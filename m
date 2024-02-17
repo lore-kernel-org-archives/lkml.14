@@ -1,207 +1,131 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CBB51C6AE;
-	Sat, 17 Feb 2024 05:37:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07CAC149DE0
+	for <linux-kernel@vger.kernel.org>; Sat, 17 Feb 2024 05:42:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708148244; cv=none; b=cmKBtBpukRb2S6eZmQNFajCeHzNoBrDLiyHVXnCnLE3DuCfcvqrBhDO8JmR9+JFNgxaQAlCJFJM8Ws1XomAJ4U5StL88BtnTM0+43LAhUbDuc5nSeAXf78T2m2lnqYAs03guHEMuFxHtuVccso82GPVjKrFK2SR1xYyNQxbNVmQ=
+	t=1708148564; cv=none; b=tTuRJu9IaBVA8gFs1vhe+2vLJNTtzhMt5xKHX1OeUe0KhNFPhzj/OfBn5K8FaTDimVhQtU339Q2y+27KzVhpwbdTZ2Aw4QVgZmNTD6NCOFl3ZHxytvvEsMBZ2v3xK5bJ1w9zefpHM4CV5rp6Hltt6FxcWeJnDOIlM1yREEzLhI8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708148244; c=relaxed/simple;
-	bh=UcrjHHCLf48qRWhBN9fennqcYtTDrQyju80s0KOzzEY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kOkCbazziQPLcEJK0yYaSIkw+ZvrowqH9KarP5wBU0ucqQ4kX2nPvujFO2DSBOwrOlMA24HJIqfmeF/c32bX7Wh/lHUKCwOm2v2b9PKXL5Vdp9yCEWRMLGQwpeQ1SLencWRgO4QcjxIwP9kJAZerIwxxxHSXCjei9+3pImspkZ8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YYUHNDGE; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1708148564; c=relaxed/simple;
+	bh=Q2XJqDi+VWb+RWFjBl96LehTOOg8v5aVoczUYhI4x1E=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=FoW0ZCn9aS2qnnCvwZ2kHj/KejGu1kQpoefi+RI2KxFUBTIvy0soPjSaPl3sIkRUcNwH3o7pRPN8GAcns28avVZWxTccH9A58lJEjFz/F4fmjZBBBoje1vdCAhA6ovETDGlkLbhwJkipR5ScrdkV1UEITSD0KBYTjBVuIR3H3Ss=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=K3G6Op5s; arc=none smtp.client-ip=209.85.167.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YYUHNDGE"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1708148243; x=1739684243;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=UcrjHHCLf48qRWhBN9fennqcYtTDrQyju80s0KOzzEY=;
-  b=YYUHNDGECr/FDeuFIdAWvHXLF6JP15TtTkCGBGQo/e4Ug6iXuBJ35gq0
-   C8MBOog7SnV/JXlox3u7YixpMfrlIi8KQK/V4wsr5EMAxaThwVIaZOWo3
-   /H0v9yk4ugsJExJyYX7GkLD6qzICUlpL0w9rfs9bGQ2qORNio53rhJk4B
-   g6gB2ZQn+LEVpMNUTRJhKdOVZbOboaH/CbdAA0rLCiUDhkTek3G3MRfb6
-   6cfaH5QyOps6MTLcPIBlxG6xeRfFJ96hH6xXdZTXN46cX5WXfL//rZul3
-   E/GOblrAhbqc4GZ2krG/yIcgabiiF1B7HVIynFXflHyFCSBCqlGhWrUEH
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10986"; a="19710476"
-X-IronPort-AV: E=Sophos;i="6.06,165,1705392000"; 
-   d="scan'208";a="19710476"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Feb 2024 21:37:21 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,165,1705392000"; 
-   d="scan'208";a="4072629"
-Received: from lkp-server02.sh.intel.com (HELO 3c78fa4d504c) ([10.239.97.151])
-  by orviesa010.jf.intel.com with ESMTP; 16 Feb 2024 21:37:16 -0800
-Received: from kbuild by 3c78fa4d504c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rbDNt-0001sK-1G;
-	Sat, 17 Feb 2024 05:37:11 +0000
-Date: Sat, 17 Feb 2024 13:36:40 +0800
-From: kernel test robot <lkp@intel.com>
-To: Mario Limonciello <mario.limonciello@amd.com>,
-	Daniel Vetter <daniel@ffwll.ch>,
-	Jani Nikula <jani.nikula@linux.intel.com>,
-	Alex Deucher <alexander.deucher@amd.com>,
-	Hans de Goede <hdegoede@redhat.com>,
-	"open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>
-Cc: Paul Gazzillo <paul@pgazz.com>,
-	Necip Fazil Yildiran <fazilyildiran@gmail.com>,
-	oe-kbuild-all@lists.linux.dev, amd-gfx@lists.freedesktop.org,
-	"open list:USB SUBSYSTEM" <linux-usb@vger.kernel.org>,
-	linux-fbdev@vger.kernel.org, nouveau@lists.freedesktop.org,
-	intel-gfx@lists.freedesktop.org,
-	platform-driver-x86@vger.kernel.org, intel-xe@lists.freedesktop.org,
-	linux-renesas-soc@vger.kernel.org,
-	"open list:ACPI" <linux-acpi@vger.kernel.org>,
-	open list <linux-kernel@vger.kernel.org>,
-	Melissa Wen <mwen@igalia.com>,
-	Mark Pearson <mpearson-lenovo@squebb.ca>,
-	Mario Limonciello <mario.limonciello@amd.com>
-Subject: Re: [PATCH v6 1/5] drm: Stop using `select ACPI_VIDEO` in all drivers
-Message-ID: <202402171302.HKl1Cpkb-lkp@intel.com>
-References: <20240214215756.6530-2-mario.limonciello@amd.com>
+	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="K3G6Op5s"
+Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-511ac32fe38so4066255e87.1
+        for <linux-kernel@vger.kernel.org>; Fri, 16 Feb 2024 21:42:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ventanamicro.com; s=google; t=1708148561; x=1708753361; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Q2XJqDi+VWb+RWFjBl96LehTOOg8v5aVoczUYhI4x1E=;
+        b=K3G6Op5sje0wQ/2M8WNZ5+PUz2OXrBG5Tms28bIyeb2v4GJVfJ4KyZ9MP1ACdYQVuK
+         NXK9XHOMf7mzge/ec2Bt0Pnj+mGTicMQiwDK1BpuN4sea8rn8CUi/Lgz8mcd5dEVcWP6
+         FcDPKWIL1d++2ihJoIcKsY1E72LfOPWSCEmRGrR5SzovEY+nQrD6okhGK1oe5Vp59Vwb
+         KXbXL+12Bk85ythDrC8xuANCdnV4b2O51jW2vWYSqixnBZ1o62U+Jsx9UH5OLCf8jYZd
+         6HzRl5Y3c8TtHIscZ8B0QKnPwRPfg6ZnQIAw9cxZvE4SLc992z36RZKEOqP7PZ5VSZjl
+         DJ3w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708148561; x=1708753361;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Q2XJqDi+VWb+RWFjBl96LehTOOg8v5aVoczUYhI4x1E=;
+        b=lR2+LdU3m4KYN0Rhe5NTNQNvp2dkcbxPjgSqhA42BoUX9EXF7Be4UTnipLPLrN6jq4
+         jfNC2e31cC2b787zdjDxaHL5rVT6uAqA0WMcT5Zn7ygOHWJXdy3MJGkk9Rhloz0MOyBV
+         scbvqW6rLo8m1/hEuBnWhg4IdRNiXMdiMGK3GAh2jrniYKBmotLFLKlEmby/j5XdI50L
+         afYO/XUS24f7TyH5vjZTyK5/qfNcyOdGuSJOgvw0XLllZxZzP1e/JB1UbNqLuAUAVVgw
+         GLHd1Fz7Dn2bNBY4m6nB5TMpLM8QD3pgy5U3gt1HnwDcNipVGe8lGBY9ngMXCKo+2ZXP
+         rYnw==
+X-Forwarded-Encrypted: i=1; AJvYcCV0Q3onxixUOIMSS7vwO8ssOw6+74WMg+tsixtZpJr8wxUqZPBGHXVj0FfjaFCM8qFLOR1xcxaGoZ0MYlvA3P1EKOvrhCezPDLGsMrI
+X-Gm-Message-State: AOJu0YzLOn/PaI60GSA5mXmDnzy/MFZP5Y2qFA7mKbuz4HpT7/WN2+/P
+	HQqKziCAvf4gDKByH+D3RxBeyu6UzHEtS9j3wKqflAPDaIJVC076u6Lcw1SvlPcT68IE/3NVqt3
+	7hN7yz5mXqoNEN+twIG6ji1+Lkkmly4Flm2GiLg==
+X-Google-Smtp-Source: AGHT+IGNn3qXE8Q2rV0AbEGEYH7CRDHvt7ZbR9eJEmA9ut7fgUgx1eQcMY50Tzh0dWXfbhyTfzgBRj3nELnm/DfNA7E=
+X-Received: by 2002:a05:6512:526:b0:511:96d0:5ae1 with SMTP id
+ o6-20020a056512052600b0051196d05ae1mr5084453lfc.40.1708148560820; Fri, 16 Feb
+ 2024 21:42:40 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240214215756.6530-2-mario.limonciello@amd.com>
+References: <20240127161753.114685-1-apatel@ventanamicro.com>
+ <20240127161753.114685-15-apatel@ventanamicro.com> <87jzn4ctks.ffs@tglx>
+ <CAAhSdy2aeyJBcMVre12jGwU52oP9Z=1emB-bcYxygdR3QhP+6w@mail.gmail.com> <878r3kcg7e.ffs@tglx>
+In-Reply-To: <878r3kcg7e.ffs@tglx>
+From: Anup Patel <apatel@ventanamicro.com>
+Date: Sat, 17 Feb 2024 11:12:29 +0530
+Message-ID: <CAK9=C2WWBrUae2hduUBwuxd8=23_KO3-x1fF=BaTtxJMHVyFrg@mail.gmail.com>
+Subject: Re: [PATCH v12 14/25] irqchip/sifive-plic: Convert PLIC driver into a
+ platform driver
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: Anup Patel <anup@brainfault.org>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	Paul Walmsley <paul.walmsley@sifive.com>, Rob Herring <robh+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Frank Rowand <frowand.list@gmail.com>, 
+	Conor Dooley <conor+dt@kernel.org>, Marc Zyngier <maz@kernel.org>, =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@kernel.org>, 
+	Atish Patra <atishp@atishpatra.org>, Andrew Jones <ajones@ventanamicro.com>, 
+	Sunil V L <sunilvl@ventanamicro.com>, Saravana Kannan <saravanak@google.com>, 
+	linux-riscv@lists.infradead.org, linux-arm-kernel@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Mario,
+On Sat, Feb 17, 2024 at 1:52=E2=80=AFAM Thomas Gleixner <tglx@linutronix.de=
+> wrote:
+>
+> On Fri, Feb 16 2024 at 22:41, Anup Patel wrote:
+> > On Fri, Feb 16, 2024 at 9:03=E2=80=AFPM Thomas Gleixner <tglx@linutroni=
+x.de> wrote:
+> >> I don't think that removing the setup protection is correct.
+> >>
+> >> Assume you have maxcpus=3DN on the kernel command line, then the above
+> >> for_each_online_cpu() loop would result in cpuhp_setup =3D=3D true whe=
+n the
+> >> instances for the not onlined CPUs are set up, no?
+> >
+> > A platform can have multiple PLIC instances where each PLIC
+> > instance targets a subset of HARTs (or CPUs).
+> >
+> > Previously (before this patch), we were probing PLIC very early so on
+> > a platform with multiple PLIC instances, we need to ensure that cpuhp
+> > setup is done only after PLIC context associated with boot CPU is
+> > initialized hence the plic_cpuhp_setup_done check.
+> >
+> > This patch converts PLIC driver into a platform driver so now PLIC
+> > instances are probed after all available CPUs are brought-up. In this
+> > case, the cpuhp setup must be done only after PLIC context of all
+> > available CPUs are initialized otherwise some of the CPUs crash
+> > in plic_starting_cpu() due to lack of PLIC context initialization.
+>
+> You're missing the point.
+>
+> Assume you have 8 CPUs and 2 PLIC instances one for CPU0-3 and one for
+> CPU4-7.
+>
+> Add "maxcpus=3D4" on the kernel command line, then only the first 4 CPUs
+> are brought up.
+>
+> So at probe time cpu_online_mask has bit 0,1,2,3 set.
+>
+> When the first PLIC it probed the loop which checks the context for each
+> online CPU will not clear cpuhp_setup and the hotplug state is installed.
+>
+> Now the second PLIC is probed (the one for the offline CPUs 4-7) and the
+> loop will again not clear cpuhp_setup and it tries to install the state
+> again, no?
 
-kernel test robot noticed the following build warnings:
+Ahh, yes. Good catch.
 
-[auto build test WARNING on drm-misc/drm-misc-next]
-[also build test WARNING on drm-intel/for-linux-next-fixes drm-tip/drm-tip linus/master v6.8-rc4 next-20240216]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+For the "maxcpus" in kernel command-line, we can't rely on the
+cpu_online_mask. I will preserve the plic_cpuhp_setup_done
+check in the next revision.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Mario-Limonciello/drm-Stop-using-select-ACPI_VIDEO-in-all-drivers/20240215-055936
-base:   git://anongit.freedesktop.org/drm/drm-misc drm-misc-next
-patch link:    https://lore.kernel.org/r/20240214215756.6530-2-mario.limonciello%40amd.com
-patch subject: [PATCH v6 1/5] drm: Stop using `select ACPI_VIDEO` in all drivers
-config: alpha-kismet-CONFIG_FB_BACKLIGHT-CONFIG_FB_TFT-0-0 (https://download.01.org/0day-ci/archive/20240217/202402171302.HKl1Cpkb-lkp@intel.com/config)
-reproduce: (https://download.01.org/0day-ci/archive/20240217/202402171302.HKl1Cpkb-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202402171302.HKl1Cpkb-lkp@intel.com/
-
-kismet warnings: (new ones prefixed by >>)
->> kismet: WARNING: unmet direct dependencies detected for FB_BACKLIGHT when selected by FB_TFT
-   .config:262:warning: symbol value 'n' invalid for SATA_MOBILE_LPM_POLICY
-   .config:360:warning: symbol value 'n' invalid for PSTORE_BLK_MAX_REASON
-   .config:445:warning: symbol value 'n' invalid for KFENCE_SAMPLE_INTERVAL
-   .config:599:warning: symbol value 'n' invalid for AIC79XX_DEBUG_MASK
-   .config:634:warning: symbol value 'n' invalid for AIC79XX_RESET_DELAY_MS
-   .config:638:warning: symbol value 'n' invalid for DRM_XE_JOB_TIMEOUT_MIN
-   .config:680:warning: symbol value 'n' invalid for CRYPTO_DEV_QCE_SW_MAX_LEN
-   .config:780:warning: symbol value 'n' invalid for PANEL_LCD_CHARSET
-   .config:820:warning: symbol value 'n' invalid for SND_AC97_POWER_SAVE_DEFAULT
-   .config:881:warning: symbol value 'n' invalid for MAGIC_SYSRQ_DEFAULT_ENABLE
-   .config:894:warning: symbol value 'n' invalid for DRM_I915_MAX_REQUEST_BUSYWAIT
-   .config:928:warning: symbol value 'n' invalid for DRM_XE_PREEMPT_TIMEOUT_MIN
-   .config:939:warning: symbol value 'n' invalid for SND_AT73C213_TARGET_BITRATE
-   .config:940:warning: symbol value 'n' invalid for NET_EMATCH_STACK
-   .config:942:warning: symbol value 'n' invalid for VMCP_CMA_SIZE
-   .config:1112:warning: symbol value 'n' invalid for AIC79XX_CMDS_PER_DEVICE
-   .config:1181:warning: symbol value 'n' invalid for PANEL_LCD_PIN_SDA
-   .config:1208:warning: symbol value 'n' invalid for MTDRAM_ERASE_SIZE
-   .config:1238:warning: symbol value 'n' invalid for MTD_REDBOOT_DIRECTORY_BLOCK
-   .config:1330:warning: symbol value 'n' invalid for SERIAL_UARTLITE_NR_UARTS
-   .config:1516:warning: symbol value 'n' invalid for LEGACY_PTY_COUNT
-   .config:1666:warning: symbol value 'n' invalid for AIC7XXX_RESET_DELAY_MS
-   .config:1808:warning: symbol value 'n' invalid for IBM_EMAC_POLL_WEIGHT
-   .config:1972:warning: symbol value 'n' invalid for DRM_I915_STOP_TIMEOUT
-   .config:2387:warning: symbol value 'n' invalid for PANEL_LCD_BWIDTH
-   .config:2412:warning: symbol value 'n' invalid for DRM_XE_TIMESLICE_MAX
-   .config:2427:warning: symbol value 'n' invalid for FTRACE_RECORD_RECURSION_SIZE
-   .config:2607:warning: symbol value 'n' invalid for KCOV_IRQ_AREA_SIZE
-   .config:2633:warning: symbol value 'n' invalid for PANEL_PARPORT
-   .config:2722:warning: symbol value 'n' invalid for NOUVEAU_DEBUG_DEFAULT
-   .config:2919:warning: symbol value 'n' invalid for KCSAN_REPORT_ONCE_IN_MS
-   .config:3017:warning: symbol value 'n' invalid for KCSAN_UDELAY_INTERRUPT
-   .config:3041:warning: symbol value 'n' invalid for PANEL_LCD_PIN_BL
-   .config:3066:warning: symbol value 'n' invalid for INITRAMFS_ROOT_GID
-   .config:3113:warning: symbol value 'n' invalid for SND_SOC_SOF_DEBUG_IPC_FLOOD_TEST_NUM
-   .config:3132:warning: symbol value 'n' invalid for SCSI_MESH_RESET_DELAY_MS
-   .config:3173:warning: symbol value 'n' invalid for ATM_FORE200E_TX_RETRY
-   .config:3216:warning: symbol value 'n' invalid for FB_OMAP2_DSS_MIN_FCK_PER_PCK
-   .config:3306:warning: symbol value 'n' invalid for IP_VS_MH_TAB_INDEX
-   .config:3454:warning: symbol value 'n' invalid for PSTORE_BLK_CONSOLE_SIZE
-   .config:3554:warning: symbol value 'n' invalid for KCSAN_UDELAY_TASK
-   .config:3564:warning: symbol value 'n' invalid for MMC_BLOCK_MINORS
-   .config:3567:warning: symbol value 'n' invalid for INET_TABLE_PERTURB_ORDER
-   .config:3612:warning: symbol value 'n' invalid for SCSI_NCR53C8XX_SYNC
-   .config:3638:warning: symbol value 'n' invalid for BOOKE_WDT_DEFAULT_TIMEOUT
-   .config:3730:warning: symbol value 'n' invalid for UCLAMP_BUCKETS_COUNT
-   .config:3815:warning: symbol value 'n' invalid for PANEL_LCD_PIN_RW
-   .config:3901:warning: symbol value 'n' invalid for SERIAL_MCF_BAUDRATE
-   .config:3983:warning: symbol value 'n' invalid for DE2104X_DSL
-   .config:3998:warning: symbol value 'n' invalid for BLK_DEV_RAM_COUNT
-   .config:4187:warning: symbol value 'n' invalid for SERIAL_AR933X_NR_UARTS
-   .config:4267:warning: symbol value 'n' invalid for IP_VS_SH_TAB_BITS
-   .config:4338:warning: symbol value 'n' invalid for INPUT_MOUSEDEV_SCREEN_X
-   .config:4405:warning: symbol value 'n' invalid for STACK_MAX_DEFAULT_SIZE_MB
-   .config:4425:warning: symbol value 'n' invalid for USBIP_VHCI_HC_PORTS
-   .config:4456:warning: symbol value 'n' invalid for RIONET_RX_SIZE
-   .config:4667:warning: symbol value 'n' invalid for RCU_BOOST_DELAY
-   .config:4750:warning: symbol value 'n' invalid for RADIO_TYPHOON_PORT
-   .config:4769:warning: symbol value 'n' invalid for IBM_EMAC_TXB
-   .config:4884:warning: symbol value 'n' invalid for SERIAL_TXX9_NR_UARTS
-   .config:4960:warning: symbol value 'n' invalid for VIDEO_VIVID_MAX_DEVS
-   .config:5156:warning: symbol value 'n' invalid for ARCH_MMAP_RND_BITS
-   .config:5237:warning: symbol value 'n' invalid for DRM_I915_FENCE_TIMEOUT
-   .config:5259:warning: symbol value 'n' invalid for TTY_PRINTK_LEVEL
-   .config:5261:warning: symbol value 'n' invalid for DRM_XE_PREEMPT_TIMEOUT_MAX
-   .config:5423:warning: symbol value 'n' invalid for MIPS_EJTAG_FDC_KGDB_CHAN
-   .config:5520:warning: symbol value 'n' invalid for KDB_DEFAULT_ENABLE
-   .config:5539:warning: symbol value 'n' invalid for SERIAL_ALTERA_UART_MAXPORTS
-   .config:5772:warning: symbol value 'n' invalid for PPC_EARLY_DEBUG_EHV_BC_HANDLE
-   .config:5808:warning: symbol value 'n' invalid for PANEL_LCD_HWIDTH
-   .config:5843:warning: symbol value 'n' invalid for LOCKDEP_CHAINS_BITS
-   .config:5872:warning: symbol value 'n' invalid for SCSI_SYM53C8XX_MAX_TAGS
-   .config:5937:warning: symbol value 'n' invalid for DRM_I915_HEARTBEAT_INTERVAL
-   .config:5944:warning: symbol value 'n' invalid for KCSAN_SKIP_WATCH
-   .config:5968:warning: symbol value 'n' invalid for PSTORE_BLK_KMSG_SIZE
-   .config:6011:warning: symbol value 'n' invalid for MTD_UBI_WL_THRESHOLD
-   .config:6030:warning: symbol value 'n' invalid for RIONET_TX_SIZE
-   .config:6268:warning: symbol value 'n' invalid for ARCH_MMAP_RND_COMPAT_BITS
-   .config:6431:warning: symbol value 'n' invalid for CRYPTO_DEV_FSL_CAAM_INTC_TIME_THLD
-   .config:6437:warning: symbol value 'n' invalid for RADIO_TRUST_PORT
-   .config:6464:warning: symbol value 'n' invalid for OMAP2_DSS_MIN_FCK_PER_PCK
-   .config:6652:warning: symbol value 'n' invalid for SERIAL_SH_SCI_NR_UARTS
-   .config:6767:warning: symbol value 'n' invalid for XEN_MEMORY_HOTPLUG_LIMIT
-   .config:6820:warning: symbol value 'n' invalid for CMA_SIZE_PERCENTAGE
-   .config:6969:warning: symbol value 'n' invalid for DRM_XE_TIMESLICE_MIN
-   .config:7104:warning: symbol value 'n' invalid for KDB_CONTINUE_CATASTROPHIC
-   .config:7210:warning: symbol value 'n' invalid for DVB_MAX_ADAPTERS
-   .config:7213:warning: symbol value 'n' invalid for SCSI_NCR53C8XX_MAX_TAGS
-   .config:7233:warning: symbol value 'n' invalid for SCSI_SYM53C8XX_DMA_ADDRESSING_MODE
-   .config:7446:warning: symbol value 'n' invalid for SERIAL_ARC_NR_PORTS
-   .config:7557:warning: symbol value 'n' invalid for IIO_CONSUMERS_PER_TRIGGER
-   .config:7600:warning: symbol value 'n' invalid for IBM_EMAC_RXB
-   .config:7621:warning: symbol value 'n' invalid for SCSI_MPT3SAS_MAX_SGE
-   .config:7752:warning: symbol value 'n' invalid for PSTORE_DEFAULT_KMSG_BYTES
-   .config:7918:warning: symbol value 'n' invalid for VGA_ARB_MAX_GPUS
-   .config:7998:warning: symbol value 'n' invalid for PANEL_LCD
-   .config:7999:warning: symbol value 'n' invalid for ZSMALLOC_CHAIN_SIZE
-   .config:8147:warning: symbol value 'n' invalid for CRYPTO_DEV_FSL_CAAM_RINGSIZE
-   .config:8240:warning: symbol value 'n' invalid for MTDRAM_TOTAL_SIZE
-   .config:8329:warning: symbol value 'n' invalid for LOCKDEP_BITS
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Regards,
+Anup
