@@ -1,45 +1,45 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7773C56755;
-	Sat, 17 Feb 2024 00:11:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8882F28DA6;
+	Sat, 17 Feb 2024 00:11:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708128665; cv=none; b=SyEmd5QQoGCTUkNGExzKxXsag3gmWGUW9q2tn4SPSxbiesjJ31rYrg/aAmWhaWns+ZyE4DL1U0IHg3hYFtjupTcwIXsYCXSdm+g0b9RT5/FA2x59c5oXxfCj2iQRtDSUbnxDoLUDL1uCLg4BOQ44AG5MnYJIkX49f+X7dKAXQ/g=
+	t=1708128665; cv=none; b=NopFdUjga8g/8aw6dKljeXckZ3LBrM6I8GPYJM0mlzQKENmar+GBEgEhxfAwxhnIS5DJgtXp7HzOfZeTsE/Lqxmxrqs1b4y6dfcVWMoFfFR93uS2MuSRisD4NSowtFoCZMDm1/fF9zLeAk+urNTrdn1x5i/hRo9x5LFHxQ49Efg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1708128665; c=relaxed/simple;
-	bh=dtH+XypTk/Dtwesx70WStgcYULhuLJpaBE5SqAaS+wg=;
+	bh=po8gdG/yPnG5R+mSe7hgcl69CxW6YNQ+1kAHPUh6tgE=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ULK46tOa9Jpo72shFM1cPZNtP1P8EtFCba5Ar5FMDArhDfPC2S0YJfPQvHRsp1GhtGGVuMpReHNCuhXO/o3rZzkeiDyrpRIk1XyiZ36G2AQpYxaAkz85arYKzYojsF3AFeo68gWsrtuT7azig6w88pplI698wieb+tpye8jpd+c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=NcKjeFZW; arc=none smtp.client-ip=205.220.180.131
+	 MIME-Version:Content-Type; b=S0bVv/pZ4X+FSMX8Vq+QYrsKxnbpXAqrUbLSIuR45z0IkWHrWgAkK1uB7mWoXhe1C98OB5kb5DKk5pCuD5zP6MfNP6YujdxHBTFUT1Vd9bqeG0LakSIGaR7D5KM7+jYrFpgOFnFtErzWFaIYmCcP649GCd69A3Y5XWlK9IjLYB8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=QOshmOFh; arc=none smtp.client-ip=205.220.168.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="NcKjeFZW"
-Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 41H0AgM8031492;
-	Sat, 17 Feb 2024 00:10:42 GMT
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="QOshmOFh"
+Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 41GNqj86030887;
+	Sat, 17 Feb 2024 00:10:32 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
 	from:to:cc:subject:date:message-id:in-reply-to:references
-	:mime-version:content-type; s=qcppdkim1; bh=Hs3fpdD+l1O4EfSuPsgb
-	K4Q6nEGroTvEVrnQjm293OU=; b=NcKjeFZWbJhLZVcnC4+sqT28nywe4r/lJ8oC
-	DRTdwt+9P4cIKGKtr9DNc0AQvSvmNnRF68+uqJ/l8FjxAt/iuj3Ji7VHj957IpdA
-	P5D972memUsUIEPFtzLexzdjWEjHn6mGSikcCUM5NMjFDfAiV5oaKxlcJiVDFe7k
-	4c/N0IWQgJG9Mg+wxhOPfsrxYrJhCgEf6ORkXrqeu9Dp1iHYkI/GH2Dft16m57X7
-	I5wQdnICrOeIwuonFi3HS0DfqcqFHK3jsWszvD+BrjKi0EroQAaahm6dhbuD8sBA
-	bqspbIUh9jaagUhjsyn3Ra6CbppstFQZnufM6R4Xxtk48PrXtA==
-Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3wa6nk9e62-1
+	:mime-version:content-type; s=qcppdkim1; bh=kRLA1poEYQe3YSdfgMDv
+	BSt3LwXq7Py24egG1yDlHO0=; b=QOshmOFhwok0ki3KdzM3kjhxZHP7RVTjJEk1
+	smXRdf/ePyDeWS2fzb4VXDctqQ+Z9zyfCY30twMSxS7O2YpaVTUTHRWdFvozx400
+	ADEYVj20r134Z9u4yPzRufokhCiM5dWq7bKmECttmZOBf71snEkcc3D1Gtko/e78
+	RvM08HqTgW7phVMbocJFv7bLQBouApAYCiB3wit07EbF6HlUMli5qyjYx5OjAxrW
+	SBtP30HbanKuIfzaJt870s7ajyzom4hEQEjwIg2fts9WjK+sS64Km4RWP61f92xT
+	4glKmcFrYKnyCpAkFnOUPWB6eqPWz4eyedVhqbCpYcfAXtsVGA==
+Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3wa61nhek2-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sat, 17 Feb 2024 00:10:42 +0000 (GMT)
+	Sat, 17 Feb 2024 00:10:32 +0000 (GMT)
 Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
-	by NALASPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 41H0AfaD025798
+	by NALASPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 41H0AVBm011304
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sat, 17 Feb 2024 00:10:41 GMT
+	Sat, 17 Feb 2024 00:10:31 GMT
 Received: from hu-wcheng-lv.qualcomm.com (10.49.16.6) by
  nalasex01b.na.qualcomm.com (10.47.209.197) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Fri, 16 Feb 2024 16:10:41 -0800
+ 15.2.1118.40; Fri, 16 Feb 2024 16:10:31 -0800
 From: Wesley Cheng <quic_wcheng@quicinc.com>
 To: <srinivas.kandagatla@linaro.org>, <mathias.nyman@intel.com>,
         <perex@perex.cz>, <conor+dt@kernel.org>, <corbet@lwn.net>,
@@ -51,10 +51,12 @@ To: <srinivas.kandagatla@linaro.org>, <mathias.nyman@intel.com>,
 CC: <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
         <linux-sound@vger.kernel.org>, <linux-usb@vger.kernel.org>,
         <linux-arm-msm@vger.kernel.org>, <linux-doc@vger.kernel.org>,
-        <alsa-devel@alsa-project.org>, Wesley Cheng <quic_wcheng@quicinc.com>
-Subject: [PATCH v17 42/51] ASoC: qcom: qdsp6: Add PCM ops to track current state
-Date: Fri, 16 Feb 2024 16:10:08 -0800
-Message-ID: <20240217001017.29969-43-quic_wcheng@quicinc.com>
+        <alsa-devel@alsa-project.org>,
+        Mathias Nyman <mathias.nyman@linux.intel.com>,
+        Wesley Cheng <quic_wcheng@quicinc.com>
+Subject: [PATCH v17 06/51] xhci: move event processing for one interrupter to a separate function
+Date: Fri, 16 Feb 2024 16:09:32 -0800
+Message-ID: <20240217001017.29969-7-quic_wcheng@quicinc.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20240217001017.29969-1-quic_wcheng@quicinc.com>
 References: <20240217001017.29969-1-quic_wcheng@quicinc.com>
@@ -69,117 +71,143 @@ X-ClientProxiedBy: nalasex01a.na.qualcomm.com (10.47.209.196) To
  nalasex01b.na.qualcomm.com (10.47.209.197)
 X-QCInternal: smtphost
 X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: To32oNIncvgr2wbxLjGZWEkPwQ5UMMSl
-X-Proofpoint-ORIG-GUID: To32oNIncvgr2wbxLjGZWEkPwQ5UMMSl
+X-Proofpoint-GUID: _0S3GpP9_YDmyTuZ0tvXHiwQDgVbTFox
+X-Proofpoint-ORIG-GUID: _0S3GpP9_YDmyTuZ0tvXHiwQDgVbTFox
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
  definitions=2024-02-16_23,2024-02-16_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
- suspectscore=0 phishscore=0 mlxlogscore=999 priorityscore=1501
- lowpriorityscore=0 spamscore=0 bulkscore=0 mlxscore=0 adultscore=0
- clxscore=1015 malwarescore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.19.0-2401310000 definitions=main-2402160189
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 mlxscore=0
+ clxscore=1015 bulkscore=0 phishscore=0 lowpriorityscore=0 malwarescore=0
+ adultscore=0 spamscore=0 suspectscore=0 priorityscore=1501 mlxlogscore=999
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2401310000
+ definitions=main-2402160189
 
-Register PCM callbacks so that the Q6USB DPCM backend dai link can track
-and update the status of the PCM device.  Utilize the SOC USB state APIs to
-ensure that the SND kcontrol for the offload status is updated properly.
+From: Mathias Nyman <mathias.nyman@linux.intel.com>
 
+Split the main XHCI interrupt handler into a different API, so that other
+potential interrupters can utilize similar event ring handling.  A scenario
+would be if a secondary interrupter required to skip pending events in the
+event ring, which would warrant a similar set of operations.
+
+Signed-off-by: Mathias Nyman <mathias.nyman@linux.intel.com>
 Signed-off-by: Wesley Cheng <quic_wcheng@quicinc.com>
 ---
- sound/soc/qcom/qdsp6/q6usb.c | 52 +++++++++++++++++++++++++++++++++---
- 1 file changed, 49 insertions(+), 3 deletions(-)
+ drivers/usb/host/xhci-ring.c | 87 +++++++++++++++++-------------------
+ 1 file changed, 42 insertions(+), 45 deletions(-)
 
-diff --git a/sound/soc/qcom/qdsp6/q6usb.c b/sound/soc/qcom/qdsp6/q6usb.c
-index 72ec7d45f916..32971395ab13 100644
---- a/sound/soc/qcom/qdsp6/q6usb.c
-+++ b/sound/soc/qcom/qdsp6/q6usb.c
-@@ -30,6 +30,9 @@
- struct q6usb_status {
- 	struct snd_soc_usb_device *sdev;
- 	unsigned int pcm_index;
-+	bool prepared;
-+	bool running;
-+	int session_id;
- };
- 
- struct q6usb_port_data {
-@@ -81,14 +84,48 @@ static int q6usb_hw_params(struct snd_pcm_substream *substream,
- 		goto out;
- 
- 	data->status[data->sel_card_idx].pcm_index = data->sel_pcm_idx;
-+	data->status[data->sel_card_idx].prepared = true;
-+	data->status[data->sel_card_idx].session_id =
-+		snd_soc_usb_prepare_session(data->usb, data->sel_card_idx,
-+						data->sel_pcm_idx);
- out:
- 	mutex_unlock(&data->mutex);
- 
- 	return ret;
+diff --git a/drivers/usb/host/xhci-ring.c b/drivers/usb/host/xhci-ring.c
+index 62bde16f435e..ad008a5abc81 100644
+--- a/drivers/usb/host/xhci-ring.c
++++ b/drivers/usb/host/xhci-ring.c
+@@ -3069,6 +3069,46 @@ static void xhci_clear_interrupt_pending(struct xhci_hcd *xhci,
+ 	}
  }
  
-+static int q6usb_prepare(struct snd_pcm_substream *substream,
-+		struct snd_soc_dai *dai)
++static int xhci_handle_events(struct xhci_hcd *xhci, struct xhci_interrupter *ir)
 +{
-+	struct q6usb_port_data *data = dev_get_drvdata(dai->dev);
++	int event_loop = 0;
++	u64 temp;
 +
-+	mutex_lock(&data->mutex);
-+	data->status[data->sel_card_idx].running = true;
-+	snd_soc_usb_set_session_state(data->usb,
-+			data->status[data->sel_card_idx].session_id,
-+			SND_SOC_USB_RUNNING);
-+	mutex_unlock(&data->mutex);
++	xhci_clear_interrupt_pending(xhci, ir);
++
++	if (xhci->xhc_state & XHCI_STATE_DYING ||
++	    xhci->xhc_state & XHCI_STATE_HALTED) {
++		xhci_dbg(xhci, "xHCI dying, ignoring interrupt. Shouldn't IRQs be disabled?\n");
++
++		/* Clear the event handler busy flag (RW1C) */
++		temp = xhci_read_64(xhci, &ir->ir_set->erst_dequeue);
++		xhci_write_64(xhci, temp | ERST_EHB, &ir->ir_set->erst_dequeue);
++		return -ENODEV;
++	}
++
++	while (xhci_handle_event(xhci, ir) > 0) {
++		/*
++		 * If half a segment of events have been handled in one go then
++		 * update ERDP, and force isoc trbs to interrupt more often
++		 */
++		if (event_loop++ > TRBS_PER_SEGMENT / 2) {
++			xhci_update_erst_dequeue(xhci, ir, false);
++
++			if (ir->isoc_bei_interval > AVOID_BEI_INTERVAL_MIN)
++				ir->isoc_bei_interval = ir->isoc_bei_interval / 2;
++
++			event_loop = 0;
++		}
++
++		/* Update SW event ring dequeue pointer */
++		inc_deq(xhci, ir->event_ring);
++	}
++
++	xhci_update_erst_dequeue(xhci, ir, true);
 +
 +	return 0;
 +}
 +
-+static void q6usb_shutdown(struct snd_pcm_substream *substream,
-+				struct snd_soc_dai *dai)
-+{
-+	struct q6usb_port_data *data = dev_get_drvdata(dai->dev);
-+
-+	mutex_lock(&data->mutex);
-+	data->status[data->sel_card_idx].running = false;
-+	data->status[data->sel_card_idx].prepared = false;
-+	snd_soc_usb_shutdown_session(data->usb,
-+			data->status[data->sel_card_idx].session_id);
-+	mutex_unlock(&data->mutex);
-+}
-+
- static const struct snd_soc_dai_ops q6usb_ops = {
- 	.hw_params = q6usb_hw_params,
-+	.prepare = q6usb_prepare,
-+	.shutdown = q6usb_shutdown,
- };
+ /*
+  * xHCI spec says we can get an interrupt, and if the HC has an error condition,
+  * we might get bad data out of the event ring.  Section 4.10.2.7 has a list of
+@@ -3077,11 +3117,8 @@ static void xhci_clear_interrupt_pending(struct xhci_hcd *xhci,
+ irqreturn_t xhci_irq(struct usb_hcd *hcd)
+ {
+ 	struct xhci_hcd *xhci = hcd_to_xhci(hcd);
+-	struct xhci_interrupter *ir;
+ 	irqreturn_t ret = IRQ_NONE;
+-	u64 temp_64;
+ 	u32 status;
+-	int event_loop = 0;
  
- static struct snd_soc_dai_driver q6usb_be_dais[] = {
-@@ -149,9 +186,14 @@ static int q6usb_put_offload_dev(struct snd_kcontrol *kcontrol,
- 	int changed = 0;
- 	int idx;
+ 	spin_lock(&xhci->lock);
+ 	/* Check if the xHC generated the interrupt, or the irq is shared */
+@@ -3114,50 +3151,10 @@ irqreturn_t xhci_irq(struct usb_hcd *hcd)
+ 	 */
+ 	status |= STS_EINT;
+ 	writel(status, &xhci->op_regs->status);
+-
+-	/* This is the handler of the primary interrupter */
+-	ir = xhci->interrupters[0];
+-
+-	xhci_clear_interrupt_pending(xhci, ir);
+-
+-	if (xhci->xhc_state & XHCI_STATE_DYING ||
+-	    xhci->xhc_state & XHCI_STATE_HALTED) {
+-		xhci_dbg(xhci, "xHCI dying, ignoring interrupt. "
+-				"Shouldn't IRQs be disabled?\n");
+-		/* Clear the event handler busy flag (RW1C);
+-		 * the event ring should be empty.
+-		 */
+-		temp_64 = xhci_read_64(xhci, &ir->ir_set->erst_dequeue);
+-		xhci_write_64(xhci, temp_64 | ERST_EHB,
+-				&ir->ir_set->erst_dequeue);
+-		ret = IRQ_HANDLED;
+-		goto out;
+-	}
+-
+-	/* FIXME this should be a delayed service routine
+-	 * that clears the EHB.
+-	 */
+-	while (xhci_handle_event(xhci, ir) > 0) {
+-		/*
+-		 * If half a segment of events have been handled in one go then
+-		 * update ERDP, and force isoc trbs to interrupt more often
+-		 */
+-		if (event_loop++ > TRBS_PER_SEGMENT / 2) {
+-			xhci_update_erst_dequeue(xhci, ir, false);
+-
+-			if (ir->isoc_bei_interval > AVOID_BEI_INTERVAL_MIN)
+-				ir->isoc_bei_interval = ir->isoc_bei_interval / 2;
+-
+-			event_loop = 0;
+-		}
+-
+-		/* Update SW event ring dequeue pointer */
+-		inc_deq(xhci, ir->event_ring);
+-	}
+-
+-	xhci_update_erst_dequeue(xhci, ir, true);
+ 	ret = IRQ_HANDLED;
  
-+	mutex_lock(&data->mutex);
-+
-+	/* Don't allow changes to the offloading devices if session is busy */
-+	if (data->sel_card_idx >= 0 && data->status[data->sel_card_idx].prepared)
-+		goto out;
-+
- 	idx = ucontrol->value.integer.value[0];
++	/* This is the handler of the primary interrupter */
++	xhci_handle_events(xhci, xhci->interrupters[0]);
+ out:
+ 	spin_unlock(&xhci->lock);
  
--	mutex_lock(&data->mutex);
- 	switch (type) {
- 	case SND_SOC_USB_KCTL_CARD_ROUTE:
- 		if (idx >= 0 && test_bit(idx, &data->available_card_slot)) {
-@@ -210,8 +252,12 @@ static int q6usb_alsa_connection_cb(struct snd_soc_usb *usb,
- 
- 	mutex_lock(&data->mutex);
- 	if (connected) {
--		/* We only track the latest USB headset plugged in */
--		if (!data->idx_valid) {
-+		/*
-+		 * Update the latest USB headset plugged in, if session is
-+		 * idle.
-+		 */
-+		if (!data->idx_valid &&
-+			!data->status[data->sel_card_idx].prepared) {
- 			data->sel_card_idx = sdev->card_idx;
- 			data->sel_pcm_idx = 0;
- 		}
