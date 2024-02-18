@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6012863412;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 600F16340F;
 	Sun, 18 Feb 2024 12:03:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708257788; cv=none; b=lrtGJRoxzaK5Y+cC5EwBIId2xUBI4fxIIcxDh7sdTNMvPI2La0WttXYUB419iYFxLDqv5ZcK6kWfmpVQlSy5gd2PCf3kjSc7Bf2P3cVpFSwGgJ25C+4h0A+b2amT18LHgVdl7e1zEuttE79R1RPldZvJMvtGtYmBPi7rX83l4/U=
+	t=1708257788; cv=none; b=A9H+pMHrZXOFMDr4ANp6Bm5JobL5LBsBmBh6HvU9Npve02xLafvUkdJWyU6Aioz3kfpR9/TmjvqhuKY1RdWV/hMeGA9gYlBiXFHEvR3mJZWpbkzF75lJN5uVY+STenFVvsUCPR4ko9tOWz9IjFvIsrYFOtHvgovcXHuuzrfug8U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1708257788; c=relaxed/simple;
-	bh=RPUmB8TnTdVoKukhHeVUW8RKPIT3OlUDg9hq4euJK94=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=mvrzf89Xv1NgR2tomwzuBWcs/S14d+aDl6yRqZQ59AdH9fW9hl0mQQM++XucaKwxZbUfy3PWkPRl7aq1NsFgp6kQ8omdRbJXJyl/+Yuatb2z1FLlXMXwiyyroDIUfVhlNuaCJTOBXvqrNmqcDBmt0BXb8QWoG45FQoicrBbTUKM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=C10tmYII; arc=none smtp.client-ip=10.30.226.201
+	bh=y/WIW5qNdPD+SYYlidFaKT5euCg8gHN9F20TR9It0Y4=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=ob+Nw4qr3qIe4VpWKlKnqN5VsGzirj38IkvDDf0saQ5jWeewsDg6ZUvL+ggLhqlwpEBzmKWAyvjzodJEAg0F3Msb+ZFe8FqAOuF+W6S2ZAsSFZAz5zbu1NpmLm6f9UKeNOl7av4MdwnZgGq5/d/bvVV/pjtta/pSQaaSAnxpWi0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IHoNisqf; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="C10tmYII"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id DDAEEC433C7;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IHoNisqf"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id C9D8DC433F1;
 	Sun, 18 Feb 2024 12:03:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1708257787;
-	bh=RPUmB8TnTdVoKukhHeVUW8RKPIT3OlUDg9hq4euJK94=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=C10tmYII47FOSk1mOrHEymRzoTTfZWyRW8oVUF4Q8g8a5ZlQk+Y6rT5vUJEArVCw8
-	 OYm0Ko0x7HyVaRdow1RMMYUrWXT40KZydT5kOBtf8WGbMx3F3bqQm+KXuCh0NlxW7D
-	 EPJVf04LMYF7VIWlgVJ41EC8JLBOh0ZVUFmvuxMgzrE38xiic2FRYOQNT52pQSpWIQ
-	 OSMS+L/B+iyfyGQcjfv1YJveP/mqQJfzSe4DPdlT/hTSJ7279iBZa4lSIyPgd9QsQJ
-	 LaMb5bUk9+Z1BWO+nRZLj0FavZO6QW6Fp8JBtB6Ofae8b6DJoAGeYMlEea1WQSjosS
-	 1o9iZvIUOTVlA==
+	bh=y/WIW5qNdPD+SYYlidFaKT5euCg8gHN9F20TR9It0Y4=;
+	h=From:Subject:Date:To:Cc:Reply-To:From;
+	b=IHoNisqf+/F0cNor5jSXQrtJQXjzunUp9567BX5Upq5AQ5WdddiNI9GPjfNhoz/1c
+	 FNk1DnADCFIeVis0ZpBNQ2UnXj9EF1IXWtWhrbYU4nKoB3FJVftI+1O4o5xL6p6dmj
+	 48Hs6DINx2bA3yGOLefz3gTNyvqg9+6YzQ3IE0wV4Htg4OT994OxkJ/YSHi7a2iBzL
+	 n8RcvplPNJEVxDngxGqaPXf/sRA+YOFydxbAptZifzYJLJrVCklOCkKOvk0HNnLJLq
+	 IPYpTRNCBkX2pqox8WWPb7uw7OIqDQ3jqQJPeUzu9lVQYl9bTdw7BBaoyx0xZpOG+T
+	 bFjiFmwH1RAng==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3F6EC54766;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEA2CC48BF6;
 	Sun, 18 Feb 2024 12:03:07 +0000 (UTC)
 From: Yang Xiwen via B4 Relay <devnull+forbidden405.outlook.com@kernel.org>
-Date: Sun, 18 Feb 2024 20:02:51 +0800
-Subject: [PATCH v2 2/3] arm64: dts: hi3798cv200: add GICH, GICV register
- space and irq
+Subject: [PATCH v2 0/3] arm64: dts: hi3798cv200: fix GICR size, add cache
+ info, maintenance irq and GICH, GICV spaces
+Date: Sun, 18 Feb 2024 20:02:49 +0800
+Message-Id: <20240218-cache-v2-0-1fd919e2bd3e@outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,9 +41,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240218-cache-v2-2-1fd919e2bd3e@outlook.com>
-References: <20240218-cache-v2-0-1fd919e2bd3e@outlook.com>
-In-Reply-To: <20240218-cache-v2-0-1fd919e2bd3e@outlook.com>
+X-B4-Tracking: v=1; b=H4sIAOnx0WUC/13MQQ7CIBCF4as0sxYDEyzElfcwXeA4FaKWBirRN
+ Nxd7NLl//LyrZA5Bc5w7FZIXEIOcWqBuw7Iu+nGIlxbA0rUEpUV5MizUIrsZTSHvieE9p0Tj+G
+ 9OeehtQ95iemzsUX91n+hKCEFknTWaW2QzSm+lkeM9z3FJwy11i/5JAW5nAAAAA==
 To: Wei Xu <xuwei5@hisilicon.com>, Rob Herring <robh+dt@kernel.org>, 
  Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
  Conor Dooley <conor+dt@kernel.org>, 
@@ -52,11 +52,11 @@ To: Wei Xu <xuwei5@hisilicon.com>, Rob Herring <robh+dt@kernel.org>,
 Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, 
  linux-kernel@vger.kernel.org, Yang Xiwen <forbidden405@outlook.com>
 X-Mailer: b4 0.12.4
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1708257770; l=1117;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1708257770; l=1715;
  i=forbidden405@outlook.com; s=20230724; h=from:subject:message-id;
- bh=oWPOXVSM7W5vHY31kDr4p2HrgQkuCpZx2sc6S9SlCF8=;
- b=YbBBZa81olla9r1dJqBTLzU5eZwlr9EMPAU11UChDqur5df31Kx/+zKUl+9eMR6I2jiXr8mlW
- b4PZ90CnhK9BmpzF3yRdh+HkmJCb9f7ZfAsvKVslY2q6zD8eJ4GMr4D
+ bh=y/WIW5qNdPD+SYYlidFaKT5euCg8gHN9F20TR9It0Y4=;
+ b=MaCi7riRn97ZX+LWscA01GTgPBnN1DBFlMZ5vlzWXAPis+uMoVXi78fazwJp8jeT1nYohx/Ew
+ buTXhOraUuhAJJjWYS5Uo7UbArdaGzmBYZYpnXKr+gJyV1YHkocPJdZ
 X-Developer-Key: i=forbidden405@outlook.com; a=ed25519;
  pk=qOD5jhp891/Xzc+H/PZ8LWVSWE3O/XCQnAg+5vdU2IU=
 X-Endpoint-Received:
@@ -64,35 +64,49 @@ X-Endpoint-Received:
 X-Original-From: Yang Xiwen <forbidden405@outlook.com>
 Reply-To: <forbidden405@outlook.com>
 
-From: Yang Xiwen <forbidden405@outlook.com>
+They are tested on a hi3798mv200 board in fact. Though the 2 SoCs are
+highly similar and the CPU should be the same. Still, Tested-by are
+welcomed.
 
-This is needed by KVM to make use of VGIC code. Just like regular
-GIC-400, PPI #9 is the hypervisor maintenance interrupt. It has been
-verified.
+The patchset fixes some warnings reported by the kernel during boot.
+
+The cache size info is from Processor_Datasheet_v2XX.pdf [1], Section
+2.2.1 Master Processor.
+
+The cache line size and the set-associative info are from Cortex-A53
+Documentation [2]. Dts for other SoCs are also a good reference.
+
+From the doc, we know L1 i-cache is 4-way assoc, L1 d-cache is 2-way
+assoc and L2 cache is 16-way assoc. Fill the dts props accordingly.
+
+Also, to use KVM's VGIC code, we need to add GICH, GICV and maintenance
+IRQ to the dts. They are added with verification.
+
+Dear maintainers, maybe consider Cc to stable too?
+
+[1]: https://github.com/96boards/documentation/blob/master/enterprise/poplar/hardware-docs/Processor_Datasheet_v2XX.pdf
+[2]: https://developer.arm.com/documentation/ddi0500/j/Level-1-Memory-System
 
 Signed-off-by: Yang Xiwen <forbidden405@outlook.com>
 ---
- arch/arm64/boot/dts/hisilicon/hi3798cv200.dtsi | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+Changes in v2:
+- arm64: dts: hi3798cv200: add GICH, GICV register spces and
+  maintainance IRQ.
+- Link to v1: https://lore.kernel.org/r/20240218-cache-v1-0-2c0a8a4472e7@outlook.com
 
-diff --git a/arch/arm64/boot/dts/hisilicon/hi3798cv200.dtsi b/arch/arm64/boot/dts/hisilicon/hi3798cv200.dtsi
-index d01023401d7e..fc64d2fa99eb 100644
---- a/arch/arm64/boot/dts/hisilicon/hi3798cv200.dtsi
-+++ b/arch/arm64/boot/dts/hisilicon/hi3798cv200.dtsi
-@@ -58,7 +58,11 @@ cpu@3 {
- 	gic: interrupt-controller@f1001000 {
- 		compatible = "arm,gic-400";
- 		reg = <0x0 0xf1001000 0x0 0x1000>,  /* GICD */
--		      <0x0 0xf1002000 0x0 0x2000>;  /* GICC */
-+		      <0x0 0xf1002000 0x0 0x2000>,  /* GICC */
-+		      <0x0 0xf1004000 0x0 0x2000>,  /* GICH */
-+		      <0x0 0xf1006000 0x0 0x2000>;  /* GICV */
-+		interrupts = <GIC_PPI 9 (GIC_CPU_MASK_SIMPLE(4) |
-+			      IRQ_TYPE_LEVEL_HIGH)>;
- 		#address-cells = <0>;
- 		#interrupt-cells = <3>;
- 		interrupt-controller;
+---
+Yang Xiwen (3):
+      arm64: dts: hi3798cv200: fix the size of GICR
+      arm64: dts: hi3798cv200: add GICH, GICV register space and irq
+      arm64: dts: hi3798cv200: add cache info
 
+ arch/arm64/boot/dts/hisilicon/hi3798cv200.dtsi | 43 +++++++++++++++++++++++++-
+ 1 file changed, 42 insertions(+), 1 deletion(-)
+---
+base-commit: 8d3dea210042f54b952b481838c1e7dfc4ec751d
+change-id: 20240218-cache-11c8bf7566c2
+
+Best regards,
 -- 
-2.43.0
+Yang Xiwen <forbidden405@outlook.com>
 
