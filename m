@@ -1,118 +1,77 @@
-Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6805E15C0;
-	Sun, 18 Feb 2024 03:10:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DB7415C0
+	for <linux-kernel@vger.kernel.org>; Sun, 18 Feb 2024 03:13:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708225857; cv=none; b=JkSAQ4aNncRaGeJknAWi9ltP6tIcoa8UHIPCiGb7HbtcwrGc9lBFYuDoN31an92Y/8Tc3FQW13E8ays/Z2DQnwYTWtxQVoxMuYAshxM08dq4JqHP+OamlX7UpPbmocNZXCGfn4uMOgeVXYMNmH10EZeHsQU8GY6FpC1IHXJOktM=
+	t=1708225998; cv=none; b=T0dwoh9tNgHyzMrFaRLpMcLIWqMXcmkgGREuagElxGFXGMnxu288EtlesX5iW7GyanetibA4amE8kDdEH4zlYwOVVQ2y6CABqkv0ro5iL+ukd/ktiaD3SMal8voyqc4emHlCehlTNKY0Oey8e2i41L8MYxsHhx674FdzQezWTng=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708225857; c=relaxed/simple;
-	bh=/+4TlFWh8lKqTf1az0E4o7ZlHJHLJPmeg3PkaSltrH0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=hpyo89bO26iXMDm3wvjYe+j1ddoYw0Nggiiyj2IX+Bl56ELS9oC/RHTUMWLcwmHgp5zVNpFD3qRyzorkQXzVDmGwveT8gA4tH2IeanbrUCTCsZME08gDp6CTphXpvhnaZPeXoDGX+rFpuDTcxifywhKzhwrHPlfeQ4HSRL6yZhA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=f1HxYVWo; arc=none smtp.client-ip=209.85.218.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f1HxYVWo"
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-a3d6d160529so236935166b.0;
-        Sat, 17 Feb 2024 19:10:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1708225854; x=1708830654; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=FnlDJkdNhI1kCGRl0tLw3fRINrAPP/RmkZJTxoIRS+g=;
-        b=f1HxYVWoAhTXT7OdyE0ANqLWciPYCxDBDgbz0pyZGzRT/beyhdCoy9lGdtJ3ExqsB2
-         dLrpI/87ZCNBG6HgWe0ZwWGAKs3XM8Vl239ICVf9yn3M6p3wk8pwEFFf5bpYjhkgAd9K
-         hKOfUb2zJf8fRrJvkSTTybB36Hm/Za8/ZBpet8kRJvIFs6GJq0PaVXaKDA+AxHzXH69V
-         cCO/ifhjQAMJMw7O/WO6hymwTLJfWpmASjRUiQxz3PG9Pd5NqWaIrE4nNBNrEuxn6CdB
-         ySUW2hTdEnGjJbkqjNx5wMpIEFUKFKE4u2qkoi07c2bWhuRKub3k+UYTaQHw/vqHSC3k
-         hdYQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708225854; x=1708830654;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=FnlDJkdNhI1kCGRl0tLw3fRINrAPP/RmkZJTxoIRS+g=;
-        b=GIP3rU6jQL0MPuCictA1MDMwiu66MWGlNW8/RgKKw2kk9j+HvI7mrFHdqRRVYjnSrv
-         OKYtnpdH1JTNYgBR3Q91miauEgEMns1EvMERAPVugHi1gFOs4EXCg4gvDuEzHcR9iFv/
-         DM3/lfM6871Cnem/3FQOP/Bu51wLNgt6Jl774rbw+CmUVpEaKWpRMPTZTJ6bcFwHATXl
-         xEQqk23hTM19ckQZYnVLHBqLQsNHg3nW30DKoW1GCmdcfGcvJoFU80XZnZVzjM6jeB1C
-         9Nd9nMBG0dAW9Nbmlypl7Kln1t9XcekEQ9TkBJwqZhr5zdFab2IJZ1ibq684QQdSjzFZ
-         p28g==
-X-Forwarded-Encrypted: i=1; AJvYcCUQP0CPk7WTzQkr7lwZHLCKzHHut3sGuhI0uZINX9MganEDuHtYfAA8KvNx+AjKYxQhCxI4Oc+fvkP5akF54iwURmh8xCSmueyb+YiVlFv90H+/3xuAK6c+TXsWLMOeg9N2Id6T65pb/w==
-X-Gm-Message-State: AOJu0YyTFXuYXq/DVR3/kiGgYNLZyeW/voli/w7LmPzd4HYXCUbyG0fO
-	g4/C108caNLemR7FMEC59nOaPLlDny6NJwTTEL6jIWCtX1Jku/uzE3sIYmh0KZh3k/IlLMvA+21
-	DL3vbmEqeIu6VnTTmK3CzefSWUQg=
-X-Google-Smtp-Source: AGHT+IG6q7s2A+bcCjOyvytvYGlG4/gO5k1DEYbRKOzeuRChC+WCxUsjSbelYM2wcwGqJRX2VDOq/Pv8uOaSbi0euEg=
-X-Received: by 2002:a17:906:ca56:b0:a38:9590:cde8 with SMTP id
- jx22-20020a170906ca5600b00a389590cde8mr6974488ejb.73.1708225853615; Sat, 17
- Feb 2024 19:10:53 -0800 (PST)
+	s=arc-20240116; t=1708225998; c=relaxed/simple;
+	bh=BAzZDtWxmPKCYWUkBPM7TWSay365QqhhOeFGtf5/nX8=;
+	h=From:To:CC:Subject:Date:Message-ID:References:Content-Type:
+	 MIME-Version; b=RuDKaf2OgmTqxaH6zlyrz3lk2ZzifKxL9zXAA4XXDSsItVmnRc3cGOn+iYx+H2nqAGtz9eEChzyUdsBgF77WsdcksgjpXmgap7oHkze/l/xubXEUx1nNzjKo+bTWnzuLGftnxPSwkiAzvmQbMXv0SUucUTwEe+qjayZBXj9VoBs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.191
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.234])
+	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4TcrKJ2DB2z1gyx0
+	for <linux-kernel@vger.kernel.org>; Sun, 18 Feb 2024 11:11:00 +0800 (CST)
+Received: from kwepemd200002.china.huawei.com (unknown [7.221.188.186])
+	by mail.maildlp.com (Postfix) with ESMTPS id 0ED271400CC
+	for <linux-kernel@vger.kernel.org>; Sun, 18 Feb 2024 11:13:06 +0800 (CST)
+Received: from dggpemm500006.china.huawei.com (7.185.36.236) by
+ kwepemd200002.china.huawei.com (7.221.188.186) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.2.1258.28; Sun, 18 Feb 2024 11:13:05 +0800
+Received: from dggpemm500006.china.huawei.com ([7.185.36.236]) by
+ dggpemm500006.china.huawei.com ([7.185.36.236]) with mapi id 15.01.2507.035;
+ Sun, 18 Feb 2024 11:13:05 +0800
+From: "chenjun (AM)" <chenjun102@huawei.com>
+To: Thomas Gleixner <tglx@linutronix.de>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>
+CC: "xuqiang (M)" <xuqiang36@huawei.com>
+Subject: Re: [PATCH] irqchip/mbigen: Fix incorrect null pointer check
+Thread-Topic: [PATCH] irqchip/mbigen: Fix incorrect null pointer check
+Thread-Index: AQHaUrPy4yFabhAFLUSb7iNXYyazpg==
+Date: Sun, 18 Feb 2024 03:13:05 +0000
+Message-ID: <45fe193a87fc4a5cb2e3233386b47dc7@huawei.com>
+References: <20240129130003.18181-1-chenjun102@huawei.com>
+ <874jecisku.ffs@tglx>
+Accept-Language: zh-CN, en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+Content-Type: text/plain; charset="iso-2022-jp"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240201-imx-mailbox-v6-0-76f4f35b403e@nxp.com>
- <PA4PR04MB941646795F4E19D1EC35134F88522@PA4PR04MB9416.eurprd04.prod.outlook.com>
- <CABb+yY0aM9Dn3LPBqb11vU3Ln4bCCGOBXX77sF499cyb_sXiUA@mail.gmail.com> <DU0PR04MB94170454D64EF65E6774BEAB88522@DU0PR04MB9417.eurprd04.prod.outlook.com>
-In-Reply-To: <DU0PR04MB94170454D64EF65E6774BEAB88522@DU0PR04MB9417.eurprd04.prod.outlook.com>
-From: Jassi Brar <jassisinghbrar@gmail.com>
-Date: Sat, 17 Feb 2024 21:10:42 -0600
-Message-ID: <CABb+yY3U5GzvznLDU7pyA1ppfLT50MQKQ3YRXB3rYwr_QwcH-g@mail.gmail.com>
-Subject: Re: [PATCH v6 0/4] mailbox: imx: support i.MX95 ELE/V2X MU
-To: Peng Fan <peng.fan@nxp.com>
-Cc: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>, Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Aisheng Dong <aisheng.dong@nxp.com>, Shawn Guo <shawnguo@kernel.org>, 
-	Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, 
-	Fabio Estevam <festevam@gmail.com>, dl-linux-imx <linux-imx@nxp.com>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, 
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, 
-	Conor Dooley <conor.dooley@microchip.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Sat, Feb 17, 2024 at 8:10=E2=80=AFPM Peng Fan <peng.fan@nxp.com> wrote:
->
-> Hi Jassi,
->
-> > Subject: Re: [PATCH v6 0/4] mailbox: imx: support i.MX95 ELE/V2X MU
-> >
-> > Hi Peng,
-> >
-> > On Sat, Feb 17, 2024 at 7:38=E2=80=AFPM Peng Fan <peng.fan@nxp.com> wro=
-te:
-> > >
-> > > Hi Jassi
-> > >
-> > > > Subject: [PATCH v6 0/4] mailbox: imx: support i.MX95 ELE/V2X MU
-> > > >
-> > > > - Add dt-bindings
-> > > > - i.MX95 ELE/V2X use same register layout as i.MX8ULP S4 MU, but
-> > > >   the TR/RR num is different. To make code reusable and not add too
-> > much
-> > > >   macros, add runtime detect number of TR and RR by reading PAR_OFF
-> > > >   registers.
-> > > > - Add i.MX95 ELE/V2X MU entry in driver
-> > >
-> > > Ping..
-> > >
-> > dt bindings and compatibles first need to be acked by dt maintainers.
->
-> The bindings has been reviewed by Conor Dooley who listed as maintainer:
-> OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS
-> M:      Rob Herring <robh+dt@kernel.org>
-> M:      Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
-> M:      Conor Dooley <conor+dt@kernel.org>
->
-Ok, I didn't realise we have three maintainers now.
-
-I see no problem other than adding of_platform_populate() and
-compatibles in the same patch. They should be separate.
-
-cheers.
+=1B$B:_=1B(B 2024/2/13 18:09, Thomas Gleixner =1B$B<LF;=1B(B:=0A=
+> On Mon, Jan 29 2024 at 21:00, Chen Jun wrote:=0A=
+> =0A=
+> That's not about an incorrect NULL pointer check. That's about using a=0A=
+> function which is guaranteed to return NULL on your platform, no?=0A=
+> =0A=
+>> bus_get_dev_root(&platform_bus_type) always returns NULL.=0A=
+> =0A=
+> Lacks an explanation why this always returns NULL.=0A=
+> =0A=
+=0A=
+Thank you for the reply.=0A=
+=0A=
+bus_get_dev_root returns sp->dev_root set in subsys_register.=0A=
+And subsys_register is not called by platform_bus_init.=0A=
+=0A=
+So, for platform_bus_type, bus_get_dev_root always returns NULL.=0A=
+=0A=
+> Thanks=0A=
+> =0A=
+>          tglx=0A=
+> =0A=
+> =0A=
+=0A=
