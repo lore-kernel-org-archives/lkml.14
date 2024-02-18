@@ -1,180 +1,94 @@
-Received: from vps.xff.cz (vps.xff.cz [195.181.215.36])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from nikam.ms.mff.cuni.cz (nikam.ms.mff.cuni.cz [195.113.20.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CC611E535
-	for <linux-kernel@vger.kernel.org>; Sun, 18 Feb 2024 15:17:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.181.215.36
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4225D1E48A;
+	Sun, 18 Feb 2024 15:19:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.113.20.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708269448; cv=none; b=CBe95rlzXGJOxk5hwn1GIgqy4AhrZPFmUvuRrRSoZkO3I+hKjR5ug4Kp8t954OgbyO0GMNWSCn4J0TsuHIV4ohLWZEdM9fxjPsMATl+TfcVTuX4/aMImhWVgQ68knC9Fg2npFEDe9m231GKxQ4Mch7++60V6MbwDlEYt8i5D4uc=
+	t=1708269544; cv=none; b=WCOMWBE1BLQ9TOM2EvWhlmmHSqvi+DqjoEJYNLM80w+yezfe3n+vekMOsovnN+dQKGthiFDjNnowYq3E5bjlSyBKakYpLTGeVi8/CPGalBkUUTdTc+CnFIpmluxY5grnbCmLBUzuDZ2hNFWttYC3UxQJEWMBr8rihZ+nYTaMj6A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708269448; c=relaxed/simple;
-	bh=vgYyrkfy4NvMffwZnA9GbIjwpDwWVz0QVFbKOYEwfJQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=a2NGSEeDzzac9MpRoWYNiUPrSdUFGYZ66uPokos4bpvSD37hJFojlM+Uh2W+fy6JmZmcHzLMsNoW6NeONO/EnY+lk/sgneQ2yMQ+8ogKlMPiZ2mOmPrAHRs8VtfeQGM9iOp5FL5J747NrvqbtCEYOpGs4UTrOdxE4qP11z06qFw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=xff.cz; spf=pass smtp.mailfrom=xff.cz; dkim=pass (1024-bit key) header.d=xff.cz header.i=@xff.cz header.b=betw1GS2; arc=none smtp.client-ip=195.181.215.36
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=xff.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xff.cz
+	s=arc-20240116; t=1708269544; c=relaxed/simple;
+	bh=dHAGCgeVmGjm43yn4Gqxh+5WsKjJyWWIZnh1ext83uM=;
+	h=Mime-Version:Content-Type:Date:Message-Id:From:Cc:Subject:To:
+	 References:In-Reply-To; b=pnWq5XG+zYx5loX37zAO5A+hY3/DGaxvFWnOSx3afVwaQwTyAJC6BolwXdUeOamQrs5F+eAYX0cfLD0c8JKPPWi/CluytK5vXmCMLKtKxQKkv5IB6oshNNAg/17ykTBjuSNmwuJAXnEJEwwUmtk4TMTqD0Dgo7hfaqK1WXHfE44=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gimli.ms.mff.cuni.cz; spf=pass smtp.mailfrom=gimli.ms.mff.cuni.cz; dkim=pass (1024-bit key) header.d=gimli.ms.mff.cuni.cz header.i=@gimli.ms.mff.cuni.cz header.b=jR35gko6; arc=none smtp.client-ip=195.113.20.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gimli.ms.mff.cuni.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gimli.ms.mff.cuni.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=xff.cz header.i=@xff.cz header.b="betw1GS2"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xff.cz; s=mail;
-	t=1708269442; bh=vgYyrkfy4NvMffwZnA9GbIjwpDwWVz0QVFbKOYEwfJQ=;
-	h=Date:From:To:Cc:Subject:X-My-GPG-KeyId:References:From;
-	b=betw1GS2RwS4OjostOe9MAyGZAzRsiDV36jcyw9WQ9jAB+MQ+pbGdaHEsM1Irngqh
-	 uzGfdq/2mOTdrV9ZRyr5tGZyEWVR5dvQAJzZ6q+1hEqP+RbIfet/pSkFiiTn3cwCLk
-	 p7GFEg35DB2UFv/USy8i6Y0HfbeLIg/DKhNUM5iI=
-Date: Sun, 18 Feb 2024 16:17:22 +0100
-From: =?utf-8?Q?Ond=C5=99ej?= Jirman <megi@xff.cz>
-To: Andy Yan <andy.yan@rock-chips.com>
-Cc: linux-kernel@vger.kernel.org, Sandy Huang <hjc@rock-chips.com>, 
-	Heiko =?utf-8?Q?St=C3=BCbner?= <heiko@sntech.de>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
-	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
-	"open list:DRM DRIVERS FOR ROCKCHIP" <dri-devel@lists.freedesktop.org>, 
-	"moderated list:ARM/Rockchip SoC support" <linux-arm-kernel@lists.infradead.org>, 
-	"open list:ARM/Rockchip SoC support" <linux-rockchip@lists.infradead.org>
-Subject: Re: [PATCH] drm: rockchip: Don't require MIPI DSI device when it's
- used for ISP
-Message-ID: <bsc3lpdxvhy3ss2uja4do3jwvj43zbs7zhx4bzs2tryrakn7be@pt2qsyvryk73>
-Mail-Followup-To: =?utf-8?Q?Ond=C5=99ej?= Jirman <megi@xff.cz>, 
-	Andy Yan <andy.yan@rock-chips.com>, linux-kernel@vger.kernel.org, Sandy Huang <hjc@rock-chips.com>, 
-	Heiko =?utf-8?Q?St=C3=BCbner?= <heiko@sntech.de>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
-	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
-	"open list:DRM DRIVERS FOR ROCKCHIP" <dri-devel@lists.freedesktop.org>, 
-	"moderated list:ARM/Rockchip SoC support" <linux-arm-kernel@lists.infradead.org>, 
-	"open list:ARM/Rockchip SoC support" <linux-rockchip@lists.infradead.org>
-X-My-GPG-KeyId: EBFBDDE11FB918D44D1F56C1F9F0A873BE9777ED
- <https://xff.cz/key.txt>
-References: <20240217183941.1752463-1-megi@xff.cz>
- <4c66c084-5af6-43fb-a256-4746b2e00192@rock-chips.com>
+	dkim=pass (1024-bit key) header.d=gimli.ms.mff.cuni.cz header.i=@gimli.ms.mff.cuni.cz header.b="jR35gko6"
+Received: from gimli.ms.mff.cuni.cz (gimli.ms.mff.cuni.cz [195.113.20.176])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by nikam.ms.mff.cuni.cz (Postfix) with ESMTPS id 7B0142807E0;
+	Sun, 18 Feb 2024 16:09:37 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gimli.ms.mff.cuni.cz;
+	s=gen1; t=1708268977;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=oAxZkLmX1aRHRUsZ0ExGlhAyhq9nsWkycT8rOvRVdsU=;
+	b=jR35gko6R0Gi7XNdojRdFa5sTNjDxzgE8LriPPgFpACmMlg5qfwiU5T2JrgbSIqhVDxpYo
+	I1lkkmwo7c9tx+KGWuv2n2Fd9y1lPIUeOLIXPSlE5BQr8qvJ3MTLBWNw1QEe0Tymwxpd7T
+	Lwyg69c5f7FQ1wcGo4p+8wZik0daxw4=
+Received: from localhost (internet5.mraknet.com [185.200.108.250])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	(Authenticated sender: karelb)
+	by gimli.ms.mff.cuni.cz (Postfix) with ESMTPSA id 415C24570C6;
+	Sun, 18 Feb 2024 16:09:37 +0100 (CET)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <4c66c084-5af6-43fb-a256-4746b2e00192@rock-chips.com>
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Sun, 18 Feb 2024 16:10:10 +0100
+Message-Id: <CZ8ATPJTOA3U.2QJSJY50EX2YH@gimli.ms.mff.cuni.cz>
+From: "Karel Balej" <karelb@gimli.ms.mff.cuni.cz>
+Cc: "Dmitry Torokhov" <dmitry.torokhov@gmail.com>, "Krzysztof Kozlowski"
+ <krzysztof.kozlowski+dt@linaro.org>, "Conor Dooley" <conor+dt@kernel.org>,
+ "Lee Jones" <lee@kernel.org>, "Liam Girdwood" <lgirdwood@gmail.com>, "Mark
+ Brown" <broonie@kernel.org>, <linux-input@vger.kernel.org>,
+ <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+ =?utf-8?q?Duje_Mihanovi=C4=87?= <duje.mihanovic@skole.hr>,
+ <~postmarketos/upstreaming@lists.sr.ht>, <phone-devel@vger.kernel.org>
+Subject: Re: [RFC PATCH v2 1/6] dt-bindings: mfd: add entry for Marvell
+ 88PM886 PMIC
+To: "Rob Herring" <robh@kernel.org>
+References: <20240211094609.2223-1-karelb@gimli.ms.mff.cuni.cz>
+ <20240211094609.2223-2-karelb@gimli.ms.mff.cuni.cz>
+ <20240215142052.GA4180777-robh@kernel.org>
+In-Reply-To: <20240215142052.GA4180777-robh@kernel.org>
 
-Hi Andy,
+Rob Herring, 2024-02-15T08:20:52-06:00:
+> >  .../bindings/mfd/marvell,88pm88x.yaml         | 74 +++++++++++++++++++
+>
+> Filename should match the compatible.
+>
+> In general, drop the 'x' wildcard.
 
-On Sun, Feb 18, 2024 at 07:14:56PM +0800, Andy Yan wrote:
-> Hi,
-> 
-> On 2/18/24 02:39, Ondřej Jirman wrote:
-> > From: Ondrej Jirman <megi@xff.cz>
-> > 
-> > On RK3399 one MIPI DSI device can be alternatively used with the ISP1,
-> > to provide RX DPHY. When this is the case (ISP1 is enabled in device
-> > tree), probe success of DRM is tied to probe success of ISP1 connected
-> > camera sensor. This can fail if the user is able to killswitch the camera
-> > power, like on Pinephone Pro.
-> > 
-> > Detect use of MIPI DSI controller by ISP, and don't include it in
-> > component match list in that case.
-> > 
-> 
-> Isn't this supposed to be taken care of within the dts?
-> Since DPHY1 should exclusively used by MIPI DSI1 and ISP1, then if
-> a device want to use ISP1, the DSI1 should be disabled in dts.
+By "in general", do you mean for the drivers code also?
 
-DSI1 can't be disabled, because it provides PHY device for ISP1 in this
-scenario.
+As I have mentioned in the commit message for the driver, the other
+device is very similar and if the support for it was ever to be added
+(which I personally currently have no interest in), I believe it would
+make sense to extend this driver. Is it then still prefered to call it
+all just 88pm886 now?
 
-The problem is that in this scenario DRM keeps waiting for DSI1 device,
-despite it just being used for PHY for ISP1 and not as a component for
-rockchip DRM driver.
+> > +properties:
+> > +  compatible:
+> > +    const: marvell,88pm886-a1
 
-See:
+So the file should be called marvell,88pm886-a1.yaml, correct? Again, is
+it prefered to call it like this even if the other revision could
+eventually be added (again, I am not interested in that right now
+personally)? I mean, if I was implementing support for both revisions
+right now, it would make sense to name it just marvell,88pm886.yaml, no?
 
-        isp1: isp1@ff920000 {
-                compatible = "rockchip,rk3399-cif-isp";
-                reg = <0x0 0xff920000 0x0 0x4000>;
-                interrupts = <GIC_SPI 44 IRQ_TYPE_LEVEL_HIGH 0>;
-                clocks = <&cru SCLK_ISP1>,
-                         <&cru ACLK_ISP1_WRAPPER>,
-                         <&cru HCLK_ISP1_WRAPPER>;
-                clock-names = "isp", "aclk", "hclk";
-                iommus = <&isp1_mmu>;
-                phys = <&mipi_dsi1>;  <--------- 
-                phy-names = "dphy";
-                power-domains = <&power RK3399_PD_ISP1>;
-                status = "disabled";
-
-If mipi_dsi1 is disabled, isp1 will never probe.
-
-It's a consequence of this special dual use of mipi_dsi1.
-
-kind regards,
-	o.
-
-> > Signed-off-by: Ondrej Jirman <megi@xff.cz>
-> > ---
-> >   drivers/gpu/drm/rockchip/rockchip_drm_drv.c | 47 +++++++++++++++++++++
-> >   1 file changed, 47 insertions(+)
-> > 
-> > diff --git a/drivers/gpu/drm/rockchip/rockchip_drm_drv.c b/drivers/gpu/drm/rockchip/rockchip_drm_drv.c
-> > index ab55d7132550..f47de94ad576 100644
-> > --- a/drivers/gpu/drm/rockchip/rockchip_drm_drv.c
-> > +++ b/drivers/gpu/drm/rockchip/rockchip_drm_drv.c
-> > @@ -354,6 +354,43 @@ static void rockchip_drm_match_remove(struct device *dev)
-> >   		device_link_del(link);
-> >   }
-> > +/*
-> > + * Check if ISP block linked to a mipi-dsi device via phys phandle is
-> > + * enabled in device tree.
-> > + */
-> > +static bool rockchip_drm_is_mipi1_and_used_by_isp(struct device *dev)
-> > +{
-> > +	struct device_node *np = NULL, *phy_np;
-> > +
-> > +	if (!of_device_is_compatible(dev->of_node, "rockchip,rk3399-mipi-dsi"))
-> > +		return false;
-> > +
-> > +	while (true) {
-> > +		np = of_find_compatible_node(np, NULL, "rockchip,rk3399-cif-isp");
-> > +		if (!np)
-> > +			break;
-> > +
-> > +		if (!of_device_is_available(np)) {
-> > +			of_node_put(np);
-> > +			continue;
-> > +		}
-> > +
-> > +		phy_np = of_parse_phandle(np, "phys", 0);
-> > +		if (!phy_np) {
-> > +			of_node_put(np);
-> > +			continue;
-> > +		}
-> > +
-> > +		of_node_put(phy_np);
-> > +		of_node_put(np);
-> > +
-> > +		if (phy_np == dev->of_node)
-> > +			return true;
-> > +	}
-> > +
-> > +	return false;
-> > +}
-> > +
-> >   static struct component_match *rockchip_drm_match_add(struct device *dev)
-> >   {
-> >   	struct component_match *match = NULL;
-> > @@ -371,6 +408,16 @@ static struct component_match *rockchip_drm_match_add(struct device *dev)
-> >   			if (!d)
-> >   				break;
-> > +			/*
-> > +			 * If mipi1 is connected to ISP, we don't want to wait for mipi1 component,
-> > +			 * because it will not be used by DRM anyway, to not tie success of camera
-> > +			 * driver probe to display pipeline initialization.
-> > +			 */
-> > +			if (rockchip_drm_is_mipi1_and_used_by_isp(d)) {
-> > +				dev_info(d, "used by ISP1, skipping from DRM\n");
-> > +				continue;
-> > +			}
-> > +
-> >   			device_link_add(dev, d, DL_FLAG_STATELESS);
-> >   			component_match_add(dev, &match, component_compare_dev, d);
-> >   		} while (true);
+Thank you, kind regards,
+K. B.
