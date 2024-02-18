@@ -1,179 +1,149 @@
-Received: from gandalf.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E699736D
-	for <linux-kernel@vger.kernel.org>; Sun, 18 Feb 2024 00:16:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0372C36C;
+	Sun, 18 Feb 2024 00:25:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708215389; cv=none; b=HUI1EooQs7ErPfDt57tY+GHzZQ89kj/szBdGUErL+CtMA27qES6xJBvsQdECGQMOkfjaGsBlWKTnLOCg9mRHzwy9xbvhel56OWH7A+qhWe4KSHBf3NC4M0izFKimVMf6+hwXNmky2pflr6udnqB2yupwxtL/GrZmkgqJUxPgG7Q=
+	t=1708215943; cv=none; b=a6RkD+tbYqICYw5d8UiMEWVGN1Htwpcvejulgo6K48F2GS1XM4moFySK5LaheBWdspu5gF0mEHSPc3ugIK6xzJc2Cw7y09CsVCA6RYFzMoV4Wtbs+fb6f+laBglxyqjGKXuARfZxt4uHU4iu9ZLI1r9KfUNu6XzgexQDjeynOl4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708215389; c=relaxed/simple;
-	bh=UuT32SyYaKCY7zsyInrLw9pJf/lsbvEouRt23HU4e8Q=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=e8HRSN+DW0X3Pys2ZrMJfDNvNGvDUnRMI5X6yYUJZsPdOIkhf3TTtJD/B/719FlyrHfk3j8DZJp7YzeVifrXaHtCcfonWz8dKQ/STE+qxL+nsIbJz6FeNML1BTzGMPYS9rM5EQ2dNHlabThfikjVAxwh4B1UE+3PT9qTlFEtNFw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ellerman.id.au; spf=pass smtp.mailfrom=ellerman.id.au; dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b=LG4x3dES; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ellerman.id.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ellerman.id.au
+	s=arc-20240116; t=1708215943; c=relaxed/simple;
+	bh=f+SJeG/+7SyYuuCxfdve4/s8s1BXOkjgBnXHVRptnmk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=qQwH6PPj4GSmVgvg/ng9rHP7GkASbWm0oQtyrXGyfQ+Q0RCfjztmQkWqvSfClvwb6JJjW899ONqAFMjEVsvTWvyCImyB12/Dzw7wGLBog0DaCqErYp1yjlSJ0eQPMptiKc8cpmTT4K2xZIvdNxrlXFyHkatA3J9ckPO0QipMwUM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GccW6guv; arc=none smtp.client-ip=209.85.221.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="LG4x3dES"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ellerman.id.au;
-	s=201909; t=1708215378;
-	bh=SdDVeMmt6qwYZT3yLAbV+2fQAihanKI9PnpnYBAS1jE=;
-	h=From:To:Cc:Subject:Date:From;
-	b=LG4x3dES9eOlPN2p3bw8wWtkrR+ILZTxq1KyW46qrJ3fdq9WR4mV/jMgz89Qo83T+
-	 ZaKc+E7VBMXosEOs64iq8RZwmYQ8Ye7pF5bMTHEjTWcy+XImNPl8VDK7ZzGJcLyYRq
-	 wdsKDJXSucROkwnRWIrclrbioms76c6DqarBNS03A8ntdKD7gHCzqjXPwJwFTuJegt
-	 Ip3nkpfzbAk69mUl/8xBedpbTJxeSNks2Y3Mde4jHfZ0UcQp3wfm3tzN7fXD4tsj5I
-	 +NeaiT7w+KVQJpGGp7sNskYh2HZOIA7R/yFZjqbNDa7iHqC+NuCKZQK8iDEp9QzCMV
-	 OmGyI8ZNgYEJw==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4TcmRg5l0Rz4wc7;
-	Sun, 18 Feb 2024 11:16:15 +1100 (AEDT)
-From: Michael Ellerman <mpe@ellerman.id.au>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: arnd@arndb.de, david.engraf@sysgo.com, gbatra@linux.ibm.com,
- linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
- matthias.schiffer@ew.tq-group.com, nathanl@linux.ibm.com,
- naveen@kernel.org, rnsastry@linux.ibm.com, sbhat@linux.ibm.com,
- sshegde@linux.ibm.com, xiaojiangfeng@huawei.com
-Subject: [GIT PULL] Please pull powerpc/linux.git powerpc-6.8-3 tag
-Date: Sun, 18 Feb 2024 11:16:14 +1100
-Message-ID: <87cysu1vap.fsf@mail.lhotse>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GccW6guv"
+Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-33d2746894dso304221f8f.0;
+        Sat, 17 Feb 2024 16:25:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1708215940; x=1708820740; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=WsTA4mhfd2ENU0rJnRdquWRoV2pddtaVwBTwOhdVEEY=;
+        b=GccW6guv8bgC5dPScnZ++Xk1FY40XX78Itcy8Qig0xLSGXvFTjssrMAQdz/ecFh200
+         VYVsmBQR6Q16PuOC3wePwbmsSIx70Tn7kv+bkYSF4ouzckEYB6vJA6Pdk6wsuuMerw6F
+         fB6nOH912IdhtlR266SL2ZGyT9oLKEAHMxOSSXrlTCesE+lxZ3+CcZ+KzyfFFx1hZhOG
+         MEqDzj9Q1DCbgd2ZbQW0aK0UmCfyEzNo/Vmnw8ffIsFMqRvzfQwllPgm4Ea9/3fS3/A1
+         f4wQYZBFtlO3h2QvDDDsxGi7cfS8PQBCzUPbWq7eYGf50ZXhBaVF2Bd7y+jwKNMO5fpC
+         CigA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708215940; x=1708820740;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=WsTA4mhfd2ENU0rJnRdquWRoV2pddtaVwBTwOhdVEEY=;
+        b=S2vBDJXEz/IV9mnv4baV4v2fl7Re/4UZB/NrKFvHbUb76YeIo/spgUzv2HhClwqaag
+         nT8GDVjkLSG8PXL8wrBC8hIc8tOCgFStEb0b9VuuQUkNXP7PQphMQX+7TBHGelVPjI7X
+         Y5yaxw9bMrz7vfGnH8Xp9fx3EjIR9BeXuZRWIKcfgLV+IRuWQVitJzBA8TGEUH8g2U1M
+         6YklgwhsnN6m41PiqfRTn/PXNY1hevJiL7RlQJkRunrH6cnvvbJEgMC7qjZTCU1qalUL
+         eB6r42Br3DCxKDuXYgRnewput2PnhLqaHIpPeZTVZO2KFpb4a85M37X7NkuRmvgVBFNk
+         1HTw==
+X-Forwarded-Encrypted: i=1; AJvYcCVSBYvBviUqrx4RWEYk78UeiJoj/27v/jHIR8y2VwbRflzZPDGeyDmfl8yH2l+KB7YQ3Mod94Km4knwPz46OYy0mwK2gcwsYY5+1TUhErsLGQ01WtWfmA9ETVj3m2+cWT8WCch9PCEyGgY=
+X-Gm-Message-State: AOJu0Yxe9/9Rf8UMpzgvwFkDf3ERcsW94cuIymbQH/vOxq8+XOYYRQ2g
+	QAq+mIenkxyPYZ2B7DM6nrsszPEa6/4viVWn6OebYQ/eotBvaf93
+X-Google-Smtp-Source: AGHT+IExt3Q1Ln7cvSElVx8C6cEsFmTP7+4MioMJYfWhyy3lqo+TRH8cPsUHBynESgshCrW/ITLxGQ==
+X-Received: by 2002:a05:600c:3b94:b0:412:5f44:65b0 with SMTP id n20-20020a05600c3b9400b004125f4465b0mr950026wms.4.1708215940004;
+        Sat, 17 Feb 2024 16:25:40 -0800 (PST)
+Received: from ?IPV6:2a01:4b00:d20e:7300:2d36:2287:e6ed:8944? ([2a01:4b00:d20e:7300:2d36:2287:e6ed:8944])
+        by smtp.gmail.com with ESMTPSA id z10-20020a1c4c0a000000b00410794ddfc6sm6546582wmf.35.2024.02.17.16.25.38
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 17 Feb 2024 16:25:39 -0800 (PST)
+Message-ID: <06fc4dff-938b-46a3-9721-b3de983f27b5@gmail.com>
+Date: Sun, 18 Feb 2024 00:25:38 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] [v2] ALSA: core: fix buffer overflow in
+ test_format_fill_silence()
+Content-Language: en-US
+To: Arnd Bergmann <arnd@kernel.org>, Jaroslav Kysela <perex@perex.cz>,
+ Takashi Iwai <tiwai@suse.com>
+Cc: Arnd Bergmann <arnd@arndb.de>, Naresh Kamboju
+ <naresh.kamboju@linaro.org>, linux-sound@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20240217104311.3749655-1-arnd@kernel.org>
+From: Ivan Orlov <ivan.orlov0322@gmail.com>
+In-Reply-To: <20240217104311.3749655-1-arnd@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
------BEGIN PGP SIGNED MESSAGE-----
-Hash: SHA256
+On 2/17/24 10:42, Arnd Bergmann wrote:
+> From: Arnd Bergmann <arnd@arndb.de>
+> 
+> KASAN caught a buffer overflow with the hardcoded 2048 byte buffer
+> size, when 2080 bytes are written to it:
+> 
+>   BUG: KASAN: slab-out-of-bounds in snd_pcm_format_set_silence+0x3bc/0x3e4
+>   Write of size 8 at addr ffff0000c8149800 by task kunit_try_catch/1297
+> 
+>   CPU: 0 PID: 1297 Comm: kunit_try_catch Tainted: G N 6.8.0-rc4-next-20240216 #1
+>   Hardware name: linux,dummy-virt (DT)
+>   Call trace:
+>    kasan_report+0x78/0xc0
+>    __asan_report_store_n_noabort+0x1c/0x28
+>    snd_pcm_format_set_silence+0x3bc/0x3e4
+>    _test_fill_silence+0xdc/0x298
+>    test_format_fill_silence+0x110/0x228
+>    kunit_try_run_case+0x144/0x3bc
+>    kunit_generic_run_threadfn_adapter+0x50/0x94
+>    kthread+0x330/0x3e8
+>    ret_from_fork+0x10/0x20
+> 
+>   Allocated by task 1297:
+>    __kmalloc+0x17c/0x2f0
+>    kunit_kmalloc_array+0x2c/0x78
+>    test_format_fill_silence+0xcc/0x228
+>    kunit_try_run_case+0x144/0x3bc
+>    kunit_generic_run_threadfn_adapter+0x50/0x94
+>    kthread+0x330/0x3e8
+>    ret_from_fork+0x10/0x20
+> 
+> Replace the incorrect size with the correct length of 260 64-bit samples.
+> 
+> Reported-by: Naresh Kamboju <naresh.kamboju@linaro.org>
+> Suggested-by: Ivan Orlov <ivan.orlov0322@gmail.com>
+> Fixes: 3e39acf56ede ("ALSA: core: Add sound core KUnit test")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+> v2: use a named constant as suggested by Ivan Orlov
+> ---
+>   sound/core/sound_kunit.c | 5 +++--
+>   1 file changed, 3 insertions(+), 2 deletions(-)
+> 
+> diff --git a/sound/core/sound_kunit.c b/sound/core/sound_kunit.c
+> index 5d5a7bf88de4..4212c4a20697 100644
+> --- a/sound/core/sound_kunit.c
+> +++ b/sound/core/sound_kunit.c
+> @@ -8,7 +8,8 @@
+>   #include <sound/core.h>
+>   #include <sound/pcm.h>
+>   
+> -#define SILENCE_BUFFER_SIZE 2048
+> +#define SILENCE_BUFFER_MAX_FRAMES 260
+> +#define SILENCE_BUFFER_SIZE (sizeof(u64) * SILENCE_BUFFER_MAX_FRAMES)
+>   #define SILENCE(...) { __VA_ARGS__ }
+>   #define DEFINE_FORMAT(fmt, pbits, wd, endianness, signd, silence_arr) {		\
+>   	.format = SNDRV_PCM_FORMAT_##fmt, .physical_bits = pbits,		\
+> @@ -165,7 +166,7 @@ static void _test_fill_silence(struct kunit *test, struct snd_format_test_data *
+>   
+>   static void test_format_fill_silence(struct kunit *test)
+>   {
+> -	u32 buf_samples[] = { 10, 20, 32, 64, 129, 260 };
+> +	u32 buf_samples[] = { 10, 20, 32, 64, 129, SILENCE_BUFFER_MAX_FRAMES };
+>   	u8 *buffer;
+>   	u32 i, j;
+>   
 
-Hi Linus,
+Acked-by: Ivan Orlov <ivan.orlov0322@gmail.com>
+-- 
+Kind regards,
+Ivan Orlov
 
-Please pull some more powerpc fixes for 6.8.
-
-This is a bit of a big batch for rc4, but just due to holiday hangover and
-because I didn't send any fixes last week due to a late revert request. I think
-next week should be back to normal.
-
-cheers
-
-The following changes since commit 41bccc98fb7931d63d03f326a746ac4d429c1dd3:
-
-  Linux 6.8-rc2 (2024-01-28 17:01:12 -0800)
-
-are available in the git repository at:
-
-  https://git.kernel.org/pub/scm/linux/kernel/git/powerpc/linux.git tags/powerpc-6.8-3
-
-for you to fetch changes up to 0846dd77c8349ec92ca0079c9c71d130f34cb192:
-
-  powerpc/iommu: Fix the missing iommu_group_put() during platform domain attach (2024-02-14 23:59:23 +1100)
-
-- ------------------------------------------------------------------
-powerpc fixes for 6.8 #3
-
- - Fix ftrace bug on boot caused by exit text sections with -fpatchable-function-entry.
-
- - Fix accuracy of stolen time on pseries since the switch to VIRT_CPU_ACCOUNTING_GEN.
-
- - Fix a crash in the IOMMU code when doing DLPAR remove.
-
- - Set pt_regs->link on scv entry to fix BPF stack unwinding.
-
- - Add missing PPC_FEATURE_BOOKE on 64-bit e5500/e6500, which broke gdb.
-
- - Fix boot on some 6xx platforms with STRICT_KERNEL_RWX enabled.
-
- - Fix build failures with KASAN enabled and 32KB stack size.
-
- - Some other minor fixes.
-
-Thanks to: Arnd Bergmann, Benjamin Gray, Christophe Leroy, David Engraf, Gaurav
-Batra, Jason Gunthorpe, Jiangfeng Xiao, Matthias Schiffer, Nathan Lynch, Naveen
-N Rao, Nicholas Piggin, Nysal Jan K.A, R Nageswara Sastry, Shivaprasad G Bhat,
-Shrikanth Hegde, Spoorthy, Srikar Dronamraju, Venkat Rao Bagalkote.
-
-- ------------------------------------------------------------------
-Arnd Bergmann (2):
-      powerpc: udbg_memcons: mark functions static
-      powerpc: 85xx: mark local functions static
-
-David Engraf (1):
-      powerpc/cputable: Add missing PPC_FEATURE_BOOKE on PPC64 Book-E
-
-Gaurav Batra (1):
-      powerpc/pseries/iommu: Fix iommu initialisation during DLPAR add
-
-Jiangfeng Xiao (1):
-      powerpc/kasan: Fix addr error caused by page alignment
-
-Matthias Schiffer (1):
-      powerpc/6xx: set High BAT Enable flag on G2_LE cores
-
-Michael Ellerman (2):
-      Revert "powerpc/pseries/iommu: Fix iommu initialisation during DLPAR add"
-      powerpc/kasan: Limit KASAN thread size increase to 32KB
-
-Nathan Lynch (1):
-      powerpc/pseries/papr-sysparm: use u8 arrays for payloads
-
-Naveen N Rao (2):
-      powerpc/64: Set task pt_regs->link to the LR value on scv entry
-      powerpc/ftrace: Ignore ftrace locations in exit text sections
-
-R Nageswara Sastry (1):
-      selftests/powerpc/papr_vpd: Check devfd before get_system_loc_code()
-
-Shivaprasad G Bhat (1):
-      powerpc/iommu: Fix the missing iommu_group_put() during platform domain attach
-
-Shrikanth Hegde (1):
-      powerpc/pseries: fix accuracy of stolen time
-
-
- arch/powerpc/include/asm/ftrace.h                   | 10 ++--------
- arch/powerpc/include/asm/papr-sysparm.h             |  2 +-
- arch/powerpc/include/asm/reg.h                      |  2 ++
- arch/powerpc/include/asm/sections.h                 |  1 +
- arch/powerpc/include/asm/thread_info.h              |  2 +-
- arch/powerpc/include/uapi/asm/papr-sysparm.h        |  2 +-
- arch/powerpc/kernel/cpu_setup_6xx.S                 | 20 +++++++++++++++++++-
- arch/powerpc/kernel/cpu_specs_e500mc.h              |  3 ++-
- arch/powerpc/kernel/interrupt_64.S                  |  4 ++--
- arch/powerpc/kernel/iommu.c                         |  4 +++-
- arch/powerpc/kernel/trace/ftrace.c                  | 12 ++++++++++++
- arch/powerpc/kernel/trace/ftrace_64_pg.c            |  5 +++++
- arch/powerpc/kernel/vmlinux.lds.S                   |  2 ++
- arch/powerpc/mm/kasan/init_32.c                     |  1 +
- arch/powerpc/platforms/85xx/mpc8536_ds.c            |  2 +-
- arch/powerpc/platforms/85xx/mvme2500.c              |  2 +-
- arch/powerpc/platforms/85xx/p1010rdb.c              |  2 +-
- arch/powerpc/platforms/85xx/p1022_ds.c              |  6 +++---
- arch/powerpc/platforms/85xx/p1022_rdk.c             |  6 +++---
- arch/powerpc/platforms/85xx/socrates_fpga_pic.c     |  2 ++
- arch/powerpc/platforms/85xx/xes_mpc85xx.c           |  2 +-
- arch/powerpc/platforms/pseries/lpar.c               |  8 ++++++--
- arch/powerpc/sysdev/udbg_memcons.c                  |  6 +++---
- tools/testing/selftests/powerpc/papr_vpd/papr_vpd.c |  4 ++--
- 24 files changed, 77 insertions(+), 33 deletions(-)
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEJFGtCPCthwEv2Y/bUevqPMjhpYAFAmXRS0wACgkQUevqPMjh
-pYBS2hAAuHWg/zSRifvkc10YwFJPMjufaGvN7/H49VPipVDqjEq8OsPWFpTC4WrK
-7giDvvcR9udoNQKX9wismvHAG3zWfmmshGYozpH/+V+/ZNhf3bQAnrpx+cshB1q7
-dhDEAQneNBw9q5EYY7HvXrBcXiuvFoldVOIfIbSx70wRGCHatkZAn8TSY7JVQNLj
-AkbFXqoGk8mTKrL1LIRB5jSUMadXvEzFiXaaz8P9WVrC9lFTmv/o/8VcWu070j4s
-NzTNJZi/ToIRrHPIOiEWjuku/Z61rakBg2XXcZbr6c9mY5BKqsdJ4RSb2sNr+/xw
-DxTZF19M94aqiElAot/asV+amVpcTqz3DZNgX46QNENoGawuilT8SKH2ZdrDNgRX
-vl7FTNLi9UR18kQFG84pNTQXMZEFqtapnbtvLysejfC8FTttPtcLdh9LnZBGxMmU
-l7G3l7T1uisW4lnSrgI4t6d1Kq7vR4/T1TkvgGIEHVufa0R+CXdbppIRzIfokOyd
-p9c4UKjWXypwACqXfhqovg6H7IwUaor1b1sr3Oyd1J8PliTgFL5q6AA2okCdx6uM
-urzRgcqA6++PsZfxQSSPBlmhAAt6UrsUPO4qQa/ZKSuYTIeqX2Ucdn2T/3f7apoN
-Av4ip3vtSdfJ3nQf3DiDYvNIH2TnjTa0PPFQZy7veC7NxhHEjiw=
-=fGhO
------END PGP SIGNATURE-----
