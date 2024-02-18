@@ -1,101 +1,127 @@
-Received: from out-172.mta0.migadu.com (out-172.mta0.migadu.com [91.218.175.172])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D78872D60B
-	for <linux-kernel@vger.kernel.org>; Sun, 18 Feb 2024 10:24:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A25B92CCA4
+	for <linux-kernel@vger.kernel.org>; Sun, 18 Feb 2024 10:26:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708251899; cv=none; b=usZJ0bS06s7fE2wwF2/RDZOfWHH5JA96cD5O2LHPbctYKXebfj28/hk/wweA2nlaTqaU4ALM4qbf7LGsBzMfzlFUxBN2r6de3LawEfzjOBjI+oim1bl6ho+NY/Zd+qnGjyE1uZAyCqkM31pGyNHXvyoe/UXsWXIfZ+8dHAGqZJ4=
+	t=1708252001; cv=none; b=icY/9Rwr7NzYjNvDN9IzMfR//R/Kx/yTXmhSpGzGevfpbD4rcGNhTQKBup4GF/zc7/AFXiFJydRc10XEXF+2xxlQomzhGJMrSMfFbRhlMd2a7daS1PgavWfk7IBs/a6u7a5eQn5MmdZE6MREEJD2yF2vB1Cs/F4YHL+WktYLeEY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708251899; c=relaxed/simple;
-	bh=7T65f/Wd63Ks1lufnUN/PWkHZ5lS3y7W0WH/QysgGms=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BZ80F7lm0aV+ZSPe3FvAec/nY97cE3hGDOzcWt0jE5s+yCvCq1REegpZzttn5on0k4J3SX4bVHZwnK+Eg3ofW/QATwnPbrLoMRn1Upw/P3m0TjVbJhG1TH1OjP6bFAkAnXpbuBAxjLPF6Lb4VS7KGJE3rr/nO2wAk7HW5SpjPDA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=grimler.se; spf=pass smtp.mailfrom=grimler.se; dkim=pass (1024-bit key) header.d=grimler.se header.i=@grimler.se header.b=POmXrPzV; arc=none smtp.client-ip=91.218.175.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=grimler.se
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=grimler.se
+	s=arc-20240116; t=1708252001; c=relaxed/simple;
+	bh=73xM8HfwtjYvZeQh6N+9c+UZ7gdRDzATR9UR06S7DOs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Br32hJKwFbjCpiu3ss1yHrZgPLtPGj+boc8tthURO0m08k65QJbmwIgLUhdMqGH/6ATwTq2BPYQOKcYnv11WdwCbBR29IuncbNjRvPlGRvEqCpNVUCwvvNcy/vSy8VMgXNT4VjYJOReBjlpFciG94igCj4jjTFAkCWrAyckA8mM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=NMqS9LIh; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=grimler.se header.i=@grimler.se header.b="POmXrPzV"
-Date: Sun, 18 Feb 2024 11:24:49 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=grimler.se; s=key1;
-	t=1708251893;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NMqS9LIh"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1708251998;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=5Q6gteFXLuw2xa9qiBWiKUaLv3oz6lEnepe4NxbB9Vs=;
-	b=POmXrPzVyqbX9+lwS3g3MVsM1gkzEC6PGkcdMmTbGjf5yrQqoVeEAEoDS4EJZiuikXJKfd
-	1vWGINMT2dD/TMkzn6/SakwIOj1swc3zbVfj/gXijUECLRdfA7pjr8CBm/Tb4DkQjDtQYi
-	OW/n+aog7oheGUfApsczc9y54aCsUcc=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Henrik Grimler <henrik@grimler.se>
-To: Artur Weber <aweber.kernel@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Alim Akhtar <alim.akhtar@samsung.com>, devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	~postmarketos/upstreaming@lists.sr.ht
-Subject: Re: [PATCH] ARM: dts: exynos4212-tab3: limit usable memory range
-Message-ID: <20240218102449.GA7577@grimlerstat.localdomain>
-References: <20240217-tab3-limit-usable-memory-range-v1-1-49cc9c86a5cc@gmail.com>
+	bh=3iL7cm/0gzvphX08YlG1pTdWcKTR7vjKbJ6kYFx0SGQ=;
+	b=NMqS9LIh8lz+mQ5x/T0c9otWlelejywmjnmSFEYwUH2RXT4UFEe34hN/YbyGz8C4xaS3rn
+	HPGKMCyC1WYqUvJvjO7hcjRDLUIYcqBprQNDkmTRsnD4hWgH4d2o0tmFvo2MMXt1OXYYDu
+	D53/kKGlFikzE+EUJDv18aBdTU/8Jw8=
+Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
+ [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-81-VUWF6pB4NfKmWa5KIfRXKA-1; Sun, 18 Feb 2024 05:26:35 -0500
+X-MC-Unique: VUWF6pB4NfKmWa5KIfRXKA-1
+Received: by mail-ej1-f70.google.com with SMTP id a640c23a62f3a-a2b068401b4so391042666b.1
+        for <linux-kernel@vger.kernel.org>; Sun, 18 Feb 2024 02:26:35 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708251994; x=1708856794;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=3iL7cm/0gzvphX08YlG1pTdWcKTR7vjKbJ6kYFx0SGQ=;
+        b=SG48PcoYtUsOyWZESX73askl3mCdYUdyzvgNnkQxY+o7t0SSXe2uysXoC0zu1YNIxo
+         4wXaEArPG6LQNMXq/L3D3hLZVqkGPp3EVLKACa7P/8PEifvfaKGUuVYiFJIdkwb0pVOx
+         eLdwxEfEycRYwJ/kmMEl2fKaUOjlpnkqRWpcLzY1EGxhHehflYC5lJRTLj9E3rLDbp1N
+         g6uHGPoTrLWUcAjkaOnRo7aFVk4KgP/rzsFG+yH5mbascT/wFUEl/wC2EWNRmpHmdWWC
+         8H7R8ZAZveieHxNmdqpbwumsojoyW6rmyABaY6Iv2ZZ5Qy0fEjIrldSGoTex1/MxCZMN
+         kQyg==
+X-Forwarded-Encrypted: i=1; AJvYcCWTmIcQ1H5S1e9VDzGIwdtnXo0ScEM+QpA6MufJuBAjyD6Vb3oFqnsBjCSDhc7uJllUozaRvuXzfkoZwAiQYON93uNO+cmSSnrhSgtR
+X-Gm-Message-State: AOJu0YyXpXI+mbupZ/5dCf8kTZ7t5wYhix7IsH13f5mk16iMAQLufgSH
+	cxhLCtr3Zk4CUAjPQTyBWZrMu/f1Ms8/XvU9ciF1YSI1TSCKEBsCz4CAuvcwdlERif+6d+65P+1
+	mBA6eQZH3J01209Dj+jsm/9AuKZvIjpUHnLX5kF69fm3BEuhFNVR/E2qyVGgvaw==
+X-Received: by 2002:a17:906:d293:b0:a3d:df97:47be with SMTP id ay19-20020a170906d29300b00a3ddf9747bemr4945772ejb.1.1708251994454;
+        Sun, 18 Feb 2024 02:26:34 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IH2LPWogWqNaTO56lcudkdC1bbE+GHPBOzFooj4aTxaOOb4vFusuX04kOGUJ+8ZKLqElym9FA==
+X-Received: by 2002:a17:906:d293:b0:a3d:df97:47be with SMTP id ay19-20020a170906d29300b00a3ddf9747bemr4945752ejb.1.1708251994129;
+        Sun, 18 Feb 2024 02:26:34 -0800 (PST)
+Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
+        by smtp.gmail.com with ESMTPSA id un1-20020a170907cb8100b00a3d5a08ccc1sm1812528ejc.191.2024.02.18.02.26.33
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 18 Feb 2024 02:26:33 -0800 (PST)
+Message-ID: <f6cced34-087a-4593-b510-a8a728deab97@redhat.com>
+Date: Sun, 18 Feb 2024 11:26:33 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240217-tab3-limit-usable-memory-range-v1-1-49cc9c86a5cc@gmail.com>
-X-Migadu-Flow: FLOW_OUT
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] platform/x86/amd/pmf: Fix a suspend hang on Framework 13
+Content-Language: en-US, nl
+To: Mario Limonciello <mario.limonciello@amd.com>, Shyam-sundar.S-k@amd.com
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Linux regressions mailing list <regressions@lists.linux.dev>,
+ Trolli Schmittlauch <t.schmittlauch@orlives.de>
+References: <20240217005216.113408-1-mario.limonciello@amd.com>
+From: Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <20240217005216.113408-1-mario.limonciello@amd.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Artur,
+Hi,
 
-On Sat, Feb 17, 2024 at 08:02:47PM +0100, Artur Weber wrote:
-> The stock bootloader on the Samsung Galaxy Tab 3 8.0 provides an
-> incorrect available memory range over ATAG_MEM. Limit the usable
-> memory in the DTS to prevent it from doing so, without having to
-> disable ATAG support.
+On 2/17/24 01:52, Mario Limonciello wrote:
+> The buffer is cleared in the suspend handler but used in
+> the delayed work for amd_pmf_get_metrics().
 > 
-> Signed-off-by: Artur Weber <aweber.kernel@gmail.com>
+> Stop clearing it to fix the hang.
+> 
+> Reported-by: Trolli Schmittlauch <t.schmittlauch@orlives.de>
+> Closes: https://lore.kernel.org/regressions/ed2226ff-257b-4cfd-afd6-bf3be9785474@localhost/
+> Closes: https://community.frame.work/t/kernel-6-8-rc-system-freezes-after-resuming-from-suspend-reproducers-wanted/45381
+> Fixes: 2b3a7f06caaf ("platform/x86/amd/pmf: Change return type of amd_pmf_set_dram_addr()")
+> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+
+Ugh, I should have caught this during review. I especially asked
+for the alloc parameter to amd_pmf_set_dram_addr() to be added
+for this. Ah well ...
+
+Thanks, patch looks good to me:
+
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+
+Regards,
+
+Hans
+
+
+
 > ---
->  arch/arm/boot/dts/samsung/exynos4212-tab3.dtsi | 6 ++++++
->  1 file changed, 6 insertions(+)
+>  drivers/platform/x86/amd/pmf/core.c | 2 --
+>  1 file changed, 2 deletions(-)
 > 
-> diff --git a/arch/arm/boot/dts/samsung/exynos4212-tab3.dtsi b/arch/arm/boot/dts/samsung/exynos4212-tab3.dtsi
-> index e5254e32aa8f..9bc05961577d 100644
-> --- a/arch/arm/boot/dts/samsung/exynos4212-tab3.dtsi
-> +++ b/arch/arm/boot/dts/samsung/exynos4212-tab3.dtsi
-> @@ -45,6 +45,12 @@ chosen {
->  		/* Default S-BOOT bootloader loads initramfs here */
->  		linux,initrd-start = <0x42000000>;
->  		linux,initrd-end = <0x42800000>;
-> +
-> +		/*
-> +		 * Stock bootloader provides incorrect memory size in ATAG_MEM;
-> +		 * override it here
-> +		 */
-> +		linux,usable-memory-range = <0x40000000 0x3fc00000>;
-
-Maybe it would make sense to set the memory reg to
-<0x40000000 0x60000000> (1.5 GiB) and move the comment about last
-512(/516) MiB being weird/broken here instead.  It looks a bit weird
-that the memory range and usable-memory-range are identical, and device tree
-should describe hardware, which technically has 1.5 GiB RAM.
-
-From a functional point of view it does not really matter, so in any case:
-Reviewed-by: Henrik Grimler <henrik@grimler.se>
-
->  	};
+> diff --git a/drivers/platform/x86/amd/pmf/core.c b/drivers/platform/x86/amd/pmf/core.c
+> index 853158933510..4f734e049f4a 100644
+> --- a/drivers/platform/x86/amd/pmf/core.c
+> +++ b/drivers/platform/x86/amd/pmf/core.c
+> @@ -299,8 +299,6 @@ static int amd_pmf_suspend_handler(struct device *dev)
+>  	if (pdev->smart_pc_enabled)
+>  		cancel_delayed_work_sync(&pdev->pb_work);
 >  
->  	firmware@204f000 {
-> 
-> ---
-> base-commit: 0f1dd5e91e2ba3990143645faff2bcce2d99778e
-> change-id: 20240217-tab3-limit-usable-memory-range-1d1ffa8dc44d
-> 
-> Best regards,
-> -- 
-> Artur Weber <aweber.kernel@gmail.com>
-> 
+> -	kfree(pdev->buf);
+> -
+>  	return 0;
+>  }
+>  
+
