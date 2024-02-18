@@ -1,113 +1,142 @@
 Received: from fallback22.i.mail.ru (fallback22.i.mail.ru [79.137.243.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8888D6F507;
-	Sun, 18 Feb 2024 19:36:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A9BD9442;
+	Sun, 18 Feb 2024 19:50:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.137.243.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708285002; cv=none; b=ozbTwLpDLRdnRdbk5Fzwv1XSJWTOMECSKyDs4CHQW8RJvUIg1jbFMjVPnFUcaunmoAWwPgsVrIx4jMV6NR86M8jjA5wZPPE1hkTiepwM87l3Bog05Jwp4KJsJgGZnD/R8wxH/LmDsNiZB7UuaEoZcpL+3M4PT3DVhP9AhsQgBJw=
+	t=1708285833; cv=none; b=FwYX7fG4Qd9PszxBeJQPpld6gE5zdYFC23QZ98m9IslBhHlpxmQTYZPjyj1baBFcfNk1TUu2oTNAG354S/Jsbs+Mb6MouJEYNXA306AFGTnKo4guyGKJg/3FLt3gpzjVEGPxWAOyPnuDv/2oY3GLDLcz4S+4Qh/N2xCjkiWw72s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708285002; c=relaxed/simple;
-	bh=cBTLLd4fPeaUvWkODfGyD3++ZlviOPyT7dSZACmAIOQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ibUby+qDoCC1AKOjI0S8doAX0ADUbZydtkuTBX4vNpSQlNHHj8E6kVBIXN4Kd5p1yIYn4V8AMOu5nBSCPwnUgjjtoDcNL4WZkqgPqhV/93q989YgGYm7oXlZk3mA6Jh6xNVpO3qsrVCkodqTAslVFHkpgATFpLAxD8jbELi/vEk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jiaxyga.com; spf=pass smtp.mailfrom=jiaxyga.com; dkim=pass (1024-bit key) header.d=jiaxyga.com header.i=@jiaxyga.com header.b=nuN2t6YX; dkim=pass (1024-bit key) header.d=jiaxyga.com header.i=@jiaxyga.com header.b=NSAsfQ3W; arc=none smtp.client-ip=79.137.243.74
+	s=arc-20240116; t=1708285833; c=relaxed/simple;
+	bh=LwinS9JB95uEZLSjeTt+G4axyvv7nJVl1bqUuJsT8R8=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=AUcVQ8DuQXesfOXDumgSWAtJow9X+9HYOdOH3FXvvfhOv6JaKbNltoizUCUAarS60eGsMDag0R18yChkAJwc6coJPPYGmMyzW+9UVNE6b1qvvZxFbq0riO7U+x6lNWVmt3eXPijL0Vcjtyj0VFpMrPFqYgXOQ+tNOtRpC59+3v8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jiaxyga.com; spf=pass smtp.mailfrom=jiaxyga.com; dkim=pass (1024-bit key) header.d=jiaxyga.com header.i=@jiaxyga.com header.b=xjj7zlpc; dkim=pass (1024-bit key) header.d=jiaxyga.com header.i=@jiaxyga.com header.b=nIXIwEu7; arc=none smtp.client-ip=79.137.243.74
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jiaxyga.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jiaxyga.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=jiaxyga.com header.i=@jiaxyga.com header.b="nuN2t6YX";
-	dkim=pass (1024-bit key) header.d=jiaxyga.com header.i=@jiaxyga.com header.b="NSAsfQ3W"
+	dkim=pass (1024-bit key) header.d=jiaxyga.com header.i=@jiaxyga.com header.b="xjj7zlpc";
+	dkim=pass (1024-bit key) header.d=jiaxyga.com header.i=@jiaxyga.com header.b="nIXIwEu7"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=jiaxyga.com; s=mailru;
-	h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:From:Subject:Content-Type:Content-Transfer-Encoding:To:Cc; bh=o/hxFDSgXayAN8I0Y2EKcBJU46DJQsaZjaDQYg69Zrk=;
-	t=1708284998;x=1708374998; 
-	b=nuN2t6YXOZJPDSq6nNIGqcR9BxMq3YdPBhWXpMka5GXytPo4nVSB6zenx83nU69ad5TmFmmztMPX5oLyh9552MC+rsXkKU7oTOSN1EbnHvkUtf2hMHRhPqtUW4jWmbW69vFaHXaUAQjYYJxtUuysexKai6ponh+NsQQjDuBAyOo=;
-Received: from [10.12.4.29] (port=48678 helo=smtp51.i.mail.ru)
+	h=Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:From:Subject:Content-Type:Content-Transfer-Encoding:To:Cc; bh=4/wl3nPE9NLJe3dlrlIflnjznmzyaom44ksPbb06geE=;
+	t=1708285830;x=1708375830; 
+	b=xjj7zlpcZmQ8kEDX1qmhICN/dSFSBbIcQfl7IMoAfFQ+ZdQoQVGsLcXq3Xvjf99FeW+0xr78CAoPMJZ+SCWetILPCOZhsuEi846SnK+PXjTeztd7W/xM+iHwj2TJyTdpnOT7Vt+IwGPSNC3YQtim+OPdCjejXFt6Un7SGUcgMnY=;
+Received: from [10.12.4.2] (port=35680 helo=smtp29.i.mail.ru)
 	by fallback22.i.mail.ru with esmtp (envelope-from <danila@jiaxyga.com>)
-	id 1rbmHu-00BQ6z-F3; Sun, 18 Feb 2024 21:53:18 +0300
+	id 1rbnBD-00C5Vm-Oe; Sun, 18 Feb 2024 22:50:28 +0300
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=jiaxyga.com
-	; s=mailru; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-	References:Cc:To:Subject:MIME-Version:Date:Message-ID:From:Sender:Reply-To:To
-	:Cc:Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-	List-Archive:X-Cloud-Ids:Disposition-Notification-To;
-	bh=o/hxFDSgXayAN8I0Y2EKcBJU46DJQsaZjaDQYg69Zrk=; t=1708282398; x=1708372398; 
-	b=NSAsfQ3WT+evT9o2P3VRybQHhAFAxDoN+cYtqNS2LeBkdLiRkL8ADbhfwjTB9r4YHGYRDqbhg1J
-	MG6K1yp8o62Mz3Iq3oizUS/vGcdSg3I6wEtv133tj38xf+8ETxGDaDDNswsJlBn7f2Gjeg/qIYM1A
-	NhtqUO7743tgYY9P7JE=;
-Received: by smtp51.i.mail.ru with esmtpa (envelope-from <danila@jiaxyga.com>)
-	id 1rbmHe-00000005vMT-21OP; Sun, 18 Feb 2024 21:53:03 +0300
-Message-ID: <60728953-bdf0-4a06-a90a-d1191d41962b@jiaxyga.com>
-Date: Sun, 18 Feb 2024 21:52:03 +0300
+	; s=mailru; h=Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:
+	Message-ID:Date:Subject:Cc:To:From:From:Sender:Reply-To:To:Cc:Content-Type:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive:
+	X-Cloud-Ids:Disposition-Notification-To;
+	bh=4/wl3nPE9NLJe3dlrlIflnjznmzyaom44ksPbb06geE=; t=1708285827; x=1708375827; 
+	b=nIXIwEu7YLN0kB3XiylGvh3O7cyvFmbElr+l3kDE4Dvbgd63M1kfOGBULduxcgxAqhEKn0f9NhF
+	C1KFEit9SY5yeNfQO6jth22KNaFiH3DrOLhdd8l6A75KjDVx6ztb5TH4CmQPIaMbyFntfkKSC+lMu
+	MK+9vtX5SZCX+OE4MqY=;
+Received: by smtp29.i.mail.ru with esmtpa (envelope-from <danila@jiaxyga.com>)
+	id 1rbnAz-00000006hY1-275H; Sun, 18 Feb 2024 22:50:14 +0300
+From: Danila Tikhonov <danila@jiaxyga.com>
+To: robdclark@gmail.com,
+	quic_abhinavk@quicinc.com,
+	dmitry.baryshkov@linaro.org,
+	sean@poorly.run,
+	marijn.suijten@somainline.org,
+	airlied@gmail.com,
+	daniel@ffwll.ch,
+	konrad.dybcio@linaro.org,
+	johan+linaro@kernel.org,
+	quic_bjorande@quicinc.com
+Cc: linux-arm-msm@vger.kernel.org,
+	dri-devel@lists.freedesktop.org,
+	freedreno@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org,
+	Danila Tikhonov <danila@jiaxyga.com>
+Subject: [RESEND PATCH v2 1/1] drm/msm/adreno: Add support for SM7150 SoC machine
+Date: Sun, 18 Feb 2024 22:50:07 +0300
+Message-ID: <20240218195007.89960-2-danila@jiaxyga.com>
+X-Mailer: git-send-email 2.43.2
+In-Reply-To: <20240218195007.89960-1-danila@jiaxyga.com>
+References: <20240218195007.89960-1-danila@jiaxyga.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/3] arm64: dts: qcom: pm6150: define USB-C related blocks
-Content-Language: en-US
-To: Bryan O'Donoghue <bryan.odonoghue@linaro.org>, andersson@kernel.org,
- konrad.dybcio@linaro.org, lgirdwood@gmail.com, broonie@kernel.org,
- robh@kernel.org, krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
- gregkh@linuxfoundation.org, quic_wcheng@quicinc.com
-Cc: linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
- devicetree@vger.kernel.org, linux-usb@vger.kernel.org,
- Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-References: <20240217163201.32989-1-danila@jiaxyga.com>
- <20240217163201.32989-4-danila@jiaxyga.com>
- <6bf11ccd-ff08-369b-913f-277c189afb76@linaro.org>
- <b0b732b8-456a-4021-8277-cd51f01ead17@jiaxyga.com>
- <44c669a0-3722-4a58-be78-0c91f0573ca1@linaro.org>
-From: Danila Tikhonov <danila@jiaxyga.com>
-In-Reply-To: <44c669a0-3722-4a58-be78-0c91f0573ca1@linaro.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 X-Mailru-Src: smtp
-X-4EC0790: 10
-X-7564579A: B8F34718100C35BD
-X-77F55803: 4F1203BC0FB41BD9001F8F2F6BAD2021721DFC1638C0DE020CB518295F388C0600894C459B0CD1B9A01AAA9C53E1FC432F2A137662B0CE962297CA7220B8368C71C683C9A4AAF24583DAA694144A5695
-X-7FA49CB5: FF5795518A3D127A4AD6D5ED66289B5278DA827A17800CE746D93DAA4671895CEA1F7E6F0F101C67BD4B6F7A4D31EC0BCC500DACC3FED6E28638F802B75D45FF8AA50765F790063767500BC4578134A08638F802B75D45FF36EB9D2243A4F8B5A6FCA7DBDB1FC311F39EFFDF887939037866D6147AF826D8FBF1F58988AA117F27B5378C4569AF915A99C2240F7500D3CC7F00164DA146DAFE8445B8C89999728AA50765F79006374F09588CB15B21E6389733CBF5DBD5E9C8A9BA7A39EFB766F5D81C698A659EA7CC7F00164DA146DA9985D098DBDEAEC8ED96AA85C75E140D117882F4460429728AD0CFFFB425014E868A13BD56FB6657D81D268191BDAD3DC09775C1D3CA48CFACA9F7D16C0C9468BA3038C0950A5D36C8A9BA7A39EFB766D91E3A1F190DE8FDBA3038C0950A5D36D5E8D9A59859A8B6AFA7A56FB51D02A176E601842F6C81A1F004C906525384303E02D724532EE2C3F43C7A68FF6260569E8FC8737B5C2249D082881546D93491E827F84554CEF50127C277FBC8AE2E8BA83251EDC214901ED5E8D9A59859A8B603913CCF128142C9089D37D7C0E48F6C5571747095F342E88FB05168BE4CE3AF
-X-C1DE0DAB: 0D63561A33F958A5B96BF9A7E50CFEC45002B1117B3ED696BFF207C5EA5A8D5922DFD5397F446790823CB91A9FED034534781492E4B8EEAD9DB614F8F96CFA30BDAD6C7F3747799A
-X-C8649E89: 1C3962B70DF3F0ADBF74143AD284FC7177DD89D51EBB7742424CF958EAFF5D571004E42C50DC4CA955A7F0CF078B5EC49A30900B95165D34411AA3F52B5778B68AFB7C41CED23D24D319A1D15F84B4677068687820F8DA58194B66EDDAE282011D7E09C32AA3244C8304EF706C60CF3B2887F5EA2DDCF344BE1C58D71CDCC731EA455F16B58544A26EF364EE5276B8775DA084F8E80FEBD322CFFF16B4474ECB4573B60270F1EB7C214C2BC1176D5C25
-X-D57D3AED: 3ZO7eAau8CL7WIMRKs4sN3D3tLDjz0dLbV79QFUyzQ2Ujvy7cMT6pYYqY16iZVKkSc3dCLJ7zSJH7+u4VD18S7Vl4ZUrpaVfd2+vE6kuoey4m4VkSEu530nj6fImhcD4MUrOEAnl0W826KZ9Q+tr5ycPtXkTV4k65bRjmOUUP8cvGozZ33TWg5HZplvhhXbhDGzqmQDTd6OAevLeAnq3Ra9uf7zvY2zzsIhlcp/Y7m53TZgf2aB4JOg4gkr2bioj3ZJ49a6yxuuwKMqqiM4moA==
-X-Mailru-Sender: 9EB879F2C80682A09F26F806C739498149590CA6AC7771EACDECE012BE5914E03C454A2D891CD7F55FD86E11417434552C62728BC403A049225EC17F3711B6CF1A6F2E8989E84EC137BFB0221605B344978139F6FA5A77F05FEEDEB644C299C0ED14614B50AE0675
+X-7564579A: 646B95376F6C166E
+X-77F55803: 4F1203BC0FB41BD9001F8F2F6BAD2021BBD8C705D41124DC6159324E79CF6DC700894C459B0CD1B9C5E22C23F1BE03C07FBBE522E338CBBDA25AC2CB0B85F4D9C08A02FB1A177B0896BFE15B8ADB4371
+X-7FA49CB5: FF5795518A3D127A4AD6D5ED66289B5278DA827A17800CE793089AEA09EF102BEA1F7E6F0F101C67BD4B6F7A4D31EC0BCC500DACC3FED6E28638F802B75D45FF8AA50765F7900637D8F5094E9BAC3E9F8638F802B75D45FF36EB9D2243A4F8B5A6FCA7DBDB1FC311F39EFFDF887939037866D6147AF826D89E8E22097183F6372652140B8C21926305C4F13DE3BC10D8CC7F00164DA146DAFE8445B8C89999728AA50765F79006377C70927E34808485389733CBF5DBD5E9C8A9BA7A39EFB766F5D81C698A659EA7CC7F00164DA146DA9985D098DBDEAEC821E93C0F2A571C7BF6B57BC7E6449061A352F6E88A58FB86F5D81C698A659EA73AA81AA40904B5D9A18204E546F3947CA5ED62E35AC703CCC0837EA9F3D197644AD6D5ED66289B523666184CF4C3C14F6136E347CC761E07725E5C173C3A84C3C9F4304F34B30F1CBA3038C0950A5D36B5C8C57E37DE458B330BD67F2E7D9AF16D1867E19FE14079C09775C1D3CA48CF17B107DEF921CE791DD303D21008E298D5E8D9A59859A8B6B372FE9A2E580EFC725E5C173C3A84C3D13DC059A893E58D35872C767BF85DA2F004C90652538430E4A6367B16DE6309
+X-C1DE0DAB: 0D63561A33F958A5D4E08B9C32BD0D525002B1117B3ED6969918ED69EDCDA2E7C638DF663A625AFA823CB91A9FED034534781492E4B8EEADF12279BA039A6965C79554A2A72441328621D336A7BC284946AD531847A6065A535571D14F44ED41
+X-C8649E89: 1C3962B70DF3F0ADE00A9FD3E00BEEDF77DD89D51EBB7742D3581295AF09D3DF87807E0823442EA2ED31085941D9CD0AF7F820E7B07EA4CFB5E2A74AD09625C955E57C695C7097EF810F039CA7F3B7C081E5A95D9CF27496E5D0AE1B9048421534E84B500378195F3327C800B57CF284DA80BD25FDB1A95A9D5BF67B070882F2457F7985AD47CF5C02C26D483E81D6BE72B480F99247062FEE42F474E8A1C6FD34D382445848F2F3
+X-D57D3AED: 3ZO7eAau8CL7WIMRKs4sN3D3tLDjz0dLbV79QFUyzQ2Ujvy7cMT6pYYqY16iZVKkSc3dCLJ7zSJH7+u4VD18S7Vl4ZUrpaVfd2+vE6kuoey4m4VkSEu530nj6fImhcD4MUrOEAnl0W826KZ9Q+tr5ycPtXkTV4k65bRjmOUUP8cvGozZ33TWg5HZplvhhXbhDGzqmQDTd6OAevLeAnq3Ra9uf7zvY2zzsIhlcp/Y7m53TZgf2aB4JOg4gkr2bioj3ZJ49a6yxuuUQixMPPYjew==
+X-Mailru-Sender: 9EB879F2C80682A09F26F806C7394981B81DDCAC1631E74704DE63E6493D46055460E003A26B2832A877D903728FDABB2C62728BC403A049225EC17F3711B6CF1A6F2E8989E84EC137BFB0221605B344978139F6FA5A77F05FEEDEB644C299C0ED14614B50AE0675
 X-Mras: Ok
-X-7564579A: B8F34718100C35BD
-X-77F55803: 6242723A09DB00B4A77971E4CF73965D9E271BDE2CCB4C0C9224595B18E9D805049FFFDB7839CE9E8F5A60B08382AFE3C7D0837E42D462A30016A7864CFEE5E5F33A3D857371F1ED
-X-7FA49CB5: 0D63561A33F958A5C4A1241F65A9DF449011F685861E5E6B1A890AC55145D5408941B15DA834481FA18204E546F3947C4B6F6234D9065C97F6B57BC7E64490618DEB871D839B7333395957E7521B51C2DFABB839C843B9C08941B15DA834481F8AA50765F7900637CBDA538BD653CEDD389733CBF5DBD5E9B5C8C57E37DE458BD96E472CDF7238E0725E5C173C3A84C36623C589A9CCD53435872C767BF85DA2F004C90652538430E4A6367B16DE6309
+X-7564579A: 78E4E2B564C1792B
+X-77F55803: 6242723A09DB00B4A77971E4CF73965D9E271BDE2CCB4C0C7AB8ED82C1DDBC5A049FFFDB7839CE9E8F5A60B08382AFE3848351DD467580E9312762F486F8102C39D320635B8870A2
+X-7FA49CB5: 0D63561A33F958A5DBD39F8E793081EACE88A8A54B442D44FAF53675CA7907D98941B15DA834481FA18204E546F3947CB645AEB2D65EEA52117882F4460429724CE54428C33FAD30A8DF7F3B2552694AC26CFBAC0749D213D2E47CDBA5A9658378DA827A17800CE7EF2A066DDA19BA868941B15DA834481F9449624AB7ADAF3735872C767BF85DA227C277FBC8AE2E8B9323F30CF592B49A75ECD9A6C639B01B4E70A05D1297E1BBCB5012B2E24CD356
 X-87b9d050: 1
-X-D57D3AED: 3ZO7eAau8CL7WIMRKs4sN3D3tLDjz0dLbV79QFUyzQ2Ujvy7cMT6pYYqY16iZVKkSc3dCLJ7zSJH7+u4VD18S7Vl4ZUrpaVfd2+vE6kuoey4m4VkSEu530nj6fImhcD4MUrOEAnl0W826KZ9Q+tr5ycPtXkTV4k65bRjmOUUP8cvGozZ33TWg5HZplvhhXbhDGzqmQDTd6OAevLeAnq3Ra9uf7zvY2zzsIhlcp/Y7m53TZgf2aB4JOg4gkr2bioj3ZJ49a6yxuuW3WXFcmWZoQ==
+X-D57D3AED: 3ZO7eAau8CL7WIMRKs4sN3D3tLDjz0dLbV79QFUyzQ2Ujvy7cMT6pYYqY16iZVKkSc3dCLJ7zSJH7+u4VD18S7Vl4ZUrpaVfd2+vE6kuoey4m4VkSEu530nj6fImhcD4MUrOEAnl0W826KZ9Q+tr5ycPtXkTV4k65bRjmOUUP8cvGozZ33TWg5HZplvhhXbhDGzqmQDTd6OAevLeAnq3Ra9uf7zvY2zzsIhlcp/Y7m53TZgf2aB4JOg4gkr2bioj3ZJ49a6yxuu6I5dWVp/Zhw==
 X-Mailru-MI: 8000000000000800
 X-Mras: Ok
 
-You are referring to Dmitry Baryshkov, as I see. But Dmitry has already 
-reviewed my patch (message above).
-So it would be rude to change anything without his knowledge. Let's wait 
-for his answer.
+SM7150 has 5 power levels which correspond to 5 speed-bin values: 0,
+128, 146, 167, 172. Speed-bin value is calulated as FMAX/4.8MHz round up
+to zero decimal places.
 
+Also a618 on SM7150 uses a615 zapfw. Add a squashed version (.mbn).
+
+Add this as machine = "qcom,sm7150", because speed-bin values are
+different from atoll (sc7180/sm7125).
+
+Signed-off-by: Danila Tikhonov <danila@jiaxyga.com>
 ---
-Best wishes
-Danila
+ drivers/gpu/drm/msm/adreno/adreno_device.c | 22 ++++++++++++++++++++++
+ 1 file changed, 22 insertions(+)
 
-On 2/18/24 20:14, Bryan O'Donoghue wrote:
-> On 18/02/2024 8:05 a.m., Danila Tikhonov wrote:
->> I know that some interrupts have both for PM8150B, but for PM6150 all 
->> interrupts are rising.
->> Please look at the downstream kernel:
->> https://git.codelinaro.org/clo/la/kernel/msm-4.14/-/blob/187022f2721d584ac4ec92c0ac1af77da487521d/arch/arm64/boot/dts/qcom/pm6150.dtsi#L319 
->>
->> https://git.codelinaro.org/clo/la/kernel/msm-4.14/-/blob/187022f2721d584ac4ec92c0ac1af77da487521d/arch/arm64/boot/dts/qcom/pm8150b.dtsi#L292 
->>
->>
->
->
-> Please take a look here, I think the same logic should apply to your 
-> patchset.
->
-> https://www.spinics.net/lists/devicetree/msg665558.html
->
-> ---
-> bod
+diff --git a/drivers/gpu/drm/msm/adreno/adreno_device.c b/drivers/gpu/drm/msm/adreno/adreno_device.c
+index 2ce7d7b1690d..b81f90fb4257 100644
+--- a/drivers/gpu/drm/msm/adreno/adreno_device.c
++++ b/drivers/gpu/drm/msm/adreno/adreno_device.c
+@@ -293,6 +293,27 @@ static const struct adreno_info gpulist[] = {
+ 			{ 157, 3 },
+ 			{ 127, 4 },
+ 		),
++	}, {
++		.machine = "qcom,sm7150",
++		.chip_ids = ADRENO_CHIP_IDS(0x06010800),
++		.family = ADRENO_6XX_GEN1,
++		.fw = {
++			[ADRENO_FW_SQE] = "a630_sqe.fw",
++			[ADRENO_FW_GMU] = "a630_gmu.bin",
++		},
++		.gmem = SZ_512K,
++		.inactive_period = DRM_MSM_INACTIVE_PERIOD,
++		.quirks = ADRENO_QUIRK_HAS_CACHED_COHERENT,
++		.init = a6xx_gpu_init,
++		.zapfw = "a615_zap.mbn",
++		.hwcg = a615_hwcg,
++		.speedbins = ADRENO_SPEEDBINS(
++			{ 0,   0 },
++			{ 128, 1 },
++			{ 146, 2 },
++			{ 167, 3 },
++			{ 172, 4 },
++		),
+ 	}, {
+ 		.chip_ids = ADRENO_CHIP_IDS(0x06010800),
+ 		.family = ADRENO_6XX_GEN1,
+@@ -539,6 +560,7 @@ MODULE_FIRMWARE("qcom/a530_zap.b00");
+ MODULE_FIRMWARE("qcom/a530_zap.b01");
+ MODULE_FIRMWARE("qcom/a530_zap.b02");
+ MODULE_FIRMWARE("qcom/a540_gpmu.fw2");
++MODULE_FIRMWARE("qcom/a615_zap.mbn");
+ MODULE_FIRMWARE("qcom/a619_gmu.bin");
+ MODULE_FIRMWARE("qcom/a630_sqe.fw");
+ MODULE_FIRMWARE("qcom/a630_gmu.bin");
+-- 
+2.43.2
 
