@@ -1,127 +1,116 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AACF31849;
-	Sun, 18 Feb 2024 04:22:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0B4C5673
+	for <linux-kernel@vger.kernel.org>; Sun, 18 Feb 2024 04:23:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708230166; cv=none; b=UeNMCzdMtG63nQxBcDom73drCo4xMs2gMZdj84cHVDA3xGCo2Bx9FpNbeXCnaPY3GTxonEKxBBzYQbsyEiTovrGQkD/pLFZZkldtBZaDn97vC5EnBYRulFWsIIsKyLJpOi3MfnRKZqBS518h2kVhCqk9htE6SMV0OkbIJ0lTtaQ=
+	t=1708230187; cv=none; b=Gku3ZKcBz/ZxdkKO4lNrgkvOMlVJUJlegqaIfQfnLgOpQg0KGg53YJTox9ZUGqlJoTXOMDNvjb1l16Fy3OmzW8Zz0TC3iK560SCiRND4WJvcrBSB/4+z7Hbr5EvB/Wozk3eafb6aQwFC5NCiAKI2oITvLhKHQst/IlZT2dY+VWg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708230166; c=relaxed/simple;
-	bh=L910vuA1nInbN44R4e4ypYcqnk/4FDV5+y2YMJ9WPsE=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=eIKSRsPy4E5Uz5Gw7di+1JBzuv+Slt+PQYzc9nfNuKDTD9OXKb0qHSamuVFxbLFQMOOG/iCVWcDwfxX7y7HSNq/oj1yCz9KzpFHufIjuId/lDy+DbeJaoNiA+jFXmU20YJE5AcZ7TnS5G1F2bdrM/Af8hx0wEhm60KaWTuY/bSI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Wtdayv0s; arc=none smtp.client-ip=198.175.65.19
+	s=arc-20240116; t=1708230187; c=relaxed/simple;
+	bh=m/zDbOZHINOQqbUYOBUJpcOJN2RTLiWenKUMEw8YWUA=;
+	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=G6KPEmg+vyteEclTAs838zZLaYFj42YdUHdReJTm6ZMbOJTYdH1F9Aqvwj3v871YvraKncozEp0aVjBTURuwtD60qkp+eZuA0if12dJXATIugLd4MLUyGL+DKxVL85Lvp/FUWLq9eIiK0XuijjLwIeNp/sZ1DVI97R/0Lc58oS4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UyEmal1W; arc=none smtp.client-ip=198.175.65.16
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Wtdayv0s"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UyEmal1W"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1708230165; x=1739766165;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=L910vuA1nInbN44R4e4ypYcqnk/4FDV5+y2YMJ9WPsE=;
-  b=Wtdayv0s8jk9GDntxPsIMRP7jxCpedpNNsZGYRTWXMi6BwKBVvMiRlaN
-   HoZ2CK4qWztGfTJUgieFpjGCY9Y6WsNCB2pCLNp9zJVk4ANTr33FzTssI
-   TKVYbIKbhQyHFb5tVrPAq54z+scNAxTZHaub7tDkdx7I4Itq5mnb5WiyD
-   IDmMDiH/RzswY/zcLRCZcr4eo952NFaGo4yXS9WdyGEoTFOc+kgKT8OKp
-   o2rdh07fJUuDClMcF/bVlguI9kldFaNF7G+W/vPY9P5VgY3QTu62KqvO1
-   7au6aOAsKzhEMRvpCT1ZyMXi/+fg0RSl0rgcVdaGtfxvWpOqLrcHm1IRT
+  t=1708230186; x=1739766186;
+  h=message-id:date:mime-version:cc:subject:to:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=m/zDbOZHINOQqbUYOBUJpcOJN2RTLiWenKUMEw8YWUA=;
+  b=UyEmal1Wcmsq3Z1wUCT811vH09K+BLA02kVDCfog4B9KIDyyRwpwL7cc
+   LJDAQQnvjPc73vuET1fKyCF0kyNKa9s7vZ4rz7GHuFpy4UsegFZlMpBKs
+   CIZrTCzqicmrz+Pz63e/lrnHl3dEKafzioL4QojYy1b+vAwwCnkiWFBB4
+   cP3AeN1jGcQTVzWKMwz6cXbJC6B+M/DFEtD++xd5vyJznS7OKAXFcXy2I
+   8gs4wkDP7oTAh+xStdt36DCm6gQq/i22O1qs/Ntr5w7RWYGIJ7WQIAoFn
+   /p9GH0pI+DzNqNS/jJm8eKPXLJtxwR7Ur+T0vd5mIM6Uq9nVTzQrwEWjd
    A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10987"; a="2189219"
+X-IronPort-AV: E=McAfee;i="6600,9927,10987"; a="2468823"
 X-IronPort-AV: E=Sophos;i="6.06,167,1705392000"; 
-   d="scan'208";a="2189219"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Feb 2024 20:22:44 -0800
+   d="scan'208";a="2468823"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Feb 2024 20:23:05 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.06,167,1705392000"; 
-   d="scan'208";a="4338402"
-Received: from dmi-pnp-i7.sh.intel.com ([10.239.159.155])
-  by fmviesa008.fm.intel.com with ESMTP; 17 Feb 2024 20:22:41 -0800
-From: Dapeng Mi <dapeng1.mi@linux.intel.com>
-To: Sean Christopherson <seanjc@google.com>,
-	Paolo Bonzini <pbonzini@redhat.com>
-Cc: kvm@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Jim Mattson <jmattson@google.com>,
-	Jinrong Liang <cloudliang@tencent.com>,
-	Aaron Lewis <aaronlewis@google.com>,
-	Dapeng Mi <dapeng1.mi@intel.com>,
-	Dapeng Mi <dapeng1.mi@linux.intel.com>
-Subject: [Patch v2] KVM: selftests: Test top-down slots event
-Date: Sun, 18 Feb 2024 12:30:03 +0800
-Message-Id: <20240218043003.2424683-1-dapeng1.mi@linux.intel.com>
-X-Mailer: git-send-email 2.34.1
+   d="scan'208";a="8863508"
+Received: from blu2-mobl.ccr.corp.intel.com (HELO [10.254.209.212]) ([10.254.209.212])
+  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Feb 2024 20:23:02 -0800
+Message-ID: <83010db4-d8f7-4ddd-a0dd-9d839ed32232@linux.intel.com>
+Date: Sun, 18 Feb 2024 12:22:59 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Cc: baolu.lu@linux.intel.com, Joerg Roedel <joro@8bytes.org>,
+ Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
+ Kevin Tian <kevin.tian@intel.com>, Huang Jiaqing <jiaqing.huang@intel.com>,
+ Ethan Zhao <haifeng.zhao@linux.intel.com>, iommu@lists.linux.dev,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] iommu/vt-d: Use rbtree to track iommu probed devices
+To: Jason Gunthorpe <jgg@ziepe.ca>
+References: <20240215072249.4465-1-baolu.lu@linux.intel.com>
+ <20240215072249.4465-2-baolu.lu@linux.intel.com>
+ <20240215174708.GC1299735@ziepe.ca>
+Content-Language: en-US
+From: Baolu Lu <baolu.lu@linux.intel.com>
+In-Reply-To: <20240215174708.GC1299735@ziepe.ca>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Although the fixed counter 3 and its exclusive pseudo slots event are
-not supported by KVM yet, the architectural slots event is supported by
-KVM and can be programed on any GP counter. Thus add validation for this
-architectural slots event.
+On 2024/2/16 1:47, Jason Gunthorpe wrote:
+> On Thu, Feb 15, 2024 at 03:22:48PM +0800, Lu Baolu wrote:
+>> Use a red-black tree(rbtree) to track devices probed by the driver's
+>> probe_device callback. These devices need to be looked up quickly by
+>> a source ID when the hardware reports a fault, either recoverable or
+>> unrecoverable.
+>>
+>> Fault reporting paths are critical. Searching a list in this scenario
+>> is inefficient, with an algorithm complexity of O(n). An rbtree is a
+>> self-balancing binary search tree, offering an average search time
+>> complexity of O(log(n)). This significant performance improvement
+>> makes rbtrees a better choice.
+>>
+>> Furthermore, rbtrees are implemented on a per-iommu basis, eliminating
+>> the need for global searches and further enhancing efficiency in
+>> critical fault paths. The rbtree is protected by a spin lock with
+>> interrupts disabled to ensure thread-safe access even within interrupt
+>> contexts.
+>>
+>> Co-developed-by: Huang Jiaqing<jiaqing.huang@intel.com>
+>> Signed-off-by: Huang Jiaqing<jiaqing.huang@intel.com>
+>> Signed-off-by: Lu Baolu<baolu.lu@linux.intel.com>
+>> ---
+>>   drivers/iommu/intel/iommu.h |  7 +++++
+>>   drivers/iommu/intel/dmar.c  |  3 +-
+>>   drivers/iommu/intel/iommu.c | 62 +++++++++++++++++++++++++++++++++++--
+>>   3 files changed, 69 insertions(+), 3 deletions(-)
+> Reviewed-by: Jason Gunthorpe<jgg@nvidia.com>
+> 
+>> +static int device_rbtree_insert(struct intel_iommu *iommu,
+>> +				struct device_domain_info *info)
+>> +{
+>> +	struct rb_node *curr;
+>> +	unsigned long flags;
+>> +
+>> +	spin_lock_irqsave(&iommu->device_rbtree_lock, flags);
+>> +	curr = rb_find_add(&info->node, &iommu->device_rbtree, device_rid_cmp);
+>> +	spin_unlock_irqrestore(&iommu->device_rbtree_lock, flags);
+>> +	if (curr)
+>> +		dev_warn(info->dev, "device already in rbtree\n");
+> I would suggest
+> 
+> WARN_ON(curr);
+> 
+> Something has gone really wonky at this point, right?
 
-Top-down slots event "counts the total number of available slots for an
-unhalted logical processor, and increments by machine-width of the
-narrowest pipeline as employed by the Top-down Microarchitecture
-Analysis method."
+Yes. This is not expected, and it is worth a WARN_ON().
 
-As for the slot, it's an abstract concept which indicates how many
-uops (decoded from instructions) can be processed simultaneously
-(per cycle) on HW. In Top-down Microarchitecture Analysis (TMA) method,
-the processor is divided into two parts, frond-end and back-end. Assume
-there is a processor with classic 5-stage pipeline, fetch, decode,
-execute, memory access and register writeback. The former 2 stages
-(fetch/decode) are classified to frond-end and the latter 3 stages are
-classified to back-end.
-
-In modern Intel processors, a complicated instruction would be decoded
-into several uops (micro-operations) and so these uops can be processed
-simultaneously and then improve the performance. Thus, assume a
-processor can decode and dispatch 4 uops in front-end and execute 4 uops
-in back-end simultaneously (per-cycle), so the machine-width of this
-processor is 4 and this processor has 4 topdown slots per-cycle.
-
-If a slot is spare and can be used to process a new upcoming uop, then
-the slot is available, but if a uop occupies a slot for several cycles
-and can't be retired (maybe blocked by memory access), then this slot is
-stall and unavailable.
-
-Considering the testing instruction sequence can't be macro-fused on x86
-platforms, the measured slots count should not be less than
-NUM_INSNS_RETIRED. Thus assert the slots count against NUM_INSNS_RETIRED.
-
-pmu_counters_test passed with this patch on Intel Sapphire Rapids.
-
-About the more information about TMA method, please refer the below link.
-https://www.intel.com/content/www/us/en/docs/vtune-profiler/cookbook/2023-0/top-down-microarchitecture-analysis-method.html
-
-Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
----
- tools/testing/selftests/kvm/x86_64/pmu_counters_test.c | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/tools/testing/selftests/kvm/x86_64/pmu_counters_test.c b/tools/testing/selftests/kvm/x86_64/pmu_counters_test.c
-index ae5f6042f1e8..29609b52f8fa 100644
---- a/tools/testing/selftests/kvm/x86_64/pmu_counters_test.c
-+++ b/tools/testing/selftests/kvm/x86_64/pmu_counters_test.c
-@@ -119,6 +119,9 @@ static void guest_assert_event_count(uint8_t idx,
- 	case INTEL_ARCH_REFERENCE_CYCLES_INDEX:
- 		GUEST_ASSERT_NE(count, 0);
- 		break;
-+	case INTEL_ARCH_TOPDOWN_SLOTS_INDEX:
-+		GUEST_ASSERT(count >= NUM_INSNS_RETIRED);
-+		break;
- 	default:
- 		break;
- 	}
-
-base-commit: f0f3b810edda57f317d79f452056786257089667
--- 
-2.40.1
-
+Best regards,
+baolu
