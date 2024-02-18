@@ -1,165 +1,108 @@
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+Received: from mail-qt1-f173.google.com (mail-qt1-f173.google.com [209.85.160.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C53821E87F
-	for <linux-kernel@vger.kernel.org>; Sun, 18 Feb 2024 18:35:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3AB86341A;
+	Sun, 18 Feb 2024 18:35:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708281341; cv=none; b=al6cPUit98ClpNum2JiSprc5aOTKL7D5X81pHyCPmunbM3DBFV6sGDScc4hQ/tpK9s7aaJ9KeIloZPdfR0UN6YDunxxnU2Uv8E71166oUDcJMIb+11X22JlLyj4ZkRWKMvhKDTVLI+WumvIyzN1O/sLQxzVEnmaV9m8+9HPYEGg=
+	t=1708281357; cv=none; b=W6hnesHSjSOww95oaCOO1P4AQdA+uxvdpugPOyOorfLmPXKL2c0u3SddM9isSYNmU6Hr4Ao/h3mvyZ2aQ4qs2l/LtCH+2m/3kbSZyIWf2WvWJYnA2QdQ+4g+5+PfQ01Q2dB6uK6huxJBkss66ToE2lsRpc5eVFHN4L0b/6tSVdo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708281341; c=relaxed/simple;
-	bh=IELhMP2AeuGkk3hZA0BPNHxnwCFGw2GFPgU0FluDnk8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=F7LLq4lk7D+hkE8bfXWyT/cbHwavt3q+q68l+UtTu9Iddn/hXoHS+gFLU2BZg1k5StEF1a8v8AxiPFC4ct7oA3qUiPE7Q/VT8YcKGp8C6Bg+mCcDnOAQfEC77FsN7Psr2IV6lCBJKJmnP6nTNLknguUq+41hAxHErJT2El8Emao=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Snso/58g; arc=none smtp.client-ip=209.85.128.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1708281357; c=relaxed/simple;
+	bh=5fuux1HAirtBiYVp43TmFsANlPjwHWYFEx8MXM16p6k=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=it+V73VItZ60aThscE/OC4WhdPeX+PhnZ02ZI7p7LXdWWH1nAxAqg5VI8dzLqtgTfXRt8YwMbs+FVoXF23GGnsy3E/45eQz/l2hGb053lLooAMtYp4C3qg4677u7xMXJuKTzQaxCebeNjtdHQUZuX2yfmisGNCzcVxSSYtnbydU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gdawcmHJ; arc=none smtp.client-ip=209.85.160.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Snso/58g"
-Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-41263e8b7f8so3143205e9.2
-        for <linux-kernel@vger.kernel.org>; Sun, 18 Feb 2024 10:35:39 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gdawcmHJ"
+Received: by mail-qt1-f173.google.com with SMTP id d75a77b69052e-42ce63b1d30so40096361cf.3;
+        Sun, 18 Feb 2024 10:35:55 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1708281338; x=1708886138; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=HmhsdjiVydbji9/BcSZQ8XMnnQqt5AZTtEIoi8Kez+o=;
-        b=Snso/58gwtZ3uqEfEGIWf9bry0jm02h4kDenwQUu6FR3mSiQSk9SwNrR2ZZRk7AQUi
-         AQ7CnNowb5FInlDtIJ0s2o5DbRJqiOs16ZVSXbSMJHSJHXvxfVlC5LacriiCVR2YLXZ+
-         Si1uEDMxW0tI6yX7rxbuaXXdPW1O819f4NprROqx1G9m44byg2awZUJMhorMrKudEGlI
-         XVdLTBEPwWN+bFMXudbeO8Z9Il9ltCQQMt9vLgokdTR+v9rybIjon4WI1rPXzuGVeYYl
-         I5/M5tAHzij5He2ZnFHSYnp4eeAtRPRqUXkgpJoKeAerxnlZi/nwrHbaNYxqPgLYao6a
-         NtIQ==
+        d=gmail.com; s=20230601; t=1708281354; x=1708886154; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=rtlFK2N47ATXOiP1HgXvAlQ7VAuyaeK7nB3D2FRWvkg=;
+        b=gdawcmHJzaU3npzbZ9iGce4JBxkG0GxOfjtDXK8663kOMUiYKB1w1DXP+L1NZVCcwW
+         L1aZlXHt9b/P0LM0wowItyL4O55UsZh6+6vos3a8BQOQCKzwxY/xEWEWYC1ZfZ3VALCP
+         /Rv+FFpgvUigAVF8XxIWVNHprsPl2184zLVr+6dYIO1Odiem1PrzE6RlE4gKPjGY8PdC
+         KWs6k/3d1f2EJozq77WJNtyMPpZV4XXfYAgpWPaEHjX/dSO3/GZ2PbszxObhur89OQ6H
+         2clbms3LnOwgVsWKLnWiePjZcOK+Itkb75QtIIZZw3r8F32GZIM84PQ5ul5rzn9x0iVK
+         eXKQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708281338; x=1708886138;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=HmhsdjiVydbji9/BcSZQ8XMnnQqt5AZTtEIoi8Kez+o=;
-        b=ERHd1CVWWPKI1USWfIRhcBAX8+gckbT0QFq6BiH/bdol9XIomNfk4A0VVzTAJigFuO
-         gg0fC0j+VLSWFqeG5q+B4ua+gNzVf+C8E1jvBjavdpco/SBCEH80mW+ToBdyYpra7DHB
-         cOaG6cwM7lu9Jv7E500RFoHZ++1qSp9htQ3Pq70KdBPeHj89UyTUmGmPPfYvmNcdjVMD
-         UgWwBGuXvQkUmhMDihLqoHI33QPp02LK8eduHaPev03Vo+8GiG+wgT9Mlncpi+DqhnYW
-         myaZwQYXEXrLzYTWZK/oUePrA9dHcle4QC2hqXh7+GhU4gytSedF5ToIzQ1gTke7sWLQ
-         zB3Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWuUI9CV43mt5xyOXbtH6StfT2Kfw+xtJT/N0KaOyW+wp4Q7QQoo2DigYe5qGPqfYB8oUmBwTLfkKevcUE6hLafLXsovPBCJEBKxJVD
-X-Gm-Message-State: AOJu0Yy7837Mh5v4DfjRNxdOgzQAtnHo7holagdm295T7SiX9ZDoAkVr
-	NLXA6Czh1sF5jJ578JRBXjZ3Bgjz6rJHcNTokg/NrQALqHxHtxiuvidANKNT1A27KwRHaT683rD
-	TXaQ=
-X-Google-Smtp-Source: AGHT+IEr8LrLo8rnwBtfp9cUd9o7aqVTJAIclLAIh7GyvHzXVGv0w8CZXc+tD91eJhchPQAPLNQW7w==
-X-Received: by 2002:a05:600c:3502:b0:412:aec:2cfa with SMTP id h2-20020a05600c350200b004120aec2cfamr8677926wmq.1.1708281338234;
-        Sun, 18 Feb 2024 10:35:38 -0800 (PST)
-Received: from [192.168.1.20] ([178.197.222.116])
-        by smtp.gmail.com with ESMTPSA id l20-20020a05600c1d1400b0041256ab5becsm5990592wms.26.2024.02.18.10.35.36
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 18 Feb 2024 10:35:37 -0800 (PST)
-Message-ID: <6ac4005b-01e6-48c2-971e-d6a127134d13@linaro.org>
-Date: Sun, 18 Feb 2024 19:35:35 +0100
+        d=1e100.net; s=20230601; t=1708281354; x=1708886154;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=rtlFK2N47ATXOiP1HgXvAlQ7VAuyaeK7nB3D2FRWvkg=;
+        b=fQMJyFmEP0n+EKUHx5V0TLKi0Sf4IlDn9WZVTWfFDv4xkvI8r84z+xvuRse8BfEg+V
+         2W1LJB5ucOXvpH00Oq9Tpepkh/qKkHurp2A6lVn20nWY7uf4rtp0j94FwwtwYCoEOTzy
+         WQ0PC18ND1weCgOJag80EAX8a5BojWwPNKBl8pD0yTTbPRgfIJe7dpzU7PC+X3lhcGrz
+         9wa8DAe8F1TIDDwkMAiNd8jJfOBDI02MfHm9BCp+Dsyx/1pr/JoqvQzkhGrLLdqgqWG9
+         Tb1EM/iu04h67xEAyfhmmUlBjhOx1F8ZCTXNXIdINXkQdITfHVKDicQ2klQN8Brkrvav
+         +h+g==
+X-Forwarded-Encrypted: i=1; AJvYcCXpdJ2NZo5fuOKG7rKBiYwVpthdKZwDn69bS09xf3hdB+Jl89LlWHZIJVeglZbrONGlKtIn/FkXH3L/APYM08uj0VqD8/XtWk3fHdkv
+X-Gm-Message-State: AOJu0Yzs9xirdttn/3UTMQMPO8KhdJnwwfxQRArVNxp4jWh7yzK1TTYr
+	pjQtXyZFFL1jiF8BFFap3D40tqwy/x4FCZIaC02anHBBD5Z7Qe66
+X-Google-Smtp-Source: AGHT+IEsGtbyPHD9+xbewDdwoJ8fl023wuuWU2V8e7302Cwwd7xV+PRUpoDCmgLcjwR5VsR6WbToDw==
+X-Received: by 2002:a05:620a:1928:b0:787:54a5:9047 with SMTP id bj40-20020a05620a192800b0078754a59047mr4612171qkb.34.1708281354320;
+        Sun, 18 Feb 2024 10:35:54 -0800 (PST)
+Received: from localhost ([2601:8c:502:14f0:acdd:1182:de4a:7f88])
+        by smtp.gmail.com with ESMTPSA id c9-20020a05620a11a900b007859c6a3a7esm1764078qkk.105.2024.02.18.10.35.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 18 Feb 2024 10:35:53 -0800 (PST)
+Date: Sun, 18 Feb 2024 08:35:51 -0500
+From: Oliver Crumrine <ozlinuxc@gmail.com>
+To: davem@davemloft.net, dsahern@kernel.org, edumazet@google.com, 
+	kuba@kernel.org, pabeni@redhat.com
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH net-next] net: copy routing table more efficiently in
+ rt_dst_clone
+Message-ID: <xlabdyc4izitfdfpuoy2p2hi3abiq4mrrgizdqz45k7xeftbsg@ee6jgncdaqg7>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 1/6] dt-bindings: cache: Document the
- sifive,perfmon-counters property
-To: Samuel Holland <samuel.holland@sifive.com>, Will Deacon
- <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Eric Lin <eric.lin@sifive.com>, Conor Dooley <conor@kernel.org>
-Cc: Palmer Dabbelt <palmer@dabbelt.com>, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, Paul Walmsley <paul.walmsley@sifive.com>,
- linux-riscv@lists.infradead.org, Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- linux-arm-kernel@lists.infradead.org
-References: <20240216000837.1868917-1-samuel.holland@sifive.com>
- <20240216000837.1868917-2-samuel.holland@sifive.com>
- <eeb2331d-10e6-4902-91ba-85896a8f0ee1@linaro.org>
- <72221da1-4a1a-4947-a202-9de203032f5c@sifive.com>
-Content-Language: en-US
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
- 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
- D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <72221da1-4a1a-4947-a202-9de203032f5c@sifive.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On 18/02/2024 16:29, Samuel Holland wrote:
-> Hi Krzysztof,
-> 
-> On 2024-02-17 3:00 AM, Krzysztof Kozlowski wrote:
->> On 16/02/2024 01:08, Samuel Holland wrote:
->>> The SiFive Composable Cache controller contains an optional PMU with a
->>> configurable number of event counters. Document a property which
->>
->> Configurable in what context? By chip designers or by OS? Why this
->> cannot be deduced from the compatible?
-> 
-> This parameter is configurable by the chip designers.
-> 
-> The information certainly can be deduced from the SoC-specific compatible
-> string, but doing so makes the driver only work on that specific list of SoCs.
+Instead of copying field-by-field, copy the entire struct at once. This
+should lead to a performance improvment in rt_dst_clone.
 
-Usually that's exactly what's expected, so why here usual approach is wrong?
+Signed-off-by: Oliver Crumrine <ozlinuxc@gmail.com>
+---
+ net/ipv4/route.c | 16 +---------------
+ 1 file changed, 1 insertion(+), 15 deletions(-)
 
-> When provided via a property, the driver can work without changes on any SoC
-> that uses this IP block. (None of the SoCs currently listed in the binding
-
-Sorry, properties are not a work-around for missing compatibles.
-
-> contain a PMU, so there is no backward compatibility concern with adding the new
-> property.)
-> 
-> My understanding of the purpose of the SoC-specific compatible string is to
-> handle eventualities (silicon bugs, integration quirks, etc.), not to
-> intentionally limit the driver to a narrow list of hardware.
-
-Depends what is the hardware. For most of licensed blocks, the final
-design is the hardware so equals to its compatible.
-
-Best regards,
-Krzysztof
+diff --git a/net/ipv4/route.c b/net/ipv4/route.c
+index 16615d107cf0..ebb17c3a0dec 100644
+--- a/net/ipv4/route.c
++++ b/net/ipv4/route.c
+@@ -1664,22 +1664,8 @@ struct rtable *rt_dst_clone(struct net_device *dev, struct rtable *rt)
+ 			   rt->dst.flags);
+ 
+ 	if (new_rt) {
++		*new_rt = *rt;
+ 		new_rt->rt_genid = rt_genid_ipv4(dev_net(dev));
+-		new_rt->rt_flags = rt->rt_flags;
+-		new_rt->rt_type = rt->rt_type;
+-		new_rt->rt_is_input = rt->rt_is_input;
+-		new_rt->rt_iif = rt->rt_iif;
+-		new_rt->rt_pmtu = rt->rt_pmtu;
+-		new_rt->rt_mtu_locked = rt->rt_mtu_locked;
+-		new_rt->rt_gw_family = rt->rt_gw_family;
+-		if (rt->rt_gw_family == AF_INET)
+-			new_rt->rt_gw4 = rt->rt_gw4;
+-		else if (rt->rt_gw_family == AF_INET6)
+-			new_rt->rt_gw6 = rt->rt_gw6;
+-
+-		new_rt->dst.input = rt->dst.input;
+-		new_rt->dst.output = rt->dst.output;
+-		new_rt->dst.error = rt->dst.error;
+ 		new_rt->dst.lastuse = jiffies;
+ 		new_rt->dst.lwtstate = lwtstate_get(rt->dst.lwtstate);
+ 	}
+-- 
+2.43.0
 
