@@ -1,182 +1,240 @@
-Received: from CHN02-BJS-obe.outbound.protection.partner.outlook.cn (mail-bjschn02on2115.outbound.protection.partner.outlook.cn [139.219.17.115])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 471984F210;
-	Sun, 18 Feb 2024 10:55:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=139.219.17.115
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708253747; cv=fail; b=gsc8fnqsaeGoAE+uSAirmPUpgfQCwnwHQBrtvkFa1m63rN8UvnKWB6Vdro3MMP6va3AuQLstDpv/YjfQUpNWITvJs5Se+Vcbyx1TuuhPb9yYLvd2x/oAjGY7RVJmdZu2CTRJKi73iFKKvyx48UWTOfE6sLH1Psc32B3vVD15EYQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708253747; c=relaxed/simple;
-	bh=BBYnptWQIjFtcUllo2fZRW0ZqwaT8YAxJA0EoTd48OI=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=VMaZwvzZeHe39yX0a6FCpS6hDBiyzxn7du4uhi/+n2cjtniKjD4xEIpgeEHj1+h1nddLyMcmi307sOetdHDt8reEfF92OFR1lQ9xFuHJ3tm25NZeY+1EygRvXyZIwiX3nJPCR9AmlCWH4mOVP0tjhS1gInr91xup59CdD0ZaPGs=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com; spf=pass smtp.mailfrom=starfivetech.com; arc=fail smtp.client-ip=139.219.17.115
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=starfivetech.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Ooi8HT1DC0XrO8v0HoAF6V+Si6YjyKMZrOIh3UVFfu5UTJA2Z3kcM3eApyqPyDpk0gLxzWde13JdvmgYYCgtcg5BHpA/AVTKbxzQKqL0n13LMFvb9OeHeDXd3RzDUFypjvXX6i9An3imRwTZYXrDYJnaiRT3iwdkSQVhfvprGhddmWehweyQOHTnCfOhyAl0x18pYN5cHeNe52Xqk+7s+uBYoiFj546vEwEqguSKSaEaVGspBkuBKH0LASzulTtfrkhwOMo7/BUPRpILpE6G8vj7znEARsxT20qxLwBt7fbmzLDl1KtyWT7uUc3RhOF8jX0gKj8oiHN0Wg0GxSTrMA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=loSF85QfSFsTWg1Z4YTdJt2rwA9n7SE/EKB3f4Wn2eA=;
- b=Ah4+AiASrc8j4dQDgoE76SD6UkqRgRajJYL1J4Lu+IMsR9rjHDs+tDLxwd4Lom02z3DxDC8xRAtO7Rig5DQcsYmN6xJuOX4/8vGTEouAkzu7igMXWwsvwnyGmWjbWCqELhqPEx3J3OpIxX0sO3KT30OApUTEf0MvtQg0cKBCSUiDMr6yCI54jOkuUA5ECklPDFyRqed+vEr87HyjxCpxskj8WghQ1Jy/jmA/Totfm5SEjicx8L3QvyWWkl9lHzh/VhUDybeTdcgWEdaOG+u9dEQU4fIRRv32FwlNUUtoNejjwC/WipPch/zAslzzdJADTNKWLtB7Bcxc0I2cq1KZ7w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=starfivetech.com; dmarc=pass action=none
- header.from=starfivetech.com; dkim=pass header.d=starfivetech.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=starfivetech.com;
-Received: from SHXPR01MB0863.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c311:25::15) by SHXPR01MB0765.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c311:26::18) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7270.46; Sun, 18 Feb
- 2024 10:17:47 +0000
-Received: from SHXPR01MB0863.CHNPR01.prod.partner.outlook.cn
- ([fe80::5a5a:fa59:15fd:63dc]) by
- SHXPR01MB0863.CHNPR01.prod.partner.outlook.cn ([fe80::5a5a:fa59:15fd:63dc%3])
- with mapi id 15.20.7249.051; Sun, 18 Feb 2024 10:17:47 +0000
-From: Minda Chen <minda.chen@starfivetech.com>
-To: Conor Dooley <conor@kernel.org>,
-	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh+dt@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Daire McNamara <daire.mcnamara@microchip.com>,
-	Emil Renner Berthing <emil.renner.berthing@canonical.com>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
-Cc: devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	linux-pci@vger.kernel.org,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Mason Huo <mason.huo@starfivetech.com>,
-	Leyfoon Tan <leyfoon.tan@starfivetech.com>,
-	Kevin Xie <kevin.xie@starfivetech.com>,
-	Minda Chen <minda.chen@starfivetech.com>
-Subject: [PATCH v15 13/23] PCI: microchip: Add INTx and MSI event num to struct plda_event
-Date: Sun, 18 Feb 2024 18:17:32 +0800
-Message-Id: <20240218101732.113397-12-minda.chen@starfivetech.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20240218101732.113397-1-minda.chen@starfivetech.com>
-References: <20240218101732.113397-1-minda.chen@starfivetech.com>
-Content-Type: text/plain
-X-ClientProxiedBy: SHXPR01CA0022.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c311:1b::31) To SHXPR01MB0863.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c311:25::15)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E78E14A86
+	for <linux-kernel@vger.kernel.org>; Sun, 18 Feb 2024 11:01:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1708254112; cv=none; b=D8ojj/W9pdsoJj7egRABfE9USScKquQgh7wHGjx0c8BLsqMa89wWmgCoAYazIm/hcuUqTNIi6z9GakNUxy9ZEKRAKvhoeMuvLXNMg6uuJA4oWG8y+NHi85WwOzB1BTFsK19ZDY4n8cC+v33pGEtPZoNswk+rDyYjBKfU0eOe+gY=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1708254112; c=relaxed/simple;
+	bh=M/AHIi+x/jiF/PThKbMOMo4JXa4L1ccApc8Jqc9khAM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=OeXF5+PH+s+JA55rMnzbjTP6OF+Q7HOzul4FvNwKyKGvmU5/i6Mz2iM9fAlqbt+h4dKNYqXO3rNpXqcPzEnmARBbBquHmxYbc0h3PJjBRYRx1U5VlC6A5kUb9fHJF3GMZJk4Ldr+SzUrzczP6H6UMGzoZ94wb/j1eDPOHHmUDQ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=dh2A4ORg; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dh2A4ORg"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1708254108;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=PhzxOa+tdV5tT3KRjUp/wlDOXFfnB7vhxjSt9woYKnQ=;
+	b=dh2A4ORg0A1ckJUpOBOhZIxuPlURbm5pfuRGR1GmFoZbNsu6WxmZWlYwlt7qj5jLzQXMuR
+	6zvYeGPdp1ukRdOPF40ZjrGquia4QbgsOuexEAUe90/LDpeOXTwBNu9rif6web+I1pC6gK
+	+DXbcLJnacCtvWkyh/UQKgXncsRxVH8=
+Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
+ [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-157-O3CJXae-MrWHpRGZgTzhmg-1; Sun, 18 Feb 2024 06:01:47 -0500
+X-MC-Unique: O3CJXae-MrWHpRGZgTzhmg-1
+Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-a2f71c83b7eso286397166b.1
+        for <linux-kernel@vger.kernel.org>; Sun, 18 Feb 2024 03:01:47 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708254106; x=1708858906;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=PhzxOa+tdV5tT3KRjUp/wlDOXFfnB7vhxjSt9woYKnQ=;
+        b=IBi2WxOn6TWfqF9vgIZ15TFqU5AoTzweJU+wgaqu7BwyguFzHs0Bj8V10RdnP+A00f
+         Qt0Zpp4eJoRyBBpXC/t2Vv9Lcf0q1EmrKY2xM4uA7ORwF6zHkjQKb2J2yRLv0/1perZr
+         wS/F8n8b2zji4yO1CiM5Emm1mgQ8y/cvqDxw0+gsn+jCNG/P0JNcSQ2a72ShcUoZIkdf
+         QWbFVAjzXUAHdSwv/IEtsOVJ7n4DPo7Eh5TGtB7L+nnPkg9GSBHfoYtXSGytY7SQtMt5
+         us0B+U1M2NFPKUnfVkkXMF8IZqNHOK8OUJO0cbSr83+KwskK8ninKahUP6uBsmgtlyaA
+         MEKw==
+X-Forwarded-Encrypted: i=1; AJvYcCVcNlCX+QKJ4KrTRnj4qeXYxaGf/x2nAsUiDlN9YN3JGTs4SxPa3SlxSjNpjFyNlP4071wOq9TjuQjzEMFRxD7GLazjkE+YdqIp2pAo
+X-Gm-Message-State: AOJu0YwNuu8H4o8eNLveyt9sknTJuQvUMy4ach7coO0SfTfxbm5FIrun
+	2Dq9JIQxmgPgp1koXvrSW0uKqtpjvb1EXHYw0JUM/RWt4i/tOiwtoHjy7PFJI04dTpK48DIN4uP
+	+P1tO1fe33hxzFneELmKKUay47T1Qb7DyfSQYbrLo/TGJDGuXQYz8i3+kOPDYhA==
+X-Received: by 2002:a17:906:d86:b0:a3d:7559:6ed1 with SMTP id m6-20020a1709060d8600b00a3d75596ed1mr6557325eji.4.1708254106153;
+        Sun, 18 Feb 2024 03:01:46 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IHTOitH7IczymutN2VoJo3b5YCAFLZzH9xYmmAjNuVWwzt/z1AW3C5zjADbe1Ig+jJdPvmwug==
+X-Received: by 2002:a17:906:d86:b0:a3d:7559:6ed1 with SMTP id m6-20020a1709060d8600b00a3d75596ed1mr6557311eji.4.1708254105844;
+        Sun, 18 Feb 2024 03:01:45 -0800 (PST)
+Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
+        by smtp.gmail.com with ESMTPSA id vo5-20020a170907a80500b00a3d559c6113sm1819579ejc.204.2024.02.18.03.01.45
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 18 Feb 2024 03:01:45 -0800 (PST)
+Message-ID: <7260ca36-fd92-4bf5-86b1-fb91393ad064@redhat.com>
+Date: Sun, 18 Feb 2024 12:01:44 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SHXPR01MB0863:EE_|SHXPR01MB0765:EE_
-X-MS-Office365-Filtering-Correlation-Id: 167f5ee1-297f-44c8-8978-08dc306adade
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	VEQRJ56M2ulyu/tIthpjsVSlpTDpYLnThb2gz8lWAvuI+YFagjjhw8iZxDEFl2tww/6z7jMHHDWVK8sB18qulkML0xYy3VZIATiXZ9bi8zLdBYL39XzKxHT+IwnUhR77oOem49INcftzGxUwo42jRW98wMrZjzPbnMHNh4QUfzKex+f47DlQt9CBj4KgYIrurqLdwawGSjzyX7GgYns9gobV6srKTo4bIvQybdzaFs5XDa649W7Brg1cECJRtDaHzrbcHo+BTfebu2Ar8MpDKNeuIEA/TfwqSMeZ2nqxeo2E15NZOspLPDaZ7anB38CX1uey4JJnmF7p5k17MH7510TTGPZP599Bv2W1sMjmLrhBU8hsF9CZhoxHZYx5a74EGtAhrT08ifFmizlERXTt0ZOh2HEFoPuBJUr+OajZO3ibLMaRsaWuGa2i6bzGl3ysotaKxuiCkCP8dZdbxlRhqQVRf2RSsHQOUo21l5cwYM98cl3QckmCBpGgNOVHXhmItAA32o7K+rGM4JQqKYihsTEZdEKhTAQM6FrF8/ZwjjNLIoX24bvBGYhL3eDcezRt
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SHXPR01MB0863.CHNPR01.prod.partner.outlook.cn;PTR:;CAT:NONE;SFS:(13230031)(366004)(136003)(396003)(346002)(39830400003)(230922051799003)(64100799003)(186009)(451199024)(1800799012)(2906002)(5660300002)(7416002)(44832011)(41320700001)(26005)(1076003)(6666004)(8936002)(66556008)(66476007)(4326008)(66946007)(107886003)(41300700001)(2616005)(83380400001)(8676002)(40180700001)(38350700005)(52116002)(508600001)(110136005)(54906003)(38100700002)(86362001)(36756003)(40160700002);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?FmwKvm/zcNzg66q5lR43oIABZpZzRo0o7rbq1vZtHlR3bkmXtvFMillV5Wo0?=
- =?us-ascii?Q?YjYOhEgucWMiSkTDVpqXLLIPlebAiK9WRcVfZ4kZGZzIwDVhaL4ByxUo7u0K?=
- =?us-ascii?Q?CNoIcZ12QH3edcmvoWaFvkEpijIbbHYM8JF19TbHGPuW4oFJsTvQi0eY1yDP?=
- =?us-ascii?Q?08scMtUCkvtJtXlY2NVXK7A+qfkmXetcMOop4wi20ZvnPI3gnZIvA6eRENB+?=
- =?us-ascii?Q?pJRUJyciyXkJb8CHPjWbGmm822MrIIs6NkKKqeu8TzZ3jcnBYwiBTo5+Q6eH?=
- =?us-ascii?Q?Mab0cy+rmXozw/yVxlMaqpsXdVPI5IlDvamcyarnraf9KPBD0KYcbzqRxZy/?=
- =?us-ascii?Q?ZE3dsPi0P6qn37E5HdiNkPiBJQxwi0AC4lA/lU3XJONwRwnLzP0SK6PPOE0T?=
- =?us-ascii?Q?rW/uV1SHn/OaqrOJrbYZ1p+FHN1++gaefJOZhvF5LlkTqjvS4GwhtH4u6bYg?=
- =?us-ascii?Q?q6IUehpdF52Rz3JsxibKcnJ/xYr5EX03yZmHoSjqVX5SOPgCiQ/NUOtQK4lx?=
- =?us-ascii?Q?FtuN0MtKsDHjBUx468MsWZGKwB/dk327V2RSJzdgYqUJ/wWJifA8p4IgVyqW?=
- =?us-ascii?Q?q1HSctzEQUmBNP3o7u/Xfrg+mbwiTocet+5Ra8E3w5/4SmNIR0u4JQfPPWq8?=
- =?us-ascii?Q?ySW8Jf23LsoqON9py7DfMEwnEdjl1dHIgbXAeMjQHGKIAoHK1U+WGeuvdAVN?=
- =?us-ascii?Q?edWDVYqz66P7XZgRfwjbuhPJxHomPExtqpjPfs7uXtkWNGm0bhi3lJEtwxGY?=
- =?us-ascii?Q?8fPez0sRxehnCna6KIDFsUnqy7C6z+V/uVeSk4IFa3CNjDqz6vxaOooNwgg6?=
- =?us-ascii?Q?0ENRN+SZ/RX4eEHLx+4BYxclKxtEOKOse2IN+tg3jl3vQzelBk/ldsXcDDb/?=
- =?us-ascii?Q?vN5j5BR2xtKIAAomCIViMiXO2NuLIoi/iMGtfL6mt/nVxBwPPv82lgE8OdT9?=
- =?us-ascii?Q?MK5Yd9ACmH76beZf82g5wcFFqsuDGCzz74jD+laXF5BcjGTQcTZhFr5+WPPx?=
- =?us-ascii?Q?8l/J6j7z2AD3FshvyOcJXI5/DWZAgs8hpyXQxbx24/4QOzQHulYUShl7HhHc?=
- =?us-ascii?Q?IhcmOOJrOigDeQgVacrWTJZ3F1hdi5+Q8oMTt87w053Vi0Oc3YL89Dlt098K?=
- =?us-ascii?Q?kQfXAmjD21UonLebh1NBZ27i6B31/M8FwNtQFOP4N709D1h/UxHO71JlcbS9?=
- =?us-ascii?Q?Ev9jCnz87D02NIgNeuQBL1PG07rYvzcPuu5N+LY2ZZ54oDVFXcBaGl4F9r5k?=
- =?us-ascii?Q?zm0JpqWO0R5NLrwFAh78PIW7+i4GDQYLJf9XbMT+slLuy+n7gWSojZiZAHwl?=
- =?us-ascii?Q?hCUuU0o+IC1jbJJikokCDlE2HAwKqkXop4ceF3DmGk4wEQ4/ElFLWzfOVyKd?=
- =?us-ascii?Q?aHRFfrsEAJx4j8LlO/ncuEDi4L1FCb5zXNttRCRvaKeP7+oqlFGTV4Ewbscm?=
- =?us-ascii?Q?83ajcc1v7G+MX2pbAtLlFRnVcGRO9lrkEZvi2XBARGFM45pGdnhDn15c/7UP?=
- =?us-ascii?Q?RcBQSfwb2wjqa7DKDiK3ReD+TzqciK1y3KTkpqOeUjuD1bywOS5c8XHs7LT+?=
- =?us-ascii?Q?gZJF7z8kxRxUwtDh/4LWRtMq37Wms9Tg3E6dj+tNsVzBjxzz2gSOpMxQ6mj0?=
- =?us-ascii?Q?pw=3D=3D?=
-X-OriginatorOrg: starfivetech.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 167f5ee1-297f-44c8-8978-08dc306adade
-X-MS-Exchange-CrossTenant-AuthSource: SHXPR01MB0863.CHNPR01.prod.partner.outlook.cn
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Feb 2024 10:17:47.7640
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 06fe3fa3-1221-43d3-861b-5a4ee687a85c
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: WMOH0Mjuif8ftVQ7hPbQZyLEwdnfU7J0HyOboyGHY8HosDVvrEvKXYFE+H9lgBzw3CvAt5ODiYyCvTOeC8ltMuoIf4wCKxF6u4fhk7TDAqQ=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SHXPR01MB0765
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/2] platform/x86/amd/pmf: Fixup error handling for
+ amd_pmf_init_smart_pc()
+Content-Language: en-US, nl
+To: Mario Limonciello <mario.limonciello@amd.com>, Shyam-sundar.S-k@amd.com
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Linux regressions mailing list <regressions@lists.linux.dev>
+References: <20240217012205.113614-1-mario.limonciello@amd.com>
+ <20240217012205.113614-3-mario.limonciello@amd.com>
+From: Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <20240217012205.113614-3-mario.limonciello@amd.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-The INTx and MSI interrupt event num is different in Microchip and
-StarFive platform.
+Hi Mario,
 
-Signed-off-by: Minda Chen <minda.chen@starfivetech.com>
-Acked-by: Conor Dooley <conor.dooley@microchip.com>
----
- drivers/pci/controller/plda/pcie-microchip-host.c | 6 ++++--
- drivers/pci/controller/plda/pcie-plda.h           | 2 ++
- 2 files changed, 6 insertions(+), 2 deletions(-)
+Thank you for your patches.
 
-diff --git a/drivers/pci/controller/plda/pcie-microchip-host.c b/drivers/pci/controller/plda/pcie-microchip-host.c
-index bf5ce33ee275..8a51d3aa7e88 100644
---- a/drivers/pci/controller/plda/pcie-microchip-host.c
-+++ b/drivers/pci/controller/plda/pcie-microchip-host.c
-@@ -817,6 +817,8 @@ static int mc_request_event_irq(struct plda_pcie_rp *plda, int event_irq,
- 
- static const struct plda_event mc_event = {
- 	.request_event_irq = mc_request_event_irq,
-+	.intx_event        = EVENT_LOCAL_PM_MSI_INT_INTX,
-+	.msi_event         = EVENT_LOCAL_PM_MSI_INT_MSI,
- };
- 
- static int plda_pcie_init_irq_domains(struct plda_pcie_rp *port)
-@@ -960,7 +962,7 @@ static int plda_init_interrupts(struct platform_device *pdev,
- 	}
- 
- 	intx_irq = irq_create_mapping(port->event_domain,
--				      EVENT_LOCAL_PM_MSI_INT_INTX);
-+				      event->intx_event);
- 	if (!intx_irq) {
- 		dev_err(dev, "failed to map INTx interrupt\n");
- 		return -ENXIO;
-@@ -970,7 +972,7 @@ static int plda_init_interrupts(struct platform_device *pdev,
- 	irq_set_chained_handler_and_data(intx_irq, plda_handle_intx, port);
- 
- 	msi_irq = irq_create_mapping(port->event_domain,
--				     EVENT_LOCAL_PM_MSI_INT_MSI);
-+				     event->msi_event);
- 	if (!msi_irq)
- 		return -ENXIO;
- 
-diff --git a/drivers/pci/controller/plda/pcie-plda.h b/drivers/pci/controller/plda/pcie-plda.h
-index 935686bba837..89172ce18237 100644
---- a/drivers/pci/controller/plda/pcie-plda.h
-+++ b/drivers/pci/controller/plda/pcie-plda.h
-@@ -130,6 +130,8 @@ struct plda_pcie_rp {
- struct plda_event {
- 	int (*request_event_irq)(struct plda_pcie_rp *pcie,
- 				 int event_irq, int event);
-+	int intx_event;
-+	int msi_event;
- };
- 
- void plda_pcie_setup_window(void __iomem *bridge_base_addr, u32 index,
--- 
-2.17.1
+On 2/17/24 02:22, Mario Limonciello wrote:
+> amd_pmf_init_smart_pc() calls out to amd_pmf_get_bios_buffer() but
+> the error handling flow doesn't clean everything up all allocated
+> memory.
+> 
+> As amd_pmf_get_bios_buffer() is only called by amd_pmf_init_smart_pc(),
+> fold it into the function and add labels to clean up any step that
+> can fail along the way.
+> 
+> Fixes: 7c45534afa44 ("platform/x86/amd/pmf: Add support for PMF Policy Binary")
+> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+> ---
+>  drivers/platform/x86/amd/pmf/tee-if.c | 67 ++++++++++++++++++---------
+>  1 file changed, 44 insertions(+), 23 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/amd/pmf/tee-if.c b/drivers/platform/x86/amd/pmf/tee-if.c
+> index 1359ab340f7c..feb9dfafea30 100644
+> --- a/drivers/platform/x86/amd/pmf/tee-if.c
+> +++ b/drivers/platform/x86/amd/pmf/tee-if.c
+> @@ -338,25 +338,6 @@ static void amd_pmf_remove_pb(struct amd_pmf_dev *dev) {}
+>  static void amd_pmf_hex_dump_pb(struct amd_pmf_dev *dev) {}
+>  #endif
+>  
+> -static int amd_pmf_get_bios_buffer(struct amd_pmf_dev *dev)
+> -{
+> -	dev->policy_buf = kzalloc(dev->policy_sz, GFP_KERNEL);
+> -	if (!dev->policy_buf)
+> -		return -ENOMEM;
+> -
+> -	dev->policy_base = devm_ioremap(dev->dev, dev->policy_addr, dev->policy_sz);
+> -	if (!dev->policy_base)
+> -		return -ENOMEM;
+> -
+> -	memcpy(dev->policy_buf, dev->policy_base, dev->policy_sz);
+> -
+> -	amd_pmf_hex_dump_pb(dev);
+> -	if (pb_side_load)
+> -		amd_pmf_open_pb(dev, dev->dbgfs_dir);
+> -
+> -	return amd_pmf_start_policy_engine(dev);
+> -}
+> -
+>  static int amd_pmf_amdtee_ta_match(struct tee_ioctl_version_data *ver, const void *data)
+>  {
+>  	return ver->impl_id == TEE_IMPL_ID_AMDTEE;
+> @@ -454,14 +435,54 @@ int amd_pmf_init_smart_pc(struct amd_pmf_dev *dev)
+>  	if (ret)
+>  		return ret;
+>  
+> +	ret = amd_pmf_set_dram_addr(dev, true);
+> +	if (ret)
+> +		goto out_dram;
+> +
+> +	dev->policy_base = devm_ioremap(dev->dev, dev->policy_addr, dev->policy_sz);
+> +	if (!dev->policy_base) {
+> +		ret = -ENOMEM;
+> +		goto out_policy_base;
+> +	}
+> +
+> +	dev->policy_buf = kzalloc(dev->policy_sz, GFP_KERNEL);
+> +	if (!dev->policy_buf) {
+> +		ret = -ENOMEM;
+> +		goto out_policy_buf;
+> +	}
+> +
+> +	memcpy(dev->policy_buf, dev->policy_base, dev->policy_sz);
+> +
+> +	amd_pmf_hex_dump_pb(dev);
+> +	if (pb_side_load)
+> +		amd_pmf_open_pb(dev, dev->dbgfs_dir);
+> +
+>  	INIT_DELAYED_WORK(&dev->pb_work, amd_pmf_invoke_cmd);
+> -	amd_pmf_set_dram_addr(dev, true);
+> -	amd_pmf_get_bios_buffer(dev);
+> +
+> +	ret = amd_pmf_start_policy_engine(dev);
+> +	if (ret)
+> +		goto out_start_engine;
+> +
+>  	dev->prev_data = kzalloc(sizeof(*dev->prev_data), GFP_KERNEL);
+>  	if (!dev->prev_data)
+
+I just checked and dev->prev_data gets used by dev->pb_work
+which gets queued by amd_pmf_start_policy_engine() so there
+is a (pre-existing) race here and dev->prev_data should be allocated
+before amd_pmf_start_policy_engine().
+
+Note kfree(NULL) is a no-op as is cancel_delayed_work_sync()
+on a non-queued work.
+
+So I think you can just use a single error_exit: label 
+(or any other label-name you like) and do:
+
+error_exit:
+	cancel_delayed_work_sync(&dev->pb_work);
+	kfree(dev->prev_data);
+	dev->prev_data = NULL;
+	kfree(dev->policy_buf);
+	dev->policy_buf = NULL;
+	kfree(dev->buf);
+	dev->buf = NULL;
+	amd_pmf_tee_deinit(dev);
+	return ret;
+
+There as long as you do the INIT_DELAYED_WORK() before
+any of the code which may fail with a goto error_exit.
+
+Note I also added clearing of the pointers after freeing
+them, at least for dev->buf this is important because
+that also gets used in non smart-pc paths and those
+count on it either being NULL or a valid pointer.
+
+Regards,
+
+Hans
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+> -		return -ENOMEM;
+> +		goto out_prev_data;
+> +
+> +	return 0;
+>  
+> -	return dev->smart_pc_enabled;
+> +out_prev_data:
+> +	cancel_delayed_work_sync(&dev->pb_work);
+> +
+> +out_start_engine:
+> +	kfree(dev->policy_buf);
+> +
+> +out_policy_buf:
+> +out_policy_base:
+> +	kfree(dev->buf);
+> +
+> +out_dram:
+> +	amd_pmf_tee_deinit(dev);
+> +
+> +	return ret;
+>  }
+>  
+>  void amd_pmf_deinit_smart_pc(struct amd_pmf_dev *dev)
 
