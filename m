@@ -1,131 +1,164 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ot1-f41.google.com (mail-ot1-f41.google.com [209.85.210.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D51821CF98;
-	Sun, 18 Feb 2024 09:43:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF66112E61;
+	Sun, 18 Feb 2024 09:51:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708249441; cv=none; b=BWdGJaMsBp0B8if8k5FSbz8IGvNpfWqPjQi43tXyVytCo8mfMx8kkCc7tti/VmTfbeaZtYRQn686JVXkpfYTwEs+MZYANq22wIFEtTCyfx4uBrUi+Gu+yz21prccRjyZSeeXc4Pi/phNOyCMxRSgJlkeWzO2ynb/zQIK2vgXzIk=
+	t=1708249913; cv=none; b=LGkYCqxSP4ammdvNhdgwvQAnXVmSb3Mq3szDBgd4a573/Y06nNtb+CMBMh1laz6rHBNCpaHULZGubTIim4Vnz2Jl1iqJ2H6WW5bvsf41ZCadqiz0gfZ+AXm/yZM1nbOfdkTwgHg6ULTUuBPCj0LhuUV88WKDEMbBheDE5C0Byhw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708249441; c=relaxed/simple;
-	bh=aSSYAKXiNZ3B9g+7NCAreTP0gRzqX/zcTJJrTQGiG24=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=hqJF4xs2VblUmsBGdSvjWwmo4rWgBR0bmwZ1+diAlqHuX2hPzMiRLUY2UaIaT9NOGn/H+Vb3pBJ/08VL6Ma3xvPlw1b2j6Bt8x7n/73WherVXBw5zAY/caVAprSSOppTgFjko5ODJIlaaWsdHMsR9085OLLVtQ7eBWvaOmmXdL4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=GqUch005; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1708249913; c=relaxed/simple;
+	bh=jHjHvEjAA/RhoLWSIKDlWeb7THxIVIJEBNEhkFgNP70=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=aYJAKPPyA5d5WSDhn/KIlBW161Stk/tYLM0XeSwvUEXihvd/SU62hnTvcR2zFIaKRVPM+ik/Pk+ZyL0qQT5t7B2eJlHguDNoiEs4bmEjOYVjpU36p0PswXq3gjBOO+SNP9nH/Tx5o6n5eF4JCycge8cA8VWiD6BFX9iWRshAYmc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Y8xwqYBo; arc=none smtp.client-ip=209.85.210.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="GqUch005"
-Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 41I9ehfF013317;
-	Sun, 18 Feb 2024 09:43:48 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	from:to:cc:subject:date:message-id:in-reply-to:references
-	:mime-version:content-transfer-encoding:content-type; s=
-	qcppdkim1; bh=I6FhMe2svHVVjnm5YbUsg2AnSWJOzTgHFtU1/uId9f0=; b=Gq
-	Uch0050zvS52uXzHME4nFmOxgN0GS/GBUBW1aFYkZkXXP+c+HEnKB/uqepovJ7Ua
-	0ceYl+S8ODLyMhiurp4HbdOJcYUIW6E8h+O7s2PDgiq4SPg42C1CEIndaWZjVvhC
-	IzYYFS+DrQjUrH34E27idTk7blvhXjt9EPg0y1AbCPB4I2X5Y4xSObNARAGhGiCl
-	+1HtiBRUxYZ79zm3oK5cwDQxsrwlh29BrcIug4cXX7rIGUDFS663RfLrYtTvA+vs
-	04ru/kWcROOJ1PQdOxxGQrdZU9zDqKW82bCGdbEKBHkGy71+wmlIGdRw41o9ukss
-	QNJnT1xUc1q6I/E4WSeg==
-Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3waktcsp2h-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sun, 18 Feb 2024 09:43:48 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 41I9hk9W022450
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sun, 18 Feb 2024 09:43:46 GMT
-Received: from hu-jinlmao-lv.qualcomm.com (10.49.16.6) by
- nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Sun, 18 Feb 2024 01:43:46 -0800
-From: Mao Jinlong <quic_jinlmao@quicinc.com>
-To: Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Mike Leach
-	<mike.leach@linaro.org>, James Clark <james.clark@arm.com>,
-        Bjorn Andersson
-	<andersson@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@linaro.org>,
-        Rob Herring
-	<robh+dt@kernel.org>,
-        Krzysztof Kozlowski
-	<krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        "Mao
- Jinlong" <quic_jinlmao@quicinc.com>,
-        Tao Zhang <quic_taozha@quicinc.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>
-CC: <coresight@lists.linaro.org>, <linux-arm-kernel@lists.infradead.org>,
-        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH v3 1/2] dt-bindings: arm: qcom,coresight-tpdm: Rename qcom,dsb-element-size
-Date: Sun, 18 Feb 2024 01:43:19 -0800
-Message-ID: <20240218094322.22470-2-quic_jinlmao@quicinc.com>
-X-Mailer: git-send-email 2.41.0
-In-Reply-To: <20240218094322.22470-1-quic_jinlmao@quicinc.com>
-References: <20240218094322.22470-1-quic_jinlmao@quicinc.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y8xwqYBo"
+Received: by mail-ot1-f41.google.com with SMTP id 46e09a7af769-6e2db19761fso1649323a34.1;
+        Sun, 18 Feb 2024 01:51:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1708249911; x=1708854711; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=/JuFlw0+x8wXUHToJkVUHN6ReDOJkSSSekYTFPFk/Jg=;
+        b=Y8xwqYBo0ki3T04TSKNHC/+pwgi5jYpc8BVhEbC4wE9kopdxpJU+fuQrFrBXHc8TWp
+         iVPslY8uBT860C9Eu3gJwf3wQnM0qXUcyHCKXYLeRjudeUkxmyXqrJVHF2dxYQfV0JOF
+         sCpZp4lhlePddnG/37R5ov+aP4QemYfiHQEuAhfcWlXGAMmeHD3m/zFymkMfQkvVwrqn
+         VN1ccl22t/SXKp29EFE/rEaEJLEE0ykNPvAKyYKUXQjMGDx/Nq9iIqdpmd84BJ4NfW0W
+         QBDt7vEDiYmzApGzP972su+/6nHbErK2wyV93uRj4NNsVqPgui9i3MNaiQ9QBDrMJTKH
+         SdUw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708249911; x=1708854711;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=/JuFlw0+x8wXUHToJkVUHN6ReDOJkSSSekYTFPFk/Jg=;
+        b=tx7FdwFT4sdayJp4MR79n2wJnGb1PePvQZhHiU5RNezHa82uQTIWLZo98q4rDEovIj
+         4SnStniXSMprFRB45nk+54AEv57DHNpCfyl1pqEBisDMsA6XGPwLZz6xKShn7qYGjYbK
+         uPA4c5a13hXqBsAqD5tHrZwk1SCSOSJVAZPlb2lwpEPi+cVRg/cLY5bWujkLqXvGDIX3
+         UcP5wcyghEh7s0nBBC/LQjH99jY7MDyKt8iBl0tVXA2+ay/OalKEDt5tu7FtxgdEENni
+         TldfylB8z9s0CEph2HuvpNgp84A+tDPNGGISvjdco7ului+bLN2j84QyMgjf5XUE0u7a
+         86Uw==
+X-Forwarded-Encrypted: i=1; AJvYcCWR1WhID1+tgAfcmY1I3lTln3E9tREWV43xDw2Xw1LIiQnjn98xw0LHmSawfKWIXfMswhJihwwIshzJlO6m/4pqvHnGLEc53xaxBx8MmCrfWO5i8ktrUjg4Lp9aZNKu2lyu
+X-Gm-Message-State: AOJu0Yy+hNh8/Ak7ZJ/x8grOF0PSTvtQz82uDKVTO933wwecOnxpkWzY
+	rqJRbBAYXc4+RbzwMgx2uVqk+XANRSEeLQcAWHFQOcO3W97FoM/3
+X-Google-Smtp-Source: AGHT+IFRnCiBoZY/IJLiyHv/jUKntft7MLsa6+sZ+FzMAjX3sVpz7axj62k3ebNbjpxlqEoSlyLAPA==
+X-Received: by 2002:a9d:7ad7:0:b0:6e2:eb00:7551 with SMTP id m23-20020a9d7ad7000000b006e2eb007551mr10040684otn.21.1708249910880;
+        Sun, 18 Feb 2024 01:51:50 -0800 (PST)
+Received: from [192.168.255.10] ([43.132.141.22])
+        by smtp.gmail.com with ESMTPSA id c11-20020aa781cb000000b006e0322f072asm2742266pfn.35.2024.02.18.01.51.48
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 18 Feb 2024 01:51:50 -0800 (PST)
+Message-ID: <585a36d2-6e46-44a0-8224-8d4cd54d0dd3@gmail.com>
+Date: Sun, 18 Feb 2024 17:51:47 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: nalasex01a.na.qualcomm.com (10.47.209.196) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: xlUXZiqKJrL5z87HpcIp1MVdpiXfESS5
-X-Proofpoint-ORIG-GUID: xlUXZiqKJrL5z87HpcIp1MVdpiXfESS5
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-02-18_07,2024-02-16_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 phishscore=0
- mlxlogscore=984 lowpriorityscore=0 priorityscore=1501 adultscore=0
- malwarescore=0 impostorscore=0 spamscore=0 mlxscore=0 bulkscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2401310000 definitions=main-2402180073
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] KVM: x86/intr: Explicitly check NMI from guest to
+ eliminate false positives
+Content-Language: en-US
+To: Sean Christopherson <seanjc@google.com>
+Cc: Paolo Bonzini <pbonzini@redhat.com>, Andi Kleen <ak@linux.intel.com>,
+ kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20231206032054.55070-1-likexu@tencent.com>
+ <ZcKKwSi7FdbSnexE@google.com> <ZcKf3RvyoVJ77sUQ@google.com>
+From: Like Xu <like.xu.linux@gmail.com>
+In-Reply-To: <ZcKf3RvyoVJ77sUQ@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Change qcom,dsb-element-size to qcom,dsb-element-bits as the unit is
-bit. There is no tpdm node in any DT as of now. Make this change before
-any tpdm node is added to DT.
+On 7/2/2024 5:08 am, Sean Christopherson wrote:
+> On Tue, Feb 06, 2024, Sean Christopherson wrote:
+>> +Oliver
+>>
+>> On Wed, Dec 06, 2023, Like Xu wrote:
+>>> Note that when vm-exit is indeed triggered by PMI and before HANDLING_NMI
+>>> is cleared, it's also still possible that another PMI is generated on host.
+>>> Also for perf/core timer mode, the false positives are still possible since
+>>> that non-NMI sources of interrupts are not always being used by perf/core.
+>>> In both cases above, perf/core should correctly distinguish between real
+>>> RIP sources or even need to generate two samples, belonging to host and
+>>> guest separately, but that's perf/core's story for interested warriors.
+>>
+>> Oliver has a patch[*] that he promised he would send "soon" (wink wink) to
+>> properly fix events that are configured to exclude the guest.  Unless someone
+>> objects, I'm going to tweak the last part of the changelog to be:
+>>
+>>      Note that when VM-exit is indeed triggered by PMI and before HANDLING_NMI
+>>      is cleared, it's also still possible that another PMI is generated on host.
+>>      Also for perf/core timer mode, the false positives are still possible since
+>>      that non-NMI sources of interrupts are not always being used by perf/core.
+>>      
+>>      For events that are host-only, perf/core can and should eliminate false
+>>      positives by checking event->attr.exclude_guest, i.e. events that are
+>>      configured to exclude KVM guests should never fire in the guest.
+>>      
+>>      Events that are configured to count host and guest are trickier, perhaps
+>>      impossible to handle with 100% accuracy?  And regardless of what accuracy
+>>      is provided by perf/core, improving KVM's accuracy is cheap and easy, with
+>>      no real downsides.
+> 
+> Never mind, this causes KUT's pmu_pebs test to fail:
+> 
+>    FAIL: Multiple (0x700000055): No OVF irq, none PEBS records.
+>    FAIL: Adaptive (0x1): Multiple (0x700000055): No OVF irq, none PEBS records.
+>    FAIL: Adaptive (0x2): Multiple (0x700000055): No OVF irq, none PEBS records.
+>    FAIL: Adaptive (0x4): Multiple (0x700000055): No OVF irq, none PEBS records.
+>    FAIL: Adaptive (0x1f000008): Multiple (0x700000055): No OVF irq, none PEBS records.
+>    FAIL: GP counter 0 (0xfffffffffffe): No OVF irq, none PEBS records.
+>    FAIL: Multiple (0x700000055): No OVF irq, none PEBS records.
+>    FAIL: Adaptive (0x1): GP counter 0 (0xfffffffffffe): No OVF irq, none PEBS records.
+>    FAIL: Adaptive (0x1): Multiple (0x700000055): No OVF irq, none PEBS records.
+>    FAIL: Adaptive (0x2): GP counter 0 (0xfffffffffffe): No OVF irq, none PEBS records.
+>    FAIL: Adaptive (0x2): Multiple (0x700000055): No OVF irq, none PEBS records.
+>    FAIL: Adaptive (0x4): GP counter 0 (0xfffffffffffe): No OVF irq, none PEBS records.
+>    FAIL: Adaptive (0x4): Multiple (0x700000055): No OVF irq, none PEBS records.
+>    FAIL: Adaptive (0x1f000008): GP counter 0 (0xfffffffffffe): No OVF irq, none PEBS records.
+>    FAIL: Adaptive (0x1f000008): Multiple (0x700000055): No OVF irq, none PEBS records.
+>    FAIL: Multiple (0x700000055): No OVF irq, none PEBS records.
+>    FAIL: Adaptive (0x1): Multiple (0x700000055): No OVF irq, none PEBS records.
+>    FAIL: Adaptive (0x2): Multiple (0x700000055): No OVF irq, none PEBS records.
+>    FAIL: Adaptive (0x4): Multiple (0x700000055): No OVF irq, none PEBS records.
+>    FAIL: Adaptive (0x1f000008): Multiple (0x700000055): No OVF irq, none PEBS records.
+> 
+> It might be a test bug, but I have neither the time nor the inclination to
+> investigate.
 
-Fixes: 2a8d9b371566 ("dt-bindings: arm: Add support for DSB element size")
-Signed-off-by: Mao Jinlong <quic_jinlmao@quicinc.com>
----
- .../devicetree/bindings/arm/qcom,coresight-tpdm.yaml         | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+For PEBS ovf case, we have "in_nmi() = 0x100000" from the core kernel and
+the following diff fixes the issue:
 
-diff --git a/Documentation/devicetree/bindings/arm/qcom,coresight-tpdm.yaml b/Documentation/devicetree/bindings/arm/qcom,coresight-tpdm.yaml
-index d0647ffaed71..8eec07d9d454 100644
---- a/Documentation/devicetree/bindings/arm/qcom,coresight-tpdm.yaml
-+++ b/Documentation/devicetree/bindings/arm/qcom,coresight-tpdm.yaml
-@@ -44,12 +44,11 @@ properties:
-     minItems: 1
-     maxItems: 2
- 
--  qcom,dsb-element-size:
-+  qcom,dsb-element-bits:
-     description:
-       Specifies the DSB(Discrete Single Bit) element size supported by
-       the monitor. The associated aggregator will read this size before it
-       is enabled. DSB element size currently only supports 32-bit and 64-bit.
--    $ref: /schemas/types.yaml#/definitions/uint8
-     enum: [32, 64]
- 
-   qcom,cmb-element-bits:
-@@ -111,7 +110,7 @@ examples:
-       compatible = "qcom,coresight-tpdm", "arm,primecell";
-       reg = <0x0684c000 0x1000>;
- 
--      qcom,dsb-element-size = /bits/ 8 <32>;
-+      qcom,dsb-element-bits = <32>;
-       qcom,dsb-msrs-num = <16>;
- 
-       clocks = <&aoss_qmp>;
--- 
-2.41.0
+diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+index 995760ba072f..dcf665251fce 100644
+--- a/arch/x86/include/asm/kvm_host.h
++++ b/arch/x86/include/asm/kvm_host.h
+@@ -1891,7 +1891,7 @@ enum kvm_intr_type {
+  /* Enable perf NMI and timer modes to work, and minimise false positives. */
+  #define kvm_arch_pmi_in_guest(vcpu) \
+  	((vcpu) && (vcpu)->arch.handling_intr_from_guest && \
+-	 (in_nmi() == ((vcpu)->arch.handling_intr_from_guest == KVM_HANDLING_NMI)))
++	 (!!in_nmi() == ((vcpu)->arch.handling_intr_from_guest == KVM_HANDLING_NMI)))
 
+  void __init kvm_mmu_x86_module_init(void);
+  int kvm_mmu_vendor_module_init(void);
+
+, does it help (tests passed on ICX) ?
+
+> 
+> 
+> Like,
+> 
+> If you want any chance of your patches going anywhere but my trash folder, you
+> need to change your upstream workflow to actually run tests.  I would give most
+> people the benefit of the doubt, e.g. assume they didn't have the requisite
+> hardware, or didn't realize which tests would be relevant/important.  But this
+> is a recurring problem, and you have been warned, multiple times.
+
+Sorry, my CI resources are diverted to other downstream projects.
+But there's no doubt it's my fault and this behavior will be corrected.
