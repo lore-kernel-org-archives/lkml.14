@@ -1,46 +1,58 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B697F1848;
-	Sun, 18 Feb 2024 03:25:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C924D15C0;
+	Sun, 18 Feb 2024 03:27:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708226715; cv=none; b=a9dTIyjeE+DCfqc0aH7EMAOE8ylrRwmw+UyVWD33vYTz8Tx2kSRKQGyYC6HsljiOaN+/dN3QF/5nBAXlt0+C/LmkHbWcL36GO7m+haFn1fpfooJj/q46xQpKpdG6ZwIshB066M4OCodv2Q+DlzN3BYFXlbMwXBgkn12hZ92YN3A=
+	t=1708226833; cv=none; b=QVOsAyT3PHLHx1bwvri60Oy0+UahjOB9HR+19nh2wXGo/lVsh7mOEMcNYjro7lc8M2vkf9FWBAPm4CSaxpvSGyL+nzWwYTijnf2L9lLMz4C5hR2WVkl/I89EOKxwWqL9XYEMI1l5tmzC3+4j1WBzUcDRkFK+ATHPSWTW1z2mNq8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708226715; c=relaxed/simple;
-	bh=mSWLc4sSN134G7gn1rRMq9O57FqrO4Jhs8fU+bv3Rfw=;
+	s=arc-20240116; t=1708226833; c=relaxed/simple;
+	bh=kEu7RUHLgNZwfVyNdolqNMnkH+oHU7TrRv26YvjrNkc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AMu9f8WFsXR43w2SYo3NgN5A7D/tYT8goMNYCO7zBXpMT4iaGYR4lMA3/Gn+TdfO8Or+hpM+3rJ5hzd6CYDA8KArjUEB0WheTK2C/awbY057EwFhcwCV2J+BocUaLf+CrWuwOdqLH1y1KIClvlODATJVUlp5/5PiMItkPycwEns=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ryZhzndb; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=nXBINZIzHN5ikLwJNVNuVkQK3+3r6y1CVs1Ull7UM0RS6FGFrF78Z8ug1aDqY3qvAbbv2hRnkxWYba3HMnJLiLolOmujVQUQghncK9AEb/dJZ3ekLYm9SxjVKjUzQIEkqVD7spdhOmCIm/TJFy8tDjd+d5n7Aw292Jx7SYoTGcc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VO0JYDhF; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ryZhzndb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 058EBC433F1;
-	Sun, 18 Feb 2024 03:25:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708226715;
-	bh=mSWLc4sSN134G7gn1rRMq9O57FqrO4Jhs8fU+bv3Rfw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ryZhzndb5eonUXEh55cTcGp11eNSU8/OYbjY0+SakYLYQ8pj1fyKTkrmqKOazqcMN
-	 GKBuUQKfakDIb8jXgBmIbAo/nZwUUSrFnnRZDWcQBzUEOvb14QqwdUgxvKXVXDsk3/
-	 WkZhT+YZnzKkOoIsCB9TKop2uZNjGolPIin/D/kW6wy8vM4hIXL4pp2I2JmhYLqIz/
-	 NcLxn5QOKVmFh6tc2SjSwlzJQ0rk4TF73swFMsuGKn9N4KocJQ2h4ntEbfqxSThIon
-	 xiN2rFee3/YeLunngIg2QmgecM+xG7HWlsTOGc4ThicoJwNRx+OgxCPtcZXnSYBZFE
-	 IkWWRQlJED4SQ==
-Date: Sat, 17 Feb 2024 21:25:12 -0600
-From: Bjorn Andersson <andersson@kernel.org>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Andy Gross <agross@kernel.org>, 
-	Konrad Dybcio <konrad.dybcio@linaro.org>, Elliot Berman <quic_eberman@quicinc.com>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, Guru Das Srinagesh <quic_gurus@quicinc.com>, 
-	Andrew Halaney <ahalaney@redhat.com>, Maximilian Luz <luzmaximilian@gmail.com>, 
-	Alex Elder <elder@linaro.org>, Srini Kandagatla <srinivas.kandagatla@linaro.org>, 
-	Arnd Bergmann <arnd@arndb.de>, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, kernel@quicinc.com, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, Deepti Jaggi <quic_djaggi@quicinc.com>
-Subject: Re: [PATCH v7 02/12] firmware: qcom: scm: enable the TZ mem allocator
-Message-ID: <tnylagkmj36lve2ub5voumtkqjdy6j3hr6yyk4mqkaabvc3gdv@voaiu2oqi73o>
-References: <20240205182810.58382-1-brgl@bgdev.pl>
- <20240205182810.58382-3-brgl@bgdev.pl>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VO0JYDhF"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1708226832; x=1739762832;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=kEu7RUHLgNZwfVyNdolqNMnkH+oHU7TrRv26YvjrNkc=;
+  b=VO0JYDhFjeMRFoD9pQohRBuk0OMGm6GDHiPgj3wS5YjS12lJBWuNvZ7K
+   UMysbcRKhdV8J7ZSK+/gC8pzfWfnr4h13+w0kHs0PVCAo6OvVhffx0OsV
+   sazAAOJx8OINSKyk/WNCbFaoF/sRkF44e7ia8bAa0lW0rY1Bsy8B7GKLj
+   6407V3KbwC/4muxHMGpjWvHKcF4aMsaGENAgnBUtiHuy9N9dfjREYtAWI
+   uD4eylB/3kbjiUTjI8GTMAvWYUdJvOtC8fjxnebWFtPzA+Dj2Gu/sn2ei
+   smMRSg/3f5M7jH9D7BkiIPKN/qdb+htCFiVrmjdFEzBZ1IjGUyirIXHfx
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10987"; a="2187942"
+X-IronPort-AV: E=Sophos;i="6.06,167,1705392000"; 
+   d="scan'208";a="2187942"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Feb 2024 19:27:11 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.06,167,1705392000"; 
+   d="scan'208";a="27344386"
+Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.165])
+  by fmviesa002.fm.intel.com with ESMTP; 17 Feb 2024 19:27:09 -0800
+Date: Sun, 18 Feb 2024 11:23:18 +0800
+From: Xu Yilun <yilun.xu@linux.intel.com>
+To: matthew.gerlach@linux.intel.com
+Cc: hao.wu@intel.com, trix@redhat.com, mdf@kernel.org, yilun.xu@intel.com,
+	linux-fpga@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] fpga: dfl: afu: support Rev 2 of DFL Port feature
+Message-ID: <ZdF4JvYQQL8irnbW@yilunxu-OptiPlex-7050>
+References: <20240125233715.861883-1-matthew.gerlach@linux.intel.com>
+ <ZbjHl8ptQG5FdHvC@yilunxu-OptiPlex-7050>
+ <alpine.DEB.2.22.394.2401300948590.112016@sj-4150-psse-sw-opae-dev2>
+ <Zbnd8W1ciTKeoKc4@yilunxu-OptiPlex-7050>
+ <alpine.DEB.2.22.394.2401311610020.112016@sj-4150-psse-sw-opae-dev2>
+ <ZcBIjcFJjGKf0qcO@yilunxu-OptiPlex-7050>
+ <alpine.DEB.2.22.394.2402051600190.122158@sj-4150-psse-sw-opae-dev2>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -49,101 +61,127 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240205182810.58382-3-brgl@bgdev.pl>
+In-Reply-To: <alpine.DEB.2.22.394.2402051600190.122158@sj-4150-psse-sw-opae-dev2>
 
-On Mon, Feb 05, 2024 at 07:28:00PM +0100, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+On Wed, Feb 07, 2024 at 08:40:55AM -0800, matthew.gerlach@linux.intel.com wrote:
 > 
-> Select the TrustZone memory allocator in Kconfig and create a pool of
-> memory shareable with the TrustZone when probing the SCM driver.
 > 
-> This will allow a gradual conversion of all relevant SCM calls to using
-> the dedicated allocator.
+> On Mon, 5 Feb 2024, Xu Yilun wrote:
 > 
-> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> Reviewed-by: Andrew Halaney <ahalaney@redhat.com>
-> Tested-by: Andrew Halaney <ahalaney@redhat.com> # sc8280xp-lenovo-thinkpad-x13s
-> Tested-by: Deepti Jaggi <quic_djaggi@quicinc.com> #sa8775p-ride
-> Reviewed-by: Elliot Berman <quic_eberman@quicinc.com>
-> ---
->  drivers/firmware/qcom/Kconfig    |  1 +
->  drivers/firmware/qcom/qcom_scm.c | 16 ++++++++++++++++
->  2 files changed, 17 insertions(+)
+> > On Wed, Jan 31, 2024 at 04:26:27PM -0800, matthew.gerlach@linux.intel.com wrote:
+> > > 
+> > > 
+> > > On Wed, 31 Jan 2024, Xu Yilun wrote:
+> > > 
+> > > > On Tue, Jan 30, 2024 at 10:00:16AM -0800, matthew.gerlach@linux.intel.com wrote:
+> > > > > 
+> > > > > 
+> > > > > On Tue, 30 Jan 2024, Xu Yilun wrote:
+> > > > > 
+> > > > > > On Thu, Jan 25, 2024 at 03:37:15PM -0800, Matthew Gerlach wrote:
+> > > > > > > Revision 2 of the Device Feature List (DFL) Port feature
+> > > > > > > adds support for connecting the contents of the port to
+> > > > > > > multiple PCIe Physical Functions (PF).
+> > > > > > > 
+> > > > > > > This new functionality requires changing the port reset
+> > > > > > > behavior during FPGA and software initialization from
+> > > > > > > revision 1 of the port feature. With revision 1, the initial
+> > > > > > > state of the logic inside the port was not guaranteed to
+> > > > > > > be valid until a port reset was performed by software during
+> > > > > > > driver initialization. With revision 2, the initial state
+> > > > > > > of the logic inside the port is guaranteed to be valid,
+> > > > > > > and a port reset is not required during driver initialization.
+> > > > > > > 
+> > > > > > > This change in port reset behavior avoids a potential race
+> > > > > > > condition during PCI enumeration when a port is connected to
+> > > > > > > multiple PFs. Problems can occur if the driver attached to
+> > > > > > > the PF managing the port asserts reset in its probe function
+> > > > > > > when a driver attached to another PF accesses the port in its
+> > > > > > > own probe function. The potential problems include failed or hung
+> > > > > > 
+> > > > > > Only racing during probe functions? I assume any time port_reset()
+> > > > > > would fail TLPs for the other PF. And port_reset() could be triggered
+> > > > > > at runtime by ioctl().
+> > > > > 
+> > > > > Yes, a port_reset() triggered by ioctl could result in failed TLP for the
+> > > > > other PFs. The user space SW performing the ioctl needs to ensure all PFs
+> > > > > involved are properly quiesced before the port_reset is performed.
+> > > > 
+> > > > How would user get an insight into other PF drivers to know everything
+> > > > is quiesced?  I mean do we need driver level management for this?
+> > > 
+> > > Since this is an FPGA, the number of other PFs and the drivers bound to
+> > > those PFs depends on the FPGA image. There would also be user space software
+> > > stacks involved with the other PFs as well. The user would have to ensure
+> > > all the SW stacks and drivers are quiesced as appropriate for the FPGA
+> > 
+> > User may not know everything about the device, they only get part of the
+> > controls that drivers grant. This is still true for vfio + userspace
+> > drivers.
 > 
-> diff --git a/drivers/firmware/qcom/Kconfig b/drivers/firmware/qcom/Kconfig
-> index f18686edf415..d24d83223867 100644
-> --- a/drivers/firmware/qcom/Kconfig
-> +++ b/drivers/firmware/qcom/Kconfig
-> @@ -7,6 +7,7 @@
->  menu "Qualcomm firmware drivers"
->  
->  config QCOM_SCM
-> +	select QCOM_TZMEM
->  	tristate
->  
->  config QCOM_TZMEM
-> diff --git a/drivers/firmware/qcom/qcom_scm.c b/drivers/firmware/qcom/qcom_scm.c
-> index 520de9b5633a..0d4c028be0c1 100644
-> --- a/drivers/firmware/qcom/qcom_scm.c
-> +++ b/drivers/firmware/qcom/qcom_scm.c
-> @@ -8,8 +8,10 @@
->  #include <linux/completion.h>
->  #include <linux/cpumask.h>
->  #include <linux/dma-mapping.h>
-> +#include <linux/err.h>
->  #include <linux/export.h>
->  #include <linux/firmware/qcom/qcom_scm.h>
-> +#include <linux/firmware/qcom/qcom_tzmem.h>
->  #include <linux/init.h>
->  #include <linux/interconnect.h>
->  #include <linux/interrupt.h>
-> @@ -20,9 +22,11 @@
->  #include <linux/of_platform.h>
->  #include <linux/platform_device.h>
->  #include <linux/reset-controller.h>
-> +#include <linux/sizes.h>
->  #include <linux/types.h>
->  
->  #include "qcom_scm.h"
-> +#include "qcom_tzmem.h"
->  
->  static bool download_mode = IS_ENABLED(CONFIG_QCOM_SCM_DOWNLOAD_MODE_DEFAULT);
->  module_param(download_mode, bool, 0);
-> @@ -41,6 +45,8 @@ struct qcom_scm {
->  	int scm_vote_count;
->  
->  	u64 dload_mode_addr;
-> +
-> +	struct qcom_tzmem_pool *mempool;
->  };
->  
->  struct qcom_scm_current_perm_info {
-> @@ -1887,6 +1893,16 @@ static int qcom_scm_probe(struct platform_device *pdev)
->  	if (of_property_read_bool(pdev->dev.of_node, "qcom,sdi-enabled"))
->  		qcom_scm_disable_sdi();
->  
-> +	ret = qcom_tzmem_enable(__scm->dev);
-> +	if (ret)
-> +		return dev_err_probe(__scm->dev, ret,
-> +				     "Failed to enable the TrustZone memory allocator\n");
-> +
-> +	__scm->mempool = devm_qcom_tzmem_pool_new(__scm->dev, SZ_256K);
+> A user performing a port reset would have to know the impact to the specific
+> FPGA image being run in order to ensure all SW stacks are ready for the
+> reset.
 
-As we're not moving from the callers freely allocating what they need,
-to a fixed sized pool of 256kb. Please document why 256kb was choosen,
-so that we have something to fall back on when someone runs out of this
-space, or wonders "why not 128kb?".
+We are not going to change the logic of the whole driver model just
+because the device is backed up by an FPGA image.  The *driver* should be
+fully responsible for matched devices.  A HW reset unaware to the
+device driver is not wanted.  Assuming that the userspace could control
+every access to device makes no sense.
 
-Regards,
-Bjorn
+For your case, there is no garantee userspace could block every access
+to "other PF" initiated by "other PF" driver.  There is also no
+notification to "other PF" driver that userspace is doing reset to
+"other PF" via "management PF" interface.  "other PF" driver just break
+on reset.
 
-> +	if (IS_ERR(__scm->mempool))
-> +		return dev_err_probe(__scm->dev, PTR_ERR(__scm->mempool),
-> +				     "Failed to create the SCM memory pool\n");
-> +
->  	/*
->  	 * Initialize the QSEECOM interface.
->  	 *
-> -- 
-> 2.40.1
 > 
+> > 
+> > > image. I don't think the driver performing the port_reset() can know all the
+> > 
+> > Other PF drivers should know their own components. They should be aware
+> > that their devices are being reset.
+> 
+> The other PF drivers depend on the actual FPGA image being run.
+> 
+> > 
+> > > components to be able to provide any meaningful management.
+> > 
+> > If the reset provider and reset consumer are not in the same driver,
+> > they should interact with each other. IIRC, some reset controller class
+> > works for this purpose.
+> 
+> The other PFs in many cases can present as standard devices with existing
+> drivers like virtio-net or virtio-blk. It does not seem desireable to have
+> to change existing drivers for a particular FPGA implementation
+
+If you have to use a specific method for reset, it is not a standard virtio
+pci device, and you have to make some change.
+
+Thanks,
+Yilun
+
+> 
+> Thanks,
+> Matthew
+> > 
+> > Thanks,
+> > Yilun
+> > 
+> > > 
+> > > Thanks,
+> > > Matthew
+> > > 
+> > > > 
+> > > > Thanks,
+> > > > Yilun
+> > > > 
+> > > > > 
+> > > > > Do you want me to update the commit message with this information?
+> > > > > 
+> > > > > Thanks,
+> > > > > Matthew
+> > > > 
+> > > > 
+> > 
+> > 
