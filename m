@@ -1,160 +1,87 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 940AF6DCEA;
-	Sun, 18 Feb 2024 17:02:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1A1A335D8;
+	Sun, 18 Feb 2024 17:05:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708275771; cv=none; b=W/8ZSninMuriS/pfhGEQD80y9ok1GHDX32qemSL8Ne9DIquiTgY/4mg5bnlP+roCoR7Uez1q1aFK7uZdMTGKEdGy+o6576+IX+00ZcSuzgFanFy6LWAhE2PX7+Xr7QjD67I5SfWpNuFQo2QqKxZblALxGIUvkutu3eNN/IhIPG4=
+	t=1708275937; cv=none; b=p0qK4xyF9bFkwRgE6VIFIytkMMwEDusivPcfepi/f1xXk4hgnZ2X46oe/VszJKti8oHgJZ6FB5NO9UOBWlfKTic/SPyhP/aVjasW1ncSQ1CST//0wUfMg15rz3X2hapAiAxO9DvpQnaNlspwMOW8P0FZLkVd38KJn2j2NVhcCHc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708275771; c=relaxed/simple;
-	bh=qWyNRiG421dAjYKLRLROwxCibjuXvtznm1WgYeNyacQ=;
+	s=arc-20240116; t=1708275937; c=relaxed/simple;
+	bh=WEt0ZSBB/wSMLcKR7tYm2xx702SIKxALBV7kapfv/6U=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Cjd8GE0/CnxFVEZLlyq0w1bQ6oZXAC4IpzYIvRxUmTf4aUBAuDfFtQjWXzAfFuBUNGaTRSbnPyVGCscmbFDY7JuE1d/ur7oyZhQR/VmqNPV8tK5JN5n7ZMDYFgDEv7qmGNd+CruuMqgIc7mOmRhZj/gdqxQozeGUXZurfc45u3c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qC+7Iss1; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=B1W8FUxsKjOIH+DEMc/GTmHQSbXr0OgGwMibYMlHsiIxHI1BjT8Yu8R4cjzkR2AgJU36/8gBiDp3iH4xz+StvXkz3OHDTcM/R841Lu5MQiwhgKPBM99g/g+IQdDQyAHuHB3qd0D/7Yc3v5j6OK4e8YoCUaqrF4B4YQHKW3b0DXY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=4XEwo+D0; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qC+7Iss1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5215FC433F1;
-	Sun, 18 Feb 2024 17:02:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708275771;
-	bh=qWyNRiG421dAjYKLRLROwxCibjuXvtznm1WgYeNyacQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=qC+7Iss1WVr/u4uGeMhyAxUJ47KbW7ZzWrqCCepfOj9Oo2GRarYn0G9V1CHzoRrOT
-	 XxJuCN7blczYmeYaDnkSsEN8s82n5GW4SGQ9gXzvKfG6rYbRtbwYZCv+2QJyheSWLl
-	 IPdlv2Ck3ZRFplhYfoJeDPihp5wrJ6c6JUg3v0IRw0eyAC6+z/uFrybRN221zg6vob
-	 Thmylje/yFGHCWDHZ47cFrmJNj3ByHz9ssbkkgiMGDGaPNKAPWtTFn6jt/rxd08YB8
-	 sVvQRhT7whg+lB0DOeMOHwXtXDQbMxxW+7pM6mxIVSjA546WBKuxMN0BwdTGdEd/4d
-	 7o0IDykUZ0g7g==
-Date: Sun, 18 Feb 2024 17:02:46 +0000
-From: Conor Dooley <conor@kernel.org>
-To: Samuel Holland <samuel.holland@sifive.com>
-Cc: Stefan O'Rear <sorear@fastmail.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Andrew Jones <ajones@ventanamicro.com>,
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Subject: Re: [PATCH -fixes v2 3/4] riscv: Add ISA extension parsing for Sm
- and Ss
-Message-ID: <20240218-rotunda-discover-d6d84709807e@spud>
-References: <20240213033744.4069020-1-samuel.holland@sifive.com>
- <20240213033744.4069020-4-samuel.holland@sifive.com>
- <20240213-dangle-taco-2742f6087a3e@spud>
- <ff3bd436-12f8-4cde-881d-89a005ad85c0@sifive.com>
- <b7ad2bd4-a19e-486e-8be2-3b56f288d5d0@app.fastmail.com>
- <20240213-earflap-easing-370492840507@spud>
- <90a7443c-feca-4fbb-8c2e-fa050c0e6141@sifive.com>
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="4XEwo+D0"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=JoiEVod0eganWp4ZBFaZnk8w/7QLOEnGwHWEOsbmutY=; b=4XEwo+D0jkMjh7s/d3gm/tF4or
+	7iCQGJSQHUP0mfnG0hX8uq3ros/DfVnbu37RRz5boTOdAMghq6WGa0zMIzF4sPK81ZcrLSGXrYYKi
+	6jr9bbk1/t+OfUb8l4y6zQgifrxUOaQJSqUn0iSMNQASPeNfkJti2RrgxgSCgxIKkIZM=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1rbkbl-0088Gu-W6; Sun, 18 Feb 2024 18:05:41 +0100
+Date: Sun, 18 Feb 2024 18:05:41 +0100
+From: Andrew Lunn <andrew@lunn.ch>
+To: Dimitri Fedrau <dima.fedrau@gmail.com>
+Cc: Heiner Kallweit <hkallweit1@gmail.com>,
+	Russell King <linux@armlinux.org.uk>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Stefan Eichenberger <eichest@gmail.com>, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v7 net-next 09/14] net: phy: marvell-88q2xxx: add cable
+ test support
+Message-ID: <9c1bc1fa-a009-4653-a772-d771fcd67515@lunn.ch>
+References: <20240218075753.18067-1-dima.fedrau@gmail.com>
+ <20240218075753.18067-10-dima.fedrau@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="r0a/WySfeyXRLwE+"
-Content-Disposition: inline
-In-Reply-To: <90a7443c-feca-4fbb-8c2e-fa050c0e6141@sifive.com>
-
-
---r0a/WySfeyXRLwE+
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20240218075753.18067-10-dima.fedrau@gmail.com>
 
-On Sun, Feb 18, 2024 at 09:00:14AM -0600, Samuel Holland wrote:
-> >>>> Or maybe we can still with the properties you have, but instead of
-> >>>> treating them like any other extension, handle these separately,
-> >>>> focusing on the numbering, so that only having the exact version
-> >>>> supported by a cpu is possible.
-> >>>
-> >>> Maybe I'm misunderstanding what you're saying here, but it is already=
- the case
-> >>> that the DT for a CPU would only contain the exact version of the pri=
-vileged ISA
-> >>> supported by that CPU.
-> >>
-> >> If privileged spec versions are boolean extensions, then you would say=
- "ss1p11",
-> >> "ss1p12", "ss1p13" as separate/simultaneous extensions.
-> >=20
-> >> This is needed in order
-> >> to allow simple support checks as described in the riscv,isa-extension=
-s cover
-> >> letter.
-> >=20
-> > Yes, it is explicitly a goal of riscv,isa-extensions that you can look
-> > for a specific extension in the list if that is all you care about. If
-> > you go and drop ss1p11 because you support ss1p12 it defeats that.
->=20
-> Okay, that makes sense, but that is not how the parsing code works right =
-now,
-> which is probably what led me down the wrong path. :)
->=20
-> To have the intended semantics, we cannot parse _anything_ in
-> riscv,isa-extensions as a "bundled" or "superset" extension.
+On Sun, Feb 18, 2024 at 08:57:46AM +0100, Dimitri Fedrau wrote:
+> Add cable test support for Marvell 88Q222x devices. Reported distance
+> granularity is 1m.
+> 
+> 1m cable, open:
+>   Cable test started for device eth0.
+>   Cable test completed for device eth0.
+>   Pair A code Open Circuit
+>   Pair A, fault length: 1.00m
+> 
+> 1m cable, shorted:
+>   Cable test started for device eth0.
+>   Cable test completed for device eth0.
+>   Pair A code Short within Pair
+>   Pair A, fault length: 1.00m
+> 
+> 6m cable, open:
+>   Cable test started for device eth0.
+>   Cable test completed for device eth0.
+>   Pair A code Open Circuit
+>   Pair A, fault length: 6.00m
+> 
+> 6m cable, shorted:
+>   Cable test started for device eth0.
+>   Cable test completed for device eth0.
+>   Pair A code Short within Pair
+>   Pair A, fault length: 6.00m
+> 
+> Signed-off-by: Dimitri Fedrau <dima.fedrau@gmail.com>
 
-That's not true I don't think. You can parse as a "bundle" but...
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 
-> Because to
-> accomplish your goal, each extension in the bundle must be listed explici=
-tly, in
-> case the consumer only cares about that one extension.
-
-=2E..as you note here, the extensions also have to be listed explicitly so
-that they can be detected in isolation if that is all that a consumer
-does.
-
-> So it sounds like
-> riscv_fill_hwcap_from_ext_list() needs to ignore subset_ext_size/subset_e=
-xt_ids.
-
-Do you mean this:
-if (ext->subset_ext_size) {
-	for (int j =3D 0; j < ext->subset_ext_size; j++) {
-		if (riscv_isa_extension_check(ext->subset_ext_ids[i]))
-			set_bit(ext->subset_ext_ids[j], isainfo->isa);
-	}
-}
-
-I think that is fine? If you find the "superset" you can enable the
-individual elements. The problem would just be if someone put only the
-superset in a DT (or ACPI tables) and the software looked for the
-individual element only, but IIRC the kernel currently checks both the
-superset and individual elements.
-It would be possible to check a bundle and then skip looking for the
-individual elements if the bundle was already found if the parsing is
-wont to be sped up.
-
-I think all we need to do is enforce that all individual elements are
-present on a schema validation level (I have no clue what we can do
-for ACPI) and no change is required in the kernel.
-
-Am I misunderstanding what you think is the problem here?
-
-> > I don't know off the top of my head how to enforce ss1p12 requiring ss1=
-p11
-> > in json schema, but I do have an idea of where to start...
->=20
-> Yeah, this is different from normal "dependencies:" because it is a strin=
-g list.
-
-I think it is actually doable, just will look sorta clunky. I meant to
-go and do it this weekend, but I've been rather sick unfortunately.
-Something similar is definitely doable for compatibles, so either it'll
-"just work" or I may have to extend the validation tooling.
-
-Cheers,
-Conor.
-
---r0a/WySfeyXRLwE+
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZdI3+gAKCRB4tDGHoIJi
-0op+AQD+yswfcNC39kGvy+5LlZblpT5uVA4VMEPH51eOdf6opgEA64Aq9nCRWaUY
-XrJa2JzMMscuYkn0xKBnFl5H5ed3sAs=
-=oPKw
------END PGP SIGNATURE-----
-
---r0a/WySfeyXRLwE+--
+    Andrew
