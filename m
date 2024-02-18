@@ -1,240 +1,197 @@
-Received: from CHN02-BJS-obe.outbound.protection.partner.outlook.cn (mail-bjschn02on2122.outbound.protection.partner.outlook.cn [139.219.17.122])
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2059.outbound.protection.outlook.com [40.107.237.59])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E8482421D;
-	Sun, 18 Feb 2024 11:55:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=139.219.17.122
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D06791B811;
+	Sun, 18 Feb 2024 11:57:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.59
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708257360; cv=fail; b=SgYxCcOdFMwjeqpD9E/5sJxdYmJXkrtFKQeLqXlPJeslpUX8TME8JVSe9APhQA4KShCsKY8uD4WtX3mo5uQfLxosc4sCAHk2WGJsjkGD+00yKyZjBFfgpgsAOscnesnyRCezlwWFlBaI6tqgRVN33eDoFw+zIVCIItpaTn2yb24=
+	t=1708257480; cv=fail; b=YJR4xirkttjz4IO3q3my4OuDVvzjE05vU0j6GjEestrvOawCHpGq/YaZobTtqUORpXw8HiarS2LTASulBQvqjQPrE6VMICAVHDvnsZwq42EVSGEPR9e5eHJgrvR5HrD6is0rRB8ff9GDR8NL4qa+ICRaxSIrDf16ZUvP0Z6SVcE=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708257360; c=relaxed/simple;
-	bh=CK38PTJKcJcw90VpcidRxBv9FWVT/PDLFLiHaWgmHaU=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=JMUZm6TgaT+ZPbUm8HiXRv+P5TpSBiE5dCv9vb685zDHeeXpN+t9g8uNKiWJHHviUJWRWJERDwjXEqgWg9g4Suub2at65q9ImeRsW9g76zz24meyBXProw+d7vqLqg1V+bfWxHxRTSIIB4NdKjWIDfqr4BumTeDyVEeQ5QP7/UI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com; spf=pass smtp.mailfrom=starfivetech.com; arc=fail smtp.client-ip=139.219.17.122
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=starfivetech.com
+	s=arc-20240116; t=1708257480; c=relaxed/simple;
+	bh=59CAn5wXmap+szpOqOXeFHeEbKuafsT2IE2jSwR4QiQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=bkw9UMZD45vuSNSUI2XBgSfxIwOgtHSelBZcMuB6uIetoWMr5KOHfWoRd+eaFtPy1JIQbxfsY7IKMj3wpvsgFKHayxXLdeOPff+9drZkw4qL+G7sSz4HPACPtN9W4iPmkYTMEI0a8aIZPdckIb6tDfWrNlDg9e6ydmRCMLUsFco=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=QdqDK//K; arc=fail smtp.client-ip=40.107.237.59
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="QdqDK//K"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=lHX1YfWLgeFDZVellxphoJhD0Zv0OtHO9Z9M5FK7BsYebN6+eXgcLjCJXVESGoJCQUS0A5RUVREJY5fHJaLUgdEfrV7+GILKCNHV9AmT7DYPDuODT1daADIoQyoywOcfRkpvipA4xYW+KSdKGAfW2Qa2pY4sW5dHAxlNM+EO9EOHFlVbnANFn4FGlAXCNKGYTzoQbHJZ3TrDU2AU5piTpDXcDOS7HOzkiYEWUqULfHG9y+wqxHYio/La2MlVac/WEaAd/TXw1aVBpnWqFHomqOZUse9T/BEH8xV3mCYyPg58YZGUlzWkaCg7ReVNbafyn2LFGKvZ+DQjNvk7VL43eA==
+ b=luoRPBY+KdYkVvz1P4s0kCOyAGZKKTsz1axcVHqiBurI7dfP5fbxQuHkztWM5gp+82vb8mkMI0M8cT7jS+Ii2M263jTVz4h0ZxvM4eGMyuFw56LCGkqRIexECWFf7QLnAEV8oDQnfZC9nE0Gvfxh2ZLoIavgoXDj913L6NuTx4URSYgLUUBiZIXdFzAHcmBwXGQR7NabsiXAg9aSwosZH4MskA8FVUUtt7QkyTh1Lgwi5DMsC3Cg8MRt+d8CTnNgqbKjvlZG0sU7bQRsUUehhCqge7tJRH05WjbAj9FaWEIz8z89NTx6wV1UOK5TZsyiibbfO6I+wUPZi/nseikuCw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=w95He89+nS3O0/n7azFj8FLXOgq0kCSQDRtJPpzHt7I=;
- b=VjlmLOXN+es9mIpnxrZMD+GH1aSC8K/EgcKgOpxGqFDKhyi/YE9qPT+3myHZS/ZVkUsPSoexeLzLEqSYM2chqhE4d9ak8/JQB6Fxq17oGC1vEihmGecF2sH4yF7DNbKSx34oUyNdMnJ9FkQFUlhNYtNpDk51qblyEg4UlaqaMSAz4iFdB8PNetxEW1KiiI/yXt+jpHEh7sDIUz7+YzGbHcPCc0xfdQJ+yIcUahw25tO+Vl7csEkxr4V7gT7pza4zkpndnuL/KCCAbxDQw0ZP/ClhkWcHNXJOzhFwEMb931hPRmsAHWJSP/YFYlXCYMKMnxVpX+587Ow6uZHjjvh23Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=starfivetech.com; dmarc=pass action=none
- header.from=starfivetech.com; dkim=pass header.d=starfivetech.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=starfivetech.com;
-Received: from SHXPR01MB0863.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c311:25::15) by SHXPR01MB0765.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c311:26::18) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7270.46; Sun, 18 Feb
- 2024 10:17:47 +0000
-Received: from SHXPR01MB0863.CHNPR01.prod.partner.outlook.cn
- ([fe80::5a5a:fa59:15fd:63dc]) by
- SHXPR01MB0863.CHNPR01.prod.partner.outlook.cn ([fe80::5a5a:fa59:15fd:63dc%3])
- with mapi id 15.20.7249.051; Sun, 18 Feb 2024 10:17:47 +0000
-From: Minda Chen <minda.chen@starfivetech.com>
-To: Conor Dooley <conor@kernel.org>,
-	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh+dt@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Daire McNamara <daire.mcnamara@microchip.com>,
-	Emil Renner Berthing <emil.renner.berthing@canonical.com>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
-Cc: devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	linux-pci@vger.kernel.org,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Mason Huo <mason.huo@starfivetech.com>,
-	Leyfoon Tan <leyfoon.tan@starfivetech.com>,
-	Kevin Xie <kevin.xie@starfivetech.com>,
-	Minda Chen <minda.chen@starfivetech.com>
-Subject: [PATCH v15 12/23] PCI: microchip: Add request_event_irq() callback function
-Date: Sun, 18 Feb 2024 18:17:31 +0800
-Message-Id: <20240218101732.113397-11-minda.chen@starfivetech.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20240218101732.113397-1-minda.chen@starfivetech.com>
-References: <20240218101732.113397-1-minda.chen@starfivetech.com>
-Content-Type: text/plain
-X-ClientProxiedBy: SHXPR01CA0022.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c311:1b::31) To SHXPR01MB0863.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c311:25::15)
+ bh=OhdozrAwlDh4/q0rWb8RZFMxx2ywrrLJev0rhxbmng4=;
+ b=A7FNvkVm/Fjrwn8BivQweyg/JDFt3Cb/3BPaozPkQIuGLpXAhosPdniBWhsPxkCHM2GjK5ipFSTCYJRVtRcaEWsUr4OsbdyQbLwuLCGHNc5LU8A7HfuobP+DQ6qxwuDR5KmcNODV5dMI8E88Pwo6a4ynJwt97o9BHrI+DF7gpLTCjwA834jMMLW1bVYWpbxhswLnrTpgUD/eJGh28Iqe5mVutqJ/v6Zg1/3DYP5yIeee1fsEoMPWzYNhbKt3aOdMTBhl/F+AjMoar6Pu9I/JrLrbVqo5c8bjrZhNE4V16oYFuQL/Ax9OaObkwtKzquRUf39dMTpPJ7ios8gxrNVVvw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.117.160) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=OhdozrAwlDh4/q0rWb8RZFMxx2ywrrLJev0rhxbmng4=;
+ b=QdqDK//KUOt6y07G93Mzxgzvdc6L9YKarv4p6T1NU5H5ZM14F4KmLzITnYWILdNdLmHz6BHU3YlocOv1zM21MjsKzqV1WroDgTfNAFlDHmDrddfPiaK8glSL38ShH5hkQGj4MHfD1lMi+zwVTVczkwhceSI3fuaxS/ucvrq4yXjn3mJ38+sFojZYB8pqzFgOvzfHKqFxxd4BDouolyeQcFQ3kymNiUMUIKkez1uw40zbwXspAoj6hb3BFt5HItBfSB+c72djuBgeQ7QmHoRJgT++kdDNuYABjv06EvCfELL/xZJhLRxb2o1i5yVjCxMiRue8FoFyEyhYZn3Gf50aVw==
+Received: from SN1PR12CA0087.namprd12.prod.outlook.com (2603:10b6:802:21::22)
+ by SN7PR12MB8027.namprd12.prod.outlook.com (2603:10b6:806:32a::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7316.17; Sun, 18 Feb
+ 2024 11:57:54 +0000
+Received: from SN1PEPF00026369.namprd02.prod.outlook.com
+ (2603:10b6:802:21:cafe::bc) by SN1PR12CA0087.outlook.office365.com
+ (2603:10b6:802:21::22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7292.34 via Frontend
+ Transport; Sun, 18 Feb 2024 11:57:54 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.160)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.117.160 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.117.160; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.117.160) by
+ SN1PEPF00026369.mail.protection.outlook.com (10.167.241.134) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.7292.25 via Frontend Transport; Sun, 18 Feb 2024 11:57:54 +0000
+Received: from rnnvmail201.nvidia.com (10.129.68.8) by mail.nvidia.com
+ (10.129.200.66) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.41; Sun, 18 Feb
+ 2024 03:57:41 -0800
+Received: from [172.27.34.193] (10.126.231.35) by rnnvmail201.nvidia.com
+ (10.129.68.8) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1258.12; Sun, 18 Feb
+ 2024 03:57:34 -0800
+Message-ID: <c7690b8a-78db-46ba-91fe-a2186eaae8aa@nvidia.com>
+Date: Sun, 18 Feb 2024 13:57:32 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v18 1/3] vfio/pci: rename and export do_io_rw()
+To: <ankita@nvidia.com>, <jgg@nvidia.com>, <alex.williamson@redhat.com>,
+	<shameerali.kolothum.thodi@huawei.com>, <kevin.tian@intel.com>,
+	<mst@redhat.com>, <eric.auger@redhat.com>, <jgg@ziepe.ca>,
+	<oleksandr@natalenko.name>, <clg@redhat.com>,
+	<satyanarayana.k.v.p@intel.com>, <brett.creeley@amd.com>, <horms@kernel.org>,
+	<shannon.nelson@amd.com>
+CC: <aniketa@nvidia.com>, <cjia@nvidia.com>, <kwankhede@nvidia.com>,
+	<targupta@nvidia.com>, <vsethi@nvidia.com>, <acurrid@nvidia.com>,
+	<apopple@nvidia.com>, <jhubbard@nvidia.com>, <danw@nvidia.com>,
+	<anuaggarwal@nvidia.com>, <mochs@nvidia.com>, <kvm@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <virtualization@lists.linux-foundation.org>
+References: <20240216030128.29154-1-ankita@nvidia.com>
+ <20240216030128.29154-2-ankita@nvidia.com>
+Content-Language: en-US
+From: Yishai Hadas <yishaih@nvidia.com>
+In-Reply-To: <20240216030128.29154-2-ankita@nvidia.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: rnnvmail201.nvidia.com (10.129.68.8) To
+ rnnvmail201.nvidia.com (10.129.68.8)
+X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SHXPR01MB0863:EE_|SHXPR01MB0765:EE_
-X-MS-Office365-Filtering-Correlation-Id: f893e8e6-f9fa-4c3e-919d-08dc306ada62
+X-MS-TrafficTypeDiagnostic: SN1PEPF00026369:EE_|SN7PR12MB8027:EE_
+X-MS-Office365-Filtering-Correlation-Id: 3495ce6d-4cde-44bc-720b-08dc3078d778
 X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
 X-Microsoft-Antispam-Message-Info:
-	2/7NSP8p8AGumkkx1vcAFVXmzbdjhtL+RHgBE3LAH/t0PEiQ3VhfYl9vFnZyXVnOrZmeSq9Sjw6j1YZYHBZs8/LkEMYgHV0flKhfseoILuQy2mWJjC6pSjgsUWh0IkEEaytzluubgCfU4CpZT15/apRBlvaOEubkSynlfLu2j7QC+NPQRQUWoSQZldhwINa/EH43gdwiSNin0rnWq/bV/QI7PW4/Qrd/tFrUJ17k/Rb6gtRjC7xHmWS8WIFFPCVGNkNJm/L9JBP9+2x7C5dIP3d1J4xwAcfc6KgVkvtd47ce8h1M85VmRABjD7yoR/jYQW8XRRUWs20dRFr+G16/wWO4Crf/YCzZRUyyJDRnH3ecgBMoFeEz/3us/X3IygiUH+QnlpVVgpEUEA7TeAL7zRNXNvQLBeJVCsyBYqp2ECNxLYBRjJ/tXQiUvM4O5cdu7HNyT5/Lfi+03I/eT68llF/aY4hy4PDhLx4bEKK2Ia8rB/I4IEiVE3wC6yivDzhTIIFA9LaUZwhis6MChrH8B5ZO9QAhOcDndJWUiBHg5v+DG+tgQKLH7QzfpcCRa81y
+	nSuzu0FGcyOAWCVNjFLow/XBGauybMric9WWm6TLh3FVHHhwqzKVoOD8Er91OEGXtmKOEgwxdalVlJaI8fmSq9or4UhGOrkiahFamOaEy0oKVoXkpbA5LKg16LJ8mpMibc1w2XADJAHGjBTYKxVP9nWPu1ldqXxejkK9b9TjYG2M4deVZeyMo90Z0FePtl42+A7696g/8+g5yhJ9Zu6Xa/kD/GFtBQweZ09i0nOoFjekjUSF2zWMSxP+AktPt9ONaf8w7XD76yuJ671mz9EaWDvk2Rir4oBnW4D7uHLDZOhd/032mxUu+ZFTFyhD1tfadvhcktWTchw9RAW3c8SYEpLmm+EIFPvlloJFBSrR/ntpX7SpHQwuh5d5QYb2bS5bN04MGB50bvtZlqVB5U2AcogUO5G1QZRgJe+egb79by8LkbAMySRfn4JcwR5sSHIOWJTxXd6pLQ2cmYa9DxSYOfub6bUF+QX0UFIRlHsrlwSXId3o90ZSHLN0wPSl8KZboCg52RTU0AjXcNjxBFgkPcF1x4n6HAKutFv6BZf/AuvQ6TdAsNIcFouv67zc3kCNBGx17JQq7EQbKcMQ4Epu/CqlSUI+EnS6qWAHPAz4hKXTDSCjlQPZKJvn6HIA7ZLTRX++nYLtB9VbunTqBzE/Z/JtNw5OdxnxA1gEeU8bRo4=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SHXPR01MB0863.CHNPR01.prod.partner.outlook.cn;PTR:;CAT:NONE;SFS:(13230031)(366004)(136003)(396003)(346002)(39830400003)(230922051799003)(64100799003)(186009)(451199024)(1800799012)(2906002)(5660300002)(7416002)(44832011)(41320700001)(26005)(1076003)(6666004)(8936002)(66556008)(66476007)(4326008)(66946007)(107886003)(41300700001)(2616005)(83380400001)(8676002)(40180700001)(38350700005)(52116002)(508600001)(110136005)(54906003)(38100700002)(86362001)(36756003)(40160700002);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?EVHreCZGcovroKnqowry16R7yUT3pmiYyxNoFuwmWb018uyYTa+VlB9uhQjP?=
- =?us-ascii?Q?bi48NnpYixLhyUFZkwwAqAVaLWyQNXDuHRbqWYOlFZU6j2Uh3yQETDNtschd?=
- =?us-ascii?Q?HcKJKYKS4VjXF0a0/LIx6Cz8goM7shcQ6IPaCU2Ijsz1CmLLvu7rARCEY1uv?=
- =?us-ascii?Q?N2a4P78JVkaFQcdxzt2up/1TcaKpZU28uyQhTwMw5QJbBsNIkp95+YM9+Beh?=
- =?us-ascii?Q?491T+rYkbBTdCyoTD0FxW4Y5JecwRklftm1ulvTj4OMCVaMqOOkOk6NqdPFu?=
- =?us-ascii?Q?LUi5FzT1uPquRmfMdeM4HBjusbPnyXsehyc7u3GRY7Iksn3aTg5Ut7Ic0uPS?=
- =?us-ascii?Q?icoBhKmAgi+5tyC275/gNXljgNd6PHqB52QvSEzvN1mH23FM3WhJsvn7RL6+?=
- =?us-ascii?Q?WOyF67dTLZHm0Bb3il29dVJOepDzDlkPSK12C0KO/cJ+CScZBo3nkwcum72s?=
- =?us-ascii?Q?M1+Mrqybm2Wbtut1nZYAAAPXlbsJDdCjjtHpwjd5PGAn87R7CmcSPZRVD3l5?=
- =?us-ascii?Q?JTTnEo8aES35DQRj6t6qlzv0nK6m36kGlRfoOSiUiC6Ul0ZPxPC49Ksejyde?=
- =?us-ascii?Q?5omm6J5t+peuO11bGmpy/X4jSxu4KwjNcigHtbXFeLsZ/f3/85Vx2Ddd+eqW?=
- =?us-ascii?Q?sWefQYqnni8zNkBeik2h34clNpuA4VdXvz2UsvyO4T8aSozeIUZ2nLsLU7Ck?=
- =?us-ascii?Q?0bTwhahRxxA/8OqpQChISNi2UmjogMXyCNjklcRWLRNf9IWZZ59ypvSyq3hA?=
- =?us-ascii?Q?q7wPMylqsZY/RWQr4VBdx2Nph8NUCCb6TLup2LwALOnVdFHhy8Rj61yOR8Mm?=
- =?us-ascii?Q?d1XtpmSsUOoOXwZYVAmGGT/QBuLtFvf49ThswlUHqcxFS19er9/DPmJ0M4lg?=
- =?us-ascii?Q?BWV9FIqYw97OeikLBPNiNWdYs7+kRm9pQD2Yv6dfRVclxGnWZF8Zb6VwKNKC?=
- =?us-ascii?Q?WTMIVq76dWWu1P4wEa6yyeaFc06Be+65ZxNKx/eZaiL7jRGfk1ExGdtmxtIH?=
- =?us-ascii?Q?8gODaoxIy1rL6hq86YoS1QIIqBY/RhFNBjUzWtt/KrcgpooQPzKNpNM9h6ig?=
- =?us-ascii?Q?y8fso0GhEwVFF9/H5wQx2nur/ChT8gmhQsmu7K6/bxD3pFmdaMgoCxlnEzvw?=
- =?us-ascii?Q?gzN/vInBY2BfUsIn6fb53umtKgNPBDdh3PQvAb+Ucy/u4oVHAJwWUbz7hCsk?=
- =?us-ascii?Q?93wuM+utaX7vzkNzZtPPHEWJM2sSyPgZvRx5Etdkr11rxD/EVS8Yvcvv19R4?=
- =?us-ascii?Q?qNr/yHy/FtXYXxUc0KflNFw100v64EGsxSkn1es5iUjHR+aFq1sZI2M4Htvi?=
- =?us-ascii?Q?oLTOFPlN3ET1U++2o/tXkiWaaVxrvVyyQ61kRbG/NFChWQ2T+ZOhm20Mli7k?=
- =?us-ascii?Q?DWTN5ecbMWN5A3zXIQXTfsZCyOYsN9CXK17jPi+Fer/6KRErcgmS3nbM2thc?=
- =?us-ascii?Q?j3rdLpboPZcH/lksxg2Chgs/3/u9Ifr+f1zWi8pXwWGi4GH+MetIZ6lb8V3a?=
- =?us-ascii?Q?+pWyzTntxnCX9huq86YtW2tYzh1vLLdwINlFMbGfCAPeYe/GQYaqP82fn1i1?=
- =?us-ascii?Q?6oE8QUQZ3Uuq9Y8xXvYwspW/KkmaqgVeVhUKHZI/exNEij+G9+R6AtYrzrPd?=
- =?us-ascii?Q?Og=3D=3D?=
-X-OriginatorOrg: starfivetech.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f893e8e6-f9fa-4c3e-919d-08dc306ada62
-X-MS-Exchange-CrossTenant-AuthSource: SHXPR01MB0863.CHNPR01.prod.partner.outlook.cn
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Feb 2024 10:17:46.9723
+	CIP:216.228.117.160;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge1.nvidia.com;CAT:NONE;SFS:(13230031)(4636009)(396003)(346002)(39860400002)(136003)(376002)(230922051799003)(186009)(64100799003)(36860700004)(82310400011)(451199024)(1800799012)(46966006)(40470700004)(5660300002)(70206006)(70586007)(8936002)(8676002)(31686004)(4326008)(7416002)(2906002)(86362001)(31696002)(7636003)(36756003)(356005)(82740400003)(921011)(110136005)(54906003)(26005)(16526019)(336012)(426003)(83380400001)(2616005)(41300700001)(53546011)(16576012)(478600001)(316002);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Feb 2024 11:57:54.7565
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 06fe3fa3-1221-43d3-861b-5a4ee687a85c
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: zkm6DRXfVFLxJ2iKWdxQUArjQe0ufdlo+XXUA19kLmwq/CyjbbUouqL9cqjthOmAG6oAO4Y0h+ARuqhrpuTnKhUblqpIHTGapxADBHAdSRY=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SHXPR01MB0765
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3495ce6d-4cde-44bc-720b-08dc3078d778
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.160];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SN1PEPF00026369.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR12MB8027
 
-As PLDA dts binding doc(Documentation/devicetree/bindings/pci/
-plda,xpressrich3-axi-common.yaml) showed, PLDA PCIe contains an interrupt
-controller. Microchip Polarfire PCIe add some PCIe interrupts base on
-PLDA IP interrupt controller.
+On 16/02/2024 5:01, ankita@nvidia.com wrote:
+> From: Ankit Agrawal <ankita@nvidia.com>
+> 
+> do_io_rw() is used to read/write to the device MMIO. The grace hopper
+> VFIO PCI variant driver require this functionality to read/write to
+> its memory.
+> 
+> Rename this as vfio_pci_core functions and export as GPL.
+> 
+> Reviewed-by: Kevin Tian <kevin.tian@intel.com>
+> Signed-off-by: Ankit Agrawal <ankita@nvidia.com>
+> ---
+>   drivers/vfio/pci/vfio_pci_rdwr.c | 16 +++++++++-------
+>   include/linux/vfio_pci_core.h    |  5 ++++-
+>   2 files changed, 13 insertions(+), 8 deletions(-)
+> 
+> diff --git a/drivers/vfio/pci/vfio_pci_rdwr.c b/drivers/vfio/pci/vfio_pci_rdwr.c
+> index 07fea08ea8a2..03b8f7ada1ac 100644
+> --- a/drivers/vfio/pci/vfio_pci_rdwr.c
+> +++ b/drivers/vfio/pci/vfio_pci_rdwr.c
+> @@ -96,10 +96,10 @@ VFIO_IOREAD(32)
+>    * reads with -1.  This is intended for handling MSI-X vector tables and
+>    * leftover space for ROM BARs.
+>    */
+> -static ssize_t do_io_rw(struct vfio_pci_core_device *vdev, bool test_mem,
+> -			void __iomem *io, char __user *buf,
+> -			loff_t off, size_t count, size_t x_start,
+> -			size_t x_end, bool iswrite)
+> +ssize_t vfio_pci_core_do_io_rw(struct vfio_pci_core_device *vdev, bool test_mem,
+> +			       void __iomem *io, char __user *buf,
+> +			       loff_t off, size_t count, size_t x_start,
+> +			       size_t x_end, bool iswrite)
+>   {
+>   	ssize_t done = 0;
+>   	int ret;
+> @@ -201,6 +201,7 @@ static ssize_t do_io_rw(struct vfio_pci_core_device *vdev, bool test_mem,
+>   
+>   	return done;
+>   }
+> +EXPORT_SYMBOL_GPL(vfio_pci_core_do_io_rw);
+>   
+>   int vfio_pci_core_setup_barmap(struct vfio_pci_core_device *vdev, int bar)
+>   {
+> @@ -279,8 +280,8 @@ ssize_t vfio_pci_bar_rw(struct vfio_pci_core_device *vdev, char __user *buf,
+>   		x_end = vdev->msix_offset + vdev->msix_size;
+>   	}
+>   
+> -	done = do_io_rw(vdev, res->flags & IORESOURCE_MEM, io, buf, pos,
+> -			count, x_start, x_end, iswrite);
+> +	done = vfio_pci_core_do_io_rw(vdev, res->flags & IORESOURCE_MEM, io, buf, pos,
+> +				      count, x_start, x_end, iswrite);
+>   
+>   	if (done >= 0)
+>   		*ppos += done;
+> @@ -348,7 +349,8 @@ ssize_t vfio_pci_vga_rw(struct vfio_pci_core_device *vdev, char __user *buf,
+>   	 * probing, so we don't currently worry about access in relation
+>   	 * to the memory enable bit in the command register.
+>   	 */
+> -	done = do_io_rw(vdev, false, iomem, buf, off, count, 0, 0, iswrite);
+> +	done = vfio_pci_core_do_io_rw(vdev, false, iomem, buf, off, count,
+> +				      0, 0, iswrite);
+>   
+>   	vga_put(vdev->pdev, rsrc);
+>   
+> diff --git a/include/linux/vfio_pci_core.h b/include/linux/vfio_pci_core.h
+> index 85e84b92751b..cf9480a31f3e 100644
+> --- a/include/linux/vfio_pci_core.h
+> +++ b/include/linux/vfio_pci_core.h
+> @@ -130,7 +130,10 @@ void vfio_pci_core_finish_enable(struct vfio_pci_core_device *vdev);
+>   int vfio_pci_core_setup_barmap(struct vfio_pci_core_device *vdev, int bar);
+>   pci_ers_result_t vfio_pci_core_aer_err_detected(struct pci_dev *pdev,
+>   						pci_channel_state_t state);
+> -
+> +ssize_t vfio_pci_core_do_io_rw(struct vfio_pci_core_device *vdev, bool test_mem,
+> +			       void __iomem *io, char __user *buf,
+> +			       loff_t off, size_t count, size_t x_start,
+> +			       size_t x_end, bool iswrite);
+>   #define VFIO_IOWRITE_DECLATION(size) \
+>   int vfio_pci_core_iowrite##size(struct vfio_pci_core_device *vdev,	\
+>   			bool test_mem, u##size val, void __iomem *io);
 
-Microchip Polarfire PCIe additional intrerrupts:
-EVENT_PCIE_L2_EXIT
-EVENT_PCIE_HOTRST_EXIT
-EVENT_PCIE_DLUP_EXIT
-EVENT_SEC_TX_RAM_SEC_ERR
-EVENT_SEC_RX_RAM_SEC_ERR
-....
-
-Both codes of request interrupts and mc_event_handler() contain
-additional interrupts symbol names, these can not be re-used. So add a
-new plda_event_handler() functions, which implements PLDA interrupt
-defalt handler, add request_event_irq() callback function to compat
-Microchip Polorfire PCIe additional interrupts.
-
-Signed-off-by: Minda Chen <minda.chen@starfivetech.com>
-Acked-by: Conor Dooley <conor.dooley@microchip.com>
----
- .../pci/controller/plda/pcie-microchip-host.c | 31 ++++++++++++++++---
- drivers/pci/controller/plda/pcie-plda.h       |  5 +++
- 2 files changed, 32 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/pci/controller/plda/pcie-microchip-host.c b/drivers/pci/controller/plda/pcie-microchip-host.c
-index 0a5cd8b214cd..bf5ce33ee275 100644
---- a/drivers/pci/controller/plda/pcie-microchip-host.c
-+++ b/drivers/pci/controller/plda/pcie-microchip-host.c
-@@ -642,6 +642,11 @@ static irqreturn_t mc_event_handler(int irq, void *dev_id)
- 	return IRQ_HANDLED;
- }
- 
-+static irqreturn_t plda_event_handler(int irq, void *dev_id)
-+{
-+	return IRQ_HANDLED;
-+}
-+
- static void plda_handle_event(struct irq_desc *desc)
- {
- 	struct plda_pcie_rp *port = irq_desc_get_handler_data(desc);
-@@ -803,6 +808,17 @@ static int mc_pcie_init_clks(struct device *dev)
- 	return 0;
- }
- 
-+static int mc_request_event_irq(struct plda_pcie_rp *plda, int event_irq,
-+				int event)
-+{
-+	return devm_request_irq(plda->dev, event_irq, mc_event_handler,
-+				0, event_cause[event].sym, plda);
-+}
-+
-+static const struct plda_event mc_event = {
-+	.request_event_irq = mc_request_event_irq,
-+};
-+
- static int plda_pcie_init_irq_domains(struct plda_pcie_rp *port)
- {
- 	struct device *dev = port->dev;
-@@ -904,7 +920,9 @@ static void mc_disable_interrupts(struct mc_pcie *port)
- 	writel_relaxed(GENMASK(31, 0), bridge_base_addr + ISTATUS_HOST);
- }
- 
--static int plda_init_interrupts(struct platform_device *pdev, struct plda_pcie_rp *port)
-+static int plda_init_interrupts(struct platform_device *pdev,
-+				struct plda_pcie_rp *port,
-+				const struct plda_event *event)
- {
- 	struct device *dev = &pdev->dev;
- 	int irq;
-@@ -928,8 +946,13 @@ static int plda_init_interrupts(struct platform_device *pdev, struct plda_pcie_r
- 			return -ENXIO;
- 		}
- 
--		ret = devm_request_irq(dev, event_irq, mc_event_handler,
--				       0, event_cause[i].sym, port);
-+		if (event->request_event_irq)
-+			ret = event->request_event_irq(port, event_irq, i);
-+		else
-+			ret = devm_request_irq(dev, event_irq,
-+					       plda_event_handler,
-+					       0, NULL, port);
-+
- 		if (ret) {
- 			dev_err(dev, "failed to request IRQ %d\n", event_irq);
- 			return ret;
-@@ -983,7 +1006,7 @@ static int mc_platform_init(struct pci_config_window *cfg)
- 		return ret;
- 
- 	/* Address translation is up; safe to enable interrupts */
--	ret = plda_init_interrupts(pdev, &port->plda);
-+	ret = plda_init_interrupts(pdev, &port->plda, &mc_event);
- 	if (ret)
- 		return ret;
- 
-diff --git a/drivers/pci/controller/plda/pcie-plda.h b/drivers/pci/controller/plda/pcie-plda.h
-index f7e900b395f8..935686bba837 100644
---- a/drivers/pci/controller/plda/pcie-plda.h
-+++ b/drivers/pci/controller/plda/pcie-plda.h
-@@ -127,6 +127,11 @@ struct plda_pcie_rp {
- 	int num_events;
- };
- 
-+struct plda_event {
-+	int (*request_event_irq)(struct plda_pcie_rp *pcie,
-+				 int event_irq, int event);
-+};
-+
- void plda_pcie_setup_window(void __iomem *bridge_base_addr, u32 index,
- 			    phys_addr_t axi_addr, phys_addr_t pci_addr,
- 			    size_t size);
--- 
-2.17.1
-
+Reviewed-by: Yishai Hadas <yishaih@nvidia.com>
