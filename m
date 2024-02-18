@@ -1,107 +1,148 @@
-Received: from esa2.hc1455-7.c3s2.iphmx.com (esa2.hc1455-7.c3s2.iphmx.com [207.54.90.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5F55DDC3
-	for <linux-kernel@vger.kernel.org>; Sun, 18 Feb 2024 08:02:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=207.54.90.48
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 35E8512E4B;
+	Sun, 18 Feb 2024 08:03:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708243338; cv=none; b=UllQTWCBRwiHLD/10OIhU7boZGK+WvX4g6duNKUOZLsxYJVM2uYlXnqL2rhT/0DfhSc6zKGyQ8/OqVAEecGE3RTlNMSFdTOuULDodva9wzW7Qv0IG6ezvbfTi+t0/t+D8FiR9r6ktt/a2ihArIlu1RNfstA6LcwqL4fsisp6S80=
+	t=1708243388; cv=none; b=BcOBqnQYWFFIUKCgh572lwwSp3V1aG6LlzIFSazOwu0MoTQ0KIyXvrdWj4FaqZ+nu2QabSKCww/0afmbk3SlhQUgGPYDOKLWzAZ6MyxPCbgIReTOYzPa2rggV4h2Yq44sqY4a9f33qL1Hk7RYTVjCIWXsgo0twnAzSJR3wk6AXE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708243338; c=relaxed/simple;
-	bh=C099CukdDdK4Elet3lQBVaWXzyWO02Fpp/gWK4Al8TA=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Rd2eHAVJ2U3ixu/2i7MMOOOOs3QrrwM8f7y0rX4+xsTonUMOX6QANCT0v2fSqJ7fzPUhhmTO0vALtMTjQtNEsoXZ80/OINQGszZTLN4Eb5aivWCS0uuXeFPQjfQ8zPrVLlQj1fySHQqBdAXEnK4lElPUhDSPq0dgTiJzQQ+LP0E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fujitsu.com; spf=pass smtp.mailfrom=fujitsu.com; dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b=HbEJP312; arc=none smtp.client-ip=207.54.90.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fujitsu.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fujitsu.com
+	s=arc-20240116; t=1708243388; c=relaxed/simple;
+	bh=7rfhh/G/gNd2Y2Ocj7vJDV+XSDPEZiZJ2iUMHIvvKkA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=co5BVusFgzwKIJ42ZifLoZLSYzIULrfAIUUt3Y5/Psa5Xu3lAlf9NrAmzQ+ZU1IUSRxDF9JgiOVKAzRI7SfR/42ZJwIBTC6RlnTxOM+qXeuq1/4bCEhXaKewtQtD2hu9SjwlMOsQiWnf91l78N5Iyq/7q5+84AVT9WQNzY16tiQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=quZwxXZK; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b="HbEJP312"
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=fujitsu.com; i=@fujitsu.com; q=dns/txt; s=fj2;
-  t=1708243335; x=1739779335;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=C099CukdDdK4Elet3lQBVaWXzyWO02Fpp/gWK4Al8TA=;
-  b=HbEJP312LC1U8VoiXiXqc9CNf6cEapz8uSuY8uJdM4k4FOZ02952bnOU
-   r2o9hJ0utDuxhigIwB+zHm6bEJSdHmM0Jx9XZHcOJWsOEYf2CNawteD1e
-   BU9nh+aG/kDXB17tPhMsQDF3X7DwQ+S7/zl072dDeBrbi7ZcaI5mO7z5f
-   OygQdpCHYj7IyyFPyeSGrxeVs9zuey9fP2WyhIH+9QHC64issXWz2Q9Xs
-   dusxI12/1k9tbCPZiGL5eOlTH+xyiXCZi545XcRMdlRwm//rzwYhyOzHU
-   qAke7IyVNeYA3zMwznEWJodbmNMz1HBqwcrFDht9qJVrRkjlidUzwms+O
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10987"; a="149673458"
-X-IronPort-AV: E=Sophos;i="6.06,168,1705330800"; 
-   d="scan'208";a="149673458"
-Received: from unknown (HELO yto-r2.gw.nic.fujitsu.com) ([218.44.52.218])
-  by esa2.hc1455-7.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Feb 2024 17:01:02 +0900
-Received: from yto-m3.gw.nic.fujitsu.com (yto-nat-yto-m3.gw.nic.fujitsu.com [192.168.83.66])
-	by yto-r2.gw.nic.fujitsu.com (Postfix) with ESMTP id 2D69E8B010
-	for <linux-kernel@vger.kernel.org>; Sun, 18 Feb 2024 17:01:00 +0900 (JST)
-Received: from kws-ab3.gw.nic.fujitsu.com (kws-ab3.gw.nic.fujitsu.com [192.51.206.21])
-	by yto-m3.gw.nic.fujitsu.com (Postfix) with ESMTP id 78E01156B72
-	for <linux-kernel@vger.kernel.org>; Sun, 18 Feb 2024 17:00:59 +0900 (JST)
-Received: from edo.cn.fujitsu.com (edo.cn.fujitsu.com [10.167.33.5])
-	by kws-ab3.gw.nic.fujitsu.com (Postfix) with ESMTP id EC271200A7ECC
-	for <linux-kernel@vger.kernel.org>; Sun, 18 Feb 2024 17:00:58 +0900 (JST)
-Received: from localhost.localdomain (unknown [10.167.226.45])
-	by edo.cn.fujitsu.com (Postfix) with ESMTP id 50BDC1A006B;
-	Sun, 18 Feb 2024 16:00:58 +0800 (CST)
-From: Li Zhijian <lizhijian@fujitsu.com>
-To: linux-kernel@vger.kernel.org
-Cc: Li Zhijian <lizhijian@fujitsu.com>,
-	Julia Lawall <Julia.Lawall@inria.fr>,
-	Nicolas Palix <nicolas.palix@imag.fr>,
-	cocci@inria.fr
-Subject: [PATCH v2] coccinelle: device_attr_show: Remove useless expression STR
-Date: Sun, 18 Feb 2024 16:00:54 +0800
-Message-Id: <20240218080054.719008-1-lizhijian@fujitsu.com>
-X-Mailer: git-send-email 2.31.1
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="quZwxXZK"
+Received: by linux.microsoft.com (Postfix, from userid 1127)
+	id A33E320B2000; Sun, 18 Feb 2024 00:03:06 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com A33E320B2000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1708243386;
+	bh=PlBbQIfgXaGIaQ4BZWIMpX7PSPkzfONi407mxwRRYsg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=quZwxXZKLsOSQbMlKLvqthC2+ZTqAemUKIeQhzJYaP1tapfBlUmnieSCHgT+iq1G2
+	 kiRICTkijkuExz9kq/W3qGSB95rXOdFHEYcuBN3Axk5zRWQsw6qX3VRKxF4bhLb+yM
+	 v/xTyz0yUdcg0+T08wMc5JeOTReLTeGkDeYEuV6s=
+Date: Sun, 18 Feb 2024 00:03:06 -0800
+From: Saurabh Singh Sengar <ssengar@linux.microsoft.com>
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
+	decui@microsoft.com, linux-hyperv@vger.kernel.org,
+	linux-kernel@vger.kernel.org, ssengar@microsoft.com
+Subject: Re: [PATCH 1/6] Drivers: hv: vmbus: Add utility function for
+ querying ring size
+Message-ID: <20240218080306.GA26112@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+References: <1708193020-14740-1-git-send-email-ssengar@linux.microsoft.com>
+ <1708193020-14740-2-git-send-email-ssengar@linux.microsoft.com>
+ <2024021858-cubicle-irregular-d402@gregkh>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-TM-AS-Product-Ver: IMSS-9.1.0.1417-9.0.0.1002-28198.005
-X-TM-AS-User-Approved-Sender: Yes
-X-TMASE-Version: IMSS-9.1.0.1417-9.0.1002-28198.005
-X-TMASE-Result: 10-2.432000-10.000000
-X-TMASE-MatchedRID: Eg8aHm4JSTV0AdYYTJWxRBFbgtHjUWLy1QQ6Jx/fflaZtziFUn+D+VDO
-	mRheGpIycW49dHXLWX0lMcFNu44sGzxz5tDhhD0GgvmNrsT46HLBOVz0Jwcxl6vCrG0TnfVUgK6
-	qCGa1Z9cSkTIlq5S+sSqrdhRtfw3QHxPMjOKY7A/+HHE8LDNSg8RB0bsfrpPIcSqbxBgG0w4/hA
-	kX/IXASA9botRp+teq3A0gn0KlYUGMMycvCFPy0ZyRFBZM4sMWFlxNpwo362U/Y5m9xdEIztO64
-	0nFRv3qomUEc5R2CUhbjBuldNvkMkoq97WSHdFjfupJaud1uZCfRs6uIbkFVw==
-X-TMASE-SNAP-Result: 1.821001.0001-0-1-22:0,33:0,34:0-0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2024021858-cubicle-irregular-d402@gregkh>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 
-Commit ff82e84e80fc ("coccinelle: device_attr_show: simplify patch case")
-simplifies the patch case, as a result, STR is no longer needed.
+On Sun, Feb 18, 2024 at 08:11:58AM +0100, Greg KH wrote:
+> On Sat, Feb 17, 2024 at 10:03:35AM -0800, Saurabh Sengar wrote:
+> > Add a function to query for the preferred ring buffer size of VMBus
+> > device.
+> 
+> That says what you did, but not why you did it.
 
-This also helps to fix below coccicheck warning:
-> warning: rp: metavariable STR not used in the - or context code
+I thought subsequent patch will make it clear, but I can add more
+info in cover letter. I will enhance this commit as well.
 
-CC: Julia Lawall <Julia.Lawall@inria.fr>
-CC: Nicolas Palix <nicolas.palix@imag.fr>
-CC: cocci@inria.fr
-Fixes: ff82e84e80fc ("coccinelle: device_attr_show: simplify patch case")
-Signed-off-by: Li Zhijian <lizhijian@fujitsu.com>
----
- scripts/coccinelle/api/device_attr_show.cocci | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> > 
+> > Signed-off-by: Saurabh Sengar <ssengar@linux.microsoft.com>
+> > ---
+> >  drivers/hv/channel_mgmt.c | 7 +++++--
+> >  drivers/hv/hyperv_vmbus.h | 5 +++++
+> >  include/linux/hyperv.h    | 1 +
+> >  3 files changed, 11 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/drivers/hv/channel_mgmt.c b/drivers/hv/channel_mgmt.c
+> > index 2f4d09ce027a..7ea444d72f9f 100644
+> > --- a/drivers/hv/channel_mgmt.c
+> > +++ b/drivers/hv/channel_mgmt.c
+> > @@ -120,7 +120,8 @@ const struct vmbus_device vmbus_devs[] = {
+> >  	},
+> >  
+> >  	/* File copy */
+> > -	{ .dev_type = HV_FCOPY,
+> > +	{ .pref_ring_size = 0x4000,
+> > +	  .dev_type = HV_FCOPY,
+> >  	  HV_FCOPY_GUID,
+> >  	  .perf_device = false,
+> >  	  .allowed_in_isolated = false,
+> > @@ -141,11 +142,13 @@ const struct vmbus_device vmbus_devs[] = {
+> >  	},
+> >  
+> >  	/* Unknown GUID */
+> > -	{ .dev_type = HV_UNKNOWN,
+> > +	{ .pref_ring_size = 0x11000,
+> > +	  .dev_type = HV_UNKNOWN,
+> 
+> Where do these magic numbers for the size come from?
 
-diff --git a/scripts/coccinelle/api/device_attr_show.cocci b/scripts/coccinelle/api/device_attr_show.cocci
-index 550d1d2fc02a..dfcf9304195f 100644
---- a/scripts/coccinelle/api/device_attr_show.cocci
-+++ b/scripts/coccinelle/api/device_attr_show.cocci
-@@ -28,7 +28,7 @@ ssize_t show(struct device *dev, struct device_attribute *attr, char *buf)
- 
- @rp depends on patch@
- identifier show, dev, attr, buf;
--expression BUF, SZ, FORMAT, STR;
-+expression BUF, SZ, FORMAT;
- @@
- 
- ssize_t show(struct device *dev, struct device_attribute *attr, char *buf)
--- 
-2.29.2
 
+This value is (16 + 1) page_size, which is found sufficient for most
+of the slow devices. 16 page_size is for the ringbuffer and 1 page_size
+for the headre. This is the approximation for default case, to avoid
+using fall back case of 512 page_size as used by uio_hv_generic.
+
+> 
+> >  	  .perf_device = false,
+> >  	  .allowed_in_isolated = false,> >  	},
+> >  };
+> > +EXPORT_SYMBOL_GPL(vmbus_devs);
+> >  
+> >  static const struct {
+> >  	guid_t guid;
+> > diff --git a/drivers/hv/hyperv_vmbus.h b/drivers/hv/hyperv_vmbus.h
+> > index f6b1e710f805..76ac5185a01a 100644
+> > --- a/drivers/hv/hyperv_vmbus.h
+> > +++ b/drivers/hv/hyperv_vmbus.h
+> > @@ -417,6 +417,11 @@ static inline bool hv_is_perf_channel(struct vmbus_channel *channel)
+> >  	return vmbus_devs[channel->device_id].perf_device;
+> >  }
+> >  
+> > +static inline size_t hv_dev_ring_size(struct vmbus_channel *channel)
+> > +{
+> > +	return vmbus_devs[channel->device_id].pref_ring_size;
+> > +}
+> > +
+> >  static inline bool hv_is_allocated_cpu(unsigned int cpu)
+> >  {
+> >  	struct vmbus_channel *channel, *sc;
+> > diff --git a/include/linux/hyperv.h b/include/linux/hyperv.h
+> > index 2b00faf98017..5951c7bb5712 100644
+> > --- a/include/linux/hyperv.h
+> > +++ b/include/linux/hyperv.h
+> > @@ -800,6 +800,7 @@ struct vmbus_requestor {
+> >  #define VMBUS_RQST_RESET (U64_MAX - 3)
+> >  
+> >  struct vmbus_device {
+> > +	size_t pref_ring_size;
+> 
+> No documentation for this?  What is the size in units of?
+
+I can add a comment here like below:
+
+/* 
+ * Total memory in bytes allocated for the one complete ring buffer,
+ * which includes the ring buffer header, of size PAGE_SIZE. This value
+ * should be aligned to page_size.
+ */
+
+- Saurabh
+
+> 
+> thanks,
+> 
+> greg k-h
