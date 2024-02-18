@@ -1,164 +1,154 @@
-Received: from mail-ot1-f41.google.com (mail-ot1-f41.google.com [209.85.210.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from szxga07-in.huawei.com (szxga07-in.huawei.com [45.249.212.35])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF66112E61;
-	Sun, 18 Feb 2024 09:51:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69413FBE1;
+	Sun, 18 Feb 2024 10:08:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.35
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708249913; cv=none; b=LGkYCqxSP4ammdvNhdgwvQAnXVmSb3Mq3szDBgd4a573/Y06nNtb+CMBMh1laz6rHBNCpaHULZGubTIim4Vnz2Jl1iqJ2H6WW5bvsf41ZCadqiz0gfZ+AXm/yZM1nbOfdkTwgHg6ULTUuBPCj0LhuUV88WKDEMbBheDE5C0Byhw=
+	t=1708250909; cv=none; b=I5vRcYE1dEEIOR/kw8lKk3rPgCmJFHNvGXQOkQ+jttQQ2MsYPapPmur1JVOKvdgD3F4YeS+JibYbJO8RL8Bb2cYgnGraMBSOe0m5I8PIiDrQd7R3QKx3TWrOrI/82PY3F7BY3ieFt4Gn0vEsuyFhpyE+MTwZ30dtZc49Fy/BcMk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708249913; c=relaxed/simple;
-	bh=jHjHvEjAA/RhoLWSIKDlWeb7THxIVIJEBNEhkFgNP70=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=aYJAKPPyA5d5WSDhn/KIlBW161Stk/tYLM0XeSwvUEXihvd/SU62hnTvcR2zFIaKRVPM+ik/Pk+ZyL0qQT5t7B2eJlHguDNoiEs4bmEjOYVjpU36p0PswXq3gjBOO+SNP9nH/Tx5o6n5eF4JCycge8cA8VWiD6BFX9iWRshAYmc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Y8xwqYBo; arc=none smtp.client-ip=209.85.210.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y8xwqYBo"
-Received: by mail-ot1-f41.google.com with SMTP id 46e09a7af769-6e2db19761fso1649323a34.1;
-        Sun, 18 Feb 2024 01:51:51 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1708249911; x=1708854711; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=/JuFlw0+x8wXUHToJkVUHN6ReDOJkSSSekYTFPFk/Jg=;
-        b=Y8xwqYBo0ki3T04TSKNHC/+pwgi5jYpc8BVhEbC4wE9kopdxpJU+fuQrFrBXHc8TWp
-         iVPslY8uBT860C9Eu3gJwf3wQnM0qXUcyHCKXYLeRjudeUkxmyXqrJVHF2dxYQfV0JOF
-         sCpZp4lhlePddnG/37R5ov+aP4QemYfiHQEuAhfcWlXGAMmeHD3m/zFymkMfQkvVwrqn
-         VN1ccl22t/SXKp29EFE/rEaEJLEE0ykNPvAKyYKUXQjMGDx/Nq9iIqdpmd84BJ4NfW0W
-         QBDt7vEDiYmzApGzP972su+/6nHbErK2wyV93uRj4NNsVqPgui9i3MNaiQ9QBDrMJTKH
-         SdUw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708249911; x=1708854711;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=/JuFlw0+x8wXUHToJkVUHN6ReDOJkSSSekYTFPFk/Jg=;
-        b=tx7FdwFT4sdayJp4MR79n2wJnGb1PePvQZhHiU5RNezHa82uQTIWLZo98q4rDEovIj
-         4SnStniXSMprFRB45nk+54AEv57DHNpCfyl1pqEBisDMsA6XGPwLZz6xKShn7qYGjYbK
-         uPA4c5a13hXqBsAqD5tHrZwk1SCSOSJVAZPlb2lwpEPi+cVRg/cLY5bWujkLqXvGDIX3
-         UcP5wcyghEh7s0nBBC/LQjH99jY7MDyKt8iBl0tVXA2+ay/OalKEDt5tu7FtxgdEENni
-         TldfylB8z9s0CEph2HuvpNgp84A+tDPNGGISvjdco7ului+bLN2j84QyMgjf5XUE0u7a
-         86Uw==
-X-Forwarded-Encrypted: i=1; AJvYcCWR1WhID1+tgAfcmY1I3lTln3E9tREWV43xDw2Xw1LIiQnjn98xw0LHmSawfKWIXfMswhJihwwIshzJlO6m/4pqvHnGLEc53xaxBx8MmCrfWO5i8ktrUjg4Lp9aZNKu2lyu
-X-Gm-Message-State: AOJu0Yy+hNh8/Ak7ZJ/x8grOF0PSTvtQz82uDKVTO933wwecOnxpkWzY
-	rqJRbBAYXc4+RbzwMgx2uVqk+XANRSEeLQcAWHFQOcO3W97FoM/3
-X-Google-Smtp-Source: AGHT+IFRnCiBoZY/IJLiyHv/jUKntft7MLsa6+sZ+FzMAjX3sVpz7axj62k3ebNbjpxlqEoSlyLAPA==
-X-Received: by 2002:a9d:7ad7:0:b0:6e2:eb00:7551 with SMTP id m23-20020a9d7ad7000000b006e2eb007551mr10040684otn.21.1708249910880;
-        Sun, 18 Feb 2024 01:51:50 -0800 (PST)
-Received: from [192.168.255.10] ([43.132.141.22])
-        by smtp.gmail.com with ESMTPSA id c11-20020aa781cb000000b006e0322f072asm2742266pfn.35.2024.02.18.01.51.48
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 18 Feb 2024 01:51:50 -0800 (PST)
-Message-ID: <585a36d2-6e46-44a0-8224-8d4cd54d0dd3@gmail.com>
-Date: Sun, 18 Feb 2024 17:51:47 +0800
+	s=arc-20240116; t=1708250909; c=relaxed/simple;
+	bh=LaBlhBnxg6dQJQlqoJUHDWjODNXxe/GPvW3ozfStz+Q=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=hBcFPuSo8uI8239J/X5utwvbdCl4p5BPRhLCbAfq8RQkY7dJYmpYKr6pB8ykDXXP+RvgNon+UHyotuWMbML12ap5vHeyclWubgF6g+yl+Y8YQ9/MPLVqQj6dlw+DJaBOy5lLAWlG7I5lqtSqdfwwLUrwjJawVX4+FgR7qdD4tDY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.35
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.17])
+	by szxga07-in.huawei.com (SkyGuard) with ESMTP id 4Td1XL1yLyz1Q8sf;
+	Sun, 18 Feb 2024 18:06:10 +0800 (CST)
+Received: from kwepemm600017.china.huawei.com (unknown [7.193.23.234])
+	by mail.maildlp.com (Postfix) with ESMTPS id C2A4B1A0172;
+	Sun, 18 Feb 2024 18:08:16 +0800 (CST)
+Received: from [10.174.179.234] (10.174.179.234) by
+ kwepemm600017.china.huawei.com (7.193.23.234) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Sun, 18 Feb 2024 18:08:15 +0800
+Message-ID: <100198dd-320f-68e6-9c09-210620940a74@huawei.com>
+Date: Sun, 18 Feb 2024 18:08:14 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] KVM: x86/intr: Explicitly check NMI from guest to
- eliminate false positives
-Content-Language: en-US
-To: Sean Christopherson <seanjc@google.com>
-Cc: Paolo Bonzini <pbonzini@redhat.com>, Andi Kleen <ak@linux.intel.com>,
- kvm@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20231206032054.55070-1-likexu@tencent.com>
- <ZcKKwSi7FdbSnexE@google.com> <ZcKf3RvyoVJ77sUQ@google.com>
-From: Like Xu <like.xu.linux@gmail.com>
-In-Reply-To: <ZcKf3RvyoVJ77sUQ@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.8.0
+Subject: Re: [PATCH -next v5 2/3] x86/mce: set MCE_IN_KERNEL_COPYIN for
+ DEFAULT_MCE_SAFE exception
+To: Borislav Petkov <bp@alien8.de>
+CC: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+	<wangkefeng.wang@huawei.com>, Dave Hansen <dave.hansen@linux.intel.com>,
+	<x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>, Tony Luck
+	<tony.luck@intel.com>, Andy Lutomirski <luto@kernel.org>, Peter Zijlstra
+	<peterz@infradead.org>, Andrew Morton <akpm@linux-foundation.org>, Naoya
+ Horiguchi <naoya.horiguchi@nec.com>, <linux-kernel@vger.kernel.org>,
+	<linux-edac@vger.kernel.org>, <linux-mm@kvack.org>, Guohanjun
+	<guohanjun@huawei.com>
+References: <20240204082627.3892816-1-tongtiangen@huawei.com>
+ <20240204082627.3892816-3-tongtiangen@huawei.com>
+ <20240207122942.GRZcN3tqWkV-WE-pak@fat_crate.local>
+From: Tong Tiangen <tongtiangen@huawei.com>
+In-Reply-To: <20240207122942.GRZcN3tqWkV-WE-pak@fat_crate.local>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
+ kwepemm600017.china.huawei.com (7.193.23.234)
 
-On 7/2/2024 5:08 am, Sean Christopherson wrote:
-> On Tue, Feb 06, 2024, Sean Christopherson wrote:
->> +Oliver
->>
->> On Wed, Dec 06, 2023, Like Xu wrote:
->>> Note that when vm-exit is indeed triggered by PMI and before HANDLING_NMI
->>> is cleared, it's also still possible that another PMI is generated on host.
->>> Also for perf/core timer mode, the false positives are still possible since
->>> that non-NMI sources of interrupts are not always being used by perf/core.
->>> In both cases above, perf/core should correctly distinguish between real
->>> RIP sources or even need to generate two samples, belonging to host and
->>> guest separately, but that's perf/core's story for interested warriors.
->>
->> Oliver has a patch[*] that he promised he would send "soon" (wink wink) to
->> properly fix events that are configured to exclude the guest.  Unless someone
->> objects, I'm going to tweak the last part of the changelog to be:
->>
->>      Note that when VM-exit is indeed triggered by PMI and before HANDLING_NMI
->>      is cleared, it's also still possible that another PMI is generated on host.
->>      Also for perf/core timer mode, the false positives are still possible since
->>      that non-NMI sources of interrupts are not always being used by perf/core.
->>      
->>      For events that are host-only, perf/core can and should eliminate false
->>      positives by checking event->attr.exclude_guest, i.e. events that are
->>      configured to exclude KVM guests should never fire in the guest.
->>      
->>      Events that are configured to count host and guest are trickier, perhaps
->>      impossible to handle with 100% accuracy?  And regardless of what accuracy
->>      is provided by perf/core, improving KVM's accuracy is cheap and easy, with
->>      no real downsides.
+
+
+在 2024/2/7 20:29, Borislav Petkov 写道:
+> On Sun, Feb 04, 2024 at 04:26:26PM +0800, Tong Tiangen wrote:
+>> diff --git a/arch/x86/kernel/cpu/mce/severity.c b/arch/x86/kernel/cpu/mce/severity.c
+>> index bca780fa5e57..b2cce1b6c96d 100644
+>> --- a/arch/x86/kernel/cpu/mce/severity.c
+>> +++ b/arch/x86/kernel/cpu/mce/severity.c
+>> @@ -292,11 +292,11 @@ static noinstr int error_context(struct mce *m, struct pt_regs *regs)
+>>   	case EX_TYPE_UACCESS:
+>>   		if (!copy_user)
+>>   			return IN_KERNEL;
+>> +		fallthrough;
+>> +	case EX_TYPE_DEFAULT_MCE_SAFE:
+>>   		m->kflags |= MCE_IN_KERNEL_COPYIN;
+>>   		fallthrough;
 > 
-> Never mind, this causes KUT's pmu_pebs test to fail:
+> I knew something was still bugging me here and this is still wrong.
 > 
->    FAIL: Multiple (0x700000055): No OVF irq, none PEBS records.
->    FAIL: Adaptive (0x1): Multiple (0x700000055): No OVF irq, none PEBS records.
->    FAIL: Adaptive (0x2): Multiple (0x700000055): No OVF irq, none PEBS records.
->    FAIL: Adaptive (0x4): Multiple (0x700000055): No OVF irq, none PEBS records.
->    FAIL: Adaptive (0x1f000008): Multiple (0x700000055): No OVF irq, none PEBS records.
->    FAIL: GP counter 0 (0xfffffffffffe): No OVF irq, none PEBS records.
->    FAIL: Multiple (0x700000055): No OVF irq, none PEBS records.
->    FAIL: Adaptive (0x1): GP counter 0 (0xfffffffffffe): No OVF irq, none PEBS records.
->    FAIL: Adaptive (0x1): Multiple (0x700000055): No OVF irq, none PEBS records.
->    FAIL: Adaptive (0x2): GP counter 0 (0xfffffffffffe): No OVF irq, none PEBS records.
->    FAIL: Adaptive (0x2): Multiple (0x700000055): No OVF irq, none PEBS records.
->    FAIL: Adaptive (0x4): GP counter 0 (0xfffffffffffe): No OVF irq, none PEBS records.
->    FAIL: Adaptive (0x4): Multiple (0x700000055): No OVF irq, none PEBS records.
->    FAIL: Adaptive (0x1f000008): GP counter 0 (0xfffffffffffe): No OVF irq, none PEBS records.
->    FAIL: Adaptive (0x1f000008): Multiple (0x700000055): No OVF irq, none PEBS records.
->    FAIL: Multiple (0x700000055): No OVF irq, none PEBS records.
->    FAIL: Adaptive (0x1): Multiple (0x700000055): No OVF irq, none PEBS records.
->    FAIL: Adaptive (0x2): Multiple (0x700000055): No OVF irq, none PEBS records.
->    FAIL: Adaptive (0x4): Multiple (0x700000055): No OVF irq, none PEBS records.
->    FAIL: Adaptive (0x1f000008): Multiple (0x700000055): No OVF irq, none PEBS records.
+> Let's imagine this flow:
 > 
-> It might be a test bug, but I have neither the time nor the inclination to
-> investigate.
+> copy_mc_to_user() - note *src is kernel memory
+> |-> copy_mc_enhanced_fast_string or copy_mc_fragile - it's the same thing
+>    |-> -#MC, exception type EX_TYPE_DEFAULT_MCE_SAFE
+>      |-> error_context():
+>         case EX_TYPE_DEFAULT_MCE_SAFE:
+>                  m->kflags |= MCE_IN_KERNEL_COPYIN;
+> 
+> MCE_IN_KERNEL_COPYIN does kill_me_never():
+> 
+> 	pr_err("Kernel accessed poison in user space at %llx\n", p->mce_addr);
+> 
+> but that's reading from kernel memory!
 
-For PEBS ovf case, we have "in_nmi() = 0x100000" from the core kernel and
-the following diff fixes the issue:
+Hi:
 
-diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-index 995760ba072f..dcf665251fce 100644
---- a/arch/x86/include/asm/kvm_host.h
-+++ b/arch/x86/include/asm/kvm_host.h
-@@ -1891,7 +1891,7 @@ enum kvm_intr_type {
-  /* Enable perf NMI and timer modes to work, and minimise false positives. */
-  #define kvm_arch_pmi_in_guest(vcpu) \
-  	((vcpu) && (vcpu)->arch.handling_intr_from_guest && \
--	 (in_nmi() == ((vcpu)->arch.handling_intr_from_guest == KVM_HANDLING_NMI)))
-+	 (!!in_nmi() == ((vcpu)->arch.handling_intr_from_guest == KVM_HANDLING_NMI)))
+1. The copy_mc_to_kernel() is used in the coredump, KSM, and COW
+scenarios, in these scenarios, the src mem stores the user data and the
+kernel use kernel address to access the src mem(using kmap()).
 
-  void __init kvm_mmu_x86_module_init(void);
-  int kvm_mmu_vendor_module_init(void);
+2. the src mem of copy_mc_to_user() is currently only used by the DAX:
 
-, does it help (tests passed on ICX) ?
+   dax_iomap_iter()
+     -> dax_copy_to_iter()
+       -> _copy_mc_to_iter
+         -> copy_to_user_iter_mc()
+           -> copy_mc_to_user()
+
+DAX is also used to store user data，such as pmem，pmem uses the kernel
+address to access src mem(memremap_pages()):
+
+   pmem_attach_disk()
+     -> devm_memremap_pages()
+       -> memremap_pages()
+
+3. EX_TYPE_DEFAULT_MCE_SAFE is only used in
+copy_mc_to_user()/copy_mc_to_kernel()。
+
+4. Therefore, for EX_TYPE_DEFAULT_MCE_SAFE, the memory page where the
+hardware error occurs stores user data, these page can be securely
+isolated. This is different from UACCESS, which can be securely isolated
+only COPYIN(the src mem is user data) is checked.
+
+Based on the above understanding, I think the original logic should be
+fine, except for the pr_err() in kill_me_never().
+
+Thanks.
+Tong.
 
 > 
+> IOW, I *think* that switch statement should be this:
 > 
-> Like,
+> 	switch (fixup_type) {
+> 	case EX_TYPE_UACCESS:
+> 	case EX_TYPE_DEFAULT_MCE_SAFE:
+> 		if (!copy_user)
+> 			return IN_KERNEL;
 > 
-> If you want any chance of your patches going anywhere but my trash folder, you
-> need to change your upstream workflow to actually run tests.  I would give most
-> people the benefit of the doubt, e.g. assume they didn't have the requisite
-> hardware, or didn't realize which tests would be relevant/important.  But this
-> is a recurring problem, and you have been warned, multiple times.
-
-Sorry, my CI resources are diverted to other downstream projects.
-But there's no doubt it's my fault and this behavior will be corrected.
+> 		m->kflags |= MCE_IN_KERNEL_COPYIN;
+> 		fallthrough;
+> 
+> 	case EX_TYPE_FAULT_MCE_SAFE:
+> 		m->kflags |= MCE_IN_KERNEL_RECOV;
+> 		return IN_KERNEL_RECOV;
+> 
+> 	default:
+> 		return IN_KERNEL;
+> 	}
+> 
+> Provided I'm not missing a case and provided is_copy_from_user() really
+> detects all cases properly.
+> 
+> And then patch 3 is wrong because we only can handle "copy in" - not
+> just any copy.
+> 
+> Thx.
+> 
