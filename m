@@ -1,95 +1,98 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1330A746B
-	for <linux-kernel@vger.kernel.org>; Sun, 18 Feb 2024 07:45:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4686C2CA8;
+	Sun, 18 Feb 2024 07:47:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708242330; cv=none; b=ktzPDSGpCXc15YK0n41FkspGkeQtWl9Lcu+kDOyo5XZUKG3wh1OfaTLxI5nscxUOD3GozTRHIgWYpzm0jYKpHUUwT+Fn0mnRKIfVxfvWJpt80me/UwbwoWlHqDA7/gWhxezc0o2PXMZO9BZtIBzaRklP1FjOtYcGalHDtHyJ3Jk=
+	t=1708242427; cv=none; b=oYplBnMAzMieAUscnSTcHnoMEHYCcVHExT06/yoSNiLjm0SSMHzcLYrO5U0d+Sq+BeF9suvdhRYV+FXX/4CY9e/edOwXPzEITM3AqDZtewHRikXHzuKM2lMadikSj+IeVe0Sbm9zd7kXWI+w+SRF5LeFpr5gFhT/0LiF/WvzfW4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708242330; c=relaxed/simple;
-	bh=ftV4kdXCrIriQxTbvh2OAHv7Gk37s4RDaZuoclRtX6c=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=TCeJ5vbm+pCIf7nllwF4SEbHeUz+HJ9Ogv84R7vLA8P13E58ycJJHjlRPxnlXGCW6ZGTIjwOQkUhUXrlfW02WaMQbLbdR03Y3qL82NZajq9LgCMMfNqC9fIwxuwe9jExGNNf3M2t+NrlAT78hgdF+WHKAmjOjkJ3xT6OFeIt2pI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nXLL0McN; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1708242427; c=relaxed/simple;
+	bh=BKs6y9EPQXIUNlMVIpvBS2yT3Xy2/9dOIOPM54bzss8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=TuaNIVzUa99w7cRKLgnSc7/ZNzBNW8Et+J9FU6tFDW3AiQTM1TiHGU6hHYn0wlGNfGW+87ee+ospS27xLbex2TSRIIXay6ZgyYJcLJgsSa2tQRTHQCUTEUdEB2A6wH9ffMq/LJvjIG8Xzx7xD6m2opQ30E8KtGDI1uQr945F52E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=lrJH4PXP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nXLL0McN"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1708242329; x=1739778329;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version;
-  bh=ftV4kdXCrIriQxTbvh2OAHv7Gk37s4RDaZuoclRtX6c=;
-  b=nXLL0McNiQpDdzJrNERFgt6wxvlI5HURJ3WNy69YYM6ySlIXXEx8m/Bb
-   2NC/xn/MUWdPp5LgVj1p284+NzTeIX9RB0sXs8WplEVchAVnFfjnB/edo
-   agsF80ja+HN3jyuht76w1G4gwCwJyOB3vobUkqMOwDx/DLZr87Gmu09qS
-   GKRma2D+/M9neW0/pt/9OwTla2UtHU3AgiOOvefaaRUGcAGAIghKZA66T
-   xyJg2Ex5THerpucMtUCZ5O8Q2+V604qhDt4OUWl4Q8WiQjHsr6w2bphpB
-   GwNixgl0vJgqSxlXJRrVdc8tB4vSX490o7KB4JD+5rjM6BHfGPKkp1LP6
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10987"; a="2195669"
-X-IronPort-AV: E=Sophos;i="6.06,168,1705392000"; 
-   d="scan'208";a="2195669"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Feb 2024 23:45:28 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10987"; a="936092066"
-X-IronPort-AV: E=Sophos;i="6.06,168,1705392000"; 
-   d="scan'208";a="936092066"
-Received: from yhuang6-desk2.sh.intel.com (HELO yhuang6-desk2.ccr.corp.intel.com) ([10.238.208.55])
-  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Feb 2024 23:45:25 -0800
-From: "Huang, Ying" <ying.huang@intel.com>
-To: liqiang <liqiang64@huawei.com>
-Cc: <akpm@linux-foundation.org>,  <paulmck@linux.vnet.ibm.com>,
-  <neilb@suse.de>,  <chuck.lever@oracle.com>,
-  <linux-kernel@vger.kernel.org>
-Subject: Re: [RESEND PATCH] llist: Make llist_del_first return only the
- first node
-In-Reply-To: <20240218065750.1241-1-liqiang64@huawei.com> (liqiang's message
-	of "Sun, 18 Feb 2024 14:57:50 +0800")
-References: <20240218065750.1241-1-liqiang64@huawei.com>
-Date: Sun, 18 Feb 2024 15:43:30 +0800
-Message-ID: <875xymtdy5.fsf@yhuang6-desk2.ccr.corp.intel.com>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="lrJH4PXP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 55038C433C7;
+	Sun, 18 Feb 2024 07:47:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1708242426;
+	bh=BKs6y9EPQXIUNlMVIpvBS2yT3Xy2/9dOIOPM54bzss8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=lrJH4PXPj/dz7a/quQl5Hjug7zHvT5vyRayjwBJFYOwA8GIMArzsiA9avJPhw5js9
+	 bZyXGSWdNpsFtd3rycPnV5UkltleXfQ9kqrmrTr2Q9t2JOOkcNz7qSAsrsgmIMinUF
+	 hEJYTKgQKin7fiEjAUpmojYcbu3WfGgkZYZaPC8c=
+Date: Sun, 18 Feb 2024 08:47:03 +0100
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Guixiong Wei <guixiongwei@gmail.com>
+Cc: linux-hardening@vger.kernel.org, jgross@suse.com,
+	boris.ostrovsky@oracle.com, linux-kernel@vger.kernel.org,
+	Guixiong Wei <weiguixiong@bytedance.com>
+Subject: Re: [RESEND RFC] kernel/ksysfs.c: restrict /sys/kernel/notes to root
+ access
+Message-ID: <2024021825-skiing-trustee-a56a@gregkh>
+References: <20240218073501.54555-1-guixiongwei@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=ascii
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240218073501.54555-1-guixiongwei@gmail.com>
 
-liqiang <liqiang64@huawei.com> writes:
+On Sun, Feb 18, 2024 at 03:35:01PM +0800, Guixiong Wei wrote:
+> From: Guixiong Wei <weiguixiong@bytedance.com>
+> 
+> Restrict non-privileged user access to /sys/kernel/notes to
+> avoid security attack.
+> 
+> The non-privileged users have read access to notes. The notes
+> expose the load address of startup_xen. This address could be
+> used to bypass KASLR.
 
-> Set the next of the returned node of llist_del_first
-> to NULL, which can prevent subsequent nodes in llist
-> from being exposed, and is more consistent with the
-> logic of this interface.
->
-> Signed-off-by: liqiang <liqiang64@huawei.com>
+How can it be used to bypass it?
+
+KASLR is, for local users, pretty much not an issue, as that's not what
+it protects from, only remote ones.
+
+> For example, the startup_xen is built at 0xffffffff82465180 and
+> commit_creds is built at 0xffffffff810ad570 which could read from
+> the /boot/System.map. And the loaded address of startup_xen is
+> 0xffffffffbc265180 which read from /sys/kernel/notes. So the loaded
+> address of commit_creds is 0xffffffffbc265180 - (0xffffffff82465180
+>  - 0xffffffff810ad570) = 0xffffffffbaead570.
+
+I've cc: the hardening list on this, I'm sure the developers there have
+opinions about this.
+
+> Signed-off-by: Guixiong Wei <weiguixiong@bytedance.com>
 > ---
->  lib/llist.c | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/lib/llist.c b/lib/llist.c
-> index f21d0cf..c33fff5 100644
-> --- a/lib/llist.c
-> +++ b/lib/llist.c
-> @@ -61,6 +61,7 @@ struct llist_node *llist_del_first(struct llist_head *head)
->  		next = READ_ONCE(entry->next);
->  	} while (!try_cmpxchg(&head->first, &entry, next));
->  
-> +	entry->next = NULL;
->  	return entry;
->  }
->  EXPORT_SYMBOL_GPL(llist_del_first);
+>  kernel/ksysfs.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/kernel/ksysfs.c b/kernel/ksysfs.c
+> index b1292a57c2a5..09bc0730239b 100644
+> --- a/kernel/ksysfs.c
+> +++ b/kernel/ksysfs.c
+> @@ -199,7 +199,7 @@ static ssize_t notes_read(struct file *filp, struct kobject *kobj,
+>  static struct bin_attribute notes_attr __ro_after_init  = {
+>  	.attr = {
+>  		.name = "notes",
+> -		.mode = S_IRUGO,
+> +		.mode = S_IRUSR,
+>  	},
+>  	.read = &notes_read,
+>  };
 
-This isn't needed for functionality correctness.  Many users of llist
-ask for performance.  So, it may be better to let the users to decide
-whether to set entry->next to NULL.
+No objection from me, but what userspace tool requires access to this
+file today?  Will it break if permissions are changed on it?
 
---
-Best Regards,
-Huang, Ying
+And what about the module notes files?  If you change one, shouldn't you
+change all?
+
+thanks,
+
+greg k-h
