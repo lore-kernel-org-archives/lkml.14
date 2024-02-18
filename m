@@ -1,59 +1,59 @@
-Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 074661E534;
-	Sun, 18 Feb 2024 16:02:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 432FEFBEA;
+	Sun, 18 Feb 2024 16:11:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708272143; cv=none; b=RaJ7G1JZsXJJCVyE/CSuiEW5ffzOhDM1Hj0hSkDhdKaKjrlaoaQf2ZKTBhDOvEuupzASJRBkstGxOe3+ghgNi23PL/0lYhJis1TzscE6Jhjw5t9hoExsi0B16TAhcACZKpQF6rGvjkFJylcNZXmHBnM3mcRHjaY2inuYAlHwtWA=
+	t=1708272713; cv=none; b=cHCwUvJIce/9YQ02GV+frJyxnnoHHWs2W3qSKj/yw5SGtwPtsLYjY7LJj0hTzhrbc+FFvJQyiw29nLc4MzqEQjCZPQxNsqnBVLSCBMQ6e1LUDZD3spw6N5lLLarZXJBvR3dLNgg/WTNpMivJkFh8oVnhxt+uOtZ5xdkOajGrd/M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708272143; c=relaxed/simple;
-	bh=jFXeP5DOfUwj9Q0l5p1vPN6O8Sx+lmqQycqgTdkil48=;
-	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=SeJwcTcFQBRnLDSXCLVmXCH3aaxEwqNnL9rjfHM2/xGp/tkLjRU2y94/lY8jpy/xN1C7AbX05GFeKUD2hjELfUiZi30ewz9Qpbfaxdi1s2sj9W0GKeut+0m7z7aQhLnlNhGoUzTArHANJQCJlOUXyGbCYwt2ktvAKoBU1lqdCaU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PFTFXikO; arc=none smtp.client-ip=209.85.208.48
+	s=arc-20240116; t=1708272713; c=relaxed/simple;
+	bh=O7gBdNUrHWtEdQ7Sb7xM0HZk+kbpmFEH/bA31/rebr4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=WKiZvKclk4XHZa8MDZQJryIzuVgy0pdFZWy5HStPJhefxh/oBpQYN65mSjZi/Sg9Kw67jfgexRJtYABucHqRf5hnlCULtfqYNOCmzqt6+gZnw9VVEo2dvXtFEbowX4uyVnJcZxNH9DIWAI5NhsG3ieH4b80c3thHtfhWa5iBl+0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dulISQCg; arc=none smtp.client-ip=209.85.214.171
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PFTFXikO"
-Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-563d32ee33aso3101134a12.2;
-        Sun, 18 Feb 2024 08:02:21 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dulISQCg"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-1dba6b9b060so13988995ad.1;
+        Sun, 18 Feb 2024 08:11:51 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1708272140; x=1708876940; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:to:subject:cc:user-agent:mime-version:date:message-id
+        d=gmail.com; s=20230601; t=1708272711; x=1708877511; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=AtYTDa1Lhl+B0ws7FJiPos9NKcWS7fkqx50JTS9on7c=;
-        b=PFTFXikOwYkyIQI9l2HpsbdSf3hd1lGiYX84uC6dH6fNMLB/k9MgVP4iN68kTPrDMD
-         6DqCF251KvwWVWHJP621v07OWd9mJ/PtwxKcqARoPNbwRkHmuBFEwAX2kuU6UNFGI7Ss
-         +94wsNdIc66P9Ge52OGxUm6G/A3ValdbzNPR789BjHloBMr9+mFZ1XVwFybUTprAwmjQ
-         W6OTFP5FJQbgK/K2JVVeVssW5XLNYTGLlOFje/jelrIGzZ+62ZhzfbwEkRppmW3dH8/V
-         JiLh+4bs+W+/LEtYX5t9K4vEPj0/y/w0eptMdxtEwz62u/AxfMrg2RWitjvKv+T8Z1/V
-         AM1g==
+        bh=tW7EMHm+pV1IgZiBPcrF8p6ggsHIaTJdyvaAlRROm4M=;
+        b=dulISQCgLoSdL6sa73gh1QlIRYFGkFSSWA7p+5aVYahFLYOly4DIp+dvHXxo/6zcsA
+         Xy6a5qmw+KCPOsqNxcza/ngVw7KfRuB6qzMBO7Ky+Gf86nNaFc4lrLzpdBwKuyopeuhe
+         vFN/+Jq4xhXRPPex42r/Z8u0n+4jpy83XGJTD5GX1psBm+6ibc4lnhRH/8WRp6R2Zvjt
+         WMpUW9O6Ei2LZHu60p1L5ZuaQ6Cjn7h2ZW2C+KNlysm1JMMm3dOBuXmgtpy3ICjnsaba
+         6fYbX/cBW1tUmbALrPfpgbA/LtBdWOpXH1CKVdXkR2WGdjK9LbXZYOjpc+4tE7PRoF6F
+         7ebg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708272140; x=1708876940;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:to:subject:cc:user-agent:mime-version:date:message-id
+        d=1e100.net; s=20230601; t=1708272711; x=1708877511;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=AtYTDa1Lhl+B0ws7FJiPos9NKcWS7fkqx50JTS9on7c=;
-        b=u4hoBp6pWvkhpaQ4FOFy4ymZuTx0rPr31o3ZEyTxwXsHxW63iBp5CAejGFB7jvHQ4K
-         dF/xQvStyp17aARvfsaNFweXlHC4YdgIFZXGhZ/uJ/ChGb85/yaz/qqxMDxbI5AQBGDE
-         H1HEbgrp51ld2EyC5lPIVu36Aqc1LcgBDubNwYhWgTpgkqYqDgJaX11eKN3uwGzixvOq
-         DXRawojt9kOm/YcaQ2kkJbgJMyw+ixI7SJY3bBN2m921NIw7MIrB/4AE46w5TpO+64UH
-         ipvxqsEaEOZX3CeBBK21ExdxUxJaJrPxbfypDRvcesC274z/8ENNLo9iXaOR1DhWP5UN
-         M10Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUDnN0i9IAR5XWA1HU/ZM1vyAdFfVrlKgO0785A0EyqkUMOjCJekxMtPZeFFRzZtM3wg4U+ADwBMifDqsWrd8MHNuB8LZJGT5TEJB2joULVPChHkNTIotIRAnyl6qOwKX4AUQrSJQx6+j4=
-X-Gm-Message-State: AOJu0YzSMGrJblmFvlW2PPdgXFGs6DY38KQKv4sv9EabbsAlH/Y8hJkU
-	sLJ+hsNyrMGHZwbkXoWl25WbODBGzBh4+vRB2oTWRw66kcGicLfl
-X-Google-Smtp-Source: AGHT+IEZ3CR9bdgRr3Udwyg4JBaBEy18MSvs+2swHpxksNf329JsNC9YdSucrOE676n13PDqw94EZg==
-X-Received: by 2002:a17:906:859:b0:a3b:7216:3091 with SMTP id f25-20020a170906085900b00a3b72163091mr6887010ejd.20.1708272139847;
-        Sun, 18 Feb 2024 08:02:19 -0800 (PST)
-Received: from [192.168.0.28] (cable-178-148-234-71.dynamic.sbb.rs. [178.148.234.71])
-        by smtp.gmail.com with ESMTPSA id th8-20020a1709078e0800b00a3daadea882sm2024675ejc.56.2024.02.18.08.02.18
+        bh=tW7EMHm+pV1IgZiBPcrF8p6ggsHIaTJdyvaAlRROm4M=;
+        b=CszjxikYro7V0+5Fse90lQqsHSfMmFJsB7LSQcqS0T2ZpwdcvHXNSG4TUKeYMhpUEH
+         mgXPb+U+2NsjAexlR/Du53Vnbx1RaFVoFWJtOOPYbzVPRPqAZfUxQr7KtJhuhPVJ0XUo
+         MLT9QGyA14PEVsw+ILZCT9v2OyQdcrdoiFCtONMao6z+lf1mgky+cCmGKpDgT6HhZLWZ
+         sDypJbi9NUa2QCjmt98Spuczdje7k5bNkK0N5zkIqU4fyQnE2HsDtuJ5XDK4r6qdojvv
+         MnjAGYC9ug4HwUDLS2ATPMjH0ukCxADx774OHgXfUjXD9tRCfh2F25mvSLkvOtrBr2ew
+         Ertg==
+X-Forwarded-Encrypted: i=1; AJvYcCWMQ+lUEXmVIDnFVrgrOKfuhIN8FTAMCnULneCb4t44v8+70M+gIKSqLmIUzX8ifhjm7IuVemcJCFExAyVb2zgzMKNdyIIrECEwje6MsGSvLsvqUUXbfKlguWjr5key77dPnaJaaqs/wTIOE/dJkrqnoe1rZwbvMOgeUZih58HISmJRxtBU54z5Ess=
+X-Gm-Message-State: AOJu0YyMpafNOJGM0uzs7YksTKtBKlSqrj5LIgE1+5aQfisH6tVgMcEh
+	uNPN25q2d5aLXisfuG88MbC2QKK7UrOLONCzKFA5+0vULBttIyzaUgSI7zrd
+X-Google-Smtp-Source: AGHT+IGvUh5Wg21hYx2cRJD+JeqLvS78+7d49olJmucsFPibZTyi/QhEO2MJ6RB3UaIBIpLdjHH/zw==
+X-Received: by 2002:a17:903:11c5:b0:1db:8d0a:cfa9 with SMTP id q5-20020a17090311c500b001db8d0acfa9mr13621769plh.6.1708272711402;
+        Sun, 18 Feb 2024 08:11:51 -0800 (PST)
+Received: from [192.168.54.105] (static.220.238.itcsa.net. [190.15.220.238])
+        by smtp.gmail.com with ESMTPSA id b15-20020a170902d50f00b001db4b3769f6sm2813762plg.280.2024.02.18.08.11.48
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 18 Feb 2024 08:02:19 -0800 (PST)
-Message-ID: <d04f6b6c-d15b-46e2-b518-a9a940827f68@gmail.com>
-Date: Sun, 18 Feb 2024 17:02:17 +0100
+        Sun, 18 Feb 2024 08:11:50 -0800 (PST)
+Message-ID: <e3562896-2d4f-42cd-be7f-6c7fb7fd08a1@gmail.com>
+Date: Sun, 18 Feb 2024 13:11:47 -0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -61,28 +61,47 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Cc: savicaleksa83@gmail.com, Jack Doan <me@jackdoan.com>,
- Jean Delvare <jdelvare@suse.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] hwmon: (aquacomputer_d5next) Set fan to direct PWM mode
- when writing value
-To: Guenter Roeck <linux@roeck-us.net>, linux-hwmon@vger.kernel.org
-References: <20240217181536.344386-1-savicaleksa83@gmail.com>
- <718f0dd9-121a-4885-8976-aaafa7c44f2d@roeck-us.net>
+Subject: Re: [RFC PATCH v3 0/2] rust: crates in other kernel directories
 Content-Language: en-US
-From: Aleksa Savic <savicaleksa83@gmail.com>
-In-Reply-To: <718f0dd9-121a-4885-8976-aaafa7c44f2d@roeck-us.net>
-Content-Type: text/plain; charset=UTF-8
+To: Masahiro Yamada <masahiroy@kernel.org>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
+ Wedson Almeida Filho <wedsonaf@gmail.com>, Boqun Feng
+ <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+ =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
+ Benno Lossin <benno.lossin@proton.me>,
+ Andreas Hindborg <a.hindborg@samsung.com>, Alice Ryhl
+ <aliceryhl@google.com>, linux-kbuild@vger.kernel.org,
+ linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org
+References: <20231104211213.225891-1-yakoyoku@gmail.com>
+ <CAK7LNAT4zKWn6+scn5wbaN2_x4wh4EYSuNxnaoQK1FfJK45MOw@mail.gmail.com>
+From: Martin Rodriguez Reboredo <yakoyoku@gmail.com>
+In-Reply-To: <CAK7LNAT4zKWn6+scn5wbaN2_x4wh4EYSuNxnaoQK1FfJK45MOw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On 2024-02-17 19:24:50 GMT+01:00, Guenter Roeck wrote:
+On 11/13/23 11:13, Masahiro Yamada wrote:
+> [...]
 > 
-> You can require that a device is in manual mode when setting pwm
-> modes, and return an error if it isn't. However, changing the mode
-> to manual automatically when a pwm value is written is not acceptable.
+> I will not provide a line-by-line review.
 > 
-> Guenter
 > 
+> Just one thing I'd like to point out.
+> 
+> You assume the library (drivers/usb/core/*)
+> is built before its consumers (samples/rust/*).
+> 
+> If Kbuild ends up with building lib consumers first,
+> it will be a build error.
+> 
+> 
+> 
+> Kbuild descends into multiple directories in parallel building.
+> 
+> You cannot predict which directory is built first.
+> 
+> [...]
 
-Right, thanks. Will implement pwm_enable, then.
-
-Aleksa
+Thinking with what you've said the same thing might apply to any Rust
+written code that depends on crates under the `rust` dir. Adding
+Make dependencies to object code made from `.rs` will be required if so,
+assuming that Kbuild is intelligent enough to build the crates first.
