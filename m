@@ -1,40 +1,47 @@
-Received: from mail78-58.sinamail.sina.com.cn (mail78-58.sinamail.sina.com.cn [219.142.78.58])
+Received: from mail-m1284.netease.com (mail-m1284.netease.com [103.209.128.4])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F7FF1096F
-	for <linux-kernel@vger.kernel.org>; Sun, 18 Feb 2024 08:54:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=219.142.78.58
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1ED5518AF1;
+	Sun, 18 Feb 2024 08:54:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.209.128.4
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708246454; cv=none; b=Ott1cTnGYoDuDimFRcjpCUaFvJRu/gN/2KCAGS5fe2mejolrxD4nCk0c3Kvu1N5j+836bEBeLvPRCa8tfttGircG0K7AmSbNhZYgXZQQ8MTwqTAl2Drwje0ly0KGL0zZ31XDFLhUv03wKwovI71p/YYjN2+l9Hs3qw4pmvjk3yU=
+	t=1708246473; cv=none; b=lKQEqntGKezm48JSqHbRSLqtiPILJDUp2P2M8sPnMNceIKt8xzCJ+0Gn/kzH3XnYAL26FGChDwe3MUTFv2dibo3xm5Jr9952ttfTQ3YRqyj4GjK3KXEyPCv37zn4sxw8taELeszOZIGOmQSSsAv7BExslcf9RhEkKfMrsoLj9n0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708246454; c=relaxed/simple;
-	bh=KL+tFSq1Z5R4Nx+TJZnToDwfQkgYJMyBTOdqIxvJcqc=;
+	s=arc-20240116; t=1708246473; c=relaxed/simple;
+	bh=dNPPyyu8SxU1/uq10zPXV9R2GjhQ/FWzz0JvOY1iBLg=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=r0pVGrlB+bbIEnGjnViQvhJQhVTC7248ufSNVd4A8JyW8f/7YmQ3oWLwm5AymphObMU2r1jmif86mCWsDIm90aLvjehG/LtRnhVg2x1FaPIuG0C+iOZ4A4c6MhS7R7HXRoyNErMrHEXkfjM3XWuxnSRY6IJSJofj8zLvmEe9ThE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com; spf=pass smtp.mailfrom=sina.com; arc=none smtp.client-ip=219.142.78.58
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sina.com
-X-SMAIL-HELO: localhost.localdomain
-Received: from unknown (HELO localhost.localdomain)([113.118.69.133])
-	by sina.com (172.16.235.25) with ESMTP
-	id 65D1C36800003407; Sun, 18 Feb 2024 16:44:28 +0800 (CST)
-X-Sender: hdanton@sina.com
-X-Auth-ID: hdanton@sina.com
-Authentication-Results: sina.com;
-	 spf=none smtp.mailfrom=hdanton@sina.com;
-	 dkim=none header.i=none;
-	 dmarc=none action=none header.from=hdanton@sina.com
-X-SMAIL-MID: 46224334210328
-X-SMAIL-UIID: 4D2A949D34894645AA6FAB0B1A39F847-20240218-164428-1
-From: Hillf Danton <hdanton@sina.com>
-To: syzbot <syzbot+1683f76f1b20b826de67@syzkaller.appspotmail.com>
-Cc: linux-kernel@vger.kernel.org,
-	syzkaller-bugs@googlegroups.com
-Subject: Re: [syzbot] [bluetooth?] KASAN: slab-use-after-free Write in hci_conn_drop (2)
-Date: Sun, 18 Feb 2024 16:44:14 +0800
-Message-Id: <20240218084414.1254-1-hdanton@sina.com>
-In-Reply-To: <00000000000026188206118a5952@google.com>
-References: 
+	 MIME-Version; b=tS0A14/pr/QPtRl2TbB6dT2pM+CAiLDvdNqkdJWPfRAGd3eX4B3xr5OlRyyTxsuppIgfNEQcB1KFdxm8vy8MYnZ976x+xmFA0EWRxLLfirGhnjngdElysK/g3o6LblxIfHZd8XHG9hu4HE/XBkJyiTCRf5d2yqvlXYZHJe6pqss=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=YULAArt9; arc=none smtp.client-ip=103.209.128.4
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="YULAArt9"
+DKIM-Signature: a=rsa-sha256;
+	b=YULAArt9mv6osUOndAnXRdss14ruUMZO2tuBTFLEfQ2oNKECWgbNHTPSYj1j/QcNRJvf4xpoi3JRtHqW/zWbk54JxdFYhYwO/pD2XPgvADD8Sn2q4yj1XYlJbINlQcALaGQrFfGREGnxcFqMv2Bab/nkRNLdvvzYRCWhhNtE4ao=;
+	s=default; c=relaxed/relaxed; d=rock-chips.com; v=1;
+	bh=K4Fl7JEu9s5KlglszkIGJ6sdYe5Zkzfqyd/rrzoVEbc=;
+	h=date:mime-version:subject:message-id:from;
+Received: from zhangzj-rk.. (unknown [58.22.7.114])
+	by smtp.qiye.163.com (Hmail) with ESMTPA id 02FDD2A00F9;
+	Sun, 18 Feb 2024 16:53:52 +0800 (CST)
+From: Elon Zhang <zhangzj@rock-chips.com>
+To: heiko@sntech.de,
+	robh+dt@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org,
+	conor+dt@kernel.org
+Cc: weizhao.ouyang@arm.com,
+	linux-kernel@vger.kernel.org,
+	linux-rockchip@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org,
+	devicetree@vger.kernel.org,
+	Elon Zhang <zhangzj@rock-chips.com>
+Subject: [PATCH v2 2/2] dt-bindings: arm: rockchip: Add Toybrick TB-RK3588X
+Date: Sun, 18 Feb 2024 16:53:14 +0800
+Message-Id: <20240218085314.658223-2-zhangzj@rock-chips.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240218085314.658223-1-zhangzj@rock-chips.com>
+References: <20240218065407.652213-1-zhangzj@rock-chips.com>
+ <20240218085314.658223-1-zhangzj@rock-chips.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,41 +49,39 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFDSUNOT01LS0k3V1ktWUFJV1kPCRoVCBIfWUFZGUsfGFZCQkxMS0hNT00YSU1VEwETFh
+	oSFyQUDg9ZV1kYEgtZQVlOQ1VJSVVMVUpKT1lXWRYaDxIVHRRZQVlPS0hVSk1PSUxOVUpLS1VKQk
+	tLWQY+
+X-HM-Tid: 0a8dbb6bfef903aakunm02fdd2a00f9
+X-HM-MType: 1
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6PTY6OSo5LTMWMS5RVkoiFVFK
+	MzgwFFZVSlVKTEtDSU9NT0hIQ0JDVTMWGhIXVQETGhUcARE7CRQYEFYYExILCFUYFBZFWVdZEgtZ
+	QVlOQ1VJSVVMVUpKT1lXWQgBWUFJSExPNwY+
 
-On Fri, 16 Feb 2024 18:09:19 -0800
-> syzbot has found a reproducer for the following issue on:
-> 
-> HEAD commit:    2c3b09aac00d Add linux-next specific files for 20240214
-> git tree:       linux-next
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=16c27a58180000
+Add devicetree binding for Toybrick TB-RK3588X board from Rockchip Toybrick.
 
-#syz test https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git  2c3b09aac00d
+Signed-off-by: Elon Zhang <zhangzj@rock-chips.com>
+---
+ Documentation/devicetree/bindings/arm/rockchip.yaml | 5 +++++
+ 1 file changed, 5 insertions(+)
 
---- x/net/bluetooth/sco.c
-+++ y/net/bluetooth/sco.c
-@@ -297,6 +297,7 @@ static int sco_connect(struct sock *sk)
- 		sco_sock_set_timer(sk, sk->sk_sndtimeo);
- 	}
+diff --git a/Documentation/devicetree/bindings/arm/rockchip.yaml b/Documentation/devicetree/bindings/arm/rockchip.yaml
+index 5cf5cbef2cf5..d29df97c7b25 100644
+--- a/Documentation/devicetree/bindings/arm/rockchip.yaml
++++ b/Documentation/devicetree/bindings/arm/rockchip.yaml
+@@ -878,6 +878,11 @@ properties:
+           - const: rockchip,rv1108-evb
+           - const: rockchip,rv1108
  
-+	hci_conn_get(hcon);
- 	release_sock(sk);
- 
- unlock:
-@@ -439,12 +440,15 @@ static void __sco_sock_close(struct sock
- 	case BT_CONNECTED:
- 	case BT_CONFIG:
- 		if (sco_pi(sk)->conn->hcon) {
-+			struct hci_conn *hcon = sco_pi(sk)->conn->hcon;
++      - description: Rockchip Toybrick TB-RK3588X board
++        items:
++          - const: rockchip,rk3588-toybrick-x0
++          - const: rockchip,rk3588
 +
- 			sk->sk_state = BT_DISCONN;
- 			sco_sock_set_timer(sk, SCO_DISCONN_TIMEOUT);
- 			sco_conn_lock(sco_pi(sk)->conn);
--			hci_conn_drop(sco_pi(sk)->conn->hcon);
- 			sco_pi(sk)->conn->hcon = NULL;
- 			sco_conn_unlock(sco_pi(sk)->conn);
-+
-+			hci_conn_put(hcon);
- 		} else
- 			sco_chan_del(sk, ECONNRESET);
- 		break;
---
+       - description: Theobroma Systems PX30-uQ7 with Haikou baseboard
+         items:
+           - const: tsd,px30-ringneck-haikou
+-- 
+2.34.1
+
