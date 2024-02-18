@@ -1,99 +1,66 @@
-Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1807360;
-	Sun, 18 Feb 2024 00:27:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B97D3360
+	for <linux-kernel@vger.kernel.org>; Sun, 18 Feb 2024 00:34:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708216043; cv=none; b=nXysO1GsTc3Nl5sh52nrT3XNO3FfIaLyi7CpoUfG6dmxgTpj1KLC7JPG6ItzYkexvxwMJyPtw4fJRON2kyxW5Kv6P67nv0oN5I2wKT7j4cDEa14zJXh1vhDERK+APRrKC5U+c5c1vW70atieMfgcQjLQwnpOIFRyKJxfyIeW6C4=
+	t=1708216483; cv=none; b=Q7SpPpZhvvwR154W+xPVDM6UT8GSJbYotf98Trsyt7EXaJvSPNbNAc+18Tqhx0bo91qZ5tbIKnyZRun3qZD4ihytKo4Aqwe6f6ElMUu69jaTh5zegXckwL0kpiHVxXMD4jX+ejE7/M6wSveX+ZModonrh6SLQlzth8jUWazAhJc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708216043; c=relaxed/simple;
-	bh=h79Z3lIxbgbvpeJtKMFZwIkXBVN34m+I9WFzuU0RpPg=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=fdj9bMUrHLlNPHiz/lEhRmI/5TwpMbmJgUuYG9aJpsM3JVbcXO63E3cuOL84dInNl2PCV2wHI2saCnvt3ocd/8CwA/OR4/j7wJBurw+Og3GnL6KhoLFWiqYQtkyqMrr+nVvhNzEe+a4YjJM1c8EpkqyetjAMaUQWKiq4Z9ktAYI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=fail (0-bit key) header.d=zytor.com header.i=@zytor.com header.b=Kbh/cWTs reason="key not found in DNS"; arc=none smtp.client-ip=198.137.202.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=zytor.com header.i=@zytor.com header.b="Kbh/cWTs"
-Received: from [127.0.0.1] ([76.133.66.138])
-	(authenticated bits=0)
-	by mail.zytor.com (8.17.2/8.17.1) with ESMTPSA id 41I0PcJe2642444
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-	Sat, 17 Feb 2024 16:25:39 -0800
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 41I0PcJe2642444
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2024021201; t=1708215944;
-	bh=Wz3l09giQfTSL1YwWsrN6DHEZxbftRXxZ+FPELlf150=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
-	b=Kbh/cWTs4TZxrYFDQ9PGa9IsSYuA1vHWzgIsTR0kvi4sW/bys585nuFqikL0TP5gm
-	 HKIVOVqbT7JBgMSPQTIwCyqhkiwtXimEAmjOXHjR+2553XQJaMLSzYstWWUWnS4bKN
-	 dQOpwm5HzNuMPAIWbCXZ1VCkmdcz6uzIgYOMlj5+Cn11b+VeVfNQY6lnCMeyDdLuuS
-	 Ye2WBh6HLbJT67nCtUY3geuu7PCBMFHE/c0FI1Bv7dC7naHq0HkUbcVGJabT880svv
-	 Wr8a2dA16Nlv2/Q86qDi2U+JKHTIgZbdXPgEurZBZy98nZMptUmWwHxqFcf1ctQEKg
-	 2lKStlO9LtM6A==
-Date: Sat, 17 Feb 2024 16:25:33 -0800
-From: "H. Peter Anvin" <hpa@zytor.com>
-To: Kees Cook <keescook@chromium.org>, Jiri Kosina <jikos@kernel.org>
-CC: Geert Uytterhoeven <geert@linux-m68k.org>,
-        Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Qi Zheng <zhengqi.arch@bytedance.com>,
-        Alexandre Ghiti <alexghiti@rivosinc.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        Josh Poimboeuf <jpoimboe@kernel.org>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Rick Edgecombe <rick.p.edgecombe@intel.com>,
-        Brian Gerst <brgerst@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>,
-        Tony Battersby <tonyb@cybernetics.com>, linux-kernel@vger.kernel.org,
-        y0un9n132@gmail.com, x86@kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-mm@kvack.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH 0/2] Adjust brk randomness
-User-Agent: K-9 Mail for Android
-In-Reply-To: <20240217062035.work.493-kees@kernel.org>
-References: <20240217062035.work.493-kees@kernel.org>
-Message-ID: <05E12A71-D8A4-4E6D-9C9D-024251C1BDC7@zytor.com>
+	s=arc-20240116; t=1708216483; c=relaxed/simple;
+	bh=PvYE+aZ+IRwRox1Xt4CLZHe5EcgUWS1ssFaHy2+vS/w=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=hMR2PAqUH3/6ncE2nBHFqm94ykOeTv9tGKRHY0xFMjojcadzZi/B71pu5wTz4mfj1bqoahN3bJAL/WTttO7NKA1x20Itl34GbO9RI6NVDIy90fCS02evzrvAdNxIFdAjYQSGNkT8FzsH3ytdLhDRM1LHZR9kR5f5Pjwgg5k7svQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 34B61DA7;
+	Sat, 17 Feb 2024 16:35:14 -0800 (PST)
+Received: from [10.163.45.155] (unknown [10.163.45.155])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1B0433F694;
+	Sat, 17 Feb 2024 16:34:31 -0800 (PST)
+Message-ID: <785e9bd7-f47b-4e8f-9291-0616aa87fa27@arm.com>
+Date: Sun, 18 Feb 2024 06:04:34 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] arm64/sysreg: Add register fields for ID_AA64DFR1_EL1
+Content-Language: en-US
+To: Mark Brown <broonie@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ linux-kernel@vger.kernel.org
+References: <20240215065454.2489075-1-anshuman.khandual@arm.com>
+ <d2722ae9-d29c-41f9-9eec-f829589adf6e@sirena.org.uk>
+From: Anshuman Khandual <anshuman.khandual@arm.com>
+In-Reply-To: <d2722ae9-d29c-41f9-9eec-f829589adf6e@sirena.org.uk>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On February 16, 2024 10:25:42 PM PST, Kees Cook <keescook@chromium=2Eorg> w=
-rote:
->Hi,
->
->It was recently pointed out[1] that x86_64 brk entropy was not great,
->and that on all architectures the brk can (when the random offset is 0)
->be immediately adjacent to =2Ebss, leaving no gap that could stop linear
->overflows from the =2Ebss=2E Address both issues=2E
->
->-Kees
->
->Link: https://lore=2Ekernel=2Eorg/linux-hardening/CA+2EKTVLvc8hDZc+2Yhwmu=
-s=3DdzOUG5E4gV7ayCbu0MPJTZzWkw@mail=2Egmail=2Ecom [1]
->
->Kees Cook (2):
->  x86: Increase brk randomness entropy on x86_64
->  binfmt_elf: Leave a gap between =2Ebss and brk
->
-> arch/x86/kernel/process=2Ec | 5 ++++-
-> fs/binfmt_elf=2Ec           | 3 +++
-> 2 files changed, 7 insertions(+), 1 deletion(-)
->
 
-Why do we even have the brk, or perhaps more importantly, why do we use it=
-? Is there any reason whatsoever why glibc uses brk instead of mmap to her =
-heap memory?
 
-I thought the base of the brk wasn't even known to userspace other than in=
- the form of the image end=2E=2E=2E
+On 2/15/24 18:34, Mark Brown wrote:
+> On Thu, Feb 15, 2024 at 12:24:54PM +0530, Anshuman Khandual wrote:
+> 
+>>  Sysreg	ID_AA64DFR1_EL1	3	0	0	5	1
+>> -Res0	63:0
+>> +Field	63:56	ABL_CMPs
+>> +Field	55:52	DPFZS
+> 
+> This is documented in the architecture as an enumeration, though I'm not
+> immediately seeing what values to use.
+
+Just wondering - would something like the following make sense. Because
+0b0000 signifies that the cycle counter would just ignore PMCR_EL0.FZS,
+where as it gets frozen with 0b0001.
+
+UnsignedEnum   55:52   DPFZS
+       0b0000  IGNR
+       0b0001  FRZN
+EndEnum
+
+> 
+> Otherwise this looks good.
