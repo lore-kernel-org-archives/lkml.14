@@ -1,142 +1,176 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB9FF6F07C;
-	Sun, 18 Feb 2024 22:12:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBED16F07C;
+	Sun, 18 Feb 2024 22:17:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708294328; cv=none; b=gB41pl97BlLmgoyhVNlf2x/YecO5SBNHu1gBkivhRJ+k2kb0TRXeMau489SJzVv/hz5bh07jT48WTUYnQd3z8d48ID9iGVXFsUZS2DT5NXucjeq8g6ytPqU3qUfbGlcH8RerB/ykbqs5re80AsVCwKtwakBdBiqFwLAfff0bnZM=
+	t=1708294651; cv=none; b=m3/NK8P6F+928KR81KII1DHUVVKwoK8sH7viSHcITRKdmdU9g5CTrJyZ2I/7IUDbjQ5UfG0KrXYDdD1Jw5BfnNzE5CiwScZgYB4Pn+vhLpRMtA3WO05Y8v6XDCmiub22f1zJY1TdXanUIE8qjaLOyi2C9yZbsFeMSVSjHB0EuSY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708294328; c=relaxed/simple;
-	bh=tnM0uTy98OwW8DDzCPMTha03h0Xip8yTOAu7yVZB99w=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=f98sVFZmGIzixuqN6Tj8DsIWjQEWRcC4dBXb8TxaLJwTjO4eDLU5PXpt1BsVfH2Ilf1MdXFdlALrSyOjN4SUsIfnSG5lf82kCMwtO+S9OISSHY7PljcGwjRR/Cfl/dVDM/N9tJJ1GSVcdNzSSv52vhGa+DyhkpMhag2iQNPOfT8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PyLuHxqh; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1708294651; c=relaxed/simple;
+	bh=ChOSezAKDLZ/7An8MXAMha+Vzh5/qiW3BtupqQXeTO0=;
+	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
+	 References:Date:Message-id; b=tS1F+hKbNcYCKQ59nrYiSzh/bfgZz7HSbbN445uPdGXoZqJqCBcjdg2zU1+/+35vsbMoVIfpK/hRV+qqyTf7d5FcUm7xEfgFemO8BEWorSo4V22YjIX9hXM81M5PY+S6ssgZcm+pKcSaRml5yvs2Wc9NPU+Kx+MOniK0VH84qWQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=asDq1yQ4; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=2wxVesKX; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=BfheGFLK; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=+2Kjx3re; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PyLuHxqh"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1708294327; x=1739830327;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=tnM0uTy98OwW8DDzCPMTha03h0Xip8yTOAu7yVZB99w=;
-  b=PyLuHxqheb1IA5QtGNVxyL1GGvxbFhuh84xRYtIVx7GIP3m48ConPzS6
-   dCLsCTJu4ECqB+b64C+3E07MEHBIFqTxXEmwkVh1z63/XLbemi/gkEPZ3
-   j9+uikqotjyea4pri0zeAJdl8HKh/1mNJ86KZVrXbMui622HtRzbrGyf9
-   ds4sfEX3X+430OVL0KvRwOxkEg3fA71qiscORnt3YF7Ym/IdPQjvJ0xYK
-   fPoRsc/HZlv3j4IilUlbdQ8gAMf6i+dAQyT+ojVog3of6XDcMErKtuZbC
-   LrgPzcJWQO3FDaqIoe+n0rSo228DAo/005JgXK7yTS+77lObEzJyZXbTi
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10988"; a="12990493"
-X-IronPort-AV: E=Sophos;i="6.06,169,1705392000"; 
-   d="scan'208";a="12990493"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Feb 2024 14:12:06 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,169,1705392000"; 
-   d="scan'208";a="4717299"
-Received: from lkp-server02.sh.intel.com (HELO 3c78fa4d504c) ([10.239.97.151])
-  by orviesa008.jf.intel.com with ESMTP; 18 Feb 2024 14:12:02 -0800
-Received: from kbuild by 3c78fa4d504c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rbpOB-0003KO-0o;
-	Sun, 18 Feb 2024 22:11:59 +0000
-Date: Mon, 19 Feb 2024 06:11:30 +0800
-From: kernel test robot <lkp@intel.com>
-To: Yang Xiwen via B4 Relay <devnull+forbidden405.outlook.com@kernel.org>,
-	Ulf Hansson <ulf.hansson@linaro.org>,
-	Jaehoon Chung <jh80.chung@samsung.com>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	Igor Opaniuk <igor.opaniuk@linaro.org>,
-	tianshuliang <tianshuliang@hisilicon.com>,
-	David Yang <mmyangfl@gmail.com>, linux-kernel@vger.kernel.org,
-	linux-mmc@vger.kernel.org, devicetree@vger.kernel.org,
-	Yang Xiwen <forbidden405@outlook.com>
-Subject: Re: [PATCH 1/3] mmc: dw_mmc: add support for hi3798mv200
-Message-ID: <202402190531.qUVUPNDD-lkp@intel.com>
-References: <20240216-b4-mmc-hi3798mv200-v1-1-7d46db845ae6@outlook.com>
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="asDq1yQ4";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="2wxVesKX";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="BfheGFLK";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="+2Kjx3re"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 9A12421CFB;
+	Sun, 18 Feb 2024 22:17:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1708294647; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=4mA7lxWiF+oraQAzGHICYfdobEjl/bRVoJRdYvmZznk=;
+	b=asDq1yQ4L7FWy6q9LD2Vox8ecrqIRgidVV1K1QbPIDmlmjCWeO0PH9oyaEBmQx0j7Ru3/G
+	ov2ncc0N1pJDZEl15tSHVu3a8eza3+avaVx3FqMJSXi4XZZ8JFiSDVYA9bLA3lrHh33Ktu
+	60Bdy3PB80fG071T9kEfk/youbHAOQw=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1708294647;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=4mA7lxWiF+oraQAzGHICYfdobEjl/bRVoJRdYvmZznk=;
+	b=2wxVesKXcZOdfdHXfgnGVBZWVemhzl+iVobcuOLYzGSPqm80rDaPywiDWBiExn7dS8pJog
+	uP4+2AKJn7H7KcAA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1708294644; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=4mA7lxWiF+oraQAzGHICYfdobEjl/bRVoJRdYvmZznk=;
+	b=BfheGFLK5Rmp5ISvInUbqhbJRsJVlTJ0HaoCbb2gK0r6OMVs6O5yiV8SdkL0YMviSoZAsn
+	Nz8JvaNstKKq47lfRfSxvguoHCUif0HasclGKjKOiri5zZC0IL+mLj/gEXf/RCNvUhrN7R
+	GweeKfNigVuKCD3T+SCIK1QVu1erlXM=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1708294644;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=4mA7lxWiF+oraQAzGHICYfdobEjl/bRVoJRdYvmZznk=;
+	b=+2Kjx3reNhyXgwOBXpw+4lSOWNb3HDwsJIT1nSCJsoABcffyEKvkfaLeVUJTdmxeOQNCSP
+	nO4/Vsoau7AorlAw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 4FD8C139D8;
+	Sun, 18 Feb 2024 22:17:21 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([10.150.64.162])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id gYqIAfGB0mVqBgAAD6G6ig
+	(envelope-from <neilb@suse.de>); Sun, 18 Feb 2024 22:17:21 +0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240216-b4-mmc-hi3798mv200-v1-1-7d46db845ae6@outlook.com>
+From: "NeilBrown" <neilb@suse.de>
+To: "Fedor Pchelkin" <pchelkin@ispras.ru>
+Cc: "Aleksandr Burakov" <a.burakov@rosalinux.ru>,
+ "Chuck Lever" <chuck.lever@oracle.com>, "Jeff Layton" <jlayton@kernel.org>,
+ linux-nfs@vger.kernel.org, "Dai Ngo" <Dai.Ngo@oracle.com>,
+ linux-kernel@vger.kernel.org, "Tom Talpey" <tom@talpey.com>,
+ "Olga Kornievskaia" <kolga@netapp.com>, lvc-project@linuxtesting.org
+Subject: Re: [lvc-project] [PATCH] nfsd: fix memory leak in
+ __cld_pipe_inprogress_downcall()
+In-reply-to: <d6ac2546-cf4e-43c3-bc41-b62a61141339-pchelkin@ispras.ru>
+References: <20240216134541.31577-1-a.burakov@rosalinux.ru>,
+ <d6ac2546-cf4e-43c3-bc41-b62a61141339-pchelkin@ispras.ru>
+Date: Mon, 19 Feb 2024 09:17:18 +1100
+Message-id: <170829463835.1530.4794427167476868043@noble.neil.brown.name>
+Authentication-Results: smtp-out1.suse.de;
+	none
+X-Spam-Level: 
+X-Spam-Score: -1.30
+X-Spamd-Result: default: False [-1.30 / 50.00];
+	 ARC_NA(0.00)[];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 FROM_HAS_DN(0.00)[];
+	 TO_DN_SOME(0.00)[];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 NEURAL_HAM_LONG(-1.00)[-1.000];
+	 MIME_GOOD(-0.10)[text/plain];
+	 RCVD_COUNT_THREE(0.00)[3];
+	 DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	 NEURAL_HAM_SHORT(-0.20)[-0.999];
+	 RCPT_COUNT_SEVEN(0.00)[10];
+	 DBL_BLOCKED_OPENRESOLVER(0.00)[linuxtesting.org:url,princhash.data:url,rosalinux.ru:email,name.data:url];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 RCVD_TLS_ALL(0.00)[];
+	 BAYES_HAM(-0.00)[20.82%]
+X-Spam-Flag: NO
 
-Hi Yang,
+On Mon, 19 Feb 2024, Fedor Pchelkin wrote:
+> Hello Aleksandr,
+>=20
+> On 24/02/16 04:45PM, Aleksandr Burakov wrote:
+> > Dynamic memory, referenced by 'princhash.data' and 'name.data',=20
+> > is allocated by calling function 'memdup_user' and lost=20
+> > at __cld_pipe_inprogress_downcall() function return
+>=20
+> It is not actually lost. If nfs4_client_to_reclaim() fails and thus
+> returns NULL - this error case is already properly handled.
+>=20
+> If nfs4_client_to_reclaim() succeeds then reference to the memory in
+> question is passed to crp->cr_name.data and crp->cr_princhash.data
+> correspondingly, and crp->cr_strhash entry is added to the list associated
+> with nfsd_net. In this case the memory is supposed to be freed by
+> nfs4_remove_reclaim_record(). See comment for nfs4_client_to_reclaim().
+>=20
+> So I think the patch just introduces a double-free.
 
-kernel test robot noticed the following build errors:
+Agreed - this patch is incorrect.
 
-[auto build test ERROR on 8d3dea210042f54b952b481838c1e7dfc4ec751d]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Yang-Xiwen-via-B4-Relay/mmc-dw_mmc-add-support-for-hi3798mv200/20240216-014744
-base:   8d3dea210042f54b952b481838c1e7dfc4ec751d
-patch link:    https://lore.kernel.org/r/20240216-b4-mmc-hi3798mv200-v1-1-7d46db845ae6%40outlook.com
-patch subject: [PATCH 1/3] mmc: dw_mmc: add support for hi3798mv200
-config: powerpc-allyesconfig (https://download.01.org/0day-ci/archive/20240219/202402190531.qUVUPNDD-lkp@intel.com/config)
-compiler: clang version 19.0.0git (https://github.com/llvm/llvm-project 36adfec155de366d722f2bac8ff9162289dcf06c)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240219/202402190531.qUVUPNDD-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202402190531.qUVUPNDD-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
->> drivers/mmc/host/dw_mmc-hi3798mv200.c:178:25: error: incompatible pointer types passing 'struct device *' to parameter of type 'struct mmc_host *' [-Werror,-Wincompatible-pointer-types]
-     178 |         mmc_of_parse_clk_phase(host->dev, &priv->phase_map);
-         |                                ^~~~~~~~~
-   include/linux/mmc/host.h:542:46: note: passing argument to parameter 'host' here
-     542 | void mmc_of_parse_clk_phase(struct mmc_host *host,
-         |                                              ^
-   1 error generated.
+Thanks,
+NeilBrown
 
 
-vim +178 drivers/mmc/host/dw_mmc-hi3798mv200.c
+>=20
+> >=20
+> > Found by Linux Verification Center (linuxtesting.org) with SVACE.
+> >=20
+> > Fixes: 11a60d159259 ("nfsd: add a "GetVersion" upcall for nfsdcld")
+> > Signed-off-by: Aleksandr Burakov <a.burakov@rosalinux.ru>
+> > ---
+> >  fs/nfsd/nfs4recover.c | 2 ++
+> >  1 file changed, 2 insertions(+)
+> >=20
+> > diff --git a/fs/nfsd/nfs4recover.c b/fs/nfsd/nfs4recover.c
+> > index 2c060e0b1604..02663484782d 100644
+> > --- a/fs/nfsd/nfs4recover.c
+> > +++ b/fs/nfsd/nfs4recover.c
+> > @@ -850,6 +850,8 @@ __cld_pipe_inprogress_downcall(const struct cld_msg_v=
+2 __user *cmsg,
+> >  			kfree(princhash.data);
+> >  			return -EFAULT;
+> >  		}
+> > +		kfree(name.data);
+> > +		kfree(princhash.data);
+> >  		return nn->client_tracking_ops->msglen;
+> >  	}
+> >  	return -EFAULT;
+> > --=20
+> > 2.25.1
+>=20
+> --
+> Fedor
+>=20
+>=20
 
-   168	
-   169	static int dw_mci_hi3798mv200_init(struct dw_mci *host)
-   170	{
-   171		struct dw_mci_hi3798mv200_priv *priv;
-   172		struct device_node *np = host->dev->of_node;
-   173	
-   174		priv = devm_kzalloc(host->dev, sizeof(*priv), GFP_KERNEL);
-   175		if (!priv)
-   176			return -ENOMEM;
-   177	
- > 178		mmc_of_parse_clk_phase(host->dev, &priv->phase_map);
-   179	
-   180		priv->sample_clk = devm_clk_get_enabled(host->dev, "ciu-sample");
-   181		if (IS_ERR(priv->sample_clk)) {
-   182			dev_err(host->dev, "failed to get enabled ciu-sample clock\n");
-   183			return PTR_ERR(priv->sample_clk);
-   184		}
-   185	
-   186		priv->drive_clk = devm_clk_get_enabled(host->dev, "ciu-drive");
-   187		if (IS_ERR(priv->drive_clk)) {
-   188			dev_err(host->dev, "failed to get enabled ciu-drive clock\n");
-   189			return PTR_ERR(priv->drive_clk);
-   190		}
-   191	
-   192		priv->sap_dll_reg = syscon_regmap_lookup_by_phandle(np, "hisilicon,sap-dll-reg");
-   193		if (IS_ERR(priv->sap_dll_reg)) {
-   194			dev_err(host->dev, "failed to get sap-dll-reg\n");
-   195			return PTR_ERR(priv->sap_dll_reg);
-   196		}
-   197	
-   198		host->priv = priv;
-   199		return 0;
-   200	}
-   201	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
