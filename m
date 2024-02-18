@@ -1,80 +1,180 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from vps.xff.cz (vps.xff.cz [195.181.215.36])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73A066BFC7;
-	Sun, 18 Feb 2024 15:14:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CC611E535
+	for <linux-kernel@vger.kernel.org>; Sun, 18 Feb 2024 15:17:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.181.215.36
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708269268; cv=none; b=t3AiYMaMkyk7r4yGSTihp47nRhSZUSdsYH8gZdpX/pQ7JUN/Ooy0eHqKVw/W5CPU09tWnJfsZ3D6bkO40S0tRYMhZza6KHyC+6FxiUN3FBr/RR5IDAh6NVksK3gCptjpYrEMGH79ZGovvnLhkOfBeJCrm5PjQ+pOF7BuQZ/bOf8=
+	t=1708269448; cv=none; b=CBe95rlzXGJOxk5hwn1GIgqy4AhrZPFmUvuRrRSoZkO3I+hKjR5ug4Kp8t954OgbyO0GMNWSCn4J0TsuHIV4ohLWZEdM9fxjPsMATl+TfcVTuX4/aMImhWVgQ68knC9Fg2npFEDe9m231GKxQ4Mch7++60V6MbwDlEYt8i5D4uc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708269268; c=relaxed/simple;
-	bh=7ND1cr7GPflsn+fS87oYZAJbbZxVUvL0DV2PFVsYsnw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ls7yawe1zQJ9nZ7kWaRNn+5mtlgx/prp8rQzPkTaf4OnBU1Vzw1tUqU/n1WmE2MXAvZm/+Bj5+/FuP/G+69uhqSUJTjofSgSKQltfZAz8EPdbnYeIO8WPN3t4u3WCFm1Q922Tm8OANEf/aGGQQsr4ju0826axoMAYqleuRK5vnQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 698DEC433C7;
-	Sun, 18 Feb 2024 15:14:25 +0000 (UTC)
-From: Huacai Chen <chenhuacai@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: loongarch@lists.linux.dev,
-	Xuefeng Li <lixuefeng@loongson.cn>,
-	Guo Ren <guoren@kernel.org>,
-	Xuerui Wang <kernel@xen0n.name>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	linux-kernel@vger.kernel.org,
-	loongson-kernel@lists.loongnix.cn,
-	Huacai Chen <chenhuacai@loongson.cn>,
-	Oreoluwa Babatunde <quic_obabatun@quicinc.com>
-Subject: [PATCH] LoongArch: Call early_init_fdt_scan_reserved_mem() earlier
-Date: Sun, 18 Feb 2024 23:14:03 +0800
-Message-ID: <20240218151403.2206980-1-chenhuacai@loongson.cn>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1708269448; c=relaxed/simple;
+	bh=vgYyrkfy4NvMffwZnA9GbIjwpDwWVz0QVFbKOYEwfJQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=a2NGSEeDzzac9MpRoWYNiUPrSdUFGYZ66uPokos4bpvSD37hJFojlM+Uh2W+fy6JmZmcHzLMsNoW6NeONO/EnY+lk/sgneQ2yMQ+8ogKlMPiZ2mOmPrAHRs8VtfeQGM9iOp5FL5J747NrvqbtCEYOpGs4UTrOdxE4qP11z06qFw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=xff.cz; spf=pass smtp.mailfrom=xff.cz; dkim=pass (1024-bit key) header.d=xff.cz header.i=@xff.cz header.b=betw1GS2; arc=none smtp.client-ip=195.181.215.36
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=xff.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xff.cz
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=xff.cz header.i=@xff.cz header.b="betw1GS2"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xff.cz; s=mail;
+	t=1708269442; bh=vgYyrkfy4NvMffwZnA9GbIjwpDwWVz0QVFbKOYEwfJQ=;
+	h=Date:From:To:Cc:Subject:X-My-GPG-KeyId:References:From;
+	b=betw1GS2RwS4OjostOe9MAyGZAzRsiDV36jcyw9WQ9jAB+MQ+pbGdaHEsM1Irngqh
+	 uzGfdq/2mOTdrV9ZRyr5tGZyEWVR5dvQAJzZ6q+1hEqP+RbIfet/pSkFiiTn3cwCLk
+	 p7GFEg35DB2UFv/USy8i6Y0HfbeLIg/DKhNUM5iI=
+Date: Sun, 18 Feb 2024 16:17:22 +0100
+From: =?utf-8?Q?Ond=C5=99ej?= Jirman <megi@xff.cz>
+To: Andy Yan <andy.yan@rock-chips.com>
+Cc: linux-kernel@vger.kernel.org, Sandy Huang <hjc@rock-chips.com>, 
+	Heiko =?utf-8?Q?St=C3=BCbner?= <heiko@sntech.de>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
+	"open list:DRM DRIVERS FOR ROCKCHIP" <dri-devel@lists.freedesktop.org>, 
+	"moderated list:ARM/Rockchip SoC support" <linux-arm-kernel@lists.infradead.org>, 
+	"open list:ARM/Rockchip SoC support" <linux-rockchip@lists.infradead.org>
+Subject: Re: [PATCH] drm: rockchip: Don't require MIPI DSI device when it's
+ used for ISP
+Message-ID: <bsc3lpdxvhy3ss2uja4do3jwvj43zbs7zhx4bzs2tryrakn7be@pt2qsyvryk73>
+Mail-Followup-To: =?utf-8?Q?Ond=C5=99ej?= Jirman <megi@xff.cz>, 
+	Andy Yan <andy.yan@rock-chips.com>, linux-kernel@vger.kernel.org, Sandy Huang <hjc@rock-chips.com>, 
+	Heiko =?utf-8?Q?St=C3=BCbner?= <heiko@sntech.de>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
+	"open list:DRM DRIVERS FOR ROCKCHIP" <dri-devel@lists.freedesktop.org>, 
+	"moderated list:ARM/Rockchip SoC support" <linux-arm-kernel@lists.infradead.org>, 
+	"open list:ARM/Rockchip SoC support" <linux-rockchip@lists.infradead.org>
+X-My-GPG-KeyId: EBFBDDE11FB918D44D1F56C1F9F0A873BE9777ED
+ <https://xff.cz/key.txt>
+References: <20240217183941.1752463-1-megi@xff.cz>
+ <4c66c084-5af6-43fb-a256-4746b2e00192@rock-chips.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <4c66c084-5af6-43fb-a256-4746b2e00192@rock-chips.com>
 
-The unflatten_and_copy_device_tree() function contains a call to
-memblock_alloc(). This means that memblock is allocating memory before
-any of the reserved memory regions are set aside in the arch_mem_init()
-function which calls early_init_fdt_scan_reserved_mem(). Therefore,
-there is a possibility for memblock to allocate from any of the
-reserved memory regions.
+Hi Andy,
 
-Hence, move the call to early_init_fdt_scan_reserved_mem() to be earlier
-in the init sequence, so that the reserved memory regions are set aside
-before any allocations are done using memblock.
+On Sun, Feb 18, 2024 at 07:14:56PM +0800, Andy Yan wrote:
+> Hi,
+> 
+> On 2/18/24 02:39, Ondřej Jirman wrote:
+> > From: Ondrej Jirman <megi@xff.cz>
+> > 
+> > On RK3399 one MIPI DSI device can be alternatively used with the ISP1,
+> > to provide RX DPHY. When this is the case (ISP1 is enabled in device
+> > tree), probe success of DRM is tied to probe success of ISP1 connected
+> > camera sensor. This can fail if the user is able to killswitch the camera
+> > power, like on Pinephone Pro.
+> > 
+> > Detect use of MIPI DSI controller by ISP, and don't include it in
+> > component match list in that case.
+> > 
+> 
+> Isn't this supposed to be taken care of within the dts?
+> Since DPHY1 should exclusively used by MIPI DSI1 and ISP1, then if
+> a device want to use ISP1, the DSI1 should be disabled in dts.
 
-Signed-off-by: Oreoluwa Babatunde <quic_obabatun@quicinc.com>
-Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
----
- arch/loongarch/kernel/setup.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+DSI1 can't be disabled, because it provides PHY device for ISP1 in this
+scenario.
 
-diff --git a/arch/loongarch/kernel/setup.c b/arch/loongarch/kernel/setup.c
-index edf2bba80130..634ef17fd38b 100644
---- a/arch/loongarch/kernel/setup.c
-+++ b/arch/loongarch/kernel/setup.c
-@@ -357,6 +357,8 @@ void __init platform_init(void)
- 	acpi_gbl_use_default_register_widths = false;
- 	acpi_boot_table_init();
- #endif
-+
-+	early_init_fdt_scan_reserved_mem();
- 	unflatten_and_copy_device_tree();
- 
- #ifdef CONFIG_NUMA
-@@ -390,8 +392,6 @@ static void __init arch_mem_init(char **cmdline_p)
- 
- 	check_kernel_sections_mem();
- 
--	early_init_fdt_scan_reserved_mem();
--
- 	/*
- 	 * In order to reduce the possibility of kernel panic when failed to
- 	 * get IO TLB memory under CONFIG_SWIOTLB, it is better to allocate
--- 
-2.43.0
+The problem is that in this scenario DRM keeps waiting for DSI1 device,
+despite it just being used for PHY for ISP1 and not as a component for
+rockchip DRM driver.
 
+See:
+
+        isp1: isp1@ff920000 {
+                compatible = "rockchip,rk3399-cif-isp";
+                reg = <0x0 0xff920000 0x0 0x4000>;
+                interrupts = <GIC_SPI 44 IRQ_TYPE_LEVEL_HIGH 0>;
+                clocks = <&cru SCLK_ISP1>,
+                         <&cru ACLK_ISP1_WRAPPER>,
+                         <&cru HCLK_ISP1_WRAPPER>;
+                clock-names = "isp", "aclk", "hclk";
+                iommus = <&isp1_mmu>;
+                phys = <&mipi_dsi1>;  <--------- 
+                phy-names = "dphy";
+                power-domains = <&power RK3399_PD_ISP1>;
+                status = "disabled";
+
+If mipi_dsi1 is disabled, isp1 will never probe.
+
+It's a consequence of this special dual use of mipi_dsi1.
+
+kind regards,
+	o.
+
+> > Signed-off-by: Ondrej Jirman <megi@xff.cz>
+> > ---
+> >   drivers/gpu/drm/rockchip/rockchip_drm_drv.c | 47 +++++++++++++++++++++
+> >   1 file changed, 47 insertions(+)
+> > 
+> > diff --git a/drivers/gpu/drm/rockchip/rockchip_drm_drv.c b/drivers/gpu/drm/rockchip/rockchip_drm_drv.c
+> > index ab55d7132550..f47de94ad576 100644
+> > --- a/drivers/gpu/drm/rockchip/rockchip_drm_drv.c
+> > +++ b/drivers/gpu/drm/rockchip/rockchip_drm_drv.c
+> > @@ -354,6 +354,43 @@ static void rockchip_drm_match_remove(struct device *dev)
+> >   		device_link_del(link);
+> >   }
+> > +/*
+> > + * Check if ISP block linked to a mipi-dsi device via phys phandle is
+> > + * enabled in device tree.
+> > + */
+> > +static bool rockchip_drm_is_mipi1_and_used_by_isp(struct device *dev)
+> > +{
+> > +	struct device_node *np = NULL, *phy_np;
+> > +
+> > +	if (!of_device_is_compatible(dev->of_node, "rockchip,rk3399-mipi-dsi"))
+> > +		return false;
+> > +
+> > +	while (true) {
+> > +		np = of_find_compatible_node(np, NULL, "rockchip,rk3399-cif-isp");
+> > +		if (!np)
+> > +			break;
+> > +
+> > +		if (!of_device_is_available(np)) {
+> > +			of_node_put(np);
+> > +			continue;
+> > +		}
+> > +
+> > +		phy_np = of_parse_phandle(np, "phys", 0);
+> > +		if (!phy_np) {
+> > +			of_node_put(np);
+> > +			continue;
+> > +		}
+> > +
+> > +		of_node_put(phy_np);
+> > +		of_node_put(np);
+> > +
+> > +		if (phy_np == dev->of_node)
+> > +			return true;
+> > +	}
+> > +
+> > +	return false;
+> > +}
+> > +
+> >   static struct component_match *rockchip_drm_match_add(struct device *dev)
+> >   {
+> >   	struct component_match *match = NULL;
+> > @@ -371,6 +408,16 @@ static struct component_match *rockchip_drm_match_add(struct device *dev)
+> >   			if (!d)
+> >   				break;
+> > +			/*
+> > +			 * If mipi1 is connected to ISP, we don't want to wait for mipi1 component,
+> > +			 * because it will not be used by DRM anyway, to not tie success of camera
+> > +			 * driver probe to display pipeline initialization.
+> > +			 */
+> > +			if (rockchip_drm_is_mipi1_and_used_by_isp(d)) {
+> > +				dev_info(d, "used by ISP1, skipping from DRM\n");
+> > +				continue;
+> > +			}
+> > +
+> >   			device_link_add(dev, d, DL_FLAG_STATELESS);
+> >   			component_match_add(dev, &match, component_compare_dev, d);
+> >   		} while (true);
