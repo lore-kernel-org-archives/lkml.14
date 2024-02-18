@@ -1,84 +1,58 @@
-Received: from mail-qv1-f47.google.com (mail-qv1-f47.google.com [209.85.219.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A23C12E4D;
-	Sun, 18 Feb 2024 04:17:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AACF31849;
+	Sun, 18 Feb 2024 04:22:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708229837; cv=none; b=iG0znPoIp/IFpxJzbU14Vqk3Sc/GXq959DmBjkdgwAk8hCuUQ1A9rklI/9d8hZaeaRXjkzyg0MnuhohXMirHGkr0IPH/HvEi0k5AQU491y7umIYdoboWe19OP5UwVlQJmUGedSS9RLjTN7i5MijIpIcpLCDKJpzxbnzgCAKjeAM=
+	t=1708230166; cv=none; b=UeNMCzdMtG63nQxBcDom73drCo4xMs2gMZdj84cHVDA3xGCo2Bx9FpNbeXCnaPY3GTxonEKxBBzYQbsyEiTovrGQkD/pLFZZkldtBZaDn97vC5EnBYRulFWsIIsKyLJpOi3MfnRKZqBS518h2kVhCqk9htE6SMV0OkbIJ0lTtaQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708229837; c=relaxed/simple;
-	bh=jtYwgVL3qszFQzDtGVjomHAA03c+cCm3XUbUkSyOCVc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=MlmoAF33F8NJ1MoNIPOWPcChDJecQv3kxV006wz+Qo/gnCWafPNzP/sYOfVopZmLo5d1/4DFHkAXUkMEjOTo/hmq1CEFf0Jk4dcvwm8e7iiIZbNFq5126fvKd/ahSTybxgfq1G/tVB907wvfdr7P/Usg4CxMotZ4/0X64vE4Mlc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UHQMK6xC; arc=none smtp.client-ip=209.85.219.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1708230166; c=relaxed/simple;
+	bh=L910vuA1nInbN44R4e4ypYcqnk/4FDV5+y2YMJ9WPsE=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=eIKSRsPy4E5Uz5Gw7di+1JBzuv+Slt+PQYzc9nfNuKDTD9OXKb0qHSamuVFxbLFQMOOG/iCVWcDwfxX7y7HSNq/oj1yCz9KzpFHufIjuId/lDy+DbeJaoNiA+jFXmU20YJE5AcZ7TnS5G1F2bdrM/Af8hx0wEhm60KaWTuY/bSI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Wtdayv0s; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UHQMK6xC"
-Received: by mail-qv1-f47.google.com with SMTP id 6a1803df08f44-6818aa07d81so24812236d6.0;
-        Sat, 17 Feb 2024 20:17:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1708229834; x=1708834634; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/4DhMuxys/34mkhk6GaLGZiP3UVmIiKa+UwrnIlKa10=;
-        b=UHQMK6xCsosI7qkDK4iKAp7zPlZodzK5gJ2X+u2XHJXic8jJkLoxdqvjPOZBLVjvO1
-         Ut6U89moxhUkCgUwbuhHvdYkiSMfNCQdZGh5u5EWpufCkwPcxDorblQdZL5wLmmi4HV6
-         enoN/nB7dyiu1CW23Z3SCHGztxHoxRf6g6WVuc/NOSgjXYhoN7a7Gp7gpoZ6oIQMvQG3
-         i80fJgEbrwqX+u7C6s/pDMMpxAWs5CGCfC6CoKoFnc2m9CsCCBRQR+aPw4kOuUg3iPBx
-         BtFSEvQuKAekKRlx8V7Y4zWjeZgsUFgbZBv+FjVS4n4yBfsEzRxRyUJ9Fcol0jMZMkuj
-         rrhQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708229834; x=1708834634;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=/4DhMuxys/34mkhk6GaLGZiP3UVmIiKa+UwrnIlKa10=;
-        b=SK4uwuHvcTy4kNUxJnMS+MtGDDgP38/q0lgnnRiiMFAtRGdWpSAHorB7sJbsniEPoR
-         nRSd5F5z60mXeDSCrN1/dxYxcov48/Zh6ZBZqoUi+/LQwuai0ezhbp9qdq12WMspkaxj
-         suPWfKU7fiirLMglUxR6Q5/8bm6HVhnzvmxxNS/ETdQsJCEitMR7gRiynFtTpPqGaP8Y
-         cCYmQwBLm1XFIZawP4bKeHTtlLpN63DTP0gRUv+3G3pC6L5SBOuNUkNJ1Rh5u4q4+wce
-         yiIFRlvdmmv+thFraoxqw93KKzVHkde3mU88S8yjvfS5wHLQlAYoJ7z2TDMRHgbSpOj+
-         CtMQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWcaQ61rUjdZCnC+SIFYp29CpLKPdAuu9Zt0qjxVdvETQqMsPON9tWqdcESWrevJjiPqeMY27H5D/JSWhrAwmXybPQvu0ITLiKxT+LHuTgX3t6VXvTOXtrZYasjbEBfiPDk7upwlO2Hqg==
-X-Gm-Message-State: AOJu0YzvGKJjo2WMaSi69nzVWXuXRgFlI+LwGpS8pKc0LCu8D3NnCa50
-	kOHdeymYUU7lVMhc+qjIxrxdXs9GrRo665O+Iav/1cXnRdkX9Fn6
-X-Google-Smtp-Source: AGHT+IFMXYUm3DAGvhHMCJf8i+alS/1f7k2sbGdjsuXsPkCamXEfPAlsCaqOCoDWJRS6fbld8/LKrw==
-X-Received: by 2002:a0c:df0d:0:b0:68d:124:4354 with SMTP id g13-20020a0cdf0d000000b0068d01244354mr11175451qvl.49.1708229834543;
-        Sat, 17 Feb 2024 20:17:14 -0800 (PST)
-Received: from aford-System-Version.lan ([2601:447:d002:5be:dde9:2f2d:61e4:7364])
-        by smtp.gmail.com with ESMTPSA id or31-20020a056214469f00b0068eeebc4656sm1713621qvb.139.2024.02.17.20.17.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 17 Feb 2024 20:17:14 -0800 (PST)
-From: Adam Ford <aford173@gmail.com>
-To: linux-arm-kernel@lists.infradead.org,
-	linux-phy@lists.infradead.org
-Cc: aford@beaconembedded.com,
-	Adam Ford <aford173@gmail.com>,
-	Luca Ceresoli <luca.ceresoli@bootlin.com>,
-	Vinod Koul <vkoul@kernel.org>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	NXP Linux Team <linux-imx@nxp.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Lucas Stach <l.stach@pengutronix.de>,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH V5 6/6] arm64: defconfig: Enable DRM_IMX8MP_DW_HDMI_BRIDGE as module
-Date: Sat, 17 Feb 2024 22:16:44 -0600
-Message-ID: <20240218041649.1209173-7-aford173@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240218041649.1209173-1-aford173@gmail.com>
-References: <20240218041649.1209173-1-aford173@gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Wtdayv0s"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1708230165; x=1739766165;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=L910vuA1nInbN44R4e4ypYcqnk/4FDV5+y2YMJ9WPsE=;
+  b=Wtdayv0s8jk9GDntxPsIMRP7jxCpedpNNsZGYRTWXMi6BwKBVvMiRlaN
+   HoZ2CK4qWztGfTJUgieFpjGCY9Y6WsNCB2pCLNp9zJVk4ANTr33FzTssI
+   TKVYbIKbhQyHFb5tVrPAq54z+scNAxTZHaub7tDkdx7I4Itq5mnb5WiyD
+   IDmMDiH/RzswY/zcLRCZcr4eo952NFaGo4yXS9WdyGEoTFOc+kgKT8OKp
+   o2rdh07fJUuDClMcF/bVlguI9kldFaNF7G+W/vPY9P5VgY3QTu62KqvO1
+   7au6aOAsKzhEMRvpCT1ZyMXi/+fg0RSl0rgcVdaGtfxvWpOqLrcHm1IRT
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10987"; a="2189219"
+X-IronPort-AV: E=Sophos;i="6.06,167,1705392000"; 
+   d="scan'208";a="2189219"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Feb 2024 20:22:44 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.06,167,1705392000"; 
+   d="scan'208";a="4338402"
+Received: from dmi-pnp-i7.sh.intel.com ([10.239.159.155])
+  by fmviesa008.fm.intel.com with ESMTP; 17 Feb 2024 20:22:41 -0800
+From: Dapeng Mi <dapeng1.mi@linux.intel.com>
+To: Sean Christopherson <seanjc@google.com>,
+	Paolo Bonzini <pbonzini@redhat.com>
+Cc: kvm@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Jim Mattson <jmattson@google.com>,
+	Jinrong Liang <cloudliang@tencent.com>,
+	Aaron Lewis <aaronlewis@google.com>,
+	Dapeng Mi <dapeng1.mi@intel.com>,
+	Dapeng Mi <dapeng1.mi@linux.intel.com>
+Subject: [Patch v2] KVM: selftests: Test top-down slots event
+Date: Sun, 18 Feb 2024 12:30:03 +0800
+Message-Id: <20240218043003.2424683-1-dapeng1.mi@linux.intel.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -87,33 +61,67 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The i.MX8M Plus has support for an HDMI transmitter.  The
-video is genereated by lcdif3, routed to the hdmi parallel
-video interface, then fed to a DW HDMI bridge to support
-up to 4K video output.
+Although the fixed counter 3 and its exclusive pseudo slots event are
+not supported by KVM yet, the architectural slots event is supported by
+KVM and can be programed on any GP counter. Thus add validation for this
+architectural slots event.
 
-Signed-off-by: Adam Ford <aford173@gmail.com>
-Reviewed-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
-Tested-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
----
-V5:  Added Review and tested-by from Luca
-     No functional change since V1
----
- arch/arm64/configs/defconfig | 1 +
- 1 file changed, 1 insertion(+)
+Top-down slots event "counts the total number of available slots for an
+unhalted logical processor, and increments by machine-width of the
+narrowest pipeline as employed by the Top-down Microarchitecture
+Analysis method."
 
-diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index b8adb28185ad..ccfd5e6f20eb 100644
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@ -887,6 +887,7 @@ CONFIG_DRM_ANALOGIX_ANX7625=m
- CONFIG_DRM_I2C_ADV7511=m
- CONFIG_DRM_I2C_ADV7511_AUDIO=y
- CONFIG_DRM_CDNS_MHDP8546=m
-+CONFIG_DRM_IMX8MP_DW_HDMI_BRIDGE=m
- CONFIG_DRM_DW_HDMI_AHB_AUDIO=m
- CONFIG_DRM_DW_HDMI_CEC=m
- CONFIG_DRM_IMX_DCSS=m
+As for the slot, it's an abstract concept which indicates how many
+uops (decoded from instructions) can be processed simultaneously
+(per cycle) on HW. In Top-down Microarchitecture Analysis (TMA) method,
+the processor is divided into two parts, frond-end and back-end. Assume
+there is a processor with classic 5-stage pipeline, fetch, decode,
+execute, memory access and register writeback. The former 2 stages
+(fetch/decode) are classified to frond-end and the latter 3 stages are
+classified to back-end.
+
+In modern Intel processors, a complicated instruction would be decoded
+into several uops (micro-operations) and so these uops can be processed
+simultaneously and then improve the performance. Thus, assume a
+processor can decode and dispatch 4 uops in front-end and execute 4 uops
+in back-end simultaneously (per-cycle), so the machine-width of this
+processor is 4 and this processor has 4 topdown slots per-cycle.
+
+If a slot is spare and can be used to process a new upcoming uop, then
+the slot is available, but if a uop occupies a slot for several cycles
+and can't be retired (maybe blocked by memory access), then this slot is
+stall and unavailable.
+
+Considering the testing instruction sequence can't be macro-fused on x86
+platforms, the measured slots count should not be less than
+NUM_INSNS_RETIRED. Thus assert the slots count against NUM_INSNS_RETIRED.
+
+pmu_counters_test passed with this patch on Intel Sapphire Rapids.
+
+About the more information about TMA method, please refer the below link.
+https://www.intel.com/content/www/us/en/docs/vtune-profiler/cookbook/2023-0/top-down-microarchitecture-analysis-method.html
+
+Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+---
+ tools/testing/selftests/kvm/x86_64/pmu_counters_test.c | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/tools/testing/selftests/kvm/x86_64/pmu_counters_test.c b/tools/testing/selftests/kvm/x86_64/pmu_counters_test.c
+index ae5f6042f1e8..29609b52f8fa 100644
+--- a/tools/testing/selftests/kvm/x86_64/pmu_counters_test.c
++++ b/tools/testing/selftests/kvm/x86_64/pmu_counters_test.c
+@@ -119,6 +119,9 @@ static void guest_assert_event_count(uint8_t idx,
+ 	case INTEL_ARCH_REFERENCE_CYCLES_INDEX:
+ 		GUEST_ASSERT_NE(count, 0);
+ 		break;
++	case INTEL_ARCH_TOPDOWN_SLOTS_INDEX:
++		GUEST_ASSERT(count >= NUM_INSNS_RETIRED);
++		break;
+ 	default:
+ 		break;
+ 	}
+
+base-commit: f0f3b810edda57f317d79f452056786257089667
 -- 
-2.43.0
+2.40.1
 
