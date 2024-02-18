@@ -1,261 +1,121 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f52.google.com (mail-io1-f52.google.com [209.85.166.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A85EA71B33;
-	Sun, 18 Feb 2024 19:04:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CE79745F6
+	for <linux-kernel@vger.kernel.org>; Sun, 18 Feb 2024 19:04:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708283075; cv=none; b=t0aod+SKS5KVr4bVOmVGdEl9LPHubvq8rDXkerJaIkQ2/Zy0lcwIG3d3ySKw26TKn8kaCG7dtaWGGAcKqjvTJ40+7GvzcQBEwxNHpz7vHV8kv/FlWLgvlxkBJ+Fb4ljT8vhSXhfGyCvxqqOViufo9k+FTeA58rdSppEOIzQb3BU=
+	t=1708283097; cv=none; b=a5lDq5T1OHf0KrnfLn/A0Nr83KYf6uCIQgJVcyRA9CxDuDSJU/9Fe+Jz37mOG8TN4G6Qcwh7zq/yrBdJjGdcK4osqDgpg4bQVy1Jkxo0dT59EZH/I0wCgzvMD8Am3ZMzLP00LCjxIiTD1icBjEwKEh35hBnTFcnTSQlFPAn9QII=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708283075; c=relaxed/simple;
-	bh=uAuIZ9HfSiY/A0IYD728MeRHnJcUIl43QTwSldu9Elo=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=i4p5L6UjtHmN61ubE3oBlgNR3LTW+Nb8UW0YeyPL3PIxDOYSFAuAWZslsRi7FUzDUOZKskDrW4DBqoEXL2AeB5+4C6Yh4cbPMRmahfAToQvC9NIdJJIBcVQvIdh/GgASpOG5I+XGX1d0X9jchhWP0/LqdSopCA8J0qF/rK69Mp8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=UbYkC9+r; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Swz/Gol/; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1708283097; c=relaxed/simple;
+	bh=EiHEARKfsSch8CWg3qSOqrgsBmJrYMqzousU6JGvsio=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=LeXbL7BX7Oo8tnuRknSEDUsS2k9BTE1+OKcoDMD8yIq7PpBq9ualIbapO4T7EyJpJ5Jc1N2z6sSv22hsi0SbEqOUXnF/QNuNlALJGylvtTKUsAAhoxHimaPPL50EZgpOMizPFrEP+69boniXHub5OHXYQI9U87fHGJbxRtPKFZc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=kKpsh04U; arc=none smtp.client-ip=209.85.166.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="UbYkC9+r";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Swz/Gol/"
-From: John Ogness <john.ogness@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1708282668;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=CxyZZWvhSzq+VD25dSHunC8XqF+HGYq257sbHrx7tVc=;
-	b=UbYkC9+rrnE2knx+Jpd7AAc/5FGkoofSX8NvdgBLECyH65gS9y2IMZwsCGi9Dvfuis4YUb
-	4hqu9ybDvUNRUb2SHmUmjDIxTjbRSq0ej9qeFJm4FYb+eGKMAK+st5+fWH98ZmghdAqtRp
-	ukYxcAZelMhaPImfh49FsJ33pUn12UGsKtF0j5ZHmlNkkUJdip8vARJ03CcsGYiJXrwPEv
-	5GciViV2WooJ7PGufsROG6tJx5enDqphT3XZd7EnfzBANQVl1Y9W+jIEiBx4jImTeUjBjK
-	F18lnwmKmlPF0bOoM7kTHhmOB1wuPYYQeXz3EsjCKXX5iz2gSePSZL6lwxu9Xw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1708282668;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=CxyZZWvhSzq+VD25dSHunC8XqF+HGYq257sbHrx7tVc=;
-	b=Swz/Gol/1XZ9DEDonZSnv+eU/L3nfcDuegYEDQ9P3zYWgXm813efE7f8j3rg9YxE2XShrb
-	YKl1rpgrb5KjBxCg==
-To: Petr Mladek <pmladek@suse.com>
-Cc: Sergey Senozhatsky <senozhatsky@chromium.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	linux-kernel@vger.kernel.org,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Jiri Slaby <jirislaby@kernel.org>,
-	linux-serial@vger.kernel.org,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Tony Lindgren <tony@atomide.com>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Justin Chen <justin.chen@broadcom.com>,
-	Jiaqing Zhao <jiaqing.zhao@linux.intel.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	"Peter Zijlstra (Intel)" <peterz@infradead.org>,
-	Uros Bizjak <ubizjak@gmail.com>,
-	"Guilherme G. Piccoli" <gpiccoli@igalia.com>,
-	Lukas Wunner <lukas@wunner.de>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Kefeng Wang <wangkefeng.wang@huawei.com>,
-	Frederic Weisbecker <frederic@kernel.org>,
-	Neeraj Upadhyay <quic_neeraju@quicinc.com>,
-	Joel Fernandes <joel@joelfernandes.org>,
-	Josh Triplett <josh@joshtriplett.org>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Lai Jiangshan <jiangshanlai@gmail.com>,
-	Zqiang <qiang.zhang1211@gmail.com>,
-	rcu@vger.kernel.org,
-	Ingo Molnar <mingo@redhat.com>,
-	Will Deacon <will@kernel.org>,
-	Waiman Long <longman@redhat.com>
-Subject: [PATCH printk v2 00/26] wire up write_atomic() printing
-Date: Sun, 18 Feb 2024 20:03:00 +0106
-Message-Id: <20240218185726.1994771-1-john.ogness@linutronix.de>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kKpsh04U"
+Received: by mail-io1-f52.google.com with SMTP id ca18e2360f4ac-7c48e13e0d7so134543039f.1
+        for <linux-kernel@vger.kernel.org>; Sun, 18 Feb 2024 11:04:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1708283095; x=1708887895; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Pkl65YWoZqBRy7PXp9WalSTMwRYxXFsGyTDBtpnT5Zg=;
+        b=kKpsh04U8AChJFNvvcK2Ypa5nxuU1bHtMcF3zIopO7rd6k+gU7sTHPQVGhUBe7T3+/
+         SyR88IB/HfQO76TU76Qi/Bv2kL2/HE75Rm7MCB1NtwEgoI481MOHedeDZUuFJgKmnGpy
+         UWqak5GMtrBPCuEXrcwWrwfxNmyoONtxhmcuQzizK9BVjciqoWsLGs5ONKx7pfFtYxq+
+         gOKS6HCsrsjVscKeIcMPpEJGZ3eme7QK4dBssRzt2vRUrpusHhwV4wJXm6K14Wi/FDX6
+         m1syRbF5wEQK7jQWIuZo03St9ZILsJqSfI71uFvDI99WKA0W0qumTaUhewBWPqICLBXC
+         9b4A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708283095; x=1708887895;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Pkl65YWoZqBRy7PXp9WalSTMwRYxXFsGyTDBtpnT5Zg=;
+        b=IxpyTdHFMddsHSDi+nzmbyeeUIntuwiroxcsh4F/MporlJExV0YpKF2HKeTOIEOXvD
+         195NxCq/3f3rEpx9a9EZT4QH3ZeIJsq/KIivhLEwRpHY9bRuOduca7ASDBMRde10Aufi
+         gUXja9dgJeFy8QP6RS2JJ3xz78LxOIhIjBLycQ09dl2e1awlV78QU0X60tYmjxVY9iRO
+         hJRVs5ujVYSENnWJFC4GOBhkWDlFCEEkIKvuml9HVzKmpibXqc3Lv7Z75xrxAQY7RPOW
+         wIN8miqdF7QewXrEZk1WVRxilt3vRxEfx0b9JnGmhxw20FrsYBx+AaBEdd0jYm7s6OUd
+         9gMw==
+X-Forwarded-Encrypted: i=1; AJvYcCXLj7DyUC4lf4JBFciTSC/yrHDiv3GMf+obPxSzakaxlJVEZn+4b0o9oHk4Iiji5JmplMAT5s/YVcyvRWyOCRG3HfhfkSNHSF92Vp0M
+X-Gm-Message-State: AOJu0Yzk1f15fdvBh6+Vi8iiyNSv+bYZN2AGoI5HR4RGyof0KuPy3iRG
+	GAVHFhSj2IlflgC+/tFfFafxRiJSUaT9aJ0iJCUzvYOCo3N6AR2XLUtA+zN4V7w=
+X-Google-Smtp-Source: AGHT+IE21IIK1ncR0fK9WJenlFaj9vCYmwKeALvy5FLMhK6sgLjICHI8UkJIFsBzKwoWy9WfbsAPtg==
+X-Received: by 2002:a6b:6113:0:b0:7c3:ec35:8df7 with SMTP id v19-20020a6b6113000000b007c3ec358df7mr12455709iob.3.1708283095387;
+        Sun, 18 Feb 2024 11:04:55 -0800 (PST)
+Received: from localhost.localdomain (c-98-61-227-136.hsd1.mn.comcast.net. [98.61.227.136])
+        by smtp.gmail.com with ESMTPSA id t125-20020a6bc383000000b007c4926ebed8sm1300105iof.40.2024.02.18.11.04.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 18 Feb 2024 11:04:54 -0800 (PST)
+From: Alex Elder <elder@linaro.org>
+To: davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com
+Cc: mka@chromium.org,
+	andersson@kernel.org,
+	quic_cpratapa@quicinc.com,
+	quic_avuyyuru@quicinc.com,
+	quic_jponduru@quicinc.com,
+	quic_subashab@quicinc.com,
+	elder@kernel.org,
+	netdev@vger.kernel.org,
+	linux-arm-msm@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] net: ipa: don't overrun IPA suspend interrupt registers
+Date: Sun, 18 Feb 2024 13:04:50 -0600
+Message-Id: <20240218190450.331390-1-elder@linaro.org>
+X-Mailer: git-send-email 2.40.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Hi,
+In newer hardware, IPA supports more than 32 endpoints.  Some
+registers--such as IPA interrupt registers--represent endpoints
+as bits in a 4-byte register, and such registers are repeated as
+needed to represent endpoints beyond the first 32.
 
-This is v3 of a series to wire up the nbcon consoles so that
-they actually perform printing using their write_atomic()
-callback. v2 is here [0]. For information about the motivation
-of the atomic consoles, please read the cover letter of v1 [1].
+In ipa_interrupt_suspend_clear_all(), we clear all pending IPA
+suspend interrupts by reading all status register(s) and writing
+corresponding registers to clear interrupt conditions.
 
-The main focus of this series:
+Unfortunately the number of registers to read/write is calculated
+incorrectly, and as a result we access *many* more registers than
+intended.  This bug occurs only when the IPA hardware signals a
+SUSPEND interrupt, which happens when a packet is received for an
+endpoint (or its underlying GSI channel) that is suspended.  This
+situation is difficult to reproduce, but possible.
 
-- For nbcon consoles, always call write_atomic() directly from
-  printk() caller context for the panic CPU.
+Fix this by correctly computing the number of interrupt registers to
+read and write.  This is the only place in the code where registers
+that map endpoints or channels this way perform this calculation.
 
-- For nbcon consoles, call write_atomic() when unlocking the
-  console lock.
+Fixes: f298ba785e2d ("net: ipa: add a parameter to suspend registers")
+Signed-off-by: Alex Elder <elder@linaro.org>
+---
+ drivers/net/ipa/ipa_interrupt.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-- Only perform the console_lock()/_unlock() dance if legacy or
-  boot consoles are registered.
-
-- For legacy consoles, if nbcon consoles are registered, do not
-  attempt to print from printk() caller context for the panic
-  CPU until nbcon consoles have had a chance to print the most
-  significant messages.
-
-- Mark emergency sections. In these sections printk() calls
-  will only store the messages. Upon exiting the emergency
-  section, console flushing is triggered via irq_work.
-
-This series does _not_ include threaded printing or nbcon
-drivers. Those features will be added in separate follow-up
-series.
-
-Note1: With this series, a system with _only_ nbcon consoles
-       registered will not have any console printing except
-       on panic. This is on purpose. When nbcon kthreads are
-       introduced, they will fill this gap.
-
-Note2: Patches 1-3 are already mainline, but not yet in the
-       printk/for-next tree. They are included for
-       completeness, but are not actually part of this series.
-
-The changes since v2:
-
-- Eliminate CPU states (normal, emergency, panic) and instead
-  just track per-cpu emergency nesting.
-
-- Instead of talking about "atomic mode", talk about "using the
-  write_atomic() callback". This avoids confusion about what
-  "atomic mode" means (i.e. "atomic" always means the
-  write_atomic() callback is used).
-
-- Rename atomic_enter()/_exit() to
-  cpu_emergency_enter()/_exit().
-
-- When entering emergency mode for a CPU, disable preemption
-  rather than just migration to allow the warning to be
-  completely handled before permitting rescheduling.
-
-- Implement nbcon locking within the uart port lock wrappers.
-  This provides synchronization between write_atomic() and
-  non-printing driver activities (such as changing the baud
-  rate.)
-
-- Implement a one-way trigger printk_legacy_allow_panic_sync()
-  to allow legacy consoles to print from the printk() caller
-  context for the panic CPU. This allows the safe nbcon
-  consoles to print before falling back to legacy consoles.
-  Note that if no nbcon consoles are registered, legacy
-  consoles are always allowed to print from the printk() caller
-  context.
-
-- Perform unsafe nbcon flushing at the very end of panic before
-  going into the infinite loop.
-
-- Add nbcon_get_default_prio() helper to return the appropriate
-  prio for the current CPU.
-
-- Do not assume that if write_atomic() returns false that the
-  console has been released.
-
-- For nbcon_atomic_emit_one(), rely on @ctxt->backlog rather
-  than trying to read the next record.
-
-- Rename nbcon_console_emit_next_record() to
-  nbcon_legacy_emit_next_record() and have it use the same
-  procedure as console_emit_next_record() (enter printk_safe,
-  enable console_lock spinning, stop critical timings).
-
-- Add nbcon_atomic_flush_unsafe() to allow flushing nbcon
-  consoles in an unsafe manner.
-
-- For nbcon flushing, add @stop_seq argument limit how much to
-  print. This avoids a CPU getting stuck printing endlessly.
-
-- For nbcon flushing, disable irqs to avoid an interrupt
-  possibly calling into console code and deadlocking on nbcon
-  ownership.
-
-- The rules for allowing printing from the printk() caller
-  context are getting quite complex. Move all this logic into
-  vprintk_emit().
-
-- For console_init_seq(), also consider nbcon consoles.
-
-- For __pr_flush(), only take the console_lock if legacy or
-  boot consoles are registered.
-
-- For printk_trigger_flush(), do not flush nbcon consoles
-  directly.
-
-- For defer_console_output(), only trigger
-  console_lock()/unlock() if legacy or boot consoles are
-  registered.
-
-- Add detailed kerneldoc for the write_atomic() callback.
-
-- Fix kerneldoc for enum types (cons_flags, nbcon_prio).
-
-- Add extra check to printk_deferred_enter()/_exit() to ensure
-  it is called with migration disabled.
-
-[0] https://lore.kernel.org/lkml/20230919230856.661435-1-john.ogness@linutronix.de
-[1] https://lore.kernel.org/lkml/20230302195618.156940-1-john.ogness@linutronix.de
-
-John Ogness (19):
-  printk: Consider nbcon boot consoles on seq init
-  printk: Add notation to console_srcu locking
-  printk: nbcon: Ensure ownership release on failed emit
-  printk: nbcon: Implement processing in port->lock wrapper
-  printk: nbcon: Add detailed doc for write_atomic()
-  printk: nbcon: Fix kerneldoc for enums
-  printk: Make console_is_usable() available to nbcon
-  printk: Let console_is_usable() handle nbcon
-  printk: Add @flags argument for console_is_usable()
-  printk: Track registered boot consoles
-  printk: nbcon: Use nbcon consoles in console_flush_all()
-  printk: nbcon: Assign priority based on CPU state
-  printk: nbcon: Add unsafe flushing on panic
-  printk: Avoid console_lock dance if no legacy or boot consoles
-  printk: Track nbcon consoles
-  printk: Coordinate direct printing in panic
-  panic: Mark emergency section in oops
-  rcu: Mark emergency section in rcu stalls
-  lockdep: Mark emergency section in lockdep splats
-
-Randy Dunlap (1):
-  serial: core: fix kernel-doc for uart_port_unlock_irqrestore()
-
-Sebastian Andrzej Siewior (1):
-  printk: Check printk_deferred_enter()/_exit() usage
-
-Thomas Gleixner (5):
-  serial: core: Provide port lock wrappers
-  serial: core: Use lock wrappers
-  printk: nbcon: Provide function to flush using write_atomic()
-  printk: nbcon: Implement emergency sections
-  panic: Mark emergency section in warn
-
- drivers/tty/serial/8250/8250_port.c |   1 +
- include/linux/console.h             |  42 +++-
- include/linux/printk.h              |  30 ++-
- include/linux/serial_core.h         | 106 +++++++-
- kernel/locking/lockdep.c            |   5 +
- kernel/panic.c                      |   9 +
- kernel/printk/internal.h            |  57 +++++
- kernel/printk/nbcon.c               | 362 +++++++++++++++++++++++++++-
- kernel/printk/printk.c              | 248 +++++++++++++------
- kernel/printk/printk_safe.c         |  12 +
- kernel/rcu/tree_stall.h             |   5 +
- 11 files changed, 784 insertions(+), 93 deletions(-)
-
-
-base-commit: e7081d5a9d976b84f61f497316d7c940a4a2e67a
+diff --git a/drivers/net/ipa/ipa_interrupt.c b/drivers/net/ipa/ipa_interrupt.c
+index 4bc05948f772d..a78c692f2d3c5 100644
+--- a/drivers/net/ipa/ipa_interrupt.c
++++ b/drivers/net/ipa/ipa_interrupt.c
+@@ -212,7 +212,7 @@ void ipa_interrupt_suspend_clear_all(struct ipa_interrupt *interrupt)
+ 	u32 unit_count;
+ 	u32 unit;
+ 
+-	unit_count = roundup(ipa->endpoint_count, 32);
++	unit_count = DIV_ROUND_UP(ipa->endpoint_count, 32);
+ 	for (unit = 0; unit < unit_count; unit++) {
+ 		const struct reg *reg;
+ 		u32 val;
 -- 
-2.39.2
+2.40.1
 
