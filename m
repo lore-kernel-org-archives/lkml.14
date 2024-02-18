@@ -1,52 +1,56 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A866E71B36
-	for <linux-kernel@vger.kernel.org>; Sun, 18 Feb 2024 19:04:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A862D71B35;
+	Sun, 18 Feb 2024 19:04:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708283075; cv=none; b=ez9el1Zg1YONAVWSACvMwBGg0BR6uWH9bffocgEsOKNZsLPNAseXWHIhwguGSvYVazN0y0PhbZLlO1R0mPtzrr1myMtMncEuAqEBT0L/H4+Z+ti8UwkZ2VjI6ENbL0Bgw4CXZZs/8MhPNeRIrVis7iJIHGWR9vkwUd88vNDK+Mk=
+	t=1708283075; cv=none; b=LzSIsjVjU01EgH+UhpArRIBW+cwraqci/+/xd+3977Ou4bISM/mjZSym3Igv7GurW37Svg9t5GCsr8Q9eOmEW0u+f1HvZblMAxtJiHOA7AVqUOq9gYhXNWnP3mkauYViQpZlbQvyrFh1y4BP9zTdgDcGzjTQ23U4c2ne/1AlUIA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1708283075; c=relaxed/simple;
-	bh=UgNQzP2/u6tlCo+4rRFkvhUnGTuONwvzfEkavv5ocsw=;
+	bh=MO6Y8tj0NIiymjFHpZwGZycpK1m0Vc+X7D6vRJLm6OQ=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=E2zdrv6mPAhcnDrTi8Ivm3sDgEER3FU0Tmep2FTPWpe6dC1wflNHyb+3Ufvl3L+FtL7H2LC+VNEzQ7gbKzISN9wtn45ifF+VVh295jovXXfpLPD4qJ0+Avm1kwpnIrNp2tx5pKAXILW5ybMvn7Q/vPEbZVIETavwZEQW8WlMJHs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=V1z5I0ZK; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=JU0rh4zw; arc=none smtp.client-ip=193.142.43.55
+	 MIME-Version:Content-Type; b=HrEYbWttJArkFXIjF+xMLBpbPbfDh/5zC83kX4/AaxPiAyfZCfYDJZoaTZKSn960hiak/SKfzRTNF6nXvzezIDcwxPeaKpYv3UBWl39HByt0fI57OCCuHe+YWHgoU5I7W3oZZ2KZNtood2uRjhGOxySf4M7xlA4jwFqevOQabEU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=GM/VNnAa; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=j01hjXjY; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="V1z5I0ZK";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="JU0rh4zw"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="GM/VNnAa";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="j01hjXjY"
 From: John Ogness <john.ogness@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1708282669;
+	s=2020; t=1708282668;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=xxlb5lhcjt/hac5FRx4FUo+WOPkTmWiB9/oYCJlGF7c=;
-	b=V1z5I0ZKF4iHILJ11grW3yUcMsf6dzsgE9WmHuFW6u/mxsPMHOJ0NSsnRbXIC6b8V1T0Z9
-	wqPspAxBrbJs7PJxTaKHgLbrdQPevNQ5dnXs6vXoyD+hrTN3n1gh+X8inITIaEMq3XNX8l
-	dKXlX7bVC2Ea2M7PeM2Satzn9re/EfxAmImJYno6Owt6YqVpL7yIsWeXlWfziccFOTF7EL
-	89bInQanbWKAzq0TvEvvLMh0Swdds4mpPwEcCIbCABldoG8S0gVmv9Lm/41vzLqA3jr5bT
-	agzhWDfYaOcXGngoaxe8lTI2CS81GGXp1TVsB+vrx2AI7tD3/tARoptktJJG7Q==
+	bh=7K5mFiabL7N74FJZwx3sG2fqkTYhk/mX6rh+7t2HHdE=;
+	b=GM/VNnAaXsfrk931JW7tOsC8rSnrcoVqetLvg7dHTNoaA0biAHVOo0QDOQZHWoeseZkkwM
+	mRFZ9mcxot4t+TcgT/BPvpiknWQs1OH99Fhd8aPFXFwDfpRwYOpkc7KYUHJfcOa5N4nPDe
+	pwPSogdC84OLic8N43gLNsWNSSyLgBEKssAc9aR2Ts/+DmFWiYxqhtAHK6nP47dn9C2iUv
+	xiRwnf80gRKlr8q8/oWpv3LOCgWxj8qd1UJmWMqWjLMZ0Rb1zHUS2ogv/C4SVqphfIdATV
+	Sd2b+8wJRFJh+jdsehIsvBCLThyeZsFXpZQFuJqj+fdo8czdgU31ep9pzrk0Cg==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1708282669;
+	s=2020e; t=1708282668;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=xxlb5lhcjt/hac5FRx4FUo+WOPkTmWiB9/oYCJlGF7c=;
-	b=JU0rh4zwDuGsnP1WFQPCdy7oRZb7xMVV+ZfKxvMADbaw7dYlMWIc2fH5D4SMeMceDUvmUD
-	nvvtMP+k9d9OBDDw==
+	bh=7K5mFiabL7N74FJZwx3sG2fqkTYhk/mX6rh+7t2HHdE=;
+	b=j01hjXjY0lEpNjUkrWN71FG4yDfhUXPiKRay1EPW8PknNnIXHNnQV9wJESzRbUmBKK7NOA
+	lIzvZldl2ebOclBw==
 To: Petr Mladek <pmladek@suse.com>
 Cc: Sergey Senozhatsky <senozhatsky@chromium.org>,
 	Steven Rostedt <rostedt@goodmis.org>,
 	Thomas Gleixner <tglx@linutronix.de>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH printk v2 04/26] printk: Consider nbcon boot consoles on seq init
-Date: Sun, 18 Feb 2024 20:03:04 +0106
-Message-Id: <20240218185726.1994771-5-john.ogness@linutronix.de>
+	linux-kernel@vger.kernel.org,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Jiri Slaby <jirislaby@kernel.org>,
+	linux-serial@vger.kernel.org,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Subject: [PATCH printk v2 02/26] serial: core: Use lock wrappers
+Date: Sun, 18 Feb 2024 20:03:02 +0106
+Message-Id: <20240218185726.1994771-3-john.ogness@linutronix.de>
 In-Reply-To: <20240218185726.1994771-1-john.ogness@linutronix.de>
 References: <20240218185726.1994771-1-john.ogness@linutronix.de>
 Precedence: bulk
@@ -55,54 +59,98 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-If a non-boot console is registering and boot consoles exist, the
-consoles are flushed before being unregistered. This allows the
-non-boot console to continue where the boot console left off.
+From: Thomas Gleixner <tglx@linutronix.de>
 
-If for whatever reason flushing fails, the lowest seq found from
-any of the enabled boot consoles is used. Until now con->seq was
-checked. However, if it is an nbcon boot console, the function
-nbcon_seq_read() must be used to read seq because con->seq is
-always 0.
+mainline commit: c5cbdb76e8e33ce90fec2946e8eee7d71d68e57a
 
-Check if it is an nbcon boot console and if so call
-nbcon_seq_read() to read seq.
+When a serial port is used for kernel console output, then all
+modifications to the UART registers which are done from other contexts,
+e.g. getty, termios, are interference points for the kernel console.
 
+So far this has been ignored and the printk output is based on the
+principle of hope. The rework of the console infrastructure which aims to
+support threaded and atomic consoles, requires to mark sections which
+modify the UART registers as unsafe. This allows the atomic write function
+to make informed decisions and eventually to restore operational state. It
+also allows to prevent the regular UART code from modifying UART registers
+while printk output is in progress.
+
+All modifications of UART registers are guarded by the UART port lock,
+which provides an obvious synchronization point with the console
+infrastructure.
+
+To avoid adding this functionality to all UART drivers, wrap the
+spin_[un]lock*() invocations for uart_port::lock into helper functions
+which just contain the spin_[un]lock*() invocations for now. In a
+subsequent step these helpers will gain the console synchronization
+mechanisms.
+
+Converted with coccinelle. No functional change.
+
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
 Signed-off-by: John Ogness <john.ogness@linutronix.de>
+Link: https://lore.kernel.org/r/20230914183831.587273-3-john.ogness@linutronix.de
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- kernel/printk/printk.c | 17 +++++++++++++----
- 1 file changed, 13 insertions(+), 4 deletions(-)
+ include/linux/serial_core.h | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
-index 1685a71f3f71..696a9d76c09c 100644
---- a/kernel/printk/printk.c
-+++ b/kernel/printk/printk.c
-@@ -3391,11 +3391,20 @@ static void console_init_seq(struct console *newcon, bool bootcon_registered)
+diff --git a/include/linux/serial_core.h b/include/linux/serial_core.h
+index f1d5c0d1568c..3091c62ec37b 100644
+--- a/include/linux/serial_core.h
++++ b/include/linux/serial_core.h
+@@ -1035,14 +1035,14 @@ static inline void uart_unlock_and_check_sysrq(struct uart_port *port)
+ 	u8 sysrq_ch;
  
- 				newcon->seq = prb_next_seq(prb);
- 				for_each_console(con) {
--					if ((con->flags & CON_BOOT) &&
--					    (con->flags & CON_ENABLED) &&
--					    con->seq < newcon->seq) {
--						newcon->seq = con->seq;
-+					u64 seq;
-+
-+					if (!((con->flags & CON_BOOT) &&
-+					      (con->flags & CON_ENABLED))) {
-+						continue;
- 					}
-+
-+					if (con->flags & CON_NBCON)
-+						seq = nbcon_seq_read(con);
-+					else
-+						seq = con->seq;
-+
-+					if (seq < newcon->seq)
-+						newcon->seq = seq;
- 				}
- 			}
+ 	if (!port->has_sysrq) {
+-		spin_unlock(&port->lock);
++		uart_port_unlock(port);
+ 		return;
+ 	}
+ 
+ 	sysrq_ch = port->sysrq_ch;
+ 	port->sysrq_ch = 0;
+ 
+-	spin_unlock(&port->lock);
++	uart_port_unlock(port);
+ 
+ 	if (sysrq_ch)
+ 		handle_sysrq(sysrq_ch);
+@@ -1054,14 +1054,14 @@ static inline void uart_unlock_and_check_sysrq_irqrestore(struct uart_port *port
+ 	u8 sysrq_ch;
+ 
+ 	if (!port->has_sysrq) {
+-		spin_unlock_irqrestore(&port->lock, flags);
++		uart_port_unlock_irqrestore(port, flags);
+ 		return;
+ 	}
+ 
+ 	sysrq_ch = port->sysrq_ch;
+ 	port->sysrq_ch = 0;
+ 
+-	spin_unlock_irqrestore(&port->lock, flags);
++	uart_port_unlock_irqrestore(port, flags);
+ 
+ 	if (sysrq_ch)
+ 		handle_sysrq(sysrq_ch);
+@@ -1077,12 +1077,12 @@ static inline int uart_prepare_sysrq_char(struct uart_port *port, u8 ch)
+ }
+ static inline void uart_unlock_and_check_sysrq(struct uart_port *port)
+ {
+-	spin_unlock(&port->lock);
++	uart_port_unlock(port);
+ }
+ static inline void uart_unlock_and_check_sysrq_irqrestore(struct uart_port *port,
+ 		unsigned long flags)
+ {
+-	spin_unlock_irqrestore(&port->lock, flags);
++	uart_port_unlock_irqrestore(port, flags);
+ }
+ #endif	/* CONFIG_MAGIC_SYSRQ_SERIAL */
  
 -- 
 2.39.2
