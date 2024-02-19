@@ -1,72 +1,67 @@
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2069.outbound.protection.outlook.com [40.107.243.69])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE0A02232E;
-	Mon, 19 Feb 2024 07:51:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.69
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708329079; cv=fail; b=A3/xRuyOCIOdKup2rQ3ef2L/+3wKvUqDilbhFg5SP5CU/cHKUG/b0i+ueXRgUGDkxBzHelo4TgS4+jNiC2A251h50e5xm2KGirfPPtR2TYE9OWffRuv96kAtGiAw9e7K1mYQRoEp9s7c5ya1R8/OAXIppu/r0YUhaPX5ppc2E9I=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708329079; c=relaxed/simple;
-	bh=G4Tc+7Zb3w+pmvhaBq+QwaDIX9/OWcq55Yha3Uk8pl4=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=X+rOth763PPArnPHCkSWWRoKFX4IgFz9+An35n+sXbppN+gsGmbjdfxg3PwAAg11Hu5p+hIa8JoSsIskJpjXlPQOfWsQE65QNVymNQIKiWDhr0E61cbKLCwGOPdpLMWDVmYeCzSUl5FlGz6+ilfN8B9/Ijw3tqHCZcH+HrPDkfE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=huNXhnlc; arc=fail smtp.client-ip=40.107.243.69
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72134224ED
+	for <linux-kernel@vger.kernel.org>; Mon, 19 Feb 2024 07:52:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1708329139; cv=none; b=Haz6xN1xFUHJwLOEP1qd1KHpFB6noD5MhdzYEvDWtn5QJIQHGCNQG9XuyjopXusIyXdKLK77M2bBb38HLnLWSDSREFbCiysZE919DP+N7zhS0R7pv6H9xVkVfzOrmmafrV/P+e+d7Or0O+YjYjJs3om6NcReyVkAov88uAkoTH0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1708329139; c=relaxed/simple;
+	bh=wh4OmwcFRlWi/ItnT5ktk0oGxcFdh4oAYQhOp0nR3jk=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=NCgJAFJct9hSSaGzowZg5tfuS9XW3K9bUEMsZNpSMxM/nGbYBwg1HC6Ht2Ew1a4/07gWli2SoxlF8039Xr3cEbJb5ws8/a/yPrhaISRHG7kNx3MiSTELX3UKo9um/667nuSNhmCYuXnPhZYDvIcWhVDFNeIEVyWsFgewP+atbGk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=zd0EvbRJ; arc=none smtp.client-ip=209.85.128.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="huNXhnlc"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Iesoww8bkchDaiMQXpSKUtVNZ5w+7OdNntqikxtU8zqEH7T7PjxG8Jfr8sgIy+7N6JmtKIlssrU3CiKW5oFHBTveNzzWW8LAjSZxUW3QrmXCwOz8jB6k9cm7kGzC6qUWOkdnczxOJXs0xHLBX4278e2mgvvSCxuca2skBnjNoSU0y8I5KjaCJtFbAjtNmnyRGW9rr+7aBwjR5QP64IqaRfMjeSM4KSuhWN94kTXJhzqxRXqyqFaNfFIOPHGKxSJh9wno/keLnY3bsu0hTXLePg8p1E7Wesa8zzUFwTAuE1LAF76wEo3i/bEGDpWQ7u7U+q/lI5VKwCq8Ugg4ONXCjA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=bHn3iXH7UVdNTmCEfhrVhu0TnsY4LxYdcTCsJr0bNbg=;
- b=eXrl6NDIJHjdAaZ7DR+wjB2Gjehdyj/wSaSa2CmbqlOT377T4IxgziyEeCCuvkqrX+ZAWh2/MZrROVp1meJnQSPaAx76fL2hrHrbJ20doqO36xf1VrXOYE9blYcVeUzcG1FnR4mad6vSejTVqjATlsYSmI52VysBgoLgG3m+ykvcZCYy/8ffqjJcs3AHS+wyEAHXZBBxq+dfe9iqMn1dgTAhqbR24QTRckUUnS/1BdfjEzxPZI7E7GDF702PMLqwYGscI4sCoOpg9j0E4ov4WVdrOz3GjkG9rAEw/MHbITMeiprETg/2Mu44gzP/YP2wkTKcvWJbb2YC00CTQ2Wsaw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=linuxfoundation.org smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=bHn3iXH7UVdNTmCEfhrVhu0TnsY4LxYdcTCsJr0bNbg=;
- b=huNXhnlcTzE8sI/yU/Vndq8XBQLBOz1VeSTlKLSUgfBEUBle6ZMI3oi7Xf6vo5ZvxGfNso9e037APnpybLhfrPn5SXLIoBbsgqXFb8xpxuB9wG83xiHoWq2wijpm2p1EZ2zLeMFnODkx1/8R9d91IegJH642Xo2eCmh1dNz7X34=
-Received: from CH0PR13CA0009.namprd13.prod.outlook.com (2603:10b6:610:b1::14)
- by IA1PR12MB8539.namprd12.prod.outlook.com (2603:10b6:208:446::6) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7316.19; Mon, 19 Feb
- 2024 07:51:14 +0000
-Received: from DS2PEPF00003448.namprd04.prod.outlook.com
- (2603:10b6:610:b1:cafe::fc) by CH0PR13CA0009.outlook.office365.com
- (2603:10b6:610:b1::14) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7270.16 via Frontend
- Transport; Mon, 19 Feb 2024 07:51:14 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- DS2PEPF00003448.mail.protection.outlook.com (10.167.17.75) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.7292.25 via Frontend Transport; Mon, 19 Feb 2024 07:51:13 +0000
-Received: from jasmine-meng.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Mon, 19 Feb
- 2024 01:51:09 -0600
-From: Meng Li <li.meng@amd.com>
-To: Shuah Khan <skhan@linuxfoundation.org>, Andrei Vagin <avagin@google.com>,
-	Huang Rui <ray.huang@amd.com>, <linux-pm@vger.kernel.org>
-CC: Nathan Fontenot <nathan.fontenot@amd.com>, Deepak Sharma
-	<deepak.sharma@amd.com>, Alex Deucher <alexander.deucher@amd.com>, "Mario
- Limonciello" <mario.limonciello@amd.com>, Jinzhou Su <Jinzhou.Su@amd.com>,
-	Perry Yuan <Perry.Yuan@amd.com>, Xiaojian Du <Xiaojian.Du@amd.com>, "Viresh
- Kumar" <viresh.kumar@linaro.org>, Borislav Petkov <bp@alien8.de>,
-	<linux-kernel@vger.kernel.org>, Meng Li <li.meng@amd.com>
-Subject: [PATCH] selftests/overlayfs: fix compilation error in overlayfs
-Date: Mon, 19 Feb 2024 15:50:29 +0800
-Message-ID: <20240219075029.2318383-1-li.meng@amd.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="zd0EvbRJ"
+Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-410e820a4feso27565295e9.1
+        for <linux-kernel@vger.kernel.org>; Sun, 18 Feb 2024 23:52:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1708329137; x=1708933937; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=2/U/HLhILocJNKhz9qnNNoXbd+eRoVQ2PKzr45zesuc=;
+        b=zd0EvbRJLfMdVnfiRKP4d75hXjV8wOf8Va1uUQi+hmBsJgAQBdfgphgJeEPKpA7qGW
+         TdTRNwRysYM9PGz4OHhM9w1nhDJvYq0peaVthFjck7OEdy3v7jf1mHZhCoKukx9uTmoj
+         JZJh07LhVle2YSfbvgF4r4FnUkqgt2o3BHnx8c0UK10VNkxu7xdeX9aJ/HInMdLelzjn
+         v56/kFZjTQKPyXMRNmnHm6BuCATJUuggSXlGK6RBQ2BJfLGhD4dM5zfXjHucYXHf9y1n
+         My93Lhs90EbWkjqXP0vb1mAJWIeb/HvYbQQUeVWVErtM3MU748LbQe5Mr5tFWLVfqLuC
+         cumg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708329137; x=1708933937;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=2/U/HLhILocJNKhz9qnNNoXbd+eRoVQ2PKzr45zesuc=;
+        b=b9caRdH1aL6KYWQjNRfTr9rBRMb6T2PpB+mPBj6qUbpjtjL3QThthXttXra5NJzuD/
+         5387Ijme2xKP+iLXeYQ1Hi15HGDOgU0onGcKAA07T8Y2OXXVlzdZjQ2cX96C+EPDsueU
+         SRRwLnOA6rNnEvqgLqmKgYlLorXtN6gjr9fa2aG/0AT8H/rqQXoKWnGD1UHoUNRJ6deg
+         6JrAKfFZNRZ6rVd8SH06CI9Mjfkiu+EQc+w7/eAvyJKZ+3hUI/cwskNmk37ywXC8tRlg
+         KiFbuYcNVfJcI4AfF+rhpx5ZF4CJvZJF9Oh1bOQxG1AArddNRuAtWs99d6Y/oX+Zt97f
+         d86A==
+X-Gm-Message-State: AOJu0YzvgxhulR88u48qCC1cpGYEHr9sqtZrov5cPV02NYrHVWft8/SY
+	gBpSu0qeWP0k09Xz7XZ6Ot3HMj+VLzVn4G8E7H4Nhb2g4rnEh0IsACYYsOeAPmc=
+X-Google-Smtp-Source: AGHT+IHzFayj07qqwZEtFxSEIAhDseu8F5QgjmRm16RmLOnuksNhRFCUVwH+pJ4w7RfJk0af/ufDGw==
+X-Received: by 2002:a05:600c:5486:b0:412:10c2:c73b with SMTP id iv6-20020a05600c548600b0041210c2c73bmr9996038wmb.1.1708329136597;
+        Sun, 18 Feb 2024 23:52:16 -0800 (PST)
+Received: from brgl-uxlite.home ([2a01:cb1d:334:ac00:88b:d6c3:a2f2:16d9])
+        by smtp.gmail.com with ESMTPSA id z20-20020a05600c221400b0040fddaf9ff4sm10449287wml.40.2024.02.18.23.52.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 18 Feb 2024 23:52:16 -0800 (PST)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+To: Patrice Chotard <patrice.chotard@foss.st.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Jiri Slaby <jirislaby@kernel.org>,
+	Dan Carpenter <dan.carpenter@linaro.org>,
+	Linus Walleij <linus.walleij@linaro.org>
+Cc: linux-kernel@vger.kernel.org,
+	linux-serial@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: [PATCH v2] serial: st-asc: don't get/put GPIOs in atomic context
+Date: Mon, 19 Feb 2024 08:52:11 +0100
+Message-Id: <20240219075211.6949-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.40.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -74,62 +69,100 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS2PEPF00003448:EE_|IA1PR12MB8539:EE_
-X-MS-Office365-Filtering-Correlation-Id: 62e892a7-2e85-4ec8-162d-08dc311f8be7
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	GuGnJlzXi1CmMzvWJxO7nzdzh9YmTJDUsmT1xywgRWQhsq/dr5Yj5E1+ASXE8UJt+RMw4bDSD+BQrgD6SZa+A591dMdrZndU1zZWebcIOAA01kWog1qsWWWg+xFRr+nrHlxKuITkj2AxKNAXNiq53wuUJV5pxvl6Md3d1Tjc+8IeF/7TZCO4hynYlR+gzdIKe+LjX1XBsyzBGohvBjsiJXl9GM54FB0oCYLBvg3dIMU1RhoNhVlCtKPXG7a51thJ8/xwAMTHnLfvttQj7m3pS/tcu2JI4PYm/9KdQHbsy0l/o5b5bvYR9Mo+hzC9Zyai6Zfhc7k1N1eZ2WkUgekbPDUcf9jz0IKoCA5OjTzwboNuLXRlFBb9t9iFpWFo3SgFcMjiHZJtsjc/0jhWKz6Mf/ArsVLUxwYYRGADxxJ2QUXRZohOdItEi1wyFv7wfj2HdGlU/GOWpm8qzMJsnhjpOInA9k1iGM50gmOb3m6ZJBDiFs8MwPVrJlwfuNqJF1Qy1ulZQJtqtArVrp46I6JW/U+g/2WOge//tuRUOzlXwB8G0Bueynr/Xi896N5WWvwkFCdAooCbtkqPuPMQZPm3cWYpfILHN5sEbq85UAZHVkgO4GYBKJeaftZGOj21gaBKG3jttSswh+RxGzAhp5nVlCfisB0oTA24ViFMgi1xtRI=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(4636009)(376002)(346002)(136003)(396003)(39860400002)(230922051799003)(36860700004)(451199024)(1800799012)(82310400011)(64100799003)(186009)(40470700004)(46966006)(36756003)(82740400003)(86362001)(356005)(81166007)(7696005)(41300700001)(316002)(6666004)(54906003)(110136005)(478600001)(83380400001)(336012)(2616005)(16526019)(426003)(1076003)(26005)(8936002)(8676002)(4326008)(70586007)(70206006)(2906002)(5660300002);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Feb 2024 07:51:13.9755
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 62e892a7-2e85-4ec8-162d-08dc311f8be7
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	DS2PEPF00003448.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB8539
 
-make -C tools/testing/selftests, compiling dev_in_maps fail.
-In file included from dev_in_maps.c:10:
-/usr/include/x86_64-linux-gnu/sys/mount.h:35:3: error: expected identifier before numeric constant
-   35 |   MS_RDONLY = 1,                /* Mount read-only.  */
-      |   ^~~~~~~~~
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-That sys/mount.h has to be included before linux/mount.h.
+Since commit 1f2bcb8c8ccd ("gpio: protect the descriptor label with
+SRCU") gpiod_set_consumer_name() calls synchronize_srcu() which led to
+a "sleeping in atomic context" smatch warning.
 
-Signed-off-by: Meng Li <li.meng@amd.com>
+This function (along with gpiod_get/put() and all other GPIO APIs apart
+from gpiod_get/set_value() and gpiod_direction_input/output()) should
+have never been called with a spinlock taken. We're only fixing this now
+as GPIOLIB has been rebuilt to use SRCU for access serialization which
+uncovered this problem.
+
+Move the calls to gpiod_get/put() outside the spinlock critical section.
+
+Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
+Closes: https://lore.kernel.org/linux-gpio/deee1438-efc1-47c4-8d80-0ab2cf01d60a@moroto.mountain/
+Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 ---
- tools/testing/selftests/filesystems/overlayfs/dev_in_maps.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+v1 -> v2:
+- initialize the 'manual_rts' variable to false as we don't always get to
+  the place where it's set
 
-diff --git a/tools/testing/selftests/filesystems/overlayfs/dev_in_maps.c b/tools/testing/selftests/filesystems/overlayfs/dev_in_maps.c
-index e19ab0e85709..871a0923c06e 100644
---- a/tools/testing/selftests/filesystems/overlayfs/dev_in_maps.c
-+++ b/tools/testing/selftests/filesystems/overlayfs/dev_in_maps.c
-@@ -7,11 +7,11 @@
+ drivers/tty/serial/st-asc.c | 40 ++++++++++++++++++++-----------------
+ 1 file changed, 22 insertions(+), 18 deletions(-)
+
+diff --git a/drivers/tty/serial/st-asc.c b/drivers/tty/serial/st-asc.c
+index bbb5595d7e24..f184de6af313 100644
+--- a/drivers/tty/serial/st-asc.c
++++ b/drivers/tty/serial/st-asc.c
+@@ -466,6 +466,7 @@ static void asc_set_termios(struct uart_port *port, struct ktermios *termios,
+ {
+ 	struct asc_port *ascport = to_asc_port(port);
+ 	struct gpio_desc *gpiod;
++	bool manual_rts = false;
+ 	unsigned int baud;
+ 	u32 ctrl_val;
+ 	tcflag_t cflag;
+@@ -517,26 +518,12 @@ static void asc_set_termios(struct uart_port *port, struct ktermios *termios,
+ 		ctrl_val |= ASC_CTL_CTSENABLE;
  
- #include <linux/unistd.h>
- #include <linux/types.h>
--#include <linux/mount.h>
- #include <sys/syscall.h>
- #include <sys/stat.h>
- #include <sys/mount.h>
- #include <sys/mman.h>
-+#include <linux/mount.h>
- #include <sched.h>
- #include <fcntl.h>
+ 		/* If flow-control selected, stop handling RTS manually */
+-		if (ascport->rts) {
+-			devm_gpiod_put(port->dev, ascport->rts);
+-			ascport->rts = NULL;
+-
+-			pinctrl_select_state(ascport->pinctrl,
+-					     ascport->states[DEFAULT]);
+-		}
++		if (ascport->rts)
++			manual_rts = false;
+ 	} else {
+ 		/* If flow-control disabled, it's safe to handle RTS manually */
+-		if (!ascport->rts && ascport->states[NO_HW_FLOWCTRL]) {
+-			pinctrl_select_state(ascport->pinctrl,
+-					     ascport->states[NO_HW_FLOWCTRL]);
+-
+-			gpiod = devm_gpiod_get(port->dev, "rts", GPIOD_OUT_LOW);
+-			if (!IS_ERR(gpiod)) {
+-				gpiod_set_consumer_name(gpiod,
+-						port->dev->of_node->name);
+-				ascport->rts = gpiod;
+-			}
+-		}
++		if (!ascport->rts && ascport->states[NO_HW_FLOWCTRL])
++			manual_rts = true;
+ 	}
  
+ 	if ((baud < 19200) && !ascport->force_m1) {
+@@ -595,6 +582,23 @@ static void asc_set_termios(struct uart_port *port, struct ktermios *termios,
+ 	asc_out(port, ASC_CTL, (ctrl_val | ASC_CTL_RUN));
+ 
+ 	uart_port_unlock_irqrestore(port, flags);
++
++	if (manual_rts) {
++		pinctrl_select_state(ascport->pinctrl,
++				     ascport->states[NO_HW_FLOWCTRL]);
++
++		gpiod = devm_gpiod_get(port->dev, "rts", GPIOD_OUT_LOW);
++		if (!IS_ERR(gpiod)) {
++			gpiod_set_consumer_name(gpiod,
++						port->dev->of_node->name);
++			ascport->rts = gpiod;
++		} else {
++			devm_gpiod_put(port->dev, ascport->rts);
++			ascport->rts = NULL;
++			pinctrl_select_state(ascport->pinctrl,
++					     ascport->states[DEFAULT]);
++		}
++	}
+ }
+ 
+ static const char *asc_type(struct uart_port *port)
 -- 
-2.34.1
+2.40.1
 
