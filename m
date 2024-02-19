@@ -1,139 +1,270 @@
-Received: from ahti.lucaweiss.eu (ahti.lucaweiss.eu [128.199.32.197])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 555DF56448;
-	Mon, 19 Feb 2024 23:11:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=128.199.32.197
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D95F154FA8;
+	Mon, 19 Feb 2024 23:18:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708384311; cv=none; b=Y12N86eb5U3GP2NVRLABV3qloxpWzBdm10NUqoXdaefMOBHgDQV8a/qI/d3I+yEp1cwmM0G/kEBnHE9vYc0VcT/P+YEAoSQnJ38u7Sqjca2emwKVrokRJRmASo1TQxhDOzsi8YhCEgfqagCoKdPyL40UhX2tlv4U7ottGyA4BVs=
+	t=1708384729; cv=none; b=D46HUPDKp5LuTwGACnXylzWAD/QvsMDW+dTVCLGR14CpnLuilfMFh6feEk3/RgumIe7bdHuApP9JBG2D1EXCPky6H1FujZcSbvxTBEIwJYEvZoiG/tk4JWDzOhGBOCwbNq6UNaSxTip7+5ZeWBL4ey4Fz+nIwScZKlTfRMRa4Cw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708384311; c=relaxed/simple;
-	bh=tgSDAwlrVTzUIqiZyqw7iiUTatrOj4HaquGU5a8EzIU=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=o/OHUnWER17yuSSCdPsdV3qplLhZLZh1lGU2Z36TBsARMEhErdKuWxg0R8WvuhQYcdeOA8VVO4wxaWYZ8c65W76zNhNLC/tAkYtWqNzbe8+mofp7D5Hejk2TZYLYFpd3t/RV23vsv0LCyB7yOsCdvHRmMXDOvc1P4giQMjgioGE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=z3ntu.xyz; spf=pass smtp.mailfrom=z3ntu.xyz; dkim=pass (1024-bit key) header.d=z3ntu.xyz header.i=@z3ntu.xyz header.b=vGsHYTAa; arc=none smtp.client-ip=128.199.32.197
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=z3ntu.xyz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=z3ntu.xyz
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=z3ntu.xyz header.i=@z3ntu.xyz header.b="vGsHYTAa"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=z3ntu.xyz; s=s1;
-	t=1708384300; bh=tgSDAwlrVTzUIqiZyqw7iiUTatrOj4HaquGU5a8EzIU=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc;
-	b=vGsHYTAaubBzb2bYsXKkzfudGfH7qgOPou2A89bhFI7dVoNZtUuqZKndldkTDoges
-	 m4nnpyNEXOtzzLO2I2n/E4w505BcJhS81oI3ojXv3bqGQRX+7bAU0fVpqfiIyixtEZ
-	 IudaTj5Wajeq1MYkLlTuMhbRd3/PbV7BGms8PvcU=
-From: Luca Weiss <luca@z3ntu.xyz>
-Date: Tue, 20 Feb 2024 00:11:21 +0100
-Subject: [PATCH 3/4] backlight: lm3630a: Use backlight_get_brightness
- helper in update_status
+	s=arc-20240116; t=1708384729; c=relaxed/simple;
+	bh=ieo1LD6zpA/ghJMMNhYNt1Dzh9yD4gVLvF+JYaQMH6w=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=Yt1CqmvwNbf2fenpObjMKmDvHnCctoq4Vue+TgKS8WJ0WIDaw7xYJAOnvYiyAGRcT5ZVemFLJiEd1ZNTruiB+g2WpqaHDRVTNRW9ZCTJu3uDyYM0bhiEz0n7ODx0VrlfuoiU7JU32p+p/emRaU8MECremRLyfiRtfIZCytke9GM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 12EDDC433F1;
+	Mon, 19 Feb 2024 23:18:48 +0000 (UTC)
+Date: Mon, 19 Feb 2024 18:20:32 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland
+ <mark.rutland@arm.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Subject: [PATCH v3] ring-buffer: Simplify reservation with try_cmpxchg()
+ loop
+Message-ID: <20240219182032.2605d0a3@gandalf.local.home>
+X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240220-lm3630a-fixups-v1-3-9ca62f7e4a33@z3ntu.xyz>
-References: <20240220-lm3630a-fixups-v1-0-9ca62f7e4a33@z3ntu.xyz>
-In-Reply-To: <20240220-lm3630a-fixups-v1-0-9ca62f7e4a33@z3ntu.xyz>
-To: ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org, 
- Lee Jones <lee@kernel.org>, Daniel Thompson <daniel.thompson@linaro.org>, 
- Jingoo Han <jingoohan1@gmail.com>, Helge Deller <deller@gmx.de>, 
- Andrew Morton <akpm@linux-foundation.org>, 
- "G.Shark Jeong" <gshark.jeong@gmail.com>, 
- Bjorn Andersson <andersson@kernel.org>, 
- Konrad Dybcio <konrad.dybcio@linaro.org>, Rob Herring <robh+dt@kernel.org>, 
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Maximilian Weigand <mweigand@mweigand.net>
-Cc: dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
- devicetree@vger.kernel.org, Luca Weiss <luca@z3ntu.xyz>
-X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2663; i=luca@z3ntu.xyz;
- h=from:subject:message-id; bh=tgSDAwlrVTzUIqiZyqw7iiUTatrOj4HaquGU5a8EzIU=;
- b=owEBbQKS/ZANAwAIAXLYQ7idTddWAcsmYgBl0+AoTixhJbLZliq9WxIhxRszJgCAbf5dK6Uaz
- 3FQbTd6OhKJAjMEAAEIAB0WIQQ5utIvCCzakboVj/py2EO4nU3XVgUCZdPgKAAKCRBy2EO4nU3X
- Vul3D/40hfXK/hCXfw+Oi4sNLlrVTWbF3wGBLJv0EYE+UIYALtzpvViG6lquEEohZzR8nJOGd5m
- SOCn4lYVrh69CX4YGafx/Z035y23A3f7lOGlhkCZHxCmC7TkCz7jUZDIESfH2TGyxYG4im6sVnn
- 71RPTiAzOyD89Qv8Tr0TKWPgA/K8bbf+U2BtESebvJpkVMcWuMHtSiE67fqAacK7iheq+glGzjc
- DHwBzbL7/3YFJKZL9j18yXpSoKNZJZEFTtvWKPzCv75tB9Hd6h3Q7zbkN6cvOPsO9PWdjkFa/NI
- QCfymKnd9v1CPuENWvC5ADh+6z+j3N6l/moHLDtMLu6t1HTbDLYz9nVi1EplW/ECfW5LRKMM3Aw
- KvoArTl1OzAZ7kVLFAR7U9kCRYsrRUD28dcVJ9dK8Rm1ce4svScTKNQA7VtlfpogEzQlrbcB/BY
- 09cpxfGmPN8exdgSWL8cOhY89TSZqQgHVN+YzhE+COLgm0LExv7pp4wzTr4DAejtjeQxjIwfcSy
- +2UJrKAhEIz3mFyQw9t7aj8dlmiNey9T0lemmUXe+PJpnwHYcmyndCRiiYw8j0FE08de3ECwrBL
- 837t9lFnkz1VbucT4TL+uSBfcB4qjUqDAEkb2w1uUsOSrSSJIHubbZsL/JjrCaK7jST+ZPV4ICW
- fv/vS9d1qz9CyDg==
-X-Developer-Key: i=luca@z3ntu.xyz; a=openpgp;
- fpr=BD04DA24C971B8D587B2B8D7FAF69CF6CD2D02CD
 
-As per documentation "drivers are expected to use this function in their
-update_status() operation to get the brightness value.".
+From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 
-With this we can also drop the manual backlight_is_blank() handling
-since backlight_get_brightness() is already handling this correctly.
+Instead of using local_add_return() to reserve the ring buffer data,
+Mathieu Desnoyers suggested using local_cmpxchg(). This would simplify the
+reservation with the time keeping code.
 
-Signed-off-by: Luca Weiss <luca@z3ntu.xyz>
+Although, it does not get rid of the double time stamps (before_stamp and
+write_stamp), using cmpxchg() does get rid of the more complex case when
+an interrupting event occurs between getting the timestamps and reserving
+the data, as when that happens, it just tries again instead of dealing
+with it.
+
+Before we had:
+
+	w = local_read(&tail_page->write);
+	/* get time stamps */
+	write = local_add_return(length, &tail_page->write);
+	if (write - length == w) {
+		/* do simple case */
+	} else {
+		/* do complex case */
+	}
+
+By switching the local_add_return() to a local_try_cmpxchg() it can now be:
+
+	 w = local_read(&tail_page->write);
+ again:
+	/* get time stamps */
+	if (!local_try_cmpxchg(&tail_page->write, &w, w + length))
+		goto again;
+
+	 /* do simple case */
+
+The benchmarks between the two showed no regressions when trying this:
+
+ Enable: CONFIG_TRACEPOINT_BENCHMARK
+
+ # trace-cmd record -m 800000 -e benchmark sleep 60
+
+Before the patch:
+
+ # trace-cmd report | tail
+ event_benchmark-944   [003]  1998.910191: benchmark_event:      last=150 first=3488 max=1199686 min=124 avg=208 std=39 std^2=1579 delta=150
+ event_benchmark-944   [003]  1998.910192: benchmark_event:      last=149 first=3488 max=1199686 min=124 avg=208 std=39 std^2=1579 delta=149
+ event_benchmark-944   [003]  1998.910193: benchmark_event:      last=150 first=3488 max=1199686 min=124 avg=208 std=39 std^2=1579 delta=150
+ event_benchmark-944   [003]  1998.910193: benchmark_event:      last=150 first=3488 max=1199686 min=124 avg=208 std=39 std^2=1579 delta=150
+ event_benchmark-944   [003]  1998.910194: benchmark_event:      last=136 first=3488 max=1199686 min=124 avg=208 std=39 std^2=1579 delta=136
+ event_benchmark-944   [003]  1998.910194: benchmark_event:      last=138 first=3488 max=1199686 min=124 avg=208 std=39 std^2=1579 delta=138
+ event_benchmark-944   [003]  1998.910195: benchmark_event:      last=150 first=3488 max=1199686 min=124 avg=208 std=39 std^2=1579 delta=150
+ event_benchmark-944   [003]  1998.910196: benchmark_event:      last=151 first=3488 max=1199686 min=124 avg=208 std=39 std^2=1579 delta=151
+ event_benchmark-944   [003]  1998.910196: benchmark_event:      last=150 first=3488 max=1199686 min=124 avg=208 std=39 std^2=1579 delta=150
+ event_benchmark-944   [003]  1998.910197: benchmark_event:      last=152 first=3488 max=1199686 min=124 avg=208 std=39 std^2=1579 delta=152
+
+After the patch:
+
+ # trace-cmd report | tail
+ event_benchmark-848   [004]   171.414716: benchmark_event:      last=143 first=14483 max=1155491 min=125 avg=189 std=16 std^2=264 delta=143
+ event_benchmark-848   [004]   171.414717: benchmark_event:      last=142 first=14483 max=1155491 min=125 avg=189 std=16 std^2=264 delta=142
+ event_benchmark-848   [004]   171.414718: benchmark_event:      last=142 first=14483 max=1155491 min=125 avg=189 std=16 std^2=264 delta=142
+ event_benchmark-848   [004]   171.414718: benchmark_event:      last=141 first=14483 max=1155491 min=125 avg=189 std=16 std^2=264 delta=141
+ event_benchmark-848   [004]   171.414719: benchmark_event:      last=141 first=14483 max=1155491 min=125 avg=189 std=16 std^2=264 delta=141
+ event_benchmark-848   [004]   171.414719: benchmark_event:      last=141 first=14483 max=1155491 min=125 avg=189 std=16 std^2=264 delta=141
+ event_benchmark-848   [004]   171.414720: benchmark_event:      last=140 first=14483 max=1155491 min=125 avg=189 std=16 std^2=264 delta=140
+ event_benchmark-848   [004]   171.414721: benchmark_event:      last=142 first=14483 max=1155491 min=125 avg=189 std=16 std^2=264 delta=142
+ event_benchmark-848   [004]   171.414721: benchmark_event:      last=145 first=14483 max=1155491 min=125 avg=189 std=16 std^2=264 delta=145
+ event_benchmark-848   [004]   171.414722: benchmark_event:      last=144 first=14483 max=1155491 min=125 avg=189 std=16 std^2=264 delta=144
+
+It may have even improved!
+
+Suggested-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- drivers/video/backlight/lm3630a_bl.c | 14 ++++++++------
- 1 file changed, 8 insertions(+), 6 deletions(-)
+Changes since v2: https://lore.kernel.org/linux-trace-kernel/20240219173003.08339d54@gandalf.local.home
 
-diff --git a/drivers/video/backlight/lm3630a_bl.c b/drivers/video/backlight/lm3630a_bl.c
-index 26ff4178cc16..e6c0916ec88b 100644
---- a/drivers/video/backlight/lm3630a_bl.c
-+++ b/drivers/video/backlight/lm3630a_bl.c
-@@ -189,10 +189,11 @@ static int lm3630a_bank_a_update_status(struct backlight_device *bl)
- 	int ret;
- 	struct lm3630a_chip *pchip = bl_get_data(bl);
- 	enum lm3630a_pwm_ctrl pwm_ctrl = pchip->pdata->pwm_ctrl;
-+	int brightness = backlight_get_brightness(bl);
- 
- 	/* pwm control */
- 	if ((pwm_ctrl & LM3630A_PWM_BANK_A) != 0)
--		return lm3630a_pwm_ctrl(pchip, bl->props.brightness,
-+		return lm3630a_pwm_ctrl(pchip, brightness,
- 					bl->props.max_brightness);
- 
- 	/* disable sleep */
-@@ -201,9 +202,9 @@ static int lm3630a_bank_a_update_status(struct backlight_device *bl)
- 		goto out_i2c_err;
- 	usleep_range(1000, 2000);
- 	/* minimum brightness is 0x04 */
--	ret = lm3630a_write(pchip, REG_BRT_A, bl->props.brightness);
-+	ret = lm3630a_write(pchip, REG_BRT_A, brightness);
- 
--	if (backlight_is_blank(bl) || (backlight_get_brightness(bl) < 0x4))
-+	if (brightness < 0x4)
- 		/* turn the string off  */
- 		ret |= lm3630a_update(pchip, REG_CTRL, LM3630A_LEDA_ENABLE, 0);
- 	else
-@@ -263,10 +264,11 @@ static int lm3630a_bank_b_update_status(struct backlight_device *bl)
- 	int ret;
- 	struct lm3630a_chip *pchip = bl_get_data(bl);
- 	enum lm3630a_pwm_ctrl pwm_ctrl = pchip->pdata->pwm_ctrl;
-+	int brightness = backlight_get_brightness(bl);
- 
- 	/* pwm control */
- 	if ((pwm_ctrl & LM3630A_PWM_BANK_B) != 0)
--		return lm3630a_pwm_ctrl(pchip, bl->props.brightness,
-+		return lm3630a_pwm_ctrl(pchip, brightness,
- 					bl->props.max_brightness);
- 
- 	/* disable sleep */
-@@ -275,9 +277,9 @@ static int lm3630a_bank_b_update_status(struct backlight_device *bl)
- 		goto out_i2c_err;
- 	usleep_range(1000, 2000);
- 	/* minimum brightness is 0x04 */
--	ret = lm3630a_write(pchip, REG_BRT_B, bl->props.brightness);
-+	ret = lm3630a_write(pchip, REG_BRT_B, brightness);
- 
--	if (backlight_is_blank(bl) || (backlight_get_brightness(bl) < 0x4))
-+	if (brightness < 0x4)
- 		/* turn the string off  */
- 		ret |= lm3630a_update(pchip, REG_CTRL, LM3630A_LEDB_ENABLE, 0);
- 	else
+- Fixed info.field to be info->field
 
+ kernel/trace/ring_buffer.c | 103 ++++++++++++-------------------------
+ 1 file changed, 34 insertions(+), 69 deletions(-)
+
+diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+index fd4bfe3ecf01..6809d085ae98 100644
+--- a/kernel/trace/ring_buffer.c
++++ b/kernel/trace/ring_buffer.c
+@@ -3455,9 +3455,11 @@ __rb_reserve_next(struct ring_buffer_per_cpu *cpu_buffer,
+ 	/* Don't let the compiler play games with cpu_buffer->tail_page */
+ 	tail_page = info->tail_page = READ_ONCE(cpu_buffer->tail_page);
+ 
+- /*A*/	w = local_read(&tail_page->write) & RB_WRITE_MASK;
++ /*A*/	w = local_read(&tail_page->write);
+ 	barrier();
+ 	rb_time_read(&cpu_buffer->before_stamp, &info->before);
++	/* Read before_stamp only the first time through */
++ again:
+ 	rb_time_read(&cpu_buffer->write_stamp, &info->after);
+ 	barrier();
+ 	info->ts = rb_time_stamp(cpu_buffer->buffer);
+@@ -3470,7 +3472,7 @@ __rb_reserve_next(struct ring_buffer_per_cpu *cpu_buffer,
+ 		 * absolute timestamp.
+ 		 * Don't bother if this is the start of a new page (w == 0).
+ 		 */
+-		if (!w) {
++		if (!(w & RB_WRITE_MASK)) {
+ 			/* Use the sub-buffer timestamp */
+ 			info->delta = 0;
+ 		} else if (unlikely(info->before != info->after)) {
+@@ -3487,89 +3489,52 @@ __rb_reserve_next(struct ring_buffer_per_cpu *cpu_buffer,
+ 
+  /*B*/	rb_time_set(&cpu_buffer->before_stamp, info->ts);
+ 
+- /*C*/	write = local_add_return(info->length, &tail_page->write);
++ /*C*/	if (!local_try_cmpxchg(&tail_page->write, &w, w + info->length)) {
++		if (info->add_timestamp & (RB_ADD_STAMP_FORCE | RB_ADD_STAMP_EXTEND))
++			info->length -= RB_LEN_TIME_EXTEND;
++		goto again;
++	}
+ 
+-	/* set write to only the index of the write */
+-	write &= RB_WRITE_MASK;
++	/* Set write to the start of this event */
++	write = w & RB_WRITE_MASK;
+ 
+-	tail = write - info->length;
++	/* set tail to the end of the event */
++	tail = write + info->length;
+ 
+ 	/* See if we shot pass the end of this buffer page */
+-	if (unlikely(write > cpu_buffer->buffer->subbuf_size)) {
++	if (unlikely(tail > cpu_buffer->buffer->subbuf_size)) {
+ 		check_buffer(cpu_buffer, info, CHECK_FULL_PAGE);
+-		return rb_move_tail(cpu_buffer, tail, info);
++		return rb_move_tail(cpu_buffer, write, info);
+ 	}
+ 
+-	if (likely(tail == w)) {
+-		/* Nothing interrupted us between A and C */
+- /*D*/		rb_time_set(&cpu_buffer->write_stamp, info->ts);
+-		/*
+-		 * If something came in between C and D, the write stamp
+-		 * may now not be in sync. But that's fine as the before_stamp
+-		 * will be different and then next event will just be forced
+-		 * to use an absolute timestamp.
+-		 */
+-		if (likely(!(info->add_timestamp &
+-			     (RB_ADD_STAMP_FORCE | RB_ADD_STAMP_ABSOLUTE))))
+-			/* This did not interrupt any time update */
+-			info->delta = info->ts - info->after;
+-		else
+-			/* Just use full timestamp for interrupting event */
+-			info->delta = info->ts;
+-		check_buffer(cpu_buffer, info, tail);
+-	} else {
+-		u64 ts;
+-		/* SLOW PATH - Interrupted between A and C */
+-
+-		/* Save the old before_stamp */
+-		rb_time_read(&cpu_buffer->before_stamp, &info->before);
+-
+-		/*
+-		 * Read a new timestamp and update the before_stamp to make
+-		 * the next event after this one force using an absolute
+-		 * timestamp. This is in case an interrupt were to come in
+-		 * between E and F.
+-		 */
+-		ts = rb_time_stamp(cpu_buffer->buffer);
+-		rb_time_set(&cpu_buffer->before_stamp, ts);
+-
+-		barrier();
+- /*E*/		rb_time_read(&cpu_buffer->write_stamp, &info->after);
+-		barrier();
+- /*F*/		if (write == (local_read(&tail_page->write) & RB_WRITE_MASK) &&
+-		    info->after == info->before && info->after < ts) {
+-			/*
+-			 * Nothing came after this event between C and F, it is
+-			 * safe to use info->after for the delta as it
+-			 * matched info->before and is still valid.
+-			 */
+-			info->delta = ts - info->after;
+-		} else {
+-			/*
+-			 * Interrupted between C and F:
+-			 * Lost the previous events time stamp. Just set the
+-			 * delta to zero, and this will be the same time as
+-			 * the event this event interrupted. And the events that
+-			 * came after this will still be correct (as they would
+-			 * have built their delta on the previous event.
+-			 */
+-			info->delta = 0;
+-		}
+-		info->ts = ts;
+-		info->add_timestamp &= ~RB_ADD_STAMP_FORCE;
+-	}
++	/* Nothing interrupted us between A and C */
++ /*D*/	rb_time_set(&cpu_buffer->write_stamp, info->ts);
++	/*
++	 * If something came in between C and D, the write stamp
++	 * may now not be in sync. But that's fine as the before_stamp
++	 * will be different and then next event will just be forced
++	 * to use an absolute timestamp.
++	 */
++	if (likely(!(info->add_timestamp &
++		     (RB_ADD_STAMP_FORCE | RB_ADD_STAMP_ABSOLUTE))))
++		/* This did not interrupt any time update */
++		info->delta = info->ts - info->after;
++	else
++		/* Just use full timestamp for interrupting event */
++		info->delta = info->ts;
++	check_buffer(cpu_buffer, info, write);
+ 
+ 	/*
+ 	 * If this is the first commit on the page, then it has the same
+ 	 * timestamp as the page itself.
+ 	 */
+-	if (unlikely(!tail && !(info->add_timestamp &
++	if (unlikely(!write && !(info->add_timestamp &
+ 				(RB_ADD_STAMP_FORCE | RB_ADD_STAMP_ABSOLUTE))))
+ 		info->delta = 0;
+ 
+ 	/* We reserved something on the buffer */
+ 
+-	event = __rb_page_index(tail_page, tail);
++	event = __rb_page_index(tail_page, write);
+ 	rb_update_event(cpu_buffer, event, info);
+ 
+ 	local_inc(&tail_page->entries);
+@@ -3578,7 +3543,7 @@ __rb_reserve_next(struct ring_buffer_per_cpu *cpu_buffer,
+ 	 * If this is the first commit on the page, then update
+ 	 * its timestamp.
+ 	 */
+-	if (unlikely(!tail))
++	if (unlikely(!write))
+ 		tail_page->page->time_stamp = info->ts;
+ 
+ 	/* account for these added bytes */
 -- 
-2.43.2
+2.43.0
 
