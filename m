@@ -1,151 +1,71 @@
-Received: from smtpout.efficios.com (smtpout.efficios.com [167.114.26.122])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 991D347F5D
-	for <linux-kernel@vger.kernel.org>; Mon, 19 Feb 2024 18:09:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=167.114.26.122
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B35A446CE;
+	Mon, 19 Feb 2024 18:10:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708366200; cv=none; b=pHFRr0bqJOR8TxDUWETI2XRm24n8Yii3B9ixb0uHId6nMrLAQGgelSakBLsxmmssPRt9JLWEIs3v6FQhok7qxybDFxjUiaeFppQNqi5CSSjfHtq1OiikqYDg69NZd945wvKHVKhIkBLkACSrucGNu65vf+kRDhS8KwHW8eltFGM=
+	t=1708366230; cv=none; b=FddyRSJPFZknvKBpZIE3m/ldPzE9s5Z76jasMfK29r7gM14+F9XI5LjsB4n3Az5C171Jo66xtfPSvcMBQWZcIqVnz92w1YjM6c+k11t3Mk8kX5ED5+YgJOMogXLZEuKWyOP9qAjZfvmAca2jbwqVrAOVQtLRnAsCM0oQdVYQwiE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708366200; c=relaxed/simple;
-	bh=RfBCXLwyCUeqZQEFpji75aPuuqXowh06NHelS8dUuSc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=SY6MllDQpdEkE6k9vypwsaOklp4szWnRjWrsR8lyNa3xQ84zH9tXVblQ/N78lICqkmiGQKtXL0dhE2tDKA/aprcAzaKLqzfhBSWvZG69SDGjLw4Va2dwHeqL2sHo1i0pK29lgADTWK46zOyak6f2pXFBxJzoCFT4jic0BE+pNRQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com; spf=pass smtp.mailfrom=efficios.com; dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b=nQ8mYB5r; arc=none smtp.client-ip=167.114.26.122
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=efficios.com
+	s=arc-20240116; t=1708366230; c=relaxed/simple;
+	bh=EMmfRMzJxnR50bOnH7ujQWXPJcj/zGrGnPdRfBHwmbs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=EBToYrQ0w2NUsl6tAvwolkDDWBngebEzGRbTg0p8AT+OHAYeq89/nJ7lX4eXExIYy+mf6IXRmihBqyPxB8XrvInJ1bpMwbpRMmZeIRPN4otrM2nnSzfk71/uKgX/GmcfwtMOmB49Pcn7A2Je/EetXjqfG6P4jsoaDxNZhRQ6uBY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=Li6ST8cN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="nQ8mYB5r"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=efficios.com;
-	s=smtpout1; t=1708365676;
-	bh=RfBCXLwyCUeqZQEFpji75aPuuqXowh06NHelS8dUuSc=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=nQ8mYB5rDyHcJmVZ2AurI90Bg6HQ+uf8P+ck8e1SDJoxe53nNWLTxDwDG4c7NRKNm
-	 548aH/nzgVX4jc7NOUXKC1w64SCbKxfvZb03abl3IAU/1oTs9ukktX2l0g68+5pLMM
-	 G9h0UNGNMUapjggYBysuJvzwVW+wDM3QHDYi8PDRP6DvCaxhiaqfO3gBsQnyMhKqIR
-	 DtF6FiWubxDBrhYvk+O+3iaqX1UmXDY7dteeGdenzFERonD1osDlqr8NdymuPndcvf
-	 F2GMzzHjTShTfQz4pjM52OgOHg1JCCF7lAzrnYMhajHlYMxBR7JCPz+XyQjKXg84cp
-	 FgRe3CF5ExTLQ==
-Received: from [172.16.0.134] (192-222-143-198.qc.cable.ebox.net [192.222.143.198])
-	by smtpout.efficios.com (Postfix) with ESMTPSA id 4Tdr2444BqzZyH;
-	Mon, 19 Feb 2024 13:01:16 -0500 (EST)
-Message-ID: <776b842b-b19f-44bf-bc34-ac756fce7466@efficios.com>
-Date: Mon, 19 Feb 2024 13:01:16 -0500
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="Li6ST8cN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C3B8C433F1;
+	Mon, 19 Feb 2024 18:10:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1708366230;
+	bh=EMmfRMzJxnR50bOnH7ujQWXPJcj/zGrGnPdRfBHwmbs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Li6ST8cNKEgI2g/6xKw5eaNtEsgr0s31SHXttB3SkD7EhEQJ54SEHWhwhmibUWIes
+	 mXNBTiHkmDjIGm+lm5CeH5KFSVmr+xYjolre95SxGg6wAK/VstxGKvo5IAKhnOwbxg
+	 dtqGqNPYwD8r0pKiSIwAw8t9ZRnp8qLxQCxoGZW8=
+Date: Mon, 19 Feb 2024 19:10:27 +0100
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Sasha Levin <sashal@kernel.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Subject: Re: [v6.7][PATCH v2 00/23] eventfs: Linus's updates for 6.7
+Message-ID: <2024021919-herbs-uninvited-c286@gregkh>
+References: <20240206113158.822006147@rostedt.homelinux.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] coredump debugging: add a tracepoint to report the
- coredumping
-Content-Language: en-US
-To: Steven Rostedt <rostedt@goodmis.org>, Oleg Nesterov <oleg@redhat.com>
-Cc: wenyang.linux@foxmail.com, Masami Hiramatsu <mhiramat@kernel.org>,
- Ingo Molnar <mingo@kernel.org>, Mel Gorman <mgorman@techsingularity.net>,
- Peter Zijlstra <peterz@infradead.org>, linux-kernel@vger.kernel.org
-References: <tencent_5CD40341EC9384E9B7CC127EA5CF2655B408@qq.com>
- <20240217104924.GB10393@redhat.com>
- <20240219112926.77ac16f8@gandalf.local.home>
- <20240219170038.GA710@redhat.com>
- <20240219122825.31579a1e@gandalf.local.home>
-From: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-In-Reply-To: <20240219122825.31579a1e@gandalf.local.home>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240206113158.822006147@rostedt.homelinux.com>
 
-On 2024-02-19 12:28, Steven Rostedt wrote:
-> On Mon, 19 Feb 2024 18:00:38 +0100
-> Oleg Nesterov <oleg@redhat.com> wrote:
+On Tue, Feb 06, 2024 at 06:31:58AM -0500, Steven Rostedt wrote:
 > 
->>> void __noreturn do_exit(long code)
->>> {
->>> 	struct task_struct *tsk = current;
->>> 	int group_dead;
->>>
->>> [...]
->>> 	acct_collect(code, group_dead);
->>> 	if (group_dead)
->>> 		tty_audit_exit();
->>> 	audit_free(tsk);
->>>
->>> 	tsk->exit_code = code;
->>> 	taskstats_exit(tsk, group_dead);
->>>
->>> 	exit_mm();
->>>
->>> 	if (group_dead)
->>> 		acct_process();
->>> 	trace_sched_process_exit(tsk);
->>>
->>> There's a lot that happens before we trigger the above event.
->>
->> and a lot after.
+> This is a backport of all the work that lead up to the work that Linus made
+> on eventfs. I trust Linus's version more so than the versions in 6.6 and
+> 6.7. There may be plenty of hidden issues due to the design.
 > 
-> True. There really isn't a meaningful location here is there?
+> This is the update for 6.7. It includes Linus's updates as well as all the
+> patches leading up to them.
 > 
-> I actually use this tracepoint in my pid tracing.
+> I ran these through my full test suite that I use before sending anyting to
+> Linus, althouh I did not run my "bisect" test that walks through the
+> patches. The tests were just run on the end result. I'm currently running my
+> 6.6 version through my tests.
 > 
-> The set_ftrace_pid and set_event_pid from /sys/kernel/tracing will add and
-> remove PIDs if the options function-fork or event-fork are set respectively.
+> This was created with the following command against v6.7.3:
 > 
-> I hook to the sched_process_fork tracepoint to add new PIDs if the parent
-> pid is already in one of the files, and remove a PID via the
-> sched_process_exit function.
+> git log --reverse --no-merges --pretty=oneline v6.7..origin/master fs/tracefs/ | cut -d' ' -f1 |
+>    while read a; do if ! git cherry-pick -x $a; then break; fi ; done
+> 
+> Which adds -x to the cherry pick to add the upstream commit SHAs.
 
-No ? Those hook on sched_process_free, which is the actual point where the
-task is freed (AFAIR after it's been a zombie and then waited for by another
-task).
+All now picked up, thanks.
 
-kernel/trace/trace_events.c:
-
-void trace_event_follow_fork(struct trace_array *tr, bool enable)
-{
-         if (enable) {
-                 register_trace_prio_sched_process_fork(event_filter_pid_sched_process_fork,
-                                                        tr, INT_MIN);
-                 register_trace_prio_sched_process_free(event_filter_pid_sched_process_exit,
-                                                        tr, INT_MAX);
-         } else {
-                 unregister_trace_sched_process_fork(event_filter_pid_sched_process_fork,
-                                                     tr);
-                 unregister_trace_sched_process_free(event_filter_pid_sched_process_exit,
-                                                     tr);
-         }
-}
-
-kernel/trace/ftrace.c:
-
-void ftrace_pid_follow_fork(struct trace_array *tr, bool enable)
-{
-         if (enable) {
-                 register_trace_sched_process_fork(ftrace_pid_follow_sched_process_fork,
-                                                   tr);
-                 register_trace_sched_process_free(ftrace_pid_follow_sched_process_exit,
-                                                   tr);
-         } else {
-                 unregister_trace_sched_process_fork(ftrace_pid_follow_sched_process_fork,
-                                                     tr);
-                 unregister_trace_sched_process_free(ftrace_pid_follow_sched_process_exit,
-                                                     tr);
-         }
-}
-
-AFAIU, "sched_process_exit" is issued close to the point where the task exits
-(it should not go back to userspace after that). "sched_process_free" is done
-when the task is really being removed.
-
-Between "sched_process_exit" and "sched_process_free", the task can still be
-observed by a trace analysis looking at sched and signal events: it's a zombie at
-that stage.
-
-Thanks,
-
-Mathieu
-
--- 
-Mathieu Desnoyers
-EfficiOS Inc.
-https://www.efficios.com
-
+greg k-h
