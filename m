@@ -1,103 +1,163 @@
-Received: from mail-ot1-f49.google.com (mail-ot1-f49.google.com [209.85.210.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0DDF374D3
-	for <linux-kernel@vger.kernel.org>; Mon, 19 Feb 2024 14:06:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59FB1374EC;
+	Mon, 19 Feb 2024 14:06:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708351618; cv=none; b=NS3UlX9jubxvytnRo4hocI/A1Tvi8vNnY1zSppYJd+ytqh8hDHWqAuphzqZmFzy35Y1gXuengmsy3oNkjdV1ua6o5gPnU8sk3t+QzcihLrq3KFeBbva23n/7E73Ym4CCVkVGAlvDcL2uMenUHq0lJTj67Q07s31gk8nRNXxv0BY=
+	t=1708351622; cv=none; b=bLc2NN9dTcTD+tG+SlFKsC5onnWsSPLDYRFH6A0fmGEOwHK1jteikItpQZdzrl7qn5yOrrvEL1ZBjmxfT4Gg1ECo1Ag0SHb1A724K5Eylxa7Fvg1ljOS19K6wZM/SiKFtOEl07+iGQSzsWTBzk+bRdrx4RVTyjVMbFopuzcMCYU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708351618; c=relaxed/simple;
-	bh=ZN4BmNlEPEpjW/1H6cuktkLIhxEDSd5BgGVVJDCLARw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=EnwWGOEPeXhz03l3Z20HYDE4ILpfoU71TaRiFfc4PD9cQ6yPJnLDppLQcbhddOGwa2iUsxZ1pvSWsQNVLyIUVgnDHmctDip84wlsCG4UMETZ/88ESPXPXZOD1uNhXacHTlDlGWAbmUyAvTBohNg1L+OsNIaT7gXlWk3UGo53t0I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=x3DauRNp; arc=none smtp.client-ip=209.85.210.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1708351622; c=relaxed/simple;
+	bh=RdsRzreTHMNz57nWCI2dsPZimXgvZiMRK3IDydqC72A=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=A0DzjysxjboYf1qf4iEP6gmCy13jov8Ko7BEcLXbz6WyAx8N224n6otWnkaidi/v8pMvRt24DQjL5LZNL/kF2zeOLfKdFKdT30YgghpnD2Jw7/Lp2BhD0juLuPTm2eg52KKI6LoRfCdxcciFZ8JXN5WEpgJkvaqEmQMfg3bPj9M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=TKiSSgtT; arc=none smtp.client-ip=91.207.212.93
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="x3DauRNp"
-Received: by mail-ot1-f49.google.com with SMTP id 46e09a7af769-6e432beab47so1539227a34.1
-        for <linux-kernel@vger.kernel.org>; Mon, 19 Feb 2024 06:06:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1708351616; x=1708956416; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ZN4BmNlEPEpjW/1H6cuktkLIhxEDSd5BgGVVJDCLARw=;
-        b=x3DauRNpxSasiSusCnfPUiD99ZhMX9wFlxFvRukioEBT3PUdaDkL2Mkfq8RWevdycb
-         M8I04oIPCDGeh4t15Yg1VmICe71+zPx8hQe13O0ChRc2IPfjI6QA5IuEuzkKXoW9UL26
-         jvF+w0UJ4HF1bhLJLPSk8paQDTPTEY7+Amx7g1z7bscRESgf8fntXmFX5e/DJt4Z60yR
-         Qv6ITduFqDuGDJSltMT6fWgNGpkfM5TI9zl8YZKAnkdpsqyGQpN+LuwZRQ6c4bDwxpYc
-         aomNlT11H9eb0Tc7+1EU3n82UygI3v4YHO7TQmKsRAGPQlcpYnaBTpVYlmDtjSITYoXS
-         bxag==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708351616; x=1708956416;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ZN4BmNlEPEpjW/1H6cuktkLIhxEDSd5BgGVVJDCLARw=;
-        b=qy3Uurm3l8HZ8nADJBJ6crRI/2qhHU70eNHCAiqHJ12qtKl1BfuHIM4vzWBfh8aVd8
-         jwYNKQSqpgjJ+tO1gEfPK17CKw1PoP5cccaS7f9r5TCPBeIgTMOcALI4h6Uz7KOiSPJ1
-         EKaObth3mb1dRVEaKy+HL7+5trNG92mTi3/N9H4s6wUfpvn/IGctSk1yNg2mWpdyk2X7
-         AUapdwbagXxROa+ds4EJ5qkQFrEqnMThEPszFPw7+gVt+SlDW7pNh+eWd4nN+52HMI2Q
-         wxHZds58TjaHGP44R/6jM+XzxfaphotTbZQpRf3cf10pFTWmvtYEG7oD4xUhqSGB9lkN
-         V52g==
-X-Forwarded-Encrypted: i=1; AJvYcCVz2lsXoGTj2noTO5h/gj9Lny8ptIjwIUAQxrbXYoWVwXbaOBqeTk0jIiXCJBUkKBluOsTUSW7CFb6oXDQnPQTJ5RCRtDt0nILUciWD
-X-Gm-Message-State: AOJu0Yx3SrZsEeg1DljcJBxAUdTgNwSMhz3j9EuIxn/tnEzerGX8OW/n
-	oq2SZILtF+fGTJSWBVHWTrUH0OmPkjD/DGw4G/Trjzt/SVc/5548v7F2IIpRPNTz0+AwptzusI1
-	iFBRou3Eyb1O5MORHmNbrBAmtsq/whgpbw0LXhQ==
-X-Google-Smtp-Source: AGHT+IH04EqapwhcfryqkGeJ0PLDo0rjKByqtrCM8cYE2MnjC0gv9WZUijbBYPo1lK02ZF+BZQw3zmYboI9pZdUPgfQ=
-X-Received: by 2002:a05:6359:4427:b0:172:d79f:1841 with SMTP id
- nz39-20020a056359442700b00172d79f1841mr14599705rwb.7.1708351615699; Mon, 19
- Feb 2024 06:06:55 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="TKiSSgtT"
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 41JDQ2Na016201;
+	Mon, 19 Feb 2024 15:06:36 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	from:to:cc:subject:date:message-id:in-reply-to:references
+	:mime-version:content-transfer-encoding:content-type; s=
+	selector1; bh=vJQs1g05kFP9D2QsdMX/NjwJEI2VkKEsSmtoy+yfc1E=; b=TK
+	iSSgtTb/aTFX4S3Ej5Wqf1zIN0iU5pguH0UrfUR6PtAUREpDtJfHVuhn1GmP87J6
+	mUs2I4C3ClOP/W784Gc7t+EFXX7EjMmk7Zo9hESUQCPTAiqiIkc/+aXGUdvDdzm5
+	YehHkGZ4dsIyNs3TxzcyLjS+qpH0cuBISDdoifnfXUSXcsBv7ozF3E7ZHCQlEjCi
+	lE3uz0zlhEX/L4qVQ/Er1ASs6NL0micENcgFwr4iPJkoBZAs3/8AhDfzYPYAzbD4
+	ONxfO9cH5mPYes9aM1yaJhtxZxxeI3k/QJb8aCdrEQvGImh9+uJAgARYmDRoSDKz
+	a0MsvXyC1YrXewKqHIHg==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3wajt8eus9-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 19 Feb 2024 15:06:35 +0100 (CET)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id DB22E4002D;
+	Mon, 19 Feb 2024 15:06:31 +0100 (CET)
+Received: from Webmail-eu.st.com (shfdag1node3.st.com [10.75.129.71])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 4693B26A9A9;
+	Mon, 19 Feb 2024 15:05:51 +0100 (CET)
+Received: from localhost (10.201.21.177) by SHFDAG1NODE3.st.com (10.75.129.71)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Mon, 19 Feb
+ 2024 15:05:50 +0100
+From: Christophe Kerello <christophe.kerello@foss.st.com>
+To: <miquel.raynal@bootlin.com>, <richard@nod.at>, <vigneshr@ti.com>,
+        <robh+dt@kernel.org>, <krzysztof.kozlowski+dt@linaro.org>,
+        <conor+dt@kernel.org>
+CC: <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <devicetree@vger.kernel.org>,
+        Christophe Kerello <christophe.kerello@foss.st.com>
+Subject: [PATCH v2 2/3] mtd: rawnand: stm32_fmc2: use dma_get_slave_caps to get DMA max burst
+Date: Mon, 19 Feb 2024 15:05:04 +0100
+Message-ID: <20240219140505.85794-3-christophe.kerello@foss.st.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20240219140505.85794-1-christophe.kerello@foss.st.com>
+References: <20240219140505.85794-1-christophe.kerello@foss.st.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240215-mbly-i2c-v1-0-19a336e91dca@bootlin.com>
- <20240215-mbly-i2c-v1-1-19a336e91dca@bootlin.com> <20240216022704.GB850600-robh@kernel.org>
- <CZ6E24VPJKJG.35LACFD6ZV5KE@bootlin.com>
-In-Reply-To: <CZ6E24VPJKJG.35LACFD6ZV5KE@bootlin.com>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Mon, 19 Feb 2024 15:06:44 +0100
-Message-ID: <CACRpkdZZhhzg5SY7U5dv_OfLEVejRFom4V9nCfkQXunAw1ZXSw@mail.gmail.com>
-Subject: Re: [PATCH 01/13] dt-bindings: i2c: nomadik: add timeout-usecs
- property bindings
-To: =?UTF-8?B?VGjDqW8gTGVicnVu?= <theo.lebrun@bootlin.com>
-Cc: Rob Herring <robh@kernel.org>, Andi Shyti <andi.shyti@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, linux-arm-kernel@lists.infradead.org, 
-	linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org, 
-	Gregory Clement <gregory.clement@bootlin.com>, 
-	Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>, 
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Tawfik Bayouk <tawfik.bayouk@mobileye.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: EQNCAS1NODE3.st.com (10.75.129.80) To SHFDAG1NODE3.st.com
+ (10.75.129.71)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-02-19_10,2024-02-19_01,2023-05-22_02
 
-Hi Th=C3=A9o,
+Use dma_get_slave_caps API to get the max burst size of a DMA channel.
 
-thanks for your patch!
+For MP1 SoCs, MDMA is used and the max burst size is 128.
+For MP25 SoC, DMA3 is used and the max burst size is 64.
 
-On Fri, Feb 16, 2024 at 10:16=E2=80=AFAM Th=C3=A9o Lebrun <theo.lebrun@boot=
-lin.com> wrote:
+Signed-off-by: Christophe Kerello <christophe.kerello@foss.st.com>
+---
+ drivers/mtd/nand/raw/stm32_fmc2_nand.c | 29 +++++++++++++++++++++-----
+ 1 file changed, 24 insertions(+), 5 deletions(-)
 
-> i2c-mpc (fsl,timeout) and i2c-gpio (i2c-gpio,timeout-ms). I agree this
-> prop has no reason to be compatible-specific.
->
-> Feedback from dt-bindings and I2C host maintainers would be useful: what
-> should the property be named? Having the unit makes it self-descriptive,
-> which sounds like a good idea to me. timeout-usecs, timeout-us, another
-> option?
+diff --git a/drivers/mtd/nand/raw/stm32_fmc2_nand.c b/drivers/mtd/nand/raw/stm32_fmc2_nand.c
+index 88811139aaf5..a7db7b675514 100644
+--- a/drivers/mtd/nand/raw/stm32_fmc2_nand.c
++++ b/drivers/mtd/nand/raw/stm32_fmc2_nand.c
+@@ -264,6 +264,8 @@ struct stm32_fmc2_nfc {
+ 	struct sg_table dma_ecc_sg;
+ 	u8 *ecc_buf;
+ 	int dma_ecc_len;
++	u32 tx_dma_max_burst;
++	u32 rx_dma_max_burst;
+ 
+ 	struct completion complete;
+ 	struct completion dma_data_complete;
+@@ -347,20 +349,26 @@ static int stm32_fmc2_nfc_select_chip(struct nand_chip *chip, int chipnr)
+ 	stm32_fmc2_nfc_setup(chip);
+ 	stm32_fmc2_nfc_timings_init(chip);
+ 
+-	if (nfc->dma_tx_ch && nfc->dma_rx_ch) {
++	if (nfc->dma_tx_ch) {
+ 		memset(&dma_cfg, 0, sizeof(dma_cfg));
+-		dma_cfg.src_addr = nfc->data_phys_addr[nfc->cs_sel];
+ 		dma_cfg.dst_addr = nfc->data_phys_addr[nfc->cs_sel];
+-		dma_cfg.src_addr_width = DMA_SLAVE_BUSWIDTH_4_BYTES;
+ 		dma_cfg.dst_addr_width = DMA_SLAVE_BUSWIDTH_4_BYTES;
+-		dma_cfg.src_maxburst = 32;
+-		dma_cfg.dst_maxburst = 32;
++		dma_cfg.dst_maxburst = nfc->tx_dma_max_burst /
++				       dma_cfg.dst_addr_width;
+ 
+ 		ret = dmaengine_slave_config(nfc->dma_tx_ch, &dma_cfg);
+ 		if (ret) {
+ 			dev_err(nfc->dev, "tx DMA engine slave config failed\n");
+ 			return ret;
+ 		}
++	}
++
++	if (nfc->dma_rx_ch) {
++		memset(&dma_cfg, 0, sizeof(dma_cfg));
++		dma_cfg.src_addr = nfc->data_phys_addr[nfc->cs_sel];
++		dma_cfg.src_addr_width = DMA_SLAVE_BUSWIDTH_4_BYTES;
++		dma_cfg.src_maxburst = nfc->rx_dma_max_burst /
++				       dma_cfg.src_addr_width;
+ 
+ 		ret = dmaengine_slave_config(nfc->dma_rx_ch, &dma_cfg);
+ 		if (ret) {
+@@ -1545,6 +1553,7 @@ static int stm32_fmc2_nfc_setup_interface(struct nand_chip *chip, int chipnr,
+ 
+ static int stm32_fmc2_nfc_dma_setup(struct stm32_fmc2_nfc *nfc)
+ {
++	struct dma_slave_caps caps;
+ 	int ret = 0;
+ 
+ 	nfc->dma_tx_ch = dma_request_chan(nfc->dev, "tx");
+@@ -1557,6 +1566,11 @@ static int stm32_fmc2_nfc_dma_setup(struct stm32_fmc2_nfc *nfc)
+ 		goto err_dma;
+ 	}
+ 
++	ret = dma_get_slave_caps(nfc->dma_tx_ch, &caps);
++	if (ret)
++		return ret;
++	nfc->tx_dma_max_burst = caps.max_burst;
++
+ 	nfc->dma_rx_ch = dma_request_chan(nfc->dev, "rx");
+ 	if (IS_ERR(nfc->dma_rx_ch)) {
+ 		ret = PTR_ERR(nfc->dma_rx_ch);
+@@ -1567,6 +1581,11 @@ static int stm32_fmc2_nfc_dma_setup(struct stm32_fmc2_nfc *nfc)
+ 		goto err_dma;
+ 	}
+ 
++	ret = dma_get_slave_caps(nfc->dma_rx_ch, &caps);
++	if (ret)
++		return ret;
++	nfc->rx_dma_max_burst = caps.max_burst;
++
+ 	nfc->dma_ecc_ch = dma_request_chan(nfc->dev, "ecc");
+ 	if (IS_ERR(nfc->dma_ecc_ch)) {
+ 		ret = PTR_ERR(nfc->dma_ecc_ch);
+-- 
+2.25.1
 
-Use i2c-transfer-timeout-ms in my opinion, so it us crystal clear
-what that property is for.
-
-As Rob mentioned this isn't in the kernel schemas but in dtschema, so
-you need to patch this:
-https://github.com/robherring/dt-schema
-
-Yours,
-Linus Walleij
