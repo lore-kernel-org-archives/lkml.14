@@ -1,154 +1,118 @@
-Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
+Received: from mail-ua1-f41.google.com (mail-ua1-f41.google.com [209.85.222.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5A8220DF4;
-	Mon, 19 Feb 2024 07:44:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 387E321370
+	for <linux-kernel@vger.kernel.org>; Mon, 19 Feb 2024 07:44:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708328652; cv=none; b=Bqb1Getw8UDn7/2d/R0lQI2ZjfYHq48/400Sx2F7WmWpxB5ydupc0mROAhkGab/9DWyUucb9NbEoMfmbWJqo8P6m9f/OWSY4bbvC4umSDVDHKUP9JOZl0WiCYmQbpTDJFlzBNFSPgAUn/Xnh2/m9lS9t/1neTFNtbf5oMSuo5ew=
+	t=1708328658; cv=none; b=tYFjZxErN53dUm7ou1YMjjpcAqGR4Pzu6PCyPac2K+uKP1z9uBfm24Z4FytElhJpOgqtdh+zS6y9ZLNTPbgoRttmLvPskPKVQeuWyD01L8JbC6zyZmKQpJl9a+ncgliFkVDoptkeyI6WQaQY9C4QGPU8x1Bc68ivstBE3nXSJ/k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708328652; c=relaxed/simple;
-	bh=0cPDHhNi8bYSx15AbJNOmGn2pNvsKEpiuV1I2zmlnwY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=XgzCrxKiZT4diEO5+6WPMeU7d1ln2i+GJc33qlwjHla9m8Z5PmpyXa083C1pD0xazIpR6hBronpcn3/k55u+F6/KxPMaqMk6Nuv7gVQtn1+TTwIn7ZLj/QuSWZc58Vs9xtbAhBA9zRURA8lAm2LHpxL3APacj+QADQsopeSgeS4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Msv/k5sx; arc=none smtp.client-ip=209.85.167.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1708328658; c=relaxed/simple;
+	bh=7/qPoQrZcFSiHts/pkXzTwa8vDdpEHbTGYy9TW/YEl8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=QLoqqBPXLK3/pqZMD3O7mrBnYpcRZMMgSpyu+v2aEAEcNu1O6mxzwKFLQKATJ/1dCXB+YGmEOonA9l7Gg8fv95CVhOGC+jA1MYXVVTLhIRZ2+r0YkaxAYD1NPo9A6NH+5fanM3KUq8MqEavMGFm0ZxLt2GuByEUOXSCd4a2PZSQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=G+pEhP16; arc=none smtp.client-ip=209.85.222.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Msv/k5sx"
-Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-512a96e44e2so1582155e87.2;
-        Sun, 18 Feb 2024 23:44:10 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="G+pEhP16"
+Received: by mail-ua1-f41.google.com with SMTP id a1e0cc1a2514c-7d6a772e08dso1273212241.2
+        for <linux-kernel@vger.kernel.org>; Sun, 18 Feb 2024 23:44:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1708328649; x=1708933449; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=NWRB34m7daMDprm8NGoyhlWPNl7PmR3a1A52zijhYzY=;
-        b=Msv/k5sxoRnCL4mkL5twCE9KD6+WOikyOO/4VftT+8mppfg/Z4YFljtmxP8WSmZ8L6
-         5nbk7yhwDG8A22BW2odqJ9lHZg7UKHD96IGGkZdn0MU575ITAqvD+1dw9ziXJBpOc2pv
-         ymKOKo2fPwgr28M8gc2TCMkx0i4s5bKjr8jUjYIUXHaQ7d8SXkkZ47TeLBnkz19c344E
-         BDnGzN97I9UBO3JU+8p0zWhRPTwkQ7+gc3nvE4iD9JKtZOqqmSeVkXYGTn8uq129vJ/J
-         vQELhTSZ4hHV/GWMxyp6oIsGfIeVrrad+vFF+fIaSi91rrbUiDAwjIqO7qRNG6p9rML4
-         i1JA==
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1708328655; x=1708933455; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Tg3MFuW2EZ67A7xGiTJNMKIfel/eoLDMzTrRgCoVUVI=;
+        b=G+pEhP16ey8jfIZnnBOLZmLesMGhN2WpWjS4KCYxhCiqOcJVGhJxdNrmyUydzQw/GB
+         Sq9v+pkBEdZ0lKCbUWxvAGihT1Dn0euNrfVvxGicp9ZkGnnWJr+VpawSAHJzncojsyg+
+         DJgVU8UrY1IDuCTYvpKSeBi+j4ckqYqO8N3gQdCl1qdMZPCMwlULGXHE2v5yxfiJAD6C
+         1jHmOQfjhdfcsB+Wzk85CdzDLegrHIFgIq50YCMKLZQrVvx4+B8SI6Z8xsthmQIGjW+8
+         BvBdF2W3AqBp347S6NiHcM/0PDruJZMbEzLQ5F1fyXHB0d+Cn2kR5ZyyauEcKWn10A6i
+         m3ww==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708328649; x=1708933449;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=NWRB34m7daMDprm8NGoyhlWPNl7PmR3a1A52zijhYzY=;
-        b=WhQpE/dkBxEW1JqdNdLRhXQjmPYUVztllxRDX6tHksrLSkOsey2hpSYLxVIV9RDJ34
-         UM7jQqb/39blLTB32yshfSbnE4ZIL+5oP5eIXVVNIZE5rq7YsqSwRpcKpLLBr2wy+72C
-         DmInpCB+muj2PWCnSYBGaK/IZmPq84mJRVEpYT4dOoK4jIGMtjGtxmnGI0xIXTle6UJg
-         N0SeazCUo1IqcGIsebbC5A+k3Rp66ezb86IaDn9P9IFyeeWcbcXg6QB8+GWZpMWoEv7Q
-         AZXZSJIte0TGGlIyaNfOwvqQoP4FFlCyOk0Io8RopxXgOeE6lbuc4crxlN665gtlTh7H
-         AROA==
-X-Forwarded-Encrypted: i=1; AJvYcCUu+hXNgDruy3ioRr696cw+klhh7JcaddjJoKvxxDLv6QoEsiPP864bpiOWIzoq7CZqnzX60oHhn3+Ns85grfWUdodKWT+DtAnG8RMs
-X-Gm-Message-State: AOJu0YzFnUXy5NtzyIJYUKIANqLuo+PykFxwguvWKbpnZH2qsl0rW3GD
-	WqilghbkQesBIByqXyrSEupA2XP7/DlF4l5DytjvvczlR9uuptJh
-X-Google-Smtp-Source: AGHT+IHwTzvIMcCzSWgF2FY2fsE7PoYQdgs4QcL5zFtGQflR01k671ZTTneY7Qd+J6RV5oa7EVxc0A==
-X-Received: by 2002:a05:6512:12c7:b0:512:bc14:6b80 with SMTP id p7-20020a05651212c700b00512bc146b80mr395625lfg.25.1708328648730;
-        Sun, 18 Feb 2024 23:44:08 -0800 (PST)
-Received: from localhost.localdomain ([86.38.153.174])
-        by smtp.gmail.com with ESMTPSA id qw23-20020a170906fcb700b00a3e426149a1sm1886019ejb.50.2024.02.18.23.44.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 18 Feb 2024 23:44:08 -0800 (PST)
-From: Arturas Moskvinas <arturas.moskvinas@gmail.com>
-To: jic23@kernel.org,
-	Jonathan.Cameron@huawei.com,
-	oskar.andero@gmail.com,
-	lars@metafoo.de,
-	lukas@wunner.de
-Cc: linux-iio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Arturas Moskvinas <arturas.moskvinas@gmail.com>
-Subject: [PATCH v2] iio: adc: mcp320x: Simplify device removal logic
-Date: Mon, 19 Feb 2024 09:41:40 +0200
-Message-ID: <20240219074139.193464-2-arturas.moskvinas@gmail.com>
-X-Mailer: git-send-email 2.43.2
+        d=1e100.net; s=20230601; t=1708328655; x=1708933455;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Tg3MFuW2EZ67A7xGiTJNMKIfel/eoLDMzTrRgCoVUVI=;
+        b=c7z09fvzGMvj0QUZmnNUBWs512l/Jbk1maI2ot18ZFFCU2fgia83CA6t8T5d6XuCaZ
+         ggFcCSO2sdew9w1WgjGWM7GUAxUwryueRIrsCRQfWeoh3+dvICSBoX5JjzO0WDWnDy2/
+         +5p56jwXCh99YN1OAwV4zSGoc+F7OVdpcu0RRAGQtXAavt8tU/sUndwA8dvusAtHyEZS
+         kaaZwZLvnU3tfeSPJ6Oklzd2gVo5Ro/s0mc73uaGcqqxJdRYmBM6T8bF13M2p8djtpn7
+         ihblaR+JAw7kbI6F6TY+KFNvwsGuyGInqAewQFhVrH3OhJt1GbGbKUx9L/4pHTqgSODl
+         pEcg==
+X-Forwarded-Encrypted: i=1; AJvYcCXT+Pfx4NyJY84hatjGhRPfmLPCPXoIOrS7OPVvmc0JDXg2MazU1DiKiFWrhNrJ6KzadbyHwYniFPZs/yujfhFCucSURjsHgAN/lZ6j
+X-Gm-Message-State: AOJu0Yw8eSGOXsEEbyr4c7BVyupkDMuKlbHNbiH6ov3HHBjbbrSHR1Zz
+	aag1FBit0M10sTmSp1Dx8nottWxAZWvXM4scCTfhnmTC9sXjUa/qhJmClu2ONZEHZofj9homylX
+	1y/kdFgfJ7SVMZOmofDW4b/yLKJDE37gDpiEgqw==
+X-Google-Smtp-Source: AGHT+IGunJEBsTI0SmSoWKg+aPSEXOJMsTGF+Un8NyhjOhAtwMpa/tUFgrHw8ZsoB0/YwQv+yUpJYgxlkXCOcm1vhQ0=
+X-Received: by 2002:a67:b607:0:b0:46e:e861:fb09 with SMTP id
+ d7-20020a67b607000000b0046ee861fb09mr2778487vsm.2.1708328655070; Sun, 18 Feb
+ 2024 23:44:15 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240218174853.6492-1-brgl@bgdev.pl>
+In-Reply-To: <20240218174853.6492-1-brgl@bgdev.pl>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Mon, 19 Feb 2024 08:44:04 +0100
+Message-ID: <CAMRc=MffACd5XyGVv4DQO9AhbeYiVhougS8_SJ23xHd-jpfF2g@mail.gmail.com>
+Subject: Re: [PATCH] gpio: fix memory leak in gpiod_request_commit()
+To: Xiaolei Wang <xiaolei.wang@windriver.com>, Linus Walleij <linus.walleij@linaro.org>
+Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Use devm_* APIs to enable/disable regulator and to register in IIO infrastructure.
+On Sun, Feb 18, 2024 at 6:49=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.pl>=
+ wrote:
+>
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+>
+> We now copy the label string directly in desc_set_label() so it must not
+> be done a second time in gpiod_request_commit().
+>
+> Fixes: 1f2bcb8c8ccd ("gpio: protect the descriptor label with SRCU")
+> Reported-by: Xiaolei Wang <xiaolei.wang@windriver.com>
+> Closes: https://lore.kernel.org/all/20240217135255.1128716-1-xiaolei.wang=
+@windriver.com/T/
+> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> ---
+>  drivers/gpio/gpiolib.c | 6 ------
+>  1 file changed, 6 deletions(-)
+>
+> diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+> index e4dd13d81b4d..3c22920bd201 100644
+> --- a/drivers/gpio/gpiolib.c
+> +++ b/drivers/gpio/gpiolib.c
+> @@ -2250,12 +2250,6 @@ static int gpiod_request_commit(struct gpio_desc *=
+desc, const char *label)
+>         if (test_and_set_bit(FLAG_REQUESTED, &desc->flags))
+>                 return -EBUSY;
+>
+> -       if (label) {
+> -               label =3D kstrdup_const(label, GFP_KERNEL);
+> -               if (!label)
+> -                       return -ENOMEM;
+> -       }
+> -
+>         /* NOTE:  gpio_request() can be called in early boot,
+>          * before IRQs are enabled, for non-sleeping (SOC) GPIOs.
+>          */
+> --
+> 2.40.1
+>
 
-Signed-off-by: Arturas Moskvinas <arturas.moskvinas@gmail.com>
+I should probably stop coding while sleep-deprived and in the evening,
+I realized now I sent the exact same fix as you. I thought this was
+removing the allocation from desc_set_label() and not
+gpiod_request_commit().
 
----
-v1 -> v2:
-- Use devm_add_action_or_reset instead of devm_regulator_get_enable to automate disabling regulator
-- Remove empty mcp320x_remove function
----
- drivers/iio/adc/mcp320x.c | 29 +++++++++--------------------
- 1 file changed, 9 insertions(+), 20 deletions(-)
+I'll go ahead and apply your patch and you can disregard this thread.
 
-diff --git a/drivers/iio/adc/mcp320x.c b/drivers/iio/adc/mcp320x.c
-index f3b81798b3c9..da1421bd7b62 100644
---- a/drivers/iio/adc/mcp320x.c
-+++ b/drivers/iio/adc/mcp320x.c
-@@ -371,6 +371,11 @@ static const struct mcp320x_chip_info mcp320x_chip_infos[] = {
- 	},
- };
- 
-+static void mcp320x_regulator_disable(void *reg)
-+{
-+	regulator_disable(reg);
-+}
-+
- static int mcp320x_probe(struct spi_device *spi)
- {
- 	struct iio_dev *indio_dev;
-@@ -388,7 +393,6 @@ static int mcp320x_probe(struct spi_device *spi)
- 	indio_dev->name = spi_get_device_id(spi)->name;
- 	indio_dev->modes = INDIO_DIRECT_MODE;
- 	indio_dev->info = &mcp320x_info;
--	spi_set_drvdata(spi, indio_dev);
- 
- 	device_index = spi_get_device_id(spi)->driver_data;
- 	chip_info = &mcp320x_chip_infos[device_index];
-@@ -445,27 +449,13 @@ static int mcp320x_probe(struct spi_device *spi)
- 	if (ret < 0)
- 		return ret;
- 
--	mutex_init(&adc->lock);
--
--	ret = iio_device_register(indio_dev);
-+	ret = devm_add_action_or_reset(&spi->dev, mcp320x_regulator_disable, adc->reg);
- 	if (ret < 0)
--		goto reg_disable;
--
--	return 0;
--
--reg_disable:
--	regulator_disable(adc->reg);
--
--	return ret;
--}
-+		return ret;
- 
--static void mcp320x_remove(struct spi_device *spi)
--{
--	struct iio_dev *indio_dev = spi_get_drvdata(spi);
--	struct mcp320x *adc = iio_priv(indio_dev);
-+	mutex_init(&adc->lock);
- 
--	iio_device_unregister(indio_dev);
--	regulator_disable(adc->reg);
-+	return devm_iio_device_register(&spi->dev, indio_dev);
- }
- 
- static const struct of_device_id mcp320x_dt_ids[] = {
-@@ -520,7 +510,6 @@ static struct spi_driver mcp320x_driver = {
- 		.of_match_table = mcp320x_dt_ids,
- 	},
- 	.probe = mcp320x_probe,
--	.remove = mcp320x_remove,
- 	.id_table = mcp320x_id,
- };
- module_spi_driver(mcp320x_driver);
-
-base-commit: 8d3dea210042f54b952b481838c1e7dfc4ec751d
--- 
-2.43.2
-
+Thanks!
+Bartosz
