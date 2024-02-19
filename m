@@ -1,84 +1,85 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 502F22C842
-	for <linux-kernel@vger.kernel.org>; Mon, 19 Feb 2024 11:46:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1D2F28DBD;
+	Mon, 19 Feb 2024 11:47:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708343175; cv=none; b=kA6dTArkjbe5fWdvJ4uygma89V9jASIQG5+yayFwXF7ILhoqsf+ZCO+PhXxXLSV1IZ+MVx6hF7PmmXyPnn2x+E6FtYjTCTOwF9qVoA8gv9aC+dP89xSPzpV+mybeRvtRDo88JRhSqtmC21Q5hFoyQ5yyFy7mv/5tR8qvPdyQ9lU=
+	t=1708343250; cv=none; b=rz777X+g8W41Ae1cuYacLp5C18iOC5M2v8WS3jJsiorfI40Xk/o7V0fdqAReWUPgQFCRJn6V2D4vn8dw+gDg0yYGqAdiQVvOznksi2WY5YsIrjjVVrVNkNT2c9wPCJy/9rOe9PEf7bEf7TuJGDpmoPyt6YnYI+Ry/GWeHSyvsVs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708343175; c=relaxed/simple;
-	bh=4ZD/Ak4Shixqt+hRFej2u9n/4j5VFvBfGQlSNWdsOZ8=;
+	s=arc-20240116; t=1708343250; c=relaxed/simple;
+	bh=SCzSVDeXhJh0zIbeBglTZd4xn7FK70eXZH9Wgo5j/pA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NVFvBKc+SYdYP4Ob7lli9l+5uP6Kez6IaBvnHdWJKuRlBgDyUnu76ykJHE5yFo0cQ5cIRCXOzqPIigwWw7Q6qhCwEY97lN8Y1SC2mMYAsJeTWOpn1MNqLlygeHFljbOwXlNDMj1eGVNRpAVhGY4TBk+KQl/U8NkG1btfLtX/KTs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=HTIt/VMB; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=qMH2g3g42qXr+JxNXoAwBo9VkJNGn47WygzQr1Tic5m0VsplbupCs0BHKgigN3ec1d0DbcQl5MTV+t/LPfeyaJ1AIz45I75arDmfkodYuhhwdRN+JVTolk4HN5w4y2NpqNJQxLkCSCH+ToTTKWzu7fyCzz3H19BnvPIjlpSDsow=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=PIRjpJoK; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=eizLTF4s; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=AGxB46Wv; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=taNCoXnS; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HTIt/VMB"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1708343173;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="PIRjpJoK";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="eizLTF4s";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="AGxB46Wv";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="taNCoXnS"
+Received: from imap2.dmz-prg2.suse.org (imap2.dmz-prg2.suse.org [10.150.64.98])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id C496A2231F;
+	Mon, 19 Feb 2024 11:47:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1708343247; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=4ZD/Ak4Shixqt+hRFej2u9n/4j5VFvBfGQlSNWdsOZ8=;
-	b=HTIt/VMBAMjyY8+dO32MTjaTAOG1PcL59ZYuvlI+gWLAKMTN2Lvx6tsippESUurlwcd68y
-	nuBrhLys566q+I9zBpeDhKprLZRZCtUXM6fegmzRvnYmFQN6WOrt3DHuNH6sSAj5zgnxi0
-	D9pSWo3fEIS9moSyFtmH2CauHcsD4s8=
-Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com
- [209.85.160.200]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-618-EPPZq4tQN-qRHuCQbnC0IQ-1; Mon, 19 Feb 2024 06:46:11 -0500
-X-MC-Unique: EPPZq4tQN-qRHuCQbnC0IQ-1
-Received: by mail-qt1-f200.google.com with SMTP id d75a77b69052e-42da66f3f2aso55396061cf.0
-        for <linux-kernel@vger.kernel.org>; Mon, 19 Feb 2024 03:46:11 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708343171; x=1708947971;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=4ZD/Ak4Shixqt+hRFej2u9n/4j5VFvBfGQlSNWdsOZ8=;
-        b=IvEq7IzUeUnXNnjlNvA8oqzrxVBVtduum/hr6yXTsdf2DagwsrdJmx8yFkbtf57lVG
-         +eLVPuoj4oGCDLLRLjwlUYVnZzCE9m+cTt/kfRympItdD7+U452mxk2EvjJmb8EVcR2o
-         IXKIHa2+VnX6PCevJQw+RJshliDhs8lSsf2Z5hNeJJ1zGnYXny2RBM1sQlwGzzaN/RpO
-         xG2fm9TqqkpZiykmyWIgypPl+WDGR3XAWfp6+lGccHQf1sgcKyFE8IoP0epHnkcWA5p0
-         2KTWbGfAB7ziCNSgdGIv5yWhSffO5i54igggAtP+TRuzUKR0chrjv/yJWHgNQBNb71d8
-         +PxA==
-X-Forwarded-Encrypted: i=1; AJvYcCX3Mi0f2/eVrLRjcfO00jSiHFND3PVkOxipFnt0WUG1d9YSV8YiKD8WqX7jFWxa4QyOsq0oqw9WXwtNhM5UH4UiCWNu1Dzvm4KC19OT
-X-Gm-Message-State: AOJu0Yzt5EryUUb8CPq0hd1ecOkoWPWG1so4bbmeA98w8ndhQtIgvvMN
-	ePr4eBW5rqcDgYPsAx8nmIAPqr2vNHD1H0RKIERz9MkxmYbTQlVDdbb+TcQ/lYTZ4zcCcLFmDGV
-	uxrfKdmDOTi3QE+A2AdpvvdcIlECha6UtWBfv0cD4zMALR/2NLtLH0LfGuv20lQ==
-X-Received: by 2002:a05:622a:4f:b0:42c:7bfc:8068 with SMTP id y15-20020a05622a004f00b0042c7bfc8068mr18270856qtw.11.1708343171122;
-        Mon, 19 Feb 2024 03:46:11 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IFiNw4DCsKkz2RLLVtfw6QNV6TRlA/lysd4gQNMYeIoLrM5/4vWlvVZ/26MqBKbSbHaFvNgsA==
-X-Received: by 2002:a05:622a:4f:b0:42c:7bfc:8068 with SMTP id y15-20020a05622a004f00b0042c7bfc8068mr18270830qtw.11.1708343170853;
-        Mon, 19 Feb 2024 03:46:10 -0800 (PST)
-Received: from debian (2a01cb058d23d600e55283140c56efd3.ipv6.abo.wanadoo.fr. [2a01:cb05:8d23:d600:e552:8314:c56:efd3])
-        by smtp.gmail.com with ESMTPSA id t13-20020a05622a180d00b0042d0995a040sm2444657qtc.62.2024.02.19.03.46.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 19 Feb 2024 03:46:10 -0800 (PST)
-Date: Mon, 19 Feb 2024 12:46:06 +0100
-From: Guillaume Nault <gnault@redhat.com>
-To: "Ricardo B. Marliere" <ricardo@marliere.net>
-Cc: Oliver Neukum <oneukum@suse.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Andrew Lunn <andrew@lunn.ch>,
-	Florian Fainelli <f.fainelli@gmail.com>,
-	Vladimir Oltean <olteanv@gmail.com>,
-	Roopa Prabhu <roopa@nvidia.com>,
-	Nikolay Aleksandrov <razor@blackwall.org>,
-	Loic Poulain <loic.poulain@linaro.org>,
-	Sergey Ryazanov <ryazanov.s.a@gmail.com>,
-	Johannes Berg <johannes@sipsolutions.net>, netdev@vger.kernel.org,
-	linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-	bridge@lists.linux.dev, linux-ppp@vger.kernel.org,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH 08/12] net: l2tp: constify the struct device_type usage
-Message-ID: <ZdM/fjlngUdegmC7@debian>
-References: <20240217-device_cleanup-net-v1-0-1eb31fb689f7@marliere.net>
- <20240217-device_cleanup-net-v1-8-1eb31fb689f7@marliere.net>
+	bh=/HW1O8/0Ek2CVqztQkYAK9/MsoJrJt80t5MZg8IQsq0=;
+	b=PIRjpJoKsye+XABw41EC1SvhJf8KDgpfk+8t9Sz/gPiS8ZmMYYgS57/imtPArptapRi+0j
+	kAS4kZVRKX+ngzERASp8mNDrFMG0V+62B+bdH9/MVH03VwQb6AcT+jimE2fVbxnf55cC3c
+	CMfsn+lnvfhs9Hb6VqoXSLsRJ11ZjL0=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1708343247;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=/HW1O8/0Ek2CVqztQkYAK9/MsoJrJt80t5MZg8IQsq0=;
+	b=eizLTF4s3ePFkFwKSwMLtkIme5ckMcu693XFtQFdR1ZPUYmlJRV+VeQHxv1gyzij4+YY83
+	p36jkYU1Pn1cowDA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1708343244; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=/HW1O8/0Ek2CVqztQkYAK9/MsoJrJt80t5MZg8IQsq0=;
+	b=AGxB46Wvp8LJasWBCsG7x7y4vc2KtMHqEZBCntJqhmCo57QcmulsEZqZp4uIW2+seLWdrL
+	4PucXURDDxjU/yF+Vm7/FhGa3J/o3qRMZ9TBhisZvP4gGVIKlipa9RfUTVsyDvY5iqhe2e
+	VlI7SPOBtdczh1kfOiJPu+gUj7upDU8=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1708343244;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=/HW1O8/0Ek2CVqztQkYAK9/MsoJrJt80t5MZg8IQsq0=;
+	b=taNCoXnSCyevd55YOeoz9Lur0PEBKmpjgaV8JSqenHpZ8CqxIHxJBpjk9xQvdrmwINoFeB
+	Mn1y+sf0zShB7mBw==
+Received: from imap2.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap2.dmz-prg2.suse.org (Postfix) with ESMTPS id A78F113585;
+	Mon, 19 Feb 2024 11:47:24 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([10.150.64.162])
+	by imap2.dmz-prg2.suse.org with ESMTPSA
+	id gbbmKMw/02USbgAAn2gu4w
+	(envelope-from <jack@suse.cz>); Mon, 19 Feb 2024 11:47:24 +0000
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+	id ED0B2A0806; Mon, 19 Feb 2024 12:47:19 +0100 (CET)
+Date: Mon, 19 Feb 2024 12:47:19 +0100
+From: Jan Kara <jack@suse.cz>
+To: syzbot <syzbot+4936b06b07f365af31cc@syzkaller.appspotmail.com>
+Cc: axboe@kernel.dk, brauner@kernel.org, jack@suse.cz,
+	konishi.ryusuke@gmail.com, linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-nilfs@vger.kernel.org,
+	syzkaller-bugs@googlegroups.com
+Subject: Re: [syzbot] [nilfs?] KASAN: use-after-free Read in nilfs_set_link
+Message-ID: <20240219114719.pyntouzverbsk4da@quack3>
+References: <000000000000375f00060eb11585@google.com>
+ <00000000000029d2820611a09994@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -87,13 +88,65 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240217-device_cleanup-net-v1-8-1eb31fb689f7@marliere.net>
+In-Reply-To: <00000000000029d2820611a09994@google.com>
+Authentication-Results: smtp-out1.suse.de;
+	none
+X-Spam-Level: *
+X-Spam-Score: 1.70
+X-Spamd-Result: default: False [1.70 / 50.00];
+	 ARC_NA(0.00)[];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 BAYES_HAM(-0.00)[34.64%];
+	 FROM_HAS_DN(0.00)[];
+	 TO_DN_SOME(0.00)[];
+	 FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	 URI_HIDDEN_PATH(1.00)[https://syzkaller.appspot.com/x/.config?x=655f8abe9fe69b3b];
+	 TAGGED_RCPT(0.00)[4936b06b07f365af31cc];
+	 MIME_GOOD(-0.10)[text/plain];
+	 NEURAL_HAM_LONG(-1.00)[-1.000];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 RCVD_COUNT_THREE(0.00)[3];
+	 DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	 NEURAL_HAM_SHORT(-0.20)[-1.000];
+	 RCPT_COUNT_SEVEN(0.00)[9];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 MID_RHS_NOT_FQDN(0.50)[];
+	 FREEMAIL_CC(0.00)[kernel.dk,kernel.org,suse.cz,gmail.com,vger.kernel.org,googlegroups.com];
+	 RCVD_TLS_ALL(0.00)[];
+	 SUSPICIOUS_RECIPS(1.50)[];
+	 SUBJECT_HAS_QUESTION(0.00)[]
+X-Spam-Flag: NO
 
-On Sat, Feb 17, 2024 at 05:13:30PM -0300, Ricardo B. Marliere wrote:
-> Since commit aed65af1cc2f ("drivers: make device_type const"), the driver
-> core can properly handle constant struct device_type. Move the l2tpeth_type
-> variable to be a constant structure as well, placing it into read-only
-> memory which can not be modified at runtime.
+On Sat 17-02-24 20:42:02, syzbot wrote:
+> syzbot suspects this issue was fixed by commit:
+> 
+> commit 6f861765464f43a71462d52026fbddfc858239a5
+> Author: Jan Kara <jack@suse.cz>
+> Date:   Wed Nov 1 17:43:10 2023 +0000
+> 
+>     fs: Block writes to mounted block devices
+> 
+> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=10639b34180000
+> start commit:   52b1853b080a Merge tag 'i2c-for-6.7-final' of git://git.ke..
+> git tree:       upstream
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=655f8abe9fe69b3b
+> dashboard link: https://syzkaller.appspot.com/bug?extid=4936b06b07f365af31cc
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=11d62025e80000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=13c38055e80000
+> 
+> If the result looks correct, please mark the issue as fixed by replying with:
+> 
+> #syz fix: fs: Block writes to mounted block devices
 
-Reviewed-by: Guillaume Nault <gnault@redhat.com>
+The reproducers don't seem to be doing anything suspicious so I'm not sure
+why the commit makes them not work anymore. There are no working
+reproducers for this bug though so I'll leave it upto the nilfs maintainer
+to decide what to do.
 
+								Honza
+
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
