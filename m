@@ -1,35 +1,58 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay.smtp-ext.broadcom.com (unknown [192.19.166.228])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 790432E40C;
-	Mon, 19 Feb 2024 20:40:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EBEA50267;
+	Mon, 19 Feb 2024 20:41:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.19.166.228
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708375226; cv=none; b=g87uUdKlYs7TN+kPrk59Atf5mtOn+eqbQyLhVLi3T+70l6W8V6S4dalt7wkWCjKRsWw+CP9Oh0r4YO6CF2nWP6fftzPKMHoTnnx0a7+pDfK6Raf8d+7toiah2EQJjeErYOqFL36chNCgoO00MHxCR9MGbfGH2MaKGORDBk2lWP0=
+	t=1708375265; cv=none; b=W1yPAec7knUFOvk2WZCERNxpXiAGt3nWJ/GFNhcgZwAhYo+WY3ugt77LXoJbJVkK34ZsnYcm9OEH8MF9BURa2p7ZH0cFN8TsiSxUbEl0T0UjKATx3E3xvt8r/V5CIl7/ZSzeAWNFbQUFxKbf5ksa2hJAqC71RpxuIQKhnhLGOlI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708375226; c=relaxed/simple;
-	bh=U7lK/QxgqZFx8nQ7+Dwc3ef1xihUvLtQ98Tcz07NpcA=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=g7VZ+FycG7JAGmgLFs68R5TydgiouQsUnDf5Pes4TUD51ulbPPtG8BhklKBNhR0w5Rr2tSgsbesvL8dsj0EBk4wBfEE/KMOmME6NJWAHh8JcY7OxUnVPopoM2wcGZrvYmkHDxw6lSE/JHF4wBDnzq6S0/Zr//k3ZApH//S2hHDs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZwGpWn7b; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1708375265; c=relaxed/simple;
+	bh=o0TlAjqIB1czzINK/rdoqCJ5lVeAGeS7FC7bZcSamiY=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=ulcD1rrm2m6bgdG21j6QpFBsh3wWyHPgDoiSJwUYdlC2WSnywrjmRVat3z5DwNSAILsZbOD7PBZtqEcY2py2eGb7u2No7t5EyO2tS8lp5mOwAWsiIIYvBAclHnHM24Y4OsIFpLcXtVrzt6iu6jLwtGK8ZHWJOZpwdvLA9e6RAdo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=WA993cE8; arc=none smtp.client-ip=192.19.166.228
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZwGpWn7b"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id F19E5C43390;
-	Mon, 19 Feb 2024 20:40:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708375226;
-	bh=U7lK/QxgqZFx8nQ7+Dwc3ef1xihUvLtQ98Tcz07NpcA=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=ZwGpWn7boXQqk3yRS7pifDZgzDdPUTbDEx4mH8TW1Qz0HzcaNtEvqCqBbJEmHs7pD
-	 79OCCfT4zjaL+Q4BygPgNf7QeAagIgdXuKmuaGkhPSWKYGRH9fw2B+K/sM6uXzcdnc
-	 0ZWwj5SSGCK8y3AJ2ZKGX026/L0n/iu7WtNGEYjQZKrikR1kNisgj9apMhdOHVHehe
-	 L5vAYzQImAdt3AU3rykRzbUQFRC07X9J5rbh/Zficri+7QcMaitqk5X57aCBMa1HSF
-	 x2I6779FbVuLbLdm6Q4VqlreQrbMY/aooKFLUhIGOq6IAt448Oi1+39LuP/kaT0Q9L
-	 2gLh0JK8oKcbw==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id D97D9D990D9;
-	Mon, 19 Feb 2024 20:40:25 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="WA993cE8"
+Received: from mail-lvn-it-01.lvn.broadcom.net (mail-lvn-it-01.lvn.broadcom.net [10.36.132.253])
+	by relay.smtp-ext.broadcom.com (Postfix) with ESMTP id 87A5DC003B80;
+	Mon, 19 Feb 2024 12:40:57 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 relay.smtp-ext.broadcom.com 87A5DC003B80
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=broadcom.com;
+	s=dkimrelay; t=1708375257;
+	bh=o0TlAjqIB1czzINK/rdoqCJ5lVeAGeS7FC7bZcSamiY=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=WA993cE8MyTCiGVAijtq+cwOqHy0emZjkb0SIvPNlCiIIBuZdvCdMA1r8ZkbShTVC
+	 y83hso+wdYgRpnjeHvDrk2GTZnrooZFm4NhgzHv+t5JX2hxSpRrEK/yRXYk03yVLLj
+	 nTgjAtB0SPJa01DIb5QkNYZ7eHSsdYRrOkVXfxFY=
+Received: from fainelli-desktop.igp.broadcom.net (fainelli-desktop.dhcp.broadcom.net [10.67.48.245])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mail-lvn-it-01.lvn.broadcom.net (Postfix) with ESMTPSA id 0989518041CAC4;
+	Mon, 19 Feb 2024 12:40:56 -0800 (PST)
+From: Florian Fainelli <florian.fainelli@broadcom.com>
+To: netdev@vger.kernel.org
+Cc: Florian Fainelli <florian.fainelli@broadcom.com>,
+	Jacob Keller <jacob.e.keller@intel.com>,
+	Doug Berger <opendmb@gmail.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Andrew Lunn <andrew@lunn.ch>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Russell King <linux@armlinux.org.uk>,
+	linux-kernel@vger.kernel.org (open list),
+	Justin Chen <justin.chen@broadcom.com>
+Subject: [PATCH net-next v2 3/3] Revert "net: bcmgenet: Ensure MDIO unregistration has clocks enabled"
+Date: Mon, 19 Feb 2024 12:40:53 -0800
+Message-Id: <20240219204053.471825-4-florian.fainelli@broadcom.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240219204053.471825-1-florian.fainelli@broadcom.com>
+References: <20240219204053.471825-1-florian.fainelli@broadcom.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -37,43 +60,30 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net-next] page_pool: disable direct recycling based on
- pool->cpuid on destroy
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <170837522588.25032.4338620984116633204.git-patchwork-notify@kernel.org>
-Date: Mon, 19 Feb 2024 20:40:25 +0000
-References: <20240215113905.96817-1-aleksander.lobakin@intel.com>
-In-Reply-To: <20240215113905.96817-1-aleksander.lobakin@intel.com>
-To: Alexander Lobakin <aleksander.lobakin@intel.com>
-Cc: davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
- pabeni@redhat.com, lorenzo@kernel.org, toke@redhat.com,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org
 
-Hello:
+This reverts commit 1b5ea7ffb7a3bdfffb4b7f40ce0d20a3372ee405 ("net:
+bcmgenet: Ensure MDIO unregistration has clocks enabled"). This is no
+longer necessary now that the MDIO bus controller has a clock that it
+can manage around the I/O accesses.
 
-This patch was applied to netdev/net-next.git (main)
-by Jakub Kicinski <kuba@kernel.org>:
+Reviewed-by: Jacob Keller <jacob.e.keller@intel.com>
+Signed-off-by: Florian Fainelli <florian.fainelli@broadcom.com>
+---
+ drivers/net/ethernet/broadcom/genet/bcmmii.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-On Thu, 15 Feb 2024 12:39:05 +0100 you wrote:
-> Now that direct recycling is performed basing on pool->cpuid when set,
-> memory leaks are possible:
-> 
-> 1. A pool is destroyed.
-> 2. Alloc cache is emptied (it's done only once).
-> 3. pool->cpuid is still set.
-> 4. napi_pp_put_page() does direct recycling basing on pool->cpuid.
-> 5. Now alloc cache is not empty, but it won't ever be freed.
-> 
-> [...]
-
-Here is the summary with links:
-  - [net-next] page_pool: disable direct recycling based on pool->cpuid on destroy
-    https://git.kernel.org/netdev/net-next/c/56ef27e3abe6
-
-You are awesome, thank you!
+diff --git a/drivers/net/ethernet/broadcom/genet/bcmmii.c b/drivers/net/ethernet/broadcom/genet/bcmmii.c
+index 7a21950da77c..9ada89355747 100644
+--- a/drivers/net/ethernet/broadcom/genet/bcmmii.c
++++ b/drivers/net/ethernet/broadcom/genet/bcmmii.c
+@@ -678,7 +678,5 @@ void bcmgenet_mii_exit(struct net_device *dev)
+ 	if (of_phy_is_fixed_link(dn))
+ 		of_phy_deregister_fixed_link(dn);
+ 	of_node_put(priv->phy_dn);
+-	clk_prepare_enable(priv->clk);
+ 	platform_device_unregister(priv->mii_pdev);
+-	clk_disable_unprepare(priv->clk);
+ }
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
+2.34.1
 
