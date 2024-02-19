@@ -1,146 +1,150 @@
-Received: from mail-oi1-f171.google.com (mail-oi1-f171.google.com [209.85.167.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out2-smtp.messagingengine.com (out2-smtp.messagingengine.com [66.111.4.26])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F87E381C4
-	for <linux-kernel@vger.kernel.org>; Mon, 19 Feb 2024 15:13:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F159A2C1AD;
+	Mon, 19 Feb 2024 15:14:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=66.111.4.26
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708355632; cv=none; b=L8tQbxyptuGAgbGolwJlS3IPfof6L/BQjlyqyoPGorkaJ5txv/qiBPlXP41YEnRmidptqnPpJTt/6l/ny9MNHJ548Iz12RbgzotMWEcYza27GU+iICbx0VmR4LeMdwXkl6ZKgCuZ3m9dbh/R9U8R76xFlr9ERcLGo/uz3okc1LE=
+	t=1708355674; cv=none; b=l/N4/J038hTNupyOY9oJOIJjGC36M8qJNdc2QEK10utbg+7JK8NHklHmqH4RG/EgVzdAO7vdWVY6ngRVptHPpgYmd5eyX9jwQZfEPZIuSTIowX7gmHwJWFhhDh6ZBg2ysM8H8BP7Nrdcg3ScM9ThoKEHzksHG04PWRU9U4t1CQY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708355632; c=relaxed/simple;
-	bh=KMXslpEu/8HD8HCC5Kf31taCUsV+DerQdmJgOo4z//Q=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=J2kfMV/iBiDl0rR5cnAT6vFUCvsJYa944+REdELtLmA6ge3NcPGiQeLdGJXENTA/Eek3GIqAnoBBHXO+X0p7YWkUIpEqd/VySLdPREWuVLdftNOgsxKNipdKYA6CF+208kjlw8x3L8V+69FkU6c5GEU3oiupr1VTihPF7SGXmHY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=Yh/yv4XL; arc=none smtp.client-ip=209.85.167.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1708355674; c=relaxed/simple;
+	bh=5MVJrTp+bNza9ZMAQf7AGBb6UwjGk8bOxNP0jEjDp8c=;
+	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
+	 Subject:Content-Type; b=fqCnWulLCXpqvyD5SKLrjuFa5WoRJ+MqojsVWHG8fpJMF/UvWbSyc620c+YVyAgTSqCpCTkX5ZHdWuJ5J8csTikFz1Yh9l1ikjTmEpw2XQ7z6aNKci7cgPmv+hmSZH9AOaU7lJKFMO72zjG/iMrwUjfRicRxDFEQ+xkU0bKpI5s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca; spf=pass smtp.mailfrom=squebb.ca; dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b=gk9BtmfL; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=oi7xwq5E; arc=none smtp.client-ip=66.111.4.26
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=squebb.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Yh/yv4XL"
-Received: by mail-oi1-f171.google.com with SMTP id 5614622812f47-3c132695f1bso3451666b6e.2
-        for <linux-kernel@vger.kernel.org>; Mon, 19 Feb 2024 07:13:51 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1708355629; x=1708960429; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=OOBPJAb082VtuNzjGfp3LwJ+/PnS72KaIK5i7r+LyKQ=;
-        b=Yh/yv4XLzMbggMTyTgTreJQk18whWQDeg10QeL/gCzmSw2vuRqHEpD7q58xPR6ujLV
-         9LBwIrKRoLp6v6pec/VuV7sDgU/AEQIvz4TBf0NbPeDkzPWo7xycfBwxRBrmJs/johOn
-         zz3er/g6WX9lN9MGDhe/Rnq9rHObhQ11ZAQF8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708355629; x=1708960429;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=OOBPJAb082VtuNzjGfp3LwJ+/PnS72KaIK5i7r+LyKQ=;
-        b=Zt/zGv/XLJdz7brY2QAGUCZ5tFb6VyVv4FI7QqlkcktDvSDnlo1NR0celCnbznug3X
-         vuk5IP/ejl1fN4fbNXF0B5xENbGPgf1NP9PFzRkkLZ62W0TQuV5DWOXQoiulYvVl1gYb
-         32/XJ+BuO7h2Mr86WsQB6C5u4gT/ajPf6jFlmX6iQ/QhgAwmA4ByXN9boYucBivqMT3i
-         kXZBq+3k/Fda8hj1h/r+N4KyB4h/YopDSo8vrL3Udm9chD6LLxpQEOEfJu7ykqnfP4/l
-         YqHEmwS0t6txNzjRn4f4j/52seGSFse/ekV/X9X6yd3f2nRZjCuTYUJEt8FeZC8nTj5O
-         2ZHA==
-X-Forwarded-Encrypted: i=1; AJvYcCVSFUrdQwqUsEdocDTXe5n2GnIVvpC5lzGSgKvwtRAyNX1Qd+7CIB5KUxTw/9lOOo0o1StAJAY30GEAYdiFU935txLFIaoBn69BWLiC
-X-Gm-Message-State: AOJu0YxFX7lofWAvo8vgkPk9Dg6iLDGQ59kFOzXtBAJDYJdEvXrPIFKQ
-	AQEixB9AE1zg5yGP5B3Y/rzC157tQbjjfTv+uJbEpv4uAPuGfsGNFd0vhun+UzCpy1jeIFwU40s
-	=
-X-Google-Smtp-Source: AGHT+IHxBeML0rJS/zPTKjQnU572YW/FecX+Smrm7HjV4nLQiPCVBDAaXXOSl9d8nShSnwCiXlNyCg==
-X-Received: by 2002:a05:6808:2108:b0:3c1:5f16:6c47 with SMTP id r8-20020a056808210800b003c15f166c47mr1806463oiw.11.1708355629665;
-        Mon, 19 Feb 2024 07:13:49 -0800 (PST)
-Received: from mail-qv1-f42.google.com (mail-qv1-f42.google.com. [209.85.219.42])
-        by smtp.gmail.com with ESMTPSA id t11-20020a056214154b00b0068cd399760fsm3276371qvw.61.2024.02.19.07.13.49
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 19 Feb 2024 07:13:49 -0800 (PST)
-Received: by mail-qv1-f42.google.com with SMTP id 6a1803df08f44-6818aa07d81so33527286d6.0
-        for <linux-kernel@vger.kernel.org>; Mon, 19 Feb 2024 07:13:49 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCUMJtxggIJOG2eEBsuhdWhTsSIGB6Paazljg5/TirYQrOLULSbB59kF+fYJPpTDGe+EJyEG/zyKCED5ETOvaxl008x7vbu+ed4Jhj2y
-X-Received: by 2002:a0c:e0d2:0:b0:68f:2ac1:99fe with SMTP id
- x18-20020a0ce0d2000000b0068f2ac199femr11694403qvk.45.1708355628695; Mon, 19
- Feb 2024 07:13:48 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b="gk9BtmfL";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="oi7xwq5E"
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+	by mailout.nyi.internal (Postfix) with ESMTP id CD78E5C00BF;
+	Mon, 19 Feb 2024 10:14:30 -0500 (EST)
+Received: from imap52 ([10.202.2.102])
+  by compute3.internal (MEProxy); Mon, 19 Feb 2024 10:14:30 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=squebb.ca; h=cc
+	:cc:content-type:content-type:date:date:from:from:in-reply-to
+	:in-reply-to:message-id:mime-version:references:reply-to:subject
+	:subject:to:to; s=fm2; t=1708355670; x=1708442070; bh=T1Y+CtE1cF
+	4upI7SQ3B2wjaUi/0ZYHr3yApmOLdpaRU=; b=gk9BtmfL+tPZq6aPjNQaI9mfe5
+	cmcDgnj54IuAcvNANj6ytwqd2q3rlp3SePviOn7bny9z5toTtqiCrUDoq0LgVjfA
+	fFEcfci4Sev/9uO18PgZDxVKhClMgab/6zu7Iq57I7ToffsQ99B99W+rwVJ6bW90
+	FQHnFPyUUpzGIAAjIrBAQJoICGnRDag8+7DLrLAUZf4ZBKTuIAdj01xcBFCS2G09
+	wrmQSUzn3aHgVMIoiiGySVkEQnQnckWdxBfna0GqwycWfgXt+7QlhlviZtNZJu9b
+	3VaVo4Ts+neKKkMIUHi7rmkTUlRcbQ1rJGQurAmVhnUUBprFmbSl7FS/vDyQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+	fm1; t=1708355670; x=1708442070; bh=T1Y+CtE1cF4upI7SQ3B2wjaUi/0Z
+	YHr3yApmOLdpaRU=; b=oi7xwq5Ex897J9GPcpa5sFsjXypOr99CyPbCKtMWcfrH
+	b9dKXDnUjoJBGZyCEoJg688vj/Ps4VCigPOep3tu5vprjBkLEMzBJ7AepJnRDrdA
+	ojtkk6BgrgcO5AT6QOyZi+UkYdXZM6hFrtNVlELakg4JbYXVfbnOVMxEzl47pqiH
+	Ah6H7uvlkVcGTgwmbRZAhZGZC13vixKSjldebZkk/B5/R7ij/LevIHK5ezz6iXUb
+	0pN9HWqO0CQ5/6ZkACINIkLz9WQNuhnhfpOMnD3zSxcqViq2DJSlh/50LcPjGX62
+	p+6hWCAmmd9XkzLufybv3psjc1vGU+RSD1sFQklDBw==
+X-ME-Sender: <xms:VnDTZRHTrusEQTUSWF9ekj1pBQKYiVY8RXEGJiApJ_xOiZaVQSE_zA>
+    <xme:VnDTZWVAswQUHjcQ_zFppl0MPyrVdH_G_uY3LLt1oMzsZbDSpoSxzf3Z2mr3rGDxY
+    7Dl5hFhUJ_gEI2JCZM>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrvdekgdejfecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpefofgggkfgjfhffhffvvefutgesthdtredtreertdenucfhrhhomhepfdforghr
+    khcurfgvrghrshhonhdfuceomhhpvggrrhhsohhnqdhlvghnohhvohesshhquhgvsggsrd
+    gtrgeqnecuggftrfgrthhtvghrnhepieeufeejieevteduvdekteefledtveffveduheff
+    feejudefvdeijeegudegkefhnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpe
+    hmrghilhhfrhhomhepmhhpvggrrhhsohhnqdhlvghnohhvohesshhquhgvsggsrdgtrg
+X-ME-Proxy: <xmx:VnDTZTKBqfYV4rMb0Kvm-lDKyUK5sYu58cdsT056ajmg1PIk9M4jKQ>
+    <xmx:VnDTZXFaOgukaX9Eetq4h4SAl4VUot-4kOMDZv2CE2pFttVDWbA6Nw>
+    <xmx:VnDTZXXMic8kG4uGR2V8r99zPzw7VK0tne3cKQHc6_4vMkd85-Xxzw>
+    <xmx:VnDTZefiXQ1SXCpTyhX44i0kwfJggbCTtZmnuk4aTeNz0yW0ftrVMQ>
+Feedback-ID: ibe194615:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+	id 81F94C60098; Mon, 19 Feb 2024 10:14:30 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.11.0-alpha0-144-ge5821d614e-fm-20240125.002-ge5821d61
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240108-rallybar-v4-1-a7450641e41b@chromium.org>
- <20240204105227.GB25334@pendragon.ideasonboard.com> <ca89eb86-a566-422c-9448-d8d5254d54b8@suse.com>
- <6aade777-d97c-4c65-b542-14ce5b39abb6@rowland.harvard.edu> <20240213104725.GC5012@pendragon.ideasonboard.com>
-In-Reply-To: <20240213104725.GC5012@pendragon.ideasonboard.com>
-From: Ricardo Ribalda <ribalda@chromium.org>
-Date: Mon, 19 Feb 2024 16:13:31 +0100
-X-Gmail-Original-Message-ID: <CANiDSCvqEkzD_-pUExT2Aci9t_tfFPWusnjST5iF-5N9yiob4g@mail.gmail.com>
-Message-ID: <CANiDSCvqEkzD_-pUExT2Aci9t_tfFPWusnjST5iF-5N9yiob4g@mail.gmail.com>
-Subject: Re: [PATCH v4] media: ucvideo: Add quirk for Logitech Rally Bar
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Alan Stern <stern@rowland.harvard.edu>, Oliver Neukum <oneukum@suse.com>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mauro Carvalho Chehab <mchehab@kernel.org>, 
-	linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-media@vger.kernel.org, stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Message-Id: <b37b5e6f-c719-4ff2-b16d-96716e681ca9@app.fastmail.com>
+In-Reply-To: <20240217022311.113879-1-mario.limonciello@amd.com>
+References: <20240217022311.113879-1-mario.limonciello@amd.com>
+Date: Mon, 19 Feb 2024 10:13:54 -0500
+From: "Mark Pearson" <mpearson-lenovo@squebb.ca>
+To: "Limonciello, Mario" <mario.limonciello@amd.com>,
+ "Hans de Goede" <hdegoede@redhat.com>
+Cc: 
+ "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] platform/x86: thinkpad_acpi: Only update profile if successfully
+ converted
+Content-Type: text/plain
 
-Hi Oliver
+Hi Mario
 
-Would you prefer a version like this?
-
-https://lore.kernel.org/all/20231222-rallybar-v2-1-5849d62a9514@chromium.org/
-
-If so I can re-submit a version with the 3 vid/pids.  Alan, would you
-be happy with that?
-
-Regards!
-
-On Tue, 13 Feb 2024 at 11:47, Laurent Pinchart
-<laurent.pinchart@ideasonboard.com> wrote:
+On Fri, Feb 16, 2024, at 9:23 PM, Mario Limonciello wrote:
+> Randomly a Lenovo Z13 will trigger a kernel warning traceback from this
+> condition:
 >
-> On Mon, Feb 12, 2024 at 02:04:31PM -0500, Alan Stern wrote:
-> > On Mon, Feb 12, 2024 at 01:22:42PM +0100, Oliver Neukum wrote:
-> > > On 04.02.24 11:52, Laurent Pinchart wrote:
-> > > > Hi Ricardo,
-> > > >
-> > > > Thank you for the patch.
-> > >
-> > > Hi,
-> > >
-> > > sorry for commenting on this late, but this patch has
-> > > a fundamental issue. In fact this issue is the reason the
-> > > handling for quirks is in usbcore at all.
-> > >
-> > > If you leave the setting/clearing of this flag to a driver you
-> > > are introducing a race condition. The driver may or may not be
-> > > present at the time a device is enumerated. And you have
-> > > no idea how long the autosuspend delay is on a system
-> > > and what its default policy is regarding suspending
-> > > devices.
-> > > That means that a device can have been suspended and
-> > > resumed before it is probed. On a device that needs
-> > > RESET_RESUME, we are in trouble.
-> >
-> > Not necessarily.  If the driver knows that one of these devices may
-> > already have been suspend and resumed, it can issue its own preemptive
-> > reset at probe time.
-> >
-> > > The inverse issue will arise if a device does not react
-> > > well to RESET_RESUME. You cannot rule out that a device
-> > > that must not be reset will be reset.
-> >
-> > That's a separate issue, with its own list of potential problems.
-> >
-> > > I am sorry, but it seems to me that the exceptions need
-> > > to go into usbcore.
-> >
-> > If we do then we may want to come up with a better scheme for seeing
-> > which devices need to have a quirk flag set.  A static listing probably
-> > won't be good enough; the decision may have to be made dynamically.
+> ```
+> if (WARN_ON((profile < 0) || (profile >= ARRAY_SIZE(profile_names))))
+> ```
 >
-> I don't mind either way personally. Oliver, could you try to find a good
-> solution with Ricardo ? I'll merge the outcome.
+> This happens because thinkpad-acpi always assumes that
+> convert_dytc_to_profile() successfully updated the profile. On the
+> contrary a condition can occur that when dytc_profile_refresh() is called
+> the profile doesn't get updated as there is a -EOPNOTSUPP branch.
 >
-> --
-> Regards,
+> Catch this situation and avoid updating the profile. Also log this into
+> dynamic debugging in case any other modes should be added in the future.
 >
-> Laurent Pinchart
+> Fixes: c3bfcd4c6762 ("platform/x86: thinkpad_acpi: Add platform profile 
+> support")
+> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+> ---
+> BTW - This isn't new.  I've been seeing this a long time, but I just 
+> finally
+> got annoyed enough by it to find the code that triggered the sequence.
 
+I've never seen this on my systems - is there anything in particular that can be used to reproduce the issue? I'll follow up with the FW team as setting the profile shouldn't (to my knowledge) fail. Agreed it should be handled if it does fail though.
 
+>
+>  drivers/platform/x86/thinkpad_acpi.c | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/platform/x86/thinkpad_acpi.c 
+> b/drivers/platform/x86/thinkpad_acpi.c
+> index c4895e9bc714..5ecd9d33250d 100644
+> --- a/drivers/platform/x86/thinkpad_acpi.c
+> +++ b/drivers/platform/x86/thinkpad_acpi.c
+> @@ -10308,6 +10308,7 @@ static int convert_dytc_to_profile(int 
+> funcmode, int dytcmode,
+>  		return 0;
+>  	default:
+>  		/* Unknown function */
+> +		pr_debug("unknown function 0x%x\n", funcmode);
+>  		return -EOPNOTSUPP;
+>  	}
+>  	return 0;
+> @@ -10493,8 +10494,8 @@ static void dytc_profile_refresh(void)
+>  		return;
+> 
+>  	perfmode = (output >> DYTC_GET_MODE_BIT) & 0xF;
+> -	convert_dytc_to_profile(funcmode, perfmode, &profile);
+> -	if (profile != dytc_current_profile) {
+> +	err = convert_dytc_to_profile(funcmode, perfmode, &profile);
+> +	if (!err && profile != dytc_current_profile) {
+>  		dytc_current_profile = profile;
+>  		platform_profile_notify();
+>  	}
+> -- 
+> 2.34.1
 
--- 
-Ricardo Ribalda
+Looks good to me. Thank you!
+Reviewed-by Mark Pearson <mpearson-lenovo@squebb.ca>
+
+Mark
