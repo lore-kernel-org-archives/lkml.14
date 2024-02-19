@@ -1,208 +1,137 @@
-Received: from out-187.mta0.migadu.com (out-187.mta0.migadu.com [91.218.175.187])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC646481A3
-	for <linux-kernel@vger.kernel.org>; Mon, 19 Feb 2024 20:13:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.187
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AF6953E14;
+	Mon, 19 Feb 2024 20:13:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708373594; cv=none; b=Mz3UdHnVi3ZfGb3zV4Q/AJpyE3Bnde1UHjTE5quJJ761v4lPtztOfw8I+TLV5jwMWjY3q8oxv3J+NQUvwEoMZr4oTqgllqW3SoNg/AlyI2AH0/e9INR0gmf1y3u3NeyPZjt9X5RAnkUfzlgtgMS4blxsrgzlTWnRDTzp7RqzaNE=
+	t=1708373598; cv=none; b=hG99hK8cswFwZLHYdYAYEEjSBHk7zULChJkKdvs/PO8vPk/v8lG+3J40mb7WmXYFKv3MgaFpoH7CyyERvn9wxy6Os+ggYovG74GhDjeaeFNUydJdhsxgZwZMYGP8ELUQCgSnd5z3B3ssivdiXdNlndX3eunMr2xgHGT2pM0Q6OA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708373594; c=relaxed/simple;
-	bh=G2kwsajV3/BBtY00VbesBoBB8bLmiTJnlVx2H/N2aLg=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Za1cLZL2SGtFjUWjdorL5YYUuFfXC1QhZ1e42g2Zf1rhLnMoki2oNo+QzUdIe6v37i6S784iRg+0ULFdnHj71uYn2DMAnqeG1CQBsxVuyugo2N1Lci4DuImq/CEHir9prgNZlielmTJiL4t5niSUd2C+4FgF2YeLqQJl5K3Q2N8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pqrs.dk; spf=pass smtp.mailfrom=pqrs.dk; dkim=pass (2048-bit key) header.d=pqrs.dk header.i=@pqrs.dk header.b=xoz8tY5e; arc=none smtp.client-ip=91.218.175.187
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pqrs.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pqrs.dk
+	s=arc-20240116; t=1708373598; c=relaxed/simple;
+	bh=tx/TfnzZDoT1xc33L7S2O95jgvmeHSm+n3Hd+KXFKug=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=NDXshKvqL6GqBXMhiKY+JGb3gfcO6S/H60J35jdQRbue727YIIe5amixIB6mlM5tgWCB/SlbL0wOuclJhIcedxAk6G56mmji/OoMIxgv+iRWcAIO0jJLaWmypixc4gyrCluTy0VG4G2bc9OSBLTAkCw50jFm3p1Jl7KmX8SWh40=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=F+E0kHhs; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=pqrs.dk header.i=@pqrs.dk header.b="xoz8tY5e"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pqrs.dk; s=key1;
-	t=1708373587;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Gr6bVcKnfspMMRxxIcvGJZKYsuRR76HeAUpuoZm3aKc=;
-	b=xoz8tY5ewsOlJ7oHXaqTxeiYFaMy6W01horFeinqzhUWwulruOLAhCSDhnTqMUKCkErvJZ
-	fLt3oYWHpdWgyvKgkHtU18mFqNeIJRsvqXouAAKknv68orETLgmmpAd3vdAg0771VxCYQ+
-	ZMj8MBgOzoo503u1TxXEWdfBpXJ3x5A7saqC+lAf/Aj0M8Z8OjmudBGtWkBydbfJIKhzXy
-	+Xj4b5EVrguAtukQRLJRwMtwbAEMlzEcdEU7z4TXBFpj2QfZq1SQvNTsmpPChY4OoVt7tt
-	TZW3xvoU1PntWA2HCvQG/x+8Ylj1oLninxrk7n+Sm5Hq8gtJgZEZWrwqJJYEPw==
-From: =?utf-8?q?Alvin_=C5=A0ipraga?= <alvin@pqrs.dk>
-Date: Mon, 19 Feb 2024 21:12:58 +0100
-Subject: [PATCH v3 1/2] drm/bridge: adv7511: rearrange hotplug work code
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="F+E0kHhs"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CFBF4C433C7;
+	Mon, 19 Feb 2024 20:13:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1708373597;
+	bh=tx/TfnzZDoT1xc33L7S2O95jgvmeHSm+n3Hd+KXFKug=;
+	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
+	b=F+E0kHhsWnbpdV4fYP618TSw+he67latBuAV2MowUC+oXcBU04zMlV0vllkfTjbzD
+	 up4tIWcbCqgtBx5Y4SMH9Jiz3mklIxyGJ3Wq+DnQtGHOvqAFhmtCl8F/XMnE6UeBuv
+	 4HxhPuE3c3r36XHap/50FJsS+y4bFOR+/p0FfsR4PCrB3aSvPaXVPOOPaZrcVNq9hJ
+	 ezE3QeHhjtclg5u7LcD5JttuEwHtJd7fo90Ixo4k9ah6T5o8bfh+T3ADLSg6/KqMF4
+	 2qEKuogN4WkPrvMB5R2ND6KFAhzYxip/UdUQvxDZo5q1bBxAYs2aJolUX1cj3tLjYj
+	 eptSBGVuhGtyA==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20240219-adv7511-cec-edid-v3-1-445aed2f1cd7@bang-olufsen.dk>
-References: <20240219-adv7511-cec-edid-v3-0-445aed2f1cd7@bang-olufsen.dk>
-In-Reply-To: <20240219-adv7511-cec-edid-v3-0-445aed2f1cd7@bang-olufsen.dk>
-To: Andrzej Hajda <andrzej.hajda@intel.com>, 
- Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, 
- Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, 
- Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
- David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
- Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
- =?utf-8?q?Alvin_=C5=A0ipraga?= <alsi@bang-olufsen.dk>
-X-Migadu-Flow: FLOW_OUT
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Mon, 19 Feb 2024 20:13:14 +0000
+Message-Id: <CZ9BWAZ1GRZG.96ETQPKT8ER4@seitikki>
+Cc: <linux-integrity@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: =?utf-8?q?Re:_init=5Ftis()_takes_50_ms_on_Dell_XPS_13_9360_=E2=80=93_almo?= =?utf-8?q?st_10_%_of_whole_time_until_initrd?=
+From: "Jarkko Sakkinen" <jarkko@kernel.org>
+To: "Paul Menzel" <pmenzel@molgen.mpg.de>, "Peter Huewe" <peterhuewe@gmx.de>
+X-Mailer: aerc 0.15.2
+References: <0eba23c7-f62a-4a85-a383-60dec9d198f9@molgen.mpg.de>
+ <CZ6UFX5R09DD.EWDFS24L16G1@seitikki>
+ <512bdab4-1779-4407-aa7b-57d1af015fc1@molgen.mpg.de>
+In-Reply-To: <512bdab4-1779-4407-aa7b-57d1af015fc1@molgen.mpg.de>
 
-From: Alvin Šipraga <alsi@bang-olufsen.dk>
+On Fri Feb 16, 2024 at 10:20 PM UTC, Paul Menzel wrote:
+> Dear Jarkko,
+>
+>
+> Thank you for your reply.
+>
+> Am 16.02.24 um 23:07 schrieb Jarkko Sakkinen:
+> > On Wed Feb 14, 2024 at 3:10 PM UTC, Paul Menzel wrote:
+>
+> >> Trying to optimize the boot time of Linux on the Dell XPS 13 9360,
+> >> probing of MSFT0101:00 takes 52 ms, making `init_tis()` taking almost =
+10
+> >> % alone until starting the initrd:
+> >>
+> >>       [    0.000000] Linux version 6.8.0-rc4 (build@bohemianrhapsody.m=
+olgen.mpg.de) (gcc (Debian 13.2.0-13) 13.2.0,
+> >> GNU ld (GNU Binutils for Debian) 2.42) #20 SMP PREEMPT_DYNAMIC Mon Feb=
+ 12 09:40:49 CET 2024
+> >>       [=E2=80=A6]
+> >>       [    0.000000] DMI: Dell Inc. XPS 13 9360/0596KF, BIOS 2.21.0 06=
+/02/2022
+> >>       [=E2=80=A6]
+> >>       [    0.320057] calling  init_tis+0x0/0x100 @ 1
+> >>       [    0.332190] tpm_tis MSFT0101:00: 2.0 TPM (device-id 0xFE, rev=
+-id 4)
+> >>       [    0.372164] probe of MSFT0101:00 returned 0 after 52101 usecs
+> >>       [    0.372186] initcall init_tis+0x0/0x100 returned 0 after 5212=
+7 usecs
+> >>       [=E2=80=A6]
+> >>       [    0.588643] Freeing unused decrypted memory: 2036K
+> >>       [    0.589068] Freeing unused kernel image (initmem) memory: 397=
+6K
+> >>       [    0.606115] Write protecting the kernel read-only data: 22528=
+k
+> >>       [    0.606527] Freeing unused kernel image (rodata/data gap) mem=
+ory: 276K
+> >>       [    0.652327] x86/mm: Checked W+X mappings: passed, no W+X page=
+s found.
+> >>       [    0.652329] x86/mm: Checking user space page tables
+> >>       [    0.695968] x86/mm: Checked W+X mappings: passed, no W+X page=
+s found.
+> >>       [    0.696104] Run /init as init process
+> >>       [=E2=80=A6]
+> >>
+> >> For users, where boot time is most important, can this be moved out of
+> >> the hot path somehow?
+> >=20
+> > It can't be IRQ probing as IRQ's are *disabled* by default. So we can
+> > disclose that.
+> >=20
+> > I think the delay is caused by tpm2_probe(), which is called by
+> > tpm_tis_core_init(). It sends an idempotent TPM2 command to the TPM
+> > chip to know whether it is TPM 1.x or TPM2 chip.
+> >=20
+> > That detection is definitely required.
+> >=20
+> > Even some other subsystems in the kernel require to know the correct
+> > TPM version, like hwrng and IMA.
+> Understood. The TPM in my laptop does not change, so could this be=20
+> cached, or does a Linux CLI paramater exist, that I can specify the versi=
+on?
 
-In preparation for calling EDID helpers from the hotplug work, move the
-hotplug work below the EDID helper section. No functional change.
+Oops, I totally ignored tpm_chip_register() which runs more TPM commands:
 
-Reviewed-by: Robert Foss <rfoss@kernel.org>
-Signed-off-by: Alvin Šipraga <alsi@bang-olufsen.dk>
----
- drivers/gpu/drm/bridge/adv7511/adv7511_drv.c | 120 ++++++++++++++-------------
- 1 file changed, 62 insertions(+), 58 deletions(-)
+1. PCR alloction: tpm2_get_pcr_allocation()
+2. self-test: tpm2_do_selftest()
 
-diff --git a/drivers/gpu/drm/bridge/adv7511/adv7511_drv.c b/drivers/gpu/drm/bridge/adv7511/adv7511_drv.c
-index 8be235144f6d..5ffc5904bd59 100644
---- a/drivers/gpu/drm/bridge/adv7511/adv7511_drv.c
-+++ b/drivers/gpu/drm/bridge/adv7511/adv7511_drv.c
-@@ -406,64 +406,6 @@ static void adv7511_power_off(struct adv7511 *adv7511)
-  * Interrupt and hotplug detection
-  */
- 
--static bool adv7511_hpd(struct adv7511 *adv7511)
--{
--	unsigned int irq0;
--	int ret;
--
--	ret = regmap_read(adv7511->regmap, ADV7511_REG_INT(0), &irq0);
--	if (ret < 0)
--		return false;
--
--	if (irq0 & ADV7511_INT0_HPD) {
--		regmap_write(adv7511->regmap, ADV7511_REG_INT(0),
--			     ADV7511_INT0_HPD);
--		return true;
--	}
--
--	return false;
--}
--
--static void adv7511_hpd_work(struct work_struct *work)
--{
--	struct adv7511 *adv7511 = container_of(work, struct adv7511, hpd_work);
--	enum drm_connector_status status;
--	unsigned int val;
--	int ret;
--
--	ret = regmap_read(adv7511->regmap, ADV7511_REG_STATUS, &val);
--	if (ret < 0)
--		status = connector_status_disconnected;
--	else if (val & ADV7511_STATUS_HPD)
--		status = connector_status_connected;
--	else
--		status = connector_status_disconnected;
--
--	/*
--	 * The bridge resets its registers on unplug. So when we get a plug
--	 * event and we're already supposed to be powered, cycle the bridge to
--	 * restore its state.
--	 */
--	if (status == connector_status_connected &&
--	    adv7511->connector.status == connector_status_disconnected &&
--	    adv7511->powered) {
--		regcache_mark_dirty(adv7511->regmap);
--		adv7511_power_on(adv7511);
--	}
--
--	if (adv7511->connector.status != status) {
--		adv7511->connector.status = status;
--
--		if (adv7511->connector.dev) {
--			if (status == connector_status_disconnected)
--				cec_phys_addr_invalidate(adv7511->cec_adap);
--			drm_kms_helper_hotplug_event(adv7511->connector.dev);
--		} else {
--			drm_bridge_hpd_notify(&adv7511->bridge, status);
--		}
--	}
--}
--
- static int adv7511_irq_process(struct adv7511 *adv7511, bool process_hpd)
- {
- 	unsigned int irq0, irq1;
-@@ -600,6 +542,68 @@ static int adv7511_get_edid_block(void *data, u8 *buf, unsigned int block,
- 	return 0;
- }
- 
-+/* -----------------------------------------------------------------------------
-+ * Hotplug handling
-+ */
-+
-+static bool adv7511_hpd(struct adv7511 *adv7511)
-+{
-+	unsigned int irq0;
-+	int ret;
-+
-+	ret = regmap_read(adv7511->regmap, ADV7511_REG_INT(0), &irq0);
-+	if (ret < 0)
-+		return false;
-+
-+	if (irq0 & ADV7511_INT0_HPD) {
-+		regmap_write(adv7511->regmap, ADV7511_REG_INT(0),
-+			     ADV7511_INT0_HPD);
-+		return true;
-+	}
-+
-+	return false;
-+}
-+
-+static void adv7511_hpd_work(struct work_struct *work)
-+{
-+	struct adv7511 *adv7511 = container_of(work, struct adv7511, hpd_work);
-+	enum drm_connector_status status;
-+	unsigned int val;
-+	int ret;
-+
-+	ret = regmap_read(adv7511->regmap, ADV7511_REG_STATUS, &val);
-+	if (ret < 0)
-+		status = connector_status_disconnected;
-+	else if (val & ADV7511_STATUS_HPD)
-+		status = connector_status_connected;
-+	else
-+		status = connector_status_disconnected;
-+
-+	/*
-+	 * The bridge resets its registers on unplug. So when we get a plug
-+	 * event and we're already supposed to be powered, cycle the bridge to
-+	 * restore its state.
-+	 */
-+	if (status == connector_status_connected &&
-+	    adv7511->connector.status == connector_status_disconnected &&
-+	    adv7511->powered) {
-+		regcache_mark_dirty(adv7511->regmap);
-+		adv7511_power_on(adv7511);
-+	}
-+
-+	if (adv7511->connector.status != status) {
-+		adv7511->connector.status = status;
-+
-+		if (adv7511->connector.dev) {
-+			if (status == connector_status_disconnected)
-+				cec_phys_addr_invalidate(adv7511->cec_adap);
-+			drm_kms_helper_hotplug_event(adv7511->connector.dev);
-+		} else {
-+			drm_bridge_hpd_notify(&adv7511->bridge, status);
-+		}
-+	}
-+}
-+
- /* -----------------------------------------------------------------------------
-  * ADV75xx helpers
-  */
+(in some cases also tpm2_startup())
 
--- 
-2.43.1
+Just probe (a single trivial TPM command doing zero calcuation) causing
+that long delay would not make sense, so sorry for misleading with this!
 
+So the problem here is in-kernel clients of TPM that initialize during
+the boot such as IMA and hwrng.
+
+The call for tpm_chip_register() is in the tail of each chip driver,
+i.e. it is in the "overall" framework and thus theoretically could be
+relocated to a workqueue. This requires tho changes to all clients and
+error code for the case where tpm_transmit() flushes this workqueue but
+initialization fails.
+
+So *I think* (was not fully scientifical feasibility study) it is
+possible but it is not as small change as you would first think.=20
+
+> Kind regards,
+>
+> Paul
+
+BR, Jarkko
