@@ -1,641 +1,201 @@
-Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
+Received: from out199-15.us.a.mail.aliyun.com (out199-15.us.a.mail.aliyun.com [47.90.199.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4ED3C36B1D;
-	Mon, 19 Feb 2024 14:04:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CBD8381BD;
+	Mon, 19 Feb 2024 14:04:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=47.90.199.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708351480; cv=none; b=VaoqWNNOZlHoIkP+VH1uhFVYGkvBk0zn7n/JU8zkBTirR1sH8f4ieHwvhHSiFocqqA5v3LfnIXflRZEOca0JjVnuIDHD6tCKP9Q0WZbqc8gS/xxdlOXhRHLnOTxT3MgknyG/qwz3ls2RvhBHYHDXODQw2NzWomJZKvL0buynHME=
+	t=1708351496; cv=none; b=A0nRmhDTqdX0Yz4KHimMmHKZXMIMZ4yjyQkZjOEQV3E+Tm72VNuh6jjUWZA66iBJV4NQt0VSgp6qXqXKO+X9BdnLdmIOnDffarjOw+CDLSB7M+aMu5hjS6j9pFiEfY2z4Iea3YYvUyfRCLxMSVaMIJRu3su8GA1UVCB1x8t3jSs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708351480; c=relaxed/simple;
-	bh=H2jFxxdfnk4+Rkcsvl3z798zAXCcL8sKCE+2lcq5xgo=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=D2g9Dh1pbyliFrT2y3Yaa8wywkJcrI5hJ78GlKnlPFQCwz2jRUM740lF55XnrM6FC3zorkH32StyDSwOfCfqB8UULPdHtui0ykQwwAbYNftAbHi4YzwQXXmSeyFYckbq1FHh4Bz9jUksy8QlNcLx3jce9VgfuoOQ5aJmhRyMLPY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=obT7Q1iz; arc=none smtp.client-ip=185.132.182.106
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+	s=arc-20240116; t=1708351496; c=relaxed/simple;
+	bh=zXE55Wn1vwBRvTQKi9WOqRZmT86viMgSf4go7Yu3bbg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=owAQlgxIHuzo3aggXv/2qIjGNDHTZnJZf/dR4p35y2/QYBHHZ7ipSlvj+qndX9rv5VA7rV8A2on0D5RO2cJzOcgDZ3H4dcoq0yxgmw6IwP5nlv2fxxCmOLZ1oofDkP/lbZ6ZCjI11PPawllKFU9NsDRu/W/VRvjDiQagWKSUUuQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=jUCOuyn9; arc=none smtp.client-ip=47.90.199.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="obT7Q1iz"
-Received: from pps.filterd (m0288072.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 41J8nQAV029041;
-	Mon, 19 Feb 2024 15:04:31 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	from:to:cc:subject:date:message-id:in-reply-to:references
-	:mime-version:content-transfer-encoding:content-type; s=
-	selector1; bh=tSef8UcH5d0zF+hKFDnSN47OH0VRaAKhA+z8AVj238I=; b=ob
-	T7Q1iz5EH94OoXl3MaC0pmYMc8nEPDyykhqFhZjHoJ7NiOaYcmSf7hr5VykIJKtx
-	4fVmHuP5RxF0TeL4aOEGzAf3slf/8udIT09F/o/outFxc+rETBo1G7Hl/g/SkAJn
-	eFCYK3TMG9yfxX+DUqmHwAdt8HLOip+2FKbR3RhlDBoLkwd2u1BBDs9a3gV0ZJWT
-	XplN57nE3VwX549FhtF1wLe7zBD6wN+GgPABVKjSgTmEhu4V7TOju8dDmx3Iqg8/
-	x4b2sy7WJX9RS63/+nGLOq1vm9g/1AEPK7dRVyT4tix3D6xb1qkuklhFV4iuPxh8
-	d4pDQ4VAeMamoMfXRiSg==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3wak3m78j4-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 19 Feb 2024 15:04:30 +0100 (CET)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id A840540044;
-	Mon, 19 Feb 2024 15:04:27 +0100 (CET)
-Received: from Webmail-eu.st.com (shfdag1node3.st.com [10.75.129.71])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 6A11026A990;
-	Mon, 19 Feb 2024 15:03:59 +0100 (CET)
-Received: from localhost (10.201.21.177) by SHFDAG1NODE3.st.com (10.75.129.71)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Mon, 19 Feb
- 2024 15:03:59 +0100
-From: Christophe Kerello <christophe.kerello@foss.st.com>
-To: <krzysztof.kozlowski@linaro.org>, <robh+dt@kernel.org>,
-        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>
-CC: <linux-kernel@vger.kernel.org>, <linux-stm32@st-md-mailman.stormreply.com>,
-        <devicetree@vger.kernel.org>,
-        Christophe Kerello <christophe.kerello@foss.st.com>
-Subject: [PATCH v2 3/5] memory: stm32-fmc2-ebi: add MP25 support
-Date: Mon, 19 Feb 2024 15:02:00 +0100
-Message-ID: <20240219140202.85680-4-christophe.kerello@foss.st.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240219140202.85680-1-christophe.kerello@foss.st.com>
-References: <20240219140202.85680-1-christophe.kerello@foss.st.com>
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="jUCOuyn9"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1708351474; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=BNkhxppDcbFezZ4gGJ8AqJVbJcBTfeeZ+zXUxQ8+TPE=;
+	b=jUCOuyn91MI2xA/eVE+GsD/JFOoJByBj0SaPY53TCHgq9g9L5cUwM0JoLersIFC7zh5Xhnok6v7lfxNBj38xhv8HnjT6SIJPsu0hSKgAFZFSzEirN7LV97QHCoMnswY5zkZ2JMwlUOL4VN19YSopr42jJyTjydorIGNDIuZn71s=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R141e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045176;MF=guwen@linux.alibaba.com;NM=1;PH=DS;RN=17;SR=0;TI=SMTPD_---0W0tkCQI_1708351472;
+Received: from 30.221.128.181(mailfrom:guwen@linux.alibaba.com fp:SMTPD_---0W0tkCQI_1708351472)
+          by smtp.aliyun-inc.com;
+          Mon, 19 Feb 2024 22:04:33 +0800
+Message-ID: <8a333c58-4a74-4a1c-9680-a0b9b4020a62@linux.alibaba.com>
+Date: Mon, 19 Feb 2024 22:04:32 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: EQNCAS1NODE3.st.com (10.75.129.80) To SHFDAG1NODE3.st.com
- (10.75.129.71)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-02-19_10,2024-02-19_01,2023-05-22_02
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next 00/15] net/smc: implement loopback-ism used by
+ SMC-D
+To: Alexandra Winter <wintera@linux.ibm.com>, wenjia@linux.ibm.com,
+ hca@linux.ibm.com, gor@linux.ibm.com, agordeev@linux.ibm.com,
+ davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+ pabeni@redhat.com, jaka@linux.ibm.com
+Cc: borntraeger@linux.ibm.com, svens@linux.ibm.com,
+ alibuda@linux.alibaba.com, tonylu@linux.alibaba.com,
+ linux-s390@vger.kernel.org, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20240111120036.109903-1-guwen@linux.alibaba.com>
+ <83b9d600-339c-4c9f-860d-ab4539a0ae6b@linux.ibm.com>
+From: Wen Gu <guwen@linux.alibaba.com>
+In-Reply-To: <83b9d600-339c-4c9f-860d-ab4539a0ae6b@linux.ibm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Add the support of the revision 2 of FMC2 IP.
-     - PCSCNTR register has been removed,
-     - CFGR register has been added,
-     - the bit used to enable the IP has moved from BCR1 to CFGR,
-     - the timeout for CEx deassertion has moved from PCSCNTR to BCRx,
-     - the continuous clock enable has moved from BCR1 to CFGR,
-     - the clk divide ratio has moved from BCR1 to CFGR.
 
-The MP1 SoCs have only one signal to manage all the controllers (NWAIT).
-The MP25 SOC has one RNB signal for the NAND controller and one NWAIT
-signal for the memory controller.
 
-Let's use a platform data structure for parameters that will differ
-between MP1 and MP25.
+On 2024/2/6 20:18, Alexandra Winter wrote:
+> 
+> 
+> On 11.01.24 13:00, Wen Gu wrote:
+>> This patch set acts as the second part of the new version of [1] (The first
+>> part can be referred from [2]), the updated things of this version are listed
+>> at the end.
+>>
+>> # Background
+>>
+>> SMC-D is now used in IBM z with ISM function to optimize network interconnect
+>> for intra-CPC communications. Inspired by this, we try to make SMC-D available
+>> on the non-s390 architecture through a software-implemented virtual ISM device,
+>> that is the loopback-ism device here, to accelerate inter-process or
+>> inter-containers communication within the same OS instance.
+> 
+> 
+> Hello Wen Gu,
+> 
+> thank you very much for this patchset. I have been looking at it a bit.
+> I installed in on a testserver, but did not yet excercise the loopback-ism device.
+> I want to continue investigations, but daily work interferes, so I thought I
+> send you some comments now. So this is not at all a code review, but some
+> thoughts and observations about the general concept.
+> 
 
-Signed-off-by: Christophe Kerello <christophe.kerello@foss.st.com>
----
-Changes in v2:
- - V1 patch 3, 4 and 5 have been squashed and reworked.
- - a platform data structure is handling the difference between MP1 and MP25.
+Thank you very much, Sandy.
 
- drivers/memory/stm32-fmc2-ebi.c | 370 ++++++++++++++++++++++++++++++--
- 1 file changed, 356 insertions(+), 14 deletions(-)
+> 
+> In [1] there was a discussion about an abstraction layer between smc-d and the
+> ism devices.
+> I am not sure what you are proposing now, is it an smc-d feature or independent of smc?
+> In 3/15 you say it is part of the SMC module, but then it has its own device entry.
+> Didn't you want to use it for other things as well? Or is it an SMC-D only feature?
+> Is it a device (Config help: "kind of virtual device")? Or an SMC-D feature?
+> 
 
-diff --git a/drivers/memory/stm32-fmc2-ebi.c b/drivers/memory/stm32-fmc2-ebi.c
-index 6eacfbdd300c..bd823e93e7d1 100644
---- a/drivers/memory/stm32-fmc2-ebi.c
-+++ b/drivers/memory/stm32-fmc2-ebi.c
-@@ -20,6 +20,7 @@
- #define FMC2_BCR(x)			((x) * 0x8 + FMC2_BCR1)
- #define FMC2_BTR(x)			((x) * 0x8 + FMC2_BTR1)
- #define FMC2_PCSCNTR			0x20
-+#define FMC2_CFGR			0x20
- #define FMC2_BWTR1			0x104
- #define FMC2_BWTR(x)			((x) * 0x8 + FMC2_BWTR1)
- 
-@@ -42,6 +43,7 @@
- #define FMC2_BCR_ASYNCWAIT		BIT(15)
- #define FMC2_BCR_CPSIZE			GENMASK(18, 16)
- #define FMC2_BCR_CBURSTRW		BIT(19)
-+#define FMC2_BCR_CSCOUNT		GENMASK(21, 20)
- #define FMC2_BCR_NBLSET			GENMASK(23, 22)
- 
- /* Register: FMC2_BTRx/FMC2_BWTRx */
-@@ -58,6 +60,11 @@
- #define FMC2_PCSCNTR_CSCOUNT		GENMASK(15, 0)
- #define FMC2_PCSCNTR_CNTBEN(x)		BIT((x) + 16)
- 
-+/* Register: FMC2_CFGR */
-+#define FMC2_CFGR_CLKDIV		GENMASK(19, 16)
-+#define FMC2_CFGR_CCLKEN		BIT(20)
-+#define FMC2_CFGR_FMC2EN		BIT(31)
-+
- #define FMC2_MAX_EBI_CE			4
- #define FMC2_MAX_BANKS			5
- 
-@@ -74,6 +81,11 @@
- #define FMC2_BCR_MTYP_PSRAM		0x1
- #define FMC2_BCR_MTYP_NOR		0x2
- 
-+#define FMC2_BCR_CSCOUNT_0		0x0
-+#define FMC2_BCR_CSCOUNT_1		0x1
-+#define FMC2_BCR_CSCOUNT_64		0x2
-+#define FMC2_BCR_CSCOUNT_256		0x3
-+
- #define FMC2_BXTR_EXTMOD_A		0x0
- #define FMC2_BXTR_EXTMOD_B		0x1
- #define FMC2_BXTR_EXTMOD_C		0x2
-@@ -88,6 +100,7 @@
- #define FMC2_BTR_CLKDIV_MAX		0xf
- #define FMC2_BTR_DATLAT_MAX		0xf
- #define FMC2_PCSCNTR_CSCOUNT_MAX	0xff
-+#define FMC2_CFGR_CLKDIV_MAX		0xf
- 
- enum stm32_fmc2_ebi_bank {
- 	FMC2_EBI1 = 0,
-@@ -101,7 +114,8 @@ enum stm32_fmc2_ebi_register_type {
- 	FMC2_REG_BCR = 1,
- 	FMC2_REG_BTR,
- 	FMC2_REG_BWTR,
--	FMC2_REG_PCSCNTR
-+	FMC2_REG_PCSCNTR,
-+	FMC2_REG_CFGR
- };
- 
- enum stm32_fmc2_ebi_transaction_type {
-@@ -132,16 +146,37 @@ enum stm32_fmc2_ebi_cpsize {
- 	FMC2_CPSIZE_1024 = 1024
- };
- 
-+enum stm32_fmc2_ebi_cscount {
-+	FMC2_CSCOUNT_0 = 0,
-+	FMC2_CSCOUNT_1 = 1,
-+	FMC2_CSCOUNT_64 = 64,
-+	FMC2_CSCOUNT_256 = 256
-+};
-+
-+struct stm32_fmc2_ebi;
-+
-+struct stm32_fmc2_ebi_data {
-+	const struct stm32_fmc2_prop *child_props;
-+	unsigned int nb_child_props;
-+	u32 fmc2_enable_reg;
-+	u32 fmc2_enable_bit;
-+	int (*nwait_used_by_ctrls)(struct stm32_fmc2_ebi *ebi);
-+	void (*set_setup)(struct stm32_fmc2_ebi *ebi);
-+	int (*save_setup)(struct stm32_fmc2_ebi *ebi);
-+};
-+
- struct stm32_fmc2_ebi {
- 	struct device *dev;
- 	struct clk *clk;
- 	struct regmap *regmap;
-+	const struct stm32_fmc2_ebi_data *data;
- 	u8 bank_assigned;
- 
- 	u32 bcr[FMC2_MAX_EBI_CE];
- 	u32 btr[FMC2_MAX_EBI_CE];
- 	u32 bwtr[FMC2_MAX_EBI_CE];
- 	u32 pcscntr;
-+	u32 cfgr;
- };
- 
- /*
-@@ -353,6 +388,30 @@ static u32 stm32_fmc2_ebi_ns_to_clk_period(struct stm32_fmc2_ebi *ebi,
- 	return DIV_ROUND_UP(nb_clk_cycles, clk_period);
- }
- 
-+static u32 stm32_fmc2_ebi_mp25_ns_to_clk_period(struct stm32_fmc2_ebi *ebi,
-+						int cs, u32 setup)
-+{
-+	u32 nb_clk_cycles = stm32_fmc2_ebi_ns_to_clock_cycles(ebi, cs, setup);
-+	u32 cfgr, btr, clk_period;
-+	int ret;
-+
-+	ret = regmap_read(ebi->regmap, FMC2_CFGR, &cfgr);
-+	if (ret)
-+		return ret;
-+
-+	if (cfgr & FMC2_CFGR_CCLKEN) {
-+		clk_period = FIELD_GET(FMC2_CFGR_CLKDIV, cfgr) + 1;
-+	} else {
-+		ret = regmap_read(ebi->regmap, FMC2_BTR(cs), &btr);
-+		if (ret)
-+			return ret;
-+
-+		clk_period = FIELD_GET(FMC2_BTR_CLKDIV, btr) + 1;
-+	}
-+
-+	return DIV_ROUND_UP(nb_clk_cycles, clk_period);
-+}
-+
- static int stm32_fmc2_ebi_get_reg(int reg_type, int cs, u32 *reg)
- {
- 	switch (reg_type) {
-@@ -368,6 +427,9 @@ static int stm32_fmc2_ebi_get_reg(int reg_type, int cs, u32 *reg)
- 	case FMC2_REG_PCSCNTR:
- 		*reg = FMC2_PCSCNTR;
- 		break;
-+	case FMC2_REG_CFGR:
-+		*reg = FMC2_CFGR;
-+		break;
- 	default:
- 		return -EINVAL;
- 	}
-@@ -714,6 +776,30 @@ static int stm32_fmc2_ebi_set_clk_period(struct stm32_fmc2_ebi *ebi,
- 	return 0;
- }
- 
-+static int stm32_fmc2_ebi_mp25_set_clk_period(struct stm32_fmc2_ebi *ebi,
-+					      const struct stm32_fmc2_prop *prop,
-+					      int cs, u32 setup)
-+{
-+	u32 val, cfgr;
-+	int ret;
-+
-+	ret = regmap_read(ebi->regmap, FMC2_CFGR, &cfgr);
-+	if (ret)
-+		return ret;
-+
-+	if (cfgr & FMC2_CFGR_CCLKEN) {
-+		val = setup ? clamp_val(setup - 1, 1, FMC2_CFGR_CLKDIV_MAX) : 1;
-+		val = FIELD_PREP(FMC2_CFGR_CLKDIV, val);
-+		regmap_update_bits(ebi->regmap, FMC2_CFGR, FMC2_CFGR_CLKDIV, val);
-+	} else {
-+		val = setup ? clamp_val(setup - 1, 1, FMC2_BTR_CLKDIV_MAX) : 1;
-+		val = FIELD_PREP(FMC2_BTR_CLKDIV, val);
-+		regmap_update_bits(ebi->regmap, FMC2_BTR(cs), FMC2_BTR_CLKDIV, val);
-+	}
-+
-+	return 0;
-+}
-+
- static int stm32_fmc2_ebi_set_data_latency(struct stm32_fmc2_ebi *ebi,
- 					   const struct stm32_fmc2_prop *prop,
- 					   int cs, u32 setup)
-@@ -759,6 +845,27 @@ static int stm32_fmc2_ebi_set_max_low_pulse(struct stm32_fmc2_ebi *ebi,
- 	return 0;
- }
- 
-+static int stm32_fmc2_ebi_mp25_set_max_low_pulse(struct stm32_fmc2_ebi *ebi,
-+						 const struct stm32_fmc2_prop *prop,
-+						 int cs, u32 setup)
-+{
-+	u32 val;
-+
-+	if (setup == FMC2_CSCOUNT_0)
-+		val = FIELD_PREP(FMC2_BCR_CSCOUNT, FMC2_BCR_CSCOUNT_0);
-+	else if (setup == FMC2_CSCOUNT_1)
-+		val = FIELD_PREP(FMC2_BCR_CSCOUNT, FMC2_BCR_CSCOUNT_1);
-+	else if (setup <= FMC2_CSCOUNT_64)
-+		val = FIELD_PREP(FMC2_BCR_CSCOUNT, FMC2_BCR_CSCOUNT_64);
-+	else
-+		val = FIELD_PREP(FMC2_BCR_CSCOUNT, FMC2_BCR_CSCOUNT_256);
-+
-+	regmap_update_bits(ebi->regmap, FMC2_BCR(cs),
-+			   FMC2_BCR_CSCOUNT, val);
-+
-+	return 0;
-+}
-+
- static const struct stm32_fmc2_prop stm32_fmc2_child_props[] = {
- 	/* st,fmc2-ebi-cs-trans-type must be the first property */
- 	{
-@@ -924,6 +1031,171 @@ static const struct stm32_fmc2_prop stm32_fmc2_child_props[] = {
- 	},
- };
- 
-+static const struct stm32_fmc2_prop stm32_fmc2_mp25_child_props[] = {
-+	/* st,fmc2-ebi-cs-trans-type must be the first property */
-+	{
-+		.name = "st,fmc2-ebi-cs-transaction-type",
-+		.mprop = true,
-+		.set = stm32_fmc2_ebi_set_trans_type,
-+	},
-+	{
-+		.name = "st,fmc2-ebi-cs-cclk-enable",
-+		.bprop = true,
-+		.reg_type = FMC2_REG_CFGR,
-+		.reg_mask = FMC2_CFGR_CCLKEN,
-+		.check = stm32_fmc2_ebi_check_sync_trans,
-+		.set = stm32_fmc2_ebi_set_bit_field,
-+	},
-+	{
-+		.name = "st,fmc2-ebi-cs-mux-enable",
-+		.bprop = true,
-+		.reg_type = FMC2_REG_BCR,
-+		.reg_mask = FMC2_BCR_MUXEN,
-+		.check = stm32_fmc2_ebi_check_mux,
-+		.set = stm32_fmc2_ebi_set_bit_field,
-+	},
-+	{
-+		.name = "st,fmc2-ebi-cs-buswidth",
-+		.reset_val = FMC2_BUSWIDTH_16,
-+		.set = stm32_fmc2_ebi_set_buswidth,
-+	},
-+	{
-+		.name = "st,fmc2-ebi-cs-waitpol-high",
-+		.bprop = true,
-+		.reg_type = FMC2_REG_BCR,
-+		.reg_mask = FMC2_BCR_WAITPOL,
-+		.set = stm32_fmc2_ebi_set_bit_field,
-+	},
-+	{
-+		.name = "st,fmc2-ebi-cs-waitcfg-enable",
-+		.bprop = true,
-+		.reg_type = FMC2_REG_BCR,
-+		.reg_mask = FMC2_BCR_WAITCFG,
-+		.check = stm32_fmc2_ebi_check_waitcfg,
-+		.set = stm32_fmc2_ebi_set_bit_field,
-+	},
-+	{
-+		.name = "st,fmc2-ebi-cs-wait-enable",
-+		.bprop = true,
-+		.reg_type = FMC2_REG_BCR,
-+		.reg_mask = FMC2_BCR_WAITEN,
-+		.check = stm32_fmc2_ebi_check_sync_trans,
-+		.set = stm32_fmc2_ebi_set_bit_field,
-+	},
-+	{
-+		.name = "st,fmc2-ebi-cs-asyncwait-enable",
-+		.bprop = true,
-+		.reg_type = FMC2_REG_BCR,
-+		.reg_mask = FMC2_BCR_ASYNCWAIT,
-+		.check = stm32_fmc2_ebi_check_async_trans,
-+		.set = stm32_fmc2_ebi_set_bit_field,
-+	},
-+	{
-+		.name = "st,fmc2-ebi-cs-cpsize",
-+		.check = stm32_fmc2_ebi_check_cpsize,
-+		.set = stm32_fmc2_ebi_set_cpsize,
-+	},
-+	{
-+		.name = "st,fmc2-ebi-cs-byte-lane-setup-ns",
-+		.calculate = stm32_fmc2_ebi_ns_to_clock_cycles,
-+		.set = stm32_fmc2_ebi_set_bl_setup,
-+	},
-+	{
-+		.name = "st,fmc2-ebi-cs-address-setup-ns",
-+		.reg_type = FMC2_REG_BTR,
-+		.reset_val = FMC2_BXTR_ADDSET_MAX,
-+		.check = stm32_fmc2_ebi_check_async_trans,
-+		.calculate = stm32_fmc2_ebi_ns_to_clock_cycles,
-+		.set = stm32_fmc2_ebi_set_address_setup,
-+	},
-+	{
-+		.name = "st,fmc2-ebi-cs-address-hold-ns",
-+		.reg_type = FMC2_REG_BTR,
-+		.reset_val = FMC2_BXTR_ADDHLD_MAX,
-+		.check = stm32_fmc2_ebi_check_address_hold,
-+		.calculate = stm32_fmc2_ebi_ns_to_clock_cycles,
-+		.set = stm32_fmc2_ebi_set_address_hold,
-+	},
-+	{
-+		.name = "st,fmc2-ebi-cs-data-setup-ns",
-+		.reg_type = FMC2_REG_BTR,
-+		.reset_val = FMC2_BXTR_DATAST_MAX,
-+		.check = stm32_fmc2_ebi_check_async_trans,
-+		.calculate = stm32_fmc2_ebi_ns_to_clock_cycles,
-+		.set = stm32_fmc2_ebi_set_data_setup,
-+	},
-+	{
-+		.name = "st,fmc2-ebi-cs-bus-turnaround-ns",
-+		.reg_type = FMC2_REG_BTR,
-+		.reset_val = FMC2_BXTR_BUSTURN_MAX + 1,
-+		.calculate = stm32_fmc2_ebi_ns_to_clock_cycles,
-+		.set = stm32_fmc2_ebi_set_bus_turnaround,
-+	},
-+	{
-+		.name = "st,fmc2-ebi-cs-data-hold-ns",
-+		.reg_type = FMC2_REG_BTR,
-+		.check = stm32_fmc2_ebi_check_async_trans,
-+		.calculate = stm32_fmc2_ebi_ns_to_clock_cycles,
-+		.set = stm32_fmc2_ebi_set_data_hold,
-+	},
-+	{
-+		.name = "st,fmc2-ebi-cs-clk-period-ns",
-+		.reset_val = FMC2_CFGR_CLKDIV_MAX + 1,
-+		.check = stm32_fmc2_ebi_check_sync_trans,
-+		.calculate = stm32_fmc2_ebi_ns_to_clock_cycles,
-+		.set = stm32_fmc2_ebi_mp25_set_clk_period,
-+	},
-+	{
-+		.name = "st,fmc2-ebi-cs-data-latency-ns",
-+		.check = stm32_fmc2_ebi_check_sync_trans,
-+		.calculate = stm32_fmc2_ebi_mp25_ns_to_clk_period,
-+		.set = stm32_fmc2_ebi_set_data_latency,
-+	},
-+	{
-+		.name = "st,fmc2-ebi-cs-write-address-setup-ns",
-+		.reg_type = FMC2_REG_BWTR,
-+		.reset_val = FMC2_BXTR_ADDSET_MAX,
-+		.check = stm32_fmc2_ebi_check_async_trans,
-+		.calculate = stm32_fmc2_ebi_ns_to_clock_cycles,
-+		.set = stm32_fmc2_ebi_set_address_setup,
-+	},
-+	{
-+		.name = "st,fmc2-ebi-cs-write-address-hold-ns",
-+		.reg_type = FMC2_REG_BWTR,
-+		.reset_val = FMC2_BXTR_ADDHLD_MAX,
-+		.check = stm32_fmc2_ebi_check_address_hold,
-+		.calculate = stm32_fmc2_ebi_ns_to_clock_cycles,
-+		.set = stm32_fmc2_ebi_set_address_hold,
-+	},
-+	{
-+		.name = "st,fmc2-ebi-cs-write-data-setup-ns",
-+		.reg_type = FMC2_REG_BWTR,
-+		.reset_val = FMC2_BXTR_DATAST_MAX,
-+		.check = stm32_fmc2_ebi_check_async_trans,
-+		.calculate = stm32_fmc2_ebi_ns_to_clock_cycles,
-+		.set = stm32_fmc2_ebi_set_data_setup,
-+	},
-+	{
-+		.name = "st,fmc2-ebi-cs-write-bus-turnaround-ns",
-+		.reg_type = FMC2_REG_BWTR,
-+		.reset_val = FMC2_BXTR_BUSTURN_MAX + 1,
-+		.calculate = stm32_fmc2_ebi_ns_to_clock_cycles,
-+		.set = stm32_fmc2_ebi_set_bus_turnaround,
-+	},
-+	{
-+		.name = "st,fmc2-ebi-cs-write-data-hold-ns",
-+		.reg_type = FMC2_REG_BWTR,
-+		.check = stm32_fmc2_ebi_check_async_trans,
-+		.calculate = stm32_fmc2_ebi_ns_to_clock_cycles,
-+		.set = stm32_fmc2_ebi_set_data_hold,
-+	},
-+	{
-+		.name = "st,fmc2-ebi-cs-max-low-pulse-ns",
-+		.calculate = stm32_fmc2_ebi_ns_to_clock_cycles,
-+		.set = stm32_fmc2_ebi_mp25_set_max_low_pulse,
-+	},
-+};
-+
- static int stm32_fmc2_ebi_parse_prop(struct stm32_fmc2_ebi *ebi,
- 				     struct device_node *dev_node,
- 				     const struct stm32_fmc2_prop *prop,
-@@ -1005,9 +1277,31 @@ static int stm32_fmc2_ebi_save_setup(struct stm32_fmc2_ebi *ebi)
- 			return ret;
- 	}
- 
-+	return 0;
-+}
-+
-+static int stm32_fmc2_ebi_mp1_save_setup(struct stm32_fmc2_ebi *ebi)
-+{
-+	int ret;
-+
-+	ret = stm32_fmc2_ebi_save_setup(ebi);
-+	if (ret)
-+		return ret;
-+
- 	return regmap_read(ebi->regmap, FMC2_PCSCNTR, &ebi->pcscntr);
- }
- 
-+static int stm32_fmc2_ebi_mp25_save_setup(struct stm32_fmc2_ebi *ebi)
-+{
-+	int ret;
-+
-+	ret = stm32_fmc2_ebi_save_setup(ebi);
-+	if (ret)
-+		return ret;
-+
-+	return regmap_read(ebi->regmap, FMC2_CFGR, &ebi->cfgr);
-+}
-+
- static void stm32_fmc2_ebi_set_setup(struct stm32_fmc2_ebi *ebi)
- {
- 	unsigned int cs;
-@@ -1017,10 +1311,20 @@ static void stm32_fmc2_ebi_set_setup(struct stm32_fmc2_ebi *ebi)
- 		regmap_write(ebi->regmap, FMC2_BTR(cs), ebi->btr[cs]);
- 		regmap_write(ebi->regmap, FMC2_BWTR(cs), ebi->bwtr[cs]);
- 	}
-+}
- 
-+static void stm32_fmc2_ebi_mp1_set_setup(struct stm32_fmc2_ebi *ebi)
-+{
-+	stm32_fmc2_ebi_set_setup(ebi);
- 	regmap_write(ebi->regmap, FMC2_PCSCNTR, ebi->pcscntr);
- }
- 
-+static void stm32_fmc2_ebi_mp25_set_setup(struct stm32_fmc2_ebi *ebi)
-+{
-+	stm32_fmc2_ebi_set_setup(ebi);
-+	regmap_write(ebi->regmap, FMC2_CFGR, ebi->cfgr);
-+}
-+
- static void stm32_fmc2_ebi_disable_banks(struct stm32_fmc2_ebi *ebi)
- {
- 	unsigned int cs;
-@@ -1061,13 +1365,15 @@ static int stm32_fmc2_ebi_nwait_used_by_ctrls(struct stm32_fmc2_ebi *ebi)
- 
- static void stm32_fmc2_ebi_enable(struct stm32_fmc2_ebi *ebi)
- {
--	regmap_update_bits(ebi->regmap, FMC2_BCR1,
--			   FMC2_BCR1_FMC2EN, FMC2_BCR1_FMC2EN);
-+	regmap_update_bits(ebi->regmap, ebi->data->fmc2_enable_reg,
-+			   ebi->data->fmc2_enable_bit,
-+			   ebi->data->fmc2_enable_bit);
- }
- 
- static void stm32_fmc2_ebi_disable(struct stm32_fmc2_ebi *ebi)
- {
--	regmap_update_bits(ebi->regmap, FMC2_BCR1, FMC2_BCR1_FMC2EN, 0);
-+	regmap_update_bits(ebi->regmap, ebi->data->fmc2_enable_reg,
-+			   ebi->data->fmc2_enable_bit, 0);
- }
- 
- static int stm32_fmc2_ebi_setup_cs(struct stm32_fmc2_ebi *ebi,
-@@ -1079,8 +1385,8 @@ static int stm32_fmc2_ebi_setup_cs(struct stm32_fmc2_ebi *ebi,
- 
- 	stm32_fmc2_ebi_disable_bank(ebi, cs);
- 
--	for (i = 0; i < ARRAY_SIZE(stm32_fmc2_child_props); i++) {
--		const struct stm32_fmc2_prop *p = &stm32_fmc2_child_props[i];
-+	for (i = 0; i < ebi->data->nb_child_props; i++) {
-+		const struct stm32_fmc2_prop *p = &ebi->data->child_props[i];
- 
- 		ret = stm32_fmc2_ebi_parse_prop(ebi, dev_node, p, cs);
- 		if (ret) {
-@@ -1143,9 +1449,11 @@ static int stm32_fmc2_ebi_parse_dt(struct stm32_fmc2_ebi *ebi)
- 		return -ENODEV;
- 	}
- 
--	ret = stm32_fmc2_ebi_nwait_used_by_ctrls(ebi);
--	if (ret)
--		return ret;
-+	if (ebi->data->nwait_used_by_ctrls) {
-+		ret = ebi->data->nwait_used_by_ctrls(ebi);
-+		if (ret)
-+			return ret;
-+	}
- 
- 	stm32_fmc2_ebi_enable(ebi);
- 
-@@ -1165,6 +1473,10 @@ static int stm32_fmc2_ebi_probe(struct platform_device *pdev)
- 
- 	ebi->dev = dev;
- 
-+	ebi->data = of_device_get_match_data(dev);
-+	if (!ebi->data)
-+		return -EINVAL;
-+
- 	ebi->regmap = device_node_to_regmap(dev->of_node);
- 	if (IS_ERR(ebi->regmap))
- 		return PTR_ERR(ebi->regmap);
-@@ -1190,9 +1502,11 @@ static int stm32_fmc2_ebi_probe(struct platform_device *pdev)
- 	if (ret)
- 		goto err_release;
- 
--	ret = stm32_fmc2_ebi_save_setup(ebi);
--	if (ret)
--		goto err_release;
-+	if (ebi->data->save_setup) {
-+		ret = ebi->data->save_setup(ebi);
-+		if (ret)
-+			goto err_release;
-+	}
- 
- 	platform_set_drvdata(pdev, ebi);
- 
-@@ -1238,7 +1552,9 @@ static int __maybe_unused stm32_fmc2_ebi_resume(struct device *dev)
- 	if (ret)
- 		return ret;
- 
--	stm32_fmc2_ebi_set_setup(ebi);
-+	if (ebi->data->set_setup)
-+		ebi->data->set_setup(ebi);
-+
- 	stm32_fmc2_ebi_enable(ebi);
- 
- 	return 0;
-@@ -1247,8 +1563,34 @@ static int __maybe_unused stm32_fmc2_ebi_resume(struct device *dev)
- static SIMPLE_DEV_PM_OPS(stm32_fmc2_ebi_pm_ops, stm32_fmc2_ebi_suspend,
- 			 stm32_fmc2_ebi_resume);
- 
-+static const struct stm32_fmc2_ebi_data stm32_fmc2_ebi_mp1_data = {
-+	.child_props = stm32_fmc2_child_props,
-+	.nb_child_props = ARRAY_SIZE(stm32_fmc2_child_props),
-+	.fmc2_enable_reg = FMC2_BCR1,
-+	.fmc2_enable_bit = FMC2_BCR1_FMC2EN,
-+	.nwait_used_by_ctrls = stm32_fmc2_ebi_nwait_used_by_ctrls,
-+	.set_setup = stm32_fmc2_ebi_mp1_set_setup,
-+	.save_setup = stm32_fmc2_ebi_mp1_save_setup,
-+};
-+
-+static const struct stm32_fmc2_ebi_data stm32_fmc2_ebi_mp25_data = {
-+	.child_props = stm32_fmc2_mp25_child_props,
-+	.nb_child_props = ARRAY_SIZE(stm32_fmc2_mp25_child_props),
-+	.fmc2_enable_reg = FMC2_CFGR,
-+	.fmc2_enable_bit = FMC2_CFGR_FMC2EN,
-+	.set_setup = stm32_fmc2_ebi_mp25_set_setup,
-+	.save_setup = stm32_fmc2_ebi_mp25_save_setup,
-+};
-+
- static const struct of_device_id stm32_fmc2_ebi_match[] = {
--	{.compatible = "st,stm32mp1-fmc2-ebi"},
-+	{
-+		.compatible = "st,stm32mp1-fmc2-ebi",
-+		.data = &stm32_fmc2_ebi_mp1_data,
-+	},
-+	{
-+		.compatible = "st,stm32mp25-fmc2-ebi",
-+		.data = &stm32_fmc2_ebi_mp25_data,
-+	},
- 	{}
- };
- MODULE_DEVICE_TABLE(of, stm32_fmc2_ebi_match);
--- 
-2.25.1
+This patchset aims to propose an SMC feature, which is SMC-D loopback. The main work
+to achieve this feature is to implement an Emulated-ISM, which is loopback-ism. The
+loopback-ism is a 'built-in' dummy device of SMC and only serves SMC.
 
+SMC-D protocol + 'built-in dummy device' (loopback-ism device) = SMC-D loopback feature.
+
+To provide the runtime switch and statistics of loopback-ism, I need to find a sysfs
+entry for it, since it doesn't belong to any class (e.g. pci_bus), I created an 'smc'
+entry under /sys/devices/virtual/ and put loopback-ism under it.
+
+The other SMC devices, such as RoCE, s390 ISM, virtio-ism will be in their own sysfs
+entry, not under the /sys/devices/*virtual*/smc/.
+
+The Config help is somewhat inaccurate. To be more precise, the SMC_LO config is used to
+configure whether to enable this built-in dummy device for intra-OS communication.
+
+> Will we have a class of ism devices (s390 ism, ism-loopback, virtio-ism)
+> That share common properties (internal API?)
+> and smc-d will work with any of those? > But they all can exist without smc ?! BTW: This is what we want for s390-ism.
+> The client-registration interface [2] is currently the way to achieve this.
+> But maybe we need a more general concept?
+> 
+
+I didn't mean to create a class to cover all the ISM devices. It is only for
+loopback-ism. Because loopback-ism can not be classified, so I create an entry
+under /sys/devices/virtual/.
+
+> Maybe first a preparation patchset that introduces a class/ism
+> Together with an improved API?
+> In case you want to use ISM devices for other purposes as well..
+> But then the whole picture of ism-loopback in one patchset (RFC?)
+> has its benefits as well.
+> 
+
+Sorry for causing, I didn't mean to create a class to cover all the ISM devices.
+They should be in their own sysfs entries (e.g. pci_bus), since they will be used
+out of SMC. Only loopback-ism belongs only to SMC.
+
+> 
+> Other points that I noticed:
+> 
+> Naming: smc loopback, ism-loopback, loopback-ism ?
+> 
+> config: why not tristate? Why under net/smc?
+> 
+
+'SMC-D loopback' or 'SMC loopback' is used to indicate the feature or capability.
+'loopback-ism' is the emulated-ISM device that 'SMC/SMC-D loopback' used.
+('ism-loopback' doesn't seem to appear in my patchset)
+If we all agree with these, I will check all the terms in the patch and unify them.
+
+SMC_LO is used to configure whether SMC is allowed to use loopback-ism (CONFIG_SMC_LO),
+it acts as a check in the code, so I defined it as a bool.
+And loopback-ism only serves SMC-D loopback, as a feature of SMC, so the implementation
+(net/smc/smc_loopback.{c|h}) is under net/smc.
+
+> /sys/devices/virtual/smc  does not initially show up in my installation!!!
+> root@t35lp50:/sys/devices/virtual/> ls
+> 3270/  bdi/  block/  graphics/  iommu/  mem/  memory_tiering/  misc/  net/  tty/  vc/  vtconsole/  workqueue/
+> root@t35lp50:/sys/devices/virtual/> ls smc/loopback-ism
+> active  dmb_copy  dmbs_cnt  dmb_type  subsystem@  uevent  xfer_bytes
+> root@t35lp50:/sys/devices/virtual/> ls
+> 3270/  bdi/  block/  graphics/  iommu/  mem/  memory_tiering/  misc/  net/  smc/  tty/  vc/  vtconsole/  workqueue/
+> Is that normal behaviour?
+> 
+
+/sys/devices/virtual/smc is created after SMC module initialization.
+During the SMC module initialization, smc_loopback_init() is called, and the
+/sys/devices/virtual/smc entry is created.
+
+> You introduced a class/smc
+> Maybe class/ism would be better?
+> The other smc interfaces do not show up in class/smc!! Not so good
+> 
+
+Sorry for causing, I didn't mean to create a class to cover all the ISM devices.
+They should be in their own sysfs entries (e.g. pci_bus), since they can be used
+out of SMC. But loopback-ism is a SMC 'built-in' dummy device, it belongs only
+to SMC and can't be classified to other entries.
+
+
+> Why doesn't it show in smc_rnics?
+> (Maybe some deficiency of smc_rnics?)
+> 
+smc_rnics can't be used on the arch other than s390.
+
+# ./smc_rnics  -a
+Error: s390/s390x supported only
+
+
+> But then it shows in other smc-tools:
+> root@t35lp50:/sys/> smcd device
+> FID  Type  PCI-ID        PCHID  InUse  #LGs  PNET-ID
+> 0000 0     loopback-ism  ffff   No        0
+> 0029 ISM   0000:00:00.0  07c1   No        0  NET1
+> Nice!
+> 
+
+Yes, this is did on patch 01/15.
+
+Best regards,
+Wen Gu
+
+> Kind regards
+> Sandy
+> 
+> 
+> [1] https://lore.kernel.org/lkml/e3819550-7b10-4f9c-7347-dcf1f97b8e6b@linux.alibaba.com/
+> [2] 89e7d2ba61b7 ("net/ism: Add new API for client registration")
