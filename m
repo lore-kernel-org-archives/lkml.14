@@ -1,101 +1,107 @@
-Received: from mail-vk1-f175.google.com (mail-vk1-f175.google.com [209.85.221.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8E22224E3
-	for <linux-kernel@vger.kernel.org>; Mon, 19 Feb 2024 08:57:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 582E02209E;
+	Mon, 19 Feb 2024 08:57:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708333049; cv=none; b=h3jk9Lvlsu63gFkI/OKXtpHM10Qk3kxKsx2ntgH5+59V+XkT0WYROXuTfoXjr2Nry4eh79sGaCg4/YXDv4LzVEX8wGT+8EA+hAG1A3JmBKRoLr1qt/M4+pjurbjWrYgCi49rqhErtsKoIQgtEgwZTUrBwOsHezq9KsIOThokHyQ=
+	t=1708333077; cv=none; b=GEPPqth59abAeewCfHrLPIQDT+vRhVAeH1ZLmZak64gF2aFw4L9QD9LicH8CCFdyvEG6Dh3KIx5D+FFHa7F74ClGKNFDzPg0lBAQw0ac7kGfm0913RBNv4cEBnvEF3DUKvFWQ7cPEusW5NCz677Evu4caZevvigO2ZKd6kGnx4U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708333049; c=relaxed/simple;
-	bh=c42WCWRiTaPf87t3x+ZiIv1VljBs50nMTA2Bg90PJIs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=kcOTQzqm0Oo/dvS+MQBSI4Uu1St4+AUiFEU3tFYxSv2Foz5wf+otq8W1s7iOCqCcszWVfjxmyGmBUs9ZsYl+HnWRTZBeACrqb0md/eLF7JgQcu+BYdAqOmDK5uLfMjsAEM4C2BMSHI7JY91GMrjWy1xBOBZ0RIwp0VpEYy0nJJE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=gxjqTYk/; arc=none smtp.client-ip=209.85.221.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="gxjqTYk/"
-Received: by mail-vk1-f175.google.com with SMTP id 71dfb90a1353d-4c0375d438eso1236555e0c.0
-        for <linux-kernel@vger.kernel.org>; Mon, 19 Feb 2024 00:57:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1708333047; x=1708937847; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=48j6pMjCnD+Yl6EF0CTrphjsX30B0HWxj3BeNo7ksYA=;
-        b=gxjqTYk/q/Jc8QZF4GD30VhB/+hhvhMfDbTRwoUSlSGb1oAnFDoeWWu3neGDpTLP+Q
-         jOp3iFGPTsFnMCKM5M1sfMtJU7JhVCK829Dqoys5XyOl36xx8xfhdM+4iCOzuWS3gNy4
-         /Po67fVkjRUdbry1Uc3AVn0C8OF1PZ7gzS5VqFgQcalRX+MuYd6MX8CiOwuEcgDKp0iO
-         oB1fKkGsI7IZCDmybGyd7NGwlp5TgzsHg6oWSNBBIXqYfSRtgVYxN/MP2u/s4m0kHNWb
-         fVoLLzRxl9Lkuvy0ifEFhBz4HduN+2hGJDQrwJO4qXD3fEHf6YlV/PrTW54FMiHRhekB
-         Ytdw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708333047; x=1708937847;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=48j6pMjCnD+Yl6EF0CTrphjsX30B0HWxj3BeNo7ksYA=;
-        b=U2v6+JM6gNFFXKvEmxEYu0eN4zxYT/Gpobhw5ZKsyi0sWDMqzMBh6GULftqWmRUMAd
-         rtdfWbCTAFgrOg20KlqJGNuBfMiTEwuTiYX5Onb5YHkTCgUqNjw9idMj8yWF7OrQoiVO
-         SODMecYM2+/RC8X7yu96ANWjaM77WG2c5gqiZiw93mxsjGiFGsrGK+Sku156ohbbkWxS
-         80OkXOHJzWCrg8K5obAgChv5Lf5SGRcj6hzBQr2XPy0YqCuoEgpiIZADDKZTVfYfbvk+
-         BPrre14dvSSSJyefwbOhuwZwY948tdRTeBUgFLRjtnZpegtIrcB0Kl1RyCWGD8GcF9Mq
-         Yx9Q==
-X-Forwarded-Encrypted: i=1; AJvYcCXXPa7mybhV60nMeV1VXKqHPYL0c5MQINfDi6z7q3QjDdDlOSGq1d0nwfa2fWBdKD2DL7gdYZvnDETjNansEGzg4amgH7FTOZzNeCbk
-X-Gm-Message-State: AOJu0Yx7ddK2tVDJkotorXBJmHUha81jtngQsKat2q8XKABsHOgPaBiu
-	KGaElJSjh/vSzaQzLTVvUd5pp8btRDBoyJXREWNrKd353n1S/i3o8oRGeHlhBA7soy4phtu6Hbz
-	k6i4jyoU/7IXR6BbQDxIUPvZnyeXJXpofmeG1KA==
-X-Google-Smtp-Source: AGHT+IHuPtUCziaW9cBhydlAFjFx0EF9TQMAOnujfZIMTtF/3mTIQARC6OmmbkoDvg2F8OPga2OpZtcbYCHKgH9NFCY=
-X-Received: by 2002:a1f:d345:0:b0:4c0:7055:35bb with SMTP id
- k66-20020a1fd345000000b004c0705535bbmr9615404vkg.14.1708333046835; Mon, 19
- Feb 2024 00:57:26 -0800 (PST)
+	s=arc-20240116; t=1708333077; c=relaxed/simple;
+	bh=AET0VbPi7tnBZVJicQf1CS/4zQwiOWTBxN2Xtilmy6o=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=tc3HE05CT3gcUeU3Xd0oyZJ8oLFkEXVZ9bKZtHkjzaveZ4PNaAqBfY/1+JfKN7geCtbmgoEl+6qRITsjXejq7wyIpG3i/IvhHFLnu3tm7gLgQ1ryPUMqzAj+7FU0uBXAXFRuyYA412clBkRqmvGf6TuQ+82zRaFSiVKxbL4Xvkg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
+X-UUID: a27d5500c6c44550a1d72c18dad94312-20240219
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.35,REQID:e79eded5-457c-4673-8f77-adae0cb2019e,IP:10,
+	URL:0,TC:0,Content:0,EDM:0,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACTI
+	ON:release,TS:-5
+X-CID-INFO: VERSION:1.1.35,REQID:e79eded5-457c-4673-8f77-adae0cb2019e,IP:10,UR
+	L:0,TC:0,Content:0,EDM:0,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACTION
+	:release,TS:-5
+X-CID-META: VersionHash:5d391d7,CLOUDID:01b7748f-e2c0-40b0-a8fe-7c7e47299109,B
+	ulkID:240219165238P8MQKDBO,BulkQuantity:0,Recheck:0,SF:19|44|64|66|38|24|1
+	7|102,TC:nil,Content:0,EDM:-3,IP:-2,URL:0,File:nil,Bulk:nil,QS:nil,BEC:nil
+	,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0
+X-CID-BVR: 0,NGT
+X-CID-BAS: 0,NGT,0,_
+X-CID-FACTOR: TF_CID_SPAM_FAS,TF_CID_SPAM_FSD,TF_CID_SPAM_FSI,TF_CID_SPAM_SNR
+X-UUID: a27d5500c6c44550a1d72c18dad94312-20240219
+Received: from mail.kylinos.cn [(39.156.73.10)] by mailgw
+	(envelope-from <chentao@kylinos.cn>)
+	(Generic MTA)
+	with ESMTP id 114299905; Mon, 19 Feb 2024 16:52:37 +0800
+Received: from mail.kylinos.cn (localhost [127.0.0.1])
+	by mail.kylinos.cn (NSMail) with SMTP id D1297E000EBC;
+	Mon, 19 Feb 2024 16:52:36 +0800 (CST)
+X-ns-mid: postfix-65D316D4-787504167
+Received: from [172.20.15.254] (unknown [172.20.15.254])
+	by mail.kylinos.cn (NSMail) with ESMTPA id DF1D7E000EBC;
+	Mon, 19 Feb 2024 16:52:34 +0800 (CST)
+Message-ID: <e6f06500-091e-4fc3-ac36-e434c11448d7@kylinos.cn>
+Date: Mon, 19 Feb 2024 16:52:34 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240219084610.11007-1-brgl@bgdev.pl> <c083c1af-31ef-43a8-ba2d-98d63dfe45e0@app.fastmail.com>
-In-Reply-To: <c083c1af-31ef-43a8-ba2d-98d63dfe45e0@app.fastmail.com>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Mon, 19 Feb 2024 09:57:15 +0100
-Message-ID: <CAMRc=Me1q_CV02DO4+i+-yik2RMwAbbTqropd9JU7c2axVwY8Q@mail.gmail.com>
-Subject: Re: [PATCH] arm64: defconfig: build ath12k as a module
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
-	Bjorn Andersson <quic_bjorande@quicinc.com>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
-	Geert Uytterhoeven <geert+renesas@glider.be>, Konrad Dybcio <konrad.dybcio@linaro.org>, 
-	Neil Armstrong <neil.armstrong@linaro.org>, Marek Szyprowski <m.szyprowski@samsung.com>, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] zonefs: Simplify the allocation of slab caches in
+ zonefs_init_inodecache
+To: Damien Le Moal <dlemoal@kernel.org>, naohiro.aota@wdc.com, jth@kernel.org
+Cc: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20240205081022.433945-1-chentao@kylinos.cn>
+ <4af4be6e-2c58-4c14-ad2d-eb3f8101a0c1@kernel.org>
+Content-Language: en-US
+From: Kunwu Chan <chentao@kylinos.cn>
+In-Reply-To: <4af4be6e-2c58-4c14-ad2d-eb3f8101a0c1@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Mon, Feb 19, 2024 at 9:48=E2=80=AFAM Arnd Bergmann <arnd@arndb.de> wrote=
-:
->
-> On Mon, Feb 19, 2024, at 09:46, Bartosz Golaszewski wrote:
-> > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> >
-> > Qualcomm sm8550-qrd and sm8650-qrd boards have ath12k modules as part o=
-f
-> > their on-board WCN7850 WLAN/BT packages. Enable the relevant driver in
-> > defconfig.
-> >
-> > Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> > ---
->
-> Acked-by: Arnd Bergmann <arnd@arndb.de>
->
-> I assume that Bjorn will pick this up through the qualcomm
-> tree.
->
->      Arnd
+Thanks for the reply.
 
-This doesn't conflict with any of my other work and I was told to send
-it separately to make the pwrseq series smaller. I think you can pick
-it up already and send it upstream earlier.
+On 2024/2/9 12:06, Damien Le Moal wrote:
+> On 2/5/24 17:10, Kunwu Chan wrote:
+>> Use the new KMEM_CACHE() macro instead of direct kmem_cache_create
+>> to simplify the creation of SLAB caches.
+>>
+>> Signed-off-by: Kunwu Chan <chentao@kylinos.cn>
+>> ---
+>>   fs/zonefs/super.c | 6 ++----
+>>   1 file changed, 2 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/fs/zonefs/super.c b/fs/zonefs/super.c
+>> index 93971742613a..9b578e7007e9 100644
+>> --- a/fs/zonefs/super.c
+>> +++ b/fs/zonefs/super.c
+>> @@ -1387,10 +1387,8 @@ static struct file_system_type zonefs_type = {
+>>   
+>>   static int __init zonefs_init_inodecache(void)
+>>   {
+>> -	zonefs_inode_cachep = kmem_cache_create("zonefs_inode_cache",
+>> -			sizeof(struct zonefs_inode_info), 0,
+>> -			(SLAB_RECLAIM_ACCOUNT | SLAB_MEM_SPREAD | SLAB_ACCOUNT),
+>> -			NULL);
+>> +	zonefs_inode_cachep = KMEM_CACHE(zonefs_inode_info,
+>> +			SLAB_RECLAIM_ACCOUNT | SLAB_MEM_SPREAD | SLAB_ACCOUNT);
+>>   	if (zonefs_inode_cachep == NULL)
+>>   		return -ENOMEM;
+>>   	return 0;
+> 
+> I do not really see a meaningful simplification here. Using kmem_cache_create()
+The main reason is 'it hides all the 0 or NULL parameters'.
+> directly is not *that* complicated... Also, this changes the name of the cache
+> from "zonefs_inode_cache" to "zonefs_inode_info".
+Cache name is used in /proc/slabinfo to identify this cache.
+>
 
-Bart
+Thank again for taking the time to review and reply.
+
+-- 
+Thanks,
+   Kunwu
+
