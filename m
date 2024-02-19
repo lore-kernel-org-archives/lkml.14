@@ -1,142 +1,84 @@
-Received: from mo4-p02-ob.smtp.rzone.de (mo4-p02-ob.smtp.rzone.de [85.215.255.84])
+Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C442A2E835;
-	Mon, 19 Feb 2024 21:07:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=85.215.255.84
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708376871; cv=pass; b=XzmhyyLLOnpOC4fCHhDCca0Ndh7rAN6lchE5uEp7e2vQm7eX1zFu90SB/JoAzDCTsriEVKnn/RabjYDehE7j5wNKSHXJaJTkaWLuyvDjbxhkcKkeN53PFaUvoY61pQSJbenb+kwCWjIJ7j1WdkT4OUL8ak/3ZuCgSUDlUfnaC8Q=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708376871; c=relaxed/simple;
-	bh=eNljqwevEksOUMlEebSE8qxQgsP5d/5/H18BupVK6+o=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=SA7JdWWPDe3dIZBnEQjGNziVVourjtuU0BHnPGjSL+91RoY602Pop7/rDLQSc3S/FI464lBPQ1j5kxkJganLcrpwj4OTbP/3puvQvIbh5cEINkjbG6KnAt16P2/iO5AL58sqU/AapRx4x8noX/xhXOVWIZmUWO6CSIVceWu2rJs=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=hartkopp.net; spf=pass smtp.mailfrom=hartkopp.net; dkim=pass (2048-bit key) header.d=hartkopp.net header.i=@hartkopp.net header.b=Ki5jJ4a0; dkim=permerror (0-bit key) header.d=hartkopp.net header.i=@hartkopp.net header.b=hpGTBR9W; arc=pass smtp.client-ip=85.215.255.84
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=hartkopp.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hartkopp.net
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78B0653816;
+	Mon, 19 Feb 2024 21:08:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.79.88.28
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1708376933; cv=none; b=YnijqK9IOaLqEac+rwHwo43XTr0n6k7nadVlVqaYl+cohJQRjWtiIMY2UCc/2f1SRscj0nDQ9hxfVzVI1M8wUBqCI2fVumVIxxrVQD6D8hZglyyqbde9Ka9Ijc+3nT5FRdpMrLs989U3/e3RDx6ZjgrtrEcyhThx1Cs32ePITFI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1708376933; c=relaxed/simple;
+	bh=jZz8KgXb3MMiE44ES83oiRGJcepcSHs8+QmOme+7rII=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=c4sKiVqf83UvRi5wx55cnY8SB+AmLzpcagpyYIp1nWLdVyYenzmKtUb2EQqsnERCh9L4OgHsoqsIRyTjC38hjQHaidnm/EpJAtgTRmgMpnBZehwE+VJAg+JKxCAyrDwgfcp202sd0DxOcRZrbhvOyLpKhxcAOcf+o4dsKFbJRew=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net; spf=pass smtp.mailfrom=lwn.net; dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b=Y8BYTRlM; arc=none smtp.client-ip=45.79.88.28
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lwn.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hartkopp.net header.i=@hartkopp.net header.b="Ki5jJ4a0";
-	dkim=permerror (0-bit key) header.d=hartkopp.net header.i=@hartkopp.net header.b="hpGTBR9W"
-ARC-Seal: i=1; a=rsa-sha256; t=1708375067; cv=none;
-    d=strato.com; s=strato-dkim-0002;
-    b=RLoVMLhRCUjEZnzpW3aKBpfB2VpJwlSQuQFYGmFSmyOKvtye0tQjX13oiqK6acTNKZ
-    ARg0EctxXyRO3A/OqoQk8RwolS2Tpd4nG9CqsOoamSAKzW4Ya/Om1+/N5wD2Ta6mIDbp
-    kMcNa4tDkX54shueRnW3016MvLaxpXEDNW9Q+tg2jOypJ8ModkvXBt57P9L0K/oOz5/E
-    m3A2zZIeThrzGav1iC4qF9hXwL57U2nrdYsee0n9R17SqhZM/AdxhRoUlyQEVuMsfOas
-    Hpw5sQYiMXEqYXbNWSwFoQQsER0C61apF3cwgFejRn9slJnvMgwDO3gD4MG0t3nxRGD7
-    4AcQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; t=1708375067;
-    s=strato-dkim-0002; d=strato.com;
-    h=In-Reply-To:From:References:Cc:To:Subject:Date:Message-ID:Cc:Date:
-    From:Subject:Sender;
-    bh=Fv4HUwoYJ78Ao5yyDcK+Lz6h+c9zEeTZIGoLl7li1Rw=;
-    b=iIxqFJrFnfjERZhfAjhFKwzM7bCpXWkvPNHxMVYWR21X+ZdAT/kAxtkQ4deYzBH30W
-    ciMwYWyemRU0vLfCI23ZKlI3kIBniPQGZc1/BHDNBpdP0LDKyHDIHmKs5Cn1PVo3ViRj
-    db0tX/cbyZnBh4NjuxQyyLVXDVPqbPVjsN/dLvsDcSAQjTTDjP6bOKr+ktwDbyRYrtzP
-    ulcLhJok15ZjfuaQx86hoMlkf4fBP9ppmaPoNIy+tdKAKxmedJms0n1Fx6OpmKOd9sKE
-    v2n6z5UQ+iGzt04Ei/WVO7w8ZZtSvSrtnvXfOrPhxVWQrWiulgGQX6OhW0fZEjydINJs
-    xyfw==
-ARC-Authentication-Results: i=1; strato.com;
-    arc=none;
-    dkim=none
-X-RZG-CLASS-ID: mo02
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1708375067;
-    s=strato-dkim-0002; d=hartkopp.net;
-    h=In-Reply-To:From:References:Cc:To:Subject:Date:Message-ID:Cc:Date:
-    From:Subject:Sender;
-    bh=Fv4HUwoYJ78Ao5yyDcK+Lz6h+c9zEeTZIGoLl7li1Rw=;
-    b=Ki5jJ4a0ISlzbCYHqEjTRNXBFq1CXKzI/Padmw8s8rzprr5JAOab26Q86qI/7868Rk
-    lu0GmcOPWDvVXuNYRKkIkrO0ZskonOQ498yTWica2qgRuPV8R9A9dm9eRxSnqfT353RY
-    K566A8yiAkTC6MJ21ErjTt1zyf+6TJ1/YDHb9u15j/ZQT+o04sVnXrG8Oel1Q8sIxP2N
-    8y8AaRaM6WgOl4080G+kCj+x3z9XxEtn6PbS5nQANi8Bop6YNCimMmIOFk9CQbHnZZGA
-    USDsOiQRuw3WVMOKGtpHtIuU6p14gZUjmEA8qMZ8whdVIaX6TR55NAY7VDJUTMbtqBZ8
-    GwIg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; t=1708375067;
-    s=strato-dkim-0003; d=hartkopp.net;
-    h=In-Reply-To:From:References:Cc:To:Subject:Date:Message-ID:Cc:Date:
-    From:Subject:Sender;
-    bh=Fv4HUwoYJ78Ao5yyDcK+Lz6h+c9zEeTZIGoLl7li1Rw=;
-    b=hpGTBR9WEO3/nloOvwsmULD0/vv6szH/ypkVJ0Qtir7LqLyWjkXUHGlvHY0rxwFGIQ
-    k2emtWXlYz0tO6oTAGCw==
-X-RZG-AUTH: ":P2MHfkW8eP4Mre39l357AZT/I7AY/7nT2yrDxb8mjG14FZxedJy6qgO1qCHSa1GLptZHusl129OHEdFq0USEbDdAnQ=="
-Received: from [IPV6:2a00:6020:4a8e:5000::90c]
-    by smtp.strato.de (RZmta 49.11.2 AUTH)
-    with ESMTPSA id K49f9c01JKbk876
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
-	(Client did not present a certificate);
-    Mon, 19 Feb 2024 21:37:46 +0100 (CET)
-Message-ID: <e9f2c716-51d3-4c03-a447-9fed357669c5@hartkopp.net>
-Date: Mon, 19 Feb 2024 21:37:46 +0100
+	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="Y8BYTRlM"
+DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net 9FC1D47A99
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
+	t=1708376926; bh=X4TLb0vzjzBC557Ey9iVpTzSDbc+UN7a92OV2AEYVvQ=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=Y8BYTRlMJd3qN1g5BOgQXGLP1hvrb79t8A0tNq6L2T1YyAumdwOPrgqFoT0mH9XyL
+	 22VRTtkMCWvIQPhYi8Y6di595RoMfhATt6emMEdWEJbR+W16fHi8iVauBu2vfjeJ/p
+	 6M9sR8HrTurKrMJeeKWfYCu/vT031PtCOo8EwJHTo/q97Q7DbuQK59KHv765Rfyu+6
+	 rWa2PlqQUdD0D7I5kb6K4gZBdsZ+WjEeFkFLDOdgNNLXJ8xavlb35w/SqbUuldmD/I
+	 UlUny+vS00SqspI1BxSNuJs2nIHffD1gDEcfAffZW8Cb4S4K1aWwPVeiO5nS0Nz8mf
+	 8JauXVlBn62Rg==
+Received: from localhost (unknown [IPv6:2601:280:5e00:625::646])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by ms.lwn.net (Postfix) with ESMTPSA id 9FC1D47A99;
+	Mon, 19 Feb 2024 21:08:46 +0000 (UTC)
+From: Jonathan Corbet <corbet@lwn.net>
+To: Federico Vaga <federico.vaga@vaga.pv.it>, Akira Yokosawa <akiyks@gmail.com>
+Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] doc: it_IT: remove references to original documents
+In-Reply-To: <20240216221024.7oqlosmy5yemqum4@numero-86.vaga.pv.it>
+References: <20240216221024.7oqlosmy5yemqum4@numero-86.vaga.pv.it>
+Date: Mon, 19 Feb 2024 14:08:45 -0700
+Message-ID: <87h6i4nov6.fsf@meer.lwn.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] can: softing: remove redundant NULL check
-Content-Language: en-US
-To: Simon Horman <horms@kernel.org>
-Cc: Daniil Dulov <d.dulov@aladdin.ru>, Wolfgang Grandegger
- <wg@grandegger.com>, Marc Kleine-Budde <mkl@pengutronix.de>,
- "David S. Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>,
- Kurt Van Dijck <dev.kurt@vandijck-laurijssen.be>, linux-can@vger.kernel.org,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- lvc-project@linuxtesting.org
-References: <20240211150535.3529-1-d.dulov@aladdin.ru>
- <20240216172701.GP40273@kernel.org>
- <12cd0fd0-be86-4af0-8d6b-85d3a81edd2a@hartkopp.net>
- <20240219170038.GH40273@kernel.org>
-From: Oliver Hartkopp <socketcan@hartkopp.net>
-In-Reply-To: <20240219170038.GH40273@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 
-Hi Simon,
+Federico Vaga <federico.vaga@vaga.pv.it> writes:
 
-On 2024-02-19 18:00, Simon Horman wrote:
-> On Fri, Feb 16, 2024 at 08:47:43PM +0100, Oliver Hartkopp wrote:
->> Hi Simon,
+> Hello Akira,
+>
+> On Fri, Feb 16, 2024 at 11:15:12AM +0900, Akira Yokosawa wrote:
+>>On Thu, 15 Feb 2024 22:45:46 +0100, Federico Vaga wrote:
+>>> A relatively recent improvement to the document building process added a
+>>> functionality to point to documents in different languages. Hence, it is
+>>> not necessary to add an explicit link to the main English page.
 >>
->> I have a general question on the "Fixes:" tag in this patch:
->>
->> On 16.02.24 18:27, Simon Horman wrote:
->>> On Sun, Feb 11, 2024 at 07:05:35AM -0800, Daniil Dulov wrote:
->>>> In this case dev cannot be NULL, so remove redundant check.
->>>>
->>>> Found by Linux Verification Center (linuxtesting.org) with SVACE.
->>>>
->>>> Fixes: 03fd3cf5a179 ("can: add driver for Softing card")
->>
->> IMHO this is simply an improvement which is done by all patches applied to
->> the kernel but it does not really "fix" anything from a functional
->> standpoint.
->>
->> Shouldn't we either invent a new tag or better leave it out to not confuse
->> the stable maintainers?
-> 
-> Hi Oliver,
-> 
-> sorry for missing that in my review.
-> 
-> Yes, I agree that this is probably not a fix, for which my
-> rule of thumb is something that addresses a user-visible problem.
-> So I agree it should not have a fixes tag.
-> 
-> I would suggest that we can just change the text to something that
-> has no tag. Something like:
-> 
-> ...
-> 
-> Introduced by 03fd3cf5a179 ("can: add driver for Softing card")
-> 
+>>It might be true as far as htmldocs is concerned, but please remember
+>>there are other targets such as latexdocs, epubdocs, etc., where the
+>>translations extension has no effect.
+>
+> You are peferctly right. However, I do not see a significant value in these
+> references if they are not hyperlinks in a browser.
+>
+> The reader of a translation might use the reference I'm removing in this patch
+> to quickly access the original document. But in theory it should come back once
+> clarified the doubts. (Otherwise there is no point in reading a translation if
+> then you stay on another language)
+>
+> This easy way to go back and forth is offered only by using a web browser.
 
-Yes, but the "Introduced-by:" tag would be an optional tag for people 
-that like blaming others, right?
+Remember, though, that we aim to keep the plain-text docs as readable as
+we possibly can; the translation extension isn't helpful there.
 
-IMHO we should think about completely removing the "Fixes:" tag, when it 
-has no user-visible effect that might be a candidate for stable kernels. 
-It is common improvement work. And it has been so for years.
+My inclination would be to keep the references in place.  That said,
+you're in charge of the Italian translations; if you want to take them
+out I'll apply the patch.
 
-Best regards,
-Oliver
+Thanks,
+
+jon
