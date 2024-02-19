@@ -1,113 +1,105 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3453C24B5B;
-	Mon, 19 Feb 2024 10:01:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FAAD24203;
+	Mon, 19 Feb 2024 10:02:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708336909; cv=none; b=O+Fgd/UPxltGsa74E+sh3tpIX/sU7A/WUQu+y4ah612SKYKC8N+MxQy81z9DVndvmIdVym0D5fkuj/AY3wl1fdW9muZKZZPX8tuoni009whXLYgsB/XjgqbPyysEexwj5UevZdT/7DbwFEaVNB3AFHM2IE6FizYFCKmSK9XknHY=
+	t=1708336977; cv=none; b=QFg1Rh6OshwQLz+LNd1E+IBqGlZF4IE9G05AtNvruPIWMKUn3tGwCmBZcpHfIi+fCojfCLb0DmJqgzXLpRtyQx5FugOq9Zaw13z6OAN3tOTQwZq69/Z5SuGo+m+I84JkenxrJ0eDaJPIaw4cgHOB7FJJYi4MX2+V2Kqk0vrfBG0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708336909; c=relaxed/simple;
-	bh=DkvBh004YMP18g+rDjXnfO1YHpF/pbeOMgSpQ2UDspE=;
+	s=arc-20240116; t=1708336977; c=relaxed/simple;
+	bh=oWKqdvPMZz6M+UOT5vAd2xJ9jW6p5zdyxLuJpfrA+Ws=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aysarCFPEEixxXC5PM4YS1vOC+M+hop74qRx7+YTEJTV2kgiLGaSclAVIusSREKyYuJYVyhZPnVjprPYzWkH7KmdIuAo8zQjGy9TbcrrYir7dBY7LCTXr9p6M3qkieUErbyhGdjpni6+xAdcuChYm4TrUj8Tind6btfon6JqQrg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=DSO0biVO; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	 Content-Type:Content-Disposition:In-Reply-To; b=gusI1b6MtWSAdgrHPypjMhovCBQMVpSKSdAIxOHKWPWMOcqUHH70md5sp1JZBJtAKJIrbr956okD5XC5P30auop4llUN8DsDp3K9Xyp6SNGT0fChlf6rYWkRCOSFgZKVCnL+Z9CbfDum/ngqtqFvJ5yH3qudlngHjYtX0NCvndc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=bJm7WNO7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="DSO0biVO"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id CAC3640E0196;
-	Mon, 19 Feb 2024 10:01:45 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id 0cwy7_kgpFrq; Mon, 19 Feb 2024 10:01:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1708336903; bh=jgU0oM8BzJYSGmIptTsYlIeGEq2K0D5cBNjOZMTjfVQ=;
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="bJm7WNO7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 74146C433F1;
+	Mon, 19 Feb 2024 10:02:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1708336976;
+	bh=oWKqdvPMZz6M+UOT5vAd2xJ9jW6p5zdyxLuJpfrA+Ws=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=DSO0biVOpZubmEGrEOsfI0JHBzxWT/BPPO16AdNMtVINssQLY8BIb+EuOj7ybPRjE
-	 k2LLYi6/o2p0QQJ2PXfZ6TXqEZMEsBFxLHzrTzdOeCXREzBP7e6qyrxVGiClCaRSfB
-	 bUbvUNwGv7zBUpdKVIJpK5Uz4y6Alvxw+7BptdNodHeQJLGizOAE4DHiU8SorkQze/
-	 EWvBhW1ZNyRMU7wIaWwRc+ExZvT8y339KxLMIJKxx+sKpHodd0PgqYceHspRj7EdBz
-	 O6aShMaav1Z2DpDqoKNl4FzBICh6GbVNxhLeg1fOjxMKkt+YmkWtPI1RfFx3WROONz
-	 pYvpFakqpugG7GJQofQAOuwdbslyrEOKRRABSj+t0e/NGX4g6A1BGLUtbTWLDkSr7a
-	 lBHtKa79hZMGlPtmkmhB2SVdZ/GsQyJcFD3qYGNmqhDcQEJe6kYaThhtFlgH4krSmj
-	 q6yBB+X6QgG0GFRW5gJV5xxVtzhUSMNw6OhFK6RAfg0ZDreUgZbg/swg7hqhzdOLGZ
-	 OJTeQ6eUBgu50yLMmcZsir4h/wEDf5m3jr3MtuX38MgVLpxJAEBulpmqIQ/WFz89lN
-	 lu4dtzSiRg7RJVyVVVMNTTYMJqvq2WUFrtInh0FPQ8/FhDvW9+L29zvBIGUEhCPNEb
-	 /SpSfRpm8JV5WqV1xcGUR1zc=
-Received: from zn.tnic (pd953021b.dip0.t-ipconnect.de [217.83.2.27])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 28AD540E016C;
-	Mon, 19 Feb 2024 10:01:25 +0000 (UTC)
-Date: Mon, 19 Feb 2024 11:01:24 +0100
-From: Borislav Petkov <bp@alien8.de>
-To: Ard Biesheuvel <ardb@kernel.org>
-Cc: Ard Biesheuvel <ardb+git@google.com>, linux-kernel@vger.kernel.org,
-	Kevin Loughlin <kevinloughlin@google.com>,
-	Tom Lendacky <thomas.lendacky@amd.com>,
-	Dionna Glaze <dionnaglaze@google.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Andy Lutomirski <luto@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	Justin Stitt <justinstitt@google.com>,
-	Kees Cook <keescook@chromium.org>, Brian Gerst <brgerst@gmail.com>,
-	linux-arch@vger.kernel.org, llvm@lists.linux.dev
-Subject: Re: [PATCH v4 02/11] x86/startup_64: Replace pointer fixups with
- RIP-relative references
-Message-ID: <20240219100124.GCZdMm9IAWoMcfEKhF@fat_crate.local>
-References: <20240213124143.1484862-13-ardb+git@google.com>
- <20240213124143.1484862-15-ardb+git@google.com>
- <20240217125102.GSZdCrtgI-DnHA8DpK@fat_crate.local>
- <CAMj1kXEcTfvRcNh_VDhj5QxzMhD9rFhVmeAfuSF7vm1c_4_iHg@mail.gmail.com>
+	b=bJm7WNO72wGd3dVNd2lI2cQErXOg8b1YOMtR8d/UmzcfSrLnMbqgvF9XNfntViE5W
+	 sUTB+DSK74uBCmRuKUL5SBjLmAL+X4DidUcJ9TBMrQbbYFt4IL5eQ0USgRb0dbe+Em
+	 aT96rV87THDHtxtpyNl1/xJp7HC27nhcaCs91Muw=
+Date: Mon, 19 Feb 2024 11:02:54 +0100
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Saurabh Singh Sengar <ssengar@linux.microsoft.com>
+Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
+	decui@microsoft.com, linux-hyperv@vger.kernel.org,
+	linux-kernel@vger.kernel.org, ssengar@microsoft.com
+Subject: Re: [PATCH 2/6] uio_hv_generic: Query the ringbuffer size for device
+Message-ID: <2024021931-heroics-ducktail-e7aa@gregkh>
+References: <1708193020-14740-1-git-send-email-ssengar@linux.microsoft.com>
+ <1708193020-14740-3-git-send-email-ssengar@linux.microsoft.com>
+ <2024021920-wincing-dyslexic-aae1@gregkh>
+ <20240219094023.GB32526@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAMj1kXEcTfvRcNh_VDhj5QxzMhD9rFhVmeAfuSF7vm1c_4_iHg@mail.gmail.com>
+In-Reply-To: <20240219094023.GB32526@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
 
-On Sat, Feb 17, 2024 at 02:58:29PM +0100, Ard Biesheuvel wrote:
-> More testing is always good, but I am not particularly nervous about
-> these changes.
+On Mon, Feb 19, 2024 at 01:40:23AM -0800, Saurabh Singh Sengar wrote:
+> On Mon, Feb 19, 2024 at 09:50:54AM +0100, Greg KH wrote:
+> > On Sat, Feb 17, 2024 at 10:03:36AM -0800, Saurabh Sengar wrote:
+> > > Query the ring buffer size from pre defined table per device.
+> > > Keep the size as is if the device doesn't have any preferred
+> > > ring size.
+> > 
+> > What is the "as is" size?
+> 
+> I will elaborate more here.
+> 
+> > 
+> > > 
+> > > Signed-off-by: Saurabh Sengar <ssengar@linux.microsoft.com>
+> > > ---
+> > >  drivers/uio/uio_hv_generic.c | 7 +++++--
+> > >  1 file changed, 5 insertions(+), 2 deletions(-)
+> > > 
+> > > diff --git a/drivers/uio/uio_hv_generic.c b/drivers/uio/uio_hv_generic.c
+> > > index 20d9762331bd..4bda6b52e49e 100644
+> > > --- a/drivers/uio/uio_hv_generic.c
+> > > +++ b/drivers/uio/uio_hv_generic.c
+> > > @@ -238,6 +238,7 @@ hv_uio_probe(struct hv_device *dev,
+> > >  	struct hv_uio_private_data *pdata;
+> > >  	void *ring_buffer;
+> > >  	int ret;
+> > > +	size_t ring_size = hv_dev_ring_size(channel);
+> > >  
+> > >  	/* Communicating with host has to be via shared memory not hypercall */
+> > >  	if (!channel->offermsg.monitor_allocated) {
+> > > @@ -245,12 +246,14 @@ hv_uio_probe(struct hv_device *dev,
+> > >  		return -ENOTSUPP;
+> > >  	}
+> > >  
+> > > +	if (!ring_size)
+> > > +		ring_size = HV_RING_SIZE * PAGE_SIZE;
+> > 
+> > Why the magic * PAGE_SIZE here?
+> > 
+> > Where is it documented that ring_size is in pages?
+> > 
+> > And what happens when PAGE_SIZE is changed?  Why are you relying on that
+> > arbritrary value to dictate your buffer sizes to a device that has
+> > no relationship with PAGE_SIZE?
+> > 
+> > Yes, I know you are copying what was there today, but you have the
+> > chance to rethink and most importantly, DOCUMENT this decision properly
+> > now.
+> 
+> I agree PAGE_SIZE is not accurate here and we should use HV_HYP_PAGE_SIZE.
+> This can be further improved by using VMBUS_RING_SIZE macro.
+> 
+> However, I propose addressing this improvement in a separate patch, given
+> the are significant changes already present in this series.
 
-Perhaps but there's a big difference between testing everything as much
-as one can and *then* queueing it - vs testing a bit, not being really
-nervous about the changes and then someone reporting a snafu when the
-patches are already in Linus' tree.
+Add it as a new patch to the series makes sense, thanks!
 
-Means dropping everything and getting on that. And then imagine a couple
-more breakages happening in parallel and needing urgent attention.
-
-Not something you wanna deal with. Speaking from my experience, at
-least.
-
-> I could split this up into 3+ patches so we could bisect any resulting
-> issues more effectively.
-
-Yeah, splitting changes into separate bits - ala, one logical change per
-patch - is always a good idea.
-
-In this particular case, I don't mind splitting them even more so that
-it is perfectly clear what happens and looking at those changes doesn't
-make people have to go look at the source to figure out what the change
-actually looks like applied, in order to fully grok it.
-
-Thx.
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+greg k-h
