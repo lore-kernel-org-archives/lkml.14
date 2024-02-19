@@ -1,110 +1,177 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40D683F9F8;
-	Mon, 19 Feb 2024 16:35:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95CAEBA4D;
+	Mon, 19 Feb 2024 16:37:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708360521; cv=none; b=pHSonDjs3QjqWItgR7n+rBP7KB/1NtlNGBr9jk6DIeQBPFZxWTXtzr0scareYXclAEfGjXRqlI/w4QqlYzA7W7vLOauLL/Ls6hscRG9/GiSfRo8SOyy0X2hlBXmkH9E5iTFhltCJaNCo2k3KjXHPgRqRJbNx6OP51yXQDhpjX+4=
+	t=1708360675; cv=none; b=RajPLqAMR5Hzi7Ypm5C2t8nTm1fBDwAo1iUcOs76X4AUhExm0B7uLnCH9Ct485phDQqTlni0J2wrEnhjGrDXoDHr94AGbhw2XFuH/4CFH7Ql5ldbvDY3LFA1259V2EoncnKNdJ5rgZFxGi3dOCqtO4bSe/gNWibqgwYbpDKYNy0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708360521; c=relaxed/simple;
-	bh=0/qGMTY0QzX5yGfg8KCT/DD2MfErUyzudLGCN7wutkA=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=Nm2NySnp6UaMEaZcdQoJ/cNjc3/prF6czQxqymdBqkJwt/4zV9bw0hVCEptSlzRWbSzbDXrL9p9bBgZDyPDn5w7s45dFFjeE1d1PoW9O6RT5obP7uhL1D410aV/XIWb5fSHE6l6t1PcOvGOgMTfCenFx+6HRMvvItAsrSHC9K1I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=V2zUSuX8; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=UQsJZDNp; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1708360675; c=relaxed/simple;
+	bh=Wu+ycCqAdfmKT21VYRn4CyaHzrwn6FfZ+tmCfzmQgIQ=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=o+BrcwqrSP1LwllpVUspo7qLWd6YJD3BkuKzUetNWAvwkVlCcO+X7PKQayDZa4pWcFXdgfilTTGEPNi4ANaVjyQzzubusf1CpD4L33xa6lV8pLRFCJ4dl+HeAOTZKUxZ1mvLhJCawyMWSln4GpgSktTlCtxWpWFRsdz278vKz2c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UkJf3r+X; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="V2zUSuX8";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="UQsJZDNp"
-Date: Mon, 19 Feb 2024 16:35:17 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1708360518;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Pk7T2jpSR0byywKBG5od7jkk31qcfovIG9EFCImsOd0=;
-	b=V2zUSuX8g4477CHqws2anB3wJH76GLShjMu1UjcuiDdOgULWAqvutYwepKWjsmVoFuP5J8
-	20PH5USRSQ5zcMLXoHBpFRf7Cr1ChuCC7y+UXMKdFHzUiNbSV4e9g2gtI/hVu0cN/R0po5
-	u82VdFfGizQ3mqLrChcZikGGB3POnA9BDQkuthEd5ij0uBmIz7M3NvVHyyZvFAZ3KLIqXt
-	jIy7xOSmG41Jn2K9Zg062jAkW28V0k9+Fj7jll574Wo1tPgMarvfxxhdb2wD9cnnsv+UmB
-	vSODrbKZhzDD+9Obtp3Qqg9f32g8JGWeGeWQj2AO5fOYFbZuzs6ZCbsKvv4vag==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1708360518;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Pk7T2jpSR0byywKBG5od7jkk31qcfovIG9EFCImsOd0=;
-	b=UQsJZDNpYsRm30+4+Akfy08+Mbi674FcHEThCCgIX1U81WAY5sAeBy8J+qhLUTtm1vPniA
-	Kze4/vIexvCKNRBg==
-From: "tip-bot2 for Peter Hilber" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject: [tip: timers/core] timekeeping: Fix cross-timestamp interpolation on
- counter wrap
-Cc: Peter Hilber <peter.hilber@opensynergy.com>,
- Thomas Gleixner <tglx@linutronix.de>, John Stultz <jstultz@google.com>,
- x86@kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20231218073849.35294-2-peter.hilber@opensynergy.com>
-References: <20231218073849.35294-2-peter.hilber@opensynergy.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UkJf3r+X"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5472FC433F1;
+	Mon, 19 Feb 2024 16:37:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1708360675;
+	bh=Wu+ycCqAdfmKT21VYRn4CyaHzrwn6FfZ+tmCfzmQgIQ=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=UkJf3r+XhS9fLFm2ZLMkdLJLlX5opcAGa4+2jnZeyjozL44LJZuKWTfJh0/zQMzjg
+	 HIqiWkXiMlOYgRPN9sFmBR097+dG9XUpRjTqTF7lFEtJrLUG/MVIFx830XYAmCc/lG
+	 pdypqOvIJdEOLzqCm00CLw7lBpCSAIefduByvwgDlsO9UJn8DewWztXdiosDCxnBtb
+	 JxcUkWlZUjCQ0llFsFLL31fzW8uFDAFhnDzS1CnKr9yw6XiwnyNryd5h924Yh51s4m
+	 xSm+Xf3ZFoWByOkTkePeaFt+AOwXqyydi/c6KHqkJLV2ZRvrMCkLub2TX20PqXQJkI
+	 B/b52ZNzMOBpw==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1rc6eO-004ddJ-PS;
+	Mon, 19 Feb 2024 16:37:52 +0000
+Date: Mon, 19 Feb 2024 16:37:52 +0000
+Message-ID: <865xyk4dgf.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>,
+	Anup Patel <apatel@ventanamicro.com>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH] irqchip/gic-v3: handle DOMAIN_BUS_ANY in gic_irq_domain_select
+In-Reply-To: <CAA8EJpqiN6oRMWhAMMP6EsAeki5KSMbO+XzEtT9YRdJKc9_Gbg@mail.gmail.com>
+References: <20240219-gic-fix-child-domain-v1-1-09f8fd2d9a8f@linaro.org>
+	<868r3g4fhv.wl-maz@kernel.org>
+	<CAA8EJpqiN6oRMWhAMMP6EsAeki5KSMbO+XzEtT9YRdJKc9_Gbg@mail.gmail.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/29.1
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Message-ID: <170836051741.398.13453271590417776552.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: dmitry.baryshkov@linaro.org, tglx@linutronix.de, apatel@ventanamicro.com, konrad.dybcio@linaro.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-The following commit has been merged into the timers/core branch of tip:
+On Mon, 19 Feb 2024 16:21:06 +0000,
+Dmitry Baryshkov <dmitry.baryshkov@linaro.org> wrote:
+> 
+> On Mon, 19 Feb 2024 at 17:53, Marc Zyngier <maz@kernel.org> wrote:
+> >
+> > On Mon, 19 Feb 2024 14:47:37 +0000,
+> > Dmitry Baryshkov <dmitry.baryshkov@linaro.org> wrote:
+> > >
+> > > Before the commit de1ff306dcf4 ("genirq/irqdomain: Remove the param
+> > > count restriction from select()") the irq_find_matching_fwspec() was
+> > > handling the DOMAIN_BUS_ANY on its own. After this commit it is a job of
+> > > the select() callback. However the callback of GICv3 (even though it got
+> > > modified to handle zero param_count) wasn't prepared to return true for
+> > > DOMAIN_BUS_ANY bus_token.
+> > >
+> > > This breaks probing of any of the child IRQ domains, since
+> > > platform_irqchip_probe() uses irq_find_matching_host(par_np,
+> > > DOMAIN_BUS_ANY) to check for the presence of the parent IRQ domain.
+> > >
+> > > Fixes: 151378251004 ("irqchip/gic-v3: Make gic_irq_domain_select() robust for zero parameter count")
+> > > Fixes: de1ff306dcf4 ("genirq/irqdomain: Remove the param count restriction from select()")
+> > > Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+> > > ---
+> > >  drivers/irqchip/irq-gic-v3.c | 3 ++-
+> > >  1 file changed, 2 insertions(+), 1 deletion(-)
+> > >
+> > > diff --git a/drivers/irqchip/irq-gic-v3.c b/drivers/irqchip/irq-gic-v3.c
+> > > index 6fb276504bcc..e9e9643c653f 100644
+> > > --- a/drivers/irqchip/irq-gic-v3.c
+> > > +++ b/drivers/irqchip/irq-gic-v3.c
+> > > @@ -1696,7 +1696,8 @@ static int gic_irq_domain_select(struct irq_domain *d,
+> > >
+> > >       /* Handle pure domain searches */
+> > >       if (!fwspec->param_count)
+> > > -             return d->bus_token == bus_token;
+> > > +             return d->bus_token == bus_token ||
+> > > +                     bus_token == DOMAIN_BUS_ANY;
+> > >
+> > >       /* If this is not DT, then we have a single domain */
+> > >       if (!is_of_node(fwspec->fwnode))
+> > >
+> >
+> > I really dislike the look of this. If that's the case, any irqchip
+> > that has a 'select' method (such as imx-intmux) should be similarly
+> > hacked. And at this point, this should be handled by the core code.
+> >
+> > Can you try this instead? I don't have any HW that relies on
+> > behaviour, but I'd expect this to work.
+> >
+> > Thanks,
+> >
+> >         M.
+> >
+> > diff --git a/kernel/irq/irqdomain.c b/kernel/irq/irqdomain.c
+> > index aeb41655d6de..3dd1c871e091 100644
+> > --- a/kernel/irq/irqdomain.c
+> > +++ b/kernel/irq/irqdomain.c
+> > @@ -449,7 +449,7 @@ struct irq_domain *irq_find_matching_fwspec(struct irq_fwspec *fwspec,
+> >          */
+> >         mutex_lock(&irq_domain_mutex);
+> >         list_for_each_entry(h, &irq_domain_list, link) {
+> > -               if (h->ops->select)
+> > +               if (h->ops->select && bus_token != DOMAIN_BUS_ANY)
+> >                         rc = h->ops->select(h, fwspec, bus_token);
+> >                 else if (h->ops->match)
+> >                         rc = h->ops->match(h, to_of_node(fwnode), bus_token);
+> 
+> This works. But I wonder if the following change is even better. WDYT?
+> 
+> diff --git a/kernel/irq/irqdomain.c b/kernel/irq/irqdomain.c
+> index aeb41655d6de..2f0d2700709e 100644
+> --- a/kernel/irq/irqdomain.c
+> +++ b/kernel/irq/irqdomain.c
+> @@ -449,14 +449,17 @@ struct irq_domain
+> *irq_find_matching_fwspec(struct irq_fwspec *fwspec,
+>          */
+>         mutex_lock(&irq_domain_mutex);
+>         list_for_each_entry(h, &irq_domain_list, link) {
+> -               if (h->ops->select)
+> +               if (fwnode != NULL &&
+> +                   h->fwnode == fwnode &&
+> +                   bus_token == DOMAIN_BUS_ANY)
+> +                       rc = true;
+> +               else if (h->ops->select)
+>                         rc = h->ops->select(h, fwspec, bus_token);
+>                 else if (h->ops->match)
+>                         rc = h->ops->match(h, to_of_node(fwnode), bus_token);
+>                 else
+>                         rc = ((fwnode != NULL) && (h->fwnode == fwnode) &&
+> -                             ((bus_token == DOMAIN_BUS_ANY) ||
+> -                              (h->bus_token == bus_token)));
+> +                             (h->bus_token == bus_token));
+> 
+>                 if (rc) {
+>                         found = h;
+> 
 
-Commit-ID:     84dccadd3e2a3f1a373826ad71e5ced5e76b0c00
-Gitweb:        https://git.kernel.org/tip/84dccadd3e2a3f1a373826ad71e5ced5e76b0c00
-Author:        Peter Hilber <peter.hilber@opensynergy.com>
-AuthorDate:    Mon, 18 Dec 2023 08:38:39 +01:00
-Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Mon, 19 Feb 2024 12:18:51 +01:00
+Can't say I like it either. It duplicates the existing check without
+any obvious benefit. Honestly, this code is shit enough that we should
+try to make it simpler, not more complex...
 
-timekeeping: Fix cross-timestamp interpolation on counter wrap
+I'd rather we keep the impact as minimal as possible, and use the
+upcoming weeks to weed out the effects of these changes (there is
+another report of some Renesas machine falling over itself here[1]).
 
-cycle_between() decides whether get_device_system_crosststamp() will
-interpolate for older counter readings.
+Thanks,
 
-cycle_between() yields wrong results for a counter wrap-around where after
-< before < test, and for the case after < test < before.
+	M.
 
-Fix the comparison logic.
+[1] https://lore.kernel.org/all/170802702416.398.14922976721740218856.tip-bot2@tip-bot2
 
-Fixes: 2c756feb18d9 ("time: Add history to cross timestamp interface supporting slower devices")
-Signed-off-by: Peter Hilber <peter.hilber@opensynergy.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Acked-by: John Stultz <jstultz@google.com>
-Link: https://lore.kernel.org/r/20231218073849.35294-2-peter.hilber@opensynergy.com
-
----
- kernel/time/timekeeping.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/kernel/time/timekeeping.c b/kernel/time/timekeeping.c
-index 266d028..8f35455 100644
---- a/kernel/time/timekeeping.c
-+++ b/kernel/time/timekeeping.c
-@@ -1186,7 +1186,7 @@ static bool cycle_between(u64 before, u64 test, u64 after)
- {
- 	if (test > before && test < after)
- 		return true;
--	if (test < before && before > after)
-+	if (before > after && (test > before || test < after))
- 		return true;
- 	return false;
- }
+-- 
+Without deviation from the norm, progress is not possible.
