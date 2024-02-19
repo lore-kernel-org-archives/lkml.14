@@ -1,35 +1,35 @@
 Received: from mail.codeweavers.com (mail.codeweavers.com [4.36.192.163])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94CFD57307;
-	Mon, 19 Feb 2024 22:39:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FF1B5676F;
+	Mon, 19 Feb 2024 22:39:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=4.36.192.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708382382; cv=none; b=Mms8oXUr1aywWyS50n9U9YtgWbuqzvzq/NM39fBXhXle7PV9QZYe0JAtsE/Pq4K8It/okuKKt/iX/gtsItGTxtTE6G/fr97twB6U9SdBp2wK3I2oanEuiiFIm4YE2gVfbglGQv0OOmCR2uZrbje4ZXckAQc8JGW3hQX03HH+NUQ=
+	t=1708382382; cv=none; b=AX7xr21cugCMysCNUWoyd2haUA6/F4Dk5UOAjhonWG+uRPKkI8be7b4WdvNQUlYz4a4OjyMIePhOOcBlUYXucB6TX6Pul2n2NA1hHl+QRc68tKB+8EwTMfwUB2fKs5W6lTwz+2i13ptbr8NgLt+/5J8R1O03fHpyyRiw5qt0v9A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1708382382; c=relaxed/simple;
-	bh=FzJOOSC9UUHrWRcI7UAQtasAek/KIUNP0SrrKFAkeFc=;
+	bh=UtZlrYh+PmJdbzwEPZ8FZ2UGM/54x6+dlq/Hl5BOk+Y=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=GJzKpwRqqP1YW5P+HV/GRJXrPNY7IQAZFan7JJ+liHWItouC8PysJEvm61rVDALI+j2Pba2dXcp+hAyKNuxHuJfXZWkN+ML2Gt9HYKxHIrTfdQQNKjy6O/ZQ10kg4bn0ISI/AUhLItMaYTNhDp2YbEFfDfSCyg3gchrRbrgyUlI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeweavers.com; spf=pass smtp.mailfrom=codeweavers.com; dkim=pass (2048-bit key) header.d=codeweavers.com header.i=@codeweavers.com header.b=jUswTr/G; arc=none smtp.client-ip=4.36.192.163
+	 MIME-Version; b=m4Ra80NOAboonw1gCG0f7TrnHxiZq39MvM2uoXJN0PbSaXh38G3/+vrSFA4z46+MCXs7rj07iEFjQIv6Bxy8aoz7Cr4ngzNwnfKkfs7LZPFn7az6Jf3EEEuZrSSVBDS/gQo8z9Mv0zmAX9g0afk7erWoh1OpWSWe7Dde2WiqLkg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeweavers.com; spf=pass smtp.mailfrom=codeweavers.com; dkim=pass (2048-bit key) header.d=codeweavers.com header.i=@codeweavers.com header.b=GMEk38aR; arc=none smtp.client-ip=4.36.192.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeweavers.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codeweavers.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=codeweavers.com header.i=@codeweavers.com header.b="jUswTr/G"
+	dkim=pass (2048-bit key) header.d=codeweavers.com header.i=@codeweavers.com header.b="GMEk38aR"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=codeweavers.com; s=s1; h=Message-ID:Date:Subject:Cc:To:From:Sender;
-	bh=mD7kGOKMw9/SgIhNijECJqDpS2n0gwPnb6QPtQ/fOO8=; b=jUswTr/GiG/c8wOnuzhqbcgsnb
-	gd2/yfNt21JrJFYmZomc47T2isYYWmFhJy/e9d+WQyhAykuYUtLvWdzYTkCR05R70cL57w83VDbYE
-	djY4gNAA+1tgC0sCMCyYiBNI0e9dTYUFJfNOwOr0EQbL5HZLhE6Ax6VEG0tUtQXdns6iaG/BpyAcB
-	Fq1Og8UVECUTECFMvKaQiwVV25hrmjhZXkK4uRKQ0UgZGu0rjc+T5Wzd9hYiDuaEUGipyOC8lZBVa
-	kQY6urj4PGGu9sZ2fN828vm894YaPDJL4rK8ksY4wMD4hYP+gNkV5Y//a56adhfFhTVoHwB8La5ng
-	cHR+2NSg==;
+	bh=LKcmPKdAjQdF3bbQtJTzkXMVlTzxEokxNER4gf+xieY=; b=GMEk38aRzCsql4OCoE6k2dq9E1
+	Y8bFWT5JrWXlybQ3GCszyrdYRHLDdXHcaoqp8fXEOJ1YwlrmimdgZgPwoOO8uuWdXOqaXhYpL4PZi
+	+RKeZjFu+zgmDKtDvKmJ8cGJla4mKC9fnu8ktMD8hmMXN7vURDgEXQhBIPAMoKYktQ5+1vi9pls2W
+	KDKv8ehlQfnNgsvNbDQ9ZKj4w4ucvinyZwhnB9Qz0jXReaNP7oHd+NdrxrHuyTX4r0++U543Wmmqs
+	Q83POryFlXV6yZOWxwt3QW71vNXbeO5pKsD78m+1nNc621l5ltMtO8m9LDmkq/N7gVyOI59fGC1Yu
+	V5LLH88Q==;
 Received: from cw137ip160.mn.codeweavers.com ([10.69.137.160] helo=camazotz.mn.codeweavers.com)
 	by mail.codeweavers.com with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.96)
 	(envelope-from <zfigura@codeweavers.com>)
-	id 1rcCIU-0037Oz-0l;
-	Mon, 19 Feb 2024 16:39:38 -0600
+	id 1rcCIS-0037Oz-23;
+	Mon, 19 Feb 2024 16:39:36 -0600
 From: Elizabeth Figura <zfigura@codeweavers.com>
 To: Arnd Bergmann <arnd@arndb.de>,
 	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -47,9 +47,9 @@ Cc: linux-kernel@vger.kernel.org,
 	linux-kselftest@vger.kernel.org,
 	Randy Dunlap <rdunlap@infradead.org>,
 	Elizabeth Figura <zfigura@codeweavers.com>
-Subject: [PATCH v2 28/31] selftests: ntsync: Add some tests for wakeup signaling via alerts.
-Date: Mon, 19 Feb 2024 16:38:30 -0600
-Message-ID: <20240219223833.95710-29-zfigura@codeweavers.com>
+Subject: [PATCH v2 25/31] selftests: ntsync: Add some tests for auto-reset event state.
+Date: Mon, 19 Feb 2024 16:38:27 -0600
+Message-ID: <20240219223833.95710-26-zfigura@codeweavers.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240219223833.95710-1-zfigura@codeweavers.com>
 References: <20240219223833.95710-1-zfigura@codeweavers.com>
@@ -61,114 +61,85 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Expand the alert tests to cover alerting a thread mid-wait, to test that the
-relevant scheduling logic works correctly.
+Test event-specific ioctls NTSYNC_IOC_EVENT_SET, NTSYNC_IOC_EVENT_RESET,
+NTSYNC_IOC_EVENT_PULSE, NTSYNC_IOC_EVENT_READ for auto-reset events, and
+waiting on auto-reset events.
 
 Signed-off-by: Elizabeth Figura <zfigura@codeweavers.com>
 ---
- .../testing/selftests/drivers/ntsync/ntsync.c | 62 +++++++++++++++++++
- 1 file changed, 62 insertions(+)
+ .../testing/selftests/drivers/ntsync/ntsync.c | 59 +++++++++++++++++++
+ 1 file changed, 59 insertions(+)
 
 diff --git a/tools/testing/selftests/drivers/ntsync/ntsync.c b/tools/testing/selftests/drivers/ntsync/ntsync.c
-index 5465a16d38b3..968874d7e325 100644
+index b6481c2b85cc..12ccb4ec28e4 100644
 --- a/tools/testing/selftests/drivers/ntsync/ntsync.c
 +++ b/tools/testing/selftests/drivers/ntsync/ntsync.c
-@@ -1113,9 +1113,12 @@ TEST(wake_all)
- TEST(alert_any)
+@@ -442,6 +442,65 @@ TEST(manual_event_state)
+ 	close(fd);
+ }
+ 
++TEST(auto_event_state)
++{
++	struct ntsync_event_args event_args;
++	__u32 index, signaled;
++	int fd, event, ret;
++
++	fd = open("/dev/ntsync", O_CLOEXEC | O_RDONLY);
++	ASSERT_LE(0, fd);
++
++	event_args.manual = 0;
++	event_args.signaled = 1;
++	event_args.event = 0xdeadbeef;
++	ret = ioctl(fd, NTSYNC_IOC_CREATE_EVENT, &event_args);
++	EXPECT_EQ(0, ret);
++	EXPECT_NE(0xdeadbeef, event_args.event);
++	event = event_args.event;
++
++	check_event_state(event, 1, 0);
++
++	signaled = 0xdeadbeef;
++	ret = ioctl(event, NTSYNC_IOC_EVENT_SET, &signaled);
++	EXPECT_EQ(0, ret);
++	EXPECT_EQ(1, signaled);
++	check_event_state(event, 1, 0);
++
++	ret = wait_any(fd, 1, &event, 123, &index);
++	EXPECT_EQ(0, ret);
++	EXPECT_EQ(0, index);
++	check_event_state(event, 0, 0);
++
++	signaled = 0xdeadbeef;
++	ret = ioctl(event, NTSYNC_IOC_EVENT_RESET, &signaled);
++	EXPECT_EQ(0, ret);
++	EXPECT_EQ(0, signaled);
++	check_event_state(event, 0, 0);
++
++	ret = wait_any(fd, 1, &event, 123, &index);
++	EXPECT_EQ(-1, ret);
++	EXPECT_EQ(ETIMEDOUT, errno);
++
++	ret = ioctl(event, NTSYNC_IOC_EVENT_SET, &signaled);
++	EXPECT_EQ(0, ret);
++	EXPECT_EQ(0, signaled);
++
++	ret = ioctl(event, NTSYNC_IOC_EVENT_PULSE, &signaled);
++	EXPECT_EQ(0, ret);
++	EXPECT_EQ(1, signaled);
++	check_event_state(event, 0, 0);
++
++	ret = ioctl(event, NTSYNC_IOC_EVENT_PULSE, &signaled);
++	EXPECT_EQ(0, ret);
++	EXPECT_EQ(0, signaled);
++	check_event_state(event, 0, 0);
++
++	close(event);
++
++	close(fd);
++}
++
+ TEST(test_wait_any)
  {
- 	struct ntsync_event_args event_args = {0};
-+	struct ntsync_wait_args wait_args = {0};
- 	struct ntsync_sem_args sem_args = {0};
- 	__u32 index, count, signaled;
-+	struct wait_args thread_args;
- 	int objs[2], fd, ret;
-+	pthread_t thread;
- 
- 	fd = open("/dev/ntsync", O_CLOEXEC | O_RDONLY);
- 	ASSERT_LE(0, fd);
-@@ -1163,6 +1166,34 @@ TEST(alert_any)
- 	EXPECT_EQ(0, ret);
- 	EXPECT_EQ(2, index);
- 
-+	/* test wakeup via alert */
-+
-+	ret = ioctl(event_args.event, NTSYNC_IOC_EVENT_RESET, &signaled);
-+	EXPECT_EQ(0, ret);
-+
-+	wait_args.timeout = get_abs_timeout(1000);
-+	wait_args.objs = (uintptr_t)objs;
-+	wait_args.count = 2;
-+	wait_args.owner = 123;
-+	wait_args.index = 0xdeadbeef;
-+	wait_args.alert = event_args.event;
-+	thread_args.fd = fd;
-+	thread_args.args = &wait_args;
-+	thread_args.request = NTSYNC_IOC_WAIT_ANY;
-+	ret = pthread_create(&thread, NULL, wait_thread, &thread_args);
-+	EXPECT_EQ(0, ret);
-+
-+	ret = wait_for_thread(thread, 100);
-+	EXPECT_EQ(ETIMEDOUT, ret);
-+
-+	ret = ioctl(event_args.event, NTSYNC_IOC_EVENT_SET, &signaled);
-+	EXPECT_EQ(0, ret);
-+
-+	ret = wait_for_thread(thread, 100);
-+	EXPECT_EQ(0, ret);
-+	EXPECT_EQ(0, thread_args.ret);
-+	EXPECT_EQ(2, wait_args.index);
-+
- 	close(event_args.event);
- 
- 	/* test with an auto-reset event */
-@@ -1199,9 +1230,12 @@ TEST(alert_any)
- TEST(alert_all)
- {
- 	struct ntsync_event_args event_args = {0};
-+	struct ntsync_wait_args wait_args = {0};
- 	struct ntsync_sem_args sem_args = {0};
-+	struct wait_args thread_args;
- 	__u32 index, count, signaled;
- 	int objs[2], fd, ret;
-+	pthread_t thread;
- 
- 	fd = open("/dev/ntsync", O_CLOEXEC | O_RDONLY);
- 	ASSERT_LE(0, fd);
-@@ -1235,6 +1269,34 @@ TEST(alert_all)
- 	EXPECT_EQ(0, ret);
- 	EXPECT_EQ(2, index);
- 
-+	/* test wakeup via alert */
-+
-+	ret = ioctl(event_args.event, NTSYNC_IOC_EVENT_RESET, &signaled);
-+	EXPECT_EQ(0, ret);
-+
-+	wait_args.timeout = get_abs_timeout(1000);
-+	wait_args.objs = (uintptr_t)objs;
-+	wait_args.count = 2;
-+	wait_args.owner = 123;
-+	wait_args.index = 0xdeadbeef;
-+	wait_args.alert = event_args.event;
-+	thread_args.fd = fd;
-+	thread_args.args = &wait_args;
-+	thread_args.request = NTSYNC_IOC_WAIT_ALL;
-+	ret = pthread_create(&thread, NULL, wait_thread, &thread_args);
-+	EXPECT_EQ(0, ret);
-+
-+	ret = wait_for_thread(thread, 100);
-+	EXPECT_EQ(ETIMEDOUT, ret);
-+
-+	ret = ioctl(event_args.event, NTSYNC_IOC_EVENT_SET, &signaled);
-+	EXPECT_EQ(0, ret);
-+
-+	ret = wait_for_thread(thread, 100);
-+	EXPECT_EQ(0, ret);
-+	EXPECT_EQ(0, thread_args.ret);
-+	EXPECT_EQ(2, wait_args.index);
-+
- 	close(event_args.event);
- 
- 	/* test with an auto-reset event */
+ 	int objs[NTSYNC_MAX_WAIT_COUNT + 1], fd, ret;
 -- 
 2.43.0
 
