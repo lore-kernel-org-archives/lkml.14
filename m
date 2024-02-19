@@ -1,72 +1,50 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D96E535AA;
-	Mon, 19 Feb 2024 19:59:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED9F241C77
+	for <linux-kernel@vger.kernel.org>; Mon, 19 Feb 2024 20:03:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708372797; cv=none; b=khX1RLajPfHcVZLvL6AXr3N3VW41tIVsn69fGnPiW4kuU7Fb7MltNey6Tth9glYtisI2egrGx2gnChmITfgQiidhKhweAQNfeTq5hklHDo9APbKUngECRQ3gPlO+Br+Hcx737xItXedBssIbfFuX3lmUslkP1iq19mYkJP1dfc4=
+	t=1708372994; cv=none; b=FR3Z91jo/6VhaSxxeReoai/+HqgL+WYqz2TNwmlCLod2QwV7xsoU+6gRYMQjKgdYI1bmJ5I7gWMwjHyDbgYnP2kOdJtiRYfEG16S9tKc1B5ASHmFRoipNfhFLUn3haDT9tdORv4mNlJeLBq/lR/hhiZCAtrV0RJotyKibawrSP4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708372797; c=relaxed/simple;
-	bh=V7d3FUHDHjaNVIGYicTJg7/TYe1drwX4p1eQCSxDewU=;
+	s=arc-20240116; t=1708372994; c=relaxed/simple;
+	bh=lo4R7EukS8hXVzNzj60xudhkXfSigbb/6jiL+esCxTc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UEkUdzFfjg/A48XyX4qZ9hiot+D8QSaaebNav2umvx3rtsFIohZKU/SIAjecWaLa04OxYmGoX5pkoSYnSKBc9hcG/B/WJBWk0y95apqMssFSWxNuLL7URzHgXiVS1gdaBMTS7gvMxTJqmxHu45xn9oc25tHI8bmUnvR8I2I+RB8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=T45+FMhR; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="T45+FMhR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 88CC0C433C7;
-	Mon, 19 Feb 2024 19:59:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708372796;
-	bh=V7d3FUHDHjaNVIGYicTJg7/TYe1drwX4p1eQCSxDewU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=T45+FMhRUYku0IayKkrM4fevhsmPoINGwzAQ9OuvUumK7yoDAV0cFQPSR/JcJDNn6
-	 IH86pdnnzsLO36yg9DvE/hK7dOZdenbuAKHEeg7OE2f+zxYFLmduoDZWzOGylGlVnZ
-	 hoZoC5s4uP59yejL+WA87fY9xoX0np9crzdCKJA5yIqCoqjmyOKHS5oPLcM09Bb3BI
-	 tHtxC/ShPCBum7nM440EwXfy4XGKPa6Nf0ATZqLhlndytiG9amoUQaXq+Oc2LvR9/l
-	 KFDaKUBuG237eYDJ8O8YsLz3vgf0BC2UAqhKruifhPeeCoSZcvsGjOs3/8Y+Y8knzI
-	 waWE8KNaC6a5A==
-Date: Mon, 19 Feb 2024 19:59:46 +0000
-From: Mark Brown <broonie@kernel.org>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Marcel Holtmann <marcel@holtmann.org>,
-	Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
-	"David S . Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>, Kalle Valo <kvalo@kernel.org>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konrad.dybcio@linaro.org>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Saravana Kannan <saravanak@google.com>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Marek Szyprowski <m.szyprowski@samsung.com>,
-	Alex Elder <elder@linaro.org>,
-	Srini Kandagatla <srinivas.kandagatla@linaro.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Abel Vesa <abel.vesa@linaro.org>,
-	Manivannan Sadhasivam <mani@kernel.org>,
-	Lukas Wunner <lukas@wunner.de>,
-	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-	linux-bluetooth@vger.kernel.org, netdev@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-wireless@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
-	linux-pm@vger.kernel.org,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [PATCH v5 09/18] arm64: dts: qcom: qrb5165-rb5: model the PMU of
- the QCA6391
-Message-ID: <8e392aed-b5f7-486b-b5c0-5568e13796ec@sirena.org.uk>
-References: <20240216203215.40870-1-brgl@bgdev.pl>
- <20240216203215.40870-10-brgl@bgdev.pl>
- <48164f18-34d0-4053-a416-2bb63aaae74b@sirena.org.uk>
- <CAMRc=Md7ymMTmF1OkydewF5C32jDNy0V+su7pcJPHKto6VLjLg@mail.gmail.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=Uw7J3KcSo0I8kHF7m7jxms8lsR4Rp5b52aNiYedZMYpq0h2b4wNFC3ZiFZiYheHVXSsVAUvplKwGa3cVCFQoWgkJZwoAx3kH2MFWZZAA4YAf60vlbBJH06xhKbMy309X/RX5UIQzUZfa19veSOUbOI1clehEtsZbilS7nX1/kNc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <mgr@pengutronix.de>)
+	id 1rc9qp-0008JX-5k; Mon, 19 Feb 2024 21:02:55 +0100
+Received: from [2a0a:edc0:2:b01:1d::c5] (helo=pty.whiteo.stw.pengutronix.de)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <mgr@pengutronix.de>)
+	id 1rc9qo-001i2i-4m; Mon, 19 Feb 2024 21:02:54 +0100
+Received: from mgr by pty.whiteo.stw.pengutronix.de with local (Exim 4.96)
+	(envelope-from <mgr@pengutronix.de>)
+	id 1rc9qo-00Fysi-0A;
+	Mon, 19 Feb 2024 21:02:54 +0100
+Date: Mon, 19 Feb 2024 21:02:54 +0100
+From: Michael Grzeschik <mgr@pengutronix.de>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Eric Van Hensbergen <ericvh@kernel.org>,
+	Latchesar Ionkov <lucho@ionkov.net>,
+	Dominique Martinet <asmadeus@codewreck.org>,
+	Christian Schoenebeck <linux_oss@crudebyte.com>,
+	Jonathan Corbet <corbet@lwn.net>, v9fs@lists.linux.dev,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-usb@vger.kernel.org, kernel@pengutronix.de
+Subject: Re: [PATCH v2 3/4] usb: gadget: legacy: add 9pfs multi gadget
+Message-ID: <ZdOz7mc-NbiEe2Ei@pengutronix.de>
+References: <20240116-ml-topic-u9p-v2-0-b46cbf592962@pengutronix.de>
+ <20240116-ml-topic-u9p-v2-3-b46cbf592962@pengutronix.de>
+ <2024021757-geography-hacksaw-3022@gregkh>
+ <ZdKze80oFj0PRkkZ@pengutronix.de>
+ <2024021911-facelift-graveyard-0760@gregkh>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -74,68 +52,116 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="emYsqvRPUjKAiXsY"
+	protocol="application/pgp-signature"; boundary="+zGieLIMQqtXbity"
 Content-Disposition: inline
-In-Reply-To: <CAMRc=Md7ymMTmF1OkydewF5C32jDNy0V+su7pcJPHKto6VLjLg@mail.gmail.com>
-X-Cookie: Kleeneness is next to Godelness.
+In-Reply-To: <2024021911-facelift-graveyard-0760@gregkh>
+X-Sent-From: Pengutronix Hildesheim
+X-URL: http://www.pengutronix.de/
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: mgr@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
 
---emYsqvRPUjKAiXsY
-Content-Type: text/plain; charset=utf-8
+--+zGieLIMQqtXbity
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Feb 19, 2024 at 07:48:20PM +0100, Bartosz Golaszewski wrote:
-> On Mon, Feb 19, 2024 at 7:03=E2=80=AFPM Mark Brown <broonie@kernel.org> w=
-rote:
-> > On Fri, Feb 16, 2024 at 09:32:06PM +0100, Bartosz Golaszewski wrote:
+On Mon, Feb 19, 2024 at 09:13:03AM +0100, Greg Kroah-Hartman wrote:
+>On Mon, Feb 19, 2024 at 02:48:43AM +0100, Michael Grzeschik wrote:
+>> On Sat, Feb 17, 2024 at 04:59:28PM +0100, Greg Kroah-Hartman wrote:
+>> > On Fri, Feb 02, 2024 at 01:05:12AM +0100, Michael Grzeschik wrote:
+>> > > Add the newly introduced 9pfs transport gadget interface with an new
+>> > > multi composed gadget together with acm and eem.
+>> > >
+>> > > When using this legacy module, it is also possible to
+>> > > mount the 9PFS usb dir as root filesystem. Just follow the
+>> > > instrucitons from Documentation/filesystems/9p.rst
+>> >
+>> > Why are we adding new "legacy" gadgets?  What's wrong with the "correc=
+t"
+>> > api instead?  You need a lot of justification here to add something to
+>> > an api we want to one day just delete.
+>>
+>> Without the legacy gadget there is no real solution to mount
+>> the 9pfs via the gadget as rootfs. The "correct" api is configfs
+>> which will need the user to have some filesystem to mount it to.
+>
+>That's what your initramfs is for.  Why can't you just use that?
 
-> > > +                     vreg_pmu_aon_0p59: ldo1 {
-> > > +                             regulator-name =3D "vreg_pmu_aon_0p59";
-> > > +                             regulator-min-microvolt =3D <540000>;
-> > > +                             regulator-max-microvolt =3D <840000>;
-> > > +                     };
+Because out of convenience and to make it just work as simple as
+nfsrootfs. With this we now need to maintain an full initramfs,
+that has to come from somewhere.
 
-> > That's a *very* wide voltage range for a supply that's got a name ending
-> > in _0_p59 which sounds a lot like it should be fixed at 0.59V.
-> > Similarly for a bunch of the other supplies, and I'm not seeing any
-> > evidence that the consumers do any voltage changes here?  There doesn't
-> > appear to be any logic here, I'm not convinced these are validated or
-> > safe constraints.
+>> There is the relatively new concept of bootconfig which sounds
+>> promising to describe an complete configfs tree from system boot.
+>
+>Great, but until that happens, again, just use initramfs.
 
-> No, the users don't request any regulators (or rather: software
-> representations thereof) because - as per the cover letter - no
-> regulators are created by the PMU driver. This is what is physically
-> on the board - as the schematics and the datasheet define it. I took
+Hmm, okay.
 
-The above makes no sense.  How can constraints be "what is physically on
-the board", particularly variable constrants when there isn't even a
-consumer?  What values are you taking from which documentation? =20
+>> However this is some future talk for now, so we would like to
+>> stick with the legacy setup to be able to mount the 9pfs rootfs.
+>
+>I'd prefer to NOT add new legacy gadget drivers, and do everything
+>possible to delete them all from the tree "soon".
 
-The cover letter and binding both claimed (buried after large amounts of
-changelog) that these PMUs were exposing regulators to consumers and the
-DTS puports to do exactly that...
+When you mean this "soon" is in the near future, you are probably right
+then.
 
-> the values from the docs verbatim. In C, we create a power sequencing
-> provider which doesn't use the regulator framework at all.
+>> > > +/*
+>> > > + * Gadget usb9pfs only needs two bulk endpoints, and will use the u=
+sb9pfs usb
+>> > > + * transport to mount host filesystem via usb gadget. This driver w=
+ill
+>> > > + * also add one ACM and NCM interface.
+>> >
+>> > Why "also"?  What are those interfaces going to be used for and what do
+>> > they have to do with 9pfs?
+>>
+>> They are not necessary to be used with 9pfs. But since we introduce an
+>> new legacy module which is fully claiming the UDC, it would make sense
+>> to leave the other endpoints unavailable but instead add some common
+>> interfaces like ecm and acm.
+>
+>But if no one needs/wants them, why make this complex?  Again, configfs
+>can handle the composition of this if you need it, which is why that
+>"new" interface was created.
 
-For something that doesn't use the regulator framework at all what
-appears to be a provider in patch 16 ("power: pwrseq: add a driver for
-the QCA6390 PMU module") seems to have a lot of regualtor API calls?
 
---emYsqvRPUjKAiXsY
+Okay, What about the rest of the series? Can you just skip this patch
+then for? Or do you want me to send the series again without this
+legacy driver. There are no dependencies to this in that series.
+
+Michael
+
+--=20
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+
+--+zGieLIMQqtXbity
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmXTszEACgkQJNaLcl1U
-h9Cnngf+IYF9pPUvDAr0+9oD3KtUt4+wAyqpvCYd3QuvT98XgcKtkxuBF8yVrn3o
-LceeY91qW8Y/CLz4ZXDqVdWCd1bOtiU48jYXX29ZuQciuXy20B+0LuJ8hkYSkAUk
-JZplf/496WYrFs/92k/NhBU5djkuEGpxjp+LD+0mGJT3RJphr59zb8ToDh3Fi3Xo
-9Vw/tkd7v+/tZY7g+OJsbnSi1/WHnHYepYRh9O5eO7CYRsHw1sHELt2X5s+wQKv7
-rB+MB9piVE3Vjuys5hjODJMTFg5eZJix6jHU+9xKA5FxezF9mo1Yan6MceBP4ZBK
-IU9LsWWcwWsnu9mgk5kBM58ddzUI/A==
-=aUMd
+iQIzBAABCgAdFiEElXvEUs6VPX6mDPT8C+njFXoeLGQFAmXTs+oACgkQC+njFXoe
+LGRwLA/+LrNLPbGGYFlAzMGpno4wxMgOLzvDHPdnuBGsFQ0aAzm7SWtjv92xdbJs
+iv+j4zQNjpshdqmWXLtwGO6thupVI5zT7A1Upqt3K5SVe0LGnwlfeqYWqa9aHIwS
+uwmiBXMR6DtPutwduaFHCJeEMC9j1+MtSe2M6UxMDzQaXujOtQ4K9yHU6/XOyn/H
+1L+7IHrW2z40WvbtfHRxjAiySUaoIkHyn1x0q7ui4QD/UTssbrg+2smB0uMtHxZX
+bWNyrFbh0iTEeCXPVfd5LcVUSPCFcqtqag8dOwGPqevmCTkOSFiL4RhS4pZKrCrh
+kFOdfPW5tfh+dLvfIV5RkMqzKKvlg1wh2mzqh5gyGiJsQsipurTAvo5cnJFujbRc
+Gy5wztK56jnnXehPyVDGYmxt4ORJf51PHBi5+adp975RRP2yPq82nSDMAoEN6hkh
+IcS9po3h5N59UuA38WcPO1qCBg00QYnJJto0S9nyYicrVwzZnvz6/HScdfVKv+U1
+YQ0ChpBj5ijfelb3HHb5jchLvQ449C+/7iZijn5m4g7zE7Jz5VyYiXmLrGOETisQ
+4iW6d156+OH18SaWODWRQQZnioVdEmPSv84SMSxgLawqKfLlkziCi7ozqXZE79pO
+ZBvK+LDllbO8mZfAOsQSmLy/LXTrjZNaz1Ew3nW4Kd3bd/Ut1pE=
+=n31+
 -----END PGP SIGNATURE-----
 
---emYsqvRPUjKAiXsY--
+--+zGieLIMQqtXbity--
