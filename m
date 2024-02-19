@@ -1,67 +1,46 @@
-Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B8B92E410
-	for <linux-kernel@vger.kernel.org>; Mon, 19 Feb 2024 12:32:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7516C2E652
+	for <linux-kernel@vger.kernel.org>; Mon, 19 Feb 2024 12:32:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708345924; cv=none; b=hMtSgtrWEluGyi99XSem9VfZW/549w6FUxz03W5NUyyyCtuKWpu21w5WBxczbFdPBdrLTEYd9eg7MqGDP42NVDGvb2w71Y33dT0Fxq72RQ6QS1s9KorHhslkjFHfe5b+zdQ1PxC5aRn8/qLUKQwGUUE8L2JQid1pUg2N0knnvXc=
+	t=1708345948; cv=none; b=GcwZ5i+Rb9idvbZpj+EnUvZ+UPWn9UB4XLaDUl6Vg2mLPICqXBsA4sScrjGhkpaDTlGyCC+GSDMYmny5dwPXoyAeP35JLO2s2Cc3UZUrCJOJa7WPk29BQYoxTAKEVgBTgpyAHz+FH82UitUUboi7l37u4AkOQOepKjEPlHdhdM8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708345924; c=relaxed/simple;
-	bh=j6578wxWKqcx8ONxEVdRiQYKPP0Syiq2K9w0PPf/ewo=;
+	s=arc-20240116; t=1708345948; c=relaxed/simple;
+	bh=TpY5wvjvpTME5DvC+TJRlgikQDnOPMM1tS9WDjvoTMs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TKPcshwJFo+5xKK/jLJ0T1XMgPOUpryGqR2/hQa7bEdn1GWfPzxAFmwmTGbIvtEfPKqsZjy9FhyIHv+cBFYOo54Cx3aiSwOdI+WsYAKN2BG+BUh1VWvong83SEzWDyB8E4VGUvhIAkZq5SpP09YNjjlrG9q4JfrD2YK3IYN/Lww=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=AIqzeuSe; arc=none smtp.client-ip=209.85.208.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="AIqzeuSe"
-Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-55a035669d5so6874793a12.2
-        for <linux-kernel@vger.kernel.org>; Mon, 19 Feb 2024 04:32:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1708345921; x=1708950721; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=H5rTBOT512LHdHzuBKt2E2Za1VrV48YhxTWcmimOXXM=;
-        b=AIqzeuSeZYg137oUl4Xet+ISHfWTpkcaMMD+rffcceD3VIB4aJ/LWyHrnosyWw7gsZ
-         c2PmMQCUfise+JZd86B9I8xXAJhkA5RJ7ILUX2nlLGy0GsAD3dnqv8RZbSEIwx7dqbqI
-         eyuZX6r/ADjG8KN3G2oTS3TVpbwez3dnKfjDEBtogUSSgfVtL9866oZsDd4BzXW8z/WP
-         nwVp119okOyDdvn5zA374AospP6XSW7lrRzWiqQeyfbci3/wSjushcLLWpXMqb9oc79S
-         zGVWtLao+xdGYm4jhtdO39ByG4D+dTAGy0nwPrdNVY3cNbq4FBwlIiiq95hKPbQfQWcc
-         +5WA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708345921; x=1708950721;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=H5rTBOT512LHdHzuBKt2E2Za1VrV48YhxTWcmimOXXM=;
-        b=oDztKqKV9ZFpBu8NqnuZZGIzjDBik4DMuFETb4U4QGRvmwg71OSWJRE+026GCmYoGk
-         eqEYYJzlOUr/RzGX3rf3oUNzQiiEHNfn9chfrsYRGATEN6/DTEfeinUSxq/sw2H2w/2r
-         9q4DPveAqnROEaCBgw9RnyaKp7+FKGski4yQ782N0rEm7ygIGMDG7A8vPO5AkcGweAd8
-         BCrrvTY0Ak3HWmlNSMELQLC41zer1/XcMomjBBt+8dDmnV+IL8Pnx/YAqPgShO7gm+3L
-         HUkEQgqj/O7jSZQLERRBy6dIaAcJ5BYONujaDc4NQYQq9KVT22PFmr1vVUagy3cEnyhB
-         BIGg==
-X-Forwarded-Encrypted: i=1; AJvYcCXYlAA0zGw5oeCTF/F1hsbrIzI1XEP4QMv9uSK76brldbPRAOi2hjz+QVcvAPY8YEzP4tQF0/FJt9+0FtEBZsPtE+2ywcZskC0vJIXd
-X-Gm-Message-State: AOJu0Yw4EPFgkv4IYp9AvrPysOXdUP2zesQrgZuq0bY43L4Uc5yacpEt
-	OLdEW6pOVjYiCNNtggWoAuLoZFHzInnqH+6k/DsPUGSeT3uZc+d54eG2f9XmppQ=
-X-Google-Smtp-Source: AGHT+IEqPkau5gA1xSLGNYFbfj0SBd1j9tWIVJtBLMtRG5TURWbjPOmxSGxc5PG7FWezTEwt4jfqrg==
-X-Received: by 2002:a05:6402:14d0:b0:564:66c1:d527 with SMTP id f16-20020a05640214d000b0056466c1d527mr2208068edx.36.1708345921462;
-        Mon, 19 Feb 2024 04:32:01 -0800 (PST)
-Received: from localhost ([102.222.70.76])
-        by smtp.gmail.com with ESMTPSA id i7-20020aa7c9c7000000b005649f17558bsm348699edt.42.2024.02.19.04.31.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 19 Feb 2024 04:32:00 -0800 (PST)
-Date: Mon, 19 Feb 2024 15:31:56 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: "Moritz C. Weber" <mo.c.weber@gmail.com>
-Cc: florian.fainelli@broadcom.com, linux-staging@lists.linux.dev,
-	linux-rpi-kernel@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 0/2] Staging: vc04_services: bcm2835-camera: Fix code
- style checks
-Message-ID: <4295c4b8-bcee-4a7f-8960-80b6d3934530@moroto.mountain>
-References: <236d985c-1835-410f-b0b5-cacbd5fbf930@moroto.mountain>
- <20240219112234.8673-1-mo.c.weber@gmail.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=CedZjR87LDKLtjhJNMSXg1e1hTwpNg+BOQRfurk+QYLzFrojiW6I4wEMxehsRYUCUELcVqYF2UM/vzHMMxxaBgAu2Hvpza55Hs+2TlooN9pB8chY+O/zHtGcFX3xQbYfGEPnyCmvjip9PJV1fq350i+IgxwRBIue2vVpDjuSyTg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8DBE6FEC;
+	Mon, 19 Feb 2024 04:33:05 -0800 (PST)
+Received: from FVFF77S0Q05N (unknown [10.57.66.18])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EE45B3F73F;
+	Mon, 19 Feb 2024 04:32:20 -0800 (PST)
+Date: Mon, 19 Feb 2024 12:32:18 +0000
+From: Mark Rutland <mark.rutland@arm.com>
+To: Ankur Arora <ankur.a.arora@oracle.com>
+Cc: linux-kernel@vger.kernel.org, tglx@linutronix.de, peterz@infradead.org,
+	torvalds@linux-foundation.org, paulmck@kernel.org,
+	akpm@linux-foundation.org, luto@kernel.org, bp@alien8.de,
+	dave.hansen@linux.intel.com, hpa@zytor.com, mingo@redhat.com,
+	juri.lelli@redhat.com, vincent.guittot@linaro.org,
+	willy@infradead.org, mgorman@suse.de, jpoimboe@kernel.org,
+	jgross@suse.com, andrew.cooper3@citrix.com, bristot@kernel.org,
+	mathieu.desnoyers@efficios.com, geert@linux-m68k.org,
+	glaubitz@physik.fu-berlin.de, anton.ivanov@cambridgegreys.com,
+	mattst88@gmail.com, krypton@ulrich-teichert.org,
+	rostedt@goodmis.org, David.Laight@aculab.com, richard@nod.at,
+	mjguzik@gmail.com, jon.grimm@amd.com, bharata@amd.com,
+	raghavendra.kt@amd.com, boris.ostrovsky@oracle.com,
+	konrad.wilk@oracle.com
+Subject: Re: [PATCH 17/30] x86/thread_info: define TIF_NEED_RESCHED_LAZY
+Message-ID: <ZdNKUlYzQG4fk4YF@FVFF77S0Q05N>
+References: <20240213055554.1802415-1-ankur.a.arora@oracle.com>
+ <20240213055554.1802415-18-ankur.a.arora@oracle.com>
+ <Zcy_TJt9L0EXcsVM@FVFF77S0Q05N>
+ <874jeardni.fsf@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -70,23 +49,54 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240219112234.8673-1-mo.c.weber@gmail.com>
+In-Reply-To: <874jeardni.fsf@oracle.com>
 
-On Mon, Feb 19, 2024 at 12:22:32PM +0100, Moritz C. Weber wrote:
-> Resubmit these patches to address comments to rebase the 8 v2 changes into
-> 2 patches topicwise
-> Fix patches with same subject issue based on v2, which fixes multiple code
-> style checks for better readability, consistency, and fixes typos from v1
+On Wed, Feb 14, 2024 at 12:31:29PM -0800, Ankur Arora wrote:
+> Mark Rutland <mark.rutland@arm.com> writes:
+> > On Mon, Feb 12, 2024 at 09:55:41PM -0800, Ankur Arora wrote:
+
+> >> diff --git a/arch/x86/include/asm/thread_info.h b/arch/x86/include/asm/thread_info.h
+> >> index d63b02940747..88c1802185fc 100644
+> >> --- a/arch/x86/include/asm/thread_info.h
+> >> +++ b/arch/x86/include/asm/thread_info.h
+> >> @@ -81,8 +81,11 @@ struct thread_info {
+> >>  #define TIF_NOTIFY_RESUME	1	/* callback before returning to user */
+> >>  #define TIF_SIGPENDING		2	/* signal pending */
+> >>  #define TIF_NEED_RESCHED	3	/* rescheduling necessary */
+> >> -#define TIF_SINGLESTEP		4	/* reenable singlestep on user return*/
+> >> -#define TIF_SSBD		5	/* Speculative store bypass disable */
+> >> +#ifdef CONFIG_PREEMPT_AUTO
+> >> +#define TIF_NEED_RESCHED_LAZY	4	/* Lazy rescheduling */
+> >> +#endif
+> >> +#define TIF_SINGLESTEP		5	/* reenable singlestep on user return*/
+> >> +#define TIF_SSBD		6	/* Speculative store bypass disable */
+> >
+> > It's a bit awkward/ugly to conditionally define the TIF_* bits in arch code,
+> > and we don't do that for other bits that are only used in some configurations
+> > (e.g. TIF_UPROBE). That's not just for aesthetics -- for example, on arm64 we
+> > try to keep the TIF_WORK_MASK bits contiguous, which is difficult if a bit in
+> > the middle doesn't exist in some configurations.
 > 
-> Moritz C. Weber (2):
->   Staging: vc04_services: bcm2835-camera: fix blank line style check
->   Staging: vc04_services: bcm2835-camera: fix brace code style check
+> That's useful to know. And, I think you are right about the
+> ugliness of this.
 > 
+> > Is it painful to organise the common code so that arch code can define
+> > TIF_NEED_RESCHED_LAZY regardless of whether CONFIG_PREEMPT_AUTO is selected?
+> 
+> So, the original reason I did it this way was because I wanted to have
+> zero performance impact on !CONFIG_PREEMPT_AUTO configurations whether
+> TIF_NEED_RESCHED_LAZY was defined or not.
+> (I was doing some computation with TIF_NEED_RESCHED_LAZY at that point.)
+> 
+> Eventually I changed that part of code but this stayed.
+> 
+> Anyway, this should be easy enough to fix with done #ifdefry.
+> 
+> Thanks for reviewing.
 
-Looks okay now.
+Great!
 
-Reviewed-by: Dan Carpenter <dan.carpenter@linaro.org>
+BTW, the series overall looks to be in very good shape; thanks a lot for
+working on this!
 
-regards,
-dan carpenter
-
+Mark.
