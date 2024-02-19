@@ -1,201 +1,472 @@
-Received: from out199-15.us.a.mail.aliyun.com (out199-15.us.a.mail.aliyun.com [47.90.199.15])
+Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CBD8381BD;
-	Mon, 19 Feb 2024 14:04:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=47.90.199.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13121381A4;
+	Mon, 19 Feb 2024 14:04:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708351496; cv=none; b=A0nRmhDTqdX0Yz4KHimMmHKZXMIMZ4yjyQkZjOEQV3E+Tm72VNuh6jjUWZA66iBJV4NQt0VSgp6qXqXKO+X9BdnLdmIOnDffarjOw+CDLSB7M+aMu5hjS6j9pFiEfY2z4Iea3YYvUyfRCLxMSVaMIJRu3su8GA1UVCB1x8t3jSs=
+	t=1708351496; cv=none; b=GfPYRzFz9QH7z0F7RmyYLJnODNIuJQg2ZVRpkeIcgX97lBQh/jnMEOs485vU8WCaiDw2Fb+b+tR+/k9kFIPTf/3iqdNDc7jj4EavxFPhrWQ5wWMfTyHs1hd7gNr99VhSqe+Y7508R7AC3yEG/xjW3qMHuVcyClgT6Fm7mOHonyo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1708351496; c=relaxed/simple;
-	bh=zXE55Wn1vwBRvTQKi9WOqRZmT86viMgSf4go7Yu3bbg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=owAQlgxIHuzo3aggXv/2qIjGNDHTZnJZf/dR4p35y2/QYBHHZ7ipSlvj+qndX9rv5VA7rV8A2on0D5RO2cJzOcgDZ3H4dcoq0yxgmw6IwP5nlv2fxxCmOLZ1oofDkP/lbZ6ZCjI11PPawllKFU9NsDRu/W/VRvjDiQagWKSUUuQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=jUCOuyn9; arc=none smtp.client-ip=47.90.199.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	bh=aOBE0HJbN5LWmmNHO9ahLG06s6V6aZ3vi5OW/uqdPq4=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=V5f/Z1yDvyMtYTPBplJkyPhzgRQxc4084ro4qFehaqXXYP6gYfbMWQEfMCiyi/y0gDncY7kZ18/c4s1F2sV6SEof5Wt4rxXdYYiNIvwkP2HkwbPkkHOZ/tuXxBl/drydLovnTDd7+mPFRjprypvCPtrsU7VbKfXndB6UVIXNMtQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=W4ws2jtP; arc=none smtp.client-ip=185.132.182.106
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="jUCOuyn9"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1708351474; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=BNkhxppDcbFezZ4gGJ8AqJVbJcBTfeeZ+zXUxQ8+TPE=;
-	b=jUCOuyn91MI2xA/eVE+GsD/JFOoJByBj0SaPY53TCHgq9g9L5cUwM0JoLersIFC7zh5Xhnok6v7lfxNBj38xhv8HnjT6SIJPsu0hSKgAFZFSzEirN7LV97QHCoMnswY5zkZ2JMwlUOL4VN19YSopr42jJyTjydorIGNDIuZn71s=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R141e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045176;MF=guwen@linux.alibaba.com;NM=1;PH=DS;RN=17;SR=0;TI=SMTPD_---0W0tkCQI_1708351472;
-Received: from 30.221.128.181(mailfrom:guwen@linux.alibaba.com fp:SMTPD_---0W0tkCQI_1708351472)
-          by smtp.aliyun-inc.com;
-          Mon, 19 Feb 2024 22:04:33 +0800
-Message-ID: <8a333c58-4a74-4a1c-9680-a0b9b4020a62@linux.alibaba.com>
-Date: Mon, 19 Feb 2024 22:04:32 +0800
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="W4ws2jtP"
+Received: from pps.filterd (m0288072.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 41JAU4pn025733;
+	Mon, 19 Feb 2024 15:04:47 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	from:to:cc:subject:date:message-id:in-reply-to:references
+	:mime-version:content-transfer-encoding:content-type; s=
+	selector1; bh=Rwh5prREUSDr8EzPcuoMa+GpcZ/Az+yXO+NfEA3G28I=; b=W4
+	ws2jtPGCiUZrFXMMyiMMslhTrJxJM3aCmRE/t+A0Yw7QT1YuXn1IJH9E/2n5M1U8
+	VWY/ezSZJo4kWfQbVdEQdCjEoT2nn8UBc2ptpxE/ostie91bWGVc0D+xNBTyVVji
+	ptc+C0S1S6jLST0QDABmu8+8M51P07qT4LHO7jii0x1sl20PRn82jOLGqQDVIeNQ
+	G6KCAr2mG+ofRxnRd0AAEz7LkjTfE6xPsfZ7524BuPOPC9nO3DcL9/3Hfnn1yzJI
+	R9EWUSxDdUtDWsD1sDCzVD9AKYTnhEAhDZqmpCq3x7DuR/EpgDdJ/1d/g02/Ls0J
+	l/cVU01o//Xdb4BWOM8A==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3wak3m78k5-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 19 Feb 2024 15:04:47 +0100 (CET)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 758754002D;
+	Mon, 19 Feb 2024 15:04:43 +0100 (CET)
+Received: from Webmail-eu.st.com (shfdag1node3.st.com [10.75.129.71])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 0282B26A991;
+	Mon, 19 Feb 2024 15:04:14 +0100 (CET)
+Received: from localhost (10.201.21.177) by SHFDAG1NODE3.st.com (10.75.129.71)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Mon, 19 Feb
+ 2024 15:04:13 +0100
+From: Christophe Kerello <christophe.kerello@foss.st.com>
+To: <krzysztof.kozlowski@linaro.org>, <robh+dt@kernel.org>,
+        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>
+CC: <linux-kernel@vger.kernel.org>, <linux-stm32@st-md-mailman.stormreply.com>,
+        <devicetree@vger.kernel.org>,
+        Christophe Kerello <christophe.kerello@foss.st.com>
+Subject: [PATCH v2 4/5] memory: stm32-fmc2-ebi: add MP25 RIF support
+Date: Mon, 19 Feb 2024 15:02:01 +0100
+Message-ID: <20240219140202.85680-5-christophe.kerello@foss.st.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20240219140202.85680-1-christophe.kerello@foss.st.com>
+References: <20240219140202.85680-1-christophe.kerello@foss.st.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next 00/15] net/smc: implement loopback-ism used by
- SMC-D
-To: Alexandra Winter <wintera@linux.ibm.com>, wenjia@linux.ibm.com,
- hca@linux.ibm.com, gor@linux.ibm.com, agordeev@linux.ibm.com,
- davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
- pabeni@redhat.com, jaka@linux.ibm.com
-Cc: borntraeger@linux.ibm.com, svens@linux.ibm.com,
- alibuda@linux.alibaba.com, tonylu@linux.alibaba.com,
- linux-s390@vger.kernel.org, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20240111120036.109903-1-guwen@linux.alibaba.com>
- <83b9d600-339c-4c9f-860d-ab4539a0ae6b@linux.ibm.com>
-From: Wen Gu <guwen@linux.alibaba.com>
-In-Reply-To: <83b9d600-339c-4c9f-860d-ab4539a0ae6b@linux.ibm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: EQNCAS1NODE3.st.com (10.75.129.80) To SHFDAG1NODE3.st.com
+ (10.75.129.71)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-02-19_10,2024-02-19_01,2023-05-22_02
 
+The FMC2 revision 2 supports security and isolation compliant with
+the Resource Isolation Framework (RIF). From RIF point of view,
+the FMC2 is composed of several independent resources, listed below,
+which can be assigned to different security and compartment domains:
+ - 0: Common FMC_CFGR register.
+ - 1: EBI controller for Chip Select 1.
+ - 2: EBI controller for Chip Select 2.
+ - 3: EBI controller for Chip Select 3.
+ - 4: EBI controller for Chip Select 4.
+ - 5: NAND controller.
 
+Signed-off-by: Christophe Kerello <christophe.kerello@foss.st.com>
+---
+Changes in v2:
+ - security check done throw ops.
 
-On 2024/2/6 20:18, Alexandra Winter wrote:
-> 
-> 
-> On 11.01.24 13:00, Wen Gu wrote:
->> This patch set acts as the second part of the new version of [1] (The first
->> part can be referred from [2]), the updated things of this version are listed
->> at the end.
->>
->> # Background
->>
->> SMC-D is now used in IBM z with ISM function to optimize network interconnect
->> for intra-CPC communications. Inspired by this, we try to make SMC-D available
->> on the non-s390 architecture through a software-implemented virtual ISM device,
->> that is the loopback-ism device here, to accelerate inter-process or
->> inter-containers communication within the same OS instance.
-> 
-> 
-> Hello Wen Gu,
-> 
-> thank you very much for this patchset. I have been looking at it a bit.
-> I installed in on a testserver, but did not yet excercise the loopback-ism device.
-> I want to continue investigations, but daily work interferes, so I thought I
-> send you some comments now. So this is not at all a code review, but some
-> thoughts and observations about the general concept.
-> 
+ drivers/memory/stm32-fmc2-ebi.c | 224 +++++++++++++++++++++++++++++++-
+ 1 file changed, 220 insertions(+), 4 deletions(-)
 
-Thank you very much, Sandy.
+diff --git a/drivers/memory/stm32-fmc2-ebi.c b/drivers/memory/stm32-fmc2-ebi.c
+index bd823e93e7d1..b1d5e61c2434 100644
+--- a/drivers/memory/stm32-fmc2-ebi.c
++++ b/drivers/memory/stm32-fmc2-ebi.c
+@@ -21,8 +21,14 @@
+ #define FMC2_BTR(x)			((x) * 0x8 + FMC2_BTR1)
+ #define FMC2_PCSCNTR			0x20
+ #define FMC2_CFGR			0x20
++#define FMC2_SR				0x84
+ #define FMC2_BWTR1			0x104
+ #define FMC2_BWTR(x)			((x) * 0x8 + FMC2_BWTR1)
++#define FMC2_SECCFGR			0x300
++#define FMC2_CIDCFGR0			0x30c
++#define FMC2_CIDCFGR(x)			((x) * 0x8 + FMC2_CIDCFGR0)
++#define FMC2_SEMCR0			0x310
++#define FMC2_SEMCR(x)			((x) * 0x8 + FMC2_SEMCR0)
+ 
+ /* Register: FMC2_BCR1 */
+ #define FMC2_BCR1_CCLKEN		BIT(20)
+@@ -65,8 +71,23 @@
+ #define FMC2_CFGR_CCLKEN		BIT(20)
+ #define FMC2_CFGR_FMC2EN		BIT(31)
+ 
++/* Register: FMC2_SR */
++#define FMC2_SR_ISOST			GENMASK(1, 0)
++
++/* Register: FMC2_CIDCFGR */
++#define FMC2_CIDCFGR_CFEN		BIT(0)
++#define FMC2_CIDCFGR_SEMEN		BIT(1)
++#define FMC2_CIDCFGR_SCID		GENMASK(6, 4)
++#define FMC2_CIDCFGR_SEMWLC1		BIT(17)
++
++/* Register: FMC2_SEMCR */
++#define FMC2_SEMCR_SEM_MUTEX		BIT(0)
++#define FMC2_SEMCR_SEMCID		GENMASK(6, 4)
++
+ #define FMC2_MAX_EBI_CE			4
+ #define FMC2_MAX_BANKS			5
++#define FMC2_MAX_RESOURCES		6
++#define FMC2_CID1			1
+ 
+ #define FMC2_BCR_CPSIZE_0		0x0
+ #define FMC2_BCR_CPSIZE_128		0x1
+@@ -163,6 +184,9 @@ struct stm32_fmc2_ebi_data {
+ 	int (*nwait_used_by_ctrls)(struct stm32_fmc2_ebi *ebi);
+ 	void (*set_setup)(struct stm32_fmc2_ebi *ebi);
+ 	int (*save_setup)(struct stm32_fmc2_ebi *ebi);
++	int (*check_rif)(struct stm32_fmc2_ebi *ebi, u32 resource);
++	void (*put_sems)(struct stm32_fmc2_ebi *ebi);
++	void (*get_sems)(struct stm32_fmc2_ebi *ebi);
+ };
+ 
+ struct stm32_fmc2_ebi {
+@@ -171,6 +195,8 @@ struct stm32_fmc2_ebi {
+ 	struct regmap *regmap;
+ 	const struct stm32_fmc2_ebi_data *data;
+ 	u8 bank_assigned;
++	u8 sem_taken;
++	bool access_granted;
+ 
+ 	u32 bcr[FMC2_MAX_EBI_CE];
+ 	u32 btr[FMC2_MAX_EBI_CE];
+@@ -262,6 +288,33 @@ static int stm32_fmc2_ebi_check_sync_trans(struct stm32_fmc2_ebi *ebi,
+ 	return -EINVAL;
+ }
+ 
++static int stm32_fmc2_ebi_mp25_check_cclk(struct stm32_fmc2_ebi *ebi,
++					  const struct stm32_fmc2_prop *prop,
++					  int cs)
++{
++	if (!ebi->access_granted)
++		return -EACCES;
++
++	return stm32_fmc2_ebi_check_sync_trans(ebi, prop, cs);
++}
++
++static int stm32_fmc2_ebi_mp25_check_clk_period(struct stm32_fmc2_ebi *ebi,
++						const struct stm32_fmc2_prop *prop,
++						int cs)
++{
++	u32 cfgr;
++	int ret;
++
++	ret = regmap_read(ebi->regmap, FMC2_CFGR, &cfgr);
++	if (ret)
++		return ret;
++
++	if (cfgr & FMC2_CFGR_CCLKEN && !ebi->access_granted)
++		return -EACCES;
++
++	return stm32_fmc2_ebi_check_sync_trans(ebi, prop, cs);
++}
++
+ static int stm32_fmc2_ebi_check_async_trans(struct stm32_fmc2_ebi *ebi,
+ 					    const struct stm32_fmc2_prop *prop,
+ 					    int cs)
+@@ -1043,7 +1096,7 @@ static const struct stm32_fmc2_prop stm32_fmc2_mp25_child_props[] = {
+ 		.bprop = true,
+ 		.reg_type = FMC2_REG_CFGR,
+ 		.reg_mask = FMC2_CFGR_CCLKEN,
+-		.check = stm32_fmc2_ebi_check_sync_trans,
++		.check = stm32_fmc2_ebi_mp25_check_cclk,
+ 		.set = stm32_fmc2_ebi_set_bit_field,
+ 	},
+ 	{
+@@ -1141,7 +1194,7 @@ static const struct stm32_fmc2_prop stm32_fmc2_mp25_child_props[] = {
+ 	{
+ 		.name = "st,fmc2-ebi-cs-clk-period-ns",
+ 		.reset_val = FMC2_CFGR_CLKDIV_MAX + 1,
+-		.check = stm32_fmc2_ebi_check_sync_trans,
++		.check = stm32_fmc2_ebi_mp25_check_clk_period,
+ 		.calculate = stm32_fmc2_ebi_ns_to_clock_cycles,
+ 		.set = stm32_fmc2_ebi_mp25_set_clk_period,
+ 	},
+@@ -1196,6 +1249,110 @@ static const struct stm32_fmc2_prop stm32_fmc2_mp25_child_props[] = {
+ 	},
+ };
+ 
++static int stm32_fmc2_ebi_mp25_check_rif(struct stm32_fmc2_ebi *ebi, u32 resource)
++{
++	u32 seccfgr, cidcfgr, semcr;
++	int cid, ret;
++
++	if (resource >= FMC2_MAX_RESOURCES)
++		return -EINVAL;
++
++	ret = regmap_read(ebi->regmap, FMC2_SECCFGR, &seccfgr);
++	if (ret)
++		return ret;
++
++	if (seccfgr & BIT(resource)) {
++		if (resource)
++			dev_err(ebi->dev, "resource %d is configured as secure\n",
++				resource);
++
++		return -EACCES;
++	}
++
++	ret = regmap_read(ebi->regmap, FMC2_CIDCFGR(resource), &cidcfgr);
++	if (ret)
++		return ret;
++
++	if (!(cidcfgr & FMC2_CIDCFGR_CFEN))
++		/* CID filtering is turned off: access granted */
++		return 0;
++
++	if (!(cidcfgr & FMC2_CIDCFGR_SEMEN)) {
++		/* Static CID mode */
++		cid = FIELD_GET(FMC2_CIDCFGR_SCID, cidcfgr);
++		if (cid != FMC2_CID1) {
++			if (resource)
++				dev_err(ebi->dev, "static CID%d set for resource %d\n",
++					cid, resource);
++
++			return -EACCES;
++		}
++
++		return 0;
++	}
++
++	/* Pass-list with semaphore mode */
++	if (!(cidcfgr & FMC2_CIDCFGR_SEMWLC1)) {
++		if (resource)
++			dev_err(ebi->dev, "CID1 is block-listed for resource %d\n",
++				resource);
++
++		return -EACCES;
++	}
++
++	ret = regmap_read(ebi->regmap, FMC2_SEMCR(resource), &semcr);
++	if (ret)
++		return ret;
++
++	if (!(semcr & FMC2_SEMCR_SEM_MUTEX)) {
++		regmap_update_bits(ebi->regmap, FMC2_SEMCR(resource),
++				   FMC2_SEMCR_SEM_MUTEX, FMC2_SEMCR_SEM_MUTEX);
++
++		ret = regmap_read(ebi->regmap, FMC2_SEMCR(resource), &semcr);
++		if (ret)
++			return ret;
++	}
++
++	cid = FIELD_GET(FMC2_SEMCR_SEMCID, semcr);
++	if (cid != FMC2_CID1) {
++		if (resource)
++			dev_err(ebi->dev, "resource %d is already used by CID%d\n",
++				resource, cid);
++
++		return -EACCES;
++	}
++
++	ebi->sem_taken |= BIT(resource);
++
++	return 0;
++}
++
++static void stm32_fmc2_ebi_mp25_put_sems(struct stm32_fmc2_ebi *ebi)
++{
++	unsigned int resource;
++
++	for (resource = 0; resource < FMC2_MAX_RESOURCES; resource++) {
++		if (!(ebi->sem_taken & BIT(resource)))
++			continue;
++
++		regmap_update_bits(ebi->regmap, FMC2_SEMCR(resource),
++				   FMC2_SEMCR_SEM_MUTEX, 0);
++	}
++}
++
++static void stm32_fmc2_ebi_mp25_get_sems(struct stm32_fmc2_ebi *ebi)
++{
++	unsigned int resource;
++
++	for (resource = 0; resource < FMC2_MAX_RESOURCES; resource++) {
++		if (!(ebi->sem_taken & BIT(resource)))
++			continue;
++
++		regmap_update_bits(ebi->regmap, FMC2_SEMCR(resource),
++				   FMC2_SEMCR_SEM_MUTEX, FMC2_SEMCR_SEM_MUTEX);
++	}
++}
++
+ static int stm32_fmc2_ebi_parse_prop(struct stm32_fmc2_ebi *ebi,
+ 				     struct device_node *dev_node,
+ 				     const struct stm32_fmc2_prop *prop,
+@@ -1264,6 +1421,9 @@ static int stm32_fmc2_ebi_save_setup(struct stm32_fmc2_ebi *ebi)
+ 	int ret;
+ 
+ 	for (cs = 0; cs < FMC2_MAX_EBI_CE; cs++) {
++		if (!(ebi->bank_assigned & BIT(cs)))
++			continue;
++
+ 		ret = regmap_read(ebi->regmap, FMC2_BCR(cs), &ebi->bcr[cs]);
+ 		if (ret)
+ 			return ret;
+@@ -1299,7 +1459,10 @@ static int stm32_fmc2_ebi_mp25_save_setup(struct stm32_fmc2_ebi *ebi)
+ 	if (ret)
+ 		return ret;
+ 
+-	return regmap_read(ebi->regmap, FMC2_CFGR, &ebi->cfgr);
++	if (ebi->access_granted)
++		ret = regmap_read(ebi->regmap, FMC2_CFGR, &ebi->cfgr);
++
++	return ret;
+ }
+ 
+ static void stm32_fmc2_ebi_set_setup(struct stm32_fmc2_ebi *ebi)
+@@ -1307,6 +1470,9 @@ static void stm32_fmc2_ebi_set_setup(struct stm32_fmc2_ebi *ebi)
+ 	unsigned int cs;
+ 
+ 	for (cs = 0; cs < FMC2_MAX_EBI_CE; cs++) {
++		if (!(ebi->bank_assigned & BIT(cs)))
++			continue;
++
+ 		regmap_write(ebi->regmap, FMC2_BCR(cs), ebi->bcr[cs]);
+ 		regmap_write(ebi->regmap, FMC2_BTR(cs), ebi->btr[cs]);
+ 		regmap_write(ebi->regmap, FMC2_BWTR(cs), ebi->bwtr[cs]);
+@@ -1322,7 +1488,9 @@ static void stm32_fmc2_ebi_mp1_set_setup(struct stm32_fmc2_ebi *ebi)
+ static void stm32_fmc2_ebi_mp25_set_setup(struct stm32_fmc2_ebi *ebi)
+ {
+ 	stm32_fmc2_ebi_set_setup(ebi);
+-	regmap_write(ebi->regmap, FMC2_CFGR, ebi->cfgr);
++
++	if (ebi->access_granted)
++		regmap_write(ebi->regmap, FMC2_CFGR, ebi->cfgr);
+ }
+ 
+ static void stm32_fmc2_ebi_disable_banks(struct stm32_fmc2_ebi *ebi)
+@@ -1365,6 +1533,9 @@ static int stm32_fmc2_ebi_nwait_used_by_ctrls(struct stm32_fmc2_ebi *ebi)
+ 
+ static void stm32_fmc2_ebi_enable(struct stm32_fmc2_ebi *ebi)
+ {
++	if (!ebi->access_granted)
++		return;
++
+ 	regmap_update_bits(ebi->regmap, ebi->data->fmc2_enable_reg,
+ 			   ebi->data->fmc2_enable_bit,
+ 			   ebi->data->fmc2_enable_bit);
+@@ -1372,6 +1543,9 @@ static void stm32_fmc2_ebi_enable(struct stm32_fmc2_ebi *ebi)
+ 
+ static void stm32_fmc2_ebi_disable(struct stm32_fmc2_ebi *ebi)
+ {
++	if (!ebi->access_granted)
++		return;
++
+ 	regmap_update_bits(ebi->regmap, ebi->data->fmc2_enable_reg,
+ 			   ebi->data->fmc2_enable_bit, 0);
+ }
+@@ -1430,6 +1604,15 @@ static int stm32_fmc2_ebi_parse_dt(struct stm32_fmc2_ebi *ebi)
+ 			return -EINVAL;
+ 		}
+ 
++		if (ebi->data->check_rif) {
++			ret = ebi->data->check_rif(ebi, bank + 1);
++			if (ret) {
++				dev_err(dev, "bank access failed: %d\n", bank);
++				of_node_put(child);
++				return ret;
++			}
++		}
++
+ 		if (bank < FMC2_MAX_EBI_CE) {
+ 			ret = stm32_fmc2_ebi_setup_cs(ebi, child, bank);
+ 			if (ret) {
+@@ -1498,6 +1681,28 @@ static int stm32_fmc2_ebi_probe(struct platform_device *pdev)
+ 		reset_control_deassert(rstc);
+ 	}
+ 
++	/* Check if CFGR register can be modified */
++	ebi->access_granted = true;
++	if (ebi->data->check_rif) {
++		ret = ebi->data->check_rif(ebi, 0);
++		if (ret) {
++			u32 sr;
++
++			ebi->access_granted = false;
++
++			ret = regmap_read(ebi->regmap, FMC2_SR, &sr);
++			if (ret)
++				goto err_release;
++
++			/* In case of CFGR is secure, just check that the FMC2 is enabled */
++			if (sr & FMC2_SR_ISOST) {
++				dev_err(dev, "FMC2 is not ready to be used.\n");
++				ret = -EACCES;
++				goto err_release;
++			}
++		}
++	}
++
+ 	ret = stm32_fmc2_ebi_parse_dt(ebi);
+ 	if (ret)
+ 		goto err_release;
+@@ -1515,6 +1720,8 @@ static int stm32_fmc2_ebi_probe(struct platform_device *pdev)
+ err_release:
+ 	stm32_fmc2_ebi_disable_banks(ebi);
+ 	stm32_fmc2_ebi_disable(ebi);
++	if (ebi->data->put_sems)
++		ebi->data->put_sems(ebi);
+ 	clk_disable_unprepare(ebi->clk);
+ 
+ 	return ret;
+@@ -1527,6 +1734,8 @@ static void stm32_fmc2_ebi_remove(struct platform_device *pdev)
+ 	of_platform_depopulate(&pdev->dev);
+ 	stm32_fmc2_ebi_disable_banks(ebi);
+ 	stm32_fmc2_ebi_disable(ebi);
++	if (ebi->data->put_sems)
++		ebi->data->put_sems(ebi);
+ 	clk_disable_unprepare(ebi->clk);
+ }
+ 
+@@ -1535,6 +1744,8 @@ static int __maybe_unused stm32_fmc2_ebi_suspend(struct device *dev)
+ 	struct stm32_fmc2_ebi *ebi = dev_get_drvdata(dev);
+ 
+ 	stm32_fmc2_ebi_disable(ebi);
++	if (ebi->data->put_sems)
++		ebi->data->put_sems(ebi);
+ 	clk_disable_unprepare(ebi->clk);
+ 	pinctrl_pm_select_sleep_state(dev);
+ 
+@@ -1552,6 +1763,8 @@ static int __maybe_unused stm32_fmc2_ebi_resume(struct device *dev)
+ 	if (ret)
+ 		return ret;
+ 
++	if (ebi->data->get_sems)
++		ebi->data->get_sems(ebi);
+ 	if (ebi->data->set_setup)
+ 		ebi->data->set_setup(ebi);
+ 
+@@ -1580,6 +1793,9 @@ static const struct stm32_fmc2_ebi_data stm32_fmc2_ebi_mp25_data = {
+ 	.fmc2_enable_bit = FMC2_CFGR_FMC2EN,
+ 	.set_setup = stm32_fmc2_ebi_mp25_set_setup,
+ 	.save_setup = stm32_fmc2_ebi_mp25_save_setup,
++	.check_rif = stm32_fmc2_ebi_mp25_check_rif,
++	.put_sems = stm32_fmc2_ebi_mp25_put_sems,
++	.get_sems = stm32_fmc2_ebi_mp25_get_sems,
+ };
+ 
+ static const struct of_device_id stm32_fmc2_ebi_match[] = {
+-- 
+2.25.1
 
-> 
-> In [1] there was a discussion about an abstraction layer between smc-d and the
-> ism devices.
-> I am not sure what you are proposing now, is it an smc-d feature or independent of smc?
-> In 3/15 you say it is part of the SMC module, but then it has its own device entry.
-> Didn't you want to use it for other things as well? Or is it an SMC-D only feature?
-> Is it a device (Config help: "kind of virtual device")? Or an SMC-D feature?
-> 
-
-This patchset aims to propose an SMC feature, which is SMC-D loopback. The main work
-to achieve this feature is to implement an Emulated-ISM, which is loopback-ism. The
-loopback-ism is a 'built-in' dummy device of SMC and only serves SMC.
-
-SMC-D protocol + 'built-in dummy device' (loopback-ism device) = SMC-D loopback feature.
-
-To provide the runtime switch and statistics of loopback-ism, I need to find a sysfs
-entry for it, since it doesn't belong to any class (e.g. pci_bus), I created an 'smc'
-entry under /sys/devices/virtual/ and put loopback-ism under it.
-
-The other SMC devices, such as RoCE, s390 ISM, virtio-ism will be in their own sysfs
-entry, not under the /sys/devices/*virtual*/smc/.
-
-The Config help is somewhat inaccurate. To be more precise, the SMC_LO config is used to
-configure whether to enable this built-in dummy device for intra-OS communication.
-
-> Will we have a class of ism devices (s390 ism, ism-loopback, virtio-ism)
-> That share common properties (internal API?)
-> and smc-d will work with any of those? > But they all can exist without smc ?! BTW: This is what we want for s390-ism.
-> The client-registration interface [2] is currently the way to achieve this.
-> But maybe we need a more general concept?
-> 
-
-I didn't mean to create a class to cover all the ISM devices. It is only for
-loopback-ism. Because loopback-ism can not be classified, so I create an entry
-under /sys/devices/virtual/.
-
-> Maybe first a preparation patchset that introduces a class/ism
-> Together with an improved API?
-> In case you want to use ISM devices for other purposes as well..
-> But then the whole picture of ism-loopback in one patchset (RFC?)
-> has its benefits as well.
-> 
-
-Sorry for causing, I didn't mean to create a class to cover all the ISM devices.
-They should be in their own sysfs entries (e.g. pci_bus), since they will be used
-out of SMC. Only loopback-ism belongs only to SMC.
-
-> 
-> Other points that I noticed:
-> 
-> Naming: smc loopback, ism-loopback, loopback-ism ?
-> 
-> config: why not tristate? Why under net/smc?
-> 
-
-'SMC-D loopback' or 'SMC loopback' is used to indicate the feature or capability.
-'loopback-ism' is the emulated-ISM device that 'SMC/SMC-D loopback' used.
-('ism-loopback' doesn't seem to appear in my patchset)
-If we all agree with these, I will check all the terms in the patch and unify them.
-
-SMC_LO is used to configure whether SMC is allowed to use loopback-ism (CONFIG_SMC_LO),
-it acts as a check in the code, so I defined it as a bool.
-And loopback-ism only serves SMC-D loopback, as a feature of SMC, so the implementation
-(net/smc/smc_loopback.{c|h}) is under net/smc.
-
-> /sys/devices/virtual/smc  does not initially show up in my installation!!!
-> root@t35lp50:/sys/devices/virtual/> ls
-> 3270/  bdi/  block/  graphics/  iommu/  mem/  memory_tiering/  misc/  net/  tty/  vc/  vtconsole/  workqueue/
-> root@t35lp50:/sys/devices/virtual/> ls smc/loopback-ism
-> active  dmb_copy  dmbs_cnt  dmb_type  subsystem@  uevent  xfer_bytes
-> root@t35lp50:/sys/devices/virtual/> ls
-> 3270/  bdi/  block/  graphics/  iommu/  mem/  memory_tiering/  misc/  net/  smc/  tty/  vc/  vtconsole/  workqueue/
-> Is that normal behaviour?
-> 
-
-/sys/devices/virtual/smc is created after SMC module initialization.
-During the SMC module initialization, smc_loopback_init() is called, and the
-/sys/devices/virtual/smc entry is created.
-
-> You introduced a class/smc
-> Maybe class/ism would be better?
-> The other smc interfaces do not show up in class/smc!! Not so good
-> 
-
-Sorry for causing, I didn't mean to create a class to cover all the ISM devices.
-They should be in their own sysfs entries (e.g. pci_bus), since they can be used
-out of SMC. But loopback-ism is a SMC 'built-in' dummy device, it belongs only
-to SMC and can't be classified to other entries.
-
-
-> Why doesn't it show in smc_rnics?
-> (Maybe some deficiency of smc_rnics?)
-> 
-smc_rnics can't be used on the arch other than s390.
-
-# ./smc_rnics  -a
-Error: s390/s390x supported only
-
-
-> But then it shows in other smc-tools:
-> root@t35lp50:/sys/> smcd device
-> FID  Type  PCI-ID        PCHID  InUse  #LGs  PNET-ID
-> 0000 0     loopback-ism  ffff   No        0
-> 0029 ISM   0000:00:00.0  07c1   No        0  NET1
-> Nice!
-> 
-
-Yes, this is did on patch 01/15.
-
-Best regards,
-Wen Gu
-
-> Kind regards
-> Sandy
-> 
-> 
-> [1] https://lore.kernel.org/lkml/e3819550-7b10-4f9c-7347-dcf1f97b8e6b@linux.alibaba.com/
-> [2] 89e7d2ba61b7 ("net/ism: Add new API for client registration")
