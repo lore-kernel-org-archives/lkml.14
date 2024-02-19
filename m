@@ -1,154 +1,90 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A711851C2A;
-	Mon, 19 Feb 2024 19:33:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29DDB50A75;
+	Mon, 19 Feb 2024 19:34:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708371226; cv=none; b=ngPgFA7Oo3P/xwB7p9idd7PzqI6fsedyVefmT7n6l53J/H7v761AG+7O7BSLvopxSfUYc/Fyp30xNK0SXP4IR5zh7eI0mJ6kukmMtf9agb+wJJQVnu+PSb067aeoMOst4BRNFEUQObTz50zCz8I7PeRDyOmWDzTf0usVKdvKZ3g=
+	t=1708371253; cv=none; b=kAq5HdPr8Drj0kDlAJhDPIbo/bG9M0GhyCm8jtpivQ2H6KcfnZOO5FUEUmnUDnuC2PyILwpvBKOXrqA70eDcfeAYk+xnQ/jd7slJ50sbUr79ZCV0WGjg69hNNiBvsNfrckJYGHkuJ46sVF6QE3Bxih4KQGVT8eww0pRd/EnIT+Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708371226; c=relaxed/simple;
-	bh=15qqgc3nC64cmRS12BFFHTnozV/EM0f47w86rm+TtAc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MIdzCq/9GZ9jlIjv6qyHrABBc1vOSD1qHx0dRA1T9KJ49LkOCtGemMveUURQtW1bMXWvGWU348H3n7oy68y6c9rmHBCLt/wPP8WAbHNulE2Qa8zgbC/HUox0TXuQ/lMHmdGh0yIYCTXZhR607FdSy4TJFh8C6PFcKcPB3rNjfFY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=sVfwVoaD; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=sVfwVoaD; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1708371253; c=relaxed/simple;
+	bh=uiy23fzx9AJKJeZCc+CpWKPnHutJKS8U/tiBSjzkWs4=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=nZ6/pMT/+qL3VpUuTxIVQRIIpCgAM6MNl2ZgYVJ3cOkGVhbTVmTLOhkVA3yNlJKsGG64ZyW55RWCYxpZi/iO4ni8RGr3o7OI2UWrQAfPwHW4qkLnbnOr9TyOXf46IDmMsAaHSFfP/6+PeMH5HmbqZ2M5Vebi7zFZFE1POiEQrSw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IFyQI/ZK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="sVfwVoaD";
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="sVfwVoaD"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id C47D91F820;
-	Mon, 19 Feb 2024 19:33:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1708371222; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=qEEchMU2eWyAGkbixbgw2dnBZQH6T3ohOnMXKOjuWAY=;
-	b=sVfwVoaDFY6zDWy8PQxJqgtEqxnI3r4JWQahOXgpiHmuGxsXU6I0Mn30+p9wPp0jtiDeIc
-	zblFDCKuDHIBHp4VvSeOXKyNtFXTLQVirU7WIUg7oDGlxA77tnNy/WEFWQs8SvZ0AUdJL2
-	0a8ozu13LwlWxiBR4dr7Vu5ZRUFtACI=
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1708371222; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=qEEchMU2eWyAGkbixbgw2dnBZQH6T3ohOnMXKOjuWAY=;
-	b=sVfwVoaDFY6zDWy8PQxJqgtEqxnI3r4JWQahOXgpiHmuGxsXU6I0Mn30+p9wPp0jtiDeIc
-	zblFDCKuDHIBHp4VvSeOXKyNtFXTLQVirU7WIUg7oDGlxA77tnNy/WEFWQs8SvZ0AUdJL2
-	0a8ozu13LwlWxiBR4dr7Vu5ZRUFtACI=
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id A678913647;
-	Mon, 19 Feb 2024 19:33:42 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id 2W6jJRat02UyLAAAD6G6ig
-	(envelope-from <mhocko@suse.com>); Mon, 19 Feb 2024 19:33:42 +0000
-Date: Mon, 19 Feb 2024 20:33:38 +0100
-From: Michal Hocko <mhocko@suse.com>
-To: "T.J. Mercier" <tjmercier@google.com>
-Cc: Johannes Weiner <hannes@cmpxchg.org>,
-	Roman Gushchin <roman.gushchin@linux.dev>,
-	Shakeel Butt <shakeelb@google.com>,
-	Muchun Song <muchun.song@linux.dev>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Efly Young <yangyifei03@kuaishou.com>, android-mm@google.com,
-	yuzhao@google.com, mkoutny@suse.com,
-	Yosry Ahmed <yosryahmed@google.com>, cgroups@vger.kernel.org,
-	linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4] mm: memcg: Use larger batches for proactive reclaim
-Message-ID: <ZdOtEgwuwDTtVw3L@tiehlicka>
-References: <20240206175251.3364296-1-tjmercier@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IFyQI/ZK"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id B70F9C43390;
+	Mon, 19 Feb 2024 19:34:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1708371252;
+	bh=uiy23fzx9AJKJeZCc+CpWKPnHutJKS8U/tiBSjzkWs4=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+	b=IFyQI/ZKDt8Q2YaHwyi0gf3pcJWj8K/gIjEfnPE9zbjGVqe9K/ixCDcgKYOixfin8
+	 T5I6vZQX4gbw7bXNq/Sg06/xZjHRawzNRmtt+qfWpyMSPQVs1A40POMrCcSav4yRfZ
+	 YBB5N7+gaLz/f17Do0QUuypKgGFLulSR6NadkJssc6os0PKqgKE5U+Mp10g4w0x9Bq
+	 P4KgTzqhavFDzp4uqvM2HjakZhVis6cYq9RQ8zkD9jTWnWTfJ4Rz4gXhXb+p6Tn9hJ
+	 QQLaruyiYZFnkt5K37wc54K4aRtzzF7mcesG15nTi0btO9X2vEwfLqIV1ETuCfjh0B
+	 cjB0z3HEGFTqg==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C0CBC48BC3;
+	Mon, 19 Feb 2024 19:34:12 +0000 (UTC)
+From: Yang Xiwen via B4 Relay <devnull+forbidden405.outlook.com@kernel.org>
+Date: Tue, 20 Feb 2024 03:34:13 +0800
+Subject: [PATCH v5 2/5] mmc: dw_mmc-hi3798cv200: remove MODULE_ALIAS()
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240206175251.3364296-1-tjmercier@google.com>
-Authentication-Results: smtp-out2.suse.de;
-	none
-X-Spam-Level: 
-X-Spam-Score: -3.80
-X-Spamd-Result: default: False [-3.80 / 50.00];
-	 ARC_NA(0.00)[];
-	 RCVD_VIA_SMTP_AUTH(0.00)[];
-	 FROM_HAS_DN(0.00)[];
-	 TO_DN_SOME(0.00)[];
-	 TO_MATCH_ENVRCPT_ALL(0.00)[];
-	 NEURAL_HAM_LONG(-1.00)[-1.000];
-	 MIME_GOOD(-0.10)[text/plain];
-	 RCVD_COUNT_THREE(0.00)[3];
-	 DKIM_SIGNED(0.00)[suse.com:s=susede1];
-	 NEURAL_HAM_SHORT(-0.20)[-0.998];
-	 RCPT_COUNT_TWELVE(0.00)[14];
-	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email];
-	 FUZZY_BLOCKED(0.00)[rspamd.com];
-	 FROM_EQ_ENVFROM(0.00)[];
-	 MIME_TRACE(0.00)[0:+];
-	 MID_RHS_NOT_FQDN(0.50)[];
-	 RCVD_TLS_ALL(0.00)[];
-	 BAYES_HAM(-3.00)[100.00%]
-X-Spam-Flag: NO
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240220-b4-mmc-hi3798mv200-v5-2-f506c55f8e43@outlook.com>
+References: <20240220-b4-mmc-hi3798mv200-v5-0-f506c55f8e43@outlook.com>
+In-Reply-To: <20240220-b4-mmc-hi3798mv200-v5-0-f506c55f8e43@outlook.com>
+To: Ulf Hansson <ulf.hansson@linaro.org>, 
+ Jaehoon Chung <jh80.chung@samsung.com>, Rob Herring <robh+dt@kernel.org>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+ Conor Dooley <conor+dt@kernel.org>
+Cc: Igor Opaniuk <igor.opaniuk@linaro.org>, 
+ tianshuliang <tianshuliang@hisilicon.com>, David Yang <mmyangfl@gmail.com>, 
+ linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org, 
+ devicetree@vger.kernel.org, Yang Xiwen <forbidden405@outlook.com>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+X-Mailer: b4 0.12.4
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1708371252; l=722;
+ i=forbidden405@outlook.com; s=20230724; h=from:subject:message-id;
+ bh=MzqKbWX8E5l9h/hzBiWtMINHXtoCtQN0jkOqsqOv7OM=;
+ b=Bkbs/tWN2onE0fLGjRMLTNg7wCp7OAIkTmcySRNxFXCkM1RZnu8uWY43nY65UTKj4IVAywetk
+ 0wUdrpDDF0RAChUwOFV37GTB4YGs0be3LZbYdpmbC94BQlXJSNR24uu
+X-Developer-Key: i=forbidden405@outlook.com; a=ed25519;
+ pk=qOD5jhp891/Xzc+H/PZ8LWVSWE3O/XCQnAg+5vdU2IU=
+X-Endpoint-Received:
+ by B4 Relay for forbidden405@outlook.com/20230724 with auth_id=67
+X-Original-From: Yang Xiwen <forbidden405@outlook.com>
+Reply-To: <forbidden405@outlook.com>
 
-On Tue 06-02-24 17:52:50, T.J. Mercier wrote:
-> Before 388536ac291 ("mm:vmscan: fix inaccurate reclaim during proactive
-> reclaim") we passed the number of pages for the reclaim request directly
-> to try_to_free_mem_cgroup_pages, which could lead to significant
-> overreclaim. After 0388536ac291 the number of pages was limited to a
-> maximum 32 (SWAP_CLUSTER_MAX) to reduce the amount of overreclaim.
-> However such a small batch size caused a regression in reclaim
-> performance due to many more reclaim start/stop cycles inside
-> memory_reclaim. The restart cost is amortized over more pages with
-> larger batch sizes, and becomes a significant component of the runtime
-> if the batch size is too small.
-> 
-> Reclaim tries to balance nr_to_reclaim fidelity with fairness across
-> nodes and cgroups over which the pages are spread. As such, the bigger
-> the request, the bigger the absolute overreclaim error. Historic
-> in-kernel users of reclaim have used fixed, small sized requests to
-> approach an appropriate reclaim rate over time. When we reclaim a user
-> request of arbitrary size, use decaying batch sizes to manage error while
-> maintaining reasonable throughput.
-> 
-> MGLRU enabled - memcg LRU used
-> root - full reclaim       pages/sec   time (sec)
-> pre-0388536ac291      :    68047        10.46
-> post-0388536ac291     :    13742        inf
-> (reclaim-reclaimed)/4 :    67352        10.51
-> 
-> MGLRU enabled - memcg LRU not used
-> /uid_0 - 1G reclaim       pages/sec   time (sec)  overreclaim (MiB)
-> pre-0388536ac291      :    258822       1.12            107.8
-> post-0388536ac291     :    105174       2.49            3.5
-> (reclaim-reclaimed)/4 :    233396       1.12            -7.4
-> 
-> MGLRU enabled - memcg LRU not used
-> /uid_0 - full reclaim     pages/sec   time (sec)
-> pre-0388536ac291      :    72334        7.09
-> post-0388536ac291     :    38105        14.45
-> (reclaim-reclaimed)/4 :    72914        6.96
-> 
-> Fixes: 0388536ac291 ("mm:vmscan: fix inaccurate reclaim during proactive reclaim")
-> Signed-off-by: T.J. Mercier <tjmercier@google.com>
-> Reviewed-by: Yosry Ahmed <yosryahmed@google.com>
-> Acked-by: Johannes Weiner <hannes@cmpxchg.org>
-> Acked-by: Shakeel Butt <shakeelb@google.com>
-> Reviewed-by: Michal Koutný <mkoutny@suse.com>
+From: Yang Xiwen <forbidden405@outlook.com>
 
-Acked-by: Michal Hocko <mhocko@suse.com>
+The alias is not used and should be removed.
 
-Sorry, I've missed this version
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Signed-off-by: Yang Xiwen <forbidden405@outlook.com>
+---
+ drivers/mmc/host/dw_mmc-hi3798cv200.c | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/drivers/mmc/host/dw_mmc-hi3798cv200.c b/drivers/mmc/host/dw_mmc-hi3798cv200.c
+index e9470c50a348..61923a518369 100644
+--- a/drivers/mmc/host/dw_mmc-hi3798cv200.c
++++ b/drivers/mmc/host/dw_mmc-hi3798cv200.c
+@@ -201,4 +201,3 @@ module_platform_driver(dw_mci_hi3798cv200_driver);
+ 
+ MODULE_DESCRIPTION("HiSilicon Hi3798CV200 Specific DW-MSHC Driver Extension");
+ MODULE_LICENSE("GPL v2");
+-MODULE_ALIAS("platform:dwmmc_hi3798cv200");
+
 -- 
-Michal Hocko
-SUSE Labs
+2.43.0
+
