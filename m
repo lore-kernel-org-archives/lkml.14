@@ -1,82 +1,139 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f195.google.com (mail-qt1-f195.google.com [209.85.160.195])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 609962C1AA;
-	Mon, 19 Feb 2024 11:00:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE56C1C10
+	for <linux-kernel@vger.kernel.org>; Mon, 19 Feb 2024 11:01:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708340426; cv=none; b=DZglIKlBaQtLe4X2xZFrRj2FOVfBFJmMAMOxISgx5vM+3TT6U0zUp3xfCkh4zBC+cTgeEr2yaLRlEgrtiCddjlUuqHsT1s294+teVyzsioDOkDwNutoacx984d01dktpRChPLZYtuDl9txLqGkHSCFiiHC2bZmXDnx4Fu/hFzq8=
+	t=1708340469; cv=none; b=AX+KLfPRkwpaJZaU0VBLrb76hFsEGso2KifOJDoBmF2qfVPEoV71Cllm+P4CQ2dTGhHl9gq71tQv7uymBZjnrFJd5dqtau+L4fotANn4FUaPc7WNXTxH+p9nl1+vW+gBV5vUNiC/G80e6J2jeL/kthaknQZSFuw08NnZargFhvs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708340426; c=relaxed/simple;
-	bh=uvA9+6Dw90IYg/Zyk244coxsLVp6cYV58Ros7J2iFVY=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=U/pwj2524sN3MQQuT7zcX8Pk9t1ZaKO37GdIwsD8GlBTt/lFCQ1vvioSpH+fT9orqX1jZft8dXoBJd8bG4opfvbwRVmnRZvwxbkYyHtAPvaMhYRr8wb/8hsJAY9RrdCn7Q4uJdQ7PFPHeP0PLVXALAiPC97DLwqSXR/sZP72Kc4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c9gYk8je; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1708340469; c=relaxed/simple;
+	bh=rWsOnu9c0E3+G48KddE34DONtrfMn5lcE+flCVqxLVE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=jumPPywR24RNQAR3JEFWPXYn0LLMGdSwAvkvzthwl0Eg147HiQcuubTdvNQ0/Cl4hVT38DPCYQJh3QE8EyXe5ws4LCoHlCZkoVojb6C3Qlq6wMHr0hK3rTvdxM3nwbvur21hItHqrKQziWDc3AdTcSbkWgZFDS7zWHswjWKWVyQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=aL6YHDeu; arc=none smtp.client-ip=209.85.160.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c9gYk8je"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id E03B8C43330;
-	Mon, 19 Feb 2024 11:00:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708340425;
-	bh=uvA9+6Dw90IYg/Zyk244coxsLVp6cYV58Ros7J2iFVY=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=c9gYk8jeBAlGoKZ43r7vGX6dsYF9PppEMzdgBg8Xb4YsjydCQ/kdDQUIp3ARocahj
-	 hik9ULU0JYZ8DnK0nXiFziLKVAAeKeYhhtEO3dGzBvRLF1BO/6pWXghZsIBMHBlmfd
-	 H84FyCAFAN3RTQMv0BbsqupHuz4edg24bvGfhIcrF6lElwqxQ5s2+rNTQ85boo9Y88
-	 Nmmh9/99l05RB2F2Xo8mdjQjLluPEpAuQmHq6SsNGQixCuqa3UPKM/xmFd59H68sME
-	 XiRGKdRViYTJIcHYRkkRYIh3MpfKmd3X2tmObGGv1q4NxVLOHmsCj10eBGm0WWVim4
-	 GZcdLhjyTP/ug==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id CCA59D990D8;
-	Mon, 19 Feb 2024 11:00:25 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="aL6YHDeu"
+Received: by mail-qt1-f195.google.com with SMTP id d75a77b69052e-42c7908fad8so6514481cf.1
+        for <linux-kernel@vger.kernel.org>; Mon, 19 Feb 2024 03:01:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1708340466; x=1708945266; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=AZYRZSmiMtv1nVWBmnpx4nfvYB6XZR9iTXkP1K/oLxg=;
+        b=aL6YHDeurhvb+BebFy7X0/4tkHlOFIzFsbJD1eh3g7PHY6eZ0r27jFkwnFBlz7wncp
+         tJahBN0wUbU7voi3nbwmBW5A2YZPvYTUjqSrqfLexD7cEewSnzvg0uYKzlDXS13Id1hZ
+         1JS8TegJfDiD71EG0IO0DBjFeYbz3X8TfggRs=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708340466; x=1708945266;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=AZYRZSmiMtv1nVWBmnpx4nfvYB6XZR9iTXkP1K/oLxg=;
+        b=O6zTFB9bnI950wjYjeCbTxlZRqvLfdS7iH91MDj4G0rU4blIMPogKGcxDM4N8GT3Tn
+         FeFNJx5ZauHqK55XwbJQZxvie2iGFtSYnYPPAiM5R93Nl4hPbWYskRMNJDY2x+qjQy5H
+         HH1HiNHoZa8oWfD3r4Ag0nelyV3BYOqDyM6cs0CylVz7dfzNy3z6m0g4wbQ4PM9gTgOt
+         YP2iNBKZ7L7KmHgpdAERWNDi40mV6eZoz5ThdNFFyJ4Mo1h5iVB0ujEvvTEV4zkDzHBp
+         XSu+qLzq5Qc7l3AlFQ/vfuBFdkoihMUQlKbjKfiE2zVxpAAlgksKD2x7mkEKrdqeQ7P1
+         V/sQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVDvFb5YW+gTYANOwlFnH7M7LaGaIiJaUiK69GGCy7IbrY/VLHKqBrKcAQDT0Nw1xANWk7uluubG0FKpdaDVWBwR/3RxwBXWUE2Vczi
+X-Gm-Message-State: AOJu0YxM+6tcF302oVGOOqAtDd/A4jdsQ8lHve3fBBvVTisOGrWjlluM
+	On5V/wymrtuff/fLDUEuI6cdAZ1jNHxXeHyXv3JinZMsOTfISkB9ADHykaeuko+ej3O4Nx53GrJ
+	WdZ/maz6G0r69Bp2SPYyGhqnr3dCKC+uYs57T
+X-Google-Smtp-Source: AGHT+IFIyTslOoP/5qvkPX58Yl1ODI3m3FBSnFsxBzqTTkSNYT6rBtjjtKNBFtcWaJOsDwBqowPopZKYU7kUtHrJeg0=
+X-Received: by 2002:a05:622a:1885:b0:42d:c856:a2bf with SMTP id
+ v5-20020a05622a188500b0042dc856a2bfmr14383238qtc.5.1708340466731; Mon, 19 Feb
+ 2024 03:01:06 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH] net: sched: Annotate struct tc_pedit with __counted_by
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <170834042583.18215.251918949799805641.git-patchwork-notify@kernel.org>
-Date: Mon, 19 Feb 2024 11:00:25 +0000
-References: <20240216232744.work.514-kees@kernel.org>
-In-Reply-To: <20240216232744.work.514-kees@kernel.org>
-To: Kees Cook <keescook@chromium.org>
-Cc: kuba@kernel.org, jhs@mojatatu.com, xiyou.wangcong@gmail.com,
- jiri@resnulli.us, davem@davemloft.net, edumazet@google.com,
- pabeni@redhat.com, gustavoars@kernel.org, netdev@vger.kernel.org,
- linux-hardening@vger.kernel.org, nathan@kernel.org, ndesaulniers@google.com,
- morbo@google.com, justinstitt@google.com, linux-kernel@vger.kernel.org,
- llvm@lists.linux.dev
+References: <20240119033126.1802711-1-ototot@chromium.org>
+In-Reply-To: <20240119033126.1802711-1-ototot@chromium.org>
+From: Tommy Chiang <ototot@chromium.org>
+Date: Mon, 19 Feb 2024 19:00:55 +0800
+Message-ID: <CAH2knV03g8_z8326yd=pQV11X3N1VFc_DqXzVjMgM4Q0C+8awg@mail.gmail.com>
+Subject: Re: [PATCH] dma-buf: Add syntax highlighting to code listings in the document
+To: Sumit Semwal <sumit.semwal@linaro.org>, =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
+Cc: linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org, 
+	linaro-mm-sig@lists.linaro.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hello:
+Kindly ping :)
 
-This patch was applied to netdev/net-next.git (main)
-by David S. Miller <davem@davemloft.net>:
-
-On Fri, 16 Feb 2024 15:27:44 -0800 you wrote:
-> Prepare for the coming implementation by GCC and Clang of the __counted_by
-> attribute. Flexible array members annotated with __counted_by can have
-> their accesses bounds-checked at run-time checking via CONFIG_UBSAN_BOUNDS
-> (for array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
-> functions).
-> 
-> As found with Coccinelle[1], add __counted_by for struct tc_pedit.
-> Additionally, since the element count member must be set before accessing
-> the annotated flexible array member, move its initialization earlier.
-> 
-> [...]
-
-Here is the summary with links:
-  - net: sched: Annotate struct tc_pedit with __counted_by
-    https://git.kernel.org/netdev/net-next/c/1e63e5a813fa
-
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
-
+On Fri, Jan 19, 2024 at 11:33=E2=80=AFAM Tommy Chiang <ototot@chromium.org>=
+ wrote:
+>
+> This patch tries to improve the display of the code listing
+> on The Linux Kernel documentation website for dma-buf [1] .
+>
+> Originally, it appears that it was attempting to escape
+> the '*' character, but looks like it's not necessary (now),
+> so we are seeing something like '\*' on the webite.
+>
+> This patch removes these unnecessary backslashes and adds syntax
+> highlighting to improve the readability of the code listing.
+>
+> [1] https://docs.kernel.org/driver-api/dma-buf.html
+>
+> Signed-off-by: Tommy Chiang <ototot@chromium.org>
+> ---
+>  drivers/dma-buf/dma-buf.c | 15 +++++++++------
+>  1 file changed, 9 insertions(+), 6 deletions(-)
+>
+> diff --git a/drivers/dma-buf/dma-buf.c b/drivers/dma-buf/dma-buf.c
+> index 8fe5aa67b167..e083a0ab06d7 100644
+> --- a/drivers/dma-buf/dma-buf.c
+> +++ b/drivers/dma-buf/dma-buf.c
+> @@ -1282,10 +1282,12 @@ EXPORT_SYMBOL_NS_GPL(dma_buf_move_notify, DMA_BUF=
+);
+>   *   vmap interface is introduced. Note that on very old 32-bit architec=
+tures
+>   *   vmalloc space might be limited and result in vmap calls failing.
+>   *
+> - *   Interfaces::
+> + *   Interfaces:
+>   *
+> - *      void \*dma_buf_vmap(struct dma_buf \*dmabuf, struct iosys_map \*=
+map)
+> - *      void dma_buf_vunmap(struct dma_buf \*dmabuf, struct iosys_map \*=
+map)
+> + *   .. code-block:: c
+> + *
+> + *     void *dma_buf_vmap(struct dma_buf *dmabuf, struct iosys_map *map)
+> + *     void dma_buf_vunmap(struct dma_buf *dmabuf, struct iosys_map *map=
+)
+>   *
+>   *   The vmap call can fail if there is no vmap support in the exporter,=
+ or if
+>   *   it runs out of vmalloc space. Note that the dma-buf layer keeps a r=
+eference
+> @@ -1342,10 +1344,11 @@ EXPORT_SYMBOL_NS_GPL(dma_buf_move_notify, DMA_BUF=
+);
+>   *   enough, since adding interfaces to intercept pagefaults and allow p=
+te
+>   *   shootdowns would increase the complexity quite a bit.
+>   *
+> - *   Interface::
+> + *   Interface:
+> + *
+> + *   .. code-block:: c
+>   *
+> - *      int dma_buf_mmap(struct dma_buf \*, struct vm_area_struct \*,
+> - *                    unsigned long);
+> + *     int dma_buf_mmap(struct dma_buf *, struct vm_area_struct *, unsig=
+ned long);
+>   *
+>   *   If the importing subsystem simply provides a special-purpose mmap c=
+all to
+>   *   set up a mapping in userspace, calling do_mmap with &dma_buf.file w=
+ill
+> --
+> 2.43.0.381.gb435a96ce8-goog
+>
