@@ -1,95 +1,109 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1D10381C4
-	for <linux-kernel@vger.kernel.org>; Mon, 19 Feb 2024 15:10:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 159E13A264;
+	Mon, 19 Feb 2024 15:11:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708355456; cv=none; b=Ody9WeZPEBtgjyvPz5xwPzoPN81oGHJXEfvKKJqZ88G+iKXjbxDTwF5jKhalwNVLDOCsPhvWp/xWGpSUYMCirwzSreSqFZ/YMlTuWfSZ2gQBIcNts09tAXdTXyPrvGPm8O8V6UxKxZzlV3yXS/uSLafwCx3oOzJul18HxvzD1nM=
+	t=1708355493; cv=none; b=kf6dF+2Gsg/MQXIt3tHxgoBsO0Za5wkMUg6L8yr2H85zCDWtnQCTR1YEMEqTtulBBTahkycYpqWctfc+W+OHNWtZbbaS60DHmlpPQ2yIWe/c1U8PL53Ly2IKCjj6+7OBBtzqUYh1f1BXHtA7FzEMiaztphuXEqZ3rTr6v4nod1U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708355456; c=relaxed/simple;
-	bh=o6fyOf6G7BhIiVO7M4QfgNflaD8M9HcGvUR8Y5llcxQ=;
-	h=From:In-Reply-To:References:To:Cc:Subject:MIME-Version:
-	 Content-Type:Date:Message-ID; b=rwjlUaSHc32csEGFDZfIYJ2gg6fsSwie/x9jaHUL0AhfHP+HRLzNxe/VoMvpAIizMykOLMBEOUcL7ikejw/Sp49t3Y9iev3Avuvrq08SWGxNwZoLTm93gnRr8gUJWa7WBmcQN6rVqBTNQUul5juDF/SUfVGqcYbiNVZbHcxLVqA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=PHeFqz1Q; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1708355493; c=relaxed/simple;
+	bh=ayLLTpEgKqvBUDQj5moMFIOBncxte1r8rIs7zb2L0nI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CZOi2PPqBIeVydNBg5MAhpA/GQdn68olzudgsZJJiYPClazSaWNhRibllHf8ZM5cD/SZxs9xYQEUnzvrZIXlB2KoVBnYlDOlQdZygQZVecfVsA4jT+NhhHTStrtKoC5bYf/xBLfMRp78cCMqpQYgiIrhFlufCrMUsrix49hESdY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Io3ipe+f; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PHeFqz1Q"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1708355451;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=KSqXWjK+LddXqIK8pJkcj8gOwnFmQLsFMFK0s1Et2YI=;
-	b=PHeFqz1QOKPIG+Cjl9/hzX5DZxxt6BpiPkRF7YpOCHdl9JS8Xe5W/GmWzr2CDqLXDBcqAF
-	kWywxkQ9K4YELKCj67rDDgt4T5xgq6K0M96I08BH3Xn9wWAQPGvSRmR0/GhXMnCy7eCvHO
-	Y9TuP3WfiDbKhRkFIxD5LejPTDPFQVs=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-25-H-vk5ZXBOuiyEmjzhFTpBQ-1; Mon, 19 Feb 2024 10:10:48 -0500
-X-MC-Unique: H-vk5ZXBOuiyEmjzhFTpBQ-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com [10.11.54.5])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id E7698881C87;
-	Mon, 19 Feb 2024 15:10:46 +0000 (UTC)
-Received: from warthog.procyon.org.uk (unknown [10.42.28.15])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 014748077;
-	Mon, 19 Feb 2024 15:10:44 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-	Kingdom.
-	Registered in England and Wales under Company Registration No. 3798903
-From: David Howells <dhowells@redhat.com>
-In-Reply-To: <20240209105947.GF1516992@kernel.org>
-References: <20240209105947.GF1516992@kernel.org> <20240205225726.3104808-1-dhowells@redhat.com> <20240205225726.3104808-10-dhowells@redhat.com>
-To: Simon Horman <horms@kernel.org>
-Cc: dhowells@redhat.com, Steve French <smfrench@gmail.com>,
-    Jeff Layton <jlayton@kernel.org>,
-    Matthew Wilcox <willy@infradead.org>,
-    Paulo Alcantara <pc@manguebit.com>,
-    Shyam Prasad N <sprasad@microsoft.com>, Tom Talpey <tom@talpey.com>,
-    Christian Brauner <christian@brauner.io>, netfs@lists.linux.dev,
-    linux-cifs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-    linux-mm@kvack.org, netdev@vger.kernel.org,
-    linux-kernel@vger.kernel.org, Steve French <sfrench@samba.org>,
-    Shyam Prasad N <nspmangalore@gmail.com>,
-    Rohith Surabattula <rohiths.msft@gmail.com>
-Subject: Re: [PATCH v5 09/12] cifs: Cut over to using netfslib
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Io3ipe+f"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1708355492; x=1739891492;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=ayLLTpEgKqvBUDQj5moMFIOBncxte1r8rIs7zb2L0nI=;
+  b=Io3ipe+fSuBs3WX/JSX180EOJd+mCC1pJdAUW7hTI0SHzuwXM585dJWv
+   +Kep0tqLlqM+9zHh+l4U0sNl5bc1JaO4v6JyjR1rcRQZJzVaPj5cjfzAY
+   OGZ6fmhVo8OjhNBaDAVYg0HigMe4nLkoS7bJMKjG6ogS9mI4HhYC2Jkf7
+   yqK3BnToKe5vSa4fiNVImSvFmMJ/MblO36i7T2GcEraY2t4iLJ5SN1GdI
+   AFucmw9p+nqK+Mwnnq9CS+y9nYAqJPFtJqUfKtPCo9/XCz8sAIhlljzbn
+   xr0s9AWyqu7JaA3cC+yJmoBTPsk5v6r0WOp+JYWnO2PG1vb0Ox3YLsh3z
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10989"; a="2545654"
+X-IronPort-AV: E=Sophos;i="6.06,170,1705392000"; 
+   d="scan'208";a="2545654"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Feb 2024 07:09:02 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10989"; a="912890661"
+X-IronPort-AV: E=Sophos;i="6.06,170,1705392000"; 
+   d="scan'208";a="912890661"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Feb 2024 07:08:57 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.97)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1rc5GI-00000005qqV-1fic;
+	Mon, 19 Feb 2024 17:08:54 +0200
+Date: Mon, 19 Feb 2024 17:08:54 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Serge Semin <fancer.lancer@gmail.com>
+Cc: Andy Shevchenko <andy@black.fi.intel.com>,
+	Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Jiri Slaby <jslaby@suse.com>,
+	Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+	Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
+	Maxime Ripard <mripard@kernel.org>, Will Deacon <will@kernel.org>,
+	Russell King <linux@armlinux.org.uk>,
+	linux-arm-kernel@lists.infradead.org, linux-serial@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v9 1/4] serial: 8250: Add 8250 port clock update method
+Message-ID: <ZdNvBtOlxo4FlLUH@smile.fi.intel.com>
+References: <20200723003357.26897-1-Sergey.Semin@baikalelectronics.ru>
+ <20200723003357.26897-2-Sergey.Semin@baikalelectronics.ru>
+ <ZczD7KPbeRnY4CFc@black.fi.intel.com>
+ <raryiklwhctwxcfj3ulbnjcl32owagiccmxpwzmszlh3vm343y@h2ehupm7uiga>
+ <Zc5oYJY6W_MCpwhN@smile.fi.intel.com>
+ <ow5mvkxa4g7mub3faiytsij4cyaaralcbzyn675jny5355han7@azw65mhkpwjz>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <140601.1708355444.1@warthog.procyon.org.uk>
-Content-Transfer-Encoding: quoted-printable
-Date: Mon, 19 Feb 2024 15:10:44 +0000
-Message-ID: <140602.1708355444@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.5
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ow5mvkxa4g7mub3faiytsij4cyaaralcbzyn675jny5355han7@azw65mhkpwjz>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-Simon Horman <horms@kernel.org> wrote:
+On Fri, Feb 16, 2024 at 08:19:37PM +0300, Serge Semin wrote:
+> On Thu, Feb 15, 2024 at 09:39:12PM +0200, Andy Shevchenko wrote:
 
-> >  /* Functions related to files and directories */
-> > +extern const struct netfs_request_ops cifs_req_ops;
-> >  extern const struct file_operations cifs_file_ops;
-> >  extern const struct file_operations cifs_file_direct_ops; /* if direc=
-tio mnt */
-> >  extern const struct file_operations cifs_file_strict_ops; /* if stric=
-tio mnt */
-> =
+...
 
-> Nit: this hunk would probably be better placed in the
->      patch at adds cifs_req_ops to fs/smb/client/file.c
+(thanks for the detailed explanation why you have done it that way)
 
-I'm not sure I understand what you mean.  Is there a bit missing between "=
-at"
-and "adds" in that?
+> If what you suggest is to replace the serial8250_update_uartclk() body
+> with a direct uart_port::set_termios() invocation then I don't find it
+> being much clearer really. The serial8250_update_uartclk() is
+> currently specialized on doing one thing: adjusting the divider in
+> case of the UART-clock change. If instead the entire
+> serial8250_set_termios() method is called then for a reader it won't
+> be easy to understand what is really required for a 8250 serial port
+> to perceive the ref-clock change. But from the maintainability point
+> of view I guess that it might be safer to just call
+> serial8250_set_termios() indeed, since among the other things the
+> later method implies the divider update too. Thus the maintainer won't
+> need to support the two clock divider update implementations.
 
-David
+> From that perspective I agree, directly calling serial8250_set_termios()
+> might be more suitable despite of it' doing more than required.
+
+Would it be possible for you to cook the patch (and test on your HW,
+since it seems the only user of that)?
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
 
