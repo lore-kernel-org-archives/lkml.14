@@ -1,124 +1,110 @@
-Received: from invmail4.hynix.com (exvmail4.hynix.com [166.125.252.92])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E7C841F941
-	for <linux-kernel@vger.kernel.org>; Mon, 19 Feb 2024 06:24:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
+Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com [209.85.208.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5AFD200B7
+	for <linux-kernel@vger.kernel.org>; Mon, 19 Feb 2024 06:25:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708323864; cv=none; b=NYoi5MXWRcWz/c59WJsBCpsAgZ38zOru8FgvPgbqaKMU0U/ohUJmnsYlNDk+jYuLdqZjYoek1N/8GqYCKE7ToQvXHTYeI5mGOub4m1KVSzGMB/DK2E6K0Vl6ZhdkVyQ6y6MbgKqEktpi4FpDCTYjzM1a3dPE4HjnHT9rVUCMFOY=
+	t=1708323917; cv=none; b=e0RsF5TsM5rTnG/VSQaCgDYUPX2a6JiHecHrhgPD50h8/Rt6TU1UnvEewlSexA81lBj/bmSrU9ppIEXlcAAWuL2aDoUMUYH/w9eJDzBvzJ1uapeUrLBks+Vs1qcNqiEavy8wkjVcZLPsoYId2qLxX/CwcGFW68WiQLKqFqusSS4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708323864; c=relaxed/simple;
-	bh=jCdznYeqTxnAdPqUo3goftYDv+lHb7g10nhlhcikrfU=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=Upxw7KNFf0yorZByzhQAda0G3BWn/LZ4hgDZ1dVPu2W/hjj5lMJ9VD4PKMadlnG7IhL0xzbDFdXao/6uizHlbLPx7yxtV9zSpWdxxEbASeZ5L8A88maiSavLfzs5OfhIZJPcfBDYqysdRsGVrtmNziaqVUXxjdJyIpQH/dJEDm4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
-X-AuditID: a67dfc5b-d6dff70000001748-bd-65d2ef615024
-From: Byungchul Park <byungchul@sk.com>
-To: linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org
-Cc: kernel_team@skhynix.com,
-	akpm@linux-foundation.org,
-	ying.huang@intel.com,
-	namit@vmware.com,
-	vernhao@tencent.com,
-	mgorman@techsingularity.net,
-	hughd@google.com,
-	willy@infradead.org,
-	david@redhat.com,
-	peterz@infradead.org,
-	luto@kernel.org,
-	tglx@linutronix.de,
-	mingo@redhat.com,
-	bp@alien8.de,
-	dave.hansen@linux.intel.com,
-	rjgolo@gmail.com
-Subject: [PATCH v8 1/8] x86/tlb: Add APIs manipulating tlb batch's arch data
-Date: Mon, 19 Feb 2024 15:04:00 +0900
-Message-Id: <20240219060407.25254-2-byungchul@sk.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20240219060407.25254-1-byungchul@sk.com>
-References: <20240219060407.25254-1-byungchul@sk.com>
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrALMWRmVeSWpSXmKPExsXC9ZZnkW7i+0upBt8fqFrMWb+GzeLzhn9s
-	Fi82tDNafF3/i9ni6ac+FovLu+awWdxb85/V4vyutawWO5buY7K4dGABk8X1XQ8ZLY73HmCy
-	mH/vM5vF5k1TmS2OT5nKaPH7B1DHyVmTWRwEPb639rF47Jx1l91jwaZSj80rtDwW73nJ5LFp
-	VSebx6ZPk9g93p07x+5xYsZvFo95JwM93u+7yuax9ZedR+PUa2wenzfJebyb/5YtgD+KyyYl
-	NSezLLVI3y6BK+P27ZdMBav4Kpb8aGdrYJzG08XIySEhYCKx8vp0Nhj73PUDYDabgLrEjRs/
-	mUFsEQEziYOtf9i7GLk4mAU+Mkms/t7BApIQFvCRWHz/H5jNIqAq0T3zHROIzStgKnFq2gYW
-	iKHyEqs3HAAaxMHBCTRo90EhkLAQUMmJq5OZQGZKCLSzS/y7s50Vol5S4uCKGywTGHkXMDKs
-	YhTKzCvLTczMMdHLqMzLrNBLzs/dxAiMh2W1f6J3MH66EHyIUYCDUYmHN0PkUqoQa2JZcWXu
-	IUYJDmYlEV73pgupQrwpiZVVqUX58UWlOanFhxilOViUxHmNvpWnCAmkJ5akZqemFqQWwWSZ
-	ODilGhjl/X6+u7dnlu2ZRwY71ty++sdgFYPOt4qkaT4eF6ZceLywbZVx62wRNpHKr36577VM
-	HOqfH5NYG3WYYcd2tT/x5VIPJ1n6X0ubFbeo7NPtlvVRm9JPy/fNcN6gnb434MgDB8XHt3kZ
-	nl55pz61IK+E33KRjPr+6JxL+Q5XbjKXB5fUKl7bv++oEktxRqKhFnNRcSIAuMXYj4MCAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrOLMWRmVeSWpSXmKPExsXC5WfdrJv4/lKqwZevUhZz1q9hs/i84R+b
-	xYsN7YwWX9f/YrZ4+qmPxeLw3JOsFpd3zWGzuLfmP6vF+V1rWS12LN3HZHHpwAImi+u7HjJa
-	HO89wGQx/95nNovNm6YyWxyfMpXR4vcPoI6TsyazOAh5fG/tY/HYOesuu8eCTaUem1doeSze
-	85LJY9OqTjaPTZ8msXu8O3eO3ePEjN8sHvNOBnq833eVzWPxiw9MHlt/2Xk0Tr3G5vF5k5zH
-	u/lv2QIEorhsUlJzMstSi/TtErgybt9+yVSwiq9iyY92tgbGaTxdjJwcEgImEueuH2ADsdkE
-	1CVu3PjJDGKLCJhJHGz9w97FyMXBLPCRSWL19w4WkISwgI/E4vv/wGwWAVWJ7pnvmEBsXgFT
-	iVPTNrBADJWXWL3hANAgDg5OoEG7DwqBhIWASk5cncw0gZFrASPDKkaRzLyy3MTMHFO94uyM
-	yrzMCr3k/NxNjMDgXlb7Z+IOxi+X3Q8xCnAwKvHwZohcShViTSwrrsw9xCjBwawkwuvedCFV
-	iDclsbIqtSg/vqg0J7X4EKM0B4uSOK9XeGqCkEB6YklqdmpqQWoRTJaJg1OqgdHK2n/Sdu7V
-	/xe/iok3ct0vt4ZJpKPoyqFNhhYaFd6TWU5/dn/l+ObD9QxrvaN3Z2S4VmhcMhZ8uNh1OZPF
-	+tiAU83Hln/jTmg6bfLN66XQtfu7VkQd4vyxcIPwk+UvT1VHrNiVrfz8zdUHSuvnP128TV9B
-	L1eKZX+k3f8PxRppdi5Vaz3SlfuUWIozEg21mIuKEwGcMv88agIAAA==
-X-CFilter-Loop: Reflected
+	s=arc-20240116; t=1708323917; c=relaxed/simple;
+	bh=TQodChaPOHWcum/RNtaWMKL6Ir23w3h16d8jHIJEYQ8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=QaySBYUEMkKSn+RYk6lMovnhM9nXyTJYOgyTIq+5CrZQvKdk7NCwyfWevXAzOuB0s1o8XHMF7O7GOHGai94kqJW4aNpWpxlpznLer+mxW+vN+KxJ7va2YKPNghCIWeavbLkyd50g0dxsC4vMQjbqAc7TZXClCj/sL/bJNuE+T6E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=nIB01xNe; arc=none smtp.client-ip=209.85.208.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxon.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="nIB01xNe"
+Received: by mail-lj1-f181.google.com with SMTP id 38308e7fff4ca-2d09cf00214so38374811fa.0
+        for <linux-kernel@vger.kernel.org>; Sun, 18 Feb 2024 22:25:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tuxon.dev; s=google; t=1708323912; x=1708928712; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Zy/lENoBOBZbXj8shKgVOAS0kIgCPAbaRSp31XzJm0E=;
+        b=nIB01xNeanzNhVV+SdVCi588Eo0eXBukT40V3RQgpuH9ia14PLKb3/0YI34OtzMfxn
+         85N9sNV68n+JVB+68RoAmgo5CPE0LDLwYN0i+Nr5ZMzlVTM//jgqKAw09Tcoy/GGmNbd
+         I6f94Edv3EJ5otvwW7LVYZydyai5aHd7Y1yDj2k6un+G/5n+ECyBk/6+yj6R52jyw4FB
+         uj+2Z6b2r37g1AzLz804CfdI9WT/ENAnnURbTQ1wqeOKMOXPrvXLj0U+i30B4NVfl6Ux
+         NCHAABx5avCo4bDky8MjuizLsIuJW2es3tI5yJGSx0ypfVF05LdjNbknfTT/C4jDQn1T
+         6LBg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708323912; x=1708928712;
+        h=content-transfer-encoding:in-reply-to:from:references:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Zy/lENoBOBZbXj8shKgVOAS0kIgCPAbaRSp31XzJm0E=;
+        b=eYy1c/cmMmw4xKczQVc43p4/5lHYPAKsWxylxe2l/3xFGND1ppm13rzdN+Y0HNhya5
+         0Nz8MHCTDolN5tN22KUOPgdhDmAiaDRiIFP2f5ItkxDWqzs3jJjrUN6gIX8u5R9KSoXQ
+         E8n7ELhxzPe5lSLYfTtGT4OMZ4Bbt80Puxsa1QDsFN6xXWfnnKEt3oq5M5XCuhWWB4iN
+         x+JaHxc0u99CWZlpWnw2qrr13PmAXnAzLk1iVxMI2ydR9Jmzdj/9LPIcCFolUvqQiMZ5
+         ngWIK+n9MuIW92i66Ai+3iMg8n9gY4HWnZYqx/BW2diUhSIn5caz2Gwq+/BNhKqF4b/f
+         rM+A==
+X-Forwarded-Encrypted: i=1; AJvYcCUOfPD5FtzMWx0nvYYXwUahnusp+iqvoJ72PP5NW/d/BgBicCyaM228A8icP/dB54UaRO/GRXCSEQT83Eo82bmAmuDpNrZ5ha8Myczp
+X-Gm-Message-State: AOJu0YzAX7Bh8tfzzgG4XpB9zQhoVwnIzAMWQC6GnJOS+jfVj2m6E5+V
+	7VwFXfHTLde7lbpl0K5yPu8HHRFGBNx9ZZ77tAdB2dzRw9Ylfm42aAtxu6QVU+8=
+X-Google-Smtp-Source: AGHT+IGP6skyrpQ+LHssyeFVL9x4R2C5PmtB+z/bDgXXtY+zd/lWWTMfb39ns1BsA6xd3vrJYLpPRQ==
+X-Received: by 2002:a2e:99c3:0:b0:2d2:3b20:72ba with SMTP id l3-20020a2e99c3000000b002d23b2072bamr755168ljj.50.1708323911958;
+        Sun, 18 Feb 2024 22:25:11 -0800 (PST)
+Received: from [192.168.50.4] ([82.78.167.20])
+        by smtp.gmail.com with ESMTPSA id s10-20020a05600c044a00b004122fbf9253sm10177702wmb.39.2024.02.18.22.25.09
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 18 Feb 2024 22:25:11 -0800 (PST)
+Message-ID: <e43727bd-d83d-4271-9871-ff995c8e7d03@tuxon.dev>
+Date: Mon, 19 Feb 2024 08:25:08 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] clk: constify the of_phandle_args argument of
+ of_clk_provider
+Content-Language: en-US
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+ Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
+ <sboyd@kernel.org>, Sudeep Holla <sudeep.holla@arm.com>,
+ Peng Fan <peng.fan@nxp.com>, Shawn Guo <shawnguo@kernel.org>,
+ Nishanth Menon <nm@ti.com>, Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konrad.dybcio@linaro.org>,
+ Geert Uytterhoeven <geert+renesas@glider.be>,
+ Thierry Reding <thierry.reding@gmail.com>,
+ Jonathan Hunter <jonathanh@nvidia.com>,
+ Linus Walleij <linus.walleij@linaro.org>,
+ Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+ Mauro Carvalho Chehab <mchehab@kernel.org>, Vinod Koul <vkoul@kernel.org>,
+ Russell King <linux@armlinux.org.uk>,
+ Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+ Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>,
+ Takashi Iwai <tiwai@suse.com>, linux-clk@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ patches@opensource.cirrus.com, linux-stm32@st-md-mailman.stormreply.com,
+ NXP Linux Team <linux-imx@nxp.com>, linux-amlogic@lists.infradead.org,
+ linux-arm-msm@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+ linux-tegra@vger.kernel.org, linux-omap@vger.kernel.org,
+ linux-media@vger.kernel.org, linux-phy@lists.infradead.org,
+ alsa-devel@alsa-project.org, linux-sound@vger.kernel.org
+References: <20240208163710.512733-1-krzysztof.kozlowski@linaro.org>
+From: claudiu beznea <claudiu.beznea@tuxon.dev>
+In-Reply-To: <20240208163710.512733-1-krzysztof.kozlowski@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-This is a preparation for migrc mechanism that needs to recognize
-read-only TLB entries during batched TLB flush by separating tlb batch's
-arch data into two, one is for read-only entries and the other is for
-writable ones, and merging those two when needed.
 
-Migrc also needs to optimize CPUs to flush by clearing ones that have
-already performed TLB flush needed.
 
-To support it, added APIs manipulating arch data for x86.
+On 08.02.2024 18:37, Krzysztof Kozlowski wrote:
+> None of the implementations of the get() and get_hw() callbacks of
+> "struct of_clk_provider" modify the contents of received of_phandle_args
+> pointer.  They treat it as read-only variable used to find the clock to
+> return.  Make obvious that implementations are not supposed to modify
+> the of_phandle_args, by making it a pointer to const.
+> 
+> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> ---
+>  drivers/clk/at91/pmc.c                        |  3 +-
+>  drivers/clk/at91/pmc.h                        |  3 +-
 
-Signed-off-by: Byungchul Park <byungchul@sk.com>
----
- arch/x86/include/asm/tlbflush.h | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
-
-diff --git a/arch/x86/include/asm/tlbflush.h b/arch/x86/include/asm/tlbflush.h
-index 25726893c6f4..fa7e16dbeb44 100644
---- a/arch/x86/include/asm/tlbflush.h
-+++ b/arch/x86/include/asm/tlbflush.h
-@@ -5,6 +5,7 @@
- #include <linux/mm_types.h>
- #include <linux/mmu_notifier.h>
- #include <linux/sched.h>
-+#include <linux/cpumask.h>
- 
- #include <asm/processor.h>
- #include <asm/cpufeature.h>
-@@ -293,6 +294,23 @@ static inline void arch_flush_tlb_batched_pending(struct mm_struct *mm)
- 
- extern void arch_tlbbatch_flush(struct arch_tlbflush_unmap_batch *batch);
- 
-+static inline void arch_tlbbatch_clear(struct arch_tlbflush_unmap_batch *batch)
-+{
-+	cpumask_clear(&batch->cpumask);
-+}
-+
-+static inline void arch_tlbbatch_fold(struct arch_tlbflush_unmap_batch *bdst,
-+		struct arch_tlbflush_unmap_batch *bsrc)
-+{
-+	cpumask_or(&bdst->cpumask, &bdst->cpumask, &bsrc->cpumask);
-+}
-+
-+static inline bool arch_tlbbatch_done(struct arch_tlbflush_unmap_batch *bdst,
-+		struct arch_tlbflush_unmap_batch *bsrc)
-+{
-+	return cpumask_andnot(&bdst->cpumask, &bdst->cpumask, &bsrc->cpumask);
-+}
-+
- static inline bool pte_flags_need_flush(unsigned long oldflags,
- 					unsigned long newflags,
- 					bool ignore_access)
--- 
-2.17.1
-
+Reviewed-by: Claudiu Beznea <claudiu.beznea@tuxon.dev>
