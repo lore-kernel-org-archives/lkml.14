@@ -1,108 +1,134 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vs1-f54.google.com (mail-vs1-f54.google.com [209.85.217.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 362982421E;
-	Mon, 19 Feb 2024 09:05:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11C762555D
+	for <linux-kernel@vger.kernel.org>; Mon, 19 Feb 2024 09:06:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708333555; cv=none; b=NQOIsxo1vacZ7AJEfeedxjZIyfxuQnY5NseoaUJn0L8evy5DGbyPtXR+D+lowkOi7kAWq3054aZuA44F3TfL6zs5+rT3fcx7mX7MYwieITLNoeqAWpD17eJlvc4tqL8JcmYQZZevfa4O47DPgohYgXnGN/IjTbW66wpM/lYsPsk=
+	t=1708333564; cv=none; b=HuZAeQa4JeG0697CrueNxNmm2f/uH60L0SRZVEnk6mQSqTgKFX7itEKSxW1wOo+1Sv5TaU7XysNMVE6ayQNPj5bO2i42NCxtA2Cw3yn+/rBcMG9Flm9Oh5WnwC5AAf6ehi64RP2+HOn4+JaInoNxIxlfzq3uiiKQhzKdXRmxuTo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708333555; c=relaxed/simple;
-	bh=vNFZEnPjscvlCrvcCpkiA2cM6MQpRkPtvd7PWqYE+Eo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EuAp19EkZK/WT6pMMWJpL4YrBqxa9XxlEuWasJLjND71BsBRYxSzcAcnPJsxyGQ0WHzpsmacnQbJwBulRrBhFjzvoE5hggorAuziAjvE6QGTi/2tMsXLQMYcPshFwKvaY/TyI0h4j+KWi+zY/QDz/3WUHBkXgN1wwxWvqYyVAfo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SBK6igsu; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1708333564; c=relaxed/simple;
+	bh=xpY3ZmKzm5W53U81GOab3gbPC2jYO9O/nb67la/7GTs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=h2VqoWbzNpyn4Hs/fG5EVZ8+FkMax273V7qRoJsU8+w1p0Ak/AzJlXzAMcOCL0DZoWMqLFusdnNcZlfZHB8a8eqV2oHUVLgp0DxPmUZyC/LdcAvzjSERj85oouBNym0GJ9sY5s9236VeNzIfW3ScKqlmhd0zhPEd2/ySXE/Dgy4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ApXLLN4S; arc=none smtp.client-ip=209.85.217.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SBK6igsu"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1708333553; x=1739869553;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=vNFZEnPjscvlCrvcCpkiA2cM6MQpRkPtvd7PWqYE+Eo=;
-  b=SBK6igsuQGpb0s2VktCpmLD9NF3mpJek4AEey/1vB8g8sjOZQvynHMsV
-   Q+cJHAb5eFZQBWoGBQQbOVLp6iNTQlWllRwXAjA7E7Cw0v4YxgSf6BR7Y
-   HEdAZcp4AmokfYXMyhfVzD4vkuU1ecjZryO8BTJWLFtly8qOR65cx4F7q
-   sIKhYXSoGm0PAjUpYalo6Yoxe7NNdMlIY8PSFY8FGPeXjaedSqGxbUpgP
-   z4YFiAW1jf4l0qcwd4IghmeaVxcOdRvIlHNbIYCNmWXdFVId8xmTuZMGR
-   Un9WMzTqAmlEspW4hjoQ4/05qqiTX6nrEdqYOmLRRg71fSvNiiX35dAqq
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10988"; a="27849824"
-X-IronPort-AV: E=Sophos;i="6.06,170,1705392000"; 
-   d="scan'208";a="27849824"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Feb 2024 01:05:34 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10988"; a="826976921"
-X-IronPort-AV: E=Sophos;i="6.06,170,1705392000"; 
-   d="scan'208";a="826976921"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga001.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Feb 2024 01:05:32 -0800
-Date: Mon, 19 Feb 2024 11:05:29 +0200
-From: Raag Jadav <raag.jadav@intel.com>
-To: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>
-Cc: jarkko.nikula@linux.intel.com, mika.westerberg@linux.intel.com,
-	andriy.shevchenko@linux.intel.com, lakshmi.sowjanya.d@intel.com,
-	linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 1/4] pwm: dwc: Fix PM regression
-Message-ID: <ZdMZ2dgoVYbZgd4K@black.fi.intel.com>
-References: <20240219033835.11369-1-raag.jadav@intel.com>
- <20240219033835.11369-2-raag.jadav@intel.com>
- <luewujhgmgypcpnngyriv4trklznrkzngxe7syvfp2dontorwf@3xoooabwfitg>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ApXLLN4S"
+Received: by mail-vs1-f54.google.com with SMTP id ada2fe7eead31-47044462962so41830137.1
+        for <linux-kernel@vger.kernel.org>; Mon, 19 Feb 2024 01:06:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1708333562; x=1708938362; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=xpY3ZmKzm5W53U81GOab3gbPC2jYO9O/nb67la/7GTs=;
+        b=ApXLLN4S3mDbrHTU/U2jLnKEz6wz4Nl/9kO76lpoyykaKLqeJ2QUJgqoTC6+DGqQGC
+         F1GRnlNib6EicIrvLa5M/1fAiQr50/GLv24REdNFVOtLkpDxprBVWN6KddkHCqv02Qri
+         l9ADWkZM6TEBu1WIVqKHu0tr+NldrFThQgSHPtx5up2m2h6Cfr0gE+gWuoTE6JrgP+N0
+         J1kfBiGX7mLVInXiZ1a0JqiQXiMp5FSDRuRI7s4Aj2RDXfanYaWsEZG6273atdAm+0YB
+         lHB3qsOErY3qfCaOyKt6HI2Xnr/pXTu5yhDvXFsOKjapm29a+fednO/T4wDT37wMry/w
+         dQRQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708333562; x=1708938362;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=xpY3ZmKzm5W53U81GOab3gbPC2jYO9O/nb67la/7GTs=;
+        b=FIPofy4x8AgfswSOcPdy1+YDqfl7xU7dW++L26uW3t4u4aTxtWgq38Tm8FB7RW3zH4
+         4B1Dak16sVLXBhjVuFunVTRPLHQEvE4dV0McxpMbsAXqZC5P2edIhx5gjkj0kGMHEez0
+         lU4eK64NAGEb+7pijVWIYPogfdq+cjsvZOQ9vn8XGUIwbsOQtqiqNZguYuTio6Q3Od47
+         1b6HyFg3O5ir94pNchIT8zDCdXqCLSeu6VZtqLEGJEh6bC63P4DP5Mg9XEOWXtX9G0c4
+         1egIX8Bdy13oQNs5Ir+1ceqPyIhiRd8cJanwGWFTOg/As6lYUOz+EWCl7oMIaZnDXaxi
+         AGWQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUz07tCLUEAIopUH0ZarFUVMnng7Oe2mTaDuuz11jXJuyVtmVQ0j6c1G04lpq8igtOez3KbvNhMNFkxkEQk9PCb0DJtPRC9R/Ti7pOd
+X-Gm-Message-State: AOJu0YybPHZ0IgMNqfdBwwWYA82q4U7xz01g72QFH9EySaDSZp4kC5ax
+	v7z2YXFecd3Eg6zeF+7A9kR3rOLPx9VxyqJIrcUZ9XBALWVwn33jp4bmXTaSt8SPxIIjIUz96MF
+	nl6VzNZ1WTkXMzfcccXAvhXTlfTw5Er95VuHS
+X-Google-Smtp-Source: AGHT+IF1//6y3SGVWkcDFEE9RbhBB+iqv2Qr9EGFFuWkEJX/nlJvEdkBWwNoyAZuDtuFmc9lsVY4W0RoTQFSx7ySmig=
+X-Received: by 2002:a67:f3da:0:b0:470:4510:eda8 with SMTP id
+ j26-20020a67f3da000000b004704510eda8mr995388vsn.21.1708333561626; Mon, 19 Feb
+ 2024 01:06:01 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <luewujhgmgypcpnngyriv4trklznrkzngxe7syvfp2dontorwf@3xoooabwfitg>
+References: <20240217002717.57507-1-ojeda@kernel.org>
+In-Reply-To: <20240217002717.57507-1-ojeda@kernel.org>
+From: Alice Ryhl <aliceryhl@google.com>
+Date: Mon, 19 Feb 2024 10:05:50 +0100
+Message-ID: <CAH5fLgirUqw2hkEgFKOV4a2N2sW-GAGVY=KkkyzptMN+H2txfQ@mail.gmail.com>
+Subject: Re: [PATCH] rust: upgrade to Rust 1.77.0
+To: Miguel Ojeda <ojeda@kernel.org>
+Cc: Wedson Almeida Filho <wedsonaf@gmail.com>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@samsung.com>, 
+	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	patches@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Feb 19, 2024 at 08:22:15AM +0100, Uwe Kleine-König wrote:
-> Hello Raag,
-> 
-> On Mon, Feb 19, 2024 at 09:08:32AM +0530, Raag Jadav wrote:
-> > While preparing dwc driver for devm_pwmchip_alloc() usage, commit
-> > df41cd8bbcad ("pwm: dwc: Prepare removing pwm_chip from driver data")
-> > modified ->suspend() handle to use the pwm_chip as driver_data for
-> > accessing struct dwc_pwm, but didn't modify ->resume() handle with
-> > relevant changes. This results into illegal memory access during
-> > device wakeup and causes a PM regression.
-> > 
-> > Fix this by correctly accessing struct dwc_pwm in ->resume() handle.
-> > 
-> > Fixes: df41cd8bbcad ("pwm: dwc: Prepare removing pwm_chip from driver data")
-> > Signed-off-by: Raag Jadav <raag.jadav@intel.com>
-> > ---
-> >  drivers/pwm/pwm-dwc.c | 3 ++-
-> >  1 file changed, 2 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/pwm/pwm-dwc.c b/drivers/pwm/pwm-dwc.c
-> > index 8ca1c20a6aaf..c0e586688e57 100644
-> > --- a/drivers/pwm/pwm-dwc.c
-> > +++ b/drivers/pwm/pwm-dwc.c
-> > @@ -95,7 +95,8 @@ static int dwc_pwm_suspend(struct device *dev)
-> >  
-> >  static int dwc_pwm_resume(struct device *dev)
-> >  {
-> > -	struct dwc_pwm *dwc = dev_get_drvdata(dev);
-> > +	struct pwm_chip *chip = dev_get_drvdata(dev);
-> > +	struct dwc_pwm *dwc = to_dwc_pwm(chip);
-> >  	int i;
-> >  
-> >  	for (i = 0; i < DWC_TIMERS_TOTAL; i++) {
-> 
-> If you're ok I'd squash this into df41cd8bbcad adding
-> 
-> 	Thanks to Raag Jadav for providing a hunk of this patch that Uwe
-> 	missed during creation of this patch.
-> 
-> to the commit log.
+On Sat, Feb 17, 2024 at 1:27=E2=80=AFAM Miguel Ojeda <ojeda@kernel.org> wro=
+te:
+>
+> This is the next upgrade to the Rust toolchain, from 1.76.0 to 1.77.0
+> (i.e. the latest) [1].
+>
+> See the upgrade policy [2] and the comments on the first upgrade in
+> commit 3ed03f4da06e ("rust: upgrade to Rust 1.68.2").
+>
+> # Unstable features
+>
+> The `offset_of` feature (single-field `offset_of!`) that we were using
+> got stabilized in Rust 1.77.0 [3].
+>
+> Therefore, now the only unstable features allowed to be used outside the
+> `kernel` crate is `new_uninit`, though other code to be upstreamed may
+> increase the list.
+>
+> Please see [4] for details.
+>
+> # Required changes
+>
+> Rust 1.77.0 merged the `unused_tuple_struct_fields` lint into `dead_code`=
+,
+> thus upgrading it from `allow` to `warn` [5]. In turn, this makes `rustc`
+> complain about the `ThisModule`'s pointer field being never read. Thus
+> locally `allow` it for the moment, since we will have users later on
+> (e.g. Binder needs a `as_ptr` method [6]).
 
-Works for me.
+Maybe you should just add the as_ptr method to ThisModule now? It will
+silence the warning, and doesn't trigger a warning of its own since it
+is pub.
 
-Raag
+> # Other changes
+>
+> Rust 1.77.0 introduces the `--check-cfg` feature [7], for which there
+> is a Call for Testing going on [8]. We were requested to test it and
+> we found it useful [9] -- we will likely enable it in the future.
+>
+> # `alloc` upgrade and reviewing
+
+[...]
+
+> Link: https://github.com/rust-lang/rust/blob/stable/RELEASES.md#version-1=
+770-2024-03-21 [1]
+> Link: https://rust-for-linux.com/rust-version-policy [2]
+> Link: https://github.com/rust-lang/rust/pull/118799 [3]
+> Link: https://github.com/Rust-for-Linux/linux/issues/2 [4]
+> Link: https://github.com/rust-lang/rust/pull/118297 [5]
+> Link: https://lore.kernel.org/rust-for-linux/20231101-rust-binder-v1-2-08=
+ba9197f637@google.com/#Z31rust:kernel:lib.rs [6]
+> Link: https://doc.rust-lang.org/nightly/unstable-book/compiler-flags/chec=
+k-cfg.html [7]
+> Link: https://github.com/rust-lang/rfcs/pull/3013#issuecomment-1936648479=
+ [8]
+> Link: https://github.com/rust-lang/rust/issues/82450#issuecomment-1947462=
+977 [9]
+> Signed-off-by: Miguel Ojeda <ojeda@kernel.org>
+
+Reviewed-by: Alice Ryhl <aliceryhl@google.com>
