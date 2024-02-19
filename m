@@ -1,86 +1,79 @@
-Received: from fgw21-7.mail.saunalahti.fi (fgw21-7.mail.saunalahti.fi [62.142.5.82])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CF5746B9F
-	for <linux-kernel@vger.kernel.org>; Mon, 19 Feb 2024 20:38:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.142.5.82
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 790432E40C;
+	Mon, 19 Feb 2024 20:40:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708375133; cv=none; b=hJf/2fL2jWhQsggkDAZuihmKKdU+o02ECgEnngr2U5NbzV05eR0ATg/j7/ieq92ha9sSn63pCf6gSPhwqpnoieWS5KIEw5TBgOZwuUCCHmpwfcfqcKJsvQnMwNs2lZPoVXqq1JMWXgceTyKWMRBO7rdgPVeQLjrs8ePTJ0gvP44=
+	t=1708375226; cv=none; b=g87uUdKlYs7TN+kPrk59Atf5mtOn+eqbQyLhVLi3T+70l6W8V6S4dalt7wkWCjKRsWw+CP9Oh0r4YO6CF2nWP6fftzPKMHoTnnx0a7+pDfK6Raf8d+7toiah2EQJjeErYOqFL36chNCgoO00MHxCR9MGbfGH2MaKGORDBk2lWP0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708375133; c=relaxed/simple;
-	bh=82r9TO8c5dIxa0Cxd/xkQJ+Q/ndiSntYWwZ4IKipPAQ=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FQ6MPTgq8TMqqdI1rJGWpIyI7A6uNO4cpatP9+Ig7pjW99eOX7ljgANGSUHG6qplBWmyC0AX4htz6M/urtzviul/+PsjXgk7YGuSzElBsZGx3bNQGLOb3Malbsd1qzF9efTh1Q0A5CSBdGo9XKyh6WMLnELtJNDtcE1gD0G7jVM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=fail smtp.mailfrom=gmail.com; arc=none smtp.client-ip=62.142.5.82
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=gmail.com
-Received: from localhost (88-113-26-217.elisa-laajakaista.fi [88.113.26.217])
-	by fgw21.mail.saunalahti.fi (Halon) with ESMTP
-	id b80b1d33-cf66-11ee-abf4-005056bdd08f;
-	Mon, 19 Feb 2024 22:37:40 +0200 (EET)
-From: andy.shevchenko@gmail.com
-Date: Mon, 19 Feb 2024 22:37:37 +0200
-To: Dylan Hung <dylan_hung@aspeedtech.com>
-Cc: alexandre.belloni@bootlin.com, jk@codeconstruct.com.au, joel@jms.id.au,
-	u.kleine-koenig@pengutronix.de, gustavoars@kernel.org,
-	krzysztof.kozlowski@linaro.org, zenghuchen@google.com,
-	matt@codeconstruct.com.au, linux-i3c@lists.infradead.org,
-	linux-kernel@vger.kernel.org, BMC-SW@aspeedtech.com
-Subject: Re: [PATCH] i3c: dw: Disable IBI IRQ depends on hot-join and SIR
- enabling
-Message-ID: <ZdO8EST8yJ377jXL@surfacebook.localdomain>
-References: <20240119054547.983693-1-dylan_hung@aspeedtech.com>
+	s=arc-20240116; t=1708375226; c=relaxed/simple;
+	bh=U7lK/QxgqZFx8nQ7+Dwc3ef1xihUvLtQ98Tcz07NpcA=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=g7VZ+FycG7JAGmgLFs68R5TydgiouQsUnDf5Pes4TUD51ulbPPtG8BhklKBNhR0w5Rr2tSgsbesvL8dsj0EBk4wBfEE/KMOmME6NJWAHh8JcY7OxUnVPopoM2wcGZrvYmkHDxw6lSE/JHF4wBDnzq6S0/Zr//k3ZApH//S2hHDs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZwGpWn7b; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZwGpWn7b"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id F19E5C43390;
+	Mon, 19 Feb 2024 20:40:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1708375226;
+	bh=U7lK/QxgqZFx8nQ7+Dwc3ef1xihUvLtQ98Tcz07NpcA=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=ZwGpWn7boXQqk3yRS7pifDZgzDdPUTbDEx4mH8TW1Qz0HzcaNtEvqCqBbJEmHs7pD
+	 79OCCfT4zjaL+Q4BygPgNf7QeAagIgdXuKmuaGkhPSWKYGRH9fw2B+K/sM6uXzcdnc
+	 0ZWwj5SSGCK8y3AJ2ZKGX026/L0n/iu7WtNGEYjQZKrikR1kNisgj9apMhdOHVHehe
+	 L5vAYzQImAdt3AU3rykRzbUQFRC07X9J5rbh/Zficri+7QcMaitqk5X57aCBMa1HSF
+	 x2I6779FbVuLbLdm6Q4VqlreQrbMY/aooKFLUhIGOq6IAt448Oi1+39LuP/kaT0Q9L
+	 2gLh0JK8oKcbw==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id D97D9D990D9;
+	Mon, 19 Feb 2024 20:40:25 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240119054547.983693-1-dylan_hung@aspeedtech.com>
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net-next] page_pool: disable direct recycling based on
+ pool->cpuid on destroy
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <170837522588.25032.4338620984116633204.git-patchwork-notify@kernel.org>
+Date: Mon, 19 Feb 2024 20:40:25 +0000
+References: <20240215113905.96817-1-aleksander.lobakin@intel.com>
+In-Reply-To: <20240215113905.96817-1-aleksander.lobakin@intel.com>
+To: Alexander Lobakin <aleksander.lobakin@intel.com>
+Cc: davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+ pabeni@redhat.com, lorenzo@kernel.org, toke@redhat.com,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org
 
-Fri, Jan 19, 2024 at 01:45:47PM +0800, Dylan Hung kirjoitti:
-> Disable IBI IRQ signal and status only when hot-join and SIR enabling of
-> all target devices attached to the bus are disabled.
+Hello:
 
-> Fixes: e389b1d72a62 ("i3c: dw: Add support for in-band interrupts")
+This patch was applied to netdev/net-next.git (main)
+by Jakub Kicinski <kuba@kernel.org>:
+
+On Thu, 15 Feb 2024 12:39:05 +0100 you wrote:
+> Now that direct recycling is performed basing on pool->cpuid when set,
+> memory leaks are possible:
 > 
-> Signed-off-by: Dylan Hung <dylan_hung@aspeedtech.com>
+> 1. A pool is destroyed.
+> 2. Alloc cache is emptied (it's done only once).
+> 3. pool->cpuid is still set.
+> 4. napi_pp_put_page() does direct recycling basing on pool->cpuid.
+> 5. Now alloc cache is not empty, but it won't ever be freed.
+> 
+> [...]
 
-Tag block is not supposed to have blank lines.
+Here is the summary with links:
+  - [net-next] page_pool: disable direct recycling based on pool->cpuid on destroy
+    https://git.kernel.org/netdev/net-next/c/56ef27e3abe6
 
-...
-
-> @@ -1163,8 +1163,10 @@ static void dw_i3c_master_set_sir_enabled(struct dw_i3c_master *master,
->  		global = reg == 0xffffffff;
->  		reg &= ~BIT(idx);
->  	} else {
-> -		global = reg == 0;
-> +		bool hj_rejected = !!(readl(master->regs + DEVICE_CTRL) & DEV_CTRL_HOT_JOIN_NACK);
-
-'!!()' is redundant.
-
-> +
->  		reg |= BIT(idx);
-> +		global = (reg == 0xffffffff) && hj_rejected;
->  	}
-
-Moreover, you can refactor a bit both branches, like
-
-	bool hj_rejected = true;
-	...
-	if (...) {
-		...
-	} else {
-		hj_rejected = readl(master->regs + DEVICE_CTRL) & DEV_CTRL_HOT_JOIN_NACK;
-		...
-	}
-	global = (reg == 0xffffffff) && hj_rejected;
-
-
+You are awesome, thank you!
 -- 
-With Best Regards,
-Andy Shevchenko
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
 
 
