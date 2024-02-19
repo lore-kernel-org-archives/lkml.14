@@ -1,126 +1,134 @@
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.4])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CB9C42421E
-	for <linux-kernel@vger.kernel.org>; Mon, 19 Feb 2024 09:27:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.4
+Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA64422619
+	for <linux-kernel@vger.kernel.org>; Mon, 19 Feb 2024 09:29:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708334872; cv=none; b=Igtc2xxnMynj3FUQ2Xv9fXRJKFMUkdbt/vWQxvs7kYGzfsy+PdUY0rVpCn7oXDSYujZTji9/6QR8ZF8/3Wx9di9zpGZZGOm7inGK4hAoG2rl3+VdtSdR9nknJZ0YAc2Y1On/a/zzXYHXghE5tItfhSv7EiSWDsJRQO8X30iS1eo=
+	t=1708334952; cv=none; b=dGVCWyN+jpY76PKvdqB5vRJ+rjd1ZK7slTekDTq3C0l3phR+hzHf6r0TQ1euzszi5DTGIyEQ6QJ6XVpj+ajm+V/aJRVcucRqciLtqukc6v8q9CmBT2XLJc1GqHzHv42mxA4xQFuW3ec6kuy/072SEPUllNm2YNh1kqLBIR0VDF8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708334872; c=relaxed/simple;
-	bh=9fjgrCkQJcTG401P9Y7fOzSFtlh4A7QyDmdWBZ31pYs=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:Content-Type:
-	 MIME-Version:Message-ID; b=FGRV4SOtgAbdQneAiEYVAsJIOEywIfo7MwIxZi6ArjQkBKEkYMWtleo/4swgABpY0L9uDtoQAQytXNQ+1eUDlq5RuYITrnJvaFmWmfw9hmYbZVLXs7HfF23fN0EO1m/YovtQfk79XMeNLdU5gRkwiDBU6cCxBRyJEfS0NRXARtw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=fail (1024-bit key) header.d=163.com header.i=@163.com header.b=JSXS+H9s reason="signature verification failed"; arc=none smtp.client-ip=220.197.31.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1708334952; c=relaxed/simple;
+	bh=8CoylulTAEPvrrxYqutK8C/EWczUJIagkSI2Q6zcuuA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=u44JsBph6SV3pVw6VGC+DYteQs2OjiljS2CNbA39xY+OiTZStwcmli7bmKClKIdJxbxWsi6jZAfzWUwTU++kxj5bYR1YBzbl6+IRzwtE1DAjxqFFdODexbBu4yDN/kJDQ1Cvy9KjlhhI3P82AazPk8KJxaJo/gQCwYFXGUqop94=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=eIZhqnr7; arc=none smtp.client-ip=209.85.210.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=163.com header.i=@163.com header.b="JSXS+H9s"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=Date:From:Subject:Content-Type:MIME-Version:
-	Message-ID; bh=LdXQA66iqTewnXLGYwkQx7fMCWVbVDbz/y8KNE5FnZ8=; b=J
-	SXS+H9s7HHL/vHOzHbkgpxpTndollX4wJaIePQzXjHrOK/O3ld2roYZnMocy8QXS
-	LEAoXT8P5gm0llaNzuVV05uVodz6+uEwdiXkp9v/L4oVsW4Z7G8ec+QlxSsBnH6w
-	QiRXMHBkdd2BUMO+pwBFRA8LsWPhHJcmKbbX0wTL9M=
-Received: from gaoshanliukou$163.com ( [60.24.209.108] ) by
- ajax-webmail-wmsvr-40-114 (Coremail) ; Mon, 19 Feb 2024 17:26:55 +0800
- (CST)
-Date: Mon, 19 Feb 2024 17:26:55 +0800 (CST)
-From: "yang.zhang" <gaoshanliukou@163.com>
-To: "Baoquan He" <bhe@redhat.com>
-Cc: "Eric W. Biederman" <ebiederm@xmission.com>, kexec@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, "yang.zhang" <yang.zhang@hexintek.com>, 
-	akpm@linux-foundation.org
-Subject: Re:Re: [PATCH] kexec: should use uchunk for user buffer increasing
-X-Priority: 3
-X-Mailer: Coremail Webmail Server Version XT5.0.14 build 20230109(dcb5de15)
- Copyright (c) 2002-2024 www.mailtech.cn 163com
-In-Reply-To: <ZdK/Hsy1TMB8PlJs@MiWiFi-R3L-srv>
-References: <20240130101802.23850-1-gaoshanliukou@163.com>
- <Zb8+8qmn5SV4LKFd@MiWiFi-R3L-srv>
- <871q9r3xl6.fsf@email.froward.int.ebiederm.org>
- <2a207ca2.1e87.18dbf17ee10.Coremail.gaoshanliukou@163.com>
- <ZdK/Hsy1TMB8PlJs@MiWiFi-R3L-srv>
-X-NTES-SC: AL_Qu2bCv+Yu0Aq4yGRY+kXnEYQh+k3XcK4u/0u2YFVP5E0oyTL8z0ARUdJIVL69+GMNS2NiCCzaBpn5cJBXZNDc7oAhva9lGIG43yCV0QCwDB7
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset=GBK
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="eIZhqnr7"
+Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-6e46dcd8feaso58387b3a.2
+        for <linux-kernel@vger.kernel.org>; Mon, 19 Feb 2024 01:29:09 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance.com; s=google; t=1708334949; x=1708939749; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=eP/nvuVRApSzC8OZKm0vUFPbTbVhx//KVCst0ly11Aw=;
+        b=eIZhqnr7VC/aWmmjaNdmIAqbgRZ6oqvoeiZ9fv4/z2GrTE5cQr2s3i9ssUV+b6TBEi
+         WwDsevnQaduadbwAOqR9pSropd5sC+wN5/bdCqoHGq5JxVlzdoovhNNXo+fttqwv9ygV
+         rzq53oO+bD++4Cs/mHLnlmmH0Fxxmk41bXLcCFZhoSdTlOUK4Ljxucb8Lrc5iiq1ffqL
+         lrEXuV/dZSNG0PnuXQqRJMvoWrzVG43oWOM7Gce5pHCgvtiL6EKKNR8xsU46f1n6mpO2
+         njqnCZBDm+7rCa4Bl/0ZqlPXpu4yKQTYYAit5G8MI30/K7uz2Xa3sncdu7tKQjm6Du2N
+         /1EA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708334949; x=1708939749;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=eP/nvuVRApSzC8OZKm0vUFPbTbVhx//KVCst0ly11Aw=;
+        b=Et5sc4oyPiLzNrFTY7wXdCOp4dsD+qkvAQhzr7cntJrGtfnU1napCzgCO0NZXxscOO
+         DzhgcPZieCyd1PIr9Nd70N6RCMViNaOfYq4bY6LZEZmNBgkvlgO0h/09YKgZFdF8r3o9
+         kH4C+JkaYg0ng942FiMoM+/jLWS4uztA6X3UhMt/EjVgmw8Vb1an5Kp8N2RQxtYgGjpS
+         7J2siP8kPMJblwbZa2BIFf9gkjEbz2NPT2OD2LhgV8p1UG94OHmCXsIjstBiXDkUEANB
+         KPwIq5c+iCDXFq5+aM3jFr4PSZl1JdjWXrlVsRXio6Gs1H0qwl0M7vj0yJKAEntMjs27
+         MzCg==
+X-Forwarded-Encrypted: i=1; AJvYcCUzGfUSyEkAUgi0SjXWdjcYvyWyhF1UGgu9Qzy0O4iaaY8fcRmvv9h0JsKVM0bxRKGA9ICeC9T7uNsPjixZqCHP8ByFVMMaB/M0avDo
+X-Gm-Message-State: AOJu0YwVza5ZSUd1duPC5zn6HRERJkoehLOo4vWNidILd7Mc6KwcW8uY
+	BZeZ5iq564IZlumqzT2PqvH7FmoGFwGGkJcsWN+/zn2lbEOQ+nPn4CzG79Xg4u4=
+X-Google-Smtp-Source: AGHT+IEDWc2aeMYUyqp4/+7uxFHY+P3vcz/cOChgNrp3m3uNKEBcxdYHq7qiIwEQVSIz+3pL/G1IUw==
+X-Received: by 2002:a62:cec5:0:b0:6e4:6484:1a36 with SMTP id y188-20020a62cec5000000b006e464841a36mr1883032pfg.21.1708334949026;
+        Mon, 19 Feb 2024 01:29:09 -0800 (PST)
+Received: from [10.4.192.10] ([139.177.225.254])
+        by smtp.gmail.com with ESMTPSA id n15-20020aa7984f000000b006e0651ec052sm4355808pfq.32.2024.02.19.01.29.05
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 19 Feb 2024 01:29:08 -0800 (PST)
+Message-ID: <5cf40e33-d1ae-4ac9-9d01-559b86f853a8@bytedance.com>
+Date: Mon, 19 Feb 2024 17:29:02 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <23cb32ca.9195.18dc0b09810.Coremail.gaoshanliukou@163.com>
-X-Coremail-Locale: zh_CN
-X-CM-TRANSID:_____wD3ny_fHtNl5B7kAA--.18548W
-X-CM-SenderInfo: pjdr2x5dqox3xnrxqiywtou0bp/xtbBZQKF8mV4H1oUZwAGs9
-X-Coremail-Antispam: 1U5529EdanIXcx71UUUUU7vcSsGvfC2KfnxnUU==
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] slub: avoid scanning all partial slabs in get_slabinfo()
+Content-Language: en-US
+To: Vlastimil Babka <vbabka@suse.cz>, David Rientjes <rientjes@google.com>,
+ Jianfeng Wang <jianfeng.w.wang@oracle.com>
+Cc: cl@linux.com, penberg@kernel.org, iamjoonsoo.kim@lge.com,
+ akpm@linux-foundation.org, roman.gushchin@linux.dev, 42.hyeyoo@gmail.com,
+ linux-mm@kvack.org, linux-kernel@vger.kernel.org
+References: <20240215211457.32172-1-jianfeng.w.wang@oracle.com>
+ <6b58d81f-8e8f-3732-a5d4-40eece75013b@google.com>
+ <fee76a21-fbc5-4ad8-b4bf-ba8a8e7cee8f@suse.cz>
+From: Chengming Zhou <zhouchengming@bytedance.com>
+In-Reply-To: <fee76a21-fbc5-4ad8-b4bf-ba8a8e7cee8f@suse.cz>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-CgoKCgpUaGFua3MsIGkgd291bGQgcG9zdCB2MiBwYXRjaC4KQ291bGQgeW91IHBsZWFzZSBwcm92
-aWRlIHRoZSBlbWFpbCBhZGRyZXNzIGZvciBhbmRyZXcuCgoKCgoKCgoKCkF0IDIwMjQtMDItMTkg
-MTA6Mzg6MjIsICJCYW9xdWFuIEhlIiA8YmhlQHJlZGhhdC5jb20+IHdyb3RlOgo+T24gMDIvMTkv
-MjQgYXQgMTA6MDBhbSwgeWFuZy56aGFuZyB3cm90ZToKPj4gCj4+IAo+PiAKPj4gVGhhbmtzIGZv
-ciB5b3VyIHJlcGxpZXMuCj4+IERvIHlvdSBoYXZlIHBsYW5zIHRvIG1lcmdlIHRoZSBpbXByb3Zp
-bmcgY29kZSBmb3IgY2xhcml0eSwgb3IganVzdCBrZWVwIHRoZW0gdW5jaGFuZ2VkLgo+Cj5Zb3Ug
-bmVlZCBwb3N0IHYyIHRvIGNoYW5nZSB0aG9zZSB0d28gcGxhY2VzIGFzIEVyaWMgaGFzIGRlbW9u
-c3RyYXRlZC4KPlBsZWFzZSBDQyBBbmRyZXcgd2hlbiB5b3UgcG9zdC4KPgo+PiAKPj4gQXQgMjAy
-NC0wMi0wNSAyMDoyNzozMywgIkVyaWMgVy4gQmllZGVybWFuIiA8ZWJpZWRlcm1AeG1pc3Npb24u
-Y29tPiB3cm90ZToKPj4gPkJhb3F1YW4gSGUgPGJoZUByZWRoYXQuY29tPiB3cml0ZXM6Cj4+ID4K
-Pj4gPj4gT24gMDEvMzAvMjQgYXQgMDY6MThwbSwgeWFuZy56aGFuZyB3cm90ZToKPj4gPj4+IEZy
-b206ICJ5YW5nLnpoYW5nIiA8eWFuZy56aGFuZ0BoZXhpbnRlay5jb20+Cj4+ID4+PiAKPj4gPj4+
-IEJlY2F1c2Ugb2YgYWxpZ25tZW50IHJlcXVpcmVtZW50IGluIGtleGVjLXRvb2xzLCB0aGVyZSBp
-cwo+PiA+Pj4gbm8gcHJvYmxlbSBmb3IgdXNlciBidWZmZXIgaW5jcmVhc2luZyB3aGVuIGxvYWRp
-bmcgc2VnbWVudHMuCj4+ID4+PiBCdXQgd2hlbiBjb3BpbmcsIHRoZSBzdGVwIGlzIHVjaHVuaywg
-c28gd2Ugc2hvdWxkIHVzZSB1Y2h1bmsKPj4gPj4+IG5vdCBtY2h1bmsuCj4+ID4+Cj4+ID4+IElu
-IHRoZW9yeSwgdWJ5dGVzIGlzIDw9IG1ieXRlcy4gU28gdWNodW5rIGlzIGFsd2F5cyA8PSBtY2h1
-bmsuIElmIHVieXRlcwo+PiA+PiBpcyBleGhhdXN0ZWQsIHdoaWxlIHRoZXJlJ3Mgc3RpbGwgcmVt
-YWluaW5nIG1ieXRlcywgdGhlbiB1Y2h1bmsgaXMgMCwKPj4gPj4gdGhlcmUncyBzdGlsbCBtY2h1
-bmsgc3RlcHBpbmcgZm9yd2FyZC4gSWYgSSB1bmRlcnN0YW5kIGl0IGNvcnJlY3RseSwKPj4gPj4g
-dGhpcyBpcyBhIGdvb2QgY2F0Y2guIE5vdCBzdXJlIGlmIEVyaWMgaGFzIGNvbW1lbnQgb24gdGhp
-cyB0byBjb25maXJtLgo+PiA+Cj4+ID5BcyBmYXIgYXMgSSBjYW4gcmVhZCB0aGUgY29kZSB0aGUg
-cHJvcG9zZWQgY2hhbmdlIGlzIGEgbm9vcC4KPj4gPgo+PiA+SSBhZ3JlZSBpdCBpcyBtb3JlIGNv
-cnJlY3QgdG8gbm90IGFkdmFuY2UgdGhlIHBvaW50ZXJzIHdlIHJlYWQgZnJvbSwKPj4gPmJ1dCBz
-aW5jZSB3ZSBuZXZlciByZWFkIGZyb20gdGhlbSBhZnRlciB0aGF0IHBvaW50IGl0IGRvZXMgbm90
-Cj4+ID5tYXR0ZXIuCj4+ID4KPj4gPj4KPj4gPj4gc3RhdGljIGludCBraW1hZ2VfbG9hZF9ub3Jt
-YWxfc2VnbWVudChzdHJ1Y3Qga2ltYWdlICppbWFnZSwKPj4gPj4gICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICBzdHJ1Y3Qga2V4ZWNfc2VnbWVudCAqc2VnbWVudCkKPj4g
-Pj4gewo+PiA+PiAuLi4uLi4KPj4gPj4KPj4gPj4gICAgICAgICAgICAgICAgIHB0ciArPSBtYWRk
-ciAmIH5QQUdFX01BU0s7Cj4+ID4+ICAgICAgICAgICAgICAgICBtY2h1bmsgPSBtaW5fdChzaXpl
-X3QsIG1ieXRlcywKPj4gPj4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBQQUdFX1NJ
-WkUgLSAobWFkZHIgJiB+UEFHRV9NQVNLKSk7Cj4+ID4+ICAgICAgICAgICAgICAgICB1Y2h1bmsg
-PSBtaW4odWJ5dGVzLCBtY2h1bmspOwo+PiA+PiAuLi4uLi59Cj4+ID4KPj4gPklmIHdlIGFyZSBn
-b2luZyB0byBpbXByb3ZlIHRoZSBjb2RlIGZvciBjbGFyaXR5LiAgV2UgcHJvYmFibHkKPj4gPndh
-bnQgdG8gZG8gc29tZXRoaW5nIGxpa2U6Cj4+ID4KPj4gPmRpZmYgLS1naXQgYS9rZXJuZWwva2V4
-ZWNfY29yZS5jIGIva2VybmVsL2tleGVjX2NvcmUuYwo+PiA+aW5kZXggZDA4ZmM3YjVkYjk3Li4x
-YThiOGNlNmJmMTUgMTAwNjQ0Cj4+ID4tLS0gYS9rZXJuZWwva2V4ZWNfY29yZS5jCj4+ID4rKysg
-Yi9rZXJuZWwva2V4ZWNfY29yZS5jCj4+ID5AQCAtODAwLDIyICs4MDAsMjQgQEAgc3RhdGljIGlu
-dCBraW1hZ2VfbG9hZF9ub3JtYWxfc2VnbWVudChzdHJ1Y3Qga2ltYWdlICppbWFnZSwKPj4gPiAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgUEFHRV9TSVpFIC0gKG1hZGRyICYgflBBR0Vf
-TUFTSykpOwo+PiA+ICAgICAgICAgICAgICAgIHVjaHVuayA9IG1pbih1Ynl0ZXMsIG1jaHVuayk7
-Cj4+ID4gCj4+ID4tICAgICAgICAgICAgICAgLyogRm9yIGZpbGUgYmFzZWQga2V4ZWMsIHNvdXJj
-ZSBwYWdlcyBhcmUgaW4ga2VybmVsIG1lbW9yeSAqLwo+PiA+LSAgICAgICAgICAgICAgIGlmIChp
-bWFnZS0+ZmlsZV9tb2RlKQo+PiA+LSAgICAgICAgICAgICAgICAgICAgICAgbWVtY3B5KHB0ciwg
-a2J1ZiwgdWNodW5rKTsKPj4gPi0gICAgICAgICAgICAgICBlbHNlCj4+ID4tICAgICAgICAgICAg
-ICAgICAgICAgICByZXN1bHQgPSBjb3B5X2Zyb21fdXNlcihwdHIsIGJ1ZiwgdWNodW5rKTsKPj4g
-PisgICAgICAgICAgICAgICBpZiAodWNodW5rKSB7Cj4+ID4rICAgICAgICAgICAgICAgICAgICAg
-ICAvKiBGb3IgZmlsZSBiYXNlZCBrZXhlYywgc291cmNlIHBhZ2VzIGFyZSBpbiBrZXJuZWwgbWVt
-b3J5ICovCj4+ID4rICAgICAgICAgICAgICAgICAgICAgICBpZiAoaW1hZ2UtPmZpbGVfbW9kZSkK
-Pj4gPisgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgbWVtY3B5KHB0ciwga2J1ZiwgdWNo
-dW5rKTsKPj4gPisgICAgICAgICAgICAgICAgICAgICAgIGVsc2UKPj4gPisgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgcmVzdWx0ID0gY29weV9mcm9tX3VzZXIocHRyLCBidWYsIHVjaHVu
-ayk7Cj4+ID4rICAgICAgICAgICAgICAgICAgICAgICB1Ynl0ZXMgLT0gdWNodW5rOwo+PiA+KyAg
-ICAgICAgICAgICAgICAgICAgICAgaWYgKGltYWdlLT5maWxlX21vZGUpCj4+ID4rICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgIGtidWYgKz0gdWNodW5rOwo+PiA+KyAgICAgICAgICAgICAg
-ICAgICAgICAgZWxzZQo+PiA+KyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBidWYgKz0g
-dWNodW5rOwo+PiA+KyAgICAgICAgICAgICAgIH0KPj4gPiAgICAgICAgICAgICAgICBrdW5tYXBf
-bG9jYWwocHRyKTsKPj4gPiAgICAgICAgICAgICAgICBpZiAocmVzdWx0KSB7Cj4+ID4gICAgICAg
-ICAgICAgICAgICAgICAgICByZXN1bHQgPSAtRUZBVUxUOwo+PiA+ICAgICAgICAgICAgICAgICAg
-ICAgICAgZ290byBvdXQ7Cj4+ID4gICAgICAgICAgICAgICAgfQo+PiA+LSAgICAgICAgICAgICAg
-IHVieXRlcyAtPSB1Y2h1bms7Cj4+ID4gICAgICAgICAgICAgICAgbWFkZHIgICs9IG1jaHVuazsK
-Pj4gPi0gICAgICAgICAgICAgICBpZiAoaW1hZ2UtPmZpbGVfbW9kZSkKPj4gPi0gICAgICAgICAg
-ICAgICAgICAgICAgIGtidWYgKz0gbWNodW5rOwo+PiA+LSAgICAgICAgICAgICAgIGVsc2UKPj4g
-Pi0gICAgICAgICAgICAgICAgICAgICAgIGJ1ZiArPSBtY2h1bms7Cj4+ID4gICAgICAgICAgICAg
-ICAgbWJ5dGVzIC09IG1jaHVuazsKPj4gPiAKPj4gPiAgICAgICAgICAgICAgICBjb25kX3Jlc2No
-ZWQoKTsKPj4gPgo+PiA+QW5kIG1ha2UgaXQgZXhjZWVkaW5nbHkgY2xlYXIgdGhhdCBhbGwgb2Yg
-dGhlIGNvcHlpbmcgYW5kIHRoZSByZXN0Cj4+ID5vbmx5IGhhcHBlbnMgYmVmb3JlIHVjaHVuayBn
-b2VzIHRvIHplcm8uICBPdGhlcndpc2Ugd2UgYXJlIHJlbHlpbmcKPj4gPm9uIGEgbG90IG9mIG9w
-ZXJhdGlvbnMgYmVjb21pbmcgbm9vcHMgd2hlbiB1Y2h1bmsgZ29lcyB0byB6ZXJvLgo+PiA+Cj4+
-ID5FcmljCg==
+On 2024/2/19 16:30, Vlastimil Babka wrote:
+> On 2/18/24 20:25, David Rientjes wrote:
+>> On Thu, 15 Feb 2024, Jianfeng Wang wrote:
+>>
+>>> When reading "/proc/slabinfo", the kernel needs to report the number of
+>>> free objects for each kmem_cache. The current implementation relies on
+>>> count_partial() that counts the number of free objects by scanning each
+>>> kmem_cache_node's partial slab list and summing free objects from all
+>>> partial slabs in the list. This process must hold per kmem_cache_node
+>>> spinlock and disable IRQ. Consequently, it can block slab allocation
+>>> requests on other CPU cores and cause timeouts for network devices etc.,
+>>> if the partial slab list is long. In production, even NMI watchdog can
+>>> be triggered because some slab caches have a long partial list: e.g.,
+>>> for "buffer_head", the number of partial slabs was observed to be ~1M
+>>> in one kmem_cache_node. This problem was also observed by several
+
+Not sure if this situation is normal? It maybe very fragmented, right?
+
+SLUB completely depend on the timing order to place partial slabs in node,
+which maybe suboptimal in some cases. Maybe we could introduce anti-fragment
+mechanism like fullness grouping in zsmalloc to have multiple lists based
+on fullness grouping? Just some random thoughts... :)
+
+>>> others [1-2] in the past.
+>>>
+>>> The fix is to maintain a counter of free objects for each kmem_cache.
+>>> Then, in get_slabinfo(), use the counter rather than count_partial()
+>>> when reporting the number of free objects for a slab cache. per-cpu
+>>> counter is used to minimize atomic or lock operation.
+>>>
+>>> Benchmark: run hackbench on a dual-socket 72-CPU bare metal machine
+>>> with 256 GB memory and Intel(R) Xeon(R) CPU E5-2699 v3 @ 2.3 GHz.
+>>> The command is "hackbench 18 thread 20000". Each group gets 10 runs.
+>>>
+>>
+>> This seems particularly intrusive for the common path to optimize for 
+>> reading of /proc/slabinfo, and that's shown in the benchmark result.
+>>
+>> Could you discuss the /proc/slabinfo usage model a bit?  It's not clear if 
+>> this is being continuously read, or whether even a single read in 
+>> isolation is problematic.
+>>
+>> That said, optimizing for reading /proc/slabinfo at the cost of runtime 
+>> performance degradation doesn't sound like the right trade-off.
+> 
+> It should be possible to make this overhead smaller by restricting the
+> counter only to partial list slabs, as [2] did. This would keep it out of
+> the fast paths, where it's really not acceptable.
+> Note [2] used atomic_long_t and the percpu counters used here should be
+> lower overhead. So basically try to get the best of both attemps.
+
+Right, the current count_partial() also only iterate over slabs on the
+node partial list, doesn't include slabs on the cpu partial list. So this
+new percpu counter should also only include slabs on node partial list.
+Then the overhead should be lower.
+
