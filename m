@@ -1,73 +1,113 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0859428DA0;
-	Mon, 19 Feb 2024 10:09:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C721428E22
+	for <linux-kernel@vger.kernel.org>; Mon, 19 Feb 2024 10:09:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708337374; cv=none; b=UzGFUssaLeu97NIcycawVUvbwkD+pyMU2/mCa6U7EQL61AcHnbWmM1rR+7p1c+jbDSuXwsjuZSiG4Doda6htacJTRZlCYTzV4CkmhVpCu/YP+vKwiKnP2o3MUOQoCXoR0cI2xPvyeVdjg4c2k1o8R7s0SFFYuj+baSMQQCPVGt8=
+	t=1708337378; cv=none; b=fwIWMG8KZ47XVfJb5xkI7aMwdvXBofHNP7+w3KrgY2H0UcJPAsZ1BUt/J/uJ1dJMNIgfkTTsWdJHKPKe9AfDWwwaplXSOMBoseNYYyOg0eOF8A2bQV9IHBDUxlkD+V9xRqoNluflBJwFdn1wIWefbp6wrTBI5wNoAKEGlm4Gg9w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708337374; c=relaxed/simple;
-	bh=ZzvLHqzbOzNqgDJELQJkkjJLEqLzCR/eZD/cAnNXkH4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=EPeUvRv3/KF+1HOhFXS+58WXcaVJWt+5BKVdgrzlEKICTMRecXm5yTJNixrdR/iMYQ1B+cEoiXgQIQVD8+VJMZTsRV/TnSpAeZfWD4O5+3hKxNXGp81RC55FySNu4Nih1G1pd4D+JSfb7LfO/AIqeaRGraPRXOEkgUxQTWhUnso=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=r6c/Z9IP; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="r6c/Z9IP"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1708337371;
-	bh=ZzvLHqzbOzNqgDJELQJkkjJLEqLzCR/eZD/cAnNXkH4=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=r6c/Z9IP1/y6EccSA3Cxc1flHaLxKndVJnkO75I1X/sbu1OjORcs0/81F88zlEdAR
-	 uRFANdb7fNU3mruOeEnktSB8zXZnr3LWjPggn/r/dYc+E76lTZ9r1x3Qw/MjK7pg51
-	 jN+j5N0ndQ2EopJJyeOqO177V7WXfMuHs6Bxgl9wr0anFrtSgVnFkrkErSRgxPMX+x
-	 ECaO04ddI0GctmreaQvTrrz5f7cSZIjBBfOGzeVFZDKkJ29j5eeZUqJJ+/vfal4frA
-	 v56/CjTyqXXDhi1yp85FWZTC9RmU6Kr5VihvsUui2Rq0SWoue82qn3PHjByHAfs2nk
-	 K6Tfrmqxdq48g==
-Received: from [100.113.186.2] (cola.collaboradmins.com [195.201.22.229])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: kholk11)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 402D13781FD9;
-	Mon, 19 Feb 2024 10:09:30 +0000 (UTC)
-Message-ID: <3d98486e-f0cd-4930-8e97-4a09f1ad0aa2@collabora.com>
-Date: Mon, 19 Feb 2024 11:09:29 +0100
+	s=arc-20240116; t=1708337378; c=relaxed/simple;
+	bh=D+5MITGSTIWZmg+eDLdAq8eiW/paDZ2Wz+SdaFAiXlc=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=Sr7inpt1zeWfI+4DbJnDZXKlH9gk3TyJp352562kO7YpJ1BB/ERV4s57+pwFzflVPABuMFucItDVjkJvG42bmFk4/EIDEjAWHygNo+WufUydqnW2G/Nj6qp7pWtGJP3w/RMVhUuUeMusL6Zw0zQKGBz8qikrIKCbh1Mbfc0RynU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 009491FB;
+	Mon, 19 Feb 2024 02:10:16 -0800 (PST)
+Received: from a077854.blr.arm.com (a077854.arm.com [10.162.41.80])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 801233F762;
+	Mon, 19 Feb 2024 02:09:33 -0800 (PST)
+From: Faiz Abbas <faiz.abbas@arm.com>
+To: linux-kernel@vger.kernel.org,
+	dri-devel@lists.freedesktop.org
+Cc: liviu.dudau@arm.com,
+	maarten.lankhorst@linux.intel.com,
+	mripard@kernel.org,
+	tzimmermann@suse.de,
+	airlied@gmail.com,
+	daniel@ffwll.ch,
+	Faiz Abbas <faiz.abbas@arm.com>
+Subject: [PATCH 2/3] drm/arm/komeda: Move pipeline prints to after the entire pipeline has been enabled
+Date: Mon, 19 Feb 2024 15:39:14 +0530
+Message-Id: <20240219100915.192475-3-faiz.abbas@arm.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20240219100915.192475-1-faiz.abbas@arm.com>
+References: <20240219100915.192475-1-faiz.abbas@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] dt-bindings: ata: convert MediaTek controller to the
- json-schema
-Content-Language: en-US
-To: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>,
- Damien Le Moal <dlemoal@kernel.org>, Niklas Cassel <cassel@kernel.org>,
- Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>
-Cc: Matthias Brugger <matthias.bgg@gmail.com>,
- Ryder Lee <ryder.lee@mediatek.com>, linux-ide@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
- =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>
-References: <20240213074747.26151-1-zajec5@gmail.com>
-From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-In-Reply-To: <20240213074747.26151-1-zajec5@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-Il 13/02/24 08:47, Rafał Miłecki ha scritto:
-> From: Rafał Miłecki <rafal@milecki.pl>
-> 
-> This helps validating DTS files.
-> 
-> Signed-off-by: Rafał Miłecki <rafal@milecki.pl>
+The komeda driver prints a pretty verbose log in komeda_pipeline_dump()
+detailing the components of each of the two pipelines. This gets printed
+multiple times during boot as komeda EPROBE_DEFERs waiting for the
+remote bridge drivers to come up. Move this log to after this has
+happened indicating that the printed pipeline is actually completely up.
 
-Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Signed-off-by: Faiz Abbas <faiz.abbas@arm.com>
+---
+ drivers/gpu/drm/arm/display/komeda/komeda_crtc.c     | 2 ++
+ drivers/gpu/drm/arm/display/komeda/komeda_kms.h      | 1 +
+ drivers/gpu/drm/arm/display/komeda/komeda_pipeline.c | 4 ++--
+ 3 files changed, 5 insertions(+), 2 deletions(-)
 
+diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_crtc.c b/drivers/gpu/drm/arm/display/komeda/komeda_crtc.c
+index b645c5998230..92ac09dc033b 100644
+--- a/drivers/gpu/drm/arm/display/komeda/komeda_crtc.c
++++ b/drivers/gpu/drm/arm/display/komeda/komeda_crtc.c
+@@ -667,6 +667,8 @@ static int komeda_crtc_add(struct komeda_kms_dev *kms,
+ 
+ 	drm_crtc_enable_color_mgmt(crtc, 0, true, KOMEDA_COLOR_LUT_SIZE);
+ 
++	komeda_pipeline_dump(pipe);
++
+ 	return 0;
+ }
+ 
+diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_kms.h b/drivers/gpu/drm/arm/display/komeda/komeda_kms.h
+index a4048724564d..83e61c4080c2 100644
+--- a/drivers/gpu/drm/arm/display/komeda/komeda_kms.h
++++ b/drivers/gpu/drm/arm/display/komeda/komeda_kms.h
+@@ -191,5 +191,6 @@ void komeda_crtc_flush_and_wait_for_flip_done(struct komeda_crtc *kcrtc,
+ struct komeda_kms_dev *komeda_kms_attach(struct komeda_dev *mdev);
+ void komeda_kms_detach(struct komeda_kms_dev *kms);
+ void komeda_kms_shutdown(struct komeda_kms_dev *kms);
++void komeda_pipeline_dump(struct komeda_pipeline *pipe);
+ 
+ #endif /*_KOMEDA_KMS_H_*/
+diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_pipeline.c b/drivers/gpu/drm/arm/display/komeda/komeda_pipeline.c
+index 4b7d94961527..4b64ed9e9df5 100644
+--- a/drivers/gpu/drm/arm/display/komeda/komeda_pipeline.c
++++ b/drivers/gpu/drm/arm/display/komeda/komeda_pipeline.c
+@@ -9,6 +9,7 @@
+ #include <drm/drm_print.h>
+ 
+ #include "komeda_dev.h"
++#include "komeda_kms.h"
+ #include "komeda_pipeline.h"
+ 
+ /** komeda_pipeline_add - Add a pipeline to &komeda_dev */
+@@ -246,7 +247,7 @@ static void komeda_component_dump(struct komeda_component *c)
+ 		  c->max_active_outputs, c->supported_outputs);
+ }
+ 
+-static void komeda_pipeline_dump(struct komeda_pipeline *pipe)
++void komeda_pipeline_dump(struct komeda_pipeline *pipe)
+ {
+ 	struct komeda_component *c;
+ 	int id;
+@@ -350,7 +351,6 @@ int komeda_assemble_pipelines(struct komeda_dev *mdev)
+ 		pipe = mdev->pipelines[i];
+ 
+ 		komeda_pipeline_assemble(pipe);
+-		komeda_pipeline_dump(pipe);
+ 	}
+ 
+ 	return 0;
+-- 
+2.25.1
 
