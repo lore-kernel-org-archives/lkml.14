@@ -1,112 +1,218 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56CEB2E645
-	for <linux-kernel@vger.kernel.org>; Mon, 19 Feb 2024 12:38:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BC2C20DC4
+	for <linux-kernel@vger.kernel.org>; Mon, 19 Feb 2024 12:40:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708346303; cv=none; b=Q0AzpxWGROK/+LuYAejMWd/OnOwioXxo/Ej5Ypk+R1lqcf+9sg+JZF8n8DJX1ajJcwdsQoR2dUb6BlMWsrZgCmCkwBS7ZDI8nGZdEpDNTRZk3fyKhCQblROXNdVor12H/GME9fr818pXkzsJeqPOUOhaxCFGQobcpilbyziOo7o=
+	t=1708346411; cv=none; b=bIFu/dO86QAJNOS0CltCcgguovqJ98sdL4F4R/Ux+Sq0ZXz/TOzhWOLNMXO13LzsuqKBGqXyhWBYZgDj0kaafwbCa/4uLGAi425G6hDZryiGPpAG1PBmM3rtNSUBB8udL90eyNAa3cneo0Mn3eKdl8QwrTzP23X02IHYPfyeiFE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708346303; c=relaxed/simple;
-	bh=gzjCQw/WkyJ81heO1U1AhwhMls24RaDiBVDZWODcvSA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=E7RI+si1cNP88ctsYdNEyys6z3tbGcvS+CLfdGBr3/nHk/WVE5UoUYBh7jlm+XaVrzAbA3zWwZUfyYWXOjZESmt9qFWJm6rPlzGaHfSV02xis1A5ctjIy60hBya0FWxqMSi/bVrOBJ4VYOSksK5fokd9prCpyS63vnR1JZ0B244=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Lqtwvkjg; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1708346411; c=relaxed/simple;
+	bh=DbweASTEXHvNHHbDdR8OnHgPokqfSwG7rbh512B1lj0=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=ZOzZq1C1UolVrGXaZU+RvtESrTWZ4PSsnmwAC1D9smSfv97dWBmXMRgbZLUe8nr6Z9hr6Vc5cm/7FYsGMEhLHaEml8MVWShXQowHEd7iexGdkXPSbw8iMSGTpmC18mr7qdzuCSAp4+ZLpGMb9HWT11+vMpq0Cd9O5/Qekminotw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=marliere.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=marliere.net header.i=@marliere.net header.b=EUuagCe7; arc=none smtp.client-ip=209.85.214.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=marliere.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Lqtwvkjg"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1708346300;
+	dkim=pass (2048-bit key) header.d=marliere.net header.i=@marliere.net header.b="EUuagCe7"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-1d93edfa76dso23387875ad.1
+        for <linux-kernel@vger.kernel.org>; Mon, 19 Feb 2024 04:40:10 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708346409; x=1708951209;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:dkim-signature:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Uqp09n7s8zSXfMfH82VCiLrRu+5FdThwynVc1xzdBm4=;
+        b=LkYjQ51LbTIXGxpt8CZeZM0I1HN0rT1xnhnaR/0c16+eOAmxEvRPJZ7QdERSvTimc9
+         2nudSF2JwWHErqocWwKO8e04TvaDUTXjVxn6hGHpWCy5VDNdrMvC20dTyCKoOAyT3xzm
+         O9v3SFdPEo6tj2U6MACnQG6iy7JUEuRPOFKS73IcWnLP0W43a+YgelHObo+767RlX0Si
+         Wn80Dwb4BldNVps0kZoqg3wY1b5jkSzV+ysIyblvhHUoUMfQVM59rgA6HPbA5Ye7ggUS
+         tkBDIVVkmB6qRrQHT1Oy4Dy3ePkCRr4Z8VCoZbWYWTnL7ZEqSalwiPeOxRQ7kClzxJCl
+         UICA==
+X-Forwarded-Encrypted: i=1; AJvYcCW0WK0qlDLARa/iNdfOOSFfgI1gGcPMRQjV4QM6QRDqVexoxOp7Trz1yJWASelorWn7EB3y6PpswWZu0t/fScnKJ5QTqJvg17oSluWp
+X-Gm-Message-State: AOJu0Yw4wR9qMX49xGs0ZtClKr61O/ohQpJWh3zrru6yILt32V3/Pbiu
+	2oSw7g4A7HkV76ENXbBxnyKVlzvMK0ikBtTBKyN9fxQXBo7x1migtwnsD9q4xCgFcA==
+X-Google-Smtp-Source: AGHT+IEzOcyrQNaeZ8NHui8RLhzYqr7vsb1ZnJ2FVHcLfKWy/PFZRAzAJT3hrppWWRPLFRqdpj/2wA==
+X-Received: by 2002:a17:903:986:b0:1db:db5e:6712 with SMTP id mb6-20020a170903098600b001dbdb5e6712mr6666851plb.58.1708346409476;
+        Mon, 19 Feb 2024 04:40:09 -0800 (PST)
+Received: from mail.marliere.net ([24.199.118.162])
+        by smtp.gmail.com with ESMTPSA id 12-20020a170902ee4c00b001dba739d15bsm4264878plo.76.2024.02.19.04.40.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 19 Feb 2024 04:40:09 -0800 (PST)
+From: "Ricardo B. Marliere" <ricardo@marliere.net>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marliere.net;
+	s=2024; t=1708346407;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=yk2rigtIP1TrPPA5XNRdEMM1GL9bmAZcBohhgdFvSDI=;
-	b=Lqtwvkjgd08IRgwSJGnymMLSyP4myvnkGEp21xt4fCrAhciiE3OyN+OfU72X/RKtYP+Qpb
-	H0yZ/khHDs3LhH3TZcRM6GIZxg7kNHYFmp3dBVUS1ep66pLy9T8woWi4Tmx3q+pWIacUpU
-	K1nQSpI0Km4lQ0xRrdn2NRcQn8YE/ic=
-Received: from mail-lf1-f69.google.com (mail-lf1-f69.google.com
- [209.85.167.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-550-9A9IdWE2MUeU-KRlXknBag-1; Mon, 19 Feb 2024 07:38:18 -0500
-X-MC-Unique: 9A9IdWE2MUeU-KRlXknBag-1
-Received: by mail-lf1-f69.google.com with SMTP id 2adb3069b0e04-512bad7d985so618875e87.0
-        for <linux-kernel@vger.kernel.org>; Mon, 19 Feb 2024 04:38:18 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708346297; x=1708951097;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=yk2rigtIP1TrPPA5XNRdEMM1GL9bmAZcBohhgdFvSDI=;
-        b=s1S1xItwDYNFFe/sNZ2FZhaZ0doORzE4v9Cv1HbLJO5+rPVRCWYqCwjD/1KdFLFEjD
-         DGdk4xLVSE5ndyyUbBlneDJCumf1B2htRnDW45llNuOoxSI+V5r3KouchpSKhoMTu//J
-         d5MPKB6x6kLeqev+0BLBJvyvSE+M/hz18K2XmzecJntywbOE/IQQ0Xok7AM13+pGOvaT
-         fHLWDiMZe2Yrs3QNq0pba8iZeHPrsYLapc7tOPMj7qR/s2so42x76y1EgyMSnGZdv7Vj
-         P8vB4KP+KNGNcg+bMud9WyozN4A9FcEm7tqh7MWiHj0yVkvGmCSuX4+54O9n1lZPyguZ
-         HSAQ==
-X-Forwarded-Encrypted: i=1; AJvYcCX514fArOClUu6o40rtQHzzPW7lWo28+Y6c2C/cW/9hD7CSh13f4eDcSanOvqvVD+En63K4W+NzUfyDVwbINo8kBioomg3SDUL6NRii
-X-Gm-Message-State: AOJu0Yx6ViujpQAKUFOQOiiUVSTlPi4ukK/0JBCs7N/frq+83Q/d7Gru
-	CJJOUTy9A2X1iAMsEALhrD9zJF9vvRyyUTA5em5soudPyNcJLo0ZALi03nQjzIt4bkJDovBsGoH
-	OMz6tt3Y/KEbF40IUfYQJP5EgB6knqOyNr9+mnHBPtRVj45ixGgm9m+cLgWkF6Q==
-X-Received: by 2002:a05:6512:2312:b0:511:79ce:805d with SMTP id o18-20020a056512231200b0051179ce805dmr9233604lfu.7.1708346296963;
-        Mon, 19 Feb 2024 04:38:16 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IFTIrJSMSE88u6rez8enAJWFXxtTIeYnpfd/46RCais8tXQSS6eAQbycVH8j6AMohdHKR/9Dw==
-X-Received: by 2002:a05:6512:2312:b0:511:79ce:805d with SMTP id o18-20020a056512231200b0051179ce805dmr9233589lfu.7.1708346296662;
-        Mon, 19 Feb 2024 04:38:16 -0800 (PST)
-Received: from [10.40.98.142] ([78.108.130.194])
-        by smtp.gmail.com with ESMTPSA id wp1-20020a170907060100b00a3e2e03c155sm2363377ejb.155.2024.02.19.04.38.16
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 19 Feb 2024 04:38:16 -0800 (PST)
-Message-ID: <1d5dd3de-5561-4231-94bd-65ac05f1fc50@redhat.com>
-Date: Mon, 19 Feb 2024 13:38:16 +0100
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=Uqp09n7s8zSXfMfH82VCiLrRu+5FdThwynVc1xzdBm4=;
+	b=EUuagCe7S/6/yXzp7Z3+rQT/7HoQMInIBNUcLZr6wE2f29W/TyU2goKrx7h4lAd+XZ4CH0
+	otEKx/7M+n5pbPmrNK+dJoWwhT1BnAeSJutBy2ckrJLnlOPhceKi/MWTrjCv5wwh05mPGu
+	Av/kffvuaqnETo7hfCh5ZeMBrCvpHmMiuG4KnzXqzg0MVFYK+MMzGjx/p2wK96Pld88fu6
+	sG6pF6wzjsbyFn6xflvUnWDt+psrdwUKGVBaUNoRgkJEM/OfK3g225yILhOAsXM/PzmUpX
+	/HrT+Hfad7fsIZx5nwgCo20H6VcVwwZY++rp/HWB0wBuZGCsy61Fjf8n0ZjPzg==
+Authentication-Results: ORIGINATING;
+	auth=pass smtp.auth=ricardo@marliere.net smtp.mailfrom=ricardo@marliere.net
+Date: Mon, 19 Feb 2024 09:40:50 -0300
+Subject: [PATCH] greybus: constify the struct device_type usage
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 0/2] AMD PMF Smart PC error handling cleanups
-Content-Language: en-US
-To: Mario Limonciello <mario.limonciello@amd.com>, Shyam-sundar.S-k@amd.com
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20240217014107.113749-1-mario.limonciello@amd.com>
-From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20240217014107.113749-1-mario.limonciello@amd.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+Message-Id: <20240219-device_cleanup-greybus-v1-1-babb3f65e8cc@marliere.net>
+X-B4-Tracking: v=1; b=H4sIAFFM02UC/x2M3QpAQBQGX0Xn2pbdyM+rSOL4cEpLu61I3t3mc
+ mpmHvJwAk9N8pDDKV52G0GnCfE62AVKpshkMpNnRtdqihKj5w2DDYdaHO4xeMV1yRpzYfKiohg
+ fDrNc/7jt3vcD/TXi92gAAAA=
+To: Johan Hovold <johan@kernel.org>, Alex Elder <elder@kernel.org>, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: greybus-dev@lists.linaro.org, linux-kernel@vger.kernel.org, 
+ "Ricardo B. Marliere" <ricardo@marliere.net>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4624; i=ricardo@marliere.net;
+ h=from:subject:message-id; bh=DbweASTEXHvNHHbDdR8OnHgPokqfSwG7rbh512B1lj0=;
+ b=owEBbQKS/ZANAwAKAckLinxjhlimAcsmYgBl00xW7Nefy4TJNlZLv/bpaOaI78TMjGEzcuTza
+ Mz/ae//utqJAjMEAAEKAB0WIQQDCo6eQk7jwGVXh+HJC4p8Y4ZYpgUCZdNMVgAKCRDJC4p8Y4ZY
+ pnDRD/9cmNomQhIAU/nkOiUExUM2pxbNd/K/pTr+/ohcxYOgdqOfgtbC5S9il98tMlts4r/F5hy
+ GDt2vbiHiQF/UNXnwMPuvfOolQDRKmXrZ26yiMUx7nxDNbG9roa31XxhfDqcd2BAdmQ8H+Xy+1a
+ yJZmg1Cmi1FTZtcVx6MLKU8VFHGGRUzLCwhn+pRcwbongd8hyQopEE4/Pul2p/j4ldJr7J71gw0
+ xIPG+o+QR3RZs+IPY+HSsfeQbcp1WaRuBOmxsAQgGjO37p88RsYVCF4EQkPPcAvRcD48kqFu2zX
+ Ed/7GzEVxHmHNibdJMdqe+fLj+Rzhb9jnT/eDlDx7kt+i0PQEWhDi7lFWEn9kBGh5qud0+NudMG
+ qHossSpY1bciBdZBT06i5pQkzPjaJjPn0EDdSYks1IQeUVkjcoSQ2qSxFp2mQe1Ow72nxvY3T9Z
+ 956FyeP0HaoXIxG4ume5kX0OoDMyrvAd/m66CDCa5NSidPwG0w+B8CIwPWhM7RdJKWG4huGotwS
+ BD+wRxJUYiIC9EGpzBp8ajQhpeFbcxul7GFx+rFg0BpSBRPU27YMouLi3bqsx/yLWltRcRwcB2P
+ ztewUH/6cKFVjYqLEbOS8ekKbnuzSG+TdoOwqphtMBNoSA0PTqdEw3hAKYPR5NLFJTv38gv6Mm6
+ CIFsZbDoo6J7Z7w==
+X-Developer-Key: i=ricardo@marliere.net; a=openpgp;
+ fpr=030A8E9E424EE3C0655787E1C90B8A7C638658A6
 
-Hi,
+Since commit aed65af1cc2f ("drivers: make device_type const"), the driver
+core can properly handle constant struct device_type. Move the
+greybus_hd_type, greybus_module_type, greybus_interface_type,
+greybus_control_type, greybus_bundle_type and greybus_svc_type variables to
+be constant structures as well, placing it into read-only memory which can
+not be modified at runtime.
 
-On 2/17/24 02:41, Mario Limonciello wrote:
-> While debugging the suspend issue for amd-pmf the initial bisect result
-> pointed at red herrings of cleanup flow problems for
-> amd_pmf_init_smart_pc().  The actual issue wasn't in this code, but still
-> a lot of memory is allocated and not immediately released if any of the
-> error branches are taken.
-> 
-> This series cleans that up so that every step is cleaned up. I believe
-> this actually fixes driver bugs that "could" occur if a BIOS advertisd
-> Smart PC as well as ITS auto or CNQF but didn't include a policy in the
-> BIOS.
-> 
-> Mario Limonciello (2):
->   platform/x86/amd/pmf: Add debugging message for missing policy data
->   platform/x86/amd/pmf: Fixup error handling for amd_pmf_init_smart_pc()
+Signed-off-by: Ricardo B. Marliere <ricardo@marliere.net>
+---
+ drivers/greybus/bundle.c    |  2 +-
+ drivers/greybus/control.c   |  2 +-
+ drivers/greybus/hd.c        |  2 +-
+ drivers/greybus/interface.c |  2 +-
+ drivers/greybus/module.c    |  2 +-
+ drivers/greybus/svc.c       |  2 +-
+ include/linux/greybus.h     | 12 ++++++------
+ 7 files changed, 12 insertions(+), 12 deletions(-)
 
-Thank you for your patch-series, I've applied this series
-to my review-hans branch:
-https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
+diff --git a/drivers/greybus/bundle.c b/drivers/greybus/bundle.c
+index 84660729538b..a6e1cca06172 100644
+--- a/drivers/greybus/bundle.c
++++ b/drivers/greybus/bundle.c
+@@ -166,7 +166,7 @@ static const struct dev_pm_ops gb_bundle_pm_ops = {
+ 	SET_RUNTIME_PM_OPS(gb_bundle_suspend, gb_bundle_resume, gb_bundle_idle)
+ };
+ 
+-struct device_type greybus_bundle_type = {
++const struct device_type greybus_bundle_type = {
+ 	.name =		"greybus_bundle",
+ 	.release =	gb_bundle_release,
+ 	.pm =		&gb_bundle_pm_ops,
+diff --git a/drivers/greybus/control.c b/drivers/greybus/control.c
+index 359a25841973..b5cf49d09df2 100644
+--- a/drivers/greybus/control.c
++++ b/drivers/greybus/control.c
+@@ -436,7 +436,7 @@ static void gb_control_release(struct device *dev)
+ 	kfree(control);
+ }
+ 
+-struct device_type greybus_control_type = {
++const struct device_type greybus_control_type = {
+ 	.name =		"greybus_control",
+ 	.release =	gb_control_release,
+ };
+diff --git a/drivers/greybus/hd.c b/drivers/greybus/hd.c
+index 72b21bf2d7d3..e2f3496bddc3 100644
+--- a/drivers/greybus/hd.c
++++ b/drivers/greybus/hd.c
+@@ -116,7 +116,7 @@ static void gb_hd_release(struct device *dev)
+ 	kfree(hd);
+ }
+ 
+-struct device_type greybus_hd_type = {
++const struct device_type greybus_hd_type = {
+ 	.name		= "greybus_host_device",
+ 	.release	= gb_hd_release,
+ };
+diff --git a/drivers/greybus/interface.c b/drivers/greybus/interface.c
+index 9ec949a438ef..a88dc701289c 100644
+--- a/drivers/greybus/interface.c
++++ b/drivers/greybus/interface.c
+@@ -765,7 +765,7 @@ static const struct dev_pm_ops gb_interface_pm_ops = {
+ 			   gb_interface_runtime_idle)
+ };
+ 
+-struct device_type greybus_interface_type = {
++const struct device_type greybus_interface_type = {
+ 	.name =		"greybus_interface",
+ 	.release =	gb_interface_release,
+ 	.pm =		&gb_interface_pm_ops,
+diff --git a/drivers/greybus/module.c b/drivers/greybus/module.c
+index 36f77f9e1d74..7f7153a1dd60 100644
+--- a/drivers/greybus/module.c
++++ b/drivers/greybus/module.c
+@@ -81,7 +81,7 @@ static void gb_module_release(struct device *dev)
+ 	kfree(module);
+ }
+ 
+-struct device_type greybus_module_type = {
++const struct device_type greybus_module_type = {
+ 	.name		= "greybus_module",
+ 	.release	= gb_module_release,
+ };
+diff --git a/drivers/greybus/svc.c b/drivers/greybus/svc.c
+index 0d7e749174a4..4256467fcd35 100644
+--- a/drivers/greybus/svc.c
++++ b/drivers/greybus/svc.c
+@@ -1305,7 +1305,7 @@ static void gb_svc_release(struct device *dev)
+ 	kfree(svc);
+ }
+ 
+-struct device_type greybus_svc_type = {
++const struct device_type greybus_svc_type = {
+ 	.name		= "greybus_svc",
+ 	.release	= gb_svc_release,
+ };
+diff --git a/include/linux/greybus.h b/include/linux/greybus.h
+index 18c0fb958b74..5f9791fae3c0 100644
+--- a/include/linux/greybus.h
++++ b/include/linux/greybus.h
+@@ -106,12 +106,12 @@ struct dentry *gb_debugfs_get(void);
+ 
+ extern struct bus_type greybus_bus_type;
+ 
+-extern struct device_type greybus_hd_type;
+-extern struct device_type greybus_module_type;
+-extern struct device_type greybus_interface_type;
+-extern struct device_type greybus_control_type;
+-extern struct device_type greybus_bundle_type;
+-extern struct device_type greybus_svc_type;
++extern const struct device_type greybus_hd_type;
++extern const struct device_type greybus_module_type;
++extern const struct device_type greybus_interface_type;
++extern const struct device_type greybus_control_type;
++extern const struct device_type greybus_bundle_type;
++extern const struct device_type greybus_svc_type;
+ 
+ static inline int is_gb_host_device(const struct device *dev)
+ {
 
-Note it will show up in my review-hans branch once I've pushed my
-local branch there, which might take a while.
+---
+base-commit: b401b621758e46812da61fa58a67c3fd8d91de0d
+change-id: 20240219-device_cleanup-greybus-c97c1ef52458
 
-I will include this patch in my next fixes pull-req to Linus
-for the current kernel development cycle.
-
-Regards,
-
-Hans
-
+Best regards,
+-- 
+Ricardo B. Marliere <ricardo@marliere.net>
 
