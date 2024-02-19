@@ -1,78 +1,97 @@
-Received: from out-179.mta0.migadu.com (out-179.mta0.migadu.com [91.218.175.179])
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51BA0482C3
-	for <linux-kernel@vger.kernel.org>; Mon, 19 Feb 2024 20:51:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B3381F18D;
+	Mon, 19 Feb 2024 21:06:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708375871; cv=none; b=kwcuRzc7uo2g1QJ9iQJw4JvuhT/5XdZuPNBdNUO7Ypi+rNXL8fZtqGykiv1LgN0DnujmbW4SKCVDpPRVa9xr+pTVytDhgjrz5ZMXNktgZofXrsft1JoTE2plxcLfvKIRYiBg4V3BYwgkSdGina462pXe02S1zQDqF+shNkJTri4=
+	t=1708376764; cv=none; b=jzcqHFc+rGXAzdWLeoevqZgT3lkA8FVEeEEMoxqLlUZJBVio4nD+I9PEctmCpgT/P0OvEFJXkPNcLKBOgv84zbEVoN8WUykstJ+4POv2/e/UdmTrk7k1kyu/TfZvvu5mJDbqpLVmnc/stv2lXn3y5YvUL5TcZVUfV1aRLOC/rqc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708375871; c=relaxed/simple;
-	bh=Q8thPJRfpgc9+wT7IvwXgRA+nbwQjXmEwTEG9AzjJBU=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=BudwQ9Fqk1MU+QLiHyNL3zIaZhAJLSRDN04JHuuUtLjuQ2uScYvolhx5NcfEOBxsP7MVmF6UZchJNMB9NU+iHLo0isZ8snnCXNBZ6GnyCwifJAF8AWiDuM6vGOKpc+NV8E8tn73oQA9rAaJZ5iSA8kCmE0MP5DRfVQzs5zB+dEw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=nSfhB46D; arc=none smtp.client-ip=91.218.175.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1708376764; c=relaxed/simple;
+	bh=KU4nGP7iEFzvC/1hs1YWVpyHfJhGdPFeSmJ8xNlLcWc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=uaam/PdTHgGELq65WQ9y3k/DATIcyDd2nj5KWSfV1o6PW8sUBNnI00b1+xEq0avxo6hwcwPNoDL2J5EgDt3/iH2exSLyO9MIFJECIHKuhYwU3fFd7xxbHrwO5PP9deK8mQ1d7y9ejuLcAu7Rdb7Ge6ECc0y6k2O2k6gnevhhl5c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=cIM5NyNN; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="nSfhB46D"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1708375866;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=pWEO3ujEnp3IBbqfF6yum0hAVIJP6wYM9GAwk4wwij4=;
-	b=nSfhB46DbXXbhi5BXP7LdZxeNZmCa8Exn7KWD7VLiyU2FaocvWZthoWQdlPGlDUVwf2qEe
-	Wv+VJvCnL6E/QYazSu6nk7IyYSKsr565y6CV7twE3XlMApQMUeivX1bG2SazOilP2h1JEG
-	99z1hpSs6uZI7B/sfLXs+rZs0KFuJ7Q=
-From: Shakeel Butt <shakeel.butt@linux.dev>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: linux-kernel@vger.kernel.org
-Subject: [PATCH] MAINTAINERS: mailmap: update the email address
-Date: Mon, 19 Feb 2024 12:50:50 -0800
-Message-Id: <20240219205050.887810-1-shakeel.butt@linux.dev>
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="cIM5NyNN"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=ZOgxDgXjl4qwjPPUdr5tiry2hRdBim87LYWDSoqsvk4=; b=cIM5NyNNeWDim+UZ1Gwx6XfcEH
+	f0PKlkovpQVxnvG2cREypNR88n5pUmtf9z7rqlwmUm6Mlq2lLbQ9zCs6uJBmddp0ZLAtOKLHBpDys
+	Vh42aXe2ZCWSM/85RhEWepKUYNcpWuWbkn3S0mf1V8/O8/nCFQDdXzMRVaC8HXRF18zg=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1rcApd-008EUS-9d; Mon, 19 Feb 2024 22:05:45 +0100
+Date: Mon, 19 Feb 2024 22:05:45 +0100
+From: Andrew Lunn <andrew@lunn.ch>
+To: Yang Xiwen <forbidden405@outlook.com>
+Cc: Yisen Zhuang <yisen.zhuang@huawei.com>,
+	Salil Mehta <salil.mehta@huawei.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Russell King <linux@armlinux.org.uk>, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH net-next v3 3/6] net: hisilicon: add support for
+ hisi_femac core on Hi3798MV200
+Message-ID: <5572f4dd-dcf2-42ec-99c8-51bf4d1f28ba@lunn.ch>
+References: <20240220-net-v3-0-b68e5b75e765@outlook.com>
+ <20240220-net-v3-3-b68e5b75e765@outlook.com>
+ <29fc21f0-0e46-4d0f-8d4b-c4dbd1689c55@lunn.ch>
+ <SEZPR06MB695901E7D4BEABE1B6F319D096512@SEZPR06MB6959.apcprd06.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <SEZPR06MB695901E7D4BEABE1B6F319D096512@SEZPR06MB6959.apcprd06.prod.outlook.com>
 
-Moving to linux.dev based email for kernel work.
+On Tue, Feb 20, 2024 at 04:14:36AM +0800, Yang Xiwen wrote:
+> On 2/20/2024 4:03 AM, Andrew Lunn wrote:
+> > > Note it's unable to put the MDIO bus node outside of MAC controller
+> > > (i.e. at the same level in the parent bus node). Because we need to
+> > > control all clocks and resets in FEMAC driver due to the phy reset
+> > > procedure. So the clocks can't be assigned to MDIO bus device, which is
+> > > an essential resource for the MDIO bus to work.
+> > What PHY driver is being used? If there a specific PHY driver for this
+> > hardware? Does it implement soft reset?
+> 
+> I'm using generic PHY driver.
+> 
+> It implements IEEE C22 standard. So there is a soft reset in BMCR register.
+> 
+> > 
+> > I'm wondering if you can skip hardware reset of the PHY and only do a
+> > software reset.
+> 
+> There must be someone to deassert the hardware reset control signal for the
+> PHY. We can't rely on the boot loader to do that. And here even we choose to
+> skip the hardware reset procedure, the sequence of deasserting the reset
+> signals is also very important. (i.e. first PHY, then MAC and MACIF).
+> Opposite to the normal sequence. (we normally first register MAC driver, and
+> then PHY).
 
-Signed-off-by: Shakeel Butt <shakeel.butt@linux.dev>
----
- .mailmap    | 1 +
- MAINTAINERS | 2 +-
- 2 files changed, 2 insertions(+), 1 deletion(-)
+There are a few MACs which require the PHY to provide a clock to the
+MAC before they can use their DMA engine. The PHY provides typically a
+25MHz clock, which is used to driver the DMA. So long as you don't
+touch the DMA, you can access other parts of the MAC before the PHY is
+generating the clock.
 
-diff --git a/.mailmap b/.mailmap
-index 1eb607efcc6e..6ac0d469c7fa 100644
---- a/.mailmap
-+++ b/.mailmap
-@@ -553,6 +553,7 @@ Senthilkumar N L <quic_snlakshm@quicinc.com> <snlakshm@codeaurora.org>
- Serge Hallyn <sergeh@kernel.org> <serge.hallyn@canonical.com>
- Serge Hallyn <sergeh@kernel.org> <serue@us.ibm.com>
- Seth Forshee <sforshee@kernel.org> <seth.forshee@canonical.com>
-+Shakeel Butt <shakeel.butt@linux.dev> <shakeelb@google.com>
- Shannon Nelson <shannon.nelson@amd.com> <snelson@pensando.io>
- Shannon Nelson <shannon.nelson@amd.com> <shannon.nelson@intel.com>
- Shannon Nelson <shannon.nelson@amd.com> <shannon.nelson@oracle.com>
-diff --git a/MAINTAINERS b/MAINTAINERS
-index ca48f2d37892..4dc0ad25e4ab 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -5412,7 +5412,7 @@ CONTROL GROUP - MEMORY RESOURCE CONTROLLER (MEMCG)
- M:	Johannes Weiner <hannes@cmpxchg.org>
- M:	Michal Hocko <mhocko@kernel.org>
- M:	Roman Gushchin <roman.gushchin@linux.dev>
--M:	Shakeel Butt <shakeelb@google.com>
-+M:	Shakeel Butt <shakeel.butt@linux.dev>
- R:	Muchun Song <muchun.song@linux.dev>
- L:	cgroups@vger.kernel.org
- L:	linux-mm@kvack.org
--- 
-2.34.1
+So it might be possible to take the MAC and MACIF out of reset, then
+create the MDIO bus, probe the PHY, take it out of reset so its
+generating the clock, and then complete the rest of the MAC setup.
+
+	Andrew
 
