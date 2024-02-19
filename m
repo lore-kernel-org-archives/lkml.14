@@ -1,60 +1,60 @@
-Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
+Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82347376E4
-	for <linux-kernel@vger.kernel.org>; Mon, 19 Feb 2024 13:36:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B66C381D4
+	for <linux-kernel@vger.kernel.org>; Mon, 19 Feb 2024 13:36:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708349773; cv=none; b=XU1z/psVlkWXFeSx83Ezr3XZoLtQlcVU2y3TD/EQXhOeDNw6YW2BedDqriw7JNLzF9a0LIj4HHTlzcJ+kWwS7csYafsnFLMenw0SDA7fWt0TRUZB7QBxMDVQHjcXbmJZLTs+Nw9a7aSF41SKWGueHOjnrwEzABMAjSwkmtA/moE=
+	t=1708349778; cv=none; b=p0T7Rbiy/hQBdYxWfYA7HPdLM+WfpxX1wN4Qhg79Jrc49NjIm89oC0CfBNg+TTQXRJsbLC0IvzqX0wje0D26nsQcBycnyCGnHSjz2DU4jAj5QGsjab0UnoGU7Ss+GeVSazg/pbyC7z41KrigdAalWmkOSJfT2oEP2ePms9TiGyM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708349773; c=relaxed/simple;
-	bh=79Y0MxxohdGitgftXN/Ssqm4c/Qk+6TMe7Z4Gt+3Bxg=;
+	s=arc-20240116; t=1708349778; c=relaxed/simple;
+	bh=2VUaTHaFXwk9sVr7gsAachnQpNO5KMem0UoFA2HST7g=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=bPWI2h+nFMLlUUQmHDWMXaXSvZzsA0aU8aY7KRl4O3SU7xw92zu+v6OQgwcfTHbYz7jcAU3C8nzbTg/gOUh32VOHmUI6se1m9GZAh1iy3dl3WgVQagoZ8TB6AQMozoxoZmGSnFqNYoujCuFzEoj4/AMtvOzTvZ5/UI6dA40sNPY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=GrD6zCE/; arc=none smtp.client-ip=209.85.208.47
+	 In-Reply-To:To:Cc; b=EReeqXtuz0t6V4EGJX1f4n5uc9IyiSJHIz1JkrC566ul5nYYP1vckmgyza6O5Q9dJNN3NsBBkN20nzvyVxjczy1kA0cIls/AXMyebAvgZLh9LKyint+hd1ZQmcIWZlH6nk39iWqW6duyWS+nmiKw9xuIpWSDKYEwdHugzztKEps=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Ssl4sjxJ; arc=none smtp.client-ip=209.85.208.44
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GrD6zCE/"
-Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-564647bcdbfso1186298a12.2
-        for <linux-kernel@vger.kernel.org>; Mon, 19 Feb 2024 05:36:11 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Ssl4sjxJ"
+Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-563c0f13cabso5101618a12.3
+        for <linux-kernel@vger.kernel.org>; Mon, 19 Feb 2024 05:36:16 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1708349770; x=1708954570; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1708349775; x=1708954575; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=7M1e7EmpHdXumiDD0LMXKq+SIP28LzfgFkNX1b4YVQE=;
-        b=GrD6zCE/AfxRExmLVtZOeNgI/m3DjLilp+VKVqujXCbIyYWvgzFz1mADwUIh4JSGjb
-         Y6J6aEyAzGX8gQQk5vpfGolASyhx7xI77+s+aEC1FBGl9s4x4Lu3Df7A55bPDwgaQpqH
-         me5WqUglHw72xwX8LQinQxKoGW0ti0r9aP0ePeT+mBUPIa9RnM2wy7eEpHGOr79E8CEH
-         syZ8SW6Kwgl8g35avzMZ0XjVJqb8qc96t+3lxTBemBsGBZFPs82MC2fN+rEZMGk7Bjph
-         6+tVFqrXR3HYJpBzUCvQrwere/kJH03UWFgdbd6ZA1A0LhMaW1zsMEUNX32SoFHeskMX
-         DYgA==
+        bh=mjP12Zq06nby7HMeSJ/EUbYJ63ENO6BkYD8FuiAok6w=;
+        b=Ssl4sjxJzcFd5xYTrymLfoecsB/HfYk80Nsw0Mxn6tDSn3jWgV5ZPbwuAOmEe1fZnq
+         sD4gOctRV2VQ7BnZY5Dij/U52+ulKuvIpRA531mBxCcA/sx8TmJIVeejHeBDJC9xOrTm
+         kiSoBXGIt74y/Psdnh/yRyJuMOxc1BmDR5e6uGqcs23g5f7RG71KAvdpiJ2/5D3hvmia
+         beEXxa8PZULntObJ2g+4TLS8W+/YlDJ6K55YPyR6dZAoqMzSL48n1qLmn4d1ca6q2Hta
+         KLkFibEIT2LtzH+Ku2minzw7yp2n5yYeuMmcFvVoE0FjfGR4EMLv2nbN+E53X2JlRlKo
+         cfKA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708349770; x=1708954570;
+        d=1e100.net; s=20230601; t=1708349775; x=1708954575;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=7M1e7EmpHdXumiDD0LMXKq+SIP28LzfgFkNX1b4YVQE=;
-        b=N6psZ2HoxqWfe8jf5grh3OyNBmAUMfNWg7jDnzih6ag6HwS8EQAM+594i1AIqPYuHy
-         4sceKScaGE+sUpFveMdUjhSkzR7oxJ3sIYD6dZOotgIBWT19TEXCzVCAU7TvZQXFWu/Z
-         jGJeW39LzznSeJNXYjoPj+B+Bd+zJwq+uFjtptbEb7gj6f0dloRja69V51nimC7Y/ogX
-         kKfiNzjkLxgMRiF5JppvW+BeZavyXgxQQzkFdLXSlcH9YSBAZBYCbeYjfpLh1bgbZASx
-         a75PWzMCy2cqcq9kxmJFC5+NPn8LaxHDHZYz6d7scz3Pz7FDAnMaLdbBXsJF2uqFEiAV
-         xUIA==
-X-Forwarded-Encrypted: i=1; AJvYcCU5viZVL/Ep1WHPWCeVwLzYXRqeqwQGjawraYI5JbbU9eDf+0BMvehl+2a0YUD8avRQ+A+Cg1H95mslFI7G0jI68LcSLoq8HSNChyTa
-X-Gm-Message-State: AOJu0YypV4X0JIcOJ0i6c5AM3cvVF/rQWghK3hmuICLrUflcPo5HnU07
-	IFib4U1jih1bmG1DbEZ3CuXqWAt9waE9dWFUlFo49hb54fuHBc4fYf1ve7snpkE=
-X-Google-Smtp-Source: AGHT+IGYYROFmdLbUMjFpP9qsW46pO/QmXTyHrKREDj8fB5na2NFI5XZWqwX4q89xnCXQ4xvRWeBEg==
-X-Received: by 2002:a05:6402:1844:b0:564:3830:b9a5 with SMTP id v4-20020a056402184400b005643830b9a5mr3243810edy.21.1708349769992;
-        Mon, 19 Feb 2024 05:36:09 -0800 (PST)
+        bh=mjP12Zq06nby7HMeSJ/EUbYJ63ENO6BkYD8FuiAok6w=;
+        b=uOai4zbJ5aldE97qqm/TeBCJwzxZb7+riXNvYCtvsc4cjp8zmozcH/4AalaIo/j2IC
+         Bt55NgJ2deDi2f0UtgdCyCFFlyt+vPyeqFXyO9xGEuhCn1XWIycXGAeZoCm71Eup9yo2
+         MGaZaT/rcb9bpbXkV6zVrausJAhRIya1XOJIVlpvg1F0piRnpCjzDNtoNfwvxiuaeSBV
+         EJky/OcVWOpSo2d6UbIBZq+DwX/cmA+JDw1kEL8jriLfoUUh3Jv9yAbo+weXf0inORKY
+         dg+xP6H2PC3qQT42fMt+hJeujVYB6ERT9KXIMCnVtcQS6zDLGNYjlHIR77d5E1xzeB/U
+         C+zA==
+X-Forwarded-Encrypted: i=1; AJvYcCW7ceHempkszbq/ikfGCgT3eIMsZ6uUnYTPE4C999CfJEl4ClolXIX51KTJEEj43JhDMvQUQ88bIw4EJjN6TDSSzqXlD2rfYmCbYq3k
+X-Gm-Message-State: AOJu0YwMF/kjlpPV3WaswRibhkMbPUpPyjMX9d6zBViH0M8mIoObNR5Y
+	c08npqZcGbOTImAH/yBmuj4Pz7jvx24Dz9hwrbGXuatJu1vFEglMYFtK1Vvn+Y8=
+X-Google-Smtp-Source: AGHT+IHMjM8WymNt4vEQq/mCWKYvpVNBNNxjTt8NZU0BjV3r5AoZ1THDhcM56s0PPBQZdIzF6HDHNg==
+X-Received: by 2002:aa7:db59:0:b0:564:ad01:20b with SMTP id n25-20020aa7db59000000b00564ad01020bmr139795edt.25.1708349775056;
+        Mon, 19 Feb 2024 05:36:15 -0800 (PST)
 Received: from [10.167.154.1] (078088045141.garwolin.vectranet.pl. [78.88.45.141])
-        by smtp.gmail.com with ESMTPSA id q29-20020a50cc9d000000b00563a3ff30basm2900168edi.59.2024.02.19.05.36.07
+        by smtp.gmail.com with ESMTPSA id q29-20020a50cc9d000000b00563a3ff30basm2900168edi.59.2024.02.19.05.36.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 19 Feb 2024 05:36:09 -0800 (PST)
+        Mon, 19 Feb 2024 05:36:14 -0800 (PST)
 From: Konrad Dybcio <konrad.dybcio@linaro.org>
-Date: Mon, 19 Feb 2024 14:35:48 +0100
-Subject: [PATCH 3/8] clk: qcom: clk-alpha-pll: Add HUAYRA_2290 support
+Date: Mon, 19 Feb 2024 14:35:50 +0100
+Subject: [PATCH 5/8] drm/msm/adreno: Add missing defines for A702
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -63,7 +63,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240219-topic-rb1_gpu-v1-3-d260fa854707@linaro.org>
+Message-Id: <20240219-topic-rb1_gpu-v1-5-d260fa854707@linaro.org>
 References: <20240219-topic-rb1_gpu-v1-0-d260fa854707@linaro.org>
 In-Reply-To: <20240219-topic-rb1_gpu-v1-0-d260fa854707@linaro.org>
 To: Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>, 
@@ -82,114 +82,52 @@ Cc: Marijn Suijten <marijn.suijten@somainline.org>,
  linux-clk@vger.kernel.org, dri-devel@lists.freedesktop.org, 
  freedreno@lists.freedesktop.org, Konrad Dybcio <konrad.dybcio@linaro.org>
 X-Mailer: b4 0.12.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1708349759; l=4133;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1708349759; l=1379;
  i=konrad.dybcio@linaro.org; s=20230215; h=from:subject:message-id;
- bh=79Y0MxxohdGitgftXN/Ssqm4c/Qk+6TMe7Z4Gt+3Bxg=;
- b=4nQYbPVeI8Be4nvkpxVfXN4FtQYQuTUrRB6I4LVYY/kCkQW6/OyzfiXXuRABMb+6jrO9nZF9u
- NlAaZfORH/nBJ6Eq1c667ga2Qun9siLGQF88pnu9nhecTmr3DokAeBS
+ bh=2VUaTHaFXwk9sVr7gsAachnQpNO5KMem0UoFA2HST7g=;
+ b=uy8b7slouVEaFRzlMDQaQuGj6/EdLKuvoxlWss5WCvpYfkQIMuuko+sE6v3X1yKkbgzKjx7sS
+ Sr/e/dPpNpcCFZmvXDeCJmc5sQgAXJeQ/E2oSh1XTeW54gedzNfKZ7t
 X-Developer-Key: i=konrad.dybcio@linaro.org; a=ed25519;
  pk=iclgkYvtl2w05SSXO5EjjSYlhFKsJ+5OSZBjOkQuEms=
 
-Commit 134b55b7e19f ("clk: qcom: support Huayra type Alpha PLL")
-introduced an entry to the alpha offsets array, but diving into QCM2290
-downstream and some documentation, it turned out that the name Huayra
-apparently has been used quite liberally across many chips, even with
-noticeably different hardware.
+Add some defines required for A702. Can be substituted with a header
+sync after merging mesa!27665 [1].
 
-Introduce another set of offsets and a new configure function for the
-Huayra PLL found on QCM2290. This is required e.g. for the consumers
-of GPUCC_PLL0 to properly start.
-
+[1] https://gitlab.freedesktop.org/mesa/mesa/-/merge_requests/27665
 Signed-off-by: Konrad Dybcio <konrad.dybcio@linaro.org>
 ---
- drivers/clk/qcom/clk-alpha-pll.c | 45 ++++++++++++++++++++++++++++++++++++++++
- drivers/clk/qcom/clk-alpha-pll.h |  3 +++
- 2 files changed, 48 insertions(+)
+ drivers/gpu/drm/msm/adreno/a6xx.xml.h | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
 
-diff --git a/drivers/clk/qcom/clk-alpha-pll.c b/drivers/clk/qcom/clk-alpha-pll.c
-index 8a412ef47e16..61b5abd13782 100644
---- a/drivers/clk/qcom/clk-alpha-pll.c
-+++ b/drivers/clk/qcom/clk-alpha-pll.c
-@@ -244,6 +244,19 @@ const u8 clk_alpha_pll_regs[][PLL_OFF_MAX_REGS] = {
- 		[PLL_OFF_OPMODE] = 0x30,
- 		[PLL_OFF_STATUS] = 0x3c,
- 	},
-+	[CLK_ALPHA_PLL_TYPE_HUAYRA_2290] =  {
-+		[PLL_OFF_L_VAL] = 0x04,
-+		[PLL_OFF_ALPHA_VAL] = 0x08,
-+		[PLL_OFF_USER_CTL] = 0x0c,
-+		[PLL_OFF_CONFIG_CTL] = 0x10,
-+		[PLL_OFF_CONFIG_CTL_U] = 0x14,
-+		[PLL_OFF_CONFIG_CTL_U1] = 0x18,
-+		[PLL_OFF_TEST_CTL] = 0x1c,
-+		[PLL_OFF_TEST_CTL_U] = 0x20,
-+		[PLL_OFF_TEST_CTL_U1] = 0x24,
-+		[PLL_OFF_OPMODE] = 0x28,
-+		[PLL_OFF_STATUS] = 0x38,
-+	},
- };
- EXPORT_SYMBOL_GPL(clk_alpha_pll_regs);
+diff --git a/drivers/gpu/drm/msm/adreno/a6xx.xml.h b/drivers/gpu/drm/msm/adreno/a6xx.xml.h
+index 863b5e3b0e67..1ec4dbc0e746 100644
+--- a/drivers/gpu/drm/msm/adreno/a6xx.xml.h
++++ b/drivers/gpu/drm/msm/adreno/a6xx.xml.h
+@@ -1945,6 +1945,24 @@ static inline uint32_t REG_A6XX_RBBM_PERFCTR_RBBM_SEL(uint32_t i0) { return 0x00
  
-@@ -779,6 +792,38 @@ static long clk_alpha_pll_round_rate(struct clk_hw *hw, unsigned long rate,
- 	return clamp(rate, min_freq, max_freq);
- }
+ #define REG_A6XX_RBBM_CLOCK_HYST_TEX_FCHE			0x00000122
  
-+void clk_huayra_2290_pll_configure(struct clk_alpha_pll *pll, struct regmap *regmap,
-+				   const struct alpha_pll_config *config)
-+{
-+	clk_alpha_pll_write_config(regmap, PLL_CONFIG_CTL(pll), config->config_ctl_val);
-+	clk_alpha_pll_write_config(regmap, PLL_CONFIG_CTL_U(pll), config->config_ctl_hi_val);
-+	clk_alpha_pll_write_config(regmap, PLL_CONFIG_CTL_U1(pll), config->config_ctl_hi1_val);
-+	clk_alpha_pll_write_config(regmap, PLL_TEST_CTL(pll), config->test_ctl_val);
-+	clk_alpha_pll_write_config(regmap, PLL_TEST_CTL_U(pll), config->test_ctl_hi_val);
-+	clk_alpha_pll_write_config(regmap, PLL_TEST_CTL_U1(pll), config->test_ctl_hi1_val);
-+	clk_alpha_pll_write_config(regmap, PLL_L_VAL(pll), config->l);
-+	clk_alpha_pll_write_config(regmap, PLL_ALPHA_VAL(pll), config->alpha);
-+	clk_alpha_pll_write_config(regmap, PLL_USER_CTL(pll), config->user_ctl_val);
++#define REG_A6XX_RBBM_CLOCK_CNTL_FCHE				0x00000123
 +
-+	/* Set PLL_BYPASSNL */
-+	regmap_update_bits(regmap, PLL_MODE(pll), PLL_BYPASSNL, PLL_BYPASSNL);
++#define REG_A6XX_RBBM_CLOCK_DELAY_FCHE				0x00000124
 +
-+	/* Wait 5 us between setting BYPASS and deasserting reset */
-+	mb();
-+	udelay(5);
++#define REG_A6XX_RBBM_CLOCK_HYST_FCHE				0x00000125
 +
-+	/* Take PLL out from reset state */
-+	regmap_update_bits(regmap, PLL_MODE(pll), PLL_RESET_N, PLL_RESET_N);
++#define REG_A6XX_RBBM_CLOCK_CNTL_MHUB				0x00000126
 +
-+	/* Wait 50us for PLL_LOCK_DET bit to go high */
-+	mb();
-+	usleep_range(50, 55);
++#define REG_A6XX_RBBM_CLOCK_DELAY_MHUB				0x00000127
 +
-+	/* Enable PLL output */
-+	regmap_update_bits(regmap, PLL_MODE(pll), PLL_OUTCTRL, PLL_OUTCTRL);
-+}
-+EXPORT_SYMBOL(clk_huayra_2290_pll_configure);
++#define REG_A6XX_RBBM_CLOCK_HYST_MHUB				0x00000128
 +
- static unsigned long
- alpha_huayra_pll_calc_rate(u64 prate, u32 l, u32 a)
- {
-diff --git a/drivers/clk/qcom/clk-alpha-pll.h b/drivers/clk/qcom/clk-alpha-pll.h
-index fb6d50263bb9..91d3d6f19eae 100644
---- a/drivers/clk/qcom/clk-alpha-pll.h
-+++ b/drivers/clk/qcom/clk-alpha-pll.h
-@@ -29,6 +29,7 @@ enum {
- 	CLK_ALPHA_PLL_TYPE_BRAMMO_EVO,
- 	CLK_ALPHA_PLL_TYPE_STROMER,
- 	CLK_ALPHA_PLL_TYPE_STROMER_PLUS,
-+	CLK_ALPHA_PLL_TYPE_HUAYRA_2290,
- 	CLK_ALPHA_PLL_TYPE_MAX,
- };
++#define REG_A6XX_RBBM_CLOCK_DELAY_GLC				0x00000129
++
++#define REG_A6XX_RBBM_CLOCK_HYST_GLC				0x0000012a
++
++#define REG_A6XX_RBBM_CLOCK_CNTL_GLC				0x0000012b
++
+ #define REG_A7XX_RBBM_CLOCK_HYST2_VFD				0x0000012f
  
-@@ -191,6 +192,8 @@ extern const struct clk_ops clk_alpha_pll_rivian_evo_ops;
- 
- void clk_alpha_pll_configure(struct clk_alpha_pll *pll, struct regmap *regmap,
- 			     const struct alpha_pll_config *config);
-+void clk_huayra_2290_pll_configure(struct clk_alpha_pll *pll, struct regmap *regmap,
-+				   const struct alpha_pll_config *config);
- void clk_fabia_pll_configure(struct clk_alpha_pll *pll, struct regmap *regmap,
- 				const struct alpha_pll_config *config);
- void clk_trion_pll_configure(struct clk_alpha_pll *pll, struct regmap *regmap,
+ #define REG_A6XX_RBBM_LPAC_GBIF_CLIENT_QOS_CNTL			0x000005ff
 
 -- 
 2.43.2
