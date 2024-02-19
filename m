@@ -1,196 +1,130 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.20])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 265A52E64F;
-	Mon, 19 Feb 2024 11:59:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3D3F36103
+	for <linux-kernel@vger.kernel.org>; Mon, 19 Feb 2024 12:00:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708343984; cv=none; b=qMz+Zuml6D6gEIXtqUvcYwA3QIq5UOJG/YMU5ZuMpJ1g+F0OxJaTjRjnBNuNuQ1vwRcbx9uFoxdTfEyYrwXyTpOkxAoW2mHKl4Ik45lXdheCeFh8rQFN8Od1Lgt2HvJAWEcoXmptoiguxWauaAMgwdEPPhdAHMybp//ZBPAeHg0=
+	t=1708344014; cv=none; b=pgV+aIkpyByiMV2XrLsJ1cYjj+dmxXsfFf+exMwVibNcHmI2ODnNGge+vf0du+svZAqBqbGWGYPbpRx+ngnY4xWj+ooQtZmkf5mFhlhEsr/T26F8Z9bMViq+9+T1uVfgFRn8ACdB5aqHSdvf/ZUv4xSO4qHIE0+B13QuwrxZcTE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708343984; c=relaxed/simple;
-	bh=jNbs6mh9NRNmcMy+geYDC/0FJuXGdyoG3yuMN5TBvyE=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=d1AaW/w0V35xyWLWcBtsMOoXiIqCA7kSQ2B7b+Zm5sHyWoYdz3YWc7mBLO/K22w0vSdQNcAQLPJWPPMRNoVnRfiP/WJ3giQ4lEvkCSBEMsbSheCnOMzW7g2vHccXWhu4MBVj/yczJ5SEASA3CoDPr5C3eKD/wV6pmIySq0jGvNU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=I4mq0iXe; arc=none smtp.client-ip=212.227.17.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	s=arc-20240116; t=1708344014; c=relaxed/simple;
+	bh=Km+H2S6VUJOVhwCV0HxwAGP/gwbHc7XavDH63KBqNTE=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=jb2BUyzTVnYkKZfuMU0gL3ITxWtA7D/avJCeBuhnIREqfceDfvNSj90oBj0+knz6sHbcjmirsuMYcN/pzOczZPKQo55Y1Ijt6GNYrXOCS34d84f+ldOXbHnO+sDENGCv+Sxap3g+gtBqoDgqiUwmYPKH5beErjeUz/YxO6b7fyY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=marliere.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=marliere.net header.i=@marliere.net header.b=SbFqWZ8m; arc=none smtp.client-ip=209.85.214.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=marliere.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="I4mq0iXe"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.de; s=s31663417;
-	t=1708343973; x=1708948773; i=w_armin@gmx.de;
-	bh=jNbs6mh9NRNmcMy+geYDC/0FJuXGdyoG3yuMN5TBvyE=;
-	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:
-	 References;
-	b=I4mq0iXeFesQug4BYeka52DUBNP8YLI8wT2M2IDy8gtqTUhvc67lC7oOKd04Yqs/
-	 XMxxUN3zGfXHQuvBr6gMSoTQkZcgB508c8VPiRk4JAzGnyDfnu0Lx90TiF8HxIPBI
-	 LnIGolY0b0HOEf0o80hkBQ9aPiw40WmgIYMnydVNsxvpa4QEUxsDb4/2uIC/W0zyp
-	 ANBj8Wb2WvZlkMskAPHq49bdf5FWE69J14yPdzvR1JS8PEJS7/rvjPmKuFhNaxkFk
-	 uW+F9fdEgz52haLW3W7uohoZVE4/hSeV+QVqZRGk14BlHzyRafckeAZs8Cgl3ChZ6
-	 nI+VPfEfCo/D3Y/dVA==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from mx-amd-b650.users.agdsn.de ([141.30.226.129]) by mail.gmx.net
- (mrgmx105 [212.227.17.168]) with ESMTPSA (Nemesis) id
- 1MS3il-1rUaKc07kh-00TR3q; Mon, 19 Feb 2024 12:59:33 +0100
-From: Armin Wolf <W_Armin@gmx.de>
-To: corentin.chary@gmail.com,
-	luke@ljones.dev
-Cc: hdegoede@redhat.com,
-	ilpo.jarvinen@linux.intel.com,
-	platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 5/5] Revert "platform/x86: asus-wmi: Support WMI event queue"
-Date: Mon, 19 Feb 2024 12:59:19 +0100
-Message-Id: <20240219115919.16526-6-W_Armin@gmx.de>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240219115919.16526-1-W_Armin@gmx.de>
-References: <20240219115919.16526-1-W_Armin@gmx.de>
+	dkim=pass (2048-bit key) header.d=marliere.net header.i=@marliere.net header.b="SbFqWZ8m"
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-1dc0d11d1b7so478615ad.2
+        for <linux-kernel@vger.kernel.org>; Mon, 19 Feb 2024 04:00:12 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708344012; x=1708948812;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:dkim-signature:from:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=Y/y+wzHPYfd3SiHwSQB2gKjSO42jAZTbkJRHXD4vpAA=;
+        b=kkmSQsMua1Bh5nO3MVGmJK5wKaBKHa0G0h+1VLS7D62hs1atjHfK8YHskXfSiKou8r
+         39fnFt9m6AN1hgYDudC8I8BMsAPBn7rPZ2lsv2mwlpDXR3663OlS2Z5ttIhX1Rcyfpom
+         P6pStKEZ331tXSWL0U3Yfiy00WeWXI1MaYvF3ayJ3B93GbD4+W9Z2LBjeFB5IuzwN/y2
+         4oPbAJGR9YZHEsGDSpDjYBMw+1C6qemhFJNl9WhXqAWj04noabpz/TPmw3XGprjWOu5W
+         vg4sfEDai0G3+KbRFEpWjcO2PuiJJRfTxfni2xptl/1UflfI1eZ9b1BAkFQ+iYuxWfVM
+         Fp0w==
+X-Forwarded-Encrypted: i=1; AJvYcCUciEG0ET8RHe6YYNDIqF0ExZfu3ykcB28iMczqoptpCpClwpZAZb2gIj6LMbRoQTi2b9yl7zUhqmy1L3OOqR4b515rRvJ6pPvyykCV
+X-Gm-Message-State: AOJu0YyYrF9pHlgCW4K0yquNYmyZzBH5TBeaHH7Bd6KVoFSKWy/oOopI
+	cZLetUN0VkhOmdysCrcj3e+N9ydDvhrGNgQISoJsAg8wM1UtuW8J
+X-Google-Smtp-Source: AGHT+IFqlQY5V3p4tah87iC3Iam00vn1SMjTwNz28T3natSCKrRYMa//YfctcP/zWPa49vZ0F42pSQ==
+X-Received: by 2002:a17:903:11c9:b0:1db:509a:5a31 with SMTP id q9-20020a17090311c900b001db509a5a31mr12250224plh.26.1708344010045;
+        Mon, 19 Feb 2024 04:00:10 -0800 (PST)
+Received: from mail.marliere.net ([24.199.118.162])
+        by smtp.gmail.com with ESMTPSA id b17-20020a170902ed1100b001dba356b96esm4223022pld.306.2024.02.19.04.00.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 19 Feb 2024 04:00:09 -0800 (PST)
+From: "Ricardo B. Marliere" <ricardo@marliere.net>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marliere.net;
+	s=2024; t=1708344007;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=Y/y+wzHPYfd3SiHwSQB2gKjSO42jAZTbkJRHXD4vpAA=;
+	b=SbFqWZ8miv9wQlNXq84nvC4QIffme1yj078sP+A9c+zX3ra44UwXA8zi9JAn0LjP5Cwqay
+	eAnJGc1G45kkZX0dTq50UTr3hrFd01aR2wuphJ1Cfhs13/WcqYwlP8On4quNjO6L/h6nu/
+	BZTxDQ9EtIHLMQ/tFaRj5m4yWffDmmSei2Ui4LWSfUVlQJ16zPLAoJz297CP3p+Ew5WQD9
+	jJcyfGe3hMt14Knp21qNZlVUFa7ZzO8YOxiPjlb0MG7OoQClY9czp61i1VNtW1wtq2VISa
+	/Bk2lJKv8zyZlOrmiXnAob216JTNZSusEUKJT2dCH0VX439uimzyJfOs0mtIAw==
+Authentication-Results: ORIGINATING;
+	auth=pass smtp.auth=ricardo@marliere.net smtp.mailfrom=ricardo@marliere.net
+Subject: [PATCH drm-misc 0/3] drm: constify the struct device_type usage
+Date: Mon, 19 Feb 2024 09:00:50 -0300
+Message-Id: <20240219-device_cleanup-drm-v1-0-e2f2acb38bff@marliere.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:ZJ35nPdHK8By7gcfdclwJO+Zz2VmNR2oBXLTl1BfboyzseFu4eM
- 9j0u4g9AnK4alZu5BgzD1/RrSyATmuST0UgaMyYSg44fH80oZRxZx+l2Ejej8RujZIsDSQt
- 3YScrQCg2HB/DrYN5fOQJ0A45lpjER+tb13KsNf8H7CSTBrswl333dGGPVLIgP15EKZ/vHA
- XvC4TfXpBMqlYS5Vs6UAw==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:Q79NRxKhYPU=;eELxmKwKpi3aicwQv7bWuu442fg
- 5ivSD5qpdpakCi748gekkHyOzAnbt4cgowvdS2dxunpxFNLiDTd5iJyvYKQYzAEb546c+YrR0
- pC2u4ztK81cPvnfeCJm9rWvQfbxheVhN/Ue5L4Cs4i5q9ET2UpVeUC42A/42yHoVjJqAe7bpp
- tiRzZyrwU+qdDmQ00MtPCkYwjLPia+p+frjkOzxVNfz81JqbS1ROIKBDj80rSFPxTIlEkwUtc
- UbX9PIi4py/ZqPETtvx/U9PLVd110ASe03cLKSZEwRaeYM7q9uyLHsQLA0JrfUGdJH2UodVfo
- vv4Sq7Hc4JlT+8nHZdEZ5crfMfKP9asoHYLQhmIFqJzDeSgeXbIBZRJRNGm4OYgqZNFtZwqhA
- 40Q9c9qhiIx6RTVlCIuxoHdujJCV3W0m5lttOaKPUiR7K4AqftlhGMFLnmacP8fgcIZKzz08S
- Pcs/FMqSae/o7LefEeghybqlwOTh5WYdvr5zzn1gp9oLrR0+QE6pebZakBueYZn7Cj48XvROn
- E6Icbyh41zh+SA0+iYjtpgacOKdZWGp2mFfUCE6ObbW4HxfUqOk2IbXSrI5BCtHYk32NcbkjK
- qL6zYJS9dqByjqcCC25CxlDknPS8fovTg3swtsNBzJE2SUyIkZpFPu+2nfpzj+/SV2wVdZvD5
- bC9f6wgt3hjC4tOuGeHlH5d1r9eLb1drxSEjb8jGouZBT4RYyrtKCdE/j5GLjdrZXqgsEDAa0
- d8KQmrPFF219Sd4Jqpl9j3fVqoyrSRQn9HElySRbS4mD3bP7qm1FwoaxCkpPEVLzFlDfTbmmq
- FGl8z4CeBY7eURaysQcEH9s6AJC02RXsJLxHNzEHdjeks=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAPJC02UC/x2MUQqDMBAFrxL224AJttpeRYqkm1ddaNKQUBHEu
+ 5v2c2BmdirIgkJ3tVPGKkU+sYJpFPHi4gwtvjLZ1natNTftq8SY+A0Xv0n7HDSA54X77jp4RzV
+ MGS/Z/tORfkKQwvQ4jhMiAvDnbgAAAA==
+To: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+ David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
+ Hans de Goede <hdegoede@redhat.com>
+Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ "Ricardo B. Marliere" <ricardo@marliere.net>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1371; i=ricardo@marliere.net;
+ h=from:subject:message-id; bh=Km+H2S6VUJOVhwCV0HxwAGP/gwbHc7XavDH63KBqNTE=;
+ b=owEBbQKS/ZANAwAKAckLinxjhlimAcsmYgBl00L1CbIuZohfUxP4oQ+gIg5l/qdyFLnWxlC8b
+ h+0jG70h3uJAjMEAAEKAB0WIQQDCo6eQk7jwGVXh+HJC4p8Y4ZYpgUCZdNC9QAKCRDJC4p8Y4ZY
+ ptUuEACiK2YVZzL6OtOLLulMgYsNOJGnIij/8clART7o4OFIxLJiEsdVMkGj9Ob+CNt4XNP7gjM
+ jphzkppLod/SSoIvWcDAvPx9tU0sSNtJwM6ypDARr7MsSXEAqJuafTSSaeHxsCfq+YZn3CjUUEi
+ UxBbKLhdCoJC2GQqPQhPJaCXTyI5JhkRje4ugtREtHYd307d6QaALR1N7c+Ze7huKGOcRTnP+Ok
+ 9Ragvxxf2Y96SxLmc8qXonskO+QtZ0/Dnoeg0jiWp60T1QVmsMf38rMbVLOqfam1j64EBzWKAhs
+ B914RBT1yJD06xtoQEpc/nHTFkdpoEnRiRu9rXwer649r1cVIZ79yfXAPbTgxusHykOzBxW4diO
+ lZ3U2x+2/AzuuVM/S/uIBEQ8SsdFGlmcCNZKUU60jljRS7Zb/EunUy9vg5B+m0AEvpqhoLDuKtk
+ 7C5XeoVX4KmEFosCw5xZzhvoejUOPIv7HcCt39KmXx8+8sbGzv3HB4JC7GAIM9i9YclIYTlivEb
+ axBHa1YMa3qzzi1t3tr8YRRUDDBOxsH2vw0L2yyIteGbGBVAcE99omZtwF9bmP2VxjzxJzp0y6Q
+ hxX/mLArUzublWYkRljX5K3Pwl2OonxL2KvHncF4M1Yy2wKvkFPF+4uZw/PyHcrprCt/rcsDxiD
+ +AJWYhcnCF47VzA==
+X-Developer-Key: i=ricardo@marliere.net; a=openpgp;
+ fpr=030A8E9E424EE3C0655787E1C90B8A7C638658A6
 
-This reverts commit 1a373d15e283937b51eaf5debf4fc31474c31436.
+This is a simple and straight forward cleanup series that makes all device
+types in the net subsystem constants. This has been possible since 2011 [1]
+but not all occurrences were cleaned. I have been sweeping the tree to fix
+them all.
 
-The WMI core now takes care of draining the event queue if asus-wmi
-is not loaded, so the hacky event queue handling code is not needed
-anymore.
+---
+[1] https://lore.kernel.org/all/1305850262-9575-5-git-send-email-gregkh@suse.de/
 
-Signed-off-by: Armin Wolf <W_Armin@gmx.de>
-=2D--
- drivers/platform/x86/asus-wmi.c | 71 +++------------------------------
- 1 file changed, 5 insertions(+), 66 deletions(-)
+To: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
+To: Maxime Ripard <mripard@kernel.org>
+To: Thomas Zimmermann <tzimmermann@suse.de>
+To: David Airlie <airlied@gmail.com>
+To: Daniel Vetter <daniel@ffwll.ch>
+To: Hans de Goede <hdegoede@redhat.com>
+Cc:  <dri-devel@lists.freedesktop.org>
+Cc:  <linux-kernel@vger.kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Ricardo B. Marliere <ricardo@marliere.net>
 
-diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-w=
-mi.c
-index 21dee425ea6f..2865af89e95c 100644
-=2D-- a/drivers/platform/x86/asus-wmi.c
-+++ b/drivers/platform/x86/asus-wmi.c
-@@ -101,13 +101,6 @@ module_param(fnlock_default, bool, 0444);
- #define PCI_DEVICE_ID_INTEL_LYNXPOINT_LP_XHCI	0x9c31
+---
+Ricardo B. Marliere (3):
+      drm/dp: constify the struct device_type usage
+      drm/privacy_screen: constify the struct device_type usage
+      drm/sysfs: constify the struct device_type usage
 
- #define ASUS_ACPI_UID_ASUSWMI		"ASUSWMI"
--#define ASUS_ACPI_UID_ATK		"ATK"
--
--#define WMI_EVENT_QUEUE_SIZE		0x10
--#define WMI_EVENT_QUEUE_END		0x1
--#define WMI_EVENT_MASK			0xFFFF
--/* The WMI hotkey event value is always the same. */
--#define WMI_EVENT_VALUE_ATK		0xFF
+ drivers/gpu/drm/display/drm_dp_aux_bus.c | 2 +-
+ drivers/gpu/drm/drm_privacy_screen.c     | 2 +-
+ drivers/gpu/drm/drm_sysfs.c              | 4 ++--
+ 3 files changed, 4 insertions(+), 4 deletions(-)
+---
+base-commit: b59dcca97bf052341b9ac28b1ee1af46498b8833
+change-id: 20240219-device_cleanup-drm-eeeb5c7468da
 
- #define WMI_EVENT_MASK			0xFFFF
-
-@@ -219,7 +212,6 @@ struct asus_wmi {
- 	int dsts_id;
- 	int spec;
- 	int sfun;
--	bool wmi_event_queue;
-
- 	struct input_dev *inputdev;
- 	struct backlight_device *backlight_device;
-@@ -4019,50 +4011,14 @@ static void asus_wmi_handle_event_code(int code, s=
-truct asus_wmi *asus)
- static void asus_wmi_notify(u32 value, void *context)
- {
- 	struct asus_wmi *asus =3D context;
--	int code;
--	int i;
--
--	for (i =3D 0; i < WMI_EVENT_QUEUE_SIZE + 1; i++) {
--		code =3D asus_wmi_get_event_code(value);
--		if (code < 0) {
--			pr_warn("Failed to get notify code: %d\n", code);
--			return;
--		}
--
--		if (code =3D=3D WMI_EVENT_QUEUE_END || code =3D=3D WMI_EVENT_MASK)
--			return;
--
--		asus_wmi_handle_event_code(code, asus);
--
--		/*
--		 * Double check that queue is present:
--		 * ATK (with queue) uses 0xff, ASUSWMI (without) 0xd2.
--		 */
--		if (!asus->wmi_event_queue || value !=3D WMI_EVENT_VALUE_ATK)
--			return;
--	}
-+	int code =3D asus_wmi_get_event_code(value);
-
--	pr_warn("Failed to process event queue, last code: 0x%x\n", code);
--}
--
--static int asus_wmi_notify_queue_flush(struct asus_wmi *asus)
--{
--	int code;
--	int i;
--
--	for (i =3D 0; i < WMI_EVENT_QUEUE_SIZE + 1; i++) {
--		code =3D asus_wmi_get_event_code(WMI_EVENT_VALUE_ATK);
--		if (code < 0) {
--			pr_warn("Failed to get event during flush: %d\n", code);
--			return code;
--		}
--
--		if (code =3D=3D WMI_EVENT_QUEUE_END || code =3D=3D WMI_EVENT_MASK)
--			return 0;
-+	if (code < 0) {
-+		pr_warn("Failed to get notify code: %d\n", code);
-+		return;
- 	}
-
--	pr_warn("Failed to flush event queue\n");
--	return -EIO;
-+	asus_wmi_handle_event_code(code, asus);
- }
-
- /* Sysfs ****************************************************************=
-******/
-@@ -4302,23 +4258,6 @@ static int asus_wmi_platform_init(struct asus_wmi *=
-asus)
- 		asus->dsts_id =3D ASUS_WMI_METHODID_DSTS;
- 	}
-
--	/*
--	 * Some devices can have multiple event codes stored in a queue before
--	 * the module load if it was unloaded intermittently after calling
--	 * the INIT method (enables event handling). The WMI notify handler is
--	 * expected to retrieve all event codes until a retrieved code equals
--	 * queue end marker (One or Ones). Old codes are flushed from the queue
--	 * upon module load. Not enabling this when it should be has minimal
--	 * visible impact so fall back if anything goes wrong.
--	 */
--	wmi_uid =3D wmi_get_acpi_device_uid(asus->driver->event_guid);
--	if (wmi_uid && !strcmp(wmi_uid, ASUS_ACPI_UID_ATK)) {
--		dev_info(dev, "Detected ATK, enable event queue\n");
--
--		if (!asus_wmi_notify_queue_flush(asus))
--			asus->wmi_event_queue =3D true;
--	}
--
- 	/* CWAP allow to define the behavior of the Fn+F2 key,
- 	 * this method doesn't seems to be present on Eee PCs */
- 	if (asus->driver->quirks->wapf >=3D 0)
-=2D-
-2.39.2
+Best regards,
+-- 
+Ricardo B. Marliere <ricardo@marliere.net>
 
