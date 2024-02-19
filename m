@@ -1,137 +1,163 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from bee.tesarici.cz (bee.tesarici.cz [77.93.223.253])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA3582E832
-	for <linux-kernel@vger.kernel.org>; Mon, 19 Feb 2024 12:40:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF07E2E644
+	for <linux-kernel@vger.kernel.org>; Mon, 19 Feb 2024 12:40:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=77.93.223.253
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708346426; cv=none; b=rPmxHm8RbDC5jYqLAUkOCYNhSvHjGJjPoEVQa7VOiv2ThuFRZPrFCG8n2wr1xbDbaGxwpaIwvZbWe+5DP7GzZvs9eZQjGdrPzcEmbyl/vydDngQ7vw/yoMgYTJpR5xm0+SDWD5RSiWJpU6m59aoGu1Stf9dsZou50ltpNVoFvCI=
+	t=1708346456; cv=none; b=tuI4y+cXxQ2Ow4uNKtxm9UZk7/1kQqBkcMwUhjSiArTMGyFM5r+45Jc4PmQMKhFEAXQfHb25NdSRx/pfP/8K2HhcYtBR8SQ+5ZVJB95E2F0pb7RXp8d1oY6zzUKpsiBzt6fuewFxIrEdHKcZG4ircc824sUV1cXxeNCv+rDTwGI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708346426; c=relaxed/simple;
-	bh=eCc2czVnLrR2p0hVwpCcQ0OeUJg74XlztzgLwxVGqBk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=GjnT5QnzVaW2rkZpLqT+K9vgbkxHkizT81erFAq5zolWQot24D/KgXIz+WSy/oDHdwpTIekbpOHeqdWP9Qc3IAHqLI5EgpDYs6YJ6Seu08VCoFZGKXC/i+2tP+oDbNO0BYzZoiB1ytYI28Ik6q4gq+aqil//b+Gb+Z4g14O/nkY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=F1Y7TAAe; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1708346456; c=relaxed/simple;
+	bh=MgnsIAmWIvik9sb8MqiVIy0/Rv/O/Bg3/F+KvN/fMww=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=n7P8/q+o2BNchCUZ7eW9+49eohe6KyLN7mF4uFbwibHozCMZ8/AKHeQzBNO3dOxUcnWUL7WwueahvFPB4LXDtYdNCbucWjOyPlTh555lti6Wfr7yvUIOUWH926UsS0e2CZpU1+8N6g3okT+yx6JxvTLBJLY1+F0YYiKZaB46BOI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tesarici.cz; spf=pass smtp.mailfrom=tesarici.cz; dkim=pass (2048-bit key) header.d=tesarici.cz header.i=@tesarici.cz header.b=OVCIiY8y; arc=none smtp.client-ip=77.93.223.253
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tesarici.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tesarici.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="F1Y7TAAe"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1708346423;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=bSoWtrntvZIWbBvyP8tHbFaYn0WgGKZufHXTx2xqEdU=;
-	b=F1Y7TAAenyC5pS/MBHntHt6BEhudbz7C5zQnDBihlrn/9sEq1b8/mgd76ZdiR3KCBpX/XW
-	FdoRy6VVJohGV6gRi2SBHuJziWMbFIpWTnVzjV/v0Lh4s894Tx0IIsxWa/NghLzXW5wmYU
-	EWC+i5RKlNyQqufZFLDm7NwQrPEJvkw=
-Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
- [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-2-sNV2z4jEOyupa5qdAqt3Mg-1; Mon, 19 Feb 2024 07:40:21 -0500
-X-MC-Unique: sNV2z4jEOyupa5qdAqt3Mg-1
-Received: by mail-ej1-f72.google.com with SMTP id a640c23a62f3a-a3d7cd58ae2so147854666b.1
-        for <linux-kernel@vger.kernel.org>; Mon, 19 Feb 2024 04:40:21 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708346420; x=1708951220;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=bSoWtrntvZIWbBvyP8tHbFaYn0WgGKZufHXTx2xqEdU=;
-        b=TKvwRBNrM/aUWfMvpnBpeJfLIj89ccmJxUAlXuES7Or5dHVxQYjpRxQQ9Ca4vUnYwP
-         XVTdGpk4GEqvJyNc0RbLGmFrEfViP5kgiXbbhKeyKoVEIR5UQrGONxqzGFzTC2I2KEPA
-         oFoRvUhJ7n13uYeoh0ZAudBj8bZ2oitCnrhemXckY4R2IRbQoAs0xjE7GkiUr7UKSr1x
-         koHi/HnW1EOM4hA4AGyV2LUsVVKw8p1gy+20ybPgiz7JOuOcSWxGbS2Ab2X1jJko9h5W
-         efgSWesRVC79e9q1XESuBeF7IX/V+LfNPuawJUkD6YgR1jNZjT7hwZBRad3iOmODzv1c
-         t3XQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWWl7uGugQAxBAZuZQ1Efc2pyJjF7ysat/bx7chcPSbOVOREJ1PbGprYF/7DzNUtTSw+NqcYGIZidi8GVRDroc/nfisbsWQUMxYp1i7
-X-Gm-Message-State: AOJu0YwX1+oBCBrNHHQp77+ymEQ8QrH6DCYgwvHJcMI14CtWsDE3e9Gm
-	pzTTVFEhtb0+PLcArinOTjLXiDWkVf71Jrv+R1zNTMt8VI9FAPT3krAiX0OqrIHn6wMznTjmEjh
-	m9DyE+6JXsrNLDXvygUaoraUB1eR624cX++oj+Vega5O1vuTUpu8KiCwwVuh1EQ==
-X-Received: by 2002:aa7:d9d0:0:b0:564:1cc7:eae5 with SMTP id v16-20020aa7d9d0000000b005641cc7eae5mr3840387eds.5.1708346420521;
-        Mon, 19 Feb 2024 04:40:20 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IHJPwTlrDEIiQMRVVihRGIPASE6RYyVHWyKpduDzXfgFX4C0OoLGPoJXJ0K8YO5iiFR7giCXA==
-X-Received: by 2002:aa7:d9d0:0:b0:564:1cc7:eae5 with SMTP id v16-20020aa7d9d0000000b005641cc7eae5mr3840375eds.5.1708346420235;
-        Mon, 19 Feb 2024 04:40:20 -0800 (PST)
-Received: from [10.40.98.142] ([78.108.130.194])
-        by smtp.gmail.com with ESMTPSA id x16-20020a056402415000b005644e4fdf36sm1657308eda.6.2024.02.19.04.40.19
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 19 Feb 2024 04:40:19 -0800 (PST)
-Message-ID: <f6cc1cf6-b8e3-4687-83a6-3880b033288f@redhat.com>
-Date: Mon, 19 Feb 2024 13:40:19 +0100
+	dkim=pass (2048-bit key) header.d=tesarici.cz header.i=@tesarici.cz header.b="OVCIiY8y"
+Received: from meshulam.tesarici.cz (dynamic-2a00-1028-83b8-1e7a-4427-cc85-6706-c595.ipv6.o2.cz [IPv6:2a00:1028:83b8:1e7a:4427:cc85:6706:c595])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by bee.tesarici.cz (Postfix) with ESMTPSA id 561A81ACB63;
+	Mon, 19 Feb 2024 13:40:53 +0100 (CET)
+Authentication-Results: mail.tesarici.cz; dmarc=fail (p=quarantine dis=none) header.from=tesarici.cz
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tesarici.cz; s=mail;
+	t=1708346453; bh=hcFXKK9UEicR8lbLj5luyWW35H/Shii/gLNFqC84gEI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=OVCIiY8y8Hqgmgr0hTWkKYrwikovnAtC4p5dXmc2Hf6+Sd5xSFJP0DkJV8LxET6YC
+	 8+/xWnCSu7REz3yOx9GufIuVbVShMTkWbnK0xKy9QM7rVi4HEfOLX6yreheK+MF7cb
+	 Py/4Uex9ahfE3GcmSJf/jWFdRcIwF3JFdTAlzHwgKFcGSN6JraMF64D/8Fh+Mq3Zgv
+	 T0taLKt6QgFfW3/tLoQpOppwe7vY864DOpT5bjat6JE78cgT/nkQVaFaS3C4rZ5SMl
+	 T3KtOGmwYlzNEFl5r4muQ/D4Z/bfFvcRBW8ysn1gGHPljPbWMjLfnPMBX6fSFsKosj
+	 waG9uNUn2b3Dg==
+Date: Mon, 19 Feb 2024 13:40:52 +0100
+From: Petr =?UTF-8?B?VGVzYcWZw61r?= <petr@tesarici.cz>
+To: Will Deacon <will@kernel.org>
+Cc: linux-kernel@vger.kernel.org, kernel-team@android.com,
+ iommu@lists.linux.dev, Christoph Hellwig <hch@lst.de>, Marek Szyprowski
+ <m.szyprowski@samsung.com>, Robin Murphy <robin.murphy@arm.com>, Petr
+ Tesarik <petr.tesarik1@huawei-partners.com>, Dexuan Cui
+ <decui@microsoft.com>
+Subject: Re: [PATCH v3 1/3] swiotlb: Fix double-allocation of slots due to
+ broken alignment handling
+Message-ID: <20240219134052.6dd7e26d@meshulam.tesarici.cz>
+In-Reply-To: <20240205190127.20685-2-will@kernel.org>
+References: <20240205190127.20685-1-will@kernel.org>
+	<20240205190127.20685-2-will@kernel.org>
+X-Mailer: Claws Mail 4.2.0 (GTK 3.24.39; x86_64-suse-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] platform/x86/amd/pmf: Fix a potential race with policy
- binary sideload
-Content-Language: en-US
-To: Mario Limonciello <mario.limonciello@amd.com>, Shyam-sundar.S-k@amd.com
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20240217015642.113806-1-mario.limonciello@amd.com>
-From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20240217015642.113806-1-mario.limonciello@amd.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-Hi,
+On Mon,  5 Feb 2024 19:01:25 +0000
+Will Deacon <will@kernel.org> wrote:
 
-On 2/17/24 02:56, Mario Limonciello wrote:
-> The debugfs `update_policy` file is created before
-> amd_pmf_start_policy_engine() has completed, and thus there could be
-> a possible (albeit unlikely) race between sideloading a policy and the
-> BIOS policy getting setup.
+> Commit bbb73a103fbb ("swiotlb: fix a braino in the alignment check fix"),
+> which was a fix for commit 0eee5ae10256 ("swiotlb: fix slot alignment
+> checks"), causes a functional regression with vsock in a virtual machine
+> using bouncing via a restricted DMA SWIOTLB pool.
 > 
-> Move the debugfs file creation after all BIOS policy is setup.
+> When virtio allocates the virtqueues for the vsock device using
+> dma_alloc_coherent(), the SWIOTLB search can return page-unaligned
+> allocations if 'area->index' was left unaligned by a previous allocation
+> from the buffer:
 > 
-> Fixes: 10817f28e533 ("platform/x86/amd/pmf: Add capability to sideload of policy binary")
-> Reported-by: Hans de Goede <hdegoede@redhat.com>
-> Closes: https://lore.kernel.org/platform-driver-x86/15df7d02-b0aa-457a-954a-9d280a592843@redhat.com/T/#m2c445f135e5ef9b53184be7fc9df84e15f89d4d9
-> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+>  # Final address in brackets is the SWIOTLB address returned to the caller
+>  | virtio-pci 0000:00:07.0: orig_addr 0x0 alloc_size 0x2000, iotlb_align_mask 0x800 stride 0x2: got slot 1645-1649/7168 (0x98326800)
+>  | virtio-pci 0000:00:07.0: orig_addr 0x0 alloc_size 0x2000, iotlb_align_mask 0x800 stride 0x2: got slot 1649-1653/7168 (0x98328800)
+>  | virtio-pci 0000:00:07.0: orig_addr 0x0 alloc_size 0x2000, iotlb_align_mask 0x800 stride 0x2: got slot 1653-1657/7168 (0x9832a800)
+> 
+> This ends badly (typically buffer corruption and/or a hang) because
+> swiotlb_alloc() is expecting a page-aligned allocation and so blindly
+> returns a pointer to the 'struct page' corresponding to the allocation,
+> therefore double-allocating the first half (2KiB slot) of the 4KiB page.
+> 
+> Fix the problem by treating the allocation alignment separately to any
+> additional alignment requirements from the device, using the maximum
+> of the two as the stride to search the buffer slots and taking care
+> to ensure a minimum of page-alignment for buffers larger than a page.
+> 
+> Fixes: bbb73a103fbb ("swiotlb: fix a braino in the alignment check fix")
+> Fixes: 0eee5ae10256 ("swiotlb: fix slot alignment checks")
+> Cc: Christoph Hellwig <hch@lst.de>
+> Cc: Marek Szyprowski <m.szyprowski@samsung.com>
+> Cc: Robin Murphy <robin.murphy@arm.com>
+> Cc: Petr Tesarik <petr.tesarik1@huawei-partners.com>
+> Cc: Dexuan Cui <decui@microsoft.com>
+> Signed-off-by: Will Deacon <will@kernel.org>
 
-Thank you for your patch, I've applied this patch to my review-hans 
-branch:
-https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
+Reviewed-by: Petr Tesarik <petr.tesarik1@huawei-partners.com>
 
-Note it will show up in my review-hans branch once I've pushed my
-local branch there, which might take a while.
-
-I will include this patch in my next fixes pull-req to Linus
-for the current kernel development cycle.
-
-Regards,
-
-Hans
+Petr T
 
 > ---
->  drivers/platform/x86/amd/pmf/tee-if.c | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
+>  kernel/dma/swiotlb.c | 28 +++++++++++++++-------------
+>  1 file changed, 15 insertions(+), 13 deletions(-)
 > 
-> diff --git a/drivers/platform/x86/amd/pmf/tee-if.c b/drivers/platform/x86/amd/pmf/tee-if.c
-> index 4f74de680654..8527dca9cf56 100644
-> --- a/drivers/platform/x86/amd/pmf/tee-if.c
-> +++ b/drivers/platform/x86/amd/pmf/tee-if.c
-> @@ -456,8 +456,6 @@ int amd_pmf_init_smart_pc(struct amd_pmf_dev *dev)
->  	memcpy(dev->policy_buf, dev->policy_base, dev->policy_sz);
+> diff --git a/kernel/dma/swiotlb.c b/kernel/dma/swiotlb.c
+> index b079a9a8e087..9ff909a0039a 100644
+> --- a/kernel/dma/swiotlb.c
+> +++ b/kernel/dma/swiotlb.c
+> @@ -982,7 +982,7 @@ static int swiotlb_search_pool_area(struct device *dev, struct io_tlb_pool *pool
+>  		phys_to_dma_unencrypted(dev, pool->start) & boundary_mask;
+>  	unsigned long max_slots = get_max_slots(boundary_mask);
+>  	unsigned int iotlb_align_mask =
+> -		dma_get_min_align_mask(dev) | alloc_align_mask;
+> +		dma_get_min_align_mask(dev) & ~(IO_TLB_SIZE - 1);
+>  	unsigned int nslots = nr_slots(alloc_size), stride;
+>  	unsigned int offset = swiotlb_align_offset(dev, orig_addr);
+>  	unsigned int index, slots_checked, count = 0, i;
+> @@ -993,19 +993,18 @@ static int swiotlb_search_pool_area(struct device *dev, struct io_tlb_pool *pool
+>  	BUG_ON(!nslots);
+>  	BUG_ON(area_index >= pool->nareas);
 >  
->  	amd_pmf_hex_dump_pb(dev);
-> -	if (pb_side_load)
-> -		amd_pmf_open_pb(dev, dev->dbgfs_dir);
->  
->  	dev->prev_data = kzalloc(sizeof(*dev->prev_data), GFP_KERNEL);
->  	if (!dev->prev_data)
-> @@ -467,6 +465,9 @@ int amd_pmf_init_smart_pc(struct amd_pmf_dev *dev)
->  	if (ret)
->  		goto error;
->  
-> +	if (pb_side_load)
-> +		amd_pmf_open_pb(dev, dev->dbgfs_dir);
+> +	/*
+> +	 * For mappings with an alignment requirement don't bother looping to
+> +	 * unaligned slots once we found an aligned one.
+> +	 */
+> +	stride = get_max_slots(max(alloc_align_mask, iotlb_align_mask));
 > +
->  	return 0;
+>  	/*
+>  	 * For allocations of PAGE_SIZE or larger only look for page aligned
+>  	 * allocations.
+>  	 */
+>  	if (alloc_size >= PAGE_SIZE)
+> -		iotlb_align_mask |= ~PAGE_MASK;
+> -	iotlb_align_mask &= ~(IO_TLB_SIZE - 1);
+> -
+> -	/*
+> -	 * For mappings with an alignment requirement don't bother looping to
+> -	 * unaligned slots once we found an aligned one.
+> -	 */
+> -	stride = (iotlb_align_mask >> IO_TLB_SHIFT) + 1;
+> +		stride = max(stride, PAGE_SHIFT - IO_TLB_SHIFT + 1);
 >  
->  error:
+>  	spin_lock_irqsave(&area->lock, flags);
+>  	if (unlikely(nslots > pool->area_nslabs - area->used))
+> @@ -1015,11 +1014,14 @@ static int swiotlb_search_pool_area(struct device *dev, struct io_tlb_pool *pool
+>  	index = area->index;
+>  
+>  	for (slots_checked = 0; slots_checked < pool->area_nslabs; ) {
+> -		slot_index = slot_base + index;
+> +		phys_addr_t tlb_addr;
+>  
+> -		if (orig_addr &&
+> -		    (slot_addr(tbl_dma_addr, slot_index) &
+> -		     iotlb_align_mask) != (orig_addr & iotlb_align_mask)) {
+> +		slot_index = slot_base + index;
+> +		tlb_addr = slot_addr(tbl_dma_addr, slot_index);
+> +
+> +		if ((tlb_addr & alloc_align_mask) ||
+> +		    (orig_addr && (tlb_addr & iotlb_align_mask) !=
+> +				  (orig_addr & iotlb_align_mask))) {
+>  			index = wrap_area_index(pool, index + 1);
+>  			slots_checked++;
+>  			continue;
 
