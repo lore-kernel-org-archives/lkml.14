@@ -1,85 +1,111 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8F7F36AF8
-	for <linux-kernel@vger.kernel.org>; Mon, 19 Feb 2024 13:42:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 286803612C;
+	Mon, 19 Feb 2024 13:43:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708350153; cv=none; b=QNajzpW0A0pRAP+kPqsUa+0wQlqgCVrgYNcQN98LO1df4pQ1x09Ug7kSrlKXS2gl0o3sSJv/qlu2rhyGbbXwHCJVT14slxo2NFbJLTEHRbly3W4YObWH6MVqqI2180uEML4zfWUyZ1EtS+GyXTgp5c0o2i8I0fAdOrkiaCdbhtQ=
+	t=1708350219; cv=none; b=Ji72jy0QxPKmVSK86SYjZfMLZkw0r+KTKfzU4P5IWIUAwi2zbAzXY8I+/Pw0pjZcBB2mJcXh9XXaSX9HYuYTVH+8i1cKlR8+AGDSiA1GuFD2ZYT7IvHl1RmLIc7m2K73HWXQpr9ORNpMYRvxqP9/RUcqiivDEnr96qVT/ITNwSo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708350153; c=relaxed/simple;
-	bh=ekWn96iKMNvp/I5xStdVDipFHjZ+JUmKFaqTXglCXl0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=i8sjtISiMpg25233wipG4HxrGeBG8oxHF3YJVHLO8WGNniYan4pAAtoREAK1tysDHVftgq3fmLcjnM9JVP45Y6n/CbD5F94V/Aao8PL5NT2MyGxj8zEfEA/xA/PDq0nqu9/0Gj/Y5TAF7uxsPTr8Hsg/2OaCg5GqgYSnIcvPXfk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VH6iZy9r; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VH6iZy9r"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 02CBCC433C7;
-	Mon, 19 Feb 2024 13:42:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708350153;
-	bh=ekWn96iKMNvp/I5xStdVDipFHjZ+JUmKFaqTXglCXl0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=VH6iZy9rmngkiXVK3l1H6HZlB8jQwjtr6sl/oaIBMEQHC4TOEp7fb82NF3PBr6Lh0
-	 7/4/om9OScHg7nqEFBAMhhfARQIpgNA8gMgmq/WHPi14/ID2sBAAkzej0REN8nZJV6
-	 QmfhIXNZNcVxCtWmVO4UlbDqPCmU+FmGtPf2OJXeZbb7b9hfAwjixzSxH/+G6C1zMI
-	 jYvnmAApZlMU70HbgYDuMvwqaYKJRzPsImnYoxRAQd2x1xO7xf93n7o3p2VvHQg7Hu
-	 tfBRNzATvbRinOk+hR7w3t9VkHdfaaVi1XR61C+PBUcIu8H7I+uEvzHedQix2A6Tj9
-	 ISCNK2goIOBXQ==
-Date: Mon, 19 Feb 2024 13:42:29 +0000
-From: Mark Brown <broonie@kernel.org>
-To: Anshuman Khandual <anshuman.khandual@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] arm64/sysreg: Add register fields for ID_AA64DFR1_EL1
-Message-ID: <6ec0f73f-cbac-44c5-a215-d3754ce6a5d8@sirena.org.uk>
-References: <20240215065454.2489075-1-anshuman.khandual@arm.com>
- <d2722ae9-d29c-41f9-9eec-f829589adf6e@sirena.org.uk>
- <785e9bd7-f47b-4e8f-9291-0616aa87fa27@arm.com>
+	s=arc-20240116; t=1708350219; c=relaxed/simple;
+	bh=Gt5OwY2whQVuVaWFJk6JeoMSVY3zk5FlZi+HF/R3eks=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=OGFrYFFB/83kxVcATA0Ll7dvf5c5YLdvgNktVH+C5Tos9KnoPUCXy92Wj1iXG4u9xo0i1AaEp2Bpg1taOd6C8onkAg0RhCqJP3NVKeXRX8bR686FR4RzgnKl46Csn6t2IPy+Ti9Y7Ogp5HtBX7idvQIKF2QQjqoCcKfV+oisaWo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.167.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-512bc0e8ce1so687217e87.0;
+        Mon, 19 Feb 2024 05:43:37 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708350216; x=1708955016;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=oOR3y9Zmm8Tuo993+z9hIy+5r2d0Ko/vjpAMAXO6LDc=;
+        b=LRskpWjfriq+CsbFhTZ0HnZqbNN+0YI7GbpqJxBVHuGhhxSOLD8YRpyKXtrJnWNn0k
+         hJ6Ad1y+MnsoGuPyIK3Z5Xe1y9esono2r+j6OawudMYD/AdUX/SpAY51Zyc1ffB54NWo
+         rsIb66IG8BzZNemONVRAV+ES31wmgu0WZOve8sXEDCukkQFtnG4QmSCHp77iChU5i4Of
+         T6FRrUGzZ1fdaF0bLM2QtfUoJuOz8ILaAGlht7+iCEpsyD1tYqvnkuyOcP4PYgbbxguM
+         nrxuTJQDkt3BiMxryWFoKj79Sm1MsOSTBuv27ilYgaq0rqeFD0h06/+ohzfKJxUPeAPu
+         lZdA==
+X-Forwarded-Encrypted: i=1; AJvYcCXO0u5MR6RXR4Jtqh7NmoL/I22rlWRSM7MrLgzEVh6jjGl+6mH9d9gTbxH+9kLKm8gafqa15OLeuH9p8eejplnU+rOdYj34OPWzC0XT
+X-Gm-Message-State: AOJu0Ywfdln/m0XDhx+bopYwkF7pC6Q4l9HO40+2rNiR3d+R6Z4JoWnx
+	hL0ljpee0wTIMEhAV9L3ST0C3ft4YEY8NAe94ci1M+qS4uQRvPhi
+X-Google-Smtp-Source: AGHT+IG4Qg+NiQ+VzOOvLUyWATKeMMc95bMZxRhsjHKR5ytsTIZRLJlfsTHQp3wZyOE+qYddMrUlvA==
+X-Received: by 2002:ac2:58ea:0:b0:512:b965:f61b with SMTP id v10-20020ac258ea000000b00512b965f61bmr1116788lfo.33.1708350216021;
+        Mon, 19 Feb 2024 05:43:36 -0800 (PST)
+Received: from localhost (fwdproxy-lla-003.fbsv.net. [2a03:2880:30ff:3::face:b00c])
+        by smtp.gmail.com with ESMTPSA id u14-20020a17090626ce00b00a3d1580d702sm2973215ejc.185.2024.02.19.05.43.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 19 Feb 2024 05:43:35 -0800 (PST)
+From: Breno Leitao <leitao@debian.org>
+To: kuba@kernel.org,
+	davem@davemloft.net,
+	pabeni@redhat.com,
+	edumazet@google.com
+Cc: netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	horms@kernel.org
+Subject: [PATCH net-next] net/dummy: Move stats allocation to core
+Date: Mon, 19 Feb 2024 05:43:28 -0800
+Message-Id: <20240219134328.1066787-1-leitao@debian.org>
+X-Mailer: git-send-email 2.39.3
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="m/O6pAuNP29MQ3iu"
-Content-Disposition: inline
-In-Reply-To: <785e9bd7-f47b-4e8f-9291-0616aa87fa27@arm.com>
-X-Cookie: Kleeneness is next to Godelness.
+Content-Transfer-Encoding: 8bit
 
+With commit 34d21de99cea9 ("net: Move {l,t,d}stats allocation to core and
+convert veth & vrf"), stats allocation could be done on net core instead
+of this driver.
 
---m/O6pAuNP29MQ3iu
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+With this new approach, the driver doesn't have to bother with error
+handling (allocation failure checking, making sure free happens in the
+right spot, etc). This is core responsibility now.
 
-On Sun, Feb 18, 2024 at 06:04:34AM +0530, Anshuman Khandual wrote:
+Move dummy driver to leverage the core allocation.
 
-> Just wondering - would something like the following make sense. Because
-> 0b0000 signifies that the cycle counter would just ignore PMCR_EL0.FZS,
-> where as it gets frozen with 0b0001.
+Suggested-by: Jakub Kicinski <kuba@kernel.org>
+Signed-off-by: Breno Leitao <leitao@debian.org>
+---
+ drivers/net/dummy.c | 10 +---------
+ 1 file changed, 1 insertion(+), 9 deletions(-)
 
-> UnsignedEnum   55:52   DPFZS
->        0b0000  IGNR
->        0b0001  FRZN
-> EndEnum
+diff --git a/drivers/net/dummy.c b/drivers/net/dummy.c
+index 946bba0701a4..d29b5d7af0d7 100644
+--- a/drivers/net/dummy.c
++++ b/drivers/net/dummy.c
+@@ -67,19 +67,12 @@ static netdev_tx_t dummy_xmit(struct sk_buff *skb, struct net_device *dev)
+ 
+ static int dummy_dev_init(struct net_device *dev)
+ {
+-	dev->lstats = netdev_alloc_pcpu_stats(struct pcpu_lstats);
+-	if (!dev->lstats)
+-		return -ENOMEM;
++	dev->pcpu_stat_type = NETDEV_PCPU_STAT_LSTATS;
+ 
+ 	netdev_lockdep_set_classes(dev);
+ 	return 0;
+ }
+ 
+-static void dummy_dev_uninit(struct net_device *dev)
+-{
+-	free_percpu(dev->lstats);
+-}
+-
+ static int dummy_change_carrier(struct net_device *dev, bool new_carrier)
+ {
+ 	if (new_carrier)
+@@ -91,7 +84,6 @@ static int dummy_change_carrier(struct net_device *dev, bool new_carrier)
+ 
+ static const struct net_device_ops dummy_netdev_ops = {
+ 	.ndo_init		= dummy_dev_init,
+-	.ndo_uninit		= dummy_dev_uninit,
+ 	.ndo_start_xmit		= dummy_xmit,
+ 	.ndo_validate_addr	= eth_validate_addr,
+ 	.ndo_set_rx_mode	= set_multicast_list,
+-- 
+2.39.3
 
-LGTM.
-
---m/O6pAuNP29MQ3iu
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmXTWsQACgkQJNaLcl1U
-h9DhsAf+PgeKvGRhmcjsTA+KRwRFDLO8aDtLZVSK/lAH3JZi4ROmmipI0n3TpEKe
-gjmzcVKdLKKLKq2qgJMvkAHskwe1pbfpwi/BW7NszdVESdO0DOMR855Tmxk0bzkg
-RDLZHSp4vsEAcL4OzyoS1lb+lZBtIjX436vpz5a3kXjNrE6KPlfq/qZtbhREW+Ka
-Z87RLrmDaHoP3rG57Kefrp1ljRlmPgcMg6m0TK+MaQZVoByC3Ds4iquRqM9X2lbx
-IlFQ08NNa49Sy5cuWChMe20a2xsr+/fUS212LBKzZ88HtBsw21A2xK92NiPgOwI6
-J5sQz2J1xkRToBYRqfi8t9jM2BRhwg==
-=9eLA
------END PGP SIGNATURE-----
-
---m/O6pAuNP29MQ3iu--
