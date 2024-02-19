@@ -1,104 +1,110 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+Received: from mo4-p01-ob.smtp.rzone.de (mo4-p01-ob.smtp.rzone.de [85.215.255.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BDB924B5B;
-	Mon, 19 Feb 2024 10:50:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708339817; cv=none; b=kUqiMNFGSaziYOzxPw+SH9HGpMgt5y36lnWRrLuSL+qOO3z/XDAPX1trVF0TtdB2qnBrx8VhcIEClPia0Nl5qHcARcuLN9jnN7izRA1CowMjSte16h+vw5NUomKzKjFiOQMmJTDh0TI6s+oUhC/z1Lp/HLHHIIXbp2E3GgFQ8SY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708339817; c=relaxed/simple;
-	bh=dzTaso4wO+G6d/H8AhaEyUh/RCIlWQ/zztQlM6V9F0w=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=WuJAi/5SosCHXTv2bxk7BbvzcxWc4OKhSHXfdQjDOigb7JvNIXMy+NXoouIbyFlycw3WbOrNdSffVXY31hs3yGSSX0o4M3c8AaWUvsVw58sq4zTf+2F9XGneEfHM3Vu1R7ijoakUKmhLHs9+/Pj89KUdic2LWFAY+UT/GurhMdU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ud4+CxHB; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A96B824B5B;
+	Mon, 19 Feb 2024 10:50:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=85.215.255.51
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1708339836; cv=pass; b=ZY6RqLUDlUXr+/OjtnGzmgFsXdVej6XTPJ1XJdSHTE48gE4Vtbdd8Ok5x3zjE1PtRmXFisCyPyk92ePgEjiE6mGcXphn1VnZKkxJRncPma5RPB6lpYZ1VK98FDK5RuTgLYATqf8isGKwITvOX7yD2N5vi5L0GcMR6LnBJncWhUc=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1708339836; c=relaxed/simple;
+	bh=yI07zQ+jWsPFC3ueFt2YVm4gmvJXrfaBGf9cUxIYjfg=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=Qctses95VAV+nd3IBqOqR1bS+1yJBp9NHoOxdRBNt9ADF3o86fBcLz6KGEqFmC1ovf+wZ4JAvRMy3XaKKBi80wfn+AOS0p6+55YYPffCM79hmo9+14RHakuTjJ1BscmoETJEu6yDIM8FCgOuPafBoS/dRvnHXAVLQlegB37PH/A=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iokpp.de; spf=none smtp.mailfrom=iokpp.de; dkim=pass (2048-bit key) header.d=iokpp.de header.i=@iokpp.de header.b=Bnd6OGNV; dkim=permerror (0-bit key) header.d=iokpp.de header.i=@iokpp.de header.b=NQaWg/1U; arc=pass smtp.client-ip=85.215.255.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iokpp.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=iokpp.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ud4+CxHB"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1708339815; x=1739875815;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=dzTaso4wO+G6d/H8AhaEyUh/RCIlWQ/zztQlM6V9F0w=;
-  b=Ud4+CxHBvPdYkQ0YiIgs+YpENL3Z5iRQK2Oei8QbyMkbg5JrlhbZTJQ7
-   GnqIXraBqwg8DMhUTerrPzWZi2+sHguEtAgFcYKrHw7oja25LruGmop+f
-   ktWVYR2/yoKb5KS9JInElqVw3NER0Oxv0qlbTPTdkTDcY0Z7+JFk7dWww
-   9V0dbTz7UzR53Z7IwfPd3XKiN7XRypxIn4U/eEPUAxMvLRfhkXF2pCrm0
-   SvgLwbyphuj3eBkYjjP3ATvSjVB944Acm2xSLXmBumUfTKsEe8dSDmuei
-   XAH191ZBnd+G7KG3/Vj1Um7E9iSJWirMAY1EYjCkyNDP2ry5Ivcy5KTFF
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10988"; a="6189524"
-X-IronPort-AV: E=Sophos;i="6.06,170,1705392000"; 
-   d="scan'208";a="6189524"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Feb 2024 02:50:14 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,170,1705392000"; 
-   d="scan'208";a="4616255"
-Received: from crojewsk-ctrl.igk.intel.com ([10.102.9.28])
-  by fmviesa008.fm.intel.com with ESMTP; 19 Feb 2024 02:50:12 -0800
-From: Cezary Rojewski <cezary.rojewski@intel.com>
-To: vkoul@kernel.org
-Cc: alsa-devel@alsa-project.org,
-	linux-sound@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	broonie@kernel.org,
-	pierre-louis.bossart@linux.intel.com,
-	yung-chuan.liao@linux.intel.com,
-	amadeuszx.slawinski@linux.intel.com,
-	Cezary Rojewski <cezary.rojewski@intel.com>
-Subject: [PATCH] soundwire: Use snd_soc_substream_to_rtd() to obtain rtd
-Date: Mon, 19 Feb 2024 11:52:06 +0100
-Message-Id: <20240219105206.335738-1-cezary.rojewski@intel.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (2048-bit key) header.d=iokpp.de header.i=@iokpp.de header.b="Bnd6OGNV";
+	dkim=permerror (0-bit key) header.d=iokpp.de header.i=@iokpp.de header.b="NQaWg/1U"
+ARC-Seal: i=1; a=rsa-sha256; t=1708339824; cv=none;
+    d=strato.com; s=strato-dkim-0002;
+    b=BMI5Dcd7lcX9n50gnClE3URkLcs3Fh7HCv3kD9wPYeIjxMz5ZEJAu/wp48SXGADaDC
+    cgk3lNWKCnryk54tHs/45YCSy3WIE3SIzOP/tHui/np5BoL3nYdUgqpwhmZSIbnrrM53
+    VwbBg6CUSvI/xspLuVzSlXWBMa4THqRPbIKfTbosHVQtRwLwxrCrFxoDF7hFoGwb3RNy
+    LpFS6rTUlRP50NwvBGpIf4T3Et5iSLdI4nqMRGHR6QvMa9Hfa9dTZHI8+lMOo1mRaisR
+    inHmzPnC1D9Nahs0h60vwT7sna2mpupg/AoZWrPMvYpjTCZ1AeobbDFzNbqqho1Jik98
+    bp8g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; t=1708339824;
+    s=strato-dkim-0002; d=strato.com;
+    h=References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Cc:Date:
+    From:Subject:Sender;
+    bh=yI07zQ+jWsPFC3ueFt2YVm4gmvJXrfaBGf9cUxIYjfg=;
+    b=WKbwsWu2RFq/QkpkmT5pzpq5pqQqoLwwqypiwqvbWknvxUNNEouIrgih0Nn2682vT/
+    boW/+aw8Z9sFmLsCKT3O3w1i4irUAaTolEWdrAUd2daI81KM766lHJMDem5LmUlEtwzH
+    BqSKIaaIfqJnr1fJf1fea7MMNX0O/omEFZu9gyj8xbqJ7uVVMnVwVhK0FJ4oeB92pGBo
+    nmI3qsRu8CZiJcpixmT+k72BvDlpoc1AfhFhxUoM+INN7bhtNS1ajfwDSjLLuCnWw/FB
+    /rTxChcLXItJtRC+O9LcBffqxNncNBEGYbbyQ8/3ZaElw9P6MmkHRvUikAAhPaOFvO34
+    pq3g==
+ARC-Authentication-Results: i=1; strato.com;
+    arc=none;
+    dkim=none
+X-RZG-CLASS-ID: mo01
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1708339824;
+    s=strato-dkim-0002; d=iokpp.de;
+    h=References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Cc:Date:
+    From:Subject:Sender;
+    bh=yI07zQ+jWsPFC3ueFt2YVm4gmvJXrfaBGf9cUxIYjfg=;
+    b=Bnd6OGNVt7k3i/G1+hAPvA4VxQLJsFrSlN9mwXC6k3nf481JnAp75UUjVw0jt5AGRe
+    yyd4ar8vMusSR+T7asAhhEEaGIc9MSitBxlMWmGFtEO5VCYkHfXbR+JVqEaXUYny+Er1
+    4a93HNdykCJ5ToeJRNnedTZzff7YLSGy52RJoTZvvJd/RvjiWuU/yrlBjx1Tv7FqtX8M
+    UMADqOK3c1/+YRteMSIUzax0iM0IEel7C+b7FciRAYA3hfdq7y13+vnuj1D/FI0Apy8E
+    LFftUkFBv7Um87zLsSeQhSXMDR+WJQzHulkzWVRZwyl8+R4QQ7meQWtdRkooZSgyye3v
+    rWAg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; t=1708339824;
+    s=strato-dkim-0003; d=iokpp.de;
+    h=References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Cc:Date:
+    From:Subject:Sender;
+    bh=yI07zQ+jWsPFC3ueFt2YVm4gmvJXrfaBGf9cUxIYjfg=;
+    b=NQaWg/1UvEG3YDkp0pKCWcClEHAk6xqOKCxUy/DybByDlZhsXkAroKHwrn5dLSXLVx
+    +IuIwBMo663TWyDbwaAQ==
+X-RZG-AUTH: ":LmkFe0i9dN8c2t4QQyGBB/NDXvjDB6pBSeBwhhSxarlUcu05JCAPyj3VPAceccYJs0uz"
+Received: from [10.176.235.119]
+    by smtp.strato.de (RZmta 49.11.2 AUTH)
+    with ESMTPSA id z34ed901JAoOFUk
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
+	(Client did not present a certificate);
+    Mon, 19 Feb 2024 11:50:24 +0100 (CET)
+Message-ID: <82320769f502c5fadad90f1ec8d782c6ef423f56.camel@iokpp.de>
+Subject: Re: [PATCH v2] PCI: Increase maximum PCIe physical function number
+ to 7 for non-ARI devices
+From: Bean Huo <beanhuo@iokpp.de>
+To: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
+  bhelgaas@google.com, schnelle@linux.ibm.com
+Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, Bean Huo
+	 <beanhuo@micron.com>, stable@vger.kernel.org
+Date: Mon, 19 Feb 2024 11:50:23 +0100
+In-Reply-To: <4858e202-6097-493a-8405-86d3e8e17c83@linux.intel.com>
+References: <20240216190113.20341-1-beanhuo@iokpp.de>
+	 <4858e202-6097-493a-8405-86d3e8e17c83@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.44.4-0ubuntu2 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-Utilize the helper function instead of casting from ->private_data
-directly.
+On Fri, 2024-02-16 at 14:26 -0800, Kuppuswamy Sathyanarayanan wrote:
+> It looks like for an ARI capable device the limit is 256. Why not add
+> that
+> check as well?
 
-Signed-off-by: Cezary Rojewski <cezary.rojewski@intel.com>
----
- drivers/soundwire/stream.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+" With ARI, the 16-bit field is interpreted as two fields
+instead of three: an 8-bit Bus Number and an 8-bit Function Number -
+the Device Number field is eliminated. This new
+interpretation enables an ARI Device to support up to 256 Functions
+[0..255] instead of 8 Functions [0..7]."
 
-diff --git a/drivers/soundwire/stream.c b/drivers/soundwire/stream.c
-index f9c0adc0738d..4e9e7d2a942d 100644
---- a/drivers/soundwire/stream.c
-+++ b/drivers/soundwire/stream.c
-@@ -1718,7 +1718,7 @@ EXPORT_SYMBOL(sdw_deprepare_stream);
- static int set_stream(struct snd_pcm_substream *substream,
- 		      struct sdw_stream_runtime *sdw_stream)
- {
--	struct snd_soc_pcm_runtime *rtd = substream->private_data;
-+	struct snd_soc_pcm_runtime *rtd = snd_soc_substream_to_rtd(substream);
- 	struct snd_soc_dai *dai;
- 	int ret = 0;
- 	int i;
-@@ -1771,7 +1771,7 @@ EXPORT_SYMBOL(sdw_alloc_stream);
- int sdw_startup_stream(void *sdw_substream)
- {
- 	struct snd_pcm_substream *substream = sdw_substream;
--	struct snd_soc_pcm_runtime *rtd = substream->private_data;
-+	struct snd_soc_pcm_runtime *rtd = snd_soc_substream_to_rtd(substream);
- 	struct sdw_stream_runtime *sdw_stream;
- 	char *name;
- 	int ret;
-@@ -1815,7 +1815,7 @@ EXPORT_SYMBOL(sdw_startup_stream);
- void sdw_shutdown_stream(void *sdw_substream)
- {
- 	struct snd_pcm_substream *substream = sdw_substream;
--	struct snd_soc_pcm_runtime *rtd = substream->private_data;
-+	struct snd_soc_pcm_runtime *rtd = snd_soc_substream_to_rtd(substream);
- 	struct sdw_stream_runtime *sdw_stream;
- 	struct snd_soc_dai *dai;
- 
--- 
-2.25.1
+the above statement on PCIe Spec highlights that since the Function
+Number field in an ARI-enabled device is 8 bits, it inherently supports
+numbering from 0 to 255. Thus, there's no need for additional checks to
+limit the function number to this range; the 8-bit size of the field
+naturally imposes this limit. This efficient use of the available
+address space aligns with the goals of ARI to enhance device
+functionality within the PCIe specification.
 
+Kind regards,
+Bean
