@@ -1,80 +1,96 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+Received: from irl.hu (irl.hu [95.85.9.111])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8A8C3306B;
-	Mon, 19 Feb 2024 12:36:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1DE32E410;
+	Mon, 19 Feb 2024 12:37:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.85.9.111
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708346182; cv=none; b=IA6RRt7vMQEW2yTMvqr0MfiYH2d5Uyu9lXfYlVVaTzpITpnpPeZUNevnLRWhyK35ZWSxQSbpS12djlHkwgiw40gkQksLfxoo8V/QG9rGm1gHHwET0C/HekK+JCZMW/3thROtap5btaShqqAgOPuZppNRQEL0PcjBISeXu8N1nQI=
+	t=1708346238; cv=none; b=BCMedfzuqFZM2MGP9jXhCGyzLQyU67VlibbrCfGGUgQkbeUVgum0WlcnETNmiV9Y+bHsWF6ZC/Br+dMqm3vTXCO5BJdcn7lqcu8AaW0h2TrKWqgd3+k0Wt8J6bb6KL7AdViHDvaIW1s+R/8THO/DUSTKSODMEiTMqGB4KCb/k4s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708346182; c=relaxed/simple;
-	bh=Z+VCUj+P51+feGqkafHO97lvAdT97kUE6BEl9CA8Xe0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Gz5wHVB+ZQL8ZSBm4+AC7QKyZt1u274dWCRZ299lFFehlJmrosZjiJtnV3kH34bQilMIVOWe3aL1CZ9g2jUs9pEVtdAl44Lf4KDBEk3Y2dLhH2qx/wdovCfFKLvfr5/dN3kbxSd8+BVjvvje8rzCl8y145W5HjBsKOZJAOus4Zs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=lDzM2UQC; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="lDzM2UQC"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1708346179;
-	bh=Z+VCUj+P51+feGqkafHO97lvAdT97kUE6BEl9CA8Xe0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=lDzM2UQCSH6Ufq0AHo74hyY0MFzQA7epV1lt440ufl8Vip3qViDWLHImekeeW03PN
-	 TijyF6ZxLxrzvQWmCZS49OJ8oMCppaH0EdBjGtGmilFOphp5GK72v+5NVDFqhUOgjn
-	 9cXgM6sOBcO5EG7ITbKuyc+fdWGyfN1+rzoU/UHa6xs5h+01HdpufXRsLpkQ7JSQcT
-	 8R/nPGiTVh6THJJOtxTSA3sAhHITzlkAFpIeqjlEWCw1DsWuLO/ygLY7DgFRZLSLx1
-	 iN1NyvBPKD374LG5z5+qUD605z+oFMcRZ6sdERFQFu3D8ycY7uu6ZeReok6F9CIQQ4
-	 HYsVddxq+7Tsw==
-Received: from IcarusMOD.eternityproject.eu (cola.collaboradmins.com [195.201.22.229])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: kholk11)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 7478937820C1;
-	Mon, 19 Feb 2024 12:36:18 +0000 (UTC)
-From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-To: Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	Hsin-Te Yuan <yuanhsinte@chromium.org>
-Cc: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org,
-	Hsin-Te Yuan <yuanhsinte@google.com>
-Subject: Re: [PATCH v3] arm64: dts: mt8195-cherry-tomato: change watchdog reset boot flow
-Date: Mon, 19 Feb 2024 13:36:14 +0100
-Message-ID: <170834614185.140678.1878504560854372421.b4-ty@collabora.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240124-send-upstream-v3-1-5097c9862a73@chromium.org>
-References: <20240124-send-upstream-v3-1-5097c9862a73@chromium.org>
+	s=arc-20240116; t=1708346238; c=relaxed/simple;
+	bh=/J65+q+QomSfZ3wGcuHtMpFRfCHCYMuMStDpL3y0AZc=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=gP5IUeCMi6KBw/4WhFJVnpR52gvvG2yEL9+fR3L6f4SQloUOsmzowUYDzpVA5jVFf6aeeYkkNTdfwvjos2Fv725m7rxLWXQygLcmUcWH/y9/uCU6gGlYoiDN7fXE/GtzR+r0JW+G1pvJUBV5jx92j6oy0jcaipkR6L8yU+9+X30=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=irl.hu; spf=pass smtp.mailfrom=irl.hu; arc=none smtp.client-ip=95.85.9.111
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=irl.hu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=irl.hu
+Received: from [192.168.2.4] (51b68f08.dsl.pool.telekom.hu [::ffff:81.182.143.8])
+  (AUTH: CRAM-MD5 soyer@irl.hu, )
+  by irl.hu with ESMTPSA
+  id 0000000000073B80.0000000065D34A46.001CFF03; Mon, 19 Feb 2024 13:32:06 +0100
+Message-ID: <531e85d73c1926161eb15f8900ea77aade394b6f.camel@irl.hu>
+Subject: Re: [PATCH] platform/x86: ideapad-laptop: support Fn+R
+ dual-function key
+From: Gergo Koteles <soyer@irl.hu>
+To: Ike Panhc <ike.pan@canonical.com>,
+  Hans de Goede <hdegoede@redhat.com>,
+  Ilpo =?ISO-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Date: Mon, 19 Feb 2024 13:32:05 +0100
+In-Reply-To: <3b6a7bba-47a5-469c-aac1-5574ad78dadf@canonical.com>
+References: 
+	<0cdbc0e6eb65e160384ae0ed152e7de3ded1d9d5.1707604991.git.soyer@irl.hu>
+	 <3b6a7bba-47a5-469c-aac1-5574ad78dadf@canonical.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.50.3 (3.50.3-1.fc39) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
 
-On Wed, 24 Jan 2024 07:51:57 +0000, Hsin-Te Yuan wrote:
-> The external output reset signal was originally disabled and sent from
-> firmware. However, an unfixed bug in the firmware on tomato prevents
-> the signal from being sent, causing the device to fail to boot. To fix
-> this, enable external output reset signal to allow the device to reboot
-> normally.
-> 
-> 
-> [...]
+Hi Ike,
 
-Applied to v6.8-next/dts64, thanks!
+On Mon, 2024-02-19 at 10:39 +0800, Ike Panhc wrote:
+> On 2/11/24 06:51, Gergo Koteles wrote:
+> > According to the manual, Fn+R adjusts the display refresh rate.
+> > Map Fn+R to KEY_DISPLAYTOGGLE.
+> >=20
+> > Signed-off-by: Gergo Koteles <soyer@irl.hu>
+> > ---
+> >  drivers/platform/x86/ideapad-laptop.c | 2 ++
+> >  1 file changed, 2 insertions(+)
+> >=20
+> > diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x=
+86/ideapad-laptop.c
+> > index 88eefccb6ed2..4c130957f80d 100644
+> > --- a/drivers/platform/x86/ideapad-laptop.c
+> > +++ b/drivers/platform/x86/ideapad-laptop.c
+> > @@ -1091,6 +1091,8 @@ static const struct key_entry ideapad_keymap[] =
+=3D {
+> >  	{ KE_KEY,	0x07 | IDEAPAD_WMI_KEY, { KEY_HELP } },
+> >  	{ KE_KEY,	0x0e | IDEAPAD_WMI_KEY, { KEY_PICKUP_PHONE } },
+> >  	{ KE_KEY,	0x0f | IDEAPAD_WMI_KEY, { KEY_HANGUP_PHONE } },
+> > +	/* Refresh Rate Toggle (Fn+R) */
+> > +	{ KE_KEY,	0x10 | IDEAPAD_WMI_KEY, { KEY_DISPLAYTOGGLE } },
+> >  	/* Dark mode toggle */
+> >  	{ KE_KEY,	0x13 | IDEAPAD_WMI_KEY, { KEY_PROG1 } },
+> >  	/* Sound profile switch */
+>=20
+> Acked-by: Ike Panhc <ike.pan@canonical.com>
+>=20
+> BTW on which ideapad we need this patch?
+>=20
 
-[1/1] arm64: dts: mt8195-cherry-tomato: change watchdog reset boot flow
-      https://git.kernel.org/mediatek/c/ef569d5d
+Oh, I somehow missed that. I found it on a Yoga 7 14ARB7.
 
-Cheers,
-Angelo
+Newer Yogas and Legions with 60Hz/90Hz displays have this refresh rate
+toggle feature.
+
+I'm wondering if this would be worth a new KEY_REFRESH_RATE_TOGGLE
+event code?=20
+
+KEY_DISPLAYTOGGLE is used to toggle the LCD on/off in other drivers.
+
+What do you think?
+
+Thanks,
+Gergo
+
+> Thanks.
+>=20
+> --
+> Ike
 
