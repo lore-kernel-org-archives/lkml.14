@@ -1,151 +1,93 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+Received: from mail-io1-f54.google.com (mail-io1-f54.google.com [209.85.166.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B8AA56754
-	for <linux-kernel@vger.kernel.org>; Mon, 19 Feb 2024 22:28:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFC9255E74
+	for <linux-kernel@vger.kernel.org>; Mon, 19 Feb 2024 22:30:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708381729; cv=none; b=jzZhGcGS1dysOrj68Dqwla/I1EuRJk0EuVufxtO/GxjnCvMT3wjMWRu/71GfmXhetNHX38vBM8UaXlh6CTP3H4B1ecWo4IdgrPS/P1lTxWBc3wb+pqpJolUEmlM7OveTA/NKL8QvIe72BrwSo/uegy/79fegXgZkiVKh5ocUZwY=
+	t=1708381813; cv=none; b=ZY0xDP4DFH0QGKS+6DOvWTm9uu4LjfuGistt0gAUTvvId2ws/xwJEU1tCzWQddgTLvr4kNstYtX2LAziXgDRu42xwoHOU5Z4SHp5MlNzhuhkitCBmxxvit1urecFCzENc1fl2ne6IDm5jaWofqdVGBMc9tRgcHRiNGc5sEntZ6A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708381729; c=relaxed/simple;
-	bh=69e7kVPN/Z3SH6Is7oQo68JrXDtUBF6qZahWkHqh+7c=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GofWtn3vXoJl10k44SRcPGRrG7jdhDsycAdSpEO1l1cZDv8gEhQsV2A5xtQa/Firh2CKfeqLwT3ze4UZiipIndUaWYgpZYPL3OGsfoqhKzRE+TaImsXJ1TsOFlgjsh51lnHDsk3VHwaa2maaXah/IoKWHUb7Lfw7m5GnB8ekdQk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com; spf=pass smtp.mailfrom=fromorbit.com; dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b=Eo7QiUrE; arc=none smtp.client-ip=209.85.214.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fromorbit.com
+	s=arc-20240116; t=1708381813; c=relaxed/simple;
+	bh=f2hrTzeMp3/5ZZdShKy+vFXbuUBET5Nt3bj74acNCPg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=fjFNfgNRuLzG/xmudTkCZGh2czvGedskxPMspKqvE6q3C5uftbf+BjUjkQB4c0BQKcSMI6kqVtcyipkZKW1KmljstKzKIG1+mZDdZhToXOQgDBkKAf8xbaStqXTjsGJg6WhaSyy+7DPK/5pJ0VytrdjwiDLKj7zmBCkMeA87P7E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=FXkTiLs4; arc=none smtp.client-ip=209.85.166.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b="Eo7QiUrE"
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-1d94323d547so33019165ad.3
-        for <linux-kernel@vger.kernel.org>; Mon, 19 Feb 2024 14:28:47 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="FXkTiLs4"
+Received: by mail-io1-f54.google.com with SMTP id ca18e2360f4ac-7c49c979b5dso77526639f.1
+        for <linux-kernel@vger.kernel.org>; Mon, 19 Feb 2024 14:30:11 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fromorbit-com.20230601.gappssmtp.com; s=20230601; t=1708381727; x=1708986527; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=bl5GKAX3dlaK9635suuwAaWFkidsg1LZ0Wt1MsG+2JM=;
-        b=Eo7QiUrEwSYhaJWG5CYDmFY8qzWsm8HqNf9yftgk3QxW7yhgamkJs0idwtYvIx2F4O
-         RSOHv9L+OIE2wJEeSF1rigqXbk9hg26ShWyJy4wXxqoyqnW1hYErH8tKBOhW85cBAtqW
-         MKFQYzLu3nmEGiRgrTcx+goUEHIhkQ1MiE2xeSvteU63Z9a3j9MK7t46PjSPGtikCEef
-         M18272AscOXxeMR1FrTPTLX2ZO4UboMWFDlV7dUO3WFzZib63zx1h9JG2A6awBSLG4Ok
-         HvcOo/+HZh+c+XuZwVtVvlntWST77EN1XK8Pu9qevk9diZBjLj79Z8yGt18BkPepP3ii
-         aHgw==
+        d=linuxfoundation.org; s=google; t=1708381811; x=1708986611; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=969xHt7y7axLrjO4JYSk6pwx8s3Y0OrJSlbAqE8gnOk=;
+        b=FXkTiLs4mcWWvFO5cd9bg/YkApltQC2nGGdHE+DPwaBZ9z+tgzoz510xn3mY0nAKlf
+         fRuwK+gDzIfFOIUM2eOhn0mEjFOycFMuUpB37+g8CuAkwxZ44IPrJ3MbirIGjBbKf6u4
+         nOCFkk30PlNiLfgsi7fjE+t0Ur/L4vfXrTS/k=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708381727; x=1708986527;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=bl5GKAX3dlaK9635suuwAaWFkidsg1LZ0Wt1MsG+2JM=;
-        b=oysghr7UAHtvi/M09Sm033Dd+NHVLCjelufICquyof6rYeF1m0L+Tsufp38stspzIH
-         n0lktOIAkZ7zidmbtefH7eQ6VrL8bUwdCF5z4hRy9OsIPz4gdOn+chJTP+nKRWs2vS3Z
-         2BEZJ0v348Sk0JEwQ4jeFj3tVxpe+OpOXjtb6NOTcxhVmzsSGjmo0tslTx4qKh+d0qP7
-         jr1pXr+iDk/shSTT7smbSfUfd23h1ZcaWJFzr/S+VUxLOlgsqnnt5qBl+HbTE0LEIViQ
-         Uwb9UVuKfVGb7LX2/hn9hZKqF9PjEbfYCbQTIbbIwMgL78PQrdm2NVK0pAFurRKxQ7er
-         h9Kg==
-X-Forwarded-Encrypted: i=1; AJvYcCWNcjJtp8SfX9XY+AuCAGiSxsN5UEV214nr0WNQk3XwY8LlVvghOwnNUoAO2Gb45NWHeFRHt31KNjj4WMIlPIYEBObRVtNg3fihIxr6
-X-Gm-Message-State: AOJu0YyXIUYyQeO3cP6I7TbutKevJcBKh8/JWlveyVMtwG6Gbinc3AZ9
-	HHrac+WSNcOgTDxcAOpCnxKzZ97k0lOzj/CT1k9JfetZLy5QiBlzoS7fhMUQDPs=
-X-Google-Smtp-Source: AGHT+IHlEqzTbeqGZugXvJDuwYCJATCsRA1NiGwC9reCuuiCgxtV1VeURbikH3d/YTo82RrU7aljog==
-X-Received: by 2002:a17:902:cecf:b0:1db:d66e:cd15 with SMTP id d15-20020a170902cecf00b001dbd66ecd15mr6464817plg.59.1708381727050;
-        Mon, 19 Feb 2024 14:28:47 -0800 (PST)
-Received: from dread.disaster.area (pa49-181-247-196.pa.nsw.optusnet.com.au. [49.181.247.196])
-        by smtp.gmail.com with ESMTPSA id l4-20020a170902d04400b001d949e663d5sm4933240pll.31.2024.02.19.14.28.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 19 Feb 2024 14:28:46 -0800 (PST)
-Received: from dave by dread.disaster.area with local (Exim 4.96)
-	(envelope-from <david@fromorbit.com>)
-	id 1rcC7v-008o4I-26;
-	Tue, 20 Feb 2024 09:28:43 +1100
-Date: Tue, 20 Feb 2024 09:28:43 +1100
-From: Dave Chinner <david@fromorbit.com>
-To: John Garry <john.g.garry@oracle.com>
-Cc: axboe@kernel.dk, kbusch@kernel.org, hch@lst.de, sagi@grimberg.me,
-	jejb@linux.ibm.com, martin.petersen@oracle.com, djwong@kernel.org,
-	viro@zeniv.linux.org.uk, brauner@kernel.org, dchinner@redhat.com,
-	jack@suse.cz, linux-block@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
-	linux-fsdevel@vger.kernel.org, tytso@mit.edu, jbongio@google.com,
-	linux-scsi@vger.kernel.org, ojaswin@linux.ibm.com,
-	linux-aio@kvack.org, linux-btrfs@vger.kernel.org,
-	io-uring@vger.kernel.org, nilay@linux.ibm.com,
-	ritesh.list@gmail.com,
-	Prasad Singamsetty <prasad.singamsetty@oracle.com>
-Subject: Re: [PATCH v4 04/11] fs: Add initial atomic write support info to
- statx
-Message-ID: <ZdPWGwntYMvstbpc@dread.disaster.area>
-References: <20240219130109.341523-1-john.g.garry@oracle.com>
- <20240219130109.341523-5-john.g.garry@oracle.com>
+        d=1e100.net; s=20230601; t=1708381811; x=1708986611;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=969xHt7y7axLrjO4JYSk6pwx8s3Y0OrJSlbAqE8gnOk=;
+        b=FIQ2eDewNLxpS0Rw7b0djzQM2UUcPYAhxiAI3Rr1IHS5AU7ehTocPeHh2itgvTmwEy
+         wUYKYYgxzQu6913NtMLrM2DGy9SlArv1xG6HrLLncjFU30eD8O3VAz4qQDCSaLgbbvRW
+         zpBjw9lBouMnhVWzTUcBty2Jh5/wb1j776J4Q5uThXtLzsQuram5j1tX4ckGENDn0Xt2
+         YoRbdQk6x+siv1AQemKZroQ1YiKIF0CjZPBbbXAfWuJkubt7uJCIgywqFxF1cFJtGj2r
+         1MV1etcWbZtTT/nDAm29g0yBhWELjG7Ym+dyu9q8RoblY8C5EI0MkUIe2DMKwuN7tRj7
+         z3Mw==
+X-Forwarded-Encrypted: i=1; AJvYcCW2+Ny+dkDA2gtnDGV19i8EeZlzxpwqggodTiHg5Eqj3blw/T7TPoaY09UGmktoeJxcT++Ig0KQhrqbmPBhWsVX1qleHUK0c4uQanfH
+X-Gm-Message-State: AOJu0YxUTUrT/pS2DhZnjHhCrZzPXOZpufe7Q2gWLkkMS2i9EsbIEB9P
+	o70Qv/UEeO+D5UOtn1mXQ0QSQyL1FrYy0yj938Y1pJY5ajYSnOAjDOxoGC23Ljo=
+X-Google-Smtp-Source: AGHT+IEpC4BUeiUDxHAjxZ9+WbEMpLXLwyifuJgH9FE2dEEBJkMIapPZBmdSJ/n0Vsn/cptTkiJHGg==
+X-Received: by 2002:a05:6602:f15:b0:7c7:28f7:cc81 with SMTP id hl21-20020a0566020f1500b007c728f7cc81mr7909514iob.1.1708381810946;
+        Mon, 19 Feb 2024 14:30:10 -0800 (PST)
+Received: from [192.168.1.128] ([38.175.170.29])
+        by smtp.gmail.com with ESMTPSA id fx1-20020a0566381e0100b00473bc71d38dsm1764737jab.39.2024.02.19.14.30.10
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 19 Feb 2024 14:30:10 -0800 (PST)
+Message-ID: <cdc1cba0-4bd6-462e-bf88-c48d8aa00832@linuxfoundation.org>
+Date: Mon, 19 Feb 2024 15:30:09 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240219130109.341523-5-john.g.garry@oracle.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] selftests/overlayfs: fix compilation error in overlayfs
+Content-Language: en-US
+To: Meng Li <li.meng@amd.com>, Andrei Vagin <avagin@google.com>,
+ Huang Rui <ray.huang@amd.com>, linux-pm@vger.kernel.org
+Cc: Nathan Fontenot <nathan.fontenot@amd.com>,
+ Deepak Sharma <deepak.sharma@amd.com>,
+ Alex Deucher <alexander.deucher@amd.com>,
+ Mario Limonciello <mario.limonciello@amd.com>,
+ Jinzhou Su <Jinzhou.Su@amd.com>, Perry Yuan <Perry.Yuan@amd.com>,
+ Xiaojian Du <Xiaojian.Du@amd.com>, Viresh Kumar <viresh.kumar@linaro.org>,
+ Borislav Petkov <bp@alien8.de>, linux-kernel@vger.kernel.org,
+ Shuah Khan <skhan@linuxfoundation.org>
+References: <20240219075029.2318383-1-li.meng@amd.com>
+From: Shuah Khan <skhan@linuxfoundation.org>
+In-Reply-To: <20240219075029.2318383-1-li.meng@amd.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Mon, Feb 19, 2024 at 01:01:02PM +0000, John Garry wrote:
-> From: Prasad Singamsetty <prasad.singamsetty@oracle.com>
+On 2/19/24 00:50, Meng Li wrote:
+> make -C tools/testing/selftests, compiling dev_in_maps fail.
+> In file included from dev_in_maps.c:10:
+> /usr/include/x86_64-linux-gnu/sys/mount.h:35:3: error: expected identifier before numeric constant
+>     35 |   MS_RDONLY = 1,                /* Mount read-only.  */
+>        |   ^~~~~~~~~
 > 
-> Extend statx system call to return additional info for atomic write support
-> support for a file.
+> That sys/mount.h has to be included before linux/mount.h.
 > 
-> Helper function generic_fill_statx_atomic_writes() can be used by FSes to
-> fill in the relevant statx fields.
-> 
-> Signed-off-by: Prasad Singamsetty <prasad.singamsetty@oracle.com>
-> #jpg: relocate bdev support to another patch
-> Signed-off-by: John Garry <john.g.garry@oracle.com>
-> ---
->  fs/stat.c                 | 34 ++++++++++++++++++++++++++++++++++
->  include/linux/fs.h        |  3 +++
->  include/linux/stat.h      |  3 +++
->  include/uapi/linux/stat.h |  9 ++++++++-
->  4 files changed, 48 insertions(+), 1 deletion(-)
-> 
-> diff --git a/fs/stat.c b/fs/stat.c
-> index 77cdc69eb422..522787a4ab6a 100644
-> --- a/fs/stat.c
-> +++ b/fs/stat.c
-> @@ -89,6 +89,37 @@ void generic_fill_statx_attr(struct inode *inode, struct kstat *stat)
->  }
->  EXPORT_SYMBOL(generic_fill_statx_attr);
->  
-> +/**
-> + * generic_fill_statx_atomic_writes - Fill in the atomic writes statx attributes
-> + * @stat:	Where to fill in the attribute flags
-> + * @unit_min:	Minimum supported atomic write length
-> + * @unit_max:	Maximum supported atomic write length
-> + *
-> + * Fill in the STATX{_ATTR}_WRITE_ATOMIC flags in the kstat structure from
-> + * atomic write unit_min and unit_max values.
-> + */
-> +void generic_fill_statx_atomic_writes(struct kstat *stat,
-> +				      unsigned int unit_min,
-> +				      unsigned int unit_max)
-> +{
-> +	/* Confirm that the request type is known */
-> +	stat->result_mask |= STATX_WRITE_ATOMIC;
-> +
-> +	/* Confirm that the file attribute type is known */
-> +	stat->attributes_mask |= STATX_ATTR_WRITE_ATOMIC;
-> +
-> +	if (unit_min) {
-> +		stat->atomic_write_unit_min = unit_min;
-> +		stat->atomic_write_unit_max = unit_max;
-> +		/* Initially only allow 1x segment */
-> +		stat->atomic_write_segments_max = 1;
-> +
-> +		/* Confirm atomic writes are actually supported */
-> +		stat->attributes |= STATX_ATTR_WRITE_ATOMIC;
-> +	}
-> +}
-> +EXPORT_SYMBOL(generic_fill_statx_atomic_writes);
+> Signed-off-by: Meng Li <li.meng@amd.com>
 
-What units are these in? Nothing in the patch or commit description
-tells us....
+Please resend with linux-kselftest on the cc
 
--Dave.
--- 
-Dave Chinner
-david@fromorbit.com
+thanks,
+-- Shuah
