@@ -1,146 +1,216 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+Received: from EUR01-VE1-obe.outbound.protection.outlook.com (mail-ve1eur01on2087.outbound.protection.outlook.com [40.107.14.87])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CEDE38F98;
-	Mon, 19 Feb 2024 15:57:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708358249; cv=none; b=RnMvC2WWfriKyZmpyaxRLJvq+CvORkaXYvtZtXlIBM2wQ+dEKjbQf0qLosm40y71WVJ/ksUU3UZ1KbgAL1hYkKHphCkLym5iDfo8ltsIaSQS3Vd9EZpPxHwcuzJUE/RHUyPudRmGrD6iH98Bp3cNhdOQHcU2JFuuHR4SRv9GUqM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708358249; c=relaxed/simple;
-	bh=QxzA0sWbtJ1971nGvDV76Q3FY8LZ3iFXNaFcbvQwYYk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=i3Y2R+puBbcp6jCCXTfgtENUpF7ipzz5hhdopGB9yrL/BIF0cYm8p8/61E/cBXCLx9YL3JfuTU+SZaKngst7vIoPO+3fA9bsWmHBAlhb/vJQg/Ua4uQ3CrqdzEfoJ2Ju4zNtNmfouKpp9J4bnkxCpmaQXUf+/LLiFR7kNVEMllY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GIbaVIyX; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 164D93A1D0;
+	Mon, 19 Feb 2024 15:57:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.14.87
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1708358267; cv=fail; b=kmNkth9KCzEvD1OMkHM+s6Aepd8cg7QLJtE/EedldxtXuatzyGeXKS7V0zaNjn2PoSYwFmTHUd65t3sSxh+qkcu8VqTO7zGr/ykM0BV+DSjZH7GETK1epeliuteeyR8VlkHIAgeCvMjbEoh9y8kYHpbRPBnbz7DPjjTzbZMOjjw=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1708358267; c=relaxed/simple;
+	bh=eJNxE6nRQlBvNXRhKUmHShP4Bsm+42d6Qm6TJMRTsm8=;
+	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=NoYcx0XwtvbCFCalcB3C4te7b2/p11IuoWNHBEaDHwDDeNwwd2oDoHo0ezCBMD9isBNXv3Ze9ZIsX78CVXfZBOEQCx8sGtuv++/C1k8gGMVznC6N07HYiMb1FrDGoVeNTyZoP9HnNb/mwHCU/VOn2Up5PRu625b8ywL8Xy1LU1I=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=AEOvFmq0; arc=fail smtp.client-ip=40.107.14.87
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GIbaVIyX"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1708358247; x=1739894247;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=QxzA0sWbtJ1971nGvDV76Q3FY8LZ3iFXNaFcbvQwYYk=;
-  b=GIbaVIyXeaO0K+zMngg3jAWMnfIRiTjHvmysnwoi4GwVeRVpEQPXshmq
-   VKhbdMn0nmlKbbk8wJDpg6oZCoxzMaxNEmpziVTYv/BnyLNH1E9GxMDLa
-   5fb9bPVvS68CEzQ7Y9XA5Wad/ktq2n7dII3WI3v3f8jJvjTxuvjmlq5ck
-   mXp5yoj2hewxzhqgl+gJzmGdC0xnH6xTHSPJfPMKme9xjTvJq6eCr+INN
-   Qr23qEgQrNJxEjj/1thpHBsNDQ8OIbPtAQ3q3dafBWVkzPLv7GC1/xSBG
-   iyqBXC9pypWDlAgRNIoGWLSahOy+vHekVe5uLLs7Ha2jXBTDtC5iTAVTE
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10989"; a="13151568"
-X-IronPort-AV: E=Sophos;i="6.06,170,1705392000"; 
-   d="scan'208";a="13151568"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Feb 2024 07:57:01 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10989"; a="912896951"
-X-IronPort-AV: E=Sophos;i="6.06,170,1705392000"; 
-   d="scan'208";a="912896951"
-Received: from unknown (HELO [10.209.34.48]) ([10.209.34.48])
-  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Feb 2024 07:56:59 -0800
-Message-ID: <40f95b90-8698-42dd-89d7-cd73d1e311b1@intel.com>
-Date: Mon, 19 Feb 2024 07:56:58 -0800
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="AEOvFmq0"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=CA3QmyMSwY6i/Wi18VlsuTNwD0lazMUhTXZ+TrsUeW4DEy/otahe1slPISvpcYDlIbFoFlzB8OL2JQZL0NLKuVNQUWikWjbjZSjE4GuCdXlk2DAMPk+zw+OH3LhI/0ZBnGKwsJR7lSIRKsZWjnjE7f/J4JC9DbrD/zfW6jyO72K/f2e8jl8yfcQpmRYpJh/ba6FG5Dl1ZQONWzOS6Cmo8scOFz+VtnMR7JcfmRohfLekAf4f9kMFU1jF2gQgj0+9veBJtc1Nt4wHgQpFUbwHrPTJYC1Jbmdm6w2+KaJAxqrT4Y/agfJANHS+i4mrWaFp2D2LOnAl4E/+Ehe0ytSSSA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=6QR9JHvOYDB7WaZoNx3oAvzHoFGlMIBRxyB/mZOX6yY=;
+ b=BI/BE3s0An2s9g2nuEC3XmPrx3IWqPu1bhRj0ocHiaba6E+pLkfYrif5mheTADoZT/1YRcnVWlBlqfl8PzYM+sXp97btvp8bmcjsisIa4Bcw6AXDDylB7nRCzop3xvllYS0IElka07CmL7tN/l86hrgpmOkXHliDxWb9XkEK5XWGvGGQ9wkRwLB4neiRXUbWGkZ1G902nI2SwaPXc6w90Eh/ertwwtUJexLnqW/bNi5MxNynw3BQ9fMZuj5r6DLtkiwM+rNccVFx23lwl8wgV01GvDGNDw+WINrGwbCPfSa2hbqj3CeTpicYNXyhkYPoOHovS0vTmIb5/4gTyMXeqg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=6QR9JHvOYDB7WaZoNx3oAvzHoFGlMIBRxyB/mZOX6yY=;
+ b=AEOvFmq00SoR8XgVVVmRm5k1YAxjgANiPDPDLcmLN1f+d6AoujRQTF6IJi1yJukmYujOjBeT2qZZC8sp2WP5cEZqCVszTEKN2xhHA8Yz2aGtGf8x1kwfbMyDOdXYYRPjzfmbCaL9GaEWJ1aiwfKFz4RYD9xdtH8q/MCXGNaLHKE=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
+ by PR3PR04MB7369.eurprd04.prod.outlook.com (2603:10a6:102:89::5) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7292.38; Mon, 19 Feb
+ 2024 15:57:42 +0000
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::c8b4:5648:8948:e85c]) by PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::c8b4:5648:8948:e85c%3]) with mapi id 15.20.7292.036; Mon, 19 Feb 2024
+ 15:57:42 +0000
+From: Frank Li <Frank.Li@nxp.com>
+To: Vinod Koul <vkoul@kernel.org>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	NXP Linux Team <linux-imx@nxp.com>,
+	dmaengine@vger.kernel.org (open list:DMA GENERIC OFFLOAD ENGINE SUBSYSTEM),
+	linux-arm-kernel@lists.infradead.org (moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE),
+	linux-kernel@vger.kernel.org (open list)
+Cc: imx@lists.linux.dev
+Subject: [PATCH 1/1] dmaengine: mxs-dma: switch from dma_coherent to dma_pool
+Date: Mon, 19 Feb 2024 10:57:27 -0500
+Message-Id: <20240219155728.606497-1-Frank.Li@nxp.com>
+X-Mailer: git-send-email 2.34.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SA1P222CA0028.NAMP222.PROD.OUTLOOK.COM
+ (2603:10b6:806:22c::30) To PAXPR04MB9642.eurprd04.prod.outlook.com
+ (2603:10a6:102:240::14)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH] x86/sgx: Remove 'reclaim' boolean parameters
-Content-Language: en-US
-To: Haitao Huang <haitao.huang@linux.intel.com>, jarkko@kernel.org
-Cc: anakrish@microsoft.com, bp@alien8.de, cgroups@vger.kernel.org,
- chrisyan@microsoft.com, dave.hansen@linux.intel.com, hpa@zytor.com,
- kristen@linux.intel.com, linux-kernel@vger.kernel.org,
- linux-sgx@vger.kernel.org, mikko.ylinen@linux.intel.com, mingo@redhat.com,
- mkoutny@suse.com, seanjc@google.com, sohil.mehta@intel.com,
- tglx@linutronix.de, tim.c.chen@linux.intel.com, tj@kernel.org,
- x86@kernel.org, yangjie@microsoft.com, zhanb@microsoft.com,
- zhiquan1.li@intel.com
-References: <CZ4FCQ633VLC.26Y7HUHGRSFB3@kernel.org>
- <20240219153957.9957-1-haitao.huang@linux.intel.com>
-From: Dave Hansen <dave.hansen@intel.com>
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-In-Reply-To: <20240219153957.9957-1-haitao.huang@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|PR3PR04MB7369:EE_
+X-MS-Office365-Filtering-Correlation-Id: 73c2a603-728f-4160-675f-08dc3163813c
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	ymFT7SZK0zWKvJgloo27uQv8Dir39FMM/SbRCmqXvMqzr6T2ro6xR0Msk79XzHqIe5DO+ekKtQup+Aelr9qiv/BulAWYrWMEccxyObJ3An5SxukO6Ud/aYUWpHFugDpb0w0mavpQJvsA2unlbhHpHnvIJxsr8LsYWXxPe3/3fHO+2C0dxmR19j+d7by7CTwu701KVWdGnMmswBeJYyZ6I1IpgcVdsE7LJMMca+rkbAAZyYiSxNtoBiUMmq258yPOQjCrk0anQvvfSIz3YZA/nq6+YMxyphHMglor9Fi5Mq8LHmJovp0XOeMI4W51xKdUSx441MB5W3Y1wEpNeaijwDUZjwdA5i5cMye52epzp44oy/3aNB8IWoLRObpr1HIOMooYZMnPFPkMrd/LO24ubVhYmZwoc5vtVpVXVGRC2wJVT7NCQztVCtUx3tdeFR8d/NpzF+Uops8ZjqJRQTPEgOSrx1FEvMYbCgf//B+1pKbUH78JNFp8z9fdlT6H3eQeAkCF/flOC3rUxdl9jhMmCQQ87UfLzgdtxBggAbTvleKZIRak9IRkQjKkGmgBwLbPC1wJgR/sYY0RP5U8NA7s/HxkbBmF2OkLrcRiYPTkSzBP98zv0ATO+9AqhM751UK+
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(38350700005);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?SpoVnCW1xe06J2MT48aqJzRj8TCVsG7UV/xTCKJDhZQd6EfXIbaE0vebyx/G?=
+ =?us-ascii?Q?wrOt1YboyjYQ66eUh6yJcjJrE/i9T83n/TzFAfrtcwZA19D0EbczNwbfh7nE?=
+ =?us-ascii?Q?arF/yxcXSkd1EFV70eU2PmQY58tTEI9pGf/k8GFRVsMjWTLkBAmG+ADvSIth?=
+ =?us-ascii?Q?3jmKRo0TGrFI2AniVgReAjqC+7W7KdFhBrh7b1urFF/lztpyH0FVjm16mSdJ?=
+ =?us-ascii?Q?igxjKf9h0tl8Kcbkiv5elRojMzXNROIjnOqEd0e6obOIxyOZ2XPzedFpDUlj?=
+ =?us-ascii?Q?662/prt1TrVCDzyah87uST926QCwH2r8zQ6ceoPwBSGVl0lC/QQHepEZyfPm?=
+ =?us-ascii?Q?wnpHrG2VqYu9tJJUoMmZB9LrnnSEPhc/5ZaA8gvnPe4h3LH+6cMnIR7ctrK0?=
+ =?us-ascii?Q?lkyC1594XneZfZ6EL2tbBW27Bhlq9ZmGuUoyDzDU+9yAkpgt2SgTUJh7EqtP?=
+ =?us-ascii?Q?Mfgq9Ha00LfA/RnOenxt+DFHzlsQNQfG9aMfZu6hf0N9/YAvNoacTmQEfMBn?=
+ =?us-ascii?Q?US9q3kqL0iW0mb/53euYCqHi52+glg/VJMIx1n3fNiwqKbK7SaKySfbkqFnV?=
+ =?us-ascii?Q?diXYEP8UTGHEMASzQsa7S0DN2lGEcegcXpp+tNSPCla1hAPeCBGQjRcbYs8i?=
+ =?us-ascii?Q?pr7LE0jYHn5rExwEUUyLxCvF4uFa0ULfPmwCBWHJOzrvXGQQjZHwHck8YOGB?=
+ =?us-ascii?Q?cnbavGACSSfVQRLwRs7fkffdIF7iJ9fVpf+rTQd1EVCC5Rrgh6jegC9Jxpjj?=
+ =?us-ascii?Q?iHwtMuEAHXGZhB3e+L0N6uxfGd0l2NZB9f2Vt+e7eHINn+782DcFPZplwKIH?=
+ =?us-ascii?Q?RRlTIkoR4Npg+omVm7SGysoCkT0gTeNFsQHfE7sV1wtgQ2cKIYN+E8TgUhzb?=
+ =?us-ascii?Q?ZKoNTIyogwysVKy7Dm44tvtXW3UwJ/OmpXfRL18yvdbKeFNVunIAYL7FMecG?=
+ =?us-ascii?Q?r7kai2H3k70redTjGsL+Ke4VxhEjqaDXktZ/OUy+Z5RH/GXHjbLpmPVQgfr5?=
+ =?us-ascii?Q?DOQzl5JWPZVL45lspw/gD3qe5/ElPGu6cSyfV1KfywrppaUI6lW5nKEZ9Mlc?=
+ =?us-ascii?Q?PqpBkAZOu34V7sKvK5UryYYOnZ30gOXxSLzDxkjILIk4ASfYKDptheveTKnv?=
+ =?us-ascii?Q?YB25aN6RfgBW4zfacsvos7QQEPeqEZOh0EV12nOqwbmWBJnEh5qn2ZeAul+d?=
+ =?us-ascii?Q?K1KI9kC8HnzU+zACMk8JCdGay/BThsItOi+ezuOVEI3Q1reIqjyohfN/suXr?=
+ =?us-ascii?Q?yowB/oNOGcFdZ0hCQuOIwOasYqQyUV99gpugFlMOKRne9zufKcGQcJVqsXGD?=
+ =?us-ascii?Q?9ObI9xGvTo4vy469913DdU5kFP5RrisAysrQ2bYDCMb/CdvML0AXuKw3/eau?=
+ =?us-ascii?Q?Mk2/wWiTEGMRUydEyQp3PwvAL5dipXQMRWwDlCNX0iGd3Q63YySYH2aswrh5?=
+ =?us-ascii?Q?phAccJ7sJpguzcKIgBtfeIXLMHdc9rCdwI8cz+wWcKlU7t3U3pqRkzuW98Uj?=
+ =?us-ascii?Q?ePnL1klGBbO40isZMLCEzoNW9fYrrmk7VV0EsCGNad6a8JvaGxNXhL5gGn3G?=
+ =?us-ascii?Q?uEs3XCkuKpL/iRxj/zOu1zsi1m3KEHCOPKXjdzqC?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 73c2a603-728f-4160-675f-08dc3163813c
+X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Feb 2024 15:57:42.0299
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: E8NpVxe/+TiUjGR6Xt+LW6x8frIdrVN6l8c0ntuq/CtSsqNBfzmzHjBIN8ediIrvLsxz3k+bxZEpcEEQZ1X8xA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PR3PR04MB7369
 
-On 2/19/24 07:39, Haitao Huang wrote:
-> Remove all boolean parameters for 'reclaim' from the function
-> sgx_alloc_epc_page() and its callers by making two versions of each
-> function.
-> 
-> Also opportunistically remove non-static declaration of
-> __sgx_alloc_epc_page() and a typo
-> 
-> Signed-off-by: Haitao Huang <haitao.huang@linux.intel.com>
-> Suggested-by: Jarkko Sakkinen <jarkko@kernel.org>
-> ---
->  arch/x86/kernel/cpu/sgx/encl.c  | 56 +++++++++++++++++++++------
->  arch/x86/kernel/cpu/sgx/encl.h  |  6 ++-
->  arch/x86/kernel/cpu/sgx/ioctl.c | 23 ++++++++---
->  arch/x86/kernel/cpu/sgx/main.c  | 68 ++++++++++++++++++++++-----------
->  arch/x86/kernel/cpu/sgx/sgx.h   |  4 +-
->  arch/x86/kernel/cpu/sgx/virt.c  |  2 +-
->  6 files changed, 115 insertions(+), 44 deletions(-)
+From: Han Xu <han.xu@nxp.com>
 
-Jarkko, did this turn out how you expected?
+Using dma_pool to manage dma descriptor memory.
 
-I think passing around a function pointer to *only* communicate 1 bit of
-information is a _bit_ overkill here.
+Signed-off-by: Han Xu <han.xu@nxp.com>
+Signed-off-by: Frank Li <Frank.Li@nxp.com>
+---
+ drivers/dma/mxs-dma.c | 24 +++++++++++++++++-------
+ 1 file changed, 17 insertions(+), 7 deletions(-)
 
-Simply replacing the bool with:
+diff --git a/drivers/dma/mxs-dma.c b/drivers/dma/mxs-dma.c
+index cfb9962417ef6..a60bf7a22492d 100644
+--- a/drivers/dma/mxs-dma.c
++++ b/drivers/dma/mxs-dma.c
+@@ -24,6 +24,7 @@
+ #include <linux/of_dma.h>
+ #include <linux/list.h>
+ #include <linux/dma/mxs-dma.h>
++#include <linux/dmapool.h>
+ 
+ #include <asm/irq.h>
+ 
+@@ -104,6 +105,7 @@ struct mxs_dma_ccw {
+ 
+ #define CCW_BLOCK_SIZE	(4 * PAGE_SIZE)
+ #define NUM_CCW	(int)(CCW_BLOCK_SIZE / sizeof(struct mxs_dma_ccw))
++#define CCW_BLOCK_ALGIN	32
+ 
+ struct mxs_dma_chan {
+ 	struct mxs_dma_engine		*mxs_dma;
+@@ -117,6 +119,7 @@ struct mxs_dma_chan {
+ 	enum dma_status			status;
+ 	unsigned int			flags;
+ 	bool				reset;
++	struct dma_pool			*ccw_pool;
+ #define MXS_DMA_SG_LOOP			(1 << 0)
+ #define MXS_DMA_USE_SEMAPHORE		(1 << 1)
+ };
+@@ -398,9 +401,8 @@ static int mxs_dma_alloc_chan_resources(struct dma_chan *chan)
+ 	struct mxs_dma_engine *mxs_dma = mxs_chan->mxs_dma;
+ 	int ret;
+ 
+-	mxs_chan->ccw = dma_alloc_coherent(mxs_dma->dma_device.dev,
+-					   CCW_BLOCK_SIZE,
+-					   &mxs_chan->ccw_phys, GFP_KERNEL);
++	mxs_chan->ccw = dma_pool_zalloc(mxs_chan->ccw_pool, GFP_ATOMIC, &mxs_chan->ccw_phys);
++
+ 	if (!mxs_chan->ccw) {
+ 		ret = -ENOMEM;
+ 		goto err_alloc;
+@@ -428,8 +430,7 @@ static int mxs_dma_alloc_chan_resources(struct dma_chan *chan)
+ err_clk:
+ 	free_irq(mxs_chan->chan_irq, mxs_dma);
+ err_irq:
+-	dma_free_coherent(mxs_dma->dma_device.dev, CCW_BLOCK_SIZE,
+-			mxs_chan->ccw, mxs_chan->ccw_phys);
++	dma_pool_free(mxs_chan->ccw_pool, mxs_chan->ccw, mxs_chan->ccw_phys);
+ err_alloc:
+ 	return ret;
+ }
+@@ -443,8 +444,7 @@ static void mxs_dma_free_chan_resources(struct dma_chan *chan)
+ 
+ 	free_irq(mxs_chan->chan_irq, mxs_dma);
+ 
+-	dma_free_coherent(mxs_dma->dma_device.dev, CCW_BLOCK_SIZE,
+-			mxs_chan->ccw, mxs_chan->ccw_phys);
++	dma_pool_free(mxs_chan->ccw_pool, mxs_chan->ccw, mxs_chan->ccw_phys);
+ 
+ 	clk_disable_unprepare(mxs_dma->clk);
+ }
+@@ -745,6 +745,7 @@ static int mxs_dma_probe(struct platform_device *pdev)
+ 	struct device_node *np = pdev->dev.of_node;
+ 	const struct mxs_dma_type *dma_type;
+ 	struct mxs_dma_engine *mxs_dma;
++	struct dma_pool *ccw_pool;
+ 	int ret, i;
+ 
+ 	mxs_dma = devm_kzalloc(&pdev->dev, sizeof(*mxs_dma), GFP_KERNEL);
+@@ -797,6 +798,15 @@ static int mxs_dma_probe(struct platform_device *pdev)
+ 	mxs_dma->pdev = pdev;
+ 	mxs_dma->dma_device.dev = &pdev->dev;
+ 
++	ccw_pool = dma_pool_create("ccw_pool", mxs_dma->dma_device.dev, CCW_BLOCK_SIZE,
++				   CCW_BLOCK_ALGIN, 0);
++
++	for (i = 0; i < MXS_DMA_CHANNELS; i++) {
++		struct mxs_dma_chan *mxs_chan = &mxs_dma->mxs_chans[i];
++
++		mxs_chan->ccw_pool = ccw_pool;
++	}
++
+ 	/* mxs_dma gets 65535 bytes maximum sg size */
+ 	dma_set_max_seg_size(mxs_dma->dma_device.dev, MAX_XFER_BYTES);
+ 
+-- 
+2.34.1
 
-enum sgx_reclaim {
-	SGX_NO_RECLAIM,
-	SGX_DO_RECLAIM
-};
-
-would do the same thing.  Right?
-
-Are you sure you want a function pointer for this?
