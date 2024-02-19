@@ -1,319 +1,344 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D575405D3
-	for <linux-kernel@vger.kernel.org>; Mon, 19 Feb 2024 16:38:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27D263CF6B;
+	Mon, 19 Feb 2024 16:38:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708360682; cv=none; b=esOacke2jbCD8xhZufSuGYVILnvKFEm2eZIgYZ8hEBehht5tk4uC+xoWywYd+YM5vezU+oHt8KNmHUiwSZJIZQyQgc573Bkmvdd6ijjv6yoQSu+XgmIeL738l1NqDnaPPp9FKSeREgM4mHjTXUaksiniWDlwe/zaQc6gghfJxEw=
+	t=1708360706; cv=none; b=fCDj6nsuEha1WYhuFlyTVvXXwyRWKqBcq1oYWeqD7WJd2RR0J4TBk7VCyIAAmj8vI2wiNlVFE91es7KIQ0mFyIGZlzL/FCAJNgadLbyY5ZHJ2L85MoY05hbiiEdSqV/88JeVz14PBHYHQHhql4tDIBllTFTPQGwOOHTj6241o+0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708360682; c=relaxed/simple;
-	bh=lz1WhMP/iYx75AWsimvTEp9QvhmTQfseiRPDSsYwuqA=;
+	s=arc-20240116; t=1708360706; c=relaxed/simple;
+	bh=B0McRFiVQ4zvQ0zQtJQLBXN492Rof6/KLgH56S0njgY=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=t82reugSAFgGgNHehQpkFRpm0fXaAFLSRNhNi5Red/vbAWYyRTal8XQ7VlVDvUWgywYuu1vAybX1tKGPa5uDtZ37/eFgtwTY6Ow70nrrR7TmeCn5k3HwDMlnNU6bVeYBQR24CcHgkyeVoPTda6Q1Uhoy50hrOOjbIriqw4z7oEs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=seI9SUZU; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=u9Y/PCmM1TtLA0mcx5voDmTmSz9ptbrv/6Ml3lCrGWlGDSNbt11Q4jX8k+hj0DQsuzjuFwsvIwwl+eKjO/VD0+Na9HA2ECSb9moOmJis5h1dv6Rsab1I33juaKNI8CZMJYxo7SIWpFb9ZhHnAdTSc8AYBPOuNyhAohVZN4xPyCY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KFRSz/Gp; arc=none smtp.client-ip=209.85.216.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="seI9SUZU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E142FC433C7
-	for <linux-kernel@vger.kernel.org>; Mon, 19 Feb 2024 16:38:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708360681;
-	bh=lz1WhMP/iYx75AWsimvTEp9QvhmTQfseiRPDSsYwuqA=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=seI9SUZUpVhs52/fAuAyfsmZlgkb7A23HCCGn8MXvrosO0t0fnTvS4WGYvJaY4tHr
-	 eN4iQf7ZTmClUmEsZ4X9wPOI2JIwDoK09KRjuT8WDLWYLyoMIMpf03lFteuJVZDJLV
-	 MRSkv6ZHXpPShEoPEA+7LGZOzSkqwZVLJHkFS/L83exQvoA1hjfKGr2R2/xw/kK4ZZ
-	 WT6Eh0Lb3JQ9DvaTy+aMAuaI7HRdJtBafhd6VdCwRX4hCFzzov/GRvm3HpomPmU1fn
-	 yGqDTc5hs5Ts4QlrcGGyFTV5IlktBINcNLVHdyt+rvtxCOnbNk1wJfnulND9FS6Zmc
-	 RxBKqBlyDvOPg==
-Received: by mail-io1-f46.google.com with SMTP id ca18e2360f4ac-7c403dbf3adso240598639f.1
-        for <linux-kernel@vger.kernel.org>; Mon, 19 Feb 2024 08:38:01 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCV7tpyqe7qY85+IEvQjj3J5fm5jjey/AcoiL1L01SEpEPj2dOLxWXUseZPKozdQSNdIsOTVvjHC/7MHQzC7TbwNOiFonRhBgGpJ9whD
-X-Gm-Message-State: AOJu0Yyc4ZvGRPEfVVSUF7AAdtzTwTukznW4fH/0TkBHRr8GVr02tk3D
-	PlyenRsUNIVUf20+J8IksZiyVHaJphm4Nj/OpwBdxiefK+Pqk9IrL0cIuLUGJ7LA7dJXWdWZDZF
-	Zur+gJj9mroL3wfXs6d/QBW+r5MS5hDBH/NZj
-X-Google-Smtp-Source: AGHT+IEQJx4eINDk9han3urt19+iHSX8IAzHq0Cp0oJVoORn/uRvSyC3w3nU8x0uvF0lpvzWVw8MazXHYDBXh9Y3KVc=
-X-Received: by 2002:a05:6e02:1206:b0:365:1d36:91d7 with SMTP id
- a6-20020a056e02120600b003651d3691d7mr5402681ilq.27.1708360681065; Mon, 19 Feb
- 2024 08:38:01 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KFRSz/Gp"
+Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-2909a632e40so3203395a91.0;
+        Mon, 19 Feb 2024 08:38:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1708360704; x=1708965504; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=MphQCNHjjTUpCfQntf3thPefGsApaLmo+Ze0xknBPn4=;
+        b=KFRSz/Gp1Hc0n2sFM0l9ritqkfFCv1dmaDbQAwoizDpfReAlTqn2FfEkXIjuAf3uuD
+         TfJmlEDqn+K9DeZR003brFfZlZmvsIVv/NYnD+zomeLD4ywqGh03Sy9wY5YtBdxf4MnK
+         N6sK0dSN+nbcbJlI9QW5iWLcoaFnBqtflLJXawyaao5QzSmlVhUtewwiwx6qRMUUy1d+
+         ev1rd64Ax95cdhtvNsQvegUZ1VAJ3FOoHMgGopIufeYeKqXdRIgccQL5ayPqFMOeHGex
+         Df0aKqq1plIyo/qGF0qnLp174RwYeKq6WJx7stN8iRuL+rt2r2jSTlcfqWdzR0awpw47
+         fqUg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708360704; x=1708965504;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=MphQCNHjjTUpCfQntf3thPefGsApaLmo+Ze0xknBPn4=;
+        b=WvT0yi+G9/mFRdibBEoFDaAZd2xh3NAhbKyl9rquNRlmqW/CsiNb353KqPOKDg8hzb
+         3Wf3+9Z+OyaHwxPfEzaQ1kSz62i8Svrf3efGjTVXEcSVD+X/AdLcAAY6EAqj7mIX8nuM
+         V9hBxwvvuTK0Oi4mIt732fTNSFBRpuYY7BngTZn/4HwGyIpq9WL5rO5/GMDbJEAtayPh
+         N34WzrDISlYAbsVSDBACIOHz2+fhQMnyM5ek+RobKouA3fzAr6gO2hihYUgP8A1LlxrO
+         OgBNQ/NI9uowNj83jISYSW2oevQtZL+Pw/jY/E/o/wAIlsk1DfkerwQyj1ST2BLlEuXa
+         4OrA==
+X-Forwarded-Encrypted: i=1; AJvYcCV1T6UFk67IeHkPCpvGvOgfcNcMcjz/DfbaZPrI78QC+z1wn3SKjXaYwOefI5xMa6Cos4uRSbTCxKP5fOcgOtBfOd6/65zH4TCsksIz61YoVoiN/wDGz6MvnVxyb4Kotw6Eh8axWS4ypsUsI0+M3mw=
+X-Gm-Message-State: AOJu0YwUwb8qAMqcnQL0SDp7bMriNm7SMXWanrjUh/FHuoYixrsUcLk+
+	IJGNbbII9C7hxSElGVDjNcnkeCNXbhNeYXHvIB8TEnNEYGDkoVBDAEMKAjK+Ev9M4j6XQP1coL0
+	E8n5gY++DQgwredlrtWQiwCFaO6E=
+X-Google-Smtp-Source: AGHT+IGMquqVsiVFAvHYpiEy08vrbbMr27M6m+kodmL69uOLYyCtGxaqSJ1hgtPjTZJuNLz01YPEot/Q+Zp2MH8jooE=
+X-Received: by 2002:a17:90b:78e:b0:299:3e54:83fe with SMTP id
+ l14-20020a17090b078e00b002993e5483femr6100831pjz.36.1708360704235; Mon, 19
+ Feb 2024 08:38:24 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240219082040.7495-1-ryncsn@gmail.com>
-In-Reply-To: <20240219082040.7495-1-ryncsn@gmail.com>
-From: Chris Li <chrisl@kernel.org>
-Date: Mon, 19 Feb 2024 08:37:48 -0800
-X-Gmail-Original-Message-ID: <CAF8kJuNVtsaQm8iee=M3QP9961eeLOVWBhJ1uZ38akiaAAB6ng@mail.gmail.com>
-Message-ID: <CAF8kJuNVtsaQm8iee=M3QP9961eeLOVWBhJ1uZ38akiaAAB6ng@mail.gmail.com>
-Subject: Re: [PATCH v4] mm/swap: fix race when skipping swapcache
-To: Kairui Song <kasong@tencent.com>
-Cc: linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>, 
-	"Huang, Ying" <ying.huang@intel.com>, Minchan Kim <minchan@kernel.org>, 
-	Barry Song <v-songbaohua@oppo.com>, Yu Zhao <yuzhao@google.com>, SeongJae Park <sj@kernel.org>, 
-	David Hildenbrand <david@redhat.com>, Hugh Dickins <hughd@google.com>, 
-	Johannes Weiner <hannes@cmpxchg.org>, Matthew Wilcox <willy@infradead.org>, Michal Hocko <mhocko@suse.com>, 
-	Yosry Ahmed <yosryahmed@google.com>, Aaron Lu <aaron.lu@intel.com>, stable@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
+References: <6be2558b8462fc08095c24c9257563ab5f3ae013.1708001398.git.geert+renesas@glider.be>
+ <kycepdxukfsww3tnxoo5hoiuo3vcgpqqmynokzhtl4vodgm6zc@ih4uhw7gz4jh>
+ <CAMuHMdVf7ophCwKt-n_N-LBHV4+t14Gjb4d1O0T8FDk_9xMFtA@mail.gmail.com>
+ <CAHCN7xJ65RP8TO7cS0p5DwE6zru5NEF0_JA+8siT_OpSeLD7pA@mail.gmail.com>
+ <CAHCN7x+EnSU8qk5dBFco=0vkeknGq18qEN7vFmZs0_q83T_3+w@mail.gmail.com>
+ <CAHCN7xKffJ29zyjoJVAcy3b_d=-zkFzbL=URj4yWJWzYvRdB_Q@mail.gmail.com>
+ <TYCPR01MB11269CBE8429A31DE5002A5A5864C2@TYCPR01MB11269.jpnprd01.prod.outlook.com>
+ <nzrkujogauvn262ucxippwidyub6ikcohcjpbpn4hzj7rymctm@4owntgrmcquf>
+ <TYCPR01MB11269CBAA20275E11D9AD6500864C2@TYCPR01MB11269.jpnprd01.prod.outlook.com>
+ <wxwad77x2mxhhwdsbgiytzn6x54t4sywodjhzefwldo277njiz@ru7z54wxgelu>
+ <CAHCN7xJi-6W6x+OJmkNwOX45SM4WHD5zkN42ZOp8ZxFnp3YL5w@mail.gmail.com> <TYCPR01MB11269B2104687F091CFA3405F86512@TYCPR01MB11269.jpnprd01.prod.outlook.com>
+In-Reply-To: <TYCPR01MB11269B2104687F091CFA3405F86512@TYCPR01MB11269.jpnprd01.prod.outlook.com>
+From: Adam Ford <aford173@gmail.com>
+Date: Mon, 19 Feb 2024 10:38:12 -0600
+Message-ID: <CAHCN7x+BVYoeDC+Rt4PV-dxyMZ-0GyYfiRcXwmVWwursz5NAfg@mail.gmail.com>
+Subject: Re: RE: RE: [PATCH v2] drm/imagination: DRM_POWERVR should depend on ARCH_K3
+To: Biju Das <biju.das.jz@bp.renesas.com>
+Cc: Maxime Ripard <mripard@kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, 
+	Frank Binns <frank.binns@imgtec.com>, Matt Coster <matt.coster@imgtec.com>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Thomas Zimmermann <tzimmermann@suse.de>, 
+	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
+	Sarah Walker <sarah.walker@imgtec.com>, 
+	"dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
+	Javier Martinez Canillas <javierm@redhat.com>, Nishanth Menon <nm@ti.com>, Marek Vasut <marek.vasut@mailbox.org>, 
+	Linux-Renesas <linux-renesas-soc@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Acked-by: Chris Li <chrisl@kernel.org>
+On Mon, Feb 19, 2024 at 1:45=E2=80=AFAM Biju Das <biju.das.jz@bp.renesas.co=
+m> wrote:
+>
+> Hi Adam,
+>
+> > -----Original Message-----
+> > From: Adam Ford <aford173@gmail.com>
+> > Sent: Sunday, February 18, 2024 11:26 PM
+> > Subject: Re: RE: RE: [PATCH v2] drm/imagination: DRM_POWERVR should dep=
+end
+> > on ARCH_K3
+> >
+> > On Fri, Feb 16, 2024 at 8:14=E2=80=AFAM Maxime Ripard <mripard@kernel.o=
+rg> wrote:
+> > >
+> > > On Fri, Feb 16, 2024 at 09:13:14AM +0000, Biju Das wrote:
+> > > > Hi Maxime Ripard,
+> > > >
+> > > > > -----Original Message-----
+> > > > > From: Maxime Ripard <mripard@kernel.org>
+> > > > > Sent: Friday, February 16, 2024 9:05 AM
+> > > > > Subject: Re: RE: [PATCH v2] drm/imagination: DRM_POWERVR should
+> > > > > depend on
+> > > > > ARCH_K3
+> > > > >
+> > > > > On Fri, Feb 16, 2024 at 08:47:46AM +0000, Biju Das wrote:
+> > > > > > Hi Adam Ford,
+> > > > > >
+> > > > > > > -----Original Message-----
+> > > > > > > From: Adam Ford <aford173@gmail.com>
+> > > > > > > Sent: Thursday, February 15, 2024 11:36 PM
+> > > > > > > Subject: Re: [PATCH v2] drm/imagination: DRM_POWERVR should
+> > > > > > > depend on
+> > > > > > > ARCH_K3
+> > > > > > >
+> > > > > > > On Thu, Feb 15, 2024 at 11:22=E2=80=AFAM Adam Ford <aford173@=
+gmail.com>
+> > wrote:
+> > > > > > > >
+> > > > > > > > On Thu, Feb 15, 2024 at 11:10=E2=80=AFAM Adam Ford
+> > > > > > > > <aford173@gmail.com>
+> > > > > wrote:
+> > > > > > > > >
+> > > > > > > > > On Thu, Feb 15, 2024 at 10:54=E2=80=AFAM Geert Uytterhoev=
+en
+> > > > > > > > > <geert@linux-m68k.org> wrote:
+> > > > > > > > > >
+> > > > > > > > > > Hi Maxime,
+> > > > > > > > > >
+> > > > > > > > > > On Thu, Feb 15, 2024 at 5:18=E2=80=AFPM Maxime Ripard
+> > > > > > > > > > <mripard@kernel.org>
+> > > > > > > wrote:
+> > > > > > > > > > > On Thu, Feb 15, 2024 at 01:50:09PM +0100, Geert
+> > > > > > > > > > > Uytterhoeven
+> > > > > > > wrote:
+> > > > > > > > > > > > Using the Imagination Technologies PowerVR Series 6
+> > > > > > > > > > > > GPU requires a proprietary firmware image, which is
+> > > > > > > > > > > > currently only available for Texas Instruments K3
+> > > > > > > > > > > > AM62x SoCs.  Hence add a dependency on ARCH_K3, to
+> > > > > > > > > > > > prevent asking the user about this driver when
+> > > > > > > > > > > > configuring a kernel without Texas Instruments K3
+> > > > > > > Multicore SoC support.
+> > > > > > > > > > >
+> > > > > > > > > > > This wasn't making sense the first time you sent it,
+> > > > > > > > > > > and now that commit log is just plain wrong. We have
+> > > > > > > > > > > firmwares for the G6110, GX6250, GX6650, BXE-4-32, an=
+d
+> > > > > > > > > > > BXS-4-64 models, which can be found on (at least)
+> > > > > > > > > > > Renesas, Mediatek, Rockchip, TI and StarFive, so
+> > > > > > > > > > > across three
+> > > > > > > > > >
+> > > > > > > > > > I am so happy to be proven wrong!
+> > > > > > > > > > Yeah, GX6650 is found on e.g. R-Car H3, and GX6250 on e=
+.g.
+> > > > > > > > > > R-Car M3-
+> > > > > > > W.
+> > > > > > > > > >
+> > > > > > > > > > > architectures and 5 platforms. In two months.
+> > > > > > > > > >
+> > > > > > > > > > That sounds like great progress, thanks a lot!
+> > > > > > > > > >
+> > > > > > > > > Geert,
+> > > > > > > > >
+> > > > > > > > > > Where can I find these firmwares? Linux-firmware[1]
+> > > > > > > > > > seems to lack all but the original K3 AM62x one.
+> > > > > > > > >
+> > > > > > > > > I think PowerVR has a repo [1], but the last time I
+> > > > > > > > > checked it, the BVNC for the firmware didn't match what
+> > > > > > > > > was necessary for the GX6250 on the RZ/G2M.  I can't
+> > > > > > > > > remember what the corresponding R-Car3 model is.  I
+> > > > > > > > > haven't tried recently because I was told more
+> > > > > > > > > documentation for firmware porting would be delayed until
+> > everything was pushed into the kernel and Mesa.
+> > > > > > > > > Maybe there is a better repo and/or newer firmware somewh=
+ere
+> > else.
+> > > > > > > > >
+> > > > > > > > I should have doubled checked the repo contents before I
+> > > > > > > > sent my last e-mail , but it appears the firmware  [2] for
+> > > > > > > > the RZ/G2M, might be present now. I don't know if there are
+> > > > > > > > driver updates necessary. I checked my e-mails, but I didn'=
+t
+> > > > > > > > see any notification, or I would have tried it earlier.
+> > > > > > > > Either way, thank you Frank for adding it.  I'll try to tes=
+t
+> > when I have some time.
+> > > > > > > >
+> > > > > > >
+> > > > > > > I don't have the proper version of Mesa setup yet, but for
+> > > > > > > what it's worth, the firmware loads without error, and it
+> > doesn't hang.
+> > > > > >
+> > > > > > Based on [1] and [2],
+> > > > > >
+> > > > > > kmscube should work on R-Car as it works on RZ/G2L with panfros=
+t
+> > > > > > as earlier version of RZ/G2L which uses drm based on RCar-Du,
+> > > > > > later changed
+> > > > > to rzg2l-du.
+> > > > >
+> > > > > IIRC, the mesa support isn't there yet for kmscube to start.
+> > > >
+> > > > What about glmark2? I tested glmark2 as well.
+> > >
+> > > It's not really a matter of kmscube itself, but the interaction with
+> > > the compositor entirely. You can run a headless vulkan rendering, but
+> > > an application that renders to a window won't work.
+> >
+> > I have made a little progress.  I have Ubuntu running on an RZ/G2M (Rog=
+ue
+> > GX6250) with a device tree configuring the GPU and the GPU loads with
+> > firmware.
+> >
+> >   powervr fd000000.gpu: [drm] loaded firmware
+> > powervr/rogue_4.45.2.58_v1.fw
+> >   powervr fd000000.gpu: [drm] FW version v1.0 (build 6513336 OS)
+> >   [drm] Initialized powervr 1.0.0 20230904 for fd000000.gpu on minor 0
+> >
+> > drmdevice lists card0 and renderD128
+> > --- Checking the number of DRM device available ---
+> > --- Devices reported 2 ---
+> > --- Retrieving devices information (PCI device revision is ignored) ---
+> > device[0]
+> > +-> available_nodes 0x05
+> > +-> nodes
+> > |   +-> nodes[0] /dev/dri/card0
+> > |   +-> nodes[2] /dev/dri/renderD128
+> > +-> bustype 0002
+> > |   +-> platform
+> > |       +-> fullname /soc/gpu@fd000000
+> > +-> deviceinfo
+> >     +-> platform
+> >         +-> compatible
+> >                     renesas,r8a774a1-gpu
+> >                     img,img-axe
+> >
+> > There is more to this dump, but it seems to repeat. I wanted to show th=
+at
+> > it seems like it's trying to work.
+> >
+> > I think I need to modify the powervr code in mesa to recognize the
+> > renesas,r8a774a1-gpu and associate it with the rcar-du, but I am not su=
+re,
+> > and I am hoping someone might be able to provide some guidance, since I
+> > think I am missing something somewhere. I modified pvr_device.c in the
+> > mesa driver to attempt do this:
+> >
+> > /* This is the list of supported DRM render/display driver configs. */
+> > static const struct pvr_drm_device_config pvr_drm_configs[] =3D {
+> >    DEF_CONFIG("mediatek,mt8173-gpu", "mediatek-drm"),
+> >    DEF_CONFIG("ti,am62-gpu", "ti,am625-dss"),
+> >    DEF_CONFIG("renesas,r8a774a1-gpu", "rcar-du"), };
+> >
+> > When I run modetest -M rcar-du, I can see the encoders and connectors a=
+nd
+> > I can display test patterns, so the rcar-du is working.
+> >
+> > I built Mesa 24.0.1 with the following options:
+> >
+> > meson setup builddir -Dvulkan-drivers=3Dimagination-experimental
+> > -Dimagination-srv=3Dtrue -Dtools=3Dall -Dgallium-drivers=3Dzink,kmsro,s=
+wrast
+> >
+> > I have tried to set PVR_I_WANT_A_BROKEN_VULKAN_DRIVER=3D1 the Mesa
+> > documentation for the powerVR, and I have exported the variable for
+> > VK_ICD_FILENAMES to point to the powervr json file.
+> >
+> > when I try to run glmark2-drm, I was expecting the GL reddered to be th=
+e
+> > powervr, but it keeps using the
+> > GL_RENDERER:    llvmpipe (LLVM 15.0.7, 128 bits)
+> >
+> > I realize this driver is still in its infancy, but I was hoping someone
+> > could give me some guidance to let me know if the work to do is on the
+> > Mesa side or the rcar-du driver side, or something else.
+> >
+> > I rebuilt both libdrm and mesa.  While I don't get any errors, I also
+> > don't get the hardware acceleration I was hoping for.
+> >
+> > I even tried  PVR_I_WANT_A_BROKEN_VULKAN_DRIVER=3D1
+> > MESA_LOADER_DRIVER_OVERRIDE=3Dzink MESA_DEBUG=3Dcontect glmark2-drm
+> >
+> > ...but it only renders with llvmpipe
+> >
+> >     glmark2 2023.01
+> > =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D
+> >     OpenGL Information
+> >     GL_VENDOR:      Mesa
+> >     GL_RENDERER:    llvmpipe (LLVM 15.0.7, 128 bits)
+> >     GL_VERSION:     4.5 (Compatibility Profile) Mesa 24.0.1
+> >     Surface Config: buf=3D32 r=3D8 g=3D8 b=3D8 a=3D8 depth=3D32 stencil=
+=3D0 samples=3D0
+> >     Surface Size:   3840x2160 fullscreen
+> >
+> >
+> > I am not as familiar with the Mesa side, but if I can get this working =
+to
+> > a point where something is rendered, even if it's not 100% compliant, I=
+'d
+> > like to push patches to the kernel and/or Mesa if necessary.
+>
+> FYI, the glmark2 I tested on RZ/G2L with panfrost is with wayland window =
+system [1].
+>
+> Maybe there should be an panfrost equivalent package for powevr is availa=
+ble in mesa??
+> That is the only difference w.r.to panfrost.
+>
+> PACKAGECONFIG_append_pn-mesa =3D " egl kmsro panfrost"
+>
 
-Chris
+I am not using Yocto, because I am using Ubuntu, but I have build Mesa
+per the instructions they provided, but the glue that connects the
+powervr to the rcar-du isn't as clear.  I looked at the panfrost
+implementation, but I didn't see anything obvious.   It looks like the
+panfrost integrates with the kms driver, which I was rather expecting
+powervr would do.  I can tell the mesa library is build built and
+loaded but it's not attempting to use it for some reason
 
-On Mon, Feb 19, 2024 at 12:21=E2=80=AFAM Kairui Song <ryncsn@gmail.com> wro=
-te:
+The GX6250 that is supported looks like it needs some additional
+look-up-tables added to src/imagination/common/pvr_device_info.c
+inside Mesa because the LUT they have is for a different BVNC despite
+the firmware for the BVNC being posted.  I'll have to see if I can
+find documentation for the the features that are enabled or not within
+this variant of the the GX6250.
+
+adam
+
 >
-> From: Kairui Song <kasong@tencent.com>
+> [1] https://renesas.info/wiki/RZ-G/Panfrost_for_RZG2L
 >
-> When skipping swapcache for SWP_SYNCHRONOUS_IO, if two or more threads
-> swapin the same entry at the same time, they get different pages (A, B).
-> Before one thread (T0) finishes the swapin and installs page (A)
-> to the PTE, another thread (T1) could finish swapin of page (B),
-> swap_free the entry, then swap out the possibly modified page
-> reusing the same entry. It breaks the pte_same check in (T0) because
-> PTE value is unchanged, causing ABA problem. Thread (T0) will
-> install a stalled page (A) into the PTE and cause data corruption.
 >
-> One possible callstack is like this:
->
-> CPU0                                 CPU1
-> ----                                 ----
-> do_swap_page()                       do_swap_page() with same entry
-> <direct swapin path>                 <direct swapin path>
-> <alloc page A>                       <alloc page B>
-> swap_read_folio() <- read to page A  swap_read_folio() <- read to page B
-> <slow on later locks or interrupt>   <finished swapin first>
-> ...                                  set_pte_at()
->                                      swap_free() <- entry is free
->                                      <write to page B, now page A stalled=
->
->                                      <swap out page B to same swap entry>
-> pte_same() <- Check pass, PTE seems
->               unchanged, but page A
->               is stalled!
-> swap_free() <- page B content lost!
-> set_pte_at() <- staled page A installed!
->
-> And besides, for ZRAM, swap_free() allows the swap device to discard
-> the entry content, so even if page (B) is not modified, if
-> swap_read_folio() on CPU0 happens later than swap_free() on CPU1,
-> it may also cause data loss.
->
-> To fix this, reuse swapcache_prepare which will pin the swap entry using
-> the cache flag, and allow only one thread to swap it in, also prevent
-> any parallel code from putting the entry in the cache. Release the pin
-> after PT unlocked.
->
-> Racers just loop and wait since it's a rare and very short event.
-> A schedule_timeout_uninterruptible(1) call is added to avoid repeated
-> page faults wasting too much CPU, causing livelock or adding too much
-> noise to perf statistics. A similar livelock issue was described in
-> commit 029c4628b2eb ("mm: swap: get rid of livelock in swapin readahead")
->
-> Reproducer:
->
-> This race issue can be triggered easily using a well constructed
-> reproducer and patched brd (with a delay in read path) [1]:
->
-> With latest 6.8 mainline, race caused data loss can be observed easily:
-> $ gcc -g -lpthread test-thread-swap-race.c && ./a.out
->   Polulating 32MB of memory region...
->   Keep swapping out...
->   Starting round 0...
->   Spawning 65536 workers...
->   32746 workers spawned, wait for done...
->   Round 0: Error on 0x5aa00, expected 32746, got 32743, 3 data loss!
->   Round 0: Error on 0x395200, expected 32746, got 32743, 3 data loss!
->   Round 0: Error on 0x3fd000, expected 32746, got 32737, 9 data loss!
->   Round 0 Failed, 15 data loss!
->
-> This reproducer spawns multiple threads sharing the same memory region
-> using a small swap device. Every two threads updates mapped pages one by
-> one in opposite direction trying to create a race, with one dedicated
-> thread keep swapping out the data out using madvise.
->
-> The reproducer created a reproduce rate of about once every 5 minutes,
-> so the race should be totally possible in production.
->
-> After this patch, I ran the reproducer for over a few hundred rounds
-> and no data loss observed.
->
-> Performance overhead is minimal, microbenchmark swapin 10G from 32G
-> zram:
->
-> Before:     10934698 us
-> After:      11157121 us
-> Cached:     13155355 us (Dropping SWP_SYNCHRONOUS_IO flag)
->
-> Fixes: 0bcac06f27d7 ("mm, swap: skip swapcache for swapin of synchronous =
-device")
-> Link: https://github.com/ryncsn/emm-test-project/tree/master/swap-stress-=
-race [1]
-> Reported-by: "Huang, Ying" <ying.huang@intel.com>
-> Closes: https://lore.kernel.org/lkml/87bk92gqpx.fsf_-_@yhuang6-desk2.ccr.=
-corp.intel.com/
-> Signed-off-by: Kairui Song <kasong@tencent.com>
-> Cc: stable@vger.kernel.org
->
-> ---
-> V3: https://lore.kernel.org/all/20240216095105.14502-1-ryncsn@gmail.com/
-> Update from V3:
-> - Use schedule_timeout_uninterruptible(1) for now instead of schedule() t=
-o
->   prevent the busy faulting task holds CPU and livelocks [Huang, Ying]
->
-> V2: https://lore.kernel.org/all/20240206182559.32264-1-ryncsn@gmail.com/
-> Update from V2:
-> - Add a schedule() if raced to prevent repeated page faults wasting CPU
->   and add noise to perf statistics.
-> - Use a bool to state the special case instead of reusing existing
->   variables fixing error handling [Minchan Kim].
->
-> V1: https://lore.kernel.org/all/20240205110959.4021-1-ryncsn@gmail.com/
-> Update from V1:
-> - Add some words on ZRAM case, it will discard swap content on swap_free
->   so the race window is a bit different but cure is the same. [Barry Song=
-]
-> - Update comments make it cleaner [Huang, Ying]
-> - Add a function place holder to fix CONFIG_SWAP=3Dn built [SeongJae Park=
-]
-> - Update the commit message and summary, refer to SWP_SYNCHRONOUS_IO
->   instead of "direct swapin path" [Yu Zhao]
-> - Update commit message.
-> - Collect Review and Acks.
->
->  include/linux/swap.h |  5 +++++
->  mm/memory.c          | 20 ++++++++++++++++++++
->  mm/swap.h            |  5 +++++
->  mm/swapfile.c        | 13 +++++++++++++
->  4 files changed, 43 insertions(+)
->
-> diff --git a/include/linux/swap.h b/include/linux/swap.h
-> index 4db00ddad261..8d28f6091a32 100644
-> --- a/include/linux/swap.h
-> +++ b/include/linux/swap.h
-> @@ -549,6 +549,11 @@ static inline int swap_duplicate(swp_entry_t swp)
->         return 0;
->  }
->
-> +static inline int swapcache_prepare(swp_entry_t swp)
-> +{
-> +       return 0;
-> +}
-> +
->  static inline void swap_free(swp_entry_t swp)
->  {
->  }
-> diff --git a/mm/memory.c b/mm/memory.c
-> index 7e1f4849463a..a99f5e7be9a5 100644
-> --- a/mm/memory.c
-> +++ b/mm/memory.c
-> @@ -3799,6 +3799,7 @@ vm_fault_t do_swap_page(struct vm_fault *vmf)
->         struct page *page;
->         struct swap_info_struct *si =3D NULL;
->         rmap_t rmap_flags =3D RMAP_NONE;
-> +       bool need_clear_cache =3D false;
->         bool exclusive =3D false;
->         swp_entry_t entry;
->         pte_t pte;
-> @@ -3867,6 +3868,20 @@ vm_fault_t do_swap_page(struct vm_fault *vmf)
->         if (!folio) {
->                 if (data_race(si->flags & SWP_SYNCHRONOUS_IO) &&
->                     __swap_count(entry) =3D=3D 1) {
-> +                       /*
-> +                        * Prevent parallel swapin from proceeding with
-> +                        * the cache flag. Otherwise, another thread may
-> +                        * finish swapin first, free the entry, and swapo=
-ut
-> +                        * reusing the same entry. It's undetectable as
-> +                        * pte_same() returns true due to entry reuse.
-> +                        */
-> +                       if (swapcache_prepare(entry)) {
-> +                               /* Relax a bit to prevent rapid repeated =
-page faults */
-> +                               schedule_timeout_uninterruptible(1);
-> +                               goto out;
-> +                       }
-> +                       need_clear_cache =3D true;
-> +
->                         /* skip swapcache */
->                         folio =3D vma_alloc_folio(GFP_HIGHUSER_MOVABLE, 0=
-,
->                                                 vma, vmf->address, false)=
-;
-> @@ -4117,6 +4132,9 @@ vm_fault_t do_swap_page(struct vm_fault *vmf)
->         if (vmf->pte)
->                 pte_unmap_unlock(vmf->pte, vmf->ptl);
->  out:
-> +       /* Clear the swap cache pin for direct swapin after PTL unlock */
-> +       if (need_clear_cache)
-> +               swapcache_clear(si, entry);
->         if (si)
->                 put_swap_device(si);
->         return ret;
-> @@ -4131,6 +4149,8 @@ vm_fault_t do_swap_page(struct vm_fault *vmf)
->                 folio_unlock(swapcache);
->                 folio_put(swapcache);
->         }
-> +       if (need_clear_cache)
-> +               swapcache_clear(si, entry);
->         if (si)
->                 put_swap_device(si);
->         return ret;
-> diff --git a/mm/swap.h b/mm/swap.h
-> index 758c46ca671e..fc2f6ade7f80 100644
-> --- a/mm/swap.h
-> +++ b/mm/swap.h
-> @@ -41,6 +41,7 @@ void __delete_from_swap_cache(struct folio *folio,
->  void delete_from_swap_cache(struct folio *folio);
->  void clear_shadow_from_swap_cache(int type, unsigned long begin,
->                                   unsigned long end);
-> +void swapcache_clear(struct swap_info_struct *si, swp_entry_t entry);
->  struct folio *swap_cache_get_folio(swp_entry_t entry,
->                 struct vm_area_struct *vma, unsigned long addr);
->  struct folio *filemap_get_incore_folio(struct address_space *mapping,
-> @@ -97,6 +98,10 @@ static inline int swap_writepage(struct page *p, struc=
-t writeback_control *wbc)
->         return 0;
->  }
->
-> +static inline void swapcache_clear(struct swap_info_struct *si, swp_entr=
-y_t entry)
-> +{
-> +}
-> +
->  static inline struct folio *swap_cache_get_folio(swp_entry_t entry,
->                 struct vm_area_struct *vma, unsigned long addr)
->  {
-> diff --git a/mm/swapfile.c b/mm/swapfile.c
-> index 556ff7347d5f..746aa9da5302 100644
-> --- a/mm/swapfile.c
-> +++ b/mm/swapfile.c
-> @@ -3365,6 +3365,19 @@ int swapcache_prepare(swp_entry_t entry)
->         return __swap_duplicate(entry, SWAP_HAS_CACHE);
->  }
->
-> +void swapcache_clear(struct swap_info_struct *si, swp_entry_t entry)
-> +{
-> +       struct swap_cluster_info *ci;
-> +       unsigned long offset =3D swp_offset(entry);
-> +       unsigned char usage;
-> +
-> +       ci =3D lock_cluster_or_swap_info(si, offset);
-> +       usage =3D __swap_entry_free_locked(si, offset, SWAP_HAS_CACHE);
-> +       unlock_cluster_or_swap_info(si, ci);
-> +       if (!usage)
-> +               free_swap_slot(entry);
-> +}
-> +
->  struct swap_info_struct *swp_swap_info(swp_entry_t entry)
->  {
->         return swap_type_to_swap_info(swp_type(entry));
-> --
-> 2.43.0
->
+> Cheers,
+> Biju
 >
