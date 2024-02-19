@@ -1,118 +1,130 @@
-Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 440A639840;
-	Mon, 19 Feb 2024 15:05:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 890E31EA80
+	for <linux-kernel@vger.kernel.org>; Mon, 19 Feb 2024 15:06:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708355111; cv=none; b=k50xypwXtgWhVzlO9vKiAWIj164oUGahMg4N8aHvf527BGADDrRbV3edPvVLkg1u9kDfA1HdstvUIwslOEac0/hQhNgD6uI0QbAnvoTZQCLpEc53qQqmZFxVVm6W8IPv67kr7vSe8DqFi16/5XNuILOgtFn3NejryysZy11y+e4=
+	t=1708355187; cv=none; b=NuYoZCfiATrTNNLdzSlx6hyk7c73AulBlY836ub3HPBTGvcyiwF6TSaqXjjivJnFRckAxvwuoP8V+DClJqKRXyeLWnHKaTNELN7nq2FpSs3mfc1Nyo1gFSPt/nJnZS6ZaGwdy4fE13EuiINgO3LSecpmFbmif8OkrX6BIupVUW4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708355111; c=relaxed/simple;
-	bh=mThBu7chpWRHZ/eEmh5Wi1fkqZBPlPjWw7asRBsccmY=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=icJGv0PTNLnlSNLKLF3ubx7pep1HeTcvHms8zzpL5AVuRT5rgs2onGBFp4G4iSgaoP0vg4ajdSotIwc8zSettLLCVKt3hHxS6Ye9tqfYAdloUUd9fEnQTUUbDHBTaVp+kSDoE7edxy/0kLX8XPhYtMpDUieDd86532wUIoFFbBk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=n9i6rkpa; arc=none smtp.client-ip=217.70.183.200
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1708355187; c=relaxed/simple;
+	bh=xujvCyNAGwSt8/pxhQ8N9r2IAcQcDpwpPaKRWKwxogI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XNwTk/zgV7tQP3Nx2Kxs4xY+H12kNjLDDuDeCJc42eItY7rQpBTAL9O+QavWorwhnkWVtV16pCfQigSmgZb7N7eP1U8DJa/cFQveX6yJKheMYT+2o8PqAaH58h2sNFHGyRpSGDJpOw647z02Vdqz57ssxgc3WxAWxyUaaOOaOMY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=DeopLyq9; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="n9i6rkpa"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id F35642000F;
-	Mon, 19 Feb 2024 15:04:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1708355102;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DeopLyq9"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1708355184;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=A3H20W4m5T0MQHito7PWJMgAUf170u+wnoIcj9CBeGs=;
-	b=n9i6rkparoEsMUZaj1NFUkTGHkUZ7366jnD14lM7yiQ3pzh3bu1sbcYIoVNTlfu+2weMpB
-	xX1e4XVRRX6kAZlviZvJSkWPy2siX37329J0hNYY68kmKGPtuUM3kHU9kATl00GGGnTZ/g
-	ap9p9bnTpu9X8TaJjHsV24PtarXqHgdyvXCnBTXKM6r1+D5vK8Ewoue0a+GgFqdjswCKm1
-	IztGNM9m3OkSpjikr65CczcFiaPfHr+nzwUor5QCFGruE0+L3RA15VHIMjQ+5rYQLfXX8G
-	Pq954+ZGwNbC/m0F6BgPHXQ8V3sxBeIGSXp0d6ZGEOK4rn+mNzX717XSSPEZWQ==
-Date: Mon, 19 Feb 2024 16:04:56 +0100
-From: =?UTF-8?B?S8O2cnk=?= Maincent <kory.maincent@bootlin.com>
-To: Jakub Kicinski <kuba@kernel.org>
-Cc: "David S. Miller" <davem@davemloft.net>, Eric Dumazet
- <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Jonathan Corbet
- <corbet@lwn.net>, Luis Chamberlain <mcgrof@kernel.org>, Russ Weight
- <russ.weight@linux.dev>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- "Rafael J. Wysocki" <rafael@kernel.org>, Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley
- <conor+dt@kernel.org>, Oleksij Rempel <o.rempel@pengutronix.de>, Mark Brown
- <broonie@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Andrew Lunn
- <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>, Russell King
- <linux@armlinux.org.uk>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-doc@vger.kernel.org, devicetree@vger.kernel.org, Dent Project
- <dentproject@linuxfoundation.org>
-Subject: Re: [PATCH net-next v4 05/17] net: pse-pd: Introduce PSE types
- enumeration
-Message-ID: <20240219160456.0b5e8de3@kmaincent-XPS-13-7390>
-In-Reply-To: <20240216173638.4bb12af2@kernel.org>
-References: <20240215-feature_poe-v4-0-35bb4c23266c@bootlin.com>
-	<20240215-feature_poe-v4-5-35bb4c23266c@bootlin.com>
-	<20240215105846.6dd48886@kernel.org>
-	<20240216104211.2c11d1cc@kmaincent-XPS-13-7390>
-	<20240216173638.4bb12af2@kernel.org>
-Organization: bootlin
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+	bh=iHnTRavFzccEVzSoX1iUfpV/3djTz6kfAI7fI53+wUc=;
+	b=DeopLyq953Ddatsf4E0xN0/tiRz1UoewgkHOLugVleTH2c/Z/l06rhrePNI90q+Gle7nQv
+	fGa310rUT2bYVsXcH15sFyNy4vox49+6TEJZz+Q45HHzFZQij6a/sGJ6vlgIniHOikYmgA
+	C0RS+5IiJp8/xSTtpqlz88KSO6JXGMQ=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-612-1AJLftrBPSisvJTcIv_9rg-1; Mon, 19 Feb 2024 10:06:20 -0500
+X-MC-Unique: 1AJLftrBPSisvJTcIv_9rg-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.rdu2.redhat.com [10.11.54.2])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id BAC4E106D112;
+	Mon, 19 Feb 2024 15:06:18 +0000 (UTC)
+Received: from lorien.usersys.redhat.com (unknown [10.39.195.107])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 83A7340C9444;
+	Mon, 19 Feb 2024 15:06:13 +0000 (UTC)
+Date: Mon, 19 Feb 2024 10:06:10 -0500
+From: Phil Auld <pauld@redhat.com>
+To: Byungchul Park <byungchul@sk.com>
+Cc: mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
+	vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
+	rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
+	bristot@redhat.com, vschneid@redhat.com,
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+	kernel_team@skhynix.com, akpm@linux-foundation.org
+Subject: Re: [PATCH v4] sched/numa, mm: do not try to migrate memory to
+ memoryless nodes
+Message-ID: <20240219150610.GB184804@lorien.usersys.redhat.com>
+References: <20240219041920.1183-1-byungchul@sk.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-GND-Sasl: kory.maincent@bootlin.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240219041920.1183-1-byungchul@sk.com>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.2
 
-On Fri, 16 Feb 2024 17:36:38 -0800
-Jakub Kicinski <kuba@kernel.org> wrote:
-> > > but why the separate header? Is it going to be used in other parts of
-> > > uAPI than just in ethtool?   =20
-> >=20
-> > We might use it in pse core if capabilities between PoE and PoDL differ=
- but
-> > I am not sure about it.
-> > Do you prefer to move it to ethtool header and add prefix ETHTOOL_ to t=
-he
-> > enum values? =20
->=20
-> I don't know enough to have an opinion :) Whatever you end up doing,
-> it's probably worth documenting the reason for the choice in the commit
-> message?
+On Mon, Feb 19, 2024 at 01:19:20PM +0900 Byungchul Park wrote:
+> Changes from v3:
+> 	1. Rewrite the comment in code and the commit message to make it
+> 	   more clear. (feedbacked by Oscar Salvador)
+> 	2. Add "Reviewed-by: Oscar Salvador <osalvador@suse.de>"
+> 
+> Changes from v2:
+> 	1. Rewrite the comment in code and the commit message becasue it
+> 	   turns out that this patch is not the real fix for the oops
+> 	   descriped. The real fix goes in another patch below:
+> 
+> 	   https://lore.kernel.org/lkml/20240216111502.79759-1-byungchul@sk.com/
+> 
+> Changes from v1:
+> 	1. Trim the verbose oops in the commit message. (feedbacked by
+> 	   Phil Auld)
+> 	2. Rewrite a comment in code. (feedbacked by Phil Auld)
+> 
+> --->8---
+> From 98f5d472c08e3ed5b9b6543290d392a2e50fcf3c Mon Sep 17 00:00:00 2001
+> From: Byungchul Park <byungchul@sk.com>
+> Date: Mon, 19 Feb 2024 13:10:47 +0900
+> Subject: [PATCH v4] sched/numa, mm: do not try to migrate memory to memoryless nodes
+> 
+> Memoryless nodes do not have any memory to migrate to, so stop trying
+> it.
+> 
+> Signed-off-by: Byungchul Park <byungchul@sk.com>
+> Reviewed-by: Oscar Salvador <osalvador@suse.de>
+> ---
+>  kernel/sched/fair.c | 6 ++++++
+>  1 file changed, 6 insertions(+)
+> 
+> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> index d7a3c63a2171..3e3b44ae72d1 100644
+> --- a/kernel/sched/fair.c
+> +++ b/kernel/sched/fair.c
+> @@ -1828,6 +1828,12 @@ bool should_numa_migrate_memory(struct task_struct *p, struct folio *folio,
+>  	int dst_nid = cpu_to_node(dst_cpu);
+>  	int last_cpupid, this_cpupid;
+>  
+> +	/*
+> +	 * Cannot migrate to memoryless nodes.
+> +	 */
+> +	if (!node_state(dst_nid, N_MEMORY))
+> +		return false;
+> +
+>  	/*
+>  	 * The pages in slow memory node should be migrated according
+>  	 * to hot/cold instead of private/shared.
+> -- 
+> 2.17.1
+> 
+> 
 
-Mmh, I am still not sure of the best choice on this. I think I will move it=
- to
-ethtool as you suggested.
+Sorry, hadn't gotten far enough to see this version when I replied to v3...
 
-> > > > This patch is sponsored by Dent Project
-> > > > <dentproject@linuxfoundation.org>     =20
-> > >=20
-> > > side-note: no objections to the line but for accounting purposes
-> > > (i.e. when we generate development stats) we use the Author / From
-> > > line exclusively. So it'd be easier to compute stats of things funded
-> > > by Dent if you used:
-> > >=20
-> > > From: Kory Maincent (Dent Project) <kory.maincent@bootlin.com>
-> > >=20
-> > > but that's entirely up to you :)   =20
-> >=20
-> > Does adding the line side to the SOB in the commit message is sufficien=
-t or
-> > should I modify the git send email config? =20
->=20
-> I think you can sed -i s/// the patches? When the From in the email
-> file doesn't match your git config IIUC git will include the from line
-> in the body and pick it up from them. IOW it will work. The scripts look
-> at git author so s-o-b won't do much.
+Reviewed-by: Phil Auld <pauld@redhat.com>
 
-Ok, I will stick to the simple sentence then. ;)
-Thanks for the information!
 
-Regards,
---=20
-K=C3=B6ry Maincent, Bootlin
-Embedded Linux and kernel engineering
-https://bootlin.com
+Cheers,
+Phil
+
+-- 
+
