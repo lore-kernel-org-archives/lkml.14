@@ -1,125 +1,142 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 844C720DC5
-	for <linux-kernel@vger.kernel.org>; Mon, 19 Feb 2024 07:22:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5150B20DEB
+	for <linux-kernel@vger.kernel.org>; Mon, 19 Feb 2024 07:22:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708327358; cv=none; b=A8SeKGhs+PEkqX45duJcLRNtBMa6nXIr6mCRFzpkxwe6iY346npkZsv6KmLIWHpNYDsDg1VujiiPUnu+qKfxDK6gm+u5cXzKXSbzpt6+ONOcp2iIeXhba5B1bM9zLwar4c+/+B4KJV8zblTE0+U8Ry1MxNeCg5W0A+hhqFpN6zM=
+	t=1708327361; cv=none; b=T4wMhggy3+cE19/4uGIqUhEp6XFQgid2B0Pg/ZIkdurmVYyUNcl5fJusDshbNwRyNffuTza4KlJQs9ofYgAvtPoj8hxBSVDCCvhj02qGzVGVJZFvTxhstzwk1Uti53IO/A+AGSoMq850dtF60tv8p8ZbSRhOCSsCT5EnAMohvWI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708327358; c=relaxed/simple;
-	bh=UP1nq5CRx3BtEKG76frDqPHJU12i2jRZco/i+UQSPTI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XSDK7Yb65XC/iDzkNOLThbj4XX1g+jPxQvhow4kC2I/4S0sj6dUzHO5lOaVELMvqz4JOSQoBD4sqC4AQRFIomY6hdJTtwJixJEU6XSaGA+illTISIqISBcsYZ3aLaEAbLN4Do7YnWAjAV4I+OBCEUJxw59SsLIZXU4eZiinTKw4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rbxyi-0007Ri-Va; Mon, 19 Feb 2024 08:22:16 +0100
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rbxyh-001bBt-SQ; Mon, 19 Feb 2024 08:22:15 +0100
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rbxyh-007apT-2W;
-	Mon, 19 Feb 2024 08:22:15 +0100
-Date: Mon, 19 Feb 2024 08:22:15 +0100
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To: Raag Jadav <raag.jadav@intel.com>
-Cc: jarkko.nikula@linux.intel.com, mika.westerberg@linux.intel.com, 
-	andriy.shevchenko@linux.intel.com, lakshmi.sowjanya.d@intel.com, linux-pwm@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 1/4] pwm: dwc: Fix PM regression
-Message-ID: <luewujhgmgypcpnngyriv4trklznrkzngxe7syvfp2dontorwf@3xoooabwfitg>
-References: <20240219033835.11369-1-raag.jadav@intel.com>
- <20240219033835.11369-2-raag.jadav@intel.com>
+	s=arc-20240116; t=1708327361; c=relaxed/simple;
+	bh=WJoJWc4NJmRDweWqU7/qelFnZ7VDIWAHnqXRxCqaBlI=;
+	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=NFTwONQ/NOnFYuZ9i9KhfkufgEgG+E/yut2uJb6QoeyaQroevl6vDLZt8viCIuf3KiqOAXfpxnuaeQRlmhN/L/rvoWJYvnGdlRSawkD7fy4lXyWmFm4Dt0shjccaboA88UAuETKlGHuZ8ETOs+TCnFDL6hNmQt3KCoDWjv2h4T8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RXn/oV80; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RXn/oV80"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1708327360; x=1739863360;
+  h=message-id:date:mime-version:cc:subject:to:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=WJoJWc4NJmRDweWqU7/qelFnZ7VDIWAHnqXRxCqaBlI=;
+  b=RXn/oV80x94TSJ93gEGT1btR365fXClSbWJ8q9pktHcja4bw3Gfd/fqI
+   a+pZgGCgAOn+emDp5PCjDRiiaDIICTQHolM/Ckge+uk7NuSF3niln89/X
+   bV5+gCrHHPdgr3aCq0MHw0aOwdl7mvyNTLgTHfzmlMM3c042c+4UZQ409
+   OAgCzeRN0Fk8qmVJNyPky7a1nZz5hhvqoFHSUrlaKPbrXDqHs00mHp/bT
+   RylUSkjz4V9t7VAJoIZCopPA5Iwd4Xpnmk47XnJmlLiFI1qcW/Ca/vqO6
+   rH+ICBZGj3wYDKO5RvrKX6oYHLItsULaT811oiixw7jk4eAs0LutVlmeW
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10988"; a="13501647"
+X-IronPort-AV: E=Sophos;i="6.06,170,1705392000"; 
+   d="scan'208";a="13501647"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Feb 2024 23:22:39 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.06,170,1705392000"; 
+   d="scan'208";a="27576624"
+Received: from blu2-mobl.ccr.corp.intel.com (HELO [10.254.215.112]) ([10.254.215.112])
+  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Feb 2024 23:22:36 -0800
+Message-ID: <2fa8af78-5277-4278-b0e2-8a983dbbab2c@linux.intel.com>
+Date: Mon, 19 Feb 2024 15:22:33 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="lujspconz4o5yy2y"
-Content-Disposition: inline
-In-Reply-To: <20240219033835.11369-2-raag.jadav@intel.com>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+User-Agent: Mozilla Thunderbird
+Cc: baolu.lu@linux.intel.com, Huang Jiaqing <jiaqing.huang@intel.com>,
+ iommu@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] iommu/vt-d: Use device rbtree in iopf reporting path
+Content-Language: en-US
+To: Ethan Zhao <haifeng.zhao@linux.intel.com>, Joerg Roedel
+ <joro@8bytes.org>, Will Deacon <will@kernel.org>,
+ Robin Murphy <robin.murphy@arm.com>, Jason Gunthorpe <jgg@ziepe.ca>,
+ Kevin Tian <kevin.tian@intel.com>
+References: <20240215072249.4465-1-baolu.lu@linux.intel.com>
+ <20240215072249.4465-3-baolu.lu@linux.intel.com>
+ <0da83c5c-0e35-4087-aacf-6831060cab8e@linux.intel.com>
+ <e59f6ba0-a289-4c3f-8746-b58f9474a35b@linux.intel.com>
+ <be26926a-5843-46c6-a0b9-c51b5d8e29fc@linux.intel.com>
+From: Baolu Lu <baolu.lu@linux.intel.com>
+In-Reply-To: <be26926a-5843-46c6-a0b9-c51b5d8e29fc@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
+On 2024/2/19 15:06, Ethan Zhao wrote:
+> On 2/19/2024 2:58 PM, Baolu Lu wrote:
+>> On 2024/2/19 14:54, Ethan Zhao wrote:
+>>> On 2/15/2024 3:22 PM, Lu Baolu wrote:
+>>>> The existing IO page fault handler currently locates the PCI device by
+>>>> calling pci_get_domain_bus_and_slot(). This function searches the list
+>>>> of all PCI devices until the desired device is found. To improve lookup
+>>>> efficiency, a helper function named device_rbtree_find() is introduced
+>>>> to search for the device within the rbtree. Replace
+>>>> pci_get_domain_bus_and_slot() in the IO page fault handling path.
+>>>>
+>>>> Co-developed-by: Huang Jiaqing <jiaqing.huang@intel.com>
+>>>> Signed-off-by: Huang Jiaqing <jiaqing.huang@intel.com>
+>>>> Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
+>>>> ---
+>>>>   drivers/iommu/intel/iommu.h |  1 +
+>>>>   drivers/iommu/intel/iommu.c | 29 +++++++++++++++++++++++++++++
+>>>>   drivers/iommu/intel/svm.c   | 14 ++++++--------
+>>>>   3 files changed, 36 insertions(+), 8 deletions(-)
+>>>>
+>>>> diff --git a/drivers/iommu/intel/iommu.h b/drivers/iommu/intel/iommu.h
+>>>> index 54eeaa8e35a9..f13c228924f8 100644
+>>>> --- a/drivers/iommu/intel/iommu.h
+>>>> +++ b/drivers/iommu/intel/iommu.h
+>>>> @@ -1081,6 +1081,7 @@ void free_pgtable_page(void *vaddr);
+>>>>   void iommu_flush_write_buffer(struct intel_iommu *iommu);
+>>>>   struct iommu_domain *intel_nested_domain_alloc(struct iommu_domain 
+>>>> *parent,
+>>>>                              const struct iommu_user_data *user_data);
+>>>> +struct device *device_rbtree_find(struct intel_iommu *iommu, u16 rid);
+>>>>   #ifdef CONFIG_INTEL_IOMMU_SVM
+>>>>   void intel_svm_check(struct intel_iommu *iommu);
+>>>> diff --git a/drivers/iommu/intel/iommu.c b/drivers/iommu/intel/iommu.c
+>>>> index 09009d96e553..d92c680bcc96 100644
+>>>> --- a/drivers/iommu/intel/iommu.c
+>>>> +++ b/drivers/iommu/intel/iommu.c
+>>>> @@ -120,6 +120,35 @@ static int device_rid_cmp(struct rb_node *lhs, 
+>>>> const struct rb_node *rhs)
+>>>>       return device_rid_cmp_key(&key, rhs);
+>>>>   }
+>>>> +/*
+>>>> + * Looks up an IOMMU-probed device using its source ID.
+>>>> + *
+>>>> + * If the device is found:
+>>>> + *  - Increments its reference count.
+>>>> + *  - Returns a pointer to the device.
+>>>> + *  - The caller must call put_device() after using the pointer.
+>>>> + *
+>>>> + * If the device is not found, returns NULL.
+>>>> + */
+>>>> +struct device *device_rbtree_find(struct intel_iommu *iommu, u16 rid)
+>>>> +{
+>>>> +    struct device_domain_info *info;
+>>>> +    struct device *dev = NULL;
+>>>> +    struct rb_node *node;
+>>>> +    unsigned long flags;
+>>>> +
+>>>> +    spin_lock_irqsave(&iommu->device_rbtree_lock, flags);
+>>>
+>>> Though per iommu device rbtree isn't a big tree, given already holds 
+>>> spin_lock
+>>> why still needs irq off ?
+>>
+>> I want it to be usable not only in the normal execution flow, but also
+>> in the interrupt context, such as for the DMA remapping fault
+>> (unrecoverable) reporting path.
+> 
+> Holding rbtree_lock only should work in interrrupt context, I missed 
+> something ?
 
---lujspconz4o5yy2y
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+No. That will possibly cause dead lock.
 
-Hello Raag,
-
-On Mon, Feb 19, 2024 at 09:08:32AM +0530, Raag Jadav wrote:
-> While preparing dwc driver for devm_pwmchip_alloc() usage, commit
-> df41cd8bbcad ("pwm: dwc: Prepare removing pwm_chip from driver data")
-> modified ->suspend() handle to use the pwm_chip as driver_data for
-> accessing struct dwc_pwm, but didn't modify ->resume() handle with
-> relevant changes. This results into illegal memory access during
-> device wakeup and causes a PM regression.
->=20
-> Fix this by correctly accessing struct dwc_pwm in ->resume() handle.
->=20
-> Fixes: df41cd8bbcad ("pwm: dwc: Prepare removing pwm_chip from driver dat=
-a")
-> Signed-off-by: Raag Jadav <raag.jadav@intel.com>
-> ---
->  drivers/pwm/pwm-dwc.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
->=20
-> diff --git a/drivers/pwm/pwm-dwc.c b/drivers/pwm/pwm-dwc.c
-> index 8ca1c20a6aaf..c0e586688e57 100644
-> --- a/drivers/pwm/pwm-dwc.c
-> +++ b/drivers/pwm/pwm-dwc.c
-> @@ -95,7 +95,8 @@ static int dwc_pwm_suspend(struct device *dev)
-> =20
->  static int dwc_pwm_resume(struct device *dev)
->  {
-> -	struct dwc_pwm *dwc =3D dev_get_drvdata(dev);
-> +	struct pwm_chip *chip =3D dev_get_drvdata(dev);
-> +	struct dwc_pwm *dwc =3D to_dwc_pwm(chip);
->  	int i;
-> =20
->  	for (i =3D 0; i < DWC_TIMERS_TOTAL; i++) {
-
-If you're ok I'd squash this into df41cd8bbcad adding
-
-	Thanks to Raag Jadav for providing a hunk of this patch that Uwe
-	missed during creation of this patch.
-
-to the commit log.
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---lujspconz4o5yy2y
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmXTAaYACgkQj4D7WH0S
-/k4Qmgf8D5jnORguDQnPQg6OUPdRe46RfOY6+BkDi+smMqEj5pksoJ5s3pRZBZYL
-u2eOV4vh3Oxrb017HAOIEMNcuAvNE4O+vbLEX1ppIZNcFj6o3I/P7ctTLfqLNBcj
-b3VAYNNlxm3ZH6j5wh9xpD5U+HVBPadFY70WK9tS3kzgQlzzX1dWDSxDKuiaL9KO
-ZIdmjyygZdTLYCxixnzQQTbzI13wlhLGd1vf7294v0ZFRNxPPrTmfZZzuLdHoQsy
-BTFGxuuBtidfYdWEw8ptkSFbDYAQDgCXFeKJy8j+RoyKkSMywQTKgTTPXmyHQVT6
-hPGk4G4ws89YdtUiUTbAwc/O8XD3Ig==
-=SIJf
------END PGP SIGNATURE-----
-
---lujspconz4o5yy2y--
+Best regards,
+baolu
