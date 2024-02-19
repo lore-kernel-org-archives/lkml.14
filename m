@@ -1,110 +1,124 @@
-Received: from mail-lf1-f65.google.com (mail-lf1-f65.google.com [209.85.167.65])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6102F200AD
-	for <linux-kernel@vger.kernel.org>; Mon, 19 Feb 2024 06:23:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.65
+Received: from invmail4.hynix.com (exvmail4.hynix.com [166.125.252.92])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E7C841F941
+	for <linux-kernel@vger.kernel.org>; Mon, 19 Feb 2024 06:24:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708323829; cv=none; b=I/ZHP+AYyb5kZ7I+SjPX3dLXqH2gK5S60JRCRnCLmX175vQ1/uTEJ0JDFK6uc+llYSvBOV4i3Fwp0/vUNuSPXNX36fqLptlj+2W5N7VtGkF46GLCuZIHkPNicL7JiAnxyhly4Qc3S+shNG3VMXRPRCQNbDp2zf98JHyjANKxIks=
+	t=1708323864; cv=none; b=NYoi5MXWRcWz/c59WJsBCpsAgZ38zOru8FgvPgbqaKMU0U/ohUJmnsYlNDk+jYuLdqZjYoek1N/8GqYCKE7ToQvXHTYeI5mGOub4m1KVSzGMB/DK2E6K0Vl6ZhdkVyQ6y6MbgKqEktpi4FpDCTYjzM1a3dPE4HjnHT9rVUCMFOY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708323829; c=relaxed/simple;
-	bh=PCV7/GjnToskxFQVDLdtLSGzj6jLmCk9DhRk9GUzB+M=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=BQsseinpFMi3Q4Y3hXhBsj3etDZum/8BDaMHtptXQnih9nI/FVNrrM+vSv9MpWgOoWoxEwu9tvWcCq7edyzNOQMB99nzrXXa0EXU9NIUkqbXbL1pWYkzw9jXXdXkXVOq0VOmRE4Ux0UXUqadBkCONPc5SsPx4hlcybafY5eSiEw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=T3Dvm1kJ; arc=none smtp.client-ip=209.85.167.65
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T3Dvm1kJ"
-Received: by mail-lf1-f65.google.com with SMTP id 2adb3069b0e04-512b36bb97eso444609e87.1
-        for <linux-kernel@vger.kernel.org>; Sun, 18 Feb 2024 22:23:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1708323825; x=1708928625; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=PCV7/GjnToskxFQVDLdtLSGzj6jLmCk9DhRk9GUzB+M=;
-        b=T3Dvm1kJgyV3XNybjDtWRrLBNetMdFE/dbzPYZarcJ4B1l2Xv4xu+dhnoWILy7u4iE
-         ImcR2d3SbDpN9ggMRpJEgLFvdD0IxrO+c7THXZD9NHcWsAuApcgEvIVuF6FEAXpdrJqQ
-         VaWT48NCC4hCV/Cl/96K7r0FBOpzzp+UPPVDjHN7RKvLInQ+Lx8+KNJVWw2UyKalbAfk
-         SNUhe9yiFQq00Pb35KProgwqwMnpmTCW60dsQn57eCvP6WOnSHLPxtod6RPnfQKbUYTG
-         /d9/N6YLhjc3I3E3qdzyLd5G8LGLxqxvS4gNQL12+bvh/DoSdWIej5XMXWMAbGYXTJ6b
-         4aig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708323825; x=1708928625;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=PCV7/GjnToskxFQVDLdtLSGzj6jLmCk9DhRk9GUzB+M=;
-        b=SBAui4Clk9K9OCOJN9wQf3m0LBfNgyRSSyXs4pgCB0ljlPl12jrMC+cnVxEQIJtiLz
-         9VFmkR0NJnkKnHn8pM9w+y0EHy2kk0yYSbdp14/VniW2gBmsfgsC+NK3j3TJLuNkEsDK
-         LX8PfuwEqy/eKT6h9Q5PaXLj9rItsl/0sAQabu6ZMnyukPqwXcsl048CRSH2HGh42Q3/
-         VlyEe+/rfKIW9pcnYZIbb/hQavpgu3gq14MyPRysdHR7UVcXJqq6rs/u+KcnvNmjd10E
-         84zjQaUXvmqCgSzvax43lRv0EOeyzo6sHZB1XEDWvq7/Nh09KtX9LHz0o7h0GEsHsBNQ
-         xziw==
-X-Forwarded-Encrypted: i=1; AJvYcCXQinZATqXMgl47TYloWgHSNwZXof9LdibrU7HjP/XlFvVzb5S+k9O/e8jyaq1Eo2iehJcS4DTrK0IfK7JgqAODNvs/xF5cGYupPWeX
-X-Gm-Message-State: AOJu0YxGJp0okq2wjuXtGOg6Zc6sylm0xj4o8VstaY6Zw5hh6vF9u2sc
-	GRf4hgoQRfnHO6fu4hdktYrYJXrqCTD8pcRb7k4YL9NXr9QzZ7xEIPTpc9QJtBEhPDva8sAhX+z
-	UaTeZAnVZrqc4x7i6qD2G71xZAQ==
-X-Google-Smtp-Source: AGHT+IG+SSK9Ev0R/5Ce+rCVvL0NunDHmQi8xVVicpYEM6Fyp6WoACLu/HZz5RMrZ4SC6s3rnqPCfVoflgeWORV0GtY=
-X-Received: by 2002:a05:6512:945:b0:511:6031:3f1c with SMTP id
- u5-20020a056512094500b0051160313f1cmr6753250lft.28.1708323825255; Sun, 18 Feb
- 2024 22:23:45 -0800 (PST)
+	s=arc-20240116; t=1708323864; c=relaxed/simple;
+	bh=jCdznYeqTxnAdPqUo3goftYDv+lHb7g10nhlhcikrfU=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=Upxw7KNFf0yorZByzhQAda0G3BWn/LZ4hgDZ1dVPu2W/hjj5lMJ9VD4PKMadlnG7IhL0xzbDFdXao/6uizHlbLPx7yxtV9zSpWdxxEbASeZ5L8A88maiSavLfzs5OfhIZJPcfBDYqysdRsGVrtmNziaqVUXxjdJyIpQH/dJEDm4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
+X-AuditID: a67dfc5b-d6dff70000001748-bd-65d2ef615024
+From: Byungchul Park <byungchul@sk.com>
+To: linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org
+Cc: kernel_team@skhynix.com,
+	akpm@linux-foundation.org,
+	ying.huang@intel.com,
+	namit@vmware.com,
+	vernhao@tencent.com,
+	mgorman@techsingularity.net,
+	hughd@google.com,
+	willy@infradead.org,
+	david@redhat.com,
+	peterz@infradead.org,
+	luto@kernel.org,
+	tglx@linutronix.de,
+	mingo@redhat.com,
+	bp@alien8.de,
+	dave.hansen@linux.intel.com,
+	rjgolo@gmail.com
+Subject: [PATCH v8 1/8] x86/tlb: Add APIs manipulating tlb batch's arch data
+Date: Mon, 19 Feb 2024 15:04:00 +0900
+Message-Id: <20240219060407.25254-2-byungchul@sk.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20240219060407.25254-1-byungchul@sk.com>
+References: <20240219060407.25254-1-byungchul@sk.com>
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrALMWRmVeSWpSXmKPExsXC9ZZnkW7i+0upBt8fqFrMWb+GzeLzhn9s
+	Fi82tDNafF3/i9ni6ac+FovLu+awWdxb85/V4vyutawWO5buY7K4dGABk8X1XQ8ZLY73HmCy
+	mH/vM5vF5k1TmS2OT5nKaPH7B1DHyVmTWRwEPb639rF47Jx1l91jwaZSj80rtDwW73nJ5LFp
+	VSebx6ZPk9g93p07x+5xYsZvFo95JwM93u+7yuax9ZedR+PUa2wenzfJebyb/5YtgD+KyyYl
+	NSezLLVI3y6BK+P27ZdMBav4Kpb8aGdrYJzG08XIySEhYCKx8vp0Nhj73PUDYDabgLrEjRs/
+	mUFsEQEziYOtf9i7GLk4mAU+Mkms/t7BApIQFvCRWHz/H5jNIqAq0T3zHROIzStgKnFq2gYW
+	iKHyEqs3HAAaxMHBCTRo90EhkLAQUMmJq5OZQGZKCLSzS/y7s50Vol5S4uCKGywTGHkXMDKs
+	YhTKzCvLTczMMdHLqMzLrNBLzs/dxAiMh2W1f6J3MH66EHyIUYCDUYmHN0PkUqoQa2JZcWXu
+	IUYJDmYlEV73pgupQrwpiZVVqUX58UWlOanFhxilOViUxHmNvpWnCAmkJ5akZqemFqQWwWSZ
+	ODilGhjl/X6+u7dnlu2ZRwY71ty++sdgFYPOt4qkaT4eF6ZceLywbZVx62wRNpHKr36577VM
+	HOqfH5NYG3WYYcd2tT/x5VIPJ1n6X0ubFbeo7NPtlvVRm9JPy/fNcN6gnb434MgDB8XHt3kZ
+	nl55pz61IK+E33KRjPr+6JxL+Q5XbjKXB5fUKl7bv++oEktxRqKhFnNRcSIAuMXYj4MCAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrOLMWRmVeSWpSXmKPExsXC5WfdrJv4/lKqwZevUhZz1q9hs/i84R+b
+	xYsN7YwWX9f/YrZ4+qmPxeLw3JOsFpd3zWGzuLfmP6vF+V1rWS12LN3HZHHpwAImi+u7HjJa
+	HO89wGQx/95nNovNm6YyWxyfMpXR4vcPoI6TsyazOAh5fG/tY/HYOesuu8eCTaUem1doeSze
+	85LJY9OqTjaPTZ8msXu8O3eO3ePEjN8sHvNOBnq833eVzWPxiw9MHlt/2Xk0Tr3G5vF5k5zH
+	u/lv2QIEorhsUlJzMstSi/TtErgybt9+yVSwiq9iyY92tgbGaTxdjJwcEgImEueuH2ADsdkE
+	1CVu3PjJDGKLCJhJHGz9w97FyMXBLPCRSWL19w4WkISwgI/E4vv/wGwWAVWJ7pnvmEBsXgFT
+	iVPTNrBADJWXWL3hANAgDg5OoEG7DwqBhIWASk5cncw0gZFrASPDKkaRzLyy3MTMHFO94uyM
+	yrzMCr3k/NxNjMDgXlb7Z+IOxi+X3Q8xCnAwKvHwZohcShViTSwrrsw9xCjBwawkwuvedCFV
+	iDclsbIqtSg/vqg0J7X4EKM0B4uSOK9XeGqCkEB6YklqdmpqQWoRTJaJg1OqgdHK2n/Sdu7V
+	/xe/iok3ct0vt4ZJpKPoyqFNhhYaFd6TWU5/dn/l+ObD9QxrvaN3Z2S4VmhcMhZ8uNh1OZPF
+	+tiAU83Hln/jTmg6bfLN66XQtfu7VkQd4vyxcIPwk+UvT1VHrNiVrfz8zdUHSuvnP128TV9B
+	L1eKZX+k3f8PxRppdi5Vaz3SlfuUWIozEg21mIuKEwGcMv88agIAAA==
+X-CFilter-Loop: Reflected
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20240219031911.10372-1-fangzheng.zhang@unisoc.com>
- <20240219031911.10372-3-fangzheng.zhang@unisoc.com> <ZdLX51r1mOEZKUje@casper.infradead.org>
-In-Reply-To: <ZdLX51r1mOEZKUje@casper.infradead.org>
-From: zhang fangzheng <fangzheng.zhang1003@gmail.com>
-Date: Mon, 19 Feb 2024 14:23:33 +0800
-Message-ID: <CA+kNDJ+C2b520afauSWbfNK=S1XiNHR_zF32_K-3Rf7R6m3n5Q@mail.gmail.com>
-Subject: Re: [PATCH V2 2/2] Documentation: filesystems: introduce
- proc/slabinfo to users
-To: Matthew Wilcox <willy@infradead.org>
-Cc: Fangzheng Zhang <fangzheng.zhang@unisoc.com>, Christoph Lameter <cl@linux.com>, 
-	Pekka Enberg <penberg@kernel.org>, David Rientjes <rientjes@google.com>, 
-	Joonsoo Kim <iamjoonsoo.kim@lge.com>, Andrew Morton <akpm@linux-foundation.org>, 
-	Vlastimil Babka <vbabka@suse.cz>, Roman Gushchin <roman.gushchin@linux.dev>, 
-	Hyeonggon Yoo <42.hyeyoo@gmail.com>, Greg KH <gregkh@linuxfoundation.org>, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org, tkjos@google.com, 
-	Yuming Han <yuming.han@unisoc.com>, Chunyan Zhang <zhang.lyra@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Mon, Feb 19, 2024 at 12:24=E2=80=AFPM Matthew Wilcox <willy@infradead.or=
-g> wrote:
->
-> On Mon, Feb 19, 2024 at 11:19:11AM +0800, Fangzheng Zhang wrote:
-> > +Note, <slabreclaim> comes from the collected results in the file
-> > +/sys/kernel/slab/$cache/reclaim_account. Next, we will mark /proc/slab=
-info
-> > +as deprecated and recommend the use of either sysfs directly or
-> > +use of the "slabinfo" tool that we have been providing in linux/tools/=
-mm.
->
-> Wait, so you're going to all of the trouble of changing the format of
-> slabinfo (with the associated costs of updating every tool that currently
-> parses it), only to recommend that we stop using it and start using
-> tools/mm/slabinfo instead?
->
+This is a preparation for migrc mechanism that needs to recognize
+read-only TLB entries during batched TLB flush by separating tlb batch's
+arch data into two, one is for read-only entries and the other is for
+writable ones, and merging those two when needed.
 
-The initial purpose was to obtain the type of each slab through
-a simple command 'cat proc/slabinfo'. So here, my intention is not to
-update all slabinfo-related tools for the time being, but to modify
-the version number of proc/slabinfo and further display the results
-of using the command.
+Migrc also needs to optimize CPUs to flush by clearing ones that have
+already performed TLB flush needed.
 
-> How about we simply do nothing?
+To support it, added APIs manipulating arch data for x86.
 
-The note here means what changes will occur after
-we modify the version number of proc/slabinfo to 2.2.
-As for the replacement of tools/mm/slabinfo (that inspired
-by Christoph=E2=80=99s suggestions), it will be implemented in the next ver=
-sion
-or even the later version.
+Signed-off-by: Byungchul Park <byungchul@sk.com>
+---
+ arch/x86/include/asm/tlbflush.h | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
 
-Thanks!
+diff --git a/arch/x86/include/asm/tlbflush.h b/arch/x86/include/asm/tlbflush.h
+index 25726893c6f4..fa7e16dbeb44 100644
+--- a/arch/x86/include/asm/tlbflush.h
++++ b/arch/x86/include/asm/tlbflush.h
+@@ -5,6 +5,7 @@
+ #include <linux/mm_types.h>
+ #include <linux/mmu_notifier.h>
+ #include <linux/sched.h>
++#include <linux/cpumask.h>
+ 
+ #include <asm/processor.h>
+ #include <asm/cpufeature.h>
+@@ -293,6 +294,23 @@ static inline void arch_flush_tlb_batched_pending(struct mm_struct *mm)
+ 
+ extern void arch_tlbbatch_flush(struct arch_tlbflush_unmap_batch *batch);
+ 
++static inline void arch_tlbbatch_clear(struct arch_tlbflush_unmap_batch *batch)
++{
++	cpumask_clear(&batch->cpumask);
++}
++
++static inline void arch_tlbbatch_fold(struct arch_tlbflush_unmap_batch *bdst,
++		struct arch_tlbflush_unmap_batch *bsrc)
++{
++	cpumask_or(&bdst->cpumask, &bdst->cpumask, &bsrc->cpumask);
++}
++
++static inline bool arch_tlbbatch_done(struct arch_tlbflush_unmap_batch *bdst,
++		struct arch_tlbflush_unmap_batch *bsrc)
++{
++	return cpumask_andnot(&bdst->cpumask, &bdst->cpumask, &bsrc->cpumask);
++}
++
+ static inline bool pte_flags_need_flush(unsigned long oldflags,
+ 					unsigned long newflags,
+ 					bool ignore_access)
+-- 
+2.17.1
+
