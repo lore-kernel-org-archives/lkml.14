@@ -1,102 +1,234 @@
-Received: from mx08-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CC8D2C6B4;
-	Mon, 19 Feb 2024 11:40:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93D532D042;
+	Mon, 19 Feb 2024 11:40:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708342821; cv=none; b=T97EH3f5jjx7+8GGppBDmFwTcnqdnFCQJayD33yAygnZK5tMPFJ+NHcolVB/0eIzYsAKwXp9jWUnvRH6GaJ6ksQlkoRMVVDZK0d+/KTw9LFZ3zQrYyWhmibs1leyORG2Xxg+mEzWUpLAzbaMkiQUNSLcGSZsTmVqrf+AsF0fx5c=
+	t=1708342846; cv=none; b=NH3yF/5CHLtvukGyBQSY3d82JKtSOr9YQ7N+g9U0XMxQO00DCtFKHvD4qF+mCuRxzBcMr34jENfyo4CSm3PkoUmaLGUkyW2A5TtgSpYNkw0UZHZySkmHRnwbgqwpUl179PE+trqcBQjL10/qehOW6y/RsfEpf9z/sUQMcSI34OE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708342821; c=relaxed/simple;
-	bh=wXup3JEP9EFvX0hKXUJgvMA+ckyVWQnXRIWp9xhXjFc=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=biixXRjjucByLfztT/CKiEtBmZUMWwMmFSPk3wNOCXQoznOwQLJ0uihQFo7BNGhEvYwzzKiBYaFpQmATDziPPUNERx2njBtqhr4cvWmJAehTxfD3I5zVk4oBVy0qibq9B4eh466yTnNCwxUZYLx8QVoOHj12RSC67B6EsK2czVo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=5TbEunxB; arc=none smtp.client-ip=91.207.212.93
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="5TbEunxB"
-Received: from pps.filterd (m0369457.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 41J820MB027184;
-	Mon, 19 Feb 2024 12:40:07 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	from:to:cc:subject:date:message-id:in-reply-to:references
-	:mime-version:content-transfer-encoding:content-type; s=
-	selector1; bh=vtgOW1F/P27OtsClB1wYitZvlIxif1OkjeVL9NFq9+g=; b=5T
-	bEunxBjlUCxLM+pnT1gCjB2gRnZVdl/sMTsbIeyPHe+i+Gn/CPFwpKA00+T0PBDN
-	Fi7lCyfa/ANpPUn5xzORLA5FVy1BpsH2t3+0GMuw6Euf/6/n1uXsUmxs7MfavK1m
-	Wz76JPGxSiVY5e1K2nZImI+6KdDczW6MSx/pfnvuYK8KIaJ7EGS9l3FpG80JIoDl
-	HYI8F7xFyG8bZI/2zMHutQqy3jpxrF5MfDmvvyRIFMSQ+uErAtqxbAj5/sVPEaZT
-	09i4aDlZ48+mcbJV+dOX8gSTKmZW0lNFH2cfjuy7ib45cWZ9gSdAFwzEr+h6iED5
-	BYGGM15rcCkMnnpBNg7w==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3wb8mnm4gy-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 19 Feb 2024 12:40:07 +0100 (CET)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 8D8ED4002D;
-	Mon, 19 Feb 2024 12:40:04 +0100 (CET)
-Received: from Webmail-eu.st.com (shfdag1node3.st.com [10.75.129.71])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 33B1425AEE4;
-	Mon, 19 Feb 2024 12:39:32 +0100 (CET)
-Received: from localhost (10.201.22.242) by SHFDAG1NODE3.st.com (10.75.129.71)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Mon, 19 Feb
- 2024 12:39:31 +0100
-From: Thomas Bourgoin <thomas.bourgoin@foss.st.com>
-To: Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski
-	<krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue
-	<alexandre.torgue@foss.st.com>
-CC: Thomas Bourgoin <thomas.bourgoin@foss.st.com>,
-        <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH 3/3] ARM: dts: stm32: enable crypto accelerator on stm32mp135f-dk
-Date: Mon, 19 Feb 2024 12:37:45 +0100
-Message-ID: <20240219113745.92538-4-thomas.bourgoin@foss.st.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240219113745.92538-1-thomas.bourgoin@foss.st.com>
-References: <20240219113745.92538-1-thomas.bourgoin@foss.st.com>
+	s=arc-20240116; t=1708342846; c=relaxed/simple;
+	bh=wtnUCMoy6Ba42qC7WybR773SJiEU7M1UPM3rydODRKA=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Lqz0I878u40vUJ3hJ5DWLlFUJkDuimuQXgKRUEePxXpUXwEx3UvqhxVRWTIKrolpOgqgdMUUx6QPxp5QuAc4GYFSQK4jLVuYRB4Dnji/eWuMmq/gI/utDmZSXycLChS1kRlV2vfAT/LQNy7a0XFet2oteMKNT25X0yhu+YNksmk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4TdgV25WX9z6JB5f;
+	Mon, 19 Feb 2024 19:36:26 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
+	by mail.maildlp.com (Postfix) with ESMTPS id AF983140DEA;
+	Mon, 19 Feb 2024 19:40:40 +0800 (CST)
+Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Mon, 19 Feb
+ 2024 11:40:40 +0000
+Date: Mon, 19 Feb 2024 11:40:39 +0000
+From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To: Samuel Holland <samuel.holland@sifive.com>
+CC: Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "Eric
+ Lin" <eric.lin@sifive.com>, Conor Dooley <conor@kernel.org>, Palmer Dabbelt
+	<palmer@dabbelt.com>, <devicetree@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, Paul Walmsley <paul.walmsley@sifive.com>,
+	<linux-riscv@lists.infradead.org>, Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	<linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH v1 4/6] drivers/perf: Add SiFive Extensible Cache PMU
+ driver
+Message-ID: <20240219114039.00004a86@Huawei.com>
+In-Reply-To: <20240216000837.1868917-5-samuel.holland@sifive.com>
+References: <20240216000837.1868917-1-samuel.holland@sifive.com>
+	<20240216000837.1868917-5-samuel.holland@sifive.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: EQNCAS1NODE4.st.com (10.75.129.82) To SHFDAG1NODE3.st.com
- (10.75.129.71)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-02-19_08,2024-02-19_01,2023-05-22_02
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml500004.china.huawei.com (7.191.163.9) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
 
-Add the crypto accelerator enable on stm32mp135f-dk board.
+On Thu, 15 Feb 2024 16:08:16 -0800
+Samuel Holland <samuel.holland@sifive.com> wrote:
 
-Signed-off-by: Thomas Bourgoin <thomas.bourgoin@foss.st.com>
----
- arch/arm/boot/dts/st/stm32mp135f-dk.dts | 4 ++++
- 1 file changed, 4 insertions(+)
+> From: Eric Lin <eric.lin@sifive.com>
+> 
+> Add a driver for the PMU found in the SiFive Extensible Cache
+> controller. This PMU provides a configurable number of counters and a
+> variety of events. Events are grouped into sets. Each counter can count
+> events from only one set at a time; however, it can count any number of
+> events within that set simultaneously. The PMU hardware does not provide
+> an overflow interrupt.
+> 
+> The counter inhibit register is used to atomically start/stop/read a
+> group of counters so their values can be usefully compared.
+> 
+> Some events can be filtered further by client ID (e.g. CPU or external
+> DMA master). That functionality is not supported by this driver.
+> 
+> This driver further assumes that a single Extensible Cache instance is
+> shared by all CPUs in the system.
+> 
+> Example usage:
+> 
+> $ perf stat -e sifive_ecache_pmu/inner_rd_request/,
+> 	       sifive_ecache_pmu/inner_wr_request/,
+> 	       sifive_ecache_pmu/inner_rd_request_hit/,
+> 	       sifive_ecache_pmu/inner_wr_request_hit/ ls
+> 
+>  Performance counter stats for 'system wide':
+> 
+>             148001      sifive_ecache_pmu/inner_rd_request/
+>             121064      sifive_ecache_pmu/inner_wr_request/
+>             113124      sifive_ecache_pmu/inner_rd_request_hit/
+>             120860      sifive_ecache_pmu/inner_wr_request_hit/
+> 
+>        0.010643962 seconds time elapsed
+> 
+> Example combining the read/write events together within each counter:
+> 
+> $ perf stat -e sifive_ecache_pmu/event=0x601/,
+> 	       sifive_ecache_pmu/event=0xc001/ ls
+> 
+>  Performance counter stats for 'system wide':
+> 
+>             262619      sifive_ecache_pmu/event=0x601/
+>             224533      sifive_ecache_pmu/event=0xc001/
+> 
+>        0.009794808 seconds time elapsed
+> 
+> Signed-off-by: Eric Lin <eric.lin@sifive.com>
+> Co-developed-by: Samuel Holland <samuel.holland@sifive.com>
+> Signed-off-by: Samuel Holland <samuel.holland@sifive.com>
 
-diff --git a/arch/arm/boot/dts/st/stm32mp135f-dk.dts b/arch/arm/boot/dts/st/stm32mp135f-dk.dts
-index a7b1b2ca9d0b..52171214a308 100644
---- a/arch/arm/boot/dts/st/stm32mp135f-dk.dts
-+++ b/arch/arm/boot/dts/st/stm32mp135f-dk.dts
-@@ -97,6 +97,10 @@ &crc1 {
- 	status = "okay";
- };
- 
-+&cryp {
-+	status = "okay";
-+};
-+
- &i2c1 {
- 	pinctrl-names = "default", "sleep";
- 	pinctrl-0 = <&i2c1_pins_a>;
--- 
-2.25.1
 
+Hi Samuel,
+
+Some comments inline. Note this is a driver by review so not very
+thorough!
+
+Jonathan
+
+> +
+> +static u64 read_counter(const struct sifive_ecache_pmu *ecache_pmu, const struct hw_perf_event *hwc)
+> +{
+> +	u64 value = 0;
+> +
+> +	for (int i = 0; i < ecache_pmu->n_slices; i++) {
+> +		void __iomem *base = ecache_pmu->slice[i].base;
+> +
+> +		value += readq(base + hwc->event_base);
+Feels like this summing should be a userspace problem.
+Knowing about slice imbalance is often useful (depending on the
+micro architecture obviously!)
+
+
+> +	}
+> +
+> +	return value;
+> +}
+
+
+
+> +
+> +static int sifive_ecache_pmu_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	struct device_node *ecache_node = dev_of_node(dev);
+> +	struct sifive_ecache_pmu *ecache_pmu;
+> +	struct device_node *slice_node;
+> +	u32 slice_counters;
+> +	int n_slices, ret;
+> +	int i = 0;
+> +
+> +	n_slices = of_get_available_child_count(ecache_node);
+fwnode_get_available_child_count(dev_fwnode(&pdev->dev));
+
+Not sure why there isn't yet a device version of this (IIRC anyway).
+
+> +	if (!n_slices)
+> +		return -ENODEV;
+> +
+> +	ecache_pmu = devm_kzalloc(dev, struct_size(ecache_pmu, slice, n_slices), GFP_KERNEL);
+> +	if (!ecache_pmu)
+> +		return -ENOMEM;
+> +
+> +	platform_set_drvdata(pdev, ecache_pmu);
+> +
+> +	ecache_pmu->pmu = (struct pmu) {
+> +		.parent		= dev,
+> +		.attr_groups	= sifive_ecache_pmu_attr_grps,
+> +		.capabilities	= PERF_PMU_CAP_NO_EXCLUDE | PERF_PMU_CAP_NO_INTERRUPT,
+> +		.task_ctx_nr	= perf_invalid_context,
+> +		.event_init	= sifive_ecache_pmu_event_init,
+> +		.add		= sifive_ecache_pmu_add,
+> +		.del		= sifive_ecache_pmu_del,
+> +		.start		= sifive_ecache_pmu_start,
+> +		.stop		= sifive_ecache_pmu_stop,
+> +		.read		= sifive_ecache_pmu_read,
+> +		.start_txn	= sifive_ecache_pmu_start_txn,
+> +		.commit_txn	= sifive_ecache_pmu_commit_txn,
+> +		.cancel_txn	= sifive_ecache_pmu_cancel_txn,
+> +	};
+> +	ecache_pmu->cpu = nr_cpu_ids;
+> +	ecache_pmu->n_counters = ECACHE_PMU_MAX_COUNTERS;
+> +	ecache_pmu->n_slices = n_slices;
+> +
+> +	for_each_available_child_of_node(ecache_node, slice_node) {
+device_for_each_child_node() (generic handlers only provide the available version btw
+which is non obvious from naming)
+
+> +		struct sifive_ecache_pmu_slice *slice = &ecache_pmu->slice[i++];
+> +
+> +		slice->base = devm_of_iomap(dev, slice_node, 0, NULL);
+> +		if (IS_ERR(slice->base))
+Leaked slice_node
+
+FWIW https://lore.kernel.org/linux-iio/20240217164249.921878-1-jic23@kernel.org/
+adds device_for_each_child_node_scoped() which deals with this stuff using
+cleanup.h magic.
+
+
+> +			return PTR_ERR(slice->base);
+> +
+> +		/* Get number of counters from slice node */
+> +		ret = of_property_read_u32(slice_node, "sifive,perfmon-counters", &slice_counters);
+Not sure on what perf maintainers want, but I'd go with
+device_property_read etc as in the previous driver.
+
+> +		if (ret)
+leaked slice_node
+
+> +			return dev_err_probe(dev, ret,
+> +					     "Slice %pOF missing sifive,perfmon-counters property\n",
+> +					     slice_node);
+> +
+> +		ecache_pmu->n_counters = min_t(u32, slice_counters, ecache_pmu->n_counters);
+> +	}
+> +
+> +	sifive_ecache_pmu_hw_init(ecache_pmu);
+> +
+> +	ret = cpuhp_state_add_instance(CPUHP_AP_PERF_RISCV_SIFIVE_ECACHE_ONLINE, &ecache_pmu->node);
+> +	if (ret)
+> +		return dev_err_probe(dev, ret, "Failed to add CPU hotplug instance\n");
+> +
+> +	ret = perf_pmu_register(&ecache_pmu->pmu, "sifive_ecache_pmu", -1);
+> +	if (ret) {
+> +		dev_err_probe(dev, ret, "Failed to register PMU\n");
+> +		goto err_remove_instance;
+Comments from other review apply here as well so if you agree apply them in both drivers.
+
+> +	}
+> +
+> +	return 0;
+> +
+> +err_remove_instance:
+> +	cpuhp_state_remove_instance(CPUHP_AP_PERF_RISCV_SIFIVE_ECACHE_ONLINE, &ecache_pmu->node);
+> +
+> +	return ret;
+> +}
