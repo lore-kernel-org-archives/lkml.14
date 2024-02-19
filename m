@@ -1,92 +1,106 @@
-Received: from relay.smtp-ext.broadcom.com (relay.smtp-ext.broadcom.com [192.19.144.205])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA3AF535D6;
-	Mon, 19 Feb 2024 20:41:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.19.144.205
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57E3252F98;
+	Mon, 19 Feb 2024 20:42:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708375266; cv=none; b=HUBNxNl8b95GpAgEIv3S4UrmyULRReedDzhhy4W9BeO+a0CVDD4ecayesiGAtO8P+gfrzhp1Zw0IBUfqX941MM+VfKTloLzb8BRRHsS/aFN8mc+juuBzCkq7FuA1bSVtqhusuB8LUWh9EwvSEFE6hWqh/ws95aubyhw9BU+2xRI=
+	t=1708375357; cv=none; b=qs1plX5ZoryiFMVf9e3DgC85dg/QH98/WrRUXXBuLbXmrnBlp0XlfPqkBSfsQtwiB/II6ElMlMF0h97LMG3I0DJwWOtKzJDZENY5ijCI4OSU4EhQ19WNQM/KDHTY71asMVboz0OuNS9zstdr25hTJ5EjrSsASFSsSGwflZ2BFVQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708375266; c=relaxed/simple;
-	bh=1XKmVkJGMse2FkEHAtATkVJsddA0KnJTeeuea388y+8=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=dT/U37PiAt3EEzALYOZEhVngetUhiaj/QBIz0AvQ9fjGcL8r+Vf70n6se9BV92U2lqnhPvabM7R5gmyBRrPqHEMgf+nRzzOh50LTHD69Jph1QEFZ3bZRryqRXwbrq5w9gv1dDnsuqzovN+M+q5ucb15SGx09uIDYUzVlGh9V6AI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=c1B3I38i; arc=none smtp.client-ip=192.19.144.205
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
+	s=arc-20240116; t=1708375357; c=relaxed/simple;
+	bh=d17JEQ94N0uoQLFj1CrJnlh4bPeyeziOZO+AvWt/zv4=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=FEqLzjrViO0dn/8XMPL/suBP39virOurIsxftgQ7so8FtP8cABOx083Uh0CvcN9Z2X3/YW9/GuJCrCJZhl6M6wzvdQQCtgQpq0Dwdfkh4OzZAZ4RaviDVSbBq4LboUqtsrNNU59ubxtwuoRimfnNbTMPT59YkG632Ir2MLoowZs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k5pUuMn6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="c1B3I38i"
-Received: from mail-lvn-it-01.lvn.broadcom.net (mail-lvn-it-01.lvn.broadcom.net [10.36.132.253])
-	by relay.smtp-ext.broadcom.com (Postfix) with ESMTP id A15FFC0000E3;
-	Mon, 19 Feb 2024 12:40:57 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 relay.smtp-ext.broadcom.com A15FFC0000E3
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=broadcom.com;
-	s=dkimrelay; t=1708375257;
-	bh=1XKmVkJGMse2FkEHAtATkVJsddA0KnJTeeuea388y+8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=c1B3I38iTBsxlmBH/377DLgzNqwdGKLDMPupJr577dSUHU0oWJlqYW6rpUs2LpSDy
-	 IuHW8yI79NOHtNOYoRjAMXXJgO3SfCqAbk+PVe0TM3qVq4w7+mT7ZusxF9em7LTBxx
-	 REU7q2dgRZuemQW2YHYs7V6qsXQTMXb5vrN01U+o=
-Received: from fainelli-desktop.igp.broadcom.net (fainelli-desktop.dhcp.broadcom.net [10.67.48.245])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mail-lvn-it-01.lvn.broadcom.net (Postfix) with ESMTPSA id D3F3018041CAC7;
-	Mon, 19 Feb 2024 12:40:55 -0800 (PST)
-From: Florian Fainelli <florian.fainelli@broadcom.com>
-To: netdev@vger.kernel.org
-Cc: Florian Fainelli <florian.fainelli@broadcom.com>,
-	Jacob Keller <jacob.e.keller@intel.com>,
-	Doug Berger <opendmb@gmail.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Andrew Lunn <andrew@lunn.ch>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Russell King <linux@armlinux.org.uk>,
-	linux-kernel@vger.kernel.org (open list),
-	Justin Chen <justin.chen@broadcom.com>
-Subject: [PATCH net-next v2 2/3] net: bcmgenet: Pass "main" clock down to the MDIO driver
-Date: Mon, 19 Feb 2024 12:40:52 -0800
-Message-Id: <20240219204053.471825-3-florian.fainelli@broadcom.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240219204053.471825-1-florian.fainelli@broadcom.com>
-References: <20240219204053.471825-1-florian.fainelli@broadcom.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k5pUuMn6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 11862C433F1;
+	Mon, 19 Feb 2024 20:42:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1708375356;
+	bh=d17JEQ94N0uoQLFj1CrJnlh4bPeyeziOZO+AvWt/zv4=;
+	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
+	b=k5pUuMn6H9zU70hz/4BM/+jJxWd/6P6s/GlNOpjI4aNHEb3h5QgU2Yt70L+sc8jmV
+	 fSkW8AmYGlxnkTmvoyP9Y1aHKonKRM3URipwp05cKQ7ACRaQtkCe7Y4sFsU9EwCL2U
+	 2w9s32jXTwzeELjkiU0MV1puiNRbVcJyyr7b00p+jGrTlncA70/aFTfprcWq3NEK3C
+	 P+Wk+zTniMfKYvHn72jZ1RDXt4yql2kWAY64zYJgvPNBjgVxeb3YKzcrkRrXO7+8WB
+	 DypU8nvqIGMr+zwVR5VT+S65iPgxIMOT0vJ9ERJVx4utYWdCmQ1jtMfEu7L68w4JlN
+	 /HmhjwWxzFELw==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Mon, 19 Feb 2024 20:42:29 +0000
+Message-Id: <CZ9CIP97661C.2WUZJNNCQUHE8@seitikki>
+Cc: <anakrish@microsoft.com>, <bp@alien8.de>, <cgroups@vger.kernel.org>,
+ <chrisyan@microsoft.com>, <dave.hansen@linux.intel.com>, <hpa@zytor.com>,
+ <kristen@linux.intel.com>, <linux-kernel@vger.kernel.org>,
+ <linux-sgx@vger.kernel.org>, <mikko.ylinen@linux.intel.com>,
+ <mingo@redhat.com>, <mkoutny@suse.com>, <seanjc@google.com>,
+ <sohil.mehta@intel.com>, <tglx@linutronix.de>,
+ <tim.c.chen@linux.intel.com>, <tj@kernel.org>, <x86@kernel.org>,
+ <yangjie@microsoft.com>, <zhanb@microsoft.com>, <zhiquan1.li@intel.com>
+Subject: Re: [RFC PATCH] x86/sgx: Remove 'reclaim' boolean parameters
+From: "Jarkko Sakkinen" <jarkko@kernel.org>
+To: "Dave Hansen" <dave.hansen@intel.com>, "Haitao Huang"
+ <haitao.huang@linux.intel.com>
+X-Mailer: aerc 0.15.2
+References: <CZ4FCQ633VLC.26Y7HUHGRSFB3@kernel.org>
+ <20240219153957.9957-1-haitao.huang@linux.intel.com>
+ <40f95b90-8698-42dd-89d7-cd73d1e311b1@intel.com>
+In-Reply-To: <40f95b90-8698-42dd-89d7-cd73d1e311b1@intel.com>
 
-GENET has historically had to create a MDIO platform device for its
-controller and pass some auxiliary data to it, like a MDIO completion
-callback. Now we also pass the "main" clock to allow for the MDIO bus
-controller to manage that clock adequately around I/O accesses.
+On Mon Feb 19, 2024 at 3:56 PM UTC, Dave Hansen wrote:
+> On 2/19/24 07:39, Haitao Huang wrote:
+> > Remove all boolean parameters for 'reclaim' from the function
+> > sgx_alloc_epc_page() and its callers by making two versions of each
+> > function.
+> >=20
+> > Also opportunistically remove non-static declaration of
+> > __sgx_alloc_epc_page() and a typo
+> >=20
+> > Signed-off-by: Haitao Huang <haitao.huang@linux.intel.com>
+> > Suggested-by: Jarkko Sakkinen <jarkko@kernel.org>
+> > ---
+> >  arch/x86/kernel/cpu/sgx/encl.c  | 56 +++++++++++++++++++++------
+> >  arch/x86/kernel/cpu/sgx/encl.h  |  6 ++-
+> >  arch/x86/kernel/cpu/sgx/ioctl.c | 23 ++++++++---
+> >  arch/x86/kernel/cpu/sgx/main.c  | 68 ++++++++++++++++++++++-----------
+> >  arch/x86/kernel/cpu/sgx/sgx.h   |  4 +-
+> >  arch/x86/kernel/cpu/sgx/virt.c  |  2 +-
+> >  6 files changed, 115 insertions(+), 44 deletions(-)
+>
+> Jarkko, did this turn out how you expected?
+>
+> I think passing around a function pointer to *only* communicate 1 bit of
+> information is a _bit_ overkill here.
+>
+> Simply replacing the bool with:
+>
+> enum sgx_reclaim {
+> 	SGX_NO_RECLAIM,
+> 	SGX_DO_RECLAIM
+> };
+>
+> would do the same thing.  Right?
+>
+> Are you sure you want a function pointer for this?
 
-Reviewed-by: Jacob Keller <jacob.e.keller@intel.com>
-Signed-off-by: Florian Fainelli <florian.fainelli@broadcom.com>
----
- drivers/net/ethernet/broadcom/genet/bcmmii.c | 4 ++++
- 1 file changed, 4 insertions(+)
+To look this in context I drafted quickly two branches representing
+imaginary next version of the patch set.
 
-diff --git a/drivers/net/ethernet/broadcom/genet/bcmmii.c b/drivers/net/ethernet/broadcom/genet/bcmmii.c
-index cbbe004621bc..7a21950da77c 100644
---- a/drivers/net/ethernet/broadcom/genet/bcmmii.c
-+++ b/drivers/net/ethernet/broadcom/genet/bcmmii.c
-@@ -476,6 +476,10 @@ static int bcmgenet_mii_register(struct bcmgenet_priv *priv)
- 	ppd.wait_func = bcmgenet_mii_wait;
- 	ppd.wait_func_data = priv;
- 	ppd.bus_name = "bcmgenet MII bus";
-+	/* Pass a reference to our "main" clock which is used for MDIO
-+	 * transfers
-+	 */
-+	ppd.clk = priv->clk;
- 
- 	/* Unimac MDIO bus controller starts at UniMAC offset + MDIO_CMD
- 	 * and is 2 * 32-bits word long, 8 bytes total.
--- 
-2.34.1
+I guess this would simpler and totally sufficient approach.
 
+With this approach I'd then change also:
+
+[PATCH v9 04/15] x86/sgx: Implement basic EPC misc cgroup functionality
+
+And add the enum-parameter already in that patch with just "no reclaim"
+enum. I.e. then 10/15 will add only "do reclaim" and the new
+functionality.
+
+BR, Jarkko
