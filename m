@@ -1,153 +1,220 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 007448493;
-	Mon, 19 Feb 2024 11:38:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F39C02C861
+	for <linux-kernel@vger.kernel.org>; Mon, 19 Feb 2024 11:38:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708342715; cv=none; b=ctjU3XkPvTVJK6vjr12Mc5i6ghNoS1q61vnFZEeA8jLROFqKx0Ey0jFpZrYqCGOrnlgnu0XO0y9UVW/lBDZ+lo/k12UG4pAmyeMW4WPBSn0QTtSptn8beMHUb8emKyBEN/C1RH7uu95ZpNOIyw2Lu61huf+vKqFu00E9XCF5OOw=
+	t=1708342733; cv=none; b=JNiQbqfmTsTUEm6aqvz5Db6zKUNraK82RvKr+pXkgtzZEsISg7GXsbR/FcQrfdyo1riPwVOV8HK/2buGNrORk9wZqX/KOA8+yh63HgaKZerxzfX+EhHbxL1hmC9jaLcy4BgwKNYK9adU00Lz+0TSXT6kFx1IcwqzFbaLOS7Bx0s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708342715; c=relaxed/simple;
-	bh=rsXavOSekkeBHCyWxv91+jak94ihRfE56oyOQYTdd5E=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qUNZWzU4vzJMpdEEFBiizkcAC2lETFlbMrTq/eMyW5oh4/hNYNb1yom2pLZ+FtNw8FP3S5r6cwCR3/8pNQEsq73enX5E9ZkO6qxowKr9fIvfhyQ7EsD+vKbB405ehB5LvlkXIw2QVGxclP5DcSTDih1E6+KUgwmEHx9HjDCJVww=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=DBmA0oPj; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=Fo9NBRLD; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=DBmA0oPj; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=Fo9NBRLD; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1708342733; c=relaxed/simple;
+	bh=jr44VXtqh1WfN5s8vQyEdoQue8G83eRGigWTX8V3R/U=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=iVkwMZFObv5O7Y/U4gys+ybVUfwDgAOPKQ+b8zX/+0dlXMqiFDBSq6zyN3+zVhAWJbkelSYJ/pui3vQ30vP0AWxTA31VgkwRUF2StdiICKs2RO0yUFjfnm6W5Z4/v8ACsaX/SpTAC3usObghpidf1GtuaJRpWLvblasqqfA3pBc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=dUCI/3Yo; arc=none smtp.client-ip=209.85.221.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="DBmA0oPj";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="Fo9NBRLD";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="DBmA0oPj";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="Fo9NBRLD"
-Received: from imap2.dmz-prg2.suse.org (imap2.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:98])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 15F1D22169;
-	Mon, 19 Feb 2024 11:38:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1708342710; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=6cpGHb436M8tiQFmyhEwTl+dw5Jqu8yY4B4qSAho98M=;
-	b=DBmA0oPjT+8pJ/W5oAS3yqD0RPB1Ydt7O+xVwXtrgardb136cIpEtu8Uamb1W7p5zmhJWA
-	wGkjTnaM9eS4WgHQJEw7EuvuPk+uVaWFeFHCCd2L/GbYlCflxf9RHO5gsszxHt6MLSCP4Y
-	0HwB9UMkHlRFoornfGteUXu93hQ0slE=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1708342710;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=6cpGHb436M8tiQFmyhEwTl+dw5Jqu8yY4B4qSAho98M=;
-	b=Fo9NBRLDQsMdoRWgnN8ecQZ0HjfTuEyNhV11rJVsV800HfmLUVPQdVoMc28HxeyXdJovMo
-	/W2K2VUm9klAMvCQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1708342710; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=6cpGHb436M8tiQFmyhEwTl+dw5Jqu8yY4B4qSAho98M=;
-	b=DBmA0oPjT+8pJ/W5oAS3yqD0RPB1Ydt7O+xVwXtrgardb136cIpEtu8Uamb1W7p5zmhJWA
-	wGkjTnaM9eS4WgHQJEw7EuvuPk+uVaWFeFHCCd2L/GbYlCflxf9RHO5gsszxHt6MLSCP4Y
-	0HwB9UMkHlRFoornfGteUXu93hQ0slE=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1708342710;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=6cpGHb436M8tiQFmyhEwTl+dw5Jqu8yY4B4qSAho98M=;
-	b=Fo9NBRLDQsMdoRWgnN8ecQZ0HjfTuEyNhV11rJVsV800HfmLUVPQdVoMc28HxeyXdJovMo
-	/W2K2VUm9klAMvCQ==
-Received: from imap2.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap2.dmz-prg2.suse.org (Postfix) with ESMTPS id 0746C13585;
-	Mon, 19 Feb 2024 11:38:30 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([10.150.64.162])
-	by imap2.dmz-prg2.suse.org with ESMTPSA
-	id TDHBAbY902URbAAAn2gu4w
-	(envelope-from <jack@suse.cz>); Mon, 19 Feb 2024 11:38:30 +0000
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-	id AD2C8A0806; Mon, 19 Feb 2024 12:38:25 +0100 (CET)
-Date: Mon, 19 Feb 2024 12:38:25 +0100
-From: Jan Kara <jack@suse.cz>
-To: syzbot <syzbot+34a0f26f0f61c4888ea4@syzkaller.appspotmail.com>
-Cc: adilger.kernel@dilger.ca, axboe@kernel.dk, brauner@kernel.org,
-	jack@suse.cz, linux-ext4@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-	syzkaller-bugs@googlegroups.com, tytso@mit.edu, yebin10@huawei.com
-Subject: Re: [syzbot] [ext4?] KASAN: use-after-free Read in ext4_search_dir
-Message-ID: <20240219113825.sxjpdxhkn6w7qzy4@quack3>
-References: <0000000000000d7d6e05fb6bd2d7@google.com>
- <0000000000001924f506118e5748@google.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dUCI/3Yo"
+Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-33d153254b7so1871622f8f.0
+        for <linux-kernel@vger.kernel.org>; Mon, 19 Feb 2024 03:38:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1708342730; x=1708947530; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=RgCc9xkjAlHBUoV30Un9Gq7IYtTdQzKUjRHl/TDRQVI=;
+        b=dUCI/3YoLDn74dH7MKxWqlh6o+/F141AOh/fE41nsuSgNjweRLMuvwCNxUjW8ujySG
+         ujtf+dgRgSoYWsvebx8Mxy2MOG4OTs4qg6Kk5Yjvqrt/0xQUsU+SwC5WCHccwCJLmnW7
+         D3IWDBT8sE+k9iX6YG60OUJNZN1P1H0zwRQ6ohUwXdF9ft29zjWRIYUcSXl2BlNrJ9U+
+         KT2I+nffPIB3fcknUe/T1X5BdL51/aJ6cZJAOAInKPi7U3pyNyDeMk3ODDpE9NrqxuIU
+         KMPIDpT1hDo+sL0aSbZQAWv2ustU4kuW2Y2rdd6F0clmXIwdWgMSK2dxr7JQRweIkyEy
+         lcLQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708342730; x=1708947530;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=RgCc9xkjAlHBUoV30Un9Gq7IYtTdQzKUjRHl/TDRQVI=;
+        b=cRrnEZP7aeCxUtrhHPj1aksnX+Ym4IazsIsc44mU+VREDlXt/O3ZDbLgc8Gt8mkINt
+         geIiAMSFBS5F/svgcOz7YUTLV2uGiVXc1+qYSY8WL1lZSFVFzvdMJ9CsmUoQkoH1Mkz/
+         gbnA4pBTHIRJMi0t6ssdFte6rtAfZwPDEB+fQFdbcKmtGRs6+XoExsb92xqycBHpsSUM
+         oe8EoY29C8FqYO48ntI1ww6TIgFlif/cmacEGFv7TH/2ltrf5nZETd+dR5nawAEutQEk
+         TtO2TghUO40Aa+zLTnjXBWbtEeJFcMgZPtlBzyfP6X3hHThcKrHxeecBg0I2PfkV7r2Y
+         HgCQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU/St0Gba3bX+v9r7d0jXlsEjUASg8GpO7OpLApoqQrsRkXx18GsAXRjQ1ESPIAbGqoytnVwDoSOxUR9BihxuMjsUnIFm/mAEeNdxok
+X-Gm-Message-State: AOJu0Yz5c/fWPgEdL4I8O87JOlQ65FizZVY+sBNVu+oeZD3rRKcf1ebC
+	pDZlhGAeJjYNIlKxnKvYq53mHgCwOlPUfvZseITrHOg5+XBs688cyxhkNKLkxxU=
+X-Google-Smtp-Source: AGHT+IFmuNVQ7UlRuPrxHeguM8IFbjVIjhzZhoC+9YobmX6Mn/J7gsAOTr3zn1otvedrjfDNc9H2TA==
+X-Received: by 2002:a5d:4e52:0:b0:33d:3909:ff6 with SMTP id r18-20020a5d4e52000000b0033d39090ff6mr3046644wrt.29.1708342730078;
+        Mon, 19 Feb 2024 03:38:50 -0800 (PST)
+Received: from [192.168.2.107] ([79.115.63.202])
+        by smtp.gmail.com with ESMTPSA id e14-20020a5d4e8e000000b0033cdf1f15e8sm10152630wru.16.2024.02.19.03.38.48
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 19 Feb 2024 03:38:49 -0800 (PST)
+Message-ID: <058be836-bcd4-403e-bbc3-bb75f3f3d896@linaro.org>
+Date: Mon, 19 Feb 2024 11:38:48 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <0000000000001924f506118e5748@google.com>
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=DBmA0oPj;
-	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=Fo9NBRLD
-X-Spamd-Result: default: False [2.69 / 50.00];
-	 ARC_NA(0.00)[];
-	 RCVD_VIA_SMTP_AUTH(0.00)[];
-	 R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	 SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:98:from];
-	 FROM_HAS_DN(0.00)[];
-	 TO_DN_SOME(0.00)[];
-	 TO_MATCH_ENVRCPT_ALL(0.00)[];
-	 URI_HIDDEN_PATH(1.00)[https://syzkaller.appspot.com/x/.config?x=d05dd66e2eb2c872];
-	 TAGGED_RCPT(0.00)[34a0f26f0f61c4888ea4];
-	 MIME_GOOD(-0.10)[text/plain];
-	 BAYES_HAM(-0.00)[43.10%];
-	 RCVD_COUNT_THREE(0.00)[3];
-	 DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	 DKIM_TRACE(0.00)[suse.cz:+];
-	 MX_GOOD(-0.01)[];
-	 RCPT_COUNT_SEVEN(0.00)[11];
-	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:dkim,suse.cz:email,suse.com:email];
-	 FUZZY_BLOCKED(0.00)[rspamd.com];
-	 FROM_EQ_ENVFROM(0.00)[];
-	 MIME_TRACE(0.00)[0:+];
-	 MID_RHS_NOT_FQDN(0.50)[];
-	 RCVD_TLS_ALL(0.00)[];
-	 SUSPICIOUS_RECIPS(1.50)[];
-	 SUBJECT_HAS_QUESTION(0.00)[]
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spam-Score: 2.69
-X-Rspamd-Queue-Id: 15F1D22169
-X-Spam-Level: **
-X-Spam-Flag: NO
-X-Spamd-Bar: ++
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] spi: spi-mem: add statistics support to ->exec_op()
+ calls
+Content-Language: en-US
+To: =?UTF-8?Q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>,
+ Mark Brown <broonie@kernel.org>
+Cc: linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Dhruva Gole <d-gole@ti.com>, Gregory CLEMENT <gregory.clement@bootlin.com>,
+ Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>,
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+ Tawfik Bayouk <tawfik.bayouk@mobileye.com>
+References: <20240216-spi-mem-stats-v2-1-9256dfe4887d@bootlin.com>
+From: Tudor Ambarus <tudor.ambarus@linaro.org>
+In-Reply-To: <20240216-spi-mem-stats-v2-1-9256dfe4887d@bootlin.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Fri 16-02-24 22:55:04, syzbot wrote:
-> syzbot suspects this issue was fixed by commit:
-> 
-> commit 6f861765464f43a71462d52026fbddfc858239a5
-> Author: Jan Kara <jack@suse.cz>
-> Date:   Wed Nov 1 17:43:10 2023 +0000
-> 
->     fs: Block writes to mounted block devices
-> 
-> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=12d6758a180000
-> start commit:   7475e51b8796 Merge tag 'net-6.7-rc2' of git://git.kernel.o..
-> git tree:       upstream
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=d05dd66e2eb2c872
-> dashboard link: https://syzkaller.appspot.com/bug?extid=34a0f26f0f61c4888ea4
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=10221a14e80000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=112fd18f680000
-> 
-> If the result looks correct, please mark the issue as fixed by replying with:
 
-Makes sense.
- 
-#syz fix: fs: Block writes to mounted block devices
 
-								Honza
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+On 2/16/24 16:42, Théo Lebrun wrote:
+> Current behavior is that spi-mem operations do not increment statistics,
+> neither per-controller nor per-device, if ->exec_op() is used. For
+> operations that do NOT use ->exec_op(), stats are increased as the
+> usual spi_sync() is called.
+> 
+> The newly implemented spi_mem_add_op_stats() function is strongly
+> inspired by spi_statistics_add_transfer_stats(); locking logic and
+> l2len computation comes from there.
+> 
+> Statistics that are being filled: bytes{,_rx,_tx}, messages, transfers,
+> errors, timedout, transfer_bytes_histo_*.
+> 
+> Note about messages & transfers counters: in the fallback to spi_sync()
+> case, there are from 1 to 4 transfers per message. We only register one
+> big transfer in the ->exec_op() case as that is closer to reality.
+> 
+> This patch is NOT touching:
+>  - spi_async, spi_sync, spi_sync_immediate: those counters describe
+>    precise function calls, incrementing them would be lying. I believe
+>    comparing the messages counter to spi_async+spi_sync is a good way
+>    to detect ->exec_op() calls, but I might be missing edge cases
+>    knowledge.
+>  - transfers_split_maxsize: splitting cannot happen if ->exec_op() is
+>    provided.
+> 
+> Reviewed-by: Dhruva Gole <d-gole@ti.com>
+> Signed-off-by: Théo Lebrun <theo.lebrun@bootlin.com
+> ---
+> Changes in v2:
+> - Turn len and l2len into u64. Remove casts on all 4 nbytes fields.
+>   Remove clamp of l2len to be positive.
+> - Replace "xferred" in comment by "transferred".
+> - Remove sysfs demo from commit message. Moved to below the tear line.
+> - Take Reviewed-by Dhruva Gole.
+> - Link to v1: https://lore.kernel.org/r/20240209-spi-mem-stats-v1-1-dd1a422fc015@bootlin.com
+
+Reviewed-by: Tudor Ambarus <tudor.ambarus@linaro.org>
+> ---
+> 
+> Testing this patch:
+> 
+>    $ cd /sys/devices/platform/soc
+>    $ find . -type d -path "*spi*" -name statistics
+>    ./2100000.spi/spi_master/spi0/statistics
+>    ./2100000.spi/spi_master/spi0/spi0.0/statistics
+>    $ cd ./2100000.spi/spi_master/spi0/statistics
+> 
+>    $ for f in *; do printf "%s\t" $f; cat $f; done | \
+>          grep -v transfer_bytes_histo | column -t
+>    bytes                    240745444
+>    bytes_rx                 240170907
+>    bytes_tx                 126320
+>    errors                   0
+>    messages                 97354
+>    spi_async                0
+>    spi_sync                 0
+>    spi_sync_immediate       0
+>    timedout                 0
+>    transfers                97354
+>    transfers_split_maxsize  0
+> ---
+>  drivers/spi/spi-mem.c | 49 ++++++++++++++++++++++++++++++++++++++++++++++++-
+>  1 file changed, 48 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/spi/spi-mem.c b/drivers/spi/spi-mem.c
+> index 2dc8ceb85374..c9d6d42a88f5 100644
+> --- a/drivers/spi/spi-mem.c
+> +++ b/drivers/spi/spi-mem.c
+> @@ -297,6 +297,49 @@ static void spi_mem_access_end(struct spi_mem *mem)
+>  		pm_runtime_put(ctlr->dev.parent);
+>  }
+>  
+> +static void spi_mem_add_op_stats(struct spi_statistics __percpu *pcpu_stats,
+> +				 const struct spi_mem_op *op, int exec_op_ret)
+> +{
+> +	struct spi_statistics *stats;
+> +	u64 len, l2len;
+> +
+> +	get_cpu();
+> +	stats = this_cpu_ptr(pcpu_stats);
+> +	u64_stats_update_begin(&stats->syncp);
+> +
+> +	/*
+> +	 * We do not have the concept of messages or transfers. Let's consider
+> +	 * that one operation is equivalent to one message and one transfer.
+> +	 */
+> +	u64_stats_inc(&stats->messages);
+> +	u64_stats_inc(&stats->transfers);
+> +
+> +	/* Use the sum of all lengths as bytes count and histogram value. */
+> +	len = op->cmd.nbytes + op->addr.nbytes;
+> +	len += op->dummy.nbytes + op->data.nbytes;
+> +	u64_stats_add(&stats->bytes, len);
+> +	l2len = min(fls(len), SPI_STATISTICS_HISTO_SIZE) - 1;
+> +	u64_stats_inc(&stats->transfer_bytes_histo[l2len]);
+> +
+> +	/* Only account for data bytes as transferred bytes. */
+> +	if (op->data.nbytes && op->data.dir == SPI_MEM_DATA_OUT)
+> +		u64_stats_add(&stats->bytes_tx, op->data.nbytes);
+> +	if (op->data.nbytes && op->data.dir == SPI_MEM_DATA_IN)
+> +		u64_stats_add(&stats->bytes_rx, op->data.nbytes);
+> +
+> +	/*
+> +	 * A timeout is not an error, following the same behavior as
+> +	 * spi_transfer_one_message().
+> +	 */
+> +	if (exec_op_ret == -ETIMEDOUT)
+> +		u64_stats_inc(&stats->timedout);
+> +	else if (exec_op_ret)
+> +		u64_stats_inc(&stats->errors);
+> +
+> +	u64_stats_update_end(&stats->syncp);
+> +	put_cpu();
+> +}
+> +
+>  /**
+>   * spi_mem_exec_op() - Execute a memory operation
+>   * @mem: the SPI memory
+> @@ -339,8 +382,12 @@ int spi_mem_exec_op(struct spi_mem *mem, const struct spi_mem_op *op)
+>  		 * read path) and expect the core to use the regular SPI
+>  		 * interface in other cases.
+>  		 */
+> -		if (!ret || ret != -ENOTSUPP || ret != -EOPNOTSUPP)
+> +		if (!ret || ret != -ENOTSUPP || ret != -EOPNOTSUPP) {
+> +			spi_mem_add_op_stats(ctlr->pcpu_statistics, op, ret);
+> +			spi_mem_add_op_stats(mem->spi->pcpu_statistics, op, ret);
+> +
+>  			return ret;
+> +		}
+>  	}
+>  
+>  	tmpbufsize = op->cmd.nbytes + op->addr.nbytes + op->dummy.nbytes;
+> 
+> ---
+> base-commit: 19b50f80b3a4865bd477aa5c026dd234d39a50d2
+> change-id: 20240209-spi-mem-stats-ff9bf91c0f7e
+> 
+> Best regards,
