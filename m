@@ -1,29 +1,32 @@
 Received: from SHSQR01.spreadtrum.com (mx1.unisoc.com [222.66.158.135])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C237C4C90
-	for <linux-kernel@vger.kernel.org>; Mon, 19 Feb 2024 03:20:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB1082103
+	for <linux-kernel@vger.kernel.org>; Mon, 19 Feb 2024 03:27:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=222.66.158.135
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708312834; cv=none; b=U+9gBxPChz/YwQBnh0SEsLCLiH40ZisZA3a7cx4qtIcOjzTK6mMqaQge8MgnNMRt8Nq4OeukJDzuChGZBpg6tBKZigzSLCjXwGkJ1J1compb/6rRiVEDRRWxM93soeipOjjdtyYMr2KxF3mQR9whHKiEcg39TtU6KchLJ8qToSQ=
+	t=1708313277; cv=none; b=Za5E1gJZs2yzM9Yp7lVA/EHOac+OfccqFFCmoPITh9eHzxtwoKVVXl9za9aoyHGoc7PH0REzBhFFigIxM03qvElEza4X1IwOCDsosAsrf0dDUPNHuKQJsUJZYiG4jh+uTLGrxpP/U1ZwU0uhX0FW1rmchliKeNKxJ/3UrS80F+4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708312834; c=relaxed/simple;
-	bh=qZ3QP/O+dKCUtJMzLtIoEE1u0enCWJg3RGRx2cIFbdQ=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=pXWjJHk99R8Do9KTjwACro26QqEJ12WAPdfHkvc35XHZu/QdcQsyI+j7AVT9YUSPv76PEb3WoCU9IorPK+2zP3e/qqjDTm5PbRoOTvW4/qH+J3Rki4Gm9EMgHopwg5NeAfSplvLSI85C6NKVLHzfjMoz3YxJ+mbPsKNWo10cF+4=
+	s=arc-20240116; t=1708313277; c=relaxed/simple;
+	bh=r5WhQUGMY/9VKH1rt1wukmTW9vZu0Ig+mXDVnVjFgHU=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=A93o2BVZRvx5CN1Q7nWJut+eIqgIOA6lwoR37a09x1YXb9WBfqO3s+xmbteS0RZl5bhw+1Hq6mJiLktgrdRoYw60fgFMf14cFfChYDi6HPoeagA/WV7hGKlwqL+PmfEKD+EkYFazRz7tEK4AaVSchUKM9pi5w3Ii/iyOnS1DDoY=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=unisoc.com; spf=pass smtp.mailfrom=unisoc.com; arc=none smtp.client-ip=222.66.158.135
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=unisoc.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=unisoc.com
+Received: from SHSQR01.spreadtrum.com (localhost [127.0.0.2] (may be forged))
+	by SHSQR01.spreadtrum.com with ESMTP id 41J3K6GF006465
+	for <linux-kernel@vger.kernel.org>; Mon, 19 Feb 2024 11:20:06 +0800 (+08)
+	(envelope-from fangzheng.zhang@unisoc.com)
 Received: from dlp.unisoc.com ([10.29.3.86])
-	by SHSQR01.spreadtrum.com with ESMTP id 41J3KDic006816;
-	Mon, 19 Feb 2024 11:20:13 +0800 (+08)
+	by SHSQR01.spreadtrum.com with ESMTP id 41J3JlGn005483;
+	Mon, 19 Feb 2024 11:19:47 +0800 (+08)
 	(envelope-from fangzheng.zhang@unisoc.com)
 Received: from SHDLP.spreadtrum.com (bjmbx02.spreadtrum.com [10.0.64.8])
-	by dlp.unisoc.com (SkyGuard) with ESMTPS id 4TdSSt0CC8z2KDdHY;
-	Mon, 19 Feb 2024 11:19:42 +0800 (CST)
+	by dlp.unisoc.com (SkyGuard) with ESMTPS id 4TdSSN4KKWz2KCV0Q;
+	Mon, 19 Feb 2024 11:19:16 +0800 (CST)
 Received: from bj10906pcu1.spreadtrum.com (10.0.73.72) by
  BJMBX02.spreadtrum.com (10.0.64.8) with Microsoft SMTP Server (TLS) id
- 15.0.1497.23; Mon, 19 Feb 2024 11:20:10 +0800
+ 15.0.1497.23; Mon, 19 Feb 2024 11:19:44 +0800
 From: Fangzheng Zhang <fangzheng.zhang@unisoc.com>
 To: Christoph Lameter <cl@linux.com>, Pekka Enberg <penberg@kernel.org>,
         David
@@ -43,12 +46,10 @@ CC: <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>, <tkjos@google.com>,
         Yuming Han <yuming.han@unisoc.com>,
         Chunyan
  Zhang <zhang.lyra@gmail.com>
-Subject: [PATCH V2 2/2] Documentation: filesystems: introduce proc/slabinfo to users
-Date: Mon, 19 Feb 2024 11:19:11 +0800
-Message-ID: <20240219031911.10372-3-fangzheng.zhang@unisoc.com>
+Subject: [PATCH V2 0/2] Introduce slabinfo version 2.2
+Date: Mon, 19 Feb 2024 11:19:09 +0800
+Message-ID: <20240219031911.10372-1-fangzheng.zhang@unisoc.com>
 X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20240219031911.10372-1-fangzheng.zhang@unisoc.com>
-References: <20240219031911.10372-1-fangzheng.zhang@unisoc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -58,62 +59,38 @@ MIME-Version: 1.0
 Content-Type: text/plain
 X-ClientProxiedBy: SHCAS01.spreadtrum.com (10.0.1.201) To
  BJMBX02.spreadtrum.com (10.0.64.8)
-X-MAIL:SHSQR01.spreadtrum.com 41J3KDic006816
+X-MAIL:SHSQR01.spreadtrum.com 41J3JlGn005483
 
-Supplement slabinfo-version 2.2 details in proc.rst, so that
-users can have the status of slabinfo at a glance. And mark
-the optimization work that will be performed on proc/slabinfo
-in the next step.
+Hi all,
 
-Signed-off-by: Fangzheng Zhang <fangzheng.zhang@unisoc.com>
----
+This series introduces slabinfo version 2.2 to users.
+In slabinfo V2.2, we added a slabreclaim column to
+record whether each slab pool is of reclaim type.
+This will be more conducive for users to obtain
+the type of each slabdata more intuitively than through
+the interface /sys/kernel/slab/$cache/reclaim_account.
+And we have added an example of the output result
+executing '> cat proc/slabinfo' in the file
+Documentation/filesystems/proc.rst.
+
+Changes in v2:
+- Modify the slabinfo version number to 2.2.
+- Add an example of slabinfo output and future works.
+
+Changes in v1:
+- Add a slabreclaim column to record type of each slab
+  in file proc/slabinfo.
+
+[1] https://lore.kernel.org/linux-mm/20240131094442.28834-1-fangzheng.zhang@unisoc.com/
+
+Fangzheng Zhang (2):
+  mm/slab: Add slabreclaim flag to slabinfo
+  Documentation: filesystems: introduce proc/slabinfo to users
+
  Documentation/filesystems/proc.rst | 33 ++++++++++++++++++++++++++++++
- 1 file changed, 33 insertions(+)
+ mm/slab_common.c                   |  9 ++++----
+ 2 files changed, 38 insertions(+), 4 deletions(-)
 
-diff --git a/Documentation/filesystems/proc.rst b/Documentation/filesystems/proc.rst
-index 104c6d047d9b..89ab92f6be2d 100644
---- a/Documentation/filesystems/proc.rst
-+++ b/Documentation/filesystems/proc.rst
-@@ -892,6 +892,39 @@ Linux uses  slab  pools for memory management above page level in version 2.2.
- Commonly used  objects  have  their  own  slab  pool (such as network buffers,
- directory cache, and so on).
- 
-+Example output. You can have all of these fields in slabinfo - version: 2.2.
-+
-+::
-+
-+    > cat /proc/slabinfo
-+
-+    slabinfo - version: 2.2
-+    # name            <active_objs> <num_objs> <objsize> <objperslab> <pagesperslab> : tunables <limit> <batchcount> <sharedfactor> : slabdata <active_slabs> <num_slabs> <sharedavail> <slabreclaim>
-+    zspage              2240   2240     72   56    1 : tunables    0    0    0 : slabdata     40     40      0      0
-+    zs_handle          17408  17408      8  512    1 : tunables    0    0    0 : slabdata     34     34      0      0
-+    f2fs_xattr_entry-254:48    312    312    208   39    2 : tunables    0    0    0 : slabdata      8      8      0      1
-+    imsbr_flow           102    102     80   51    1 : tunables    0    0    0 : slabdata      2      2      0      0
-+    ......
-+    ext4_groupinfo_4k    312    312    208   39    2 : tunables    0    0    0 : slabdata      8      8      0      1
-+    dm_verity_fec_buffers      8      8   4048    8    8 : tunables    0    0    0 : slabdata      1      1      0      0
-+    dm_bufio_buffer       28     28    144   28    1 : tunables    0    0    0 : slabdata      1      1      0      1
-+    ......
-+    kernfs_iattrs_cache   4010   4116     96   42    1 : tunables    0    0    0 : slabdata     98     98      0      0
-+    kernfs_node_cache  67169  67232    128   32    1 : tunables    0    0    0 : slabdata   2101   2101      0      0
-+    mnt_cache           5624   5700    320   25    2 : tunables    0    0    0 : slabdata    228    228      0      0
-+    filp               15840  17400    320   25    2 : tunables    0    0    0 : slabdata    696    696      0      0
-+    ......
-+    kmalloc-32         30398  32384     32  128    1 : tunables    0    0    0 : slabdata    253    253      0      0
-+    kmalloc-16         31566  31744     16  256    1 : tunables    0    0    0 : slabdata    124    124      0      0
-+    kmalloc-8          51623  51712      8  512    1 : tunables    0    0    0 : slabdata    101    101      0      0
-+    kmem_cache_node      416    416    128   32    1 : tunables    0    0    0 : slabdata     13     13      0      0
-+    kmem_cache           416    416    256   32    2 : tunables    0    0    0 : slabdata     13     13      0      0
-+
-+Note, <slabreclaim> comes from the collected results in the file
-+/sys/kernel/slab/$cache/reclaim_account. Next, we will mark /proc/slabinfo
-+as deprecated and recommend the use of either sysfs directly or
-+use of the "slabinfo" tool that we have been providing in linux/tools/mm.
-+
- ::
- 
-     > cat /proc/buddyinfo
 -- 
 2.17.1
 
