@@ -1,93 +1,93 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AADE23750
-	for <linux-kernel@vger.kernel.org>; Mon, 19 Feb 2024 09:38:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 629CA25556
+	for <linux-kernel@vger.kernel.org>; Mon, 19 Feb 2024 09:38:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708335507; cv=none; b=pP3lFmn1EleeM2+insIrV1xUTq6nVIA7Ac1qlTm8vyvshwBxRnUWs7q4Su5Ec0PHdzon5BRr/Nj772WunwzM8yuN1FQkX8aHvHiZG2YVryyaKFWYLG+tdOTMVzdto/WhoOn0Hyg32Jz6Z2E0/pa+01rpwHEPK7RPi2BQr543210=
+	t=1708335530; cv=none; b=uUHgy7CgQW6wRMjyC975WIDA9oU3GPKm5oMnNDkQ/4LRppzvlv/cO4/Lm4JRDzHk372CzlRFmecJWWOO1YQyI+HSFnjWXxWj7YJg7INNyZ70VcKTffNL44jFQGgH1vBWZ9N4TrE2iRGUVKMSyskUC37Bzqf3NexQbARRvauln/I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708335507; c=relaxed/simple;
-	bh=LkDFMgrk7Th+N3vQSprqGTyuxUeNhHvf7vzI5mE/Z7c=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=YsTPrzVdO+WmBmSxI1WMUAC1nZKCNZOVAPpIW/R+fQw+ZoAkhM9dd+0Xy08IrMCzlcJECPqs27guv20A+9tmO6/SJW0kbdVE25Wk/6m4Wp4T0EgPGp/8Q94WtWqZ7W06dN8qQQ3It164Z2Y7+HZYmak+tQ7nJ9giZyIC7FgNqxY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bFLop4tM; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bFLop4tM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 82908C43394;
-	Mon, 19 Feb 2024 09:38:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708335506;
-	bh=LkDFMgrk7Th+N3vQSprqGTyuxUeNhHvf7vzI5mE/Z7c=;
-	h=From:List-Id:To:Cc:Subject:Date:From;
-	b=bFLop4tMdf1YUkZ/vhzIhrBjr+F2hheGHi3LWAfeOi9pwhjX2eqpEBD5t1aUvrK1B
-	 KEnVfRe+92U0v33PWd1XVTwX6fjM6zbxYOVjVuy2jt+JxJvLA597ujaVGEDfqagb+F
-	 RCqg9d1RtCZrqeZ4wQVDK6615jbBLhxEAe1D2l+ZZC+yNmSjwk3MmZ7nM4fTlORhFx
-	 HBqm0moXf2Nj912msQyzGl7VUnNGGtMlwHKBsdxIsB2GGSt99AJn/JU1nZxKCRCiTi
-	 yRvJrW9w5icULfOSLs8TMCNFP4HSbcfRgRJo+3yF0PDGcgcmFrT1ifhAH6vdYJtzso
-	 6Z3qpuKvv7CDQ==
-From: Arnd Bergmann <arnd@kernel.org>
-To: soc@kernel.org
-Cc: Arnd Bergmann <arnd@arndb.de>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	Kees Cook <keescook@chromium.org>,
-	Mark Brown <broonie@kernel.org>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] arm64: config: disable new platforms in virt.config
-Date: Mon, 19 Feb 2024 10:38:04 +0100
-Message-Id: <20240219093819.644324-1-arnd@kernel.org>
-X-Mailer: git-send-email 2.39.2
+	s=arc-20240116; t=1708335530; c=relaxed/simple;
+	bh=beV3HkcCobjEE+8GR3pJ/U2oTxy49Di4rABAON7noqk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=lj1LdBukcZpCcJBCF8kQhByfFKhrvizPJGa99acgaoYnMpHRolI5IJq1Swb60iLCLCj9T2zjmvmrvA6Tbbdgf9Zpb86rgfSCarz1JHaz+AC7V15FPyliw/NtOJeqgzTUJkJ5n/0PRa6KCNxbbPyeFuWN4Igy+b7wmLQey15c07k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.48])
+	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4Tdcr055lpzXhDH;
+	Mon, 19 Feb 2024 17:36:48 +0800 (CST)
+Received: from dggpeml500004.china.huawei.com (unknown [7.185.36.140])
+	by mail.maildlp.com (Postfix) with ESMTPS id 13CFF18007A;
+	Mon, 19 Feb 2024 17:38:40 +0800 (CST)
+Received: from [10.174.186.25] (10.174.186.25) by
+ dggpeml500004.china.huawei.com (7.185.36.140) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Mon, 19 Feb 2024 17:38:39 +0800
+Message-ID: <a3a41828-e65d-bc7f-ca75-7d3e9477042c@huawei.com>
+Date: Mon, 19 Feb 2024 17:38:15 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.9.0
+Subject: Re: [PATCH] KVM: arm64: Add capability for unconditional WFx
+ passthrough
+Content-Language: en-US
+To: Oliver Upton <oliver.upton@linux.dev>, Marc Zyngier <maz@kernel.org>
+CC: James Morse <james.morse@arm.com>, Suzuki K Poulose
+	<suzuki.poulose@arm.com>, Zenghui Yu <yuzenghui@huawei.com>, Catalin Marinas
+	<catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Paolo Bonzini
+	<pbonzini@redhat.com>, <linux-arm-kernel@lists.infradead.org>,
+	<kvmarm@lists.linux.dev>, <linux-kernel@vger.kernel.org>, Colton Lewis
+	<coltonlewis@google.com>, <wanghaibin.wang@huawei.com>
+References: <20240129213918.3124494-1-coltonlewis@google.com>
+ <Zbgx8hZgWCmtzMjH@linux.dev>
+From: "sundongxu (A)" <sundongxu3@huawei.com>
+In-Reply-To: <Zbgx8hZgWCmtzMjH@linux.dev>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
+ dggpeml500004.china.huawei.com (7.185.36.140)
 
-From: Arnd Bergmann <arnd@arndb.de>
+Hi Marc, Oliver,
 
-A couple of new platforms got added since last year when Mark
-added virt.config, so turn these off as well.
+On 2024/1/30 7:17, Oliver Upton wrote:
+> Hi Colton,
+> 
+> On Mon, Jan 29, 2024 at 09:39:17PM +0000, Colton Lewis wrote:
+>> Add KVM_CAP_ARM_WFX_PASSTHROUGH capability to always allow WFE/WFI
+>> instructions to run without trapping. Current behavior is to only
+>> allow this if the vcpu is the only task running. This commit keeps the
+>> old behavior when the capability is not set.
+>>
+>> This allows userspace to set deterministic behavior and increase
+>> efficiency for platforms with direct interrupt injection support.
+> 
+> Marc and I actually had an offlist conversation (shame on us!) about
+> this very topic since there are users asking for the _opposite_ of this
+> patch (unconditionally trap) [*].
+> 
+> I had originally wanted something like this, but Marc made the very good
+> point that (1) the behavior of WFx traps is in no way user-visible and
+> (2) it is entirely an IMP DEF behavior. The architecture only requires
+> the traps be effective if the instruction does not complete in finite
+> time.
+> 
+> We need to think of an interface that doesn't depend on
+> implementation-specific behavior, such as a control based on runqueue
+> depth.
 
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- arch/arm64/configs/virt.config | 4 ++++
- 1 file changed, 4 insertions(+)
+If I understand correctly, this run queue belongs to the scheduler, right?
+And I will be appreciated if you can share any more detail information
+about this.
 
-diff --git a/arch/arm64/configs/virt.config b/arch/arm64/configs/virt.config
-index c47c36f8f67b..2d1d2ce7ae2a 100644
---- a/arch/arm64/configs/virt.config
-+++ b/arch/arm64/configs/virt.config
-@@ -14,6 +14,7 @@
- # CONFIG_ARCH_BERLIN is not set
- # CONFIG_ARCH_BRCMSTB is not set
- # CONFIG_ARCH_EXYNOS is not set
-+# CONFIG_ARCH_SPARX5 is not set
- # CONFIG_ARCH_K3 is not set
- # CONFIG_ARCH_LAYERSCAPE is not set
- # CONFIG_ARCH_LG1K is not set
-@@ -23,14 +24,17 @@
- # CONFIG_ARCH_MESON is not set
- # CONFIG_ARCH_MVEBU is not set
- # CONFIG_ARCH_NXP is not set
-+# CONFIG_ARCH_MA35 is not set
- # CONFIG_ARCH_MXC is not set
- # CONFIG_ARCH_NPCM is not set
- # CONFIG_ARCH_QCOM is not set
-+# CONFIG_ARCH_REALTEK is not set
- # CONFIG_ARCH_RENESAS is not set
- # CONFIG_ARCH_ROCKCHIP is not set
- # CONFIG_ARCH_S32 is not set
- # CONFIG_ARCH_SEATTLE is not set
- # CONFIG_ARCH_INTEL_SOCFPGA is not set
-+# CONFIG_ARCH_STM32 is not set
- # CONFIG_ARCH_SYNQUACER is not set
- # CONFIG_ARCH_TEGRA is not set
- # CONFIG_ARCH_TESLA_FSD is not set
--- 
-2.39.2
+> 
+> [*] https://lore.kernel.org/kvmarm/a481ef04-ddd2-dfc1-41b1-d2ec45c6a3b5@huawei.com/
+> 
 
+Thanks,
+Dongxu
