@@ -1,91 +1,106 @@
-Received: from mail-yb1-f180.google.com (mail-yb1-f180.google.com [209.85.219.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADA5B36B17
-	for <linux-kernel@vger.kernel.org>; Mon, 19 Feb 2024 14:21:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7289374C6;
+	Mon, 19 Feb 2024 14:22:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708352501; cv=none; b=CzgaO9YKDMTct23nU3gKNLjvsRYvglAc+eyM8XjDXAmlsletYRpmoFjsGV11N01ofheGe7pcB8yxmdcDiDukUq07oi+tPUEqZF1EuaZIVsEma41bh2gqz4xjJZ5HZsM/wYVtmzCMfaDAawOVgvUbcc5Y4yR5kN46bmsAEZ5yJwc=
+	t=1708352558; cv=none; b=kloREZTaezgs7OESS8fD2sM0xGFQ2Ofd0Kx9Y2revh48pBHQIFjzBlW/vMxoBE6ZwL3U9eSIEsPUe9s1l9OFLTtnJdIdcImjEeN5FdU9DN3K7piG442o2EsYh9K0qxc/a3x9SQ7kEPGNF7jWLzeD184L/Fi6896puPIKuh5E+F0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708352501; c=relaxed/simple;
-	bh=SrwC0+4KeISVGwaFeZbt6eoTCX4pOFuHjyV4acTEdn8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=pA63zjDLBKOokYdMGlI/j4avaBl32khdiFOuHFJennf7t1+DxUprxLf7z408LruJHUP8tcgmiRpvEZ/PFvFGIzeSxVepxgigavrkx6biVtDqF+bFdp6lEiPziShoiRQHoauaccULPy2SJWu4LbEEjfLDn8SAlzTZAb9U828DKfA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=tTKE/O3m; arc=none smtp.client-ip=209.85.219.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1708352558; c=relaxed/simple;
+	bh=VirNTJqU30QLy7416ZaZEoSyRmXkYqVSdeOtlf+rVxA=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=avZItcXGZuf+grnBPXVkIzcq5iVBSRBfZSH2a5DrJI/7nmf+YF/P4+3Qp8otDbsuex3I7HAB0zFUe91xALkCjhTLwq6vpFWasitOgipcYfRbtXPNjfluz2wgZVoNhr4QmrpU2Qfwv5Lip+/Ie/5lhgDrEOVpRlh0ptloEdv97Zw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=4upGx7kJ; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=4+9ecyFE; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tTKE/O3m"
-Received: by mail-yb1-f180.google.com with SMTP id 3f1490d57ef6-dbed179f0faso3751227276.1
-        for <linux-kernel@vger.kernel.org>; Mon, 19 Feb 2024 06:21:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1708352499; x=1708957299; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=SrwC0+4KeISVGwaFeZbt6eoTCX4pOFuHjyV4acTEdn8=;
-        b=tTKE/O3m1ig1JfmukMOVlcj0apK05F9sHBrjZZLTBULHI9BN2gazcHtXkSDnb6xCYd
-         WfZ656EQgv0JCpsSGckqoKmDaJMUHfoavozMkgxR4JVU9gPGtr7UjW9XczgmCBuSUaUi
-         4A6zZ2WZ1xfI2Oug/shfdKmJAsXs+50ma4/m40nX90nbPq6GAE/BU/MehJF0xVTk+ogu
-         BTPc/U5ip9whYC8BxpIVO7gqmQxmdkQyouo0+54+UwpXzmRYn6iGSqQHZ86J3w042Hws
-         HxStEv/HeJe64OHL720Tk8A/P53E5xxkjXHvHAe+KM3+6HE7OVhxMMbFZi09wFGPYJfC
-         2RLA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708352499; x=1708957299;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=SrwC0+4KeISVGwaFeZbt6eoTCX4pOFuHjyV4acTEdn8=;
-        b=Gr4DtPV4TeTyLR3V4756J370UwlqLm3z7mREPQ9VVaB8p7Zevu04w3LOHRl7tOryaW
-         GLQfY5jCqppvauxSqvj1I6Hl9iL6TLVByYZudHEyBLjjatTRxg/NUu+aYMa5hEVp7Nh0
-         Vs1FFoXVds2rSZTwBwMiUDlyprfUncsI7y1qYUo+gUz26mqWuxSygHdSObITLENXaL9Z
-         SytqAJXr4B4WpTVv/sV8YehaOCLqDL1StTjBaMuINoyByqPayCx2lkFP5YjFN4B5+vHn
-         1OPq+eSPbfG00OZsBc2h/bmYLF7p5g3JN6Un6kaobVXheue9BXj8NfZNyER1G7UKdJdb
-         /OUg==
-X-Forwarded-Encrypted: i=1; AJvYcCV9xXxitm3KebeZwFm0+tAH9x+MSQZIPonfkxWYA9ZD58PHNsmo/cSgQqfCSmCnSbuyC6DKbhSJ7hPTy157dk6+FrHvn2OwUUNV+3Fi
-X-Gm-Message-State: AOJu0Ywt7moosi4clsebGaNGbF2FDpAHxLLljOfCGRIonAuFxK9r6SzU
-	PyVkq98Dyf/FKI8hEwfLSyizPwgAQr1+GAUDDSUftHWOa3SMMP8C6ifMOXWpNbBrONkYS0QGwPt
-	mdLo6h3PfE+t3l+M2pfnmRw5q4LUdCU46hVIkBUTGyIP0XkZ1OCo=
-X-Google-Smtp-Source: AGHT+IHNfSIGwbZ8da8WA4wu3utNXpd89Nvp2VMBYUutX9dQbg95IHwCqHaWvUBTbOVrAfhe6rvgUYD4B+AnWJejaYE=
-X-Received: by 2002:a25:838c:0:b0:dcc:fe98:368 with SMTP id
- t12-20020a25838c000000b00dccfe980368mr6937583ybk.19.1708352498795; Mon, 19
- Feb 2024 06:21:38 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="4upGx7kJ";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="4+9ecyFE"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1708352554;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=8iEgdflkmZKXImf680lz4hgFumtn+q/R0YDjSc4t/Vc=;
+	b=4upGx7kJ727A884ML4hUkx8C8e9g9smfQg662DB+Eql0qhnTPCpSxSOyFEBVeuIEZl3D2x
+	lifGEA6YdZDxZ3NATNyidGIV9C47gWKE1F+bi+RMUbfG6GS5JyQqSU1eF7ydP141pP96cO
+	Ejs2/ZFtgYFx6xD+cXA+D6dF14bXZ1Bzog1pajHS8HEuh3FLJOXqNLOya45j2829Og2LQV
+	KSVySQTHgr2Cwbsv/m17DEgTr0sZup4bsdHay2QH+ElPRfgphVBLWy8FzODQOHxWfmARqj
+	+TEWoE/Dyg9x3UBjG4oHCdTBdpxv3lEZlgWMKlBfaLh5q6Id5RObd4Dpti1oRQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1708352554;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=8iEgdflkmZKXImf680lz4hgFumtn+q/R0YDjSc4t/Vc=;
+	b=4+9ecyFEBiX9R65rg3DVI+yqWFudZBvINi2tHB1FDWo7lijLMJysfGElaqbRllJylJYfxs
+	KB6fhvkKSS/LqXBg==
+To: Antonio Borneo <antonio.borneo@foss.st.com>, Rob Herring
+ <robh+dt@kernel.org>, Krzysztof Kozlowski
+ <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>,
+ Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre
+ Torgue <alexandre.torgue@foss.st.com>, Catalin Marinas
+ <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>
+Cc: Antonio Borneo <antonio.borneo@foss.st.com>,
+ linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-stm32@st-md-mailman.stormreply.com,
+ linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 03/12] irqchip/stm32-exti: Map interrupts through
+ interrupt nexus node
+In-Reply-To: <20240216094758.916722-4-antonio.borneo@foss.st.com>
+References: <20240216094758.916722-1-antonio.borneo@foss.st.com>
+ <20240216094758.916722-4-antonio.borneo@foss.st.com>
+Date: Mon, 19 Feb 2024 15:22:34 +0100
+Message-ID: <87a5nwa5zp.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240215-mbly-i2c-v1-0-19a336e91dca@bootlin.com> <20240215-mbly-i2c-v1-8-19a336e91dca@bootlin.com>
-In-Reply-To: <20240215-mbly-i2c-v1-8-19a336e91dca@bootlin.com>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Mon, 19 Feb 2024 15:21:27 +0100
-Message-ID: <CACRpkdbuTX50syD0CMFcZXBmAHw4nwpcSc-C1OOUQEA9WHqCwA@mail.gmail.com>
-Subject: Re: [PATCH 08/13] i2c: nomadik: replace jiffies by ktime for FIFO
- flushing timeout
-To: =?UTF-8?B?VGjDqW8gTGVicnVu?= <theo.lebrun@bootlin.com>
-Cc: Andi Shyti <andi.shyti@kernel.org>, Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, linux-arm-kernel@lists.infradead.org, 
-	linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org, 
-	Gregory Clement <gregory.clement@bootlin.com>, 
-	Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>, 
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Tawfik Bayouk <tawfik.bayouk@mobileye.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
 
-On Thu, Feb 15, 2024 at 5:52=E2=80=AFPM Th=C3=A9o Lebrun <theo.lebrun@bootl=
-in.com> wrote:
+On Fri, Feb 16 2024 at 10:47, Antonio Borneo wrote:
+> diff --git a/drivers/irqchip/irq-stm32-exti.c b/drivers/irqchip/irq-stm32-exti.c
+> index 69982f21126a..95bb3dd10b2c 100644
+> --- a/drivers/irqchip/irq-stm32-exti.c
+> +++ b/drivers/irqchip/irq-stm32-exti.c
+> @@ -61,6 +61,7 @@ struct stm32_exti_host_data {
+>  	struct stm32_exti_chip_data *chips_data;
+>  	const struct stm32_exti_drv_data *drv_data;
+>  	struct hwspinlock *hwlock;
+> +	struct device_node *irq_map_node;
 
-> The FIFO flush function uses a jiffies amount to detect timeouts as the
-> flushing is async. Replace with ktime to get more accurate precision
-> and support short timeouts.
->
-> Signed-off-by: Th=C3=A9o Lebrun <theo.lebrun@bootlin.com>
+Please keep variable declarations ordered in reverse fir tree layout:
 
-Excellent patch. Thanks.
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+https://www.kernel.org/doc/html/latest/process/maintainer-tip.html#variable-declarations
 
-Yours,
-Linus Walleij
+>  };
+>  
+>  static struct stm32_exti_host_data *stm32_host_data;
+> @@ -713,8 +714,9 @@ static int stm32_exti_h_domain_alloc(struct irq_domain *dm,
+>  	u8 desc_irq;
+>  	struct irq_fwspec *fwspec = data;
+>  	struct irq_fwspec p_fwspec;
+> +	struct of_phandle_args out_irq;
+
+Please move this into the condition path where it is actually used.
+
+>  	irq_hw_number_t hwirq;
+> -	int bank;
+> +	int bank, ret;
+>  	u32 event_trg;
+>  	struct irq_chip *chip;
+>  
+> @@ -731,6 +733,25 @@ static int stm32_exti_h_domain_alloc(struct irq_domain *dm,
+>  
+>  	irq_domain_set_hwirq_and_chip(dm, virq, hwirq, chip, chip_data);
+>  
+> +	if (host_data->irq_map_node) {
+> +		out_irq.np = host_data->irq_map_node;
+
+Thanks,
+
+        tglx
