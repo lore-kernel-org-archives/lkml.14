@@ -1,130 +1,142 @@
-Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mo4-p02-ob.smtp.rzone.de (mo4-p02-ob.smtp.rzone.de [85.215.255.84])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB0DE51C2C
-	for <linux-kernel@vger.kernel.org>; Mon, 19 Feb 2024 21:07:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.174
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708376871; cv=none; b=PQ57rymL6EpkAzbyhb6D5LfD2V/QuSxzUHZw+rHZ3jUHhZ+VJJPtBLsn4BFM10npKDtaoi+jGOOGDF4Ucl6IGUREge8+yinEdjDovsYv5v9mCcGf7mzUXdvxl5C9ZIdkBzyJ0IcRJqpZ8IfNnwM1VXTnIzJ2D4QpD4+3BxhsB/4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C442A2E835;
+	Mon, 19 Feb 2024 21:07:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=85.215.255.84
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1708376871; cv=pass; b=XzmhyyLLOnpOC4fCHhDCca0Ndh7rAN6lchE5uEp7e2vQm7eX1zFu90SB/JoAzDCTsriEVKnn/RabjYDehE7j5wNKSHXJaJTkaWLuyvDjbxhkcKkeN53PFaUvoY61pQSJbenb+kwCWjIJ7j1WdkT4OUL8ak/3ZuCgSUDlUfnaC8Q=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1708376871; c=relaxed/simple;
-	bh=Wb1EsAOdRQ+TypSlFyHwyJrlgDHcSksuMbbbXKbQxA8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OOyGfnDzLaiY5+DdnHOaF0wu0ET6WPfhCu86Yu1VtXFuQOOgyczr0jc7cFP01foe+VSEQ4Sh/ERaZTm6RK12QmHbdoaitemn2iuQ0urrdsJusTmL97JiFJI5fStDouYlN2ky5MICdXB34CHRdVDvix/DCP2osWtzn4na6yLbJJU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=FqGzwUhi; arc=none smtp.client-ip=209.85.210.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	bh=eNljqwevEksOUMlEebSE8qxQgsP5d/5/H18BupVK6+o=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=SA7JdWWPDe3dIZBnEQjGNziVVourjtuU0BHnPGjSL+91RoY602Pop7/rDLQSc3S/FI464lBPQ1j5kxkJganLcrpwj4OTbP/3puvQvIbh5cEINkjbG6KnAt16P2/iO5AL58sqU/AapRx4x8noX/xhXOVWIZmUWO6CSIVceWu2rJs=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=hartkopp.net; spf=pass smtp.mailfrom=hartkopp.net; dkim=pass (2048-bit key) header.d=hartkopp.net header.i=@hartkopp.net header.b=Ki5jJ4a0; dkim=permerror (0-bit key) header.d=hartkopp.net header.i=@hartkopp.net header.b=hpGTBR9W; arc=pass smtp.client-ip=85.215.255.84
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=hartkopp.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hartkopp.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="FqGzwUhi"
-Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-6e466a679bfso704079b3a.1
-        for <linux-kernel@vger.kernel.org>; Mon, 19 Feb 2024 13:07:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1708376869; x=1708981669; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=0v4aGJ9LU9dBSomS+ec3dUGjJlpnKfj3hq8T5zymb8w=;
-        b=FqGzwUhij7LMdv6aCDTBzNyV/FOCGQFfjP95A8FhobdSv6sKeSPPDCLt0EpOP+5A7v
-         he2QN+7Cja4kaqwis/BvHSrH1rogQMeJiqOTF2obTVHYwvSjT36FYNYczo9B6v5jW9u6
-         mUiXAUqczrccMdjUkpIa2XerW3AWNebPy4dEk=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708376869; x=1708981669;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=0v4aGJ9LU9dBSomS+ec3dUGjJlpnKfj3hq8T5zymb8w=;
-        b=l1V9s0PvjsIo+PIsxxkT0luYje6Ezr2lIY1Jb+xM6lpYbhjbeTdZZwAuZP7KEmI0e6
-         de/8uaVzL6vjaa5xfgDyuFU9UyLnETHq9Rfrk8VqZWj27u9gjERBw0AlLrSefzkzFGeE
-         ZxsklwtWxxB/KQyz7x3IXUdu5BxFxMBXW1nLMO3JmBfmA4Gj68GZjBk0tJnaW3qw4vqq
-         ocUe5hF3zhbFSXaEWAFkhVA/Oh0VZaty1OEaVX1/z+cYYDMUq/Ac8+YYdZi5TaGFIFom
-         9UVQNyTpKJfvJFPQM8cZpmYwnQeFsemXRDG8Y1aQp9Vs4UqK34XW/yDJnrDFMX3pNTfO
-         j9mA==
-X-Forwarded-Encrypted: i=1; AJvYcCX1plTdbBlKoHUf+ZoFhUiw9U0XNrTlTrOynHJvDaWP/pGNBWTfqWMPcy9qacFpW2KPbxtM2LqHGs2cvo9UsR6CVaB7fCWRSro3/m9M
-X-Gm-Message-State: AOJu0Yy7B6O7oZcH27WTpC3TaMJ2HGtkCTrWff7MLwPnK9BRyb52/V/Q
-	fQc4fS+js32uTfrdvOhfOghOOmDzCsNDEvYEnbz6gyubc5QdJsPD/c6CC5I24g==
-X-Google-Smtp-Source: AGHT+IHbLBW3EDVvJdonxYBkFDS1KzBBkz2Oq6mObdvWo4OQ4squ6PL/TXRDYA61vIonSEErhJiQtw==
-X-Received: by 2002:a05:6a00:812:b0:6e4:6047:fdf3 with SMTP id m18-20020a056a00081200b006e46047fdf3mr4974895pfk.14.1708376869048;
-        Mon, 19 Feb 2024 13:07:49 -0800 (PST)
-Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id h9-20020a62b409000000b006e448fa3d93sm3401025pfn.174.2024.02.19.13.07.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 19 Feb 2024 13:07:48 -0800 (PST)
-Date: Mon, 19 Feb 2024 13:07:48 -0800
-From: Kees Cook <keescook@chromium.org>
-To: =?iso-8859-1?Q?Micka=EBl_Sala=FCn?= <mic@digikod.net>
-Cc: =?iso-8859-1?Q?G=FCnther?= Noack <gnoack@google.com>,
-	Paul Moore <paul@paul-moore.com>,
-	"Serge E . Hallyn" <serge@hallyn.com>,
-	Konstantin Meskhidze <konstantin.meskhidze@huawei.com>,
-	Shervin Oloumi <enlightened@chromium.org>,
-	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-security-module@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH] landlock: Warn once if a Landlock action is requested
- while disabled
-Message-ID: <202402191304.ED03339B@keescook>
-References: <20240219191804.2978911-1-mic@digikod.net>
+	dkim=pass (2048-bit key) header.d=hartkopp.net header.i=@hartkopp.net header.b="Ki5jJ4a0";
+	dkim=permerror (0-bit key) header.d=hartkopp.net header.i=@hartkopp.net header.b="hpGTBR9W"
+ARC-Seal: i=1; a=rsa-sha256; t=1708375067; cv=none;
+    d=strato.com; s=strato-dkim-0002;
+    b=RLoVMLhRCUjEZnzpW3aKBpfB2VpJwlSQuQFYGmFSmyOKvtye0tQjX13oiqK6acTNKZ
+    ARg0EctxXyRO3A/OqoQk8RwolS2Tpd4nG9CqsOoamSAKzW4Ya/Om1+/N5wD2Ta6mIDbp
+    kMcNa4tDkX54shueRnW3016MvLaxpXEDNW9Q+tg2jOypJ8ModkvXBt57P9L0K/oOz5/E
+    m3A2zZIeThrzGav1iC4qF9hXwL57U2nrdYsee0n9R17SqhZM/AdxhRoUlyQEVuMsfOas
+    Hpw5sQYiMXEqYXbNWSwFoQQsER0C61apF3cwgFejRn9slJnvMgwDO3gD4MG0t3nxRGD7
+    4AcQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; t=1708375067;
+    s=strato-dkim-0002; d=strato.com;
+    h=In-Reply-To:From:References:Cc:To:Subject:Date:Message-ID:Cc:Date:
+    From:Subject:Sender;
+    bh=Fv4HUwoYJ78Ao5yyDcK+Lz6h+c9zEeTZIGoLl7li1Rw=;
+    b=iIxqFJrFnfjERZhfAjhFKwzM7bCpXWkvPNHxMVYWR21X+ZdAT/kAxtkQ4deYzBH30W
+    ciMwYWyemRU0vLfCI23ZKlI3kIBniPQGZc1/BHDNBpdP0LDKyHDIHmKs5Cn1PVo3ViRj
+    db0tX/cbyZnBh4NjuxQyyLVXDVPqbPVjsN/dLvsDcSAQjTTDjP6bOKr+ktwDbyRYrtzP
+    ulcLhJok15ZjfuaQx86hoMlkf4fBP9ppmaPoNIy+tdKAKxmedJms0n1Fx6OpmKOd9sKE
+    v2n6z5UQ+iGzt04Ei/WVO7w8ZZtSvSrtnvXfOrPhxVWQrWiulgGQX6OhW0fZEjydINJs
+    xyfw==
+ARC-Authentication-Results: i=1; strato.com;
+    arc=none;
+    dkim=none
+X-RZG-CLASS-ID: mo02
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1708375067;
+    s=strato-dkim-0002; d=hartkopp.net;
+    h=In-Reply-To:From:References:Cc:To:Subject:Date:Message-ID:Cc:Date:
+    From:Subject:Sender;
+    bh=Fv4HUwoYJ78Ao5yyDcK+Lz6h+c9zEeTZIGoLl7li1Rw=;
+    b=Ki5jJ4a0ISlzbCYHqEjTRNXBFq1CXKzI/Padmw8s8rzprr5JAOab26Q86qI/7868Rk
+    lu0GmcOPWDvVXuNYRKkIkrO0ZskonOQ498yTWica2qgRuPV8R9A9dm9eRxSnqfT353RY
+    K566A8yiAkTC6MJ21ErjTt1zyf+6TJ1/YDHb9u15j/ZQT+o04sVnXrG8Oel1Q8sIxP2N
+    8y8AaRaM6WgOl4080G+kCj+x3z9XxEtn6PbS5nQANi8Bop6YNCimMmIOFk9CQbHnZZGA
+    USDsOiQRuw3WVMOKGtpHtIuU6p14gZUjmEA8qMZ8whdVIaX6TR55NAY7VDJUTMbtqBZ8
+    GwIg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; t=1708375067;
+    s=strato-dkim-0003; d=hartkopp.net;
+    h=In-Reply-To:From:References:Cc:To:Subject:Date:Message-ID:Cc:Date:
+    From:Subject:Sender;
+    bh=Fv4HUwoYJ78Ao5yyDcK+Lz6h+c9zEeTZIGoLl7li1Rw=;
+    b=hpGTBR9WEO3/nloOvwsmULD0/vv6szH/ypkVJ0Qtir7LqLyWjkXUHGlvHY0rxwFGIQ
+    k2emtWXlYz0tO6oTAGCw==
+X-RZG-AUTH: ":P2MHfkW8eP4Mre39l357AZT/I7AY/7nT2yrDxb8mjG14FZxedJy6qgO1qCHSa1GLptZHusl129OHEdFq0USEbDdAnQ=="
+Received: from [IPV6:2a00:6020:4a8e:5000::90c]
+    by smtp.strato.de (RZmta 49.11.2 AUTH)
+    with ESMTPSA id K49f9c01JKbk876
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
+	(Client did not present a certificate);
+    Mon, 19 Feb 2024 21:37:46 +0100 (CET)
+Message-ID: <e9f2c716-51d3-4c03-a447-9fed357669c5@hartkopp.net>
+Date: Mon, 19 Feb 2024 21:37:46 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240219191804.2978911-1-mic@digikod.net>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] can: softing: remove redundant NULL check
+Content-Language: en-US
+To: Simon Horman <horms@kernel.org>
+Cc: Daniil Dulov <d.dulov@aladdin.ru>, Wolfgang Grandegger
+ <wg@grandegger.com>, Marc Kleine-Budde <mkl@pengutronix.de>,
+ "David S. Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>,
+ Kurt Van Dijck <dev.kurt@vandijck-laurijssen.be>, linux-can@vger.kernel.org,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ lvc-project@linuxtesting.org
+References: <20240211150535.3529-1-d.dulov@aladdin.ru>
+ <20240216172701.GP40273@kernel.org>
+ <12cd0fd0-be86-4af0-8d6b-85d3a81edd2a@hartkopp.net>
+ <20240219170038.GH40273@kernel.org>
+From: Oliver Hartkopp <socketcan@hartkopp.net>
+In-Reply-To: <20240219170038.GH40273@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Mon, Feb 19, 2024 at 08:18:04PM +0100, Mickaël Salaün wrote:
-> Because sandboxing can be used as an opportunistic security measure,
-> user space may not log unsupported features.  Let the system
-> administrator know if an application tries to use Landlock but failed
-> because it isn't enabled at boot time.  This may be caused by bootloader
-> configurations with outdated "lsm" kernel's command-line parameter.
+Hi Simon,
+
+On 2024-02-19 18:00, Simon Horman wrote:
+> On Fri, Feb 16, 2024 at 08:47:43PM +0100, Oliver Hartkopp wrote:
+>> Hi Simon,
+>>
+>> I have a general question on the "Fixes:" tag in this patch:
+>>
+>> On 16.02.24 18:27, Simon Horman wrote:
+>>> On Sun, Feb 11, 2024 at 07:05:35AM -0800, Daniil Dulov wrote:
+>>>> In this case dev cannot be NULL, so remove redundant check.
+>>>>
+>>>> Found by Linux Verification Center (linuxtesting.org) with SVACE.
+>>>>
+>>>> Fixes: 03fd3cf5a179 ("can: add driver for Softing card")
+>>
+>> IMHO this is simply an improvement which is done by all patches applied to
+>> the kernel but it does not really "fix" anything from a functional
+>> standpoint.
+>>
+>> Shouldn't we either invent a new tag or better leave it out to not confuse
+>> the stable maintainers?
 > 
-> Cc: Günther Noack <gnoack@google.com>
-> Cc: stable@vger.kernel.org
-> Fixes: 265885daf3e5 ("landlock: Add syscall implementations")
-> Signed-off-by: Mickaël Salaün <mic@digikod.net>
-> ---
->  security/landlock/syscalls.c | 18 +++++++++++++++---
->  1 file changed, 15 insertions(+), 3 deletions(-)
+> Hi Oliver,
 > 
-> diff --git a/security/landlock/syscalls.c b/security/landlock/syscalls.c
-> index f0bc50003b46..b5b424819dee 100644
-> --- a/security/landlock/syscalls.c
-> +++ b/security/landlock/syscalls.c
-> @@ -33,6 +33,18 @@
->  #include "ruleset.h"
->  #include "setup.h"
->  
-> +static bool is_not_initialized(void)
-> +{
-> +	if (likely(landlock_initialized))
-> +		return false;
-> +
-> +	pr_warn_once(
-> +		"Disabled but requested by user space. "
-> +		"You should enable Landlock at boot time: "
-> +		"https://docs.kernel.org/userspace-api/landlock.html#kernel-support\n");
+> sorry for missing that in my review.
+> 
+> Yes, I agree that this is probably not a fix, for which my
+> rule of thumb is something that addresses a user-visible problem.
+> So I agree it should not have a fixes tag.
+> 
+> I would suggest that we can just change the text to something that
+> has no tag. Something like:
+> 
+> ...
+> 
+> Introduced by 03fd3cf5a179 ("can: add driver for Softing card")
+> 
 
-Perhaps update this docs to be really explicit with a example, maybe...
+Yes, but the "Introduced-by:" tag would be an optional tag for people 
+that like blaming others, right?
 
-If `landlock` is not present in `CONFIG_LSM`, you can add it. For
-example, if this was the current config::
+IMHO we should think about completely removing the "Fixes:" tag, when it 
+has no user-visible effect that might be a candidate for stable kernels. 
+It is common improvement work. And it has been so for years.
 
-  $ zgrep -h ^CONFIG_LSM= /boot/config-$(uname -r) /proc/config.gz 2>/dev/null
-  CONFIG_LSM="lockdown,yama,integrity,apparmor"
-
-You can boot with::
-
-  lsm=landlock,lockdown,yama,integrity,apparmor
-
-
-I *still* wish we had the "+" operator for lsm=. It would be SO much
-easier to say "boot with lsm=+landlock". *shrug*
-
-
-Reviewed-by: Kees Cook <keescook@chromium.org>
-
--- 
-Kees Cook
+Best regards,
+Oliver
