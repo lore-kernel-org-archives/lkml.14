@@ -1,109 +1,276 @@
-Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98C09524C0;
-	Mon, 19 Feb 2024 20:19:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.193
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F1EC374DD;
+	Mon, 19 Feb 2024 20:20:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708373968; cv=none; b=CyM55jKjV2lXGT+7+GokUtGaJaEi5d37dhIpVN+KJey9rSC+6DNs3nA1QaFAeutMSICkfN/TCIXE2BhbG+4Y2Ub1l2Rtj+hP0xiHW20WCIVbCRDz/txGISFhvjmzW1VrFKEbS/QptRludGnLLdTWa61nj8fUhkPwCAXI+MhyH98=
+	t=1708374018; cv=none; b=B1RHWF9x0nKBwE9cLNSWHRfvzyIscQPWLWtXnV+cdoWXG/y1sUZOMJrBwmU1i8VKn0P7sjUYUvjI0LwCepCbwESZ6hU7hqoHeVEyjjJSRca2tqtpRp3k8pBqVxsy5UMae2W3C/e2gdNHOSjGSq4hLfq8EJP8LtXjlDZUtoBDKSQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708373968; c=relaxed/simple;
-	bh=EwTBXOokFY4P9ANdyfQvACUoGgEpku28/zv8Debf6KQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ERRnDhHYB+4R1fXE9uNMbj/UmuOznIHYbRcwocpzAC9t5M8/FX4lZs2G6exC/cPsD06FxP7ZIG2k0gEzaYKK0aQsjdt3zsebJ+YeDGDfyisIwFOelLKWtKI8ekjzjZaTLx4k5cJ/lYb6jRHe5mUAsRimiSNQCUNG/IPOWiqUXQg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=ZJJBiWbb; arc=none smtp.client-ip=217.70.183.193
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1708374018; c=relaxed/simple;
+	bh=gHOp1QBYiHr0I6TnykCbbaoLqfJQnuRcGvEdxF39TMQ=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=WJkWmlL0WZ3Q86dmGhzkZmLZOk3mia4reHSIQSjNeNPeKcBmkhv8Z787f6iSDaNWN4mSxsIkebczasfDYfD4P1HbZ+W444t5bWTuNGnmKxXKgf8XF2ClAWGUzfU2XhzaVE0gsQ/VX2TAwOOU8PBzjQQyQhdRGsMgrPTZICkQjrg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MjTtUSkY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="ZJJBiWbb"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 1FC0F240003;
-	Mon, 19 Feb 2024 20:19:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1708373957;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=/eFa1OZ6RfBH4efn1I84fs1ja49iC4gp/bJRJKYHyLY=;
-	b=ZJJBiWbbQlaBB2D6VpMjxy7mi1VJFKuuQHHbAVy2+IbVDdQ6zzJNgzwpTrdZy3I7Z5Xl81
-	lmZ/fVm4w9xg7xsGvRp47527tcWFUhfrz6mGGNeQ2uzs4msTJbniB8ZKQq2pYnxwH/SsdX
-	YRVfyuatTfzV0WAY6i2dJyzxDEdEuCm41W+B9LzOpSscxlaSNYOphuOgHlO1O+bcljUUxz
-	Qem3xafhQyRKvcG+A57yYeIjrYlz8WMWqMjfJY7Oa3blsQV6klPHBz1RRKl0XokY2ILVQh
-	FD3Sc4jN8ItbrLxZXE5SKqG+N5MFkgsNQwDZ7xEAfIttA/j6f33s5t1RtpgUMA==
-Date: Mon, 19 Feb 2024 21:19:16 +0100
-From: Alexandre Belloni <alexandre.belloni@bootlin.com>
-To: Michal Simek <michal.simek@amd.com>
-Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	linux-kernel@vger.kernel.org, monstr@monstr.eu,
-	michal.simek@xilinx.com, git@xilinx.com,
-	Conor Dooley <conor+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Rob Herring <robh@kernel.org>,
-	"open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>,
-	"moderated list:ARM/ZYNQ ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>,
-	"open list:REAL TIME CLOCK (RTC) SUBSYSTEM" <linux-rtc@vger.kernel.org>
-Subject: Re: [PATCH] dt-bindings: rtc: zynqmp: Describe power-domains property
-Message-ID: <202402192019160b9c4120@mail.local>
-References: <94726c90ff519185767475f672d70311472ea925.1708073513.git.michal.simek@amd.com>
- <5a81f16b-8ece-4263-b424-4dd6cd6e386f@linaro.org>
- <ed59671f-6e0b-45a2-bae7-38f7b4b7e625@amd.com>
- <ebcfd49d-f810-4d9b-8cba-b55071fc7fa6@linaro.org>
- <96c0f613-7c53-4189-bfc8-7d572b308b9f@amd.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MjTtUSkY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 55613C433F1;
+	Mon, 19 Feb 2024 20:20:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1708374017;
+	bh=gHOp1QBYiHr0I6TnykCbbaoLqfJQnuRcGvEdxF39TMQ=;
+	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
+	b=MjTtUSkYwMCnetFVEyU3rTIW7slfhEkNYlnC5PSLvNOkTBn7jVZm5yq4Ko2MmODZJ
+	 XmyXQTTl+GD42Oeqq+4x9Vc9QgphUq3WNQd7Rl/0PWY9StAS7vaaMGRZiPQPvO88A0
+	 LLduiZBeZlB5rFTsylvnz5ZyithTDB/e2wHsfagzBOnJrXsks6lSyw8j+PIt7JQ0T+
+	 CBSTnEjzyavFGMIQpfdsgF5h2CcYbsfWZOeoAx9uFjq6RaZOkYXVFGVtBBOaRMFS6V
+	 pqSKP32SRiickys93tIvJgohpV/wE0x1i/1Uhw4JsQptKbxJOV8tkqfPYe3MqRqzFy
+	 QwNC4OwnXLClA==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <96c0f613-7c53-4189-bfc8-7d572b308b9f@amd.com>
-X-GND-Sasl: alexandre.belloni@bootlin.com
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Mon, 19 Feb 2024 20:20:11 +0000
+Message-Id: <CZ9C1M72695Q.1K7JBWXIQNLTL@seitikki>
+Cc: <zhiquan1.li@intel.com>, <kristen@linux.intel.com>, <seanjc@google.com>,
+ <zhanb@microsoft.com>, <anakrish@microsoft.com>,
+ <mikko.ylinen@linux.intel.com>, <yangjie@microsoft.com>,
+ <chrisyan@microsoft.com>
+Subject: Re: [PATCH v9 10/15] x86/sgx: Add EPC reclamation in cgroup
+ try_charge()
+From: "Jarkko Sakkinen" <jarkko@kernel.org>
+To: "Haitao Huang" <haitao.huang@linux.intel.com>,
+ <dave.hansen@linux.intel.com>, <tj@kernel.org>, <mkoutny@suse.com>,
+ <linux-kernel@vger.kernel.org>, <linux-sgx@vger.kernel.org>,
+ <x86@kernel.org>, <cgroups@vger.kernel.org>, <tglx@linutronix.de>,
+ <mingo@redhat.com>, <bp@alien8.de>, <hpa@zytor.com>,
+ <sohil.mehta@intel.com>, <tim.c.chen@linux.intel.com>
+X-Mailer: aerc 0.15.2
+References: <20240205210638.157741-1-haitao.huang@linux.intel.com>
+ <20240205210638.157741-11-haitao.huang@linux.intel.com>
+ <CZ3D53XFVXAW.25EK0ZBFH3HV2@kernel.org>
+ <op.2i1xkgedwjvjmi@hhuan26-mobl.amr.corp.intel.com>
+ <CZ4FCQ633VLC.26Y7HUHGRSFB3@kernel.org>
+ <op.2jd9vpf0wjvjmi@hhuan26-mobl.amr.corp.intel.com>
+In-Reply-To: <op.2jd9vpf0wjvjmi@hhuan26-mobl.amr.corp.intel.com>
 
-On 19/02/2024 14:11:50+0100, Michal Simek wrote:
-> 
-> 
-> On 2/17/24 09:26, Krzysztof Kozlowski wrote:
-> > On 16/02/2024 10:42, Michal Simek wrote:
-> > > 
-> > > 
-> > > On 2/16/24 10:19, Krzysztof Kozlowski wrote:
-> > > > On 16/02/2024 09:51, Michal Simek wrote:
-> > > > > RTC has its own power domain on Xilinx Versal SOC that's why describe it as
-> > > > > optional property.
-> > > > > 
-> > > > > Signed-off-by: Michal Simek <michal.simek@amd.com>
-> > > > > ---
-> > > > > 
-> > > > >    Documentation/devicetree/bindings/rtc/xlnx,zynqmp-rtc.yaml | 3 +++
-> > > > >    1 file changed, 3 insertions(+)
-> > > > > 
-> > > > 
-> > > > But Versal is not described in this binding, is it? I see only one
-> > > > compatible.
-> > > 
-> > > It is the same IP only as is on zynqmp with own power rail.
-> > 
-> > Then you should have separate compatible, because they are not
-> > identical. It would also allow you to narrow the domains to versal and
-> > also require it (on versal).
-> 
-> I can double check with HW guys but I am quite sure IP itself is exactly the
-> same. What it is different is that there is own power domain to it (not
-> shared one as is in zynqmp case).
-> 
-> Also Linux is non secure sw and if secure firmware won't allow to change
-> setting of it it can't be required. I am just saying that Linux doesn't need
-> to be owner of any power domain that's why it shouldn't be required
-> property.
+On Mon Feb 19, 2024 at 3:12 PM UTC, Haitao Huang wrote:
+> On Tue, 13 Feb 2024 19:52:25 -0600, Jarkko Sakkinen <jarkko@kernel.org> =
+=20
+> wrote:
+>
+> > On Tue Feb 13, 2024 at 1:15 AM EET, Haitao Huang wrote:
+> >> Hi Jarkko
+> >>
+> >> On Mon, 12 Feb 2024 13:55:46 -0600, Jarkko Sakkinen <jarkko@kernel.org=
+>
+> >> wrote:
+> >>
+> >> > On Mon Feb 5, 2024 at 11:06 PM EET, Haitao Huang wrote:
+> >> >> From: Kristen Carlson Accardi <kristen@linux.intel.com>
+> >> >>
+> >> >> When the EPC usage of a cgroup is near its limit, the cgroup needs =
+to
+> >> >> reclaim pages used in the same cgroup to make room for new =20
+> >> allocations.
+> >> >> This is analogous to the behavior that the global reclaimer is =20
+> >> triggered
+> >> >> when the global usage is close to total available EPC.
+> >> >>
+> >> >> Add a Boolean parameter for sgx_epc_cgroup_try_charge() to indicate
+> >> >> whether synchronous reclaim is allowed or not. And trigger the
+> >> >> synchronous/asynchronous reclamation flow accordingly.
+> >> >>
+> >> >> Note at this point, all reclaimable EPC pages are still tracked in =
+=20
+> >> the
+> >> >> global LRU and per-cgroup LRUs are empty. So no per-cgroup =20
+> >> reclamation
+> >> >> is activated yet.
+> >> >>
+> >> >> Co-developed-by: Sean Christopherson =20
+> >> <sean.j.christopherson@intel.com>
+> >> >> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com=
+>
+> >> >> Signed-off-by: Kristen Carlson Accardi <kristen@linux.intel.com>
+> >> >> Co-developed-by: Haitao Huang <haitao.huang@linux.intel.com>
+> >> >> Signed-off-by: Haitao Huang <haitao.huang@linux.intel.com>
+> >> >> ---
+> >> >> V7:
+> >> >> - Split this out from the big patch, #10 in V6. (Dave, Kai)
+> >> >> ---
+> >> >>  arch/x86/kernel/cpu/sgx/epc_cgroup.c | 26 ++++++++++++++++++++++++=
+--
+> >> >>  arch/x86/kernel/cpu/sgx/epc_cgroup.h |  4 ++--
+> >> >>  arch/x86/kernel/cpu/sgx/main.c       |  2 +-
+> >> >>  3 files changed, 27 insertions(+), 5 deletions(-)
+> >> >>
+> >> >> diff --git a/arch/x86/kernel/cpu/sgx/epc_cgroup.c
+> >> >> b/arch/x86/kernel/cpu/sgx/epc_cgroup.c
+> >> >> index d399fda2b55e..abf74fdb12b4 100644
+> >> >> --- a/arch/x86/kernel/cpu/sgx/epc_cgroup.c
+> >> >> +++ b/arch/x86/kernel/cpu/sgx/epc_cgroup.c
+> >> >> @@ -184,13 +184,35 @@ static void
+> >> >> sgx_epc_cgroup_reclaim_work_func(struct work_struct *work)
+> >> >>  /**
+> >> >>   * sgx_epc_cgroup_try_charge() - try to charge cgroup for a single=
+ =20
+> >> EPC
+> >> >> page
+> >> >>   * @epc_cg:	The EPC cgroup to be charged for the page.
+> >> >> + * @reclaim:	Whether or not synchronous reclaim is allowed
+> >> >>   * Return:
+> >> >>   * * %0 - If successfully charged.
+> >> >>   * * -errno - for failures.
+> >> >>   */
+> >> >> -int sgx_epc_cgroup_try_charge(struct sgx_epc_cgroup *epc_cg)
+> >> >> +int sgx_epc_cgroup_try_charge(struct sgx_epc_cgroup *epc_cg, bool
+> >> >> reclaim)
+> >> >>  {
+> >> >> -	return misc_cg_try_charge(MISC_CG_RES_SGX_EPC, epc_cg->cg, =20
+> >> PAGE_SIZE);
+> >> >> +	for (;;) {
+> >> >> +		if (!misc_cg_try_charge(MISC_CG_RES_SGX_EPC, epc_cg->cg,
+> >> >> +					PAGE_SIZE))
+> >> >> +			break;
+> >> >> +
+> >> >> +		if (sgx_epc_cgroup_lru_empty(epc_cg->cg))
+> >> >> +			return -ENOMEM;
+> >> >> + +		if (signal_pending(current))
+> >> >> +			return -ERESTARTSYS;
+> >> >> +
+> >> >> +		if (!reclaim) {
+> >> >> +			queue_work(sgx_epc_cg_wq, &epc_cg->reclaim_work);
+> >> >> +			return -EBUSY;
+> >> >> +		}
+> >> >> +
+> >> >> +		if (!sgx_epc_cgroup_reclaim_pages(epc_cg->cg, false))
+> >> >> +			/* All pages were too young to reclaim, try again a little late=
+r =20
+> >> */
+> >> >> +			schedule();
+> >> >
+> >> > This will be total pain to backtrack after a while when something
+> >> > needs to be changed so there definitely should be inline comments
+> >> > addressing each branch condition.
+> >> >
+> >> > I'd rethink this as:
+> >> >
+> >> > 1. Create static __sgx_epc_cgroup_try_charge() for addressing single
+> >> >    iteration with the new "reclaim" parameter.
+> >> > 2. Add a new sgx_epc_group_try_charge_reclaim() function.
+> >> >
+> >> > There's a bit of redundancy with sgx_epc_cgroup_try_charge() and
+> >> > sgx_epc_cgroup_try_charge_reclaim() because both have almost the
+> >> > same loop calling internal __sgx_epc_cgroup_try_charge() with
+> >> > different parameters. That is totally acceptable.
+> >> >
+> >> > Please also add my suggested-by.
+> >> >
+> >> > BR, Jarkko
+> >> >
+> >> > BR, Jarkko
+> >> >
+> >> For #2:
+> >> The only caller of this function, sgx_alloc_epc_page(), has the same
+> >> boolean which is passed into this this function.
+> >
+> > I know. This would be good opportunity to fix that up. Large patch
+> > sets should try to make the space for its feature best possible and
+> > thus also clean up the code base overally.
+> >
+> >> If we separate it into sgx_epc_cgroup_try_charge() and
+> >> sgx_epc_cgroup_try_charge_reclaim(), then the caller has to have the
+> >> if/else branches. So separation here seems not help?
+> >
+> > Of course it does. It makes the code in that location self-documenting
+> > and easier to remember what it does.
+> >
+> > BR, Jarkko
+> >
+>
+> Please let me know if this aligns with your suggestion.
+>
+>
+> static int ___sgx_epc_cgroup_try_charge(struct sgx_epc_cgroup *epc_cg)
+> {
+>          if (!misc_cg_try_charge(MISC_CG_RES_SGX_EPC, epc_cg->cg,
+>                                          PAGE_SIZE))
+>                  return 0;
+>
+>          if (sgx_epc_cgroup_lru_empty(epc_cg->cg))
+>                  return -ENOMEM;
+>
+>          if (signal_pending(current))
+>                  return -ERESTARTSYS;
+>
+>          return -EBUSY;
+> }
+>
+> /**
+>   * sgx_epc_cgroup_try_charge() - try to charge cgroup for a single page
+>   * @epc_cg:     The EPC cgroup to be charged for the page.
+>   *
+>   * Try to reclaim pages in the background if the group reaches its limit=
+ =20
+> and
+>   * there are reclaimable pages in the group.
+>   * Return:
+>   * * %0 - If successfully charged.
+>   * * -errno - for failures.
+>   */
+> int sgx_epc_cgroup_try_charge(struct sgx_epc_cgroup *epc_cg)
+> {
+>          int ret =3D  ___sgx_epc_cgroup_try_charge(epc_cg);
+>
+>          if (ret =3D=3D -EBUSY)
+>                  queue_work(sgx_epc_cg_wq, &epc_cg->reclaim_work);
+>
+>          return ret;
+> }
+>
+> /**
+>   * sgx_epc_cgroup_try_charge_reclaim() - try to charge cgroup for a sing=
+le =20
+> page
+>   * @epc_cg:     The EPC cgroup to be charged for the page.
+>   *
+>   * Try to reclaim pages directly if the group reaches its limit and ther=
+e =20
+> are
+>   * reclaimable pages in the group.
+>   * Return:
+>   * * %0 - If successfully charged.
+>   * * -errno - for failures.
+>   */
+> int sgx_epc_cgroup_try_charge_reclaim(struct sgx_epc_cgroup *epc_cg)
+> {
+>          int ret;
+>
+>          for (;;) {
+>                  ret =3D  ___sgx_epc_cgroup_try_charge(epc_cg);
+>                  if (ret !=3D -EBUSY)
+>                          return ret;
+>
+>                  if (!sgx_epc_cgroup_reclaim_pages(epc_cg->cg, current->m=
+m))
+>                          /* All pages were too young to reclaim, try agai=
+n =20
+> a little later */
+>                          schedule();
+>          }
+>
+>          return 0;
+> }
+>
+> It is a little more involved to remove the boolean for =20
+> sgx_alloc_epc_page() and its callers like sgx_encl_grow(), =20
+> sgx_alloc_va_page(). I'll send a separate patch for comments.
 
-I guess because the integration is different, you still need a
-differente compatible so you can forbid the property on non-Versal.
+With quick look, it is towards right direction for sure.
 
-> 
-> Thanks,
-> Michal
-
--- 
-Alexandre Belloni, co-owner and COO, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+BR, Jarkko
