@@ -1,57 +1,57 @@
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 294BD3B79D;
-	Mon, 19 Feb 2024 16:09:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24FC73CF76;
+	Mon, 19 Feb 2024 16:09:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708358996; cv=none; b=Na6MmTjHIO28IvstGC6cFxbDUogfcOP8QHTqvOlaICEXULDFG5l1HPjEEJZoN/q6fezXmJIX39a6jio+Jhdq2q+oxJExfQti5Ddtef7NCMMlE+e9FQnLV1XAKXGUzHdc+yYoEfwm+FdXQgpaJoOvdGapkdQumoazhj5MRnmVAEM=
+	t=1708358998; cv=none; b=H1rjkAzSE7T4JySDOT9kbh/CuANsB7/foYUUVIkZ1hUEDcHIDZ1X/BQbH/lMl9aMLv0Zh4GENGkGX9kXtArKJaWohpy6yuYsYoA9zTppbskjiNc5uLgVvmEkV82ZGv4ydCww2NGiX0vOum8Ff6K+j2Yvn0tFDG6+/A+X6YXoMeo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708358996; c=relaxed/simple;
-	bh=W9dB3rUMqoNAamOHOS2WOxt7HyATzwndZgN7uhrewD8=;
+	s=arc-20240116; t=1708358998; c=relaxed/simple;
+	bh=4V919eTbFdBw7Tp07YHLEPWHDYxOjIPHYtJG5CrZq5I=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=AJw9Cu7hw2EiRZsgH6Rt7v30V3A/FUoldlua9zR827y0g1oJU96d057T3DOVDPUnvTU7c91KGFMRhLO/TA2Xa3H1bvPEGKbe+MIq/22E6gNCm2/Ar7jECHES7ycpUo9GnS0fll7/I5U3nVKsrnfrNC+i3XMUgXy4vI+JslLiTVg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Du7nmEJu; arc=none smtp.client-ip=209.85.128.44
+	 MIME-Version; b=ZzBYOthrplIbA7dfd7z/R4U6+nj1l3KWE7vk8xb/054k06j1u4quEt//eIMjZW1CVyLKjzOS+WSHD8oEXivAiVb9C4NQKHbdqHZn2UVOXMg2zIk4tTU81p6xw6F2hV3htQP7j5CQLz+Ttec4nRi6Mp3hNxj4/yGJQ/X8Y5PXwbY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YtEimwRr; arc=none smtp.client-ip=209.85.128.45
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Du7nmEJu"
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-4126ac0c32eso3301445e9.1;
-        Mon, 19 Feb 2024 08:09:54 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YtEimwRr"
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-41262eaa95aso10463715e9.0;
+        Mon, 19 Feb 2024 08:09:56 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1708358993; x=1708963793; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1708358995; x=1708963795; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Xh9vUfoHPZFnPPcTVso6vUO3bMJmWkfyYVswHNjvUxU=;
-        b=Du7nmEJuUPfY+iSQAsc/JcdIzf7uBi16Y/Tl5VYVARFnn/R7LyqV5QdpqxtT7hZoDt
-         WfS/VoGDzEJMVswns3L68hT2GxdbpRytN+EycOiYr6L4sglwr2XO8iamYfFAOGBzEQb1
-         2HnzHz9cO7mKTZXTW/zruOoy35thyyRUx2c3XTNoYyTcRQQ46rZTzywGtpMzmJtvaroj
-         mfOoywzF4JCw64aYw6Jp5YReWDmVqcvWebjkC6+MJHgTPZKTCMARqBK+GvUCSD3jAGf5
-         CrAw2XbUkewCf5MsSluyAgcGkXIEJjehOaQ2o6V1XqZTas/bTb4U6MPvwmKcN40DcmfD
-         q0yA==
+        bh=IcSzz7g/FXeqXPU2ZtW7Zce4uvUpW6Qhsx4YHP77Rr0=;
+        b=YtEimwRrMRtPISreOZCYxo0eDHAh868TMFLK+gYEHTY1nUlbuHallkHV+c6So27Fkc
+         ohDqvxUVziB3BKw8vyHpYHsRLzXxMAjEzhuCmKmloRa51Lv2TIU+x9fcSKKB3diowq7E
+         abH++B55H81Pigxk4+whxDgfBxVEkJgDrWuL5QdPtKeE5BVGI44umvVkr1imE/NqPuFo
+         dG8YIY1CJcmQtyuGNN4mMTuIs4DwvRzW5Bmqx0vp4dfiX4anBCycaV/GoZ3mNnPbnkCl
+         t9iDdRgsMl3xgY7IEn6MJf+SEltdH/g3UXtYIkpji9vvVbi9EdijO14HIc38wPRsw2Bs
+         vqIw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708358993; x=1708963793;
+        d=1e100.net; s=20230601; t=1708358995; x=1708963795;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Xh9vUfoHPZFnPPcTVso6vUO3bMJmWkfyYVswHNjvUxU=;
-        b=rO9N4+AMvHvlXnQGt9wicbxVlR7sh5kDkXbRE+OWvkPA5wv8oJglNkO/CubNmwkAXf
-         dRlaWbuFtnTma8jGSF6/wBJN5+Z1tpxe/7FuV7QzNV4Z4a/V4KfTOOj2JIP/a6rBxncG
-         QCb81aJbqifu+S06wNWCzl8WsznUZxuugAISVBlDJnVIkpfA7Py2cUw483tySn9ateHo
-         HLdob3XM3j6xDlvg5PiAIdpT+VUPLAdPatrT6h3Y1ScgYLGHj9y82QwzmvGegrevk2h6
-         SMQ2FspeUz25g7ICrIcKCCovEFSXAXKpj6YcNrfKjL8QFByR7oIKgMzl8+HPju+iLWeX
-         1JNA==
-X-Forwarded-Encrypted: i=1; AJvYcCVKYznC4rULt5G1Xky2gQbZwDctwjxHVvYY23DqoiA7+ofmeRiaW449AjfvFL9fi7lFWm9kue2sqzHroMkjYc57X4eDrMqoenyZ4TVCSZngvianKWkyiK19PaVbajo4IDU9X3qYqYISkdJfYctMruuGINAxXzckcg2Hqp6Sb6R0BJpzUNZpXpRiZZsP
-X-Gm-Message-State: AOJu0YzpPK7bz02w11TLPD0+LHpvE1Kw2LIt7t5eUkwf0IzUWZfbITRH
-	c5Jc+0D6XvaZIdggFmTbAR5bw+qatD62kQBmigiOety3D/+7GV/XGSaTTi/Q
-X-Google-Smtp-Source: AGHT+IGwHO1+9bzW+aeUsfuP4YK/bsb8fDl3AXVY3KJdwWdOV6wi0ZHETgfjh87YtN31Ug3+vIUc7g==
-X-Received: by 2002:a05:600c:1396:b0:411:d889:f3cd with SMTP id u22-20020a05600c139600b00411d889f3cdmr8958674wmf.34.1708358993362;
-        Mon, 19 Feb 2024 08:09:53 -0800 (PST)
+        bh=IcSzz7g/FXeqXPU2ZtW7Zce4uvUpW6Qhsx4YHP77Rr0=;
+        b=r/EzUUqDKEExQvJGdg2sqBLs6JdwwQa7saLEUdIQEfJsom4J+nVkkGt6wyLPNfJwOj
+         ubWWADFOr4KVYjdh1KS3ji4i89rWwZP5EcuaLzGJSMDC6GiWNM9JLy1VXndGkMRvHsk2
+         5obYQUZ8l+cpJGqIdK37im0WzjpyhYPoMg5V0QaJ+WGiacaN0oKhRzNzktSmpp3LUeqC
+         VWtr8Fl3YJU2ZlI1ardq/2pPntkMWAq9c1faFVujbJHoUfpcDGyewUt0zp5usWFQzWCh
+         u6d4uqdzLQHCm7UPaBcUhyfxzzhAlZn7Jrauer8F/bLCCJ7CTHf1mP/nKBISPm4SlLXE
+         Zhrg==
+X-Forwarded-Encrypted: i=1; AJvYcCXdo8BtA810g87VWJVKp2H+b91yrYBFOyhsnmTZXC9RqZRXR4XH6Wbdr76JHRTh2NWJ9YcovRK0VbD4CCLpPwA+7V8eqOz2GMxmxjBI739V8DVMtKVxj+1k6U7wWQPhGD1TqnjulFs5ciIPJ2BYM5o7Am60l6AiloVciYWs3cpiXh9INg3v5xShMfsX
+X-Gm-Message-State: AOJu0YwOKkjNgAi3QuU9BXEJZYCUiLn+/44oZc1/D8/EbUpVY7ICsBWj
+	2QXbBuBZt1C3nTpCk+ZboY2rc5LVI6K2HqlPxKCZD84ZDnpLSmkM
+X-Google-Smtp-Source: AGHT+IHYJOd7OkQJ+RxOn3mWD6F4cG3u5619ahizdkR4xGYSVkPM72ZOGf5heQNBoSanegiBRAFEzA==
+X-Received: by 2002:a7b:c850:0:b0:40f:ed18:f74b with SMTP id c16-20020a7bc850000000b0040fed18f74bmr8844128wml.35.1708358995582;
+        Mon, 19 Feb 2024 08:09:55 -0800 (PST)
 Received: from prasmi.home ([2a00:23c8:2500:a01:3c2e:cd45:f50f:f083])
-        by smtp.gmail.com with ESMTPSA id l14-20020a7bc44e000000b00411d1ce4f9dsm11592670wmi.34.2024.02.19.08.09.52
+        by smtp.gmail.com with ESMTPSA id l14-20020a7bc44e000000b00411d1ce4f9dsm11592670wmi.34.2024.02.19.08.09.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 19 Feb 2024 08:09:52 -0800 (PST)
+        Mon, 19 Feb 2024 08:09:55 -0800 (PST)
 From: Prabhakar <prabhakar.csengg@gmail.com>
 X-Google-Original-From: Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 To: Magnus Damm <magnus.damm@gmail.com>,
@@ -67,9 +67,9 @@ Cc: linux-arm-kernel@lists.infradead.org,
 	Prabhakar <prabhakar.csengg@gmail.com>,
 	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
 	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [PATCH 2/4] dt-bindings: arm: renesas: Document Renesas RZ/V2H{P} System Controller
-Date: Mon, 19 Feb 2024 16:09:10 +0000
-Message-Id: <20240219160912.1206647-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: [PATCH 4/4] arm64: defconfig: Enable R9A09G057 SoC
+Date: Mon, 19 Feb 2024 16:09:12 +0000
+Message-Id: <20240219160912.1206647-5-prabhakar.mahadev-lad.rj@bp.renesas.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240219160912.1206647-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
 References: <20240219160912.1206647-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
@@ -83,87 +83,27 @@ Content-Transfer-Encoding: 8bit
 
 From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-Add DT binding documentation for System Controller (SYS) found on
-RZ/V2H{P} ("R9A09G057") SoC's.
-
-SYS block contains the SYS_LSI_DEVID register which can be used to
-retrieve SoC version information.
+Enable support for the Renesas RZ/V2H (R9A09G057) SoC in the ARM64
+defconfig.
 
 Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 Reviewed-by: Fabrizio Castro <fabrizio.castro.jz@renesas.com>
 ---
-Note, the reset index in example node will be update once the CPG
-support is upstreamed.
----
- .../soc/renesas/renesas,r9a09g057-sys.yaml    | 59 +++++++++++++++++++
- 1 file changed, 59 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/soc/renesas/renesas,r9a09g057-sys.yaml
+ arch/arm64/configs/defconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/soc/renesas/renesas,r9a09g057-sys.yaml b/Documentation/devicetree/bindings/soc/renesas/renesas,r9a09g057-sys.yaml
-new file mode 100644
-index 000000000000..ba30d7734ee8
---- /dev/null
-+++ b/Documentation/devicetree/bindings/soc/renesas/renesas,r9a09g057-sys.yaml
-@@ -0,0 +1,59 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/soc/renesas/renesas,r9a09g057-sys.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Renesas RZ/V2H{P} System Controller (SYS)
-+
-+maintainers:
-+  - Geert Uytterhoeven <geert+renesas@glider.be>
-+
-+description:
-+  The RZ/V2H{P} SYS (System Controller) controls the overall
-+  configuration of the LSI and supports the following functions,
-+  - Trust zone control
-+  - Extend access by specific masters to address beyond 4GB space
-+  - GBETH configuration
-+  - Control of settings and states of SRAM/PCIe/CM33/CA55/CR8/xSPI/ADC/TSU
-+  - LSI version
-+  - WDT stop control
-+  - General registers
-+
-+properties:
-+  compatible:
-+    const: renesas,r9a09g057-sys
-+
-+  reg:
-+    maxItems: 1
-+
-+  clocks:
-+    items:
-+      - description: Clock from external oscillator
-+
-+  resets:
-+    items:
-+      - description: SYS_0_PRESETN reset signal
-+
-+required:
-+  - compatible
-+  - reg
-+  - clocks
-+  - resets
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    extal_clk: extal-clk {
-+        compatible = "fixed-clock";
-+        #clock-cells = <0>;
-+        clock-frequency = <24000000>;
-+    };
-+
-+    sys: system-controller@10430000 {
-+        compatible = "renesas,r9a09g057-sys";
-+        reg = <0x10430000 0x10000>;
-+        clocks = <&extal_clk>;
-+        resets = <&cpg 1>;
-+    };
+diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+index f9cc5bff157c..5d51ab7d14a3 100644
+--- a/arch/arm64/configs/defconfig
++++ b/arch/arm64/configs/defconfig
+@@ -1387,6 +1387,7 @@ CONFIG_ARCH_R9A07G044=y
+ CONFIG_ARCH_R9A07G054=y
+ CONFIG_ARCH_R9A08G045=y
+ CONFIG_ARCH_R9A09G011=y
++CONFIG_ARCH_R9A09G057=y
+ CONFIG_ROCKCHIP_IODOMAIN=y
+ CONFIG_ARCH_TEGRA_132_SOC=y
+ CONFIG_ARCH_TEGRA_210_SOC=y
 -- 
 2.34.1
 
