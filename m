@@ -1,55 +1,55 @@
-Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
+Received: from mail-qk1-f202.google.com (mail-qk1-f202.google.com [209.85.222.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2FF72C69E
-	for <linux-kernel@vger.kernel.org>; Mon, 19 Feb 2024 11:48:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67E0B2D606
+	for <linux-kernel@vger.kernel.org>; Mon, 19 Feb 2024 11:48:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708343317; cv=none; b=L5dfRy+r/QiSFNDJLY4vxTYAfpASaj0+p0g9utJ6iYbpKaQGpqKH2KykOmxa2fYPvN1pMnIfngedVdMlbFW8arXlWQMGZwvldfp5aVbbZT1jmuG4GcOrj11TDv+hIaFAYtHEduHg5gf5o0ruGgWQUkFdjFksb+p9JAsfzm+3jBM=
+	t=1708343320; cv=none; b=JerDzwu7JNLoOJDn+JKsQMfejUSuhPpGPAdGZApUD20eAbswvmVfsZ79fOoXTftnc9m8Kj08joVVYmtljRVKZ5b3+MatdgkZSDFIQ/+ea+UJQjxVvGFB+iBzOMCKzlMRMcZiGOXUOgnUK9GGETJLlHu9DB8fvnW+nLP46nqddI0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708343317; c=relaxed/simple;
-	bh=innSX49CwmZV7ZYVg2pc4oPmPaVu0uYAbVQ1SRQo7W0=;
+	s=arc-20240116; t=1708343320; c=relaxed/simple;
+	bh=Gsr8Np304/ZF/8MRD/n+jlVmItVNTviF52shcVw7ERw=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=G8TK2uOPRDcc37SaY8VfDAQKHQLwZmoM8zgsByKIJO3qTvLb1azs2XS99eIY0q5e0PgKXBsgi48DM8n8WUf1FjFZPxYMqurWu/CXwCu6Ll1/+HwcUdScYy6keGhUel6tBgKZiPEzupAFhEGslGlF3h2n8YkXzWwKzyNrpPMGJHE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--mattgilbride.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=qtDFEN0+; arc=none smtp.client-ip=209.85.219.202
+	 To:Cc:Content-Type; b=EL3pnuxZplip7a9US11/a3BXwapNhzC9NkS5gP0VkzRlJZdyGQwn3kEgCnRgusHrXOv6FjuTtAToNT3Q89uQdVvTsY7TPMncsyvYt9+0+dHSH403k+UX+jiU2NCbzMkJn3ng6hXFO27J1mqlYmqjzbJwoMutlBQOK4VFfjq/wZE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--mattgilbride.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=DZsSTOZz; arc=none smtp.client-ip=209.85.222.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--mattgilbride.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qtDFEN0+"
-Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-dc64e0fc7c8so5875207276.2
-        for <linux-kernel@vger.kernel.org>; Mon, 19 Feb 2024 03:48:35 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DZsSTOZz"
+Received: by mail-qk1-f202.google.com with SMTP id af79cd13be357-7816bea8d28so1015479985a.0
+        for <linux-kernel@vger.kernel.org>; Mon, 19 Feb 2024 03:48:38 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1708343314; x=1708948114; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1708343317; x=1708948117; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=kQYC/9pHL/SpAUfLef4ziz+f1NtXPaV0zydD9EqqSTw=;
-        b=qtDFEN0+epX1qOO3GYygJ39pJdj5Ny8r6NzpJLVSlMIEHfkXz/4jPaPXOaFZ8isRE6
-         RUSEarDOJblEIExN0iwOxMpF0aBc2QSNiEPhGLHzhRTTfYRCCLX05dUrlcbM1OvlnEyw
-         LVZyTftuKYD1XeKcqkoofr/ryhRHINwa84e0VVLED1T78gmu/og9XGYnP04Q9zTtAn8p
-         Xb0Szzn6eLeeYlBkI1wVtpFZahMaZ0NcGpyp8vB7GP1XhXKp4PjGENa1uW0B3e1+T5J7
-         AdqXGgLS4YdOQhOs0n0FYWMSB90FZvu4/YGfYhclP34XUGDmC2JeROjcldlUBXGvziq8
-         StXA==
+        bh=eQCD4AuKZId7gMhOchvG2XGZrBs0B56ew/r04xotUCQ=;
+        b=DZsSTOZzMjMot2AhkcMGcLko6acOMIDdSj8YEVYpLIsc3Rhy1M6LQhm0bSgYWyzmDI
+         rd4BHMdalqe0XjGUsJetR2YLYWZZ5Cte3vfwxZbO9jqBeMjBMcGLmEh2Vr/zr2lFdTEL
+         vhFaK4dNfY+GVz3fcfc0jEcPq1IiBBWtp/DutXBkTv3YEy4nqzb4cvKbqAwDwTYNCr01
+         iXW0qqSn/eZvM3gq38S3WFtADYkwuvs4DAGY2zkiOnP5g9bezQG6MgfQbTrGWgvLeUHm
+         gYbEMUFNfh4dhkvPjjyXHDHFdlAL6AJv/Pr60Y1H9ANwaMnQCwxL906LtRwlujkkAF9R
+         YI0w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708343314; x=1708948114;
+        d=1e100.net; s=20230601; t=1708343317; x=1708948117;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=kQYC/9pHL/SpAUfLef4ziz+f1NtXPaV0zydD9EqqSTw=;
-        b=GBM9gHr2/gkfjUz0P1Jh9qh7zczmkqjP7hxH9Zm01naW0ie6oBIFUSNPsGPNaoCIIa
-         1VgDHANEfn9eMjspRrbxgSFK9W0rIkhWPoxnR3KgeVAb2JLy2ifIza4ggxQJygWHlgQB
-         1psy6nB5bwOUUgbE926rDxJ0puLjrJYyfjH92nW1jKzllE0PV/AvR7ltwGyr/M6raNuT
-         VW9+dFTZid9wQzDxF4ewx4pkG/ENSt5ehgWerLnYxR/bkOmcOv4oXDXbrx3oWyEiH2T4
-         sO0Zdhxd+th1GcsyGY8+y9pTDFzqzwZ4Rh6NP5ViWXkZAYl6F7d+JkTAA4orTOh8PBsb
-         koLw==
-X-Forwarded-Encrypted: i=1; AJvYcCXE9ST9vo2/9beBH7396dy9g6E9EgyMhMHO3AJBpfcPdVFyEZUiPud2TN7C8apYaIhPsCmbUzzTwoGUv7VEnxeaMvui+rMmcjgjPbBh
-X-Gm-Message-State: AOJu0Yx5zHF4ZASX0gFfY0Fx+x9O0hiG0stg4XUbj3BcCpJffdLnyQsX
-	YKM3vycx9URhP6yTt7WgQLyLqeCsr8x7xJHX213iX7A/BqedKAOes9K0sfs7wgh4H7O04YxQs7O
-	zO4j9ulYx88rzihUttqKc0HHeKw==
-X-Google-Smtp-Source: AGHT+IEas/WNgoqoMZV1uw6x3vMJGN/U6AYX0XX9NXg/aOY3Ge04I04GlwMyjOmccpi/WvuL0dggWNRBtTjL3qmY2Z4=
+        bh=eQCD4AuKZId7gMhOchvG2XGZrBs0B56ew/r04xotUCQ=;
+        b=tuDBFZRUy9hY4PgTlAa+hq9/AxvBy62CblHHp/0/UlFT4Cr8XBhwhkcibQhwKg6rCC
+         2Q1IWzEZ5XLlEHkKq8arxYDo25CofGjd6sZai+KM9p0/bbQ0fa/DBLJ21lOip2utSeNR
+         TQZ+IqPkCarT6ZwY3QZPmv49QgtOIdsg223StEFzD8Z/3xuIW+23xeB28Wytte0rGiI4
+         5tuUb/gpx5/N2BuVovBoeW3sg4gQrchem6WcBQoXbCSASnisw/CfjCRWswX0Wb6tsKy8
+         sAFBBJ8LZgMqrW8Qfr50EMnHSFd0ufOwRZvhiSHSWJH9kPGgx8+T0nhaY8GcB5jH3cWK
+         3hvA==
+X-Forwarded-Encrypted: i=1; AJvYcCV3Qz7BVsdpE6CAKjG/CjQeqL396d+HlPCo0pPPWllKtYPqSxGg0EE8rkv1r/eVQFW986Ea1/5hw3/SHWPRtaoGWFXYK3GCpbFIEtoF
+X-Gm-Message-State: AOJu0Yy9NMVqckH94lyU5aH3rHyoHdowPHADHHJEK7bcznLCinr8IRB2
+	+SfiEZTpi6KadcusNNX5MYwG89cOUoKJbY6DGc2bDXbKOv3R5jdgoTz4YTto/pdcyyCih6XC02u
+	lB50Y7bdXUg6PD68wjIievmD1Mw==
+X-Google-Smtp-Source: AGHT+IF/WFVUGJFcz1k6jq7qhar/F0WayDZnvQAS2c7izu/+vXSmtyAZO8j0stsH0Xjt0E6hPX62r3w4J705wFJKzfE=
 X-Received: from mattgilbride.c.googlers.com ([fda3:e722:ac3:cc00:2b:7d90:c0a8:2ac5])
- (user=mattgilbride job=sendgmr) by 2002:a05:6902:1b85:b0:dc2:26f6:fbc8 with
- SMTP id ei5-20020a0569021b8500b00dc226f6fbc8mr479735ybb.7.1708343314722; Mon,
- 19 Feb 2024 03:48:34 -0800 (PST)
-Date: Mon, 19 Feb 2024 11:48:08 +0000
+ (user=mattgilbride job=sendgmr) by 2002:a05:620a:40d0:b0:787:72d9:b7a0 with
+ SMTP id g16-20020a05620a40d000b0078772d9b7a0mr3625qko.3.1708343317417; Mon,
+ 19 Feb 2024 03:48:37 -0800 (PST)
+Date: Mon, 19 Feb 2024 11:48:10 +0000
 In-Reply-To: <20240219-b4-rbtree-v2-0-0b113aab330d@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -59,8 +59,8 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20240219-b4-rbtree-v2-0-0b113aab330d@google.com>
 X-Mailer: b4 0.12.4
-Message-ID: <20240219-b4-rbtree-v2-1-0b113aab330d@google.com>
-Subject: [PATCH v2 1/6] rust: add `container_of!` macro
+Message-ID: <20240219-b4-rbtree-v2-3-0b113aab330d@google.com>
+Subject: [PATCH v2 3/6] rust: rbtree: add `RBTreeIterator`
 From: Matt Gilbride <mattgilbride@google.com>
 To: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
 	Wedson Almeida Filho <wedsonaf@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
@@ -77,57 +77,214 @@ Content-Type: text/plain; charset="utf-8"
 
 From: Wedson Almeida Filho <wedsonaf@gmail.com>
 
-This macro is used to obtain a pointer to an entire struct
-when given a pointer to a field in that struct.
+- Add Iterator implementation (`RBTreeIterator`) for `RBTree`, allowing
+  iteration over (key, value) pairs in key order.
+- Add individual `keys()` and `values()` functions to iterate over keys
+  or values alone.
+- Update doctests to use iteration instead of explicitly getting items.
 
+Iteration is needed by the binder driver to enumerate all values in a
+tree for oneway spam detection [1].
+
+Link: https://lore.kernel.org/rust-for-linux/20231101-rust-binder-v1-17-08ba9197f637@google.com/ [1]
 Signed-off-by: Wedson Almeida Filho <wedsonaf@gmail.com>
 Reviewed-by: Alice Ryhl <aliceryhl@google.com>
 Tested-by: Alice Ryhl <aliceryhl@google.com>
 Signed-off-by: Matt Gilbride <mattgilbride@google.com>
 ---
- rust/kernel/lib.rs | 32 ++++++++++++++++++++++++++++++++
- 1 file changed, 32 insertions(+)
+ rust/kernel/rbtree.rs | 125 ++++++++++++++++++++++++++++++++++++++++++--------
+ 1 file changed, 107 insertions(+), 18 deletions(-)
 
-diff --git a/rust/kernel/lib.rs b/rust/kernel/lib.rs
-index 7ac39874aeac..c7963efd1318 100644
---- a/rust/kernel/lib.rs
-+++ b/rust/kernel/lib.rs
-@@ -102,3 +102,35 @@ fn panic(info: &core::panic::PanicInfo<'_>) -> ! {
-     // SAFETY: FFI call.
-     unsafe { bindings::BUG() };
- }
-+
-+/// Produces a pointer to an object from a pointer to one of its fields.
-+///
-+/// # Safety
-+///
-+/// The pointer passed to this macro, and the pointer returned by this macro, must both be in
-+/// bounds of the same allocation.
-+///
-+/// # Examples
-+///
-+/// ```
-+/// # use kernel::container_of;
-+/// struct Test {
-+///     a: u64,
-+///     b: u32,
+diff --git a/rust/kernel/rbtree.rs b/rust/kernel/rbtree.rs
+index a72e9f57e660..b1faac831cfc 100644
+--- a/rust/kernel/rbtree.rs
++++ b/rust/kernel/rbtree.rs
+@@ -54,14 +54,30 @@ struct Node<K, V> {
+ ///     assert_eq!(tree.get(&30).unwrap(), &300);
+ /// }
+ ///
++/// // Iterate over the nodes we just inserted.
++/// {
++///     let mut iter = tree.iter();
++///     assert_eq!(iter.next().unwrap(), (&10, &100));
++///     assert_eq!(iter.next().unwrap(), (&20, &200));
++///     assert_eq!(iter.next().unwrap(), (&30, &300));
++///     assert!(iter.next().is_none());
 +/// }
 +///
-+/// let test = Test { a: 10, b: 20 };
-+/// let b_ptr = &test.b;
-+/// // SAFETY: The pointer points at the `b` field of a `Test`, so the resulting pointer will be
-+/// // in-bounds of the same allocation as `b_ptr`.
-+/// let test_alias = unsafe { container_of!(b_ptr, Test, b) };
-+/// assert!(core::ptr::eq(&test, test_alias));
-+/// ```
-+#[macro_export]
-+macro_rules! container_of {
-+    ($ptr:expr, $type:ty, $($f:tt)*) => {{
-+        let ptr = $ptr as *const _ as *const u8;
-+        let offset: usize = ::core::mem::offset_of!($type, $($f)*);
-+        ptr.sub(offset) as *const $type
-+    }}
++/// // Print all elements.
++/// for (key, value) in &tree {
++///     pr_info!("{} = {}\n", key, value);
++/// }
++///
+ /// // Replace one of the elements.
+ /// tree.try_create_and_insert(10, 1000)?;
+ ///
+ /// // Check that the tree reflects the replacement.
+ /// {
+-///     assert_eq!(tree.get(&10).unwrap(), &1000);
+-///     assert_eq!(tree.get(&20).unwrap(), &200);
+-///     assert_eq!(tree.get(&30).unwrap(), &300);
++///     let mut iter = tree.iter();
++///     assert_eq!(iter.next().unwrap(), (&10, &1000));
++///     assert_eq!(iter.next().unwrap(), (&20, &200));
++///     assert_eq!(iter.next().unwrap(), (&30, &300));
++///     assert!(iter.next().is_none());
+ /// }
+ ///
+ /// // Change the value of one of the elements.
+@@ -69,9 +85,11 @@ struct Node<K, V> {
+ ///
+ /// // Check that the tree reflects the update.
+ /// {
+-///     assert_eq!(tree.get(&10).unwrap(), &1000);
+-///     assert_eq!(tree.get(&20).unwrap(), &200);
+-///     assert_eq!(tree.get(&30).unwrap(), &3000);
++///     let mut iter = tree.iter();
++///     assert_eq!(iter.next().unwrap(), (&10, &1000));
++///     assert_eq!(iter.next().unwrap(), (&20, &200));
++///     assert_eq!(iter.next().unwrap(), (&30, &3000));
++///     assert!(iter.next().is_none());
+ /// }
+ ///
+ /// // Remove an element.
+@@ -79,9 +97,10 @@ struct Node<K, V> {
+ ///
+ /// // Check that the tree reflects the removal.
+ /// {
+-///     assert_eq!(tree.get(&10), None);
+-///     assert_eq!(tree.get(&20).unwrap(), &200);
+-///     assert_eq!(tree.get(&30).unwrap(), &3000);
++///     let mut iter = tree.iter();
++///     assert_eq!(iter.next().unwrap(), (&20, &200));
++///     assert_eq!(iter.next().unwrap(), (&30, &3000));
++///     assert!(iter.next().is_none());
+ /// }
+ ///
+ /// # Ok::<(), Error>(())
+@@ -121,9 +140,11 @@ struct Node<K, V> {
+ ///
+ /// // Check the nodes we just inserted.
+ /// {
+-///     assert_eq!(tree.get(&10).unwrap(), &100);
+-///     assert_eq!(tree.get(&20).unwrap(), &200);
+-///     assert_eq!(tree.get(&30).unwrap(), &300);
++///     let mut iter = tree.iter();
++///     assert_eq!(iter.next().unwrap(), (&10, &100));
++///     assert_eq!(iter.next().unwrap(), (&20, &200));
++///     assert_eq!(iter.next().unwrap(), (&30, &300));
++///     assert!(iter.next().is_none());
+ /// }
+ ///
+ /// // Remove a node, getting back ownership of it.
+@@ -131,9 +152,10 @@ struct Node<K, V> {
+ ///
+ /// // Check that the tree reflects the removal.
+ /// {
+-///     assert_eq!(tree.get(&10).unwrap(), &100);
+-///     assert_eq!(tree.get(&20).unwrap(), &200);
+-///     assert_eq!(tree.get(&30), None);
++///     let mut iter = tree.iter();
++///     assert_eq!(iter.next().unwrap(), (&10, &100));
++///     assert_eq!(iter.next().unwrap(), (&20, &200));
++///     assert!(iter.next().is_none());
+ /// }
+ ///
+ /// // Turn the node into a reservation so that we can reuse it with a different key/value.
+@@ -145,9 +167,11 @@ struct Node<K, V> {
+ ///
+ /// // Check that the tree reflect the new insertion.
+ /// {
+-///     assert_eq!(tree.get(&10).unwrap(), &100);
+-///     assert_eq!(tree.get(&15).unwrap(), &150);
+-///     assert_eq!(tree.get(&20).unwrap(), &200);
++///     let mut iter = tree.iter();
++///     assert_eq!(iter.next().unwrap(), (&10, &100));
++///     assert_eq!(iter.next().unwrap(), (&15, &150));
++///     assert_eq!(iter.next().unwrap(), (&20, &200));
++///     assert!(iter.next().is_none());
+ /// }
+ ///
+ /// # Ok::<(), Error>(())
+@@ -188,6 +212,25 @@ pub fn try_reserve_node() -> Result<RBTreeNodeReservation<K, V>> {
+     pub fn try_allocate_node(key: K, value: V) -> Result<RBTreeNode<K, V>> {
+         Ok(Self::try_reserve_node()?.into_node(key, value))
+     }
++
++    /// Returns an iterator over the tree nodes, sorted by key.
++    pub fn iter(&self) -> RBTreeIterator<'_, K, V> {
++        RBTreeIterator {
++            _tree: PhantomData,
++            // SAFETY: `root` is valid as it's embedded in `self` and we have a valid `self`.
++            next: unsafe { bindings::rb_first(&self.root) },
++        }
++    }
++
++    /// Returns an iterator over the keys of the nodes in the tree, in sorted order.
++    pub fn keys(&self) -> impl Iterator<Item = &'_ K> {
++        self.iter().map(|(k, _)| k)
++    }
++
++    /// Returns an iterator over the values of the nodes in the tree, sorted by key.
++    pub fn values(&self) -> impl Iterator<Item = &'_ V> {
++        self.iter().map(|(_, v)| v)
++    }
+ }
+ 
+ impl<K, V> RBTree<K, V>
+@@ -350,6 +393,52 @@ fn drop(&mut self) {
+     }
+ }
+ 
++impl<'a, K, V> IntoIterator for &'a RBTree<K, V> {
++    type Item = (&'a K, &'a V);
++    type IntoIter = RBTreeIterator<'a, K, V>;
++
++    fn into_iter(self) -> Self::IntoIter {
++        self.iter()
++    }
 +}
++
++/// An iterator over the nodes of a [`RBTree`].
++///
++/// Instances are created by calling [`RBTree::iter`].
++pub struct RBTreeIterator<'a, K, V> {
++    _tree: PhantomData<&'a RBTree<K, V>>,
++    next: *mut bindings::rb_node,
++}
++
++// SAFETY: An [`RBTree`] allows the same kinds of access to its values that a struct allows to its
++// fields, so we use the same Send condition as would be used for a struct with K and V fields.
++unsafe impl<'a, K: Send, V: Send> Send for RBTreeIterator<'a, K, V> {}
++
++// SAFETY: An [`RBTree`] allows the same kinds of access to its values that a struct allows to its
++// fields, so we use the same Sync condition as would be used for a struct with K and V fields.
++unsafe impl<'a, K: Sync, V: Sync> Sync for RBTreeIterator<'a, K, V> {}
++
++impl<'a, K, V> Iterator for RBTreeIterator<'a, K, V> {
++    type Item = (&'a K, &'a V);
++
++    fn next(&mut self) -> Option<Self::Item> {
++        if self.next.is_null() {
++            return None;
++        }
++
++        // SAFETY: All links fields we create are in a `Node<K, V>`.
++        let cur = unsafe { crate::container_of!(self.next, Node<K, V>, links) };
++
++        // SAFETY: The reference to the tree used to create the iterator outlives the iterator, so
++        // the tree cannot change. By the tree invariant, all nodes are valid.
++        self.next = unsafe { bindings::rb_next(self.next) };
++
++        // SAFETY: By the same reasoning above, it is safe to dereference the node. Additionally,
++        // it is ok to return a reference to members because the iterator must outlive it.
++        Some(unsafe { (&(*cur).key, &(*cur).value) })
++    }
++}
++
+ /// A memory reservation for a red-black tree node.
+ ///
+ /// It contains the memory needed to hold a node that can be inserted into a red-black tree. One
 
 -- 
 2.44.0.rc0.258.g7320e95886-goog
