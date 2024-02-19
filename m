@@ -1,57 +1,76 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f197.google.com (mail-il1-f197.google.com [209.85.166.197])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B23AB44C9C;
-	Mon, 19 Feb 2024 17:25:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8CB0482C0
+	for <linux-kernel@vger.kernel.org>; Mon, 19 Feb 2024 17:26:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708363525; cv=none; b=gqUBTk8WJ3kE1vYKu+abRDXoX3YNNHvXceF69OOoze1U4mQb9H/EizwJaXgZZL1lGUgPn+QXlKUcs5D26cOIpzg30YquSheLy89xCfOwPFgox/dVAF7a9+Y3OI6c8ciwn5mTU8UjdbXKyNG11Ho2Qm+SP1sWHXcow0K99rPs6tw=
+	t=1708363565; cv=none; b=g0ESUe/kLGhaOYQBF39lyEi6Hleona+CH7Ln3K88aTQlpPMjnHLQQOqes+scvGX71zScrh1/EoV/mBqikvC+PmiIYInW54BOSMfz08BkNtQSoC/AShr5M2Nsd30WHTG6Z6B9t0XP5IX6ufOOlNi56M8UE+VfkIpm7ZNVhM8TKcQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708363525; c=relaxed/simple;
-	bh=wMNKfNljDxVgzrZucLr6jIgjIOCOrZ/lrIeAT8DiT0w=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ph+0bS55j7ud3jeLX7bOxeHTFbqj0drYfFdZuKRGknnTW6iyQ9DPb82wlgJIEWz1Pj+wuv1ecIz9eXjXYWntSZZm7q8h1Y2+BKndnNcdDvx87fuKC5NJ3ZUOAJbA3g40/w/knSqz60pQ3nQVC352mR1W52dT8ElGRjjRp/bi084=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MZDmiA1h; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MZDmiA1h"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B6E95C433C7;
-	Mon, 19 Feb 2024 17:25:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708363525;
-	bh=wMNKfNljDxVgzrZucLr6jIgjIOCOrZ/lrIeAT8DiT0w=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=MZDmiA1hdzjbIAcFByxzAVA0EUeL4W30iscLiEQvgH9A7hJRxIcuBsGYSD1/6n3hk
-	 K/SVuslQ98pOMYyyLq0TNIgxL7ll9ZbS5CiIwjJYdb+fNZ7vKNFh5X63RwRhfrvwpU
-	 ert1v5HbMJbUYdBVzjV/U3eQGPExzOZC6qa1QX6C8cLEGqA07uyy6choii8pzdx4RE
-	 mCntkgYNbGrdU8CqLmP2Hgdxoa5UFMgvMi11XJwCqbaecXdC2dlvYMA+jFWRCf5Exd
-	 ftVhtAu+TI+IHVMTF1kWFpaLvv7qk52I+eSw8+tBEq7UM3QPcImbnQc7v33yBUhTJC
-	 ISav9Deh+bppA==
-Date: Mon, 19 Feb 2024 17:25:21 +0000
-From: Simon Horman <horms@kernel.org>
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: "David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [RESEND PATCH net-next] net: wan: framer: constify
- of_phandle_args in xlate
-Message-ID: <20240219172521.GJ40273@kernel.org>
-References: <20240217100306.86740-1-krzysztof.kozlowski@linaro.org>
+	s=arc-20240116; t=1708363565; c=relaxed/simple;
+	bh=aZmoMCgbUJdjQL0v39nvpibD9TtPYmXNpPVEeyvHuVM=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=bZmfpnwquJxw8ODeQm9R7d5PqkruRw72ujuLpm4jakw0BVCbL+M/PK1B8EWnQXq+MJvOQLIIcDXK8QpM/TDQZpp02JgykIalhwHYnphQyyT4UA+ow1FM0RqT9qBx/1rEuKu6+fr5OdVuIvCty3Nm+U18n+Z8s7SwxLh5rgAZPB8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f197.google.com with SMTP id e9e14a558f8ab-365067c1349so30973465ab.3
+        for <linux-kernel@vger.kernel.org>; Mon, 19 Feb 2024 09:26:03 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708363563; x=1708968363;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ounGnQVyQWCAqb1gZccJxpOSoYs9iqhP6nXF46zXbQ4=;
+        b=sKDTfAR5H6V/zcEL4JAgzAC+17jVYFnK73cHAeivsVDKgIKCV66KZUpKbAbZl03Huw
+         hoYyvMB82NNLCO1dpu8DAugf7gZN6PKZH4TCrYz3Yx8nHZQfxU6fqgqgTKT/gY0u3f75
+         ph7iK8JGHsXBJI9245gGYkOrpCaCTJEDh0YqeKg251aHVsO7BnLxmYn4Dv/Lax0jm9Ea
+         SVdo+zisl+NoCeZzxWHfHRYAed2GCzt+AKV3Cu9uMafsOE4CSNcRW3T1uontGBRN6pga
+         u+7+tfc4GUqn2r1FosY23hwwoIrWS1IqUcRXfLTTQ3vHf16dT8PIg7S7IZfLJ+Bf7ZFs
+         Bl6w==
+X-Forwarded-Encrypted: i=1; AJvYcCX+6YBHHP+cbYvup6HHYYlnyt3iGDEPZt2tOsLoYimzm1oRlGkCD9/WuUB4cLZZwkk1ciqVcV5yF0wcGnFnCCd+XKvcaenjBVebkvqn
+X-Gm-Message-State: AOJu0YxfReX8nHpnPDVnpenmmy8QizYh1RAsY0ue7m/s9/H9sLCUR5Lu
+	zIBuwPJeKp89fRQ2z9FVnMrB8Qtjl0QzTbaWU7vyNs7hVCgvoHeTgS5XL76Aa8EaK6J4fn2IwuL
+	EQ/vm92rW13tAIlwoHkSRs/qWhp4n1l1QEx3MeztLuGPmCMybsBwBTgw=
+X-Google-Smtp-Source: AGHT+IFwUWM05/bAStl8NBq/eDdz5SadddI9IhapVYlljinuyOAxoboUUL051r7seYwMybLrVBTmh8rZFIVe9kEM6QeKRhdZmN6C
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240217100306.86740-1-krzysztof.kozlowski@linaro.org>
+X-Received: by 2002:a05:6e02:1d04:b0:365:26e3:6e48 with SMTP id
+ i4-20020a056e021d0400b0036526e36e48mr383468ila.0.1708363562962; Mon, 19 Feb
+ 2024 09:26:02 -0800 (PST)
+Date: Mon, 19 Feb 2024 09:26:02 -0800
+In-Reply-To: <000000000000fa007305fcd83579@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000005159340611bf637e@google.com>
+Subject: Re: [syzbot] [reiserfs?] possible deadlock in do_unlinkat
+From: syzbot <syzbot+ada12d2d935bbc82aa7f@syzkaller.appspotmail.com>
+To: axboe@kernel.dk, brauner@kernel.org, jack@suse.cz, 
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	reiserfs-devel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Sat, Feb 17, 2024 at 11:03:06AM +0100, Krzysztof Kozlowski wrote:
-> The xlate callbacks are supposed to translate of_phandle_args to proper
-> provider without modifying the of_phandle_args.  Make the argument
-> pointer to const for code safety and readability.
-> 
-> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+syzbot suspects this issue was fixed by commit:
 
-Reviewed-by: Simon Horman <horms@kernel.org>
+commit 6f861765464f43a71462d52026fbddfc858239a5
+Author: Jan Kara <jack@suse.cz>
+Date:   Wed Nov 1 17:43:10 2023 +0000
+
+    fs: Block writes to mounted block devices
+
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=146e7e94180000
+start commit:   933174ae28ba Merge tag 'spi-fix-v6.4-rc3' of git://git.ker..
+git tree:       upstream
+kernel config:  https://syzkaller.appspot.com/x/.config?x=7d8067683055e3f5
+dashboard link: https://syzkaller.appspot.com/bug?extid=ada12d2d935bbc82aa7f
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=106e6d19280000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=13cf84e5280000
+
+If the result looks correct, please mark the issue as fixed by replying with:
+
+#syz fix: fs: Block writes to mounted block devices
+
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
