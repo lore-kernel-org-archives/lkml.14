@@ -1,179 +1,147 @@
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2450C3CF71;
-	Mon, 19 Feb 2024 16:09:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A32F3C09F
+	for <linux-kernel@vger.kernel.org>; Mon, 19 Feb 2024 16:10:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708358998; cv=none; b=iMq9k2//cLPQxbU1t5L8wF8JN5lEiUY9rRGQdQcCFs2k7y3wYjLdeLDGs/Hzsrtu/+j7eDTJZpETvVCGJrBtX2dPkbFi7C1T2BcmIJ/EkOdeyT+Lfhs8okRSmI/TEb1Q7Q1vy/V52pLE820VlCYjXZVwCxDH0h7zo2de7BoCoDg=
+	t=1708359031; cv=none; b=CvldOErIWajF6yF/AKiopi3nbjCGEW2RQ89AOl/MKtJpTmgSUy2fwaL+q5FB61d/IsFM6sX0mpGs5lua7AghglWjh8q2AkboFoG9acuCAJ7JhS9AP3npI0MxbQyQeal/eGz9QTFhTv7D/vUYudike2Repz4yVPtDNRHEvQv1QDM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708358998; c=relaxed/simple;
-	bh=vofPB0kRjGtISv61Eu6snz09738FlvIvSZ5Jg08rcVk=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=uOFce4bdpzSUlMV1u/ZvGFjhUkrCxoTrPHtyoS0gwR63JEaH750kvZsOInuwOxTTEogHVm2EED5+dB6ECIkZKnBCilWt3jcc5wF3HaL5RC9+qjfKB3jHmGm3XV++yYZhWuAhQgTbp5sz9Kh9zPXYfHFVef8Cg7EDiKJsuuX8awM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=etd0pAgC; arc=none smtp.client-ip=209.85.128.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1708359031; c=relaxed/simple;
+	bh=zYH1LuOXgQQm0vqtmeFhua6+HEyiQe8k/7kz4CN9QA0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=sIKagTqgwAIhwJJn2oau/zsemAn6B1gGaI6fl38GRZd8910AtSuupaagCz19YCxtrV6EOJGXqS+MT713eTkmMsT+oV69JtyaAW6sKLRXsO4rq9NDOm5LJ1C1lvMRtyfd/Omxr5aOyG164/bW+2PufY8a9OzUrmv6a08x52810bA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=jcwqjzNC; arc=none smtp.client-ip=209.85.208.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="etd0pAgC"
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-40fd72f7125so37478545e9.1;
-        Mon, 19 Feb 2024 08:09:56 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="jcwqjzNC"
+Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-2d241ff062cso9428401fa.3
+        for <linux-kernel@vger.kernel.org>; Mon, 19 Feb 2024 08:10:28 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1708358995; x=1708963795; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1708359027; x=1708963827; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=JAty1mWdwmMOLtDVPwWFJ/YPRqG9UrpAtFa4aRlt5qc=;
-        b=etd0pAgCHdSeSGx1nHJpNXJkJJRztNE5fBhaYbLMeDkbUomahEPXk92b+M5YOqosCH
-         MjNJ9RU3bFw9y7SIpdYHYrhD2vehL44RJeYzNoLmAE/ifTBdBhqz7sH7agQIp2WZd8t7
-         lxisEdZMU2RsitaWfQs2sEcnSO3hgAujiEPJFWZ+EBpWa1RdA8DtwAq6u6hdQMSlw1qm
-         mBfAytjwhc1D1Ectl4RB8kawS327tqqHVRxHfiUN++ces1mYoYTuAlEGcn+LjZMWu7iq
-         KXgrELkjhrFMd5Lf2E4IgkTXbZkg9Eadk8A79jM04+EXx4rEnsB2D33MZGn2O74lnull
-         9jLg==
+        bh=Pa3zXecLjhLhKgOku2SBcFoSL+ZBhFujLXiFCiZcIb8=;
+        b=jcwqjzNCyYcmjkndQ7fjja85b7W5MA7xr86iGwARthtygpTT6CfXPstXRSyfFYqhkT
+         kiCdW5PCD7lHiLAor1OuJ9gQ4kriHfqFMMdLa9PXfKG/h6A0bh3K0P3o4u5NvJhX4x9U
+         li57PiJPfhkZx2QIEKspXGsQz++Uy1HsWZ0rPZ2Ytc473rTyIbaoLDNddloyZbb+Cntt
+         qOprjnhD5jww9M+cZexQQ4F12PE7q9Rimg2I7tHNcU/+nfFNxwXtjPlnAJYNwvmtv609
+         mtm0e1satmzlpaP7Qa0T4Soc3FqMiDr07uV3OvEQxnGl05eu7wyn75tuRibRcisWpHLJ
+         w9Bg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708358995; x=1708963795;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1708359027; x=1708963827;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=JAty1mWdwmMOLtDVPwWFJ/YPRqG9UrpAtFa4aRlt5qc=;
-        b=plyQiad+G/CzEHrCXabx12tDmS7l3HgnmBYQqILqbB+4hmwbfF+HzdaKmZr4+tx2I5
-         3WPTCi6Ty+Op12ZKJzq1QKlqkOZObyrWHybL9h3ZyaeXmlweT1WYvKxiFn8+CJ1Cf7Xb
-         QWwA4OZMP4f8X0dleUdnCfgFF0IplcYopGLnU7UhjiqMBuFujfTKM00NeXUg3oCB9yoE
-         E9uKnIXTvJ/xxiHBiW1+Qa+aZQnIC1iAiyl0YqBtR8AeIeSWqFzlDpvoGjWJDZpTohgh
-         gwwP5ggNhQtoWXQjD6Grw+uocsObS+vjCJH3I4FiWaJgJ2vYjqCZto0TjLh4EvNA8IVG
-         rg3Q==
-X-Forwarded-Encrypted: i=1; AJvYcCXXR/YkrNmq1FJ/4O9oh+ZlH31unCDJfOwcxzZyl0HI0Z5ccsIto7/aopWyU9WYENbqAGpQZElyjelh6GYAPWqDO58/wN/ij7GfQFZwpHlttQ9NFGcaM+W7hufD8aP+Yd+Gu/81JWBqcJR4ihyosLhys3lirGi1ylnW2bSzDDOHVnqixF/YhfkjjzCa
-X-Gm-Message-State: AOJu0YzkRWPFin+HMDXioN3ubnB+Q7WwYptBDrQrFI2JktaKkv2Lb5hq
-	CLRA04U95QnpvcWdDr5Dfy0vSfCup8pQml7pakhtx+5nanOeIXuc
-X-Google-Smtp-Source: AGHT+IHrkzblkrWsemQP5Dqf+bUZAM56ai8td+o/veIe6vP6nnk/AAMbYi1zMp751ZFku+6MsMv4Rg==
-X-Received: by 2002:a05:600c:3790:b0:40f:cf69:3e1a with SMTP id o16-20020a05600c379000b0040fcf693e1amr9584304wmr.39.1708358994673;
-        Mon, 19 Feb 2024 08:09:54 -0800 (PST)
-Received: from prasmi.home ([2a00:23c8:2500:a01:3c2e:cd45:f50f:f083])
-        by smtp.gmail.com with ESMTPSA id l14-20020a7bc44e000000b00411d1ce4f9dsm11592670wmi.34.2024.02.19.08.09.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 19 Feb 2024 08:09:53 -0800 (PST)
-From: Prabhakar <prabhakar.csengg@gmail.com>
-X-Google-Original-From: Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-To: Magnus Damm <magnus.damm@gmail.com>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>
-Cc: linux-arm-kernel@lists.infradead.org,
-	linux-renesas-soc@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Prabhakar <prabhakar.csengg@gmail.com>,
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [PATCH 3/4] soc: renesas: Add identification support for RZ/V2H SoC
-Date: Mon, 19 Feb 2024 16:09:11 +0000
-Message-Id: <20240219160912.1206647-4-prabhakar.mahadev-lad.rj@bp.renesas.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240219160912.1206647-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-References: <20240219160912.1206647-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+        bh=Pa3zXecLjhLhKgOku2SBcFoSL+ZBhFujLXiFCiZcIb8=;
+        b=idPUFKOKjyH+yxyGce3/+stD3/DGtOPi3pNJvLe6VYsqJcNOLR7BlgC1UUZzL2Kgbx
+         yMGDkwJmMcWbNDYz9UJDIzYFuiDWtDIXhu/YbEed8Lcj+QMV3nJgRaLknZrC2KR6QOPm
+         GX2ZpUkSc0QsX8eNjc2K43uxJJxm/0j/5tjHAIsPSQAYCaVFs4bnOJSwgW6KjAIabBwW
+         0wGHam5nKBZqyIaBAdUQPup/VWENYblz78xSPodyus2Pzsw/6Is6bAcLtwUuS0hZkzWV
+         ujs6Lu4w/mhaeRHN5ntsfBRk+nqvWhLMjBDOr3Hrugzto5+FBVTjnh+KkrjXfBWOqunB
+         HJ8g==
+X-Forwarded-Encrypted: i=1; AJvYcCV0CQ295OLKCPa0JJNHGPYq9G3h/7PynBzotMmXCWiQw3IBQbHZOI++URnpOY1RYCFlEjHgI1gYIrQXlxWzL+IB0gUuLyDxKA1Xqj52
+X-Gm-Message-State: AOJu0YzeZ9vrjBe3ot+kdocdf//WBOo81a8OWwClAp2NeZZ8KR+oRrpL
+	GQ1aVtiEPsrLRpN3gjEt+N5//LQYkUopIgLFt83GvVle1YAL18jkzenfK6x57nIwCr8NusSpQzT
+	jK/6yG1W9ZBZHeDefMHosU+rqoZlIqSQoswSY7w==
+X-Google-Smtp-Source: AGHT+IE2ef+NW69Aa9c+Eg+arV7TCujS69hqXekx8arU9+dXFwYNzJ9wRTpBkrVa2J5rAPuJaMz5mI0FBQ+xK98yNXU=
+X-Received: by 2002:a05:651c:1047:b0:2d2:3f05:d137 with SMTP id
+ x7-20020a05651c104700b002d23f05d137mr1491985ljm.1.1708359026789; Mon, 19 Feb
+ 2024 08:10:26 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240208172459.280189-1-alisa.roman@analog.com>
+ <20240208172459.280189-6-alisa.roman@analog.com> <CAMknhBHU6k8J_PLCmGYF48S1q3uXByiCwzcd+B3q3Cd-02CUow@mail.gmail.com>
+ <84546728-f0cb-4b38-a71c-e053b9b9278e@gmail.com> <CAMknhBFp-4s+-D8kD9rh0-OCc3gBs3hFX1EZ9ZmOifQOyGgUug@mail.gmail.com>
+ <20240216142158.30e96c53@jic23-huawei> <CAMknhBEtLR1QNEv6HhcW35jiGEkx=srzy41NXt8bJ=gokzoemw@mail.gmail.com>
+ <20240217162510.5d5d4511@jic23-huawei>
+In-Reply-To: <20240217162510.5d5d4511@jic23-huawei>
+From: David Lechner <dlechner@baylibre.com>
+Date: Mon, 19 Feb 2024 10:10:15 -0600
+Message-ID: <CAMknhBF5mAsN1c-194Qwa5oKmqKzef2khXnqA1cSdKpWHKWp0w@mail.gmail.com>
+Subject: Re: [PATCH v3 5/5] iio: adc: ad7192: Add AD7194 support
+To: Jonathan Cameron <jic23@kernel.org>
+Cc: Alisa-Dariana Roman <alisadariana@gmail.com>, alexandru.tachici@analog.com, 
+	alisa.roman@analog.com, conor+dt@kernel.org, devicetree@vger.kernel.org, 
+	krzysztof.kozlowski+dt@linaro.org, krzysztof.kozlowski@linaro.org, 
+	lars@metafoo.de, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	michael.hennerich@analog.com, robh+dt@kernel.org, 
+	Nuno Sa <nuno.sa@analog.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+On Sat, Feb 17, 2024 at 10:25=E2=80=AFAM Jonathan Cameron <jic23@kernel.org=
+> wrote:
+>
+> On Fri, 16 Feb 2024 10:57:33 -0600
+> David Lechner <dlechner@baylibre.com> wrote:
+>
+> > On Fri, Feb 16, 2024 at 8:22=E2=80=AFAM Jonathan Cameron <jic23@kernel.=
+org> wrote:
+> > >
+> > > On Thu, 15 Feb 2024 11:13:19 -0600
+> > > David Lechner <dlechner@baylibre.com> wrote:
+> > >
+> >
+> > ...
+> >
+> > > >
+> > > > Tables 22, 23 and 24 in the AD7194 datasheet show that this chip is
+> > > > much more configurable than AD7192 when it comes to assigning
+> > > > channels. There are basically no restrictions on which inputs can b=
+e
+> > > > used together. So I am still confident that my suggestion is the wa=
+y
+> > > > to go for AD7194. (Although I didn't actually try it on hardware, s=
+o
+> > > > can't be 100% confident. But at least 90% confident :-p)
+> > >
+> > > You would have to define a channel number for aincom.  There is an ex=
+plicit
+> > > example in the datasheet of it being at 2.5V using a reference supply=
+.
+> > >
+> > > I wonder what expectation here is.  Allways a reference regulator on =
+that pin, or
+> > > an actually varying input? Maybe in long term we want to support both
+> > > options - so if aincom-supply is provided these are single ended with
+> > > an offset, but if not they are differential channels between channel =
+X and
+> > > channel AINCOM.
+> > >
+> > > Note though that this mode is described a pseudo differential which n=
+ormally
+> > > means a fixed voltage on the negative.
+> > >
+> > > So gut feeling from me is treat them as single ended and add an
+> > > aincom-supply + the offsets that result if that is provided in DT and
+> > > voltage from it is non 0.
+> >
+> > Calling AINCOM a supply doesn't sound right to me since usually this
+> > signal is coming somewhere external, i.e. you have a twisted pair
+> > connected to AIN1 and AINCOM going to some signal source that may be
+> > hot-pluggable and not known at compile time. As an example, if AINCOM
+> > was modeled as a supply, then we would have to change the device tree
+> > every time we changed the voltage offset on the signal generator while
+> > we are testing using an evaluation board.
+>
+> We tend to stick away from designing features to support testing with
+> devboards where external wiring is involved because anything could be
+> wired up there. (Examples are things like shunt resistors - normally
+> they are DT only) So sometimes it's a bit painful to work with such board=
+s.
+> The main focus has to be production devices or at least stable set ups
+> where a fixed DT is sufficient.
+>
+> So I'm more interested in focusing on production device use cases.
+> Do we have an information on how this is this used in those environments?
+>
 
-Add support to identify the RZ/V2H (R9A09G057) SoC.
-
-Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Reviewed-by: Fabrizio Castro <fabrizio.castro.jz@renesas.com>
----
- drivers/soc/renesas/Kconfig       |  5 +++++
- drivers/soc/renesas/renesas-soc.c | 20 +++++++++++++++++++-
- 2 files changed, 24 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/soc/renesas/Kconfig b/drivers/soc/renesas/Kconfig
-index 5deca747fb77..78d656d7699f 100644
---- a/drivers/soc/renesas/Kconfig
-+++ b/drivers/soc/renesas/Kconfig
-@@ -344,6 +344,11 @@ config ARCH_R9A09G011
- 	help
- 	  This enables support for the Renesas RZ/V2M SoC.
- 
-+config ARCH_R9A09G057
-+	bool "ARM64 Platform support for RZ/V2H{P}"
-+	help
-+	  This enables support for the Renesas RZ/V2H{P} SoC variants.
-+
- endif # ARM64
- 
- if RISCV
-diff --git a/drivers/soc/renesas/renesas-soc.c b/drivers/soc/renesas/renesas-soc.c
-index 8f9b8d3736dc..499d120f9978 100644
---- a/drivers/soc/renesas/renesas-soc.c
-+++ b/drivers/soc/renesas/renesas-soc.c
-@@ -75,6 +75,10 @@ static const struct renesas_family fam_rzg3s __initconst __maybe_unused = {
- 	.name	= "RZ/G3S",
- };
- 
-+static const struct renesas_family fam_rzv2h __initconst __maybe_unused = {
-+	.name	= "RZ/V2H",
-+};
-+
- static const struct renesas_family fam_rzv2l __initconst __maybe_unused = {
- 	.name	= "RZ/V2L",
- };
-@@ -177,6 +181,11 @@ static const struct renesas_soc soc_rz_g3s __initconst __maybe_unused = {
- 	.id	= 0x85e0447,
- };
- 
-+static const struct renesas_soc soc_rz_v2h __initconst __maybe_unused = {
-+	.family = &fam_rzv2h,
-+	.id     = 0x847A447,
-+};
-+
- static const struct renesas_soc soc_rz_v2l __initconst __maybe_unused = {
- 	.family = &fam_rzv2l,
- 	.id     = 0x8447447,
-@@ -407,6 +416,9 @@ static const struct of_device_id renesas_socs[] __initconst __maybe_unused = {
- #ifdef CONFIG_ARCH_R9A09G011
- 	{ .compatible = "renesas,r9a09g011",	.data = &soc_rz_v2m },
- #endif
-+#ifdef CONFIG_ARCH_R9A09G057
-+	{ .compatible = "renesas,r9a09g057",	.data = &soc_rz_v2h },
-+#endif
- #ifdef CONFIG_ARCH_SH73A0
- 	{ .compatible = "renesas,sh73a0",	.data = &soc_shmobile_ag5 },
- #endif
-@@ -432,6 +444,11 @@ static const struct renesas_id id_rzg2l __initconst = {
- 	.mask = 0xfffffff,
- };
- 
-+static const struct renesas_id id_rzv2h __initconst = {
-+	.offset = 0x304,
-+	.mask = 0xfffffff,
-+};
-+
- static const struct renesas_id id_rzv2m __initconst = {
- 	.offset = 0x104,
- 	.mask = 0xff,
-@@ -449,6 +466,7 @@ static const struct of_device_id renesas_ids[] __initconst = {
- 	{ .compatible = "renesas,r9a07g054-sysc",	.data = &id_rzg2l },
- 	{ .compatible = "renesas,r9a08g045-sysc",	.data = &id_rzg2l },
- 	{ .compatible = "renesas,r9a09g011-sys",	.data = &id_rzv2m },
-+	{ .compatible = "renesas,r9a09g057-sys",	.data = &id_rzv2h },
- 	{ .compatible = "renesas,prr",			.data = &id_prr },
- 	{ /* sentinel */ }
- };
-@@ -513,7 +531,7 @@ static int __init renesas_soc_init(void)
- 			eslo = product & 0xf;
- 			soc_dev_attr->revision = kasprintf(GFP_KERNEL, "ES%u.%u",
- 							   eshi, eslo);
--		}  else if (id == &id_rzg2l) {
-+		}  else if (id == &id_rzg2l || id == &id_rzv2h) {
- 			eshi =  ((product >> 28) & 0x0f);
- 			soc_dev_attr->revision = kasprintf(GFP_KERNEL, "%u",
- 							   eshi);
--- 
-2.34.1
-
+Point taken. I also checked with an apps engineer at ADI and it does
+sound like AINCOM should be a supply.
