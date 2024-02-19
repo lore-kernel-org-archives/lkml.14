@@ -1,99 +1,164 @@
-Received: from gate2.alliedtelesis.co.nz (gate2.alliedtelesis.co.nz [202.36.163.20])
+Received: from gandalf.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 852F12103
-	for <linux-kernel@vger.kernel.org>; Mon, 19 Feb 2024 02:57:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.36.163.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A8BB1FC8;
+	Mon, 19 Feb 2024 02:58:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708311437; cv=none; b=mRnFWh5DdnHN+tkt7I6aAiSmV/yy6Xg3+MbJ6eSzy8IIb5rfnSS3HVqbQtq1HriZob4mokwfNRK8TRuzvpArbT06G4KUS/Ptid3dEd7+VMLXGBRSzNvJ3PD+dWe7GFxduZF0O2AvzZMdjNGxJgc0B7kv8AIh1eUXsstZ1cGM4CU=
+	t=1708311493; cv=none; b=MW3ZY9eA4I5SCIzmCIB5Zky5+LlV1adP9IRtqSNVNDIpb+ZDZrMjYcUnPxo6yJTW1+MDvCme1QFGjn6/ec/vNvxoGjX3noLLYq6EDaaf8pvCkFgFECjMoFb9eD9tnZyumWRHCMnF4Re37PHLMV6Ehixx9pOefZRB2Vk3y5CQW7s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708311437; c=relaxed/simple;
-	bh=/sT628QU7hhhOgu/cwt/DOFforB7kkTOr1NUg6K+gJ0=;
-	h=From:To:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=msvve7wfvLI4ZUC4Vgz/S7Ior/cjBByKRo8i+mt9IlH0oeGvsKhXMggQw8KSH31s5u34lF8hKEIWGMTZp9zZWqf6jwSKdKoPI5gwF1mA6vPIi+Hi6BoqKCWEa3rRm7GSjW90WjicyMiV6koR25GI5h+grXxihCaZtavVYw7Lddo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=alliedtelesis.co.nz; spf=pass smtp.mailfrom=alliedtelesis.co.nz; dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b=QBTww7cr; arc=none smtp.client-ip=202.36.163.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=alliedtelesis.co.nz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alliedtelesis.co.nz
+	s=arc-20240116; t=1708311493; c=relaxed/simple;
+	bh=gctggYPLGlntgRouCIS1Y5xS9wy4M1dICUmfSMUaA2g=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=VUdRpB3+kBR4sPJZ0/TJKQniuevH6zkE/dSzj26apPVGudwUaimCP+/sR+pK+euUAQbx1WQuudd2HecO7PLtnmrOFWDuWVP6maMLG7P5sBohVZijs19BSW5MSOxlhLEhRVI8opf3Olpg/FhSNgkGJfZDT+2ZfUTeOjvJ5OTOViM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=tirE7gwQ; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="QBTww7cr"
-Received: from svr-chch-seg1.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="tirE7gwQ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=201702; t=1708311488;
+	bh=7XaKWVD9KB3AwSX0RxGYmJEUX1mxEDnJZN5p2hnu4+o=;
+	h=Date:From:To:Cc:Subject:From;
+	b=tirE7gwQkigdBfOiXJLEWoOdlMv7xicMQ+bb8KwBI0l75izAOwmj+ROEHmIl/ZKdE
+	 hqlrvppMFDuW4rCs5n+diq7qeGSS5nyfTnXfaWoYgMxcNP8NHtklGzy8TgftO41Kxz
+	 GmKWlt82Uah4fykXuWZnuAbHPHm4zad8eXEkl4irt4d8KzzYBUZAlcljnEdDBKrFZH
+	 7vFI1hyIlGaSeaHZwtUXZejUlA5uHfb+b02iyDUI1i2YKSxR4ZqWQFMN3ZRt1WN2Dv
+	 4pnT030y9o2LJS1YKqltYqSCwv03x+mXrfXwl93nnRsB5mLtOPTnKWWRiRUKdVVqmH
+	 k0CuP4d9znDXw==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 3C72A2C0270;
-	Mon, 19 Feb 2024 15:51:58 +1300 (NZDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
-	s=mail181024; t=1708311118;
-	bh=/sT628QU7hhhOgu/cwt/DOFforB7kkTOr1NUg6K+gJ0=;
-	h=From:To:Subject:Date:References:In-Reply-To:From;
-	b=QBTww7cryoBEcwLYtR6q5ueAEMVVHO9gaxqHKqynPL4t6Pn5apTeWv+hO4QSRl8iK
-	 zdvXwPjZdIj3SF9pQ4gAcCgfmiiv2SLbO6QLgE2tg+yfDc14LgRqtP1HGUrQyCIyrN
-	 580U7SGWXEo7xynot121kxFct1zrEHzYypnBVuT7mtOupZ5YcVReYSUE546tvTCGhI
-	 RplUvB6YkDP/gURV6XFUVoG6he6jbnTHR70aTkudprxmOr2Jw6dK/mVTkg1EcQxrFE
-	 28CahbBREBl+uutmJEcC2jHEMkWEvgqyQA05wKD6NI2N7+D3XhS1Om50SHs4fOfWEV
-	 i8p8Oo2G/Oq6Q==
-Received: from svr-chch-ex2.atlnz.lc (Not Verified[2001:df5:b000:bc8::76]) by svr-chch-seg1.atlnz.lc with Trustwave SEG (v8,2,6,11305)
-	id <B65d2c24e0001>; Mon, 19 Feb 2024 15:51:58 +1300
-Received: from svr-chch-ex2.atlnz.lc (2001:df5:b000:bc8:f753:6de:11c0:a008) by
- svr-chch-ex2.atlnz.lc (2001:df5:b000:bc8:f753:6de:11c0:a008) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Mon, 19 Feb 2024 15:51:57 +1300
-Received: from svr-chch-ex2.atlnz.lc ([fe80::a9eb:c9b7:8b52:9567]) by
- svr-chch-ex2.atlnz.lc ([fe80::a9eb:c9b7:8b52:9567%15]) with mapi id
- 15.02.1118.040; Mon, 19 Feb 2024 15:51:57 +1300
-From: Chris Packham <Chris.Packham@alliedtelesis.co.nz>
-To: Antoniu Miclaus <antoniu.miclaus@analog.com>, Alessandro Zummo
-	<a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@bootlin.com>,
-	Rob Herring <robh+dt@kernel.org>, Krzysztof Kozlowski
-	<krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>,
-	"Jean Delvare" <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>,
-	"linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-hwmon@vger.kernel.org" <linux-hwmon@vger.kernel.org>
-Subject: Re: [PATCH v9 2/2] rtc: max31335: add driver support
-Thread-Topic: [PATCH v9 2/2] rtc: max31335: add driver support
-Thread-Index: AQHaYt6aqhqsMvt9rUeZpcrpI3oGpA==
-Date: Mon, 19 Feb 2024 02:51:57 +0000
-Message-ID: <1a51a8ac-e2a6-4054-b91d-c860913b7385@alliedtelesis.co.nz>
-References: <20231120120114.48657-1-antoniu.miclaus@analog.com>
- <20231120120114.48657-2-antoniu.miclaus@analog.com>
-In-Reply-To: <20231120120114.48657-2-antoniu.miclaus@analog.com>
-Accept-Language: en-NZ, en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <6D9684104BB159439CC41F4F009C1578@atlnz.lc>
-Content-Transfer-Encoding: base64
+	(No client certificate requested)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4TdRzz2BrNz4wcK;
+	Mon, 19 Feb 2024 13:58:06 +1100 (AEDT)
+Date: Mon, 19 Feb 2024 13:58:05 +1100
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Christoffer Dall <cdall@cs.columbia.edu>, Marc Zyngier <maz@kernel.org>,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>
+Cc: Ard Biesheuvel <ardb@kernel.org>, Linux Kernel Mailing List
+ <linux-kernel@vger.kernel.org>, Linux Next Mailing List
+ <linux-next@vger.kernel.org>, Oliver Upton <oliver.upton@linux.dev>
+Subject: linux-next: manual merge of the kvm-arm tree with the arm64 tree
+Message-ID: <20240219135805.1c4138a3@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-SEG-SpamProfiler-Analysis: v=2.4 cv=BKkQr0QG c=1 sm=1 tr=0 ts=65d2c24e a=Xf/6aR1Nyvzi7BryhOrcLQ==:117 a=xqWC_Br6kY4A:10 a=75chYTbOgJ0A:10 a=IkcTkHD0fZMA:10 a=k7vzHIieQBIA:10 a=_jlGtV7tAAAA:8 a=gAnH3GRIAAAA:8 a=FVfxCX4UZNgzJca5yKQA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10 a=nlm17XC03S6CtCLSeiRr:22 a=oVHKYsEdi7-vN-J5QA_j:22
-X-SEG-SpamProfiler-Score: 0
+Content-Type: multipart/signed; boundary="Sig_/0lq+TnyNw/r+bgBwPDvE7v7";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-SGkgQWxsLA0KDQpJJ20gbG9va2luZyBhdCBmb2xkaW5nIHRoaXMgaW50byB0aGUgcmVzdCBvZiB0
-aGUgbWF4MzEzeHggc3VwcG9ydCAoYnV0IA0KSSdsbCBzdGljayB3aXRoIHRoZSBtYXgzMTMzNSBu
-YW1lIHNpbmNlIHRoYXQncyBsYW5kZWQpIGFuZCBJIG5vdGljZWQgYSANCnByb2JsZW0uDQoNCk9u
-IDIxLzExLzIzIDAxOjAwLCBBbnRvbml1IE1pY2xhdXMgd3JvdGU6DQo+IFJUQyBkcml2ZXIgZm9y
-IE1BWDMxMzM1IMKxMnBwbSBBdXRvbW90aXZlIFJlYWwtVGltZSBDbG9jayB3aXRoDQo+IEludGVn
-cmF0ZWQgTUVNUyBSZXNvbmF0b3IuDQo+DQo+IFJldmlld2VkLWJ5OiBHdWVudGVyIFJvZWNrIDxs
-aW51eEByb2Vjay11cy5uZXQ+DQo+IFNpZ25lZC1vZmYtYnk6IEFudG9uaXUgTWljbGF1cyA8YW50
-b25pdS5taWNsYXVzQGFuYWxvZy5jb20+DQo8c25pcD4NCj4gKw0KPiArc3RhdGljIGJvb2wgbWF4
-MzEzMzVfdm9sYXRpbGVfcmVnKHN0cnVjdCBkZXZpY2UgKmRldiwgdW5zaWduZWQgaW50IHJlZykN
-Cj4gK3sNCj4gKwkvKiB0aW1lIGtlZXBpbmcgcmVnaXN0ZXJzICovDQo+ICsJaWYgKHJlZyA+PSBN
-QVgzMTMzNV9TRUNPTkRTICYmDQo+ICsJICAgIHJlZyA8IE1BWDMxMzM1X1NFQ09ORFMgKyBNQVgz
-MTMzNV9USU1FX1NJWkUpDQo+ICsJCXJldHVybiB0cnVlOw0KPiArDQo+ICsJLyogaW50ZXJydXB0
-IHN0YXR1cyByZWdpc3RlciAqLw0KPiArCWlmIChyZWcgPT0gTUFYMzEzMzVfSU5UX0VOMV9BMUlF
-KQ0KPiArCQlyZXR1cm4gdHJ1ZTsNClByZXN1bWFibHkgdGhpcyBzaG91bGQgYmUgc29tZXRoaW5n
-IGVsc2UgYXMgTUFYMzEzMzVfSU5UX0VOMV9BMUlFIGlzIGEgDQpiaXRmaWVsZCBvZmZzZXQgbm90
-IGEgcmVnaXN0ZXIuwqAgQmFzZWQgb24gdGhlIG90aGVyIGNoaXBzIEknbSBndWVzc2luZyANCnRo
-aXMgc2hvdWxkIGJlIGByZWcgPT0gTUFYMzEzMzVfU1RBVFVTMWAuIEknbGwgdHJ5IHRvIGluY29y
-cG9yYXRlIGEgZml4IA0KaW50byBteSB1cGRhdGUgYnV0IHNvbWVvbmUgbWlnaHQgd2FudCB0byBm
-aXggaXQgdXAgZm9yIHN0YWJsZS4NCj4gKw0KPiArCS8qIHRlbXBlcmF0dXJlIHJlZ2lzdGVycyAq
-Lw0KPiArCWlmIChyZWcgPT0gTUFYMzEzMzVfVEVNUF9EQVRBX01TQiB8fCBNQVgzMTMzNV9URU1Q
-X0RBVEFfTFNCKQ0KPiArCQlyZXR1cm4gdHJ1ZTsNCj4gKw0KPiArCXJldHVybiBmYWxzZTsNCj4g
-K30NCj4gKw0K
+--Sig_/0lq+TnyNw/r+bgBwPDvE7v7
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
+
+Hi all,
+
+Today's linux-next merge of the kvm-arm tree got a conflict in:
+
+  arch/arm64/kernel/cpufeature.c
+
+between commits:
+
+  9cce9c6c2c3b ("arm64: mm: Handle LVA support as a CPU feature")
+  352b0395b505 ("arm64: Enable 52-bit virtual addressing for 4k and 16k gra=
+nule configs")
+
+from the arm64 tree and commit:
+
+  da9af5071b25 ("arm64: cpufeature: Detect HCR_EL2.NV1 being RES0")
+
+from the kvm-arm tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc arch/arm64/kernel/cpufeature.c
+index 0be9296e9253,f309fd542c20..000000000000
+--- a/arch/arm64/kernel/cpufeature.c
++++ b/arch/arm64/kernel/cpufeature.c
+@@@ -721,13 -754,12 +756,14 @@@ static const struct __ftr_reg_entry=20
+  			       &id_aa64isar2_override),
+ =20
+  	/* Op1 =3D 0, CRn =3D 0, CRm =3D 7 */
+ -	ARM64_FTR_REG(SYS_ID_AA64MMFR0_EL1, ftr_id_aa64mmfr0),
+ +	ARM64_FTR_REG_OVERRIDE(SYS_ID_AA64MMFR0_EL1, ftr_id_aa64mmfr0,
+ +			       &id_aa64mmfr0_override),
+  	ARM64_FTR_REG_OVERRIDE(SYS_ID_AA64MMFR1_EL1, ftr_id_aa64mmfr1,
+  			       &id_aa64mmfr1_override),
+ -	ARM64_FTR_REG(SYS_ID_AA64MMFR2_EL1, ftr_id_aa64mmfr2),
+ +	ARM64_FTR_REG_OVERRIDE(SYS_ID_AA64MMFR2_EL1, ftr_id_aa64mmfr2,
+ +			       &id_aa64mmfr2_override),
+  	ARM64_FTR_REG(SYS_ID_AA64MMFR3_EL1, ftr_id_aa64mmfr3),
++ 	ARM64_FTR_REG(SYS_ID_AA64MMFR4_EL1, ftr_id_aa64mmfr4),
+ =20
+  	/* Op1 =3D 1, CRn =3D 0, CRm =3D 0 */
+  	ARM64_FTR_REG(SYS_GMID_EL1, ftr_gmid),
+@@@ -2701,33 -2817,13 +2779,40 @@@ static const struct arm64_cpu_capabilit
+  		.type =3D ARM64_CPUCAP_SYSTEM_FEATURE,
+  		.matches =3D has_lpa2,
+  	},
+ +#ifdef CONFIG_ARM64_VA_BITS_52
+ +	{
+ +		.capability =3D ARM64_HAS_VA52,
+ +		.type =3D ARM64_CPUCAP_BOOT_CPU_FEATURE,
+ +		.matches =3D has_cpuid_feature,
+ +		.field_width =3D 4,
+ +#ifdef CONFIG_ARM64_64K_PAGES
+ +		.desc =3D "52-bit Virtual Addressing (LVA)",
+ +		.sign =3D FTR_SIGNED,
+ +		.sys_reg =3D SYS_ID_AA64MMFR2_EL1,
+ +		.field_pos =3D ID_AA64MMFR2_EL1_VARange_SHIFT,
+ +		.min_field_value =3D ID_AA64MMFR2_EL1_VARange_52,
+ +#else
+ +		.desc =3D "52-bit Virtual Addressing (LPA2)",
+ +		.sys_reg =3D SYS_ID_AA64MMFR0_EL1,
+ +#ifdef CONFIG_ARM64_4K_PAGES
+ +		.sign =3D FTR_SIGNED,
+ +		.field_pos =3D ID_AA64MMFR0_EL1_TGRAN4_SHIFT,
+ +		.min_field_value =3D ID_AA64MMFR0_EL1_TGRAN4_52_BIT,
+ +#else
+ +		.sign =3D FTR_UNSIGNED,
+ +		.field_pos =3D ID_AA64MMFR0_EL1_TGRAN16_SHIFT,
+ +		.min_field_value =3D ID_AA64MMFR0_EL1_TGRAN16_52_BIT,
+ +#endif
+ +#endif
+ +	},
+ +#endif
++ 	{
++ 		.desc =3D "NV1",
++ 		.capability =3D ARM64_HAS_HCR_NV1,
++ 		.type =3D ARM64_CPUCAP_SYSTEM_FEATURE,
++ 		.matches =3D has_nv1,
++ 		ARM64_CPUID_FIELDS_NEG(ID_AA64MMFR4_EL1, E2H0, NI_NV1)
++ 	},
+  	{},
+  };
+ =20
+
+--Sig_/0lq+TnyNw/r+bgBwPDvE7v7
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmXSw70ACgkQAVBC80lX
+0GyVwgf/ZHEO28wMM8fAb+rIwWzYhYPmN/J+oY9/fOCQugZk145/bDic7aowxLIi
+6wakG6HC7l1e7fD2ZMCFXX3q01wQzxPe5WxOyu9p/F1t5kDoLTUuXvsFZGA+D0CT
+wrJysenGrAQ1QGQzY2Xb1oWX2r15PTfAsXbo1XteyWRxPXxgp0XeMT1tN0CbyPws
+G1mh1COBaUb/dekFfTKYQKwO6Aulr/R5sQp+ECozBE78Agoo5hedwDssMMjPdW3e
+BszpUSPcs19HbyUVfCC9blfV4/XvqSc7tJqlJYhgbdRZoedyl3/fI+0dzPpcA98X
+pAHQU/INbAOYfPsPULnrCtrEsuSurQ==
+=1mRN
+-----END PGP SIGNATURE-----
+
+--Sig_/0lq+TnyNw/r+bgBwPDvE7v7--
