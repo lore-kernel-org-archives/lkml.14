@@ -1,47 +1,47 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C83B446A6;
-	Mon, 19 Feb 2024 17:03:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0765544C6E;
+	Mon, 19 Feb 2024 17:03:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708362229; cv=none; b=lZ4nx9mXriOjtflHWY5/UfcWVa3Y7BGxHJlu6pfMRrwR3jw87uc7JDZb3rUYQXWQjsva7mP4kHS7uzNwohIjaL9VmJdoKQtKSHtpT4/JmE+25kK6ybpkCk6wDFkV94JjsNK9KNq9eSND1v+OSwfBvtQ2dX0iv0nI28g+l/3XUGk=
+	t=1708362231; cv=none; b=HfqdSTxN4/FpP630lmyLNQ8lQjDvrdypQodoTzXovRVXc0HphCtKP1QBF4RS1ixN92I0rvPP4uUCivRpdHLK8FsZjWDpsAKIzdHjEmLQZK35atxlKVS4cL1zfxHkcsd/JHY9njNxhPncdYCKqH57asFUb/jY1jR78thd1+s/ehc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708362229; c=relaxed/simple;
-	bh=I61aQrfxe8pltYJ1/AfqQL0Uek1s8wSiEP8xqVGCwiU=;
+	s=arc-20240116; t=1708362231; c=relaxed/simple;
+	bh=XdwgCH4GhJq64BzVy3/gUxYOZMQMDnBvonE+oyY5QFA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=jjZuzlcvqH93rgNKHGTKQpaY2Ww3aKfjhRbvq1GBsKvyX2TYFV76ZQZjL5U7qUfDxEgYrd+FyTsXrG+7+c7v7bPjs1liCDfnB0nXfdvCAmdgPGGXFjahN5alJd7tT3MtlIo+e5UIkKHm+b8NZ1QshQ/jyVNWf60zIWaf9jktMNM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=je1kNWNv; arc=none smtp.client-ip=198.175.65.17
+	 MIME-Version; b=YCdHpO36Lao23MzhFYctWA2hQh55jpPi417entZ3uKazYGn+IX7LOWF6NKHQpbzw2nlF742xnJt61vJppZVbHcCtjvnCGOyjjdvQLzZDBBlK3GLKf5Pqf+uE8/1l3fEGnig6l2PPQ4wKg1PzEJhu0+2cJnMK6htmtOEdY+3vqQY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=a+fQZK10; arc=none smtp.client-ip=198.175.65.17
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="je1kNWNv"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="a+fQZK10"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1708362228; x=1739898228;
+  t=1708362230; x=1739898230;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=I61aQrfxe8pltYJ1/AfqQL0Uek1s8wSiEP8xqVGCwiU=;
-  b=je1kNWNvx5iwzn3/oevvCiwzXpA8S91tunkbfBdO/4e5JU9PrygS6zTL
-   FGm9wJTm+gnYq5/r6YNR+A76xOWIaYivvELcUNRs01mwUZdJqeo8SwszD
-   VGTSYWbtSA+uUqt9lFMNHKqzdeNgK7vMp7kibr2sbd0TbilMQuz0rWA0T
-   Xrb+xuo2AIcdAmtyKjv3kYOMI7tlcjETJdIBVXuscag2BuJHtdY5oCVU4
-   bkUJ2ET/3DEA3G+HRdO8qMBhmG8qp8sGiZlUOAiynGYHFjAP6hki17a9Y
-   AsDRa8LXwpIFSRwjyb5mds/qKv63uw31tFMygsdWosgayECZRGidQfzvG
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10989"; a="2577405"
+  bh=XdwgCH4GhJq64BzVy3/gUxYOZMQMDnBvonE+oyY5QFA=;
+  b=a+fQZK10x3uD8kcrI+5RoIJ6vqMWSAKTtrYNgH37cubZMVwDuZKSvOsu
+   3KeWZFmmRkPotP1j6bC0n/M1i+TTXMypMq8Kdx3utbWSErtBCkJzvRtVM
+   +NGmSezVgmk8hyCPdMWrxcKm0jbmdNdW5EjjRbUMtOTG83Bc9mj4g+xJ4
+   Z8V8mjKSxFkr6qphxAbC4pSOx/dtUgyUDyLZYwPp/QodBudqYvtoV1nhA
+   Cy5KTHg0MxW1/Lk8vLgrzm8nR2N2KFP2YEqKZsLwxTeeIgyybP+b2vqRz
+   5tbwaov5P3OiTt4bm4bNTbdi815vFzCYn2HfJe9olrAXg/MZV8Mw4Cuw8
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10989"; a="2577427"
 X-IronPort-AV: E=Sophos;i="6.06,170,1705392000"; 
-   d="scan'208";a="2577405"
+   d="scan'208";a="2577427"
 Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Feb 2024 09:03:45 -0800
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Feb 2024 09:03:49 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10989"; a="936315353"
+X-IronPort-AV: E=McAfee;i="6600,9927,10989"; a="936315371"
 X-IronPort-AV: E=Sophos;i="6.06,170,1705392000"; 
-   d="scan'208";a="936315353"
+   d="scan'208";a="936315371"
 Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga001.fm.intel.com with ESMTP; 19 Feb 2024 09:03:42 -0800
+  by fmsmga001.fm.intel.com with ESMTP; 19 Feb 2024 09:03:46 -0800
 Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id 392CC49C; Mon, 19 Feb 2024 19:03:41 +0200 (EET)
+	id 947E71063; Mon, 19 Feb 2024 19:03:41 +0200 (EET)
 From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
 	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
@@ -54,9 +54,9 @@ Cc: Andy Shevchenko <andy@kernel.org>,
 	Conor Dooley <conor+dt@kernel.org>,
 	Robin van der Gracht <robin@protonic.nl>,
 	Paul Burton <paulburton@kernel.org>
-Subject: [PATCH v3 2/9] auxdisplay: linedisp: Allocate buffer for the string
-Date: Mon, 19 Feb 2024 18:58:01 +0200
-Message-ID: <20240219170337.2161754-3-andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v3 9/9] auxdisplay: Add driver for MAX695x 7-segment LED controllers
+Date: Mon, 19 Feb 2024 18:58:08 +0200
+Message-ID: <20240219170337.2161754-10-andriy.shevchenko@linux.intel.com>
 X-Mailer: git-send-email 2.43.0.rc1.1.gbec44491f096
 In-Reply-To: <20240219170337.2161754-1-andriy.shevchenko@linux.intel.com>
 References: <20240219170337.2161754-1-andriy.shevchenko@linux.intel.com>
@@ -68,192 +68,253 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Always allocate a buffer for the currently displayed characters.
-It makes the line display API simpler.
+Add initial driver for the MAX6958 and MAX6959 7-segment LED
+controllers.
 
 Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- drivers/auxdisplay/ht16k33.c       |  8 +++-----
- drivers/auxdisplay/img-ascii-lcd.c | 17 +++++++----------
- drivers/auxdisplay/line-display.c  | 11 +++++++----
- drivers/auxdisplay/line-display.h  |  3 +--
- 4 files changed, 18 insertions(+), 21 deletions(-)
+ drivers/auxdisplay/Kconfig   |  14 +++
+ drivers/auxdisplay/Makefile  |   1 +
+ drivers/auxdisplay/max6959.c | 194 +++++++++++++++++++++++++++++++++++
+ 3 files changed, 209 insertions(+)
+ create mode 100644 drivers/auxdisplay/max6959.c
 
-diff --git a/drivers/auxdisplay/ht16k33.c b/drivers/auxdisplay/ht16k33.c
-index 32d3afd29177..19805f39a257 100644
---- a/drivers/auxdisplay/ht16k33.c
-+++ b/drivers/auxdisplay/ht16k33.c
-@@ -92,7 +92,6 @@ struct ht16k33_seg {
- 		struct seg14_conversion_map seg14;
- 	} map;
- 	unsigned int map_size;
--	char curr[4];
- };
+diff --git a/drivers/auxdisplay/Kconfig b/drivers/auxdisplay/Kconfig
+index 109ac253d160..bc295ede3c2c 100644
+--- a/drivers/auxdisplay/Kconfig
++++ b/drivers/auxdisplay/Kconfig
+@@ -59,6 +59,20 @@ config LCD2S
+ 	  is a simple single color character display. You have to connect it
+ 	  to an I2C bus.
  
- struct ht16k33_priv {
-@@ -457,7 +456,7 @@ static void ht16k33_seg7_update(struct work_struct *work)
- 	struct ht16k33_priv *priv = container_of(work, struct ht16k33_priv,
- 						 work.work);
- 	struct ht16k33_seg *seg = &priv->seg;
--	char *s = seg->curr;
-+	char *s = seg->linedisp.buf;
- 	uint8_t buf[9];
- 
- 	buf[0] = map_to_seg7(&seg->map.seg7, *s++);
-@@ -478,7 +477,7 @@ static void ht16k33_seg14_update(struct work_struct *work)
- 	struct ht16k33_priv *priv = container_of(work, struct ht16k33_priv,
- 						 work.work);
- 	struct ht16k33_seg *seg = &priv->seg;
--	char *s = seg->curr;
-+	char *s = seg->linedisp.buf;
- 	uint8_t buf[8];
- 
- 	put_unaligned_le16(map_to_seg14(&seg->map.seg14, *s++), buf);
-@@ -700,8 +699,7 @@ static int ht16k33_seg_probe(struct device *dev, struct ht16k33_priv *priv,
- 	if (err)
- 		return err;
- 
--	err = linedisp_register(&seg->linedisp, dev, 4, seg->curr,
--				&ht16k33_linedisp_ops);
-+	err = linedisp_register(&seg->linedisp, dev, 4, &ht16k33_linedisp_ops);
- 	if (err)
- 		goto err_remove_map_file;
- 
-diff --git a/drivers/auxdisplay/img-ascii-lcd.c b/drivers/auxdisplay/img-ascii-lcd.c
-index ecfb1c05bf55..925c4cd101e9 100644
---- a/drivers/auxdisplay/img-ascii-lcd.c
-+++ b/drivers/auxdisplay/img-ascii-lcd.c
-@@ -37,7 +37,6 @@ struct img_ascii_lcd_config {
-  * @regmap: the regmap through which LCD registers are accessed
-  * @offset: the offset within regmap to the start of the LCD registers
-  * @cfg: pointer to the LCD model configuration
-- * @curr: the string currently displayed on the LCD
-  */
- struct img_ascii_lcd_ctx {
- 	struct linedisp linedisp;
-@@ -47,7 +46,6 @@ struct img_ascii_lcd_ctx {
- 	};
- 	u32 offset;
- 	const struct img_ascii_lcd_config *cfg;
--	char curr[] __aligned(8);
- };
- 
- /*
-@@ -61,12 +59,12 @@ static void boston_update(struct linedisp *linedisp)
- 	ulong val;
- 
- #if BITS_PER_LONG == 64
--	val = *((u64 *)&ctx->curr[0]);
-+	val = *((u64 *)&linedisp->buf[0]);
- 	__raw_writeq(val, ctx->base);
- #elif BITS_PER_LONG == 32
--	val = *((u32 *)&ctx->curr[0]);
-+	val = *((u32 *)&linedisp->buf[0]);
- 	__raw_writel(val, ctx->base);
--	val = *((u32 *)&ctx->curr[4]);
-+	val = *((u32 *)&linedisp->buf[4]);
- 	__raw_writel(val, ctx->base + 4);
- #else
- # error Not 32 or 64 bit
-@@ -93,7 +91,7 @@ static void malta_update(struct linedisp *linedisp)
- 
- 	for (i = 0; i < linedisp->num_chars; i++) {
- 		err = regmap_write(ctx->regmap,
--				   ctx->offset + (i * 8), ctx->curr[i]);
-+				   ctx->offset + (i * 8), linedisp->buf[i]);
- 		if (err)
- 			break;
- 	}
-@@ -195,7 +193,7 @@ static void sead3_update(struct linedisp *linedisp)
- 
- 		err = regmap_write(ctx->regmap,
- 				   ctx->offset + SEAD3_REG_LCD_DATA,
--				   ctx->curr[i]);
-+				   linedisp->buf[i]);
- 		if (err)
- 			break;
- 	}
-@@ -236,7 +234,7 @@ static int img_ascii_lcd_probe(struct platform_device *pdev)
- 	struct img_ascii_lcd_ctx *ctx;
- 	int err;
- 
--	ctx = devm_kzalloc(dev, sizeof(*ctx) + cfg->num_chars, GFP_KERNEL);
-+	ctx = devm_kzalloc(dev, sizeof(*ctx), GFP_KERNEL);
- 	if (!ctx)
- 		return -ENOMEM;
- 
-@@ -253,8 +251,7 @@ static int img_ascii_lcd_probe(struct platform_device *pdev)
- 			return PTR_ERR(ctx->base);
- 	}
- 
--	err = linedisp_register(&ctx->linedisp, dev, cfg->num_chars, ctx->curr,
--				&cfg->ops);
-+	err = linedisp_register(&ctx->linedisp, dev, cfg->num_chars, &cfg->ops);
- 	if (err)
- 		return err;
- 
-diff --git a/drivers/auxdisplay/line-display.c b/drivers/auxdisplay/line-display.c
-index 13be7c2f6bc3..e2b546210f8d 100644
---- a/drivers/auxdisplay/line-display.c
-+++ b/drivers/auxdisplay/line-display.c
-@@ -265,6 +265,7 @@ static void linedisp_release(struct device *dev)
- 
- 	kfree(linedisp->map);
- 	kfree(linedisp->message);
-+	kfree(linedisp->buf);
- 	ida_free(&linedisp_id, linedisp->id);
- }
- 
-@@ -316,14 +317,12 @@ static int linedisp_init_map(struct linedisp *linedisp)
-  * @linedisp: pointer to character line display structure
-  * @parent: parent device
-  * @num_chars: the number of characters that can be displayed
-- * @buf: pointer to a buffer that can hold @num_chars characters
-  * @ops: character line display operations
-  *
-  * Return: zero on success, else a negative error code.
-  */
- int linedisp_register(struct linedisp *linedisp, struct device *parent,
--		      unsigned int num_chars, char *buf,
--		      const struct linedisp_ops *ops)
-+		      unsigned int num_chars, const struct linedisp_ops *ops)
- {
- 	int err;
- 
-@@ -331,7 +330,6 @@ int linedisp_register(struct linedisp *linedisp, struct device *parent,
- 	linedisp->dev.parent = parent;
- 	linedisp->dev.type = &linedisp_type;
- 	linedisp->ops = ops;
--	linedisp->buf = buf;
- 	linedisp->num_chars = num_chars;
- 	linedisp->scroll_rate = DEFAULT_SCROLL_RATE;
- 
-@@ -343,6 +341,11 @@ int linedisp_register(struct linedisp *linedisp, struct device *parent,
- 	device_initialize(&linedisp->dev);
- 	dev_set_name(&linedisp->dev, "linedisp.%u", linedisp->id);
- 
-+	err = -ENOMEM;
-+	linedisp->buf = kzalloc(linedisp->num_chars, GFP_KERNEL);
-+	if (!linedisp->buf)
-+		goto out_put_device;
++config MAX6959
++	tristate "Maxim MAX6958/6959 7-segment LED controller"
++	depends on I2C
++	select REGMAP_I2C
++	select LINEDISP
++	help
++	  If you say yes here you get support for the following Maxim chips
++	  (I2C 7-segment LED display controller):
++	  - MAX6958
++	  - MAX6959 (input support)
 +
- 	/* initialise a character mapping, if required */
- 	err = linedisp_init_map(linedisp);
- 	if (err)
-diff --git a/drivers/auxdisplay/line-display.h b/drivers/auxdisplay/line-display.h
-index 4e310b0e611e..4348d7a2f69a 100644
---- a/drivers/auxdisplay/line-display.h
-+++ b/drivers/auxdisplay/line-display.h
-@@ -82,8 +82,7 @@ struct linedisp {
- };
++	  This driver can also be built as a module. If so, the module
++	  will be called max6959.
++
+ menuconfig PARPORT_PANEL
+ 	tristate "Parallel port LCD/Keypad Panel support"
+ 	depends on PARPORT
+diff --git a/drivers/auxdisplay/Makefile b/drivers/auxdisplay/Makefile
+index 9197ea34e2d6..9718aedf6ee2 100644
+--- a/drivers/auxdisplay/Makefile
++++ b/drivers/auxdisplay/Makefile
+@@ -15,5 +15,6 @@ obj-$(CONFIG_CFAG12864B)	+= cfag12864b.o cfag12864bfb.o
+ obj-$(CONFIG_LINEDISP)		+= line-display.o
+ obj-$(CONFIG_IMG_ASCII_LCD)	+= img-ascii-lcd.o
+ obj-$(CONFIG_HT16K33)		+= ht16k33.o
++obj-$(CONFIG_MAX6959)		+= max6959.o
  
- int linedisp_register(struct linedisp *linedisp, struct device *parent,
--		      unsigned int num_chars, char *buf,
--		      const struct linedisp_ops *ops);
-+		      unsigned int num_chars, const struct linedisp_ops *ops);
- void linedisp_unregister(struct linedisp *linedisp);
- 
- #endif /* LINEDISP_H */
+ obj-$(CONFIG_ARM_CHARLCD)	+= arm-charlcd.o
+diff --git a/drivers/auxdisplay/max6959.c b/drivers/auxdisplay/max6959.c
+new file mode 100644
+index 000000000000..5519c014bd29
+--- /dev/null
++++ b/drivers/auxdisplay/max6959.c
+@@ -0,0 +1,194 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * MAX6958/6959 7-segment LED display controller
++ * Datasheet:
++ * https://www.analog.com/media/en/technical-documentation/data-sheets/MAX6958-MAX6959.pdf
++ *
++ * Copyright (c) 2024, Intel Corporation.
++ * Author: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
++ */
++#include <linux/array_size.h>
++#include <linux/bitrev.h>
++#include <linux/bits.h>
++#include <linux/container_of.h>
++#include <linux/err.h>
++#include <linux/i2c.h>
++#include <linux/mod_devicetable.h>
++#include <linux/module.h>
++#include <linux/pm.h>
++#include <linux/regmap.h>
++#include <linux/slab.h>
++#include <linux/types.h>
++#include <linux/workqueue.h>
++
++#include <linux/map_to_7segment.h>
++
++#include "line-display.h"
++
++/* Registers */
++#define REG_DECODE_MODE			0x01
++#define REG_INTENSITY			0x02
++#define REG_SCAN_LIMIT			0x03
++#define REG_CONFIGURATION		0x04
++#define REG_CONFIGURATION_S_BIT		BIT(0)
++
++#define REG_DIGIT(x)			(0x20 + (x))
++#define REG_DIGIT0			0x20
++#define REG_DIGIT1			0x21
++#define REG_DIGIT2			0x22
++#define REG_DIGIT3			0x23
++
++#define REG_SEGMENTS			0x24
++#define REG_MAX				REG_SEGMENTS
++
++struct max6959_priv {
++	struct linedisp linedisp;
++	struct delayed_work work;
++	struct regmap *regmap;
++};
++
++static void max6959_disp_update(struct work_struct *work)
++{
++	struct max6959_priv *priv = container_of(work, struct max6959_priv, work.work);
++	struct linedisp *linedisp = &priv->linedisp;
++	struct linedisp_map *map = linedisp->map;
++	char *s = linedisp->buf;
++	u8 buf[4];
++
++	/* Map segments according to datasheet */
++	buf[0] = bitrev8(map_to_seg7(&map->map.seg7, *s++)) >> 1;
++	buf[1] = bitrev8(map_to_seg7(&map->map.seg7, *s++)) >> 1;
++	buf[2] = bitrev8(map_to_seg7(&map->map.seg7, *s++)) >> 1;
++	buf[3] = bitrev8(map_to_seg7(&map->map.seg7, *s++)) >> 1;
++
++	regmap_bulk_write(priv->regmap, REG_DIGIT(0), buf, ARRAY_SIZE(buf));
++}
++
++static int max6959_linedisp_get_map_type(struct linedisp *linedisp)
++{
++	struct max6959_priv *priv = container_of(linedisp, struct max6959_priv, linedisp);
++
++	INIT_DELAYED_WORK(&priv->work, max6959_disp_update);
++	return LINEDISP_MAP_SEG7;
++}
++
++static void max6959_linedisp_update(struct linedisp *linedisp)
++{
++	struct max6959_priv *priv = container_of(linedisp, struct max6959_priv, linedisp);
++
++	schedule_delayed_work(&priv->work, 0);
++}
++
++static const struct linedisp_ops max6959_linedisp_ops = {
++	.get_map_type = max6959_linedisp_get_map_type,
++	.update = max6959_linedisp_update,
++};
++
++static int max6959_enable(struct max6959_priv *priv, bool enable)
++{
++	u8 mask = REG_CONFIGURATION_S_BIT;
++	u8 value = enable ? mask : 0;
++
++	return regmap_update_bits(priv->regmap, REG_CONFIGURATION, mask, value);
++}
++
++static void max6959_power_off(void *priv)
++{
++	max6959_enable(priv, false);
++}
++
++static int max6959_power_on(struct max6959_priv *priv)
++{
++	struct device *dev = regmap_get_device(priv->regmap);
++	int ret;
++
++	ret = max6959_enable(priv, true);
++	if (ret)
++		return ret;
++
++	return devm_add_action_or_reset(dev, max6959_power_off, priv);
++}
++
++static const struct regmap_config max6959_regmap_config = {
++	.reg_bits = 8,
++	.val_bits = 8,
++
++	.max_register = REG_MAX,
++	.cache_type = REGCACHE_MAPLE,
++};
++
++static int max6959_i2c_probe(struct i2c_client *client)
++{
++	struct device *dev = &client->dev;
++	struct max6959_priv *priv;
++	int ret;
++
++	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
++	if (!priv)
++		return -ENOMEM;
++
++	priv->regmap = devm_regmap_init_i2c(client, &max6959_regmap_config);
++	if (IS_ERR(priv->regmap))
++		return PTR_ERR(priv->regmap);
++
++	ret = max6959_power_on(priv);
++	if (ret)
++		return ret;
++
++	ret = linedisp_register(&priv->linedisp, dev, 4, &max6959_linedisp_ops);
++	if (ret)
++		return ret;
++
++	i2c_set_clientdata(client, priv);
++
++	return 0;
++}
++
++static void max6959_i2c_remove(struct i2c_client *client)
++{
++	struct max6959_priv *priv = i2c_get_clientdata(client);
++
++	cancel_delayed_work_sync(&priv->work);
++	linedisp_unregister(&priv->linedisp);
++}
++
++static int max6959_suspend(struct device *dev)
++{
++	return max6959_enable(dev_get_drvdata(dev), false);
++}
++
++static int max6959_resume(struct device *dev)
++{
++	return max6959_enable(dev_get_drvdata(dev), true);
++}
++
++static DEFINE_SIMPLE_DEV_PM_OPS(max6959_pm_ops, max6959_suspend, max6959_resume);
++
++static const struct i2c_device_id max6959_i2c_id[] = {
++	{ "max6959" },
++	{ }
++};
++MODULE_DEVICE_TABLE(i2c, max6959_i2c_id);
++
++static const struct of_device_id max6959_of_table[] = {
++	{ .compatible = "maxim,max6959" },
++	{ }
++};
++MODULE_DEVICE_TABLE(of, max6959_of_table);
++
++static struct i2c_driver max6959_i2c_driver = {
++	.driver = {
++		.name = "max6959",
++		.pm = pm_sleep_ptr(&max6959_pm_ops),
++		.of_match_table = max6959_of_table,
++	},
++	.probe = max6959_i2c_probe,
++	.remove = max6959_i2c_remove,
++	.id_table = max6959_i2c_id,
++};
++module_i2c_driver(max6959_i2c_driver);
++
++MODULE_DESCRIPTION("MAX6958/6959 7-segment LED controller");
++MODULE_AUTHOR("Andy Shevchenko <andriy.shevchenko@linux.intel.com>");
++MODULE_LICENSE("GPL");
++MODULE_IMPORT_NS(LINEDISP);
 -- 
 2.43.0.rc1.1.gbec44491f096
 
