@@ -1,47 +1,46 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDA7B44389;
-	Mon, 19 Feb 2024 17:03:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB80744391;
+	Mon, 19 Feb 2024 17:03:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708362227; cv=none; b=WLL4JAr1T4lqBwQwGcK4xAWhDjFtum6VySHzDYUjaw4p98txLHVFNRG0j3A0g74zaSljLCDL8n5+GbzbxyJHtqmrGFI/1yacvBRKtTclXXauvJWhOy3vQc2Xq3xR4i5fteo6hrXo9gKxebwY/Pl7xjS9sltq/jYsVNpTRSjJcmI=
+	t=1708362229; cv=none; b=DOprOZXTlEsdktxwqtABzu/b3VxWbeRF5eIsyKD8JOk4Q/Ubq+uOHsu5JLKeELJN7E75zYzk3S1QQJd5ln7mWzw0TPJepN5APIWo+gwqTwrzylTD/qqzn9pfge4ZZz3aj6GrGTH3HG7K1u/0SPNqLk8+kV3zer68atvDrkiDwdc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708362227; c=relaxed/simple;
-	bh=38IkFeeB3s9t528Gme98k0LsxVPPJCADBjB36ZdncEc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=mGYxGMKjKrCZE3YZrfPhfPl4ISTfFTfBWYsdF/nv0++wk9A4nn3laz4srp4XdyIlTU7jDvKqi8ySDgYbqNntoYwSxEJEXwyZznP9EZpqxB2A1H05Q+o1WWPm9auRbVEZQPCmpDipL9xtjijPITMhQCJoaKrxY/z0uQgheta8tn0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PfjDJyUN; arc=none smtp.client-ip=198.175.65.17
+	s=arc-20240116; t=1708362229; c=relaxed/simple;
+	bh=kDh4WLiNwWNPYGC9OYUv0pS6W7fpqiiqCez/hH4DIYQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=eHV/KUShLU43JJQV64M/XDKWVjBGVq3VsQ94YdFTTGmEa75Vcy3JMOORoiE8b8JYNT9SkoHjmc+pftIDg/o107c3RKLq5IVFa022eN2J0YJFjKKytC9HSFcbql20QT1phLpBZ214DK4J0tl5hooK4V8od+px/gNatXQkLVmMZZs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MDHvQHBB; arc=none smtp.client-ip=198.175.65.17
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PfjDJyUN"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MDHvQHBB"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1708362226; x=1739898226;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=38IkFeeB3s9t528Gme98k0LsxVPPJCADBjB36ZdncEc=;
-  b=PfjDJyUNjywbKHx49UXA75KfMSxu7MVNrydPJMAp5lkfYl0iawkllXkw
-   wP25bOkRoATOV7SXm2g0WvmS5rw7u9PIFHK02fyV8UhrRw9PfBCoUdp2R
-   eEg5iojQn6gfpqGz332Z9zgrt65kJ0uRkDAW2ywCW76mGLif0XKqL1k8z
-   ZVLAvokNyUTxWTYX/vcN5g9KKTP0Hx9qqN/SvNbFEOhR2DCGv3w6cpdmY
-   ZP3+FDsjI+WDuLvSe45ssNmEsdyeNsrPVPpIgNa/7HTRryXwb1NyblsHn
-   N6rNQHkSbp6r5fOgY3aa3In5neLBKCAsD2v/yecADdjR19oRC96zPlHOT
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10989"; a="2577393"
+  t=1708362228; x=1739898228;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=kDh4WLiNwWNPYGC9OYUv0pS6W7fpqiiqCez/hH4DIYQ=;
+  b=MDHvQHBBNpH1X/+C8jZQ7BxRKujyONPZhRbvOvFE2zTmvIQo4LjL6yW+
+   HFUAbplS2GDqScxeY0mZ92QQK+yukQyUJ0jhPTt4eTJh9259SkLsMk1dR
+   Glvj3N9gr+xzPAcHjI0z78pVwWSMM6cyR6V+54xGLr7t0CuI0Jaj4bYvE
+   yhehBweD3tgtC4Mufl+zmOPE7WdPqje2E28S6OB7WmAVoCgrVspeijUOs
+   sKR/6y3p59cCyNE9ghhkdFArXeefDqosJ74sGrexjA9e2qAKysJx5bkOa
+   sDCOQx7Xs6Ly3hCBftPPRbCRkI1WD8hGB63m19wwza0/2lUXDdfR3FgyK
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10989"; a="2577400"
 X-IronPort-AV: E=Sophos;i="6.06,170,1705392000"; 
-   d="scan'208";a="2577393"
+   d="scan'208";a="2577400"
 Received: from fmsmga001.fm.intel.com ([10.253.24.23])
   by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Feb 2024 09:03:45 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10989"; a="936315355"
+X-IronPort-AV: E=McAfee;i="6600,9927,10989"; a="936315352"
 X-IronPort-AV: E=Sophos;i="6.06,170,1705392000"; 
-   d="scan'208";a="936315355"
+   d="scan'208";a="936315352"
 Received: from black.fi.intel.com ([10.237.72.28])
   by fmsmga001.fm.intel.com with ESMTP; 19 Feb 2024 09:03:42 -0800
 Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id 585CAAE0; Mon, 19 Feb 2024 19:03:41 +0200 (EET)
+	id 1E99D2CB; Mon, 19 Feb 2024 19:03:41 +0200 (EET)
 From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
 	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
@@ -54,74 +53,63 @@ Cc: Andy Shevchenko <andy@kernel.org>,
 	Conor Dooley <conor+dt@kernel.org>,
 	Robin van der Gracht <robin@protonic.nl>,
 	Paul Burton <paulburton@kernel.org>
-Subject: [PATCH v3 4/9] auxdisplay: ht16k33: Move ht16k33_linedisp_ops down
-Date: Mon, 19 Feb 2024 18:58:03 +0200
-Message-ID: <20240219170337.2161754-5-andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v3 0/9] auxdisplay: linedisp: Clean up and add new driver
+Date: Mon, 19 Feb 2024 18:57:59 +0200
+Message-ID: <20240219170337.2161754-1-andriy.shevchenko@linux.intel.com>
 X-Mailer: git-send-email 2.43.0.rc1.1.gbec44491f096
-In-Reply-To: <20240219170337.2161754-1-andriy.shevchenko@linux.intel.com>
-References: <20240219170337.2161754-1-andriy.shevchenko@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-We will need the update functions to be defined before
-ht16k33_linedisp_ops. Move the latter down in the code.
-No functional change intended.
+Add a new initial driver for Maxim MAX6958/6959 chips.
+While developing that driver I realised that there is a lot
+of duplication between ht16k33 and a new one. Hence set of
+cleanups and refactorings.
 
-Reviewed-by: Geert Uytterhoeven <geert@linux-m68k.org>
-Acked-by: Robin van der Gracht <robin@protonic.nl>
-Tested-by: Geert Uytterhoeven <geert@linux-m68k.org>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- drivers/auxdisplay/ht16k33.c | 24 ++++++++++++------------
- 1 file changed, 12 insertions(+), 12 deletions(-)
+Note, the new driver has minimum support of the hardware and
+I have plans to cover more features in the future.
 
-diff --git a/drivers/auxdisplay/ht16k33.c b/drivers/auxdisplay/ht16k33.c
-index c0067a3b2b61..f016130835b1 100644
---- a/drivers/auxdisplay/ht16k33.c
-+++ b/drivers/auxdisplay/ht16k33.c
-@@ -439,18 +439,6 @@ static void ht16k33_keypad_stop(struct input_dev *dev)
- 	disable_irq(keypad->client->irq);
- }
- 
--static void ht16k33_linedisp_update(struct linedisp *linedisp)
--{
--	struct ht16k33_priv *priv = container_of(linedisp, struct ht16k33_priv,
--						 seg.linedisp);
--
--	schedule_delayed_work(&priv->work, 0);
--}
--
--static const struct linedisp_ops ht16k33_linedisp_ops = {
--	.update = ht16k33_linedisp_update,
--};
--
- static void ht16k33_seg7_update(struct work_struct *work)
- {
- 	struct ht16k33_priv *priv = container_of(work, struct ht16k33_priv,
-@@ -488,6 +476,18 @@ static void ht16k33_seg14_update(struct work_struct *work)
- 	i2c_smbus_write_i2c_block_data(priv->client, 0, ARRAY_SIZE(buf), buf);
- }
- 
-+static void ht16k33_linedisp_update(struct linedisp *linedisp)
-+{
-+	struct ht16k33_priv *priv = container_of(linedisp, struct ht16k33_priv,
-+						 seg.linedisp);
-+
-+	schedule_delayed_work(&priv->work, 0);
-+}
-+
-+static const struct linedisp_ops ht16k33_linedisp_ops = {
-+	.update = ht16k33_linedisp_update,
-+};
-+
- static int ht16k33_led_probe(struct device *dev, struct led_classdev *led,
- 			     unsigned int brightness)
- {
+In v3:
+- dropped applied patches
+- fixed compilation error (Geert)
+- dragging back and force added memory allocation for the character buffer
+- dropped 'with keyscan' in new driver (Geert)
+- rephrased a bit description in DT bindings for new driver (Geert)
+- added tags to the (almost) unchanged patches (Geert, Krzysztof, Robin)
+
+In v2:
+- updated DT bindings to follow specifications and requirements (Krzysztof)
+- unified return code variable (err everywhere)
+- left patches 10 and 13 untouched, we may amend later on (Robin)
+
+Andy Shevchenko (9):
+  auxdisplay: linedisp: Group display drivers together
+  auxdisplay: linedisp: Allocate buffer for the string
+  auxdisplay: ht16k33: Add default to switch-cases
+  auxdisplay: ht16k33: Move ht16k33_linedisp_ops down
+  auxdisplay: ht16k33: Define a few helper macros
+  auxdisplay: ht16k33: Switch to use line display character mapping
+  auxdisplay: ht16k33: Drop struct ht16k33_seg
+  dt-bindings: auxdisplay: Add Maxim MAX6958/6959
+  auxdisplay: Add driver for MAX695x 7-segment LED controllers
+
+ .../bindings/auxdisplay/maxim,max6959.yaml    |  44 +++
+ drivers/auxdisplay/Kconfig                    | 306 ++++++++++--------
+ drivers/auxdisplay/Makefile                   |  16 +-
+ drivers/auxdisplay/ht16k33.c                  | 177 ++++------
+ drivers/auxdisplay/img-ascii-lcd.c            |  17 +-
+ drivers/auxdisplay/line-display.c             |  11 +-
+ drivers/auxdisplay/line-display.h             |   3 +-
+ drivers/auxdisplay/max6959.c                  | 194 +++++++++++
+ 8 files changed, 496 insertions(+), 272 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/auxdisplay/maxim,max6959.yaml
+ create mode 100644 drivers/auxdisplay/max6959.c
+
 -- 
 2.43.0.rc1.1.gbec44491f096
 
