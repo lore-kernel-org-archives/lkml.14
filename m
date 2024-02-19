@@ -1,37 +1,38 @@
-Received: from out-182.mta0.migadu.com (out-182.mta0.migadu.com [91.218.175.182])
+Received: from out-186.mta0.migadu.com (out-186.mta0.migadu.com [91.218.175.186])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FCEC374DD
-	for <linux-kernel@vger.kernel.org>; Mon, 19 Feb 2024 20:13:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF017524C0
+	for <linux-kernel@vger.kernel.org>; Mon, 19 Feb 2024 20:13:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.186
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708373593; cv=none; b=IyPctfC5rzUYz9w2oVQ1CEu8qJHn6uZseVqVI92shf14ufsaMaXZ+qwpzEI36Obh0YhV/hIyWJKWqg3dnxoRwSPXjL2NBhAArrhHxt7Q/nwxywpQUJByIYKOlAUtdi352oLSt/an8lAWsnMZTDHCmunR6Ht/DqtWqae8MLAZfds=
+	t=1708373593; cv=none; b=CFeOMOmo0hCg8BIdNeCNYWx88a0IrAP7KZWooAvPi6S4wU08fkhEXYxbugNUbEHqMmDd0gZlK9oMjEZbW/i18ygC4atfXG8NjGkIZf4Qh5wPzHJDH3iY8r2CCbt8ziv8A3mIQBCnoM5PeyFLAZb9jDmkGuQa15b5uQZ7upZXqOs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1708373593; c=relaxed/simple;
-	bh=GiZmlgeKTMCkZ8D5oBlu3UrTyPPfMRdiZij9U/zUGGw=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=YF82Fp6TnMfCY2I0NFVAojtUh1k4kWGCJcBY4dD91YinN1b3NVdcl+G0L7kFTwNIi8t3GDNe4SQkLwyPsCeMGAMlsnyM2Ku5kFFKHR0r3Qeu6k/hSB3LoeEpuaV1kovuAxP1iGMk6Htu0Idm95pXv7D7A37QqPwEdm/91SEky3Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pqrs.dk; spf=pass smtp.mailfrom=pqrs.dk; dkim=pass (2048-bit key) header.d=pqrs.dk header.i=@pqrs.dk header.b=1v/SkDNa; arc=none smtp.client-ip=91.218.175.182
+	bh=sC55kJDsLPpg0KGXV9oArJ9f+Vh/MrJPcucqs3lfL5c=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=BjV5qXlHkmf14qlSFdtxxZEfqmWCxMQraKYq4xMCr9ssflqCGX4oKK5S+OgHvVFIysHwdOlWa5C9Y9ZZiH11Y24hctGo26kPuyDMDoj6wHhmIvwEbZUBOlml9ZsXLIWIsyILDIHwWQA+Cvtf3P3paQQElxx2RCRBDFUlkRkkZZk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pqrs.dk; spf=pass smtp.mailfrom=pqrs.dk; dkim=pass (2048-bit key) header.d=pqrs.dk header.i=@pqrs.dk header.b=fImIG8zt; arc=none smtp.client-ip=91.218.175.186
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pqrs.dk
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pqrs.dk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=pqrs.dk header.i=@pqrs.dk header.b="1v/SkDNa"
+	dkim=pass (2048-bit key) header.d=pqrs.dk header.i=@pqrs.dk header.b="fImIG8zt"
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pqrs.dk; s=key1;
-	t=1708373586;
+	t=1708373588;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=mguEP1Gv9Bi8kebx8E+Cy9id6Us4gzQ3hJk5w5gRw5A=;
-	b=1v/SkDNaRggd3fhA6WuwSDFAXz2yqhhxP+RTeyhMfS32xGBW49Y+SICHJmMpMws41ocvO3
-	wizWAyQxKKIpy7A16tNchfnITb7cgnoWufGqWtuyW/gvUKXL+gbUdEqs4S4eQNG6ED6t7f
-	WmF3R3Ae2WhdlrgEDCU0CZ8ytfT830+a49eFMRF69LO33GFILL8AXvOEVWGPx+PJ8RAwbp
-	80V5h55xysVvMr5NxY4nigRB+h16xDcAtIH+7TB9usSOAvE/0mx0ilMC2GaPYBRc6WgBSR
-	2bIx/dL3R2xkNiHev9T3GadTCg1Wzexf7mfxi0MDSG/2j5+L8FKjMqJkdeoeSg==
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=kFZNbXQUFAlr8d7wQOjWhFQiUag9o0uIzBpo8W4u+X8=;
+	b=fImIG8ztlMgvHBWbWNrGKrUMPefmEVHb8dBpjveIsJnuA585m4M0V5IZvjEXKa2JpXfWUl
+	uyLYilgIPgRD9oG6s0Ke8G2uOQChKiTL6xHvdHmWqqtPVjkwv3Ik/HpIqC1KTRd/DCaLlN
+	qz/VEnGjeZxW9Av0x3aehpLkGh8sUSaKRn5BQ0UiS85fmORljOO3kMcb8m9Y9XDTqqledK
+	YuuugJiF6zXQ6/72S7fMK962CPiTE7vUilO12LbwKc1XG/gzj4IE0u4emhN574PBK9cwxb
+	TtvSXFXd8JsT2+ipHY0o8uu8WfT+4J0YnuFV+zRhBiSDqT8YzsS7Xk4axsoQEQ==
 From: =?utf-8?q?Alvin_=C5=A0ipraga?= <alvin@pqrs.dk>
-Subject: [PATCH v3 0/2] drm/bridge: adv7511: get edid in hpd_work to update
+Date: Mon, 19 Feb 2024 21:12:59 +0100
+Subject: [PATCH v3 2/2] drm/bridge: adv7511: get edid in hpd_work to update
  CEC phys address
-Date: Mon, 19 Feb 2024 21:12:57 +0100
-Message-Id: <20240219-adv7511-cec-edid-v3-0-445aed2f1cd7@bang-olufsen.dk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -40,10 +41,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-B4-Tracking: v=1; b=H4sIAEq202UC/33OwQrCMAyA4VcZORtpOsvUk+8hHro2cUXZpNWij
- L273S4eFI9/IF8yQuIYOMG+GiFyDikMfYl6VYHrbH9mDL40aKVrUrRB63NjiNCxQ/bBo0hjWl9
- bt9M7KGu3yBKeC3k8le5Cug/xtVzINE//YJmQ0JqtY8uqNQ0f2vIEDteHJO7X/gIzmfWHIf2L0
- ahQFBtmK16c/mamaXoDUMpTf/0AAAA=
+Message-Id: <20240219-adv7511-cec-edid-v3-2-445aed2f1cd7@bang-olufsen.dk>
+References: <20240219-adv7511-cec-edid-v3-0-445aed2f1cd7@bang-olufsen.dk>
+In-Reply-To: <20240219-adv7511-cec-edid-v3-0-445aed2f1cd7@bang-olufsen.dk>
 To: Andrzej Hajda <andrzej.hajda@intel.com>, 
  Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, 
  Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, 
@@ -54,32 +54,128 @@ Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
  =?utf-8?q?Alvin_=C5=A0ipraga?= <alsi@bang-olufsen.dk>
 X-Migadu-Flow: FLOW_OUT
 
-This series fixes a small bug where the CEC adapter could have an
-invalid CEC address even though we got a hotplug connect and could have
-read it.
+From: Alvin Šipraga <alsi@bang-olufsen.dk>
 
+The adv7511 driver is solely responsible for setting the physical
+address of its CEC adapter. To do this, it must read the EDID. However,
+EDID is only read when either the drm_bridge_funcs :: get_edid or
+drm_connector_helper_funcs :: get_modes ops are called. Without loss of
+generality, it cannot be assumed that these ops are called when a sink
+gets attached. Therefore there exist scenarios in which the CEC physical
+address will be invalid (f.f.f.f), rendering the CEC adapter inoperable.
+
+Address this problem by always fetching the EDID in the HPD work when we
+detect a connection. The CEC physical address is set in the process.
+This is done by moving the EDID DRM helper into an internal helper
+function so that it can be cleanly called from an earlier section of
+the code. The EDID getter has not changed in practice.
+
+Reviewed-by: Robert Foss <rfoss@kernel.org>
 Signed-off-by: Alvin Šipraga <alsi@bang-olufsen.dk>
 ---
-Changes in v3:
-- rebase on latest drm-misc-fixes
-- remove redundant NULL check before kfree()
-- collect Robert's Reviewed-by
-- Link to v2: https://lore.kernel.org/r/20231124-adv7511-cec-edid-v2-0-f0e5eeafdfc2@bang-olufsen.dk
+ drivers/gpu/drm/bridge/adv7511/adv7511_drv.c | 73 ++++++++++++++++++----------
+ 1 file changed, 47 insertions(+), 26 deletions(-)
 
-Changes in v2:
-- Rearrange driver code to avoid the previous prototype of
-  adv7511_get_edid(), per Laurent's feedback
-- Free the returned EDID to prevent a memory leak, per Jani's comment
-- Link to v1: https://lore.kernel.org/r/20231014-adv7511-cec-edid-v1-1-a58ceae0b57e@bang-olufsen.dk
+diff --git a/drivers/gpu/drm/bridge/adv7511/adv7511_drv.c b/drivers/gpu/drm/bridge/adv7511/adv7511_drv.c
+index 5ffc5904bd59..d823b372ff43 100644
+--- a/drivers/gpu/drm/bridge/adv7511/adv7511_drv.c
++++ b/drivers/gpu/drm/bridge/adv7511/adv7511_drv.c
+@@ -542,6 +542,36 @@ static int adv7511_get_edid_block(void *data, u8 *buf, unsigned int block,
+ 	return 0;
+ }
+ 
++static struct edid *__adv7511_get_edid(struct adv7511 *adv7511,
++				       struct drm_connector *connector)
++{
++	struct edid *edid;
++
++	/* Reading the EDID only works if the device is powered */
++	if (!adv7511->powered) {
++		unsigned int edid_i2c_addr =
++					(adv7511->i2c_edid->addr << 1);
++
++		__adv7511_power_on(adv7511);
++
++		/* Reset the EDID_I2C_ADDR register as it might be cleared */
++		regmap_write(adv7511->regmap, ADV7511_REG_EDID_I2C_ADDR,
++			     edid_i2c_addr);
++	}
++
++	edid = drm_do_get_edid(connector, adv7511_get_edid_block, adv7511);
++
++	if (!adv7511->powered)
++		__adv7511_power_off(adv7511);
++
++	adv7511_set_config_csc(adv7511, connector, adv7511->rgb,
++			       drm_detect_hdmi_monitor(edid));
++
++	cec_s_phys_addr_from_edid(adv7511->cec_adap, edid);
++
++	return edid;
++}
++
+ /* -----------------------------------------------------------------------------
+  * Hotplug handling
+  */
+@@ -595,8 +625,23 @@ static void adv7511_hpd_work(struct work_struct *work)
+ 		adv7511->connector.status = status;
+ 
+ 		if (adv7511->connector.dev) {
+-			if (status == connector_status_disconnected)
++			if (status == connector_status_disconnected) {
+ 				cec_phys_addr_invalidate(adv7511->cec_adap);
++			} else {
++				struct edid *edid;
++
++				/*
++				 * Get the updated EDID so that the CEC
++				 * subsystem gets informed of any change in CEC
++				 * address. The helper returns a newly allocated
++				 * edid structure, so free it to prevent
++				 * leakage.
++				 */
++				edid = __adv7511_get_edid(adv7511,
++							  &adv7511->connector);
++				kfree(edid);
++			}
++
+ 			drm_kms_helper_hotplug_event(adv7511->connector.dev);
+ 		} else {
+ 			drm_bridge_hpd_notify(&adv7511->bridge, status);
+@@ -611,31 +656,7 @@ static void adv7511_hpd_work(struct work_struct *work)
+ static struct edid *adv7511_get_edid(struct adv7511 *adv7511,
+ 				     struct drm_connector *connector)
+ {
+-	struct edid *edid;
+-
+-	/* Reading the EDID only works if the device is powered */
+-	if (!adv7511->powered) {
+-		unsigned int edid_i2c_addr =
+-					(adv7511->i2c_edid->addr << 1);
+-
+-		__adv7511_power_on(adv7511);
+-
+-		/* Reset the EDID_I2C_ADDR register as it might be cleared */
+-		regmap_write(adv7511->regmap, ADV7511_REG_EDID_I2C_ADDR,
+-			     edid_i2c_addr);
+-	}
+-
+-	edid = drm_do_get_edid(connector, adv7511_get_edid_block, adv7511);
+-
+-	if (!adv7511->powered)
+-		__adv7511_power_off(adv7511);
+-
+-	adv7511_set_config_csc(adv7511, connector, adv7511->rgb,
+-			       drm_detect_hdmi_monitor(edid));
+-
+-	cec_s_phys_addr_from_edid(adv7511->cec_adap, edid);
+-
+-	return edid;
++	return __adv7511_get_edid(adv7511, connector);
+ }
+ 
+ static int adv7511_get_modes(struct adv7511 *adv7511,
 
----
-Alvin Šipraga (2):
-      drm/bridge: adv7511: rearrange hotplug work code
-      drm/bridge: adv7511: get edid in hpd_work to update CEC phys address
-
- drivers/gpu/drm/bridge/adv7511/adv7511_drv.c | 153 ++++++++++++++++-----------
- 1 file changed, 89 insertions(+), 64 deletions(-)
----
-base-commit: 335126937753844d36036984e96a8f343538a778
-change-id: 20231014-adv7511-cec-edid-ff75bd3ac929
+-- 
+2.43.1
 
