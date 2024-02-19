@@ -1,160 +1,91 @@
-Received: from smtp.smtpout.orange.fr (smtp-30.smtpout.orange.fr [80.12.242.30])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3012347F63
-	for <linux-kernel@vger.kernel.org>; Mon, 19 Feb 2024 18:11:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.30
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8CD346B9F;
+	Mon, 19 Feb 2024 18:14:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708366281; cv=none; b=RAicFfwmlGR8dvNlWO5uQfvW2pQ+yXTflVB/eDPoBtAXUb+3d0YkINuLZqesI03t6KDNh4IMK5TFHq0hNcJQwDSah5h8UM3VInTNPLjFe2okGULXm9ivfvi/5NGDpFUXvs2xvqqxjc48CiJHhw7unb/z1rKX11SCYOrny9GpZKE=
+	t=1708366465; cv=none; b=ErBjg2Z7/tFEAhIr4nYr0ffwC3K2U8oaddqOfyuAz27BljIgtWDW6X1X9LhYIWLRAsqncYDOiAxBdTzvpjU5RTDLD2j6OAg+l/MPECkwkCFr13T7DSZjcYp77T4r5tHY9FZIeVCU6L8X9BfXFoSlgno10e4jkitZbd2xfIL1Bdo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708366281; c=relaxed/simple;
-	bh=VMG0FUPd+kO1UMfam5hKqmeC8mpbpmgr7NCRClOWnXk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Z8mzn7rNTzZPYmKBQbRKrRc5GT0N474Gn8MNklp77GP5OgGCc8gG+4AAkyC2DTpsPH4BoRKES9wuSU55prnZIW94aBh1tcwqfhFOH2HrsQaoZNRZKaEM3S3pxoC9ipGmxLRl3OpfhZv1TsrZwOvZeHwqsU9EU4FCahpn7ZwFlA0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=F6tpps14; arc=none smtp.client-ip=80.12.242.30
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
+	s=arc-20240116; t=1708366465; c=relaxed/simple;
+	bh=3p90HdXjRYqaF/dwaJSI6JIUSflQuajrLtO/CzXAHow=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=sljBUYF5qN6PSATM+DbamtzuvcWgdhibzoCC4nz0CYtSJTV/3mba8vHNJGvZfW/UHZO/t7g5W6OvggryNxonkD8IlP473PFsFydWLqXZ+ak3fqCigzGE5T2Qi9hZbrJO650nd3iREyE63jo/dTQsNNXAG5ygSFxwSiyMyWCv05c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DriiqdOZ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="F6tpps14"
-Received: from [192.168.1.18] ([92.140.202.140])
-	by smtp.orange.fr with ESMTPA
-	id c85irVcPB58CZc85irrhO1; Mon, 19 Feb 2024 19:10:11 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1708366211;
-	bh=tLmysCFqJCBp4TBWVrdLLgYXDPccma3RhSmnyQ0EwgI=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=F6tpps144gVlrYjHGIDYz/gTXAJluqaebMaqobJjJk71MNEprsG3bMLFkMMFlswrQ
-	 O+DJDNWCgS+VL43hGZ8FUBk3SXWbNrfWsR+g7f82QU1LHMM8uSyA20YYIuWLJ0wXCH
-	 D7cYPhd54wh8HTfyiXihFZeDLMd6QY0Ci5oblWtsreh6li3xEOz2fdrNit11sBPPX+
-	 Pb5ZxP2IDZchfteFz7WwEIa1HZ2Lukc+xmOJPtd4FFSnKXgBZtvoWKfOEez0sZ5t4k
-	 qrJA2z8QHkyOs0kxKk5pO2CDk6biRxXX11dzHb05JZV0Kvg95J6lfsalRN3khLR0R/
-	 x1uI3iPoh+kQA==
-X-ME-Helo: [192.168.1.18]
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Mon, 19 Feb 2024 19:10:11 +0100
-X-ME-IP: 92.140.202.140
-Message-ID: <c745c4d3-a084-440d-bc07-0ecbcfe10e37@wanadoo.fr>
-Date: Mon, 19 Feb 2024 19:10:10 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DriiqdOZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 6928FC433C7;
+	Mon, 19 Feb 2024 18:14:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1708366465;
+	bh=3p90HdXjRYqaF/dwaJSI6JIUSflQuajrLtO/CzXAHow=;
+	h=From:Subject:Date:To:Cc:Reply-To:From;
+	b=DriiqdOZJx7EDXvA7xtliPDhs/8oKgC8Y+MNqeSGCzkh2lUq/k2EvQ0bCuNf8nwgB
+	 QvcI2WksBTZS0PQObt9S/jIwf9+zcLPD58p5T2ZLJnaiYA/W32O8bSHmAvSIxrCrwq
+	 Z/aijtMrG5fPtae0GDiiPtN37AiZVshFzsdViqfTqwHwGWMdOa/2/Sg83vWwqKHKir
+	 qq2oCyHVLmyUBHhoStIHmXlfx+cD1pLeyykEv3zkE6YB+RZn1yuDvx8tDdBawvkLK5
+	 iKKHMCPEXuhgVnNFt63vWCqEzwCOHlK0u/FY+GNp+VnhvuwjLVhARh7Udpjkgh+iM7
+	 12tw1qGjLM9Mg==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 480A7C48BF8;
+	Mon, 19 Feb 2024 18:14:25 +0000 (UTC)
+From: Yang Xiwen via B4 Relay <devnull+forbidden405.outlook.com@kernel.org>
+Subject: [PATCH v2 0/2] watchdog: sp805: add reset control support
+Date: Tue, 20 Feb 2024 02:14:24 +0800
+Message-Id: <20240220-hisi-wdt-v2-0-63edc4965b4c@outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] bcachefs: Avoid a potential useless over memory
- allocation in bch2_prt_[v]printf()
-Content-Language: en-MW
-To: Kent Overstreet <kent.overstreet@linux.dev>
-Cc: Brian Foster <bfoster@redhat.com>, linux-kernel@vger.kernel.org,
- kernel-janitors@vger.kernel.org, linux-bcachefs@vger.kernel.org
-References: <4c614db674887346ea418acaeafd6bf86502ec77.1708272713.git.christophe.jaillet@wanadoo.fr>
- <pmyezdskyr3t2iyald4diibl6b7lttf46d6sskxfu2wq3pub7r@gmyezjb3wfeu>
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-In-Reply-To: <pmyezdskyr3t2iyald4diibl6b7lttf46d6sskxfu2wq3pub7r@gmyezjb3wfeu>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAICa02UC/22MSw7CIBQAr9K8tRhA20pX3sN0wU9L1D4DiJqGu
+ /vs2uVMJrNA8jH4BEOzQPQlpIAzgdw0YCc9XzwLjhgkl3suRc8mStjLZbYzrVS90F2rBFD+iP4
+ c3uvqNBJTmDF+1nMRP/tnUgTjzDqjnLPaqO5wxGe+IV63Fu8w1lq/k5lSPqIAAAA=
+To: Wim Van Sebroeck <wim@linux-watchdog.org>, 
+ Guenter Roeck <linux@roeck-us.net>, Philipp Zabel <p.zabel@pengutronix.de>, 
+ Rob Herring <robh+dt@kernel.org>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Viresh Kumar <vireshk@kernel.org>
+Cc: linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ devicetree@vger.kernel.org, Yang Xiwen <forbidden405@outlook.com>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+X-Mailer: b4 0.12.4
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1708366465; l=825;
+ i=forbidden405@outlook.com; s=20230724; h=from:subject:message-id;
+ bh=3p90HdXjRYqaF/dwaJSI6JIUSflQuajrLtO/CzXAHow=;
+ b=NY9tsSJ4I1KQNgp+4GHYAc0+8hARqMhSN/cqcCnZLV6CXiW8r+zNewLjP58YJ0cUqEk40u7cD
+ Con8Y6VpnijAo3L23KyUzMSeGccNOoyrvkinvy/mlYNpfGz63CNGWh9
+X-Developer-Key: i=forbidden405@outlook.com; a=ed25519;
+ pk=qOD5jhp891/Xzc+H/PZ8LWVSWE3O/XCQnAg+5vdU2IU=
+X-Endpoint-Received:
+ by B4 Relay for forbidden405@outlook.com/20230724 with auth_id=67
+X-Original-From: Yang Xiwen <forbidden405@outlook.com>
+Reply-To: <forbidden405@outlook.com>
 
-Le 19/02/2024 à 04:39, Kent Overstreet a écrit :
-> On Sun, Feb 18, 2024 at 05:12:28PM +0100, Christophe JAILLET wrote:
->> 2 issues related to incorrect available space in the output buffer
->> computation may lead to some extra memory allocation.
->>
->>
->> First: vsnprintf() takes the size of the buffer, *including* the space for
->> the trailing null.
->>
->> But printbuf_remaining() returns the number of characters we can print
->> to the output buffer, *excluding* the terminating null.
->>
->> So, use printbuf_remaining_size(), which includes the space for the
->> terminating null.
-> 
-> nope, buggy.
-> 
-> passing printbuf_remaining_size() to snprintf() is correct, but
-> snprintf() returns the number of charecters wrote _excluding_ the null
+Deassert the reset if it's available.
 
-Hi,
+Signed-off-by: Yang Xiwen <forbidden405@outlook.com>
+---
+Changes in v2:
+- commit log: dt-binding->dt-bindings (Krzysztof Kozlowski)
+- binding: remove "|", join two lines. (Krzysztof Kozlowski)
+- Link to v1: https://lore.kernel.org/r/20240217-hisi-wdt-v1-0-cdb9ddcab968@outlook.com
 
-I think that the patch is correct.
+---
+Yang Xiwen (2):
+      watchdog: sp805_wdt: deassert the reset if available
+      dt-bindings: watchdog: arm,sp805: document the reset signal
 
-snprintf() returns the number of characters wrote _excluding_ the null. 
-That is why the test is: len >= size_of_the_buffer   ==>  more space is 
-needed.
-The case you describe is handled by the == part of >=.
+ Documentation/devicetree/bindings/watchdog/arm,sp805.yaml | 5 +++++
+ drivers/watchdog/sp805_wdt.c                              | 9 +++++++++
+ 2 files changed, 14 insertions(+)
+---
+base-commit: 8d3dea210042f54b952b481838c1e7dfc4ec751d
+change-id: 20240217-hisi-wdt-3b52971a6591
 
-On the contrary, if len is < size_of_the_buffer, then we have at least 1 
-place for the terminating NULL. It will then eventually lead to:
-   len_of_the_string + space_for_'\0' ==  size_of_the_buffer
-So it does not overflow.
-
-
-Anyway, feel free to ignore the patch completely if it sounds too risky, 
-take only half of it (s/printbuf_remaining/printbuf_remaining_size/) if 
-you are more confident with it, or the complete patch if the explanation 
-above convinced you.
-
- From my PoV, the 3 options lead to the same run-time output, with more 
-or less memory allocated.
-
-Best regards.
-
-CJ
-
-
-> 
->>
->>
->> Second: if the return value of vsnprintf() is greater than or equal to the
->> passed size, the resulting string is truncated.
->> So, in order to see if some extra space is needed, the check needs to be
->> changed.
->>
->> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
->> ---
->> Un-tested
->>
->> v2: - Use printbuf_remaining_size() instead of hand-writing it.  [Brian Foster]
->>      - Reword the commit log, hoping it is clearer.
->>      - Synch with -next-20240215
->>
->> v1: https://lore.kernel.org/all/0f40108bed3e084057223bdbe32c4b37f8500ff3.1694845203.git.christophe.jaillet@wanadoo.fr/
->> ---
->>   fs/bcachefs/printbuf.c | 10 ++++++----
->>   1 file changed, 6 insertions(+), 4 deletions(-)
->>
->> diff --git a/fs/bcachefs/printbuf.c b/fs/bcachefs/printbuf.c
->> index b27d22925929..8cee9c2f88c4 100644
->> --- a/fs/bcachefs/printbuf.c
->> +++ b/fs/bcachefs/printbuf.c
->> @@ -55,9 +55,10 @@ void bch2_prt_vprintf(struct printbuf *out, const char *fmt, va_list args)
->>   		va_list args2;
->>   
->>   		va_copy(args2, args);
->> -		len = vsnprintf(out->buf + out->pos, printbuf_remaining(out), fmt, args2);
->> +		len = vsnprintf(out->buf + out->pos, printbuf_remaining_size(out),
->> +				fmt, args2);
->>   		va_end(args2);
->> -	} while (len + 1 >= printbuf_remaining(out) &&
->> +	} while (len >= printbuf_remaining_size(out) &&
->>   		 !bch2_printbuf_make_room(out, len + 1));
->>   
->>   	len = min_t(size_t, len,
->> @@ -72,9 +73,10 @@ void bch2_prt_printf(struct printbuf *out, const char *fmt, ...)
->>   
->>   	do {
->>   		va_start(args, fmt);
->> -		len = vsnprintf(out->buf + out->pos, printbuf_remaining(out), fmt, args);
->> +		len = vsnprintf(out->buf + out->pos, printbuf_remaining_size(out),
->> +				fmt, args);
->>   		va_end(args);
->> -	} while (len + 1 >= printbuf_remaining(out) &&
->> +	} while (len >= printbuf_remaining_size(out) &&
->>   		 !bch2_printbuf_make_room(out, len + 1));
->>   
->>   	len = min_t(size_t, len,
->> -- 
->> 2.43.2
->>
-> 
-> 
+Best regards,
+-- 
+Yang Xiwen <forbidden405@outlook.com>
 
