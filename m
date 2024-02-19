@@ -1,78 +1,113 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D63322C1B9
-	for <linux-kernel@vger.kernel.org>; Mon, 19 Feb 2024 10:09:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mailgw01.mediatek.com (unknown [60.244.123.138])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB0EB22F1E;
+	Mon, 19 Feb 2024 10:11:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.244.123.138
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708337383; cv=none; b=X32KfxvDhRdtpJfPju8IRVgdFGEjp85kNaNKRHdOni0zOWZxbv8lKorxHb1QYhCnh03k3nR6DZkWLYYdF+p563+DSP6iVnxpfK9d5DouiKznjNJj46DzCGIC81tibmPasahlAnsv5uwnGsradqF6/baiYf3l/v7al2U+Ny9WhTM=
+	t=1708337478; cv=none; b=DsjkIssor0774jyx+xJ93e1u3QzSJtl/f+MBAJ985So+Omf6us5CRFp5fi+9wHxi68jiERG9FIkfDY3g6EShjyGWDcQse6/vt4Giq2QcPlZddftNPigVjZAIvoAC76brIjCMaapz7axbJfEllbgmkeywnmA4qaW4lO+VnXcF38A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708337383; c=relaxed/simple;
-	bh=4p55QVB0gwo1Fy/Ce5qntjkMuucso5JioyXwkvgEAIw=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=ZXoqhyJQbsdbGsADU4co3DjPzK6hBuk4sMT5gJHp036Eb965dfeha6yBiWXUNYlgEAecz6IlytSUqGNGOsPlg4fnF6orvP5izapuZsocHRw9rD4lnCz2dSLtZpy+DvtyFzqxEXYSpmnIGoOyDl9KycOPbanDdB8L6lTqNJhDyAg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0E9ECFEC;
-	Mon, 19 Feb 2024 02:10:21 -0800 (PST)
-Received: from a077854.blr.arm.com (a077854.arm.com [10.162.41.80])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 45ED93F762;
-	Mon, 19 Feb 2024 02:09:38 -0800 (PST)
-From: Faiz Abbas <faiz.abbas@arm.com>
-To: linux-kernel@vger.kernel.org,
-	dri-devel@lists.freedesktop.org
-Cc: liviu.dudau@arm.com,
-	maarten.lankhorst@linux.intel.com,
-	mripard@kernel.org,
-	tzimmermann@suse.de,
-	airlied@gmail.com,
-	daniel@ffwll.ch,
-	Amjad Ouled-Ameur <amjad.ouled-ameur@arm.com>,
-	Faiz Abbas <faiz.abbas@arm.com>
-Subject: [PATCH 3/3] drm/arm/komeda: update DMA mask to 40 bits
-Date: Mon, 19 Feb 2024 15:39:15 +0530
-Message-Id: <20240219100915.192475-4-faiz.abbas@arm.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240219100915.192475-1-faiz.abbas@arm.com>
-References: <20240219100915.192475-1-faiz.abbas@arm.com>
+	s=arc-20240116; t=1708337478; c=relaxed/simple;
+	bh=nKglCQxaIL9KhzTcv2EpJnB3vJNsx8B6s925upveKuo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=RBRBBapwgBUdsh8Pm3gb5cs6LMWr2b2V+AXkaF1mgs3Y/Zm3Eb7bCVpqi7kcsz5ZqI+8Y4JZ5en6ZyEkKTZLiY6u6WgGgg+0Wuvd3dE7RWIKg5GnBNHKmIefG+hBt9P+oQWZ4xaATlPXWePKmWfxgGWPyHsC+dsfmyfa4PU11Gw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=b5IP8oB0; arc=none smtp.client-ip=60.244.123.138
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="b5IP8oB0"
+X-UUID: 34ead050cf0f11ee9e680517dc993faa-20240219
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+	h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:References:CC:To:Subject:MIME-Version:Date:Message-ID; bh=FrRtn58nRdzgiHjxO5LEX/AMpFVMDY48qkJZG+hrISI=;
+	b=b5IP8oB0Z4PMPQbZStwzEWt/qKj8D2T6SxgxjuASMPY4nSOqRE5FqCyp4Biip4wM6Q5KI7hjwNiuSnhNn1LIHgSf976iWemmwoAZjUJzBvkonR4MiQIGC6gHNyJxGf2/aUcsmyQaEJu9at+E4YKhY8uIb/OOSaHCX1KciVVBOPM=;
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.37,REQID:d6fa4c11-acf9-4f1c-ae0e-dcbd7dee9419,IP:0,U
+	RL:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
+	release,TS:0
+X-CID-META: VersionHash:6f543d0,CLOUDID:95978e80-4f93-4875-95e7-8c66ea833d57,B
+	ulkID:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0,EDM:-3,IP:nil,U
+	RL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,
+	SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0
+X-CID-BVR: 0,NGT
+X-CID-BAS: 0,NGT,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR
+X-UUID: 34ead050cf0f11ee9e680517dc993faa-20240219
+Received: from mtkmbs11n2.mediatek.inc [(172.21.101.187)] by mailgw01.mediatek.com
+	(envelope-from <macpaul.lin@mediatek.com>)
+	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
+	with ESMTP id 1620944991; Mon, 19 Feb 2024 18:11:11 +0800
+Received: from mtkmbs13n1.mediatek.inc (172.21.101.193) by
+ mtkmbs11n2.mediatek.inc (172.21.101.187) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.26; Mon, 19 Feb 2024 18:11:10 +0800
+Received: from [172.21.84.99] (172.21.84.99) by mtkmbs13n1.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.2.1118.26 via Frontend
+ Transport; Mon, 19 Feb 2024 18:11:04 +0800
+Message-ID: <91b2109d-1bf7-1fa7-ac16-ec1d9aba2f5b@mediatek.com>
+Date: Mon, 19 Feb 2024 18:11:03 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.9.1
+Subject: Re: [PATCH v2 1/2] dt-bindings: phy: mediatek: tphy: add a property
+ for force-mode switch
+Content-Language: en-US
+To: Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>, Chunfeng
+ Yun <chunfeng.yun@mediatek.com>
+CC: Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley
+	<conor+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-mediatek@lists.infradead.org>,
+	<linux-phy@lists.infradead.org>, <devicetree@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <stable@vger.kernel.org>,
+	<gregkh@linuxfoundation.org>
+References: <20231211025624.28991-1-chunfeng.yun@mediatek.com>
+ <170317895962.712473.102387666807925662.b4-ty@kernel.org>
+From: Macpaul Lin <macpaul.lin@mediatek.com>
+In-Reply-To: <170317895962.712473.102387666807925662.b4-ty@kernel.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
 
-From: Amjad Ouled-Ameur <amjad.ouled-ameur@arm.com>
+On 12/22/23 01:15, Vinod Koul wrote:
+> 	
+> 
+> External email : Please do not click links or open attachments until you 
+> have verified the sender or the content.
+> 
+> On Mon, 11 Dec 2023 10:56:23 +0800, Chunfeng Yun wrote:
+>> Due to some old SoCs with shared t-phy between usb3 and pcie only support
+>> force-mode switch, and shared and non-shared t-phy may exist at the same
+>> time on a SoC, can't use compatible to distinguish between shared and
+>> non-shared t-phy, add a property to supported it.
+>> Currently, only support switch from default pcie mode to usb3 mode.
+>> But now prefer to use "mediatek,syscon-type" on new SoC as far as possible.
+>> 
+>> [...]
+> 
+> Applied, thanks!
+> 
+> [1/2] dt-bindings: phy: mediatek: tphy: add a property for force-mode switch
+>        commit: cc230a4cd8e91f64c90b5494dfd76848197418ed
+> [2/2] phy: mediatek: tphy: add support force phy mode switch
+>        commit: 9b27303003f5af0d378f29ccccea57c7d65cc642
+> 
+> Best regards,
+> -- 
+> ~Vinod
+> 
+> 
 
-Each layer in the DPU has a 40-bit base address register, which indicates
-start of frame buffer data for that layer. Komeda driver does not set
-its DMA mask, which makes it 32-bit by default which does not use
-the entire available possible supported by the DPU.
+Is it possible to cherry-pick these 2 patches to stable branches?
+These 2 patches help fix USB port 1 (xhci1) for board mt8395-genio-1200-evb.
+The following branch has been tested.
+  - linux-6.7.y (6.7.5): apply test, build pass, function tested OK 
+(with corresponded dtb change).
+  - linux-6.6.y (6.6.17): apply test, build pass.
+  - linux-6.1.y (6.1.78): apply test, build pass.
 
-Update the DMA mask to align with DPU Architecture v1.0 spec.
-
-Signed-off-by: Amjad Ouled-Ameur <amjad.ouled-ameur@arm.com>
-Signed-off-by: Faiz Abbas <faiz.abbas@arm.com>
----
- drivers/gpu/drm/arm/display/komeda/komeda_drv.c | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_drv.c b/drivers/gpu/drm/arm/display/komeda/komeda_drv.c
-index cc57ea4e13ae..fea5a4818f33 100644
---- a/drivers/gpu/drm/arm/display/komeda/komeda_drv.c
-+++ b/drivers/gpu/drm/arm/display/komeda/komeda_drv.c
-@@ -59,6 +59,10 @@ static int komeda_platform_probe(struct platform_device *pdev)
- 	struct komeda_drv *mdrv;
- 	int err;
- 
-+	err = dma_set_mask_and_coherent(dev, DMA_BIT_MASK(40));
-+	if (err)
-+		return dev_err_probe(dev, err, "DMA mask error\n");
-+
- 	mdrv = devm_kzalloc(dev, sizeof(*mdrv), GFP_KERNEL);
- 	if (!mdrv)
- 		return -ENOMEM;
--- 
-2.25.1
-
+Thanks.
+Macpaul Lin
