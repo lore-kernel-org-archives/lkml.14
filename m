@@ -1,154 +1,168 @@
-Received: from out3-smtp.messagingengine.com (out3-smtp.messagingengine.com [66.111.4.27])
+Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B30101CD38;
-	Mon, 19 Feb 2024 06:21:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=66.111.4.27
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96C8220300;
+	Mon, 19 Feb 2024 06:22:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708323698; cv=none; b=rN/AIp6Cn8d7i8qI3DG5r8eIfumR5IFql7+fCNtf4FWJ1f01juOzkm8ZM4epUIlZB0TRC70o45vrekp4rL17fewzocQvoq45Oj1lvph2UObYgkRDQzhRr2O7p6Xj3d5BzhhaQ2tLgkoM6brfs7D3yuv5tIhUcI2zXS3i/oRm/mw=
+	t=1708323753; cv=none; b=BJ5mSd/lHdtJvm+QpzUBPiP+B4lIN5TPDfOoa99Y1ZyQoJYAoiM5MaskazAb3QoVFFxVNuiWcfGY7dSyVqUyiAYCXmdyPRW8o/OqdMosnI/A5a0fFiOmPTHRex+FR1S5sk9Dmy4FqcNszR8ylSp4xjwxNKryxwnRqTNK8z6wBmo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708323698; c=relaxed/simple;
-	bh=G5EPwk7arzO6YoCzr0UQc0o9BgPoKKHKNTkh3mzfbZw=;
-	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
-	 Subject:Content-Type; b=RDqnc4hc+ngD0j5O+fx/kxC45SHxtDSEmboyAtO83n7V3RBNNS6i9o/RtHPyiAemp7lSe/igx4cPhD16odmw+cC4FOJjhuq5jtEyZ2hBJPG5+eUHlBnR8jBqMg7gsPHcLq1ttcYXvss5Ao46HwiEE+S2bxGXzk7d/xt8ysRrWZA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=s2IOVqvh; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=I0UNMtad; arc=none smtp.client-ip=66.111.4.27
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="s2IOVqvh";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="I0UNMtad"
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-	by mailout.nyi.internal (Postfix) with ESMTP id 9A5335C005D;
-	Mon, 19 Feb 2024 01:21:34 -0500 (EST)
-Received: from imap51 ([10.202.2.101])
-  by compute5.internal (MEProxy); Mon, 19 Feb 2024 01:21:34 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm3; t=1708323694;
-	 x=1708410094; bh=AQpZrl+IvXCpOpDkvvYnVCKxOiLdnwSRn5oGsD7e3Eo=; b=
-	s2IOVqvhboBuC/k3Blx25GcR6KVtm3mDUNExQLXrHtjNamYPHpIoQhVwHQHasUPm
-	v2TWbZVN1jR5H5qBxnRnUMCxhhBDRX7l7jOCD6VVdAOGkAvq3sTGtDxDQrC1lBIQ
-	kwqyZ3cgqg2UnMdxCzw/KZ4Kq51V2eea1byEeZv74iKUSWY5IvctmFEMIPphNQVq
-	VE9uMkBBc8atY1jpnzzhT2DjlRU2KXcCFdDJF6jgvgomKqsrRdT43cs9Ev3kztHv
-	MKO+bZZrbiRgBhtYCnbr3oB3RuFwE7g+5iCDhV56HcMsf34kMay71kudbb1wTSs3
-	PENBeJgmO7ArXsrHR/htwA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1708323694; x=
-	1708410094; bh=AQpZrl+IvXCpOpDkvvYnVCKxOiLdnwSRn5oGsD7e3Eo=; b=I
-	0UNMtadwi4o81nJpXjdR2QDYVHJKECqS4U+TdcfkH2Jk5bKaUFeWRvaxw3M1fGY7
-	InO79odXO/Soo1M/wG5AstSzDB6BW1eMLmWNQO1n6wtUqHTkh5B96KZHyEIxa/DR
-	eNBuoQPGDGL/Stl7/1Koq2kfZ9nZ3cFUF0D0V3evTXQqk00Q6BaIya+zZR9MMeKU
-	mLfStzuUdZK3B6pGgS+qEaPMM48VcmnbEmmQHb5BPvGNV9tYEeYfXow4S484W1iu
-	j3qeTGKWKWGuHjBlTOs/T8Rql9m1g1vhR5ys9OplzT5Fkfq9JW9hCaTt2G+vp8Wk
-	CEKd5lky1Fj1yImlntMEg==
-X-ME-Sender: <xms:bPPSZZ1CqCWmce9BxypBS9A_cXXkzrjZxtUrjVtgra3lr0ULYFNuAA>
-    <xme:bPPSZQGHLwvK1Gkzy6s3dPYJnaqCuWxK6VY0qKkeKrSf8GMt5V_6iLQQcrKC5xQlq
-    saH_oCM4G4AW4WXxCE>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrvdejgdelhecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefofgggkfgjfhffhffvvefutgfgsehtqhertderreejnecuhfhrohhmpedftehr
-    nhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrth
-    htvghrnhepgeefjeehvdelvdffieejieejiedvvdfhleeivdelveehjeelteegudektdfg
-    jeevnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprg
-    hrnhgusegrrhhnuggsrdguvg
-X-ME-Proxy: <xmx:bPPSZZ6508DIIGGowADrsjtVXFd6nvPUma4DYQPbbfD2wmLS554ltg>
-    <xmx:bPPSZW1odbny3rkmTdtBoaUa3rub-aplFpsA0wn9J0MGu20JweBjug>
-    <xmx:bPPSZcEoj3nAAtnNZ0LEW39bXJt1-iXDaszxjaFI32D5ZH4n5hMmkA>
-    <xmx:bvPSZRP-wI0ACGri0c1FS2MaleqXS-hygM8W-n3CUYyQcZ3VKt_8bQ>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id F18D0B6008F; Mon, 19 Feb 2024 01:21:31 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.11.0-alpha0-144-ge5821d614e-fm-20240125.002-ge5821d61
+	s=arc-20240116; t=1708323753; c=relaxed/simple;
+	bh=HL9tjnCMOqkDFFykDHNI4UFffH0/mEiphqfYVgR+jQ4=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=LDOXjZ2F8Fk/Z9rufR1kG/vvZaswMpaWKk62Q+TjNu9rn1pdEb9EwH2b3gOP8zUoHS8bQlAvc0QGElPsXn7FqLr2OvZZGSB+b7GcqUx/+G4kstJVONN7jkEbsqrXWX4L4ym2K67/TFZCqqxWxBoDM/i4VP3+kEs2uPMSohyY/0k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=hisilicon.com; spf=pass smtp.mailfrom=hisilicon.com; arc=none smtp.client-ip=45.249.212.191
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=hisilicon.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hisilicon.com
+Received: from mail.maildlp.com (unknown [172.19.163.17])
+	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4TdXPz1kcgz1FKsc;
+	Mon, 19 Feb 2024 14:17:27 +0800 (CST)
+Received: from kwepemi500006.china.huawei.com (unknown [7.221.188.68])
+	by mail.maildlp.com (Postfix) with ESMTPS id 9417B1A0172;
+	Mon, 19 Feb 2024 14:22:16 +0800 (CST)
+Received: from localhost.localdomain (10.67.165.2) by
+ kwepemi500006.china.huawei.com (7.221.188.68) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Mon, 19 Feb 2024 14:22:16 +0800
+From: Junxian Huang <huangjunxian6@hisilicon.com>
+To: <jgg@ziepe.ca>, <leon@kernel.org>
+CC: <linux-rdma@vger.kernel.org>, <linuxarm@huawei.com>,
+	<linux-kernel@vger.kernel.org>, <huangjunxian6@hisilicon.com>
+Subject: [PATCH for-next] RDMA/hns: Fix mis-modifying default congestion control algorithm
+Date: Mon, 19 Feb 2024 14:18:05 +0800
+Message-ID: <20240219061805.668170-1-huangjunxian6@hisilicon.com>
+X-Mailer: git-send-email 2.30.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <431dd956-ad31-4da8-ad42-34f7380824bb@app.fastmail.com>
-In-Reply-To: 
- <fe51512baa18e1480ce997fc535813ce6a0b0721.1708286962.git.jcalvinowens@gmail.com>
-References: 
- <fe51512baa18e1480ce997fc535813ce6a0b0721.1708286962.git.jcalvinowens@gmail.com>
-Date: Mon, 19 Feb 2024 07:21:11 +0100
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Calvin Owens" <jcalvinowens@gmail.com>,
- "Russell King" <linux@armlinux.org.uk>
-Cc: "Dave Martin" <Dave.Martin@arm.com>, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org,
- "linux-bcachefs@vger.kernel.org" <linux-bcachefs@vger.kernel.org>,
- "Kent Overstreet" <kent.overstreet@linux.dev>
-Subject: Re: [PATCH] arm: Silence gcc warnings about arch ABI drift
-Content-Type: text/plain;charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
+ kwepemi500006.china.huawei.com (7.221.188.68)
 
-On Mon, Feb 19, 2024, at 05:09, Calvin Owens wrote:
-> 32-bit arm builds uniquely emit a lot of spam like this:
->
->     fs/bcachefs/backpointers.c: In function =E2=80=98extent_matches_bp=
-=E2=80=99:
->     fs/bcachefs/backpointers.c:15:13: note: parameter passing for=20
-> argument of type =E2=80=98struct bch_backpointer=E2=80=99 changed in G=
-CC 9.1
->
-> Apply the arm64 change from commit ebcc5928c5d9 ("arm64: Silence gcc
-> warnings about arch ABI drift") to silence them. It seems like Dave's
-> original rationale applies here too.
->
-> Cc: Dave Martin <Dave.Martin@arm.com>
-> Signed-off-by: Calvin Owens <jcalvinowens@gmail.com>
-> ---
+From: Luoyouming <luoyouming@huawei.com>
 
-I think these should be addressed in bcachefs instead.
-While it's not the fault of bcachefs that the calling
-convention changed between gcc versions, have a look at
-the actual structure layout:
+Commit 27c5fd271d8b ("RDMA/hns: The UD mode can only be configured
+with DCQCN") adds a check of congest control alorithm for UD. But
+that patch causes a problem: hr_dev->caps.congest_type is global,
+used by all QPs, so modifying this field to DCQCN for UD QPs causes
+other QPs unable to use any other algorithm except DCQCN.
 
-struct bch_val {
-        __u64           __nothing[0];
-};
-struct bpos {
-        /*
-         * Word order matches machine byte order - btree code treats a b=
-pos as a
-         * single large integer, for search/comparison purposes
-         *
-         * Note that wherever a bpos is embedded in another on disk data
-         * structure, it has to be byte swabbed when reading in metadata=
- that
-         * wasn't written in native endian order:
-         */
-#if __BYTE_ORDER__ =3D=3D __ORDER_LITTLE_ENDIAN__
-        __u32           snapshot;
-        __u64           offset;
-        __u64           inode;
-#elif __BYTE_ORDER__ =3D=3D __ORDER_BIG_ENDIAN__
-        __u64           inode;
-        __u64           offset;         /* Points to end of extent - sec=
-tors */
-        __u32           snapshot;
-#else
-#error edit for your odd byteorder.
-#endif
-} __packed
-struct bch_backpointer {
-        struct bch_val          v;
-        __u8                    btree_id;
-        __u8                    level;
-        __u8                    data_type;
-        __u64                   bucket_offset:40;
-        __u32                   bucket_len;
-        struct bpos             pos;
-} __packed __aligned(8);
+Revert the modification in commit 27c5fd271d8b ("RDMA/hns: The UD
+mode can only be configured with DCQCN"). Add a new field cong_type
+to struct hns_roce_qp and configure DCQCN for UD QPs.
 
-This is not something that should ever be passed by value
-into a function.
+Fixes: 27c5fd271d8b ("RDMA/hns: The UD mode can only be configured with DCQCN")
+Fixes: f91696f2f053 ("RDMA/hns: Support congestion control type selection according to the FW")
+Signed-off-by: Luoyouming <luoyouming@huawei.com>
+Signed-off-by: Junxian Huang <huangjunxian6@hisilicon.com>
+---
+ drivers/infiniband/hw/hns/hns_roce_device.h | 17 +++++++++--------
+ drivers/infiniband/hw/hns/hns_roce_hw_v2.c  | 16 ++++++++++------
+ 2 files changed, 19 insertions(+), 14 deletions(-)
 
-      Arnd
+diff --git a/drivers/infiniband/hw/hns/hns_roce_device.h b/drivers/infiniband/hw/hns/hns_roce_device.h
+index 1a8516019516..1d062c522d69 100644
+--- a/drivers/infiniband/hw/hns/hns_roce_device.h
++++ b/drivers/infiniband/hw/hns/hns_roce_device.h
+@@ -594,6 +594,13 @@ struct hns_roce_work {
+ 	u32 queue_num;
+ };
+ 
++enum hns_roce_cong_type {
++	CONG_TYPE_DCQCN,
++	CONG_TYPE_LDCP,
++	CONG_TYPE_HC3,
++	CONG_TYPE_DIP,
++};
++
+ struct hns_roce_qp {
+ 	struct ib_qp		ibqp;
+ 	struct hns_roce_wq	rq;
+@@ -637,6 +644,7 @@ struct hns_roce_qp {
+ 	struct list_head	sq_node; /* all send qps are on a list */
+ 	struct hns_user_mmap_entry *dwqe_mmap_entry;
+ 	u32			config;
++	enum hns_roce_cong_type	cong_type;
+ };
+ 
+ struct hns_roce_ib_iboe {
+@@ -708,13 +716,6 @@ struct hns_roce_eq_table {
+ 	struct hns_roce_eq	*eq;
+ };
+ 
+-enum cong_type {
+-	CONG_TYPE_DCQCN,
+-	CONG_TYPE_LDCP,
+-	CONG_TYPE_HC3,
+-	CONG_TYPE_DIP,
+-};
+-
+ struct hns_roce_caps {
+ 	u64		fw_ver;
+ 	u8		num_ports;
+@@ -844,7 +845,7 @@ struct hns_roce_caps {
+ 	u16		default_aeq_period;
+ 	u16		default_aeq_arm_st;
+ 	u16		default_ceq_arm_st;
+-	enum cong_type	cong_type;
++	enum hns_roce_cong_type cong_type;
+ };
+ 
+ enum hns_roce_device_state {
+diff --git a/drivers/infiniband/hw/hns/hns_roce_hw_v2.c b/drivers/infiniband/hw/hns/hns_roce_hw_v2.c
+index de56dc6e3226..42e28586cefa 100644
+--- a/drivers/infiniband/hw/hns/hns_roce_hw_v2.c
++++ b/drivers/infiniband/hw/hns/hns_roce_hw_v2.c
+@@ -4738,12 +4738,15 @@ static int check_cong_type(struct ib_qp *ibqp,
+ 			   struct hns_roce_congestion_algorithm *cong_alg)
+ {
+ 	struct hns_roce_dev *hr_dev = to_hr_dev(ibqp->device);
++	struct hns_roce_qp *hr_qp = to_hr_qp(ibqp);
+ 
+-	if (ibqp->qp_type == IB_QPT_UD)
+-		hr_dev->caps.cong_type = CONG_TYPE_DCQCN;
++	if (ibqp->qp_type == IB_QPT_UD || ibqp->qp_type == IB_QPT_GSI)
++		hr_qp->cong_type = CONG_TYPE_DCQCN;
++	else
++		hr_qp->cong_type = hr_dev->caps.cong_type;
+ 
+ 	/* different congestion types match different configurations */
+-	switch (hr_dev->caps.cong_type) {
++	switch (hr_qp->cong_type) {
+ 	case CONG_TYPE_DCQCN:
+ 		cong_alg->alg_sel = CONG_DCQCN;
+ 		cong_alg->alg_sub_sel = UNSUPPORT_CONG_LEVEL;
+@@ -4771,8 +4774,8 @@ static int check_cong_type(struct ib_qp *ibqp,
+ 	default:
+ 		ibdev_warn(&hr_dev->ib_dev,
+ 			   "invalid type(%u) for congestion selection.\n",
+-			   hr_dev->caps.cong_type);
+-		hr_dev->caps.cong_type = CONG_TYPE_DCQCN;
++			   hr_qp->cong_type);
++		hr_qp->cong_type = CONG_TYPE_DCQCN;
+ 		cong_alg->alg_sel = CONG_DCQCN;
+ 		cong_alg->alg_sub_sel = UNSUPPORT_CONG_LEVEL;
+ 		cong_alg->dip_vld = DIP_INVALID;
+@@ -4791,6 +4794,7 @@ static int fill_cong_field(struct ib_qp *ibqp, const struct ib_qp_attr *attr,
+ 	struct hns_roce_congestion_algorithm cong_field;
+ 	struct ib_device *ibdev = ibqp->device;
+ 	struct hns_roce_dev *hr_dev = to_hr_dev(ibdev);
++	struct hns_roce_qp *hr_qp = to_hr_qp(ibqp);
+ 	u32 dip_idx = 0;
+ 	int ret;
+ 
+@@ -4803,7 +4807,7 @@ static int fill_cong_field(struct ib_qp *ibqp, const struct ib_qp_attr *attr,
+ 		return ret;
+ 
+ 	hr_reg_write(context, QPC_CONG_ALGO_TMPL_ID, hr_dev->cong_algo_tmpl_id +
+-		     hr_dev->caps.cong_type * HNS_ROCE_CONG_SIZE);
++		     hr_qp->cong_type * HNS_ROCE_CONG_SIZE);
+ 	hr_reg_clear(qpc_mask, QPC_CONG_ALGO_TMPL_ID);
+ 	hr_reg_write(&context->ext, QPCEX_CONG_ALG_SEL, cong_field.alg_sel);
+ 	hr_reg_clear(&qpc_mask->ext, QPCEX_CONG_ALG_SEL);
+-- 
+2.30.0
+
