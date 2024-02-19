@@ -1,148 +1,101 @@
-Received: from smtp-fw-52004.amazon.com (smtp-fw-52004.amazon.com [52.119.213.154])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B2A94A3B;
-	Mon, 19 Feb 2024 18:55:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.119.213.154
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EA3834545;
+	Mon, 19 Feb 2024 18:57:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708368956; cv=none; b=ccSooodnUTBkQka5SziYnQxC9NkvLkZIDtYZrQHEp++usyuTkxDsr517h/iXXezb+9EG71zer55q9EbEYL0if4vZT7Tlmxq2gLEfDmsgtILbtTyi5drk6Ty1e4aOgIsTZgni7ibD5P8d42autRBl7n68t17KCIX9R5eGfRwMCJw=
+	t=1708369049; cv=none; b=F2RVb0otCh515nReQFVRrQlgY1Z0y57CXXF6ZJr8ymE27m4JOwqJQBXfs9C0efR/oorEswpJuOqblS/CNAZ1QdMwC4J4KWfoRY4usPhaG7VyBRf8LYFtiuLRMXF5v2qxFBVf8954tTj0tpSWNGFAygxp6NxBcix2dojlngwJPI8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708368956; c=relaxed/simple;
-	bh=N5ZH9wqFWur86cVuVxvi/Pi+hCjhc8MpHYwaMvTmuzI=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=TlfB+uwn2fJCrdX09dk238oNK+cSX7XSzu8XqW/XIuFlz/W9cUUfWqMKPvYdHKQSGKIjV16b0XTEPltlVgw4iZSIPBunc6SzP5Dnm1O1Gb9VxNOclZu8zpNPeG2HsYOey7qho+Wk+ILhCgFpn9bj3OXcTcJqwqlmMFvULHcME5U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.co.jp; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=cEJ6+gQ+; arc=none smtp.client-ip=52.119.213.154
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.jp
+	s=arc-20240116; t=1708369049; c=relaxed/simple;
+	bh=hlzNv0HneAFcj8iXq6Qfn9/TqgvN+CXJ8vpN0bhvzuQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nI307I8DUhRdk9swHm2JS3NQCntB+m3Un7NZCW8D/e0hZbxS4pPGvTDFoEYNd8rxvZZgpV7WyXAF1UtNxpkqx7J5ONmGEDBHbjGNHQJFjn5gL7vD+G0/s2X7lZjCmTUZjfoinZlEoN1Ftc+LwAp164ee+nnOHzItJ0auH43KrzQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VYGRxYfH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="cEJ6+gQ+"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1708368954; x=1739904954;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=AYF3fJ3lQYdHvX4FbenRMpfXYf4i7AfH5JvlmkprmDk=;
-  b=cEJ6+gQ+FZptKUuB/jkouOlvMXJCPXgvQmai2DLmdvPuS3B1IiGyosVx
-   H8CP7gKfLy/dHx60AMT2LU8Uqcz1mbBRXnIWHKjh2Jm/x2CGdLie+MFTq
-   avuIYqbVot+soUFCi6XVb/myZNdPD4XwwzqK1AiSyAf9pcKOblyVXuafo
-   4=;
-X-IronPort-AV: E=Sophos;i="6.06,170,1705363200"; 
-   d="scan'208";a="185811561"
-Received: from iad12-co-svc-p1-lb1-vlan2.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.43.8.2])
-  by smtp-border-fw-52004.iad7.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Feb 2024 18:55:50 +0000
-Received: from EX19MTAUWB001.ant.amazon.com [10.0.38.20:4119]
- by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.63.9:2525] with esmtp (Farcaster)
- id 9b887880-2511-4018-a341-9f255bfa8211; Mon, 19 Feb 2024 18:55:49 +0000 (UTC)
-X-Farcaster-Flow-ID: 9b887880-2511-4018-a341-9f255bfa8211
-Received: from EX19D004ANA001.ant.amazon.com (10.37.240.138) by
- EX19MTAUWB001.ant.amazon.com (10.250.64.248) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Mon, 19 Feb 2024 18:55:48 +0000
-Received: from 88665a182662.ant.amazon.com (10.94.72.56) by
- EX19D004ANA001.ant.amazon.com (10.37.240.138) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Mon, 19 Feb 2024 18:55:45 +0000
-From: Kuniyuki Iwashima <kuniyu@amazon.com>
-To: <vschneid@redhat.com>
-CC: <bigeasy@linutronix.de>, <davem@davemloft.net>, <dccp@vger.kernel.org>,
-	<dsahern@kernel.org>, <edumazet@google.com>, <juri.lelli@redhat.com>,
-	<kuba@kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-rt-users@vger.kernel.org>, <mleitner@redhat.com>,
-	<netdev@vger.kernel.org>, <pabeni@redhat.com>, <tglozar@redhat.com>,
-	<tglx@linutronix.de>, <kuniyu@amazon.com>
-Subject: Re: [PATCH v3 1/1] tcp/dcpp: Un-pin tw_timer
-Date: Mon, 19 Feb 2024 10:55:37 -0800
-Message-ID: <20240219185537.13666-1-kuniyu@amazon.com>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20240219095729.2339914-2-vschneid@redhat.com>
-References: <20240219095729.2339914-2-vschneid@redhat.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VYGRxYfH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 77D1EC433C7;
+	Mon, 19 Feb 2024 18:57:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1708369049;
+	bh=hlzNv0HneAFcj8iXq6Qfn9/TqgvN+CXJ8vpN0bhvzuQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=VYGRxYfHz+G5gsqE/kZ4an8+k6ihso+suEPttoEPqHlHRsbjJ/rGY14ni7lhoobG7
+	 x+RoZnTABT4BQwrVYlT9CDUxYlvONcW+6VGDuq6Rr76NAUgnuMMosQhFmbVcChmM3L
+	 phR4ndzdjB31okSWC7FD7Qd/49kwDaGyasfOFFjkVslnlcmLOFy3HlMtn6gGJMtkmL
+	 h4z5S2vA+7TQDbiY7i3IQZAYMeFkhAdA8aGt6RGmGurZtO7kovYuEKhtXLuNt8XWYV
+	 w+Ocv832w1rwRR6AMOuIPW9Dz71gwFlL+G9dCYWCrYOGLqbkUqj//z7JztyDntVXE6
+	 vQ70wA0mNgV2Q==
+Date: Mon, 19 Feb 2024 11:57:25 -0700
+From: Keith Busch <kbusch@kernel.org>
+To: John Garry <john.g.garry@oracle.com>
+Cc: axboe@kernel.dk, hch@lst.de, sagi@grimberg.me, jejb@linux.ibm.com,
+	martin.petersen@oracle.com, djwong@kernel.org,
+	viro@zeniv.linux.org.uk, brauner@kernel.org, dchinner@redhat.com,
+	jack@suse.cz, linux-block@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
+	linux-fsdevel@vger.kernel.org, tytso@mit.edu, jbongio@google.com,
+	linux-scsi@vger.kernel.org, ojaswin@linux.ibm.com,
+	linux-aio@kvack.org, linux-btrfs@vger.kernel.org,
+	io-uring@vger.kernel.org, nilay@linux.ibm.com,
+	ritesh.list@gmail.com
+Subject: Re: [PATCH v4 02/11] block: Call blkdev_dio_unaligned() from
+ blkdev_direct_IO()
+Message-ID: <ZdOklTSG9tHuYtGi@kbusch-mbp>
+References: <20240219130109.341523-1-john.g.garry@oracle.com>
+ <20240219130109.341523-3-john.g.garry@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: EX19D031UWC001.ant.amazon.com (10.13.139.241) To
- EX19D004ANA001.ant.amazon.com (10.37.240.138)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240219130109.341523-3-john.g.garry@oracle.com>
 
-From: Valentin Schneider <vschneid@redhat.com>
-Date: Mon, 19 Feb 2024 10:57:29 +0100
-> The TCP timewait timer is proving to be problematic for setups where scheduler
-> CPU isolation is achieved at runtime via cpusets (as opposed to statically via
-> isolcpus=domains).
-> 
-> What happens there is a CPU goes through tcp_time_wait(), arming the time_wait
-> timer, then gets isolated. TCP_TIMEWAIT_LEN later, the timer fires, causing
-> interference for the now-isolated CPU. This is conceptually similar to the issue
-> described in
->   e02b93124855 ("workqueue: Unbind kworkers before sending them to exit()")
-> 
-> Keep softirqs disabled, but make the timer un-pinned and arm it *after* the
-> hashdance.
-> 
-> This introduces the following (non-fatal) race:
-> 
->   CPU0                        CPU1
->     allocates a tw
->     insert it in hash table
-> 				finds the TW and removes it
-> 				(timer cancel does nothing)
->     arms a TW timer, lasting
-> 
-> This partially reverts
->   ed2e92394589 ("tcp/dccp: fix timewait races in timer handling")
-> and
->   ec94c2696f0b ("tcp/dccp: avoid one atomic operation for timewait hashdance")
-> 
-> This also reinstores a comment from
->   ec94c2696f0b ("tcp/dccp: avoid one atomic operation for timewait hashdance")
-> as inet_twsk_hashdance() had a "Step 1" and "Step 3" comment, but the "Step
-> 2" had gone missing.
-> 
-> Link: https://lore.kernel.org/all/ZPhpfMjSiHVjQkTk@localhost.localdomain/
-> Signed-off-by: Valentin Schneider <vschneid@redhat.com>
-> ---
->  net/dccp/minisocks.c          | 16 +++++++---------
->  net/ipv4/inet_timewait_sock.c | 20 +++++++++++++++-----
->  net/ipv4/tcp_minisocks.c      | 16 +++++++---------
->  3 files changed, 29 insertions(+), 23 deletions(-)
-> 
-> diff --git a/net/dccp/minisocks.c b/net/dccp/minisocks.c
-> index 64d805b27adde..2f0fad4255e36 100644
-> --- a/net/dccp/minisocks.c
-> +++ b/net/dccp/minisocks.c
-> @@ -53,16 +53,14 @@ void dccp_time_wait(struct sock *sk, int state, int timeo)
->  		if (state == DCCP_TIME_WAIT)
->  			timeo = DCCP_TIMEWAIT_LEN;
+On Mon, Feb 19, 2024 at 01:01:00PM +0000, John Garry wrote:
+> @@ -53,9 +53,6 @@ static ssize_t __blkdev_direct_IO_simple(struct kiocb *iocb,
+>  	struct bio bio;
+>  	ssize_t ret;
 >  
-> -		/* tw_timer is pinned, so we need to make sure BH are disabled
-> -		 * in following section, otherwise timer handler could run before
-> -		 * we complete the initialization.
-> -		 */
-> -		local_bh_disable();
-> -		inet_twsk_schedule(tw, timeo);
-> -		/* Linkage updates.
-> -		 * Note that access to tw after this point is illegal.
-> -		 */
-> +	       local_bh_disable();
+> -	if (blkdev_dio_unaligned(bdev, pos, iter))
+> -		return -EINVAL;
+> -
+>  	if (nr_pages <= DIO_INLINE_BIO_VECS)
+>  		vecs = inline_vecs;
+>  	else {
+> @@ -171,9 +168,6 @@ static ssize_t __blkdev_direct_IO(struct kiocb *iocb, struct iov_iter *iter,
+>  	loff_t pos = iocb->ki_pos;
+>  	int ret = 0;
+>  
+> -	if (blkdev_dio_unaligned(bdev, pos, iter))
+> -		return -EINVAL;
+> -
+>  	if (iocb->ki_flags & IOCB_ALLOC_CACHE)
+>  		opf |= REQ_ALLOC_CACHE;
+>  	bio = bio_alloc_bioset(bdev, nr_pages, opf, GFP_KERNEL,
+> @@ -310,9 +304,6 @@ static ssize_t __blkdev_direct_IO_async(struct kiocb *iocb,
+>  	loff_t pos = iocb->ki_pos;
+>  	int ret = 0;
+>  
+> -	if (blkdev_dio_unaligned(bdev, pos, iter))
+> -		return -EINVAL;
+> -
+>  	if (iocb->ki_flags & IOCB_ALLOC_CACHE)
+>  		opf |= REQ_ALLOC_CACHE;
+>  	bio = bio_alloc_bioset(bdev, nr_pages, opf, GFP_KERNEL,
+> @@ -365,11 +356,16 @@ static ssize_t __blkdev_direct_IO_async(struct kiocb *iocb,
+>  
+>  static ssize_t blkdev_direct_IO(struct kiocb *iocb, struct iov_iter *iter)
+>  {
+> +	struct block_device *bdev = I_BDEV(iocb->ki_filp->f_mapping->host);
+> +	loff_t pos = iocb->ki_pos;
+>  	unsigned int nr_pages;
 
-This line seems not correctly indented, same for TCP change.
+All three of the changed functions also want 'bdev' and 'pos', so maybe
+pass on the savings to them? Unless you think the extended argument list
+would harm readibilty, or perhaps the compiler optimizes the 2nd access
+out anyway. Either way, this looks good to me.
 
-
-
-> +
-> +		// Linkage updates
->  		inet_twsk_hashdance(tw, sk, &dccp_hashinfo);
-> +		inet_twsk_schedule(tw, timeo);
-> +		// Access to tw after this point is illegal.
-
-Also please use /**/ style for these comments, same for TCP too.
-
-
-> +		inet_twsk_put(tw);
-> +
->  		local_bh_enable();
->  	} else {
->  		/* Sorry, if we're out of memory, just CLOSE this
+Reviewed-by: Keith Busch <kbusch@kernel.org>
