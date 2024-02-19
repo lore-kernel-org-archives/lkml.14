@@ -1,43 +1,45 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 703031E526
-	for <linux-kernel@vger.kernel.org>; Mon, 19 Feb 2024 14:39:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06DAF2E419
+	for <linux-kernel@vger.kernel.org>; Mon, 19 Feb 2024 14:39:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708353556; cv=none; b=A0jP/HPjHgBbGPVRTOdC+RPspGW2bRBPnECsyxNmfvXxD86JvJ8XuyhUuFzKUINqsh2QOlL6tu1tLXZPLH9gNOXFp+G3U4cEIjSFAy6055eX9N9qTjGHHwSAapdx1XdTeBHWMXIjXdjzdyPJjWxijBwe/KyTFnsdv7Bc3XDxCFc=
+	t=1708353559; cv=none; b=kTKr6UE7fAm26ZoMvSMgniACbYnVOElaiWQjgUbIuN9WKacjY6Wtz/4gGb/oBpoInLqfpRu2rwYbBLXKH4jku6oJo069Q+BJk2lg88H+fmbEd9FeDMVf/C1aJaT0EGen2EPU5AKyk3mv1j2hlZj1eDlx6d8oghwHgqqU9IgdKt8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708353556; c=relaxed/simple;
-	bh=iAYLQ/ry4Ws2zpmoqOww5l5/+sgF7NvkadRmo19kmW0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=bvH0UrjD/ZjB2VUl/3vi1fKTnNaOOUpuwbU8urHximETBaOCRWNtCv7I+/WRPu/D4T0aYHFURFGwjMRg8/BQZgZ0YE/rSPa4S42MTOEZVoECPg5OIAOx8fBUpJmQB52Y7EVJKeX5AH5V95u1ZRbP6E7HZCNyfnSNIwLIzI423As=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=KWPFwFJD; arc=none smtp.client-ip=170.10.129.124
+	s=arc-20240116; t=1708353559; c=relaxed/simple;
+	bh=q6i/qIM7No4B8p1Gsv1EcuGge0SWmBXroEjze9FrxRw=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=jXd40fYEi4dJo8RHwrz2u+d00s1V07XhEhO2ic3jsx5lQUa4vwYGy8cAnmOHOJU8lmuJdceSqk6/NBFQF8vom/3EMfVxQ+mUplsrTLoY/i0y3S18FqtHK2G2iaUV6M2FCVKEnf8OibiCyDUO2RzVpy6ta1U2+7KRDskocCPCjrI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=FjOUuEko; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KWPFwFJD"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FjOUuEko"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1708353553;
+	s=mimecast20190719; t=1708353557;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=zRNUK86yxiv/OwmKYhoDvWlQYRo9iQoXDxOJPggkFCc=;
-	b=KWPFwFJDMUefH9bX5Tiw8hbCNLyk1z16IL2TlBQO6S/ghd3xwIVMfeRWRJYMyd5UljA72K
-	A92yU/KRk8ZY+dshHvEzjwf4ICNjuhRsaA4q9VlGpPk2/XPCV3uMRolQsVvs9vuVV49d6s
-	GsOf7nsR8FndoHR+ve4kJiKQ95M8j8U=
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=2z5xVfPbtvAXi+poyaZjlxvFkPKDSd6KB5QNpLYkM5w=;
+	b=FjOUuEkoWuQyQkUNMdVgtIuZSAKNrbmuYhJNSo6TtT0aAmHFxGAgtniA8cMOB+IhRUzAF3
+	QsxS4YA8YGXDpMWDlS/B5w6T9AvaldxwTZM+/FRvY0RN5mkOJSQYleZguAp2q0hDj66sl9
+	jRYwAJ64e3OVNWNBZ/YJqsTczWEMrDM=
 Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
  [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-331-0HMhFc7UODeaRflfNH66Xw-1; Mon, 19 Feb 2024 09:39:09 -0500
-X-MC-Unique: 0HMhFc7UODeaRflfNH66Xw-1
-Received: from smtp.corp.redhat.com (int-mx10.intmail.prod.int.rdu2.redhat.com [10.11.54.10])
+ us-mta-661-0a4mPoAgNBuqh-rfWblxlw-1; Mon, 19 Feb 2024 09:39:13 -0500
+X-MC-Unique: 0a4mPoAgNBuqh-rfWblxlw-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.rdu2.redhat.com [10.11.54.4])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 65111185A780;
-	Mon, 19 Feb 2024 14:39:09 +0000 (UTC)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id A837C881B6C;
+	Mon, 19 Feb 2024 14:39:12 +0000 (UTC)
 Received: from warthog.procyon.org.com (unknown [10.42.28.15])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 3AB65492BE2;
-	Mon, 19 Feb 2024 14:39:08 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTP id A03AA200B2D7;
+	Mon, 19 Feb 2024 14:39:11 +0000 (UTC)
 From: David Howells <dhowells@redhat.com>
 To: Christian Brauner <christian@brauner.io>
 Cc: David Howells <dhowells@redhat.com>,
@@ -47,9 +49,11 @@ Cc: David Howells <dhowells@redhat.com>,
 	linux-afs@lists.infradead.org,
 	linux-fsdevel@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 0/2] afs: Miscellaneous fixes
-Date: Mon, 19 Feb 2024 14:39:01 +0000
-Message-ID: <20240219143906.138346-1-dhowells@redhat.com>
+Subject: [PATCH 2/2] afs: Increase buffer size in afs_update_volume_status()
+Date: Mon, 19 Feb 2024 14:39:03 +0000
+Message-ID: <20240219143906.138346-3-dhowells@redhat.com>
+In-Reply-To: <20240219143906.138346-1-dhowells@redhat.com>
+References: <20240219143906.138346-1-dhowells@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -57,34 +61,46 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.10
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.4
 
-Hi Christian,
+From: Daniil Dulov <d.dulov@aladdin.ru>
 
-Here are some fixes for afs, if you could take them?
+The max length of volume->vid value is 20 characters.
+So increase idbuf[] size up to 24 to avoid overflow.
 
- (1) Fix searching for the AFS fileserver record for an incoming callback
-     in a mixed IPv4/IPv6 environment.
+Found by Linux Verification Center (linuxtesting.org) with SVACE.
 
- (2) Fix the size of a buffer in afs_update_volume_status() to avoid
-     overrunning it and use snprintf() as well.
+[DH: Actually, it's 20 + NUL, so increase it to 24 and use snprintf()]
 
-The patches can be found here:
+Fixes: d2ddc776a458 ("afs: Overhaul volume and server record caching and fileserver rotation")
+Signed-off-by: Daniil Dulov <d.dulov@aladdin.ru>
+Signed-off-by: David Howells <dhowells@redhat.com>
+Link: https://lore.kernel.org/r/20240211150442.3416-1-d.dulov@aladdin.ru/ # v1
+Link: https://lore.kernel.org/r/20240212083347.10742-1-d.dulov@aladdin.ru/ # v2
+---
+ fs/afs/volume.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-	https://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git/log/?h=afs-fixes
-
-Thanks,
-David
-
-Daniil Dulov (1):
-  afs: Increase buffer size in afs_update_volume_status()
-
-Marc Dionne (1):
-  afs: Fix ignored callbacks over ipv4
-
- fs/afs/internal.h |  6 ++----
- fs/afs/main.c     |  3 +--
- fs/afs/server.c   | 14 +++++---------
- fs/afs/volume.c   |  4 ++--
- 4 files changed, 10 insertions(+), 17 deletions(-)
+diff --git a/fs/afs/volume.c b/fs/afs/volume.c
+index 020ecd45e476..af3a3f57c1b3 100644
+--- a/fs/afs/volume.c
++++ b/fs/afs/volume.c
+@@ -353,7 +353,7 @@ static int afs_update_volume_status(struct afs_volume *volume, struct key *key)
+ {
+ 	struct afs_server_list *new, *old, *discard;
+ 	struct afs_vldb_entry *vldb;
+-	char idbuf[16];
++	char idbuf[24];
+ 	int ret, idsz;
+ 
+ 	_enter("");
+@@ -361,7 +361,7 @@ static int afs_update_volume_status(struct afs_volume *volume, struct key *key)
+ 	/* We look up an ID by passing it as a decimal string in the
+ 	 * operation's name parameter.
+ 	 */
+-	idsz = sprintf(idbuf, "%llu", volume->vid);
++	idsz = snprintf(idbuf, sizeof(idbuf), "%llu", volume->vid);
+ 
+ 	vldb = afs_vl_lookup_vldb(volume->cell, key, idbuf, idsz);
+ 	if (IS_ERR(vldb)) {
 
