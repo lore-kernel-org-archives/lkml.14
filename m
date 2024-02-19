@@ -1,42 +1,46 @@
 Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 033A440BEF
-	for <linux-kernel@vger.kernel.org>; Mon, 19 Feb 2024 16:51:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23BEE41770;
+	Mon, 19 Feb 2024 16:53:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708361474; cv=none; b=ju32Gkhoi9ikhVyhVhvmX3Icv66yIZWQI6y4sbZrTQdlRSPgYXxcSqvBnWKMDiVVEd93uv7mDkOi93+YO6GYON6G6SscsU3RR8box4IVl7OTz7F1RNSDBE3HzrFwGEJXa2tQUE+flihEIPv/8h0xlfSKgX4JOwdsOKW5oCSvt2w=
+	t=1708361584; cv=none; b=cK/D/l2F+/iDTaP1xXmwUSrgPp/8p2k1tnOkTXm0iHu4c3UdrEGgXfwgah5gnB17MHJm8lt67hEh68N6UpkULi1HXRQblB6iENaIdnSBFNZ1BXlGZu/HYHQsgeX65WYqsYI7jlgh5dxhBkDcUYiH8tVmHykWY7Fsk659CsNIr3k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708361474; c=relaxed/simple;
-	bh=DdD3j5XhCn0EknIO/60FDYkuXpk4uDO0Md2NP1sph8c=;
+	s=arc-20240116; t=1708361584; c=relaxed/simple;
+	bh=kI1TDFnjzqoHHflIKZRsHmh469jjbM+AR43RgSlc6E4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CXeZlk+LQ1waDJ0b0OAk47y0FqIxCkdoH1NzIVcuR3IS4JCiZAoCFp1vIsII8tMF7Zxoq8AmSFTM94RLmTpZYiZ6cpOj1Yzrs//dDGLFdDEzJZuKPPAetcbZkGEnG6wS8nHpixhcDo4inIYTun2ZmZbaHvQbRAh5f0cPapRX7aA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=u19BYPk5; arc=none smtp.client-ip=90.155.50.34
+	 Content-Type:Content-Disposition:In-Reply-To; b=e2KjycpM1f6jKstrnmOUp0ewuTJAIhFgk41NHWC/4xEa/6sbv+gBpRnQmX4TikE462RSBSCvN8W5CGHQb+DJ6RqTgpyZGtmUFN1x2Rbc9/AKzXqIxdXAuWfF946MZlSNweeuabNlss1C2TjsyLFAvvLL73xaTcLfD/Ewun2QzcI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=h86xzF8J; arc=none smtp.client-ip=90.155.50.34
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="u19BYPk5"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="h86xzF8J"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
 	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=i0E4eQpTOIwPHD4AY+ANWQYLzpqrYXlwWbKYvpZ1KIQ=; b=u19BYPk5u9c0pMjXJTYREC1I7o
-	/e42Y6IuzK+u/EZSLfbcVb59UobsbB5xDL/1Vl6Z+w0ESAaGYDzzOXHoIPUmeZDGXW+OJdJAMfkLd
-	A3QwVsJLULB9uHsyacx3pv0ET2dc1hbEq+6PGABRtG/8fXgyJfKFtWpkYBYx6d8m+jUtU2Igxh5Sq
-	zd3EblFPpGBgAojJ2YRZN2KcddLs99hBq2L9U0lfpKPoZ4E2VsVE3MTYXp9ETwppxVqbIpiO4ydqM
-	blid2wBl4QRukgIySrSbOUocpIJ2utO8GhtFMcxfm0kOiMQC1Rw0IBpyDG3er2njLH64pv7LVeSp2
-	wA5CowFg==;
+	bh=mBU6F4FMvCmlzghULKN4T+OEFNdK6km1uxFjLAbwvo0=; b=h86xzF8J2+X4PqV2CAcEzzI0fQ
+	KsHosJXJRfwYYPnTlNXH7tAt6ycp64Qx2vSllLBJ/9h09IHDmF20dOvFgMtK3gJpt4ZbH6c67FeNn
+	rEbNTBqWLPJapSBr1Z+hRozwKjU3umAvV1yS6zlENLkGpzigh1uAf0gfcrXWWnVZeyHgUOyBNaD0U
+	h9rAMCEohPYK4qL7qcoqpW7fWM4mTnem1pRgh4Xvu1tYYRl3OrDoqUWqD1Dn/XLVXA4UzkAuXGNDj
+	qz0Ua080uzuZGqtfxaShdXDDRQ9gFm+D4cWP+cDMO/TBXjCWc1a0pnAFpjSISyJaD5yHwVyS/2rJB
+	ObGZJbTg==;
 Received: from willy by casper.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rc6rD-0000000DIa6-1rTK;
-	Mon, 19 Feb 2024 16:51:07 +0000
-Date: Mon, 19 Feb 2024 16:51:07 +0000
+	id 1rc6sz-0000000DIii-3GsA;
+	Mon, 19 Feb 2024 16:52:57 +0000
+Date: Mon, 19 Feb 2024 16:52:57 +0000
 From: Matthew Wilcox <willy@infradead.org>
-To: lipeifeng@oppo.com
-Cc: akpm@linux-foundation.org, david@redhat.com, osalvador@suse.de,
-	linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/2] Support kshrinkd
-Message-ID: <ZdOG-135dLP0IeU8@casper.infradead.org>
-References: <20240219141703.3851-1-lipeifeng@oppo.com>
+To: David Howells <dhowells@redhat.com>
+Cc: Christian Brauner <christian@brauner.io>,
+	Markus Suvanto <markus.suvanto@gmail.com>,
+	Marc Dionne <marc.dionne@auristor.com>,
+	Daniil Dulov <d.dulov@aladdin.ru>, linux-afs@lists.infradead.org,
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] afs: Fix ignored callbacks over ipv4
+Message-ID: <ZdOHaTLPkV8VlU7x@casper.infradead.org>
+References: <20240219143906.138346-1-dhowells@redhat.com>
+ <20240219143906.138346-2-dhowells@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -45,20 +49,27 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240219141703.3851-1-lipeifeng@oppo.com>
+In-Reply-To: <20240219143906.138346-2-dhowells@redhat.com>
 
-On Mon, Feb 19, 2024 at 10:17:01PM +0800, lipeifeng@oppo.com wrote:
-> 'commit 6d4675e60135 ("mm: don't be stuck to rmap lock on reclaim path")'
-> The above patch would avoid reclaim path to stuck rmap lock.
-> But it would cause some folios in LRU not sorted by aging because
-> the contended-folios in rmap_walk would be putbacked to the head of LRU
-> during shrink_folio_list even if the folios are very cold.
-> 
-> The patchset setups new kthread:kshrinkd to reclaim the contended-folio
-> in rmap_walk when shrink_folio_list, to avoid to break the rules of LRU.
+On Mon, Feb 19, 2024 at 02:39:02PM +0000, David Howells wrote:
+> +++ b/fs/afs/internal.h
+> @@ -321,8 +321,7 @@ struct afs_net {
+>  	struct list_head	fs_probe_slow;	/* List of afs_server to probe at 5m intervals */
+>  	struct hlist_head	fs_proc;	/* procfs servers list */
+>  
+> -	struct hlist_head	fs_addresses4;	/* afs_server (by lowest IPv4 addr) */
+> -	struct hlist_head	fs_addresses6;	/* afs_server (by lowest IPv6 addr) */
+> +	struct hlist_head	fs_addresses;	/* afs_server (by lowest IPv6 addr) */
 
-Patch 1/2 didn't make it to my inbox or to lore.  But you should talk
-about the real world consequences of this in the cover letter.  What do
-we observe if this problem happens?  How much extra performance will we
-gain by applying this patch?
+Comment is out of date ...
+
+> @@ -561,8 +560,7 @@ struct afs_server {
+>  	struct afs_server __rcu	*uuid_next;	/* Next server with same UUID */
+>  	struct afs_server	*uuid_prev;	/* Previous server with same UUID */
+>  	struct list_head	probe_link;	/* Link in net->fs_probe_list */
+> -	struct hlist_node	addr4_link;	/* Link in net->fs_addresses4 */
+> -	struct hlist_node	addr6_link;	/* Link in net->fs_addresses6 */
+> +	struct hlist_node	addr_link;	/* Link in net->fs_addresses6 */
+
+Ditto
 
