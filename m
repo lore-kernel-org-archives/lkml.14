@@ -1,123 +1,125 @@
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fllv0016.ext.ti.com (fllv0016.ext.ti.com [198.47.19.142])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA024364BC
-	for <linux-kernel@vger.kernel.org>; Mon, 19 Feb 2024 12:00:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BD4B2C842;
+	Mon, 19 Feb 2024 12:00:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.142
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708344019; cv=none; b=BXvczg8jm9+gc3tzSg+CPEh1whCW0/FBzdOLlUN6YYUdfLqp25bRSSZWPKLFt7RGZwvPX/gNWnxGKAw4TRnhHXaf7MLuzwL10ZRo/JMs9EYwAjw0ctlgTMrldWG93Drvq0/bq+HAtMtOTxrkQEXjj7bN/wO/2w3dSIYB/+pE/2Y=
+	t=1708344021; cv=none; b=PY1XPn0wR6WHA5NP0bcwHA5uXkiYAtqbD86/pWnvDj50jSDL0GBIbldzs5XbpGsj4GZ++R7p+vhoG5eTVhElLWo/osMUlcuP9aYunp1UN41XvNXMkHnfJ7xpZDSRuQRuE33tEAL788j24mtNwd8Zy2URCwB9N3ACh8FiVPwlZdY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708344019; c=relaxed/simple;
-	bh=Zbpl54vz+j7VK1lL7d8GEo/58z6p6dU/i6sdwxlkH9Q=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=iJomkBpwAdifidjoRaOFSw/CObJIyq6HS9VMKmKWTUR9Fv+So1PfeLdt2nYTthAjXkhT650ztyaFfyY0+Fbub6m1mi9vV7xaRfkgGLV6oQFK3fZxMa6DZOh9FliMBNDSP7/61prBYANvsnrnPSFtI2Heh7l/IrW/jab68roWmdo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=marliere.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=marliere.net header.i=@marliere.net header.b=r2yqU9sK; arc=none smtp.client-ip=209.85.214.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=marliere.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1708344021; c=relaxed/simple;
+	bh=KPJGEyp+8mjgucHi5TVoshHn75rjK/8wWiERVy3coCI=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=owRRda4q+n8R86P+JKDrenU0Kz2WhDY+AvMbRVQp6o43ASoXiWctslArS/1Mle6K2mjzXHLeAOylRTLP6ydZaTmeB/jIZDdNQ4nX1XHUiwuFFTPq93Y4ISK1qMruivmuSI7RipU2n23otSnvAbrcno7AGSH9RLZ/YN97yNWfzEM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=jgGZxJ2d; arc=none smtp.client-ip=198.47.19.142
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=marliere.net header.i=@marliere.net header.b="r2yqU9sK"
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-1dba94f9201so24217905ad.0
-        for <linux-kernel@vger.kernel.org>; Mon, 19 Feb 2024 04:00:17 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708344017; x=1708948817;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:dkim-signature:from:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=+ceTuhqP93bH+p1U/4Nuj7uzSb4ni/tc46LUJgesgV0=;
-        b=gvLgmfAoF+k5h4RRrTcvKJTEf6vgbCOV7A10b8cgMDoXNOz91IEbw923WpfSIgF3xk
-         dEMlweq3i82xwLuEeghVLIdu3r5kzeGTzZZQ1KBqqPoMjqeKB4FN9p+Xo5D9a064uXzM
-         7OiC4/dND9jgpzaJiIZODdA0e5AoUzbgsb5FNZ1Ah/zGV1ZLy2A5iAN7PRWC4ZRfjZRu
-         tfjig68RbvYK06ozWyMyv+lHBqwG2Pudf6MZs/893nZ1vITL4MXLM0OBhZv52BgoiZXS
-         +o3X0fCl+VFDui1aiu6IYKZ9DhZhAD73rggb26uImnwQ6oKnP8R8LDBvnmgmYXsUA98N
-         5nGg==
-X-Forwarded-Encrypted: i=1; AJvYcCWkVna/9c/DhTtRsR+SDOLIpqQcITisIjmVQq1G07VfJcI0yYPvv2zyZq9fA5LsfYq1AVX/RIbBGFNIEQaSUBT1GTSq/GDryN9MBffD
-X-Gm-Message-State: AOJu0YxQQ+v9SMwMY8ksAKQRuKS3Yv+mEmvVbvViYMQdmkB/aPdPSvVi
-	o9rH05qwHCpMuN5RSbk/KpiwGyP/mpicTzgZhI7lfoNqk1cN2JQB7Tz+KfsBW4PpoQ==
-X-Google-Smtp-Source: AGHT+IEN9ChGeMnDJJIbUUp1Te4f0gqEOgxdvDik2FSQpy1djK61w/k2ZmjVgWA4Jr3lObS/PF3Bnw==
-X-Received: by 2002:a17:902:d511:b0:1db:cf8c:d3c1 with SMTP id b17-20020a170902d51100b001dbcf8cd3c1mr8097410plg.57.1708344016487;
-        Mon, 19 Feb 2024 04:00:16 -0800 (PST)
-Received: from mail.marliere.net ([24.199.118.162])
-        by smtp.gmail.com with ESMTPSA id p3-20020a170902c70300b001db86c48221sm4224248plp.22.2024.02.19.04.00.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 19 Feb 2024 04:00:15 -0800 (PST)
-From: "Ricardo B. Marliere" <ricardo@marliere.net>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marliere.net;
-	s=2024; t=1708344014;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=+ceTuhqP93bH+p1U/4Nuj7uzSb4ni/tc46LUJgesgV0=;
-	b=r2yqU9sKWtNvOwenunllWDUFpDxanXCUgWNClVjK6HldtqKIL6EouJxLqOOE7WbSj7ACGQ
-	uZI/bKP5PiznKj5n1NgSOzNwI7h6oUDtkqCG6W97HplmmSVbHR1hYT5wmrLXlpHyYQ7ehl
-	ubzYWXldNTTBIYzrKebII0jKPHY8lZiZ1QEzzErOjLQAT2/czCjxHpywP6Uo5LwimlZRau
-	KM9vltFTs3RsiRWc1t/Xq/3ikG+bIb6v9PzUv2jEGBIzAE1qY9KbuRXcDiqAJ+bkQwyHBL
-	vl9WVBMfRLUt/GzVRC/+cPzHzDQv509mzlsfG9ieiXO5FRITSdBAHa6dtTzrSA==
-Authentication-Results: ORIGINATING;
-	auth=pass smtp.auth=ricardo@marliere.net smtp.mailfrom=ricardo@marliere.net
-Date: Mon, 19 Feb 2024 09:00:52 -0300
-Subject: [PATCH drm-misc 2/3] drm/privacy_screen: constify the struct
- device_type usage
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="jgGZxJ2d"
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+	by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 41JC07U3118394;
+	Mon, 19 Feb 2024 06:00:07 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1708344007;
+	bh=cU8f6d3RpKc/TTtGEPnr+Al9HkYAPF1QNsCxZf4C8gA=;
+	h=Date:From:To:CC:Subject:References:In-Reply-To;
+	b=jgGZxJ2dvkrIPjoRF3Q46cnAErwClWjeY2my0tjcjVC/ZsRl+jI2rh5UG+biWmsz+
+	 UNrDYzW/6HExJ1h3V3rmjI/kkkN6ux41SmEJ17wywxqk/VvJ+5RUSbIMDjcUKv3XQD
+	 zPXpDdCTfFonqmyX6xOPRiqfzhgxPF8yBXpw64tQ=
+Received: from DLEE103.ent.ti.com (dlee103.ent.ti.com [157.170.170.33])
+	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 41JC029x003366
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Mon, 19 Feb 2024 06:00:06 -0600
+Received: from DLEE104.ent.ti.com (157.170.170.34) by DLEE103.ent.ti.com
+ (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 19
+ Feb 2024 06:00:03 -0600
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE104.ent.ti.com
+ (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Mon, 19 Feb 2024 06:00:03 -0600
+Received: from localhost (uda0492258.dhcp.ti.com [172.24.227.9])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 41JC021g003913;
+	Mon, 19 Feb 2024 06:00:03 -0600
+Date: Mon, 19 Feb 2024 17:30:02 +0530
+From: Siddharth Vadapalli <s-vadapalli@ti.com>
+To: Bean Huo <beanhuo@iokpp.de>
+CC: <bhelgaas@google.com>, <helgaas@kernel.org>,
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Bean Huo <beanhuo@micron.com>, <stable@vger.kernel.org>,
+        <s-vadapalli@ti.com>
+Subject: Re: [PATCH v3] PCI: Increase maximum PCIe physical function number
+ to 7 for non-ARI devices
+Message-ID: <37d21806-d964-40e0-a5a5-3173996e601f@ti.com>
+References: <20240219112422.54657-1-beanhuo@iokpp.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240219-device_cleanup-drm-v1-2-e2f2acb38bff@marliere.net>
-References: <20240219-device_cleanup-drm-v1-0-e2f2acb38bff@marliere.net>
-In-Reply-To: <20240219-device_cleanup-drm-v1-0-e2f2acb38bff@marliere.net>
-To: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
- David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
- Hans de Goede <hdegoede@redhat.com>
-Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- "Ricardo B. Marliere" <ricardo@marliere.net>
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1047; i=ricardo@marliere.net;
- h=from:subject:message-id; bh=Zbpl54vz+j7VK1lL7d8GEo/58z6p6dU/i6sdwxlkH9Q=;
- b=owEBbQKS/ZANAwAKAckLinxjhlimAcsmYgBl00L1Yti36lbOzneUCF80ZmSkp/FO9XDLY3YU2
- JB1FS7moZaJAjMEAAEKAB0WIQQDCo6eQk7jwGVXh+HJC4p8Y4ZYpgUCZdNC9QAKCRDJC4p8Y4ZY
- pmu2EACilPwO+2JjpT7yUaLrxh0L/LqgGXLvq7nb3RkrM5xqys7r5yIwmqj5OphsgF9WlwSXxCt
- 0KXP5J4ly0XfKtgI4IbSXeUlo2zXyqjG/qzYG4OQoS6v+V6v2+UuC2ax0L+pQC6EkKX979/eOSG
- io/NTZczgf5T8NeevmG/AIL7QgTtfkwtu0ZPT6gzExzL/5C+z3Mpeg2uiJM5XSSjJV8kv0pSa2a
- REUmpVtpCgIrdgRirp7bNcQk0fk15i3djGHQYhvgjoIlmC8oAnD/oS//tEq7SWmUgcI0LxQLT4G
- Sn31Tb3w6oXvsIAZFJKPKXAvblQIdB9furVbQD+QBUdrd7YbW79f6TDH3N+/6wAPipPuUn5T0Ju
- 5sLycEeCWHy2+oErhGAYIGSeAfejS/2qHcy0y0f8zZuYNSkmH6zhd2yo+Vlm+Lo7XbtGRG0x/5m
- ZO3GJSNrGflLsCljf4BiPK7PJR6PVl4AAqyrTHD5V3pEbMZioFagpfitLtpH5/XdWWgFgQ8AfPT
- iQ84DADLdt3cBf2mReZRSXcq+xaaTmxGqGaubQMcudRz4Bz/34hJMi/qVZJuPlgtM+1bHvNDakO
- Ak6Bey4i9tCdQypPwuKEiJu1gfkVuVIDrbcqEc/g5XoZZEInDKCnU7fdStoc3Xt/j67zeDo8DcE
- 23urScHg0588jKA==
-X-Developer-Key: i=ricardo@marliere.net; a=openpgp;
- fpr=030A8E9E424EE3C0655787E1C90B8A7C638658A6
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20240219112422.54657-1-beanhuo@iokpp.de>
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-Since commit aed65af1cc2f ("drivers: make device_type const"), the driver
-core can properly handle constant struct device_type. Move the
-drm_privacy_screen_type variable to be a constant structure as well,
-placing it into read-only memory which can not be modified at runtime.
+On 24/02/19 12:24PM, Bean Huo wrote:
+> From: Bean Huo <beanhuo@micron.com>
+> 
+> As per PCIe r6.2, sec 6.13 titled "Alternative Routing-ID Interpretation
+> (ARI)", up to 8 [fn # 0..7] Physical Functions(PFs) are allowed in an
+> non-ARI capable device. Previously, our implementation erroneously limited
+> the maximum number of PFs to 7 for endpoints without ARI support.
+> 
+> This patch corrects the maximum PF count to adhere to the PCIe specification
+> by allowing up to 8 PFs on non-ARI capable devices. This change ensures better
+> compliance with the standard and improves compatibility with devices relying
+> on this specification.
 
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Ricardo B. Marliere <ricardo@marliere.net>
----
- drivers/gpu/drm/drm_privacy_screen.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+The function "next_fn()" seems to provide the next valid function.
+Therefore, if the current function is 0 (fn = 0), then the next valid
+function will be 1 which is returned by next_fn(). It extends similarly
+until the case where current function is 6 (fn = 6) which shall return
+the next valid function as 7. So all 8 PFs are still treated as valid
+and there doesn't seem to be any limitation. Only in the case where the
+EP doesn't support ARI (there is no function 8 (fn = 8)), the call to
+next_fn() with the fn parameter set to 7, will return -ENODEV which
+seems to be the expected behavior.
 
-diff --git a/drivers/gpu/drm/drm_privacy_screen.c b/drivers/gpu/drm/drm_privacy_screen.c
-index 6cc39e30781f..088a30b3b488 100644
---- a/drivers/gpu/drm/drm_privacy_screen.c
-+++ b/drivers/gpu/drm/drm_privacy_screen.c
-@@ -363,7 +363,7 @@ static struct attribute *drm_privacy_screen_attrs[] = {
- };
- ATTRIBUTE_GROUPS(drm_privacy_screen);
- 
--static struct device_type drm_privacy_screen_type = {
-+static const struct device_type drm_privacy_screen_type = {
- 	.name = "privacy_screen",
- 	.groups = drm_privacy_screen_groups,
- };
+Regards,
+Siddharth.
 
--- 
-2.43.0
-
+> 
+> Fixes: c3df83e01a96 ("PCI: Clean up pci_scan_slot()")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Bean Huo <beanhuo@micron.com>
+> ---
+> Changelog:
+> 	v2--v3:
+> 		1. Update commit messag 
+> 	v1--v2:
+> 		1. Add Fixes tag
+> 		2. Modify commit message
+> ---
+>  drivers/pci/probe.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+> index ed6b7f48736a..8c3d0f63bc13 100644
+> --- a/drivers/pci/probe.c
+> +++ b/drivers/pci/probe.c
+> @@ -2630,7 +2630,8 @@ static int next_fn(struct pci_bus *bus, struct pci_dev *dev, int fn)
+>  	if (pci_ari_enabled(bus))
+>  		return next_ari_fn(bus, dev, fn);
+>  
+> -	if (fn >= 7)
+> +	/* If EP does not support ARI, the maximum number of functions should be 7 */
+> +	if (fn > 7)
+>  		return -ENODEV;
+>  	/* only multifunction devices may have more functions */
+>  	if (dev && !dev->multifunction)
+> -- 
+> 2.34.1
+> 
+> 
