@@ -1,178 +1,171 @@
-Received: from mail-ot1-f44.google.com (mail-ot1-f44.google.com [209.85.210.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from forward500b.mail.yandex.net (forward500b.mail.yandex.net [178.154.239.144])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0061556B6D
-	for <linux-kernel@vger.kernel.org>; Mon, 19 Feb 2024 22:35:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E91654F88;
+	Mon, 19 Feb 2024 22:35:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.154.239.144
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708382103; cv=none; b=QJg13ljBJyUKEB00J1no+6Fecm6L9KMRxbqgS3a1z3zotIYSdjp0IjPT2Rk37DDaW1G8TmUMkc7DkqxJsdPImI2PBVJaYpZE0aQMKyUOUgs1MKAHWSmetSChCnUC/yOQNiMppRfw1RZlg7rJNF2W6NijzJQj+pSXhEKAgFbwnCY=
+	t=1708382124; cv=none; b=Ec8oD3Ib0GXTGKariNZIoFbKJyO5RIkAc9L55jiT1Wg+/l5hP9ljAE8lpBoRXyH+t6VtsaAzqYgvu84L0RFKF0V9BOcBbSWwwMOSUkwZWS6DfRRW3cQOu62K6FPJwxsZvYo6CdIx9kiTKdE8UKBTQNrs1hKUer2X2QKSXi1NXa0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708382103; c=relaxed/simple;
-	bh=QsqGSd0YrGNt4iO+QSuv/owuo4NT7KSX8p+xqtQcChY=;
+	s=arc-20240116; t=1708382124; c=relaxed/simple;
+	bh=syOmdfRytxiX/HKVSxNzcoLs0gcEIlM3vpEM9T4e5BI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=WBnnvmEbSrEJyRba0xi0eJpx2iB5SIEmVSFs6MSdKO5kFXGcsQCgwk8qKT66cb8B6fmS3cUsPgaXjHXXHBnz9lcHPwGfUOoEeuPM6pIqIBOKT2FMRSrDZ20P3+QPk/9tS8B5dPtErWQKxSvoYpuw55gZcLlIjZT+2H0kGsDUvK4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=Autx+eBN; arc=none smtp.client-ip=209.85.210.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	 MIME-Version; b=GC0qgenXxUgsZpwNMs03ssryNLYxthIj6cGE9/86dq+Tt5T5GiakK6jabNcmEB6907yrik8Y4ksGCAxnbz8SE8cba1Iw5bFV1mtX8aRtbEldyE3b+m09hBlJpjSze+aSQNb2reodVP/tm83mtjJLvcnH2p9nveqwcQsIDVncG3E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=6tel.net; spf=pass smtp.mailfrom=6tel.net; dkim=pass (1024-bit key) header.d=6tel.net header.i=@6tel.net header.b=XO02EO3Z; arc=none smtp.client-ip=178.154.239.144
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=6tel.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=6tel.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="Autx+eBN"
-Received: by mail-ot1-f44.google.com with SMTP id 46e09a7af769-6e2dfc98664so2665119a34.2
-        for <linux-kernel@vger.kernel.org>; Mon, 19 Feb 2024 14:35:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1708382101; x=1708986901; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=nguAE7f5YcWI/h5umYjj7eHdUyvOtkK6QQpK6mXXbx4=;
-        b=Autx+eBNNCqYL35ZC0xL0rB31mo/p6dR/xOEzOklq4eWf1IMK5AUmGKdW+3Rdtwb28
-         nwoTuLyfFwdGa8MpIaPz0vXjZ8OfkYRTlxUAqKALXi+BTqQ3kBGZ4+eMwu2STVqEwiEd
-         mEoiAQvbPLzOrDVtkAWW7QgArX44AkDUf1n9M1+QV63ZQ5PjqYMgZP+YIfYpMIWftduw
-         XYlwSzfT0AbVnB9Y8LY7Ji3SME0nA8eGib5w4aI/R9mQ+lbLMj9W9jbPSnm9KUbHNw90
-         hgweH1prQEyn6/GeWokXEREudiWr5uZDA2xL41m+xSIfk5vZerGAgBY9zIXkrLOHqWeH
-         iEtA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708382101; x=1708986901;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=nguAE7f5YcWI/h5umYjj7eHdUyvOtkK6QQpK6mXXbx4=;
-        b=llhlMZ06ruvh3NoAmu9PCKZ+sGzOR1ZbyOqblW1rVnQie4Nsh3fKmUc5L03wT7d+l7
-         A1pi60V1hfZWRtVeHS3OTqyIse1jDLyNbcUtwQblSWMuFXaQpOard98X8OPSK349Thrw
-         etDH8MfV//GvSOYDQB2WMfRZaMZY4vMiEX8CHpprv0MjjS3Uh1X7Hbbo67N8IcJhVM3D
-         fSFR4qGYhFBJWWJfizvTRNntN9WAfqyG0tqyCZ/pNwjQaFwjvIcUnFNBQLxvZZqEnE8L
-         hcRw2zPPEQNIGIkHi2pPsXm0Wj8kUz21WQWV/PT9fdPV1bcjQ9fHqoUiiMyGjhYbye0A
-         SeBA==
-X-Forwarded-Encrypted: i=1; AJvYcCXH4att8qe0JQpVP8I42EWgBQ2UaPqe9MdXr8qEHLyrD8M68B9L250kfN31sokh7hwjssGubUED4BCNp6CuIK2Y0ONRoMdWFLunux3D
-X-Gm-Message-State: AOJu0YzcoWNmQE7WGGPURXyl7OOoYQR37xU+/zZ0OTNgcIGeVjW9blxq
-	TsOzJqVM0vmzqbN8Xvm9G44e0kGZv50PGLWLx8bK3fTG7B8gg+yUr3A5l2WHd3w=
-X-Google-Smtp-Source: AGHT+IEKk7jzI/qkme4zk/gFRVTVBf/1nLdJFY+y7tiRySbZb046arGF15DJiOZ4ycZjN+0TNGVe+A==
-X-Received: by 2002:a9d:7494:0:b0:6e2:e5a3:1732 with SMTP id t20-20020a9d7494000000b006e2e5a31732mr3221609otk.37.1708382101127;
-        Mon, 19 Feb 2024 14:35:01 -0800 (PST)
-Received: from freyr.lechnology.com (ip98-183-112-25.ok.ok.cox.net. [98.183.112.25])
-        by smtp.gmail.com with ESMTPSA id h25-20020a9d6419000000b006e45a5f0a70sm171776otl.49.2024.02.19.14.35.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 19 Feb 2024 14:35:00 -0800 (PST)
-From: David Lechner <dlechner@baylibre.com>
-To: Mark Brown <broonie@kernel.org>
-Cc: David Lechner <dlechner@baylibre.com>,
-	Martin Sperl <kernel@martin.sperl.org>,
-	David Jander <david@protonic.nl>,
-	Jonathan Cameron <jic23@kernel.org>,
-	Michael Hennerich <michael.hennerich@analog.com>,
-	=?utf-8?q?Nuno_S=C3=A1?= <nuno.sa@analog.com>,
-	Alain Volmat <alain.volmat@foss.st.com>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	linux-spi@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
+	dkim=pass (1024-bit key) header.d=6tel.net header.i=@6tel.net header.b="XO02EO3Z"
+Received: from mail-nwsmtp-smtp-production-main-46.myt.yp-c.yandex.net (mail-nwsmtp-smtp-production-main-46.myt.yp-c.yandex.net [IPv6:2a02:6b8:c12:3285:0:640:fd1e:0])
+	by forward500b.mail.yandex.net (Yandex) with ESMTPS id E7FB260FA0;
+	Tue, 20 Feb 2024 01:35:19 +0300 (MSK)
+Received: by mail-nwsmtp-smtp-production-main-46.myt.yp-c.yandex.net (smtp/Yandex) with ESMTPSA id bYZIDNh7RSw0-9nfYeG6M;
+	Tue, 20 Feb 2024 01:35:18 +0300
+X-Yandex-Fwd: 1
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=6tel.net; s=mail;
+	t=1708382119; bh=4esHHPB8QRrp0Iemcf6FHGQ6BZdQ9YtoicpK0U4GrhM=;
+	h=Message-ID:Date:In-Reply-To:Cc:Subject:References:To:From;
+	b=XO02EO3ZIyNk2n+j94csTnSD72YDrZtTmKwAN3Kjo8JS7bEIeneV4MehIV7ObDD7J
+	 1PpZdTVrI80RsISeBTo/QUSFy2oDxY63Y7/ivDgnv+aXstdFnkfyjuQW5XXQM0WhZH
+	 ML+av7TcBA+YT/DcWbIIAYYYeqygpbfY7j5QZadk=
+Authentication-Results: mail-nwsmtp-smtp-production-main-46.myt.yp-c.yandex.net; dkim=pass header.i=@6tel.net
+From: efectn@6tel.net
+To: linux-rockchip@lists.infradead.org
+Cc: devicetree@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org,
-	linux-iio@vger.kernel.org,
-	Julien Stephan <jstephan@baylibre.com>
-Subject: [PATCH v2 5/5] iio: adc: ad7380: use spi_optimize_message()
-Date: Mon, 19 Feb 2024 16:33:22 -0600
-Message-ID: <20240219-mainline-spi-precook-message-v2-5-4a762c6701b9@baylibre.com>
-X-Mailer: git-send-email 2.43.2
-In-Reply-To: <20240219-mainline-spi-precook-message-v2-0-4a762c6701b9@baylibre.com>
-References: <20240219-mainline-spi-precook-message-v2-0-4a762c6701b9@baylibre.com>
+	linux-kernel@vger.kernel.org,
+	robh+dt@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org,
+	conor+dt@kernel.org,
+	heiko@sntech.de,
+	sebastian.reichel@collabora.com,
+	Muhammed Efe Cetin <efectn@protonmail.com>
+Subject: [PATCH 5/9] arm64: dts: rockchip: Add ir receiver and leds to Khadas Edge 2
+Date: Tue, 20 Feb 2024 01:34:21 +0300
+Message-ID: <335629f57e593e20418a4a55a1e662505640cbde.1708381247.git.efectn@protonmail.com>
+X-Mailer: git-send-email 2.43.1
+In-Reply-To: <5a7bd2cd8703e51382abfc11242de59d45286477.1708381247.git.efectn@protonmail.com>
+References: <5a7bd2cd8703e51382abfc11242de59d45286477.1708381247.git.efectn@protonmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-X-Mailer: b4 0.12.4
 Content-Transfer-Encoding: 8bit
 
-This modifies the ad7380 ADC driver to use spi_optimize_message() to
-optimize the SPI message for the buffered read operation. Since buffered
-reads reuse the same SPI message for each read, this can improve
-performance by reducing the overhead of setting up some parts the SPI
-message in each spi_sync() call.
+From: Muhammed Efe Cetin <efectn@protonmail.com>
 
-Signed-off-by: David Lechner <dlechner@baylibre.com>
+Khadas Edge 2 exposes IR receiver pins as same as TF card via EXTIO. The
+IR receiver is connected to MCU and SoC.
+
+The board also has 2 PWM RGB leds. One is controlled by MCU and the
+other is controlled by SoC. This commit adds support for the led
+controlled by SoC using pwm-leds.
+
+Signed-off-by: Muhammed Efe Cetin <efectn@protonmail.com>
 ---
+ .../dts/rockchip/rk3588s-khadas-edge2.dts     | 66 +++++++++++++++++++
+ 1 file changed, 66 insertions(+)
 
-v2 changes:
-- Removed dynamic allocation of spi xfer/msg
-- Moved spi message optimization to probe function
-- Dropped buffer pre/post callbacks
-
- drivers/iio/adc/ad7380.c | 36 ++++++++++++++++++++++++++++++------
- 1 file changed, 30 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/iio/adc/ad7380.c b/drivers/iio/adc/ad7380.c
-index abd746aef868..6b3fd20c8f1f 100644
---- a/drivers/iio/adc/ad7380.c
-+++ b/drivers/iio/adc/ad7380.c
-@@ -133,6 +133,9 @@ struct ad7380_state {
- 	struct spi_device *spi;
- 	struct regulator *vref;
- 	struct regmap *regmap;
-+	/* xfer and msg for buffer reads */
-+	struct spi_transfer xfer;
-+	struct spi_message msg;
- 	/*
- 	 * DMA (thus cache coherency maintenance) requires the
- 	 * transfer buffers to live in their own cache lines.
-@@ -236,14 +239,9 @@ static irqreturn_t ad7380_trigger_handler(int irq, void *p)
- 	struct iio_poll_func *pf = p;
- 	struct iio_dev *indio_dev = pf->indio_dev;
- 	struct ad7380_state *st = iio_priv(indio_dev);
--	struct spi_transfer xfer = {
--		.bits_per_word = st->chip_info->channels[0].scan_type.realbits,
--		.len = 4,
--		.rx_buf = st->scan_data.raw,
--	};
- 	int ret;
+diff --git a/arch/arm64/boot/dts/rockchip/rk3588s-khadas-edge2.dts b/arch/arm64/boot/dts/rockchip/rk3588s-khadas-edge2.dts
+index ea7f1bb7c908..5a3b52e62dce 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3588s-khadas-edge2.dts
++++ b/arch/arm64/boot/dts/rockchip/rk3588s-khadas-edge2.dts
+@@ -4,6 +4,7 @@
  
--	ret = spi_sync_transfer(st->spi, &xfer, 1);
-+	ret = spi_sync(st->spi, &st->msg);
- 	if (ret)
- 		goto out;
+ #include <dt-bindings/gpio/gpio.h>
+ #include <dt-bindings/pinctrl/rockchip.h>
++#include <dt-bindings/leds/common.h>
+ #include "rk3588s.dtsi"
  
-@@ -335,6 +333,28 @@ static const struct iio_info ad7380_info = {
- 	.debugfs_reg_access = &ad7380_debugfs_reg_access,
+ / {
+@@ -19,6 +20,47 @@ chosen {
+ 		stdout-path = "serial2:1500000n8";
+ 	};
+ 
++	ir-receiver {
++		compatible = "gpio-ir-receiver";
++		gpios = <&gpio1 RK_PA7 GPIO_ACTIVE_LOW>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&ir_receiver_pin>;
++	};
++
++	leds {
++		compatible = "pwm-leds";
++
++		red_led: led-0 {
++			label = "red_led";
++			linux,default-trigger = "none";
++			default-state = "off";
++			function = LED_FUNCTION_INDICATOR;
++			color = <LED_COLOR_ID_RED>;
++			max-brightness = <255>;
++			pwms = <&pwm11 0 25000 0>;
++		};
++
++		green_led: led-1 {
++			label = "green_led";
++			linux,default-trigger = "default-on";
++			default-state = "on";
++			function = LED_FUNCTION_POWER;
++			color = <LED_COLOR_ID_GREEN>;
++			max-brightness = <255>;
++			pwms = <&pwm14 0 25000 0>;
++		};
++
++		blue_led: led-2 {
++			label = "blue_led";
++			linux,default-trigger = "none";
++			default-state = "off";
++			function = LED_FUNCTION_INDICATOR;
++			color = <LED_COLOR_ID_BLUE>;
++			max-brightness = <255>;
++			pwms = <&pwm15 0 25000 0>;
++		};
++	};
++
+ 	vcc5v0_sys: vcc5v0-sys-regulator {
+ 		compatible = "regulator-fixed";
+ 		regulator-name = "vcc5v0_sys";
+@@ -181,6 +223,12 @@ vcc5v0_host_en: vcc5v0-host-en {
+ 			rockchip,pins = <1 RK_PB1 RK_FUNC_GPIO &pcfg_pull_none>;
+ 		};
+ 	};
++
++	ir-receiver {
++		ir_receiver_pin: ir-receiver-pin {
++			rockchip,pins = <1  RK_PA7  RK_FUNC_GPIO  &pcfg_pull_none>;
++		};
++	};
  };
  
-+static void ad7380_unoptimize_spi_msg(void *msg)
-+{
-+	spi_unoptimize_message(msg);
-+}
-+
-+static int devm_ad7380_setup_spi_msg(struct device *dev, struct ad7380_state *st)
-+{
-+	int ret;
-+
-+	st->xfer.bits_per_word = st->chip_info->channels[0].scan_type.realbits;
-+	st->xfer.len = 4;
-+	st->xfer.rx_buf = st->scan_data.raw;
-+
-+	spi_message_init_with_transfers(&st->msg, &st->xfer, 1);
-+
-+	ret = spi_optimize_message(st->spi, &st->msg);
-+	if (ret)
-+		return dev_err_probe(dev, ret, "failed to optimize message\n");
-+
-+	return devm_add_action_or_reset(dev, ad7380_unoptimize_spi_msg, &st->msg);
-+}
-+
- static int ad7380_init(struct ad7380_state *st)
- {
- 	int ret;
-@@ -411,6 +431,10 @@ static int ad7380_probe(struct spi_device *spi)
- 		return dev_err_probe(&spi->dev, PTR_ERR(st->regmap),
- 				     "failed to allocate register map\n");
+ &pcie2x1l2 {
+@@ -191,6 +239,24 @@ &pcie2x1l2 {
+ 	status = "okay";
+ };
  
-+	ret = devm_ad7380_setup_spi_msg(&spi->dev, st);
-+	if (ret)
-+		return ret;
++&pwm11 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pwm11m1_pins>;
++	status = "okay";
++};
 +
- 	indio_dev->channels = st->chip_info->channels;
- 	indio_dev->num_channels = st->chip_info->num_channels;
- 	indio_dev->name = st->chip_info->name;
-
++&pwm14 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pwm14m1_pins>;
++	status = "okay";
++};
++
++&pwm15 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pwm15m1_pins>;
++	status = "okay";
++};
++
+ &sdhci {
+ 	bus-width = <8>;
+ 	no-sdio;
 -- 
-2.43.2
+2.43.1
 
