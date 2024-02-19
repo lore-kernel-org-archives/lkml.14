@@ -1,67 +1,67 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13678524DD;
-	Mon, 19 Feb 2024 18:37:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2D76537E9;
+	Mon, 19 Feb 2024 18:37:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708367861; cv=none; b=afdLWihXoxbcL2dpYLv1UNctyCHuYGFpmquL5ffIZyDlvS+tPHWOfOdFNhOmtjOQ0dbLejTYxhTLCRq0sxGwh/wUFpAJfkAlVWv4/4yfJlV6EkqbyMpu7ppDjZJFhQfdy9L7jf85Y6m1qpsTO1WJK9K2FHirGgUSMnGntKYquZk=
+	t=1708367863; cv=none; b=ThVRmP07uv4uX4I5y0RPUzQDFxyQXCxdsF1kEluXQPW1lQuPTRqhufBnHxWYoCCDB/sfFBm2U27zeDAfIGOX3HT+ngXuxnM7iV1WZjMa76SgtRU0GkcMnTi3Xq5e921XLNPO93NeZpUhyRFQSEcx1aPRKhRjA7jQcq+IREgeRk0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708367861; c=relaxed/simple;
-	bh=tUtrY79YAqX4M+Tz94D4J/f6c0DV9z7rZa/bNyExzsU=;
+	s=arc-20240116; t=1708367863; c=relaxed/simple;
+	bh=q7Z0zDf2sHYGuXHOEP78pHQ8wLIL1eLFN1+2JS1vUoE=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=qBspmFIUvlL1rBIpQkWkRUFRMJADtJRGqQW+TpkOyC/hdDaoSr0is2gMLOGA0fap8wnWiM2tz9sD1f/4t/aqUJUjOPLPu6W530GOOW6seZ2Df0vvtR88z2mdt79/n2bA87Eg8HrflkbM1tDD6ynY9rCl7840ctEOE85PyvgFwQE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=WcmoeVJ3; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=3v1iChid; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=cbcFG5NYgT35gNtTTdSDz0lw2nloxdLTKWCRM7kWnIYmppj118KAJMb6LsykxZMUfBAe2xMMc9NxK/Sl6nwJGoRC5ynPUzB4qcSBY1MdgWvzU+0KpKYuyLthw/WAyCHA1fD/PxW/0LPHHnIYps8FwigoWxnq2liLF8p/zEtKhKE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=jfS1Dk93; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=wGFwjTPo; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="WcmoeVJ3";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="3v1iChid"
-Date: Mon, 19 Feb 2024 18:37:36 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="jfS1Dk93";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="wGFwjTPo"
+Date: Mon, 19 Feb 2024 18:37:39 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1708367857;
+	s=2020; t=1708367860;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=tu6FJ9xhhYXX3pgLppJ9uAaNstlFmxXjTl6koTxXxG0=;
-	b=WcmoeVJ3Gbv7tMvAfN14n/Fnq+x6jY5OUrVwRY8sXNIBojSMXQhKs90/tmr6pFv+XftC6J
-	5idJYS9mLe29VNPhqJTyrgo8oBSe1Kw3t9MZzeFcXm9uqnM4eJe8hYHm3Q8aoxHOaRRNLW
-	sb4uqzUpzAnT8XCUhQrBs3Z9FNL0zQJ/t03dSr6i/Et5wLwFpMLBZmK+9l7J2EA7fMp2pw
-	cr8y93AlRaNEiWRrw/8/ANGOqEocKQsCTZ1bBuw3nDqQkCuyaSlY3kiRPhiVrhuq9wpAq2
-	kV4wyDwbiHaXdaEowxQAilD2MFwE6QM/m21R02gxHzIZ05A45pqint2n76Jahg==
+	bh=W69O648/cDrwBZrR7qGW2NNfJAmJ741ypx6S+2Sk2nA=;
+	b=jfS1Dk93ysIOl/Sb4LWIPpMrph65dSW54hT6zisF6r2z47OfcwEtxV1e/25tLOmYZm9fMO
+	QrP/i2797ns/syNc1+EFDcLFrdu3Thm/8r0YSL4S1atbJP5Q/JXh2uekydvBCTAdw+g5pf
+	yorAbrppbfywCWmcaSybYmAD29EmuknuoaMwffXyYtWvrLgG+mH1ody0Ts1UB4kt4gcjbp
+	5/WJMUrNJK0Qy0kjTm9PzKcEPd0sX+E/yYp68Yxk6QDr1+eLK7nWgE6XZITFUiQK39v49g
+	a1FqoLuHBJpFgoiO/40yozptITK7E+DJOPpwzytaKjQaADBAViA+2xp1ny/euw==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1708367857;
+	s=2020e; t=1708367860;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=tu6FJ9xhhYXX3pgLppJ9uAaNstlFmxXjTl6koTxXxG0=;
-	b=3v1iChidDCmptlO+NBbBDoDl7KsqtFLsI9b8F1VSzolRiKRNbTEVeFujU6TsnRcHp+yFd3
-	5b3ilkVOU+vAzKBg==
+	bh=W69O648/cDrwBZrR7qGW2NNfJAmJ741ypx6S+2Sk2nA=;
+	b=wGFwjTPolkL/rQjzPMC9zB1OEKdtsCDZm1/KyijH6B9jaJDZnAYkiqM/KIvAdXHZovcMB3
+	F2UjMIJuu/mMEODA==
 From: "tip-bot2 for James Morse" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
 Subject:
- [tip: x86/cache] x86/resctrl: Allow RMID allocation to be scoped by CLOSID
+ [tip: x86/cache] x86/resctrl: Move RMID allocation out of mkdir_rdt_prepare()
 Cc: James Morse <james.morse@arm.com>, "Borislav Petkov (AMD)" <bp@alien8.de>,
  Shaopeng Tan <tan.shaopeng@fujitsu.com>,
  Reinette Chatre <reinette.chatre@intel.com>, Babu Moger <babu.moger@amd.com>,
  Peter Newman <peternewman@google.com>,
  Carl Worth <carl@os.amperecomputing.com>, x86@kernel.org,
  linux-kernel@vger.kernel.org
-In-Reply-To: <20240213184438.16675-8-james.morse@arm.com>
-References: <20240213184438.16675-8-james.morse@arm.com>
+In-Reply-To: <20240213184438.16675-5-james.morse@arm.com>
+References: <20240213184438.16675-5-james.morse@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <170836785664.398.2250904883339911498.tip-bot2@tip-bot2>
+Message-ID: <170836785924.398.3184776632833650588.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -71,24 +71,30 @@ Content-Transfer-Encoding: 7bit
 
 The following commit has been merged into the x86/cache branch of tip:
 
-Commit-ID:     c4c0376eefe185b790d89ca8016b7f837ebf25da
-Gitweb:        https://git.kernel.org/tip/c4c0376eefe185b790d89ca8016b7f837ebf25da
+Commit-ID:     311639e9512bb3af2abae32be9322b8a9b30eaa1
+Gitweb:        https://git.kernel.org/tip/311639e9512bb3af2abae32be9322b8a9b30eaa1
 Author:        James Morse <james.morse@arm.com>
-AuthorDate:    Tue, 13 Feb 2024 18:44:21 
+AuthorDate:    Tue, 13 Feb 2024 18:44:18 
 Committer:     Borislav Petkov (AMD) <bp@alien8.de>
 CommitterDate: Fri, 16 Feb 2024 19:18:31 +01:00
 
-x86/resctrl: Allow RMID allocation to be scoped by CLOSID
+x86/resctrl: Move RMID allocation out of mkdir_rdt_prepare()
 
-MPAMs RMID values are not unique unless the CLOSID is considered as well.
+RMIDs are allocated for each monitor or control group directory, because
+each of these needs its own RMID. For control groups,
+rdtgroup_mkdir_ctrl_mon() later goes on to allocate the CLOSID.
 
-alloc_rmid() expects the RMID to be an independent number.
+MPAM's equivalent of RMID is not an independent number, so can't be
+allocated until the CLOSID is known. An RMID allocation for one CLOSID
+may fail, whereas another may succeed depending on how many monitor
+groups a control group has.
 
-Pass the CLOSID in to alloc_rmid(). Use this to compare indexes when
-allocating. If the CLOSID is not relevant to the index, this ends up comparing
-the free RMID with itself, and the first free entry will be used. With MPAM the
-CLOSID is included in the index, so this becomes a walk of the free RMID
-entries, until one that matches the supplied CLOSID is found.
+The RMID allocation needs to move to be after the CLOSID has been
+allocated.
+
+Move the RMID allocation out of mkdir_rdt_prepare() to occur in its caller,
+after the mkdir_rdt_prepare() call. This allows the RMID allocator to
+know the CLOSID.
 
 Signed-off-by: James Morse <james.morse@arm.com>
 Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
@@ -99,114 +105,98 @@ Tested-by: Shaopeng Tan <tan.shaopeng@fujitsu.com>
 Tested-by: Peter Newman <peternewman@google.com>
 Tested-by: Babu Moger <babu.moger@amd.com>
 Tested-by: Carl Worth <carl@os.amperecomputing.com> # arm64
-Link: https://lore.kernel.org/r/20240213184438.16675-8-james.morse@arm.com
+Link: https://lore.kernel.org/r/20240213184438.16675-5-james.morse@arm.com
 Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
 ---
- arch/x86/kernel/cpu/resctrl/internal.h    |  2 +-
- arch/x86/kernel/cpu/resctrl/monitor.c     | 43 +++++++++++++++++-----
- arch/x86/kernel/cpu/resctrl/pseudo_lock.c |  2 +-
- arch/x86/kernel/cpu/resctrl/rdtgroup.c    |  2 +-
- 4 files changed, 37 insertions(+), 12 deletions(-)
+ arch/x86/kernel/cpu/resctrl/rdtgroup.c | 35 ++++++++++++++++++-------
+ 1 file changed, 26 insertions(+), 9 deletions(-)
 
-diff --git a/arch/x86/kernel/cpu/resctrl/internal.h b/arch/x86/kernel/cpu/resctrl/internal.h
-index cbba782..872ba1a 100644
---- a/arch/x86/kernel/cpu/resctrl/internal.h
-+++ b/arch/x86/kernel/cpu/resctrl/internal.h
-@@ -543,7 +543,7 @@ void rdtgroup_pseudo_lock_remove(struct rdtgroup *rdtgrp);
- struct rdt_domain *get_domain_from_cpu(int cpu, struct rdt_resource *r);
- int closids_supported(void);
- void closid_free(int closid);
--int alloc_rmid(void);
-+int alloc_rmid(u32 closid);
- void free_rmid(u32 closid, u32 rmid);
- int rdt_get_mon_l3_config(struct rdt_resource *r);
- void __exit rdt_put_mon_l3_config(void);
-diff --git a/arch/x86/kernel/cpu/resctrl/monitor.c b/arch/x86/kernel/cpu/resctrl/monitor.c
-index bc5ceef..c49f2e8 100644
---- a/arch/x86/kernel/cpu/resctrl/monitor.c
-+++ b/arch/x86/kernel/cpu/resctrl/monitor.c
-@@ -344,24 +344,49 @@ bool has_busy_rmid(struct rdt_domain *d)
- 	return find_first_bit(d->rmid_busy_llc, idx_limit) != idx_limit;
- }
- 
-+static struct rmid_entry *resctrl_find_free_rmid(u32 closid)
-+{
-+	struct rmid_entry *itr;
-+	u32 itr_idx, cmp_idx;
-+
-+	if (list_empty(&rmid_free_lru))
-+		return rmid_limbo_count ? ERR_PTR(-EBUSY) : ERR_PTR(-ENOSPC);
-+
-+	list_for_each_entry(itr, &rmid_free_lru, list) {
-+		/*
-+		 * Get the index of this free RMID, and the index it would need
-+		 * to be if it were used with this CLOSID.
-+		 * If the CLOSID is irrelevant on this architecture, the two
-+		 * index values are always the same on every entry and thus the
-+		 * very first entry will be returned.
-+		 */
-+		itr_idx = resctrl_arch_rmid_idx_encode(itr->closid, itr->rmid);
-+		cmp_idx = resctrl_arch_rmid_idx_encode(closid, itr->rmid);
-+
-+		if (itr_idx == cmp_idx)
-+			return itr;
-+	}
-+
-+	return ERR_PTR(-ENOSPC);
-+}
-+
- /*
-- * As of now the RMIDs allocation is global.
-- * However we keep track of which packages the RMIDs
-- * are used to optimize the limbo list management.
-+ * For MPAM the RMID value is not unique, and has to be considered with
-+ * the CLOSID. The (CLOSID, RMID) pair is allocated on all domains, which
-+ * allows all domains to be managed by a single free list.
-+ * Each domain also has a rmid_busy_llc to reduce the work of the limbo handler.
-  */
--int alloc_rmid(void)
-+int alloc_rmid(u32 closid)
- {
- 	struct rmid_entry *entry;
- 
- 	lockdep_assert_held(&rdtgroup_mutex);
- 
--	if (list_empty(&rmid_free_lru))
--		return rmid_limbo_count ? -EBUSY : -ENOSPC;
-+	entry = resctrl_find_free_rmid(closid);
-+	if (IS_ERR(entry))
-+		return PTR_ERR(entry);
- 
--	entry = list_first_entry(&rmid_free_lru,
--				 struct rmid_entry, list);
- 	list_del(&entry->list);
--
- 	return entry->rmid;
- }
- 
-diff --git a/arch/x86/kernel/cpu/resctrl/pseudo_lock.c b/arch/x86/kernel/cpu/resctrl/pseudo_lock.c
-index 65bee6f..d8f4411 100644
---- a/arch/x86/kernel/cpu/resctrl/pseudo_lock.c
-+++ b/arch/x86/kernel/cpu/resctrl/pseudo_lock.c
-@@ -777,7 +777,7 @@ int rdtgroup_locksetup_exit(struct rdtgroup *rdtgrp)
- 	int ret;
- 
- 	if (rdt_mon_capable) {
--		ret = alloc_rmid();
-+		ret = alloc_rmid(rdtgrp->closid);
- 		if (ret < 0) {
- 			rdt_last_cmd_puts("Out of RMIDs\n");
- 			return ret;
 diff --git a/arch/x86/kernel/cpu/resctrl/rdtgroup.c b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-index a7dbc0e..dcffd1c 100644
+index 4ea5a87..f455a10 100644
 --- a/arch/x86/kernel/cpu/resctrl/rdtgroup.c
 +++ b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-@@ -3295,7 +3295,7 @@ static int mkdir_rdt_prepare_rmid_alloc(struct rdtgroup *rdtgrp)
- 	if (!rdt_mon_capable)
- 		return 0;
+@@ -3312,6 +3312,12 @@ static int mkdir_rdt_prepare_rmid_alloc(struct rdtgroup *rdtgrp)
+ 	return 0;
+ }
  
--	ret = alloc_rmid();
-+	ret = alloc_rmid(rdtgrp->closid);
- 	if (ret < 0) {
- 		rdt_last_cmd_puts("Out of RMIDs\n");
- 		return ret;
++static void mkdir_rdt_prepare_rmid_free(struct rdtgroup *rgrp)
++{
++	if (rdt_mon_capable)
++		free_rmid(rgrp->mon.rmid);
++}
++
+ static int mkdir_rdt_prepare(struct kernfs_node *parent_kn,
+ 			     const char *name, umode_t mode,
+ 			     enum rdt_group_type rtype, struct rdtgroup **r)
+@@ -3384,12 +3390,6 @@ static int mkdir_rdt_prepare(struct kernfs_node *parent_kn,
+ 		goto out_destroy;
+ 	}
+ 
+-	ret = mkdir_rdt_prepare_rmid_alloc(rdtgrp);
+-	if (ret)
+-		goto out_destroy;
+-
+-	kernfs_activate(kn);
+-
+ 	/*
+ 	 * The caller unlocks the parent_kn upon success.
+ 	 */
+@@ -3408,7 +3408,6 @@ out_unlock:
+ static void mkdir_rdt_prepare_clean(struct rdtgroup *rgrp)
+ {
+ 	kernfs_remove(rgrp->kn);
+-	free_rmid(rgrp->mon.rmid);
+ 	rdtgroup_remove(rgrp);
+ }
+ 
+@@ -3430,12 +3429,21 @@ static int rdtgroup_mkdir_mon(struct kernfs_node *parent_kn,
+ 	prgrp = rdtgrp->mon.parent;
+ 	rdtgrp->closid = prgrp->closid;
+ 
++	ret = mkdir_rdt_prepare_rmid_alloc(rdtgrp);
++	if (ret) {
++		mkdir_rdt_prepare_clean(rdtgrp);
++		goto out_unlock;
++	}
++
++	kernfs_activate(rdtgrp->kn);
++
+ 	/*
+ 	 * Add the rdtgrp to the list of rdtgrps the parent
+ 	 * ctrl_mon group has to track.
+ 	 */
+ 	list_add_tail(&rdtgrp->mon.crdtgrp_list, &prgrp->mon.crdtgrp_list);
+ 
++out_unlock:
+ 	rdtgroup_kn_unlock(parent_kn);
+ 	return ret;
+ }
+@@ -3466,9 +3474,16 @@ static int rdtgroup_mkdir_ctrl_mon(struct kernfs_node *parent_kn,
+ 	ret = 0;
+ 
+ 	rdtgrp->closid = closid;
++
++	ret = mkdir_rdt_prepare_rmid_alloc(rdtgrp);
++	if (ret)
++		goto out_closid_free;
++
++	kernfs_activate(rdtgrp->kn);
++
+ 	ret = rdtgroup_init_alloc(rdtgrp);
+ 	if (ret < 0)
+-		goto out_id_free;
++		goto out_rmid_free;
+ 
+ 	list_add(&rdtgrp->rdtgroup_list, &rdt_all_groups);
+ 
+@@ -3488,7 +3503,9 @@ static int rdtgroup_mkdir_ctrl_mon(struct kernfs_node *parent_kn,
+ 
+ out_del_list:
+ 	list_del(&rdtgrp->rdtgroup_list);
+-out_id_free:
++out_rmid_free:
++	mkdir_rdt_prepare_rmid_free(rdtgrp);
++out_closid_free:
+ 	closid_free(closid);
+ out_common_fail:
+ 	mkdir_rdt_prepare_clean(rdtgrp);
