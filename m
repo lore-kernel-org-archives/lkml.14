@@ -1,43 +1,43 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 773AE3D96C;
-	Mon, 19 Feb 2024 07:47:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 155FE41C7A;
+	Mon, 19 Feb 2024 07:48:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708328880; cv=none; b=q2qp5ifZFyEEqhkWjB9kG4Xnhm19WcFF068wpyOrt8bEwZrMJnDzeHw0J7rgXZuqfAtv7Bt4HcH24pElSvmoFyG+jHj4hKZ3ezbXC+wPp1ZsM8q19Rw6xc8SzoggSsvmKtKe14TaATqt6GF0cEpaQwVpcxLpRzW9tsp9gYW6Xk8=
+	t=1708328881; cv=none; b=D2Tkp+fk+yl3sAxQ+5Vb6atSorC+phX8yrdJsYrZoZ6ON4Kuuol0LqL192x4Dejk4MHDhn7ScruF5la/FWo69ezq0lb6q2spAqLkSeCqVb+fo+tO1ec+eAz7cQ3mZdoQj4S2W7h/rDYm+SdMZwwPj+yLJVQQ7u1uulw31lVd/w0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708328880; c=relaxed/simple;
-	bh=Uv5NXvZAXmi5JcnTTPv3AnGIZ1+vXF1EKPUlOm+C42U=;
+	s=arc-20240116; t=1708328881; c=relaxed/simple;
+	bh=7BaBpJwT/sD2IyfBYcZweX9LwIqZGDL72eD5AtTEaCU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=YoVzcgFVGWTyDpbvGGft0GlqGiB/Oc9I/5vIUBdJUH2A6AWL9raFHHlPDWk1i2OFTM2v8DBhlpc4lzvygSGuWPGtkwoar3B54wdtusYjBB7PNtnCGs84i9hvsfLNMDOxt9VdCY98tWRHDBG3McZIz+QP80uxnwGi6JvJrQmnO0Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=C0FTN5mm; arc=none smtp.client-ip=198.175.65.16
+	 MIME-Version; b=bwyFHZ+tmLiilBMIVlEPuAy1uEIuAxTuSU11XzGAkc6tpeTQQXyqFMVJQYjSKULwnTfCnJjRcwV1cXfi+YI/AxDmKjYc5hvhqfUiJceBU4/aj6VrEs/zkz/CaO2fwKViL2xD8B75P7ziS2lLKO0v3RIoya3MDFHoirSg4jw8PkY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eBjXNDgF; arc=none smtp.client-ip=198.175.65.16
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="C0FTN5mm"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eBjXNDgF"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1708328878; x=1739864878;
+  t=1708328880; x=1739864880;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=Uv5NXvZAXmi5JcnTTPv3AnGIZ1+vXF1EKPUlOm+C42U=;
-  b=C0FTN5mmmN697p/fBd8yakE4dkg3cM5USnk/1nIeZ8vS6jfc6fhScfe+
-   RVICkh9mEBBTIJx5T7iQpRxNw0+ZP7v0qaBrpCPhoZLaFV5kLUi0g+ZRV
-   pWA5ghEiP3WnkmzvjPRAb1r8W04ZtZUqwXzhGWZW0tYGBfPFlFLZ6P21S
-   n7VADNg7yI/OtLjoZYHRxJjJSqvIc5Pzf9qf4LC5GV1CmLEYprbySd0v4
-   wstOWmUDUXk26VZXkgeR51PGaXMMmdQyiSkcLK0/HgUSQmD/O2y/V2hVB
-   Z2GRvHoeuPrKCUkQmWLtzJGVYtVbfSVwWP75bAW+3WRv5m7g6scON1sVu
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10988"; a="2535163"
+  bh=7BaBpJwT/sD2IyfBYcZweX9LwIqZGDL72eD5AtTEaCU=;
+  b=eBjXNDgFsbPS5dCKlTusIAFT45XVymJ4Jh2RqdmdJZGAVigQTWpVkFtv
+   jOg1JEm2WWaXQQsewNnBRT19VtwW3Cdic1JuGw7JwAkhDFpqK8prj7kU3
+   538Zcc6cZeUbOmZZJdQWVpozPVgB3CNVsiCSLBOeunsTPNZOZrWhfV3uj
+   mF1Dx9IEoVKPKFkFNUa/X/H+IP5b4KV3MqNrrQEVfHLIsEwHzBWzNQjOt
+   VsgUdsMQIpuH6QTua/znJy9n5PrtxnJUZjU9dpJsiOt7hBXZDlt6oN1kL
+   RraQsyURJQ3aIsgt6HVOCpyYKTk2/FdnBijtfnahn3NUSeHUnb1LOFCNA
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10988"; a="2535168"
 X-IronPort-AV: E=Sophos;i="6.06,170,1705392000"; 
-   d="scan'208";a="2535163"
+   d="scan'208";a="2535168"
 Received: from orsmga001.jf.intel.com ([10.7.209.18])
   by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Feb 2024 23:47:45 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10988"; a="826966127"
+X-IronPort-AV: E=McAfee;i="6600,9927,10988"; a="826966139"
 X-IronPort-AV: E=Sophos;i="6.06,170,1705392000"; 
-   d="scan'208";a="826966127"
+   d="scan'208";a="826966139"
 Received: from jf.jf.intel.com (HELO jf.intel.com) ([10.165.9.183])
   by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Feb 2024 23:47:44 -0800
 From: Yang Weijiang <weijiang.yang@intel.com>
@@ -53,9 +53,9 @@ Cc: peterz@infradead.org,
 	mlevitsk@redhat.com,
 	john.allen@amd.com,
 	weijiang.yang@intel.com
-Subject: [PATCH v10 23/27] KVM: VMX: Set host constant supervisor states to VMCS fields
-Date: Sun, 18 Feb 2024 23:47:29 -0800
-Message-ID: <20240219074733.122080-24-weijiang.yang@intel.com>
+Subject: [PATCH v10 27/27] KVM: x86: Don't emulate instructions guarded by CET
+Date: Sun, 18 Feb 2024 23:47:33 -0800
+Message-ID: <20240219074733.122080-28-weijiang.yang@intel.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240219074733.122080-1-weijiang.yang@intel.com>
 References: <20240219074733.122080-1-weijiang.yang@intel.com>
@@ -67,118 +67,122 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Save constant values to HOST_{S_CET,SSP,INTR_SSP_TABLE} field explicitly.
-Kernel IBT is supported and the setting in MSR_IA32_S_CET is static after
-post-boot(The exception is BIOS call case but vCPU thread never across it)
-and KVM doesn't need to refresh HOST_S_CET field before every VM-Enter/
-VM-Exit sequence.
+Don't emulate the branch instructions, e.g., CALL/RET/JMP etc., when CET
+is active in guest, return KVM_INTERNAL_ERROR_EMULATION to userspace to
+handle it.
 
-Host supervisor shadow stack is not enabled now and SSP is not accessible
-to kernel mode, thus it's safe to set host IA32_INT_SSP_TAB/SSP VMCS field
-to 0s. When shadow stack is enabled for CPL3, SSP is reloaded from PL3_SSP
-before it exits to userspace. Check SDM Vol 2A/B Chapter 3/4 for SYSCALL/
-SYSRET/SYSENTER SYSEXIT/RDSSP/CALL etc.
+KVM doesn't emulate CPU behaviors to check CET protected stuffs while
+emulating guest instructions, instead it stops emulation on detecting
+the instructions in process are CET protected. By doing so, it can avoid
+generating bogus #CP in guest and preventing CET protected execution flow
+subversion from guest side.
 
-Prevent KVM module loading if host supervisor shadow stack SHSTK_EN is set
-in MSR_IA32_S_CET as KVM cannot co-exit with it correctly.
-
-Suggested-by: Sean Christopherson <seanjc@google.com>
 Suggested-by: Chao Gao <chao.gao@intel.com>
 Signed-off-by: Yang Weijiang <weijiang.yang@intel.com>
-Reviewed-by: Maxim Levitsky <mlevitsk@redhat.com>
-Reviewed-by: Chao Gao <chao.gao@intel.com>
 ---
- arch/x86/kvm/vmx/capabilities.h |  4 ++++
- arch/x86/kvm/vmx/vmx.c          | 15 +++++++++++++++
- arch/x86/kvm/x86.c              | 14 ++++++++++++++
- arch/x86/kvm/x86.h              |  1 +
- 4 files changed, 34 insertions(+)
+ arch/x86/kvm/emulate.c | 46 ++++++++++++++++++++++++++++++++----------
+ 1 file changed, 35 insertions(+), 11 deletions(-)
 
-diff --git a/arch/x86/kvm/vmx/capabilities.h b/arch/x86/kvm/vmx/capabilities.h
-index 41a4533f9989..ee8938818c8a 100644
---- a/arch/x86/kvm/vmx/capabilities.h
-+++ b/arch/x86/kvm/vmx/capabilities.h
-@@ -106,6 +106,10 @@ static inline bool cpu_has_load_perf_global_ctrl(void)
- 	return vmcs_config.vmentry_ctrl & VM_ENTRY_LOAD_IA32_PERF_GLOBAL_CTRL;
- }
+diff --git a/arch/x86/kvm/emulate.c b/arch/x86/kvm/emulate.c
+index 8ccc17eb78ca..c18616d24ac9 100644
+--- a/arch/x86/kvm/emulate.c
++++ b/arch/x86/kvm/emulate.c
+@@ -178,6 +178,8 @@
+ #define IncSP       ((u64)1 << 54)  /* SP is incremented before ModRM calc */
+ #define TwoMemOp    ((u64)1 << 55)  /* Instruction has two memory operand */
+ #define IsBranch    ((u64)1 << 56)  /* Instruction is considered a branch. */
++#define ShadowStack ((u64)1 << 57)  /* Instruction protected by Shadow Stack. */
++#define IndirBrnTrk ((u64)1 << 58)  /* Instruction protected by IBT. */
  
-+static inline bool cpu_has_load_cet_ctrl(void)
-+{
-+	return (vmcs_config.vmentry_ctrl & VM_ENTRY_LOAD_CET_STATE);
-+}
- static inline bool cpu_has_vmx_mpx(void)
- {
- 	return vmcs_config.vmentry_ctrl & VM_ENTRY_LOAD_BNDCFGS;
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index 24e921c4e7e3..342b5b94c892 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -4371,6 +4371,21 @@ void vmx_set_constant_host_state(struct vcpu_vmx *vmx)
+ #define DstXacc     (DstAccLo | SrcAccHi | SrcWrite)
  
- 	if (cpu_has_load_ia32_efer())
- 		vmcs_write64(HOST_IA32_EFER, host_efer);
+@@ -4100,9 +4102,11 @@ static const struct opcode group4[] = {
+ static const struct opcode group5[] = {
+ 	F(DstMem | SrcNone | Lock,		em_inc),
+ 	F(DstMem | SrcNone | Lock,		em_dec),
+-	I(SrcMem | NearBranch | IsBranch,       em_call_near_abs),
+-	I(SrcMemFAddr | ImplicitOps | IsBranch, em_call_far),
+-	I(SrcMem | NearBranch | IsBranch,       em_jmp_abs),
++	I(SrcMem | NearBranch | IsBranch | ShadowStack | IndirBrnTrk,
++	em_call_near_abs),
++	I(SrcMemFAddr | ImplicitOps | IsBranch | ShadowStack | IndirBrnTrk,
++	em_call_far),
++	I(SrcMem | NearBranch | IsBranch | IndirBrnTrk, em_jmp_abs),
+ 	I(SrcMemFAddr | ImplicitOps | IsBranch, em_jmp_far),
+ 	I(SrcMem | Stack | TwoMemOp,		em_push), D(Undefined),
+ };
+@@ -4364,11 +4368,11 @@ static const struct opcode opcode_table[256] = {
+ 	/* 0xC8 - 0xCF */
+ 	I(Stack | SrcImmU16 | Src2ImmByte | IsBranch, em_enter),
+ 	I(Stack | IsBranch, em_leave),
+-	I(ImplicitOps | SrcImmU16 | IsBranch, em_ret_far_imm),
+-	I(ImplicitOps | IsBranch, em_ret_far),
+-	D(ImplicitOps | IsBranch), DI(SrcImmByte | IsBranch, intn),
++	I(ImplicitOps | SrcImmU16 | IsBranch | ShadowStack, em_ret_far_imm),
++	I(ImplicitOps | IsBranch | ShadowStack, em_ret_far),
++	D(ImplicitOps | IsBranch), DI(SrcImmByte | IsBranch | ShadowStack, intn),
+ 	D(ImplicitOps | No64 | IsBranch),
+-	II(ImplicitOps | IsBranch, em_iret, iret),
++	II(ImplicitOps | IsBranch | ShadowStack, em_iret, iret),
+ 	/* 0xD0 - 0xD7 */
+ 	G(Src2One | ByteOp, group2), G(Src2One, group2),
+ 	G(Src2CL | ByteOp, group2), G(Src2CL, group2),
+@@ -4384,7 +4388,7 @@ static const struct opcode opcode_table[256] = {
+ 	I2bvIP(SrcImmUByte | DstAcc, em_in,  in,  check_perm_in),
+ 	I2bvIP(SrcAcc | DstImmUByte, em_out, out, check_perm_out),
+ 	/* 0xE8 - 0xEF */
+-	I(SrcImm | NearBranch | IsBranch, em_call),
++	I(SrcImm | NearBranch | IsBranch | ShadowStack, em_call),
+ 	D(SrcImm | ImplicitOps | NearBranch | IsBranch),
+ 	I(SrcImmFAddr | No64 | IsBranch, em_jmp_far),
+ 	D(SrcImmByte | ImplicitOps | NearBranch | IsBranch),
+@@ -4403,7 +4407,8 @@ static const struct opcode opcode_table[256] = {
+ static const struct opcode twobyte_table[256] = {
+ 	/* 0x00 - 0x0F */
+ 	G(0, group6), GD(0, &group7), N, N,
+-	N, I(ImplicitOps | EmulateOnUD | IsBranch, em_syscall),
++	N, I(ImplicitOps | EmulateOnUD | IsBranch | ShadowStack | IndirBrnTrk,
++	em_syscall),
+ 	II(ImplicitOps | Priv, em_clts, clts), N,
+ 	DI(ImplicitOps | Priv, invd), DI(ImplicitOps | Priv, wbinvd), N, N,
+ 	N, D(ImplicitOps | ModRM | SrcMem | NoAccess), N, N,
+@@ -4434,8 +4439,9 @@ static const struct opcode twobyte_table[256] = {
+ 	IIP(ImplicitOps, em_rdtsc, rdtsc, check_rdtsc),
+ 	II(ImplicitOps | Priv, em_rdmsr, rdmsr),
+ 	IIP(ImplicitOps, em_rdpmc, rdpmc, check_rdpmc),
+-	I(ImplicitOps | EmulateOnUD | IsBranch, em_sysenter),
+-	I(ImplicitOps | Priv | EmulateOnUD | IsBranch, em_sysexit),
++	I(ImplicitOps | EmulateOnUD | IsBranch | ShadowStack | IndirBrnTrk,
++	em_sysenter),
++	I(ImplicitOps | Priv | EmulateOnUD | IsBranch | ShadowStack, em_sysexit),
+ 	N, N,
+ 	N, N, N, N, N, N, N, N,
+ 	/* 0x40 - 0x4F */
+@@ -4973,6 +4979,24 @@ int x86_decode_insn(struct x86_emulate_ctxt *ctxt, void *insn, int insn_len, int
+ 	if (ctxt->d == 0)
+ 		return EMULATION_FAILED;
+ 
++	if (ctxt->ops->get_cr(ctxt, 4) & X86_CR4_CET) {
++		u64 u_cet, s_cet;
++		bool stop_em;
 +
-+	/*
-+	 * Supervisor shadow stack is not enabled on host side, i.e.,
-+	 * host IA32_S_CET.SHSTK_EN bit is guaranteed to 0 now, per SDM
-+	 * description(RDSSP instruction), SSP is not readable in CPL0,
-+	 * so resetting the two registers to 0s at VM-Exit does no harm
-+	 * to kernel execution. When execution flow exits to userspace,
-+	 * SSP is reloaded from IA32_PL3_SSP. Check SDM Vol.2A/B Chapter
-+	 * 3 and 4 for details.
-+	 */
-+	if (cpu_has_load_cet_ctrl()) {
-+		vmcs_writel(HOST_S_CET, host_s_cet);
-+		vmcs_writel(HOST_SSP, 0);
-+		vmcs_writel(HOST_INTR_SSP_TABLE, 0);
-+	}
- }
- 
- void set_cr4_guest_host_mask(struct vcpu_vmx *vmx)
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index 281c3fe728c5..73a55d388dd9 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -114,6 +114,8 @@ static u64 __read_mostly efer_reserved_bits = ~((u64)EFER_SCE);
- #endif
- 
- static u64 __read_mostly cr4_reserved_bits = CR4_RESERVED_BITS;
-+u64 __read_mostly host_s_cet;
-+EXPORT_SYMBOL_GPL(host_s_cet);
- 
- #define KVM_EXIT_HYPERCALL_VALID_MASK (1 << KVM_HC_MAP_GPA_RANGE)
- 
-@@ -9862,6 +9864,18 @@ int kvm_x86_vendor_init(struct kvm_x86_init_ops *ops)
- 		return -EIO;
- 	}
- 
-+	if (boot_cpu_has(X86_FEATURE_SHSTK)) {
-+		rdmsrl(MSR_IA32_S_CET, host_s_cet);
-+		/*
-+		 * Linux doesn't yet support supervisor shadow stacks (SSS), so
-+		 * KVM doesn't save/restore the associated MSRs, i.e. KVM may
-+		 * clobber the host values.  Yell and refuse to load if SSS is
-+		 * unexpectedly enabled, e.g. to avoid crashing the host.
-+		 */
-+		if (WARN_ON_ONCE(host_s_cet & CET_SHSTK_EN))
-+			return -EIO;
++		if (ctxt->ops->get_msr(ctxt, MSR_IA32_U_CET, &u_cet) ||
++		    ctxt->ops->get_msr(ctxt, MSR_IA32_S_CET, &s_cet))
++			return EMULATION_FAILED;
++
++		stop_em = ((u_cet & CET_SHSTK_EN) || (s_cet & CET_SHSTK_EN)) &&
++			  (opcode.flags & ShadowStack);
++
++		stop_em |= ((u_cet & CET_ENDBR_EN) || (s_cet & CET_ENDBR_EN)) &&
++			   (opcode.flags & IndirBrnTrk);
++
++		if (stop_em)
++			return EMULATION_FAILED;
 +	}
 +
- 	x86_emulator_cache = kvm_alloc_emulator_cache();
- 	if (!x86_emulator_cache) {
- 		pr_err("failed to allocate cache for x86 emulator\n");
-diff --git a/arch/x86/kvm/x86.h b/arch/x86/kvm/x86.h
-index 9c19dfb5011d..656107e64c93 100644
---- a/arch/x86/kvm/x86.h
-+++ b/arch/x86/kvm/x86.h
-@@ -325,6 +325,7 @@ fastpath_t handle_fastpath_set_msr_irqoff(struct kvm_vcpu *vcpu);
- extern u64 host_xcr0;
- extern u64 host_xss;
- extern u64 host_arch_capabilities;
-+extern u64 host_s_cet;
+ 	ctxt->execute = opcode.u.execute;
  
- extern struct kvm_caps kvm_caps;
- 
+ 	if (unlikely(emulation_type & EMULTYPE_TRAP_UD) &&
 -- 
 2.43.0
 
