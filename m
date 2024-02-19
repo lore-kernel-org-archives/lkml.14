@@ -1,155 +1,149 @@
-Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20A7E23750
-	for <linux-kernel@vger.kernel.org>; Mon, 19 Feb 2024 09:35:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 176432376D;
+	Mon, 19 Feb 2024 09:36:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708335342; cv=none; b=NCrr+J3Fiys9oDneUNOsEPikSXZWCsZkPYc3T5uz9qIqUCiMZFrmsLsyx2htoxbLbT4kBGOWpbzsjL14Ggl9daqVbd6KMcn/LRpCy80bMODP+8P2YYCTmj7j0PcCNWMY3bWEdpmkN75JaXNERn6o9wd8DPq8lsUmT0YmRdIbszs=
+	t=1708335386; cv=none; b=Ixd+TFl50I7qkJrAd45hDj6ycjnFHc5IuOUb6S/30EABOsEebM7YKBSolF5LyK5PuQRwGbi97xvE3ph33fjrFWwrxZrig3xXSKZfqJgL/OoFNItZflIFcRUkIEYyZKkxrhKFTK0haFYF8R8yzSPRCKcpTMBDr0rs4Ux5tcwwbt4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708335342; c=relaxed/simple;
-	bh=DV1eMWrP1yHwvBkjma46GQoQqytaGvsplBfPvrYl2BU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=f6you6aCw0FGb6o7YNQxz0b62DvBxBuGD0wXTVXVRGGIDx+11wAZCVPreVmLET4u5TkAiwVVtbJWTli3ZYJ5lvMx9nZ+XSp9QFsnsBH2NzTqEEf/RdAk9O3T6iOeCY2oXmqyx0u0UbrqFyf8zEeKuWXsD0wYAnNA4BqmomTxTWw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=HVtrs0Wg; arc=none smtp.client-ip=209.85.167.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
+	s=arc-20240116; t=1708335386; c=relaxed/simple;
+	bh=JRPmrEv9gjNSe3XKa/1/hoE+552uSlwY7LJEpBHT2NY=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=qN3PBfzCWOrZy+Lw+JWb7rFjAiCi3fikYK3VVdjPcnE3Sepp3+gIlcXGS3WAKtIROtsozaVTPl/BWLmeTUviFml5A4cdbpNpal1+M12mmwFUv0WqXUKWozk6iJWal/Z+gSLgDRZLCsL6VE1sckUAChCitDJf9ZpfLNEqNZAjbak=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tuGSa5Pk; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="HVtrs0Wg"
-Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-5112bd13a4fso5483108e87.0
-        for <linux-kernel@vger.kernel.org>; Mon, 19 Feb 2024 01:35:40 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ventanamicro.com; s=google; t=1708335339; x=1708940139; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=+YXFCVZu0xeTYReG8iTx+B6CeSN2wh50vnPVuE5JAz4=;
-        b=HVtrs0WgnjOmb9TeV0Zb8SWODXohlylAuhVcnYv0CU5JX9w988yxn5VU/Kb/oyaoSw
-         t8Nz2zKjMcESweRQBqHJeqhvu2RbSj81jdjSCwv8TVmJ/V6DSJIRZiI6QDHTs96QKHbd
-         BNeDyzMN0qMzMARzNNaoYUC/FKOdKEhOr7Opr/A9InlUz6wxepa7HFMPGmFfcKrBt9IM
-         omaKtUsPMNpu8RuxFHrHZKd1yPdIRCYIA8FR2g05UzyueZci9XGiW0EgkDY70v0lQ7kw
-         P+29GIgaDbcmpmv2Aj2ygdkqdaeJQo6e0ucYHT87m98KTGiNcokn/kNKDk5mvNX+QeXx
-         KmMA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708335339; x=1708940139;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=+YXFCVZu0xeTYReG8iTx+B6CeSN2wh50vnPVuE5JAz4=;
-        b=IV79G1ROSbrB+irtaHTr0JRza1gDruHNhmSxT23GCTCEYDQKussORj6OUeL0JZImRj
-         a3IDSdhMBaXT6jE53jMbRRyumc+DFZkuO+EYs7CoLkejYuIOsR2jcZ+CLgQ1JhjTJEN+
-         KuOulbUi6CbCsbKi54OFb9p0Hhc5j/O4k7OQIwVE4g0NSD8Ttrmiw3tW/S/XpfGSztmz
-         3NmeKyzM6sqjcsLJ2fPyCDuzyGf5MLHS2kCVSz13YNZBOYSB+jPTsViiME9fT1oe/bJn
-         VvCez29KRH56yCPnpJNNW+fzh3WXL1hcgG/b5KzMygn24vwbJNHLJVyqq76TV6sThgh+
-         WaHQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWW92rP4f75c1S8/uOaose5ws+W76fCoCna31VwC/ciEUNHhMA05rVycRt7NKjwDaaTyKW7P9rkzLpwJB/7l4jhUvQOX5TOIec3u5fX
-X-Gm-Message-State: AOJu0YwiJ2LNPKZsYa/qV1jDisrGhI8AmOvPhVvFER5IQ7YOoqXIKuJP
-	8embN8bwVOGWRYLAsHl0/P0/Buu4XLLa5fKEL7gwiC6KuFMkwGAE7oObIXtBWM/fohq2splqjEV
-	LMgU35vUdkKLja++KL1CbW2WpD1EE3FT0SXvELQ==
-X-Google-Smtp-Source: AGHT+IHKBoXvqDfBDeOhzuqjW0NvaEpjXXu31tio9dyFtOxU3tQdArUbgNnkiYg2tcU8DAO0JGXTtbfHK108EupdJdU=
-X-Received: by 2002:a05:6512:3254:b0:512:bb2c:9221 with SMTP id
- c20-20020a056512325400b00512bb2c9221mr306467lfr.34.1708335339012; Mon, 19 Feb
- 2024 01:35:39 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tuGSa5Pk"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id B69B1C433C7;
+	Mon, 19 Feb 2024 09:36:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1708335385;
+	bh=JRPmrEv9gjNSe3XKa/1/hoE+552uSlwY7LJEpBHT2NY=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+	b=tuGSa5PkhnxfWj8GauWyd8CyEDeyka7bRVYv94Xemy74DhPEGCagusutiAM92D3Fg
+	 v2PqOQuMCzYLEhYaBspD3NYz4KtMFZPXfCGx8eb3YcnYkcWfJwDixTUH9sgIpYlNEc
+	 a1VFrlIXdnwRNyZGtSQsCGzAw80kW6pNIR7IfP9rKl+OrXy3ebl0J/bKmUSpB2J1ub
+	 diZv3AD6qkf+CCSFRKRudvj8w1XWUIieabV3fpwa1vpLksgSqUVp6z39UJdV2YkuZs
+	 LPs/4+MUHIPW9H13IbA6o2gJSwe7gyWwIlUVVrczIMp9Jm+Ou7oGzUdWw2+Hj7DzwU
+	 UcFIu7erN6QmQ==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A831C48BC3;
+	Mon, 19 Feb 2024 09:36:25 +0000 (UTC)
+From: =?utf-8?b?QXLEsW7DpyDDnE5BTA==?= via B4 Relay
+ <devnull+arinc.unal.arinc9.com@kernel.org>
+Date: Mon, 19 Feb 2024 12:36:13 +0300
+Subject: [PATCH 1/2] arm64: dts: mt7622: add port@5 as CPU port
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240127161753.114685-1-apatel@ventanamicro.com>
- <20240127161753.114685-23-apatel@ventanamicro.com> <875xyocewt.ffs@tglx>
-In-Reply-To: <875xyocewt.ffs@tglx>
-From: Anup Patel <apatel@ventanamicro.com>
-Date: Mon, 19 Feb 2024 15:05:27 +0530
-Message-ID: <CAK9=C2UO4=H9jPXFjJhS5b9kPezVutto1aReAmH3rU_uUhf9=g@mail.gmail.com>
-Subject: Re: [PATCH v12 22/25] irqchip: Add RISC-V advanced PLIC driver for direct-mode
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: Palmer Dabbelt <palmer@dabbelt.com>, Paul Walmsley <paul.walmsley@sifive.com>, 
-	Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Frank Rowand <frowand.list@gmail.com>, 
-	Conor Dooley <conor+dt@kernel.org>, Marc Zyngier <maz@kernel.org>, =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@kernel.org>, 
-	Atish Patra <atishp@atishpatra.org>, Andrew Jones <ajones@ventanamicro.com>, 
-	Sunil V L <sunilvl@ventanamicro.com>, Saravana Kannan <saravanak@google.com>, 
-	Anup Patel <anup@brainfault.org>, linux-riscv@lists.infradead.org, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Message-Id: <20240219-for-mediatek-v1-1-7078f23eab82@arinc9.com>
+References: <20240219-for-mediatek-v1-0-7078f23eab82@arinc9.com>
+In-Reply-To: <20240219-for-mediatek-v1-0-7078f23eab82@arinc9.com>
+To: Rob Herring <robh+dt@kernel.org>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Matthias Brugger <matthias.bgg@gmail.com>, 
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Cc: erkin.bozoglu@xeront.com, mithat.guner@xeront.com, 
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, 
+ =?utf-8?q?Ar=C4=B1n=C3=A7_=C3=9CNAL?= <arinc.unal@arinc9.com>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1708335384; l=1934;
+ i=arinc.unal@arinc9.com; s=arinc9-patatt; h=from:subject:message-id;
+ bh=Dyf6RoFzaYd8gc3DOMB65qzJ0IGXiSBDbE/B8hL5EUk=;
+ b=GRe/NnYvt1hIheDRqi/7Mopy1KSIqZfbYDKDWSl7bvsU2LCMGywswlvBQ98vQU6C4KmQscnEf
+ wRGauX6MqEMBnFwuS4FzSGyeARFjYw+MJXrvd9qeWyYfrtdh/kcN16B
+X-Developer-Key: i=arinc.unal@arinc9.com; a=ed25519;
+ pk=VmvgMWwm73yVIrlyJYvGtnXkQJy9CvbaeEqPQO9Z4kA=
+X-Endpoint-Received:
+ by B4 Relay for arinc.unal@arinc9.com/arinc9-patatt with auth_id=115
+X-Original-From: =?utf-8?b?QXLEsW7DpyDDnE5BTA==?= <arinc.unal@arinc9.com>
+Reply-To: <arinc.unal@arinc9.com>
 
-On Sat, Feb 17, 2024 at 2:20=E2=80=AFAM Thomas Gleixner <tglx@linutronix.de=
-> wrote:
->
-> On Sat, Jan 27 2024 at 21:47, Anup Patel wrote:
-> > +static int aplic_direct_irqdomain_translate(struct irq_domain *d,
-> > +                                      struct irq_fwspec *fwspec,
-> > +                                      unsigned long *hwirq,
-> > +                                      unsigned int *type)
->
-> Please align the arguments to the first argument of the first line and
-> use the 100 characters, i.e.
->
-> static int aplic_direct_irqdomain_translate(struct irq_domain *d, struct =
-irq_fwspec *fwspec,
->                                             unsigned long *hwirq, unsigne=
-d int *type)
-> {
->
-> All over the place.
+From: Arınç ÜNAL <arinc.unal@arinc9.com>
 
-Okay, I will update.
+On Banana Pi BPI-R64 and MediaTek MT7622 RFB1 board, port 5 of the MT7531
+switch is connected to the second MAC of the SoC as a CPU port. Add the
+port and set up the second MAC on the bindings.
 
->
-> > +{
-> > +     struct aplic_priv *priv =3D d->host_data;
-> > +
-> > +     return aplic_irqdomain_translate(fwspec, priv->gsi_base,
-> > +                                      hwirq, type);
-> > +}
-> > +
-> > +static int aplic_direct_irqdomain_alloc(struct irq_domain *domain,
-> > +                                  unsigned int virq, unsigned int nr_i=
-rqs,
-> > +                                  void *arg)
-> > +{
-> > +     int i, ret;
-> > +     unsigned int type;
-> > +     irq_hw_number_t hwirq;
-> > +     struct irq_fwspec *fwspec =3D arg;
-> > +     struct aplic_priv *priv =3D domain->host_data;
-> > +     struct aplic_direct *direct =3D
-> > +                     container_of(priv, struct aplic_direct, priv);
->
-> Variable ordering. Please make this consistent according to documentation=
-.
+Signed-off-by: Arınç ÜNAL <arinc.unal@arinc9.com>
+---
+ .../boot/dts/mediatek/mt7622-bananapi-bpi-r64.dts  | 12 +++++++++++
+ arch/arm64/boot/dts/mediatek/mt7622-rfb1.dts       | 24 ++++++++++++++++++++++
+ 2 files changed, 36 insertions(+)
 
-Okay, I will update.
+diff --git a/arch/arm64/boot/dts/mediatek/mt7622-bananapi-bpi-r64.dts b/arch/arm64/boot/dts/mediatek/mt7622-bananapi-bpi-r64.dts
+index 850b3e277368..224bb289660c 100644
+--- a/arch/arm64/boot/dts/mediatek/mt7622-bananapi-bpi-r64.dts
++++ b/arch/arm64/boot/dts/mediatek/mt7622-bananapi-bpi-r64.dts
+@@ -186,6 +186,18 @@ port@4 {
+ 					label = "lan3";
+ 				};
+ 
++				port@5 {
++					reg = <5>;
++					ethernet = <&gmac1>;
++					phy-mode = "rgmii";
++
++					fixed-link {
++						speed = <1000>;
++						full-duplex;
++						pause;
++					};
++				};
++
+ 				port@6 {
+ 					reg = <6>;
+ 					label = "cpu";
+diff --git a/arch/arm64/boot/dts/mediatek/mt7622-rfb1.dts b/arch/arm64/boot/dts/mediatek/mt7622-rfb1.dts
+index 5c26021fc4cf..41629769bdc8 100644
+--- a/arch/arm64/boot/dts/mediatek/mt7622-rfb1.dts
++++ b/arch/arm64/boot/dts/mediatek/mt7622-rfb1.dts
+@@ -118,6 +118,18 @@ fixed-link {
+ 		};
+ 	};
+ 
++	gmac1: mac@1 {
++		compatible = "mediatek,eth-mac";
++		reg = <1>;
++		phy-mode = "rgmii";
++
++		fixed-link {
++			speed = <1000>;
++			full-duplex;
++			pause;
++		};
++	};
++
+ 	mdio-bus {
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
+@@ -156,6 +168,18 @@ port@4 {
+ 					label = "wan";
+ 				};
+ 
++				port@5 {
++					reg = <5>;
++					ethernet = <&gmac1>;
++					phy-mode = "rgmii";
++
++					fixed-link {
++						speed = <1000>;
++						full-duplex;
++						pause;
++					};
++				};
++
+ 				port@6 {
+ 					reg = <6>;
+ 					label = "cpu";
 
->
-> > +     ret =3D aplic_irqdomain_translate(fwspec, priv->gsi_base,
-> > +                                     &hwirq, &type);
-> > +     if (ret)
-> > +             return ret;
-> > +
-> > +     for (i =3D 0; i < nr_irqs; i++) {
-> > +             irq_domain_set_info(domain, virq + i, hwirq + i,
-> > +                                 &aplic_direct_chip, priv,
-> > +                                 handle_fasteoi_irq, NULL, NULL);
-> > +             irq_set_affinity(virq + i, &direct->lmask);
-> > +             /* See the reason described in aplic_msi_irqdomain_alloc(=
-) */
->
-> I still have to understand that "reason". :)
+-- 
+2.40.1
 
-Like mentioned on another patch, I will drop it for now. If required
-then we can bring it back as a separate patch with clear reasoning.
-
->
-> > +             irq_set_status_flags(virq + i, IRQ_DISABLE_UNLAZY);
-> > +     }
->
-> Thanks,
->
->         tglx
-
-Regards,
-Anup
