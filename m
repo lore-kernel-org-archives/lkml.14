@@ -1,356 +1,124 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD76021362;
-	Mon, 19 Feb 2024 08:54:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40489219E9
+	for <linux-kernel@vger.kernel.org>; Mon, 19 Feb 2024 08:55:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708332875; cv=none; b=SSgTBY5nrQf+ZrveiA/tSNJ6Sm/UvZk8nnvZJgnj9KJzUKOqIAQt3L8nSaC1XUkM+txahhbcGk5Gcv6scUaoa05iLaztSJM/ZCm+kJED/1icmykmkp9jBb04XXtBeMcLQxLbTcuaNn3kKzbBbu0m5BlyBB3ZDuZ44qjRetos9pE=
+	t=1708332935; cv=none; b=HNf0G/MS3u3O1gdLefyJDipwoou4U2qMItMcXdSEkHkg+SeFp2C0o9Al3hCvT07dHNBIYJ9c6lnK+0pkPrfloqlrH1BHSpaMUjJCMsunr1hPmZR1TYe1cq67fHhiGYZ5beSJaO0pDfpuDo2RAC2pactoixCZ4rtmftAODkGpf2Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708332875; c=relaxed/simple;
-	bh=OrrbkCygvoUCodvx8CWHRJR1R9gpqIq+eNds+ye+OB0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=jI7HvHW1aVjxZpp9GWXY2BDvdZvnwbIeIOzojAAM3Uy5IbJ/trRP5SNIWKdsLHZIhGeb5116gHIhy7+5ABu8GKtqn9rPcb3s/EhR6OF5Lx0g1ZPRvQJd9EniF6T0NpLcxpN8i4N2EuPiHHA07Zr6czX8kWKCsV7L8WKYdx5YY7s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Up/v4S31; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1708332935; c=relaxed/simple;
+	bh=v3jG8NE8mdAouMj5NdjEMZU71geyyozFyI4FC8QUgo0=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=tcUemJLc2hcjMZmXWh42OezvTI4ne7Sh2fp6l7lIL+c0+3yz+9npTrtaRvHQTsHGxjg2o4hl/JoKItZsGuomLheNo85ZpP7Oe/0Ns7PqGJxjVM43M/JruRKKrkEGvoKlYmb62iEnZN5D8op+M9MrkrF/BJYLTxiaeppvanASPi0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=euIY5KVU; arc=none smtp.client-ip=209.85.128.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Up/v4S31"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1708332874; x=1739868874;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=OrrbkCygvoUCodvx8CWHRJR1R9gpqIq+eNds+ye+OB0=;
-  b=Up/v4S31A3vH+DmvO1cBxwoQRj8Esy1ZBglKI02hL/q5wQO+OqQNdk3d
-   FxovpYOtfM7X2xHbvkpXd6kNNgehvVIW/7j6xYa7vqdi5DDp142T7rNcZ
-   Sd5KQqZPbVQVYclZIcOQxFaJoMuOzRlnNt/jIP+nJJr1yv5FHd4PAT901
-   bMmmXmnPkHA0MGRJBLqOnZt9EfZz3vVfmpT2ktIvzhYCWIlvth96YNapb
-   aAvd7hLpKYu8oxI715uF7GBXHMwreMVrr1ZqfCgYm1lC3YuxHyShP5UTV
-   F3pfG5Y1N57o/I7xs8tH774WUOxB7DHeWiqOZcN57mTHXjEBvlW6dZ7vx
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10988"; a="2507350"
-X-IronPort-AV: E=Sophos;i="6.06,170,1705392000"; 
-   d="scan'208";a="2507350"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Feb 2024 00:54:32 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,170,1705392000"; 
-   d="scan'208";a="9040195"
-Received: from binbinwu-mobl.ccr.corp.intel.com (HELO [10.238.1.66]) ([10.238.1.66])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Feb 2024 00:54:30 -0800
-Message-ID: <b8fb2a97-d593-4c0f-aefc-6156740a0b6a@linux.intel.com>
-Date: Mon, 19 Feb 2024 16:54:27 +0800
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="euIY5KVU"
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-4126aa42402so2375e9.0
+        for <linux-kernel@vger.kernel.org>; Mon, 19 Feb 2024 00:55:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1708332927; x=1708937727; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=iA8hL0vmryN9XM9ciwuNyT7l7HkIEUflQrFOUN/duUY=;
+        b=euIY5KVUzXFzVnvWfwSpnPOkqzu4zGRU9O23YszpCpyJKpmmLzljZIvimVTd1tpj5Q
+         JX9CKf0/96KnGkLfufybftBnFHlvQK5qWnA7CskI8TegoeAZ4GaaSSGoDlD4bgXKAv1c
+         hFbJsGyYU+Xf62zd7xgP72RN8Qb2XldDppINPNlutGJbrt8mziHx1oMyA7GmFuRpEd/d
+         9kXkdDgwoMSjR+3u90sBVsEyjPaAzcmEO+Sy97mK/rw52yM9kJYWJFBzxU5VxThZjaFE
+         I+wnju4eo/pOIz+rWyv3ZQBRk9m2V9gPJGA6aSSpNqLKVkKyZRvo4LV1cXZUXwE3ogyI
+         acFA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708332927; x=1708937727;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=iA8hL0vmryN9XM9ciwuNyT7l7HkIEUflQrFOUN/duUY=;
+        b=lckxzvjgdfsWmitjTtl9tx9aP+HbeZL6XEopqbIjAc5pyN9DSOF6lt+J+sTLTIGfRm
+         Bn8X0wM78ya0bo4e445h4o//Xco3iPjSQ8UqITVL8KnzXBz36DtvOcAXSzNd7U7DIsfp
+         X5TiVmgRKf2tthGyMvyG6GOctitOEJOorY8MrlvMEE5JPxRyLgnIDScogtagnwMTfCLx
+         6Gq9JIc+UvjVDq1bwQ5UZGtW9/gZSeVACoCusIxfbzWwhmXCl5VuF7SXDR+q6k0uljYX
+         CAyr/mezOG7m7vCGvCB8whUVG0dAjve17TdS7yghlWE+Jtw3yk5iI2YYt5IGSQSKk2Fo
+         IqHQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV7skP5SWkExzCCOroKrrOP8dfNpotB7zDvfHymbqZ7TUKZTXYOkNPZZF9NEGbA/hk+2YDwcoYwvoAUPFKoo03G1OcXI4FO8L5a2SJ8
+X-Gm-Message-State: AOJu0YyxKl18Bf2syUObvT61ROyEhJOgPcs9quq2yx6U6SJr0q68mhaU
+	UpMgG1Q5O/9KGX4yw+Ki5j3/ClQDQf+MWcUh3NzvalWF5RXX8ZsHE4B1iN1K0/k=
+X-Google-Smtp-Source: AGHT+IGXNRor5SWq6PVxqhZAe3rTmCqaW2L1WMllERpSnnHE4+0llmEdPEPP8Xj/3W+6Y0poTE8lkQ==
+X-Received: by 2002:a7b:c415:0:b0:412:e80:be4d with SMTP id k21-20020a7bc415000000b004120e80be4dmr8310293wmi.36.1708332927387;
+        Mon, 19 Feb 2024 00:55:27 -0800 (PST)
+Received: from arrakeen.starnux.net ([2a01:e0a:982:cbb0:52eb:f6ff:feb3:451a])
+        by smtp.gmail.com with ESMTPSA id q17-20020a7bce91000000b00412656ba919sm2952458wmj.20.2024.02.19.00.55.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 19 Feb 2024 00:55:27 -0800 (PST)
+From: Neil Armstrong <neil.armstrong@linaro.org>
+To: linux-amlogic@lists.infradead.org, 
+ Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ linux-kernel@vger.kernel.org, robh+dt@kernel.org, 
+ krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org
+In-Reply-To: <20240218111959.1811676-1-martin.blumenstingl@googlemail.com>
+References: <20240218111959.1811676-1-martin.blumenstingl@googlemail.com>
+Subject: Re: [PATCH v1 0/3] ARM: dts: amlogic: Three small binding check
+ error fixes
+Message-Id: <170833292669.1750802.15916025234070714227.b4-ty@linaro.org>
+Date: Mon, 19 Feb 2024 09:55:26 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v18 064/121] KVM: TDX: Create initial guest memory
-To: isaku.yamahata@intel.com
-Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
- isaku.yamahata@gmail.com, Paolo Bonzini <pbonzini@redhat.com>,
- erdemaktas@google.com, Sean Christopherson <seanjc@google.com>,
- Sagi Shahar <sagis@google.com>, Kai Huang <kai.huang@intel.com>,
- chen.bo@intel.com, hang.yuan@intel.com, tina.zhang@intel.com,
- gkirkpatrick@google.com
-References: <cover.1705965634.git.isaku.yamahata@intel.com>
- <97bb1f2996d8a7b828cd9e3309380d1a86ca681b.1705965635.git.isaku.yamahata@intel.com>
-From: Binbin Wu <binbin.wu@linux.intel.com>
-In-Reply-To: <97bb1f2996d8a7b828cd9e3309380d1a86ca681b.1705965635.git.isaku.yamahata@intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.12.4
 
+Hi,
 
+On Sun, 18 Feb 2024 12:19:56 +0100, Martin Blumenstingl wrote:
+> This series contains three small binding check fixes.
+> Nothing functional was broken before, so no need to backpport any of
+> these to -stable.
+> 
+> 
+> Martin Blumenstingl (3):
+>   ARM: dts: meson: fix bus node names
+>   ARM: dts: meson8: fix &hwrng node compatible string
+>   ARM: dts: meson8b: fix &hwrng node compatible string
+> 
+> [...]
 
-On 1/23/2024 7:53 AM, isaku.yamahata@intel.com wrote:
-> From: Isaku Yamahata <isaku.yamahata@intel.com>
->
-> Because the guest memory is protected in TDX, the creation of the initial
-> guest memory requires a dedicated TDX module API, tdh_mem_page_add, instead
-> of directly copying the memory contents into the guest memory in the case
-> of the default VM type.  KVM MMU page fault handler callback,
-> private_page_add, handles it.
+Thanks, Applied to https://git.kernel.org/pub/scm/linux/kernel/git/amlogic/linux.git (v6.9/arm-dt)
 
-The changelog is stale?  Do you mean "set_private_spte"?
+[1/3] ARM: dts: meson: fix bus node names
+      https://git.kernel.org/amlogic/c/0a20438f4531b55393a2e85bd0cb9cc45362a6a4
+[2/3] ARM: dts: meson8: fix &hwrng node compatible string
+      https://git.kernel.org/amlogic/c/6f2cc11b4340cb5b0f81fe72eb732144bc7b6287
+[3/3] ARM: dts: meson8b: fix &hwrng node compatible string
+      https://git.kernel.org/amlogic/c/778a2c000470ee56551d0833a0eaa387530e4bec
 
->
-> Define new subcommand, KVM_TDX_INIT_MEM_REGION, of VM-scoped
-> KVM_MEMORY_ENCRYPT_OP.  It assigns the guest page, copies the initial
-> memory contents into the guest memory, encrypts the guest memory.  At the
-> same time, optionally it extends memory measurement of the TDX guest.  It
-> calls the KVM MMU page fault(EPT-violation) handler to trigger the
-> callbacks for it.
->
-> Reported-by: gkirkpatrick@google.com
-> Signed-off-by: Isaku Yamahata <isaku.yamahata@intel.com>
->
-> ---
-> v18:
-> - rename tdx_sept_page_add() -> tdx_mem_page_add().
-> - open code tdx_measure_page() into tdx_mem_page_add().
-> - remove the change of tools/arch/x86/include/uapi/asm/kvm.h.
->
-> v15 -> v16:
-> - add check if nr_pages isn't large with
->    (nr_page << PAGE_SHIFT) >> PAGE_SHIFT
->
-> v14 -> v15:
-> - add a check if TD is finalized or not to tdx_init_mem_region()
-> - return -EAGAIN when partial population
-> ---
->   arch/x86/include/uapi/asm/kvm.h |   9 ++
->   arch/x86/kvm/mmu/mmu.c          |   1 +
->   arch/x86/kvm/vmx/tdx.c          | 160 +++++++++++++++++++++++++++++++-
->   arch/x86/kvm/vmx/tdx.h          |   2 +
->   4 files changed, 169 insertions(+), 3 deletions(-)
->
-> diff --git a/arch/x86/include/uapi/asm/kvm.h b/arch/x86/include/uapi/asm/kvm.h
-> index 4000a2e087a8..9fda7c90b7b5 100644
-> --- a/arch/x86/include/uapi/asm/kvm.h
-> +++ b/arch/x86/include/uapi/asm/kvm.h
-> @@ -572,6 +572,7 @@ enum kvm_tdx_cmd_id {
->   	KVM_TDX_CAPABILITIES = 0,
->   	KVM_TDX_INIT_VM,
->   	KVM_TDX_INIT_VCPU,
-> +	KVM_TDX_INIT_MEM_REGION,
->   
->   	KVM_TDX_CMD_NR_MAX,
->   };
-> @@ -649,4 +650,12 @@ struct kvm_tdx_init_vm {
->   	struct kvm_cpuid2 cpuid;
->   };
->   
-> +#define KVM_TDX_MEASURE_MEMORY_REGION	(1UL << 0)
-> +
-> +struct kvm_tdx_init_mem_region {
-> +	__u64 source_addr;
-> +	__u64 gpa;
-> +	__u64 nr_pages;
-> +};
-> +
->   #endif /* _ASM_X86_KVM_H */
-> diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
-> index 26d215e85b76..fc258f112e73 100644
-> --- a/arch/x86/kvm/mmu/mmu.c
-> +++ b/arch/x86/kvm/mmu/mmu.c
-> @@ -5663,6 +5663,7 @@ int kvm_mmu_load(struct kvm_vcpu *vcpu)
->   out:
->   	return r;
->   }
-> +EXPORT_SYMBOL(kvm_mmu_load);
->   
->   void kvm_mmu_unload(struct kvm_vcpu *vcpu)
->   {
-> diff --git a/arch/x86/kvm/vmx/tdx.c b/arch/x86/kvm/vmx/tdx.c
-> index 4cbcedff4f16..1a5a91b99de9 100644
-> --- a/arch/x86/kvm/vmx/tdx.c
-> +++ b/arch/x86/kvm/vmx/tdx.c
-> @@ -591,6 +591,69 @@ static int tdx_mem_page_aug(struct kvm *kvm, gfn_t gfn,
->   	return 0;
->   }
->   
-> +static int tdx_mem_page_add(struct kvm *kvm, gfn_t gfn,
-> +			    enum pg_level level, kvm_pfn_t pfn)
-> +{
-> +	struct kvm_tdx *kvm_tdx = to_kvm_tdx(kvm);
-> +	hpa_t hpa = pfn_to_hpa(pfn);
-> +	gpa_t gpa = gfn_to_gpa(gfn);
-> +	struct tdx_module_args out;
-> +	hpa_t source_pa;
-> +	bool measure;
-> +	u64 err;
-> +	int i;
-> +
-> +	/*
-> +	 * KVM_INIT_MEM_REGION, tdx_init_mem_region(), supports only 4K page
-> +	 * because tdh_mem_page_add() supports only 4K page.
-> +	 */
-> +	if (KVM_BUG_ON(level != PG_LEVEL_4K, kvm))
-> +		return -EINVAL;
-> +
-> +	/*
-> +	 * In case of TDP MMU, fault handler can run concurrently.  Note
-> +	 * 'source_pa' is a TD scope variable, meaning if there are multiple
-> +	 * threads reaching here with all needing to access 'source_pa', it
-> +	 * will break.  However fortunately this won't happen, because below
-> +	 * TDH_MEM_PAGE_ADD code path is only used when VM is being created
-> +	 * before it is running, using KVM_TDX_INIT_MEM_REGION ioctl (which
-> +	 * always uses vcpu 0's page table and protected by vcpu->mutex).
-> +	 */
-> +	if (KVM_BUG_ON(kvm_tdx->source_pa == INVALID_PAGE, kvm)) {
-> +		tdx_unpin(kvm, pfn);
-> +		return -EINVAL;
-> +	}
-> +
-> +	source_pa = kvm_tdx->source_pa & ~KVM_TDX_MEASURE_MEMORY_REGION;
-> +	measure = kvm_tdx->source_pa & KVM_TDX_MEASURE_MEMORY_REGION;
-> +	kvm_tdx->source_pa = INVALID_PAGE;
-> +
-> +	do {
-> +		err = tdh_mem_page_add(kvm_tdx->tdr_pa, gpa, hpa, source_pa,
-> +				       &out);
-> +		/*
-> +		 * This path is executed during populating initial guest memory
-> +		 * image. i.e. before running any vcpu.  Race is rare.
-> +		 */
-> +	} while (unlikely(err == TDX_ERROR_SEPT_BUSY));
+These changes has been applied on the intermediate git tree [1].
 
-For page add, since pages are added one by one, there should be no such
-error, right?
+The v6.9/arm-dt branch will then be sent via a formal Pull Request to the Linux SoC maintainers
+for inclusion in their intermediate git branches in order to be sent to Linus during
+the next merge window, or sooner if it's a set of fixes.
 
-> +	if (KVM_BUG_ON(err, kvm)) {
-> +		pr_tdx_error(TDH_MEM_PAGE_ADD, err, &out);
-> +		tdx_unpin(kvm, pfn);
-> +		return -EIO;
-> +	} else if (measure) {
-> +		for (i = 0; i < PAGE_SIZE; i += TDX_EXTENDMR_CHUNKSIZE) {
-> +			err = tdh_mr_extend(kvm_tdx->tdr_pa, gpa + i, &out);
-> +			if (KVM_BUG_ON(err, &kvm_tdx->kvm)) {
-> +				pr_tdx_error(TDH_MR_EXTEND, err, &out);
-> +				break;
-> +			}
-> +		}
-> +	}
-> +
-> +	return 0;
-> +
-> +}
-> +
->   static int tdx_sept_set_private_spte(struct kvm *kvm, gfn_t gfn,
->   				     enum pg_level level, kvm_pfn_t pfn)
->   {
-> @@ -613,9 +676,7 @@ static int tdx_sept_set_private_spte(struct kvm *kvm, gfn_t gfn,
->   	if (likely(is_td_finalized(kvm_tdx)))
->   		return tdx_mem_page_aug(kvm, gfn, level, pfn);
->   
-> -	/* TODO: tdh_mem_page_add() comes here for the initial memory. */
-> -
-> -	return 0;
-> +	return tdx_mem_page_add(kvm, gfn, level, pfn);
->   }
->   
->   static int tdx_sept_drop_private_spte(struct kvm *kvm, gfn_t gfn,
-> @@ -1322,6 +1383,96 @@ void tdx_flush_tlb_current(struct kvm_vcpu *vcpu)
->   	tdx_track(vcpu->kvm);
->   }
->   
-> +#define TDX_SEPT_PFERR	(PFERR_WRITE_MASK | PFERR_GUEST_ENC_MASK)
-> +
-> +static int tdx_init_mem_region(struct kvm *kvm, struct kvm_tdx_cmd *cmd)
-> +{
-> +	struct kvm_tdx *kvm_tdx = to_kvm_tdx(kvm);
-> +	struct kvm_tdx_init_mem_region region;
-> +	struct kvm_vcpu *vcpu;
-> +	struct page *page;
-> +	int idx, ret = 0;
-> +	bool added = false;
-> +
-> +	/* Once TD is finalized, the initial guest memory is fixed. */
-> +	if (is_td_finalized(kvm_tdx))
-> +		return -EINVAL;
-> +
-> +	/* The BSP vCPU must be created before initializing memory regions. */
-> +	if (!atomic_read(&kvm->online_vcpus))
-> +		return -EINVAL;
-> +
-> +	if (cmd->flags & ~KVM_TDX_MEASURE_MEMORY_REGION)
-> +		return -EINVAL;
-> +
-> +	if (copy_from_user(&region, (void __user *)cmd->data, sizeof(region)))
-> +		return -EFAULT;
-> +
-> +	/* Sanity check */
-> +	if (!IS_ALIGNED(region.source_addr, PAGE_SIZE) ||
-> +	    !IS_ALIGNED(region.gpa, PAGE_SIZE) ||
-> +	    !region.nr_pages ||
-> +	    region.nr_pages & GENMASK_ULL(63, 63 - PAGE_SHIFT) ||
-> +	    region.gpa + (region.nr_pages << PAGE_SHIFT) <= region.gpa ||
-> +	    !kvm_is_private_gpa(kvm, region.gpa) ||
-> +	    !kvm_is_private_gpa(kvm, region.gpa + (region.nr_pages << PAGE_SHIFT)))
-> +		return -EINVAL;
-> +
-> +	vcpu = kvm_get_vcpu(kvm, 0);
-> +	if (mutex_lock_killable(&vcpu->mutex))
-> +		return -EINTR;
-> +
-> +	vcpu_load(vcpu);
-> +	idx = srcu_read_lock(&kvm->srcu);
-> +
-> +	kvm_mmu_reload(vcpu);
-> +
-> +	while (region.nr_pages) {
-> +		if (signal_pending(current)) {
-> +			ret = -ERESTARTSYS;
-> +			break;
-> +		}
-> +
-> +		if (need_resched())
-> +			cond_resched();
-> +
-> +		/* Pin the source page. */
-> +		ret = get_user_pages_fast(region.source_addr, 1, 0, &page);
-> +		if (ret < 0)
-> +			break;
-> +		if (ret != 1) {
-> +			ret = -ENOMEM;
-> +			break;
-> +		}
-> +
-> +		kvm_tdx->source_pa = pfn_to_hpa(page_to_pfn(page)) |
-> +				     (cmd->flags & KVM_TDX_MEASURE_MEMORY_REGION);
-> +
-> +		ret = kvm_mmu_map_tdp_page(vcpu, region.gpa, TDX_SEPT_PFERR,
-> +					   PG_LEVEL_4K);
-> +		put_page(page);
-> +		if (ret)
-> +			break;
-> +
-> +		region.source_addr += PAGE_SIZE;
-> +		region.gpa += PAGE_SIZE;
-> +		region.nr_pages--;
-> +		added = true;
-> +	}
-> +
-> +	srcu_read_unlock(&kvm->srcu, idx);
-> +	vcpu_put(vcpu);
-> +
-> +	mutex_unlock(&vcpu->mutex);
-> +
-> +	if (added && region.nr_pages > 0)
-> +		ret = -EAGAIN;
-> +	if (copy_to_user((void __user *)cmd->data, &region, sizeof(region)))
-> +		ret = -EFAULT;
-> +
-> +	return ret;
-> +}
-> +
->   int tdx_vm_ioctl(struct kvm *kvm, void __user *argp)
->   {
->   	struct kvm_tdx_cmd tdx_cmd;
-> @@ -1341,6 +1492,9 @@ int tdx_vm_ioctl(struct kvm *kvm, void __user *argp)
->   	case KVM_TDX_INIT_VM:
->   		r = tdx_td_init(kvm, &tdx_cmd);
->   		break;
-> +	case KVM_TDX_INIT_MEM_REGION:
-> +		r = tdx_init_mem_region(kvm, &tdx_cmd);
-> +		break;
->   	default:
->   		r = -EINVAL;
->   		goto out;
-> diff --git a/arch/x86/kvm/vmx/tdx.h b/arch/x86/kvm/vmx/tdx.h
-> index 783ce329d7da..d589a2caedfb 100644
-> --- a/arch/x86/kvm/vmx/tdx.h
-> +++ b/arch/x86/kvm/vmx/tdx.h
-> @@ -17,6 +17,8 @@ struct kvm_tdx {
->   	u64 xfam;
->   	int hkid;
->   
-> +	hpa_t source_pa;
-> +
->   	bool finalized;
->   	atomic_t tdh_mem_track;
->   
+In the cases of fixes, those will be merged in the current release candidate
+kernel and as soon they appear on the Linux master branch they will be
+backported to the previous Stable and Long-Stable kernels [2].
+
+The intermediate git branches are merged daily in the linux-next tree [3],
+people are encouraged testing these pre-release kernels and report issues on the
+relevant mailing-lists.
+
+If problems are discovered on those changes, please submit a signed-off-by revert
+patch followed by a corrective changeset.
+
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/amlogic/linux.git
+[2] https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git
+[3] https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
+
+-- 
+Neil
 
