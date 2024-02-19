@@ -1,134 +1,118 @@
-Received: from mail-yb1-f170.google.com (mail-yb1-f170.google.com [209.85.219.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D28F2E645
-	for <linux-kernel@vger.kernel.org>; Mon, 19 Feb 2024 11:53:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 451972375A
+	for <linux-kernel@vger.kernel.org>; Mon, 19 Feb 2024 11:54:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708343582; cv=none; b=gRAYuoXYp2Gs+WUAmczxuEos0utukrielPbFetVzqFmo8m1efGKdCTfUXx4AfPUFPbp5DlUgHg3jqCPpLYajZl8e6Y62457LjI3kFZoP4JgrBuWFtJ66H7PeI4booKgcsp9stp2xgC3cJBW1U8OdB6DzEEc4W2WXRx/c7F3/vR8=
+	t=1708343652; cv=none; b=H1/fuzyVI8zq8BKaqZwVeWyzCunnZm9cwso/iVR0UZdaNUjJSetYYUIc0pUDYEHWBM9lng11dUY1UZyRZAUP//YLoO6m314dsfcG5wXMQyPOKeRScB+2RwyFO0u5jfxiLdavo7p4u3KkHgClOffdk2984LmGuFDwQN8gKeb54/Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708343582; c=relaxed/simple;
-	bh=psLxC6s9LHoyLa6JFtDB3Lh1RZsR5Kss2pXXzs/r4iU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ejiHvnNyrNgaBLVPAMRIFIwnNzirOl3qBY8bVRgOeKAGAl+rOWK9TxHhh6oZ6PZ1Ft4X6zNyxSt+dLak8C1IYGPSd74q2tIjOwZu11da6Ke/l1P71y1hy9e3QRdY97ltv6aJJMmWuQ0Nz+4pGs6apEwswotK221BzuHbK8u6j90=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=WHlmVRVs; arc=none smtp.client-ip=209.85.219.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WHlmVRVs"
-Received: by mail-yb1-f170.google.com with SMTP id 3f1490d57ef6-dcc4de7d901so3574898276.0
-        for <linux-kernel@vger.kernel.org>; Mon, 19 Feb 2024 03:53:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1708343579; x=1708948379; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=eDlnERxsGwtLXki6krZHreIryztOLvxcnQnuu/21/BE=;
-        b=WHlmVRVs0RxyaTX9lCDGXBbBcS3spZQ28Rt+fU70oFTsdWz85VoXZfakojk+g44EUm
-         6rgvYh6orQjTvMIObP/joX5DO+o8WRXLjdE8tBmwx1dN+xwzPoC9Lg1ZxKFIxIjw8bI6
-         ERpoufPL8GcdsqJOWXLVpzoIUWS3334N9pDd9LhYiqdDDAMHz5z1qXpI8E8NswOiPQ85
-         GYuT2/4pA4Of/rQDZUpwvujkskiq1grB2feKfxKqbWlEZCJfw0a6bgz+GEJ2WB5lEn+4
-         xNAhKPX4QmJ88UYxMOmjOjBYSOwjMHj9SaLr1UPolMdEzu/gfa0ydNsbPaG66yfbUPKK
-         zzig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708343579; x=1708948379;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=eDlnERxsGwtLXki6krZHreIryztOLvxcnQnuu/21/BE=;
-        b=jTqHGprJLm1LVL/rpiSPE+QtEgbYopqeGA5ckQkCIi8GdWhxQ8OQklvSRNuv/aT1z5
-         O4A8jqFrUYWmPwNdIaYbFk2wVtU42l9u6Q6iGqTZv0hvikKsb1of7CvzipwQwZ71YA/C
-         yP6oQwY6cCrNkUZlZZQuSbGW1MluJn/i0VVs5xOKY2RJoyKY0Nw4SKZSvrUpRCHoPXlp
-         eTKGl/S1iyrBJwU3c0RMJ++3pUjgxTfryueCrimgYWUepI4oRzbkgRsjD3u1pHmrvPHk
-         AiZMkgjupypLXJuaBiMOTqQ123y5Rn8uou5xpNu/FiISy+fIK0utJxzWdmTQ/bthIEDL
-         jGiw==
-X-Forwarded-Encrypted: i=1; AJvYcCWYXsHwJ8ArXjH2hWlXdy/GGZsBtyL8Y6jUBHhy55RzvBiGzhzeiyNWomMum/oIHXpS6P3oqy2Ikjz9XCAC6H6OdUi6bEzHtCAEp6wJ
-X-Gm-Message-State: AOJu0YykHvRDM0eJCuv1EcQKFknPnD+s3TvgWfUpt261vJ1Qyy4aLuUg
-	S3DMiDehZ5Lb6z1Rjnsh8etHMFpaphXmlrCWVgFS3S27NuORZOTlOqTSZJ/yNdhbBAaDKRkG71G
-	bEHimnnVYIA1vINzUAERSJ+qjVSryxTV1yg3ZxsNEvD5ofnZa
-X-Google-Smtp-Source: AGHT+IEPnDswYQFtDH941jPPgVJlGCvd1CpCQH5qqUk8Fa/hDLMhAwQb5bV+etm3XhmW+ddV9H3F2J9t1vD4jdi3+lU=
-X-Received: by 2002:a25:b322:0:b0:dcd:2aa3:d73b with SMTP id
- l34-20020a25b322000000b00dcd2aa3d73bmr9660313ybj.50.1708343579395; Mon, 19
- Feb 2024 03:52:59 -0800 (PST)
+	s=arc-20240116; t=1708343652; c=relaxed/simple;
+	bh=IQ+I8THSNJZOjxDOQuUmx4ca4vdRIuGe/OZr+1rekus=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tKX/hqjFHkgSr6wLLy1UhC/E3A3fKjKfHGWEiBnvoDWZjVVnyEhGtjmPx40/IxSsyXUkYLBGzD2n50rwqAC0ea9vFi0D7GkK2BwbJ8uY6lR8dhmUn97WtWNc7Pb1kWVAQ+hShyhzic/S5u4GtMR/oSk+VXaU6biN9rFe+p2zdxw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <mfe@pengutronix.de>)
+	id 1rc2Df-0003Mq-TF; Mon, 19 Feb 2024 12:53:59 +0100
+Received: from [2a0a:edc0:2:b01:1d::c5] (helo=pty.whiteo.stw.pengutronix.de)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <mfe@pengutronix.de>)
+	id 1rc2Df-001djE-1t; Mon, 19 Feb 2024 12:53:59 +0100
+Received: from mfe by pty.whiteo.stw.pengutronix.de with local (Exim 4.96)
+	(envelope-from <mfe@pengutronix.de>)
+	id 1rc2De-00Fr1u-37;
+	Mon, 19 Feb 2024 12:53:58 +0100
+Date: Mon, 19 Feb 2024 12:53:58 +0100
+From: Marco Felsch <m.felsch@pengutronix.de>
+To: Miquel Raynal <miquel.raynal@bootlin.com>
+Cc: Michael Walle <michael@walle.cc>, srinivas.kandagatla@linaro.org,
+	gregkh@linuxfoundation.org, rafal@milecki.pl,
+	linux-kernel@vger.kernel.org, kernel@pengutronix.de
+Subject: Re: [RFC PATCH] nvmem: core: add sysfs cell write support
+Message-ID: <20240219115358.xui5fpoisvsubdyb@pengutronix.de>
+References: <20240215211401.1201004-1-m.felsch@pengutronix.de>
+ <CZ6DFL6061FS.2WMDPMSSBXX8S@walle.cc>
+ <20240216100750.zxl4wncbgpulr2cc@pengutronix.de>
+ <20240219120414.32395299@xps-13>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240208-fd-dpu-debug-timeout-v2-1-9f907f1bdd87@linaro.org>
- <1cb90bff-ce5b-c6d1-a3df-24f6306f833a@quicinc.com> <CAA8EJpotiHKT_NYphDs0-vhpvsybgTW281XDYbteUx8qOX=v4g@mail.gmail.com>
- <63bba15b-6d8d-5ba8-d99d-8cd2dd763262@quicinc.com>
-In-Reply-To: <63bba15b-6d8d-5ba8-d99d-8cd2dd763262@quicinc.com>
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Date: Mon, 19 Feb 2024 13:52:48 +0200
-Message-ID: <CAA8EJpqHmVBry9FyJ6HRB+qdVcVNN3Q7rHZz1daZL1Sz6yeZ=A@mail.gmail.com>
-Subject: Re: [PATCH v2] drm/msm/dpu: make "vblank timeout" more useful
-To: Abhinav Kumar <quic_abhinavk@quicinc.com>
-Cc: Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>, 
-	Marijn Suijten <marijn.suijten@somainline.org>, David Airlie <airlied@gmail.com>, 
-	Daniel Vetter <daniel@ffwll.ch>, linux-arm-msm@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240219120414.32395299@xps-13>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: mfe@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-On Wed, 14 Feb 2024 at 22:36, Abhinav Kumar <quic_abhinavk@quicinc.com> wrote:
->
->
->
-> On 2/14/2024 11:20 AM, Dmitry Baryshkov wrote:
-> > On Wed, 14 Feb 2024 at 20:02, Abhinav Kumar <quic_abhinavk@quicinc.com> wrote:
-> >>
-> >>
-> >>
-> >> On 2/8/2024 6:50 AM, Dmitry Baryshkov wrote:
-> >>> We have several reports of vblank timeout messages. However after some
-> >>> debugging it was found that there might be different causes to that.
-> >>> To allow us to identify the DPU block that gets stuck, include the
-> >>> actual CTL_FLUSH value into the timeout message and trigger the devcore
-> >>> snapshot capture.
-> >>>
-> >>> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-> >>> ---
-> >>> Changes in v2:
-> >>> - Added a call to msm_disp_snapshot_state() to trigger devcore dump
-> >>>     (Abhinav)
-> >>> - Link to v1: https://lore.kernel.org/r/20240106-fd-dpu-debug-timeout-v1-1-6d9762884641@linaro.org
-> >>> ---
-> >>>    drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_vid.c | 3 ++-
-> >>>    1 file changed, 2 insertions(+), 1 deletion(-)
-> >>>
-> >>> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_vid.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_vid.c
-> >>> index d0f56c5c4cce..a8d6165b3c0a 100644
-> >>> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_vid.c
-> >>> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_vid.c
-> >>> @@ -489,7 +489,8 @@ static int dpu_encoder_phys_vid_wait_for_commit_done(
-> >>>                (hw_ctl->ops.get_flush_register(hw_ctl) == 0),
-> >>>                msecs_to_jiffies(50));
-> >>>        if (ret <= 0) {
-> >>> -             DPU_ERROR("vblank timeout\n");
-> >>> +             DPU_ERROR("vblank timeout: %x\n", hw_ctl->ops.get_flush_register(hw_ctl));
-> >>> +             msm_disp_snapshot_state(phys_enc->parent->dev);
-> >>
-> >>
-> >> There is no rate limiting in this piece of code unfortunately. So this
-> >> will flood the number of snapshots.
-> >
-> > Well... Yes and no. The devcoredump will destroy other snapshots if
-> > there is a pending one. So only the console will be flooded and only
-> > in case when MSM_DISP_SNAPSHOT_DUMP_IN_CONSOLE is enabled.
-> >
->
-> Yes, true but at the same time this makes it hard to capture a good dump
-> as potentially every vblank you could timeout so this destroy/create
-> cycle wont end.
+On 24-02-19, Miquel Raynal wrote:
+> Hi Marco,
+> 
+> m.felsch@pengutronix.de wrote on Fri, 16 Feb 2024 11:07:50 +0100:
+> 
+> > Hi Michael,
+> > 
+> > On 24-02-16, Michael Walle wrote:
+> > > Hi,
+> > > 
+> > > On Thu Feb 15, 2024 at 10:14 PM CET, Marco Felsch wrote:  
+> > > > @@ -432,6 +466,7 @@ static int nvmem_populate_sysfs_cells(struct nvmem_device *nvmem)
+> > > >  	struct bin_attribute **cells_attrs, *attrs;
+> > > >  	struct nvmem_cell_entry *entry;
+> > > >  	unsigned int ncells = 0, i = 0;
+> > > > +	umode_t mode;
+> > > >  	int ret = 0;
+> > > >  
+> > > >  	mutex_lock(&nvmem_mutex);
+> > > > @@ -456,15 +491,18 @@ static int nvmem_populate_sysfs_cells(struct nvmem_device *nvmem)
+> > > >  		goto unlock_mutex;
+> > > >  	}
+> > > >  
+> > > > +	mode = nvmem_bin_attr_get_umode(nvmem);
+> > > > +
+> > > >  	/* Initialize each attribute to take the name and size of the cell */
+> > > >  	list_for_each_entry(entry, &nvmem->cells, node) {
+> > > >  		sysfs_bin_attr_init(&attrs[i]);
+> > > >  		attrs[i].attr.name = devm_kasprintf(&nvmem->dev, GFP_KERNEL,
+> > > >  						    "%s@%x", entry->name,
+> > > >  						    entry->offset);
+> > > > -		attrs[i].attr.mode = 0444;  
+> > > 
+> > > cells are not writable if there is a read post process hook, see
+> > > __nvmem_cell_entry_write().
+> > > 
+> > > if (entry->read_post_processing)
+> > > 	mode &= ~0222;  
+> > 
+> > good point, thanks for the hint :) I will add this and send a non-rfc
+> > version if write-support is something you would like to have.
+> 
+> I like the idea but, what about mtd devices (and soon maybe UBI
+> devices)? This may only work on EEPROM-like devices I guess, where each
+> area is fully independent and where no erasure is actually expected.
 
-Excuse me, maybe I miss something. On the first timeout the snapshot
-is created. It is held by the kernel until it is fully read out from
-the userspace. Other snapshots will not interfere with this snapshot.
+For MTD I would say that you need to ensure that you need to align the
+cells correctly. The cell-write should handle the page erase/write cycle
+properly. E.g. an SPI-NOR need to align the cells to erase-page size or
+the nvmem-cell-write need to read-copy-update the cells if they are not
+erase-paged aligned.
 
-Or are you worried that snapshotting takes time, so taking a snapshot
-will also interfere with the vblank timings for the next vblank?
+Regarding UBI(FS) I'm not sure if this is required at all since you have
+an filesystem. IMHO nvmem-cells are very lowelevel and are not made for
+filesystem backed backends.
 
--- 
-With best wishes
-Dmitry
+That beeing said: I have no problem if we provide write support for
+EEPROMs only and adapt it later on to cover spi-nor/nand devices as
+well.
+
+Regards,
+  Marco
