@@ -1,64 +1,113 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EE6E23749;
-	Mon, 19 Feb 2024 09:24:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE6D523746;
+	Mon, 19 Feb 2024 09:25:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708334684; cv=none; b=sotTw1N8K9UY4lPLDFVhgZOQH92/IHr/bfLaRKtvNTJ8Q3MymYPxgjW415lbpen8sLHXFmurnKwlbmG6XgxazOi84GwaQqOL51Yvm9sRhuNLXcXT+Mx+LrwstlCHuf9BG9rLM1ML84wwuVNaWERZ1CLChLexY/eG8fuyt61csp4=
+	t=1708334740; cv=none; b=Ixjtnsps8/4SDbZjlfbLnWodg1eHyO9yW6BTeD7mZEfrarw9CySTTqSHYyXiX7vvLjm2qHdVXekKLYc5W5suLAlXLt5fOTAVtoW/EMsXC0XcIiMdKsY4QIdlPHQPNBG03oMdVdDKUFM7IBrOTLUIve3JffvTNNTS98xIip+qAX0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708334684; c=relaxed/simple;
-	bh=cHV74QhceqZ2+XbCvJJj3Cf7xONLS1W+pjFWm1YMEvA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ANWzkWz9aQ56C6Emtjd/PGrmyxllMX3/rQIrBJpEr49hTcAkydLacQtVQQlGVR7ocy0mSRgEEVzaFB4diciQiPf4MHt7bxpaEOdxM0fu4kS9RdxA2e191jGfuGdZarZjju4zmf7a0eXFhP5qVYLT/4Xwe5AWDlX0rsbtXKOa6eM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZVMFI7/r; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1708334740; c=relaxed/simple;
+	bh=TQgJ/dUEc4sWbXoGbmu4Gc1ioWBXLv4l0BknLPBgqHs=;
+	h=Content-Type:Date:Message-Id:Subject:Cc:From:To:References:
+	 In-Reply-To; b=lfxlaC5BTChlTmRh3SANwYb3XNCUA35eU4XbUd4F2naXFNjR+nmf7F5Oevptk+Oub7Oqc5bQJS2iVTy1zvRbUwKr6slYx6Ogmmce+P+0VEhOPdgmaxhuctp7rqZfi+QDD7dyY1+YShFFSKJDIlsqRyJ5/CxhWSev2hY6la5X+dM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=J8rTnnHg; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZVMFI7/r"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6340DC433C7;
-	Mon, 19 Feb 2024 09:24:42 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="J8rTnnHg"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0DBB4C433C7;
+	Mon, 19 Feb 2024 09:25:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708334684;
-	bh=cHV74QhceqZ2+XbCvJJj3Cf7xONLS1W+pjFWm1YMEvA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ZVMFI7/r5bqKUYpio0866Qs0B9QoX/6XMIm68I8w0UzwXl3a/lxe9PAxq1eZToYPj
-	 69F3XJuzbGXvFrcTdcMGoGV9bkVXsvH9T93+9hr1nuUmv5jrjtSf7ruCp4fj9i3Cig
-	 liXrHNa/T+3EXOHlXWS4We5DXihfDWl6BfFd0Y5X4quNwWu7YyIT2WnDHv7svxAIqS
-	 Ewl7VXNyzk/09jPz3KlacNnBhqNEbVSzWxpuHdDBJHGuKuJYajP+UuT9Ay3a9+iwHb
-	 c3YTtJdwuGQdk9ebqphhZA2Z+gJuI+rGO4GKIPWs04wAbvEcdOuZRoksXY57b8yKE1
-	 Vd7aJXtLYMCPA==
-Date: Mon, 19 Feb 2024 09:24:39 +0000
-From: Will Deacon <will@kernel.org>
-To: Christoph Hellwig <hch@lst.de>
-Cc: linux-kernel@vger.kernel.org, kernel-team@android.com,
-	iommu@lists.linux.dev, Marek Szyprowski <m.szyprowski@samsung.com>,
-	Robin Murphy <robin.murphy@arm.com>,
-	Petr Tesarik <petr.tesarik1@huawei-partners.com>,
-	Dexuan Cui <decui@microsoft.com>
-Subject: Re: [PATCH v3 0/3] Fix double allocation in swiotlb_alloc()
-Message-ID: <20240219092438.GB4105@willie-the-truck>
-References: <20240205190127.20685-1-will@kernel.org>
- <20240219063527.GA4580@lst.de>
+	s=k20201202; t=1708334739;
+	bh=TQgJ/dUEc4sWbXoGbmu4Gc1ioWBXLv4l0BknLPBgqHs=;
+	h=Date:Subject:Cc:From:To:References:In-Reply-To:From;
+	b=J8rTnnHg2jq4qSe9wkaheaQRnHYTStPOBliPhPlu9XMSyAH/7SWcw+hwCnAZQuBSp
+	 pm85XhsSaDbD3Ax/bBjkrBzKoGoM97KCZVs+0q4D+rQpV9WLmtf6ALdW7f1weaxPWX
+	 hUkEjEuIcTAbHDt0k5zo9PBiRn5YxkbIEq/aOHbAqSW2zcQ+CfhX2HiHZ6IrEozmnh
+	 3rvO22UujnQ20i4N0rOlQYbTujhp3PfZSEJpQNk6QJco5j6aRrlcWtzj6n//wPkNP3
+	 1FRCRfBoNY7g6cPGsxCE3z14MBM+xLVjYz/VIudpFQG2XclvUj+yxuHmgWviMY07UN
+	 2r/5zPMQ89atw==
+Content-Type: multipart/signed;
+ boundary=03803a3ba4b4ec418cf5496082e438ace4bc390993da25f1c1c6651408c6;
+ micalg=pgp-sha256; protocol="application/pgp-signature"
+Date: Mon, 19 Feb 2024 10:25:31 +0100
+Message-Id: <CZ8Y4DFQNLM9.3GIGATDIAXBR5@kernel.org>
+Subject: Re: [PATCH v2 1/2] dt-bindings: arm64: mediatek: add Kontron
+ 3.5"-SBC-i1200
+Cc: <devicetree@vger.kernel.org>, "Sean Wang" <sean.wang@mediatek.com>,
+ <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+ <linux-mediatek@lists.infradead.org>
+From: "Michael Walle" <mwalle@kernel.org>
+To: "Krzysztof Kozlowski" <krzysztof.kozlowski@linaro.org>, "Rob Herring"
+ <robh@kernel.org>, "Krzysztof Kozlowski"
+ <krzysztof.kozlowski+dt@linaro.org>, "Conor Dooley" <conor+dt@kernel.org>,
+ "Matthias Brugger" <matthias.bgg@gmail.com>, "AngeloGioacchino Del Regno"
+ <angelogioacchino.delregno@collabora.com>
+X-Mailer: aerc 0.16.0
+References: <20240219084456.1075445-1-mwalle@kernel.org>
+ <72fffc25-33f0-4394-b7c1-8dbc2d23a4a4@linaro.org>
+In-Reply-To: <72fffc25-33f0-4394-b7c1-8dbc2d23a4a4@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240219063527.GA4580@lst.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
 
-Hey Christoph,
+--03803a3ba4b4ec418cf5496082e438ace4bc390993da25f1c1c6651408c6
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
 
-On Mon, Feb 19, 2024 at 07:35:27AM +0100, Christoph Hellwig wrote:
-> Robin and Petr, does this looks good to you now?
+On Mon Feb 19, 2024 at 10:06 AM CET, Krzysztof Kozlowski wrote:
+> On 19/02/2024 09:44, Michael Walle wrote:
+> > Add the compatible string for the Kontron 3.5"-SBC-i1200 single board
+> > computer.
+> >=20
+> > Signed-off-by: Michael Walle <mwalle@kernel.org>
+> > ---
+> > v2:
+> >  - convert enum to const as there is only one specific board
+> >=20
+> >  Documentation/devicetree/bindings/arm/mediatek.yaml | 5 +++++
+> >  1 file changed, 5 insertions(+)
+> >=20
+> > diff --git a/Documentation/devicetree/bindings/arm/mediatek.yaml b/Docu=
+mentation/devicetree/bindings/arm/mediatek.yaml
+> > index 09f9ffd3ff7b..add167d8b8da 100644
+> > --- a/Documentation/devicetree/bindings/arm/mediatek.yaml
+> > +++ b/Documentation/devicetree/bindings/arm/mediatek.yaml
+> > @@ -357,6 +357,11 @@ properties:
+> >                - radxa,nio-12l
+> >            - const: mediatek,mt8395
+> >            - const: mediatek,mt8195
+> > +      - description: Kontron 3.5"-SBC-i1200
+> > +        items:
+> > +          - const: kontron,3-5-sbc-i1200
+>
+> And then it should be part of earlier entry. Just take a look there in
+> the file...
 
-FWIW, I'm likely to send a v4 addressing another issue reported by
-Nicolin with NVME and 64k pages [1], so you may as well wait for that.
+FWIW I did and all the entries with descriptions are by there own
+(that's also true for fsl.yaml and sunxi.yaml).
 
-Cheers,
+mediatek.yaml seems to have both, either boards without description
+like the "radxa,nio-12l" which you are probably referring to. Or
+boards which has the same sub compatibles but still have individual
+entries, like google,burnet, google,cozmo, google,damu.
 
-Will
+Therefore, what is the rule of thumb here? Drop the description?
+If so, why it it there in the first place?
 
-[1] https://lkml.kernel.org/r/cover.1707851466.git.nicolinc@nvidia.com
+-michael
+
+--03803a3ba4b4ec418cf5496082e438ace4bc390993da25f1c1c6651408c6
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iIgEABYIADAWIQQCnWSOYTtih6UXaxvNyh2jtWxG+wUCZdMeixIcbXdhbGxlQGtl
+cm5lbC5vcmcACgkQzcodo7VsRvus0wEA961xASC5sQxgLl7D2sdBs8vZGbpKm2xY
+5IGGz3L8+T8A+gJrDnh9avI1bglxsEP4pVy4KSuErmUiYYw9/g58FPgO
+=LoCQ
+-----END PGP SIGNATURE-----
+
+--03803a3ba4b4ec418cf5496082e438ace4bc390993da25f1c1c6651408c6--
