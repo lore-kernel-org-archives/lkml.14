@@ -1,310 +1,191 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D025210E1
-	for <linux-kernel@vger.kernel.org>; Mon, 19 Feb 2024 08:52:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A547923757;
+	Mon, 19 Feb 2024 08:53:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708332772; cv=none; b=PqwLuorq5IQTCkbnt6TGqP6q+aWuvsrQibXeuduSuK5XRXna3CgS0oosH9hMvJfU1WNkb4cMwo/wu1gYlMiXJd9vj9vKpN1IwUxAFbBYBSjQqjlmk8IREApVA7jTKkETcnlTFCaQRS3j7eV7TkSFgpnqLI6LPc4ey3g3eVYw4p0=
+	t=1708332784; cv=none; b=Q792QOum8P6ym5il6nAzt73mUjWHoQIY/HIv49P0lqx0MJmpKnD0b5pjdd3VHNuKfNBjl3RV59RJ0Tm0DI7ucKgIuP5n1hvOpEzkREpfOuT24IeAv33tA9TQYgA6Fe6pimyt3iA8+Ol47ek3N2P1cWl2nRsqm6cUIm4AaFL1tWg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708332772; c=relaxed/simple;
-	bh=pg1FwB+kQ8F8kemtdVReXcqxP1+taKA0R1mQnwchW2I=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=eonrMw+f1SE/TQfZvMHdG9vuOL9GXEARk5hVLzz1dQaqJd8eQWtOeT3qKtvsynUmlKOZ7Dcj/xuif3QlvRy/xlHR8Lui0By/2HBqOE7FLnrVVOS9t/4xWP3M+f9icXqBD7IqTyPCcZYnS8sPdIrBX7rSkMiYTfe++ILtp19N1f8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Es7HJyTC; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=YBSRhCFm; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1708332784; c=relaxed/simple;
+	bh=SDQufJ9z5aiPeuINsDKd9XXb7cmghsbeEma5FC1MrU0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VPGQ1FpmwXDbGcewRZYES2/qI8M899vNE/0qoXKeAtY8RPq2u4CEB8TjRg+UdIIN4aYBUAn75+QV2z+x3ARIEnTfOxPQkGqiNNBDI/NQr2dAv8cw+7q7QvrKF8s2ckQtPsZfMGOz5f15PBw04IMYQ5TVTl9TRreDs/FSPmWZ/HM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=usZaX8Cp; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Es7HJyTC";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="YBSRhCFm"
-From: Anna-Maria Behnsen <anna-maria@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1708332768;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=KFjyMB85edu0Xy6r0SyHudy/SZ42PaKdfawATnHNXt4=;
-	b=Es7HJyTCMbQIMMnMjWZ6sPcSSCX80ODs8UkJF7VyzBo67eiKH/0+GqEVP/7u+qqYTxDwE5
-	E63hZW7Ptoac9ndgh1V3TALDNM9eGaVJXDT5oVB/EDKq/wf9n60RdyWPAH2GfYSbLHJeg3
-	le0lF0l9Lh2ti38oIjcXAftaxm/VsS86SuJ3T3QeQI2bnKjxC5WV0sKi7o9GqjymEYbJed
-	tFFnAH378onwqBo+LxFxQxi1zL3GA48iUsElhratTCkvnJB5wttHlE+R7CLnpOD59LRFw7
-	6jllsNQsXL9kiZVPIR38dSJoXEhPK7sKkb2PdgdVJ7WOIzvSAcCNKlzRjGgC9A==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1708332768;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=KFjyMB85edu0Xy6r0SyHudy/SZ42PaKdfawATnHNXt4=;
-	b=YBSRhCFmGpE/vVKUux8qmGb1zT9EgxuQYPx1GV1O5nGMdp9o41t96kWPBy7pschfW8TK3u
-	ZEOgHsNr6T1imxCQ==
-To: linux-kernel@vger.kernel.org
-Cc: Peter Zijlstra <peterz@infradead.org>,
-	John Stultz <jstultz@google.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Eric Dumazet <edumazet@google.com>,
-	"Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-	Arjan van de Ven <arjan@infradead.org>,
-	"Paul E . McKenney" <paulmck@kernel.org>,
-	Frederic Weisbecker <frederic@kernel.org>,
-	Rik van Riel <riel@surriel.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Sebastian Siewior <bigeasy@linutronix.de>,
-	Giovanni Gherdovich <ggherdovich@suse.cz>,
-	Lukasz Luba <lukasz.luba@arm.com>,
-	"Gautham R . Shenoy" <gautham.shenoy@amd.com>,
-	Srinivas Pandruvada <srinivas.pandruvada@intel.com>,
-	K Prateek Nayak <kprateek.nayak@amd.com>,
-	Anna-Maria Behnsen <anna-maria@linutronix.de>
-Subject: [PATCH v10a] timers: Move marking timer bases idle into tick_nohz_stop_tick()
-Date: Mon, 19 Feb 2024 09:52:36 +0100
-Message-Id: <20240219085236.10624-1-anna-maria@linutronix.de>
-In-Reply-To: <20240115143743.27827-4-anna-maria@linutronix.de>
-References: <20240115143743.27827-4-anna-maria@linutronix.de>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="usZaX8Cp"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BA5DCC433F1;
+	Mon, 19 Feb 2024 08:53:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1708332784;
+	bh=SDQufJ9z5aiPeuINsDKd9XXb7cmghsbeEma5FC1MrU0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=usZaX8CpwwzXVWtYNNvZz3zqkH5sbHb5Q7ImfBBj7c1ILt/jj38fmd5torqaemTBL
+	 9rAKxRPStF6bWaiosQc/XDTT9TzgBf5ysirRQs0iWAn8jXS0F1YWJ0xSJ+pmLu3Oft
+	 rHhjXwdWv+orYqpGX5ark3KBTkECiXpiuq02aE7w=
+Date: Mon, 19 Feb 2024 09:53:01 +0100
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Saurabh Sengar <ssengar@linux.microsoft.com>
+Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
+	decui@microsoft.com, linux-hyperv@vger.kernel.org,
+	linux-kernel@vger.kernel.org, ssengar@microsoft.com
+Subject: Re: [PATCH 5/6] tools: hv: Add new fcopy application based on uio
+ driver
+Message-ID: <2024021908-royal-sequester-84be@gregkh>
+References: <1708193020-14740-1-git-send-email-ssengar@linux.microsoft.com>
+ <1708193020-14740-6-git-send-email-ssengar@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1708193020-14740-6-git-send-email-ssengar@linux.microsoft.com>
 
-The timer base is marked idle when get_next_timer_interrupt() is
-executed. But the decision whether the tick will be stopped and whether the
-system is able to go idle is done later. When the timer bases is marked
-idle and a new first timer is enqueued remote an IPI is raised. Even if it
-is not required because the tick is not stopped and the timer base is
-evaluated again at the next tick.
+On Sat, Feb 17, 2024 at 10:03:39AM -0800, Saurabh Sengar wrote:
+> New fcopy application which utilizes uio_hv_vmbus_client driver
 
-To prevent this, the timer base is marked idle in tick_nohz_stop_tick() and
-get_next_timer_interrupt() is streamlined by only looking for the next timer
-interrupt. All other work is postponed to timer_base_try_to_set_idle() which is
-called by tick_nohz_stop_tick(). timer_base_try_to_set_idle() never resets
-timer_base::is_idle state. This is done when the tick is restarted via
-tick_nohz_restart_sched_tick().
+What does this "application" do?
 
-With this, tick_sched::tick_stopped and timer_base::is_idle are always in
-sync. So there is no longer the need to execute timer_clear_idle() in
-tick_nohz_idle_retain_tick(). This was required before, as
-tick_nohz_next_event() set timer_base::is_idle even if the tick would not be
-stopped. So timer_clear_idle() is only executed, when timer base is idle. So the
-check whether timer base is idle, is now no longer required as well.
+> 
+> Signed-off-by: Saurabh Sengar <ssengar@linux.microsoft.com>
+> ---
+>  tools/hv/Build                 |   3 +-
+>  tools/hv/Makefile              |  10 +-
+>  tools/hv/hv_fcopy_uio_daemon.c | 488 +++++++++++++++++++++++++++++++++
+>  3 files changed, 495 insertions(+), 6 deletions(-)
+>  create mode 100644 tools/hv/hv_fcopy_uio_daemon.c
+> 
+> diff --git a/tools/hv/Build b/tools/hv/Build
+> index 6cf51fa4b306..7d1f1698069b 100644
+> --- a/tools/hv/Build
+> +++ b/tools/hv/Build
+> @@ -1,3 +1,4 @@
+>  hv_kvp_daemon-y += hv_kvp_daemon.o
+>  hv_vss_daemon-y += hv_vss_daemon.o
+> -hv_fcopy_daemon-y += hv_fcopy_daemon.o
+> +hv_fcopy_uio_daemon-y += hv_fcopy_uio_daemon.o
+> +hv_fcopy_uio_daemon-y += vmbus_bufring.o
+> diff --git a/tools/hv/Makefile b/tools/hv/Makefile
+> index fe770e679ae8..944180cf916e 100644
+> --- a/tools/hv/Makefile
+> +++ b/tools/hv/Makefile
+> @@ -17,7 +17,7 @@ MAKEFLAGS += -r
+>  
+>  override CFLAGS += -O2 -Wall -g -D_GNU_SOURCE -I$(OUTPUT)include
+>  
+> -ALL_TARGETS := hv_kvp_daemon hv_vss_daemon hv_fcopy_daemon
+> +ALL_TARGETS := hv_kvp_daemon hv_vss_daemon hv_fcopy_uio_daemon
+>  ALL_PROGRAMS := $(patsubst %,$(OUTPUT)%,$(ALL_TARGETS))
+>  
+>  ALL_SCRIPTS := hv_get_dhcp_info.sh hv_get_dns_info.sh hv_set_ifconfig.sh
+> @@ -39,10 +39,10 @@ $(HV_VSS_DAEMON_IN): FORCE
+>  $(OUTPUT)hv_vss_daemon: $(HV_VSS_DAEMON_IN)
+>  	$(QUIET_LINK)$(CC) $(CFLAGS) $(LDFLAGS) $< -o $@
+>  
+> -HV_FCOPY_DAEMON_IN := $(OUTPUT)hv_fcopy_daemon-in.o
+> -$(HV_FCOPY_DAEMON_IN): FORCE
+> -	$(Q)$(MAKE) $(build)=hv_fcopy_daemon
+> -$(OUTPUT)hv_fcopy_daemon: $(HV_FCOPY_DAEMON_IN)
+> +HV_FCOPY_UIO_DAEMON_IN := $(OUTPUT)hv_fcopy_uio_daemon-in.o
+> +$(HV_FCOPY_UIO_DAEMON_IN): FORCE
+> +	$(Q)$(MAKE) $(build)=hv_fcopy_uio_daemon
+> +$(OUTPUT)hv_fcopy_uio_daemon: $(HV_FCOPY_UIO_DAEMON_IN)
+>  	$(QUIET_LINK)$(CC) $(CFLAGS) $(LDFLAGS) $< -o $@
+>  
+>  clean:
+> diff --git a/tools/hv/hv_fcopy_uio_daemon.c b/tools/hv/hv_fcopy_uio_daemon.c
+> new file mode 100644
+> index 000000000000..f72c899328fc
+> --- /dev/null
+> +++ b/tools/hv/hv_fcopy_uio_daemon.c
+> @@ -0,0 +1,488 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * An implementation of host to guest copy functionality for Linux.
 
-While at it fix some nearby whitespace damage as well.
+host to guest of what?  I think it's a specific type of host and guest,
+right?
 
-Signed-off-by: Anna-Maria Behnsen <anna-maria@linutronix.de>
----
-v10a:
- - Drop the unnecessary if branch which handles return value of
-   timer_base_try_to_set_idle()
- - Do not open code 'tick_nohz_retain_tick()' and keep
-   tick_nohz_idle_retain_tick() as is.
----
- kernel/time/tick-internal.h |  1 +
- kernel/time/tick-sched.c    | 40 +++++++++++++++++--------
- kernel/time/timer.c         | 60 ++++++++++++++++++++++++++-----------
- 3 files changed, 71 insertions(+), 30 deletions(-)
+> + *
+> + * Copyright (C) 2023, Microsoft, Inc.
+> + *
+> + * Author : K. Y. Srinivasan <kys@microsoft.com>
+> + * Author : Saurabh Sengar <ssengar@microsoft.com>
+> + *
+> + */
+> +
+> +#include <dirent.h>
+> +#include <errno.h>
+> +#include <fcntl.h>
+> +#include <getopt.h>
+> +#include <locale.h>
+> +#include <stdbool.h>
+> +#include <stddef.h>
+> +#include <stdint.h>
+> +#include <stdio.h>
+> +#include <stdlib.h>
+> +#include <string.h>
+> +#include <syslog.h>
+> +#include <unistd.h>
+> +#include <wchar.h>
+> +#include <sys/stat.h>
+> +#include <linux/hyperv.h>
+> +#include <linux/limits.h>
+> +#include "vmbus_bufring.h"
+> +
+> +#define ICMSGTYPE_NEGOTIATE	0
+> +#define ICMSGTYPE_FCOPY		7
+> +
+> +#define WIN8_SRV_MAJOR		1
+> +#define WIN8_SRV_MINOR		1
+> +#define WIN8_SRV_VERSION	(WIN8_SRV_MAJOR << 16 | WIN8_SRV_MINOR)
+> +
+> +#define MAX_FOLDER_NAME		15
+> +#define MAX_PATH_LEN		15
+> +#define FCOPY_UIO		"/sys/bus/vmbus/devices/eb765408-105f-49b6-b4aa-c123b64d17d4/uio"
+> +
+> +#define FCOPY_VER_COUNT		1
+> +static const int fcopy_versions[] = {
+> +	WIN8_SRV_VERSION
+> +};
+> +
+> +#define FW_VER_COUNT		1
+> +static const int fw_versions[] = {
+> +	UTIL_FW_VERSION
+> +};
+> +
+> +#define HV_RING_SIZE		(4 * 4096)
 
-diff --git a/kernel/time/tick-internal.h b/kernel/time/tick-internal.h
-index 481b7ab65e2c..47df30b871e4 100644
---- a/kernel/time/tick-internal.h
-+++ b/kernel/time/tick-internal.h
-@@ -163,6 +163,7 @@ static inline void timers_update_nohz(void) { }
- DECLARE_PER_CPU(struct hrtimer_cpu_base, hrtimer_bases);
- 
- extern u64 get_next_timer_interrupt(unsigned long basej, u64 basem);
-+u64 timer_base_try_to_set_idle(unsigned long basej, u64 basem, bool *idle);
- void timer_clear_idle(void);
- 
- #define CLOCK_SET_WALL							\
-diff --git a/kernel/time/tick-sched.c b/kernel/time/tick-sched.c
-index 01fb50c1b17e..4c7ccb1c9307 100644
---- a/kernel/time/tick-sched.c
-+++ b/kernel/time/tick-sched.c
-@@ -849,11 +849,6 @@ static ktime_t tick_nohz_next_event(struct tick_sched *ts, int cpu)
- 	 */
- 	delta = next_tick - basemono;
- 	if (delta <= (u64)TICK_NSEC) {
--		/*
--		 * Tell the timer code that the base is not idle, i.e. undo
--		 * the effect of get_next_timer_interrupt():
--		 */
--		timer_clear_idle();
- 		/*
- 		 * We've not stopped the tick yet, and there's a timer in the
- 		 * next period, so no point in stopping it either, bail.
-@@ -889,12 +884,34 @@ static ktime_t tick_nohz_next_event(struct tick_sched *ts, int cpu)
- static void tick_nohz_stop_tick(struct tick_sched *ts, int cpu)
- {
- 	struct clock_event_device *dev = __this_cpu_read(tick_cpu_device.evtdev);
-+	unsigned long basejiff = ts->last_jiffies;
- 	u64 basemono = ts->timer_expires_base;
--	u64 expires = ts->timer_expires;
-+	bool timer_idle;
-+	u64 expires;
- 
- 	/* Make sure we won't be trying to stop it twice in a row. */
- 	ts->timer_expires_base = 0;
- 
-+	/*
-+	 * Now the tick should be stopped definitely - so the timer base needs
-+	 * to be marked idle as well to not miss a newly queued timer.
-+	 */
-+	expires = timer_base_try_to_set_idle(basejiff, basemono, &timer_idle);
-+	if (expires > ts->timer_expires) {
-+		/*
-+		 * This path could only happen when the first timer was removed
-+		 * between calculating the possible sleep length and now (when
-+		 * high resolution mode is not active, timer could also be a
-+		 * hrtimer).
-+		 *
-+		 * We have to stick to the original calculated expiry value to
-+		 * not stop the tick for too long with a shallow C-state (which
-+		 * was programmed by cpuidle because of an early next expiration
-+		 * value).
-+		 */
-+		expires = ts->timer_expires;
-+	}
-+
- 	/*
- 	 * If this CPU is the one which updates jiffies, then give up
- 	 * the assignment and let it be taken by the CPU which runs
-@@ -930,6 +947,10 @@ static void tick_nohz_stop_tick(struct tick_sched *ts, int cpu)
- 	 * scheduler tick in tick_nohz_restart_sched_tick().
- 	 */
- 	if (!ts->tick_stopped) {
-+		/* If the timer base is not idle, retain the tick. */
-+		if (!timer_idle)
-+			return;
-+
- 		calc_load_nohz_start();
- 		quiet_vmstat();
- 
-@@ -991,7 +1012,7 @@ static void tick_nohz_restart_sched_tick(struct tick_sched *ts, ktime_t now)
- 	touch_softlockup_watchdog_sched();
- 
- 	/* Cancel the scheduled timer and restore the tick: */
--	ts->tick_stopped  = 0;
-+	ts->tick_stopped = 0;
- 	tick_nohz_restart(ts, now);
- }
- 
-@@ -1147,11 +1168,6 @@ void tick_nohz_idle_stop_tick(void)
- void tick_nohz_idle_retain_tick(void)
- {
- 	tick_nohz_retain_tick(this_cpu_ptr(&tick_cpu_sched));
--	/*
--	 * Undo the effect of get_next_timer_interrupt() called from
--	 * tick_nohz_next_event().
--	 */
--	timer_clear_idle();
- }
- 
- /**
-diff --git a/kernel/time/timer.c b/kernel/time/timer.c
-index 2aea55d53416..3a668060692e 100644
---- a/kernel/time/timer.c
-+++ b/kernel/time/timer.c
-@@ -1911,19 +1911,22 @@ static u64 cmp_next_hrtimer_event(u64 basem, u64 expires)
- 	return DIV_ROUND_UP_ULL(nextevt, TICK_NSEC) * TICK_NSEC;
- }
- 
--static inline u64 __get_next_timer_interrupt(unsigned long basej, u64 basem)
-+static inline u64 __get_next_timer_interrupt(unsigned long basej, u64 basem,
-+					     bool *idle)
- {
- 	struct timer_base *base = this_cpu_ptr(&timer_bases[BASE_STD]);
- 	unsigned long nextevt = basej + NEXT_TIMER_MAX_DELTA;
- 	u64 expires = KTIME_MAX;
--	bool was_idle;
- 
- 	/*
- 	 * Pretend that there is no timer pending if the cpu is offline.
- 	 * Possible pending timers will be migrated later to an active cpu.
- 	 */
--	if (cpu_is_offline(smp_processor_id()))
-+	if (cpu_is_offline(smp_processor_id())) {
-+		if (idle)
-+			*idle = true;
- 		return expires;
-+	}
- 
- 	raw_spin_lock(&base->lock);
- 	if (base->next_expiry_recalc)
-@@ -1953,17 +1956,26 @@ static inline u64 __get_next_timer_interrupt(unsigned long basej, u64 basem)
- 	__forward_timer_base(base, basej);
- 
- 	/*
--	 * Base is idle if the next event is more than a tick away.
--	 *
--	 * If the base is marked idle then any timer add operation must forward
--	 * the base clk itself to keep granularity small. This idle logic is
--	 * only maintained for the BASE_STD base, deferrable timers may still
--	 * see large granularity skew (by design).
-+	 * Set base->is_idle only when caller is timer_base_try_to_set_idle()
- 	 */
--	was_idle = base->is_idle;
--	base->is_idle = time_after(nextevt, basej + 1);
--	if (was_idle != base->is_idle)
--		trace_timer_base_idle(base->is_idle, base->cpu);
-+	if (idle) {
-+		/*
-+		 * Base is idle if the next event is more than a tick away.
-+		 *
-+		 * If the base is marked idle then any timer add operation must
-+		 * forward the base clk itself to keep granularity small. This
-+		 * idle logic is only maintained for the BASE_STD base,
-+		 * deferrable timers may still see large granularity skew (by
-+		 * design).
-+		 */
-+		if (!base->is_idle) {
-+			if (time_after(nextevt, basej + 1)) {
-+				base->is_idle = true;
-+				trace_timer_base_idle(true, base->cpu);
-+			}
-+		}
-+		*idle = base->is_idle;
-+	}
- 
- 	raw_spin_unlock(&base->lock);
- 
-@@ -1980,7 +1992,21 @@ static inline u64 __get_next_timer_interrupt(unsigned long basej, u64 basem)
-  */
- u64 get_next_timer_interrupt(unsigned long basej, u64 basem)
- {
--	return __get_next_timer_interrupt(basej, basem);
-+	return __get_next_timer_interrupt(basej, basem, NULL);
-+}
-+
-+/**
-+ * timer_base_try_to_set_idle() - Try to set the idle state of the timer bases
-+ * @basej:	base time jiffies
-+ * @basem:	base time clock monotonic
-+ * @idle:	pointer to store the value of timer_base->is_idle
-+ *
-+ * Returns the tick aligned clock monotonic time of the next pending
-+ * timer or KTIME_MAX if no timer is pending.
-+ */
-+u64 timer_base_try_to_set_idle(unsigned long basej, u64 basem, bool *idle)
-+{
-+	return __get_next_timer_interrupt(basej, basem, idle);
- }
- 
- /**
-@@ -1998,10 +2024,8 @@ void timer_clear_idle(void)
- 	 * sending the IPI a few instructions smaller for the cost of taking
- 	 * the lock in the exit from idle path.
- 	 */
--	if (base->is_idle) {
--		base->is_idle = false;
--		trace_timer_base_idle(false, smp_processor_id());
--	}
-+	base->is_idle = false;
-+	trace_timer_base_idle(false, smp_processor_id());
- }
- #endif
- 
--- 
-2.39.2
+Hey, that doesn't match the kernel driver!  Why these values?
 
+
+> +
+> +unsigned char desc[HV_RING_SIZE];
+> +
+> +static int target_fd;
+> +static char target_fname[PATH_MAX];
+> +static unsigned long long filesize;
+> +
+> +static int hv_fcopy_create_file(char *file_name, char *path_name, __u32 flags)
+> +{
+> +	int error = HV_E_FAIL;
+> +	char *q, *p;
+> +
+> +	filesize = 0;
+> +	p = (char *)path_name;
+
+Why the unneeded cast?
+
+> +	snprintf(target_fname, sizeof(target_fname), "%s/%s",
+> +		 (char *)path_name, (char *)file_name);
+
+Again, why all of the unneeded casts?  This feels very odd, so I've
+stopped reading here, perhaps get an internal review first before
+sending this out again?
+
+thanks,
+
+greg k-h
