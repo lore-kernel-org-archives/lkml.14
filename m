@@ -1,231 +1,161 @@
-Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from APC01-PSA-obe.outbound.protection.outlook.com (mail-psaapc01olkn2065.outbound.protection.outlook.com [40.92.52.65])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64E1A3D966
-	for <linux-kernel@vger.kernel.org>; Mon, 19 Feb 2024 22:33:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708382033; cv=none; b=Zn98sQ5pzKLwc3xgXdlETVV/mpZnDWszdYXgwro/pPrbpCu9QjXEStub6LLyo76XcHflSSCoffgHg/CzlrUnnoCFHbsSkA7tXntdt6iKpHfgp82xVVIHF/kD66gXyXHuWLs6x6Z18qcM0RFgweEMM5aAzdGKQ+wXDDs7gnxFSjk=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708382033; c=relaxed/simple;
-	bh=cB2Qe3sL4F5K56WhslZkEo6DrttREefN+0eSWkobVVw=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=a6J8KacvtTGS6JWUt4k4LLguTs+IFTIt/OOdXZ1AtClFPnHuPisGXVkUYgXS5//dBOmxXf6XE+ydxcdnF/5FZJXjTg5A4jCIsKJfS6DQ933OS5TgoI3jW+aFrJLJ4omarl9TF9u16YUsSL/C6Chv0zN4O8LG/9EsYQNRId1IoJ8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=fSWzBEZG; arc=none smtp.client-ip=209.85.128.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B37BB54F94;
+	Mon, 19 Feb 2024 22:34:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.52.65
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1708382068; cv=fail; b=orfUqnUO0uetQiKG+sfOkw9m5grmLpLAmX0pi6JoWKP7NkqXT4ThuH9694of4EuDpO35nVCCtihx5PQJERx0WJU23XHWTO8jWngrImWwQC+8qB5cEXFPv7Yxc3RNPq4PuCak+XNWH2B9cLa8OI21XuBycnjzGLa7i1yIEJeW9II=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1708382068; c=relaxed/simple;
+	bh=TTmEiPCWpoKhPhvhaNN1aVSKpO9AEkLkUZA434sqxwU=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=kTkY8GuFuOzboL4f7cQK3S23R+zie1J3CjizHlWqLu/zPCoZSj7vmG5VfVt+A1z8nNfxtZhAyLzJmwyI44aWJFDa56LZu2qlWx8eYhS5aIWy8D7CD7NcZ0R+5FhKPTplIPDR0L/F1RijmIvNYDW+Un6IjEijgJdDbVKL+4G6WlE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=J1bCiCmf; arc=fail smtp.client-ip=40.92.52.65
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="fSWzBEZG"
-Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-608575317f8so7479227b3.3
-        for <linux-kernel@vger.kernel.org>; Mon, 19 Feb 2024 14:33:51 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1708382030; x=1708986830; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=L2F2d370iBT4NDo692GMhX9HUMYxc26yEy5510rVGDs=;
-        b=fSWzBEZGOfzNUt3XfCfob2ue7dYG3o4eyz005gCo3AXMO3p53jFRsWpK2Kud+520RF
-         aTj0hLrYJCktHtDxCB/71KqgkPS5mIP0VLxlLNQt5ZcHI4l1ASxPpzObQWCIRsK5CaVZ
-         MfGtGIrMkmdnVI1zb4Yp5tZ1gPUd8dVN4uTCUQhMmrgQcFaw7WwGo1NFgYu+EBfh4W3g
-         6+qmByU+H+8voYIe+aQubTzSmMZjUT1pZiqRgvgUqsfBblLFENLL7vZ2FbIJXPak2tqT
-         pz9h9jvAydMnN35QtgLvwMRNAD/N1T9MtBZUXGLfjunL8S43rejlBLDUswoebLQB1dNt
-         mKpg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708382030; x=1708986830;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=L2F2d370iBT4NDo692GMhX9HUMYxc26yEy5510rVGDs=;
-        b=ayoevbCEJJ17fiVodYw+UlSNPra/dWZQubxSjzh/EgI6ckhHJz1rdB7iDidpYVePsW
-         fvtsX32SK0yz5WFBjF32von7mPjcFbDOVbl4JvGydZlp/Gh0U+HnCLu1x+vnJyTgHuqW
-         IMlhq2PV6jCU1OxlAZXXK0pL913+1HeuGowGCss51HzRbSpXfld7pujNyL2mWt0Yuc+h
-         SvLtegGeYQazAf17GWPD7ibJCGoisOQi8QUvVCQsFEIduKjXFBAwsTMWGFEpO4BMBVmM
-         g6lU/P6Me9oPg4uZ/1DJBmg38cTS+dXxa5Ul79E1LStX6TWJA6nIYuS049uMgKEqPzgO
-         FcMQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUe4QBmOqCrsrj1uLli0Jxbl09tfUt2n5jlM30RQ9EoVNQ0efjhIewmTJw8WA4aAWzXQe9ScJKcE+QhMtuo+FzPmTyU8/f4EbBLdFkb
-X-Gm-Message-State: AOJu0Yzb0wnVveNovKjPCO4U5q9Ydr9BwSzYnyFEoasUfIoH4g5fjP72
-	g5gxasHNLgKe0KCooRQo1eV0HwOtLn1q3gzGGz6JhxtcH8LY/2wsRUoug2ADTG7lJfqexw/JTJc
-	rwQ==
-X-Google-Smtp-Source: AGHT+IFgBn1pwmA80Xr6878qTRqEsY9mDc5ekWPCTg7S48ErOOV5LQyFL19mN0vMOiwUx0LfthTm8jOltuw=
-X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a81:7949:0:b0:608:5535:9bff with SMTP id
- u70-20020a817949000000b0060855359bffmr297616ywc.7.1708382030474; Mon, 19 Feb
- 2024 14:33:50 -0800 (PST)
-Date: Mon, 19 Feb 2024 14:33:49 -0800
-In-Reply-To: <20240217014513.7853-4-dongli.zhang@oracle.com>
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="J1bCiCmf"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=dbT7YxhOTL9eWNJFV4iZw7d26GgecxnoRkQGSKycQU60ctalkEjOuzMNGnPvQslRZrEcpPLnSsqZ3UO0BmfE+UKjX4dk1dUKjH5ahG9Lwr6EA+YxY0ELUAlZZXnDgnO33835xeVeZNJDOPmvt4msFUnh+zLRkAXP+usxAGldtQCTXuD0//p+LM9gljOiqsT1A1fPvBCxgyd3bkCN+66W1wWWfJ4NtW598hO8vI0j5AWCExlYkU0HM/k6yPfDJr1ahg3MTOBcXijwwLbyCRvMAUgYe3sU8Ymg8Rn49PAYgucW+LfibUEkRdZ8LWa6xlio/q615UHFi5JPHnrWz5iC4A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=mGbM3AC5SJV90fJaTlCt5tBckr/ZJADQtQ7J0uA83gk=;
+ b=ZOG1Pw81UOkmsnblCJZrMK2CFbJ1OgPgjjG2SKvhEj6imx/HeLA/d+XXLIsKB5wcedZ3eRRbcUXu5cQF5LoMl/pgNfEXD7Hk9+2M/NEhsyWhDN2qukofGkLU2IClhwnAZNrb0iyfftnnCXx0DBGsDA/W30eHIrVCrmNRjnnSLdv0XQGVvfSbzwNTyY6VR9nOD2H0+9yEqr0guHU/KgIpWQQmPLpTKUt7laGZyS1pvvODKxuxYP7bIUhvGL4Llhl9DBVzbCvWF4wMAiREdJ1LFh5ApM+mhBpwuTGS7M4MORh2LthLCMMCpzhxO/mx+bh+GYdlofusdJxp29XvCCZfVw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=mGbM3AC5SJV90fJaTlCt5tBckr/ZJADQtQ7J0uA83gk=;
+ b=J1bCiCmfp6aUCZ0DrVlss3yE69a1oH9u60nU7/LiPxT/xa9/V5jxbF1rUd7zAeahAp9FgzngWdGHegudk6Fi+OX9ypiZ/tMYnRPEhCx8Hl02YLTZ6LXTDa0GioYNxh0tAHijHm9lPSqRqZbXE1OD1278ZvUUuBXOvm7AFLZYG81o5tEwSjUc1dwi+BrKio9p2B3TmmtohocugAKppZXgK5P0FLlFtHEi16MtHGcVmpG7gX9MR8o5XI4d+78MoKQIbDusY0tmtvqS62HEPiibmiSgE7s2Ht1GfTWNxfLhViwKfpLsvxz26xzfirqdqH/TrwICv9YLWz82aFbq/V88xg==
+Received: from SEZPR06MB6959.apcprd06.prod.outlook.com (2603:1096:101:1ed::14)
+ by SEZPR06MB5958.apcprd06.prod.outlook.com (2603:1096:101:e5::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7292.38; Mon, 19 Feb
+ 2024 22:34:21 +0000
+Received: from SEZPR06MB6959.apcprd06.prod.outlook.com
+ ([fe80::53da:a8a:83cb:b9ad]) by SEZPR06MB6959.apcprd06.prod.outlook.com
+ ([fe80::53da:a8a:83cb:b9ad%4]) with mapi id 15.20.7292.036; Mon, 19 Feb 2024
+ 22:34:21 +0000
+Message-ID:
+ <SEZPR06MB69594F945CDB5DB05F51C9BA96512@SEZPR06MB6959.apcprd06.prod.outlook.com>
+Date: Tue, 20 Feb 2024 06:34:18 +0800
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next v3 3/6] net: hisilicon: add support for
+ hisi_femac core on Hi3798MV200
+Content-Language: en-US
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: Yisen Zhuang <yisen.zhuang@huawei.com>,
+ Salil Mehta <salil.mehta@huawei.com>, "David S. Miller"
+ <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>, Heiner Kallweit <hkallweit1@gmail.com>,
+ Russell King <linux@armlinux.org.uk>, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+References: <20240220-net-v3-0-b68e5b75e765@outlook.com>
+ <20240220-net-v3-3-b68e5b75e765@outlook.com>
+ <29fc21f0-0e46-4d0f-8d4b-c4dbd1689c55@lunn.ch>
+ <SEZPR06MB695901E7D4BEABE1B6F319D096512@SEZPR06MB6959.apcprd06.prod.outlook.com>
+ <5572f4dd-dcf2-42ec-99c8-51bf4d1f28ba@lunn.ch>
+ <SEZPR06MB6959E5BDA57AF61BFAB19FC096512@SEZPR06MB6959.apcprd06.prod.outlook.com>
+ <0beab72d-2919-447f-88ff-fb7c92b28b61@lunn.ch>
+From: Yang Xiwen <forbidden405@outlook.com>
+In-Reply-To: <0beab72d-2919-447f-88ff-fb7c92b28b61@lunn.ch>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-TMN:
+ [+1LCJbXh7vhO7eLkeYwqe1Vv//pXB4cTLMfCKz6DHOOcIIFyOwBJKAzTPRqh5X9lzrTzYwngVl8=]
+X-ClientProxiedBy: TYCP286CA0247.JPNP286.PROD.OUTLOOK.COM
+ (2603:1096:400:456::18) To SEZPR06MB6959.apcprd06.prod.outlook.com
+ (2603:1096:101:1ed::14)
+X-Microsoft-Original-Message-ID:
+ <df199a6f-a859-4ffc-a2be-04dd5f74a2dc@outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20240217014513.7853-1-dongli.zhang@oracle.com> <20240217014513.7853-4-dongli.zhang@oracle.com>
-Message-ID: <ZdPXTfHj4uxfe0Ay@google.com>
-Subject: Re: [PATCH 3/3] KVM: VMX: simplify MSR interception enable/disable
-From: Sean Christopherson <seanjc@google.com>
-To: Dongli Zhang <dongli.zhang@oracle.com>
-Cc: kvm@vger.kernel.org, pbonzini@redhat.com, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SEZPR06MB6959:EE_|SEZPR06MB5958:EE_
+X-MS-Office365-Filtering-Correlation-Id: 18c68fbc-bae8-44bb-e051-08dc319aeaa4
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	ounD5c9q/rGVTkhm0fNLYQcMFVULPMPTYeauoM7hqRbaMRyHzBqiySXyWB68npnbituPboBGMG0bGhqd8F9RbmLWGh/w1i+/LCC6IXOnXkXDD2kHg0nGDGTZHX0BcvhYwBC3P5ifRspgJXz82ea66nl55lQK+10YDumCB96VI8R1iWQNQ1O8OtgU12iS2zhhgG9f00oYKB3TYxjN8lM81i0UPPRVSFQD5AoZiwN1DdL5aR+IunfbndEUu4e3qtBCc3sZlQrcdHWE1bw4vLsmdH9Ob7nkGe6tjtbweNeNgpAAQMa5GKS08rWGcVQpL9Wk9ViWTa+rqB+W82ReLbgGIU1mDxMFaiADcJDnp1U+aQfSavaYmKT0d8JFyxWKL7n3iqkhyNZddPacKu+ZvFdMpfyy7xF3iva4O0JWE9eCiiaeAy42qCLz4hwyDuD0J1ZpNwhhrzBa0w6m0o713vfERLNCBO2+/sCfVriFqLHHMViyjc6m6n4DOjmAe0EUgD81fs7DL3IbHsTEsHVgKQ40XkncqCiPGABY/ZYd3RlflXGxh7p3jmueAReTFy1YZzT5
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?OEdKVG5GZ0ZyQWE2R2dvVUpWQ0xycTdacnlod2dkVjJsK3Zwd0RmQkt6YlJo?=
+ =?utf-8?B?OUdBbWZ4VmdOejZUSnhiK0F1Q0xxMHE4eDhkWDZ1UERjTjNrZzJuRHpHdCsv?=
+ =?utf-8?B?ZStpbzFJZG94Q2hvWTE3TTE5Y3RhSmFSdDBDVG0yZ3lkUVpUbTA1Ti9JeGdX?=
+ =?utf-8?B?bFhRY2RSbTBZZ3NzTlhCcDhoNlBTSHlBQlc3czlZT0FWWmJid3c5aU1JSVpN?=
+ =?utf-8?B?alBWR1ZyT2c2TTdYcmZHTW96MlJGODVKL2VoYXhmZnF5N3JrbE4ySHZ3akww?=
+ =?utf-8?B?R3NibzJRSnYwYS9Yd3hwRGx2MEljZjZXdFFCRHkrOFJEUElPd1dBNDZySzI4?=
+ =?utf-8?B?VGJJUVYyRU0yQlpnRlArSDhHcy9xT3VVa0tuQjFiKzM0blYyRzJNOE5EZDAr?=
+ =?utf-8?B?clpDLy93UERpSW56UFNxb2hiYUYwa0xyOEt4czYxc0xHY05XWktBaGF6dDNj?=
+ =?utf-8?B?LzFoVW1DNHp1MDdZYVNKT2FWSzVDeExSdEJycEdLaXQ5aVUxQmoxeUp5eXFk?=
+ =?utf-8?B?WFhnT0xNZnR6Z2ZiV3VtRDhINTZzVVoyUjhmcmkrVy92WEJ6bVAzL1RObldO?=
+ =?utf-8?B?YW1yd0NibjQxSHRGdHlITnB4Y1ZBMHlBK3JZMnYrc01ncmRRdUVRY0NQTzNh?=
+ =?utf-8?B?VGlPY2I4V1ZqY29mazVCWTNqbUhmcWFRMTh2dU5WSzNqS3pFbkpJakR0MGRp?=
+ =?utf-8?B?ditvSytWelZPemppdEFBZHNCRXhiT2VJSklxdzhwNXh2MU1Sa2dhNkFuVklP?=
+ =?utf-8?B?Qnp3ZmtpaTUyeU43UHBxbkg0d3VZQ2h3QXpqV2ZwaGJrcVNSell0bStPTXZw?=
+ =?utf-8?B?L1JTRmxPR1ZuQ21TY0REQk5FY3FIclhSMUdrdGt4eTMxTGp1Rkh6NTBFbXV4?=
+ =?utf-8?B?ZDNnUnNnMVl5aC9hVGc5Vkc3bC9pOUkyWitUTUxNMEtqWTZBUE1IaGNBWXdk?=
+ =?utf-8?B?ZlZvUlBrZDlZQVdlQmJpS2VTMVVLOXF5Sk5kTU11YXF6RC9YNHE5NzNjNGU0?=
+ =?utf-8?B?aElxd29PQmlUMzlqZWFLSUhRSGhrQ1dsNXVOUWE3dlRJUGxxbkVTeXRKdXBO?=
+ =?utf-8?B?enhrYUgxQjhxU0NiWGR1SHhiQVczclNPaWx3TitDNGNmNVZpTDJLQVUrNGMy?=
+ =?utf-8?B?N1VNMnBNRE91NVNWOGV4eW9MMWJ1N1JKTkFacERUL3JteEhWWlozY3liWGtH?=
+ =?utf-8?B?QTFCeHFOdFN4bGltNTRqKzFidVkxR01MR3E5WFZlaWVmdXNoUzhzRFZvQXdM?=
+ =?utf-8?B?SklNU3B2cS9xcHJ0TTZmY1ZhTlRpb2FTOWpXMCtzUTg3dDVWZ2RydkJ4NlBq?=
+ =?utf-8?B?SHBZM013bnI0TkFqSjdmQUdyVE1Sb1JSeTF6WEtmeWV1TlZrdjFOVktyV0J6?=
+ =?utf-8?B?aXpjZ3lxM1Q2NUh0Mm9HMUVXcG1aOGdvR2VCWXZhdlBtR25tOExyMDgrc2s3?=
+ =?utf-8?B?RHJnNllEcTJIUUg4enY2RGV1akJvRml0Vi9ETklUQnR4KzdJUkNCU0lDLzRn?=
+ =?utf-8?B?SDM5TmJGYkFDazBLQjFDOGZPWk9CT0YyYXNvUHVYaEh4WDU0U3NhT3hCcmZi?=
+ =?utf-8?B?ajB3WitTQkhFV0pFcnNsY3RhS0RiOU1JQmNuNW5kdjN1MnpiQjRnQTlPUVFE?=
+ =?utf-8?B?ZEV6V3pRTTFMR295bThQWER6a2ZNcVdDUXpMd2FzZkxoa0hDQzQwNEwxMnQr?=
+ =?utf-8?B?NUtkQW9qazlnSis5bTNrY1liQk5xL0k1bDRKNTJzeXV3T0I2TmdjQVp5T0NH?=
+ =?utf-8?Q?+X1h9ALdyYObh6sTV5a/i8B8/dGuKXY7BlI0OLy?=
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 18c68fbc-bae8-44bb-e051-08dc319aeaa4
+X-MS-Exchange-CrossTenant-AuthSource: SEZPR06MB6959.apcprd06.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Feb 2024 22:34:21.2466
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
+	00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SEZPR06MB5958
 
-On Fri, Feb 16, 2024, Dongli Zhang wrote:
-> ---
->  arch/x86/kvm/vmx/vmx.c | 55 +++++++++++++++++++++---------------------
->  1 file changed, 28 insertions(+), 27 deletions(-)
-> 
-> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-> index 5a866d3c2bc8..76dff0e7d8bd 100644
-> --- a/arch/x86/kvm/vmx/vmx.c
-> +++ b/arch/x86/kvm/vmx/vmx.c
-> @@ -669,14 +669,18 @@ static int possible_passthrough_msr_slot(u32 msr)
->  	return -ENOENT;
->  }
->  
-> -static bool is_valid_passthrough_msr(u32 msr)
-> +#define VMX_POSSIBLE_PASSTHROUGH	1
-> +#define VMX_OTHER_PASSTHROUGH		2
-> +/*
-> + * Vefify if the msr is the passthrough MSRs.
-> + * Return the index in *possible_idx if it is a possible passthrough MSR.
-> + */
-> +static int validate_passthrough_msr(u32 msr, int *possible_idx)
+On 2/20/2024 6:05 AM, Andrew Lunn wrote:
+>> It's not MAC which behaves wrongly, it's the MDIO bus. If we don't follow
+>> the reset procedure properly. The MDIO bus fails to respond to any
+>> write/read commands. But i believe MAC controller and PHY are still working.
+>> I recalled that it can still transfer network packets, though it fails to
+>> read PHY registers from MDIO bus so only 10Mbps is available (And the phy id
+>> read out is always 0x0, normally it's 0x20669853).
+>>
+>> Maybe during initialization, PHY sent some garbage to MDIO bus and killed
+>> it.
+> MDIO bus masters are really simple things, not much more than a shift
+> register. I find it hard to believe the MDIO bus master breaks because
+I conclude that master side is working. Because when i tried to read PHY 
+registers manually. It does say it completes reading(the finish bit is 
+set). Though the data read out is invalid.
+> of reset order. If the MDIO pins went to SoC pins, it would be simple
+> to prove, a bus-pirate or similar can capture the signals and sigrok
+> can decode MDIO.
+>
+> To me, its more likely the PHY side of the MDIO bus is broken somehow.
+>
+>     Andrew
 
-There's no need for a custom tri-state return value or an out-param, just return
-the slot/-ENOENT.  Not fully tested yet, but this should do the trick.
 
-From: Sean Christopherson <seanjc@google.com>
-Date: Mon, 19 Feb 2024 07:58:10 -0800
-Subject: [PATCH] KVM: VMX: Combine "check" and "get" APIs for passthrough MSR
- lookups
-
-Combine possible_passthrough_msr_slot() and is_valid_passthrough_msr()
-into a single function, vmx_get_passthrough_msr_slot(), and have the
-combined helper return the slot on success, using a negative value to
-indiciate "failure".
-
-Combining the operations avoids iterating over the array of passthrough
-MSRs twice for relevant MSRs.
-
-Suggested-by: Dongli Zhang <dongli.zhang@oracle.com>
-Signed-off-by: Sean Christopherson <seanjc@google.com>
----
- arch/x86/kvm/vmx/vmx.c | 63 +++++++++++++++++-------------------------
- 1 file changed, 25 insertions(+), 38 deletions(-)
-
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index 014cf47dc66b..969fd3aa0da3 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -658,25 +658,14 @@ static inline bool cpu_need_virtualize_apic_accesses(struct kvm_vcpu *vcpu)
- 	return flexpriority_enabled && lapic_in_kernel(vcpu);
- }
- 
--static int possible_passthrough_msr_slot(u32 msr)
-+static int vmx_get_passthrough_msr_slot(u32 msr)
- {
--	u32 i;
--
--	for (i = 0; i < ARRAY_SIZE(vmx_possible_passthrough_msrs); i++)
--		if (vmx_possible_passthrough_msrs[i] == msr)
--			return i;
--
--	return -ENOENT;
--}
--
--static bool is_valid_passthrough_msr(u32 msr)
--{
--	bool r;
-+	int i;
- 
- 	switch (msr) {
- 	case 0x800 ... 0x8ff:
- 		/* x2APIC MSRs. These are handled in vmx_update_msr_bitmap_x2apic() */
--		return true;
-+		return -ENOENT;
- 	case MSR_IA32_RTIT_STATUS:
- 	case MSR_IA32_RTIT_OUTPUT_BASE:
- 	case MSR_IA32_RTIT_OUTPUT_MASK:
-@@ -691,14 +680,16 @@ static bool is_valid_passthrough_msr(u32 msr)
- 	case MSR_LBR_CORE_FROM ... MSR_LBR_CORE_FROM + 8:
- 	case MSR_LBR_CORE_TO ... MSR_LBR_CORE_TO + 8:
- 		/* LBR MSRs. These are handled in vmx_update_intercept_for_lbr_msrs() */
--		return true;
-+		return -ENOENT;
- 	}
- 
--	r = possible_passthrough_msr_slot(msr) != -ENOENT;
--
--	WARN(!r, "Invalid MSR %x, please adapt vmx_possible_passthrough_msrs[]", msr);
-+	for (i = 0; i < ARRAY_SIZE(vmx_possible_passthrough_msrs); i++) {
-+		if (vmx_possible_passthrough_msrs[i] == msr)
-+			return i;
-+	}
- 
--	return r;
-+	WARN(1, "Invalid MSR %x, please adapt vmx_possible_passthrough_msrs[]", msr);
-+	return -ENOENT;
- }
- 
- struct vmx_uret_msr *vmx_find_uret_msr(struct vcpu_vmx *vmx, u32 msr)
-@@ -3954,6 +3945,7 @@ void vmx_disable_intercept_for_msr(struct kvm_vcpu *vcpu, u32 msr, int type)
- {
- 	struct vcpu_vmx *vmx = to_vmx(vcpu);
- 	unsigned long *msr_bitmap = vmx->vmcs01.msr_bitmap;
-+	int idx;
- 
- 	if (!cpu_has_vmx_msr_bitmap())
- 		return;
-@@ -3963,16 +3955,13 @@ void vmx_disable_intercept_for_msr(struct kvm_vcpu *vcpu, u32 msr, int type)
- 	/*
- 	 * Mark the desired intercept state in shadow bitmap, this is needed
- 	 * for resync when the MSR filters change.
--	*/
--	if (is_valid_passthrough_msr(msr)) {
--		int idx = possible_passthrough_msr_slot(msr);
--
--		if (idx != -ENOENT) {
--			if (type & MSR_TYPE_R)
--				clear_bit(idx, vmx->shadow_msr_intercept.read);
--			if (type & MSR_TYPE_W)
--				clear_bit(idx, vmx->shadow_msr_intercept.write);
--		}
-+	 */
-+	idx = vmx_get_passthrough_msr_slot(msr);
-+	if (idx >= 0) {
-+		if (type & MSR_TYPE_R)
-+			clear_bit(idx, vmx->shadow_msr_intercept.read);
-+		if (type & MSR_TYPE_W)
-+			clear_bit(idx, vmx->shadow_msr_intercept.write);
- 	}
- 
- 	if ((type & MSR_TYPE_R) &&
-@@ -3998,6 +3987,7 @@ void vmx_enable_intercept_for_msr(struct kvm_vcpu *vcpu, u32 msr, int type)
- {
- 	struct vcpu_vmx *vmx = to_vmx(vcpu);
- 	unsigned long *msr_bitmap = vmx->vmcs01.msr_bitmap;
-+	int idx;
- 
- 	if (!cpu_has_vmx_msr_bitmap())
- 		return;
-@@ -4008,15 +3998,12 @@ void vmx_enable_intercept_for_msr(struct kvm_vcpu *vcpu, u32 msr, int type)
- 	 * Mark the desired intercept state in shadow bitmap, this is needed
- 	 * for resync when the MSR filter changes.
- 	*/
--	if (is_valid_passthrough_msr(msr)) {
--		int idx = possible_passthrough_msr_slot(msr);
--
--		if (idx != -ENOENT) {
--			if (type & MSR_TYPE_R)
--				set_bit(idx, vmx->shadow_msr_intercept.read);
--			if (type & MSR_TYPE_W)
--				set_bit(idx, vmx->shadow_msr_intercept.write);
--		}
-+	idx = vmx_get_passthrough_msr_slot(msr);
-+	if (idx >= 0) {
-+		if (type & MSR_TYPE_R)
-+			set_bit(idx, vmx->shadow_msr_intercept.read);
-+		if (type & MSR_TYPE_W)
-+			set_bit(idx, vmx->shadow_msr_intercept.write);
- 	}
- 
- 	if (type & MSR_TYPE_R)
-
-base-commit: 342c6dfc2a0ae893394a6f894acd1d1728c009f2
 -- 
+Regards,
+Yang Xiwen
+
