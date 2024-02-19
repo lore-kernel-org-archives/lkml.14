@@ -1,172 +1,137 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mout.web.de (mout.web.de [212.227.15.3])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 208CC38F98
-	for <linux-kernel@vger.kernel.org>; Mon, 19 Feb 2024 16:01:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A90E238DCA;
+	Mon, 19 Feb 2024 16:02:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.3
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708358497; cv=none; b=Bx73Mnj0OLGLrCoW32Fpv7RMqbdjF2gtlNoukGCpQpY0yy9zD88cVPysGiJ2KWungnPso7x+wU7E05eIVAF/1+1XFTqRo+aixnthvqFK42apb982vK/FLUwuLR8f7n6zyfTgfHKpvbT7Ph0A2/1P+akrfLmE6jd3+kEEBelfTN0=
+	t=1708358576; cv=none; b=sxefDSlvxztgrVTS3w58KVX0XSJ2BaqnFlD0NA7vpwKUfLpfcAQwGzIK7qUPzeOcB+AKc1ZmCs2+UFy+6J3POAW9Ngq0N0eopVeMHc3C0MyjCYAcrwp3UTVf9m6eldduji3xpxFu3BNDvmSTBMiF8Q4zJ74fQOnFMUlP64mhTWA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708358497; c=relaxed/simple;
-	bh=9rjvz9CM+LavqK3pQR6XiVskqXx8Rp5ZFRE6QcceZfA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=DBDhmadKPd3T75inV/9WNkjFBULtNSURGm/rPpPFwSQFHhn6p2e8jysS7zNBqu2TFWLzrdGvwFTx8LXd3WXr5VXheK75HuOxgVWXumZ2Vzm6cdwAziB23pdgqCRdQR1dVVXyp24sUqs7GUuLYu1EzcAoYjSd9kUjN9rBn6LM7Q8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=biqvwINd; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1708358576; c=relaxed/simple;
+	bh=cncWoi+d1RGf/a5S4CtVXG7UuuYdV2+VdmehADA5xXk=;
+	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
+	 In-Reply-To:Content-Type; b=b5I3+3/U5KfoDB6F8XUVdOxttehHZFdQns3IQ3b9vifMHY6qNjJ6OUqpyXONaiEJqOsTG9Uvkowm+nK7RnesL9qwlo4SXvZSwgUAL1eXTegcVJp5DrZ0sst64iMa64MUqJ2Q0j3XP1MlAuwNlkM9mBqTu7UeqLgZLPaQPqYYt0I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=G7p+DA6p; arc=none smtp.client-ip=212.227.15.3
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="biqvwINd"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1708358493;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=ACYtZtf7H5Q3rQRQKd2B0qBvUBXaYHTjNbsS69NayNU=;
-	b=biqvwINdN5ifToadyyxKZVKIqnlLRC/Pok8HfXi75f1H/ZZhMccnHP9WKqac+6jSaAqXhg
-	A0wJ03qFsh4vQOz0wEp0jkSeo0dOwh8Fd8FBLy0Wyclvr01CxbtVrpF3AECX+3pZ8cxWJ/
-	TWrkIZn1OTpjfkFAQZUEBVppNRTHCMY=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-625-N3l74wuWPYC-cgKPtsyPdg-1; Mon, 19 Feb 2024 11:01:30 -0500
-X-MC-Unique: N3l74wuWPYC-cgKPtsyPdg-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.rdu2.redhat.com [10.11.54.3])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id E6980108C063;
-	Mon, 19 Feb 2024 16:01:29 +0000 (UTC)
-Received: from thuth-p1g4.redhat.com (unknown [10.39.192.115])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id F098F1121312;
-	Mon, 19 Feb 2024 16:01:27 +0000 (UTC)
-From: Thomas Huth <thuth@redhat.com>
-To: linux-m68k@lists.linux-m68k.org,
-	Arnd Bergmann <arnd@arndb.de>,
-	Greg Ungerer <gerg@linux-m68k.org>,
-	Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: linux-kernel@vger.kernel.org,
-	Oleg Nesterov <oleg@redhat.com>
-Subject: [PATCH v2] m68k: Avoid CONFIG_COLDFIRE switch in uapi header
-Date: Mon, 19 Feb 2024 17:01:26 +0100
-Message-ID: <20240219160126.510498-1-thuth@redhat.com>
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="G7p+DA6p"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de; s=s29768273;
+	t=1708358571; x=1708963371; i=markus.elfring@web.de;
+	bh=cncWoi+d1RGf/a5S4CtVXG7UuuYdV2+VdmehADA5xXk=;
+	h=X-UI-Sender-Class:Date:To:Cc:References:Subject:From:
+	 In-Reply-To;
+	b=G7p+DA6pcKaXx9Q3Y1diEzbjVjOtnwcyy802tGFqUgUfgH/GNrKDPjWmXsk5tmDM
+	 2A2Jaka6hBuQVRWC2spH5I8cAuEvWftG4tSV+PPMSn0elJoD59BNmtwxpxO26DPXX
+	 O4FDtdvyZq3eyPV693YvA/MHMZR/u5Ni3o8JrcgwGkHeShtcp43fETR70wWVJmoE/
+	 Yq/N1bVRgOSxo4KiT2MZXHm9YqiaBLiVl4wkzgMB/7VRbSOfkt0v9t4NJZGrk4n5O
+	 n37CsQQyhwFv8mM+tCFdrFH1trskuNz4cvODPvWgSzwmnfSuhvVlXZQ77QQO0Toym
+	 JGYuFys8ZSgBurBBtw==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.21] ([94.31.80.95]) by smtp.web.de (mrweb006
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 1M43KW-1rc6171ZZ2-00022S; Mon, 19
+ Feb 2024 16:57:17 +0100
+Message-ID: <9427c0fd-f48a-4104-ac7e-2929be3562af@web.de>
+Date: Mon, 19 Feb 2024 16:57:04 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.3
+User-Agent: Mozilla Thunderbird
+To: Niklas Cassel <cassel@kernel.org>,
+ Radhey Shyam Pandey <radhey.shyam.pandey@amd.com>,
+ Damien Le Moal <dlemoal@kernel.org>, Jens Axboe <axboe@kernel.dk>,
+ Michal Simek <michal.simek@amd.com>, Philipp Zabel <p.zabel@pengutronix.de>,
+ linux-ide@vger.kernel.org, kernel-janitors@vger.kernel.org
+Cc: LKML <linux-kernel@vger.kernel.org>, git@amd.com
+References: <ZdMp+QBiays6fprk@x1-carbon>
+Subject: Re: [PATCH v3] ata: ahci_ceva: fix error handling for Xilinx GT PHY
+ support
+Content-Language: en-GB
+From: Markus Elfring <Markus.Elfring@web.de>
+In-Reply-To: <ZdMp+QBiays6fprk@x1-carbon>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:9aWKjUNLAvFXdNdeXmCqi+CsGU2Divcei5WtZvrpJavhTUscivm
+ 55foQ1f/sOC7AxbquVlmIOkb+6d0GcrDsQ+zcY5d5PeOZwe/njLFetb5RygpGkMfcKRyBsZ
+ 1xxlUZwuf9eP6S8WizF73OVcoZBLhHC949XKxW/fHQth9pvUsRQRm4XC3BKVoyGePBf/3er
+ 7WpFHOMHyXIeqwEyM/jCA==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:Z5xuQVR5D3s=;KNcmfynmW+sNHysCEHwpCQStPRZ
+ pdnqcgbpuIgdUNxYxMSLajE01VRdbF+HGWWtdFHjwBd0Z6h1B+DmhyhU3LnxLQXgNlWxq3h6e
+ 4NfopGQNzZd6iaaEJ9LKOA9w3tI+OkihBR8HTlyTfnEBijfjWJDckglN0yZFRmJtAhTAMHi/8
+ gJu3uADKqqDUCFdOkBNBfip7YQtF4sE3l5WJvpFTuyA5vXpJbkqxq20VzGi0s6BlQzQKmfPTj
+ GKBCBjGQQcolZM52h3HWHJlDCcP9EyFHOCKRRUIIFUkWbuueFFzB/rUeI9StMEMPkqdNSXOwP
+ 1wSfbJWLXU5cz88oIvgv9WPbUsN07l7dgIFIBzxUzTL9gfoqU5PK4sUSXyECWwh9TH4msvjDl
+ RylTWLsquVGe/uUNaHpSgMeWGN+A/ZM4LchUzoCe8Elok1KGAN/uJEmgoRNuX8k12+JgIcRfT
+ qutvdDWPDT8lcD7P3ULplJuE6iS9p3pJZPfKU7263deybEwL62UHPDo/ncGHAMUSrpIbpjKbY
+ QNMRJ6Zx171tK9DbdU+NI5MO5X+iIqqeetXF9x3QEmLR/lVQRTMgdWeOj9uHnuuQTemm/4l96
+ EudWJ1LAYLHwJSXs4nLOW7psAWm7UZAwPG8dX5SZJwFCRjGYhwVKQfbg6IN0fJYhT6har5lQR
+ 6DMZijbRT367FPzsBSm5ngz/iAJ0vq7cQcMG4RP5f5Viso/eSzWIJtvFtn2ETM7jwQ8rKtKWm
+ ulhXHNH6OA86NC+RJaQuofeLCihE0oKJvWfVkUbOzEGmmdIVhpichQEwC5X3bV7BB4ZvIejyQ
+ 3fhXmJJOjWtlYVH08b47kaQvfxSb0OcKPnb9e/DPsI+Jo=
 
-We should not use any CONFIG switches in uapi headers since these
-only work during kernel compilation; they are not defined for
-userspace. Fix it by moving the struct pt_regs to the kernel-internal
-header instead - struct pt_regs does not seem to be required for
-the userspace headers on m68k at all.
+> > Platform clock and phy error resources are not cleaned up in Xilinx GT=
+ PHY
+> > error path.
+> >
+> > To fix introduce the function ceva_ahci_platform_enable_resources()
+=E2=80=A6
+> Applied:
+> https://git.kernel.org/pub/scm/linux/kernel/git/libata/linux.git/log/?h=
+=3Dfor-6.8-fixes
 
-Suggested-by: Greg Ungerer <gerg@linux-m68k.org>
-Signed-off-by: Thomas Huth <thuth@redhat.com>
----
- v2: Move the struct instead of changing the #ifdef
+The error code =E2=80=9C-EINVAL=E2=80=9D was set before the statement =E2=
+=80=9Cgoto disable_resources=E2=80=9D
+multiple times in the adjusted implementation of the function =E2=80=9Ccev=
+a_ahci_probe=E2=80=9D.
+I suggest to add a jump target so that a bit of exception handling
+can be better reused at the end of this function.
 
- See previous discussion here:
- https://lore.kernel.org/lkml/6e3f2a2e-2430-4b4f-9ead-d9a4d5e42713@linux-m68k.org/
 
- arch/m68k/include/asm/ptrace.h      | 29 +++++++++++++++++++++++++++++
- arch/m68k/include/uapi/asm/ptrace.h | 28 ----------------------------
- scripts/headers_install.sh          |  1 -
- 3 files changed, 29 insertions(+), 29 deletions(-)
+How do you think about to apply the following script for the semantic
+patch language (Coccinelle software) accordingly?
 
-diff --git a/arch/m68k/include/asm/ptrace.h b/arch/m68k/include/asm/ptrace.h
-index ea5a80ca1ab33..f200712946603 100644
---- a/arch/m68k/include/asm/ptrace.h
-+++ b/arch/m68k/include/asm/ptrace.h
-@@ -6,6 +6,35 @@
- 
- #ifndef __ASSEMBLY__
- 
-+/*
-+ * This struct defines the way the registers are stored on the
-+ * stack during a system call.
-+ */
-+struct pt_regs {
-+	long     d1;
-+	long     d2;
-+	long     d3;
-+	long     d4;
-+	long     d5;
-+	long     a0;
-+	long     a1;
-+	long     a2;
-+	long     d0;
-+	long     orig_d0;
-+	long     stkadj;
-+#ifdef CONFIG_COLDFIRE
-+	unsigned format :  4; /* frame format specifier */
-+	unsigned vector : 12; /* vector offset */
-+	unsigned short sr;
-+	unsigned long  pc;
-+#else
-+	unsigned short sr;
-+	unsigned long  pc;
-+	unsigned format :  4; /* frame format specifier */
-+	unsigned vector : 12; /* vector offset */
-+#endif
-+};
+
+@replacement1@
+identifier rc;
+@@
+ <+...
+ if (...)
+ {
+    ... when !=3D rc
+-   rc =3D -EINVAL;
+    goto
+-        disable_resources
++        e_inval
+    ;
+ }
+ ...+>
+ return 0;
 +
- #ifndef PS_S
- #define PS_S  (0x2000)
- #define PS_M  (0x1000)
-diff --git a/arch/m68k/include/uapi/asm/ptrace.h b/arch/m68k/include/uapi/asm/ptrace.h
-index 5b50ea592e002..a83bfe36dd10a 100644
---- a/arch/m68k/include/uapi/asm/ptrace.h
-+++ b/arch/m68k/include/uapi/asm/ptrace.h
-@@ -24,34 +24,6 @@
- 
- #ifndef __ASSEMBLY__
- 
--/* this struct defines the way the registers are stored on the
--   stack during a system call. */
--
--struct pt_regs {
--  long     d1;
--  long     d2;
--  long     d3;
--  long     d4;
--  long     d5;
--  long     a0;
--  long     a1;
--  long     a2;
--  long     d0;
--  long     orig_d0;
--  long     stkadj;
--#ifdef CONFIG_COLDFIRE
--  unsigned format :  4; /* frame format specifier */
--  unsigned vector : 12; /* vector offset */
--  unsigned short sr;
--  unsigned long  pc;
--#else
--  unsigned short sr;
--  unsigned long  pc;
--  unsigned format :  4; /* frame format specifier */
--  unsigned vector : 12; /* vector offset */
--#endif
--};
--
- /*
-  * This is the extended stack used by signal handlers and the context
-  * switcher: it's pushed after the normal "struct pt_regs".
-diff --git a/scripts/headers_install.sh b/scripts/headers_install.sh
-index f7d9b114de8f7..6bbccb43f7e72 100755
---- a/scripts/headers_install.sh
-+++ b/scripts/headers_install.sh
-@@ -74,7 +74,6 @@ arch/arc/include/uapi/asm/page.h:CONFIG_ARC_PAGE_SIZE_16K
- arch/arc/include/uapi/asm/page.h:CONFIG_ARC_PAGE_SIZE_4K
- arch/arc/include/uapi/asm/swab.h:CONFIG_ARC_HAS_SWAPE
- arch/arm/include/uapi/asm/ptrace.h:CONFIG_CPU_ENDIAN_BE8
--arch/m68k/include/uapi/asm/ptrace.h:CONFIG_COLDFIRE
- arch/nios2/include/uapi/asm/swab.h:CONFIG_NIOS2_CI_SWAB_NO
- arch/nios2/include/uapi/asm/swab.h:CONFIG_NIOS2_CI_SWAB_SUPPORT
- arch/x86/include/uapi/asm/auxvec.h:CONFIG_IA32_EMULATION
--- 
-2.43.2
++e_inval:
++rc =3D -EINVAL;
+ disable_resources:
+ ahci_platform_disable_resources(hpriv);
 
+@replacement2 disable neg_if, drop_else@
+identifier replacement1.rc;
+statement is;
+@@
+ if (...)
+    is
+ else
+ {
+    ... when !=3D rc
+-   rc =3D -EINVAL;
+    goto
+-        disable_resources
++        e_inval
+    ;
+ }
+
+
+Regards,
+Markus
