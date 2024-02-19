@@ -1,78 +1,148 @@
-Received: from mail115-95.sinamail.sina.com.cn (mail115-95.sinamail.sina.com.cn [218.30.115.95])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D223A22F00
-	for <linux-kernel@vger.kernel.org>; Mon, 19 Feb 2024 11:55:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=218.30.115.95
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C121F2D604;
+	Mon, 19 Feb 2024 11:56:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708343760; cv=none; b=MZrCcxweVZ9M1Ivjlpv67DhJ5BNO6zqK94+m1GvR9yP3L1qP4/I4ycr7fM0txaXr5245xTvgYh9AYGtdWSTT+c2TGHuv84qbJIKsbhAmu+4QYkE/nweCIviF58Q4472sT8eCotMEZbtsEXug0fZ2eAenbsGxYzWNRDl40f1SHnw=
+	t=1708343779; cv=none; b=sM5cbThLK/xi8i6g0uww9T7F53Vt+okY9Rr9FPL/bVuA6OIDHjprOXHwF/fzHYKH9uLU/3Saa4N4/seZwaPeKE50vMWJV3KqnseMXuoeb4P8c60l5opSGnp4ugtYeJdbji2IKc3YOzcqKQXfHsqiZRVx941hX9GGd5Sa+ISwRak=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708343760; c=relaxed/simple;
-	bh=y0UIklNnKZM5nijJtKykqYX+P5z9/aUxva0HnXWRgDQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Vibpy5ldbmN4HRrwQ6CJKfynxxVFRBfdH0MyO5DFTEN504GbcEVSYF70ShG1v8Cs3DMexovymhaIsJ/QhI3u4CP1+eEYbsRgBKIZC62VOMBvuMVyB7dMHs8GZ898McvuQe92JqhCQZnfGif0ONOrhnuRsRxls/+6g3hACKyr30g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com; spf=pass smtp.mailfrom=sina.com; arc=none smtp.client-ip=218.30.115.95
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sina.com
-X-SMAIL-HELO: localhost.localdomain
-Received: from unknown (HELO localhost.localdomain)([113.118.64.82])
-	by sina.com (172.16.235.24) with ESMTP
-	id 65D3407F00006019; Mon, 19 Feb 2024 19:50:28 +0800 (CST)
-X-Sender: hdanton@sina.com
-X-Auth-ID: hdanton@sina.com
-Authentication-Results: sina.com;
-	 spf=none smtp.mailfrom=hdanton@sina.com;
-	 dkim=none header.i=none;
-	 dmarc=none action=none header.from=hdanton@sina.com
-X-SMAIL-MID: 95218145089571
-X-SMAIL-UIID: 22E409DE58DC4221B8DB985F39DC424D-20240219-195028-1
-From: Hillf Danton <hdanton@sina.com>
-To: Chen Yu <yu.c.chen@intel.com>
-Cc: Peter Zijlstra <peterz@infradead.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Mel Gorman <mgorman@suse.de>,
-	K Prateek Nayak <kprateek.nayak@amd.com>,
-	Chen Yu <yu.chen.surf@gmail.com>,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 3/3] sched/fair: do not scribble cache-hot CPU in select_idle_cpu()
-Date: Mon, 19 Feb 2024 19:50:14 +0800
-Message-Id: <20240219115014.1333-1-hdanton@sina.com>
-In-Reply-To: <35e612eb2851693a52f7ed1ff9be5bc24011136f.1700548379.git.yu.c.chen@intel.com>
-References: <cover.1700548379.git.yu.c.chen@intel.com>
+	s=arc-20240116; t=1708343779; c=relaxed/simple;
+	bh=6EisK76yYaXOwsl5YMYWUtUhlQhrvrxsUxnJoTcUV9U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LgZCQ6SddtqiN+lYB5NS3L1nrlMrHr5d/N9ECM+gL3jyuoq4Oy3Oklus9CQXEOEpUckdjS3wjdQ8Ft0a3ksab96Uclsj8RqIuizXCxw73LMkQFD2dlYkP0t0B/6JYmj9+1wiDrv0CbMoOPNS2xbj6e2BmGz542KDPRRQ6ndpV/A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=gMfhQGjO; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=CW3k+AAS; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=buau6+K+; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=t31G6cyP; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="gMfhQGjO";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="CW3k+AAS";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="buau6+K+";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="t31G6cyP"
+Received: from imap2.dmz-prg2.suse.org (imap2.dmz-prg2.suse.org [10.150.64.98])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id EB9582231D;
+	Mon, 19 Feb 2024 11:56:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1708343775; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=M0IoGNXF9cQZCZYZwVTpF79rld9vp/bZIPPNKytiUpQ=;
+	b=gMfhQGjOI+lbem8SkpG7abYXZG/YGgsbr5mfhTFEt32zW1Limui820XncUd3JP4Jf/4cjb
+	Ki2fipqnH6aZNqggQcrRBpvej5RFxm3Gf1k4azm8OzeBA2Zjorl5by+Ny2VFQpP4sFWCTW
+	VqPFtogMpHtYR6RLlotNkKPFguE/0+0=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1708343775;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=M0IoGNXF9cQZCZYZwVTpF79rld9vp/bZIPPNKytiUpQ=;
+	b=CW3k+AASubWZUsX7BEFpJjYNb6M0up0wqB5uWYsyR6VxJvrC9ZCwXfu8YryV9Fd8VAXOri
+	5XB31zaQdMHLrYBA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1708343773; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=M0IoGNXF9cQZCZYZwVTpF79rld9vp/bZIPPNKytiUpQ=;
+	b=buau6+K+bHQBAEbQguScoIcRxtFI0j7HwT8gHAUdxEJUUcZwmnLmx902BD6L4pg2FD/uw8
+	iCK1i7I3hf+0dC8b2q7Hc5ZRYKfDNUhrLEW5N2oQRMZEqKm6yoU+zPYXXkCHXnUVuq6BV7
+	/ZFSsvDjjx6glmdQ6+bnmSX5XxMvZto=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1708343773;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=M0IoGNXF9cQZCZYZwVTpF79rld9vp/bZIPPNKytiUpQ=;
+	b=t31G6cyP2MTxAh//4JyTp9UpLAj2jDCsgF5zz0fCnkkhDX77LFRDdUwQO793OeIuKrM0Lb
+	wjIs1K4uYH4qxVAw==
+Received: from imap2.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap2.dmz-prg2.suse.org (Postfix) with ESMTPS id DE64213585;
+	Mon, 19 Feb 2024 11:56:13 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([10.150.64.162])
+	by imap2.dmz-prg2.suse.org with ESMTPSA
+	id gFdGNt1B02U2cAAAn2gu4w
+	(envelope-from <jack@suse.cz>); Mon, 19 Feb 2024 11:56:13 +0000
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+	id 92E02A0806; Mon, 19 Feb 2024 12:56:13 +0100 (CET)
+Date: Mon, 19 Feb 2024 12:56:13 +0100
+From: Jan Kara <jack@suse.cz>
+To: syzbot <syzbot+84c274731411665e6c52@syzkaller.appspotmail.com>
+Cc: axboe@kernel.dk, brauner@kernel.org, damien.lemoal@opensource.wdc.com,
+	jack@suse.cz, jfs-discussion@lists.sourceforge.net,
+	jlayton@kernel.org, kch@nvidia.com, linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org, shaggy@kernel.org,
+	syzkaller-bugs@googlegroups.com, willy@infradead.org
+Subject: Re: [syzbot] [jfs?] INFO: task hung in __get_metapage
+Message-ID: <20240219115613.frzm7ttf7vfdy3xo@quack3>
+References: <0000000000004f9dd605eabee6dc@google.com>
+ <00000000000056790c0611b5548c@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <00000000000056790c0611b5548c@google.com>
+Authentication-Results: smtp-out1.suse.de;
+	none
+X-Spam-Level: *
+X-Spam-Score: 1.69
+X-Spamd-Result: default: False [1.69 / 50.00];
+	 ARC_NA(0.00)[];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 BAYES_HAM(-0.01)[47.63%];
+	 FROM_HAS_DN(0.00)[];
+	 TO_DN_SOME(0.00)[];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 URI_HIDDEN_PATH(1.00)[https://syzkaller.appspot.com/x/.config?x=68e0be42c8ee4bb4];
+	 TAGGED_RCPT(0.00)[84c274731411665e6c52];
+	 MIME_GOOD(-0.10)[text/plain];
+	 NEURAL_HAM_LONG(-1.00)[-1.000];
+	 RCVD_COUNT_THREE(0.00)[3];
+	 R_RATELIMIT(0.00)[to_ip_from(RLpdan7qhx516wxzbnn3a3f9z9)];
+	 DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	 NEURAL_HAM_SHORT(-0.20)[-1.000];
+	 RCPT_COUNT_TWELVE(0.00)[13];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 MID_RHS_NOT_FQDN(0.50)[];
+	 RCVD_TLS_ALL(0.00)[];
+	 SUSPICIOUS_RECIPS(1.50)[];
+	 SUBJECT_HAS_QUESTION(0.00)[]
+X-Spam-Flag: NO
 
-On Tue, 21 Nov 2023 15:40:14 +0800 Chen Yu <yu.c.chen@intel.com>
-> Problem statement:
-> When task p is woken up, the scheduler leverages select_idle_sibling()
-> to find an idle CPU for it. p's previous CPU is usually a preference
-> because it can improve cache locality. However in many cases, the
-> previous CPU has already been taken by other wakees, thus p has to
-> find another idle CPU.
+On Sun 18-02-24 21:26:01, syzbot wrote:
+> syzbot suspects this issue was fixed by commit:
 > 
-> Proposal:
-> Introduce the SIS_CACHE. It considers the sleep time of the task for
-> better task placement. Based on the task's short sleeping history,
-> tag p's previous CPU as cache-hot. Later when p is woken up, it can
-> choose its previous CPU in select_idle_sibling(). When other task is
-> woken up, skip this cache-hot idle CPU when possible.
+> commit 6f861765464f43a71462d52026fbddfc858239a5
+> Author: Jan Kara <jack@suse.cz>
+> Date:   Wed Nov 1 17:43:10 2023 +0000
 > 
-> SIS_CACHE still prefers to choose an idle CPU during task wakeup,
-> the idea is to optimize the idle CPU scan sequence.
+>     fs: Block writes to mounted block devices
+> 
+> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=13310158180000
+> start commit:   1b929c02afd3 Linux 6.2-rc1
+> git tree:       upstream
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=68e0be42c8ee4bb4
+> dashboard link: https://syzkaller.appspot.com/bug?extid=84c274731411665e6c52
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1702dc54480000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=13b9eaf4480000
+> 
+> If the result looks correct, please mark the issue as fixed by replying with:
 
-Could you specify why the currently selected cpu fails to work in the
-scenario described above?
+No working repro and this is JFS. So:
+ 
+#syz fix: fs: Block writes to mounted block devices
 
-	/*
-	 * If the previous CPU is cache affine and idle, don't be stupid:
-	 */
-	if (prev != target && cpus_share_cache(prev, target) &&
-	    (available_idle_cpu(prev) || sched_idle_cpu(prev)) &&
-	    asym_fits_cpu(task_util, util_min, util_max, prev))
-		return prev;
+								Honza
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
