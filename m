@@ -1,16 +1,16 @@
 Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0757220DCB
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B149E208B9
 	for <linux-kernel@vger.kernel.org>; Mon, 19 Feb 2024 07:46:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708328801; cv=none; b=qf+MsOv3qMh0kj+KdwPFTctYkHWVomvHmUWYqNWlfiNKKGs2n8spZeKCppRsZpHTqysvvB+MlbrFRlOjKcXuxYDK/xCrX3XsHmhHdwIkR9iKJJ9gBKODIc0HBT2hN3aSnorLnwBUOHkN0A+HO07XGANTICARi8XpLFYqZWwu3ZI=
+	t=1708328802; cv=none; b=o9SwOayLXY3Y1h/b6wwxzqtOvxDGadWqcSxoR0z6c3N/B05boAZiRu+8AkqGsvGArNlRcd0I9QgfuvSTsFURu+Pj9JMkQDwUXI+ib90w8Xw2+ralRvUqHklJa/MgmICOS4Ww47LBlhzpNmDlo8HKZR8kxpGB5DPfYjErOAgAmdo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708328801; c=relaxed/simple;
-	bh=5n374oK69anYKzr186W3GbJnE/m/Yv82dp/vgrHEbcQ=;
+	s=arc-20240116; t=1708328802; c=relaxed/simple;
+	bh=QZqbPBhPYmmHIl+LVwHKgs3Du4oSnfjsBLIeKUtJ4R0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Rg6lbBhxSbDPV5wcQLxcgY198dSSimFTucwfFpSwDGK9aoAZGBgyE6r5IOjQV/zddafMvb+1ndpfRP2j+yN+8o54zt8gu2TYdturRdULU1xHpvNR1gM9TZJ5/maVSPhV7a2EvsEpb2zk6TIIjWiFsMzyuaLuIbE0bxslKLWg5rk=
+	 MIME-Version:Content-Type; b=mW7YMM7pn2JAX6TCZLthJwciU8ECbrBwIzXB5tEHq4x7htDffTVd/WLqUh4iS8uyGt8Qb88Tzv3RtbGNWrHO5D0p375Xex0dPLHuYQVefSkVQa+B3cDET+ALHuHjDIr51mR+yKnouN+PvhaknmtNG3h0buOLkdv/q1oiL5Zi5W8=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
@@ -18,23 +18,23 @@ Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
 	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
 	(Exim 4.92)
 	(envelope-from <ukl@pengutronix.de>)
-	id 1rbyMI-0000Qa-9v; Mon, 19 Feb 2024 08:46:38 +0100
+	id 1rbyMH-0000QD-TM; Mon, 19 Feb 2024 08:46:37 +0100
 Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
 	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.94.2)
 	(envelope-from <ukl@pengutronix.de>)
-	id 1rbyMH-001bI0-TH; Mon, 19 Feb 2024 08:46:37 +0100
+	id 1rbyMH-001bHu-Gb; Mon, 19 Feb 2024 08:46:37 +0100
 Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
 	(envelope-from <ukl@pengutronix.de>)
-	id 1rbyMH-007bwV-2f;
+	id 1rbyMH-007bvV-1P;
 	Mon, 19 Feb 2024 08:46:37 +0100
 From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
 To: Thorsten Scherer <t.scherer@eckelmann.de>
 Cc: Pengutronix Kernel Team <kernel@pengutronix.de>,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 3/4] siox: Provide a devm variant of siox_master_register()
-Date: Mon, 19 Feb 2024 08:46:31 +0100
-Message-ID:  <e961dfb3e94f106b16f5eacff2110fc7fa0cab13.1708328466.git.u.kleine-koenig@pengutronix.de>
+Subject: [PATCH 1/4] siox: Don't pass the reference on a master in siox_master_register()
+Date: Mon, 19 Feb 2024 08:46:29 +0100
+Message-ID:  <1e8d09d17848e58e8fc6a46278b5e8fb0cf4618a.1708328466.git.u.kleine-koenig@pengutronix.de>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <cover.1708328466.git.u.kleine-koenig@pengutronix.de>
 References: <cover.1708328466.git.u.kleine-koenig@pengutronix.de>
@@ -45,7 +45,7 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1637; i=u.kleine-koenig@pengutronix.de; h=from:subject:message-id; bh=5n374oK69anYKzr186W3GbJnE/m/Yv82dp/vgrHEbcQ=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBl0wdZMfEcZi8q8rmWm9FEXF5CfGlEFTwMlt1RD K8+7NIunyeJATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCZdMHWQAKCRCPgPtYfRL+ TiczB/96bCoLprpEiH7fVeWwFAW3Q/3nTdWc1kdgE57eBPs4YlwkF9uikIJEJeVvTX/CNQaN+Ym pVTGAwCs85cff4iLQsIh1wLLv1oE4jXSQRCd3hNlFlfP1bkyoZfL13hpK+6tm3MOxln/VP4isO4 V/qlMUMVr12V7STOVPjdFbexomt+JBrd3p8V06/dLC73YIaixjB7+mATDlXSuMXVasqSKJSQu1K dOz33blyY3o73Ec992k/c42yerph5eQ+UncZNrq6fhlwH5S+tc/V8Q9i4WSi3Vmurqdhostg+Fb D0uiKPCn3goewnjV3sYcrJezTgKF9G8Xn3B8/7gxL0tNSsas
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1309; i=u.kleine-koenig@pengutronix.de; h=from:subject:message-id; bh=QZqbPBhPYmmHIl+LVwHKgs3Du4oSnfjsBLIeKUtJ4R0=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBl0wdWQIu5tDnIFdc4N1sCtCpl7yfMajaokhN6X zhaCNQH6vaJATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCZdMHVgAKCRCPgPtYfRL+ TmucCACzAy5qlIT/7W4Sm4FWw3zBPiSj1dbaIYxgNHhkg4SB+a8KSq2XtyAx2Rl76t1DKcrrohc oqlSrwKqMOJ5+bW7uRZArvofTevc3xNiGPLsUHOYuRqWUMEDRHo+8wo//phN3noWK7j0IQaW+A/ BytMKxoYFadNh99eR8l1b49XiQKAJRuLIZar6dAFAAohwT50v8oKYBhCfh8D4EO2DHrPZLqPvYF RzgrcPvZwQyHbvrgcDOCPDKdDicPZsraXEhCepcpOJyHXmy4QZGffp9eiQDPIAJ5PtAenaLrNCX I5iKqhL/1cCcmZO9Myf6pHypVYQO86Xn4BsqGZCsBa7OCa9K
 X-Developer-Key: i=u.kleine-koenig@pengutronix.de; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
 Content-Transfer-Encoding: 8bit
 X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
@@ -53,54 +53,44 @@ X-SA-Exim-Mail-From: ukl@pengutronix.de
 X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
 X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-This allows to simplify siox master drivers in the next step.
+While it's technically fine to pass the ownership of the reference on
+a struct siox_master from the caller of siox_master_register() to the
+framework this is hard to use. Instead let the framework take its own
+reference (that is freed in siox_master_unregister()) and drop the bus
+driver's reference in its remove callback.
 
 Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 ---
- drivers/siox/siox-core.c | 19 +++++++++++++++++++
- drivers/siox/siox.h      |  2 ++
- 2 files changed, 21 insertions(+)
+ drivers/siox/siox-bus-gpio.c | 2 ++
+ drivers/siox/siox-core.c     | 2 ++
+ 2 files changed, 4 insertions(+)
 
+diff --git a/drivers/siox/siox-bus-gpio.c b/drivers/siox/siox-bus-gpio.c
+index aeefeb725524..fdf20fe80059 100644
+--- a/drivers/siox/siox-bus-gpio.c
++++ b/drivers/siox/siox-bus-gpio.c
+@@ -149,6 +149,8 @@ static int siox_gpio_remove(struct platform_device *pdev)
+ 
+ 	siox_master_unregister(master);
+ 
++	siox_master_put(master);
++
+ 	return 0;
+ }
+ 
 diff --git a/drivers/siox/siox-core.c b/drivers/siox/siox-core.c
-index 9dd0bda03db3..8d7cb9e24efb 100644
+index 561408583b2b..d4acab7036d6 100644
 --- a/drivers/siox/siox-core.c
 +++ b/drivers/siox/siox-core.c
-@@ -794,6 +794,25 @@ void siox_master_unregister(struct siox_master *smaster)
- }
- EXPORT_SYMBOL_GPL(siox_master_unregister);
+@@ -717,6 +717,8 @@ int siox_master_register(struct siox_master *smaster)
+ 	if (!smaster->pushpull)
+ 		return -EINVAL;
  
-+static void devm_siox_master_unregister(void *data)
-+{
-+	struct siox_master *smaster = data;
++	get_device(&smaster->dev);
 +
-+	siox_master_unregister(smaster);
-+}
-+
-+int devm_siox_master_register(struct device *dev, struct siox_master *smaster)
-+{
-+	int ret;
-+
-+	ret = siox_master_register(smaster);
-+	if (ret)
-+		return ret;
-+
-+	return devm_add_action_or_reset(dev, devm_siox_master_unregister, smaster);
-+}
-+EXPORT_SYMBOL_GPL(devm_siox_master_register);
-+
- static struct siox_device *siox_device_add(struct siox_master *smaster,
- 					   const char *type, size_t inbytes,
- 					   size_t outbytes, u8 statustype)
-diff --git a/drivers/siox/siox.h b/drivers/siox/siox.h
-index b227e18b697a..513f2c8312f7 100644
---- a/drivers/siox/siox.h
-+++ b/drivers/siox/siox.h
-@@ -49,3 +49,5 @@ struct siox_master *devm_siox_master_alloc(struct device *dev, size_t size);
+ 	dev_set_name(&smaster->dev, "siox-%d", smaster->busno);
  
- int siox_master_register(struct siox_master *smaster);
- void siox_master_unregister(struct siox_master *smaster);
-+
-+int devm_siox_master_register(struct device *dev, struct siox_master *smaster);
+ 	mutex_init(&smaster->lock);
 -- 
 2.43.0
 
