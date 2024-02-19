@@ -1,71 +1,118 @@
-Received: from mail-io1-f70.google.com (mail-io1-f70.google.com [209.85.166.70])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2FD9381B1
-	for <linux-kernel@vger.kernel.org>; Mon, 19 Feb 2024 15:05:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.70
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 440A639840;
+	Mon, 19 Feb 2024 15:05:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708355107; cv=none; b=Qo4gACj8P400XYQi/EuqL5CeNgfyC9vrboU1xE05hWfqRZQfid5AlzbmAOL/zz3XUJnxpdqOoimpDysKHfHG7wfnJsjU+FYr20sIEAkqwvVqflyCqZUR243V8Am80WwlD96VleO7FQ3AZX3SGmHyGJbzi3LMI/3939LLbwd/uN8=
+	t=1708355111; cv=none; b=k50xypwXtgWhVzlO9vKiAWIj164oUGahMg4N8aHvf527BGADDrRbV3edPvVLkg1u9kDfA1HdstvUIwslOEac0/hQhNgD6uI0QbAnvoTZQCLpEc53qQqmZFxVVm6W8IPv67kr7vSe8DqFi16/5XNuILOgtFn3NejryysZy11y+e4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708355107; c=relaxed/simple;
-	bh=gmrF/d9fnvBujfvzzmEj2K6sNHpmgiuQK/4OQHkLnbM=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=JOpHG4m3/jJGJijW9Ny4jOLnW1KXHad7BxY/H2tG6zXcS3KFA9J0jWndvs4kQTGIga3Ac9uz2J3bCVYK7cGH4lR1Tcaupva5OwvPgTFVA9IPh4Z/ny7n+BDUxTkaelLJfg3KfPQ0AbB0HEZX90Fl5KnmPcfWA9+zoJy4FUG96EQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.70
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f70.google.com with SMTP id ca18e2360f4ac-7c74d3ab389so82015139f.1
-        for <linux-kernel@vger.kernel.org>; Mon, 19 Feb 2024 07:05:05 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708355105; x=1708959905;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=DHKBFuNAT/YooSgZ/ha7+6WUrz4Zbm6cjlAajlAzOGQ=;
-        b=Z9Nc3DRBe7yqI1qDMx0JBVGF74PIISZbJ7bPoHqEjPO3jxFQqvnEH/rsmwGbk+zq3E
-         EWH9Y+qCPgKBD3D/unBdaL9l3XBOmrbmOEefgzQ/vsE9XdS12OVfBylb0/4z+NBEuYcR
-         d9+BOln3fG3dmIXw0lVl7Jj5dVTV6rGjPkqA5Tvzl3130cyim8+hJ9efYFA8QS17zp+0
-         2LZaIgrEc5rG1oUSMGvPkSenaV9MvDyDztXAiI/m97KQ43kbtMfRlgYU23srNKUtbOQd
-         Qnqh/eHS1EpXt5KfqfHR4G8+eov3FLO++zAwRvAoMHeAT/W/HbgoPiGDzWR3S6m09zQe
-         UEkQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUZTw+/dl+u7VALKc+aDUqYPmTMP3nmYfs9bPIFnrxV0/SOyIRIKctcug74JkJH0RLDfZBLc3WC0QR8bsN7dG/uBNlhUnVFB9IZyIc7
-X-Gm-Message-State: AOJu0Yw8uTHtVmQZJgIysLl2rU+WxWDML6cXyx5lG2geNZFp77+P5+SI
-	ZfXQwzyxt5J/5w7BnWALj6LSiyTLToiKQNckoTyx+IAy7sMKg5GMjGYmHERfXBHiPXY6O7voN3R
-	ysH35NIpCpX+VYAFYpeKgzFOqUQMV7dTBM1MgbTpp6YCEW6/x5aBQBjg=
-X-Google-Smtp-Source: AGHT+IFlFXGsJ4D52+O4iBNFFJCNEZDJ5LbCNdjN7RFOLiN9InVzRRHKm9oS01hKvz4T0pp5os3+EuxIYwEXvmem1vANk80LbTNc
+	s=arc-20240116; t=1708355111; c=relaxed/simple;
+	bh=mThBu7chpWRHZ/eEmh5Wi1fkqZBPlPjWw7asRBsccmY=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=icJGv0PTNLnlSNLKLF3ubx7pep1HeTcvHms8zzpL5AVuRT5rgs2onGBFp4G4iSgaoP0vg4ajdSotIwc8zSettLLCVKt3hHxS6Ye9tqfYAdloUUd9fEnQTUUbDHBTaVp+kSDoE7edxy/0kLX8XPhYtMpDUieDd86532wUIoFFbBk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=n9i6rkpa; arc=none smtp.client-ip=217.70.183.200
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="n9i6rkpa"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id F35642000F;
+	Mon, 19 Feb 2024 15:04:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1708355102;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=A3H20W4m5T0MQHito7PWJMgAUf170u+wnoIcj9CBeGs=;
+	b=n9i6rkparoEsMUZaj1NFUkTGHkUZ7366jnD14lM7yiQ3pzh3bu1sbcYIoVNTlfu+2weMpB
+	xX1e4XVRRX6kAZlviZvJSkWPy2siX37329J0hNYY68kmKGPtuUM3kHU9kATl00GGGnTZ/g
+	ap9p9bnTpu9X8TaJjHsV24PtarXqHgdyvXCnBTXKM6r1+D5vK8Ewoue0a+GgFqdjswCKm1
+	IztGNM9m3OkSpjikr65CczcFiaPfHr+nzwUor5QCFGruE0+L3RA15VHIMjQ+5rYQLfXX8G
+	Pq954+ZGwNbC/m0F6BgPHXQ8V3sxBeIGSXp0d6ZGEOK4rn+mNzX717XSSPEZWQ==
+Date: Mon, 19 Feb 2024 16:04:56 +0100
+From: =?UTF-8?B?S8O2cnk=?= Maincent <kory.maincent@bootlin.com>
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: "David S. Miller" <davem@davemloft.net>, Eric Dumazet
+ <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Jonathan Corbet
+ <corbet@lwn.net>, Luis Chamberlain <mcgrof@kernel.org>, Russ Weight
+ <russ.weight@linux.dev>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ "Rafael J. Wysocki" <rafael@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley
+ <conor+dt@kernel.org>, Oleksij Rempel <o.rempel@pengutronix.de>, Mark Brown
+ <broonie@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Andrew Lunn
+ <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>, Russell King
+ <linux@armlinux.org.uk>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-doc@vger.kernel.org, devicetree@vger.kernel.org, Dent Project
+ <dentproject@linuxfoundation.org>
+Subject: Re: [PATCH net-next v4 05/17] net: pse-pd: Introduce PSE types
+ enumeration
+Message-ID: <20240219160456.0b5e8de3@kmaincent-XPS-13-7390>
+In-Reply-To: <20240216173638.4bb12af2@kernel.org>
+References: <20240215-feature_poe-v4-0-35bb4c23266c@bootlin.com>
+	<20240215-feature_poe-v4-5-35bb4c23266c@bootlin.com>
+	<20240215105846.6dd48886@kernel.org>
+	<20240216104211.2c11d1cc@kmaincent-XPS-13-7390>
+	<20240216173638.4bb12af2@kernel.org>
+Organization: bootlin
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a6b:ea04:0:b0:7bf:ffe2:3537 with SMTP id
- m4-20020a6bea04000000b007bfffe23537mr92123ioc.3.1708355105010; Mon, 19 Feb
- 2024 07:05:05 -0800 (PST)
-Date: Mon, 19 Feb 2024 07:05:04 -0800
-In-Reply-To: <20240219140408.GB22070@breakpoint.cc>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000002f3c3a0611bd6b5e@google.com>
-Subject: Re: [syzbot] [netfilter?] WARNING in __nf_unregister_net_hook (6)
-From: syzbot <syzbot+de4025c006ec68ac56fc@syzkaller.appspotmail.com>
-To: fw@strlen.de, linux-kernel@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-GND-Sasl: kory.maincent@bootlin.com
 
-Hello,
+On Fri, 16 Feb 2024 17:36:38 -0800
+Jakub Kicinski <kuba@kernel.org> wrote:
+> > > but why the separate header? Is it going to be used in other parts of
+> > > uAPI than just in ethtool?   =20
+> >=20
+> > We might use it in pse core if capabilities between PoE and PoDL differ=
+ but
+> > I am not sure about it.
+> > Do you prefer to move it to ethtool header and add prefix ETHTOOL_ to t=
+he
+> > enum values? =20
+>=20
+> I don't know enough to have an opinion :) Whatever you end up doing,
+> it's probably worth documenting the reason for the choice in the commit
+> message?
 
-syzbot has tested the proposed patch and the reproducer did not trigger any issue:
+Mmh, I am still not sure of the best choice on this. I think I will move it=
+ to
+ethtool as you suggested.
 
-Reported-and-tested-by: syzbot+de4025c006ec68ac56fc@syzkaller.appspotmail.com
+> > > > This patch is sponsored by Dent Project
+> > > > <dentproject@linuxfoundation.org>     =20
+> > >=20
+> > > side-note: no objections to the line but for accounting purposes
+> > > (i.e. when we generate development stats) we use the Author / From
+> > > line exclusively. So it'd be easier to compute stats of things funded
+> > > by Dent if you used:
+> > >=20
+> > > From: Kory Maincent (Dent Project) <kory.maincent@bootlin.com>
+> > >=20
+> > > but that's entirely up to you :)   =20
+> >=20
+> > Does adding the line side to the SOB in the commit message is sufficien=
+t or
+> > should I modify the git send email config? =20
+>=20
+> I think you can sed -i s/// the patches? When the From in the email
+> file doesn't match your git config IIUC git will include the from line
+> in the body and pick it up from them. IOW it will work. The scripts look
+> at git author so s-o-b won't do much.
 
-Tested on:
+Ok, I will stick to the simple sentence then. ;)
+Thanks for the information!
 
-commit:         34bfd872 netfilter: nf_tables: raise dormant flag agai..
-git tree:       https://git.kernel.org/pub/scm/linux/kernel/git/fwestphal/nf.git dormant-reset
-console output: https://syzkaller.appspot.com/x/log.txt?x=1495c734180000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=52f6b87f61a6b59c
-dashboard link: https://syzkaller.appspot.com/bug?extid=de4025c006ec68ac56fc
-compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
-
-Note: no patches were applied.
-Note: testing is done by a robot and is best-effort only.
+Regards,
+--=20
+K=C3=B6ry Maincent, Bootlin
+Embedded Linux and kernel engineering
+https://bootlin.com
