@@ -1,43 +1,43 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C1BC2C6A5;
-	Mon, 19 Feb 2024 07:47:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20FB52D043;
+	Mon, 19 Feb 2024 07:47:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708328872; cv=none; b=Rjepv+AHHVSXUJ1jN4a5Z4WI2jiVfugb/IoaSeUHswUecBahEG/Qu7o0cLsTRnC2bGFaAY6dAo1cSupRXa3r/UNIu+Qy2kVWxAx145qPo7AGdUh5U6DCF/tWnWkyPLftdpFYn1rS4RY65aKxpPQM9UKlYfj0aI8VzYAE81fLXvs=
+	t=1708328873; cv=none; b=XXcuN/9/2XncxFWqz4tgWRaft6VMVikSgPHTynrHCdf2ZUfNCUmbedMp6PHuwJQnmCSBnwlro8MA0LGnMW1yJ3aGTASpSgMeygJQ8SLkuUlgEP2DT01ogzmj/tpK3oov4Kw36llaiNHthiXOXnsOJjz+pm8XOSQy2fb+4IKjnMY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708328872; c=relaxed/simple;
-	bh=LLhrBOymq6NYTEUsoYOVmixfi9tT5OVBKgVwc5iax14=;
+	s=arc-20240116; t=1708328873; c=relaxed/simple;
+	bh=zsZWtSrIsMEG2dQWduuhWlHPy9Ug6FFiV6Z1WKrBC90=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=vB/NL/NSV1CuM3GfzeCBfIL9wvtWUHtSfGBerFgXPCeYqiGM5uZ/N9p/77Mvqf7nmnRhwh9u8zmIwQdD+4vF61pwduFe1vTclHz6rg+SV32+zxo//zyLHvuq6jtuPlWFM28vtOlrQre9p8tAdoq4ti+dvUvC93tGXMaftYcxwzM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=erLHhcPE; arc=none smtp.client-ip=198.175.65.16
+	 MIME-Version; b=RJL1TvKZOawukuIYQ7KASiL8qjSBK659VV30GmkVKswomv+OQpup8H1R3H2fw18RbRUTxUQ/DEmoY4eGZC58mP7QpdVtziHE0ZtNrnGa9ywVtKO3YM4c8Sw7IFLc9/IIeXri8qj4OpVWtAY9WisMt2U665YfVKuhoAj1VvYNXkE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jA3xbpzU; arc=none smtp.client-ip=198.175.65.16
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="erLHhcPE"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jA3xbpzU"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1708328870; x=1739864870;
+  t=1708328871; x=1739864871;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=LLhrBOymq6NYTEUsoYOVmixfi9tT5OVBKgVwc5iax14=;
-  b=erLHhcPE0ozar76TYW+++JNk/DEeIdbmnd1R/Dh0IOuSYm74NeT6VqK2
-   An3VBmbx/mk5S1S0zX8BDvqrDB9e5nx7oom8F8nBui+SZx7psI7IjLREE
-   LjXRjT0M6A3/dsH0QFHAn69x1wu1S1xBX58YcjGR99lKsMwtkKiUxhDAW
-   jFhOgvYSVs0PPNj8eGKByCXoZzoLh8/EzzSjYMT6DMicBrz8p2HUCHuAC
-   Hyb6abbAA4cXLMYxaz/JeBgUHXrETAMcA65dSRqk6M7HMScbr9EPRX1+i
-   5gIGl8UKhY609SeymFVL+ENcYgkVymseNLSdlhxxYrW7hpe58pO0jjQ9a
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10988"; a="2535077"
+  bh=zsZWtSrIsMEG2dQWduuhWlHPy9Ug6FFiV6Z1WKrBC90=;
+  b=jA3xbpzUmS+PRuFNyIQoD6+R1sIadpvmfEbsDKehGjJTNmyZ5y5+QT/K
+   tKaTHdGgtPQ5Ct1Ofnyu7L8ctAJdyU73p/wwvYSKt+tWRKUF7tsEqQprd
+   4iiRh+P9rRQo/CcVzoAbgXJ54TnczmQ/XMmfiguvVjo3bvlgazyxathrz
+   Gk1zzgM/FvaNzasxTRip9vrDbKpDbq6umav1+o++/4KAvwOPj1vaAQoh5
+   fwpSLSCJ1GZLQ9KYvhkQFGRLHWKf+aBe+CYoKCompiHTYqYdFyhdl8Mf+
+   8UUmeJKbcpXAOaoJxl3hpVn6Ah/LtMoK7YzPKmqJ6n0Ot2JZ4KawkivED
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10988"; a="2535092"
 X-IronPort-AV: E=Sophos;i="6.06,170,1705392000"; 
-   d="scan'208";a="2535077"
+   d="scan'208";a="2535092"
 Received: from orsmga001.jf.intel.com ([10.7.209.18])
   by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Feb 2024 23:47:44 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10988"; a="826966087"
+X-IronPort-AV: E=McAfee;i="6600,9927,10988"; a="826966092"
 X-IronPort-AV: E=Sophos;i="6.06,170,1705392000"; 
-   d="scan'208";a="826966087"
+   d="scan'208";a="826966092"
 Received: from jf.jf.intel.com (HELO jf.intel.com) ([10.165.9.183])
   by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Feb 2024 23:47:43 -0800
 From: Yang Weijiang <weijiang.yang@intel.com>
@@ -53,9 +53,9 @@ Cc: peterz@infradead.org,
 	mlevitsk@redhat.com,
 	john.allen@amd.com,
 	weijiang.yang@intel.com
-Subject: [PATCH v10 10/27] KVM: x86: Refine xsave-managed guest register/MSR reset handling
-Date: Sun, 18 Feb 2024 23:47:16 -0800
-Message-ID: <20240219074733.122080-11-weijiang.yang@intel.com>
+Subject: [PATCH v10 12/27] KVM: x86: Report XSS as to-be-saved if there are supported features
+Date: Sun, 18 Feb 2024 23:47:18 -0800
+Message-ID: <20240219074733.122080-13-weijiang.yang@intel.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240219074733.122080-1-weijiang.yang@intel.com>
 References: <20240219074733.122080-1-weijiang.yang@intel.com>
@@ -67,77 +67,46 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Tweak the code a bit to facilitate resetting more xstate components in
-the future, e.g., CET's xstate-managed MSRs.
+From: Sean Christopherson <seanjc@google.com>
 
-No functional change intended.
+Add MSR_IA32_XSS to list of MSRs reported to userspace if supported_xss
+is non-zero, i.e. KVM supports at least one XSS based feature.
 
-Suggested-by: Chao Gao <chao.gao@intel.com>
+Before enabling CET virtualization series, guest IA32_MSR_XSS is
+guaranteed to be 0, i.e., XSAVES/XRSTORS is executed in non-root mode
+with XSS == 0, which equals to the effect of XSAVE/XRSTOR.
+
+Signed-off-by: Sean Christopherson <seanjc@google.com>
 Signed-off-by: Yang Weijiang <weijiang.yang@intel.com>
+Reviewed-by: Maxim Levitsky <mlevitsk@redhat.com>
+Reviewed-by: Chao Gao <chao.gao@intel.com>
 ---
- arch/x86/kvm/x86.c | 30 +++++++++++++++++++++++++++---
- 1 file changed, 27 insertions(+), 3 deletions(-)
+ arch/x86/kvm/x86.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
 diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index 10847e1cc413..5a9c07751c0e 100644
+index cbd44f904ba8..9eb5c8dbd4fb 100644
 --- a/arch/x86/kvm/x86.c
 +++ b/arch/x86/kvm/x86.c
-@@ -12217,11 +12217,27 @@ void kvm_arch_vcpu_destroy(struct kvm_vcpu *vcpu)
- 		static_branch_dec(&kvm_has_noapic_vcpu);
- }
+@@ -1464,6 +1464,7 @@ static const u32 msrs_to_save_base[] = {
+ 	MSR_IA32_UMWAIT_CONTROL,
  
-+#define XSTATE_NEED_RESET_MASK	(XFEATURE_MASK_BNDREGS | \
-+				 XFEATURE_MASK_BNDCSR)
-+
-+static bool kvm_vcpu_has_xstate(unsigned long xfeature)
-+{
-+	switch (xfeature) {
-+	case XFEATURE_MASK_BNDREGS:
-+	case XFEATURE_MASK_BNDCSR:
-+		return kvm_cpu_cap_has(X86_FEATURE_MPX);
-+	default:
-+		return false;
-+	}
-+}
-+
- void kvm_vcpu_reset(struct kvm_vcpu *vcpu, bool init_event)
- {
- 	struct kvm_cpuid_entry2 *cpuid_0x1;
- 	unsigned long old_cr0 = kvm_read_cr0(vcpu);
-+	DECLARE_BITMAP(reset_mask, 64);
- 	unsigned long new_cr0;
-+	unsigned int i;
+ 	MSR_IA32_XFD, MSR_IA32_XFD_ERR,
++	MSR_IA32_XSS,
+ };
  
- 	/*
- 	 * Several of the "set" flows, e.g. ->set_cr0(), read other registers
-@@ -12274,7 +12290,12 @@ void kvm_vcpu_reset(struct kvm_vcpu *vcpu, bool init_event)
- 	kvm_async_pf_hash_reset(vcpu);
- 	vcpu->arch.apf.halted = false;
- 
--	if (vcpu->arch.guest_fpu.fpstate && kvm_mpx_supported()) {
-+	bitmap_from_u64(reset_mask, (kvm_caps.supported_xcr0 |
-+				     kvm_caps.supported_xss) &
-+				    XSTATE_NEED_RESET_MASK);
-+
-+	if (vcpu->arch.guest_fpu.fpstate &&
-+	    !bitmap_empty(reset_mask, XFEATURE_MAX)) {
- 		struct fpstate *fpstate = vcpu->arch.guest_fpu.fpstate;
- 
- 		/*
-@@ -12284,8 +12305,11 @@ void kvm_vcpu_reset(struct kvm_vcpu *vcpu, bool init_event)
- 		if (init_event)
- 			kvm_put_guest_fpu(vcpu);
- 
--		fpstate_clear_xstate_component(fpstate, XFEATURE_BNDREGS);
--		fpstate_clear_xstate_component(fpstate, XFEATURE_BNDCSR);
-+		for_each_set_bit(i, reset_mask, XFEATURE_MAX) {
-+			if (!kvm_vcpu_has_xstate(i))
-+				continue;
-+			fpstate_clear_xstate_component(fpstate, i);
-+		}
- 
- 		if (init_event)
- 			kvm_load_guest_fpu(vcpu);
+ static const u32 msrs_to_save_pmu[] = {
+@@ -7388,6 +7389,10 @@ static void kvm_probe_msr_to_save(u32 msr_index)
+ 		if (!(kvm_get_arch_capabilities() & ARCH_CAP_TSX_CTRL_MSR))
+ 			return;
+ 		break;
++	case MSR_IA32_XSS:
++		if (!kvm_caps.supported_xss)
++			return;
++		break;
+ 	default:
+ 		break;
+ 	}
 -- 
 2.43.0
 
