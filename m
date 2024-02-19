@@ -1,102 +1,80 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A0E5535B9
-	for <linux-kernel@vger.kernel.org>; Mon, 19 Feb 2024 20:25:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 339563D38C
+	for <linux-kernel@vger.kernel.org>; Mon, 19 Feb 2024 20:27:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708374330; cv=none; b=SDLSNzNflzw6Xg009z5Ld7moVpEpGkREIji/G2WV76kuEtc2pLCYX6GBcqx0yMkSOmVgZVlbI5YriBSlYd81Gf4EoBE95TS/7pI2FilyvThpqEV/oWnikAklPUftKv8aFmeiHDMsFXU08x1RejodvsJptAHuA0/vEUEhY98kv/E=
+	t=1708374445; cv=none; b=ItIZgHug2xVZBEfJB+zvtlw/Yr5m0XsHymRHfaJVId984miSrGs3aTZRaoOjyjsdWdSrte6g53IXxwn0IVuG85N4IGb8HBjK9oXnpxp/feYueNPwANTbbZKBcq7OpIKVQ4ry//URYNl6D8ey6Cwj/2KF9AfKZ4Q3T8OpaA05Q2k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708374330; c=relaxed/simple;
-	bh=Uqg1R0qvaa5JA2Yh6FaRPVlAfSHxwxGSnZkxtpTv01s=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bxjwdMOukqpSUDg8hey9K1bEDYMhA+r7oy9gALYrCHgU1cHoZ+Ng2PBKcCory9qGMHHgNqZl2eSQvicAFA7yKqPJbabFerNwfYcGlnUfmZ/thP4rVDZTxvlcfgVnjcDbyLRzsLPMHjYJhCyn55mgk7xucdGAS19RdSZhT6rdLSE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rcACb-000534-VO; Mon, 19 Feb 2024 21:25:25 +0100
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rcACb-001iPp-Dm; Mon, 19 Feb 2024 21:25:25 +0100
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rcACb-00844W-13;
-	Mon, 19 Feb 2024 21:25:25 +0100
-Date: Mon, 19 Feb 2024 21:25:25 +0100
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	linux-kernel@vger.kernel.org, kernel@pengutronix.de, Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 0/4] w1: Convert to platform remove callback returning
- void
-Message-ID: <jodslbkntas5fzftwl4llynbvcw5p4pmup3t46euifpvzo36m7@yvlfqcmbkiux>
-References: <cover.1708340114.git.u.kleine-koenig@pengutronix.de>
+	s=arc-20240116; t=1708374445; c=relaxed/simple;
+	bh=2+aoCwOd06/v1RwfWjtXRvkTzvzg3Gip4JPINzS5zGw=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=C5zKRaONF1q0812ogaVUp5v29rsXv1U82sOHLE8byfOwGi8rlK9rJOQvQP+K4B80+Emc7CO9ToJpUTzjctHFInFxSoxfBxuqRODsNA9kkqHWoSvpIQVjR+vicD/sTluN8gOLy2qXPCP6zAabel0NA738AY5apSN3wMAK5swAvvU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=Nn6oRj52; arc=none smtp.client-ip=159.69.126.157
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=weissschuh.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="Nn6oRj52"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
+	s=mail; t=1708373975;
+	bh=2+aoCwOd06/v1RwfWjtXRvkTzvzg3Gip4JPINzS5zGw=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=Nn6oRj52uOevfeinneNNvv6zz5iNu4l5SM6k0SPBlWNKzB+XAtRQbp2qom68SVsmc
+	 +Ld3fukJ0WuH9QLVzXYl+DCatXDgPKScmW59/5xWJOkwXc0HOUdopR5Pt2Je1YvUx9
+	 Vl25Uu+s81Wph/veKdYwujymErvsj21BzWOU+Tu4=
+From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
+Date: Mon, 19 Feb 2024 21:19:23 +0100
+Subject: [PATCH v3 2/3] ipc: remove linebreaks from arguments of
+ __register_sysctl_table
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="lrcv7jlcrjjcdbyn"
-Content-Disposition: inline
-In-Reply-To: <cover.1708340114.git.u.kleine-koenig@pengutronix.de>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Message-Id: <20240219-sysctl-check-v3-2-6940d5ff747b@weissschuh.net>
+References: <20240219-sysctl-check-v3-0-6940d5ff747b@weissschuh.net>
+In-Reply-To: <20240219-sysctl-check-v3-0-6940d5ff747b@weissschuh.net>
+To: Luis Chamberlain <mcgrof@kernel.org>, 
+ Joel Granados <j.granados@samsung.com>
+Cc: linux-kernel@vger.kernel.org, 
+ =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1708373973; l=797;
+ i=linux@weissschuh.net; s=20221212; h=from:subject:message-id;
+ bh=2+aoCwOd06/v1RwfWjtXRvkTzvzg3Gip4JPINzS5zGw=;
+ b=4a1lYJ1PBMTeJ+6XFqt0TOA2ayoWIl3GQxZ8fy2AU3RjjsgobW0N8db4rYq9EkMvbSHXaa8/w
+ IIHgKKGd4BLAjxli2DumdMyGGqqf89gO1OGf+heF13ZUPDvVx3mto5p
+X-Developer-Key: i=linux@weissschuh.net; a=ed25519;
+ pk=KcycQgFPX2wGR5azS7RhpBqedglOZVgRPfdFSPB1LNw=
 
+Calls to __register_sysctl_table will be validated by
+scripts/check-sysctl-docs. As this script is line-based remove the
+linebreak which would confuse the script.
 
---lrcv7jlcrjjcdbyn
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
+---
+ ipc/ipc_sysctl.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-Hello,
+diff --git a/ipc/ipc_sysctl.c b/ipc/ipc_sysctl.c
+index 8c62e443f78b..e4008288a3ba 100644
+--- a/ipc/ipc_sysctl.c
++++ b/ipc/ipc_sysctl.c
+@@ -259,8 +259,7 @@ bool setup_ipc_sysctls(struct ipc_namespace *ns)
+ 				tbl[i].data = NULL;
+ 		}
+ 
+-		ns->ipc_sysctls = __register_sysctl_table(&ns->ipc_set,
+-							  "kernel", tbl,
++		ns->ipc_sysctls = __register_sysctl_table(&ns->ipc_set, "kernel", tbl,
+ 							  ARRAY_SIZE(ipc_sysctls));
+ 	}
+ 	if (!ns->ipc_sysctls) {
 
-On Mon, Feb 19, 2024 at 11:59:26AM +0100, Uwe Kleine-K=F6nig wrote:
-> this series converts all drivers below drivers/w1 to struct
-> platform_driver::remove_new(). See commit 5c5a7680e67b ("platform:
-> Provide a remove callback that returns no value") for an extended
-> explanation and the eventual goal.
->=20
-> All four conversations are trivial, because their .remove() callbacks
-> returned zero unconditionally.=20
->=20
-> There are no interdependencies between these patches, so they could be
-> picked up individually. However I'd expect them to go in all together
-> via Krzysztof's tree.
+-- 
+2.43.2
 
-This series hit a corner case in my patch sending scripts (because the
-maintainer entry title has a ' which I failed to properly quote). I'll
-try to resend the patches that didn't hit the mailing list.
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---lrcv7jlcrjjcdbyn
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmXTuTQACgkQj4D7WH0S
-/k6Lcgf/apfewqeunOC48O19T0+Lgc4HAu4vzNGO2VXUNzo3sLWtLSXJ4/qgsZWW
-ArafvrcBM4vqRAz4vPGjkqJCej1aML1IKMZxcf33u+124pngBofx1B2cHL9VM5g8
-dxiPS163BaZgujHj+nq/ZVvS1t1DfTiYS0Y9DfWJVerTlfzAEW01CCd0GEtqM9Io
-1cLosVtkqgys3Zc7O+YchI9hl+2MBjN8Ipuz2odxVTCHfHf6GDqu2Cpnmjfa47MZ
-AZG4c3wH5j8e6QWeTm5Ai4Ew+Du0yoXgdl/we3T1aJhJ8m6IYSvOxkASkyN/jCkH
-zbyjN/xMi4rL10l0TJ8th6qXNrtvzA==
-=EZpa
------END PGP SIGNATURE-----
-
---lrcv7jlcrjjcdbyn--
