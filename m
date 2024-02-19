@@ -1,136 +1,76 @@
-Received: from out-180.mta0.migadu.com (out-180.mta0.migadu.com [91.218.175.180])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37A9050272
-	for <linux-kernel@vger.kernel.org>; Mon, 19 Feb 2024 20:21:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E655A52F9B;
+	Mon, 19 Feb 2024 20:23:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708374120; cv=none; b=NosEm2wT7XI65wk2pwPVcaHpx4kcJo9Kn9WYqe8R2RnZ1uANBSPOKZDl2y6xBU3ZBhtl6Cn20DSFZTBNZjI4aEy27RNirWZu4NsYza/kQ4dhAvkPUq2N/oiKBL41ta1t59LBBioh7TGmO59h+wQL/ACZlWoCDzu1K0HJK8vmywU=
+	t=1708374210; cv=none; b=fjba62Ar33FrTx/M5Jx6hKgXiw2FQLN6cAL5mECYn2oNrEZqtIqdOGnIj4dg80ecHqyj6TLY4KB+KGriSglLuwl24iq+hh3epZAGrH8cSaMMgTo4dlOCU5D5TpENYB6CxDEn0tRpOHnZU4ZGmC0eZD1xpjl//UMNXDpLB4JqoL0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708374120; c=relaxed/simple;
-	bh=NadXeNdqAB/nYs/a/J52wOKf5x7jp+wtAwDpZbHVNsU=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=rovoYNEG26gCJae06Tnm/1V0j0D1uHAQxYU49vy2uhMqm4O4AI2cqY5N6CuNN359FLakGO0Fg1kIkyZVttTUFOdz8fObvV4iZFHGZA0YhNGcQPJHWQRtMOVeom+VoWOH0fcC5ivgkVtPAFqywqJVrSuLLMBY1iIhUStSjyp+wwM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pqrs.dk; spf=pass smtp.mailfrom=pqrs.dk; dkim=pass (2048-bit key) header.d=pqrs.dk header.i=@pqrs.dk header.b=vJuDBtbJ; arc=none smtp.client-ip=91.218.175.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pqrs.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pqrs.dk
+	s=arc-20240116; t=1708374210; c=relaxed/simple;
+	bh=ixHV3knXhwlKaNm/H5VZf90xSon7xbNx8HdzY1OHTaE=;
+	h=Mime-Version:Content-Type:Date:Message-Id:From:To:Cc:Subject:
+	 References:In-Reply-To; b=Dpehsvbmg6I9Ca1ZlsApovOj41KiM472ygwU72XtYhNAeYqEAWtquSUeKQdUbcLzagDQpZD3CiC9XssYoExRi/Kg8saz6N7ZoeKOtl07YcpoMk3G3zQcLI93qk8DleYBhTl9lNlJ+Ar2bFr3jEKaC2/mKTg4fzXaSAgdG1HqvQQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OjpUcB1I; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=pqrs.dk header.i=@pqrs.dk header.b="vJuDBtbJ"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pqrs.dk; s=key1;
-	t=1708374116;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=kp0URhMfvWbpdkL0k/GUMkRRGYQFzEpfZ2mEHZ+rImI=;
-	b=vJuDBtbJv9vc8nkDV5W8HkNi/RotiChvYxU+iCCH//5OXnSXXFLGWEXjMo12APQduibzSs
-	pUJdHP+aXrcsFVW2MF32O6dUnXcUTI1zU7ssWLM89GcKv7C0jPVonulxbEXvdinALRv0hY
-	4Op3EwWKB+DhT+hzTdwpTGpcq5xWkAZlzx//r9qtE5pHaHr2IuNBjUzRO4MzQHOMbWUm0r
-	qXjuh9Ycf+HOkXCYUSvPM4djzYi6V3x4wcIOFwTp9BuXQgsnVyPDDC9tp12sOPVJbimF34
-	Ll5Bod0/JPiQvSviwcq0oUqdrNuMgKoyY98BOTSXDoTasebmIcyAPiKEEBm17A==
-From: =?utf-8?q?Alvin_=C5=A0ipraga?= <alvin@pqrs.dk>
-Date: Mon, 19 Feb 2024 21:21:47 +0100
-Subject: [PATCH v2] drm/bridge: adv7511: fix crash on irq during probe
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OjpUcB1I"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F3F0DC433F1;
+	Mon, 19 Feb 2024 20:23:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1708374209;
+	bh=ixHV3knXhwlKaNm/H5VZf90xSon7xbNx8HdzY1OHTaE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=OjpUcB1IXEiERVGSZfOvbUCkCuR4TmpnrjXZViMy49DFN74vJyxOHJLpZnI/mluoy
+	 5t+48D1/yfNRnngCi3+O0k93X+tzsXNC7dAfSJM1dwk67yAW2JS1kc+dPAxzYGD9Va
+	 OV5MRb5nxQL8BnJo8n/GRJqfacljYIXCAX4FOOisF+xFEjguF/rcH7Lmv+D3rQGvaA
+	 IQbOSumem2riEQiubkyQhsh9xN9QoS7/OMHYNw+DwKzoexy78hpiAEfsMZdIvzZ3w7
+	 OWAMjZu1i7F0TgNnDh9tR9RVkP93uO1muS6llIweMUmrsexc+d2ZHttmbOHLbMQJlU
+	 T3j5ctixMwO1w==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20240219-adv7511-cec-irq-crash-fix-v2-1-245e53c4b96f@bang-olufsen.dk>
-X-B4-Tracking: v=1; b=H4sIAFq402UC/42OSw7CMAxEr1J5jVHdlH5YcQ/URUgcaoHakkAEq
- nJ3Qk/A8o00b2aFwF44wLFYwXOUIPOUodoVYEY9XRnFZoaqrBSVVKO2sT0QoWGD4h9ovA4jOnl
- j46zty15Z02rI/cVzjjf3ecg8SnjO/rNNRfql/1gjIaFSXV93jelUq06XfAvn+8sFnvb2BkNK6
- Qs4CESPyAAAAA==
-To: Andrzej Hajda <andrzej.hajda@intel.com>, 
- Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, 
- Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, 
- Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
- David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
- Archit Taneja <architt@codeaurora.org>, 
- Hans Verkuil <hans.verkuil@cisco.com>
-Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
- Mads Bligaard Nielsen <bli@bang-olufsen.dk>, 
- =?utf-8?q?Alvin_=C5=A0ipraga?= <alsi@bang-olufsen.dk>
-X-Migadu-Flow: FLOW_OUT
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Mon, 19 Feb 2024 20:23:23 +0000
+Message-Id: <CZ9C42ETAIZ5.2QF94SIXDWCHR@seitikki>
+From: "Jarkko Sakkinen" <jarkko@kernel.org>
+To: "Haitao Huang" <haitao.huang@linux.intel.com>
+Cc: <anakrish@microsoft.com>, <bp@alien8.de>, <cgroups@vger.kernel.org>,
+ <chrisyan@microsoft.com>, <dave.hansen@linux.intel.com>, <hpa@zytor.com>,
+ <kristen@linux.intel.com>, <linux-kernel@vger.kernel.org>,
+ <linux-sgx@vger.kernel.org>, <mikko.ylinen@linux.intel.com>,
+ <mingo@redhat.com>, <mkoutny@suse.com>, <seanjc@google.com>,
+ <sohil.mehta@intel.com>, <tglx@linutronix.de>,
+ <tim.c.chen@linux.intel.com>, <tj@kernel.org>, <x86@kernel.org>,
+ <yangjie@microsoft.com>, <zhanb@microsoft.com>, <zhiquan1.li@intel.com>
+Subject: Re: [RFC PATCH] x86/sgx: Remove 'reclaim' boolean parameters
+X-Mailer: aerc 0.15.2
+References: <CZ4FCQ633VLC.26Y7HUHGRSFB3@kernel.org>
+ <20240219153957.9957-1-haitao.huang@linux.intel.com>
+In-Reply-To: <20240219153957.9957-1-haitao.huang@linux.intel.com>
 
-From: Mads Bligaard Nielsen <bli@bang-olufsen.dk>
+On Mon Feb 19, 2024 at 3:39 PM UTC, Haitao Huang wrote:
+> Remove all boolean parameters for 'reclaim' from the function
+> sgx_alloc_epc_page() and its callers by making two versions of each
+> function.
+>
+> Also opportunistically remove non-static declaration of
+> __sgx_alloc_epc_page() and a typo
+>
+> Signed-off-by: Haitao Huang <haitao.huang@linux.intel.com>
+> Suggested-by: Jarkko Sakkinen <jarkko@kernel.org>
 
-Moved IRQ registration down to end of adv7511_probe().
+I think this is for better.
 
-If an IRQ already is pending during adv7511_probe
-(before adv7511_cec_init) then cec_received_msg_ts
-could crash using uninitialized data:
+My view point for kernel patches overally is that:
 
-    Unable to handle kernel read from unreadable memory at virtual address 00000000000003d5
-    Internal error: Oops: 96000004 [#1] PREEMPT_RT SMP
-    Call trace:
-     cec_received_msg_ts+0x48/0x990 [cec]
-     adv7511_cec_irq_process+0x1cc/0x308 [adv7511]
-     adv7511_irq_process+0xd8/0x120 [adv7511]
-     adv7511_irq_handler+0x1c/0x30 [adv7511]
-     irq_thread_fn+0x30/0xa0
-     irq_thread+0x14c/0x238
-     kthread+0x190/0x1a8
+1. A feature should leave the subsystem in cleaner state as
+   far as the existing framework of doing things goes.
+2. A bugfix can sometimes do the opposite if corner case
+   requires some weird dance to perform.
 
-Fixes: 3b1b975003e4 ("drm: adv7511/33: add HDMI CEC support")
-Signed-off-by: Mads Bligaard Nielsen <bli@bang-olufsen.dk>
-Signed-off-by: Alvin Šipraga <alsi@bang-olufsen.dk>
----
-Changes in v2:
-- rebase on latest drm-misc-fixes
-- no other changes
-- RESEND
-- Link to v1: https://lore.kernel.org/r/20231014-adv7511-cec-irq-crash-fix-v1-1-3389486c8373@bang-olufsen.dk
----
- drivers/gpu/drm/bridge/adv7511/adv7511_drv.c | 22 +++++++++++-----------
- 1 file changed, 11 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/gpu/drm/bridge/adv7511/adv7511_drv.c b/drivers/gpu/drm/bridge/adv7511/adv7511_drv.c
-index 8be235144f6d..6fc292393c67 100644
---- a/drivers/gpu/drm/bridge/adv7511/adv7511_drv.c
-+++ b/drivers/gpu/drm/bridge/adv7511/adv7511_drv.c
-@@ -1277,17 +1277,6 @@ static int adv7511_probe(struct i2c_client *i2c)
- 
- 	INIT_WORK(&adv7511->hpd_work, adv7511_hpd_work);
- 
--	if (i2c->irq) {
--		init_waitqueue_head(&adv7511->wq);
--
--		ret = devm_request_threaded_irq(dev, i2c->irq, NULL,
--						adv7511_irq_handler,
--						IRQF_ONESHOT, dev_name(dev),
--						adv7511);
--		if (ret)
--			goto err_unregister_cec;
--	}
--
- 	adv7511_power_off(adv7511);
- 
- 	i2c_set_clientdata(i2c, adv7511);
-@@ -1311,6 +1300,17 @@ static int adv7511_probe(struct i2c_client *i2c)
- 
- 	adv7511_audio_init(dev, adv7511);
- 
-+	if (i2c->irq) {
-+		init_waitqueue_head(&adv7511->wq);
-+
-+		ret = devm_request_threaded_irq(dev, i2c->irq, NULL,
-+						adv7511_irq_handler,
-+						IRQF_ONESHOT, dev_name(dev),
-+						adv7511);
-+		if (ret)
-+			goto err_unregister_audio;
-+	}
-+
- 	if (adv7511->info->has_dsi) {
- 		ret = adv7533_attach_dsi(adv7511);
- 		if (ret)
-
----
-base-commit: 335126937753844d36036984e96a8f343538a778
-change-id: 20231014-adv7511-cec-irq-crash-fix-6fdd9093dc7a
-
+BR, Jarkko
