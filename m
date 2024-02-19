@@ -1,148 +1,80 @@
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F5CB446C4
-	for <linux-kernel@vger.kernel.org>; Mon, 19 Feb 2024 17:22:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 842DB2CCA4
+	for <linux-kernel@vger.kernel.org>; Mon, 19 Feb 2024 17:24:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708363327; cv=none; b=lyEqIBzqeaf2sAjqq5wTmWXvXlDCUlP6mZ0Tu+ZKdm7GjVQvVyCDl3aXtdnU9k3r76grSe4yPPXVAW2HstUDzUrDcO09FBzn6x95Zk/rhD2FgEKpY1tdGJXrRyg9mt9DDpvr1/rkNAK7SUrurovI/QhNnxgYw+Nx+xMv/IY7atk=
+	t=1708363472; cv=none; b=n6ARcfcNyR6VbJ0zzfhyPbY3enxg0syMmz+vhnbyMCSW1DqbuUBY+G/qd1hHwBDtXlSQKljevkLAUFbxwHL4IPlb1EPEGIOpH0Eq0NX6csWJY2Gn8lJp4uTZ/HGK40pA4zPFugBjoHYEOFOYeWOH/EEg47Z8t34AeDvGhA/YvIs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708363327; c=relaxed/simple;
-	bh=D4hbJX7uGV8vohd/O7pYTtYq3FdJW6tASIcFVTSogHk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=q/DCT6Atc6L3hHg/mEaXlFn0z39QYccwLcMMXH5qgTHThx9ubB4o7MdxmmRpAcBgxdwj/T6njmM0d80jGKhR9V61DbNoL0IgipPHC/dVBeNrp24H8vWmDIn1Mt1G5xualjzdJK91bzynQiXVfYDheM1IUbVtfMipN0klY5sUM18=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=sL45fs6s; arc=none smtp.client-ip=209.85.128.48
+	s=arc-20240116; t=1708363472; c=relaxed/simple;
+	bh=IqXAlLKeekccseiZoETdUwjQ0rAhOYE1/rlcGiLxS4M=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=b0ytYTCAceRlJpG65wjCo3WQEnwtKHyCXQiCWk+Y4FqJtY5tmtn6E6cmpNPvMFoTb1KpS+EWGj3aFiRXxxGq7oPOh1ccOtM7bAXWxU42XlCbkb3ltGkFMC8v42uVsoBg1cIVAHRM6Y3DMbF/ErmK70lKDS6IRhwTGoFzH3BOFoo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--dextero.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=mvbzA6Ku; arc=none smtp.client-ip=209.85.219.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--dextero.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sL45fs6s"
-Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-411d9e901dcso108535e9.1
-        for <linux-kernel@vger.kernel.org>; Mon, 19 Feb 2024 09:22:05 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mvbzA6Ku"
+Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-dc64e0fc7c8so6304574276.2
+        for <linux-kernel@vger.kernel.org>; Mon, 19 Feb 2024 09:24:31 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1708363324; x=1708968124; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=TzE2ImKo71OrGpPwUdYL/4pHbPBLfbVgHi0cr9m3U8k=;
-        b=sL45fs6sLPjwI75d4uFu8XxABRB/V521bZaKwne7qpuU6wrVTEUIA4UD0hzj9EP1O8
-         B1KKCZt+3VgGoF7Eo2IK+Ni47YoRntvhkFlPY+A30st5Hr1LZsE870leOriwliLFM4QA
-         31E+8KBHTjFLEA+KJaLBmftERuQMO0lMH4rO1dbFlAFgXkw+cHn0FrNw8SCEU0nZGulC
-         SwhH+okvFFFS5sgOktS/IHc3YZD6XDQ/hCp7YNUskEC815Xaf5V69Ae0BrsidNm/K/am
-         V2+XY8s87cXVXfMS1wl6/JChlHQIJQT+srZdiZQmJw+uP/TycvNIHtGv37Skm41h4kit
-         Ly3A==
+        d=google.com; s=20230601; t=1708363470; x=1708968270; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=IqXAlLKeekccseiZoETdUwjQ0rAhOYE1/rlcGiLxS4M=;
+        b=mvbzA6Kur06QrdLMT5WXpwjnC96UPbA/TeiKvuIR1cczySqp7pXN9urcb7mVITNc0D
+         wS00Um1PCNrXZdAMm6DsPwlbIn5Zlkf7kHD4YNfU5EwKlvxp6X8tnvZ0FrtAUcYaG8mq
+         ci2HfzX34JLnpdC1hfEVrhsH5lMFNAP6G6j1jFXyCHIUSbDoZ4vzjeLG1L94NQd8YBJq
+         1zUNDaoGvINU3tZ6YtweUhqYZeT2c3T4AynQvExWJy0Q89trTwzeTanir/oXKLfrHAcI
+         oqqPlkZZlBH5lvsgJKjEPyeaj200NfdSWQ66AlOqbirGcb3S+nGpTgK3mdFCjOuCJ0K8
+         da4Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708363324; x=1708968124;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=TzE2ImKo71OrGpPwUdYL/4pHbPBLfbVgHi0cr9m3U8k=;
-        b=l9K4Yxm63nlxbm0BZ3u2ApNbdVOkuYW6NOW9z3QnZQ5oomk/EDtiTNuFnvp2doArus
-         KBl5ujtcE4kNGZalq33duQuNUYn4jyUsKGa7iy59DXpUTxF78oyKtw0ENXkPFLtXWOKr
-         e1dM8XgvjKIwWxgY52hxLvGRXN9s5yW9qcHyaG9uSzkj4GijO5JiJK+/SjIUEF2cDcJx
-         roAxujKXzEr7WJ3UkcHJFgd0N28eW7tAnVs6ipV39q2REY90dmgQFQ0/8vpH0ByiGXTs
-         YcpxbzmEfHYQOw/CwMVFzr3N3qGzqvpi6tFcpHSZ3okt57QQwR2o4r+PteCO1RUV/de6
-         iuvg==
-X-Forwarded-Encrypted: i=1; AJvYcCVmV+yGCWMFHPTi6Qn1/104Wq7s7Pfq06QBRwuoiApasr3A3iNTtL1iNomZNGpB/1M4KNsxIFe9BBQtrtVtEQkO9lGtaZt8Czmqa/yA
-X-Gm-Message-State: AOJu0YwLmMn9+B19OoVn7XQ7J3Cuh4DrvB7/MTt+kbDJQs90X9ZlL0Tc
-	2lJuMCbLzwjE9u9Kqx4kWBxZFDHjDjt7WlIXOBsQE+HmDdI0n2LsnhhetA5+7eu8NUMwaKd3wnx
-	2YpbtzrcO+KaN8rq1XcJqid3k/Hu2GIYkUOal
-X-Google-Smtp-Source: AGHT+IFtUO3gJmAv9pg3NVlt8jW79fOGFR/YkJjU3AyGWJK7/hjLBpWxiTYoMfGOwmlNssRqFlRN3PKW2DohJYoHKeM=
-X-Received: by 2002:a05:600c:c08:b0:412:68a7:913a with SMTP id
- fm8-20020a05600c0c0800b0041268a7913amr116160wmb.4.1708363323800; Mon, 19 Feb
- 2024 09:22:03 -0800 (PST)
+        d=1e100.net; s=20230601; t=1708363470; x=1708968270;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=IqXAlLKeekccseiZoETdUwjQ0rAhOYE1/rlcGiLxS4M=;
+        b=ksJMv/YD5P4e8Mw15/TkD7XbCiM0nC9D7WJ+93EXTugRfil2lx4eDqk7yJF/sUdFZO
+         ioCt2T7fd5KN/7jipn3ORbEACvDavexfnbKRnh4jqpwWLhGObmLvWKlFGrOTgi8ku4jV
+         BHiZgRL7RM95YFnMNjHXU+iWmhLprPDVCHQS6On3QVx5uqL9wrWC6z3LGDdTOSJ9vKdT
+         oyd2ROBshVCi291MsnrVKYsnDLe1DWTh8QAvhRpOGpGm5axj/dDCymkCMGkhYVmyJc6g
+         fGCsQ8PQj4abPkbr/V/mCGzh+Pt6rpXdKCCQixI5MTIe0R0sVy4FQR7y6gENp2krK6Tl
+         mBig==
+X-Forwarded-Encrypted: i=1; AJvYcCVBlquO4zbg9xNwoHoRIr7pl1pzxhlJ/+uYKFshr5DUsUjUOyMmfz9JaRNAG5vVyAHhz23WkKFjymOaq9FXeVOSD+C0N6ffq9WTCPSw
+X-Gm-Message-State: AOJu0YzGBKa21acKD18eQAUXLG57oQV87BFaP1hYQw2HzP5FxgjoU5J0
+	B8+XYmZ48S9jRlbNErtFnLgfH5TJa65aXYcnMn/3TvgbyFqf3hcrLddztyg1JzsZusVVig09QoC
+	bThVWpQ==
+X-Google-Smtp-Source: AGHT+IHb/LI2umaPKzrGXSM6YYmMbRda0hH22YF1Jjo5mhqYj23QHtTxbCVUfsVZSjB+mHPk+SsGS1fXXoBd
+X-Received: from dextero.c.googlers.com ([fda3:e722:ac3:cc00:28:9cb1:c0a8:364e])
+ (user=dextero job=sendgmr) by 2002:a05:6902:1001:b0:dcc:79ab:e522 with SMTP
+ id w1-20020a056902100100b00dcc79abe522mr524910ybt.11.1708363470612; Mon, 19
+ Feb 2024 09:24:30 -0800 (PST)
+Date: Mon, 19 Feb 2024 17:24:17 +0000
+In-Reply-To: <20240115133654.576068-2-aiswarya.cyriac@opensynergy.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20240215-upstream-net-20240215-misc-fixes-v1-0-8c01a55d8f6a@kernel.org>
- <20240215-upstream-net-20240215-misc-fixes-v1-3-8c01a55d8f6a@kernel.org>
-In-Reply-To: <20240215-upstream-net-20240215-misc-fixes-v1-3-8c01a55d8f6a@kernel.org>
-From: Eric Dumazet <edumazet@google.com>
-Date: Mon, 19 Feb 2024 18:21:52 +0100
-Message-ID: <CANn89iJ=Oecw6OZDwmSYc9HJKQ_G32uN11L+oUcMu+TOD5Xiaw@mail.gmail.com>
-Subject: Re: [PATCH net 03/13] mptcp: fix lockless access in subflow ULP diag
-To: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Cc: mptcp@lists.linux.dev, Mat Martineau <martineau@kernel.org>, 
-	Geliang Tang <geliang@kernel.org>, "David S. Miller" <davem@davemloft.net>, 
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	Davide Caratti <dcaratti@redhat.com>, Shuah Khan <shuah@kernel.org>, netdev@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	stable@vger.kernel.org, Boris Pismenny <borisp@nvidia.com>, 
-	John Fastabend <john.fastabend@gmail.com>
+Mime-Version: 1.0
+References: <20240115133654.576068-2-aiswarya.cyriac@opensynergy.com>
+X-Mailer: git-send-email 2.44.0.rc0.258.g7320e95886-goog
+Message-ID: <20240219172417.1383044-1-dextero@google.com>
+Subject: Re: [v2 PATCH 0/1] ALSA: virtio: add support for audio controls
+From: Marcin Radomski <dextero@google.com>
+To: aiswarya.cyriac@opensynergy.com
+Cc: vill@google.com, alsa-devel@alsa-project.org, 
+	anton.yakovlev@opensynergy.com, jasowang@redhat.com, 
+	linux-kernel@vger.kernel.org, mst@redhat.com, perex@perex.cz, tiwai@suse.com, 
+	virtio-dev@lists.oasis-open.org, virtualization@lists.linux-foundation.org, 
+	Marcin Radomski <dextero@google.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Thu, Feb 15, 2024 at 7:25=E2=80=AFPM Matthieu Baerts (NGI0)
-<matttbe@kernel.org> wrote:
->
-> From: Paolo Abeni <pabeni@redhat.com>
->
-> Since the introduction of the subflow ULP diag interface, the
-> dump callback accessed all the subflow data with lockless.
->
-> We need either to annotate all the read and write operation accordingly,
-> or acquire the subflow socket lock. Let's do latter, even if slower, to
-> avoid a diffstat havoc.
->
-> Fixes: 5147dfb50832 ("mptcp: allow dumping subflow context to userspace")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
-> Reviewed-by: Mat Martineau <martineau@kernel.org>
-> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-> ---
-> Notes:
->   - This patch modifies the existing ULP API. No better solutions have
->     been found for -net, and there is some similar prior art, see
->     commit 0df48c26d841 ("tcp: add tcpi_bytes_acked to tcp_info").
->
->     Please also note that TLS ULP Diag has likely the same issue.
-> To: Boris Pismenny <borisp@nvidia.com>
-> To: John Fastabend <john.fastabend@gmail.com>
-> ---
->  include/net/tcp.h  | 2 +-
->  net/mptcp/diag.c   | 6 +++++-
->  net/tls/tls_main.c | 2 +-
->  3 files changed, 7 insertions(+), 3 deletions(-)
->
-> diff --git a/include/net/tcp.h b/include/net/tcp.h
-> index dd78a1181031..f6eba9652d01 100644
-> --- a/include/net/tcp.h
-> +++ b/include/net/tcp.h
-> @@ -2506,7 +2506,7 @@ struct tcp_ulp_ops {
->         /* cleanup ulp */
->         void (*release)(struct sock *sk);
->         /* diagnostic */
-> -       int (*get_info)(const struct sock *sk, struct sk_buff *skb);
-> +       int (*get_info)(struct sock *sk, struct sk_buff *skb);
->         size_t (*get_info_size)(const struct sock *sk);
->         /* clone ulp */
->         void (*clone)(const struct request_sock *req, struct sock *newsk,
-> diff --git a/net/mptcp/diag.c b/net/mptcp/diag.c
-> index a536586742f2..e57c5f47f035 100644
-> --- a/net/mptcp/diag.c
-> +++ b/net/mptcp/diag.c
-> @@ -13,17 +13,19 @@
->  #include <uapi/linux/mptcp.h>
->  #include "protocol.h"
->
-> -static int subflow_get_info(const struct sock *sk, struct sk_buff *skb)
-> +static int subflow_get_info(struct sock *sk, struct sk_buff *skb)
->  {
->         struct mptcp_subflow_context *sf;
->         struct nlattr *start;
->         u32 flags =3D 0;
-> +       bool slow;
->         int err;
->
->         start =3D nla_nest_start_noflag(skb, INET_ULP_INFO_MPTCP);
->         if (!start)
->                 return -EMSGSIZE;
->
-> +       slow =3D lock_sock_fast(sk);
->         rcu_read_lock();
+Thanks Anton for the reupload.
 
-I am afraid lockdep is not happy with this change.
+I tested this series with a 6.1 kernel guest on a proprietary hypervisor. The
+controls exposed by the host (BOOLEAN/INTEGER ones, as that was all I could
+get) worked as expected when adjusted via ALSA APIs.
 
-Paolo, we probably need the READ_ONCE() annotations after all.
+Reviewed-by: Marcin Radomski <dextero@google.com>
+Tested-By: Marcin Radomski <dextero@google.com>
