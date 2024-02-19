@@ -1,133 +1,122 @@
-Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
+Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CB265822D;
-	Mon, 19 Feb 2024 19:49:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF3C45823E
+	for <linux-kernel@vger.kernel.org>; Mon, 19 Feb 2024 19:49:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708372191; cv=none; b=f+jbpaEnIKOEy5i9gtTykLpa1eP1dC17TX6A/BKQrlxedS6id3rgZGGj42o38jFOimfTs9nivoifzWXhO+QiV5JSTXekuLv1xXt2cWhFt0WLX4Ldu79SEAXlRMtOkq9LNiad9wZIA7SQI5sUhpEBDTbx4x4X9+N1WqDjdUB+a5c=
+	t=1708372194; cv=none; b=H3s3uJYHEHTJjcDaLpphovkaGViNg8B0m12NWZg8dJ1r6ll2b0jiiZF2yvnN6aQ/vLYl8DEnKrVbLW4i0Rqg65cxowMsgW5SP2zI4xdNNxZxb+dCoe0iCMYGazAjrA2L5HGJOdvlRup5gFlUE5OPVNob8rexy8IE9i2IfGaY/8Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708372191; c=relaxed/simple;
-	bh=2BFGhy1GoGAZQrg+qot76orHOK5E0hhM9ZPKjpWs0L0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=gnh5UEbRb6T3YqkM5nY/pcGsmPgf855BUDHbK8VrGsPQuAa3CYikS3vOXxFLY6s8DBWaI0ojL2iQFYbLOAqCbyVew1BmkZMcVMDUrOPiXg4ky4C81PW8byo7x6phj3vHD6RpWHSXSOpStRrQAkyQDVBBXlkK11rgS/Mkxv/tO5c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QCcwxNIG; arc=none smtp.client-ip=209.85.208.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+	s=arc-20240116; t=1708372194; c=relaxed/simple;
+	bh=GDlMaaEvH+4ZAzww1vS7qaXzwS3hQNyr2z3KYzcZF6Q=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=uX+Obvx59SInN60qWCRDXgA/bh8WsgLP6q3mUfq6dWiIoP4qY7nnz/MUDHEqnouaG1AOaqcUDqBOcMFD3XguWNBSpIlw74C2CWmw7+VVKYjn2EKPXdl7oBFNo+8g2t+GuxdT9UFy3I3BqI/ssZSJOSswUkJ3AG3KH7zHpaSudaU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=marliere.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=marliere.net header.i=@marliere.net header.b=gC6mwSDK; arc=none smtp.client-ip=209.85.210.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=marliere.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QCcwxNIG"
-Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-2d22b8c6e0dso29294761fa.2;
-        Mon, 19 Feb 2024 11:49:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1708372188; x=1708976988; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=j+Mxj6oL3njy7wYXA6Pewj5A5hfEOxX2yUvAWo5Ne8Y=;
-        b=QCcwxNIGTB7hAr5jM8+nlA13qyCz7fi/DIt9SzF0EPOK9N1V5VnNC6HYmBTi23N1vO
-         4BpiDr76lg7K3ucRS4yBHnIAH4ZbiRU6RAr0mWaUWtOmQbQwGIXhuhRNXk+VIcS6wQJn
-         MDsU9lXoRDPvAhHPer5K7RnCaMEDEj5r8MfHbyVeCKeEBFLLuBBeGbi5k/uOkkmPIfzc
-         dUnLv7Xds80aSitjv8/xeqIyDWBXitFH0GPy1fRGPujgrvXSJCYJpMBntF8mrYQ+djKK
-         v2QRphZnloiiX02qD75JhAqSYGH5VllvOkqPDDNY6N4A4weZ7JxuUfFfGW7OTh+Ir1UY
-         DNOw==
+	dkim=pass (2048-bit key) header.d=marliere.net header.i=@marliere.net header.b="gC6mwSDK"
+Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-6e09143c7bdso2329303b3a.3
+        for <linux-kernel@vger.kernel.org>; Mon, 19 Feb 2024 11:49:52 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708372188; x=1708976988;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=j+Mxj6oL3njy7wYXA6Pewj5A5hfEOxX2yUvAWo5Ne8Y=;
-        b=AoD2bZMfIZEdsbTo9/zyePhjYqhQNemxIlvatQw1w5as6Ve73CuAsrp89qNcLUgBDF
-         qamz+sRurVwyxD6Vi6RXq6CYXci3mULwr7Ky2W7vgWXXVg8a2anqSpjqQxwARbcD9dS8
-         6mt8VSQ8uTpgaQUukt45T1fGlmYVRt6YVupXpzpKV+IrmJF6j1c4iXqyBTf8KyaMlziG
-         nrmzIieLE5BAUYqbQyqKRpyAn7S66vme7OifNpOubSbsVa0qTywQxWptSqj4EFWfSZQX
-         JT2nkgEaRbaBJrjz35bDczNjTqd2ST0y6b6DCL6qGnI4DC+7mG4La5jMpdkaDM9gMDcI
-         WUOw==
-X-Forwarded-Encrypted: i=1; AJvYcCVJqj9v2LDU0DOkllAe9NQca/6DvUA5+5Q7ewMvrvn4y4IX+5xcRklatHeuL7Ak9WtKHN6DsFZg9Pf94deTmemlGvvOnCL6p5KP8krwZS2GNWufiexmiSKiksV4pOnIPuMqLwzD8yy975/jPRZmiP8=
-X-Gm-Message-State: AOJu0YwPXQM6IBOFJBz1bzHhDCXieB+fIq9XxolM+6Hzbdh+NpgI+Kww
-	r1yq6qOFSzSk3TSbv8273FvdivqFqZmI9YppSt7sA1J0Pd4y4iLM
-X-Google-Smtp-Source: AGHT+IFih7GdrQAufuteLL8qMR0G4/2b7CwVADm2kPBGSrjoEY1liwkNr8A7UP7zROTWMCWm0iPUfA==
-X-Received: by 2002:a05:651c:b21:b0:2d2:35e6:7a7f with SMTP id b33-20020a05651c0b2100b002d235e67a7fmr3898833ljr.0.1708372188047;
-        Mon, 19 Feb 2024 11:49:48 -0800 (PST)
-Received: from [192.168.50.244] (83.8.201.110.ipv4.supernova.orange.pl. [83.8.201.110])
-        by smtp.gmail.com with ESMTPSA id d5-20020aa7c1c5000000b00564775edd4esm1224313edp.35.2024.02.19.11.49.46
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 19 Feb 2024 11:49:47 -0800 (PST)
-Message-ID: <c2fde69d-48c2-446f-ac56-876651c06b51@gmail.com>
-Date: Mon, 19 Feb 2024 20:49:46 +0100
+        d=1e100.net; s=20230601; t=1708372192; x=1708976992;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:dkim-signature:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=q5cxuExblNc4ySUrOXZT/i60BTkmMfHliWWRnxN2LN0=;
+        b=BPuuSCXMG23HCY1nK8PF3cvowgdGI7+kuq7ETx3MjnMhfeLOtkDUXU9t3PIaEY5XOM
+         MtO6wkmlpVwVihsylWC0MeNDxLD9itUBEKyXxPgyohTLQUG7F95RavPerXxwTnfD6W71
+         l4ccEiCFHWFKz1H3mVbYA0Tq7hFdyxocd1RB56Oan/4KD14OVeXMLK74UB9Q+QvUYYfy
+         o3Qvfz2GofuFmZHEJMWNe0QXSXiGm0rdqYlin1XltAqybjFuc7096HUNE59vIROix0wQ
+         QFPSMcgajrvx4ZXehH+cgXbBBOi18/sKkTaZY9a8LioEC5BnzUgq/U/UYANqUsWAG8Ef
+         BIeg==
+X-Gm-Message-State: AOJu0Yy5TIUw4g8LzqfV81zbogchS0Ysxv4Hi8TvFAMESqHsj7Y8y/GM
+	yzMbwLN2EV4JrUQ0zj/kFWvCZJqd4D1o4YrxBbEy2m0GhV3cXVfKWEKWygd6weAcww==
+X-Google-Smtp-Source: AGHT+IGvsR7nZpZVOpqJkCXeoQYcILZJpPdLLwQ/k4cmbk/+DDsoYDjLvz2mvGPBaCPNeqiROxL1bg==
+X-Received: by 2002:a05:6a20:b21:b0:19e:48e7:e664 with SMTP id x33-20020a056a200b2100b0019e48e7e664mr9473062pzf.31.1708372192022;
+        Mon, 19 Feb 2024 11:49:52 -0800 (PST)
+Received: from mail.marliere.net ([24.199.118.162])
+        by smtp.gmail.com with ESMTPSA id fn15-20020a056a002fcf00b006e324e33ab8sm4725779pfb.218.2024.02.19.11.49.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 19 Feb 2024 11:49:51 -0800 (PST)
+From: "Ricardo B. Marliere" <ricardo@marliere.net>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marliere.net;
+	s=2024; t=1708372189;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=q5cxuExblNc4ySUrOXZT/i60BTkmMfHliWWRnxN2LN0=;
+	b=gC6mwSDK9c9cN6GPiykq7vRl+LAoRpYgTdRUePG27mXZ2pK+jYfVPzuFRDUwrTuGgtMykc
+	9QIaA7gI+M75pSJuU8myQfrmLsT+qHgi4DD2xHiK0Vdj38k0EsmaoQFdggrViHsRVGvKvR
+	jtsV4m1Bv3x+4M+1KY24DQgOJL4BkwJ5EM9o/c8scWEBoWz3ld1tg95c+eSAql0+ym9uvt
+	daqMYyqJhF9NRIQisWzpsZ3LSGDcCfQvSo7ulXZM7wyvt8wVQ+K72HlkmDEeWJuK33kHG3
+	lhTXtuB90C2gTjbQ3Xd6oZYbtJ9aUbCtMewSXjuxyvp37SLWpkNpwyefBjPgVg==
+Authentication-Results: ORIGINATING;
+	auth=pass smtp.auth=ricardo@marliere.net smtp.mailfrom=ricardo@marliere.net
+Date: Mon, 19 Feb 2024 16:50:37 -0300
+Subject: [PATCH] parport: constify the struct device_type usage
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] ARM: dts: exynos4212-tab3: limit usable memory range
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
- Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>, Alim Akhtar <alim.akhtar@samsung.com>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
- ~postmarketos/upstreaming@lists.sr.ht
-References: <20240217-tab3-limit-usable-memory-range-v1-1-49cc9c86a5cc@gmail.com>
- <15ab6aa6-fb30-4970-9c50-546afb933e03@linaro.org>
-Content-Language: en-US
-From: Artur Weber <aweber.kernel@gmail.com>
-In-Reply-To: <15ab6aa6-fb30-4970-9c50-546afb933e03@linaro.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+Message-Id: <20240219-device_cleanup-parport-v1-1-1d2cac6c884b@marliere.net>
+X-B4-Tracking: v=1; b=H4sIAAyx02UC/x2MUQqFIBAArxL7naBSoO8qj4jNtloIk7UiiO6e9
+ DkwMzdkEqYMv+oGoZMzb7GAqSsIC8aZFI+FwWrbaGu8GosUqA8rYTySSihpk10NqBuHrvXGOyh
+ xEpr4+sb/7nlecmVQuWgAAAA=
+To: Sudip Mukherjee <sudipm.mukherjee@gmail.com>
+Cc: linux-kernel@vger.kernel.org, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ "Ricardo B. Marliere" <ricardo@marliere.net>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1065; i=ricardo@marliere.net;
+ h=from:subject:message-id; bh=GDlMaaEvH+4ZAzww1vS7qaXzwS3hQNyr2z3KYzcZF6Q=;
+ b=owEBbQKS/ZANAwAKAckLinxjhlimAcsmYgBl07EN8OvcjPJ55hQE7ATHXtY8ZqD3qv9/MYzUZ
+ OBE8ZdNDzOJAjMEAAEKAB0WIQQDCo6eQk7jwGVXh+HJC4p8Y4ZYpgUCZdOxDQAKCRDJC4p8Y4ZY
+ pkzJEACloxmdXukC3F/8+gcU19/wbX3/xddgxXrmH0cv5e5DVSSpx7zyUaN7QoDSN8fRy1m2KfF
+ 71a3AuszvKo2/4sjxiveHD54BRcKMKzMnrV5DWtVk4yS/PO/KLFDxcwRHUZXTH3IytF10HcDPWH
+ SQfWSU9r4D1jtQrIo1QyzIKilEPHXLhMhy14ZcwHGujY7ivEB3kEYj3uesgm6A+Gw4hVBj6dDZx
+ p0rLGpUpUa3rMe2BxNBG/BDgsNmc+W8Oa7/ugcIAth4mAhV3ka7CekULOc5KhRje0zPx4vIsdF9
+ QH85dn4bzorAU2ogjCqRsESs9dTYjFtOgt8EBNuTXeNLPNeTxzuKzgAtm017DM/z4iIfhHk1PbF
+ SJ+CO/x5yaOLS4KP+nuBltwsEWemhWFBkNu9/w5vsMHdfa7s3wzVztu/WMErMK9obiati9uwIF1
+ ZoV4MGBhI+C+YP7fQyK+BL8MAd1XqzmD37K/hsS+tI0+ic7wSIX57mbr3Ibi7cpalPfmPO8jf1l
+ 4oeDh8go0T/hzRL6Ha7flO0abSFaC+eG0bWslJyfVLP/5rPQyE+um6VcrZkyojjmDcmyomI6n4d
+ 3cPMs9f3HhREEi/f5WOgS5/xtCeQkrCqmtcKdTRICpZ8jxfzA7rPuTCpx6v/4Fjo8DI2TCs1gxf
+ c8bBLeTscqMPWPw==
+X-Developer-Key: i=ricardo@marliere.net; a=openpgp;
+ fpr=030A8E9E424EE3C0655787E1C90B8A7C638658A6
 
-On 19.02.2024 08:44, Krzysztof Kozlowski wrote:
-> On 17/02/2024 20:02, Artur Weber wrote:
->> The stock bootloader on the Samsung Galaxy Tab 3 8.0 provides an
->> incorrect available memory range over ATAG_MEM. Limit the usable
->> memory in the DTS to prevent it from doing so, without having to
->> disable ATAG support.
->>
->> Signed-off-by: Artur Weber <aweber.kernel@gmail.com>
->> ---
->>   arch/arm/boot/dts/samsung/exynos4212-tab3.dtsi | 6 ++++++
->>   1 file changed, 6 insertions(+)
->>
->> diff --git a/arch/arm/boot/dts/samsung/exynos4212-tab3.dtsi b/arch/arm/boot/dts/samsung/exynos4212-tab3.dtsi
->> index e5254e32aa8f..9bc05961577d 100644
->> --- a/arch/arm/boot/dts/samsung/exynos4212-tab3.dtsi
->> +++ b/arch/arm/boot/dts/samsung/exynos4212-tab3.dtsi
->> @@ -45,6 +45,12 @@ chosen {
->>   		/* Default S-BOOT bootloader loads initramfs here */
->>   		linux,initrd-start = <0x42000000>;
->>   		linux,initrd-end = <0x42800000>;
->> +
->> +		/*
->> +		 * Stock bootloader provides incorrect memory size in ATAG_MEM;
->> +		 * override it here
->> +		 */
->> +		linux,usable-memory-range = <0x40000000 0x3fc00000>;
-> 
-> Applied and dropped:
->   chosen: linux,usable-memory-range:0: [4611686019496935424] is too short
+Since commit aed65af1cc2f ("drivers: make device_type const"), the driver
+core can properly handle constant struct device_type. Move the
+parport_device_type variable to be a constant structure as well, placing it
+into read-only memory which can not be modified at runtime.
 
-This seems to be a binding issue; the DT schema expects a 64-bit memory 
-address and size, and doesn't allow a 32-bit range. I've tested the DTS 
-on my device and this property seems to be handled fine, so I think this 
-should allow 32-bit values as well.
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Ricardo B. Marliere <ricardo@marliere.net>
+---
+ drivers/parport/share.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-I've opened a PR[1] against devicetree-org/dt-schema (where the schema 
-for the chosen node is stored) to try and fix this. If my approach is 
-incorrect, feel free to comment there as well.
+diff --git a/drivers/parport/share.c b/drivers/parport/share.c
+index 49c74ded8a53..33159392d70c 100644
+--- a/drivers/parport/share.c
++++ b/drivers/parport/share.c
+@@ -101,7 +101,7 @@ static struct parport_operations dead_ops = {
+ 	.owner		= NULL,
+ };
+ 
+-static struct device_type parport_device_type = {
++static const struct device_type parport_device_type = {
+ 	.name = "parport",
+ };
+ 
 
-Best regards
-Artur
+---
+base-commit: b401b621758e46812da61fa58a67c3fd8d91de0d
+change-id: 20240219-device_cleanup-parport-ba048a859198
 
-[1] https://github.com/devicetree-org/dt-schema/pull/128
-
-> 
-> Does not look you tested the bindings.
-> 
-> Please observe that we have dedicated subsystem profile since a release:
-> https://www.kernel.org/doc/html/latest/process/maintainers.html#arm-samsung-s3c-s5p-and-exynos-arm-architectures
-> 
-> Best regards,
-> Krzysztof
-> 
+Best regards,
+-- 
+Ricardo B. Marliere <ricardo@marliere.net>
 
