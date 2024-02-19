@@ -1,140 +1,116 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71F1A25614;
-	Mon, 19 Feb 2024 14:29:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AEF737160;
+	Mon, 19 Feb 2024 14:29:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708352957; cv=none; b=uCf2N4UTG7ciIC12wYNGRkTBiTtdNon9cSSJOTOO6hU847NmagoGFT9d3yLsCid1KvF01RjymD2RdA/U1sJRj3Xjy631Fds4RVgbIwSeE746BFKjbba5XC+NT61SozXhIFftoJrIpb9P8jJPeIQ5zD+Klsp40Prb5ykcSlWvfkM=
+	t=1708353002; cv=none; b=B32Y8fyB4wy0oN6faDdxxHC2zN6nT9jKMxDek8p/cW36xCDYmlOh6UDaPGSLD3t2F5H3xAeZlCRF0zLQl53Jto2BBJuc8TAuIYuWV2OFItinSPeSFxYeTM8GFnUSqFW1+oz64Iacqq73UjXhMveLd3aTaZYWwJ5BNGnWuOoDtuA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708352957; c=relaxed/simple;
-	bh=+92MW98XOXYBpDGx8mWcDGFrMsPAqOXoGejzwebjWB8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EHRUOrp2aLWjReDFR/NnL7m/Ygk5wpESE+Ojm+IF4JMzIMPxgO1mBYiQkWl0AfH+kF6PNa6CtB5xPrr0W81TrYCAMymm8h8p703ki3mNawriYwQvCCFvEqU3KLgqvsmFOD1wyn8cPND/5Z6Bef8idsITmHLX1dwt6TRswMRtQAc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=CyOmQFXf; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=CyOmQFXf; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1708353002; c=relaxed/simple;
+	bh=jSJtb19xo6U4wrKlOqq7IbDHuxWUa9am9jpce38A2yU=;
+	h=Mime-Version:Content-Type:Date:Message-Id:From:Subject:Cc:To:
+	 References:In-Reply-To; b=SOCZ5/inIpBqG5OXC7zIdmxNls9ThlbbSIDYI95iNpTyhduuYYAjdVC2mdDsoCAt/rlRbRfRnYJw3sRmJUUWY7qub/Z49V/4lYwoB3uFMdewtOLRaCHg12sevJj71sVv52HpIhRpvtTVH+8swtGLaOkIzZbeOyz3+5bRv1NkGpk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=Y+Ri8PbE; arc=none smtp.client-ip=217.70.183.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="CyOmQFXf";
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="CyOmQFXf"
-Received: from imap2.dmz-prg2.suse.org (imap2.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:98])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 2521B220FD;
-	Mon, 19 Feb 2024 14:29:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1708352953; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="Y+Ri8PbE"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id E74DE1BF209;
+	Mon, 19 Feb 2024 14:29:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1708352998;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=1ONaivgVj/kykIG/cXvY1zXXQU8tX6udCSGGm21f/RE=;
-	b=CyOmQFXfzsrEpil59zjj1xDhLSls+8rhnUd/fyM34aCxr5PpAsA/lhdmTMzKx8PxdQA/q7
-	ayNWDtsEGEmotEstGlETf4VqR4ofnEUf/rDEBI9rulMxzF4Y3fUs2Gc9IQLdPOyu7nf4iS
-	BgP9ma7+xRaMwGXQbh0NsY2UwQa8aW4=
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1708352953; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=1ONaivgVj/kykIG/cXvY1zXXQU8tX6udCSGGm21f/RE=;
-	b=CyOmQFXfzsrEpil59zjj1xDhLSls+8rhnUd/fyM34aCxr5PpAsA/lhdmTMzKx8PxdQA/q7
-	ayNWDtsEGEmotEstGlETf4VqR4ofnEUf/rDEBI9rulMxzF4Y3fUs2Gc9IQLdPOyu7nf4iS
-	BgP9ma7+xRaMwGXQbh0NsY2UwQa8aW4=
-Received: from imap2.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap2.dmz-prg2.suse.org (Postfix) with ESMTPS id 0E15D139C6;
-	Mon, 19 Feb 2024 14:29:13 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([10.150.64.162])
-	by imap2.dmz-prg2.suse.org with ESMTPSA
-	id mIwkA7ll02XNEwAAn2gu4w
-	(envelope-from <mkoutny@suse.com>); Mon, 19 Feb 2024 14:29:13 +0000
-Date: Mon, 19 Feb 2024 15:29:11 +0100
-From: Michal =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>
-To: Johannes Weiner <hannes@cmpxchg.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>, 
-	Michal Hocko <mhocko@kernel.org>, Shakeel Butt <shakeelb@google.com>, 
-	Roman Gushchin <roman.gushchin@linux.dev>, linux-mm@kvack.org, cgroups@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Jonas =?utf-8?Q?Sch=C3=A4fer?= <jonas@wielicki.name>, 
-	Narcis Garcia <debianlists@actiu.net>, Yosry Ahmed <yosryahmed@google.com>
-Subject: Re: [PATCH] mm: memcontrol: clarify swapaccount=0 deprecation warning
-Message-ID: <ch7mbvyfcvc5yswykpgj5i73okgt4dnovelqhpuv22puw7gpba@6vj6d2z2yhau>
-References: <20240213081634.3652326-1-hannes@cmpxchg.org>
+	bh=jSJtb19xo6U4wrKlOqq7IbDHuxWUa9am9jpce38A2yU=;
+	b=Y+Ri8PbEfAVqHYxOyn7iqdOjgEFwTTgLg0MONT5WYr9Pt6gbz+NqkpWDcV/ZjfYuInJ9PT
+	dopPyvTqtIusrhbip7t5fiYVk+sTGQktlAk8uT7Qg0QfMV8xXxjgWQZ4ip+gFuj6pY0IPt
+	5M/K17pKPtqTOdeueh+LFKt6b5PLLEkrGV0FVcmKJCsN3oChUhbPa2JUZyilf+xSyn1et+
+	UzAlUgnQjMAigrc2fnsfdl4zlWDCZjsucLO3uEgvwKlnZGmhqAKcPQZIqO6iWoHBESoJEU
+	uKb6etT9INEcZyxkGvsGiWPO8I87me5hCW8S1QAyHAuVcxUARUStsP1mtLPcdg==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="ifpowlilw3jtc7ow"
-Content-Disposition: inline
-In-Reply-To: <20240213081634.3652326-1-hannes@cmpxchg.org>
-X-Spam-Level: 
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.com header.s=susede1 header.b=CyOmQFXf
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Spamd-Result: default: False [-5.38 / 50.00];
-	 ARC_NA(0.00)[];
-	 RCVD_VIA_SMTP_AUTH(0.00)[];
-	 R_DKIM_ALLOW(-0.20)[suse.com:s=susede1];
-	 SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:98:from];
-	 FROM_HAS_DN(0.00)[];
-	 TO_DN_SOME(0.00)[];
-	 TO_MATCH_ENVRCPT_ALL(0.00)[];
-	 NEURAL_HAM_LONG(-1.00)[-1.000];
-	 MIME_GOOD(-0.20)[multipart/signed,text/plain];
-	 NEURAL_HAM_SHORT(-0.20)[-0.994];
-	 RCVD_COUNT_THREE(0.00)[3];
-	 DKIM_SIGNED(0.00)[suse.com:s=susede1];
-	 DKIM_TRACE(0.00)[suse.com:+];
-	 MX_GOOD(-0.01)[];
-	 RCPT_COUNT_SEVEN(0.00)[11];
-	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:dkim];
-	 SIGNED_PGP(-2.00)[];
-	 FUZZY_BLOCKED(0.00)[rspamd.com];
-	 FROM_EQ_ENVFROM(0.00)[];
-	 MIME_TRACE(0.00)[0:+,1:+,2:~];
-	 MID_RHS_NOT_FQDN(0.50)[];
-	 RCVD_TLS_ALL(0.00)[];
-	 BAYES_HAM(-2.27)[96.58%];
-	 RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:98:from]
-X-Spam-Score: -5.38
-X-Rspamd-Queue-Id: 2521B220FD
-X-Spam-Flag: NO
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Mon, 19 Feb 2024 15:29:57 +0100
+Message-Id: <CZ94LGRSF9KN.15ZO1VRMIQVR8@bootlin.com>
+From: =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>
+Subject: Re: [PATCH 01/13] dt-bindings: i2c: nomadik: add timeout-usecs
+ property bindings
+Cc: "Rob Herring" <robh@kernel.org>, "Andi Shyti" <andi.shyti@kernel.org>,
+ "Krzysztof Kozlowski" <krzysztof.kozlowski+dt@linaro.org>, "Conor Dooley"
+ <conor+dt@kernel.org>, "Thomas Bogendoerfer" <tsbogend@alpha.franken.de>,
+ <linux-arm-kernel@lists.infradead.org>, <linux-i2c@vger.kernel.org>,
+ <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+ <linux-mips@vger.kernel.org>, "Gregory Clement"
+ <gregory.clement@bootlin.com>, "Vladimir Kondratiev"
+ <vladimir.kondratiev@mobileye.com>, "Thomas Petazzoni"
+ <thomas.petazzoni@bootlin.com>, "Tawfik Bayouk"
+ <tawfik.bayouk@mobileye.com>
+To: "Linus Walleij" <linus.walleij@linaro.org>
+X-Mailer: aerc 0.15.2
+References: <20240215-mbly-i2c-v1-0-19a336e91dca@bootlin.com>
+ <20240215-mbly-i2c-v1-1-19a336e91dca@bootlin.com>
+ <20240216022704.GB850600-robh@kernel.org>
+ <CZ6E24VPJKJG.35LACFD6ZV5KE@bootlin.com>
+ <CACRpkdZZhhzg5SY7U5dv_OfLEVejRFom4V9nCfkQXunAw1ZXSw@mail.gmail.com>
+In-Reply-To: <CACRpkdZZhhzg5SY7U5dv_OfLEVejRFom4V9nCfkQXunAw1ZXSw@mail.gmail.com>
+X-GND-Sasl: theo.lebrun@bootlin.com
 
+Hello,
 
---ifpowlilw3jtc7ow
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On Mon Feb 19, 2024 at 3:06 PM CET, Linus Walleij wrote:
+> Hi Th=C3=A9o,
+>
+> thanks for your patch!
+>
+> On Fri, Feb 16, 2024 at 10:16=E2=80=AFAM Th=C3=A9o Lebrun <theo.lebrun@bo=
+otlin.com> wrote:
+>
+> > i2c-mpc (fsl,timeout) and i2c-gpio (i2c-gpio,timeout-ms). I agree this
+> > prop has no reason to be compatible-specific.
+> >
+> > Feedback from dt-bindings and I2C host maintainers would be useful: wha=
+t
+> > should the property be named? Having the unit makes it self-descriptive=
+,
+> > which sounds like a good idea to me. timeout-usecs, timeout-us, another
+> > option?
+>
+> Use i2c-transfer-timeout-ms in my opinion, so it us crystal clear
+> what that property is for.
 
-On Tue, Feb 13, 2024 at 03:16:34AM -0500, Johannes Weiner <hannes@cmpxchg.org> wrote:
-> The swapaccount deprecation warning is throwing false positives. Since
-> we deprecated the knob and defaulted to enabling, the only reports
-> we've been getting are from folks that set swapaccount=1. While this
-> is a nice affirmation that always-enabling was the right choice, we
-> certainly don't want to warn when users request the supported mode.
+Using =C2=B5s (microseconds) would be OK? I'm not sure yet about the exact
+timeout desired but a one millisecond granularity might not be enough
+for the Mobileye usecase.
 
-But shouldn't such users be still warned about effectively unused option?
-I think `return 0;` from the param handler should ensure that.
+Expect incoming patches to use the I2C controller in Fast Mode Plus
+(1Mbps) and High Speed Mode (3.4Mbps). Gotta go fast!
 
+> As Rob mentioned this isn't in the kernel schemas but in dtschema, so
+> you need to patch this:
+> https://github.com/robherring/dt-schema
 
-> +	if (!kstrtobool(s, &res) && !res)
-> +		pr_warn_once("The swapaccount=0 commdandline option is deprecated "
-                                                commandline
+Indeed. The other question if we do microseconds is the
+suffix: -us, -usecs, -microseconds, etc? I picked -usecs for my v1, but
+a grep tells me I am the only user of this suffix. -us is much more
+common.
 
-Regards,
-Michal
+BTW i2c-controller.yaml already has a =C2=B5s timeout:
+i2c-scl-clk-low-timeout-us
 
---ifpowlilw3jtc7ow
-Content-Type: application/pgp-signature; name="signature.asc"
+Thanks,
 
------BEGIN PGP SIGNATURE-----
+--
+Th=C3=A9o Lebrun, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
 
-iHUEABYKAB0WIQQpEWyjXuwGT2dDBqAGvrMr/1gcjgUCZdNltQAKCRAGvrMr/1gc
-juU8AQCiaPhuMzNBRds24LnLkLrdU13FWaz9U416QQSNSADfBwD/SBYoMGN5ze1k
-0GP/LNuyKMEMrQa7zSRq6963II7goAY=
-=Jopi
------END PGP SIGNATURE-----
+------------------------------------------------------------------------
 
---ifpowlilw3jtc7ow--
