@@ -1,16 +1,16 @@
 Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F20F28DD1
-	for <linux-kernel@vger.kernel.org>; Mon, 19 Feb 2024 10:59:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D892328DD0
+	for <linux-kernel@vger.kernel.org>; Mon, 19 Feb 2024 10:59:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708340381; cv=none; b=afFaqVSEHUYr0CzYdT7f+fEbLxzRxEjBqrTbSB1I3rCZTrfRz4ShQL9sn8k2q3Ma1xSfkDlhjiXEwhiZM5AJ7DuOJYNnD5uaPE3KAWdNWTpS7HiJ9/eEluGnZjW5WWPluU0k3X2C9f+qkNuR0ATQdhRMZecGkofjQEXK2ni6+7o=
+	t=1708340381; cv=none; b=FiHl4OR7lXmI4tv5R9Wv6lsqnJVqNwYhhW5RHwJfxQZwGznfx61Apaw0A2+ytZdzqnyj7npPDBJyVQszqxYfLPv6uMpeJlz3hqOSqDZX6eiVVeiP2dS9uzqnuTUBxfBzcSUL4KbojvTRIVhZ6NkXNPWfre761zsW5ia/zd+3HGg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1708340381; c=relaxed/simple;
-	bh=00egCWTf/Xz90viScRQeUZaKnDU/N7KFipBuJnl8Wp8=;
+	bh=LeFkUhF7INlM3yuDLb1Rsn627568Wm2uaSf9+/UNkoc=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=e187HLA7PJ5tNfvNJ5vsbbgNBvskQBzj9mT34F/f/Vm6xZzRU1UUYuWFpAfdAW5+/gOmjCUFV5lXnDXe+zOsUvKV/E4xo6WD4qsKvSXjF+PSC3fW6CA4yrHH2CxltclPj1grqnTtGXPG+Yj8EL1nbuJuGbCFC4kr59LzJo8lGRs=
+	 MIME-Version:Content-Type; b=TaCZ/xJUD9HfQDdq+IoV3jLov2ANUESL3m2DwOgeeh0FQyf37ReFRSiSZZXZu3CconoAkbi4KRgD6OsOwCFer0Vw5jpmwJBKK1TPWSBN+HJQN7FukhjjU6YYJUTqzevJvkXLVJTUBhc6MhMtDGb5cxDgLwIWMJ5mlS8lFNBWdV0=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
@@ -18,25 +18,24 @@ Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
 	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
 	(Exim 4.92)
 	(envelope-from <ukl@pengutronix.de>)
-	id 1rc1N2-0007tT-JA; Mon, 19 Feb 2024 11:59:36 +0100
+	id 1rc1N2-0007t1-8l; Mon, 19 Feb 2024 11:59:36 +0100
 Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
 	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.94.2)
 	(envelope-from <ukl@pengutronix.de>)
-	id 1rc1N2-001dBG-6F; Mon, 19 Feb 2024 11:59:36 +0100
+	id 1rc1N1-001dBA-S9; Mon, 19 Feb 2024 11:59:35 +0100
 Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
 	(envelope-from <ukl@pengutronix.de>)
-	id 1rc1N2-007lm9-0N;
-	Mon, 19 Feb 2024 11:59:36 +0100
+	id 1rc1N1-007lm1-2Y;
+	Mon, 19 Feb 2024 11:59:35 +0100
 From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
 To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 Cc: kernel@pengutronix.de,
-	Rob Herring <robh@kernel.org>,
 	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 4/4] w1: w1-gpio: Convert to platform remove callback returning void
-Date: Mon, 19 Feb 2024 11:59:30 +0100
-Message-ID:  <bd69ccde7395cf4bf63765e29c1ce83834d3669b.1708340114.git.u.kleine-koenig@pengutronix.de>
+Subject: [PATCH 2/4] w1: omap_hdq: Convert to platform remove callback returning void
+Date: Mon, 19 Feb 2024 11:59:28 +0100
+Message-ID:  <f3a7eaee59020bf879249304eaaf9839c7e17222.1708340114.git.u.kleine-koenig@pengutronix.de>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <cover.1708340114.git.u.kleine-koenig@pengutronix.de>
 References: <cover.1708340114.git.u.kleine-koenig@pengutronix.de>
@@ -47,7 +46,7 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1873; i=u.kleine-koenig@pengutronix.de; h=from:subject:message-id; bh=00egCWTf/Xz90viScRQeUZaKnDU/N7KFipBuJnl8Wp8=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBl0zSTrq456IYWTjU+KXkxkmXQkNFMCKWgFxPeF 73xd2/n6FKJATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCZdM0kwAKCRCPgPtYfRL+ TkKdB/9Nux88D/xvqCPsFwszanxBm2bILV18T4Ub+x9ms/hcYEGQUHyWyiPA1+6ByDeIKJaoR9T Uf63vNWNwVoKavgzTS6VssxsHw9EN41Xg9ftCbvwNTMgPtkUbop0uyuRQTAbNIrRQ0TKKyLUeMV ZXWahZ+BVxAEATso9pWa4sDt5DzzoohY+q1UKYXP2bxA4/3K+l1FNVUDcBWsexPl2RtpyibuBTj Ds6qsQHc0ngNXgbBwMR8zMS6xe5XbVdl9x5IoR5NOCdzasu5wVmFdo429TFwGyE7KFx5RC2Hgsl SbzekQjXrg7aXDor58e4YNb45qbQWxrQXMrFKlBaDeTcZiIC
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1828; i=u.kleine-koenig@pengutronix.de; h=from:subject:message-id; bh=LeFkUhF7INlM3yuDLb1Rsn627568Wm2uaSf9+/UNkoc=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBl0zSQzv197BQttr+MmgiSNlxIVPdKy8hHHTXuy aHDevX/JKmJATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCZdM0kAAKCRCPgPtYfRL+ To/gCACEbqrpt26gtKcuJmYLXGd59FyHz2ICXd2bZHcLu4NwXNrd1CzunUdeXdpB1umeHcoXNRS 7rHWwIAVDNvsnNrKQ/p6Rna1xrIqk6St/6roDK903rwCogvgHqk/FhcEy9bzJQQjNt0yI8ERym7 sZ/vxWvTf97kJE/l+BdQrXYyBx8cbTKBufMl5BSbmwuAuRPGDGNkfF1ostHHmAmT/oKHMf534i5 ncWyeu4MtuJ+KFMGmif788caBXtjZNiWzlZRgKUzpLDrNvq2W40/22lbuAar666xUcSnVWo2l2+ piKSoWh2aveY8xTbVMxkXO25RIGpwfyh4IymKp2W4Sv3Vb1l
 X-Developer-Key: i=u.kleine-koenig@pengutronix.de; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
 Content-Transfer-Encoding: 8bit
 X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
@@ -70,40 +69,40 @@ callback to the void returning variant.
 
 Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 ---
- drivers/w1/masters/w1-gpio.c | 6 ++----
+ drivers/w1/masters/omap_hdq.c | 6 ++----
  1 file changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/w1/masters/w1-gpio.c b/drivers/w1/masters/w1-gpio.c
-index 05c67038ed20..34128e6bbbfa 100644
---- a/drivers/w1/masters/w1-gpio.c
-+++ b/drivers/w1/masters/w1-gpio.c
-@@ -141,7 +141,7 @@ static int w1_gpio_probe(struct platform_device *pdev)
- 	return 0;
+diff --git a/drivers/w1/masters/omap_hdq.c b/drivers/w1/masters/omap_hdq.c
+index 6a39b71eb718..d1cb5190445a 100644
+--- a/drivers/w1/masters/omap_hdq.c
++++ b/drivers/w1/masters/omap_hdq.c
+@@ -647,7 +647,7 @@ static int omap_hdq_probe(struct platform_device *pdev)
+ 	return ret;
  }
  
--static int w1_gpio_remove(struct platform_device *pdev)
-+static void w1_gpio_remove(struct platform_device *pdev)
+-static int omap_hdq_remove(struct platform_device *pdev)
++static void omap_hdq_remove(struct platform_device *pdev)
  {
- 	struct w1_bus_master *master = platform_get_drvdata(pdev);
- 	struct w1_gpio_ddata *ddata = master->data;
-@@ -150,8 +150,6 @@ static int w1_gpio_remove(struct platform_device *pdev)
- 		gpiod_set_value(ddata->pullup_gpiod, 0);
+ 	int active;
  
- 	w1_remove_master_device(master);
+@@ -661,8 +661,6 @@ static int omap_hdq_remove(struct platform_device *pdev)
+ 	if (active >= 0)
+ 		pm_runtime_put_sync(&pdev->dev);
+ 	pm_runtime_disable(&pdev->dev);
 -
 -	return 0;
  }
  
- static struct platform_driver w1_gpio_driver = {
-@@ -160,7 +158,7 @@ static struct platform_driver w1_gpio_driver = {
- 		.of_match_table = of_match_ptr(w1_gpio_dt_ids),
- 	},
- 	.probe = w1_gpio_probe,
--	.remove = w1_gpio_remove,
-+	.remove_new = w1_gpio_remove,
- };
+ static const struct of_device_id omap_hdq_dt_ids[] = {
+@@ -674,7 +672,7 @@ MODULE_DEVICE_TABLE(of, omap_hdq_dt_ids);
  
- module_platform_driver(w1_gpio_driver);
+ static struct platform_driver omap_hdq_driver = {
+ 	.probe = omap_hdq_probe,
+-	.remove = omap_hdq_remove,
++	.remove_new = omap_hdq_remove,
+ 	.driver = {
+ 		.name =	"omap_hdq",
+ 		.of_match_table = omap_hdq_dt_ids,
 -- 
 2.43.0
 
