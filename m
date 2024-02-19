@@ -1,87 +1,113 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 694EA3B7A9
-	for <linux-kernel@vger.kernel.org>; Mon, 19 Feb 2024 15:55:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95F703B190;
+	Mon, 19 Feb 2024 15:57:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708358101; cv=none; b=qlMfRdL1jj0udBMtfTjeM681JRVJJvGIYZx7nFEJnOC1lE0uyjYg5qkJzquo4VhIOSuSAOZCBWJEQZkl/ndPmBJ9PPqWL4iRcej7f0i9ymCuOKdI0VjC/ERy0lAC8fhwH6eGihTq6XVDXTGqMHrIybXUEmeyTgOt2CvbgZXaDyI=
+	t=1708358221; cv=none; b=fb+2a6nNhnxmeNKv1WwRkWjlDdmDf9nZe00SpMk8TIztpFxLvPF1HTxXVREtnTSGasIOffW7ay8vRfzkG5GFfx1nPybJtWmFpoZWBRNdTzpGmd9FTdCM+oMUsvNRE+gLDHxjv2S0ZoV6PYWktDKHR3rGsHKLRO1s8ypgSaXyveQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708358101; c=relaxed/simple;
-	bh=sDhgfWqSwRQP0W/gjqhUOncvH89HLXRCOuR9itr/o1o=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=HxddxVPKLnsN7RC5xtv1M/4287h74aMxkiBFH8AbGv5Su37t/w+wxsVyBq6mGYxFgDQKMls2xcQUxrLA9xIufHEPAJJPNolTAcMMc985jfQe/2UvqVgEmjxzT1jiXLhpJ1o5XfsaeU4j/P+BV9PRA74MaJnYBXsrqhYn+Hlv1+k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=SFxFmXSp; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=bXGHXZOZ; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1708358221; c=relaxed/simple;
+	bh=ViZrw86k4pjLburJCJObXL4Filt6Xa7zhElSH1BTaM0=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Gjr9Z55hlhetF0hs4UFYIxJBco7F0k+6i/IUJ9Q27RMUwnmtEk8atX9kIlScjlnvjP/AkY1EAH/d0x5JDd8sB1nXc3Ug/82wE0YSOfGPRr+VWWjWCqqSPo+XpfbPKAzlRHgEVAwgSFAqqdL7ygacInIWL7Eim41oWAszh3Jx+0U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CmA4Fkqp; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="SFxFmXSp";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="bXGHXZOZ"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1708358098;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=bEnlqSRlwvlrLkErx0rL1ZZTMmCapG/UfDxG/X7ObI4=;
-	b=SFxFmXSpEl7aQTZMNvceDZ7h7/vZS5CR8TSXhAu661r9tggYc97Sq1q87htzcKOGbo6wBo
-	NM7SMp/jQVVJYvrraxTbZOgbbgBvvUl0/b9VeVd2O5bc0f7eiZFxY03iNIzDHBIve+WNy7
-	yIGS0q6QSEZYKwCv6RK1in+2DT1CmzVqbFym0uPebA60Rz2VODvbYGudBz0lrFL/igoesV
-	aDoqVvIt0q4veJ7f7U/ZFyztgd1MEQbwoIpukEWcxtD3HZMbh4Evd85MlsuKL9dKFw2aAy
-	QW5t339aBcfqzmtR+7g8NhfCYmLYeBiX11ppqTRofqgI9UUXuFewAdzvLT+47A==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1708358098;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=bEnlqSRlwvlrLkErx0rL1ZZTMmCapG/UfDxG/X7ObI4=;
-	b=bXGHXZOZwMwVLUqWEUub/FScytsjczBSpZbgvf303K4doHWeBvHmjrd5id/6AnyonDbq0l
-	hpHsA3qZZ3vL+eDA==
-To: Ankur Arora <ankur.a.arora@oracle.com>, linux-kernel@vger.kernel.org
-Cc: peterz@infradead.org, torvalds@linux-foundation.org, paulmck@kernel.org,
- akpm@linux-foundation.org, luto@kernel.org, bp@alien8.de,
- dave.hansen@linux.intel.com, hpa@zytor.com, mingo@redhat.com,
- juri.lelli@redhat.com, vincent.guittot@linaro.org, willy@infradead.org,
- mgorman@suse.de, jpoimboe@kernel.org, mark.rutland@arm.com,
- jgross@suse.com, andrew.cooper3@citrix.com, bristot@kernel.org,
- mathieu.desnoyers@efficios.com, geert@linux-m68k.org,
- glaubitz@physik.fu-berlin.de, anton.ivanov@cambridgegreys.com,
- mattst88@gmail.com, krypton@ulrich-teichert.org, rostedt@goodmis.org,
- David.Laight@ACULAB.COM, richard@nod.at, mjguzik@gmail.com,
- jon.grimm@amd.com, bharata@amd.com, raghavendra.kt@amd.com,
- boris.ostrovsky@oracle.com, konrad.wilk@oracle.com, Ankur Arora
- <ankur.a.arora@oracle.com>
-Subject: Re: [PATCH 00/30] PREEMPT_AUTO: support lazy rescheduling
-In-Reply-To: <draft-87a5o4go5i.ffs@tglx>
-References: <draft-87a5o4go5i.ffs@tglx>
-Date: Mon, 19 Feb 2024 16:54:58 +0100
-Message-ID: <87msrw8n59.ffs@tglx>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CmA4Fkqp"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E4C44C433C7;
+	Mon, 19 Feb 2024 15:57:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1708358221;
+	bh=ViZrw86k4pjLburJCJObXL4Filt6Xa7zhElSH1BTaM0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=CmA4FkqprLlsrbkkuP++2cothZ3a2rLe1RDDzOzZYJGbUE+vzvqi7vXc2/azCPQfl
+	 H6LWYYmIqhUz8Xqr9Pf6aIs0Sbe7O12kVDFZXSwLZgBXTK6ND9OJ35iHSNPBCwsYB3
+	 q8zcTlVFze53LFrQa8Ho/pY+9vKgPTU7TBF922DnU7pVOovbSAzk2wxMYds55LMIeq
+	 UJxpIITaZwAz5vSAZm8JftfLF8FyRafSXO51hh6Khdddud68eiVqkIAsMREth4449L
+	 MDcQFLIL09Ep8+rcMhnXRnNLXv9kp+TLIAqWknmQ9E8Xr6CCbcvu55lv1nVVl8D/wW
+	 yjExMpDKAkcdw==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1rc60o-004cv5-LP;
+	Mon, 19 Feb 2024 15:56:58 +0000
+Date: Mon, 19 Feb 2024 15:56:58 +0000
+Message-ID: <867cj04fcl.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: Biju Das <biju.das.jz@bp.renesas.com>
+Cc: tip-bot2@linutronix.de,
+	apatel@ventanamicro.com,
+	linux-kernel@vger.kernel.org,
+	linux-tip-commits@vger.kernel.org,
+	tglx@linutronix.de,
+	geert@linux-m68k.org,
+	linux-renesas-soc@vger.kernel.org,
+	x86@kernel.org
+Subject: Re: [tip: irq/msi] genirq/irqdomain: Remove the param count restriction from select()
+In-Reply-To: <170802702416.398.14922976721740218856.tip-bot2@tip-bot2>
+References: <170802702416.398.14922976721740218856.tip-bot2@tip-bot2>
+	<20240127161753.114685-3-apatel@ventanamicro.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/29.1
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: biju.das.jz@bp.renesas.com, tip-bot2@linutronix.de, apatel@ventanamicro.com, linux-kernel@vger.kernel.org, linux-tip-commits@vger.kernel.org, tglx@linutronix.de, geert@linux-m68k.org, linux-renesas-soc@vger.kernel.org, x86@kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-On Tue, Feb 13 2024 at 20:27, Thomas Gleixner wrote:
-> On Mon, Feb 12 2024 at 21:55, Ankur Arora wrote:
->
->> Hi,
->>
->> This series adds a new scheduling model PREEMPT_AUTO, which like
->> PREEMPT_DYNAMIC allows dynamic switching between a none/voluntary/full
->> preemption model. However, unlike PREEMPT_DYNAMIC, it doesn't depend
->> on explicit preemption points for the voluntary models.
->>
->> The series is based on Thomas' original proposal which he outlined
->> in [1], [2] and in his PoC [3].
->>
->> An earlier RFC version is at [4].
+On Mon, 19 Feb 2024 15:50:36 +0000,
+Biju Das <biju.das.jz@bp.renesas.com> wrote:
+> 
+> > Now that the GIC-v3 callback can handle invocation with a fwspec parameter
+> > count of 0 lift the restriction in the core code and invoke select()
+> > unconditionally when the domain provides it.
+> 
+> This patch breaks on RZ/G2L SMARC EVK as of_phandle_args_to_fwspec count()
+> is called after irq_find_matching_fwspec() is causing fwspec->param_count=0
+> and this results in boot failure as the patch removes the check.
+> 
+> Maybe we need to revert this patch or fix the fundamental issue.
+> 
+> Cheers,
+> Biju
+> ---
+>  kernel/irq/irqdomain.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/kernel/irq/irqdomain.c b/kernel/irq/irqdomain.c
+> index 0bdef4f..8fee379 100644
+> --- a/kernel/irq/irqdomain.c
+> +++ b/kernel/irq/irqdomain.c
+> @@ -448,7 +448,7 @@ struct irq_domain *irq_find_matching_fwspec(struct irq_fwspec *fwspec,
+>  	 */
+>  	mutex_lock(&irq_domain_mutex);
+>  	list_for_each_entry(h, &irq_domain_list, link) {
+> -		if (h->ops->select && fwspec->param_count)
+> +		if (h->ops->select)
+>  			rc = h->ops->select(h, fwspec, bus_token);
+>  		else if (h->ops->match)
+>  			rc = h->ops->match(h, to_of_node(fwnode), bus_token);
+> 
+> 
 
-Aside of the nitpicks from me and Mark this really looks promising!
+Dmitry posted his take on this at [1], and I have suggested another
+possible fix in my reply.
 
-Thanks for working through this.
+Could you please give both patches a go?
 
-       tglx
+Thanks,
 
+	M.
+
+[1] https://lore.kernel.org/r/20240219-gic-fix-child-domain-v1-1-09f8fd2d9a8f@linaro.org
+
+-- 
+Without deviation from the norm, progress is not possible.
