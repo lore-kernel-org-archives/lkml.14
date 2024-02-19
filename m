@@ -1,94 +1,122 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 41DA647F79
-	for <linux-kernel@vger.kernel.org>; Mon, 19 Feb 2024 18:22:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.smtpout.orange.fr (smtp-30.smtpout.orange.fr [80.12.242.30])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEEB3481CF
+	for <linux-kernel@vger.kernel.org>; Mon, 19 Feb 2024 18:23:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.30
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708366953; cv=none; b=ZsUjBlCpoOluCVbFtDK8FpzJFGOn3RAtwkjm/wx5d+k6KUM3QCcJSSfDNuEIBuIEHHb4exYNgEYsvdZkLYZ+5kM6sPPPI0mn2Ct4DRnpZPq1HPu6IRISoQUUUbetFyfVsbq2F+LbXw5CnGK7gtFqtAbFGwkL1BC6rQdPJwSAf4A=
+	t=1708366985; cv=none; b=Yfzc2vNpV3uNHC73fdZtEOnyPIESHgwCHwHEJCcuVBCoykju8hTev90wveCv5KRDSrRFuCdpZUi7SGzMnbMgBOCB6etTLWIhbHJkBFTwL0cLpOvIHML9bJfjlJQKESlTGx2WV/JDpFh/JjMlZiPWQPnop1uqVXCY/XTBGP2UI3I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708366953; c=relaxed/simple;
-	bh=btrFO5+2vaS7IMyffuC98/87q7X/ok+FsHXq6YojZkU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WW1mHI3uStxP8pXh9s68EKJSWniNn4MQNjr1AdJ59hBYb9vDwEly3PPh6lVNK3xi46ZtghxUOdV2kbv0b/lrTuCreFy2aw5v7gp1klDv82XQU6rm9ZfyGl6yWo7FbJ6ckT0c/c0xJc+5ZtRLmTsOoTfG4Q6bN9GnV3qAIWml3dM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 63CFBFEC;
-	Mon, 19 Feb 2024 10:23:10 -0800 (PST)
-Received: from FVFF77S0Q05N (unknown [10.57.67.88])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 94A623F73F;
-	Mon, 19 Feb 2024 10:22:28 -0800 (PST)
-Date: Mon, 19 Feb 2024 18:22:21 +0000
-From: Mark Rutland <mark.rutland@arm.com>
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Ard Biesheuvel <ardb@kernel.org>,
-	Geert Uytterhoeven <geert@linux-m68k.org>,
-	Fangrui Song <maskray@google.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, linux-arm-kernel@lists.infradead.org,
-	Jisheng Zhang <jszhang@kernel.org>,
-	Dave Martin <Dave.Martin@arm.com>,
-	Peter Smith <peter.smith@arm.com>, llvm@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] arm64: jump_label: use constraints "Si" instead of "i"
-Message-ID: <ZdOcXTvvHyl8s56I@FVFF77S0Q05N>
-References: <20240206074552.541154-1-maskray@google.com>
- <CAMuHMdVOoxVFohcwwoQtY0KgZEvbjgJJ6mib8Fabo97P0krEqw@mail.gmail.com>
- <CAMj1kXGaF5bobHTr1pTg+-=s4Ft7+5SSbX72-NxsR_W_Yuxb8Q@mail.gmail.com>
- <CAMj1kXGw+r7yEEBA8gYBcdrqkiP=VYOSzz9YLnNavJn2snmFwA@mail.gmail.com>
- <CAMuHMdX+6fnAf8Hm6EqYJPAjrrLO9T7c=Gu3S8V_pqjSDowJ6g@mail.gmail.com>
- <CAMj1kXHh_m=V0QsiTpHrUXpFBXFbFfezdysz8quhPSgUrZg1MA@mail.gmail.com>
- <dca5b082-90d1-40ab-954f-8b3b6f51138c@app.fastmail.com>
+	s=arc-20240116; t=1708366985; c=relaxed/simple;
+	bh=2diCma878oe8ouCclOiC7aO335qXUQpjGxjO0Fqg1uk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=EgnahOseJPfHcmYBeT1g59FOk1/yVqR4PukMiPNt4FH2ZdBzaMeKTUxXuSOzrK/sda5poEBgvxAIz/8sW4PfLVC9m2Vgo/89M7hApKEQy7SeUdBefApQfGmQhpQjXXWA7nY7QxXrukcZRVdSbrsufUMRj9gRys9yUTJ9s+btX2s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=ok0XJ9Mw; arc=none smtp.client-ip=80.12.242.30
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="ok0XJ9Mw"
+Received: from [192.168.1.18] ([92.140.202.140])
+	by smtp.orange.fr with ESMTPA
+	id c8I6rUTMEnpdmc8I6rJqqs; Mon, 19 Feb 2024 19:23:02 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
+	s=t20230301; t=1708366982;
+	bh=7cSw+RThIdZviJliCkOE7s+SxHD7U5sg+3WzTWH/P6c=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=ok0XJ9MwY7SZtbjR8Iol+9h9SpgZItsPD65MnFbx8hcR4/YQ/7H4LIP+Qlkmcu7/5
+	 6ji7w6kWaZnxfNKnKPQyUt5OUTuiitX0gHJte3kPJJfxVSQAMf0Ljnr4q7nfUMHC6D
+	 qJQx5x+mqcrS6fkrg8K6iuGlEgahvhvu25CBqcygsHZiAE9s/KXE1L56IXl1ObkZUV
+	 kdA7ba4Lh+FcCOv3qhgFruNUCz/7w7TkW63arsgM7KaU5hC/6BSXbXdRBK/wbGP/O0
+	 8BrmDFXviFWE88bHYQ22UHB32Z0GYmPUVm5jwrCtVbI6M/MU/txjYe6MaiWTH7+TLp
+	 wEZt3LuLs9ISA==
+X-ME-Helo: [192.168.1.18]
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Mon, 19 Feb 2024 19:23:02 +0100
+X-ME-IP: 92.140.202.140
+Message-ID: <534b62dc-3874-407f-a5c9-f67d366107dc@wanadoo.fr>
+Date: Mon, 19 Feb 2024 19:22:58 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/2] watchdog: sp805_wdt: deassert the reset if
+ available
+To: forbidden405@outlook.com
+Cc: conor+dt@kernel.org, devicetree@vger.kernel.org,
+ forbidden405@outlook.com, krzysztof.kozlowski+dt@linaro.org,
+ linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org,
+ linux@roeck-us.net, p.zabel@pengutronix.de, robh+dt@kernel.org,
+ vireshk@kernel.org, wim@linux-watchdog.org
+References: <20240220-hisi-wdt-v2-0-63edc4965b4c@outlook.com>
+ <20240220-hisi-wdt-v2-1-63edc4965b4c@outlook.com>
+Content-Language: en-MW
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+In-Reply-To: <20240220-hisi-wdt-v2-1-63edc4965b4c@outlook.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <dca5b082-90d1-40ab-954f-8b3b6f51138c@app.fastmail.com>
 
-On Mon, Feb 19, 2024 at 06:06:19PM +0100, Arnd Bergmann wrote:
-> On Mon, Feb 19, 2024, at 16:41, Ard Biesheuvel wrote:
-> > On Mon, 19 Feb 2024 at 15:43, Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> >> On Mon, Feb 19, 2024 at 11:57 AM Ard Biesheuvel <ardb@kernel.org> wrote:
-> >> > On Mon, 19 Feb 2024 at 11:56, Ard Biesheuvel <ardb@kernel.org> wrote:
+Le 19/02/2024 à 19:14, Yang Xiwen via B4 Relay a écrit :
+> From: Yang Xiwen <forbidden405-1ViLX0X+lBJBDgjK7y7TUQ@public.gmane.org>
 > 
-> >> > https://godbolt.org/z/GTnf3vPaT
-> >>
-> >> I could reproduce the issue on v6.8-rc5 using arm64 defconfig
-> >> and x86_64-gcc-5.5.0-nolibc-aarch64-linux.tar.xz from
-> >> https://cdn.kernel.org/pub/tools/crosstool/files/bin/x86_64/5.5.0/:
-> >>
-> >
-> > OK, I managed to do so as well.
-> >
-> > And GCC 6.4 from the same source works correctly.
-> >
-> > Not sure whether there are any plans to bump the minimal GCC version
-> > any time soon (cc'ing Arnd), but we should probably drop this change
-> > until that happens.
+> According to the datasheet, the core has an WDOGRESn input signal that
+> needs to be deasserted before being operational. Implement it in the
+> driver.
 > 
-> From what I can tell, we may as well formally raise the minimum
-> gcc version to 8.1+ already, as that is a version that is
-> actually used in distros, and we have been on 5.1+ for a few
-> years already.
+> Signed-off-by: Yang Xiwen <forbidden405-1ViLX0X+lBJBDgjK7y7TUQ@public.gmane.org>
+> ---
+>   drivers/watchdog/sp805_wdt.c | 9 +++++++++
+>   1 file changed, 9 insertions(+)
 > 
-> Not sure if there are any other benefits to gcc-8 besides
-> allowing minor cleanups.
+> diff --git a/drivers/watchdog/sp805_wdt.c b/drivers/watchdog/sp805_wdt.c
+> index 2756ed54ca3d..b4bcfdeb39e6 100644
+> --- a/drivers/watchdog/sp805_wdt.c
+> +++ b/drivers/watchdog/sp805_wdt.c
+> @@ -25,6 +25,7 @@
+>   #include <linux/moduleparam.h>
+>   #include <linux/pm.h>
+>   #include <linux/property.h>
+> +#include <linux/reset.h>
+>   #include <linux/slab.h>
+>   #include <linux/spinlock.h>
+>   #include <linux/types.h>
+> @@ -59,6 +60,7 @@
+>    * @lock: spin lock protecting dev structure and io access
+>    * @base: base address of wdt
+>    * @clk: (optional) clock structure of wdt
+> + * @rst: (optional) reset control signal of wdt
+>    * @rate: (optional) clock rate when provided via properties
+>    * @adev: amba device structure of wdt
+>    * @status: current status of wdt
+> @@ -69,6 +71,7 @@ struct sp805_wdt {
+>   	spinlock_t			lock;
+>   	void __iomem			*base;
+>   	struct clk			*clk;
+> +	struct reset_control		*rst;
+>   	u64				rate;
+>   	struct amba_device		*adev;
+>   	unsigned int			load_val;
+> @@ -264,6 +267,12 @@ sp805_wdt_probe(struct amba_device *adev, const struct amba_id *id)
+>   		return -ENODEV;
+>   	}
+>   
+> +	wdt->rst = devm_reset_control_get_optional(&adev->dev, NULL);
+> +	if (IS_ERR(wdt->rst))
+> +		return dev_err_probe(&adev->dev, PTR_ERR(wdt->rst), "Can not get reset\n");
+> +
+> +	reset_control_deassert(wdt->rst);
+> +
 
-Arguably a minor cleanup, but on arm64 that'd allow us to get rid of the old
-mcount-based ftrace implementation and rely on -fpatchable-function-entry.
-On its own that'd save ~130 lines of asm and ~70 lines of C, but it'd also
-remove some constraints on other features (e.g. the mcount-based form's graph
-tracer isn't compatible with pointer authentication), it would simplify a few
-things going forwards (e.g. the implementation of RELIABLE_STACKTRACE, since we
-could rely on having ftrace_regs and a single trampoline), and the remaining
-support would be better tested.
+Hi,
 
-I've wanted to remove the old ftrace implementation for a while, but on its own
-it was never important/urgent enough to justify bumping to GCC 8+.
+Is a corresponding reset_control_assert() needed in the remove function?
 
-Mark.
+CJ
+
+>   	wdt->adev = adev;
+>   	wdt->wdd.info = &wdt_info;
+>   	wdt->wdd.ops = &wdt_ops;
+> 
+
