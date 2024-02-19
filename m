@@ -1,61 +1,122 @@
-Received: from mail-io1-f72.google.com (mail-io1-f72.google.com [209.85.166.72])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43BA136AF8
-	for <linux-kernel@vger.kernel.org>; Mon, 19 Feb 2024 14:04:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B4F5374DE;
+	Mon, 19 Feb 2024 14:04:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708351451; cv=none; b=AwiXq0MkBFBtG4947VgQvyfgpUPc0e9I73Y2aMHgDmBkbvdL9n5M67yI/lQSWMIhjnphRUb/44MW++2wradhnf7LPFhPJWwObBElD4MTm/fLDW0e3SwB4SjoClzXWxJl63de7FclVsnTqd5JTB59ZopGbtZtq9TFpZxVGdg8KSY=
+	t=1708351459; cv=none; b=bg7b3WT/6w9+LEpJDHMuTt6IeiBPFU6JYRTNHOZKrNhvLGKsOlfF8hpUXG1ltuNqPkBPzbTMEYp7+52FIe0iVAsYTh7VSfb3VKMtfHAxyP+Tt5hKKJn8dnkUhC/yLxsm9bDZ3x38dOSDcH/QyYLG1RE9foUrIDFi42SzDprMZKk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708351451; c=relaxed/simple;
-	bh=1h1rFxO/JcEOYbSUnkSRuRJY5k5j+jfv2C9vQpExf8g=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=YJB2uFRwltqh7OghzKoeWkXXHR7OvHH0XNe9TS/CGj6qH/xsYViCxyIZL5sFnx7Fp+S/rTLeQYeG4tPZLnCFFJf0Mgl5SFuZQ0GN+nAg0aSyJpZ9hHuRplrpCmlB97kiYCKZ3Ifx1ElOMzpsST5D3GX//4HjO1dtRN6+Mw8OKtQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f72.google.com with SMTP id ca18e2360f4ac-7c7490332deso108271739f.1
-        for <linux-kernel@vger.kernel.org>; Mon, 19 Feb 2024 06:04:10 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708351449; x=1708956249;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=1h1rFxO/JcEOYbSUnkSRuRJY5k5j+jfv2C9vQpExf8g=;
-        b=vn0srQeFEj74hYI8jedOc+3qUfY0nVLAg5KzA1RgAvDH45PWPd7hk5hDDWIqyPdThO
-         qeqZmizFwNm2qy2zEB+YMNc9Vey4CgMFoIVJ03/jB1y4j/45JIuCkXAiOsRLWL4WvwVp
-         FlYdaSqbTV9a2cp2TElzlVBZHcDCOt5q3O5l4/CtZ8yLjtyGxxx41dgjEg/wXkHhZGl0
-         nXjOOuyMnhrcGG2Q1GycCpvhdrStTzflYQZqU6q3uVf7yRZCLwSWGle5HF0ZQgdRez9N
-         FR2chgPPwI1NSvjnlK4Rhq4Jty0EunNikbQSjgu68z3JkrI2EbHc1p+JezjCdlxszYAh
-         HZiQ==
-X-Gm-Message-State: AOJu0Yw6A+DsFRzk4JZnysOwQUzinbpYYj3KcjjXGRqRx3xiwb0NPN/W
-	R2csyGYu+ZX277Xy+ddFgM86Uk/gErQHHt6jGrZpUnit6xM2dqSag5qnOn/PRqZppGI73fKNQw0
-	FF/afsp8C9txvqFY/c4M9LUmftd74wHUF5XHZDdl4VJnlcNpb580FFOWz7A==
-X-Google-Smtp-Source: AGHT+IEpCMLvdtmSII+wS9hvc7sLS8o6ou5L57WNsPNL1L/IoFlmfhQ58QPzXQPOYZSGj73xsTvNmeYdsDy/LHkwnF8shQ0NdQ0p
+	s=arc-20240116; t=1708351459; c=relaxed/simple;
+	bh=UDNvKSYg+/SA5i8qLf0z8IBqL6wuxzfyh+tb5eFpRXg=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=o+7bef9TYUih+47sPE+ItrEPeqEOT+DrqcAbTrsx3q4gnpax1f5EKYw40GmZy5QxbjRLic8MpdpOg5b4Pvy5R1BMiIy9VovkMAp6v5kEFTq7FjIlQCLT+KEZRkE/c3mtzEoBsVBeXboL+/nOT8UkAzzMtrIh22dOpDwB6iC9FJM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=PkBuWUzY; arc=none smtp.client-ip=185.132.182.106
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="PkBuWUzY"
+Received: from pps.filterd (m0288072.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 41JAMD80022490;
+	Mon, 19 Feb 2024 15:04:06 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	from:to:cc:subject:date:message-id:in-reply-to:references
+	:mime-version:content-transfer-encoding:content-type; s=
+	selector1; bh=OW57AZTUsQlp0CNOE8yjZNo7VI7deZ88cKgdLkWe72c=; b=Pk
+	BuWUzYgnFW0OwxNQT3LT5+hHABWfGebe6rYGBpNcXahClRMRdccU2S4/i4LuOxB1
+	sZnl2GDl51s0No4dVIkA0fLT6virjUPzu8yQ2ThYsJLESu5cPPrJyeS2q85r5CqZ
+	NtaMIb1Xl+0vIjjRvrCr7dSQb7ZfX0iYVOnuFzEKtOVR5sOO8hZhs7nPNpvRHttE
+	S1aR8EFbqIp1zOOE1YONRD5LdjDGa86LKKrLL9ynXHBV3LiNdCF7aRmPwTJFiMpd
+	TkWJcfuHe+oU7wPtpsN8reP36ziy0YM71USmV4zKgJ2hOwcKbWD+fw7xI5UvDjlW
+	UWygZaaBwUr5AEsv15qg==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3wak3m78fq-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 19 Feb 2024 15:04:06 +0100 (CET)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 8DA2840045;
+	Mon, 19 Feb 2024 15:03:55 +0100 (CET)
+Received: from Webmail-eu.st.com (shfdag1node3.st.com [10.75.129.71])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 7AD1A2690DD;
+	Mon, 19 Feb 2024 15:03:29 +0100 (CET)
+Received: from localhost (10.201.21.177) by SHFDAG1NODE3.st.com (10.75.129.71)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Mon, 19 Feb
+ 2024 15:03:29 +0100
+From: Christophe Kerello <christophe.kerello@foss.st.com>
+To: <krzysztof.kozlowski@linaro.org>, <robh+dt@kernel.org>,
+        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>
+CC: <linux-kernel@vger.kernel.org>, <linux-stm32@st-md-mailman.stormreply.com>,
+        <devicetree@vger.kernel.org>,
+        Christophe Kerello <christophe.kerello@foss.st.com>
+Subject: [PATCH v2 1/5] dt-bindings: memory-controller: st,stm32: add MP25 support
+Date: Mon, 19 Feb 2024 15:01:58 +0100
+Message-ID: <20240219140202.85680-2-christophe.kerello@foss.st.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20240219140202.85680-1-christophe.kerello@foss.st.com>
+References: <20240219140202.85680-1-christophe.kerello@foss.st.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6638:3712:b0:474:c34:65b4 with SMTP id
- k18-20020a056638371200b004740c3465b4mr153684jav.5.1708351449465; Mon, 19 Feb
- 2024 06:04:09 -0800 (PST)
-Date: Mon, 19 Feb 2024 06:04:09 -0800
-In-Reply-To: <000000000000635bfa0607ed5cdc@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000004c0cde0611bc910e@google.com>
-Subject: Re: [syzbot] WARNING in __nf_unregister_net_hook
-From: syzbot <syzbot+de4025c006ec68ac56fc@syzkaller.appspotmail.com>
-To: linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: EQNCAS1NODE3.st.com (10.75.129.80) To SHFDAG1NODE3.st.com
+ (10.75.129.71)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-02-19_10,2024-02-19_01,2023-05-22_02
 
-For archival purposes, forwarding an incoming command email to
-linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com.
+Add a new compatible string to support MP25 SoC.
 
-***
+On MP1 SoC, RNB signal (NAND controller signal) and NWAIT signal (PSRAM
+controller signal) have been integrated together in the SoC. That means
+that the NAND controller and the PSRAM controller (if the signal is
+used) can not be used at the same time. On MP25 SoC, the 2 signals can
+be used outside the SoC, so there is no more restrictions.
 
-Subject: WARNING in __nf_unregister_net_hook
-Author: fw@strlen.de
+MP1 SoC also embeds revision 1.1 of the FMC2 IP when MP25 SoC embeds
+revision 2.0 of the FMC2 IP.
 
-#syz test: https://git.kernel.org/pub/scm/linux/kernel/git/fwestphal/nf.git dormant-reset
+MP25 SoC is also using PSCI OS-initiated mode, so allow a single
+'power-domains' entry for STM32 FMC2. As MP1 will move on PSCI
+OS-initiated mode, add this property as optional for all FMC2 variants.
+
+Signed-off-by: Christophe Kerello <christophe.kerello@foss.st.com>
+---
+Changes in v2:
+ - V1 patch 1 and 2 have been squashed and commit message has been updated.
+
+ .../bindings/memory-controllers/st,stm32-fmc2-ebi.yaml     | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
+
+diff --git a/Documentation/devicetree/bindings/memory-controllers/st,stm32-fmc2-ebi.yaml b/Documentation/devicetree/bindings/memory-controllers/st,stm32-fmc2-ebi.yaml
+index 14f1833d37c9..84ac6f50a6fc 100644
+--- a/Documentation/devicetree/bindings/memory-controllers/st,stm32-fmc2-ebi.yaml
++++ b/Documentation/devicetree/bindings/memory-controllers/st,stm32-fmc2-ebi.yaml
+@@ -23,7 +23,9 @@ maintainers:
+ 
+ properties:
+   compatible:
+-    const: st,stm32mp1-fmc2-ebi
++    enum:
++      - st,stm32mp1-fmc2-ebi
++      - st,stm32mp25-fmc2-ebi
+ 
+   reg:
+     maxItems: 1
+@@ -34,6 +36,9 @@ properties:
+   resets:
+     maxItems: 1
+ 
++  power-domains:
++    maxItems: 1
++
+   "#address-cells":
+     const: 2
+ 
+-- 
+2.25.1
+
