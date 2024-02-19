@@ -1,111 +1,199 @@
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailout3.samsung.com (mailout3.samsung.com [203.254.224.33])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D06B208C0
-	for <linux-kernel@vger.kernel.org>; Mon, 19 Feb 2024 07:21:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC1E3653
+	for <linux-kernel@vger.kernel.org>; Mon, 19 Feb 2024 07:22:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708327277; cv=none; b=pTZg/fX2tdTd+6EDOiUlAxe+xsa6Rf7jV1HWNZ6fTo29ZyuzzqCpaSt90b/e1fHFcrZ6i9BvT5yBgQ+04nB22QVJoM5b9VqzQwIJQx6yHlj6w6znLqFPNP1adV9EuwcITEQPKQAf/tUriHUQWORKfIzICYLx7UlaPrQ9ACaueDo=
+	t=1708327333; cv=none; b=mPZJ2mYXK2ymy+vlYpTLfxv3Opc5Mg1uHbpbZ5iENCb64Xl/fFvuTxA5KDVldQWcN9P2xwOqJvdrUgA5jP9EoIEG1XfiFOjFXkd4aA7Q35+9HuRY/pdN73CyhyN3/OIIFa91mq7uWfLG4Thfwq2PjyS+sPzLDdbi03n16XU19n8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708327277; c=relaxed/simple;
-	bh=QN0mnIvLWaqPN7bppER4z5cXJNGlnW4ZBUQce0v0esE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=AWW1WLqzwQXE8oCOA+AWve2BXkV4JVoWI7JV/RzSSiq1MUYdlPRIvhfipS+zceNK2B/W9F46kOf7yqi/tKxRSwvYKatq29hxodd5v+2k+P41uZXn82pk+EvV1woRUqasSyZs9m53V7HUEvPChhyWc6HqdlRbLgfZqthkCwMlcp4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com; spf=pass smtp.mailfrom=googlemail.com; dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b=aWwgAIiB; arc=none smtp.client-ip=209.85.128.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=googlemail.com
+	s=arc-20240116; t=1708327333; c=relaxed/simple;
+	bh=z5gEp1g+Cx86Qj4hb2iV/fY7GbbVaIldH4c4QsjgZLg=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:MIME-Version:
+	 Content-Type:References; b=GdWA7cLsxFL+vmU9204UoeToIm/W/7dJg86tTHADMD0IiJIjU3i3j1OxzXuRTBAZaoxdfj6r9jH+flLWrngfvls/Tl5qW/2mVqT1ksff4E0cLbsBeE5t4el0uPcatq7FPDPpbznyLbrwWAj5RR0WWP79YO0ab267T3mH6ewSMvU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=fyUkx5KR; arc=none smtp.client-ip=203.254.224.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="aWwgAIiB"
-Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-4125df3c40aso13601475e9.3
-        for <linux-kernel@vger.kernel.org>; Sun, 18 Feb 2024 23:21:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20230601; t=1708327274; x=1708932074; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=PVqM0b0itzTgllW893u9sbLtVTXtg0oDYKDS5Qi+rsQ=;
-        b=aWwgAIiBkKJcNNRvtZvPkgZaOkTx985uMBvssGNY/rsIMO33XFFNmESRpjFvUGVqME
-         g8HqKinnK4V344I2D4E91zpJRbgLKtbqNpbvuMK0BlmrLVRRH5ALDD79PLQviQw19vGt
-         i7vRXOpeFgTSSKhDV71KEVuEKbZO+vhSaJqjr+oeryEYALLaDc/OrFg/ycOcghx9MkSx
-         YsEgTiW+eDbNn1JWvx4fCg0Hb3Mp6NQK9kvAN93nCUxMyQYDmtDt+lpeZt6tEuqcsMf/
-         WpyeQ2STKU2tau1ubq7vMjh/WsPZYNCRA/3aI1sYrbPUNWxVp+k9FjWJeR6fZo12NaBQ
-         czGQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708327274; x=1708932074;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=PVqM0b0itzTgllW893u9sbLtVTXtg0oDYKDS5Qi+rsQ=;
-        b=suvnyH1acVo87GJ289wyAuIbkycQG1uOU6QUVod440uSXw3Fj97dpvy2Rkmm2PxUUv
-         bRhQmIcL8sWikpZRWtzTQzg993TLd704kH2vtEWGBqIB7cIDz5uHhCVqy+Wx+OQM1/F1
-         rXA9R9dwnyZ2qLUtpq/vQbg0Nn7xDN4ePXCM61PCdz3oTZRjcYR1xjH5QraDaGiRwRsD
-         N4obSeSxsPX7HdIho2v25JUO+xcdzgnoLDkXtVIzwKOzvpreo1gicgQYQkte/9gzDjn+
-         o/LUwVrxsZXN3EeqcQB0CUPWYKJnkspalWETkekZtULF+WBEhcZCvak+TXEQhVRMP6j0
-         3urA==
-X-Forwarded-Encrypted: i=1; AJvYcCUOwFG3RvzWk9yG6iWVvKtXnW2e+wJFEm32C8zFtlzd05kmlTl/RA1e5Nk5MkxicC/72pMSQKsHj86fQPmD3QJv3+PoY79BA+3Cc4gx
-X-Gm-Message-State: AOJu0YxIfNoJB/K1BVhj1Xt5TVv4z3U6QbDWA5Z00n9bIa2gA3XfaAsu
-	YOmOjLaFtgr0jicFwyP18C+vr2rDFQo8NuikOIMMlu3vEC8DGDg4gQzJ6out
-X-Google-Smtp-Source: AGHT+IETLfPHLLopGCD+sezW13FOiuvcS70DNbH9oqN5ZMR+lJmw7TXZAdysc+hTTzbuAYHtPBcg/Q==
-X-Received: by 2002:a05:600c:1c0e:b0:412:698b:d7bd with SMTP id j14-20020a05600c1c0e00b00412698bd7bdmr222859wms.31.1708327273709;
-        Sun, 18 Feb 2024 23:21:13 -0800 (PST)
-Received: from [192.168.1.10] ([94.9.209.181])
-        by smtp.googlemail.com with ESMTPSA id z19-20020a7bc7d3000000b00411e1574f7fsm10327647wmk.44.2024.02.18.23.21.12
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 18 Feb 2024 23:21:13 -0800 (PST)
-Message-ID: <89630027-f93c-4e1d-a9c0-a120b8f0bc9e@googlemail.com>
-Date: Mon, 19 Feb 2024 07:21:09 +0000
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="fyUkx5KR"
+Received: from epcas5p2.samsung.com (unknown [182.195.41.40])
+	by mailout3.samsung.com (KnoxPortal) with ESMTP id 20240219072202epoutp0383e0c8fbe102fa4642c7f7cbe282b9e7~1MqYDJI9X0857208572epoutp03Y
+	for <linux-kernel@vger.kernel.org>; Mon, 19 Feb 2024 07:22:02 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20240219072202epoutp0383e0c8fbe102fa4642c7f7cbe282b9e7~1MqYDJI9X0857208572epoutp03Y
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1708327322;
+	bh=t26mQRhskGWreQ+iBAEauW8i+bpFYE4AzVGSadA654I=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=fyUkx5KRH8DAdigMCft6bN5zXONj8YwzDBQyAEv37ZtqitMiF4V/11YcHFJFJFkX2
+	 gZBnf6CC1xyjgOorLr8HXHjSf2g1W5oEQQejfs/hCU1HvJIOLpsYoIbWppI/mk9yRj
+	 Zw8oej/RosobbUZj/56B4EbCSP+t+JKfNsGJ+2kY=
+Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
+	epcas5p4.samsung.com (KnoxPortal) with ESMTP id
+	20240219072201epcas5p41fbb970f2902d04565d8dbe3888cdb98~1MqXSaSGS1847418474epcas5p4W;
+	Mon, 19 Feb 2024 07:22:01 +0000 (GMT)
+Received: from epsmges5p2new.samsung.com (unknown [182.195.38.183]) by
+	epsnrtp3.localdomain (Postfix) with ESMTP id 4TdYrR6rp0z4x9Pw; Mon, 19 Feb
+	2024 07:21:59 +0000 (GMT)
+Received: from epcas5p1.samsung.com ( [182.195.41.39]) by
+	epsmges5p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	A5.80.10009.79103D56; Mon, 19 Feb 2024 16:21:59 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+	epcas5p3.samsung.com (KnoxPortal) with ESMTPA id
+	20240219031238epcas5p3aa330855093314a2c5768cf83971599c~1JQnjg2i31795817958epcas5p32;
+	Mon, 19 Feb 2024 03:12:38 +0000 (GMT)
+Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
+	epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+	20240219031238epsmtrp25ad73a7782742174d219c1a1ae1d2925~1JQnisthy1454914549epsmtrp2W;
+	Mon, 19 Feb 2024 03:12:38 +0000 (GMT)
+X-AuditID: b6c32a4a-261fd70000002719-92-65d30197bd09
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+	epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	EA.6A.08817.527C2D56; Mon, 19 Feb 2024 12:12:37 +0900 (KST)
+Received: from testpc118124.samsungds.net (unknown [109.105.118.124]) by
+	epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
+	20240219031236epsmtip193194b00f806aa26e158495b77512ae7~1JQmQ4xjl2613326133epsmtip1T;
+	Mon, 19 Feb 2024 03:12:36 +0000 (GMT)
+From: Xiaobing Li <xiaobing.li@samsung.com>
+To: axboe@kernel.dk
+Cc: asml.silence@gmail.com, linux-kernel@vger.kernel.org,
+	io-uring@vger.kernel.org, kun.dou@samsung.com, peiwei.li@samsung.com,
+	joshi.k@samsung.com, kundan.kumar@samsung.com, wenwen.chen@samsung.com,
+	ruyi.zhang@samsung.com, xiaobing.li@samsung.com
+Subject: Re: Re: [PATCH] liburing: add script for statistics sqpoll running
+ time.
+Date: Mon, 19 Feb 2024 11:12:32 +0800
+Message-Id: <20240219031232.203025-1-xiaobing.li@samsung.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <522c03d9-a8ba-459d-9f7c-dfbf461dcf6b@kernel.dk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Betterbird (Linux)
-Subject: Re: [PATCH] fs/ntfs3: fix build without CONFIG_NTFS3_LZX_XPRESS
-To: Mark O'Donovan <shiftee@posteo.net>, linux-kernel@vger.kernel.org
-Cc: ntfs3@lists.linux.dev, almaz.alexandrovich@paragon-software.com
-References: <20240214224500.811609-1-shiftee@posteo.net>
-Content-Language: en-GB
-From: Chris Clayton <chris2553@googlemail.com>
-In-Reply-To: <20240214224500.811609-1-shiftee@posteo.net>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrEJsWRmVeSWpSXmKPExsWy7bCmuu50xsupBi1fTCzmrNrGaLH6bj+b
+	xbvWcywWR/+/ZbP41X2X0WLrl6+sFpd3zWGzeLaX0+LL4e/sFmcnfGC1mLplB5NFR8tlRgce
+	j52z7rJ7XD5b6tG3ZRWjx+dNcgEsUdk2GamJKalFCql5yfkpmXnptkrewfHO8aZmBoa6hpYW
+	5koKeYm5qbZKLj4Bum6ZOUCHKSmUJeaUAoUCEouLlfTtbIryS0tSFTLyi0tslVILUnIKTAr0
+	ihNzi0vz0vXyUkusDA0MjEyBChOyM3Z0rWQq+CBS8XXaIcYGxj0CXYwcHBICJhJznkV1MXJx
+	CAnsZpQ4er2BCcL5xCjx7dAnKOcbo8SZyY1sXYycYB1Htk9ihEjsZZTYd/YYE0hCSOAXo0RP
+	VyKIzSagLXF9XRcriC0iICyxv6OVBaSBWeAvo8SEl7+ZQRLCAsESjQcXgjWzCKhKLNzbww5i
+	8wrYSvT/X84CsU1eYv/Bs8wgt3ICxecvM4EoEZQ4OfMJWAkzUEnz1tnMIPMlBBo5JNr2/2GF
+	6HWReHvzBSOELSzx6vgWdghbSuLzu71Q3xRLHOn5zgrR3MAoMf32Vagia4l/V/awgCxmFtCU
+	WL9LHyIsKzH11DomiMV8Er2/nzBBxHkldsyDsVUlVl96CHW/tMTrht9QcQ+J6yfesUFCbgKj
+	xKH2VywTGBVmIXloFpKHZiGsXsDIvIpRMrWgODc9tdi0wCgvtRwey8n5uZsYwYlVy2sH48MH
+	H/QOMTJxMB5ilOBgVhLhdW+6kCrEm5JYWZValB9fVJqTWnyI0RQY4BOZpUST84GpPa8k3tDE
+	0sDEzMzMxNLYzFBJnPd169wUIYH0xJLU7NTUgtQimD4mDk6pBqa21YwzYmRzZ71cHlRUMvt9
+	v86hOQ7W5RN/p+epxJ85M+fE/z17tiZd+771XRari1qlr9+7OSs02qKO2O1Yci9W64OO8Yr9
+	7Mkvu9M8jPfdkw1eveH3ym/xc88W3S5I3suaJOCc9XBmbsua6e4edfIOf7pKlqwNze82lL/w
+	8XN7QJby0z9+Nk9nV/yxzTHaK7mcUSJjxbLecxse8vXl/xIV7vi96+3VW7fCTogzzQz6XNz0
+	XuTrG9vgrTGfi9U+65+JPc1RbFOi0rDhaVAYd+uCC85XP9tsfB19xNDg+c+sh95/Ouz+nloc
+	4+Dxtvqr59nu/7luplXS6St/LlHbpmCrq3wn9LsEyxOZL8YVO7YrsRRnJBpqMRcVJwIA9Yds
+	KDUEAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrGLMWRmVeSWpSXmKPExsWy7bCSnK7q8UupBu/XmFvMWbWN0WL13X42
+	i3et51gsjv5/y2bxq/suo8XWL19ZLS7vmsNm8Wwvp8WXw9/ZLc5O+MBqMXXLDiaLjpbLjA48
+	Hjtn3WX3uHy21KNvyypGj8+b5AJYorhsUlJzMstSi/TtErgydnStZCr4IFLxddohxgbGPQJd
+	jJwcEgImEke2T2LsYuTiEBLYzShxYPkuti5GDqCEtMSfP+UQNcISK/89Z4eo+cEosf3vCXaQ
+	BJuAtsT1dV2sILYIUNH+jlYWEJtZoJNJ4vVnPRBbWCBQ4sarHrA4i4CqxMK9PWC9vAK2Ev3/
+	l7NALJCX2H/wLDPIXk6g+PxlJiCmkICNxKTGAohqQYmTM59ATZeXaN46m3kCo8AsJKlZSFIL
+	GJlWMUqmFhTnpucWGxYY5aWW6xUn5haX5qXrJefnbmIEB72W1g7GPas+6B1iZOJgPMQowcGs
+	JMLr3nQhVYg3JbGyKrUoP76oNCe1+BCjNAeLkjjvt9e9KUIC6YklqdmpqQWpRTBZJg5OqQam
+	7Jw6MaVrp+9Vnu9kSr7R9HTJLJv2fWrhYk42eQEfHpxmF96l2NP08eOWt686Zk15Wf7sd+Y9
+	pSsP1c003j5c9MP7wEz+c+s8r8Xamvy4FxK16pldurdGR0rt30V2DpcnM64/X+838+yLp2fm
+	Lyp6F757Ovv/ZV+FHOp47leripekNidaHnlfwbp4msKWzlAXp5uWYk6Tk7jevZRy2f5Le00U
+	b9QBk92hW9ZlbDOJajtnEruE5fiV39N2JGzckaYk97Uk+KGTd/WN7QoTon127Vp6/cu1C4/f
+	1B7LVMtfo/FuQ9uz5MuNvsbZqU0SniI+D8PNj0ht/Pr9u8OS7Gs5m+e3vmx+tPiw2fdK9c9L
+	opRYijMSDbWYi4oTAW+dnGPpAgAA
+X-CMS-MailID: 20240219031238epcas5p3aa330855093314a2c5768cf83971599c
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: REQ_APPROVE
+CMS-TYPE: 105P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20240219031238epcas5p3aa330855093314a2c5768cf83971599c
+References: <522c03d9-a8ba-459d-9f7c-dfbf461dcf6b@kernel.dk>
+	<CGME20240219031238epcas5p3aa330855093314a2c5768cf83971599c@epcas5p3.samsung.com>
 
-Hi.
+On 2/18/24 06:00 AM, Jens Axboe wrote:
+>And since your Signed-off-by is here, it also does not go into the
+>commit message, which it must.
+>
+>> index 976e9500f651..18c6f4aa4a48 100644
+>> --- a/io_uring/fdinfo.c
+>> +++ b/io_uring/fdinfo.c
+>> @@ -64,6 +64,7 @@ __cold void io_uring_show_fdinfo(struct seq_file *m, struct file *f)
+>>  	unsigned int sq_shift = 0;
+>>  	unsigned int sq_entries, cq_entries;
+>>  	int sq_pid = -1, sq_cpu = -1;
+>> +	u64 sq_total_time = 0, sq_work_time = 0;
+>>  	bool has_lock;
+>>  	unsigned int i;
+>>  
+>> @@ -147,10 +148,17 @@ __cold void io_uring_show_fdinfo(struct seq_file *m, struct file *f)
+>>  
+>>  		sq_pid = sq->task_pid;
+>>  		sq_cpu = sq->sq_cpu;
+>> +		struct rusage r;
+>
+>Here, and in one other spot, you're mixing variable declarations and
+>code. Don't do that, they need to be top of that scope and before any
+>code.
+>
+>> diff --git a/io_uring/sqpoll.c b/io_uring/sqpoll.c
+>> index 65b5dbe3c850..9155fc0b5eee 100644
+>> --- a/io_uring/sqpoll.c
+>> +++ b/io_uring/sqpoll.c
+>> @@ -251,6 +251,9 @@ static int io_sq_thread(void *data)
+>>  		}
+>>  
+>>  		cap_entries = !list_is_singular(&sqd->ctx_list);
+>> +		struct rusage start, end;
+>> +
+>> +		getrusage(current, RUSAGE_SELF, &start);
+>
+>Ditto, move the variables to the top of the scope.
+>
+>>  		list_for_each_entry(ctx, &sqd->ctx_list, sqd_list) {
+>>  			int ret = __io_sq_thread(ctx, cap_entries);
+>>  
+>> @@ -260,6 +263,11 @@ static int io_sq_thread(void *data)
+>>  		if (io_run_task_work())
+>>  			sqt_spin = true;
+>>  
+>> +		getrusage(current, RUSAGE_SELF, &end);
+>> +		if (sqt_spin == true)
+>> +			sqd->work_time += (end.ru_stime.tv_sec - start.ru_stime.tv_sec) *
+>> +					1000000 + (end.ru_stime.tv_usec - start.ru_stime.tv_usec);
+>> +
+>
+>and this should go in a helper instead. It's trivial code, but the way
+>too long lines makes it hard to read. Compare the above to eg:
+>
+>static void io_sq_update_worktime(struct io_sq_data *sqd, struct rusage *start)
+>{
+>       struct rusage end;
+>
+>       getrusage(current, RUSAGE_SELF, &end);
+>       end.ru_stime.tv_sec -= start->ru_stime.tv_sec;
+>       end_ru_stime.tv_usec -= start->ru_stime.tv_usec;
+>
+>       sqd->work_time += end.ru_stime.tv_usec + end.ru_stime.tv_sec * 1000000;
+>}
+>
+>which is so much nicer to look at.
+>
+>We're already doing an sqt_spin == true check right below, here:
+>
+>>  		if (sqt_spin || !time_after(jiffies, timeout)) {
+>>  			if (sqt_spin)
+>>  				timeout = jiffies + sqd->sq_thread_idle;
+>
+>why not just put io_sq_update_worktime(sqd, &start); inside this check?
+>
+ 
+ok, I got it, I will send out a v9.
 
-On 14/02/2024 22:45, Mark O'Donovan wrote:
-> When CONFIG_NTFS3_LZX_XPRESS is not set then we get the following:
-> fs/ntfs3/frecord.c:2460:16: error: unused variable ‘i_size’
-> 
-> Signed-off-by: Mark O'Donovan <shiftee@posteo.net>
-> ---
->  fs/ntfs3/frecord.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/fs/ntfs3/frecord.c b/fs/ntfs3/frecord.c
-> index 3b42938a9d3b..7f27382e0ce2 100644
-> --- a/fs/ntfs3/frecord.c
-> +++ b/fs/ntfs3/frecord.c
-> @@ -2457,7 +2457,6 @@ int ni_read_frame(struct ntfs_inode *ni, u64 frame_vbo, struct page **pages,
->  	struct ATTR_LIST_ENTRY *le = NULL;
->  	struct runs_tree *run = &ni->file.run;
->  	u64 valid_size = ni->i_valid;
-> -	loff_t i_size = i_size_read(&ni->vfs_inode);
->  	u64 vbo_disk;
->  	size_t unc_size;
->  	u32 frame_size, i, npages_disk, ondisk_size;
-> @@ -2509,6 +2508,7 @@ int ni_read_frame(struct ntfs_inode *ni, u64 frame_vbo, struct page **pages,
->  		err = -EOPNOTSUPP;
->  		goto out1;
->  #else
-> +		loff_t i_size = i_size_read(&ni->vfs_inode);
->  		u32 frame_bits = ni_ext_compress_bits(ni);
->  		u64 frame64 = frame_vbo >> frame_bits;
->  		u64 frames, vbo_data;
-> 
-> base-commit: 7e90b5c295ec1e47c8ad865429f046970c549a66
-
-Mark - Thanks for the patch.
-Alex - Fixes a build bug introduced by 4fd6c08a16d7f1ba10212c9ef7bc73218144b463.
-
-Tested-by: Chris Clayton <chris2553@googlemail.com>
+--
+Xiaobing Li
