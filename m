@@ -1,168 +1,133 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3990F23772;
-	Mon, 19 Feb 2024 09:36:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE43E2562E;
+	Mon, 19 Feb 2024 09:36:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708335386; cv=none; b=J4xFFro8L6Y3BW0rqq/PxsmzoOP5qbAN3yhCkFF4we6wabBPENtLROMlrC8/piOp5ESjpzeIqQGF8dG1NnbEPZNOjXNSI1vM4T4RZ5e1XyxgXuqXHObMzwZFSnU5ncPbtQaRgxCUhvvoRPHLCVlCwoJ26HExIvLTlQwfRsGaKBI=
+	t=1708335392; cv=none; b=TjV3NmPx5iZxe4bXfDihMmJnN3zRi3tvCuzE7jFGG2EdowJA3j2bWrBJYScpoCWOcYY0RDFnW07ADMuayVTKTxtOO9tsJlCQ2zzlNq6kDMAAfZM0+eYTEnhP+HEJU6EGFS/FPEzm+ybJ7T2J2nGmh56y3TJN+6aUsHYufvxF7D0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708335386; c=relaxed/simple;
-	bh=DPs7xzTtibskM7IfcNZHafi1s4OR/BO95p3ospi+tMg=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=rasmmMzHVZTqfGTuaaWzNBqmvuH0wNDLShb5DslW1pB0TYuAhZt2SVNQ+J9K8kkfFtlncZOxnrE9iTgm+b/YbIgQAUvNdRUAtpGRHDuWl6grapDMOiQBHx0JxRxmuu1Rc0YWx9H8IeMGVgG3gWuf2WyNVEQGbOhEnTnb3tXxSFg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Aq+fezDu; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1708335392; c=relaxed/simple;
+	bh=2JEkX46Vp/cBAVVvgsgHoF/zxvBsYbJKJ4rTHU/s2hk=;
+	h=Content-Type:Date:Message-Id:From:To:Subject:Cc:References:
+	 In-Reply-To; b=PyIWgaL+ThLGi19K+xsyf+WPFrANijjwAhQ/TXwoSSGei/2FtLgQw85nVAU8ry890VE2SYGN34VbYv4R9Bb6VR1s7lSh+INK6XA7Fx2/Q6yhaOpkwAWrsqzspU2vpcllAdEN7Naq3xnL6Z+WmUqy/F9Jgd+pc/Ee5rGvvovfIEw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=crbNLM/4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Aq+fezDu"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id C11DEC43394;
-	Mon, 19 Feb 2024 09:36:25 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="crbNLM/4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EA76DC433F1;
+	Mon, 19 Feb 2024 09:36:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708335385;
-	bh=DPs7xzTtibskM7IfcNZHafi1s4OR/BO95p3ospi+tMg=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=Aq+fezDuLAyoeKI+WScEoKL9At4VrcFdBdBIHrH0JGJcYMyrdWAjcbL6SJ3bIJNs1
-	 ePqg3zNAgYm4O2mYtkbBss1aIoFzfGiDcRTvg6C5dKUvmOkbXc3Va/MVjp/SVTkpbC
-	 uZlvQm1PjooyzOYY1h7e9e3dhjj3quHc2QlpsKthvSDQY+WudwS61KK2UqoR4qvA8Z
-	 srG2czF0IR8ymL9tMckWJuX7r9nYoZvBtiv1xMpOK1irFPnySvfZzGsEAAyFB7NXGt
-	 RbHQTJRxKGwnIYfLSVqc/0YKrenJmW2Xt4d/1MRXHsRKqs0wbylvU0Jb6c3ufLuSxh
-	 gZXC9ES3p5KjQ==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA6E2C54787;
-	Mon, 19 Feb 2024 09:36:25 +0000 (UTC)
-From: =?utf-8?b?QXLEsW7DpyDDnE5BTA==?= via B4 Relay
- <devnull+arinc.unal.arinc9.com@kernel.org>
-Date: Mon, 19 Feb 2024 12:36:14 +0300
-Subject: [PATCH 2/2] arm64: dts: mt7986: add port@5 as CPU port
+	s=k20201202; t=1708335391;
+	bh=2JEkX46Vp/cBAVVvgsgHoF/zxvBsYbJKJ4rTHU/s2hk=;
+	h=Date:From:To:Subject:Cc:References:In-Reply-To:From;
+	b=crbNLM/4l3WxOMO/z1NI5uM/uMSLp3JKrA1HesJ67bumXJ9OewEOn/oK7qGTbh/Cx
+	 0MM5bHgbYQkGSbKzWTVhwTCMgD0EVbcfbjtXcG38PpFP+Jj/CQ4XFeGgcos2YTn08Q
+	 xx7ZlwO0es5Pb936IJuNIXmLiqlMmgq8m/NoXFw0BhtowiQByycV0WreEjKwzfILek
+	 5u3cVT4CLanHf1GdCmbYmTvdJcEjW5Kk1U0AutY8cz7O7dDQeUaVrLF1eegt+n7ilk
+	 2ogtUwa2kqam0bgJT99sOLYI3e/7AYi6wbDRd6zSQFYvc7sVKVfnmcBfRUmpLLgDKl
+	 xcyF5LzNi6Bsg==
+Content-Type: multipart/signed;
+ boundary=5b911bf665d2ea492c216b90f01b24b10ab08eb643d157bdd14da66d2129;
+ micalg=pgp-sha256; protocol="application/pgp-signature"
+Date: Mon, 19 Feb 2024 10:36:26 +0100
+Message-Id: <CZ8YCQETS7LL.1BLJJZNCLV7DT@kernel.org>
+From: "Michael Walle" <mwalle@kernel.org>
+To: "AngeloGioacchino Del Regno" <angelogioacchino.delregno@collabora.com>,
+ "Rob Herring" <robh@kernel.org>, "Krzysztof Kozlowski"
+ <krzysztof.kozlowski+dt@linaro.org>, "Conor Dooley" <conor+dt@kernel.org>,
+ "Matthias Brugger" <matthias.bgg@gmail.com>
+Subject: Re: [PATCH v2 1/2] dt-bindings: arm64: mediatek: add Kontron
+ 3.5"-SBC-i1200
+Cc: <devicetree@vger.kernel.org>, "Sean Wang" <sean.wang@mediatek.com>,
+ <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+ <linux-mediatek@lists.infradead.org>
+X-Mailer: aerc 0.16.0
+References: <20240219084456.1075445-1-mwalle@kernel.org>
+ <ed3530f0-227a-47f2-938c-28eba90dd6eb@collabora.com>
+In-Reply-To: <ed3530f0-227a-47f2-938c-28eba90dd6eb@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20240219-for-mediatek-v1-2-7078f23eab82@arinc9.com>
-References: <20240219-for-mediatek-v1-0-7078f23eab82@arinc9.com>
-In-Reply-To: <20240219-for-mediatek-v1-0-7078f23eab82@arinc9.com>
-To: Rob Herring <robh+dt@kernel.org>, 
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Matthias Brugger <matthias.bgg@gmail.com>, 
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Cc: erkin.bozoglu@xeront.com, mithat.guner@xeront.com, 
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, 
- =?utf-8?q?Ar=C4=B1n=C3=A7_=C3=9CNAL?= <arinc.unal@arinc9.com>
-X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1708335384; l=2158;
- i=arinc.unal@arinc9.com; s=arinc9-patatt; h=from:subject:message-id;
- bh=58182oTWmYdN/H9gOxWBaCjBXGKyd/UkxWiwHahp3Xo=;
- b=8ixGoZdtLfMIYfLLr7jnFfKQiIaoNd41jekDYSA4+3eH7gG17EnPXLUZKqLWTyNpHq5tzSDDq
- OLuyHKPxO4SCQd7MBszzXTj/H/1sT7bqFSPjNa2ZliffoymFdSh5C6Z
-X-Developer-Key: i=arinc.unal@arinc9.com; a=ed25519;
- pk=VmvgMWwm73yVIrlyJYvGtnXkQJy9CvbaeEqPQO9Z4kA=
-X-Endpoint-Received:
- by B4 Relay for arinc.unal@arinc9.com/arinc9-patatt with auth_id=115
-X-Original-From: =?utf-8?b?QXLEsW7DpyDDnE5BTA==?= <arinc.unal@arinc9.com>
-Reply-To: <arinc.unal@arinc9.com>
 
-From: Arınç ÜNAL <arinc.unal@arinc9.com>
+--5b911bf665d2ea492c216b90f01b24b10ab08eb643d157bdd14da66d2129
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
 
-On MediaTek MT7986b RFB and MediaTek MT7986a RFB, port 5 of the MT7531
-switch is connected to the second MAC of the SoC as a CPU port. Add the
-port and set up the second MAC on the bindings.
+On Mon Feb 19, 2024 at 10:23 AM CET, AngeloGioacchino Del Regno wrote:
+> Il 19/02/24 09:44, Michael Walle ha scritto:
+> > Add the compatible string for the Kontron 3.5"-SBC-i1200 single board
+> > computer.
+> >=20
+> > Signed-off-by: Michael Walle <mwalle@kernel.org>
+> > ---
+> > v2:
+> >   - convert enum to const as there is only one specific board
+> >=20
+> >   Documentation/devicetree/bindings/arm/mediatek.yaml | 5 +++++
+> >   1 file changed, 5 insertions(+)
+> >=20
+> > diff --git a/Documentation/devicetree/bindings/arm/mediatek.yaml b/Docu=
+mentation/devicetree/bindings/arm/mediatek.yaml
+> > index 09f9ffd3ff7b..add167d8b8da 100644
+> > --- a/Documentation/devicetree/bindings/arm/mediatek.yaml
+> > +++ b/Documentation/devicetree/bindings/arm/mediatek.yaml
+> > @@ -357,6 +357,11 @@ properties:
+> >                 - radxa,nio-12l
+> >             - const: mediatek,mt8395
+> >             - const: mediatek,mt8195
+> > +      - description: Kontron 3.5"-SBC-i1200
+> > +        items:
+> > +          - const: kontron,3-5-sbc-i1200
+> > +          - const: mediatek,mt8395
+> > +          - const: mediatek,mt8195
+> >         - items:
+> >             - enum:
+> >                 - mediatek,mt8516-pumpkin
+>
+> I understand that you took inspiration from the Google Chromebooks entrie=
+s, but
+> those are separated only because they've got "a bunch of revisions".
+>
 
-Signed-off-by: Arınç ÜNAL <arinc.unal@arinc9.com>
----
- arch/arm64/boot/dts/mediatek/mt7986a-rfb.dts | 24 ++++++++++++++++++++++++
- arch/arm64/boot/dts/mediatek/mt7986b-rfb.dts | 24 ++++++++++++++++++++++++
- 2 files changed, 48 insertions(+)
+I don't really care about the description. It's just the way I've
+done it in the past. And in this file, there is also google,burnet,
+google,cozmo, google,damu, without any further revs.
 
-diff --git a/arch/arm64/boot/dts/mediatek/mt7986a-rfb.dts b/arch/arm64/boot/dts/mediatek/mt7986a-rfb.dts
-index 2f884c24f1eb..5d8e3d3f6c20 100644
---- a/arch/arm64/boot/dts/mediatek/mt7986a-rfb.dts
-+++ b/arch/arm64/boot/dts/mediatek/mt7986a-rfb.dts
-@@ -65,6 +65,18 @@ fixed-link {
- 		};
- 	};
- 
-+	gmac1: mac@1 {
-+		compatible = "mediatek,eth-mac";
-+		reg = <1>;
-+		phy-mode = "rgmii";
-+
-+		fixed-link {
-+			speed = <1000>;
-+			full-duplex;
-+			pause;
-+		};
-+	};
-+
- 	mdio: mdio-bus {
- 		#address-cells = <1>;
- 		#size-cells = <0>;
-@@ -288,6 +300,18 @@ port@4 {
- 			label = "lan4";
- 		};
- 
-+		port@5 {
-+			reg = <5>;
-+			ethernet = <&gmac1>;
-+			phy-mode = "rgmii";
-+
-+			fixed-link {
-+				speed = <1000>;
-+				full-duplex;
-+				pause;
-+			};
-+		};
-+
- 		port@6 {
- 			reg = <6>;
- 			label = "cpu";
-diff --git a/arch/arm64/boot/dts/mediatek/mt7986b-rfb.dts b/arch/arm64/boot/dts/mediatek/mt7986b-rfb.dts
-index 57dcaeef31d7..58f77d932429 100644
---- a/arch/arm64/boot/dts/mediatek/mt7986b-rfb.dts
-+++ b/arch/arm64/boot/dts/mediatek/mt7986b-rfb.dts
-@@ -45,6 +45,18 @@ fixed-link {
- 		};
- 	};
- 
-+	gmac1: mac@1 {
-+		compatible = "mediatek,eth-mac";
-+		reg = <1>;
-+		phy-mode = "rgmii";
-+
-+		fixed-link {
-+			speed = <1000>;
-+			full-duplex;
-+			pause;
-+		};
-+	};
-+
- 	mdio: mdio-bus {
- 		#address-cells = <1>;
- 		#size-cells = <0>;
-@@ -83,6 +95,18 @@ port@4 {
- 					label = "lan4";
- 				};
- 
-+				port@5 {
-+					reg = <5>;
-+					ethernet = <&gmac1>;
-+					phy-mode = "rgmii";
-+
-+					fixed-link {
-+						speed = <1000>;
-+						full-duplex;
-+						pause;
-+					};
-+				};
-+
- 				port@6 {
- 					reg = <6>;
- 					label = "cpu";
+> For machines that don't have a billion compatible strings, I would sugges=
+t to
+> add the compatible under a single big entry: like this, the binding is (i=
+mo) a
+> bit more readable .. and cleaner.
+>
+> Eventually, the machine name is in the devicetree so we're not losing any=
+ kind
+> of information anyway... :-)
+>
+>        - items:
+>            - enum:
+>                - kontron,3-5-sbc-i1200
+>                - mediatek,mt8395-evk
+>                - radxa,nio-12l
+>            - const: mediatek,mt8395
+>            - const: mediatek,mt8195
 
--- 
-2.40.1
+Ack. I'll give you some time to look at the actual DTS before
+posting a new version.
 
+-michael
+
+--5b911bf665d2ea492c216b90f01b24b10ab08eb643d157bdd14da66d2129
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iIgEABYIADAWIQQCnWSOYTtih6UXaxvNyh2jtWxG+wUCZdMhGhIcbXdhbGxlQGtl
+cm5lbC5vcmcACgkQzcodo7VsRvs3fgEAlFQCpxkpEfzEqfjyl3YucexQcUbd1+Lj
+0DJqee5gUp0BAP0BDmrnoWc+fCp5T7L07BNNJRAC7wDWhSUbmgvyBvEF
+=mwoc
+-----END PGP SIGNATURE-----
+
+--5b911bf665d2ea492c216b90f01b24b10ab08eb643d157bdd14da66d2129--
