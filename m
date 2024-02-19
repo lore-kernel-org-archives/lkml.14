@@ -1,126 +1,122 @@
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-179.mta1.migadu.com (out-179.mta1.migadu.com [95.215.58.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71DCE2031A
-	for <linux-kernel@vger.kernel.org>; Mon, 19 Feb 2024 07:39:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15A7B2031A
+	for <linux-kernel@vger.kernel.org>; Mon, 19 Feb 2024 07:42:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708328380; cv=none; b=WvPw18MqSvQcHFPJWbrgxx7oPGbfK/D/QJFw4ZCumO1/VZXBm/5Uzc9GWaxWvFsq0i1yGabqm7WzcDoSJlScGOebwcEVzfqRoyP5qqdgbPMJXcgNe3j2zjk9Zmvxfc/2TVq/IsbzbEhYU6H0A0xNPi9XiHGk0+8clRxX+RoisBg=
+	t=1708328540; cv=none; b=kyCMalOpw/PaN4PAYP0/sZ2oN7x6uPfhb8SvBn+yp6WrUpuGJhg55s4fBm9yzGn3SXiS370tWiwcShhvaQ/iaceKODzOAWY6bkbkgNdhTr1HktXr3v3PCmlguZMSCUZw8NwZQDZpKUbfbNextVQpXg3AMsL0ZzKxPicDOHFTPyg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708328380; c=relaxed/simple;
-	bh=TJbq3thR54sD0Wi77iVig095+YH5xo0jhAJ9BMhF3rU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=kC3KOAun3jxFU9aDuOGuTUJc1zdKS5/TP16voRng0NqXqboHOzk/8cFKHS8RP/ts2wiXZOTzPtTFlhBYq2suA2+6V9hjC/WRdcmL2swd6MrT2LLB63egNHuKwsYrKLRXwO6tqQan+AJeMkA3MRCuJuhw15IqTV5d9EYyJDaDz+o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=QDMMKoUZ; arc=none smtp.client-ip=209.85.128.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxon.dev
+	s=arc-20240116; t=1708328540; c=relaxed/simple;
+	bh=Pvo+Ek3Iy4IsTJjIeDIlt7UnU6DilP1jXSHFrD9iMeQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tRT7nd1BwoXtl9IfkC4PVeLp8vUGKbw2smZXSgtDcQVH6qrsZytUbS1wtVfpSZ0OdXwUNpBDAlxeXchPmLlJVTHF23Mincvi77Pp317Jzqtt0/t0B87r2HQDp2IPUBaWHHhXxu7DYN+AHgaD60tfPSRLeY6SoY3OlFZa1HM5oZE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=DKO6m93L; arc=none smtp.client-ip=95.215.58.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="QDMMKoUZ"
-Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-4126a159fa6so381045e9.0
-        for <linux-kernel@vger.kernel.org>; Sun, 18 Feb 2024 23:39:37 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tuxon.dev; s=google; t=1708328376; x=1708933176; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Ztvukbsw2DpPqYv6GrnPegXCQAC9j1Oi6plVvewLB6I=;
-        b=QDMMKoUZTVRK0dilXQCZcu+/FjOvoyjuTFVl0cqo4krhYmz+4zNEl+kXDY0QtwCKrw
-         o0eQG4YLZcZ2/kbOf2LGjAfqH9GFb764//2dZeNd+sBGM4y6Q+dhbNIUbdtyGbYi7RD+
-         YXACWNMoXqB40ERO74m0IKZ0PIRb18e5ezWgyN+EnDg5C+dk1UGCMFxsfe1/SQGL7fqT
-         +ZjLKX3dARp/EAvTz1oPYdmi2ck+2X3HyD+zBvODEMnVHIqPDq0faUhF+QygVcMfrHnl
-         o9XZjpmmuPMnjXUrMaAWKTS2H57XukCPPPS4pvj1e6VNj4TzoCB9t8OAQBE6MtMugRp1
-         2THQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708328376; x=1708933176;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Ztvukbsw2DpPqYv6GrnPegXCQAC9j1Oi6plVvewLB6I=;
-        b=QFQhk7nLWDjBhwoMP2Hm1/yT+sevfmDVvVlBR4cceY2luXEFzXrKF/DjJgeNQ92ODD
-         3UXz1dHZbrjtmDc+j5ZJRduy4WM6p5y/IaV3fR9wVpVIS1Uqn3g0SLQktD3Pyz/bWw/K
-         9HIMVYwRxYx1m4eVAry26IcDLeMjKX8m6txt5H2mBvnqFN+i2irnjEx3uLkfhJ0lxc7v
-         qWQptJh3kzM2328KfPyrL2MC7lIfPXUOjglvV7tiRUYVQ1wHoThFOxbII4R/Ft95NFqD
-         7nJe6nI4YWbNFRG61eHEFXfvjv7BkML6Mo7JwMKVASLCgSlBBwRhgpnooFM/SB+H0jKA
-         1fwQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXgviVdt+rKHEBYfX7DwKjDcMGChchbFcRYyWHsjrUY9Ta9fETMR9mm4Elf3nlyC4t3qAqR0sa2rgert3X9TnxSGj2h9AWC/4qvfUhs
-X-Gm-Message-State: AOJu0YxFC7MHu7y+HKUo+0eYOIM/DmOTivWl1BRddfWyJT303N0p0T9A
-	VORsjGl+WsC0PvNXBdJ/tuQe82MgquqtZD4+FpSRKIRV1WM69M8eU8clvr3u5WU=
-X-Google-Smtp-Source: AGHT+IHzTk4jAkU4Cb4x2j5R1eZYxapWDSX9BdPNE/TAg6w2jAWj8XsoaKg0OzZkL2HOPDbGsXDXjw==
-X-Received: by 2002:a05:600c:354a:b0:412:5b86:2f2c with SMTP id i10-20020a05600c354a00b004125b862f2cmr3647927wmq.14.1708328375766;
-        Sun, 18 Feb 2024 23:39:35 -0800 (PST)
-Received: from [192.168.50.4] ([82.78.167.20])
-        by smtp.gmail.com with ESMTPSA id k35-20020a05600c1ca300b00412393ddac2sm10715749wms.6.2024.02.18.23.39.34
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 18 Feb 2024 23:39:35 -0800 (PST)
-Message-ID: <c6bea32e-5169-4181-ab42-a8f7f35594b2@tuxon.dev>
-Date: Mon, 19 Feb 2024 09:39:33 +0200
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="DKO6m93L"
+Date: Mon, 19 Feb 2024 02:42:10 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1708328534;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=xv1SsAErNeLDlReQiUOTwWoV7eXbrLbtvJ3wk244HwQ=;
+	b=DKO6m93LludDXzuv/K+825dRWtoJRaz1i5qsTKYfz5z7XV+fl5Z+8HYm0+5fiQbpRCVFTA
+	QcSmEfctqXPCMsFefinNCpmj3dicT42ZYfwAsB4Ek6miDsxW/B2hc209C6+TN80/WiMNob
+	gNOGc2l2/84iKmOu5G7TBPJf8U9aq4Y=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Kent Overstreet <kent.overstreet@linux.dev>
+To: Calvin Owens <jcalvinowens@gmail.com>
+Cc: linux-kernel@vger.kernel.org, 
+	"linux-bcachefs@vger.kernel.org" <linux-bcachefs@vger.kernel.org>
+Subject: Re: [PATCH] arm: Silence gcc warnings about arch ABI drift
+Message-ID: <3qjukuaadpxvz2jwhozszq2rlnzymrbbvws3btlhh776aikph6@pabo2w4mr4ao>
+References: <fe51512baa18e1480ce997fc535813ce6a0b0721.1708286962.git.jcalvinowens@gmail.com>
+ <431dd956-ad31-4da8-ad42-34f7380824bb@app.fastmail.com>
+ <ZdL7_-2VCJqjn634@gmail.com>
+ <mtelhhn3z7qfo35odeb37doe3pqagesju46awcjnsyhq4xdk7t@ufoyklpskiyf>
+ <ZdME6NUCBuy3yq7L@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 05/17] dt-bindings: clock: r9a09g011-cpg: Add always-on
- power domain IDs
-Content-Language: en-US
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: mturquette@baylibre.com, sboyd@kernel.org, robh@kernel.org,
- krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
- magnus.damm@gmail.com, paul.walmsley@sifive.com, palmer@dabbelt.com,
- aou@eecs.berkeley.edu, linux-renesas-soc@vger.kernel.org,
- linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
- Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-References: <20240208124300.2740313-1-claudiu.beznea.uj@bp.renesas.com>
- <20240208124300.2740313-6-claudiu.beznea.uj@bp.renesas.com>
- <CAMuHMdVbCYfaM6Zi5AZhj+yc8vySFdCDFF3x1rgbV9Y5xh4LSA@mail.gmail.com>
-From: claudiu beznea <claudiu.beznea@tuxon.dev>
-In-Reply-To: <CAMuHMdVbCYfaM6Zi5AZhj+yc8vySFdCDFF3x1rgbV9Y5xh4LSA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <ZdME6NUCBuy3yq7L@gmail.com>
+X-Migadu-Flow: FLOW_OUT
 
+On Sun, Feb 18, 2024 at 11:36:08PM -0800, Calvin Owens wrote:
+> On Monday 02/19 at 02:03 -0500, Kent Overstreet wrote:
+> > On Sun, Feb 18, 2024 at 10:58:07PM -0800, Calvin Owens wrote:
+> > > On Monday 02/19 at 07:21 +0100, Arnd Bergmann wrote:
+> > > > On Mon, Feb 19, 2024, at 05:09, Calvin Owens wrote:
+> > > > > 32-bit arm builds uniquely emit a lot of spam like this:
+> > > > >
+> > > > >     fs/bcachefs/backpointers.c: In function ‘extent_matches_bp’:
+> > > > >     fs/bcachefs/backpointers.c:15:13: note: parameter passing for 
+> > > > > argument of type ‘struct bch_backpointer’ changed in GCC 9.1
+> > > > >
+> > > > > Apply the arm64 change from commit ebcc5928c5d9 ("arm64: Silence gcc
+> > > > > warnings about arch ABI drift") to silence them. It seems like Dave's
+> > > > > original rationale applies here too.
+> > > > >
+> > > > > Cc: Dave Martin <Dave.Martin@arm.com>
+> > > > > Signed-off-by: Calvin Owens <jcalvinowens@gmail.com>
+> > > > > ---
+> > > >
+> > > > I think these should be addressed in bcachefs instead.
+> > > 
+> > > That seems reasonable to me. For clarity, I just happened to notice this
+> > > while doing allyesconfig cross builds for something entirely unrelated.
+> > > 
+> > > I'll take it up with them. It's not a big problem from my POV, the notes
+> > > don't cause -Werror builds to fail or anything like that.
+> > 
+> > Considering we're not dynamic linking it's a non issue for us.
+> 
+> [ dropping arm people/lists ]
+> 
+> Would you mind taking this then?
+> 
+> Thanks,
+> Calvin
+ 
+That looks like just the thing - thanks!
 
-
-On 16.02.2024 16:03, Geert Uytterhoeven wrote:
-> Hi Claudiu,
+> ---8<---
+> From: Calvin Owens <jcalvinowens@gmail.com>
+> Subject: [PATCH] bcachefs: Silence gcc warnings about arm arch ABI drift
 > 
-> On Thu, Feb 8, 2024 at 1:43 PM Claudiu <claudiu.beznea@tuxon.dev> wrote:
->> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
->>
->> Add always-on power domain ID for RZ/V2M (R9A09G011) SoC.
->>
->> Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+> 32-bit arm builds emit a lot of spam like this:
 > 
-> Thanks for your patch!
+>     fs/bcachefs/backpointers.c: In function ‘extent_matches_bp’:
+>     fs/bcachefs/backpointers.c:15:13: note: parameter passing for argument of type ‘struct bch_backpointer’ changed in GCC 9.1
 > 
->> --- a/include/dt-bindings/clock/r9a09g011-cpg.h
->> +++ b/include/dt-bindings/clock/r9a09g011-cpg.h
->> @@ -349,4 +349,7 @@
->>  #define R9A09G011_DDI_RESET            93
->>  #define R9A09G011_DDI_RESETN_APB       94
->>
->> +/* Power domain IDs. */
->> +#define R9A09G011_PD_ALWAYS_ON         0
+> Apply the change from commit ebcc5928c5d9 ("arm64: Silence gcc warnings
+> about arch ABI drift") to fs/bcachefs/ to silence them.
 > 
-> RZ/V2M has many more power domains, but they are not controlled through
-> CPG_BUS_*_MSTOP registers, but by the Internal Power Domain Controller
-> (PMC).
-
-I wasn't aware of that. I'll be checking it.
-
+> Signed-off-by: Calvin Owens <jcalvinowens@gmail.com>
+> ---
+>  fs/bcachefs/Makefile | 3 +++
+>  1 file changed, 3 insertions(+)
 > 
->> +
->>  #endif /* __DT_BINDINGS_CLOCK_R9A09G011_CPG_H__ */
+> diff --git a/fs/bcachefs/Makefile b/fs/bcachefs/Makefile
+> index 1a05cecda7cc..3433959d4f35 100644
+> --- a/fs/bcachefs/Makefile
+> +++ b/fs/bcachefs/Makefile
+> @@ -90,3 +90,6 @@ bcachefs-y		:=	\
+>  	xattr.o
+>  
+>  obj-$(CONFIG_MEAN_AND_VARIANCE_UNIT_TEST)   += mean_and_variance_test.o
+> +
+> +# Silence "note: xyz changed in GCC X.X" messages
+> +subdir-ccflags-y += $(call cc-disable-warning, psabi)
+> -- 
+> 2.43.0
 > 
-> Gr{oetje,eeting}s,
-> 
->                         Geert
-> 
-> 
-> --
-> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-> 
-> In personal conversations with technical people, I call myself a hacker. But
-> when I'm talking to journalists I just say "programmer" or something like that.
->                                 -- Linus Torvalds
