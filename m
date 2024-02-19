@@ -1,183 +1,116 @@
-Received: from dggsgout11.his.huawei.com (unknown [45.249.212.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CAE322063;
-	Mon, 19 Feb 2024 08:53:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80F572135A
+	for <linux-kernel@vger.kernel.org>; Mon, 19 Feb 2024 08:54:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708332825; cv=none; b=oL1UmiwQVt5Y1T0zLb6Id3B9XCLVrPYJAENGenHlxErVv2V02Wr/7/AgDEzEK+Eb5VnMOw4YBgwRO8bkQ65bKYlQULjdTc+JQUNZiThj/JfrqjiWAiEZLsnE7HNuj9c6rimtIbcLXfSJfFG9lNh3yZQIYHZWzsRCS2v6pKcJHCc=
+	t=1708332875; cv=none; b=B7eP6vM5N1q6Nb4GeIUf83dtqpLUzexzXuljDjb+KQwR53zfrTFBlEynancAX5H6MT5SZFFM7/awhR0tvncLLqTy+WuWzeUn6R598pqTOS2oKK97gt2dYBOHCmIGKDoFL82Zgm9Y/7lge3cNNeU3hu6a5QZsUgE7ZyaJcpgvsNU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708332825; c=relaxed/simple;
-	bh=8HkkR6iJ4IHWS6OvdN4vAUbuMZcIA4Hfk4172V+EblI=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=Z/4Inx72Qnjum6uO6QxfOPP8HFJEiifxW32AS0qfmd2fG3mGYixvC9zT9S1InBKjNviRtge3YVTF09435HB3hiJ0YEKR1uzb9P0tSQrVMqfQ+iG1GP3LXiKMlcfWzh5Di04wjRu3bRvVb0CKS/z3vhxj39emBQcdWtR4ZWV0mUA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.93.142])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4Tdbt301VXz4f3tPG;
-	Mon, 19 Feb 2024 16:53:30 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.112])
-	by mail.maildlp.com (Postfix) with ESMTP id 0F0EA1A016E;
-	Mon, 19 Feb 2024 16:53:38 +0800 (CST)
-Received: from [10.174.176.73] (unknown [10.174.176.73])
-	by APP1 (Coremail) with SMTP id cCh0CgDHlxAQF9NlTC7vEQ--.53103S3;
-	Mon, 19 Feb 2024 16:53:37 +0800 (CST)
-Subject: Re: [PATCH] block: fix deadlock between bd_link_disk_holder and
- partition scan
-To: linan666@huaweicloud.com, axboe@kernel.dk, Christoph Hellwig
- <hch@lst.de>, "yukuai (C)" <yukuai3@huawei.com>
-Cc: linux-raid@vger.kernel.org, song@kernel.org, linux-block@vger.kernel.org,
- linux-kernel@vger.kernel.org, yi.zhang@huawei.com, houtao1@huawei.com,
- yangerkun@huawei.com
-References: <20240207092756.2087888-1-linan666@huaweicloud.com>
-From: Yu Kuai <yukuai1@huaweicloud.com>
-Message-ID: <d7456326-ebb1-fc4a-9071-bf7083191211@huaweicloud.com>
-Date: Mon, 19 Feb 2024 16:53:36 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+	s=arc-20240116; t=1708332875; c=relaxed/simple;
+	bh=nBg4A06R/OUY1p3joIBcI8CRnrxw0fL2LoZhv/OrnSI=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=nYQ+kSG8r9arH1nIG4ezaOcfDDDuzATpLdGp2lg8b2i3wIXBSraYw57iDs4m0f2yjmvBaxQ5YaWI0ZrFQ4vi93oGSyxlsAB7b4mArggjE0grL+Gt29T3DpeUBFgXlbpqvdig6PyxmHrlw7UTWIEkM8gd81I8XzGsXUNZTKehbGg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=tffYliaK; arc=none smtp.client-ip=209.85.167.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tffYliaK"
+Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-512bb2ed1f7so289600e87.3
+        for <linux-kernel@vger.kernel.org>; Mon, 19 Feb 2024 00:54:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1708332872; x=1708937672; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=6Nbg2AjR83BKRqP6eesz1VFg3OuGIvtb3xMqeLGeGpU=;
+        b=tffYliaKP/wdA8W+Tz/Lknjg6ktO+ufLdQnRJyWaeppRVdm/1H777Y9diXhFKXKP/j
+         wZjTPuQOMtliO3Ok0woacwakd6pmITF1FVWMdopnzt+vbeWboVkiINl1Kx3z/eZr3C0q
+         DR6EDtnxLn4Wo4dt6to0YqQqj5wpwlR6LG+SptZfAcuab5aoqVIRs4lXTezA8UCl4aBt
+         RxiBD97OVNDH8bl0fEU/kkBkZoWWrz6V2uLCBhvXqkw2V/FyVqE+TWc/0ZIDc+t0k6nc
+         wG0hoh8FdShAh2V/zHekHDdZ6e5as+aa3arja5vIJXIqEldl8YPXx28fvOrPoGcfpFop
+         0K3g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708332872; x=1708937672;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=6Nbg2AjR83BKRqP6eesz1VFg3OuGIvtb3xMqeLGeGpU=;
+        b=Bm32IVOv8914bvC8WfxjdS57ZJwgZmUwst6jMIFxq+9WHuuzBAsHOWmmQdDWYpIodY
+         HWaZONwNgc5LPSP2NFzgb3U6Th7KIbx1y/FT5JObKh+oJGOoDNeC89tKNyVJT9k7KNgW
+         khdG+pP9n1+EGZhprRvKhyNBpLS+EUOb9J6OWNrqGT+HAG2B1TPz1kfccrSM6ZPNq9jG
+         RgyXTZecrGI/NzfxLyOk+UDoQbKClVmbvn7x9nvjJw+qOa5M3s/Ln9gpxuqmQBDUY41N
+         NHbgDvY0wrM6LsuiDKoIwW5jTNdLLBBIyhl8j7ne7B8Wo8gRrHRsFeNaN2MTNXGt9fxG
+         UddA==
+X-Forwarded-Encrypted: i=1; AJvYcCVjNVxAFMwUKpQfenDMi7pjCGV3zgwPuRYEXJwJbK7m+y9m41pi95YKLA9wYd828k1BNVnPi++tyxqb2chWC5rx4qSSQX8zRnNbCx8W
+X-Gm-Message-State: AOJu0YyfhLaf6X48pU/iQNAqqSSbB8q0kHU+JaFUKzQQhzktWevBv7l7
+	yfyS0jea5cWD9fggr7aIq73jUgWOID3QUfXXUTaAOY+n+vsnrIp30qhGP2ZXnuM=
+X-Google-Smtp-Source: AGHT+IFX4/mGjG+vU95UUpnnLXRp/XwEI4DMPybRrGk+Qnnh13kjBBjoqh9gpDbiPP+7JCfYZqpAjQ==
+X-Received: by 2002:a05:6512:31c5:b0:512:b773:2800 with SMTP id j5-20020a05651231c500b00512b7732800mr937004lfe.34.1708332871628;
+        Mon, 19 Feb 2024 00:54:31 -0800 (PST)
+Received: from arrakeen.starnux.net ([2a01:e0a:982:cbb0:52eb:f6ff:feb3:451a])
+        by smtp.gmail.com with ESMTPSA id f5-20020a7bc8c5000000b00410bca333b7sm10516716wml.27.2024.02.19.00.54.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 19 Feb 2024 00:54:31 -0800 (PST)
+From: Neil Armstrong <neil.armstrong@linaro.org>
+To: Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Kevin Hilman <khilman@baylibre.com>, 
+ Jerome Brunet <jbrunet@baylibre.com>, 
+ Martin Blumenstingl <martin.blumenstingl@googlemail.com>, 
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: Marc Gonzalez <mgonzalez@freebox.fr>
+In-Reply-To: <20240213143217.336341-1-krzysztof.kozlowski@linaro.org>
+References: <20240213143217.336341-1-krzysztof.kozlowski@linaro.org>
+Subject: Re: [PATCH] arm64: dts: amlogic: replace underscores in node names
+Message-Id: <170833287080.1749763.10941075703798896000.b4-ty@linaro.org>
+Date: Mon, 19 Feb 2024 09:54:30 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20240207092756.2087888-1-linan666@huaweicloud.com>
-Content-Type: text/plain; charset=gbk; format=flowed
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:cCh0CgDHlxAQF9NlTC7vEQ--.53103S3
-X-Coremail-Antispam: 1UD129KBjvJXoWxZF4rCr1xtw4xtFW5XFW3Awb_yoWrXFyDpF
-	Z8KFWrtryUtF4Dur4Utw47uF45Kw40ga1xGr97Kry29r9rArs29r17tFy7uFy8trWIyF4D
-	tF1UX3yYyF10y37anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUU9214x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
-	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
-	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
-	2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
-	W8JwACjcxG0xvEwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2Y2ka
-	0xkIwI1lc7I2V7IY0VAS07AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7x
-	kEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E
-	67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCw
-	CI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6rWUJVWr
-	Zr1UMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYx
-	BIdaVFxhVjvjDU0xZFpf9x0JUdHUDUUUUU=
-X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.12.4
 
-Hi, Christoph
+Hi,
 
-ÔÚ 2024/02/07 17:27, linan666@huaweicloud.com Ð´µÀ:
-> From: Li Nan <linan122@huawei.com>
+On Tue, 13 Feb 2024 15:32:17 +0100, Krzysztof Kozlowski wrote:
+> Underscores should not be used in node names (dtc with W=2 warns about
+> them), so replace them with hyphens.
 > 
-> 'open_mutex' of gendisk is used to protect open/close block devices. But
-> in bd_link_disk_holder(), it is used to protect the creation of symlink
-> between holding disk and slave bdev, which introduces some issues.
 > 
-> When bd_link_disk_holder() is called, the driver is usually in the process
-> of initialization/modification and may suspend submitting io. At this
-> time, any io hold 'open_mutex', such as scanning partitions, can cause
-> deadlocks. For example, in raid:
-> 
-> T1                              T2
-> bdev_open_by_dev
->   lock open_mutex [1]
->   ...
->    efi_partition
->    ...
->     md_submit_bio
-> 				md_ioctl mddev_syspend
-> 				  -> suspend all io
-> 				 md_add_new_disk
-> 				  bind_rdev_to_array
-> 				   bd_link_disk_holder
-> 				    try lock open_mutex [2]
->      md_handle_request
->       -> wait mddev_resume
-> 
-> T1 scan partition, T2 add a new device to raid. T1 waits for T2 to resume
-> mddev, but T2 waits for open_mutex held by T1. Deadlock occurs.
-> 
-> Fix it by introducing a local mutex 'holder_mutex' to replace 'open_mutex'.
 
-Can you take a look at this patch? I think for raid(perhaps and dm and
-other drivers), it's reasonable to suspend IO while hot adding new
-underlying disks. And I think add new slaves to holder is not related to
-open the holder disk, because caller should already open the holder disk
-to hot add slaves, hence 'open_mutex' for holder is not necessary here.
+Thanks, Applied to https://git.kernel.org/pub/scm/linux/kernel/git/amlogic/linux.git (v6.9/arm64-dt)
 
-Actually bd_link_disk_holder() is protected by 'reconfig_mutex' for
-raid, and 'table_devices_lock' for dm(I'm not sure yet if other drivers
-have similiar lock).
+[1/1] arm64: dts: amlogic: replace underscores in node names
+      https://git.kernel.org/amlogic/c/f0ed445e7397e386264d4752a5eb5d2dfc7f7fd2
 
-For raid, we do can fix this problem in raid by delay
-bd_link_disk_holder() while the array is not suspended, however, we'll
-consider this fix later if you think this patch is not acceptable.
+These changes has been applied on the intermediate git tree [1].
 
-Thanks,
-Kuai
+The v6.9/arm64-dt branch will then be sent via a formal Pull Request to the Linux SoC maintainers
+for inclusion in their intermediate git branches in order to be sent to Linus during
+the next merge window, or sooner if it's a set of fixes.
 
-> 
-> Signed-off-by: Li Nan <linan122@huawei.com>
-> ---
->   block/holder.c | 12 +++++++-----
->   1 file changed, 7 insertions(+), 5 deletions(-)
-> 
-> diff --git a/block/holder.c b/block/holder.c
-> index 37d18c13d958..5bfb0a674cc7 100644
-> --- a/block/holder.c
-> +++ b/block/holder.c
-> @@ -8,6 +8,8 @@ struct bd_holder_disk {
->   	int			refcnt;
->   };
->   
-> +static DEFINE_MUTEX(holder_mutex);
-> +
->   static struct bd_holder_disk *bd_find_holder_disk(struct block_device *bdev,
->   						  struct gendisk *disk)
->   {
-> @@ -80,7 +82,7 @@ int bd_link_disk_holder(struct block_device *bdev, struct gendisk *disk)
->   	kobject_get(bdev->bd_holder_dir);
->   	mutex_unlock(&bdev->bd_disk->open_mutex);
->   
-> -	mutex_lock(&disk->open_mutex);
-> +	mutex_lock(&holder_mutex);
->   	WARN_ON_ONCE(!bdev->bd_holder);
->   
->   	holder = bd_find_holder_disk(bdev, disk);
-> @@ -108,7 +110,7 @@ int bd_link_disk_holder(struct block_device *bdev, struct gendisk *disk)
->   		goto out_del_symlink;
->   	list_add(&holder->list, &disk->slave_bdevs);
->   
-> -	mutex_unlock(&disk->open_mutex);
-> +	mutex_unlock(&holder_mutex);
->   	return 0;
->   
->   out_del_symlink:
-> @@ -116,7 +118,7 @@ int bd_link_disk_holder(struct block_device *bdev, struct gendisk *disk)
->   out_free_holder:
->   	kfree(holder);
->   out_unlock:
-> -	mutex_unlock(&disk->open_mutex);
-> +	mutex_unlock(&holder_mutex);
->   	if (ret)
->   		kobject_put(bdev->bd_holder_dir);
->   	return ret;
-> @@ -140,7 +142,7 @@ void bd_unlink_disk_holder(struct block_device *bdev, struct gendisk *disk)
->   	if (WARN_ON_ONCE(!disk->slave_dir))
->   		return;
->   
-> -	mutex_lock(&disk->open_mutex);
-> +	mutex_lock(&holder_mutex);
->   	holder = bd_find_holder_disk(bdev, disk);
->   	if (!WARN_ON_ONCE(holder == NULL) && !--holder->refcnt) {
->   		del_symlink(disk->slave_dir, bdev_kobj(bdev));
-> @@ -149,6 +151,6 @@ void bd_unlink_disk_holder(struct block_device *bdev, struct gendisk *disk)
->   		list_del_init(&holder->list);
->   		kfree(holder);
->   	}
-> -	mutex_unlock(&disk->open_mutex);
-> +	mutex_unlock(&holder_mutex);
->   }
->   EXPORT_SYMBOL_GPL(bd_unlink_disk_holder);
-> 
+In the cases of fixes, those will be merged in the current release candidate
+kernel and as soon they appear on the Linux master branch they will be
+backported to the previous Stable and Long-Stable kernels [2].
+
+The intermediate git branches are merged daily in the linux-next tree [3],
+people are encouraged testing these pre-release kernels and report issues on the
+relevant mailing-lists.
+
+If problems are discovered on those changes, please submit a signed-off-by revert
+patch followed by a corrective changeset.
+
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/amlogic/linux.git
+[2] https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git
+[3] https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
+
+-- 
+Neil
 
