@@ -1,139 +1,88 @@
-Received: from mail-qt1-f195.google.com (mail-qt1-f195.google.com [209.85.160.195])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE56C1C10
-	for <linux-kernel@vger.kernel.org>; Mon, 19 Feb 2024 11:01:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59B7C1C10;
+	Mon, 19 Feb 2024 11:01:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708340469; cv=none; b=AX+KLfPRkwpaJZaU0VBLrb76hFsEGso2KifOJDoBmF2qfVPEoV71Cllm+P4CQ2dTGhHl9gq71tQv7uymBZjnrFJd5dqtau+L4fotANn4FUaPc7WNXTxH+p9nl1+vW+gBV5vUNiC/G80e6J2jeL/kthaknQZSFuw08NnZargFhvs=
+	t=1708340521; cv=none; b=HGRPBixG31K7+BlnDrVE8Lg3N3wjMQQ7vH+OwNowV3X0+7FAL1zv0ZdUWMPPzdCYZwpQ51ffQSEEtbgn9D++4f6mJ9omrxedSwiM0EM6Yn1gmHzXFXZlSTTepEI2k+EsMiR8agMRIytkpOGZIn++OJ+sQl8X61p2mvV/GRnz6cU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708340469; c=relaxed/simple;
-	bh=rWsOnu9c0E3+G48KddE34DONtrfMn5lcE+flCVqxLVE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=jumPPywR24RNQAR3JEFWPXYn0LLMGdSwAvkvzthwl0Eg147HiQcuubTdvNQ0/Cl4hVT38DPCYQJh3QE8EyXe5ws4LCoHlCZkoVojb6C3Qlq6wMHr0hK3rTvdxM3nwbvur21hItHqrKQziWDc3AdTcSbkWgZFDS7zWHswjWKWVyQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=aL6YHDeu; arc=none smtp.client-ip=209.85.160.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1708340521; c=relaxed/simple;
+	bh=FYHwUjv0CBOVE/UvV6qkWI5k+uNh+6/RQIoNRoiJaqg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=S+cGZ/rTpG2hCZcaYuT0/KpyxyQSCLGNvnhNccGYYxPBPZC/tBgib1Oni+SAYA/2VRpp8yQi89IiDSzpL8DXeAvS6AVTRPx32MDoVb7Zi5ewnjBJ1ZbRF1t/iPece53la1218c6UrgDMn8A87DG+TgxfzP4uIXhVj6aSeHFmqNY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iI3AdxuQ; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="aL6YHDeu"
-Received: by mail-qt1-f195.google.com with SMTP id d75a77b69052e-42c7908fad8so6514481cf.1
-        for <linux-kernel@vger.kernel.org>; Mon, 19 Feb 2024 03:01:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1708340466; x=1708945266; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=AZYRZSmiMtv1nVWBmnpx4nfvYB6XZR9iTXkP1K/oLxg=;
-        b=aL6YHDeurhvb+BebFy7X0/4tkHlOFIzFsbJD1eh3g7PHY6eZ0r27jFkwnFBlz7wncp
-         tJahBN0wUbU7voi3nbwmBW5A2YZPvYTUjqSrqfLexD7cEewSnzvg0uYKzlDXS13Id1hZ
-         1JS8TegJfDiD71EG0IO0DBjFeYbz3X8TfggRs=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708340466; x=1708945266;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=AZYRZSmiMtv1nVWBmnpx4nfvYB6XZR9iTXkP1K/oLxg=;
-        b=O6zTFB9bnI950wjYjeCbTxlZRqvLfdS7iH91MDj4G0rU4blIMPogKGcxDM4N8GT3Tn
-         FeFNJx5ZauHqK55XwbJQZxvie2iGFtSYnYPPAiM5R93Nl4hPbWYskRMNJDY2x+qjQy5H
-         HH1HiNHoZa8oWfD3r4Ag0nelyV3BYOqDyM6cs0CylVz7dfzNy3z6m0g4wbQ4PM9gTgOt
-         YP2iNBKZ7L7KmHgpdAERWNDi40mV6eZoz5ThdNFFyJ4Mo1h5iVB0ujEvvTEV4zkDzHBp
-         XSu+qLzq5Qc7l3AlFQ/vfuBFdkoihMUQlKbjKfiE2zVxpAAlgksKD2x7mkEKrdqeQ7P1
-         V/sQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVDvFb5YW+gTYANOwlFnH7M7LaGaIiJaUiK69GGCy7IbrY/VLHKqBrKcAQDT0Nw1xANWk7uluubG0FKpdaDVWBwR/3RxwBXWUE2Vczi
-X-Gm-Message-State: AOJu0YxM+6tcF302oVGOOqAtDd/A4jdsQ8lHve3fBBvVTisOGrWjlluM
-	On5V/wymrtuff/fLDUEuI6cdAZ1jNHxXeHyXv3JinZMsOTfISkB9ADHykaeuko+ej3O4Nx53GrJ
-	WdZ/maz6G0r69Bp2SPYyGhqnr3dCKC+uYs57T
-X-Google-Smtp-Source: AGHT+IFIyTslOoP/5qvkPX58Yl1ODI3m3FBSnFsxBzqTTkSNYT6rBtjjtKNBFtcWaJOsDwBqowPopZKYU7kUtHrJeg0=
-X-Received: by 2002:a05:622a:1885:b0:42d:c856:a2bf with SMTP id
- v5-20020a05622a188500b0042dc856a2bfmr14383238qtc.5.1708340466731; Mon, 19 Feb
- 2024 03:01:06 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iI3AdxuQ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1708340519; x=1739876519;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=FYHwUjv0CBOVE/UvV6qkWI5k+uNh+6/RQIoNRoiJaqg=;
+  b=iI3AdxuQLJ85BdNTv3LccBvTl5WpMvi7xNNIB/S4qC0txlEEhksTTF4t
+   PObXqnZpH7B9civwnocqwQqi7C93tDCK7ntMrdlosEgtv4GHRtZmFZkrR
+   hbPSMYpk0z9IrOc7SQR6DN22A6iklWlgKP08i1akbwVjBrxa435dC7s4x
+   /ZOs19P1TCMAx+2atJl7CfGGimudpfoBiW6s89tAoHFzMM5CkQF7HtsN7
+   bJBRifBbJ+X798YVCRjVfVX+CYt5s7HVfH/oRB8cg1l9HYEvMsSKgdEVY
+   zeHxFy6koLkwkj4IChSaQMcnrJ5v0xh7a4bypUyV8zwLUpOJFFSb9fVMK
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10988"; a="2276106"
+X-IronPort-AV: E=Sophos;i="6.06,170,1705392000"; 
+   d="scan'208";a="2276106"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Feb 2024 03:01:58 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10988"; a="936276332"
+X-IronPort-AV: E=Sophos;i="6.06,170,1705392000"; 
+   d="scan'208";a="936276332"
+Received: from mattu-haswell.fi.intel.com (HELO [10.237.72.199]) ([10.237.72.199])
+  by fmsmga001.fm.intel.com with ESMTP; 19 Feb 2024 03:01:53 -0800
+Message-ID: <d82c8955-6793-7544-0013-1033abd9f1e9@linux.intel.com>
+Date: Mon, 19 Feb 2024 13:03:31 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240119033126.1802711-1-ototot@chromium.org>
-In-Reply-To: <20240119033126.1802711-1-ototot@chromium.org>
-From: Tommy Chiang <ototot@chromium.org>
-Date: Mon, 19 Feb 2024 19:00:55 +0800
-Message-ID: <CAH2knV03g8_z8326yd=pQV11X3N1VFc_DqXzVjMgM4Q0C+8awg@mail.gmail.com>
-Subject: Re: [PATCH] dma-buf: Add syntax highlighting to code listings in the document
-To: Sumit Semwal <sumit.semwal@linaro.org>, =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
-Cc: linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org, 
-	linaro-mm-sig@lists.linaro.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Firefox/102.0 Thunderbird/102.13.0
+Subject: Re: [PATCH v17 00/51] Introduce QC USB SND audio offloading support
+Content-Language: en-US
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: Wesley Cheng <quic_wcheng@quicinc.com>, srinivas.kandagatla@linaro.org,
+ mathias.nyman@intel.com, perex@perex.cz, conor+dt@kernel.org,
+ corbet@lwn.net, lgirdwood@gmail.com, andersson@kernel.org,
+ krzysztof.kozlowski+dt@linaro.org, Thinh.Nguyen@synopsys.com,
+ broonie@kernel.org, bgoswami@quicinc.com, tiwai@suse.com,
+ robh+dt@kernel.org, konrad.dybcio@linaro.org, linux-kernel@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-sound@vger.kernel.org,
+ linux-usb@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+ linux-doc@vger.kernel.org, alsa-devel@alsa-project.org
+References: <20240217001017.29969-1-quic_wcheng@quicinc.com>
+ <2024021754-unengaged-saggy-6ab1@gregkh>
+ <96ab6033-2cb9-daa7-ddad-090138896739@linux.intel.com>
+ <2024021922-privatize-runt-495e@gregkh>
+From: Mathias Nyman <mathias.nyman@linux.intel.com>
+In-Reply-To: <2024021922-privatize-runt-495e@gregkh>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Kindly ping :)
+>>
+>> Patch 10/10 is based on an old POC patch by me, but it's heavily modified.
+>>
+>> It looks like it does a few minor things that are not optimal, like extra
+>> spinlock/unlock, and wait_for_completion_timeout() with magical timeout value.
+>> I haven't tested this version, but I guess any fixes or cleanups can be done
+>> later on top of it.
+> 
+> I can revert it now if you want, just let me know.
+> 
 
-On Fri, Jan 19, 2024 at 11:33=E2=80=AFAM Tommy Chiang <ototot@chromium.org>=
- wrote:
->
-> This patch tries to improve the display of the code listing
-> on The Linux Kernel documentation website for dma-buf [1] .
->
-> Originally, it appears that it was attempting to escape
-> the '*' character, but looks like it's not necessary (now),
-> so we are seeing something like '\*' on the webite.
->
-> This patch removes these unnecessary backslashes and adds syntax
-> highlighting to improve the readability of the code listing.
->
-> [1] https://docs.kernel.org/driver-api/dma-buf.html
->
-> Signed-off-by: Tommy Chiang <ototot@chromium.org>
-> ---
->  drivers/dma-buf/dma-buf.c | 15 +++++++++------
->  1 file changed, 9 insertions(+), 6 deletions(-)
->
-> diff --git a/drivers/dma-buf/dma-buf.c b/drivers/dma-buf/dma-buf.c
-> index 8fe5aa67b167..e083a0ab06d7 100644
-> --- a/drivers/dma-buf/dma-buf.c
-> +++ b/drivers/dma-buf/dma-buf.c
-> @@ -1282,10 +1282,12 @@ EXPORT_SYMBOL_NS_GPL(dma_buf_move_notify, DMA_BUF=
-);
->   *   vmap interface is introduced. Note that on very old 32-bit architec=
-tures
->   *   vmalloc space might be limited and result in vmap calls failing.
->   *
-> - *   Interfaces::
-> + *   Interfaces:
->   *
-> - *      void \*dma_buf_vmap(struct dma_buf \*dmabuf, struct iosys_map \*=
-map)
-> - *      void dma_buf_vunmap(struct dma_buf \*dmabuf, struct iosys_map \*=
-map)
-> + *   .. code-block:: c
-> + *
-> + *     void *dma_buf_vmap(struct dma_buf *dmabuf, struct iosys_map *map)
-> + *     void dma_buf_vunmap(struct dma_buf *dmabuf, struct iosys_map *map=
-)
->   *
->   *   The vmap call can fail if there is no vmap support in the exporter,=
- or if
->   *   it runs out of vmalloc space. Note that the dma-buf layer keeps a r=
-eference
-> @@ -1342,10 +1344,11 @@ EXPORT_SYMBOL_NS_GPL(dma_buf_move_notify, DMA_BUF=
-);
->   *   enough, since adding interfaces to intercept pagefaults and allow p=
-te
->   *   shootdowns would increase the complexity quite a bit.
->   *
-> - *   Interface::
-> + *   Interface:
-> + *
-> + *   .. code-block:: c
->   *
-> - *      int dma_buf_mmap(struct dma_buf \*, struct vm_area_struct \*,
-> - *                    unsigned long);
-> + *     int dma_buf_mmap(struct dma_buf *, struct vm_area_struct *, unsig=
-ned long);
->   *
->   *   If the importing subsystem simply provides a special-purpose mmap c=
-all to
->   *   set up a mapping in userspace, calling do_mmap with &dma_buf.file w=
-ill
-> --
-> 2.43.0.381.gb435a96ce8-goog
->
+Maybe reverting it would be better yes.
+
+Thanks
+Mathias
