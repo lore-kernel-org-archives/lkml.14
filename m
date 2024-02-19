@@ -1,55 +1,55 @@
-Received: from lelv0142.ext.ti.com (lelv0142.ext.ti.com [198.47.23.249])
+Received: from fllv0016.ext.ti.com (fllv0016.ext.ti.com [198.47.19.142])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D72C22338;
-	Mon, 19 Feb 2024 09:04:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.249
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5CC122F0F;
+	Mon, 19 Feb 2024 09:04:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.142
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708333491; cv=none; b=n4WBF4vmdIrdz6H568d9rxhglCHHTzWy7yVyG60kJv5bxcPDF+BMjIcvGrTnw23JD2umP54XaHzw3pmdC5zhbkn6gCXN+H2Bb2oHl2B17T2y+eKW611e359uFRO7Tr5zatxuLbPzKzCdVDX8jGl1BfV7WpLgzBiy8rNIBTli9Ms=
+	t=1708333494; cv=none; b=KHRzUAnt+/vrZIgZSaSCkbkYWUmH+PZBvlQcF3AA7bXlfouIJSCS4a0kOewTuQffcgYZuQqlydkIuYqSxQU3UiO5Lnq2Owm+tBhHyrcNJuG+QKQweYRpu3heraWvYv/qo0R/07ZNhUf1nyzSz8XN228SciCwGipmMK1wIIWYZQs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708333491; c=relaxed/simple;
-	bh=wk1n0oWjh34QbIeqz7ZNkSxon2SKxcvJK+7DW2eQqgQ=;
+	s=arc-20240116; t=1708333494; c=relaxed/simple;
+	bh=4nHzmmScnB6u8alRBLQ2zpIryKuEIYDSKVWCionSE18=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=h98HMjGCmOiPd3+dA6TSlreM9AphBLwSXC7+bcnBBZkBrIe8C4yDlLKoyT63Pp8MLOy67KjjlWye9ldDks/aplM8YGaE9g9W8fn4/gqDAOCuIJ+QIswqFFEURvMk3d4V78XLu6aykmkF6nqHk9d3VZc18HdvGEUJRs3uHiWxdkk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=Qk9k8S5/; arc=none smtp.client-ip=198.47.23.249
+	 MIME-Version:Content-Type; b=nPQp4YbnlqW/cwX7aFzKBXdHEAz0teCyOW0G021sWJBsmw4Ifcc0OLHC8VgUYZ5cpEwKtMUmMXYdHkHy9cmU9ZvBepsNEcHxsXlvDQVeWLd9Qk8CzfEqbrMkFJGjCaYrhvtnkUbX0k+BsZ1gOz9iJcyQ7rrXIBIoWWfcAlomdnw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=FZW+i+br; arc=none smtp.client-ip=198.47.19.142
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Qk9k8S5/"
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-	by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 41J94hDb097758;
-	Mon, 19 Feb 2024 03:04:43 -0600
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="FZW+i+br"
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+	by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 41J94kLh078768;
+	Mon, 19 Feb 2024 03:04:46 -0600
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1708333483;
-	bh=F9VQ5cICpZyC3r18cZBGn07fwGkoD+GP7y8K4AAm+eI=;
+	s=ti-com-17Q1; t=1708333486;
+	bh=UX+R3vrf/vh6sGWWi37SEiGJ2+BZgfectRVJ4DobpLE=;
 	h=From:To:CC:Subject:Date:In-Reply-To:References;
-	b=Qk9k8S5/vHsfbglZEJKP+qlDjO+UIAW48ODAeaMvbO2EE9uUnadNlv2caQtHVARrG
-	 LY0hMW43D+d8VcQWZKF45P8xh4HvhoFGGGzBdbcCHyMOIueYyhsQBOkqjNSui/+/gz
-	 aHixgZ9D+aNooSBduyug6e3i4PrKQ/vAh5lWzexg=
-Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
-	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 41J94haD084363
+	b=FZW+i+brcKi+FeZ/Qxh0CqyXXtS4K8tMncYuwxisXooe5sHgPGbDNK9PRQAldG6/d
+	 LXM525mgcrLjO3q780WgLVtZFkFWe1Ru9bx/nrOOBateUQKKc9eJ2n6xaWcsf5yVuj
+	 MK8tyiErfpNPqMst6KHPn3Sb2tEGOnqGq0Wffie4=
+Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
+	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 41J94kEF116027
 	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Mon, 19 Feb 2024 03:04:43 -0600
-Received: from DLEE110.ent.ti.com (157.170.170.21) by DLEE114.ent.ti.com
- (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
+	Mon, 19 Feb 2024 03:04:46 -0600
+Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE100.ent.ti.com
+ (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 19
- Feb 2024 03:04:42 -0600
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE110.ent.ti.com
- (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
+ Feb 2024 03:04:46 -0600
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Mon, 19 Feb 2024 03:04:43 -0600
+ Frontend Transport; Mon, 19 Feb 2024 03:04:46 -0600
 Received: from uda0490681.. ([10.24.69.142])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 41J94ZnV011977;
-	Mon, 19 Feb 2024 03:04:39 -0600
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 41J94ZnW011977;
+	Mon, 19 Feb 2024 03:04:43 -0600
 From: Vaishnav Achath <vaishnav.a@ti.com>
 To: <nm@ti.com>, <vigneshr@ti.com>, <kristo@kernel.org>, <robh@kernel.org>,
         <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>
 CC: <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>, <vaishnav.a@ti.com>, <u-kumar1@ti.com>,
         <s-vadapalli@ti.com>
-Subject: [PATCH v2 1/2] arm64: dts: ti: k3-j722s-evm: Enable CPSW3G RGMII1
-Date: Mon, 19 Feb 2024 14:34:34 +0530
-Message-ID: <20240219090435.934383-2-vaishnav.a@ti.com>
+Subject: [PATCH v2 2/2] arm64: dts: ti: k3-j722s-evm: Enable OSPI NOR support
+Date: Mon, 19 Feb 2024 14:34:35 +0530
+Message-ID: <20240219090435.934383-3-vaishnav.a@ti.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240219090435.934383-1-vaishnav.a@ti.com>
 References: <20240219090435.934383-1-vaishnav.a@ti.com>
@@ -63,89 +63,116 @@ Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
 X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-From: Siddharth Vadapalli <s-vadapalli@ti.com>
+J722S EVM has S28HS512T 64 MiB Octal SPI NOR flash connected
+to the OSPI interface, add support for the flash and describe
+the partition information as per bootloader.
 
-Enable MAC Port 1 of CPSW3G instance of CPSW Ethernet Switch in
-RGMII-RXID mode of operation. Port 2 is not connected on the EVM,
-thus keep it disabled.
-
-Signed-off-by: Siddharth Vadapalli <s-vadapalli@ti.com>
 Signed-off-by: Vaishnav Achath <vaishnav.a@ti.com>
 ---
- arch/arm64/boot/dts/ti/k3-j722s-evm.dts | 53 +++++++++++++++++++++++++
- 1 file changed, 53 insertions(+)
+
+V1->V2:
+  * Update comments indicating PAD numbers. 
+
+ arch/arm64/boot/dts/ti/k3-j722s-evm.dts | 79 +++++++++++++++++++++++++
+ 1 file changed, 79 insertions(+)
 
 diff --git a/arch/arm64/boot/dts/ti/k3-j722s-evm.dts b/arch/arm64/boot/dts/ti/k3-j722s-evm.dts
-index b4f2fee53a97..9e12a6e9111f 100644
+index 9e12a6e9111f..cee3a8661d5e 100644
 --- a/arch/arm64/boot/dts/ti/k3-j722s-evm.dts
 +++ b/arch/arm64/boot/dts/ti/k3-j722s-evm.dts
-@@ -8,6 +8,7 @@
- 
- /dts-v1/;
- 
-+#include <dt-bindings/net/ti-dp83867.h>
- #include "k3-j722s.dtsi"
- 
- / {
-@@ -160,6 +161,58 @@ J722S_IOPAD(0x0240, PIN_INPUT, 0) /* (B24) MMC1_SDCD */
+@@ -169,6 +169,23 @@ J722S_IOPAD(0x015c, PIN_INPUT, 0) /* (AD25) MDIO0_MDIO */
  		>;
- 		bootph-all;
  	};
-+
-+	mdio_pins_default: mdio-default-pins {
+ 
++	ospi0_pins_default: ospi0-default-pins {
 +		pinctrl-single,pins = <
-+			J722S_IOPAD(0x0160, PIN_OUTPUT, 0) /* (AC24) MDIO0_MDC */
-+			J722S_IOPAD(0x015c, PIN_INPUT, 0) /* (AD25) MDIO0_MDIO */
++			J722S_IOPAD(0x0000, PIN_OUTPUT, 0) /* (L24) OSPI0_CLK */
++			J722S_IOPAD(0x002c, PIN_OUTPUT, 0) /* (K26) OSPI0_CSn0 */
++			J722S_IOPAD(0x000c, PIN_INPUT, 0) /* (K27) OSPI0_D0 */
++			J722S_IOPAD(0x0010, PIN_INPUT, 0) /* (L27) OSPI0_D1 */
++			J722S_IOPAD(0x0014, PIN_INPUT, 0) /* (L26) OSPI0_D2 */
++			J722S_IOPAD(0x0018, PIN_INPUT, 0) /* (L25) OSPI0_D3 */
++			J722S_IOPAD(0x001c, PIN_INPUT, 0) /* (L21) OSPI0_D4 */
++			J722S_IOPAD(0x0020, PIN_INPUT, 0) /* (M26) OSPI0_D5 */
++			J722S_IOPAD(0x0024, PIN_INPUT, 0) /* (N27) OSPI0_D6 */
++			J722S_IOPAD(0x0028, PIN_INPUT, 0) /* (M27) OSPI0_D7 */
++			J722S_IOPAD(0x0008, PIN_INPUT, 0) /* (L22) OSPI0_DQS */
 +		>;
++		bootph-all;
 +	};
 +
-+	rgmii1_pins_default: rgmii1-default-pins {
-+		pinctrl-single,pins = <
-+			J722S_IOPAD(0x014c, PIN_INPUT, 0) /* (AC25) RGMII1_RD0 */
-+			J722S_IOPAD(0x0150, PIN_INPUT, 0) /* (AD27) RGMII1_RD1 */
-+			J722S_IOPAD(0x0154, PIN_INPUT, 0) /* (AE24) RGMII1_RD2 */
-+			J722S_IOPAD(0x0158, PIN_INPUT, 0) /* (AE26) RGMII1_RD3 */
-+			J722S_IOPAD(0x0148, PIN_INPUT, 0) /* (AE27) RGMII1_RXC */
-+			J722S_IOPAD(0x0144, PIN_INPUT, 0) /* (AD23) RGMII1_RX_CTL */
-+			J722S_IOPAD(0x0134, PIN_OUTPUT, 0) /* (AF27) RGMII1_TD0 */
-+			J722S_IOPAD(0x0138, PIN_OUTPUT, 0) /* (AE23) RGMII1_TD1 */
-+			J722S_IOPAD(0x013c, PIN_OUTPUT, 0) /* (AG25) RGMII1_TD2 */
-+			J722S_IOPAD(0x0140, PIN_OUTPUT, 0) /* (AF24) RGMII1_TD3 */
-+			J722S_IOPAD(0x0130, PIN_OUTPUT, 0) /* (AG26) RGMII1_TXC */
-+			J722S_IOPAD(0x012c, PIN_OUTPUT, 0) /* (AF25) RGMII1_TX_CTL */
-+		>;
-+	};
-+};
-+
-+&cpsw3g {
-+	status = "okay";
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&rgmii1_pins_default>;
-+};
-+
-+&cpsw3g_mdio {
-+	status = "okay";
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&mdio_pins_default>;
-+
-+	cpsw3g_phy0: ethernet-phy@0 {
-+		reg = <0>;
-+		ti,rx-internal-delay = <DP83867_RGMIIDCTL_2_00_NS>;
-+		ti,fifo-depth = <DP83867_PHYCR_FIFO_DEPTH_4_B_NIB>;
-+		ti,min-output-impedance;
-+	};
-+};
-+
-+&cpsw_port1 {
-+	phy-mode = "rgmii-rxid";
-+	phy-handle = <&cpsw3g_phy0>;
-+};
-+
-+&cpsw_port2 {
-+	status = "disabled";
+ 	rgmii1_pins_default: rgmii1-default-pins {
+ 		pinctrl-single,pins = <
+ 			J722S_IOPAD(0x014c, PIN_INPUT, 0) /* (AC25) RGMII1_RD0 */
+@@ -290,6 +307,68 @@ exp1: gpio@23 {
+ 	};
  };
  
- &main_gpio1 {
++&ospi0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&ospi0_pins_default>;
++	status = "okay";
++
++	flash@0 {
++		compatible = "jedec,spi-nor";
++		reg = <0x0>;
++		spi-tx-bus-width = <8>;
++		spi-rx-bus-width = <8>;
++		spi-max-frequency = <25000000>;
++		cdns,tshsl-ns = <60>;
++		cdns,tsd2d-ns = <60>;
++		cdns,tchsh-ns = <60>;
++		cdns,tslch-ns = <60>;
++		cdns,read-delay = <4>;
++		bootph-all;
++
++		partitions {
++			compatible = "fixed-partitions";
++			#address-cells = <1>;
++			#size-cells = <1>;
++
++			partition@0 {
++				label = "ospi.tiboot3";
++				reg = <0x00 0x80000>;
++			};
++
++			partition@80000 {
++				label = "ospi.tispl";
++				reg = <0x80000 0x200000>;
++			};
++
++			partition@280000 {
++				label = "ospi.u-boot";
++				reg = <0x280000 0x400000>;
++			};
++
++			partition@680000 {
++				label = "ospi.env";
++				reg = <0x680000 0x40000>;
++			};
++
++			partition@6c0000 {
++				label = "ospi.env.backup";
++				reg = <0x6c0000 0x40000>;
++			};
++
++			partition@800000 {
++				label = "ospi.rootfs";
++				reg = <0x800000 0x37c0000>;
++			};
++
++			partition@3fc0000 {
++				label = "ospi.phypattern";
++				reg = <0x3fc0000 0x40000>;
++			};
++		};
++	};
++
++};
++
+ &sdhci1 {
+ 	/* SD/MMC */
+ 	vmmc-supply = <&vdd_mmc1>;
 -- 
 2.34.1
 
