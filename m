@@ -1,161 +1,142 @@
-Received: from forward206c.mail.yandex.net (forward206c.mail.yandex.net [178.154.239.215])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 267735381A;
-	Mon, 19 Feb 2024 22:43:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.154.239.215
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48D4A57877;
+	Mon, 19 Feb 2024 22:43:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708382595; cv=none; b=Q+neh+S+ZF/8aGb6CaOArEoPdy9my+VqSafxsH2mBdlBx9LppTXCmBi4JVeCDdXhtzoGCohYEPe3ndJ1GfIIxIIPg0XWmJ/2hnU/zAVbpH35/lhP0kXh7Z+YfvVLj8cvnTklSyMumxs8ODQrXQ00+ocqRGF2+Qzmv/hpcJBuF7w=
+	t=1708382598; cv=none; b=kQigZGeSsSLWi6SaEeEfTvDKgOGCZueD/Mv9UwOdIcwDUvd2u8HIl1KTBeg+/dLiutTfI29OveA5ajxbacb9O6EPYwmBdmldKp5x/woVQSqm7+i0HLXV4E1R6Jm8HCqp3dI5DPE6a2bTBKBMEj24Eww+KJ5WGpMPvi0I/bRSmmg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708382595; c=relaxed/simple;
-	bh=9gKp44U64vpDldG4mNOhjDG2liu6cXrXKG6GoC6eEP8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=D7p4bf1rbmMX74O69zWWChhgx4DVRVtgg8W8NhfXVphucD58MLjnx+HXjZrCffPYguvpGs9QGh4sinxX2uBGjZQb7BNWl2qKcecTsLsvzVysL/6ZeWLi1lHTmMxMWQutzcaY0utbo7vWTPo7okJq/vYDAgQrtM7kf+W0Mwge7gU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=6tel.net; spf=pass smtp.mailfrom=6tel.net; dkim=pass (1024-bit key) header.d=6tel.net header.i=@6tel.net header.b=o0kNILLx; arc=none smtp.client-ip=178.154.239.215
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=6tel.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=6tel.net
+	s=arc-20240116; t=1708382598; c=relaxed/simple;
+	bh=niaSERqhJ4QxtZz9++F8YWQyqPA5MyjhNIr1Dtj9Ezw=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Subject:From:To:Cc:
+	 References:In-Reply-To; b=lcZRiPmUqOoLGPk+/9/HLwqfzvB9sKlWg/P6loXI6h7ssGKKtZl7PA5FjaRVfTIqCR+jyiVhFeRYrBm/nCt6g1hQ4JSBAp1NkLYiCMR3aaQ8j0QENh+KXvpeKK0GkwpzHy+MneJYdL/VANPG2/tUwdQ6GhzGpbFnK5swsTjhtdI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UK6d5FuW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=6tel.net header.i=@6tel.net header.b="o0kNILLx"
-Received: from forward102b.mail.yandex.net (forward102b.mail.yandex.net [IPv6:2a02:6b8:c02:900:1:45:d181:d102])
-	by forward206c.mail.yandex.net (Yandex) with ESMTPS id E577763527;
-	Tue, 20 Feb 2024 01:35:16 +0300 (MSK)
-Received: from mail-nwsmtp-smtp-production-main-46.myt.yp-c.yandex.net (mail-nwsmtp-smtp-production-main-46.myt.yp-c.yandex.net [IPv6:2a02:6b8:c12:3285:0:640:fd1e:0])
-	by forward102b.mail.yandex.net (Yandex) with ESMTPS id 819C160985;
-	Tue, 20 Feb 2024 01:35:08 +0300 (MSK)
-Received: by mail-nwsmtp-smtp-production-main-46.myt.yp-c.yandex.net (smtp/Yandex) with ESMTPSA id bYZIDNh7RSw0-E7KFyfSe;
-	Tue, 20 Feb 2024 01:35:07 +0300
-X-Yandex-Fwd: 1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=6tel.net; s=mail;
-	t=1708382107; bh=iaUiCJngdlVa+OcnhANuHvIOXadWyrNnDfT/O58QDVA=;
-	h=Message-ID:Date:Cc:Subject:To:From;
-	b=o0kNILLxyr95zX+t/8ATgV+owzuxiS3YX8f0PqUSTtB47X0Ku8lwkEKd5Ok3MShsl
-	 fUU/6iYet1miI+Y9vvp79dhyiByywEWwjIwUIX2EzGCgpZFv7ZAlRfoUy2godheCi7
-	 YxmcDymUhNZYeN+HA4nLTkTdumVFkUZqaFY8x2I0=
-Authentication-Results: mail-nwsmtp-smtp-production-main-46.myt.yp-c.yandex.net; dkim=pass header.i=@6tel.net
-From: efectn@6tel.net
-To: linux-rockchip@lists.infradead.org
-Cc: devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	robh+dt@kernel.org,
-	krzysztof.kozlowski+dt@linaro.org,
-	conor+dt@kernel.org,
-	heiko@sntech.de,
-	sebastian.reichel@collabora.com,
-	Muhammed Efe Cetin <efectn@protonmail.com>
-Subject: [PATCH 1/9] arm64: dts: rockchip: Add cpu regulators and vcc5v0_sys to Khadas Edge 2
-Date: Tue, 20 Feb 2024 01:34:17 +0300
-Message-ID: <5a7bd2cd8703e51382abfc11242de59d45286477.1708381247.git.efectn@protonmail.com>
-X-Mailer: git-send-email 2.43.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UK6d5FuW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 184FAC433F1;
+	Mon, 19 Feb 2024 22:43:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1708382597;
+	bh=niaSERqhJ4QxtZz9++F8YWQyqPA5MyjhNIr1Dtj9Ezw=;
+	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
+	b=UK6d5FuWDhJk9UDsNB7j3xrH1V85geOu+OMlOGXTgrZUm7lLu304mUNtu8RbTH4lg
+	 qzuhNqCgjRshzJq7qtOvGTVKrYUoLVseWKct64v498/H7Dg80b6JoTUPbgCIHvkxsH
+	 lh8cdyVTRrph1l9340WQwjFqHG1joSPtvasDwFppuvUkOiq3rQ2sYXSx/+138h3a7S
+	 aJCBYuSHtZX/XwN/gl+i7CPvUqaj+422wr1GX/VWgtqadY+XgI4z/nWrFVfxdY11uR
+	 IrP/buZ1h4Vl+trLwz5I8XJsFXfRNcJYYJsYxKt0Kn30HnTHd5uRID5g/7BXRXfadJ
+	 Nn6eRSUfKyExA==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Mon, 19 Feb 2024 22:43:10 +0000
+Message-Id: <CZ9F33MWM7CO.2W1QSM24ZN6RM@seitikki>
+Subject: Re: [RFC PATCH] x86/sgx: Remove 'reclaim' boolean parameters
+From: "Jarkko Sakkinen" <jarkko@kernel.org>
+To: "Haitao Huang" <haitao.huang@linux.intel.com>, "Dave Hansen"
+ <dave.hansen@intel.com>
+Cc: <anakrish@microsoft.com>, <bp@alien8.de>, <cgroups@vger.kernel.org>,
+ <chrisyan@microsoft.com>, <dave.hansen@linux.intel.com>, <hpa@zytor.com>,
+ <kristen@linux.intel.com>, <linux-kernel@vger.kernel.org>,
+ <linux-sgx@vger.kernel.org>, <mikko.ylinen@linux.intel.com>,
+ <mingo@redhat.com>, <mkoutny@suse.com>, <seanjc@google.com>,
+ <sohil.mehta@intel.com>, <tglx@linutronix.de>,
+ <tim.c.chen@linux.intel.com>, <tj@kernel.org>, <x86@kernel.org>,
+ <yangjie@microsoft.com>, <zhanb@microsoft.com>, <zhiquan1.li@intel.com>
+X-Mailer: aerc 0.15.2
+References: <CZ4FCQ633VLC.26Y7HUHGRSFB3@kernel.org>
+ <20240219153957.9957-1-haitao.huang@linux.intel.com>
+ <40f95b90-8698-42dd-89d7-cd73d1e311b1@intel.com>
+ <CZ9CIP97661C.2WUZJNNCQUHE8@seitikki>
+ <op.2jetwkvkwjvjmi@hhuan26-mobl.amr.corp.intel.com>
+In-Reply-To: <op.2jetwkvkwjvjmi@hhuan26-mobl.amr.corp.intel.com>
 
-From: Muhammed Efe Cetin <efectn@protonmail.com>
+On Mon Feb 19, 2024 at 10:25 PM UTC, Haitao Huang wrote:
+> On Mon, 19 Feb 2024 14:42:29 -0600, Jarkko Sakkinen <jarkko@kernel.org> =
+=20
+> wrote:
+>
+> > On Mon Feb 19, 2024 at 3:56 PM UTC, Dave Hansen wrote:
+> >> On 2/19/24 07:39, Haitao Huang wrote:
+> >> > Remove all boolean parameters for 'reclaim' from the function
+> >> > sgx_alloc_epc_page() and its callers by making two versions of each
+> >> > function.
+> >> >
+> >> > Also opportunistically remove non-static declaration of
+> >> > __sgx_alloc_epc_page() and a typo
+> >> >
+> >> > Signed-off-by: Haitao Huang <haitao.huang@linux.intel.com>
+> >> > Suggested-by: Jarkko Sakkinen <jarkko@kernel.org>
+> >> > ---
+> >> >  arch/x86/kernel/cpu/sgx/encl.c  | 56 +++++++++++++++++++++------
+> >> >  arch/x86/kernel/cpu/sgx/encl.h  |  6 ++-
+> >> >  arch/x86/kernel/cpu/sgx/ioctl.c | 23 ++++++++---
+> >> >  arch/x86/kernel/cpu/sgx/main.c  | 68 =20
+> >> ++++++++++++++++++++++-----------
+> >> >  arch/x86/kernel/cpu/sgx/sgx.h   |  4 +-
+> >> >  arch/x86/kernel/cpu/sgx/virt.c  |  2 +-
+> >> >  6 files changed, 115 insertions(+), 44 deletions(-)
+> >>
+> >> Jarkko, did this turn out how you expected?
+> >>
+> >> I think passing around a function pointer to *only* communicate 1 bit =
+of
+> >> information is a _bit_ overkill here.
+> >>
+> >> Simply replacing the bool with:
+> >>
+> >> enum sgx_reclaim {
+> >> 	SGX_NO_RECLAIM,
+> >> 	SGX_DO_RECLAIM
+> >> };
+> >>
+> >> would do the same thing.  Right?
+> >>
+> >> Are you sure you want a function pointer for this?
+> >
+> > To look this in context I drafted quickly two branches representing
+> > imaginary next version of the patch set.
+> >
+> > I guess this would simpler and totally sufficient approach.
+> >
+> > With this approach I'd then change also:
+> >
+> > [PATCH v9 04/15] x86/sgx: Implement basic EPC misc cgroup functionality
+> >
+> > And add the enum-parameter already in that patch with just "no reclaim"
+> > enum. I.e. then 10/15 will add only "do reclaim" and the new
+> > functionality.
+> >
+> > BR, Jarkko
+> >
+>
+> Thanks. My understanding is:
+>
+> 1) For this patch, replace the boolean with the enum as Dave suggested. N=
+o =20
+> two versions of the same functions. And this is a prerequisite for the =
+=20
+> cgroup series, positioned before [PATCH v9 04/15]
+>
+> 2) For [PATCH v9 04/15], pass a hard coded SGX_NO_RECLAIM to =20
+> sgx_epc_cg_try_charge() from sgx_alloc_epc_page().
 
-This commit adds 5V fixed power regulator and CPU regulators to Khadas
-Edge 2.
+Yup, this will make the whole patch set also a bit leaner as the API
+does not change in the middle.
 
-Signed-off-by: Muhammed Efe Cetin <efectn@protonmail.com>
----
- .../dts/rockchip/rk3588s-khadas-edge2.dts     | 81 +++++++++++++++++++
- 1 file changed, 81 insertions(+)
+>
+> 3) For [PATCH v9 10/15], remove the hard coded value, pass the reclaim =
+=20
+> enum parameter value from sgx_alloc_epc_page() to  sgx_epc_cg_try_charge(=
+) =20
+> and add the reclaim logic.
+>
+> I'll send patches soon. But please let me know if I misunderstood.
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3588s-khadas-edge2.dts b/arch/arm64/boot/dts/rockchip/rk3588s-khadas-edge2.dts
-index f53e993c785e..1d1ce70a0f3a 100644
---- a/arch/arm64/boot/dts/rockchip/rk3588s-khadas-edge2.dts
-+++ b/arch/arm64/boot/dts/rockchip/rk3588s-khadas-edge2.dts
-@@ -17,6 +17,87 @@ aliases {
- 	chosen {
- 		stdout-path = "serial2:1500000n8";
- 	};
-+
-+	vcc5v0_sys: vcc5v0-sys-regulator {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vcc5v0_sys";
-+		regulator-always-on;
-+		regulator-boot-on;
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+	};
-+};
-+
-+&cpu_b0 {
-+	cpu-supply = <&vdd_cpu_big0_s0>;
-+};
-+
-+&cpu_b1 {
-+	cpu-supply = <&vdd_cpu_big0_s0>;
-+};
-+
-+&cpu_b2 {
-+	cpu-supply = <&vdd_cpu_big1_s0>;
-+};
-+
-+&cpu_b3 {
-+	cpu-supply = <&vdd_cpu_big1_s0>;
-+};
-+
-+&cpu_l0 {
-+	cpu-supply = <&vdd_cpu_lit_s0>;
-+};
-+
-+&cpu_l1 {
-+	cpu-supply = <&vdd_cpu_lit_s0>;
-+};
-+
-+&cpu_l2 {
-+	cpu-supply = <&vdd_cpu_lit_s0>;
-+};
-+
-+&cpu_l3 {
-+	cpu-supply = <&vdd_cpu_lit_s0>;
-+};
-+
-+&i2c0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&i2c0m2_xfer>;
-+	status = "okay";
-+
-+	vdd_cpu_big0_s0: regulator@42 {
-+		compatible = "rockchip,rk8602";
-+		reg = <0x42>;
-+		fcs,suspend-voltage-selector = <1>;
-+		regulator-name = "vdd_cpu_big0_s0";
-+		regulator-always-on;
-+		regulator-boot-on;
-+		regulator-min-microvolt = <550000>;
-+		regulator-max-microvolt = <1050000>;
-+		regulator-ramp-delay = <2300>;
-+		vin-supply = <&vcc5v0_sys>;
-+
-+		regulator-state-mem {
-+			regulator-off-in-suspend;
-+		};
-+	};
-+
-+	vdd_cpu_big1_s0: regulator@43 {
-+		compatible = "rockchip,rk8603", "rockchip,rk8602";
-+		reg = <0x43>;
-+		fcs,suspend-voltage-selector = <1>;
-+		regulator-name = "vdd_cpu_big1_s0";
-+		regulator-always-on;
-+		regulator-boot-on;
-+		regulator-min-microvolt = <550000>;
-+		regulator-max-microvolt = <1050000>;
-+		regulator-ramp-delay = <2300>;
-+		vin-supply = <&vcc5v0_sys>;
-+
-+		regulator-state-mem {
-+			regulator-off-in-suspend;
-+		};
-+	};
- };
- 
- &sdhci {
--- 
-2.43.1
 
+BR, Jarkko
