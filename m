@@ -1,208 +1,323 @@
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2061.outbound.protection.outlook.com [40.107.220.61])
+Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2493F2E647;
-	Mon, 19 Feb 2024 12:45:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.61
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708346735; cv=fail; b=Er9qmx9A5rUqKeDCeUjWVL7o/EU3adRRLprzDKTqa7/QrhbLaod09cXwr9RoNveRnTDjR4Y6x9/tcrhtoD1nH4vT0Yjp8E1K0+QexPJ4b7hW/hH2bdICxEm6VzBuhxi+EaIsxVTslw0ZDFTc6ZComzu7QAiAZf/Ac/hj9EJtFDI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708346735; c=relaxed/simple;
-	bh=Is4lY6G1qFh2OTRe/UGWjH+2ET45xwpGpSI/wF+vWQM=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=AWWetss1/hl+IslDwpxMEEdPwwLOsJvO8WUR918crZ9b8XK69Wd+QDWxxIIIfYBPw41klIGCDkHQVkeFg51F3ongykPzYQLbhXG9gmDIdvmdvfHpVNT+t9TEg5m/fxd7IvFW5wltzRk2NRln4ECTyTzgFnhY7KMGRsBPOsEA+1M=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=JYkfoEB+; arc=fail smtp.client-ip=40.107.220.61
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="JYkfoEB+"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=aH4YYjMpj6VfvfqvNAP56JIf7SOoQNPtsgkKXDA66eJOrcpUUF+/gQGd1WMA7yByGRZwfHcQEmUNQ9bjX3FnQsDwRAGCqC5UtemEu/8onxYCDeq3TUXeu99nPZvjSvqxYY2iUdpJTVX2mSpEocOABVM1wiLOa2WD73+IACdUwdlaN4dfxHNAwAmC8DFw+MDC3MV1DBoJaFjknstDG4U6nexW8dlc1d6JM8JK/fvEXHpjlps7xhOjbwbcME5MNrmSesa0JgW10g5y06t5CYVGZWYD4E++WWhMP1rAHJ3k4LRL0/UeCGjrMxJyStWPPiDIJ/jgdZ/LV4O8H14z/R9WVQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=GQl43IE71pNrbKZ184dB5OesS5z16NU+SBEe8StfGG0=;
- b=E69IlicZ8ICoXd4MR47M6/7rWJobg2NqmoXjNkynqfaT1qKngDFxeuduPaQV6sNA8EDg2HBDeilNBgfnZaVEICslFo6zFk/FqeDNALpXiqU7AyUnsHwcWwxFpYV10mupMrEarlEsPR3E0lFRsF30ezvwEdi7hS8GmkimRY/aShshzEzwcUSq6kOfkyM5oaqdct7ARocsMjTIzIgAmR+pPc4MzB3sDZKmmlrSWbuh7lDIZukKKaZZLYbwStDb5mqgoI3he3IfutSTARMQqThI3KN94+838NGKTuSzoA5XT+xPIMA56MX2U7lK3bSuddYo+2FobX89k3U/eBoeuAadYg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=GQl43IE71pNrbKZ184dB5OesS5z16NU+SBEe8StfGG0=;
- b=JYkfoEB++pDJfNeCDP/CSW1NJkS/AseCq5gB5MO7p/hdSMj157Dxe8waEjwrGUKh+i8ttI9UFTvU5bQz+Ry1LcMn+xhIJMDDHIt+QUs2D6XTcZcojyqoeKh241YFJxWBSLC2NZedPnyYMUds9OV3KxesdQa3eD4xufjrYZtfTSA=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from MN0PR12MB6101.namprd12.prod.outlook.com (2603:10b6:208:3cb::10)
- by PH7PR12MB5594.namprd12.prod.outlook.com (2603:10b6:510:134::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7316.19; Mon, 19 Feb
- 2024 12:45:28 +0000
-Received: from MN0PR12MB6101.namprd12.prod.outlook.com
- ([fe80::dd00:9ab5:4d11:2d1a]) by MN0PR12MB6101.namprd12.prod.outlook.com
- ([fe80::dd00:9ab5:4d11:2d1a%7]) with mapi id 15.20.7316.016; Mon, 19 Feb 2024
- 12:45:28 +0000
-Message-ID: <736af6b3-52c0-4b3a-bab1-07e04eb156ce@amd.com>
-Date: Mon, 19 Feb 2024 06:45:25 -0600
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/2] PCI: Disable D3cold on Asus B1400 PCI-NVMe bridge
-To: Daniel Drake <drake@endlessos.org>, david.e.box@linux.intel.com
-Cc: Bjorn Helgaas <helgaas@kernel.org>, tglx@linutronix.de, mingo@redhat.com,
- bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
- linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
- bhelgaas@google.com, rafael@kernel.org, lenb@kernel.org,
- linux-acpi@vger.kernel.org, linux@endlessos.org
-References: <20240207084452.9597-1-drake@endlessos.org>
- <20240207200538.GA912749@bhelgaas>
- <CAD8Lp47DjuAAxqwt+yKD22UNMyvqE00x0u+JeM74KO2OC+Otrg@mail.gmail.com>
- <CAD8Lp44-8WhPyOrd2dCWyG3rRuCqzJ-aZCH6b1r0kyhfcXJ8xg@mail.gmail.com>
- <9654146ac849bb00faf2fe963d3da94ad65003b8.camel@linux.intel.com>
- <CAD8Lp44tO_pz_HZmPOKUQ-LEQT=c856eH52xWL9nBtAtJwjL1g@mail.gmail.com>
- <CAD8Lp46dPtE12ai8srt9Bz3awnkkb1LZz_7FQuF57M=LaUSaCw@mail.gmail.com>
-Content-Language: en-US
-From: Mario Limonciello <mario.limonciello@amd.com>
-In-Reply-To: <CAD8Lp46dPtE12ai8srt9Bz3awnkkb1LZz_7FQuF57M=LaUSaCw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: DM6PR06CA0080.namprd06.prod.outlook.com
- (2603:10b6:5:336::13) To MN0PR12MB6101.namprd12.prod.outlook.com
- (2603:10b6:208:3cb::10)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10DCA2E65B;
+	Mon, 19 Feb 2024 12:45:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1708346752; cv=none; b=K79V1kZdBniJtkNTF8ClN2e+9VYaEcCn1RMyfsGVp0iQ35gWKWjNaknqheDZTHC5dt/SGlAJ7J/lDnnMFSD8+ubq6/z6cQZ5io0NCCbCXYdH05n/RTxB9zJ3elwX6SM2OVjQNVOifRiLkeK+2QF/t00D30lqOpeV9rxUnDbRReQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1708346752; c=relaxed/simple;
+	bh=0R/k68qA+muFbteM1o4YrRrqdkoWy77R+Re5DfjOkcU=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=W8kIT5Z/yzz0DtTj5UCddDugYcJ8B2XOOaa0YEqkRQUoteN+AnOCV7bGxLxSUDNf+xLEpHStsRlHNBdpiljpjUP/ENnzVx52gSihRMWvWLYfX/p/CgVdxPvIyoeJgpJGyHYf2KFEWxHRiDPTSkLS20G0hBL1U3gxzT+aMyuBW/k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=hisilicon.com; spf=pass smtp.mailfrom=hisilicon.com; arc=none smtp.client-ip=45.249.212.190
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=hisilicon.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hisilicon.com
+Received: from mail.maildlp.com (unknown [172.19.163.44])
+	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4TdhzV0H0Nz2BcyN;
+	Mon, 19 Feb 2024 20:43:34 +0800 (CST)
+Received: from kwepemi500006.china.huawei.com (unknown [7.221.188.68])
+	by mail.maildlp.com (Postfix) with ESMTPS id 348261400CB;
+	Mon, 19 Feb 2024 20:45:41 +0800 (CST)
+Received: from localhost.localdomain (10.67.165.2) by
+ kwepemi500006.china.huawei.com (7.221.188.68) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Mon, 19 Feb 2024 20:45:40 +0800
+From: Junxian Huang <huangjunxian6@hisilicon.com>
+To: <jgg@ziepe.ca>, <leon@kernel.org>
+CC: <linux-rdma@vger.kernel.org>, <linuxarm@huawei.com>,
+	<linux-kernel@vger.kernel.org>, <huangjunxian6@hisilicon.com>
+Subject: [PATCH for-next] RDMA/hns: Support userspace configuring congestion control algorithm with QP granularity
+Date: Mon, 19 Feb 2024 20:41:33 +0800
+Message-ID: <20240219124133.267519-1-huangjunxian6@hisilicon.com>
+X-Mailer: git-send-email 2.30.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MN0PR12MB6101:EE_|PH7PR12MB5594:EE_
-X-MS-Office365-Filtering-Correlation-Id: 84372b42-29e2-4c17-629c-08dc3148a69d
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	bJZpSdCl5jz3gIvI99JOuuW0ktt9GedVRVlDGyH9D15Om+1x1sXTwaKv4X4cZ6P4nbsJ7ScJUJlR0x8TP9qYC/xjEgSrwuatFsk6fJBR+XfuhCZ1jcbZV8kpIzsKF0s4KxckdkN6uaKFYjB3GMOhN1tr5cBiVKwRikV+7QCWm2cvJtV9lpiUtTSNXpLLGm2mjrcB//fCVc4AgpKG+s/oaD+006ZZj/b5zSuNfvJJR4zpGJGZ4hJ74dYYsNM5KmsGu3R0x5Z5AOM3VVEHfuZzQaOA1eLiWhwVnvukgZWHut+rYJ4d4eaL46FFHx3/Ak9uHE18lAO4h/tt0yYPokxxvp+jLOQSIW6Tm+RhlPEn9NhN0ljQA//2wOte957AON2mPKpMMBeNt2uM7tI0UNu6dNKsOLg2z+4/MICveTFMzUazv7PPfcECbl01Fn4zJj2bUoDM2TRfSXzFP3FLn+HQs75rjJTWYwPTJcTpQ1EvB5po3OwNtY7U0r5l65X34KeSywYc/t8+JzBeJEmz3j8gprTx9//DDzJUMK4xzHgrHiU=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?M1JiMGZ2b3M4NnllNHVNd1h3WGV4bGhwWFVLN1pDbTE0Wk1qQkYxbnVOTVVF?=
- =?utf-8?B?WFFBVXNFaElBVnNCb1g3VjFaZGRGVXBIMVpnNFVxWnlabUFTbldyVTBrdGxi?=
- =?utf-8?B?OW1RMzZDV3ljT1Exa1RRUDZIV01UZFdvQTdDeXRFNE1uUG9sSkwrd1dGOFFW?=
- =?utf-8?B?WVppOCtwalBmVVhqNzVZOHNnNmV5RVpVcC95cmtoK3F3SDdqRmdOWFU5ZVI5?=
- =?utf-8?B?VkpLeHZpS3JDM09QajgwamVxUDg0ME9KdVNTd2RoYjlPL05Nend4ZzJMcTNQ?=
- =?utf-8?B?dVljVWNadFc0c1Z6L21sVnFLL2RneG5RMGJFRVZRcDQ5UDdOTzFncEo2dW9p?=
- =?utf-8?B?aEtTa0VueTBLVFhleE84NzZ3b25uaGY4ZExxYzhxN0drTTRIdDg1UkE4VDZP?=
- =?utf-8?B?RmR4L1laK1E3Y1NQSGRiWjZaTFpSY0RTSE1uUTF5Z3IzNzV3bkI2TmxTaVVZ?=
- =?utf-8?B?K21rYjRPSTg0MUdIM21FMG1JbFpBd3FXeTF1OXdJdVhNSzNjWUFUUHFKT1RX?=
- =?utf-8?B?QjMzYjBUVXhNai9haEppVVFvSFYzeTI3dTFvQzN4RnA4MXlUOHR1UjgwUnBp?=
- =?utf-8?B?K1FERkNQVlBuZG5RTGdCOFdtbGxzYlRRYUU3ZVdGVjRZYnFnTjRMaVZHMmxH?=
- =?utf-8?B?djBRZXVRcC9JWE5wRkpnek1kRTd6ektpQUdXSklrNFU2amd1R2k0eHJqbGJr?=
- =?utf-8?B?ZUVXVlRqeGl2SlIxd2EvL1p1S0J4WkZLQm1jbUlqZDkzOHhsbjJ6Rnh3VS9t?=
- =?utf-8?B?S2VqN29jZFpTZnJnMkxkdmtrUW4xd25EZ0JoZU1xVmtITzQ1ZTN2WkNPTHpQ?=
- =?utf-8?B?R01qbzVMTHc2R0ZQU2xJSXAxWnlRRkZSWWkvYVZNaUdCYzhsZFpucWQvQ1Na?=
- =?utf-8?B?N05PeVZmUnJsaGZaZjVnWTA4UFEvaEhrc01uRXQ3RkI3NXJ5dHcvcldITlFP?=
- =?utf-8?B?czhJOTUzUWtFR21kSyt5M1RoOUVmeS9qbStLaVdkeFBEYnNlZThIdVhWY3M0?=
- =?utf-8?B?azdFVFlnL3NwZGcvWTZvOVp5aFhtRHdrUldwUXU2eFd0Znc5d2lXS0J5VktN?=
- =?utf-8?B?cE16THByeDNVbE40MHB4NUdrSWJtRkRvYmdkUjlwcnNSYnBiVUQvcGFheGIr?=
- =?utf-8?B?V01wUXlJc2o1QktHR1ZnczcyME5uNDcrMUQ5TXR0OXF0bm45cURXaUR6WkM0?=
- =?utf-8?B?RUE5eDlPTTE3NnAwYlZpRlQ1Q0dPTzh6eVIvejBZaFV5SGtvcVhxQ211SmU5?=
- =?utf-8?B?UVZNMVVvdUhSOGZDUUp5eEFuR0NXUnB5Nmw3MUpxNVpmMTNINVYydDFzVlB4?=
- =?utf-8?B?MURXSEplZDFmOXdXOVZPSVZqTWVJcmVTRWFHY0o0d00zK3pBdjRtQXJUOFVG?=
- =?utf-8?B?MTQwcnM1akdmM2RqTGZUdU1RK2liY0tBYlZUbkJTTFJrdlh1bmg0VEExV2FM?=
- =?utf-8?B?alNQeVlpdk9GRlV5aTJOWEc0Z0gzNi94RHNqMHFsNzl4ZnlPdUU5UDVWMHNY?=
- =?utf-8?B?VUVOblY5NEJsU3BUQkRYbytQVHpGN0RWaG9OZkVnc25RME84STZsSGw3dXNz?=
- =?utf-8?B?a05DWTlEcjlwdVJvZTlaeThzRXk0dkcwZjIxbTh0MU9XWFJ0WHltV1Y0Q2JZ?=
- =?utf-8?B?aTJ2SS9CTE9GVDlWaHh2bHlTZ3lEby9ueURqSXROeHBjUEl1Zk0xOHFYa21L?=
- =?utf-8?B?YWpoUGkxajVaL2FjNytyTThZRmFsaGpGWEErMVNwUzUvQTRRMTc3SlVZTnIz?=
- =?utf-8?B?em82MzRSUXlxVklpd0R2NWFRaDd0T3RmVlNyb2pkeFUrOHQ4cE9xV1dSL3di?=
- =?utf-8?B?V0pxKzh6cVRDbHBoV01vWmdyejhYamFtUC9GbXRpZThtUnpQZXZvZFl5MkF1?=
- =?utf-8?B?c1hkd0pnb2pzZ05TclMwa2EwS2VxWXBGa0NKUFJ0NTZKTkpELzg4ZitMMmtS?=
- =?utf-8?B?Q1RHcTR2ZlRmTkxtbWZGMGVMTFZrZlIrN2ZWQ0srTXpuaG9US1U0M2ZGRk82?=
- =?utf-8?B?NTFLL1ZwWkZFdnVNc084KzMzVmJFQlM5cnFXUkdsajg0OXlDTi84akRwU0RN?=
- =?utf-8?B?MjczUnd1VEUrYUNLZEo0dTBoSnNUU2luRlE0dCswQ05jdGdmR1k5d3c0NnN3?=
- =?utf-8?Q?XpFiw8izfQh+HG66AuEPApgdI?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 84372b42-29e2-4c17-629c-08dc3148a69d
-X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB6101.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Feb 2024 12:45:28.3889
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Jklx46Cmx0uk1vK3/xTgToq5xu2hsJhgKf3qIpRUpYuKTEJCUB32WJsc7Fabu7Z9J00iG5gIISF8L/wrigX4CA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB5594
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
+ kwepemi500006.china.huawei.com (7.221.188.68)
 
-On 2/19/2024 05:35, Daniel Drake wrote:
-> On Fri, Feb 9, 2024 at 9:36 AM Daniel Drake <drake@endlessos.org> wrote:
->> On Thu, Feb 8, 2024 at 5:57 PM David E. Box <david.e.box@linux.intel.com> wrote:
->>> This does look like a firmware bug. We've had reports of D3cold support missing
->>> when running in non-VMD mode on systems that were designed with VMD for Windows.
->>> These issues have been caught and addressed by OEMs during enabling of Linux
->>> systems. Does D3cold work in VMD mode?
->>
->> On Windows for the VMD=on case, we only tested this on a BIOS with
->> StorageD3Enable=0. The NVMe device and parent bridge stayed in D0 over
->> suspend, but that's exactly what the BIOS asked for, so it doesn't
->> really answer your question.
-> 
-> Tested on the original BIOS version with VMD=on: Windows leaves the
-> NVMe device (and parent bridge) in D0 during suspend (i.e. same result
-> as VMD=off).
-> 
-> On this setup, there are 2 devices with StorageD3Enable flags:
-> 
-> 1. \_SB.PC00.PEG0.PEGP._DSD has StorageD3Enable=1. This is set
-> regardless of the VMD setting at the BIOS level. This is the flag that
-> is causing us the headache in non-VMD mode where Linux then proceeds
-> to put devices into D3cold.
-> This PEGP device in the non-VMD configuration corresponds to the NVMe
-> storage device. PEG0 is the PCI root port at 00:06.0 (the one in
-> question in this thread), and PEGP is the child with address 0.
-> However in VMD mode, 00:06.0 is a dummy device (not a bridge) so this
-> PEGP device isn't going to be used by anything.
-> 
-> 2. \_SB.PC00.VMD0._DSD has StorageD3Enable=0. This VMD0 device is only
-> present when VMD is enabled in the BIOS. It is the companion for
-> 00:0e.0 which is the device that the vmd driver binds against. This
-> could be influencing Windows to leave the NVMe device in D0, but I
-> doubt it, because it can't explain why Windows would have the D0
-> behaviour when VMD=off, also this is a really strange place to put the
-> StorageD3Enable setting because it is not a storage device.
-> 
->> On Linux with VMD=on and StorageD3Enable=1, the NVMe storage device
->> and the VMD parent bridge are staying in D0 over suspend. I don't know
->> why this is, I would have expected at least D3hot.  However, given
->> that the NVMe device has no firmware_node under the VMD=on setup, I
->> believe there is no way it would enter D3cold because there's no
->> linkage to an ACPI device, so no available _PS3 or _PR0 or whatever is
->> the precise definition of D3cold.
-> 
-> Checked in more detail. In Linux, the NVMe device will only go into
-> D3hot/D3cold if the ACPI companion device has an explicit
-> StorageD3Enable=1. However, in VMD mode the NVMe storage device has no
-> ACPI companion. Code flow is nvme_pci_alloc_dev() -> acpi_storage_d3()
->   -> return false because no companion.
-> 
-> The VMD PCI bridge at 10000:e0:06.0 that is parent of the SATA & NVME
-> devices does have a companion \_SB.PC00.VMD0.PEG0
-> However, the SATA and NVME child devices do not have any ACPI
-> companion. I examined the logic of vmd_acpi_find_companion() and
-> determined that it is looking for devices with _ADR 80b8ffff (SATA)
-> and 8100ffff (NVME) and such devices do not exist in the ACPI tables.
-> 
-> Speculating a little, I guess this is also why Windows leaves the
-> device in D0 in VMD=on mode: it would only put the NVMe device in
-> D3hot/D3cold if it had a corresponding companion with
-> StorageD3Enable=1 and there isn't one of those. What's still unknown
-> is why it doesn't put the device in D3 in VMD=off mode because there
-> is a correctly placed StorageD3Enable=1 in that case.
-> 
-> Daniel
+Currently, congestion control algorithm is statically configured in
+FW, and all QPs use the same algorithm(except UD which has a fixed
+configuration of DCQCN). This is not flexible enough.
 
-Tangentially related, I've observed from multiple bug reports that 
-Windows will apply StorageD3Enable behavior to all storage devices in 
-the system even if "only one" has the property.  I would speculate that 
-the logic for Windows exists specifically in the Microsoft storage 
-drivers but is a "global boolean" for those drivers.  So perhaps when 
-VMD is enabled the Intel VMD driver is used instead of the Microsoft 
-storage driver so it doesn't have that logic.
+Support userspace configuring congestion control algorithm with QP
+granularity while creating QPs. If the algorithm is not specified in
+userspace, use the default one.
+
+Signed-off-by: Junxian Huang <huangjunxian6@hisilicon.com>
+---
+ drivers/infiniband/hw/hns/hns_roce_device.h | 19 ++++--
+ drivers/infiniband/hw/hns/hns_roce_hw_v2.c  | 14 +----
+ drivers/infiniband/hw/hns/hns_roce_hw_v2.h  |  3 +-
+ drivers/infiniband/hw/hns/hns_roce_main.c   |  3 +
+ drivers/infiniband/hw/hns/hns_roce_qp.c     | 68 +++++++++++++++++++++
+ include/uapi/rdma/hns-abi.h                 | 17 ++++++
+ 6 files changed, 107 insertions(+), 17 deletions(-)
+
+diff --git a/drivers/infiniband/hw/hns/hns_roce_device.h b/drivers/infiniband/hw/hns/hns_roce_device.h
+index 1d062c522d69..948fbf30e7d8 100644
+--- a/drivers/infiniband/hw/hns/hns_roce_device.h
++++ b/drivers/infiniband/hw/hns/hns_roce_device.h
+@@ -594,11 +594,19 @@ struct hns_roce_work {
+ 	u32 queue_num;
+ };
+ 
++enum hns_roce_scc_algo {
++	HNS_ROCE_SCC_ALGO_DCQCN = 0,
++	HNS_ROCE_SCC_ALGO_LDCP,
++	HNS_ROCE_SCC_ALGO_HC3,
++	HNS_ROCE_SCC_ALGO_DIP,
++	HNS_ROCE_SCC_ALGO_TOTAL,
++};
++
+ enum hns_roce_cong_type {
+-	CONG_TYPE_DCQCN,
+-	CONG_TYPE_LDCP,
+-	CONG_TYPE_HC3,
+-	CONG_TYPE_DIP,
++	CONG_TYPE_DCQCN = 1 << HNS_ROCE_SCC_ALGO_DCQCN,
++	CONG_TYPE_LDCP = 1 << HNS_ROCE_SCC_ALGO_LDCP,
++	CONG_TYPE_HC3 = 1 << HNS_ROCE_SCC_ALGO_HC3,
++	CONG_TYPE_DIP = 1 << HNS_ROCE_SCC_ALGO_DIP,
+ };
+ 
+ struct hns_roce_qp {
+@@ -845,7 +853,8 @@ struct hns_roce_caps {
+ 	u16		default_aeq_period;
+ 	u16		default_aeq_arm_st;
+ 	u16		default_ceq_arm_st;
+-	enum hns_roce_cong_type cong_type;
++	u8		cong_cap;
++	enum hns_roce_cong_type default_cong_type;
+ };
+ 
+ enum hns_roce_device_state {
+diff --git a/drivers/infiniband/hw/hns/hns_roce_hw_v2.c b/drivers/infiniband/hw/hns/hns_roce_hw_v2.c
+index 42e28586cefa..21532f213b0f 100644
+--- a/drivers/infiniband/hw/hns/hns_roce_hw_v2.c
++++ b/drivers/infiniband/hw/hns/hns_roce_hw_v2.c
+@@ -2209,11 +2209,12 @@ static int hns_roce_query_caps(struct hns_roce_dev *hr_dev)
+ 	caps->max_wqes = 1 << le16_to_cpu(resp_c->sq_depth);
+ 
+ 	caps->num_srqs = 1 << hr_reg_read(resp_d, PF_CAPS_D_NUM_SRQS);
+-	caps->cong_type = hr_reg_read(resp_d, PF_CAPS_D_CONG_TYPE);
++	caps->cong_cap = hr_reg_read(resp_d, PF_CAPS_D_CONG_CAP);
+ 	caps->max_srq_wrs = 1 << le16_to_cpu(resp_d->srq_depth);
+ 	caps->ceqe_depth = 1 << hr_reg_read(resp_d, PF_CAPS_D_CEQ_DEPTH);
+ 	caps->num_comp_vectors = hr_reg_read(resp_d, PF_CAPS_D_NUM_CEQS);
+ 	caps->aeqe_depth = 1 << hr_reg_read(resp_d, PF_CAPS_D_AEQ_DEPTH);
++	caps->default_cong_type = hr_reg_read(resp_d, PF_CAPS_D_DEFAULT_ALG);
+ 	caps->reserved_pds = hr_reg_read(resp_d, PF_CAPS_D_RSV_PDS);
+ 	caps->num_uars = 1 << hr_reg_read(resp_d, PF_CAPS_D_NUM_UARS);
+ 	caps->reserved_qps = hr_reg_read(resp_d, PF_CAPS_D_RSV_QPS);
+@@ -4737,14 +4738,8 @@ enum {
+ static int check_cong_type(struct ib_qp *ibqp,
+ 			   struct hns_roce_congestion_algorithm *cong_alg)
+ {
+-	struct hns_roce_dev *hr_dev = to_hr_dev(ibqp->device);
+ 	struct hns_roce_qp *hr_qp = to_hr_qp(ibqp);
+ 
+-	if (ibqp->qp_type == IB_QPT_UD || ibqp->qp_type == IB_QPT_GSI)
+-		hr_qp->cong_type = CONG_TYPE_DCQCN;
+-	else
+-		hr_qp->cong_type = hr_dev->caps.cong_type;
+-
+ 	/* different congestion types match different configurations */
+ 	switch (hr_qp->cong_type) {
+ 	case CONG_TYPE_DCQCN:
+@@ -4772,9 +4767,6 @@ static int check_cong_type(struct ib_qp *ibqp,
+ 		cong_alg->wnd_mode_sel = WND_LIMIT;
+ 		break;
+ 	default:
+-		ibdev_warn(&hr_dev->ib_dev,
+-			   "invalid type(%u) for congestion selection.\n",
+-			   hr_qp->cong_type);
+ 		hr_qp->cong_type = CONG_TYPE_DCQCN;
+ 		cong_alg->alg_sel = CONG_DCQCN;
+ 		cong_alg->alg_sub_sel = UNSUPPORT_CONG_LEVEL;
+@@ -4807,7 +4799,7 @@ static int fill_cong_field(struct ib_qp *ibqp, const struct ib_qp_attr *attr,
+ 		return ret;
+ 
+ 	hr_reg_write(context, QPC_CONG_ALGO_TMPL_ID, hr_dev->cong_algo_tmpl_id +
+-		     hr_qp->cong_type * HNS_ROCE_CONG_SIZE);
++		     ilog2(hr_qp->cong_type) * HNS_ROCE_CONG_SIZE);
+ 	hr_reg_clear(qpc_mask, QPC_CONG_ALGO_TMPL_ID);
+ 	hr_reg_write(&context->ext, QPCEX_CONG_ALG_SEL, cong_field.alg_sel);
+ 	hr_reg_clear(&qpc_mask->ext, QPCEX_CONG_ALG_SEL);
+diff --git a/drivers/infiniband/hw/hns/hns_roce_hw_v2.h b/drivers/infiniband/hw/hns/hns_roce_hw_v2.h
+index cd97cbee682a..359a74672ba1 100644
+--- a/drivers/infiniband/hw/hns/hns_roce_hw_v2.h
++++ b/drivers/infiniband/hw/hns/hns_roce_hw_v2.h
+@@ -1214,12 +1214,13 @@ struct hns_roce_query_pf_caps_d {
+ #define PF_CAPS_D_RQWQE_HOP_NUM PF_CAPS_D_FIELD_LOC(21, 20)
+ #define PF_CAPS_D_EX_SGE_HOP_NUM PF_CAPS_D_FIELD_LOC(23, 22)
+ #define PF_CAPS_D_SQWQE_HOP_NUM PF_CAPS_D_FIELD_LOC(25, 24)
+-#define PF_CAPS_D_CONG_TYPE PF_CAPS_D_FIELD_LOC(29, 26)
++#define PF_CAPS_D_CONG_CAP PF_CAPS_D_FIELD_LOC(29, 26)
+ #define PF_CAPS_D_CEQ_DEPTH PF_CAPS_D_FIELD_LOC(85, 64)
+ #define PF_CAPS_D_NUM_CEQS PF_CAPS_D_FIELD_LOC(95, 86)
+ #define PF_CAPS_D_AEQ_DEPTH PF_CAPS_D_FIELD_LOC(117, 96)
+ #define PF_CAPS_D_AEQ_ARM_ST PF_CAPS_D_FIELD_LOC(119, 118)
+ #define PF_CAPS_D_CEQ_ARM_ST PF_CAPS_D_FIELD_LOC(121, 120)
++#define PF_CAPS_D_DEFAULT_ALG PF_CAPS_D_FIELD_LOC(127, 122)
+ #define PF_CAPS_D_RSV_PDS PF_CAPS_D_FIELD_LOC(147, 128)
+ #define PF_CAPS_D_NUM_UARS PF_CAPS_D_FIELD_LOC(155, 148)
+ #define PF_CAPS_D_RSV_QPS PF_CAPS_D_FIELD_LOC(179, 160)
+diff --git a/drivers/infiniband/hw/hns/hns_roce_main.c b/drivers/infiniband/hw/hns/hns_roce_main.c
+index b55fe6911f9f..1dc60c2b2b7a 100644
+--- a/drivers/infiniband/hw/hns/hns_roce_main.c
++++ b/drivers/infiniband/hw/hns/hns_roce_main.c
+@@ -394,6 +394,9 @@ static int hns_roce_alloc_ucontext(struct ib_ucontext *uctx,
+ 			resp.config |= HNS_ROCE_RSP_CQE_INLINE_FLAGS;
+ 	}
+ 
++	if (hr_dev->pci_dev->revision >= PCI_REVISION_ID_HIP09)
++		resp.congest_type = hr_dev->caps.cong_cap;
++
+ 	ret = hns_roce_uar_alloc(hr_dev, &context->uar);
+ 	if (ret)
+ 		goto error_out;
+diff --git a/drivers/infiniband/hw/hns/hns_roce_qp.c b/drivers/infiniband/hw/hns/hns_roce_qp.c
+index 31b147210688..350a9b78ac6b 100644
+--- a/drivers/infiniband/hw/hns/hns_roce_qp.c
++++ b/drivers/infiniband/hw/hns/hns_roce_qp.c
+@@ -1004,6 +1004,68 @@ static void free_kernel_wrid(struct hns_roce_qp *hr_qp)
+ 	kfree(hr_qp->sq.wrid);
+ }
+ 
++static void default_congest_type(struct hns_roce_dev *hr_dev,
++				 struct hns_roce_qp *hr_qp)
++{
++	if (hr_qp->ibqp.qp_type == IB_QPT_UD ||
++	    hr_qp->ibqp.qp_type == IB_QPT_GSI)
++		hr_qp->cong_type = CONG_TYPE_DCQCN;
++	else
++		hr_qp->cong_type = 1 << hr_dev->caps.default_cong_type;
++}
++
++static int set_congest_type(struct hns_roce_qp *hr_qp,
++			    struct hns_roce_ib_create_qp *ucmd)
++{
++	struct hns_roce_dev *hr_dev = to_hr_dev(hr_qp->ibqp.device);
++
++	switch (ucmd->cong_type_flags) {
++	case HNS_ROCE_CREATE_QP_FLAGS_DCQCN:
++		hr_qp->cong_type = CONG_TYPE_DCQCN;
++		break;
++	case HNS_ROCE_CREATE_QP_FLAGS_LDCP:
++		hr_qp->cong_type = CONG_TYPE_LDCP;
++		break;
++	case HNS_ROCE_CREATE_QP_FLAGS_HC3:
++		hr_qp->cong_type = CONG_TYPE_HC3;
++		break;
++	case HNS_ROCE_CREATE_QP_FLAGS_DIP:
++		hr_qp->cong_type = CONG_TYPE_DIP;
++		break;
++	default:
++		hr_qp->cong_type = 0;
++	}
++
++	if (!(hr_qp->cong_type & hr_dev->caps.cong_cap)) {
++		ibdev_err_ratelimited(&hr_dev->ib_dev,
++				      "Unsupported congest type 0x%x, cong_cap = 0x%x.\n",
++				      hr_qp->cong_type, hr_dev->caps.cong_cap);
++		return -EOPNOTSUPP;
++	}
++
++	if (hr_qp->ibqp.qp_type == IB_QPT_UD &&
++	    !(hr_qp->cong_type & CONG_TYPE_DCQCN)) {
++		ibdev_err_ratelimited(&hr_dev->ib_dev,
++				      "Only DCQCN supported for UD. Unsupported congest type 0x%x.\n",
++				      hr_qp->cong_type);
++		return -EOPNOTSUPP;
++	}
++
++	return 0;
++}
++
++static int set_congest_param(struct hns_roce_dev *hr_dev,
++			     struct hns_roce_qp *hr_qp,
++			     struct hns_roce_ib_create_qp *ucmd)
++{
++	if (ucmd->comp_mask & HNS_ROCE_CREATE_QP_MASK_CONGEST_TYPE)
++		return set_congest_type(hr_qp, ucmd);
++
++	default_congest_type(hr_dev, hr_qp);
++
++	return 0;
++}
++
+ static int set_qp_param(struct hns_roce_dev *hr_dev, struct hns_roce_qp *hr_qp,
+ 			struct ib_qp_init_attr *init_attr,
+ 			struct ib_udata *udata,
+@@ -1043,6 +1105,10 @@ static int set_qp_param(struct hns_roce_dev *hr_dev, struct hns_roce_qp *hr_qp,
+ 			ibdev_err(ibdev,
+ 				  "failed to set user SQ size, ret = %d.\n",
+ 				  ret);
++
++		ret = set_congest_param(hr_dev, hr_qp, ucmd);
++		if (ret)
++			return ret;
+ 	} else {
+ 		if (hr_dev->pci_dev->revision >= PCI_REVISION_ID_HIP09)
+ 			hr_qp->config = HNS_ROCE_EXSGE_FLAGS;
+@@ -1051,6 +1117,8 @@ static int set_qp_param(struct hns_roce_dev *hr_dev, struct hns_roce_qp *hr_qp,
+ 			ibdev_err(ibdev,
+ 				  "failed to set kernel SQ size, ret = %d.\n",
+ 				  ret);
++
++		default_congest_type(hr_dev, hr_qp);
+ 	}
+ 
+ 	return ret;
+diff --git a/include/uapi/rdma/hns-abi.h b/include/uapi/rdma/hns-abi.h
+index c996e151081e..757095a6c6fc 100644
+--- a/include/uapi/rdma/hns-abi.h
++++ b/include/uapi/rdma/hns-abi.h
+@@ -81,6 +81,9 @@ struct hns_roce_ib_create_qp {
+ 	__u8    sq_no_prefetch;
+ 	__u8    reserved[5];
+ 	__aligned_u64 sdb_addr;
++	__aligned_u64 comp_mask; /* Use enum hns_roce_create_qp_comp_mask */
++	__aligned_u64 create_flags;
++	__aligned_u64 cong_type_flags;
+ };
+ 
+ enum hns_roce_qp_cap_flags {
+@@ -107,6 +110,17 @@ enum {
+ 	HNS_ROCE_RSP_CQE_INLINE_FLAGS = 1 << 2,
+ };
+ 
++enum hns_roce_congest_type_flags {
++	HNS_ROCE_CREATE_QP_FLAGS_DCQCN = 1 << 0,
++	HNS_ROCE_CREATE_QP_FLAGS_LDCP = 1 << 1,
++	HNS_ROCE_CREATE_QP_FLAGS_HC3 = 1 << 2,
++	HNS_ROCE_CREATE_QP_FLAGS_DIP = 1 << 3,
++};
++
++enum hns_roce_create_qp_comp_mask {
++	HNS_ROCE_CREATE_QP_MASK_CONGEST_TYPE = 1 << 1,
++};
++
+ struct hns_roce_ib_alloc_ucontext_resp {
+ 	__u32	qp_tab_size;
+ 	__u32	cqe_size;
+@@ -114,6 +128,9 @@ struct hns_roce_ib_alloc_ucontext_resp {
+ 	__u32	reserved;
+ 	__u32	config;
+ 	__u32	max_inline_data;
++	__u8	reserved0;
++	__u8	congest_type;
++	__u8	reserved1[6];
+ };
+ 
+ struct hns_roce_ib_alloc_ucontext {
+-- 
+2.30.0
+
