@@ -1,127 +1,151 @@
-Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.3ffe.de (0001.3ffe.de [159.69.201.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 747ED364C6
-	for <linux-kernel@vger.kernel.org>; Mon, 19 Feb 2024 13:22:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D24882E419
+	for <linux-kernel@vger.kernel.org>; Mon, 19 Feb 2024 13:26:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.201.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708348937; cv=none; b=nh+ekG/oSA1kkEHHnBp/QCOXU1dGhXJisBA5CDjftiN4xfzNio3mRxfg6QclytiijM7Ny7auVIlQ9yapkatya7XX0sOvViwMyEP0ylyFVmvAtLLrc8Iym+J9mnPCZPTrZ5m+rQj7VObopuCJneIcTFFzF5vh6AGcytvFv4SvkMs=
+	t=1708349194; cv=none; b=ODB6huVh/rtu7dAur4tyWQMxBK1b1WzMBq4VSkVrN5DE0rF0QIFJjjRr88PzKRvY21gcCbeVCXRDK1egTfrIBF/BjjPROpFu8u2RZ42ueoyL+Py+6wgXzGiCxID73SSSd2eOCfZQ4h3HHmGzMEfTdKADhrYHrQ97EipOAeSa21E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708348937; c=relaxed/simple;
-	bh=7gbzT0bFlv7Vx+qBIh0t/oLWx0mTJwXdNjLV3zbFmRU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=vA1oy3LDYSRZLgAUrCbDevM/X42YlRpcI/uEZqdvstxmS+Y8Jj9N2ICf1kxRDY5Ph7BLvqvVq1uU9xI8lCma6oCcmpA8EQg6NqJXoBQkVIp46Qj3dI1UFgIAnI08eFKk6omYWoOvAwFDgIvyG2ZS7TF/a1Zb+5EozwDjtAVnv6g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=dxKxvUE/; arc=none smtp.client-ip=209.85.208.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1708349194; c=relaxed/simple;
+	bh=DmXfhNNa4p9DS5Y9vKc8A9iqo7N58OEkUnvPWf30quo=;
+	h=Content-Type:Date:Message-Id:Subject:Cc:From:To:References:
+	 In-Reply-To; b=TeMam+9+GNflS7zhEpFqxZpRty+UCjdJq4f6Kc/LMq0XlGIi2vHrqt6UDtr0SYqnfcCMrtJgkQW2Kt+M8MNBsENyJkbAlwwhPhsHOKiL9vLbecWfMB/2pAo9kQWN9yxSxy44BvHFQt9ZNq0v7TKzNyDgOUf2sCPNJw0BGIQvfeU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=walle.cc; spf=pass smtp.mailfrom=walle.cc; dkim=pass (2048-bit key) header.d=walle.cc header.i=@walle.cc header.b=YMLsfnrS; arc=none smtp.client-ip=159.69.201.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=walle.cc
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=walle.cc
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dxKxvUE/"
-Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-5647f4aac6aso7092a12.0
-        for <linux-kernel@vger.kernel.org>; Mon, 19 Feb 2024 05:22:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1708348934; x=1708953734; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=XR/z2c5RZraUzauY2z56Ou90i3GAu2aYjsgtVMp28As=;
-        b=dxKxvUE/0uVP0R13Uri2E2vM7/cRDswa7hV7Wiekqx6dUuev7d3+nG9k/Cej0NhUnO
-         AyGz4duGKTbwCsEzytJw1Y1TFf7PtrdUmHJBxOdUfAY9XWwjOe2eySWLCWhDHBMrXpl/
-         if6HP1itS5gN6ErgWppcURwDjhjvjtVDF1SVb8fOtYIqcbsbJchs3C8TNfDCXLibzhqs
-         Lylm9vkW93wM5yLV8kz/K2D0vvceD/hp/ycYCOJH3VHS56cn9lpS214CDOTbuaVneHah
-         OipvVonwqCasJ+RiBnrg63+bpQ5E46+k8PJio7By6K7UVl0TLop6ZGHUa39J65vquGmP
-         VRZw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708348934; x=1708953734;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=XR/z2c5RZraUzauY2z56Ou90i3GAu2aYjsgtVMp28As=;
-        b=V28IApBLfhRI9ConvfPu7sGuMe/EtPnwo4ENLxbInUECGSI8aJzyP6/O2DX/eDEvl3
-         TH12W5iqt28ecNnO6sZrUZ4ULYXPRpRk5LpSgFUB7Y75sGLwpCFCE5BsfKQrSWA5zEam
-         8YdDNTabf+poYSEIXa8vwriCj6qYNxk+RU4qj1DXX0tLQsjsKAPcJM6yu8DvjsCtDcEj
-         e4T5iCIIPyuk/R52RVBvTwSC+mDYyqpw0oWSP8uhZWMlgmo3i5UTSgKt3zWhiusb44sU
-         Jp4g0oVMP2eyocis2zDCrHJ9VhlOpq6S7ZLDpQvPUKPY6oZX1J2AGkYkP+wvN3EHz5hD
-         jZnA==
-X-Forwarded-Encrypted: i=1; AJvYcCXZi61J9+qrK60whtroraH23hNvu3LE1V8VYt80PHwEllnx7D1k8VY39KzVvfj0iuj3WXJeqNw8rDJY0TXtTJnXQxqk45XdZ1+cqCEd
-X-Gm-Message-State: AOJu0YxDn5T76+nTraGYuDswyJ5VrW0YRWKDunekduZQx4UxBy8Yfgv2
-	DqLNM+arQX9F+9K/SPumjRt5L3BA4if9rGHVqSXMudWuDBx00jrR753cfDKDKtUDuiZnQIy/hlw
-	vx1W9UR0EKNRN28eEdDGF5GNtkTEJvKr0sBOLBPDmtW9gq9RXqfQl
-X-Google-Smtp-Source: AGHT+IFPRzTY5t73jcifT3Rn47qUnlB2DlUaCnDpkGWwzhR6nZzTzUdbK/OxBtetxy0o+T2EaUFM+sbLktcNGyhaz00=
-X-Received: by 2002:a05:6402:1649:b0:564:55e5:6ee1 with SMTP id
- s9-20020a056402164900b0056455e56ee1mr140228edx.2.1708348933587; Mon, 19 Feb
- 2024 05:22:13 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=walle.cc header.i=@walle.cc header.b="YMLsfnrS"
+Received: from localhost (unknown [213.135.10.150])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail.3ffe.de (Postfix) with ESMTPSA id 62092D4B;
+	Mon, 19 Feb 2024 14:26:23 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2022082101;
+	t=1708349183;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:content-type:content-type:in-reply-to:in-reply-to:
+	 references:references; bh=3goiUfn8w3t5SmwT7BNMO9ZLi9SIvXz1B37HAHXy168=;
+	b=YMLsfnrSrY4bAu2cw7WQDxprkuP2+L6O7Rb3YAGQyRiFTOnjk1zDva9BfpMygySCzD9egp
+	hDjesE0DYscg4l0oRKszc6w6rZgNiGyuxN2aTtvhOCDJkeC0cP+VHzlms6khUjCMly/XWC
+	mKK712t1vB/V4YRpy2i4gr6+v8ihGvT7u2ALig4yKpLPG+rRKyjLwG8e2ZW+ZvmSDGhSSu
+	fqckLBMGiKwURMyVC8QziUEdPxoxLNY/tVi7WRlKYFoAtIGBQU6bCinv0EP9uek9j2Qx71
+	A3QUglNyIsw14kQbY9NoHF49GOVt0cp0oC5DpspFn3nSJ78eV4yQ1CBOSXmsWw==
+Content-Type: multipart/signed;
+ boundary=4d612e85c44be11edd360cd91b974ed96a303e8b11425e6de3e0efa4c955;
+ micalg=pgp-sha256; protocol="application/pgp-signature"
+Date: Mon, 19 Feb 2024 14:26:16 +0100
+Message-Id: <CZ938PEUZ1JQ.2DJE7C03HI9OO@walle.cc>
+Subject: Re: [RFC PATCH] nvmem: core: add sysfs cell write support
+Cc: <srinivas.kandagatla@linaro.org>, <gregkh@linuxfoundation.org>,
+ <rafal@milecki.pl>, <linux-kernel@vger.kernel.org>, <kernel@pengutronix.de>
+From: "Michael Walle" <michael@walle.cc>
+To: "Marco Felsch" <m.felsch@pengutronix.de>, "Miquel Raynal"
+ <miquel.raynal@bootlin.com>
+X-Mailer: aerc 0.16.0
+References: <20240215211401.1201004-1-m.felsch@pengutronix.de>
+ <CZ6DFL6061FS.2WMDPMSSBXX8S@walle.cc>
+ <20240216100750.zxl4wncbgpulr2cc@pengutronix.de>
+ <20240219120414.32395299@xps-13>
+ <20240219115358.xui5fpoisvsubdyb@pengutronix.de>
+In-Reply-To: <20240219115358.xui5fpoisvsubdyb@pengutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20240218073501.54555-1-guixiongwei@gmail.com> <2024021825-skiing-trustee-a56a@gregkh>
-In-Reply-To: <2024021825-skiing-trustee-a56a@gregkh>
-From: Jann Horn <jannh@google.com>
-Date: Mon, 19 Feb 2024 14:21:37 +0100
-Message-ID: <CAG48ez32+y7jK5e7WHJxD9aP20WHLmHiXX8U8F=jBtFO3qakAQ@mail.gmail.com>
-Subject: Re: [RESEND RFC] kernel/ksysfs.c: restrict /sys/kernel/notes to root access
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: Guixiong Wei <guixiongwei@gmail.com>, linux-hardening@vger.kernel.org, jgross@suse.com, 
-	boris.ostrovsky@oracle.com, linux-kernel@vger.kernel.org, 
-	Guixiong Wei <weiguixiong@bytedance.com>
-Content-Type: text/plain; charset="UTF-8"
+
+--4d612e85c44be11edd360cd91b974ed96a303e8b11425e6de3e0efa4c955
+Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
 
-On Sun, Feb 18, 2024 at 8:47=E2=80=AFAM Greg KH <gregkh@linuxfoundation.org=
-> wrote:
+On Mon Feb 19, 2024 at 12:53 PM CET, Marco Felsch wrote:
+> On 24-02-19, Miquel Raynal wrote:
+> > Hi Marco,
+> >=20
+> > m.felsch@pengutronix.de wrote on Fri, 16 Feb 2024 11:07:50 +0100:
+> >=20
+> > > Hi Michael,
+> > >=20
+> > > On 24-02-16, Michael Walle wrote:
+> > > > Hi,
+> > > >=20
+> > > > On Thu Feb 15, 2024 at 10:14 PM CET, Marco Felsch wrote: =20
+> > > > > @@ -432,6 +466,7 @@ static int nvmem_populate_sysfs_cells(struct =
+nvmem_device *nvmem)
+> > > > >  	struct bin_attribute **cells_attrs, *attrs;
+> > > > >  	struct nvmem_cell_entry *entry;
+> > > > >  	unsigned int ncells =3D 0, i =3D 0;
+> > > > > +	umode_t mode;
+> > > > >  	int ret =3D 0;
+> > > > > =20
+> > > > >  	mutex_lock(&nvmem_mutex);
+> > > > > @@ -456,15 +491,18 @@ static int nvmem_populate_sysfs_cells(struc=
+t nvmem_device *nvmem)
+> > > > >  		goto unlock_mutex;
+> > > > >  	}
+> > > > > =20
+> > > > > +	mode =3D nvmem_bin_attr_get_umode(nvmem);
+> > > > > +
+> > > > >  	/* Initialize each attribute to take the name and size of the c=
+ell */
+> > > > >  	list_for_each_entry(entry, &nvmem->cells, node) {
+> > > > >  		sysfs_bin_attr_init(&attrs[i]);
+> > > > >  		attrs[i].attr.name =3D devm_kasprintf(&nvmem->dev, GFP_KERNEL,
+> > > > >  						    "%s@%x", entry->name,
+> > > > >  						    entry->offset);
+> > > > > -		attrs[i].attr.mode =3D 0444; =20
+> > > >=20
+> > > > cells are not writable if there is a read post process hook, see
+> > > > __nvmem_cell_entry_write().
+> > > >=20
+> > > > if (entry->read_post_processing)
+> > > > 	mode &=3D ~0222; =20
+> > >=20
+> > > good point, thanks for the hint :) I will add this and send a non-rfc
+> > > version if write-support is something you would like to have.
+> >=20
+> > I like the idea but, what about mtd devices (and soon maybe UBI
+> > devices)? This may only work on EEPROM-like devices I guess, where each
+> > area is fully independent and where no erasure is actually expected.
 >
-> On Sun, Feb 18, 2024 at 03:35:01PM +0800, Guixiong Wei wrote:
-> > From: Guixiong Wei <weiguixiong@bytedance.com>
-> >
-> > Restrict non-privileged user access to /sys/kernel/notes to
-> > avoid security attack.
-> >
-> > The non-privileged users have read access to notes. The notes
-> > expose the load address of startup_xen. This address could be
-> > used to bypass KASLR.
+> For MTD I would say that you need to ensure that you need to align the
+> cells correctly. The cell-write should handle the page erase/write cycle
+> properly. E.g. an SPI-NOR need to align the cells to erase-page size or
+> the nvmem-cell-write need to read-copy-update the cells if they are not
+> erase-paged aligned.
 >
-> How can it be used to bypass it?
+> Regarding UBI(FS) I'm not sure if this is required at all since you have
+> an filesystem. IMHO nvmem-cells are very lowelevel and are not made for
+> filesystem backed backends.
 >
-> KASLR is, for local users, pretty much not an issue, as that's not what
-> it protects from, only remote ones.
->
-> > For example, the startup_xen is built at 0xffffffff82465180 and
-> > commit_creds is built at 0xffffffff810ad570 which could read from
-> > the /boot/System.map. And the loaded address of startup_xen is
-> > 0xffffffffbc265180 which read from /sys/kernel/notes. So the loaded
-> > address of commit_creds is 0xffffffffbc265180 - (0xffffffff82465180
-> >  - 0xffffffff810ad570) =3D 0xffffffffbaead570.
->
-> I've cc: the hardening list on this, I'm sure the developers there have
-> opinions about this.
->
-> > Signed-off-by: Guixiong Wei <weiguixiong@bytedance.com>
-> > ---
-> >  kernel/ksysfs.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/kernel/ksysfs.c b/kernel/ksysfs.c
-> > index b1292a57c2a5..09bc0730239b 100644
-> > --- a/kernel/ksysfs.c
-> > +++ b/kernel/ksysfs.c
-> > @@ -199,7 +199,7 @@ static ssize_t notes_read(struct file *filp, struct=
- kobject *kobj,
-> >  static struct bin_attribute notes_attr __ro_after_init  =3D {
-> >       .attr =3D {
-> >               .name =3D "notes",
-> > -             .mode =3D S_IRUGO,
-> > +             .mode =3D S_IRUSR,
-> >       },
-> >       .read =3D &notes_read,
-> >  };
->
-> No objection from me, but what userspace tool requires access to this
-> file today?  Will it break if permissions are changed on it?
+> That beeing said: I have no problem if we provide write support for
+> EEPROMs only and adapt it later on to cover spi-nor/nand devices as
+> well.
 
-FWIW, https://codesearch.debian.net/search?q=3D%2Fsys%2Fkernel%2Fnotes&lite=
-ral=3D1
-shows that (from what I can tell) this is mostly used by stuff like
-perf, libdwfl and systemtap for figuring out the kernel's build-id,
-probably mostly for kernel profiling?
+Agreed. Honestly, I don't know how much sense this makes for MTD
+devices. First, the operation itself, seems really dangerous, as
+you'll have to delete the whole sector. Second, during initial
+provisioning, I don't think it will make much sense to use the sysfs
+cells because you cannot combine multiple writes into one. You'll
+always end up with unnecessary erases.
+
+What's your use case here?
+
+Just my two cents..
+-michael
+
+--4d612e85c44be11edd360cd91b974ed96a303e8b11425e6de3e0efa4c955
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iIcEABYIAC8WIQQCnWSOYTtih6UXaxvNyh2jtWxG+wUCZdNW+BEcbWljaGFlbEB3
+YWxsZS5jYwAKCRDNyh2jtWxG+1uSAQCkmDcFY4GzAsY7ha1lKvgSSJRCqLkydobm
+qqzwyMMsFwEA65edy4y9PaiLDA1aM8sL5Npr1cskJtyTGNMcmDHKXws=
+=bNfX
+-----END PGP SIGNATURE-----
+
+--4d612e85c44be11edd360cd91b974ed96a303e8b11425e6de3e0efa4c955--
