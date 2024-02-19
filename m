@@ -1,53 +1,53 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CA74535DF
-	for <linux-kernel@vger.kernel.org>; Mon, 19 Feb 2024 20:23:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB52253E14
+	for <linux-kernel@vger.kernel.org>; Mon, 19 Feb 2024 20:23:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708374212; cv=none; b=fmkIOcrQQJYSnmV5UVtIGC+dFhnMu8H5L8mbhqp1h6QNzWh1IoabcVcsKzsrJRlGutargBA9+6JhiCEDjdHKQXKz9eMNib9dXDX9AMIBe7dbRg8z+oDKwvk6wYuEPaUh2xSUevj6bCmcODFfAYUp7mOrn20NzBSaVh2c+YAtUSc=
+	t=1708374214; cv=none; b=ip9tpnIVj4TLhD/fZ5/fkqudZDdLbab5wLcgL0xHteyhqpR2kMPBnBAPgCQKTZsz8fI2blGqiT0Al6BK1ZyPLozKCGLBdQawQvAh0KhJu8VdC08RC5i3TIWwrgEr+ERcXh28UWv8afNdgJ4dqquTWkFzWTKE9Sj2x699Laqox6A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708374212; c=relaxed/simple;
-	bh=GCN4a3XwyVGjN4FSoVSL7WZNZKmZBWlauyy+D84PGEY=;
+	s=arc-20240116; t=1708374214; c=relaxed/simple;
+	bh=1LpOcOPE8NF67KY2Om+0rc+yLxqoD9d+aNt1OJgcsWY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=XHuJCUbW4/2nu/2uaoE/3zDJsQCXA82mMf1QZwRiP0FporovT5LojYLfnk3n8MUg3YP16qMjwx7kY5tt3xaVQykiOPl1fqyGlKV3H8Wf7P0hWz51pk8I+PhW0+yWMxQ4/t5Gg+SxJjITXLT9OJCCHoN5GFX2ttN5BrNi1pLZZCY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=bV1JYQCt; arc=none smtp.client-ip=209.85.214.169
+	 MIME-Version; b=VO4oBSAD0cePSSAcqfRE8RVltapFDOVBdk3izsRSz+GaxYlPqeuDgheHgD7PCi10ApocdX+Y6UwP3AjryYZPeIjGchASxS8d+iLUlRx0FwmfbsqYJlDMUJMG3NCDzXSfPJob4DW0pvTR5omszD68BObczgkIrAoMDbvQTeED1Bs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=Lk50Vlzo; arc=none smtp.client-ip=209.85.216.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="bV1JYQCt"
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-1db51e55023so25477355ad.1
-        for <linux-kernel@vger.kernel.org>; Mon, 19 Feb 2024 12:23:31 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Lk50Vlzo"
+Received: by mail-pj1-f49.google.com with SMTP id 98e67ed59e1d1-2998950e951so787629a91.2
+        for <linux-kernel@vger.kernel.org>; Mon, 19 Feb 2024 12:23:32 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1708374211; x=1708979011; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1708374212; x=1708979012; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=kUa3JH16Oe5UJV9UEwjr6pY+WpID6lK8xSe+O5n7a8M=;
-        b=bV1JYQCtkS9Hy/MCHAsLi2DxYJJUp0KhmL4KmzkBk8aXLh8/3g3U3ugU8E+n1kKV33
-         q4RwPzkMJx8ltaijxuXdkCMP6uXEHBZHmxFxmU7oCup1bnCgjhmbgDUay4KJWWANBza6
-         U0zd6BPSnOZlRYH+S5CNrFfLgWqajGh0b6nrY=
+        bh=GaHCMRLTHpVjbQpn0nm8Soa0CT5I0pTuDvK1Y4TvoOs=;
+        b=Lk50VlzoWwTHtFvsPUYJhB0ed6Lu8/AhLLfJdlMIo9L1kEo4eRRXLbizWAzh6sxvEg
+         QKEwNOSbmbqU9nGjbgF8hIdcKiTncogBz7a/OzxyuXHYb3TQLc4sC+lHI/4HG2IS5e4L
+         2yqr7pUjTYKhuvVEgCCH6sR80EsP5jyH/K1rU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708374211; x=1708979011;
+        d=1e100.net; s=20230601; t=1708374212; x=1708979012;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=kUa3JH16Oe5UJV9UEwjr6pY+WpID6lK8xSe+O5n7a8M=;
-        b=wx/OZK3AU90qsLOTayK1VfTWaUo7PibJp7i5Mbh16CwoSwe5f42dlVGUJQrEYQ57/u
-         lA5B7n3pydstNselqCyFCeiS3QgRRtDerPvcL2p6GIc0oozGBKSZsTYVIvtx6ubeDtUk
-         eFEuIndkxwfKl9Q7crg3geUn0z5CNhB7ACh9kGca7/YxZANDc/ky4ReRSdhWPPHGIL0T
-         ZVfmz7O6Y7JKUXpoLR+bd5zBgzdK3PdoVtvjk8lf31dbzq3nbAeQMjU/FbAK3633uVAm
-         wn+tJu1UwBTOFijOyUJOt422opYpjD06aVL2F4T345VBu0yTz2q+9bxubH3p1zeC/rCB
-         XqyQ==
-X-Gm-Message-State: AOJu0YzWDGK7zHAzPS2kX6OzcLj6IjyC0iY93BkWfZ7YilM6G+sB/tJn
-	g/hn8zVaZxdBPgZvbW8fpBP9+uI+6S2o0niHv+VnxILNTG8eNEWdyuRGxyZ3NQ==
-X-Google-Smtp-Source: AGHT+IG8LtaETDPpup4Qyvx26INSaCWovgahZdaA0zbKl+GL/t4KUJJLp2AnURqkSJ5Jxmv9EMKmoQ==
-X-Received: by 2002:a17:902:da87:b0:1d9:2158:1308 with SMTP id j7-20020a170902da8700b001d921581308mr16281281plx.28.1708374210688;
-        Mon, 19 Feb 2024 12:23:30 -0800 (PST)
+        bh=GaHCMRLTHpVjbQpn0nm8Soa0CT5I0pTuDvK1Y4TvoOs=;
+        b=lajnjEM6QM3Ll1LrSHI8ElI3pZYTfVTTYhcyD+q1ZTc7BxHTphy6DHYDDZ7+hVYmZM
+         itk3yKhWk7dTTa2ccSfnJE0UXZp+skpcS3nJF1tiQsTAgBh6c7fYJUjSryiwYhrIvrH1
+         4NKd825mrvsMALrwArG2lCnhiAikKU+UgZa4Qeg4ARsHDda22vzJv8BJdRmGaiGc++9y
+         FjYMwg3Fxw/BLk0tMEl8RPxcrw47zB+CQNnssUovdxVF06aE95s2fjzTjl28LYhgXUxb
+         h08m0yX2aNcqRYtLUXd5j1wjq1tnZOVGAZ3d476Df8JJMlDcDuzWe2++IerNlTwtIN2o
+         7Qgw==
+X-Gm-Message-State: AOJu0Yxg7DVlMWP889sOHZZGizWerptujTYuvwSTcKBHonzjmjSdD6Jt
+	vou+CnEWNT3SoXHGeKP2Abdsx7oVWo0OMVlqVsvDZKAcMUzBalkY9fcdt90E0g==
+X-Google-Smtp-Source: AGHT+IEAUG2tvGVJGd+hj3U8ybO/DpLRVg66FdpMvbg2eIV6gnVcioXBOcc/U9zxzq4OgB0t7uZbUg==
+X-Received: by 2002:a17:90a:b382:b0:299:3e54:83f3 with SMTP id e2-20020a17090ab38200b002993e5483f3mr6532900pjr.38.1708374212270;
+        Mon, 19 Feb 2024 12:23:32 -0800 (PST)
 Received: from localhost (175.199.125.34.bc.googleusercontent.com. [34.125.199.175])
-        by smtp.gmail.com with UTF8SMTPSA id mf8-20020a170902fc8800b001d9fc6cb5f2sm4818207plb.203.2024.02.19.12.23.29
+        by smtp.gmail.com with UTF8SMTPSA id e21-20020a17090ac21500b00298dd684b8csm5810598pjt.32.2024.02.19.12.23.31
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 19 Feb 2024 12:23:30 -0800 (PST)
+        Mon, 19 Feb 2024 12:23:31 -0800 (PST)
 From: Stephen Boyd <swboyd@chromium.org>
 To: Lee Jones <lee@kernel.org>
 Cc: linux-kernel@vger.kernel.org,
@@ -58,14 +58,11 @@ Cc: linux-kernel@vger.kernel.org,
 	Pin-yen Lin <treapking@chromium.org>,
 	Linus Walleij <linus.walleij@linaro.org>,
 	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
 	Benson Leung <bleung@chromium.org>,
 	Guenter Roeck <groeck@chromium.org>
-Subject: [PATCH 1/2] dt-bindings: cros-ec: Add properties for GPIO controller
-Date: Mon, 19 Feb 2024 12:23:23 -0800
-Message-ID: <20240219202325.4095816-2-swboyd@chromium.org>
+Subject: [PATCH 2/2] mfd: cros_ec_dev: Add gpio device if feature present on EC
+Date: Mon, 19 Feb 2024 12:23:24 -0800
+Message-ID: <20240219202325.4095816-3-swboyd@chromium.org>
 X-Mailer: git-send-email 2.44.0.rc0.258.g7320e95886-goog
 In-Reply-To: <20240219202325.4095816-1-swboyd@chromium.org>
 References: <20240219202325.4095816-1-swboyd@chromium.org>
@@ -79,52 +76,48 @@ Content-Transfer-Encoding: 8bit
 
 The ChromeOS embedded controller (EC) supports setting the state of
 GPIOs when the system is unlocked, and getting the state of GPIOs in all
-cases. The GPIOs are on the EC itself, so the EC acts similar to a GPIO
-expander. Add the #gpio-cells and gpio-controller properties to the
-cros-ec binding so that other devices described in DT can get the GPIOs
-on the EC.
+cases. Check for the feature support by checking for the GPIO feature
+and then populate a sub-device for the gpio hardware on the EC.
 
+Cc: Lee Jones <lee@kernel.org>
 Cc: Linus Walleij <linus.walleij@linaro.org>
 Cc: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
-Cc: Conor Dooley <conor+dt@kernel.org>
-Cc: Lee Jones <lee@kernel.org>
 Cc: Benson Leung <bleung@chromium.org>
 Cc: Guenter Roeck <groeck@chromium.org>
-Cc: <devicetree@vger.kernel.org>
 Cc: <chrome-platform@lists.linux.dev>
 Cc: Pin-yen Lin <treapking@chromium.org>
 Signed-off-by: Stephen Boyd <swboyd@chromium.org>
 ---
- Documentation/devicetree/bindings/mfd/google,cros-ec.yaml | 7 +++++++
- 1 file changed, 7 insertions(+)
+ drivers/mfd/cros_ec_dev.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/mfd/google,cros-ec.yaml b/Documentation/devicetree/bindings/mfd/google,cros-ec.yaml
-index e1ca4f297c6d..aac8819bd00b 100644
---- a/Documentation/devicetree/bindings/mfd/google,cros-ec.yaml
-+++ b/Documentation/devicetree/bindings/mfd/google,cros-ec.yaml
-@@ -93,6 +93,11 @@ properties:
-   '#size-cells':
-     const: 0
+diff --git a/drivers/mfd/cros_ec_dev.c b/drivers/mfd/cros_ec_dev.c
+index 603b1cd52785..9c3f8488b416 100644
+--- a/drivers/mfd/cros_ec_dev.c
++++ b/drivers/mfd/cros_ec_dev.c
+@@ -74,6 +74,10 @@ static const struct mfd_cell cros_ec_cec_cells[] = {
+ 	{ .name = "cros-ec-cec", },
+ };
  
-+  '#gpio-cells':
-+    const: 2
++static const struct mfd_cell cros_ec_gpio_cells[] = {
++	{ .name = "cros-ec-gpio", },
++};
 +
-+  gpio-controller: true
-+
-   typec:
-     $ref: /schemas/chrome/google,cros-ec-typec.yaml#
- 
-@@ -275,6 +280,8 @@ examples:
-             interrupts = <99 0>;
-             interrupt-parent = <&gpio7>;
-             spi-max-frequency = <5000000>;
-+            #gpio-cells = <2>;
-+            gpio-controller;
- 
-             proximity {
-                 compatible = "google,cros-ec-mkbp-proximity";
+ static const struct mfd_cell cros_ec_rtc_cells[] = {
+ 	{ .name = "cros-ec-rtc", },
+ };
+@@ -97,6 +101,11 @@ static const struct cros_feature_to_cells cros_subdevices[] = {
+ 		.mfd_cells	= cros_ec_cec_cells,
+ 		.num_cells	= ARRAY_SIZE(cros_ec_cec_cells),
+ 	},
++	{
++		.id		= EC_FEATURE_GPIO,
++		.mfd_cells	= cros_ec_gpio_cells,
++		.num_cells	= ARRAY_SIZE(cros_ec_gpio_cells),
++	},
+ 	{
+ 		.id		= EC_FEATURE_RTC,
+ 		.mfd_cells	= cros_ec_rtc_cells,
 -- 
 https://chromeos.dev
 
