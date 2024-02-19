@@ -1,122 +1,272 @@
-Received: from smtpbgsg2.qq.com (smtpbgsg2.qq.com [54.254.200.128])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com [209.85.208.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B6721E53A
-	for <linux-kernel@vger.kernel.org>; Mon, 19 Feb 2024 06:38:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.254.200.128
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 904EC200B7
+	for <linux-kernel@vger.kernel.org>; Mon, 19 Feb 2024 06:39:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708324695; cv=none; b=RKVs+rfOCWOOUfE7j2xt8DouiWgjUkwh3IPrc+NiGfgmYvn/ADsol06BT4l1/TPuEJB1IkVHBj/XpdCAB6iJdLQ7iuTEWHDSS5jvjFRDc6AxZuAMtHaP3yedpfBN/qNghc6eIOH6j2ETXUfCu1cTmBAgwx5ATPF63/bTbnQJQXs=
+	t=1708324743; cv=none; b=i+xzlcNedn9pUJ4ITT2OVc1PZgnrjQZJH+3kxk4yPKW/nld+0E7m4wbVsUkIEnvAuUolm/aO/T1R3gJ6k3Yld9W0miz9veg8Tl7wLCcQXb79Ws/nBRzv8WBKIkPQTzOVVzd4ZKcP64pGkO0niTW//Wx4fWoj2TubosQqSED14Z4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708324695; c=relaxed/simple;
-	bh=k2W4SLsFgsS9LCnpgmL1u7Cig5/CHtD4qFo/HAogbiQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=DSu2C0/ex7gb5QjjJryvK6k7YWwe/D1R3NvpxwDvZD+8Cs9C6g6cGN67exZXYRezAluHJ/prBUQhJDyV+7NPUjIgfrsVapJ6gPGMlKoKoPaiB6YvTnlk/BVGaiz1BtgBTV1cp0Dx652x96Pnv7IXY4cAQ04LbBINbCWG2C9XRFc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shingroup.cn; spf=pass smtp.mailfrom=shingroup.cn; arc=none smtp.client-ip=54.254.200.128
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shingroup.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shingroup.cn
-X-QQ-mid: bizesmtp85t1708324630tbe0lfpq
-X-QQ-Originating-IP: ePE/qLgyPfe1V/nBJfQ2j4hIEphQMTlw8PTAfJik8+I=
-Received: from [127.0.0.1] ( [223.112.234.130])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Mon, 19 Feb 2024 14:37:08 +0800 (CST)
-X-QQ-SSF: 00400000000000B0B000000A0000000
-X-QQ-FEAT: FwowAM4HOqDdhY0Gzn+ClKKjVX6mbdXdMVvKgJbfIirwcGIMI78wiLXHy6zx7
-	wqiOHbXwq0NZktjXcy2Bs9IVbFJhOXRykM2uYMapAOwnQ32dO0INkqQCCINol8x93bAfaGx
-	AEo3EDF/1mFrtsxrzta+dk7API3xIzbI9KTBD89WD4UfRElftIyN4lWiPvhF9MNPi24bd/h
-	ma6VAmbiYJGRrGAGUnqr7OmhS16yco4i4wQ3lWPDKpkaW3Z8U/59V2IXExMUAtu/6Ef0DgW
-	o+Kb+OqtWZmKdNob+1TXwT9nQX/ggBMAQrZXI4w0DcXYHkN2L9Zn7ccYXAYWVW36wPLam/a
-	JQwgxT0yrSObSUwnsWeBoODSWI44x8JAcOtwIpyFVCvo6nDXrcWKFN5AcfZyTn62k4vnjMV
-	RFO+bwwG4XA=
-X-QQ-GoodBg: 2
-X-BIZMAIL-ID: 17624953656164576299
-Message-ID: <840C2556C7DDB57C+c4575f04-5d1b-44a5-8f7b-3a2ba1fd61c4@shingroup.cn>
-Date: Mon, 19 Feb 2024 14:37:08 +0800
+	s=arc-20240116; t=1708324743; c=relaxed/simple;
+	bh=bn22hAbVRAIpE6N8x32GU+BqOXbisrxuCrqfTD+hjW8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=itDcl9V0RwGaKSBXBbAzaE4TArUfSVmAYCR9LJGab/87TuuI3ZprsguR/mvjCGvOLFNyXo4p8xnvOH8KTdL3VWRhJGKGNfRjdWSPKGzvjOR/3U7aN8kYpbxjJy61T605SzISV/HuoHvu3v7sea3+gIbI5fH5YtUSvn6NDG8ZQC8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=gQyCmtoO; arc=none smtp.client-ip=209.85.208.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gQyCmtoO"
+Received: by mail-lj1-f173.google.com with SMTP id 38308e7fff4ca-2d21a68dd3bso33245801fa.1
+        for <linux-kernel@vger.kernel.org>; Sun, 18 Feb 2024 22:39:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1708324740; x=1708929540; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=UMM4OlN27SHOCtOj5ufL8MjJjCh3VwYmsX9AUeuZ5U4=;
+        b=gQyCmtoOj8tMDd6uBKFzWz97HB/rN6O5WHsGa+wKVKZPmSw0kWL613tE1TYlR5pVD8
+         4fcbJ9njaugmntjUB0pVEjUYlSg6cyOHkkC9c0ec7qNNPFGfgNh822N+jT5Gl//9toqa
+         /9QWGvbBvZtTbNQiX+cxLhdXxoS9RivUr0qS6DbFERhUMqGGO+O2FPmyziOzu4X2YSK3
+         mTw+TTFpYQppPg+uTY52nDG1g9o5NYqWX9bEg/Pjvx4fsxXZea/sjoaXQqqyih4pyAbJ
+         ajMbTNh52BTMqSeDGtt+bQ+S2q/SeWPsx59jwT44yYUNzxSQDfjy8qcIZ7h2Og0kguF/
+         7lKw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708324740; x=1708929540;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=UMM4OlN27SHOCtOj5ufL8MjJjCh3VwYmsX9AUeuZ5U4=;
+        b=dIVwdGwnaj7B/IFhque3rGrJJ3GRQaDPujgBkNoxPG1Av7tZdbTJ58yQiMHS9u3x9X
+         FrV0YEyBw54twAxBjyFmOom6jqyFOHvH07k+ME1nFMzPOJMoFpBvXRZqe46PO/zbqCer
+         yC7rNnJbiHkmcwmUy91qZj1qQzQPfqW2T+DE6PstlygFnPEyVz/C05Yo5d0UDyLBRMAy
+         3qrPDUdTXEUAw6Cf07fipc8+2P1MB6C80YOZ9l1gJ/9X9ueCCeohK1JFdF4u2KaL9b+C
+         0BBHGnp1XxArYzZ2QtQR9RjIEdi4dZfbcZL+2wjYVMMy+E0jrZ/QDzd5bSi+iU+wZ2pa
+         MdfA==
+X-Forwarded-Encrypted: i=1; AJvYcCUGVoKG8k4PbpaHfMWtWtZSW9WEqrhkL3qKJsm1f45QKTmhqF28Tmqkz4ReIM64339tcDwPBPOJLkhA7KTjG7Yssn+ByAlElEbSMqKz
+X-Gm-Message-State: AOJu0Yy02ckPTlRaLToKGcArGGPed8pcyPK/EiQxlex2J39CVp54ASS4
+	mhC85aP7OCphHSrvBRqElMPRXuqcTQXrlvvrnN3nK7qondV8MOaPY09EBi8PJCbBJwcYT9p8/T3
+	CF0RB4n279OQ1FFZ2keBLzJtLOerAfKnvwS+fYA==
+X-Google-Smtp-Source: AGHT+IE5Do2svm3Bso8AFpKefeHNR3iobQSGjsn3Q7K6d+P0nUhURXoXaDzDuPC/MY1/rORrSxIcKc2iipnGq1XhrYY=
+X-Received: by 2002:a19:7407:0:b0:512:9e9f:2f1d with SMTP id
+ v7-20020a197407000000b005129e9f2f1dmr3700842lfe.58.1708324739383; Sun, 18 Feb
+ 2024 22:38:59 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] perf/arm_smmuv3: Omit the two judgements which done in
- framework
-Content-Language: en-US
-To: Robin Murphy <robin.murphy@arm.com>, Will Deacon <will@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, shenghui.qu@shingroup.cn,
- ke.zhao@shingroup.cn, zhijie.ren@shingroup.cn,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20231221093802.20612-1-jialong.yang@shingroup.cn>
- <20240209160905.GA24565@willie-the-truck>
- <a455e5db-676a-4cf8-8669-8a10e900361c@arm.com>
-From: =?UTF-8?B?WWFuZyBKaWFsb25nIOadqOS9s+m+mQ==?= <jialong.yang@shingroup.cn>
-In-Reply-To: <a455e5db-676a-4cf8-8669-8a10e900361c@arm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: bizesmtp:shingroup.cn:qybglogicsvrgz:qybglogicsvrgz6a-1
+References: <20240215030002.281456-1-sathyanarayanan.kuppuswamy@linux.intel.com>
+ <20240215030002.281456-2-sathyanarayanan.kuppuswamy@linux.intel.com>
+In-Reply-To: <20240215030002.281456-2-sathyanarayanan.kuppuswamy@linux.intel.com>
+From: Ilias Apalodimas <ilias.apalodimas@linaro.org>
+Date: Mon, 19 Feb 2024 08:38:23 +0200
+Message-ID: <CAC_iWj+p6gmcb4-_-f8Kr4Ds6EmSsq2D4GK1XymyybX7i1TMFw@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] efi/libstub: Add Confidential Computing (CC)
+ measurement support
+To: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+Cc: Ard Biesheuvel <ardb@kernel.org>, linux-kernel@vger.kernel.org, 
+	linux-efi@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
+Hi Kuppuswamy,
 
+On Thu, 15 Feb 2024 at 05:02, Kuppuswamy Sathyanarayanan
+<sathyanarayanan.kuppuswamy@linux.intel.com> wrote:
+>
+> If the virtual firmware implements TPM support, TCG2 protocol will be
+> used for kernel measurements and event logging support. But in CC
+> environment, not all platforms support or enable the TPM feature. UEFI
+> specification [1] exposes protocol and interfaces used for kernel
+> measurements in CC platforms without TPM support.
+>
+> Currently, the efi-stub only supports the kernel related measurements
+> for the platform that supports TCG2 protocol. So, extend it add
+> CC measurement protocol (EFI_CC_MEASUREMENT_PROTOCOL) and event logging
+> support. Event logging format in the CC environment is the same as
+> TCG2.
+>
+> More details about the EFI CC measurements and logging can be found
+> in [1].
+>
+> Link: https://uefi.org/specs/UEFI/2.10/38_Confidential_Computing.html#efi-cc-measurement-protocol [1]
+> Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+> ---
+>
+> Changes since v1:
+> * Fixed missing tagged event data.
+>
+>  .../firmware/efi/libstub/efi-stub-helper.c    | 127 ++++++++++++++----
+>  drivers/firmware/efi/libstub/efistub.h        |  74 ++++++++++
+>  include/linux/efi.h                           |   1 +
+>  3 files changed, 174 insertions(+), 28 deletions(-)
+>
+> diff --git a/drivers/firmware/efi/libstub/efi-stub-helper.c b/drivers/firmware/efi/libstub/efi-stub-helper.c
+> index bfa30625f5d0..cc31f8143190 100644
+> --- a/drivers/firmware/efi/libstub/efi-stub-helper.c
+> +++ b/drivers/firmware/efi/libstub/efi-stub-helper.c
+> @@ -219,50 +219,121 @@ static const struct {
+>         },
+>  };
+>
+> +static efi_status_t tcg2_efi_measure(efi_tcg2_protocol_t *tcg2,
+> +                                    unsigned long load_addr,
+> +                                    unsigned long load_size,
+> +                                    enum efistub_event event)
+> +{
+> +       struct efi_measured_event {
+> +               efi_tcg2_event_t        event_data;
+> +               efi_tcg2_tagged_event_t tagged_event;
+> +               u8                      tagged_event_data[];
+> +       } *evt;
+> +       int size = sizeof(*evt) + events[event].event_data_len;
 
-在 2024/2/10 0:32, Robin Murphy 写道:
-> On 2024-02-09 4:09 pm, Will Deacon wrote:
->> On Thu, Dec 21, 2023 at 05:38:01PM +0800, JiaLong.Yang wrote:
->>> 'event->attr.type != event->pmu->type' has been done in
->>> core.c::perf_init_event() ,core.c::perf_event_modify_attr(), etc.
->>>
->>> This PMU is an uncore one. The core framework has disallowed
->>> uncore-task events. So the judgement to event->cpu < 0 is no mean.
->>
->> It would be great to refer to the changes which added those checks to
->> the perf core code. From reading the code myself, I can't convince myself
->> that perf_try_init_event() won't call into the driver.
->>
->>>
->>> The two judgements have been done in kernel/events/core.c
->>>
->>> Signed-off-by: JiaLong.Yang <jialong.yang@shingroup.cn>
->>> ---
->>>   drivers/perf/arm_smmuv3_pmu.c | 8 --------
->>>   1 file changed, 8 deletions(-)
->>
->> It looks like _many_ perf drivers have these checks, so if they really
->> aren't needed, we can clean this up bveyond SMMU. However, as I said
->> above, I'm not quite convinced we can drop them.
-> 
-> Right, I think the logic prevents events with a specific PMU type being 
-> offered to other PMUs, but as far as I'm aware doesn't apply the other 
-> way round to stop generic events (PERF_TYPE_HARDWARE etc.) being offered 
-> to all PMUs, so it's those that system PMUs need to reject. >
-> It's been on my wishlist for a long time to have a capability flag to 
-> say "I don't handle generic events, please only ever give me events of 
-> my exact type" so we *can* truly factor this into the core.
+This is defined as size_t on the cc variant. I guess both are ok, just pick one
 
+> +       efi_status_t status;
+> +
+> +       status = efi_bs_call(allocate_pool, EFI_LOADER_DATA, size,
+> +                            (void **)&evt);
+> +       if (status != EFI_SUCCESS)
 
-It's core framework's responsible to differ generic events and others, 
-or uncore pmu and core pmu.
-Here we have flag PERF_TYPE_HARDWARE, PERF_TYPE_HW_CACHE, 
-PERF_PMU_CAP_EXTENDED_HW_TYPE doing this.
+pr_err() here as done in the cc variant?
 
-again:
-         rcu_read_lock();
-         pmu = idr_find(&pmu_idr, type);
-         rcu_read_unlock();
-         if (pmu) {
-                 if (event->attr.type != type && type != PERF_TYPE_RAW &&
-                     !(pmu->capabilities & PERF_PMU_CAP_EXTENDED_HW_TYPE))
-                         goto fail; /* generic event with no ability pmu */
-This can avoid driver code (event->attr.type != event->pmu->type).
+> +               return status;
+> +
+> +       evt->event_data = (struct efi_tcg2_event){
+> +               .event_size                     = size,
+> +               .event_header.header_size       = sizeof(evt->event_data.event_header),
+> +               .event_header.header_version    = EFI_TCG2_EVENT_HEADER_VERSION,
+> +               .event_header.pcr_index         = events[event].pcr_index,
+> +               .event_header.event_type        = EV_EVENT_TAG,
+> +       };
+> +
+> +       evt->tagged_event = (struct efi_tcg2_tagged_event){
+> +               .tagged_event_id                = events[event].event_id,
+> +               .tagged_event_data_size         = events[event].event_data_len,
+> +       };
+> +
+> +       memcpy(evt->tagged_event_data, events[event].event_data,
+> +              events[event].event_data_len);
+> +
+> +       status = efi_call_proto(tcg2, hash_log_extend_event, 0,
+> +                               load_addr, load_size, &evt->event_data);
 
-And, code:
-if (pmu->task_ctx_nr == perf_invalid_context && (task || cgroup_fd != -1)) {
-	err = -EINVAL;
-	goto err_pmu;
-}
-can promise not uncore-task event.
+The struct filling/memcpying looks similar across the 2 functions.  I
+wonder if it makes sense to have a common function for that, with an
+argument for the event data type.
 
-We should confirm that uncore event should be cpu >= 0.
+> +       efi_bs_call(free_pool, evt);
+> +
+> +       return status;
+> +}
+> +
+> +static efi_status_t cc_efi_measure(efi_cc_protocol_t *cc,
+> +                                  unsigned long load_addr,
+> +                                  unsigned long load_size,
+> +                                  enum efistub_event event)
+> +{
+> +       struct efi_measured_event {
+> +               efi_cc_event_t  event_data;
+> +               efi_tcg2_tagged_event_t tagged_event;
+> +               u8                      tagged_event_data[];
+> +       } *evt;
+> +       size_t size = sizeof(*evt) + events[event].event_data_len;
+> +       efi_cc_mr_index_t mr;
+> +       efi_status_t status;
+> +
+> +       status = efi_call_proto(cc, map_pcr_to_mr_index, events[event].pcr_index, &mr);
+> +       if (status != EFI_SUCCESS) {
+> +               efi_err("CC_MEASURE: PCR to MR mapping failed\n");
+> +               return status;
+> +       }
+> +
+> +       status = efi_bs_call(allocate_pool, EFI_LOADER_DATA, size, (void **)&evt);
+> +       if (status != EFI_SUCCESS) {
+> +               efi_err("CC_MEASURE: Allocating event struct failed\n");
+> +               return status;
+> +       }
+> +
+> +       evt->event_data = (struct efi_cc_event){
+> +               .event_size                     = size,
+> +               .event_header.header_size       = sizeof(evt->event_data.event_header),
+> +               .event_header.header_version    = EFI_CC_EVENT_HEADER_VERSION,
+> +               .event_header.mr_index          = mr,
+> +               .event_header.event_type        = EV_EVENT_TAG,
+> +       };
+> +
+> +       evt->tagged_event = (struct efi_tcg2_tagged_event){
+> +               .tagged_event_id                = events[event].event_id,
+> +               .tagged_event_data_size         = events[event].event_data_len,
+> +       };
+> +
+> +       memcpy(evt->tagged_event_data, events[event].event_data,
+> +              events[event].event_data_len);
+> +
+> +       status = efi_call_proto(cc, hash_log_extend_event, 0,
+> +                               load_addr, load_size, &evt->event_data);
+> +
+> +       efi_bs_call(free_pool, evt);
+> +
+> +       return status;
+> +}
+>  static efi_status_t efi_measure_tagged_event(unsigned long load_addr,
+>                                              unsigned long load_size,
+>                                              enum efistub_event event)
+>  {
+>         efi_guid_t tcg2_guid = EFI_TCG2_PROTOCOL_GUID;
+> +       efi_guid_t cc_guid = EFI_CC_MEASUREMENT_PROTOCOL_GUID;
+> +       efi_cc_protocol_t *cc = NULL;
+>         efi_tcg2_protocol_t *tcg2 = NULL;
+>         efi_status_t status;
+>
+>         efi_bs_call(locate_protocol, &tcg2_guid, NULL, (void **)&tcg2);
+>         if (tcg2) {
+> -               struct efi_measured_event {
+> -                       efi_tcg2_event_t        event_data;
+> -                       efi_tcg2_tagged_event_t tagged_event;
+> -                       u8                      tagged_event_data[];
+> -               } *evt;
+> -               int size = sizeof(*evt) + events[event].event_data_len;
+> -
+> -               status = efi_bs_call(allocate_pool, EFI_LOADER_DATA, size,
+> -                                    (void **)&evt);
+> +               status = tcg2_efi_measure(tcg2, load_addr, load_size, event);
+>                 if (status != EFI_SUCCESS)
+>                         goto fail;
+>
+> -               evt->event_data = (struct efi_tcg2_event){
+> -                       .event_size                     = size,
+> -                       .event_header.header_size       = sizeof(evt->event_data.event_header),
+> -                       .event_header.header_version    = EFI_TCG2_EVENT_HEADER_VERSION,
+> -                       .event_header.pcr_index         = events[event].pcr_index,
+> -                       .event_header.event_type        = EV_EVENT_TAG,
+> -               };
+> -
+> -               evt->tagged_event = (struct efi_tcg2_tagged_event){
+> -                       .tagged_event_id                = events[event].event_id,
+> -                       .tagged_event_data_size         = events[event].event_data_len,
+> -               };
+> -
+> -               memcpy(evt->tagged_event_data, events[event].event_data,
+> -                      events[event].event_data_len);
+> -
+> -               status = efi_call_proto(tcg2, hash_log_extend_event, 0,
+> -                                       load_addr, load_size, &evt->event_data);
+> -               efi_bs_call(free_pool, evt);
+> +               return EFI_SUCCESS;
+> +       }
+>
+> +       efi_bs_call(locate_protocol, &cc_guid, NULL, (void **)&cc);
+> +       if (cc) {
+> +               status = cc_efi_measure(cc, load_addr, load_size, event);
+>                 if (status != EFI_SUCCESS)
+>                         goto fail;
+> +
+>                 return EFI_SUCCESS;
+>         }
+>
 
-> 
-> Thanks,
-> Robin.
-> 
+[...]
 
+Thanks
+/Ilias
