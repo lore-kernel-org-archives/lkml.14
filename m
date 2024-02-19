@@ -1,47 +1,47 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26FC244C93;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C561445949;
 	Mon, 19 Feb 2024 17:03:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708362232; cv=none; b=lMX2NYx+9BEdEtEvi+eS+Ce/2hFzaZ6+XZIfd0sk9nVJC6iUg3bpMx0u4pqQTh/ZPETsWI6pyzzsJckqUfpY4y+K/J/ASkb+Cir+wUHFiZSUPhQJ42toMieyC3lknaDZhyYfyjCfCASfhKiGVFfj4FNKrhvX0ObywudZfXCcas0=
+	t=1708362233; cv=none; b=ciJ7F9FGB2zt0V+x91LTm2q/Kxrcb2t3pgcQ8uO8f1bxnIRMPEYwHWtVfMTi7G6bx31wgzyDSP4U0PmkKprD3KkhErxGiDGimzXJYTqXvNIHqazWNOocox+KEfpC86Imc2YyAuj2+iauK7hVwySNyXbLFsdMNkTLoLDcY7OzbeI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708362232; c=relaxed/simple;
-	bh=nTLPN95Vl8V4f80BsBvGNYRqiV1i3kk//8sITOoQ8ck=;
+	s=arc-20240116; t=1708362233; c=relaxed/simple;
+	bh=WXC5x/5xpsIn2kxjIiHl+pWHnAC7qY7YPJf9uH9AyEE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=YE/ooqr4Po46CfkKdfl2Tb5FjJeUY2FiKDe37D9HEufATocrsuXlW4L7OSd1VgGsKC8SdMmmvg6i7VCrkwnmWX4rClvSkDHeH/aEcsWN2mnw6opAPgKsZ1BYn3dxJU324h2YvwmJDRgw9S+S5QWlNQoc0Yy1SI073g67WJKofVk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HrDmBRPm; arc=none smtp.client-ip=198.175.65.17
+	 MIME-Version; b=n/xM/UXhmLltQRNZ8ndmRdjlkXkUNieU8fJxoLot7PEeuxeygfZ0Rt2VsM0OwX79qnwWr9afN9Q7qlpWyyzSCNXYgxoMElG9L1/h6K1Ah3jd78sM++VVcxgN7M53KePiT2dqp1B8VSoRwmdVcVW5js6VQh0h1/mIKjzwyRzX64Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=geU7p5P0; arc=none smtp.client-ip=198.175.65.17
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HrDmBRPm"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="geU7p5P0"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1708362231; x=1739898231;
+  t=1708362232; x=1739898232;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=nTLPN95Vl8V4f80BsBvGNYRqiV1i3kk//8sITOoQ8ck=;
-  b=HrDmBRPm5lUDbn4/JL6Ci2TMDGSFhUsDahImeHq/II8Bhtf2yiXiCgL6
-   VYPyYIXVNVmnWw5ZMpdk7JN3EyeToPjirfmM8mpMsG6mzr9U2zLylSHKA
-   sEQWfAeQRDO9FmSBKqEue1QIMy511x7+iAqUgDZAoxhx0wjOOxOJq+QDv
-   wq1NvQ4Q3ZM2ola1RC0LOtsRS/fqlsZDEGWnjWNBv5VJJcPRJWnwMySiV
-   UnpYMEDbPgaOSkKWNnBbtJrF+4zUq5gFSmqljsd1oRgYN5xJXkSVnN+oF
-   TKKepMoOwWIwfeT8kY3qoCf6ttk5FUCiuuq43eBPBHyfRmT+LVl2hk/o9
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10989"; a="2577433"
+  bh=WXC5x/5xpsIn2kxjIiHl+pWHnAC7qY7YPJf9uH9AyEE=;
+  b=geU7p5P0zG7fRQOH5nxDPNckY5X5Sz0mU/ot44VerWOgR5rzxKzTCqYP
+   LhlEU2/B1RKvFkYIhOCCgDfIchPuGjWOCcpm8d19Vr/WQxMZXu2o8jJwu
+   ac6MSm4PaUoR8r1YYcGArZedj6j0f8aGdFtBkWwutVlzKwrpp+Tef4vFZ
+   LmYPL/zEgoWVanGUyytQQiF1tPn//1br67I98NT2ID1BaH+dlGT4qvf3o
+   TKhZWl9+uDKmebvNLfoAqpUe+qNHnxzA9hU1SWdVW/kSM+QwnFfgtTTB9
+   UCzRXcZyFJVaaBR5GSI/8mwggk+wnQdqNw7sW+f+2mUi59lart6dfrdDN
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10989"; a="2577442"
 X-IronPort-AV: E=Sophos;i="6.06,170,1705392000"; 
-   d="scan'208";a="2577433"
+   d="scan'208";a="2577442"
 Received: from fmsmga001.fm.intel.com ([10.253.24.23])
   by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Feb 2024 09:03:49 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10989"; a="936315369"
+X-IronPort-AV: E=McAfee;i="6600,9927,10989"; a="936315370"
 X-IronPort-AV: E=Sophos;i="6.06,170,1705392000"; 
-   d="scan'208";a="936315369"
+   d="scan'208";a="936315370"
 Received: from black.fi.intel.com ([10.237.72.28])
   by fmsmga001.fm.intel.com with ESMTP; 19 Feb 2024 09:03:46 -0800
 Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id 5E5863E5; Mon, 19 Feb 2024 19:03:41 +0200 (EET)
+	id 7EB47FF3; Mon, 19 Feb 2024 19:03:41 +0200 (EET)
 From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
 	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
@@ -54,9 +54,9 @@ Cc: Andy Shevchenko <andy@kernel.org>,
 	Conor Dooley <conor+dt@kernel.org>,
 	Robin van der Gracht <robin@protonic.nl>,
 	Paul Burton <paulburton@kernel.org>
-Subject: [PATCH v3 5/9] auxdisplay: ht16k33: Define a few helper macros
-Date: Mon, 19 Feb 2024 18:58:04 +0200
-Message-ID: <20240219170337.2161754-6-andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v3 7/9] auxdisplay: ht16k33: Drop struct ht16k33_seg
+Date: Mon, 19 Feb 2024 18:58:06 +0200
+Message-ID: <20240219170337.2161754-8-andriy.shevchenko@linux.intel.com>
 X-Mailer: git-send-email 2.43.0.rc1.1.gbec44491f096
 In-Reply-To: <20240219170337.2161754-1-andriy.shevchenko@linux.intel.com>
 References: <20240219170337.2161754-1-andriy.shevchenko@linux.intel.com>
@@ -66,105 +66,99 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Define a few helper macros — wrappers on contaoner_of)() — for easier
-maintenance in the future. While at it, include missing container_of.h.
+The struct ht16k33_seg is repeating struct linedisp. Use the latter
+directly.
 
 Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- drivers/auxdisplay/ht16k33.c | 28 ++++++++++++++++------------
- 1 file changed, 16 insertions(+), 12 deletions(-)
+ drivers/auxdisplay/ht16k33.c | 24 +++++++++---------------
+ 1 file changed, 9 insertions(+), 15 deletions(-)
 
 diff --git a/drivers/auxdisplay/ht16k33.c b/drivers/auxdisplay/ht16k33.c
-index f016130835b1..b76c4d83528f 100644
+index 41a961342dc3..96acfb2b58cd 100644
 --- a/drivers/auxdisplay/ht16k33.c
 +++ b/drivers/auxdisplay/ht16k33.c
-@@ -15,6 +15,7 @@
- #include <linux/property.h>
- #include <linux/fb.h>
- #include <linux/backlight.h>
-+#include <linux/container_of.h>
- #include <linux/input.h>
- #include <linux/input/matrix_keypad.h>
- #include <linux/leds.h>
-@@ -107,6 +108,15 @@ struct ht16k33_priv {
- 	uint8_t blink;
+@@ -86,10 +86,6 @@ struct ht16k33_fbdev {
+ 	uint8_t *cache;
  };
  
-+#define ht16k33_work_to_priv(p)				\
-+	container_of(p, struct ht16k33_priv, work.work)
-+
-+#define ht16k33_led_to_priv(p)				\
-+	container_of(p, struct ht16k33_priv, led)
-+
-+#define ht16k33_linedisp_to_priv(p)			\
-+	container_of(p, struct ht16k33_priv, seg.linedisp)
-+
+-struct ht16k33_seg {
+-	struct linedisp linedisp;
+-};
+-
+ struct ht16k33_priv {
+ 	struct i2c_client *client;
+ 	struct delayed_work work;
+@@ -97,7 +93,7 @@ struct ht16k33_priv {
+ 	struct ht16k33_keypad keypad;
+ 	union {
+ 		struct ht16k33_fbdev fbdev;
+-		struct ht16k33_seg seg;
++		struct linedisp linedisp;
+ 	};
+ 	enum display_type type;
+ 	uint8_t blink;
+@@ -110,7 +106,7 @@ struct ht16k33_priv {
+ 	container_of(p, struct ht16k33_priv, led)
+ 
+ #define ht16k33_linedisp_to_priv(p)			\
+-	container_of(p, struct ht16k33_priv, seg.linedisp)
++	container_of(p, struct ht16k33_priv, linedisp)
+ 
  static const struct fb_fix_screeninfo ht16k33_fb_fix = {
  	.id		= DRIVER_NAME,
- 	.type		= FB_TYPE_PACKED_PIXELS,
-@@ -194,8 +204,7 @@ static int ht16k33_brightness_set(struct ht16k33_priv *priv,
- static int ht16k33_brightness_set_blocking(struct led_classdev *led_cdev,
- 					   enum led_brightness brightness)
- {
--	struct ht16k33_priv *priv = container_of(led_cdev, struct ht16k33_priv,
--						 led);
-+	struct ht16k33_priv *priv = ht16k33_led_to_priv(led_cdev);
- 
- 	return ht16k33_brightness_set(priv, brightness);
- }
-@@ -203,8 +212,7 @@ static int ht16k33_brightness_set_blocking(struct led_classdev *led_cdev,
- static int ht16k33_blink_set(struct led_classdev *led_cdev,
- 			     unsigned long *delay_on, unsigned long *delay_off)
- {
--	struct ht16k33_priv *priv = container_of(led_cdev, struct ht16k33_priv,
--						 led);
-+	struct ht16k33_priv *priv = ht16k33_led_to_priv(led_cdev);
- 	unsigned int delay;
- 	uint8_t blink;
- 	int err;
-@@ -246,8 +254,7 @@ static void ht16k33_fb_queue(struct ht16k33_priv *priv)
-  */
- static void ht16k33_fb_update(struct work_struct *work)
- {
--	struct ht16k33_priv *priv = container_of(work, struct ht16k33_priv,
--						 work.work);
-+	struct ht16k33_priv *priv = ht16k33_work_to_priv(work);
- 	struct ht16k33_fbdev *fbdev = &priv->fbdev;
- 
- 	uint8_t *p1, *p2;
-@@ -441,8 +448,7 @@ static void ht16k33_keypad_stop(struct input_dev *dev)
- 
+@@ -417,9 +413,8 @@ static void ht16k33_keypad_stop(struct input_dev *dev)
  static void ht16k33_seg7_update(struct work_struct *work)
  {
--	struct ht16k33_priv *priv = container_of(work, struct ht16k33_priv,
--						 work.work);
-+	struct ht16k33_priv *priv = ht16k33_work_to_priv(work);
- 	struct ht16k33_seg *seg = &priv->seg;
- 	char *s = seg->linedisp.buf;
+ 	struct ht16k33_priv *priv = ht16k33_work_to_priv(work);
+-	struct ht16k33_seg *seg = &priv->seg;
+-	struct linedisp_map *map = seg->linedisp.map;
+-	char *s = seg->linedisp.buf;
++	struct linedisp_map *map = priv->linedisp.map;
++	char *s = priv->linedisp.buf;
  	uint8_t buf[9];
-@@ -462,8 +468,7 @@ static void ht16k33_seg7_update(struct work_struct *work)
  
+ 	buf[0] = map_to_seg7(&map->map.seg7, *s++);
+@@ -438,9 +433,8 @@ static void ht16k33_seg7_update(struct work_struct *work)
  static void ht16k33_seg14_update(struct work_struct *work)
  {
--	struct ht16k33_priv *priv = container_of(work, struct ht16k33_priv,
--						 work.work);
-+	struct ht16k33_priv *priv = ht16k33_work_to_priv(work);
- 	struct ht16k33_seg *seg = &priv->seg;
- 	char *s = seg->linedisp.buf;
+ 	struct ht16k33_priv *priv = ht16k33_work_to_priv(work);
+-	struct ht16k33_seg *seg = &priv->seg;
+-	struct linedisp_map *map = seg->linedisp.map;
+-	char *s = seg->linedisp.buf;
++	struct linedisp_map *map = priv->linedisp.map;
++	char *s = priv->linedisp.buf;
  	uint8_t buf[8];
-@@ -478,8 +483,7 @@ static void ht16k33_seg14_update(struct work_struct *work)
  
- static void ht16k33_linedisp_update(struct linedisp *linedisp)
+ 	put_unaligned_le16(map_to_seg14(&map->map.seg14, *s++), buf + 0);
+@@ -662,14 +656,14 @@ static int ht16k33_fbdev_probe(struct device *dev, struct ht16k33_priv *priv,
+ static int ht16k33_seg_probe(struct device *dev, struct ht16k33_priv *priv,
+ 			     uint32_t brightness)
  {
--	struct ht16k33_priv *priv = container_of(linedisp, struct ht16k33_priv,
--						 seg.linedisp);
-+	struct ht16k33_priv *priv = ht16k33_linedisp_to_priv(linedisp);
+-	struct ht16k33_seg *seg = &priv->seg;
++	struct linedisp *linedisp = &priv->linedisp;
+ 	int err;
  
- 	schedule_delayed_work(&priv->work, 0);
+ 	err = ht16k33_brightness_set(priv, brightness);
+ 	if (err)
+ 		return err;
+ 
+-	return linedisp_register(&seg->linedisp, dev, 4, &ht16k33_linedisp_ops);
++	return linedisp_register(linedisp, dev, 4, &ht16k33_linedisp_ops);
  }
+ 
+ static int ht16k33_probe(struct i2c_client *client)
+@@ -756,7 +750,7 @@ static void ht16k33_remove(struct i2c_client *client)
+ 
+ 	case DISP_QUAD_7SEG:
+ 	case DISP_QUAD_14SEG:
+-		linedisp_unregister(&priv->seg.linedisp);
++		linedisp_unregister(&priv->linedisp);
+ 		break;
+ 
+ 	default:
 -- 
 2.43.0.rc1.1.gbec44491f096
 
