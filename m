@@ -1,98 +1,71 @@
-Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 114F020DF5
-	for <linux-kernel@vger.kernel.org>; Mon, 19 Feb 2024 06:11:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B89072032E;
+	Mon, 19 Feb 2024 06:13:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708323073; cv=none; b=mQlWInRMfnUp0xaVGdUCFaqKCfB7TZ6sxdD8Jq6/Dvr4/f0MG+dBLdMh0K4dyecwSyG7S7K9b7qIJsYYga4Kz3+96QJJu0PIiAuGEX29odcIZnWC3X3zX0Yu3wuz1MYjTAS4mOeCufj6LHfhLmyzBHdx1QugHz4bUoymFsDIZAQ=
+	t=1708323234; cv=none; b=RUO94PvLLN3WJAUqQJMqNGI4Jxs0eNoco7lgXdpG7PPEDYFjroPXXTSXsRP4PV0V6MaGaWQCFHbsxuus9OutstfCULB7Iy7GKOo0gA2kaxrtIIqf8eB2WojWN1LYOBjgsQ+5f0Tfzw2znX7os7SomwDrLcUu33gSG0Ni7K6vU8k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708323073; c=relaxed/simple;
-	bh=6dDfDAz5I+hc4k6dr0zdna9LjUyhKmw46b/4NU8Gsds=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=Av1sXXiy+pTCXxpPCZu8cbXSIhvydct/9MSD6OW+ZuaVevZ3L9TQhYddsm2DO+KMjkXxddWeshe4YYcIZbtdlOAECgRSJUu4KVs6KjYHsX0og7+wynktUjarLo94Iz4nxWkDtT0d7ZOd2PYRZvCEfJrR7CsAV6v4QSTaqkoHxaU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--pumahsu.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=TtXgDuyF; arc=none smtp.client-ip=209.85.128.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--pumahsu.bounces.google.com
+	s=arc-20240116; t=1708323234; c=relaxed/simple;
+	bh=nwz+T+tPUvTDkHYJYlpLL/2DO2LTDQ53pHK5efARrr4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=iHEUvJd86Xe1X8CPsH124gb39HHWgadmcHNtSHWaujjfqvJk7c4aE4Hf8uBKh/CS+R+jYSyftRCqcwKcJ2N4PEMEocXjsdzWppYOAfMcV/h3anqubgLpryXtBTcX6sOmGpQ7WZYMLNV3dGfThTOWdXTN1PkzF1NXKP1dkV+dIX8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YqEi6bsc; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="TtXgDuyF"
-Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-607cd6c11d7so57346977b3.0
-        for <linux-kernel@vger.kernel.org>; Sun, 18 Feb 2024 22:11:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1708323071; x=1708927871; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=uGZJ8u5lTXI5mGL4r7O/a3CozSV5U8TTkXgiiPZhXeo=;
-        b=TtXgDuyF/O0tiHAWvoEN0OrrSKeCowgZmbHQ3sq0ld3lS3+GzsG+iBjox9C7XuHTN5
-         DsIbCvg5B/jNSKWUcHarT5vt57lkJoSbE4qyJp7+WtWuvAG5x9g/iRezsCOLNpIWqzjJ
-         Z6GNVYWhLwGrgtun7WoZAMmhMpE8CIOoInXMzCgHxG3Nv7nrgHveKwxm0w/k7ZVWOdP7
-         DTiLuH6gS16K7aX1PPAsmsOmqheAGVh61Ar2scjQWRH7hKl9+wDxn2JyJ7tbDpsGK7Rr
-         NCX3gBykPKK3X8VjRxpjps84bjVi3Jlx56KZxS2oWeAnv1jKaB5bIDq6eM1oC7MP5lMJ
-         Bisg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708323071; x=1708927871;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=uGZJ8u5lTXI5mGL4r7O/a3CozSV5U8TTkXgiiPZhXeo=;
-        b=ZhNhtBsupA6O5UNF5ZpAQTG0EfLNiRHcu888+ItPwV0C5uSaE/MOFC7aC0dvoHr+WX
-         Ke2i3ov91tQmdc2APumTpYOmzrmMo4XK3rknB8RTu/rA8Uk2Sc6AFrJfZadajGp/O7vj
-         Fle9xZVuy4LkUEI+n3b5nlC+ytXLko/N3mCxVRNturdTMr9BT6Yt5mTlooJkMlYSBa4T
-         quCHNRwzj8ttGNWw5Noe172Y8S/8iH0omXgHJ8FPm3MTjPqYxXOgOipZxX6PJRgzsxAu
-         ruv/KDB0FdJHzoxCnlPIVja34nAVwgqccylZ5yUBE0v7SAKKfM323JmfNn/zPFBxvAbN
-         feIA==
-X-Forwarded-Encrypted: i=1; AJvYcCWhkz1P3E1ahRMoL3Pvkrhfkdn480zYSUe4aiXGbXs4aKO+bXJMw//i5hN10+4ijnDs9fl/Sa2DMp0WKZwxarjawoNcHZUYH9iNsAtM
-X-Gm-Message-State: AOJu0YzMV8c99sczH98DsUVqjgxpN80N4VPHD7Al4CsYays97dd8s1FP
-	XMELv5ese/DPOXmTQ2oWslNGTBYNqfJjMunmicVnGqjg3YhmQb5LDhAXc44Qz7CS7WlNOqswVS3
-	7421mtA==
-X-Google-Smtp-Source: AGHT+IHZtagH7BxHLIkh1QcbT/hFogdlNF7ZRCSon/JkCFDlcOCKCwMiiYdHzhHdxmGNAIdKeM29oFOCWbjX
-X-Received: from pumahsu-p620linsp01.ntc.corp.google.com ([2401:fa00:fc:202:c8b2:b71:a506:971a])
- (user=pumahsu job=sendgmr) by 2002:a0d:e2d6:0:b0:5f9:abfe:243c with SMTP id
- l205-20020a0de2d6000000b005f9abfe243cmr1937909ywe.3.1708323071233; Sun, 18
- Feb 2024 22:11:11 -0800 (PST)
-Date: Mon, 19 Feb 2024 14:10:08 +0800
-In-Reply-To: <20240219061008.1761102-1-pumahsu@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YqEi6bsc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 19A28C433C7;
+	Mon, 19 Feb 2024 06:13:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1708323233;
+	bh=nwz+T+tPUvTDkHYJYlpLL/2DO2LTDQ53pHK5efARrr4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=YqEi6bscGK90CL6t2fVX0D+Vr3N0vBx6075oOw44YJyZfQgWyTDyxPgVxQqQ4YwEo
+	 OG2ZhaDN2whte+SeYEHhHU3mEQzS+V6hXbXvYvMlp47h5d4NNsmoRQ16cMqHptTNW3
+	 Yls7yN7L+Wxz5AQeVscHKjs05jVaItnnrGUiDIpun6jrXIqbzYL/jhXeTY6YOjwWzn
+	 cqYESI48p37xxkEATtWELWuOELX3l6yx5QgK+u95hs1PdqKEXlqCYa4NJiKABeQOka
+	 yvDxk5T91fmtnjCYW7UIQIXvNnqs3UhNMXICOK44/cEvhlsmucuh+5IwLmZBwiO9J9
+	 fcB9a+cB5ka/A==
+Date: Mon, 19 Feb 2024 11:43:49 +0530
+From: Vinod Koul <vkoul@kernel.org>
+To: Stephen Rothwell <sfr@canb.auug.org.au>
+Cc: Kishon Vijay Abraham I <kishon@kernel.org>,
+	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	Linux Next Mailing List <linux-next@vger.kernel.org>
+Subject: Re: linux-next: manual merge of the phy-next tree with the phy tree
+Message-ID: <ZdLxnXkxTQSW5pOV@matsya>
+References: <20240219144423.16a76202@canb.auug.org.au>
+ <20240219150629.7d45ae60@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20240219061008.1761102-1-pumahsu@google.com>
-X-Mailer: git-send-email 2.44.0.rc0.258.g7320e95886-goog
-Message-ID: <20240219061008.1761102-4-pumahsu@google.com>
-Subject: [PATCH 3/3] MAINTAINERS: Add maintainer for Google USB XHCI driver
-From: Puma Hsu <pumahsu@google.com>
-To: mathias.nyman@intel.com, gregkh@linuxfoundation.org, 
-	Thinh.Nguyen@synopsys.com
-Cc: badhri@google.com, royluo@google.com, howardyen@google.com, 
-	albertccwang@google.com, raychi@google.com, linux-kernel@vger.kernel.org, 
-	linux-usb@vger.kernel.org, Puma Hsu <pumahsu@google.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240219150629.7d45ae60@canb.auug.org.au>
 
-Add Google USB XHCI driver and maintainer.
+On 19-02-24, 15:06, Stephen Rothwell wrote:
+> Hi all,
+> 
+> On Mon, 19 Feb 2024 14:44:23 +1100 Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+> > 
+> > Today's linux-next merge of the phy-next tree got a conflict in:
+> > 
+> >   drivers/phy/qualcomm/phy-qcom-qmp-usb.c
+> > 
+> > between commit:
+> > 
+> >   d4c08d8b23b2 ("phy: qcom-qmp-usb: fix v3 offsets data")
+> > 
+> > from the phy tree and commit:
+> > 
+> >   52cfdc9c6c33 ("phy: qcom: qmp-usb: drop dual-lane handling")
 
-Signed-off-by: Puma Hsu <pumahsu@google.com>
----
- MAINTAINERS | 6 ++++++
- 1 file changed, 6 insertions(+)
+Thanks, this lgtm
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 960512bec428..dc0e32a3c250 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -9081,6 +9081,12 @@ F:	arch/arm64/boot/dts/exynos/google/
- F:	drivers/clk/samsung/clk-gs101.c
- F:	include/dt-bindings/clock/google,gs101.h
- 
-+GOOGLE USB XHCI DRIVER
-+M:	Puma Hsu <pumahsu@google.com>
-+L:	linux-usb@vger.kernel.org
-+S:	Maintained
-+F:	drivers/usb/host/xhci-goog.c
-+
- GPD POCKET FAN DRIVER
- M:	Hans de Goede <hdegoede@redhat.com>
- L:	platform-driver-x86@vger.kernel.org
+BR
 -- 
-2.44.0.rc0.258.g7320e95886-goog
-
+~Vinod
