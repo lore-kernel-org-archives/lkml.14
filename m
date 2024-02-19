@@ -1,112 +1,112 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A24BB405D3
-	for <linux-kernel@vger.kernel.org>; Mon, 19 Feb 2024 16:40:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B44040BE4;
+	Mon, 19 Feb 2024 16:41:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708360821; cv=none; b=b0euAqqoDAwJ2xLOZjCKzjVl4XK8lyC1NkJS0ufHSBKzinRHrS2wApLcCFO4BjZDfOp0mGnRJaa2TrNgxzFw6AN4e4QusCfowft/FFXM8/j3duGDMO6h4ErpvNha3EwECdN2kctCAqbbIMJ3qnoHDNR2HEdvaxoKbyP3rExXJK0=
+	t=1708360880; cv=none; b=dLuAbYUtizydBdFUuI2DKK9da4Vs7E6BypOoxBCq+As3TNnR5csJZv5eglA8jWOUMLacB912WE1SXY7o4izZlhHoV9H6LmQL2ntHddK2UYkH3MdfM19gQ7MPKqRNcrPAxSseuN4d7Y3wlniXpfZwTYnZEyVvJ5gV/KsDxzHiT7U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708360821; c=relaxed/simple;
-	bh=JzgpMbb5vfhhk7STctFxuswkVJQw83y6pxdVZBYT7nE=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=j7KrpBeinGtk/h/DirUDuMT1lapc/D8qPPVVBmBp2IJp52OCjGoYJlA0WRga00RvyyjBWHxE6rd3zSi+Y1UwaDVxBU3HnLVO5id0pllluJQ/ab5tZbjzN3zRBsyoIXrbtlljBfH+ZJZVnnbI9mYAamzJSiWJMJt7DilB5ogFlpw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=HGAVD8yE; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1708360880; c=relaxed/simple;
+	bh=ulGeX0PWqjlbuuzrErJ/p8v6kpkw8SQPxm11W1ozGbM=;
+	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cKFeu18ds5bmglWYO8Ls5irMr2MP0pOTiqG7oIqWlYW43ATqxIUlDhXGRzQ6fyUFpbAo1dTg2xI3/urKK/hoahzPMUkZ6L4KeNOQSOvs2P7QQKUiHAkgCodqpVUijCbvn9G01Hn1yaliaKygYivSCwEKGl2tlTD+EBBqxcpjJfk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KFPsNiOP; arc=none smtp.client-ip=209.85.128.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="HGAVD8yE"
-Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 41JDh20N004975;
-	Mon, 19 Feb 2024 16:40:12 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	from:to:cc:subject:date:message-id:mime-version
-	:content-transfer-encoding:content-type; s=qcppdkim1; bh=YsBlBje
-	RtZ5nUFLrFLHaUA8DOFE+PkpC+n1Iaw3boDk=; b=HGAVD8yE+KTApMsJv5XADxc
-	TGl5QNyXuEHvm7WKLHsFzvOVC/cBDZ6DJfdpwUzGnSSJpdq313KdzGdmGn8FSGEK
-	BypinMZXLn2ub3ddipqma47znQkfmZB0Jztc5UtnbJRmqkY5/V2XvJwIR0LnF2wX
-	S4jiyN6AoW7ep73hMudvPVnHhlseVUTNnCn2SYB6MRCvF9rmHkk+9ZSTYP/pTWbE
-	GMrKA/zjLHCLlxTLWLzEAuMxGvaDU6RkRnTjENt0n1mBgdq2hUoyIkh4zIz+Sv0x
-	/3qRwo5n00miyuTPNPuG2YdNBI8+ipHNncABcIsMAQzI322AlLADK51/NAwohhA=
-	=
-Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3wc4qx0w88-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 19 Feb 2024 16:40:11 +0000 (GMT)
-Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
-	by NASANPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 41JGeAeh013079
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 19 Feb 2024 16:40:10 GMT
-Received: from hu-mojha-hyd.qualcomm.com (10.80.80.8) by
- nasanex01c.na.qualcomm.com (10.45.79.139) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Mon, 19 Feb 2024 08:40:08 -0800
-From: Mukesh Ojha <quic_mojha@quicinc.com>
-To: <mcgrof@kernel.org>, <russ.weight@linux.dev>, <gregkh@linuxfoundation.org>,
-        <rafael@kernel.org>
-CC: <linux-kernel@vger.kernel.org>, Mukesh Ojha <quic_mojha@quicinc.com>
-Subject: [PATCH] firmware_loader: Suppress warning on FW_OPT_NO_WARN flag
-Date: Mon, 19 Feb 2024 22:09:54 +0530
-Message-ID: <20240219163954.7719-1-quic_mojha@quicinc.com>
-X-Mailer: git-send-email 2.43.0.254.ga26002b62827
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KFPsNiOP"
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-41261233e61so8618215e9.0;
+        Mon, 19 Feb 2024 08:41:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1708360876; x=1708965676; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:subject:cc
+         :to:from:date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=KT2kmDlZDFvoaZHP2a6wxZ/Yk0wqC7BnKMaiueQOHJc=;
+        b=KFPsNiOPAV35ffyaUGTaR4OyxDEKEhtBFAMmZLr5jhbZCEHrrFzELKHxhIOxCB5rzE
+         t7ObQs/G6NC/ZEuMI/b1DI/KNt2aLUB1J/QTUXW8TubIB6D6XKzt2Cu+uvyVfq5uNCBC
+         Xd4y4TQGiX70/gMQIOaS/QWyQ/stdu3E+mRqj59duvnP5PM2vE+duhMjTxdIR1oCnmN1
+         6q6AOak2+ahE9KsKw7DSO8flSVCDO1cKfBk9TQK9EMUG5EYhZyPjvFeIbIMa6eaWFvgE
+         0QRqSx7GYHN66L9CvKxdfbtaNE4gQvRcBKFJRbrsz5PDOgImel3TJdnbMSiC9baYQO5G
+         tWEQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708360876; x=1708965676;
+        h=in-reply-to:content-disposition:mime-version:references:subject:cc
+         :to:from:date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=KT2kmDlZDFvoaZHP2a6wxZ/Yk0wqC7BnKMaiueQOHJc=;
+        b=GSA1EGSye9NU1YNLeeaKs6znxRCjBULS0iTqOIzms00PdjgAZx58q/hvBlBQBHuHXN
+         jwwsv9150Rl+Tf1+cQZoRodziLUoElKcovuaaaPmJt/ViLXJi/+X4QLiaLFVoYpm4iC8
+         EDVaUQv8Vw5EBPZdgkoxs7W9WOGYFRjfFAvk2vpp+P7D7o5eg6ujWyv2xOeyduN0FrGf
+         WfFwzCIjXnGOAiNuKleR7prd+0yW9YA91HhFWAZ7ofaQv4piy68otiov4M0n5cJs6uHk
+         YfFTlRefRcWcwMbKM/i7SuQeZ+daSV7PFgaliDzqA0BtVlUDOgw4Hdw6+flV9+RzRfSh
+         60bw==
+X-Forwarded-Encrypted: i=1; AJvYcCVf2JDiuO+4gLhge2MdpzamAkJak83oNGlkg1exp3b5NP15mxT9sKLxJUGszhAw6QrvEiCPSAfpWfcd3UVEjWh1/sNTfIqwF2fW7y/rNyVpJgvDnWN6VJ+9dR9hMehy92s/0jVy
+X-Gm-Message-State: AOJu0YyIDU/eUwy204reJUh+KwryHtB4z8pG/0Gty6Qu1o/HMHqf8Mya
+	59bZNkGI4FHn+kUkbUrPMIRXHGj6f+CoJvRUn591xaKtm7VOXHzJ
+X-Google-Smtp-Source: AGHT+IGROfI8r3VYmRi0MS1nfajmPHmuX8p/Rs3wvyPcFOd70ecjjfs7y+gxxGPMK25b9SQQiT00rA==
+X-Received: by 2002:a05:600c:154f:b0:411:de5c:8023 with SMTP id f15-20020a05600c154f00b00411de5c8023mr11106288wmg.4.1708360876306;
+        Mon, 19 Feb 2024 08:41:16 -0800 (PST)
+Received: from Ansuel-XPS. (93-34-89-13.ip49.fastwebnet.it. [93.34.89.13])
+        by smtp.gmail.com with ESMTPSA id l14-20020a7bc44e000000b00411d1ce4f9dsm11665446wmi.34.2024.02.19.08.41.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 19 Feb 2024 08:41:15 -0800 (PST)
+Message-ID: <65d384ab.7b0a0220.15279.bf48@mx.google.com>
+X-Google-Original-Message-ID: <ZdOEqm5E7Bnhy5wQ@Ansuel-XPS.>
+Date: Mon, 19 Feb 2024 17:41:14 +0100
+From: Christian Marangi <ansuelsmth@gmail.com>
+To: Florian Fainelli <f.fainelli@gmail.com>
+Cc: Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>,
+	Russell King <linux@armlinux.org.uk>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Robert Marko <robimarko@gmail.com>,
+	"Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Pieter Jansen van Vuuren <pieter.jansen-van-vuuren@amd.com>,
+	Nipun Gupta <nipun.gupta@amd.com>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Puneet Gupta <puneet.gupta@amd.com>,
+	Abhijit Gangurde <abhijit.gangurde@amd.com>,
+	Umang Jain <umang.jain@ideasonboard.com>, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [net-next RFC PATCH 6/6] net: phy: bcm7xxx: rework phy_driver
+ table to new multiple PHY ID format
+References: <20240218190034.15447-1-ansuelsmth@gmail.com>
+ <20240218190034.15447-7-ansuelsmth@gmail.com>
+ <6146eb3b-720a-4523-bcc7-8e2656aeafef@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01c.na.qualcomm.com (10.45.79.139)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: E6y-MUpSL30mpFFAnTPSTvUl-6IbqTeN
-X-Proofpoint-ORIG-GUID: E6y-MUpSL30mpFFAnTPSTvUl-6IbqTeN
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-02-19_12,2024-02-19_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- spamscore=0 suspectscore=0 adultscore=0 clxscore=1011 malwarescore=0
- bulkscore=0 impostorscore=0 priorityscore=1501 mlxlogscore=961 mlxscore=0
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2401310000 definitions=main-2402190124
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <6146eb3b-720a-4523-bcc7-8e2656aeafef@gmail.com>
 
-Some of the warnings are still being printed even if FW_OPT_NO_WARN
-is passed for some of the function e.g., firmware_request_nowarn().
-Fix it by adding a check for FW_OPT_NO_WARN before printing the warning.
+On Sun, Feb 18, 2024 at 08:26:29PM -0800, Florian Fainelli wrote:
+> 
+> 
+> On 2/18/2024 11:00 AM, Christian Marangi wrote:
+> > Rework bcm7xxx PHY driver table to new multiple PHY format
+> > implementation to reduce code duplication and final size of the compiled
+> > module.
+> 
+> I like the idea of sharing as much code as possible and creating a smaller
+> module, however by changing the name, you are creating an user-space ABI
+> change, we rely upon the exact PHY name being shown under
+> /sys/class/mdio_bus/*/* and this change will break that.
+>
 
-Signed-off-by: Mukesh Ojha <quic_mojha@quicinc.com>
----
- drivers/base/firmware_loader/main.c | 16 ++++++++++------
- 1 file changed, 10 insertions(+), 6 deletions(-)
+Thanks for putting this concern on the table but isn't that generated by
+dev_set_name and PHY_ID_FMT? from bus->id and addr?
 
-diff --git a/drivers/base/firmware_loader/main.c b/drivers/base/firmware_loader/main.c
-index ea28102d421e..da8ca01d011c 100644
---- a/drivers/base/firmware_loader/main.c
-+++ b/drivers/base/firmware_loader/main.c
-@@ -551,12 +551,16 @@ fw_get_filesystem_firmware(struct device *device, struct fw_priv *fw_priv,
- 						       file_size_ptr,
- 						       READING_FIRMWARE);
- 		if (rc < 0) {
--			if (rc != -ENOENT)
--				dev_warn(device, "loading %s failed with error %d\n",
--					 path, rc);
--			else
--				dev_dbg(device, "loading %s failed for no such file or directory.\n",
--					 path);
-+			if (!(fw_priv->opt_flags & FW_OPT_NO_WARN)) {
-+				if (rc != -ENOENT)
-+					dev_warn(device,
-+						 "loading %s failed with error %d\n",
-+						 path, rc);
-+				else
-+					dev_dbg(device,
-+						"loading %s failed for no such file or directory.\n",
-+						path);
-+			}
- 			continue;
- 		}
- 		size = rc;
+Can't find reference of the name entry in sysfs. Am I missing something?
+The name seems to be used only by logging to print info/err/warn.
+
 -- 
-2.43.0.254.ga26002b62827
-
+	Ansuel
