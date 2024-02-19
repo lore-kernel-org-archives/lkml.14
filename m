@@ -1,144 +1,130 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8795E535C6;
-	Mon, 19 Feb 2024 20:23:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CA74535DF
+	for <linux-kernel@vger.kernel.org>; Mon, 19 Feb 2024 20:23:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708374212; cv=none; b=XO2VdfNLe1vru1ylcGo3qiSCDrYYYbuTiSo9KF+RkbO3roM/LPbhdL5edRg6HLanK3A3I+MsOAkCH7YNi6DfE4uezFuBefVCuJ1W+Rh0lWzRaS3e3+YPCjbSf4EkUIOWKlFe3asLcF+bA9nnPzId5P6E4Io78MIqpQtbVUK6h24=
+	t=1708374212; cv=none; b=fmkIOcrQQJYSnmV5UVtIGC+dFhnMu8H5L8mbhqp1h6QNzWh1IoabcVcsKzsrJRlGutargBA9+6JhiCEDjdHKQXKz9eMNib9dXDX9AMIBe7dbRg8z+oDKwvk6wYuEPaUh2xSUevj6bCmcODFfAYUp7mOrn20NzBSaVh2c+YAtUSc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1708374212; c=relaxed/simple;
-	bh=uZaCMC5IWWkK0wjuMtfXpecMc77gSRyuDuSAVtOMOsc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ODUyZ8MyCBUn+Vi+66+n8PJfcAt6UIELPlzE+c+S0pm7s8xMbdYpiFgIV+bNMPsbhbSYw+4eOiBRYH++b/HVza/lVnHSFbj6qOhFzW4t9lAbXZXlr/tt/rlskCBJrpkThZXtOGt7BzixQQuBT2hTbu9ggZCWnxZjRt4uLVez5pE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=kX1OCIx5; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=o6ZRAM16; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=sY665t8f; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=deH1j0Ln; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	bh=GCN4a3XwyVGjN4FSoVSL7WZNZKmZBWlauyy+D84PGEY=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=XHuJCUbW4/2nu/2uaoE/3zDJsQCXA82mMf1QZwRiP0FporovT5LojYLfnk3n8MUg3YP16qMjwx7kY5tt3xaVQykiOPl1fqyGlKV3H8Wf7P0hWz51pk8I+PhW0+yWMxQ4/t5Gg+SxJjITXLT9OJCCHoN5GFX2ttN5BrNi1pLZZCY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=bV1JYQCt; arc=none smtp.client-ip=209.85.214.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="kX1OCIx5";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="o6ZRAM16";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="sY665t8f";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="deH1j0Ln"
-Received: from imap2.dmz-prg2.suse.org (imap2.dmz-prg2.suse.org [10.150.64.98])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id A48CD22109;
-	Mon, 19 Feb 2024 20:23:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1708374208;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=IaiaYYyRrIaayqv/xsgvuF0xUZS0lMy4+lcMvWeNzEk=;
-	b=kX1OCIx5L7FrOS4ttnrl+jwssJS9IshxqPo2u/zBth9Ueiil1mMczdT2j4TjuOHfcY1BPP
-	1Mq3OydsFBmLiSk81VNUukc+72GUNlViR5cSC3BaA9Ysr82UqsBEIUa+MN29wDcIPAzBjZ
-	zbFYcNvE+zrC+0PEZS9A3tIrSYa8g9k=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1708374208;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=IaiaYYyRrIaayqv/xsgvuF0xUZS0lMy4+lcMvWeNzEk=;
-	b=o6ZRAM16QjPGOjR0eNezYoLiPPvKB4ucceCvDTdKM7GFXJOGOALsp8PENO/GIPSfdS8+Dv
-	nStz0Nr/jBeYhgDA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1708374207;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=IaiaYYyRrIaayqv/xsgvuF0xUZS0lMy4+lcMvWeNzEk=;
-	b=sY665t8fRME6ZA8d7ypbzSkc9RXAlouAKJ0Fa3jy/CaZQsecK8e9jZydeDe1luNsjdGqgZ
-	c2f/5qnCM+aOdg8yE9s9c6mAkXKOHYtvyJPbS/VK9lI96mBu0NZHW1QTwAeulRGhCPsc6B
-	HSpea3XM9O0s5Lr7/WSauql7xBOu7zg=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1708374207;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=IaiaYYyRrIaayqv/xsgvuF0xUZS0lMy4+lcMvWeNzEk=;
-	b=deH1j0LnkaQV7CHUI8lLF2NeXthu0pOZRSzbSPhXHLMKZBjb0GgX5TZd8hbFK+JQhn5LJE
-	H9tNz6NrZQjxzvBA==
-Received: from imap2.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap2.dmz-prg2.suse.org (Postfix) with ESMTPS id 9148C13585;
-	Mon, 19 Feb 2024 20:23:27 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([10.150.64.162])
-	by imap2.dmz-prg2.suse.org with ESMTPSA
-	id 7sVLI7+402VHXQAAn2gu4w
-	(envelope-from <dsterba@suse.cz>); Mon, 19 Feb 2024 20:23:27 +0000
-Date: Mon, 19 Feb 2024 21:22:47 +0100
-From: David Sterba <dsterba@suse.cz>
-To: Johannes Thumshirn <johannes.thumshirn@wdc.com>
-Cc: Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
-	David Sterba <dsterba@suse.com>, Christoph Hellwig <hch@lst.de>,
-	linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/5] btrfs: always open the device read-only in
- btrfs_scan_one_device
-Message-ID: <20240219202247.GB355@twin.jikos.cz>
-Reply-To: dsterba@suse.cz
-References: <20240214-hch-device-open-v1-0-b153428b4f72@wdc.com>
- <20240214-hch-device-open-v1-1-b153428b4f72@wdc.com>
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="bV1JYQCt"
+Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-1db51e55023so25477355ad.1
+        for <linux-kernel@vger.kernel.org>; Mon, 19 Feb 2024 12:23:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1708374211; x=1708979011; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=kUa3JH16Oe5UJV9UEwjr6pY+WpID6lK8xSe+O5n7a8M=;
+        b=bV1JYQCtkS9Hy/MCHAsLi2DxYJJUp0KhmL4KmzkBk8aXLh8/3g3U3ugU8E+n1kKV33
+         q4RwPzkMJx8ltaijxuXdkCMP6uXEHBZHmxFxmU7oCup1bnCgjhmbgDUay4KJWWANBza6
+         U0zd6BPSnOZlRYH+S5CNrFfLgWqajGh0b6nrY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708374211; x=1708979011;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=kUa3JH16Oe5UJV9UEwjr6pY+WpID6lK8xSe+O5n7a8M=;
+        b=wx/OZK3AU90qsLOTayK1VfTWaUo7PibJp7i5Mbh16CwoSwe5f42dlVGUJQrEYQ57/u
+         lA5B7n3pydstNselqCyFCeiS3QgRRtDerPvcL2p6GIc0oozGBKSZsTYVIvtx6ubeDtUk
+         eFEuIndkxwfKl9Q7crg3geUn0z5CNhB7ACh9kGca7/YxZANDc/ky4ReRSdhWPPHGIL0T
+         ZVfmz7O6Y7JKUXpoLR+bd5zBgzdK3PdoVtvjk8lf31dbzq3nbAeQMjU/FbAK3633uVAm
+         wn+tJu1UwBTOFijOyUJOt422opYpjD06aVL2F4T345VBu0yTz2q+9bxubH3p1zeC/rCB
+         XqyQ==
+X-Gm-Message-State: AOJu0YzWDGK7zHAzPS2kX6OzcLj6IjyC0iY93BkWfZ7YilM6G+sB/tJn
+	g/hn8zVaZxdBPgZvbW8fpBP9+uI+6S2o0niHv+VnxILNTG8eNEWdyuRGxyZ3NQ==
+X-Google-Smtp-Source: AGHT+IG8LtaETDPpup4Qyvx26INSaCWovgahZdaA0zbKl+GL/t4KUJJLp2AnURqkSJ5Jxmv9EMKmoQ==
+X-Received: by 2002:a17:902:da87:b0:1d9:2158:1308 with SMTP id j7-20020a170902da8700b001d921581308mr16281281plx.28.1708374210688;
+        Mon, 19 Feb 2024 12:23:30 -0800 (PST)
+Received: from localhost (175.199.125.34.bc.googleusercontent.com. [34.125.199.175])
+        by smtp.gmail.com with UTF8SMTPSA id mf8-20020a170902fc8800b001d9fc6cb5f2sm4818207plb.203.2024.02.19.12.23.29
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 19 Feb 2024 12:23:30 -0800 (PST)
+From: Stephen Boyd <swboyd@chromium.org>
+To: Lee Jones <lee@kernel.org>
+Cc: linux-kernel@vger.kernel.org,
+	patches@lists.linux.dev,
+	devicetree@vger.kernel.org,
+	chrome-platform@lists.linux.dev,
+	Douglas Anderson <dianders@chromium.org>,
+	Pin-yen Lin <treapking@chromium.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Benson Leung <bleung@chromium.org>,
+	Guenter Roeck <groeck@chromium.org>
+Subject: [PATCH 1/2] dt-bindings: cros-ec: Add properties for GPIO controller
+Date: Mon, 19 Feb 2024 12:23:23 -0800
+Message-ID: <20240219202325.4095816-2-swboyd@chromium.org>
+X-Mailer: git-send-email 2.44.0.rc0.258.g7320e95886-goog
+In-Reply-To: <20240219202325.4095816-1-swboyd@chromium.org>
+References: <20240219202325.4095816-1-swboyd@chromium.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240214-hch-device-open-v1-1-b153428b4f72@wdc.com>
-User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
-Authentication-Results: smtp-out1.suse.de;
-	none
-X-Spam-Level: 
-X-Spam-Score: -1.01
-X-Spamd-Result: default: False [-1.01 / 50.00];
-	 ARC_NA(0.00)[];
-	 HAS_REPLYTO(0.30)[dsterba@suse.cz];
-	 RCVD_VIA_SMTP_AUTH(0.00)[];
-	 FROM_HAS_DN(0.00)[];
-	 TO_DN_SOME(0.00)[];
-	 TO_MATCH_ENVRCPT_ALL(0.00)[];
-	 NEURAL_HAM_LONG(-1.00)[-1.000];
-	 MIME_GOOD(-0.10)[text/plain];
-	 REPLYTO_ADDR_EQ_FROM(0.00)[];
-	 RCVD_COUNT_THREE(0.00)[3];
-	 DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	 NEURAL_HAM_SHORT(-0.20)[-1.000];
-	 RCPT_COUNT_SEVEN(0.00)[7];
-	 DBL_BLOCKED_OPENRESOLVER(0.00)[lst.de:email];
-	 FUZZY_BLOCKED(0.00)[rspamd.com];
-	 FROM_EQ_ENVFROM(0.00)[];
-	 MIME_TRACE(0.00)[0:+];
-	 RCVD_TLS_ALL(0.00)[];
-	 BAYES_HAM(-0.01)[50.61%]
-X-Spam-Flag: NO
+Content-Transfer-Encoding: 8bit
 
-On Wed, Feb 14, 2024 at 08:42:12AM -0800, Johannes Thumshirn wrote:
-> From: Christoph Hellwig <hch@lst.de>
-> 
-> btrfs_scan_one_device opens the block device only to read the super
-> block.  Instead of passing a blk_mode_t argument to sometimes open
-> it for writing, just hard code BLK_OPEN_READ as it will never write
-> to the device or hand the block_device out to someone else.
+The ChromeOS embedded controller (EC) supports setting the state of
+GPIOs when the system is unlocked, and getting the state of GPIOs in all
+cases. The GPIOs are on the EC itself, so the EC acts similar to a GPIO
+expander. Add the #gpio-cells and gpio-controller properties to the
+cros-ec binding so that other devices described in DT can get the GPIOs
+on the EC.
 
-Opening for write was not meant to be for writing but also to exclude
-other attempted writes.
+Cc: Linus Walleij <linus.walleij@linaro.org>
+Cc: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
+Cc: Conor Dooley <conor+dt@kernel.org>
+Cc: Lee Jones <lee@kernel.org>
+Cc: Benson Leung <bleung@chromium.org>
+Cc: Guenter Roeck <groeck@chromium.org>
+Cc: <devicetree@vger.kernel.org>
+Cc: <chrome-platform@lists.linux.dev>
+Cc: Pin-yen Lin <treapking@chromium.org>
+Signed-off-by: Stephen Boyd <swboyd@chromium.org>
+---
+ Documentation/devicetree/bindings/mfd/google,cros-ec.yaml | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-That it's always for read seems OK, this has changed at some point and
-is explained in btrfs_scan_one_device():
+diff --git a/Documentation/devicetree/bindings/mfd/google,cros-ec.yaml b/Documentation/devicetree/bindings/mfd/google,cros-ec.yaml
+index e1ca4f297c6d..aac8819bd00b 100644
+--- a/Documentation/devicetree/bindings/mfd/google,cros-ec.yaml
++++ b/Documentation/devicetree/bindings/mfd/google,cros-ec.yaml
+@@ -93,6 +93,11 @@ properties:
+   '#size-cells':
+     const: 0
+ 
++  '#gpio-cells':
++    const: 2
++
++  gpio-controller: true
++
+   typec:
+     $ref: /schemas/chrome/google,cros-ec-typec.yaml#
+ 
+@@ -275,6 +280,8 @@ examples:
+             interrupts = <99 0>;
+             interrupt-parent = <&gpio7>;
+             spi-max-frequency = <5000000>;
++            #gpio-cells = <2>;
++            gpio-controller;
+ 
+             proximity {
+                 compatible = "google,cros-ec-mkbp-proximity";
+-- 
+https://chromeos.dev
 
-1356         /*
-1357          * Avoid an exclusive open here, as the systemd-udev may initiate the 
-1358          * device scan which may race with the user's mount or mkfs command,  
-1359          * resulting in failure.                                              
-1360          * Since the device scan is solely for reading purposes, there is no   
-1361          * need for an exclusive open. Additionally, the devices are read again
-1362          * during the mount process. It is ok to get some inconsistent    
-1363          * values temporarily, as the device paths of the fsid are the only
-1364          * required information for assembling the volume.
-1365          */
-1366         bdev_handle = bdev_open_by_path(path, flags, NULL, NULL);
