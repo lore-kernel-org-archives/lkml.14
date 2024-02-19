@@ -1,273 +1,98 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26EBB38F83;
-	Mon, 19 Feb 2024 15:18:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D43038389
+	for <linux-kernel@vger.kernel.org>; Mon, 19 Feb 2024 15:18:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708355884; cv=none; b=R+afVvmBCRgH4jjQWVi0cakcqKSNaFo9sGpX7+kKtYkHD7uUITUSsRpO6XQXHX2th+UYHon5iCVjti5cLhdm+f4O9zrfuBLy+TFy/xpZ8oaowfDTgbynXr3oJyVODrY1uptoyBe/rPEFHuRf1+x7Mdrlxqi7PSKyVJ/1KS7fvQA=
+	t=1708355921; cv=none; b=YZ82zDMQJtdlVtN15zw4pRg2kN0GwXrevef9Exdu5GPR/T0Bjkck+z9C3TRd68WW+DG5GFM8xWvgz5xHJCplcsQkaTUs2V1tf0qgmE/jPc0LDFhdXrJ2WYzFuK4MoGCtlnE5yzvuDpqdhSjxDC/JKUkiFGtfprVak1su5gJATS4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708355884; c=relaxed/simple;
-	bh=ZhWmkh/IIQkwD8dcKNirzjh2xpN1uEDAcdNeim0Gh5E=;
-	h=Content-Type:To:Cc:Subject:References:Date:MIME-Version:From:
-	 Message-ID:In-Reply-To; b=UOb4qfB+/pnFXpkhwLBsMz84d6JiOVvKiUrXO/yozAJJNxJhILPNXr6XaiUlnuaSUJyB+0j/MDYyPH/cDL1XLGCrDyMFEOAy9d0nv/YzZoL3p03cTEZcPv/+AEl2qbK2QgPViHF4E7o3LV0W7/I/YVQ+W2cswFsYaPjlJn9Zpls=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iqPfRZHw; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iqPfRZHw"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1708355883; x=1739891883;
-  h=to:cc:subject:references:date:mime-version:
-   content-transfer-encoding:from:message-id:in-reply-to;
-  bh=ZhWmkh/IIQkwD8dcKNirzjh2xpN1uEDAcdNeim0Gh5E=;
-  b=iqPfRZHwJidugWJHOK72J/yha3xY+BrX28PNDiSyyEP3XkOVYPumHrpl
-   a+4CRxzu2X9r/cJ5Wa3cyKsa9y8gnAqKInlqK75IVvTPm0iPOYxVMGLm3
-   8KfyS9Ls8+SONLbbrurQZoFR1shwQoaPZJJ3V3iTdAEWyUfUMBrHrproU
-   l5pzNOTj/VYo6AaYlTYpmic+rzhBx0Peu4fK1B2GPjelSX7zbj7HYgjgC
-   7W4Zxe2bizM2HnvbiEY4tvi2TDgU77jHfbqQb9VvMFRIc6Hj0jJhPQqxu
-   9gihgFeIYArPzLiT3IX0DnM2CHLaln2O7BYXcMKkTdRcdi+oEdrbC+sCG
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10989"; a="2548280"
-X-IronPort-AV: E=Sophos;i="6.06,170,1705392000"; 
-   d="scan'208";a="2548280"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Feb 2024 07:12:57 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10989"; a="936303679"
-X-IronPort-AV: E=Sophos;i="6.06,170,1705392000"; 
-   d="scan'208";a="936303679"
-Received: from hhuan26-mobl.amr.corp.intel.com ([10.92.17.168])
-  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-SHA; 19 Feb 2024 07:12:54 -0800
-Content-Type: text/plain; charset=iso-8859-15; format=flowed; delsp=yes
-To: dave.hansen@linux.intel.com, tj@kernel.org, mkoutny@suse.com,
- linux-kernel@vger.kernel.org, linux-sgx@vger.kernel.org, x86@kernel.org,
- cgroups@vger.kernel.org, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
- hpa@zytor.com, sohil.mehta@intel.com, tim.c.chen@linux.intel.com, "Jarkko
- Sakkinen" <jarkko@kernel.org>
-Cc: zhiquan1.li@intel.com, kristen@linux.intel.com, seanjc@google.com,
- zhanb@microsoft.com, anakrish@microsoft.com, mikko.ylinen@linux.intel.com,
- yangjie@microsoft.com, chrisyan@microsoft.com
-Subject: Re: [PATCH v9 10/15] x86/sgx: Add EPC reclamation in cgroup
- try_charge()
-References: <20240205210638.157741-1-haitao.huang@linux.intel.com>
- <20240205210638.157741-11-haitao.huang@linux.intel.com>
- <CZ3D53XFVXAW.25EK0ZBFH3HV2@kernel.org>
- <op.2i1xkgedwjvjmi@hhuan26-mobl.amr.corp.intel.com>
- <CZ4FCQ633VLC.26Y7HUHGRSFB3@kernel.org>
-Date: Mon, 19 Feb 2024 09:12:51 -0600
+	s=arc-20240116; t=1708355921; c=relaxed/simple;
+	bh=e+73T9SMCi27PyDmGbKHMRdyG/AztmAZjvgCjhDl5fw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XrMaLBwHp2OpE3EHTJOV1Gne3xvb8497n0FTtfuwkKosVmb4LY0CAOyoXzCWuAODU6gAmwsjVB/aVCcRfCdNkweMAjk4q6/m2KRES3u43lE1yLODRXUwQPTiDnJjPLoi27qLaRKLQWWRR0T3AIpaczLjcdCshj5obiruA2UPmxg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 179F3C433F1;
+	Mon, 19 Feb 2024 15:18:35 +0000 (UTC)
+Date: Mon, 19 Feb 2024 15:18:33 +0000
+From: Catalin Marinas <catalin.marinas@arm.com>
+To: Ryan Roberts <ryan.roberts@arm.com>
+Cc: Will Deacon <will@kernel.org>, Ard Biesheuvel <ardb@kernel.org>,
+	Marc Zyngier <maz@kernel.org>, James Morse <james.morse@arm.com>,
+	Andrey Ryabinin <ryabinin.a.a@gmail.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Matthew Wilcox <willy@infradead.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	David Hildenbrand <david@redhat.com>,
+	Kefeng Wang <wangkefeng.wang@huawei.com>,
+	John Hubbard <jhubbard@nvidia.com>, Zi Yan <ziy@nvidia.com>,
+	Barry Song <21cnbao@gmail.com>,
+	Alistair Popple <apopple@nvidia.com>,
+	Yang Shi <shy828301@gmail.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	linux-arm-kernel@lists.infradead.org, x86@kernel.org,
+	linuxppc-dev@lists.ozlabs.org, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v6 12/18] arm64/mm: Wire up PTE_CONT for user mappings
+Message-ID: <ZdNxSRR9MgvtMVao@arm.com>
+References: <20240215103205.2607016-1-ryan.roberts@arm.com>
+ <20240215103205.2607016-13-ryan.roberts@arm.com>
+ <Zc9UQy-mtYAzNWm2@arm.com>
+ <892caa6a-e4fe-4009-aa33-0570526961c5@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-From: "Haitao Huang" <haitao.huang@linux.intel.com>
-Organization: Intel
-Message-ID: <op.2jd9vpf0wjvjmi@hhuan26-mobl.amr.corp.intel.com>
-In-Reply-To: <CZ4FCQ633VLC.26Y7HUHGRSFB3@kernel.org>
-User-Agent: Opera Mail/1.0 (Win32)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <892caa6a-e4fe-4009-aa33-0570526961c5@arm.com>
 
-On Tue, 13 Feb 2024 19:52:25 -0600, Jarkko Sakkinen <jarkko@kernel.org>  
-wrote:
+On Fri, Feb 16, 2024 at 12:53:43PM +0000, Ryan Roberts wrote:
+> On 16/02/2024 12:25, Catalin Marinas wrote:
+> > On Thu, Feb 15, 2024 at 10:31:59AM +0000, Ryan Roberts wrote:
+> >> +pte_t contpte_ptep_get_lockless(pte_t *orig_ptep)
+> >> +{
+> >> +	/*
+> >> +	 * Gather access/dirty bits, which may be populated in any of the ptes
+> >> +	 * of the contig range. We may not be holding the PTL, so any contiguous
+> >> +	 * range may be unfolded/modified/refolded under our feet. Therefore we
+> >> +	 * ensure we read a _consistent_ contpte range by checking that all ptes
+> >> +	 * in the range are valid and have CONT_PTE set, that all pfns are
+> >> +	 * contiguous and that all pgprots are the same (ignoring access/dirty).
+> >> +	 * If we find a pte that is not consistent, then we must be racing with
+> >> +	 * an update so start again. If the target pte does not have CONT_PTE
+> >> +	 * set then that is considered consistent on its own because it is not
+> >> +	 * part of a contpte range.
+> >> +*/
+[...]
+> > After writing the comments above, I think I figured out that the whole
+> > point of this loop is to check that the ptes in the contig range are
+> > still consistent and the only variation allowed is the dirty/young
+> > state to be passed to the orig_pte returned. The original pte may have
+> > been updated by the time this loop finishes but I don't think it
+> > matters, it wouldn't be any different than reading a single pte and
+> > returning it while it is being updated.
+> 
+> Correct. The pte can be updated at any time, before after or during the reads.
+> That was always the case. But now we have to cope with a whole contpte block
+> being repainted while we are reading it. So we are just checking to make sure
+> that all the ptes that we read from the contpte block are consistent with
+> eachother and therefore we can trust that the access/dirty bits we gathered are
+> consistent.
 
-> On Tue Feb 13, 2024 at 1:15 AM EET, Haitao Huang wrote:
->> Hi Jarkko
->>
->> On Mon, 12 Feb 2024 13:55:46 -0600, Jarkko Sakkinen <jarkko@kernel.org>
->> wrote:
->>
->> > On Mon Feb 5, 2024 at 11:06 PM EET, Haitao Huang wrote:
->> >> From: Kristen Carlson Accardi <kristen@linux.intel.com>
->> >>
->> >> When the EPC usage of a cgroup is near its limit, the cgroup needs to
->> >> reclaim pages used in the same cgroup to make room for new  
->> allocations.
->> >> This is analogous to the behavior that the global reclaimer is  
->> triggered
->> >> when the global usage is close to total available EPC.
->> >>
->> >> Add a Boolean parameter for sgx_epc_cgroup_try_charge() to indicate
->> >> whether synchronous reclaim is allowed or not. And trigger the
->> >> synchronous/asynchronous reclamation flow accordingly.
->> >>
->> >> Note at this point, all reclaimable EPC pages are still tracked in  
->> the
->> >> global LRU and per-cgroup LRUs are empty. So no per-cgroup  
->> reclamation
->> >> is activated yet.
->> >>
->> >> Co-developed-by: Sean Christopherson  
->> <sean.j.christopherson@intel.com>
->> >> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
->> >> Signed-off-by: Kristen Carlson Accardi <kristen@linux.intel.com>
->> >> Co-developed-by: Haitao Huang <haitao.huang@linux.intel.com>
->> >> Signed-off-by: Haitao Huang <haitao.huang@linux.intel.com>
->> >> ---
->> >> V7:
->> >> - Split this out from the big patch, #10 in V6. (Dave, Kai)
->> >> ---
->> >>  arch/x86/kernel/cpu/sgx/epc_cgroup.c | 26 ++++++++++++++++++++++++--
->> >>  arch/x86/kernel/cpu/sgx/epc_cgroup.h |  4 ++--
->> >>  arch/x86/kernel/cpu/sgx/main.c       |  2 +-
->> >>  3 files changed, 27 insertions(+), 5 deletions(-)
->> >>
->> >> diff --git a/arch/x86/kernel/cpu/sgx/epc_cgroup.c
->> >> b/arch/x86/kernel/cpu/sgx/epc_cgroup.c
->> >> index d399fda2b55e..abf74fdb12b4 100644
->> >> --- a/arch/x86/kernel/cpu/sgx/epc_cgroup.c
->> >> +++ b/arch/x86/kernel/cpu/sgx/epc_cgroup.c
->> >> @@ -184,13 +184,35 @@ static void
->> >> sgx_epc_cgroup_reclaim_work_func(struct work_struct *work)
->> >>  /**
->> >>   * sgx_epc_cgroup_try_charge() - try to charge cgroup for a single  
->> EPC
->> >> page
->> >>   * @epc_cg:	The EPC cgroup to be charged for the page.
->> >> + * @reclaim:	Whether or not synchronous reclaim is allowed
->> >>   * Return:
->> >>   * * %0 - If successfully charged.
->> >>   * * -errno - for failures.
->> >>   */
->> >> -int sgx_epc_cgroup_try_charge(struct sgx_epc_cgroup *epc_cg)
->> >> +int sgx_epc_cgroup_try_charge(struct sgx_epc_cgroup *epc_cg, bool
->> >> reclaim)
->> >>  {
->> >> -	return misc_cg_try_charge(MISC_CG_RES_SGX_EPC, epc_cg->cg,  
->> PAGE_SIZE);
->> >> +	for (;;) {
->> >> +		if (!misc_cg_try_charge(MISC_CG_RES_SGX_EPC, epc_cg->cg,
->> >> +					PAGE_SIZE))
->> >> +			break;
->> >> +
->> >> +		if (sgx_epc_cgroup_lru_empty(epc_cg->cg))
->> >> +			return -ENOMEM;
->> >> + +		if (signal_pending(current))
->> >> +			return -ERESTARTSYS;
->> >> +
->> >> +		if (!reclaim) {
->> >> +			queue_work(sgx_epc_cg_wq, &epc_cg->reclaim_work);
->> >> +			return -EBUSY;
->> >> +		}
->> >> +
->> >> +		if (!sgx_epc_cgroup_reclaim_pages(epc_cg->cg, false))
->> >> +			/* All pages were too young to reclaim, try again a little later  
->> */
->> >> +			schedule();
->> >
->> > This will be total pain to backtrack after a while when something
->> > needs to be changed so there definitely should be inline comments
->> > addressing each branch condition.
->> >
->> > I'd rethink this as:
->> >
->> > 1. Create static __sgx_epc_cgroup_try_charge() for addressing single
->> >    iteration with the new "reclaim" parameter.
->> > 2. Add a new sgx_epc_group_try_charge_reclaim() function.
->> >
->> > There's a bit of redundancy with sgx_epc_cgroup_try_charge() and
->> > sgx_epc_cgroup_try_charge_reclaim() because both have almost the
->> > same loop calling internal __sgx_epc_cgroup_try_charge() with
->> > different parameters. That is totally acceptable.
->> >
->> > Please also add my suggested-by.
->> >
->> > BR, Jarkko
->> >
->> > BR, Jarkko
->> >
->> For #2:
->> The only caller of this function, sgx_alloc_epc_page(), has the same
->> boolean which is passed into this this function.
->
-> I know. This would be good opportunity to fix that up. Large patch
-> sets should try to make the space for its feature best possible and
-> thus also clean up the code base overally.
->
->> If we separate it into sgx_epc_cgroup_try_charge() and
->> sgx_epc_cgroup_try_charge_reclaim(), then the caller has to have the
->> if/else branches. So separation here seems not help?
->
-> Of course it does. It makes the code in that location self-documenting
-> and easier to remember what it does.
->
-> BR, Jarkko
->
+I've been thinking a bit more about this - do any of the callers of
+ptep_get_lockless() check the dirty/access bits? The only one that seems
+to care is ptdump but in that case I'd rather see the raw bits for
+debugging rather than propagating the dirty/access bits to the rest in
+the contig range.
 
-Please let me know if this aligns with your suggestion.
+So with some clearer documentation on the requirements, I think we don't
+need an arm64-specific ptep_get_lockless() (unless I missed something).
 
-
-static int ___sgx_epc_cgroup_try_charge(struct sgx_epc_cgroup *epc_cg)
-{
-         if (!misc_cg_try_charge(MISC_CG_RES_SGX_EPC, epc_cg->cg,
-                                         PAGE_SIZE))
-                 return 0;
-
-         if (sgx_epc_cgroup_lru_empty(epc_cg->cg))
-                 return -ENOMEM;
-
-         if (signal_pending(current))
-                 return -ERESTARTSYS;
-
-         return -EBUSY;
-}
-
-/**
-  * sgx_epc_cgroup_try_charge() - try to charge cgroup for a single page
-  * @epc_cg:     The EPC cgroup to be charged for the page.
-  *
-  * Try to reclaim pages in the background if the group reaches its limit  
-and
-  * there are reclaimable pages in the group.
-  * Return:
-  * * %0 - If successfully charged.
-  * * -errno - for failures.
-  */
-int sgx_epc_cgroup_try_charge(struct sgx_epc_cgroup *epc_cg)
-{
-         int ret =  ___sgx_epc_cgroup_try_charge(epc_cg);
-
-         if (ret == -EBUSY)
-                 queue_work(sgx_epc_cg_wq, &epc_cg->reclaim_work);
-
-         return ret;
-}
-
-/**
-  * sgx_epc_cgroup_try_charge_reclaim() - try to charge cgroup for a single  
-page
-  * @epc_cg:     The EPC cgroup to be charged for the page.
-  *
-  * Try to reclaim pages directly if the group reaches its limit and there  
-are
-  * reclaimable pages in the group.
-  * Return:
-  * * %0 - If successfully charged.
-  * * -errno - for failures.
-  */
-int sgx_epc_cgroup_try_charge_reclaim(struct sgx_epc_cgroup *epc_cg)
-{
-         int ret;
-
-         for (;;) {
-                 ret =  ___sgx_epc_cgroup_try_charge(epc_cg);
-                 if (ret != -EBUSY)
-                         return ret;
-
-                 if (!sgx_epc_cgroup_reclaim_pages(epc_cg->cg, current->mm))
-                         /* All pages were too young to reclaim, try again  
-a little later */
-                         schedule();
-         }
-
-         return 0;
-}
-
-It is a little more involved to remove the boolean for  
-sgx_alloc_epc_page() and its callers like sgx_encl_grow(),  
-sgx_alloc_va_page(). I'll send a separate patch for comments.
-
-Thanks
-Haitao
+-- 
+Catalin
