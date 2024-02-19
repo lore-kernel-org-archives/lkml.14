@@ -1,43 +1,43 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A901381C2;
-	Mon, 19 Feb 2024 07:47:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEC85374F2;
+	Mon, 19 Feb 2024 07:47:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708328878; cv=none; b=enlj6DE1Xrp4J18hEVgnKTUD3+YwEzrc+Se/E+ii8i/N9LJyOMc8TljUSLVn+kSDnh4WwTAGdsRl6nUa3lAfrq13sZjdZSFGzzWLwRIJu1OuIoIMtNe9k7l5pRUloNPThR7sI9BbaO/5sCdLWliW3bWJ0ydg2pgARYgY2s2PMDw=
+	t=1708328877; cv=none; b=r3g9Hw1FxkA7xc3OaiouWk49x1YiNXa7469zh6Knzt85UJ9IxsT1fHNEAEoJrcAMoDejNUtwvp92Dh70GegzqZzMFwl1xJfViqmASxMXgo/TQEzGPXawxgI5q7KahhDCq3QQ4bEDw9bouKGc/FIVuEU0yGxcC4GCwD0ra9dHnBc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708328878; c=relaxed/simple;
-	bh=lN6usg9zOqtCq4Znlmw51f35EKAS6w8CTKcm4FaLfzI=;
+	s=arc-20240116; t=1708328877; c=relaxed/simple;
+	bh=BTAmCrJM+TMcHQ8B+9ubqY9NJwhtodRsnqEaKj9jxbQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=d0IS06N/hcGps+s7Wh+Q+MYEu4JwP0l0fRLmsqmVKSiu11LyPAnC1woBsj6YsXY/6ojHihDnKw9aMG93G+2TmWcvcly3YXASCS3cZH8V0A88GmKkqzBs6ZIZqGzmgTX2pXXAjliqPCe1beDPoISQ577cn11hyxhZhxXUse55T0s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lj+ayEti; arc=none smtp.client-ip=198.175.65.16
+	 MIME-Version; b=mbklRxyrOaOsbSL9dNUj+yOgsWShfebGy4M9x6aOru2iLYSeSYcnGorj51FS0XhrpvLygJoNKUTPbLfXXG71lCUR6/CE29BZBekauqwtiYCuMJ/DcJTBFw96Hgc/I8SkDvPbHxgElYd8S9kEKKX6Bo1zHoZOVOjFFA7OFImopDU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=l9dmXkCC; arc=none smtp.client-ip=198.175.65.16
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lj+ayEti"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="l9dmXkCC"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1708328876; x=1739864876;
+  t=1708328875; x=1739864875;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=lN6usg9zOqtCq4Znlmw51f35EKAS6w8CTKcm4FaLfzI=;
-  b=lj+ayEtiYlI9IsViEhJEyWvC+jh2mIj3wGxPevG2YxtyXd6Dy4wVkyaw
-   THxMhcslVDbaVT12z6aw7cpL8JEeMSdo2CLZ+sWiYa2I8oMp8a/niOBjX
-   n/bfeYTFYsscwLfa5BLSirBCbv3tQKeqQ/YqpAJFz7F4xd8EXuK6I52f4
-   +5Gcuto3TQijPXJQuavhCJUgUJJff5F8FPACIn243+sGpf+sE1MewB16Z
-   qcP9azhaYDLotZdPTuIZmfbCtp3UzHr7CG5/ZZp7NfQ4DE2Eltth9SMkt
-   rtEFn5p0SY6OHTZqHHsL1vZWMvgfi0iw1zSviWURYPQOPG7tzlkrM3ZG+
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10988"; a="2535161"
+  bh=BTAmCrJM+TMcHQ8B+9ubqY9NJwhtodRsnqEaKj9jxbQ=;
+  b=l9dmXkCC1AkFPVYNybVIzkDHkNBlWE8buOUZKbLoKBgFvYUohz7mAGJF
+   SdfK+5vOWwru2GtsYUAGhzodYzDbWq+gMv8gi1ZHtETzforkpwNkrYQds
+   Zsnb+wxKbj2oeAIognWTF+pqf9vGuQUQ+4KApKn9fsYu6SbE36uyjezAX
+   qHAEwynqB7mStFZAsUfA04SO3Wg2gNitBSI/DPmGOX3OGM6aN69lJ1KQc
+   DM7CWlM90sWV7xxgS5twW+On4p8vu9C8McuzDQtG2FODe4yIjhbrOdTl7
+   SllVNNwoIJDRfTjaM1z3PIIT30CkJDdUuTA2YjG/+fxplP5NhDsXPdNJC
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10988"; a="2535142"
 X-IronPort-AV: E=Sophos;i="6.06,170,1705392000"; 
-   d="scan'208";a="2535161"
+   d="scan'208";a="2535142"
 Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Feb 2024 23:47:45 -0800
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Feb 2024 23:47:44 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10988"; a="826966124"
+X-IronPort-AV: E=McAfee;i="6600,9927,10988"; a="826966118"
 X-IronPort-AV: E=Sophos;i="6.06,170,1705392000"; 
-   d="scan'208";a="826966124"
+   d="scan'208";a="826966118"
 Received: from jf.jf.intel.com (HELO jf.intel.com) ([10.165.9.183])
   by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Feb 2024 23:47:44 -0800
 From: Yang Weijiang <weijiang.yang@intel.com>
@@ -53,9 +53,9 @@ Cc: peterz@infradead.org,
 	mlevitsk@redhat.com,
 	john.allen@amd.com,
 	weijiang.yang@intel.com
-Subject: [PATCH v10 22/27] KVM: VMX: Set up interception for CET MSRs
-Date: Sun, 18 Feb 2024 23:47:28 -0800
-Message-ID: <20240219074733.122080-23-weijiang.yang@intel.com>
+Subject: [PATCH v10 20/27] KVM: VMX: Emulate read and write to CET MSRs
+Date: Sun, 18 Feb 2024 23:47:26 -0800
+Message-ID: <20240219074733.122080-21-weijiang.yang@intel.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240219074733.122080-1-weijiang.yang@intel.com>
 References: <20240219074733.122080-1-weijiang.yang@intel.com>
@@ -67,98 +67,181 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Enable/disable CET MSRs interception per associated feature configuration.
-Shadow Stack feature requires all CET MSRs passed through to guest to make
-it supported in user and supervisor mode while IBT feature only depends on
-MSR_IA32_{U,S}_CETS_CET to enable user and supervisor IBT.
+Add emulation interface for CET MSR access. The emulation code is split
+into common part and vendor specific part. The former does common checks
+for MSRs, e.g., accessibility, data validity etc., then passes operation
+to either XSAVE-managed MSRs via the helpers or CET VMCS fields.
 
-Note, this MSR design introduced an architectural limitation of SHSTK and
-IBT control for guest, i.e., when SHSTK is exposed, IBT is also available
-to guest from architectual perspective since IBT relies on subset of SHSTK
-relevant MSRs.
-
+Suggested-by: Sean Christopherson <seanjc@google.com>
 Signed-off-by: Yang Weijiang <weijiang.yang@intel.com>
-Reviewed-by: Maxim Levitsky <mlevitsk@redhat.com>
-Reviewed-by: Chao Gao <chao.gao@intel.com>
 ---
- arch/x86/kvm/vmx/vmx.c | 43 +++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 42 insertions(+), 1 deletion(-)
+ arch/x86/kvm/vmx/vmx.c | 18 +++++++++
+ arch/x86/kvm/x86.c     | 88 ++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 106 insertions(+)
 
 diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index ff2296fa7d39..24e921c4e7e3 100644
+index 6cb94754c2a9..ff2296fa7d39 100644
 --- a/arch/x86/kvm/vmx/vmx.c
 +++ b/arch/x86/kvm/vmx/vmx.c
-@@ -159,7 +159,7 @@ module_param(allow_smaller_maxphyaddr, bool, S_IRUGO);
- 
- /*
-  * List of MSRs that can be directly passed to the guest.
-- * In addition to these x2apic and PT MSRs are handled specially.
-+ * In addition to these x2apic/PT/CET MSRs are handled specially.
-  */
- static u32 vmx_possible_passthrough_msrs[MAX_POSSIBLE_PASSTHROUGH_MSRS] = {
- 	MSR_IA32_SPEC_CTRL,
-@@ -692,6 +692,10 @@ static bool is_valid_passthrough_msr(u32 msr)
- 	case MSR_LBR_CORE_TO ... MSR_LBR_CORE_TO + 8:
- 		/* LBR MSRs. These are handled in vmx_update_intercept_for_lbr_msrs() */
- 		return true;
-+	case MSR_IA32_U_CET:
+@@ -2106,6 +2106,15 @@ static int vmx_get_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
+ 		else
+ 			msr_info->data = vmx->pt_desc.guest.addr_a[index / 2];
+ 		break;
 +	case MSR_IA32_S_CET:
-+	case MSR_IA32_PL0_SSP ... MSR_IA32_INT_SSP_TAB:
-+		return true;
- 	}
- 
- 	r = possible_passthrough_msr_slot(msr) != -ENOENT;
-@@ -7767,6 +7771,41 @@ static void update_intel_pt_cfg(struct kvm_vcpu *vcpu)
- 		vmx->pt_desc.ctl_bitmask &= ~(0xfULL << (32 + i * 4));
++		msr_info->data = vmcs_readl(GUEST_S_CET);
++		break;
++	case MSR_KVM_SSP:
++		msr_info->data = vmcs_readl(GUEST_SSP);
++		break;
++	case MSR_IA32_INT_SSP_TAB:
++		msr_info->data = vmcs_readl(GUEST_INTR_SSP_TABLE);
++		break;
+ 	case MSR_IA32_DEBUGCTLMSR:
+ 		msr_info->data = vmcs_read64(GUEST_IA32_DEBUGCTL);
+ 		break;
+@@ -2415,6 +2424,15 @@ static int vmx_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
+ 		else
+ 			vmx->pt_desc.guest.addr_a[index / 2] = data;
+ 		break;
++	case MSR_IA32_S_CET:
++		vmcs_writel(GUEST_S_CET, data);
++		break;
++	case MSR_KVM_SSP:
++		vmcs_writel(GUEST_SSP, data);
++		break;
++	case MSR_IA32_INT_SSP_TAB:
++		vmcs_writel(GUEST_INTR_SSP_TABLE, data);
++		break;
+ 	case MSR_IA32_PERF_CAPABILITIES:
+ 		if (data && !vcpu_to_pmu(vcpu)->version)
+ 			return 1;
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index c0ed69353674..281c3fe728c5 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -1849,6 +1849,36 @@ bool kvm_msr_allowed(struct kvm_vcpu *vcpu, u32 index, u32 type)
  }
+ EXPORT_SYMBOL_GPL(kvm_msr_allowed);
  
-+static void vmx_update_intercept_for_cet_msr(struct kvm_vcpu *vcpu)
++#define CET_US_RESERVED_BITS		GENMASK(9, 6)
++#define CET_US_SHSTK_MASK_BITS		GENMASK(1, 0)
++#define CET_US_IBT_MASK_BITS		(GENMASK_ULL(5, 2) | GENMASK_ULL(63, 10))
++#define CET_US_LEGACY_BITMAP_BASE(data)	((data) >> 12)
++
++static bool is_set_cet_msr_allowed(struct kvm_vcpu *vcpu, u32 index, u64 data,
++				   bool host_initiated)
 +{
-+	bool incpt;
++	bool msr_ctrl = index == MSR_IA32_S_CET || index == MSR_IA32_U_CET;
 +
-+	if (kvm_cpu_cap_has(X86_FEATURE_SHSTK)) {
-+		incpt = !guest_cpuid_has(vcpu, X86_FEATURE_SHSTK);
++	if (guest_can_use(vcpu, X86_FEATURE_SHSTK))
++		return true;
 +
-+		vmx_set_intercept_for_msr(vcpu, MSR_IA32_U_CET,
-+					  MSR_TYPE_RW, incpt);
-+		vmx_set_intercept_for_msr(vcpu, MSR_IA32_S_CET,
-+					  MSR_TYPE_RW, incpt);
-+		vmx_set_intercept_for_msr(vcpu, MSR_IA32_PL0_SSP,
-+					  MSR_TYPE_RW, incpt);
-+		vmx_set_intercept_for_msr(vcpu, MSR_IA32_PL1_SSP,
-+					  MSR_TYPE_RW, incpt);
-+		vmx_set_intercept_for_msr(vcpu, MSR_IA32_PL2_SSP,
-+					  MSR_TYPE_RW, incpt);
-+		vmx_set_intercept_for_msr(vcpu, MSR_IA32_PL3_SSP,
-+					  MSR_TYPE_RW, incpt);
-+		vmx_set_intercept_for_msr(vcpu, MSR_IA32_INT_SSP_TAB,
-+					  MSR_TYPE_RW, incpt);
-+		if (!incpt)
-+			return;
-+	}
++	if (msr_ctrl && guest_can_use(vcpu, X86_FEATURE_IBT))
++		return true;
 +
-+	if (kvm_cpu_cap_has(X86_FEATURE_IBT)) {
-+		incpt = !guest_cpuid_has(vcpu, X86_FEATURE_IBT);
++	/*
++	 * If KVM supports the MSR, i.e. has enumerated the MSR existence to
++	 * userspace, then userspace is allowed to write '0' irrespective of
++	 * whether or not the MSR is exposed to the guest.
++	 */
++	if (!host_initiated || data)
++		return false;
 +
-+		vmx_set_intercept_for_msr(vcpu, MSR_IA32_U_CET,
-+					  MSR_TYPE_RW, incpt);
-+		vmx_set_intercept_for_msr(vcpu, MSR_IA32_S_CET,
-+					  MSR_TYPE_RW, incpt);
-+	}
++	if (kvm_cpu_cap_has(X86_FEATURE_SHSTK))
++		return true;
++
++	return msr_ctrl && kvm_cpu_cap_has(X86_FEATURE_IBT);
 +}
 +
- static void vmx_vcpu_after_set_cpuid(struct kvm_vcpu *vcpu)
- {
- 	struct vcpu_vmx *vmx = to_vmx(vcpu);
-@@ -7845,6 +7884,8 @@ static void vmx_vcpu_after_set_cpuid(struct kvm_vcpu *vcpu)
+ /*
+  * Write @data into the MSR specified by @index.  Select MSR specific fault
+  * checks are bypassed if @host_initiated is %true.
+@@ -1908,6 +1938,42 @@ static int __kvm_set_msr(struct kvm_vcpu *vcpu, u32 index, u64 data,
  
- 	/* Refresh #PF interception to account for MAXPHYADDR changes. */
- 	vmx_update_exception_bitmap(vcpu);
-+
-+	vmx_update_intercept_for_cet_msr(vcpu);
- }
+ 		data = (u32)data;
+ 		break;
++	case MSR_IA32_U_CET:
++	case MSR_IA32_S_CET:
++		if (!is_set_cet_msr_allowed(vcpu, index, data, host_initiated))
++			return 1;
++		if (data & CET_US_RESERVED_BITS)
++			return 1;
++		if (!guest_can_use(vcpu, X86_FEATURE_SHSTK) &&
++		    (data & CET_US_SHSTK_MASK_BITS))
++			return 1;
++		if (!guest_can_use(vcpu, X86_FEATURE_IBT) &&
++		    (data & CET_US_IBT_MASK_BITS))
++			return 1;
++		if (!IS_ALIGNED(CET_US_LEGACY_BITMAP_BASE(data), 4))
++			return 1;
++		/* IBT can be suppressed iff the TRACKER isn't WAIT_ENDBR. */
++		if ((data & CET_SUPPRESS) && (data & CET_WAIT_ENDBR))
++			return 1;
++		break;
++	case MSR_IA32_INT_SSP_TAB:
++		if (!is_set_cet_msr_allowed(vcpu, index, data, host_initiated))
++			return 1;
++		if (is_noncanonical_address(data, vcpu))
++			return 1;
++		break;
++	case MSR_KVM_SSP:
++		if (!host_initiated)
++			return 1;
++		fallthrough;
++	case MSR_IA32_PL0_SSP ... MSR_IA32_PL3_SSP:
++		if (!is_set_cet_msr_allowed(vcpu, index, data, host_initiated))
++			return 1;
++		if (is_noncanonical_address(data, vcpu))
++			return 1;
++		if (!IS_ALIGNED(data, 4))
++			return 1;
++		break;
+ 	}
  
- static u64 vmx_get_perf_capabilities(void)
+ 	msr.data = data;
+@@ -1951,6 +2017,20 @@ static int __kvm_get_msr(struct kvm_vcpu *vcpu, u32 index, u64 *data,
+ 		    !guest_cpuid_has(vcpu, X86_FEATURE_RDPID))
+ 			return 1;
+ 		break;
++	case MSR_IA32_U_CET:
++	case MSR_IA32_S_CET:
++		if (!guest_can_use(vcpu, X86_FEATURE_SHSTK) &&
++		    !guest_can_use(vcpu, X86_FEATURE_IBT))
++			return 1;
++		break;
++	case MSR_KVM_SSP:
++		if (!host_initiated)
++			return 1;
++		fallthrough;
++	case MSR_IA32_PL0_SSP ... MSR_IA32_INT_SSP_TAB:
++		if (!guest_can_use(vcpu, X86_FEATURE_SHSTK))
++			return 1;
++		break;
+ 	}
+ 
+ 	msr.index = index;
+@@ -4143,6 +4223,10 @@ int kvm_set_msr_common(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
+ 		vcpu->arch.guest_fpu.xfd_err = data;
+ 		break;
+ #endif
++	case MSR_IA32_U_CET:
++	case MSR_IA32_PL0_SSP ... MSR_IA32_PL3_SSP:
++		kvm_set_xstate_msr(vcpu, msr_info);
++		break;
+ 	default:
+ 		if (kvm_pmu_is_valid_msr(vcpu, msr))
+ 			return kvm_pmu_set_msr(vcpu, msr_info);
+@@ -4502,6 +4586,10 @@ int kvm_get_msr_common(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
+ 		msr_info->data = vcpu->arch.guest_fpu.xfd_err;
+ 		break;
+ #endif
++	case MSR_IA32_U_CET:
++	case MSR_IA32_PL0_SSP ... MSR_IA32_PL3_SSP:
++		kvm_get_xstate_msr(vcpu, msr_info);
++		break;
+ 	default:
+ 		if (kvm_pmu_is_valid_msr(vcpu, msr_info->index))
+ 			return kvm_pmu_get_msr(vcpu, msr_info);
 -- 
 2.43.0
 
