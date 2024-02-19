@@ -1,156 +1,86 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7931286AC;
-	Mon, 19 Feb 2024 07:45:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B14CF208CF
+	for <linux-kernel@vger.kernel.org>; Mon, 19 Feb 2024 07:46:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708328748; cv=none; b=iTW1qC8YUM3Ss+rVRXI27bTqtT+rnLyaf02XMqrdujsuIylslTo/Vhvr5gW4yDog9x6823RNI0blYxWX5sM8PKC8priWJvngaeJ6yq2L94Do5wul7R3/jw1D1W263oYeO4MQa3k4qQdjkwIRH6y9UVCtLc5WVSZlIcA1+gzfusQ=
+	t=1708328801; cv=none; b=j39cp5AvSWPt1Tn7FdeAyp4hTLmqWyNFCmzHjlVwPdVZXaEmXrtEtFzdUsl2FShHcs0TGZ0C15dUZILC/MMjH/ckZ3u8n1VKpR7rnvVuJJ+BAESWo9A02ESbYIE+WqlNaxxtQhlgVrhgstSGMtIYdt6uVkj7YZ4hShjwlo6X/U0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708328748; c=relaxed/simple;
-	bh=PJX9nxRLEeoQwdUnmOqN3H2dctwppjpelMENczAYtJo=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=PcSZJcmXAJBSNsPBFgLiDE6l3wUwAezttQn53cWvOHEI8BWIqCKI4JBHQ1TNwzYXHNc5ER3jUH8FnNGnGUgKsnp3k6CzW6I2FyTBWEg4zw1VfcU5uzZwVSOJ/F2svuQYLFY+9Pmyx5zBV3Butj9oXBI4XCQpHIzxbGzxJFMhHpg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=BS2A+tGl; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="BS2A+tGl"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1708328745;
-	bh=PJX9nxRLEeoQwdUnmOqN3H2dctwppjpelMENczAYtJo=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=BS2A+tGlyrlXhAMVAAqIP9FMTpGAabNIJMqExmdQc6ch0HMCeFPA7fPrAA7/MFYRZ
-	 is/znYhAW+23oSaFZ/76fl32JOqAhJuCpAarw6VJDGdNDzHbVW+m2ZOtFBtQf1r/7q
-	 ZDwFDQh5mNYydk8zOcFfGSt9rNA0kyu4IV5nJF2xAuvM7TKUw2eQLqWLxUcMXj/p3Y
-	 yTs8FSll/a7uFqrYvCgnjfE06iDRLIp3Rpo+WGEq6YTdJ30od8oZglKoU5ya1Qwsx/
-	 Qn7zd6QEECx2FXgOxplbcu5G1HDLfSwYOcPB/2/cpUjZEECMKtFjR4fPj00ACaWmYR
-	 Tzg47AFqJtutA==
-Received: from eugen-station.. (cola.collaboradmins.com [195.201.22.229])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: ehristev)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 2859B37820BE;
-	Mon, 19 Feb 2024 07:45:40 +0000 (UTC)
-From: Eugen Hristev <eugen.hristev@collabora.com>
-To: tytso@mit.edu,
-	adilger.kernel@dilger.ca,
-	linux-ext4@vger.kernel.org,
-	jaegeuk@kernel.org,
-	chao@kernel.org,
-	linux-f2fs-devel@lists.sourceforge.net,
-	linux-fsdevel@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	kernel@collabora.com,
-	eugen.hristev@collabora.com,
-	viro@zeniv.linux.org.uk,
-	brauner@kernel.org,
-	jack@suse.cz,
-	krisman@suse.de,
-	Gabriel Krisman Bertazi <krisman@collabora.com>,
-	Eric Biggers <ebiggers@google.com>
-Subject: [PATCH v11 8/8] f2fs: Move CONFIG_UNICODE defguards into the code flow
-Date: Mon, 19 Feb 2024 09:44:57 +0200
-Message-Id: <20240219074457.24578-9-eugen.hristev@collabora.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240219074457.24578-1-eugen.hristev@collabora.com>
-References: <20240219074457.24578-1-eugen.hristev@collabora.com>
+	s=arc-20240116; t=1708328801; c=relaxed/simple;
+	bh=JfG0uoYUT2Yb7KnUa8vgB5iLyT96E9pNxJMpHnbFr5E=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=ljXpdzd/QWZVuWmAjgvay+GWIEDwV/EV9ov0mkp46VmvO5c+PX29/Vv617UujyGiyyYgKm5r0QTqo94Y1KSNnzGU1qrJQ1j/EH6nysNSF1nPMdIkvAMLENO/MsphKyhj+oZR9Gxi0Ia+kv5TW37cFnBPYSkMD0GdCkl1TI2aEng=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rbyMH-0000QC-Pq; Mon, 19 Feb 2024 08:46:37 +0100
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rbyMH-001bHr-Ai; Mon, 19 Feb 2024 08:46:37 +0100
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rbyMH-007bvR-0n;
+	Mon, 19 Feb 2024 08:46:37 +0100
+From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To: Thorsten Scherer <t.scherer@eckelmann.de>
+Cc: Pengutronix Kernel Team <kernel@pengutronix.de>,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 0/4] siox: Move some complexity into the core
+Date: Mon, 19 Feb 2024 08:46:28 +0100
+Message-ID: <cover.1708328466.git.u.kleine-koenig@pengutronix.de>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1298; i=u.kleine-koenig@pengutronix.de; h=from:subject:message-id; bh=JfG0uoYUT2Yb7KnUa8vgB5iLyT96E9pNxJMpHnbFr5E=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBl0wdV5KoOVMYV9bbk4yCGhmy4C2xnPdssud5f9 chkfG9LUUaJATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCZdMHVQAKCRCPgPtYfRL+ TsOWB/0fqeYeL2v7P/VZWwf3v5HhWDGKQVZlro6QvTILEh9pD435WgE9aJpUxQ8xJUovs3EB+1j bxO+AxoKOfKgbDR4wsoPKDTPire/NnQghaxNthlIGXxHqXjqz0DBXpig6jKvk7DAjqalQxFctu+ oqOUB9mDRSvLBxEwyVQ/1/+h0n+Z4iE2O3mNEtOKpZSNO0Cfz1Nsl4FFlMzStyupFl2klJ5wPl0 DEzFXau5B5PSJOKTQfTpFBS+As0FDDdmckAKtzgY5VOfXRdah0UWwp/y1iXnFjcxVDC9LBGWXm2 +HTRtSqPv3HG3zklFqNpevbFw8aTBbez/tMtqqxlsfUL7WNs
+X-Developer-Key: i=u.kleine-koenig@pengutronix.de; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
 Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-From: Gabriel Krisman Bertazi <krisman@collabora.com>
+Hello,
 
-Instead of a bunch of ifdefs, make the unicode built checks part of the
-code flow where possible, as requested by Torvalds.
+the reference handling in siox is a bit strange. With
+siox_master_alloc() to get a reference on the master that is passed to
+the core calling siox_master_register(). So until siox_master_register()
+is called successfully the driver has to call siox_master_put() in the
+error path, but on remove siox_master_unregister cares for that. While
+that technically works, it's unusual and surprising to use. This serie's
+first patch cleans that up and then introduces devm functions to make it
+even easier to use.
 
-Reviewed-by: Eric Biggers <ebiggers@google.com>
-Reviewed-by: Chao Yu <chao@kernel.org>
-Signed-off-by: Gabriel Krisman Bertazi <krisman@collabora.com>
-[eugen.hristev@collabora.com: port to 6.8-rc3]
-Signed-off-by: Eugen Hristev <eugen.hristev@collabora.com>
----
- fs/f2fs/namei.c | 10 ++++------
- fs/f2fs/super.c |  8 ++++----
- 2 files changed, 8 insertions(+), 10 deletions(-)
+A nice (and intended) side effect is that the gpio bus driver gets rid
+of it's remove callback, so I don't have to adapt it for my quest that
+changes the prototype of .remove().
 
-diff --git a/fs/f2fs/namei.c b/fs/f2fs/namei.c
-index ba11298b7837..c317bfd1c344 100644
---- a/fs/f2fs/namei.c
-+++ b/fs/f2fs/namei.c
-@@ -577,8 +577,7 @@ static struct dentry *f2fs_lookup(struct inode *dir, struct dentry *dentry,
- 		goto out_iput;
- 	}
- out_splice:
--#if IS_ENABLED(CONFIG_UNICODE)
--	if (!inode && IS_CASEFOLDED(dir)) {
-+	if (IS_ENABLED(CONFIG_UNICODE) && !inode && IS_CASEFOLDED(dir)) {
- 		/* Eventually we want to call d_add_ci(dentry, NULL)
- 		 * for negative dentries in the encoding case as
- 		 * well.  For now, prevent the negative dentry
-@@ -587,7 +586,7 @@ static struct dentry *f2fs_lookup(struct inode *dir, struct dentry *dentry,
- 		trace_f2fs_lookup_end(dir, dentry, ino, err);
- 		return NULL;
- 	}
--#endif
-+
- 	new = d_splice_alias(inode, dentry);
- 	trace_f2fs_lookup_end(dir, !IS_ERR_OR_NULL(new) ? new : dentry,
- 				ino, IS_ERR(new) ? PTR_ERR(new) : err);
-@@ -640,16 +639,15 @@ static int f2fs_unlink(struct inode *dir, struct dentry *dentry)
- 	f2fs_delete_entry(de, page, dir, inode);
- 	f2fs_unlock_op(sbi);
- 
--#if IS_ENABLED(CONFIG_UNICODE)
- 	/* VFS negative dentries are incompatible with Encoding and
- 	 * Case-insensitiveness. Eventually we'll want avoid
- 	 * invalidating the dentries here, alongside with returning the
- 	 * negative dentries at f2fs_lookup(), when it is better
- 	 * supported by the VFS for the CI case.
- 	 */
--	if (IS_CASEFOLDED(dir))
-+	if (IS_ENABLED(CONFIG_UNICODE) && IS_CASEFOLDED(dir))
- 		d_invalidate(dentry);
--#endif
-+
- 	if (IS_DIRSYNC(dir))
- 		f2fs_sync_fs(sbi->sb, 1);
- fail:
-diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
-index 1b718bebfaa1..07c54981cb6b 100644
---- a/fs/f2fs/super.c
-+++ b/fs/f2fs/super.c
-@@ -312,7 +312,7 @@ struct kmem_cache *f2fs_cf_name_slab;
- static int __init f2fs_create_casefold_cache(void)
- {
- 	f2fs_cf_name_slab = f2fs_kmem_cache_create("f2fs_casefolded_name",
--							F2FS_NAME_LEN);
-+						   F2FS_NAME_LEN);
- 	return f2fs_cf_name_slab ? 0 : -ENOMEM;
- }
- 
-@@ -1360,13 +1360,13 @@ static int parse_options(struct super_block *sb, char *options, bool is_remount)
- 		return -EINVAL;
- 	}
- #endif
--#if !IS_ENABLED(CONFIG_UNICODE)
--	if (f2fs_sb_has_casefold(sbi)) {
-+
-+	if (!IS_ENABLED(CONFIG_UNICODE) && f2fs_sb_has_casefold(sbi)) {
- 		f2fs_err(sbi,
- 			"Filesystem with casefold feature cannot be mounted without CONFIG_UNICODE");
- 		return -EINVAL;
- 	}
--#endif
-+
- 	/*
- 	 * The BLKZONED feature indicates that the drive was formatted with
- 	 * zone alignment optimization. This is optional for host-aware
+Best regards
+Uwe
+
+Uwe Kleine-König (4):
+  siox: Don't pass the reference on a master in siox_master_register()
+  siox: Provide a devm variant of siox_master_alloc()
+  siox: Provide a devm variant of siox_master_register()
+  siox: bus-gpio: Simplify using devm_siox_* functions
+
+ drivers/siox/siox-bus-gpio.c | 62 ++++++++++++------------------------
+ drivers/siox/siox-core.c     | 45 ++++++++++++++++++++++++++
+ drivers/siox/siox.h          |  4 +++
+ 3 files changed, 69 insertions(+), 42 deletions(-)
+
+
+base-commit: d37e1e4c52bc60578969f391fb81f947c3e83118
 -- 
-2.34.1
+2.43.0
 
