@@ -1,138 +1,106 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7892EE572;
-	Mon, 19 Feb 2024 11:03:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0ED861C10
+	for <linux-kernel@vger.kernel.org>; Mon, 19 Feb 2024 11:04:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.196
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708340592; cv=none; b=X4yIi37FIG9li3KMlQtidXt+fKxfkQsdxo1TzSZ2KPGb1oKlcd80lb1AlP7awnvy5H28pLDFcwIZiH1E6xRJZCPxs8j/Yp3mBfi3Uv+fbfTTDzMqHz5gOxEN2ogHeLdFQPCh+/4H+ZeNtGNnBdc32YIUrGbOxUDS2sexbV4Yes8=
+	t=1708340666; cv=none; b=DKW2omc7c1WbLDcEl5SYsc0K72yQ1M5iLVUYTWhcXlu9hNHpChq/o4CDs7MlVqpY+u53sQLbYoaKNGbvlQ/K6gt/h6cuDG1e7zIaaejN/vGzrVBw5zP9WX37Sft8IPYYLIXyeypMlgxiRvRDicQ5WH060om+0wneVHtR/3+4wKE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708340592; c=relaxed/simple;
-	bh=FmJQEyGJLQVLQYwch0n2HMhFM8e+cKsyEMeHqRiQ8SM=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=ddeTZWuWB+VX4txXf93QEcS2036swhX7Sfa/cK0lRrnkVuje5qhN582pEmz6ARUxxiBVUhzcSWlvpDbG25yu4n/jdejmGXnlrbu8gYcpbFGOo3kDRguy+6MR/20Jm8x0LkW+o84mpmZXpANw3/9r6aVAnuvN+UJGmXp55dMckn4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=km/R2N0W; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=W4XwrQWP; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1708340666; c=relaxed/simple;
+	bh=/w0iYygLzqoKWkoa611dONSmQSfaIjtKlgKCivWQdS0=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=mBvb3zHCXB83QcjYn+uEFfs4P7grfjJVXCizRZsCrKj0wK70Ua9U7Lwi90QLzeQH/FfeU08vycyAQKaTDNMbYaS6nRD1G/lXq76ACNVg7HwUH6fBRmhOWottp7qiO3a5q+yV+kA24uS/tzlovJP2+L8AW0VfGtmq0WShUmRt5SM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=XoPxeI8r; arc=none smtp.client-ip=217.70.183.196
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="km/R2N0W";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="W4XwrQWP"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1708340587;
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="XoPxeI8r"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 97AD4E000E;
+	Mon, 19 Feb 2024 11:04:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1708340656;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=zKDld/uBnZjKtA3ymC1kDB57x1PvjJD6+IsbauqnIRc=;
-	b=km/R2N0WeQl1h7yz5GnViOyv7tHLEwvzYLLabsfcjt2IUYyU2sVbYVViII9pL9a+1hoS6k
-	sHJeBmxpSQEMjJ31AWpD7773/d94TU2p76eVW+0GdnqNLRhSqVoEBJJJIphQSGeouP3Nly
-	Xl4WHudNOWljN1nOdgU1njWe8N7aEw1Daul6PfIhRVGSrIDAdc/KckanTTE/eYIpI1tRjR
-	x/bhGxyNLcrwMnsZGDs/BZKvfIOUwMB6m+/XvPKDxceXwPwlpYrbHDWiRU/PLAkZ3xywjn
-	4YrhVBf2SUNgEYaRzHKGg+BqugSuJkdz0PfPHU0mZ5MVuWYOQ20Ic4NojGByGA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1708340587;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=zKDld/uBnZjKtA3ymC1kDB57x1PvjJD6+IsbauqnIRc=;
-	b=W4XwrQWPdPbbcWQ5uhHpV6oF0yPIWmY7na5LfqG+OiWCsL3D4e2qkqsujOrvpTnPSkMEKv
-	HZdEgHYk2Jrf0AAA==
-To: Leonardo Bras <leobras@redhat.com>, Greg Kroah-Hartman
- <gregkh@linuxfoundation.org>, Jiri Slaby <jirislaby@kernel.org>, Tony
- Lindgren <tony@atomide.com>, Andy Shevchenko
- <andriy.shevchenko@linux.intel.com>, John Ogness
- <john.ogness@linutronix.de>, Ilpo =?utf-8?Q?J=C3=A4rvinen?=
- <ilpo.jarvinen@linux.intel.com>, Uwe =?utf-8?Q?Kleine-K=C3=B6nig?=
- <u.kleine-koenig@pengutronix.de>, Leonardo Bras <leobras@redhat.com>,
- Florian Fainelli <florian.fainelli@broadcom.com>, Shanker Donthineni
- <sdonthineni@nvidia.com>
-Cc: linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org
-Subject: Re: [RFC PATCH v2 3/4] irq: Introduce IRQ_HANDLED_MANY
-In-Reply-To: <87zfvwai62.ffs@tglx>
-References: <20240216075948.131372-2-leobras@redhat.com>
- <20240216075948.131372-5-leobras@redhat.com> <87zfvwai62.ffs@tglx>
-Date: Mon, 19 Feb 2024 12:03:07 +0100
-Message-ID: <87v86kaf84.ffs@tglx>
+	bh=x8NgPd3ichHUKUe1/b2p+TzQDwQB7pbYETz/ptF4PXI=;
+	b=XoPxeI8rJLGBVbcQ6ynl63IreWXv4XK5NDJha/2Xm5BetwHusMR0B8bUU87kdPC+3i2VW9
+	wYF+jzFrrzbrAH1d3iimT/oAb0HJko4hmhyKvtEkZUSdqyy2+P9seIiuFqETb+w1ZXGNl1
+	SIPtsa+2fwlowOpH/G9dTu/JLTMlPxBQ63p7Qaa2G8A6qiy7cSZV1/RJDXi0Q8BDmQDuo6
+	C2lZp3T9l1sQYdd6YzzjjnW4NYMLex3rrktEeQoTOmoU/ECONU7VjC5T9JiLSf1m4BF++w
+	YgmsMBuhSMt1GeTjH8vf30JOPqyM4f/xcjyW9XSDAIs6OqrXW9Scg1pBUvRXnw==
+Date: Mon, 19 Feb 2024 12:04:14 +0100
+From: Miquel Raynal <miquel.raynal@bootlin.com>
+To: Marco Felsch <m.felsch@pengutronix.de>
+Cc: Michael Walle <michael@walle.cc>, srinivas.kandagatla@linaro.org,
+ gregkh@linuxfoundation.org, rafal@milecki.pl, linux-kernel@vger.kernel.org,
+ kernel@pengutronix.de
+Subject: Re: [RFC PATCH] nvmem: core: add sysfs cell write support
+Message-ID: <20240219120414.32395299@xps-13>
+In-Reply-To: <20240216100750.zxl4wncbgpulr2cc@pengutronix.de>
+References: <20240215211401.1201004-1-m.felsch@pengutronix.de>
+	<CZ6DFL6061FS.2WMDPMSSBXX8S@walle.cc>
+	<20240216100750.zxl4wncbgpulr2cc@pengutronix.de>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-GND-Sasl: miquel.raynal@bootlin.com
 
-On Mon, Feb 19 2024 at 10:59, Thomas Gleixner wrote:
-> On Fri, Feb 16 2024 at 04:59, Leonardo Bras wrote:
->
->> In threaded IRQs, some irq handlers are able to handle many requests at a
->> single run, but this is only accounted as a single IRQ_HANDLED when
->> increasing threads_handled.
->>
->> In order to fix this, introduce IRQ_HANDLED_MANY, so the returned value of
->> those IRQ handlers are able to signal that many IRQs got handled at that
->> run.
->>
->> Is scenarios where there is no need to keep track of IRQ handled, convert
->> it back to IRQ_HANDLED.
->
-> That's not really workable as you'd have to update tons of drivers just
-> to deal with that corner case. That's error prone and just extra
-> complexity all over the place.
->
-> This really needs to be solved in the core code.
+Hi Marco,
 
-Something like the uncompiled below should do the trick.
+m.felsch@pengutronix.de wrote on Fri, 16 Feb 2024 11:07:50 +0100:
+
+> Hi Michael,
+>=20
+> On 24-02-16, Michael Walle wrote:
+> > Hi,
+> >=20
+> > On Thu Feb 15, 2024 at 10:14 PM CET, Marco Felsch wrote: =20
+> > > @@ -432,6 +466,7 @@ static int nvmem_populate_sysfs_cells(struct nvme=
+m_device *nvmem)
+> > >  	struct bin_attribute **cells_attrs, *attrs;
+> > >  	struct nvmem_cell_entry *entry;
+> > >  	unsigned int ncells =3D 0, i =3D 0;
+> > > +	umode_t mode;
+> > >  	int ret =3D 0;
+> > > =20
+> > >  	mutex_lock(&nvmem_mutex);
+> > > @@ -456,15 +491,18 @@ static int nvmem_populate_sysfs_cells(struct nv=
+mem_device *nvmem)
+> > >  		goto unlock_mutex;
+> > >  	}
+> > > =20
+> > > +	mode =3D nvmem_bin_attr_get_umode(nvmem);
+> > > +
+> > >  	/* Initialize each attribute to take the name and size of the cell =
+*/
+> > >  	list_for_each_entry(entry, &nvmem->cells, node) {
+> > >  		sysfs_bin_attr_init(&attrs[i]);
+> > >  		attrs[i].attr.name =3D devm_kasprintf(&nvmem->dev, GFP_KERNEL,
+> > >  						    "%s@%x", entry->name,
+> > >  						    entry->offset);
+> > > -		attrs[i].attr.mode =3D 0444; =20
+> >=20
+> > cells are not writable if there is a read post process hook, see
+> > __nvmem_cell_entry_write().
+> >=20
+> > if (entry->read_post_processing)
+> > 	mode &=3D ~0222; =20
+>=20
+> good point, thanks for the hint :) I will add this and send a non-rfc
+> version if write-support is something you would like to have.
+
+I like the idea but, what about mtd devices (and soon maybe UBI
+devices)? This may only work on EEPROM-like devices I guess, where each
+area is fully independent and where no erasure is actually expected.
 
 Thanks,
-
-        tglx
----
---- a/include/linux/irqdesc.h
-+++ b/include/linux/irqdesc.h
-@@ -38,7 +38,8 @@ struct pt_regs;
-  * @affinity_notify:	context for notification of affinity changes
-  * @pending_mask:	pending rebalanced interrupts
-  * @threads_oneshot:	bitfield to handle shared oneshot threads
-- * @threads_active:	number of irqaction threads currently running
-+ * @threads_active:	number of irqaction threads currently activated
-+ * @threads_running:	number of irqaction threads currently running
-  * @wait_for_threads:	wait queue for sync_irq to wait for threaded handlers
-  * @nr_actions:		number of installed actions on this descriptor
-  * @no_suspend_depth:	number of irqactions on a irq descriptor with
-@@ -80,6 +81,7 @@ struct irq_desc {
- #endif
- 	unsigned long		threads_oneshot;
- 	atomic_t		threads_active;
-+	atomic_t		threads_running;
- 	wait_queue_head_t       wait_for_threads;
- #ifdef CONFIG_PM_SLEEP
- 	unsigned int		nr_actions;
---- a/kernel/irq/manage.c
-+++ b/kernel/irq/manage.c
-@@ -1194,9 +1194,11 @@ irq_forced_thread_fn(struct irq_desc *de
- 	local_bh_disable();
- 	if (!IS_ENABLED(CONFIG_PREEMPT_RT))
- 		local_irq_disable();
-+	atomic_inc(&desc->threads_running);
- 	ret = action->thread_fn(action->irq, action->dev_id);
- 	if (ret == IRQ_HANDLED)
- 		atomic_inc(&desc->threads_handled);
-+	atomic_dec(&desc->threads_running);
- 
- 	irq_finalize_oneshot(desc, action);
- 	if (!IS_ENABLED(CONFIG_PREEMPT_RT))
---- a/kernel/irq/spurious.c
-+++ b/kernel/irq/spurious.c
-@@ -350,6 +350,12 @@ void note_interrupt(struct irq_desc *des
- 				desc->threads_handled_last = handled;
- 			} else {
- 				/*
-+				 * Avoid false positives when there is
-+				 * actually a thread running.
-+				 */
-+				if (atomic_read(&desc->threads_running))
-+					return;
-+				/*
- 				 * None of the threaded handlers felt
- 				 * responsible for the last interrupt
- 				 *
+Miqu=C3=A8l
