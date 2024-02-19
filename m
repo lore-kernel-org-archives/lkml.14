@@ -1,180 +1,133 @@
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB88C22F17
-	for <linux-kernel@vger.kernel.org>; Mon, 19 Feb 2024 09:04:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19B3322618
+	for <linux-kernel@vger.kernel.org>; Mon, 19 Feb 2024 09:05:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708333495; cv=none; b=HCQTHIe2JPayGvLpVQ/kUZXjj1pW0QgleTRV+Bh21/2uswH2NcT3Wqy5yFsD+L0yIrbnuHGVSgu1SdiKOVJ9hybN1auz3dbWMIP5MNeQ9ldoUJmlwzkykEyl8Bl6Gr0i6NqAVb81U6m5wLYzMgQkTP0WMrcIJ7r3Sko9/af9CJs=
+	t=1708333512; cv=none; b=Ni+x7Lcfo1vVP5gu+xrJONhN280dRgygXte2rvMe3yo9z4fnd2/4XNR6fI63KVqX2PWWJlGXOKupiB7vZZo6XFJbL8U88m8O81/ylAn7ORV/uKNjj6S52vQ7zYLtieFmbpfJT/jOqEYa5k/jV3bvyc67BDTdTaSepJnwFdMK/J0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708333495; c=relaxed/simple;
-	bh=uQE+HBxhODMtSC9yhjOPxO99whbGm6VHOSreEDYTf6k=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=a6c3r7dDxHVUbx8ZALGDbvwR3oZF/LweqFx3Kf3Mep6cpCtsO9wpyOIqK6so1xILs5XnKJh0VjirYRFqRQX4XqBrE9LxA5YdkUec3RMPDUxLIjrlUP4T9F6L5XmR1m7bRGjQnl7Vpo27mdkTKSMwyiPD8BzI7ipNQvnGTCwhwKs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=Ts8zPlFW; arc=none smtp.client-ip=209.85.128.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxon.dev
+	s=arc-20240116; t=1708333512; c=relaxed/simple;
+	bh=eQbzK6udwGnvj1Xh5Im+mUok/MbiejLYuLtoqIi3BAA=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=uXjOrPamlgNq+UugnenrGQNH9lDnC/gqew46I/03IRAg5M3F7s4guGaJH3Bebs322nGVwlL7fcXbN2DOnYeR2SZnKJt0H372zSYx+0Ec2jq2O28lprHyI2D1e8ccVintdVvChHHynjCJMqQtkbOhbaNNdIYthtAn4PeMXYR9g+s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Umo7MM+1; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="Ts8zPlFW"
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-412698cb496so1393335e9.1
-        for <linux-kernel@vger.kernel.org>; Mon, 19 Feb 2024 01:04:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tuxon.dev; s=google; t=1708333491; x=1708938291; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=csW9r/4gQ0jxKhE2Wzu5kKeCgTzvE7WcFlLyXAHYs/4=;
-        b=Ts8zPlFWur583wkwssubCJdkSbUcvgDnfBSoMHRtPSeKEzkDh6P2q35A4DJjITan8S
-         ILInzxTe3ScG6AlNsVH1vPqpx8Z9gDvwifnBwbjmvq1cwTn8GQHY4HnOskKgV3ur0KOO
-         rBho06/gkdAD4Ku4aXDGxJUF2R9E4YK3U0EETheL4iqLvHeDcmkUB4UEs/zNsXthOfPD
-         fwy2knNiamNL0M7Impr0amEGPTMfwfozshDaaWI4O6qV7CDA0A5Vqjd1W26IX1YkuHV0
-         /Zb+Kshs2Gwiy5oD0fKsSs5C+gStFMaBEOJRZTv95IpCuWDAFpC/mGWgXZ7ZMYu6wH5C
-         AhLA==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Umo7MM+1"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1708333510;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=mvmiQ9Kd1nkve/0Looqf6/3ALADHPkqVvnShGJp77EI=;
+	b=Umo7MM+1R9YaEygYEdxsxxaceu2Dfu4URk1UPbEPQXTQ20IstuYEjfnnCDfTYbWO3fQ1iV
+	zpnYZkhJSTD56nrC68paGfPoKr8fFyeMwwdzlsAExsE9CYZvRvlBTQv4Cpno3l4m/kt1za
+	E2hzqKkT29godyY/OyZqkdnHjier9/M=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-505-fPB08JqFP-S7eD72Ch1DCQ-1; Mon, 19 Feb 2024 04:05:07 -0500
+X-MC-Unique: fPB08JqFP-S7eD72Ch1DCQ-1
+Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-33d1896e0d5so242987f8f.1
+        for <linux-kernel@vger.kernel.org>; Mon, 19 Feb 2024 01:05:07 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708333491; x=1708938291;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
+        d=1e100.net; s=20230601; t=1708333505; x=1708938305;
+        h=mime-version:user-agent:content-transfer-encoding:autocrypt
+         :references:in-reply-to:date:cc:to:from:subject:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=csW9r/4gQ0jxKhE2Wzu5kKeCgTzvE7WcFlLyXAHYs/4=;
-        b=Nv16X2B7pH+lO85qx+DxdymMUxvpa9XPPPdU/JTHApi8KtnN+c8F9Z2xKD4/Smlb9L
-         g9EESSTE00051WDENSV1s3luZxCmk2LniphX8fVObbuqnvHFR3r62DQl6e5+mCSavyXA
-         Vi6E6Y4nO3JsnoZVjY76eCipWQ9A5nSGiBWNFqR6MZpJT8LKayzt2dDuhGEUS2nzhqnC
-         Ohb8TfpcFo/hEc8+dK6NxGjA0iXZjhwel+qHgw39BPD47VPQVi1zCLdexoWY2tKGUhYp
-         KjQobUMGGqc1icn+LO+g6q79SLuNn4D+ST5mMloWuz/uXs1IjtGsYKM5tl3dNJ4/y9DB
-         kQeQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV1QNfMzdjYYL9Y/8F0OsKhMzCW3WGxh4K1EYS7DxVcmXmkqDtI/LuZYZWzcVU/9dMDpy3UKZFl/TIJbDP3T4H9fHTaqfZ45k5L5HC8
-X-Gm-Message-State: AOJu0Yz/tbTDq9cyF8qpc4yn3dPHRvp7LZda9DPM00dh25HIeWrhkjoL
-	wjioEZIX8RwNEfgvkksukugOJ/hkOzkHXubuzNen+p5lVfXw4OB8jWvraJCqBYaEgG/vdk3YvLQ
-	1
-X-Google-Smtp-Source: AGHT+IHIIH1nQpDud5Np09DnfjqzOylTojdUO6ifSKPECbfou2QFnUkVFQbppPGzAhWd9AzX/DIxTg==
-X-Received: by 2002:a19:2d43:0:b0:511:7b37:1d26 with SMTP id t3-20020a192d43000000b005117b371d26mr7692205lft.13.1708333479889;
-        Mon, 19 Feb 2024 01:04:39 -0800 (PST)
-Received: from [192.168.50.4] ([82.78.167.20])
-        by smtp.gmail.com with ESMTPSA id f7-20020a5d5687000000b0033ce727e728sm9611101wrv.94.2024.02.19.01.04.38
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 19 Feb 2024 01:04:39 -0800 (PST)
-Message-ID: <ba089899-3625-43b2-9ba4-f2fb0e8ac03e@tuxon.dev>
-Date: Mon, 19 Feb 2024 11:04:36 +0200
+        bh=mvmiQ9Kd1nkve/0Looqf6/3ALADHPkqVvnShGJp77EI=;
+        b=Se3enFgZkWHaS7Z7ph0zP4vrGT82vtUKMwnM67NE1wMebR3RmH1SG7BIOVtDB3ftBK
+         S4cjM640zGalCmWY28+mBZWAcV8mV6WaZEQXYC0PwKPWcXUs1inzEMpPGrAf36yREP3r
+         yaH81imEDou66TUnnYXehykelqavtOfwOqJcx6lyDX1gYN9BZJRIan8R1HTjbNI/xDR2
+         6uIgNFp0ZpbrweEZ89SDARRNy5/crfZAoQBBYudj/ZM421DK8qwv74H7GT9ntfALlaT8
+         6i5paa5mIJudjJ2izyzS5LYC4DCwTTJCA7cqas4VK78qjThHY6X5JB6vFnutEjN4QjoH
+         B8AQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVxHKzzzt0VvjuX2OLFzgmkWtCXfS3vn/GVNsPOppKVkqnsX6jOAc9Rl1t6JVF0HlYfCoOn4zZSUIu6S0ENu+0x7S3IvoiitegRvXsN
+X-Gm-Message-State: AOJu0YxDzostcxjTIF8SGuctIZRBEyVQoSoh/SkZ7SVi64Izr9jbWaa9
+	KfIttgolXhZiz/8HIhckOuhFFwcfwUAyLn/rCoxD1KnnmI+iowHkCqDY/EgvGxeFOq72bmpx+ob
+	2QuUB7aentQJLtxuAUN1Z3ORkqQNS418H/jFmoPXGXUZTXd+gqNfTE7S4QKpIGtVgb7aZVg==
+X-Received: by 2002:a5d:5a90:0:b0:33d:4921:6a6c with SMTP id bp16-20020a5d5a90000000b0033d49216a6cmr1928585wrb.1.1708333505759;
+        Mon, 19 Feb 2024 01:05:05 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IFO72fn2SQV3CDUSdnp9eHGGASTUxZtTjOTPOw8p78etSSZmbkLg9LrLzyLb43w9V2QOv3n0g==
+X-Received: by 2002:a5d:5a90:0:b0:33d:4921:6a6c with SMTP id bp16-20020a5d5a90000000b0033d49216a6cmr1928565wrb.1.1708333505400;
+        Mon, 19 Feb 2024 01:05:05 -0800 (PST)
+Received: from gerbillo.redhat.com (146-241-227-135.dyn.eolo.it. [146.241.227.135])
+        by smtp.gmail.com with ESMTPSA id c5-20020adfe705000000b0033b8305ffe2sm9703340wrm.87.2024.02.19.01.05.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 19 Feb 2024 01:05:05 -0800 (PST)
+Message-ID: <e92bea31ff921ea072de86acc2694621fd11a016.camel@redhat.com>
+Subject: Re: [PATCH net 1/2] ioam6: fix write to cloned skb in
+ ipv6_hop_ioam()
+From: Paolo Abeni <pabeni@redhat.com>
+To: Justin Iurman <justin.iurman@uliege.be>, netdev@vger.kernel.org
+Cc: davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+ shuah@kernel.org,  linux-kselftest@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Date: Mon, 19 Feb 2024 10:05:03 +0100
+In-Reply-To: <20240216234356.32243-2-justin.iurman@uliege.be>
+References: <20240216234356.32243-1-justin.iurman@uliege.be>
+	 <20240216234356.32243-2-justin.iurman@uliege.be>
+Autocrypt: addr=pabeni@redhat.com; prefer-encrypt=mutual; keydata=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
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.50.3 (3.50.3-1.fc39) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 07/17] clk: renesas: rzg2l: Extend power domain support
-Content-Language: en-US
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: mturquette@baylibre.com, sboyd@kernel.org, robh@kernel.org,
- krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
- magnus.damm@gmail.com, paul.walmsley@sifive.com, palmer@dabbelt.com,
- aou@eecs.berkeley.edu, linux-renesas-soc@vger.kernel.org,
- linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
- Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-References: <20240208124300.2740313-1-claudiu.beznea.uj@bp.renesas.com>
- <20240208124300.2740313-8-claudiu.beznea.uj@bp.renesas.com>
- <CAMuHMdWdJ9jN9-cko2zSoqSS0acbwYB77aBWvenJHMrFTXhdWg@mail.gmail.com>
- <4098873b-a7e7-4c88-9af2-01f3c76424ab@tuxon.dev>
- <CAMuHMdX0HDK2w1N-k_R9ud_CVotRgAd2CjOoHTsWkSE_Rb7zyQ@mail.gmail.com>
-From: claudiu beznea <claudiu.beznea@tuxon.dev>
-In-Reply-To: <CAMuHMdX0HDK2w1N-k_R9ud_CVotRgAd2CjOoHTsWkSE_Rb7zyQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
 
-Hi, Geert,
+On Sat, 2024-02-17 at 00:43 +0100, Justin Iurman wrote:
+> ioam6_fill_trace_data() writes inside the skb payload without ensuring
+> it's writeable (e.g., not cloned). This function is called both from the
+> input and output path. The output path (ioam6_iptunnel) already does the
+> check. This commit provides a fix for the input path, inside
+> ipv6_hop_ioam().
+>=20
+> Fixes: 9ee11f0fff20 ("ipv6: ioam: Data plane support for Pre-allocated Tr=
+ace ")
+> Reported-by: Paolo Abeni <pabeni@redhat.com>
+> Signed-off-by: Justin Iurman <justin.iurman@uliege.be>
+> ---
+>  net/ipv6/exthdrs.c | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+>=20
+> diff --git a/net/ipv6/exthdrs.c b/net/ipv6/exthdrs.c
+> index 4952ae792450..f68e5faab3aa 100644
+> --- a/net/ipv6/exthdrs.c
+> +++ b/net/ipv6/exthdrs.c
+> @@ -943,6 +943,14 @@ static bool ipv6_hop_ioam(struct sk_buff *skb, int o=
+ptoff)
+>  		if (!skb_valid_dst(skb))
+>  			ip6_route_input(skb);
+> =20
+> +		if (skb_cloned(skb)) {
+> +			if (pskb_expand_head(skb, 0, 0, GFP_ATOMIC))
+> +				goto drop;
 
-On 19.02.2024 10:48, Geert Uytterhoeven wrote:
-> Hi Claudiu,
-> 
-> On Mon, Feb 19, 2024 at 9:24 AM claudiu beznea <claudiu.beznea@tuxon.dev> wrote:
->> On 16.02.2024 16:08, Geert Uytterhoeven wrote:
->>> On Thu, Feb 8, 2024 at 1:44 PM Claudiu <claudiu.beznea@tuxon.dev> wrote:
->>>> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
->>>>
->>>> RZ/{G2L, V2L, G3S}-based CPG versions have support for saving extra
->>>> power when clocks are disabled by activating module standby. This is done
->>>> through MSTOP-specific registers that are part of CPG. Each individual
->>>> module has one or more bits associated with one MSTOP register (see table
->>>> "Registers for Module Standby Mode" from HW manuals). Hardware manual
->>>> associates modules' clocks with one or more MSTOP bits. There are 3 mappings
->>>> available (identified by researching RZ/G2L, RZ/G3S, RZ/V2L HW manuals):
->>>>
->>>> case 1: N clocks mapped to N MSTOP bits (with N={0, ..., X})
->>>> case 2: N clocks mapped to 1 MSTOP bit  (with N={0, ..., X})
->>>> case 3: N clocks mapped to M MSTOP bits (with N={0, ..., X}, M={0, ..., Y})
->>>>
->>>> Case 3 has been currently identified on RZ/V2L for the VCPL4 module.
->>>>
->>>> To cover all three cases, the individual platform drivers will provide to
->>>> clock driver MSTOP register offset and associated bits in this register
->>>> as a bitmask and the clock driver will apply this bitmask to proper
->>>> MSTOP register.
->>>>
->>>> Apart from MSTOP support, RZ/G3S can save more power by powering down the
->>>> individual IPs (after MSTOP has been set) if proper bits in
->>>> CPG_PWRDN_IP{1,2} registers are set.
->>>>
->>>> The MSTOP and IP power down support were implemented through power
->>>> domains. Platform-specific clock drivers will register an array of
->>>> type struct rzg2l_cpg_pm_domain_init_data, which will be used to
->>>> instantiate properly the power domains.
->>>>
->>>> Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
->>>
->>> Thanks for your patch!
->>>
->>>> --- a/drivers/clk/renesas/rzg2l-cpg.c
->>>> +++ b/drivers/clk/renesas/rzg2l-cpg.c
->>>> @@ -1559,9 +1556,34 @@ static bool rzg2l_cpg_is_pm_clk(struct rzg2l_cpg_priv *priv,
->>>>         return true;
->>>>  }
->> [ ... ]
->>
->>>
->>>> @@ -234,6 +246,54 @@ struct rzg2l_reset {
->>>>  #define DEF_RST(_id, _off, _bit)       \
->>>>         DEF_RST_MON(_id, _off, _bit, -1)
->>>>
->>>> +/**
->>>> + * struct rzg2l_cpg_pm_domain_conf - PM domain configuration data structure
->>>> + * @mstop: MSTOP configuration (MSB = register offset, LSB = bitmask)
->>>> + * @pwrdn: PWRDN configuration (MSB = register offset, LSB = register bit)
->>>> + */
->>>> +struct rzg2l_cpg_pm_domain_conf {
->>>> +       u32 mstop;
->>>> +       u32 pwrdn;
->>>
->>> Why not
->>>
->>>     u16 mstop_off;
->>>     u16 mstop_mask;
->>>     u16 pwrdn_off;
->>>     u16 pwrdn_mask;
->>>
->>> so you can drop the MSTOP*() and PWRDN*() macros below?
->>
->> I did it like this to align with the already existing approach for this
->> kind of things available in this driver. I can do it as you proposed.
-> 
-> The other fields do not align nicely with byte or word boundaries.
-> 
-> I can see the value of the MSTOP(name, bitmask) and
-> PWRDN(name, bitmask) macros, but I'd rather get rid of the *_MASK()
-> and *_OFF() variants.
+My personal preference would be for using skb_ensure_writable() here,
+with write_len =3D=3D optoff + hdr->opt_len.
 
-Sure, I'll do proper adjustments in the next version.
+> +
+> +			hdr =3D (struct ioam6_hdr *)(skb_network_header(skb) + optoff);
+> +			trace =3D (struct ioam6_trace_hdr *)((u8 *)hdr + sizeof(*hdr));
 
-Thank you,
-Claudiu Beznea
+Note that this can potentially change the network header ptr and the
+caller - ip6_parse_tlv() - has cached such value in 'nh'. You also need
+to update ip6_parse_tlv() to reload such pointer.
 
-> 
->> For the rest of your comments on this patch: I agree and will adjust the
->> patch in the next version.
-> 
-> Thanks!
-> 
-> Gr{oetje,eeting}s,
-> 
->                         Geert
-> 
+Side note: a bunch of self-tests are apparently stuck after this
+series. I think it's an unrelated problem. I'll try to have a better
+look.
+
+Cheers,
+
+Paolo
+
