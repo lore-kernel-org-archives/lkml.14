@@ -1,191 +1,183 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from dggsgout11.his.huawei.com (unknown [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A547923757;
-	Mon, 19 Feb 2024 08:53:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CAE322063;
+	Mon, 19 Feb 2024 08:53:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708332784; cv=none; b=Q792QOum8P6ym5il6nAzt73mUjWHoQIY/HIv49P0lqx0MJmpKnD0b5pjdd3VHNuKfNBjl3RV59RJ0Tm0DI7ucKgIuP5n1hvOpEzkREpfOuT24IeAv33tA9TQYgA6Fe6pimyt3iA8+Ol47ek3N2P1cWl2nRsqm6cUIm4AaFL1tWg=
+	t=1708332825; cv=none; b=oL1UmiwQVt5Y1T0zLb6Id3B9XCLVrPYJAENGenHlxErVv2V02Wr/7/AgDEzEK+Eb5VnMOw4YBgwRO8bkQ65bKYlQULjdTc+JQUNZiThj/JfrqjiWAiEZLsnE7HNuj9c6rimtIbcLXfSJfFG9lNh3yZQIYHZWzsRCS2v6pKcJHCc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708332784; c=relaxed/simple;
-	bh=SDQufJ9z5aiPeuINsDKd9XXb7cmghsbeEma5FC1MrU0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VPGQ1FpmwXDbGcewRZYES2/qI8M899vNE/0qoXKeAtY8RPq2u4CEB8TjRg+UdIIN4aYBUAn75+QV2z+x3ARIEnTfOxPQkGqiNNBDI/NQr2dAv8cw+7q7QvrKF8s2ckQtPsZfMGOz5f15PBw04IMYQ5TVTl9TRreDs/FSPmWZ/HM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=usZaX8Cp; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="usZaX8Cp"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BA5DCC433F1;
-	Mon, 19 Feb 2024 08:53:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1708332784;
-	bh=SDQufJ9z5aiPeuINsDKd9XXb7cmghsbeEma5FC1MrU0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=usZaX8CpwwzXVWtYNNvZz3zqkH5sbHb5Q7ImfBBj7c1ILt/jj38fmd5torqaemTBL
-	 9rAKxRPStF6bWaiosQc/XDTT9TzgBf5ysirRQs0iWAn8jXS0F1YWJ0xSJ+pmLu3Oft
-	 rHhjXwdWv+orYqpGX5ark3KBTkECiXpiuq02aE7w=
-Date: Mon, 19 Feb 2024 09:53:01 +0100
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Saurabh Sengar <ssengar@linux.microsoft.com>
-Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
-	decui@microsoft.com, linux-hyperv@vger.kernel.org,
-	linux-kernel@vger.kernel.org, ssengar@microsoft.com
-Subject: Re: [PATCH 5/6] tools: hv: Add new fcopy application based on uio
- driver
-Message-ID: <2024021908-royal-sequester-84be@gregkh>
-References: <1708193020-14740-1-git-send-email-ssengar@linux.microsoft.com>
- <1708193020-14740-6-git-send-email-ssengar@linux.microsoft.com>
+	s=arc-20240116; t=1708332825; c=relaxed/simple;
+	bh=8HkkR6iJ4IHWS6OvdN4vAUbuMZcIA4Hfk4172V+EblI=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=Z/4Inx72Qnjum6uO6QxfOPP8HFJEiifxW32AS0qfmd2fG3mGYixvC9zT9S1InBKjNviRtge3YVTF09435HB3hiJ0YEKR1uzb9P0tSQrVMqfQ+iG1GP3LXiKMlcfWzh5Di04wjRu3bRvVb0CKS/z3vhxj39emBQcdWtR4ZWV0mUA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.93.142])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4Tdbt301VXz4f3tPG;
+	Mon, 19 Feb 2024 16:53:30 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.112])
+	by mail.maildlp.com (Postfix) with ESMTP id 0F0EA1A016E;
+	Mon, 19 Feb 2024 16:53:38 +0800 (CST)
+Received: from [10.174.176.73] (unknown [10.174.176.73])
+	by APP1 (Coremail) with SMTP id cCh0CgDHlxAQF9NlTC7vEQ--.53103S3;
+	Mon, 19 Feb 2024 16:53:37 +0800 (CST)
+Subject: Re: [PATCH] block: fix deadlock between bd_link_disk_holder and
+ partition scan
+To: linan666@huaweicloud.com, axboe@kernel.dk, Christoph Hellwig
+ <hch@lst.de>, "yukuai (C)" <yukuai3@huawei.com>
+Cc: linux-raid@vger.kernel.org, song@kernel.org, linux-block@vger.kernel.org,
+ linux-kernel@vger.kernel.org, yi.zhang@huawei.com, houtao1@huawei.com,
+ yangerkun@huawei.com
+References: <20240207092756.2087888-1-linan666@huaweicloud.com>
+From: Yu Kuai <yukuai1@huaweicloud.com>
+Message-ID: <d7456326-ebb1-fc4a-9071-bf7083191211@huaweicloud.com>
+Date: Mon, 19 Feb 2024 16:53:36 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1708193020-14740-6-git-send-email-ssengar@linux.microsoft.com>
+In-Reply-To: <20240207092756.2087888-1-linan666@huaweicloud.com>
+Content-Type: text/plain; charset=gbk; format=flowed
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:cCh0CgDHlxAQF9NlTC7vEQ--.53103S3
+X-Coremail-Antispam: 1UD129KBjvJXoWxZF4rCr1xtw4xtFW5XFW3Awb_yoWrXFyDpF
+	Z8KFWrtryUtF4Dur4Utw47uF45Kw40ga1xGr97Kry29r9rArs29r17tFy7uFy8trWIyF4D
+	tF1UX3yYyF10y37anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUU9214x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
+	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
+	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
+	2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
+	W8JwACjcxG0xvEwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2Y2ka
+	0xkIwI1lc7I2V7IY0VAS07AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7x
+	kEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E
+	67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCw
+	CI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6rWUJVWr
+	Zr1UMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYx
+	BIdaVFxhVjvjDU0xZFpf9x0JUdHUDUUUUU=
+X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 
-On Sat, Feb 17, 2024 at 10:03:39AM -0800, Saurabh Sengar wrote:
-> New fcopy application which utilizes uio_hv_vmbus_client driver
+Hi, Christoph
 
-What does this "application" do?
+ÔÚ 2024/02/07 17:27, linan666@huaweicloud.com Ð´µÀ:
+> From: Li Nan <linan122@huawei.com>
+> 
+> 'open_mutex' of gendisk is used to protect open/close block devices. But
+> in bd_link_disk_holder(), it is used to protect the creation of symlink
+> between holding disk and slave bdev, which introduces some issues.
+> 
+> When bd_link_disk_holder() is called, the driver is usually in the process
+> of initialization/modification and may suspend submitting io. At this
+> time, any io hold 'open_mutex', such as scanning partitions, can cause
+> deadlocks. For example, in raid:
+> 
+> T1                              T2
+> bdev_open_by_dev
+>   lock open_mutex [1]
+>   ...
+>    efi_partition
+>    ...
+>     md_submit_bio
+> 				md_ioctl mddev_syspend
+> 				  -> suspend all io
+> 				 md_add_new_disk
+> 				  bind_rdev_to_array
+> 				   bd_link_disk_holder
+> 				    try lock open_mutex [2]
+>      md_handle_request
+>       -> wait mddev_resume
+> 
+> T1 scan partition, T2 add a new device to raid. T1 waits for T2 to resume
+> mddev, but T2 waits for open_mutex held by T1. Deadlock occurs.
+> 
+> Fix it by introducing a local mutex 'holder_mutex' to replace 'open_mutex'.
+
+Can you take a look at this patch? I think for raid(perhaps and dm and
+other drivers), it's reasonable to suspend IO while hot adding new
+underlying disks. And I think add new slaves to holder is not related to
+open the holder disk, because caller should already open the holder disk
+to hot add slaves, hence 'open_mutex' for holder is not necessary here.
+
+Actually bd_link_disk_holder() is protected by 'reconfig_mutex' for
+raid, and 'table_devices_lock' for dm(I'm not sure yet if other drivers
+have similiar lock).
+
+For raid, we do can fix this problem in raid by delay
+bd_link_disk_holder() while the array is not suspended, however, we'll
+consider this fix later if you think this patch is not acceptable.
+
+Thanks,
+Kuai
 
 > 
-> Signed-off-by: Saurabh Sengar <ssengar@linux.microsoft.com>
+> Signed-off-by: Li Nan <linan122@huawei.com>
 > ---
->  tools/hv/Build                 |   3 +-
->  tools/hv/Makefile              |  10 +-
->  tools/hv/hv_fcopy_uio_daemon.c | 488 +++++++++++++++++++++++++++++++++
->  3 files changed, 495 insertions(+), 6 deletions(-)
->  create mode 100644 tools/hv/hv_fcopy_uio_daemon.c
+>   block/holder.c | 12 +++++++-----
+>   1 file changed, 7 insertions(+), 5 deletions(-)
 > 
-> diff --git a/tools/hv/Build b/tools/hv/Build
-> index 6cf51fa4b306..7d1f1698069b 100644
-> --- a/tools/hv/Build
-> +++ b/tools/hv/Build
-> @@ -1,3 +1,4 @@
->  hv_kvp_daemon-y += hv_kvp_daemon.o
->  hv_vss_daemon-y += hv_vss_daemon.o
-> -hv_fcopy_daemon-y += hv_fcopy_daemon.o
-> +hv_fcopy_uio_daemon-y += hv_fcopy_uio_daemon.o
-> +hv_fcopy_uio_daemon-y += vmbus_bufring.o
-> diff --git a/tools/hv/Makefile b/tools/hv/Makefile
-> index fe770e679ae8..944180cf916e 100644
-> --- a/tools/hv/Makefile
-> +++ b/tools/hv/Makefile
-> @@ -17,7 +17,7 @@ MAKEFLAGS += -r
->  
->  override CFLAGS += -O2 -Wall -g -D_GNU_SOURCE -I$(OUTPUT)include
->  
-> -ALL_TARGETS := hv_kvp_daemon hv_vss_daemon hv_fcopy_daemon
-> +ALL_TARGETS := hv_kvp_daemon hv_vss_daemon hv_fcopy_uio_daemon
->  ALL_PROGRAMS := $(patsubst %,$(OUTPUT)%,$(ALL_TARGETS))
->  
->  ALL_SCRIPTS := hv_get_dhcp_info.sh hv_get_dns_info.sh hv_set_ifconfig.sh
-> @@ -39,10 +39,10 @@ $(HV_VSS_DAEMON_IN): FORCE
->  $(OUTPUT)hv_vss_daemon: $(HV_VSS_DAEMON_IN)
->  	$(QUIET_LINK)$(CC) $(CFLAGS) $(LDFLAGS) $< -o $@
->  
-> -HV_FCOPY_DAEMON_IN := $(OUTPUT)hv_fcopy_daemon-in.o
-> -$(HV_FCOPY_DAEMON_IN): FORCE
-> -	$(Q)$(MAKE) $(build)=hv_fcopy_daemon
-> -$(OUTPUT)hv_fcopy_daemon: $(HV_FCOPY_DAEMON_IN)
-> +HV_FCOPY_UIO_DAEMON_IN := $(OUTPUT)hv_fcopy_uio_daemon-in.o
-> +$(HV_FCOPY_UIO_DAEMON_IN): FORCE
-> +	$(Q)$(MAKE) $(build)=hv_fcopy_uio_daemon
-> +$(OUTPUT)hv_fcopy_uio_daemon: $(HV_FCOPY_UIO_DAEMON_IN)
->  	$(QUIET_LINK)$(CC) $(CFLAGS) $(LDFLAGS) $< -o $@
->  
->  clean:
-> diff --git a/tools/hv/hv_fcopy_uio_daemon.c b/tools/hv/hv_fcopy_uio_daemon.c
-> new file mode 100644
-> index 000000000000..f72c899328fc
-> --- /dev/null
-> +++ b/tools/hv/hv_fcopy_uio_daemon.c
-> @@ -0,0 +1,488 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * An implementation of host to guest copy functionality for Linux.
+> diff --git a/block/holder.c b/block/holder.c
+> index 37d18c13d958..5bfb0a674cc7 100644
+> --- a/block/holder.c
+> +++ b/block/holder.c
+> @@ -8,6 +8,8 @@ struct bd_holder_disk {
+>   	int			refcnt;
+>   };
+>   
+> +static DEFINE_MUTEX(holder_mutex);
+> +
+>   static struct bd_holder_disk *bd_find_holder_disk(struct block_device *bdev,
+>   						  struct gendisk *disk)
+>   {
+> @@ -80,7 +82,7 @@ int bd_link_disk_holder(struct block_device *bdev, struct gendisk *disk)
+>   	kobject_get(bdev->bd_holder_dir);
+>   	mutex_unlock(&bdev->bd_disk->open_mutex);
+>   
+> -	mutex_lock(&disk->open_mutex);
+> +	mutex_lock(&holder_mutex);
+>   	WARN_ON_ONCE(!bdev->bd_holder);
+>   
+>   	holder = bd_find_holder_disk(bdev, disk);
+> @@ -108,7 +110,7 @@ int bd_link_disk_holder(struct block_device *bdev, struct gendisk *disk)
+>   		goto out_del_symlink;
+>   	list_add(&holder->list, &disk->slave_bdevs);
+>   
+> -	mutex_unlock(&disk->open_mutex);
+> +	mutex_unlock(&holder_mutex);
+>   	return 0;
+>   
+>   out_del_symlink:
+> @@ -116,7 +118,7 @@ int bd_link_disk_holder(struct block_device *bdev, struct gendisk *disk)
+>   out_free_holder:
+>   	kfree(holder);
+>   out_unlock:
+> -	mutex_unlock(&disk->open_mutex);
+> +	mutex_unlock(&holder_mutex);
+>   	if (ret)
+>   		kobject_put(bdev->bd_holder_dir);
+>   	return ret;
+> @@ -140,7 +142,7 @@ void bd_unlink_disk_holder(struct block_device *bdev, struct gendisk *disk)
+>   	if (WARN_ON_ONCE(!disk->slave_dir))
+>   		return;
+>   
+> -	mutex_lock(&disk->open_mutex);
+> +	mutex_lock(&holder_mutex);
+>   	holder = bd_find_holder_disk(bdev, disk);
+>   	if (!WARN_ON_ONCE(holder == NULL) && !--holder->refcnt) {
+>   		del_symlink(disk->slave_dir, bdev_kobj(bdev));
+> @@ -149,6 +151,6 @@ void bd_unlink_disk_holder(struct block_device *bdev, struct gendisk *disk)
+>   		list_del_init(&holder->list);
+>   		kfree(holder);
+>   	}
+> -	mutex_unlock(&disk->open_mutex);
+> +	mutex_unlock(&holder_mutex);
+>   }
+>   EXPORT_SYMBOL_GPL(bd_unlink_disk_holder);
+> 
 
-host to guest of what?  I think it's a specific type of host and guest,
-right?
-
-> + *
-> + * Copyright (C) 2023, Microsoft, Inc.
-> + *
-> + * Author : K. Y. Srinivasan <kys@microsoft.com>
-> + * Author : Saurabh Sengar <ssengar@microsoft.com>
-> + *
-> + */
-> +
-> +#include <dirent.h>
-> +#include <errno.h>
-> +#include <fcntl.h>
-> +#include <getopt.h>
-> +#include <locale.h>
-> +#include <stdbool.h>
-> +#include <stddef.h>
-> +#include <stdint.h>
-> +#include <stdio.h>
-> +#include <stdlib.h>
-> +#include <string.h>
-> +#include <syslog.h>
-> +#include <unistd.h>
-> +#include <wchar.h>
-> +#include <sys/stat.h>
-> +#include <linux/hyperv.h>
-> +#include <linux/limits.h>
-> +#include "vmbus_bufring.h"
-> +
-> +#define ICMSGTYPE_NEGOTIATE	0
-> +#define ICMSGTYPE_FCOPY		7
-> +
-> +#define WIN8_SRV_MAJOR		1
-> +#define WIN8_SRV_MINOR		1
-> +#define WIN8_SRV_VERSION	(WIN8_SRV_MAJOR << 16 | WIN8_SRV_MINOR)
-> +
-> +#define MAX_FOLDER_NAME		15
-> +#define MAX_PATH_LEN		15
-> +#define FCOPY_UIO		"/sys/bus/vmbus/devices/eb765408-105f-49b6-b4aa-c123b64d17d4/uio"
-> +
-> +#define FCOPY_VER_COUNT		1
-> +static const int fcopy_versions[] = {
-> +	WIN8_SRV_VERSION
-> +};
-> +
-> +#define FW_VER_COUNT		1
-> +static const int fw_versions[] = {
-> +	UTIL_FW_VERSION
-> +};
-> +
-> +#define HV_RING_SIZE		(4 * 4096)
-
-Hey, that doesn't match the kernel driver!  Why these values?
-
-
-> +
-> +unsigned char desc[HV_RING_SIZE];
-> +
-> +static int target_fd;
-> +static char target_fname[PATH_MAX];
-> +static unsigned long long filesize;
-> +
-> +static int hv_fcopy_create_file(char *file_name, char *path_name, __u32 flags)
-> +{
-> +	int error = HV_E_FAIL;
-> +	char *q, *p;
-> +
-> +	filesize = 0;
-> +	p = (char *)path_name;
-
-Why the unneeded cast?
-
-> +	snprintf(target_fname, sizeof(target_fname), "%s/%s",
-> +		 (char *)path_name, (char *)file_name);
-
-Again, why all of the unneeded casts?  This feels very odd, so I've
-stopped reading here, perhaps get an internal review first before
-sending this out again?
-
-thanks,
-
-greg k-h
