@@ -1,97 +1,138 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 427373D3A3;
-	Mon, 19 Feb 2024 15:40:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A759C3A297
+	for <linux-kernel@vger.kernel.org>; Mon, 19 Feb 2024 15:41:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708357210; cv=none; b=QdfDf5lkHCkDJFUMEWiVLb8JqTDvtRiI/5rcbzJBJaixpT8baWnADyJnPv35fJVbNNISps8TMHLy+vUapSgz7dyWtMYLAyuxYrQxRJa+u4tnXA+fZaaHcBpkdD1QASOzwOvDwyE/w2RP4ja9norn2JVE079+Mg8y+t8SFsQgrso=
+	t=1708357276; cv=none; b=CKXm09vnX+zLJXH+7Pyciz9L7BHwizgfNC4fydcsIGYhGaJSQfJgMEBgAifrRurqjl6y9Unee23TQIEgeTcB1skGf1rGlY2p7LnR97ihjV5BhraV25+qDSjY4lOM0+pvin354OWpLxnhDE/Uf7YEkmVK373yo0OnNbIqVxBCLi4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708357210; c=relaxed/simple;
-	bh=pWCDQWj1ZGKNeKtUkk10UnRUvitx2JkEKKGeUE/9QBo=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=cC8q10TjcEKf2kZ3AoMYqZLuUKALtclYc5jd8BASC/W7UTlwFCNBayRVX1sEvTLyBU9Dqg75sSMPCHO6KVVngNTEbo6exN+5umzEdBfrE7BUpCkvCsBSN9ogeBKuWLZEJa6PNahuNmm2joj7Zj+VzYX/vy4IWq0kJLl10qgvWvU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=3/UM9dNj; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=VArxm8BU; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1708357276; c=relaxed/simple;
+	bh=kN7/FxZg2B4U0kkEnp+f+35AOQ3P4uh2oK/ZbnyEGPc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=CBwdy7v3qk6MTzBJtvUFddHJ7FdDwjWLTD7zfAS6KtilKgvchCSexkBamThjsVa3LDPrAg/WGCtb3uXjv6hDOVxFew7I/71EUtPZB/YywWibFHyUaC2mQ2R0Ez5oobr69BzWo5x2ZFrWro65gWLhScrJpSp2OaChjcUyLNKN4eU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tUW/Qgfm; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="3/UM9dNj";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="VArxm8BU"
-From: Anna-Maria Behnsen <anna-maria@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1708357207;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=jTsHPIZ0ef28j3t4F2fpsa7oGTHGH9ta8CIKVXueM1c=;
-	b=3/UM9dNj5/TaM9bUdHKQcc4OKv7ja6XkGFpf2YFpvEfr1XpudXG74nes6wwth2aXCf1p90
-	smHhAMqlq1RbZPkaEbFDJ36ydOS4dPPK829KHE8BmozcwkUTy3NNbZwPNSjQTLzdmI70cp
-	zb1c/KBdeU05g6/PbpA4DXGttlh1rsOJEQ7Ei+R9wAE1li79sPX4vv5cgThYHA/yfw2rYV
-	d1GO4k49vPKz8zgFsUL7fDKAdIINIqOGFTlZoXocRXZoV8kLquPvC3i5MAa4R4WXUJBJoN
-	5r6otuTsNVx2fnEULa4TUb+TioXDf/0Tem8ESW8NoOMbwokvxoOU5KH+J1CRLw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1708357207;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=jTsHPIZ0ef28j3t4F2fpsa7oGTHGH9ta8CIKVXueM1c=;
-	b=VArxm8BUHFw/wNcOu6uyuCQuJOxxlgvOQN8+8bFiy7NcVxaY2v32b5mFu0FfhaSRY1AnBf
-	EPQp4M6V5QF/AvBg==
-To: linux-kernel@vger.kernel.org
-Cc: Andy Lutomirski <luto@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Vincenzo Frascino <vincenzo.frascino@arm.com>,
-	Anna-Maria Behnsen <anna-maria@linutronix.de>,
-	Guo Ren <guoren@kernel.org>,
-	linux-csky@vger.kernel.org
-Subject: [PATCH 10/10] csky/vdso: Use generic union vdso_data_store
-Date: Mon, 19 Feb 2024 16:39:39 +0100
-Message-Id: <20240219153939.75719-11-anna-maria@linutronix.de>
-In-Reply-To: <20240219153939.75719-1-anna-maria@linutronix.de>
-References: <20240219153939.75719-1-anna-maria@linutronix.de>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tUW/Qgfm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5EB30C43399
+	for <linux-kernel@vger.kernel.org>; Mon, 19 Feb 2024 15:41:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1708357276;
+	bh=kN7/FxZg2B4U0kkEnp+f+35AOQ3P4uh2oK/ZbnyEGPc=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=tUW/QgfmsH4Vdh129JzdOQ8l/LvoHRZylg24rMkxUzMkcwRP1NM25hd7+faU2GhR9
+	 s/DK0pnKYYV336dXciaX/y4OGC/Jl01tgSop5r5DS61s4vWMgAhUESaw4UJAHxLjGC
+	 W7HMQl3b5xWjxXbpyzfblL74xUvZfQ7ddbg1Hvjdk9I+Y4zq+xkXjjMfBtNvOCr4yA
+	 1rLt1TWxGokbLVqvOGWPSZonAlTHfmMqfMkRnfSC1sklpMmDXdJJaFgWJqBqnoElte
+	 IdIVCGoBxUuvjgS2V9oN8EcTXyhccQOL4NNdlCqWQH/kz625CAO4bPOIuwHFxj/Hnm
+	 L24vMOtufDYvg==
+Received: by mail-lj1-f173.google.com with SMTP id 38308e7fff4ca-2d204e102a9so57343221fa.0
+        for <linux-kernel@vger.kernel.org>; Mon, 19 Feb 2024 07:41:16 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCVgdnoC3eJq82dl1keITXN9xB310UZu+Fc0i6m+MKjmmglLWxAAuBy4mdtwWDPfZWRtu0OmWeCKqqfCaKRz+ySjoqPPkxwemQPz4ATM
+X-Gm-Message-State: AOJu0YwGIpe63u8JZUZtMOsCRkXnTdu0ejdOdWt5gVNjD6q0Np5vOqDy
+	H4DjTQhzt9wCxNCPD6lYpSo0v9KiP12Jz3BOE6nhbSrsU2u0HDKILPdfcmnSfldqsU/Q0jDhK/S
+	o2Ft5eipFMAYlJ62HPMgnpkQNC0g=
+X-Google-Smtp-Source: AGHT+IHkRv5759OCKHrFBcoZL5QX4beAd5RFXwDpYEZXX7suzJ+JwQ8On/fgdp7Ct96YAZ0TiFYkz+Xfo3acVf3B/Lo=
+X-Received: by 2002:a05:651c:218:b0:2d2:3437:ef4a with SMTP id
+ y24-20020a05651c021800b002d23437ef4amr2717698ljn.42.1708357274494; Mon, 19
+ Feb 2024 07:41:14 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240206074552.541154-1-maskray@google.com> <CAMuHMdVOoxVFohcwwoQtY0KgZEvbjgJJ6mib8Fabo97P0krEqw@mail.gmail.com>
+ <CAMj1kXGaF5bobHTr1pTg+-=s4Ft7+5SSbX72-NxsR_W_Yuxb8Q@mail.gmail.com>
+ <CAMj1kXGw+r7yEEBA8gYBcdrqkiP=VYOSzz9YLnNavJn2snmFwA@mail.gmail.com> <CAMuHMdX+6fnAf8Hm6EqYJPAjrrLO9T7c=Gu3S8V_pqjSDowJ6g@mail.gmail.com>
+In-Reply-To: <CAMuHMdX+6fnAf8Hm6EqYJPAjrrLO9T7c=Gu3S8V_pqjSDowJ6g@mail.gmail.com>
+From: Ard Biesheuvel <ardb@kernel.org>
+Date: Mon, 19 Feb 2024 16:41:03 +0100
+X-Gmail-Original-Message-ID: <CAMj1kXHh_m=V0QsiTpHrUXpFBXFbFfezdysz8quhPSgUrZg1MA@mail.gmail.com>
+Message-ID: <CAMj1kXHh_m=V0QsiTpHrUXpFBXFbFfezdysz8quhPSgUrZg1MA@mail.gmail.com>
+Subject: Re: [PATCH v2] arm64: jump_label: use constraints "Si" instead of "i"
+To: Geert Uytterhoeven <geert@linux-m68k.org>, Arnd Bergmann <arnd@arndb.de>
+Cc: Fangrui Song <maskray@google.com>, Catalin Marinas <catalin.marinas@arm.com>, 
+	Will Deacon <will@kernel.org>, linux-arm-kernel@lists.infradead.org, 
+	Jisheng Zhang <jszhang@kernel.org>, Dave Martin <Dave.Martin@arm.com>, 
+	Peter Smith <peter.smith@arm.com>, llvm@lists.linux.dev, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-There is already a generic union definition for vdso_data_store in vdso
-datapage header.
+On Mon, 19 Feb 2024 at 15:43, Geert Uytterhoeven <geert@linux-m68k.org> wro=
+te:
+>
+> Hi Ard,
+>
+> On Mon, Feb 19, 2024 at 11:57=E2=80=AFAM Ard Biesheuvel <ardb@kernel.org>=
+ wrote:
+> > On Mon, 19 Feb 2024 at 11:56, Ard Biesheuvel <ardb@kernel.org> wrote:
+> > > On Mon, 19 Feb 2024 at 11:03, Geert Uytterhoeven <geert@linux-m68k.or=
+g> wrote:
+> > > > On Tue, Feb 6, 2024 at 8:46=E2=80=AFAM Fangrui Song <maskray@google=
+.com> wrote:
+> > > > > The generic constraint "i" seems to be copied from x86 or arm (an=
+d with
+> > > > > a redundant generic operand modifier "c"). It works with -fno-PIE=
+ but
+> > > > > not with -fPIE/-fPIC in GCC's aarch64 port.
+> > > >
+> > > > Thanks for your patch, which is now commit f9daab0ad01cf9d1 ("arm64=
+:
+> > > > jump_label: use constraints "Si" instead of "i"") in v6.8-rc5.
+> > > >
+> > > > > The machine constraint "S", which denotes a symbol or label refer=
+ence
+> > > > > with a constant offset, supports PIC and has been available in GC=
+C since
+> > > > > 2012 and in Clang since 7.0. However, Clang before 19 does not su=
+pport
+> > > > > "S" on a symbol with a constant offset [1] (e.g.
+> > > > > `static_key_false(&nf_hooks_needed[pf][hook])` in
+> > > > > include/linux/netfilter.h), so we use "i" as a fallback.
+> > > >
+> > > > https://gcc.gnu.org/releases.html says gcc-5 was released in 2015,
+> > > > i.e. after 2012 ...
+> > > >
+> > > > > Suggested-by: Ard Biesheuvel <ardb@kernel.org>
+> > > > > Signed-off-by: Fangrui Song <maskray@google.com>
+> > > > > Link: https://github.com/llvm/llvm-project/pull/80255 [1]
+> > > > >
+> > > > > ---
+> > > > > Changes from
+> > > > > arm64: jump_label: use constraint "S" instead of "i" (https://lor=
+e.kernel.org/all/20240131065322.1126831-1-maskray@google.com/)
+> > > > >
+> > > > > * Use "Si" as Ard suggested to support Clang<19
+> > > > > * Make branch a separate operand
+> > > > >
+> > > > > Changes from v1:
+> > > > >
+> > > > > * Use asmSymbolicName for readability
+> > > >
+> > > > But it still fails on gcc-5:
+> > > >
+> > > >     arch/arm64/include/asm/jump_label.h:25:2: error: invalid 'asm':
+> > > > invalid operand
+> > > >       asm goto(
+> > > >       ^
+> > > >
+> > > > http://kisskb.ellerman.id.au/kisskb/buildresult/15129281/
+> > > >
+> > >
+> > > How odd. godbolt.org has 5.4 and it seems perfectly happy with it.
+>
+> > https://godbolt.org/z/GTnf3vPaT
+>
+> I could reproduce the issue on v6.8-rc5 using arm64 defconfig
+> and x86_64-gcc-5.5.0-nolibc-aarch64-linux.tar.xz from
+> https://cdn.kernel.org/pub/tools/crosstool/files/bin/x86_64/5.5.0/:
+>
 
-Use this definition to prevent code duplication.
+OK, I managed to do so as well.
 
-Signed-off-by: Anna-Maria Behnsen <anna-maria@linutronix.de>
-Cc: Guo Ren <guoren@kernel.org>
-Cc: linux-csky@vger.kernel.org
----
- arch/csky/kernel/vdso.c | 10 ++--------
- 1 file changed, 2 insertions(+), 8 deletions(-)
+And GCC 6.4 from the same source works correctly.
 
-diff --git a/arch/csky/kernel/vdso.c b/arch/csky/kernel/vdso.c
-index e74a2504d331..2ca886e4a458 100644
---- a/arch/csky/kernel/vdso.c
-+++ b/arch/csky/kernel/vdso.c
-@@ -15,14 +15,8 @@ extern char vdso_start[], vdso_end[];
- static unsigned int vdso_pages;
- static struct page **vdso_pagelist;
- 
--/*
-- * The vDSO data page.
-- */
--static union {
--	struct vdso_data	data;
--	u8			page[PAGE_SIZE];
--} vdso_data_store __page_aligned_data;
--struct vdso_data *vdso_data = &vdso_data_store.data;
-+static union vdso_data_store vdso_data_store __page_aligned_data;
-+struct vdso_data *vdso_data = vdso_data_store.data;
- 
- static int __init vdso_init(void)
- {
--- 
-2.39.2
-
+Not sure whether there are any plans to bump the minimal GCC version
+any time soon (cc'ing Arnd), but we should probably drop this change
+until that happens.
