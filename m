@@ -1,133 +1,114 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB94C22619;
-	Mon, 19 Feb 2024 09:26:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CCFC224DA;
+	Mon, 19 Feb 2024 09:27:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708334779; cv=none; b=VoMInItOIR0wPrKuhwYZVkyheUgICFY1m5ybMzhfgiPA8u9G4elNr5XahWDYnSHDO/lcNWr/ZfQgevogvZkH/sYbPybTchlkshkUaUVt3pXsUhxLcUsQb++kz/1XFK3XDzKy8K5aPvxCLgKoknSk0VJqUQxK5sKKLNGVmrjhsNQ=
+	t=1708334824; cv=none; b=XEdU3hI15gZFiHU4qrUaCCqUE2azB0W939zvbxsBgthECCUirwYgvfj7qtobd5UI2qo2pOECUQYygpQT0LypgVaygUEBjL/7hsGk7p/2JacOeQUP91IksIJqtc0GrUkko6FnTR1MTTO9j+EVtd5aNNKGtjdNwYaK5zeXuhC2a+c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708334779; c=relaxed/simple;
-	bh=JvAKRCTepAOVOrEHkC52aYvy+39kprUzUC+lxvHxVgU=;
+	s=arc-20240116; t=1708334824; c=relaxed/simple;
+	bh=pV6OcNifszV+/iw/c/toiIcPwTQmu3XK4ZhLAbXV/s0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=S0rQwQMx7YDoadPksGpzXi39mj8dg+RLqPQOZB0iN1DC8Nqa0MIAoWRKv/SxWU2sV0N6LNs2jerzYLrTVQgHBHg9GLeYClKPHCQrKMS+y9v37PaWYHk59VbFDI4HSgVa24Vv0zRZNE2kqOELtmSwZpv37NAeFlXL9XTCP07dsVw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=Xf0cdP2x; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	 Content-Type:Content-Disposition:In-Reply-To; b=hVWE1WCXGnV+IyGdBtNx2LfIFh+HTy017JbJJW5UjDs4oPn+3nV6mFq7CRNyO2wuWBJFAC4UmdxthTT5Mgl3dYJ6pEV621BpurXmHAfLvrPUuTDyxjsD3Z1NRc57Yt0zOrkvYcamJBQjJnNX3igEoh2Kg3cuE3NnjXIViMti9AM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=BIrabAyZ; arc=none smtp.client-ip=78.32.30.218
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="Xf0cdP2x"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 7366540E01B5;
-	Mon, 19 Feb 2024 09:26:13 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id Mq1WMaf5Uafz; Mon, 19 Feb 2024 09:26:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1708334770; bh=UeyP8KcF7dj4h57hjnNyWpdHtLUCNmmBLKlm/tndrmU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Xf0cdP2xgYwE7kk7NPoncwRQ2vWHPuBzFiX9Tp/dkKOkz7smCwncVf0nzi1Na0lVi
-	 x6ujl4Eih/C97YDlmeLExPqrbjN3/aaspiUhEbhnXTW1mcnIxZm2GBmz8Vm+MttUNx
-	 718loAEebT/uwngmUFn2ICrqZyBj/QciEgICYjPGkDAsJ1k3JF11Q8g83P4umT5v5H
-	 jNENwJiT4B5rbIChpoeAM/XQN3VTlBnlLBOS0P8iEDUciphLLIs5Ur52B23krqy4Ky
-	 QWAjTpPWG5pPWTs4C91do1EZTp92qFN5LpX5M2Fww5TuYARes6D/UiQ6Yr/p/yzMhD
-	 5nWN2iSpsbO3TDbHOv6sRHTUUhXtsdnA19VmQMa1qBhGGYxsgygmL84WdtsQal30w3
-	 oGn4Mfo7Ite08xAMz5y+ziPRCJuKMN9sIKEOnT8Ja/9D5z8EIWx1tiYtBFJ45fVLd9
-	 ByPPRpVoiiUHKhjBj01J6zSM1PuJmriXQv6SHiGlIKAyK8iJLYinVBmsQm8Z6OrCIg
-	 +T/HT9O+/gLpixmCRHqIZcgxS/JYamyKfclw2ziFb4x1K2+HqVdbV3opVQtZYxnHw4
-	 WrBcLblJm6zCeGMNmCRCHfSm/hWAaKzFiHZwPJ8ohAebLAsnqG/RI+NufsbkjC6zrf
-	 l+T3vQ8Jaw0ElXahzouG/fww=
-Received: from zn.tnic (pd953021b.dip0.t-ipconnect.de [217.83.2.27])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 13EB640E0196;
-	Mon, 19 Feb 2024 09:25:35 +0000 (UTC)
-Date: Mon, 19 Feb 2024 10:25:28 +0100
-From: Borislav Petkov <bp@alien8.de>
-To: Shuai Xue <xueshuai@linux.alibaba.com>
-Cc: rafael@kernel.org, wangkefeng.wang@huawei.com, tanxiaofei@huawei.com,
-	mawupeng1@huawei.com, tony.luck@intel.com, linmiaohe@huawei.com,
-	naoya.horiguchi@nec.com, james.morse@arm.com,
-	gregkh@linuxfoundation.org, will@kernel.org, jarkko@kernel.org,
-	linux-acpi@vger.kernel.org, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org, akpm@linux-foundation.org,
-	linux-edac@vger.kernel.org, x86@kernel.org, justin.he@arm.com,
-	ardb@kernel.org, ying.huang@intel.com, ashish.kalra@amd.com,
-	baolin.wang@linux.alibaba.com, tglx@linutronix.de, mingo@redhat.com,
-	dave.hansen@linux.intel.com, lenb@kernel.org, hpa@zytor.com,
-	robert.moore@intel.com, lvying6@huawei.com, xiexiuqi@huawei.com,
-	zhuo.song@linux.alibaba.com, Ira Weiny <ira.weiny@intel.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Dan Williams <dan.j.williams@intel.com>
-Subject: Re: [PATCH v11 1/3] ACPI: APEI: send SIGBUS to current task if
- synchronous memory error not recovered
-Message-ID: <20240219092528.GTZdMeiDWIDz613VeT@fat_crate.local>
-References: <20221027042445.60108-1-xueshuai@linux.alibaba.com>
- <20240204080144.7977-2-xueshuai@linux.alibaba.com>
+	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="BIrabAyZ"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=/LzjvA8uDCXuz1zAKNQ/JIcMEOk4CVtuLJzwpOkdWrY=; b=BIrabAyZ8H2iJoFDb7tlM63h4l
+	H76D4cYaNEZF5I8dY23y8rCEtyQ6fr+MXAIsGmyZKHE52skjAw/RurHXN52SfRtkhGmrEA+iw3CzE
+	l9qVcW+QMNKoDcVJhrrn/OD/dpslVZkPc3Q/CImSSBN9OFK1vbUpnf4m6Cf98GgUHCJ7560xygNi1
+	AbiQSCpfThgGr9XeBqHgUL2SHeV1mXZC4gFFmL0MACVhmvKzuFsIIN767oHljmjXGgtB1nhqpPT9Q
+	85WaKiGLU/DN/mEQYQS1QrGUkdqerCnGXLtajv0Rob8cSgbgqFUxmimY90rtM5nFnSQjbGcJJ7YFB
+	UtRFz0NQ==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:56090)
+	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <linux@armlinux.org.uk>)
+	id 1rbzvK-0005wJ-01;
+	Mon, 19 Feb 2024 09:26:54 +0000
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
+	(envelope-from <linux@shell.armlinux.org.uk>)
+	id 1rbzvH-0008FV-N8; Mon, 19 Feb 2024 09:26:51 +0000
+Date: Mon, 19 Feb 2024 09:26:51 +0000
+From: "Russell King (Oracle)" <linux@armlinux.org.uk>
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Calvin Owens <jcalvinowens@gmail.com>,
+	Dave Martin <Dave.Martin@arm.com>,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	"linux-bcachefs@vger.kernel.org" <linux-bcachefs@vger.kernel.org>,
+	Kent Overstreet <kent.overstreet@linux.dev>
+Subject: Re: [PATCH] arm: Silence gcc warnings about arch ABI drift
+Message-ID: <ZdMe24xN1Ej4QoVU@shell.armlinux.org.uk>
+References: <fe51512baa18e1480ce997fc535813ce6a0b0721.1708286962.git.jcalvinowens@gmail.com>
+ <431dd956-ad31-4da8-ad42-34f7380824bb@app.fastmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240204080144.7977-2-xueshuai@linux.alibaba.com>
+In-Reply-To: <431dd956-ad31-4da8-ad42-34f7380824bb@app.fastmail.com>
+Sender: Russell King (Oracle) <linux@armlinux.org.uk>
 
-On Sun, Feb 04, 2024 at 04:01:42PM +0800, Shuai Xue wrote:
-> Synchronous error was detected as a result of user-space process accessing
-> a 2-bit uncorrected error. The CPU will take a synchronous error exception
-> such as Synchronous External Abort (SEA) on Arm64. The kernel will queue a
-> memory_failure() work which poisons the related page, unmaps the page, and
-> then sends a SIGBUS to the process, so that a system wide panic can be
-> avoided.
+On Mon, Feb 19, 2024 at 07:21:11AM +0100, Arnd Bergmann wrote:
+> I think these should be addressed in bcachefs instead.
+> While it's not the fault of bcachefs that the calling
+> convention changed between gcc versions, have a look at
+> the actual structure layout:
 > 
-> However, no memory_failure() work will be queued when abnormal synchronous
-> errors occur. These errors can include situations such as invalid PA,
-> unexpected severity, no memory failure config support, invalid GUID
-> section, etc. In such case, the user-space process will trigger SEA again.
-> This loop can potentially exceed the platform firmware threshold or even
-> trigger a kernel hard lockup, leading to a system reboot.
+> struct bch_val {
+>         __u64           __nothing[0];
+> };
+> struct bpos {
+>         /*
+>          * Word order matches machine byte order - btree code treats a bpos as a
+>          * single large integer, for search/comparison purposes
+>          *
+>          * Note that wherever a bpos is embedded in another on disk data
+>          * structure, it has to be byte swabbed when reading in metadata that
+>          * wasn't written in native endian order:
+>          */
+> #if __BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__
+>         __u32           snapshot;
+>         __u64           offset;
+>         __u64           inode;
+> #elif __BYTE_ORDER__ == __ORDER_BIG_ENDIAN__
+>         __u64           inode;
+>         __u64           offset;         /* Points to end of extent - sectors */
+>         __u32           snapshot;
+> #else
+> #error edit for your odd byteorder.
+> #endif
+> } __packed
+> struct bch_backpointer {
+>         struct bch_val          v;
+>         __u8                    btree_id;
+>         __u8                    level;
+>         __u8                    data_type;
+>         __u64                   bucket_offset:40;
+>         __u32                   bucket_len;
+>         struct bpos             pos;
+> } __packed __aligned(8);
 > 
-> Fix it by performing a force kill if no memory_failure() work is queued
-> for synchronous errors.
-> 
-> Signed-off-by: Shuai Xue <xueshuai@linux.alibaba.com>
-> ---
->  drivers/acpi/apei/ghes.c | 9 +++++++++
->  1 file changed, 9 insertions(+)
-> 
-> diff --git a/drivers/acpi/apei/ghes.c b/drivers/acpi/apei/ghes.c
-> index 7b7c605166e0..0892550732d4 100644
-> --- a/drivers/acpi/apei/ghes.c
-> +++ b/drivers/acpi/apei/ghes.c
-> @@ -806,6 +806,15 @@ static bool ghes_do_proc(struct ghes *ghes,
->  		}
->  	}
->  
-> +	/*
-> +	 * If no memory failure work is queued for abnormal synchronous
-> +	 * errors, do a force kill.
-> +	 */
-> +	if (sync && !queued) {
-> +		pr_err("Sending SIGBUS to current task due to memory error not recovered");
-> +		force_sig(SIGBUS);
-> +	}
+> This is not something that should ever be passed by value
+> into a function.
 
-Except that there are a bunch of CXL GUIDs being handled there too and
-this will sigbus those processes now automatically.
++1 - bcachefs definitely needs fixing. Passing all that as an argument
+not only means that it has to be read into registers, but also when
+accessing members, it has to be extracted from those registers as well.
 
-Lemme add the whole bunch from
-
-  671a794c33c6 ("acpi/ghes: Process CXL Component Events")
-
-for comment to Cc.
+Passing that by argument is utterly insane.
 
 -- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
