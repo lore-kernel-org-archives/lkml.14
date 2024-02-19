@@ -1,90 +1,79 @@
-Received: from mail-yw1-f172.google.com (mail-yw1-f172.google.com [209.85.128.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88EAD3A29A;
-	Mon, 19 Feb 2024 16:01:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AC9E3CF66
+	for <linux-kernel@vger.kernel.org>; Mon, 19 Feb 2024 16:01:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708358484; cv=none; b=Vl6oXuRhtUUbK87kVrJVaI8UA+WSMDxbSAPg7x2o8og75eMRsyHhXRd3vzKwOgxtz0LyvrsUClXkS45zH8HoIFjEL7c/LgQjSXQyjWf9MG4HsU1GcF+DX40DxWp1U2m4SYyxAdM3dgzFOfMbER3HY45xew29lTOr0+FHD4SxRRA=
+	t=1708358489; cv=none; b=IzgwCSu1gEGBRHoo1t9nIJD+Wv7wFlhpC4KBT4KCHQXl6xKYd9W1J5VDaeaXr0Mz2ug0cwEzZZYYEPCeK2CROyfQ6sB+6aEM4jEq4EFM3NnB7U1Yd8Ucl5hTANeBKopn+e5n18KHxtauR59Zxhkpp1PsQEjcrVSoG6AYtSwlmpU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708358484; c=relaxed/simple;
-	bh=RjJaUO3UTTrFsrhoX11/20RQ9F41KV1HxKWjbf2SUaA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=k6nE4FUp2lrDxEVRm1EKfRQvzWEgYB3Hd646ejckDbRM4OjbsHWgVlOxuY2poWs4StiIl8j1KYL0D4/rumVW9hTVLBHOX1qpKvqVgYTIE5Q/q6I9OzpT4kXM/gAGbHH7RrhcbwoZghrAEnjTWBL80WBZC0ESVwTIu4ThqYe+FGU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KeJlezPb; arc=none smtp.client-ip=209.85.128.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1708358489; c=relaxed/simple;
+	bh=gycZaBE7Cy24i7aMR1MwJXS9SdXAFZkBFApim+SPZRM=;
+	h=From:In-Reply-To:References:To:Cc:Subject:MIME-Version:
+	 Content-Type:Date:Message-ID; b=uSAL0dsQVFGF/HFH1w224nbmd3PZYKSTZC72dM4IbGH6K7+u6o5PzvXHDZPclD/DPQDdDA6S59SZAsOBfJY85iq1aD79o0AYt2/F9hJRrLG4yBwmqw0QSHBjkektGZLsYiT/NZjEu7R60N8gmLq771KnnBsh9Zx8YHTv2MUB75Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=G6tXvI5J; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KeJlezPb"
-Received: by mail-yw1-f172.google.com with SMTP id 00721157ae682-607f8482b88so29075147b3.0;
-        Mon, 19 Feb 2024 08:01:22 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1708358481; x=1708963281; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=RjJaUO3UTTrFsrhoX11/20RQ9F41KV1HxKWjbf2SUaA=;
-        b=KeJlezPbN3clz3N8ckKag+gGWgOjR5ddzRX6aj8ni4sAbaoN6/318/CRSmFVt6sITe
-         nY5+nrvE79E4dnTvv6PXTmZVPagZDE9oqMSakn/GX6ZVPmXuQie7XQGpsbIpP0MR7uYd
-         ZixkVC7RKcQs/Pjyr8qaAWGpF/EPLX7VXC5v4MzfLUGRC0TGYrhhEo9xC81ALnACbm4w
-         UQoaPaF7kdkqsbFd7YfApBrbOfezl1dZ0ZVAeYca5dI32xxrURaJgS10FvpGqBUJtk2L
-         vL0ifCmbWOe2ZCjMSGxOzxKvvAjfX5Pt+xWqx2meF8wqlLL25YbLImL65ZPbv9J3DuGL
-         hUUw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708358481; x=1708963281;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=RjJaUO3UTTrFsrhoX11/20RQ9F41KV1HxKWjbf2SUaA=;
-        b=ozLVeeH75njGCVauI4SzP/c33jyAFVghDc116gya6VFqAokfufbWUNukz/ZJb3dyI2
-         +ycCvExRbGvMVkZGKhxSIU45ED7MRe0qiefkZeKj1vUAXwYqx3ujeZP1fmnTX9Whz5Bb
-         3ECCznQZx09BqV33C0qT6B/5Gfx396KEv/lLtcwEUu2i0UJenZYtb+Bx3JSA+uinSZl3
-         mewQItM7HHc6XDLt/sEIg7HVqDguI3arBfMIXKQng0n1mdDfgb9F/GVrPFA2n/meXT25
-         1JaK8LzeGeUM1/H2iPuFWM4oYCArCKqHFA0EsoeafVPFmzSh9kOW6JNOnJyeS0iFcjM7
-         mBkA==
-X-Forwarded-Encrypted: i=1; AJvYcCWR4RZmK0hSjLpVOKGa3RpnvqUw5HNW9MMXiB85K8SpJ93pokZC1FpWtYUCo9PyHDU9C5P4lCR7z+kOpqRPqAJMQ1cF7KXjvD3JB/kx1ea9gm9Rotmg4EmN9GBb0TY0050INbQ9SUoXhLu7IlQ=
-X-Gm-Message-State: AOJu0YxH1yrucPgYy5wsv5xCEZUK8wKcbwANdOltcbq+IXT8VVsTHk+L
-	OvGdvEqaUAr/ta7AMOnA9jX8L9n7zsb/0HAj8DQa8L1dtko7wm4hM8HkEmz1B/OsJpIVJxjZJhw
-	mWLgJl7ez8eGMN/vfT4F5TTmq+lM=
-X-Google-Smtp-Source: AGHT+IFV7cnfqHWd3LWv+ZHLoC4tmJGJ/Lk4xaw+zFGGTkElEoABI2C5HfHRAkYwwL44+IqGRK7P3TWcTOqJsPV5ric=
-X-Received: by 2002:a81:b614:0:b0:607:f4b9:11aa with SMTP id
- u20-20020a81b614000000b00607f4b911aamr10367352ywh.21.1708358460925; Mon, 19
- Feb 2024 08:01:00 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="G6tXvI5J"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1708358486;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=gycZaBE7Cy24i7aMR1MwJXS9SdXAFZkBFApim+SPZRM=;
+	b=G6tXvI5JoSVfPl08lUgOEzhwWg6Y9Trct5tqlX+FDqCSgXTEadYfCothxY90Vc9ji9CmzF
+	CYbdxr/hs//wmaMKfrL9D91MshOjRQRyFIQpfVR3g+IDM5YuKbFWbwipmKAwPzblmZ/dh/
+	fw++4B5Jde0/jCC4OeSWH4IyvJiFsIQ=
+Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
+ by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-134-Sl4aI5GGPlOIOR_R_x3-Jw-1; Mon,
+ 19 Feb 2024 11:01:22 -0500
+X-MC-Unique: Sl4aI5GGPlOIOR_R_x3-Jw-1
+Received: from smtp.corp.redhat.com (int-mx10.intmail.prod.int.rdu2.redhat.com [10.11.54.10])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id E2AA51C05133;
+	Mon, 19 Feb 2024 16:01:21 +0000 (UTC)
+Received: from warthog.procyon.org.uk (unknown [10.42.28.15])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id BCDB6492BE2;
+	Mon, 19 Feb 2024 16:01:20 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+	Kingdom.
+	Registered in England and Wales under Company Registration No. 3798903
+From: David Howells <dhowells@redhat.com>
+In-Reply-To: <208066d6326a428499fa68c5984da62c@aladdin.ru>
+References: <208066d6326a428499fa68c5984da62c@aladdin.ru> <20240212083347.10742-1-d.dulov@aladdin.ru> <125563.1708338814@warthog.procyon.org.uk>
+To: Daniil Dulov <D.Dulov@aladdin.ru>
+Cc: dhowells@redhat.com, Jeffrey E Altman <jaltman@auristor.com>,
+    "linux-afs@lists.infradead.org" <linux-afs@lists.infradead.org>,
+    Marc Dionne <marc.dionne@auristor.com>,
+    "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+    "lvc-project@linuxtesting.org" <lvc-project@linuxtesting.org>
+Subject: Re: [PATCH v2] afs: Increase buffer size in afs_update_volume_status()
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240217002717.57507-1-ojeda@kernel.org> <CAH5fLgirUqw2hkEgFKOV4a2N2sW-GAGVY=KkkyzptMN+H2txfQ@mail.gmail.com>
-In-Reply-To: <CAH5fLgirUqw2hkEgFKOV4a2N2sW-GAGVY=KkkyzptMN+H2txfQ@mail.gmail.com>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Mon, 19 Feb 2024 17:00:49 +0100
-Message-ID: <CANiq72=r9cE5ZT7EWe77g2dfprBx+DBrujo=mcA7r1hoO+=P0w@mail.gmail.com>
-Subject: Re: [PATCH] rust: upgrade to Rust 1.77.0
-To: Alice Ryhl <aliceryhl@google.com>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Wedson Almeida Filho <wedsonaf@gmail.com>, 
-	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
-	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@samsung.com>, 
-	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	patches@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <214311.1708358480.1@warthog.procyon.org.uk>
 Content-Transfer-Encoding: quoted-printable
+Date: Mon, 19 Feb 2024 16:01:20 +0000
+Message-ID: <214312.1708358480@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.10
 
-On Mon, Feb 19, 2024 at 10:06=E2=80=AFAM Alice Ryhl <aliceryhl@google.com> =
-wrote:
->
-> Maybe you should just add the as_ptr method to ThisModule now? It will
-> silence the warning, and doesn't trigger a warning of its own since it
-> is pub.
+Daniil Dulov <D.Dulov@aladdin.ru> wrote:
 
-Yeah, either way is fine -- I meant the patch to be independent and to
-avoid adding an API without a user, but it is not a big deal.
+> Thank you for your feedback. I agree with the suggested improvement. I w=
+ill send v3 a bit later today.
 
-> Reviewed-by: Alice Ryhl <aliceryhl@google.com>
+I posted an updated patch:
 
-Thanks!
+https://lore.kernel.org/linux-fsdevel/20240219143906.138346-3-dhowells@red=
+hat.com/T/#u
 
-Cheers,
-Miguel
