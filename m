@@ -1,70 +1,105 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD3CE1C10;
-	Mon, 19 Feb 2024 10:40:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B713122F13;
+	Mon, 19 Feb 2024 10:40:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708339204; cv=none; b=EBt0CO1IGIjZnWE6aJnNURJoKLVax2ao+vYY41g3ma7T1Scvb0Oqrw9vrIrxSqQ/mWnVo0WnuaC2bEHtsXFKAKswTNFYpVdOUEL38dwKgQoRe7ZX3aDFGm7k7vPXj1bRotWuXNHBtTc4qennpdyy8Y0b+Wn599kcNU3qTIeQxw8=
+	t=1708339233; cv=none; b=OOYFurHRHaxGN0MrHXQ0azr6tFLdGnvR2HrvC/9VqRr9VlMWYD/SfIB8KrKQYRonlmFWJkmiYE27XvGLNC6pDjHWIGMRBpmpx9AupNOutgtDaqKg2O0PMvp+v9kt+i20XlpSOFYk/Azu0WO8sbXIfTJ5MF7Wt95/hp8SJPNygmU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708339204; c=relaxed/simple;
-	bh=b8qQHtXahwTH+tFwQtqQqu+gs5fjfDrer18Sd7jkXq4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tSi1yhk2VEwc55XXPFkNxHQ8Ca/ERDJzzab2HhLLo5AjyzIwUYh7/SabTdv9IOMlLhKHjv/qM2lpFNjoRgJRLWfHZPifjZ691iuYE7QKhX3plMhY0Py/xMUy3yYBXpCB7hbad7aoD2RQS1cpKDuJIH9hOkFZGm3+y5/bmeOrr+c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=YFDtC3cW; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1708339233; c=relaxed/simple;
+	bh=vPK/7i++5EkuRh3A9cB+oZcKXbKyaMhoFkcCQIQBXlM=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=pKXhfgRSL7g5w2xC34WbkKb9b68WEdsN7bK9InKoeUdw4EOAZC0OXLP1IiQB0pPCq7rBhnkgjMaUCWZfuQhI1bQkrowER3jM0AUGTyYEl4ITHdbvzSzFofsxHAaAblT1T2SVDVhp4nwn9ScsKvAfYFXpovr57ycpn9JlSLByMb8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=APnXhhLk; arc=none smtp.client-ip=217.70.183.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="YFDtC3cW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D3F94C433F1;
-	Mon, 19 Feb 2024 10:40:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1708339204;
-	bh=b8qQHtXahwTH+tFwQtqQqu+gs5fjfDrer18Sd7jkXq4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=YFDtC3cWbF+BHdNFqkcR+JDlYMrJoUyeuT3H8nkXtoe6LqUK437lujhTqdoQgKRkp
-	 n4dEGThWJ2sZPFwyX+aTHr0VCyIcDlpILuXMaE5UfIB09Yn2WMCinJmJFqwaP0rRnI
-	 6i/wY7SLGuf4Jf/vJM8vqJzlDs4n9auUdYrPvBT0=
-Date: Mon, 19 Feb 2024 11:40:01 +0100
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Tomas Winkler <tomas.winkler@intel.com>
-Cc: Alexander Usyskin <alexander.usyskin@intel.com>,
-	Vitaly Lubart <vitaly.lubart@intel.com>,
-	linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [char-misc-next] mei: gsc_proxy: match component when GSC is on
- different bus
-Message-ID: <2024021927-study-schilling-9dfa@gregkh>
-References: <20240211130408.3478-1-tomas.winkler@intel.com>
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="APnXhhLk"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id D31AAC0006;
+	Mon, 19 Feb 2024 10:40:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1708339228;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=pvJ5Bdzvp14vIivGP5ebUVk8Mv5zqJTnOjVP5r+RR6o=;
+	b=APnXhhLkeqRTI+H3MWdxeMZNrdls3Bs3LmusHu3n/te7j+eVqu7MLTs1HPdKLdZORKad4n
+	oU8YCUXIWJ1KU3AF/zEOZg3kxbOTjxjYy69J+4Oll7qGkM8nM3Uw3IMezvxZdM7wnct/Me
+	HAVEtZbVcisMdbey1mV5zXIChEYPDT1JtSOAOo9bGfWr8ZZB7WHBkbpnAGF1FgOd0L7mAE
+	WQKjyJhT8qRVea5UHtreltShxYcHBeA38xsdp/nFlHHiE1dHZvheo30m7PK9wlxqtnpfll
+	MJD3Ho8GljzFJG4iCcApfzVcaYKBuAU6bgPiooeCBLE61kzhP0/iSdRuiTxESA==
+Date: Mon, 19 Feb 2024 11:40:56 +0100 (CET)
+From: Romain Gantois <romain.gantois@bootlin.com>
+To: Piotr Wejman <piotrwejman90@gmail.com>
+cc: Alexandre Torgue <alexandre.torgue@foss.st.com>, 
+    Jose Abreu <joabreu@synopsys.com>, "David S. Miller" <davem@davemloft.net>, 
+    Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
+    Paolo Abeni <pabeni@redhat.com>, 
+    Maxime Coquelin <mcoquelin.stm32@gmail.com>, netdev@vger.kernel.org, 
+    linux-stm32@st-md-mailman.stormreply.com, 
+    linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] net: stmmac: fix rx queue priority assignment
+In-Reply-To: <20240219102405.32015-1-piotrwejman90@gmail.com>
+Message-ID: <6bb634fb-fe02-085b-a96f-ea56698ebcb4@bootlin.com>
+References: <20240219102405.32015-1-piotrwejman90@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240211130408.3478-1-tomas.winkler@intel.com>
+Content-Type: text/plain; charset=US-ASCII
+X-GND-Sasl: romain.gantois@bootlin.com
 
-On Sun, Feb 11, 2024 at 03:04:08PM +0200, Tomas Winkler wrote:
-> From: Alexander Usyskin <alexander.usyskin@intel.com>
-> 
-> On Arrow Lake S systems, MEI is no longer strictly connected to bus 0,
-> while graphics remain exclusively on bus 0. Adapt the component
-> matching logic to accommodate this change:
-> 
-> Original behavior: Required both MEI and graphics to be on the same
-> bus 0.
-> 
-> New behavior: Only enforces graphics to be on bus 0 (integrated),
-> allowing MEI to reside on any bus.
-> This ensures compatibility with Arrow Lake S and maintains functionality
-> for the legacy systems.
-> 
-> Cc: <stable@vger.kernel.org>
-> Signed-off-by: Alexander Usyskin <alexander.usyskin@intel.com>
-> Signed-off-by: Tomas Winkler <tomas.winkler@intel.com>
+Hello Piotr,
 
-What commit id does this fix?  How far back in stable kernels should it
-go?
+On Mon, 19 Feb 2024, Piotr Wejman wrote:
 
-thanks,
+>  static void dwmac4_rx_queue_priority(struct mac_device_info *hw,
+> -				     u32 prio, u32 queue)
+> +				     u32 prio_mask, u32 queue)
+>  {
+>  	void __iomem *ioaddr = hw->pcsr;
+> -	u32 base_register;
+> -	u32 value;
+> +	u32 clear_mask = 0;
+> +	u32 ctrl2, ctrl3;
+> +	int i;
+>  
+> -	base_register = (queue < 4) ? GMAC_RXQ_CTRL2 : GMAC_RXQ_CTRL3;
+> -	if (queue >= 4)
+> -		queue -= 4;
+> +	ctrl2 = readl(ioaddr + GMAC_RXQ_CTRL2);
+> +	ctrl3 = readl(ioaddr + GMAC_RXQ_CTRL3);
+>  
+> -	value = readl(ioaddr + base_register);
+> +	for (i = 0; i < 4; i++)
+> +		clear_mask |= ((prio_mask << GMAC_RXQCTRL_PSRQX_SHIFT(i)) &
+> +						GMAC_RXQCTRL_PSRQX_MASK(i));
+>  
+> -	value &= ~GMAC_RXQCTRL_PSRQX_MASK(queue);
+> -	value |= (prio << GMAC_RXQCTRL_PSRQX_SHIFT(queue)) &
+> +	ctrl2 &= ~clear_mask;
+> +	ctrl3 &= ~clear_mask;
+> +
+> +	if (queue < 4) {
+> +		ctrl2 |= (prio_mask << GMAC_RXQCTRL_PSRQX_SHIFT(queue)) &
+This is a bit of a nitpick but do you think it would make sense to replace that 
+"4" with a macro? Something like GMAC_RXQCTRL_PSRXQ_MAXCTRL2QUEUE?
 
-greg k-h
+>  						GMAC_RXQCTRL_PSRQX_MASK(queue);
+> -	writel(value, ioaddr + base_register);
+> +
+> +		writel(ctrl2, ioaddr + GMAC_RXQ_CTRL2);
+> +		writel(ctrl3, ioaddr + GMAC_RXQ_CTRL3);
+I suppose that the order of these two writes are somehow important, else these 
+could be factored out of the conditional block. Could you maybe add a short 
+comment that explains why the order of these writes matter?
+
+Best Regards,
+
+-- 
+Romain Gantois, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
