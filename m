@@ -1,137 +1,81 @@
-Received: from fhigh6-smtp.messagingengine.com (fhigh6-smtp.messagingengine.com [103.168.172.157])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B0082C1BC
-	for <linux-kernel@vger.kernel.org>; Mon, 19 Feb 2024 11:30:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.157
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20A6A846D
+	for <linux-kernel@vger.kernel.org>; Mon, 19 Feb 2024 11:32:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708342231; cv=none; b=LlNdh2EtuOfPd9Fe8EhiiPIgFzBLqfW6iIZvEIlMxkrPAVpp6JfCYjx5GV9ImoR49XV/VOLBryFSBkIvl4nKB4yBuQUgO9Xnv0og24ZwECoMqftef6LcPmt2pTyxqHeKCF9L1P7azKpLHlj3p49W88lfvow4D8G+P3qN/I2o/jk=
+	t=1708342328; cv=none; b=rCwR+osHJK82/WpikcJAlB13VhsLZdBdwE9Yi+E2OV7SZSj6wUzd0pxqP+Rhfe0KCdy14yi+5SKBGMe5pj4x3zfoBLFCntZfHudMnqo1UjSfks7H7yBVa5P6+5k6Q+cvWopF7AC4q9GR/VW2A2l8bD2FUWJ8ODBKUN1adYqVF1w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708342231; c=relaxed/simple;
-	bh=X9M+tjEeoip0TeLuPx3RYlT1m5MOUQ+xB9mh2j89o2g=;
-	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
-	 Subject:Content-Type; b=GL8j5HhdUMkIyGbFKQIVK5+1aumP/vyZ2AkRWJ8vv8R9E7GVKpO03woPpWeFuwNGiNcApMymv2iRFCfZEuYZGp791+gS/4fAsJs4INg7m69rXf4tUGM91JSYKEsUXlJkuGjQfyp4jCzitZe5syZtYsQUil19bW0QsetcWqwdutk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=QMHV+HnQ; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=nblDJDTS; arc=none smtp.client-ip=103.168.172.157
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1708342328; c=relaxed/simple;
+	bh=VB+iI+fug3eSv+fm6efC/2HzoubUcnoN5nHFZ5Ilajs=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=DRKFeb2E2OoJzaDt3V7Zq3EeaoBpg0qAy7nzmBjGdICN9MBzKcuYDdjqQQopWDkHJto56SlnsywPrl6iwaOF4IQJUwbTZmwlXbSxpUvu/qe18ahyPwrOHC4bbPXv1QVLfQQwYtQWmM/akeXjxDbNwi5QraB5duR1iVKInkXvRAU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=r3mVrcyt; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ZDtAxRPl; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="QMHV+HnQ";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="nblDJDTS"
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-	by mailfhigh.nyi.internal (Postfix) with ESMTP id 9548F11400C3;
-	Mon, 19 Feb 2024 06:30:28 -0500 (EST)
-Received: from imap51 ([10.202.2.101])
-  by compute5.internal (MEProxy); Mon, 19 Feb 2024 06:30:28 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm3; t=1708342228;
-	 x=1708428628; bh=ZTYwiFQEp8cThTaa6T2QNUW4Hfm+lei5RwnJjMUwvVI=; b=
-	QMHV+HnQ/Ms+W3R44Cr/1qex2YyCm6zb/EbvPgsSH0wu7U/uu7hUJJ1KqKvaXXex
-	5Ds/oCnEhN/eXFE5IFDj5feFJRYKAPFaWk8mLSjEeVuTGN5mJ2qw3s5shrzvALNN
-	CrXnqwVje76o9aojr+pjb3kYdJz+1GSpu1Je75wEjIZV/q/whl9Q1jORx3sjGD9U
-	GKcN7LEZO4l+TDMV5uYqoT7R9CF4qI5PoarzqlxR+W3QNbXQAsgho7h54l3mE/ND
-	u5m29DeomnQ0ncY0gj4dn6SPl8bXh3AZ5tYXpe07wrzr8G+g+1Hawmg4LGSsj/Xa
-	LnTop0Z/w9Dkktv7ONHsYQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1708342228; x=
-	1708428628; bh=ZTYwiFQEp8cThTaa6T2QNUW4Hfm+lei5RwnJjMUwvVI=; b=n
-	blDJDTSgAdRv4JKz/DXFmuy+vw2sbTMeiqIVGmBsvCRUVYoyJwMyUytITeBNtOvW
-	zOAcKqTOsoEnYpyOVXXzsSCsoYRt2DtR1tuKEBXngjEd8QHZd7sVlRJe1J37NrD8
-	LONbAkRIr2HgFNzckiAae4uAJ5lBt5a45DCDfuBGxoTrHKleQRlDk7bMEutrOkjn
-	hf2NKSHRcfz2nsduvb+qNpb2U+AKwFmyCTprMU2Vjg00PTbx3AUi0EoDvH4I6zRN
-	ZA/2SvX3ZjS7MuQu00AevLGWZVhrR1zBTS8xphqPNGIUgOww7B5J8egR66gC4S5M
-	I8hrpA+IOeyJGDlkT90MQ==
-X-ME-Sender: <xms:0zvTZTLPW0B06TNGLqFApIpZhVWdUrtEhyvFJDXKtJwKK473VFCTmA>
-    <xme:0zvTZXJATIm4FZyGRN-olEkB2_6u3MbMWXPxugjqwoF8GyXBZgt5eotnY2iMtwEIu
-    XEM-dREj-1PA5Az-Dg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrvdekgddvkecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefofgggkfgjfhffhffvvefutgfgsehtqhertderreejnecuhfhrohhmpedftehr
-    nhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrth
-    htvghrnhepgeefjeehvdelvdffieejieejiedvvdfhleeivdelveehjeelteegudektdfg
-    jeevnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprg
-    hrnhgusegrrhhnuggsrdguvg
-X-ME-Proxy: <xmx:0zvTZbs01jMkFgvSVsuiWB2gmXY_1znay3rIUmXEhGVMv9DG9JTQAQ>
-    <xmx:0zvTZcbh25BMdGyftcN1Ke5d6P7MDUZ4ZSZD6m4ytyXWfiaJwXpGhQ>
-    <xmx:0zvTZabJQk1KOjVMI70npcifY1lp6jPNte-CeX5hhIuu4grjFPzPpQ>
-    <xmx:1DvTZSoNGlsCr2gjSLvlIvfNerBMN7MZips93aHJPxlQA30VJ8rSvw>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id D0AC0B6008D; Mon, 19 Feb 2024 06:30:27 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.11.0-alpha0-144-ge5821d614e-fm-20240125.002-ge5821d61
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="r3mVrcyt";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ZDtAxRPl"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1708342325;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=D9GKMP7xsT1loNPYfLVLghc8f51mY65KwFSji6d7V9c=;
+	b=r3mVrcytCIs8QLqrdWr39/DIFhcznwBqlN3h4H9o8F/dC0wT/URiiTyk00llHe23DJ3r/e
+	PVy50mxs2O2Ix72eXn6rlAr9QD+VNvFcZ+0el1nAKiu/YiXky4GvarLmK+Ut0HZlqpNQuu
+	6fQGEL4ykjTQqLFQRnO+nydQIOTXUkGSSJpa1LWWmZHG2Es7DUc2Tf7KszIpSoyxixR28R
+	gnY7uJj+iCWklWIeBuHki9gdU31WCsvKICfBeMCnj65+4PLJ+TDODJZ9o2XSlaiXccDEbC
+	EpjVdw2tG56Fp6tKxS3jrAvnV1HdCc8n/I7V8w3RpGNPP+uViVLEUseg1UWBcg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1708342325;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=D9GKMP7xsT1loNPYfLVLghc8f51mY65KwFSji6d7V9c=;
+	b=ZDtAxRPl7wR51qRS5OnoEFuZY7Ks2O8U9b2bi+nLIyvPjZmAyNVCX8/T/gdGNmeA92rezm
+	LOdHX7yg3SmDzsAA==
+To: Feng Tang <feng.tang@intel.com>, John Stultz <jstultz@google.com>,
+ Stephen Boyd <sboyd@kernel.org>, paulmck@kernel.org, Waiman Long
+ <longman@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
+ linux-kernel@vger.kernel.org
+Cc: Feng Tang <feng.tang@intel.com>, Jin Wang <jin1.wang@intel.com>
+Subject: Re: [PATCH v3] clocksource: Scale the max retry number of watchdog
+ read according to CPU numbers
+In-Reply-To: <20240129134505.961208-1-feng.tang@intel.com>
+References: <20240129134505.961208-1-feng.tang@intel.com>
+Date: Mon, 19 Feb 2024 12:32:05 +0100
+Message-ID: <87msrwadvu.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <fbd0426c-fdd2-4b7f-a13e-072ed5f973de@app.fastmail.com>
-In-Reply-To: <4cdc5b58-11c1-490d-8c3b-6352d8f1b8cb@amd.com>
-References: <20240216202442.2493031-1-arnd@kernel.org>
- <745e156e-c3ec-427f-98ad-bfc7d3cfd846@infradead.org>
- <4cdc5b58-11c1-490d-8c3b-6352d8f1b8cb@amd.com>
-Date: Mon, 19 Feb 2024 12:29:57 +0100
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
- "Randy Dunlap" <rdunlap@infradead.org>, "Arnd Bergmann" <arnd@kernel.org>,
- "Maarten Lankhorst" <maarten.lankhorst@linux.intel.com>,
- "Maxime Ripard" <mripard@kernel.org>,
- "Thomas Zimmermann" <tzimmermann@suse.de>
-Cc: "Dave Airlie" <airlied@gmail.com>, "Daniel Vetter" <daniel@ffwll.ch>,
- "Arunpravin Paneer Selvam" <Arunpravin.PaneerSelvam@amd.com>,
- "David Gow" <davidgow@google.com>,
- =?UTF-8?Q?Ma=C3=ADra_Canal?= <mcanal@igalia.com>,
- "Matthew Auld" <matthew.auld@intel.com>, dri-devel@lists.freedesktop.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] drm/tests/drm_buddy: avoid 64-bit calculation
-Content-Type: text/plain;charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
 
-On Mon, Feb 19, 2024, at 12:22, Christian K=C3=B6nig wrote:
-> Am 17.02.24 um 02:31 schrieb Randy Dunlap:
->> On 2/16/24 12:24, Arnd Bergmann wrote:
->>> From: Arnd Bergmann <arnd@arndb.de>
->>>
->>> The newly added drm_test_buddy_alloc_contiguous() test fails to link=
- on
->>> 32-bit targets because of inadvertent 64-bit calculations:
->>>
->>> ERROR: modpost: "__aeabi_uldivmod" [drivers/gpu/drm/tests/drm_buddy_=
-test.ko] undefined!
->>> ERROR: modpost: "__aeabi_ldivmod" [drivers/gpu/drm/tests/drm_buddy_t=
-est.ko] undefined!
->>>
->>> >From what I can tell, the numbers cannot possibly overflow a 32-bit=
- size,
->>> so use different types for these.
->>>
->>> I noticed that the function has another possible flaw in that is mix=
-es
->>> what it calls pages with 4KB units. This is a big confusing at best,
->>> or possibly broken when built on machines with larger pages.
->>>
->>> Fixes: a64056bb5a32 ("drm/tests/drm_buddy: add alloc_contiguous test=
-")
->>> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
->> Tested-by: Randy Dunlap <rdunlap@infradead.org>
->
-> I've just pushed a similar patch Mathew came up a bit earlier to=20
-> drm-misc-fixes.
->
-> Sorry for the noise, I have to catch up on picking up patches for=20
-> misc-fixes and misc-next.
+On Mon, Jan 29 2024 at 21:45, Feng Tang wrote:
+> +static inline long clocksource_max_watchdog_read_retries(void)
+> +{
+> +	long max_retries = max_cswd_read_retries;
+> +
+> +	if (max_cswd_read_retries <= 0) {
+> +		/* santity check for user input value */
+> +		if (max_cswd_read_retries != -1)
+> +			pr_warn_once("max_cswd_read_retries was set with an invalid number: %ld\n",
+> +				max_cswd_read_retries);
+> +
+> +		max_retries = ilog2(num_online_cpus()) + 1;
 
-Ok, thanks.
+I'm getting tired of these knobs and the horrors behind them. Why not
+simply doing the obvious:
 
-Have you looked at how this code works for larger values of PAGE_SIZE?
-Is there any need to change other things or will this work with the
-hardcoded 4KB chunks?
+       retries = ilog2(num_online_cpus()) + 1;
 
-     Arnd
+and remove the knob alltogether?
+
+Thanks,
+
+        tglx
