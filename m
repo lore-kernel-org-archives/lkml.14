@@ -1,114 +1,107 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFBE0524D7
-	for <linux-kernel@vger.kernel.org>; Mon, 19 Feb 2024 19:58:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D41CA51C5F;
+	Mon, 19 Feb 2024 19:59:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708372701; cv=none; b=DQTaDayEW44jg42s1xzAmxjWGGlBDehQrtP8iKmMXmlwYdvvjZMbPpK6ZqjXVt3cBLM9V4MW/yVICNDpKJEcXrhfcI51gZ64tbv2LFIX0uH5D1NPrgXbVpQ7iXMuDMYWjSLFO/fCKvv3qhFIaPi2Tinnms2kRhJKJ+XAp0b/kxU=
+	t=1708372793; cv=none; b=KNkksXIHq/MhqtwzfCmsU8CXZfK9h3esD5inWuTYmCqwjfMvCelKPxJIgrgvubu49uGb/fUXYuidOUdXLgWLeahB4701QvY+1Ibh3RZpg+2vqundziDkR95hD+cOGCzXUuDeEKx8mrxq/blzCsk5PYr/e/xvLMBTJnhWUJfcccs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708372701; c=relaxed/simple;
-	bh=CnCKLmpVpCmUXuzfNqSYcIlBmrUGIF8rsECdq6agMcQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=XkqExx1k9P7DT6bKD3rfCiUUjVR2HYPHBYznF0SP5UnTDoah/bZkXWrpI7vFRI3BahtG1GCAwp9oG9ci8O0CYjdcVOq6rJycRkCNvQwetN6HrUzDPzGD7MG2PnCq7ZSVjn3N/w26TVyWi599b9oSiJzWR+3unDTFs2Js2CTWiLU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZOVKngJu; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1708372793; c=relaxed/simple;
+	bh=jPhUX7fseszIBa5Cz4g6HtJ32wY5HpFdNrxQegeyAcU=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=ArHSECXTkq2JES8kPX3VAlMjUlMNHzk5uhi7yzGimFcbzz1AchmAbiomr2fk9gc1vXlRylCvT8qUqZ221EGkz+dvgkAzhdvVmRFsR7/ce0lJ3uvIt0K1kZzzXfjPoBuNDfeL1NW0LsqNapA3nVLjV0kKgmeQJKYo6hVv2HVxD/I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rennXjGT; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZOVKngJu"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1708372700; x=1739908700;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=CnCKLmpVpCmUXuzfNqSYcIlBmrUGIF8rsECdq6agMcQ=;
-  b=ZOVKngJuBYY2bzZ1AY+1qW4Abg91gl3onef0FaQCxg8fwaADKf8ZjVQC
-   gdwiX3LjyPLA88x9pYbKeAE2nXxwimQQyKDjMLK9LpDqftDE/Cnui6vpL
-   Fec2IfjqLpQ6PsRE0K6f+AdD62MeEqPz2a4NE3+ZqPLDpo0Dwd01MJGz+
-   ELrZF91PVLcl326sd56xRCsYdOR2CtoxVPOnSouBluTKvfxEx5BPIR+GY
-   APTOqx8DFwyWikdRyFzMkmRLWhm08PkXLJllhq3DSnbVyLdtDjF4MGxik
-   /tZl3PAB65av7HePgVx+t/nqbliMD5W5C1YUxb/PqroE9yNI3SoSJkH+8
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10989"; a="19893449"
-X-IronPort-AV: E=Sophos;i="6.06,170,1705392000"; 
-   d="scan'208";a="19893449"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Feb 2024 11:58:16 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,170,1705392000"; 
-   d="scan'208";a="9239492"
-Received: from turnipsi.fi.intel.com (HELO kekkonen.fi.intel.com) ([10.237.72.44])
-  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Feb 2024 11:58:15 -0800
-Received: from svinhufvud.ger.corp.intel.com (localhost [IPv6:::1])
-	by kekkonen.fi.intel.com (Postfix) with ESMTP id 44BF9120204;
-	Mon, 19 Feb 2024 21:58:11 +0200 (EET)
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
-To: linux-kernel@vger.kernel.org
-Cc: Hans de Goede <hdegoede@redhat.com>,
-	Tomas Winkler <tomas.winkler@intel.com>,
-	Wentong Wu <wentong.wu@intel.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH v2 3/3] mei: vsc: Assign pinfo fields in variable declaration
-Date: Mon, 19 Feb 2024 21:58:07 +0200
-Message-Id: <20240219195807.517742-4-sakari.ailus@linux.intel.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240219195807.517742-1-sakari.ailus@linux.intel.com>
-References: <20240219195807.517742-1-sakari.ailus@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rennXjGT"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 569EBC43390;
+	Mon, 19 Feb 2024 19:59:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1708372793;
+	bh=jPhUX7fseszIBa5Cz4g6HtJ32wY5HpFdNrxQegeyAcU=;
+	h=From:Date:Subject:To:Cc:Reply-To:From;
+	b=rennXjGTcaDY/TDQzC7c3u7zSQ44dXdcvGGfTfQB2u6ZEEW+5Z6gMZysAAAp0iBcB
+	 kD9V0lmIUQIdYUZBZpof+tjWHQpcdZpTm84UPP4mwsby14/Xh+FXDpuIZ5I8RHiAQ8
+	 AEN3pbFBU0p634Q9TucB9q2jIT/90ByGB/8A88uSKaWe0ScsueACbFngOV0EAmI3Wk
+	 kqjtGNEqLKj3PadrpV/b+6tZEl1dQ5g9+RJ9DtuzSAp/a922HEQTeWBZPwmLHJuGHe
+	 xBoKDeBpTOfT6G96xaCVMFnhQxkWa86HX+aBydZm6bKemxiorQ37KPWKXIc8OuO/Le
+	 r6Fjmpv/1vdGg==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 469C7C48BC3;
+	Mon, 19 Feb 2024 19:59:53 +0000 (UTC)
+From: Yang Xiwen via B4 Relay <devnull+forbidden405.outlook.com@kernel.org>
+Date: Tue, 20 Feb 2024 03:59:51 +0800
+Subject: [PATCH RESEND] clk: set initial best mux parent to current parent
+ when determining rate
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240220-mux-v1-1-3ee0807ec219@outlook.com>
+To: Michael Turquette <mturquette@baylibre.com>, 
+ Stephen Boyd <sboyd@kernel.org>
+Cc: linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Yang Xiwen <forbidden405@outlook.com>
+X-Mailer: b4 0.12.4
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1708372793; l=1451;
+ i=forbidden405@outlook.com; s=20230724; h=from:subject:message-id;
+ bh=fggch9mxMQ8SzPlFXnQcVvzDJCD3ro+vLZXoDYu1RGE=;
+ b=K0K7C5//41mDeCsJpdfDjHd3GisENzOiqi+JFzD56RKu1hD13WdtTBCyC9JVc/ZoWoU2bXhfi
+ hvk+d/xORxzDWdGIgmJtDjbupDM9vfr5aPKfaG5zFF1x6olZjKdqkcI
+X-Developer-Key: i=forbidden405@outlook.com; a=ed25519;
+ pk=qOD5jhp891/Xzc+H/PZ8LWVSWE3O/XCQnAg+5vdU2IU=
+X-Endpoint-Received:
+ by B4 Relay for forbidden405@outlook.com/20230724 with auth_id=67
+X-Original-From: Yang Xiwen <forbidden405@outlook.com>
+Reply-To: <forbidden405@outlook.com>
 
-Assign all possible fields of pinfo in variable declaration, instead of
-just zeroing it there.
+From: Yang Xiwen <forbidden405@outlook.com>
 
-Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+Originally, the initial clock rate is hardcoded to 0, this can lead to
+some problem when setting a very small rate with CLK_MUX_ROUND_NEAREST.
+
+For example, if the lowest possible rate privided by the mux is 1000Hz,
+setting a rate below 500Hz will fail, because no clock can provide a
+better rate than the non-existant 0. But it should succeed with 1000Hz
+being set.
+
+Setting the initial best parent to current parent could solve this bug
+very well.
+
+Signed-off-by: Yang Xiwen <forbidden405@outlook.com>
 ---
- drivers/misc/mei/vsc-tp.c | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
+This is actually a v2 of [1], but seems too simple to have a unittest.
+It's tested in a mmc host driver.
 
-diff --git a/drivers/misc/mei/vsc-tp.c b/drivers/misc/mei/vsc-tp.c
-index 7b678005652b..9b4584d67a1b 100644
---- a/drivers/misc/mei/vsc-tp.c
-+++ b/drivers/misc/mei/vsc-tp.c
-@@ -445,11 +445,16 @@ static int vsc_tp_match_any(struct acpi_device *adev, void *data)
+[1]: https://lore.kernel.org/linux-clk/20230421-clk-v3-1-9ff79e7e7fed@outlook.com/
+---
+ drivers/clk/clk.c | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
+index 2253c154a824..d98cebd7ff03 100644
+--- a/drivers/clk/clk.c
++++ b/drivers/clk/clk.c
+@@ -649,6 +649,10 @@ int clk_mux_determine_rate_flags(struct clk_hw *hw,
  
- static int vsc_tp_probe(struct spi_device *spi)
- {
--	struct platform_device_info pinfo = { 0 };
-+	struct vsc_tp *tp;
-+	struct platform_device_info pinfo = {
-+		.name = "intel_vsc",
-+		.data = &tp,
-+		.size_data = sizeof(tp),
-+		.id = PLATFORM_DEVID_NONE,
-+	};
- 	struct device *dev = &spi->dev;
- 	struct platform_device *pdev;
- 	struct acpi_device *adev;
--	struct vsc_tp *tp;
- 	int ret;
+ 	/* find the parent that can provide the fastest rate <= rate */
+ 	num_parents = core->num_parents;
++	if (core->parent) {
++		best_parent = core->parent;
++		best = clk_core_get_rate_nolock(best_parent);
++	}
+ 	for (i = 0; i < num_parents; i++) {
+ 		unsigned long parent_rate;
  
- 	tp = devm_kzalloc(dev, sizeof(*tp), GFP_KERNEL);
-@@ -501,13 +506,8 @@ static int vsc_tp_probe(struct spi_device *spi)
- 		ret = -ENODEV;
- 		goto err_destroy_lock;
- 	}
--	pinfo.fwnode = acpi_fwnode_handle(adev);
--
--	pinfo.name = "intel_vsc";
--	pinfo.data = &tp;
--	pinfo.size_data = sizeof(tp);
--	pinfo.id = PLATFORM_DEVID_NONE;
- 
-+	pinfo.fwnode = acpi_fwnode_handle(adev);
- 	pdev = platform_device_register_full(&pinfo);
- 	if (IS_ERR(pdev)) {
- 		ret = PTR_ERR(pdev);
+
+---
+base-commit: 8d3dea210042f54b952b481838c1e7dfc4ec751d
+change-id: 20240215-mux-6db8b3714590
+
+Best regards,
 -- 
-2.39.2
+Yang Xiwen <forbidden405@outlook.com>
 
