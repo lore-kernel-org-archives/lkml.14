@@ -1,111 +1,126 @@
-Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B72BE3C082
-	for <linux-kernel@vger.kernel.org>; Mon, 19 Feb 2024 15:51:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 369E3381CE;
+	Mon, 19 Feb 2024 15:53:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708357888; cv=none; b=I929k7sBF4Tta2dygrHp8qdtp7d4O7lwmfpNG1ZByL8IC1pF27wL+GJBIPLGt1EYdWgGlUpEy55tcmh93XFpanOCkegQ5RQArjyDJSabaylIwztvzP8N8YOiINYiD1vPq4XVJ4H2U3ibFb4bhApr/26Cj5SOhlbD1SNxMU9wtEs=
+	t=1708358031; cv=none; b=E8wS6geAbvbnrkKn/a9QilP236L/olVkOH6XPWXm/emD3noEgSqC5BfDycV8i+n9S9aX/kRFpTkQez+f1UQEpiR7IxR0JaM+kd+eZjJq0maQAd1KM6NmkiRhuvNIbF3HbmHUcWfwFpVBbvrvSaMZucBGwGC8aKwwtzY5s0sDW50=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708357888; c=relaxed/simple;
-	bh=YROZrjdq3gYQCAeXMRavVSWhGIfjVKco/8EJ0nQwWjQ=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=mYpZue5vcAjiuPMr16QFP3SKnP/eYc4Fq67+r1kzVKM5A1yVEQDgB2Xj6UwACjc7hsM42VCxx4zcjpKS4EO9B1h+J1vO7sacaVf80ip3l39OjjTnUJktbHeZERM6IHeQboFwxhYsXLkelTLtUxiQnMZfJgtGSGcOt6ei6WdnbE0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=0iHY6Oex; arc=none smtp.client-ip=209.85.219.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1708358031; c=relaxed/simple;
+	bh=517fO3sYzhBoS+A0/0syTbcWUfDqWRHc0TLYK++SB58=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=YZu5wKtbuXkxg3bDVW2ZTEnt0IpWSQ39N2qvPFkG+jL44BBVUkPBzZUJK5xIoRuECwsPEAGYxL6CDziUJFjZuT2fp5QkBZCyJUbBYOw/KlpQRfiKtEGmwa6E3LrsLhmN3kN+exQ+7YMek1ko5Tqa9/rX6UOHoJhDHaeM2CiGAWY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=s9vTbW1Z; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="0iHY6Oex"
-Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-dc6b26eef6cso6515013276.3
-        for <linux-kernel@vger.kernel.org>; Mon, 19 Feb 2024 07:51:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1708357886; x=1708962686; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=g37j1FtPF8B2B6ahbdjOo4C4cedCCq5D/gQif5NDL0M=;
-        b=0iHY6OexxSF1ZaZ6jqNaL0QyczVhARwrhhpqwrbHzrq3S/dJnAldeOhBMa1CjE4ybp
-         m5p4wajY3UPQyGhGEZe3j10fN+zbXfRMmOvpfV2+/32Kav3bntgMpapZMCMPwEZCBM1T
-         AGJdfiHEWFSXXk+Fx58AjCZtSRT0vyDY5ShZKoNDVlACwu+vVz2lknV9On4JyXJDgyKe
-         yVa19KbLy0FMy3EamvIs/uIf9nCk/dy3oCZInJFH5WJ/5XuTm1RYYYDYfB7V2SqUCENS
-         VNveEGcFzsSdMOqIMxce0lgvcxREVDn0e6GvGl6CVdz896aNUyw45d1MsEg5g2bb3h2O
-         je5A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708357886; x=1708962686;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=g37j1FtPF8B2B6ahbdjOo4C4cedCCq5D/gQif5NDL0M=;
-        b=g5P+4RxhZ+iSTcKCuAQOYMwwi53ZtHlVx6LT/p9ybvUuC8eDqhO3GzlNkvC8yQTPvR
-         KOINQ61nKWuN0XEu3KaTqBHAv6HWg2FLhcpp+O4qnyr6WMjKOoqFwXgU/Pgu6lp3HE5B
-         V+/QMxjIsIcG7rwPy2hMdSG8NsAKe+4G3x491nXuBwCF2jML8lk0t2oZ0OQ0Z+tIG2D6
-         93hjKhboHqEEkzfmeTHP5OlUvTWzQB/q/ls2iBjonRNawUeYyPEWzwjueT+pwFoiHL8z
-         0dsP6cTBUc5GGdiNg+5O5hHxc/PuIGBSkOTdg4fnueq4hg0aFTZVGMkZQ0wbWF02/c61
-         xxSg==
-X-Forwarded-Encrypted: i=1; AJvYcCVXMb7Jaft+imYmMXJmgz/KAKGIdjGf0GuQ6EWFztKcOcAYhQ013KMTW9dDtu1JiE2cJ9cn6NWr6QqkEWLKdhw7aNpGvVX//ZIxEB4t
-X-Gm-Message-State: AOJu0Yz5FX6jEl+sWvqVC7RKSacWbw/sO8bdbHnei7lRQcikkhWfeAna
-	uQPFvBeBZgMo+WXoRMvyCWd7wZh+fLwY9AiDqtI7e5kUPgyKdIHw5LocfUF8WBtTSiTi3o2FYOG
-	Keg==
-X-Google-Smtp-Source: AGHT+IG3bnNo3degTA8nAtDyn4Jeq+yh4DrP36yNtEvgicB6u/1+JruJbPCIsrQ+aNqsLML+HG1SPuwVZpU=
-X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a05:6902:a8e:b0:dc7:6cfa:dc59 with SMTP id
- cd14-20020a0569020a8e00b00dc76cfadc59mr427758ybb.4.1708357885861; Mon, 19 Feb
- 2024 07:51:25 -0800 (PST)
-Date: Mon, 19 Feb 2024 07:51:24 -0800
-In-Reply-To: <ZdNerMaewrcrwBlL@yilunxu-OptiPlex-7050>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="s9vTbW1Z"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A1D53C43390;
+	Mon, 19 Feb 2024 15:53:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1708358030;
+	bh=517fO3sYzhBoS+A0/0syTbcWUfDqWRHc0TLYK++SB58=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=s9vTbW1Zb4232ZNMuGkskRATSlx/9DIk6EfIbOERpQ8wfVwMybokX2cKqwlst5k3s
+	 /wZn4awaQpLjSjlE3xEeenjMDR0dcHanOaS6euffCUGFVUJTCbXieWC2CbkLUY7Jbt
+	 gtfATQZS2FDZj+VvvE+Rbyu8DLqMo8RKeHo4/pSmbqAeuKqSUuQJci+wXv6CDkUwlX
+	 CyaQIaLsPqW3PnGTTvOZe+OLq0N0K3RroZG1LBviYsaclgy4qRxOaIVO8hmJ/vX8o8
+	 h6Dsg3AdOR3jPNmSMQtHQeIunm3GFunpTkuDe0rpSpT8AvEml40Im6NYF1qgWqHVfj
+	 f7slrWgzTUg5w==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1rc5xk-004crN-Hc;
+	Mon, 19 Feb 2024 15:53:48 +0000
+Date: Mon, 19 Feb 2024 15:53:48 +0000
+Message-ID: <868r3g4fhv.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>,
+	Anup Patel <apatel@ventanamicro.com>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH] irqchip/gic-v3: handle DOMAIN_BUS_ANY in gic_irq_domain_select
+In-Reply-To: <20240219-gic-fix-child-domain-v1-1-09f8fd2d9a8f@linaro.org>
+References: <20240219-gic-fix-child-domain-v1-1-09f8fd2d9a8f@linaro.org>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/29.1
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20240110011533.503302-1-seanjc@google.com> <20240110011533.503302-2-seanjc@google.com>
- <ZdNerMaewrcrwBlL@yilunxu-OptiPlex-7050>
-Message-ID: <ZdN4_ENRMqeBIBkn@google.com>
-Subject: Re: [PATCH 1/4] KVM: Always flush async #PF workqueue when vCPU is
- being destroyed
-From: Sean Christopherson <seanjc@google.com>
-To: Xu Yilun <yilun.xu@linux.intel.com>
-Cc: Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	David Matlack <dmatlack@google.com>
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: dmitry.baryshkov@linaro.org, tglx@linutronix.de, apatel@ventanamicro.com, konrad.dybcio@linaro.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-On Mon, Feb 19, 2024, Xu Yilun wrote:
-> >  void kvm_clear_async_pf_completion_queue(struct kvm_vcpu *vcpu)
-> > @@ -114,7 +132,6 @@ void kvm_clear_async_pf_completion_queue(struct kvm_vcpu *vcpu)
-> >  #else
-> >  		if (cancel_work_sync(&work->work)) {
-> >  			mmput(work->mm);
-> > -			kvm_put_kvm(vcpu->kvm); /* == work->vcpu->kvm */
-> >  			kmem_cache_free(async_pf_cache, work);
-> >  		}
-> >  #endif
-> > @@ -126,7 +143,18 @@ void kvm_clear_async_pf_completion_queue(struct kvm_vcpu *vcpu)
-> >  			list_first_entry(&vcpu->async_pf.done,
-> >  					 typeof(*work), link);
-> >  		list_del(&work->link);
-> > -		kmem_cache_free(async_pf_cache, work);
-> > +
-> > +		spin_unlock(&vcpu->async_pf.lock);
-> > +
-> > +		/*
-> > +		 * The async #PF is "done", but KVM must wait for the work item
-> > +		 * itself, i.e. async_pf_execute(), to run to completion.  If
-> > +		 * KVM is a module, KVM must ensure *no* code owned by the KVM
-> > +		 * (the module) can be run after the last call to module_put(),
-> > +		 * i.e. after the last reference to the last vCPU's file is put.
-> > +		 */
-> > +		kvm_flush_and_free_async_pf_work(work);
+On Mon, 19 Feb 2024 14:47:37 +0000,
+Dmitry Baryshkov <dmitry.baryshkov@linaro.org> wrote:
 > 
-> I have a new concern when I re-visit this patchset.
+> Before the commit de1ff306dcf4 ("genirq/irqdomain: Remove the param
+> count restriction from select()") the irq_find_matching_fwspec() was
+> handling the DOMAIN_BUS_ANY on its own. After this commit it is a job of
+> the select() callback. However the callback of GICv3 (even though it got
+> modified to handle zero param_count) wasn't prepared to return true for
+> DOMAIN_BUS_ANY bus_token.
 > 
-> Form kvm_check_async_pf_completion(), I see async_pf.queue is always a
-> superset of async_pf.done (except wake-all work, which is not within
-> concern).  And done work would be skipped from sync (cancel_work_sync()) by:
+> This breaks probing of any of the child IRQ domains, since
+> platform_irqchip_probe() uses irq_find_matching_host(par_np,
+> DOMAIN_BUS_ANY) to check for the presence of the parent IRQ domain.
 > 
->                 if (!work->vcpu)
->                         continue;
+> Fixes: 151378251004 ("irqchip/gic-v3: Make gic_irq_domain_select() robust for zero parameter count")
+> Fixes: de1ff306dcf4 ("genirq/irqdomain: Remove the param count restriction from select()")
+> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+> ---
+>  drivers/irqchip/irq-gic-v3.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
 > 
-> But now with this patch we also sync done works, how about we just sync all
-> queued work instead.
+> diff --git a/drivers/irqchip/irq-gic-v3.c b/drivers/irqchip/irq-gic-v3.c
+> index 6fb276504bcc..e9e9643c653f 100644
+> --- a/drivers/irqchip/irq-gic-v3.c
+> +++ b/drivers/irqchip/irq-gic-v3.c
+> @@ -1696,7 +1696,8 @@ static int gic_irq_domain_select(struct irq_domain *d,
+>  
+>  	/* Handle pure domain searches */
+>  	if (!fwspec->param_count)
+> -		return d->bus_token == bus_token;
+> +		return d->bus_token == bus_token ||
+> +			bus_token == DOMAIN_BUS_ANY;
+>  
+>  	/* If this is not DT, then we have a single domain */
+>  	if (!is_of_node(fwspec->fwnode))
+> 
 
-Hmm, IIUC, I think we can simply revert commit 22583f0d9c85 ("KVM: async_pf: avoid
-recursive flushing of work items").
+I really dislike the look of this. If that's the case, any irqchip
+that has a 'select' method (such as imx-intmux) should be similarly
+hacked. And at this point, this should be handled by the core code.
+
+Can you try this instead? I don't have any HW that relies on
+behaviour, but I'd expect this to work.
+
+Thanks,
+
+	M.
+
+diff --git a/kernel/irq/irqdomain.c b/kernel/irq/irqdomain.c
+index aeb41655d6de..3dd1c871e091 100644
+--- a/kernel/irq/irqdomain.c
++++ b/kernel/irq/irqdomain.c
+@@ -449,7 +449,7 @@ struct irq_domain *irq_find_matching_fwspec(struct irq_fwspec *fwspec,
+ 	 */
+ 	mutex_lock(&irq_domain_mutex);
+ 	list_for_each_entry(h, &irq_domain_list, link) {
+-		if (h->ops->select)
++		if (h->ops->select && bus_token != DOMAIN_BUS_ANY)
+ 			rc = h->ops->select(h, fwspec, bus_token);
+ 		else if (h->ops->match)
+ 			rc = h->ops->match(h, to_of_node(fwnode), bus_token);
+
+-- 
+Without deviation from the norm, progress is not possible.
