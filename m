@@ -1,137 +1,99 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F86036B09;
-	Mon, 19 Feb 2024 14:03:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 119A0374C4;
+	Mon, 19 Feb 2024 14:03:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708351384; cv=none; b=Xxs8d3O0oz+HQ+C0Ja+lAe5M/+qkLQ6VaDqKybfrfQI4xAivWGN0btMjteH95kW3MBYzkjXAkWsPlZ29MlnlBgoHCBxYu2IPqcPdFDEvRcX+O/Q5nakpDnUJzx4r+Jyqq5PWgvoQ2QPzijjwY7VAbaticHvcuj5NMqqrZNfe/lM=
+	t=1708351433; cv=none; b=W4YnV6RQQwxIZ8wVFBaR6HnZAV6aiSwr7JQEE60Co9cBPKZ+jMhTRcBPRNkm9bZIZ2LbWBziaTQgySMuMbAx1C6UsvhBx7oDExsibX2EyM/0j1w1+be/Exyx+BcaHoEx9c5TgyeLsiC21FPw5UpPXy41UZs9bBMie/Ptrzx/RFM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708351384; c=relaxed/simple;
-	bh=wHheWqOg2lnrXFJQJwK4hCwjRP1jqy2jGPo/csvfdrM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=L75m7U5+OT8vGH7SmQcD2cxXoyOmeAIpY8E7zSybXOWCF4wkW0203m7M6eNAfaEGAkGKLKNOCdIJ6fmHLMctOIKKHbcgcvMT3YiaoL4AnPNmRgcIZrA8FmAozIlI5hCHst7i3YJz0M3A5N/krJhgfW63nZhUfFzLBgvS91vw2oE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JKdrVC//; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1708351433; c=relaxed/simple;
+	bh=W5O7VZ8KqDCfbvD26szdWB030oyr7Cq1XvqJ3vUKziE=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=cvia5FY087i1d+Tc1A/blRVClsQRNMWBP017vGTTK+LIY8IqNXdr17AXVcLE2hfRPt9hTMpKsYSy5HCW119WkHiF0WeacBmbEijBUXEloHU0VWc9ewR/AeIfh8B78KFNZpxCtvNpCFPmm6OttmS0vcu8De3YQiLYAfJHqJHNJok=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=7vOItSRY; arc=none smtp.client-ip=91.207.212.93
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JKdrVC//"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1708351383; x=1739887383;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=wHheWqOg2lnrXFJQJwK4hCwjRP1jqy2jGPo/csvfdrM=;
-  b=JKdrVC//GNaIbK1i5uTYZQ4qMuusEE/T/srpkOcRtEzuarH2BAft74Q5
-   3i2Fvw6XrD4S/UR5A4uYJIgyrb9B0hTUv6VwydVBli3r1XvGceuA+j+zl
-   OzGLJqniqIm+1SNIAm1dPNzO4NpU1Z1xZ+wZ5xOS2pNKvM7XRcpmIQwKU
-   DexXAORBnOlw/A13FmZrcRk3pSkEjY9b2jl4aev2aks5Yh3GceXuGB/nI
-   PVcUFeE+D2SqT1bgh8eIwfvO6J6EK8zOQj2w2Uxc1LtwnkYHKqOoxuWeo
-   t3DVVmwMTJNNrDB8CK1yURIF0W+FSCy6eb3az0RStMC0tbTPQXtuOddcC
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10988"; a="2294745"
-X-IronPort-AV: E=Sophos;i="6.06,170,1705392000"; 
-   d="scan'208";a="2294745"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Feb 2024 06:03:02 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,170,1705392000"; 
-   d="scan'208";a="4407006"
-Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.165])
-  by fmviesa007.fm.intel.com with ESMTP; 19 Feb 2024 06:03:00 -0800
-Date: Mon, 19 Feb 2024 21:59:08 +0800
-From: Xu Yilun <yilun.xu@linux.intel.com>
-To: Sean Christopherson <seanjc@google.com>
-Cc: Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
-	linux-kernel@vger.kernel.org, David Matlack <dmatlack@google.com>
-Subject: Re: [PATCH 1/4] KVM: Always flush async #PF workqueue when vCPU is
- being destroyed
-Message-ID: <ZdNerMaewrcrwBlL@yilunxu-OptiPlex-7050>
-References: <20240110011533.503302-1-seanjc@google.com>
- <20240110011533.503302-2-seanjc@google.com>
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="7vOItSRY"
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 41JBbmfn010713;
+	Mon, 19 Feb 2024 15:03:38 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	from:to:cc:subject:date:message-id:mime-version
+	:content-transfer-encoding:content-type; s=selector1; bh=JbFKX/R
+	0/Q/8vicTvjhSmz3MCxFrHdiMtjVvUU6pahA=; b=7vOItSRY0orWOLflOvBChU3
+	gfTyHpTsT2gaFtBG5/+a9RZ9TjxjWg17JNZMUmm9WNOcXH5B6imYXcu4I7/s6+1x
+	F8QOMyoqOo/Gpi509/RSJHf0Gb2YLXPRuviS0megmHytHTo8ZAFIz+xmu0we/NuV
+	i9TiTh3khV8RJNWRpQiEqJK9wNHVnJJzOGZIBU4d9+jIg4HMfVrQS5+hPJ2Mo2A8
+	LMyfSJVJaeU5FVRXaTKLSarUAjk1RxGwAJuj/yyuFjH4WrTEiLWoTdqQnxdKOl78
+	jCjQInT4c9FWx+cE0pWa13nQy0qAV1a6Pe9x9GIXVc4edIkkFAjjXuZql0jfjAA=
+	=
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3wamjh6mur-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 19 Feb 2024 15:03:38 +0100 (CET)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 1A4A54002D;
+	Mon, 19 Feb 2024 15:03:33 +0100 (CET)
+Received: from Webmail-eu.st.com (shfdag1node3.st.com [10.75.129.71])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 903CF26A985;
+	Mon, 19 Feb 2024 15:03:09 +0100 (CET)
+Received: from localhost (10.201.21.177) by SHFDAG1NODE3.st.com (10.75.129.71)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Mon, 19 Feb
+ 2024 15:03:09 +0100
+From: Christophe Kerello <christophe.kerello@foss.st.com>
+To: <krzysztof.kozlowski@linaro.org>, <robh+dt@kernel.org>,
+        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>
+CC: <linux-kernel@vger.kernel.org>, <linux-stm32@st-md-mailman.stormreply.com>,
+        <devicetree@vger.kernel.org>,
+        Christophe Kerello <christophe.kerello@foss.st.com>
+Subject: [PATCH v2 0/5] memory: stm32-fmc2-ebi: Add MP25 FMC2 support
+Date: Mon, 19 Feb 2024 15:01:57 +0100
+Message-ID: <20240219140202.85680-1-christophe.kerello@foss.st.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240110011533.503302-2-seanjc@google.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: EQNCAS1NODE3.st.com (10.75.129.80) To SHFDAG1NODE3.st.com
+ (10.75.129.71)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-02-19_09,2024-02-19_01,2023-05-22_02
 
->  void kvm_clear_async_pf_completion_queue(struct kvm_vcpu *vcpu)
-> @@ -114,7 +132,6 @@ void kvm_clear_async_pf_completion_queue(struct kvm_vcpu *vcpu)
->  #else
->  		if (cancel_work_sync(&work->work)) {
->  			mmput(work->mm);
-> -			kvm_put_kvm(vcpu->kvm); /* == work->vcpu->kvm */
->  			kmem_cache_free(async_pf_cache, work);
->  		}
->  #endif
-> @@ -126,7 +143,18 @@ void kvm_clear_async_pf_completion_queue(struct kvm_vcpu *vcpu)
->  			list_first_entry(&vcpu->async_pf.done,
->  					 typeof(*work), link);
->  		list_del(&work->link);
-> -		kmem_cache_free(async_pf_cache, work);
-> +
-> +		spin_unlock(&vcpu->async_pf.lock);
-> +
-> +		/*
-> +		 * The async #PF is "done", but KVM must wait for the work item
-> +		 * itself, i.e. async_pf_execute(), to run to completion.  If
-> +		 * KVM is a module, KVM must ensure *no* code owned by the KVM
-> +		 * (the module) can be run after the last call to module_put(),
-> +		 * i.e. after the last reference to the last vCPU's file is put.
-> +		 */
-> +		kvm_flush_and_free_async_pf_work(work);
+On MP1 SoC, RNB signal (NAND controller signal) and NWAIT signal (PSRAM
+controller signal) have been integrated together in the SoC. That means
+that the NAND controller and the PSRAM controller (if the signal is
+used) can not be used at the same time. On MP25 SoC, the 2 signals can
+be used outside the SoC, so there is no more restrictions.
+    
+MP1 SoC also embeds revision 1.1 of the FMC2 IP when MP25 SoC embeds
+revision 2.0 of the FMC2 IP.
 
-I have a new concern when I re-visit this patchset.
+Changes in v2:
+ - V1 patch 1 and 2 have been squashed and commit message has been updated.
+ - V1 patch 3, 4 and 5 have been squashed and reworked.
+ - V1 patch 7 has been renamed and associated commit message has been updated.
+ - V1 patchset is split, one for memory, and another one for NAND. 
+ - Regmap_read API return value is checked everywhere it is called.
+ - A platform data structure is handling the difference between MP1 and MP25.
 
-Form kvm_check_async_pf_completion(), I see async_pf.queue is always a
-superset of async_pf.done (except wake-all work, which is not within
-concern).  And done work would be skipped from sync (cancel_work_sync()) by:
+Christophe Kerello (5):
+  dt-bindings: memory-controller: st,stm32: add MP25 support
+  memory: stm32-fmc2-ebi: check regmap_read return value
+  memory: stm32-fmc2-ebi: add MP25 support
+  memory: stm32-fmc2-ebi: add MP25 RIF support
+  memory: stm32-fmc2-ebi: keep power domain on
 
-                if (!work->vcpu)
-                        continue;
+ .../memory-controllers/st,stm32-fmc2-ebi.yaml |   7 +-
+ drivers/memory/stm32-fmc2-ebi.c               | 739 ++++++++++++++++--
+ 2 files changed, 696 insertions(+), 50 deletions(-)
 
-But now with this patch we also sync done works, how about we just sync all
-queued work instead.
+-- 
+2.25.1
 
-diff --git a/virt/kvm/async_pf.c b/virt/kvm/async_pf.c
-index e033c79d528e..2268f16a36c2 100644
---- a/virt/kvm/async_pf.c
-+++ b/virt/kvm/async_pf.c
-@@ -71,7 +71,6 @@ static void async_pf_execute(struct work_struct *work)
-        spin_lock(&vcpu->async_pf.lock);
-        first = list_empty(&vcpu->async_pf.done);
-        list_add_tail(&apf->link, &vcpu->async_pf.done);
--       apf->vcpu = NULL;
-        spin_unlock(&vcpu->async_pf.lock);
-
-        if (!IS_ENABLED(CONFIG_KVM_ASYNC_PF_SYNC) && first)
-@@ -101,13 +100,6 @@ void kvm_clear_async_pf_completion_queue(struct kvm_vcpu *vcpu)
-                                         typeof(*work), queue);
-                list_del(&work->queue);
-
--               /*
--                * We know it's present in vcpu->async_pf.done, do
--                * nothing here.
--                */
--               if (!work->vcpu)
--                       continue;
--
-                spin_unlock(&vcpu->async_pf.lock);
- #ifdef CONFIG_KVM_ASYNC_PF_SYNC
-                flush_work(&work->work);
-
-
-This way we don't have to sync twice for the same purpose, also we could
-avoid reusing work->vcpu as a "done" flag which confused me a bit.
-
-Thanks,
-Yilun
-
-> +		spin_lock(&vcpu->async_pf.lock);
->  	}
->  	spin_unlock(&vcpu->async_pf.lock);
->  
