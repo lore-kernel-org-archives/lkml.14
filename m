@@ -1,451 +1,225 @@
-Received: from mx07-00376f01.pphosted.com (mx07-00376f01.pphosted.com [185.132.180.163])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D78B5224CC;
-	Mon, 19 Feb 2024 09:08:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=185.132.180.163
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708333693; cv=fail; b=Qtxp7LISC+LUqacVyUhhBaMEuHr8lARK9kGIatmopv+T6E/xkqEE/4wDm89qpwS08zcYdkF6VqitbsWDr2WQDoeInMFl6SkSPv3CHWtv/qcMdF04sBUACL29Srv3SOsvWcXnnFFmfLRrwWjciz2IQPwA7SKh85QTlalWyAfAULs=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708333693; c=relaxed/simple;
-	bh=nUalpgfqqADzLcFsz795a0XOS6rH0sJ8yKqWJSuFy34=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=BxhfHYlFW2+T5qKrXjnR2aZSAyjVBJoqrpR9Z+lG5xmcf934Fjo+z6EpjSPl5KX56XtA5u2j1KdLZls8W30uxFp61GUYICtzGzUtlQI1NHQXD1vM4nHIUajxgmQ1ulSoXEemVP5sxNwaCpyMhePDxwK4p3zJDBexii3AtoVs//c=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=imgtec.com; spf=pass smtp.mailfrom=imgtec.com; dkim=pass (2048-bit key) header.d=imgtec.com header.i=@imgtec.com header.b=h/N9Q6Ur; dkim=pass (1024-bit key) header.d=IMGTecCRM.onmicrosoft.com header.i=@IMGTecCRM.onmicrosoft.com header.b=P5l5gClL; arc=fail smtp.client-ip=185.132.180.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=imgtec.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=imgtec.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72C7222309;
+	Mon, 19 Feb 2024 09:08:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1708333737; cv=none; b=gF69JPBpbvVEeI8lwciac4cNBXDAxmFGlD3Yl/ccQfhYYKlVq5dPsNK3raWEuYtlVJi211l0iO3ZUtlpUuoL9hqTJBrvlFQsWpHw9/k9UQzU+Iemvi3tmTSoXsVlx+AaOwWfpdoB+hjqRaZrRTrOpxue6xY5qCoeKXqFMKiwxz4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1708333737; c=relaxed/simple;
+	bh=+ZMPIvIwkppldENup3GEYut/raXsv5r8fa0cHqLSbv0=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=k1CHWdp4/kG6C5k4KKQtAgWAYc9B/BEVd/VYEv/HgabxydiXp1M1TJ4xv7VgJCTdrUalaTNgKq0nqOJVjdKN4VS7xL2c3pAwJD1eRFerAzkdtv5b4VlMkwQElfWy3wD61K6hjNxGk0fZMThKHDvQjsgQcWF4eMMwcuW8SRwNWm8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=DZBiokTQ; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=cEu3F6wK; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=imgtec.com header.i=@imgtec.com header.b="h/N9Q6Ur";
-	dkim=pass (1024-bit key) header.d=IMGTecCRM.onmicrosoft.com header.i=@IMGTecCRM.onmicrosoft.com header.b="P5l5gClL"
-Received: from pps.filterd (m0168889.ppops.net [127.0.0.1])
-	by mx07-00376f01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 41J7tBWU027763;
-	Mon, 19 Feb 2024 09:00:31 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=imgtec.com; h=
-	from:to:cc:subject:date:message-id:references:in-reply-to
-	:content-type:mime-version; s=dk201812; bh=lhx2LUVoBSnDDaE7ABZpY
-	j7dx4LYCODPdgqul+ELSmQ=; b=h/N9Q6UrHcUzqIFekdveg29Ui6UK65Let+Ylx
-	CAYlw8yExdRxeAFy67sQPXQ/NHUSs/8AVKZVrbvSQDcGUoedZgcDxzNenYuWZdy7
-	bWYeylqFOfZOLO8QRsfBMNzOI4HC3L21S1tRRsmTR7cBtGR5/AIBU2Xqxhl2cWRo
-	Zwobh7lY4NOxhWWy6h+yunMQTRNDpPMZHNJ9Z13wsabivAIQI9GE9hyfN7DCY9Xv
-	MnFvofGgfB1H6dBvarPiLz0QXTHvnnlZDBTgf1mtYhoH+pMbrlIbXLNLtg8TXgem
-	ue0xWeD7LebDm8wlcVIRoByR5zVS4pRI5y5khzHfiajvUgbrA==
-Received: from hhmail05.hh.imgtec.org ([217.156.249.195])
-	by mx07-00376f01.pphosted.com (PPS) with ESMTPS id 3wanrvsddu-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-	Mon, 19 Feb 2024 09:00:31 +0000 (GMT)
-Received: from HHMAIL05.hh.imgtec.org (10.100.10.120) by
- HHMAIL05.hh.imgtec.org (10.100.10.120) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Mon, 19 Feb 2024 09:00:30 +0000
-Received: from GBR01-LO4-obe.outbound.protection.outlook.com (104.47.85.104)
- by email.imgtec.com (10.100.10.121) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35 via Frontend Transport; Mon, 19 Feb 2024 09:00:30 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=nV17zZdcQhgvHoWS/VtjxAsZS1ZdSvHyMHfjuaneqjoRCu21YE3vV8fbu2sYnfbDQGidVe0V+VSNz8oU3/bc7XNOcfjTokzduEuOr3eBnGidWRzSfgMep2qPJOsOe0mP7RTJnqJkqQCjviRm8YRVjnbHUZEkbe7LyrK4ug6/69HthFz6JZglDx6+vUI7FDTHhVpul9nGtgkvEY2Y3RaGaJ4oKadnGD+K/0FjGjFNpp5ZDQT+CCwIWuvlQrAgrYJVGFka7nbrh2BhPwzfVorFaNurfu1MB43D0G/ZiU062GpQfZOOzZdlUu/mZDrkhzuIxLtjKy7ielsoifUD8TcxXA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=lhx2LUVoBSnDDaE7ABZpYj7dx4LYCODPdgqul+ELSmQ=;
- b=RQF28f/N4FQr8EJ2WtqSpqsu2DT6g5+wiltrv1a851wZ3mONpVD66C+agbPII7W8aF+FhTP5fkjr1mYsJsV+scn1j9thOIq0H/8V1haj/ld0LDRE8OWOn9nc1tbRAivGZAhywbH/CQ8GRA/bd3zSGN3prygnBO50hpFJHhIqkOuU04F4/TN5PG7TdJkDcFK912rWMmU3LQrrDI8oVKQbeHtOJDKyo5DXCmK4xpm6hsZoUhOgtEqSH8HvUYTE1OkT/Fk+zA+nXjcmVwc8p3rmdNBFKlQ9no41XX1GvsULrU5hM82ug0lbOZtrIrJ3SEVFYz15doHhCBnIpLQk7XSEig==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=imgtec.com; dmarc=pass action=none header.from=imgtec.com;
- dkim=pass header.d=imgtec.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=IMGTecCRM.onmicrosoft.com; s=selector2-IMGTecCRM-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=lhx2LUVoBSnDDaE7ABZpYj7dx4LYCODPdgqul+ELSmQ=;
- b=P5l5gClLvp1hPK4w9gCZDDhMVfQ7/mt1XgYiyi+BFtf6IbB3CthxFQNO6NpuYtBuaRU40fPCKBv32tiy+RQWJ38nEO1b60UXpK3nacgngwjr/C0gLMxc9dBY3U9A0DmhTbsdGm9wqbkdGDjdfhh0lb7tuJT0gx9NwrDENmr9ZmA=
-Received: from LO0P265MB3404.GBRP265.PROD.OUTLOOK.COM (2603:10a6:600:16c::5)
- by CWXP265MB5298.GBRP265.PROD.OUTLOOK.COM (2603:10a6:400:191::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7292.39; Mon, 19 Feb
- 2024 09:00:27 +0000
-Received: from LO0P265MB3404.GBRP265.PROD.OUTLOOK.COM
- ([fe80::4b5c:d51f:da10:2626]) by LO0P265MB3404.GBRP265.PROD.OUTLOOK.COM
- ([fe80::4b5c:d51f:da10:2626%5]) with mapi id 15.20.7292.036; Mon, 19 Feb 2024
- 09:00:27 +0000
-From: Matt Coster <Matt.Coster@imgtec.com>
-To: Adam Ford <aford173@gmail.com>
-CC: Maxime Ripard <mripard@kernel.org>, Biju Das <biju.das.jz@bp.renesas.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Frank Binns
-	<Frank.Binns@imgtec.com>,
-        Maarten Lankhorst
-	<maarten.lankhorst@linux.intel.com>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
-        "Sarah
- Walker" <Sarah.Walker@imgtec.com>,
-        Javier Martinez Canillas
-	<javierm@redhat.com>,
-        Nishanth Menon <nm@ti.com>, Marek Vasut
-	<marek.vasut@mailbox.org>,
-        "linux-renesas-soc@vger.kernel.org"
-	<linux-renesas-soc@vger.kernel.org>,
-        "dri-devel@lists.freedesktop.org"
-	<dri-devel@lists.freedesktop.org>,
-        "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] drm/imagination: DRM_POWERVR should depend on ARCH_K3
-Thread-Topic: [PATCH v2] drm/imagination: DRM_POWERVR should depend on ARCH_K3
-Thread-Index: AQHaYxIUhgoz/G+Kvkq/JRlnzqZV/A==
-Date: Mon, 19 Feb 2024 09:00:27 +0000
-Message-ID: <1ff513b9-d4fd-4663-b46b-bb9662e3881c@imgtec.com>
-References: <6be2558b8462fc08095c24c9257563ab5f3ae013.1708001398.git.geert+renesas@glider.be>
- <kycepdxukfsww3tnxoo5hoiuo3vcgpqqmynokzhtl4vodgm6zc@ih4uhw7gz4jh>
- <CAMuHMdVf7ophCwKt-n_N-LBHV4+t14Gjb4d1O0T8FDk_9xMFtA@mail.gmail.com>
- <CAHCN7xJ65RP8TO7cS0p5DwE6zru5NEF0_JA+8siT_OpSeLD7pA@mail.gmail.com>
- <CAHCN7x+EnSU8qk5dBFco=0vkeknGq18qEN7vFmZs0_q83T_3+w@mail.gmail.com>
- <CAHCN7xKffJ29zyjoJVAcy3b_d=-zkFzbL=URj4yWJWzYvRdB_Q@mail.gmail.com>
- <TYCPR01MB11269CBE8429A31DE5002A5A5864C2@TYCPR01MB11269.jpnprd01.prod.outlook.com>
- <nzrkujogauvn262ucxippwidyub6ikcohcjpbpn4hzj7rymctm@4owntgrmcquf>
- <TYCPR01MB11269CBAA20275E11D9AD6500864C2@TYCPR01MB11269.jpnprd01.prod.outlook.com>
- <wxwad77x2mxhhwdsbgiytzn6x54t4sywodjhzefwldo277njiz@ru7z54wxgelu>
- <CAHCN7xJi-6W6x+OJmkNwOX45SM4WHD5zkN42ZOp8ZxFnp3YL5w@mail.gmail.com>
-In-Reply-To: <CAHCN7xJi-6W6x+OJmkNwOX45SM4WHD5zkN42ZOp8ZxFnp3YL5w@mail.gmail.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: yes
-X-MS-TNEF-Correlator: 
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: LO0P265MB3404:EE_|CWXP265MB5298:EE_
-x-ms-office365-filtering-correlation-id: 1f07288a-55c9-476c-584b-08dc3129374d
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: KVNc8QN2F2RIJeIuujbSRVrPzYgtJCbo35l/0frcb+Y2u+mtnwmQTHiZFdZ/J2RT2DNxjuuTdxVl9Vy6VotDt3WAXEwkze9XMrE3EzOWwbzA9CeggCqO97bDC04vsO0VsV49ivBd0Kq/9+RB4K9snVZvWwAi8DYt4Rl3of9nTAZKNhdhqh3GjzJwqRZ4gyORmkWoaZUd997Jj1Zch0rp0mU1klFxIs9dQiE9sUAcX1oA0+GhFxYsrakcQXsau5A8ZpyGWFwGv0d7evw52AgxjKsVDlPDHKASa01VjghXWMpKt/HVaoiWuy2pK0SCUrBAXBs1L+ei7dXpl+O32dT23f7aVC+0Rzv8Uj3SDV/wchmAB7CP+mdzm0bkEIl5kTo8kl1hz+5DX/VyjtY1rTXedWvIP/DQhQf9nptH76fK+75rhNvURCJUo/0cJ1V9t++fzdVYiu+YLl7DR/OUAvXab5e062bUYsDMjPW/lF+YPzDIY9DdXunFRYLXvei7RlNmYZO/oOJlsGtj72GhlJa8plZ9JuPoWVuduZdFTapet/7W4GZu+gnrduJCcrvpTywPrbtv34xcVQOR0XMfZjA8GbE5ndalgTof4GW1gmI+Ols=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LO0P265MB3404.GBRP265.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230031)(346002)(39840400004)(376002)(366004)(136003)(396003)(230922051799003)(64100799003)(1800799012)(186009)(451199024)(38100700002)(31686004)(122000001)(2906002)(7416002)(5660300002)(6916009)(8676002)(8936002)(41300700001)(316002)(66556008)(66476007)(31696002)(86362001)(66446008)(64756008)(66946007)(76116006)(4326008)(6486002)(6512007)(478600001)(966005)(71200400001)(54906003)(6506007)(99936003)(83380400001)(53546011)(2616005)(36756003)(38070700009)(26005);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?bzZqMGI1YzBxTzNrSG5YUTJNak1JQkZ5QVhjc2VVK3RmcmVGYkU4Z0tVVEEv?=
- =?utf-8?B?eHVKT1RDMzFRcXNoT3lWZ3lueEZMcnQraE1BNjU2aGRmTzNWMlM4ems5Wk1L?=
- =?utf-8?B?WDA5cm5lYjN4MSs1Zmt0dFYzcHZta3QzdGp0dUZtYzRmK1Z2VFZ4SGlRYnlM?=
- =?utf-8?B?aFFZMEMrN1lOTmE3bDNIOVB4UUtFcllsa2dYQy9YanhZalN3KzJYTGVTUlRh?=
- =?utf-8?B?aGw5WXQrbnN2c2V6TG8wVytmeTYwZUpHdFJqdi9lZjNQS0I2Z3VTOEV3Y25B?=
- =?utf-8?B?M2ZCTUNlSzhQR0FYRFk4enF6Sm9tWlQxNmFOY3pXdEF4Y0VzSjhLS0lnZURQ?=
- =?utf-8?B?clVpbytKVE9FTjNRdFAxMVZTdDdSck5UNWFmQnpjclJrd0FVbUJYd3luZFpZ?=
- =?utf-8?B?b3MyS3VIOHFLTzVLMUVSL2lsNjZwQ2d0WmlGZFdyQlFRbXZ2QzJ6MTVXVTFG?=
- =?utf-8?B?NWhTRG9vV1dwMUc0Q3lCL2J4eExudmlvWW5Wd01rYlBzb25zR3FRWkhVMitD?=
- =?utf-8?B?UmV0bjV3Y0VqNG5QS1Jhd09MbklBTjA1OHZwU2dlYzBJc3pDL3dvVnl1UG1U?=
- =?utf-8?B?Zm1UQjB3blNKWDU1MFdZcmRSTS9Xam5YcnFOSGFKZlY4RjJKRXZxNFRidXpU?=
- =?utf-8?B?ZE91ODRGRzhTZFdZTW1aVkM4dkV0Y0N0NVZCVWg0THlVMkVYUGFSY2ErZWpl?=
- =?utf-8?B?dGFvY0xvMjJuSGJNSm0yMjZQVFFvY3d5bzZrallDYnNkeC9wcGVFeXBXcXhr?=
- =?utf-8?B?RTg2dlZZQlhYSzg4VVFEOTRYNmM0YUY0WmtuaVMzZXlzZ0psZHRnSXlyeEd3?=
- =?utf-8?B?VjBhMkNJVitodnpCeUZEMDBZK1BGaGxzSWN6enlZRmhrajlwa0pQeTUyZzN2?=
- =?utf-8?B?MDFFQ1RNenlNY0NtT2w3RXZCOVArb05xZlpVeTBuRVlNMExVL0Y3emUwYnV0?=
- =?utf-8?B?VmlzTms4SmRpOGNwQzNnRzlBQTh1NE1LREVMK1BQZnJmWGthNUQ3Njl0eEdy?=
- =?utf-8?B?SjI4cTVpNDlMZGFpVVQwWTdLdG9OZkMzSUs0aWxxUFZFLzVvOERyUkUyWElk?=
- =?utf-8?B?YTZDRkFHUXJMVFlzMTdqTU0wem14MWkyY09CQWdaVnk5NXFkSkwwV3FJMHdR?=
- =?utf-8?B?UE1VUy9BUHVSakZsV3QrWkNwSkluTmU5UElySklPSUptRUZyRzAyaFBwRW44?=
- =?utf-8?B?NC9vQnlUc0owWnVzQnErcDZrY0lKdnRBOUovQ21vbWNpL2hHdWU5NHUxeCtJ?=
- =?utf-8?B?eXZ3TUxHdDdxbkNIN24vK25jS2kwWjAzelNKSlgxTXVQTW9SWGdvSnVJR08y?=
- =?utf-8?B?aDZGLzBNL1MvTTVhQ1NJZERxOFlpZDNoNDVBSnNjaFNUOGs3dEVYT0pDMVE1?=
- =?utf-8?B?NGJZUHQwZWppa1liKzh2dnVaUEVrTDR6ZHliNkNXYS9kMVBJVnpMSWpMQkhz?=
- =?utf-8?B?MzBrbktYKzl2cER1QlFTT1o1RUgxb0ZUNllUbDBpbDNaOWtZREZ3N2orWDVN?=
- =?utf-8?B?aTB1WU1JSTFyZkY5OENKVVJPS3MwR2hkTm9jTldQVUUxRElCUGgwZ1d5UU1Y?=
- =?utf-8?B?dElzRlJrUmoxVE1IUlcrMU5GTkVCR29TRUlUbEtKdi95S3ptdzdhWk1TZVZR?=
- =?utf-8?B?T0U5RzA1VlF0RGR5bEJERXNhdFNkY1g2dEpGTE4vYndsU3p4M1hpc1dOVmF0?=
- =?utf-8?B?SUZwWWxONTB4MmtTa0V1UVZGdHFtMUo3YWwxNmNPc25DUTNxRlBoZ2VsV1VR?=
- =?utf-8?B?VSs3RGlUalJBQmM5bk11UkdBWE9CRjNEQnIxT1VFYkdMdDZPeGExRzYwYWRN?=
- =?utf-8?B?ejZZVW15VThTVFd5RG5kMUFYdmUxbFNFWWJzQ2JmVnF1UGhLQkVTcUNRbEF0?=
- =?utf-8?B?bmdkWTlxNVRKb0FxaTU5WkRJbWhaQXhkY29mWCtRMkZITGZVL1lPKzFDOHZ6?=
- =?utf-8?B?ZmV5WGJka1JUcmNCcS9rQnVQMGdjcnhJeDZrbWFPWWNBazN2TlpvWG4xZUFo?=
- =?utf-8?B?WWRxN3ZlVDNmVkJoa25kcE9CSWNwSDh0cjhYemwxUCtaL1VnZnNRL3FnZEFB?=
- =?utf-8?B?eTF4aU1pRzVFNGNPaVNLV3hRZ05yNTJkeWtoNGhBN2tsclZrNk5OWThKWENI?=
- =?utf-8?B?SkJMbnJhNGoranJmZkZGVmZQa2NuYStnR1RHa1JKQk5jdEN0WUNiaUVOYm81?=
- =?utf-8?B?SFE9PQ==?=
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="------------ha7LX0M8wgsyahGCVSED1Pxg"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="DZBiokTQ";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="cEu3F6wK"
+From: Florian Kauer <florian.kauer@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1708333733;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=CyuTyEUacN3pepSBJWL72y/0RunhnYpq37IXOd+sUdI=;
+	b=DZBiokTQDlOdztrlEBO0BdhvIfliISfFM5K/4igbF+EX0M5Mp/S53BDNd5VvTXiEMasiC+
+	1pefmKJK+6CZMS6Y0jjI5fLAfoPYLIdlKbqc239RxTpshpEr3JiGjXvtxKnO1gdNNuiFeN
+	/4rHIuIH/vToEnRmlN1KCZI94VpP8qeqK5W3rUcSGMFzlPiVDcl8XGqY6UyLuX8Rq/Vd6Y
+	NOSzYyxXxP2QooXTb1qGagaeOP6WCtrKISM/skhN1DwZudviNR5dtMOavYKqUZCbHLWGNf
+	4qUaTzsJOhkEJqTTtlCweMo+zOQAJRxQ/mR6D4FaFyyY3FobjVLEQdIRRcp1dg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1708333733;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=CyuTyEUacN3pepSBJWL72y/0RunhnYpq37IXOd+sUdI=;
+	b=cEu3F6wKVZE3xIS+G90z7VEP0pbOGI6Cah5j92ZjIX8P7r+WNCPCb+EsBK0mtFje58an/p
+	G0lCqcsKHNsJqlDA==
+To: Jesse Brandeburg <jesse.brandeburg@intel.com>,
+	Tony Nguyen <anthony.l.nguyen@intel.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Jesper Dangaard Brouer <hawk@kernel.org>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Maciej Fijalkowski <maciej.fijalkowski@intel.com>,
+	Jithu Joseph <jithu.joseph@intel.com>,
+	Andre Guedes <andre.guedes@intel.com>,
+	Vedang Patel <vedang.patel@intel.com>
+Cc: Florian Kauer <florian.kauer@linutronix.de>,
+	kurt@linutronix.de,
+	intel-wired-lan@lists.osuosl.org,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	bpf@vger.kernel.org
+Subject: [PATCH net 1/1] igc: avoid returning frame twice in XDP_REDIRECT
+Date: Mon, 19 Feb 2024 10:08:43 +0100
+Message-Id: <20240219090843.9307-1-florian.kauer@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: LO0P265MB3404.GBRP265.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1f07288a-55c9-476c-584b-08dc3129374d
-X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Feb 2024 09:00:27.0460
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 0d5fd8bb-e8c2-4e0a-8dd5-2c264f7140fe
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: ql9bfUkJ+0AsktDQ0sXtrg9A+0cAOEr6VPX9USECpQih7lJsNN4ekXQyjBVGLQetm3sFFSeydxolw0KBkoa6lg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CWXP265MB5298
-X-OriginatorOrg: imgtec.com
-X-EXCLAIMER-MD-CONFIG: 15a78312-3e47-46eb-9010-2e54d84a9631
-X-Proofpoint-ORIG-GUID: vglMKDHSMRtJ9sDDtCp99rZXROTqRE1O
-X-Proofpoint-GUID: vglMKDHSMRtJ9sDDtCp99rZXROTqRE1O
+Content-Transfer-Encoding: 8bit
 
---------------ha7LX0M8wgsyahGCVSED1Pxg
-Content-Type: multipart/mixed; boundary="------------1xsLN9pK6q311Mc1xcQLrJKv";
- protected-headers="v1"
-From: Matt Coster <matt.coster@imgtec.com>
-To: Adam Ford <aford173@gmail.com>
-Cc: Maxime Ripard <mripard@kernel.org>, Biju Das
- <biju.das.jz@bp.renesas.com>, Geert Uytterhoeven <geert@linux-m68k.org>,
- Frank Binns <frank.binns@imgtec.com>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
- Daniel Vetter <daniel@ffwll.ch>, Sarah Walker <sarah.walker@imgtec.com>,
- Javier Martinez Canillas <javierm@redhat.com>, Nishanth Menon <nm@ti.com>,
- Marek Vasut <marek.vasut@mailbox.org>, linux-renesas-soc@vger.kernel.org,
- dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Message-ID: <1ff513b9-d4fd-4663-b46b-bb9662e3881c@imgtec.com>
-Subject: Re: [PATCH v2] drm/imagination: DRM_POWERVR should depend on ARCH_K3
-References: <6be2558b8462fc08095c24c9257563ab5f3ae013.1708001398.git.geert+renesas@glider.be>
- <kycepdxukfsww3tnxoo5hoiuo3vcgpqqmynokzhtl4vodgm6zc@ih4uhw7gz4jh>
- <CAMuHMdVf7ophCwKt-n_N-LBHV4+t14Gjb4d1O0T8FDk_9xMFtA@mail.gmail.com>
- <CAHCN7xJ65RP8TO7cS0p5DwE6zru5NEF0_JA+8siT_OpSeLD7pA@mail.gmail.com>
- <CAHCN7x+EnSU8qk5dBFco=0vkeknGq18qEN7vFmZs0_q83T_3+w@mail.gmail.com>
- <CAHCN7xKffJ29zyjoJVAcy3b_d=-zkFzbL=URj4yWJWzYvRdB_Q@mail.gmail.com>
- <TYCPR01MB11269CBE8429A31DE5002A5A5864C2@TYCPR01MB11269.jpnprd01.prod.outlook.com>
- <nzrkujogauvn262ucxippwidyub6ikcohcjpbpn4hzj7rymctm@4owntgrmcquf>
- <TYCPR01MB11269CBAA20275E11D9AD6500864C2@TYCPR01MB11269.jpnprd01.prod.outlook.com>
- <wxwad77x2mxhhwdsbgiytzn6x54t4sywodjhzefwldo277njiz@ru7z54wxgelu>
- <CAHCN7xJi-6W6x+OJmkNwOX45SM4WHD5zkN42ZOp8ZxFnp3YL5w@mail.gmail.com>
-In-Reply-To: <CAHCN7xJi-6W6x+OJmkNwOX45SM4WHD5zkN42ZOp8ZxFnp3YL5w@mail.gmail.com>
+When a frame can not be transmitted in XDP_REDIRECT
+(e.g. due to a full queue), it is necessary to free
+it by calling xdp_return_frame_rx_napi.
 
---------------1xsLN9pK6q311Mc1xcQLrJKv
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+However, this is the reponsibility of the caller of
+the ndo_xdp_xmit (see for example bq_xmit_all in
+kernel/bpf/devmap.c) and thus calling it inside
+igc_xdp_xmit (which is the ndo_xdp_xmit of the igc
+driver) as well will lead to memory corruption.
 
-Hi Adam,
+In fact, bq_xmit_all expects that it can return all
+frames after the last successfully transmitted one.
+Therefore, break for the first not transmitted frame,
+but do not call xdp_return_frame_rx_napi in igc_xdp_xmit.
+This is equally implemented in other Intel drivers
+such as the igb.
 
-On 18/02/2024 23:26, Adam Ford wrote:
-> On Fri, Feb 16, 2024 at 8:14=E2=80=AFAM Maxime Ripard <mripard@kernel.o=
-rg> wrote:
->>
->> On Fri, Feb 16, 2024 at 09:13:14AM +0000, Biju Das wrote:
->>> Hi Maxime Ripard,
->>>
->>>> -----Original Message-----
->>>> From: Maxime Ripard <mripard@kernel.org>
->>>> Sent: Friday, February 16, 2024 9:05 AM
->>>> Subject: Re: RE: [PATCH v2] drm/imagination: DRM_POWERVR should depe=
-nd on
->>>> ARCH_K3
->>>>
->>>> On Fri, Feb 16, 2024 at 08:47:46AM +0000, Biju Das wrote:
->>>>> Hi Adam Ford,
->>>>>
->>>>>> -----Original Message-----
->>>>>> From: Adam Ford <aford173@gmail.com>
->>>>>> Sent: Thursday, February 15, 2024 11:36 PM
->>>>>> Subject: Re: [PATCH v2] drm/imagination: DRM_POWERVR should depend=
+There are two alternatives to this that were rejected:
+1. Return num_frames as all the frames would have been
+   transmitted and release them inside igc_xdp_xmit.
+   While it might work technically, it is not what
+   the return value is meant to repesent (i.e. the
+   number of SUCCESSFULLY transmitted packets).
+2. Rework kernel/bpf/devmap.c and all drivers to
+   support non-consecutively dropped packets.
+   Besides being complex, it likely has a negative
+   performance impact without a significant gain
+   since it is anyway unlikely that the next frame
+   can be transmitted if the previous one was dropped.
 
->>>>>> on
->>>>>> ARCH_K3
->>>>>>
->>>>>> On Thu, Feb 15, 2024 at 11:22=E2=80=AFAM Adam Ford <aford173@gmail=
-=2Ecom> wrote:
->>>>>>>
->>>>>>> On Thu, Feb 15, 2024 at 11:10=E2=80=AFAM Adam Ford <aford173@gmai=
-l.com>
->>>> wrote:
->>>>>>>>
->>>>>>>> On Thu, Feb 15, 2024 at 10:54=E2=80=AFAM Geert Uytterhoeven
->>>>>>>> <geert@linux-m68k.org> wrote:
->>>>>>>>>
->>>>>>>>> Hi Maxime,
->>>>>>>>>
->>>>>>>>> On Thu, Feb 15, 2024 at 5:18=E2=80=AFPM Maxime Ripard
->>>>>>>>> <mripard@kernel.org>
->>>>>> wrote:
->>>>>>>>>> On Thu, Feb 15, 2024 at 01:50:09PM +0100, Geert Uytterhoeven
->>>>>> wrote:
->>>>>>>>>>> Using the Imagination Technologies PowerVR Series 6 GPU
->>>>>>>>>>> requires a proprietary firmware image, which is currently
->>>>>>>>>>> only available for Texas Instruments K3 AM62x SoCs.  Hence
->>>>>>>>>>> add a dependency on ARCH_K3, to prevent asking the user
->>>>>>>>>>> about this driver when configuring a kernel without Texas
->>>>>>>>>>> Instruments K3
->>>>>> Multicore SoC support.
->>>>>>>>>>
->>>>>>>>>> This wasn't making sense the first time you sent it, and now
->>>>>>>>>> that commit log is just plain wrong. We have firmwares for
->>>>>>>>>> the G6110, GX6250, GX6650, BXE-4-32, and BXS-4-64 models,
->>>>>>>>>> which can be found on (at least) Renesas, Mediatek,
->>>>>>>>>> Rockchip, TI and StarFive, so across three
->>>>>>>>>
->>>>>>>>> I am so happy to be proven wrong!
->>>>>>>>> Yeah, GX6650 is found on e.g. R-Car H3, and GX6250 on e.g.
->>>>>>>>> R-Car M3-
->>>>>> W.
->>>>>>>>>
->>>>>>>>>> architectures and 5 platforms. In two months.
->>>>>>>>>
->>>>>>>>> That sounds like great progress, thanks a lot!
->>>>>>>>>
->>>>>>>> Geert,
->>>>>>>>
->>>>>>>>> Where can I find these firmwares? Linux-firmware[1] seems to
->>>>>>>>> lack all but the original K3 AM62x one.
->>>>>>>>
->>>>>>>> I think PowerVR has a repo [1], but the last time I checked it,
->>>>>>>> the BVNC for the firmware didn't match what was necessary for
->>>>>>>> the GX6250 on the RZ/G2M.  I can't remember what the
->>>>>>>> corresponding R-Car3 model is.  I haven't tried recently because=
+The memory corruption can be reproduced with
+the following script which leads to a kernel panic
+after a few seconds.  It basically generates more
+traffic than a i225 NIC can transmit and pushes it
+via XDP_REDIRECT from a virtual interface to the
+physical interface where frames get dropped.
 
->>>>>>>> I was told more documentation for firmware porting would be
->>>>>>>> delayed until everything was pushed into the kernel and Mesa.
->>>>>>>> Maybe there is a better repo and/or newer firmware somewhere els=
-e.
->>>>>>>>
->>>>>>> I should have doubled checked the repo contents before I sent my
->>>>>>> last e-mail , but it appears the firmware  [2] for the RZ/G2M,
->>>>>>> might be present now. I don't know if there are driver updates
->>>>>>> necessary. I checked my e-mails, but I didn't see any
->>>>>>> notification, or I would have tried it earlier.  Either way, than=
-k
->>>>>>> you Frank for adding it.  I'll try to test when I have some time.=
+   #!/bin/bash
+   INTERFACE=enp4s0
+   INTERFACE_IDX=`cat /sys/class/net/$INTERFACE/ifindex`
 
->>>>>>>
->>>>>>
->>>>>> I don't have the proper version of Mesa setup yet, but for what it=
-'s
->>>>>> worth, the firmware loads without error, and it doesn't hang.
->>>>>
->>>>> Based on [1] and [2],
->>>>>
->>>>> kmscube should work on R-Car as it works on RZ/G2L with panfrost as=
+   sudo ip link add dev veth1 type veth peer name veth2
+   sudo ip link set up $INTERFACE
+   sudo ip link set up veth1
+   sudo ip link set up veth2
 
->>>>> earlier version of RZ/G2L which uses drm based on RCar-Du, later ch=
-anged
->>>> to rzg2l-du.
->>>>
->>>> IIRC, the mesa support isn't there yet for kmscube to start.
->>>
->>> What about glmark2? I tested glmark2 as well.
->>
->> It's not really a matter of kmscube itself, but the interaction with t=
-he
->> compositor entirely. You can run a headless vulkan rendering, but an
->> application that renders to a window won't work.
->=20
-> I have made a little progress.  I have Ubuntu running on an RZ/G2M
-> (Rogue GX6250) with a device tree configuring the GPU and the GPU
-> loads with firmware.
->=20
->   powervr fd000000.gpu: [drm] loaded firmware powervr/rogue_4.45.2.58_v=
-1.fw
->   powervr fd000000.gpu: [drm] FW version v1.0 (build 6513336 OS)
->   [drm] Initialized powervr 1.0.0 20230904 for fd000000.gpu on minor 0
->=20
-> drmdevice lists card0 and renderD128
-> --- Checking the number of DRM device available ---
-> --- Devices reported 2 ---
-> --- Retrieving devices information (PCI device revision is ignored) ---=
+   cat << EOF > redirect.bpf.c
 
-> device[0]
-> +-> available_nodes 0x05
-> +-> nodes
-> |   +-> nodes[0] /dev/dri/card0
-> |   +-> nodes[2] /dev/dri/renderD128
-> +-> bustype 0002
-> |   +-> platform
-> |       +-> fullname /soc/gpu@fd000000
-> +-> deviceinfo
->     +-> platform
->         +-> compatible
->                     renesas,r8a774a1-gpu
->                     img,img-axe
->=20
-> There is more to this dump, but it seems to repeat. I wanted to show
-> that it seems like it's trying to work.
->=20
-> I think I need to modify the powervr code in mesa to recognize the
-> renesas,r8a774a1-gpu and associate it with the rcar-du, but I am not
-> sure, and I am hoping someone might be able to provide some guidance,
-> since I think I am missing something somewhere. I modified
-> pvr_device.c in the mesa driver to attempt do this:
->=20
-> /* This is the list of supported DRM render/display driver configs. */
-> static const struct pvr_drm_device_config pvr_drm_configs[] =3D {
->    DEF_CONFIG("mediatek,mt8173-gpu", "mediatek-drm"),
->    DEF_CONFIG("ti,am62-gpu", "ti,am625-dss"),
->    DEF_CONFIG("renesas,r8a774a1-gpu", "rcar-du"),
-> };
->=20
-> When I run modetest -M rcar-du, I can see the encoders and connectors
-> and I can display test patterns, so the rcar-du is working.
->=20
-> I built Mesa 24.0.1 with the following options:
->=20
-> meson setup builddir -Dvulkan-drivers=3Dimagination-experimental
-> -Dimagination-srv=3Dtrue -Dtools=3Dall -Dgallium-drivers=3Dzink,kmsro,s=
-wrast
->=20
-> I have tried to set PVR_I_WANT_A_BROKEN_VULKAN_DRIVER=3D1 the Mesa
-> documentation for the powerVR, and I have exported the variable for
-> VK_ICD_FILENAMES to point to the powervr json file.
->=20
-> when I try to run glmark2-drm, I was expecting the GL reddered to be
-> the powervr, but it keeps using the
-> GL_RENDERER:    llvmpipe (LLVM 15.0.7, 128 bits)
->=20
-> I realize this driver is still in its infancy, but I was hoping
-> someone could give me some guidance to let me know if the work to do
-> is on the Mesa side or the rcar-du driver side, or something else.
->=20
-> I rebuilt both libdrm and mesa.  While I don't get any errors, I also
-> don't get the hardware acceleration I was hoping for.
->=20
-> I even tried  PVR_I_WANT_A_BROKEN_VULKAN_DRIVER=3D1
-> MESA_LOADER_DRIVER_OVERRIDE=3Dzink MESA_DEBUG=3Dcontect glmark2-drm
->=20
-> ...but it only renders with llvmpipe
->=20
->     glmark2 2023.01
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D
->     OpenGL Information
->     GL_VENDOR:      Mesa
->     GL_RENDERER:    llvmpipe (LLVM 15.0.7, 128 bits)
->     GL_VERSION:     4.5 (Compatibility Profile) Mesa 24.0.1
->     Surface Config: buf=3D32 r=3D8 g=3D8 b=3D8 a=3D8 depth=3D32 stencil=
-=3D0 samples=3D0
->     Surface Size:   3840x2160 fullscreen
->=20
->=20
-> I am not as familiar with the Mesa side, but if I can get this working
-> to a point where something is rendered, even if it's not 100%
-> compliant, I'd like to push patches to the kernel and/or Mesa if
-> necessary.
->=20
-> adam
->=20
->=20
->=20
->=20
->>
->> Maxime
+   SEC("prog")
+   int redirect(struct xdp_md *ctx)
+   {
+       return bpf_redirect($INTERFACE_IDX, 0);
+   }
 
-I suggest you try running Vulkan demos (we use Sascha Willems=E2=80=99 [1=
-])
-instead of GL at this stage. Support for Zink is currently under heavy
-development so you may have trouble differentiating between issues with
-your kernel changes and the incompleteness in Mesa.
+   char _license[] SEC("license") = "GPL";
+   EOF
+   clang -O2 -g -Wall -target bpf -c redirect.bpf.c -o redirect.bpf.o
+   sudo ip link set veth2 xdp obj redirect.bpf.o
 
-Matt
+   cat << EOF > pass.bpf.c
 
-[1]: https://github.com/SaschaWillems/Vulkan
+   SEC("prog")
+   int pass(struct xdp_md *ctx)
+   {
+       return XDP_PASS;
+   }
 
---------------1xsLN9pK6q311Mc1xcQLrJKv--
+   char _license[] SEC("license") = "GPL";
+   EOF
+   clang -O2 -g -Wall -target bpf -c pass.bpf.c -o pass.bpf.o
+   sudo ip link set $INTERFACE xdp obj pass.bpf.o
 
---------------ha7LX0M8wgsyahGCVSED1Pxg
-Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="OpenPGP_signature.asc"
+   cat << EOF > trafgen.cfg
 
------BEGIN PGP SIGNATURE-----
+   {
+     /* Ethernet Header */
+     0xe8, 0x6a, 0x64, 0x41, 0xbf, 0x46,
+     0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
+     const16(ETH_P_IP),
 
-wnsEABYIACMWIQS4qDmoJvwmKhjY+nN5vBnz2d5qsAUCZdMYqgUDAAAAAAAKCRB5vBnz2d5qsMPB
-AQCQjNAki64edEkMOWibhRLHt7rWcu/9Cj6vIoGZsOijnwEA4tpQlnC0cJFH6BE65UEsvkB+x63f
-7LFGglsyliUsegQ=
-=ExFl
------END PGP SIGNATURE-----
+     /* IPv4 Header */
+     0b01000101, 0,   # IPv4 version, IHL, TOS
+     const16(1028),   # IPv4 total length (UDP length + 20 bytes (IP header))
+     const16(2),      # IPv4 ident
+     0b01000000, 0,   # IPv4 flags, fragmentation off
+     64,              # IPv4 TTL
+     17,              # Protocol UDP
+     csumip(14, 33),  # IPv4 checksum
 
---------------ha7LX0M8wgsyahGCVSED1Pxg--
+     /* UDP Header */
+     10,  0, 1, 1,    # IP Src - adapt as needed
+     10,  0, 1, 2,    # IP Dest - adapt as needed
+     const16(6666),   # UDP Src Port
+     const16(6666),   # UDP Dest Port
+     const16(1008),   # UDP length (UDP header 8 bytes + payload length)
+     csumudp(14, 34), # UDP checksum
+
+     /* Payload */
+     fill('W', 1000),
+   }
+   EOF
+
+   sudo trafgen -i trafgen.cfg -b3000MB -o veth1 --cpp
+
+Fixes: 4ff320361092 ("igc: Add support for XDP_REDIRECT action")
+Signed-off-by: Florian Kauer <florian.kauer@linutronix.de>
+---
+ drivers/net/ethernet/intel/igc/igc_main.c | 13 ++++++-------
+ 1 file changed, 6 insertions(+), 7 deletions(-)
+
+diff --git a/drivers/net/ethernet/intel/igc/igc_main.c b/drivers/net/ethernet/intel/igc/igc_main.c
+index ba8d3fe186ae..81c21a893ede 100644
+--- a/drivers/net/ethernet/intel/igc/igc_main.c
++++ b/drivers/net/ethernet/intel/igc/igc_main.c
+@@ -6487,7 +6487,7 @@ static int igc_xdp_xmit(struct net_device *dev, int num_frames,
+ 	int cpu = smp_processor_id();
+ 	struct netdev_queue *nq;
+ 	struct igc_ring *ring;
+-	int i, drops;
++	int i, nxmit;
+ 
+ 	if (unlikely(!netif_carrier_ok(dev)))
+ 		return -ENETDOWN;
+@@ -6503,16 +6503,15 @@ static int igc_xdp_xmit(struct net_device *dev, int num_frames,
+ 	/* Avoid transmit queue timeout since we share it with the slow path */
+ 	txq_trans_cond_update(nq);
+ 
+-	drops = 0;
++	nxmit = 0;
+ 	for (i = 0; i < num_frames; i++) {
+ 		int err;
+ 		struct xdp_frame *xdpf = frames[i];
+ 
+ 		err = igc_xdp_init_tx_descriptor(ring, xdpf);
+-		if (err) {
+-			xdp_return_frame_rx_napi(xdpf);
+-			drops++;
+-		}
++		if (err)
++			break;
++		nxmit++;
+ 	}
+ 
+ 	if (flags & XDP_XMIT_FLUSH)
+@@ -6520,7 +6519,7 @@ static int igc_xdp_xmit(struct net_device *dev, int num_frames,
+ 
+ 	__netif_tx_unlock(nq);
+ 
+-	return num_frames - drops;
++	return nxmit;
+ }
+ 
+ static void igc_trigger_rxtxq_interrupt(struct igc_adapter *adapter,
+-- 
+2.39.2
+
