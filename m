@@ -1,168 +1,110 @@
-Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f65.google.com (mail-lf1-f65.google.com [209.85.167.65])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96C8220300;
-	Mon, 19 Feb 2024 06:22:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6102F200AD
+	for <linux-kernel@vger.kernel.org>; Mon, 19 Feb 2024 06:23:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.65
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708323753; cv=none; b=BJ5mSd/lHdtJvm+QpzUBPiP+B4lIN5TPDfOoa99Y1ZyQoJYAoiM5MaskazAb3QoVFFxVNuiWcfGY7dSyVqUyiAYCXmdyPRW8o/OqdMosnI/A5a0fFiOmPTHRex+FR1S5sk9Dmy4FqcNszR8ylSp4xjwxNKryxwnRqTNK8z6wBmo=
+	t=1708323829; cv=none; b=I/ZHP+AYyb5kZ7I+SjPX3dLXqH2gK5S60JRCRnCLmX175vQ1/uTEJ0JDFK6uc+llYSvBOV4i3Fwp0/vUNuSPXNX36fqLptlj+2W5N7VtGkF46GLCuZIHkPNicL7JiAnxyhly4Qc3S+shNG3VMXRPRCQNbDp2zf98JHyjANKxIks=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708323753; c=relaxed/simple;
-	bh=HL9tjnCMOqkDFFykDHNI4UFffH0/mEiphqfYVgR+jQ4=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=LDOXjZ2F8Fk/Z9rufR1kG/vvZaswMpaWKk62Q+TjNu9rn1pdEb9EwH2b3gOP8zUoHS8bQlAvc0QGElPsXn7FqLr2OvZZGSB+b7GcqUx/+G4kstJVONN7jkEbsqrXWX4L4ym2K67/TFZCqqxWxBoDM/i4VP3+kEs2uPMSohyY/0k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=hisilicon.com; spf=pass smtp.mailfrom=hisilicon.com; arc=none smtp.client-ip=45.249.212.191
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=hisilicon.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hisilicon.com
-Received: from mail.maildlp.com (unknown [172.19.163.17])
-	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4TdXPz1kcgz1FKsc;
-	Mon, 19 Feb 2024 14:17:27 +0800 (CST)
-Received: from kwepemi500006.china.huawei.com (unknown [7.221.188.68])
-	by mail.maildlp.com (Postfix) with ESMTPS id 9417B1A0172;
-	Mon, 19 Feb 2024 14:22:16 +0800 (CST)
-Received: from localhost.localdomain (10.67.165.2) by
- kwepemi500006.china.huawei.com (7.221.188.68) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Mon, 19 Feb 2024 14:22:16 +0800
-From: Junxian Huang <huangjunxian6@hisilicon.com>
-To: <jgg@ziepe.ca>, <leon@kernel.org>
-CC: <linux-rdma@vger.kernel.org>, <linuxarm@huawei.com>,
-	<linux-kernel@vger.kernel.org>, <huangjunxian6@hisilicon.com>
-Subject: [PATCH for-next] RDMA/hns: Fix mis-modifying default congestion control algorithm
-Date: Mon, 19 Feb 2024 14:18:05 +0800
-Message-ID: <20240219061805.668170-1-huangjunxian6@hisilicon.com>
-X-Mailer: git-send-email 2.30.0
+	s=arc-20240116; t=1708323829; c=relaxed/simple;
+	bh=PCV7/GjnToskxFQVDLdtLSGzj6jLmCk9DhRk9GUzB+M=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=BQsseinpFMi3Q4Y3hXhBsj3etDZum/8BDaMHtptXQnih9nI/FVNrrM+vSv9MpWgOoWoxEwu9tvWcCq7edyzNOQMB99nzrXXa0EXU9NIUkqbXbL1pWYkzw9jXXdXkXVOq0VOmRE4Ux0UXUqadBkCONPc5SsPx4hlcybafY5eSiEw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=T3Dvm1kJ; arc=none smtp.client-ip=209.85.167.65
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T3Dvm1kJ"
+Received: by mail-lf1-f65.google.com with SMTP id 2adb3069b0e04-512b36bb97eso444609e87.1
+        for <linux-kernel@vger.kernel.org>; Sun, 18 Feb 2024 22:23:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1708323825; x=1708928625; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=PCV7/GjnToskxFQVDLdtLSGzj6jLmCk9DhRk9GUzB+M=;
+        b=T3Dvm1kJgyV3XNybjDtWRrLBNetMdFE/dbzPYZarcJ4B1l2Xv4xu+dhnoWILy7u4iE
+         ImcR2d3SbDpN9ggMRpJEgLFvdD0IxrO+c7THXZD9NHcWsAuApcgEvIVuF6FEAXpdrJqQ
+         VaWT48NCC4hCV/Cl/96K7r0FBOpzzp+UPPVDjHN7RKvLInQ+Lx8+KNJVWw2UyKalbAfk
+         SNUhe9yiFQq00Pb35KProgwqwMnpmTCW60dsQn57eCvP6WOnSHLPxtod6RPnfQKbUYTG
+         /d9/N6YLhjc3I3E3qdzyLd5G8LGLxqxvS4gNQL12+bvh/DoSdWIej5XMXWMAbGYXTJ6b
+         4aig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708323825; x=1708928625;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=PCV7/GjnToskxFQVDLdtLSGzj6jLmCk9DhRk9GUzB+M=;
+        b=SBAui4Clk9K9OCOJN9wQf3m0LBfNgyRSSyXs4pgCB0ljlPl12jrMC+cnVxEQIJtiLz
+         9VFmkR0NJnkKnHn8pM9w+y0EHy2kk0yYSbdp14/VniW2gBmsfgsC+NK3j3TJLuNkEsDK
+         LX8PfuwEqy/eKT6h9Q5PaXLj9rItsl/0sAQabu6ZMnyukPqwXcsl048CRSH2HGh42Q3/
+         VlyEe+/rfKIW9pcnYZIbb/hQavpgu3gq14MyPRysdHR7UVcXJqq6rs/u+KcnvNmjd10E
+         84zjQaUXvmqCgSzvax43lRv0EOeyzo6sHZB1XEDWvq7/Nh09KtX9LHz0o7h0GEsHsBNQ
+         xziw==
+X-Forwarded-Encrypted: i=1; AJvYcCXQinZATqXMgl47TYloWgHSNwZXof9LdibrU7HjP/XlFvVzb5S+k9O/e8jyaq1Eo2iehJcS4DTrK0IfK7JgqAODNvs/xF5cGYupPWeX
+X-Gm-Message-State: AOJu0YxGJp0okq2wjuXtGOg6Zc6sylm0xj4o8VstaY6Zw5hh6vF9u2sc
+	GRf4hgoQRfnHO6fu4hdktYrYJXrqCTD8pcRb7k4YL9NXr9QzZ7xEIPTpc9QJtBEhPDva8sAhX+z
+	UaTeZAnVZrqc4x7i6qD2G71xZAQ==
+X-Google-Smtp-Source: AGHT+IG+SSK9Ev0R/5Ce+rCVvL0NunDHmQi8xVVicpYEM6Fyp6WoACLu/HZz5RMrZ4SC6s3rnqPCfVoflgeWORV0GtY=
+X-Received: by 2002:a05:6512:945:b0:511:6031:3f1c with SMTP id
+ u5-20020a056512094500b0051160313f1cmr6753250lft.28.1708323825255; Sun, 18 Feb
+ 2024 22:23:45 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
- kwepemi500006.china.huawei.com (7.221.188.68)
+References: <20240219031911.10372-1-fangzheng.zhang@unisoc.com>
+ <20240219031911.10372-3-fangzheng.zhang@unisoc.com> <ZdLX51r1mOEZKUje@casper.infradead.org>
+In-Reply-To: <ZdLX51r1mOEZKUje@casper.infradead.org>
+From: zhang fangzheng <fangzheng.zhang1003@gmail.com>
+Date: Mon, 19 Feb 2024 14:23:33 +0800
+Message-ID: <CA+kNDJ+C2b520afauSWbfNK=S1XiNHR_zF32_K-3Rf7R6m3n5Q@mail.gmail.com>
+Subject: Re: [PATCH V2 2/2] Documentation: filesystems: introduce
+ proc/slabinfo to users
+To: Matthew Wilcox <willy@infradead.org>
+Cc: Fangzheng Zhang <fangzheng.zhang@unisoc.com>, Christoph Lameter <cl@linux.com>, 
+	Pekka Enberg <penberg@kernel.org>, David Rientjes <rientjes@google.com>, 
+	Joonsoo Kim <iamjoonsoo.kim@lge.com>, Andrew Morton <akpm@linux-foundation.org>, 
+	Vlastimil Babka <vbabka@suse.cz>, Roman Gushchin <roman.gushchin@linux.dev>, 
+	Hyeonggon Yoo <42.hyeyoo@gmail.com>, Greg KH <gregkh@linuxfoundation.org>, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org, tkjos@google.com, 
+	Yuming Han <yuming.han@unisoc.com>, Chunyan Zhang <zhang.lyra@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Luoyouming <luoyouming@huawei.com>
+On Mon, Feb 19, 2024 at 12:24=E2=80=AFPM Matthew Wilcox <willy@infradead.or=
+g> wrote:
+>
+> On Mon, Feb 19, 2024 at 11:19:11AM +0800, Fangzheng Zhang wrote:
+> > +Note, <slabreclaim> comes from the collected results in the file
+> > +/sys/kernel/slab/$cache/reclaim_account. Next, we will mark /proc/slab=
+info
+> > +as deprecated and recommend the use of either sysfs directly or
+> > +use of the "slabinfo" tool that we have been providing in linux/tools/=
+mm.
+>
+> Wait, so you're going to all of the trouble of changing the format of
+> slabinfo (with the associated costs of updating every tool that currently
+> parses it), only to recommend that we stop using it and start using
+> tools/mm/slabinfo instead?
+>
 
-Commit 27c5fd271d8b ("RDMA/hns: The UD mode can only be configured
-with DCQCN") adds a check of congest control alorithm for UD. But
-that patch causes a problem: hr_dev->caps.congest_type is global,
-used by all QPs, so modifying this field to DCQCN for UD QPs causes
-other QPs unable to use any other algorithm except DCQCN.
+The initial purpose was to obtain the type of each slab through
+a simple command 'cat proc/slabinfo'. So here, my intention is not to
+update all slabinfo-related tools for the time being, but to modify
+the version number of proc/slabinfo and further display the results
+of using the command.
 
-Revert the modification in commit 27c5fd271d8b ("RDMA/hns: The UD
-mode can only be configured with DCQCN"). Add a new field cong_type
-to struct hns_roce_qp and configure DCQCN for UD QPs.
+> How about we simply do nothing?
 
-Fixes: 27c5fd271d8b ("RDMA/hns: The UD mode can only be configured with DCQCN")
-Fixes: f91696f2f053 ("RDMA/hns: Support congestion control type selection according to the FW")
-Signed-off-by: Luoyouming <luoyouming@huawei.com>
-Signed-off-by: Junxian Huang <huangjunxian6@hisilicon.com>
----
- drivers/infiniband/hw/hns/hns_roce_device.h | 17 +++++++++--------
- drivers/infiniband/hw/hns/hns_roce_hw_v2.c  | 16 ++++++++++------
- 2 files changed, 19 insertions(+), 14 deletions(-)
+The note here means what changes will occur after
+we modify the version number of proc/slabinfo to 2.2.
+As for the replacement of tools/mm/slabinfo (that inspired
+by Christoph=E2=80=99s suggestions), it will be implemented in the next ver=
+sion
+or even the later version.
 
-diff --git a/drivers/infiniband/hw/hns/hns_roce_device.h b/drivers/infiniband/hw/hns/hns_roce_device.h
-index 1a8516019516..1d062c522d69 100644
---- a/drivers/infiniband/hw/hns/hns_roce_device.h
-+++ b/drivers/infiniband/hw/hns/hns_roce_device.h
-@@ -594,6 +594,13 @@ struct hns_roce_work {
- 	u32 queue_num;
- };
- 
-+enum hns_roce_cong_type {
-+	CONG_TYPE_DCQCN,
-+	CONG_TYPE_LDCP,
-+	CONG_TYPE_HC3,
-+	CONG_TYPE_DIP,
-+};
-+
- struct hns_roce_qp {
- 	struct ib_qp		ibqp;
- 	struct hns_roce_wq	rq;
-@@ -637,6 +644,7 @@ struct hns_roce_qp {
- 	struct list_head	sq_node; /* all send qps are on a list */
- 	struct hns_user_mmap_entry *dwqe_mmap_entry;
- 	u32			config;
-+	enum hns_roce_cong_type	cong_type;
- };
- 
- struct hns_roce_ib_iboe {
-@@ -708,13 +716,6 @@ struct hns_roce_eq_table {
- 	struct hns_roce_eq	*eq;
- };
- 
--enum cong_type {
--	CONG_TYPE_DCQCN,
--	CONG_TYPE_LDCP,
--	CONG_TYPE_HC3,
--	CONG_TYPE_DIP,
--};
--
- struct hns_roce_caps {
- 	u64		fw_ver;
- 	u8		num_ports;
-@@ -844,7 +845,7 @@ struct hns_roce_caps {
- 	u16		default_aeq_period;
- 	u16		default_aeq_arm_st;
- 	u16		default_ceq_arm_st;
--	enum cong_type	cong_type;
-+	enum hns_roce_cong_type cong_type;
- };
- 
- enum hns_roce_device_state {
-diff --git a/drivers/infiniband/hw/hns/hns_roce_hw_v2.c b/drivers/infiniband/hw/hns/hns_roce_hw_v2.c
-index de56dc6e3226..42e28586cefa 100644
---- a/drivers/infiniband/hw/hns/hns_roce_hw_v2.c
-+++ b/drivers/infiniband/hw/hns/hns_roce_hw_v2.c
-@@ -4738,12 +4738,15 @@ static int check_cong_type(struct ib_qp *ibqp,
- 			   struct hns_roce_congestion_algorithm *cong_alg)
- {
- 	struct hns_roce_dev *hr_dev = to_hr_dev(ibqp->device);
-+	struct hns_roce_qp *hr_qp = to_hr_qp(ibqp);
- 
--	if (ibqp->qp_type == IB_QPT_UD)
--		hr_dev->caps.cong_type = CONG_TYPE_DCQCN;
-+	if (ibqp->qp_type == IB_QPT_UD || ibqp->qp_type == IB_QPT_GSI)
-+		hr_qp->cong_type = CONG_TYPE_DCQCN;
-+	else
-+		hr_qp->cong_type = hr_dev->caps.cong_type;
- 
- 	/* different congestion types match different configurations */
--	switch (hr_dev->caps.cong_type) {
-+	switch (hr_qp->cong_type) {
- 	case CONG_TYPE_DCQCN:
- 		cong_alg->alg_sel = CONG_DCQCN;
- 		cong_alg->alg_sub_sel = UNSUPPORT_CONG_LEVEL;
-@@ -4771,8 +4774,8 @@ static int check_cong_type(struct ib_qp *ibqp,
- 	default:
- 		ibdev_warn(&hr_dev->ib_dev,
- 			   "invalid type(%u) for congestion selection.\n",
--			   hr_dev->caps.cong_type);
--		hr_dev->caps.cong_type = CONG_TYPE_DCQCN;
-+			   hr_qp->cong_type);
-+		hr_qp->cong_type = CONG_TYPE_DCQCN;
- 		cong_alg->alg_sel = CONG_DCQCN;
- 		cong_alg->alg_sub_sel = UNSUPPORT_CONG_LEVEL;
- 		cong_alg->dip_vld = DIP_INVALID;
-@@ -4791,6 +4794,7 @@ static int fill_cong_field(struct ib_qp *ibqp, const struct ib_qp_attr *attr,
- 	struct hns_roce_congestion_algorithm cong_field;
- 	struct ib_device *ibdev = ibqp->device;
- 	struct hns_roce_dev *hr_dev = to_hr_dev(ibdev);
-+	struct hns_roce_qp *hr_qp = to_hr_qp(ibqp);
- 	u32 dip_idx = 0;
- 	int ret;
- 
-@@ -4803,7 +4807,7 @@ static int fill_cong_field(struct ib_qp *ibqp, const struct ib_qp_attr *attr,
- 		return ret;
- 
- 	hr_reg_write(context, QPC_CONG_ALGO_TMPL_ID, hr_dev->cong_algo_tmpl_id +
--		     hr_dev->caps.cong_type * HNS_ROCE_CONG_SIZE);
-+		     hr_qp->cong_type * HNS_ROCE_CONG_SIZE);
- 	hr_reg_clear(qpc_mask, QPC_CONG_ALGO_TMPL_ID);
- 	hr_reg_write(&context->ext, QPCEX_CONG_ALG_SEL, cong_field.alg_sel);
- 	hr_reg_clear(&qpc_mask->ext, QPCEX_CONG_ALG_SEL);
--- 
-2.30.0
-
+Thanks!
