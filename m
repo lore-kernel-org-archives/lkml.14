@@ -1,60 +1,60 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B647C2D05D;
-	Mon, 19 Feb 2024 12:43:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05A5A2D610;
+	Mon, 19 Feb 2024 12:45:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708346599; cv=none; b=TGi2Zpf+bNqIDzzZP065nu1oNmYzKNxxumPCWmHDVFof62CZvQQFLdFIHOn1VI5hPK3pkt6OM6DaEnbgqpYiN0CElkZ2Tl08kgAQY09h7lr5N3mU1CEp8ZkyhaP+GYq1qBqfbFCEkbLaoDb8Xh7/v631O+c05J81Jf/b/iYhDu4=
+	t=1708346712; cv=none; b=pw6+2ZGkLJyLY/Lj/ggAo5uuedCJ7oI2KL1aHk5A73Y550H52lQVMzexJK+1udJfAjvfBBG0SxRgDB5HgcOMHpEr0QV1pG5UbbejoVuzPYve5mVnApRD0MA1b8HHsla3jd5BMfX6ueoPeav1nYhVk8J0B09VPWaE/nDaSFJ1Qhk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708346599; c=relaxed/simple;
-	bh=Zs9XwXfin6vsvyZ0Tkvtj1y1nmSBKNq0xIOxwIjWzyM=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=YTJoZ8EbcZ+7CBnl21imVDg5A17m41Ein7P4lHojD4b3ofAg9W07nNbnVXZ6cfNsjJ2I9cqgsORO98ny7eEUayV0R0RrvXpcfoxXbelTC67VCKtKf6DpQcg9JwI1K5zZfMQntl37vZ3F1yIkmpmfkpYuok3FOcQDjJxtANK+AAw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=marliere.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=marliere.net header.i=@marliere.net header.b=EyWdc7sc; arc=none smtp.client-ip=209.85.214.176
+	s=arc-20240116; t=1708346712; c=relaxed/simple;
+	bh=+qGfhiVCyV9q7WZjG4VEtZjEWGbusXpLGOzf0leGW0M=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=KPRG+L5SiJZKuH5jrFKlvxTykWE6cPspTtwcvJIZTsWBUGmVy4CeyGy0NOUqCT58LjJmtvh5kWyrrTID2qK0kQ5re8WP8ErGO0Z4RuUmNIDE7KWVqwHeXCKl0nSpJoXYcjpD7hR0t5rrVgS6IAllCYx3DQxQWsT0cr057ZSHjDI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=marliere.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=marliere.net header.i=@marliere.net header.b=pmcgNQpe; arc=none smtp.client-ip=209.85.210.176
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=marliere.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=marliere.net header.i=@marliere.net header.b="EyWdc7sc"
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-1dba177c596so21737645ad.0;
-        Mon, 19 Feb 2024 04:43:17 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=marliere.net header.i=@marliere.net header.b="pmcgNQpe"
+Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-6e22e63abf1so920555b3a.3;
+        Mon, 19 Feb 2024 04:45:09 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708346597; x=1708951397;
+        d=1e100.net; s=20230601; t=1708346709; x=1708951509;
         h=cc:to:message-id:content-transfer-encoding:mime-version:subject
          :date:dkim-signature:from:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=81C9/qYgaM7+uTbMn1Q+DPCJE1ow0PPCxUFOn05+/9E=;
-        b=BXh05nLq4ZAwiiAhDPEZREniCQcMZ12fHTSxdUiJUTIWEB1UXpKj5oYCZtw8Ad8i40
-         Axl3JPnCCkNhjDF93nfqLNo833Fp1l/qniG9FHLc4d6VH8hYPbYc5a25495qaHv2AEAo
-         1/CUPIvU/vFfAd79e0+vlMoc5oOad311wafs8WBoE+YflnUaArwo6f0f82DjccZeXXSs
-         2esxTigin/bUaUYcIvzHrZWi6zjNUauYVzfWHC4Xj97feyDCUUc9g83L7gC/KqUPa0SY
-         SmJAM3KMSSpW6EBLKGtKdBiMjhanr1AhDGqAZleDG+PJZft507pB6QdC/lvGVDkQll+T
-         rD4w==
-X-Forwarded-Encrypted: i=1; AJvYcCWfkqtjnR3YAjgO/DFdVH3b70gatTZ8EMeLWirTRNwBYKwM+Migu6K6hU3oGBNya2SuzmNzoalHY0E2P/LW4iWi3dzVm0/eh6DmBuHL
-X-Gm-Message-State: AOJu0YzcytFF1fFN5a7/1V+UE7diKcbkSvP9kQCfJqB8FNMkXzuoBQ20
-	SZskhQEyMtWH2Oige6VO2dWPGUq41QH2pZcEAnqT9tbn1PcnSuMcnwQXpozOZwQ+/Q==
-X-Google-Smtp-Source: AGHT+IFQZO85RawS9N/GVLt7CKZ2Nc56+OWGJeihEfPdmFPM26vz9zhNukHu0h491d1y4B0JgOf0Lg==
-X-Received: by 2002:a17:902:c402:b0:1d9:30e3:ea84 with SMTP id k2-20020a170902c40200b001d930e3ea84mr18763047plk.2.1708346596888;
-        Mon, 19 Feb 2024 04:43:16 -0800 (PST)
+        bh=F3d+lJrHnThtsf8pUVLxKYnnmGUoQxCJeQhGw1ipwrk=;
+        b=iFUNVog/5XEeraoAVQUo/qNOcLjOeqGOLr6v+CAPz2vJxwJe/9iOR46NrarMPHO5HH
+         XQSVQvfheNbPDAvgena6vqSCdtDegu/dWSlo4gTlYTv4bzIsC1BGKMroqGZoikpao7se
+         B8FRgY7SNIxTBbJN5hqLTY73Qw3qUR2kOImSPVem8DzZwq3DeZ339FC0NPaBnvY5m8WR
+         6oEYrRTT3Y8Db+uY6n76HfSceQDmjUT9khrkr7FmXuvs/hsOa4ggDhTdw6QAWTMlCM9s
+         1hnZrZxaj4NkpOIyJcY5Wvw749j4S1Dn7R3s6zUSI6ykbBMW3AIENpVXWNrQedTVQiVs
+         cA3Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVLf9duHDEATHdCyAYxK78DzBmw4iiqvTMJqgb2r9VyxvSq6cqCb4HpsKPbtgg6ZVoXvcCFaFrO6uZohepAKUohuW542n8A8bPRT63p
+X-Gm-Message-State: AOJu0Yz3InZZqWDBA1GOPE6Wb0T+e6dCUZGzz3BIg59Ii5yMevZRNnq3
+	Bo2/EyOz1xodem9s9D6maLBaJaZA71ErhOWbptZI6lwefUzTZQKH
+X-Google-Smtp-Source: AGHT+IGWP7wCo7AVG7o3NF8lKLZJpOzUrUMnCQZ7wnQWllz39e6iIFKod1hUclsB6ASZvJHd7YC3Mg==
+X-Received: by 2002:a05:6a20:9e4b:b0:1a0:9010:92ad with SMTP id mt11-20020a056a209e4b00b001a0901092admr4780055pzb.31.1708346709194;
+        Mon, 19 Feb 2024 04:45:09 -0800 (PST)
 Received: from mail.marliere.net ([24.199.118.162])
-        by smtp.gmail.com with ESMTPSA id y12-20020a170903010c00b001d974ffa1fcsm4325840plc.173.2024.02.19.04.43.16
+        by smtp.gmail.com with ESMTPSA id p27-20020a056a0026db00b006e4648059b6sm1685205pfw.26.2024.02.19.04.45.08
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 19 Feb 2024 04:43:16 -0800 (PST)
+        Mon, 19 Feb 2024 04:45:08 -0800 (PST)
 From: "Ricardo B. Marliere" <ricardo@marliere.net>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marliere.net;
-	s=2024; t=1708346594;
+	s=2024; t=1708346707;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding;
-	bh=81C9/qYgaM7+uTbMn1Q+DPCJE1ow0PPCxUFOn05+/9E=;
-	b=EyWdc7scphkQr3bgEmgzEcABO8mh0xDJgwJFz1daVDpM2LDssZ+DHj8aPcKj6rOYZHRYJT
-	bnGq+A91wOz9lQQSVJfNX3pcvgvmjE+hsnHguwuMDt1i1dSdjDrf+GFaIupCHRGonWz5KP
-	hWabEyF3QxgufHBQCMRQ0d2PIO36ZJJ9YhTEj4Ls7aOsT6wgh3nWtk+5xGo9V1TQYSpYFk
-	senLvpgdhx3msNDjWO/+bS/eJl4sujDMou1WSe178Tg5x3C/wtkuimMYHCq7vrTK5KkiQL
-	2b3+ENFI+UEO3bFcHNMphUnmi3csnUJWHexUm37d3XGdE54QE90+fEZ/88h4Hg==
+	bh=F3d+lJrHnThtsf8pUVLxKYnnmGUoQxCJeQhGw1ipwrk=;
+	b=pmcgNQpeawXYM49pRCTVvbGqUdnBQMVROUywws/Uj4dnRg7pseGdsNUEE979QGn0hNIBbh
+	lj5cqkdYkSHR9qhMHclnHpIy7GmHV10jNPcJMSxSxer2xly1911IkgQDNIkED5Pzy9GXGJ
+	rf00efGliok8BpZQ3XhldGvUQpyC8qmof9d/oxuwh3EVCRdIHEO8OhOqjBP+6VKWNi0rtT
+	vozKUuXn7+Q94MZB6ipwnOuXEmSg6o3h03bEXM1bYv48KNlL+mNSTEfsYakQCcYTH/+eaJ
+	DOAZW03IuoYg/F9zLyyWBt0+84RNUr/r91CDVp4SOhnByTiTUC/BHUknLuZXvA==
 Authentication-Results: ORIGINATING;
 	auth=pass smtp.auth=ricardo@marliere.net smtp.mailfrom=ricardo@marliere.net
-Date: Mon, 19 Feb 2024 09:43:57 -0300
-Subject: [PATCH] mmc: core: constify the struct device_type usage
+Date: Mon, 19 Feb 2024 09:45:50 -0300
+Subject: [PATCH] thunderbolt: constify the struct device_type usage
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -63,129 +63,165 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240219-device_cleanup-mmc-v1-1-1910e283cf5a@marliere.net>
-X-B4-Tracking: v=1; b=H4sIAAxN02UC/x2MQQqAIBAAvxJ7TlDrUl+JCFu3WkgTpQiiv7d0H
- JiZBwplpgJ99UCmiwsfUcDUFeDm4kqKvTBYbVttTae8SEgT7uTimVQIqHRrjZ4RG985kDBlWvj
- +p8P4vh8Z+m4kZAAAAA==
-To: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+Message-Id: <20240219-device_cleanup-thunderbolt-v1-1-7890787f1ec5@marliere.net>
+X-B4-Tracking: v=1; b=H4sIAH1N02UC/x3MQQqAIBBA0avErBNUKqirRMSkYw2IhVYE4d2Tl
+ g8+/4VEkSnBUL0Q6ebEeyhQdQVmw7CSYFsMWupGatULWyJDs/GE4TrEuV3BUlx2f4pe6dbYTiE
+ 6hDI4Ijl+/vk45fwB7uaMnWwAAAA=
+To: Andreas Noever <andreas.noever@gmail.com>, 
+ Michael Jamet <michael.jamet@intel.com>, 
+ Mika Westerberg <mika.westerberg@linux.intel.com>, 
+ Yehezkel Bernat <YehezkelShB@gmail.com>
+Cc: linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, 
  Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
  "Ricardo B. Marliere" <ricardo@marliere.net>
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3388; i=ricardo@marliere.net;
- h=from:subject:message-id; bh=Zs9XwXfin6vsvyZ0Tkvtj1y1nmSBKNq0xIOxwIjWzyM=;
- b=owEBbQKS/ZANAwAKAckLinxjhlimAcsmYgBl000RePCeBs1bWiwAl9LosSaNviJ82I1W3PzrM
- Ut4tb+obZeJAjMEAAEKAB0WIQQDCo6eQk7jwGVXh+HJC4p8Y4ZYpgUCZdNNEQAKCRDJC4p8Y4ZY
- poVXD/wLI4sBidqgdBxJQs4zMVBekU1VwhcVmqngHoYLP8wfbq7ynHP2WJwmm+hYDGFAApbP+l0
- AJaksMcgVN0sZ1aQXzV7bYWH6l7Dq4IJ33wXoO1firTHC9r0Yt8t9q+C24wJOyBwEZL4MRCYfyV
- 4GlifwrH+Xh53LAhkL/E3Mhntv2r8iTlKmblJOEDONlSOpGDvg+PiYxaku/D6iHM8GLc1jrXl4G
- sVLBGoYayikC1F2NIFAkMCKhI1yPGCNJ5oDQjSqDeVrknAkIZmzAevyiJLmU5Y/+esoHkX3Tfx4
- dYopAaTp28OwDLUkVGivJlZ1Vm1cJcJToStPbv1D/5pAf2KUS5wTuuItJPtNXosdmWp+j5iUKn8
- +w+2425qZL3TSRnDWFo+NCH67cirRA9CX+NOBvgLxRxiZzkQXN8bGC5ekoftGLJblPRxPygw69u
- Ndjk8TaQtxVi6LNf4erqpwN1zKtv4sktWHUsUMPgH/D2phwt2rI0jFGt76XeoKkQ/TEAwWaMDEM
- DWofQvP5AO/oklARoOeEWxbaamZThs/5SeDMCgX1DjdlRSQtyFiVsqny3wVRhEuwgXcSn/vlgQP
- bUE5HALCacooKRMyMIH2Jp+jMv3KQjluPXzvxQJHq7+RNGZzaq6BcaUzqmHvZSnRPbxcU1HVwgk
- O96BMcM9739e+tA==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=5022; i=ricardo@marliere.net;
+ h=from:subject:message-id; bh=+qGfhiVCyV9q7WZjG4VEtZjEWGbusXpLGOzf0leGW0M=;
+ b=owEBbQKS/ZANAwAKAckLinxjhlimAcsmYgBl002Csy5N7M/mDcAaLsxV3VsnAlxjZPjc+Npqr
+ K8kYtVqmuKJAjMEAAEKAB0WIQQDCo6eQk7jwGVXh+HJC4p8Y4ZYpgUCZdNNggAKCRDJC4p8Y4ZY
+ plsCD/wNjI47Zjz6WoONWQ8IbQhvJ3ls9fMibAiFTn9QnQuCpKaXgkUz5gpJzyHGx+wWfzvhmCA
+ U5ZfWHO01omlxCtb38lwXQ/CihkxV3A7I1XwBNfKtcLSEv/JaRivYY8AoqQrEw0lxr0FcGZv2hO
+ vhFwJKCczHESP2btoim7OJ+CREu9Wuc1vCzdk71HiSvKEbUlPkKMHeiFxqq8rV087jvmsq5urW/
+ KeP/IkkJZ+d2lwCmhp92LJb/lkly7csMu2MxRurq2yELtfjB3GGU7NpBXzzq/cGK1ZObWRlooA2
+ bTy7y95G83JXnGhzhc/9W+Lu+TZoTc/tLZf73/WVzQ6oatQMPnNCtAZlhBHT7VysE0ym2FUpxJL
+ +aF5K27aj6Exe5cZ69Tqc7nOJ5eQE8kuImDDySOxcCXkyZOiU7wOd8+8GeUwlHG7mZdc70mqzyA
+ nfOcrHmbNFRVPzHoBEdTeuRTAxkY2Hrl4TE+NgwuzNey5VO9MDLtBfskU0bKIOAnrhsaEaHlKqT
+ URPguBHE6jx+TPUbtJccBNY43zh1lDJN4plzxV6jZ+ODnJuyTEJEkTv0eScOgXU+6gMcYvxwWSh
+ J5KlGFpk4Jw7DpEtwaZMuGo7/YEIWrPVgrDDmy44zSLcIsJUCr7/DtNsT6fNc+ZDwOO0HMSYKiy
+ DTgZ3fi4o28PF+Q==
 X-Developer-Key: i=ricardo@marliere.net; a=openpgp;
  fpr=030A8E9E424EE3C0655787E1C90B8A7C638658A6
 
 Since commit aed65af1cc2f ("drivers: make device_type const"), the driver
-core can properly handle constant struct device_type. Move the sdio_type,
-sd_type and mmc_type variables to be constant structures as well, placing
-it into read-only memory which can not be modified at runtime.
+core can properly handle constant struct device_type. Move the
+tb_domain_type, tb_retimer_type, tb_switch_type, usb4_port_device_type,
+tb_service_type and tb_xdomain_type variables to be constant structures as
+well, placing it into read-only memory which can not be modified at
+runtime.
 
 Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Ricardo B. Marliere <ricardo@marliere.net>
 ---
- drivers/mmc/core/bus.c  | 2 +-
- drivers/mmc/core/bus.h  | 2 +-
- drivers/mmc/core/mmc.c  | 2 +-
- drivers/mmc/core/sd.c   | 2 +-
- drivers/mmc/core/sd.h   | 2 +-
- drivers/mmc/core/sdio.c | 2 +-
- 6 files changed, 6 insertions(+), 6 deletions(-)
+ drivers/thunderbolt/domain.c    | 2 +-
+ drivers/thunderbolt/retimer.c   | 2 +-
+ drivers/thunderbolt/switch.c    | 2 +-
+ drivers/thunderbolt/tb.h        | 8 ++++----
+ drivers/thunderbolt/usb4_port.c | 2 +-
+ drivers/thunderbolt/xdomain.c   | 4 ++--
+ include/linux/thunderbolt.h     | 4 ++--
+ 7 files changed, 12 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/mmc/core/bus.c b/drivers/mmc/core/bus.c
-index 48daeafdff7a..0ddaee0eae54 100644
---- a/drivers/mmc/core/bus.c
-+++ b/drivers/mmc/core/bus.c
-@@ -272,7 +272,7 @@ static void mmc_release_card(struct device *dev)
- /*
-  * Allocate and initialise a new MMC card structure.
-  */
--struct mmc_card *mmc_alloc_card(struct mmc_host *host, struct device_type *type)
-+struct mmc_card *mmc_alloc_card(struct mmc_host *host, const struct device_type *type)
- {
- 	struct mmc_card *card;
+diff --git a/drivers/thunderbolt/domain.c b/drivers/thunderbolt/domain.c
+index d7abb8c445aa..6a7ec53ddc44 100644
+--- a/drivers/thunderbolt/domain.c
++++ b/drivers/thunderbolt/domain.c
+@@ -326,7 +326,7 @@ static void tb_domain_release(struct device *dev)
+ 	kfree(tb);
+ }
  
-diff --git a/drivers/mmc/core/bus.h b/drivers/mmc/core/bus.h
-index 3996b191b68d..cfd0d02d3420 100644
---- a/drivers/mmc/core/bus.h
-+++ b/drivers/mmc/core/bus.h
-@@ -23,7 +23,7 @@ static ssize_t mmc_##name##_show (struct device *dev, struct device_attribute *a
- static DEVICE_ATTR(name, S_IRUGO, mmc_##name##_show, NULL)
- 
- struct mmc_card *mmc_alloc_card(struct mmc_host *host,
--	struct device_type *type);
-+				const struct device_type *type);
- int mmc_add_card(struct mmc_card *card);
- void mmc_remove_card(struct mmc_card *card);
- 
-diff --git a/drivers/mmc/core/mmc.c b/drivers/mmc/core/mmc.c
-index 58ed7193a3ca..5b2f7c285461 100644
---- a/drivers/mmc/core/mmc.c
-+++ b/drivers/mmc/core/mmc.c
-@@ -883,7 +883,7 @@ static struct attribute *mmc_std_attrs[] = {
+-struct device_type tb_domain_type = {
++const struct device_type tb_domain_type = {
+ 	.name = "thunderbolt_domain",
+ 	.release = tb_domain_release,
  };
- ATTRIBUTE_GROUPS(mmc_std);
+diff --git a/drivers/thunderbolt/retimer.c b/drivers/thunderbolt/retimer.c
+index d49d6628dbf2..6bb49bdcd6c1 100644
+--- a/drivers/thunderbolt/retimer.c
++++ b/drivers/thunderbolt/retimer.c
+@@ -356,7 +356,7 @@ static void tb_retimer_release(struct device *dev)
+ 	kfree(rt);
+ }
  
--static struct device_type mmc_type = {
-+static const struct device_type mmc_type = {
- 	.groups = mmc_std_groups,
+-struct device_type tb_retimer_type = {
++const struct device_type tb_retimer_type = {
+ 	.name = "thunderbolt_retimer",
+ 	.groups = retimer_groups,
+ 	.release = tb_retimer_release,
+diff --git a/drivers/thunderbolt/switch.c b/drivers/thunderbolt/switch.c
+index bca6f28c553b..5a617ea285a7 100644
+--- a/drivers/thunderbolt/switch.c
++++ b/drivers/thunderbolt/switch.c
+@@ -2327,7 +2327,7 @@ static const struct dev_pm_ops tb_switch_pm_ops = {
+ 			   NULL)
  };
  
-diff --git a/drivers/mmc/core/sd.c b/drivers/mmc/core/sd.c
-index c3e554344c99..1c8148cdda50 100644
---- a/drivers/mmc/core/sd.c
-+++ b/drivers/mmc/core/sd.c
-@@ -805,7 +805,7 @@ static const struct attribute_group sd_std_group = {
+-struct device_type tb_switch_type = {
++const struct device_type tb_switch_type = {
+ 	.name = "thunderbolt_device",
+ 	.release = tb_switch_release,
+ 	.uevent = tb_switch_uevent,
+diff --git a/drivers/thunderbolt/tb.h b/drivers/thunderbolt/tb.h
+index 1bbbeb034e0e..5e93c02d37b3 100644
+--- a/drivers/thunderbolt/tb.h
++++ b/drivers/thunderbolt/tb.h
+@@ -745,10 +745,10 @@ static inline int tb_port_write(struct tb_port *port, const void *buffer,
+ struct tb *icm_probe(struct tb_nhi *nhi);
+ struct tb *tb_probe(struct tb_nhi *nhi);
+ 
+-extern struct device_type tb_domain_type;
+-extern struct device_type tb_retimer_type;
+-extern struct device_type tb_switch_type;
+-extern struct device_type usb4_port_device_type;
++extern const struct device_type tb_domain_type;
++extern const struct device_type tb_retimer_type;
++extern const struct device_type tb_switch_type;
++extern const struct device_type usb4_port_device_type;
+ 
+ int tb_domain_init(void);
+ void tb_domain_exit(void);
+diff --git a/drivers/thunderbolt/usb4_port.c b/drivers/thunderbolt/usb4_port.c
+index e355bfd6343f..5150879888ca 100644
+--- a/drivers/thunderbolt/usb4_port.c
++++ b/drivers/thunderbolt/usb4_port.c
+@@ -243,7 +243,7 @@ static void usb4_port_device_release(struct device *dev)
+ 	kfree(usb4);
+ }
+ 
+-struct device_type usb4_port_device_type = {
++const struct device_type usb4_port_device_type = {
+ 	.name = "usb4_port",
+ 	.groups = usb4_port_device_groups,
+ 	.release = usb4_port_device_release,
+diff --git a/drivers/thunderbolt/xdomain.c b/drivers/thunderbolt/xdomain.c
+index b48df88981bd..940ae97987ff 100644
+--- a/drivers/thunderbolt/xdomain.c
++++ b/drivers/thunderbolt/xdomain.c
+@@ -1002,7 +1002,7 @@ static void tb_service_release(struct device *dev)
+ 	kfree(svc);
+ }
+ 
+-struct device_type tb_service_type = {
++const struct device_type tb_service_type = {
+ 	.name = "thunderbolt_service",
+ 	.groups = tb_service_attr_groups,
+ 	.uevent = tb_service_uevent,
+@@ -1893,7 +1893,7 @@ static const struct dev_pm_ops tb_xdomain_pm_ops = {
+ 	SET_SYSTEM_SLEEP_PM_OPS(tb_xdomain_suspend, tb_xdomain_resume)
  };
- __ATTRIBUTE_GROUPS(sd_std);
  
--struct device_type sd_type = {
-+const struct device_type sd_type = {
- 	.groups = sd_std_groups,
+-struct device_type tb_xdomain_type = {
++const struct device_type tb_xdomain_type = {
+ 	.name = "thunderbolt_xdomain",
+ 	.release = tb_xdomain_release,
+ 	.pm = &tb_xdomain_pm_ops,
+diff --git a/include/linux/thunderbolt.h b/include/linux/thunderbolt.h
+index 2c835e5c41f6..4338ea9ac4fd 100644
+--- a/include/linux/thunderbolt.h
++++ b/include/linux/thunderbolt.h
+@@ -87,8 +87,8 @@ struct tb {
  };
  
-diff --git a/drivers/mmc/core/sd.h b/drivers/mmc/core/sd.h
-index 1af5a038bae9..fe6dd46927a4 100644
---- a/drivers/mmc/core/sd.h
-+++ b/drivers/mmc/core/sd.h
-@@ -4,7 +4,7 @@
+ extern const struct bus_type tb_bus_type;
+-extern struct device_type tb_service_type;
+-extern struct device_type tb_xdomain_type;
++extern const struct device_type tb_service_type;
++extern const struct device_type tb_xdomain_type;
  
- #include <linux/types.h>
- 
--extern struct device_type sd_type;
-+extern const struct device_type sd_type;
- 
- struct mmc_host;
- struct mmc_card;
-diff --git a/drivers/mmc/core/sdio.c b/drivers/mmc/core/sdio.c
-index 5914516df2f7..4fb247fde5c0 100644
---- a/drivers/mmc/core/sdio.c
-+++ b/drivers/mmc/core/sdio.c
-@@ -66,7 +66,7 @@ static struct attribute *sdio_std_attrs[] = {
- };
- ATTRIBUTE_GROUPS(sdio_std);
- 
--static struct device_type sdio_type = {
-+static const struct device_type sdio_type = {
- 	.groups = sdio_std_groups,
- };
+ #define TB_LINKS_PER_PHY_PORT	2
  
 
 ---
-base-commit: 25e69172db8a31ef8564ce1cf755ac5cb8374daa
-change-id: 20240219-device_cleanup-mmc-04210bcc3d9a
+base-commit: b4734507ac55cc7ea1380e20e83f60fcd7031955
+change-id: 20240219-device_cleanup-thunderbolt-9125cd61aafa
 
 Best regards,
 -- 
