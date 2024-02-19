@@ -1,114 +1,161 @@
-Received: from mo4-p01-ob.smtp.rzone.de (mo4-p01-ob.smtp.rzone.de [85.215.255.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D484C2DF9C;
-	Mon, 19 Feb 2024 12:09:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=85.215.255.51
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708344566; cv=pass; b=g0y2IxYXAe7qSub1lW/NXsCADapRRvZqbPrZJjMbESRkxSuPcc1bD/cMa8PZjfnvpWsthAhR7mlWTCgHhDaOGY/EumpbZ1tlV+WrxItPLkx3Zf8ZK49pE1GSubi4P7WH0LxbrLRIeV7wkB8U44yXocYO7JUS3QYPcK49dD+9Aec=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708344566; c=relaxed/simple;
-	bh=AjrVEp3fpkZRCO/o25RmtJVX3tFJ8i0+SruCDOkqxVc=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=PKZgYT/JkUOBQPK7u63GwepypgIV0VrVYzR02A7J2CpoBjLFZNjPN8EAR/O+B4F+MHVjRRH4GIziAA9un2oqf9/YVEyEtZ6rKRLqDP5OFVZVEs5tFuq4xI+Lh+uV/mcjeN6XcAXlbH+HF1GNLxk7YOQOjQs9nuteCScZj/AncHI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iokpp.de; spf=none smtp.mailfrom=iokpp.de; dkim=pass (2048-bit key) header.d=iokpp.de header.i=@iokpp.de header.b=SpodSi7z; dkim=permerror (0-bit key) header.d=iokpp.de header.i=@iokpp.de header.b=l3tiWElU; arc=pass smtp.client-ip=85.215.255.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iokpp.de
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=iokpp.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BF9422F00;
+	Mon, 19 Feb 2024 12:11:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1708344694; cv=none; b=Z8iqH472kc7YRFZtrL2KpPeQCp9qJwKIcbQCeu+xLOQ4YCgVwJueRX3LkV77nHkKnbAfNXXXl0uxbrQpKjPuuf1lpGrOkNMpBJF4q6iAew69W9JdkCsegTDD33fZ27XoIHi1mu9pnVLYgIiKIRi5EMCBLmlnxG0t85eKX9AGZJg=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1708344694; c=relaxed/simple;
+	bh=RKA1FRCk3ma0tGwU4yw6balfgkgpjYcTeV2wBsGPWa4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NWUaSaBbTykyJSPzsU1BoQBOMlUElfIC3IBnYsWIM5svkYpQDMCGjqSM/Z2OF/LWTmIvDr7In98S1YnwfI8qO6zHCZy123rnsg+NOW/G0nnYnmWJ/U8LHDOEkvwqkQUlJziRvLB8K1zkgbGCPMh+fM4d9T+WSUIXYy5a83OYtjI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=mUO1CBBR; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=mUO1CBBR; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=iokpp.de header.i=@iokpp.de header.b="SpodSi7z";
-	dkim=permerror (0-bit key) header.d=iokpp.de header.i=@iokpp.de header.b="l3tiWElU"
-ARC-Seal: i=1; a=rsa-sha256; t=1708344556; cv=none;
-    d=strato.com; s=strato-dkim-0002;
-    b=qcCuu30vrT9ipND9ROtbvG+H753q3gyJ4pvPZo0p0jDe+PLmdxKqiNoBkXgGL01um0
-    u2bcJDBrLzNNgSCIix/D3bnfcjN3N0ty1Pi59XGnEAbLeXLZFrP44yxHlt6DgYxBfE5c
-    SIgPu6DnEmDG35wCtY0VZ8kT9bzFAPGQQ1njmAlNQyo+1IzON7vu1pY+K/LRirg62VG/
-    GSEkQwTEpfUW6aysGnhd+ClmofgBDF4DfaoELM2hKyS/ichqAcVvqmNMqSyD4JIRjS34
-    e067damlRfMPf85/1ZvtCvy347kvJrwRfk8+Urwo2hYnryJC+5KfYRiwv9wIOFLNczSF
-    X6sA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; t=1708344556;
-    s=strato-dkim-0002; d=strato.com;
-    h=References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Cc:Date:
-    From:Subject:Sender;
-    bh=AjrVEp3fpkZRCO/o25RmtJVX3tFJ8i0+SruCDOkqxVc=;
-    b=U/N6tOSurMwh9euZTjLenRadLMg+TvdrX9Yc8jqydZQbj0hHTY9mgt0iEdRHuRxtyX
-    acTrYx4/slsIXmPtHL1qW7wSlJDb/k1tu6FG1fYlNZO6jyJ6ClYjexmrHJpKKYhWG2EM
-    /UHIRUMC0b8qCMKLBEq9QNZrt4NzUXaHrlmpxJBXC5MrupGfh4gy2UQj5g+MMECYawLB
-    omdr+Y8pf+t09JUB5tg/wJAqr0UST1433TnS2OCIU6ReO9iwR5o8C4B37kdPvNMQUk2R
-    /QHqYlXZ08K1+UYYl66fzMvUxHwfxY2CAS0MoGYot0M9z21VyijkjkAMtkeetAYSC3rw
-    EtMQ==
-ARC-Authentication-Results: i=1; strato.com;
-    arc=none;
-    dkim=none
-X-RZG-CLASS-ID: mo01
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1708344555;
-    s=strato-dkim-0002; d=iokpp.de;
-    h=References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Cc:Date:
-    From:Subject:Sender;
-    bh=AjrVEp3fpkZRCO/o25RmtJVX3tFJ8i0+SruCDOkqxVc=;
-    b=SpodSi7z0nOve6xepgf+5NIJ3W/dFpmsvbfyQ2CNNGRTaGc1iSgPkZLcdFLMmh4r5N
-    lZZ4Mi4aGk+m9r2jLQft4nL+IW6MxE1Y29VLZubaq2JaI+g1SxPOIYsKNuzRVkDQ5Zim
-    qX+sJVtbt40Bq+bulrWE/KCEMEEr3aS9uqi7z/+0glwYNHa3ws9tOouNh2ngJM615cZ6
-    GgRu2w6k91okdtZbX+2laOjcYmouHqn1mr/4fnC6E7+XYevKJHz/cMnEM6Y8R4xJQrqj
-    +nAc/vwDa9zMbXzjvyNLplcRBro2bJwCveksLLayZlYZFucQvvPGwWmZRLEc0Gm1cdrp
-    10jQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; t=1708344555;
-    s=strato-dkim-0003; d=iokpp.de;
-    h=References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Cc:Date:
-    From:Subject:Sender;
-    bh=AjrVEp3fpkZRCO/o25RmtJVX3tFJ8i0+SruCDOkqxVc=;
-    b=l3tiWElUoTRAGkwsTxJHK4fOZt2M2ZKN/F4JiVqegz2UlxKYdDF26KL89t/pAAl/SO
-    hFfuhpMCYWdlsK9qkbAQ==
-X-RZG-AUTH: ":LmkFe0i9dN8c2t4QQyGBB/NDXvjDB6pBSeBwhhSxarlUcu05JCAPyj3VPAceccYJs0uz"
-Received: from [10.176.235.119]
-    by smtp.strato.de (RZmta 49.11.2 AUTH)
-    with ESMTPSA id z34ed901JC9EFwE
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
-	(Client did not present a certificate);
-    Mon, 19 Feb 2024 13:09:14 +0100 (CET)
-Message-ID: <fe5d0d5c3cdebc8d637c348f3759330166604bb0.camel@iokpp.de>
-Subject: Re: [PATCH v3] PCI: Increase maximum PCIe physical function number
- to 7 for non-ARI devices
-From: Bean Huo <beanhuo@iokpp.de>
-To: Siddharth Vadapalli <s-vadapalli@ti.com>
-Cc: bhelgaas@google.com, helgaas@kernel.org, 
-	sathyanarayanan.kuppuswamy@linux.intel.com, linux-pci@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Bean Huo <beanhuo@micron.com>, 
-	stable@vger.kernel.org
-Date: Mon, 19 Feb 2024 13:09:14 +0100
-In-Reply-To: <37d21806-d964-40e0-a5a5-3173996e601f@ti.com>
-References: <20240219112422.54657-1-beanhuo@iokpp.de>
-	 <37d21806-d964-40e0-a5a5-3173996e601f@ti.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.44.4-0ubuntu2 
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="mUO1CBBR";
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="mUO1CBBR"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 4FF2D21E6D;
+	Mon, 19 Feb 2024 12:11:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1708344691; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=dgEdE8pMlMrPDPVr2iZZlKCQOw1qxLHW5eescT7bZpg=;
+	b=mUO1CBBRL3HyVHI2fWsDkW0cA/NpbcKxhZPLTjpUVNrn15DI+P6p0SBpC+BjTfClxVqY0b
+	OaH+WJkFMGCOaI61UFckLXxAN8SE5Scv8tLSCP8ULatZb7VSAdEIYQ+DrchMsOBFiUy5Y/
+	PI26M9CvjSnmzPnmFtQNRxvkYXhGDu8=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1708344691; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=dgEdE8pMlMrPDPVr2iZZlKCQOw1qxLHW5eescT7bZpg=;
+	b=mUO1CBBRL3HyVHI2fWsDkW0cA/NpbcKxhZPLTjpUVNrn15DI+P6p0SBpC+BjTfClxVqY0b
+	OaH+WJkFMGCOaI61UFckLXxAN8SE5Scv8tLSCP8ULatZb7VSAdEIYQ+DrchMsOBFiUy5Y/
+	PI26M9CvjSnmzPnmFtQNRxvkYXhGDu8=
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 2C8FB139D0;
+	Mon, 19 Feb 2024 12:11:31 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id /jviB3NF02VWPgAAD6G6ig
+	(envelope-from <mhocko@suse.com>); Mon, 19 Feb 2024 12:11:31 +0000
+Date: Mon, 19 Feb 2024 13:11:26 +0100
+From: Michal Hocko <mhocko@suse.com>
+To: "T.J. Mercier" <tjmercier@google.com>
+Cc: Johannes Weiner <hannes@cmpxchg.org>,
+	Roman Gushchin <roman.gushchin@linux.dev>,
+	Shakeel Butt <shakeelb@google.com>,
+	Muchun Song <muchun.song@linux.dev>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Efly Young <yangyifei03@kuaishou.com>, android-mm@google.com,
+	yuzhao@google.com, mkoutny@suse.com,
+	Yosry Ahmed <yosryahmed@google.com>, cgroups@vger.kernel.org,
+	linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] mm: memcg: Use larger batches for proactive reclaim
+Message-ID: <ZdNFbiH1ufbOTIDx@tiehlicka>
+References: <20240202233855.1236422-1-tjmercier@google.com>
+ <ZcC7Kgew3GDFNIux@tiehlicka>
+ <CABdmKX3HbSxX6zLF4z3f+=Ybiq1bA71jckkeHv5QJxAjSexgaA@mail.gmail.com>
+ <ZcE5n9cTdTGJChmq@tiehlicka>
+ <CABdmKX0Du2F+bko=hjLBqdQO-bJSFcG3y1Bbuu2v6J8aVB39sw@mail.gmail.com>
+ <ZcFG2JoXI7i8XzQY@tiehlicka>
+ <CABdmKX0t1LXj80Awe20TrmY5gQB6v2E4bGfW8WXr2i84o+k6ow@mail.gmail.com>
+ <ZcFQMru5_oATGbuP@tiehlicka>
+ <CABdmKX35GV3VFar0_pNR_vAXLpvxo+APALXMharsXh6TO+0mrQ@mail.gmail.com>
+ <ZcH0wBPvOjqayjAD@tiehlicka>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <ZcH0wBPvOjqayjAD@tiehlicka>
+Authentication-Results: smtp-out1.suse.de;
+	none
+X-Spam-Level: 
+X-Spam-Score: -3.80
+X-Spamd-Result: default: False [-3.80 / 50.00];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 TO_DN_SOME(0.00)[];
+	 RCVD_COUNT_THREE(0.00)[3];
+	 NEURAL_HAM_SHORT(-0.20)[-1.000];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 BAYES_HAM(-3.00)[100.00%];
+	 ARC_NA(0.00)[];
+	 FROM_HAS_DN(0.00)[];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 NEURAL_HAM_LONG(-1.00)[-1.000];
+	 MIME_GOOD(-0.10)[text/plain];
+	 DKIM_SIGNED(0.00)[suse.com:s=susede1];
+	 RCPT_COUNT_TWELVE(0.00)[14];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 MID_RHS_NOT_FQDN(0.50)[];
+	 RCVD_TLS_ALL(0.00)[]
+X-Spam-Flag: NO
 
-On Mon, 2024-02-19 at 17:30 +0530, Siddharth Vadapalli wrote:
-> The function "next_fn()" seems to provide the next valid function.
-> Therefore, if the current function is 0 (fn =3D 0), then the next valid
-> function will be 1 which is returned by next_fn(). It extends
-> similarly
-> until the case where current function is 6 (fn =3D 6) which shall
-> return
-> the next valid function as 7. So all 8 PFs are still treated as valid
-> and there doesn't seem to be any limitation. Only in the case where
-> the
-> EP doesn't support ARI (there is no function 8 (fn =3D 8)), the call to
-> next_fn() with the fn parameter set to 7, will return -ENODEV which
-> seems to be the expected behavior.
->=20
-> Regards,
-> Siddharth.
+On Tue 06-02-24 09:58:41, Michal Hocko wrote:
+> On Mon 05-02-24 20:01:40, T.J. Mercier wrote:
+> > On Mon, Feb 5, 2024 at 1:16 PM Michal Hocko <mhocko@suse.com> wrote:
+> > >
+> > > On Mon 05-02-24 12:47:47, T.J. Mercier wrote:
+> > > > On Mon, Feb 5, 2024 at 12:36 PM Michal Hocko <mhocko@suse.com> wrote:
+> > > [...]
+> > > > > This of something like
+> > > > > timeout $TIMEOUT echo $TARGET > $MEMCG_PATH/memory.reclaim
+> > > > > where timeout acts as a stop gap if the reclaim cannot finish in
+> > > > > TIMEOUT.
+> > > >
+> > > > Yeah I get the desired behavior, but using sc->nr_reclaimed to achieve
+> > > > it is what's bothering me.
+> > >
+> > > I am not really happy about this subtlety. If we have a better way then
+> > > let's do it. Better in its own patch, though.
+> > >
+> > > > It's already wired up that way though, so if you want to make this
+> > > > change now then I can try to test for the difference using really
+> > > > large reclaim targets.
+> > >
+> > > Yes, please. If you want it a separate patch then no objection from me
+> > > of course. If you do no like the nr_to_reclaim bailout then maybe we can
+> > > go with a simple break out flag in scan_control.
+> > >
+> > > Thanks!
+> > 
+> > It's a bit difficult to test under the too_many_isolated check, so I
+> > moved the fatal_signal_pending check outside and tried with that.
+> > Performing full reclaim on the /uid_0 cgroup with a 250ms delay before
+> > SIGKILL, I got an average of 16ms better latency with
+> > sc->nr_to_reclaim across 20 runs ignoring one 1s outlier with
+> > SWAP_CLUSTER_MAX.
+> 
+> This will obviously scale with the number of memcgs in the hierarchy but
+> you are right that too_many_isolated makes the whole fatal_signal_pending
+> check rather inefficient. I haven't missed that. The reclaim path is
+> rather convoluted so this will likely be more complex than I
+> anticipated. I will think about that some more.
+> 
+> In order to not delay your patch, please repost with suggested updates
+> to the changelog. This needs addressing IMO but I do not think this is
+> critical at this stage.
 
-yes, you are right, the fn 7 has no next_fn, hence should return -
-ENODEV.=20
-
-ignore this patch!
-
-kind regards,
-Bean
+Has there been a new version or a proposal to refine the changelog
+posted?
+-- 
+Michal Hocko
+SUSE Labs
