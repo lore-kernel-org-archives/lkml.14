@@ -1,182 +1,135 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63F0853805;
-	Mon, 19 Feb 2024 18:37:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 685A153E30;
+	Mon, 19 Feb 2024 18:37:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708367864; cv=none; b=Wcwhh2k1TNsejuIwGY09yDqsrE5QWR494OvsL+yLJ+hJTy/XrmW2uYq+zmvjWNLcihQGdnrJNkeYbUhCysYDmkagz2xkrEH5rDLan6fJE0tcaBLM3wW+ujoFFlIMrp+0W/G0lOxbMzaXkvZLYZJFjzpxnmC5m7+xpo6MIvech0Y=
+	t=1708367865; cv=none; b=lIevKOWwIjDs5P6J8Brh8Qh71j9/2T9CUcZMVitdFyaK/H5/4mB/eN1UPiV8trETRBcdXBrB5a/lMJw+MBrkV1tjxDIdKIwGzJGAwImEBy2KzZIb0HnCfmyTbmSxHpj0Vspia5tV8HPameT9d/0peWAaFclQ7hUW/j27Gnx6CP8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708367864; c=relaxed/simple;
-	bh=WCORwWdgbnnKQewSn/5SZtw1kNBcXmb3yv93ydSiP5Q=;
+	s=arc-20240116; t=1708367865; c=relaxed/simple;
+	bh=Ur7n6O6cc2GYgaHCjHv02QDl9qSnvKgLGRianf5W6rU=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=bFV+5jQ1GUmLy8BIO1IrRMUE1RNIPUUtVE/oJHoe1qGLUtbCVez4oHjfaKoZR1Ch/K0TC5H6VpEGTRi24GLiU+QXBvZTyX+Q0h1nlcC0P3Cd7uSBCBeVQmXwkTQKRWKcd0gNsBL8O0heczwaNxi8HCH/JNPsLDDzdJovTvb/UMs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ITcQVtQu; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=r9r6QyGj; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=PrSig+xgGP3n0tYPZ6EF++f9abxEpiEiqOcvT4pOm8IsP/frVe6CeKbqB/AbO1qxmZCY+WiEEc2mL36gYp6WcBt80XFZ0+Weda8281WV/HulCN4uxDItBIrG2jsIf8kUyUxg79LASH5RMITZ55Bl472elgAo+mKk74jT12ywSq0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=FakJgU4t; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=VB+NAyF9; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ITcQVtQu";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="r9r6QyGj"
-Date: Mon, 19 Feb 2024 18:37:39 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="FakJgU4t";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="VB+NAyF9"
+Date: Mon, 19 Feb 2024 18:37:41 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1708367860;
+	s=2020; t=1708367862;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=P8uQUEP7sHBDAE6xDrwE50fmOGZvNATtQCG6BlfpgkI=;
-	b=ITcQVtQuZQBtY+EWvSyp5Xrssk2bEtYhnU+7iKivsTzKQ6opuBZgjtSVsarIVpFRvFo4Jd
-	kLcanE8j/XOPHhrN+X7cGiQdSqWVxJRaCnNO4ucMtb33bpVhaCyF3nyPqNpfhAdsuwSl1o
-	2aVfMC3QUc1BJ7hXtmPsr7p51rhWiI7o+KDsOmISmcBSPeJe5plzx2xF/xXvE3ekqaCI5R
-	ELIOeqKHMCEa9atv9J5sLyEj9d6+f+lpeJ/RDB6EVFslPzbdm/FPc4mr4Khx2dLhoYaRlG
-	Otd45aRs+cGSXfr6fDQQCod9kHr/o+92vDtVm6xKwlJ4GltM7q3vgKFNSbLncg==
+	bh=KNEh+ZS43l4fs1ygurS2HLPWAbO1/zVyUp6TyI3WOfY=;
+	b=FakJgU4tFagn3dBTdqYkw3J3XGW5tEpZC77RX5PVlJ5RPCLSommfeFkydc+lC6y0snitCB
+	yl0J4h2ZDfCATPHX55GNqI4fY2+YxR22pzbQKjFWSvAgfvO2c4ddOkO1lNenRaDG9/GUBZ
+	xSa9J13i/DczDBg3kCopMmiE19zCGcs94SGRn7hDLpXCSeSdbVHN5latIOo2UYMUn/0lO2
+	bVi7k44vXH7LSABJLRMA21FQBpBHwfVxgFyiPMqEHI0p+cArEiGCiZIA0w5+aoL/N+KuNX
+	lP4+9FRhZnZqLEadHca3EtXA4w1UHDad6V6KIbwQ1Y0h4pnO+eZ12R9GJHRjQg==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1708367860;
+	s=2020e; t=1708367862;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=P8uQUEP7sHBDAE6xDrwE50fmOGZvNATtQCG6BlfpgkI=;
-	b=r9r6QyGjR085Snx1JxAdIRfoM/FlHXVV1XdBp7/Wfw301CRnAntYJZb8Gf+TKWyvqx4k+8
-	WFliF8xhZbdphgDg==
+	bh=KNEh+ZS43l4fs1ygurS2HLPWAbO1/zVyUp6TyI3WOfY=;
+	b=VB+NAyF95ShyXaialLQseb6IzKBmVldY6odcWjVK3ZnTnhKAPHoLi9xqgEPS+xqyw68UCj
+	j1Q9pu/c2FaHniBA==
 From: "tip-bot2 for James Morse" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/cache] x86/resctrl: Create helper for RMID allocation and
- mondata dir creation
+Subject: [tip: x86/cache] tick/nohz: Move tick_nohz_full_mask declaration
+ outside the #ifdef
 Cc: James Morse <james.morse@arm.com>, "Borislav Petkov (AMD)" <bp@alien8.de>,
- Shaopeng Tan <tan.shaopeng@fujitsu.com>, ilpo.jarvinen@linux.intel.com,
- Reinette Chatre <reinette.chatre@intel.com>, Babu Moger <babu.moger@amd.com>,
+ Shaopeng Tan <tan.shaopeng@fujitsu.com>, Thomas Gleixner <tglx@linutronix.de>,
+ Reinette Chatre <reinette.chatre@intel.com>,
  Peter Newman <peternewman@google.com>,
  Carl Worth <carl@os.amperecomputing.com>, x86@kernel.org,
  linux-kernel@vger.kernel.org
-In-Reply-To: <20240213184438.16675-4-james.morse@arm.com>
-References: <20240213184438.16675-4-james.morse@arm.com>
+In-Reply-To: <20240213184438.16675-2-james.morse@arm.com>
+References: <20240213184438.16675-2-james.morse@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <170836785987.398.10687382192378795242.tip-bot2@tip-bot2>
+Message-ID: <170836786117.398.9035726276646423995.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
 Precedence: bulk
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
 
 The following commit has been merged into the x86/cache branch of tip:
 
-Commit-ID:     b1de313979af99dc0f999656fc99bbcb52559a38
-Gitweb:        https://git.kernel.org/tip/b1de313979af99dc0f999656fc99bbcb525=
-59a38
+Commit-ID:     31a5c0b7c674977889ce721d69101bc35f25e041
+Gitweb:        https://git.kernel.org/tip/31a5c0b7c674977889ce721d69101bc35f25e041
 Author:        James Morse <james.morse@arm.com>
-AuthorDate:    Tue, 13 Feb 2024 18:44:17=20
+AuthorDate:    Tue, 13 Feb 2024 18:44:15 
 Committer:     Borislav Petkov (AMD) <bp@alien8.de>
 CommitterDate: Fri, 16 Feb 2024 19:18:31 +01:00
 
-x86/resctrl: Create helper for RMID allocation and mondata dir creation
+tick/nohz: Move tick_nohz_full_mask declaration outside the #ifdef
 
-When monitoring is supported, each monitor and control group is allocated an
-RMID. For control groups, rdtgroup_mkdir_ctrl_mon() later goes on to allocate
-the CLOSID.
+tick_nohz_full_mask lists the CPUs that are nohz_full. This is only needed when
+CONFIG_NO_HZ_FULL is defined. tick_nohz_full_cpu() allows a specific CPU to be
+tested against the mask, and evaluates to false when CONFIG_NO_HZ_FULL is not
+defined.
 
-MPAM's equivalent of RMID are not an independent number, so can't be allocated
-until the CLOSID is known. An RMID allocation for one CLOSID may fail, whereas
-another may succeed depending on how many monitor groups a control group has.
+The resctrl code needs to pick a CPU to run some work on, a new helper prefers
+housekeeping CPUs by examining the tick_nohz_full_mask. Hiding the declaration
+behind #ifdef CONFIG_NO_HZ_FULL forces all the users to be behind an #ifdef
+too.
 
-The RMID allocation needs to move to be after the CLOSID has been allocated.
+Move the tick_nohz_full_mask declaration, this lets callers drop the #ifdef,
+and guard access to tick_nohz_full_mask with IS_ENABLED() or something like
+tick_nohz_full_cpu().
 
-Move the RMID allocation and mondata dir creation to a helper.
+The definition does not need to be moved as any callers should be removed at
+compile time unless CONFIG_NO_HZ_FULL is defined.
 
 Signed-off-by: James Morse <james.morse@arm.com>
 Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
 Reviewed-by: Shaopeng Tan <tan.shaopeng@fujitsu.com>
-Reviewed-by: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
-Reviewed-by: Reinette Chatre <reinette.chatre@intel.com>
-Reviewed-by: Babu Moger <babu.moger@amd.com>
-Tested-by: Peter Newman <peternewman@google.com>
+Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
+Acked-by: Reinette Chatre <reinette.chatre@intel.com> # for resctrl dependency
 Tested-by: Shaopeng Tan <tan.shaopeng@fujitsu.com>
-Tested-by: Babu Moger <babu.moger@amd.com>
+Tested-by: Peter Newman <peternewman@google.com>
 Tested-by: Carl Worth <carl@os.amperecomputing.com> # arm64
-Link: https://lore.kernel.org/r/20240213184438.16675-4-james.morse@arm.com
+Link: https://lore.kernel.org/r/20240213184438.16675-2-james.morse@arm.com
 Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
 ---
- arch/x86/kernel/cpu/resctrl/rdtgroup.c | 42 ++++++++++++++++---------
- 1 file changed, 27 insertions(+), 15 deletions(-)
+ include/linux/tick.h |  9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/kernel/cpu/resctrl/rdtgroup.c b/arch/x86/kernel/cpu/res=
-ctrl/rdtgroup.c
-index aa24343..4ea5a87 100644
---- a/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-+++ b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-@@ -3288,6 +3288,30 @@ out:
- 	return ret;
- }
-=20
-+static int mkdir_rdt_prepare_rmid_alloc(struct rdtgroup *rdtgrp)
-+{
-+	int ret;
+diff --git a/include/linux/tick.h b/include/linux/tick.h
+index 716d17f..0fb9038 100644
+--- a/include/linux/tick.h
++++ b/include/linux/tick.h
+@@ -164,9 +164,16 @@ static inline u64 get_cpu_idle_time_us(int cpu, u64 *unused) { return -1; }
+ static inline u64 get_cpu_iowait_time_us(int cpu, u64 *unused) { return -1; }
+ #endif /* !CONFIG_NO_HZ_COMMON */
+ 
++/*
++ * Mask of CPUs that are nohz_full.
++ *
++ * Users should be guarded by CONFIG_NO_HZ_FULL or a tick_nohz_full_cpu()
++ * check.
++ */
++extern cpumask_var_t tick_nohz_full_mask;
 +
-+	if (!rdt_mon_capable)
-+		return 0;
-+
-+	ret =3D alloc_rmid();
-+	if (ret < 0) {
-+		rdt_last_cmd_puts("Out of RMIDs\n");
-+		return ret;
-+	}
-+	rdtgrp->mon.rmid =3D ret;
-+
-+	ret =3D mkdir_mondata_all(rdtgrp->kn, rdtgrp, &rdtgrp->mon.mon_data_kn);
-+	if (ret) {
-+		rdt_last_cmd_puts("kernfs subdir error\n");
-+		free_rmid(rdtgrp->mon.rmid);
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
- static int mkdir_rdt_prepare(struct kernfs_node *parent_kn,
- 			     const char *name, umode_t mode,
- 			     enum rdt_group_type rtype, struct rdtgroup **r)
-@@ -3360,20 +3384,10 @@ static int mkdir_rdt_prepare(struct kernfs_node *pare=
-nt_kn,
- 		goto out_destroy;
- 	}
-=20
--	if (rdt_mon_capable) {
--		ret =3D alloc_rmid();
--		if (ret < 0) {
--			rdt_last_cmd_puts("Out of RMIDs\n");
--			goto out_destroy;
--		}
--		rdtgrp->mon.rmid =3D ret;
-+	ret =3D mkdir_rdt_prepare_rmid_alloc(rdtgrp);
-+	if (ret)
-+		goto out_destroy;
-=20
--		ret =3D mkdir_mondata_all(kn, rdtgrp, &rdtgrp->mon.mon_data_kn);
--		if (ret) {
--			rdt_last_cmd_puts("kernfs subdir error\n");
--			goto out_idfree;
--		}
--	}
- 	kernfs_activate(kn);
-=20
- 	/*
-@@ -3381,8 +3395,6 @@ static int mkdir_rdt_prepare(struct kernfs_node *parent=
-_kn,
- 	 */
- 	return 0;
-=20
--out_idfree:
--	free_rmid(rdtgrp->mon.rmid);
- out_destroy:
- 	kernfs_put(rdtgrp->kn);
- 	kernfs_remove(rdtgrp->kn);
+ #ifdef CONFIG_NO_HZ_FULL
+ extern bool tick_nohz_full_running;
+-extern cpumask_var_t tick_nohz_full_mask;
+ 
+ static inline bool tick_nohz_full_enabled(void)
+ {
