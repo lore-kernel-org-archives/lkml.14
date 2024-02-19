@@ -1,336 +1,1178 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9307B224CA;
-	Mon, 19 Feb 2024 08:45:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9E3425571;
+	Mon, 19 Feb 2024 08:45:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708332339; cv=none; b=aCHqbVH8QRuJBlMq1KzydpN7esxT34B7MBWVuNnT1recPkJzurQx5UtUh7zNc19Z/sP/ajpK6VF1aVkzo5AtNxo1dIHfPcODIV5h/mAL21ZbQVkcdvj59CUaOJcr4vYGKw73+1BlCXNUZEWOQDPdQDxckxEVaiIAVMtOEV6M31A=
+	t=1708332343; cv=none; b=ET3gEd+mMqGkLED3652o82d4e36CryEDue6DpHm/+ZTaT4wDUEP3/5D03uRCE36yFXZSVext/yEmpzcZTPKtGONssgUX5wFPF0ihsNIszuq+rPtOgwsVbbO2kOyVYXLXssCAaAkSjSUQbxG1BkxNb3Jz9vM2SJI7l9RjjLWH0hY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708332339; c=relaxed/simple;
-	bh=aP3a2VaMCfvGZdPOvnOMG7G2bH0AyGP96msZ2vSrZv8=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=Xt0dtQ8pFMkRgjVe3kz4ArHRQ9qe8E0bspuTyyxMN/zvhmk6tpg2nLSbzYR2nkmlGWKJYJcMxv1b2JJrBklQ6nH7mHtkB2Pqbh3Fa+0BJ2C/4jS1nNfZdEUJJKueAy6yDruhLd9ElSUSPYJnEOpci7t/OYR0kppY7VmVZ7XBWBU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=hgTEMjRc; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=H4Nw45Ny; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1708332343; c=relaxed/simple;
+	bh=nxfYJ05fduxv5KaPx43iXJzQm2ZNCd1Eh+3FJ0WvxD4=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=GCzDxlQyW9YHCM/826DUm/HUjMr3nvFNuAT+C+RB7HlEaY5O1Jl06phYCPyHGe+3am7gtV44bZ9ztUnoQLZ3x7U/XxBQJidxxBTFtVQADaL/rnaJZEKHrtMyS6C+LugjoK8kv/PfJHcL+qjRZu1yTCx3Puz7n6u43x0O+Y7NbII=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MRfRc75U; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="hgTEMjRc";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="H4Nw45Ny"
-Date: Mon, 19 Feb 2024 08:45:34 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1708332335;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=e79XwFm9T8JkG9FwTmyG4lbnGIMfdP83AZ1lUQhNCcM=;
-	b=hgTEMjRcTfBk7heAzFYJJ7BjV5BxyT/6hdHuEEY/4E5MiLk4Zjb1crnxdl9ar8HmtRJP6y
-	9trkwMpYDdxgtRr/1PDF+6nBPCwl1rz8gwav8LXQvrsWwF4BboODl40pkH/FsoZiuP1isL
-	FZPcFfF1TqR+czxhrVCQdrcdlC952DD0BaucaqtsW6O+bgTzB9+TjLYBO2p2JMfwwjpDrk
-	9NU/O8G0IJoX5HWNxy+xrEgvdWYPMPnHHWMJA9c/wfSD5V97EP2Mkps+X9ie4oAisdJ4Tr
-	tO5j1omgBFVyiWJ1JGutV+rx82oALejyFgJLyQISFJtQuq183a1qyRyGTPi5ng==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1708332335;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=e79XwFm9T8JkG9FwTmyG4lbnGIMfdP83AZ1lUQhNCcM=;
-	b=H4Nw45Nyod3IwWdtjKlKmBPJJyH6Q4b/+KraN7Tax/9+wQMlspoyAjnsVFcRO/jk76UkDV
-	bhOGS1lT5qo+/rAQ==
-From: "tip-bot2 for Anna-Maria Behnsen" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject: [tip: timers/core] hrtimers: Move hrtimer base related definitions
- into hrtimer_defs.h
-Cc: "Anna-Maria Behnsen" <anna-maria@linutronix.de>,
- Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org,
- linux-kernel@vger.kernel.org
-In-Reply-To: <20240123164702.55612-2-anna-maria@linutronix.de>
-References: <20240123164702.55612-2-anna-maria@linutronix.de>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MRfRc75U"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 560E5C43390;
+	Mon, 19 Feb 2024 08:45:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1708332342;
+	bh=nxfYJ05fduxv5KaPx43iXJzQm2ZNCd1Eh+3FJ0WvxD4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=MRfRc75UbzPNARJf7UQ797RjGhcCxx5hxeoDttSr6JW3VL6stf2184jZ66d3RTOF7
+	 tpNXZ6An31/RDg/eIQrvckVkS+pSScPZyK8o+Ql10ZpIibJKLMbXk6KdsEJN2Vc3b1
+	 SJEW2oq4VLeeOwf+p32rv91pcjcRBKRJtY5k5PnWzJd6cLMqqV+6ISCeBj1u1QBv3p
+	 zVVVEOpe9VtKmbZ9lKNcS7Lq7bNWG/V7f6G0NkFHU5Fu7I4Xet3r9oLwtutLR8YQCZ
+	 W0d9h5U/cTGZHHyyFZ8NHfcGBd/M3fqSg0725maxD+7mgks5Xjy/wNY661ChcXfFF3
+	 U8nV+GKiAXHOQ==
+From: Michael Walle <mwalle@kernel.org>
+To: Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Cc: devicetree@vger.kernel.org,
+	Sean Wang <sean.wang@mediatek.com>,
+	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org,
+	Michael Walle <mwalle@kernel.org>
+Subject: [PATCH v2 2/2] arm64: dts: mediatek: add Kontron 3.5"-SBC-i1200
+Date: Mon, 19 Feb 2024 09:44:56 +0100
+Message-Id: <20240219084456.1075445-2-mwalle@kernel.org>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240219084456.1075445-1-mwalle@kernel.org>
+References: <20240219084456.1075445-1-mwalle@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <170833233491.398.13327405048781821251.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-The following commit has been merged into the timers/core branch of tip:
+Add basic support for the Kontron 3.5" single board computer featuring a
+Mediatek i1200 SoC (MT8395/MT8195).
 
-Commit-ID:     1a4729ecafc239f922d0c758bab7be0038714e88
-Gitweb:        https://git.kernel.org/tip/1a4729ecafc239f922d0c758bab7be0038714e88
-Author:        Anna-Maria Behnsen <anna-maria@linutronix.de>
-AuthorDate:    Tue, 23 Jan 2024 17:46:55 +01:00
-Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Mon, 19 Feb 2024 09:37:59 +01:00
-
-hrtimers: Move hrtimer base related definitions into hrtimer_defs.h
-
-hrtimer base related struct definitions are part of hrtimers.h as it is
-required there. With this, also the struct documentation which is for core
-code internal use, is exposed into the general api.
-
-To prevent this, move all core internal definitions and the related
-includes into hrtimer_defs.h.
-
-Signed-off-by: Anna-Maria Behnsen <anna-maria@linutronix.de>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lore.kernel.org/r/20240123164702.55612-2-anna-maria@linutronix.de
-
+Signed-off-by: Michael Walle <mwalle@kernel.org>
 ---
- include/linux/hrtimer.h      | 103 +----------------------------------
- include/linux/hrtimer_defs.h | 102 ++++++++++++++++++++++++++++++++++-
- 2 files changed, 102 insertions(+), 103 deletions(-)
+v2:
+ - none
 
-diff --git a/include/linux/hrtimer.h b/include/linux/hrtimer.h
-index 87e3bed..792a0ac 100644
---- a/include/linux/hrtimer.h
-+++ b/include/linux/hrtimer.h
-@@ -18,12 +18,8 @@
- #include <linux/list.h>
- #include <linux/percpu-defs.h>
- #include <linux/rbtree.h>
--#include <linux/seqlock.h>
- #include <linux/timer.h>
- 
--struct hrtimer_clock_base;
--struct hrtimer_cpu_base;
--
- /*
-  * Mode arguments of xxx_hrtimer functions:
-  *
-@@ -98,105 +94,6 @@ struct hrtimer_sleeper {
- 	struct task_struct *task;
- };
- 
--#ifdef CONFIG_64BIT
--# define __hrtimer_clock_base_align	____cacheline_aligned
--#else
--# define __hrtimer_clock_base_align
--#endif
--
--/**
-- * struct hrtimer_clock_base - the timer base for a specific clock
-- * @cpu_base:		per cpu clock base
-- * @index:		clock type index for per_cpu support when moving a
-- *			timer to a base on another cpu.
-- * @clockid:		clock id for per_cpu support
-- * @seq:		seqcount around __run_hrtimer
-- * @running:		pointer to the currently running hrtimer
-- * @active:		red black tree root node for the active timers
-- * @get_time:		function to retrieve the current time of the clock
-- * @offset:		offset of this clock to the monotonic base
-- */
--struct hrtimer_clock_base {
--	struct hrtimer_cpu_base	*cpu_base;
--	unsigned int		index;
--	clockid_t		clockid;
--	seqcount_raw_spinlock_t	seq;
--	struct hrtimer		*running;
--	struct timerqueue_head	active;
--	ktime_t			(*get_time)(void);
--	ktime_t			offset;
--} __hrtimer_clock_base_align;
--
--enum  hrtimer_base_type {
--	HRTIMER_BASE_MONOTONIC,
--	HRTIMER_BASE_REALTIME,
--	HRTIMER_BASE_BOOTTIME,
--	HRTIMER_BASE_TAI,
--	HRTIMER_BASE_MONOTONIC_SOFT,
--	HRTIMER_BASE_REALTIME_SOFT,
--	HRTIMER_BASE_BOOTTIME_SOFT,
--	HRTIMER_BASE_TAI_SOFT,
--	HRTIMER_MAX_CLOCK_BASES,
--};
--
--/**
-- * struct hrtimer_cpu_base - the per cpu clock bases
-- * @lock:		lock protecting the base and associated clock bases
-- *			and timers
-- * @cpu:		cpu number
-- * @active_bases:	Bitfield to mark bases with active timers
-- * @clock_was_set_seq:	Sequence counter of clock was set events
-- * @hres_active:	State of high resolution mode
-- * @in_hrtirq:		hrtimer_interrupt() is currently executing
-- * @hang_detected:	The last hrtimer interrupt detected a hang
-- * @softirq_activated:	displays, if the softirq is raised - update of softirq
-- *			related settings is not required then.
-- * @nr_events:		Total number of hrtimer interrupt events
-- * @nr_retries:		Total number of hrtimer interrupt retries
-- * @nr_hangs:		Total number of hrtimer interrupt hangs
-- * @max_hang_time:	Maximum time spent in hrtimer_interrupt
-- * @softirq_expiry_lock: Lock which is taken while softirq based hrtimer are
-- *			 expired
-- * @timer_waiters:	A hrtimer_cancel() invocation waits for the timer
-- *			callback to finish.
-- * @expires_next:	absolute time of the next event, is required for remote
-- *			hrtimer enqueue; it is the total first expiry time (hard
-- *			and soft hrtimer are taken into account)
-- * @next_timer:		Pointer to the first expiring timer
-- * @softirq_expires_next: Time to check, if soft queues needs also to be expired
-- * @softirq_next_timer: Pointer to the first expiring softirq based timer
-- * @clock_base:		array of clock bases for this cpu
-- *
-- * Note: next_timer is just an optimization for __remove_hrtimer().
-- *	 Do not dereference the pointer because it is not reliable on
-- *	 cross cpu removals.
-- */
--struct hrtimer_cpu_base {
--	raw_spinlock_t			lock;
--	unsigned int			cpu;
--	unsigned int			active_bases;
--	unsigned int			clock_was_set_seq;
--	unsigned int			hres_active		: 1,
--					in_hrtirq		: 1,
--					hang_detected		: 1,
--					softirq_activated       : 1;
--#ifdef CONFIG_HIGH_RES_TIMERS
--	unsigned int			nr_events;
--	unsigned short			nr_retries;
--	unsigned short			nr_hangs;
--	unsigned int			max_hang_time;
--#endif
--#ifdef CONFIG_PREEMPT_RT
--	spinlock_t			softirq_expiry_lock;
--	atomic_t			timer_waiters;
--#endif
--	ktime_t				expires_next;
--	struct hrtimer			*next_timer;
--	ktime_t				softirq_expires_next;
--	struct hrtimer			*softirq_next_timer;
--	struct hrtimer_clock_base	clock_base[HRTIMER_MAX_CLOCK_BASES];
--} ____cacheline_aligned;
--
- static inline void hrtimer_set_expires(struct hrtimer *timer, ktime_t time)
- {
- 	timer->node.expires = time;
-diff --git a/include/linux/hrtimer_defs.h b/include/linux/hrtimer_defs.h
-index 2d3e3c5..b12869d 100644
---- a/include/linux/hrtimer_defs.h
-+++ b/include/linux/hrtimer_defs.h
-@@ -3,6 +3,8 @@
- #define _LINUX_HRTIMER_DEFS_H
- 
- #include <linux/ktime.h>
-+#include <linux/timerqueue.h>
-+#include <linux/seqlock.h>
- 
- #ifdef CONFIG_HIGH_RES_TIMERS
- 
-@@ -24,4 +26,104 @@
- 
- #endif
- 
-+#ifdef CONFIG_64BIT
-+# define __hrtimer_clock_base_align	____cacheline_aligned
-+#else
-+# define __hrtimer_clock_base_align
-+#endif
-+
-+/**
-+ * struct hrtimer_clock_base - the timer base for a specific clock
-+ * @cpu_base:		per cpu clock base
-+ * @index:		clock type index for per_cpu support when moving a
-+ *			timer to a base on another cpu.
-+ * @clockid:		clock id for per_cpu support
-+ * @seq:		seqcount around __run_hrtimer
-+ * @running:		pointer to the currently running hrtimer
-+ * @active:		red black tree root node for the active timers
-+ * @get_time:		function to retrieve the current time of the clock
-+ * @offset:		offset of this clock to the monotonic base
+ arch/arm64/boot/dts/mediatek/Makefile         |    1 +
+ .../mediatek/mt8395-kontron-3-5-sbc-i1200.dts | 1091 +++++++++++++++++
+ 2 files changed, 1092 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/mediatek/mt8395-kontron-3-5-sbc-i1200.dts
+
+diff --git a/arch/arm64/boot/dts/mediatek/Makefile b/arch/arm64/boot/dts/mediatek/Makefile
+index 37b4ca3a87c9..697b6b5de3cb 100644
+--- a/arch/arm64/boot/dts/mediatek/Makefile
++++ b/arch/arm64/boot/dts/mediatek/Makefile
+@@ -76,5 +76,6 @@ dtb-$(CONFIG_ARCH_MEDIATEK) += mt8195-demo.dtb
+ dtb-$(CONFIG_ARCH_MEDIATEK) += mt8195-evb.dtb
+ dtb-$(CONFIG_ARCH_MEDIATEK) += mt8365-evk.dtb
+ dtb-$(CONFIG_ARCH_MEDIATEK) += mt8395-genio-1200-evk.dtb
++dtb-$(CONFIG_ARCH_MEDIATEK) += mt8395-kontron-3-5-sbc-i1200.dtb
+ dtb-$(CONFIG_ARCH_MEDIATEK) += mt8395-radxa-nio-12l.dtb
+ dtb-$(CONFIG_ARCH_MEDIATEK) += mt8516-pumpkin.dtb
+diff --git a/arch/arm64/boot/dts/mediatek/mt8395-kontron-3-5-sbc-i1200.dts b/arch/arm64/boot/dts/mediatek/mt8395-kontron-3-5-sbc-i1200.dts
+new file mode 100644
+index 000000000000..0c634bc8776c
+--- /dev/null
++++ b/arch/arm64/boot/dts/mediatek/mt8395-kontron-3-5-sbc-i1200.dts
+@@ -0,0 +1,1091 @@
++// SPDX-License-Identifier: (GPL-2.0 OR MIT)
++/*
++ * Copyright (C) 2024 Kontron Europe GmbH
++ *
++ * Author: Michael Walle <mwalle@kernel.org>
 + */
-+struct hrtimer_clock_base {
-+	struct hrtimer_cpu_base	*cpu_base;
-+	unsigned int		index;
-+	clockid_t		clockid;
-+	seqcount_raw_spinlock_t	seq;
-+	struct hrtimer		*running;
-+	struct timerqueue_head	active;
-+	ktime_t			(*get_time)(void);
-+	ktime_t			offset;
-+} __hrtimer_clock_base_align;
++/dts-v1/;
 +
-+enum  hrtimer_base_type {
-+	HRTIMER_BASE_MONOTONIC,
-+	HRTIMER_BASE_REALTIME,
-+	HRTIMER_BASE_BOOTTIME,
-+	HRTIMER_BASE_TAI,
-+	HRTIMER_BASE_MONOTONIC_SOFT,
-+	HRTIMER_BASE_REALTIME_SOFT,
-+	HRTIMER_BASE_BOOTTIME_SOFT,
-+	HRTIMER_BASE_TAI_SOFT,
-+	HRTIMER_MAX_CLOCK_BASES,
++#include "mt8195.dtsi"
++#include "mt6359.dtsi"
++
++#include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/input/input.h>
++#include <dt-bindings/leds/common.h>
++#include <dt-bindings/pinctrl/mt8195-pinfunc.h>
++#include <dt-bindings/regulator/mediatek,mt6360-regulator.h>
++#include <dt-bindings/spmi/spmi.h>
++
++/ {
++	model = "Kontron 3.5\"-SBC-i1200";
++	compatible = "kontron,3-5-sbc-i1200", "mediatek,mt8395", "mediatek,mt8195";
++
++	aliases {
++		mmc0 = &mmc0;
++		mmc1 = &mmc1;
++		serial0 = &uart1;
++		serial1 = &uart2;
++		serial2 = &uart3;
++		serial3 = &uart4;
++		serial4 = &uart0;
++	};
++
++	chosen {
++		stdout-path = "serial0:115200n8";
++	};
++
++	firmware {
++		optee {
++			compatible = "linaro,optee-tz";
++			method = "smc";
++		};
++	};
++
++	gpio-keys {
++		compatible = "gpio-keys";
++		pinctrl-names = "default";
++		pinctrl-0 = <&gpio_keys_pins>;
++
++		key-0 {
++			gpios = <&pio 106 GPIO_ACTIVE_LOW>;
++			label = "volume_up";
++			linux,code = <KEY_VOLUMEUP>;
++			wakeup-source;
++			debounce-interval = <15>;
++		};
++	};
++
++	leds {
++		compatible = "gpio-leds";
++		pinctrl-names = "default";
++		pinctrl-0 = <&led_pins>;
++
++		led-0 {
++			gpios = <&pio 107 GPIO_ACTIVE_HIGH>;
++			default-state = "keep";
++			function = LED_FUNCTION_POWER;
++			color = <LED_COLOR_ID_GREEN>;
++		};
++	};
++
++	memory@40000000 {
++		device_type = "memory";
++		reg = <0 0x40000000 0x0 0x80000000>;
++	};
++
++	reserved-memory {
++		#address-cells = <2>;
++		#size-cells = <2>;
++		ranges;
++
++		/*
++		 * 12 MiB reserved for OP-TEE (BL32)
++		 * +-----------------------+ 0x43e0_0000
++		 * |      SHMEM 2MiB       |
++		 * +-----------------------+ 0x43c0_0000
++		 * |        | TA_RAM  8MiB |
++		 * + TZDRAM +--------------+ 0x4340_0000
++		 * |        | TEE_RAM 2MiB |
++		 * +-----------------------+ 0x4320_0000
++		 */
++		optee_reserved: optee@43200000 {
++			no-map;
++			reg = <0 0x43200000 0 0x00c00000>;
++		};
++
++		scp_mem: memory@50000000 {
++			compatible = "shared-dma-pool";
++			reg = <0 0x50000000 0 0x2900000>;
++			no-map;
++		};
++
++		vpu_mem: memory@53000000 {
++			compatible = "shared-dma-pool";
++			reg = <0 0x53000000 0 0x1400000>; /* 20 MB */
++		};
++
++		/* 2 MiB reserved for ARM Trusted Firmware (BL31) */
++		bl31_secmon_mem: memory@54600000 {
++			no-map;
++			reg = <0 0x54600000 0x0 0x200000>;
++		};
++
++		snd_dma_mem: memory@60000000 {
++			compatible = "shared-dma-pool";
++			reg = <0 0x60000000 0 0x1100000>;
++			no-map;
++		};
++
++		apu_mem: memory@62000000 {
++			compatible = "shared-dma-pool";
++			reg = <0 0x62000000 0 0x1400000>; /* 20 MB */
++		};
++	};
++
++	thermal_sensor0: thermal-sensor-0 {
++		compatible = "generic-adc-thermal";
++		#thermal-sensor-cells = <0>;
++		io-channels = <&auxadc 0>;
++		io-channel-names = "sensor-channel";
++		temperature-lookup-table = <(-25000) 1474
++					    (-20000) 1374
++					    (-15000) 1260
++					    (-10000) 1134
++					     (-5000) 1004
++						   0 874
++						5000 750
++					       10000 635
++					       15000 532
++					       20000 443
++					       25000 367
++					       30000 303
++					       35000 250
++					       40000 206
++					       45000 170
++					       50000 141
++					       55000 117
++					       60000 97
++					       65000 81
++					       70000 68
++					       75000 57
++					       80000 48
++					       85000 41
++					       90000 35
++					       95000 30
++					      100000 25
++					      105000 22
++					      110000 19
++					      115000 16
++					      120000 14
++					      125000 12
++					      130000 10
++					      135000 9
++					      140000 8
++					      145000 7
++					      150000 6>;
++	};
++
++	thermal_sensor1: thermal-sensor-1 {
++		compatible = "generic-adc-thermal";
++		#thermal-sensor-cells = <0>;
++		io-channels = <&auxadc 1>;
++		io-channel-names = "sensor-channel";
++		temperature-lookup-table = <(-25000) 1474
++					    (-20000) 1374
++					    (-15000) 1260
++					    (-10000) 1134
++					     (-5000) 1004
++						   0 874
++						5000 750
++					       10000 635
++					       15000 532
++					       20000 443
++					       25000 367
++					       30000 303
++					       35000 250
++					       40000 206
++					       45000 170
++					       50000 141
++					       55000 117
++					       60000 97
++					       65000 81
++					       70000 68
++					       75000 57
++					       80000 48
++					       85000 41
++					       90000 35
++					       95000 30
++					      100000 25
++					      105000 22
++					      110000 19
++					      115000 16
++					      120000 14
++					      125000 12
++					      130000 10
++					      135000 9
++					      140000 8
++					      145000 7
++					      150000 6>;
++	};
++
++	thermal_sensor2: thermal-sensor-2 {
++		compatible = "generic-adc-thermal";
++		#thermal-sensor-cells = <0>;
++		io-channels = <&auxadc 2>;
++		io-channel-names = "sensor-channel";
++		temperature-lookup-table = <(-25000) 1474
++					    (-20000) 1374
++					    (-15000) 1260
++					    (-10000) 1134
++					     (-5000) 1004
++						   0 874
++						5000 750
++					       10000 635
++					       15000 532
++					       20000 443
++					       25000 367
++					       30000 303
++					       35000 250
++					       40000 206
++					       45000 170
++					       50000 141
++					       55000 117
++					       60000 97
++					       65000 81
++					       70000 68
++					       75000 57
++					       80000 48
++					       85000 41
++					       90000 35
++					       95000 30
++					      100000 25
++					      105000 22
++					      110000 19
++					      115000 16
++					      120000 14
++					      125000 12
++					      130000 10
++					      135000 9
++					      140000 8
++					      145000 7
++					      150000 6>;
++	};
 +};
 +
-+/**
-+ * struct hrtimer_cpu_base - the per cpu clock bases
-+ * @lock:		lock protecting the base and associated clock bases
-+ *			and timers
-+ * @cpu:		cpu number
-+ * @active_bases:	Bitfield to mark bases with active timers
-+ * @clock_was_set_seq:	Sequence counter of clock was set events
-+ * @hres_active:	State of high resolution mode
-+ * @in_hrtirq:		hrtimer_interrupt() is currently executing
-+ * @hang_detected:	The last hrtimer interrupt detected a hang
-+ * @softirq_activated:	displays, if the softirq is raised - update of softirq
-+ *			related settings is not required then.
-+ * @nr_events:		Total number of hrtimer interrupt events
-+ * @nr_retries:		Total number of hrtimer interrupt retries
-+ * @nr_hangs:		Total number of hrtimer interrupt hangs
-+ * @max_hang_time:	Maximum time spent in hrtimer_interrupt
-+ * @softirq_expiry_lock: Lock which is taken while softirq based hrtimer are
-+ *			 expired
-+ * @timer_waiters:	A hrtimer_cancel() invocation waits for the timer
-+ *			callback to finish.
-+ * @expires_next:	absolute time of the next event, is required for remote
-+ *			hrtimer enqueue; it is the total first expiry time (hard
-+ *			and soft hrtimer are taken into account)
-+ * @next_timer:		Pointer to the first expiring timer
-+ * @softirq_expires_next: Time to check, if soft queues needs also to be expired
-+ * @softirq_next_timer: Pointer to the first expiring softirq based timer
-+ * @clock_base:		array of clock bases for this cpu
-+ *
-+ * Note: next_timer is just an optimization for __remove_hrtimer().
-+ *	 Do not dereference the pointer because it is not reliable on
-+ *	 cross cpu removals.
-+ */
-+struct hrtimer_cpu_base {
-+	raw_spinlock_t			lock;
-+	unsigned int			cpu;
-+	unsigned int			active_bases;
-+	unsigned int			clock_was_set_seq;
-+	unsigned int			hres_active		: 1,
-+					in_hrtirq		: 1,
-+					hang_detected		: 1,
-+					softirq_activated       : 1;
-+#ifdef CONFIG_HIGH_RES_TIMERS
-+	unsigned int			nr_events;
-+	unsigned short			nr_retries;
-+	unsigned short			nr_hangs;
-+	unsigned int			max_hang_time;
-+#endif
-+#ifdef CONFIG_PREEMPT_RT
-+	spinlock_t			softirq_expiry_lock;
-+	atomic_t			timer_waiters;
-+#endif
-+	ktime_t				expires_next;
-+	struct hrtimer			*next_timer;
-+	ktime_t				softirq_expires_next;
-+	struct hrtimer			*softirq_next_timer;
-+	struct hrtimer_clock_base	clock_base[HRTIMER_MAX_CLOCK_BASES];
-+} ____cacheline_aligned;
++&auxadc {
++	status = "okay";
++};
 +
++&eth {
++	phy-mode ="rgmii-id";
++	phy-handle = <&ethernet_phy0>;
++	snps,reset-gpio = <&pio 93 GPIO_ACTIVE_HIGH>;
++	snps,reset-delays-us = <0 10000 80000>;
++	pinctrl-names = "default", "sleep";
++	pinctrl-0 = <&eth_default_pins>;
++	pinctrl-1 = <&eth_sleep_pins>;
++	status = "okay";
 +
- #endif
++	mdio {
++		ethernet_phy0: ethernet-phy@1 {
++			reg = <0x1>;
++			interrupts-extended = <&pio 94 IRQ_TYPE_LEVEL_LOW>;
++		};
++	};
++};
++
++&gpu {
++	status = "okay";
++	mali-supply = <&mt6315_7_vbuck1>;
++};
++
++&i2c2 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&i2c2_pins>;
++	clock-frequency = <400000>;
++	status = "okay";
++};
++
++&i2c3 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&i2c3_pins>;
++	clock-frequency = <100000>;
++	status = "okay";
++};
++
++&i2c4 {
++	clock-frequency = <100000>;
++	pinctrl-0 = <&i2c4_pins>;
++	pinctrl-names = "default";
++	status = "okay";
++};
++
++&i2c6 {
++	clock-frequency = <400000>;
++	pinctrl-0 = <&i2c6_pins>;
++	pinctrl-names = "default";
++	status = "okay";
++
++	mt6360: pmic@34 {
++		compatible = "mediatek,mt6360";
++		reg = <0x34>;
++		interrupt-controller;
++		interrupts-extended = <&pio 101 IRQ_TYPE_EDGE_FALLING>;
++		interrupt-names = "IRQB";
++
++		charger {
++			compatible = "mediatek,mt6360-chg";
++			richtek,vinovp-microvolt = <14500000>;
++
++			otg_vbus_regulator: usb-otg-vbus-regulator {
++				regulator-compatible = "usb-otg-vbus";
++				regulator-name = "usb-otg-vbus";
++				regulator-min-microvolt = <4425000>;
++				regulator-max-microvolt = <5825000>;
++			};
++		};
++
++		regulator {
++			compatible = "mediatek,mt6360-regulator";
++			LDO_VIN3-supply = <&mt6360_buck2>;
++
++			mt6360_buck1: buck1 {
++				regulator-compatible = "BUCK1";
++				regulator-name = "mt6360,buck1";
++				regulator-min-microvolt = <300000>;
++				regulator-max-microvolt = <1300000>;
++				regulator-allowed-modes = <MT6360_OPMODE_NORMAL
++							   MT6360_OPMODE_LP
++							   MT6360_OPMODE_ULP>;
++				regulator-always-on;
++			};
++
++			mt6360_buck2: buck2 {
++				regulator-compatible = "BUCK2";
++				regulator-name = "mt6360,buck2";
++				regulator-min-microvolt = <300000>;
++				regulator-max-microvolt = <1300000>;
++				regulator-allowed-modes = <MT6360_OPMODE_NORMAL
++							   MT6360_OPMODE_LP
++							   MT6360_OPMODE_ULP>;
++				regulator-always-on;
++			};
++
++			mt6360_ldo1: ldo1 {
++				regulator-compatible = "LDO1";
++				regulator-name = "mt6360,ldo1";
++				regulator-min-microvolt = <1200000>;
++				regulator-max-microvolt = <3600000>;
++				regulator-allowed-modes = <MT6360_OPMODE_NORMAL
++							   MT6360_OPMODE_LP>;
++			};
++
++			mt6360_ldo2: ldo2 {
++				regulator-compatible = "LDO2";
++				regulator-name = "mt6360,ldo2";
++				regulator-min-microvolt = <1200000>;
++				regulator-max-microvolt = <3600000>;
++				regulator-allowed-modes = <MT6360_OPMODE_NORMAL
++							   MT6360_OPMODE_LP>;
++			};
++
++			mt6360_ldo3: ldo3 {
++				regulator-compatible = "LDO3";
++				regulator-name = "mt6360,ldo3";
++				regulator-min-microvolt = <1200000>;
++				regulator-max-microvolt = <3600000>;
++				regulator-allowed-modes = <MT6360_OPMODE_NORMAL
++							   MT6360_OPMODE_LP>;
++			};
++
++			mt6360_ldo5: ldo5 {
++				regulator-compatible = "LDO5";
++				regulator-name = "mt6360,ldo5";
++				regulator-min-microvolt = <2700000>;
++				regulator-max-microvolt = <3600000>;
++				regulator-allowed-modes = <MT6360_OPMODE_NORMAL
++							   MT6360_OPMODE_LP>;
++			};
++
++			mt6360_ldo6: ldo6 {
++				regulator-compatible = "LDO6";
++				regulator-name = "mt6360,ldo6";
++				regulator-min-microvolt = <500000>;
++				regulator-max-microvolt = <2100000>;
++				regulator-allowed-modes = <MT6360_OPMODE_NORMAL
++							   MT6360_OPMODE_LP>;
++			};
++
++			mt6360_ldo7: ldo7 {
++				regulator-compatible = "LDO7";
++				regulator-name = "mt6360,ldo7";
++				regulator-min-microvolt = <500000>;
++				regulator-max-microvolt = <2100000>;
++				regulator-allowed-modes = <MT6360_OPMODE_NORMAL
++							   MT6360_OPMODE_LP>;
++				regulator-always-on;
++			};
++		};
++	};
++};
++
++&mmc0 {
++	pinctrl-names = "default", "state_uhs";
++	pinctrl-0 = <&mmc0_default_pins>;
++	pinctrl-1 = <&mmc0_uhs_pins>;
++	bus-width = <8>;
++	max-frequency = <200000000>;
++	cap-mmc-highspeed;
++	mmc-hs200-1_8v;
++	mmc-hs400-1_8v;
++	cap-mmc-hw-reset;
++	no-sdio;
++	no-sd;
++	hs400-ds-delay = <0x14c11>;
++	vmmc-supply = <&mt6359_vemc_1_ldo_reg>;
++	vqmmc-supply = <&mt6359_vufs_ldo_reg>;
++	non-removable;
++	status = "okay";
++};
++
++&mmc1 {
++	pinctrl-names = "default", "state_uhs";
++	pinctrl-0 = <&mmc1_default_pins>;
++	pinctrl-1 = <&mmc1_uhs_pins>;
++	cd-gpios = <&pio 129 GPIO_ACTIVE_LOW>;
++	bus-width = <4>;
++	max-frequency = <200000000>;
++	cap-sd-highspeed;
++	sd-uhs-sdr50;
++	sd-uhs-sdr104;
++	vmmc-supply = <&mt6360_ldo5>;
++	vqmmc-supply = <&mt6360_ldo3>;
++	status = "okay";
++};
++
++&mt6359_vbbck_ldo_reg {
++	regulator-always-on;
++};
++
++&mt6359_vcore_buck_reg {
++	regulator-always-on;
++};
++
++&mt6359_vgpu11_buck_reg {
++	regulator-always-on;
++};
++
++&mt6359_vproc1_buck_reg {
++	regulator-always-on;
++};
++
++&mt6359_vproc2_buck_reg {
++	regulator-always-on;
++};
++
++&mt6359_vpu_buck_reg {
++	regulator-always-on;
++};
++
++&mt6359_vrf12_ldo_reg {
++	regulator-always-on;
++};
++
++&mt6359_vsram_md_ldo_reg {
++	regulator-always-on;
++};
++
++&mt6359_vsram_others_ldo_reg {
++	regulator-always-on;
++};
++
++&nor_flash {
++	pinctrl-names = "default";
++	pinctrl-0 = <&nor_pins_default>;
++	status = "okay";
++
++	flash@0 {
++		compatible = "jedec,spi-nor";
++		reg = <0>;
++		spi-max-frequency = <52000000>;
++		spi-rx-bus-width = <2>;
++		spi-tx-bus-width = <2>;
++	};
++};
++
++&pcie0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pcie0_pins_default>;
++	status = "okay";
++};
++
++&pcie1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pcie1_pins_default>;
++	status = "okay";
++};
++
++&pciephy {
++	status = "okay";
++};
++
++&pio {
++	eth_default_pins: eth-default-pins {
++		pins-txd {
++			pinmux = <PINMUX_GPIO77__FUNC_GBE_TXD3>,
++				 <PINMUX_GPIO78__FUNC_GBE_TXD2>,
++				 <PINMUX_GPIO79__FUNC_GBE_TXD1>,
++				 <PINMUX_GPIO80__FUNC_GBE_TXD0>;
++			drive-strength = <MTK_DRIVE_8mA>;
++		};
++
++		pins-rxd {
++			pinmux = <PINMUX_GPIO81__FUNC_GBE_RXD3>,
++				 <PINMUX_GPIO82__FUNC_GBE_RXD2>,
++				 <PINMUX_GPIO83__FUNC_GBE_RXD1>,
++				 <PINMUX_GPIO84__FUNC_GBE_RXD0>;
++		};
++
++		pins-cc {
++			pinmux = <PINMUX_GPIO85__FUNC_GBE_TXC>,
++				 <PINMUX_GPIO86__FUNC_GBE_RXC>,
++				 <PINMUX_GPIO87__FUNC_GBE_RXDV>,
++				 <PINMUX_GPIO88__FUNC_GBE_TXEN>;
++			drive-strength = <MTK_DRIVE_8mA>;
++		};
++
++		pins-mdio {
++			pinmux = <PINMUX_GPIO89__FUNC_GBE_MDC>,
++				 <PINMUX_GPIO90__FUNC_GBE_MDIO>;
++			input-enable;
++		};
++
++		pins-power {
++			pinmux = <PINMUX_GPIO91__FUNC_GPIO91>,
++				 <PINMUX_GPIO92__FUNC_GPIO92>;
++			output-high;
++		};
++
++		pins-reset {
++			pinmux = <PINMUX_GPIO93__FUNC_GPIO93>;
++			output-high;
++		};
++
++		pins-interrupt {
++			pinmux = <PINMUX_GPIO94__FUNC_GPIO94>;
++			input-enable;
++		};
++	};
++
++	eth_sleep_pins: eth-sleep-pins {
++		pins-txd {
++			pinmux = <PINMUX_GPIO77__FUNC_GPIO77>,
++				 <PINMUX_GPIO78__FUNC_GPIO78>,
++				 <PINMUX_GPIO79__FUNC_GPIO79>,
++				 <PINMUX_GPIO80__FUNC_GPIO80>;
++		};
++		pins-cc {
++			pinmux = <PINMUX_GPIO85__FUNC_GPIO85>,
++				 <PINMUX_GPIO88__FUNC_GPIO88>,
++				 <PINMUX_GPIO87__FUNC_GPIO87>,
++				 <PINMUX_GPIO86__FUNC_GPIO86>;
++		};
++		pins-rxd {
++			pinmux = <PINMUX_GPIO81__FUNC_GPIO81>,
++				 <PINMUX_GPIO82__FUNC_GPIO82>,
++				 <PINMUX_GPIO83__FUNC_GPIO83>,
++				 <PINMUX_GPIO84__FUNC_GPIO84>;
++		};
++		pins-mdio {
++			pinmux = <PINMUX_GPIO89__FUNC_GPIO89>,
++				 <PINMUX_GPIO90__FUNC_GPIO90>;
++			input-disable;
++			bias-disable;
++		};
++	};
++
++	gpio_keys_pins: gpio-keys-pins {
++		pins {
++			pinmux = <PINMUX_GPIO106__FUNC_GPIO106>;
++			input-enable;
++		};
++	};
++
++	i2c2_pins: i2c2-default-pins {
++		pins-bus {
++			pinmux = <PINMUX_GPIO12__FUNC_SDA2>,
++				 <PINMUX_GPIO13__FUNC_SCL2>;
++			bias-pull-up;
++		};
++	};
++
++	i2c3_pins: i2c3-pins {
++		pins {
++			pinmux = <PINMUX_GPIO14__FUNC_SDA3>,
++				 <PINMUX_GPIO15__FUNC_SCL3>;
++			bias-pull-up;
++		};
++	};
++
++	i2c4_pins: i2c4-pins {
++		pins {
++			pinmux = <PINMUX_GPIO16__FUNC_SDA4>,
++				 <PINMUX_GPIO17__FUNC_SCL4>;
++			bias-pull-up;
++		};
++	};
++
++	i2c6_pins: i2c6-pins {
++		pins {
++			pinmux = <PINMUX_GPIO25__FUNC_SDA6>,
++				 <PINMUX_GPIO26__FUNC_SCL6>;
++			bias-pull-up;
++		};
++	};
++
++	mmc0_default_pins: mmc0-default-pins {
++		pins-clk {
++			pinmux = <PINMUX_GPIO122__FUNC_MSDC0_CLK>;
++			drive-strength = <MTK_DRIVE_6mA>;
++			bias-pull-down = <MTK_PUPD_SET_R1R0_10>;
++		};
++
++		pins-cmd-dat {
++			pinmux = <PINMUX_GPIO126__FUNC_MSDC0_DAT0>,
++				 <PINMUX_GPIO125__FUNC_MSDC0_DAT1>,
++				 <PINMUX_GPIO124__FUNC_MSDC0_DAT2>,
++				 <PINMUX_GPIO123__FUNC_MSDC0_DAT3>,
++				 <PINMUX_GPIO119__FUNC_MSDC0_DAT4>,
++				 <PINMUX_GPIO118__FUNC_MSDC0_DAT5>,
++				 <PINMUX_GPIO117__FUNC_MSDC0_DAT6>,
++				 <PINMUX_GPIO116__FUNC_MSDC0_DAT7>,
++				 <PINMUX_GPIO121__FUNC_MSDC0_CMD>;
++			input-enable;
++			drive-strength = <MTK_DRIVE_6mA>;
++			bias-pull-up = <MTK_PUPD_SET_R1R0_01>;
++		};
++
++		pins-rst {
++			pinmux = <PINMUX_GPIO120__FUNC_MSDC0_RSTB>;
++			drive-strength = <MTK_DRIVE_6mA>;
++			bias-pull-up = <MTK_PUPD_SET_R1R0_01>;
++		};
++	};
++
++	mmc0_uhs_pins: mmc0-uhs-pins {
++		pins-clk {
++			pinmux = <PINMUX_GPIO122__FUNC_MSDC0_CLK>;
++			drive-strength = <MTK_DRIVE_8mA>;
++			bias-pull-down = <MTK_PUPD_SET_R1R0_10>;
++		};
++
++		pins-cmd-dat {
++			pinmux = <PINMUX_GPIO126__FUNC_MSDC0_DAT0>,
++				 <PINMUX_GPIO125__FUNC_MSDC0_DAT1>,
++				 <PINMUX_GPIO124__FUNC_MSDC0_DAT2>,
++				 <PINMUX_GPIO123__FUNC_MSDC0_DAT3>,
++				 <PINMUX_GPIO119__FUNC_MSDC0_DAT4>,
++				 <PINMUX_GPIO118__FUNC_MSDC0_DAT5>,
++				 <PINMUX_GPIO117__FUNC_MSDC0_DAT6>,
++				 <PINMUX_GPIO116__FUNC_MSDC0_DAT7>,
++				 <PINMUX_GPIO121__FUNC_MSDC0_CMD>;
++			input-enable;
++			drive-strength = <MTK_DRIVE_8mA>;
++			bias-pull-up = <MTK_PUPD_SET_R1R0_01>;
++		};
++
++		pins-ds {
++			pinmux = <PINMUX_GPIO127__FUNC_MSDC0_DSL>;
++			drive-strength = <MTK_DRIVE_8mA>;
++			bias-pull-down = <MTK_PUPD_SET_R1R0_10>;
++		};
++
++		pins-rst {
++			pinmux = <PINMUX_GPIO120__FUNC_MSDC0_RSTB>;
++			drive-strength = <MTK_DRIVE_8mA>;
++			bias-pull-up = <MTK_PUPD_SET_R1R0_01>;
++		};
++	};
++
++	mmc1_default_pins: mmc1-default-pins {
++		pins-clk {
++			pinmux = <PINMUX_GPIO111__FUNC_MSDC1_CLK>;
++			drive-strength = <MTK_DRIVE_8mA>;
++			bias-pull-down = <MTK_PUPD_SET_R1R0_10>;
++		};
++
++		pins-cmd-dat {
++			pinmux = <PINMUX_GPIO110__FUNC_MSDC1_CMD>,
++				 <PINMUX_GPIO112__FUNC_MSDC1_DAT0>,
++				 <PINMUX_GPIO113__FUNC_MSDC1_DAT1>,
++				 <PINMUX_GPIO114__FUNC_MSDC1_DAT2>,
++				 <PINMUX_GPIO115__FUNC_MSDC1_DAT3>;
++			input-enable;
++			drive-strength = <MTK_DRIVE_8mA>;
++			bias-pull-up = <MTK_PUPD_SET_R1R0_01>;
++		};
++
++		pins-insert {
++			pinmux = <PINMUX_GPIO129__FUNC_GPIO129>;
++			bias-pull-up;
++		};
++	};
++
++	mmc1_uhs_pins: mmc1-uhs-pins {
++		pins-clk {
++			pinmux = <PINMUX_GPIO111__FUNC_MSDC1_CLK>;
++			drive-strength = <MTK_DRIVE_8mA>;
++			bias-pull-down = <MTK_PUPD_SET_R1R0_10>;
++		};
++
++		pins-cmd-dat {
++			pinmux = <PINMUX_GPIO110__FUNC_MSDC1_CMD>,
++				 <PINMUX_GPIO112__FUNC_MSDC1_DAT0>,
++				 <PINMUX_GPIO113__FUNC_MSDC1_DAT1>,
++				 <PINMUX_GPIO114__FUNC_MSDC1_DAT2>,
++				 <PINMUX_GPIO115__FUNC_MSDC1_DAT3>;
++			input-enable;
++			drive-strength = <MTK_DRIVE_8mA>;
++			bias-pull-up = <MTK_PUPD_SET_R1R0_01>;
++		};
++	};
++
++	nor_pins_default: nor-default-pins {
++		pins-ck-io {
++			pinmux = <PINMUX_GPIO142__FUNC_SPINOR_IO0>,
++				 <PINMUX_GPIO141__FUNC_SPINOR_CK>,
++				 <PINMUX_GPIO143__FUNC_SPINOR_IO1>;
++			drive-strength = <6>;
++			bias-pull-down;
++		};
++
++		pins-cs {
++			pinmux = <PINMUX_GPIO140__FUNC_SPINOR_CS>;
++			drive-strength = <6>;
++			bias-pull-up;
++		};
++	};
++
++	pcie0_pins_default: pcie0-default-pins {
++		pins-bus {
++			pinmux = <PINMUX_GPIO19__FUNC_WAKEN>,
++				 <PINMUX_GPIO20__FUNC_PERSTN>,
++				 <PINMUX_GPIO21__FUNC_CLKREQN>;
++			bias-pull-up;
++		};
++	};
++
++	pcie1_pins_default: pcie1-default-pins {
++		pins-bus {
++			pinmux = <PINMUX_GPIO0__FUNC_PERSTN_1>,
++				 <PINMUX_GPIO1__FUNC_CLKREQN_1>,
++				 <PINMUX_GPIO2__FUNC_WAKEN_1>;
++			bias-pull-up = <MTK_PUPD_SET_R1R0_01>;
++		};
++	};
++
++	led_pins: led-pins {
++		pins-power-en {
++			pinmux = <PINMUX_GPIO107__FUNC_GPIO107>;
++			output-high;
++		};
++	};
++
++	spi0_pins: spi0-default-pins {
++		pins-cs-mosi-clk {
++			pinmux = <PINMUX_GPIO132__FUNC_SPIM0_CSB>,
++				 <PINMUX_GPIO134__FUNC_SPIM0_MO>,
++				 <PINMUX_GPIO133__FUNC_SPIM0_CLK>;
++			bias-disable;
++		};
++
++		pins-miso {
++			pinmux = <PINMUX_GPIO135__FUNC_SPIM0_MI>;
++			bias-pull-down;
++		};
++	};
++
++	spi1_pins: spi1-default-pins {
++		pins-cs-mosi-clk {
++			pinmux = <PINMUX_GPIO136__FUNC_SPIM1_CSB>,
++				 <PINMUX_GPIO138__FUNC_SPIM1_MO>,
++				 <PINMUX_GPIO137__FUNC_SPIM1_CLK>;
++			bias-disable;
++		};
++
++		pins-miso {
++			pinmux = <PINMUX_GPIO139__FUNC_SPIM1_MI>;
++			bias-pull-down;
++		};
++	};
++
++	uart0_pins: uart0-pins {
++		pins_rx {
++			pinmux = <PINMUX_GPIO99__FUNC_URXD0>;
++			input-enable;
++			bias-pull-up;
++		};
++
++		pins_tx {
++			pinmux = <PINMUX_GPIO98__FUNC_UTXD0>;
++		};
++	};
++
++	uart1_pins: uart1-pins {
++		pins_rx {
++			pinmux = <PINMUX_GPIO103__FUNC_URXD1>;
++			input-enable;
++			bias-pull-up;
++		};
++
++		pins_tx {
++			pinmux = <PINMUX_GPIO102__FUNC_UTXD1>;
++		};
++
++		pins_rts {
++			pinmux = <PINMUX_GPIO100__FUNC_URTS1>;
++			output-enable;
++		};
++
++		pins_cts {
++			pinmux = <PINMUX_GPIO101__FUNC_UCTS1>;
++			input-enable;
++		};
++	};
++
++	uart2_pins: uart2-pins {
++		pins_rx {
++			pinmux = <PINMUX_GPIO68__FUNC_URXD2>;
++			input-enable;
++			bias-pull-up;
++		};
++
++		pins_tx {
++			pinmux = <PINMUX_GPIO67__FUNC_UTXD2>;
++		};
++
++		pins_rts {
++			pinmux = <PINMUX_GPIO66__FUNC_URTS2>;
++			output-enable;
++		};
++
++		pins_cts {
++			pinmux = <PINMUX_GPIO65__FUNC_UCTS2>;
++			input-enable;
++		};
++	};
++
++	uart3_pins: uart3-pins {
++		pins_rx {
++			pinmux = <PINMUX_GPIO5__FUNC_URXD3>;
++			input-enable;
++			bias-pull-up = <MTK_PUPD_SET_R1R0_01>;
++		};
++
++		pins_tx {
++			pinmux = <PINMUX_GPIO4__FUNC_UTXD3>;
++		};
++	};
++
++	uart4_pins: uart4-pins {
++		pins_rx {
++			pinmux = <PINMUX_GPIO7__FUNC_URXD4>;
++			input-enable;
++			bias-pull-up;
++		};
++
++		pins_tx {
++			pinmux = <PINMUX_GPIO6__FUNC_UTXD4>;
++		};
++	};
++};
++
++&pmic {
++	interrupts-extended = <&pio 222 IRQ_TYPE_LEVEL_HIGH>;
++};
++
++&scp {
++	memory-region = <&scp_mem>;
++	status = "okay";
++};
++
++&spmi {
++	#address-cells = <2>;
++	#size-cells = <0>;
++
++	mt6315@6 {
++		compatible = "mediatek,mt6315-regulator";
++		reg = <0x6 SPMI_USID>;
++
++		regulators {
++			mt6315_6_vbuck1: vbuck1 {
++				regulator-compatible = "vbuck1";
++				regulator-name = "Vbcpu";
++				regulator-min-microvolt = <300000>;
++				regulator-max-microvolt = <1193750>;
++				regulator-enable-ramp-delay = <256>;
++				regulator-ramp-delay = <6250>;
++				regulator-allowed-modes = <0 1 2>;
++				regulator-always-on;
++			};
++		};
++	};
++
++	mt6315@7 {
++		compatible = "mediatek,mt6315-regulator";
++		reg = <0x7 SPMI_USID>;
++
++		regulators {
++			mt6315_7_vbuck1: vbuck1 {
++				regulator-compatible = "vbuck1";
++				regulator-name = "Vgpu";
++				regulator-min-microvolt = <625000>;
++				regulator-max-microvolt = <1193750>;
++				regulator-enable-ramp-delay = <256>;
++				regulator-ramp-delay = <6250>;
++				regulator-allowed-modes = <0 1 2>;
++				regulator-always-on;
++			};
++		};
++	};
++};
++
++&spi0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&spi0_pins>;
++	mediatek,pad-select = <0>;
++	status = "okay";
++
++	tpm: tpm@0 {
++		compatible = "infineon,slb9670";
++		reg = <0>;
++		spi-max-frequency = <18500000>;
++	};
++};
++
++&spi1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&spi1_pins>;
++	mediatek,pad-select = <0>;
++	status = "okay";
++};
++
++&thermal_zones {
++	board0-thermal {
++		polling-delay = <1000>; /* milliseconds */
++		polling-delay-passive = <0>; /* milliseconds */
++		thermal-sensors = <&thermal_sensor0>;
++
++		trips {
++			trip-alert {
++				temperature = <85000>;
++				hysteresis = <2000>;
++				type = "passive";
++			};
++
++			trip-crit {
++				temperature = <95000>;
++				hysteresis = <2000>;
++				type = "critical";
++			};
++		};
++	};
++
++	board1-thermal {
++		polling-delay = <1000>; /* milliseconds */
++		polling-delay-passive = <0>; /* milliseconds */
++		thermal-sensors = <&thermal_sensor1>;
++
++		trips {
++			trip-alert {
++				temperature = <75000>;
++				hysteresis = <2000>;
++				type = "passive";
++			};
++
++			trip-crit {
++				temperature = <85000>;
++				hysteresis = <2000>;
++				type = "critical";
++			};
++		};
++	};
++
++	board2-thermal {
++		polling-delay = <1000>; /* milliseconds */
++		polling-delay-passive = <0>; /* milliseconds */
++		thermal-sensors = <&thermal_sensor2>;
++
++		trips {
++			trip-alert {
++				temperature = <75000>;
++				hysteresis = <2000>;
++				type = "passive";
++			};
++
++			trip-crit {
++				temperature = <85000>;
++				hysteresis = <2000>;
++				type = "critical";
++			};
++		};
++	};
++};
++
++&uart0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&uart0_pins>;
++	status = "okay";
++};
++
++&uart1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&uart1_pins>;
++	uart-has-rtscts;
++	status = "okay";
++};
++
++&uart2 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&uart2_pins>;
++	uart-has-rtscts;
++	status = "okay";
++};
++
++&uart3 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&uart3_pins>;
++	status = "okay";
++};
++
++&uart4 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&uart4_pins>;
++	status = "okay";
++};
++
++/* USB3 */
++&u3phy0 {
++	status = "okay";
++};
++
++/* PCIe1/USB2 */
++&u3phy1 {
++	status = "okay";
++};
++
++/* USB2 */
++&u3phy2 {
++	status = "okay";
++};
++
++/* USB2 */
++&u3phy3 {
++	status = "okay";
++};
++
++/* USB3 front port */
++&xhci0 {
++	vusb33-supply = <&mt6359_vusb_ldo_reg>;
++	vbus-supply = <&otg_vbus_regulator>;
++	status = "okay";
++};
++
++/* USB2 M.2 Key-B */
++&xhci1 {
++	vusb33-supply = <&mt6359_vusb_ldo_reg>;
++	mediatek,u3p-dis-msk = <0x01>;
++	status = "okay";
++};
++
++/* USB2 M.2 Key-E */
++&xhci2 {
++	vusb33-supply = <&mt6359_vusb_ldo_reg>;
++	status = "okay";
++};
++
++/* USB2 to on-board usb hub */
++&xhci3 {
++	vusb33-supply = <&mt6359_vusb_ldo_reg>;
++	status = "okay";
++};
+-- 
+2.39.2
+
