@@ -1,119 +1,112 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from smtp-190a.mail.infomaniak.ch (smtp-190a.mail.infomaniak.ch [185.125.25.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87DCC1BF3D;
-	Mon, 19 Feb 2024 19:21:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F17944C86
+	for <linux-kernel@vger.kernel.org>; Mon, 19 Feb 2024 19:22:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.25.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708370478; cv=none; b=SBF0I3XXx/ucgvyIoBHQXPkIz+aL/h2rpfRYye/znGquht+KP7tOJP+n9sIfIZdCv5ge82naMRc8nK4O4SHoLQUfkYkP2axvbzGG08tBZ9QyLNbtRYK3GHdRzCDsljVKU3BaY3KpOOHWIl/Zek084+fXTmmOw3m/xPyyQBMY5tw=
+	t=1708370532; cv=none; b=GjigZix2Jl3kFEkF3onLDbC5DsOgh0PSeR/D1sWciGsMQE4siR6qdJXIqbB00tJ0gxOYZkTWNSrklXA2ALgSGXiE0Qr445D6cSlLWSsAQTnPShjrjUEfHiixfg2WNSc8/fTZsdy6zv7IChNc6hPegzEcTc58zy962MtvzQGbTgA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708370478; c=relaxed/simple;
-	bh=BU7vmtS91LW14umqdRks1US1wmoCN7BfyNRskJ+lpzg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mc6sb+9HBgxmwuyl+D3F8kK0kW7JHCuVYq9kP6piFBor4padm1iphrSgCmg9epJn39UJRg4riEp68mo56byjdRtjz7C43fUxZoRFP9r7I/dME9A3YrQ6vlIiNLaXZTf/joYaCOhu6V7XTg7fqkX+b912k9VEK11b86JJOPXxmYE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rDI2Tw7l; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1708370532; c=relaxed/simple;
+	bh=2Hj9UWhrDgzjOkOL5rsGTh1N6ZOemj+WfIpokHEQmEQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=jSjpXxn65YcPbjjU0q81G88ZY02mVxftFXMWNADPgzxT8ZFkoDAwYPnZI2GU1GV++9B+nsd74LeKTKMYBxVQIvhbjRpRfb1evSxUq5MXz2qLDyoDtBzTJDgT1BoNOZAnfzbt6WRZsvinJxPT3dLtp5cnfBeQS+WnFWTs9j1qm4E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=oYEBpSyH; arc=none smtp.client-ip=185.125.25.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=digikod.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rDI2Tw7l"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C5BB4C433F1;
-	Mon, 19 Feb 2024 19:21:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708370478;
-	bh=BU7vmtS91LW14umqdRks1US1wmoCN7BfyNRskJ+lpzg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=rDI2Tw7lYr17vYfRVT31/CFWOTvQvw8vu8Kd10WZDkZAfAUrzH8Df4KP6kxyUwmrK
-	 rGFpMcWC60IsJ/xONKcoIBQHrAldlZdG91Eo5stQQ7g0kxVAFfd9FHlI499h6X/V9X
-	 uV3aNuG/f+xnORzGFBi12Jq9+lalxrUM0mCfg2eSqcmNxdvWWWj0HLY4KndwAixZ5R
-	 QrIt0Synm8G4YerLcrr4Ta1M2jUeYFvwJyqYGsqzjANrsTGlgG6z54InG3nSN7NzBy
-	 lWYK1LwZxKgM45/cm2HfebVej40pz17i5AFt4n/v5CPx9+emInzhElr3yhPEDIr6p7
-	 ynArQJ8jnkTMw==
-Date: Mon, 19 Feb 2024 12:21:14 -0700
-From: Keith Busch <kbusch@kernel.org>
-To: John Garry <john.g.garry@oracle.com>
-Cc: axboe@kernel.dk, hch@lst.de, sagi@grimberg.me, jejb@linux.ibm.com,
-	martin.petersen@oracle.com, djwong@kernel.org,
-	viro@zeniv.linux.org.uk, brauner@kernel.org, dchinner@redhat.com,
-	jack@suse.cz, linux-block@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
-	linux-fsdevel@vger.kernel.org, tytso@mit.edu, jbongio@google.com,
-	linux-scsi@vger.kernel.org, ojaswin@linux.ibm.com,
-	linux-aio@kvack.org, linux-btrfs@vger.kernel.org,
-	io-uring@vger.kernel.org, nilay@linux.ibm.com,
-	ritesh.list@gmail.com, Alan Adamson <alan.adamson@oracle.com>
-Subject: Re: [PATCH v4 10/11] nvme: Atomic write support
-Message-ID: <ZdOqKr6Js_nlobh5@kbusch-mbp>
-References: <20240219130109.341523-1-john.g.garry@oracle.com>
- <20240219130109.341523-11-john.g.garry@oracle.com>
+	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="oYEBpSyH"
+Received: from smtp-4-0001.mail.infomaniak.ch (unknown [10.7.10.108])
+	by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4TdsQN4czSzMq2jt;
+	Mon, 19 Feb 2024 20:03:56 +0100 (CET)
+Received: from unknown by smtp-4-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4TdsQM6BKYzHc4;
+	Mon, 19 Feb 2024 20:03:55 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=digikod.net;
+	s=20191114; t=1708369436;
+	bh=2Hj9UWhrDgzjOkOL5rsGTh1N6ZOemj+WfIpokHEQmEQ=;
+	h=From:To:Cc:Subject:Date:From;
+	b=oYEBpSyHPf3yCOV1oKVMu8oMFvPoQCSBIkNLD+IxvPoRrocGTlH6/8tVFY6grA/4c
+	 HrGPkpJHLNPY4iMEKl0tx04ZbxKvFox0qZDC43+cqxrcm7kdx5k9AWmXmBj0QePO/+
+	 gDw7Cba472cs3BaH1+HVVVML+M4YsWMtlhVpbagM=
+From: =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>
+To: Arnd Bergmann <arnd@arndb.de>,
+	Christian Brauner <brauner@kernel.org>,
+	=?UTF-8?q?G=C3=BCnther=20Noack?= <gnoack@google.com>,
+	Jann Horn <jannh@google.com>
+Cc: =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>,
+	Kees Cook <keescook@chromium.org>,
+	Konstantin Meskhidze <konstantin.meskhidze@huawei.com>,
+	Paul Moore <paul@paul-moore.com>,
+	"Serge E . Hallyn" <serge@hallyn.com>,
+	Shervin Oloumi <enlightened@chromium.org>,
+	linux-fsdevel@vger.kernel.org,
+	linux-hardening@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-security-module@vger.kernel.org,
+	stable@vger.kernel.org
+Subject: [PATCH] landlock: Fix asymmetric private inodes referring
+Date: Mon, 19 Feb 2024 20:03:45 +0100
+Message-ID: <20240219190345.2928627-1-mic@digikod.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-In-Reply-To: <20240219130109.341523-11-john.g.garry@oracle.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Infomaniak-Routing: alpha
 
-On Mon, Feb 19, 2024 at 01:01:08PM +0000, John Garry wrote:
-> From: Alan Adamson <alan.adamson@oracle.com>
-> 
-> Add support to set block layer request_queue atomic write limits. The
-> limits will be derived from either the namespace or controller atomic
-> parameters.
-> 
-> NVMe atomic-related parameters are grouped into "normal" and "power-fail"
-> (or PF) class of parameter. For atomic write support, only PF parameters
-> are of interest. The "normal" parameters are concerned with racing reads
-> and writes (which also applies to PF). See NVM Command Set Specification
-> Revision 1.0d section 2.1.4 for reference.
-> 
-> Whether to use per namespace or controller atomic parameters is decided by
-> NSFEAT bit 1 - see Figure 97: Identify - Identify Namespace Data Structure,
-> #NVM Command Set.
-> 
-> NVMe namespaces may define an atomic boundary, whereby no atomic guarantees
-> are provided for a write which straddles this per-lba space boundary. The
-> block layer merging policy is such that no merges may occur in which the
-> resultant request would straddle such a boundary.
-> 
-> Unlike SCSI, NVMe specifies no granularity or alignment rules. In addition,
-> again unlike SCSI, there is no dedicated atomic write command - a write
-> which adheres to the atomic size limit and boundary is implicitly atomic.
-> 
-> If NSFEAT bit 1 is set, the following parameters are of interest:
-> - NAWUPF (Namespace Atomic Write Unit Power Fail)
-> - NABSPF (Namespace Atomic Boundary Size Power Fail)
-> - NABO (Namespace Atomic Boundary Offset)
-> 
-> and we set request_queue limits as follows:
-> - atomic_write_unit_max = rounddown_pow_of_two(NAWUPF)
-> - atomic_write_max_bytes = NAWUPF
-> - atomic_write_boundary = NABSPF
-> 
-> If in the unlikely scenario that NABO is non-zero, then atomic writes will
-> not be supported at all as dealing with this adds extra complexity. This
-> policy may change in future.
-> 
-> In all cases, atomic_write_unit_min is set to the logical block size.
-> 
-> If NSFEAT bit 1 is unset, the following parameter is of interest:
-> - AWUPF (Atomic Write Unit Power Fail)
-> 
-> and we set request_queue limits as follows:
-> - atomic_write_unit_max = rounddown_pow_of_two(AWUPF)
-> - atomic_write_max_bytes = AWUPF
-> - atomic_write_boundary = 0
-> 
-> The block layer requires that the atomic_write_boundary value is a
-> power-of-2. However, it is really only required that atomic_write_boundary
-> be a multiple of atomic_write_unit_max. As such, if NABSPF were not a
-> power-of-2, atomic_write_unit_max could be reduced such that it was
-> divisible into NABSPF. However, this complexity will not be yet supported.
-> 
-> A helper function, nvme_valid_atomic_write(), is also added for the
-> submission path to verify that a request has been submitted to the driver
-> will actually be executed atomically.
+When linking or renaming a file, if only one of the source or
+destination directory is backed by an S_PRIVATE inode, then the related
+set of layer masks would be used as uninitialized by
+is_access_to_paths_allowed().  This would result to indeterministic
+access for one side instead of always being allowed.
 
-Maybe patch 11 should be folded into this one. No bigged, the series as
-a whole looks good.
+This bug could only be triggered with a mounted filesystem containing
+both S_PRIVATE and !S_PRIVATE inodes, which doesn't seem possible.
 
-Reviewed-by: Keith Busch <kbusch@kernel.org>
+The collect_domain_accesses() calls return early if
+is_nouser_or_private() returns false, which means that the directory's
+superblock has SB_NOUSER or its inode has S_PRIVATE.  Because rename or
+link actions are only allowed on the same mounted filesystem, the
+superblock is always the same for both source and destination
+directories.  However, it might be possible in theory to have an
+S_PRIVATE parent source inode with an !S_PRIVATE parent destination
+inode, or vice versa.
+
+To make sure this case is not an issue, explicitly initialized both set
+of layer masks to 0, which means to allow all actions on the related
+side.  If at least on side has !S_PRIVATE, then
+collect_domain_accesses() and is_access_to_paths_allowed() check for the
+required access rights.
+
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Christian Brauner <brauner@kernel.org>
+Cc: Günther Noack <gnoack@google.com>
+Cc: Jann Horn <jannh@google.com>
+Cc: Shervin Oloumi <enlightened@chromium.org>
+Cc: stable@vger.kernel.org
+Fixes: b91c3e4ea756 ("landlock: Add support for file reparenting with LANDLOCK_ACCESS_FS_REFER")
+Signed-off-by: Mickaël Salaün <mic@digikod.net>
+---
+ security/landlock/fs.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/security/landlock/fs.c b/security/landlock/fs.c
+index 90f7f6db1e87..f243c6a392ee 100644
+--- a/security/landlock/fs.c
++++ b/security/landlock/fs.c
+@@ -1093,8 +1093,8 @@ static int current_check_refer_path(struct dentry *const old_dentry,
+ 	bool allow_parent1, allow_parent2;
+ 	access_mask_t access_request_parent1, access_request_parent2;
+ 	struct path mnt_dir;
+-	layer_mask_t layer_masks_parent1[LANDLOCK_NUM_ACCESS_FS],
+-		layer_masks_parent2[LANDLOCK_NUM_ACCESS_FS];
++	layer_mask_t layer_masks_parent1[LANDLOCK_NUM_ACCESS_FS] = {},
++		     layer_masks_parent2[LANDLOCK_NUM_ACCESS_FS] = {};
+ 
+ 	if (!dom)
+ 		return 0;
+-- 
+2.43.0
+
