@@ -1,210 +1,347 @@
-Received: from egress-ip43b.ess.de.barracuda.com (egress-ip43b.ess.de.barracuda.com [18.185.115.247])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DCC224A0A
-	for <linux-kernel@vger.kernel.org>; Mon, 19 Feb 2024 09:49:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=18.185.115.247
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5DBC824B2C;
+	Mon, 19 Feb 2024 09:50:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708336148; cv=none; b=IncPd1iKZ3fDnparUyuXWzOXVGC7qpx7DQchS3kdDkG9KzrnOMhEUkxi+BIbTtD44kt/f4jE8uRoaAFC5lg72tQ7bqCMtWL9MUEPTZdvFVu6H5Sna5ThCnqhGber6le/O72Ldy9alDF3m8hJkgM1EGGeSAYZd1zIcH91yVjmmrk=
+	t=1708336204; cv=none; b=ANDHuHhksgXfqaoISdPNq2sODiTSh875INpyc0e+YPcNFNgije1vpRedM4CDkkNf0rGX3IOXuM4VEWgjIh+ynUxAsUQv9iAh7KqGThPWipsHq3NjTKCbCQhgl8EDPLLRH1ctJvezsyBZPstt48EGmdBEv4OuKK0BhRnT2OtYPG4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708336148; c=relaxed/simple;
-	bh=FqVikFmzluRuWznuQC1YJtnaJWBrWCiiS+vEsKl0JGs=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=HAZVxsGRz29vsA+8M5JCY+u1Wkrn5jZJBvSc8z3iZGTdw5vvAH5up/zrUEmUh57LYwfp/NgkUb+NHVZkI9BXSj3aStrSLhB6vpoUjD89J54p0co+V8Qo6ISDOQ4IkuufJFyS7GxMRKpl0SyW2xGwoOL4xZEoIw257Y8K2rAA+sA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mistralsolutions.com; spf=pass smtp.mailfrom=mistralsolutions.com; dkim=pass (1024-bit key) header.d=mistralsolutions.com header.i=@mistralsolutions.com header.b=fvYDvvWY; arc=none smtp.client-ip=18.185.115.247
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mistralsolutions.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mistralsolutions.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mistralsolutions.com header.i=@mistralsolutions.com header.b="fvYDvvWY"
-Received: from mail-pl1-f198.google.com (mail-pl1-f198.google.com [209.85.214.198]) by mx-outbound47-141.eu-central-1c.ess.aws.cudaops.com (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO); Mon, 19 Feb 2024 09:49:02 +0000
-Received: by mail-pl1-f198.google.com with SMTP id d9443c01a7336-1d9df9a3ef3so44539975ad.0
-        for <linux-kernel@vger.kernel.org>; Mon, 19 Feb 2024 01:49:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=mistralsolutions.com; s=google; t=1708336141; x=1708940941; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=miyKJdiB2gWRsatSJx8FIbILVUc1DBSiCVFq0Gs7BZA=;
-        b=fvYDvvWY7CbZFSSQRCbdnVK45qlvDogy4vvSZGcRG3iN1rFwm+jNKa021+8M8onsik
-         l3BOGPKtmMBtlzKG7/66DE1PFzeUisUHwklr/3XLCPGHQcg9mPUOB1CdtbWf7f381Fy5
-         Yk8o0K+/IIH/4fYnmOTx4dw1KFp0zH98Y9Vbo=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708336141; x=1708940941;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=miyKJdiB2gWRsatSJx8FIbILVUc1DBSiCVFq0Gs7BZA=;
-        b=QVIM4yEtGUrOPS0tP8ugNFqOYR7B5nh1w8OQoULNKdNENNd15iX6c3DWBRFta+WwD7
-         NiWrbRXAiXexgsovg4Y9i7rxsWDxpnxv2tTK20tt6ApAFohK5IapLZ+taMzLFcUI9sWE
-         pr27V6DBfdPT7SRXgqL57EINAfZyncGpvcn+pMN//Z3CseEbxnfgfhxEsapMMmw06e4d
-         VcVCAzzDiJZDmdaRAr7y6tnU6H9lmY8pcI1xo6rFhe2I+3CH7trGaNuLLxEG1Z8OuNKC
-         3aSMzvHZXGG9cET7/UNJbt1Nv8qEL5ytnwECsECUThlCHjukG56z/Jnt21VjUtMcBqz4
-         ytig==
-X-Forwarded-Encrypted: i=1; AJvYcCXTnyGT2eNqxj4AvJaZOxLl4kzODotcooLG8farkBFVzb2FOnsyS/nCC5Jb0ZGYhjLvH+hVVGgts6fkfa0J+9+D6RbSmbiQsXUnPO0w
-X-Gm-Message-State: AOJu0YypEzT9zHt9daKy4Mwyzga65iLmpsR3MotEPq+u57oGfXsM2FQC
-	arwjBF6+5EJVkE09RbawjwTTn5ULd3Ucav+J9RFAUfsYCsSeHWFnDN+e/WxRvmJYfpJ6kstWOyo
-	u+uf/Ltal6K+ZU0tTqGYkfugVJTwHvoFSLi8v3WLD4DKTkRXyNNzhNlYFUerYO0iVpcHlvNOAg+
-	iDixWDBDaqicRuZurCz9dJ
-X-Received: by 2002:a05:6358:63a2:b0:17b:c8d:f39c with SMTP id k34-20020a05635863a200b0017b0c8df39cmr13687164rwh.28.1708329580095;
-        Sun, 18 Feb 2024 23:59:40 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IFR6bba8F48zsG94/WmE1CDv0XWbi4wAXc6sfLANAc3WjiY1EOsy5WvWL/JajzxA6qW8Wqobw==
-X-Received: by 2002:a05:6358:63a2:b0:17b:c8d:f39c with SMTP id k34-20020a05635863a200b0017b0c8df39cmr13687153rwh.28.1708329579761;
-        Sun, 18 Feb 2024 23:59:39 -0800 (PST)
-Received: from LAP568U.mistral.in ([106.51.69.35])
-        by smtp.gmail.com with ESMTPSA id n12-20020a63ee4c000000b005dc4b562f6csm4072525pgk.3.2024.02.18.23.59.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 18 Feb 2024 23:59:39 -0800 (PST)
-From: Sinthu Raja <sinthu.raja@mistralsolutions.com>
-X-Google-Original-From: Sinthu Raja <sinthu.raja@ti.com>
-To: Nishanth Menon <nm@ti.com>,
-	Tero Kristo <kristo@kernel.org>,
-	Vignesh Raghavendra <vigneshr@ti.com>
-Cc: linux-arm-kernel@lists.infradead.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Sinthu Raja <sinthu.raja@ti.com>
-Subject: [PATCH V2] arm64: dts: ti: k3-am68-sk-som: Add support for OSPI flash
-Date: Mon, 19 Feb 2024 13:29:32 +0530
-Message-Id: <20240219075932.6458-1-sinthu.raja@ti.com>
-X-Mailer: git-send-email 2.36.1
+	s=arc-20240116; t=1708336204; c=relaxed/simple;
+	bh=qVLktq4L4ue04kDObs/s6VXvHhJ8BL4Ga9qHhCok+Xw=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=rmHAFdZfiuSTJ3brCLZfWAzBNPUA+uq+hVJGC6vL3EsXEbI055FwsSqvJ0RSBMbTOQ9mKBzL9lQePycbl2qsxNTPIMka8o1kox2K5H82ixx04u7LP709OHwHNwPnTNctqzgSfGTmvZ+0bUVG9rVJPK6qX/DR2woCoWQ5MozoMvU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.20.42.173])
+	by gateway (Coremail) with SMTP id _____8BxOPBHJNNlMU4OAA--.38551S3;
+	Mon, 19 Feb 2024 17:50:00 +0800 (CST)
+Received: from [10.20.42.173] (unknown [10.20.42.173])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8BxnhNDJNNlsOo7AA--.33312S3;
+	Mon, 19 Feb 2024 17:49:57 +0800 (CST)
+Subject: Re: [PATCH v4 4/6] LoongArch: Add paravirt interface for guest kernel
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: Tianrui Zhao <zhaotianrui@loongson.cn>, Juergen Gross <jgross@suse.com>,
+ Paolo Bonzini <pbonzini@redhat.com>, loongarch@lists.linux.dev,
+ linux-kernel@vger.kernel.org, virtualization@lists.linux.dev,
+ kvm@vger.kernel.org
+References: <20240201031950.3225626-1-maobibo@loongson.cn>
+ <20240201031950.3225626-5-maobibo@loongson.cn>
+ <CAAhV-H7dXsU+WM172PWi_m8TYpYmzG_SW-vVQcdnOdETUxQ9+w@mail.gmail.com>
+ <63f8bd29-c0da-167b-187d-61c56eb081a6@loongson.cn>
+ <CAAhV-H6HQHyu=0zyv6FVLRJTkOcmnkLk5h361yGd2igYnuMMng@mail.gmail.com>
+ <4dcbd5b2-ba69-e254-b3bb-75a75e5f9215@loongson.cn>
+ <CAAhV-H7UyOX6ifKzUdTQiPuueOwsBUO2Jhtfcb832Gc0DTpQKQ@mail.gmail.com>
+From: maobibo <maobibo@loongson.cn>
+Message-ID: <b6482ad7-c800-beb9-ac49-989f8a044132@loongson.cn>
+Date: Mon, 19 Feb 2024 17:50:01 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+In-Reply-To: <CAAhV-H7UyOX6ifKzUdTQiPuueOwsBUO2Jhtfcb832Gc0DTpQKQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-BESS-ID: 1708336142-312173-12421-3210-1
-X-BESS-VER: 2019.1_20240214.1700
-X-BESS-Apparent-Source-IP: 209.85.214.198
-X-BESS-Parts: H4sIAAAAAAACA4uuVkqtKFGyUirNy1bSUcovVrIyNjQ3AbIygILGRobmaYZmRh
-	ZplikG5mZmpmZJSWnJhqaJKeYpxiYmaUq1sQCIw3SbQQAAAA==
-X-BESS-Outbound-Spam-Score: 0.40
-X-BESS-Outbound-Spam-Report: Code version 3.2, rules version 3.2.2.254321 [from 
-	cloudscan14-78.eu-central-1a.ess.aws.cudaops.com]
-	Rule breakdown below
-	 pts rule name              description
-	---- ---------------------- --------------------------------
-	0.00 BSF_SC0_MISMATCH_TO    META: Envelope rcpt doesn't match header 
-	0.40 BSF_SC0_SA085b         META: Custom Rule SA085b 
-	0.00 BSF_BESS_OUTBOUND      META: BESS Outbound 
-X-BESS-Outbound-Spam-Status: SCORE=0.40 using account:ESS91090 scores of KILL_LEVEL=7.0 tests=BSF_SC0_MISMATCH_TO, BSF_SC0_SA085b, BSF_BESS_OUTBOUND
-X-BESS-BRTS-Status:1
+X-CM-TRANSID:AQAAf8BxnhNDJNNlsOo7AA--.33312S3
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBj93XoW3ZF47urW8GFy5ZF4UWr4ftFc_yoWDXry5pF
+	yUAF4kGF4UGr1xArnFq3y5Wrnxtrn7Gr17WF17t340yrsFvr17Jr18Jryj9FykJa1kGF10
+	qFy8Gr4a9F15J3gCm3ZEXasCq-sJn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUB2b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
+	xVW8Jr0_Cr1UM2kKe7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07
+	AIYIkI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
+	XVWUAwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI4
+	8JMxk0xIA0c2IEe2xFo4CEbIxvr21l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_
+	Jr0_Gr1l4IxYO2xFxVAFwI0_JF0_Jw1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8Gjc
+	xK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0
+	cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8V
+	AvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6xkF7I0E
+	14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxU4s2-UUUUU
 
-From: Sinthu Raja <sinthu.raja@ti.com>
 
-AM68 SK has an OSPI NOR flash on its SOM connected to OSPI0 instance.
-Enable support for the same. Also, describe the OSPI flash partition
-information through the device tree, according to the offsets in the
-bootloader.
 
-Signed-off-by: Sinthu Raja <sinthu.raja@ti.com>
----
+On 2024/2/19 下午5:38, Huacai Chen wrote:
+> On Mon, Feb 19, 2024 at 5:21 PM maobibo <maobibo@loongson.cn> wrote:
+>>
+>>
+>>
+>> On 2024/2/19 下午4:48, Huacai Chen wrote:
+>>> On Mon, Feb 19, 2024 at 12:11 PM maobibo <maobibo@loongson.cn> wrote:
+>>>>
+>>>>
+>>>>
+>>>> On 2024/2/19 上午10:42, Huacai Chen wrote:
+>>>>> Hi, Bibo,
+>>>>>
+>>>>> On Thu, Feb 1, 2024 at 11:19 AM Bibo Mao <maobibo@loongson.cn> wrote:
+>>>>>>
+>>>>>> The patch adds paravirt interface for guest kernel, function
+>>>>>> pv_guest_initi() firstly checks whether system runs on VM mode. If kernel
+>>>>>> runs on VM mode, it will call function kvm_para_available() to detect
+>>>>>> whether current VMM is KVM hypervisor. And the paravirt function can work
+>>>>>> only if current VMM is KVM hypervisor, since there is only KVM hypervisor
+>>>>>> supported on LoongArch now.
+>>>>>>
+>>>>>> This patch only adds paravirt interface for guest kernel, however there
+>>>>>> is not effective pv functions added here.
+>>>>>>
+>>>>>> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+>>>>>> ---
+>>>>>>     arch/loongarch/Kconfig                        |  9 ++++
+>>>>>>     arch/loongarch/include/asm/kvm_para.h         |  7 ++++
+>>>>>>     arch/loongarch/include/asm/paravirt.h         | 27 ++++++++++++
+>>>>>>     .../include/asm/paravirt_api_clock.h          |  1 +
+>>>>>>     arch/loongarch/kernel/Makefile                |  1 +
+>>>>>>     arch/loongarch/kernel/paravirt.c              | 41 +++++++++++++++++++
+>>>>>>     arch/loongarch/kernel/setup.c                 |  2 +
+>>>>>>     7 files changed, 88 insertions(+)
+>>>>>>     create mode 100644 arch/loongarch/include/asm/paravirt.h
+>>>>>>     create mode 100644 arch/loongarch/include/asm/paravirt_api_clock.h
+>>>>>>     create mode 100644 arch/loongarch/kernel/paravirt.c
+>>>>>>
+>>>>>> diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
+>>>>>> index 10959e6c3583..817a56dff80f 100644
+>>>>>> --- a/arch/loongarch/Kconfig
+>>>>>> +++ b/arch/loongarch/Kconfig
+>>>>>> @@ -585,6 +585,15 @@ config CPU_HAS_PREFETCH
+>>>>>>            bool
+>>>>>>            default y
+>>>>>>
+>>>>>> +config PARAVIRT
+>>>>>> +       bool "Enable paravirtualization code"
+>>>>>> +       depends on AS_HAS_LVZ_EXTENSION
+>>>>>> +       help
+>>>>>> +          This changes the kernel so it can modify itself when it is run
+>>>>>> +         under a hypervisor, potentially improving performance significantly
+>>>>>> +         over full virtualization.  However, when run without a hypervisor
+>>>>>> +         the kernel is theoretically slower and slightly larger.
+>>>>>> +
+>>>>>>     config ARCH_SUPPORTS_KEXEC
+>>>>>>            def_bool y
+>>>>>>
+>>>>>> diff --git a/arch/loongarch/include/asm/kvm_para.h b/arch/loongarch/include/asm/kvm_para.h
+>>>>>> index 9425d3b7e486..41200e922a82 100644
+>>>>>> --- a/arch/loongarch/include/asm/kvm_para.h
+>>>>>> +++ b/arch/loongarch/include/asm/kvm_para.h
+>>>>>> @@ -2,6 +2,13 @@
+>>>>>>     #ifndef _ASM_LOONGARCH_KVM_PARA_H
+>>>>>>     #define _ASM_LOONGARCH_KVM_PARA_H
+>>>>>>
+>>>>>> +/*
+>>>>>> + * Hypcall code field
+>>>>>> + */
+>>>>>> +#define HYPERVISOR_KVM                 1
+>>>>>> +#define HYPERVISOR_VENDOR_SHIFT                8
+>>>>>> +#define HYPERCALL_CODE(vendor, code)   ((vendor << HYPERVISOR_VENDOR_SHIFT) + code)
+>>>>>> +
+>>>>>>     /*
+>>>>>>      * LoongArch hypcall return code
+>>>>>>      */
+>>>>>> diff --git a/arch/loongarch/include/asm/paravirt.h b/arch/loongarch/include/asm/paravirt.h
+>>>>>> new file mode 100644
+>>>>>> index 000000000000..b64813592ba0
+>>>>>> --- /dev/null
+>>>>>> +++ b/arch/loongarch/include/asm/paravirt.h
+>>>>>> @@ -0,0 +1,27 @@
+>>>>>> +/* SPDX-License-Identifier: GPL-2.0 */
+>>>>>> +#ifndef _ASM_LOONGARCH_PARAVIRT_H
+>>>>>> +#define _ASM_LOONGARCH_PARAVIRT_H
+>>>>>> +
+>>>>>> +#ifdef CONFIG_PARAVIRT
+>>>>>> +#include <linux/static_call_types.h>
+>>>>>> +struct static_key;
+>>>>>> +extern struct static_key paravirt_steal_enabled;
+>>>>>> +extern struct static_key paravirt_steal_rq_enabled;
+>>>>>> +
+>>>>>> +u64 dummy_steal_clock(int cpu);
+>>>>>> +DECLARE_STATIC_CALL(pv_steal_clock, dummy_steal_clock);
+>>>>>> +
+>>>>>> +static inline u64 paravirt_steal_clock(int cpu)
+>>>>>> +{
+>>>>>> +       return static_call(pv_steal_clock)(cpu);
+>>>>>> +}
+>>>>> The steal time code can be removed in this patch, I think.
+>>>>>
+>>>> Originally I want to remove this piece of code, but it fails to compile
+>>>> if CONFIG_PARAVIRT is selected. Here is reference code, function
+>>>> paravirt_steal_clock() must be defined if CONFIG_PARAVIRT is selected.
+>>>>
+>>>> static __always_inline u64 steal_account_process_time(u64 maxtime)
+>>>> {
+>>>> #ifdef CONFIG_PARAVIRT
+>>>>            if (static_key_false(&paravirt_steal_enabled)) {
+>>>>                    u64 steal;
+>>>>
+>>>>                    steal = paravirt_steal_clock(smp_processor_id());
+>>>>                    steal -= this_rq()->prev_steal_time;
+>>>>                    steal = min(steal, maxtime);
+>>>>                    account_steal_time(steal);
+>>>>                    this_rq()->prev_steal_time += steal;
+>>>>
+>>>>                    return steal;
+>>>>            }
+>>>> #endif
+>>>>            return 0;
+>>>> }
+>>> OK, then keep it.
+>>>
+>>>>
+>>>>>> +
+>>>>>> +int pv_guest_init(void);
+>>>>>> +#else
+>>>>>> +static inline int pv_guest_init(void)
+>>>>>> +{
+>>>>>> +       return 0;
+>>>>>> +}
+>>>>>> +
+>>>>>> +#endif // CONFIG_PARAVIRT
+>>>>>> +#endif
+>>>>>> diff --git a/arch/loongarch/include/asm/paravirt_api_clock.h b/arch/loongarch/include/asm/paravirt_api_clock.h
+>>>>>> new file mode 100644
+>>>>>> index 000000000000..65ac7cee0dad
+>>>>>> --- /dev/null
+>>>>>> +++ b/arch/loongarch/include/asm/paravirt_api_clock.h
+>>>>>> @@ -0,0 +1 @@
+>>>>>> +#include <asm/paravirt.h>
+>>>>>> diff --git a/arch/loongarch/kernel/Makefile b/arch/loongarch/kernel/Makefile
+>>>>>> index 3c808c680370..662e6e9de12d 100644
+>>>>>> --- a/arch/loongarch/kernel/Makefile
+>>>>>> +++ b/arch/loongarch/kernel/Makefile
+>>>>>> @@ -48,6 +48,7 @@ obj-$(CONFIG_MODULES)         += module.o module-sections.o
+>>>>>>     obj-$(CONFIG_STACKTRACE)       += stacktrace.o
+>>>>>>
+>>>>>>     obj-$(CONFIG_PROC_FS)          += proc.o
+>>>>>> +obj-$(CONFIG_PARAVIRT)         += paravirt.o
+>>>>>>
+>>>>>>     obj-$(CONFIG_SMP)              += smp.o
+>>>>>>
+>>>>>> diff --git a/arch/loongarch/kernel/paravirt.c b/arch/loongarch/kernel/paravirt.c
+>>>>>> new file mode 100644
+>>>>>> index 000000000000..21d01d05791a
+>>>>>> --- /dev/null
+>>>>>> +++ b/arch/loongarch/kernel/paravirt.c
+>>>>>> @@ -0,0 +1,41 @@
+>>>>>> +// SPDX-License-Identifier: GPL-2.0
+>>>>>> +#include <linux/export.h>
+>>>>>> +#include <linux/types.h>
+>>>>>> +#include <linux/jump_label.h>
+>>>>>> +#include <linux/kvm_para.h>
+>>>>>> +#include <asm/paravirt.h>
+>>>>>> +#include <linux/static_call.h>
+>>>>>> +
+>>>>>> +struct static_key paravirt_steal_enabled;
+>>>>>> +struct static_key paravirt_steal_rq_enabled;
+>>>>>> +
+>>>>>> +static u64 native_steal_clock(int cpu)
+>>>>>> +{
+>>>>>> +       return 0;
+>>>>>> +}
+>>>>>> +
+>>>>>> +DEFINE_STATIC_CALL(pv_steal_clock, native_steal_clock);
+>>>>> The steal time code can be removed in this patch, I think.
+>>>> Ditto, the same reason with above.
+>>>>>
+>>>>>> +
+>>>>>> +static bool kvm_para_available(void)
+>>>>>> +{
+>>>>>> +       static int hypervisor_type;
+>>>>>> +       int config;
+>>>>>> +
+>>>>>> +       if (!hypervisor_type) {
+>>>>>> +               config = read_cpucfg(CPUCFG_KVM_SIG);
+>>>>>> +               if (!memcmp(&config, KVM_SIGNATURE, 4))
+>>>>>> +                       hypervisor_type = HYPERVISOR_KVM;
+>>>>>> +       }
+>>>>>> +
+>>>>>> +       return hypervisor_type == HYPERVISOR_KVM;
+>>>>>> +}
+>>>>>> +
+>>>>>> +int __init pv_guest_init(void)
+>>>>>> +{
+>>>>>> +       if (!cpu_has_hypervisor)
+>>>>>> +               return 0;
+>>>>>> +       if (!kvm_para_available())
+>>>>>> +               return 0;
+>>>>>> +
+>>>>>> +       return 1;
+>>>>>> +}
+>>>>>> diff --git a/arch/loongarch/kernel/setup.c b/arch/loongarch/kernel/setup.c
+>>>>>> index edf2bba80130..de5c36dccc49 100644
+>>>>>> --- a/arch/loongarch/kernel/setup.c
+>>>>>> +++ b/arch/loongarch/kernel/setup.c
+>>>>>> @@ -43,6 +43,7 @@
+>>>>>>     #include <asm/efi.h>
+>>>>>>     #include <asm/loongson.h>
+>>>>>>     #include <asm/numa.h>
+>>>>>> +#include <asm/paravirt.h>
+>>>>>>     #include <asm/pgalloc.h>
+>>>>>>     #include <asm/sections.h>
+>>>>>>     #include <asm/setup.h>
+>>>>>> @@ -367,6 +368,7 @@ void __init platform_init(void)
+>>>>>>            pr_info("The BIOS Version: %s\n", b_info.bios_version);
+>>>>>>
+>>>>>>            efi_runtime_init();
+>>>>>> +       pv_guest_init();
+>>>>> I prefer use CONFIG_PARAVIRT here, though you have a dummy version for
+>>>>> !CONFIG_PARAVIRT, I think it is better to let others clearly know that
+>>>>> PARAVIRT is an optional feature.
+>>>> I remember that there is rule that CONFIG_xxx had better be used in
+>>>> header files rather than c code, so that the code looks neat. Am I wrong?
+>>> That depends on what we want, sometimes we want to hide the details,
+>>> but sometimes we want to give others a notice.
+>> I want to keep code clean here :)
+>>
+>>>
+>>> And there is another problem: if you want to centralize all pv init
+>>> functions, it is better to use pv_features_init() rather than
+>>> pv_guest_init(); if you want to give each feature an init function,
+>>> then we don't need pv_guest_init here, and we can then add a
+>>> pv_ipi_init() in the last patch.
+>> Currently I have no idea how to add other pv features like pv
+>> stealtimer, I will consider this when adding other pv features.
+>> pv_ipi_init/pv_guest_init is both ok for me, pv_ipi_init is better for now.
+> Then you want to add an init function for each feature, so please
+> rename to pv_ipi_init(), move to the last patch and in
+> loongson_smp_setup().
+Sure, will change function name with pv_ipi_init() and move sentences 
+calling this function to last patch.
 
-Changes in V2:
-=============
-1. Address review comments
-   a. remove pin E20, which is not connected.
+Regards
+Bibo Mao
 
-V1: https://patchwork.kernel.org/project/linux-arm-kernel/patch/20240206092334.30307-1-sinthu.raja@ti.com/
-
- arch/arm64/boot/dts/ti/k3-am68-sk-som.dtsi | 78 ++++++++++++++++++++++
- 1 file changed, 78 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/ti/k3-am68-sk-som.dtsi b/arch/arm64/boot/dts/ti/k3-am68-sk-som.dtsi
-index 0f4a5da0ebc4..afaf702cfc9d 100644
---- a/arch/arm64/boot/dts/ti/k3-am68-sk-som.dtsi
-+++ b/arch/arm64/boot/dts/ti/k3-am68-sk-som.dtsi
-@@ -130,6 +130,24 @@ rtos_ipc_memory_region: ipc-memories@a8000000 {
- 	};
- };
- 
-+&wkup_pmx0 {
-+	mcu_fss0_ospi0_pins_default: mcu-fss0-ospi0-pins-default {
-+		pinctrl-single,pins = <
-+			J721S2_WKUP_IOPAD(0x000, PIN_OUTPUT, 0) /* (D19) MCU_OSPI0_CLK */
-+			J721S2_WKUP_IOPAD(0x02c, PIN_OUTPUT, 0) /* (F15) MCU_OSPI0_CSn0 */
-+			J721S2_WKUP_IOPAD(0x00c, PIN_INPUT, 0) /* (C19) MCU_OSPI0_D0 */
-+			J721S2_WKUP_IOPAD(0x010, PIN_INPUT, 0) /* (F16) MCU_OSPI0_D1 */
-+			J721S2_WKUP_IOPAD(0x014, PIN_INPUT, 0) /* (G15) MCU_OSPI0_D2 */
-+			J721S2_WKUP_IOPAD(0x018, PIN_INPUT, 0) /* (F18) MCU_OSPI0_D3 */
-+			J721S2_WKUP_IOPAD(0x01c, PIN_INPUT, 0) /* (E19) MCU_OSPI0_D4 */
-+			J721S2_WKUP_IOPAD(0x020, PIN_INPUT, 0) /* (G19) MCU_OSPI0_D5 */
-+			J721S2_WKUP_IOPAD(0x024, PIN_INPUT, 0) /* (F19) MCU_OSPI0_D6 */
-+			J721S2_WKUP_IOPAD(0x028, PIN_INPUT, 0) /* (F20) MCU_OSPI0_D7 */
-+			J721S2_WKUP_IOPAD(0x008, PIN_INPUT, 0) /* (E18) MCU_OSPI0_DQS */
-+		>;
-+	};
-+};
-+
- &wkup_pmx2 {
- 	wkup_i2c0_pins_default: wkup-i2c0-default-pins {
- 		pinctrl-single,pins = <
-@@ -152,6 +170,66 @@ eeprom@51 {
- 	};
- };
- 
-+&ospi0 {
-+	status = "okay";
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&mcu_fss0_ospi0_pins_default>;
-+
-+	flash@0 {
-+		compatible = "jedec,spi-nor";
-+		reg = <0x0>;
-+		spi-tx-bus-width = <8>;
-+		spi-rx-bus-width = <8>;
-+		spi-max-frequency = <25000000>;
-+		cdns,tshsl-ns = <60>;
-+		cdns,tsd2d-ns = <60>;
-+		cdns,tchsh-ns = <60>;
-+		cdns,tslch-ns = <60>;
-+		cdns,read-delay = <4>;
-+
-+		partitions {
-+			compatible = "fixed-partitions";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+
-+			partition@0 {
-+				label = "ospi.tiboot3";
-+				reg = <0x0 0x80000>;
-+			};
-+
-+			partition@80000 {
-+				label = "ospi.tispl";
-+				reg = <0x80000 0x200000>;
-+			};
-+
-+			partition@280000 {
-+				label = "ospi.u-boot";
-+				reg = <0x280000 0x400000>;
-+			};
-+
-+			partition@680000 {
-+				label = "ospi.env";
-+				reg = <0x680000 0x40000>;
-+			};
-+
-+			partition@6c0000 {
-+				label = "ospi.env.backup";
-+				reg = <0x6c0000 0x40000>;
-+			};
-+
-+			partition@800000 {
-+				label = "ospi.rootfs";
-+				reg = <0x800000 0x37c0000>;
-+			};
-+
-+			partition@3fc0000 {
-+				label = "ospi.phypattern";
-+				reg = <0x3fc0000 0x40000>;
-+			};
-+		};
-+	};
-+};
-+
- &mailbox0_cluster0 {
- 	status = "okay";
- 	interrupts = <436>;
--- 
-2.36.1
+> 
+> Huacai
+> 
+>>
+>> Regards
+>> Bibo Mao
+>>
+>>>
+>>> Huacai
+>>>
+>>>>
+>>>> Regards
+>>>> Bibo Mao
+>>>>>
+>>>>> Huacai
+>>>>>
+>>>>>
+>>>>> Huacai
+>>>>>>     }
+>>>>>>
+>>>>>>     static void __init check_kernel_sections_mem(void)
+>>>>>> --
+>>>>>> 2.39.3
+>>>>>>
+>>>>>>
+>>>>
+>>
 
