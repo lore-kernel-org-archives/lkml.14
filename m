@@ -1,160 +1,100 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F7D228E39;
-	Mon, 19 Feb 2024 10:47:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 688612C686;
+	Mon, 19 Feb 2024 10:47:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708339669; cv=none; b=nEwqS5X96ucPNlUJuotvBr7XvooyfmUQ3fmEHz7t1vh82SzaJlO890bPCTJvNPjutRkUfocvoPTOy6ezIhneMCs3GrTYk10oqz0PnYJwoS3HTIpJww4NlVj+6m+dcL4GGBa7+saxtc/Feo6TXJcl6K8154xefTBfjVwxLW2Oz6o=
+	t=1708339672; cv=none; b=b25fYoGVOu6oYU7ACqgjUdOmUEX1c2teBf6j4HJuyaH7nqoVYlEGqfv3fUwrbDBW5cYRasBlm/ZB4IYKt9vMsf4y8DNaFhJSA6OMxO4rE9gaawQF82gpHQqZlSzDqGm/Qdbn50ymyCVmwXIiBcxsqvgFxtOiSQoSB2pYEscI+OA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708339669; c=relaxed/simple;
-	bh=J76nWNpLPlCdb2/zC3wLiltJ7TgkL/vEOtz2wj3rw5Q=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=diHbzu54Dgdec3MIY5A+O0UoTCt71o/nVNiJUKqEGnbUsSFA8yH0+OpWlNVzMfIB2p2yf5d7qz6gZ7QSSj2naBA4uEGaWmg8ru1rUqJkg+E/6Er4oGCIq+banKO3y+AjfaoCUq2vlFn/HquGGV4amW+r2nBcy6jJ7wMrgDGV4JY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HHjMUYLu; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1708339672; c=relaxed/simple;
+	bh=Jfo6TfwmGwLUsV6LesciDk9MRgp2/h+EYgVBnXUJszM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=g8tOKB9sM2CtglQhwcs0DeGfAvhrAn09ukxpy578yvoK5GwRwpJ2RAFDdlbu3CoHykBM6tVVNrwfNSf2zOmnEegRyVsmJJXI79qqSvC0B8/9OzoJ7A4TRzGaem8iI1yE4CCVPQ4q3od2VYthYcsy9UZ2BrP4QWqJIks/97OYbQw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PM6pzIX0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HHjMUYLu"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1708339667; x=1739875667;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=J76nWNpLPlCdb2/zC3wLiltJ7TgkL/vEOtz2wj3rw5Q=;
-  b=HHjMUYLueXl0HAW/+4iX45N5/PKfwIHniT2imWutWgAm14y9B2qadsJ/
-   bM/wWa1YmGuAHDjXnmTnVfZNp/NvDU9nRBEVuUjeLm2jd98gGS89eZ9Xb
-   Wm0fq2z6qLnJREXXp2SS+k+YF0DoeSMIo1ru3HLC8lUVQy5N+JiB6HhT4
-   gntvENNgxOARBEsgY8ZY1zI5c6mxUagDbDr9C2KsLN5sEOBDF1kYgn3Kb
-   uGnCLDeox3OjFLEliFUAsfMN8MlUxCFVOAgoou8dxcwKDSacfdjRrPqdH
-   4W0ob3NIY4qpSz2t4KB39zKcup0R1T17LBAp6hde2ZKAD9nUIfJe/h4Bu
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10988"; a="2850781"
-X-IronPort-AV: E=Sophos;i="6.06,170,1705392000"; 
-   d="scan'208";a="2850781"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Feb 2024 02:47:45 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,170,1705392000"; 
-   d="scan'208";a="4817735"
-Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.246.48.18])
-  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Feb 2024 02:47:42 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Mon, 19 Feb 2024 12:47:33 +0200 (EET)
-To: Michael Kelley <mhklinux@outlook.com>
-cc: "haiyangz@microsoft.com" <haiyangz@microsoft.com>, 
-    "wei.liu@kernel.org" <wei.liu@kernel.org>, 
-    "decui@microsoft.com" <decui@microsoft.com>, 
-    "lpieralisi@kernel.org" <lpieralisi@kernel.org>, 
-    "kw@linux.com" <kw@linux.com>, "robh@kernel.org" <robh@kernel.org>, 
-    "bhelgaas@google.com" <bhelgaas@google.com>, 
-    "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, 
-    LKML <linux-kernel@vger.kernel.org>, 
-    "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>
-Subject: RE: [PATCH v2 1/1] PCI: hv: Fix ring buffer size calculation
-In-Reply-To: <SN6PR02MB415749788D7DEA3D1D792913D44C2@SN6PR02MB4157.namprd02.prod.outlook.com>
-Message-ID: <0a680c72-0c30-d3e7-5c67-a0aefe752be2@linux.intel.com>
-References: <20240215074823.51014-1-mhklinux@outlook.com> <0802ce88-c86d-3a74-501f-28393d6112f3@linux.intel.com> <SN6PR02MB415749788D7DEA3D1D792913D44C2@SN6PR02MB4157.namprd02.prod.outlook.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PM6pzIX0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EC801C433C7;
+	Mon, 19 Feb 2024 10:47:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1708339672;
+	bh=Jfo6TfwmGwLUsV6LesciDk9MRgp2/h+EYgVBnXUJszM=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=PM6pzIX03tt4ZjrxnYPJXPGUX5ADnjh07V73zqD2omNQ4Xk9qSfJfl3GsLdLJnffd
+	 osYaXkKlJpqogY/SPg0hw1jVPJHtWPS1r9N6APmdJ87PXKsoc9GjxT4fFtkmgFOrR1
+	 wvtMoS8iRqGbO5JMuv8sHJAdVZyrj9X9p7Sfor/wo433BXO0vGAM9VhhRj+LmuDDrk
+	 pPDYP9aFdOFUkfTAZXOMwbd1F1LIHXzO/hYoj3X/6ImodrI7my9qlMbbuBGDHMDzl/
+	 2Cg3vo0E0huhrCNGfaBoQL+h1RS6xZIg7zoLXAs3STouIJZaSC2+ox6jA9Aty5i06L
+	 0ozKuW1QQq/JQ==
+Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-512bd533be0so344670e87.0;
+        Mon, 19 Feb 2024 02:47:51 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCUpdvI9Mf0CmQMGu4pAR3QfKyyTcN3Tg5i91pHmCnZZnCNdwXnfu8U47BCOoT4hjg8UzVmh98TkzQI39lCfeDlMSVJDrNYb2sDTxTNKrkttPlDqrAkffG9hRsIlLzhlj/A9rYnLZSncPw==
+X-Gm-Message-State: AOJu0Yw33nuJbNyK+asppnUyFl3m2F64e519J5kcR1FuKY9ZsyK28h9I
+	hZSe52SOQ8zrFMUAISIpBiXOBamJ8tBFsql1HzmPWu4MCNzy8aZewocsv/ifp+3/muu6Fy/ikki
+	l7u8FCKeAz+W7rtBiynafIe9RUS4=
+X-Google-Smtp-Source: AGHT+IGuVJ1P1iK/x+vOmrtC/tU48rUsDna2+oeh1glDTw2nC4sRpzBKFaqlDQkaZk6qcR3xVV+mXqWRMCazBcGGgSs=
+X-Received: by 2002:a05:6512:609:b0:512:a984:267f with SMTP id
+ b9-20020a056512060900b00512a984267fmr2885423lfe.58.1708339670239; Mon, 19 Feb
+ 2024 02:47:50 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-1499309722-1708339653=:1174"
+References: <20240213124143.1484862-13-ardb+git@google.com>
+ <20240213124143.1484862-15-ardb+git@google.com> <20240217125102.GSZdCrtgI-DnHA8DpK@fat_crate.local>
+ <CAMj1kXEcTfvRcNh_VDhj5QxzMhD9rFhVmeAfuSF7vm1c_4_iHg@mail.gmail.com> <20240219100124.GCZdMm9IAWoMcfEKhF@fat_crate.local>
+In-Reply-To: <20240219100124.GCZdMm9IAWoMcfEKhF@fat_crate.local>
+From: Ard Biesheuvel <ardb@kernel.org>
+Date: Mon, 19 Feb 2024 11:47:39 +0100
+X-Gmail-Original-Message-ID: <CAMj1kXH7CtN2j1os7Ujw7G_xtD2H0g=pfxNBLK=ayj4XGPkudA@mail.gmail.com>
+Message-ID: <CAMj1kXH7CtN2j1os7Ujw7G_xtD2H0g=pfxNBLK=ayj4XGPkudA@mail.gmail.com>
+Subject: Re: [PATCH v4 02/11] x86/startup_64: Replace pointer fixups with
+ RIP-relative references
+To: Borislav Petkov <bp@alien8.de>
+Cc: Ard Biesheuvel <ardb+git@google.com>, linux-kernel@vger.kernel.org, 
+	Kevin Loughlin <kevinloughlin@google.com>, Tom Lendacky <thomas.lendacky@amd.com>, 
+	Dionna Glaze <dionnaglaze@google.com>, Thomas Gleixner <tglx@linutronix.de>, 
+	Ingo Molnar <mingo@redhat.com>, Dave Hansen <dave.hansen@linux.intel.com>, 
+	Andy Lutomirski <luto@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Nathan Chancellor <nathan@kernel.org>, 
+	Nick Desaulniers <ndesaulniers@google.com>, Justin Stitt <justinstitt@google.com>, 
+	Kees Cook <keescook@chromium.org>, Brian Gerst <brgerst@gmail.com>, linux-arch@vger.kernel.org, 
+	llvm@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+On Mon, 19 Feb 2024 at 11:01, Borislav Petkov <bp@alien8.de> wrote:
+>
+> On Sat, Feb 17, 2024 at 02:58:29PM +0100, Ard Biesheuvel wrote:
+> > More testing is always good, but I am not particularly nervous about
+> > these changes.
+>
+> Perhaps but there's a big difference between testing everything as much
+> as one can and *then* queueing it - vs testing a bit, not being really
+> nervous about the changes and then someone reporting a snafu when the
+> patches are already in Linus' tree.
+>
+> Means dropping everything and getting on that. And then imagine a couple
+> more breakages happening in parallel and needing urgent attention.
+>
+> Not something you wanna deal with. Speaking from my experience, at
+> least.
+>
 
---8323328-1499309722-1708339653=:1174
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Not disagreeing with that.
 
-On Fri, 16 Feb 2024, Michael Kelley wrote:
+> > I could split this up into 3+ patches so we could bisect any resulting
+> > issues more effectively.
+>
+> Yeah, splitting changes into separate bits - ala, one logical change per
+> patch - is always a good idea.
+>
+> In this particular case, I don't mind splitting them even more so that
+> it is perfectly clear what happens and looking at those changes doesn't
+> make people have to go look at the source to figure out what the change
+> actually looks like applied, in order to fully grok it.
+>
 
-> From: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com> Sent: Friday, Febru=
-ary 16, 2024 6:46 AM
-> >=20
-> > On Wed, 14 Feb 2024, mhkelley58@gmail.com wrote:
-> > >
-> > > For a physical PCI device that is passed through to a Hyper-V guest V=
-M,
-> > > current code specifies the VMBus ring buffer size as 4 pages.  But th=
-is
-> > > is an inappropriate dependency, since the amount of ring buffer space
-> > > needed is unrelated to PAGE_SIZE. For example, on x86 the ring buffer
-> > > size ends up as 16 Kbytes, while on ARM64 with 64 Kbyte pages, the ri=
-ng
-> > > size bloats to 256 Kbytes. The ring buffer for PCI pass-thru devices
-> > > is used for only a few messages during device setup and removal, so a=
-ny
-> > > space above a few Kbytes is wasted.
-> > >
-> > > Fix this by declaring the ring buffer size to be a fixed 16 Kbytes.
-> > > Furthermore, use the VMBUS_RING_SIZE() macro so that the ring buffer
-> > > header is properly accounted for, and so the size is rounded up to a
-> > > page boundary, using the page size for which the kernel is built. Whi=
-le
-> > > w/64 Kbyte pages this results in a 64 Kbyte ring buffer header plus a
-> > > 64 Kbyte ring buffer, that's the smallest possible with that page siz=
-e.
-> > > It's still 128 Kbytes better than the current code.
-> > >
-> > > Cc: <stable@vger.kernel.org> # 5.15.x
-> > > Signed-off-by: Michael Kelley <mhklinux@outlook.com>
-> > > Reviewed-by: Kuppuswamy Sathyanarayanan
-> > <sathyanarayanan.kuppuswamy@linux.intel.com>
-> > > ---
-> > > Changes in v2:
-> > > * Use SZ_16K instead of 16 * 1024
-> > > ---
-> > >  drivers/pci/controller/pci-hyperv.c | 2 +-
-> > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > >
-> > > diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/contro=
-ller/pci-
-> > hyperv.c
-> > > index 1eaffff40b8d..baadc1e5090e 100644
-> > > --- a/drivers/pci/controller/pci-hyperv.c
-> > > +++ b/drivers/pci/controller/pci-hyperv.c
-> > > @@ -465,7 +465,7 @@ struct pci_eject_response {
-> > >  =09u32 status;
-> > >  } __packed;
-> > >
-> > > -static int pci_ring_size =3D (4 * PAGE_SIZE);
-> > > +static int pci_ring_size =3D VMBUS_RING_SIZE(SZ_16K);
-> > >
-> > >  /*
-> > >   * Driver specific state.
-> > >
-> >=20
-> > Hi,
-> >=20
-> > You forgot to add #include <linux/sizes.h> for it.
-> >=20
-> > With that fixed:
-> >=20
-> > Reviewed-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
-> >=20
->=20
-> Fixed in v3.  I mis-interpreted your previous comment about
-> adding the #include "if needed".  It's not needed to compile
-> correctly, as sizes.h is indirectly included through some other
-> #include.  But it's better to directly #include what's needed
-> lest some unrelated change cause a failure.
-
-Yes, we try include the headers we use in the .c file. I used "if needed"=
-=20
-because I didn't check if it was already among the #includes in the file.
-
-Our tools are lacking to enforce/check a file has correct set of #includes=
-=20
-so it's currently based mostly on reviewers noticing something is wrong=20
-with #includes, hopefully some time in the future, the tools also catch=20
-up.
-
-
---=20
- i.
-
---8323328-1499309722-1708339653=:1174--
+I split this into 5 patches for v5. The final patch in this v4 is
+broken for CONFIG_X86_5LEVEL=n so I was going to have to respin
+anyway. (I'll pick up the latest version of patch #1 you pasted)
