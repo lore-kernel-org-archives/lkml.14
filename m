@@ -1,113 +1,186 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from APC01-PSA-obe.outbound.protection.outlook.com (mail-psaapc01olkn2024.outbound.protection.outlook.com [40.92.52.24])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95F703B190;
-	Mon, 19 Feb 2024 15:57:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708358221; cv=none; b=fb+2a6nNhnxmeNKv1WwRkWjlDdmDf9nZe00SpMk8TIztpFxLvPF1HTxXVREtnTSGasIOffW7ay8vRfzkG5GFfx1nPybJtWmFpoZWBRNdTzpGmd9FTdCM+oMUsvNRE+gLDHxjv2S0ZoV6PYWktDKHR3rGsHKLRO1s8ypgSaXyveQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708358221; c=relaxed/simple;
-	bh=ViZrw86k4pjLburJCJObXL4Filt6Xa7zhElSH1BTaM0=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Gjr9Z55hlhetF0hs4UFYIxJBco7F0k+6i/IUJ9Q27RMUwnmtEk8atX9kIlScjlnvjP/AkY1EAH/d0x5JDd8sB1nXc3Ug/82wE0YSOfGPRr+VWWjWCqqSPo+XpfbPKAzlRHgEVAwgSFAqqdL7ygacInIWL7Eim41oWAszh3Jx+0U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CmA4Fkqp; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBEFF1DFE8;
+	Mon, 19 Feb 2024 15:56:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.52.24
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1708358220; cv=fail; b=Y0ZECNK5x8NF1uRTyScdNrpIn0q8HmGfBZ29dnTxVECfBdWzBFWCrXuj6zG3Db4XXum/Qw7vHgJGPG/wz3X5l75NtZp2+0IuMcq9FIoNIKSVdLsjSkG+a0L0bh4kRdSdefFUnuOcTCVOvR9lqcWkbFxbIepdp8HrDmXXCb3C6zY=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1708358220; c=relaxed/simple;
+	bh=h/ZALkrNjBD+DN2kWgJXn5zPWQkyOBGEaDktEflveDA=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=G9MPp1vUoXK/ZrwADI61o2bb9LhLgbESyNZPCbX1h8dOKkZucewCSuRJ7lVP8BvnQ0iqxkqpcSkjahBqENCPkXRm4ToQfreUgT+YSKAphp/cnb6hsWQ+YHqsBE1J8O4Dm8dfliN6PAVJ4LMCQBH24mHsaGVKwOcMSBXdeXgYo/Q=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=cPfZGq1r; arc=fail smtp.client-ip=40.92.52.24
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CmA4Fkqp"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E4C44C433C7;
-	Mon, 19 Feb 2024 15:57:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708358221;
-	bh=ViZrw86k4pjLburJCJObXL4Filt6Xa7zhElSH1BTaM0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=CmA4FkqprLlsrbkkuP++2cothZ3a2rLe1RDDzOzZYJGbUE+vzvqi7vXc2/azCPQfl
-	 H6LWYYmIqhUz8Xqr9Pf6aIs0Sbe7O12kVDFZXSwLZgBXTK6ND9OJ35iHSNPBCwsYB3
-	 q8zcTlVFze53LFrQa8Ho/pY+9vKgPTU7TBF922DnU7pVOovbSAzk2wxMYds55LMIeq
-	 UJxpIITaZwAz5vSAZm8JftfLF8FyRafSXO51hh6Khdddud68eiVqkIAsMREth4449L
-	 MDcQFLIL09Ep8+rcMhnXRnNLXv9kp+TLIAqWknmQ9E8Xr6CCbcvu55lv1nVVl8D/wW
-	 yjExMpDKAkcdw==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <maz@kernel.org>)
-	id 1rc60o-004cv5-LP;
-	Mon, 19 Feb 2024 15:56:58 +0000
-Date: Mon, 19 Feb 2024 15:56:58 +0000
-Message-ID: <867cj04fcl.wl-maz@kernel.org>
-From: Marc Zyngier <maz@kernel.org>
-To: Biju Das <biju.das.jz@bp.renesas.com>
-Cc: tip-bot2@linutronix.de,
-	apatel@ventanamicro.com,
-	linux-kernel@vger.kernel.org,
-	linux-tip-commits@vger.kernel.org,
-	tglx@linutronix.de,
-	geert@linux-m68k.org,
-	linux-renesas-soc@vger.kernel.org,
-	x86@kernel.org
-Subject: Re: [tip: irq/msi] genirq/irqdomain: Remove the param count restriction from select()
-In-Reply-To: <170802702416.398.14922976721740218856.tip-bot2@tip-bot2>
-References: <170802702416.398.14922976721740218856.tip-bot2@tip-bot2>
-	<20240127161753.114685-3-apatel@ventanamicro.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/29.1
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="cPfZGq1r"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=JJ4y6XBSZVZsb2eSCQ40J0dHPIUVSBqTn5FEqZrwN/PsR1SBoQQEHhouG8O1xnGZ75r08T3WSpqH89vhillZYGAjDqwhGiSGJx5NbHmgRxVJmhHZjf3qAzrVpMA7qN9njWmID6S9wZfPWHAQL6VDyUa/RcT+sHO9GpMPMIrcR5iRzy6++cAbd/aT/mMsatBIcxJ1vUZZUPFlUkoEPYdsy30FpZgEs39VzxgyHFEgS6MY62ie7Bm7MjskCuZyiFo588LwEkiuWXWIvAH7FSePp7eomtBrLj423SjNxf7WWudSXVDbdwNcEZ2TAsfiGo+ibauDRERCad4PGC+i3tOaSw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=faohQmhY9PxliFMJJTev2O4hahpWTrxm6nbIV+473Qc=;
+ b=HNwotOKZj9OT+Fgy7rwROGkwJp4Xdt/z+ZzVdKVnQ+SAc1TBPs22MpbKQBoxLLyrRUz710HCxK8vBc34gWZngrNeT8MvuKX6CnoO1Y6BWjmKwLhF5BcNV8U7FwQx5Q9Iczg+DSb0vB9keD/8vHMk360gIrjaIHe8h5NZW+WQavXLhdPuNDYLf2TiQoqiYJczPBsk4eab93d+VPLBcl50/jlAE6bWpshCXy2R7dybvdfhcmlI1ext38sJB9EWvkLwAJT4iYzmkfhUUvdXPOFFW5aWHk1qQo5h/GkLZbZiSNg3xKeoRaM5QYmIVAGg7DlEagiKzhFoQ2MG1i7AmAOxfw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=faohQmhY9PxliFMJJTev2O4hahpWTrxm6nbIV+473Qc=;
+ b=cPfZGq1rLb1MhmG2vjwppHVcXfD//2bKznZr7AA4/QAyxi6krpOEpH4qW8U5C5eAwrWjfi//8834Fb618TCZdla97Drgq32Qt5FSm50kdrxpVoziEjGtSeO/IVH2GDbXlbutM+6wn2Nle28WITFrzlntogzLWKEzNFXhOd6oapfkFtFlvq+9mYJ1fzw3fhcgj89LyVHJXAL8AuM0mL6cADAw8SB3OBzpNdL67aA7xyhB9C37JszBZ+LyGCCPK8oMAYpNNL2pD3hnSOjDhye3QdgmishiS1llf+0HOsP1nLVTX/TO1oheDJHNNpuX4kTVhDUdr8pudIJ6L9seRvCu8w==
+Received: from KL1PR06MB6964.apcprd06.prod.outlook.com (2603:1096:820:121::11)
+ by TYSPR06MB7483.apcprd06.prod.outlook.com (2603:1096:405:8e::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7292.31; Mon, 19 Feb
+ 2024 15:56:53 +0000
+Received: from KL1PR06MB6964.apcprd06.prod.outlook.com
+ ([fe80::c971:fdb5:84cd:dd71]) by KL1PR06MB6964.apcprd06.prod.outlook.com
+ ([fe80::c971:fdb5:84cd:dd71%7]) with mapi id 15.20.7292.036; Mon, 19 Feb 2024
+ 15:56:53 +0000
+Message-ID:
+ <KL1PR06MB696494800980E97A1CBD449E96512@KL1PR06MB6964.apcprd06.prod.outlook.com>
+Date: Mon, 19 Feb 2024 23:56:42 +0800
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/6] net: hisilicon: add support for hisi_femac core on
+ Hi3798MV200
+Content-Language: en-US
+To: Simon Horman <horms@kernel.org>
+Cc: Yisen Zhuang <yisen.zhuang@huawei.com>,
+ Salil Mehta <salil.mehta@huawei.com>, "David S. Miller"
+ <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>, Yang Xiwen <forbidden405@foxmail.com>,
+ Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>,
+ Russell King <linux@armlinux.org.uk>, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+References: <20240216-net-v2-0-89bd4b7065c2@outlook.com>
+ <20240216-net-v2-1-89bd4b7065c2@outlook.com>
+ <20240219155346.GE40273@kernel.org>
+From: Yang Xiwen <forbidden405@outlook.com>
+In-Reply-To: <20240219155346.GE40273@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-TMN:
+ [GG01HwWAa1FZ6a0OKSswIQ0/hdkZcAZ0dNtUaxS2XADeYCKLuONZHdaNrpORaV65lP0waORTR7M=]
+X-ClientProxiedBy: TYAPR01CA0167.jpnprd01.prod.outlook.com
+ (2603:1096:404:7e::35) To KL1PR06MB6964.apcprd06.prod.outlook.com
+ (2603:1096:820:121::11)
+X-Microsoft-Original-Message-ID:
+ <2790f5d0-16a1-4b29-af36-b5d621570bf4@outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: biju.das.jz@bp.renesas.com, tip-bot2@linutronix.de, apatel@ventanamicro.com, linux-kernel@vger.kernel.org, linux-tip-commits@vger.kernel.org, tglx@linutronix.de, geert@linux-m68k.org, linux-renesas-soc@vger.kernel.org, x86@kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: KL1PR06MB6964:EE_|TYSPR06MB7483:EE_
+X-MS-Office365-Filtering-Correlation-Id: 91be3064-3ca1-419c-a940-08dc316363e1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	PqG85d+RQcLo5jRizOrdcHhs+v4Gdl7eezqlgB8b4AAgBRxtYafE62H6G1ejm1Wd+c/Dl/G28XDSJRQS8NjmIJdfsHDWfYMpAf43xinKpCbwKBbq4p7iyjjujruuB1jEahoNkomhCwqVhdCXZUSSOl+JPtOUDPzR+i+24UBm4URjmosz4tPVFcAAAURQigh95PNzwYMqRt1ZEoi0Px6ex5TSQaaKupp2P2lvyHNkg6G6Vtm7M4CTnq/ySDA1YXntsx925PT0AFAFMngyuFdAVUpJRZcP66Qo5Up9plfuO+B6GzCRcO0P05KMFGAXc1y/DKPIbCrQa8+oVwqb389LYWBS2T9btFe+M6ypBcNnplHxXcBwVHaZ7tXohE3tbkWXhLQG5yC7Ffoi4yzFNRiPTVEDIebrtetVC9Y1WXs3mDookadNJ3Klc8q7euLzSp7WwoywnuaDGdKG3kk0c0r7beo3eCYn8YwGbUq081Nqcd4EXbdjh+02yb5/zA1SjBJlEB91VbSXOyZVdBk2TG1ZKqnAHg8x9M1lEEVIEcyLnjTcR9sJP+/20eU9buV4ezu/
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?RzA1amdjU0NQZ01OMXkrbzFJZU4zalVDS2hBM0RHT3ZzcnZmelVMM0QyYWhF?=
+ =?utf-8?B?dkZ5L2lsaU01R3lQekttalJNL3B5RjJ1TS9tN0ZqeWJxcG5kUmFtK3VWYW93?=
+ =?utf-8?B?MTlWVVMwa1RpbE5pUVhpb0lWZ1BBUlBaUW1mSDNmUTJjcnV3V1I4Q24wenBC?=
+ =?utf-8?B?ZG0wY3pKUUNvZlNKVjFkNWxSMTE2dXFLTm4xWUtSb3p1OThRdTIyUmh0Qm5y?=
+ =?utf-8?B?U3UwcDlSU052dlRXWHErWlRLTTNlMzNTaHdhOGxiRk1ISlhZbUlubFNzMXVK?=
+ =?utf-8?B?cEdCcjBzUE9zSzMyeFpmcGZEbWRFcE92bWwrSUw2VFBDazV4RUFyNjFIMWhx?=
+ =?utf-8?B?VUgybGo2SnZSNm45YUswTGdCa1NCbEd0VjhJL1ptQlVLTXIwWjM1UzVYeVlh?=
+ =?utf-8?B?dW1yckNrd1J0SDRSb1ZFYTRYdENFTEhMcXB2ZHlrUlVOcTZkTjFweHFCSmdo?=
+ =?utf-8?B?alFYWFFYR015dk91LzZtZlhKWVh0RzdjMmlvVnJCUndxTXNZcVFacitTcjZO?=
+ =?utf-8?B?WlZ4Kzc0bWcyVHFJcmc4amlHWlpPbkFsMTRCcVpmZXhmN2U2UE1sSU9hV0s1?=
+ =?utf-8?B?ZEw4L3pFcUV2MU1oQ2ZNa2YyRE43MHJHRlhHWkJqMWJxazNId3dCcHVKNVls?=
+ =?utf-8?B?NFlwbFB0UzFZNTJYMGwwcWR0OExQckRObElrVTdoS1N5Y1JaVUxrRWNCS3RJ?=
+ =?utf-8?B?cEw1SkYyNlNlbDNhRWFBQkU4K2RqWlpxTWN5RjN2VDQyQzZ4RW9FVWFyaG8w?=
+ =?utf-8?B?TEZLaW1sWHhVc3JNSUl0NWVNWlNGZ0lUclgvQTl6ZHpqZ3JKRWNHR1BzQ2NG?=
+ =?utf-8?B?bkVsNy9tcWxNS1pGeDJkZ3RKSjhlL1Q1cGV0RlBWelUrKys1TU1hdy9MYzdi?=
+ =?utf-8?B?N3NXY2xDdkVjMldQTTZqWEtoUUtQMS9WVWt3M3lVQUszZHBUMEJWY1hBOWJk?=
+ =?utf-8?B?R0pSamdrODlCUUhlU2QxNkgrOXpFUHNvQ05ESjRnWWQwcUpTR0pTeHNPLzVT?=
+ =?utf-8?B?UTJhZlF2VC9wcWhnZ3NFc3BDOHBWdzY0bm9PempFa1VQa2ZVRnNSdGQ2S0tT?=
+ =?utf-8?B?TTRPMGx6QkpHbG15STlsRUxzazZNTmtCS1VMTUdPbXJHQjcycUNMVFNBRVN3?=
+ =?utf-8?B?YldSSGZseDhUZlE1Uld2M282anE5aTBEcXJheDVUTC9WM1hCdnhkbnhZUkcz?=
+ =?utf-8?B?SVIvTHYrVWw0N1o2QkhaOW5nRCtoSGZ2N2hnY3hMMm1WWnlVa0xYcmxVQStm?=
+ =?utf-8?B?di82TXFwU0o1K3hPY3lLaHl4VENkamE5UHBSTEV5cG5XTTN6WGszYmdYaHYz?=
+ =?utf-8?B?c21kSFFYQ0ZoRXF4eGxsYXl0enkvWE9sNVRPaWxxaGNyWEZVWCt1Q24wMUNY?=
+ =?utf-8?B?NU1GUnNTTHpwQWJxMFMvQWJEVjQzQU53UTFiWElvdFp6TGo1ZmRxVEtkbWdu?=
+ =?utf-8?B?YmtUOTRqa1h0bUN3YWZYdkRZMFI3aXBxUDFQMHVmN0NoSFljYXYyYXFSRmxJ?=
+ =?utf-8?B?dkhpNGd2a1hHbnNQUzRjSDhXRGVzTTRVbEtidUNiZVhoU1p3MkxodXBEVWRq?=
+ =?utf-8?B?aDFaZVI2SFpkeVQxeEtabEcxSnc5RGY5MXEzVmFWUFBiOFRRTWZwWURKRlo5?=
+ =?utf-8?B?bmY5K1MwUWVNY3dVVHlLYnArQjUwSmxYbEhEcCtVOEMvV1dPMXA4YkxIOTg5?=
+ =?utf-8?B?c0dWck01Z2FSRysvOXlQNEJwVUlzL25RaWtOR2I0citDS0pLcUxEWmxjM0tq?=
+ =?utf-8?Q?6UAQwW2d+Mo90dy1IzgxWmVl9IM4xHsJCRNKXhx?=
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 91be3064-3ca1-419c-a940-08dc316363e1
+X-MS-Exchange-CrossTenant-AuthSource: KL1PR06MB6964.apcprd06.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Feb 2024 15:56:53.0192
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
+	00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYSPR06MB7483
 
-On Mon, 19 Feb 2024 15:50:36 +0000,
-Biju Das <biju.das.jz@bp.renesas.com> wrote:
-> 
-> > Now that the GIC-v3 callback can handle invocation with a fwspec parameter
-> > count of 0 lift the restriction in the core code and invoke select()
-> > unconditionally when the domain provides it.
-> 
-> This patch breaks on RZ/G2L SMARC EVK as of_phandle_args_to_fwspec count()
-> is called after irq_find_matching_fwspec() is causing fwspec->param_count=0
-> and this results in boot failure as the patch removes the check.
-> 
-> Maybe we need to revert this patch or fix the fundamental issue.
-> 
-> Cheers,
-> Biju
-> ---
->  kernel/irq/irqdomain.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/kernel/irq/irqdomain.c b/kernel/irq/irqdomain.c
-> index 0bdef4f..8fee379 100644
-> --- a/kernel/irq/irqdomain.c
-> +++ b/kernel/irq/irqdomain.c
-> @@ -448,7 +448,7 @@ struct irq_domain *irq_find_matching_fwspec(struct irq_fwspec *fwspec,
->  	 */
->  	mutex_lock(&irq_domain_mutex);
->  	list_for_each_entry(h, &irq_domain_list, link) {
-> -		if (h->ops->select && fwspec->param_count)
-> +		if (h->ops->select)
->  			rc = h->ops->select(h, fwspec, bus_token);
->  		else if (h->ops->match)
->  			rc = h->ops->match(h, to_of_node(fwnode), bus_token);
-> 
-> 
+On 2/19/2024 11:53 PM, Simon Horman wrote:
+> On Fri, Feb 16, 2024 at 06:02:00PM +0800, Yang Xiwen via B4 Relay wrote:
+>
+> ...
+>
+>> @@ -826,15 +847,32 @@ static int hisi_femac_drv_probe(struct platform_device *pdev)
+>>   						 priv->phy_reset_delays,
+>>   						 DELAYS_NUM);
+>>   		if (ret)
+>> -			goto out_disable_clk;
+>> +			goto out_free_netdev;
+>>   		hisi_femac_phy_reset(priv);
+>>   	}
+>>   
+>> +	// Register the optional MDIO bus
+>> +	for_each_available_child_of_node(node, mdio_np) {
+>> +		if (of_node_name_prefix(mdio_np, "mdio")) {
+>> +			priv->mdio_pdev = of_platform_device_create(mdio_np, NULL, dev);
+>> +			of_node_put(mdio_np);
+>> +			if (!priv->mdio_pdev) {
+>> +				dev_err(dev, "failed to register MDIO bus device\n");
+>> +				goto out_free_netdev;
+> Hi Yang Xiwen,
+>
+> out_free_netdev will return ret.
+> However, it seems that ret is uninitialised here.
+> Perhaps it should be set to a negative error value?
+Oh, you are right. Will fix this in next version.
+>
+> Flagged by Smatch.
+>
+>> +			}
+>> +			mdio_registered = true;
+>> +			break;
+>> +		}
+>> +	}
+>> +
+>> +	if (!mdio_registered)
+>> +		dev_warn(dev, "MDIO subnode notfound. This is usually a bug.\n");
+>> +
+>>   	phy = of_phy_get_and_connect(ndev, node, hisi_femac_adjust_link);
+>>   	if (!phy) {
+>>   		dev_err(dev, "connect to PHY failed!\n");
+>>   		ret = -ENODEV;
+>> -		goto out_disable_clk;
+>> +		goto out_unregister_mdio_bus;
+>>   	}
+>>   
+>>   	phy_attached_print(phy, "phy_id=0x%.8lx, phy_mode=%s\n",
+> ...
 
-Dmitry posted his take on this at [1], and I have suggested another
-possible fix in my reply.
-
-Could you please give both patches a go?
-
-Thanks,
-
-	M.
-
-[1] https://lore.kernel.org/r/20240219-gic-fix-child-domain-v1-1-09f8fd2d9a8f@linaro.org
 
 -- 
-Without deviation from the norm, progress is not possible.
+Regards,
+Yang Xiwen
+
