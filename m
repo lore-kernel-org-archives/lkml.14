@@ -1,109 +1,55 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62F422D638;
-	Mon, 19 Feb 2024 12:27:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3F332FC59
+	for <linux-kernel@vger.kernel.org>; Mon, 19 Feb 2024 12:27:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708345665; cv=none; b=Apsd7vW+b4JD56/4Nw0QkwEu/lNqzEq9PLLhtTNs9Ps4NVuwsDukOL3BGVsFMsEH2NzpIOJ9z9twKe685WStz/RUUI1VnUxao7Rwsx+hG2i0/RA8J+FjlVQ3xbuZQ3ZPqxFTPyYqCqh9H8BcJgQVnCsJkYThjtqmrguIOIyof6g=
+	t=1708345678; cv=none; b=NeByBqA9dtbqrIFjj2x41B8EoYL52vWKhDHR/AhdLwWInkdQfozD4t082bZZNNWj1WL+fDQboc0Zywb5bZ83HBeSykjVyYNF0M38JcMQjw8ogpCj6XYQuFvPakEmu1AxRApJ62JxTswb5LC8rUhh9ZNafFAEexJYD715PEwaUqM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708345665; c=relaxed/simple;
-	bh=QtyAmgyaqBP3Pw2hsyXdaBD838ZNokfapk5FB3vM9do=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=RipRGigIOQng3AF9pNI2Xgb5vrpHNSONFeYl0I4+FStye+xGx6pFdUeWRVKIWmiJk5wQ42kECIum3C7kKEhXx3b4ePIv9Eak8GvxX6WFIrX5jY+eRVRrit9OwSQlogsOHk9E2BDEc4a9QIq28YzlxErftR0BNGPbA0MS6/MT4e0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=T8lK5B3N; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1708345678; c=relaxed/simple;
+	bh=v7TF6D7rCT1Xtj8T7jMIW7GSQIy+0TcQjmq6sFHYN4A=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=EVevIEhbgExSMMINhujnKLUcY7ErKaXzaR5qKOVWmTYBU7LngpPmbhqNYuxo/S2Mt27XiQsaFvVJ1HmIVpFV6L1v6xjknZlBwpWCySdOqhJ3FOMAxpO3r+0BeDH3yt5gz4YUmpkES5qwkg4QWzysDcfQpJ0CY/8N5+B/TA4COCM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WPbwxWgk; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="T8lK5B3N"
-Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 41JAeoK2009496;
-	Mon, 19 Feb 2024 12:27:36 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	qcppdkim1; bh=k3n1beUOcmwlqVyyDnDeVwvl4hamR/xvV4h8XQhkusc=; b=T8
-	lK5B3NiIBFlquw+7f0Ai1xSOO8osBXYtKp4T+ObjNl1UqRFzYkTnJ/+keYupjTKI
-	VHKZsm6mKhqJEL6Yz3ZWQ/xrAXdJmb5E2d/xRX/EQarcg7uvyHlPFk0e2gj0RbHA
-	DGuwM7FxdSey225lhGRReIlAXASOGYPWYNRnsaCm01a6YTqU/aRKnAdd4aDtl5hH
-	H/kmP9f1NdSZoO9PqdgMLo0cHOsRAGOqCg9028ldNvyvWfyUahnImGrigTTpWd70
-	9+6oPAPg2qXS7uCSk/c4DC15WorRpypGOzSofjOEoF+B0WOAvRBG0gB43rF6IlXh
-	bCfegwQ2ADRDWvM1zoLQ==
-Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3wc5dtr6mx-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 19 Feb 2024 12:27:35 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 41JCRZLx022733
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 19 Feb 2024 12:27:35 GMT
-Received: from [10.214.82.119] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Mon, 19 Feb
- 2024 04:27:31 -0800
-Message-ID: <34734d65-6be7-4fab-98b7-357726751af5@quicinc.com>
-Date: Mon, 19 Feb 2024 17:57:28 +0530
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WPbwxWgk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E0FABC433F1;
+	Mon, 19 Feb 2024 12:27:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1708345678;
+	bh=v7TF6D7rCT1Xtj8T7jMIW7GSQIy+0TcQjmq6sFHYN4A=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=WPbwxWgkOxrUtLw7Mw3h4YpF7/LTym0hpLxdG8wqk5340/44ljPpxuKq0yNAsw5Xe
+	 XXsGPTZMtJkv4JrFyVobC2xIQ7OZ2cpZmUZ0EcFyxdnd6akVpIiQW6xzAQZBC3ma7X
+	 BKRsKMRxhBrj377tMduSIDpnoWBG7ZEsOaUSrjMS53T4xDSYs6ibw3y+pkWH+0h1O5
+	 DRCEv9LkL4oHeO6kEae1aUKnVjUzAUJQOZ2V/f8YVBfb/h49VLNemwqnyOQSLjhXyD
+	 5iVBKLcjNG+PjfcTajEpMw9hJIDLGX+ol4v14foE369aH40ZcZ2KszOsKVddQsUf9D
+	 +YLculyxLh6EQ==
+From: =?utf-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@kernel.org>
+To: Samuel Holland <samuel.holland@sifive.com>, Palmer Dabbelt
+ <palmer@dabbelt.com>
+Cc: linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, Samuel
+ Holland <samuel.holland@sifive.com>
+Subject: Re: [PATCH 2/7] riscv: jump_label: Simplify assembly syntax
+In-Reply-To: <20240212025529.1971876-3-samuel.holland@sifive.com>
+References: <20240212025529.1971876-1-samuel.holland@sifive.com>
+ <20240212025529.1971876-3-samuel.holland@sifive.com>
+Date: Mon, 19 Feb 2024 13:27:55 +0100
+Message-ID: <87edd8fxkk.fsf@all.your.base.are.belong.to.us>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] dt-bindings: interconnect: Add Qualcomm SM7150 DT
- bindings
-Content-Language: en-US
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        Danila Tikhonov
-	<danila@jiaxyga.com>, <andersson@kernel.org>,
-        <konrad.dybcio@linaro.org>, <djakov@kernel.org>, <robh@kernel.org>,
-        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>
-CC: <linux-arm-msm@vger.kernel.org>, <linux-pm@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20240218183239.85319-1-danila@jiaxyga.com>
- <20240218183239.85319-2-danila@jiaxyga.com>
- <fce70468-05fb-4f51-a653-7921dd27bc6b@quicinc.com>
- <f522e679-3543-46ee-8b2d-92e384427382@linaro.org>
-From: Naman Jain <quic_namajain@quicinc.com>
-In-Reply-To: <f522e679-3543-46ee-8b2d-92e384427382@linaro.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: FdxgsSP__rrgBzXHnAKkDnCXCpPjd2pP
-X-Proofpoint-GUID: FdxgsSP__rrgBzXHnAKkDnCXCpPjd2pP
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-02-19_08,2024-02-19_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 clxscore=1015
- impostorscore=0 mlxlogscore=805 lowpriorityscore=0 phishscore=0
- spamscore=0 adultscore=0 suspectscore=0 malwarescore=0 bulkscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2401310000 definitions=main-2402190093
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On 2/19/2024 4:44 PM, Krzysztof Kozlowski wrote:
-> On 19/02/2024 10:48, Naman Jain wrote:
->> On 2/19/2024 12:02 AM, Danila Tikhonov wrote:
->>> The Qualcomm SM7150 platform has several bus fabrics that could be
->>> controlled and tuned dynamically according to the bandwidth demand.
->>
->> Please add what you are trying to do with this patch.
->>
->> Ref:
->> https://docs.kernel.org/process/submitting-patches.html#describe-your-changes
-> 
-> The reason for this change is explained in commit msg, so what exactly
-> are you missing?
-> 
-> Best regards,
-> Krzysztof
-> 
+Samuel Holland <samuel.holland@sifive.com> writes:
 
-I was under the impression that we should have explained/mentioned the
-subject of this patch in the description of the commit msg. It seems
-that it's not required. Thanks for correcting me.
+> The idiomatic way to write "jal zero" is "j".
+>
+> Signed-off-by: Samuel Holland <samuel.holland@sifive.com>
 
-Regards,
-Naman Jain
+Reviewed-by: Bj=C3=B6rn T=C3=B6pel <bjorn@rivosinc.com>
