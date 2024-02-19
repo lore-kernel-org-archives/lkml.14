@@ -1,115 +1,148 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96DE73308A
-	for <linux-kernel@vger.kernel.org>; Mon, 19 Feb 2024 16:05:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B2573A8FB;
+	Mon, 19 Feb 2024 16:05:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708358701; cv=none; b=R9GiNHEd5NinyZY901VzvGCbpaq/KDCMIlP2goXg4jZCBa2aerLSZt0mpK9B1VhafxVGHMxtlM3ekbQkanpSoFnVSkOhstFmGVysJkuBDDhjd7TqNQHKpLbfs9J05yQDjux4gZOPMgKp7+GcZp7s0ngRchrEYvQDlAulVQ2tY5c=
+	t=1708358724; cv=none; b=MX+8E0ND/AboiToynBW2/al1k5z3GQtBi/fYCP651u/xd+7MubxpxVCQxk84r+ivtWyVGxkLeoQfT1IsDpZQopc4EAc5AnbbQcRW0BNo8L9XJadsG3RCM0lDm0NHNXE8jjiUh+H16UkkY/rXLrCbcE6xEQZVlkfOcPS3kIDXktQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708358701; c=relaxed/simple;
-	bh=QSQhFzqyHvdSBslDmpugOpRWw2G2U/ioWUEnLCdRQaM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=a2BuZZylYL08JuTRUSHJZsMJrTThN4rDCJ8kayPbRN6fpq6vaXJlsRnwoVLpthQBjGVN1w2szwpo45fxLFqJNTOK6vo8NwGAal6LdZbJOZQarV7yuBb37y0rlCFcmZvbRmvcy4wVxZ+fF84T2I4h50ffgzp7PsJ1Qfo5XvtiXOg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=q7kcpoHl; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="q7kcpoHl"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A47C0C433C7;
-	Mon, 19 Feb 2024 16:05:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708358701;
-	bh=QSQhFzqyHvdSBslDmpugOpRWw2G2U/ioWUEnLCdRQaM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=q7kcpoHlgsbbngSSNe5KCyP4JbREt2a3SmvVj1ufDyge68StNJNRgRIjEjZjhPXTq
-	 37dCRdT+LKBsXXTPus9E8Vgi0LAmdbCBnl4GbP2JtjDuSmtL8Nfn30V5WtoHqeV2wM
-	 E3DVSWYnjKUp0FEv8Bppk+Xg38ZIFbgZuvVcNDkXn8JjeKTgUFymz5VeGlbjO7C4Qi
-	 50cIyf+0J4n40e2Tu/JsM6HECwDXcI/ZeJJRGKos8C5lAJqyYYWe6MsEgsRW7ScJWm
-	 Ypfq+motK7Q1itoStAtmX8qEV/CcM7VbcF1hHPzyJbz4fYmwK0MirmlaHBfdhSjVlx
-	 31f+rM/ReYgZg==
-Date: Mon, 19 Feb 2024 17:04:56 +0100
-From: Frederic Weisbecker <frederic@kernel.org>
-To: Anna-Maria Behnsen <anna-maria@linutronix.de>
-Cc: linux-kernel@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
-	John Stultz <jstultz@google.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Eric Dumazet <edumazet@google.com>,
-	"Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-	Arjan van de Ven <arjan@infradead.org>,
-	"Paul E . McKenney" <paulmck@kernel.org>,
-	Rik van Riel <riel@surriel.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Sebastian Siewior <bigeasy@linutronix.de>,
-	Giovanni Gherdovich <ggherdovich@suse.cz>,
-	Lukasz Luba <lukasz.luba@arm.com>,
-	"Gautham R . Shenoy" <gautham.shenoy@amd.com>,
-	Srinivas Pandruvada <srinivas.pandruvada@intel.com>,
-	K Prateek Nayak <kprateek.nayak@amd.com>,
-	Frederic Weisbecker <frederic@kernel.org>
-Subject: Re: [PATCH v10 13/20] timers: Add get next timer interrupt
- functionality for remote CPUs
-Message-ID: <ZdN8KCTB2smSZb88@localhost.localdomain>
-References: <20240115143743.27827-1-anna-maria@linutronix.de>
- <20240115143743.27827-14-anna-maria@linutronix.de>
+	s=arc-20240116; t=1708358724; c=relaxed/simple;
+	bh=/dckHxJU8Um9rSbczYrIkkwQ4W5d5/C4/kuOUKIhTok=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=txD7BYYttdKICxqutmsqG/Np+7T9JXzRaGhnaI5qN0LwadVKuYXnSxywGonn0xfMCI/QvUTWarLYpr5C0DBPKk8yb3LtHohLEXF36BQLs6gUQZ7s6vhbAmgBKk2wkWx3TuAda2kg3PMfOowHo/MzAOP+7D/rHcTV+IstNLJAm2k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 87B9FC433C7;
+	Mon, 19 Feb 2024 16:05:22 +0000 (UTC)
+Date: Mon, 19 Feb 2024 11:07:05 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>, Florent Revest
+ <revest@chromium.org>, linux-trace-kernel@vger.kernel.org, LKML
+ <linux-kernel@vger.kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>,
+ bpf <bpf@vger.kernel.org>, Sven Schnelle <svens@linux.ibm.com>, Alexei
+ Starovoitov <ast@kernel.org>, Jiri Olsa <jolsa@kernel.org>, Arnaldo
+ Carvalho de Melo <acme@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
+ Alan Maguire <alan.maguire@oracle.com>, Mark Rutland
+ <mark.rutland@arm.com>, Peter Zijlstra <peterz@infradead.org>, Thomas
+ Gleixner <tglx@linutronix.de>, Guo Ren <guoren@kernel.org>
+Subject: Re: [PATCH v7 22/36] function_graph: Add a new entry handler with
+ parent_ip and ftrace_regs
+Message-ID: <20240219110705.0c1ffa9c@gandalf.local.home>
+In-Reply-To: <170723229401.502590.8644663781359457778.stgit@devnote2>
+References: <170723204881.502590.11906735097521170661.stgit@devnote2>
+	<170723229401.502590.8644663781359457778.stgit@devnote2>
+X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240115143743.27827-14-anna-maria@linutronix.de>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Le Mon, Jan 15, 2024 at 03:37:36PM +0100, Anna-Maria Behnsen a écrit :
-> +# ifdef CONFIG_SMP
-> +/**
-> + * fetch_next_timer_interrupt_remote() - Store next timers into @tevt
-> + * @basej:	base time jiffies
-> + * @basem:	base time clock monotonic
-> + * @tevt:	Pointer to the storage for the expiry values
-> + * @cpu:	Remote CPU
-> + *
-> + * Stores the next pending local and global timer expiry values in the
-> + * struct pointed to by @tevt. If a queue is empty the corresponding
-> + * field is set to KTIME_MAX. If local event expires before global
-> + * event, global event is set to KTIME_MAX as well.
-> + *
-> + * Caller needs to make sure timer base locks are held (use
-> + * timer_lock_remote_bases() for this purpose).
-> + */
-> +void fetch_next_timer_interrupt_remote(unsigned long basej, u64 basem,
-> +				       struct timer_events *tevt,
-> +				       unsigned int cpu)
-> +{
-> +	struct timer_base *base_local, *base_global;
-> +
-> +	/* Preset local / global events */
-> +	tevt->local = tevt->global = KTIME_MAX;
-> +
-> +	base_local = per_cpu_ptr(&timer_bases[BASE_LOCAL], cpu);
-> +	base_global = per_cpu_ptr(&timer_bases[BASE_GLOBAL], cpu);
-> +
-> +	lockdep_assert_held(&base_local->lock);
-> +	lockdep_assert_held(&base_global->lock);
-> +
-> +	fetch_next_timer_interrupt(basej, basem, base_local, base_global, tevt);
+On Wed,  7 Feb 2024 00:11:34 +0900
+"Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
 
-If the next timer is global and it is <= jiffies + 1, the result will be
-returned in tevt.local only and not on tevt.global. So a remote fetch may miss it.
+> From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> 
+> Add a new entry handler to fgraph_ops as 'entryregfunc'  which takes
+> parent_ip and ftrace_regs. Note that the 'entryfunc' and 'entryregfunc'
+> are mutual exclusive. You can set only one of them.
+> 
+> Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> ---
+>  Changes in v3:
+>   - Update for new multiple fgraph.
+> ---
+>  arch/arm64/kernel/ftrace.c               |    2 +
+>  arch/loongarch/kernel/ftrace_dyn.c       |    2 +
+>  arch/powerpc/kernel/trace/ftrace.c       |    2 +
+>  arch/powerpc/kernel/trace/ftrace_64_pg.c |   10 ++++---
+>  arch/x86/kernel/ftrace.c                 |   42 ++++++++++++++++--------------
+>  include/linux/ftrace.h                   |   19 +++++++++++---
+>  kernel/trace/fgraph.c                    |   30 +++++++++++++++++----
+>  7 files changed, 72 insertions(+), 35 deletions(-)
+> 
+> diff --git a/arch/arm64/kernel/ftrace.c b/arch/arm64/kernel/ftrace.c
+> index b96740829798..779b975f03f5 100644
+> --- a/arch/arm64/kernel/ftrace.c
+> +++ b/arch/arm64/kernel/ftrace.c
+> @@ -497,7 +497,7 @@ void ftrace_graph_func(unsigned long ip, unsigned long parent_ip,
+>  		return;
+>  
+>  	if (!function_graph_enter_ops(*parent, ip, frame_pointer,
+> -				      (void *)frame_pointer, gops))
+> +				      (void *)frame_pointer, fregs, gops))
 
-For this to work on both local and remote fetch, you may need:
+I would like to replace that second frame_pointer with fregs.
 
-diff --git a/kernel/time/timer.c b/kernel/time/timer.c
-index 320eb4ceafa2..64ce9a7760f5 100644
---- a/kernel/time/timer.c
-+++ b/kernel/time/timer.c
-@@ -2004,6 +2007,8 @@ static unsigned long fetch_next_timer_interrupt(unsigned long basej, u64 basem,
- 		if (time_before(nextevt, basej))
- 			nextevt = basej;
- 		tevt->local = basem + (u64)(nextevt - basej) * TICK_NSEC;
-+		if (!local_first)
-+			tevt->global = tevt->local;
- 		return nextevt;
- 	}
- 
+
+>  		*parent = (unsigned long)&return_to_handler;
+>  
+>  	ftrace_test_recursion_unlock(bit);
+> diff --git a/arch/loongarch/kernel/ftrace_dyn.c b/arch/loongarch/kernel/ftrace_dyn.c
+> index 81d18b911cc1..45d26c6e6564 100644
+> --- a/arch/loongarch/kernel/ftrace_dyn.c
+> +++ b/arch/loongarch/kernel/ftrace_dyn.c
+> @@ -250,7 +250,7 @@ void ftrace_graph_func(unsigned long ip, unsigned long parent_ip,
+>  
+>  	old = *parent;
+>  
+> -	if (!function_graph_enter_ops(old, ip, 0, parent, gops))
+> +	if (!function_graph_enter_ops(old, ip, 0, parent, fregs, gops))
+
+That is, to replace the parent with fregs, as the parent can be retrieved
+from fregs.
+
+We should add a fregs helper (something like):
+
+unsigned long *fregs_caller_addr(fregs) {
+	return (unsigned long *)(kernel_stack_pointer(fregs->regs) + PT_R1);
+}
+
+That returns the address that points to the parent caller on the stack.
+
+This was on my todo list to do. That is, replace the passing of the parent
+of the stack with fregs as it is redundant information.
+
+>  		*parent = return_hooker;
+>  }
+>  #else
+> diff --git a/arch/powerpc/kernel/trace/ftrace.c b/arch/powerpc/kernel/trace/ftrace.c
+> index 4ef8bf480279..eeaaa798f4f9 100644
+> --- a/arch/powerpc/kernel/trace/ftrace.c
+> +++ b/arch/powerpc/kernel/trace/ftrace.c
+> @@ -423,7 +423,7 @@ void ftrace_graph_func(unsigned long ip, unsigned long parent_ip,
+>  	if (bit < 0)
+>  		goto out;
+>  
+> -	if (!function_graph_enter_ops(parent_ip, ip, 0, (unsigned long *)sp, gops))
+> +	if (!function_graph_enter_ops(parent_ip, ip, 0, (unsigned long *)sp, fregs, gops))
+>  		parent_ip = ppc_function_entry(return_to_handler);
+>  
+>  	ftrace_test_recursion_unlock(bit);
+> diff --git a/arch/powerpc/kernel/trace/ftrace_64_pg.c b/arch/powerpc/kernel/trace/ftrace_64_pg.c
+> index 7b85c3b460a3..43f6cfaaf7db 100644
+> --- a/arch/powerpc/kernel/trace/ftrace_64_pg.c
+> +++ b/arch/powerpc/kernel/trace/ftrace_64_pg.c
+> @@ -795,7 +795,8 @@ int ftrace_disable_ftrace_graph_caller(void)
+>   * in current thread info. Return the address we want to divert to.
+>   */
+>  static unsigned long
+> -__prepare_ftrace_return(unsigned long parent, unsigned long ip, unsigned long sp)
+> +__prepare_ftrace_return(unsigned long parent, unsigned long ip, unsigned long sp,
+> +			struct ftrace_regs *fregs)
+
+And sp shouldn't need to be passed in either, as hat should be part of the fregs.
+
+I really like to consolidate the parameters and not just keep adding to
+them. This all slows down the logic to load the parameters.
+
+-- Steve
+
+
+>  {
+>  	unsigned long return_hooker;
+>  	int bit;
