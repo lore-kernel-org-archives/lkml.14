@@ -1,103 +1,96 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91E44328B1;
-	Mon, 19 Feb 2024 12:49:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AE392E821
+	for <linux-kernel@vger.kernel.org>; Mon, 19 Feb 2024 12:50:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.16
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708346970; cv=fail; b=ci96ZL+S1tuMmGbbpQHtIFyaLzV9PI1fAMb51BJJxn2bNWmFCciGbuBhzSbF0HPIQ2TX5L0ZZeMOugI8CwPLlWZVinAgZf8lzaMhV0c1vJxcF4FHA9/MdKzgP+TfqBSZOTthg3OzdJgzaHftUPmeoTYlWdot8hxCh4/Kz4U5s+M=
+	t=1708347011; cv=fail; b=qydQgywLk+zEhj0KOfXBswRVGmq3L0gkhj9XJP8CqQn+Xl3iqT1jeq0sQm3tq9VAb/KTenAdRQNddtdqWy3r5cjwvApZRwHKmuKmvy6+fQyLiAXPWzE8QR7ZSEVOcKT1qICZNQ7CNHZGG2dzcBnc8LQkvWNopOyxtX+xSDDg4f4=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708346970; c=relaxed/simple;
-	bh=3QkhmzFXKe+RKkyS6WpahY8Kf+tSPVbYfQtaPXJvhvg=;
-	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=jhZ+iUZiuamCTgG+aUqWXpKbUPRhq0mHK8ZLtMEhmhbLZlV6sr1Mgg83j0FtRygB4MLVbi0zFL1XupIZC+1t3Jdp+RMQsrVPPtYQ978lWbbkGhEku4ZoNRX+jZ9fNGs6AWs7DG6TAGIcyMlAJyvjjxeBuUyqslA17HBTUc7gDTo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=k15q9YEI; arc=fail smtp.client-ip=192.198.163.16
+	s=arc-20240116; t=1708347011; c=relaxed/simple;
+	bh=qTKMEP6Ciq0FIDkOzyrVlL/+G84i5zXzPm3W/gyyQ1k=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=qVrPxyGYvoyyB0ceOaTgO5CFKXwI2hxeNEsYMfrl0DJbDgOTxIn272FdEcfS5qhGp9tbEvC+hmJPdfEfk4p4ZKg4VHOLerbSNINtH28Ibl2lsLtfxT1M1vi3LFjX48unrjEzW77k948mY9MXPaSKbwIuhEoPuXI03WRLpNG+uMA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=K7Y5z2FC; arc=fail smtp.client-ip=192.198.163.16
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="k15q9YEI"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="K7Y5z2FC"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1708346969; x=1739882969;
-  h=message-id:date:subject:to:cc:references:from:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=3QkhmzFXKe+RKkyS6WpahY8Kf+tSPVbYfQtaPXJvhvg=;
-  b=k15q9YEI7kosw7e7rpUMThbtqIrA1Q4bHLnjehhqjgIGKNP6A3ZDMcrD
-   bI//mIuqTo0QqKENmGWjCkwc9/LLxkFoqJz/8qf3pe/Kj0H6SjSNoCbPD
-   TpZyJxUZmxE9YK2YhPAzbNKsSDpi+N8MA/OOo9vL5RpsF6X/rekhYvE/G
-   X690FmO+fJ2N0SoEpWce0N2w3e0eZcLpfIMpf6xe+WqONBTj/rxaafiu+
-   GWjwwb0n2SfgMwDXNTTQOtwBwSnEM6mEZDSDu/FnWpJ3VZY9W6rf1aYqO
-   Aq6O4cvABG95Kxa5zcDqFJbDDtSU9i8kh5kh4yQU5n0Qu/sCcl5xTJvMY
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10988"; a="2868449"
+  t=1708347010; x=1739883010;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=qTKMEP6Ciq0FIDkOzyrVlL/+G84i5zXzPm3W/gyyQ1k=;
+  b=K7Y5z2FC1nAcu2ftkjLku/tSICcbrnKpYFAc+wVPc/kGsiv5X+QbLS6g
+   saAnrJ6SOAXNI7ymBvQOJHAlyHMNg+S3YHiVAykKss9R2T5Y6swKJ8AkD
+   9pHYy2X9Q0PTz3BJ57m9ZwkdlXNUa8zcpaw5vIRIEF/vi4rTo0JuTOhQ8
+   sBZq9Usr45Ji/dMje9Pm9U8LksHjSO5Fi1VF+hfX1KfGpWGo7lX6FXnOn
+   /gICVWkjVG+6Fjoj6fEAl6YLCmB8jrY25I5QaZS5J9qzGF7cwsKZ6yoCt
+   0aeeOR2tiTwYdau0wwPICIuKNOCUbJ01nY02/tlSkZ2mPx5kIPpqfNbql
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10988"; a="2868515"
 X-IronPort-AV: E=Sophos;i="6.06,170,1705392000"; 
-   d="scan'208";a="2868449"
+   d="scan'208";a="2868515"
 Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Feb 2024 04:49:28 -0800
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Feb 2024 04:50:09 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.06,170,1705392000"; 
-   d="scan'208";a="9153391"
+   d="scan'208";a="9153438"
 Received: from fmsmsx601.amr.corp.intel.com ([10.18.126.81])
-  by orviesa004.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 19 Feb 2024 04:49:27 -0800
+  by orviesa004.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 19 Feb 2024 04:50:09 -0800
 Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
  fmsmsx601.amr.corp.intel.com (10.18.126.81) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Mon, 19 Feb 2024 04:49:25 -0800
-Received: from fmsedg601.ED.cps.intel.com (10.1.192.135) by
+ 15.1.2507.35; Mon, 19 Feb 2024 04:50:08 -0800
+Received: from FMSEDG603.ED.cps.intel.com (10.1.192.133) by
  fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35 via Frontend Transport; Mon, 19 Feb 2024 04:49:25 -0800
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (104.47.58.169)
- by edgegateway.intel.com (192.55.55.70) with Microsoft SMTP Server
+ 15.1.2507.35 via Frontend Transport; Mon, 19 Feb 2024 04:50:08 -0800
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (104.47.55.101)
+ by edgegateway.intel.com (192.55.55.68) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Mon, 19 Feb 2024 04:49:24 -0800
+ 15.1.2507.35; Mon, 19 Feb 2024 04:50:07 -0800
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=SpA17MzHo8YJsWZI3eUQzlV6ucMgiIlTX0QAd0UgJwAhf3wI4GKnVRlkQFIFc3W5YPWb8POmLzl5KJZLzBc7zWdUHE7U91VvFa5w7Z0pR0cCiJkKn9y94A3XN6UUeVmuID8QGB4ttit6MKGTRc6f5CawCNSgpM2KufbvbGUUUbQe+cR1N9Yl+8jkrn3MbEoH4gpMhRXoHvR7EHTjM8CnBrtNCcXkLdqoHxvX0ztZ9JhndA2bk9nXOkc3E7iIW7GsLmOeF+kS2r9qAf/CIcdolWujom0QK1lyhaYqDxe9PYwzOjFsSLig9KM3GZLK2GVZb3QuNQmmhNKr7AF3DEcA9Q==
+ b=BVx9d4/HqvUMEL49ZkY1S8LkI/7VlSBMG01PW7PKhQRsXeeqvfsLVDSMysXSrpHu2GDTKxseYCqqZU0kEmCjDm5kazPsNZfyZMmY7gtPpHajDnEJS4rbCvrzy5hhv5bOChMqWSnXFXRHakiIlnPXmevA7QaEOrsb21pUcVOOxNdFy+CLxQmiFXI5K3J52zINwW0MIgtMx5bnWoqVoQqYkCIjQuRr0sfDGKiPKpbcYdtiKw9Cn0WBmQkUgNm/dBWZqE5/+sPl5c3jmUjh3zx3eFjO4YP2c5iYaJsS7y5X0L72e/aLLvtO1mNdML5JKxKSLc+QG+OADFSXWa0FckpJRg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=/N0b9tGaHQhr7acJXshZm6i/t512flc91i1ogIOg89I=;
- b=bO9DrxYCp0yitLysRqZ1HeXn9vUaqTDArte2TBLFJd8VjclsNHg9rgJn+BwgDfeIlSYWhnBVyGmRcECItxB2p36/vEUduQNSeVo4WCLE7C7V4ZuQRGNzHiFgGUTrOOyPOcvlctZhJVwUQH5XWeyjWmnq3vXMRMJaVE3yMyVIJbxO/lrK1r9ETQWHdseKRmnYTToYY1PVmhvKFSAAS0IZ8di8M9U7dkGf8LBCacoi8sOEPFL+Ny0TRxI7R1zjD0tiJj6pwOQXQs/rZi36ekOP+KyT9TTjuJ8bH53w94XYjDIkUWXN1PelZWtxpiwl+ps277eB6+ts6Ip9RMEawjVhWQ==
+ bh=5W8yjTDgqGkwhvRE0S0SCWNde2y0xY40iClCI7SLNGA=;
+ b=Eyhewjkpflwh+dxDVBJ7v9TDNs3JEpCQ6lMIlkgfMT73FCzGTS1FJjPPx5Q5bTI+fqPLJr3CBBq3r+IUf8V333WiuAGCScbiicOpt95pmOjnXZGrH5TxKkJ/jnMuSlIFaHl+BgeMAmLQ6SbV8NwxYOp8M2K4UkgsSt+76/ZaLmFECwt4KOAljVOHMYq2KyDYwS6FygBZ1JFE2hcIxb5SScU89izrL/bYAoUSPlOYuhcigDk+PIM4YbaVXOgN9E5BC8UF8HJ1EjfO4b66CbREUP7+JiWStFfP8xyFhDTcjBNvvOIxuQ9khmnL5Cs6izXBlMW42aKdygM/Xx57XI+2Fg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
  dkim=pass header.d=intel.com; arc=none
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from DS0PR11MB8718.namprd11.prod.outlook.com (2603:10b6:8:1b9::20)
- by CY8PR11MB6937.namprd11.prod.outlook.com (2603:10b6:930:5b::10) with
+Received: from DM4PR11MB6020.namprd11.prod.outlook.com (2603:10b6:8:61::19) by
+ PH7PR11MB7641.namprd11.prod.outlook.com (2603:10b6:510:27b::19) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7292.38; Mon, 19 Feb
- 2024 12:49:17 +0000
-Received: from DS0PR11MB8718.namprd11.prod.outlook.com
- ([fe80::93d9:a6b2:cf4c:9dd2]) by DS0PR11MB8718.namprd11.prod.outlook.com
- ([fe80::93d9:a6b2:cf4c:9dd2%5]) with mapi id 15.20.7292.036; Mon, 19 Feb 2024
- 12:49:17 +0000
-Message-ID: <4d2678be-e36c-4726-83a5-ae9a3a0def55@intel.com>
-Date: Mon, 19 Feb 2024 13:49:10 +0100
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next v3 2/7] dma: avoid redundant calls for sync
- operations
-Content-Language: en-US
-To: Robin Murphy <robin.murphy@arm.com>
-CC: "David S. Miller" <davem@davemloft.net>, Eric Dumazet
-	<edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni
-	<pabeni@redhat.com>, Christoph Hellwig <hch@lst.de>, Marek Szyprowski
-	<m.szyprowski@samsung.com>, Joerg Roedel <joro@8bytes.org>, Will Deacon
-	<will@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael
- J. Wysocki" <rafael@kernel.org>, Magnus Karlsson <magnus.karlsson@intel.com>,
-	Maciej Fijalkowski <maciej.fijalkowski@intel.com>, Alexander Duyck
-	<alexanderduyck@fb.com>, <bpf@vger.kernel.org>, <netdev@vger.kernel.org>,
-	<iommu@lists.linux.dev>, <linux-kernel@vger.kernel.org>
-References: <20240214162201.4168778-1-aleksander.lobakin@intel.com>
- <20240214162201.4168778-3-aleksander.lobakin@intel.com>
- <3a9dd580-1977-418f-a3f3-73003dd37710@arm.com>
-From: Alexander Lobakin <aleksander.lobakin@intel.com>
-In-Reply-To: <3a9dd580-1977-418f-a3f3-73003dd37710@arm.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: DB7PR02CA0004.eurprd02.prod.outlook.com
- (2603:10a6:10:52::17) To DS0PR11MB8718.namprd11.prod.outlook.com
- (2603:10b6:8:1b9::20)
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7292.39; Mon, 19 Feb
+ 2024 12:50:06 +0000
+Received: from DM4PR11MB6020.namprd11.prod.outlook.com
+ ([fe80::a83c:a9dc:f30d:507]) by DM4PR11MB6020.namprd11.prod.outlook.com
+ ([fe80::a83c:a9dc:f30d:507%7]) with mapi id 15.20.7292.036; Mon, 19 Feb 2024
+ 12:50:05 +0000
+Date: Mon, 19 Feb 2024 20:49:51 +0800
+From: Chen Yu <yu.c.chen@intel.com>
+To: Abel Wu <wuyun.abel@bytedance.com>
+CC: kernel test robot <oliver.sang@intel.com>, <oe-lkp@lists.linux.dev>,
+	<lkp@intel.com>, <linux-kernel@vger.kernel.org>, Peter Zijlstra
+	<peterz@infradead.org>, <aubrey.li@linux.intel.com>, Tiwei Bie
+	<tiwei.btw@antgroup.com>, Honglei Wang <wanghonglei@didichuxing.com>, "Aaron
+ Lu" <aaron.lu@intel.com>
+Subject: Re: [linus:master] [sched/eevdf] 2227a957e1:
+ BUG:kernel_NULL_pointer_dereference,address
+Message-ID: <ZdNOb7fOLIoY5sgW@chenyu5-mobl2>
+References: <202401301012.2ed95df0-oliver.sang@intel.com>
+ <23cbb613-c8a2-4f07-b83b-fa3104bef642@bytedance.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <23cbb613-c8a2-4f07-b83b-fa3104bef642@bytedance.com>
+X-ClientProxiedBy: SI1PR02CA0059.apcprd02.prod.outlook.com
+ (2603:1096:4:1f5::19) To DM4PR11MB6020.namprd11.prod.outlook.com
+ (2603:10b6:8:61::19)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -105,95 +98,263 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS0PR11MB8718:EE_|CY8PR11MB6937:EE_
-X-MS-Office365-Filtering-Correlation-Id: c7d24e8f-dc5c-41bb-031f-08dc31492f3a
+X-MS-TrafficTypeDiagnostic: DM4PR11MB6020:EE_|PH7PR11MB7641:EE_
+X-MS-Office365-Filtering-Correlation-Id: 51dd8d86-ac0e-4020-28db-08dc31494bbb
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: m9GUgYFwip3AWisQuPr4i70wkt2NL9mZBEcisXgyzmS61uI5QugHrnag+PAIqsRTX+gusZ89KABz7j2xC6bUTMpbLQvdX0W6dJwyDXg+TAdYfUViJSNQdIz1qxTg4fnbAu4zBvaKORYJTfb0N+sMOmEHfkBUcfY5QE35WcjGwZnyIaYYBhbFdASAmyBi3z+kXZHadrKJQuq6QCAWYqxtxTsktA65KfAc0l80Nip8mOiYJHr61RcKWYzwBP7EkL4dHi7hLetCJBfuR/b4VP298iR1zC3DF5LW2f6pIR9YYJeA0HJz9Kc6b9RAEmIa/ezPNWzOuoYtC2Rk8hgSRP2+Hs+DfWtT/B7rMfdYBz+bgZkKZTTX7bzSUywoysnIVlp8FP6/9Pul5YF7e+C+080xK11H28Fgh5d0G0xjAovUFzBg1p6ERlkwI83R687sBptvP2SGw4JbwrDdkYHuGy2VqC4+pc7pzpgaXMNGZY4cMXkcrqj1xIF/vKe3SvXG4XRnWjAQ6yBTTx0cnfoxNUBvpALaXmBBakN9crEhtHOGris=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR11MB8718.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam-Message-Info: N1lYE1w7cE/3iFAAFc/z5QcwL+PIj/7So5CFsupwW6ydxfjVBycSLWehAJhZ3noXhf8JeJ2c6MshJnLYzqUol9xC7yIPymhjpS1e5x+r6vT3SpE6NWkAmeoIOMzAgZJM/Lw4WMgQVeeoOxQtg6KeYazev4ZTnSh9erm2zZHuPzDpxMaWleOAPfINNs8wxvr0KOSmdPN4eTmIy1UZhzwppPcjx+Kc8DLAPe4ytl/bxbcr+V5pOqeqyQSEgy3knQYl5APnCV+q8DNsxLhcY1vDPS88v5QxSlsRLfV/lxzt6Ze+xnA3aU7Sk5NQR/DSQ5BGICPzjw9fj5b/kh1TEYe4eo+K+P7aOvHTrOEVLCgzIUCPNj7pmxPRIOWzn4UQuLn6uHYd1IKNBAhTwaWSU0TqxASPJOcE75tVPCeyctFuIkPLkTrVZMV9mRuUIErYb/H6VRyKtvQrtgr4ahW5Da81e/KRs61yVV23Vo1TD2QR7wGSvuDQzuXW4SAtVvef3U9enEUhpFxGn3T72iKlKpiDnw==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR11MB6020.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?cER1ZXlTNEVEazUwYUkvQTNteUZKaW5VcTZiTmluajRsZ2FZeURMZjRkdWZy?=
- =?utf-8?B?QUI4dXp6K01SYkVQQVlnSndrZmVNOThhVDFtcUJzbGl4bi9rd01SUEJBT3Qz?=
- =?utf-8?B?dTF5V0xZWm4rbnlwMEpwVnFHQ2EwNUhkNVpkeGFJM2k1ejhOVHFENWJtb1Ax?=
- =?utf-8?B?YjVmb3NJZ2V6cVRRc3dhY0Uyem1nM2JWbGxjTnhUNGxoK0hYYkZITURkT0ZK?=
- =?utf-8?B?SXRqUHZSd2RpRC9wQVFweGZNRmNmVWtFUkV2WGNQWHQ1S1ZEZWxlOEszNXZC?=
- =?utf-8?B?bU1vSzhaQTNnbnhRRm1uakZoTFdpSnZWdUJHSmVRQnRFeHdtVWRmaHdTeGhW?=
- =?utf-8?B?cklsUmNEN1p4b1VGT0dWR0pLb2wwekFTYkZpTmJKWFVTcFliaXBva2k0WGtY?=
- =?utf-8?B?RElZakY2bFNIZGJqaXpLYk9tMGtYbG5kMVRSaXJ5K3lrZU05RVhlL1dYZmVX?=
- =?utf-8?B?WlNVSmNJdzN6QUVRY05tSWcrYk9XaGU1NkY5K0NnSTdrMk5PejdoZjRHb2F6?=
- =?utf-8?B?RGpBNndRazBEVEV2Vk9ranFoSWp5NEpkWDBwSTVLckZRY1VXMUhlN3ZqNEtw?=
- =?utf-8?B?TzdoMHplTlhwRXdWbzRJQ0wwUnBCaHhoYjdBRnBoQkhMYXl0bEpYMi9ETU1i?=
- =?utf-8?B?UEcvaGpKQ1h6OWNNTVBFZ095SzQ4dUkvR2ZUY3BJVDFZYkdWcitzcXd5anFJ?=
- =?utf-8?B?a0xRS2YvZ05oR0JBd0ZlUHdhd0dkb3RRU3JWUEVYNCtTM1grbXVlWWxBMHdK?=
- =?utf-8?B?eVpxenB1WEpSZjlIbTlqMnR5R0R3SytuYVZtQ0lIQmp2S01rdWdwR1NFNDVw?=
- =?utf-8?B?RmVSVi8vTk1mVU12QjhKYWZqby9sS1NMU0Z6NmpDOWpZZ2pqZnZWdFNkbElE?=
- =?utf-8?B?U2N6UUNubFhlaWpmc1FpbExNbk1Wc3NReVpudEpMcUhVUExqaldpblArK3Bh?=
- =?utf-8?B?REQrZEE0S2dmYVMzSWlhSWpjdFR4TzBEd25RaHBUQUc4NjRKTGtyditKSnc4?=
- =?utf-8?B?RWRuREZ6cnp4TmlmbFFSYWRLSXVHd254b2hEUGphVlJjcko5K1d6N21hY21K?=
- =?utf-8?B?S1FLak9CYmFRMG1wUjBVekhJYXhRMGE5M1psZGcwR2svZnMwQmg3Rkc3QzAx?=
- =?utf-8?B?T2dGZWc1bjgzc1dLQmxwZnI4RWttaEcwMDRGUkc3MDNFbkpOTDFLSFNkR0lh?=
- =?utf-8?B?RWsxVmxTcC9GQkhQZUR6MElhSHlaVk1TVThWM3N2T3RHREZ2Zlp3SFNNV1V5?=
- =?utf-8?B?Nks5c2JNdVpLdGVPNXg3Y3FNbmd3c044QlJkcU82TFJpaFdYb1cyVE5sUVRo?=
- =?utf-8?B?OExKL1VpSGhDcG8wUFFGeFI0UUZaM2ZtN3c1QnZrVmxraFBRVHlZby9TM2dN?=
- =?utf-8?B?d0UwZTBjbG5mYWtpSm94RVJxc2w4bkZHV1NDNk5iWTZRaWFJVUhyS0U0TkJs?=
- =?utf-8?B?d21qOVRzUng3VVFuM3grYWJOVC9zVzRocnRLcGlDbjNONFV5djZpTENaUlJu?=
- =?utf-8?B?M0pMMDVEcVIyMnYzZzd0SEtEeTYwVkpXTG50ZmFKQjRJNkNBdEZRRmlYVlFn?=
- =?utf-8?B?NGZLSWZ4Zmtjb2sySDQreDZjaXpwOVZHZ2ZxaVlBdXJpRmNOMUVFdTBoTURU?=
- =?utf-8?B?cW1kWE0zQmlRU2NhQ0NTUlMyMlZYRlpYbkVhb3dKQjFXVUVuSWxlRjFTd2xQ?=
- =?utf-8?B?a1Q5cVp1R3FoS2FPMmdueUZSZ3MzVEFSd2cybmlvakx5TUkzRGl1VW9GOS94?=
- =?utf-8?B?ZGpTdzdnYzlKdEk4MDNDRUJvZXVqZDV1YkFiWFlQSUNWYUdHZTNCRXpYNGZi?=
- =?utf-8?B?TTh0bEtSQnJIWGpvKy9qQTZIY2R3RWtxcThwNFlWYklKdDFaZmlKQ0l4Z3NP?=
- =?utf-8?B?a2RzQUl3Ulg3cHk4dHljMjVOcVVYQldvRGNjdTE1WHFQamdiZTVmSjBFYmxC?=
- =?utf-8?B?UCtjaTNTdEFibW5iQWJxa2dVOXJaSnFGK2szOGd6RG1Gd3FyQm9qNmUxNG8v?=
- =?utf-8?B?KzN3RWRDYUdiSlEwZ1pENHNScGQveDlpSEVYSnkyaUNzQjY2MWR1d0lGcWkz?=
- =?utf-8?B?QnNwSW9ZVHRqVzg2NXlsRExzQkkrTlk4MjVaRWRLZGpZUXJRU1Q1cGl2OEkx?=
- =?utf-8?B?YzhTRWJZcTV6d3B0K0RLYmJyWm16OFVydDF2TmlPdmFIUml5S1ZyUDgxeXdB?=
- =?utf-8?B?Rnc9PQ==?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: c7d24e8f-dc5c-41bb-031f-08dc31492f3a
-X-MS-Exchange-CrossTenant-AuthSource: DS0PR11MB8718.namprd11.prod.outlook.com
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?p5Scrmq5Vhht+qJJElHCCR6Pp6bFqEMsmYWg5r4gYOByvqbCPzCzmCNiKtTs?=
+ =?us-ascii?Q?Y5NSiyF6lTfmp9IpcXDeQgv45GbqRHg0Jfrer/8trTH+4Hp8HdLFVumSSnzD?=
+ =?us-ascii?Q?LbEfQLpSBnDHCKOBVsG5j8xOL7+P/Rehxf01PmxAlwknESaK9Dlv4O54kcIy?=
+ =?us-ascii?Q?3aGTYXUrdKLMcChT2b+99jxf0VFV8mFUokOSbNQsuH4H++ntXgQJ9fbyrApR?=
+ =?us-ascii?Q?9E3CAoyaivX7ixugb9PWRAb46EYW1zdfSEEb/OVwBfqfxztSZU9Q/Z77Knv7?=
+ =?us-ascii?Q?XybvBNX90CM0Ix3uFBG9dDbe06MbJJtkeCjFOYL6lYMTo/HSw7UAV/RboQt/?=
+ =?us-ascii?Q?APrO5xk30YuclZRTBeWv4W/tyFJ08P7Xuk0C8kSewAx50/24b15jPmL0lvIM?=
+ =?us-ascii?Q?44YpyxgSAIY4zvVVbsCDWQR+yrRBTeexo6pYMsLqlKLjDFpvWOWT10OGAr8d?=
+ =?us-ascii?Q?fdeqaA51PKwr7O3erGmKIpci8yEE7kwaMGNpxvWZ+EGN9kf6W7ld7E+j3svc?=
+ =?us-ascii?Q?b28hV1JFfOYdC048Qqrveiwoup9SE/MemI+oPs3SQybG4r/5cyEabQLJfdAA?=
+ =?us-ascii?Q?ZWhQX7RHsaHj2pPkS2s4BwuQRKB/Twdy72IX+XF+tr5nIzqi2mIwU6H2vDDi?=
+ =?us-ascii?Q?JWykgxfHs08G3WAbZWe28i0j035sz3grqVgRuK2RQMxWHhQl6S5k8DAV5nfg?=
+ =?us-ascii?Q?ljA6b0d4kFVMygCyL6ZhHrle8wM6o/wHmwEZOUv9X17rJ6VkkG2799wVFEl+?=
+ =?us-ascii?Q?7WyeCddyXo2CyyOFP6wWiMtzkcTqORID3wCEUfnTq4U7lMHLQfjPyegKAhft?=
+ =?us-ascii?Q?5nn7E33KJLxEd7TvyfLd4+vdLV0oOZ2oFYsdXdWJcZNASMy951F/WXLyOPPc?=
+ =?us-ascii?Q?UNHyBHaSTCAwed4QaabZ62P5S2BEmsOA1il+e/7JBYIjGDqocobPjlfAze3P?=
+ =?us-ascii?Q?yNfKoEmxeKGD3E8nfuDaQTVhiXurmnNIjt1dctKjR6Jr8sygKPhs247kxueI?=
+ =?us-ascii?Q?1JNHoFzuGCkVGTxruJqtZgGCEQ53bEKEapraEFU0xXc2f1kBs27ZCqRvspfT?=
+ =?us-ascii?Q?Nhy+K8095JmgJvUXjzwP2FagiZQbaQqATsuVsADTfyK2gXxS1WaXQab6933+?=
+ =?us-ascii?Q?EBw+TwyRruyQpeV+zjQrYfoOn5IsuUWfcFpqzfFKWlr+3u9/Ij8+CzTJjc/D?=
+ =?us-ascii?Q?HashukYPnyZOQGF7NpjcsbrjXQjmogBF9Y0PMIcd9gztdxP4Ec5w23o1T4Vt?=
+ =?us-ascii?Q?l9lfnWvMCQlWVNcge/EBBs/mM4A9t7f/CWEb5ZcApIMWCXgK8/5wqM7qQG7u?=
+ =?us-ascii?Q?UcqwoOdoLw0YK/Ylsbwe8kfWk4kk4m0HevWbzWEP1pm3iWM5HPDG80oWIfCK?=
+ =?us-ascii?Q?4vrpnG4Ar2d7bIPKi7pxnt/KTPFa/Ds0Yr0MXV3yEbrtYZQrocBmp3aAXx1B?=
+ =?us-ascii?Q?Z2Htgi60NeN2YpYIimV6UdjJtsCyowUkgzAOnmCoMdfrtbkk3NJg6epVFJv1?=
+ =?us-ascii?Q?5rq7d9KJVV3lA9/WPjvX0qXRQb7DfVqOnqXthP37zzR8cuYPaigid5aSZ7ZQ?=
+ =?us-ascii?Q?HdyqKsT8/EnENFWo1TzeDfMeFlzbq8USNnjQ6CkI?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 51dd8d86-ac0e-4020-28db-08dc31494bbb
+X-MS-Exchange-CrossTenant-AuthSource: DM4PR11MB6020.namprd11.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Feb 2024 12:49:17.6565
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Feb 2024 12:50:05.5078
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: VMLJfA2WHKZH/T5nc6m6ZC/L/FOYX+RR9MHuHYAIomowJvf5YBH4yfnKDPHDLjfa/r+lOpfOsTDBsfsSVns5QIoc+I0GIFe7/bFKhekqYrk=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR11MB6937
+X-MS-Exchange-CrossTenant-UserPrincipalName: FdQFnnkegDSyZ18qepsaRky2gnGSnbwgfAM4n4gUUbqoArgI8JbqVXGhdf4MEWs6TFyauyYGFtjKimUZK4rmOQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR11MB7641
 X-OriginatorOrg: intel.com
 
-From: Robin Murphy <robin.murphy@arm.com>
-Date: Wed, 14 Feb 2024 17:55:23 +0000
-
-> On 2024-02-14 4:21 pm, Alexander Lobakin wrote:
-
-[...]
-
->> +        /*
->> +         * Synchronization is not possible when none of DMA sync ops
->> +         * is set. This check precedes the below one as it disables
->> +         * the synchronization unconditionally.
->> +         */
->> +        dev->dma_skip_sync = true;
->> +    else if (ops->flags & DMA_F_CAN_SKIP_SYNC)
+On 2024-01-30 at 18:13:32 +0800, Abel Wu wrote:
+> On 1/30/24 3:24 PM, kernel test robot Wrote:
+> > 
+> > 
+> > Hello,
+> > 
+> > (besides a previous performance report),
+> > kernel test robot noticed "BUG:kernel_NULL_pointer_dereference,address" on:
+> > 
+> > commit: 2227a957e1d5b1941be4e4207879ec74f4bb37f8 ("sched/eevdf: Sort the rbtree by virtual deadline")
+> > https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git master
+> > 
+> > [test failed on linus/master 3a5879d495b226d0404098e3564462d5f1daa33b]
+> > [test failed on linux-next/master 01af33cc9894b4489fb68fa35c40e9fe85df63dc]
+> > 
+> > in testcase: trinity
+> > version: trinity-i386-abe9de86-1_20230429
+> > with following parameters:
+> > 
+> > 	runtime: 300s
+> > 	group: group-03
+> > 	nr_groups: 5
+> > 
+> > test-description: Trinity is a linux system call fuzz tester.
+> > test-url: http://codemonkey.org.uk/projects/trinity/
+> > 
+> > 
+> > compiler: clang-17
+> > test machine: qemu-system-x86_64 -enable-kvm -cpu SandyBridge -smp 2 -m 16G
+> > 
+> > (please refer to attached dmesg/kmsg for entire log/backtrace)
+> > 
+> > 
+> > 
+> > we found this issue happens in very random way (23 out of 999 runs).
+> > but keeps clean on parent.
 > 
-> Personally I'd combine this into the dma-direct condition.
-
-Please read the code comment a couple lines above :D
-
+> Thanks for reporting, I will try to reproduce the issue. Does the 'parent'
+> mean the same code branch without this commit?
 > 
->> +        /*
->> +         * Assume that when ``DMA_F_CAN_SKIP_SYNC`` is advertised,
->> +         * the conditions for synchronizing are the same as with
->> +         * the direct DMA.
->> +         */
->> +        dev->dma_skip_sync = dev_is_dma_coherent(dev);
->> +    else
->> +        dev->dma_skip_sync = false;
->> +}
->> +#endif /* CONFIG_DMA_NEED_SYNC */
+> > 
+> > 84db47ca7146d7bd 2227a957e1d5b1941be4e420787
+> > ---------------- ---------------------------
+> >         fail:runs  %reproduction    fail:runs
+> >             |             |             |
+> >             :999          2%          23:999   dmesg.BUG:kernel_NULL_pointer_dereference,address
+> >             :999          2%          23:999   dmesg.Kernel_panic-not_syncing:Fatal_exception
+> >             :999          2%          23:999   dmesg.Oops:#[##]
+> > 
+> > 
+> > 
+> > 
+> > If you fix the issue in a separate patch/commit (i.e. not just a new version of
+> > the same patch/commit), kindly add following tags
+> > | Reported-by: kernel test robot <oliver.sang@intel.com>
+> > | Closes: https://lore.kernel.org/oe-lkp/202401301012.2ed95df0-oliver.sang@intel.com
+> > 
+> > 
+> > sorry for below parse failure which caused no real line numbers.
+> > we will follow further. the orgial dmesg could be fetch from below link.
+> > 
+> > 
+> > [  512.079810][ T8305] BUG: kernel NULL pointer dereference, address: 0000002c
+> > [  512.080897][ T8305] #PF: supervisor read access in kernel mode
+> > [  512.081636][ T8305] #PF: error_code(0x0000) - not-present page
+> > [  512.082337][ T8305] *pde = 00000000
+> > [  512.082829][ T8305] Oops: 0000 [#1] PREEMPT SMP
+> > [  512.083407][ T8305] CPU: 1 PID: 8305 Comm: watchdog Tainted: G        W        N 6.7.0-rc1-00006-g2227a957e1d5 #1 819e6d1a8b887f5f97adb4aed77d98b15504c836
+> > [  512.084986][ T8305] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.16.2-debian-1.16.2-1 04/01/2014
+> > [ 512.086203][ T8305] EIP: set_next_entity (fair.c:?)
+> 
+> There was actually a NULL-test in pick_eevdf() before this commit,
+> but I removed it by intent as I found it impossible to be NULL after
+> examining 'all' the cases.
+> 
+> Also cc Tiwei who once proposed to add this check back.
+> https://lore.kernel.org/all/20231208112100.18141-1-tiwei.btw@antgroup.com/
+> 
+> Thanks,
+> 	Abel
+>
 
-[...]
+While looking at pick_eevdf(), I have a thought.
+Currently the sched entity is sorted by their deadline. During task
+pickup, the pick_eevdf() scans for an candidate sched entity with the
+smallest deadline. Meanwhile this candidate sched entity must also be
+eligible.
 
-Thanks,
-Olek
+The scan is O(lgn) on average, and O(1) at best case. How about making the
+average scan even faster by sorting the sched entity not only by deadline,
+but also the eligibility? The idea is that, the eligible sched entity with
+smaller deadline is sorted at the front the tree. Otherwise, if the entity
+is not eligible, even if it has a smaller deadline, it should be sorted
+at the end of the tree.
+
+After the change, pick_eevdf() get the leftmost sched entity at O(1) on
+average. Besides, it is guaranteed to return non-NULL sched entity in
+pick_eevdf(), which prevents suspicious NULL pointer exception in pick_eevdf().
+
+For example, suppose there are two sched entities to be queued, se_a and se_b.
+Consider their eligibility and deadline, there are 6 combination:
+
+1. se_a is eligible, se_b is eligible, se_a.deadline < se_b.deadline
+2. se_a is eligible, se_b is eligible, se_a.deadline >= se_b.deadline
+3. se_a is eligible, se_b is not eligible
+4. se_a is not eligible, se_b is eligible
+5. se_a is not eligible, se_b is not eligible, se_a.deadline < se_b.deadline
+6. se_a is not eligible, se_b is not eligible, se_a.deadline >= se_b.deadline
+
+In scenario 1, 3, 5, sched_entity se_a should be sorted before se_b,
+so pick_eevdf() would pick se_a first.
+
+When enqueuing a new sched entity, it is regarded as eligible if its
+vlag is positive. In theory later in pick_eevdf(), the eligibility
+of this sched entity should be re-checked via entity_eligible(). But
+consider if the sched entity is eliglble when enqueued, it is very
+likely the same sched entity remains eligible when pick_eevdf(), because
+the V keeps moving forward but the vruntime of this sched entity remain
+unchanged - the vlag could get larger.
+
+Something like this untested:
+
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index 533547e3c90a..831043cc1432 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -551,11 +551,19 @@ static inline u64 min_vruntime(u64 min_vruntime, u64 vruntime)
+ static inline bool entity_before(const struct sched_entity *a,
+ 				 const struct sched_entity *b)
+ {
+-	/*
+-	 * Tiebreak on vruntime seems unnecessary since it can
+-	 * hardly happen.
+-	 */
+-	return (s64)(a->deadline - b->deadline) < 0;
++	bool eli_a, eli_b;
++
++	eli_a = (a->vlag >= 0) ? true : false;
++	eli_b = (b->vlag >= 0) ? true : false;
++
++	if ((eli_a && eli_b) || (!eli_a && !eli_b))
++		/*
++		 * Tiebreak on vruntime seems unnecessary since it can
++		 * hardly happen.
++		 */
++		return (s64)(a->deadline - b->deadline) < 0;
++
++	return eli_a ? 1 : 0;
+ }
+ 
+ static inline s64 entity_key(struct cfs_rq *cfs_rq, struct sched_entity *se)
+@@ -877,10 +885,8 @@ struct sched_entity *__pick_first_entity(struct cfs_rq *cfs_rq)
+  */
+ static struct sched_entity *pick_eevdf(struct cfs_rq *cfs_rq)
+ {
+-	struct rb_node *node = cfs_rq->tasks_timeline.rb_root.rb_node;
+ 	struct sched_entity *se = __pick_first_entity(cfs_rq);
+ 	struct sched_entity *curr = cfs_rq->curr;
+-	struct sched_entity *best = NULL;
+ 
+ 	/*
+ 	 * We can safely skip eligibility check if there is only one entity
+@@ -899,45 +905,8 @@ static struct sched_entity *pick_eevdf(struct cfs_rq *cfs_rq)
+ 	if (sched_feat(RUN_TO_PARITY) && curr && curr->vlag == curr->deadline)
+ 		return curr;
+ 
+-	/* Pick the leftmost entity if it's eligible */
+-	if (se && entity_eligible(cfs_rq, se)) {
+-		best = se;
+-		goto found;
+-	}
+-
+-	/* Heap search for the EEVD entity */
+-	while (node) {
+-		struct rb_node *left = node->rb_left;
+-
+-		/*
+-		 * Eligible entities in left subtree are always better
+-		 * choices, since they have earlier deadlines.
+-		 */
+-		if (left && vruntime_eligible(cfs_rq,
+-					__node_2_se(left)->min_vruntime)) {
+-			node = left;
+-			continue;
+-		}
+-
+-		se = __node_2_se(node);
+-
+-		/*
+-		 * The left subtree either is empty or has no eligible
+-		 * entity, so check the current node since it is the one
+-		 * with earliest deadline that might be eligible.
+-		 */
+-		if (entity_eligible(cfs_rq, se)) {
+-			best = se;
+-			break;
+-		}
+-
+-		node = node->rb_right;
+-	}
+-found:
+-	if (!best || (curr && entity_before(curr, best)))
+-		best = curr;
+-
+-	return best;
++	/* Pick the leftmost entity */
++	return se;
+ }
+ 
+ #ifdef CONFIG_SCHED_DEBUG
+-- 
+2.25.1
+
