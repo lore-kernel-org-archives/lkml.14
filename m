@@ -1,215 +1,116 @@
-Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 918D614A0BF
-	for <linux-kernel@vger.kernel.org>; Tue, 20 Feb 2024 19:57:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0C08F14A4D8
+	for <linux-kernel@vger.kernel.org>; Tue, 20 Feb 2024 19:58:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708459066; cv=none; b=axfcl1LEaDvymGHcSqiXhLTlVVHUd3YH6P9AZcpzlcoXesg/lm9tvgeQzLbd0RRbLeB2P2SPkXGQNb/P9e6chLF4oQwAuTjwsuq7U1keJqthGliXJYEkDEKXFJGEANzxlF9VPOCR2xvbvSe9rOKYsW6sgDkv4sAGNMWM2lE67eU=
+	t=1708459139; cv=none; b=r61wrCjXaSPQLhQ/ijEfQD3NC8rAnn9dv1PuWikI9rHlHnD577NH1APw9ZuHSzMiANDkKERqyAusLUWS7dLsE5wnpElcMCLJ9AACAACIE9ITw4OfgVjr7w3HRGNHm6RUYI08J9D9/YcGuTax9T/ik0Uh6w2MJBFaVPKRR8BXWpE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708459066; c=relaxed/simple;
-	bh=Le8hcsec8oPnFJ48wZNId+Ds0IV1319YVdFwWsrifNY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=aK77AEdT7lADY4lOce6GY0/Ssb5MsTQt9W0s96f0GpheHChx8Cs4kG2+saK1upDBorPYxXzuExxno2L5MoGFICltvV1bnht+pOLouiN6rhbak87ev5hdVlY1vtolgC9JJb1xEuWZ1SrxiouoPHCwNJjWHyUzy2VmAn/Azk0Tt/8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=VSYrDd9P; arc=none smtp.client-ip=209.85.167.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="VSYrDd9P"
-Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-512be6fda52so2491452e87.0
-        for <linux-kernel@vger.kernel.org>; Tue, 20 Feb 2024 11:57:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1708459061; x=1709063861; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=2tM3zSryKInLuLsr7URVNSkPqzm4t0QBdTylJ1borGg=;
-        b=VSYrDd9P136WqSxCoG8xjt9J+gWE5IpQfzTEAflMLYRdQ3mjt0d+J7MKqRxzrSofn7
-         MopKve8MyKKN1/MN7yS7cBb4iUPFzhimq2/lxzl01Qa+q/9bwRXOEMs8k627gi2slk5N
-         16R2YgoRzzMKAoCdxNhJgCv9qLfs0RSKD5vNY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708459061; x=1709063861;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=2tM3zSryKInLuLsr7URVNSkPqzm4t0QBdTylJ1borGg=;
-        b=FuW96u9dg1nlPEpAMdNoHgOXxIFaiyEoeuPma6sF2wKpLUWJhrISorWOXMCiF4tz2y
-         u+mDOumrmdil1DkiFz44RBSq4vcCHDjFz9WV03R4ASVk7JBMoqY2B0gW02wM/uXgFtkw
-         t2OkwHNzL6UIWf7/Nd+KJfMlgLtc8mmGU0nCX0pUEdttGEScjFCOm4HHgR4xYuXy3VP4
-         flkx3ty9NgiXJPHG5rgyCQMLTkMna5lvcirKswjkb/un9gL7jGUHcgV9x3wdYJ6lkgkd
-         TpoFKH4KI97LA8x82EYK9Sj30yNyC7vWV1drXa8t/s7UPVZFmrwPkuAZJcQMfmDdC10K
-         bgNQ==
-X-Gm-Message-State: AOJu0YxSjiM7LAgb0lI3DGzmDg6FE6R1E+Cf/UfHzObtRmyVCpd5eecr
-	5L82tgkgpmcBalBCL+kSSppzUX08MGkKCDor4XJfLCH7TVlxJNQVM8+72afD7YopUSqhtcxyI3/
-	+B3Uj3w==
-X-Google-Smtp-Source: AGHT+IE/mJmzn2VTE79RYdor65bITbn6S70eySmMLTuglsyuk0hJOhNq71dpwWKtl9t53FGu9AK7bw==
-X-Received: by 2002:a05:6512:4027:b0:512:b00f:a55d with SMTP id br39-20020a056512402700b00512b00fa55dmr6051096lfb.30.1708459061436;
-        Tue, 20 Feb 2024 11:57:41 -0800 (PST)
-Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com. [209.85.167.45])
-        by smtp.gmail.com with ESMTPSA id e8-20020a05651236c800b0051296788949sm1387622lfs.232.2024.02.20.11.57.40
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 20 Feb 2024 11:57:40 -0800 (PST)
-Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-512be6fda52so2491406e87.0
-        for <linux-kernel@vger.kernel.org>; Tue, 20 Feb 2024 11:57:40 -0800 (PST)
-X-Received: by 2002:a05:6512:4027:b0:512:b00f:a55d with SMTP id
- br39-20020a056512402700b00512b00fa55dmr6051068lfb.30.1708459059910; Tue, 20
- Feb 2024 11:57:39 -0800 (PST)
+	s=arc-20240116; t=1708459139; c=relaxed/simple;
+	bh=+i8JjHVQkwYG6aYw9uGp8s+ZPKM0ZgZC8abIOEX9pzM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=kULGkSV7KeF5ABU6q1WpCbxvUS+QcTeCXvnC6Jp7kGqtI6GZ3VtWws0N+M/eQss85XSlJ85QJF4+yBysBviGmJxsxfpx5uzf4p+BSnETQyslSPEqX3UgD37mmPRa3p2yKBy3nK0JM8+smrVODmUf1Bti/GsVydHv8tC+BK9eqxE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1C06FFEC;
+	Tue, 20 Feb 2024 11:59:36 -0800 (PST)
+Received: from [172.20.10.9] (unknown [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A9C333F73F;
+	Tue, 20 Feb 2024 11:58:51 -0800 (PST)
+Message-ID: <9cb2b8c6-aac8-4130-8558-6646817689e0@arm.com>
+Date: Tue, 20 Feb 2024 20:58:49 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAHk-=wi8vZD7EXZfob-yhfDERyfzWxzMOzG9FsOuaKU-v6+PHA@mail.gmail.com>
- <538327ff-8d34-41d5-a9ae-1a334744f5ae@roeck-us.net>
-In-Reply-To: <538327ff-8d34-41d5-a9ae-1a334744f5ae@roeck-us.net>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Tue, 20 Feb 2024 11:57:23 -0800
-X-Gmail-Original-Message-ID: <CAHk-=wj6xj_cGmsQK7g=hSfRZZNo-njC+u_1v3dE8fPZtjCBOg@mail.gmail.com>
-Message-ID: <CAHk-=wj6xj_cGmsQK7g=hSfRZZNo-njC+u_1v3dE8fPZtjCBOg@mail.gmail.com>
-Subject: Re: Linux 6.8-rc5
-To: Guenter Roeck <linux@roeck-us.net>, Matthew Auld <matthew.auld@intel.com>, 
-	Arunpravin Paneer Selvam <Arunpravin.PaneerSelvam@amd.com>, 
-	=?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: multipart/mixed; boundary="00000000000062498a0611d59ff3"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 12/18] arm64/mm: Wire up PTE_CONT for user mappings
+Content-Language: en-GB
+To: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Will Deacon <will@kernel.org>, Ard Biesheuvel <ardb@kernel.org>,
+ Marc Zyngier <maz@kernel.org>, James Morse <james.morse@arm.com>,
+ Andrey Ryabinin <ryabinin.a.a@gmail.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Matthew Wilcox <willy@infradead.org>, Mark Rutland <mark.rutland@arm.com>,
+ David Hildenbrand <david@redhat.com>,
+ Kefeng Wang <wangkefeng.wang@huawei.com>, John Hubbard
+ <jhubbard@nvidia.com>, Zi Yan <ziy@nvidia.com>,
+ Barry Song <21cnbao@gmail.com>, Alistair Popple <apopple@nvidia.com>,
+ Yang Shi <shy828301@gmail.com>, Thomas Gleixner <tglx@linutronix.de>,
+ Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+ Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>,
+ linux-arm-kernel@lists.infradead.org, x86@kernel.org,
+ linuxppc-dev@lists.ozlabs.org, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org
+References: <20240215103205.2607016-1-ryan.roberts@arm.com>
+ <20240215103205.2607016-13-ryan.roberts@arm.com> <Zc9UQy-mtYAzNWm2@arm.com>
+ <892caa6a-e4fe-4009-aa33-0570526961c5@arm.com> <ZdNxSRR9MgvtMVao@arm.com>
+From: Ryan Roberts <ryan.roberts@arm.com>
+In-Reply-To: <ZdNxSRR9MgvtMVao@arm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
---00000000000062498a0611d59ff3
-Content-Type: text/plain; charset="UTF-8"
+On 19/02/2024 15:18, Catalin Marinas wrote:
+> On Fri, Feb 16, 2024 at 12:53:43PM +0000, Ryan Roberts wrote:
+>> On 16/02/2024 12:25, Catalin Marinas wrote:
+>>> On Thu, Feb 15, 2024 at 10:31:59AM +0000, Ryan Roberts wrote:
+>>>> +pte_t contpte_ptep_get_lockless(pte_t *orig_ptep)
+>>>> +{
+>>>> +	/*
+>>>> +	 * Gather access/dirty bits, which may be populated in any of the ptes
+>>>> +	 * of the contig range. We may not be holding the PTL, so any contiguous
+>>>> +	 * range may be unfolded/modified/refolded under our feet. Therefore we
+>>>> +	 * ensure we read a _consistent_ contpte range by checking that all ptes
+>>>> +	 * in the range are valid and have CONT_PTE set, that all pfns are
+>>>> +	 * contiguous and that all pgprots are the same (ignoring access/dirty).
+>>>> +	 * If we find a pte that is not consistent, then we must be racing with
+>>>> +	 * an update so start again. If the target pte does not have CONT_PTE
+>>>> +	 * set then that is considered consistent on its own because it is not
+>>>> +	 * part of a contpte range.
+>>>> +*/
+> [...]
+>>> After writing the comments above, I think I figured out that the whole
+>>> point of this loop is to check that the ptes in the contig range are
+>>> still consistent and the only variation allowed is the dirty/young
+>>> state to be passed to the orig_pte returned. The original pte may have
+>>> been updated by the time this loop finishes but I don't think it
+>>> matters, it wouldn't be any different than reading a single pte and
+>>> returning it while it is being updated.
+>>
+>> Correct. The pte can be updated at any time, before after or during the reads.
+>> That was always the case. But now we have to cope with a whole contpte block
+>> being repainted while we are reading it. So we are just checking to make sure
+>> that all the ptes that we read from the contpte block are consistent with
+>> eachother and therefore we can trust that the access/dirty bits we gathered are
+>> consistent.
+> 
+> I've been thinking a bit more about this - do any of the callers of
+> ptep_get_lockless() check the dirty/access bits? The only one that seems
+> to care is ptdump but in that case I'd rather see the raw bits for
+> debugging rather than propagating the dirty/access bits to the rest in
+> the contig range.
+> 
+> So with some clearer documentation on the requirements, I think we don't
+> need an arm64-specific ptep_get_lockless() (unless I missed something).
 
-On Tue, 20 Feb 2024 at 11:09, Guenter Roeck <linux@roeck-us.net> wrote:
->
-> Build results:
->         total: 155 pass: 151 fail: 4
-> Failed builds:
->         csky:allmodconfig
->         openrisc:allmodconfig
->         parisc:allmodconfig
->         xtensa:allmodconfig
-> Qemu test results:
->         total: 549 pass: 547 fail: 2
+We've discussed similar at [1]. And I've posted an RFC series to convert all
+ptep_get_lockless() to ptep_get_lockless_norecency() at [2]. The current spec
+for ptep_get_lockless() is that it includes the access and dirty bits. So we
+can't just read the single pte - if there is a tlb eviction followed by
+re-population for the block, the access/dirty bits could move and that will
+break pte_same() comparisons which are used in places.
 
-Grr, I was hoping things would improve, not go backwards.
+So the previous conclusion was that we are ok to put this arm64-specific
+ptep_get_lockless() in for now, but look to simplify by migrating to
+ptep_get_lockless_norecency() in future. Are you ok with that approach?
 
-> ERROR: modpost: "__umoddi3" [drivers/gpu/drm/tests/drm_buddy_test.ko] undefined!
-> ERROR: modpost: "__moddi3" [drivers/gpu/drm/tests/drm_buddy_test.ko] undefined!
->
-> Commit a64056bb5a32 ("drm/tests/drm_buddy: add alloc_contiguous test"):
->
-> +       u64 mm_size, ps = SZ_4K, i, n_pages, total;
-> ...
-> +       n_pages = mm_size / ps;
+[1]
+https://lore.kernel.org/linux-mm/a91cfe1c-289e-4828-8cfc-be34eb69a71b@redhat.com/
+[2] https://lore.kernel.org/linux-mm/20240215121756.2734131-1-ryan.roberts@arm.com/
 
-WTF? This code isn't lovely, but the build error indicates a complete
-lack of compiler optimizations.
+Thanks,
+Ryan
 
-As far as I can tell, 'ps' is never modified, so the compiler should
-be able to just treat it as a constant.
-
-And 'mm_size' is a constant too in this context. It's a local variable
-assigned once, with a compile-time constant value.
-
-So that
-
-        n_pages = mm_size / ps;
-
-should be a constant value too (and that value should be 48).
-
-Now, the __moddi3() is a *bit* more reasonable, because I assume it comes from
-
-                int slot = i % 3;
-
-where 'i' is marked as u64 too. For no good reason (it goes from 0 to
-47), but it too does show a certain lack of basic optimizations (but
-now it's at least a slightly more *complex* optimization because it
-depends on the whole value range propagation).
-
-None of this should be 'u64'. Even if the compiler has been unusually stupid.
-
-The 'total' variable could possibly be considered validly be u64,
-although even that is very very questinable.
-
-> This patch breaks the build on all 32-bit systems since it introduces an
-> unhandled direct 64-bit divide operation.
-
-It turns out that that commit is buggy for another reason, but it's
-hidden by the fact that apparently KUNIT_ASSERT_FALSE_MSG() doesn't
-check the format string.
-
-It randomly uses '%d' or '%llu' to print out various variations of
-'ps'. All garbage.
-
-Yes, yes, drm_buddy_init() takes u64 arguments. That in itself is a
-bit questionable, but whatever. It does *NOT* mean that the variables
-that don't need it should then be u64.
-
-Suggested untested patch attached.
-
-                  Linus
-
---00000000000062498a0611d59ff3
-Content-Type: text/x-patch; charset="US-ASCII"; name="patch.diff"
-Content-Disposition: attachment; filename="patch.diff"
-Content-Transfer-Encoding: base64
-Content-ID: <f_lsusecpv0>
-X-Attachment-Id: f_lsusecpv0
-
-IGRyaXZlcnMvZ3B1L2RybS90ZXN0cy9kcm1fYnVkZHlfdGVzdC5jIHwgMTkgKysrKysrKysrLS0t
-LS0tLS0tLQogMSBmaWxlIGNoYW5nZWQsIDkgaW5zZXJ0aW9ucygrKSwgMTAgZGVsZXRpb25zKC0p
-CgpkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL3Rlc3RzL2RybV9idWRkeV90ZXN0LmMgYi9k
-cml2ZXJzL2dwdS9kcm0vdGVzdHMvZHJtX2J1ZGR5X3Rlc3QuYwppbmRleCBmZWU2YmVjNzU3ZDEu
-LjNkYmZhMzA3ODQ0OSAxMDA2NDQKLS0tIGEvZHJpdmVycy9ncHUvZHJtL3Rlc3RzL2RybV9idWRk
-eV90ZXN0LmMKKysrIGIvZHJpdmVycy9ncHUvZHJtL3Rlc3RzL2RybV9idWRkeV90ZXN0LmMKQEAg
-LTIxLDcgKzIxLDggQEAgc3RhdGljIGlubGluZSB1NjQgZ2V0X3NpemUoaW50IG9yZGVyLCB1NjQg
-Y2h1bmtfc2l6ZSkKIAogc3RhdGljIHZvaWQgZHJtX3Rlc3RfYnVkZHlfYWxsb2NfY29udGlndW91
-cyhzdHJ1Y3Qga3VuaXQgKnRlc3QpCiB7Ci0JdTY0IG1tX3NpemUsIHBzID0gU1pfNEssIGksIG5f
-cGFnZXMsIHRvdGFsOworCWNvbnN0IHVuc2lnbmVkIGxvbmcgcHMgPSBTWl80SywgbW1fc2l6ZSA9
-IDE2ICogMyAqIFNaXzRLOworCXVuc2lnbmVkIGxvbmcgaSwgbl9wYWdlcywgdG90YWw7CiAJc3Ry
-dWN0IGRybV9idWRkeV9ibG9jayAqYmxvY2s7CiAJc3RydWN0IGRybV9idWRkeSBtbTsKIAlMSVNU
-X0hFQUQobGVmdCk7CkBAIC0yOSw4ICszMCw2IEBAIHN0YXRpYyB2b2lkIGRybV90ZXN0X2J1ZGR5
-X2FsbG9jX2NvbnRpZ3VvdXMoc3RydWN0IGt1bml0ICp0ZXN0KQogCUxJU1RfSEVBRChyaWdodCk7
-CiAJTElTVF9IRUFEKGFsbG9jYXRlZCk7CiAKLQltbV9zaXplID0gMTYgKiAzICogU1pfNEs7Ci0K
-IAlLVU5JVF9FWFBFQ1RfRkFMU0UodGVzdCwgZHJtX2J1ZGR5X2luaXQoJm1tLCBtbV9zaXplLCBw
-cykpOwogCiAJLyoKQEAgLTU2LDMwICs1NSwzMCBAQCBzdGF0aWMgdm9pZCBkcm1fdGVzdF9idWRk
-eV9hbGxvY19jb250aWd1b3VzKHN0cnVjdCBrdW5pdCAqdGVzdCkKIAkJS1VOSVRfQVNTRVJUX0ZB
-TFNFX01TRyh0ZXN0LAogCQkJCSAgICAgICBkcm1fYnVkZHlfYWxsb2NfYmxvY2tzKCZtbSwgMCwg
-bW1fc2l6ZSwKIAkJCQkJCQkgICAgICBwcywgcHMsIGxpc3QsIDApLAotCQkJCSAgICAgICAiYnVk
-ZHlfYWxsb2MgaGl0IGFuIGVycm9yIHNpemU9JWRcbiIsCisJCQkJICAgICAgICJidWRkeV9hbGxv
-YyBoaXQgYW4gZXJyb3Igc2l6ZT0lbHVcbiIsCiAJCQkJICAgICAgIHBzKTsKIAl9IHdoaWxlICgr
-K2kgPCBuX3BhZ2VzKTsKIAogCUtVTklUX0FTU0VSVF9UUlVFX01TRyh0ZXN0LCBkcm1fYnVkZHlf
-YWxsb2NfYmxvY2tzKCZtbSwgMCwgbW1fc2l6ZSwKIAkJCQkJCQkgICAzICogcHMsIHBzLCAmYWxs
-b2NhdGVkLAogCQkJCQkJCSAgIERSTV9CVUREWV9DT05USUdVT1VTX0FMTE9DQVRJT04pLAotCQkJ
-ICAgICAgICJidWRkeV9hbGxvYyBkaWRuJ3QgZXJyb3Igc2l6ZT0lZFxuIiwgMyAqIHBzKTsKKwkJ
-CSAgICAgICAiYnVkZHlfYWxsb2MgZGlkbid0IGVycm9yIHNpemU9JWx1XG4iLCAzICogcHMpOwog
-CiAJZHJtX2J1ZGR5X2ZyZWVfbGlzdCgmbW0sICZtaWRkbGUpOwogCUtVTklUX0FTU0VSVF9UUlVF
-X01TRyh0ZXN0LCBkcm1fYnVkZHlfYWxsb2NfYmxvY2tzKCZtbSwgMCwgbW1fc2l6ZSwKIAkJCQkJ
-CQkgICAzICogcHMsIHBzLCAmYWxsb2NhdGVkLAogCQkJCQkJCSAgIERSTV9CVUREWV9DT05USUdV
-T1VTX0FMTE9DQVRJT04pLAotCQkJICAgICAgICJidWRkeV9hbGxvYyBkaWRuJ3QgZXJyb3Igc2l6
-ZT0lbGx1XG4iLCAzICogcHMpOworCQkJICAgICAgICJidWRkeV9hbGxvYyBkaWRuJ3QgZXJyb3Ig
-c2l6ZT0lbHVcbiIsIDMgKiBwcyk7CiAJS1VOSVRfQVNTRVJUX1RSVUVfTVNHKHRlc3QsIGRybV9i
-dWRkeV9hbGxvY19ibG9ja3MoJm1tLCAwLCBtbV9zaXplLAogCQkJCQkJCSAgIDIgKiBwcywgcHMs
-ICZhbGxvY2F0ZWQsCiAJCQkJCQkJICAgRFJNX0JVRERZX0NPTlRJR1VPVVNfQUxMT0NBVElPTiks
-Ci0JCQkgICAgICAgImJ1ZGR5X2FsbG9jIGRpZG4ndCBlcnJvciBzaXplPSVsbHVcbiIsIDIgKiBw
-cyk7CisJCQkgICAgICAgImJ1ZGR5X2FsbG9jIGRpZG4ndCBlcnJvciBzaXplPSVsdVxuIiwgMiAq
-IHBzKTsKIAogCWRybV9idWRkeV9mcmVlX2xpc3QoJm1tLCAmcmlnaHQpOwogCUtVTklUX0FTU0VS
-VF9UUlVFX01TRyh0ZXN0LCBkcm1fYnVkZHlfYWxsb2NfYmxvY2tzKCZtbSwgMCwgbW1fc2l6ZSwK
-IAkJCQkJCQkgICAzICogcHMsIHBzLCAmYWxsb2NhdGVkLAogCQkJCQkJCSAgIERSTV9CVUREWV9D
-T05USUdVT1VTX0FMTE9DQVRJT04pLAotCQkJICAgICAgICJidWRkeV9hbGxvYyBkaWRuJ3QgZXJy
-b3Igc2l6ZT0lbGx1XG4iLCAzICogcHMpOworCQkJICAgICAgICJidWRkeV9hbGxvYyBkaWRuJ3Qg
-ZXJyb3Igc2l6ZT0lbHVcbiIsIDMgKiBwcyk7CiAJLyoKIAkgKiBBdCB0aGlzIHBvaW50IHdlIHNo
-b3VsZCBoYXZlIGVub3VnaCBjb250aWd1b3VzIHNwYWNlIGZvciAyIGJsb2NrcywKIAkgKiBob3dl
-dmVyIHRoZXkgYXJlIG5ldmVyIGJ1ZGRpZXMgKHNpbmNlIHdlIGZyZWVkIG1pZGRsZSBhbmQgcmln
-aHQpIHNvCkBAIC04OCwxMyArODcsMTMgQEAgc3RhdGljIHZvaWQgZHJtX3Rlc3RfYnVkZHlfYWxs
-b2NfY29udGlndW91cyhzdHJ1Y3Qga3VuaXQgKnRlc3QpCiAJS1VOSVRfQVNTRVJUX0ZBTFNFX01T
-Ryh0ZXN0LCBkcm1fYnVkZHlfYWxsb2NfYmxvY2tzKCZtbSwgMCwgbW1fc2l6ZSwKIAkJCQkJCQkg
-ICAgMiAqIHBzLCBwcywgJmFsbG9jYXRlZCwKIAkJCQkJCQkgICAgRFJNX0JVRERZX0NPTlRJR1VP
-VVNfQUxMT0NBVElPTiksCi0JCQkgICAgICAgImJ1ZGR5X2FsbG9jIGhpdCBhbiBlcnJvciBzaXpl
-PSVkXG4iLCAyICogcHMpOworCQkJICAgICAgICJidWRkeV9hbGxvYyBoaXQgYW4gZXJyb3Igc2l6
-ZT0lbHVcbiIsIDIgKiBwcyk7CiAKIAlkcm1fYnVkZHlfZnJlZV9saXN0KCZtbSwgJmxlZnQpOwog
-CUtVTklUX0FTU0VSVF9GQUxTRV9NU0codGVzdCwgZHJtX2J1ZGR5X2FsbG9jX2Jsb2NrcygmbW0s
-IDAsIG1tX3NpemUsCiAJCQkJCQkJICAgIDMgKiBwcywgcHMsICZhbGxvY2F0ZWQsCiAJCQkJCQkJ
-ICAgIERSTV9CVUREWV9DT05USUdVT1VTX0FMTE9DQVRJT04pLAotCQkJICAgICAgICJidWRkeV9h
-bGxvYyBoaXQgYW4gZXJyb3Igc2l6ZT0lZFxuIiwgMyAqIHBzKTsKKwkJCSAgICAgICAiYnVkZHlf
-YWxsb2MgaGl0IGFuIGVycm9yIHNpemU9JWx1XG4iLCAzICogcHMpOwogCiAJdG90YWwgPSAwOwog
-CWxpc3RfZm9yX2VhY2hfZW50cnkoYmxvY2ssICZhbGxvY2F0ZWQsIGxpbmspCg==
---00000000000062498a0611d59ff3--
