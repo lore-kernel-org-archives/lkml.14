@@ -1,170 +1,155 @@
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06FFD5C918
-	for <linux-kernel@vger.kernel.org>; Tue, 20 Feb 2024 08:43:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D28675D73E
+	for <linux-kernel@vger.kernel.org>; Tue, 20 Feb 2024 08:43:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708418608; cv=none; b=GRiERxX0KcXGU/myqN1OjsfwjLWHiD7F0kvsDQrjbdEvLbuG1+UGiKsiCJrSQtiO5UiRqWb7b1phmm48DZE8C8QcwpQTp37vUKFobYB8E0HSzSXalglRecSisP5u/xGzbPOGDdcBZ1T+3Rh3LEkEN1YyQd8oLQyAlaS/05lc+KU=
+	t=1708418627; cv=none; b=nYKAEUauzYDQa4b51XcF9fvvBX44WEj9AQG/bb5W2I2dz24xR/HjQ8fObTWhqEDWvm86gOQ9QC2cBfZXHhlJVqiAA2ggloqGFPyycUBl8bqVZxFiIA7AIftey/RZUMB+BS/tRGfCJmKAETKMNQ2JLCC9LNzEm+yBp+o+JvpCgIc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708418608; c=relaxed/simple;
-	bh=+t4VwbrGo553hvc0/n5wxPqBQt8SYKPxeM/tBSQCuf0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=AFEmnljDmH/Rl2nBv4jG5gVHLOtnIHpfZkN4SZUXSMWSfr+buyYacG7+AsVH7OO2HhhbgWnj3m8DwXi3OLZgXZmOaIgePXiOQM8W0HGmqLCGHziM+cdCqy/87JFfqWjoXo4VRj5qhFaKe/lWW3/MZ5G7APT5ItPMZETLJiRssM8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=rGH1RGBk; arc=none smtp.client-ip=209.85.128.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1708418627; c=relaxed/simple;
+	bh=jiKygd1TMHvHAdFLBMMyyM+ctA1TbGkCDRuL++B7qmE=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=WtkKBqK0lT7zAqVba5w0GEH+0C27CdXRbBXU4MJArVNs6IgDDHl393ijNgDDwtei/sLjF1olQmSFdr1c9RmGP0PV8kGvPbx0solCoYoJTALgzQhGXqdDwbzp72Hu7Dn+3H8PGUy4AFLQEQq93kvYGMpiyNNT3aJtJPiCBqWXZEc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RLXFp3W6; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rGH1RGBk"
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-4126fda8ef8so1581075e9.2
-        for <linux-kernel@vger.kernel.org>; Tue, 20 Feb 2024 00:43:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1708418605; x=1709023405; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=lvOKZ6FnRVaRVe1Ql/pBOvP/3gu5W7cm2XGKLzU0Jes=;
-        b=rGH1RGBkCDV5U7Zdv4RsFSN2yLuB2qxBc7tQ8nT/0hniMwCBEDhGNvcHcOtFHONZSP
-         yYgll5wnUYFy6ZE1YWtAKAu4ez1xC1zlVYJfGMjVXJBBJjq4u002n8vvWqRCk9Tu8Jl+
-         eWpae4SjB08TZ1/dowFz5RBIE3mFbYKUG71QSiTQXx+CRN0RK8QJqvMFURLGuxVbcNDP
-         qCYpZJn8CAmRgV0AcD6Da+jCg4kQBnIU7EXwYHfBohP0cEH8U+jhGLSFSrNSmF/956uh
-         hokXNngYNsPQmW70wGW7Etd+8Aa9VRA+bdsD3zAtZo0xqH80W8PVfq9R16myUdawRriC
-         QHjA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708418605; x=1709023405;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=lvOKZ6FnRVaRVe1Ql/pBOvP/3gu5W7cm2XGKLzU0Jes=;
-        b=cGgeJrTjcNbyXD+2p0BSPukaE8ogaZCfMue6qKZy++T+PlCkIgYBA2Blph8X1xRYaT
-         xCN+NPauarCpMv9BIkA5ITJY9rbpoV9CVTQ97AUqPRicPfkh0CpleGzWHFLKgSg/Uyki
-         32EToizQbYwsBTi7VJ83SvlmTck0FaoX8a+bqvrlDzTjZ9A0TCag4qTsetIQMuD7A49p
-         jUxhKVoWY1fAQzASQWEJO3JSieyIHPt/RPpc1AIeW5ThzFD4STLxfySrmdmgAEkQxDjy
-         II1L104Yql7olomQPcjYpM7tAxqU/S+jorhvjLgR7dQJAeaVdH2ONKwWGEIvzwGDj09e
-         vDsw==
-X-Forwarded-Encrypted: i=1; AJvYcCXVFH5ivXE858dTdfPS+8u2EBKSFhnIf62hDxebSqty+RGRnJ1z+T8JcoBk4/8Oyfd1AuCom6V3Nh4w3JTOAxs+KzWN/fuOuSOSYYne
-X-Gm-Message-State: AOJu0Yyu3DzNx5MkwRD1Cv/wkSi6KfT/l6Cy27tFQg6HyivQ1e7dKY3j
-	xDwGapwMowQFAd1cIK/1KzKnKzdb9X0i2xZY5KQOlK88qtNW2/2DwiBE2c3SuV0=
-X-Google-Smtp-Source: AGHT+IHC8cvv39figdqKFr2x/5K8JqNBhDhnjLZkdTYqb0OQnDRB6RKw8IW4o1Opoo/z9ZuQp6+ZCg==
-X-Received: by 2002:a05:600c:19cd:b0:411:d273:90e2 with SMTP id u13-20020a05600c19cd00b00411d27390e2mr13071167wmq.3.1708418605430;
-        Tue, 20 Feb 2024 00:43:25 -0800 (PST)
-Received: from [192.168.1.20] ([178.197.222.116])
-        by smtp.gmail.com with ESMTPSA id g17-20020a05600c4ed100b0040ecdd672fasm14075986wmq.13.2024.02.20.00.43.22
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 20 Feb 2024 00:43:25 -0800 (PST)
-Message-ID: <e6fdfb54-aa2c-4c17-a5c2-4d12abf2591c@linaro.org>
-Date: Tue, 20 Feb 2024 09:43:21 +0100
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RLXFp3W6"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1708418626; x=1739954626;
+  h=from:to:cc:subject:in-reply-to:references:date:
+   message-id:mime-version;
+  bh=jiKygd1TMHvHAdFLBMMyyM+ctA1TbGkCDRuL++B7qmE=;
+  b=RLXFp3W6kxh6mVKFHsBCd1Jvv6IxyZCRAGVKeRJpKT59pZwd7pWfo/Fc
+   V33ZxsE0rH2TkPGOsZn9CnmS8sp2FUVlfREBSGYoCOea/ngICkg9dbbnC
+   6uo/Xo5PBhGmGJPOqM6NbWEHoeVfg7EXgIkluJTOwDAX8gn0rDXm6Ikdp
+   VLk3Rl+SbqPFXGkk8yACYkRo1KQ+lEIhsrHGcvRRV5SugqY8WYhzTcLC7
+   Isw0877/nG3ZxMsS2m9RvI6FwgRvzbAw6LyCF7PcHLXvHBHn4sO13orY9
+   6TThxiZDLPO5yFG7S+z609kZ+9/4D9rrefWHowM9Fz1rj/4lWt1lKoO3U
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10989"; a="13626084"
+X-IronPort-AV: E=Sophos;i="6.06,172,1705392000"; 
+   d="scan'208";a="13626084"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Feb 2024 00:43:43 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.06,172,1705392000"; 
+   d="scan'208";a="5081600"
+Received: from yhuang6-desk2.sh.intel.com (HELO yhuang6-desk2.ccr.corp.intel.com) ([10.238.208.55])
+  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Feb 2024 00:43:35 -0800
+From: "Huang, Ying" <ying.huang@intel.com>
+To: Daniel Bristot de Oliveira <bristot@kernel.org>
+Cc: Ingo Molnar <mingo@redhat.com>,  Peter Zijlstra <peterz@infradead.org>,
+  Juri Lelli <juri.lelli@redhat.com>,  Vincent Guittot
+ <vincent.guittot@linaro.org>,  Dietmar Eggemann
+ <dietmar.eggemann@arm.com>,  Steven Rostedt <rostedt@goodmis.org>,  Ben
+ Segall <bsegall@google.com>,  Mel Gorman <mgorman@suse.de>,  Daniel
+ Bristot de Oliveira <bristot@redhat.com>,  Valentin Schneider
+ <vschneid@redhat.com>,  linux-kernel@vger.kernel.org,  Luca Abeni
+ <luca.abeni@santannapisa.it>,  Tommaso Cucinotta
+ <tommaso.cucinotta@santannapisa.it>,  Thomas Gleixner
+ <tglx@linutronix.de>,  Joel Fernandes <joel@joelfernandes.org>,  Vineeth
+ Pillai <vineeth@bitbyteword.org>,  Shuah Khan <skhan@linuxfoundation.org>,
+  Phil Auld <pauld@redhat.com>,  Aaron Lu <aaron.lu@intel.com>,  Kairui
+ Song <kasong@tencent.com>,  Guo Ziliang <guo.ziliang@zte.com.cn>
+Subject: Re: [PATCH v5 0/7] SCHED_DEADLINE server infrastructure
+In-Reply-To: <b859f20b-5df7-403d-8078-06d747ec6b75@kernel.org> (Daniel Bristot
+	de Oliveira's message of "Tue, 20 Feb 2024 09:31:55 +0100")
+References: <cover.1699095159.git.bristot@kernel.org>
+	<8734tosyb9.fsf@yhuang6-desk2.ccr.corp.intel.com>
+	<23b87c48-c4b8-4b85-822a-33cffaf6f779@kernel.org>
+	<878r3freza.fsf@yhuang6-desk2.ccr.corp.intel.com>
+	<b859f20b-5df7-403d-8078-06d747ec6b75@kernel.org>
+Date: Tue, 20 Feb 2024 16:41:39 +0800
+Message-ID: <87le7fo7cs.fsf@yhuang6-desk2.ccr.corp.intel.com>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: (subset) [linux][PATCH v6 3/3] dt-bindings: mfd: atmel,hlcdc:
- Convert to DT schema format
-Content-Language: en-US
-To: Dharma.B@microchip.com, lee@kernel.org, sam@ravnborg.org,
- bbrezillon@kernel.org, maarten.lankhorst@linux.intel.com,
- mripard@kernel.org, tzimmermann@suse.de, airlied@gmail.com, daniel@ffwll.ch,
- robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
- Nicolas.Ferre@microchip.com, alexandre.belloni@bootlin.com,
- claudiu.beznea@tuxon.dev, dri-devel@lists.freedesktop.org,
- devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, thierry.reding@gmail.com,
- u.kleine-koenig@pengutronix.de, linux-pwm@vger.kernel.org
-Cc: Hari.PrasathGE@microchip.com, Manikandan.M@microchip.com,
- Conor.Dooley@microchip.com
-References: <20240202001733.91455-1-dharma.b@microchip.com>
- <20240202001733.91455-4-dharma.b@microchip.com>
- <170738899221.920003.15342446791449663430.b4-ty@kernel.org>
- <cedecdb7-fe4a-42ea-9a11-faa82f84b57d@linaro.org>
- <ffd43756-b24e-4f19-be33-0e33047ad70c@microchip.com>
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
- 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
- D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <ffd43756-b24e-4f19-be33-0e33047ad70c@microchip.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=ascii
 
-On 20/02/2024 04:34, Dharma.B@microchip.com wrote:
-> Hi Krzysztof,
-> 
-> On 12/02/24 3:53 pm, Krzysztof Kozlowski wrote:
->> EXTERNAL EMAIL: Do not click links or open attachments unless you know the content is safe
->>
->> On 08/02/2024 11:43, Lee Jones wrote:
->>> On Fri, 02 Feb 2024 05:47:33 +0530, Dharma Balasubiramani wrote:
->>>> Convert the atmel,hlcdc binding to DT schema format.
+Daniel Bristot de Oliveira <bristot@kernel.org> writes:
+
+> On 2/20/24 04:28, Huang, Ying wrote:
+>> Daniel Bristot de Oliveira <bristot@kernel.org> writes:
+>> 
+>>> Hi
+>>>
+>>> On 2/19/24 08:33, Huang, Ying wrote:
+>>>> Hi, Daniel,
 >>>>
->>>> Align clocks and clock-names properties to clearly indicate that the LCD
->>>> controller expects lvds_pll_clk when interfaced with the lvds display. This
->>>> alignment with the specific hardware requirements ensures accurate device tree
->>>> configuration for systems utilizing the HLCDC IP.
+>>>> Thanks a lot for your great patchset!
 >>>>
->>>> [...]
+>>>> We have a similar starvation issue in mm subsystem too.  Details are in
+>>>> the patch description of the below commit.  In short, task A is busy
+>>>> looping on some event, while task B will signal the event after some
+>>>> work.  If the priority of task A is higher than that of task B, task B
+>>>> may be starved.
 >>>
->>> Applied, thanks!
+>>> ok...
 >>>
->>> [3/3] dt-bindings: mfd: atmel,hlcdc: Convert to DT schema format
->>>        commit: cb946db1335b599ece363d33966bf653ed0fa58a
+>>>>
+>>>> IIUC, if task A is RT task while task B is fair task, then your patchset
+>>>> will solve the issue.
 >>>
->>
->> Next is still failing.
->>
->> Dharma,
->> You must explain and clearly mark dependencies between patches.
-> 
-> I sincerely apologize for any confusion caused by the oversight. I have 
-> organized the patches according to their dependencies in the patch 
+>>> This patch set will not solve the issue. It will mitigate the effect of the
+>>> problem. Still the system will perform very poorly...
+>> 
+>> I don't think that it's common (or even reasonable) for real-time tasks
+>> to use swap.  So, IMHO, performance isn't very important here.  But, we
+>> need to avoid live-lock anyway.  I think that your patchset solves the
+>> live-lock issue.
+>
+> I mean, if for you this is solving your user problem, be happy :-) Play with parameters...
+> find a way to tune your system as a user... use it :)
+>
+> But your problem is also "solved" with RT throttling without RT_RUNTIME_SHARE (the
+> default since... two years ago, I think). So there is not much news here.
+>
+> IMHO, it is not a solution. As a developer, there is a synchronization problem
+> in swap code, and pushing a workaround to the scheduling side is not the way to go...
+>
+>> 
+>>>> If both task A and task B is RT tasks, is there
+>>>> some way to solve the issue?
+>>>
+>>> I would say reworking the swap algorithm, as it is not meant to be used when
+>>> real-time tasks are in place.
+>>>
+>>> As an exercise, let's say that we add a server per priority on FIFO, with a default
+>>> 50ms/1s runtime period. Your "real-time" workload would suffer a 950ms latency,
+>>> busy loop in vain.
+>> 
+>> If the target is only the live-lock avoidance, is it possible to run
+>> lower priority runnable tasks for a short while if we run long enough in
+>> the busy loop?
+>
+> If you do it in the algorithm side (instead of relying on scheduling), it could be a
+> thing.
+>
+> I think NAPI still uses something like this: Busy-loop for two jiffies in the softirq
+> context (a priority higher than all threads on the !rt kernel), then move to thread
+> the thread context to avoid starvation. In the swap case, it could run for two jiffies
+> and then go to sleep for a while. How well will swap people receive this as a solution...
+> I do not know :) I would first try something better than this using synchronization
+> primitives.
+>
+> This patch set is for things outside of kernel control. For example, people running
+> poll mode DPDK in user-space with FIFO priority; FIFO tasks in user-space for too long...
+> with a better design than rt throttling.
+>
+> Will this patch help in misbehaving kernel activities: yes. Is it a reason not to
+> fix kernel problems? I do not think so, and I bet many other people do not believe as
+> well.
 
-Does it mean that all your other patchsets which contain multiple
-patches have dependencies? That would be the meaning of above approach.
-Unfortunately that's not good... I'll comment in other places for
-individual issues.
+I totally agree with you that we need to fix the kernel problems.  And,
+Thanks for your information!
 
-Best regards,
-Krzysztof
-
+--
+Best Regards,
+Huang, Ying
