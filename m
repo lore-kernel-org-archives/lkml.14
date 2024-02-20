@@ -1,105 +1,150 @@
-Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DE8177637
-	for <linux-kernel@vger.kernel.org>; Tue, 20 Feb 2024 17:55:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B696476C98;
+	Tue, 20 Feb 2024 17:56:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708451751; cv=none; b=dZuxcf/H2B1JOpY040gs2IXCIoX2NTbohU65irPWOKuPUc1BkPb6akI2JqjHAvfoR55FbweIsLvNm1PbLvmUgzqGeK1zrubZrH+ogWXB71nvoPzGDqD3rRyUN/+9IwwiqHscdjtka293hR6FELOzwnYlIcZCEFgEf4HLwRlqi0I=
+	t=1708451807; cv=none; b=Njr0Ksq2V2t5nvzNS0vXhSBavCPlMu7OuzX2SFdc9fhb4W+PYRv0VyP2Yoj96UrlTtmu8QfWq5VbhANbwnBEBMnzGBkZNJuGMP09gI4tT8dCaE/Hg9QiLsWzyxzhyMADcWCDk2kBPq5DFThz5SVwWzvCiZ1n1AHH+2b0DLUI8nQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708451751; c=relaxed/simple;
-	bh=hqb1KpK8idTkVHw05D9DaOecFdA77V8n0hYYGqZ4o2Y=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Content-Type; b=qsUQN1CTyB76sfwuVnsClpyfwuq3bxvBdZAu2LMlbLLv1lH8sO7+je3eXjw3R3syBl502OcfdeRJhThz+IHbaJMagjB58082FMOl8caPHyXQ+4v3CWSFGcg8pR0yBOckCJl+zGqTv8YSETXlJqyiQD5YWmI0CCL2pTl0fvJYPY4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=Ab81jJE7; arc=none smtp.client-ip=209.85.208.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="Ab81jJE7"
-Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-55a179f5fa1so7735350a12.0
-        for <linux-kernel@vger.kernel.org>; Tue, 20 Feb 2024 09:55:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1708451747; x=1709056547; darn=vger.kernel.org;
-        h=to:subject:message-id:date:from:in-reply-to:references:mime-version
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=cs7a6JxSri8UPMBfIFAC6zzBgd9E4B30piovcQly+DY=;
-        b=Ab81jJE7kpciDnJ5EwJA/C9473hy/PJMieFJXVoELmOQlHN1kdZlXBvBYeg2yMEo52
-         g+epCK1CX+nDxaDfjoUwaKrsYvPUvFx4APPM2hylpTX4ZmOcQrSh+a49/xP4JllLSA48
-         zGk7z6o9SYtKONS0sKuhAc8IB/5+tLtazoVno=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708451747; x=1709056547;
-        h=to:subject:message-id:date:from:in-reply-to:references:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=cs7a6JxSri8UPMBfIFAC6zzBgd9E4B30piovcQly+DY=;
-        b=GCr1CVmMJHom9HMv6T8qHSiU8lwfvYTyWfeQr0AtnY1hFohKCt9xeqDPHuS1jf6Wt0
-         XUlyGoZsfrungLExZRAlzj2itnXGgBOq4b4rqdmA4c8z2VxPHhcfw5LaCxNU8CLwme57
-         +41kOGEWj0S3iq8iimQnhwRph+nrmPoFCRY9QWQ2CYcib/57a5QQaRHfQUBkEHp61m9q
-         rzfCQipIjgT84jtN1+1207+p8rDdGZC62SjdUWN7By4ezzJa5e6o9Aeim7qLHNBuGP6Y
-         1cUv8M/HnSKPwKRhaTM8kv7uhCIwtkdb4EkpRITm/2pY9qUwmcmisG24FadhV5qsXBM3
-         IYpg==
-X-Forwarded-Encrypted: i=1; AJvYcCVjp2bsQiqQ7gfQV+vkESlixFC/IPSckn/Y06DN1FCSTAltok4+U1RH2MjpkF1zlLohaxBs1QkgPpLT5y3ho81dK82B7ze8AVV1x+3D
-X-Gm-Message-State: AOJu0YyB0LvRbB7iU4KQ33M7RgNekaQM9FyBy3xdogAI83uSR+Ly2bcy
-	i36pgIG6+YPi4/4QIBtfOwixDf9auCvjGdLdARp3XLY4zpnnIBXxExSwe8RBj91e4wM0/E7OeE5
-	pxauNuw==
-X-Google-Smtp-Source: AGHT+IFcBhlYs5guky53suKM++T6S5sbw8fD5UQpAzhpVJPFnFEMD9t6P3PMSV6ehzfXwSEvTJIrhQ==
-X-Received: by 2002:aa7:d595:0:b0:564:405c:dfa with SMTP id r21-20020aa7d595000000b00564405c0dfamr6347428edq.17.1708451747689;
-        Tue, 20 Feb 2024 09:55:47 -0800 (PST)
-Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com. [209.85.208.44])
-        by smtp.gmail.com with ESMTPSA id e14-20020a50fb8e000000b00564e1b7754asm227238edq.31.2024.02.20.09.55.46
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 20 Feb 2024 09:55:46 -0800 (PST)
-Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-563e6131140so5488458a12.2
-        for <linux-kernel@vger.kernel.org>; Tue, 20 Feb 2024 09:55:46 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCWQzHGE2+RfAjdSCg6xvybw1yJ20WkLqMaeBz4FJXGZXRaYZEDD2ZLmyjOj0WZ9ZI4xC8jabf84+ZnTJabMVGC8XsIdmEEm8b6iGEn2
-X-Received: by 2002:aa7:d393:0:b0:564:3d68:55f5 with SMTP id
- x19-20020aa7d393000000b005643d6855f5mr5518556edq.5.1708451746591; Tue, 20 Feb
- 2024 09:55:46 -0800 (PST)
+	s=arc-20240116; t=1708451807; c=relaxed/simple;
+	bh=vBVZJ8qhjBTqUAubMKlfbOnylTorwMxfjgmZNZSlUnY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=GM/hjiJJg68ID752+6SwBWdP+qwiHiKnspP0nyEO9GXyL/pCAYYdzvt08Sb7CAzM69AUbed9ej/5RSOA/IjvmzPGcrNVlsYeglJGYwtjK9jjf+SpOgABGqDMA/7SkJooYcvRBhgrqAI1tBFdytX2t14lQRtl8DmL5a+uM+/0+7E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E0040FEC;
+	Tue, 20 Feb 2024 09:57:22 -0800 (PST)
+Received: from [10.1.197.60] (eglon.cambridge.arm.com [10.1.197.60])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8DF113F762;
+	Tue, 20 Feb 2024 09:56:38 -0800 (PST)
+Message-ID: <50bd1168-5461-43de-9e64-cbe0019d571d@arm.com>
+Date: Tue, 20 Feb 2024 17:56:36 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240130091300.2968534-1-tj@kernel.org> <20240130091300.2968534-6-tj@kernel.org>
- <bckroyio6l2nt54refuord4pm6mqylt3adx6z2bg6iczxkbnyk@bb5447rqahj5>
-In-Reply-To: <bckroyio6l2nt54refuord4pm6mqylt3adx6z2bg6iczxkbnyk@bb5447rqahj5>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Tue, 20 Feb 2024 09:55:30 -0800
-X-Gmail-Original-Message-ID: <CAHk-=whqae-+7Q7wbtnEj7YmR8vsx6skTj6j-srV2Fz7cBZ2ag@mail.gmail.com>
-Message-ID: <CAHk-=whqae-+7Q7wbtnEj7YmR8vsx6skTj6j-srV2Fz7cBZ2ag@mail.gmail.com>
-Subject: Re: [PATCH 5/8] usb: core: hcd: Convert from tasklet to BH workqueue
-To: Tejun Heo <tj@kernel.org>, torvalds@linux-foundation.org, mpatocka@redhat.com, 
-	linux-kernel@vger.kernel.org, dm-devel@lists.linux.dev, msnitzer@redhat.com, 
-	ignat@cloudflare.com, damien.lemoal@wdc.com, bob.liu@oracle.com, 
-	houtao1@huawei.com, peterz@infradead.org, mingo@kernel.org, 
-	netdev@vger.kernel.org, allen.lkml@gmail.com, kernel-team@meta.com, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Alan Stern <stern@rowland.harvard.edu>, 
-	linux-usb@vger.kernel.org, mchehab@kernel.org
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 04/17] x86/resctrl: Detect Assignable Bandwidth
+ Monitoring feature details
+Content-Language: en-GB
+To: Babu Moger <babu.moger@amd.com>, corbet@lwn.net, fenghua.yu@intel.com,
+ reinette.chatre@intel.com, tglx@linutronix.de, mingo@redhat.com,
+ bp@alien8.de, dave.hansen@linux.intel.com
+Cc: x86@kernel.org, hpa@zytor.com, paulmck@kernel.org, rdunlap@infradead.org,
+ tj@kernel.org, peterz@infradead.org, yanjiewtw@gmail.com,
+ kim.phillips@amd.com, lukas.bulwahn@gmail.com, seanjc@google.com,
+ jmattson@google.com, leitao@debian.org, jpoimboe@kernel.org,
+ rick.p.edgecombe@intel.com, kirill.shutemov@linux.intel.com,
+ jithu.joseph@intel.com, kai.huang@intel.com, kan.liang@linux.intel.com,
+ daniel.sneddon@linux.intel.com, pbonzini@redhat.com, sandipan.das@amd.com,
+ ilpo.jarvinen@linux.intel.com, peternewman@google.com,
+ maciej.wieczor-retman@intel.com, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, eranian@google.com
+References: <20231201005720.235639-1-babu.moger@amd.com>
+ <cover.1705688538.git.babu.moger@amd.com>
+ <bba869886410265ffac0250ba2a495e3e7576dfa.1705688539.git.babu.moger@amd.com>
+From: James Morse <james.morse@arm.com>
+In-Reply-To: <bba869886410265ffac0250ba2a495e3e7576dfa.1705688539.git.babu.moger@amd.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, 20 Feb 2024 at 09:25, Davidlohr Bueso <dave@stgolabs.net> wrote:
->
-> In the past this tasklet removal was held up by Mauro's device not properly
-> streaming - hopefully this no longer the case. Cc'ing.
->
-> https://lore.kernel.org/all/20180216170450.yl5owfphuvltstnt@breakpoint.cc/
+Hi Babu,
 
-Oh, lovely - an actual use-case where the old tasklet code has known
-requirements.
+On 19/01/2024 18:22, Babu Moger wrote:
+> ABMC feature details are reported via CPUID Fn8000_0020_EBX_x5.
+> Bits Description
+> 15:0 MAX_ABMC Maximum Supported Assignable Bandwidth
+>      Monitoring Counter ID + 1
+> 
+> Detect the feature details and update
+> /sys/fs/resctrl/info/L3_MON/mon_features.
+> 
+> If the system supports Assignable Bandwidth Monitoring Counters (ABMC),
+> the output will have additional text.
+>  $ cat /sys/fs/resctrl/info/L3_MON/mon_features
+>    mbm_assign_capable
+> 
+> The feature details are documented in APM listed below [1].
+> [1] AMD64 Architecture Programmer's Manual Volume 2: System Programming
+> Publication # 24593 Revision 3.41 section 19.3.3.3 Assignable Bandwidth
+> Monitoring (ABMC).
 
-Mauro - the BH workqueue should provide the same kind of latency as
-the tasklets, and it would be good to validate early that yes, this
-workqueue conversion works well in practice. Since you have an actual
-real-life test-case, could you give it a try?
+> diff --git a/arch/x86/kernel/cpu/resctrl/core.c b/arch/x86/kernel/cpu/resctrl/core.c
+> index 4efe2d6a9eb7..f40ee271a5c7 100644
+> --- a/arch/x86/kernel/cpu/resctrl/core.c
+> +++ b/arch/x86/kernel/cpu/resctrl/core.c
+> @@ -303,6 +303,17 @@ static void rdt_get_cdp_l2_config(void)
+>  	rdt_get_cdp_config(RDT_RESOURCE_L2);
+>  }
+>  
+> +static void rdt_get_abmc_cfg(struct rdt_resource *r)
+> +{
+> +	struct rdt_hw_resource *hw_res = resctrl_to_arch_res(r);
+> +	u32 eax, ebx, ecx, edx;
+> +
+> +	r->mbm_assign_capable = true;
+> +	/* Query CPUID_Fn80000020_EBX_x05 for number of ABMC counters */
+> +	cpuid_count(0x80000020, 5, &eax, &ebx, &ecx, &edx);
 
-You can find the work in
+> +	hw_res->mbm_assignable_counters = (ebx & 0xFFFF) + 1;
 
-   git://git.kernel.org/pub/scm/linux/kernel/git/tj/wq.git
-refs/heads/for-6.9-bh-conversions
+Please put the mbm_assignable_counters field in struct rdt_resource. The filesystem code
+needs to access this to allocate/free counters and report how many are available.
+After all this gets split and the filesystem code moves to /fs/, the rdt_hw_resrouce
+structure is inaccessible to the filesystem code.
 
-although it's possible that Tejun has a newer version in some other
-branch. Tejun - maybe point Mauro at something he can try out if you
-have updated the conversion since?
 
-                Linus
+> +}
+> +
+>  static void
+>  mba_wrmsr_amd(struct rdt_domain *d, struct msr_param *m, struct rdt_resource *r)
+>  {
+> @@ -815,6 +826,12 @@ static __init bool get_rdt_alloc_resources(void)
+>  	if (get_slow_mem_config())
+>  		ret = true;
+>  
+> +	if (rdt_cpu_has(X86_FEATURE_ABMC)) {
+> +		r = &rdt_resources_all[RDT_RESOURCE_L3].r_resctrl;
+> +		rdt_get_abmc_cfg(r);
+
+> +		ret = true;
+
+Does it make sense to report rdt_alloc_capable if the SoC has ABMC, but nothing that can
+be configured?
+
+This code would probably make more sense in the get_rdt_mon_resources().
+
+
+> +	}
+> +
+>  	return ret;
+>  }
+>  
+> diff --git a/arch/x86/kernel/cpu/resctrl/internal.h b/arch/x86/kernel/cpu/resctrl/internal.h
+> index a4f1aa15f0a2..01eb0522b42b 100644
+> --- a/arch/x86/kernel/cpu/resctrl/internal.h
+> +++ b/arch/x86/kernel/cpu/resctrl/internal.h
+> @@ -391,6 +391,8 @@ struct rdt_parse_data {
+>   *			resctrl_arch_get_num_closid() to avoid confusion
+>   *			with struct resctrl_schema's property of the same name,
+>   *			which has been corrected for features like CDP.
+
+> + * @mbm_assignable_counters:
+> + *			Maximum number of assignable ABMC counters
+
+As above, please move this to struct rdt_resource. The 'hw' version becomes private to the
+arch code after the move to /fs//
+
+
+>   * @msr_base:		Base MSR address for CBMs
+>   * @msr_update:		Function pointer to update QOS MSRs
+>   * @mon_scale:		cqm counter * mon_scale = occupancy in bytes
+
+
+Thanks,
+
+James
+
