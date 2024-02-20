@@ -1,97 +1,170 @@
-Received: from out-189.mta0.migadu.com (out-189.mta0.migadu.com [91.218.175.189])
+Received: from NAM02-BN1-obe.outbound.protection.outlook.com (mail-bn1nam02on2047.outbound.protection.outlook.com [40.107.212.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C504576C94;
-	Tue, 20 Feb 2024 17:19:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.189
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708449545; cv=none; b=E+ooGkgIpjS+lQxjFLp2AflP6XXQ49LDle9JjL+7cW8rK5HgLw2mk9/TUwSDyePW9B7zyUxv1f4cRFEOyrGnXmxah1QApdTbATOxg4FU2gAsKy7KfXtg1wdRyATDdzsu/s6y04mt7usOXEuFl/ZjOYuKpkko70QyTY2L6G/Xl8o=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708449545; c=relaxed/simple;
-	bh=qY/gICxbLEkSnEgQyrbs+LyV/tRdFeA2GPaxJlaMch0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cfZt53oHgweBJDrD/+YyuRLiUQW+NZS9rBK/Lh9nP7qRYFVIn9plhXfHMRoQcnVP05XT6a8xO8EABCCJcWCJp5Zd2pYej1CclVMy265Jg2I8Zwvp/7MicaROtNs3shMqSGg8OXHspH6AvKvigmA4vNJ4ORk9kU0u0APBgg+QpR8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=ZylNuoqF; arc=none smtp.client-ip=91.218.175.189
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABD7A76C60;
+	Tue, 20 Feb 2024 17:19:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.212.47
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1708449564; cv=fail; b=bXRBteYCyp6vgfJtCWIIKZYH81xhVyO4uqVKmeLIQ6pMShmttLqi4MZFBAcpzF1AcxkLWHzmEX6EdNZadyVsO5ZZK05akvX9wznq7/mtbYio0wmn48t0aevP2G6I/kjgWMG83+EKjVcW/Vz6kMxGFrQUP1O3zfXdwC1SApInqo8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1708449564; c=relaxed/simple;
+	bh=DMDI8E7jslPzeTepHfsONRA+jbDaJcCbAS1heHxM5Cc=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Q1WgVDOsmLuI+dZDNC3aJMH8/jhCTwF9ygffRPNatjv6VnAGJwOR7hM9CpEy/pLfPjygMJK2AU2mwKJhVeGr/0mhseezxITjm/PinxZtJZL71GDlLICgkoXZEUf2DCKUFB/Lr3U3ESj/b329ZCJ1/7nZr1NrQzq/KpLGBoVCUus=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=qlaWNrQP; arc=fail smtp.client-ip=40.107.212.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="ZylNuoqF"
-Date: Tue, 20 Feb 2024 12:18:49 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1708449541;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=TFBMvCwRxxn7Ubei4id/yHwyn/BDb0WjYtVEnoOd25s=;
-	b=ZylNuoqF0WKUPQen8SuTjXEKNDhM2Ex2wqwBoEJf60+6TaajmwkB70wpiPVQXYu+eoYCUR
-	sUKS2cANH7nSCOlWQUjFI+HMnkIwXo0ZHXqsAjV+pF8AwlJ/TOPjGDnpbzkNBHPzZ7uLrX
-	c3XpOWsBmNaK+l1P89corGdUgfBt0Rw=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Kent Overstreet <kent.overstreet@linux.dev>
-To: Michal Hocko <mhocko@suse.com>
-Cc: Suren Baghdasaryan <surenb@google.com>, 
-	Steven Rostedt <rostedt@goodmis.org>, Vlastimil Babka <vbabka@suse.cz>, akpm@linux-foundation.org, 
-	hannes@cmpxchg.org, roman.gushchin@linux.dev, mgorman@suse.de, dave@stgolabs.net, 
-	willy@infradead.org, liam.howlett@oracle.com, corbet@lwn.net, void@manifault.com, 
-	peterz@infradead.org, juri.lelli@redhat.com, catalin.marinas@arm.com, will@kernel.org, 
-	arnd@arndb.de, tglx@linutronix.de, mingo@redhat.com, 
-	dave.hansen@linux.intel.com, x86@kernel.org, peterx@redhat.com, david@redhat.com, 
-	axboe@kernel.dk, mcgrof@kernel.org, masahiroy@kernel.org, nathan@kernel.org, 
-	dennis@kernel.org, tj@kernel.org, muchun.song@linux.dev, rppt@kernel.org, 
-	paulmck@kernel.org, pasha.tatashin@soleen.com, yosryahmed@google.com, 
-	yuzhao@google.com, dhowells@redhat.com, hughd@google.com, andreyknvl@gmail.com, 
-	keescook@chromium.org, ndesaulniers@google.com, vvvvvv@google.com, 
-	gregkh@linuxfoundation.org, ebiggers@google.com, ytcoode@gmail.com, 
-	vincent.guittot@linaro.org, dietmar.eggemann@arm.com, bsegall@google.com, bristot@redhat.com, 
-	vschneid@redhat.com, cl@linux.com, penberg@kernel.org, iamjoonsoo.kim@lge.com, 
-	42.hyeyoo@gmail.com, glider@google.com, elver@google.com, dvyukov@google.com, 
-	shakeelb@google.com, songmuchun@bytedance.com, jbaron@akamai.com, rientjes@google.com, 
-	minchan@google.com, kaleshsingh@google.com, kernel-team@android.com, 
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, iommu@lists.linux.dev, 
-	linux-arch@vger.kernel.org, linux-fsdevel@vger.kernel.org, linux-mm@kvack.org, 
-	linux-modules@vger.kernel.org, kasan-dev@googlegroups.com, cgroups@vger.kernel.org
-Subject: Re: [PATCH v3 31/35] lib: add memory allocations report in show_mem()
-Message-ID: <qnpkravlw4d5zic4djpku6ffghargekkohsolrnus3bvwipa7g@lfbucg3r4zbz>
-References: <CAJuCfpHq3N0h6dGieHxD6Au+qs=iKAifFrHAMxTsHTcDrOwSQA@mail.gmail.com>
- <ruxvgrm3scv7zfjzbq22on7tj2fjouydzk33k7m2kukm2n6uuw@meusbsciwuut>
- <320cd134-b767-4f29-869b-d219793ba8a1@suse.cz>
- <efxe67vo32epvmyzplmpd344nw2wf37azicpfhvkt3zz4aujm3@n27pl5j5zahj>
- <20240215180742.34470209@gandalf.local.home>
- <20240215181648.67170ed5@gandalf.local.home>
- <20240215182729.659f3f1c@gandalf.local.home>
- <mi5zw42r6c2yfg7fr2pfhfff6hudwizybwydosmdiwsml7vqna@a5iu6ksb2ltk>
- <CAJuCfpEARb8t8pc8WVZYB=yPk6G_kYGmJTMOdgiMHaYYKW3fUA@mail.gmail.com>
- <ZdTSAWwNng9rmKtg@tiehlicka>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="qlaWNrQP"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=axx25BCMz7AkcwC6doYX7FJieFsv8qO0QTNLAV/1hY5sy1f1eLMb47QldoabvS4p45HicWZ+CXaEO99syP2hwZyV6heK4FVwQGW3bIDPACPkXH9fGSP9bYzPsM5atLtGqoGLG+UaXCmnA+0Qzsl1oaA7FxzSGcxXi9Oim3cly1RUpWoGEOcn/i9brlSe2QsNhB7xVmF6K4YxMwkFROVfXNLd8FnuZ0Gx2TpLm+F3B3cEYNypxJmmljixuy6jezqHlrr0R0aZQpBwtjBOk69oKFKZ+n/uqol+NINmQtVPjwVY2+mh+etOKiht+Bo3ZfXjaEzdnX24vimafTq90wx56Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=WGCVtOeKyckm5h/RRBMlLdaF8ZUAoTg3nZ3RDW0iOgM=;
+ b=hOMP6Ox3K1JpoUsZuZxDecVcL6Dn62m9uaVYChSE/yQEAjiiazzeN/oZbMk8DL22ppwbi1qK5Eifi+++rWJGeXS1Q0RU4RyCBBe4A4KViYI/2S4YWmIoe05IRI5ebW01mt+IhIKb035qKa2kxq8ZonZ8dy1bvXSkl5GelMVxBvoHsQaADrlGrQdiyHhXLiUASdFA91KkioutvA0clGg0sYDFNOwLgSZCyPukbjDwYdCvFlXUf6iaaxPoregHy/a/kzsj8DHpy+0WcnsZeuCWoVBgNK9YNbKxBHPOpUlf422cxI5+spLVc1MtmFpWI/NngpjbCROBZXx6r6nK/1Mz9g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=WGCVtOeKyckm5h/RRBMlLdaF8ZUAoTg3nZ3RDW0iOgM=;
+ b=qlaWNrQPqoSaH5HIdU4IV7ACGKcVeH3+s19vkdQaAcnRiZ5T6DGFjnTTrLI1htefhs6W8wHJndbgEaq8aredGpHJQf3ySZwPoFCIhjSgqGXsjc6jjc/P9D93237oSsRm39fXbHgXxfkwlbtUE0HrsOgO3wUFNIm3UfAVK+GldhQ=
+Received: from PH8PR15CA0024.namprd15.prod.outlook.com (2603:10b6:510:2d2::9)
+ by SN7PR12MB6715.namprd12.prod.outlook.com (2603:10b6:806:271::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7316.21; Tue, 20 Feb
+ 2024 17:19:19 +0000
+Received: from SA2PEPF000015C6.namprd03.prod.outlook.com
+ (2603:10b6:510:2d2:cafe::8d) by PH8PR15CA0024.outlook.office365.com
+ (2603:10b6:510:2d2::9) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7292.40 via Frontend
+ Transport; Tue, 20 Feb 2024 17:19:19 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ SA2PEPF000015C6.mail.protection.outlook.com (10.167.241.196) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.7292.25 via Frontend Transport; Tue, 20 Feb 2024 17:19:19 +0000
+Received: from BLR5CG134614W.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Tue, 20 Feb
+ 2024 11:19:11 -0600
+From: K Prateek Nayak <kprateek.nayak@amd.com>
+To: <linux-kernel@vger.kernel.org>
+CC: "Gautham R. Shenoy" <gautham.shenoy@amd.com>, K Prateek Nayak
+	<kprateek.nayak@amd.com>, Michael Ellerman <mpe@ellerman.id.au>, "Nicholas
+ Piggin" <npiggin@gmail.com>, Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Aneesh Kumar K.V <aneesh.kumar@kernel.org>, "Naveen N. Rao"
+	<naveen.n.rao@linux.ibm.com>, "Rafael J. Wysocki" <rafael@kernel.org>,
+	"Daniel Lezcano" <daniel.lezcano@linaro.org>, Ingo Molnar <mingo@redhat.com>,
+	"Peter Zijlstra" <peterz@infradead.org>, Juri Lelli <juri.lelli@redhat.com>,
+	"Vincent Guittot" <vincent.guittot@linaro.org>, Dietmar Eggemann
+	<dietmar.eggemann@arm.com>, Steven Rostedt <rostedt@goodmis.org>, Ben Segall
+	<bsegall@google.com>, Mel Gorman <mgorman@suse.de>, "Daniel Bristot de
+ Oliveira" <bristot@redhat.com>, Valentin Schneider <vschneid@redhat.com>,
+	Andrew Donnellan <ajd@linux.ibm.com>, Nicholas Miehlbradt
+	<nicholas@linux.ibm.com>, <linuxppc-dev@lists.ozlabs.org>,
+	<linux-pm@vger.kernel.org>
+Subject: [RFC PATCH 08/14] powerpc/thread_info: Introduce TIF_NOTIFY_IPI flag
+Date: Tue, 20 Feb 2024 22:44:51 +0530
+Message-ID: <20240220171457.703-9-kprateek.nayak@amd.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20240220171457.703-1-kprateek.nayak@amd.com>
+References: <20240220171457.703-1-kprateek.nayak@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZdTSAWwNng9rmKtg@tiehlicka>
-X-Migadu-Flow: FLOW_OUT
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SA2PEPF000015C6:EE_|SN7PR12MB6715:EE_
+X-MS-Office365-Filtering-Correlation-Id: 298d8946-e44d-453c-b049-08dc323812b2
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	3wZ5JscQM9q5Ne+uB84OH9BSDDwHT8EoBCAAmB/PEJ26NITdQw8Gh5yMxJFplRTQawoRpsl9dfjTWU/jrTZCW715UW6m2Q21snXndMAapBfuQOq2EDV+al8Pv0RT0Mp7COcEJORb1JRWPkNIshNXPELXkXYy6BuM8U21YGERABMvlpdQzv9B+rvV8EGFmvmalU6PFN1PCsH2BaC4oRR2+LJh2zKv5JHjJUFs77nwDtyLBsEiLX6dL/k09MLjpmxonFxGGniOt7EQjXrvlO/jDWA72G3x34I0+ooOorpvHEc4/kXVrwjr4xTu9eQmiV/NqIpzGTB+DgCFlM1njOTpL/uBkdUdiny8bZqvVOC1jKl0UnBXrlqL+Mpu1KrIzwfCrBlhyPDc4wGoL77KykIV/+c+pWj8muBJXAN+TOGnVDoSwuNU+ECfTDLeEJRwogVNGA004HauY6I5F9RP7f2kqI7qGabAfdFeAOt81ZRstu1cwCAUBDaGcxdu6HZ0VFB0+v4RcaLiEw9D3h55z7DGmjVbZKzDKfImVu6gFI/oIpfa/GN/TfHTypSHx4o9dhSBexcZIhkn6Wvg6BKB+gkDmF8Nwe+B3CItRSOgZnIW9KiaSrmt5I3AsZp+0FUThyKe0cdUow8+BW5ZNpidvYC30zdT7rQJz6FPDqTlp/yEbZk=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(36860700004)(40470700004)(46966006);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Feb 2024 17:19:19.2088
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 298d8946-e44d-453c-b049-08dc323812b2
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SA2PEPF000015C6.namprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR12MB6715
 
-On Tue, Feb 20, 2024 at 05:23:29PM +0100, Michal Hocko wrote:
-> On Mon 19-02-24 09:17:36, Suren Baghdasaryan wrote:
-> [...]
-> > For now I think with Vlastimil's __GFP_NOWARN suggestion the code
-> > becomes safe and the only risk is to lose this report. If we get cases
-> > with reports missing this data, we can easily change to reserved
-> > memory.
-> 
-> This is not just about missing part of the oom report. This is annoying
-> but not earth shattering. Eating into very small reserves (that might be
-> the only usable memory while the system is struggling in OOM situation)
-> could cause functional problems that would be non trivial to test for.
-> All that for debugging purposes is just lame. If you want to reuse the code
-> for a different purpose then abstract it and allocate the buffer when you
-> can afford that and use preallocated on when in OOM situation.
-> 
-> We have always went extra mile to avoid potentially disruptive
-> operations from the oom handling code and I do not see any good reason
-> to diverge from that principle.
+Add support for TIF_NOTIFY_IPI on PowerPC. With TIF_NOTIFY_IPI, a sender
+sending an IPI to an idle CPU in TIF_POLLING mode will set the
+TIF_NOTIFY_IPI flag in the target's idle tasks's thread_info to pull the
+CPU out of idle, as opposed to setting TIF_NEED_RESCHED previously. This
+avoids spurious calls to schedule_idle() in cases where an IPI does not
+necessarily wake up a task on the idle CPU.
 
-Michal, I gave you the logic between dedicated reserves and system
-reserves. Please stop repeating these vague what-ifs.
+Cc: Michael Ellerman <mpe@ellerman.id.au>
+Cc: Nicholas Piggin <npiggin@gmail.com>
+Cc: Christophe Leroy <christophe.leroy@csgroup.eu>
+Cc: "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>
+Cc: "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Juri Lelli <juri.lelli@redhat.com>
+Cc: Vincent Guittot <vincent.guittot@linaro.org>
+Cc: Dietmar Eggemann <dietmar.eggemann@arm.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>
+Cc: Ben Segall <bsegall@google.com>
+Cc: Mel Gorman <mgorman@suse.de>
+Cc: Daniel Bristot de Oliveira <bristot@redhat.com>
+Cc: Valentin Schneider <vschneid@redhat.com>
+Cc: Andrew Donnellan <ajd@linux.ibm.com>
+Cc: K Prateek Nayak <kprateek.nayak@amd.com>
+Cc: Nicholas Miehlbradt <nicholas@linux.ibm.com>
+Cc: linuxppc-dev@lists.ozlabs.org
+Cc: linux-kernel@vger.kernel.org
+Cc: linux-pm@vger.kernel.org
+Signed-off-by: K Prateek Nayak <kprateek.nayak@amd.com>
+---
+ arch/powerpc/include/asm/thread_info.h | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/arch/powerpc/include/asm/thread_info.h b/arch/powerpc/include/asm/thread_info.h
+index bf5dde1a4114..b48db55192e0 100644
+--- a/arch/powerpc/include/asm/thread_info.h
++++ b/arch/powerpc/include/asm/thread_info.h
+@@ -103,6 +103,7 @@ void arch_setup_new_exec(void);
+ #define TIF_PATCH_PENDING	6	/* pending live patching update */
+ #define TIF_SYSCALL_AUDIT	7	/* syscall auditing active */
+ #define TIF_SINGLESTEP		8	/* singlestepping active */
++#define TIF_NOTIFY_IPI		9	/* Pending IPI on TIF_POLLLING idle CPU */
+ #define TIF_SECCOMP		10	/* secure computing */
+ #define TIF_RESTOREALL		11	/* Restore all regs (implies NOERROR) */
+ #define TIF_NOERROR		12	/* Force successful syscall return */
+@@ -129,6 +130,7 @@ void arch_setup_new_exec(void);
+ #define _TIF_PATCH_PENDING	(1<<TIF_PATCH_PENDING)
+ #define _TIF_SYSCALL_AUDIT	(1<<TIF_SYSCALL_AUDIT)
+ #define _TIF_SINGLESTEP		(1<<TIF_SINGLESTEP)
++#define _TIF_NOTIFY_IPI		(1<<TIF_NOTIFY_IPI)
+ #define _TIF_SECCOMP		(1<<TIF_SECCOMP)
+ #define _TIF_RESTOREALL		(1<<TIF_RESTOREALL)
+ #define _TIF_NOERROR		(1<<TIF_NOERROR)
+-- 
+2.34.1
+
