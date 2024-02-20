@@ -1,156 +1,147 @@
 Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73FD5664C3;
-	Tue, 20 Feb 2024 08:53:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F00EE5F481;
+	Tue, 20 Feb 2024 08:54:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708419206; cv=none; b=esyfv2qDDum43G9gNPyoa+hZgWre4MAoCgZIle1Ag94CKDe1jEsmDs3aAxReYOj6z8LKU4XQ0NhiMAf9u8URYiIdlnpEm1hArZq5ijo8yuVvKSecrPF+egnblmFyT4s/1i+Yb7oOjEEgBSvL0dP/XgN3jZRmLovYvDGzkTAsyGs=
+	t=1708419252; cv=none; b=MaC6DUdLL0C2caYbmTxiz73GW3MZDVMgsSqtkkC7cNDRBQs9v7ZFCI4/7hOY+I8aOXM2hP+ZV0D3lTqBvyUr4l6GUYhtogZbyJETUv2XXVP1CPdWlOb8JZ6O3oZFsLVyTew2DOGdgGr4dUVcqa6z2mLdAGEnF/eD8eo/BW0oOIE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708419206; c=relaxed/simple;
-	bh=PJX9nxRLEeoQwdUnmOqN3H2dctwppjpelMENczAYtJo=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=BlK9GM4kyJ/eZEu1ngOZCB8LXM8QnH1lz2C0CpupzqSktWggF7eZghgsn/UcVznI5+OZoLBIe1+988T+peCPxMyptz8ge12YXAyevnCoDdErguXsxDE0+2veZxBswVZytczhhyPlqJqq7z2wcoIlfZ1ebo3SKAJbnI3rt4zTGaE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=QISnZzZ7; arc=none smtp.client-ip=46.235.227.194
+	s=arc-20240116; t=1708419252; c=relaxed/simple;
+	bh=M8/PhF0aAqABF/pRPoLSGcD9DP7US6tDXUQJIwRD354=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Iqz3KjVQFZTcdhynKGC8Jf2shxY8D8BhwNYyuaRNc30ISEhMA1sWJH6Ro0ijxuhnDtGRwvg6W1wiDX3YLyU2/rs/E4/5pMfpzX9fZRbvoH0WJ+XZql2MzPjp9p4336F3Lc+26trQ0RCQCsoAuTTYuIiMJ2WovmWhis5/7+u9Uio=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=DR+iocJ0; arc=none smtp.client-ip=46.235.227.194
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="QISnZzZ7"
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="DR+iocJ0"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1708419202;
-	bh=PJX9nxRLEeoQwdUnmOqN3H2dctwppjpelMENczAYtJo=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=QISnZzZ7KXVGg1T7oPWsyGpge3L8xRwxFPHEU8reETwgOv3wT68lfYY0n71LieToc
-	 teQ2of1OPiELpnTUYlZojXRftIMXGdx+MOlrimcQLKwzgI9+XCV1tT0apbTZwGL08N
-	 VfW3i6DbE/S2jPaiVGjNfDgYwrLeePKdTsg+wUe6xxy7nc7EEuiGgidc+Q19BgDU/l
-	 h4UBJE/usHSrJ01gILnP8cuJtVCLgBlr6c32kdK9lEYocJoGXGFBh0hdg+WO/YODv3
-	 1PR9g9EB6gz/pMt6vvS3+XaEIsNUAOXT8G12T6aYTG3qMP2DN9c1M1QN5vbMPiNPei
-	 IHGG5dcC8XQIQ==
-Received: from eugen-station.. (cola.collaboradmins.com [195.201.22.229])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	s=mail; t=1708419249;
+	bh=M8/PhF0aAqABF/pRPoLSGcD9DP7US6tDXUQJIwRD354=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=DR+iocJ0Rz307omPoFvSmgFRhhtAABmY+XrQiLAQTlRAUrlFw0GZNJHxjMmhx0/Bt
+	 t5k9wtlV0/qqG4tbCx4SsErlOTi62v7aAYS+RtHrrdZ0jEIhRS/GtenkuekSVt9Kxr
+	 CoktsWi4i1CuJOQP8KRT7wmCsu4YKDQlTGOnGeBo/CwD2kA83Al4KOzpFyMWL/WheZ
+	 XuQ3HJEKCfQUD8iRPn62+QpsOgdO1Ic5ZHti6deOh38+fO8tOzBdL6SKSsr9dnXYEl
+	 KSGJ91O8qNhbfMIurf044wjDJA7C2ERHwCRHWNfXtcUGoP1LngdopvU5C0derCZWRP
+	 bKQtUiDOAwfqA==
+Received: from [100.113.186.2] (cola.collaboradmins.com [195.201.22.229])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	(Authenticated sender: ehristev)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 027D837820A1;
-	Tue, 20 Feb 2024 08:53:18 +0000 (UTC)
-From: Eugen Hristev <eugen.hristev@collabora.com>
-To: tytso@mit.edu,
-	adilger.kernel@dilger.ca,
-	linux-ext4@vger.kernel.org,
-	jaegeuk@kernel.org,
-	chao@kernel.org,
-	linux-f2fs-devel@lists.sourceforge.net,
-	linux-fsdevel@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	kernel@collabora.com,
-	eugen.hristev@collabora.com,
-	viro@zeniv.linux.org.uk,
-	brauner@kernel.org,
-	jack@suse.cz,
-	krisman@suse.de,
-	Gabriel Krisman Bertazi <krisman@collabora.com>,
-	Eric Biggers <ebiggers@google.com>
-Subject: [PATCH v12 8/8] f2fs: Move CONFIG_UNICODE defguards into the code flow
-Date: Tue, 20 Feb 2024 10:52:35 +0200
-Message-Id: <20240220085235.71132-9-eugen.hristev@collabora.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240220085235.71132-1-eugen.hristev@collabora.com>
-References: <20240220085235.71132-1-eugen.hristev@collabora.com>
+	(Authenticated sender: kholk11)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id E581E37820C1;
+	Tue, 20 Feb 2024 08:54:08 +0000 (UTC)
+Message-ID: <e0c44c03-8c66-4a44-9c6d-6b8c83e9d16f@collabora.com>
+Date: Tue, 20 Feb 2024 09:54:08 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/2] arm64: dts: mediatek: add Kontron 3.5"-SBC-i1200
+To: Michael Walle <mwalle@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>
+Cc: devicetree@vger.kernel.org, Sean Wang <sean.wang@mediatek.com>,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-mediatek@lists.infradead.org
+References: <20240219084456.1075445-1-mwalle@kernel.org>
+ <20240219084456.1075445-2-mwalle@kernel.org>
+ <2ad6bda8-a457-421b-b35d-dc005fb00ae9@collabora.com>
+ <CZ92W3VSYV1A.1693O76GY1XDP@kernel.org>
+ <b50d49fd-2976-46fc-9f35-354fb39720ad@collabora.com>
+ <CZ93XYV3MB10.YRCFWLLHIICY@kernel.org>
+From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Content-Language: en-US
+In-Reply-To: <CZ93XYV3MB10.YRCFWLLHIICY@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-From: Gabriel Krisman Bertazi <krisman@collabora.com>
+Il 19/02/24 14:59, Michael Walle ha scritto:
+> On Mon Feb 19, 2024 at 2:35 PM CET, AngeloGioacchino Del Regno wrote:
+>>>> vbus is always supplied by something, as otherwise USB won't work - whether this
+>>>> is an always-on regulator or a passthrough from external supply this doesn't really
+>>>> matter - you should model a regulator-fixed that provides the 5V VBUS line.
+>>>
+>>> I don't think this is correct, though. Think of an on-board USB
+>>> hub. There only D+/D- are connected (and maybe the USB3.2 SerDes
+>>> lanes). Or have a look at the M.2 pinout. There is no Vbus.
+>>>
+>>
+>> Yes but the MediaTek MTU3 and/or controllers do have it ;-)
+> 
+> .. and ..
+> 
+>>>> For example:
+>>>> 	vbus_fixed: regulator-vbus {
+>>>> 		compatible = "regulator-fixed";
+>>>> 		regulator-name = "usb-vbus";
+>>>> 		regulator-always-on;
+>>>> 		regulator-boot-on;
+>>>> 		regulator-min-microvolt = <5000000>;
+>>>> 		regulator-max-microvolt = <5000000>;
+>>>> 	};
+>>>
+>>> As mentioned above, I don't think this will make sense in my case.
+>>>   >> P.S.: If the rail has a different name, please use that different name. Obviously
+>>>> that requires you to have schematics at hand, and I don't know if you do: if you
+>>>> don't, then that regulator-vbus name is just fine.
+>>>
+>>> I do have the schematics.
+>>
+>> In that case, you should model the power tree with the fixed power lines,
+>> check mt8195-cherry (and/or cherry-tomato) and radxa-nio-12l; even though
+>> those are technically "doing nothing", this is device tree, so it should
+>> provide a description of the hardware ... and the board does have fixed
+>> power lines.
+>> It has at least one: DC-IN (typec, barrel jack or whatever, the board needs
+>> power, doesn't it?!).
+> 
+> Mh, maybe I don't get it. But within the hardware there is simply no
+> Vbus. Thus I'd argue it doesn't make sense to have a vbus-supply
+> property. Besides, the mediatek,mtu3.yaml binding lists it as
+> deprecated anyway and it should rather be on the connector. There,
+> it makes perfectly sense (at least if it's a USB connector).
+> 
+> Thus in my case, the xhci for the front port has a vbus-supply
+> property (but it should rather have a connector node, as I've just
+> learned). But the internal port which connects to the USB hub
+> shouldn't have one.
+> 
+> 
+>    +-----+           +-----+                  +------+
+>    |     |<--Dp/Dn-->|     |<------Dp/Dn----->| USB  |
+>    | SoC |           |     |                  | Conn |
+>    |     |           |     |   +-----+        |      |
+>    +-----+           | USB |   | PWR |--Vbus->|      |
+>                      | Hub |   | SW  |        +------+
+>                      |     |   +-----+
+>                      |     |     ^
+>                      |     |     | PRTPWR
+>                      |     |-----'
+>                      +-----+
+> 
+> "PWR SW" is a power switch, the input (+5V) isn't shown here. The
+> power will be enabled by the USB Hub.
+> 
 
-Instead of a bunch of ifdefs, make the unicode built checks part of the
-code flow where possible, as requested by Torvalds.
+Ok then, put the vbus on the connector, where applicable.
 
-Reviewed-by: Eric Biggers <ebiggers@google.com>
-Reviewed-by: Chao Yu <chao@kernel.org>
-Signed-off-by: Gabriel Krisman Bertazi <krisman@collabora.com>
-[eugen.hristev@collabora.com: port to 6.8-rc3]
-Signed-off-by: Eugen Hristev <eugen.hristev@collabora.com>
----
- fs/f2fs/namei.c | 10 ++++------
- fs/f2fs/super.c |  8 ++++----
- 2 files changed, 8 insertions(+), 10 deletions(-)
+If PWR_SW is a physical switch (not detectable), then you can still model it as an
+always-on regulator-fixed, as there's no other clean way of doing that.
 
-diff --git a/fs/f2fs/namei.c b/fs/f2fs/namei.c
-index ba11298b7837..c317bfd1c344 100644
---- a/fs/f2fs/namei.c
-+++ b/fs/f2fs/namei.c
-@@ -577,8 +577,7 @@ static struct dentry *f2fs_lookup(struct inode *dir, struct dentry *dentry,
- 		goto out_iput;
- 	}
- out_splice:
--#if IS_ENABLED(CONFIG_UNICODE)
--	if (!inode && IS_CASEFOLDED(dir)) {
-+	if (IS_ENABLED(CONFIG_UNICODE) && !inode && IS_CASEFOLDED(dir)) {
- 		/* Eventually we want to call d_add_ci(dentry, NULL)
- 		 * for negative dentries in the encoding case as
- 		 * well.  For now, prevent the negative dentry
-@@ -587,7 +586,7 @@ static struct dentry *f2fs_lookup(struct inode *dir, struct dentry *dentry,
- 		trace_f2fs_lookup_end(dir, dentry, ino, err);
- 		return NULL;
- 	}
--#endif
-+
- 	new = d_splice_alias(inode, dentry);
- 	trace_f2fs_lookup_end(dir, !IS_ERR_OR_NULL(new) ? new : dentry,
- 				ino, IS_ERR(new) ? PTR_ERR(new) : err);
-@@ -640,16 +639,15 @@ static int f2fs_unlink(struct inode *dir, struct dentry *dentry)
- 	f2fs_delete_entry(de, page, dir, inode);
- 	f2fs_unlock_op(sbi);
- 
--#if IS_ENABLED(CONFIG_UNICODE)
- 	/* VFS negative dentries are incompatible with Encoding and
- 	 * Case-insensitiveness. Eventually we'll want avoid
- 	 * invalidating the dentries here, alongside with returning the
- 	 * negative dentries at f2fs_lookup(), when it is better
- 	 * supported by the VFS for the CI case.
- 	 */
--	if (IS_CASEFOLDED(dir))
-+	if (IS_ENABLED(CONFIG_UNICODE) && IS_CASEFOLDED(dir))
- 		d_invalidate(dentry);
--#endif
-+
- 	if (IS_DIRSYNC(dir))
- 		f2fs_sync_fs(sbi->sb, 1);
- fail:
-diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
-index 1b718bebfaa1..07c54981cb6b 100644
---- a/fs/f2fs/super.c
-+++ b/fs/f2fs/super.c
-@@ -312,7 +312,7 @@ struct kmem_cache *f2fs_cf_name_slab;
- static int __init f2fs_create_casefold_cache(void)
- {
- 	f2fs_cf_name_slab = f2fs_kmem_cache_create("f2fs_casefolded_name",
--							F2FS_NAME_LEN);
-+						   F2FS_NAME_LEN);
- 	return f2fs_cf_name_slab ? 0 : -ENOMEM;
- }
- 
-@@ -1360,13 +1360,13 @@ static int parse_options(struct super_block *sb, char *options, bool is_remount)
- 		return -EINVAL;
- 	}
- #endif
--#if !IS_ENABLED(CONFIG_UNICODE)
--	if (f2fs_sb_has_casefold(sbi)) {
-+
-+	if (!IS_ENABLED(CONFIG_UNICODE) && f2fs_sb_has_casefold(sbi)) {
- 		f2fs_err(sbi,
- 			"Filesystem with casefold feature cannot be mounted without CONFIG_UNICODE");
- 		return -EINVAL;
- 	}
--#endif
-+
- 	/*
- 	 * The BLKZONED feature indicates that the drive was formatted with
- 	 * zone alignment optimization. This is optional for host-aware
--- 
-2.34.1
+As for modeling the power tree with the fixed power lines, I mean that you should
+add the power rails as described in your schematics.
+You will surely have one DC-IN supply, and others. That should be modeled as a
+fixed regulator, which outputs to (probably) the PMIC, using it as an input for
+its buck regulators.
 
+Again, your PMIC must be getting a voltage from somewhere in order to regulate
+that to a different voltage for a different power rail, right? :-)
+
+Regards,
+Angelo
