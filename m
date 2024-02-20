@@ -1,63 +1,101 @@
-Received: from fallback19.i.mail.ru (fallback19.i.mail.ru [79.137.243.70])
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2083.outbound.protection.outlook.com [40.107.244.83])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A4A576C63;
-	Tue, 20 Feb 2024 17:12:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.137.243.70
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708449175; cv=none; b=Dr4kiEjMyHSKYSQ7YrYkr8MOwYyAU/lpOfCAkyBvDBk8F69m7oudn3cWymRi/srrQHGMgNB32P+9XtLkNyJWfkzM+9g1W6jInBUV0fGbDLhBJCHaovvxcgcawaDp1bxhKdcdl4MN5QdD64iEgAS9SjMbtJyQM89uIwieqigO2mA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708449175; c=relaxed/simple;
-	bh=y7TM1Ce8/9NqY9uLh0co3vJ+gT7WaDfcdG6FQY4FBSQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=LiSgnkpbtV+SEr4477mgOr3QG492QJjxNhsxfWPfbdDwBi/x9qwTsGO1wE5UQB8LiELNNkAcuUFAJHO8IYRg/gLP2iwR/Q0ggc/rplfBZkawYn7VIFU42t/v4TpknvMrfcvpGcZbH+6tj6/y1C8C+fWvPXEu+ZAf+zVih+sR0qg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jiaxyga.com; spf=pass smtp.mailfrom=jiaxyga.com; dkim=pass (1024-bit key) header.d=jiaxyga.com header.i=@jiaxyga.com header.b=fx9N3jPb; dkim=pass (1024-bit key) header.d=jiaxyga.com header.i=@jiaxyga.com header.b=NrgRy31w; arc=none smtp.client-ip=79.137.243.70
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jiaxyga.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jiaxyga.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5661D1E48F;
+	Tue, 20 Feb 2024 17:15:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.244.83
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1708449347; cv=fail; b=qbGF8e9B+afVlY+HCHWEC2aGL1iSYASmtFJVOqucmx3JCYaDKTiPwD4yR3Vn4Cy4q+rNh8iNH/izVqG8XRIzsvuahsrfXyPpQXGtQOmIMnpmAESxLzAtt9PQcwPdu9ygTwEhMH6f1yO743JmQf4pT9vjIqTEAqw1wVyKakzdBuI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1708449347; c=relaxed/simple;
+	bh=Qc1y4xQehEgUrwn/LyAabrZASoWkA9z7AUDyCDLmRgA=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=B9Ek7k4inWJLqv9fORq+A8cAlMkmm2EcVXs0TGGUgQyXOzTY0nHNP4sHzRnw9Afv/7Le6c/nGPIVvwM++2hQfVzcojsjT7J/skD7x212asWloouKR1TYCXZCMlzlkCW6IFh12NAI/jUkWgtE5XzUtk9bvII+YuqXwYqElyUzsxU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=xJyV9Ek9; arc=fail smtp.client-ip=40.107.244.83
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=jiaxyga.com header.i=@jiaxyga.com header.b="fx9N3jPb";
-	dkim=pass (1024-bit key) header.d=jiaxyga.com header.i=@jiaxyga.com header.b="NrgRy31w"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=jiaxyga.com; s=mailru;
-	h=Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:From:Subject:Content-Type:Content-Transfer-Encoding:To:Cc; bh=xosS4pMVAXMl64KfbhqNg4pT6gzUO5DbW2nHMK1KqR4=;
-	t=1708449172;x=1708539172; 
-	b=fx9N3jPblK9qkeYjsGd/Uw4jpePnrWsgfw1Z2RfNj92NY9eZMckq2srK2tvaaa9p0B10BA5KsQTPChnSTHBfgrDHZ32wvgn4FUImn5aakmSPEeGNTTvcaSbAijnJV7R1GgrtvzbzNHqObC9wJeXkB29IaZd9SAPUvlImoecDisk=;
-Received: from [10.12.4.25] (port=52686 helo=smtp54.i.mail.ru)
-	by fallback19.i.mail.ru with esmtp (envelope-from <danila@jiaxyga.com>)
-	id 1rcTMc-008CEL-F1; Tue, 20 Feb 2024 19:53:02 +0300
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=jiaxyga.com
-	; s=mailru; h=Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:
-	Message-ID:Date:Subject:Cc:To:From:From:Sender:Reply-To:To:Cc:Content-Type:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive:
-	X-Cloud-Ids:Disposition-Notification-To;
-	bh=xosS4pMVAXMl64KfbhqNg4pT6gzUO5DbW2nHMK1KqR4=; t=1708447982; x=1708537982; 
-	b=NrgRy31wycwYrboen+onLEvk7ThfIlH4KnJpbF38TpJMBbWlLY07aqPMu+seh4++xvrlJiFtUXC
-	tk4jF43Q+4sX0/NpDSoCIZ7DqVluUcLIHlZFYUAdBaAS+Tj5JWG0cDq9Wyl90J3Rdn0JtDgDnQJVh
-	KXN4kFacC/WylA/yivU=;
-Received: by smtp54.i.mail.ru with esmtpa (envelope-from <danila@jiaxyga.com>)
-	id 1rcTMS-0000000GhgU-1V38; Tue, 20 Feb 2024 19:52:53 +0300
-From: Danila Tikhonov <danila@jiaxyga.com>
-To: andersson@kernel.org,
-	konrad.dybcio@linaro.org,
-	mturquette@baylibre.com,
-	sboyd@kernel.org,
-	robh@kernel.org,
-	krzysztof.kozlowski+dt@linaro.org,
-	conor+dt@kernel.org,
-	david@mainlining.org,
-	adrian@travitia.xyz
-Cc: linux-arm-msm@vger.kernel.org,
-	linux-clk@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Danila Tikhonov <danila@jiaxyga.com>
-Subject: [PATCH 4/8] clk: qcom: Add Display Clock Controller driver for SM7150
-Date: Tue, 20 Feb 2024 19:52:36 +0300
-Message-ID: <20240220165240.154716-5-danila@jiaxyga.com>
-X-Mailer: git-send-email 2.43.2
-In-Reply-To: <20240220165240.154716-1-danila@jiaxyga.com>
-References: <20240220165240.154716-1-danila@jiaxyga.com>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="xJyV9Ek9"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=KnW7P3tEvkDe9SC40TjO7XmiQ0hmhvXSo3WV3spHhUbzSed0r9GHickJVStbzhuJcgIta58BMW4urryz95IUk/syOQ5ZSpCO+WGQ1hvFF5l4lk15fjXqxGq//G4rLYsZ4hBwGfLSynmrxB4TyLHSDg5WisYNmOCYWo668GXbNK1DkbuPIPkvTAOHlg3WF5KSp3YJjKz/m3Vk4PBx4zeDPzxj0upILw4ilYa7If9aTirFy34GUbTdj5A9BJ6X86oODaqi3LnZHOsC7vV9uBndBAYFA19z23NQfgUYZourykQufOAHswu/P6h3gLSI17sg2N3SavlfWyPq58n5oENB2Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=rErl6Jmu5BIFGn8Hi3bu7+XDakfM4Z4iit7x6OM3jZE=;
+ b=NeiuuPp4VVw7qqjI86xo5GkD9nBPB6Jz8w5px1Fnlw1sBuMCmlq4iCW/l//b8H6J3e7v6kuEWw4TzApp0A7/IJ1DRgyptSuVxqiXt42UI5E0QpktlqTMd9bsqM5TPUcwqGDr/pmokAOW3Ybzn5r7HN9OkMbpdf9994dJh3f43zoFNtXanV1iJTrdul+886sWEeyfd+PzYkRSlrw0oCH8WVcwQKSq0Y9Z8OX4rxJ59G/wtw228gdxUAM8AQrm4D/GZlR3XF+XzV+8troG+jS0CRJM43ChTDRHqhUGLIsbtq0S2t4GqcdtaXnLnfOpPKmP+0M4hzpjRcSUM/I7zKvTLQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=rErl6Jmu5BIFGn8Hi3bu7+XDakfM4Z4iit7x6OM3jZE=;
+ b=xJyV9Ek9kgBBklSBU3bU/2mG6NnTr2Gsk/3V+FerobRthxaKfF3xayiys/LSZGfT+Mlg/28ttcILeMz1iv/SONbgXJ7Ny+auK8VX6gtNeyz11yeqaDDs8VRAej2btYpv26PuSr/08DJlGRoWLY+v8Ldnmt9dkRyh9cimygrkxDI=
+Received: from BN0PR03CA0023.namprd03.prod.outlook.com (2603:10b6:408:e6::28)
+ by PH0PR12MB8799.namprd12.prod.outlook.com (2603:10b6:510:28e::6) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7316.19; Tue, 20 Feb
+ 2024 17:15:39 +0000
+Received: from BN2PEPF000044A6.namprd04.prod.outlook.com
+ (2603:10b6:408:e6:cafe::4b) by BN0PR03CA0023.outlook.office365.com
+ (2603:10b6:408:e6::28) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7292.40 via Frontend
+ Transport; Tue, 20 Feb 2024 17:15:38 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ BN2PEPF000044A6.mail.protection.outlook.com (10.167.243.100) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.7292.25 via Frontend Transport; Tue, 20 Feb 2024 17:15:38 +0000
+Received: from BLR5CG134614W.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Tue, 20 Feb
+ 2024 11:15:21 -0600
+From: K Prateek Nayak <kprateek.nayak@amd.com>
+To: <linux-kernel@vger.kernel.org>
+CC: "Gautham R. Shenoy" <gautham.shenoy@amd.com>, K Prateek Nayak
+	<kprateek.nayak@amd.com>, Richard Henderson <richard.henderson@linaro.org>,
+	Ivan Kokshaysky <ink@jurassic.park.msu.ru>, Matt Turner <mattst88@gmail.com>,
+	Russell King <linux@armlinux.org.uk>, Guo Ren <guoren@kernel.org>, "Michal
+ Simek" <monstr@monstr.eu>, Dinh Nguyen <dinguyen@kernel.org>, Jonas Bonn
+	<jonas@southpole.se>, Stefan Kristiansson
+	<stefan.kristiansson@saunalahti.fi>, Stafford Horne <shorne@gmail.com>,
+	"James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>, Helge Deller
+	<deller@gmx.de>, Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin
+	<npiggin@gmail.com>, Christophe Leroy <christophe.leroy@csgroup.eu>, "Aneesh
+ Kumar K.V" <aneesh.kumar@kernel.org>, "Naveen N. Rao"
+	<naveen.n.rao@linux.ibm.com>, Yoshinori Sato <ysato@users.sourceforge.jp>,
+	Rich Felker <dalias@libc.org>, John Paul Adrian Glaubitz
+	<glaubitz@physik.fu-berlin.de>, "David S. Miller" <davem@davemloft.net>,
+	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>, "Rafael J. Wysocki" <rafael@kernel.org>,
+	Daniel Lezcano <daniel.lezcano@linaro.org>, Peter Zijlstra
+	<peterz@infradead.org>, Juri Lelli <juri.lelli@redhat.com>, Vincent Guittot
+	<vincent.guittot@linaro.org>, Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>, "Mel
+ Gorman" <mgorman@suse.de>, Daniel Bristot de Oliveira <bristot@redhat.com>,
+	Valentin Schneider <vschneid@redhat.com>, Al Viro <viro@zeniv.linux.org.uk>,
+	Linus Walleij <linus.walleij@linaro.org>, Ard Biesheuvel <ardb@kernel.org>,
+	Andrew Donnellan <ajd@linux.ibm.com>, Nicholas Miehlbradt
+	<nicholas@linux.ibm.com>, Andrew Morton <akpm@linux-foundation.org>, "Arnd
+ Bergmann" <arnd@arndb.de>, Josh Poimboeuf <jpoimboe@kernel.org>, "Kirill A.
+ Shutemov" <kirill.shutemov@linux.intel.com>, Rick Edgecombe
+	<rick.p.edgecombe@intel.com>, Tony Battersby <tonyb@cybernetics.com>, "Brian
+ Gerst" <brgerst@gmail.com>, Tim Chen <tim.c.chen@linux.intel.com>, "David
+ Vernet" <void@manifault.com>, <x86@kernel.org>,
+	<linux-alpha@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-csky@vger.kernel.org>, <linux-openrisc@vger.kernel.org>,
+	<linux-parisc@vger.kernel.org>, <linuxppc-dev@lists.ozlabs.org>,
+	<linux-sh@vger.kernel.org>, <sparclinux@vger.kernel.org>,
+	<linux-pm@vger.kernel.org>
+Subject: [RFC PATCH 00/14] Introducing TIF_NOTIFY_IPI flag
+Date: Tue, 20 Feb 2024 22:44:43 +0530
+Message-ID: <20240220171457.703-1-kprateek.nayak@amd.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -65,1095 +103,488 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Mailru-Src: smtp
-X-4EC0790: 10
-X-7564579A: B8F34718100C35BD
-X-77F55803: 4F1203BC0FB41BD9001F8F2F6BAD2021A4088691FB60B4B8D975C14E9881615F00894C459B0CD1B9895C044223CC214240A02D48E7B53F4AD1E11FF1BFA077CAEAC3EACB7F7CF7DD2D5CFE12AD13DA04
-X-7FA49CB5: FF5795518A3D127A4AD6D5ED66289B5278DA827A17800CE7E001CCFF7904EF03EA1F7E6F0F101C67BD4B6F7A4D31EC0BCC500DACC3FED6E28638F802B75D45FF8AA50765F79006374C1E21D5B12C874B8638F802B75D45FF36EB9D2243A4F8B5A6FCA7DBDB1FC311F39EFFDF887939037866D6147AF826D879EAA79633882769CF466CB8E830073E2BEBDE04FA26AA03CC7F00164DA146DAFE8445B8C89999728AA50765F7900637028599BB38096F4F389733CBF5DBD5E9C8A9BA7A39EFB766F5D81C698A659EA7CC7F00164DA146DA9985D098DBDEAEC8ED96AA85C75E140D117882F4460429728AD0CFFFB425014E868A13BD56FB6657D81D268191BDAD3DC09775C1D3CA48CF6A17C1D73752556876E601842F6C81A12EF20D2F80756B5FB606B96278B59C4276E601842F6C81A127C277FBC8AE2E8BDCBA8CBAA3833548D81D268191BDAD3D3666184CF4C3C14F3FC91FA280E0CE3D1A620F70A64A45A98AA50765F7900637F9425D8FA97DB4396D1867E19FE1407959CC434672EE6371089D37D7C0E48F6C8AA50765F7900637089291438AC96012731C566533BA786AA5CC5B56E945C8DA
-X-C1DE0DAB: 0D63561A33F958A5272FE7E75920E5285002B1117B3ED6967821C20D1984FE4E957033528158102E823CB91A9FED034534781492E4B8EEADEB1E98E89195A0E1C79554A2A72441328621D336A7BC284946AD531847A6065A17B107DEF921CE79BDAD6C7F3747799A
-X-C8649E89: 1C3962B70DF3F0ADE00A9FD3E00BEEDF3FED46C3ACD6F73ED3581295AF09D3DF87807E0823442EA2ED31085941D9CD0AF7F820E7B07EA4CFEA23F0AD53AACD0EFB0A2265D9756D69B935373CDB2C959C7E95A9519213CA6FE4A5F4FEF661E8B5F1AD97FD9824DBCDE178650540114AFBC96C25594159584025ADCF837DC8379D146D90F64BF3396102C26D483E81D6BE72B480F99247062FEE42F474E8A1C6FD34D382445848F2F3
-X-D57D3AED: 3ZO7eAau8CL7WIMRKs4sN3D3tLDjz0dLbV79QFUyzQ2Ujvy7cMT6pYYqY16iZVKkSc3dCLJ7zSJH7+u4VD18S7Vl4ZUrpaVfd2+vE6kuoey4m4VkSEu530nj6fImhcD4MUrOEAnl0W826KZ9Q+tr5ycPtXkTV4k65bRjmOUUP8cvGozZ33TWg5HZplvhhXbhDGzqmQDTd6OAevLeAnq3Ra9uf7zvY2zzsIhlcp/Y7m53TZgf2aB4JOg4gkr2biojiWfz0I2sVCnUCoShmXeeLA==
-X-Mailru-Sender: 9EB879F2C80682A09F26F806C739498132FA18D1217A7BFE00C2CDE4AB6CFA7B9C418A2F8B5D3A23027D9DD7AE8510952C62728BC403A049225EC17F3711B6CF1A6F2E8989E84EC137BFB0221605B344978139F6FA5A77F05FEEDEB644C299C0ED14614B50AE0675
-X-Mras: Ok
-X-7564579A: 646B95376F6C166E
-X-77F55803: 6242723A09DB00B4A77971E4CF73965D9E271BDE2CCB4C0C498EF283BD449B07049FFFDB7839CE9E76E35804B2850F207A54E4C54ED84F66870523AE63E8FF65F0DCF9AC1A3C7192
-X-7FA49CB5: 0D63561A33F958A53A966B52199EA9648E678C9B6C3D5282C3E773E407F02E1B8941B15DA834481FA18204E546F3947CD2DCF9CF1F528DBCF6B57BC7E64490618DEB871D839B7333395957E7521B51C2DFABB839C843B9C08941B15DA834481F8AA50765F7900637CAEE156C82D3D7D9389733CBF5DBD5E9B5C8C57E37DE458BD96E472CDF7238E0725E5C173C3A84C3BB73733C80CB3C5935872C767BF85DA2F004C90652538430E4A6367B16DE6309
-X-87b9d050: 1
-X-D57D3AED: 3ZO7eAau8CL7WIMRKs4sN3D3tLDjz0dLbV79QFUyzQ2Ujvy7cMT6pYYqY16iZVKkSc3dCLJ7zSJH7+u4VD18S7Vl4ZUrpaVfd2+vE6kuoey4m4VkSEu530nj6fImhcD4MUrOEAnl0W826KZ9Q+tr5ycPtXkTV4k65bRjmOUUP8cvGozZ33TWg5HZplvhhXbhDGzqmQDTd6OAevLeAnq3Ra9uf7zvY2zzsIhlcp/Y7m53TZgf2aB4JOg4gkr2biojiWfz0I2sVCmmdTQzr5/8lg==
-X-Mailru-MI: 8000000000000800
-X-Mras: Ok
+Content-Type: text/plain
+X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BN2PEPF000044A6:EE_|PH0PR12MB8799:EE_
+X-MS-Office365-Filtering-Correlation-Id: ae640750-660a-4f87-dd67-08dc32378f57
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	k4pnYz5Jqm0hkNOYWIH290dX+dYbIoLMgMluJk/FBc4jM/dbEvRKvfe6W3qk+cGIrMPI5xUlDkdsEcR7OzzHXaXDUaZ5lB/ipe+ZZFtDPfUCki+9WDSdZ44wrlAvA1KgEKtpMbj3yN/NXXznTs8Qd7Iik9r29I9qL4l5dRmHhtjbSYFJmXqyGK0LgLWGqhte7l9oDtGaqPaLOgFNozdzoFFVgQ8rXWsX5PHEcZId2jUBuj/nmoVgIM5bIWIwS7J4sllrnVTgqKj2poQpQXbG0vWYTHMMWXS7zB+aJV08+eD74ZyG/Yj0omKLbFqdHt6u4/mV9/ZFUSbrM2Pje6aYWo2INWQLbIcM6mFmiuOcJbGe0PDDX3ofNd4qNcMX8PZLbIAMD7sgKOhOsDPEFSwsyiQX3ZM5kyofIE0RjZ7/zyTghMTCNl5SZnM8wsCXJr7iT90UO8hxHNmo4aL1i5EuVhTevAgS0tpNa0RK8R2muCGF+AsYT+Evwq5zEXLhusyGFnqMbfXLjVRlw6cnYYYjoUuXFcHvIEQR8ZOMSf458b/EnRDX5WBx75SGif4enA49Hg7jvJOqqYeAzYnxNkU3k5kj9811KtxDxZdarmrfYx7vf18nSidEbqdKVDkI2dLaO3skLfosxuOhzCZVu7WE9w==
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(36860700004)(40470700004)(46966006);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Feb 2024 17:15:38.8320
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: ae640750-660a-4f87-dd67-08dc32378f57
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	BN2PEPF000044A6.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR12MB8799
 
-Add support for the display clock controller found on SM7150.
+Hello everyone,
 
-Co-developed-by: David Wronek <david@mainlining.org>
-Signed-off-by: David Wronek <david@mainlining.org>
-Signed-off-by: Danila Tikhonov <danila@jiaxyga.com>
----
- drivers/clk/qcom/Kconfig         |   10 +
- drivers/clk/qcom/Makefile        |    1 +
- drivers/clk/qcom/dispcc-sm7150.c | 1020 ++++++++++++++++++++++++++++++
- 3 files changed, 1031 insertions(+)
- create mode 100644 drivers/clk/qcom/dispcc-sm7150.c
+Before jumping into the issue, let me clarify the Cc list. Everyone have
+been cc'ed on Patch 0 through Patch 3. Respective arch maintainers,
+reviewers, and committers returned by scripts/get_maintainer.pl have
+been cc'ed on the respective arch side changes. Scheduler and CPU Idle
+maintainers and reviewers have been included for the entire series. If I
+have missed anyone, please do add them. If you would like to be dropped
+from the cc list, wholly or partially, for the future iterations, please
+do let me know.
 
-diff --git a/drivers/clk/qcom/Kconfig b/drivers/clk/qcom/Kconfig
-index 966770187844..384c50cbdcd0 100644
---- a/drivers/clk/qcom/Kconfig
-+++ b/drivers/clk/qcom/Kconfig
-@@ -846,6 +846,16 @@ config SM_DISPCC_6125
- 	  Say Y if you want to support display devices and functionality such as
- 	  splash screen
+With that out of the way ...
+
+Problem statement
+=================
+
+When measuring IPI throughput using a modified version of Anton
+Blanchard's ipistorm benchmark [1], configured to measure time taken to
+perform a fixed number of smp_call_function_single() (with wait set to
+1), an increase in benchmark time was observed between v5.7 and the
+current upstream release (v6.7-rc6 at the time of encounter).
+
+Bisection pointed to commit b2a02fc43a1f ("smp: Optimize
+send_call_function_single_ipi()") as the reason behind this increase in
+runtime.
+
+
+Experiments
+===========
+
+Since the commit cannot be cleanly reverted on top of the current
+tip:sched/core, the effects of the optimizations were reverted by:
+
+1. Removing the check for call_function_single_prep_ipi() in
+   send_call_function_single_ipi(). With this change
+   send_call_function_single_ipi() always calls
+   arch_send_call_function_single_ipi()
+
+2. Removing the call to flush_smp_call_function_queue() in do_idle()
+   since every smp_call_function, with (1.), would unconditionally send
+   an IPI to an idle CPU in TIF_POLLING mode.
+
+Following is the diff of the above described changes which will be
+henceforth referred to as the "revert":
+
+diff --git a/kernel/sched/idle.c b/kernel/sched/idle.c
+index 31231925f1ec..735184d98c0f 100644
+--- a/kernel/sched/idle.c
++++ b/kernel/sched/idle.c
+@@ -332,11 +332,6 @@ static void do_idle(void)
+	 */
+	smp_mb__after_atomic();
  
-+config SM_DISPCC_7150
-+	tristate "SM7150 Display Clock Controller"
-+	depends on ARM64 || COMPILE_TEST
-+	depends on SM_GCC_7150
-+	help
-+	  Support for the display clock controller on Qualcomm Technologies, Inc
-+	  SM7150 devices.
-+	  Say Y if you want to support display devices and functionality such as
-+	  splash screen.
-+
- config SM_DISPCC_8250
- 	tristate "SM8150/SM8250/SM8350 Display Clock Controller"
- 	depends on ARM64 || COMPILE_TEST
-diff --git a/drivers/clk/qcom/Makefile b/drivers/clk/qcom/Makefile
-index dec5b6db6860..cdec5ce2bb94 100644
---- a/drivers/clk/qcom/Makefile
-+++ b/drivers/clk/qcom/Makefile
-@@ -113,6 +113,7 @@ obj-$(CONFIG_SM_DISPCC_6115) += dispcc-sm6115.o
- obj-$(CONFIG_SM_DISPCC_6125) += dispcc-sm6125.o
- obj-$(CONFIG_SM_DISPCC_6350) += dispcc-sm6350.o
- obj-$(CONFIG_SM_DISPCC_6375) += dispcc-sm6375.o
-+obj-$(CONFIG_SM_DISPCC_7150) += dispcc-sm7150.o
- obj-$(CONFIG_SM_DISPCC_8250) += dispcc-sm8250.o
- obj-$(CONFIG_SM_DISPCC_8450) += dispcc-sm8450.o
- obj-$(CONFIG_SM_DISPCC_8550) += dispcc-sm8550.o
-diff --git a/drivers/clk/qcom/dispcc-sm7150.c b/drivers/clk/qcom/dispcc-sm7150.c
-new file mode 100644
-index 000000000000..5a3cb154195c
---- /dev/null
-+++ b/drivers/clk/qcom/dispcc-sm7150.c
-@@ -0,0 +1,1020 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Copyright (c) 2018, The Linux Foundation. All rights reserved.
-+ * Copyright (c) 2024, Danila Tikhonov <danila@jiaxyga.com>
-+ * Copyright (c) 2024, David Wronek <david@mainlining.org>
-+ */
-+
-+#include <linux/clk-provider.h>
-+#include <linux/mod_devicetable.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/platform_device.h>
-+#include <linux/regmap.h>
-+
-+#include <dt-bindings/clock/qcom,sm7150-dispcc.h>
-+
-+#include "clk-alpha-pll.h"
-+#include "clk-branch.h"
-+#include "clk-rcg.h"
-+#include "clk-regmap.h"
-+#include "clk-regmap-divider.h"
-+#include "common.h"
-+#include "gdsc.h"
-+
-+enum {
-+	DT_BI_TCXO,
-+	DT_BI_TCXO_AO,
-+	DT_GCC_DISP_GPLL0_CLK,
-+	DT_CHIP_SLEEP_CLK,
-+	DT_DSI0_PHY_PLL_OUT_BYTECLK,
-+	DT_DSI0_PHY_PLL_OUT_DSICLK,
-+	DT_DSI1_PHY_PLL_OUT_BYTECLK,
-+	DT_DSI1_PHY_PLL_OUT_DSICLK,
-+	DT_DP_PHY_PLL_LINK_CLK,
-+	DT_DP_PHY_PLL_VCO_DIV_CLK,
-+};
-+
-+enum {
-+	P_BI_TCXO,
-+	P_CHIP_SLEEP_CLK,
-+	P_DISP_CC_PLL0_OUT_EVEN,
-+	P_DISP_CC_PLL0_OUT_MAIN,
-+	P_DP_PHY_PLL_LINK_CLK,
-+	P_DP_PHY_PLL_VCO_DIV_CLK,
-+	P_DSI0_PHY_PLL_OUT_BYTECLK,
-+	P_DSI0_PHY_PLL_OUT_DSICLK,
-+	P_DSI1_PHY_PLL_OUT_BYTECLK,
-+	P_DSI1_PHY_PLL_OUT_DSICLK,
-+	P_GCC_DISP_GPLL0_CLK,
-+};
-+
-+static const struct pll_vco fabia_vco[] = {
-+	{ 249600000, 2000000000, 0 },
-+	{ 125000000, 1000000000, 1 },
-+};
-+
-+/* 860MHz configuration */
-+static const struct alpha_pll_config disp_cc_pll0_config = {
-+	.l = 0x2c,
-+	.alpha = 0xcaaa,
-+	.test_ctl_val = 0x40000000,
-+};
-+
-+static struct clk_alpha_pll disp_cc_pll0 = {
-+	.offset = 0x0,
-+	.vco_table = fabia_vco,
-+	.num_vco = ARRAY_SIZE(fabia_vco),
-+	.regs = clk_alpha_pll_regs[CLK_ALPHA_PLL_TYPE_FABIA],
-+	.clkr = {
-+		.hw.init = &(struct clk_init_data){
-+			.name = "disp_cc_pll0",
-+			.parent_data = &(const struct clk_parent_data){
-+				.index = DT_BI_TCXO,
-+			},
-+			.num_parents = 1,
-+			.ops = &clk_alpha_pll_fabia_ops,
-+		},
-+	},
-+};
-+
-+static const struct parent_map disp_cc_parent_map_0[] = {
-+	{ P_BI_TCXO, 0 },
-+	{ P_DSI0_PHY_PLL_OUT_BYTECLK, 1 },
-+	{ P_DSI1_PHY_PLL_OUT_BYTECLK, 2 },
-+};
-+
-+static const struct clk_parent_data disp_cc_parent_data_0[] = {
-+	{ .index = DT_BI_TCXO },
-+	{ .index = DT_DSI0_PHY_PLL_OUT_BYTECLK },
-+	{ .index = DT_DSI1_PHY_PLL_OUT_BYTECLK },
-+};
-+
-+static const struct parent_map disp_cc_parent_map_1[] = {
-+	{ P_BI_TCXO, 0 },
-+	{ P_DP_PHY_PLL_LINK_CLK, 1 },
-+	{ P_DP_PHY_PLL_VCO_DIV_CLK, 2 },
-+};
-+
-+static const struct clk_parent_data disp_cc_parent_data_1[] = {
-+	{ .index = DT_BI_TCXO },
-+	{ .index = DT_DP_PHY_PLL_LINK_CLK },
-+	{ .index = DT_DP_PHY_PLL_VCO_DIV_CLK },
-+};
-+
-+static const struct parent_map disp_cc_parent_map_2[] = {
-+	{ P_BI_TCXO, 0 },
-+};
-+
-+static const struct clk_parent_data disp_cc_parent_data_2[] = {
-+	{ .index = DT_BI_TCXO },
-+};
-+
-+static const struct clk_parent_data disp_cc_parent_data_2_ao[] = {
-+	{ .index = DT_BI_TCXO_AO },
-+};
-+
-+static const struct parent_map disp_cc_parent_map_3[] = {
-+	{ P_BI_TCXO, 0 },
-+	{ P_DISP_CC_PLL0_OUT_MAIN, 1 },
-+	{ P_GCC_DISP_GPLL0_CLK, 4 },
-+	{ P_DISP_CC_PLL0_OUT_EVEN, 5 },
-+};
-+
-+static const struct clk_parent_data disp_cc_parent_data_3[] = {
-+	{ .index = DT_BI_TCXO },
-+	{ .hw = &disp_cc_pll0.clkr.hw },
-+	{ .index = DT_GCC_DISP_GPLL0_CLK },
-+	{ .hw = &disp_cc_pll0.clkr.hw },
-+};
-+
-+static const struct parent_map disp_cc_parent_map_4[] = {
-+	{ P_BI_TCXO, 0 },
-+	{ P_DSI0_PHY_PLL_OUT_DSICLK, 1 },
-+	{ P_DSI1_PHY_PLL_OUT_DSICLK, 2 },
-+};
-+
-+static const struct clk_parent_data disp_cc_parent_data_4[] = {
-+	{ .index = DT_BI_TCXO },
-+	{ .index = DT_DSI0_PHY_PLL_OUT_DSICLK },
-+	{ .index = DT_DSI1_PHY_PLL_OUT_DSICLK },
-+};
-+
-+static const struct parent_map disp_cc_parent_map_5[] = {
-+	{ P_BI_TCXO, 0 },
-+	{ P_GCC_DISP_GPLL0_CLK, 4 },
-+};
-+
-+static const struct clk_parent_data disp_cc_parent_data_5[] = {
-+	{ .index = DT_BI_TCXO },
-+	{ .index = DT_GCC_DISP_GPLL0_CLK },
-+};
-+
-+static const struct parent_map disp_cc_parent_map_6[] = {
-+	{ P_CHIP_SLEEP_CLK, 0 },
-+};
-+
-+static const struct clk_parent_data disp_cc_parent_data_6[] = {
-+	{ .index = DT_CHIP_SLEEP_CLK },
-+};
-+
-+static const struct freq_tbl ftbl_disp_cc_mdss_ahb_clk_src[] = {
-+	F(19200000, P_BI_TCXO, 1, 0, 0),
-+	F(37500000, P_GCC_DISP_GPLL0_CLK, 16, 0, 0),
-+	F(75000000, P_GCC_DISP_GPLL0_CLK, 8, 0, 0),
-+	{ }
-+};
-+
-+static struct clk_rcg2 disp_cc_mdss_ahb_clk_src = {
-+	.cmd_rcgr = 0x22bc,
-+	.mnd_width = 0,
-+	.hid_width = 5,
-+	.parent_map = disp_cc_parent_map_5,
-+	.freq_tbl = ftbl_disp_cc_mdss_ahb_clk_src,
-+	.clkr.hw.init = &(const struct clk_init_data) {
-+		.name = "disp_cc_mdss_ahb_clk_src",
-+		.parent_data = disp_cc_parent_data_5,
-+		.num_parents = ARRAY_SIZE(disp_cc_parent_data_5),
-+		.flags = CLK_SET_RATE_PARENT,
-+		.ops = &clk_rcg2_shared_ops,
-+	},
-+};
-+
-+static const struct freq_tbl ftbl_disp_cc_mdss_byte0_clk_src[] = {
-+	F(19200000, P_BI_TCXO, 1, 0, 0),
-+	{ }
-+};
-+
-+static struct clk_rcg2 disp_cc_mdss_byte0_clk_src = {
-+	.cmd_rcgr = 0x2110,
-+	.mnd_width = 0,
-+	.hid_width = 5,
-+	.parent_map = disp_cc_parent_map_0,
-+	.clkr.hw.init = &(const struct clk_init_data) {
-+		.name = "disp_cc_mdss_byte0_clk_src",
-+		.parent_data = disp_cc_parent_data_0,
-+		.num_parents = ARRAY_SIZE(disp_cc_parent_data_0),
-+		.flags = CLK_SET_RATE_PARENT | CLK_GET_RATE_NOCACHE,
-+		.ops = &clk_byte2_ops,
-+	},
-+};
-+
-+static struct clk_rcg2 disp_cc_mdss_byte1_clk_src = {
-+	.cmd_rcgr = 0x212c,
-+	.mnd_width = 0,
-+	.hid_width = 5,
-+	.parent_map = disp_cc_parent_map_0,
-+	.clkr.hw.init = &(const struct clk_init_data) {
-+		.name = "disp_cc_mdss_byte1_clk_src",
-+		.parent_data = disp_cc_parent_data_0,
-+		.num_parents = ARRAY_SIZE(disp_cc_parent_data_0),
-+		.flags = CLK_SET_RATE_PARENT | CLK_GET_RATE_NOCACHE,
-+		.ops = &clk_byte2_ops,
-+	},
-+};
-+
-+static struct clk_rcg2 disp_cc_mdss_dp_aux_clk_src = {
-+	.cmd_rcgr = 0x21dc,
-+	.mnd_width = 0,
-+	.hid_width = 5,
-+	.parent_map = disp_cc_parent_map_2,
-+	.freq_tbl = ftbl_disp_cc_mdss_byte0_clk_src,
-+	.clkr.hw.init = &(const struct clk_init_data) {
-+		.name = "disp_cc_mdss_dp_aux_clk_src",
-+		.parent_data = disp_cc_parent_data_2,
-+		.num_parents = ARRAY_SIZE(disp_cc_parent_data_2),
-+		.ops = &clk_rcg2_ops,
-+	},
-+};
-+
-+static const struct freq_tbl ftbl_disp_cc_mdss_dp_crypto_clk_src[] = {
-+	F(108000, P_DP_PHY_PLL_LINK_CLK, 3, 0, 0),
-+	F(180000, P_DP_PHY_PLL_LINK_CLK, 3, 0, 0),
-+	F(360000, P_DP_PHY_PLL_LINK_CLK, 1.5, 0, 0),
-+	F(540000, P_DP_PHY_PLL_LINK_CLK, 1.5, 0, 0),
-+	{ }
-+};
-+
-+static struct clk_rcg2 disp_cc_mdss_dp_crypto_clk_src = {
-+	.cmd_rcgr = 0x2194,
-+	.mnd_width = 0,
-+	.hid_width = 5,
-+	.parent_map = disp_cc_parent_map_1,
-+	.freq_tbl = ftbl_disp_cc_mdss_dp_crypto_clk_src,
-+	.clkr.hw.init = &(const struct clk_init_data) {
-+		.name = "disp_cc_mdss_dp_crypto_clk_src",
-+		.parent_data = disp_cc_parent_data_1,
-+		.num_parents = ARRAY_SIZE(disp_cc_parent_data_1),
-+		.flags = CLK_GET_RATE_NOCACHE,
-+		.ops = &clk_rcg2_ops,
-+	},
-+};
-+
-+static const struct freq_tbl ftbl_disp_cc_mdss_dp_link_clk_src[] = {
-+	F(162000, P_DP_PHY_PLL_LINK_CLK, 1, 0, 0),
-+	F(270000, P_DP_PHY_PLL_LINK_CLK, 1, 0, 0),
-+	F(540000, P_DP_PHY_PLL_LINK_CLK, 1, 0, 0),
-+	F(810000, P_DP_PHY_PLL_LINK_CLK, 1, 0, 0),
-+	{ }
-+};
-+
-+static struct clk_rcg2 disp_cc_mdss_dp_link_clk_src = {
-+	.cmd_rcgr = 0x2178,
-+	.mnd_width = 0,
-+	.hid_width = 5,
-+	.parent_map = disp_cc_parent_map_1,
-+	.freq_tbl = ftbl_disp_cc_mdss_dp_link_clk_src,
-+	.clkr.hw.init = &(const struct clk_init_data) {
-+		.name = "disp_cc_mdss_dp_link_clk_src",
-+		.parent_data = disp_cc_parent_data_1,
-+		.num_parents = ARRAY_SIZE(disp_cc_parent_data_1),
-+		.flags = CLK_SET_RATE_PARENT | CLK_GET_RATE_NOCACHE,
-+		.ops = &clk_rcg2_ops,
-+	},
-+};
-+
-+static struct clk_rcg2 disp_cc_mdss_dp_pixel1_clk_src = {
-+	.cmd_rcgr = 0x21c4,
-+	.mnd_width = 16,
-+	.hid_width = 5,
-+	.parent_map = disp_cc_parent_map_1,
-+	.clkr.hw.init = &(const struct clk_init_data) {
-+		.name = "disp_cc_mdss_dp_pixel1_clk_src",
-+		.parent_data = disp_cc_parent_data_1,
-+		.num_parents = ARRAY_SIZE(disp_cc_parent_data_1),
-+		.flags = CLK_SET_RATE_PARENT | CLK_GET_RATE_NOCACHE,
-+		.ops = &clk_dp_ops,
-+	},
-+};
-+
-+static struct clk_rcg2 disp_cc_mdss_dp_pixel_clk_src = {
-+	.cmd_rcgr = 0x21ac,
-+	.mnd_width = 16,
-+	.hid_width = 5,
-+	.parent_map = disp_cc_parent_map_1,
-+	.clkr.hw.init = &(const struct clk_init_data) {
-+		.name = "disp_cc_mdss_dp_pixel_clk_src",
-+		.parent_data = disp_cc_parent_data_1,
-+		.num_parents = ARRAY_SIZE(disp_cc_parent_data_1),
-+		.flags = CLK_SET_RATE_PARENT | CLK_GET_RATE_NOCACHE,
-+		.ops = &clk_dp_ops,
-+	},
-+};
-+
-+static struct clk_rcg2 disp_cc_mdss_esc0_clk_src = {
-+	.cmd_rcgr = 0x2148,
-+	.mnd_width = 0,
-+	.hid_width = 5,
-+	.parent_map = disp_cc_parent_map_0,
-+	.freq_tbl = ftbl_disp_cc_mdss_byte0_clk_src,
-+	.clkr.hw.init = &(const struct clk_init_data) {
-+		.name = "disp_cc_mdss_esc0_clk_src",
-+		.parent_data = disp_cc_parent_data_0,
-+		.num_parents = ARRAY_SIZE(disp_cc_parent_data_0),
-+		.ops = &clk_rcg2_ops,
-+	},
-+};
-+
-+static struct clk_rcg2 disp_cc_mdss_esc1_clk_src = {
-+	.cmd_rcgr = 0x2160,
-+	.mnd_width = 0,
-+	.hid_width = 5,
-+	.parent_map = disp_cc_parent_map_0,
-+	.freq_tbl = ftbl_disp_cc_mdss_byte0_clk_src,
-+	.clkr.hw.init = &(const struct clk_init_data) {
-+		.name = "disp_cc_mdss_esc1_clk_src",
-+		.parent_data = disp_cc_parent_data_0,
-+		.num_parents = ARRAY_SIZE(disp_cc_parent_data_0),
-+		.ops = &clk_rcg2_ops,
-+	},
-+};
-+
-+static const struct freq_tbl ftbl_disp_cc_mdss_mdp_clk_src[] = {
-+	F(19200000, P_BI_TCXO, 1, 0, 0),
-+	F(85714286, P_GCC_DISP_GPLL0_CLK, 7, 0, 0),
-+	F(100000000, P_GCC_DISP_GPLL0_CLK, 6, 0, 0),
-+	F(150000000, P_GCC_DISP_GPLL0_CLK, 4, 0, 0),
-+	F(172000000, P_DISP_CC_PLL0_OUT_MAIN, 5, 0, 0),
-+	F(200000000, P_GCC_DISP_GPLL0_CLK, 3, 0, 0),
-+	F(286666667, P_DISP_CC_PLL0_OUT_MAIN, 3, 0, 0),
-+	F(300000000, P_GCC_DISP_GPLL0_CLK, 2, 0, 0),
-+	F(344000000, P_DISP_CC_PLL0_OUT_MAIN, 2.5, 0, 0),
-+	F(430000000, P_DISP_CC_PLL0_OUT_MAIN, 2, 0, 0),
-+	{ }
-+};
-+
-+static struct clk_rcg2 disp_cc_mdss_mdp_clk_src = {
-+	.cmd_rcgr = 0x20c8,
-+	.mnd_width = 0,
-+	.hid_width = 5,
-+	.parent_map = disp_cc_parent_map_3,
-+	.freq_tbl = ftbl_disp_cc_mdss_mdp_clk_src,
-+	.clkr.hw.init = &(const struct clk_init_data) {
-+		.name = "disp_cc_mdss_mdp_clk_src",
-+		.parent_data = disp_cc_parent_data_3,
-+		.num_parents = ARRAY_SIZE(disp_cc_parent_data_3),
-+		.flags = CLK_SET_RATE_PARENT,
-+		.ops = &clk_rcg2_shared_ops,
-+	},
-+};
-+
-+static struct clk_rcg2 disp_cc_mdss_pclk0_clk_src = {
-+	.cmd_rcgr = 0x2098,
-+	.mnd_width = 8,
-+	.hid_width = 5,
-+	.parent_map = disp_cc_parent_map_4,
-+	.clkr.hw.init = &(const struct clk_init_data) {
-+		.name = "disp_cc_mdss_pclk0_clk_src",
-+		.parent_data = disp_cc_parent_data_4,
-+		.num_parents = ARRAY_SIZE(disp_cc_parent_data_4),
-+		.flags = CLK_SET_RATE_PARENT | CLK_GET_RATE_NOCACHE,
-+		.ops = &clk_pixel_ops,
-+	},
-+};
-+
-+static struct clk_rcg2 disp_cc_mdss_pclk1_clk_src = {
-+	.cmd_rcgr = 0x20b0,
-+	.mnd_width = 8,
-+	.hid_width = 5,
-+	.parent_map = disp_cc_parent_map_4,
-+	.clkr.hw.init = &(const struct clk_init_data) {
-+		.name = "disp_cc_mdss_pclk1_clk_src",
-+		.parent_data = disp_cc_parent_data_4,
-+		.num_parents = ARRAY_SIZE(disp_cc_parent_data_4),
-+		.flags = CLK_SET_RATE_PARENT | CLK_GET_RATE_NOCACHE,
-+		.ops = &clk_pixel_ops,
-+	},
-+};
-+
-+static const struct freq_tbl ftbl_disp_cc_mdss_rot_clk_src[] = {
-+	F(19200000, P_BI_TCXO, 1, 0, 0),
-+	F(171428571, P_GCC_DISP_GPLL0_CLK, 3.5, 0, 0),
-+	F(200000000, P_GCC_DISP_GPLL0_CLK, 3, 0, 0),
-+	F(300000000, P_GCC_DISP_GPLL0_CLK, 2, 0, 0),
-+	F(344000000, P_DISP_CC_PLL0_OUT_MAIN, 2.5, 0, 0),
-+	F(430000000, P_DISP_CC_PLL0_OUT_MAIN, 2, 0, 0),
-+	{ }
-+};
-+
-+static struct clk_rcg2 disp_cc_mdss_rot_clk_src = {
-+	.cmd_rcgr = 0x20e0,
-+	.mnd_width = 0,
-+	.hid_width = 5,
-+	.parent_map = disp_cc_parent_map_3,
-+	.freq_tbl = ftbl_disp_cc_mdss_rot_clk_src,
-+	.clkr.hw.init = &(const struct clk_init_data) {
-+		.name = "disp_cc_mdss_rot_clk_src",
-+		.parent_data = disp_cc_parent_data_3,
-+		.num_parents = ARRAY_SIZE(disp_cc_parent_data_3),
-+		.ops = &clk_rcg2_shared_ops,
-+	},
-+};
-+
-+static struct clk_rcg2 disp_cc_mdss_vsync_clk_src = {
-+	.cmd_rcgr = 0x20f8,
-+	.mnd_width = 0,
-+	.hid_width = 5,
-+	.parent_map = disp_cc_parent_map_2,
-+	.freq_tbl = ftbl_disp_cc_mdss_byte0_clk_src,
-+	.clkr.hw.init = &(const struct clk_init_data) {
-+		.name = "disp_cc_mdss_vsync_clk_src",
-+		.parent_data = disp_cc_parent_data_2,
-+		.num_parents = ARRAY_SIZE(disp_cc_parent_data_2),
-+		.ops = &clk_rcg2_ops,
-+	},
-+};
-+
-+static const struct freq_tbl ftbl_disp_cc_sleep_clk_src[] = {
-+	F(32000, P_CHIP_SLEEP_CLK, 1, 0, 0),
-+	{ }
-+};
-+
-+static struct clk_rcg2 disp_cc_sleep_clk_src = {
-+	.cmd_rcgr = 0x6060,
-+	.mnd_width = 0,
-+	.hid_width = 5,
-+	.parent_map = disp_cc_parent_map_6,
-+	.freq_tbl = ftbl_disp_cc_sleep_clk_src,
-+	.clkr.hw.init = &(const struct clk_init_data) {
-+		.name = "disp_cc_sleep_clk_src",
-+		.parent_data = disp_cc_parent_data_6,
-+		.num_parents = ARRAY_SIZE(disp_cc_parent_data_6),
-+		.ops = &clk_rcg2_ops,
-+	},
-+};
-+
-+static struct clk_rcg2 disp_cc_xo_clk_src = {
-+	.cmd_rcgr = 0x6044,
-+	.mnd_width = 0,
-+	.hid_width = 5,
-+	.parent_map = disp_cc_parent_map_2,
-+	.freq_tbl = ftbl_disp_cc_mdss_byte0_clk_src,
-+	.clkr.hw.init = &(const struct clk_init_data) {
-+		.name = "disp_cc_xo_clk_src",
-+		.parent_data = disp_cc_parent_data_2_ao,
-+		.num_parents = ARRAY_SIZE(disp_cc_parent_data_2_ao),
-+		.ops = &clk_rcg2_ops,
-+	},
-+};
-+
-+static struct clk_branch disp_cc_mdss_ahb_clk = {
-+	.halt_reg = 0x2080,
-+	.halt_check = BRANCH_HALT,
-+	.clkr = {
-+		.enable_reg = 0x2080,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(struct clk_init_data){
-+			.name = "disp_cc_mdss_ahb_clk",
-+			.parent_hws = (const struct clk_hw*[]){
-+				&disp_cc_mdss_ahb_clk_src.clkr.hw,
-+			},
-+			.num_parents = 1,
-+			.flags = CLK_SET_RATE_PARENT,
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
-+
-+static struct clk_branch disp_cc_mdss_byte0_clk = {
-+	.halt_reg = 0x2028,
-+	.halt_check = BRANCH_HALT,
-+	.clkr = {
-+		.enable_reg = 0x2028,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(struct clk_init_data){
-+			.name = "disp_cc_mdss_byte0_clk",
-+			.parent_hws = (const struct clk_hw*[]){
-+				&disp_cc_mdss_byte0_clk_src.clkr.hw,
-+			},
-+			.num_parents = 1,
-+			.flags = CLK_SET_RATE_PARENT | CLK_GET_RATE_NOCACHE,
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
-+
-+static struct clk_regmap_div disp_cc_mdss_byte0_div_clk_src = {
-+	.reg = 0x2128,
-+	.shift = 0,
-+	.width = 2,
-+	.clkr = {
-+		.hw.init = &(struct clk_init_data){
-+			.name = "disp_cc_mdss_byte0_div_clk_src",
-+			.parent_hws = (const struct clk_hw*[]){
-+				&disp_cc_mdss_byte0_clk_src.clkr.hw,
-+			},
-+			.num_parents = 1,
-+			.flags = CLK_GET_RATE_NOCACHE,
-+			.ops = &clk_regmap_div_ops,
-+		},
-+	},
-+};
-+
-+static struct clk_branch disp_cc_mdss_byte0_intf_clk = {
-+	.halt_reg = 0x202c,
-+	.halt_check = BRANCH_HALT,
-+	.clkr = {
-+		.enable_reg = 0x202c,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(struct clk_init_data){
-+			.name = "disp_cc_mdss_byte0_intf_clk",
-+			.parent_hws = (const struct clk_hw*[]){
-+				&disp_cc_mdss_byte0_div_clk_src.clkr.hw,
-+			},
-+			.num_parents = 1,
-+			.flags = CLK_GET_RATE_NOCACHE,
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
-+
-+static struct clk_branch disp_cc_mdss_byte1_clk = {
-+	.halt_reg = 0x2030,
-+	.halt_check = BRANCH_HALT,
-+	.clkr = {
-+		.enable_reg = 0x2030,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(struct clk_init_data){
-+			.name = "disp_cc_mdss_byte1_clk",
-+			.parent_hws = (const struct clk_hw*[]){
-+				&disp_cc_mdss_byte1_clk_src.clkr.hw,
-+			},
-+			.num_parents = 1,
-+			.flags = CLK_SET_RATE_PARENT | CLK_GET_RATE_NOCACHE,
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
-+
-+static struct clk_regmap_div disp_cc_mdss_byte1_div_clk_src = {
-+	.reg = 0x2144,
-+	.shift = 0,
-+	.width = 2,
-+	.clkr = {
-+		.hw.init = &(struct clk_init_data){
-+			.name = "disp_cc_mdss_byte1_div_clk_src",
-+			.parent_hws = (const struct clk_hw*[]){
-+				&disp_cc_mdss_byte1_clk_src.clkr.hw,
-+			},
-+			.num_parents = 1,
-+			.flags = CLK_GET_RATE_NOCACHE,
-+			.ops = &clk_regmap_div_ops,
-+		},
-+	},
-+};
-+
-+static struct clk_branch disp_cc_mdss_byte1_intf_clk = {
-+	.halt_reg = 0x2034,
-+	.halt_check = BRANCH_HALT,
-+	.clkr = {
-+		.enable_reg = 0x2034,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(struct clk_init_data){
-+			.name = "disp_cc_mdss_byte1_intf_clk",
-+			.parent_hws = (const struct clk_hw*[]){
-+				&disp_cc_mdss_byte1_div_clk_src.clkr.hw,
-+			},
-+			.num_parents = 1,
-+			.flags = CLK_SET_RATE_PARENT | CLK_GET_RATE_NOCACHE,
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
-+
-+static struct clk_branch disp_cc_mdss_dp_aux_clk = {
-+	.halt_reg = 0x2054,
-+	.halt_check = BRANCH_HALT,
-+	.clkr = {
-+		.enable_reg = 0x2054,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(struct clk_init_data){
-+			.name = "disp_cc_mdss_dp_aux_clk",
-+			.parent_hws = (const struct clk_hw*[]){
-+				&disp_cc_mdss_dp_aux_clk_src.clkr.hw,
-+			},
-+			.num_parents = 1,
-+			.flags = CLK_SET_RATE_PARENT,
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
-+
-+static struct clk_branch disp_cc_mdss_dp_crypto_clk = {
-+	.halt_reg = 0x2048,
-+	.halt_check = BRANCH_HALT,
-+	.clkr = {
-+		.enable_reg = 0x2048,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(struct clk_init_data){
-+			.name = "disp_cc_mdss_dp_crypto_clk",
-+			.parent_hws = (const struct clk_hw*[]){
-+				&disp_cc_mdss_dp_crypto_clk_src.clkr.hw,
-+			},
-+			.num_parents = 1,
-+			.flags = CLK_SET_RATE_PARENT | CLK_GET_RATE_NOCACHE,
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
-+
-+static struct clk_branch disp_cc_mdss_dp_link_clk = {
-+	.halt_reg = 0x2040,
-+	.halt_check = BRANCH_HALT,
-+	.clkr = {
-+		.enable_reg = 0x2040,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(struct clk_init_data){
-+			.name = "disp_cc_mdss_dp_link_clk",
-+			.parent_hws = (const struct clk_hw*[]){
-+				&disp_cc_mdss_dp_link_clk_src.clkr.hw,
-+			},
-+			.num_parents = 1,
-+			.flags = CLK_SET_RATE_PARENT | CLK_GET_RATE_NOCACHE,
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
-+
-+static struct clk_branch disp_cc_mdss_dp_link_intf_clk = {
-+	.halt_reg = 0x2044,
-+	.halt_check = BRANCH_HALT,
-+	.clkr = {
-+		.enable_reg = 0x2044,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(struct clk_init_data){
-+			.name = "disp_cc_mdss_dp_link_intf_clk",
-+			.parent_hws = (const struct clk_hw*[]){
-+				&disp_cc_mdss_dp_link_clk_src.clkr.hw,
-+			},
-+			.num_parents = 1,
-+			.flags = CLK_GET_RATE_NOCACHE,
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
-+
-+static struct clk_branch disp_cc_mdss_dp_pixel1_clk = {
-+	.halt_reg = 0x2050,
-+	.halt_check = BRANCH_HALT,
-+	.clkr = {
-+		.enable_reg = 0x2050,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(struct clk_init_data){
-+			.name = "disp_cc_mdss_dp_pixel1_clk",
-+			.parent_hws = (const struct clk_hw*[]){
-+				&disp_cc_mdss_dp_pixel1_clk_src.clkr.hw,
-+			},
-+			.num_parents = 1,
-+			.flags = CLK_SET_RATE_PARENT | CLK_GET_RATE_NOCACHE,
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
-+
-+static struct clk_branch disp_cc_mdss_dp_pixel_clk = {
-+	.halt_reg = 0x204c,
-+	.halt_check = BRANCH_HALT,
-+	.clkr = {
-+		.enable_reg = 0x204c,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(struct clk_init_data){
-+			.name = "disp_cc_mdss_dp_pixel_clk",
-+			.parent_hws = (const struct clk_hw*[]){
-+				&disp_cc_mdss_dp_pixel_clk_src.clkr.hw,
-+			},
-+			.num_parents = 1,
-+			.flags = CLK_SET_RATE_PARENT | CLK_GET_RATE_NOCACHE,
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
-+
-+static struct clk_branch disp_cc_mdss_esc0_clk = {
-+	.halt_reg = 0x2038,
-+	.halt_check = BRANCH_HALT,
-+	.clkr = {
-+		.enable_reg = 0x2038,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(struct clk_init_data){
-+			.name = "disp_cc_mdss_esc0_clk",
-+			.parent_hws = (const struct clk_hw*[]){
-+				&disp_cc_mdss_esc0_clk_src.clkr.hw,
-+			},
-+			.num_parents = 1,
-+			.flags = CLK_SET_RATE_PARENT,
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
-+
-+static struct clk_branch disp_cc_mdss_esc1_clk = {
-+	.halt_reg = 0x203c,
-+	.halt_check = BRANCH_HALT,
-+	.clkr = {
-+		.enable_reg = 0x203c,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(struct clk_init_data){
-+			.name = "disp_cc_mdss_esc1_clk",
-+			.parent_hws = (const struct clk_hw*[]){
-+				&disp_cc_mdss_esc1_clk_src.clkr.hw,
-+			},
-+			.num_parents = 1,
-+			.flags = CLK_SET_RATE_PARENT,
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
-+
-+static struct clk_branch disp_cc_mdss_mdp_clk = {
-+	.halt_reg = 0x200c,
-+	.halt_check = BRANCH_HALT,
-+	.clkr = {
-+		.enable_reg = 0x200c,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(struct clk_init_data){
-+			.name = "disp_cc_mdss_mdp_clk",
-+			.parent_hws = (const struct clk_hw*[]){
-+				&disp_cc_mdss_mdp_clk_src.clkr.hw,
-+			},
-+			.num_parents = 1,
-+			.flags = CLK_SET_RATE_PARENT,
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
-+
-+static struct clk_branch disp_cc_mdss_mdp_lut_clk = {
-+	.halt_reg = 0x201c,
-+	.halt_check = BRANCH_VOTED,
-+	.clkr = {
-+		.enable_reg = 0x201c,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(struct clk_init_data){
-+			.name = "disp_cc_mdss_mdp_lut_clk",
-+			.parent_hws = (const struct clk_hw*[]){
-+				&disp_cc_mdss_mdp_clk_src.clkr.hw,
-+			},
-+			.num_parents = 1,
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
-+
-+static struct clk_branch disp_cc_mdss_non_gdsc_ahb_clk = {
-+	.halt_reg = 0x4004,
-+	.halt_check = BRANCH_VOTED,
-+	.clkr = {
-+		.enable_reg = 0x4004,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(struct clk_init_data){
-+			.name = "disp_cc_mdss_non_gdsc_ahb_clk",
-+			.parent_hws = (const struct clk_hw*[]){
-+				&disp_cc_mdss_ahb_clk_src.clkr.hw,
-+			},
-+			.num_parents = 1,
-+			.flags = CLK_SET_RATE_PARENT,
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
-+
-+static struct clk_branch disp_cc_mdss_pclk0_clk = {
-+	.halt_reg = 0x2004,
-+	.halt_check = BRANCH_HALT,
-+	.clkr = {
-+		.enable_reg = 0x2004,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(struct clk_init_data){
-+			.name = "disp_cc_mdss_pclk0_clk",
-+			.parent_hws = (const struct clk_hw*[]){
-+				&disp_cc_mdss_pclk0_clk_src.clkr.hw,
-+			},
-+			.num_parents = 1,
-+			.flags = CLK_SET_RATE_PARENT | CLK_GET_RATE_NOCACHE,
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
-+
-+static struct clk_branch disp_cc_mdss_pclk1_clk = {
-+	.halt_reg = 0x2008,
-+	.halt_check = BRANCH_HALT,
-+	.clkr = {
-+		.enable_reg = 0x2008,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(struct clk_init_data){
-+			.name = "disp_cc_mdss_pclk1_clk",
-+			.parent_hws = (const struct clk_hw*[]){
-+				&disp_cc_mdss_pclk1_clk_src.clkr.hw,
-+			},
-+			.num_parents = 1,
-+			.flags = CLK_SET_RATE_PARENT | CLK_GET_RATE_NOCACHE,
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
-+
-+static struct clk_branch disp_cc_mdss_rot_clk = {
-+	.halt_reg = 0x2014,
-+	.halt_check = BRANCH_HALT,
-+	.clkr = {
-+		.enable_reg = 0x2014,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(struct clk_init_data){
-+			.name = "disp_cc_mdss_rot_clk",
-+			.parent_hws = (const struct clk_hw*[]){
-+				&disp_cc_mdss_rot_clk_src.clkr.hw,
-+			},
-+			.num_parents = 1,
-+			.flags = CLK_SET_RATE_PARENT,
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
-+
-+static struct clk_branch disp_cc_mdss_rscc_ahb_clk = {
-+	.halt_reg = 0x400c,
-+	.halt_check = BRANCH_HALT,
-+	.clkr = {
-+		.enable_reg = 0x400c,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(struct clk_init_data){
-+			.name = "disp_cc_mdss_rscc_ahb_clk",
-+			.parent_names = (const char *[]){
-+				"disp_cc_mdss_ahb_clk_src",
-+			},
-+			.num_parents = 1,
-+			.flags = CLK_SET_RATE_PARENT,
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
-+
-+static struct clk_branch disp_cc_mdss_rscc_vsync_clk = {
-+	.halt_reg = 0x4008,
-+	.halt_check = BRANCH_HALT,
-+	.clkr = {
-+		.enable_reg = 0x4008,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(struct clk_init_data){
-+			.name = "disp_cc_mdss_rscc_vsync_clk",
-+			.parent_hws = (const struct clk_hw*[]){
-+				&disp_cc_mdss_vsync_clk_src.clkr.hw,
-+			},
-+			.num_parents = 1,
-+			.flags = CLK_SET_RATE_PARENT,
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
-+
-+static struct clk_branch disp_cc_mdss_vsync_clk = {
-+	.halt_reg = 0x2024,
-+	.halt_check = BRANCH_HALT,
-+	.clkr = {
-+		.enable_reg = 0x2024,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(struct clk_init_data){
-+			.name = "disp_cc_mdss_vsync_clk",
-+			.parent_hws = (const struct clk_hw*[]){
-+				&disp_cc_mdss_vsync_clk_src.clkr.hw,
-+			},
-+			.num_parents = 1,
-+			.flags = CLK_SET_RATE_PARENT,
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
-+
-+static struct clk_branch disp_cc_sleep_clk = {
-+	.halt_reg = 0x6078,
-+	.halt_check = BRANCH_HALT,
-+	.clkr = {
-+		.enable_reg = 0x6078,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(struct clk_init_data){
-+			.name = "disp_cc_sleep_clk",
-+			.parent_names = (const char *[]){
-+				"disp_cc_sleep_clk_src",
-+			},
-+			.num_parents = 1,
-+			.flags = CLK_SET_RATE_PARENT,
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
-+
-+static struct gdsc mdss_gdsc = {
-+	.gdscr = 0x3000,
-+	.en_rest_wait_val = 0x2,
-+	.en_few_wait_val = 0x2,
-+	.clk_dis_wait_val = 0xf,
-+	.pd = {
-+		.name = "mdss_gdsc",
-+	},
-+	.pwrsts = PWRSTS_OFF_ON,
-+	.flags = HW_CTRL,
-+};
-+
-+static struct clk_regmap *disp_cc_sm7150_clocks[] = {
-+	[DISP_CC_MDSS_AHB_CLK] = &disp_cc_mdss_ahb_clk.clkr,
-+	[DISP_CC_MDSS_AHB_CLK_SRC] = &disp_cc_mdss_ahb_clk_src.clkr,
-+	[DISP_CC_MDSS_BYTE0_CLK] = &disp_cc_mdss_byte0_clk.clkr,
-+	[DISP_CC_MDSS_BYTE0_CLK_SRC] = &disp_cc_mdss_byte0_clk_src.clkr,
-+	[DISP_CC_MDSS_BYTE0_DIV_CLK_SRC] = &disp_cc_mdss_byte0_div_clk_src.clkr,
-+	[DISP_CC_MDSS_BYTE0_INTF_CLK] = &disp_cc_mdss_byte0_intf_clk.clkr,
-+	[DISP_CC_MDSS_BYTE1_CLK] = &disp_cc_mdss_byte1_clk.clkr,
-+	[DISP_CC_MDSS_BYTE1_CLK_SRC] = &disp_cc_mdss_byte1_clk_src.clkr,
-+	[DISP_CC_MDSS_BYTE1_DIV_CLK_SRC] = &disp_cc_mdss_byte1_div_clk_src.clkr,
-+	[DISP_CC_MDSS_BYTE1_INTF_CLK] = &disp_cc_mdss_byte1_intf_clk.clkr,
-+	[DISP_CC_MDSS_DP_AUX_CLK] = &disp_cc_mdss_dp_aux_clk.clkr,
-+	[DISP_CC_MDSS_DP_AUX_CLK_SRC] = &disp_cc_mdss_dp_aux_clk_src.clkr,
-+	[DISP_CC_MDSS_DP_CRYPTO_CLK] = &disp_cc_mdss_dp_crypto_clk.clkr,
-+	[DISP_CC_MDSS_DP_CRYPTO_CLK_SRC] = &disp_cc_mdss_dp_crypto_clk_src.clkr,
-+	[DISP_CC_MDSS_DP_LINK_CLK] = &disp_cc_mdss_dp_link_clk.clkr,
-+	[DISP_CC_MDSS_DP_LINK_CLK_SRC] = &disp_cc_mdss_dp_link_clk_src.clkr,
-+	[DISP_CC_MDSS_DP_LINK_INTF_CLK] = &disp_cc_mdss_dp_link_intf_clk.clkr,
-+	[DISP_CC_MDSS_DP_PIXEL1_CLK] = &disp_cc_mdss_dp_pixel1_clk.clkr,
-+	[DISP_CC_MDSS_DP_PIXEL1_CLK_SRC] = &disp_cc_mdss_dp_pixel1_clk_src.clkr,
-+	[DISP_CC_MDSS_DP_PIXEL_CLK] = &disp_cc_mdss_dp_pixel_clk.clkr,
-+	[DISP_CC_MDSS_DP_PIXEL_CLK_SRC] = &disp_cc_mdss_dp_pixel_clk_src.clkr,
-+	[DISP_CC_MDSS_ESC0_CLK] = &disp_cc_mdss_esc0_clk.clkr,
-+	[DISP_CC_MDSS_ESC0_CLK_SRC] = &disp_cc_mdss_esc0_clk_src.clkr,
-+	[DISP_CC_MDSS_ESC1_CLK] = &disp_cc_mdss_esc1_clk.clkr,
-+	[DISP_CC_MDSS_ESC1_CLK_SRC] = &disp_cc_mdss_esc1_clk_src.clkr,
-+	[DISP_CC_MDSS_MDP_CLK] = &disp_cc_mdss_mdp_clk.clkr,
-+	[DISP_CC_MDSS_MDP_CLK_SRC] = &disp_cc_mdss_mdp_clk_src.clkr,
-+	[DISP_CC_MDSS_MDP_LUT_CLK] = &disp_cc_mdss_mdp_lut_clk.clkr,
-+	[DISP_CC_MDSS_NON_GDSC_AHB_CLK] = &disp_cc_mdss_non_gdsc_ahb_clk.clkr,
-+	[DISP_CC_MDSS_PCLK0_CLK] = &disp_cc_mdss_pclk0_clk.clkr,
-+	[DISP_CC_MDSS_PCLK0_CLK_SRC] = &disp_cc_mdss_pclk0_clk_src.clkr,
-+	[DISP_CC_MDSS_PCLK1_CLK] = &disp_cc_mdss_pclk1_clk.clkr,
-+	[DISP_CC_MDSS_PCLK1_CLK_SRC] = &disp_cc_mdss_pclk1_clk_src.clkr,
-+	[DISP_CC_MDSS_ROT_CLK] = &disp_cc_mdss_rot_clk.clkr,
-+	[DISP_CC_MDSS_ROT_CLK_SRC] = &disp_cc_mdss_rot_clk_src.clkr,
-+	[DISP_CC_MDSS_RSCC_AHB_CLK] = &disp_cc_mdss_rscc_ahb_clk.clkr,
-+	[DISP_CC_MDSS_RSCC_VSYNC_CLK] = &disp_cc_mdss_rscc_vsync_clk.clkr,
-+	[DISP_CC_MDSS_VSYNC_CLK] = &disp_cc_mdss_vsync_clk.clkr,
-+	[DISP_CC_MDSS_VSYNC_CLK_SRC] = &disp_cc_mdss_vsync_clk_src.clkr,
-+	[DISP_CC_PLL0] = &disp_cc_pll0.clkr,
-+	[DISP_CC_SLEEP_CLK] = &disp_cc_sleep_clk.clkr,
-+	[DISP_CC_SLEEP_CLK_SRC] = &disp_cc_sleep_clk_src.clkr,
-+	[DISP_CC_XO_CLK_SRC] = &disp_cc_xo_clk_src.clkr,
-+};
-+
-+static struct gdsc *disp_cc_sm7150_gdscs[] = {
-+	[MDSS_GDSC] = &mdss_gdsc,
-+};
-+
-+static const struct regmap_config disp_cc_sm7150_regmap_config = {
-+	.reg_bits	= 32,
-+	.reg_stride	= 4,
-+	.val_bits	= 32,
-+	.max_register	= 0x10000,
-+	.fast_io	= true,
-+};
-+
-+static const struct qcom_cc_desc disp_cc_sm7150_desc = {
-+	.config = &disp_cc_sm7150_regmap_config,
-+	.clks = disp_cc_sm7150_clocks,
-+	.num_clks = ARRAY_SIZE(disp_cc_sm7150_clocks),
-+	.gdscs = disp_cc_sm7150_gdscs,
-+	.num_gdscs = ARRAY_SIZE(disp_cc_sm7150_gdscs),
-+};
-+
-+static const struct of_device_id disp_cc_sm7150_match_table[] = {
-+	{ .compatible = "qcom,sm7150-dispcc" },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, disp_cc_sm7150_match_table);
-+
-+static int disp_cc_sm7150_probe(struct platform_device *pdev)
-+{
-+	struct regmap *regmap;
-+
-+	regmap = qcom_cc_map(pdev, &disp_cc_sm7150_desc);
-+	if (IS_ERR(regmap))
-+		return PTR_ERR(regmap);
-+
-+	clk_fabia_pll_configure(&disp_cc_pll0, regmap, &disp_cc_pll0_config);
-+	/* Enable clock gating for DSI and MDP clocks */
-+	regmap_update_bits(regmap, 0x8000, 0x7f0, 0x7f0);
-+
-+	/* Keep some clocks always-on */
-+	qcom_branch_set_clk_en(regmap, 0x605c); /* DISP_CC_XO_CLK */
-+
-+	return qcom_cc_really_probe(pdev, &disp_cc_sm7150_desc, regmap);
-+}
-+
-+static struct platform_driver disp_cc_sm7150_driver = {
-+	.probe = disp_cc_sm7150_probe,
-+	.driver = {
-+		.name = "disp_cc-sm7150",
-+		.of_match_table = disp_cc_sm7150_match_table,
-+	},
-+};
-+
-+module_platform_driver(disp_cc_sm7150_driver);
-+
-+MODULE_DESCRIPTION("Qualcomm SM7150 Display Clock Controller");
-+MODULE_LICENSE("GPL");
+-	/*
+-	 * RCU relies on this call to be done outside of an RCU read-side
+-	 * critical section.
+-	 */
+-	flush_smp_call_function_queue();
+	schedule_idle();
+ 
+	if (unlikely(klp_patch_pending(current)))
+diff --git a/kernel/smp.c b/kernel/smp.c
+index f085ebcdf9e7..2ff100c41885 100644
+--- a/kernel/smp.c
++++ b/kernel/smp.c
+@@ -111,11 +111,9 @@ void __init call_function_init(void)
+ static __always_inline void
+ send_call_function_single_ipi(int cpu)
+ {
+-	if (call_function_single_prep_ipi(cpu)) {
+-		trace_ipi_send_cpu(cpu, _RET_IP_,
+-				   generic_smp_call_function_single_interrupt);
+-		arch_send_call_function_single_ipi(cpu);
+-	}
++	trace_ipi_send_cpu(cpu, _RET_IP_,
++			   generic_smp_call_function_single_interrupt);
++	arch_send_call_function_single_ipi(cpu);
+ }
+ 
+ static __always_inline void
+--
+
+With the revert, the time taken to complete a fixed set of IPIs using
+ipistorm improves significantly. Following are the numbers from a dual
+socket 3rd Generation EPYC system (2 x 64C/128T) (boost on, C2 disabled)
+running ipistorm between CPU8 and CPU16:
+
+cmdline: insmod ipistorm.ko numipi=100000 single=1 offset=8 cpulist=8 wait=1
+
+(tip:sched/core at tag "sched-core-2024-01-08" for all the testing done
+below)
+
+  ==================================================================
+  Test          : ipistorm (modified)
+  Units         : Normalized runtime
+  Interpretation: Lower is better
+  Statistic     : AMean
+  ==================================================================
+  kernel:			time [pct imp]
+  tip:sched/core		1.00 [0.00]
+  tip:sched/core + revert	0.81 [19.36]
+
+Although the revert improves ipistorm performance, it also regresses
+tbench and netperf, supporting the validity of the optimization.
+Following are netperf and tbench numbers from the same machine comparing
+vanilla tip:sched/core and the revert applied on top:
+
+  ==================================================================
+  Test          : tbench
+  Units         : Normalized throughput
+  Interpretation: Higher is better
+  Statistic     : AMean
+  ==================================================================
+  Clients:    tip[pct imp](CV)       revert[pct imp](CV)
+      1     1.00 [  0.00]( 0.24)     0.91 [ -8.96]( 0.30)
+      2     1.00 [  0.00]( 0.25)     0.92 [ -8.20]( 0.97)
+      4     1.00 [  0.00]( 0.23)     0.91 [ -9.20]( 1.75)
+      8     1.00 [  0.00]( 0.69)     0.91 [ -9.48]( 1.56)
+     16     1.00 [  0.00]( 0.66)     0.92 [ -8.49]( 2.43)
+     32     1.00 [  0.00]( 0.96)     0.89 [-11.13]( 0.96)
+     64     1.00 [  0.00]( 1.06)     0.90 [ -9.72]( 2.49)
+    128     1.00 [  0.00]( 0.70)     0.92 [ -8.36]( 1.26)
+    256     1.00 [  0.00]( 0.72)     0.97 [ -3.30]( 1.10)
+    512     1.00 [  0.00]( 0.42)     0.98 [ -1.73]( 0.37)
+   1024     1.00 [  0.00]( 0.28)     0.99 [ -1.39]( 0.43)
+
+  ==================================================================
+  Test          : netperf
+  Units         : Normalized Througput
+  Interpretation: Higher is better
+  Statistic     : AMean
+  ==================================================================
+  Clients:         tip[pct imp](CV)       revert[pct imp](CV)
+   1-clients     1.00 [  0.00]( 0.50)     0.89 [-10.51]( 0.20)
+   2-clients     1.00 [  0.00]( 1.16)     0.89 [-11.10]( 0.59)
+   4-clients     1.00 [  0.00]( 1.03)     0.89 [-10.68]( 0.38)
+   8-clients     1.00 [  0.00]( 0.99)     0.89 [-10.54]( 0.50)
+  16-clients     1.00 [  0.00]( 0.87)     0.89 [-10.92]( 0.95)
+  32-clients     1.00 [  0.00]( 1.24)     0.89 [-10.85]( 0.63)
+  64-clients     1.00 [  0.00]( 1.58)     0.90 [-10.11]( 1.18)
+  128-clients    1.00 [  0.00]( 0.87)     0.89 [-10.94]( 1.11)
+  256-clients    1.00 [  0.00]( 4.77)     1.00 [ -0.16]( 3.45)
+  512-clients    1.00 [  0.00](56.16)     1.02 [  2.10](56.05)
+
+Since a simple revert is not a viable solution, we delved deeper into
+the changes in the execution path with call_function_single_prep_ipi()
+check.
+
+
+Effects of call_function_single_prep_ipi()
+==========================================
+
+To pull a TIF_POLLING thread out of idle to process an IPI, the sender
+sets the TIF_NEED_RESCHED bit in the idle task's thread info in
+call_function_single_prep_ipi() and avoids sending an actual IPI to the
+target. As a result, the scheduler expects a task to be enqueued when
+exiting the idle path. This is not the case with non-polling idle states
+where the idle CPU exits the non-polling idle state to process the
+interrupt, and since need_resched() returns false, soon goes back to
+idle again.
+
+When TIF_NEED_RESCHED flag is set, do_idle() will call schedule_idle(),
+a large part of which runs with local IRQ disabled. In case of ipistorm,
+when measuring IPI throughput, this large IRQ disabled section delays
+processing of IPIs. Further auditing revealed that in absence of any
+runnable tasks, pick_next_task_fair(), which is called from the
+pick_next_task() fast path, will always call newidle_balance() in this
+scenario, further increasing the time spent in the IRQ disabled section.
+
+Following is the crude visualization of the problem with relevant
+functions expanded:
+--
+CPU0							CPU1
+====							====
+							do_idle() {
+								__current_set_polling();
+								...
+								monitor(addr);
+								if (!need_resched())
+									mwait() {
+									/* Waiting */
+smp_call_function_single(CPU1, func, wait = 1) {				...
+	...									...
+	set_nr_if_polling(CPU1) {						...
+		/* Realizes CPU1 is polling */					...
+		try_cmpxchg(addr,						...
+			    &val,						...
+			    val | _TIF_NEED_RESCHED);				...
+	} /* Does not send an IPI */						...
+	...								} /* mwait exit due to write at addr */
+	csd_lock_wait() {					} 
+	/* Waiting */						preempt_set_need_resched();
+		...						__current_clr_polling();
+		...						flush_smp_call_function_queue() {
+		...							func();
+	} /* End of wait */					}
+}								schedule_idle() {
+									...
+									local_irq_disable();
+smp_call_function_single(CPU1, func, wait = 1) {			...
+	...								...
+	arch_send_call_function_single_ipi(CPU1);			...
+						\			...
+						 \			newidle_balance() {
+						  \				...
+					      /* Delay */			...
+						    \			}
+					     	     \			...
+						      \-------------->	local_irq_enable();
+									/* Processes the IPI */
+--
+
+
+Skipping newidle_balance()
+==========================
+
+In an earlier attempt to solve the challenge of the long IRQ disabled
+section, newidle_balance() was skipped when a CPU waking up from idle
+was found to have no runnable tasks, and was transitioning back to
+idle [2]. Tim [3] and David [4] had pointed out that newidle_balance()
+may be viable for CPUs that are idling with tick enabled, where the
+newidle_balance() has the opportunity to pull tasks onto the idle CPU.
+
+Vincent [5] pointed out a case where the idle load kick will fail to
+run on an idle CPU since the IPI handler launching the ILB will check
+for need_resched(). In such cases, the idle CPU relies on
+newidle_balance() to pull tasks towards itself.
+
+Using an alternate flag instead of NEED_RESCHED to indicate a pending
+IPI was suggested as the correct approach to solve this problem on the
+same thread.
+
+
+Proposed solution: TIF_NOTIFY_IPI
+=================================
+
+Instead of reusing TIF_NEED_RESCHED bit to pull an TIF_POLLING CPU out
+of idle, TIF_NOTIFY_IPI is a newly introduced flag that
+call_function_single_prep_ipi() sets on a target TIF_POLLING CPU to
+indicate a pending IPI, which the idle CPU promises to process soon.
+
+On architectures that do not support the TIF_NOTIFY_IPI flag (this
+series only adds support for x86 and ARM processors for now),
+call_function_single_prep_ipi() will fallback to setting
+TIF_NEED_RESCHED bit to pull the TIF_POLLING CPU out of idle.
+
+Since the pending IPI handlers are processed before the call to
+schedule_idle() in do_idle(), schedule_idle() will only be called if the
+IPI handler have woken / migrated a new task on the idle CPU and has set
+TIF_NEED_RESCHED bit to indicate the same. This avoids running into the
+long IRQ disabled section in schedule_idle() unnecessarily, and any
+need_resched() check within a call function will accurately notify if a
+task is waiting for CPU time on the CPU handling the IPI.
+
+Following is the crude visualization of how the situation changes with
+the newly introduced TIF_NOTIFY_IPI flag:
+--
+CPU0							CPU1
+====							====
+							do_idle() {
+								__current_set_polling();
+								...
+								monitor(addr);
+								if (!need_resched_or_ipi())
+									mwait() {
+									/* Waiting */
+smp_call_function_single(CPU1, func, wait = 1) {				...
+	...									...
+	set_nr_if_polling(CPU1) {						...
+		/* Realizes CPU1 is polling */					...
+		try_cmpxchg(addr,						...
+			    &val,						...
+			    val | _TIF_NOTIFY_IPI);				...
+	} /* Does not send an IPI */						...
+	...								} /* mwait exit due to write at addr */
+	csd_lock_wait() {					... 
+	/* Waiting */						preempt_fold_need_resched(); /* fold if NEED_RESCHED */
+		...						__current_clr_polling();
+		...						flush_smp_call_function_queue() {
+		...							func(); /* Will set NEED_RESCHED if sched_ttwu_pending() */
+	} /* End of wait */					}
+}								if (need_resched()) {
+									schedule_idle();
+smp_call_function_single(CPU1, func, wait = 1) {		}
+	...							... /* IRQs remain enabled */
+	arch_send_call_function_single_ipi(CPU1); ----------->  /* Processes the IPI */
+--
+
+Results
+=======
+
+With the TIF_NOTIFY_IPI, the time taken to complete a fixed set of IPIs
+using ipistorm improves drastically. Following are the numbers from the
+same dual socket 3rd Generation EPYC system (2 x 64C/128T) (boost on,
+C2 disabled) running ipistorm between CPU8 and CPU16:
+
+cmdline: insmod ipistorm.ko numipi=100000 single=1 offset=8 cpulist=8 wait=1
+
+  ==================================================================
+  Test          : ipistorm (modified)
+  Units         : Normalized runtime
+  Interpretation: Lower is better
+  Statistic     : AMean
+  ==================================================================
+  kernel:				time [pct imp]
+  tip:sched/core			1.00 [0.00]
+  tip:sched/core + revert		0.81 [19.36]
+  tip:sched/core + TIF_NOTIFY_IPI	0.20 [80.99]
+
+Same experiment was repeated on an dual socket ARM server (2 x 64C)
+which too saw a significant improvement in the ipistorm performance:
+
+  ==================================================================
+  Test          : ipistorm (modified)
+  Units         : Normalized runtime
+  Interpretation: Lower is better
+  Statistic     : AMean
+  ==================================================================
+  kernel:				time [pct imp]
+  tip:sched/core			1.00 [0.00]
+  tip:sched/core + TIF_NOTIFY_IPI	0.41 [59.29]
+
+netperf and tbench results with the patch match the results on tip on
+the dual socket 3rd Generation AMD system (2 x 64C/128T). Additionally,
+hackbench, stream, and schbench too were tested, with results from the
+patched kernel matching that of the tip.
+
+
+Future Work
+===========
+
+Evaluate impact of newidle_balance() when scheduler tick hits an idle
+CPU. The call to newidle_balance() will be skipped with the
+TIF_NOTIFY_IPI solution similar to [2]. Counter argument for the case is
+that if the idle state did not set the TIF_POLLING bit, the idle CPU
+would not have called schedule_idle() unless the IPI handler set the
+NEED_RESCHED bit.
+
+
+Links
+=====
+
+[1] https://github.com/antonblanchard/ipistorm
+[2] https://lore.kernel.org/lkml/20240119084548.2788-1-kprateek.nayak@amd.com/
+[3] https://lore.kernel.org/lkml/b4f5ac150685456cf45a342e3bb1f28cdd557a53.camel@linux.intel.com/
+[4] https://lore.kernel.org/lkml/20240123211756.GA221793@maniforge/
+[5] https://lore.kernel.org/lkml/CAKfTPtC446Lo9CATPp7PExdkLhHQFoBuY-JMGC7agOHY4hs-Pw@mail.gmail.com/
+
+This series is based on tip:sched/core at tag "sched-core-2024-01-08".
+---
+Gautham R. Shenoy (4):
+  thread_info: Add helpers to test and clear TIF_NOTIFY_IPI
+  sched: Define a need_resched_or_ipi() helper and use it treewide
+  sched/core: Use TIF_NOTIFY_IPI to notify an idle CPU in TIF_POLLING
+    mode of pending IPI
+  x86/thread_info: Introduce TIF_NOTIFY_IPI flag
+
+K Prateek Nayak (10):
+  arm/thread_info: Introduce TIF_NOTIFY_IPI flag
+  alpha/thread_info: Introduce TIF_NOTIFY_IPI flag
+  openrisc/thread_info: Introduce TIF_NOTIFY_IPI flag
+  powerpc/thread_info: Introduce TIF_NOTIFY_IPI flag
+  sh/thread_info: Introduce TIF_NOTIFY_IPI flag
+  sparc/thread_info: Introduce TIF_NOTIFY_IPI flag
+  csky/thread_info: Introduce TIF_NOTIFY_IPI flag
+  parisc/thread_info: Introduce TIF_NOTIFY_IPI flag
+  nios2/thread_info: Introduce TIF_NOTIFY_IPI flag
+  microblaze/thread_info: Introduce TIF_NOTIFY_IPI flag
+---
+Cc: Richard Henderson <richard.henderson@linaro.org>
+Cc: Ivan Kokshaysky <ink@jurassic.park.msu.ru>
+Cc: Matt Turner <mattst88@gmail.com>
+Cc: Russell King <linux@armlinux.org.uk>
+Cc: Guo Ren <guoren@kernel.org>
+Cc: Michal Simek <monstr@monstr.eu>
+Cc: Dinh Nguyen <dinguyen@kernel.org>
+Cc: Jonas Bonn <jonas@southpole.se>
+Cc: Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>
+Cc: Stafford Horne <shorne@gmail.com>
+Cc: "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>
+Cc: Helge Deller <deller@gmx.de>
+Cc: Michael Ellerman <mpe@ellerman.id.au>
+Cc: Nicholas Piggin <npiggin@gmail.com>
+Cc: Christophe Leroy <christophe.leroy@csgroup.eu>
+Cc: "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>
+Cc: "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>
+Cc: Yoshinori Sato <ysato@users.sourceforge.jp>
+Cc: Rich Felker <dalias@libc.org>
+Cc: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Juri Lelli <juri.lelli@redhat.com>
+Cc: Vincent Guittot <vincent.guittot@linaro.org>
+Cc: Dietmar Eggemann <dietmar.eggemann@arm.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>
+Cc: Ben Segall <bsegall@google.com>
+Cc: Mel Gorman <mgorman@suse.de>
+Cc: Daniel Bristot de Oliveira <bristot@redhat.com>
+Cc: Valentin Schneider <vschneid@redhat.com>
+Cc: Al Viro <viro@zeniv.linux.org.uk>
+Cc: Linus Walleij <linus.walleij@linaro.org>
+Cc: Ard Biesheuvel <ardb@kernel.org>
+Cc: Andrew Donnellan <ajd@linux.ibm.com>
+Cc: Nicholas Miehlbradt <nicholas@linux.ibm.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Josh Poimboeuf <jpoimboe@kernel.org>
+Cc: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+Cc: Rick Edgecombe <rick.p.edgecombe@intel.com>
+Cc: Tony Battersby <tonyb@cybernetics.com>
+Cc: Brian Gerst <brgerst@gmail.com>
+Cc: Tim Chen <tim.c.chen@linux.intel.com>
+Cc: David Vernet <void@manifault.com>
+Cc: x86@kernel.org
+Cc: linux-kernel@vger.kernel.org
+Cc: linux-alpha@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-csky@vger.kernel.org
+Cc: linux-openrisc@vger.kernel.org
+Cc: linux-parisc@vger.kernel.org
+Cc: linuxppc-dev@lists.ozlabs.org
+Cc: linux-sh@vger.kernel.org
+Cc: sparclinux@vger.kernel.org
+Cc: linux-pm@vger.kernel.org
+---
+ arch/alpha/include/asm/thread_info.h      |  2 ++
+ arch/arm/include/asm/thread_info.h        |  3 ++
+ arch/csky/include/asm/thread_info.h       |  2 ++
+ arch/microblaze/include/asm/thread_info.h |  2 ++
+ arch/nios2/include/asm/thread_info.h      |  2 ++
+ arch/openrisc/include/asm/thread_info.h   |  2 ++
+ arch/parisc/include/asm/thread_info.h     |  2 ++
+ arch/powerpc/include/asm/thread_info.h    |  2 ++
+ arch/sh/include/asm/thread_info.h         |  2 ++
+ arch/sparc/include/asm/thread_info_32.h   |  2 ++
+ arch/sparc/include/asm/thread_info_64.h   |  2 ++
+ arch/x86/include/asm/mwait.h              |  2 +-
+ arch/x86/include/asm/thread_info.h        |  2 ++
+ arch/x86/kernel/process.c                 |  2 +-
+ drivers/cpuidle/cpuidle-powernv.c         |  2 +-
+ drivers/cpuidle/cpuidle-pseries.c         |  2 +-
+ drivers/cpuidle/poll_state.c              |  2 +-
+ include/linux/sched.h                     |  5 +++
+ include/linux/sched/idle.h                | 12 +++----
+ include/linux/thread_info.h               | 43 +++++++++++++++++++++++
+ kernel/sched/core.c                       | 41 ++++++++++++++++-----
+ kernel/sched/idle.c                       | 23 ++++++++----
+ 22 files changed, 133 insertions(+), 26 deletions(-)
+
 -- 
-2.43.2
+2.34.1
 
