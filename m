@@ -1,132 +1,199 @@
-Received: from mx3.molgen.mpg.de (mx3.molgen.mpg.de [141.14.17.11])
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2048.outbound.protection.outlook.com [40.107.223.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4C9576C87;
-	Tue, 20 Feb 2024 17:17:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=141.14.17.11
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708449454; cv=none; b=IalLkhV+gIvnpPT2YqgDONOxvZiDDquIEF6OcIawAbJDpq3E98qPr4pIBgTImnkeMyxw53qzqivOwvMfguBfBUJScdKqLHp+/oEcv2BP3+w2jVJgEiUbSOzCW43LOSe2wUWkyizeP/AGR/ecTXuiiKTrQmb7D2FAkXztCtL+gqk=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708449454; c=relaxed/simple;
-	bh=96ksfqWINydkRiMCjGad2oGhzIwnfo2QrZw43uLx3is=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ogfO68XttrSf5yiHGSn+y5MiRtrCWVBuB4/WQaY5rEqLC4D4To6LaGf3o0A5Fkl1vGF2p23srbzh+aXBcRL2Y9t8EMKpNt1dhz1yDGtaBNuzHs+njYjWM36xW78T1iCu0IbhHkBaL9T11hifwUr8dtrMUJmd8oJHyZu64zEhn6o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de; spf=pass smtp.mailfrom=molgen.mpg.de; arc=none smtp.client-ip=141.14.17.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=molgen.mpg.de
-Received: from [141.14.220.34] (g34.guest.molgen.mpg.de [141.14.220.34])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: pmenzel)
-	by mx.molgen.mpg.de (Postfix) with ESMTPSA id 2098E61E5FE01;
-	Tue, 20 Feb 2024 18:16:40 +0100 (CET)
-Message-ID: <26acdacd-e63b-494f-bf7d-215b8643a0c5@molgen.mpg.de>
-Date: Tue, 20 Feb 2024 18:16:37 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D72176C68;
+	Tue, 20 Feb 2024 17:17:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.48
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1708449473; cv=fail; b=IFGyeybMUo3c5SSYajqTkcctbqxOnFxXn37s/+wKK+B1JQxc89VQF6ifN9nuJzdwGj3KepXrGbUDNrwrtoOzOXgNiHP6JGwHDFlVmb7+qB+8ZUYkqLmnSUDpNtkM801lXP2GIHTDAMIbNXI/O1VJ7rjAcoECkAWiJWkmIdUaS1c=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1708449473; c=relaxed/simple;
+	bh=UqDsnlqYBKCPSSidsS2P4E/txgPmzhD4hImu14WOJIs=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Stg2vYl9SKsPmgmIJ9r3p1v9RPE+vBhNz4eWpuTsJdvsdfYVqpKd9wpRFnFnoOS+My0AcopBqb3mXSwWYroVLUR+JHdh94FmrUsV30TLHIOmkA8LHbD5JCWQ5dOTisOyEgrhiWEBGot7O3T2Q6ZzuPuBFKFB1TXO7KnKp5ef2JY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=ZaCKCdpY; arc=fail smtp.client-ip=40.107.223.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="ZaCKCdpY"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=DDqe6tKtP/qxGb5Bi93hGy/xfrY5PLjh97FFh5mHRYL0jzcVIrEdDnac3FIqofym0Jy5R8Kq9BjP0RQun8N8HvzEowLMbR4Yan5M0fFkZY8cp17M4Xd2quNAZloUOsMyXl+WK/XqSLdyzBD7P3AQrTD5BoygD5hLq/4QSBMCdVEHGL8CgEvXcuzfvDIzsMDNDT3BHwYlgqwx+cY9LKP3n9pvrWAKIMqZDJ5Fp77zIaAhikFMcxNGvvUaRsQOKYzNmhHPV3uuOJVhuzSqblgLZ1Vui1LkgEVBk2kYgRxYeLCjBToB+hI6RmCKpHFEkBh6R7n3yipYOoYy7DcJVDZG6Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=0dAzWXAGtD1k4Sd4g6zY7umndOUpNmK43wb69pY2RMg=;
+ b=dYMpoDW+aEBxrDC51TIQ5DfZqI/9+XpHTyo4lH3DWrNe9crsghLQkigu3y/8uACnnGbf9RxEnsajRWTgeKmAy23FAF/bugIA3VFr4CDpBbfl0/p40N0Za4uU/n9dJf27sU2LBKdcs8jrlScpEikJzWSe5sukD/r+nmcO+hAdDBJXI0C5sOvoDozqpOHibRqUYv4cEjyA7YxYaXKMd1TB5cKmn+a5lB+orGI9lz36q1iziP63nzZHDWalJhioEJvc57QowznGXMfzeFlTbsgwF+s2iRnMePIJNC06qzzSYqqBCBtP4EKRLrpXOCrkj2LvtXl1bD47U90IJ5k7WBLe0Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=0dAzWXAGtD1k4Sd4g6zY7umndOUpNmK43wb69pY2RMg=;
+ b=ZaCKCdpYMwG6aDQj5Q7aeMUDNl8l7b8wX8JkAmdE7RDTuI/oeXnBNAnq+wChZzObSAJowiBB8HBr8zcsdLlUdYY8/EGdi5EHRotb378pvRmIwWKFHSuTF2wXMnvfOMQ6iHCWjUkch+ol6i6hqo/0Stvt8Ftva4Gsx/MBqN2tLOM=
+Received: from PH8PR15CA0008.namprd15.prod.outlook.com (2603:10b6:510:2d2::27)
+ by SA1PR12MB7441.namprd12.prod.outlook.com (2603:10b6:806:2b9::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7316.19; Tue, 20 Feb
+ 2024 17:17:49 +0000
+Received: from SA2PEPF000015C6.namprd03.prod.outlook.com
+ (2603:10b6:510:2d2:cafe::5b) by PH8PR15CA0008.outlook.office365.com
+ (2603:10b6:510:2d2::27) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7292.40 via Frontend
+ Transport; Tue, 20 Feb 2024 17:17:49 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ SA2PEPF000015C6.mail.protection.outlook.com (10.167.241.196) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.7292.25 via Frontend Transport; Tue, 20 Feb 2024 17:17:48 +0000
+Received: from BLR5CG134614W.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Tue, 20 Feb
+ 2024 11:17:41 -0600
+From: K Prateek Nayak <kprateek.nayak@amd.com>
+To: <linux-kernel@vger.kernel.org>
+CC: "Gautham R. Shenoy" <gautham.shenoy@amd.com>, Thomas Gleixner
+	<tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov
+	<bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin"
+	<hpa@zytor.com>, "Rafael J. Wysocki" <rafael@kernel.org>, Daniel Lezcano
+	<daniel.lezcano@linaro.org>, Peter Zijlstra <peterz@infradead.org>, "Juri
+ Lelli" <juri.lelli@redhat.com>, Vincent Guittot <vincent.guittot@linaro.org>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>, Steven Rostedt
+	<rostedt@goodmis.org>, Ben Segall <bsegall@google.com>, Mel Gorman
+	<mgorman@suse.de>, Daniel Bristot de Oliveira <bristot@redhat.com>, "Valentin
+ Schneider" <vschneid@redhat.com>, Andrew Morton <akpm@linux-foundation.org>,
+	Arnd Bergmann <arnd@arndb.de>, Tim Chen <tim.c.chen@linux.intel.com>, "David
+ Vernet" <void@manifault.com>, <x86@kernel.org>, <linux-pm@vger.kernel.org>,
+	"K Prateek Nayak" <kprateek.nayak@amd.com>
+Subject: [RFC PATCH 04/14] x86/thread_info: Introduce TIF_NOTIFY_IPI flag
+Date: Tue, 20 Feb 2024 22:44:47 +0530
+Message-ID: <20240220171457.703-5-kprateek.nayak@amd.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20240220171457.703-1-kprateek.nayak@amd.com>
+References: <20240220171457.703-1-kprateek.nayak@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] mmc: host: replace 1st argument to struct device * for
- mmc_of_parse_clk_phase()
-Content-Language: en-US
-To: Yang Xiwen <forbidden405@outlook.com>
-Cc: Ulf Hansson <ulf.hansson@linaro.org>,
- Andrew Jeffery <andrew@codeconstruct.com.au>,
- Adrian Hunter <adrian.hunter@intel.com>, Joel Stanley <joel@jms.id.au>,
- linux-aspeed@lists.ozlabs.org, openbmc@lists.ozlabs.org,
- linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org
-References: <20240215-mmc_phase-v1-1-f27644ee13e4@outlook.com>
-From: Paul Menzel <pmenzel@molgen.mpg.de>
-In-Reply-To: <20240215-mmc_phase-v1-1-f27644ee13e4@outlook.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SA2PEPF000015C6:EE_|SA1PR12MB7441:EE_
+X-MS-Office365-Filtering-Correlation-Id: 70144d14-30f0-42dd-e3fa-08dc3237dcd6
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	glxj1MCJFufDj7jaY6ASZaFWdsZVvp68DoCvAtS5wLb0gzd1b5hPl6h8JWLLncrFETEaUTzxC9NAoV3x6yWBBqhT/YAnmmP6X0fvqMaTZmnqXbp8MCjEf+IhMV1j00WMmnBtsaGx4cxsEPkLDZkqxpZ3fEULz02NJnPep/E7+0+RGyGscWGgAlZCqjiqZUnb/0D0EvLpOqs/EvUawoAI6dfbeh6tC+eg+g+DaanMcJA8CqPfXYXi20NV2zKPd3eLMR7Y4KGtOPNMyFJGXps6UDsbXCAeokXYxBxlFneLNNCK9Pr9sxxJkCZUpxzt68F8LMVOmyr4clohHsM5CQCgukAxJ/ZyI9+diJ3QpSwG/9aJGtnghEUDAREFQst6ozw8HpIBq9+ybYdYlibra/UaXCZlDzfz1RjG01vYBkH731AepzMFszXvlL/SFNqVLK3XHWBxT9lKYSdARXR1i8jgaYUFCH3Xj3plt9OF7YIQmnMFUIneybz54z1KoAXai0u2I3s0/72BDD+WxL4Jj63/VgFVROe+FYXZA1MuLD777zhixfdMLu4OGmwy2lHX0NZgl+3vWXIC246krz2sbNN/JQ7EovkvzGx0tCHC5aXdSCi+G6GfeFVb/lfRXpK/keZ5EqO80/s0c49oNIN6auGAnw==
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(36860700004)(46966006)(40470700004);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Feb 2024 17:17:48.8334
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 70144d14-30f0-42dd-e3fa-08dc3237dcd6
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SA2PEPF000015C6.namprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR12MB7441
 
-Dear Yang,
+From: "Gautham R. Shenoy" <gautham.shenoy@amd.com>
 
+Add support for TIF_NOTIFY_IPI on x86. With TIF_NOTIFY_IPI, a sender
+sending an IPI to an idle CPU in TIF_POLLING mode will set the
+TIF_NOTIFY_IPI flag in the target's idle tasks's thread_info to pull the
+CPU out of idle, as opposed to setting TIF_NEED_RESCHED previously. This
+avoids spurious calls to schedule_idle() in cases where an IPI does not
+necessarily wake up a task on the idle CPU.
 
-Thank you very much for your patch. Some nits from my side.
+IPI throughput measured using a modified version of Anton Blanchard's
+ipistorm benchmark [1], configured to measure time taken to perform a
+fixed number of smp_call_function_single() (with wait set to 1),
+improves significantly with TIF_NOTIFY_IPI on a dual socket Ampere Server
+(2 x 64C) with the benchmark time reducing to less than half for
+100000 IPIs between two CPUs. (Note: Only WFI idle mode was left enabled
+during testing to reduce variance)
 
-For the summary, I suggest:
+cmdline: insmod ipistorm.ko numipi=100000 single=1 offset=8 cpulist=8 wait=1
 
- > mmc: host: mmc_of_parse_clk_phase(): Pass struct device * instead of 
-mmc_host *
+  ==================================================================
+  Test          : ipistorm (modified)
+  Units         : Normalized runtime
+  Interpretation: Lower is better
+  Statistic     : AMean
+  ==================================================================
+  kernel:                       	time [pct imp]
+  tip:sched/core                	1.00 [0.00]
+  tip:sched/core + TIF_NOTIFY_IPI	0.41 [59.29]
 
-Am 15.02.24 um 12:03 schrieb Yang Xiwen via B4 Relay:
-> From: Yang Xiwen <forbidden405@outlook.com>
-> 
-> Parsing dt usaully happens very early, sometimes even bofore struct
+tip:sched/core was at tag "sched-core-2024-01-08" at the time of
+testing.
 
-1.  us*ua*lly
-2.  b*e*fore
+[ prateek: Split the changes into a separate patch, commit log ]
 
-> mmc_host is allocated (e.g. dw_mci_probe() and dw_mci_parse_dt() in
-> dw_mmc.c). Looking at the source of mmc_of_parse_clk_phase(), it's
-> actually not mandatory to have a initialized mmc_host first, instead we
+Link: https://github.com/antonblanchard/ipistorm [1]
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Juri Lelli <juri.lelli@redhat.com>
+Cc: Vincent Guittot <vincent.guittot@linaro.org>
+Cc: Dietmar Eggemann <dietmar.eggemann@arm.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>
+Cc: Ben Segall <bsegall@google.com>
+Cc: Mel Gorman <mgorman@suse.de>
+Cc: Daniel Bristot de Oliveira <bristot@redhat.com>
+Cc: Valentin Schneider <vschneid@redhat.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Tim Chen <tim.c.chen@linux.intel.com>
+Cc: David Vernet <void@manifault.com>
+Cc: x86@kernel.org
+Cc: linux-kernel@vger.kernel.org
+Cc: linux-pm@vger.kernel.org
+Signed-off-by: Gautham R. Shenoy <gautham.shenoy@amd.com>
+Co-developed-by: K Prateek Nayak <kprateek.nayak@amd.com>
+Signed-off-by: K Prateek Nayak <kprateek.nayak@amd.com>
+---
+ arch/x86/include/asm/thread_info.h | 2 ++
+ 1 file changed, 2 insertions(+)
 
-a*n*
+diff --git a/arch/x86/include/asm/thread_info.h b/arch/x86/include/asm/thread_info.h
+index d63b02940747..90cdce971397 100644
+--- a/arch/x86/include/asm/thread_info.h
++++ b/arch/x86/include/asm/thread_info.h
+@@ -83,6 +83,7 @@ struct thread_info {
+ #define TIF_NEED_RESCHED	3	/* rescheduling necessary */
+ #define TIF_SINGLESTEP		4	/* reenable singlestep on user return*/
+ #define TIF_SSBD		5	/* Speculative store bypass disable */
++#define TIF_NOTIFY_IPI		6	/* Pending IPI on TIF_POLLLING idle CPU */
+ #define TIF_SPEC_IB		9	/* Indirect branch speculation mitigation */
+ #define TIF_SPEC_L1D_FLUSH	10	/* Flush L1D on mm switches (processes) */
+ #define TIF_USER_RETURN_NOTIFY	11	/* notify kernel of userspace return */
+@@ -106,6 +107,7 @@ struct thread_info {
+ #define _TIF_NEED_RESCHED	(1 << TIF_NEED_RESCHED)
+ #define _TIF_SINGLESTEP		(1 << TIF_SINGLESTEP)
+ #define _TIF_SSBD		(1 << TIF_SSBD)
++#define _TIF_NOTIFY_IPI		(1 << TIF_NOTIFY_IPI)
+ #define _TIF_SPEC_IB		(1 << TIF_SPEC_IB)
+ #define _TIF_SPEC_L1D_FLUSH	(1 << TIF_SPEC_L1D_FLUSH)
+ #define _TIF_USER_RETURN_NOTIFY	(1 << TIF_USER_RETURN_NOTIFY)
+-- 
+2.34.1
 
-> can pass struct device * to it directly.
-> 
-> Also fix the only current user (sdhci-of-aspeed.c).
-> 
-> Signed-off-by: Yang Xiwen <forbidden405@outlook.com>
-> ---
->   drivers/mmc/core/host.c            | 4 +---
->   drivers/mmc/host/sdhci-of-aspeed.c | 2 +-
->   include/linux/mmc/host.h           | 2 +-
->   3 files changed, 3 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/mmc/core/host.c b/drivers/mmc/core/host.c
-> index cf396e8f34e9..8b2844ac5dc5 100644
-> --- a/drivers/mmc/core/host.c
-> +++ b/drivers/mmc/core/host.c
-> @@ -234,10 +234,8 @@ static void mmc_of_parse_timing_phase(struct device *dev, const char *prop,
->   }
->   
->   void
-> -mmc_of_parse_clk_phase(struct mmc_host *host, struct mmc_clk_phase_map *map)
-> +mmc_of_parse_clk_phase(struct device *dev, struct mmc_clk_phase_map *map)
->   {
-> -	struct device *dev = host->parent;
-> -
->   	mmc_of_parse_timing_phase(dev, "clk-phase-legacy",
->   				  &map->phase[MMC_TIMING_LEGACY]);
->   	mmc_of_parse_timing_phase(dev, "clk-phase-mmc-hs",
-> diff --git a/drivers/mmc/host/sdhci-of-aspeed.c b/drivers/mmc/host/sdhci-of-aspeed.c
-> index 42d54532cabe..430c1f90037b 100644
-> --- a/drivers/mmc/host/sdhci-of-aspeed.c
-> +++ b/drivers/mmc/host/sdhci-of-aspeed.c
-> @@ -435,7 +435,7 @@ static int aspeed_sdhci_probe(struct platform_device *pdev)
->   		goto err_sdhci_add;
->   
->   	if (dev->phase_desc)
-> -		mmc_of_parse_clk_phase(host->mmc, &dev->phase_map);
-> +		mmc_of_parse_clk_phase(&pdev->dev, &dev->phase_map);
->   
->   	ret = sdhci_add_host(host);
->   	if (ret)
-> diff --git a/include/linux/mmc/host.h b/include/linux/mmc/host.h
-> index 2f445c651742..5894bf912f7b 100644
-> --- a/include/linux/mmc/host.h
-> +++ b/include/linux/mmc/host.h
-> @@ -539,7 +539,7 @@ struct mmc_host *devm_mmc_alloc_host(struct device *dev, int extra);
->   int mmc_add_host(struct mmc_host *);
->   void mmc_remove_host(struct mmc_host *);
->   void mmc_free_host(struct mmc_host *);
-> -void mmc_of_parse_clk_phase(struct mmc_host *host,
-> +void mmc_of_parse_clk_phase(struct device *dev,
->   			    struct mmc_clk_phase_map *map);
->   int mmc_of_parse(struct mmc_host *host);
->   int mmc_of_parse_voltage(struct mmc_host *host, u32 *mask);
-
-Reviewed-by: Paul Menzel <pmenzel@molgen.mpg.de>
-
-
-Kind regards,
-
-Paul
