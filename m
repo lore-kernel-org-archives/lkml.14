@@ -1,251 +1,405 @@
-Received: from APC01-PSA-obe.outbound.protection.outlook.com (mail-psaapc01olkn2062.outbound.protection.outlook.com [40.92.52.62])
+Received: from frasgout11.his.huawei.com (frasgout11.his.huawei.com [14.137.139.23])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36E6A62178;
-	Tue, 20 Feb 2024 10:40:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.52.62
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708425637; cv=fail; b=cHCDQJgpOHRzGksF+hXssn7YbWp2+4+DPL4uEjVy+v/2JjAdlyqbUXrsNPFOOMhEa9DQ/jh2AxKe3+0MlpAlANCHl9Dgv26TACQMvfAC7Dzp0ESyyGXcJADL5debDcOnutz9XaLvh7wbeb1ZXoQ5I7VGU/LmCfddelHI6s3hRCk=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708425637; c=relaxed/simple;
-	bh=Sg/F9PoHkl/mH205HhPyR/75FS3nwqwEnGydsjLgZow=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=pH9EdmJ4qx1LBLnKdc6KoM35SWNeIBom4pJv9gtyedPX25mGZSFaB0Y2INUDDioZw6basWuwLjVzSEWB1oKkLzyaHfIniF8Vx2720106FMVAEfoxzzBB81K9uAA7KAOQxf6WiZQNK76q0E93S/gyg2B06sEfTyvn2QWSyQ34h64=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=IJakxOFf; arc=fail smtp.client-ip=40.92.52.62
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="IJakxOFf"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=g/NRIEQtLzznDvg3TlweP1yLnkF2tGLgiA1WB5Ft/acczIMXhYaQj5nrVDo27ExVEDCTUWNkmaoid1YHsvHijjV9yW3QkmrZ25nn0nYhii0Z8bW1706AjNs6kvbZkVdPcs7ep588n//O/mgiZ/pi0IxyF70Juh+Zbxzd9hZGu4H37aguMynWxZGyb7KYV47ysJ5LGqkoIkq8MOmEO8uubY6YNfXy+O8vl8oq2mncO7vxc04psPa4xZ5C1gJxUFYiNNLl76CPEXrI5KvcF6s7S33LTH3Tmtyvj7jmnFVH3vKi302mMCGjGmDoAs9iWyOfrSumc/o61nAZXhFWZYtCDQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=ynzqihl5m6RG2EHU6ulgyrEty8/XuckZJ9LfbS+ymG4=;
- b=FBPb8D121NpXa7G98bSmlNZYz1Gj21BFdT5+6409hMySn+EeRmNDz2ReU7hilOGgBtZFFdtHETVLnz1b+q+bzD6nNFteYZk6Ie6g2/AQvFbgxNhSalXuAnd1v5oL8ApT8pYJdgYVEh8MKNYMQ4PxvB/rmFFeR48+R/HI5deLKyvV4R+iYEs4zch11e8+N1o4ZExUw9GUVR64kEUQB9fejGG+TOam6tpys4IF4Ksbhj9Szkkmhcp2QOTOMNKgc8MM4+IITHSouy9TThD37PnuJcrKuVNWccUusPj3NKmscb2UcZRKIF3vYLxi5qDTbTbS/vRUp5+ylzYlnMJL4+6KVQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ynzqihl5m6RG2EHU6ulgyrEty8/XuckZJ9LfbS+ymG4=;
- b=IJakxOFfYCj6Ai8/d2nM7PHmQBIl0gongrK1YK0Eudso4Fv3ZussgSU2bXd4qJuSxMvyOCt8GUwxDNbbeg2cskaAeQxFjCQptmmlGWEjPn++tajaq2Sp1abeYBD9D4iUN2s6uFkDT43eZwUEWUZ+Bt1qp+clNszlqAx5wWHv6nqlxIopU/RvIW5bHciQfmUY+RWt1tBTFEQ/fwygy23amvfbVyw3yv7Sg0w+tRjhOlnhvAabT1eZIqjKFXppaYHKqDy/XnBTQIEVX2ybUPJhCN5Kk0CZhER/Qv6kSu83vXWanLZDe7bunU4MB0BpwNqbztIuyAwUsM8erZsqSmVtUQ==
-Received: from SEZPR06MB6959.apcprd06.prod.outlook.com (2603:1096:101:1ed::14)
- by PSAPR06MB4343.apcprd06.prod.outlook.com (2603:1096:301:78::5) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7292.39; Tue, 20 Feb
- 2024 10:40:28 +0000
-Received: from SEZPR06MB6959.apcprd06.prod.outlook.com
- ([fe80::53da:a8a:83cb:b9ad]) by SEZPR06MB6959.apcprd06.prod.outlook.com
- ([fe80::53da:a8a:83cb:b9ad%4]) with mapi id 15.20.7292.036; Tue, 20 Feb 2024
- 10:40:28 +0000
-Message-ID:
- <SEZPR06MB69594A5036F122CE6C14043C96502@SEZPR06MB6959.apcprd06.prod.outlook.com>
-Date: Tue, 20 Feb 2024 18:40:23 +0800
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RFC v3 1/5] dt-bindings: phy: hisi-inno-usb2: convert to
- YAML
-Content-Language: en-US
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
- Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>,
- Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>,
- Jiancheng Xue <xuejiancheng@hisilicon.com>, Shawn Guo
- <shawn.guo@linaro.org>, Philipp Zabel <p.zabel@pengutronix.de>
-Cc: linux-phy@lists.infradead.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, Kishon Vijay Abraham I <kishon@ti.com>,
- David Yang <mmyangfl@gmail.com>
-References: <20240220-inno-phy-v3-0-893cdf8633b4@outlook.com>
- <20240220-inno-phy-v3-1-893cdf8633b4@outlook.com>
- <62221084-247c-4a0b-a030-e12cb2931411@linaro.org>
- <SEZPR06MB6959AAB6B43F3E1F5E1C526596512@SEZPR06MB6959.apcprd06.prod.outlook.com>
- <6f3f22f6-f659-494d-963c-544cf5f44adc@linaro.org>
- <SEZPR06MB69592FACB1EF1B9FEDA89E5996512@SEZPR06MB6959.apcprd06.prod.outlook.com>
- <9a5e9363-79eb-416c-89ae-c826062350b5@linaro.org>
-From: Yang Xiwen <forbidden405@outlook.com>
-In-Reply-To: <9a5e9363-79eb-416c-89ae-c826062350b5@linaro.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-TMN: [1SEx1yBc0sVBU2Q+aWh2FHRG/vhUrhr02WLJQEGsv5OjZnhhInLqBcnkzNYvCRY/]
-X-ClientProxiedBy: TY2PR02CA0069.apcprd02.prod.outlook.com
- (2603:1096:404:e2::33) To SEZPR06MB6959.apcprd06.prod.outlook.com
- (2603:1096:101:1ed::14)
-X-Microsoft-Original-Message-ID:
- <1615f7c5-21bd-422d-84fa-fbffcaa56454@outlook.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCF83612C4;
+	Tue, 20 Feb 2024 10:41:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=14.137.139.23
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1708425672; cv=none; b=r9fE63IxaRc/5qL1k3zIPybhd/A0SjJoTBD/LfJLrktDaypHU+kcU+WHanMDF54cSzLZBRHNUmtaJ6WDun5XNwpe12kSpI5bLjsGkawsppIJJFEMOwbhYLKPOuq/uP3vZSnGAROfaHm5jGA7/F1MpjEmPMahWOf7FOwvKnXl+V0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1708425672; c=relaxed/simple;
+	bh=iiXKTzv5geTec4zJYDsv24Swhq/K+PLTeHsix1h/wBg=;
+	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=Ytdr/pBBuk9/L0Vy2AXAj5oIvMkDIbuzY8dRej52yNIe3UllPV82H+SCYqtTA/w564s+c7vgg2oR9Ez3qTRBEwHtCHRBCPMR/WMaXktGM9vhSNX0MUtcs7flkbqc+08kLlraRNVa/KM/63N8my2MHqXTlNxjsSimHZ5Wub2QJOU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=14.137.139.23
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.18.186.51])
+	by frasgout11.his.huawei.com (SkyGuard) with ESMTP id 4TfFsr1hjpz9xyNP;
+	Tue, 20 Feb 2024 18:25:36 +0800 (CST)
+Received: from mail02.huawei.com (unknown [7.182.16.47])
+	by mail.maildlp.com (Postfix) with ESMTP id B355914059C;
+	Tue, 20 Feb 2024 18:40:59 +0800 (CST)
+Received: from [127.0.0.1] (unknown [10.204.63.22])
+	by APP1 (Coremail) with SMTP id LxC2BwD36hOvgdRl1QDeAg--.11661S2;
+	Tue, 20 Feb 2024 11:40:58 +0100 (CET)
+Message-ID: <40746a9ae6d2e76d748ec0bf7710bba7e49a53ac.camel@huaweicloud.com>
+Subject: Re: [syzbot] [integrity?] [lsm?] KMSAN: uninit-value in
+ ima_add_template_entry
+From: Roberto Sassu <roberto.sassu@huaweicloud.com>
+To: syzbot <syzbot+7bc44a489f0ef0670bd5@syzkaller.appspotmail.com>, 
+ dmitry.kasatkin@gmail.com, eric.snowberg@oracle.com, jmorris@namei.org, 
+ linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-security-module@vger.kernel.org, paul@paul-moore.com, 
+ roberto.sassu@huawei.com, serge@hallyn.com,
+ syzkaller-bugs@googlegroups.com,  zohar@linux.ibm.com,
+ linux-fsdevel@vger.kernel.org
+Date: Tue, 20 Feb 2024 11:40:43 +0100
+In-Reply-To: <0000000000002be12a0611ca7ff8@google.com>
+References: <0000000000002be12a0611ca7ff8@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.44.4-0ubuntu2 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SEZPR06MB6959:EE_|PSAPR06MB4343:EE_
-X-MS-Office365-Filtering-Correlation-Id: c2800f1e-e7c4-42fc-984c-08dc32005a63
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	rcmCUaLiMk7znWigMA9hihrJAMvNbzU/Pr+PRScoiD6Hk4L9TD35mN+yxTVPJ0sGbOcNoUs/ffAp/Et7Sk7avAbCau+5JVdjcr086bVBAAg3kLUjvs3B1L0kNiWyo8c/ozh1VoGMOYIcTgcIE7+GwhsQ1sbr/XDfTNYK9lM1yA8SzmBRZgjEvhzHacTlXjJd9/IRiwV9YPwjxdo//luVCUrIJc2cp9jqQz/7JjobeoGpPnAExMdFBlk9FUpEQZmY1I0hggQ4+fDPNOQvBIpRAs8XlPbzv0xCkggL6kllkwUpX2KcV1ZAnir1uy0DjlAJvKxaGHYmCvpmWk2KYiHCNtM4PQt2BbHz1NxQJjWb0O20Ogzjp4idAqgAEc5kQOrQRi/VXsHQ7VbWuZf6gWRnOFGQsSk65xEHciH0FBQWTo2/KMwgNntsWndGiRfwm6f6pFo2tesiPtFVJmxfsKWzLpiZaop8506AwfY0xWUeSFFmUtrG5okazJR4uO6pRX24NuiqFYN7zojDu8NMQbVgpzynMMVvYdMps8eb069uc2Xxh0wYQn9lX+hZASsH/hfuPJpIm7hM8Kvz8lMbBU3sNXbol1xHnavb+GNsbbX4YQU=
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?Yi9iWjhtcThOamdVYVFxVVpqbXQrRmliT1NISzZaSXRaeE1CazBVUGg0aFJD?=
- =?utf-8?B?ZU5GM3BYenY3MWtOY0VCc2haWjJxVzNTWEZuY2JuVzdyc0VveWh3b3FTeU4r?=
- =?utf-8?B?ZkZzM0d6T3AyR3Z3ajllV2Y4bmt6TDlPR2JoSG5MK1gxSjYrTGc2b0NxS2E3?=
- =?utf-8?B?UWd1RFZpSnlHQUJFRVF1OGVQTmNtMEpvdFBOWUh3dEJSQjdvb0tCaXJDOCtL?=
- =?utf-8?B?VXdZd3QvY0ZWREpNM3BaMVJheFZEV3NUVHgrN2dTdVB2U1N3d0J2OEthRHlD?=
- =?utf-8?B?RnZyQSszbm9UK3dZK0JKeVZuSlI5d2RiZE5rR2dDdG9aMEpBQUMzL3lQd050?=
- =?utf-8?B?VUJOVHJSWE52UDV5dmJWZ1ZTb0hnMmFFMGxBZmk2eWRtVVJzMmJ1MzBOcXZi?=
- =?utf-8?B?UklQYUhsWVBya3pOazBsZHdwc01tMzhMamE2Nm5WMnd6OGNuTUxaWlQ2ZUlD?=
- =?utf-8?B?RlhjTGpsYTQ3MGxhRytpc1NpYlVpY0p5NG5JbUN1YVlZR3hPeUxacUtpMnAw?=
- =?utf-8?B?NHJ1QWN2UitTR0sraTQzc2JJa1A4OWpaVnF5U3hvd1dUdE1UbHhQVnZ3T2Q1?=
- =?utf-8?B?WTdscUlhT3ZKV1orM1QzZ25qbmNwNDZ2Wmpnb21UYXVBWWJHYUhmTSs4YkRx?=
- =?utf-8?B?U0FZVFc5T2s4aHRwR0diRjkrdVdyemtNaTdBVG44QndvRzQySm1IbmQvRU93?=
- =?utf-8?B?OXpKcFdxeG0yS2JNT3dsa3NRUFJLZVd6bTVLTmNLVHo4ZGNWbkk2aVlBOWJX?=
- =?utf-8?B?bU5MS1U1WVdpVEpNNnhDN0swck5WbG54bDNuVWVJVkluZDRtWWRBdSsxd3dT?=
- =?utf-8?B?UlUxWGRUMmVxY1VQK0p5NmduYVUzUldOZ2NBcGZxQzNqWnlIUnFiY0t5dmF6?=
- =?utf-8?B?eUlXQXkwSUgzcDFIK2NMVjMwcTZkWnMzS1RmcFlRMU1sRDJwdHNvUFRmd3N2?=
- =?utf-8?B?K09Va1ZVbE5Fd0tYR1JUak95NkJCY2E4ckZsQmZGUTdjdG1YdzNmVEIwR3dS?=
- =?utf-8?B?QkdPZnZpWmtnMytXeGM1Z3FCM3lzNWhuVnFiVnI1L1ZKbmZNM3ovSUZqcTEx?=
- =?utf-8?B?SGVCZkJhMDkvKzhXYVI1aXhrcEgvblFOd2R1UkRyNng0UWRrdEhpS216eEdK?=
- =?utf-8?B?bUpFTEZNOXhLcXNpd0JxaVdZWWhQNGFIQjVIZTdwM0xCV2haY2g5NldGQUdL?=
- =?utf-8?B?dE42bGJ1OUZOOU5TV0p0Q0huMjl6L01XMkdNUVdXMXJNQ0J1UkFhaXZ4d1JD?=
- =?utf-8?B?N1ZzV1NLdXBRdFBqZG5GRlE2eUVia0FBUzhwU0wwVDYxd0l1ZDlBQWxRdlNs?=
- =?utf-8?B?SFFiREpiSzRuSGhwQUZmbDMrbnI4OGtiZlQ2TDR6aXd5aWREZjhXeEtWblV4?=
- =?utf-8?B?ZzJubjhsZm5mNE90ZlJmUXExdEZqaFZ3T3o2TGRhV04zb0tFWjZTbnozRWk5?=
- =?utf-8?B?U0owTEtZcDlrZHdKaktCaHlnbERLUGNNMXcvTG1Ec3dGY2ZLRWZQc1FGWFJM?=
- =?utf-8?B?YVRrbElEeUhnN1RJY29jNGloRkhzQ1NLMWJ2WUh2VHhZK0huSDZVQ1pHMFlY?=
- =?utf-8?B?RmpML2o5NWMyS3VIOUQ4R1JUVWNKQlQxb2JhZVliUTZHcWYzcExQcG9uMWxh?=
- =?utf-8?B?Q0dGL0xHcW1DMGFiRER6dkpiQmRoYksvd00zWFZyV1BDU2Nsc3lIRERxeDZE?=
- =?utf-8?B?UStFOS9qT20wM0JHSDhBdkRFeHBDcUVBb0pFTytXRVBNY25NekxnSUdOVnVG?=
- =?utf-8?Q?gYxNF2em7AS7kIw/m9Hp7JrT6Ftuc6QzDvI1bNv?=
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c2800f1e-e7c4-42fc-984c-08dc32005a63
-X-MS-Exchange-CrossTenant-AuthSource: SEZPR06MB6959.apcprd06.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Feb 2024 10:40:27.9040
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
-	00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PSAPR06MB4343
+X-CM-TRANSID:LxC2BwD36hOvgdRl1QDeAg--.11661S2
+X-Coremail-Antispam: 1UD129KBjvAXoWfXr1rZw4xXF15CF4xJFW7CFg_yoW8Ww15Co
+	ZavwsIkF15J3ZxJFWSkFs7uw4fuFWrXry7Xr4v93y5KF43Z34jkryrAa4jyFZ5Xr43W3WU
+	X3srtF13t3Wqgr1fn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73VFW2AGmfu7bjvjm3
+	AaLaJ3UjIYCTnIWjp_UUUYO7kC6x804xWl14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK
+	8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4
+	AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26r4j6ryUM28EF7xvwVC0I7IYx2IY6xkF
+	7I0E14v26r4j6F4UM28EF7xvwVC2z280aVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv6xkF7I
+	0E14v26r4j6r4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
+	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
+	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7MxAIw28IcxkI
+	7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxV
+	Cjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIccxYrVCFb41lIxkGc2Ij
+	64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr
+	0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6rW3Jr0E3s1lIxAIcVC2z280aVAFwI0_Jr0_Gr1l
+	IxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU5l4iUUUUU
+	U==
+X-CM-SenderInfo: purev21wro2thvvxqx5xdzvxpfor3voofrz/1tbiAgATBF1jj5aCXQAAst
 
-On 2/20/2024 4:16 PM, Krzysztof Kozlowski wrote:
-> On 19/02/2024 22:49, Yang Xiwen wrote:
->> On 2/20/2024 5:37 AM, Krzysztof Kozlowski wrote:
->>> On 19/02/2024 22:35, Yang Xiwen wrote:
->>>> On 2/20/2024 5:32 AM, Krzysztof Kozlowski wrote:
->>>>> On 19/02/2024 22:27, Yang Xiwen via B4 Relay wrote:
->>>>>> From: Yang Xiwen <forbidden405@outlook.com>
->>>>>>
->>>>>> Add missing compatible "hisilicon,hi3798mv100-usb2-phy" to compatible
->>>>>> list due to prior driver change.
->>>>>>
->>>>>> Also rename to hisilicon,inno-usb2-phy.yaml and add this name to
->>>>>> compatible lists.
->>>>>>
->>>>>> Fixes: 3940ffc65492 ("phy: hisilicon: Add inno-usb2-phy driver for Hi3798MV100")
->>>>>> Signed-off-by: Yang Xiwen <forbidden405@outlook.com>
->>>>>> ---
->>>>>>     .../bindings/phy/hisilicon,inno-usb2-phy.yaml      | 95 ++++++++++++++++++++++
->>>>>>     .../devicetree/bindings/phy/phy-hisi-inno-usb2.txt | 71 ----------------
->>>>>>     2 files changed, 95 insertions(+), 71 deletions(-)
->>>>>>
->>>>>> diff --git a/Documentation/devicetree/bindings/phy/hisilicon,inno-usb2-phy.yaml b/Documentation/devicetree/bindings/phy/hisilicon,inno-usb2-phy.yaml
->>>>>> new file mode 100644
->>>>>> index 000000000000..1b57e0396209
->>>>>> --- /dev/null
->>>>>> +++ b/Documentation/devicetree/bindings/phy/hisilicon,inno-usb2-phy.yaml
->>>>>> @@ -0,0 +1,95 @@
->>>>>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
->>>>>> +%YAML 1.2
->>>>>> +---
->>>>>> +$id: http://devicetree.org/schemas/phy/hisilicon,inno-usb2-phy.yaml#
->>>>>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->>>>>> +
->>>>>> +title: HiSilicon HiSTB SoCs INNO USB2 PHY device
->>>>>> +
->>>>>> +maintainers:
->>>>>> +  - Yang Xiwen <forbidden405@outlook.com>
->>>>>> +
->>>>>> +properties:
->>>>>> +  compatible:
->>>>>> +    items:
->>>>>> +      - enum:
->>>>>> +          - hisilicon,hi3798cv200-usb2-phy
->>>>>> +          - hisilicon,hi3798mv100-usb2-phy
->>>>>> +      - const: hisilicon,inno-usb2-phy
->>>>> According to your driver hisilicon,hi3798mv100-usb2-phy and
->>>>> hisilicon,inno-usb2-phy are not compatible.
->>>> Ah, i didn't pay too much attention to that. I should remove the entry
->>>> for hisilicon,inno-usb2-phy in the driver. Sorry for that.
->>> We don't talk here about driver, although I used the driver as proof or
->>> argument, because I don't have access to hardware datasheet (and no
->>> intention to look there).
->>>
->>> What I claim is these are not compatible, so respond to this argument,
->>> not some other one.
->> Why not? Of course they are compatible. All 3 SoCs are using
-> Why? Because...
->
->> inno-usb2-phy. The only difference here is the method to access the
-> ... here! Different programming interface means not compatible.
->
-> Please provide instead any argument that they are compatible, in the
-> meaning of Devicetree of course. You are claiming inno-usb2-phy  can be
-> used for hi3798mv100 and it will work fine?
->
->> registers. They are all enabled by `writing BIT(2) to address 0x6`. In
->> the cover letter, I said the driver is actually doing things wrong.
-> Cover letter does not matter, I don't even read them. Your commits matter.
->
->> Especially the commit adding PHY_TYPE enums, the name is confusing and
->> conveys the wrong info. It's not PHY which are not compatible, it's the
->> bus. I'll fix the driver, but still the PHY hardwares are compatible
->> between these 3 SoCs.
-> Provide any argument.
+On Mon, 2024-02-19 at 22:41 -0800, syzbot wrote:
+> Hello,
+>=20
+> syzbot found the following issue on:
+>=20
+> HEAD commit:    4f5e5092fdbf Merge tag 'net-6.8-rc5' of git://git.kernel.=
+o..
+> git tree:       upstream
+> console output: https://syzkaller.appspot.com/x/log.txt?x=3D135ba81c18000=
+0
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=3De3dd779fba027=
+968
+> dashboard link: https://syzkaller.appspot.com/bug?extid=3D7bc44a489f0ef06=
+70bd5
+> compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Deb=
+ian) 2.40
+>=20
+> Unfortunately, I don't have any reproducer for this issue yet.
+>=20
+> Downloadable assets:
+> disk image: https://storage.googleapis.com/syzbot-assets/34924e0466d4/dis=
+k-4f5e5092.raw.xz
+> vmlinux: https://storage.googleapis.com/syzbot-assets/29d0b1935c61/vmlinu=
+x-4f5e5092.xz
+> kernel image: https://storage.googleapis.com/syzbot-assets/2e033c3d8679/b=
+zImage-4f5e5092.xz
+>=20
+> IMPORTANT: if you fix the issue, please add the following tag to the comm=
+it:
+> Reported-by: syzbot+7bc44a489f0ef0670bd5@syzkaller.appspotmail.com
+>=20
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D
+> BUG: KMSAN: uninit-value in ima_add_template_entry+0x52b/0x870 security/i=
+ntegrity/ima/ima_queue.c:172
+>  ima_add_template_entry+0x52b/0x870 security/integrity/ima/ima_queue.c:17=
+2
+>  ima_store_template security/integrity/ima/ima_api.c:122 [inline]
+>  ima_store_measurement+0x371/0x8d0 security/integrity/ima/ima_api.c:376
+>  process_measurement+0x2c6e/0x3ef0 security/integrity/ima/ima_main.c:367
+>  ima_file_check+0xb3/0x100 security/integrity/ima/ima_main.c:557
+>  do_open fs/namei.c:3643 [inline]
+>  path_openat+0x4d09/0x5ad0 fs/namei.c:3798
+>  do_filp_open+0x20d/0x590 fs/namei.c:3825
+>  do_sys_openat2+0x1bf/0x2f0 fs/open.c:1404
+>  do_sys_open fs/open.c:1419 [inline]
+>  __do_sys_open fs/open.c:1427 [inline]
+>  __se_sys_open fs/open.c:1423 [inline]
+>  __x64_sys_open+0x275/0x2d0 fs/open.c:1423
+>  do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+>  do_syscall_64+0xcf/0x1e0 arch/x86/entry/common.c:83
+>  entry_SYSCALL_64_after_hwframe+0x63/0x6b
+>=20
+> <Zero or more stacks not recorded to save memory>
+>=20
+> Uninit was stored to memory at:
+>  sha256_transform lib/crypto/sha256.c:117 [inline]
+>  sha256_transform_blocks+0x2dbf/0x2e80 lib/crypto/sha256.c:127
+>  lib_sha256_base_do_update include/crypto/sha256_base.h:63 [inline]
+>  sha256_update+0x2fb/0x340 lib/crypto/sha256.c:136
+>  crypto_sha256_update+0x37/0x60 crypto/sha256_generic.c:39
+>  crypto_shash_update+0x75/0xa0 crypto/shash.c:70
+>  ima_calc_file_hash_tfm security/integrity/ima/ima_crypto.c:496 [inline]
+>  ima_calc_file_shash security/integrity/ima/ima_crypto.c:516 [inline]
+>  ima_calc_file_hash+0x1816/0x3cc0 security/integrity/ima/ima_crypto.c:573
+>  ima_collect_measurement+0x44d/0xdd0 security/integrity/ima/ima_api.c:290
+>  process_measurement+0x2936/0x3ef0 security/integrity/ima/ima_main.c:359
+>  ima_file_check+0xb3/0x100 security/integrity/ima/ima_main.c:557
+>  do_open fs/namei.c:3643 [inline]
+>  path_openat+0x4d09/0x5ad0 fs/namei.c:3798
+>  do_filp_open+0x20d/0x590 fs/namei.c:3825
+>  do_sys_openat2+0x1bf/0x2f0 fs/open.c:1404
+>  do_sys_open fs/open.c:1419 [inline]
+>  __do_sys_open fs/open.c:1427 [inline]
+>  __se_sys_open fs/open.c:1423 [inline]
+>  __x64_sys_open+0x275/0x2d0 fs/open.c:1423
+>  do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+>  do_syscall_64+0xcf/0x1e0 arch/x86/entry/common.c:83
+>  entry_SYSCALL_64_after_hwframe+0x63/0x6b
+>=20
+> Uninit was stored to memory at:
+>  sha256_transform lib/crypto/sha256.c:117 [inline]
+>  sha256_transform_blocks+0x2dbf/0x2e80 lib/crypto/sha256.c:127
+>  lib_sha256_base_do_update include/crypto/sha256_base.h:63 [inline]
+>  sha256_update+0x2fb/0x340 lib/crypto/sha256.c:136
+>  crypto_sha256_update+0x37/0x60 crypto/sha256_generic.c:39
+>  crypto_shash_update+0x75/0xa0 crypto/shash.c:70
+>  ima_calc_file_hash_tfm security/integrity/ima/ima_crypto.c:496 [inline]
+>  ima_calc_file_shash security/integrity/ima/ima_crypto.c:516 [inline]
+>  ima_calc_file_hash+0x1816/0x3cc0 security/integrity/ima/ima_crypto.c:573
+>  ima_collect_measurement+0x44d/0xdd0 security/integrity/ima/ima_api.c:290
+>  process_measurement+0x2936/0x3ef0 security/integrity/ima/ima_main.c:359
+>  ima_file_check+0xb3/0x100 security/integrity/ima/ima_main.c:557
+>  do_open fs/namei.c:3643 [inline]
+>  path_openat+0x4d09/0x5ad0 fs/namei.c:3798
+>  do_filp_open+0x20d/0x590 fs/namei.c:3825
+>  do_sys_openat2+0x1bf/0x2f0 fs/open.c:1404
+>  do_sys_open fs/open.c:1419 [inline]
+>  __do_sys_open fs/open.c:1427 [inline]
+>  __se_sys_open fs/open.c:1423 [inline]
+>  __x64_sys_open+0x275/0x2d0 fs/open.c:1423
+>  do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+>  do_syscall_64+0xcf/0x1e0 arch/x86/entry/common.c:83
+>  entry_SYSCALL_64_after_hwframe+0x63/0x6b
+>=20
+> Uninit was stored to memory at:
+>  BLEND_OP lib/crypto/sha256.c:61 [inline]
+>  sha256_transform lib/crypto/sha256.c:91 [inline]
+>  sha256_transform_blocks+0xf33/0x2e80 lib/crypto/sha256.c:127
+>  lib_sha256_base_do_update include/crypto/sha256_base.h:63 [inline]
+>  sha256_update+0x2fb/0x340 lib/crypto/sha256.c:136
+>  crypto_sha256_update+0x37/0x60 crypto/sha256_generic.c:39
+>  crypto_shash_update+0x75/0xa0 crypto/shash.c:70
+>  ima_calc_file_hash_tfm security/integrity/ima/ima_crypto.c:496 [inline]
+>  ima_calc_file_shash security/integrity/ima/ima_crypto.c:516 [inline]
+>  ima_calc_file_hash+0x1816/0x3cc0 security/integrity/ima/ima_crypto.c:573
+>  ima_collect_measurement+0x44d/0xdd0 security/integrity/ima/ima_api.c:290
+>  process_measurement+0x2936/0x3ef0 security/integrity/ima/ima_main.c:359
+>  ima_file_check+0xb3/0x100 security/integrity/ima/ima_main.c:557
+>  do_open fs/namei.c:3643 [inline]
+>  path_openat+0x4d09/0x5ad0 fs/namei.c:3798
+>  do_filp_open+0x20d/0x590 fs/namei.c:3825
+>  do_sys_openat2+0x1bf/0x2f0 fs/open.c:1404
+>  do_sys_open fs/open.c:1419 [inline]
+>  __do_sys_open fs/open.c:1427 [inline]
+>  __se_sys_open fs/open.c:1423 [inline]
+>  __x64_sys_open+0x275/0x2d0 fs/open.c:1423
+>  do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+>  do_syscall_64+0xcf/0x1e0 arch/x86/entry/common.c:83
+>  entry_SYSCALL_64_after_hwframe+0x63/0x6b
+>=20
+> Uninit was stored to memory at:
+>  BLEND_OP lib/crypto/sha256.c:61 [inline]
+>  sha256_transform lib/crypto/sha256.c:92 [inline]
+>  sha256_transform_blocks+0xf7d/0x2e80 lib/crypto/sha256.c:127
+>  lib_sha256_base_do_update include/crypto/sha256_base.h:63 [inline]
+>  sha256_update+0x2fb/0x340 lib/crypto/sha256.c:136
+>  crypto_sha256_update+0x37/0x60 crypto/sha256_generic.c:39
+>  crypto_shash_update+0x75/0xa0 crypto/shash.c:70
+>  ima_calc_file_hash_tfm security/integrity/ima/ima_crypto.c:496 [inline]
+>  ima_calc_file_shash security/integrity/ima/ima_crypto.c:516 [inline]
+>  ima_calc_file_hash+0x1816/0x3cc0 security/integrity/ima/ima_crypto.c:573
+>  ima_collect_measurement+0x44d/0xdd0 security/integrity/ima/ima_api.c:290
+>  process_measurement+0x2936/0x3ef0 security/integrity/ima/ima_main.c:359
+>  ima_file_check+0xb3/0x100 security/integrity/ima/ima_main.c:557
+>  do_open fs/namei.c:3643 [inline]
+>  path_openat+0x4d09/0x5ad0 fs/namei.c:3798
+>  do_filp_open+0x20d/0x590 fs/namei.c:3825
+>  do_sys_openat2+0x1bf/0x2f0 fs/open.c:1404
+>  do_sys_open fs/open.c:1419 [inline]
+>  __do_sys_open fs/open.c:1427 [inline]
+>  __se_sys_open fs/open.c:1423 [inline]
+>  __x64_sys_open+0x275/0x2d0 fs/open.c:1423
+>  do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+>  do_syscall_64+0xcf/0x1e0 arch/x86/entry/common.c:83
+>  entry_SYSCALL_64_after_hwframe+0x63/0x6b
+>=20
+> Uninit was stored to memory at:
+>  BLEND_OP lib/crypto/sha256.c:61 [inline]
+>  sha256_transform lib/crypto/sha256.c:93 [inline]
+>  sha256_transform_blocks+0xfb5/0x2e80 lib/crypto/sha256.c:127
+>  lib_sha256_base_do_update include/crypto/sha256_base.h:63 [inline]
+>  sha256_update+0x2fb/0x340 lib/crypto/sha256.c:136
+>  crypto_sha256_update+0x37/0x60 crypto/sha256_generic.c:39
+>  crypto_shash_update+0x75/0xa0 crypto/shash.c:70
+>  ima_calc_file_hash_tfm security/integrity/ima/ima_crypto.c:496 [inline]
+>  ima_calc_file_shash security/integrity/ima/ima_crypto.c:516 [inline]
+>  ima_calc_file_hash+0x1816/0x3cc0 security/integrity/ima/ima_crypto.c:573
+>  ima_collect_measurement+0x44d/0xdd0 security/integrity/ima/ima_api.c:290
+>  process_measurement+0x2936/0x3ef0 security/integrity/ima/ima_main.c:359
+>  ima_file_check+0xb3/0x100 security/integrity/ima/ima_main.c:557
+>  do_open fs/namei.c:3643 [inline]
+>  path_openat+0x4d09/0x5ad0 fs/namei.c:3798
+>  do_filp_open+0x20d/0x590 fs/namei.c:3825
+>  do_sys_openat2+0x1bf/0x2f0 fs/open.c:1404
+>  do_sys_open fs/open.c:1419 [inline]
+>  __do_sys_open fs/open.c:1427 [inline]
+>  __se_sys_open fs/open.c:1423 [inline]
+>  __x64_sys_open+0x275/0x2d0 fs/open.c:1423
+>  do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+>  do_syscall_64+0xcf/0x1e0 arch/x86/entry/common.c:83
+>  entry_SYSCALL_64_after_hwframe+0x63/0x6b
+>=20
+> Uninit was stored to memory at:
+>  LOAD_OP lib/crypto/sha256.c:56 [inline]
+>  sha256_transform lib/crypto/sha256.c:82 [inline]
+>  sha256_transform_blocks+0x2c35/0x2e80 lib/crypto/sha256.c:127
+>  lib_sha256_base_do_update include/crypto/sha256_base.h:63 [inline]
+>  sha256_update+0x2fb/0x340 lib/crypto/sha256.c:136
+>  crypto_sha256_update+0x37/0x60 crypto/sha256_generic.c:39
+>  crypto_shash_update+0x75/0xa0 crypto/shash.c:70
+>  ima_calc_file_hash_tfm security/integrity/ima/ima_crypto.c:496 [inline]
+>  ima_calc_file_shash security/integrity/ima/ima_crypto.c:516 [inline]
+>  ima_calc_file_hash+0x1816/0x3cc0 security/integrity/ima/ima_crypto.c:573
+>  ima_collect_measurement+0x44d/0xdd0 security/integrity/ima/ima_api.c:290
+>  process_measurement+0x2936/0x3ef0 security/integrity/ima/ima_main.c:359
+>  ima_file_check+0xb3/0x100 security/integrity/ima/ima_main.c:557
+>  do_open fs/namei.c:3643 [inline]
+>  path_openat+0x4d09/0x5ad0 fs/namei.c:3798
+>  do_filp_open+0x20d/0x590 fs/namei.c:3825
+>  do_sys_openat2+0x1bf/0x2f0 fs/open.c:1404
+>  do_sys_open fs/open.c:1419 [inline]
+>  __do_sys_open fs/open.c:1427 [inline]
+>  __se_sys_open fs/open.c:1423 [inline]
+>  __x64_sys_open+0x275/0x2d0 fs/open.c:1423
+>  do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+>  do_syscall_64+0xcf/0x1e0 arch/x86/entry/common.c:83
+>  entry_SYSCALL_64_after_hwframe+0x63/0x6b
 
-Just take a look at the driver. hisi_inno_phy_write_reg() is the 
-function that differs between different models. But for all of them, 
-hisi_inno_phy_setup() is the same.
+If I understood what the report is saying (ima_calc_file_hash_tfm()):
 
+	while (offset < i_size) {
+		int rbuf_len;
 
-hisi_inno_phy_write_reg() should be moved to a separate bus driver. It's 
-bus-related, not phy. PHY driver should not care how to access the bus, 
-but the bus driver should. The PHY driver only needs to use regmap_* 
-APIs to "write BIT(2) to addr 6".
+		rbuf_len =3D integrity_kernel_read(file, offset, rbuf, PAGE_SIZE);
+		if (rbuf_len < 0) {
+			rc =3D rbuf_len;
+			break;
+		}
+		if (rbuf_len =3D=3D 0) {	/* unexpected EOF */
+			rc =3D -EINVAL;
+			break;
+		}
+		offset +=3D rbuf_len;
 
+		rc =3D crypto_shash_update(shash, rbuf, rbuf_len);
+		if (rc)
+			break;
+	}
 
-For mv100 and cv200, the PHY master bus interface is attached to the 
-perictrl core in SoC (though the perictrl core provides slightly 
-different register offsets to access the PHY bus). For mv200, it is 
-directly attached to AHB/APB system bus so we don't need to put it under 
-a perictrl node anymore. So here, clearly it's the bus the PHY attached 
-to which is different, not the PHY itself.
+we are reading a non-initialized rbuf, which should not happen because
+integrity_kernel_read() returned a positive value (success).
 
+The other information we have is that the filesystem in question uses
+generic_file_read_iter() as read_iter method.
 
-That's why i say the driver is wrong from the beginning. It's mixing PHY 
-driver and bus driver together but they ought to be different. PHY is 
-always compatible, but the bus is not.
+I would add the VFS people in CC, in case they have some ideas.
 
+Thanks
 
-The correct fix should be moving hisi_inno_phy_write_reg() to a new bus 
-driver and migrating to regmap_* APIs in PHY driver. But i'll have to 
-write a new driver for that, which i try to avoid (it takes too much 
-time!). So i said clearly in the cover-letter this should be considered 
-a hack.
+Roberto
 
-
->
->> I'll say the driver is broken from the beginning. They should move
->> write_reg function to a separate regmap driver and only left `write
->> BIT(2) to addr 0x6` to the PHY driver.
->>
-> Best regards,
-> Krzysztof
->
-
--- 
-Regards,
-Yang Xiwen
+> Uninit was stored to memory at:
+>  memcpy_to_iter lib/iov_iter.c:65 [inline]
+>  iterate_kvec include/linux/iov_iter.h:85 [inline]
+>  iterate_and_advance2 include/linux/iov_iter.h:251 [inline]
+>  iterate_and_advance include/linux/iov_iter.h:271 [inline]
+>  _copy_to_iter+0x125a/0x2520 lib/iov_iter.c:186
+>  copy_page_to_iter+0x419/0x870 lib/iov_iter.c:381
+>  copy_folio_to_iter include/linux/uio.h:181 [inline]
+>  filemap_read+0xbf4/0x14d0 mm/filemap.c:2654
+>  generic_file_read_iter+0x136/0xad0 mm/filemap.c:2784
+>  __kernel_read+0x724/0xce0 fs/read_write.c:434
+>  integrity_kernel_read+0x77/0x90 security/integrity/iint.c:221
+>  ima_calc_file_hash_tfm security/integrity/ima/ima_crypto.c:485 [inline]
+>  ima_calc_file_shash security/integrity/ima/ima_crypto.c:516 [inline]
+>  ima_calc_file_hash+0x1743/0x3cc0 security/integrity/ima/ima_crypto.c:573
+>  ima_collect_measurement+0x44d/0xdd0 security/integrity/ima/ima_api.c:290
+>  process_measurement+0x2936/0x3ef0 security/integrity/ima/ima_main.c:359
+>  ima_file_check+0xb3/0x100 security/integrity/ima/ima_main.c:557
+>  do_open fs/namei.c:3643 [inline]
+>  path_openat+0x4d09/0x5ad0 fs/namei.c:3798
+>  do_filp_open+0x20d/0x590 fs/namei.c:3825
+>  do_sys_openat2+0x1bf/0x2f0 fs/open.c:1404
+>  do_sys_open fs/open.c:1419 [inline]
+>  __do_sys_open fs/open.c:1427 [inline]
+>  __se_sys_open fs/open.c:1423 [inline]
+>  __x64_sys_open+0x275/0x2d0 fs/open.c:1423
+>  do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+>  do_syscall_64+0xcf/0x1e0 arch/x86/entry/common.c:83
+>  entry_SYSCALL_64_after_hwframe+0x63/0x6b
+>=20
+> Uninit was created at:
+>  __alloc_pages+0x9a6/0xe00 mm/page_alloc.c:4590
+>  alloc_pages_mpol+0x62b/0x9d0 mm/mempolicy.c:2133
+>  alloc_pages mm/mempolicy.c:2204 [inline]
+>  folio_alloc+0x1da/0x380 mm/mempolicy.c:2211
+>  filemap_alloc_folio+0xa5/0x430 mm/filemap.c:975
+>  page_cache_ra_unbounded+0x2cc/0x960 mm/readahead.c:247
+>  do_page_cache_ra mm/readahead.c:299 [inline]
+>  page_cache_ra_order+0xe31/0xee0 mm/readahead.c:544
+>  ondemand_readahead+0x157d/0x1750 mm/readahead.c:666
+>  page_cache_sync_ra+0x724/0x760 mm/readahead.c:693
+>  page_cache_sync_readahead include/linux/pagemap.h:1300 [inline]
+>  filemap_get_pages+0x4c4/0x2bd0 mm/filemap.c:2498
+>  filemap_read+0x59e/0x14d0 mm/filemap.c:2594
+>  generic_file_read_iter+0x136/0xad0 mm/filemap.c:2784
+>  __kernel_read+0x724/0xce0 fs/read_write.c:434
+>  integrity_kernel_read+0x77/0x90 security/integrity/iint.c:221
+>  ima_calc_file_hash_tfm security/integrity/ima/ima_crypto.c:485 [inline]
+>  ima_calc_file_shash security/integrity/ima/ima_crypto.c:516 [inline]
+>  ima_calc_file_hash+0x1743/0x3cc0 security/integrity/ima/ima_crypto.c:573
+>  ima_collect_measurement+0x44d/0xdd0 security/integrity/ima/ima_api.c:290
+>  process_measurement+0x2936/0x3ef0 security/integrity/ima/ima_main.c:359
+>  ima_file_check+0xb3/0x100 security/integrity/ima/ima_main.c:557
+>  do_open fs/namei.c:3643 [inline]
+>  path_openat+0x4d09/0x5ad0 fs/namei.c:3798
+>  do_filp_open+0x20d/0x590 fs/namei.c:3825
+>  do_sys_openat2+0x1bf/0x2f0 fs/open.c:1404
+>  do_sys_open fs/open.c:1419 [inline]
+>  __do_sys_open fs/open.c:1427 [inline]
+>  __se_sys_open fs/open.c:1423 [inline]
+>  __x64_sys_open+0x275/0x2d0 fs/open.c:1423
+>  do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+>  do_syscall_64+0xcf/0x1e0 arch/x86/entry/common.c:83
+>  entry_SYSCALL_64_after_hwframe+0x63/0x6b
+>=20
+> CPU: 1 PID: 9243 Comm: syz-executor.3 Not tainted 6.8.0-rc4-syzkaller-001=
+80-g4f5e5092fdbf #0
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS G=
+oogle 01/25/2024
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D
+>=20
+>=20
+> ---
+> This report is generated by a bot. It may contain errors.
+> See https://goo.gl/tpsmEJ for more information about syzbot.
+> syzbot engineers can be reached at syzkaller@googlegroups.com.
+>=20
+> syzbot will keep track of this issue. See:
+> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+>=20
+> If the report is already addressed, let syzbot know by replying with:
+> #syz fix: exact-commit-title
+>=20
+> If you want to overwrite report's subsystems, reply with:
+> #syz set subsystems: new-subsystem
+> (See the list of subsystem names on the web dashboard)
+>=20
+> If the report is a duplicate of another one, reply with:
+> #syz dup: exact-subject-of-another-report
+>=20
+> If you want to undo deduplication, reply with:
+> #syz undup
 
