@@ -1,169 +1,130 @@
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1377260DD2
-	for <linux-kernel@vger.kernel.org>; Tue, 20 Feb 2024 09:43:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5975762172
+	for <linux-kernel@vger.kernel.org>; Tue, 20 Feb 2024 09:43:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708422213; cv=none; b=K65NSjFJ2Q+69B5O3jy9eyOfbXKKVVleUZZERBijwElBr32YLPHDVIRh5jRN3mggR/xetJoXgY0bZcthAfNqANTClwTSWEpMgDXYGXeC0et9CGHEMLsgXb74d7OoheU61y2ix5h8R2ZIjZzJNDxdfIqAmYzjBwZQwavQJNQBv3I=
+	t=1708422215; cv=none; b=muakdn6wX+E0kt/kkEF7yrjNsIYBqZ9iDcE3fe4eFgavXXUaC6k5tJfhyO9fAnCZChpFWI67s+knVbxQlrwp9NtYV/XkyIrJ4J1YIJt+LAAk+0R8N3shMLyQBrmKuR0k4hHhTKvkTDK5VKJuDFrDvawoFsE6CZ4vQWC8YsaslbA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708422213; c=relaxed/simple;
-	bh=PJUu+kWfIKUOW86S8DxyICVjYB5q8vTCRbyPWsxdmjw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=cL/mYQ8pMDMTUekiPDfTIs3BqB0pRKJffqvUmJSPpRQsgzyJHllHkthhfMAocjxJOAwM1ODGZewi/t325EZ540Gq3S/GUWPEYCYcQnbhkD10HZiPLZ4sRUu0KKPnJ4sgh1MbwgoUVa7/HrXsTuPR0Ri+Kps7wFlDzWWcV1d5Sjc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=aK8RE1Am; arc=none smtp.client-ip=209.85.128.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1708422215; c=relaxed/simple;
+	bh=rlFKBjfxBfB5przc60p+qp81VvS1nj/vKLjjDNglv3Q=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=bWrsCMS0Saug1RlGk2wx84rZxAMfqdJNH2mC8NHnv/nLHFt8X+gxty9JbDN5hZvbQD6K+2mPQhp37L5FpsvBDa+8udbVwbhjSTKih96b6Ah9Ac+sHLtb+M5MUjANCHmxtIL89Z37/zr5u6OCAlG1LS8TYMH4sVIhgKp+QN08C+Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=lhMvpXN9; arc=none smtp.client-ip=209.85.208.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="aK8RE1Am"
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-41270782a37so1222315e9.3
-        for <linux-kernel@vger.kernel.org>; Tue, 20 Feb 2024 01:43:30 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lhMvpXN9"
+Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-55c2cf644f3so7048666a12.1
+        for <linux-kernel@vger.kernel.org>; Tue, 20 Feb 2024 01:43:34 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1708422209; x=1709027009; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=4PauvFB3bUKN5W95pNqPUPqPoLWSdGphWzpxYqhYsSQ=;
-        b=aK8RE1AmCuLkEWDvhvdtuEwWFbXZwTk7z880Efx2ze+t7OCIisd6r7iC68CAh3SfuU
-         XBa4ee5rZWhnLQqQJdOmUXBlRtBzRTQcRmpjiVCTscPXF0P6Yul/pY8Jc4o26NTCnIbP
-         +MZ132yAWQ4/mReEAPOFp6NeuxsoKauaI2EFT7E3gyqudcTY/iHf28xXTWf7+MpdIYx4
-         KrFKeBwChAzmcOeYnKAcdsFmFSGlDAokaPq//g0Srz4IbLbJexPQmSSJmUDnYIrMJ5bp
-         BQpbDbpTz0pv/3whGvovMo2rgPAq0kJbA6Thw7fE91Xon0F7DBmwUQWIL7Swn+oMXckD
-         WdAA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708422209; x=1709027009;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+        d=google.com; s=20230601; t=1708422213; x=1709027013; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=4PauvFB3bUKN5W95pNqPUPqPoLWSdGphWzpxYqhYsSQ=;
-        b=V5RLdZJambNDqc/oVQX/RjD9A4TZruqhq9sLaiv8dZQVidYIPI3iJsNHA143w3YwR2
-         QFKTclmI9GiJu8d8JZ3jCoW17fkjXZ0F4QGKLGLMJP6cXo22B7YjAlcsWc7mogsKzouR
-         UTTuaA5xdy2LHxHquqywCn/f6xxdDJ4PEzAQMO6H/IuLYrgQ31H9JFIfoAp1KzjvU03G
-         Sx0WJKxoswm1JJLoDph1GG0GZIDNViltRFhQmU483RHO/xWEC91vmC1Oo8U/4conA7aS
-         NgkekvyFEt1tGGkg1AsSewUcuvmVzC0EvGuyHIwYMJEUnPGn2KydW64vNVsyT8wFRfd8
-         0u8g==
-X-Forwarded-Encrypted: i=1; AJvYcCVC9UNqDyrxNVyUlL1mReBdw2I23zB6cW//AmanP/GCvWFDvZ6SxgkXvPT0lJQGa8jyfmpo39kUGIQgPH7CbvP57J4+IzARuxQCTSbL
-X-Gm-Message-State: AOJu0YyVwpRi1tke+tNKtMH9hdNYyX05wjgagw1scbs/NRnRbvjD3kro
-	EpgVOwWZlfd5KCqbbZxZBDARAMyqcGPgjC3OUTpFnYoUszuTY+bY+uXcmCndqXI=
-X-Google-Smtp-Source: AGHT+IEowmJmsiZiarHKK3ngeT5Ip/EGhVx5Ax4qyJx3z1sQ57KxWFSAL3lTopVSd5WPI80+MA9ZVQ==
-X-Received: by 2002:a05:600c:511f:b0:410:d6c7:e003 with SMTP id o31-20020a05600c511f00b00410d6c7e003mr10450794wms.32.1708422209447;
-        Tue, 20 Feb 2024 01:43:29 -0800 (PST)
-Received: from [192.168.1.20] ([178.197.222.116])
-        by smtp.gmail.com with ESMTPSA id i13-20020a5d55cd000000b0033b198efbedsm12779204wrw.15.2024.02.20.01.43.27
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 20 Feb 2024 01:43:29 -0800 (PST)
-Message-ID: <56da3332-deb5-4fff-ad58-664bbea0dc73@linaro.org>
-Date: Tue, 20 Feb 2024 10:43:27 +0100
+        bh=6wXGNSO7EAp4ThzIsFzmHN2w6lFZhp54XNCpapquw2M=;
+        b=lhMvpXN904q2pks39RZqlAavJW8u9xVuxVNfmDwC0VRkR06xSxBTTOcx2TmUarqFOw
+         n29uVI1hmLITquzoPhEO7VBmWTKO/iWJgzxkpJ6R8JUU0OPq6fVsuY1nRTL047tONHdj
+         YxSo+arbnPZxqXm8fn79pXozFqIV7zoZwJc6uRIuLggcZmmzo2lruNee7VgS7r3nWh1H
+         C3OEn3+EXha5AdDMtvirEUAf1JyYTjbnHFFtkaewLNamlU+UWsZmeRP4DbrN+JFwmCRy
+         Wm1hMSAMefS1I/wjZXERJhqnapVlX9I2MwJ06AvkQwZsku8CHo2TLXPqKsbu46FAgfzI
+         H/JQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708422213; x=1709027013;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=6wXGNSO7EAp4ThzIsFzmHN2w6lFZhp54XNCpapquw2M=;
+        b=GlWju0OUxGXRgeCPU9BNoNoxbzNKWc+G1tS6tmX2xeiaGN18Jzz6Q2MsCLEfCILRQn
+         mR0pXfM6LNT5xc36pVYn+PxVlZz5elqkSlaLhgdR6ykeTVDJEoATNNtnjIERM5dzFE3L
+         7rauCUu0Z7smcCissv2gOZVgZRTy63S1SegT3EcxrknnY+OwQIBQVlVdWMHbw2ORXSTx
+         lSEMU1q5r8VP1Qx5Si8TNcEghoUhafMTpVsR1YwmAKh2Z2y/DNc7BXFwQyQ9ffI3tPrG
+         wNcXgxNTW9yYWBl/4fgeZDmTnpkcG0tJppPQyeouDQrUN9OSDRimdpfduWgZ/Kai9+Vv
+         Rwgg==
+X-Forwarded-Encrypted: i=1; AJvYcCVbzbaipwoKa5ENXiiZS39MOAP1po1oNYWRE6mDg03xOy6z6rU2qquX3huF+No2xijQll2jDlmVl/V29TLorzL5VAhf1Ic+DuzNz79+
+X-Gm-Message-State: AOJu0Yy2x6XYuGdn0gHrukK2bSjToUNsoefNJPenbdBgmzQtJhU16SZR
+	xedJ3JJRMYDe1MkskJ/6E7xql3eIS1ufeaQFF1M3h2qXxMiHI81TugZvA1UOoTUG5imRLazCoSJ
+	DlDD2TSwOn6069MkTEmRyx6vUyEJQocutC5QR
+X-Google-Smtp-Source: AGHT+IGo8bMi1ufIugwBQxJ09WQnYJlAWn1e8eQOJeCgyp5JhtuInq+rAAuyt68+BhpUHU0p7WmO3Bz0UMzJA8+aWuo=
+X-Received: by 2002:a05:6402:3588:b0:564:762c:fe5e with SMTP id
+ y8-20020a056402358800b00564762cfe5emr3859938edc.20.1708422212502; Tue, 20 Feb
+ 2024 01:43:32 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 1/6] dt-bindings: arm: qcom: Document sm8650p soc and
- AIM500 AIoT board
-To: Jingyi Wang <quic_jingyw@quicinc.com>, linux-arm-msm@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- andersson@kernel.org, konrad.dybcio@linaro.org, robh@kernel.org,
- krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org
-Cc: kernel@quicinc.com
-References: <20240205115721.1195336-1-quic_jingyw@quicinc.com>
- <20240205115721.1195336-2-quic_jingyw@quicinc.com>
- <2fa4d857-7262-40df-a842-56945ecffb81@linaro.org>
- <441ffff2-81a8-4b53-b15b-5ac6375d65c3@quicinc.com>
-Content-Language: en-US
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
- 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
- D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <441ffff2-81a8-4b53-b15b-5ac6375d65c3@quicinc.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20240220081205.135063-1-raychi@google.com> <2024022024-trout-kennel-6d14@gregkh>
+ <4d62d4d0-3f28-486b-8132-4cc571b6f721@quicinc.com>
+In-Reply-To: <4d62d4d0-3f28-486b-8132-4cc571b6f721@quicinc.com>
+From: Ray Chi <raychi@google.com>
+Date: Tue, 20 Feb 2024 17:42:56 +0800
+Message-ID: <CAPBYUsD=3ux8RXgRcroVsmpqNs0D+2NeLhqPHh3TBB_oq=ziXA@mail.gmail.com>
+Subject: Re: [PATCH] usb: dwc3: gadget: remove warning during kernel boot
+To: Krishna Kurapati PSSNV <quic_kriskura@quicinc.com>
+Cc: Greg KH <gregkh@linuxfoundation.org>, Thinh.Nguyen@synopsys.com, 
+	quic_uaggarwa@quicinc.com, albertccwang@google.com, linux-usb@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 20/02/2024 09:55, Jingyi Wang wrote:
-> 
-> Hi Krzysztof,
-> 
-> On 2/5/2024 8:33 PM, Krzysztof Kozlowski wrote:
->> On 05/02/2024 12:57, Jingyi Wang wrote:
->>> Document Qualcomm SM8650P SoC and AIM500 AIoT board.
->>
->> Please describe shortly what is SM8650P and what are the differences
->> with SM8650.
->>
->>>
->>> Signed-off-by: Jingyi Wang <quic_jingyw@quicinc.com>
->>> ---
->>>  Documentation/devicetree/bindings/arm/qcom.yaml | 9 +++++++++
->>>  1 file changed, 9 insertions(+)
->>>
->>> diff --git a/Documentation/devicetree/bindings/arm/qcom.yaml b/Documentation/devicetree/bindings/arm/qcom.yaml
->>> index 1999a5f2f254..e87ceb42853b 100644
->>> --- a/Documentation/devicetree/bindings/arm/qcom.yaml
->>> +++ b/Documentation/devicetree/bindings/arm/qcom.yaml
->>> @@ -88,11 +88,13 @@ description: |
->>>          sm8450
->>>          sm8550
->>>          sm8650
->>> +        sm8650p
->>>          x1e80100
->>>  
->>>    The 'board' element must be one of the following strings:
->>>  
->>>          adp
->>> +        aim500-aiot
->>
->> Drop this line.
->>
-> drop this line will cause fail dt binding check failure, any suggestion on that?
+Hi Krishna,
 
-Really? How?
+I verified the Thinh's patch and the warning could be
+fixed. Thanks for the information.
 
+Regards,
+Ray
 
-
-Best regards,
-Krzysztof
-
+On Tue, Feb 20, 2024 at 4:40=E2=80=AFPM Krishna Kurapati PSSNV
+<quic_kriskura@quicinc.com> wrote:
+>
+>
+>
+> On 2/20/2024 2:04 PM, Greg KH wrote:
+> > On Tue, Feb 20, 2024 at 04:12:04PM +0800, Ray Chi wrote:
+> >> The dwc3->gadget_driver is not initialized during the dwc3 probe
+> >> process. This leads to a warning when the runtime power management (PM=
+)
+> >> attempts to suspend the gadget using dwc3_gadget_suspend().
+> >
+> > What type of warning happens?
+> >
+> >> This patch adds a check to prevent the warning.
+> >>
+> >> Cc: stable@vger.kernel.org
+> >> Fixes: 61a348857e86 ("usb: dwc3: gadget: Fix NULL pointer dereference =
+in dwc3_gadget_suspend")
+> >> Signed-off-by: Ray Chi <raychi@google.com>
+> >> ---
+> >>   drivers/usb/dwc3/gadget.c | 3 +++
+> >>   1 file changed, 3 insertions(+)
+> >>
+> >> diff --git a/drivers/usb/dwc3/gadget.c b/drivers/usb/dwc3/gadget.c
+> >> index 28f49400f3e8..de987cffe1ec 100644
+> >> --- a/drivers/usb/dwc3/gadget.c
+> >> +++ b/drivers/usb/dwc3/gadget.c
+> >> @@ -4708,6 +4708,9 @@ int dwc3_gadget_suspend(struct dwc3 *dwc)
+> >>      unsigned long flags;
+> >>      int ret;
+> >>
+> >> +    if (!dwc->gadget_driver)
+> >> +            return 0;
+> >> +
+> >
+> > This directly reverts part of the commit you say this fixes, are you
+> > SURE about this?  Why?
+> >
+>
+> Hi Ray,
+>
+> Thinh sent a patch recently addressing the issue in soft disconnect.
+> Can you check if it helps:
+>
+> https://lore.kernel.org/all/e3be9b929934e0680a6f4b8f6eb11b18ae9c7e07.1708=
+043922.git.Thinh.Nguyen@synopsys.com/
+>
+> Regards,
+> Krishna,
