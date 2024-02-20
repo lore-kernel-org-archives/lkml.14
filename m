@@ -1,140 +1,129 @@
-Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
+Received: from mail-yb1-f177.google.com (mail-yb1-f177.google.com [209.85.219.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 994AA67A13;
-	Tue, 20 Feb 2024 11:55:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC11D67E67
+	for <linux-kernel@vger.kernel.org>; Tue, 20 Feb 2024 11:55:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708430146; cv=none; b=EEU49hLfhokAB8wX3q7rc9ZHqVpN8sEXPOGGLw/0yp/A+da/13SYKST/0gNHIbEaKT9fFQycxkUI6iIUXzquNHFNSmg/2SrNPHI8VW0unhTrTPH2qOM5QPctZaeu7mI5kSoNMQ1DjtMrKYo4oK6wa4JLiya0tI0VJ8PoWkpuRy8=
+	t=1708430154; cv=none; b=DstKme3RIYgA4okfGcnhJK2jowe9GC/eWiRbWYhCjt/tftpYLzSQxIS0rzHW/xbYUCF8IfWdyY3AiJ8jFje5PvER+nAss3oBj2xXuXPToZE5ik6aTsqfOUJK/ZGkWSmNYK2sBTIVYQ5Q+mOBSnqtQ7JxvkUQHu96O/rgCaZ73l4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708430146; c=relaxed/simple;
-	bh=RlzLyIaBIPYhIIJ+Cv0QTiGGtwgWgSS7chPV9swd+q4=;
+	s=arc-20240116; t=1708430154; c=relaxed/simple;
+	bh=eRbFyA1HvnTiPA/WeNSsg+LGCPcb7wlEk3IxlkbWnAI=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=fLY89TdTxHgA+IawtBE8gBJA4nXhBsUyTLVZ3BApjyHZIF/ZBA3dkrS2WarP9ph45ayQVcUo/igJSZ9KvoDhkB0LU0U1wSz6GkuI7k6IdwnRTz+PdAWO6lXbRNik57IXQ2LTWCBW3moKnkwfyJHJISf7zqFOBC/riquK9MkJOiM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lD/wbnZ0; arc=none smtp.client-ip=209.85.167.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Cc:Content-Type; b=ajmMKNWEQ4xf70NGt1pf3WMUfsWqMUljZCyQ6kIHj4ObGyPqwGdK5OpPOS+7seNjrGcd+Fz2+SF1BTKkNLTyUT8txsCdHSW7ZcsH9G2H6ilS1XDdwk0ioJ9qrY0uuQdW9JRlzvVYlL/6iLlR564WAolfNyXE/tUyNvmrIJTuY8w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=iQUs7WiY; arc=none smtp.client-ip=209.85.219.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lD/wbnZ0"
-Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-51197ca63f5so5551383e87.1;
-        Tue, 20 Feb 2024 03:55:44 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="iQUs7WiY"
+Received: by mail-yb1-f177.google.com with SMTP id 3f1490d57ef6-dc6d8bd612dso5199195276.1
+        for <linux-kernel@vger.kernel.org>; Tue, 20 Feb 2024 03:55:52 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1708430143; x=1709034943; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1708430152; x=1709034952; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=3yl0M7CLKZiWg66boULSo73wijfnxqf7U3kAkpRW4/4=;
-        b=lD/wbnZ0vUceaC6k1FLUELjB9e8jAWo5XTbRGBs5efgbV7YrDZ8tLSuFN3am1UEHLQ
-         rWkGs/1/rAxbDxl+qZaszfnCTpGQolKAiHOmZ5BgJZLdDfxSaF5A4ZJ0BJbbpnql3Kuj
-         mHC5HZFeyNzg9nFeJPGuDqzqLmAddmCb0/tQZ/pkKy5Mp6QRLIpLTbKj8xQhmlEZOgg9
-         iSMGt0InIz5Xz6AUCmbwuezQ1DihUZbRX+XALpj1FrzL27fGPE6Iyp4nYa9RNjUj1H5t
-         gHOGqkdH/TK8hoD6gr5zwJ9dPIJ0dnezQPqrRUWWxx7AIXb449bZNYD08UyqpKCdUdyT
-         wMvQ==
+        bh=uumLRt54NCf1C2r2Jw813VJ80gZwOfopdqyWnHS9j/Y=;
+        b=iQUs7WiYRjzGkvUHMWXgnimq2PfuGVqXsXx1Wq+uIY5+jjT1HCeHKFV45dDyEn7XIB
+         n4+z4z+b00r9QuOZEi+vm+eQy/KyEt5eF1ePUbWMfn8gwY/jHy+HlPX6mM1TYoOE+tj9
+         5Ggoge+2oxr3yFaQE0hyPX+beq2WcgdOy0QEGxfQsnJ3N5DsDFHCUpSBT6RVjak5GsS9
+         wYx46u9WxPVlXbmWxMMPtpN03FwMVdzEnYzRr7wNnkDjkIsUZQPtGKGLWbM8xDHO1I7W
+         AwhAZNQaEgO09cJxGLmTeYx81DY2fLc/EaPgloi/igK70jCCp4EAB0n09SCFLFE023pY
+         vIyg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708430143; x=1709034943;
+        d=1e100.net; s=20230601; t=1708430152; x=1709034952;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=3yl0M7CLKZiWg66boULSo73wijfnxqf7U3kAkpRW4/4=;
-        b=A5cndOWVtPIQrcnmHeOLwyUuxspu0RiXjxNu6TVgFsrX8JR3gvQOAeu4BEckrgUN69
-         Nm8mrUw1YRZ57bfWfFIm7omnFUAeh1InRTGYL0qcagV+GaSpbbKON5Xg1Vww7N/Cdlbg
-         xWDlXUOKmzvmTBSa+a41dIKZfafsS2ij0sbKkAXHVHHPKaD0+MKZo0B7G/3lqfuXXl3A
-         ULZHvqQf7tJz4smJ6b6/OoibIw5R56K3nDL5W3oYrtbI+OzjAOiyWIiW6+amIhkGdkQp
-         6pBeiiq7GGmpeuRmjTZ1kE8fefPC/fQ37ZM/C4/TpliBZK1pY3+8508bVpSETdAog9rg
-         JMAg==
-X-Forwarded-Encrypted: i=1; AJvYcCXPmkOI7Lc7TPWbR1U5gAw7HZDmSXqXIDvoVUJ0BVzBHQ+w1l+2QZG0t+tIoKJWRueOtM6Row7IDhTNATUpJfVy4yMiMf1PzZGv7Bofzpj5bswNAHxHFNkX/cGiKnwFLUaZnwjKT/AJw9wdASEx1Eo=
-X-Gm-Message-State: AOJu0YxakNVhFx8oZu6YqbErYX/WoaGdHbXFnaObffhEmPfBbZsjAd6F
-	o8CxabGpo/h3ScrBWR3UpGeUyXjd+ragP+kwxck15UNrnaCfbKJ5giqC6Z5E+81b/SROOy7w5lG
-	XQNir3WN+OvMY1SDppjc5JwM17jU=
-X-Google-Smtp-Source: AGHT+IFBAgJPIT1xKrmwp1gHK45l1q76tE8uzVZZZAV8JcaYwkzwtiN/zQeC6JUtGsdfPOZzl8wLMrd2rpBnjFv0ejc=
-X-Received: by 2002:a05:6512:3ba2:b0:512:a2c7:e44c with SMTP id
- g34-20020a0565123ba200b00512a2c7e44cmr6617160lfv.20.1708430142565; Tue, 20
- Feb 2024 03:55:42 -0800 (PST)
+        bh=uumLRt54NCf1C2r2Jw813VJ80gZwOfopdqyWnHS9j/Y=;
+        b=O/jM6TrpdUeHWvpGsy+x/ZPMAQokIH0fjMLBnXxzVuHPXE2Itx42gtiNPqScYJLGTF
+         WGYfUK0nhMcDaa5KOa3Yp23eyVpNvJynnCWg4Q9JICv6nFa/4a5oK6Y+i06iIssOGLH8
+         VYdbxHSJephTP8/LMsQx4qPSw3acNQnISTQudlVopk1imkV/cx0n64qOUrh9p0fkz+Iz
+         5VY+zF8yt6Bf4dJoqLWSp1bJBqqu+S1VXbxFCNNUnpH6GWQShofO6mBCIuKhc+S+Iwd6
+         UUFplLOIzqaxE5urrhg4XPn+LyWom7zSCB7+gJyysqRwA3Vur3MlU3PofuxdzX19Yp1P
+         X8Bw==
+X-Forwarded-Encrypted: i=1; AJvYcCWlvfvdsACeu6exQD/tzkAES4swj4xns9bIGQ9M+dy4XPQy8BpnlfCZUg1CYUOLWmUG1GUnDcoQd108Divax12ELl0GPGK8UxjNO6Ap
+X-Gm-Message-State: AOJu0YzmbGU6ejnyUnfh4prJmh+K7T+McJ0W7MYZl934Ko7KCl3yxBEq
+	L4cngWx9XHQQ8a17PQHpEHHe5l1uR/SN6cn1dWVHnQEmbgCl21lis+9d4lRi7wPe85C74vQ/D7Y
+	jgTF+xZ/tu2FLQYNqtdNtgsTC2AICkZppG0z7oQ==
+X-Google-Smtp-Source: AGHT+IExpvpD8AgXA3aIHbCHCE4RqNcFOBxn35EoCinO8Hpk+aekmgbnXIo/496q/fTFdU86koAVpAivWwXL7BwqeFo=
+X-Received: by 2002:a25:8d0d:0:b0:dcb:ef22:3869 with SMTP id
+ n13-20020a258d0d000000b00dcbef223869mr12986540ybl.16.1708430151780; Tue, 20
+ Feb 2024 03:55:51 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <6be2558b8462fc08095c24c9257563ab5f3ae013.1708001398.git.geert+renesas@glider.be>
- <kycepdxukfsww3tnxoo5hoiuo3vcgpqqmynokzhtl4vodgm6zc@ih4uhw7gz4jh>
- <CAMuHMdVf7ophCwKt-n_N-LBHV4+t14Gjb4d1O0T8FDk_9xMFtA@mail.gmail.com>
- <CAHCN7xJ65RP8TO7cS0p5DwE6zru5NEF0_JA+8siT_OpSeLD7pA@mail.gmail.com>
- <CAHCN7x+EnSU8qk5dBFco=0vkeknGq18qEN7vFmZs0_q83T_3+w@mail.gmail.com>
- <CAHCN7xKffJ29zyjoJVAcy3b_d=-zkFzbL=URj4yWJWzYvRdB_Q@mail.gmail.com>
- <TYCPR01MB11269CBE8429A31DE5002A5A5864C2@TYCPR01MB11269.jpnprd01.prod.outlook.com>
- <nzrkujogauvn262ucxippwidyub6ikcohcjpbpn4hzj7rymctm@4owntgrmcquf>
- <TYCPR01MB11269CBAA20275E11D9AD6500864C2@TYCPR01MB11269.jpnprd01.prod.outlook.com>
- <wxwad77x2mxhhwdsbgiytzn6x54t4sywodjhzefwldo277njiz@ru7z54wxgelu>
- <CAHCN7xJi-6W6x+OJmkNwOX45SM4WHD5zkN42ZOp8ZxFnp3YL5w@mail.gmail.com>
- <1ff513b9-d4fd-4663-b46b-bb9662e3881c@imgtec.com> <CAHCN7xJ0TTS_-PA3Ox_RCpfyHJFk-s=-zs8W1Zm3dQTUAoqbpg@mail.gmail.com>
-In-Reply-To: <CAHCN7xJ0TTS_-PA3Ox_RCpfyHJFk-s=-zs8W1Zm3dQTUAoqbpg@mail.gmail.com>
-From: Erico Nunes <nunes.erico@gmail.com>
-Date: Tue, 20 Feb 2024 12:55:29 +0100
-Message-ID: <CAK4VdL3o+oS3hqwATb8wbv=qOVojWz270r0bUhaBJOw6+tKbxg@mail.gmail.com>
-Subject: Re: [PATCH v2] drm/imagination: DRM_POWERVR should depend on ARCH_K3
-To: Adam Ford <aford173@gmail.com>
-Cc: Matt Coster <Matt.Coster@imgtec.com>, Maxime Ripard <mripard@kernel.org>, 
-	Biju Das <biju.das.jz@bp.renesas.com>, Geert Uytterhoeven <geert@linux-m68k.org>, 
-	Frank Binns <Frank.Binns@imgtec.com>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Thomas Zimmermann <tzimmermann@suse.de>, 
-	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
-	Sarah Walker <Sarah.Walker@imgtec.com>, Javier Martinez Canillas <javierm@redhat.com>, Nishanth Menon <nm@ti.com>, 
-	Marek Vasut <marek.vasut@mailbox.org>, 
-	"linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, 
-	"dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20240217150228.5788-2-johan+linaro@kernel.org>
+ <c95f5ff3-8dad-4302-9384-92a9b83f7bdc@web.de> <ZdRTx2lmHBVlcLub@hovoldconsulting.com>
+ <1afc87c-2c1f-df10-a0c8-2a267d44122@inria.fr>
+In-Reply-To: <1afc87c-2c1f-df10-a0c8-2a267d44122@inria.fr>
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Date: Tue, 20 Feb 2024 13:55:40 +0200
+Message-ID: <CAA8EJppH9ey97yKFUccNLHhMKs3eUS55+rY0tXm_a6KGp9jtug@mail.gmail.com>
+Subject: Re: [PATCH 1/6] drm/bridge: aux-hpd: fix OF node leaks
+To: Julia Lawall <julia.lawall@inria.fr>
+Cc: Johan Hovold <johan@kernel.org>, Markus Elfring <Markus.Elfring@web.de>, 
+	Johan Hovold <johan+linaro@kernel.org>, freedreno@lists.freedesktop.org, 
+	dri-devel@lists.freedesktop.org, linux-phy@lists.infradead.org, 
+	linux-arm-msm@vger.kernel.org, kernel-janitors@vger.kernel.org, 
+	Andrzej Hajda <andrzej.hajda@intel.com>, Bjorn Andersson <andersson@kernel.org>, 
+	Daniel Vetter <daniel@ffwll.ch>, David Airlie <airlied@gmail.com>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, Vinod Koul <vkoul@kernel.org>, 
+	LKML <linux-kernel@vger.kernel.org>, Abhinav Kumar <quic_abhinavk@quicinc.com>, 
+	Jernej Skrabec <jernej.skrabec@gmail.com>, Jonas Karlman <jonas@kwiboo.se>, 
+	Kishon Vijay Abraham I <kishon@kernel.org>, Konrad Dybcio <konrad.dybcio@linaro.org>, 
+	Kuogee Hsieh <quic_khsieh@quicinc.com>, 
+	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Rob Clark <robdclark@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi,
-
-On Mon, Feb 19, 2024 at 9:38=E2=80=AFPM Adam Ford <aford173@gmail.com> wrot=
-e:
-> /usr/share/vulkan/explicit_layer.d/VkLayer_MESA_overlay.json
-> ERROR:            loader_validate_instance_extensions: Instance
-> extension VK_KHR_wayland_surface not supported by available ICDs or
-> enabled layers.
-> Failed to create Vulkan instance.
+On Tue, 20 Feb 2024 at 13:52, Julia Lawall <julia.lawall@inria.fr> wrote:
 >
-> I have tried running in X.org mode instead of Wayland, but I get a
-> different set of errors:
 >
-> [ 11102.013] (II) Loading /usr/lib/xorg/modules/libfbdevhw.so
-> [ 11102.014] (II) Module fbdevhw: vendor=3D"X.Org Foundation"
-> [ 11102.014]    compiled for 1.21.1.7, module version =3D 0.0.2
-> [ 11102.014]    ABI class: X.Org Video Driver, version 25.2
-> [ 11102.015] (II) FBDEV(0): using default device
-> [ 11102.016] (II) modeset(G0): using drv /dev/dri/card1
-> [ 11102.016] (EE)
-> Fatal server error:
-> or all framebuffer devices
-> [ 11102.016] (EE)
-> [ 11102.017] (EE)
-> Please consult the The X.Org Foundation support at http://wiki.x.org  for=
- help.
+>
+> On Tue, 20 Feb 2024, Johan Hovold wrote:
+>
+> > On Mon, Feb 19, 2024 at 06:48:30PM +0100, Markus Elfring wrote:
+> > > > The two device node references taken during allocation need to be
+> > > > dropped when the auxiliary device is freed.
+> > > =E2=80=A6
+> > > > +++ b/drivers/gpu/drm/bridge/aux-hpd-bridge.c
+> > > =E2=80=A6
+> > > > @@ -74,6 +75,8 @@ struct device *drm_dp_hpd_bridge_register(struct =
+device *parent,
+> > > >
+> > > >   ret =3D auxiliary_device_init(adev);
+> > > >   if (ret) {
+> > > > +         of_node_put(adev->dev.platform_data);
+> > > > +         of_node_put(adev->dev.of_node);
+> > > >           ida_free(&drm_aux_hpd_bridge_ida, adev->id);
+> > > >           kfree(adev);
+> > > >           return ERR_PTR(ret);
+> > >
+> > > The last two statements are also used in a previous if branch.
+> > > https://elixir.bootlin.com/linux/v6.8-rc5/source/drivers/gpu/drm/brid=
+ge/aux-hpd-bridge.c#L63
+> > >
+> > > How do you think about to avoid such a bit of duplicate source code
+> > > by adding a label here?
+> >
+> > No, the current code is fine and what you are suggesting is in any case
+> > unrelated to this fix.
+> >
+> > If this function ever grows a third error path like that, I too would
+> > consider it however.
+>
+> I guess these of_node_puts can all go away shortly with cleanup anyway?
+
+I'm not sure about it. Those are long-living variables, so they are
+not a subject of cleanup.h, are they?
 
 
-The wayland and xcb extensions are not really supported at the moment
-in Mesa for powervr, so this kind of use case does not really work
-yet. For a first test, indeed the Sascha Willems triangle with
--DUSE_D2D_WSI=3DON is probably best.
-
-One thing I can add is that most Wayland compositors use OpenGL for
-rendering and will only expose linux dmabuf capability if accelerated
-OpenGL support is found by the compositor. So even if you manage to
-hack some WSI functionality to be exposed by the Vulkan driver, it
-still won't work out of the box with regular compositors since there
-is no zink/OpenGL support yet. There is some experimental Vulkan
-renderer support in some compositors but last time I tried they hit
-other limitations due to the early state of powervr Vulkan in Mesa.
-
-I did some work related to this and managed to run a Vulkan triangle
-with Wayland and a modified compositor so far. So at least we could
-get the client side out of the way soon. But that depends on a Mesa
-development branch from Imagination which is being heavily reworked,
-so we need to wait for that rework to make its way into upstream Mesa
-before making progress on that work being upstreamed.
-
-
-Erico
+--=20
+With best wishes
+Dmitry
