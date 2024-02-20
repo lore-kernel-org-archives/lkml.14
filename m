@@ -1,45 +1,65 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B0632C1B1;
-	Tue, 20 Feb 2024 23:55:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA19F154C0D;
+	Tue, 20 Feb 2024 23:57:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708473332; cv=none; b=dG9qKl+iGUgyjECwHnXgQDlQyqEdh4k8IauWCO/hIKeELMSCx0pBAZHWqDDx5TrKA2fcukCY6wOvIPOwX5EDrRVfqRFwI6JWCgQO0YRDBhUHVGjXa4ZiPezDhj2IRUwtXYqp8lLUh5EjRygPv7nKfHk2sLvpke7Di8q9KHRB064=
+	t=1708473444; cv=none; b=Hxt/knmkq8jmzFI9+rLSPFPTJw+HzyypJK0mxnW1jy46YumwCw1I4gnjp3Gc1yJPMq3HnXSUlV42AyKy5omVOu4x+HKTTFlempNb3lwOzCbS+zxaJj7awiQHqbgmKWlEBYwquq+iUvxy37ROAay7qE0ajXjRBiU35VPoAv4vg9c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708473332; c=relaxed/simple;
-	bh=pxMSv6jAyvYB/3P8lPP0YmoEDtMkNQ0qpAnwOIXPqOQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=aki+HXwh+oxfwiDchQrLgNkcfDUG+JuP4q5rlPrLHWrYwhTrWMf6BSf1m7b3N9BV8Jm3I7Z5oWl7iCzBrAqV6kOUAqAa6rrltL35plxdWmGT8GN1KTqkqlR3jDToXEHO7i7k94WVMPdztVfMTyvT+xWL5PZMVo3kTZ+y9Mt6JaE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OOpTa8eH; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1708473444; c=relaxed/simple;
+	bh=ndy7ThxenZxil/rvXJUUjRiW8Z85XoIMMBuihvffwjI=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=dYpar9oCtFkg9xZ3fDtSjHcec/1jjmguXuiatAG3u6ykbkmjYRXd57KN4W+dpHPHxuebDMGNJJr7E+ZLpppYfD1+5byyIST9Pw+bRJrFy2R5+3uQshzC9iSY+QURs7yEP9xNZJYPLGPrKi8cqvR83XVBy9dqCBToz5TZQljgksk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gVgTiCQN; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OOpTa8eH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6D884C433F1;
-	Tue, 20 Feb 2024 23:55:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708473331;
-	bh=pxMSv6jAyvYB/3P8lPP0YmoEDtMkNQ0qpAnwOIXPqOQ=;
-	h=From:To:Cc:Subject:Date:From;
-	b=OOpTa8eHu85Il3VQM6AN5fQV/X/C2vZnrC182k7nHLPpADaKz/ZL/f/5LiHDdu0dF
-	 iR0ushZ7TbHyg4zhSgZmXECCB9tIVNAf2yBBYHiCRBfJh/Y2FoFu1pTZ/H21qP+K8c
-	 BDR1Ab4KHBhsdDRh/n1zjscLUnEp87Q6HJTyQhJvVssI7+yhz+rfcWre1brJzi2S2K
-	 j1Ms4SLvhEZx1GWELZbPunnkEND6OkBOkGrFNfu3bbcF6O9R9d9ubbr8r2aJ0gutGE
-	 iyBlTBLBqOiBVrHvI9GTRFGuYVD8nd9Wr7tzjJLt4JKz03aujz1DATVTy/jqTdFpqv
-	 STQgIHG49uAEw==
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: linux-pci@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	stable@vger.kernel.org,
-	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
-	Matthew W Carlis <mattc@purestorage.com>,
-	Keith Busch <kbusch@kernel.org>,
-	Lukas Wunner <lukas@wunner.de>,
-	Mika Westerberg <mika.westerberg@linux.intel.com>,
-	Jesse Brandeburg <jesse.brandeburg@intel.com>
-Subject: [PATCH] PCI/DPC: Request DPC only if also requesting AER
-Date: Tue, 20 Feb 2024 17:55:20 -0600
-Message-Id: <20240220235520.1514548-1-helgaas@kernel.org>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gVgTiCQN"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1708473443; x=1740009443;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=ndy7ThxenZxil/rvXJUUjRiW8Z85XoIMMBuihvffwjI=;
+  b=gVgTiCQN7SrRXeD9PQN75+b5mH290SDP73GUFur0S42kV6CPGS1MtLKq
+   995MGHrxG7GiXcrdEXGycbl4DwdsCODAkVST1ll1RQXCL7ePJvu82CYIY
+   ZTDsBtpnH/mni7d2yDjocQP2iQbO7AMoKDP5yaQFywGHmIlZDqvjec6YN
+   tF+0oxRFcWD/E7DjQt7DctmdLaXobuG3+lzNKRLk0boBqka5BPVchMjfs
+   eirlYTH0ogmZaQ1IOZIfcgueH3qsOFgtGgViGTpo7G32iYYgoQKwKsL5R
+   tzx6elb9reSkidTKeJgRFrtg9yEPhmuQuOMD+iHbS8VhBdI9/+wJJvUdm
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10990"; a="20041763"
+X-IronPort-AV: E=Sophos;i="6.06,174,1705392000"; 
+   d="scan'208";a="20041763"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Feb 2024 15:57:20 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.06,174,1705392000"; 
+   d="scan'208";a="5092387"
+Received: from vcostago-mobl3.jf.intel.com ([10.24.14.83])
+  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Feb 2024 15:57:19 -0800
+From: Vinicius Costa Gomes <vinicius.gomes@intel.com>
+To: intel-wired-lan@lists.osuosl.org
+Cc: sasha.neftin@intel.com,
+	richardcochran@gmail.com,
+	kurt@linutronix.de,
+	anthony.l.nguyen@intel.com,
+	jesse.brandeburg@intel.com,
+	netdev@vger.kernel.org,
+	Vinicius Costa Gomes <vinicius.gomes@intel.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+	linux-kernel@vger.kernel.org
+Subject: [iwl-net v2 1/2] igc: Fix missing time sync events
+Date: Tue, 20 Feb 2024 15:57:10 -0800
+Message-ID: <20240220235712.241552-2-vinicius.gomes@intel.com>
+X-Mailer: git-send-email 2.43.2
+In-Reply-To: <20240220235712.241552-1-vinicius.gomes@intel.com>
+References: <20240220235712.241552-1-vinicius.gomes@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -48,74 +68,99 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Bjorn Helgaas <bhelgaas@google.com>
+Fix "double" clearing of interrupts, which can cause external events
+or timestamps to be missed.
 
-When booting with "pci=noaer", we don't request control of AER, but we
-previously *did* request control of DPC, as in the dmesg log attached at
-the bugzilla below:
+The IGC_TSIRC Time Sync Interrupt Cause register can be cleared in two
+ways, by either reading it or by writing '1' into the specific cause
+bit. This is documented in section 8.16.1.
 
-  Command line: ... pci=noaer
-  acpi PNP0A08:00: _OSC: OS supports [ExtendedConfig ASPM ClockPM Segments MSI EDR HPX-Type3]
-  acpi PNP0A08:00: _OSC: OS now controls [PCIeHotplug SHPCHotplug PME PCIeCapability LTR DPC]
+The following flow was used:
+ 1. read IGC_TSIRC into 'tsicr';
+ 2. handle the interrupts present in 'tsirc' and mark them in 'ack';
+ 3. write 'ack' into IGC_TSICR;
 
-That's illegal per PCI Firmware Spec, r3.3, sec 4.5.1, table 4-5, which
-says:
+As both (1) and (3) will clear the interrupt cause, if the same
+interrupt happens again between (1) and (3) it will be ignored,
+causing events to be missed.
 
-  If the operating system sets this bit [OSC_PCI_EXPRESS_DPC_CONTROL], it
-  must also set bit 7 of the Support field (indicating support for Error
-  Disconnect Recover notifications) and bits 3 and 4 of the Control field
-  (requesting control of PCI Express Advanced Error Reporting and the PCI
-  Express Capability Structure).
+Remove the extra clear in (3).
 
-Request DPC control only if we have also requested AER control.
-
-Fixes: ac1c8e35a326 ("PCI/DPC: Add Error Disconnect Recover (EDR) support")
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=218491#c12
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Cc: <stable@vger.kernel.org>	# v5.7+
-Cc: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-Cc: Matthew W Carlis <mattc@purestorage.com>
-Cc: Keith Busch <kbusch@kernel.org>
-Cc: Lukas Wunner <lukas@wunner.de>
-Cc: Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc: Jesse Brandeburg <jesse.brandeburg@intel.com>
+Fixes: 2c344ae24501 ("igc: Add support for TX timestamping")
+Reviewed-by: Kurt Kanzenbach <kurt@linutronix.de>
+Tested-by: Kurt Kanzenbach <kurt@linutronix.de> # Intel i225
+Signed-off-by: Vinicius Costa Gomes <vinicius.gomes@intel.com>
 ---
- drivers/acpi/pci_root.c | 20 +++++++++++---------
- 1 file changed, 11 insertions(+), 9 deletions(-)
+ drivers/net/ethernet/intel/igc/igc_main.c | 12 +-----------
+ 1 file changed, 1 insertion(+), 11 deletions(-)
 
-diff --git a/drivers/acpi/pci_root.c b/drivers/acpi/pci_root.c
-index 58b89b8d950e..1c16965427b3 100644
---- a/drivers/acpi/pci_root.c
-+++ b/drivers/acpi/pci_root.c
-@@ -518,17 +518,19 @@ static u32 calculate_control(void)
- 	if (IS_ENABLED(CONFIG_HOTPLUG_PCI_SHPC))
- 		control |= OSC_PCI_SHPC_NATIVE_HP_CONTROL;
+diff --git a/drivers/net/ethernet/intel/igc/igc_main.c b/drivers/net/ethernet/intel/igc/igc_main.c
+index ba8d3fe186ae..39b6a8d64de3 100644
+--- a/drivers/net/ethernet/intel/igc/igc_main.c
++++ b/drivers/net/ethernet/intel/igc/igc_main.c
+@@ -5302,25 +5302,22 @@ igc_features_check(struct sk_buff *skb, struct net_device *dev,
  
--	if (pci_aer_available())
-+	if (pci_aer_available()) {
- 		control |= OSC_PCI_EXPRESS_AER_CONTROL;
+ static void igc_tsync_interrupt(struct igc_adapter *adapter)
+ {
+-	u32 ack, tsauxc, sec, nsec, tsicr;
+ 	struct igc_hw *hw = &adapter->hw;
++	u32 tsauxc, sec, nsec, tsicr;
+ 	struct ptp_clock_event event;
+ 	struct timespec64 ts;
  
--	/*
--	 * Per the Downstream Port Containment Related Enhancements ECN to
--	 * the PCI Firmware Spec, r3.2, sec 4.5.1, table 4-5,
--	 * OSC_PCI_EXPRESS_DPC_CONTROL indicates the OS supports both DPC
--	 * and EDR.
--	 */
--	if (IS_ENABLED(CONFIG_PCIE_DPC) && IS_ENABLED(CONFIG_PCIE_EDR))
--		control |= OSC_PCI_EXPRESS_DPC_CONTROL;
-+		/*
-+		 * Per PCI Firmware Spec, r3.3, sec 4.5.1, table 4-5, the
-+		 * OS can request DPC control only if it has advertised
-+		 * OSC_PCI_EDR_SUPPORT and requested both
-+		 * OSC_PCI_EXPRESS_CAPABILITY_CONTROL and
-+		 * OSC_PCI_EXPRESS_AER_CONTROL.
-+		 */
-+		if (IS_ENABLED(CONFIG_PCIE_DPC) && IS_ENABLED(CONFIG_PCIE_EDR))
-+			control |= OSC_PCI_EXPRESS_DPC_CONTROL;
-+	}
+ 	tsicr = rd32(IGC_TSICR);
+-	ack = 0;
  
- 	return control;
+ 	if (tsicr & IGC_TSICR_SYS_WRAP) {
+ 		event.type = PTP_CLOCK_PPS;
+ 		if (adapter->ptp_caps.pps)
+ 			ptp_clock_event(adapter->ptp_clock, &event);
+-		ack |= IGC_TSICR_SYS_WRAP;
+ 	}
+ 
+ 	if (tsicr & IGC_TSICR_TXTS) {
+ 		/* retrieve hardware timestamp */
+ 		igc_ptp_tx_tstamp_event(adapter);
+-		ack |= IGC_TSICR_TXTS;
+ 	}
+ 
+ 	if (tsicr & IGC_TSICR_TT0) {
+@@ -5334,7 +5331,6 @@ static void igc_tsync_interrupt(struct igc_adapter *adapter)
+ 		wr32(IGC_TSAUXC, tsauxc);
+ 		adapter->perout[0].start = ts;
+ 		spin_unlock(&adapter->tmreg_lock);
+-		ack |= IGC_TSICR_TT0;
+ 	}
+ 
+ 	if (tsicr & IGC_TSICR_TT1) {
+@@ -5348,7 +5344,6 @@ static void igc_tsync_interrupt(struct igc_adapter *adapter)
+ 		wr32(IGC_TSAUXC, tsauxc);
+ 		adapter->perout[1].start = ts;
+ 		spin_unlock(&adapter->tmreg_lock);
+-		ack |= IGC_TSICR_TT1;
+ 	}
+ 
+ 	if (tsicr & IGC_TSICR_AUTT0) {
+@@ -5358,7 +5353,6 @@ static void igc_tsync_interrupt(struct igc_adapter *adapter)
+ 		event.index = 0;
+ 		event.timestamp = sec * NSEC_PER_SEC + nsec;
+ 		ptp_clock_event(adapter->ptp_clock, &event);
+-		ack |= IGC_TSICR_AUTT0;
+ 	}
+ 
+ 	if (tsicr & IGC_TSICR_AUTT1) {
+@@ -5368,11 +5362,7 @@ static void igc_tsync_interrupt(struct igc_adapter *adapter)
+ 		event.index = 1;
+ 		event.timestamp = sec * NSEC_PER_SEC + nsec;
+ 		ptp_clock_event(adapter->ptp_clock, &event);
+-		ack |= IGC_TSICR_AUTT1;
+ 	}
+-
+-	/* acknowledge the interrupts */
+-	wr32(IGC_TSICR, ack);
  }
+ 
+ /**
 -- 
-2.34.1
+2.43.2
 
