@@ -1,97 +1,97 @@
-Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90F965C5EC
-	for <linux-kernel@vger.kernel.org>; Tue, 20 Feb 2024 08:12:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 936BD5C5EF;
+	Tue, 20 Feb 2024 08:14:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708416739; cv=none; b=YahD4WEHXOp8pvZUTb6wofmwyWGGD27JCiwlM3iT4OYhpNxi9bLi5s3zbeATWGsYWLwjqKkhRnrgUPObxM1AUM/E+MJCYB7mxEvoSUuqTiIZ+teLC8HgnZUzQs5EE1IB1wFccuvCLlp7mX71Q4mtA7dMcFDnrV+q0SUPCH/Tz3M=
+	t=1708416841; cv=none; b=EPAY9VqBMMDxgmCB4UDWe+XeIGtDsdtBSV3LRNelDvgn3qsZE4FZmskpCCL816KXtgaCkrQ0tLhz4FFVmvp6o6X3AWya3CEyHU0NcRbjAmSSI0LWYRGh2nE0Zgs8pegLNLIxneyK/M1oD2XWynv4e1BEdJbn6NxDIHypXYYKL5Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708416739; c=relaxed/simple;
-	bh=/rabM4Ojv3qXPABWhPOzcXvWzcE1bpcBe1707Z9xKgg=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=VdD7HBzFQXiw1nQeYsUYd5hboBG7Q/tZTeCn/8oaz+Cm+FngrS/Qo3sJPcKoaE2uULGdeAXQ+UuDgoGY2z9R6/ddgjL7hkkrdYtn7JtLsWOtsAza6QsaxRIOUkisnclnOgQjntvKTwiNujptKKJrkhKMOid4U5dmLVMCzFRF/Vs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--raychi.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=g+nggSxm; arc=none smtp.client-ip=209.85.219.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--raychi.bounces.google.com
+	s=arc-20240116; t=1708416841; c=relaxed/simple;
+	bh=KMaiaCUm3bZGBK7I5/F1KQ3UkBMCQjLFXyGs6MrrrZU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mJlQB1BKx7r/koL3EYIcHCVLDmIPD8LUal7REtOnsG2zKEKfbmtm7JQIl7sNODMelrVcz3P0p1Vs07GIkfYkcIQpq8uh77D669mcVfeRGZCjharORM6qhFjubTxNv6HHKKQ+Bzq+POJMmfiygCu0Fp60/8IbC8mFVwN0iWTLFe0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hWAqPqIF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="g+nggSxm"
-Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-dc743cc50a6so6911642276.2
-        for <linux-kernel@vger.kernel.org>; Tue, 20 Feb 2024 00:12:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1708416736; x=1709021536; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=7NyTQc14Zf/h2SqeLHUekdRb34OTt1i2UvuEmj+OuFE=;
-        b=g+nggSxmQkbCXvjQQMjfd+GJrhqjetnwR3vH3J7tBDV3Mki9t9r4v1QDZnCPz5OK88
-         kG6dQSYSd73EVxG6bae7vMB7ZAP+fbZanubSs/NaF8qvgLPygjoSgLLS+ZUhO+TC3zy6
-         lvYQcIoD1oYrhwiyo6s2bNb9OQ8/J7BgLzwxBN/iFSoax/63sS82m6waRJSSYe26oOp0
-         c6DlUqQYAQEllT78ObvQYJg7nN5+WCor/I4P62AVuztaruIblbXmezvm6tTFkJlwmnzL
-         DKyZW8x2J1vf+gOCdsx8h7krEexg/qz7i0R7bc9C29X9FUOcw8j4Qzg6iR+kmJ0iYi3x
-         JpDg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708416736; x=1709021536;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=7NyTQc14Zf/h2SqeLHUekdRb34OTt1i2UvuEmj+OuFE=;
-        b=r8uyVOXMfoj1xkbV/1wT9e2IllauyDcXDRlDeotzN7jNqRUpYvtlJxrl6KQDFfk9/J
-         bazAUnvk3gLxYBhUFpPpnIQMuLgNxfkMQULLX6NRd9NH6w8LhUKpIHltxtPd81DBzO4d
-         XZ55GXD1gE0qDEl2Wo3XwUESL6dXmWhaPxiHaK3I2yCWLV35wR0WIO2wqOS6hI45BEHt
-         vC5w4sT7wK6ffjdIXTYedpP0m0jMmYg4IQOMIgANDM7qCmKAsSK2U+LhCgkUV2Bda++b
-         StPA7JFk/EKiLFtd8pLWY/QnKActsMeJDzHZA746+WkKPNM8cOAAOZska3YCUqine1hX
-         Q/BA==
-X-Forwarded-Encrypted: i=1; AJvYcCWxbrrK3b0RU/DJ8RW7sFVpnXrToKZKpv6dPeUYjhfNAFIBE7X1xk+zncxvsZUpAyvRp8FgEHfZeWH0ZD/R+0ICq5yw1X8w/os6dQjy
-X-Gm-Message-State: AOJu0YzaWyb+tnyysgIIUTgGIgI2kqM/TB7ZO+lNqevsi79qpTHepICZ
-	ubN3JFb5To68KojppsRawlB/EZidzAqJKt4ZSLdDvis3chXgqKacURC/+/qK6rUA3I6N8+ukTQm
-	ljQ==
-X-Google-Smtp-Source: AGHT+IHNQS6LSHevRMTxDokV0cAYaI5EkrQn4V1Y4tZL0I+ejqlFuzOyBy3AA2eQbWjAGfgyiPZewI6v+oY=
-X-Received: from raychi-p620lin01.ntc.corp.google.com ([2401:fa00:fc:202:d899:e5b8:ba5f:3c9])
- (user=raychi job=sendgmr) by 2002:a25:abec:0:b0:dcc:94b7:a7a3 with SMTP id
- v99-20020a25abec000000b00dcc94b7a7a3mr495450ybi.12.1708416736722; Tue, 20 Feb
- 2024 00:12:16 -0800 (PST)
-Date: Tue, 20 Feb 2024 16:12:04 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hWAqPqIF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 15A99C433F1;
+	Tue, 20 Feb 2024 08:14:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1708416841;
+	bh=KMaiaCUm3bZGBK7I5/F1KQ3UkBMCQjLFXyGs6MrrrZU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=hWAqPqIFYAZcp/X5cbUN4fXO8zQJX/f6D4UJtzxFT6y6m5gyG3oKuoyLyKCf6r6Np
+	 bHxHY+ewlI5Loa2rf5avoXxV7CrD6+ALSzIiHSWDVhHYjfzr8O7AlZOYCQ+5MF7fqv
+	 5avMiRaq3S3N4IBGWssZdSlZbpiZED8r8rwXL3dA/xuPMaO3XXoym7jDw5qlYD75+r
+	 qTCuA0UYbEVEQ/dDDyvoTExr1WLTNadhOWBz6MI+2wm5we1NzvkYcklutzMXfXStn5
+	 qRtBEHp4ZmitTxwcP/I3jc0w5avu3ifpbqNlHzrJDtbU055PBcjgSF0W1JJZxS9Vnc
+	 7ap2cwluTBrzw==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan@kernel.org>)
+	id 1rcLGJ-000000002QZ-0PDo;
+	Tue, 20 Feb 2024 09:13:59 +0100
+Date: Tue, 20 Feb 2024 09:13:59 +0100
+From: Johan Hovold <johan@kernel.org>
+To: Rob Clark <robdclark@gmail.com>
+Cc: dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org,
+	linux-arm-msm@vger.kernel.org, Rob Clark <robdclark@chromium.org>,
+	Robin Murphy <robin.murphy@arm.com>,
+	Abhinav Kumar <quic_abhinavk@quicinc.com>,
+	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+	Sean Paul <sean@poorly.run>,
+	Marijn Suijten <marijn.suijten@somainline.org>,
+	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Jordan Crouse <jordan@cosmicpenguin.net>,
+	open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] drm/msm: Wire up tlb ops
+Message-ID: <ZdRfR3xqYIYNISbL@hovoldconsulting.com>
+References: <20240213172340.228314-1-robdclark@gmail.com>
+ <Zc2-qVd0gtErdbKe@hovoldconsulting.com>
+ <CAF6AEGsPojmqDgMZWrEAm_CoWGZ05euc0jzD5+9aX0cXQha_ew@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.44.0.rc0.258.g7320e95886-goog
-Message-ID: <20240220081205.135063-1-raychi@google.com>
-Subject: [PATCH] usb: dwc3: gadget: remove warning during kernel boot
-From: Ray Chi <raychi@google.com>
-To: Thinh.Nguyen@synopsys.com, gregkh@linuxfoundation.org, 
-	quic_uaggarwa@quicinc.com
-Cc: albertccwang@google.com, linux-usb@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Ray Chi <raychi@google.com>, stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAF6AEGsPojmqDgMZWrEAm_CoWGZ05euc0jzD5+9aX0cXQha_ew@mail.gmail.com>
 
-The dwc3->gadget_driver is not initialized during the dwc3 probe
-process. This leads to a warning when the runtime power management (PM)
-attempts to suspend the gadget using dwc3_gadget_suspend().
+On Thu, Feb 15, 2024 at 07:28:53AM -0800, Rob Clark wrote:
+> On Wed, Feb 14, 2024 at 11:34 PM Johan Hovold <johan@kernel.org> wrote:
+> >
+> > On Tue, Feb 13, 2024 at 09:23:40AM -0800, Rob Clark wrote:
+> > > From: Rob Clark <robdclark@chromium.org>
+> > >
+> > > The brute force iommu_flush_iotlb_all() was good enough for unmap, but
+> > > in some cases a map operation could require removing a table pte entry
+> > > to replace with a block entry.  This also requires tlb invalidation.
+> > > Missing this was resulting an obscure iova fault on what should be a
+> > > valid buffer address.
+> > >
+> > > Thanks to Robin Murphy for helping me understand the cause of the fault.
+> > >
+> > > Cc: Robin Murphy <robin.murphy@arm.com>
+> > > Fixes: b145c6e65eb0 ("drm/msm: Add support to create a local pagetable")
+> >
+> > Sounds like you're missing a
+> >
+> > Cc: stable@vger.kernel.org
+> >
+> > here? Or is there some reason not to backport this fix (to 5.9 and later
+> > kernels)?
+> 
+> No reason, I just expected the Fixes tag was sufficient
 
-This patch adds a check to prevent the warning.
+No, you should still mark patches intended for stable with an explicit
+CC-stable tag (as per the documentation).
 
-Cc: stable@vger.kernel.org
-Fixes: 61a348857e86 ("usb: dwc3: gadget: Fix NULL pointer dereference in dwc3_gadget_suspend")
-Signed-off-by: Ray Chi <raychi@google.com>
----
- drivers/usb/dwc3/gadget.c | 3 +++
- 1 file changed, 3 insertions(+)
+The fact that Sasha and his AI tries to catch fixes which the author and
+maintainer failed to tag as a fallback should not be relied upon. It
+also makes it harder for the stable team and others to determine what
+the intention with a fix was.
 
-diff --git a/drivers/usb/dwc3/gadget.c b/drivers/usb/dwc3/gadget.c
-index 28f49400f3e8..de987cffe1ec 100644
---- a/drivers/usb/dwc3/gadget.c
-+++ b/drivers/usb/dwc3/gadget.c
-@@ -4708,6 +4708,9 @@ int dwc3_gadget_suspend(struct dwc3 *dwc)
- 	unsigned long flags;
- 	int ret;
- 
-+	if (!dwc->gadget_driver)
-+		return 0;
-+
- 	ret = dwc3_gadget_soft_disconnect(dwc);
- 	if (ret)
- 		goto err;
--- 
-2.44.0.rc0.258.g7320e95886-goog
-
+Johan
