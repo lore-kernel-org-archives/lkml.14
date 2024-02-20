@@ -1,135 +1,94 @@
-Received: from mail-vs1-f51.google.com (mail-vs1-f51.google.com [209.85.217.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52C1C7764E
-	for <linux-kernel@vger.kernel.org>; Tue, 20 Feb 2024 17:53:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D83E676C89;
+	Tue, 20 Feb 2024 17:54:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708451641; cv=none; b=D8MYufxsxIeEP217TBbg9378190jE4M7aT+C7oIYTYYChDETRLF9yxxik5STlqBIYhDAGr96kuVMNC8J/LDhQWcy/oT/gWocLnR1UTw3zTuH6PLd5cfL/VB/RN64hGs3GlZtglrNPqrHO6JxTQGMGc3wOesur0D1c4jU3Gf7iCY=
+	t=1708451676; cv=none; b=pBi+5CoQUJSiugbQXgftwB4XbHZ5qWaz6B4fsRDg6hEwXjZpFMrLMIeBTFl2QkRSRggTpTYcnLzi5VWKcG9/aJah/D0DsIaXIGMnLwjfjpDZdKWTSPpHDTx4J5cQ1i+QkiqjzaBO/fyWz/4O07c7vbZ3hJNCKR1jlDy878a0Vcc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708451641; c=relaxed/simple;
-	bh=d38oaY+K+spNFRP/qOIWiTuNObZ5xOckG4uBJUP/Mnw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=pL10BaAffLdRyZDrBqV0uZYVxWx+91Puw3rAhRPFE+pM+BkKHDzhiS3sAWkHyn+AQTV9L5SrsABjSgaGOknGF9cx6AMaqkXSer7c6XhC+lkSNbCh7HybuMdH2sUYWCpyp6xkghV1CDj0lNWc3wExQD+mfR7lO9mlLl+WNvPnkwE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=dqDmFqmf; arc=none smtp.client-ip=209.85.217.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	s=arc-20240116; t=1708451676; c=relaxed/simple;
+	bh=SU2u/s6J2tyjUDgWrjhHiv9l7XN4N9C8xBDwaAaElWM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UiRwstmUVkMWlZR/ZMah+s5IkpRVLzcG0JG5C1iqXfgmVmLOYHZWzhyNxqLw86d1DBuBX4bF9vlAtoTlF0SSxbqTL0/ioVVL6ANeOFWAbILmGFcFoBl/sI/NYnU2oRK6Tnjv5B7EfHhtvhDt9xdIyNiwjT5Rk2L5MYiXxisjhQw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TLw+J6iR; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="dqDmFqmf"
-Received: by mail-vs1-f51.google.com with SMTP id ada2fe7eead31-4706beefb70so685274137.0
-        for <linux-kernel@vger.kernel.org>; Tue, 20 Feb 2024 09:53:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1708451638; x=1709056438; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=4DriMqP4qiEsOx9DUXcwZZJ3R+6NkNBQrlsXuZW2fRw=;
-        b=dqDmFqmf/boXSO3XLftzEpiYyOHCamaX0F53wcY4GQpiuQW/2vzcNdtROqhIDlmaNi
-         41o8Nq1nyOrvoLTIL/A3cIMQYXmTq2Cjxsvyk3NK7hnVBlMFTjhSAGVAurwdgztdwqeW
-         jVt2HdNK35jY7M80Pawdx8zCXwTpkxi3BoUuVDYfpb+UCAn6zAOXbk1Rfe/IksHmfhmQ
-         oXt/2Ch2k7erVEf5RIDIoaIW8yY1cCjQYXfObTdvxtwV8chIeWUY5YmCQak9EDtS7KxH
-         haS60yiEvpExLTaT/E7j/g0EV7s1tdqQxtTdRgSV6FL8RIUCHzQTPmYA/1Xdy57iHOop
-         P2gA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708451638; x=1709056438;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=4DriMqP4qiEsOx9DUXcwZZJ3R+6NkNBQrlsXuZW2fRw=;
-        b=QcuclFg1EyG76UsEy1l4OJcj+4nm/hXKL3yubpJkJJkE13DgHDEiLXx82aJGi8X6XN
-         vkmMc2gnOgXh0gw/xA+aYmygL48WPsdW1N6V8F17gH347vIZR7m05IrVhAVjGB1x0zQo
-         70la4yq1dPMYFLVeDSLH97bJhsELCX9J6laJsKbsyd46CLQtVcuZ9zGHEIwiokxKw3/s
-         Fq4mq/yQJg5Hyo84K2e67jpehrcTwJlL2M6yScujeFIZzGAdI9vb8txeQHPuRcFB0H8j
-         kVxtMN+5+ijtyzCmnOFwGa5CwrYcvUvGgFzcVmbm3avt6peiawyWs+ijaHHmPvfQiEo0
-         ZlGg==
-X-Forwarded-Encrypted: i=1; AJvYcCViUYLySeOd9wbaW/lryT4GtT5bCn+Nsi4ECpdGsq06ppr943tl6R9gDpVh0N14j18ieb/IwZmXyAkXV47YDcjXmp4qp3MQ9TINVhkY
-X-Gm-Message-State: AOJu0YyjSXs3YfWgCzEa8cKxogYxz9GV1amuRLJ1VwaMvRJxdMbph4fn
-	85wktB65nGbHaU2SEYRqMx5T5xlfa+iyjQwqb8LUAivW9FddRO+VJ0TbleQb6BMEfqgkFpP+iaR
-	D3m6QFirVXXvPb+8d8xvEo5EYPCxdKvmfif7zWg==
-X-Google-Smtp-Source: AGHT+IEAXD4s0vfCLOf3dGv178kSWMvcITercQToZ5Xpgu/ylirbyvBE31sO5fq4v2ZZE2g252F6KNSh/laLzVqmd+s=
-X-Received: by 2002:a05:6102:2436:b0:470:51da:3adc with SMTP id
- l22-20020a056102243600b0047051da3adcmr4445513vsi.10.1708451638124; Tue, 20
- Feb 2024 09:53:58 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TLw+J6iR"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1708451675; x=1739987675;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=SU2u/s6J2tyjUDgWrjhHiv9l7XN4N9C8xBDwaAaElWM=;
+  b=TLw+J6iRFoYm1w+KZWA+5DXmGtxbs+Nt1L6DubldD/CRDx+dWA9GfFYU
+   fXKWlIrR9Eq8iBsB1hloGQ6jqG03GH6Tr+NnJNlzsvF3izSzKm6mHy2q3
+   ZNFjVKD+DyQxCNHvETj8oQF2g+lLAEPQFK3Y5ROReJkrT2l+ydoJlOC5+
+   f7SYCmG4yQKHVtNoRqBpHZHihOkk5Iq2tr+2Lr9o/nD0UZ/Xh9ROkCFal
+   3yAVEaNTa/nOgGrlmZiC1aSVDwhERcTLhnrRefg4qgfc5cUGaQj5jCsG0
+   O86x6BEis9FlT/PcgFtIWYiCU3fIVlmPE/ZboE1khrDCxssglhRmJchaa
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10990"; a="3036198"
+X-IronPort-AV: E=Sophos;i="6.06,174,1705392000"; 
+   d="scan'208";a="3036198"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Feb 2024 09:54:34 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10990"; a="913117010"
+X-IronPort-AV: E=Sophos;i="6.06,174,1705392000"; 
+   d="scan'208";a="913117010"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Feb 2024 09:54:32 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.97)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1rcUK5-000000069Jq-2QFA;
+	Tue, 20 Feb 2024 19:54:29 +0200
+Date: Tue, 20 Feb 2024 19:54:29 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Vasileios Amoiridis <vassilisamir@gmail.com>
+Cc: jic23@kernel.org, lars@metafoo.de, ang.iglesiasg@gmail.com,
+	linus.walleij@linaro.org, semen.protsenko@linaro.org,
+	linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] drivers: iio: pressure: Fixes BMP38x and BMP390 SPI
+ support
+Message-ID: <ZdTnVUlsME7gtvrf@smile.fi.intel.com>
+References: <20240219191359.18367-1-vassilisamir@gmail.com>
+ <ZdSyljwOyxIY7Gvb@smile.fi.intel.com>
+ <20240220174624.GA27576@vamoiridPC>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240216203215.40870-1-brgl@bgdev.pl> <20240216203215.40870-10-brgl@bgdev.pl>
- <48164f18-34d0-4053-a416-2bb63aaae74b@sirena.org.uk> <CAMRc=Md7ymMTmF1OkydewF5C32jDNy0V+su7pcJPHKto6VLjLg@mail.gmail.com>
- <8e392aed-b5f7-486b-b5c0-5568e13796ec@sirena.org.uk> <CAMRc=MeAXEyV47nDO_WPQqEQxSYFWTrwVPAtLghkfONj56FGVA@mail.gmail.com>
- <CAA8EJppzkuH=YTAHuJ3Og2RLHB93PSas004UDvpqepYbGepVPg@mail.gmail.com>
-In-Reply-To: <CAA8EJppzkuH=YTAHuJ3Og2RLHB93PSas004UDvpqepYbGepVPg@mail.gmail.com>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Tue, 20 Feb 2024 18:53:46 +0100
-Message-ID: <CAMRc=MfXkG1bqGrtFWpoZo3fTY49TvU3sHOnX-zc2kjUiRfp3w@mail.gmail.com>
-Subject: Re: [PATCH v5 09/18] arm64: dts: qcom: qrb5165-rb5: model the PMU of
- the QCA6391
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc: Mark Brown <broonie@kernel.org>, Marcel Holtmann <marcel@holtmann.org>, 
-	Luiz Augusto von Dentz <luiz.dentz@gmail.com>, "David S . Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Kalle Valo <kvalo@kernel.org>, 
-	Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konrad.dybcio@linaro.org>, 
-	Liam Girdwood <lgirdwood@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, 
-	Will Deacon <will@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Saravana Kannan <saravanak@google.com>, Geert Uytterhoeven <geert+renesas@glider.be>, 
-	Arnd Bergmann <arnd@arndb.de>, Neil Armstrong <neil.armstrong@linaro.org>, 
-	Marek Szyprowski <m.szyprowski@samsung.com>, Alex Elder <elder@linaro.org>, 
-	Srini Kandagatla <srinivas.kandagatla@linaro.org>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Abel Vesa <abel.vesa@linaro.org>, 
-	Manivannan Sadhasivam <mani@kernel.org>, Lukas Wunner <lukas@wunner.de>, linux-bluetooth@vger.kernel.org, 
-	netdev@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org, 
-	linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-pci@vger.kernel.org, linux-pm@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240220174624.GA27576@vamoiridPC>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Tue, Feb 20, 2024 at 5:30=E2=80=AFPM Dmitry Baryshkov
-<dmitry.baryshkov@linaro.org> wrote:
->
-> On Tue, 20 Feb 2024 at 13:16, Bartosz Golaszewski <brgl@bgdev.pl> wrote:
-> >
-> > On Mon, Feb 19, 2024 at 8:59=E2=80=AFPM Mark Brown <broonie@kernel.org>=
- wrote:
-> > >
-> > > On Mon, Feb 19, 2024 at 07:48:20PM +0100, Bartosz Golaszewski wrote:
-> > > > On Mon, Feb 19, 2024 at 7:03=E2=80=AFPM Mark Brown <broonie@kernel.=
-org> wrote:
-> > > > > On Fri, Feb 16, 2024 at 09:32:06PM +0100, Bartosz Golaszewski wro=
-te:
-> > >
-> > > > > > +                     vreg_pmu_aon_0p59: ldo1 {
-> > > > > > +                             regulator-name =3D "vreg_pmu_aon_=
-0p59";
-> > > > > > +                             regulator-min-microvolt =3D <5400=
-00>;
-> > > > > > +                             regulator-max-microvolt =3D <8400=
-00>;
-> > > > > > +                     };
-> > >
-> > > > > That's a *very* wide voltage range for a supply that's got a name=
- ending
-> >
-> > Because it's an error, it should have been 640000. Thanks for spotting =
-it.
->
-> According to the datasheet, VDD08_PMU_AON_O goes up to 0.85V then down
-> to 0.59V, which is the working voltage.
->
+On Tue, Feb 20, 2024 at 06:46:24PM +0100, Vasileios Amoiridis wrote:
+> On Tue, Feb 20, 2024 at 04:09:26PM +0200, Andy Shevchenko wrote:
+> > On Mon, Feb 19, 2024 at 08:13:59PM +0100, Vasileios Amoiridis wrote:
 
-Hmm indeed this is what figure 3.4 says but table 3-2 says the maximum is 0=
-.64V.
+...
 
-> VDD08_PMU_RFA_CMN is normally at 0.8V, but goes to 0.4V during sleep.
->
+> > >  #include <linux/spi/spi.h>
+> > >  #include <linux/err.h>
+> > >  #include <linux/regmap.h>
+> > > +#include <linux/bits.h>
+> > 
+> > I see that it's unsorted, but try to squeeze a new header to the better place
+> > where more will be kept sorted. With given context, it should go before all
+> > others, but it might be even better location.
+> 
+> So you would suggest a re-ordering of the headers with a reverse
+> christmas-tree?
 
-Again figure 3.4 and table 3-2 disagree unless I'm missing something.
+No. Alphabetically.
 
-Bart
+-- 
+With Best Regards,
+Andy Shevchenko
 
-[snip]
+
