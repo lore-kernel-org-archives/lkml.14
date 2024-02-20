@@ -1,79 +1,50 @@
-Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB93B77641
-	for <linux-kernel@vger.kernel.org>; Tue, 20 Feb 2024 17:07:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2F05626C6
+	for <linux-kernel@vger.kernel.org>; Tue, 20 Feb 2024 17:09:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708448865; cv=none; b=FGVUOSeZtbDKcRnMUUWdeb5dNvHH/wZzVol+1vbIQg9NcgXZLhCodRyKdIUv8CKNcXTaBFD4v+UI19MewLwLddKeJk0hkhKp4wOnil+DbcOLEodyETxd2ls1vcoJoIYTLPaJhBDrfTH21gkPCaDvyl6LBtDZdHFeI9xZD12+cq4=
+	t=1708448993; cv=none; b=Vowle+0o+q2mPzd5jXmoYGnhYwpgXe9bPoTh4ZSCfBN23GlzU3eyB2LgkOPINJ8CCRnE/CGTJqkwFg/DgKbkJQmGcYBMBak4cyU2u41W7VqrqgeAI0Rbu0sSRMuewjxtO4jay8FIvKiRRl39IzU3YxFlzO7cELz+6XlChohRlCI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708448865; c=relaxed/simple;
-	bh=5/bi1QgRjF6knCi0qXssJ/goXm/3I+MJaDD3TiEGDHI=;
+	s=arc-20240116; t=1708448993; c=relaxed/simple;
+	bh=IuYUnTcNI7A33LoTZwZRSGnYwOg8OpnlQpKw+Sz4gLg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=E1GP23OpCGbt4M0nLPKwQp6AL6CBu6PsRFdmUntVilF/k+dfEq9+vvw32Y4gNiGffEmltMPr4HnLnrRC3t/IjimX0S42Yo2L/+jaOzgB5za/7ezgJvVm2CekvLFYbktI1CgoM5CWkxqlX88giVqYFQdHjACHNHWcZRo/2Oup/xg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=I6+n8kWE; arc=none smtp.client-ip=209.85.167.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=iuYVodS8iQJSzhOZs0jeS9wxwbDQiINY0363xJVv4L5IIH3t/ZkXF0/Q+9jh5HatepEcXD16eqtYQRe2TBsGzRyzqwAAvViZTgOijCSS2rBHUhTvMVL2lcPr5KNblwsthzjgnPbmKJ6d98cfWzlIgdT4kxuVkxQCf535CvPhvnQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mn4cp/Dw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="I6+n8kWE"
-Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-512b84bdaf1so2812674e87.1
-        for <linux-kernel@vger.kernel.org>; Tue, 20 Feb 2024 09:07:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1708448861; x=1709053661; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=mShveTDs8o2HzJ7EXJAElPOAOERFmO61toHHqLsbnwI=;
-        b=I6+n8kWEWB3rLVaVyyiUFGyFJWQEAc6wf/NLMbg8JyW7gFjFkl5HR1yTWDFlzKCTdR
-         K7qsF/+uxTkqWRbmkEFlYtU25tGY3cT7mNe/4iSW4Sc+TxrPAcv6KP4sOpNDvyi0YEr+
-         apyOGy0MP58u93fImfmfDR/xwC8mocuBUdIwfe5bVHLFTgDXNX9uihooy29dH4kEHm8P
-         L0x3axKKbQ10rb9v8D6K95Th38GAyGrST7dLlCmIP/DZ+eYnbmED5Ovcnykf9vfJwt07
-         1MHly4Kw6zB9NvjvQv802LNgyTv6TQhJ2Js1xF1Tfxf7mMhanU9GSvFzowxz9UbcV+wx
-         M1fQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708448861; x=1709053661;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=mShveTDs8o2HzJ7EXJAElPOAOERFmO61toHHqLsbnwI=;
-        b=R+G+keoC1yFD5IWScrQRdTlQGLYsnLEF/H8WV93N+sUw7Y+XN3Ky8dQf3+8JS8EnOZ
-         tURJ1bvwwHeKEZqfl2sNY1yqI5HSczvM4GEgtwvpd0AVHq5Se7smwX+IKkz0KOJSufvP
-         4BLrZJ6StLDXAe5hEmH/CFRVirOwujNIBFb1x9T0i8RsWWzhZOJR+kfvfeNf0G5UEhaA
-         s8yYXmUWav8XKxmICbF4Al3/avE/xzK1DIkJiOwY1f8sALlnMZ96tbHwuuE8fJA5x/DV
-         r6zcDm9ND7tvsnXPjz0bvToKGi7PebvAg0x6i2ECDZZzbZ3Tb2ZXiX8xuT8a5HjYCe/d
-         ocUQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXOhlfrYRSpBN1MEG5q5L3jqduNhNvfDqzswqzsXrU0yexzl/CLYTg1I+STTLoZl75dG0y0fl/1iGfMXcaHJYW7qDsLRgy2U9vnEJec
-X-Gm-Message-State: AOJu0Ywylrwa3kPX70X8pma/6DA1QIwhRSHWE95pmPmo5ymWtolzjwmM
-	zNI3xVw2cpRHkVpyt+VrK7bDgg1SPfHgoqta/VPgLsbSE73/rI8XDU5JpJ7usQE=
-X-Google-Smtp-Source: AGHT+IGSj4UFEzJ2QdkqJnyaxs4ii6FgzfPObw02jZbt679agm5/qstPtdmgxKLIT0ezZ9Hr8LkbUQ==
-X-Received: by 2002:a05:6512:102f:b0:512:96f3:413b with SMTP id r15-20020a056512102f00b0051296f3413bmr7991228lfr.26.1708448860804;
-        Tue, 20 Feb 2024 09:07:40 -0800 (PST)
-Received: from aspen.lan (aztw-34-b2-v4wan-166919-cust780.vm26.cable.virginm.net. [82.37.195.13])
-        by smtp.gmail.com with ESMTPSA id z20-20020a05600c221400b0040fddaf9ff4sm15131450wml.40.2024.02.20.09.07.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 20 Feb 2024 09:07:40 -0800 (PST)
-Date: Tue, 20 Feb 2024 17:07:38 +0000
-From: Daniel Thompson <daniel.thompson@linaro.org>
-To: Luca Weiss <luca@z3ntu.xyz>
-Cc: ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org,
-	Lee Jones <lee@kernel.org>, Jingoo Han <jingoohan1@gmail.com>,
-	Helge Deller <deller@gmx.de>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	"G.Shark Jeong" <gshark.jeong@gmail.com>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konrad.dybcio@linaro.org>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Maximilian Weigand <mweigand@mweigand.net>,
-	dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-	devicetree@vger.kernel.org
-Subject: Re: [PATCH 4/4] ARM: dts: qcom: msm8974-hammerhead: Hook up backlight
-Message-ID: <20240220170738.GI6716@aspen.lan>
-References: <20240220-lm3630a-fixups-v1-0-9ca62f7e4a33@z3ntu.xyz>
- <20240220-lm3630a-fixups-v1-4-9ca62f7e4a33@z3ntu.xyz>
- <20240220141210.GG6716@aspen.lan>
- <2444202.ElGaqSPkdT@g550jk>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mn4cp/Dw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4A714C433C7;
+	Tue, 20 Feb 2024 17:09:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1708448993;
+	bh=IuYUnTcNI7A33LoTZwZRSGnYwOg8OpnlQpKw+Sz4gLg=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+	b=mn4cp/Dw0jowoGmikQrA2F3nhmpJ8YzTR+Iiy8n9fA/zKEFg4TG0Yr3Bg87I+C4+1
+	 kSDAN4LsND6HFPER4IhC2VwvDkL0N3WSMCMF8kvoBFCF6uvDDwtCDUI7rYC6ku7p8y
+	 km54BEc8SB1xn+055ytuJ7gPH8kQ59DSv24fyRpZcV3uXmTozYu5z7yjhcT9cuSgHO
+	 q9W0X9X/3OYX3AKjgo+nsa9d6vncbyWK+wRbcR5X49cM88dwqrmtt8atuIHejJbqF4
+	 JuwjWmr1Qpl99bdNiH9rKQg39kGdnc7JwCVNjoS0P25mnex6QhcJ35lfFpvgMLAoIb
+	 /icIstXx0psqQ==
+Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
+	id D90DCCE109C; Tue, 20 Feb 2024 09:09:52 -0800 (PST)
+Date: Tue, 20 Feb 2024 09:09:52 -0800
+From: "Paul E. McKenney" <paulmck@kernel.org>
+To: Feng Tang <feng.tang@intel.com>
+Cc: Waiman Long <longman@redhat.com>, Thomas Gleixner <tglx@linutronix.de>,
+	John Stultz <jstultz@google.com>, Stephen Boyd <sboyd@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>, linux-kernel@vger.kernel.org,
+	Jin Wang <jin1.wang@intel.com>
+Subject: Re: [PATCH v3] clocksource: Scale the max retry number of watchdog
+ read according to CPU numbers
+Message-ID: <d0517bce-6284-43b8-bcf8-c56ac83fb31f@paulmck-laptop>
+Reply-To: paulmck@kernel.org
+References: <20240129134505.961208-1-feng.tang@intel.com>
+ <87msrwadvu.ffs@tglx>
+ <ZdNnjdNTjtvpbGH0@feng-clx.sh.intel.com>
+ <388686b2-5305-43d1-8edf-19ba66d52727@redhat.com>
+ <0b7833a4-75f3-43ba-9d87-6f83cf4faa5a@paulmck-laptop>
+ <ZdTE2SzO1pZ0QjUn@feng-clx.sh.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -82,41 +53,60 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <2444202.ElGaqSPkdT@g550jk>
+In-Reply-To: <ZdTE2SzO1pZ0QjUn@feng-clx.sh.intel.com>
 
-On Tue, Feb 20, 2024 at 05:45:32PM +0100, Luca Weiss wrote:
-> On Dienstag, 20. Februar 2024 15:12:10 CET Daniel Thompson wrote:
-> > On Tue, Feb 20, 2024 at 12:11:22AM +0100, Luca Weiss wrote:
-> > > Connect the panel with the backlight nodes so that the backlight can be
-> > > turned off when the display is blanked.
-> > >
-> > > Signed-off-by: Luca Weiss <luca@z3ntu.xyz>
-> >
-> > Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
-> >
-> >
-> > > ---
-> > >  arch/arm/boot/dts/qcom/qcom-msm8974-lge-nexus5-hammerhead.dts | 4 +++-
-> > >  1 file changed, 3 insertions(+), 1 deletion(-)
-> > >
-> > > diff --git a/arch/arm/boot/dts/qcom/qcom-msm8974-lge-nexus5-hammerhead.dts b/arch/arm/boot/dts/qcom/qcom-msm8974-lge-nexus5-hammerhead.dts
-> > > index 4aaae8537a3f..8eaa5b162815 100644
-> > > --- a/arch/arm/boot/dts/qcom/qcom-msm8974-lge-nexus5-hammerhead.dts
-> > > +++ b/arch/arm/boot/dts/qcom/qcom-msm8974-lge-nexus5-hammerhead.dts
-> > > @@ -182,7 +182,7 @@ &blsp2_i2c5 {
-> > >  	status = "okay";
-> > >  	clock-frequency = <355000>;
-> > >
-> > > -	led-controller@38 {
-> > > +	backlight: led-controller@38 {
-> >
-> > Again... a minor nit regarding existing problems but this node doesn't
-> > follow the generic naming recommendations:
-> > https://devicetree-specification.readthedocs.io/en/stable/devicetree-basics.html#generic-names-recommendation
->
-> "led-controller" is listed on that page, or do you mean something else?
+On Tue, Feb 20, 2024 at 11:27:21PM +0800, Feng Tang wrote:
+> On Tue, Feb 20, 2024 at 07:24:27AM -0800, Paul E. McKenney wrote:
+> > On Mon, Feb 19, 2024 at 09:20:31PM -0500, Waiman Long wrote:
+> > > 
+> > > On 2/19/24 09:37, Feng Tang wrote:
+> > > > Hi Thomas,
+> > > > 
+> > > > On Mon, Feb 19, 2024 at 12:32:05PM +0100, Thomas Gleixner wrote:
+> > > > > On Mon, Jan 29 2024 at 21:45, Feng Tang wrote:
+> > > > > > +static inline long clocksource_max_watchdog_read_retries(void)
+> > > > > > +{
+> > > > > > +	long max_retries = max_cswd_read_retries;
+> > > > > > +
+> > > > > > +	if (max_cswd_read_retries <= 0) {
+> > > > > > +		/* santity check for user input value */
+> > > > > > +		if (max_cswd_read_retries != -1)
+> > > > > > +			pr_warn_once("max_cswd_read_retries was set with an invalid number: %ld\n",
+> > > > > > +				max_cswd_read_retries);
+> > > > > > +
+> > > > > > +		max_retries = ilog2(num_online_cpus()) + 1;
+> > > > > I'm getting tired of these knobs and the horrors behind them. Why not
+> > > > > simply doing the obvious:
+> > > > > 
+> > > > >         retries = ilog2(num_online_cpus()) + 1;
+> > > > > 
+> > > > > and remove the knob alltogether?
+> > > > Thanks for the suggestion! Yes, this makes sense to me. IIUC, the
+> > > > 'max_cswd_read_retries' was introduced mainly to cover different
+> > > > platforms' requirement, which could now be covered by the new
+> > > > self-adaptive number.
+> > > > 
+> > > > If there is no concern from other developers, I will send a new
+> > > > version in this direction.
+> > > 
+> > > I see no problem simplifying it.
+> > 
+> > My guess is that we will eventually end up with something like this:
+> > 
+> > 	retries = ilog2(num_online_cpus()) / 2 + 1;
+> 
+> Good point! Initially when writing the patch, I did try to search if
+> there is a 'ilog4' api :) as the ilog2 of that 8-socket machine is
+> about 10, which is more than enough.
 
-That's the point ;-). It is supposed to be called backlight@38!
+I am also not averse to starting with the above, either.  ;-)
 
+							Thanx, Paul
 
-Daniel.
+> Thanks,
+> Feng
+> 
+> > 
+> > but I am not at all opposed to starting without the division by 2.
+> > 
+> > 							Thanx, Paul
