@@ -1,164 +1,151 @@
-Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out30-131.freemail.mail.aliyun.com (out30-131.freemail.mail.aliyun.com [115.124.30.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31A6C664DB
-	for <linux-kernel@vger.kernel.org>; Tue, 20 Feb 2024 11:36:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9840766B4F
+	for <linux-kernel@vger.kernel.org>; Tue, 20 Feb 2024 11:36:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708428984; cv=none; b=Rh/I52hDP8XDDpcekiy8N/MtstHKCtLwN/xutLOmjkKd/oYjSDY+yxjJNJSapw/OC1dYG9a0qB2mvszOZh39plKGifjA2vpFz46gIzAfwE6Y3pU8WICPIW/WBZ+N92Lm3V3dh58Tp6S8hkiHTSpVoVOO5AhIVOxvzaZAwTMKqCI=
+	t=1708429011; cv=none; b=iMtGVbltpwwLZQz29p/B9yeRF0Heik7AU1Fsz2lmGF2ZTDqOZz0911/pY3eEFkQI6mzxE9Q5qQSjEhciFcZe3mZcym7baDCv0zLIfN0MoGo2qHtCh4RgiApvDRjfJdNGNypUONkViVAmd2WtoIai/qQ0NRIEkiO3gOTHQ+f99QQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708428984; c=relaxed/simple;
-	bh=bQNTQQftu8hT132BY8z//CNRib7r0FxwOl65wzmeJTQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=gPUQUFxodf0YYl0z6A5ULxCvqO/UFpqVgArf7hPNs/o/0F3NW+YfivpvVPV5h63jcCdHXwv0inNTRKd6DF7yXy0muZglqQnZaiY+mjsRZyUjUE6mM0DdMXv7DDAe4NPYRTZ27wTJZUzsymUCgaGIKYIjklRW34ehcyE6g/N+UrM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=kDkaSRPd; arc=none smtp.client-ip=209.85.208.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1708429011; c=relaxed/simple;
+	bh=MJZTwvMAhXU1TEesSE5qck+Xlaoz9q2+OP1AZ3mvBy8=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=YQLo1efzBPoYgwxus4jQJ9Akzx5XF78xPBALdG2Sm5IxiRASGSBwygRmpd3uOTqBKn2j4NjF0F0pTJCOWntlikKYTiReZytivRvZn3Rvo3cRiR3ICNbE9H6bjm5dZKlpeBeEY+c+z4tIeYg9+nfI31UInkTT0juCgcXYSAQ09rs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=myYCSnem; arc=none smtp.client-ip=115.124.30.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kDkaSRPd"
-Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-5649c25369aso2644544a12.2
-        for <linux-kernel@vger.kernel.org>; Tue, 20 Feb 2024 03:36:22 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1708428981; x=1709033781; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=8vEYNIyU29gTWgK7RPlJP8ywD5d82+QI8BUp/J+t4jU=;
-        b=kDkaSRPdvVnThko2wb0oSjYuO4H170I0k8cSHkGYcGAteq0dlidJpasqJTE9Grhun1
-         0G8m2JgHMrh31wyHLAxSjGwugUU5PKZ9XBpsHNMpO3tadanaypzXIuLr0MerpiQHaF5P
-         wa6R4bMe0paXNfEIBlEsLkR/CSFLEAkj/e2+YNM1so5qWcXJheXf7XBYLpAs6YmTAin5
-         /Jz1sQuU5WUGnUJRuCOKsQIAoX2svv5zliKidfG07s0kebJPNec9tcl0zOPff/TS9NgH
-         gnXaHBaeJugO3IURzpa5Rj+rI1HUGngWI2LoIXQxbqTQFh8Y+ric9CMRdmJXoVLr3Soi
-         Muyg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708428981; x=1709033781;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=8vEYNIyU29gTWgK7RPlJP8ywD5d82+QI8BUp/J+t4jU=;
-        b=WRAL7FS0d+WK0ozOadm0DVmvDfVCqKw6A315iA2tX1IEDl4FWVyxVx16M5kwPT0joh
-         Z9SG2oRBNmmBaQ4jBmKlRC5PV8PNhGBM2U4JxXNmuDF0V2DczS++5bp+Ov9ZgC0yV2uq
-         yt4bpz7bGRn4tabgAoQBWwKr8dWEqpktI8enJ+cngnW//Hw9O+KlUt12LSr0P5Xl/vLA
-         /L2+GyjCL9NImfP5SKdeOlfurq4Z9CE9Htq7EFVP3JnGxRtJ46SysE7Kh4GX9q12uvpZ
-         9W2zgcc0qQ8rF+KBGkmsaiBepLD0/5YbBSCLNmamCgI9SwgDXzFSlqHNN54d/Q6UyQ7c
-         VRfg==
-X-Forwarded-Encrypted: i=1; AJvYcCV0luZR/sP/qM/K/1ZnnSnKRdGp6/YtoTKYANXAxr/uTuAvPd56njba8Ju3Xqgr99LabRXnc0aaloh5iLxule9q+V7NCaRLP6eIuA+L
-X-Gm-Message-State: AOJu0YzzYzr0zXNvwvokRsef8WtkxQy6cemHscSLbl4obOTs0XBv15Na
-	CfHGMixhDYi2ByTc+UtfL4Bg7sNgurOrQThGwyTYwV25IY4KUF1QtHDuAIvY1TA=
-X-Google-Smtp-Source: AGHT+IGpyxJ/bl0eqpL2sckEecGp2IRFB53crVZKhLoZSHuacr+gQOzDmFq8EUEwV19XeGHyJABCBw==
-X-Received: by 2002:a05:6402:334:b0:563:d32f:5441 with SMTP id q20-20020a056402033400b00563d32f5441mr7885607edw.3.1708428981479;
-        Tue, 20 Feb 2024 03:36:21 -0800 (PST)
-Received: from [192.168.1.20] ([178.197.222.116])
-        by smtp.gmail.com with ESMTPSA id e10-20020a50ec8a000000b00564d6840976sm234387edr.80.2024.02.20.03.36.19
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 20 Feb 2024 03:36:21 -0800 (PST)
-Message-ID: <454a7e8d-70f5-4bf5-a3f1-bf9e42672c4c@linaro.org>
-Date: Tue, 20 Feb 2024 12:36:18 +0100
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="myYCSnem"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1708429001; h=From:To:Subject:Date:Message-Id:MIME-Version;
+	bh=Cz1c5ISGmBdsxneLIlZx/BdFlZMirzknWzhxQibv2VY=;
+	b=myYCSnem7v/BWmz0M7MvyuyhBIg4zODOaDg1YCDFptmor0rA7rPntF3nyD0WEKBXpCheZTtn9Gw9A+o/C4NkIpZKybcCkeYzAbJm5iegT0jzjpraD6P8ucGHbPpWQzi6zJr8klx57DPRwxA2FbMRTZlP6Cn96r1UNGHHpmMt4js=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R701e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046050;MF=rongwei.wang@linux.alibaba.com;NM=1;PH=DS;RN=11;SR=0;TI=SMTPD_---0W0wabbT_1708428963;
+Received: from localhost.localdomain(mailfrom:rongwei.wang@linux.alibaba.com fp:SMTPD_---0W0wabbT_1708428963)
+          by smtp.aliyun-inc.com;
+          Tue, 20 Feb 2024 19:36:40 +0800
+From: Rongwei Wang <rongwei.wang@linux.alibaba.com>
+To: linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org
+Cc: akpm@linux-foundation.org,
+	gregkh@linuxfoundation.org,
+	rafael@kernel.org,
+	pierre.gondois@arm.com,
+	mingo@redhat.com,
+	dave.hansen@linux.intel.com,
+	luto@kernel.org,
+	teng.ma@linux.alibaba.com
+Subject: [PATCH v1 0/2] support NUMA emulation for genertic arch
+Date: Tue, 20 Feb 2024 19:36:00 +0800
+Message-Id: <20240220113602.6943-1-rongwei.wang@linux.alibaba.com>
+X-Mailer: git-send-email 2.40.0
+In-Reply-To: <20231012024842.99703-1-rongwei.wang@linux.alibaba.com>
+References: <20231012024842.99703-1-rongwei.wang@linux.alibaba.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/5] Add QPIC SPI NAND driver
-Content-Language: en-US
-To: Md Sadre Alam <quic_mdalam@quicinc.com>,
- Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: andersson@kernel.org, konrad.dybcio@linaro.org, broonie@kernel.org,
- robh@kernel.org, krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
- miquel.raynal@bootlin.com, richard@nod.at, vigneshr@ti.com,
- linux-arm-msm@vger.kernel.org, linux-spi@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-mtd@lists.infradead.org, quic_srichara@quicinc.com,
- quic_varada@quicinc.com
-References: <20240215134856.1313239-1-quic_mdalam@quicinc.com>
- <20240219130412.GC3281@thinkpad>
- <3ad2909d-4ac3-fff3-739d-b12a3408fa0f@quicinc.com>
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
- 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
- D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <3ad2909d-4ac3-fff3-739d-b12a3408fa0f@quicinc.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 20/02/2024 12:32, Md Sadre Alam wrote:
-> 
-> 
-> On 2/19/2024 6:34 PM, Manivannan Sadhasivam wrote:
->> On Thu, Feb 15, 2024 at 07:18:51PM +0530, Md Sadre Alam wrote:
->>> This series of patches will add initial supports
->>> for QPIC SPI NAND driver.
->>>
->>> Currently this driver support following commands
->>>
->>> -- RESET
->>> -- READ ID
->>> -- BLOCK ERASE
->>> -- PAGE READ
->>> -- PAGE WRITE
->>> -- GET FEATURE
->>> -- SET FEATURE
->>> -- BAD BLOCK CHECK
->>>
->>> This driver has been tested with dd command with read/write page
->>> with multiple file size 1MiB, 10MiB,40MiB etc.
->>> Also tested with "mtd" command like mtd erase, mtd write, mtd verify etc.
->>>
->>
->> This is not the first version isn't it? Where is the changelog describing what
->> has changed since then?
-> 
->    The earlier patch was the RFC for design review only.
+A brief introduction
+====================
 
-RFC is state of patch, not version. This is v2 then.
+The NUMA emulation can fake more node base on a single
+node system, e.g.
 
-These RFC postings are really becoming mess. Some people make multiple
-RFCs and then post v1 hiding entire previous history... And why even
-bother with calling it RFC?
+one node system:
 
-Best regards,
-Krzysztof
+[root@localhost ~]# numactl -H
+available: 1 nodes (0)
+node 0 cpus: 0 1 2 3 4 5 6 7
+node 0 size: 31788 MB
+node 0 free: 31446 MB
+node distances:
+node   0
+  0:  10
+
+add numa=fake=2 (fake 2 node on each origin node):
+
+[root@localhost ~]# numactl -H
+available: 2 nodes (0-1)
+node 0 cpus: 0 1 2 3 4 5 6 7
+node 0 size: 15806 MB
+node 0 free: 15451 MB
+node 1 cpus: 0 1 2 3 4 5 6 7
+node 1 size: 16029 MB
+node 1 free: 15989 MB
+node distances:
+node   0   1
+  0:  10  10
+  1:  10  10
+
+As above shown, a new node has been faked. As cpus, the realization
+of x86 NUMA emulation is kept. Maybe each node should has 4 cores is
+better (not sure, next to do if so).
+
+Why do this
+===========
+
+It seems has following reasons:
+  (1) In x86 host, apply NUMA emulation can fake more nodes environment
+      to test or verify some performance stuff, but arm64 only has
+      one method that modify ACPI table to do this. It's troublesome
+      more or less.
+  (2) Reduce competition for some locks. Here an example we found:
+      will-it-scale/tlb_flush1_processes -t 96 -s 10, it shows obvious
+      hotspot on lruvec->lock when test in single environment. What's
+      more, The performance improved greatly if test in two more nodes
+      system. The data shows below (more is better):
+
+      ---------------------------------------------------------------------
+      threads/process |   1     |     12   |     24   |   48     |   96
+      ---------------------------------------------------------------------
+      one node        | 14 1122 | 110 5372 | 111 2615 | 79 7084  | 72 4516
+      ---------------------------------------------------------------------
+      numa=fake=2     | 14 1168 | 144 4848 | 215 9070 | 157 0412 | 142 3968
+      ---------------------------------------------------------------------
+                      | For concurrency 12, no lruvec->lock hotspot. For 24,
+      hotspot         | one node has 24% hotspot on lruvec->lock, but
+                      | two nodes env hasn't.
+      ---------------------------------------------------------------------
+
+As for risks (e.g. numa balance...), they need to be discussed here.
+
+Lastly, it seems not a good choice to realize x86 and other genertic
+archs separately. But it can indeed avoid some architecture related
+APIs adjustments and alleviate future maintenance. The previous RFC
+link see [1].
+
+Any advice are welcome, Thanks!
+
+Change log
+==========
+
+RFC v1 -> v1
+* add new CONFIG_NUMA_FAKE for genertic archs.
+* keep x86 implementation, realize numa emulation in driver/base/ for
+  genertic arch, e.g, arm64.
+
+[1] RFC v1: https://patchwork.kernel.org/project/linux-arm-kernel/cover/20231012024842.99703-1-rongwei.wang@linux.alibaba.com/
+
+Rongwei Wang (2):
+  arch_numa: remove __init for early_cpu_to_node
+  numa: introduce numa emulation for genertic arch
+
+ drivers/base/Kconfig          |   9 +
+ drivers/base/Makefile         |   1 +
+ drivers/base/arch_numa.c      |  32 +-
+ drivers/base/numa_emulation.c | 909 ++++++++++++++++++++++++++++++++++
+ drivers/base/numa_emulation.h |  41 ++
+ include/asm-generic/numa.h    |   2 +-
+ 6 files changed, 992 insertions(+), 2 deletions(-)
+ create mode 100644 drivers/base/numa_emulation.c
+ create mode 100644 drivers/base/numa_emulation.h
+
+-- 
+2.32.0.3.gf3a3e56d6
 
