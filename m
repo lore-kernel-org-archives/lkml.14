@@ -1,419 +1,345 @@
-Received: from mail-il1-f199.google.com (mail-il1-f199.google.com [209.85.166.199])
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 561AB5A109
-	for <linux-kernel@vger.kernel.org>; Tue, 20 Feb 2024 07:22:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4598D5A7BF
+	for <linux-kernel@vger.kernel.org>; Tue, 20 Feb 2024 07:22:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708413725; cv=none; b=fOTvKOd7Ws0WZhEJgtmsUj94m6CSOBo/RNl3JuTf45zgg2m2KvHqPueGZ885zzZHI9KhYuadH78+jOg9JQZNOvwFMJ+5wtMheaGTMPDL02iO/zq1iyYrKjWB4zi9WJJdugcMJXyJgmKhGb60BOTwEneCIqpZnfixnWnfmm4L680=
+	t=1708413742; cv=none; b=KApX58MPKZZCk/Pi1U6OvotnkaWtBZ82MXTdsN8ezC26jWH8HhSqTgaRWHhNMt+3P71O3ctsQaNMubfXClhjg7GNQi1ebzFPCd3wjlPBBOZe2Q+DiwDp2CcvK6YOH9GZORqCwSdXjc6HVN0Iavf/bOh964l5OuuGuvLrPrVvZ4A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708413725; c=relaxed/simple;
-	bh=AAi6vQq6XVjHQr2NMjHdMj5+9wnIcbs0uYCfana1NzU=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=hHi20tLEIDZYhElLplBqeqMzsksmjx0C3bLm4CHizP1e2yLOIonTgiNv/qvNTwmSXDjXcg6fr8iB2jAxN8MG/eFmsEpLavuyARCivOyu143ch3JXe/d0WNumU44Gj2UerrvFGrUoRqQQSczm+J3E1NZNzkXS6fISKy0lK0lpbfY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f199.google.com with SMTP id e9e14a558f8ab-365067c116bso34647205ab.1
-        for <linux-kernel@vger.kernel.org>; Mon, 19 Feb 2024 23:22:03 -0800 (PST)
+	s=arc-20240116; t=1708413742; c=relaxed/simple;
+	bh=LGEekiMz1MuQlgMUTzt2/pfYsfBxAob5BHRAMdbsDgI=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Zy3wxNPU/YAuh6lp2QUEpmG5Rd3Iqv8KjXfAC2wI4VMdomzgMJhDkKa9B6eV+QYGI43ew799Cr+bTZF1EHqmf86u7EcnDn9e1rLD/0kEPFP8XI1xYc0/UCzgr2HnqY4CDOjNyEQeXz3TuSV9+IhL82YPjO39cL1G1yDK4ZiDOPk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=shXeenAW; arc=none smtp.client-ip=209.85.128.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="shXeenAW"
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-40fb3b5893eso27946865e9.0
+        for <linux-kernel@vger.kernel.org>; Mon, 19 Feb 2024 23:22:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1708413738; x=1709018538; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=BIo3+G26RYj97IhyrbqNGg5wn0wlq5Qdvj0YBvaCoZM=;
+        b=shXeenAWqhQ0Dm97VY8EHi/2doq9IkSZWL8UYDkXF97mD4VeJDSMMgg3KR4DX9S8jB
+         5omLtcfQTuFsYrrlU9ST5w6Hi9BENZ0sXd4I4mT5UTjf4MjCltQvhlOaQvIHC/wrY2Ab
+         0LfI/HSu6eoGh3A30AzpKbNqiWqf472PrgsqUSvrul9HgcK61z15dXtk6pAy5CGFb81c
+         l1OHOtBdfQ0DrrXec0sjBGg5OsPzBbWt3R3YNuvc2HznVRFyt5qeSYzOslVCUsDT3o9S
+         LAQc7G3sCtyVWAalfqclB8iedqufD/4ZG67Y3XNYuVgQSdFi4BXPfrVBA8sYrBJ+PflH
+         7HMw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708413722; x=1709018522;
-        h=content-transfer-encoding:to:from:subject:message-id:in-reply-to
-         :date:mime-version:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ZwbqnixHYLrWWh5b7PeYjZalTfxBe0ogvac1G0QgjPI=;
-        b=Gbm8PzvXUIbsP7WKnzKWbUEPxGqt/xclwH52biitcbgvdDYtpk0eW8nYt8HwmFOFoz
-         OZKsyLf8BGxwxEH5nOjMLZzAgOH92cWGwrb3Lfr3Zv2THqkKbVPesOO9d8aX5UJnPyI9
-         QKrZoCBOpLa+td1PG+jCDWPDC7epYZBZuS6MfyVXyMpsoJK9M288Vlhvt6HSL/YfTjiy
-         C4UaTAImbn84IFmQ0co+A58ex+QXjdCCQ+m4EIOobQhrf6Z4PHqrhpEA2GMGqjV6ZkPM
-         gfT7zQ5av9irjE5KgeSB52WcLSHitKtM13quKGl7Cf+piajcQD5IycrVKSKJwTDf5Xex
-         2U9A==
-X-Forwarded-Encrypted: i=1; AJvYcCX5GxDzV+s7RpdbLfOCBieu3XLFLcDn6yiA3pCQWrAQV4UYslfhP6k80rKs0acvaCIL6hqSLOu3kiAIr/eDOIu01pA/2UnjBNZijZuh
-X-Gm-Message-State: AOJu0Yyew1/t6/sMIxblpDwDc48fuhMCNsAm/dSF7BQDTOxHzj0gFg32
-	2lSGsZXkmeTz1qOrZX3cpeahlKOfG9btZHXQA9dyBbuFZvkRV+c9DI2xrG2xQdPXTGPBDcBuqci
-	dlMq3D/FXj/5Ve6MBke/wuhkG0xE+Hj5yv0ZiIhhQrz2ZRYcCbZX0Bkc=
-X-Google-Smtp-Source: AGHT+IERwjOaXlDNjsqqghwwLLSPWlt022KiIIDO4tHHGhxmhbQJHDP5G/cmYJ8VdR+t3Lt5HdWr4qYGfcGkSgzetg99mOx79LSq
+        d=1e100.net; s=20230601; t=1708413738; x=1709018538;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=BIo3+G26RYj97IhyrbqNGg5wn0wlq5Qdvj0YBvaCoZM=;
+        b=hG4jVGogYYQFkUTYtBq90Md7sBmP4nT3MRwchmPkd2GyFdVIFPIfz7nk5qUuJQZqmC
+         Cl2SVqrGrYKFq1xjULCjD09hhDtql98V8MffghLJ2R7Dg0GHdAHEH/WoMWqeMQTOayMM
+         xyADkaWPWdYNEK9bK8nbByXuq73CzFvd5s0YHi52Y2PKwxEBB5ebsw/OoDZHvv7oFDRY
+         EpfXuqU2o3AbmjkahYd1hFdDMN0ry/v70UZ4uBEWQAIUlQ8Yc1BOKzE36IfbHmN6K9Wp
+         BBNoG6vCql0orBoutaHfwCome3iutMZ2LvQ+1CABh/wpsKOUZ7Kmfs4vMTF4YsrcNlph
+         0XxQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXkLgTnKh4D9Xqq4OTjyuQNOfuDxfviwC2RBTNNtwgF2mOgCy0bxmaW/XdC42AMmqBQLDPjQJ9DieSzXDrLG0nyi/wMy/9gSfj6Oqux
+X-Gm-Message-State: AOJu0Yz9FYEZFPV+ekbNyWqnO3igOy4gPp9OPyFMmJQ3QLEKQv2easNK
+	gM1IWLNC/k8ZmK+bwGVrTxgpNjBbT9oDJT9+zCV0THSoAf++FrKex3jkXtJjRL4=
+X-Google-Smtp-Source: AGHT+IFsiqErb4YdGF8aE7+74ruUZ+0bGR7/Jcn7dJsjwREy1wAfV5T5SYZ5Qe7idjSIi0rak2+F+g==
+X-Received: by 2002:a5d:62cc:0:b0:33d:3ad2:67ae with SMTP id o12-20020a5d62cc000000b0033d3ad267aemr5015404wrv.57.1708413738557;
+        Mon, 19 Feb 2024 23:22:18 -0800 (PST)
+Received: from krzk-bin.. ([178.197.222.116])
+        by smtp.gmail.com with ESMTPSA id m17-20020a5d4a11000000b0033cf4e47496sm12424045wrq.51.2024.02.19.23.22.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 19 Feb 2024 23:22:18 -0800 (PST)
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+To: Georgi Djakov <djakov@kernel.org>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Sylwester Nawrocki <s.nawrocki@samsung.com>,
+	=?UTF-8?q?Artur=20=C5=9Awigo=C5=84?= <a.swigon@samsung.com>,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	Alim Akhtar <alim.akhtar@samsung.com>,
+	Thierry Reding <thierry.reding@gmail.com>,
+	Jonathan Hunter <jonathanh@nvidia.com>,
+	linux-pm@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-arm-msm@vger.kernel.org,
+	linux-samsung-soc@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-tegra@vger.kernel.org
+Cc: Thierry Reding <treding@nvidia.com>
+Subject: [PATCH v2] interconnect: constify of_phandle_args in xlate
+Date: Tue, 20 Feb 2024 08:22:13 +0100
+Message-Id: <20240220072213.35779-1-krzysztof.kozlowski@linaro.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a92:c56e:0:b0:365:2f19:e591 with SMTP id
- b14-20020a92c56e000000b003652f19e591mr416385ilj.3.1708413722630; Mon, 19 Feb
- 2024 23:22:02 -0800 (PST)
-Date: Mon, 19 Feb 2024 23:22:02 -0800
-In-Reply-To: <0b1a06a7-0caf-43a3-bd51-64a57565390e@linux.alibaba.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000001123250611cb110a@google.com>
-Subject: Re: [syzbot] [erofs?] KMSAN: uninit-value in z_erofs_lz4_decompress (3)
-From: syzbot <syzbot+88ad8b0517a9d3bb9dc8@syzkaller.appspotmail.com>
-To: chao@kernel.org, hsiangkao@linux.alibaba.com, huyue2@coolpad.com, 
-	jefflexu@linux.alibaba.com, linux-erofs@lists.ozlabs.org, 
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com, xiang@kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Hello,
+The xlate callbacks are supposed to translate of_phandle_args to proper
+provider without modifying the of_phandle_args.  Make the argument
+pointer to const for code safety and readability.
 
-syzbot tried to test the proposed patch but the build/boot failed:
+Acked-by: Konrad Dybcio <konrad.dybcio@linaro.org>
+Acked-by: Thierry Reding <treding@nvidia.com> # Tegra
+Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-le Layout Driver Registering...
-[   21.855653][    T1] Key type cifs.spnego registered
-[   21.862292][    T1] Key type cifs.idmap registered
-[   21.872039][    T1] ntfs: driver 2.1.32 [Flags: R/W].
-[   21.878069][    T1] ntfs3: Max link count 4000
-[   21.882711][    T1] ntfs3: Enabled Linux POSIX ACLs support
-[   21.888528][    T1] ntfs3: Read-only LZX/Xpress compression included
-[   21.895581][    T1] efs: 1.0a - http://aeschi.ch.eu.org/efs/
-[   21.902312][    T1] romfs: ROMFS MTD (C) 2007 Red Hat, Inc.
-[   21.908626][    T1] QNX4 filesystem 0.2.3 registered.
-[   21.914220][    T1] qnx6: QNX6 filesystem 1.0.0 registered.
-[   21.921782][    T1] fuse: init (API version 7.39)
-[   21.933923][    T1] orangefs_debugfs_init: called with debug mask: :none=
-: :0:
-[   21.943462][    T1] orangefs_init: module version upstream loaded
-[   21.951611][    T1] JFS: nTxBlock =3D 8192, nTxLock =3D 65536
-[   21.993328][    T1] SGI XFS with ACLs, security attributes, realtime, qu=
-ota, no debug enabled
-[   22.010587][    T1] 9p: Installing v9fs 9p2000 file system support
-[   22.019170][    T1] NILFS version 2 loaded
-[   22.023764][    T1] befs: version: 0.9.3
-[   22.029409][    T1] ocfs2: Registered cluster interface o2cb
-[   22.037323][    T1] ocfs2: Registered cluster interface user
-[   22.046089][    T1] OCFS2 User DLM kernel interface loaded
-[   22.066046][    T1] gfs2: GFS2 installed
-[   22.107156][    T1] ceph: loaded (mds proto 32)
-[   26.347423][    T1] NET: Registered PF_ALG protocol family
-[   26.353728][    T1] xor: automatically using best checksumming function =
-  avx      =20
-[   26.361905][    T1] async_tx: api initialized (async)
-[   26.367588][    T1] Key type asymmetric registered
-[   26.372680][    T1] Asymmetric key parser 'x509' registered
-[   26.378760][    T1] Asymmetric key parser 'pkcs8' registered
-[   26.385472][    T1] Key type pkcs7_test registered
-[   26.391779][    T1] Block layer SCSI generic (bsg) driver version 0.4 lo=
-aded (major 240)
-[   26.402387][    T1] io scheduler mq-deadline registered
-[   26.408181][    T1] io scheduler kyber registered
-[   26.413686][    T1] io scheduler bfq registered
-[   26.431031][    T1] input: Power Button as /devices/LNXSYSTM:00/LNXPWRBN=
-:00/input/input0
-[   26.451191][    T1] ACPI: button: Power Button [PWRF]
-[   26.459719][    T1] input: Sleep Button as /devices/LNXSYSTM:00/LNXSLPBN=
-:00/input/input1
-[   26.470238][    T1] ACPI: button: Sleep Button [SLPF]
-[   26.470487][  T145] kworker/u4:6 (145) used greatest stack depth: 11288 =
-bytes left
-[   26.501185][    T1] ioatdma: Intel(R) QuickData Technology Driver 5.00
-[   26.590018][    T1] ACPI: \_SB_.LNKC: Enabled at IRQ 11
-[   26.596923][    T1] virtio-pci 0000:00:03.0: virtio_pci: leaving for leg=
-acy driver
-[   26.684933][    T1] ACPI: \_SB_.LNKD: Enabled at IRQ 10
-[   26.691887][    T1] virtio-pci 0000:00:04.0: virtio_pci: leaving for leg=
-acy driver
-[   26.769222][    T1] ACPI: \_SB_.LNKB: Enabled at IRQ 10
-[   26.775072][    T1] virtio-pci 0000:00:06.0: virtio_pci: leaving for leg=
-acy driver
-[   26.834501][    T1] virtio-pci 0000:00:07.0: virtio_pci: leaving for leg=
-acy driver
-[   26.964774][  T227] kworker/u4:4 (227) used greatest stack depth: 11000 =
-bytes left
-[   27.025559][  T254] kworker/u4:4 (254) used greatest stack depth: 10880 =
-bytes left
-[   27.967136][    T1] N_HDLC line discipline registered with maxframe=3D40=
-96
-[   27.975904][    T1] Serial: 8250/16550 driver, 4 ports, IRQ sharing enab=
-led
-[   27.992699][    T1] 00:03: ttyS0 at I/O 0x3f8 (irq =3D 4, base_baud =3D =
-115200) is a 16550A
-[   28.026200][    T1] 00:04: ttyS1 at I/O 0x2f8 (irq =3D 3, base_baud =3D =
-115200) is a 16550A
-[   28.059406][    T1] 00:05: ttyS2 at I/O 0x3e8 (irq =3D 6, base_baud =3D =
-115200) is a 16550A
-[   28.089449][    T1] 00:06: ttyS3 at I/O 0x2e8 (irq =3D 7, base_baud =3D =
-115200) is a 16550A
-[   28.140541][    T1] Non-volatile memory driver v1.3
-[   28.170442][    T1] Linux agpgart interface v0.103
-[   28.189648][    T1] ACPI: bus type drm_connector registered
-[   28.207115][    T1] [drm] Initialized vgem 1.0.0 20120112 for vgem on mi=
-nor 0
-[   28.229973][    T1] [drm] Initialized vkms 1.0.0 20180514 for vkms on mi=
-nor 1
-[   28.724393][    T1] Console: switching to colour frame buffer device 128=
-x48
-[   28.875767][    T1] platform vkms: [drm] fb0: vkmsdrmfb frame buffer dev=
-ice
-[   28.884404][    T1] usbcore: registered new interface driver udl
-[   29.061297][    T1] brd: module loaded
-[   29.244400][    T1] loop: module loaded
-[   29.512400][    T1] zram: Added device: zram0
-[   29.540501][    T1] null_blk: disk nullb0 created
-[   29.545733][    T1] null_blk: module loaded
-[   29.551941][    T1] Guest personality initialized and is inactive
-[   29.560955][    T1] VMCI host device registered (name=3Dvmci, major=3D10=
-, minor=3D118)
-[   29.569840][    T1] Initialized host personality
-[   29.575750][    T1] usbcore: registered new interface driver rtsx_usb
-[   29.585633][    T1] usbcore: registered new interface driver viperboard
-[   29.594432][    T1] usbcore: registered new interface driver dln2
-[   29.602202][    T1] usbcore: registered new interface driver pn533_usb
-[   29.616932][    T1] nfcsim 0.2 initialized
-[   29.622086][    T1] usbcore: registered new interface driver port100
-[   29.629914][    T1] usbcore: registered new interface driver nfcmrvl
-[   29.648231][    T1] Loading iSCSI transport class v2.0-870.
-[   29.684669][    T1] virtio_scsi virtio0: 1/0/0 default/read/poll queues
-[   29.731303][    T1] scsi host0: Virtio SCSI HBA
-[   30.283396][    T1] st: Version 20160209, fixed bufsize 32768, s/g segs =
-256
-[   30.301725][   T72] scsi 0:0:1:0: Direct-Access     Google   PersistentD=
-isk   1    PQ: 0 ANSI: 6
-[   30.344813][    T1] Rounding down aligned max_sectors from 4294967295 to=
- 4294967288
-[   30.362347][    T1] db_root: cannot open: /etc/target
-[   30.395006][    T1] =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-[   30.395260][    T1] BUG: KMSAN: use-after-free in __list_del_entry_valid=
-_or_report+0x19e/0x490
-[   30.395432][    T1]  __list_del_entry_valid_or_report+0x19e/0x490
-[   30.395596][    T1]  stack_depot_save_flags+0x3e7/0x7b0
-[   30.395700][    T1]  stack_depot_save+0x12/0x20
-[   30.395793][    T1]  ref_tracker_alloc+0x215/0x700
-[   30.395890][    T1]  netdev_queue_update_kobjects+0x256/0x870
-[   30.396031][    T1]  netdev_register_kobject+0x41e/0x520
-[   30.396149][    T1]  register_netdevice+0x198f/0x2170
-[   30.396264][    T1]  bond_create+0x138/0x2a0
-[   30.396406][    T1]  bonding_init+0x1a7/0x2d0
-[   30.396505][    T1]  do_one_initcall+0x216/0x960
-[   30.396640][    T1]  do_initcall_level+0x140/0x350
-[   30.396748][    T1]  do_initcalls+0xf0/0x1d0
-[   30.396848][    T1]  do_basic_setup+0x22/0x30
-[   30.396959][    T1]  kernel_init_freeable+0x300/0x4b0
-[   30.397071][    T1]  kernel_init+0x2f/0x7e0
-[   30.397189][    T1]  ret_from_fork+0x66/0x80
-[   30.397216][    T1]  ret_from_fork_asm+0x11/0x20
-[   30.397216][    T1]=20
-[   30.397216][    T1] Uninit was created at:
-[   30.397216][    T1]  free_unref_page_prepare+0xc1/0xad0
-[   30.397216][    T1]  free_unref_page+0x58/0x6d0
-[   30.397216][    T1]  __free_pages+0xb1/0x1f0
-[   30.397216][    T1]  thread_stack_free_rcu+0x97/0xb0
-[   30.397216][    T1]  rcu_core+0xa3c/0x1df0
-[   30.397216][    T1]  rcu_core_si+0x12/0x20
-[   30.397216][    T1]  __do_softirq+0x1b7/0x7c3
-[   30.397216][    T1]=20
-[   30.397216][    T1] CPU: 1 PID: 1 Comm: swapper/0 Not tainted 6.8.0-rc5-=
-syzkaller-gb401b621758e #0
-[   30.397216][    T1] Hardware name: Google Google Compute Engine/Google C=
-ompute Engine, BIOS Google 01/25/2024
-[   30.397216][    T1] =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-[   30.397216][    T1] Disabling lock debugging due to kernel taint
-[   30.397216][    T1] Kernel panic - not syncing: kmsan.panic set ...
-[   30.397216][    T1] CPU: 1 PID: 1 Comm: swapper/0 Tainted: G    B       =
-       6.8.0-rc5-syzkaller-gb401b621758e #0
-[   30.397216][    T1] Hardware name: Google Google Compute Engine/Google C=
-ompute Engine, BIOS Google 01/25/2024
-[   30.397216][    T1] Call Trace:
-[   30.397216][    T1]  <TASK>
-[   30.397216][    T1]  dump_stack_lvl+0x1bf/0x240
-[   30.397216][    T1]  dump_stack+0x1e/0x20
-[   30.397216][    T1]  panic+0x4de/0xc90
-[   30.397216][    T1]  kmsan_report+0x2d0/0x2d0
-[   30.397216][    T1]  ? kmsan_get_metadata+0x146/0x1c0
-[   30.397216][    T1]  ? __msan_warning+0x96/0x110
-[   30.397216][    T1]  ? __list_del_entry_valid_or_report+0x19e/0x490
-[   30.397216][    T1]  ? stack_depot_save_flags+0x3e7/0x7b0
-[   30.397216][    T1]  ? stack_depot_save+0x12/0x20
-[   30.397216][    T1]  ? ref_tracker_alloc+0x215/0x700
-[   30.397216][    T1]  ? netdev_queue_update_kobjects+0x256/0x870
-[   30.397216][    T1]  ? netdev_register_kobject+0x41e/0x520
-[   30.397216][    T1]  ? register_netdevice+0x198f/0x2170
-[   30.397216][    T1]  ? bond_create+0x138/0x2a0
-[   30.397216][    T1]  ? bonding_init+0x1a7/0x2d0
-[   30.397216][    T1]  ? do_one_initcall+0x216/0x960
-[   30.397216][    T1]  ? do_initcall_level+0x140/0x350
-[   30.397216][    T1]  ? do_initcalls+0xf0/0x1d0
-[   30.397216][    T1]  ? do_basic_setup+0x22/0x30
-[   30.397216][    T1]  ? kernel_init_freeable+0x300/0x4b0
-[   30.397216][    T1]  ? kernel_init+0x2f/0x7e0
-[   30.397216][    T1]  ? ret_from_fork+0x66/0x80
-[   30.397216][    T1]  ? ret_from_fork_asm+0x11/0x20
-[   30.397216][    T1]  ? kmsan_get_shadow_origin_ptr+0x4d/0xa0
-[   30.397216][    T1]  ? kmsan_get_metadata+0x146/0x1c0
-[   30.397216][    T1]  ? kmsan_get_metadata+0x146/0x1c0
-[   30.397216][    T1]  ? kmsan_get_metadata+0x146/0x1c0
-[   30.397216][    T1]  ? kmsan_get_shadow_origin_ptr+0x4d/0xa0
-[   30.397216][    T1]  ? _raw_spin_lock_irqsave+0x35/0xc0
-[   30.397216][    T1]  ? filter_irq_stacks+0x60/0x1a0
-[   30.397216][    T1]  ? stack_depot_save_flags+0x2c/0x7b0
-[   30.397216][    T1]  ? kmsan_get_metadata+0x146/0x1c0
-[   30.397216][    T1]  ? kmsan_get_metadata+0x146/0x1c0
-[   30.397216][    T1]  ? kmsan_get_metadata+0x146/0x1c0
-[   30.397216][    T1]  ? kmsan_get_shadow_origin_ptr+0x4d/0xa0
-[   30.397216][    T1]  __msan_warning+0x96/0x110
-[   30.397216][    T1]  __list_del_entry_valid_or_report+0x19e/0x490
-[   30.397216][    T1]  stack_depot_save_flags+0x3e7/0x7b0
-[   30.397216][    T1]  stack_depot_save+0x12/0x20
-[   30.397216][    T1]  ref_tracker_alloc+0x215/0x700
-[   30.397216][    T1]  ? netdev_queue_update_kobjects+0x256/0x870
-[   30.397216][    T1]  ? netdev_register_kobject+0x41e/0x520
-[   30.397216][    T1]  ? register_netdevice+0x198f/0x2170
-[   30.397216][    T1]  ? bond_create+0x138/0x2a0
-[   30.397216][    T1]  ? bonding_init+0x1a7/0x2d0
-[   30.397216][    T1]  ? do_one_initcall+0x216/0x960
-[   30.397216][    T1]  ? do_initcall_level+0x140/0x350
-[   30.397216][    T1]  ? do_initcalls+0xf0/0x1d0
-[   30.397216][    T1]  ? do_basic_setup+0x22/0x30
-[   30.397216][    T1]  ? kernel_init_freeable+0x300/0x4b0
-[   30.397216][    T1]  ? kernel_init+0x2f/0x7e0
-[   30.397216][    T1]  ? ret_from_fork+0x66/0x80
-[   30.397216][    T1]  ? ret_from_fork_asm+0x11/0x20
-[   30.397216][    T1]  ? kmsan_internal_unpoison_memory+0x14/0x20
-[   30.397216][    T1]  netdev_queue_update_kobjects+0x256/0x870
-[   30.397216][    T1]  netdev_register_kobject+0x41e/0x520
-[   30.397216][    T1]  register_netdevice+0x198f/0x2170
-[   30.397216][    T1]  ? kmsan_get_shadow_origin_ptr+0x4d/0xa0
-[   30.397216][    T1]  bond_create+0x138/0x2a0
-[   30.397216][    T1]  ? kmsan_get_shadow_origin_ptr+0x4d/0xa0
-[   30.397216][    T1]  bonding_init+0x1a7/0x2d0
-[   30.397216][    T1]  ? spi_dln2_driver_init+0x40/0x40
-[   30.397216][    T1]  do_one_initcall+0x216/0x960
-[   30.397216][    T1]  ? spi_dln2_driver_init+0x40/0x40
-[   30.397216][    T1]  ? kmsan_get_metadata+0xb0/0x1c0
-[   30.397216][    T1]  ? kmsan_get_shadow_origin_ptr+0x4d/0xa0
-[   30.397216][    T1]  ? filter_irq_stacks+0x60/0x1a0
-[   30.397216][    T1]  ? stack_depot_save_flags+0x2c/0x7b0
-[   30.407722][    T1]  ? skip_spaces+0x8f/0xc0
-[   30.407722][    T1]  ? kmsan_get_metadata+0x146/0x1c0
-[   30.407922][    T1]  ? kmsan_get_metadata+0x146/0x1c0
-[   30.407922][    T1]  ? kmsan_get_shadow_origin_ptr+0x4d/0xa0
-[   30.407922][    T1]  ? kmsan_get_metadata+0x146/0x1c0
-[   30.407922][    T1]  ? kmsan_get_shadow_origin_ptr+0x4d/0xa0
-[   30.407922][    T1]  ? parse_args+0x1511/0x15e0
-[   30.407922][    T1]  ? kmsan_get_metadata+0x146/0x1c0
-[   30.407922][    T1]  ? kmsan_get_shadow_origin_ptr+0x4d/0xa0
-[   30.407922][    T1]  ? spi_dln2_driver_init+0x40/0x40
-[   30.408958][    T1]  do_initcall_level+0x140/0x350
-[   30.408958][    T1]  do_initcalls+0xf0/0x1d0
-[   30.408958][    T1]  ? arch_cpuhp_init_parallel_bringup+0xe0/0xe0
-[   30.408958][    T1]  do_basic_setup+0x22/0x30
-[   30.408958][    T1]  kernel_init_freeable+0x300/0x4b0
-[   30.408958][    T1]  ? rest_init+0x260/0x260
-[   30.408958][    T1]  kernel_init+0x2f/0x7e0
-[   30.408958][    T1]  ? rest_init+0x260/0x260
-[   30.408958][    T1]  ret_from_fork+0x66/0x80
-[   30.409978][    T1]  ? rest_init+0x260/0x260
-[   30.409978][    T1]  ret_from_fork_asm+0x11/0x20
-[   30.409978][    T1]  </TASK>
-[   30.409978][    T1] Kernel Offset: disabled
+---
 
+Changes in v2:
+1. Drop unrelated gpiolib changes (Konrad, Thierry).
+2. Add tags.
+---
+ drivers/interconnect/core.c            |  4 ++--
+ drivers/interconnect/qcom/icc-common.c |  3 ++-
+ drivers/interconnect/qcom/icc-common.h |  3 ++-
+ drivers/interconnect/samsung/exynos.c  |  2 +-
+ drivers/memory/tegra/mc.c              |  2 +-
+ drivers/memory/tegra/tegra124-emc.c    |  2 +-
+ drivers/memory/tegra/tegra124.c        |  2 +-
+ drivers/memory/tegra/tegra186-emc.c    |  2 +-
+ drivers/memory/tegra/tegra20-emc.c     |  2 +-
+ drivers/memory/tegra/tegra20.c         |  2 +-
+ drivers/memory/tegra/tegra30-emc.c     |  2 +-
+ drivers/memory/tegra/tegra30.c         |  2 +-
+ include/linux/interconnect-provider.h  | 11 ++++++-----
+ include/soc/tegra/mc.h                 |  7 ++++---
+ 14 files changed, 25 insertions(+), 21 deletions(-)
 
-syzkaller build log:
-go env (err=3D<nil>)
-GO111MODULE=3D'auto'
-GOARCH=3D'amd64'
-GOBIN=3D''
-GOCACHE=3D'/syzkaller/.cache/go-build'
-GOENV=3D'/syzkaller/.config/go/env'
-GOEXE=3D''
-GOEXPERIMENT=3D''
-GOFLAGS=3D''
-GOHOSTARCH=3D'amd64'
-GOHOSTOS=3D'linux'
-GOINSECURE=3D''
-GOMODCACHE=3D'/syzkaller/jobs-2/linux/gopath/pkg/mod'
-GONOPROXY=3D''
-GONOSUMDB=3D''
-GOOS=3D'linux'
-GOPATH=3D'/syzkaller/jobs-2/linux/gopath'
-GOPRIVATE=3D''
-GOPROXY=3D'https://proxy.golang.org,direct'
-GOROOT=3D'/usr/local/go'
-GOSUMDB=3D'sum.golang.org'
-GOTMPDIR=3D''
-GOTOOLCHAIN=3D'auto'
-GOTOOLDIR=3D'/usr/local/go/pkg/tool/linux_amd64'
-GOVCS=3D''
-GOVERSION=3D'go1.21.4'
-GCCGO=3D'gccgo'
-GOAMD64=3D'v1'
-AR=3D'ar'
-CC=3D'gcc'
-CXX=3D'g++'
-CGO_ENABLED=3D'1'
-GOMOD=3D'/syzkaller/jobs-2/linux/gopath/src/github.com/google/syzkaller/go.=
-mod'
-GOWORK=3D''
-CGO_CFLAGS=3D'-O2 -g'
-CGO_CPPFLAGS=3D''
-CGO_CXXFLAGS=3D'-O2 -g'
-CGO_FFLAGS=3D'-O2 -g'
-CGO_LDFLAGS=3D'-O2 -g'
-PKG_CONFIG=3D'pkg-config'
-GOGCCFLAGS=3D'-fPIC -m64 -pthread -Wl,--no-gc-sections -fmessage-length=3D0=
- -ffile-prefix-map=3D/tmp/go-build1804868575=3D/tmp/go-build -gno-record-gc=
-c-switches'
+diff --git a/drivers/interconnect/core.c b/drivers/interconnect/core.c
+index 50bac2d79d9b..5d1010cafed8 100644
+--- a/drivers/interconnect/core.c
++++ b/drivers/interconnect/core.c
+@@ -343,7 +343,7 @@ EXPORT_SYMBOL_GPL(icc_std_aggregate);
+  * an array of icc nodes specified in the icc_onecell_data struct when
+  * registering the provider.
+  */
+-struct icc_node *of_icc_xlate_onecell(struct of_phandle_args *spec,
++struct icc_node *of_icc_xlate_onecell(const struct of_phandle_args *spec,
+ 				      void *data)
+ {
+ 	struct icc_onecell_data *icc_data = data;
+@@ -368,7 +368,7 @@ EXPORT_SYMBOL_GPL(of_icc_xlate_onecell);
+  * Returns a valid pointer to struct icc_node_data on success or ERR_PTR()
+  * on failure.
+  */
+-struct icc_node_data *of_icc_get_from_provider(struct of_phandle_args *spec)
++struct icc_node_data *of_icc_get_from_provider(const struct of_phandle_args *spec)
+ {
+ 	struct icc_node *node = ERR_PTR(-EPROBE_DEFER);
+ 	struct icc_node_data *data = NULL;
+diff --git a/drivers/interconnect/qcom/icc-common.c b/drivers/interconnect/qcom/icc-common.c
+index f27f4fdc4531..9b9ee113f172 100644
+--- a/drivers/interconnect/qcom/icc-common.c
++++ b/drivers/interconnect/qcom/icc-common.c
+@@ -9,7 +9,8 @@
+ 
+ #include "icc-common.h"
+ 
+-struct icc_node_data *qcom_icc_xlate_extended(struct of_phandle_args *spec, void *data)
++struct icc_node_data *qcom_icc_xlate_extended(const struct of_phandle_args *spec,
++					      void *data)
+ {
+ 	struct icc_node_data *ndata;
+ 	struct icc_node *node;
+diff --git a/drivers/interconnect/qcom/icc-common.h b/drivers/interconnect/qcom/icc-common.h
+index 33bb2c38dff3..21c39b163948 100644
+--- a/drivers/interconnect/qcom/icc-common.h
++++ b/drivers/interconnect/qcom/icc-common.h
+@@ -8,6 +8,7 @@
+ 
+ #include <linux/interconnect-provider.h>
+ 
+-struct icc_node_data *qcom_icc_xlate_extended(struct of_phandle_args *spec, void *data);
++struct icc_node_data *qcom_icc_xlate_extended(const struct of_phandle_args *spec,
++					      void *data);
+ 
+ #endif
+diff --git a/drivers/interconnect/samsung/exynos.c b/drivers/interconnect/samsung/exynos.c
+index 1ba14cb45d5a..c9e5361e17c5 100644
+--- a/drivers/interconnect/samsung/exynos.c
++++ b/drivers/interconnect/samsung/exynos.c
+@@ -82,7 +82,7 @@ static int exynos_generic_icc_set(struct icc_node *src, struct icc_node *dst)
+ 	return 0;
+ }
+ 
+-static struct icc_node *exynos_generic_icc_xlate(struct of_phandle_args *spec,
++static struct icc_node *exynos_generic_icc_xlate(const struct of_phandle_args *spec,
+ 						 void *data)
+ {
+ 	struct exynos_icc_priv *priv = data;
+diff --git a/drivers/memory/tegra/mc.c b/drivers/memory/tegra/mc.c
+index a083921a8968..224b488794e5 100644
+--- a/drivers/memory/tegra/mc.c
++++ b/drivers/memory/tegra/mc.c
+@@ -755,7 +755,7 @@ const char *const tegra_mc_error_names[8] = {
+ 	[6] = "SMMU translation error",
+ };
+ 
+-struct icc_node *tegra_mc_icc_xlate(struct of_phandle_args *spec, void *data)
++struct icc_node *tegra_mc_icc_xlate(const struct of_phandle_args *spec, void *data)
+ {
+ 	struct tegra_mc *mc = icc_provider_to_tegra_mc(data);
+ 	struct icc_node *node;
+diff --git a/drivers/memory/tegra/tegra124-emc.c b/drivers/memory/tegra/tegra124-emc.c
+index 00ed2b6a0d1b..47c0c19e13fd 100644
+--- a/drivers/memory/tegra/tegra124-emc.c
++++ b/drivers/memory/tegra/tegra124-emc.c
+@@ -1285,7 +1285,7 @@ to_tegra_emc_provider(struct icc_provider *provider)
+ }
+ 
+ static struct icc_node_data *
+-emc_of_icc_xlate_extended(struct of_phandle_args *spec, void *data)
++emc_of_icc_xlate_extended(const struct of_phandle_args *spec, void *data)
+ {
+ 	struct icc_provider *provider = data;
+ 	struct icc_node_data *ndata;
+diff --git a/drivers/memory/tegra/tegra124.c b/drivers/memory/tegra/tegra124.c
+index 470b7dbab2c2..9d7393e19f12 100644
+--- a/drivers/memory/tegra/tegra124.c
++++ b/drivers/memory/tegra/tegra124.c
+@@ -1170,7 +1170,7 @@ static int tegra124_mc_icc_aggreate(struct icc_node *node, u32 tag, u32 avg_bw,
+ }
+ 
+ static struct icc_node_data *
+-tegra124_mc_of_icc_xlate_extended(struct of_phandle_args *spec, void *data)
++tegra124_mc_of_icc_xlate_extended(const struct of_phandle_args *spec, void *data)
+ {
+ 	struct tegra_mc *mc = icc_provider_to_tegra_mc(data);
+ 	const struct tegra_mc_client *client;
+diff --git a/drivers/memory/tegra/tegra186-emc.c b/drivers/memory/tegra/tegra186-emc.c
+index fcd4aea48bda..57d9ae12fcfe 100644
+--- a/drivers/memory/tegra/tegra186-emc.c
++++ b/drivers/memory/tegra/tegra186-emc.c
+@@ -236,7 +236,7 @@ static int tegra_emc_icc_set_bw(struct icc_node *src, struct icc_node *dst)
+ }
+ 
+ static struct icc_node *
+-tegra_emc_of_icc_xlate(struct of_phandle_args *spec, void *data)
++tegra_emc_of_icc_xlate(const struct of_phandle_args *spec, void *data)
+ {
+ 	struct icc_provider *provider = data;
+ 	struct icc_node *node;
+diff --git a/drivers/memory/tegra/tegra20-emc.c b/drivers/memory/tegra/tegra20-emc.c
+index fd595c851a27..97cf59523b0b 100644
+--- a/drivers/memory/tegra/tegra20-emc.c
++++ b/drivers/memory/tegra/tegra20-emc.c
+@@ -950,7 +950,7 @@ to_tegra_emc_provider(struct icc_provider *provider)
+ }
+ 
+ static struct icc_node_data *
+-emc_of_icc_xlate_extended(struct of_phandle_args *spec, void *data)
++emc_of_icc_xlate_extended(const struct of_phandle_args *spec, void *data)
+ {
+ 	struct icc_provider *provider = data;
+ 	struct icc_node_data *ndata;
+diff --git a/drivers/memory/tegra/tegra20.c b/drivers/memory/tegra/tegra20.c
+index aa4b97d5e732..a3022e715dee 100644
+--- a/drivers/memory/tegra/tegra20.c
++++ b/drivers/memory/tegra/tegra20.c
+@@ -390,7 +390,7 @@ static int tegra20_mc_icc_aggreate(struct icc_node *node, u32 tag, u32 avg_bw,
+ }
+ 
+ static struct icc_node_data *
+-tegra20_mc_of_icc_xlate_extended(struct of_phandle_args *spec, void *data)
++tegra20_mc_of_icc_xlate_extended(const struct of_phandle_args *spec, void *data)
+ {
+ 	struct tegra_mc *mc = icc_provider_to_tegra_mc(data);
+ 	unsigned int i, idx = spec->args[0];
+diff --git a/drivers/memory/tegra/tegra30-emc.c b/drivers/memory/tegra/tegra30-emc.c
+index 9eae25c57ec6..d7b0a23c2d7d 100644
+--- a/drivers/memory/tegra/tegra30-emc.c
++++ b/drivers/memory/tegra/tegra30-emc.c
+@@ -1468,7 +1468,7 @@ to_tegra_emc_provider(struct icc_provider *provider)
+ }
+ 
+ static struct icc_node_data *
+-emc_of_icc_xlate_extended(struct of_phandle_args *spec, void *data)
++emc_of_icc_xlate_extended(const struct of_phandle_args *spec, void *data)
+ {
+ 	struct icc_provider *provider = data;
+ 	struct icc_node_data *ndata;
+diff --git a/drivers/memory/tegra/tegra30.c b/drivers/memory/tegra/tegra30.c
+index 06f8b35e0a14..d3e685c8431f 100644
+--- a/drivers/memory/tegra/tegra30.c
++++ b/drivers/memory/tegra/tegra30.c
+@@ -1332,7 +1332,7 @@ static int tegra30_mc_icc_aggreate(struct icc_node *node, u32 tag, u32 avg_bw,
+ }
+ 
+ static struct icc_node_data *
+-tegra30_mc_of_icc_xlate_extended(struct of_phandle_args *spec, void *data)
++tegra30_mc_of_icc_xlate_extended(const struct of_phandle_args *spec, void *data)
+ {
+ 	struct tegra_mc *mc = icc_provider_to_tegra_mc(data);
+ 	const struct tegra_mc_client *client;
+diff --git a/include/linux/interconnect-provider.h b/include/linux/interconnect-provider.h
+index 7ba183f221f1..f5aef8784692 100644
+--- a/include/linux/interconnect-provider.h
++++ b/include/linux/interconnect-provider.h
+@@ -36,7 +36,7 @@ struct icc_onecell_data {
+ 	struct icc_node *nodes[] __counted_by(num_nodes);
+ };
+ 
+-struct icc_node *of_icc_xlate_onecell(struct of_phandle_args *spec,
++struct icc_node *of_icc_xlate_onecell(const struct of_phandle_args *spec,
+ 				      void *data);
+ 
+ /**
+@@ -65,8 +65,9 @@ struct icc_provider {
+ 			 u32 peak_bw, u32 *agg_avg, u32 *agg_peak);
+ 	void (*pre_aggregate)(struct icc_node *node);
+ 	int (*get_bw)(struct icc_node *node, u32 *avg, u32 *peak);
+-	struct icc_node* (*xlate)(struct of_phandle_args *spec, void *data);
+-	struct icc_node_data* (*xlate_extended)(struct of_phandle_args *spec, void *data);
++	struct icc_node* (*xlate)(const struct of_phandle_args *spec, void *data);
++	struct icc_node_data* (*xlate_extended)(const struct of_phandle_args *spec,
++						void *data);
+ 	struct device		*dev;
+ 	int			users;
+ 	bool			inter_set;
+@@ -124,7 +125,7 @@ int icc_nodes_remove(struct icc_provider *provider);
+ void icc_provider_init(struct icc_provider *provider);
+ int icc_provider_register(struct icc_provider *provider);
+ void icc_provider_deregister(struct icc_provider *provider);
+-struct icc_node_data *of_icc_get_from_provider(struct of_phandle_args *spec);
++struct icc_node_data *of_icc_get_from_provider(const struct of_phandle_args *spec);
+ void icc_sync_state(struct device *dev);
+ 
+ #else
+@@ -171,7 +172,7 @@ static inline int icc_provider_register(struct icc_provider *provider)
+ 
+ static inline void icc_provider_deregister(struct icc_provider *provider) { }
+ 
+-static inline struct icc_node_data *of_icc_get_from_provider(struct of_phandle_args *spec)
++static inline struct icc_node_data *of_icc_get_from_provider(const struct of_phandle_args *spec)
+ {
+ 	return ERR_PTR(-ENOTSUPP);
+ }
+diff --git a/include/soc/tegra/mc.h b/include/soc/tegra/mc.h
+index af1d73a7f0cd..6ee4c59db620 100644
+--- a/include/soc/tegra/mc.h
++++ b/include/soc/tegra/mc.h
+@@ -146,13 +146,14 @@ struct tegra_mc_icc_ops {
+ 	int (*set)(struct icc_node *src, struct icc_node *dst);
+ 	int (*aggregate)(struct icc_node *node, u32 tag, u32 avg_bw,
+ 			 u32 peak_bw, u32 *agg_avg, u32 *agg_peak);
+-	struct icc_node* (*xlate)(struct of_phandle_args *spec, void *data);
+-	struct icc_node_data *(*xlate_extended)(struct of_phandle_args *spec,
++	struct icc_node* (*xlate)(const struct of_phandle_args *spec, void *data);
++	struct icc_node_data *(*xlate_extended)(const struct of_phandle_args *spec,
+ 						void *data);
+ 	int (*get_bw)(struct icc_node *node, u32 *avg, u32 *peak);
+ };
+ 
+-struct icc_node *tegra_mc_icc_xlate(struct of_phandle_args *spec, void *data);
++struct icc_node *tegra_mc_icc_xlate(const struct of_phandle_args *spec,
++				    void *data);
+ extern const struct tegra_mc_icc_ops tegra_mc_icc_ops;
+ 
+ struct tegra_mc_ops {
+-- 
+2.34.1
 
-git status (err=3D<nil>)
-HEAD detached at 373b66cd2
-nothing to commit, working tree clean
-
-
-tput: No value for $TERM and no -T specified
-tput: No value for $TERM and no -T specified
-Makefile:32: run command via tools/syz-env for best compatibility, see:
-Makefile:33: https://github.com/google/syzkaller/blob/master/docs/contribut=
-ing.md#using-syz-env
-go list -f '{{.Stale}}' ./sys/syz-sysgen | grep -q false || go install ./sy=
-s/syz-sysgen
-make .descriptions
-tput: No value for $TERM and no -T specified
-tput: No value for $TERM and no -T specified
-bin/syz-sysgen
-touch .descriptions
-GOOS=3Dlinux GOARCH=3Damd64 go build "-ldflags=3D-s -w -X github.com/google=
-/syzkaller/prog.GitRevision=3D373b66cd2ba1fd05c72d0bbe16141fb287fe2eb3 -X '=
-github.com/google/syzkaller/prog.gitRevisionDate=3D20240130-131205'" "-tags=
-=3Dsyz_target syz_os_linux syz_arch_amd64 " -o ./bin/linux_amd64/syz-fuzzer=
- github.com/google/syzkaller/syz-fuzzer
-GOOS=3Dlinux GOARCH=3Damd64 go build "-ldflags=3D-s -w -X github.com/google=
-/syzkaller/prog.GitRevision=3D373b66cd2ba1fd05c72d0bbe16141fb287fe2eb3 -X '=
-github.com/google/syzkaller/prog.gitRevisionDate=3D20240130-131205'" "-tags=
-=3Dsyz_target syz_os_linux syz_arch_amd64 " -o ./bin/linux_amd64/syz-execpr=
-og github.com/google/syzkaller/tools/syz-execprog
-GOOS=3Dlinux GOARCH=3Damd64 go build "-ldflags=3D-s -w -X github.com/google=
-/syzkaller/prog.GitRevision=3D373b66cd2ba1fd05c72d0bbe16141fb287fe2eb3 -X '=
-github.com/google/syzkaller/prog.gitRevisionDate=3D20240130-131205'" "-tags=
-=3Dsyz_target syz_os_linux syz_arch_amd64 " -o ./bin/linux_amd64/syz-stress=
- github.com/google/syzkaller/tools/syz-stress
-mkdir -p ./bin/linux_amd64
-gcc -o ./bin/linux_amd64/syz-executor executor/executor.cc \
-	-m64 -O2 -pthread -Wall -Werror -Wparentheses -Wunused-const-variable -Wfr=
-ame-larger-than=3D16384 -Wno-stringop-overflow -Wno-array-bounds -Wno-forma=
-t-overflow -Wno-unused-but-set-variable -Wno-unused-command-line-argument -=
-static-pie -fpermissive -w -DGOOS_linux=3D1 -DGOARCH_amd64=3D1 \
-	-DHOSTGOOS_linux=3D1 -DGIT_REVISION=3D\"373b66cd2ba1fd05c72d0bbe16141fb287=
-fe2eb3\"
-
-
-Error text is too large and was truncated, full error text is at:
-https://syzkaller.appspot.com/x/error.txt?x=3D12579b34180000
-
-
-Tested on:
-
-commit:         b401b621 Linux 6.8-rc5
-git tree:       upstream
-kernel config:  https://syzkaller.appspot.com/x/.config?x=3Dd33318d4e4a0d22=
-6
-dashboard link: https://syzkaller.appspot.com/bug?extid=3D88ad8b0517a9d3bb9=
-dc8
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debia=
-n) 2.40
-
-Note: no patches were applied.
