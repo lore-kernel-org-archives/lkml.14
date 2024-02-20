@@ -1,35 +1,29 @@
 Received: from elvis.franken.de (elvis.franken.de [193.175.24.41])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F0AEF6A351;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F09A96A346;
 	Tue, 20 Feb 2024 13:48:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.175.24.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708436934; cv=none; b=XwkFbYIhUCOWPndzRB+FMvJuViLwxCOT8Tcy1BIv9CPAZ6XxdZn48WqISqtBjqNrc63WfTusVxd09YEq0QJYtiBzk2uKN1H+qPO6jYKC5ckPmSNWO2C5kswUcZ3ROMBT3VWU+XuCKXS9Ew4GHofZE0IfbFJln7zSIdyJ+zmwNdA=
+	t=1708436934; cv=none; b=Eh1hgIu8FOawRLMqGZ13/1ssJX8l4+8410GYNFCqowe09ZTmUDZtkl9KkW6b876jkptrI/ODg6ozdGpgc6DnLSVgGJGNN6xD2UEFzn8bIiYKrHkKWoBlINUzSMNAQ+3wwkM8lz36s3dE2CPUlmNG26FdOCMrSkTjUu//IfGybuo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1708436934; c=relaxed/simple;
-	bh=Yl/icjLDZM808VaGxQ+Hf9C0/O8MQvl2Zfavr53DyuQ=;
+	bh=SynaioFw+yQpRvdCOCb1Co5Ewh+f1Mqe+AUZhxJedIo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XzQXVNsRcuxCY7WcWE5Z9chBjtWs3nQu21b1H+FzudFdgoPaVe2L/H88yscFST948KXgimiwQ+G2MpPmAY/C/gQS913h1TarMUpLXH9CtarfupwBk3KrXylJegwXhS9IU1rG2U32GsJM6DR9VBlDL/o2yAMzNcGMzPkZq8DShdc=
+	 Content-Type:Content-Disposition:In-Reply-To; b=eiloiwJMgQord0zf3T2ag9K2+24IwQ9XTwC0gRG5Q2Wu/ZWq4LOn5xIomPTjNZ6wtnrwAvwkRrlkGNS9CRQw3VWXGIX+LoF6jysrWXPh3HvMOOIa60n6A2vkuZe4Bnfzjsx8mQq8RhMksSf+ub4ixw6bZ2xlritjjWBLwdLC65A=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpha.franken.de; spf=pass smtp.mailfrom=alpha.franken.de; arc=none smtp.client-ip=193.175.24.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpha.franken.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alpha.franken.de
 Received: from uucp by elvis.franken.de with local-rmail (Exim 3.36 #1)
-	id 1rcQUF-0007OM-00; Tue, 20 Feb 2024 14:48:43 +0100
+	id 1rcQUF-0007Od-00; Tue, 20 Feb 2024 14:48:43 +0100
 Received: by alpha.franken.de (Postfix, from userid 1000)
-	id DDBEAC04A2; Tue, 20 Feb 2024 14:36:43 +0100 (CET)
-Date: Tue, 20 Feb 2024 14:36:43 +0100
+	id 06587C0A1E; Tue, 20 Feb 2024 14:39:40 +0100 (CET)
+Date: Tue, 20 Feb 2024 14:39:40 +0100
 From: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-To: Serge Semin <Sergey.Semin@BAIKALELECTRONICS.ru>
-Cc: Lukas Bulwahn <lukas.bulwahn@gmail.com>,
-	Serge Semin <fancer.lancer@gmail.com>,
-	Alexey Malahov <Alexey.Malahov@BAIKALELECTRONICS.ru>,
-	Arnd Bergmann <arnd@arndb.de>, linux-mips@vger.kernel.org,
-	linux-pci@vger.kernel.org, linux-hwmon@vger.kernel.org,
-	kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/3] MAINTAINERS: Add maintainer for MIPS Baikal-T1
- platform code
-Message-ID: <ZdSq66XhxrqgyNBy@alpha.franken.de>
-References: <20231122170506.27267-1-Sergey.Semin@baikalelectronics.ru>
- <20231122170506.27267-4-Sergey.Semin@baikalelectronics.ru>
+To: Jiaxun Yang <jiaxun.yang@flygoat.com>
+Cc: Gregory CLEMENT <gregory.clement@bootlin.com>,
+	linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/8] MIPS: Unify register numbering macros for uasm
+Message-ID: <ZdSrnG493wn2U+5s@alpha.franken.de>
+References: <20240209-regname-v1-0-2125efa016ef@flygoat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -38,45 +32,45 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20231122170506.27267-4-Sergey.Semin@baikalelectronics.ru>
+In-Reply-To: <20240209-regname-v1-0-2125efa016ef@flygoat.com>
 
-On Wed, Nov 22, 2023 at 08:04:52PM +0300, Serge Semin wrote:
-> Add myself as a maintainer of the MIPS Baikal-T1 platform-specific
-> drivers. The arch-code hasn't been submitted yet, but will be soon enough.
-> Until then it's better to have the already available drivers marked as
-> maintained.
+On Fri, Feb 09, 2024 at 06:07:46PM +0000, Jiaxun Yang wrote:
+> Hi all,
 > 
-> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> This is a attempt to unify register numbering macros for uasm,
+> in response to review comment [1].
+> 
+> This is a rather large cosmetic change so I decided to send
+> it as a sepreate set.
+> 
+> Please review.
+> Thanks
+> 
+> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
 > ---
->  MAINTAINERS | 11 +++++++++++
->  1 file changed, 11 insertions(+)
+> Jiaxun Yang (8):
+>       MIPS: Unify define of CP0 registers for uasm code
+>       MIPS: regdefs.h: Guard all defines with __ASSEMBLY__
+>       MIPS: regdefs.h: Define a set of register numbers
+>       MIPS: traps: Use GPR number macros
+>       MIPS: page: Use GPR number macros
+>       MIPS: tlbex: Use GPR number macros
+>       MIPS: kvm/entry: Use GPR number macros
+>       MIPS: pm-cps: Use GPR number macros
 > 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 52ee905c50f4..a56e241608ae 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -14491,6 +14491,17 @@ F:	arch/mips/
->  F:	drivers/platform/mips/
->  F:	include/dt-bindings/mips/
->  
-> +MIPS BAIKAL-T1 PLATFORM
-> +M:	Serge Semin <fancer.lancer@gmail.com>
-> +L:	linux-mips@vger.kernel.org
-> +S:	Supported
-> +F:	Documentation/devicetree/bindings/bus/baikal,bt1-*.yaml
-> +F:	Documentation/devicetree/bindings/clock/baikal,bt1-*.yaml
-> +F:	drivers/bus/bt1-*.c
-> +F:	drivers/clk/baikal-t1/
-> +F:	drivers/memory/bt1-l2-ctl.c
-> +F:	drivers/mtd/maps/physmap-bt1-rom.[ch]
-> +
->  MIPS BOSTON DEVELOPMENT BOARD
->  M:	Paul Burton <paulburton@kernel.org>
->  L:	linux-mips@vger.kernel.org
-> -- 
-> 2.42.1
+>  arch/mips/include/asm/mipsregs.h | 249 +++++++++++++++++-----
+>  arch/mips/include/asm/regdef.h   |  91 +++++++++
+>  arch/mips/kernel/pm-cps.c        | 134 ++++++------
+>  arch/mips/kernel/traps.c         |   6 +-
+>  arch/mips/kvm/entry.c            | 431 +++++++++++++++++----------------------
+>  arch/mips/mm/page.c              | 202 +++++++++---------
+>  arch/mips/mm/tlbex.c             | 214 +++++++++----------
+>  7 files changed, 737 insertions(+), 590 deletions(-)
+> ---
+> base-commit: 445a555e0623387fa9b94e68e61681717e70200a
+> change-id: 20240209-regname-4c14f1147e25
 
-applied to mips-next.
+series applied to mips-next.
 
 Thomas.
 
