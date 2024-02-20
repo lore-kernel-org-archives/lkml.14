@@ -1,301 +1,163 @@
-Received: from out30-132.freemail.mail.aliyun.com (out30-132.freemail.mail.aliyun.com [115.124.30.132])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4857C5BAFA;
-	Tue, 20 Feb 2024 07:47:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.132
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 094785BAFD
+	for <linux-kernel@vger.kernel.org>; Tue, 20 Feb 2024 07:54:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708415262; cv=none; b=Ee1eDiO+63nmGTcrfBXqa03BumfD/di176IjFraBT8Deyc5g6cpynTLtdK0KfDbY2zYeaXLeAHTY8HPodc9p7hVDgxA1l/9Iqb+/ZFLpNvmO9SUqmmWnUBRq5+MjhVuyl/kht1aaVG7wQv4l2xicXLr96JuoZh2LGpOIOI5gh4k=
+	t=1708415650; cv=none; b=UKFHmHz/kbIVEjJHsc8MNKuIAwCF6blfo2zm/xB8ktHYMUuuv8DGjWlVB2C0qfSop73TOkuRBVxoOfff8KXaxLZnZG78xqwiwjG7FvLI9JkmYLyshpRQwzO01a/vYqQ2mYmwYAKev9u8Boerf/z3fgBmGajlesQsMAEV+f+purI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708415262; c=relaxed/simple;
-	bh=RFsXVlxOZJUTfN9EVsu5hd1DhPX3ZJKWJ/lBaekLx8w=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=jgYr6a5EEOmY9Nzfpo4WmQDtbS1OYwAPTQ/T7aasPmUUdF/vcbyDYqZfyLfrDZ/tfVPfa14D4pi3K6wFBEUpcDKgZVPAlbFP6nYf/Wru9FampjXISIubZB5xoD4bAvNQOs/tQQheVJD+JUI3Aq2l0ZchOvZrubbmQ1FvOCyeGUQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=bfQ14+bL; arc=none smtp.client-ip=115.124.30.132
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1708415650; c=relaxed/simple;
+	bh=nZRwj2fpad3qzEKDGddArjPflIxngkmQgThhJYg64dc=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=OaF1/Hr5be7VTSynZI0cuY4bq1fZeQ3tA0Z0/9CFftgJ18GBGADEk4dC/2l8k8xwNQoqPgisBgcmt366EdRoCh5qidq5PlMN1RbUheozHVk8NTRfz79vRFHj0uaPb0O8iyilRf0bkRIKJjN2rSWflD6ciydAzgYpkg/qFSNznbs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Vr/2mGgF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="bfQ14+bL"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1708415256; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=bnMt8FcyxluEOoMRGW7COyabNWUHt06Ggj96huHAMzk=;
-	b=bfQ14+bLqyJhwdsQN7PLFAMy47PKO5CP63cXAOVupmDfK/Doognhpzz6x+J+uDOGBtEkXKShvWSlXeG/jo01QkZWv/stHosQHRCwmAlwfhC09GCiP9m5il1tGpSccwiPgLHxSNLaDp3Wp+2PpbZpmh6FgNFNqnM/b8iwwKK1hBQ=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R591e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046056;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=10;SR=0;TI=SMTPD_---0W0w6wCb_1708415254;
-Received: from 30.97.48.246(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0W0w6wCb_1708415254)
-          by smtp.aliyun-inc.com;
-          Tue, 20 Feb 2024 15:47:35 +0800
-Message-ID: <9eb94a85-2d52-4f2c-8b9e-fde419717bd1@linux.alibaba.com>
-Date: Tue, 20 Feb 2024 15:47:34 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Vr/2mGgF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 76B5BC433C7;
+	Tue, 20 Feb 2024 07:54:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1708415649;
+	bh=nZRwj2fpad3qzEKDGddArjPflIxngkmQgThhJYg64dc=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=Vr/2mGgFfAue0SY+UF7cEYZOwWdvp5FO1cUEQ2Wf2EHU31cahpsEujyr03eOYRAyK
+	 hU0zoIJExoHn6KqcUZIT5D4gpst4/yDY3qmPglzpc3lZfcoWVwRB2FbgfwfSzPRZMU
+	 fo7Rj+/wuIIp03poIfY63SM+Gs7MQqVh/UmD3Wx1wjfoa+Aooq2PX3I6iY8RMPOI0f
+	 FsezOj6nz4TsmlocRTpgED0mgpocO2JBQ+4iybcAYTN1X9NiT+PDnsip9GbGHTOqtY
+	 4QgKzroZ0KsseifiabXTIRIWIi8pFNYYcfgJlVjOo4Rgbf7fq5H1z2YFYybYeTR532
+	 eLZh+M7Pqs7EQ==
+X-Mailer: emacs 29.2 (via feedmail 11-beta-1 I)
+From: Aneesh Kumar K.V <aneesh.kumar@kernel.org>
+To: "Huang, Ying" <ying.huang@intel.com>,
+	Donet Tom <donettom@linux.ibm.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Mel Gorman <mgorman@suse.de>,
+	Ben Widawsky <ben.widawsky@intel.com>,
+	Feng Tang <feng.tang@intel.com>, Michal Hocko <mhocko@kernel.org>,
+	Andrea Arcangeli <aarcange@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>, Rik van Riel <riel@surriel.com>,
+	Johannes Weiner <hannes@cmpxchg.org>,
+	Matthew Wilcox <willy@infradead.org>,
+	Mike Kravetz <mike.kravetz@oracle.com>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Hugh Dickins <hughd@google.com>,
+	Kefeng Wang <wangkefeng.wang@huawei.com>,
+	Suren Baghdasaryan <surenb@google.com>
+Subject: Re: [PATCH 3/3] mm/numa_balancing:Allow migrate on protnone
+ reference with MPOL_PREFERRED_MANY policy
+In-Reply-To: <877cizppsa.fsf@yhuang6-desk2.ccr.corp.intel.com>
+References: <9c3f7b743477560d1c5b12b8c111a584a2cc92ee.1708097962.git.donettom@linux.ibm.com>
+ <8d7737208bd24e754dc7a538a3f7f02de84f1f72.1708097962.git.donettom@linux.ibm.com>
+ <877cizppsa.fsf@yhuang6-desk2.ccr.corp.intel.com>
+Date: Tue, 20 Feb 2024 13:23:59 +0530
+Message-ID: <87sf1nzi3s.fsf@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [syzbot] [erofs?] KMSAN: uninit-value in z_erofs_lz4_decompress
- (3)
-To: syzbot <syzbot+88ad8b0517a9d3bb9dc8@syzkaller.appspotmail.com>,
- chao@kernel.org, huyue2@coolpad.com, jefflexu@linux.alibaba.com,
- linux-erofs@lists.ozlabs.org, linux-fsdevel@vger.kernel.org,
- linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com,
- xiang@kernel.org, netdev@vger.kernel.org
-References: <0000000000001123250611cb110a@google.com>
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-In-Reply-To: <0000000000001123250611cb110a@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 
-(+add -netdev)
+"Huang, Ying" <ying.huang@intel.com> writes:
 
-On 2024/2/20 15:22, syzbot wrote:
-> Hello,
-> 
-> syzbot tried to test the proposed patch but the build/boot failed:
-> 
-> le Layout Driver Registering...
+> Donet Tom <donettom@linux.ibm.com> writes:
+>
+>> commit bda420b98505 ("numa balancing: migrate on fault among multiple bound
+>> nodes") added support for migrate on protnone reference with MPOL_BIND
+>> memory policy. This allowed numa fault migration when the executing node
+>> is part of the policy mask for MPOL_BIND. This patch extends migration
+>> support to MPOL_PREFERRED_MANY policy.
+>>
+>> Currently, we cannot specify MPOL_PREFERRED_MANY with the mempolicy flag
+>> MPOL_F_NUMA_BALANCING. This causes issues when we want to use
+>> NUMA_BALANCING_MEMORY_TIERING. To effectively use the slow memory tier,
+>> the kernel should not allocate pages from the slower memory tier via
+>> allocation control zonelist fallback. Instead, we should move cold pages
+>> from the faster memory node via memory demotion. For a page allocation,
+>> kswapd is only woken up after we try to allocate pages from all nodes in
+>> the allocation zone list. This implies that, without using memory
+>> policies, we will end up allocating hot pages in the slower memory tier.
+>>
+>> MPOL_PREFERRED_MANY was added by commit b27abaccf8e8 ("mm/mempolicy: add
+>> MPOL_PREFERRED_MANY for multiple preferred nodes") to allow better
+>> allocation control when we have memory tiers in the system. With
+>> MPOL_PREFERRED_MANY, the user can use a policy node mask consisting only
+>> of faster memory nodes. When we fail to allocate pages from the faster
+>> memory node, kswapd would be woken up, allowing demotion of cold pages
+>> to slower memory nodes.
+>>
+>> With the current kernel, such usage of memory policies implies we can't
+>> do page promotion from a slower memory tier to a faster memory tier
+>> using numa fault. This patch fixes this issue.
+>>
+>> For MPOL_PREFERRED_MANY, if the executing node is in the policy node
+>> mask, we allow numa migration to the executing nodes. If the executing
+>> node is not in the policy node mask but the folio is already allocated
+>> based on policy preference (the folio node is in the policy node mask),
+>> we don't allow numa migration. If both the executing node and folio node
+>> are outside the policy node mask, we allow numa migration to the
+>> executing nodes.
+>>
+>> Signed-off-by: Aneesh Kumar K.V (IBM) <aneesh.kumar@kernel.org>
+>> Signed-off-by: Donet Tom <donettom@linux.ibm.com>
+>> ---
+>>  mm/mempolicy.c | 28 ++++++++++++++++++++++++++--
+>>  1 file changed, 26 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/mm/mempolicy.c b/mm/mempolicy.c
+>> index 73d698e21dae..8c4c92b10371 100644
+>> --- a/mm/mempolicy.c
+>> +++ b/mm/mempolicy.c
+>> @@ -1458,9 +1458,10 @@ static inline int sanitize_mpol_flags(int *mode, unsigned short *flags)
+>>  	if ((*flags & MPOL_F_STATIC_NODES) && (*flags & MPOL_F_RELATIVE_NODES))
+>>  		return -EINVAL;
+>>  	if (*flags & MPOL_F_NUMA_BALANCING) {
+>> -		if (*mode != MPOL_BIND)
+>> +		if (*mode == MPOL_BIND || *mode == MPOL_PREFERRED_MANY)
+>> +			*flags |= (MPOL_F_MOF | MPOL_F_MORON);
+>> +		else
+>>  			return -EINVAL;
+>> -		*flags |= (MPOL_F_MOF | MPOL_F_MORON);
+>>  	}
+>>  	return 0;
+>>  }
+>> @@ -2463,6 +2464,23 @@ static void sp_free(struct sp_node *n)
+>>  	kmem_cache_free(sn_cache, n);
+>>  }
+>>  
+>> +static inline bool mpol_preferred_should_numa_migrate(int exec_node, int folio_node,
+>> +					    struct mempolicy *pol)
+>> +{
+>> +	/* if the executing node is in the policy node mask, migrate */
+>> +	if (node_isset(exec_node, pol->nodes))
+>> +		return true;
+>> +
+>> +	/* If the folio node is in policy node mask, don't migrate */
+>> +	if (node_isset(folio_node, pol->nodes))
+>> +		return false;
+>> +	/*
+>> +	 * both the folio node and executing node are outside the policy nodemask,
+>> +	 * migrate as normal numa fault migration.
+>> +	 */
+>> +	return true;
+>
+> Why?  This may cause some unexpected result.  For example, pages may be
+> distributed among multiple sockets unexpectedly.  So, I prefer the more
+> conservative policy, that is, only migrate if this node is in
+> pol->nodes.
+>
 
-...
+This will only have an impact if the user specifies
+MPOL_F_NUMA_BALANCING. This means that the user is explicitly requesting
+for frequently accessed memory pages to be migrated. Memory policy
+MPOL_PREFERRED_MANY is able to allocate pages from nodes outside of
+policy->nodes. For the specific use case that I am interested in, it
+should be okay to restrict it to policy->nodes. However, I am wondering
+if this is too restrictive given the definition of MPOL_PREFERRED_MANY.
 
-> [   29.540501][    T1] null_blk: disk nullb0 created
-> [   29.545733][    T1] null_blk: module loaded
-> [   29.551941][    T1] Guest personality initialized and is inactive
-> [   29.560955][    T1] VMCI host device registered (name=vmci, major=10, minor=118)
-> [   29.569840][    T1] Initialized host personality
-> [   29.575750][    T1] usbcore: registered new interface driver rtsx_usb
-> [   29.585633][    T1] usbcore: registered new interface driver viperboard
-> [   29.594432][    T1] usbcore: registered new interface driver dln2
-> [   29.602202][    T1] usbcore: registered new interface driver pn533_usb
-> [   29.616932][    T1] nfcsim 0.2 initialized
-> [   29.622086][    T1] usbcore: registered new interface driver port100
-> [   29.629914][    T1] usbcore: registered new interface driver nfcmrvl
-> [   29.648231][    T1] Loading iSCSI transport class v2.0-870.
-> [   29.684669][    T1] virtio_scsi virtio0: 1/0/0 default/read/poll queues
-> [   29.731303][    T1] scsi host0: Virtio SCSI HBA
-> [   30.283396][    T1] st: Version 20160209, fixed bufsize 32768, s/g segs 256
-> [   30.301725][   T72] scsi 0:0:1:0: Direct-Access     Google   PersistentDisk   1    PQ: 0 ANSI: 6
-> [   30.344813][    T1] Rounding down aligned max_sectors from 4294967295 to 4294967288
-> [   30.362347][    T1] db_root: cannot open: /etc/target
-> [   30.395006][    T1] =====================================================
-> [   30.395260][    T1] BUG: KMSAN: use-after-free in __list_del_entry_valid_or_report+0x19e/0x490
-> [   30.395432][    T1]  __list_del_entry_valid_or_report+0x19e/0x490
-> [   30.395596][    T1]  stack_depot_save_flags+0x3e7/0x7b0
-> [   30.395700][    T1]  stack_depot_save+0x12/0x20
-> [   30.395793][    T1]  ref_tracker_alloc+0x215/0x700
-> [   30.395890][    T1]  netdev_queue_update_kobjects+0x256/0x870
-> [   30.396031][    T1]  netdev_register_kobject+0x41e/0x520
-
-It seems it got some similar boot-failure issue:
-https://lore.kernel.org/r/00000000000036e27e0610890a65@google.com
-https://lore.kernel.org/r/000000000000bacd1706107232cd@google.com
-
-before I tend to verify a resolved duplicated report:
-https://syzkaller.appspot.com/bug?extid=6c746eea496f34b3161d
-
-Thanks,
-Gao Xiang
-
-> [   30.396149][    T1]  register_netdevice+0x198f/0x2170
-> [   30.396264][    T1]  bond_create+0x138/0x2a0
-> [   30.396406][    T1]  bonding_init+0x1a7/0x2d0
-> [   30.396505][    T1]  do_one_initcall+0x216/0x960
-> [   30.396640][    T1]  do_initcall_level+0x140/0x350
-> [   30.396748][    T1]  do_initcalls+0xf0/0x1d0
-> [   30.396848][    T1]  do_basic_setup+0x22/0x30
-> [   30.396959][    T1]  kernel_init_freeable+0x300/0x4b0
-> [   30.397071][    T1]  kernel_init+0x2f/0x7e0
-> [   30.397189][    T1]  ret_from_fork+0x66/0x80
-> [   30.397216][    T1]  ret_from_fork_asm+0x11/0x20
-> [   30.397216][    T1]
-> [   30.397216][    T1] Uninit was created at:
-> [   30.397216][    T1]  free_unref_page_prepare+0xc1/0xad0
-> [   30.397216][    T1]  free_unref_page+0x58/0x6d0
-> [   30.397216][    T1]  __free_pages+0xb1/0x1f0
-> [   30.397216][    T1]  thread_stack_free_rcu+0x97/0xb0
-> [   30.397216][    T1]  rcu_core+0xa3c/0x1df0
-> [   30.397216][    T1]  rcu_core_si+0x12/0x20
-> [   30.397216][    T1]  __do_softirq+0x1b7/0x7c3
-> [   30.397216][    T1]
-> [   30.397216][    T1] CPU: 1 PID: 1 Comm: swapper/0 Not tainted 6.8.0-rc5-syzkaller-gb401b621758e #0
-> [   30.397216][    T1] Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/25/2024
-> [   30.397216][    T1] =====================================================
-> [   30.397216][    T1] Disabling lock debugging due to kernel taint
-> [   30.397216][    T1] Kernel panic - not syncing: kmsan.panic set ...
-> [   30.397216][    T1] CPU: 1 PID: 1 Comm: swapper/0 Tainted: G    B              6.8.0-rc5-syzkaller-gb401b621758e #0
-> [   30.397216][    T1] Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/25/2024
-> [   30.397216][    T1] Call Trace:
-> [   30.397216][    T1]  <TASK>
-> [   30.397216][    T1]  dump_stack_lvl+0x1bf/0x240
-> [   30.397216][    T1]  dump_stack+0x1e/0x20
-> [   30.397216][    T1]  panic+0x4de/0xc90
-> [   30.397216][    T1]  kmsan_report+0x2d0/0x2d0
-> [   30.397216][    T1]  ? kmsan_get_metadata+0x146/0x1c0
-> [   30.397216][    T1]  ? __msan_warning+0x96/0x110
-> [   30.397216][    T1]  ? __list_del_entry_valid_or_report+0x19e/0x490
-> [   30.397216][    T1]  ? stack_depot_save_flags+0x3e7/0x7b0
-> [   30.397216][    T1]  ? stack_depot_save+0x12/0x20
-> [   30.397216][    T1]  ? ref_tracker_alloc+0x215/0x700
-> [   30.397216][    T1]  ? netdev_queue_update_kobjects+0x256/0x870
-> [   30.397216][    T1]  ? netdev_register_kobject+0x41e/0x520
-> [   30.397216][    T1]  ? register_netdevice+0x198f/0x2170
-> [   30.397216][    T1]  ? bond_create+0x138/0x2a0
-> [   30.397216][    T1]  ? bonding_init+0x1a7/0x2d0
-> [   30.397216][    T1]  ? do_one_initcall+0x216/0x960
-> [   30.397216][    T1]  ? do_initcall_level+0x140/0x350
-> [   30.397216][    T1]  ? do_initcalls+0xf0/0x1d0
-> [   30.397216][    T1]  ? do_basic_setup+0x22/0x30
-> [   30.397216][    T1]  ? kernel_init_freeable+0x300/0x4b0
-> [   30.397216][    T1]  ? kernel_init+0x2f/0x7e0
-> [   30.397216][    T1]  ? ret_from_fork+0x66/0x80
-> [   30.397216][    T1]  ? ret_from_fork_asm+0x11/0x20
-> [   30.397216][    T1]  ? kmsan_get_shadow_origin_ptr+0x4d/0xa0
-> [   30.397216][    T1]  ? kmsan_get_metadata+0x146/0x1c0
-> [   30.397216][    T1]  ? kmsan_get_metadata+0x146/0x1c0
-> [   30.397216][    T1]  ? kmsan_get_metadata+0x146/0x1c0
-> [   30.397216][    T1]  ? kmsan_get_shadow_origin_ptr+0x4d/0xa0
-> [   30.397216][    T1]  ? _raw_spin_lock_irqsave+0x35/0xc0
-> [   30.397216][    T1]  ? filter_irq_stacks+0x60/0x1a0
-> [   30.397216][    T1]  ? stack_depot_save_flags+0x2c/0x7b0
-> [   30.397216][    T1]  ? kmsan_get_metadata+0x146/0x1c0
-> [   30.397216][    T1]  ? kmsan_get_metadata+0x146/0x1c0
-> [   30.397216][    T1]  ? kmsan_get_metadata+0x146/0x1c0
-> [   30.397216][    T1]  ? kmsan_get_shadow_origin_ptr+0x4d/0xa0
-> [   30.397216][    T1]  __msan_warning+0x96/0x110
-> [   30.397216][    T1]  __list_del_entry_valid_or_report+0x19e/0x490
-> [   30.397216][    T1]  stack_depot_save_flags+0x3e7/0x7b0
-> [   30.397216][    T1]  stack_depot_save+0x12/0x20
-> [   30.397216][    T1]  ref_tracker_alloc+0x215/0x700
-> [   30.397216][    T1]  ? netdev_queue_update_kobjects+0x256/0x870
-> [   30.397216][    T1]  ? netdev_register_kobject+0x41e/0x520
-> [   30.397216][    T1]  ? register_netdevice+0x198f/0x2170
-> [   30.397216][    T1]  ? bond_create+0x138/0x2a0
-> [   30.397216][    T1]  ? bonding_init+0x1a7/0x2d0
-> [   30.397216][    T1]  ? do_one_initcall+0x216/0x960
-> [   30.397216][    T1]  ? do_initcall_level+0x140/0x350
-> [   30.397216][    T1]  ? do_initcalls+0xf0/0x1d0
-> [   30.397216][    T1]  ? do_basic_setup+0x22/0x30
-> [   30.397216][    T1]  ? kernel_init_freeable+0x300/0x4b0
-> [   30.397216][    T1]  ? kernel_init+0x2f/0x7e0
-> [   30.397216][    T1]  ? ret_from_fork+0x66/0x80
-> [   30.397216][    T1]  ? ret_from_fork_asm+0x11/0x20
-> [   30.397216][    T1]  ? kmsan_internal_unpoison_memory+0x14/0x20
-> [   30.397216][    T1]  netdev_queue_update_kobjects+0x256/0x870
-> [   30.397216][    T1]  netdev_register_kobject+0x41e/0x520
-> [   30.397216][    T1]  register_netdevice+0x198f/0x2170
-> [   30.397216][    T1]  ? kmsan_get_shadow_origin_ptr+0x4d/0xa0
-> [   30.397216][    T1]  bond_create+0x138/0x2a0
-> [   30.397216][    T1]  ? kmsan_get_shadow_origin_ptr+0x4d/0xa0
-> [   30.397216][    T1]  bonding_init+0x1a7/0x2d0
-> [   30.397216][    T1]  ? spi_dln2_driver_init+0x40/0x40
-> [   30.397216][    T1]  do_one_initcall+0x216/0x960
-> [   30.397216][    T1]  ? spi_dln2_driver_init+0x40/0x40
-> [   30.397216][    T1]  ? kmsan_get_metadata+0xb0/0x1c0
-> [   30.397216][    T1]  ? kmsan_get_shadow_origin_ptr+0x4d/0xa0
-> [   30.397216][    T1]  ? filter_irq_stacks+0x60/0x1a0
-> [   30.397216][    T1]  ? stack_depot_save_flags+0x2c/0x7b0
-> [   30.407722][    T1]  ? skip_spaces+0x8f/0xc0
-> [   30.407722][    T1]  ? kmsan_get_metadata+0x146/0x1c0
-> [   30.407922][    T1]  ? kmsan_get_metadata+0x146/0x1c0
-> [   30.407922][    T1]  ? kmsan_get_shadow_origin_ptr+0x4d/0xa0
-> [   30.407922][    T1]  ? kmsan_get_metadata+0x146/0x1c0
-> [   30.407922][    T1]  ? kmsan_get_shadow_origin_ptr+0x4d/0xa0
-> [   30.407922][    T1]  ? parse_args+0x1511/0x15e0
-> [   30.407922][    T1]  ? kmsan_get_metadata+0x146/0x1c0
-> [   30.407922][    T1]  ? kmsan_get_shadow_origin_ptr+0x4d/0xa0
-> [   30.407922][    T1]  ? spi_dln2_driver_init+0x40/0x40
-> [   30.408958][    T1]  do_initcall_level+0x140/0x350
-> [   30.408958][    T1]  do_initcalls+0xf0/0x1d0
-> [   30.408958][    T1]  ? arch_cpuhp_init_parallel_bringup+0xe0/0xe0
-> [   30.408958][    T1]  do_basic_setup+0x22/0x30
-> [   30.408958][    T1]  kernel_init_freeable+0x300/0x4b0
-> [   30.408958][    T1]  ? rest_init+0x260/0x260
-> [   30.408958][    T1]  kernel_init+0x2f/0x7e0
-> [   30.408958][    T1]  ? rest_init+0x260/0x260
-> [   30.408958][    T1]  ret_from_fork+0x66/0x80
-> [   30.409978][    T1]  ? rest_init+0x260/0x260
-> [   30.409978][    T1]  ret_from_fork_asm+0x11/0x20
-> [   30.409978][    T1]  </TASK>
-> [   30.409978][    T1] Kernel Offset: disabled
-> 
-> 
-> syzkaller build log:
-> go env (err=<nil>)
-> GO111MODULE='auto'
-> GOARCH='amd64'
-> GOBIN=''
-> GOCACHE='/syzkaller/.cache/go-build'
-> GOENV='/syzkaller/.config/go/env'
-> GOEXE=''
-> GOEXPERIMENT=''
-> GOFLAGS=''
-> GOHOSTARCH='amd64'
-> GOHOSTOS='linux'
-> GOINSECURE=''
-> GOMODCACHE='/syzkaller/jobs-2/linux/gopath/pkg/mod'
-> GONOPROXY=''
-> GONOSUMDB=''
-> GOOS='linux'
-> GOPATH='/syzkaller/jobs-2/linux/gopath'
-> GOPRIVATE=''
-> GOPROXY='https://proxy.golang.org,direct'
-> GOROOT='/usr/local/go'
-> GOSUMDB='sum.golang.org'
-> GOTMPDIR=''
-> GOTOOLCHAIN='auto'
-> GOTOOLDIR='/usr/local/go/pkg/tool/linux_amd64'
-> GOVCS=''
-> GOVERSION='go1.21.4'
-> GCCGO='gccgo'
-> GOAMD64='v1'
-> AR='ar'
-> CC='gcc'
-> CXX='g++'
-> CGO_ENABLED='1'
-> GOMOD='/syzkaller/jobs-2/linux/gopath/src/github.com/google/syzkaller/go.mod'
-> GOWORK=''
-> CGO_CFLAGS='-O2 -g'
-> CGO_CPPFLAGS=''
-> CGO_CXXFLAGS='-O2 -g'
-> CGO_FFLAGS='-O2 -g'
-> CGO_LDFLAGS='-O2 -g'
-> PKG_CONFIG='pkg-config'
-> GOGCCFLAGS='-fPIC -m64 -pthread -Wl,--no-gc-sections -fmessage-length=0 -ffile-prefix-map=/tmp/go-build1804868575=/tmp/go-build -gno-record-gcc-switches'
-> 
-> git status (err=<nil>)
-> HEAD detached at 373b66cd2
-> nothing to commit, working tree clean
-> 
-> 
-> tput: No value for $TERM and no -T specified
-> tput: No value for $TERM and no -T specified
-> Makefile:32: run command via tools/syz-env for best compatibility, see:
-> Makefile:33: https://github.com/google/syzkaller/blob/master/docs/contributing.md#using-syz-env
-> go list -f '{{.Stale}}' ./sys/syz-sysgen | grep -q false || go install ./sys/syz-sysgen
-> make .descriptions
-> tput: No value for $TERM and no -T specified
-> tput: No value for $TERM and no -T specified
-> bin/syz-sysgen
-> touch .descriptions
-> GOOS=linux GOARCH=amd64 go build "-ldflags=-s -w -X github.com/google/syzkaller/prog.GitRevision=373b66cd2ba1fd05c72d0bbe16141fb287fe2eb3 -X 'github.com/google/syzkaller/prog.gitRevisionDate=20240130-131205'" "-tags=syz_target syz_os_linux syz_arch_amd64 " -o ./bin/linux_amd64/syz-fuzzer github.com/google/syzkaller/syz-fuzzer
-> GOOS=linux GOARCH=amd64 go build "-ldflags=-s -w -X github.com/google/syzkaller/prog.GitRevision=373b66cd2ba1fd05c72d0bbe16141fb287fe2eb3 -X 'github.com/google/syzkaller/prog.gitRevisionDate=20240130-131205'" "-tags=syz_target syz_os_linux syz_arch_amd64 " -o ./bin/linux_amd64/syz-execprog github.com/google/syzkaller/tools/syz-execprog
-> GOOS=linux GOARCH=amd64 go build "-ldflags=-s -w -X github.com/google/syzkaller/prog.GitRevision=373b66cd2ba1fd05c72d0bbe16141fb287fe2eb3 -X 'github.com/google/syzkaller/prog.gitRevisionDate=20240130-131205'" "-tags=syz_target syz_os_linux syz_arch_amd64 " -o ./bin/linux_amd64/syz-stress github.com/google/syzkaller/tools/syz-stress
-> mkdir -p ./bin/linux_amd64
-> gcc -o ./bin/linux_amd64/syz-executor executor/executor.cc \
-> 	-m64 -O2 -pthread -Wall -Werror -Wparentheses -Wunused-const-variable -Wframe-larger-than=16384 -Wno-stringop-overflow -Wno-array-bounds -Wno-format-overflow -Wno-unused-but-set-variable -Wno-unused-command-line-argument -static-pie -fpermissive -w -DGOOS_linux=1 -DGOARCH_amd64=1 \
-> 	-DHOSTGOOS_linux=1 -DGIT_REVISION=\"373b66cd2ba1fd05c72d0bbe16141fb287fe2eb3\"
-> 
-> 
-> Error text is too large and was truncated, full error text is at:
-> https://syzkaller.appspot.com/x/error.txt?x=12579b34180000
-> 
-> 
-> Tested on:
-> 
-> commit:         b401b621 Linux 6.8-rc5
-> git tree:       upstream
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=d33318d4e4a0d226
-> dashboard link: https://syzkaller.appspot.com/bug?extid=88ad8b0517a9d3bb9dc8
-> compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-> 
-> Note: no patches were applied.
+-aneesh
