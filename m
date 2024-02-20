@@ -1,154 +1,255 @@
-Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 117BE76058
-	for <linux-kernel@vger.kernel.org>; Tue, 20 Feb 2024 15:55:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32E452C6AA
+	for <linux-kernel@vger.kernel.org>; Tue, 20 Feb 2024 15:57:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708444545; cv=none; b=Vdh/swyA/AUzH30aeqVi+3P7tIsWiwS7WwqrrSwmadHfdCiEfkzo0smYlZ1w93OXhznhtthPypFpG1ge3EIHEro+FNQb79eG3RxyU4R+puM4AJiG1Bsn0BymtkZr0KS9alWIGUerlZA1EvsbyZUxCoDzuw1NRBZ7iKiCDxHZ23Q=
+	t=1708444627; cv=none; b=NeZf8UPu2sCBx2Ugkp+f48ymJwA+VtRXTm3SJb6ufj0X759ILl2OmEUIcys52IkTJJVnDfOXMjQLzVaZbzyl5NR9uL+g29JU0rZRea+hoByCJbazYRrAAJQqBrCsjX/5DjUd/YfyuA47BlLymya1oP7cwfAOg87Pvd7w3DadJ74=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708444545; c=relaxed/simple;
-	bh=Kz0GA9Y94W0SFhelWwox2nUv5tXBxEbev4X5jMa+djk=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=Vp+ykVdIr5eeaL3T8s4SMPEnWiGX1DCtmz5g1Li4maJw78HMcdGW9oO5HyTjgAyrDZR2ybXurPYmYfxa2z3IbN6f3bMhJHYEkZ2SM/+jbhAnR3Yj+qmiiYvHXs9m4YCp+2TwBqAWvdHFEakZp0nUXS69l8eJUG8zfSudFzNTi/g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=p2EhsI2l; arc=none smtp.client-ip=209.85.128.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1708444627; c=relaxed/simple;
+	bh=Bwe1QO9l+GtxBba7WsuK9HJ8YAbX9q8YPkmY27vB80Y=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=jP4tnmCW0YFDiCnPC5Do3aJQqai9ivixSZdBoQnz2IEB4jBIk+DbFlqBdXC9CvP45fDxl6TGyhMrZ+Pf4NpzBOWoLIUTZJmCEAWRohKi8HovGYTk2td9kmnv6+FcUoW2DycvglEEQxIV7Bf7UnqHSEw4KaDksDe9p2fAL27/3Rc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GR8WiPMh; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="p2EhsI2l"
-Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-5ffee6fcdc1so72519537b3.2
-        for <linux-kernel@vger.kernel.org>; Tue, 20 Feb 2024 07:55:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1708444543; x=1709049343; darn=vger.kernel.org;
-        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=nkZ1YNi4HdlEBdTOsrosj2I/p2QRJpg3Qe1Xk4lNWF0=;
-        b=p2EhsI2lVDdB7akSjITmV+58d9qTKwuMEdrSp3830ZiHSdU0mDJR+gTOMen74z130I
-         R3iz4/oR8riFKKW7Eqeu06w77IeKsZC0d+W5tJD1PJSNQCl0+cP+uhMDc/w7DRefN2ne
-         aQW3r8DfSGG1ZLO4NutXsF0wdIdY0QvVSRJWyjf6Go4P4gZRQH01amUDHTVfmMJhd/BW
-         rhi1bD9k+EYoXy6/LTbqW8I2LRS0DmlN6E00DuLWi/9v5DVOLfA/XHBECVhYvZfGAs0Q
-         0Q4jtgtN6XONO37Tlus7+J4PnzB2v7eUspOwU3r12hMZZJ0HR4dyzziUpyxEM9D1R7bN
-         4NJg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708444543; x=1709049343;
-        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=nkZ1YNi4HdlEBdTOsrosj2I/p2QRJpg3Qe1Xk4lNWF0=;
-        b=WDRM4QcKzFuJbzbvsNtOnW1m++apEALklzJ/fpvspT3yEGaMFQmQEeHIb0w6ORDPjR
-         IFlaTTMcTH+btSsmwcuGb5FXDigRjE51zERZ0yfXp7aUWcq/723h7w96FxQwRvhu71sh
-         SNHukJeqZw79x7432nZcNj8lFCGDFJsp9ZFpsH3fTpLfq++H1ccHrLQdAEdJ8rCd6bsT
-         hN1pOuEs7a/FX/mudKMiE6f0kf3WqgF6UfjldhwUXSAW8Q+rh3AIyGciaAqwv+RGu3PB
-         RgmoInt6HgAWkA9H/nfV55gEDbaiAmZTygyiiHwg1f/oEL1n7snbNXWroZbcLDRg5Pdj
-         DnjA==
-X-Forwarded-Encrypted: i=1; AJvYcCUr17q/RpUzD08l+GQHkVuOO3TjiM4+VwcQ1YUbMNnXDmpfo6lYQBODS03vNT7vsIxt4qUDQHuqT/3w89piVyPuvW63TbrrK5VgPhiL
-X-Gm-Message-State: AOJu0YzRQBrtxVkq8z6MibCkFYq8sush6CFB/QGTETYjAm7rJAz6wIeg
-	3z5aGRjiS2AypKBeF6/FvSy1lmgyAgvMhRfq2jLf3YFyfrQb5tfv3huUs+IOITJaGrcfuQTNfAG
-	vFQ==
-X-Google-Smtp-Source: AGHT+IF1JkxDWJLA5wtljU6ntRBClVsQ/F9GLWL8bomcPlRftmO9ep/YZ1ByFg2cif0LNqgTe/Rychu4wWM=
-X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a81:ee0a:0:b0:608:66be:2f71 with SMTP id
- l10-20020a81ee0a000000b0060866be2f71mr302250ywm.9.1708444543193; Tue, 20 Feb
- 2024 07:55:43 -0800 (PST)
-Date: Tue, 20 Feb 2024 07:55:13 -0800
-In-Reply-To: <20240215152916.1158-1-paul@xen.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GR8WiPMh"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1708444625; x=1739980625;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=Bwe1QO9l+GtxBba7WsuK9HJ8YAbX9q8YPkmY27vB80Y=;
+  b=GR8WiPMhdvXciysfDoSyvQOBWpiA06Wu5Autjl0I6mk+afLzAgkRoyR4
+   2J3eVHxSHQfyLIgsLQymqK4PxshvZWekHNnVIbSJaUhmQAXxDFpy/xrW1
+   einXgoV/tE7AGK5tbP4uFTalDXjvtmV11y8/jii0olup7yg8FlYmlJZIm
+   gLOKz7okF9ylAqu0X6XuKtT3SP1VjL+g2MKsDnHzkR7RrBEfTjz5ZazhH
+   yfXjIq3PqLp2uqm/YEWjXAx1PxUcTN/9tyFdWkvV8oW4V66V5/a5en/By
+   q/uJdlU4uUEAyLilE1uSIIIf4z5HMlyKp/NCkA0RdB1CMw6GZJcctn149
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10990"; a="2417188"
+X-IronPort-AV: E=Sophos;i="6.06,174,1705392000"; 
+   d="scan'208";a="2417188"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Feb 2024 07:57:04 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.06,174,1705392000"; 
+   d="scan'208";a="42307590"
+Received: from feng-clx.sh.intel.com ([10.239.159.50])
+  by orviesa001.jf.intel.com with ESMTP; 20 Feb 2024 07:57:01 -0800
+From: Feng Tang <feng.tang@intel.com>
+To: John Stultz <jstultz@google.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Jonathan Corbet <corbet@lwn.net>,
+	paulmck@kernel.org,
+	Peter Zijlstra <peterz@infradead.org>,
+	Waiman Long <longman@redhat.com>,
+	linux-kernel@vger.kernel.org
+Cc: Feng Tang <feng.tang@intel.com>,
+	Jin Wang <jin1.wang@intel.com>
+Subject: [PATCH v4] clocksource: Scale the max retry number of watchdog read according to CPU numbers
+Date: Tue, 20 Feb 2024 23:43:02 +0800
+Message-Id: <20240220154302.848412-1-feng.tang@intel.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20240215152916.1158-1-paul@xen.org>
-X-Mailer: git-send-email 2.44.0.rc0.258.g7320e95886-goog
-Message-ID: <170838297541.2281798.7838961694439257911.b4-ty@google.com>
-Subject: Re: [PATCH v13 00/21] KVM: xen: update shared_info and vcpu_info handling
-From: Sean Christopherson <seanjc@google.com>
-To: Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>, 
-	Jonathan Corbet <corbet@lwn.net>, Christian Borntraeger <borntraeger@linux.ibm.com>, 
-	Janosch Frank <frankja@linux.ibm.com>, Claudio Imbrenda <imbrenda@linux.ibm.com>, 
-	David Hildenbrand <david@redhat.com>, Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, 
-	Alexander Gordeev <agordeev@linux.ibm.com>, Sven Schnelle <svens@linux.ibm.com>, 
-	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	"H. Peter Anvin" <hpa@zytor.com>, David Woodhouse <dwmw2@infradead.org>, Shuah Khan <shuah@kernel.org>, 
-	kvm@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-s390@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	Paul Durrant <paul@xen.org>
-Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Thu, 15 Feb 2024 15:28:55 +0000, Paul Durrant wrote:
-> From: Paul Durrant <pdurrant@amazon.com>
-> 
-> This series contains a new patch from Sean added since v12 [1]:
-> 
-> * KVM: s390: Refactor kvm_is_error_gpa() into kvm_is_gpa_in_memslot()
-> 
-> This frees up the function name kvm_is_error_gpa() such that it can then be
-> re-defined in:
-> 
-> [...]
+There was a bug on one 8-socket server that the TSC is wrongly marked
+as 'unstable' and disabled during boot time (reproduce rate is about
+every 120 rounds of reboot tests), with log:
 
-*sigh*
+    clocksource: timekeeping watchdog on CPU227: wd-tsc-wd excessive read-back delay of 153560ns vs. limit of 125000ns,
+    wd-wd read-back delay only 11440ns, attempt 3, marking tsc unstable
+    tsc: Marking TSC unstable due to clocksource watchdog
+    TSC found unstable after boot, most likely due to broken BIOS. Use 'tsc=unstable'.
+    sched_clock: Marking unstable (119294969739, 159204297)<-(125446229205, -5992055152)
+    clocksource: Checking clocksource tsc synchronization from CPU 319 to CPUs 0,99,136,180,210,542,601,896.
+    clocksource: Switched to clocksource hpet
 
-I forgot to hit "send" on this yesterday.  But lucky for me, that worked out in
-my favor as I needed to rebase on top of kvm/kvm-uapi to avoid pointless conflicts
-in the uapi headeres.
+The reason is for platform with lots of CPU, there are sporadic big or
+huge read latency of read watchog/clocksource during boot or when system
+is under stress work load, and the frequency and maximum value of the
+latency goes up with the increasing of CPU numbers. Current code already
+has logic to detect and filter such high latency case by reading 3 times
+of watchdog, and check the 2 deltas. Due to the randomness of the
+latency, there is a low possibility situation that the first delta
+(latency) is big, but the second delta is small and looks valid, which
+can escape from the check, and there is a 'max_cswd_read_retries' for
+retrying that check covering this case, whose default value is only 2
+and may be not enough for machines with huge number of CPUs.
 
-So....
+So scale and enlarge the max retry number according to CPU number to
+better filter those latency noise for large systems, which has been
+verified fine in 4 days reboot test on the 8-socket machine.
 
-Applied to kvm-x86 xen, minus 18 and 19 (trylock stuff) and 21 (locking cleanup
-that we're doing elsewhere).
+Also as suggested by Thomas, remove parameter 'max_cswd_read_retries'
+which was originally introduced to cover this.
 
-Paul and David, please take (another) look at the end result to make sure you don't
-object to any of my tweaks and that I didn't botch anything.
+Signed-off-by: Feng Tang <feng.tang@intel.com>
+Tested-by: Jin Wang <jin1.wang@intel.com>
+Tested-by: Paul E. McKenney <paulmck@kernel.org>
+Reviewed-by: Waiman Long <longman@redhat.com>
+---
+ 
+Hi Paul, Waiman,
 
-s390 folks, I'm applying/pushing now to get it into -next asap, but I'll make
-sure to get acks/reviews on patch 08/21 before I do anything else with this
-branch/series.
+I keep your 'Tested-by' and 'Reviewed-by' tag for v3, as I think the
+core logic of the patch isn't changed. Please let me know if you
+think otherwise. thanks!
 
-Thanks!
+Changelog:
 
-[01/21] KVM: pfncache: Add a map helper function
-        https://github.com/kvm-x86/linux/commit/f39b80e3ff12
-[02/21] KVM: pfncache: remove unnecessary exports
-        https://github.com/kvm-x86/linux/commit/41496fffc0e1
-[03/21] KVM: x86/xen: mark guest pages dirty with the pfncache lock held
-        https://github.com/kvm-x86/linux/commit/4438355ec6e1
-[04/21] KVM: pfncache: add a mark-dirty helper
-        https://github.com/kvm-x86/linux/commit/78b74638eb6d
-[05/21] KVM: pfncache: remove KVM_GUEST_USES_PFN usage
-        https://github.com/kvm-x86/linux/commit/a4bff3df5147
-[06/21] KVM: pfncache: stop open-coding offset_in_page()
-        https://github.com/kvm-x86/linux/commit/53e63e953e14
-[07/21] KVM: pfncache: include page offset in uhva and use it consistently
-        https://github.com/kvm-x86/linux/commit/406c10962a4c
-[08/21] KVM: s390: Refactor kvm_is_error_gpa() into kvm_is_gpa_in_memslot()
-        https://github.com/kvm-x86/linux/commit/9e7325acb3dc
-[09/21] KVM: pfncache: allow a cache to be activated with a fixed (userspace) HVA
-        https://github.com/kvm-x86/linux/commit/721f5b0dda78
-[10/21] KVM: x86/xen: separate initialization of shared_info cache and content
-        https://github.com/kvm-x86/linux/commit/c01c55a34f28
-[11/21] KVM: x86/xen: re-initialize shared_info if guest (32/64-bit) mode is set
-        https://github.com/kvm-x86/linux/commit/21b99e4d6db6
-[12/21] KVM: x86/xen: allow shared_info to be mapped by fixed HVA
-        https://github.com/kvm-x86/linux/commit/10dcbfc46724
-[13/21] KVM: x86/xen: allow vcpu_info to be mapped by fixed HVA
-        https://github.com/kvm-x86/linux/commit/16877dd45f98
-[14/21] KVM: selftests: map Xen's shared_info page using HVA rather than GFN
-        https://github.com/kvm-x86/linux/commit/95c27ed8619b
-[15/21] KVM: selftests: re-map Xen's vcpu_info using HVA rather than GPA
-        https://github.com/kvm-x86/linux/commit/5359bf19a3f0
-[16/21] KVM: x86/xen: advertize the KVM_XEN_HVM_CONFIG_SHARED_INFO_HVA capability
-        https://github.com/kvm-x86/linux/commit/49668ce7e1ae
-[17/21] KVM: x86/xen: split up kvm_xen_set_evtchn_fast()
-        (not applied)
-[18/21] KVM: x86/xen: don't block on pfncache locks in kvm_xen_set_evtchn_fast()
-        (not applied)
-[19/21] KVM: pfncache: check the need for invalidation under read lock first
-        https://github.com/kvm-x86/linux/commit/21dadfcd665e
-[20/21] KVM: x86/xen: allow vcpu_info content to be 'safely' copied
-        https://github.com/kvm-x86/linux/commit/dadeabc3b6fa
-[21/21] KVM: pfncache: rework __kvm_gpc_refresh() to fix locking issues
-        (not applied)
+    since v3:
+      * Remove clocksource's module parameter 'max_cswd_read_retries' (Thomas)
+      * Use "ilog4" instead of ilog2 for max retry calculation, and
+        may be adjusted later (Paul)
 
---
-https://github.com/kvm-x86/linux/tree/next
+    since v2:
+      * Fix the unexported symbol of helper function being used by
+        kernel module issue (Waiman)
+
+    since v1:
+      * Add santity check for user input value of 'max_cswd_read_retries'
+        and a helper function for getting max retry nubmer (Paul)
+      * Apply the same logic to watchdog test code (Waiman)
+
+
+ Documentation/admin-guide/kernel-parameters.txt  |  6 ------
+ include/linux/clocksource.h                      |  1 -
+ kernel/time/clocksource-wdtest.c                 | 13 +++++++------
+ kernel/time/clocksource.c                        | 16 +++++++++++-----
+ .../testing/selftests/rcutorture/bin/torture.sh  |  2 +-
+ 5 files changed, 19 insertions(+), 19 deletions(-)
+
+diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+index 31b3a25680d0..763e96dcf8b1 100644
+--- a/Documentation/admin-guide/kernel-parameters.txt
++++ b/Documentation/admin-guide/kernel-parameters.txt
+@@ -679,12 +679,6 @@
+ 			loops can be debugged more effectively on production
+ 			systems.
+ 
+-	clocksource.max_cswd_read_retries= [KNL]
+-			Number of clocksource_watchdog() retries due to
+-			external delays before the clock will be marked
+-			unstable.  Defaults to two retries, that is,
+-			three attempts to read the clock under test.
+-
+ 	clocksource.verify_n_cpus= [KNL]
+ 			Limit the number of CPUs checked for clocksources
+ 			marked with CLOCK_SOURCE_VERIFY_PERCPU that
+diff --git a/include/linux/clocksource.h b/include/linux/clocksource.h
+index 1d42d4b17327..b93f18270b5c 100644
+--- a/include/linux/clocksource.h
++++ b/include/linux/clocksource.h
+@@ -291,7 +291,6 @@ static inline void timer_probe(void) {}
+ #define TIMER_ACPI_DECLARE(name, table_id, fn)		\
+ 	ACPI_DECLARE_PROBE_ENTRY(timer, name, table_id, 0, NULL, 0, fn)
+ 
+-extern ulong max_cswd_read_retries;
+ void clocksource_verify_percpu(struct clocksource *cs);
+ 
+ #endif /* _LINUX_CLOCKSOURCE_H */
+diff --git a/kernel/time/clocksource-wdtest.c b/kernel/time/clocksource-wdtest.c
+index df922f49d171..d1025f956fab 100644
+--- a/kernel/time/clocksource-wdtest.c
++++ b/kernel/time/clocksource-wdtest.c
+@@ -105,7 +105,7 @@ static int wdtest_func(void *arg)
+ {
+ 	unsigned long j1, j2;
+ 	char *s;
+-	int i;
++	int i, max_retries;
+ 
+ 	schedule_timeout_uninterruptible(holdoff * HZ);
+ 
+@@ -139,18 +139,19 @@ static int wdtest_func(void *arg)
+ 	WARN_ON_ONCE(time_before(j2, j1 + NSEC_PER_USEC));
+ 
+ 	/* Verify tsc-like stability with various numbers of errors injected. */
+-	for (i = 0; i <= max_cswd_read_retries + 1; i++) {
+-		if (i <= 1 && i < max_cswd_read_retries)
++	max_retries = ilog2(num_online_cpus()) / 2 + 1;
++	for (i = 0; i <= max_retries + 1; i++) {
++		if (i <= 1 && i < max_retries)
+ 			s = "";
+-		else if (i <= max_cswd_read_retries)
++		else if (i <= max_retries)
+ 			s = ", expect message";
+ 		else
+ 			s = ", expect clock skew";
+-		pr_info("--- Watchdog with %dx error injection, %lu retries%s.\n", i, max_cswd_read_retries, s);
++		pr_info("--- Watchdog with %dx error injection, %d retries%s.\n", i, max_retries, s);
+ 		WRITE_ONCE(wdtest_ktime_read_ndelays, i);
+ 		schedule_timeout_uninterruptible(2 * HZ);
+ 		WARN_ON_ONCE(READ_ONCE(wdtest_ktime_read_ndelays));
+-		WARN_ON_ONCE((i <= max_cswd_read_retries) !=
++		WARN_ON_ONCE((i <= max_retries) !=
+ 			     !(clocksource_wdtest_ktime.flags & CLOCK_SOURCE_UNSTABLE));
+ 		wdtest_ktime_clocksource_reset();
+ 	}
+diff --git a/kernel/time/clocksource.c b/kernel/time/clocksource.c
+index 3052b1f1168e..9def0e39f43a 100644
+--- a/kernel/time/clocksource.c
++++ b/kernel/time/clocksource.c
+@@ -210,9 +210,6 @@ void clocksource_mark_unstable(struct clocksource *cs)
+ 	spin_unlock_irqrestore(&watchdog_lock, flags);
+ }
+ 
+-ulong max_cswd_read_retries = 2;
+-module_param(max_cswd_read_retries, ulong, 0644);
+-EXPORT_SYMBOL_GPL(max_cswd_read_retries);
+ static int verify_n_cpus = 8;
+ module_param(verify_n_cpus, int, 0644);
+ 
+@@ -227,8 +224,17 @@ static enum wd_read_status cs_watchdog_read(struct clocksource *cs, u64 *csnow,
+ 	unsigned int nretries;
+ 	u64 wd_end, wd_end2, wd_delta;
+ 	int64_t wd_delay, wd_seq_delay;
++	int max_retries;
+ 
+-	for (nretries = 0; nretries <= max_cswd_read_retries; nretries++) {
++	/*
++	 * When system is in boot phase or under heavy workload, there could
++	 * be random big latency during clocksource/watchdog read, so add
++	 * some retry to filter the noise latency. As the latency's frequency
++	 * and maximum value goes up with the CPU numbers relatively, chose
++	 * the max retry number according to CPU numbers.
++	 */
++	max_retries = ilog2(num_online_cpus()) / 2 + 1;
++	for (nretries = 0; nretries <= max_retries; nretries++) {
+ 		local_irq_disable();
+ 		*wdnow = watchdog->read(watchdog);
+ 		*csnow = cs->read(cs);
+@@ -240,7 +246,7 @@ static enum wd_read_status cs_watchdog_read(struct clocksource *cs, u64 *csnow,
+ 		wd_delay = clocksource_cyc2ns(wd_delta, watchdog->mult,
+ 					      watchdog->shift);
+ 		if (wd_delay <= WATCHDOG_MAX_SKEW) {
+-			if (nretries > 1 || nretries >= max_cswd_read_retries) {
++			if (nretries > 1 || nretries >= max_retries) {
+ 				pr_warn("timekeeping watchdog on CPU%d: %s retried %d times before success\n",
+ 					smp_processor_id(), watchdog->name, nretries);
+ 			}
+diff --git a/tools/testing/selftests/rcutorture/bin/torture.sh b/tools/testing/selftests/rcutorture/bin/torture.sh
+index d5a0d8a33c27..bbac5f4b03d0 100755
+--- a/tools/testing/selftests/rcutorture/bin/torture.sh
++++ b/tools/testing/selftests/rcutorture/bin/torture.sh
+@@ -567,7 +567,7 @@ then
+ 	torture_bootargs="rcupdate.rcu_cpu_stall_suppress_at_boot=1 torture.disable_onoff_at_boot rcupdate.rcu_task_stall_timeout=30000 tsc=watchdog"
+ 	torture_set "clocksourcewd-1" tools/testing/selftests/rcutorture/bin/kvm.sh --allcpus --duration 45s --configs TREE03 --kconfig "CONFIG_TEST_CLOCKSOURCE_WATCHDOG=y" --trust-make
+ 
+-	torture_bootargs="rcupdate.rcu_cpu_stall_suppress_at_boot=1 torture.disable_onoff_at_boot rcupdate.rcu_task_stall_timeout=30000 clocksource.max_cswd_read_retries=1 tsc=watchdog"
++	torture_bootargs="rcupdate.rcu_cpu_stall_suppress_at_boot=1 torture.disable_onoff_at_boot rcupdate.rcu_task_stall_timeout=30000 tsc=watchdog"
+ 	torture_set "clocksourcewd-2" tools/testing/selftests/rcutorture/bin/kvm.sh --allcpus --duration 45s --configs TREE03 --kconfig "CONFIG_TEST_CLOCKSOURCE_WATCHDOG=y" --trust-make
+ 
+ 	# In case our work is already done...
+-- 
+2.34.1
+
