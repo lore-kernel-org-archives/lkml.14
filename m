@@ -1,67 +1,69 @@
-Received: from CHN02-BJS-obe.outbound.protection.partner.outlook.cn (mail-bjschn02on2090.outbound.protection.partner.outlook.cn [139.219.17.90])
+Received: from NAM02-DM3-obe.outbound.protection.outlook.com (mail-dm3nam02on2055.outbound.protection.outlook.com [40.107.95.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6556B56B74;
-	Tue, 20 Feb 2024 06:58:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=139.219.17.90
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 369535A0F3;
+	Tue, 20 Feb 2024 06:58:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.95.55
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708412285; cv=fail; b=aX9Z8awNQxrVZR56TjRBLDhyEhRb6zggNJf5V0wmmH0+qGedwk74+h7kPrS3t4iRZ6Qvg01AwCagXVFst3fFvl9AC6Igzkz7NQ5sslJtyZl3Qfu17J2TzfxdTRubIQikHg+GamfXilBHn5EZI7uOnrR6ooJMBPtj3Rei8wnau6I=
+	t=1708412288; cv=fail; b=dwvL2TyqIL9HgaKoL+Nygtnel2PMVc2kJw+FCSlet17OsaOKTHTrW3kfP6/T1bySpEkc5/4B4J5T/oEXGteNNWYoaVPLcr0UELQwnTbPxzm9MdKjAHZfNDt7SWpQ/MxjTqn5V0DIekMSeEXC8/7q6+eSXuGzkik+U97ftLJyHEE=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708412285; c=relaxed/simple;
-	bh=eMHSZ961nLkrD8qwRFGle46FCzfkfbYwv7pNklaGgKg=;
-	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=px7z/XwAs3W9dALqjkbpNFwRDeznjOqOJ3G4QcKzFScngZmoQ9KaqNN3cxZCRGC88NGF0/E3TpA38QWogiEi6c7kMhD5eAuYuryv96r9ahhVitsZT1kkYmgbC3ne6RX7n1qKYc9zm+rzWr4T1dthkzvjRliPsitSnE6vxYs25BM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com; spf=pass smtp.mailfrom=starfivetech.com; arc=fail smtp.client-ip=139.219.17.90
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=starfivetech.com
+	s=arc-20240116; t=1708412288; c=relaxed/simple;
+	bh=kvGN8nhtGZoTVTwcyir86xRcMghgRdBi0xGMnOTxRWE=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=Ak31283BkoF0LcWGcyDzFuzvimY1RkWylCGlq2PGqnowcVh334RLxtYq9R/jEmEms98tKJ2dFIfM4iva0pZ7g6DuBfNT2Zm1X3eDOISfhHgAADkMtqevxy5LvsnjKTKUZxG+XtBzuXL1ECNYZUIBkerqiyJI7P0lTxuTqwT5+18=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=bubLqgMq; arc=fail smtp.client-ip=40.107.95.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="bubLqgMq"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=X9ZrIZJZgSkDR8kNzLMDCQE813kmWHHkgvysqKvap2FzMAdUubxQyVudk0lRTpG7gSakCdvsvtQVc+AZSGzmnHfBILkmAFMQBqjPH3ctjTyVRaRqtHn2ADODlHjT6YTWleYQVPsPwMTo7JFx0kF0LU58dVF61vmn1u7bZnRp5eyC7tmV6vw93dGnnQspTHlDbMXU2liNUHkBGJvRXcmu44K6HTOQM+XryYzHre+pB9OCgUO5WM4DwiH8bqS+p9WASYjFTVUiOhOhMOP9Cn6s+OomueGgAu2bBHzef6huXMsj0CCw/csDXJj1pLGHfWRLdRJ3NQGDsqlNjFjd5/Ip1w==
+ b=ArqJVCCktDG7X8H/WM7OaxvdBv6EEJXHaoERFA9+5iK/VOYLxdKAYJLm4EU2r5KVnUoxVIHH3hfxJJ3BqSrvx+zEMOBqxO7WvbLgoLZdIxb2hY5ibZS17TTH6DGalIDg1G9tT+J82AhuJIDyuskm9m9ZjcVraI6MEdLjli3abzDe/AjW1fmr40Lzx0JcpRXh1ejswOzQXoM3ztcbSpWu7RGtyNX04OHDo+Z3VXZ9z5l6Gmch4KXMCtnfb11Vp/70EDEkDqhIy/EvWMK474aDHo/Y/DpuQOAeoEBTW3Ab1Zz7UGVOONh7cpw8jipiYEckSWHnj+XkjvIJUCZkqvvcHA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=PNay858DEqOto1OV6uEx+DFqa4hargxwgIGRAUUBh7M=;
- b=YwJm9im6sLnvQ38+jAlpI6hp0IpFFyfHyAmqAslSwBcyj1xM7pLXG8VHpccVTSQivH5faTtwjPBK52Au+NxxhuA7ECgOTdZpKSOU8fHemuPZe6qO8ausZONM0r5ZYIi3eYRbhXOsIBQaANVKMaZvDuz/vo5NLMbUJzhzuIDCOmcdFfvALMhfIWgf4x4YCx0pHwFswp9Addy59JYou44H1k+aYsZF7/+XKWmfs84iEijMmVXvfFJdFI6AvFzQEyuZ7+eA2cEqQGBgL0+iG1kg8ZvAgFmIDuUnuszELzBIjwp5PlDpLjA6PZix7jxHzlflcj1ReKwcxKG/0VvCH+weHA==
+ bh=YCppe5nKRMKWIkG9s7NiGAy7fBjMltr7ENb5oY/iZy4=;
+ b=WYcBl53yve0caamOYErJMaROutBWv1i4hO9umPcC3An7en3puaary3msNZCYy9XiPsrrFWHxkahQQJiQM6ZCTpXo9YAW0ldU0gQB+4b7L+3m3p+gw2Uxq9OQj8QBiLDmk+uWidBB19OiYp86TRPG4k8GN48rfw+BcqWiW5ArESUUtw58yQZHYTnI4hMr8HyeNuL8/dF3FX8WrRRgh8nVnUjL5aCeierD2AvBURhDiRRCpziAFlWfgUrxjfuhbUrurrmFKXxbgJL9mJhInpmgqwj2nMcwvMvIXEFM6Uf1UbJmOGUY0/CTqlsPhOsYGyxIOgX6b1AA2WX63FNmSN16xg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=starfivetech.com; dmarc=pass action=none
- header.from=starfivetech.com; dkim=pass header.d=starfivetech.com; arc=none
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=YCppe5nKRMKWIkG9s7NiGAy7fBjMltr7ENb5oY/iZy4=;
+ b=bubLqgMqMcpfLNciGXCb5zv4g7NdomxMLWSpKC5y8YMdNVK29gzQl0c4CPHB/KAMXej663OWTMeOTLUcE3ulBVtnn7gswUwYyYyCsJyPPmh8Wuu4TcYZBHkR7VwukDuWUS2iEGy+EcpF8VkI5AYJlm7zJ/odOl89mWHDhpZ6q7HXd7HF65oJAkECI8Fdoj6tUoO+i1iUtvGKvqXLh5UHgMNX8/aaYSr4ro90SFgR75Y9XXL3vH72YNJq9hOCOSmdO0PcwqgOezhYxbHiG0v4wpHcynnVou+XUCZ2tW5jWmBeQ+7Ze47vmVJgACtI4mxCjKiFT/r5/EGFw4LHhxHHZw==
 Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=starfivetech.com;
-Received: from ZQ0PR01MB1302.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c550:1b::9) by ZQ0PR01MB1239.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c550:1c::11) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7270.47; Tue, 20 Feb
- 2024 06:42:58 +0000
-Received: from ZQ0PR01MB1302.CHNPR01.prod.partner.outlook.cn
- ([fe80::9d68:58f1:62cc:f1d3]) by
- ZQ0PR01MB1302.CHNPR01.prod.partner.outlook.cn ([fe80::9d68:58f1:62cc:f1d3%4])
- with mapi id 15.20.7270.047; Tue, 20 Feb 2024 06:42:58 +0000
-From: Alex Soo <yuklin.soo@starfivetech.com>
-To: Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	Hal Feng <hal.feng@starfivetech.com>,
-	Ley Foon Tan <leyfoon.tan@starfivetech.com>,
-	Jianlong Huang <jianlong.huang@starfivetech.com>,
-	Emil Renner Berthing <kernel@esmil.dk>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Drew Fustini <drew@beagleboard.org>
-Cc: linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Alex Soo <yuklin.soo@starfivetech.com>
-Subject: [RFC PATCH v2 0/6] Add Pinctrl driver for Starfive JH8100 SoC 
-Date: Tue, 20 Feb 2024 14:42:40 +0800
-Message-ID: <20240220064246.467216-1-yuklin.soo@starfivetech.com>
-X-Mailer: git-send-email 2.43.0
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from IA0PR12MB8086.namprd12.prod.outlook.com (2603:10b6:208:403::7)
+ by CYYPR12MB8871.namprd12.prod.outlook.com (2603:10b6:930:c2::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7316.19; Tue, 20 Feb
+ 2024 06:58:04 +0000
+Received: from IA0PR12MB8086.namprd12.prod.outlook.com
+ ([fe80::9987:3f37:9a25:b0e7]) by IA0PR12MB8086.namprd12.prod.outlook.com
+ ([fe80::9987:3f37:9a25:b0e7%2]) with mapi id 15.20.7316.018; Tue, 20 Feb 2024
+ 06:58:04 +0000
+Message-ID: <2abe3279-ccba-4e1d-a04c-fd724e1660b6@nvidia.com>
+Date: Tue, 20 Feb 2024 08:57:55 +0200
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] net/mlx5: pre-initialize sprintf buffers
+To: Zhu Yanjun <yanjun.zhu@linux.dev>, Arnd Bergmann <arnd@kernel.org>,
+ Saeed Mahameed <saeedm@nvidia.com>, Leon Romanovsky <leon@kernel.org>
+Cc: Arnd Bergmann <arnd@arndb.de>, "David S. Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>, Alex Vesker <valex@nvidia.com>,
+ Erez Shitrit <erezsh@nvidia.com>, Hamdan Igbaria <hamdani@nvidia.com>,
+ netdev@vger.kernel.org, linux-rdma@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20240219100506.648089-1-arnd@kernel.org>
+ <bbef7014-5059-405d-a27a-a379431a3fcf@linux.dev>
+Content-Language: en-US
+From: Yevgeny Kliteynik <kliteyn@nvidia.com>
+In-Reply-To: <bbef7014-5059-405d-a27a-a379431a3fcf@linux.dev>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: BJXPR01CA0055.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c211:12::22) To ZQ0PR01MB1302.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c550:1b::9)
+X-ClientProxiedBy: FR4P281CA0089.DEUP281.PROD.OUTLOOK.COM
+ (2603:10a6:d10:cd::18) To IA0PR12MB8086.namprd12.prod.outlook.com
+ (2603:10b6:208:403::7)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -69,146 +71,86 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: ZQ0PR01MB1302:EE_|ZQ0PR01MB1239:EE_
-X-MS-Office365-Filtering-Correlation-Id: 99166286-12d1-4211-5891-08dc31df2cba
+X-MS-TrafficTypeDiagnostic: IA0PR12MB8086:EE_|CYYPR12MB8871:EE_
+X-MS-Office365-Filtering-Correlation-Id: bf6e7b3b-00c0-47a9-5918-08dc31e1491c
 X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
 X-Microsoft-Antispam-Message-Info:
-	9bkdC+0U+SPSjCr9fq4BH2VANAODssPv5ELSrgTWF/tqj1D5bhHAF6Kos/tTI8JffaL6Htkr7NyqOIpgY+bL4kCbUw1QIkpsq6XEbtpKPx+T3I6cYHpxZF1T6EMeBBqkHfle1++GGb0Wtols0Ur00U3UTjM+30Mk8YdYxGOa+/lLECsuINBRL6KkV3+Xv5ks9O9O8lo6SwIX/i4dn6b/fcihxWoQ2ooW4Dkf1D4rzfaOR2iGDS0zdIvOhqFBlQNET1jUxH/KPa3GR+3tPRadPGu3XeFe0PxWSSaWYpbAcFytjn7weCdKQQHtFR18TgtAfOdiKaYvecNODNHrXURDldWhcfeHFcKtLiucnULVwzqoRokCVDchLyM23Km8txaye081DZS+AePSOP/cxWOtv0ojWm0V9CVQmeTibwdo7/zFWnLq94OUJwDBGHzKEV4s26IA8YyNW8G9Kmjb1qCPQ0fpZQDKaRP1TlM/pPDa4JZ9pv9tTCE3RCoYkCFKFX0RtGELDbrTO7hknB+8HeG3+8BxNsEZjW5X+R+abOAOPsULTbjd+hpHTwCD/ETZt+NHM0rCnZyaArtSEblG72bk4w==
+	3O0T/U0oaSWdqV1ULVzWzSj0RogC+w2Y2r/PQ37zIuU70+vhw1XIxQ2AKvH0fzTx8M/FyUMwIIdiQw6EBx8/uumltLH2F6XF/vxt9EpchQaIABaIniWem5uK0NkUQT0H3VVW91/yOVduu5NSZkWkMYoCyT2GEmPaZx7eSkPzJPcfc3JJZzNoYAy6CTMMteMFqeRSOoVT0DN1djilcNUBqqYOoxbVUHwXcHenN2g5uHVppZ0H1Anpb9HPSLdoYbVQI5iWdMJ8fE396ziE+sqq1+lKh1e9JQR2YJJj1QbqbC2BESVeypMvJJhjRYplMVoFy9JwtCr7pk6BvLz+4DHzAVdDj6olDm04DtEGXvQpmt0jtSeek4iKU6U1DNtpDXVhcqXtbVdL3wu3HXS9qYNmHrN6nwP2f+UOEEGlYLlZaRExGNtsYjOp4MtqP2Eb5zqeWyueobrDwP3fOlQt5khWK5x9Oz9d6OwtBRSLhSepufBKMpXut2Z3CYafAQiBDm6zvAPs7vm7Tg3f6vthHJUfIyD6SYH7d+6voRH/oWlzVBrv8kpB+N/+/CkKOf2v7vyb
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:ZQ0PR01MB1302.CHNPR01.prod.partner.outlook.cn;PTR:;CAT:NONE;SFS:(13230031)(38350700005)(921011);DIR:OUT;SFP:1102;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:IA0PR12MB8086.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(230273577357003);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?ca6zGGuZIlXy3TW1P8qgDvPm7sgMrMFzaqffgaZlOjwLc0Ky4CAsyImBHmod?=
- =?us-ascii?Q?WTp5pBmBXm/vgxJUfb7huPR1fMAd2npJTIJ/Uir2hQ7fDOYAF5fNU3rJObcF?=
- =?us-ascii?Q?D49JwJ2xVOW9rf4rAf7AS1FIDjtt/TLxqDwYoVRfJqGRo82PYOLd1xck4OUC?=
- =?us-ascii?Q?tNLWxopw52Hqk7/1Lsfdv9ThC2YOjA1o2a4tB9FJSwRSoKEXr1aUoVeiAvNR?=
- =?us-ascii?Q?hbS2y4meTTKbIyuXY33CzCTiYjz5L9wer3WnUwwfgVBTqpAt9jJ6U+rLO5M5?=
- =?us-ascii?Q?1zdLHI9AnjE+0cleCT37yx1GAi2uMA0wDPKg7oJHLRoHgn6Ei+1ZND5NsSG4?=
- =?us-ascii?Q?GT5+G1hxV5a192W4+uKLXW3HFxAsrqg/NLegYkIZi9ARQLC1K4KJ9bUsJxpV?=
- =?us-ascii?Q?S3B4YarsUY9/3ciNdgQtdixnf7dKteXvgHXxLwfEEQZWr0sxhLU1aHdLjrSo?=
- =?us-ascii?Q?J5CqOmpA06UTD1FnMLOjne7PVjvzkfVrfOV2jg6ycdgHWRRioHQwN4r6/Qk9?=
- =?us-ascii?Q?RP3EYDZVfDCEiiPqZ/FLwp3a3y3xqEH/2wuCNS3rfFTZzaAYFF1sKG7PiNkI?=
- =?us-ascii?Q?MkKhesaOA6flL9Wx+xEJAqBSUa/KmP2i4ZuussbINbXyoMO/sKDMg6hzNq0a?=
- =?us-ascii?Q?FIi1Uz7TdoE8VoBL3TDjU3clrkFVn1u2SwK4XHTq9iltMsTbfeY9YNFRg+n5?=
- =?us-ascii?Q?5bG3IwETQTx4yAMDlXu+wzXfGaFtfzdhNyoXeMkUi+J+H4P5uVFxZj0UCdwJ?=
- =?us-ascii?Q?5IlYML2S4L6om/fhJIkyQZYa81CFEdWGQALnDCu4VVSEoSVmsCAMofDttkqn?=
- =?us-ascii?Q?eYCCTdOQnm4bQxTAZyHpcKt3wagYmO6navLePsPOBUINwxUPi+8j5zGQPa0E?=
- =?us-ascii?Q?9cY0gmcqjfLmGOQ/jaoSwXY/ZxbANSDYKo8Onw//cfcxL5/4kElM2tK+Oj/P?=
- =?us-ascii?Q?+X5kH+J8Mp4/B3qEmUqdHwUpRcqEhAHQmWEw72Mfj+C9FW4owwApn6k0oXu7?=
- =?us-ascii?Q?SsYOb/sItL8xZK5l6bT03VT3xqIjt5BilhdKlIjsc2/Fo8xExOmJnkOvS4wj?=
- =?us-ascii?Q?rIEPBXlsxPcSlRoojhutQTSrWHWoreFroKMgtzF0GO5kFjfsiPjL2bWn95jB?=
- =?us-ascii?Q?Pu/9+GpIWzG3y9H/uhdbq7mFzl28jWzGl1ZBQyT3kd722o+38RafRVqimzbw?=
- =?us-ascii?Q?Kc06yLAbIx7ZXk1wisfuJpojuyrZWm5ZqMn0QkJyky2gEvvUHuJQAn1p4FTs?=
- =?us-ascii?Q?qOqZQc8a3aqIlxLf5jftpL9Tx8b8ygSKkTb4mkPUiOGPks0aJFg6J6RbneEU?=
- =?us-ascii?Q?cv2DC3YfetH7GIE9XZ8NIGSZ/ijyN4FhGMc3WJchH1pz3jhg5+wxAgU6UHTc?=
- =?us-ascii?Q?cql43lkppYGivm/kRj+Q7n/pixyfcfnode7v5Tqt+MWE+WM3+6ChBExnJJvj?=
- =?us-ascii?Q?3l79/2C6Ca4Fg1q4bCYf9/WBjHbkyjnIYrcCgIERrJJ0pEmdi2NU/Eq14dQS?=
- =?us-ascii?Q?q2QVSF7jQo+24aND01V41krLtr+KnCbk7jm4XLtMsIhw+POsIg4sYKZHEXME?=
- =?us-ascii?Q?9gO8xHFzTdu7x0nVMxc4EfGXNzalvwiTSWbDwFKACAiWq+aoK6Ddf6fBtKvc?=
- =?us-ascii?Q?jQ=3D=3D?=
-X-OriginatorOrg: starfivetech.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 99166286-12d1-4211-5891-08dc31df2cba
-X-MS-Exchange-CrossTenant-AuthSource: ZQ0PR01MB1302.CHNPR01.prod.partner.outlook.cn
+	=?utf-8?B?Nk5vb3dIaHZMNFhxMUM2ZHJxVVhWVERkMmRIWjB3TWwwdHNibGF3eU42Mk5O?=
+ =?utf-8?B?bGwzT3ArSTlZS24yWGdJNUZHT1dZWGQyRTU2UzNMdU14NlgxWk9ZbFBqM2M3?=
+ =?utf-8?B?Q2M5SGlpQmozdm55TFZvMmZ1ejV4WC9WaDgrRGhySGFJdkc0RXlDcjFHRnNy?=
+ =?utf-8?B?MWYvY0dkSk1VdFlZNDQ4dVNzeHE2S3FhK0Y0ZTN0R04vSjdpTy9sNjYycktN?=
+ =?utf-8?B?dHd1Y1VjWjRtcTZhdk1ya1lybEd1NG1jZmRtN01kbCt3c3YwZzZaSkhURi9v?=
+ =?utf-8?B?Zjh1cXVtZlI1b0MySkErVExUcWpLY0FUcm16cjlOdlQ2cDFpZlg3SE1mcjRm?=
+ =?utf-8?B?WlRGaHV6R1A5SU12N0pEUjlZOFYrYWtqc0ZsZjJPd25wYnpqR2RuVlpnYzc5?=
+ =?utf-8?B?Nm9hM2N3VUhaQXVndHM5NmRDcUc2emM0VkxCYUJNeXN2MUgyRDBpc0xhZkJs?=
+ =?utf-8?B?NVVXdnphWGJaN3NxaU5uRmZHV2xsK0lJWmtBNXB6U2JnR1U3TytqNVNNNE55?=
+ =?utf-8?B?ZTlEa1Q3MjRDVlByODE5aXAyOXdzOFBBUzVoRXU1TWdjVklneXdoWHB1ZXFJ?=
+ =?utf-8?B?ajJWVGEyb3lUb3JxQkhmdktkRnZndEFpNFVOQ1VDaGJ5ZlBYVktLUnpVclY4?=
+ =?utf-8?B?YWtNU2x3SzZKWUczay9pQXM3OXBFOVJWaGpXaE9KMjBGOWpwbGp1SXFhSjl3?=
+ =?utf-8?B?emhuSFYyNHQwb09jeDE1VytJU0U0RjBhaWd0OWZsV1c5MDJUU2xlS2MzQXM3?=
+ =?utf-8?B?K2VndXpSWWM5TDFYQndtNGh3WlFXSE5JeWszYUNTaHU5UFV2UmwxdnNuTDh6?=
+ =?utf-8?B?S2JxMUdmMHVObDRham54NGg4UzBrZXNJNGtnTXc1czBkZzE1VlNrK3dBQ0Fs?=
+ =?utf-8?B?eHRmQXhDZGFmMUpQTnQ4ZXFyUWxlT0NoZzJVMjVxbnVKRktFUTcwQ0lBQWN1?=
+ =?utf-8?B?ODRkNVovVjdxbnV4N2t6OHdTN0hldHFnUlFzWHBlTEUrUWdpLzZhQVBTTVh4?=
+ =?utf-8?B?Q2QxRVZUcnN1MWptaVdGc1E2YkgwSTJCRWVETjlqSEdtb0pPTElSZzdxWjRa?=
+ =?utf-8?B?UEFtbXMyM2VDN25vU2ViZ3NDVzE1SFBKaDBrWjFhbmhrWWt2TkJhUmVvNG9D?=
+ =?utf-8?B?WkVaZHZCTHIvOE9MSFVCWkRtaXU2VzhhNkdtRzR4N3VYTjQ5SjNrdXRORi9I?=
+ =?utf-8?B?OFRRN3NNckFyT3Z5dWdTdXNuc2FLcXd6cjFwZHlBN0ZtZTdCcXZRY0RFZUhS?=
+ =?utf-8?B?T29YN1N0S1FBUkF0R0lRRFNIV090NFRnZ2pjOURydDUxakVMMDBQUGNLVk9R?=
+ =?utf-8?B?dUxheTN6Wlo1T3JLcU53UVZCT2hpY1pnNjBnNGQyNHFGc2ZySjB2bWNwZDdZ?=
+ =?utf-8?B?VzJVQ0FZeU9ZbHR1RWpROVpVRitnTDJoOStVS0lQWXhwQ0NNMUlJdld5Ti9Y?=
+ =?utf-8?B?UHE4VmEvcUtESXM4ZjdkWEJVZXBIM3E4VVkrZENOZlJ1bFM5VzZ4ZHBNbU81?=
+ =?utf-8?B?TGFTQ0c1U2lRRWNPUkhQWHM4VHRMcmh0MHM4TXRVS3JFVUNOQTNZUGRmTXlT?=
+ =?utf-8?B?SjRiZ2gzWDVCYmZGdFdzaHljREtVWFVWYXpvUWh6aEo0UGpFRnkxbEpEMytQ?=
+ =?utf-8?B?TnRaTHRlZGRWQitEWnZrTm8rUk42U205ZEo3SWhHeDB3UGxBS0pwdC9NMHdx?=
+ =?utf-8?B?YkRNN0h2MGJZclJNTWVYb3YrRlZuWjBzcmpQNmJabmExMGswNE5KNlRkZHlz?=
+ =?utf-8?B?SWFQOGtsb3RrOWN3TUtDSS9EMHdsTDhyQ0FIcy9KQ3AwbVlBQWFJZkZJQ0k3?=
+ =?utf-8?B?NHFSVFRvY1FRd3FUNEdFaktpQTc4d2hQNmh6M1VXVEluajlYaGxyVUpzVHY1?=
+ =?utf-8?B?T2xhdUwxTnp0UGNzUisvM3lmMWtycG5PdnJyN3MwbkdFaEwzWTNqVG00YzBx?=
+ =?utf-8?B?Y2tNZHdwV1pXZW92ZTlNckVWb1lyeWF0aE5iNStlMlFkN1NlZlY0SHNtRmJa?=
+ =?utf-8?B?bmxzT1J4RDVIb3NwaG5sVXUrY2FjUTdNcUZDQzhraS9lTGw5bFZMUG5wbnlP?=
+ =?utf-8?B?UnlDMU5VU3RmT24wdDRYRDQrL1Zta2ZsZUpYSW93WTdUa3VRNTU4WFV6NnRE?=
+ =?utf-8?Q?hnv1Fw4y3H+dZqw0qJmBsq7Hb?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: bf6e7b3b-00c0-47a9-5918-08dc31e1491c
+X-MS-Exchange-CrossTenant-AuthSource: IA0PR12MB8086.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Feb 2024 06:42:57.9794
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Feb 2024 06:58:04.5847
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 06fe3fa3-1221-43d3-861b-5a4ee687a85c
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 6dHUIpVLF8ZDtuBjTARuNuNo72vb4+yQp1K3DMQfCXOY9iVs+SNQu3/LeOvyxlFlYSxqu93eqkV4qA3V1LEEP4eRpWHTZWo0K6yjDVxudqg=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: ZQ0PR01MB1239
+X-MS-Exchange-CrossTenant-UserPrincipalName: MDrE0lq38wlAUPLXdotdlbOOD3/NFfFd70VbDz7cIxHelY/2DvKSiYD6DPHHWr0rPrJs/frHtIe0rtSQhRZ2Ng==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CYYPR12MB8871
 
-Starfive JH8100 SoC consists of 4 pinctrl domains - sys_east,
-sys_west, sys_gmac, and aon. This patch series adds pinctrl
-drivers for these 4 pinctrl domains and this patch series is
-depending on the JH8100 base patch series in [1] and [2].
-The relevant dt-binding documentation for each pinctrl domain has
-been updated accordingly.
+On 20-Feb-24 07:50, Zhu Yanjun wrote:
+> External email: Use caution opening links or attachments
+> 
+> 
+> 在 2024/2/19 18:04, Arnd Bergmann 写道:
+>> From: Arnd Bergmann <arnd@arndb.de>
+>>
+>> The debugfs files always in this driver all use an extra round-trip
+>> through an snprintf() before getting put into a mlx5dr_dbg_dump_buff()
+>> rather than the normal seq_printf().
+>>
+>> Zhu Yanjun noticed that the buffers are not initialized before being
+>> filled or reused and requested them to always be zeroed as a
+>> preparation for having more reused between the buffers.
+> 
+> I think that you are the first to find this.
 
-[1] https://lore.kernel.org/lkml/20231201121410.95298-1-jeeheng.sia@starfivetech.com/
-[2] https://lore.kernel.org/lkml/20231206115000.295825-1-jeeheng.sia@starfivetech.com/
+The buffers are not initialized intentionally.
+The content is overwritten from the buffer's beginning.
+Initializing is not needed as it will only cause perf degradation.
 
----
+-- YK
 
-Changes in v2:
-- Add "(always-on)" to document title to clarify acronym AON.
-- Replace "drive-strength" by "drive-strength-microamp".
-- Update "slew-rate" property in sys-east, sys-west, and aon document.
-- remove redundant "bindings" from commit subject and message.
-- Change regular expression "-[0-9]+$"  to "-grp$" to standardize client
-  node names to end with suffix "-grp" instead of "-<numerical _number>".
-- Use 4 spaces indentation for DTS examples.
-- Update DTS examples in sys-east, sys-west, and aon document with client
-  driver pinmuxing.
-- Remove redundant syscon and gmac macros from dt-binding header file.
-- Remove redundant register macros from dt-binding header file.
-- Add "wakeup-gpios" and "wakeup-source" to aon document.
-- Add "gpio-line-names" to sys-east and sys-west document.
-- Update the description of syscon register usage in each document.
-- Update sys-gmac and aon document with information of GMAC voltage.
-  reference syscon and GMAC pad syscon.
-- Fix the pinctrl device nodes compatible string too long issue.
-- Move all common codes from subdrivers to the main driver.
-- Change the commit log to "add main and sys_east driver" to indicate
-  the commit of both main and sys-east driver.
-- Turn pin_to_hwirq macro to a static inline function to hide gpio
-  internal detail, and also, for easier code readability.
-- Change "JH8100_PADCFG_BIAS" to "JH8100_PADCFG_BIAS_MASK".
-- Change "#define JH8100_PADCFG_DS_4MA   BIT(1)" to
-  #define JH8100_PADCFG_DS_4MA   (1U << 1)".
-- Replace "jh8100_gpio_request" by "pinctrl_gpio_request".
-- Replace "jh8100_gpio_free" by "pinctrl_gpio_free".
-- Replace "jh8100_gpio_set_config" by "gpiochip_generic_config".
-- Use irq_print_chip function to display irqchip name to user space.
-- Use girq to represent GPIO interrupt controller.
-- Update code to ensure wakeup-gpios is always an input line.
-- Remove the jh8100_gpio_add_pin_ranges function and use gpio-ranges
-  in device tree to provide information for GPIO core to add pin range
-  for each pinctrl.
-- Change "StarFive GPIO chip registered" to "StarFive JH8100 GPIO chip
-  registered".
-
----
-Alex Soo (6):
-  dt-bindings: pinctrl: starfive: Add JH8100 pinctrl
-  pinctrl: starfive: jh8100: add main and sys_east driver
-  pinctrl: starfive: jh8100: add pinctrl driver for sys_west domain
-  pinctrl: starfive: jh8100: add pinctrl driver for sys_gmac domain
-  pinctrl: starfive: jh8100: add pinctrl driver for AON domain
-  riscv: dts: starfive: jh8100: add pinctrl device tree nodes
-
- .../pinctrl/starfive,jh8100-aon-pinctrl.yaml  |  261 ++++
- .../starfive,jh8100-sys-east-pinctrl.yaml     |  223 ++++
- .../starfive,jh8100-sys-gmac-pinctrl.yaml     |  163 +++
- .../starfive,jh8100-sys-west-pinctrl.yaml     |  220 +++
- MAINTAINERS                                   |    7 +
- arch/riscv/boot/dts/starfive/jh8100-evb.dts   |    5 +
- arch/riscv/boot/dts/starfive/jh8100-pinfunc.h |  418 ++++++
- arch/riscv/boot/dts/starfive/jh8100.dtsi      |   47 +
- drivers/pinctrl/starfive/Kconfig              |   59 +
- drivers/pinctrl/starfive/Makefile             |    6 +
- .../starfive/pinctrl-starfive-jh8100-aon.c    |  154 +++
- .../pinctrl-starfive-jh8100-sys-east.c        |  224 ++++
- .../pinctrl-starfive-jh8100-sys-gmac.c        |   93 ++
- .../pinctrl-starfive-jh8100-sys-west.c        |  168 +++
- .../starfive/pinctrl-starfive-jh8100.c        | 1181 +++++++++++++++++
- .../starfive/pinctrl-starfive-jh8100.h        |  105 ++
- .../pinctrl/starfive,jh8100-pinctrl.h         |  103 ++
- 17 files changed, 3437 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pinctrl/starfive,jh8100-aon-pinctrl.yaml
- create mode 100644 Documentation/devicetree/bindings/pinctrl/starfive,jh8100-sys-east-pinctrl.yaml
- create mode 100644 Documentation/devicetree/bindings/pinctrl/starfive,jh8100-sys-gmac-pinctrl.yaml
- create mode 100644 Documentation/devicetree/bindings/pinctrl/starfive,jh8100-sys-west-pinctrl.yaml
- create mode 100644 arch/riscv/boot/dts/starfive/jh8100-pinfunc.h
- create mode 100644 drivers/pinctrl/starfive/pinctrl-starfive-jh8100-aon.c
- create mode 100644 drivers/pinctrl/starfive/pinctrl-starfive-jh8100-sys-east.c
- create mode 100644 drivers/pinctrl/starfive/pinctrl-starfive-jh8100-sys-gmac.c
- create mode 100644 drivers/pinctrl/starfive/pinctrl-starfive-jh8100-sys-west.c
- create mode 100644 drivers/pinctrl/starfive/pinctrl-starfive-jh8100.c
- create mode 100644 drivers/pinctrl/starfive/pinctrl-starfive-jh8100.h
- create mode 100644 include/dt-bindings/pinctrl/starfive,jh8100-pinctrl.h
-
--- 
-2.43.0
 
