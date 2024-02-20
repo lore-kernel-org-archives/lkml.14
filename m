@@ -1,80 +1,86 @@
-Received: from serv108.segi.ulg.ac.be (serv108.segi.ulg.ac.be [139.165.32.111])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AF1914A0B6;
-	Tue, 20 Feb 2024 19:45:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=139.165.32.111
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B197C36135;
+	Tue, 20 Feb 2024 19:47:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708458307; cv=none; b=Whdi/iDmdZV5yF5Ktsn0c7Wh3ea3nuar8fzR/t8+Q9hB6cu6dWztbgKqPe74jZNwBR1n7j7+Om0PMaxXgxDkxahJYztrB8cDKJhc3UBQ02Rihcf4n6vcTv+f0KOgEJQOC+FpiraNm+crr9t1uNqMl9KP4e9O2VUvAeI690juALQ=
+	t=1708458432; cv=none; b=sD8tUCRwvtENPD1k19TemjpyxsGuFcKPJuzhKXXmBfdlNDItm3AA522NIZsvRT0yVKDb/StFRveJwTGKr4c6aockcPQAFFa0pPSLBF8ynUAwixdgY7UNk6Jx++X8RaEg61eg89LxXr/+ByDrX4dSKso2IZl4KM6lY17BvNy5y5A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708458307; c=relaxed/simple;
-	bh=SQvynyntrh4mzXiFdzzGOqWMD8t0yJGwv9xwE/ScJU0=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ij1j65tV0jDZFIxbXHiXvH7ejXL+BEsHzobYRal/HgBpA+KDtj995kt8/lCyMaLi24yMd6bvHns9o0fmClapyTvxj1FVPUhTm3D8mbcjT1LoUHrcCn/zFT4oV7HtkTHd1W60l8yxeMY87DfbAGQhD0uWysgky4JeQUE15hnjgL4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uliege.be; spf=pass smtp.mailfrom=uliege.be; dkim=pass (2048-bit key) header.d=uliege.be header.i=@uliege.be header.b=C4LgFSah; arc=none smtp.client-ip=139.165.32.111
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uliege.be
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uliege.be
+	s=arc-20240116; t=1708458432; c=relaxed/simple;
+	bh=1KiS+U4NNT/mwNoBNJ7E4oCUd/6Lzcv1jcGa7+zX+Vg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=a5rKySNfULmYywDyACGfz7qzKSvjJndaHom8m5a8STNguAE++fWgBKQI6fwiavGZMDn+FfXhoiEiMUUNpMKVIh//e96/O6hN41EIEe3fQs5dPXKgJD9iSJD7h1u+ZYXGZGmExmnvjdtwtvAakynEDGEPiNIDI2GD/0gJflN1tH4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oCStGpKy; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=uliege.be header.i=@uliege.be header.b="C4LgFSah"
-Received: from localhost.localdomain (125.179-65-87.adsl-dyn.isp.belgacom.be [87.65.179.125])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by serv108.segi.ulg.ac.be (Postfix) with ESMTPSA id 16491200BE5F;
-	Tue, 20 Feb 2024 20:44:57 +0100 (CET)
-DKIM-Filter: OpenDKIM Filter v2.11.0 serv108.segi.ulg.ac.be 16491200BE5F
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uliege.be;
-	s=ulg20190529; t=1708458297;
-	bh=h7EcwSW71SSSDL0dnFc82jgR2ymx/wCW+Xnzy4FBRVk=;
-	h=From:To:Cc:Subject:Date:From;
-	b=C4LgFSahEyCLpy/HMeEojNoufstQvHzsc0cLHBylkMjy5R6wKz0M2EThWqEWa1E3f
-	 aZbOQ2aC4LidvCdwG7rmoTVO0/fUmd5bc6oRKreqicN8V9IBzWaAbmCeCpnvHG+itB
-	 ARXZArvcM9LHzwUEBoRBMJ7ia6w8J63RLUOjzaDmaqXo4HuRiT2NhV22zptKf9d27S
-	 xAbKtDTAlGp0DNoksi2GLtzacI+fDiRgvx8O/HkEVoOJBRtAgb/NfCFmf5CMIivd9l
-	 BWs+zfTUk+WnOkqD3AS1VUrNfEBljTUUADxpLLsxNbO+2mf+oSEIO+oHXvilH2kYnx
-	 C2NPeZ6YtUc9g==
-From: Justin Iurman <justin.iurman@uliege.be>
-To: netdev@vger.kernel.org
-Cc: davem@davemloft.net,
-	dsahern@kernel.org,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	linux-kernel@vger.kernel.org,
-	justin.iurman@uliege.be
-Subject: [PATCH net-next 0/3] multicast event support for ioam6
-Date: Tue, 20 Feb 2024 20:44:41 +0100
-Message-Id: <20240220194444.36127-1-justin.iurman@uliege.be>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oCStGpKy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DB893C433F1;
+	Tue, 20 Feb 2024 19:47:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1708458432;
+	bh=1KiS+U4NNT/mwNoBNJ7E4oCUd/6Lzcv1jcGa7+zX+Vg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=oCStGpKyprAazJxn0xJT7SpatIrasVkTuxPqf5bGDO8klHUhTy+LkvcfqhpDAIU+E
+	 Pi00Fq6nJ1FQWsSHrp/hmBlnxf6Xd0WHN+8fLsiE1ztai154YOZ6B0EWFmvsv2SL5r
+	 9ClVxPzJcv1EIEaReBaUA3fVisEt1mMD6oaly5q6ztRAMWOCkSvkJ8gBo5aS3LPpVB
+	 OJUSexXEcLR17q74kIhLp3ZL63KDtyNMaLOgNTqvcSaDS/r2NYaByhx8f8KxgmeDre
+	 Rav/PUuB3tWB7omnjX4YilFxFDibRERnfx2HaJ+oPNWdeXLVzwe/CeT6a9HsJ/VHc2
+	 JqWtq6zLrJxFQ==
+Date: Tue, 20 Feb 2024 19:47:07 +0000
+From: Conor Dooley <conor@kernel.org>
+To: David Lechner <dlechner@baylibre.com>
+Cc: linux-iio@vger.kernel.org,
+	Michael Hennerich <Michael.Hennerich@analog.com>,
+	Jonathan Cameron <jic23@kernel.org>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] dt-bindings: iio: adc: add ad7944 ADCs
+Message-ID: <20240220-tamper-feed-0622f9441cfe@spud>
+References: <20240216-ad7944-mainline-v2-0-7eb69651e592@baylibre.com>
+ <20240216-ad7944-mainline-v2-1-7eb69651e592@baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-
-Add generic netlink multicast event support to ioam6 as another solution
-to share IOAM data with user space. The other one being via IPv6 raw
-sockets combined with ancillary data. This patchset focuses on the IOAM
-Pre-allocated Trace (the only Option-Type currently supported), and so
-on IOAM "trace" events. See an example of a consumer here [1].
-
-  [1] https://github.com/Advanced-Observability/ioam-agent-python/blob/netlink_event/ioam-agent.py
-
-Suggested-By: Paolo Abeni <pabeni@redhat.com>
-
-Justin Iurman (3):
-  uapi: ioam6: API for netlink multicast events
-  ioam6: multicast event
-  net: exthdrs: ioam6: send trace event
-
- include/net/ioam6.h             |  4 +++
- include/uapi/linux/ioam6_genl.h | 20 +++++++++++
- net/ipv6/exthdrs.c              |  5 +++
- net/ipv6/ioam6.c                | 61 +++++++++++++++++++++++++++++++++
- 4 files changed, 90 insertions(+)
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="39pzYbsQtZHaU+Tb"
+Content-Disposition: inline
+In-Reply-To: <20240216-ad7944-mainline-v2-1-7eb69651e592@baylibre.com>
 
 
-base-commit: a6e0cb150c514efba4aaba4069927de43d80bb59
--- 
-2.34.1
+--39pzYbsQtZHaU+Tb
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
+On Fri, Feb 16, 2024 at 01:46:18PM -0600, David Lechner wrote:
+> This adds a new binding for the Analog Devices, Inc. AD7944, AD7985, and
+> AD7986 ADCs.
+
+I think this binding is overall pretty well written, especially
+considering the interproperty dependencies.
+
+Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
+
+Cheers,
+Conor.
+
+
+--39pzYbsQtZHaU+Tb
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZdUBuwAKCRB4tDGHoIJi
+0uuWAQDLngt5pz4PlV2W01fTD2fS7srtxqDPBPGnF6sXp+nKUwEAuL1m1J9Am2Th
+iGA+hrTy6KEwjZqWfj7mHiqM/QpsFQg=
+=VP88
+-----END PGP SIGNATURE-----
+
+--39pzYbsQtZHaU+Tb--
