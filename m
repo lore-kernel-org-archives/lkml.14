@@ -1,29 +1,30 @@
 Received: from elvis.franken.de (elvis.franken.de [193.175.24.41])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F09A96A346;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 912F96A345;
 	Tue, 20 Feb 2024 13:48:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.175.24.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708436934; cv=none; b=Eh1hgIu8FOawRLMqGZ13/1ssJX8l4+8410GYNFCqowe09ZTmUDZtkl9KkW6b876jkptrI/ODg6ozdGpgc6DnLSVgGJGNN6xD2UEFzn8bIiYKrHkKWoBlINUzSMNAQ+3wwkM8lz36s3dE2CPUlmNG26FdOCMrSkTjUu//IfGybuo=
+	t=1708436934; cv=none; b=fhFEi/OWzaNQ6P7D1RHcczGJL5y2sbzqGmOhes4I7FVZK0aUexif7qQlA3LTS5xzHGP7i9FKCzX7NJwyKOg840zuLtGmYsQQ/Ev3ImuBaCfwPAq3SS9BS8Limgt0D+9cdn5E9kDyFSYNCZGWfBmunUtReiE9aFG6mQJwacrmJjw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1708436934; c=relaxed/simple;
-	bh=SynaioFw+yQpRvdCOCb1Co5Ewh+f1Mqe+AUZhxJedIo=;
+	bh=dN9MbC0dNk5OxWYWmvs4wMDcGflhy2eneDFOeyPwUIw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eiloiwJMgQord0zf3T2ag9K2+24IwQ9XTwC0gRG5Q2Wu/ZWq4LOn5xIomPTjNZ6wtnrwAvwkRrlkGNS9CRQw3VWXGIX+LoF6jysrWXPh3HvMOOIa60n6A2vkuZe4Bnfzjsx8mQq8RhMksSf+ub4ixw6bZ2xlritjjWBLwdLC65A=
+	 Content-Type:Content-Disposition:In-Reply-To; b=IZU3CdoMtnbNGHtyDL3E5Uu8/HdmpR1Ic+cUq5Qun+bkr96Zs3WrvWNEjhO8F4x1+nEQ7VM3vr8I2GliAW6h5wy+PHJsZXFAhzdKtKDXC1McU6HNbPKyoB2Cq5I3Dgag7LrgKFqYwNVB+7bIG80J50jL+4gwtWFUd0h0GSNpTLM=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpha.franken.de; spf=pass smtp.mailfrom=alpha.franken.de; arc=none smtp.client-ip=193.175.24.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpha.franken.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alpha.franken.de
 Received: from uucp by elvis.franken.de with local-rmail (Exim 3.36 #1)
-	id 1rcQUF-0007Od-00; Tue, 20 Feb 2024 14:48:43 +0100
+	id 1rcQUF-0007OO-00; Tue, 20 Feb 2024 14:48:43 +0100
 Received: by alpha.franken.de (Postfix, from userid 1000)
-	id 06587C0A1E; Tue, 20 Feb 2024 14:39:40 +0100 (CET)
-Date: Tue, 20 Feb 2024 14:39:40 +0100
+	id B2CADC066F; Tue, 20 Feb 2024 14:37:47 +0100 (CET)
+Date: Tue, 20 Feb 2024 14:37:47 +0100
 From: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-To: Jiaxun Yang <jiaxun.yang@flygoat.com>
-Cc: Gregory CLEMENT <gregory.clement@bootlin.com>,
-	linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/8] MIPS: Unify register numbering macros for uasm
-Message-ID: <ZdSrnG493wn2U+5s@alpha.franken.de>
-References: <20240209-regname-v1-0-2125efa016ef@flygoat.com>
+To: Erick Archer <erick.archer@gmx.com>
+Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] MIPS: Alchemy: Use kcalloc() instead of kzalloc()
+Message-ID: <ZdSrK6QeToAl2K2h@alpha.franken.de>
+References: <20240120133443.4237-1-erick.archer@gmx.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -32,45 +33,44 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240209-regname-v1-0-2125efa016ef@flygoat.com>
+In-Reply-To: <20240120133443.4237-1-erick.archer@gmx.com>
 
-On Fri, Feb 09, 2024 at 06:07:46PM +0000, Jiaxun Yang wrote:
-> Hi all,
+On Sat, Jan 20, 2024 at 02:34:43PM +0100, Erick Archer wrote:
+> As noted in the "Deprecated Interfaces, Language Features, Attributes,
+> and Conventions" documentation [1], size calculations (especially
+> multiplication) should not be performed in memory allocator (or similar)
+> function arguments due to the risk of them overflowing. This could lead
+> to values wrapping around and a smaller allocation being made than the
+> caller was expecting. Using those allocations could lead to linear
+> overflows of heap memory and other misbehaviors.
 > 
-> This is a attempt to unify register numbering macros for uasm,
-> in response to review comment [1].
+> So, use the purpose specific kcalloc() function instead of the argument
+> size * count in the kzalloc() function.
 > 
-> This is a rather large cosmetic change so I decided to send
-> it as a sepreate set.
-> 
-> Please review.
-> Thanks
-> 
-> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+> Link: https://www.kernel.org/doc/html/next/process/deprecated.html#open-coded-arithmetic-in-allocator-arguments [1]
+> Link: https://github.com/KSPP/linux/issues/162
+> Signed-off-by: Erick Archer <erick.archer@gmx.com>
 > ---
-> Jiaxun Yang (8):
->       MIPS: Unify define of CP0 registers for uasm code
->       MIPS: regdefs.h: Guard all defines with __ASSEMBLY__
->       MIPS: regdefs.h: Define a set of register numbers
->       MIPS: traps: Use GPR number macros
->       MIPS: page: Use GPR number macros
->       MIPS: tlbex: Use GPR number macros
->       MIPS: kvm/entry: Use GPR number macros
->       MIPS: pm-cps: Use GPR number macros
+>  arch/mips/alchemy/common/clock.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
->  arch/mips/include/asm/mipsregs.h | 249 +++++++++++++++++-----
->  arch/mips/include/asm/regdef.h   |  91 +++++++++
->  arch/mips/kernel/pm-cps.c        | 134 ++++++------
->  arch/mips/kernel/traps.c         |   6 +-
->  arch/mips/kvm/entry.c            | 431 +++++++++++++++++----------------------
->  arch/mips/mm/page.c              | 202 +++++++++---------
->  arch/mips/mm/tlbex.c             | 214 +++++++++----------
->  7 files changed, 737 insertions(+), 590 deletions(-)
-> ---
-> base-commit: 445a555e0623387fa9b94e68e61681717e70200a
-> change-id: 20240209-regname-4c14f1147e25
+> diff --git a/arch/mips/alchemy/common/clock.c b/arch/mips/alchemy/common/clock.c
+> index c01be8c45271..6c8996e20a7d 100644
+> --- a/arch/mips/alchemy/common/clock.c
+> +++ b/arch/mips/alchemy/common/clock.c
+> @@ -771,7 +771,7 @@ static int __init alchemy_clk_init_fgens(int ctype)
+>  	}
+>  	id.flags = CLK_SET_RATE_PARENT | CLK_GET_RATE_NOCACHE;
+> 
+> -	a = kzalloc((sizeof(*a)) * 6, GFP_KERNEL);
+> +	a = kcalloc(6, sizeof(*a), GFP_KERNEL);
+>  	if (!a)
+>  		return -ENOMEM;
+> 
+> --
+> 2.25.1
 
-series applied to mips-next.
+applied to mips-next.
 
 Thomas.
 
