@@ -1,76 +1,69 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8874F6A8D5;
-	Tue, 20 Feb 2024 14:04:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2FD465BDD;
+	Tue, 20 Feb 2024 14:05:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708437888; cv=none; b=XwVEqGZ/h9i+mlcp3U/7Eu+D+7+z/3EVYPAW4dlc6mRygQypIXRIhL8zx2Bp5vJzmtMMgFQHZEfRDr7ZuNKfLWCX9cyC4z6eykNxUPQi1eCXOQZJ6UnOjQXs9C6qc9Uxd1l2THslDHx5GYbYym2fKBows0LwQtCe0CLgoHHuStk=
+	t=1708437917; cv=none; b=Lm+NW0zclw4aQfQZjkUH2YhNJW2vevPDysQctaEikmKfCRTXu5RooSQ0L2LEhAM75GIXCXLuh1Yb625+Ks6/qilpHhqF7TvtdWn5oMchkUrRNTlsDosCx+lUzB8iRyWxNxW8rBWaDzGPnfnPahxCh7iAQ3uUgjzg0i07wVi71q8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708437888; c=relaxed/simple;
-	bh=+DcNQ5b7LggalgRTToCWl0v9dRAJnGofw1+yMleHhpw=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=DP1QxVJkwS97w5qqTiTK5o3OzkLDkqQKsOT93bM/ASBHzN0sEsGV5Du2ifOekzDFr59vl8OGS9ZU86ScYwiUkt06AiHjSyDDaWMtiD8xge+diQu9t/hl+Cpl5Zqc1MY7mpKzOSr9tiZ4Xqt6y48/6kWe8IpEve1JlNKqx4e2YRg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Yn09JOMy; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Yn09JOMy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C60AAC43390;
-	Tue, 20 Feb 2024 14:04:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708437888;
-	bh=+DcNQ5b7LggalgRTToCWl0v9dRAJnGofw1+yMleHhpw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Yn09JOMyRXKoxpREqz+RRmA7flJ0OlpSjXeiCVrWjuGgUnSxUvJvP5aQcBcJ8hWO5
-	 imjk8ThAzKoWZqnY5/PDQ6OwTgtxO1FWAT7aw7CQF7tcOq2jnF9Rg22iInfU3jyrRY
-	 BLnbv6Nge+Delhb5RnSeTdEhiGcweBZ+5cg6AQpkxTT8IauKhoqVg2rpbPRIrKZEAw
-	 jwSry43jl8lOzDKqUl2s11KIQuanyKovW1UFs5FsTu/mMUGGY9Wkowv2j/VxISwjje
-	 +kqrpUO4VDqcLYcF5FbahyCCJFCJg0CZgPHpAyMbqEq32tUvoiaTpwBcpw0htzNRpG
-	 QIkf3rMJrcNWw==
-From: Will Deacon <will@kernel.org>
-To: hj96.nam@samsung.com
-Cc: catalin.marinas@arm.com,
-	kernel-team@android.com,
-	Will Deacon <will@kernel.org>,
-	linux-kernel@vger.kernel.org,
-	linux-cxl@vger.kernel.org,
-	wj28.lee@samsung.com,
-	jonathan.cameron@huawei.com,
-	mark.rutland@arm.com,
-	ks0204.kim@samsung.com,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v3] perf: CXL: fix CPMU filter value mask length
-Date: Tue, 20 Feb 2024 14:04:39 +0000
-Message-Id: <170843064764.2617406.4906791201590222748.b4-ty@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20240216014522.32321-1-hj96.nam@samsung.com>
-References: <CGME20240216014507epcas2p41686c0ccb1fa73715499e45bbbc7d7e9@epcas2p4.samsung.com> <20240216014522.32321-1-hj96.nam@samsung.com>
+	s=arc-20240116; t=1708437917; c=relaxed/simple;
+	bh=EteAf7m6g8ZwJ4f+8sFnTF5mSQpmaFi6c6AiotBKWdE=;
+	h=Message-ID:Date:From:To:Cc:Subject; b=Xbn3Q5epcn9dvJyJ2ngT4+AmGRREir2I7dXLBe5XfIT2GLhkYbzNIxqfV9Pu2O9SuVnLdXal6igTfgffSAvS9nmt1L8BwdEjrDlWRYuEiy1fHKCAT55lgh6JTJhFoClBxA7kcGkMmAzN7Gco+qP7n/sthKORoqA1PIqyOl7cE5g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 73B5FC43394;
+	Tue, 20 Feb 2024 14:05:17 +0000 (UTC)
+Received: from rostedt by gandalf with local (Exim 4.97)
+	(envelope-from <rostedt@goodmis.org>)
+	id 1rcQlz-0000000266G-0djS;
+	Tue, 20 Feb 2024 09:07:03 -0500
+Message-ID: <20240220140613.782679360@goodmis.org>
+User-Agent: quilt/0.67
+Date: Tue, 20 Feb 2024 09:06:13 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Tim Chen <tim.c.chen@linux.intel.com>,
+ Vincent Donnefort <vdonnefort@google.com>,
+ Sven Schnelle <svens@linux.ibm.com>,
+ Mete Durlu <meted@linux.ibm.com>
+Subject: [PATCH v4 0/3] tracing: Changes to saved_cmdlines
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
 
-On Fri, 16 Feb 2024 10:45:22 +0900, hj96.nam@samsung.com wrote:
-> From: Hojin Nam <hj96.nam@samsung.com>
-> 
-> CPMU filter value is described as 4B length in CXL r3.0 8.2.7.2.2.
-> However, it is used as 2B length in code and comments.
-> 
-> 
 
-Applied to arm64 (for-next/fixes), thanks!
+The first patch is to consolidate the map_cmdline_to_pid into the allocate
+page for the saved_cmdlines structure.
 
-[1/1] perf: CXL: fix CPMU filter value mask length
-      https://git.kernel.org/arm64/c/802379b8f9e1
+The second patch removes some open coded saved_cmdlines logic in trace.c
+into a helper function to make it a cleaner move.
 
-Cheers,
--- 
-Will
+The third patch simply moves code around. The goal is to keep all the
+saved_cmdlines logic in one place. Currently it's in two files (trace.c and
+trace_sched_switch.c). Since trace.c is awfully large, move all the code to
+trace_sched_switch.c, as that's its only purpose today anyway.
 
-https://fixes.arm64.dev
-https://next.arm64.dev
-https://will.arm64.dev
+Changes since v3: https://lore.kernel.org/linux-trace-kernel/20240216210047.584712062@goodmis.org/
+
+- The map_cmdline_to_pid field was moved into the pages allocated of the
+  structure and that replaced the kmalloc. But that field still had
+  kfree() called on it in the freeing of the structure which caused
+  a memory corruption.
+
+Steven Rostedt (Google) (3):
+      tracing: Have saved_cmdlines arrays all in one allocation
+      tracing: Move open coded processing of tgid_map into helper function
+      tracing: Move saved_cmdline code into trace_sched_switch.c
+
+----
+ kernel/trace/trace.c              | 509 +------------------------------------
+ kernel/trace/trace.h              |  10 +
+ kernel/trace/trace_sched_switch.c | 515 ++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 528 insertions(+), 506 deletions(-)
