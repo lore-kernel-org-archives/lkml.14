@@ -1,224 +1,245 @@
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E20064CD0;
-	Tue, 20 Feb 2024 09:53:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708422794; cv=fail; b=TJUkz9UawUV2mHm+lml1A37JsaHC0crEcRnAVYEiYrJ96Kqc8tt+C6lAKUGFYBW3/+GiHI2oBV/9JDUqQ9iLDcG395NrLDOVKVO4DFxIueJsWwEip/37QHyIgUxCuim7SSZOvptvg1nVHfIYUnLZtUK+TxS6k59P/CM8iDiQv7g=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708422794; c=relaxed/simple;
-	bh=Mb0bDnm0i2uVryCgSZ4gigxI9GGwTGmFnbdXDLosfTI=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=uY8gV6GreH+rljrff9HP3At0X3nKmRqZror9vQnt0OUtbaf1H+KJU+sAr1UH9ehbEtq1gEgU9tI+rZLyz5y+p13N+Z21pIqI32W4dZuBgrfFCnVq05W9b51EDY4Ls0rubNOySF+dNu7t9VhBLcdBjHCIO/osH+JDWvlSoOa1TPk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=YLzjcrhH; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=yrCY7Emf; arc=fail smtp.client-ip=205.220.177.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FB05651BC
+	for <linux-kernel@vger.kernel.org>; Tue, 20 Feb 2024 09:53:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.197
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1708422807; cv=none; b=IOv9tK6a36a1icdx0VJQXGw0gOskoPXmcVAjK+pG9bw+RzX4RfYWll7ZaIFUZASLOhiFKm+UQJC6ASHs2/rxnFYgPlj9gOxQNUldQD7zbwajNdWpgvQnrRM/m6U9LFC4oNbwTHQ85FHHi/mQrd08JexiHitXwaanKwjnwIddOeU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1708422807; c=relaxed/simple;
+	bh=tf6J8yreFA2kU6lgOdYaEkPuNfkRJDwXDVrcwZxoDcs=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Z+1TFx58dE0GBOxQua99+DHk8UvB08yckBld/LYPayIer2zFe1jhA9D+wuNKrVaz96ED4ZBqtkMbK8LxTr9IzSifXWOkUTy2Qq/dQcbHSjdvHqB9gxEKuz313865Vv9Q8TJhnnH4mA64pxXIG4TFnlYxOAX6oBcwYyOnMS1KOjg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=I6T8Fm/7; arc=none smtp.client-ip=217.70.183.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="YLzjcrhH";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="yrCY7Emf"
-Received: from pps.filterd (m0246632.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 41K8wvR8031411;
-	Tue, 20 Feb 2024 09:52:48 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=message-id : date :
- subject : to : cc : references : from : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=corp-2023-11-20;
- bh=6xbLIOf+iFYQjLuiytaMKWulerGgwh/uk5ukLUzM3TE=;
- b=YLzjcrhHmWIUOemxzSLGMkhRu44o4ScIdRecfDOryKDICicjiF9ONlfrpwsHtmiH8EET
- et3182EL/uASGYEXrHoLWut7Mm9oCsHRXqL40hCMwKhQZOeVSlI2SrR8C5mRA46nihvQ
- KkTIDaP5kN8Ry5AP9s7+Lwg4KFck6Xv+V7Vglankw3kpwdRKJZ4WioYbz9XJfzUz6u98
- 4a+NMaB0L5EYRC6++i+PUoRRFpQpofCJexrP77/9T2H0bPV4gLZH5QcqBMNfxfxdkuY+
- c0+/CCWMl1vsOGD9wDHym4ucgKkMgTQSAhYB6Y2JjnJdPPbxUoCPv3snvOsI9yfflEEU Bg== 
-Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.appoci.oracle.com [130.35.103.27])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3wamdtx7nn-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 20 Feb 2024 09:52:48 +0000
-Received: from pps.filterd (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 41K8COZp006673;
-	Tue, 20 Feb 2024 09:52:47 GMT
-Received: from nam12-bn8-obe.outbound.protection.outlook.com (mail-bn8nam12lp2168.outbound.protection.outlook.com [104.47.55.168])
-	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3wak8788ed-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 20 Feb 2024 09:52:47 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=HRsx0XN9kIg9FLWb7MDlSGF8delteg0Bl3USInBF9sWgA3NEIiANLPkFHxZnv9ea5j/BjwBfvZy6lc0hHYcfCHZ9L555YSD8YUINIsR03QTGr+tleYCe3JAEHKK7iaWUwrDhfYoyV75YN5cQFWlS2WYiE9F8+3Xh2cSAtK3yeuP9A9KOMuTQeoxdShT9wgmszf+VshPZ3VDz30LJVwwYsfnCRfcmVVOHS8oAPQ6V0S6Nery6quzGSswBunFDXcYwJraPYIxZ09u2l7XROn1mHgDlm9Ct38IWDZtvKli7Nm4uZaWYMfM3dVO/EVbie7tbQcS7kovtHdbeN1TOoaySVQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=6xbLIOf+iFYQjLuiytaMKWulerGgwh/uk5ukLUzM3TE=;
- b=HVfNJ3ajm163C5S9K3kkXclxIVHSrzD0dANmJX6K1UfFZwuajTBxbCEqeaRSc6ABPJgKs5rvqk9lfQWBDdsd1WPGjWtPN74jDDa6hPwGPkmN78W/ECarRf4YO5arMazmjgXyWWPG+7XVXjiAf2dt5aZDgoxf3Q01llajQtzi/pIToUsJy8k5aqNAd4M/rqIKZrjKFyvy3mh4Zhdki1VGOTzTwCudm6EgYyRvWAVHT31ZilNQmGHQtsHASOD5PtzeAqgS7uK3ohPPmjDb5etYlAexPgKmVQJjMDYYNX0FrFIZxQTt4Qob7BFm/qvbatclgsvuUjEeDP89tbp4WmWeHg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=6xbLIOf+iFYQjLuiytaMKWulerGgwh/uk5ukLUzM3TE=;
- b=yrCY7EmfnWHWmei4DaXPqU4dhrMqRnmVLMAHCDr4/VSEC5LuADuH7atqcfNGHEoddA4AkhhY8stL4sa2wa9FAMvle++UHIGydbj1I2IDqJgyypg2Wh4WL2NkKC8L+w7+LgOX9szku/ot72FHB6MKLJyJuHeNVCZ+NBXV3BQNXXE=
-Received: from DM6PR10MB4313.namprd10.prod.outlook.com (2603:10b6:5:212::20)
- by CH3PR10MB6884.namprd10.prod.outlook.com (2603:10b6:610:145::5) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7292.39; Tue, 20 Feb
- 2024 09:52:45 +0000
-Received: from DM6PR10MB4313.namprd10.prod.outlook.com
- ([fe80::56f9:2210:db18:61c4]) by DM6PR10MB4313.namprd10.prod.outlook.com
- ([fe80::56f9:2210:db18:61c4%4]) with mapi id 15.20.7292.036; Tue, 20 Feb 2024
- 09:52:45 +0000
-Message-ID: <d6386903-5c9c-4d11-9d7f-05b0981bdfea@oracle.com>
-Date: Tue, 20 Feb 2024 09:52:40 +0000
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 03/11] fs: Initial atomic write support
-Content-Language: en-US
-To: Dave Chinner <david@fromorbit.com>
-Cc: axboe@kernel.dk, kbusch@kernel.org, hch@lst.de, sagi@grimberg.me,
-        jejb@linux.ibm.com, martin.petersen@oracle.com, djwong@kernel.org,
-        viro@zeniv.linux.org.uk, brauner@kernel.org, dchinner@redhat.com,
-        jack@suse.cz, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
-        linux-fsdevel@vger.kernel.org, tytso@mit.edu, jbongio@google.com,
-        linux-scsi@vger.kernel.org, ojaswin@linux.ibm.com, linux-aio@kvack.org,
-        linux-btrfs@vger.kernel.org, io-uring@vger.kernel.org,
-        nilay@linux.ibm.com, ritesh.list@gmail.com,
-        Prasad Singamsetty <prasad.singamsetty@oracle.com>
-References: <20240219130109.341523-1-john.g.garry@oracle.com>
- <20240219130109.341523-4-john.g.garry@oracle.com>
- <ZdPZvqLgwWSP1ppv@dread.disaster.area>
-From: John Garry <john.g.garry@oracle.com>
-Organization: Oracle Corporation
-In-Reply-To: <ZdPZvqLgwWSP1ppv@dread.disaster.area>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: LNXP123CA0012.GBRP123.PROD.OUTLOOK.COM
- (2603:10a6:600:d2::24) To DM6PR10MB4313.namprd10.prod.outlook.com
- (2603:10b6:5:212::20)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="I6T8Fm/7"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 4B9F81C0009;
+	Tue, 20 Feb 2024 09:53:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1708422796;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=vSdHFa3arkRH7EqPLCC3LYRFNsMZzoRHpNScPv/MSXA=;
+	b=I6T8Fm/7/rqeok3R1j6SrMr8pTjanZgbB/g44wr2tAmV2NGxNJy0K7MbQna0gZUWFZCyLJ
+	qU60Z4qMmwfe4G4AUPinZEterEvt3q8JLLScpTDgrvIOeSJrxn5nOn85rrgQ81ypYuu6EE
+	rGTLHuT3PSWdX8ljKkwn6ltgrgol/mlbr5XexZguT4C9AcjGtImOYL/TsNbnOjYtNBGfiz
+	FEJbY8o7asRMSQ8OWW3xUrWeK97K6LRY4a6r1f7gAeX0WBFn0VEEdFAnJULNtcjwKzs5u9
+	j0whHTBfGhABgX+P4bTnfCWKT6QwUAozhEG+B0nw1UbK08Mk7sCfSKBI92MV6A==
+Date: Tue, 20 Feb 2024 10:53:13 +0100
+From: Miquel Raynal <miquel.raynal@bootlin.com>
+To: William Zhang <william.zhang@broadcom.com>
+Cc: Linux MTD List <linux-mtd@lists.infradead.org>, Linux ARM List
+ <linux-arm-kernel@lists.infradead.org>, Broadcom Kernel List
+ <bcm-kernel-feedback-list@broadcom.com>, f.fainelli@gmail.com,
+ kursad.oney@broadcom.com, joel.peshkin@broadcom.com,
+ anand.gore@broadcom.com, dregan@mail.com, kamal.dasu@broadcom.com,
+ tomer.yacoby@broadcom.com, dan.beygelman@broadcom.com, David Regan
+ <dregan@broadcom.com>, linux-kernel@vger.kernel.org, Vignesh Raghavendra
+ <vigneshr@ti.com>, Brian Norris <computersforpeace@gmail.com>, Richard
+ Weinberger <richard@nod.at>
+Subject: Re: [PATCH v5 09/12] mtd: rawnand: brcmnand: Add support for
+ getting ecc setting from strap
+Message-ID: <20240220105313.5e3c600d@xps-13>
+In-Reply-To: <20240207202257.271784-10-william.zhang@broadcom.com>
+References: <20240207202257.271784-1-william.zhang@broadcom.com>
+	<20240207202257.271784-10-william.zhang@broadcom.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM6PR10MB4313:EE_|CH3PR10MB6884:EE_
-X-MS-Office365-Filtering-Correlation-Id: 0fe495d0-8e00-4f1d-c6aa-08dc31f9b035
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 
-	P+PcEb3JFNqLgAAFoQ+UoXW4pkfQHDjjz0/1SiSG6Mi/nNgLjlZGFWo562iZ7dQ9lsjF9gNWmq34ReG1vKhflzQhG/NVKzvYwfSjGBvKZcSw4KUXrC7OhjOSb0oBcHltbw+iIMkA9tX/y3lC/9OGI9SDSRpD/xR1NflHpZs29OLp0u+eU2A2xWdAFJUNlS/d8QiN/f8kKNmakwYLW15n//Byu0XhGf7RodVAxfaR6W8xHuCr0DmwKRyi/y25eu+u8XUHKi+iIa3ZAocvW28vf+vdQiOTz6l6smSixuTGWepvj9RowNrEPIrtnqSlIo5UuHrqqrReBEMBQmvfD3Dgl1loakMPQiDk93Q9m4Bx/tPIcU1ezyURJAtIerWVrSXHYDv90Onwomj7RPjrUwujZ+p6ZHGRzPxLJExMJSWs6oWRJjiE5HRRQvOddJagfNlXERYECpoFnM0WGLXPUG6Q1dn4M6zaKDmAMu/IpweMsLM5PE4tVJ52t6dHxWFUi/xMl3tE7+SGOcyf5VtN4Dh68KKfjolKhnVNNcPD1eDXyZc=
-X-Forefront-Antispam-Report: 
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR10MB4313.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: 
-	=?utf-8?B?Z3JLRlhhdTZSN0ptZFNSclJVZ0NyejRPNG0xbmNIWDVnd09wT0xHL1JreldH?=
- =?utf-8?B?a1RKUFBYekFEL3RDS3JZUm9rMHJUT0pKRHVsUVkzMGtRVkVGdSt5ZUpiaVhS?=
- =?utf-8?B?djNjemdIVjZtYmJPbldxUjF3REMyUnVaYXVjVlRyb1FjSUJncEdoTm43c2F6?=
- =?utf-8?B?Z0sydVNnUldhelF1dGxybmp1MURlRVZ5ODVQb29TMnh4Skk4QU9uZEhnMnFR?=
- =?utf-8?B?anRERlFiNWRlRDRBT2xGYnoydUxLdVVYdzNpaFNXMDRLaHBGSmJtdDBLejla?=
- =?utf-8?B?d25Ub1c5NWQxcHNZa3Z2Y2dBSkIxSnBsVlNXREJEaUpHRERNbU9MOXU4dnkr?=
- =?utf-8?B?VGU4S05pQzljaldPUUttbWpzSkZOVlRhMEpVSTJJM2ljQkdVemgxbnhtQk9T?=
- =?utf-8?B?WkdHaEhrQmo5NWU2N3UvMHJrcG5DWHZGSFhvc3lXcXpnQnJ2ZHloQ3Fta1pT?=
- =?utf-8?B?MVd6amE1dXBQUjVCRFdtYWdHMUlQKzV6K2tyNlFkTzQ2WVZ4MUpxT1FJS3d2?=
- =?utf-8?B?cFUxeU4zU29RbVV5MUgxQ3hHNVh4WGVaa3ZES2YvQWZwTkNxNEduYkMyQXlo?=
- =?utf-8?B?Q3dCZjJveHJjTjBwaEJtM2tKUk8vOW1ac2tScGk4elgzS2RWejZXRUN5SXBm?=
- =?utf-8?B?Wit0TXBvOEtwMFlKZnltZXRVSmNXK1VmOGVnMm9LcWQ2cjlQOUFZdGxSaDFL?=
- =?utf-8?B?bi85U1NweEw5c0cxdzRDekg4RTdWVUdHNllLcyt2RjIxVVIvNm1QUDFvUEhh?=
- =?utf-8?B?RlBwUWNhdDNqYXZYY3NRYkYxZHRGbm9NOHVQSHY4OW5tT051NFpDZWRySG1j?=
- =?utf-8?B?R0hZeFUzdXl2ajJYWW1xL3RFcktMQTRuQy9NZENjWTJPMitLZE1KT3dlYmtL?=
- =?utf-8?B?ZnZJclRWRGt3dGE5Z3hpeHAwU0M2OXh6b0NEUkpJYUdVU2lIaUd6T1RtZElD?=
- =?utf-8?B?T3krVmlvbmZKeUExT3VBV1owMVZES1lUWXlEa2t2NFM0aU93aDJlRnpadmYx?=
- =?utf-8?B?MitWQXNsek0zYXd5V0N3SnViSzNvYm4ycDRHTVdOTzhEY0NFeGc4d2h0NXYv?=
- =?utf-8?B?MWg3L3oxeHZoY0ZHUWh3c3UvWVVFZEtrNDlzSmhxZnlRYXlvd2k2elAxYjlN?=
- =?utf-8?B?YjhGQWNDa2tGMzhEVEtNNHBQM2RlMUE3eHlvZ0Q3eVZlUmJ0RERxQ1dZNmE4?=
- =?utf-8?B?SGZwN3Z5Q0pXdlBzWThXSCtlN0xSc3MySDc1bExQSlVjMlo1N0x2anNjaU80?=
- =?utf-8?B?VVBOWUw2eG1ta2cyanhjTlNCQ3pCd2xFR1FGdjdvY1prVElsZWR1c0JYeDBG?=
- =?utf-8?B?U3JhT1BWSmxhOUtYQlNBRXNoM0RIVGxBbkwzcC8yWUlnQ2FHbEpJT1Z4bisr?=
- =?utf-8?B?b1BkS25pTWtSU3JZbS9uZjB6WmdBTkZ5di9vTFNlaTdmbzlGZUJkL21nQlhU?=
- =?utf-8?B?aDA4MjNaaDVNSkIxbVFzRjV2K082M0xXTG9qdlgyU1I0S0M4UlppZ3FVYU45?=
- =?utf-8?B?eU9hdzdMVXV3c3VYQzRFTHg1Mm1XUXNYelo5UHJCdytZejBKblE5MXBBc3Jz?=
- =?utf-8?B?cm1UUURGTTkvTVc0alNUS3BWVzBudWtERmoyS0dKNHl4eXRuVWRodUl3dlNB?=
- =?utf-8?B?VnhKMmJqTHFhdGFIcHBHMUI5b0hzMFVIVFA2bUdEOGpFeEpFeStrWlZPMjFM?=
- =?utf-8?B?WDVwR1VXYVg3TU95ckZpZEpYWC9LYkdkMEFtWjVZcU9yOHdkMnpuK2RpL0Qw?=
- =?utf-8?B?S0ZOb21GK003RmlUVHNiWko2YUxjMXFhM3l1RDJ1UXB1bjBwRnVCZ090QVQx?=
- =?utf-8?B?WkVFN1ZxUXRaanlzYjZKWld3Sk4zYloyV1RBM0FrN2ZMd0lrVG5kd0xnZ2VI?=
- =?utf-8?B?V0dPZnlsdDZ3cTIzZjkzbHFFSnJKZUNBZjJGNE5qNTRsTXowS3J4ZTVZbFVM?=
- =?utf-8?B?dmR6RTJwOFhFWS9RMWdKejBXOHluSmdhdFBuK3pIQ09CSE4vQllPb3lMU0pm?=
- =?utf-8?B?L08xNDkxMmhpcUxIQTdtbzdmRTRyNHpkMTFnWUlKS2VUWnc1OG1uTDl3RFZ5?=
- =?utf-8?B?c2lXN3NGNm82eDZEempES0g5Vi9MK3ZrMmZWTHp1WHRyYS9XczVMRjYxYVBJ?=
- =?utf-8?B?MngzVldJN3dxZmg0T0dScWN3UmRsRnRMcFJ4aDNsWGhMWnlOVFJsa3podHpG?=
- =?utf-8?B?dlE9PQ==?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 
-	xAmlg4n3Cp3GKC7M1exBAME1IXjkpZWo/+M5CrpgCcarONoBtsEI2kgAwViyia33mp+pUKkXvKSSxFUXkOKIvIUEg8iJoaWPxCX5fOjTU7BoacrIMXuhEdhA8k+Cukn50x5mNXBXp4LkIROYMiQc+XzMH2S8UBmY25be2imF1sKRZrU7M/SWpY1LC1e+WaHLCN620Wzt/JJ7A4bk/SOPhr/2vbl4lVerRsHrP7N64lensPdRyS51SoPoDB86PVk8jii6GztxI/bkhwMo6VUC1ZZAhggEm74aiYxVApmuoIwzj+LI2/fo563maxhA95U6eCPwFMAG0Jri4eIx2OPUdVVO/ayo/4RaLJZs4fy6g5NAGNf8NtfS6kuZRSs8b3EM/bDYTVgW+pgFmxI0Qez9FenMSWR5bkKZrLBvd8DBnwRLdmeQtqnLURtokiwGJh2yf+8C7VI+3TEc1nzaFiFKg1SnO10XaIxmJPDC8sllhGtlaGzOXS1M1DI6Mq6fbFADCiZkxmu+WX9UlJtf0f8xYcSVQ6lakuaOXfjilO5qXag96Ee8gubYRfrGpuIdSKPcHEz9Ct29dcEZssBtp2I0Bt6h1a2ipdiuWGkSQNcC9Qw=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0fe495d0-8e00-4f1d-c6aa-08dc31f9b035
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR10MB4313.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Feb 2024 09:52:45.4607
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: f01YiXkkoHTNVZVZ+OlhjE7hQJwUsQqab3TfEN6yRwQ+4irYLG/26f7Tga8fjl/xo+fQ4p4gKBsVgcouJ1cNyA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR10MB6884
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-02-20_06,2024-02-19_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 suspectscore=0
- mlxscore=0 spamscore=0 mlxlogscore=999 phishscore=0 bulkscore=0
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2311290000 definitions=main-2402200070
-X-Proofpoint-GUID: Ob5PGtGLWuOs3FTXRFW4lO-MROxiJn2Q
-X-Proofpoint-ORIG-GUID: Ob5PGtGLWuOs3FTXRFW4lO-MROxiJn2Q
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-GND-Sasl: miquel.raynal@bootlin.com
 
-On 19/02/2024 22:44, Dave Chinner wrote:
-> On Mon, Feb 19, 2024 at 01:01:01PM +0000, John Garry wrote:
->> @@ -3523,4 +3535,26 @@ extern int vfs_fadvise(struct file *file, loff_t offset, loff_t len,
->>   extern int generic_fadvise(struct file *file, loff_t offset, loff_t len,
->>   			   int advice);
->>   
->> +static inline bool atomic_write_valid(loff_t pos, struct iov_iter *iter,
->> +			   unsigned int unit_min, unsigned int unit_max)
->> +{
->> +	size_t len = iov_iter_count(iter);
->> +
->> +	if (!iter_is_ubuf(iter))
->> +		return false;
->> +
->> +	if (len == unit_min || len == unit_max) {
->> +		/* ok if exactly min or max */
->> +	} else if (len < unit_min || len > unit_max) {
->> +		return false;
->> +	} else if (!is_power_of_2(len)) {
->> +		return false;
->> +	}
-> This doesn't need if else if else if and it doesn't need to check
-> for exact unit min/max matches. 
+Hi William,
 
-This is fastpath code, and I thought it quicker to just check if min/max 
-first. Based on recent discussions, for FS support I expect typically 
-len == unit_max.
+william.zhang@broadcom.com wrote on Wed,  7 Feb 2024 12:22:54 -0800:
 
-But I can change to your simpler checking and later change to the 
-current method if those FS assumptions hold true.
+> BCMBCA broadband SoC based board design does not specify ecc setting in
+> dts but rather use the SoC NAND strap info to obtain the ecc strength
+> and spare area size setting. Add brcm,nand-ecc-use-strap dts propety for
+> this purpose and update driver to support this option.
+>=20
+> The generic nand ecc settings still take precedence over this flag. For
+> example, if nand-ecc-strength is set in the dts, the driver ignores the
+> strap setting and falls back to original behavior. This makes sure that
+> the existing BCMBCA board dts still works the old way even the strap
+> flag is set in the BCMBCA chip dtsi.
+>=20
+> Signed-off-by: William Zhang <william.zhang@broadcom.com>
+> Reviewed-by: David Regan <dregan@broadcom.com>
+>=20
+> ---
+>=20
+> Changes in v5: None
+> Changes in v4:
+> - Update the comments for ecc setting selection
+>=20
+> Changes in v3: None
+> Changes in v2:
+> - Minor cosmetic fixes
+>=20
+>  drivers/mtd/nand/raw/brcmnand/brcmnand.c | 83 ++++++++++++++++++++++--
+>  1 file changed, 76 insertions(+), 7 deletions(-)
+>=20
+> diff --git a/drivers/mtd/nand/raw/brcmnand/brcmnand.c b/drivers/mtd/nand/=
+raw/brcmnand/brcmnand.c
+> index 73fdf7ce21aa..efeee9e80213 100644
+> --- a/drivers/mtd/nand/raw/brcmnand/brcmnand.c
+> +++ b/drivers/mtd/nand/raw/brcmnand/brcmnand.c
+> @@ -1038,6 +1038,19 @@ static inline int brcmnand_sector_1k_shift(struct =
+brcmnand_controller *ctrl)
+>  		return -1;
+>  }
+> =20
+> +static int brcmnand_get_sector_size_1k(struct brcmnand_host *host)
+> +{
+> +	struct brcmnand_controller *ctrl =3D host->ctrl;
+> +	int shift =3D brcmnand_sector_1k_shift(ctrl);
+> +	u16 acc_control_offs =3D brcmnand_cs_offset(ctrl, host->cs,
+> +						  BRCMNAND_CS_ACC_CONTROL);
+> +
+> +	if (shift < 0)
+> +		return 0;
+> +
+> +	return (nand_readreg(ctrl, acc_control_offs) >> shift) & 0x1;
 
-> The exact matches require the
-> length to be a power of 2, so the checks are simply:
-> 
-> 	if (len < unit_min || len > unit_max)
-> 		return false;
-> 	if (!is_power_of_2(len))
-> 		return false;
-> 
->> +	if (pos & (len - 1))
->> +		return false;
-> This has typing issues - 64 bit value, 32 bit mask. probably should
-> use:
-> 
-> 	if (!IS_ALIGNED(pos, len))
-> 		return false;
+What is this & 0x1 ? If you return a yes/no value, please make this
+function return a bool. Also, please use intermediate steps to clarify
+what you do.
 
-ok, good idea.
+sector_1k_bit =3D ...;
+acc =3D nand_readreg();
+return acc & BIT(sector_1k_bit);
+
+Or something like that.
+
+> +}
+> +
+>  static void brcmnand_set_sector_size_1k(struct brcmnand_host *host, int =
+val)
+>  {
+>  	struct brcmnand_controller *ctrl =3D host->ctrl;
+> @@ -1055,6 +1068,38 @@ static void brcmnand_set_sector_size_1k(struct brc=
+mnand_host *host, int val)
+>  	nand_writereg(ctrl, acc_control_offs, tmp);
+>  }
+> =20
+> +static int brcmnand_get_spare_size(struct brcmnand_host *host)
+> +{
+> +	struct brcmnand_controller *ctrl =3D host->ctrl;
+> +	u16 acc_control_offs =3D brcmnand_cs_offset(ctrl, host->cs,
+> +						  BRCMNAND_CS_ACC_CONTROL);
+> +	u32 acc =3D nand_readreg(ctrl, acc_control_offs);
+> +
+> +	return (acc & brcmnand_spare_area_mask(ctrl));
+> +}
+> +
+> +static int brcmnand_get_ecc_strength(struct brcmnand_host *host)
+
+					_from_strap
+
+> +{
+> +	struct brcmnand_controller *ctrl =3D host->ctrl;
+> +	u16 acc_control_offs =3D brcmnand_cs_offset(ctrl, host->cs,
+> +						  BRCMNAND_CS_ACC_CONTROL);
+> +	int sector_size_1k =3D brcmnand_get_sector_size_1k(host);
+> +	int spare_area_size, ecc_level, ecc_strength;
+> +	u32 acc;
+> +
+> +	spare_area_size =3D brcmnand_get_spare_size(host);
+> +	acc =3D nand_readreg(ctrl, acc_control_offs);
+> +	ecc_level =3D (acc & brcmnand_ecc_level_mask(ctrl)) >> ctrl->ecc_level_=
+shift;
+
+Please use FIELD_PREP/FIELD_GET.
+
+> +	if (sector_size_1k)
+> +		ecc_strength =3D ecc_level * 2;
+> +	else if (spare_area_size =3D=3D 16 && ecc_level =3D=3D 15)
+> +		ecc_strength =3D 1; /* hamming */
+> +	else
+> +		ecc_strength =3D ecc_level;
+> +
+> +	return ecc_strength;
+> +}
+> +
+>  /***********************************************************************
+>   * CS_NAND_SELECT
+>   ***********************************************************************/
+> @@ -2622,19 +2667,43 @@ static int brcmnand_setup_dev(struct brcmnand_hos=
+t *host)
+>  		nanddev_get_memorg(&chip->base);
+>  	struct brcmnand_controller *ctrl =3D host->ctrl;
+>  	struct brcmnand_cfg *cfg =3D &host->hwcfg;
+> -	char msg[128];
+> +	struct device_node *np =3D nand_get_flash_node(chip);
+>  	u32 offs, tmp, oob_sector;
+> -	int ret;
+> +	int ret, sector_size_1k =3D 0;
+> +	bool use_strap =3D false;
+> +	char msg[128];
+> =20
+>  	memset(cfg, 0, sizeof(*cfg));
+> +	use_strap =3D of_property_read_bool(np, "brcm,nand-ecc-use-strap");
+> =20
+> -	ret =3D of_property_read_u32(nand_get_flash_node(chip),
+> -				   "brcm,nand-oob-sector-size",
+> +	/*
+> +	 * Set ECC size and strength based on hw configuration from strap
+> +	 * if brcm,nand-ecc-use-strap is set. However if nand-ecc-strength
+> +	 * is set, its value will be used and ignore the strap setting.
+
+Please error out in this case. It's one or the other, not both.
+
+> +	 */
+> +	if (chip->ecc.strength)
+> +		use_strap =3D 0;
+> +
+> +	if (use_strap) {
+> +		chip->ecc.strength =3D brcmnand_get_ecc_strength(host);
+> +		sector_size_1k =3D brcmnand_get_sector_size_1k(host);
+> +		if (chip->ecc.size =3D=3D 0) {
+> +			if (sector_size_1k < 0)
+> +				chip->ecc.size =3D 512;
+> +			else
+> +				chip->ecc.size =3D 512 << sector_size_1k;
+> +		}
+
+I'd instead make a function named brcmnand_get_ecc_settings() with the
+chip->ecc parameter, so you can directly fill the entries without
+getting another time the sector_size_1k thing.
+
+Strength and step size are tightly linked, it does make sense to derive
+them both at the same time.
+
+> +	}
+> +
+> +	ret =3D of_property_read_u32(np, "brcm,nand-oob-sector-size",
+>  				   &oob_sector);
+>  	if (ret) {
+> -		/* Use detected size */
+> -		cfg->spare_area_size =3D mtd->oobsize /
+> -					(mtd->writesize >> FC_SHIFT);
+> +		if (use_strap)
+> +			cfg->spare_area_size =3D brcmnand_get_spare_size(host);
+> +		else
+> +			/* Use detected size */
+> +			cfg->spare_area_size =3D mtd->oobsize /
+> +						(mtd->writesize >> FC_SHIFT);
+>  	} else {
+>  		cfg->spare_area_size =3D oob_sector;
+>  	}
+
 
 Thanks,
-John
-
+Miqu=C3=A8l
