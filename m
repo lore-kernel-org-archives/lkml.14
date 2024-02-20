@@ -1,139 +1,96 @@
-Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D03C160BBA;
-	Tue, 20 Feb 2024 09:56:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.193
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2D1D5D725;
+	Tue, 20 Feb 2024 09:56:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708423003; cv=none; b=PBcXs+RrX+zZC4jNdyhIr+sxbqfaO05wN2OGoFZvVpYLT8sYrHPL3FjWelaQgPBU28AtE2AfzmsOCuX3MDVaak5au0LcNWGPhBZSZUDUXD5RxLi0D+/A9dQAkZlUaskiVy7/JTanqPYU+/GvdCAFZtgkstuDscgp868TDKlN1CE=
+	t=1708423019; cv=none; b=LFvXAlIN1mu/83hwVGBrQzM1CRbmBEfuvx5YMcwfysE5W0teSjYBtya6Ng4Yk9sSE3uAxwy2LT/2uf2mkpD1K2S5z7nPGKpdcDbkSQadVo0WG6g3fUsoLfbAnkH+FErmBNv/nplsPwMvqlxYcCKEdS8Gh41P4+PBIUkGvXsWoow=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708423003; c=relaxed/simple;
-	bh=4Q+Eytv8Lqu7vRaPxXLCovjvrNp3hPC/myttHLGJDFM=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=iBQYOICMQY9+TJdLj1YNqWUn0SQeI1smEgkRu7MvK60yY8+Tpz794RN+shjB92+15l0+EVVEky/9c/IPhBMeQZ1U+tOlHVLuWPZRaPK9j+phzssZe3HfN+4EOQ0/jEUCfM7PGpb7C1EXVPU+9U4jt9pDTz2aq8gUbk37ku5Y0P4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=cvDEEtdu; arc=none smtp.client-ip=217.70.183.193
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1708423019; c=relaxed/simple;
+	bh=ndWAmyMkyCe7p03x/9HHbHy76rgNeM5CEFriO4AjFT4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=uDo/yDCGq+7DMl1P0VTmOsUqqyf6QA4udWn+YQbp8z2X8G/fvOyG13yjqLjlASqrCzy3qV15HIgOiCER/v/YMQ+fBqNoh/5PjcEG8kQyTCACnESprq7lOlCdeTU2YLKQreRwma9esmxwILeRiWptaLxU3ivL9wcLBy+dYBUiP4g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bDYiEGut; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="cvDEEtdu"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 29EB1240005;
-	Tue, 20 Feb 2024 09:56:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1708422998;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=E8vYmz20JtDfNNRe27+16Y9GfbpnqV9b0nYEvIzUvwE=;
-	b=cvDEEtdujSkBM0JSloT0c+vkmgUHZKt59K6583zRWp+UHoVJtv9nUKuxOEXRMkwbgse7Ue
-	Yg0earM/LIN0c6sfqzrIsNEZAuGsti2YXWLMqBpgJCi79h8JaYPySLLK8QlQSlEM70T1B6
-	BSH6wRyz362bRgFHuRYZ4ry8o3AZY7MHONQZxBgu6wHLdYChFn9Vwp8LtI/Qj/juQQUIx4
-	kihISrkrWTksIIg+AwQdNwzcs4bV284PdTRhCL1oOYyrF1gtk57A7fAzxmiIgHLH7vhIwE
-	tHViXT0j+R43onIFmbbVlXZ7CiEP4fPVURi7oTK/zjaaX1R/A5/DPa1qRHDJHg==
-Date: Tue, 20 Feb 2024 10:56:34 +0100
-From: Miquel Raynal <miquel.raynal@bootlin.com>
-To: William Zhang <william.zhang@broadcom.com>
-Cc: Linux MTD List <linux-mtd@lists.infradead.org>, Linux ARM List
- <linux-arm-kernel@lists.infradead.org>, Broadcom Kernel List
- <bcm-kernel-feedback-list@broadcom.com>, f.fainelli@gmail.com,
- kursad.oney@broadcom.com, joel.peshkin@broadcom.com,
- anand.gore@broadcom.com, dregan@mail.com, kamal.dasu@broadcom.com,
- tomer.yacoby@broadcom.com, dan.beygelman@broadcom.com,
- devicetree@vger.kernel.org, Brian Norris <computersforpeace@gmail.com>,
- linux-kernel@vger.kernel.org, Conor Dooley <conor+dt@kernel.org>, Krzysztof
- Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Vignesh Raghavendra
- <vigneshr@ti.com>, Richard Weinberger <richard@nod.at>, Kamal Dasu
- <kdasu.kdev@gmail.com>, Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v5 03/12] dt-bindings: mtd: brcmnand: Add ecc strap
- property
-Message-ID: <20240220105634.02b505b6@xps-13>
-In-Reply-To: <20240207202257.271784-4-william.zhang@broadcom.com>
-References: <20240207202257.271784-1-william.zhang@broadcom.com>
-	<20240207202257.271784-4-william.zhang@broadcom.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bDYiEGut"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2ED29C43390;
+	Tue, 20 Feb 2024 09:56:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1708423019;
+	bh=ndWAmyMkyCe7p03x/9HHbHy76rgNeM5CEFriO4AjFT4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=bDYiEGuttiQVberspseQVpB4Jch8Z2ZrWiIOeyuRcCuXGLIRFXR275xuUlcX94Rzs
+	 2/dyIVxOvyxpZIPwZdNu23hhgP9dZDWhSjr9qzCf2iQoOehtppGlBXg73XU43rKEh0
+	 yoiwQLvMhLXPwFvfwW93oJvFme797H7Hkmvd5C30LUVn74wIU4Nhr0vtFk2QK8+fxj
+	 XEUmBXgmsdvLP6hABt/noHrUNTGW3thG6vySSeZFw+ZATCYgTBA50t8VTxWRnmMzuY
+	 cu1XWeh8zFpfjxAsFiZUdQUuVJFRE/G2yRBQ38s8jZ2hSZBkW7+/oJUSKq1E1aLIwu
+	 VLyL1riVTmHNw==
+Date: Tue, 20 Feb 2024 10:56:53 +0100
+From: Christian Brauner <brauner@kernel.org>
+To: Chuck Lever <cel@kernel.org>
+Cc: viro@zeniv.linux.org.uk, jack@suse.cz, hughd@google.com, 
+	akpm@linux-foundation.org, Liam.Howlett@oracle.com, oliver.sang@intel.com, 
+	feng.tang@intel.com, linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	maple-tree@lists.infradead.org, linux-mm@kvack.org, lkp@intel.com
+Subject: Re: [PATCH v2 1/6] libfs: Re-arrange locking in offset_iterate_dir()
+Message-ID: <20240220-ortsrand-initialen-43550ee746ed@brauner>
+References: <170820083431.6328.16233178852085891453.stgit@91.116.238.104.host.secureserver.net>
+ <170820142021.6328.15047865406275957018.stgit@91.116.238.104.host.secureserver.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-GND-Sasl: miquel.raynal@bootlin.com
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <170820142021.6328.15047865406275957018.stgit@91.116.238.104.host.secureserver.net>
 
-Hi William,
+On Sat, Feb 17, 2024 at 03:23:40PM -0500, Chuck Lever wrote:
+> From: Chuck Lever <chuck.lever@oracle.com>
+> 
+> Liam and Matthew say that once the RCU read lock is released,
+> xa_state is not safe to re-use for the next xas_find() call. But the
+> RCU read lock must be released on each loop iteration so that
+> dput(), which might_sleep(), can be called safely.
 
-william.zhang@broadcom.com wrote on Wed,  7 Feb 2024 12:22:48 -0800:
+Fwiw, functions like this:
 
-> Add brcm,nand-ecc-use-strap to get ecc and spare area size settings from
-> board boot strap for broadband board designs because they do not specify
-> ecc setting in dts but rather using the strap setting.
->=20
-> Signed-off-by: William Zhang <william.zhang@broadcom.com>
->=20
-> ---
->=20
-> Changes in v5:
-> - Update the description for this ecc strap property
-> - Add check to make sure brcm,nand-ecc-use-strap and
->   nand-ecc-strength/brcm,nand-oob-sector-size can not be used at the
->   same time
->=20
-> Changes in v4:
-> - Move ecc strap property to this separate patch and remove some
-> non-binding related text from the description
->=20
-> Changes in v3: None
-> Changes in v2: None
->=20
->  .../bindings/mtd/brcm,brcmnand.yaml           | 19 +++++++++++++++++++
->  1 file changed, 19 insertions(+)
->=20
-> diff --git a/Documentation/devicetree/bindings/mtd/brcm,brcmnand.yaml b/D=
-ocumentation/devicetree/bindings/mtd/brcm,brcmnand.yaml
-> index 6a717bcedfd3..52a4c993b6f1 100644
-> --- a/Documentation/devicetree/bindings/mtd/brcm,brcmnand.yaml
-> +++ b/Documentation/devicetree/bindings/mtd/brcm,brcmnand.yaml
-> @@ -146,6 +146,13 @@ patternProperties:
->            layout.
->          $ref: /schemas/types.yaml#/definitions/uint32
-> =20
-> +      brcm,nand-ecc-use-strap:
-> +        description:
-> +          This property requires the host system to get the ECC strength
-> +          and step size from the SoC NAND boot strap setting. This is a
-> +          common hardware design on BCMBCA based boards.
-> +        $ref: /schemas/types.yaml#/definitions/flag
-> +
->      unevaluatedProperties: false
-> =20
->  allOf:
-> @@ -195,6 +202,18 @@ allOf:
->        required:
->          - interrupt-names
-> =20
-> +  - if:
-> +      patternProperties:
-> +        "^nand@[a-f0-9]$":
-> +          required:
-> +            - brcm,nand-ecc-use-strap
-> +    then:
-> +      patternProperties:
-> +        "^nand@[a-f0-9]$":
-> +          properties:
-> +            nand-ecc-strength: false
-> +            brcm,nand-oob-sector-size: false
+static struct dentry *offset_find_next(struct xa_state *xas)
+{
+        struct dentry *child, *found = NULL;
 
-Can you also excluse all the other nand-ecc- settings and brcm,
-settings as well? Either you use the strap *or* you provide values in
-the DT, but not both.
+        rcu_read_lock();
+        child = xas_next_entry(xas, U32_MAX);
+        if (!child)
+                goto out;
+        spin_lock(&child->d_lock);
+        if (simple_positive(child))
+                found = dget_dlock(child);
+        spin_unlock(&child->d_lock);
+out:
+        rcu_read_unlock();
+        return found;
+}
 
-> +
->  unevaluatedProperties: false
-> =20
->  required:
+should use the new guard feature going forward imho. IOW, in the future such
+helpers should be written as:
 
+static struct dentry *offset_find_next(struct xa_state *xas)
+{
+        struct dentry *child, *found = NULL;
 
-Thanks,
-Miqu=C3=A8l
+	guard(rcu)();
+        child = xas_next_entry(xas, U32_MAX);
+        if (!child)
+		return NULL;
+        spin_lock(&child->d_lock);
+        if (simple_positive(child))
+                found = dget_dlock(child);
+        spin_unlock(&child->d_lock);
+        return found;
+}
+
+which allows you to eliminate the goto and to have the guarantee that the rcu
+lock is released when you return. This also works for other locks btw.
