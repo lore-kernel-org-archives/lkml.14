@@ -1,117 +1,98 @@
-Received: from mail-pg1-f171.google.com (mail-pg1-f171.google.com [209.85.215.171])
+Received: from mail-qv1-f47.google.com (mail-qv1-f47.google.com [209.85.219.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48542154BF1
-	for <linux-kernel@vger.kernel.org>; Tue, 20 Feb 2024 23:17:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 893AB76C99;
+	Tue, 20 Feb 2024 23:19:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708471079; cv=none; b=t9GYgbezbF2gcRMBeLhZBCWtfTQP/fxeOCgmXMgxhfnCrHxwu0GloA9Zo1VBLkkIbgruf5fWpIm+8IK7iQbe7Yfk+fmCHvSitw+RbpA0mlAU3NoUtah7zsyk4qz+J8IPrNF7Csrjl6XUiseJvXIn2zgV9kEPpvouP6ifvtBdO2Q=
+	t=1708471191; cv=none; b=TpzspQV1F+6FL3wgNEDXYCQciO0qyE4YG5NWIzM9K7EP+WwcXUhGVrTrTa/YR+Gk4gwtUEnBb3Fvv47+qyhZiqKRj8bh/RpSaCgohEmT5eSva2UAi/7VmN0LSLhBV9bOf7SHYnGhsNHkpojkmT2UgauXH/SmZt9+aBPvnCj9gxs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708471079; c=relaxed/simple;
-	bh=qFlaAcGU6Y1uDzxqv2LE52Sqg0304QiZAIx8ki9By54=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=NNqCUFfytrrmk3hBMV9qy0hSlZTg5Y+mJa4Pp5HVsHYTQJ7L4udXGSp17ly2gCPJfWcTTO6z7xrQrNzNDjg2nSM+m0it6/cXEbsg3O+QiHhtW2l5Dx+QGYAkughaucy4ESvBWP3ww6CLduEbjWSN/VuirDpU7Mdng5hr3/vwBKk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jyUW6FvG; arc=none smtp.client-ip=209.85.215.171
+	s=arc-20240116; t=1708471191; c=relaxed/simple;
+	bh=j4AZpUs7iNUNOw3+U2CKct0moYYUgG7dyRsvoaQkXgA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=MTawO+6P+FcvBR9La3BpMZvSuRFzICQUBFrt+b/ryagziKTAS1Ao81QnR8byC9dNvt8vpXlWuVNFg6HNOo+rWCSpy85FmEz4yHFyBuSwwQoA/JhyvzK2idpQo/GTzpKhRQyMdkzB13kSLNcPqLVYdj9zpooFQERITwWInO+UCPI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=asdJXhIH; arc=none smtp.client-ip=209.85.219.47
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jyUW6FvG"
-Received: by mail-pg1-f171.google.com with SMTP id 41be03b00d2f7-5ce07cf1e5dso4686334a12.2
-        for <linux-kernel@vger.kernel.org>; Tue, 20 Feb 2024 15:17:58 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="asdJXhIH"
+Received: by mail-qv1-f47.google.com with SMTP id 6a1803df08f44-68f74007267so5838306d6.0;
+        Tue, 20 Feb 2024 15:19:49 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1708471077; x=1709075877; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1708471188; x=1709075988; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=WrT4PFTPEBdVnQtB3JqEnMTnzuYVsnDN94ufDiP3ix8=;
-        b=jyUW6FvGBy5kzzZpjgyjsgXwi/pGHdx+T5eDb221Qxkhu3WyofLjjuF9GVJ5LkRPMg
-         +v5LgT7v/4S8PCWOot5dIZIyLx1e61yAvWEqzhSkk+J1Tt2/Hl43HpxgxQOc1YRYxkfr
-         Tyzd5snsUkgzv3+5KYymgdUZrevd/eMoN64C0LlB5eVegoY09Fb6KE7iPsB7HLB4Rv1Z
-         daLjBaIX5rlzMu2voAQZCLsCrbfxLLI/gjY1O3XwtXTyZ9LS5faTaWLtIKwP5j73PQIJ
-         iDl2kFNXBq9JErHiQSfIjVA30eAYKreW0/CbUvIXfq5EG7P2vu//KxNaIBCgl4gNNPYr
-         qGyA==
+        bh=j4AZpUs7iNUNOw3+U2CKct0moYYUgG7dyRsvoaQkXgA=;
+        b=asdJXhIHFnzv3DoUezuHzTuXFT1z3s4/ZJIwDqb7lAMIm6gii7VpnHdSezzCzOTtWe
+         z9vgSuTEGP1e4f8D8DIZV7x6dqz0WqWq4JpF/MYEJnSoeA1fjKIcR+GDrwqi3pcPc86U
+         qNEpH4/yVNzApmIEwSnxxSZqYV26Y7LNXZsfN6cG0ngaTyrRHoZawch0lanrU3eoE86c
+         kl9nNYMj62nDVbui3jsjMXGnQYLHf8gLGCJhlksS7yKVsde+jXEq3Xti9Ln/GRoZXke5
+         hS7ApySaBKWDJ7bqvp07te6Y+7Mfo8HrelKqIq03q/NWoqCH3gwNvSIfK0/xUiRUTq3Q
+         veXg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708471077; x=1709075877;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1708471188; x=1709075988;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=WrT4PFTPEBdVnQtB3JqEnMTnzuYVsnDN94ufDiP3ix8=;
-        b=tz+ykf9/7BeaTkrL2D//GQ+VqOiubOufBg8BhP9F/LXPr/e7StHQuJ027XgJElaknJ
-         pnPRlaaZxNfy6vWGU5U6m1OnizAVWvFzoxI3e+RN8LHbqTEiOcv9xkpzCylog0/hfxyy
-         Jy+VCbjBIwmP3iMFr37lKGibPJ+aLaxYNxwFCTsvrvpe7uUeI9A+fy+OOrYHGy6//T+c
-         B7GEAGIBDVmZkOI3ltA7SbTAV2fwMMT6ZvIIfkWhnv7Opdz7+3d6XxSts04A/sMbdOHA
-         b5T42sYqZ+Gqki7PHqM7Pvduf5HRVaqdYku/v4inN2S8j9IiojTf4BidDKZn7yix1bM/
-         mH4A==
-X-Gm-Message-State: AOJu0Yw2qKkCFnZZ9DmgGnWSe0BvQQ3Z6eetJuTeCCMH/goYjezkUlS0
-	/wWmJxBw95A+/f4SiUtRkl/MPz2bB8+jYBO5BS/EQ5p6qRmtOTch78Zlqa+V
-X-Google-Smtp-Source: AGHT+IFKKyG86+3BcYGfCtYk4B+BIzlGb+TUrCSTONtmVN/+s7J3gVwj8UxkSRj+/w/58I5OyBVGAw==
-X-Received: by 2002:a05:6a21:6315:b0:1a0:785c:58c2 with SMTP id wu21-20020a056a21631500b001a0785c58c2mr13278203pzb.61.1708471077457;
-        Tue, 20 Feb 2024 15:17:57 -0800 (PST)
-Received: from fedora.. (c-73-170-51-167.hsd1.ca.comcast.net. [73.170.51.167])
-        by smtp.googlemail.com with ESMTPSA id x16-20020aa784d0000000b006e13a5ab1e5sm5317803pfn.73.2024.02.20.15.17.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 20 Feb 2024 15:17:57 -0800 (PST)
-From: "Vishal Moola (Oracle)" <vishal.moola@gmail.com>
-To: linux-mm@kvack.org
-Cc: linux-kernel@vger.kernel.org,
-	akpm@linux-foundation.org,
-	muchun.song@linux.dev,
-	"Vishal Moola (Oracle)" <vishal.moola@gmail.com>
-Subject: [PATCH 3/3] hugetlb: Allow faults to be handled under the VMA lock
-Date: Tue, 20 Feb 2024 15:14:24 -0800
-Message-ID: <20240220231424.126600-4-vishal.moola@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240220231424.126600-1-vishal.moola@gmail.com>
-References: <20240220231424.126600-1-vishal.moola@gmail.com>
+        bh=j4AZpUs7iNUNOw3+U2CKct0moYYUgG7dyRsvoaQkXgA=;
+        b=gyzZrHyFuNzWHk0uVYywuHexO4PUpMcWJwhBONZWU2wmDfwHm+baAb/JXdqr+XxOLl
+         AhBlbNP0bUf/+iIvYf7AaJQWh16fxTLNfNXJZkpZZCQBiaW3FMjeHIPSE0L03Jl/9ovg
+         FFjP7ZXFGZqUfxnNDkWLj7V1ivRHihIo8lDHph1ycxNFtnfaKmKrrNR6pb1/S40kovVq
+         Z1kBUiqhxeiVFjAS7NPlW7d/M51Uya+BIQ4SCG+ALs8EVm78a9VrsHIxrBk/poJVPPii
+         Fnk9VJAm/dpmHI9/Bp8TQ9C8OyqTAPWocBxY/p4GMEcIg4/GL2tsMMEL7J/ZZnCCr63s
+         TJcw==
+X-Forwarded-Encrypted: i=1; AJvYcCUIZ5cAiq3ZxvpufUggc9GYgC8DZv4pLDloZh5Zgb9i13KvuDScOd40SFaljAFEdqiIcrnOmBLymPDEClGAGZ81nbKHnJzlC1eBPeVcrPXbgTkI8D5dwq4OLKA1PpEy5qMqk11v77s1B2ctnTeDztecovDxuNF+/6/OFuKbOgcFoh/Oi7Rdx5wSC4dokMm7GPLDPeCn1jtpK4c5ksuw
+X-Gm-Message-State: AOJu0YyvwSJT/ch1+mLz2dXOIqJfPAuKqMeCDkNTj0AwifR7Nq0m6IBY
+	M9unY9HQFNtzqp+APPUiujYeGMZm1AsSwpUXtSvijfSXtAUHg8qNASRwYPk2/1Vm9DT9eapiEjI
+	yV/I7n3U/EY9z7RG0w3TXqqDQB40=
+X-Google-Smtp-Source: AGHT+IHFIDEAmC8NEGxjsG4riq9Ba4dDJ0CvrcQgOH7NX1APlBIJUTnNK6zqQcTbZLzYlCVkQWftRFgHgYnfYkaZn9w=
+X-Received: by 2002:a05:6214:500f:b0:68f:8b5a:3e6b with SMTP id
+ jo15-20020a056214500f00b0068f8b5a3e6bmr4541836qvb.6.1708471188325; Tue, 20
+ Feb 2024 15:19:48 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <CABXGCsNnUfCCYVSb_-j-a-cAdONu1r6Fe8p2OtQ5op_wskOfpw@mail.gmail.com>
+ <Zb6D/5R8nNrxveAP@cae.in-ulm.de> <Zb/30qOGYAH4j6Mn@cae.in-ulm.de>
+ <CABXGCsPu73D+JS9dpvzX78RktK2VOv_xT8vvuVaQ=B6zs2dMNQ@mail.gmail.com>
+ <e7b96819-edf7-1f9f-7b01-e2e805c99b33@linux.intel.com> <CABXGCsPjW_Gr4fGBzYSkr_4tsn0fvuT72G-YJYXcb1a4kX=CQw@mail.gmail.com>
+ <2d87509a-1515-520c-4b9e-bba4cd4fa2c6@linux.intel.com> <CABXGCsPdXqRG6v97KDGy+o59xc3ayaq3rLj267veC7YcKVp8ww@mail.gmail.com>
+ <1126ed0a-bfc1-a752-1b5e-f1339d7a8aa5@linux.intel.com> <CABXGCsN5_O3iKDOyYxtsGTGDA6fw4962CjzXLSnOK3rscELq+Q@mail.gmail.com>
+ <a026ecd8-6fba-017d-d673-0d0759a37ed8@linux.intel.com> <CABXGCsOgy8H4GGcNU1jRE+SzRqwnPeNuy_3xBukjwB-bPxeZrQ@mail.gmail.com>
+In-Reply-To: <CABXGCsOgy8H4GGcNU1jRE+SzRqwnPeNuy_3xBukjwB-bPxeZrQ@mail.gmail.com>
+From: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
+Date: Wed, 21 Feb 2024 04:19:37 +0500
+Message-ID: <CABXGCsOd=E428ixUOw+msRpnaubgx5-cVU7TDXwRUCdrM5Oicw@mail.gmail.com>
+Subject: =?UTF-8?Q?Re=3A_This_is_the_fourth_time_I=E2=80=99ve_tried_to_find_wha?=
+	=?UTF-8?Q?t_led_to_the_regression_of_outgoing_network_speed_and_each_t?=
+	=?UTF-8?Q?ime_I_find_the_merge_commit_8c94ccc7cd691472461448f98e2372c7?=
+	=?UTF-8?Q?5849406c?=
+To: Mathias Nyman <mathias.nyman@linux.intel.com>
+Cc: "Christian A. Ehrhardt" <lk@c--e.de>, niklas.neronin@linux.intel.com, 
+	Linux List Kernel Mailing <linux-kernel@vger.kernel.org>, Greg KH <gregkh@linuxfoundation.org>, 
+	linux-usb@vger.kernel.org, linux-x86_64@vger.kernel.org, 
+	netdev@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hugetlb can now safely handle faults under the VMA lock, so allow it to
-do so.
+On Mon, Feb 19, 2024 at 2:41=E2=80=AFPM Mikhail Gavrilov
+<mikhail.v.gavrilov@gmail.com> wrote:
+>
+> I installed irqbalance daemon and nothing changed.
+> So who is responsible for irq balancing?
 
-This patch may cause ltp hugemmap10 to "fail". Hugemmap10 tests hugetlb
-counters, and expects the counters to remain unchanged on failure to
-handle a fault.
+Sorry for the noise. Can anyone give me an answer?
+Who is responsible for distributing interrupts in Linux?
+I spotted network performance regression and it turned out, this was
+due to the network card getting other interrupt. It is a side effect
+of commit 57e153dfd0e7a080373fe5853c5609443d97fa5a.
+Installing irqbalance daemon did not help. Maybe someone experienced
+such a problem?
 
-In hugetlb_no_page(), vmf_anon_prepare() may bailout with no anon_vma
-under the VMA lock after allocating a folio for the hugepage. In
-free_huge_folio(), this folio is completely freed on bailout iff there
-is a surplus of hugetlb pages. This will remove a folio off the freelist
-and decrement the number of hugepages while ltp expects these counters
-to remain unchanged on failure.
-
-Originally this could only happen due to OOM failures, but now it may
-also occur after we allocate a hugetlb folio without a suitable anon_vma
-under the VMA lock. This should only happen for the first freshly
-allocated hugepage in this vma.
-
-Signed-off-by: Vishal Moola (Oracle) <vishal.moola@gmail.com>
----
- mm/hugetlb.c | 6 ------
- 1 file changed, 6 deletions(-)
-
-diff --git a/mm/hugetlb.c b/mm/hugetlb.c
-index 10f57306e1f0..ed472510699d 100644
---- a/mm/hugetlb.c
-+++ b/mm/hugetlb.c
-@@ -6376,12 +6376,6 @@ vm_fault_t hugetlb_fault(struct mm_struct *mm, struct vm_area_struct *vma,
- 	int need_wait_lock = 0;
- 	unsigned long haddr = address & huge_page_mask(h);
- 
--	/* TODO: Handle faults under the VMA lock */
--	if (flags & FAULT_FLAG_VMA_LOCK) {
--		vma_end_read(vma);
--		return VM_FAULT_RETRY;
--	}
--
- 	/*
- 	 * Serialize hugepage allocation and instantiation, so that we don't
- 	 * get spurious allocation failures if two CPUs race to instantiate
--- 
-2.43.0
-
+--=20
+Best Regards,
+Mike Gavrilov.
