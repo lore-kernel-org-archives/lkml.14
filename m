@@ -1,183 +1,138 @@
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BBAF5D8EC
-	for <linux-kernel@vger.kernel.org>; Tue, 20 Feb 2024 08:39:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 634382E3E8
+	for <linux-kernel@vger.kernel.org>; Tue, 20 Feb 2024 08:39:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708418356; cv=none; b=sNCYtodrhviamFLL53zYvBCbOx+Fw5l05urcukrW7YrU0SVN7uZMISUnJzB7cRt6p47IdO66B/fWxuJvWsPxSyuNh3OE+FcwcisjkdcJDM4OA6LqIZO1z7DCRMs5FQoG/hwDwPS1TND4UdFx56v07E2wBdpVdKcJfao4DdPOH4w=
+	t=1708418372; cv=none; b=BK9Ul9IaKXb5dmwGYrPhe94GTEuW266zgCGDAg0r8jMB+SaNxitCHJBLeOxv5cqa0FaH6hxeYKz4j6fPvvHsJ+L6nst7LG5lsCIiLUiqI93H3zk/ar3ljwVWo5Oiu7uUl+iMDtZqoC3B+siM9Jr8JSY1WdTELCh+jeg8+whYCng=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708418356; c=relaxed/simple;
-	bh=eARWGRfRDmOm0P/pwF6ioHyIv/3ArkeboFaDCJ2mAEo=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=bgbH9UVXlVgzDWUwpaAi/TMQEfYL2HhI7IT9NvQSP45ZgUVcXEq5NET4/kICO8IN8G7kn1JyFzH/u5rzPqPunyFHVtag6nkcDsdkEzSF9+Tq0nf1iYrq4+Md4ZRqac7B+qeFg0GGPpfYu1REFEpjsvFYqT7pL059ZFSVAff7yhI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.105])
-	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4TfC2r4hVpzvVnw;
-	Tue, 20 Feb 2024 16:18:12 +0800 (CST)
-Received: from dggpemd100004.china.huawei.com (unknown [7.185.36.20])
-	by mail.maildlp.com (Postfix) with ESMTPS id DADAC140154;
-	Tue, 20 Feb 2024 16:20:13 +0800 (CST)
-Received: from huawei.com (10.67.174.76) by dggpemd100004.china.huawei.com
- (7.185.36.20) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.2.1258.28; Tue, 20 Feb
- 2024 16:20:13 +0800
-From: Yuntao Liu <liuyuntao12@huawei.com>
-To: <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>
-CC: <linux@armlinux.org.uk>, <arnd@arndb.de>, <afd@ti.com>,
-	<akpm@linux-foundation.org>, <kirill.shutemov@linux.intel.com>,
-	<geert+renesas@glider.be>, <corbet@lwn.net>, <rppt@kernel.org>,
-	<eric.devolder@oracle.com>, <robh@kernel.org>, <tglx@linutronix.de>,
-	<linus.walleij@linaro.org>, <liuyuntao12@huawei.com>
-Subject: [PATCH -next] arm32: enable HAVE_LD_DEAD_CODE_DATA_ELIMINATION
-Date: Tue, 20 Feb 2024 08:15:27 +0000
-Message-ID: <20240220081527.23408-1-liuyuntao12@huawei.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1708418372; c=relaxed/simple;
+	bh=WCIgc8FmZR2G8VtM8HPhX6ovI0R5QT9omQjCWGJo+1U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=C4raVJatcnr/7mwZbstcLKFBsslDSzkwOMKdmPeH2Whd+s9qyXOwh9ltc9c/Fnb1B26B8trReKFbfixCrlPcXCxNwlPKAijUMGRNOLIfNc0WCmCqz9a9ujnyoptZHaK9rjhhr6pLY684AVDSzKsmJRTXi+mliVFOEAiISNDtapM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rcLeg-00082X-Iy; Tue, 20 Feb 2024 09:39:10 +0100
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rcLef-001oAI-4n; Tue, 20 Feb 2024 09:39:09 +0100
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rcLef-008LlF-08;
+	Tue, 20 Feb 2024 09:39:09 +0100
+Date: Tue, 20 Feb 2024 09:39:08 +0100
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To: Lee Jones <lee@kernel.org>, Sam Ravnborg <sam@ravnborg.org>, 
+	Boris Brezillon <bbrezillon@kernel.org>
+Cc: Dharma.B@microchip.com, krzysztof.kozlowski@linaro.org, 
+	maarten.lankhorst@linux.intel.com, mripard@kernel.org, tzimmermann@suse.de, airlied@gmail.com, 
+	daniel@ffwll.ch, robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org, 
+	conor+dt@kernel.org, Nicolas.Ferre@microchip.com, alexandre.belloni@bootlin.com, 
+	claudiu.beznea@tuxon.dev, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, thierry.reding@gmail.com, 
+	linux-pwm@vger.kernel.org, Hari.PrasathGE@microchip.com, Manikandan.M@microchip.com, 
+	Conor.Dooley@microchip.com
+Subject: Re: (subset) [linux][PATCH v6 3/3] dt-bindings: mfd: atmel,hlcdc:
+ Convert to DT schema format
+Message-ID: <qywehfpajronx457jzaxpynjnae6wpl5uvswetr6nrtmmcm5wl@7rl5jfqsofzn>
+References: <20240202001733.91455-1-dharma.b@microchip.com>
+ <20240202001733.91455-4-dharma.b@microchip.com>
+ <170738899221.920003.15342446791449663430.b4-ty@kernel.org>
+ <cedecdb7-fe4a-42ea-9a11-faa82f84b57d@linaro.org>
+ <ffd43756-b24e-4f19-be33-0e33047ad70c@microchip.com>
+ <20240220082026.GG10170@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
- dggpemd100004.china.huawei.com (7.185.36.20)
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="qejo3o7k6h2mp3hz"
+Content-Disposition: inline
+In-Reply-To: <20240220082026.GG10170@google.com>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-The current arm32 architecture does not yet support the
-HAVE_LD_DEAD_CODE_DATA_ELIMINATION feature. arm32 is widely used in
-embedded scenarios, and enabling this feature would be beneficial for
-reducing the size of the kernel image.
 
-In order to make this work, we keep the necessary tables by annotating
-them with KEEP, also it requires further changes to linker script to KEEP
-some tables and wildcard compiler generated sections into the right place.
+--qejo3o7k6h2mp3hz
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-It boots normally with defconfig, vexpress_defconfig and tinyconfig.
+Hello,
 
-The size comparison of zImage is as follows:
-defconfig       vexpress_defconfig      tinyconfig
-5137712         5138024                 424192          no dce
-5032560         4997824                 298384          dce
-2.0%            2.7%                    29.7%           shrink
+On Tue, Feb 20, 2024 at 08:20:26AM +0000, Lee Jones wrote:
+> On Tue, 20 Feb 2024, Dharma.B@microchip.com wrote:
+> > On 12/02/24 3:53 pm, Krzysztof Kozlowski wrote:
+> > > On 08/02/2024 11:43, Lee Jones wrote:
+> > >> On Fri, 02 Feb 2024 05:47:33 +0530, Dharma Balasubiramani wrote:
+> > >>> Convert the atmel,hlcdc binding to DT schema format.
+> > >>>
+> > >>> Align clocks and clock-names properties to clearly indicate that th=
+e LCD
+> > >>> controller expects lvds_pll_clk when interfaced with the lvds displ=
+ay. This
+> > >>> alignment with the specific hardware requirements ensures accurate =
+device tree
+> > >>> configuration for systems utilizing the HLCDC IP.
+> > >>>
+> > >>> [...]
+> > >>
+> > >> Applied, thanks!
+> > >>
+> > >> [3/3] dt-bindings: mfd: atmel,hlcdc: Convert to DT schema format
+> > >>        commit: cb946db1335b599ece363d33966bf653ed0fa58a
+> > >>
+> > >=20
+> > > Next is still failing.
+>
+> If this continues to be an issue, I can just remove the commit.
 
-When using smaller config file, there is a significant reduction in the
-size of the zImage.
+The missing part in next is that patch 1 isn't included. So the options
+are:
 
-We also tested this patch on a commercially available single-board
-computer, and the comparison is as follows:
-a15eb_config
-2161384         no dce
-2092240         dce
-3.2%            shrink
+ a) Someone (dri or dt folks?) merges patch 1
+    This fixes the state in next, though some commits stay around that
+    fail dt_binding_check
 
-The zImage size has been reduced by approximately 3.2%, which is 70KB on
-2.1M.
+ b) Someone (mfd or dt?) merges all 3 patches in one go and the two
+    patches already applied are dropped.
+    This makes dt_binding_check happy for all revs.
 
-Signed-off-by: Yuntao Liu <liuyuntao12@huawei.com>
----
- arch/arm/Kconfig                       | 1 +
- arch/arm/boot/compressed/vmlinux.lds.S | 4 ++--
- arch/arm/include/asm/vmlinux.lds.h     | 8 ++++----
- arch/arm/kernel/vmlinux.lds.S          | 6 +++---
- 4 files changed, 10 insertions(+), 9 deletions(-)
+For me a) is good enough, but I guess the dri people are not aware there
+is something to do for them?! Would be nice if Sam or Boris commented.
 
-diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
-index 0af6709570d1..de78ceb821df 100644
---- a/arch/arm/Kconfig
-+++ b/arch/arm/Kconfig
-@@ -113,6 +113,7 @@ config ARM
- 	select HAVE_KERNEL_XZ
- 	select HAVE_KPROBES if !XIP_KERNEL && !CPU_ENDIAN_BE32 && !CPU_V7M
- 	select HAVE_KRETPROBES if HAVE_KPROBES
-+	select HAVE_LD_DEAD_CODE_DATA_ELIMINATION
- 	select HAVE_MOD_ARCH_SPECIFIC
- 	select HAVE_NMI
- 	select HAVE_OPTPROBES if !THUMB2_KERNEL
-diff --git a/arch/arm/boot/compressed/vmlinux.lds.S b/arch/arm/boot/compressed/vmlinux.lds.S
-index 3fcb3e62dc56..da21244aa892 100644
---- a/arch/arm/boot/compressed/vmlinux.lds.S
-+++ b/arch/arm/boot/compressed/vmlinux.lds.S
-@@ -89,7 +89,7 @@ SECTIONS
-      * The EFI stub always executes from RAM, and runs strictly before the
-      * decompressor, so we can make an exception for its r/w data, and keep it
-      */
--    *(.data.efistub .bss.efistub)
-+    *(.data.* .bss.*)
-     __pecoff_data_end = .;
- 
-     /*
-@@ -125,7 +125,7 @@ SECTIONS
- 
-   . = BSS_START;
-   __bss_start = .;
--  .bss			: { *(.bss) }
-+  .bss			: { *(.bss .bss.*) }
-   _end = .;
- 
-   . = ALIGN(8);		/* the stack must be 64-bit aligned */
-diff --git a/arch/arm/include/asm/vmlinux.lds.h b/arch/arm/include/asm/vmlinux.lds.h
-index 4c8632d5c432..f2ff79f740ab 100644
---- a/arch/arm/include/asm/vmlinux.lds.h
-+++ b/arch/arm/include/asm/vmlinux.lds.h
-@@ -42,7 +42,7 @@
- #define PROC_INFO							\
- 		. = ALIGN(4);						\
- 		__proc_info_begin = .;					\
--		*(.proc.info.init)					\
-+		KEEP(*(.proc.info.init))				\
- 		__proc_info_end = .;
- 
- #define IDMAP_TEXT							\
-@@ -125,13 +125,13 @@
- 	__vectors_lma = .;						\
- 	OVERLAY 0xffff0000 : NOCROSSREFS AT(__vectors_lma) {		\
- 		.vectors {						\
--			*(.vectors)					\
-+			KEEP(*(.vectors))				\
- 		}							\
- 		.vectors.bhb.loop8 {					\
--			*(.vectors.bhb.loop8)				\
-+			KEEP(*(.vectors.bhb.loop8))			\
- 		}							\
- 		.vectors.bhb.bpiall {					\
--			*(.vectors.bhb.bpiall)				\
-+			KEEP(*(.vectors.bhb.bpiall))			\
- 		}							\
- 	}								\
- 	ARM_LMA(__vectors, .vectors);					\
-diff --git a/arch/arm/kernel/vmlinux.lds.S b/arch/arm/kernel/vmlinux.lds.S
-index bd9127c4b451..de373c6c2ae8 100644
---- a/arch/arm/kernel/vmlinux.lds.S
-+++ b/arch/arm/kernel/vmlinux.lds.S
-@@ -74,7 +74,7 @@ SECTIONS
- 	. = ALIGN(4);
- 	__ex_table : AT(ADDR(__ex_table) - LOAD_OFFSET) {
- 		__start___ex_table = .;
--		ARM_MMU_KEEP(*(__ex_table))
-+		ARM_MMU_KEEP(KEEP(*(__ex_table)))
- 		__stop___ex_table = .;
- 	}
- 
-@@ -99,7 +99,7 @@ SECTIONS
- 	}
- 	.init.arch.info : {
- 		__arch_info_begin = .;
--		*(.arch.info.init)
-+		KEEP(*(.arch.info.init))
- 		__arch_info_end = .;
- 	}
- 	.init.tagtable : {
-@@ -116,7 +116,7 @@ SECTIONS
- #endif
- 	.init.pv_table : {
- 		__pv_table_begin = .;
--		*(.pv_table)
-+		KEEP(*(.pv_table))
- 		__pv_table_end = .;
- 	}
- 
--- 
-2.34.1
+Best regards
+Uwe
 
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--qejo3o7k6h2mp3hz
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmXUZSwACgkQj4D7WH0S
+/k7RwggAn5k8z+bYxn2HgADIEc6MbdHU9mSeQkIedBDJ7eKUR9WZ1pe+Srnu1tVr
+WrbdWq3sSF9lnSbmq+jH/W6Rp2m1T/8d17EqgmBblQM31IHwt/aJO6y0Ey3qrE91
+tF3NOvg4sDPwl0E+WSKOSl0fk9Qk0zhL161D6FREDGwt2KAZ5MKIxYvIobYDLHmb
+sqKfYhfHR7r3FfhvtPTkWrTdhasrsrxNY1Jkff8UuznodekV+O6j5UaQyLCZRzRS
++kw+V/q9YQW1PdpNX8GuUYeArlXwco8mSS3iVm7KbAJDg20lGumcEJGr9u8WRB3d
+pduGmFRvTTV/J2sLRDjAX4oijX45fA==
+=2XIV
+-----END PGP SIGNATURE-----
+
+--qejo3o7k6h2mp3hz--
