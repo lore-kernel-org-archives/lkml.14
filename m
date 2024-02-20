@@ -1,523 +1,198 @@
-Received: from mx0b-00823401.pphosted.com (mx0b-00823401.pphosted.com [148.163.152.46])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0D2B150991;
-	Tue, 20 Feb 2024 20:33:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.152.46
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708461228; cv=none; b=IxjFE6HTxbrwEI96nZ50diJHp5rw/i8MQc9Vk9Dh/EoP1hRR/lMxNOUCBSSnYtfJ/V0/AwprtjqPbxMXETQUyratN4rP1ILXeMKRoxLNkSwjEPhPWXkfR6B74N5YHX6JLDEIHWsmpN5JvxFyRkjSxrtmEHHaQ/kEWkiMm527bJA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708461228; c=relaxed/simple;
-	bh=kIHH0cooVYActrYEV0TilEGQ5DXxtwVkOOPB79ofTVs=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=LMbQ/IMUp7RATpn9AMKkPj8eTDrWzo/tNIOTg9v8ZGMUCsvsR8Yac9u9LUkGcUbywK78dxDBntWCRtFS0OBVsb2+wZDEzImYgONfKL4opgOMxG3tY2u5QfPG8i/J2wKHlTXJ2uSufhH8YRgnXn1mKgUdocF1hHpds31Xm0NdJs8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=motorola.com; spf=pass smtp.mailfrom=motorola.com; dkim=pass (2048-bit key) header.d=motorola.com header.i=@motorola.com header.b=UXr8sKPP; arc=none smtp.client-ip=148.163.152.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=motorola.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=motorola.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8F491FDB;
+	Tue, 20 Feb 2024 20:35:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.12
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1708461331; cv=fail; b=BrKRu0SZs8yoVtCd4uxVh4IhAC+sezwkLstavOFEdvfdP8M2NMxUMmao3XUa4NWK0IeetUB1HVxo0i6J7lq8hffevSiSyu5cP9NeT5E27DZpqMsrE1pEX3BOPYutWq3yhBHdBI55J8tl+ivJMRiT7YwM1dmZbm21YioNhSentvI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1708461331; c=relaxed/simple;
+	bh=A6RaZSTEvSWOSAsfdYmwh9OGKYMbAdpQrt36UFB3Nws=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=f7YYG7Cn7im6tdXPVFX+ryaUjAqVhkfceGznjOz0alDO8l8u0r2/4Hx0ra0sTA6ksyoRuij5ujJjOrYC1ZnGFCxmIUA5OSnRjMNfFtABka5aeliw8/wLB1LxVHyu3PdIbbiLk/p51X0/FF9MSd6iZjOHFCspvsd99bCUTao7ygI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=EJSCXxYW; arc=fail smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=motorola.com header.i=@motorola.com header.b="UXr8sKPP"
-Received: from pps.filterd (m0355090.ppops.net [127.0.0.1])
-	by m0355090.ppops.net (8.17.1.24/8.17.1.24) with ESMTP id 41KJFO83021030;
-	Tue, 20 Feb 2024 20:33:18 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=motorola.com; h=
-	from:to:cc:subject:date:message-id:in-reply-to:references; s=
-	DKIM202306; bh=73sw9qCcfHZDBF19mVjUh6QeXe6a4xhn7+e2L7eQ6wM=; b=U
-	Xr8sKPPpKTWY8rQgN86shbmM6QDZi7UtwRsqBighe6FWxZoOMr6rIACyHTESh75p
-	TaL+95m5h12hLM5fp+Euf/jpR5gd7C73csAZN+uMDLfdBEHVEr+v2bWSF8o3aZfD
-	wE1FP/JHojDSvWjg+Weok6tYyOEFZmPfFjwLuT0/cfby0Z8Cp3JSKGDPy/4Q+SbF
-	unNaBT16quJy/oUQBcJEr8wXJnMUJ0mpzHNACQneQBUbNzjyNngstVLKsGYt6i/N
-	jwgsKjxGh6oxHNJAUG/i0kOAAiZwKG1/4JWNGXVIoW+REj0gJzWZglScJ2Z4kwi0
-	BsyzVxBJqxVLlH4hfPsqA==
-Received: from va32lpfpp01.lenovo.com ([104.232.228.21])
-	by m0355090.ppops.net (PPS) with ESMTPS id 3wd231g7tc-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 20 Feb 2024 20:33:18 +0000 (GMT)
-Received: from ilclmmrp01.lenovo.com (ilclmmrp01.mot.com [100.65.83.165])
-	(using TLSv1.2 with cipher ADH-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by va32lpfpp01.lenovo.com (Postfix) with ESMTPS id 4TfWM15BdpzldQn;
-	Tue, 20 Feb 2024 20:33:17 +0000 (UTC)
-Received: from ilclasset01.mot.com (ilclasset01.mot.com [100.64.7.105])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: mbland)
-	by ilclmmrp01.lenovo.com (Postfix) with ESMTPSA id 4TfWM13X59z3n3fr;
-	Tue, 20 Feb 2024 20:33:17 +0000 (UTC)
-From: Maxwell Bland <mbland@motorola.com>
-To: linux-arm-kernel@lists.infradead.org
-Cc: gregkh@linuxfoundation.org, agordeev@linux.ibm.com,
-        akpm@linux-foundation.org, andreyknvl@gmail.com, andrii@kernel.org,
-        aneesh.kumar@kernel.org, aou@eecs.berkeley.edu, ardb@kernel.org,
-        arnd@arndb.de, ast@kernel.org, borntraeger@linux.ibm.com,
-        bpf@vger.kernel.org, brauner@kernel.org, catalin.marinas@arm.com,
-        christophe.leroy@csgroup.eu, cl@linux.com, daniel@iogearbox.net,
-        dave.hansen@linux.intel.com, david@redhat.com, dennis@kernel.org,
-        dvyukov@google.com, glider@google.com, gor@linux.ibm.com,
-        guoren@kernel.org, haoluo@google.com, hca@linux.ibm.com,
-        hch@infradead.org, john.fastabend@gmail.com, jolsa@kernel.org,
-        kasan-dev@googlegroups.com, kpsingh@kernel.org,
-        linux-arch@vger.kernel.org, linux@armlinux.org.uk,
-        linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, linuxppc-dev@lists.ozlabs.org,
-        linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
-        lstoakes@gmail.com, mark.rutland@arm.com, martin.lau@linux.dev,
-        meted@linux.ibm.com, michael.christie@oracle.com, mjguzik@gmail.com,
-        mpe@ellerman.id.au, mst@redhat.com, muchun.song@linux.dev,
-        naveen.n.rao@linux.ibm.com, npiggin@gmail.com, palmer@dabbelt.com,
-        paul.walmsley@sifive.com, quic_nprakash@quicinc.com,
-        quic_pkondeti@quicinc.com, rick.p.edgecombe@intel.com,
-        ryabinin.a.a@gmail.com, ryan.roberts@arm.com, samitolvanen@google.com,
-        sdf@google.com, song@kernel.org, surenb@google.com,
-        svens@linux.ibm.com, tj@kernel.org, urezki@gmail.com,
-        vincenzo.frascino@arm.com, will@kernel.org, wuqiang.matt@bytedance.com,
-        yonghong.song@linux.dev, zlim.lnx@gmail.com, mbland@motorola.com,
-        awheeler@motorola.com
-Subject: [PATCH 1/4] mm/vmalloc: allow arch-specific vmalloc_node overrides
-Date: Tue, 20 Feb 2024 14:32:53 -0600
-Message-Id: <20240220203256.31153-2-mbland@motorola.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20240220203256.31153-1-mbland@motorola.com>
-References: <20240220203256.31153-1-mbland@motorola.com>
-X-Proofpoint-GUID: wzagho37jhijkGrV1Lgjn4DCAKqFMTDO
-X-Proofpoint-ORIG-GUID: wzagho37jhijkGrV1Lgjn4DCAKqFMTDO
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-02-20_06,2024-02-20_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501 mlxscore=0
- spamscore=0 malwarescore=0 lowpriorityscore=0 adultscore=0 bulkscore=0
- impostorscore=0 clxscore=1015 suspectscore=0 phishscore=0 mlxlogscore=999
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2402120000
- definitions=main-2402200146
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EJSCXxYW"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1708461330; x=1739997330;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=A6RaZSTEvSWOSAsfdYmwh9OGKYMbAdpQrt36UFB3Nws=;
+  b=EJSCXxYWEtUcIXcKoAbWQ+aMV/KEtzohuWMSzrNa5295dSURd337n5lz
+   VnJMg6g15pfe2EwJHfh1FbhLmbg5kcmaVm1rXVdSLhTRk4Ru0xhIFVQx3
+   GX07z63db4CdUaa8742hWuEKjSISyWkRckcadZNHLdPFCHTC8TJtDSoCN
+   LPTSJWrFV0/29YJ9cd96mdNnZK5WtuDqGjNlMbx0V59DdhK5ts6pawtDc
+   C9O83aUy+9Zi3nH6GH4rPOpKxpE0PJERtLn5XW6sZ+GpfLFOVoSPvfZfb
+   norwvIx+DebeC9uGDPQ7EZRaIhfEtqxzuQ9hd+Ka32aDmIc2gh3B89XwQ
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10990"; a="6365204"
+X-IronPort-AV: E=Sophos;i="6.06,174,1705392000"; 
+   d="scan'208";a="6365204"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Feb 2024 12:35:28 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.06,174,1705392000"; 
+   d="scan'208";a="35934900"
+Received: from orsmsx602.amr.corp.intel.com ([10.22.229.15])
+  by fmviesa001.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 20 Feb 2024 12:35:27 -0800
+Received: from orsmsx611.amr.corp.intel.com (10.22.229.24) by
+ ORSMSX602.amr.corp.intel.com (10.22.229.15) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Tue, 20 Feb 2024 12:35:26 -0800
+Received: from orsmsx603.amr.corp.intel.com (10.22.229.16) by
+ ORSMSX611.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Tue, 20 Feb 2024 12:35:25 -0800
+Received: from ORSEDG601.ED.cps.intel.com (10.7.248.6) by
+ orsmsx603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35 via Frontend Transport; Tue, 20 Feb 2024 12:35:25 -0800
+Received: from NAM04-BN8-obe.outbound.protection.outlook.com (104.47.74.40) by
+ edgegateway.intel.com (134.134.137.102) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Tue, 20 Feb 2024 12:35:10 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=YfHk7pqzTNW/Vs3GPNrpo9CxecioUJOVGYBN2Dc08MAqeZdMg/J3tzW72GWnXhsjUE/S3rc4XYGnVdxaTGxiRAqrl+E743e7a2Af/vHMTQAOL0D1yNGtGri8b+36yJy3ONIKq90vpcfdLv8p3eth0nYnrlrX6iuJWUo9y9CafgilWrAwdfzG96/gnwjaTKy5Oiit9shlFWqW6R7E+SpB54AjK3RoXTlSFsrlt91ghHMRwLAioVHRkwQwZLKLtbeSjvZZ9B95W0RXoDY8r5NSrAoz4ms0DdE0jAgeFiwrp/S+mM6Dz3r66Z3FzGk+7moFEpTjOypuD1xC+mTkASwKmA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=NELs1ugHAP5F5H2QgPOXEYA4ChEw0HkfBe47Q8MG7ow=;
+ b=mpHh7+nvZjAN322FnsPJ8F7zhKITEl6Bc6Mg8ZXdvBKXP1IoTOxvDW5/kiJmvMh5h5wy6yo4g3npsvOiNaSBPTT+VGLtY79bIeNl1gzn+y1cwzq4XaqJxBOsGAphTBE9CBS1/5wiq15Pqm6n13lQWragI2wuuCDLlQu43tIaOA6/JnMDe/UgJ7LclnTGwKxkVcDrKTzU3PeqwaiChg1+qjwCu7FdU490UJtLsqldHb1yoWeTju9N1b5sYbY9Yzn1zHOLRL6IYtrLYAGrT3CTVFXrnFFGc1FiEoZma6M7J8ALdIP8foJNQ26tJ1ggKz3vSV4aaLH5S3GISdfOWwebyQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from CY5PR11MB6139.namprd11.prod.outlook.com (2603:10b6:930:29::17)
+ by DS7PR11MB7739.namprd11.prod.outlook.com (2603:10b6:8:e0::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7292.31; Tue, 20 Feb
+ 2024 20:35:07 +0000
+Received: from CY5PR11MB6139.namprd11.prod.outlook.com
+ ([fe80::9f32:ce50:1914:e954]) by CY5PR11MB6139.namprd11.prod.outlook.com
+ ([fe80::9f32:ce50:1914:e954%7]) with mapi id 15.20.7316.018; Tue, 20 Feb 2024
+ 20:35:07 +0000
+Date: Tue, 20 Feb 2024 14:34:53 -0600
+From: Lucas De Marchi <lucas.demarchi@intel.com>
+To: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+CC: Oded Gabbay <ogabbay@kernel.org>, Thomas =?utf-8?Q?Hellstr=C3=B6m?=
+	<thomas.hellstrom@linux.intel.com>, Maarten Lankhorst
+	<maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
+	Daniel Vetter <daniel@ffwll.ch>, <kernel-janitors@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
+	<intel-xe@lists.freedesktop.org>
+Subject: Re: [PATCH] drm/xe/guc: Remove usage of the deprecated
+ ida_simple_xx() API
+Message-ID: <pshjojhgguhevgor6p724fs4pnw4a5nyclwfqnk4pfbommxyrh@jfha3y5whlei>
+References: <d6a9ec9dc426fca372eaa1423a83632bd743c5d9.1705244938.git.christophe.jaillet@wanadoo.fr>
+Content-Type: text/plain; charset="us-ascii"; format=flowed
+Content-Disposition: inline
+In-Reply-To: <d6a9ec9dc426fca372eaa1423a83632bd743c5d9.1705244938.git.christophe.jaillet@wanadoo.fr>
+X-ClientProxiedBy: SJ0PR13CA0006.namprd13.prod.outlook.com
+ (2603:10b6:a03:2c0::11) To CY5PR11MB6139.namprd11.prod.outlook.com
+ (2603:10b6:930:29::17)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CY5PR11MB6139:EE_|DS7PR11MB7739:EE_
+X-MS-Office365-Filtering-Correlation-Id: dda0033e-f229-4416-98c3-08dc32536d3a
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 5TxUaDuwXHEBgORiBR9t6H3mUBLn9rt3af7viB2UzV+9r61zSWOo6Mz/gwGHe5w6+ZACrNdLw1m1ScEayH4orrf37k4G3i8lka9qGAQtdCsTbo7bsZow3UUOXb7ot/yRxLf7g6vp3WLD1bna7Te4mteoY9e+QRF7/XUUklCDjGCgGqi2V+uBRF2kyYTtnJcq4um+mj3zihTapxjbrJH0/ZhG3gfXDzYCOOxPJcSUEJt7udAK69Ubiaf7heS9jkaguT5hnjye+JlA8+axO9/kjTUW/4li2t5miqGI1UPRlj2Nt4Ar95ca667fGQAn17/K71VdpuNcvwfD3Q09rue2LMFzB67/758nZ+AceUVOEwbDLwe0u8BkOlvY/jB9kKzOWn2VhufqQni9jOhrrJgpFjx4SA0dFB17d9WaJEI0FBnLS8PUeAbNJYo4PZLw+UL06pSMuESe9378DBYog/gjo+HFI3Au0GKcbFfqHjpQ1B275ugMytI2DsMdTTSG+GxQrwpqBCkIXqANpwItmTWAce48+epvz2fPBNpM0f2lJFU=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY5PR11MB6139.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?qi76smMJU+Rr2pwY00XU1CLZb4wrZC3r7MMfuayGL8EU9YIKNHyTe0WLHQFS?=
+ =?us-ascii?Q?KgbWKQluIRcuqgVTv4G0bFbG1PXPKEgQN9tr/jT8aPn3+UHGu/tD3ckRZ/bk?=
+ =?us-ascii?Q?MFqGaM4H+LcfVwVh2nAUK51TEetzSy/YBij2BoVL95JoDrb4bI4yMAMrJrNp?=
+ =?us-ascii?Q?LCHbTePcu4136KNYLloEQaH5ZYmP4U4V9VFktLFU12ph67zla5GG+0LZi2Xw?=
+ =?us-ascii?Q?rAv/WiqrYU/9Vb4roo/TayXJhAI/R5xAOVunrrVi+Xwqk6TJ878kasBZ/Vx0?=
+ =?us-ascii?Q?XCcrydtLsDTlIgDK3gItqXGfH7E3SwgRBfMF7EC22sUdFVAovx4d8KlapNLf?=
+ =?us-ascii?Q?SQAiTADN5JvWMk/nAGk2y1fEv7IyfcYtOcwVuLWKxPGDhDvmzrMmrnAI/SXG?=
+ =?us-ascii?Q?RDq2/elmOavcG+CVHG1bAXJBgYNAdgnuoiGaswOouBOzxhyZU0J+7QPI88cU?=
+ =?us-ascii?Q?0a2YPfb8PHo5EPLZrES3SnkhKwPi4v26X/Z8kwadxSi1CHuN1hMdaFA+hqdq?=
+ =?us-ascii?Q?vLM0zzV0li6BGgx+NkRT+rmc3AxwQDZQIhec9rbyLmhiXHTsUvWiyXpSK3VU?=
+ =?us-ascii?Q?xhorBN8liwb9neQtqot+XsaHrSnNfNxNR5lU/9WN2N1bVPuDDE7GeuPnHkvs?=
+ =?us-ascii?Q?ZmQFghBdaER0Q4XaFyn7kmcmfG6gklc92GL5pHtsmGqX/qvBbGNua4BhagRv?=
+ =?us-ascii?Q?8ry1+uRzTuzXbESMi2JqZRA5kECUZTyIwMKgei5xdtEFup8SfqDZeySUyTYA?=
+ =?us-ascii?Q?ZDj0oOeNeBHa9y2gu/TVkcMQTx2XKBbPFpUzGIgmLgO9xq7FMS3RrQf168VG?=
+ =?us-ascii?Q?o991R978ScKJrSWsUnBJLmRjfrn7Bw6jHIbBX71mNQYcixwBfpQMa1Ksoa/Y?=
+ =?us-ascii?Q?UT3FRuGNzaC2Iy0xTCSJckDO0sY8svM5ir+3IeuBCNA9W6ZQa++3rUruOChS?=
+ =?us-ascii?Q?7mGK+T0HWxLnf/mtqOos+/qoi31o2WAAhfDjuOdahQ0O4f324vJRmYdYPqlh?=
+ =?us-ascii?Q?RgN+dY5orYFiq9cmH4VHS3k8LNn3LDGspJMnL2iQ7GtXjcH4Eovw8mixMJZF?=
+ =?us-ascii?Q?viQv3zEJGn64ZmKuyjLsg7LfZCYtkYKaMEBKbAER+/DoSoM/DBQH33ligJ0T?=
+ =?us-ascii?Q?cGBqk7oEpvj5GSpYXf8id/RsUYr7qMvSWNK2htybkzlDtIPToY4/rrB0iQMK?=
+ =?us-ascii?Q?3/2G7C0W91PAH1SpjH/lax1iD3eA8dRw7Ikk7cY/81e6It8jIUYGeMFLEgid?=
+ =?us-ascii?Q?uErpvcamW7gBlsxZPBaqzt/rnvGNd4IaJzsV7acF/pyh94d99yQXqsGaWvCT?=
+ =?us-ascii?Q?JTHUi67GWWIt1IRABLyqrA5C34Go7dsj23Zl6OdV3hcPWpRBXlrzRu1gfVnL?=
+ =?us-ascii?Q?5x6H4qFgPUxj547y58EtnzX+CQB0hKZd9P1OKNsBxlzeJ++BdjhAp8f2Fb+m?=
+ =?us-ascii?Q?Hb1zPNaL2Wtctkp4S4LwdFy3lgSRvak8SzATrYgs4quNOsAhk+LJQrf6PiHW?=
+ =?us-ascii?Q?0UGk3ArjS1hIybyS1l+xj40UF0wbD1U7dzYi26rs9OJxJQ+fKE9U0jW6ihNp?=
+ =?us-ascii?Q?xuXHtfk93yQeg5XfiDjTSkJIFLaTxG4sFA4WEwl5h0orgrpVEUj6OmcioJmV?=
+ =?us-ascii?Q?Pw=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: dda0033e-f229-4416-98c3-08dc32536d3a
+X-MS-Exchange-CrossTenant-AuthSource: CY5PR11MB6139.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Feb 2024 20:35:07.7467
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: oEYNk8L8L5cg+b0M4NCSIlan1LaYG5U5GMlDtZ+pabo1NcxvJgLG+1KC9l3yk82+KmE73Y3AimPzFQTFjVWRhN6S9B6ehNLpYTOSfr58C2o=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR11MB7739
+X-OriginatorOrg: intel.com
 
-Present non-uniform use of __vmalloc_node and __vmalloc_node_range makes
-enforcing appropriate code and data seperation untenable on certain
-microarchitectures, as VMALLOC_START and VMALLOC_END are monolithic
-while the use of the vmalloc interface is non-monolithic: in particular,
-appropriate randomness in ASLR makes it such that code regions must fall
-in some region between VMALLOC_START and VMALLOC_end, but this
-necessitates that code pages are intermingled with data pages, meaning
-code-specific protections, such as arm64's PXNTable, cannot be
-performantly runtime enforced.
+On Sun, Jan 14, 2024 at 04:09:16PM +0100, Christophe JAILLET wrote:
+>ida_alloc() and ida_free() should be preferred to the deprecated
+>ida_simple_get() and ida_simple_remove().
+>
+>Note that the upper limit of ida_simple_get() is exclusive, but the one of
+>ida_alloc_max() is inclusive. So a -1 has been added when needed.
+>
+>Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
-The solution to this problem allows architectures to override the
-vmalloc wrapper functions by enforcing that the rest of the kernel does
-not reimplement __vmalloc_node by using __vmalloc_node_range with the
-same parameters as __vmalloc_node or provides a __weak tag to those
-functions using __vmalloc_node_range with parameters repeating those of
-__vmalloc_node.
 
-Two benefits of this approach are (1) greater flexibility to each
-architecture for handling of virtual memory while not compromising the
-kernel's vmalloc logic and (2) more uniform use of the __vmalloc_node
-interface, reserving the more specialized __vmalloc_node_range for more
-specialized cases, such as kasan's shadow memory.
+Reviewed-by: Lucas De Marchi <lucas.demarchi@intel.com>
 
-Signed-off-by: Maxwell Bland <mbland@motorola.com>
----
- arch/arm/kernel/irq.c               |  2 +-
- arch/arm64/include/asm/vmap_stack.h |  2 +-
- arch/arm64/kernel/efi.c             |  2 +-
- arch/powerpc/kernel/irq.c           |  2 +-
- arch/riscv/include/asm/irq_stack.h  |  2 +-
- arch/s390/hypfs/hypfs_diag.c        |  2 +-
- arch/s390/kernel/setup.c            |  6 ++---
- arch/s390/kernel/sthyi.c            |  2 +-
- include/linux/vmalloc.h             | 15 ++++++++++-
- kernel/bpf/syscall.c                |  4 +--
- kernel/fork.c                       |  4 +--
- kernel/scs.c                        |  3 +--
- lib/objpool.c                       |  2 +-
- lib/test_vmalloc.c                  |  6 ++---
- mm/util.c                           |  3 +--
- mm/vmalloc.c                        | 39 +++++++++++------------------
- 16 files changed, 47 insertions(+), 49 deletions(-)
+Lucas De Marchi
 
-diff --git a/arch/arm/kernel/irq.c b/arch/arm/kernel/irq.c
-index fe28fc1f759d..109f4f363621 100644
---- a/arch/arm/kernel/irq.c
-+++ b/arch/arm/kernel/irq.c
-@@ -61,7 +61,7 @@ static void __init init_irq_stacks(void)
- 						       THREAD_SIZE_ORDER);
- 		else
- 			stack = __vmalloc_node(THREAD_SIZE, THREAD_ALIGN,
--					       THREADINFO_GFP, NUMA_NO_NODE,
-+					       THREADINFO_GFP, 0, NUMA_NO_NODE,
- 					       __builtin_return_address(0));
- 
- 		if (WARN_ON(!stack))
-diff --git a/arch/arm64/include/asm/vmap_stack.h b/arch/arm64/include/asm/vmap_stack.h
-index 20873099c035..57a7eaa720d5 100644
---- a/arch/arm64/include/asm/vmap_stack.h
-+++ b/arch/arm64/include/asm/vmap_stack.h
-@@ -21,7 +21,7 @@ static inline unsigned long *arch_alloc_vmap_stack(size_t stack_size, int node)
- 
- 	BUILD_BUG_ON(!IS_ENABLED(CONFIG_VMAP_STACK));
- 
--	p = __vmalloc_node(stack_size, THREAD_ALIGN, THREADINFO_GFP, node,
-+	p = __vmalloc_node(stack_size, THREAD_ALIGN, THREADINFO_GFP, 0, node,
- 			__builtin_return_address(0));
- 	return kasan_reset_tag(p);
- }
-diff --git a/arch/arm64/kernel/efi.c b/arch/arm64/kernel/efi.c
-index 0228001347be..48efa31a9161 100644
---- a/arch/arm64/kernel/efi.c
-+++ b/arch/arm64/kernel/efi.c
-@@ -205,7 +205,7 @@ static int __init arm64_efi_rt_init(void)
- 		return 0;
- 
- 	p = __vmalloc_node(THREAD_SIZE, THREAD_ALIGN, GFP_KERNEL,
--			   NUMA_NO_NODE, &&l);
-+			   0, NUMA_NO_NODE, &&l);
- l:	if (!p) {
- 		pr_warn("Failed to allocate EFI runtime stack\n");
- 		clear_bit(EFI_RUNTIME_SERVICES, &efi.flags);
-diff --git a/arch/powerpc/kernel/irq.c b/arch/powerpc/kernel/irq.c
-index 6f7d4edaa0bc..ceb7ea07ca28 100644
---- a/arch/powerpc/kernel/irq.c
-+++ b/arch/powerpc/kernel/irq.c
-@@ -308,7 +308,7 @@ DEFINE_INTERRUPT_HANDLER_ASYNC(do_IRQ)
- static void *__init alloc_vm_stack(void)
- {
- 	return __vmalloc_node(THREAD_SIZE, THREAD_ALIGN, THREADINFO_GFP,
--			      NUMA_NO_NODE, (void *)_RET_IP_);
-+			      0, NUMA_NO_NODE, (void *)_RET_IP_);
- }
- 
- static void __init vmap_irqstack_init(void)
-diff --git a/arch/riscv/include/asm/irq_stack.h b/arch/riscv/include/asm/irq_stack.h
-index 6441ded3b0cf..d2410735bde0 100644
---- a/arch/riscv/include/asm/irq_stack.h
-+++ b/arch/riscv/include/asm/irq_stack.h
-@@ -24,7 +24,7 @@ static inline unsigned long *arch_alloc_vmap_stack(size_t stack_size, int node)
- {
- 	void *p;
- 
--	p = __vmalloc_node(stack_size, THREAD_ALIGN, THREADINFO_GFP, node,
-+	p = __vmalloc_node(stack_size, THREAD_ALIGN, THREADINFO_GFP, 0, node,
- 			__builtin_return_address(0));
- 	return kasan_reset_tag(p);
- }
-diff --git a/arch/s390/hypfs/hypfs_diag.c b/arch/s390/hypfs/hypfs_diag.c
-index 279b7bba4d43..16359d854288 100644
---- a/arch/s390/hypfs/hypfs_diag.c
-+++ b/arch/s390/hypfs/hypfs_diag.c
-@@ -70,7 +70,7 @@ void *diag204_get_buffer(enum diag204_format fmt, int *pages)
- 			return ERR_PTR(-EOPNOTSUPP);
- 	}
- 	diag204_buf = __vmalloc_node(array_size(*pages, PAGE_SIZE),
--				     PAGE_SIZE, GFP_KERNEL, NUMA_NO_NODE,
-+				     PAGE_SIZE, GFP_KERNEL, 0, NUMA_NO_NODE,
- 				     __builtin_return_address(0));
- 	if (!diag204_buf)
- 		return ERR_PTR(-ENOMEM);
-diff --git a/arch/s390/kernel/setup.c b/arch/s390/kernel/setup.c
-index d1f3b56e7afc..2c25b4e9f20a 100644
---- a/arch/s390/kernel/setup.c
-+++ b/arch/s390/kernel/setup.c
-@@ -254,7 +254,7 @@ static void __init conmode_default(void)
- 		cpcmd("QUERY TERM", query_buffer, 1024, NULL);
- 		ptr = strstr(query_buffer, "CONMODE");
- 		/*
--		 * Set the conmode to 3215 so that the device recognition 
-+		 * Set the conmode to 3215 so that the device recognition
- 		 * will set the cu_type of the console to 3215. If the
- 		 * conmode is 3270 and we don't set it back then both
- 		 * 3215 and the 3270 driver will try to access the console
-@@ -314,7 +314,7 @@ static inline void setup_zfcpdump(void) {}
- 
-  /*
-  * Reboot, halt and power_off stubs. They just call _machine_restart,
-- * _machine_halt or _machine_power_off. 
-+ * _machine_halt or _machine_power_off.
-  */
- 
- void machine_restart(char *command)
-@@ -364,7 +364,7 @@ unsigned long stack_alloc(void)
- 	void *ret;
- 
- 	ret = __vmalloc_node(THREAD_SIZE, THREAD_SIZE, THREADINFO_GFP,
--			     NUMA_NO_NODE, __builtin_return_address(0));
-+			     0, NUMA_NO_NODE, __builtin_return_address(0));
- 	kmemleak_not_leak(ret);
- 	return (unsigned long)ret;
- #else
-diff --git a/arch/s390/kernel/sthyi.c b/arch/s390/kernel/sthyi.c
-index 30bb20461db4..5bf239bcdae9 100644
---- a/arch/s390/kernel/sthyi.c
-+++ b/arch/s390/kernel/sthyi.c
-@@ -318,7 +318,7 @@ static void fill_diag(struct sthyi_sctns *sctns)
- 		return;
- 
- 	diag204_buf = __vmalloc_node(array_size(pages, PAGE_SIZE),
--				     PAGE_SIZE, GFP_KERNEL, NUMA_NO_NODE,
-+				     PAGE_SIZE, GFP_KERNEL, 0, NUMA_NO_NODE,
- 				     __builtin_return_address(0));
- 	if (!diag204_buf)
- 		return;
-diff --git a/include/linux/vmalloc.h b/include/linux/vmalloc.h
-index c720be70c8dd..f13bd711ad7d 100644
---- a/include/linux/vmalloc.h
-+++ b/include/linux/vmalloc.h
-@@ -150,7 +150,8 @@ extern void *__vmalloc_node_range(unsigned long size, unsigned long align,
- 			pgprot_t prot, unsigned long vm_flags, int node,
- 			const void *caller) __alloc_size(1);
- void *__vmalloc_node(unsigned long size, unsigned long align, gfp_t gfp_mask,
--		int node, const void *caller) __alloc_size(1);
-+		unsigned long vm_flags, int node, const void *caller)
-+		__alloc_size(1);
- void *vmalloc_huge(unsigned long size, gfp_t gfp_mask) __alloc_size(1);
- 
- extern void *__vmalloc_array(size_t n, size_t size, gfp_t flags) __alloc_size(1, 2);
-@@ -295,4 +296,16 @@ bool vmalloc_dump_obj(void *object);
- static inline bool vmalloc_dump_obj(void *object) { return false; }
- #endif
- 
-+#if defined(CONFIG_64BIT) && defined(CONFIG_ZONE_DMA32)
-+#define GFP_VMALLOC32 (GFP_DMA32 | GFP_KERNEL)
-+#elif defined(CONFIG_64BIT) && defined(CONFIG_ZONE_DMA)
-+#define GFP_VMALLOC32 (GFP_DMA | GFP_KERNEL)
-+#else
-+/*
-+ * 64b systems should always have either DMA or DMA32 zones. For others
-+ * GFP_DMA32 should do the right thing and use the normal zone.
-+ */
-+#define GFP_VMALLOC32 (GFP_DMA32 | GFP_KERNEL)
-+#endif
-+
- #endif /* _LINUX_VMALLOC_H */
-diff --git a/kernel/bpf/syscall.c b/kernel/bpf/syscall.c
-index a1f18681721c..79c11307ff40 100644
---- a/kernel/bpf/syscall.c
-+++ b/kernel/bpf/syscall.c
-@@ -303,8 +303,8 @@ static void *__bpf_map_area_alloc(u64 size, int numa_node, bool mmapable)
- 			return area;
- 	}
- 
--	return __vmalloc_node_range(size, align, VMALLOC_START, VMALLOC_END,
--			gfp | GFP_KERNEL | __GFP_RETRY_MAYFAIL, PAGE_KERNEL,
-+	return __vmalloc_node(size, align,
-+			gfp | GFP_KERNEL | __GFP_RETRY_MAYFAIL,
- 			flags, numa_node, __builtin_return_address(0));
- }
- 
-diff --git a/kernel/fork.c b/kernel/fork.c
-index 0d944e92a43f..800bb1c76000 100644
---- a/kernel/fork.c
-+++ b/kernel/fork.c
-@@ -304,10 +304,8 @@ static int alloc_thread_stack_node(struct task_struct *tsk, int node)
- 	 * so memcg accounting is performed manually on assigning/releasing
- 	 * stacks to tasks. Drop __GFP_ACCOUNT.
- 	 */
--	stack = __vmalloc_node_range(THREAD_SIZE, THREAD_ALIGN,
--				     VMALLOC_START, VMALLOC_END,
-+	stack = __vmalloc_node(THREAD_SIZE, THREAD_ALIGN,
- 				     THREADINFO_GFP & ~__GFP_ACCOUNT,
--				     PAGE_KERNEL,
- 				     0, node, __builtin_return_address(0));
- 	if (!stack)
- 		return -ENOMEM;
-diff --git a/kernel/scs.c b/kernel/scs.c
-index d7809affe740..5b89fb08a392 100644
---- a/kernel/scs.c
-+++ b/kernel/scs.c
-@@ -43,8 +43,7 @@ static void *__scs_alloc(int node)
- 		}
- 	}
- 
--	s = __vmalloc_node_range(SCS_SIZE, 1, VMALLOC_START, VMALLOC_END,
--				    GFP_SCS, PAGE_KERNEL, 0, node,
-+	s = __vmalloc_node(SCS_SIZE, 1, GFP_SCS, 0, node,
- 				    __builtin_return_address(0));
- 
- out:
-diff --git a/lib/objpool.c b/lib/objpool.c
-index cfdc02420884..f0acd421a652 100644
---- a/lib/objpool.c
-+++ b/lib/objpool.c
-@@ -80,7 +80,7 @@ objpool_init_percpu_slots(struct objpool_head *pool, int nr_objs,
- 			slot = kmalloc_node(size, pool->gfp, cpu_to_node(i));
- 		else
- 			slot = __vmalloc_node(size, sizeof(void *), pool->gfp,
--				cpu_to_node(i), __builtin_return_address(0));
-+				0, cpu_to_node(i), __builtin_return_address(0));
- 		if (!slot)
- 			return -ENOMEM;
- 		memset(slot, 0, size);
-diff --git a/lib/test_vmalloc.c b/lib/test_vmalloc.c
-index 3718d9886407..6bde73f892f9 100644
---- a/lib/test_vmalloc.c
-+++ b/lib/test_vmalloc.c
-@@ -97,7 +97,7 @@ static int random_size_align_alloc_test(void)
- 		size = ((rnd % 10) + 1) * PAGE_SIZE;
- 
- 		ptr = __vmalloc_node(size, align, GFP_KERNEL | __GFP_ZERO, 0,
--				__builtin_return_address(0));
-+				0, __builtin_return_address(0));
- 		if (!ptr)
- 			return -1;
- 
-@@ -120,7 +120,7 @@ static int align_shift_alloc_test(void)
- 		align = ((unsigned long) 1) << i;
- 
- 		ptr = __vmalloc_node(PAGE_SIZE, align, GFP_KERNEL|__GFP_ZERO, 0,
--				__builtin_return_address(0));
-+				0, __builtin_return_address(0));
- 		if (!ptr)
- 			return -1;
- 
-@@ -138,7 +138,7 @@ static int fix_align_alloc_test(void)
- 	for (i = 0; i < test_loop_count; i++) {
- 		ptr = __vmalloc_node(5 * PAGE_SIZE, THREAD_ALIGN << 1,
- 				GFP_KERNEL | __GFP_ZERO, 0,
--				__builtin_return_address(0));
-+				0, __builtin_return_address(0));
- 		if (!ptr)
- 			return -1;
- 
-diff --git a/mm/util.c b/mm/util.c
-index 5a6a9802583b..c6b7111215e2 100644
---- a/mm/util.c
-+++ b/mm/util.c
-@@ -639,8 +639,7 @@ void *kvmalloc_node(size_t size, gfp_t flags, int node)
- 	 * about the resulting pointer, and cannot play
- 	 * protection games.
- 	 */
--	return __vmalloc_node_range(size, 1, VMALLOC_START, VMALLOC_END,
--			flags, PAGE_KERNEL, VM_ALLOW_HUGE_VMAP,
-+	return __vmalloc_node(size, 1, flags, VM_ALLOW_HUGE_VMAP,
- 			node, __builtin_return_address(0));
- }
- EXPORT_SYMBOL(kvmalloc_node);
-diff --git a/mm/vmalloc.c b/mm/vmalloc.c
-index d12a17fc0c17..18ece28e79d3 100644
---- a/mm/vmalloc.c
-+++ b/mm/vmalloc.c
-@@ -3119,7 +3119,7 @@ static void *__vmalloc_area_node(struct vm_struct *area, gfp_t gfp_mask,
- 
- 	/* Please note that the recursion is strictly bounded. */
- 	if (array_size > PAGE_SIZE) {
--		area->pages = __vmalloc_node(array_size, 1, nested_gfp, node,
-+		area->pages = __vmalloc_node(array_size, 1, nested_gfp, 0, node,
- 					area->caller);
- 	} else {
- 		area->pages = kmalloc_node(array_size, nested_gfp, node);
-@@ -3379,11 +3379,12 @@ void *__vmalloc_node_range(unsigned long size, unsigned long align,
-  *
-  * Return: pointer to the allocated memory or %NULL on error
-  */
--void *__vmalloc_node(unsigned long size, unsigned long align,
--			    gfp_t gfp_mask, int node, const void *caller)
-+__weak void *__vmalloc_node(unsigned long size, unsigned long align,
-+			    gfp_t gfp_mask, unsigned long vm_flags, int node,
-+			    const void *caller)
- {
- 	return __vmalloc_node_range(size, align, VMALLOC_START, VMALLOC_END,
--				gfp_mask, PAGE_KERNEL, 0, node, caller);
-+				gfp_mask, PAGE_KERNEL, vm_flags, node, caller);
- }
- /*
-  * This is only for performance analysis of vmalloc and stress purpose.
-@@ -3396,7 +3397,7 @@ EXPORT_SYMBOL_GPL(__vmalloc_node);
- 
- void *__vmalloc(unsigned long size, gfp_t gfp_mask)
- {
--	return __vmalloc_node(size, 1, gfp_mask, NUMA_NO_NODE,
-+	return __vmalloc_node(size, 1, gfp_mask, 0, NUMA_NO_NODE,
- 				__builtin_return_address(0));
- }
- EXPORT_SYMBOL(__vmalloc);
-@@ -3415,7 +3416,7 @@ EXPORT_SYMBOL(__vmalloc);
-  */
- void *vmalloc(unsigned long size)
- {
--	return __vmalloc_node(size, 1, GFP_KERNEL, NUMA_NO_NODE,
-+	return __vmalloc_node(size, 1, GFP_KERNEL, 0, NUMA_NO_NODE,
- 				__builtin_return_address(0));
- }
- EXPORT_SYMBOL(vmalloc);
-@@ -3432,7 +3433,7 @@ EXPORT_SYMBOL(vmalloc);
-  *
-  * Return: pointer to the allocated memory or %NULL on error
-  */
--void *vmalloc_huge(unsigned long size, gfp_t gfp_mask)
-+__weak void *vmalloc_huge(unsigned long size, gfp_t gfp_mask)
- {
- 	return __vmalloc_node_range(size, 1, VMALLOC_START, VMALLOC_END,
- 				    gfp_mask, PAGE_KERNEL, VM_ALLOW_HUGE_VMAP,
-@@ -3455,7 +3456,7 @@ EXPORT_SYMBOL_GPL(vmalloc_huge);
-  */
- void *vzalloc(unsigned long size)
- {
--	return __vmalloc_node(size, 1, GFP_KERNEL | __GFP_ZERO, NUMA_NO_NODE,
-+	return __vmalloc_node(size, 1, GFP_KERNEL | __GFP_ZERO, 0, NUMA_NO_NODE,
- 				__builtin_return_address(0));
- }
- EXPORT_SYMBOL(vzalloc);
-@@ -3469,7 +3470,7 @@ EXPORT_SYMBOL(vzalloc);
-  *
-  * Return: pointer to the allocated memory or %NULL on error
-  */
--void *vmalloc_user(unsigned long size)
-+__weak void *vmalloc_user(unsigned long size)
- {
- 	return __vmalloc_node_range(size, SHMLBA,  VMALLOC_START, VMALLOC_END,
- 				    GFP_KERNEL | __GFP_ZERO, PAGE_KERNEL,
-@@ -3493,7 +3494,7 @@ EXPORT_SYMBOL(vmalloc_user);
-  */
- void *vmalloc_node(unsigned long size, int node)
- {
--	return __vmalloc_node(size, 1, GFP_KERNEL, node,
-+	return __vmalloc_node(size, 1, GFP_KERNEL, 0, node,
- 			__builtin_return_address(0));
- }
- EXPORT_SYMBOL(vmalloc_node);
-@@ -3511,23 +3512,11 @@ EXPORT_SYMBOL(vmalloc_node);
-  */
- void *vzalloc_node(unsigned long size, int node)
- {
--	return __vmalloc_node(size, 1, GFP_KERNEL | __GFP_ZERO, node,
-+	return __vmalloc_node(size, 1, GFP_KERNEL | __GFP_ZERO, 0, node,
- 				__builtin_return_address(0));
- }
- EXPORT_SYMBOL(vzalloc_node);
- 
--#if defined(CONFIG_64BIT) && defined(CONFIG_ZONE_DMA32)
--#define GFP_VMALLOC32 (GFP_DMA32 | GFP_KERNEL)
--#elif defined(CONFIG_64BIT) && defined(CONFIG_ZONE_DMA)
--#define GFP_VMALLOC32 (GFP_DMA | GFP_KERNEL)
--#else
--/*
-- * 64b systems should always have either DMA or DMA32 zones. For others
-- * GFP_DMA32 should do the right thing and use the normal zone.
-- */
--#define GFP_VMALLOC32 (GFP_DMA32 | GFP_KERNEL)
--#endif
--
- /**
-  * vmalloc_32 - allocate virtually contiguous memory (32bit addressable)
-  * @size:	allocation size
-@@ -3539,7 +3528,7 @@ EXPORT_SYMBOL(vzalloc_node);
-  */
- void *vmalloc_32(unsigned long size)
- {
--	return __vmalloc_node(size, 1, GFP_VMALLOC32, NUMA_NO_NODE,
-+	return __vmalloc_node(size, 1, GFP_VMALLOC32, 0, NUMA_NO_NODE,
- 			__builtin_return_address(0));
- }
- EXPORT_SYMBOL(vmalloc_32);
-@@ -3553,7 +3542,7 @@ EXPORT_SYMBOL(vmalloc_32);
-  *
-  * Return: pointer to the allocated memory or %NULL on error
-  */
--void *vmalloc_32_user(unsigned long size)
-+__weak void *vmalloc_32_user(unsigned long size)
- {
- 	return __vmalloc_node_range(size, SHMLBA,  VMALLOC_START, VMALLOC_END,
- 				    GFP_VMALLOC32 | __GFP_ZERO, PAGE_KERNEL,
--- 
-2.39.2
+>---
+> drivers/gpu/drm/xe/xe_guc_submit.c | 6 +++---
+> 1 file changed, 3 insertions(+), 3 deletions(-)
+>
+>diff --git a/drivers/gpu/drm/xe/xe_guc_submit.c b/drivers/gpu/drm/xe/xe_guc_submit.c
+>index 21ac68e3246f..11ffacd1dd58 100644
+>--- a/drivers/gpu/drm/xe/xe_guc_submit.c
+>+++ b/drivers/gpu/drm/xe/xe_guc_submit.c
+>@@ -311,7 +311,7 @@ static void __release_guc_id(struct xe_guc *guc, struct xe_exec_queue *q, u32 xa
+> 				      q->guc->id - GUC_ID_START_MLRC,
+> 				      order_base_2(q->width));
+> 	else
+>-		ida_simple_remove(&guc->submission_state.guc_ids, q->guc->id);
+>+		ida_free(&guc->submission_state.guc_ids, q->guc->id);
+> }
+>
+> static int alloc_guc_id(struct xe_guc *guc, struct xe_exec_queue *q)
+>@@ -335,8 +335,8 @@ static int alloc_guc_id(struct xe_guc *guc, struct xe_exec_queue *q)
+> 		ret = bitmap_find_free_region(bitmap, GUC_ID_NUMBER_MLRC,
+> 					      order_base_2(q->width));
+> 	} else {
+>-		ret = ida_simple_get(&guc->submission_state.guc_ids, 0,
+>-				     GUC_ID_NUMBER_SLRC, GFP_NOWAIT);
+>+		ret = ida_alloc_max(&guc->submission_state.guc_ids,
+>+				    GUC_ID_NUMBER_SLRC - 1, GFP_NOWAIT);
+> 	}
+> 	if (ret < 0)
+> 		return ret;
+>-- 
+>2.43.0
+>
