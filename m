@@ -1,167 +1,146 @@
-Received: from smtp11.infineon.com (smtp11.infineon.com [217.10.52.105])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B667762E4;
-	Tue, 20 Feb 2024 18:59:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.10.52.105
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4474612F5BF
+	for <linux-kernel@vger.kernel.org>; Tue, 20 Feb 2024 19:00:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708455543; cv=none; b=MFIdKFQDSDuI/W4qaxBNyLPMuwPgItIU8nUoNYXjYq1TD3Ahk8w4T9frjXqpH5jpRKVWK1RH+wp5rg9xvuCJ3lJ3DCw+Pcm0R7snpZP6lO4F9z6bOYioG/Hi55O5hKkTCeuG0KeZVoz3U10pt3YSWEL2oJ4SWKsUQqQOpQJ3qAo=
+	t=1708455646; cv=none; b=HJLsR3/p9R8H2iFCqnSV3Ul3mah4GwsXQ+V4PShvBeSfmAncR9VsGqs5SFiTpT5SO0RWTacvPqk9GJLUHSTPYZVQ1Gt60AvX0S1KIgJsNBZkhlmkVYhgE/xIpy/+BDhqu2X7dWri6WF6eL1NyY9ZBmiKTeOnBow5WippeKQ4Jd8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708455543; c=relaxed/simple;
-	bh=nQhCy9Z6IkfDzhaAFtGmFDQQ4coSnEEVrK1GWZy5cT4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=VLTGrqC22F2lBbNpxw/ZhkZtwJr3CHyNF+R4MbGDPkpeSzIqY89EF+CmEmyeY+WU6LvcOlEP8pFqlP6Zd3jCv/x7W4XejyImdVYyhe3js0LM3MviK+jkPH3cWz3RXNMHEdmCDTjnY9+Tkev9q9Q0P0Ix5Xw3GXZGRKBPyrKisyg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infineon.com; spf=pass smtp.mailfrom=infineon.com; dkim=pass (1024-bit key) header.d=infineon.com header.i=@infineon.com header.b=ATJl2TiW; arc=none smtp.client-ip=217.10.52.105
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infineon.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=infineon.com
+	s=arc-20240116; t=1708455646; c=relaxed/simple;
+	bh=tO06HXuDUFkiQckbEEvMm/sPNj2r0sApMkfRWSALYmo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=YVbEd3goZNIqbyaiS5pfizSQ2J+Ajwz2GAWsbQvsnfVofZmBcX+UFUnyu1UecLgbjvPrpWjLeHVQTxydfrpv2vihBLvFlsa3vuPQmlNRtbgwEyj0AqYxZZK+wZjlORNNgFiRJmNlsE+tvduufgmre13UEhI8mZgx4NDHOTb27GM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Mmx9hrN1; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=infineon.com header.i=@infineon.com header.b="ATJl2TiW"
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=infineon.com; i=@infineon.com; q=dns/txt; s=IFXMAIL;
-  t=1708455542; x=1739991542;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=nQhCy9Z6IkfDzhaAFtGmFDQQ4coSnEEVrK1GWZy5cT4=;
-  b=ATJl2TiWdVdj7T+fspC0OdqdDoDUwUSW6/lLQrMvQNZzE8whscezHQub
-   pss9jGlKlrdD9++C3Sc0b2jzvgIgxZ1BdOaDi6eeTGfVrAB3PCeXKmEeJ
-   vNWDL33dLm8TeRQmGV18HAhvDFcr40JX1e3g8rF5K7CwT4BUTihfaTvhr
-   U=;
-X-IronPort-AV: E=McAfee;i="6600,9927,10990"; a="48972462"
-X-IronPort-AV: E=Sophos;i="6.06,174,1705359600"; 
-   d="scan'208";a="48972462"
-Received: from unknown (HELO MUCSE812.infineon.com) ([172.23.29.38])
-  by smtp11.infineon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Feb 2024 19:57:51 +0100
-Received: from MUCSE844.infineon.com (172.23.7.73) by MUCSE812.infineon.com
- (172.23.29.38) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Tue, 20 Feb
- 2024 19:57:50 +0100
-Received: from [10.165.32.120] (10.165.32.120) by MUCSE844.infineon.com
- (172.23.7.73) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Tue, 20 Feb
- 2024 19:57:49 +0100
-Message-ID: <33838539-62ec-43d0-8223-b3d5df4bf8f6@infineon.com>
-Date: Tue, 20 Feb 2024 19:57:49 +0100
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Mmx9hrN1"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1708455643;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=QSeB4uZ0c7rbXL9rOKisOf73q7fjczXQY8KjKSHtRXw=;
+	b=Mmx9hrN1e5p69fH2XA92PncTWgnltooYz7g8Wzs01c5mNbWVvmwPDsdeTyvMXxsa00LDdq
+	X7gzXpcbgHwd+QM5BNIxbnkKsy9cf1fTD3l7EvPlvEV0OZTFE+gAieuaL1TjA72UiLlAzl
+	DcJuipl+pm8Ld5mo4D1lkiejMFnaTQE=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-512-xlxqwbWDOE2_D3vXPZ74tA-1; Tue, 20 Feb 2024 14:00:38 -0500
+X-MC-Unique: xlxqwbWDOE2_D3vXPZ74tA-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.rdu2.redhat.com [10.11.54.4])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 9CFBA811E79;
+	Tue, 20 Feb 2024 19:00:37 +0000 (UTC)
+Received: from shalem.redhat.com (unknown [10.39.192.76])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id E2DB32022AAC;
+	Tue, 20 Feb 2024 19:00:35 +0000 (UTC)
+From: Hans de Goede <hdegoede@redhat.com>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Hans de Goede <hdegoede@redhat.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Eric Piel <eric.piel@tremplin-utc.net>,
+	linux-kernel@vger.kernel.org,
+	Paul Menzel <pmenzel@molgen.mpg.de>,
+	stable@vger.kernel.org,
+	regressions@lists.linux.dev
+Subject: [PATCH regression fix] misc: lis3lv02d_i2c: Fix regulators getting en-/dis-abled twice on suspend/resume
+Date: Tue, 20 Feb 2024 20:00:35 +0100
+Message-ID: <20240220190035.53402-1-hdegoede@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/3] tpm: make locality request return value consistent
-To: "Daniel P. Smith" <dpsmith@apertussolutions.com>, Jarkko Sakkinen
-	<jarkko@kernel.org>, Jason Gunthorpe <jgg@ziepe.ca>,
-	<linux-integrity@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC: Ross Philipson <ross.philipson@oracle.com>, Peter Huewe
-	<peterhuewe@gmx.de>
-References: <20240131170824.6183-1-dpsmith@apertussolutions.com>
- <20240131170824.6183-4-dpsmith@apertussolutions.com>
- <CYU3XUGOX6QT.1GL070ONNPBWQ@suppilovahvero>
- <80d95a08-a1c1-44a7-959c-8bff14254608@apertussolutions.com>
-From: Alexander Steffen <Alexander.Steffen@infineon.com>
-In-Reply-To: <80d95a08-a1c1-44a7-959c-8bff14254608@apertussolutions.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: MUCSE820.infineon.com (172.23.29.46) To
- MUCSE844.infineon.com (172.23.7.73)
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.4
 
-On 19.02.2024 21:29, Daniel P. Smith wrote:
-> On 2/1/24 17:49, Jarkko Sakkinen wrote:
->> On Wed Jan 31, 2024 at 7:08 PM EET, Daniel P. Smith wrote:
->>> The function tpm_tis_request_locality() is expected to return the 
->>> locality
->>> value that was requested, or a negative error code upon failure. If 
->>> it is called
->>> while locality_count of struct tis_data is non-zero, no actual 
->>> locality request
->>> will be sent. Because the ret variable is initially set to 0, the
->>> locality_count will still get increased, and the function will return 
->>> 0. For a
->>> caller, this would indicate that locality 0 was successfully 
->>> requested and not
->>> the state changes just mentioned.
->>>
->>> Additionally, the function __tpm_tis_request_locality() provides 
->>> inconsistent
->>> error codes. It will provide either a failed IO write or a -1 should 
->>> it have
->>> timed out waiting for locality request to succeed.
->>>
->>> This commit changes __tpm_tis_request_locality() to return valid 
->>> negative error
->>> codes to reflect the reason it fails. It then adjusts the return 
->>> value check in
->>> tpm_tis_request_locality() to check for a non-negative return value 
->>> before
->>> incrementing locality_cout. In addition, the initial value of the ret 
->>> value is
->>> set to a negative error to ensure the check does not pass if
->>> __tpm_tis_request_locality() is not called.
->>
->> This is way way too abtract explanation and since I don't honestly
->> understand what I'm reading, the code changes look bunch of arbitrary
->> changes with no sound logic as a whole.
-> 
-> In more simpler terms, the interface is inconsistent with its return
-> values. To be specific, here are the sources for the possible values
-> tpm_tis_request_locality() will return:
-> 1. 0 - 4: _tpm_tis_request_locality() was able to set the locality
-> 2. 0: a locality already open, no locality request made
-> 3. -1: if timeout happens in __tpm_tis_request_locality()
-> 4. -EINVAL: unlikely, return by IO write for incorrect sized write
-> 
-> As can easily be seen, tpm_tis_request_locality() will return 0 for both
-> a successful(1) and non-successful request(2). And to be explicit for
-> (2), if tpm_tis_request_locality is called for a non-zero locality and
-> the locality counter is not zero, it will return 0. Thus, making the
-> value 0 reflect as success when locality 0 is successfully requested and
-> as failure when a locality is requested with a locality already open.
+When not configured for wakeup lis3lv02d_i2c_suspend() will call
+lis3lv02d_poweroff() even if the device has already been turned off
+by the runtime-suspend handler and if configured for wakeup and
+the device is runtime-suspended at this point then it is not turned
+back on to serve as a wakeup source.
 
-There is a potential problem here, but I think it is slightly different 
-from what you describe: Currently, the kernel uses only locality 0, so 
-case 1 and 2 are indistinguishable for the caller. Getting a return 
-value of 0 simply means that the requested locality is now active. The 
-callers don't care whether it had already been active before or not, so 
-it is not a problem that the callers cannot distinguish case 1 and 2, 
-and a return value of 0 always indicates "success".
+Before commit b1b9f7a49440 ("misc: lis3lv02d_i2c: Add missing setting
+of the reg_ctrl callback"), lis3lv02d_poweroff() failed to disable
+the regulators which as a side effect made calling poweroff() twice ok.
 
-It might only become a problem once you make the kernel use localities 
-!= 0. Then a caller can get either 0 as the return value (if the 
-locality was already active before) or the requested locality, and both 
-values mean "success". In practice, this shouldn't cause any problems as 
-far as I can tell, because all existing callers either check only for 
-failures (negative return values), e.g. 
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/char/tpm/tpm_tis_core.c?h=v6.8-rc5#n1214, 
-or explicitly request locality 0 and check for a return value of 0, e.g. 
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/char/tpm/tpm_tis_core.c?h=v6.8-rc5#n750. 
-There is no caller that would be confused by case 2 because it requests 
-an arbitrary locality and always expects that locality to be returned in 
-order to indiciate "success".
+Now that poweroff() correctly disables the regulators, doing this twice
+triggers a WARN() in the regulator core:
 
-Still, such an inconsistency is not nice and should be fixed, but if I 
-read your patch correctly, this is not what it does: In 
-tpm_tis_request_locality(), you initialize ret with -EBUSY. For 
-locality_count != 0, you never assign to ret again and therefore return 
--EBUSY, even though the locality is active and can be used. The correct 
-fix would be to initialize ret with l, so that no error is returned in 
-such cases.
+unbalanced disables for regulator-dummy
+WARNING: CPU: 1 PID: 92 at drivers/regulator/core.c:2999 _regulator_disable
+...
 
-> As for failures, correct me if I am wrong, but if a function is
-> returning negative error codes, it should not be using a hard coded -1
-> as a generic error code. As I note, it is unlikely for the -EINVAL to be
-> delivered, but the code path is still available should something in the
-> future change the backing call logic.
-> 
-> After this change, the possible return values for
-> tpm_tis_request_locality() become:
-> 1. 0 - 4: the locality that was successfully requested
-> 2. -EBUSY: tpm busy, unable to request locality
-> 3. -EINVAL: invalid parameter
-> 
-> With this more consistent interface, I updated the return value checks
-> at the call sites to check for negative error as the means to catch
-> failures.
-> 
-> v/r,
-> dps
->
+Fix lis3lv02d_i2c_suspend() to not call poweroff() a second time if
+already runtime-suspended and add a poweron() call when necessary to
+make wakeup work.
+
+lis3lv02d_i2c_resume() has similar issues, with an added weirness that
+it always powers on the device if it is runtime suspended, after which
+the first runtime-resume will call poweron() again, causing the enabled
+count for the regulator to increase by 1 every suspend/resume. These
+unbalanced regulator_enable() calls cause the regulator to never
+be turned off and trigger the following WARN() on driver unbind:
+
+WARNING: CPU: 1 PID: 1724 at drivers/regulator/core.c:2396 _regulator_put
+
+Fix this by making lis3lv02d_i2c_resume() mirror the new suspend().
+
+Fixes: b1b9f7a49440 ("misc: lis3lv02d_i2c: Add missing setting of the reg_ctrl callback")
+Reported-by: Paul Menzel <pmenzel@molgen.mpg.de>
+Closes: https://lore.kernel.org/regressions/5fc6da74-af0a-4aac-b4d5-a000b39a63a5@molgen.mpg.de/
+Cc: stable@vger.kernel.org
+Cc: regressions@lists.linux.dev
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+---
+ drivers/misc/lis3lv02d/lis3lv02d_i2c.c | 21 +++++++++++++--------
+ 1 file changed, 13 insertions(+), 8 deletions(-)
+
+diff --git a/drivers/misc/lis3lv02d/lis3lv02d_i2c.c b/drivers/misc/lis3lv02d/lis3lv02d_i2c.c
+index c6eb27d46cb0..15119584473c 100644
+--- a/drivers/misc/lis3lv02d/lis3lv02d_i2c.c
++++ b/drivers/misc/lis3lv02d/lis3lv02d_i2c.c
+@@ -198,8 +198,14 @@ static int lis3lv02d_i2c_suspend(struct device *dev)
+ 	struct i2c_client *client = to_i2c_client(dev);
+ 	struct lis3lv02d *lis3 = i2c_get_clientdata(client);
+ 
+-	if (!lis3->pdata || !lis3->pdata->wakeup_flags)
++	/* Turn on for wakeup if turned off by runtime suspend */
++	if (lis3->pdata && lis3->pdata->wakeup_flags) {
++		if (pm_runtime_suspended(dev))
++			lis3lv02d_poweron(lis3);
++	/* For non wakeup turn off if not already turned off by runtime suspend */
++	} else if (!pm_runtime_suspended(dev))
+ 		lis3lv02d_poweroff(lis3);
++
+ 	return 0;
+ }
+ 
+@@ -208,13 +214,12 @@ static int lis3lv02d_i2c_resume(struct device *dev)
+ 	struct i2c_client *client = to_i2c_client(dev);
+ 	struct lis3lv02d *lis3 = i2c_get_clientdata(client);
+ 
+-	/*
+-	 * pm_runtime documentation says that devices should always
+-	 * be powered on at resume. Pm_runtime turns them off after system
+-	 * wide resume is complete.
+-	 */
+-	if (!lis3->pdata || !lis3->pdata->wakeup_flags ||
+-		pm_runtime_suspended(dev))
++	/* Turn back off if turned on for wakeup and runtime suspended*/
++	if (lis3->pdata && lis3->pdata->wakeup_flags) {
++		if (pm_runtime_suspended(dev))
++			lis3lv02d_poweroff(lis3);
++	/* For non wakeup turn back on if not runtime suspended */
++	} else if (!pm_runtime_suspended(dev))
+ 		lis3lv02d_poweron(lis3);
+ 
+ 	return 0;
+-- 
+2.43.0
+
