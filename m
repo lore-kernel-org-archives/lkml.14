@@ -1,34 +1,36 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.20])
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A879482D1;
-	Tue, 20 Feb 2024 05:45:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1B7556B9F;
+	Tue, 20 Feb 2024 05:45:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708407932; cv=none; b=EFEJrTWBja/jcHayO8TO22IiPipTJPdkeaas/8FU82XwjEJ8m+sNalgQpp0iC5Z+ReSw1WL8buNbhY4xtip/yE1SDvIo6S8XDTAqayChFnBDOr7kOP3U+HytaoVmqzL1mgptvxwMOA/YOGzlJAD+wc8VqycmBNEhg5Q4W7UgXXg=
+	t=1708407935; cv=none; b=p31RYLJZvFyEiLlfd8sZyKcsR+DBTEkO+PKVqZish/qXPNdrNoPcoGh+yPjzYrvFiPtigMcfvNT0KOmQ1jF0opQNijOlF9Re/YdJeiX5INPjLumz0nh3W8OoxWpyY0ojCOjjc4tF9CJRaqs3Tz9SVEDG9ddN08wAKlDQF1X6xD4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708407932; c=relaxed/simple;
-	bh=wMCc8J1PCY8KB0C8TU2S2VGitU5uhYxb7pS5TWKpv/4=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=WrJPQK97MRcTy7si0GL3euoPhM6IagOueej1cEolk+d9R9CkESvwVqGh7GPNtZwH3YGfv8IDIYTNGLv6G6H0D2I+dSKZVzbjDCR8wfhCi5nv9xWU8mFgSrSW4o6bxGNOT3GMS1IhjlSFoMwz9rLMj62Och2BsKyQqIFATKh0h7c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=aLitBPO/; arc=none smtp.client-ip=212.227.17.20
+	s=arc-20240116; t=1708407935; c=relaxed/simple;
+	bh=eobAWH/CQ74AbdBposfF5jZqxo/Sl7vEIa1ZDCK8rNs=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=XyMVNfDXPHbNePhMPu1GFbCboZD1r9a5ib0Vpb3IwQ01pCNI3vTV/XadlB6HAPZ7K8Y6oqixLE2XDFKDJbRHLZEJTRRfde03vVrqMS60FJXz5VJKQOUk3ByJFxXSrGgSxNN1e9kY4EIbLYBhzzENdMsang3W0AMGfHTSRqDmpEM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=mJ5GA+eF; arc=none smtp.client-ip=212.227.15.18
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="aLitBPO/"
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="mJ5GA+eF"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.de; s=s31663417;
-	t=1708407918; x=1709012718; i=w_armin@gmx.de;
-	bh=wMCc8J1PCY8KB0C8TU2S2VGitU5uhYxb7pS5TWKpv/4=;
-	h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
-	b=aLitBPO/PNEumsiFTO5LEBWzlUKDQCkasQdR5ZDmIVTh5+SAzGljSZSIhp8HaAAy
-	 /S0+l2BeiOpPSg271uN0IR8lTSgalXntcxvjTuZl9p+EQtcPzs7u8itXLB4+59drz
-	 EY7ccLY319/767ZqQZpyVGMSAqm8PWIzbBvauVjYWaFSIO8LcigRy6kpdCv1wmpZu
-	 6A4xZVmYzOAlbCNVU5CT+sCHTg6nkFAKp/X27sM2QnLuEh9oa4u6HKxqT/ymyHVOt
-	 23jvgAiAxi2PuLZPViBM8fwOvl1NPaop6Xr5hSiVEZpKb8I0RdYzyG6VEKS7VVgmd
-	 9p/h/4Q3crejPt+iTw==
+	t=1708407924; x=1709012724; i=w_armin@gmx.de;
+	bh=eobAWH/CQ74AbdBposfF5jZqxo/Sl7vEIa1ZDCK8rNs=;
+	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:
+	 References;
+	b=mJ5GA+eF/fBfSmgGh86TH5ksk1Z8QTD3RXe+4w7OBQDUAxtTlHuk6/cYhkNQgXYW
+	 6QDhUOAT3uz735VMktpWMiPpGQyQZeIaAvu8ummMh0FpW81xxsQ+TKeagq/TFcX3Z
+	 pIBcDKq/78AFxwqtkTSECjUpzqq2ILa817bM+5AAVh4GXTBwnp3N1ckoPTjn5zi3b
+	 QAdgff7W/+3ytQqQXl8mJFzN2cR1PaBAXu4pJRqsQMeBe1kDqqyAj+jbC2qUOCQXf
+	 sirIrnuH+J3JOkps5xU+kMmr3Da21sVCEWxaMrcU+lnRVQ1C2XlvH+MqulPBMz6UB
+	 +GLWVX5YrHYkSbApSg==
 X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
 Received: from mx-amd-b650.users.agdsn.de ([141.30.226.129]) by mail.gmx.net
- (mrgmx105 [212.227.17.168]) with ESMTPSA (Nemesis) id
- 1M9Wyy-1rWmdN3pp6-005cp5; Tue, 20 Feb 2024 06:45:18 +0100
+ (mrgmx004 [212.227.17.190]) with ESMTPSA (Nemesis) id
+ 1MgNh7-1r0k8K3i07-00hufC; Tue, 20 Feb 2024 06:45:24 +0100
 From: Armin Wolf <W_Armin@gmx.de>
 To: Shyam-sundar.S-k@amd.com,
 	mika.westerberg@linux.intel.com
@@ -36,10 +38,12 @@ Cc: hdegoede@redhat.com,
 	ilpo.jarvinen@linux.intel.com,
 	platform-driver-x86@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 1/3] platform/x86/amd/pmf: Add missing __iomem attribute to policy_base
-Date: Tue, 20 Feb 2024 06:45:11 +0100
-Message-Id: <20240220054513.2832-1-W_Armin@gmx.de>
+Subject: [PATCH 3/3] platform/x86: intel_scu_ipcutil: Make scu static
+Date: Tue, 20 Feb 2024 06:45:13 +0100
+Message-Id: <20240220054513.2832-3-W_Armin@gmx.de>
 X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240220054513.2832-1-W_Armin@gmx.de>
+References: <20240220054513.2832-1-W_Armin@gmx.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -47,66 +51,51 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:Ozzk3tnKBJ32+TPnyj6okQniSEs5v+d+xylq2BPWyiH69B9isX1
- ihj78sqcgowFCHaFxcvQZhSsKIHqKnVaKKpMWgjbB60ayJnv6x2pKMjJW3UcgPKK0Jl1dpn
- XEyk36rVvykCSjFPGGMBfjvatk/HWpKDsRrNXKDpidRYZFSXDLjAZnoCOThZMNyOR/WgO8c
- WlM8rxOUGSf/S6urDAl0g==
+X-Provags-ID: V03:K1:FwrNV4oltVweFu4+1d1wzAEeqcmQk3qU4JgmxxNMCO1FmdRCMJH
+ r09Jvi1qYGSmYgjMZLI+LFflr7cdKwr6vWJj+eH/KL3XRxGsS/0F4X2Yy0Gxp3frwKdoUNz
+ KHpwI8yCydJrLP0workv4liQEphTqGvTBi9T3suF9G+PJu+B31zsWTgNUPFI8N/6soKU0jE
+ cqMQXrQssdM4iY3OMpl0Q==
 X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:uyGY52FymLM=;UIsQXfUcdN2wYpy9mdDmqgdB6/z
- pl5xRbfE7qMdUWUo91GRlRQIgqf1HlnQL+o6Um2hpvDWFo5AS+vPAArIaeWM21pOnNUJtHTKq
- XmCVwcYGWGDgj5d3aVyOLSvrzdZr2ifU5wP8i2hQ81SPtZrCsExEqQeTfAYGqB4WoW6BJfVfo
- 7XR3szR12LONsZcV068Fb90TFZ/YtkSgIe+Hgf80SeVc5eUiiHTcBafq0c6vf9vuYIHaMn0b3
- 3Emrpzwam+yus7T8HQK7pEHv6naNscqM23y72WH4JiQEzUHA51h5FXBfECf1Wx6+IaNu2rzVE
- yy0jtsru76GvpUaULsRHWE5q45qOb33LL3UPVZ4DNWBWL63C7uCkH95yuDqlMyzyIo1dViqe4
- YQf4brQV7X+IlUZAfOqPr2J6njg98m1/EOpHRjjLSp4+D1HVuTSavWvyl7vgUKYZfPKPeWvIF
- o7fakstS/KAZyNgDTDjtuuqV9XyxHQ9Fnh8+JFrSrZqMujgju0ugdWq9q8wyLAaZaEgx3gXkO
- VUIXEUZvtEGaQaaMKVYRUcD0UDWXUIiaBlEtDUylhlneg6HQMmey/syc8nhtbTxA8ADz8+iob
- roHMSJKgZBGN443CFuhnqHKxHW6Igub+E50iFhI4MjfQSkifITQy+yVPz9ATqyp2R8UfDsAUO
- 6lCINWE0bLDPhruqCNNy6ZedbReFjfkPPv0V8T6nsK+D5pTmZ/T+wPLHLJaJ4Q/98VB4vA3ae
- YsQiYvP5auEeZOQXlu0L/3E3JRHvSLuLMVc+s6R63wjf2vlI+z8QNnhHUgS0msFUmUnr0Mi+T
- uhegh0HkId82pLSb005B862OWh/ZBeFNVmAFFDzsUisJE=
+UI-OutboundReport: notjunk:1;M01:P0:bPiltYbMaEg=;lauq3K32ajcbpBIZwGnp6fPdrV7
+ wtjwCCLm9ahVxJu++i8v7yF2PiJ/pmLfI43WM8JGkXVHvw5Z8GyT0MEZHU4Vxb7a3g0IKq53o
+ JSi+sR68UqYqqTuFNnWLSYsBDcoUSBnO50GLz1SvFZEi4OjpyJ/bMwkkktZR38XObI3se18V9
+ 7PFu6GDkH1yphdput7n/gNVOtg7Xf/4UtVFVul3dlRUt+R1OvGrnCAlWjHCB/nKTzhsBl78lW
+ D7v53XLf/2iXzBAxzi7aJst2BPCC4xd7/l//ruocgU+S8lPAf9euELTsjYMOdLjtde8WU8ZBd
+ BUT56sQKa0gzBNeQPT9QZPohJQ5DZODdHlqJa0AyuNTTzPXJFvkgU+VQGxjOwrozUWWco/nt6
+ WUlV3FN2HNkmNzGjedxOAf5SiLdwTrUgDuPrmCKhYSLn8g3hp3b6CsWMLogwTajR44DB4AmDP
+ Zb0dACgA4XbKp3ON0qsw7ytFtNuZbXSo1hNc7CUGwENHjwBDKuBCshxDMg/S9+jCjjhc9jMwJ
+ vLmWmdwTRVgGIttfQ7x2WCtPJCo9o5JUSQSB8hMJXZSpE4K8LRPIHdxmY+9zJsm6jDvDMtIf9
+ YvOEnL6VQc6v6HlxR9EY0DOIUk7uKSPbUD46hVBmgqrL3Wgh0TzX6OHU9GXebyxuDiXldr/qV
+ gVF6YOAPToqkWEtkJU6BJ0RDdIi6PjDUoaUuwQuSifX4wi5QMEvcSVk6/O1IojP3HvR4op6XM
+ i5lB32vx/mq3EWU1r9p373mKUywRZqxOPLCt+zwuSOfYWxoH5nYkuyyWSD9VcvaNBGqB1SHPM
+ hlB+mDhLWtfF1hP42/fsEQ1y5Csbr9N5ggdMH/onN+ccU=
 
-The value of policy_base is the return value of a devm_ioremap call,
-which returns a __iomem pointer instead of an regular pointer.
-Add the missing __iomem attribute.
+The variable is only used internally and has no external users,
+so it should me made static.
 
 Compile-tested only.
 
+Fixes: 663cc18861a0 ("platform/x86: intel_scu_ipcutil: Convert to use new =
+SCU IPC API")
 Signed-off-by: Armin Wolf <W_Armin@gmx.de>
 =2D--
- drivers/platform/x86/amd/pmf/pmf.h    | 2 +-
- drivers/platform/x86/amd/pmf/tee-if.c | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ drivers/platform/x86/intel_scu_ipcutil.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/platform/x86/amd/pmf/pmf.h b/drivers/platform/x86/amd=
-/pmf/pmf.h
-index 16999c5b334f..bcf777a5659a 100644
-=2D-- a/drivers/platform/x86/amd/pmf/pmf.h
-+++ b/drivers/platform/x86/amd/pmf/pmf.h
-@@ -229,7 +229,7 @@ struct amd_pmf_dev {
- 	struct delayed_work pb_work;
- 	struct pmf_action_table *prev_data;
- 	u64 policy_addr;
--	void *policy_base;
-+	void __iomem *policy_base;
- 	bool smart_pc_enabled;
- };
+diff --git a/drivers/platform/x86/intel_scu_ipcutil.c b/drivers/platform/x=
+86/intel_scu_ipcutil.c
+index b7c10c15a3d6..7d87cbd4b9c6 100644
+=2D-- a/drivers/platform/x86/intel_scu_ipcutil.c
++++ b/drivers/platform/x86/intel_scu_ipcutil.c
+@@ -22,7 +22,7 @@
 
-diff --git a/drivers/platform/x86/amd/pmf/tee-if.c b/drivers/platform/x86/=
-amd/pmf/tee-if.c
-index f8c0177afb0d..16973bebf55f 100644
-=2D-- a/drivers/platform/x86/amd/pmf/tee-if.c
-+++ b/drivers/platform/x86/amd/pmf/tee-if.c
-@@ -346,7 +346,7 @@ static int amd_pmf_get_bios_buffer(struct amd_pmf_dev =
-*dev)
- 	if (!dev->policy_base)
- 		return -ENOMEM;
+ static int major;
 
--	memcpy(dev->policy_buf, dev->policy_base, dev->policy_sz);
-+	memcpy_fromio(dev->policy_buf, dev->policy_base, dev->policy_sz);
+-struct intel_scu_ipc_dev *scu;
++static struct intel_scu_ipc_dev *scu;
+ static DEFINE_MUTEX(scu_lock);
 
- 	amd_pmf_hex_dump_pb(dev);
- 	if (pb_side_load)
+ /* IOCTL commands */
 =2D-
 2.39.2
 
