@@ -1,84 +1,163 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5952576C70;
-	Tue, 20 Feb 2024 18:05:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44814779F2;
+	Tue, 20 Feb 2024 18:06:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708452331; cv=none; b=usJMsYqbXPBCb7NakvReyX/m9X1VCtl7CxhNaGQ42t0YklxkpNJ4TLUFg+1Rq8y73sK2kMt0mieCOGUZhLdK25nI1MfW1jHxaW9h8s+lk/IUWWj5qw0tx7ZPG+oVsEDXCSaN07h1N03xgB7Pi+0FqmCn7x1PAcOeNwpqBFbB5zA=
+	t=1708452395; cv=none; b=HDzIzJkZ0ZqqRGYXEwLp4+TG5tjhJ7W95WbcZn7JvCBY4MT0+ujhad3aYLAH4PSXF+uvGNfd7TCPwt1L3+fdOcK5AOaiJCvssX1BpHYBa7O2ZOnrwBhaa8/w/xatkvVkxZMWMlZRLykb2R29pHfUNm4w5vEAzNmLhWZQCCvosdY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708452331; c=relaxed/simple;
-	bh=xY01WNSDg+fB4b3tzgDPOlMr8YfAE3F7j2PbUEDxlHs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jLUpRgCiIac9snN4G0mDzG+WCA/oikblj1afwXOHZquYwGHwJv5RtlMCtgJqeOOPR5za20o1ANP65tCBEVBvj/ZkEET9qCTgSDGdzCKRc7eovyP/shl/FWXabDJI6TpEwHPYxsZxmiiOWPnWorL1CNi8X/n4QWi7H/kYkbCdRo4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RBGAJPDE; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1708452395; c=relaxed/simple;
+	bh=HTRjPgc3Z93+9+vnRup3H//l9q0/RpaJYD0XmG63Y+I=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=WgHuVNb2mpAqsx+SSTLvraoKcC4jKfsfKb5m0FTGtedb/FPBg/hool1kUkOFReYvyBePE21ZIikDLfLPxDUs6aovWxICfIKl/kYNQl7NKkiZl/YkpDXyY4yreScdwpXl3BppjnA5b0gYROX0WRE/2gZLk7ZsSecMyxRslvmxSR8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=cApLI3Vd; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=gCM5cWYl; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=f3iT9O7i; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=5EMPdQE7; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RBGAJPDE"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1708452330; x=1739988330;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=xY01WNSDg+fB4b3tzgDPOlMr8YfAE3F7j2PbUEDxlHs=;
-  b=RBGAJPDExE66AXm4VwLxSBREE2jFUrJ+vbvROsJga32ZyMDT/cWl2Iqe
-   fyA0BP5f01toMMUc5PPWUddLy2p7GVwR+7m6k2GD08PLjnJW4QaG5Qd6M
-   I+HDm2RNLlUG6NzjZ5IJ/pIW/E84Gwuq9x9cRNVFB/N60AMTdkz6SQZeT
-   luoNDCRWo3bHuX00cmXklJQb5Ju7X5e+UJB/a9jrpNsDsg2sJ54tqny1E
-   lYoF5kSll9jceGu36K/C33OdYD5ROcvSq+tPaKnRh2Dm3r+DO7Gv1ianE
-   H4k9UOLfqFrgmw1u2Tk/0mrhZgZj1EY5CORNHHf8dgZtogiqKKdk3nYqA
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10990"; a="3037655"
-X-IronPort-AV: E=Sophos;i="6.06,174,1705392000"; 
-   d="scan'208";a="3037655"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Feb 2024 10:05:30 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10990"; a="913118980"
-X-IronPort-AV: E=Sophos;i="6.06,174,1705392000"; 
-   d="scan'208";a="913118980"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Feb 2024 10:05:27 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.97)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1rcUUe-000000069WL-3Ueo;
-	Tue, 20 Feb 2024 20:05:24 +0200
-Date: Tue, 20 Feb 2024 20:05:24 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	Geert Uytterhoeven <geert@linux-m68k.org>,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Robin van der Gracht <robin@protonic.nl>,
-	Paul Burton <paulburton@kernel.org>
-Subject: Re: [PATCH v3 5/9] auxdisplay: ht16k33: Define a few helper macros
-Message-ID: <ZdTp5LQOTpL5ke96@smile.fi.intel.com>
-References: <20240219170337.2161754-1-andriy.shevchenko@linux.intel.com>
- <20240219170337.2161754-6-andriy.shevchenko@linux.intel.com>
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="cApLI3Vd";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="gCM5cWYl";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="f3iT9O7i";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="5EMPdQE7"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id E1B661F8BD;
+	Tue, 20 Feb 2024 18:06:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1708452387; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=GdNVBUnk8GlUwBol8CUxIWy0oFcd/4EAWmIfbejS74g=;
+	b=cApLI3Vd53N9iWV4D4ue8aW8yLUeZFs0TAKfgK8xOsLUY+K2ABrblF87rEz/VtP52H899z
+	b6kVryas/eaoxIRdpmhWN4yYVOMoW4sPcIOKdM4Oj0vQ8HiSMkqHpT7//O/n6rorjO9KH7
+	qurZBMQ+G2LFRVd5LTzahnPAOzVeWZw=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1708452387;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=GdNVBUnk8GlUwBol8CUxIWy0oFcd/4EAWmIfbejS74g=;
+	b=gCM5cWYl5Rfvk51fIJTQEB9E8lv4vVXMcntr9izWnSANUzazeEQsZDido6rVDI7lw+7vOi
+	08xbQYi75Ex9I+Aw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1708452386; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=GdNVBUnk8GlUwBol8CUxIWy0oFcd/4EAWmIfbejS74g=;
+	b=f3iT9O7iVtQTwb3EourgM2uTR02pJhWn8GaYv/zDzXwCH1DA53VB8TMwmOnLzTgbo5elvy
+	wBDQTk9+r3b8X0f87m+EYm2PKvP40poM8lnXgDqehXRyKDkE8kCEYOQ8gQnXay8MIGAfF0
+	hUEbgjxCG7m3674P0wn/xFvJY650nNo=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1708452386;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=GdNVBUnk8GlUwBol8CUxIWy0oFcd/4EAWmIfbejS74g=;
+	b=5EMPdQE7hqDjKj9wMIqeEdMdIVkXVAYF5NCZ2lMCgDwbpHK0YfhUenXPEF5KjW6oxkCDDL
+	s5l4y3eVq98zuqBg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id CA79E134E4;
+	Tue, 20 Feb 2024 18:06:26 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id +12wMCLq1GWKbQAAD6G6ig
+	(envelope-from <vbabka@suse.cz>); Tue, 20 Feb 2024 18:06:26 +0000
+Message-ID: <48318c98-2a14-46c8-b6d5-8f8584b6a789@suse.cz>
+Date: Tue, 20 Feb 2024 19:06:26 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240219170337.2161754-6-andriy.shevchenko@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] MAINTAINERS: add memory mapping entry with reviewers
+Content-Language: en-US
+To: Lorenzo Stoakes <lstoakes@gmail.com>, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>
+Cc: "=Liam R . Howlett" <Liam.Howlett@oracle.com>, workflows@vger.kernel.org
+References: <20240220064410.4639-1-lstoakes@gmail.com>
+From: Vlastimil Babka <vbabka@suse.cz>
+In-Reply-To: <20240220064410.4639-1-lstoakes@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+Authentication-Results: smtp-out2.suse.de;
+	none
+X-Spam-Level: 
+X-Spam-Score: -1.29
+X-Spamd-Result: default: False [-1.29 / 50.00];
+	 ARC_NA(0.00)[];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 XM_UA_NO_VERSION(0.01)[];
+	 FROM_HAS_DN(0.00)[];
+	 TO_DN_SOME(0.00)[];
+	 FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 MIME_GOOD(-0.10)[text/plain];
+	 NEURAL_HAM_LONG(-1.00)[-1.000];
+	 RCPT_COUNT_FIVE(0.00)[6];
+	 RCVD_COUNT_THREE(0.00)[3];
+	 DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	 NEURAL_HAM_SHORT(-0.20)[-1.000];
+	 BAYES_HAM(-0.00)[13.75%];
+	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:email,linux-foundation.org:email,oracle.com:email];
+	 FREEMAIL_TO(0.00)[gmail.com,kvack.org,vger.kernel.org,linux-foundation.org];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 RCVD_TLS_ALL(0.00)[];
+	 MID_RHS_MATCH_FROM(0.00)[]
+X-Spam-Flag: NO
 
-On Mon, Feb 19, 2024 at 06:58:04PM +0200, Andy Shevchenko wrote:
-> Define a few helper macros — wrappers on contaoner_of)() — for easier
+On 2/20/24 07:44, Lorenzo Stoakes wrote:
+> Recently there have been a number of patches which have affected various
+> aspects of the memory mapping logic as implemented in mm/mmap.c where it
+> would have been useful for regular contributors to have been notified.
+> 
+> Add an entry for this part of mm in particular with regular contributors
+> tagged as reviewers.
+> 
+> Signed-off-by: Lorenzo Stoakes <lstoakes@gmail.com>
 
-I have fixed 'container_of()' above locally.
+Acked-by: Vlastimil Babka <vbabka@suse.cz>
 
-> maintenance in the future. While at it, include missing container_of.h.
+Would be nice if this targetted sub-reviewing could be managed in a simpler
+way as part of the MM section instead of having to define a new one which
+duplicates half of if, but until we have such support...
 
--- 
-With Best Regards,
-Andy Shevchenko
-
+> ---
+>  MAINTAINERS | 11 +++++++++++
+>  1 file changed, 11 insertions(+)
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index b6c5c92e49db..129a237b7880 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -14121,6 +14121,17 @@ F:	tools/mm/
+>  F:	tools/testing/selftests/mm/
+>  N:	include/linux/page[-_]*
+>  
+> +MEMORY MAPPING
+> +M:	Andrew Morton <akpm@linux-foundation.org>
+> +R:	Liam R. Howlett <Liam.Howlett@oracle.com>
+> +R:	Vlastimil Babka <vbabka@suse.cz>
+> +R:	Lorenzo Stoakes <lstoakes@gmail.com>
+> +L:	linux-mm@kvack.org
+> +S:	Maintained
+> +W:	http://www.linux-mm.org
+> +T:	git git://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm
+> +F:	mm/mmap.c
+> +
+>  MEMORY TECHNOLOGY DEVICES (MTD)
+>  M:	Miquel Raynal <miquel.raynal@bootlin.com>
+>  M:	Richard Weinberger <richard@nod.at>
 
