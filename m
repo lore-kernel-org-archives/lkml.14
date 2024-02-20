@@ -1,133 +1,106 @@
-Received: from elvis.franken.de (elvis.franken.de [193.175.24.41])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F0ABC6A34F;
-	Tue, 20 Feb 2024 13:48:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.175.24.41
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51FB26A33D;
+	Tue, 20 Feb 2024 13:49:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708436934; cv=none; b=K5PLDmxo2nYCAvig0TSNJWRl2yBUgjMC/6/NdhWhRMPizYTDeQtCrNA4EavqwwVxybZe6t20rP0aReP5Ywe8mEGihGcocXVf5xEfOlWR7TW2l4j89p7ZbOXLm5MrttXEzt8QjIznJG2GRTH1JPt5NbtkuJsBVAkhcJHmXqDurNc=
+	t=1708436964; cv=none; b=AgTvMLNRq6vjExJlOurF+rO+hudUuX77HuVibM+W4eTPQXUIwcjrEzuk8indlYf7CMokSZYwnp0Y2Q1K2olYKmqK/jse+XDjKkeg2GFQBJkQ8dh+joetUhLyIxZAlJz/E5S+F8t6qieFWPRDBcuje2Etcs6njLN498TVrBMsFpM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708436934; c=relaxed/simple;
-	bh=vYR8p74SkVXVJ7OHqgJra7pbE2srpH4uLh8O5W7OSOo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Vfsu/HPCGcSM7gJA9F6DFoeRgBezi6TWNE0Wy8urlyMThDj0PTnC2Cl0X08MGwZbVpXGWJCTrVK1YBwLdE/cp9wzfAR9UqwRR8ryw3uYHDPUOuKu31OdFsORaDDQwSkGhiFdyN2D61Wzp6zUG0sJ2GRaKLTX98eQtuZgNJKpV6k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpha.franken.de; spf=pass smtp.mailfrom=alpha.franken.de; arc=none smtp.client-ip=193.175.24.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpha.franken.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alpha.franken.de
-Received: from uucp by elvis.franken.de with local-rmail (Exim 3.36 #1)
-	id 1rcQUE-0007OI-00; Tue, 20 Feb 2024 14:48:42 +0100
-Received: by alpha.franken.de (Postfix, from userid 1000)
-	id DD60CC0A1E; Tue, 20 Feb 2024 14:44:23 +0100 (CET)
-Date: Tue, 20 Feb 2024 14:44:23 +0100
-From: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-To: Gregory CLEMENT <gregory.clement@bootlin.com>
-Cc: Paul Burton <paulburton@kernel.org>, linux-mips@vger.kernel.org,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>,
-	Tawfik Bayouk <tawfik.bayouk@mobileye.com>,
-	Alexandre Belloni <alexandre.belloni@bootlin.com>,
-	=?iso-8859-1?Q?Th=E9o?= Lebrun <theo.lebrun@bootlin.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v8 00/14] Add support for the Mobileye EyeQ5 SoC
-Message-ID: <ZdSst3fM3EOQGH03@alpha.franken.de>
-References: <20240216174227.409400-1-gregory.clement@bootlin.com>
+	s=arc-20240116; t=1708436964; c=relaxed/simple;
+	bh=Ry+oD2aeuZyQ8lyL2bZUi5BX0g4Xx7EQvo1e3TAbr5I=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=bZ715y9vvNBIRx2MSUbljDwfDsBWXI9cgY7dVDyoSuJFdr7eF0l66ZwHKyuv9Z4n3Vk3+Sj/2OmY/c5yieV9ewDaCYPgUMT/OddbG67H14yqSiQgybP0hM7OMnUWPi0ihgJO3XLIrGCYVXCmKSp6AYHxOCqp1ejZhnMOWAmDncc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UIbJoLjV; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UIbJoLjV"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1708436963; x=1739972963;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=Ry+oD2aeuZyQ8lyL2bZUi5BX0g4Xx7EQvo1e3TAbr5I=;
+  b=UIbJoLjVjDTpeyUpxqpnIJvR9ehj/PFG2YqFBYHTw4MNNP/LEtF+pxZc
+   ugQ09kJ2deJlr4y6PFdpGNnuAfQfu9d7PbuWnCHiRP59yN2prrDBPyRas
+   DZobRPOWwgZ2IxNVJcNZnzJOuqKwPiBNPcOC1aBPSUjsrkrLd536zAPES
+   ehNFNL62o7o6yEIylj3uW8308x9DxZSj2TYUvKYmw4kcJyWvlvmO1p5f6
+   YjTem/IZApjVhiGSRh6N+2CXvXSm7dTqB2eVLgmAESFaRg3gVsgLKh+Pq
+   a2jy6uZn7xuHmhU0oFwugi9P8Rxu4KqM3RbXuTOk2qg83tNRJ3g2SD5iT
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10989"; a="24995632"
+X-IronPort-AV: E=Sophos;i="6.06,172,1705392000"; 
+   d="scan'208";a="24995632"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Feb 2024 05:49:23 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.06,172,1705392000"; 
+   d="scan'208";a="4940842"
+Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.94.249.21])
+  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Feb 2024 05:49:21 -0800
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Tue, 20 Feb 2024 15:49:16 +0200 (EET)
+To: Maciej Wieczor-Retman <maciej.wieczor-retman@intel.com>
+cc: Fenghua Yu <fenghua.yu@intel.com>, 
+    Reinette Chatre <reinette.chatre@intel.com>, Shuah Khan <shuah@kernel.org>, 
+    LKML <linux-kernel@vger.kernel.org>, linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH 3/3] selftests/resctrl: Move cleanups out of individual
+ tests
+In-Reply-To: <63b9763211c2954f0ef517a817b3bf0c482df8cd.1708434017.git.maciej.wieczor-retman@intel.com>
+Message-ID: <f08dafda-c8a5-324a-464c-5b84d779c4ad@linux.intel.com>
+References: <cover.1708434017.git.maciej.wieczor-retman@intel.com> <63b9763211c2954f0ef517a817b3bf0c482df8cd.1708434017.git.maciej.wieczor-retman@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240216174227.409400-1-gregory.clement@bootlin.com>
+Content-Type: text/plain; charset=US-ASCII
 
-On Fri, Feb 16, 2024 at 06:42:09PM +0100, Gregory CLEMENT wrote:
-> Hello,
-> 
-> The EyeQ5 SoC from Mobileye is based on the MIPS I6500 architecture
-> and features multiple controllers such as the classic UART, I2C, SPI,
-> as well as CAN-FD, PCIe, Octal/Quad SPI Flash interface, Gigabit
-> Ethernet, MIPI CSI-2, and eMMC 5.1. It also includes a Hardware
-> Security Module, Functional Safety Hardware, and MJPEG encoder.
-> 
-> One peculiarity of this SoC is that the physical address of the DDDR
-> exceeds 32 bits. Given that the architecture is 64 bits, this is not
-> an issue, but it requires some changes in how the mips64 is currently
-> managed during boot.
-> 
-> In this eighth version, I rebased the series onto the one sent by
-> Jixuan to unify register numbering macros for uasm. I also addressed
-> the comments from Thomas Bogendoerfer, especially regarding the use of
-> cache memory to copy the vectors.
-> 
-> To build and test the kernel, we need to run the following commands:
-> 
-> make eyeq5_defconfig
-> make vmlinuz.itb
-> [..] 
-> Gregory CLEMENT (12):
->   MIPS: spaces: Define a couple of handy macros
->   MIPS: traps: Give more explanations if ebase doesn't belong to KSEG0
->   MIPS: cps-vec: Use macros for 64bits access
->   dt-bindings: Add vendor prefix for Mobileye Vision Technologies Ltd.
->   dt-bindings: mips: cpus: Sort the entries
->   dt-bindings: mips: cpu: Add I-Class I6500 Multiprocessor Core
->   dt-bindings: mips: Add bindings for Mobileye SoCs
->   MIPS: mobileye: Add EyeQ5 dtsi
->   MIPS: mobileye: Add EPM5 device tree
->   MIPS: Share generic kernel code with other architecture
->   MIPS: Add support for Mobileye EyeQ5
->   MAINTAINERS: Add entry for Mobileye MIPS SoCs
-> 
-> Jiaxun Yang (2):
->   MIPS: Fix set_uncached_handler for ebase in XKPHYS
->   MIPS: Allows relocation exception vectors everywhere
-> 
->  .../devicetree/bindings/mips/cpus.yaml        |  13 +-
->  .../devicetree/bindings/mips/mobileye.yaml    |  32 ++
->  .../devicetree/bindings/vendor-prefixes.yaml  |   2 +
->  MAINTAINERS                                   |  12 +
->  arch/mips/Kbuild                              |   1 +
->  arch/mips/Kbuild.platforms                    |   1 +
->  arch/mips/Kconfig                             |  57 ++++
->  arch/mips/boot/dts/Makefile                   |   1 +
->  arch/mips/boot/dts/mobileye/Makefile          |   4 +
->  arch/mips/boot/dts/mobileye/eyeq5-epm5.dts    |  23 ++
->  .../boot/dts/mobileye/eyeq5-fixed-clocks.dtsi | 292 ++++++++++++++++++
->  arch/mips/boot/dts/mobileye/eyeq5.dtsi        | 124 ++++++++
->  arch/mips/configs/eyeq5_defconfig             | 108 +++++++
->  arch/mips/generic/Makefile                    |   6 +-
->  arch/mips/include/asm/addrspace.h             |   5 +
->  arch/mips/include/asm/mach-generic/spaces.h   |   4 +
->  arch/mips/include/asm/mips-cm.h               |   1 +
->  arch/mips/include/asm/smp-cps.h               |   9 +-
->  arch/mips/kernel/cps-vec.S                    |  54 +---
->  arch/mips/kernel/smp-cps.c                    | 141 +++++++--
->  arch/mips/kernel/traps.c                      |   7 +-
->  arch/mips/mobileye/Makefile                   |   1 +
->  arch/mips/mobileye/Platform                   |  16 +
->  arch/mips/mobileye/board-epm5.its.S           |  24 ++
->  arch/mips/mobileye/vmlinux.its.S              |  32 ++
->  25 files changed, 890 insertions(+), 80 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/mips/mobileye.yaml
->  create mode 100644 arch/mips/boot/dts/mobileye/Makefile
->  create mode 100644 arch/mips/boot/dts/mobileye/eyeq5-epm5.dts
->  create mode 100644 arch/mips/boot/dts/mobileye/eyeq5-fixed-clocks.dtsi
->  create mode 100644 arch/mips/boot/dts/mobileye/eyeq5.dtsi
->  create mode 100644 arch/mips/configs/eyeq5_defconfig
->  create mode 100644 arch/mips/mobileye/Makefile
->  create mode 100644 arch/mips/mobileye/Platform
->  create mode 100644 arch/mips/mobileye/board-epm5.its.S
->  create mode 100644 arch/mips/mobileye/vmlinux.its.S
+On Tue, 20 Feb 2024, Maciej Wieczor-Retman wrote:
 
-series applied to mips-next.
+> Every test calls its cleanup function at the end of it's test function.
+> After the cleanup function pointer is added to the test framework this
+> can be simplified to executing the callback function at the end of the
+> generic test running function.
+> 
+> Make test cleanup functions static and call them from the end of
+> run_single_test() from the resctrl_test's cleanup function pointer.
+> 
+> Signed-off-by: Maciej Wieczor-Retman <maciej.wieczor-retman@intel.com>
+> ---
+>  tools/testing/selftests/resctrl/cat_test.c      | 4 +---
+>  tools/testing/selftests/resctrl/cmt_test.c      | 3 +--
+>  tools/testing/selftests/resctrl/mba_test.c      | 4 +---
+>  tools/testing/selftests/resctrl/mbm_test.c      | 4 +---
+>  tools/testing/selftests/resctrl/resctrl.h       | 4 ----
+>  tools/testing/selftests/resctrl/resctrl_tests.c | 2 ++
+>  6 files changed, 6 insertions(+), 15 deletions(-)
+> 
+> diff --git a/tools/testing/selftests/resctrl/cat_test.c b/tools/testing/selftests/resctrl/cat_test.c
+> index 2d2f69d3e5b7..ad5ebce65c07 100644
+> --- a/tools/testing/selftests/resctrl/cat_test.c
+> +++ b/tools/testing/selftests/resctrl/cat_test.c
+> @@ -128,7 +128,7 @@ static int check_results(struct resctrl_val_param *param, const char *cache_type
+>  	return fail;
+>  }
+>  
+> -void cat_test_cleanup(void)
+> +static void cat_test_cleanup(void)
+>  {
+>  	remove(RESULT_FILE_NAME);
+>  }
+> @@ -289,8 +289,6 @@ static int cat_run_test(const struct resctrl_test *test, const struct user_param
+>  	ret = check_results(&param, test->resource,
+>  			    cache_total_size, full_cache_mask, start_mask);
+>  out:
+> -	cat_test_cleanup();
+> -
 
-I've fixed generic|ingenic|realtek builds by adding select MACH_GENERIC_CORE
-in arch/mips/Kconfig.
+Any goto out can now become return ret; and the out label be then removed.
 
-Thomas.
 
 -- 
-Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
-good idea.                                                [ RFC1925, 2.3 ]
+ i.
+
