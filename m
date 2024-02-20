@@ -1,375 +1,260 @@
-Received: from mail-ua1-f47.google.com (mail-ua1-f47.google.com [209.85.222.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM02-BN1-obe.outbound.protection.outlook.com (mail-bn1nam02on2049.outbound.protection.outlook.com [40.107.212.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09CF6137C41
-	for <linux-kernel@vger.kernel.org>; Tue, 20 Feb 2024 20:28:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.47
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708460938; cv=none; b=VX7HMTNshd+n6U56W9E+604lYXB3JUBjFmuIJMKCmNsqPhgjxT5V6hKQnIhtM0G4ssDu5osOLv5hQSeiq2maSk1AcwLhAq9lxPoT+5G6UHFh+MtzT5SjnWKgxMD+x2JWsSt7BH6B2i3MrkBKn6A/rqbzi8K9/thI682k3ZpIltk=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708460938; c=relaxed/simple;
-	bh=Z8hH+nUkdKI4/djCjmnhxLyTG/4N2RSHJGrU/nJxrcI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=aum5y54sYqsxWzBCvK9qQdhnBH9jdDCIbCQhitIFWF9BybHB7h3k/KrpKsIIrYHjvX1hoD5O5H6IbKgCm+2UZZw2KqB0Lqbi+51PpS8hbU6LapoiXsWDQuUzb/G8r7MuK9S1SXhzugmanE0Zf/t+6lisD5Ynwok3xDParaGzCUs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GtI62mJS; arc=none smtp.client-ip=209.85.222.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D425514A4E4;
+	Tue, 20 Feb 2024 20:30:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.212.49
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1708461003; cv=fail; b=Jy4gyAqnAe4jUYaN/oiihqUHXZypLSpdUXyhzW+HxD2gs1wGnuCeKHaUurvym7PsN3CApSU+oHsEM3l7su3JUd8FVXwGlJ5yY3UZ3nntuuYDE89mYR2GzCZTwqhZVcP4Lc6AqicLN7koePTjZjR/vBEu/xrlx+csvZYo+vbtoOk=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1708461003; c=relaxed/simple;
+	bh=7NXxyjhpzdF5kD46hFaXaQ7ocothOqZjvD45hQGV7cI=;
+	h=References:From:To:Cc:Subject:Date:In-reply-to:Message-ID:
+	 Content-Type:MIME-Version; b=FQ7+ns40ZBNDHKVMJ5rZyXlqQemPKvuediD+CwR9qz2Iilb2tw8F2FH5dvoIpx6Yjnva7Uc/A8JvtfvS+ZJrbHT49r1mS6bxVusrT3PicuTLwMm5AlvC9n1/rFWKNkTFqRJ5IC++gbrKvGwMw/O7A2EdccEAyIXZe21eJiPIpdY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=dzQNd86z; arc=fail smtp.client-ip=40.107.212.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GtI62mJS"
-Received: by mail-ua1-f47.google.com with SMTP id a1e0cc1a2514c-7d2a78c49d1so3157561241.0
-        for <linux-kernel@vger.kernel.org>; Tue, 20 Feb 2024 12:28:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1708460936; x=1709065736; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=zJVLT75WajL6t4L9YIZZCclZPhvgAF8k7gyY0UcPW3w=;
-        b=GtI62mJStiE4IlQiIJYzPZrriIRb7nYPTtxkQzYel9ZwoA7rRsnb+mWlm0Ev/BPzH9
-         GYIVJauB5eXip/riCytP54Aq3A27hfOo/hpWTesN4kxjlydWt66ZJdmuXasIuWzqFEtG
-         VtT8hVhgdfplzj6YqITeC4gBBPWcm00cnSDGeOTD8UFyFkV8PciPMQjYfEEFvo3vvLS/
-         Tgta5aQTEOnGUa7Qh6Vky7nKHUUeYycfmMOhaPPOYXBSSaM0PGmSiw8vDdgaHQuKDe3a
-         hZRc4gjjxAnFuca5QBtbraVH5GWQrr9sa9o6R88qNV0roTkrV8NBQWQgG/zNybFMZgDT
-         zNlw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708460936; x=1709065736;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=zJVLT75WajL6t4L9YIZZCclZPhvgAF8k7gyY0UcPW3w=;
-        b=S75CaHeTvZ5wwQ/bnWy41q3gRQYWJvmMt/2vAPISd3DSB+YHDUYJ1+itdKU9JgzM/z
-         CZYyWktscCDFnVXEMfaVwJqXUVSLSWRG6QqwYWXpyufFfg+0JX5LHQxRheDd1YkYQ9XR
-         7hhlAtrGcfim1idqNEw/1SmA9pT7CQThk69TMjj16i4NbII3YjZdN4gatJ/VxVI2I3Sy
-         0+6IVRWPMpNFZMizsHCYNAwB8/F5lw8stzdP9VP5/Iv1638lCXejieMFfiV84dhJUmWq
-         L+OFXMqrEAaG/vdJnKNfKyQwUW0WmAcGGd2JXT2eowsq89SvWxyehfEYCCViVQn0hzf2
-         L2Ag==
-X-Forwarded-Encrypted: i=1; AJvYcCUF/ueUboVz4HEoL3eAlFDMlNfbKFBIlAtKI/lfAiPgtYj0ZmMXmvngZ1578ICxowjj78njofLVm2zySie3UETMcch5l37s2tKkbE5C
-X-Gm-Message-State: AOJu0Yx0NEvjriFSa/SXhhB2lUygw8pazOpMqreHSvhBbYtB4MkKsD95
-	xFdSNvvfd+BMN4bSmWXq4UeJWAaxykS8DLfanGtIALtmFhYux1DpBatdjC2CUglvP5WwKONBS7R
-	FW91xeoKai/kWyR1sms05bzDThAE=
-X-Google-Smtp-Source: AGHT+IFBjP/m9hY+L9Ae17EXOU2oBF+9rKDSjBrKJ8GEBbRzI2SC33AHgZImHGXoyc1z5a39h+PHDI8G5giXKXWvkl8=
-X-Received: by 2002:a67:f3cb:0:b0:470:41e7:bd75 with SMTP id
- j11-20020a67f3cb000000b0047041e7bd75mr6853615vsn.5.1708460935696; Tue, 20 Feb
- 2024 12:28:55 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="dzQNd86z"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=BVFJ5SgisfuVsRyp/EJixJJ2Ho4P3p3x1ZMeDB8/R0Q99ec09qR/lI1ltdtaP8QwHLp5Z4Jzs1FiYpRN4HYZw2q/U4SiYkl1V04EW8EFoNwnlHJVWHoH8mKZplHLFgHl1t63GHvxMnu8DU6KSeEkh+yfU420pH/1M+kUBBYYJDdJ+OwzADaaFiDSovhcSs0KkFLxe0Wylv8GU71Bs/KL6bHuR7LeRaUzqc6MIsLmKM7NhXeYEle4so07514NweI+ESjqcvKm5Ul9cSuPCLDLMBG069pqX6zs0hpMiCYFitJRHKH7FuBP0SPTh/sa89ZAS5+mOos4wdSYjl/P3wxe4A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=SUCd6k+0G9SvEF4gIlNosCqVOEGAcbN+yNGQNGZ1ze8=;
+ b=XmGcVeDHXOiGbZEvZKqU9Q7o3lJhVCP7ayLbW1WAJfkLQOY+Jou0JHyqNF2fMlQQDJUi9Q+LFUqiZqk0HY9goY7sz7Fm3Qd4XA00Z6gL2kNiFMoP/svzP3xCHxBiz2kY2Ie4VP+q9K03GDVKHp1Bpra1T3bSGLy5s2jerAwRpgBumPgTUEqX8MoosXXAUp6bDEzYGlGgM+wHevSNUJxjY243QAPRPyFu9c2m13+k7RiX1l5UiFCdGAXzLqGvNLlV2ZDsWRwSzsvaiCgPVcNjpkLyChL2axZET2yQv3RIJ3HgFTCnoZ3YHB46C0I1/HaBhfseaWfUOohNHeiLHFDIIA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=SUCd6k+0G9SvEF4gIlNosCqVOEGAcbN+yNGQNGZ1ze8=;
+ b=dzQNd86ziFGiXB+Jzh6CBzF5HI70WhtV52IlYMipkCGYnCJLWMwXW2G1NNEWq1Akl80WzS04z5SiX2G+64V75Gst+qXtKrlEJkO7Yis5UmX8vLjF0b2BKtqVeCRUH32Vs97sYPPjMAApwt0fLNbTw70TksUZZi+EC0k5g2ouTqidSDarf5FRGPcIIJMrSdCBbMZCcowktJFuSUPirowg0xJ/I1EN1pOjcrAkrcF0B/rQ1HwKL2ghmFZ5x/LAM8aRai3Uk6J0+dggyJZZXmVUvqoNtZ7jxNhOR8+fHsGWpE6baWnDhn5N2ekgjkptg6yXQ4YgovHsUbFbKM0j6Vmu5A==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from BYAPR12MB2743.namprd12.prod.outlook.com (2603:10b6:a03:61::28)
+ by DS7PR12MB8418.namprd12.prod.outlook.com (2603:10b6:8:e9::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7316.21; Tue, 20 Feb
+ 2024 20:29:54 +0000
+Received: from BYAPR12MB2743.namprd12.prod.outlook.com
+ ([fe80::e127:7911:8149:184c]) by BYAPR12MB2743.namprd12.prod.outlook.com
+ ([fe80::e127:7911:8149:184c%3]) with mapi id 15.20.7316.018; Tue, 20 Feb 2024
+ 20:29:54 +0000
+References: <20240216-feature_ptp_netnext-v8-0-510f42f444fb@bootlin.com>
+ <20240216-feature_ptp_netnext-v8-4-510f42f444fb@bootlin.com>
+ <87jzn4gtlv.fsf@nvidia.com> <b8926fe5-81ef-40ea-9e87-5e84b368b745@lunn.ch>
+ <87o7cebx9z.fsf@nvidia.com> <9e2ce7a0-e938-4f5f-aae9-cfee3a066628@lunn.ch>
+User-agent: mu4e 1.10.8; emacs 28.2
+From: Rahul Rameshbabu <rrameshbabu@nvidia.com>
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: Kory Maincent <kory.maincent@bootlin.com>, Florian Fainelli
+ <florian.fainelli@broadcom.com>, Broadcom internal kernel review list
+ <bcm-kernel-feedback-list@broadcom.com>, Heiner Kallweit
+ <hkallweit1@gmail.com>, Russell King <linux@armlinux.org.uk>, "David S.
+ Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub
+ Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Richard
+ Cochran <richardcochran@gmail.com>, Radu Pirea
+ <radu-nicolae.pirea@oss.nxp.com>, Jay Vosburgh <j.vosburgh@gmail.com>,
+ Andy Gospodarek <andy@greyhouse.net>, Nicolas Ferre
+ <nicolas.ferre@microchip.com>, Claudiu Beznea <claudiu.beznea@tuxon.dev>,
+ Willem de Bruijn <willemdebruijn.kernel@gmail.com>, Jonathan Corbet
+ <corbet@lwn.net>, Horatiu Vultur <horatiu.vultur@microchip.com>,
+ UNGLinuxDriver@microchip.com, Simon Horman <horms@kernel.org>, Vladimir
+ Oltean <vladimir.oltean@nxp.com>, Thomas Petazzoni
+ <thomas.petazzoni@bootlin.com>, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, Maxime Chevallier
+ <maxime.chevallier@bootlin.com>
+Subject: Re: [PATCH RFC net-next v8 04/13] net: Change the API of PHY
+ default timestamp to MAC
+Date: Tue, 20 Feb 2024 12:17:52 -0800
+In-reply-to: <9e2ce7a0-e938-4f5f-aae9-cfee3a066628@lunn.ch>
+Message-ID: <87zfvuange.fsf@nvidia.com>
+Content-Type: text/plain
+X-ClientProxiedBy: BY3PR05CA0030.namprd05.prod.outlook.com
+ (2603:10b6:a03:254::35) To BYAPR12MB2743.namprd12.prod.outlook.com
+ (2603:10b6:a03:61::28)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CGME20240214013426epcms2p655328452ef7fac82f3df56855d7dd99b@epcms2p6>
- <20240214013426epcms2p655328452ef7fac82f3df56855d7dd99b@epcms2p6>
-In-Reply-To: <20240214013426epcms2p655328452ef7fac82f3df56855d7dd99b@epcms2p6>
-From: Daeho Jeong <daeho43@gmail.com>
-Date: Tue, 20 Feb 2024 12:28:44 -0800
-Message-ID: <CACOAw_wS0SS8xhoKkK9aBz2mquVw4fYwfJFqGUJ4QUk08XfxdA@mail.gmail.com>
-Subject: Re: [f2fs-dev] [PATCH v6] f2fs: New victim selection for GC
-To: yonggil.song@samsung.com
-Cc: "jaegeuk@kernel.org" <jaegeuk@kernel.org>, "chao@kernel.org" <chao@kernel.org>, 
-	"linux-f2fs-devel@lists.sourceforge.net" <linux-f2fs-devel@lists.sourceforge.net>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Dongjin Kim <dongjin_.kim@samsung.com>, 
-	Daejun Park <daejun7.park@samsung.com>, Siwoo Jung <siu.jung@samsung.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BYAPR12MB2743:EE_|DS7PR12MB8418:EE_
+X-MS-Office365-Filtering-Correlation-Id: 2884f26e-99e5-438c-e3bd-08dc3252b278
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	51kUlMgy21Z+YEfc1lmwcrFizJVR8OwJZxevDw1OHk3HuEtSOjuUjLhEtth+w4Z9jokBo2qkkTMuA0+b/uQFHyqXX0hL/Wd1yDUPfQvPpCu0JmOwWtZCLFlrG/OnYv366TXItaGavbAlm6GRPRhoXHWPoXCe8/4HBiijrgPJP63iJ92hq0lkD7leCEZDVAwW5Ux67wAASjaP6zcjQS7qktzWeklqzwOKbaZLZFI3rq9pl/0UV1zT5/D83odIhU/s9bU9EYOLVERKUoXSYyjTO2fO/QK+zB9xmlXthzaEiG5JaYhyRCtrlx8/PlNf6z6mBxdYlQRKmBCpAhDDrFWUlfrnMwU0e4ZEuIoip+txDepjCO1IhuR34tCr1Qk3qDi98tKUQ8qX43ZNuek4J8LzEq6roqoP6CoMgmkkzsdKrR5wB7wTtWBA67y2amsroa9XtqhQaNpmSFM/l+3Dlh9Z2jaEbQr9YoGsXLzpzO+pi2ZusNuIW/9QfeFgqK/xqGehy90uUVVg6Wvp8ltoMvvbktFb/cCkD4IE4UFKY9xXBdmhXSJbfjWp53Oz2f9u9cJYx+1uFfxJt3pQXAYLlkEr/g==
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR12MB2743.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?uUZBAdh5soer+JkXvNQP8lSDB1sVBqd3mpOkcVniVdNEoq4YFAxWFu1VRgyd?=
+ =?us-ascii?Q?Xmy/aPT4sY1LGhhDyweJiHfJ9EYRsdUltLl0U3t1lcZZhqNg6hdrAUGaIu4C?=
+ =?us-ascii?Q?+EzdxuM3EWf86K2dtTuIrRveEvmiRGZJjM050jUY1NNvCheAwDr5sf+N0G0z?=
+ =?us-ascii?Q?Brwl83RMMjsYueqGIV2tkV8mLmHd0H5qzP3r9bf3CRZa3GDjV1XzFCq2J2GO?=
+ =?us-ascii?Q?2Qo2M041PiotPUhgV/+KQ2r0dn9dTVXloucVdp95fMC6c8+/VAyi6JspRRno?=
+ =?us-ascii?Q?TK+0E11d1ebP6xJCSr1ovkqo2iYQAsRC4Rs8seB0Arf+3+BZL8pBSBGQosQu?=
+ =?us-ascii?Q?zqiTXnMWsmgElvdeO9scvyDAFNokap5/E056ySasWOiBvqQuPwBbynLMEHYy?=
+ =?us-ascii?Q?CF3cTTSCNAyb2CRfH5p1ejs4oC8x4Qtbuiq2M6O3aG+lDGMEO7gG2dbd5Edb?=
+ =?us-ascii?Q?D5UOi3dcEpHYArbtH+O5m5/XupjkGMyVpt4F3VYRvw7PAxgVPCDulwKCkO7v?=
+ =?us-ascii?Q?6qQqRJ1dN1hBoaHqBQ1ImnMxw8JLsXCMSrnpnqlLNon+Tg/RoSok4H1Wj8ev?=
+ =?us-ascii?Q?4XRIJb9I9RxNNA/FrmVVm31LB+xyuiqv8o2JtJqYEitbWtse8j3Pi+gdlIlt?=
+ =?us-ascii?Q?UHZ6D4Cii0L/N7AtSGbAwZtSS0VeIeZY23GJh8sQPz+IByQkgEXEzkgt4q/P?=
+ =?us-ascii?Q?QYkYKgZ++d3I1oyP7Z4CQ4Adogp5z9l5FTq+dLgV5m2hbfnc8i4ejWhrKI3L?=
+ =?us-ascii?Q?GHa+I27pXT1JOMcUgMDYpHoDmKAKq2K5kCveT/EfLHPpAIcFKbN6scHI9C2y?=
+ =?us-ascii?Q?clww9odRTzdOqIVyn+vANL1RpOitqu1VIrAiDrCV+3ZGBmRai3hJ0MLIhUi2?=
+ =?us-ascii?Q?VSF8ZK8lv7IiB2FSIx3Ro+Sg5jaJCJTebYiAphhAIZV/d4GsQKyEKJtfDHwi?=
+ =?us-ascii?Q?UZzqfBow/Qx6/LOMirPYlDPd/zUoicdEC10bW4Spd8FCR+HnUq/QjqlXy9wg?=
+ =?us-ascii?Q?A3NGFViBzDUfJ3RBavytFVArKtTRzmAV4FI9QSqn+gsR3aHagSJ0Mlwx0fCw?=
+ =?us-ascii?Q?mMfqjzERFimi9bNUbwPaaPpOs4YhWJ/KN/P2HRwJE1SI0blbDAgAdA0RXbin?=
+ =?us-ascii?Q?f6d2RxDealwzvOZLx8vYwJYk2r8lpkbYqLiuVjA8Hd4hh3b5UDZEj8BRe0Cj?=
+ =?us-ascii?Q?GmXOTu+PeLBOxAAlqOZwu8q8HTSBqx/ysfPwoDx+xnBy/cTixmSCeAFQlcg5?=
+ =?us-ascii?Q?KnSIiPOUU0J90+GpWZW84J9whaYNSGTIRc7L7dS8BDuiOexcWOkJ6A/lm/kq?=
+ =?us-ascii?Q?SGD/4LMVRZG1MA+b2Hn//etPNKipJq+ckOLCRAbTYeAKzZGreUM0wlSMh91S?=
+ =?us-ascii?Q?qwjbcRx43yF8KXWZwkbvjiz8LgZ+HqHBATyqgLZWT2bfqJ0Set9N85jMJrqZ?=
+ =?us-ascii?Q?xAxVWNCDd+n/H0HYH8Kz6ZeJDtKCU8n3uW+GiPT5EGFTHfjM5MY7FzjsLuN8?=
+ =?us-ascii?Q?yvihNFyWkcUopl31cEldVBmQXRZgAPgZQTEYj7PlGfswKHANU7Bf/azPen5K?=
+ =?us-ascii?Q?1L85CywRjJfPCclJ2qxzvl5ovAywDymJMudDhO11cy3vxP4tF6TOn8ZN38fg?=
+ =?us-ascii?Q?GQ=3D=3D?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2884f26e-99e5-438c-e3bd-08dc3252b278
+X-MS-Exchange-CrossTenant-AuthSource: BYAPR12MB2743.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Feb 2024 20:29:54.3837
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: GiM2trBtu7XG6UTlrzlrw6g39fJTtt+T0iz/1DgWNrXJhEcHPiPsTfPh7tUNS4Kfbq08uimHUVEO4AAHQXOY+w==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR12MB8418
 
-On Tue, Feb 13, 2024 at 5:36=E2=80=AFPM Yonggil Song <yonggil.song@samsung.=
-com> wrote:
->
->
-> Overview
-> =3D=3D=3D=3D=3D=3D=3D=3D
->
-> This patch introduces a new way to preference data sections when selectin=
-g
-> GC victims. Migration of data blocks causes invalidation of node blocks.
-> Therefore, in situations where GC is frequent, selecting data blocks as
-> victims can reduce unnecessary block migration by invalidating node block=
-s.
 
-Your approach will allocate new node blocks despite invalidating
-current node blocks while moving data blocks, though. While your
-approach may work well relating to WAF in a specific scenario, such as
-randomly overwriting an entire storage space with a huge file, it is
-important to consider its general applicability. For example, how
-about the test performance? Performance optimization should encompass
-a wide range of user scenarios. However, I am not convinced that this
-is the most efficient solution for most users. Can you provide more
-information about how your approach addresses the performance needs of
-a broader spectrum of user scenarios?
+On Sat, 17 Feb, 2024 23:10:07 +0100 Andrew Lunn <andrew@lunn.ch> wrote:
+>> > Could you give some examples? It seems odd to me, the application
+>> > wants a less accurate timestamp?
+>> >
+>> > Is it more about overheads? A MAC timestamp might be less costly than
+>> > a PHY timestamp?
+>> 
+>> It's a combination of both though I think primarily about line rate.
+>> This point is somewhat carried over from the previous discussions on
+>> this patch series in the last revision.
+>
+> Sorry, i've not been keeping up with the discussion. That could also
+> mean whatever i say below is total nonsense!
+>
 
-> For exceptional situations where free sections are insufficient, node blo=
-cks
-> are selected as victims instead of data blocks to get extra free sections=
-.
+No worries. I could also be off here. I am mostly using mlx5 for my
+perspective here and I think Kory and Russell sent some feedback that
+likely confirms that this patch makes sense. Will reply to that in a
+bit.
+
+>> I assume the device in question
+>> here cannot timestamp at the PHY at a high rate.
+>> 
+>>   https://lore.kernel.org/netdev/20231120093723.4d88fb2a@kernel.org/
+>> 
+>> >
+>> > Or is the application not actually doing PTP, it does not care about
+>> > the time of the packet on the wire, but it is more about media access
+>> > control? Maybe the applications you are talking about are misusing the
+>> > PTP API for something its not intended?
+>> 
+>> So hardware timestamping is not a PTP specific API or application right?
 >
-> Problem
-> =3D=3D=3D=3D=3D=3D=3D
+> Well, we have drivers/ptp. The IOCTL numbers are all PTP_XXXX. It
+> seems like the subsystem started life in order to support PTP. It is
+> not unusual for a subsystem to gain extra capabilities, and maybe PTP
+> timestamps can be used in a more general way than the PTP
+> protocol.
 >
-> If the total amount of nodes is larger than the size of one section, node=
-s
-> occupy multiple sections, and node victims are often selected because the
-> gc cost is lowered by data block migration in GC. Since moving the data
-> section causes frequent node victim selection, victim threshing occurs in
-> the node section. This results in an increase in WAF.
+
+This is a great point to bring up. I think the PTP related ioctls can be
+confusing. Rather than calling them PTP ioctls, I think it would be best
+to call them PHC ioctls, where PHC stands for PTP hardware clock. These
+ioctls are more about controlling the local PTP clock devices rather
+than handling timestamps sent/received via the PTP protocol.
+
+https://docs.kernel.org/driver-api/ptp.html
+
+We can look at the ptp4l source code and see that PTP does indeed depend
+on the more generic PTP hardware timestamping socket options.
+
+  https://github.com/richardcochran/linuxptp/blob/f271257b799d390d9ec09d5c7dafb7f10a3bd99b/sk.c#L559
+
+Again, I do know the ioctls can be confusing. The ioctls tend to be more
+about adjusting the PHCs rather than controlling the timestamping flow
+if that makes sense.
+
+>> It's purely a socket option that is not tied to PTP (unless I am missing
+>> something here).
+>> 
+>>   https://docs.kernel.org/networking/timestamping.html#timestamp-generation
+>> 
+>> So you could use this information for other applications like congestion
+>> control where you do not want to limit the line rate using the PHY
+>> timestamping mechanism.
 >
-> Experiment
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> I think the key API point here is, you need to separate PTP stamping
+> from other sorts of stamping. PTP stamping generally works better at
+> the lowest point. So PTP stamping could be PHY stamping. If the PHY
+> does not support PTP, or its implementation is poor, PTP stamping can
+> be performed at the MAC. There are plenty of MACs which support that.
+> So we need an API to configure where PTP stamping is performed.
 >
-> Test environment is as follows.
+
+I actually agree with this to a degree. However, I do think it is
+sensible for applications that understand their properties to explicitly
+select the timestamping layer in the application initialization as well.
+I think because of the impact on line rate, the MAC/DMA layer makes
+sense as the default.
+
+> I expect the socket option is more generic. It is more about, give me
+> a time stamp at a specific point in the stack. It is probably not
+> being used by PTP, it could be used for flow control, etc. We probably
+> need an API to configure that SOF_TIMESTAMPING_RX_HARDWARE actually
+> means. It could be the PHY time stamp, maybe the MAC timestamp. Same
+> for SOF_TIMESTAMPING_TX_HARDWARE, it could be the MAC, could be the
+> PHY. But whatever they mean, i expect they are separate PTP.
 >
->         System info
->           - 3.6GHz, 16 core CPU
->           - 36GiB Memory
->         Device info
->           - a conventional null_blk with 228MiB
->           - a sequential null_blk with 4068 zones of 8MiB
->         Format
->           - mkfs.f2fs <conv null_blk> -c <seq null_blk> -m -Z 8 -o 3.89
->         Mount
->           - mount <conv null_blk> <mount point>
->         Fio script
->           - fio --rw=3Drandwrite --bs=3D4k --ba=3D4k --filesize=3D31187m =
---norandommap --overwrite=3D1 --name=3Djob1 --filename=3D./mnt/sustain --io=
-_size=3D128g
->         WAF calculation
->           - (IOs on conv. null_blk + IOs on seq. null_blk) / random write=
- IOs
+
+As I linked above, the socket options are being utilized by the linuxptp
+userspace stack.
+
+>> In mlx5, we only steering PTP traffic to our PHY timestamping mechanism
+>> through a traffic matching logic.
+>> 
+>>   https://git.kernel.org/pub/scm/linux/kernel/git/netdev/net-next.git/tree/drivers/net/ethernet/mellanox/mlx5/core/en/ptp.h?id=a6e0cb150c514efba4aaba4069927de43d80bb59#n71
+>> 
+>> This is because we do not want to PHY/port timestamp timing related
+>> applications such as congestion control. I think it makes sense for
+>> specialized timestamping applications to instead use the ethtool ioctl
+>> to reconfigure using the PHY timestamps if the device is capable of PHY
+>> timestamping. (So have the change be in userspace application tools like
+>> linuxptp where precise but low <relative> rate timestamp information is
+>> ideal).
 >
-> Conclusion
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
->
-> This experiment showed that the WAF was reduced by 29% (18.75 -> 13.3) wh=
-en
-> the data section was selected first when selecting GC victims. This was
-> achieved by reducing the migration of the node blocks by 69.4%
-> (253,131,743 blks -> 77,463,278 blks). It is possible to achieve low WAF
-> performance with the GC victim selection method in environments where the
-> section size is relatively small.
->
-> Signed-off-by: Yonggil Song <yonggil.song@samsung.com>
-> ---
->  fs/f2fs/f2fs.h |  1 +
->  fs/f2fs/gc.c   | 96 +++++++++++++++++++++++++++++++++++++++-----------
->  fs/f2fs/gc.h   |  6 ++++
->  3 files changed, 82 insertions(+), 21 deletions(-)
->
-> diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
-> index 65294e3b0bef..b129f62ba541 100644
-> --- a/fs/f2fs/f2fs.h
-> +++ b/fs/f2fs/f2fs.h
-> @@ -1654,6 +1654,7 @@ struct f2fs_sb_info {
->         struct f2fs_mount_info mount_opt;       /* mount options */
->
->         /* for cleaning operations */
-> +       bool require_node_gc;                   /* flag for node GC */
->         struct f2fs_rwsem gc_lock;              /*
->                                                  * semaphore for GC, avoi=
-d
->                                                  * race between GC and GC=
- or CP
-> diff --git a/fs/f2fs/gc.c b/fs/f2fs/gc.c
-> index a079eebfb080..53a51a668567 100644
-> --- a/fs/f2fs/gc.c
-> +++ b/fs/f2fs/gc.c
-> @@ -341,6 +341,14 @@ static unsigned int get_cb_cost(struct f2fs_sb_info =
-*sbi, unsigned int segno)
->         unsigned int i;
->         unsigned int usable_segs_per_sec =3D f2fs_usable_segs_in_sec(sbi,=
- segno);
->
-> +       /*
-> +        * When BG_GC selects victims based on age, it prevents node vict=
-ims
-> +        * from being selected. This is because node blocks can be invali=
-dated
-> +        * by moving data blocks.
-> +        */
-> +       if (__skip_node_gc(sbi, segno))
-> +               return UINT_MAX;
-> +
->         for (i =3D 0; i < usable_segs_per_sec; i++)
->                 mtime +=3D get_seg_entry(sbi, start + i)->mtime;
->         vblocks =3D get_valid_blocks(sbi, segno, true);
-> @@ -369,10 +377,24 @@ static inline unsigned int get_gc_cost(struct f2fs_=
-sb_info *sbi,
->                 return get_seg_entry(sbi, segno)->ckpt_valid_blocks;
->
->         /* alloc_mode =3D=3D LFS */
-> -       if (p->gc_mode =3D=3D GC_GREEDY)
-> -               return get_valid_blocks(sbi, segno, true);
-> -       else if (p->gc_mode =3D=3D GC_CB)
-> +       if (p->gc_mode =3D=3D GC_GREEDY) {
-> +               /*
-> +                * If the data block that the node block pointed to is GC=
-ed,
-> +                * the node block is invalidated. For this reason, we add=
- a
-> +                * weight to cost of node victims to give priority to dat=
-a
-> +                * victims during the gc process. However, in a situation
-> +                * where we run out of free sections, we remove the weigh=
-t
-> +                * because we need to clean up node blocks.
-> +                */
-> +               unsigned int weight =3D 0;
-> +
-> +               if (__skip_node_gc(sbi, segno))
-> +                       weight =3D BLKS_PER_SEC(sbi);
-> +
-> +               return get_valid_blocks(sbi, segno, true) + weight;
-> +       } else if (p->gc_mode =3D=3D GC_CB) {
->                 return get_cb_cost(sbi, segno);
-> +       }
->
->         f2fs_bug_on(sbi, 1);
->         return 0;
-> @@ -557,6 +579,14 @@ static void atgc_lookup_victim(struct f2fs_sb_info *=
-sbi,
->         if (ve->mtime >=3D max_mtime || ve->mtime < min_mtime)
->                 goto skip;
->
-> +       /*
-> +        * When BG_GC selects victims based on age, it prevents node vict=
-ims
-> +        * from being selected. This is because node blocks can be invali=
-dated
-> +        * by moving data blocks.
-> +        */
-> +       if (__skip_node_gc(sbi, ve->segno))
-> +               goto skip;
-> +
->         /* age =3D 10000 * x% * 60 */
->         age =3D div64_u64(accu * (max_mtime - ve->mtime), total_time) *
->                                                                 age_weigh=
-t;
-> @@ -1827,8 +1857,27 @@ int f2fs_gc(struct f2fs_sb_info *sbi, struct f2fs_=
-gc_control *gc_control)
->                 goto stop;
->         }
->
-> +       __get_secs_required(sbi, NULL, &upper_secs, NULL);
-> +
-> +       /*
-> +        * Write checkpoint to reclaim prefree segments.
-> +        * We need more three extra sections for writer's data/node/dentr=
-y.
-> +        */
-> +       if (free_sections(sbi) <=3D upper_secs + NR_GC_CHECKPOINT_SECS) {
-> +               sbi->require_node_gc =3D true;
-> +
-> +               if (prefree_segments(sbi)) {
-> +                       stat_inc_cp_call_count(sbi, TOTAL_CALL);
-> +                       ret =3D f2fs_write_checkpoint(sbi, &cpc);
-> +                       if (ret)
-> +                               goto stop;
-> +                       /* Reset due to checkpoint */
-> +                       sec_freed =3D 0;
-> +               }
-> +       }
-> +
->         /* Let's run FG_GC, if we don't have enough space. */
-> -       if (has_not_enough_free_secs(sbi, 0, 0)) {
-> +       if (gc_type =3D=3D BG_GC && has_not_enough_free_secs(sbi, 0, 0)) =
-{
->                 gc_type =3D FG_GC;
->
->                 /*
-> @@ -1863,6 +1912,18 @@ int f2fs_gc(struct f2fs_sb_info *sbi, struct f2fs_=
-gc_control *gc_control)
->                 goto stop;
->         }
->
-> +       if (sbi->require_node_gc &&
-> +           IS_DATASEG(get_seg_entry(sbi, segno)->type)) {
-> +               /*
-> +                * We need to clean node sections. but, data victim
-> +                * cost is the lowest. If free sections are enough,
-> +                * stop cleaning node victim. If not, it goes on
-> +                * by GCing data victims.
-> +                */
-> +               if (has_enough_free_secs(sbi, sec_freed, 0))
-> +                       goto stop;
-> +       }
-> +
->         seg_freed =3D do_garbage_collect(sbi, segno, &gc_list, gc_type,
->                                 gc_control->should_migrate_blocks);
->         if (seg_freed < 0)
-> @@ -1882,7 +1943,13 @@ int f2fs_gc(struct f2fs_sb_info *sbi, struct f2fs_=
-gc_control *gc_control)
->                         if (!gc_control->no_bg_gc &&
->                             total_sec_freed < gc_control->nr_free_secs)
->                                 goto go_gc_more;
-> -                       goto stop;
-> +                       /*
-> +                        * If require_node_gc flag is set even though the=
-re
-> +                        * are enough free sections, node cleaning will
-> +                        * continue.
-> +                        */
-> +                       if (!sbi->require_node_gc)
-> +                               goto stop;
->                 }
->                 if (sbi->skipped_gc_rwsem)
->                         skipped_round++;
-> @@ -1897,21 +1964,6 @@ int f2fs_gc(struct f2fs_sb_info *sbi, struct f2fs_=
-gc_control *gc_control)
->                 goto stop;
->         }
->
-> -       __get_secs_required(sbi, NULL, &upper_secs, NULL);
-> -
-> -       /*
-> -        * Write checkpoint to reclaim prefree segments.
-> -        * We need more three extra sections for writer's data/node/dentr=
-y.
-> -        */
-> -       if (free_sections(sbi) <=3D upper_secs + NR_GC_CHECKPOINT_SECS &&
-> -                               prefree_segments(sbi)) {
-> -               stat_inc_cp_call_count(sbi, TOTAL_CALL);
-> -               ret =3D f2fs_write_checkpoint(sbi, &cpc);
-> -               if (ret)
-> -                       goto stop;
-> -               /* Reset due to checkpoint */
-> -               sec_freed =3D 0;
-> -       }
->  go_gc_more:
->         segno =3D NULL_SEGNO;
->         goto gc_more;
-> @@ -1920,8 +1972,10 @@ int f2fs_gc(struct f2fs_sb_info *sbi, struct f2fs_=
-gc_control *gc_control)
->         SIT_I(sbi)->last_victim[ALLOC_NEXT] =3D 0;
->         SIT_I(sbi)->last_victim[FLUSH_DEVICE] =3D gc_control->victim_segn=
-o;
->
-> -       if (gc_type =3D=3D FG_GC)
-> +       if (gc_type =3D=3D FG_GC) {
->                 f2fs_unpin_all_sections(sbi, true);
-> +               sbi->require_node_gc =3D false;
-> +       }
->
->         trace_f2fs_gc_end(sbi->sb, ret, total_freed, total_sec_freed,
->                                 get_pages(sbi, F2FS_DIRTY_NODES),
-> diff --git a/fs/f2fs/gc.h b/fs/f2fs/gc.h
-> index 28a00942802c..cd07bf125177 100644
-> --- a/fs/f2fs/gc.h
-> +++ b/fs/f2fs/gc.h
-> @@ -166,3 +166,9 @@ static inline bool has_enough_invalid_blocks(struct f=
-2fs_sb_info *sbi)
->                 free_user_blocks(sbi) <
->                         limit_free_user_blocks(invalid_user_blocks));
->  }
-> +
-> +static inline bool __skip_node_gc(struct f2fs_sb_info *sbi, unsigned int=
- segno)
-> +{
-> +       return (IS_NODESEG(get_seg_entry(sbi, segno)->type) &&
-> +               !sbi->require_node_gc);
-> +}
-> --
-> 2.34.1
->
->
->
-> _______________________________________________
-> Linux-f2fs-devel mailing list
-> Linux-f2fs-devel@lists.sourceforge.net
-> https://lists.sourceforge.net/lists/listinfo/linux-f2fs-devel
+> I would expect linuxptp is only interested in the PTP timestamp. It
+> might be interested where the stamp is coming from, PHY or MAC, but it
+> probably does not care too much, it just assumes the time stamp is
+> good for PTP. But i would expect linuxptp has no interest in what the
+> generic socket options are doing.
+
+For timestamping events and being able to generate and receive them for
+the userspace perspective, there is no special interface just for ptp.
+That said, maybe it makes sense versus having the userspace stack just
+make use of the generic timestamping options. I am slightly against
+doing something special for the ptp implementation since I do think it
+is a typically timestamping application with different configuration
+parameters (like which timestamping layer to select).
+
+--
+Thanks,
+
+Rahul Rameshbabu
+
