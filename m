@@ -1,111 +1,153 @@
-Received: from ahti.lucaweiss.eu (ahti.lucaweiss.eu [128.199.32.197])
+Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C513876419;
-	Tue, 20 Feb 2024 16:53:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=128.199.32.197
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D281768FA;
+	Tue, 20 Feb 2024 16:54:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708448028; cv=none; b=fLQ/HUcB/j3XqthXNnX71KD+Hg5EAvA1VIW8iNqH5P68dJuh+/7obwiUhZJLpTT3fw01F2Xjt3M3KS5wcpP/vxC9Uvtdectvp8PgGtO0z/In9KzgUBpD2Wq9TgZWlvQ1HrlJxtbpXfGBw0NWKlSBQ4GzFAC/adCJodK2Ben8hzA=
+	t=1708448046; cv=none; b=Aayks7Z4qcrCSxWZyVOGfh5IwenrYmd5TIfZG+vXBXYkyZL/ediyf3KRTU/E/WhiZ14CmvLggkVjQyh42t89TdQZi0yy4oyXdHI/345dXEyWaaW/8r8go+Rl+fYyjIMd9dxH5sZuSnVasIsTjXwDdrCGeoiKve75uzxrDUPR3W8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708448028; c=relaxed/simple;
-	bh=z4JWuWnGXxtj1e13X8/078DUzc51WgJgv/eBSFm2h68=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=nLT26YcJ2MWBOODrFZAd6gTcJJVo93sNJMloIy4lBASzUDaO0t1v29SRo1/haWktIw5h57OkA6vTe+aVQn8c35vmy5Pxb2XGH4o6mIV5qYHJVNng1TlSzH11jVTBxFU+Fw0Ir8VBDeDiU6gEnDHWHaiP/qNwxoxGoG/0RiUkx7U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=z3ntu.xyz; spf=pass smtp.mailfrom=z3ntu.xyz; dkim=pass (1024-bit key) header.d=z3ntu.xyz header.i=@z3ntu.xyz header.b=FUQQWI2G; arc=none smtp.client-ip=128.199.32.197
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=z3ntu.xyz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=z3ntu.xyz
+	s=arc-20240116; t=1708448046; c=relaxed/simple;
+	bh=DAfyiOwXCICyTswYOmrcxT3Fh32GfqIV3qr5gjysxz8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=FjI9ZcrByKU7fyxBhvOxif03uZFmIJyR8Uac5QX5ru5zIylyZx/DmWtlwQtpN8o1x2FhyaNCW4cHQhPd/vewLpKt66gg2lVSHX2YHb9Supp0+rsgPsyGGCgaPvjUY0zb2xeCIAaQMi/ZQVYqBFLK/jlCfM/hoiuQlOJ1aP+N8Tw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ENDhiE27; arc=none smtp.client-ip=209.85.210.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=z3ntu.xyz header.i=@z3ntu.xyz header.b="FUQQWI2G"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=z3ntu.xyz; s=s1;
-	t=1708447414; bh=z4JWuWnGXxtj1e13X8/078DUzc51WgJgv/eBSFm2h68=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=FUQQWI2GUEfDPYh40q++n2IQFf5euFWbZYd/sMkhbd4YMtnzo+/j3Tv2v8HPdgYeB
-	 pOvSFLFvC6DOlZhTl26ZZi+xGX1fMErCGsPfrzxU1U50TvZi96MmlDWOlUyoVL+JfC
-	 uRCRDnSxr6Mzj9O/IFyIi2arF2v2wX92NXY3+6jU=
-From: Luca Weiss <luca@z3ntu.xyz>
-To: Daniel Thompson <daniel.thompson@linaro.org>
-Cc: ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org,
- Lee Jones <lee@kernel.org>, Jingoo Han <jingoohan1@gmail.com>,
- Helge Deller <deller@gmx.de>, Andrew Morton <akpm@linux-foundation.org>,
- "G.Shark Jeong" <gshark.jeong@gmail.com>,
- Bjorn Andersson <andersson@kernel.org>,
- Konrad Dybcio <konrad.dybcio@linaro.org>, Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>,
- Maximilian Weigand <mweigand@mweigand.net>, dri-devel@lists.freedesktop.org,
- linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org
-Subject:
- Re: [PATCH 3/4] backlight: lm3630a: Use backlight_get_brightness helper in
- update_status
-Date: Tue, 20 Feb 2024 17:43:32 +0100
-Message-ID: <5027630.31r3eYUQgx@g550jk>
-In-Reply-To: <20240220141107.GF6716@aspen.lan>
-References:
- <20240220-lm3630a-fixups-v1-0-9ca62f7e4a33@z3ntu.xyz>
- <20240220-lm3630a-fixups-v1-3-9ca62f7e4a33@z3ntu.xyz>
- <20240220141107.GF6716@aspen.lan>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ENDhiE27"
+Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-6da9c834646so5040613b3a.3;
+        Tue, 20 Feb 2024 08:54:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1708448045; x=1709052845; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=thSXP4QAfzp8Sa+ElHHleWbXN7SpoUL9JZxQQKwtxXA=;
+        b=ENDhiE27ppOamfitNJh9CS2+UWy143wM/EC+kRle6Hpx+N6UhiIHdsPQIxhJgOlcZP
+         M6D8duEVGsbZWm6NpiykyV5mC83gehAAYSjGMA4ElsNWanQx1Y5S3W16gDhwzYeNaWud
+         sVvOSO9SOLXQ8CKHlHk1Ed/9rxI/pKnAW8k0th0Pw4b9pbYQF/V0nBojqTRLOBHZk4o3
+         qmxgUSJ500h+Emeee4MwkOMfaLukhg3iRd5LArooruQ89j/CxfiOhwqQi4cF7RIyD9WM
+         2L197d0XlGDJIljPIXH4J910DH/34oRIUItNl6XdfLRJqfCqoNEhS5L3Hbin29pxKrgI
+         XKdQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708448045; x=1709052845;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=thSXP4QAfzp8Sa+ElHHleWbXN7SpoUL9JZxQQKwtxXA=;
+        b=QUo/5PI7dvnrHcorHP09MjA3Yx3qRfxaoNM96HZJggPhJ94L677fEd1G0Nw9xYythh
+         mYcCmQlwJR2gs70A3RwLwXWoxzGbheulwufIRyxWxOGuCirwRsd+OzJb7SyIVnhi6Xuy
+         hn9jKNmJmMLeCpUtSTDQlpb2Vr2zbpYp7zUXpjKi/2YlcnyF/vKahCgbcVXdvTeK1bNN
+         ql7VdKzo3CwJHS61m+j7ugrbxiOwr2A6/r+Y9Yx4FeUVdPsQW+pcwbD77Cr1f24zMgS8
+         EGzbNQHuu58Ea8QEq2rUPDk63eEEHQjj6pynb48aIaEHHnWozFTzqoEwO3qQ2YQ7EuXf
+         1hkw==
+X-Forwarded-Encrypted: i=1; AJvYcCU8UcXtQoeiB9BG+YRwlearrxANf9ozzw4u5+iptbCIBwgMeYPPQDQQ4p6JxRpvbS6syGlgSz9XmhkEHqR5N4uU6z731ljUUgG8Rza6NTQwVTqCtxI2E5FSm4KqCafj2HhjuKWN7fCx1W3VLNs=
+X-Gm-Message-State: AOJu0YwlAc2kzAvf70r+TltnKwRXxqkQF98uQMXluXIv8tGElEzkApu2
+	Km3Xa795N/bkE4uKwQyU7l0APfXisIaveTmdtRbVcw3gUurLFQkmFpTIbK0SB4rpX5+Nvfu2xJl
+	8DI5G+Aazpe/AqUfh0X/5VJ8f7Q8TB6+B
+X-Google-Smtp-Source: AGHT+IGIB3AjXTRU+H9bLolIZrAAi6d4If9K4VEl0Xbosr8SkcRaVMlpkouDDXLlmKPR2sU/+svXcMSDvXmtlh6lS+Q=
+X-Received: by 2002:aa7:9dca:0:b0:6e4:776:c748 with SMTP id
+ g10-20020aa79dca000000b006e40776c748mr9333196pfq.19.1708448044747; Tue, 20
+ Feb 2024 08:54:04 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+References: <20240219163915.2705-1-dakr@redhat.com> <20240220093541.280140-1-aliceryhl@google.com>
+ <e543b270-dea7-477a-b83d-62129d4ac708@redhat.com> <CANiq72nVkV3+1rt4Mi+Own6KGAzmvR2jf8fFsp9NBu_gy_ob5g@mail.gmail.com>
+ <462aad75-4f03-4f8b-ad58-eef429ed2b34@redhat.com>
+In-Reply-To: <462aad75-4f03-4f8b-ad58-eef429ed2b34@redhat.com>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Tue, 20 Feb 2024 17:53:51 +0100
+Message-ID: <CANiq72m7-5CuKAKDk=G9sauri_sH0nR2TXi8ye5Eji-qaum3sw@mail.gmail.com>
+Subject: Re: [PATCH v4] rust: str: add {make,to}_{upper,lower}case() to CString
+To: Danilo Krummrich <dakr@redhat.com>
+Cc: Alice Ryhl <aliceryhl@google.com>, a.hindborg@samsung.com, alex.gaynor@gmail.com, 
+	benno.lossin@proton.me, bjorn3_gh@protonmail.com, boqun.feng@gmail.com, 
+	gary@garyguo.net, linux-kernel@vger.kernel.org, ojeda@kernel.org, 
+	rust-for-linux@vger.kernel.org, wedsonaf@gmail.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Dienstag, 20. Februar 2024 15:11:07 CET Daniel Thompson wrote:
-> On Tue, Feb 20, 2024 at 12:11:21AM +0100, Luca Weiss wrote:
-> > As per documentation "drivers are expected to use this function in their
-> > update_status() operation to get the brightness value.".
-> >
-> > With this we can also drop the manual backlight_is_blank() handling
-> > since backlight_get_brightness() is already handling this correctly.
-> >
-> > Signed-off-by: Luca Weiss <luca@z3ntu.xyz>
-> 
-> Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
-> 
-> However...
-> 
-> > ---
-> >  	/* disable sleep */
-> > @@ -201,9 +202,9 @@ static int lm3630a_bank_a_update_status(struct backlight_device *bl)
-> >  		goto out_i2c_err;
-> >  	usleep_range(1000, 2000);
-> >  	/* minimum brightness is 0x04 */
-> > -	ret = lm3630a_write(pchip, REG_BRT_A, bl->props.brightness);
-> > +	ret = lm3630a_write(pchip, REG_BRT_A, brightness);
-> 
-> ... then handling of the minimum brightness looks weird in this driver.
-> 
-> The range of the backlight is 0..max_brightness. Sadly the drivers
-> are inconsistant regarding whether zero means off or just minimum,
-> however three certainly isn't supposed to mean off! In other words the
-> offsetting should be handled by driver rather than hoping userspace has
-> some magic LM3630A mode.
+On Tue, Feb 20, 2024 at 4:53=E2=80=AFPM Danilo Krummrich <dakr@redhat.com> =
+wrote:
+>
+> The rational for a convention can't be that it is a convention. Instead
+> it should be a convention for an objective reason.
 
-I could also try and fix that..
+The rationale __for the lint__ is that it is a very established
+convention in Rust code.
 
-1. Treat 1..4 as 4, so have backlight on at that minimum level? Probably
-wouldn't be noticable that brightness 1=2=3=4. And the backlight will be
-on compared to off as it is now.
+That is what Clippy is telling you.
 
-2. Decrease max_brightness by 4 values, so probably 0..251 and shift the
-values up in the driver so we get 4..255?
+You may not agree with the convention (and thus the lint). That is
+fine, but it is still a fact that it is the convention, and that is
+why I said whoever wrote that Clippy description probably felt that
+wording is good enough.
 
-Or would you have some other idea here?
+> I'm not saying that we should enforce it otherwise, I just think that we
+> should have objective reasons for restrictions.
 
-Regards
-Luca
+Again, you seem to be saying we do not have objective reasons.
 
-> 
-> You didn't introduce this so this patch still has my R-b ...
-> 
-> 
-> Daniel.
-> 
+> However, I also don't see why we should disallow it as long as there is
+> no objective reason to do so.
 
+There are objective reasons to do so and we already explained them to you a=
+bove:
 
+    https://lore.kernel.org/rust-for-linux/CAH5fLggXiXGA_UWCxqqLhMpXe1kepDv=
+2vMG+1jLGaDSzdRHvSw@mail.gmail.com/
+    https://lore.kernel.org/rust-for-linux/CANiq72nVkV3+1rt4Mi+Own6KGAzmvR2=
+jf8fFsp9NBu_gy_ob5g@mail.gmail.com/
 
+You disagree? Fine, if you can come up with an argument that convinces
+us or a good majority of the kernel that uses Rust, then I will
+happily apply the patch.
 
+Personally, I don't particularly care (based on style arguments alone)
+whether to write `return` or not. But I do care about not wasting time
+on litigating particular choices each time somebody does not like one.
+
+> That's actually what the language did already with early-return vs return=
+ at
+> the end of the function.
+>
+> I admit that consistent inconsistency is also kinda consistent though. :-=
+)
+>
+> The language has various characteristics, maybe that's why it allows both=
+?
+
+Languages may allow a lot of things, but that does not mean we write
+the code like IOCCC just because we can.
+
+Nor it does mean that a project should allow every way to write things
+either, _especially_ when it is a very widespread convention.
+
+> See above.
+
+I don't see it, sorry. You said you want to be "explicit", but one can
+very easily argue you are _not_ being explicit by omitting the
+`return` in some cases.
+
+> That's great, although I really don't understand why you think this one i=
+s, but
+> the other one isn't. What's the difference?
+
+We already told you in this thread several times -- the `return` one
+is idiomatic and so on. See the links above.
+
+> I agree, but I also think it should be the other way around. We should ha=
+ve good
+> examples and an objective rationale for things we restrict.
+
+Why? To me, we should have good examples and an objective rationale
+for things where we actually want to deviate from what everybody else
+is doing.
+
+Cheers,
+Miguel
