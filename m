@@ -1,152 +1,133 @@
-Received: from SHSQR01.spreadtrum.com (mx1.unisoc.com [222.66.158.135])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f176.google.com (mail-vk1-f176.google.com [209.85.221.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6632F67756
-	for <linux-kernel@vger.kernel.org>; Tue, 20 Feb 2024 11:46:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=222.66.158.135
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49DE46773B
+	for <linux-kernel@vger.kernel.org>; Tue, 20 Feb 2024 11:47:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708429602; cv=none; b=qyUiJSZSSJteQJDNQofAtAaUs715t8Q0Osa5jjoHZDYrHTbOJ0rXfoTLyEJLM/Yb4AQs2FNyVFl+GavTJCjVaZJ3u+/uze9+ZM02jkiXZBl5j+xskzMEy4YW3muLeCOmbdDSo3N9x+tQbZb9NRwzJw42Ow19rCl7TPZzO2g623o=
+	t=1708429632; cv=none; b=QUK8iFw5oQ6zE0trjNyloNXbOQWR0armoHkbLhAL6RKbRLindgOHRXh11TbHU/IqnQNKL2buIJaV6HP0dWxn7HyBi6OlrPYK4IGp2p0gHEirCwwpgfcfiIn54IPUq5EWNYNXrYuQCiYgFUQUphdqV0VwyJSyslLBRssPxnVdBhM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708429602; c=relaxed/simple;
-	bh=vNZkqBTjlTdoeDozES2fdOqPQvfg/df6N1nv+ImGzOk=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type; b=D0LR96KYGj6T4v1qhxL7fv2GietTxqt4/WtoZ/a2Bwc9dUbXhBweQJHjUqnYXMhjmq+t1Na0dezuqYFXI9einHkWJ269mNi6+l3GHX2u479jmePX1Bt3XiVE9uj6FUdt1JYteUolHS/fTdRNNRV3TJQ1+Kqr9y7PcByU0KHC8oM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=unisoc.com; spf=pass smtp.mailfrom=unisoc.com; arc=none smtp.client-ip=222.66.158.135
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=unisoc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=unisoc.com
-Received: from dlp.unisoc.com ([10.29.3.86])
-	by SHSQR01.spreadtrum.com with ESMTP id 41KBjlSv037342;
-	Tue, 20 Feb 2024 19:45:47 +0800 (+08)
-	(envelope-from zhaoyang.huang@unisoc.com)
-Received: from SHDLP.spreadtrum.com (bjmbx01.spreadtrum.com [10.0.64.7])
-	by dlp.unisoc.com (SkyGuard) with ESMTPS id 4TfHdk5cQxz2KGMyM;
-	Tue, 20 Feb 2024 19:45:14 +0800 (CST)
-Received: from bj03382pcu01.spreadtrum.com (10.0.73.40) by
- BJMBX01.spreadtrum.com (10.0.64.7) with Microsoft SMTP Server (TLS) id
- 15.0.1497.23; Tue, 20 Feb 2024 19:45:46 +0800
-From: "zhaoyang.huang" <zhaoyang.huang@unisoc.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot
-	<vincent.guittot@linaro.org>,
-        Jens Axboe <axboe@kernel.dk>, <linux-block@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        Zhaoyang Huang
-	<huangzhaoyang@gmail.com>, <steve.kang@unisoc.com>
-Subject: [PATCHv2 2/2] block: adjust CFS request expire time
-Date: Tue, 20 Feb 2024 19:45:36 +0800
-Message-ID: <20240220114536.513494-1-zhaoyang.huang@unisoc.com>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1708429632; c=relaxed/simple;
+	bh=sfltWzyTzAdCakZmDcZEIFogRIcduk+6sj+HuSfY4kg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Osj0u4K8CrJip23U9o2g+SqsjcBvxv0LkAxq7qOV1TSOPRGKN/4G2rA4HROctPjdXO/aKa3ufg8j4xdums+JFJLFtbmBeqX/0La37azZ8EgHXLlEGUb4nuZC2LCLPyAjltB/svzF8Syz21mmu+fTfU+T/MAltR8cY4fJUmj+M78=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=RXRUoodM; arc=none smtp.client-ip=209.85.221.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="RXRUoodM"
+Received: by mail-vk1-f176.google.com with SMTP id 71dfb90a1353d-4affeacaff9so773383e0c.3
+        for <linux-kernel@vger.kernel.org>; Tue, 20 Feb 2024 03:47:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1708429630; x=1709034430; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=B6RqJSPI71QVegWMkFBgsdGc3en2Z5VC7xej49dSawM=;
+        b=RXRUoodMky/46TA3ifI9m4cdmmubkLMUjbVt2j1BjP3NydDmcwDriYWaAQO0/xJxaE
+         eipxOt/F4vWi6S73gHgoZJ0cfvp6A+YIVF75POt8gIGNWmny64YWVeVtkDaT1Z+5cqOn
+         OcJATRpmXHneqTp9ddVzHjYXaAEHlxup8teven9V6hntjFo5XNRLItF4nvVD01sMg+Br
+         kapR9HptbOe6EY6jzMv07MZPvDhje50RO2zmENwocN8JXH9OCLsPbBt0hoEeaIvDav70
+         rxLSsDfdlWG0SAHFZ5rgX04391zqsBRgtkPmhHNoqE3s7HJ0BcubGGd8+jBgyhrUuU9m
+         1dsA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708429630; x=1709034430;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=B6RqJSPI71QVegWMkFBgsdGc3en2Z5VC7xej49dSawM=;
+        b=SJOqkCp0RZECPCvvSiVHhy0GmmuPAytlG74tCPh6DTq76gRU1ZKAIzOb5ExxcGRhZJ
+         TYEiscIK7bPTeLvK82byzUkBwUUIlB0bJulpPYl0Xgt29Ti3QxKqInQ/MZ5TVeDCEYGw
+         TCGkQHxkR12Ok3vPN+dxpJw4BXbAbvrzrNSzwqA5wLGe1iVzJxdzyyuGHndqK1QcnUUb
+         aPB181Tutt4YmvQL5nMfQ//4eMp0zi/Tf6JhWtq/gID84+YEGGG+EBeTE3A8xMHD/FFj
+         kC2YOHqkI8tYh1y8wT83KsvlF9R115AX7g+5YCNu65xRAMPKXMwFJe+t+wxpHurvJ4XT
+         5+Dw==
+X-Forwarded-Encrypted: i=1; AJvYcCUphx1OkfRl4IIzAB/hYzLVgf8XLT2+FnSnFjCZUP0PKOdHFSybfSSSS41yA8uFPLxFMojlqGO0iGThVi3ajvx+LQ3S7ppF13DUuemE
+X-Gm-Message-State: AOJu0YxNClQrTfeSxYvZxBaoCVyWEaWaj7IX16aHpo5CakPvZfSA81Uo
+	VTbp+3lqcaHWGrDS6IaqSZB37BqCLB99dT0CSPWG39yOB7Y2ClYaA8KlUxIZKJ0Ef+vFkvZ5RXc
+	vIIHQ0oHWPJLcmzEimz3L8TTC86NjCfGkgiqc+A==
+X-Google-Smtp-Source: AGHT+IGyaajNwux1BxoocFGntAKIhbXCIQZpJVCgvuYjClY4ijqOqxgST9Zp7zbc8nri052IfntLGRfd+b6JFHGT8Iw=
+X-Received: by 2002:a1f:eb02:0:b0:4c7:b048:bb9c with SMTP id
+ j2-20020a1feb02000000b004c7b048bb9cmr4873813vkh.15.1708429630233; Tue, 20 Feb
+ 2024 03:47:10 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SHCAS03.spreadtrum.com (10.0.1.207) To
- BJMBX01.spreadtrum.com (10.0.64.7)
-X-MAIL:SHSQR01.spreadtrum.com 41KBjlSv037342
+References: <20240219202325.4095816-1-swboyd@chromium.org> <20240219202325.4095816-2-swboyd@chromium.org>
+In-Reply-To: <20240219202325.4095816-2-swboyd@chromium.org>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Tue, 20 Feb 2024 12:46:59 +0100
+Message-ID: <CAMRc=Mft4R83NSknze0BMMvJd7Yz3yNGqaBSRVBePgh_S3QU1g@mail.gmail.com>
+Subject: Re: [PATCH 1/2] dt-bindings: cros-ec: Add properties for GPIO controller
+To: Stephen Boyd <swboyd@chromium.org>
+Cc: Lee Jones <lee@kernel.org>, linux-kernel@vger.kernel.org, patches@lists.linux.dev, 
+	devicetree@vger.kernel.org, chrome-platform@lists.linux.dev, 
+	Douglas Anderson <dianders@chromium.org>, Pin-yen Lin <treapking@chromium.org>, 
+	Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Benson Leung <bleung@chromium.org>, Guenter Roeck <groeck@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Zhaoyang Huang <zhaoyang.huang@unisoc.com>
+On Mon, Feb 19, 2024 at 9:23=E2=80=AFPM Stephen Boyd <swboyd@chromium.org> =
+wrote:
+>
+> The ChromeOS embedded controller (EC) supports setting the state of
+> GPIOs when the system is unlocked, and getting the state of GPIOs in all
+> cases. The GPIOs are on the EC itself, so the EC acts similar to a GPIO
+> expander. Add the #gpio-cells and gpio-controller properties to the
+> cros-ec binding so that other devices described in DT can get the GPIOs
+> on the EC.
+>
+> Cc: Linus Walleij <linus.walleij@linaro.org>
+> Cc: Bartosz Golaszewski <brgl@bgdev.pl>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
+> Cc: Conor Dooley <conor+dt@kernel.org>
+> Cc: Lee Jones <lee@kernel.org>
+> Cc: Benson Leung <bleung@chromium.org>
+> Cc: Guenter Roeck <groeck@chromium.org>
+> Cc: <devicetree@vger.kernel.org>
+> Cc: <chrome-platform@lists.linux.dev>
+> Cc: Pin-yen Lin <treapking@chromium.org>
+> Signed-off-by: Stephen Boyd <swboyd@chromium.org>
+> ---
+>  Documentation/devicetree/bindings/mfd/google,cros-ec.yaml | 7 +++++++
+>  1 file changed, 7 insertions(+)
+>
+> diff --git a/Documentation/devicetree/bindings/mfd/google,cros-ec.yaml b/=
+Documentation/devicetree/bindings/mfd/google,cros-ec.yaml
+> index e1ca4f297c6d..aac8819bd00b 100644
+> --- a/Documentation/devicetree/bindings/mfd/google,cros-ec.yaml
+> +++ b/Documentation/devicetree/bindings/mfd/google,cros-ec.yaml
+> @@ -93,6 +93,11 @@ properties:
+>    '#size-cells':
+>      const: 0
+>
+> +  '#gpio-cells':
+> +    const: 2
+> +
+> +  gpio-controller: true
+> +
+>    typec:
+>      $ref: /schemas/chrome/google,cros-ec-typec.yaml#
+>
+> @@ -275,6 +280,8 @@ examples:
+>              interrupts =3D <99 0>;
+>              interrupt-parent =3D <&gpio7>;
+>              spi-max-frequency =3D <5000000>;
+> +            #gpio-cells =3D <2>;
+> +            gpio-controller;
+>
+>              proximity {
+>                  compatible =3D "google,cros-ec-mkbp-proximity";
+> --
+> https://chromeos.dev
+>
 
-According to current policy, CFS's may suffer involuntary IO-latency by
-being preempted by RT/DL tasks or IRQ since they possess the privilege for
-both of CPU and IO scheduler. This commit introduce an approximate and
-light method to decrease these affection by adjusting the expire time
-via the CFS's proportion among the whole cpu active time.
-The average utilization of cpu's run queue could reflect the historical
-active proportion of different types of task that can be proved valid for
-this goal from belowing three perspective,
+Applied, thanks!
 
-1. All types of sched class's load(util) are tracked and calculated in the
-same way(using a geometric series which known as PELT)
-2. Keep the legacy policy by NOT adjusting rq's position in fifo_list
-but only make changes over expire_time.
-3. The fixed expire time(hundreds of ms) is in the same range of cpu
-avg_load's account series(the utilization will be decayed to 0.5 in 32ms)
-
-TaskA
-sched in
-|
-|
-|
-submit_bio
-|
-|
-|
-fifo_time = jiffies + expire
-(insert_request)
-
-TaskB
-sched in
-|
-|
-vfs_xxx
-|
-|preempted by RT,DL,IRQ
-|\
-| This period time is unfair to TaskB's IO request, should be adjust
-|/
-|
-submit_bio
-|
-|
-|
-fifo_time = jiffies + expire * CFS_PROPORTION(rq)
-(insert_request)
-
-Signed-off-by: Zhaoyang Huang <zhaoyang.huang@unisoc.com>
----
-change of v2: introduce direction and threshold to make the hack working
-as a guard for CFS's over-preempted.
----
----
- block/mq-deadline.c | 16 +++++++++++++++-
- 1 file changed, 15 insertions(+), 1 deletion(-)
-
-diff --git a/block/mq-deadline.c b/block/mq-deadline.c
-index f958e79277b8..b5aa544d69a3 100644
---- a/block/mq-deadline.c
-+++ b/block/mq-deadline.c
-@@ -54,6 +54,7 @@ enum dd_prio {
- 
- enum { DD_PRIO_COUNT = 3 };
- 
-+#define CFS_PROP_THRESHOLD 60
- /*
-  * I/O statistics per I/O priority. It is fine if these counters overflow.
-  * What matters is that these counters are at least as wide as
-@@ -802,6 +803,7 @@ static void dd_insert_request(struct blk_mq_hw_ctx *hctx, struct request *rq,
- 	u8 ioprio_class = IOPRIO_PRIO_CLASS(ioprio);
- 	struct dd_per_prio *per_prio;
- 	enum dd_prio prio;
-+	int fifo_expire;
- 
- 	lockdep_assert_held(&dd->lock);
- 
-@@ -839,8 +841,20 @@ static void dd_insert_request(struct blk_mq_hw_ctx *hctx, struct request *rq,
- 
- 		/*
- 		 * set expire time and add to fifo list
-+		 * The expire time is adjusted when current CFS task is
-+		 * over-preempted by RT/DL/IRQ which is calculated by the
-+		 * proportion of CFS's activation among whole cpu time during
-+		 * last several dozen's ms.Whearas, this would NOT affect the
-+		 * rq's position in fifo_list but only take effect when this
-+		 * rq is checked for its expire time when at head.
- 		 */
--		rq->fifo_time = jiffies + dd->fifo_expire[data_dir];
-+		fifo_expire = dd->fifo_expire[data_dir];
-+		if (data_dir == DD_READ &&
-+			(cfs_prop_by_util(current, 100) < CFS_PROP_THRESHOLD))
-+			fifo_expire = cfs_prop_by_util(current, dd->fifo_expire[data_dir]);
-+
-+		rq->fifo_time = jiffies + fifo_expire;
-+
- 		insert_before = &per_prio->fifo_list[data_dir];
- #ifdef CONFIG_BLK_DEV_ZONED
- 		/*
--- 
-2.25.1
-
+Bart
