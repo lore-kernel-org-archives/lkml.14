@@ -1,53 +1,54 @@
 Received: from EUR05-VI1-obe.outbound.protection.outlook.com (mail-vi1eur05on2128.outbound.protection.outlook.com [40.107.21.128])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8863F657CB;
-	Tue, 20 Feb 2024 09:40:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8098664AD;
+	Tue, 20 Feb 2024 09:40:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.21.128
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708422019; cv=fail; b=kRVal6aIvWOm2rI0Pj1P4RLgNGtvI0QegvtqPZorDAKkvo5GmSGyt3eWhGmjgYHpl/zBwmFEo4AmPvZkZX4Rj1Oq6e+isqEVVIfcM9b6G7WcsagK+pOYr43YmVafbyrbBfsavW5RvKCwtYEp+gm2Ax1aCBGC43FrHs2eNQcKKM8=
+	t=1708422023; cv=fail; b=hO/QP+ubFv5vL865OfRiTH/NGzpgFvPyW6/8ZvjLkJb4EBO2bVPStQDa6LMyxvPnZzyfnD4F84HacbIvcOP7/4FkSksiVx1hXG0SRaEC3FlbxkFrMW/FP9gxlneSkkiDmkhMfqQQ48482qakUJUvnvHWScNb3S4nb608affNYSM=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708422019; c=relaxed/simple;
-	bh=ou+V5Mg+cQK/+nx6chzqIuN6MNQRuWnEU7n6yunl2Vo=;
+	s=arc-20240116; t=1708422023; c=relaxed/simple;
+	bh=GB4WBeer0yHTCcaF3Iic4k4romkbTfe6QlJh2+daQM8=;
 	h=From:Date:Subject:Content-Type:Message-Id:References:In-Reply-To:
-	 To:Cc:MIME-Version; b=p7TZkIdCZtPozX48cvcpXKteWqNZmKzeNXey8h5MQPoeG1bI27gfgy/djeBA+sJEF0n8pNDkVKjjCjRQKRpWm0NMmtKJIjaiBAK2Pe0xntYKIiHn7E7tegVhGgJPH5tdRYcDdZsA4E0l21ek9zOujdqKatJIPoAlQPl+P4pl5Eo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wolfvision.net; spf=pass smtp.mailfrom=wolfvision.net; dkim=pass (1024-bit key) header.d=wolfvision.net header.i=@wolfvision.net header.b=Mht8sSpo; arc=fail smtp.client-ip=40.107.21.128
+	 To:Cc:MIME-Version; b=u9FS5Dj59f3biihsepX8ndNveHawzrtBHiJtpDIVtjoe2Pg88HpgOVcBYJieJXyvxyedfOToMlmQcsRcAz/wpMkzTS/byChoFoadZtlyvsHWDueucFLN2TOYJ3rCph/6Tmrh7tjo6NGu/FVVGMmpPixAeDSEagDmERVupVlt1Ec=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wolfvision.net; spf=pass smtp.mailfrom=wolfvision.net; dkim=pass (1024-bit key) header.d=wolfvision.net header.i=@wolfvision.net header.b=nBtK1IhD; arc=fail smtp.client-ip=40.107.21.128
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wolfvision.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wolfvision.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=wolfvision.net header.i=@wolfvision.net header.b="Mht8sSpo"
+	dkim=pass (1024-bit key) header.d=wolfvision.net header.i=@wolfvision.net header.b="nBtK1IhD"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=YIMBx1WolY0Mmn3zYBb35/NEROcPigAlFjtJCYkGmcsREKiZGOOU1Bv0t1VgpaenGgSyT5uue6mbbIxoF6skGzG21GLXqieoCJNWGpWIX1xOZepUINH7NZYVT7P2oJbI/M8fx+pBAF7+yclYcpxn5UvbJIX50I+Q0cyxLcvsLYQ+/fBuJndy2RjVybEmG8+aCxm3WC/r8/5qNc88QqDBp2a795FAkSgSwyJu+cYT6XbHDy2hmryXaLJUsMPCiXpZFkY+Otqk5dpdx7fPv9pqNmBMPKFcfHXCJJ3vWT4iRpNmLyONocNy1KZVCrUFh3DRPvRSTkFecdYjfEiIjfyEpQ==
+ b=EN47JydzJbdy2duF7sLkmZW/pB2zGe30Z2UC5hp70tixoBiOxnuRqnu3JY/sW90zLyQdjQ86/s+cnKKcxz33UM5Eu+VBGLj/cVGq5NoV/YChppJOKkny10ebv6pWPTwtM/R+ZVr+Np3wjXfFSH6ykPD2NKrRCO0smvAm3pjtT53vDsKgDFalkcD9WM8EXHItTyiXDTN2lZwLT1lCeU2/kdwiWliJJaZPJ0IKag0sfuoGaatQ1WQ11C4rThJcXJeP4sMTP3+tiCoVetTcxefwAKr3508CWvsZccMWFAarZKMjyZ+UYB66QIDBjhYHJKn7f+Bgp9/OJ6hExDDLDlIV8Q==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=CYHmj6K+Yw2I1Wxuq6WyAkSBG52uQ7q3/Hw6yocyE/A=;
- b=C48DRYD4xXpUjji6HyfqRl4KvK2apkvObqz/yZZeIxVRq1BiLFV/He4GvCSzoEmpjg2KlowpeCo4eXpAqUHm+KmGV0HQaT90I771lKDB+iEnkyjV/OTOcJvd3N+91q7SIKxwpVVUObFKHkUPYfWU8HJQy2foBqy4NLIYIigSOVpJX8lInkOlBuO5ECdcM5azU6w9UafdId/qVFScLHxqx10lEJcr3XToWaFF6FfmzsssgEuyFTRbAjv5MltSOtA/EmuBWic4YHYRKqBYk0bvjMsxfmr0dLrVoBapAUQAYrbRGE4oBufPpmqnZUZaCfGnDt8WGnwuMQfa1hxqv1WnGQ==
+ bh=svcCWEqKTdaOLj7tlS28oJTep61vaANv4eUsOEJStv0=;
+ b=c97x8K6rlKmzzV+hqBwR/rxXtwkXczHiV5pXcL9Sq/Fl86k3POcJ+WBYI2GLjTFzJ6Z+hqlED1SXvHSopoNERLXZLvpKBWlscrny88oVfcLp/XlbO+g+B5lNAacPVZP9kSf59vVPWmj0qqZpLfbFO+XyXnJX2K6MlBuV5IuR2+6uXZECqlvaqn+EYRIsUPdfH3Qx9khxVDcEYvUQ4MmVdFs7xPnDcr9SRCaoL6vcEYkow3G0ZcFvMnWOuPqYnsY6zbPgLO/CPdRE7wvPVpr0zqnZ7CULKXbf3dsebE9foyqHgSSd2f00sIXy0qP7RVEkju5wM/i5G6V4gJZLl0SFBA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=wolfvision.net; dmarc=pass action=none
  header.from=wolfvision.net; dkim=pass header.d=wolfvision.net; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wolfvision.net;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=CYHmj6K+Yw2I1Wxuq6WyAkSBG52uQ7q3/Hw6yocyE/A=;
- b=Mht8sSpo+/x8xLAavFwI41IlgCbA9Fe5MABFWvwVJzeoo8oxxdOd2Hz2tQVERIiDub8XLS4vR+gGuz7lI80GEYAL0WH8gcN7UnH7n3RtfFupnsRgOts6+S8yYJvfwq/gFILB8d/Hz87wJQ5uPXXL7GYDoHrmm1c5mqsPX7yyUlo=
+ bh=svcCWEqKTdaOLj7tlS28oJTep61vaANv4eUsOEJStv0=;
+ b=nBtK1IhDzsWkevBeMa1QI7aJBH1ciEIIGlR6d24I+QhovXVhK1/OExgsD1H8Mg/cBlr/ncLg3e6kshSlRL0bwod2ihcs7s8B65vp5MyPYmz8ulQjHDfVOyAYEezFe/l7eDWyr3gKGwgCD1NJwD/FcVEWazxmVVKIDEm76UKDjws=
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=wolfvision.net;
 Received: from DU0PR08MB9155.eurprd08.prod.outlook.com (2603:10a6:10:416::5)
  by DB9PR08MB6763.eurprd08.prod.outlook.com (2603:10a6:10:2af::15) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7292.39; Tue, 20 Feb
- 2024 09:40:14 +0000
+ 2024 09:40:18 +0000
 Received: from DU0PR08MB9155.eurprd08.prod.outlook.com
  ([fe80::7409:db60:8209:c9f4]) by DU0PR08MB9155.eurprd08.prod.outlook.com
  ([fe80::7409:db60:8209:c9f4%6]) with mapi id 15.20.7270.043; Tue, 20 Feb 2024
- 09:40:14 +0000
+ 09:40:18 +0000
 From: Michael Riesch <michael.riesch@wolfvision.net>
-Date: Tue, 20 Feb 2024 10:39:19 +0100
-Subject: [PATCH 09/14] media: rockchip: cif: add support for grf
+Date: Tue, 20 Feb 2024 10:39:21 +0100
+Subject: [PATCH 11/14] media: rockchip: cif: make scaler support variant
+ specific
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240220-v6-8-topic-rk3568-vicap-v1-9-2680a1fa640b@wolfvision.net>
+Message-Id: <20240220-v6-8-topic-rk3568-vicap-v1-11-2680a1fa640b@wolfvision.net>
 References: <20240220-v6-8-topic-rk3568-vicap-v1-0-2680a1fa640b@wolfvision.net>
 In-Reply-To: <20240220-v6-8-topic-rk3568-vicap-v1-0-2680a1fa640b@wolfvision.net>
 To: Mehdi Djait <mehdi.djait.k@gmail.com>, 
@@ -64,11 +65,11 @@ Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org,
  linux-rockchip@lists.infradead.org, 
  Michael Riesch <michael.riesch@wolfvision.net>
 X-Mailer: b4 0.12.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1708421995; l=2405;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1708421995; l=2344;
  i=michael.riesch@wolfvision.net; s=20230803; h=from:subject:message-id;
- bh=ou+V5Mg+cQK/+nx6chzqIuN6MNQRuWnEU7n6yunl2Vo=;
- b=UhFzY5PlVTRDbx2zhAFD/+wl3qGXUYSTlRxtBvmokC5BVMJ/wBk1raT8A+xpQ+9ftwWuDQUIq
- es5posc4+TUBUXICGo60PEqVWxC2h8GdBb+5JO3+2rPDwdGcCJfqKx6
+ bh=GB4WBeer0yHTCcaF3Iic4k4romkbTfe6QlJh2+daQM8=;
+ b=SHZ3lQBcHxWUyTWCGHGvLKxIwBok1VxgYrIGqHAVLuRY1y4GwI0PJHWEm1IfQXJaDX0D9YZXe
+ i1ZfP/BQngWCxEWU7qdqcFsiY/HgrxawsbIi6uch1Kk2YHQjeRK2TX7
 X-Developer-Key: i=michael.riesch@wolfvision.net; a=ed25519;
  pk=9ral3sulLe95bLcbaiNXTgUTRiBayRBEFZ5OVIEHp+0=
 X-ClientProxiedBy: VI1PR04CA0128.eurprd04.prod.outlook.com
@@ -82,134 +83,118 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: DU0PR08MB9155:EE_|DB9PR08MB6763:EE_
-X-MS-Office365-Filtering-Correlation-Id: 603c4d07-d2aa-48cf-0fe6-08dc31f7f087
+X-MS-Office365-Filtering-Correlation-Id: 7a234b08-1930-4e5d-6b24-08dc31f7f2fd
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
 X-Microsoft-Antispam-Message-Info:
-	IS5Nu/mrRmrS/DanQQNS8u3lBnPujwwqp4e1yNVuDWfRdjJ120kF53yTmjbecyCeiN4Z7VH6TV1DEnRKgxfMwoMyqvbl43E1zH9AXVaIgEqR5w9wPVrC9c9lr8uyEH+vsO8c8W8ItAmIm7e/0THg5HqQAUajW51eyXUtArS+mkS2YKCwnmZPFp4KSQT2ZYKUBK3/GtTmpavghiTvFEn/+K4E/pRuqPhU2up1YqZHfmc9EeGwhO8JNmlnpulDoAv3h5msV6E/dnGs0CI8TU49LXA8VfKb763wtJdj9k+PUBevT43S48vu145+sHYmr+b/+gC3Rlx6fMZWe9dkKISVTthDjD5wyUs4P1t0Tj3/pmGnRYBXzl51LePW1edm8wlIGj0clLMVFdhQAfBwq5J5RNK83F56oHeZesDcWFEpN1a3v7mzQZ/El9T5gYgJK1AUHfg+WALVQcpc3kI3/ZOag5eIuAUH7tHKLYAFj1k+FnaL9qvy6CE10FV43Pw1m1IJN2vc0XLqFlj2lDZqh9/c00hcZ/h6NG+wo4F4HbwS3oRyIsu4pQYAR9ciPZ1V55Hx4eFWcPUQonjn/Ee08tDMlHReWPsOZp9JRBEXK2YpsOo/q8gANloElcpu3w2fILGK8+cpaKqTU+d0v8eszYXwGA==
+	b8JWzBPt2mAa2u+z/mMufM0zRJ7Py03CYd/Yc4MAHzTXnmziW3+ZjaFKfpY8HopE/A9TuoGJHz0jNwlkImv3R1o7onN2+NL+VTraO4q1KiumQM4oeoJqQDZ7Jy5dUK2b11tk+7mr6ey7dDHV2ZKFyV+HUyeW6xex61tpA6mUC4L1XjimlAXdX/R53Nhe60Ivlc0Kc6kpxaRE5rId3K0gAeJyV13WSGyeJgqWO8vkHhy99SmOxSfG5CgbUirhsOTBBFRFs6XGHk1vFJ1xP6JAA8+KcnoWxkCaWoJi3JpPgDqFu9jSfadVxNtnvDn21yhlmvyk9GyVrmPTKbfEY+synxcYkfx5IPNzwIod8PW9aPIcrhTZ9DuLL1pNC+cL2Y2bJFoXiqihzbNp3fNbZTuSAQhQexzVXrIBV/wMqGo6n1ev64wtiIfhA+Oxj+N3WrbhHt55l1YbpUL5rVKHE+LNDFnzZr7bgtbkjOai9NbJ1tAcViD7COvpvAj3PVXJ5qE87Fiyw5k8X0yebi7xhCxpODReg6yi7uHwkYdH+7f+DbxxyjrTotgPdSpJEXTia7bxDNtQN4jfNscDSGMzgPilhA4Xah6sg+MvIjOn5YBcNZbBoDs0PY/Uvwh9YXtnh+J4x0XMqJUci7JhaApRbeWohg==
 X-Forefront-Antispam-Report:
 	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DU0PR08MB9155.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(921011)(38350700005);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?dkg4NEpuVzJFbWpwN25YcTJzanBtc1N6dTBGcGNyRU5LTnlUeWc2RmFUMzRu?=
- =?utf-8?B?aXk1ZDFMclk2NlJmUG0vd3VYaFhBWEtCMWJtS24zTlhOS2orQlNuM1J3enZ3?=
- =?utf-8?B?V0ZzczlUK3FzcXFiN3lDU0R2VmhXVzhMb0hCTWNxV2ZWV2YyMXVGTGdmMTVL?=
- =?utf-8?B?ZlJ0S3BYOW5nUnduUnNaN2ZIVVBSbTNmSVpjd1lIZmt3RzJWRmhyOVR2bHdi?=
- =?utf-8?B?bjhUc0VOMit5c0tweTQvRjc0TzFUdm9yMTZQRzlLb2txWVN1V0hmZFpHS3hS?=
- =?utf-8?B?K000OUxtR1NIaG1WVkMwWW8wSXdEZ0JISHdMc1lMbFZFMUxDL2VCT1BKTTM0?=
- =?utf-8?B?R0x5akhnLzkyTUJTTVFQMlZtRTY1SnFwRXR0Y1grUUxwdENWMzZ1U3hEZFpy?=
- =?utf-8?B?VFFtWjVYWmxzZXBaNGZsbjJuWVFOd3QwUzRZYXVkNG9NNkVHQWgvakc4NFJR?=
- =?utf-8?B?UnNJckhHMEtNTXNUaUdxMEZJeVBKaHEvU3JIK3FZUzBrUWk3QVp2YUJyK3Ax?=
- =?utf-8?B?LzlITG92dWQ1OUVxajBHc2YyTENQSjI0UWNaeGVjVnlJemlYdkJJTUdpNmlR?=
- =?utf-8?B?aHZaRzJTRFhlZEhLU1k5cUpQN29uaGRjdldhWC9RWmdodEFOK28wcnd5T2tH?=
- =?utf-8?B?OGdId0FMWkZXQlBXYjdUUHNZV3RjOTF2c0hucitNS1lNdndWeVRNUXZ2clRI?=
- =?utf-8?B?ZVIzMHlINWFOcE1Kdk1jNG15MzFyZktxSUkwUXhGMjRMb3hZNWl1anRxUHY1?=
- =?utf-8?B?Rk9oTlhISFBhb1E0L0ZXRWhJeG5yWm5FTWxUSnNaWkF4eUtabDQrM0ZKeklN?=
- =?utf-8?B?RDhvMW9PVGVtTW1TbjVaV1ZPSWZpcGVmUDhjOExaN0I2c25NbUROWXlNRnVq?=
- =?utf-8?B?R3dpQ0JQdXJHVFc1SWhqRUlLUTZrOENpRFU3YnA5Ry95Ujd1ak12S0FSaldJ?=
- =?utf-8?B?dGt4d05WeFJyVXF3R2RaOTI1NGtkaU55UXVrZDFlTzVjdXRYYjJraEpuU3Rj?=
- =?utf-8?B?ODFKWGpHcDVhbW9SUmZ5K3JyTFhBaVZhWm91VXQ5THNWR1VHVXFkUXppTWtv?=
- =?utf-8?B?VlNpTW5CNFgzd2oxOVpGZzVYRE1OUUFNUU52NkpPRkZqYTdKZkJVL1ZxV051?=
- =?utf-8?B?R0FRUVNnVGR6OW5DakpFMTVTQmplR3Z2YzI3M3BHRUM0QStiYW1jRFZlNHdl?=
- =?utf-8?B?eHhrSlFoZ1R5NnhjSzlnMWNlRVh3VW1NUTlqbUpYWmsvTnFaNXU4aE0xVjVy?=
- =?utf-8?B?a080Unc2eFdxU3lOazlSOE5rL0RHYVh6Zkplc0F6ZmVWRS84NFlLL3hvWnRt?=
- =?utf-8?B?YmVkYkhFSXpnOWEvSEdzL21Ga0twNTl2VHQ2VHNVbDdkb3o0clRodm9wVm9x?=
- =?utf-8?B?Q1pacGRJQ20rV1pIZW9INUpkZ04rRk5wK3hqVEdkR3ByN1hBelVqaXNaK3lT?=
- =?utf-8?B?WUhMbk5qVVlUNElWUzUxaDBqcWpXc2J2MDlEUG9KVUJGbVFGMUxvbENqQjVO?=
- =?utf-8?B?RGJwMklmZWdRQVl4MU14cmxTOTU4SEwvRDJZc2tCeWxiN2VvNTJjMENHRTNT?=
- =?utf-8?B?UDF2ZHo2Z1lOa3pIVmdvRXlTL2xucFI2ZjJmTUdKSUxkM25sd0FwOE45YW9O?=
- =?utf-8?B?dktxbDJsNERlMjRqc3NPelE2UDR1NitIY1V6UDM0WEhYVmp0T2tXWmFtMzFK?=
- =?utf-8?B?NGM2UUluc0JkNitaVjErdG42TEw5ZzQrbVpEWnozK2ZHRGlQdS90UkN3VUxK?=
- =?utf-8?B?N0oyMDBwa2l1WDBzdWJ5K2hGRmhZTjBsUEdRd0lUbUZxc3puTjlCbjE5b1NP?=
- =?utf-8?B?NlM5Q2JoOVh6dXNHSnd0c0JDd3NYZmZBSTB4ZjF0eTVJV1RUd2hTQXhJRHZG?=
- =?utf-8?B?Z2pjcWh4NTNDTFlHTWtWTW9WZE9FU3E0Z0ZIM1NrSzdtRVlQWlRtUzRjMENS?=
- =?utf-8?B?VVRIWHhkblhsdmR3alh3R3ZvbUQ0eWJoNnltVll2RWMvSktvL3dFR250c2hp?=
- =?utf-8?B?V2pKME5UdFNkWEtuR3lyTkJtbk16SlFWRUVKYmVPVVVrdDFhU3dHMnFwbGdO?=
- =?utf-8?B?anZxbU1Dck1uaWpNTXRhbWFqOGRaejFqSVpTL1RTYTJDVVBKOC9hMTd6U1JK?=
- =?utf-8?B?Ump0SklFV3RuckpyTHd6UDdCOGRveTdhRjhGT0kzQ295SVhFUGMxUVRaQVJ1?=
- =?utf-8?B?aEE9PQ==?=
+	=?utf-8?B?blpaT1B1TERZYXhDL2pJTXlOUG00b2hQeUtxQTNrNzNCRHdLdFlFN1E4dTk2?=
+ =?utf-8?B?cmtZSDFhTm82Sm04T0RPbFlnM0lvS05kRHNpMlR3eVNncTAyTFk2T2paUlJz?=
+ =?utf-8?B?dnhod3lpYStWR1dyTWdaOEVVa29OSUJ6aXBYclB1SVgwVWxyT2l0YXlSUnho?=
+ =?utf-8?B?eEZQWU96WERFT1FYeU10cWUzWHFDVUdZM0NHU3RhWFNtdHB0aXNVbnVSbXQx?=
+ =?utf-8?B?ZDBjNThYblM1NEpqTXdOTHdjK3BUYUQzS1lPM3hvRW14WXN4TUdScGJiZzdi?=
+ =?utf-8?B?bVFTUlRHcVoyZG5icHNaUW9kbHJhRG9aRzcvZzRWSFl2czNxeG5BTUt1ZmFk?=
+ =?utf-8?B?ZHBKc3Q0aWY4aEZPcVhxYTJjQUcxd0RBKys1S0lJVTVIVEdyc3dVcDhOdmdC?=
+ =?utf-8?B?M1haZ3ErWHdVNzIxTU1wdEZNcnZCVVdLOHoxZTRoOWZTRjVOK0Rad21LVmlG?=
+ =?utf-8?B?ZzFpZFZESjkvazRlTkh5L2ZCVFFjdENwZm9qU1BwOWlVTzhyRytXTDBsQnpK?=
+ =?utf-8?B?c1BlNHdEQ3MwdGlzR0hpS1JmRkxQbkkzQVR0SFNZOGtwNW5TbTh4czQxUkNG?=
+ =?utf-8?B?WlpNOUhRTXo1dTdhQ3F2QWNka0VyL1hDM0xNSDBXRURWNWZQaVk2eFd0WUZW?=
+ =?utf-8?B?Mnd6RE8wdEExeFFhMThwOW5qU1VKdFR2WmdGMHN1VTI3Q1pTM3QwRGZOYm1Y?=
+ =?utf-8?B?cnJXT2gwbmU5dnc0dEFlZ3FGT29nWlZod3p2L1kxVWxnWTJHbFhYZTIrZUNy?=
+ =?utf-8?B?UmdpOGFUNFFTK0paK0xRTDQvcXpxWDA3cUVuT0Ztc3VtcFBnU014aThrTXU3?=
+ =?utf-8?B?VTVFQUNuVmFRZ2k0UUJjM3NUdkZ0eDFRaDZSbFdhcE04MUIyZzJvL040aDkv?=
+ =?utf-8?B?WnNPWFdDYURxdHhUYktVSVZKYmxFR0krS2pMRFpwT2ZaTW9xbFZLQ3JoanVn?=
+ =?utf-8?B?SVF4dUZEbTdMYldkUDAvanZnMDRib3VSekluVlo0QXM4a1ZDRXFPaE4vN0Zl?=
+ =?utf-8?B?UGhMY1c5b0puMm1nOURLYmVyZGlTUjJrdHczeWt2dnpOeUc2ajBWQjNGM09F?=
+ =?utf-8?B?U1VENVdoQ0Njb3cwUFEwY1ptd25qZkc3c3Bpc21hamx5SzNVOFFZRXA0aWFl?=
+ =?utf-8?B?UXpmWTNRWUFUKzduam1mSmt3b003a0xyYXg1VkV4cUthUElPREI0aUVtcVlt?=
+ =?utf-8?B?eDZRVnBVNi81RjRtSjNwZzdaQVZnbXNDZ25OSzcxTzhIRGxNSmhNcXlFNTVy?=
+ =?utf-8?B?YzdFb2I0V1RIR1pJL0lUaG1keW45V1RGRmRvSVVoTm5JYXNsNzR5K2p3WjNN?=
+ =?utf-8?B?Tk55cTBnUVFoWVBHM1BZZjhsN3FNZGVEd3Vlc09oTWE3SEN3eExFczgvME02?=
+ =?utf-8?B?azV6U0QzblJoVEpLQzNnSWVhWEJnN0NSQkRLVEpwbmxpTnVxRDNkL2Y0YStV?=
+ =?utf-8?B?SXFaK2xNZ0NrcWFScW1LZG5EZ0RSUVpRQTNHeE0wS2dOZ2h3d1p5d1dvUjlI?=
+ =?utf-8?B?N1NEZEt5NFgrS1Z2QTQ1bUlETmZ2MjgxTE1DSENJclhvZVRRNHlXOFdUYW1x?=
+ =?utf-8?B?bVR3WTNMUHBESzgxeStzR2dlOCtBWTJRblIyTGtydVljN2VVa1UwY2FrRzN0?=
+ =?utf-8?B?YnJPMEY5b3dEaUwyOVNRNXZrQXlFdlR0OEg3OVVNOXVPUW5wcEkwQjVSNWt4?=
+ =?utf-8?B?Y0FWdGJzaGsya1grellVVmRPVjUzV0J4Uy9nckxBQisram8yWkNJMmptalYw?=
+ =?utf-8?B?bjdIWlFBdFErRWhPUW9tZUtDVmNEUnV5VE0ybHl1SDgyemE1QmxRa2dlcm1q?=
+ =?utf-8?B?aGI1N1NzMWU2M09XRnhaQ2RoTm1HN0VzZi80SEZVUlNKS3NxbCtpOXJmMmdT?=
+ =?utf-8?B?ajN4YWxOeXhEU24zb2tqTmhxblNsS3BJYUs0UXBZZjh3L3Y0MVFnWmtXblcr?=
+ =?utf-8?B?Y2s2b0pnenJ1SEhFR0lNNTJoRnd1VUJWTFl2bm03eHA3L3NwYThOMXp5Y3VM?=
+ =?utf-8?B?bUJrVFdic1NXWDJiMENOUlpTWHBjWG9wRVlxbzRVVXFmNWlMK3VHOEtOblla?=
+ =?utf-8?B?d0pnamVrZHg4L2VXTlBIUnAyYUhtcitCTWo4VFFucURyVmdZNjF6d2ExZTUx?=
+ =?utf-8?B?MUYzeTNta0piTjVRbmY1cHAwYW5zUkloUHBmcC9WR1dtY2ZSUG91SmRPZmxu?=
+ =?utf-8?B?a2c9PQ==?=
 X-OriginatorOrg: wolfvision.net
-X-MS-Exchange-CrossTenant-Network-Message-Id: 603c4d07-d2aa-48cf-0fe6-08dc31f7f087
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7a234b08-1930-4e5d-6b24-08dc31f7f2fd
 X-MS-Exchange-CrossTenant-AuthSource: DU0PR08MB9155.eurprd08.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Feb 2024 09:40:14.2829
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Feb 2024 09:40:18.3847
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: e94ec9da-9183-471e-83b3-51baa8eb804f
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: sjtYwmDdpx0UER9CPusNJeZ77948ImjIjKQQvcGaxGMurQO96mwSIb4Gsaq1dZ49MDGiQiHAcQ0dG5JitktTir3Ren2p+IuUuol0Pr/YXnY=
+X-MS-Exchange-CrossTenant-UserPrincipalName: Wv2d/9lCYFsPXsR/cp93EfQWyJrewqqE0Tk7TR35KsNYshZq5YvHSH6YzoU/lQ2pB6znpVbhMMVPm7DaKd8xr9rT2fvhiZwBaV/472BMTeM=
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB9PR08MB6763
 
-Some variants of the Rockchip CIF require the General Register File
-for video input block control.
+Not all variants of the Rockchip CIF feature a scaler unit. Add
+variant specific Boolean variable to account for this.
 
 Signed-off-by: Michael Riesch <michael.riesch@wolfvision.net>
 ---
- drivers/media/platform/rockchip/cif/cif-common.h | 3 +++
- drivers/media/platform/rockchip/cif/cif-dev.c    | 7 +++++++
- 2 files changed, 10 insertions(+)
+ drivers/media/platform/rockchip/cif/cif-capture.c | 8 +++++---
+ drivers/media/platform/rockchip/cif/cif-common.h  | 1 +
+ drivers/media/platform/rockchip/cif/cif-dev.c     | 1 +
+ 3 files changed, 7 insertions(+), 3 deletions(-)
 
+diff --git a/drivers/media/platform/rockchip/cif/cif-capture.c b/drivers/media/platform/rockchip/cif/cif-capture.c
+index b26e6023c2b0..dd5c45f28cdd 100644
+--- a/drivers/media/platform/rockchip/cif/cif-capture.c
++++ b/drivers/media/platform/rockchip/cif/cif-capture.c
+@@ -365,9 +365,11 @@ static int cif_stream_start(struct cif_stream *stream)
+ 
+ 	cif_write(cif_dev, CIF_FRAME_STATUS, CIF_FRAME_STAT_CLS);
+ 	cif_write(cif_dev, CIF_INTSTAT, CIF_INTSTAT_CLS);
+-	cif_write(cif_dev, CIF_SCL_CTRL, (fmt_type == CIF_FMT_TYPE_YUV) ?
+-					 CIF_SCL_CTRL_ENABLE_YUV_16BIT_BYPASS :
+-					 CIF_SCL_CTRL_ENABLE_RAW_16BIT_BYPASS);
++	if (cif_dev->match_data->has_scaler)
++		cif_write(cif_dev, CIF_SCL_CTRL,
++			  (fmt_type == CIF_FMT_TYPE_YUV) ?
++				  CIF_SCL_CTRL_ENABLE_YUV_16BIT_BYPASS :
++				  CIF_SCL_CTRL_ENABLE_RAW_16BIT_BYPASS);
+ 
+ 	ret = cif_init_buffers(stream);
+ 	if (ret)
 diff --git a/drivers/media/platform/rockchip/cif/cif-common.h b/drivers/media/platform/rockchip/cif/cif-common.h
-index 34da800a0504..ae8fedeadd1c 100644
+index 84a7545422e1..e5500705eee2 100644
 --- a/drivers/media/platform/rockchip/cif/cif-common.h
 +++ b/drivers/media/platform/rockchip/cif/cif-common.h
-@@ -11,6 +11,7 @@
- 
- #include <linux/clk.h>
- #include <linux/mutex.h>
-+#include <linux/regmap.h>
- 
- #include <media/media-device.h>
- #include <media/media-entity.h>
-@@ -96,6 +97,7 @@ static inline struct cif_stream *to_cif_stream(struct video_device *vdev)
- struct cif_match_data {
- 	struct clk_bulk_data *clks;
- 	int clks_num;
-+	void (*grf_dvp_setup)(struct cif_device *cif_dev);
+@@ -100,6 +100,7 @@ struct cif_match_data {
+ 	const struct cif_input_fmt *in_fmts;
+ 	int in_fmts_num;
+ 	void (*grf_dvp_setup)(struct cif_device *cif_dev);
++	bool has_scaler;
  };
  
  struct cif_device {
-@@ -103,6 +105,7 @@ struct cif_device {
- 	int				irq;
- 	void __iomem			*base_addr;
- 	struct reset_control		*cif_rst;
-+	struct regmap			*grf;
- 
- 	struct v4l2_device		v4l2_dev;
- 	struct media_device		media_dev;
 diff --git a/drivers/media/platform/rockchip/cif/cif-dev.c b/drivers/media/platform/rockchip/cif/cif-dev.c
-index c4282449a93d..b75b76508793 100644
+index fb80e8f8dcab..e7b5ae5804ca 100644
 --- a/drivers/media/platform/rockchip/cif/cif-dev.c
 +++ b/drivers/media/platform/rockchip/cif/cif-dev.c
-@@ -11,6 +11,7 @@
- #include <linux/clk.h>
- #include <linux/delay.h>
- #include <linux/interrupt.h>
-+#include <linux/mfd/syscon.h>
- #include <linux/module.h>
- #include <linux/of.h>
- #include <linux/of_graph.h>
-@@ -103,6 +104,9 @@ static int cif_subdev_notifier(struct cif_device *cif_dev)
- 		goto complete;
- 	}
+@@ -282,6 +282,7 @@ static const struct cif_match_data px30_cif_match_data = {
+ 	.clks_num = ARRAY_SIZE(px30_cif_clks),
+ 	.in_fmts = px30_in_fmts,
+ 	.in_fmts_num = ARRAY_SIZE(px30_in_fmts),
++	.has_scaler = true,
+ };
  
-+	if (cif_dev->match_data->grf_dvp_setup)
-+		cif_dev->match_data->grf_dvp_setup(cif_dev);
-+
- 	asd = v4l2_async_nf_add_fwnode_remote(ntf, ep,
- 					      struct v4l2_async_connection);
- 	if (IS_ERR(asd)) {
-@@ -191,6 +195,9 @@ static int cif_plat_probe(struct platform_device *pdev)
- 	if (IS_ERR(cif_dev->cif_rst))
- 		return PTR_ERR(cif_dev->cif_rst);
- 
-+	cif_dev->grf = syscon_regmap_lookup_by_phandle(dev->of_node,
-+						       "rockchip,grf");
-+
- 	cif_stream_init(cif_dev);
- 	strscpy(cif_dev->media_dev.model, "cif",
- 		sizeof(cif_dev->media_dev.model));
+ static const struct of_device_id cif_plat_of_match[] = {
 
 -- 
 2.30.2
