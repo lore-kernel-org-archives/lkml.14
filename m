@@ -1,323 +1,144 @@
-Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2938E77625;
-	Tue, 20 Feb 2024 15:36:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD3A7762F5;
+	Tue, 20 Feb 2024 15:36:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708443368; cv=none; b=HUGkIu8NLKXKggUyHN2IwPXcdvGB/4lIn0p54p0zYwW0PYFQfvgT4iq7wxh7RjMlinhOxZvCAFTRpPwBEN0VxRMrAgb/ZNQoxmXKDsW6roncZGoAErxnJ3ldH5HYrlIKQlJMo4XME97OEYk1oaWCwaS3kyg+AO0MZbcagBaYub4=
+	t=1708443378; cv=none; b=AYeWnLs+hplupcjEH8X0u7GK+j7Rh5dqSrrjOE+6E6DoyRQCXtq8iXHBkos3LZZCOabgqRv2w1aXqQyDUtLXah9RG/qk9GaSQ178WqDRi1m6i0MjOhGU1F27RmdxnnK5//SnEDjLIudFuLgjZPvSHp57WsxuzguQgne7iVIZ36E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708443368; c=relaxed/simple;
-	bh=yngViWPOAMHAODTTAwgLH5RffJRA3vHYGb/gjQx44BA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=QN7GKtoX+dGvsHYMkcGA8hxRL7bacb9StkJDJoXCa5Mmj4KhQKu+fSEEuGMSzE5/XbqJTFvLcf1vtBhh4tteC2wUw38tAk3YToWQ5GrdiCMpylsApjX28D5vsBNvIVnWFc0/qoD1cqpg72kGCUlq7YfpcNduyRmNSsRrvbMzx6g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=e+DntWSc; arc=none smtp.client-ip=209.85.208.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1708443378; c=relaxed/simple;
+	bh=91doaSK1OA6gFTh8JNp1z7riF9y+l3+n/Ojx52n96AE=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=D2jq/H4QH8URjYkWz8EccMDLvxPk/OzbW0qxaOdbSTRSTtaqOFCqbS5+QlHxdQqFYYkCVjLQc405hfBHjijkC2lw8YawbZK03xFxmYW3qhEfvC+5TNfFz4wHACRImuYOTzxIOgBrlg28wFrbUEosGCticl0kakoeP1JfIY/PgxM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Xt87XlPg; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e+DntWSc"
-Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-564d9b0e96dso706754a12.2;
-        Tue, 20 Feb 2024 07:36:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1708443364; x=1709048164; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=geyL8OfscOjPv2YlXwfaUvMZU6dkavwR22sE4+gZy1A=;
-        b=e+DntWScsguJci0a0JpZECFHbaTgHAckoXtbSdNvSMvbmRL/SrH218OgmAdETxiofY
-         K3+8lLN0XV4k8n0fNgSXjPS8S+muVjlPiEOgT03meAPZuvBb7JG2Apu30+w4ozZg2kSW
-         u6rAisvA2HnczDzJF9KUbNV94IwiTocpcer94ZWZmyWd+HNGudSqw8npYubNlnzii5We
-         ckCs2G1Ly5FFUq5mXOCFFfXAkKnB8tIVLtQg+HDrtN9oKNsSInm+DQ9sBj1k5/ir0ae8
-         5HsoLekMEdJIO0tCuGOc/lDvznwJyWxWNkovi25VNuqCDd+aQhpxrc/7Rmh1j8tGfcuH
-         KQRg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708443364; x=1709048164;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=geyL8OfscOjPv2YlXwfaUvMZU6dkavwR22sE4+gZy1A=;
-        b=Epf/jzBqEi0qrBilTsD1fVWSMOA5TkQpJKkEqznh8F2F8NuD0IbnCo2rRfCPmfDKTa
-         ZKpUFt8TtEuhC3Z8dWAipmHiUI+QR8NrvP4dl2vjT0EE1IW15vych1MnVmgxtr47qAhF
-         8mMmkb4cWD1/8m5p8abNc/eAX4TpNmACsI8Dvruke/6FOTlpS9XMzZZSWWYhoUmo8xVe
-         l0qCpEes5y7PriCto2GFAvUmuZw8Ol2SqzC8mYcctriaV4tRBH7T08V+lTJTpmrGIo7p
-         LHmJQOv+RP4uZF8WIB0Ph5guCcsouMdMAhOmWXo+TO7TqP2GRKfXXOP0Wx3uLnKQdVLV
-         94Pw==
-X-Forwarded-Encrypted: i=1; AJvYcCUBDsJPsvPVAKNU79NNaRL2n8C64YQTmUHXjoYpl1WLKkBxywxMvkRfzAwnXn3B5sjTloOecXNHth0Pe+dpPFtJqZma+6nSsuHS/0eWxgJIdm0kpcUyeGJa3Pu8zOkV2XfHDAj0RFuwdTC9QCjRt3Ob1d9BbzDbIh8eS+/hHbVfemFeJA==
-X-Gm-Message-State: AOJu0YzaiXbphNxr/8DUqJC5VV4bY8XJnRFS/MkpAWJjzBPbNmVLgQ9u
-	k5MjuTuQMaY8VH7VhTctMtDOfV1xwaQg3yADrnb4uIQYuFSiuiorod7LEGqQUa+h3hIY
-X-Google-Smtp-Source: AGHT+IGLMDm3ARrwgLRHtJQorhTGCrr++X65+2urQqfqV1DRT2pDJexdtFgo/FBtACLc10UWEePyIA==
-X-Received: by 2002:a17:906:2a90:b0:a3e:1a96:a22c with SMTP id l16-20020a1709062a9000b00a3e1a96a22cmr6049808eje.38.1708443364117;
-        Tue, 20 Feb 2024 07:36:04 -0800 (PST)
-Received: from HYB-hhAwRlzzMZb.ad.analog.com ([5.2.194.157])
-        by smtp.gmail.com with ESMTPSA id r22-20020a170906281600b00a3d777aa8fesm4039024ejc.69.2024.02.20.07.36.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 20 Feb 2024 07:36:03 -0800 (PST)
-From: Dumitru Ceclan <mitrutzceclan@gmail.com>
-To: 
-Cc: Lars-Peter Clausen <lars@metafoo.de>,
-	Jonathan Cameron <jic23@kernel.org>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	linux-iio@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Ceclan Dumitru <dumitru.ceclan@analog.com>,
-	Dumitru Ceclan <mitrutzceclan@gmail.com>
-Subject: [PATCH v5 5/5] iio: amplifiers: hmc425a: add support for LTC6373 Instrumentation Amplifier
-Date: Tue, 20 Feb 2024 17:34:53 +0200
-Message-ID: <20240220153553.2432-6-mitrutzceclan@gmail.com>
-X-Mailer: git-send-email 2.42.0
-In-Reply-To: <20240220153553.2432-1-mitrutzceclan@gmail.com>
-References: <20240220153553.2432-1-mitrutzceclan@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Xt87XlPg"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 49D2FC433F1;
+	Tue, 20 Feb 2024 15:36:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1708443378;
+	bh=91doaSK1OA6gFTh8JNp1z7riF9y+l3+n/Ojx52n96AE=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=Xt87XlPg+sBVe/zFZQCf4sXMZurtA7DkT5+P1M9iXF6H7MkHXOCIc96L8nToM/aB1
+	 XTBI8Fjko4VDW6TMgoLavbmY02zoFHGL1fyC0X9mAOIXxtcccMto//W06TAQR4zYQ7
+	 00gjltz55RDh93J/d2WlzSbzGe/TGoS5MZT0ySkAbtpBdmMR2ltKVU1HGzoXw3FJS7
+	 r5g3aNP4LZd7JkN6Modqhwx8cFGaVnEweIUFABx7JO8AM0q1qhPOQpBy8pUBRSsRKG
+	 tCaL0H51IaS2708iFrkXTylC6CxfG9DKZe100gmxZbM1nrRkhCiosXZeEH4+Aggk7t
+	 Hhw9+VxL47IUQ==
+Date: Tue, 20 Feb 2024 09:36:16 -0600
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Stephen Rothwell <sfr@canb.auug.org.au>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Alex Williamson <alex.williamson@redhat.com>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	Linux Next Mailing List <linux-next@vger.kernel.org>,
+	"Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>
+Subject: Re: linux-next: manual merge of the pm tree with the pci-current tree
+Message-ID: <20240220153616.GA1481509@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240214103008.0bb12069@canb.auug.org.au>
 
-This adds support for LTC6373 36 V Fully-Differential Programmable-Gain
-Instrumentation Amplifier with 25 pA Input Bias Current.
-The user can program the gain to one of seven available settings through
-a 3-bit parallel interface (A2 to A0).
+On Wed, Feb 14, 2024 at 10:30:08AM +1100, Stephen Rothwell wrote:
+> Hi all,
+> 
+> Today's linux-next merge of the pm tree got a conflict in:
+> 
+>   drivers/pci/pci.c
+> 
+> between commit:
+> 
+>   41044d536068 ("PCI: Fix active state requirement in PME polling")
+> 
+> from the pci-current tree and commit:
+> 
+>   c0ef3df8dbae ("PM: runtime: Simplify pm_runtime_get_if_active() usage")
+> 
+> from the pm tree.
 
-Signed-off-by: Dumitru Ceclan <mitrutzceclan@gmail.com>
----
- drivers/iio/amplifiers/hmc425a.c | 124 ++++++++++++++++++++++++++++++-
- 1 file changed, 120 insertions(+), 4 deletions(-)
+Just FYI, 41044d536068 is now upstream for v6.8, so the conflict will
+be between upstream and the pm tree:
 
-diff --git a/drivers/iio/amplifiers/hmc425a.c b/drivers/iio/amplifiers/hmc425a.c
-index 77872e2dfdfe..50c86c2d28d7 100644
---- a/drivers/iio/amplifiers/hmc425a.c
-+++ b/drivers/iio/amplifiers/hmc425a.c
-@@ -2,9 +2,10 @@
- /*
-  * HMC425A and similar Gain Amplifiers
-  *
-- * Copyright 2020 Analog Devices Inc.
-+ * Copyright 2020, 2024 Analog Devices Inc.
-  */
- 
-+#include <linux/bits.h>
- #include <linux/bitops.h>
- #include <linux/device.h>
- #include <linux/err.h>
-@@ -12,6 +13,7 @@
- #include <linux/iio/iio.h>
- #include <linux/iio/sysfs.h>
- #include <linux/kernel.h>
-+#include <linux/math.h>
- #include <linux/mod_devicetable.h>
- #include <linux/module.h>
- #include <linux/platform_device.h>
-@@ -20,10 +22,24 @@
- #include <linux/regulator/consumer.h>
- #include <linux/sysfs.h>
- 
-+/*
-+ * The LTC6373 amplifier supports configuring gain using GPIO's with the following
-+ *  values (OUTPUT_V / INPUT_V): 0(shutdown), 0.25, 0.5, 1, 2, 4, 8, 16
-+ *
-+ * Except for the shutdown value, all can be converted to dB using 20 * log10(x)
-+ * From here, it is observed that all values are multiples of the '2' gain setting,
-+ *  with the correspondent of 6.020dB.
-+ */
-+#define LTC6373_CONVERSION_CONSTANT	6020
-+#define LTC6373_MIN_GAIN_CODE		0x6
-+#define LTC6373_CONVERSION_MASK		GENMASK(2, 0)
-+#define LTC6373_SHUTDOWN		GENMASK(2, 0)
-+
- enum hmc425a_type {
- 	ID_HMC425A,
- 	ID_HMC540S,
--	ID_ADRF5740
-+	ID_ADRF5740,
-+	ID_LTC6373,
- };
- 
- struct hmc425a_chip_info {
-@@ -34,6 +50,8 @@ struct hmc425a_chip_info {
- 	int				gain_min;
- 	int				gain_max;
- 	int				default_gain;
-+	int				powerdown_val;
-+	bool				has_powerdown;
- 
- 	int				(*gain_dB_to_code)(int gain, int *code);
- 	int				(*code_to_gain_dB)(int code, int *val, int *val2);
-@@ -44,6 +62,7 @@ struct hmc425a_state {
- 	const struct	hmc425a_chip_info *chip_info;
- 	struct	gpio_descs *gpios;
- 	u32	gain;
-+	bool	powerdown;
- };
- 
- static int gain_dB_to_code(struct hmc425a_state *st, int val, int val2, int *code)
-@@ -58,6 +77,8 @@ static int gain_dB_to_code(struct hmc425a_state *st, int val, int val2, int *cod
- 
- 	if (gain > inf->gain_max || gain < inf->gain_min)
- 		return -EINVAL;
-+	if (st->powerdown)
-+		return -EPERM;
- 
- 	return st->chip_info->gain_dB_to_code(gain, code);
- }
-@@ -83,8 +104,17 @@ static int adrf5740_gain_dB_to_code(int gain, int *code)
- 	return 0;
- }
- 
-+static int ltc6373_gain_dB_to_code(int gain, int *code)
-+{
-+	*code = ~(DIV_ROUND_CLOSEST(gain, LTC6373_CONVERSION_CONSTANT) + 3)
-+		& LTC6373_CONVERSION_MASK;
-+	return 0;
-+}
-+
- static int code_to_gain_dB(struct hmc425a_state *st, int *val, int *val2)
- {
-+	if (st->powerdown)
-+		return -EPERM;
- 	return st->chip_info->code_to_gain_dB(st->gain, val, val2);
- }
- 
-@@ -114,6 +144,16 @@ static int adrf5740_code_to_gain_dB(int code, int *val, int *val2)
- 	return 0;
- }
- 
-+static int ltc6373_code_to_gain_dB(int code, int *val, int *val2)
-+{
-+	int gain = ((~code & LTC6373_CONVERSION_MASK) - 3) *
-+		   LTC6373_CONVERSION_CONSTANT;
-+
-+	*val = gain / 1000;
-+	*val2 = (gain % 1000) * 1000;
-+	return 0;
-+}
-+
- static int hmc425a_write(struct iio_dev *indio_dev, u32 value)
- {
- 	struct hmc425a_state *st = iio_priv(indio_dev);
-@@ -191,6 +231,48 @@ static const struct iio_info hmc425a_info = {
- 	.write_raw_get_fmt = &hmc425a_write_raw_get_fmt,
- };
- 
-+static ssize_t ltc6373_read_powerdown(struct iio_dev *indio_dev,
-+				      uintptr_t private,
-+				      const struct iio_chan_spec *chan,
-+				      char *buf)
-+{
-+	struct hmc425a_state *st = iio_priv(indio_dev);
-+
-+	return sysfs_emit(buf, "%d\n", st->powerdown);
-+}
-+
-+static ssize_t ltc6373_write_powerdown(struct iio_dev *indio_dev,
-+				       uintptr_t private,
-+				       const struct iio_chan_spec *chan,
-+				       const char *buf,
-+				       size_t len)
-+{
-+	struct hmc425a_state *st = iio_priv(indio_dev);
-+	bool powerdown;
-+	int code, ret;
-+
-+	ret = kstrtobool(buf, &powerdown);
-+	if (ret)
-+		return ret;
-+
-+	mutex_lock(&st->lock);
-+	st->powerdown = powerdown;
-+	code = (powerdown) ? LTC6373_SHUTDOWN : st->gain;
-+	hmc425a_write(indio_dev, code);
-+	mutex_unlock(&st->lock);
-+	return len;
-+}
-+
-+static const struct iio_chan_spec_ext_info ltc6373_ext_info[] = {
-+	{
-+		.name = "powerdown",
-+		.read = ltc6373_read_powerdown,
-+		.write = ltc6373_write_powerdown,
-+		.shared = IIO_SEPARATE,
-+	},
-+	{}
-+};
-+
- #define HMC425A_CHAN(_channel)						\
- {									\
- 	.type = IIO_VOLTAGE,						\
-@@ -200,10 +282,24 @@ static const struct iio_info hmc425a_info = {
- 	.info_mask_separate = BIT(IIO_CHAN_INFO_HARDWAREGAIN),		\
- }
- 
-+#define LTC6373_CHAN(_channel)						\
-+{									\
-+	.type = IIO_VOLTAGE,						\
-+	.output = 1,							\
-+	.indexed = 1,							\
-+	.channel = _channel,						\
-+	.info_mask_separate = BIT(IIO_CHAN_INFO_HARDWAREGAIN),		\
-+	.ext_info = ltc6373_ext_info,					\
-+}
-+
- static const struct iio_chan_spec hmc425a_channels[] = {
- 	HMC425A_CHAN(0),
- };
- 
-+static const struct iio_chan_spec ltc6373_channels[] = {
-+	LTC6373_CHAN(0),
-+};
-+
- static struct hmc425a_chip_info hmc425a_chip_info_tbl[] = {
- 	[ID_HMC425A] = {
- 		.name = "hmc425a",
-@@ -238,6 +334,19 @@ static struct hmc425a_chip_info hmc425a_chip_info_tbl[] = {
- 		.gain_dB_to_code = adrf5740_gain_dB_to_code,
- 		.code_to_gain_dB = adrf5740_code_to_gain_dB,
- 	},
-+	[ID_LTC6373] = {
-+		.name = "ltc6373",
-+		.channels = ltc6373_channels,
-+		.num_channels = ARRAY_SIZE(ltc6373_channels),
-+		.num_gpios = 3,
-+		.gain_min = -12041, /* gain setting x0.25*/
-+		.gain_max = 24082,  /* gain setting x16  */
-+		.default_gain = LTC6373_MIN_GAIN_CODE,
-+		.powerdown_val = LTC6373_SHUTDOWN,
-+		.has_powerdown = true,
-+		.gain_dB_to_code = ltc6373_gain_dB_to_code,
-+		.code_to_gain_dB = ltc6373_code_to_gain_dB,
-+	},
- };
- 
- static int hmc425a_probe(struct platform_device *pdev)
-@@ -278,8 +387,13 @@ static int hmc425a_probe(struct platform_device *pdev)
- 	indio_dev->info = &hmc425a_info;
- 	indio_dev->modes = INDIO_DIRECT_MODE;
- 
--	/* Set default gain */
--	hmc425a_write(indio_dev, st->gain);
-+	if (st->chip_info->has_powerdown) {
-+		st->powerdown = true;
-+		hmc425a_write(indio_dev, st->chip_info->powerdown_val);
-+	} else {
-+		/* Set default gain */
-+		hmc425a_write(indio_dev, st->gain);
-+	}
- 
- 	return devm_iio_device_register(&pdev->dev, indio_dev);
- }
-@@ -292,6 +406,8 @@ static const struct of_device_id hmc425a_of_match[] = {
- 	  .data = &hmc425a_chip_info_tbl[ID_HMC540S]},
- 	{ .compatible = "adi,adrf5740",
- 	  .data = &hmc425a_chip_info_tbl[ID_ADRF5740]},
-+	{ .compatible = "adi,ltc6373",
-+	  .data = &hmc425a_chip_info_tbl[ID_LTC6373]},
- 	{}
- };
- MODULE_DEVICE_TABLE(of, hmc425a_of_match);
--- 
-2.42.0
+https://git.kernel.org/linus/41044d536068
+
+> I fixed it up (see below) and can carry the fix as necessary. This
+> is now fixed as far as linux-next is concerned, but any non trivial
+> conflicts should be mentioned to your upstream maintainer when your tree
+> is submitted for merging.  You may also want to consider cooperating
+> with the maintainer of the conflicting tree to minimise any particularly
+> complex conflicts.
+> 
+> -- 
+> Cheers,
+> Stephen Rothwell
+> 
+> diff --cc drivers/pci/pci.c
+> index a532bf597e57,cb51c4079013..000000000000
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@@ -2361,36 -2522,29 +2361,36 @@@ static void pci_pme_list_scan(struct wo
+>   		if (pdev->pme_poll) {
+>   			struct pci_dev *bridge = pdev->bus->self;
+>   			struct device *dev = &pdev->dev;
+>  -			int pm_status;
+>  +			struct device *bdev = bridge ? &bridge->dev : NULL;
+>  +			int bref = 0;
+>   
+>   			/*
+>  -			 * If bridge is in low power state, the
+>  -			 * configuration space of subordinate devices
+>  -			 * may be not accessible
+>  +			 * If we have a bridge, it should be in an active/D0
+>  +			 * state or the configuration space of subordinate
+>  +			 * devices may not be accessible or stable over the
+>  +			 * course of the call.
+>   			 */
+>  -			if (bridge && bridge->current_state != PCI_D0)
+>  -				continue;
+>  +			if (bdev) {
+> - 				bref = pm_runtime_get_if_active(bdev, true);
+> ++				bref = pm_runtime_get_if_active(bdev);
+>  +				if (!bref)
+>  +					continue;
+>  +
+>  +				if (bridge->current_state != PCI_D0)
+>  +					goto put_bridge;
+>  +			}
+>   
+>   			/*
+>  -			 * If the device is in a low power state it
+>  -			 * should not be polled either.
+>  +			 * The device itself should be suspended but config
+>  +			 * space must be accessible, therefore it cannot be in
+>  +			 * D3cold.
+>   			 */
+>  -			pm_status = pm_runtime_get_if_active(dev);
+>  -			if (!pm_status)
+>  -				continue;
+>  -
+>  -			if (pdev->current_state != PCI_D3cold)
+>  +			if (pm_runtime_suspended(dev) &&
+>  +			    pdev->current_state != PCI_D3cold)
+>   				pci_pme_wakeup(pdev, NULL);
+>   
+>  -			if (pm_status > 0)
+>  -				pm_runtime_put(dev);
+>  +put_bridge:
+>  +			if (bref > 0)
+>  +				pm_runtime_put(bdev);
+>   		} else {
+>   			list_del(&pme_dev->list);
+>   			kfree(pme_dev);
+
 
