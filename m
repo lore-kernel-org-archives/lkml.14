@@ -1,229 +1,97 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B7225B1F8;
-	Tue, 20 Feb 2024 12:22:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 070015B1F8
+	for <linux-kernel@vger.kernel.org>; Tue, 20 Feb 2024 12:22:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708431746; cv=none; b=RvZSDgJI9DgBTqjwiUWuQx8c8SyXVGDQ2ezJks27u4lV9bwgsVKEL+aSSzv5XpldNlPUJLs/C7BR/EYCqIlePVzomQ+/+PcfeXXBShP14cXV2qh3al+lqUtZ342m+v9RRF7+xB67ZQ17fDAZPcgZK2XspQM7ASKy3lSr3PZ89eI=
+	t=1708431767; cv=none; b=MqlXAagqM7kniXJF33LlXzLpJ9quFhfdujV4ua/7Yz4+ZHY8gH/fEOl3ay2lGbwjSxQmJDBPKfKP1rl5Owq745zA2gVVneYTv3Ovj5XqJfWs+qVmbY1LdPnOmldL41NAUMHn/wGgLFHBOLCRV29HhoLPf3XyrtukYBF4pvkcuAk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708431746; c=relaxed/simple;
-	bh=InDHKtmK2AtUmds74XuVyGWa4Kq1lt972r024xFyyPY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=HCoSik0xeeDqnAGTmgaYjELAEUKEGLkwgwJsyypgvahmQ3UJMe4amgH8+ba+WEhlcXOnHoEs8suCygaH+KECX8Cic3/dDb+sqvjkFiSTyb4FDRmM0T9gMDM4quq2QpvIsgy89CTFP7j1bnVATbYQOYUCGdjmnwW4e9r6H5fxK80=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=dYHiVoau; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1708431767; c=relaxed/simple;
+	bh=1f11NDJPNaBatEI6pO3kjUS1wCUWc9exdxFhhlFAAj0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=qQy0sG0VV83LBb0cLozdIVLv9egG3WmpqBwm/NadyNbu3n6hC9Bf758XRjD+Ra+vds2wdWD7iR4qnkNpjSA2UTaKRMjilaubBb4PcCDcXgBVNb/6kcBl241UX1NU7cE83EhoZX4HiBmVvQ7i5lCB7xppw8nCy9apWptjDbwXkx8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=O20B2+OK; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="dYHiVoau"
-Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 41KBe1qL030653;
-	Tue, 20 Feb 2024 12:21:22 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	qcppdkim1; bh=379Srn1tGEaDvceo1XrilJx6GCtEIxn4M0Q0q4VP4Mw=; b=dY
-	HiVoauIcBhnBW8SellHUd6j95dWA+0KfkP2GeUTalqAGLbljfeFRBZQPfbdJAytO
-	NFVBDM4Tsd7V2AzsMwpYsVptWiSJQCOt2ZM36hbiils+6/agZ2mwLh293R37M4bp
-	DmDJUdXDZNpTSaYGpsk8vLgkZ4nbmb0cqKJKjCcmCqUnVuUh4QfuYAurDH9TFo8Y
-	wXt/2fcSJ3ecnlpSxcRlzkX973QMMFQLN0ziCvdWrHMDiAxSXA3T2Lr2BFA4Glma
-	cDwkz8XN5Zw+qNIJU9n0rM+wurK4M2epzmX5OOF2efb81VLdsA/Vc90dPJe1Rb1u
-	qqYs0lc7Q2MDLWPOA5Aw==
-Received: from nasanppmta02.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3wct3eg7yk-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 20 Feb 2024 12:21:22 +0000 (GMT)
-Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
-	by NASANPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 41KCLLmR029113
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 20 Feb 2024 12:21:21 GMT
-Received: from [10.216.16.129] (10.80.80.8) by nasanex01a.na.qualcomm.com
- (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Tue, 20 Feb
- 2024 04:21:15 -0800
-Message-ID: <439c89ec-3702-4b4a-5e02-b18cc99b8ba3@quicinc.com>
-Date: Tue, 20 Feb 2024 17:51:11 +0530
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="O20B2+OK"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1708431764;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=nryE0QvpwIF+GBr6vQnaZDO8tVOPi12/n3SsPAdoTf4=;
+	b=O20B2+OKWbXLNuJTime8yz71RYHAPzJZjXWtTrSu4qAlbf6+ieXgxcAIONBVl+tBCqf+Cy
+	d54dUx7vZ6AizcAZ0b0ldJWHDimGUI+v4Ud1ml0xcVhEg8g+H3De22f3Tdp7Pf8a5QUsz4
+	KNuf/ILOARv4QXUqArzS3hdV3rO8IUg=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-635-SDIgkkBVPyKnz52EzcJHzQ-1; Tue, 20 Feb 2024 07:22:43 -0500
+X-MC-Unique: SDIgkkBVPyKnz52EzcJHzQ-1
+Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-410e83001cbso29593515e9.3
+        for <linux-kernel@vger.kernel.org>; Tue, 20 Feb 2024 04:22:43 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708431762; x=1709036562;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=nryE0QvpwIF+GBr6vQnaZDO8tVOPi12/n3SsPAdoTf4=;
+        b=EVdrkilGoNtgtU4N4pFSL3VD+AFGKKAmC6+qmDmSvwQDZI1Nj0Lxf9ZHBov5HvNp6U
+         y4YA8CRMjPDSwDklVFzKHG2ckuQmzltoSvM7jS2jf2SoOQD2TrYFOkzV9wQYdzxo2HNN
+         nUC0yuf+yuLG2kLG77Kcrc4IXqud1lD4XsBPqQ7MQXyZWBMSjUCbscjVFUYzdGca5S6W
+         evD35mFspbNQbzPL0Gn8ovfbJC8tR5WpIqb1K01W82FUnCjQsYGEAFpA2N9cADg5q4Tb
+         UkdeGp0nnEPvcGL0ZGmHqzoO5I5LqLgvN7wEDvv/YBAzPIYFCw+QZeCIMw2VxwvkwC09
+         21mA==
+X-Gm-Message-State: AOJu0Ywl0a6b/7RPS9VvimKYwUzTOfmK4bFemvzNrpspRq+gPmx8OcWv
+	AyGzdQzdnc2nPcWG5tlxHMw9zysKtjkU6CXZbgj6CRUpiFnE6KB3c4ONHDsS85+bDrix+MvLIqG
+	9eUGCx0z37ZhgF27FjY2R4eeCNwA3AGqHHbIyNHEpxjmiqiNjv0Es3dxMrUshA0t+MqaN2jG7ZR
+	gEPMCql8GxjB6WfdVmSBvXkI97nmX2O5/eL4iK
+X-Received: by 2002:a05:600c:35c4:b0:411:e145:bfad with SMTP id r4-20020a05600c35c400b00411e145bfadmr10448442wmq.40.1708431762463;
+        Tue, 20 Feb 2024 04:22:42 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IFvnATC39HsxnxsVPrX2vePi3o4k+bGJVrQJVVrIuj4lKaYfDwJip1nNryMKhpbiQwD04oJARcbUxMwnO4L7xA=
+X-Received: by 2002:a05:600c:35c4:b0:411:e145:bfad with SMTP id
+ r4-20020a05600c35c400b00411e145bfadmr10448417wmq.40.1708431762136; Tue, 20
+ Feb 2024 04:22:42 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.9.1
-Subject: Re: [PATCH 2/5] drivers: mtd: nand: Add qpic_common API file
-Content-Language: en-US
-To: Konrad Dybcio <konrad.dybcio@linaro.org>, <andersson@kernel.org>,
-        <broonie@kernel.org>, <robh@kernel.org>,
-        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
-        <miquel.raynal@bootlin.com>, <richard@nod.at>, <vigneshr@ti.com>,
-        <manivannan.sadhasivam@linaro.org>, <linux-arm-msm@vger.kernel.org>,
-        <linux-spi@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-mtd@lists.infradead.org>
-CC: <quic_srichara@quicinc.com>, <quic_varada@quicinc.com>
-References: <20240215134856.1313239-1-quic_mdalam@quicinc.com>
- <20240215134856.1313239-3-quic_mdalam@quicinc.com>
- <4cb0144c-303b-4b91-bf88-0a7d7412afe1@linaro.org>
-From: Md Sadre Alam <quic_mdalam@quicinc.com>
-In-Reply-To: <4cb0144c-303b-4b91-bf88-0a7d7412afe1@linaro.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01a.na.qualcomm.com (10.52.223.231)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: 5UIVdpcamgOu-7yVNLkwt275vMMlNqui
-X-Proofpoint-GUID: 5UIVdpcamgOu-7yVNLkwt275vMMlNqui
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-02-20_06,2024-02-20_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 bulkscore=0
- spamscore=0 phishscore=0 clxscore=1015 mlxscore=0 mlxlogscore=999
- priorityscore=1501 malwarescore=0 adultscore=0 lowpriorityscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2401310000 definitions=main-2402200088
+References: <20240131230902.1867092-1-pbonzini@redhat.com> <2b5e6d68-007e-48bd-be61-9a354be2ccbf@intel.com>
+ <CABgObfa_7ZAq1Kb9G=ehkzHfc5if3wnFi-kj3MZLE3oYLrArdQ@mail.gmail.com>
+ <CABgObfbetwO=4whrCE+cFfCPJa0nsK=h6sQAaoamJH=UqaJqTg@mail.gmail.com>
+ <CABgObfbUcG5NyKhLOnihWKNVM0OZ7zb9R=ADzq7mjbyOCg3tUw@mail.gmail.com> <eefbce80-18c5-42e7-8cde-3a352d5811de@intel.com>
+In-Reply-To: <eefbce80-18c5-42e7-8cde-3a352d5811de@intel.com>
+From: Paolo Bonzini <pbonzini@redhat.com>
+Date: Tue, 20 Feb 2024 13:22:29 +0100
+Message-ID: <CABgObfY=3msvJ2M-gHMqawcoaW5CDVDVxCO0jWi+6wrcrsEtAw@mail.gmail.com>
+Subject: Re: [PATCH v2 0/2] x86/cpu: fix invalid MTRR mask values for SEV or TME
+To: Dave Hansen <dave.hansen@intel.com>
+Cc: linux-kernel@vger.kernel.org, kvm@vger.kernel.org, 
+	Zixi Chen <zixchen@redhat.com>, Adam Dunlap <acdunlap@google.com>, 
+	"Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>, Xiaoyao Li <xiaoyao.li@intel.com>, 
+	Kai Huang <kai.huang@intel.com>, Dave Hansen <dave.hansen@linux.intel.com>, 
+	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@kernel.org>, x86@kernel.org, 
+	stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Tue, Feb 13, 2024 at 11:02=E2=80=AFPM Dave Hansen <dave.hansen@intel.com=
+> wrote:
+> Your patches make things a wee bit worse in the meantime, but they pale
+> in comparison to the random spaghetti that we've already got.  Also, we
+> probably need the early TME stuff regardless.
+>
+> I think I'll probably suck it up, apply them, then fix them up along
+> with the greater mess.
+>
+> Anybody have any better ideas?
 
+Ping, in the end are we applying these patches for either 6.8 or 6.9?
 
-On 2/15/2024 11:25 PM, Konrad Dybcio wrote:
-> On 15.02.2024 14:48, Md Sadre Alam wrote:
->> Add qpic_common.c file which hold all the common
->> qpic APIs which will be used by both qpic raw nand
->> driver and qpic spi nand driver.
->>
->> Co-developed-by: Sricharan Ramabadhran <quic_srichara@quicinc.com>
->> Signed-off-by: Sricharan Ramabadhran <quic_srichara@quicinc.com>
->> Co-developed-by: Varadarajan Narayanan <quic_varada@quicinc.com>
->> Signed-off-by: Varadarajan Narayanan <quic_varada@quicinc.com>
->> Signed-off-by: Md Sadre Alam <quic_mdalam@quicinc.com>
->> ---
-> 
-> IIUC this is mostly moving code around?
-> 
-> I do however have some suggestions..
-Ok
-> 
->>   drivers/mtd/nand/Makefile            |    1 +
->>   drivers/mtd/nand/qpic_common.c       |  786 +++++++++++++++++
->>   drivers/mtd/nand/raw/qcom_nandc.c    | 1226 +-------------------------
->>   include/linux/mtd/nand-qpic-common.h |  488 ++++++++++
->>   4 files changed, 1291 insertions(+), 1210 deletions(-)
->>   create mode 100644 drivers/mtd/nand/qpic_common.c
->>   create mode 100644 include/linux/mtd/nand-qpic-common.h
->>
->> diff --git a/drivers/mtd/nand/Makefile b/drivers/mtd/nand/Makefile
->> index 19e1291ac4d5..131707a41293 100644
->> --- a/drivers/mtd/nand/Makefile
->> +++ b/drivers/mtd/nand/Makefile
->> @@ -12,3 +12,4 @@ nandcore-$(CONFIG_MTD_NAND_ECC) += ecc.o
->>   nandcore-$(CONFIG_MTD_NAND_ECC_SW_HAMMING) += ecc-sw-hamming.o
->>   nandcore-$(CONFIG_MTD_NAND_ECC_SW_BCH) += ecc-sw-bch.o
->>   nandcore-$(CONFIG_MTD_NAND_ECC_MXIC) += ecc-mxic.o
->> +obj-y += qpic_common.o
->> diff --git a/drivers/mtd/nand/qpic_common.c b/drivers/mtd/nand/qpic_common.c
->> new file mode 100644
->> index 000000000000..4d74ba888028
->> --- /dev/null
->> +++ b/drivers/mtd/nand/qpic_common.c
->> @@ -0,0 +1,786 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +/*
->> + * QPIC Controller common API file.
->> + * Copyright (C) 2023  Qualcomm Inc.
->> + * Authors:	Md sadre Alam           <quic_mdalam@quicinc.com>
->> + *		Sricharan R             <quic_srichara@quicinc.com>
->> + *		Varadarajan Narayanan	<quic_varada@quicinc.com>
->> + *
->> + */
->> +
->> +#include <linux/mtd/nand-qpic-common.h>
->> +
->> +struct qcom_nand_controller *
->> +get_qcom_nand_controller(struct nand_chip *chip)
->> +{
->> +	return container_of(chip->controller, struct qcom_nand_controller,
->> +			    controller);
->> +}
->> +EXPORT_SYMBOL(get_qcom_nand_controller);
-> 
-> #define to_qcom_nand_controller()?
-Ok
-> 
->> +
->> +/*
->> + * Helper to prepare DMA descriptors for configuring registers
->> + * before reading a NAND page.
->> + */
-> 
-> Can you convert these to kerneldoc instead?
-Ok
-> 
->> +void config_nand_page_read(struct nand_chip *chip)
->> +{
->> +	struct qcom_nand_controller *nandc = get_qcom_nand_controller(chip);
->> +
->> +	write_reg_dma(nandc, NAND_ADDR0, 2, 0);
->> +	write_reg_dma(nandc, NAND_DEV0_CFG0, 3, 0);
->> +	if (!nandc->props->qpic_v2)
-> 
-> This is not going to scale going forward.. please include a version
-> enum instead.
-Ok
-> 
-> [...]
-> 
->> +
->> +int prep_adm_dma_desc(struct qcom_nand_controller *nandc, bool read,
->> +		      int reg_off, const void *vaddr, int size,
->> +			     bool flow_control)
->> +{
->> +	struct desc_info *desc;
->> +	struct dma_async_tx_descriptor *dma_desc;
->> +	struct scatterlist *sgl;
->> +	struct dma_slave_config slave_conf;
->> +	struct qcom_adm_peripheral_config periph_conf = {};
->> +	enum dma_transfer_direction dir_eng;
->> +	int ret;
-> 
-> Revertse-christmas-tree, please
-Ok
-> 
->> +
->> +	desc = kzalloc(sizeof(*desc), GFP_KERNEL);
->> +	if (!desc)
->> +		return -ENOMEM;
->> +
->> +	sgl = &desc->adm_sgl;
->> +
->> +	sg_init_one(sgl, vaddr, size);
->> +
->> +	if (read) {
->> +		dir_eng = DMA_DEV_TO_MEM;
->> +		desc->dir = DMA_FROM_DEVICE;
->> +	} else {
->> +		dir_eng = DMA_MEM_TO_DEV;
->> +		desc->dir = DMA_TO_DEVICE;
->> +	}
->> +
->> +	ret = dma_map_sg(nandc->dev, sgl, 1, desc->dir);
->> +	if (ret == 0) {
-> 
-> if (!ret)
-Ok
-> 
->> +		ret = -ENOMEM;
->> +		goto err;
->> +	}
->> +
->> +	memset(&slave_conf, 0x00, sizeof(slave_conf));
-> 
-> Just zero-initialize it (= { 0 }) at declaration time
-Ok
-> 
-> Konrad
-> 
+Paolo
 
-Thanks for reviewing , I will fix all the comments in next patch.
-
-Regards,
-Alam.
