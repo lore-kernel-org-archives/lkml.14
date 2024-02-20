@@ -1,114 +1,183 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 487AD5CDF5;
-	Tue, 20 Feb 2024 08:39:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BBAF5D8EC
+	for <linux-kernel@vger.kernel.org>; Tue, 20 Feb 2024 08:39:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708418344; cv=none; b=UQieitaD2KOT5dwW45uRJ3wdqzM1dpGgYP0B01griDdfWKmJVLaRdDkTsWjIe0ut4BeKvOP+zE994Ij+hfB2wd0IUmuw4PKo7p5RBJZlCbE/jrBrd0+xwo8D8ShVxvyeXQ1mL3gbxLt5YqBUsDkJryHL/215powLQ5t2/NgQDYQ=
+	t=1708418356; cv=none; b=sNCYtodrhviamFLL53zYvBCbOx+Fw5l05urcukrW7YrU0SVN7uZMISUnJzB7cRt6p47IdO66B/fWxuJvWsPxSyuNh3OE+FcwcisjkdcJDM4OA6LqIZO1z7DCRMs5FQoG/hwDwPS1TND4UdFx56v07E2wBdpVdKcJfao4DdPOH4w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708418344; c=relaxed/simple;
-	bh=kzLrKBPcUTW1ikS77w8ls5Y99614P/SjjSX03YkclJs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=d6hS5TRkZwEkqmYENnfRRVnMyHhjcy5BV3fLbLYeAKhJDvOUG/6ZJRDM/ah5IO0EGOqplP6lJ5N/eyDMdMFKrCl8pgUkmDE9NLClZ4SJoli0S+mimNJ1MgctRUTYhkXgo/Iocz1LOWil5bA+QxJb1CdhE2fwfEEqo8Nh31Imdb4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=LmUX/xCs; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="LmUX/xCs"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 707F4C433C7;
-	Tue, 20 Feb 2024 08:39:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1708418343;
-	bh=kzLrKBPcUTW1ikS77w8ls5Y99614P/SjjSX03YkclJs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=LmUX/xCs1dHkjU/ePjUbWXbV95xKvq+WLoXGrvHrdxFba7R1GjtWQSKanc5kH7Wxj
-	 tfSOKzXUhxmDe3HSZpQVYUswbj0ktIOphniayMDtHYMJ8HW7wSUKRk/ea3IFC4x73X
-	 BInYTp4mxZ97PImjFK8vn0J6mOTez8Wvka0MomXM=
-Date: Tue, 20 Feb 2024 09:39:00 +0100
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Ray Chi <raychi@google.com>
-Cc: Thinh.Nguyen@synopsys.com, quic_uaggarwa@quicinc.com,
-	albertccwang@google.com, linux-usb@vger.kernel.org,
-	linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH] usb: dwc3: gadget: remove warning during kernel boot
-Message-ID: <2024022024-clarinet-poise-332d@gregkh>
-References: <20240220081205.135063-1-raychi@google.com>
- <CAPBYUsAnuyLwek39GJiwin_Pit0waH-2fhQv-G21OYkjoz051w@mail.gmail.com>
+	s=arc-20240116; t=1708418356; c=relaxed/simple;
+	bh=eARWGRfRDmOm0P/pwF6ioHyIv/3ArkeboFaDCJ2mAEo=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=bgbH9UVXlVgzDWUwpaAi/TMQEfYL2HhI7IT9NvQSP45ZgUVcXEq5NET4/kICO8IN8G7kn1JyFzH/u5rzPqPunyFHVtag6nkcDsdkEzSF9+Tq0nf1iYrq4+Md4ZRqac7B+qeFg0GGPpfYu1REFEpjsvFYqT7pL059ZFSVAff7yhI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.105])
+	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4TfC2r4hVpzvVnw;
+	Tue, 20 Feb 2024 16:18:12 +0800 (CST)
+Received: from dggpemd100004.china.huawei.com (unknown [7.185.36.20])
+	by mail.maildlp.com (Postfix) with ESMTPS id DADAC140154;
+	Tue, 20 Feb 2024 16:20:13 +0800 (CST)
+Received: from huawei.com (10.67.174.76) by dggpemd100004.china.huawei.com
+ (7.185.36.20) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.2.1258.28; Tue, 20 Feb
+ 2024 16:20:13 +0800
+From: Yuntao Liu <liuyuntao12@huawei.com>
+To: <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>
+CC: <linux@armlinux.org.uk>, <arnd@arndb.de>, <afd@ti.com>,
+	<akpm@linux-foundation.org>, <kirill.shutemov@linux.intel.com>,
+	<geert+renesas@glider.be>, <corbet@lwn.net>, <rppt@kernel.org>,
+	<eric.devolder@oracle.com>, <robh@kernel.org>, <tglx@linutronix.de>,
+	<linus.walleij@linaro.org>, <liuyuntao12@huawei.com>
+Subject: [PATCH -next] arm32: enable HAVE_LD_DEAD_CODE_DATA_ELIMINATION
+Date: Tue, 20 Feb 2024 08:15:27 +0000
+Message-ID: <20240220081527.23408-1-liuyuntao12@huawei.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAPBYUsAnuyLwek39GJiwin_Pit0waH-2fhQv-G21OYkjoz051w@mail.gmail.com>
+Content-Type: text/plain
+X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
+ dggpemd100004.china.huawei.com (7.185.36.20)
 
-On Tue, Feb 20, 2024 at 04:20:50PM +0800, Ray Chi wrote:
-> On Tue, Feb 20, 2024 at 4:12 PM Ray Chi <raychi@google.com> wrote:
-> >
-> > The dwc3->gadget_driver is not initialized during the dwc3 probe
-> > process. This leads to a warning when the runtime power management (PM)
-> > attempts to suspend the gadget using dwc3_gadget_suspend().
-> >
-> > This patch adds a check to prevent the warning.
-> >
-> > Cc: stable@vger.kernel.org
-> > Fixes: 61a348857e86 ("usb: dwc3: gadget: Fix NULL pointer dereference in dwc3_gadget_suspend")
-> > Signed-off-by: Ray Chi <raychi@google.com>
-> > ---
-> >  drivers/usb/dwc3/gadget.c | 3 +++
-> >  1 file changed, 3 insertions(+)
-> >
-> > diff --git a/drivers/usb/dwc3/gadget.c b/drivers/usb/dwc3/gadget.c
-> > index 28f49400f3e8..de987cffe1ec 100644
-> > --- a/drivers/usb/dwc3/gadget.c
-> > +++ b/drivers/usb/dwc3/gadget.c
-> > @@ -4708,6 +4708,9 @@ int dwc3_gadget_suspend(struct dwc3 *dwc)
-> >         unsigned long flags;
-> >         int ret;
-> >
-> > +       if (!dwc->gadget_driver)
-> > +               return 0;
-> > +
-> >         ret = dwc3_gadget_soft_disconnect(dwc);
-> >         if (ret)
-> >                 goto err;
-> > --
-> > 2.44.0.rc0.258.g7320e95886-goog
-> >
-> 
-> Attached the warning message.
-> 
-> 02-20 06:01:24.227725  root    86    86 W Call trace:
-> 02-20 06:01:24.227730  root    86    86 W         :
-> dwc3_ep0_out_start+0xec/0x22c
-> 02-20 06:01:24.227738  root    86    86 W         :
-> dwc3_ep0_stall_and_restart+0xb8/0xd4
-> 02-20 06:01:24.227747  root    86    86 W         :
-> dwc3_gadget_soft_disconnect+0x1a8/0x284
-> 02-20 06:01:24.227756  root    86    86 W         :
-> dwc3_gadget_suspend+0x18/0xe4
-> 02-20 06:01:24.227764  root    86    86 W         :
-> dwc3_suspend_common+0x5c/0x320
-> 02-20 06:01:24.227774  root    86    86 W         :
-> dwc3_runtime_suspend+0x30/0x4c
-> 02-20 06:01:24.227783  root    86    86 W         :
-> pm_generic_runtime_suspend+0x3c/0x54
-> 02-20 06:01:24.227793  root    86    86 W         : __rpm_callback+0xfc/0x76c
-> 02-20 06:01:24.227802  root    86    86 W         : rpm_suspend+0x534/0xd78
-> 02-20 06:01:24.227811  root    86    86 W         : dwc3_runtime_idle+0xcc/0x104
-> 02-20 06:01:24.227819  root    86    86 W         : rpm_idle+0x228/0x4e0
-> 02-20 06:01:24.227827  root    86    86 W         : update_autosuspend+0x50/0xb8
-> 02-20 06:01:24.227836  root    86    86 W         :
-> __pm_runtime_use_autosuspend+0x50/0x6c
+The current arm32 architecture does not yet support the
+HAVE_LD_DEAD_CODE_DATA_ELIMINATION feature. arm32 is widely used in
+embedded scenarios, and enabling this feature would be beneficial for
+reducing the size of the kernel image.
 
-That's a kernel warning?  Odd wrapping :(
+In order to make this work, we keep the necessary tables by annotating
+them with KEEP, also it requires further changes to linker script to KEEP
+some tables and wildcard compiler generated sections into the right place.
 
-Can you clean it up a bit and put it in the changelog?  There should be
-more info before the "Call trace" portion, right?  What is causing the
-warning exactly?
+It boots normally with defconfig, vexpress_defconfig and tinyconfig.
 
-thanks,
+The size comparison of zImage is as follows:
+defconfig       vexpress_defconfig      tinyconfig
+5137712         5138024                 424192          no dce
+5032560         4997824                 298384          dce
+2.0%            2.7%                    29.7%           shrink
 
-greg k-h
+When using smaller config file, there is a significant reduction in the
+size of the zImage.
+
+We also tested this patch on a commercially available single-board
+computer, and the comparison is as follows:
+a15eb_config
+2161384         no dce
+2092240         dce
+3.2%            shrink
+
+The zImage size has been reduced by approximately 3.2%, which is 70KB on
+2.1M.
+
+Signed-off-by: Yuntao Liu <liuyuntao12@huawei.com>
+---
+ arch/arm/Kconfig                       | 1 +
+ arch/arm/boot/compressed/vmlinux.lds.S | 4 ++--
+ arch/arm/include/asm/vmlinux.lds.h     | 8 ++++----
+ arch/arm/kernel/vmlinux.lds.S          | 6 +++---
+ 4 files changed, 10 insertions(+), 9 deletions(-)
+
+diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
+index 0af6709570d1..de78ceb821df 100644
+--- a/arch/arm/Kconfig
++++ b/arch/arm/Kconfig
+@@ -113,6 +113,7 @@ config ARM
+ 	select HAVE_KERNEL_XZ
+ 	select HAVE_KPROBES if !XIP_KERNEL && !CPU_ENDIAN_BE32 && !CPU_V7M
+ 	select HAVE_KRETPROBES if HAVE_KPROBES
++	select HAVE_LD_DEAD_CODE_DATA_ELIMINATION
+ 	select HAVE_MOD_ARCH_SPECIFIC
+ 	select HAVE_NMI
+ 	select HAVE_OPTPROBES if !THUMB2_KERNEL
+diff --git a/arch/arm/boot/compressed/vmlinux.lds.S b/arch/arm/boot/compressed/vmlinux.lds.S
+index 3fcb3e62dc56..da21244aa892 100644
+--- a/arch/arm/boot/compressed/vmlinux.lds.S
++++ b/arch/arm/boot/compressed/vmlinux.lds.S
+@@ -89,7 +89,7 @@ SECTIONS
+      * The EFI stub always executes from RAM, and runs strictly before the
+      * decompressor, so we can make an exception for its r/w data, and keep it
+      */
+-    *(.data.efistub .bss.efistub)
++    *(.data.* .bss.*)
+     __pecoff_data_end = .;
+ 
+     /*
+@@ -125,7 +125,7 @@ SECTIONS
+ 
+   . = BSS_START;
+   __bss_start = .;
+-  .bss			: { *(.bss) }
++  .bss			: { *(.bss .bss.*) }
+   _end = .;
+ 
+   . = ALIGN(8);		/* the stack must be 64-bit aligned */
+diff --git a/arch/arm/include/asm/vmlinux.lds.h b/arch/arm/include/asm/vmlinux.lds.h
+index 4c8632d5c432..f2ff79f740ab 100644
+--- a/arch/arm/include/asm/vmlinux.lds.h
++++ b/arch/arm/include/asm/vmlinux.lds.h
+@@ -42,7 +42,7 @@
+ #define PROC_INFO							\
+ 		. = ALIGN(4);						\
+ 		__proc_info_begin = .;					\
+-		*(.proc.info.init)					\
++		KEEP(*(.proc.info.init))				\
+ 		__proc_info_end = .;
+ 
+ #define IDMAP_TEXT							\
+@@ -125,13 +125,13 @@
+ 	__vectors_lma = .;						\
+ 	OVERLAY 0xffff0000 : NOCROSSREFS AT(__vectors_lma) {		\
+ 		.vectors {						\
+-			*(.vectors)					\
++			KEEP(*(.vectors))				\
+ 		}							\
+ 		.vectors.bhb.loop8 {					\
+-			*(.vectors.bhb.loop8)				\
++			KEEP(*(.vectors.bhb.loop8))			\
+ 		}							\
+ 		.vectors.bhb.bpiall {					\
+-			*(.vectors.bhb.bpiall)				\
++			KEEP(*(.vectors.bhb.bpiall))			\
+ 		}							\
+ 	}								\
+ 	ARM_LMA(__vectors, .vectors);					\
+diff --git a/arch/arm/kernel/vmlinux.lds.S b/arch/arm/kernel/vmlinux.lds.S
+index bd9127c4b451..de373c6c2ae8 100644
+--- a/arch/arm/kernel/vmlinux.lds.S
++++ b/arch/arm/kernel/vmlinux.lds.S
+@@ -74,7 +74,7 @@ SECTIONS
+ 	. = ALIGN(4);
+ 	__ex_table : AT(ADDR(__ex_table) - LOAD_OFFSET) {
+ 		__start___ex_table = .;
+-		ARM_MMU_KEEP(*(__ex_table))
++		ARM_MMU_KEEP(KEEP(*(__ex_table)))
+ 		__stop___ex_table = .;
+ 	}
+ 
+@@ -99,7 +99,7 @@ SECTIONS
+ 	}
+ 	.init.arch.info : {
+ 		__arch_info_begin = .;
+-		*(.arch.info.init)
++		KEEP(*(.arch.info.init))
+ 		__arch_info_end = .;
+ 	}
+ 	.init.tagtable : {
+@@ -116,7 +116,7 @@ SECTIONS
+ #endif
+ 	.init.pv_table : {
+ 		__pv_table_begin = .;
+-		*(.pv_table)
++		KEEP(*(.pv_table))
+ 		__pv_table_end = .;
+ 	}
+ 
+-- 
+2.34.1
+
