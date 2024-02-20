@@ -1,54 +1,57 @@
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83B6B1474A8;
-	Tue, 20 Feb 2024 19:51:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18C7514A4D8;
+	Tue, 20 Feb 2024 19:51:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708458694; cv=none; b=JI8+w7XB334FJSpN8N0/f5pn2BpxiIHfB2SYhS5miE6UeT3QlrmBjVoyDasuxqy7F5Me7pJJaqw/CoBanfh8apeYE+LyMFYZlJb3Sk4G8F6/VC+FeF5p2SWtewcBsWuhk84zg9wGbTMW/QfVARhTiY2TNDBsA8ZGb/9Hq0o7NyI=
+	t=1708458697; cv=none; b=k+Aguj+E2SCCQgddKwKJdYfh70ulNLZDya8Dzj6UplMbR+eNwLOK4+gTOeTGiAHR8VfiSJydQae10pmmi8ozrqRCG8uvmm5lRQh5Bf/H32qxIDqNgQTs/Oa54oXDacEKzXKJjS2Bv70DqU0nntu92mMZFsoB8XelUSHmbQpCgaQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708458694; c=relaxed/simple;
-	bh=LX/Iy62jTtUBwefaPKs2N8vsxbkh+ynCHbcWGUHwJQc=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version; b=ZsMA4r95agQuaUh8AyuwdMEseFKb0xqJ0eQIQQb5iqrreRli5AdnXABubY0xKsgnMDH9UviEvD7JPUxEdH81Ka9euoe24g6tb/oVltzQLdFbDlH8hrak+TUmkpTfU/z+DjyGc1t/pppNlBpgJKPMLmIlp0k0sJfIqzVE5JLXZ34=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=X/73DrKu; arc=none smtp.client-ip=209.85.128.43
+	s=arc-20240116; t=1708458697; c=relaxed/simple;
+	bh=hjaKrHSb+4g9Yg7pV+2zqt9Ih3ost52YRYTyHUox8bg=;
+	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=WzVPPAyzjlawRZRts0fBIF1Ar/31qwaJZnZ3BOv3aI3Lq2s5jrLVc+SaxrnrXlAYmSR2pNkgZR+cVNKprueLH39++qiWF+N7zs1OECuwJ0MbFc8XtPWljn1TBqNQZp64KVKeHIunfemA64fiNstgzhmSGvpmezYogl9WaOGHyDI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=a6wiOCNP; arc=none smtp.client-ip=209.85.208.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X/73DrKu"
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-410e820a4feso39202005e9.1;
-        Tue, 20 Feb 2024 11:51:32 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a6wiOCNP"
+Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-2d228a132acso48437741fa.0;
+        Tue, 20 Feb 2024 11:51:34 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1708458691; x=1709063491; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=ilrcf9FIzNhryRpiM1gMnDk2mj28uZPifSV6of9OdPY=;
-        b=X/73DrKuwRIpzU2+2mgq/TK0op+H9qAOP3pK/TGHbic6yWo1JMT803ephmOLTT6+y2
-         Lginz4Dt9a40GUn4Ih+V+EtRzkq333tqeF3H/J6kFJ5BI70Lw22N022aE1ghsULv7DU8
-         4s/PPhSuuJOVJ70VrBFBjaulkZGQvIICgf89Ge3Po0NnLuWcTTpvb96m4yBOm9BKYOnH
-         3iUJSz9zhLvjKtaCTCbVpF6yBtVVsa1U7lbXczZoyW+t+E7shipjZKscIUNJ2B/a6qQt
-         xUvB6DdlQGrVtMnOwpTyDg77+AH+V8yGJawNASuwsmm07bT7JGzmsbL8FMFEhBnH0E4O
-         +7PA==
+        d=gmail.com; s=20230601; t=1708458693; x=1709063493; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=XpZVqpYazuNuHsJB29QHePKiHOfgklBcmo3nGloFXBI=;
+        b=a6wiOCNPHHJx3xwckXfl2fvxWlHvr8FNJwKeeUCb3kYvsezixLXNFuK5RCJAOcCcv/
+         B63gV0j7Z3t7BBTHFSuZ/YQVe+nE7Ah/HRxab/FxcHGKBHR/siZcwT5HmORUpAEV0msY
+         soErWhuQdOnqW8nS6kWfn0QatZPJVEhoZAlPAU/Z+8mZ6dN/eP+CAWYigX7RYFU8Zijd
+         m4SZOwEvdy8ab4xUiQSyiOhl6hA5MpKGwK54D6Y+aG1bVXuYTcMZCHzEq1McmrXU/Vlr
+         zwu9Kh7EZ2JMlHEatzftx9Vu89uAjDvdcieTXNjcYJBEJzgdHs9AtcI0We/a1JVFGELY
+         g4ow==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708458691; x=1709063491;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ilrcf9FIzNhryRpiM1gMnDk2mj28uZPifSV6of9OdPY=;
-        b=r40+yMUaizWLjEkDH6esbBgOCqo45ZxcRroEq7ZWC8N8AQtPw1J8DjGsA0te/gI0eR
-         eDw6rc4cHhCgD2WKI+aShSE3NRixTRQJ2xBY5oQ+3Ww1u4W2Z4jXkbAOvlIGew78NpnC
-         fQ1DRyJwcYf8wh8j60q80lmrY+H6WvSq1HtpXOdocXJyOuoNxM7yYzTp/IQ3KLsop5F7
-         5sKp/IFdTFF2WlbWx5BLnS4oRBbaQvz9saf6TZFrOAsEqdJzIfRUJPyORT/Vvz7LLquD
-         3X/6/qc+1+AVKqmOyuU65BIJMryOmBUlFd2LTZG0w29MG/10bu5HPAW3R/3RhJxJYxOc
-         S/zA==
-X-Forwarded-Encrypted: i=1; AJvYcCWCH7tjD4OUbFa0eUVN++0Dy0XDpPz26mEcsZ8pr+fZNNePX3AADyry4jkUvNyZRiwFZ4vxxArq/FiOImtcnAPCtGe6cWyNmBMyOcwsy7OISLEBSi6hzZDBIuCd6JYOQNilU+Dm
-X-Gm-Message-State: AOJu0YxxDAISMAqr2eD/egKklbst3u+To31jBBpqs0OdGMfHAcFoSpLP
-	t+m3UwT9C21rYSq3kBkQK+uHR5WlYdX9Qqjtb6vf3R9oaCORNv7n
-X-Google-Smtp-Source: AGHT+IHDFUk+dwyav1PP0LVsLhyXp1LnmbfhGA0Rm6MLUWBnLcbZLFrjnhkMS702tdxRLlsskSCh8A==
-X-Received: by 2002:a05:600c:19c7:b0:412:5296:9737 with SMTP id u7-20020a05600c19c700b0041252969737mr11719504wmq.12.1708458690689;
-        Tue, 20 Feb 2024 11:51:30 -0800 (PST)
+        d=1e100.net; s=20230601; t=1708458693; x=1709063493;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=XpZVqpYazuNuHsJB29QHePKiHOfgklBcmo3nGloFXBI=;
+        b=qfAAZNHKL/MK0wAx2HCrGtKyzwuLjDM0rapW9OU+tn4RU+GLOzZlYKh/xx1B9nTeLj
+         358qVdspeTe3zQ7RgftbYMK0P00DFjmAD2Yfn9VJ9BxZSMwqcmXhoGld59R/dIkU8cXX
+         zLzpxa+0bwZPiQLpqcuBxa1nACbBRotAONTVhUBf6+h4l3MujExS4OprOS7x1sm1B6jF
+         wJV1T3hAaek5DqUzySmpf30vxpZdF0XGvusRmQ2ky/zNM11siAd7M2Fk3RKB1fUBaZYH
+         C+bfQUKE/+udMpfW7E0E3LADOr1vH/5Dd/NY3yIaN7lj11ikE4wCkjd20HyEEQzThU/U
+         s0+g==
+X-Forwarded-Encrypted: i=1; AJvYcCWz9Vd26oscDxpWxT6p7Td/GhnHrh/v5qcIaw2x9kGTphOgKKJ67lVTzHe2ZBDjIx2epM1FmHNa4Gm+PwsvBnVO/a7eqC6e/ahILeU7efEad7WlFNQIcDChM2v2+CAonfLw10S5
+X-Gm-Message-State: AOJu0YyhcewvmLpNoIMhhTmQV8+lU0m9duW7XfaSx2T943ssrpSEmEfn
+	V7WDuBnjf8/QGS3dcRmTWdR5EvPILqOkXzQmnm4Lzxf4U8Xfk0bu
+X-Google-Smtp-Source: AGHT+IEc+GHrYRqg9yAJXOiqtFZdJ8XVxniOTa5Oyho+LxK0d1F9vxP0vGDWOFhicCChZS7KO0fNWw==
+X-Received: by 2002:a2e:a9a5:0:b0:2d2:3a31:c39f with SMTP id x37-20020a2ea9a5000000b002d23a31c39fmr5112734ljq.35.1708458692821;
+        Tue, 20 Feb 2024 11:51:32 -0800 (PST)
 Received: from localhost.localdomain (93-34-89-13.ip49.fastwebnet.it. [93.34.89.13])
-        by smtp.googlemail.com with ESMTPSA id fs14-20020a05600c3f8e00b00411a595d56bsm15494853wmb.14.2024.02.20.11.51.29
+        by smtp.googlemail.com with ESMTPSA id fs14-20020a05600c3f8e00b00411a595d56bsm15494853wmb.14.2024.02.20.11.51.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 20 Feb 2024 11:51:30 -0800 (PST)
+        Tue, 20 Feb 2024 11:51:32 -0800 (PST)
 From: Christian Marangi <ansuelsmth@gmail.com>
 To: Andrew Lunn <andrew@lunn.ch>,
 	Heiner Kallweit <hkallweit1@gmail.com>,
@@ -64,10 +67,12 @@ To: Andrew Lunn <andrew@lunn.ch>,
 	"Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>,
 	netdev@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [net-next RFC PATCH v2 0/3] net: phy: support multi PHY in phy_driver Was: net: phy: detach PHY driver OPs from phy_driver struct
-Date: Tue, 20 Feb 2024 20:50:47 +0100
-Message-ID: <20240220195103.15809-1-ansuelsmth@gmail.com>
+Subject: [net-next RFC PATCH v2 2/3] net: phy: aquantia: group common OPs for PHYs where possible
+Date: Tue, 20 Feb 2024 20:50:49 +0100
+Message-ID: <20240220195103.15809-3-ansuelsmth@gmail.com>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240220195103.15809-1-ansuelsmth@gmail.com>
+References: <20240220195103.15809-1-ansuelsmth@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -76,62 +81,216 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This is an alternative implementation of "net: phy: detach PHY driver OPs
-from phy_driver struct" with the same object in mind.
-v2 is used to keep track of the similar attempts but this is the 3rd try
-to accomplish the same object.
+Group common OPS for PHY where possible by defining multiple PHYs for
+similar PHY drivers instead of duplicating them for each PHY.
 
-As was pointed out in the previous series, deatching OPs is a way too big
-change (although IMHO needed, but I understand the problem with downstream
-and ugly code). As suggested and was already an idea discussed privately,
-a more easier approach is introduce an alternative way in phy_driver
-struct to declare PHY with the use of an array of IDs.
-
-The second attempt to this had a fundamental problem, as pointed out by
-Florian, it did cause an ABI change in sysfs. This was caused by the fact
-that sysfs entry are created dased on the first name the PHY driver is
-registreted and changing the dev name after (although wrong) also doesn't
-update the sysfs name.
-
-The only solution to this problem is to register one driver for each PHY
-ID like it's done currently.
-
-This was the case for attempt 1 (detached OPs) and is implemented here in
-the 3rd attempt.
-
-To accomplish this, the mdiodrv has to be moved in a separate struct and
-defined for each PHY the phy_driver supports (this is already the case
-for each phy_driver struct). With this change, we can keep the current
-phy_driver struct and support defining multi PHY.
-
-Each PHY will be registered as a separate driver, (even if they are defined
-in the same phy_driver struct) permitting to register it directly
-with the right name.
-
-For single PHY implementation, the phy_driver is internally converted to
-.ids implementation by dynamically allocating the table with only one
-entry.
-
-This is needed to handle the move of mdiodrv from the phy_driver struct
-to a more specific one for each PHY ID.
-
-Changes v2:
-- Drop c45 patch
-- Complete rework to handle specifi names for PHYs (no ABI
-  regression)
-
-Christian Marangi (3):
-  net: phy: add support for defining multiple PHY IDs in PHY driver
-  net: phy: aquantia: group common OPs for PHYs where possible
-  net: phy: bcm7xxx: rework phy_driver table to new multiple PHY ID
-    format
-
+Signed-off-by: Christian Marangi <ansuelsmth@gmail.com>
+---
  drivers/net/phy/aquantia/aquantia_main.c | 170 +++++++++--------------
- drivers/net/phy/bcm7xxx.c                | 140 +++++++++++--------
- drivers/net/phy/phy_device.c             | 127 ++++++++++++-----
- include/linux/phy.h                      |  38 ++++-
- 4 files changed, 275 insertions(+), 200 deletions(-)
+ 1 file changed, 64 insertions(+), 106 deletions(-)
 
+diff --git a/drivers/net/phy/aquantia/aquantia_main.c b/drivers/net/phy/aquantia/aquantia_main.c
+index a6a7980585f5..e8c89fdbda94 100644
+--- a/drivers/net/phy/aquantia/aquantia_main.c
++++ b/drivers/net/phy/aquantia/aquantia_main.c
+@@ -770,16 +770,26 @@ static int aqr111_config_init(struct phy_device *phydev)
+ 
+ static struct phy_driver aqr_driver[] = {
+ {
+-	PHY_ID_MATCH_MODEL(PHY_ID_AQ1202),
+-	.name		= "Aquantia AQ1202",
+-	.config_aneg    = aqr_config_aneg,
+-	.config_intr	= aqr_config_intr,
+-	.handle_interrupt = aqr_handle_interrupt,
+-	.read_status	= aqr_read_status,
+-},
+-{
+-	PHY_ID_MATCH_MODEL(PHY_ID_AQ2104),
+-	.name		= "Aquantia AQ2104",
++	.name		= "Aquantia AQ1202/AQ2104/AQR106/AQR405",
++	.ids		= (struct phy_driver_id []){
++		{
++			PHY_ID_MATCH_MODEL(PHY_ID_AQ1202),
++			.name		= "Aquantia AQ1202"
++		},
++		{
++			PHY_ID_MATCH_MODEL(PHY_ID_AQ2104),
++			.name           = "Aquantia AQ2104",
++		},
++		{
++			PHY_ID_MATCH_MODEL(PHY_ID_AQR106),
++			.name           = "Aquantia AQR106",
++		},
++		{
++			PHY_ID_MATCH_MODEL(PHY_ID_AQR405),
++			.name           = "Aquantia AQR405",
++		},
++	},
++	.ids_count	= 4,
+ 	.config_aneg    = aqr_config_aneg,
+ 	.config_intr	= aqr_config_intr,
+ 	.handle_interrupt = aqr_handle_interrupt,
+@@ -796,16 +806,22 @@ static struct phy_driver aqr_driver[] = {
+ 	.resume		= aqr107_resume,
+ },
+ {
+-	PHY_ID_MATCH_MODEL(PHY_ID_AQR106),
+-	.name		= "Aquantia AQR106",
+-	.config_aneg    = aqr_config_aneg,
+-	.config_intr	= aqr_config_intr,
+-	.handle_interrupt = aqr_handle_interrupt,
+-	.read_status	= aqr_read_status,
+-},
+-{
+-	PHY_ID_MATCH_MODEL(PHY_ID_AQR107),
+-	.name		= "Aquantia AQR107",
++	.name		= "Aquantia AQR107/AQR112/AQR412",
++	.ids		= (struct phy_driver_id []){
++		{
++			PHY_ID_MATCH_MODEL(PHY_ID_AQR107),
++			.name		= "Aquantia AQR107"
++		},
++		{
++			PHY_ID_MATCH_MODEL(PHY_ID_AQR112),
++			.name           = "Aquantia AQR112",
++		},
++		{
++			PHY_ID_MATCH_MODEL(PHY_ID_AQR412),
++			.name           = "Aquantia AQR412",
++		},
++	},
++	.ids_count	= 3,
+ 	.probe		= aqr107_probe,
+ 	.get_rate_matching = aqr107_get_rate_matching,
+ 	.config_init	= aqr107_config_init,
+@@ -842,27 +858,22 @@ static struct phy_driver aqr_driver[] = {
+ 	.link_change_notify = aqr107_link_change_notify,
+ },
+ {
+-	PHY_ID_MATCH_MODEL(PHY_ID_AQR111),
+-	.name		= "Aquantia AQR111",
+-	.probe		= aqr107_probe,
+-	.get_rate_matching = aqr107_get_rate_matching,
+-	.config_init	= aqr111_config_init,
+-	.config_aneg    = aqr_config_aneg,
+-	.config_intr	= aqr_config_intr,
+-	.handle_interrupt = aqr_handle_interrupt,
+-	.read_status	= aqr107_read_status,
+-	.get_tunable    = aqr107_get_tunable,
+-	.set_tunable    = aqr107_set_tunable,
+-	.suspend	= aqr107_suspend,
+-	.resume		= aqr107_resume,
+-	.get_sset_count	= aqr107_get_sset_count,
+-	.get_strings	= aqr107_get_strings,
+-	.get_stats	= aqr107_get_stats,
+-	.link_change_notify = aqr107_link_change_notify,
+-},
+-{
+-	PHY_ID_MATCH_MODEL(PHY_ID_AQR111B0),
+-	.name		= "Aquantia AQR111B0",
++	.name		= "Aquantia AQR111/AQR111B0",
++	.ids		= (struct phy_driver_id []){
++		{
++			PHY_ID_MATCH_MODEL(PHY_ID_AQR111),
++			.name		= "Aquantia AQR111"
++		},
++		{
++			PHY_ID_MATCH_MODEL(PHY_ID_AQR111B0),
++			.name           = "Aquantia AQR111B0",
++		},
++		{
++			PHY_ID_MATCH_MODEL(PHY_ID_AQR106),
++			.name           = "Aquantia AQR106",
++		},
++	},
++	.ids_count	= 3,
+ 	.probe		= aqr107_probe,
+ 	.get_rate_matching = aqr107_get_rate_matching,
+ 	.config_init	= aqr111_config_init,
+@@ -880,71 +891,18 @@ static struct phy_driver aqr_driver[] = {
+ 	.link_change_notify = aqr107_link_change_notify,
+ },
+ {
+-	PHY_ID_MATCH_MODEL(PHY_ID_AQR405),
+-	.name		= "Aquantia AQR405",
+-	.config_aneg    = aqr_config_aneg,
+-	.config_intr	= aqr_config_intr,
+-	.handle_interrupt = aqr_handle_interrupt,
+-	.read_status	= aqr_read_status,
+-},
+-{
+-	PHY_ID_MATCH_MODEL(PHY_ID_AQR112),
+-	.name		= "Aquantia AQR112",
+-	.probe		= aqr107_probe,
+-	.config_aneg    = aqr_config_aneg,
+-	.config_intr	= aqr_config_intr,
+-	.handle_interrupt = aqr_handle_interrupt,
+-	.get_tunable    = aqr107_get_tunable,
+-	.set_tunable    = aqr107_set_tunable,
+-	.suspend	= aqr107_suspend,
+-	.resume		= aqr107_resume,
+-	.read_status	= aqr107_read_status,
+-	.get_rate_matching = aqr107_get_rate_matching,
+-	.get_sset_count = aqr107_get_sset_count,
+-	.get_strings	= aqr107_get_strings,
+-	.get_stats	= aqr107_get_stats,
+-	.link_change_notify = aqr107_link_change_notify,
+-},
+-{
+-	PHY_ID_MATCH_MODEL(PHY_ID_AQR412),
+-	.name		= "Aquantia AQR412",
+-	.probe		= aqr107_probe,
+-	.config_aneg    = aqr_config_aneg,
+-	.config_intr	= aqr_config_intr,
+-	.handle_interrupt = aqr_handle_interrupt,
+-	.get_tunable    = aqr107_get_tunable,
+-	.set_tunable    = aqr107_set_tunable,
+-	.suspend	= aqr107_suspend,
+-	.resume		= aqr107_resume,
+-	.read_status	= aqr107_read_status,
+-	.get_rate_matching = aqr107_get_rate_matching,
+-	.get_sset_count = aqr107_get_sset_count,
+-	.get_strings	= aqr107_get_strings,
+-	.get_stats	= aqr107_get_stats,
+-	.link_change_notify = aqr107_link_change_notify,
+-},
+-{
+-	PHY_ID_MATCH_MODEL(PHY_ID_AQR113),
+-	.name		= "Aquantia AQR113",
+-	.probe          = aqr107_probe,
+-	.get_rate_matching = aqr107_get_rate_matching,
+-	.config_init    = aqr113c_config_init,
+-	.config_aneg    = aqr_config_aneg,
+-	.config_intr    = aqr_config_intr,
+-	.handle_interrupt       = aqr_handle_interrupt,
+-	.read_status    = aqr107_read_status,
+-	.get_tunable    = aqr107_get_tunable,
+-	.set_tunable    = aqr107_set_tunable,
+-	.suspend        = aqr107_suspend,
+-	.resume         = aqr107_resume,
+-	.get_sset_count = aqr107_get_sset_count,
+-	.get_strings    = aqr107_get_strings,
+-	.get_stats      = aqr107_get_stats,
+-	.link_change_notify = aqr107_link_change_notify,
+-},
+-{
+-	PHY_ID_MATCH_MODEL(PHY_ID_AQR113C),
+-	.name           = "Aquantia AQR113C",
++	.name		= "Aquantia AQR113/AQR113C",
++	.ids		= (struct phy_driver_id []){
++		{
++			PHY_ID_MATCH_MODEL(PHY_ID_AQR113),
++			.name		= "Aquantia AQR113"
++		},
++		{
++			PHY_ID_MATCH_MODEL(PHY_ID_AQR113C),
++			.name           = "Aquantia AQR113C",
++		},
++	},
++	.ids_count	= 2,
+ 	.probe          = aqr107_probe,
+ 	.get_rate_matching = aqr107_get_rate_matching,
+ 	.config_init    = aqr113c_config_init,
 -- 
 2.43.0
 
