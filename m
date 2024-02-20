@@ -1,163 +1,201 @@
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2080.outbound.protection.outlook.com [40.107.237.80])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4528176C72;
-	Tue, 20 Feb 2024 17:18:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.80
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708449519; cv=fail; b=nirbFNc3DHYzYXpCYDA9ljmgRiI+jC6eeeMXEsEN72fDlvtuJ8GcE2R03ht9rkTKFyyo/fhDKjM7Vje3BvKAiosVzRGt+dkWhpJZ4IICmpfFMIu+TNfES+njvJvPEkwllIYmBXB4vqW/D2SaLF5LK6y188r7rjLBRQT42v4JNd4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708449519; c=relaxed/simple;
-	bh=+8EtkuDL9hV0L39gAigybv0F5NHyhF6vzfYF/RW4LvA=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=AuHncHO1SFECuqgfW5N0c1Ez9Pff4eR5Jfc8BIaUJl2PLXe+9wFUa/JN/TQk5XbsiTiGpPezz9B1iRXUcqyX37MztbhZe6tGrwz/0+1KMb8dWA8AcQ5ALWNAeEZXkYd2sqFe2K7tzYjP/R5wCyGPSuzfJoxfgXIqzmeWgDQadtU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=CZTXrSGi; arc=fail smtp.client-ip=40.107.237.80
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9A5676C74;
+	Tue, 20 Feb 2024 17:18:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1708449526; cv=none; b=VB0lFvML8LxjVQ6GwinjKalcX8Cs6c0vT5yHW7zQQP5UjHip2B7ZNdw1Pt6FkNyDYzbiLFwNwVGkhVyUdyNXSJP4Za4Ml4r6svpB4zYxkq+UxVfmeGoybQYL7h1gCW2fTzEcg5qFGbKMdxG4TIGClX59F7HrONtRm9UVPlyVeFM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1708449526; c=relaxed/simple;
+	bh=oAmeEfyjXLv4RIi34kUBYqESf31shoVCzi2Fy9DSnI4=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GCreF22M9Dn/Y6IobZ0O2ME27VTjgfIC3YWcZntZXmZq8v+jxmA6hYhcUof+ykfWZGPWHYcoeXKBrUGYr3T6PE0HCeNSmvZ+IWJyJA+eihdytrrO9OUmprHA6Fyjy8rvgPFxQo5CAKX6yrT7xMixiQGkLw3zei3KgTmd9AuW+Bk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jfS+TvPW; arc=none smtp.client-ip=209.85.208.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="CZTXrSGi"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Ptak/+ry+cibyj1vuQYRolHes0+4MMmsYA+eMD2tSknQ9SaiT9+texZeDVl/BimjR51SqvYG5MOUCPEmE/u40MznMAc0MAJ1WkCdYCz4wFZaIZlWaVmWDobPrvSSO4/ZbvfEn+C7PAXVbYV/KUHEsOveNrBy0a7u4dmc5rZAmlJb6a4NCyK+9FzE/GC5AKsKZkfcCYzyvR/kphv1CXsSccdUrkhFSJ9ln3F7u3caJ69lkMWOZZAwL5Ob/aBJbIwk3WYZjW79/gD3B4jZYOp7vRW5fPXGE+VJBVBoajHp5fJpc4Znz7FOEep6I3e125+j/aDsmPPRuHAlkToNzle5ew==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=DJNpqR2gtovWArCftHGaCuq4yCd0Z6OhTytSKuS1Oiw=;
- b=eHbHsNnyeI6KpSbqNLbJw/BVRleEqVS+hxZqRFqeW5e/tBQyzNVkOrMHrvP052Md/g4PXn4Z/M/HrJcFzvht+2s8/z6WMmL4oV3TohSLplb/kkDf6R18Wyex/6m0IdIih2ByRaN4SYd7sYQ4ZlltXlmhFjGJZaO3DikayBT+U5dOgSh+8PIfY4bJdhXLJugOiVYo1Lv1rkrz4UASjkrZ3AuuVPxHJQUIahbasl6K36WKQHAAbh6l/KP5VMO2sOgBGOg+rNmT1I+QfJYrF5y2A3R/sL4J0alPRO7MtyL6l62Hz6zVwv9Ke0nsMjZxz13nVgwX/YDCmx4TeFSqhGT2Hw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=DJNpqR2gtovWArCftHGaCuq4yCd0Z6OhTytSKuS1Oiw=;
- b=CZTXrSGi9aWgkUI+oLmJiOeH90jL6EXkpXT6FkdX6gvSeuYcSEQeY3DRraZb+ZAoIVOzdQnO13ta1SANnO38Bf+fGor9K9chprKMmM6MoEspgScggUpYAyDTK/Tnkuni9b1ieITQjnOJGSVlXFPtOoHpMquHk01GmYiVkipGBgM=
-Received: from SA0PR13CA0011.namprd13.prod.outlook.com (2603:10b6:806:130::16)
- by DM4PR12MB6038.namprd12.prod.outlook.com (2603:10b6:8:ab::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7316.14; Tue, 20 Feb
- 2024 17:18:33 +0000
-Received: from SA2PEPF000015CB.namprd03.prod.outlook.com
- (2603:10b6:806:130:cafe::fa) by SA0PR13CA0011.outlook.office365.com
- (2603:10b6:806:130::16) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7292.28 via Frontend
- Transport; Tue, 20 Feb 2024 17:18:33 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- SA2PEPF000015CB.mail.protection.outlook.com (10.167.241.201) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.7292.25 via Frontend Transport; Tue, 20 Feb 2024 17:18:33 +0000
-Received: from BLR5CG134614W.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Tue, 20 Feb
- 2024 11:18:27 -0600
-From: K Prateek Nayak <kprateek.nayak@amd.com>
-To: <linux-kernel@vger.kernel.org>
-CC: "Gautham R. Shenoy" <gautham.shenoy@amd.com>, K Prateek Nayak
-	<kprateek.nayak@amd.com>, Richard Henderson <richard.henderson@linaro.org>,
-	Ivan Kokshaysky <ink@jurassic.park.msu.ru>, Matt Turner <mattst88@gmail.com>,
-	"Rafael J. Wysocki" <rafael@kernel.org>, Daniel Lezcano
-	<daniel.lezcano@linaro.org>, Ingo Molnar <mingo@redhat.com>, Peter Zijlstra
-	<peterz@infradead.org>, Juri Lelli <juri.lelli@redhat.com>, Vincent Guittot
-	<vincent.guittot@linaro.org>, Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>, "Mel
- Gorman" <mgorman@suse.de>, Daniel Bristot de Oliveira <bristot@redhat.com>,
-	Valentin Schneider <vschneid@redhat.com>, Al Viro <viro@zeniv.linux.org.uk>,
-	<linux-alpha@vger.kernel.org>, <linux-pm@vger.kernel.org>
-Subject: [RFC PATCH 06/14] alpha/thread_info: Introduce TIF_NOTIFY_IPI flag
-Date: Tue, 20 Feb 2024 22:44:49 +0530
-Message-ID: <20240220171457.703-7-kprateek.nayak@amd.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240220171457.703-1-kprateek.nayak@amd.com>
-References: <20240220171457.703-1-kprateek.nayak@amd.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jfS+TvPW"
+Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-563f675be29so5187232a12.0;
+        Tue, 20 Feb 2024 09:18:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1708449523; x=1709054323; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=2jsimXL4CWxMWFytJ0GOuQvmJcBH3su7G6flKHH6vaI=;
+        b=jfS+TvPWBy3pdZtVyDITo+zcyrHS6v33pfXYDJYx75YloyvjB4a3Jjg9QAKjgwqCpS
+         n1OI6oHneNmzEti6tNxlUuczg5gxoQYMuCfALN9cq//r8k8sNetGVyaKTEvVDoZQctQw
+         QBUBzpn4y5nCGG3b34bd9vyONdVH+Xmg8ILgnt7E9vGD2mHToS9yGgWgulwhJ2OUJLl5
+         X0BrR1hrj1d+FvxW8e3GEPmp5AE+ef3q7t49G14Jmv71ha+TZlSizdg7F2ramz/PZkVw
+         /7t8aFaISl7iO1J1Ton95YtFE0ThAUkW08F+/ogigA3NZj2Zstd+asyRvysOZ5ywHxvU
+         bo+Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708449523; x=1709054323;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=2jsimXL4CWxMWFytJ0GOuQvmJcBH3su7G6flKHH6vaI=;
+        b=aJHS9XNXWOHSun9wT8zipPdwntoCriV7AN/mw7kilfsf+B+VB4QsKg/9CI+M9OWlHU
+         7LaugUFjzNyRd9BohOUGp28JupMpmuKo9Bu9WKiUri7lQMLbsYXU5otZTKUzuoWlPpgQ
+         H8l6geIW96IXKBAnXyPh3wBdzxwvz7907q0mMKQwqitEDd8JtSCcyKC9qo7pbhJD6PP5
+         zJdZO9NYlggxbshfYVC2sxK4su14en7SVewIV5vCaY7xQODul2CT2h1yWPgeXNPR/mm1
+         OdqRpjdw9LxaqLZd6kqJei7MYkpDG+m579TnzCO+/918fb7ECNl/npFwigpNkrMaaItJ
+         XIhQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVElQFiQqZHZIjUIW3wlxbDMrj1czJzjXQApybWV9Q6BwcskBj84VbCHTMYoNHTxzsrVWid5M/rZDQpLQQ3IwuQS73AKCtTOKq3l8jX71+waE+vewvOypikVIenes+1AkbJVlo4tfhqvilngqSJOUyJCBdijmvStJh4Gv1z+zGq/n8H
+X-Gm-Message-State: AOJu0YxIQNg3xWeG8K6jRj28/IziOZ0ctJss2740TC1CjoToQQj7lnh1
+	jJdfffuZ+jMYzG+WrmNjQHsNesitg1VMjQGvu3y39bTMwzRNb1Wv
+X-Google-Smtp-Source: AGHT+IHc0pN9KHkKeb7luanourVgNNVzQPzVIAPQ4poYAK/bHeBaBBTbjvPtzX2mIiyI/iKaLuo4xQ==
+X-Received: by 2002:aa7:db49:0:b0:564:a76b:aa55 with SMTP id n9-20020aa7db49000000b00564a76baa55mr2426459edt.12.1708449523138;
+        Tue, 20 Feb 2024 09:18:43 -0800 (PST)
+Received: from krava ([83.240.60.70])
+        by smtp.gmail.com with ESMTPSA id ew14-20020a056402538e00b005602346c3f5sm3823732edb.79.2024.02.20.09.18.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 20 Feb 2024 09:18:42 -0800 (PST)
+From: Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date: Tue, 20 Feb 2024 18:18:40 +0100
+To: Menglong Dong <dongmenglong.8@bytedance.com>
+Cc: andrii@kernel.org, ast@kernel.org, daniel@iogearbox.net,
+	martin.lau@linux.dev, eddyz87@gmail.com, song@kernel.org,
+	yonghong.song@linux.dev, john.fastabend@gmail.com,
+	kpsingh@kernel.org, sdf@google.com, haoluo@google.com,
+	mykolal@fb.com, shuah@kernel.org, mcoquelin.stm32@gmail.com,
+	alexandre.torgue@foss.st.com, thinker.li@gmail.com,
+	zhoufeng.zf@bytedance.com, davemarchevsky@fb.com, dxu@dxuuu.xyz,
+	linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
+	linux-kselftest@vger.kernel.org,
+	linux-stm32@st-md-mailman.stormreply.com,
+	linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH bpf-next 1/5] bpf: tracing: add support to record and
+ check the accessed args
+Message-ID: <ZdTe8LteoqR43d4q@krava>
+References: <20240220035105.34626-1-dongmenglong.8@bytedance.com>
+ <20240220035105.34626-2-dongmenglong.8@bytedance.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SA2PEPF000015CB:EE_|DM4PR12MB6038:EE_
-X-MS-Office365-Filtering-Correlation-Id: 9b1b40be-f2ee-4042-10fa-08dc3237f73b
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	y0O87QMnqS5n+YlTdf70uRvMGSnE6brelmhg0L4/6qdphP7Nyl85iUdffg289sceCBjH4UuntD2XvgJF6nnA+IXdduyFvZZ9CTzkTBkjXBh2afxDZb6ofY+Ei6fKI9LOEdr2N6PaXlJd4P3Ka9hM+jRhIcu5jI99ZC4gtn81O44PQAvkcHCGNP1TCDxSn5YOt+TBhIK3/IBSoSU1KBg4AjXKFcRpNFCsSons1N/e9Q/AKvMt6IejBSyOI9xBLdclHPBd3iSaSMrqLuC+o/Hu8zEH+0ee2G6Vt5ENqsTKfNCNhW1fh18VKNYcI06waa0+B0izSs4Xvhtr3CAjhCcJxnVeF36nodMLD3yJMefGxJ/pB3FILxJ5ZqjKhKzZtcm/Va4HuLPk3FKxobHNA2za7i+Z1dOCTNKhANhBq/Ybhk0w71yxeoKgdPEnwwBo8hDBlusoPD0tLWVXPBVBOChyop34iYdTbZ9We8hfvPcoTcpd2ymQsbcHvTrltovKuIwCQkrl6rYd69xQ9PzHwAJf8oH68nCM4YRsq/5b7Mu4idYTxTYUBjOfSOB1TSLWFVpEVQal5xWqZlW/fZf7s1U/ocGWp/I7gUbb0yMSDvF+mL3IvTkZcm2x3GkIXyAFTkufmwJEe8zCWYzwL9B2vG3arM4H2D3aDzVnZW4zjirb2d4=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(36860700004)(46966006)(40470700004);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Feb 2024 17:18:33.1576
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9b1b40be-f2ee-4042-10fa-08dc3237f73b
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SA2PEPF000015CB.namprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB6038
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240220035105.34626-2-dongmenglong.8@bytedance.com>
 
-Add support for TIF_NOTIFY_IPI on Alpha. With TIF_NOTIFY_IPI, a sender
-sending an IPI to an idle CPU in TIF_POLLING mode will set the
-TIF_NOTIFY_IPI flag in the target's idle tasks's thread_info to pull the
-CPU out of idle, as opposed to setting TIF_NEED_RESCHED previously. This
-avoids spurious calls to schedule_idle() in cases where an IPI does not
-necessarily wake up a task on the idle CPU.
+On Tue, Feb 20, 2024 at 11:51:01AM +0800, Menglong Dong wrote:
 
-Cc: Richard Henderson <richard.henderson@linaro.org>
-Cc: Ivan Kokshaysky <ink@jurassic.park.msu.ru>
-Cc: Matt Turner <mattst88@gmail.com>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Juri Lelli <juri.lelli@redhat.com>
-Cc: Vincent Guittot <vincent.guittot@linaro.org>
-Cc: Dietmar Eggemann <dietmar.eggemann@arm.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>
-Cc: Ben Segall <bsegall@google.com>
-Cc: Mel Gorman <mgorman@suse.de>
-Cc: Daniel Bristot de Oliveira <bristot@redhat.com>
-Cc: Valentin Schneider <vschneid@redhat.com>
-Cc: Al Viro <viro@zeniv.linux.org.uk>
-Cc: linux-alpha@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Cc: linux-pm@vger.kernel.org
-Signed-off-by: K Prateek Nayak <kprateek.nayak@amd.com>
----
- arch/alpha/include/asm/thread_info.h | 2 ++
- 1 file changed, 2 insertions(+)
+SNIP
 
-diff --git a/arch/alpha/include/asm/thread_info.h b/arch/alpha/include/asm/thread_info.h
-index 4a4d00b37986..8c17855c85c7 100644
---- a/arch/alpha/include/asm/thread_info.h
-+++ b/arch/alpha/include/asm/thread_info.h
-@@ -64,6 +64,7 @@ register unsigned long *current_stack_pointer __asm__ ("$30");
- #define TIF_NEED_RESCHED	3	/* rescheduling necessary */
- #define TIF_SYSCALL_AUDIT	4	/* syscall audit active */
- #define TIF_NOTIFY_SIGNAL	5	/* signal notifications exist */
-+#define TIF_NOTIFY_IPI		6	/* Pending IPI on TIF_POLLLING idle CPU */
- #define TIF_DIE_IF_KERNEL	9	/* dik recursion lock */
- #define TIF_MEMDIE		13	/* is terminating due to OOM killer */
- #define TIF_POLLING_NRFLAG	14	/* idle is polling for TIF_NEED_RESCHED */
-@@ -74,6 +75,7 @@ register unsigned long *current_stack_pointer __asm__ ("$30");
- #define _TIF_NOTIFY_RESUME	(1<<TIF_NOTIFY_RESUME)
- #define _TIF_SYSCALL_AUDIT	(1<<TIF_SYSCALL_AUDIT)
- #define _TIF_NOTIFY_SIGNAL	(1<<TIF_NOTIFY_SIGNAL)
-+#define _TIF_NOTIFY_IPI		(1<<TIF_NOTIFY_IPI)
- #define _TIF_POLLING_NRFLAG	(1<<TIF_POLLING_NRFLAG)
- 
- /* Work to do on interrupt/exception return.  */
--- 
-2.34.1
+> +static int get_ctx_arg_idx_aligned(struct btf *btf, const struct btf_type *t,
+> +				   int off)
+> +{
+> +	const struct btf_param *args;
+> +	u32 offset = 0, nr_args;
+> +	int i;
+> +
+> +	nr_args = btf_type_vlen(t);
+> +	args = (const struct btf_param *)(t + 1);
+> +	for (i = 0; i < nr_args; i++) {
+> +		if (offset == off)
+> +			return i;
+> +
+> +		t = btf_type_skip_modifiers(btf, args[i].type, NULL);
+> +		offset += btf_type_is_ptr(t) ? 8 : roundup(t->size, 8);
+> +		if (offset > off)
+> +			return -1;
+> +	}
+> +	return -1;
+> +}
+> +
+> +/* This function is similar to btf_check_func_type_match(), except that it
+> + * only compare some function args of the function prototype t1 and t2.
+> + */
 
+could we reuse btf_check_func_type_match instead? perhaps just
+adding extra argument with arguments bitmap to it?
+
+jirka
+
+> +int btf_check_func_part_match(struct btf *btf1, const struct btf_type *func1,
+> +			      struct btf *btf2, const struct btf_type *func2,
+> +			      u64 func_args)
+> +{
+> +	const struct btf_param *args1, *args2;
+> +	u32 nargs1, i, offset = 0;
+> +	const char *s1, *s2;
+> +
+> +	if (!btf_type_is_func_proto(func1) || !btf_type_is_func_proto(func2))
+> +		return -EINVAL;
+> +
+> +	args1 = (const struct btf_param *)(func1 + 1);
+> +	args2 = (const struct btf_param *)(func2 + 1);
+> +	nargs1 = btf_type_vlen(func1);
+> +
+> +	for (i = 0; i <= nargs1; i++) {
+> +		const struct btf_type *t1, *t2;
+> +
+> +		if (!(func_args & (1 << i)))
+> +			goto next;
+> +
+> +		if (i < nargs1) {
+> +			int t2_index;
+> +
+> +			/* get the index of the arg corresponding to args1[i]
+> +			 * by the offset.
+> +			 */
+> +			t2_index = get_ctx_arg_idx_aligned(btf2, func2,
+> +							   offset);
+> +			if (t2_index < 0)
+> +				return -EINVAL;
+> +
+> +			t1 = btf_type_skip_modifiers(btf1, args1[i].type, NULL);
+> +			t2 = btf_type_skip_modifiers(btf2, args2[t2_index].type,
+> +						     NULL);
+> +		} else {
+> +			/* i == nargs1, this is the index of return value of t1 */
+> +			if (get_ctx_arg_total_size(btf1, func1) !=
+> +			    get_ctx_arg_total_size(btf2, func2))
+> +				return -EINVAL;
+> +
+> +			/* check the return type of t1 and t2 */
+> +			t1 = btf_type_skip_modifiers(btf1, func1->type, NULL);
+> +			t2 = btf_type_skip_modifiers(btf2, func2->type, NULL);
+> +		}
+> +
+> +		if (t1->info != t2->info ||
+> +		    (btf_type_has_size(t1) && t1->size != t2->size))
+> +			return -EINVAL;
+> +		if (btf_type_is_int(t1) || btf_is_any_enum(t1))
+> +			goto next;
+> +
+> +		if (btf_type_is_struct(t1))
+> +			goto on_struct;
+> +
+> +		if (!btf_type_is_ptr(t1))
+> +			return -EINVAL;
+> +
+> +		t1 = btf_type_skip_modifiers(btf1, t1->type, NULL);
+> +		t2 = btf_type_skip_modifiers(btf2, t2->type, NULL);
+> +		if (!btf_type_is_struct(t1) || !btf_type_is_struct(t2))
+> +			return -EINVAL;
+> +
+> +on_struct:
+> +		s1 = btf_name_by_offset(btf1, t1->name_off);
+> +		s2 = btf_name_by_offset(btf2, t2->name_off);
+> +		if (strcmp(s1, s2))
+> +			return -EINVAL;
+> +next:
+> +		if (i < nargs1) {
+> +			t1 = btf_type_skip_modifiers(btf1, args1[i].type, NULL);
+> +			offset += btf_type_is_ptr(t1) ? 8 : roundup(t1->size, 8);
+> +		}
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+>  static bool btf_is_dynptr_ptr(const struct btf *btf, const struct btf_type *t)
+>  {
+>  	const char *name;
+> -- 
+> 2.39.2
+> 
