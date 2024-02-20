@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4BD4763E2
-	for <linux-kernel@vger.kernel.org>; Tue, 20 Feb 2024 16:01:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF02876906
+	for <linux-kernel@vger.kernel.org>; Tue, 20 Feb 2024 16:01:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708444897; cv=none; b=pBqTjX59g8eJ3AZiC81F9nC+UJG9ju9CEP4C/wr3TKOjfpDsuruuK9VGUl5GcfB3ozcIgz23utXqA6lziDVmkMxkQUJne1hLdxcM+ppM1E+e9OTlGmA0eK9K247iAfiBgsVgBmFJgi05doEUUj84ufgnUbemXGWiLT22rFwUOC0=
+	t=1708444901; cv=none; b=nbQch/f2K8LJb153xdMQ04KKAPmy2u/BKKRg+P1qBXoIw5ZjpBH/46/YhOTk37YLQdQ0an/kUx2Zb+H46p4J3rl5eYpNJKIGUs8MCWMH0y0tr8id1Ov/vK7rGCA2ss/FgXUD1fuBhjvR8X10WchUqMKwblrAvipYWglQhuWVfHM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708444897; c=relaxed/simple;
-	bh=5HAmL0Nulrsb9wBTZFbYw4JzagI9shqZIbv7xHhDomk=;
+	s=arc-20240116; t=1708444901; c=relaxed/simple;
+	bh=WOl+4ZdV247IWqqdatc7AVxaKDXgabrgBnrNgu874og=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=eYpJrdECexf4NmnXjThxzX05EG72HayUkiam1zPpQW/oe2acTun1IXYk9cJw7/c9VTt3Oyk+QarYCO/ydcWrmZWby3J42BVZhiIe+oAdfI28O+y3bUZmr3kBIFFzOZ3TwGMlwFsadrjjApwjxEKhKVcWci0i/SMcXELo2Qw2yRE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nCRkMcV9; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=FomKxZsfuXQpeqqID7l3Wnn4WJWNa6+UmPLoTKJzhjXX1Rt/WwSMvkPuUSf2k3DAzBKFa5+qSmBum2SKnWAFV1cKEs62KDVUELT8YuTxdgqJ2yrPoSYAPAtaWiEGjKh5WLdKzEmGjyXkeOwZIt15Ybm8wxDOun0UpW4rqk++XMA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XqZcC6S8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nCRkMcV9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1ADA5C43390;
-	Tue, 20 Feb 2024 16:01:34 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XqZcC6S8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2D2C5C43394;
+	Tue, 20 Feb 2024 16:01:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708444896;
-	bh=5HAmL0Nulrsb9wBTZFbYw4JzagI9shqZIbv7xHhDomk=;
+	s=k20201202; t=1708444901;
+	bh=WOl+4ZdV247IWqqdatc7AVxaKDXgabrgBnrNgu874og=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=nCRkMcV94TF6ZiOGgI/KcdPAyvDQ5aUFUVYNEZnixqpM+SRTmYgRszRTldpgsZir5
-	 v13m5hQ0ti5S8HKY9xh1APzEKVnGJmOBFGvjl0oB2apH7EuHs0JSmSuqaVDHui+Kee
-	 G3CXk0IDaoc633XivhzYcm1XmJ1NO+yMr8sFKG4vYAOmmIvJ/88uPmrhqtcVnvQ0fU
-	 L5J89Kfnuh+tqc6sIiH7C/+sUIcHGs++u8J/hIA/u2B1RnXdWC7GGBjq8j2rK+Ymq3
-	 usR4IqDhn0LN32jyZFYuHSOT1GB3RRXhDIIr+7HdP8SY/BBfMNRsYlFlznUkO9pkMx
-	 JKMVxUa/tmLaQ==
+	b=XqZcC6S8mHwIjBn0d+GK63Kxv4K+vTVWZoiJmt0vdjnRo91G15mFS4vhA7rWpdTqF
+	 APSaXbAY+BNbmIHokTNVcE/s5Czar5u9GfSozvBHOh3MAa2IyOrhntXYpfVFSBbkCS
+	 dPDA64BNeQNxgxEB/wMwcG2fBoiU6O150T/jQVqxZ7a5YzDb2m7g4qZWPh1fas8ke2
+	 WxUGS7kG5JPndRSSPCUJVeLOqs6bdHIHOVBeMOqfg2SFihrTX9mN1h6HSRrGTtohDA
+	 DVJGG2CFERqSR/GnbZT8G88zlyLFRbBcVtFZg2MBAinLbUYMbks2xU+tqrBjI7kjTL
+	 Lo/xQ3kwOFctQ==
 From: Oded Gabbay <ogabbay@kernel.org>
 To: dri-devel@lists.freedesktop.org,
 	linux-kernel@vger.kernel.org
-Cc: Farah Kassabri <fkassabri@habana.ai>
-Subject: [PATCH 02/13] accel/habanalabs: remove hop size from asic properties
-Date: Tue, 20 Feb 2024 18:01:18 +0200
-Message-Id: <20240220160129.909714-2-ogabbay@kernel.org>
+Cc: Tomer Tayar <ttayar@habana.ai>
+Subject: [PATCH 05/13] accel/habanalabs: fix glbl error cause handling
+Date: Tue, 20 Feb 2024 18:01:21 +0200
+Message-Id: <20240220160129.909714-5-ogabbay@kernel.org>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240220160129.909714-1-ogabbay@kernel.org>
 References: <20240220160129.909714-1-ogabbay@kernel.org>
@@ -44,359 +44,174 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Farah Kassabri <fkassabri@habana.ai>
+From: Tomer Tayar <ttayar@habana.ai>
 
-The hop size related properties is a MMU properties and not
-asic properties.
-As for PMMU and HMMU we could have different sizes.
+The glbl error cause handling has a wrong assumption that all error
+bits are consecutive.
+Fix the handling to check all relevant error bits per ASIC.
 
-Signed-off-by: Farah Kassabri <fkassabri@habana.ai>
+Signed-off-by: Tomer Tayar <ttayar@habana.ai>
 Reviewed-by: Oded Gabbay <ogabbay@kernel.org>
 Signed-off-by: Oded Gabbay <ogabbay@kernel.org>
 ---
- drivers/accel/habanalabs/common/habanalabs.h  |  4 ----
- drivers/accel/habanalabs/common/mmu/mmu.c     | 22 ++++++++---------
- .../accel/habanalabs/common/mmu/mmu_v2_hr.c   | 24 +++++++++----------
- drivers/accel/habanalabs/gaudi/gaudi.c        |  8 +++----
- drivers/accel/habanalabs/gaudi2/gaudi2.c      | 12 ++++------
- drivers/accel/habanalabs/goya/goya.c          | 12 ++++------
- 6 files changed, 36 insertions(+), 46 deletions(-)
+ drivers/accel/habanalabs/common/habanalabs.h |  4 +--
+ drivers/accel/habanalabs/common/security.c   | 33 +++++++++++++++-----
+ drivers/accel/habanalabs/common/security.h   |  3 +-
+ drivers/accel/habanalabs/gaudi2/gaudi2.c     | 10 +++---
+ drivers/accel/habanalabs/gaudi2/gaudi2P.h    |  3 +-
+ 5 files changed, 35 insertions(+), 18 deletions(-)
 
 diff --git a/drivers/accel/habanalabs/common/habanalabs.h b/drivers/accel/habanalabs/common/habanalabs.h
-index 634a470efe27..c85849aefba6 100644
+index c85849aefba6..40107a4eba93 100644
 --- a/drivers/accel/habanalabs/common/habanalabs.h
 +++ b/drivers/accel/habanalabs/common/habanalabs.h
-@@ -594,8 +594,6 @@ struct hl_hints_range {
-  *                 we display to the user
-  * @mmu_pgt_size: MMU page tables total size.
-  * @mmu_pte_size: PTE size in MMU page tables.
-- * @mmu_hop_table_size: MMU hop table size.
-- * @mmu_hop0_tables_total_size: total size of MMU hop0 tables.
-  * @dram_page_size: The DRAM physical page size.
-  * @cfg_size: configuration space size on SRAM.
-  * @sram_size: total size of SRAM.
-@@ -747,8 +745,6 @@ struct asic_fixed_properties {
- 	u32				clk_pll_index;
- 	u32				mmu_pgt_size;
- 	u32				mmu_pte_size;
--	u32				mmu_hop_table_size;
--	u32				mmu_hop0_tables_total_size;
- 	u32				dram_page_size;
- 	u32				cfg_size;
- 	u32				sram_size;
-diff --git a/drivers/accel/habanalabs/common/mmu/mmu.c b/drivers/accel/habanalabs/common/mmu/mmu.c
-index fa7919dba783..d3eaab908457 100644
---- a/drivers/accel/habanalabs/common/mmu/mmu.c
-+++ b/drivers/accel/habanalabs/common/mmu/mmu.c
-@@ -1236,7 +1236,7 @@ void hl_mmu_dr_free_pgt_node(struct hl_ctx *ctx, struct pgt_info *pgt_info)
- 	struct hl_device *hdev = ctx->hdev;
+@@ -647,7 +647,7 @@ struct hl_hints_range {
+  * @num_engine_cores: number of engine cpu cores.
+  * @max_num_of_engines: maximum number of all engines in the ASIC.
+  * @num_of_special_blocks: special_blocks array size.
+- * @glbl_err_cause_num: global err cause number.
++ * @glbl_err_max_cause_num: global err max cause number.
+  * @hbw_flush_reg: register to read to generate HBW flush. value of 0 means HBW flush is
+  *                 not supported.
+  * @reserved_fw_mem_size: size in MB of dram memory reserved for FW.
+@@ -779,7 +779,7 @@ struct asic_fixed_properties {
+ 	u32				num_engine_cores;
+ 	u32				max_num_of_engines;
+ 	u32				num_of_special_blocks;
+-	u32				glbl_err_cause_num;
++	u32				glbl_err_max_cause_num;
+ 	u32				hbw_flush_reg;
+ 	u32				reserved_fw_mem_size;
+ 	u16				collective_first_sob;
+diff --git a/drivers/accel/habanalabs/common/security.c b/drivers/accel/habanalabs/common/security.c
+index fe913965dbad..5402a3cd0491 100644
+--- a/drivers/accel/habanalabs/common/security.c
++++ b/drivers/accel/habanalabs/common/security.c
+@@ -7,15 +7,31 @@
  
- 	gen_pool_free(hdev->mmu_priv.dr.mmu_pgt_pool, pgt_info->phys_addr,
--			hdev->asic_prop.mmu_hop_table_size);
-+			hdev->asic_prop.dmmu.hop_table_size);
- 	hash_del(&pgt_info->node);
- 	kfree((u64 *) (uintptr_t) pgt_info->shadow_addr);
- 	kfree(pgt_info);
-@@ -1245,18 +1245,18 @@ void hl_mmu_dr_free_pgt_node(struct hl_ctx *ctx, struct pgt_info *pgt_info)
- u64 hl_mmu_dr_get_phys_hop0_addr(struct hl_ctx *ctx)
+ #include "habanalabs.h"
+ 
+-static const char * const hl_glbl_error_cause[HL_MAX_NUM_OF_GLBL_ERR_CAUSE] = {
++static const char * const hl_glbl_error_cause[] = {
+ 	"Error due to un-priv read",
+ 	"Error due to un-secure read",
+ 	"Error due to read from unmapped reg",
+ 	"Error due to un-priv write",
+ 	"Error due to un-secure write",
+ 	"Error due to write to unmapped reg",
++	"N/A",
++	"N/A",
++	"N/A",
++	"N/A",
++	"N/A",
++	"N/A",
++	"N/A",
++	"N/A",
++	"N/A",
++	"N/A",
+ 	"External I/F write sec violation",
+ 	"External I/F write to un-mapped reg",
++	"N/A",
++	"N/A",
++	"N/A",
++	"N/A",
++	"N/A",
++	"N/A",
+ 	"Read to write only",
+ 	"Write to read only"
+ };
+@@ -671,10 +687,11 @@ static bool hl_check_block_range_exclusion(struct hl_device *hdev,
+ static int hl_read_glbl_errors(struct hl_device *hdev,
+ 		u32 blk_idx, u32 major, u32 minor, u32 sub_minor, void *data)
  {
- 	return ctx->hdev->asic_prop.mmu_pgt_addr +
--			(ctx->asid * ctx->hdev->asic_prop.mmu_hop_table_size);
-+			(ctx->asid * ctx->hdev->asic_prop.dmmu.hop_table_size);
- }
+-	struct hl_special_block_info *special_blocks = hdev->asic_prop.special_blocks;
++	struct asic_fixed_properties *prop = &hdev->asic_prop;
++	struct hl_special_block_info *special_blocks = prop->special_blocks;
+ 	struct hl_special_block_info *current_block = &special_blocks[blk_idx];
+ 	u32 glbl_err_addr, glbl_err_cause, addr_val, cause_val, block_base,
+-		base = current_block->base_addr - lower_32_bits(hdev->asic_prop.cfg_base_address);
++		base = current_block->base_addr - lower_32_bits(prop->cfg_base_address);
+ 	int i;
  
- u64 hl_mmu_dr_get_hop0_addr(struct hl_ctx *ctx)
- {
- 	return (u64) (uintptr_t) ctx->hdev->mmu_priv.dr.mmu_shadow_hop0 +
--			(ctx->asid * ctx->hdev->asic_prop.mmu_hop_table_size);
-+			(ctx->asid * ctx->hdev->asic_prop.dmmu.hop_table_size);
- }
+ 	block_base = base + major * current_block->major_offset +
+@@ -689,13 +706,13 @@ static int hl_read_glbl_errors(struct hl_device *hdev,
+ 	glbl_err_addr = block_base + HL_GLBL_ERR_ADDR_OFFSET;
+ 	addr_val = RREG32(glbl_err_addr);
  
- u64 hl_mmu_dr_get_phys_addr(struct hl_ctx *ctx, u64 shadow_addr)
- {
--	u64 page_mask = ctx->hdev->asic_prop.mmu_hop_table_size - 1;
-+	u64 page_mask = ctx->hdev->asic_prop.dmmu.hop_table_size - 1;
- 	u64 shadow_hop_addr = shadow_addr & (~page_mask);
- 	u64 pte_offset = shadow_addr & page_mask;
- 	u64 phys_hop_addr;
-@@ -1326,13 +1326,13 @@ u64 hl_mmu_dr_alloc_hop(struct hl_ctx *ctx)
- 		return ULLONG_MAX;
- 
- 	phys_addr = (u64) gen_pool_alloc(hdev->mmu_priv.dr.mmu_pgt_pool,
--					prop->mmu_hop_table_size);
-+					prop->dmmu.hop_table_size);
- 	if (!phys_addr) {
- 		dev_err(hdev->dev, "failed to allocate page\n");
- 		goto pool_add_err;
+-	for (i = 0 ; i < hdev->asic_prop.glbl_err_cause_num ; i++) {
++	for (i = 0 ; i <= prop->glbl_err_max_cause_num ; i++) {
+ 		if (cause_val & BIT(i))
+ 			dev_err_ratelimited(hdev->dev,
+-				"%s, addr %#llx\n",
+-				hl_glbl_error_cause[i],
+-				hdev->asic_prop.cfg_base_address + block_base +
+-				FIELD_GET(HL_GLBL_ERR_ADDRESS_MASK, addr_val));
++					"%s, addr %#llx\n",
++					hl_glbl_error_cause[i],
++					prop->cfg_base_address + block_base +
++						FIELD_GET(HL_GLBL_ERR_ADDRESS_MASK, addr_val));
  	}
  
--	shadow_addr = (u64) (uintptr_t) kzalloc(prop->mmu_hop_table_size,
-+	shadow_addr = (u64) (uintptr_t) kzalloc(prop->dmmu.hop_table_size,
- 						GFP_KERNEL);
- 	if (!shadow_addr)
- 		goto shadow_err;
-@@ -1347,7 +1347,7 @@ u64 hl_mmu_dr_alloc_hop(struct hl_ctx *ctx)
+ 	WREG32(glbl_err_cause, cause_val);
+diff --git a/drivers/accel/habanalabs/common/security.h b/drivers/accel/habanalabs/common/security.h
+index d7a3b3e82ea4..476f70687c09 100644
+--- a/drivers/accel/habanalabs/common/security.h
++++ b/drivers/accel/habanalabs/common/security.h
+@@ -13,8 +13,7 @@
+ struct hl_device;
  
- shadow_err:
- 	gen_pool_free(hdev->mmu_priv.dr.mmu_pgt_pool,
--			phys_addr, prop->mmu_hop_table_size);
-+			phys_addr, prop->dmmu.hop_table_size);
- pool_add_err:
- 	kfree(pgt_info);
- 
-@@ -1379,7 +1379,7 @@ int hl_mmu_dr_init(struct hl_device *hdev)
- 	int rc;
- 
- 	hdev->mmu_priv.dr.mmu_pgt_pool =
--			gen_pool_create(__ffs(prop->mmu_hop_table_size), -1);
-+			gen_pool_create(__ffs(prop->dmmu.hop_table_size), -1);
- 
- 	if (!hdev->mmu_priv.dr.mmu_pgt_pool) {
- 		dev_err(hdev->dev, "Failed to create page gen pool\n");
-@@ -1387,8 +1387,8 @@ int hl_mmu_dr_init(struct hl_device *hdev)
- 	}
- 
- 	rc = gen_pool_add(hdev->mmu_priv.dr.mmu_pgt_pool, prop->mmu_pgt_addr +
--			prop->mmu_hop0_tables_total_size,
--			prop->dmmu.pgt_size - prop->mmu_hop0_tables_total_size,
-+			prop->dmmu.hop0_tables_total_size,
-+			prop->dmmu.pgt_size - prop->dmmu.hop0_tables_total_size,
- 			-1);
- 	if (rc) {
- 		dev_err(hdev->dev, "Failed to add memory to page gen pool\n");
-@@ -1396,7 +1396,7 @@ int hl_mmu_dr_init(struct hl_device *hdev)
- 	}
- 
- 	hdev->mmu_priv.dr.mmu_shadow_hop0 = kvcalloc(prop->max_asid,
--						prop->mmu_hop_table_size, GFP_KERNEL);
-+						prop->dmmu.hop_table_size, GFP_KERNEL);
- 	if (ZERO_OR_NULL_PTR(hdev->mmu_priv.dr.mmu_shadow_hop0)) {
- 		rc = -ENOMEM;
- 		goto err_pool_add;
-diff --git a/drivers/accel/habanalabs/common/mmu/mmu_v2_hr.c b/drivers/accel/habanalabs/common/mmu/mmu_v2_hr.c
-index afe7ef964f82..31507b2a431b 100644
---- a/drivers/accel/habanalabs/common/mmu/mmu_v2_hr.c
-+++ b/drivers/accel/habanalabs/common/mmu/mmu_v2_hr.c
-@@ -47,7 +47,7 @@ static inline int hl_mmu_v2_hr_init(struct hl_device *hdev)
- {
- 	struct asic_fixed_properties *prop = &hdev->asic_prop;
- 
--	return hl_mmu_hr_init(hdev, &hdev->mmu_priv.hr, prop->mmu_hop_table_size,
-+	return hl_mmu_hr_init(hdev, &hdev->mmu_priv.hr, prop->pmmu.hop_table_size,
- 				prop->mmu_pgt_size);
- }
- 
-@@ -65,7 +65,7 @@ static inline void hl_mmu_v2_hr_fini(struct hl_device *hdev)
- {
- 	struct asic_fixed_properties *prop = &hdev->asic_prop;
- 
--	hl_mmu_hr_fini(hdev, &hdev->mmu_priv.hr, prop->mmu_hop_table_size);
-+	hl_mmu_hr_fini(hdev, &hdev->mmu_priv.hr, prop->pmmu.hop_table_size);
- }
- 
- /**
-@@ -108,7 +108,7 @@ static void hl_mmu_v2_hr_ctx_fini(struct hl_ctx *ctx)
- 			"pgt_info of addr 0x%llx of asid %d was not destroyed, num_ptes: %d\n",
- 			pgt_info->phys_addr, ctx->asid, pgt_info->num_of_ptes);
- 		hl_mmu_hr_free_hop_remove_pgt(pgt_info, &ctx->hdev->mmu_priv.hr,
--							ctx->hdev->asic_prop.mmu_hop_table_size);
-+							ctx->hdev->asic_prop.pmmu.hop_table_size);
- 	}
- }
- 
-@@ -150,7 +150,7 @@ static int _hl_mmu_v2_hr_unmap(struct hl_ctx *ctx,
- 
- 		curr_pte = *(u64 *) (uintptr_t) hl_mmu_hr_pte_phys_to_virt(ctx, hops_pgt_info[i],
- 							hop_pte_phys_addr[i],
--							ctx->hdev->asic_prop.mmu_hop_table_size);
-+							ctx->hdev->asic_prop.pmmu.hop_table_size);
- 
- 		if ((i < hop_last) && (curr_pte & mmu_prop->last_mask)) {
- 			hop_last = i;
-@@ -169,14 +169,14 @@ static int _hl_mmu_v2_hr_unmap(struct hl_ctx *ctx,
- 
- 	for (i = hop_last ; i > 0 ; i--) {
- 		hl_mmu_hr_clear_pte(ctx, hops_pgt_info[i], hop_pte_phys_addr[i],
--						ctx->hdev->asic_prop.mmu_hop_table_size);
-+						ctx->hdev->asic_prop.pmmu.hop_table_size);
- 
- 		if (hl_mmu_hr_put_pte(ctx, hops_pgt_info[i], &ctx->hdev->mmu_priv.hr,
--						ctx->hdev->asic_prop.mmu_hop_table_size))
-+						ctx->hdev->asic_prop.pmmu.hop_table_size))
- 			goto mapped;
- 	}
- 	hl_mmu_hr_clear_pte(ctx, hops_pgt_info[0], hop_pte_phys_addr[0],
--						ctx->hdev->asic_prop.mmu_hop_table_size);
-+						ctx->hdev->asic_prop.pmmu.hop_table_size);
- 
- mapped:
- 	return 0;
-@@ -255,7 +255,7 @@ static int _hl_mmu_v2_hr_map(struct hl_ctx *ctx,
- 									scrambled_virt_addr);
- 		curr_pte = *(u64 *) (uintptr_t) hl_mmu_hr_pte_phys_to_virt(ctx, hops_pgt_info[i],
- 							hop_pte_phys_addr[i],
--							ctx->hdev->asic_prop.mmu_hop_table_size);
-+							ctx->hdev->asic_prop.pmmu.hop_table_size);
- 	}
- 
- 	if (curr_pte & PAGE_PRESENT_MASK) {
-@@ -268,7 +268,7 @@ static int _hl_mmu_v2_hr_map(struct hl_ctx *ctx,
- 					*(u64 *) (uintptr_t)
- 					hl_mmu_hr_pte_phys_to_virt(ctx, hops_pgt_info[i],
- 							hop_pte_phys_addr[i],
--							ctx->hdev->asic_prop.mmu_hop_table_size),
-+							ctx->hdev->asic_prop.pmmu.hop_table_size),
- 					hop_pte_phys_addr[i]);
- 		rc = -EINVAL;
- 		goto err;
-@@ -279,7 +279,7 @@ static int _hl_mmu_v2_hr_map(struct hl_ctx *ctx,
- 
- 	/* Write the PTEs */
- 	hl_mmu_hr_write_pte(ctx, hops_pgt_info[hop_last], hop_pte_phys_addr[hop_last], curr_pte,
--							ctx->hdev->asic_prop.mmu_hop_table_size);
-+							ctx->hdev->asic_prop.pmmu.hop_table_size);
- 
- 	/* for each new hop, add its address to the table of previous-hop */
- 	for (i = 1 ; i <= hop_last ; i++) {
-@@ -287,7 +287,7 @@ static int _hl_mmu_v2_hr_map(struct hl_ctx *ctx,
- 			curr_pte = (hops_pgt_info[i]->phys_addr & HOP_PHYS_ADDR_MASK) |
- 							PAGE_PRESENT_MASK;
- 			hl_mmu_hr_write_pte(ctx, hops_pgt_info[i - 1], hop_pte_phys_addr[i - 1],
--						curr_pte, ctx->hdev->asic_prop.mmu_hop_table_size);
-+						curr_pte, ctx->hdev->asic_prop.pmmu.hop_table_size);
- 			if (i - 1)
- 				hl_mmu_hr_get_pte(ctx, &ctx->hdev->mmu_func[MMU_HR_PGT].hr_funcs,
- 								hops_pgt_info[i - 1]->phys_addr);
-@@ -303,7 +303,7 @@ static int _hl_mmu_v2_hr_map(struct hl_ctx *ctx,
- 	for (i = 1 ; i <= hop_last ; i++)
- 		if (hop_new[i] && hops_pgt_info[i])
- 			hl_mmu_hr_free_hop_remove_pgt(hops_pgt_info[i], &ctx->hdev->mmu_priv.hr,
--							ctx->hdev->asic_prop.mmu_hop_table_size);
-+							ctx->hdev->asic_prop.pmmu.hop_table_size);
- 
- 	return rc;
- }
-diff --git a/drivers/accel/habanalabs/gaudi/gaudi.c b/drivers/accel/habanalabs/gaudi/gaudi.c
-index dde3839fe0e0..f2b04ffb0ecb 100644
---- a/drivers/accel/habanalabs/gaudi/gaudi.c
-+++ b/drivers/accel/habanalabs/gaudi/gaudi.c
-@@ -614,8 +614,6 @@ static int gaudi_set_fixed_properties(struct hl_device *hdev)
- 	else
- 		prop->mmu_pgt_size = MMU_PAGE_TABLES_SIZE;
- 	prop->mmu_pte_size = HL_PTE_SIZE;
--	prop->mmu_hop_table_size = HOP_TABLE_SIZE_512_PTE;
--	prop->mmu_hop0_tables_total_size = HOP0_512_PTE_TABLES_TOTAL_SIZE;
- 	prop->dram_page_size = PAGE_SIZE_2MB;
- 	prop->device_mem_alloc_default_page_size = prop->dram_page_size;
- 	prop->dram_supports_virtual_memory = false;
-@@ -637,8 +635,8 @@ static int gaudi_set_fixed_properties(struct hl_device *hdev)
- 	prop->pmmu.num_hops = MMU_ARCH_5_HOPS;
- 	prop->pmmu.last_mask = LAST_MASK;
- 	/* TODO: will be duplicated until implementing per-MMU props */
--	prop->pmmu.hop_table_size = prop->mmu_hop_table_size;
--	prop->pmmu.hop0_tables_total_size = prop->mmu_hop0_tables_total_size;
-+	prop->pmmu.hop_table_size = HOP_TABLE_SIZE_512_PTE;
-+	prop->pmmu.hop0_tables_total_size = HOP0_512_PTE_TABLES_TOTAL_SIZE;
- 
- 	/* PMMU and HPMMU are the same except of page size */
- 	memcpy(&prop->pmmu_huge, &prop->pmmu, sizeof(prop->pmmu));
-@@ -3653,7 +3651,7 @@ static int gaudi_mmu_init(struct hl_device *hdev)
- 
- 	for (i = 0 ; i < prop->max_asid ; i++) {
- 		hop0_addr = prop->mmu_pgt_addr +
--				(i * prop->mmu_hop_table_size);
-+				(i * prop->dmmu.hop_table_size);
- 
- 		rc = gaudi_mmu_update_asid_hop0_addr(hdev, i, hop0_addr);
- 		if (rc) {
+ /* special blocks */
+-#define HL_MAX_NUM_OF_GLBL_ERR_CAUSE		10
+-#define HL_GLBL_ERR_ADDRESS_MASK		GENMASK(11, 0)
++#define HL_GLBL_ERR_ADDRESS_MASK	GENMASK(11, 0)
+ /* GLBL_ERR_ADDR register offset from the start of the block */
+ #define HL_GLBL_ERR_ADDR_OFFSET		0xF44
+ /* GLBL_ERR_CAUSE register offset from the start of the block */
 diff --git a/drivers/accel/habanalabs/gaudi2/gaudi2.c b/drivers/accel/habanalabs/gaudi2/gaudi2.c
-index 4a0917aa4dd7..26975179763a 100644
+index 671241735a6e..189d8da6a624 100644
 --- a/drivers/accel/habanalabs/gaudi2/gaudi2.c
 +++ b/drivers/accel/habanalabs/gaudi2/gaudi2.c
-@@ -2467,8 +2467,6 @@ static int gaudi2_set_fixed_properties(struct hl_device *hdev)
+@@ -158,11 +158,13 @@
+ #define RAZWI_INITIATOR_ID_X_Y(xl, yl, xh) \
+ 	(RAZWI_INITIATOR_ID_X_Y_LOW(xl, yl) | RAZWI_INITIATOR_ID_X_HIGH(xh))
  
- 	prop->dmmu.pgt_size = HMMU_PAGE_TABLES_SIZE;
- 	prop->mmu_pte_size = HL_PTE_SIZE;
--	prop->mmu_hop_table_size = HOP_TABLE_SIZE_512_PTE;
--	prop->mmu_hop0_tables_total_size = HOP_TABLE_SIZE_512_PTE * prop->max_asid;
+-#define PSOC_RAZWI_ENG_STR_SIZE 128
+-#define PSOC_RAZWI_MAX_ENG_PER_RTR 5
++#define PSOC_RAZWI_ENG_STR_SIZE			128
++#define PSOC_RAZWI_MAX_ENG_PER_RTR		5
  
- 	prop->dmmu.hop_shifts[MMU_HOP0] = DHOP0_SHIFT;
- 	prop->dmmu.hop_shifts[MMU_HOP1] = DHOP1_SHIFT;
-@@ -2482,8 +2480,8 @@ static int gaudi2_set_fixed_properties(struct hl_device *hdev)
- 	prop->dmmu.num_hops = MMU_ARCH_4_HOPS;
- 	prop->dmmu.last_mask = LAST_MASK;
- 	prop->dmmu.host_resident = 0;
--	prop->dmmu.hop_table_size = prop->mmu_hop_table_size;
--	prop->dmmu.hop0_tables_total_size = prop->mmu_hop0_tables_total_size;
-+	prop->dmmu.hop_table_size = HOP_TABLE_SIZE_512_PTE;
-+	prop->dmmu.hop0_tables_total_size = HOP_TABLE_SIZE_512_PTE * prop->max_asid;
+ /* HW scrambles only bits 0-25 */
+-#define HW_UNSCRAMBLED_BITS_MASK GENMASK_ULL(63, 26)
++#define HW_UNSCRAMBLED_BITS_MASK		GENMASK_ULL(63, 26)
++
++#define GAUDI2_GLBL_ERR_MAX_CAUSE_NUM		17
  
- 	/* As we need to set the pgt address in dram for HMMU init so we cannot
- 	 * wait to the fw cpucp info to set the dram props as mmu init comes before
-@@ -2500,8 +2498,8 @@ static int gaudi2_set_fixed_properties(struct hl_device *hdev)
- 	prop->pmmu.host_resident = 1;
- 	prop->pmmu.num_hops = MMU_ARCH_6_HOPS;
- 	prop->pmmu.last_mask = LAST_MASK;
--	prop->pmmu.hop_table_size = prop->mmu_hop_table_size;
--	prop->pmmu.hop0_tables_total_size = prop->mmu_hop0_tables_total_size;
-+	prop->pmmu.hop_table_size = HOP_TABLE_SIZE_512_PTE;
-+	prop->pmmu.hop0_tables_total_size = HOP_TABLE_SIZE_512_PTE * prop->max_asid;
+ struct gaudi2_razwi_info {
+ 	u32 axuser_xy;
+@@ -3587,7 +3589,7 @@ static int gaudi2_special_blocks_config(struct hl_device *hdev)
+ 	int i, rc;
  
- 	prop->hints_host_reserved_va_range.start_addr = RESERVED_VA_FOR_VIRTUAL_MSIX_DOORBELL_START;
- 	prop->hints_host_reserved_va_range.end_addr = RESERVED_VA_RANGE_FOR_ARC_ON_HOST_END;
-@@ -5934,7 +5932,7 @@ static int gaudi2_mmu_update_hop0_addr(struct hl_device *hdev, u32 stlb_base,
- 		if (host_resident_pgt)
- 			hop0_addr = hdev->mmu_priv.hr.mmu_asid_hop0[asid].phys_addr;
- 		else
--			hop0_addr = prop->mmu_pgt_addr + (asid * prop->mmu_hop_table_size);
-+			hop0_addr = prop->mmu_pgt_addr + (asid * prop->dmmu.hop_table_size);
+ 	/* Configure Special blocks */
+-	prop->glbl_err_cause_num = GAUDI2_NUM_OF_GLBL_ERR_CAUSE;
++	prop->glbl_err_max_cause_num = GAUDI2_GLBL_ERR_MAX_CAUSE_NUM;
+ 	prop->num_of_special_blocks = ARRAY_SIZE(gaudi2_special_blocks);
+ 	prop->special_blocks = kmalloc_array(prop->num_of_special_blocks,
+ 			sizeof(*prop->special_blocks), GFP_KERNEL);
+diff --git a/drivers/accel/habanalabs/gaudi2/gaudi2P.h b/drivers/accel/habanalabs/gaudi2/gaudi2P.h
+index bc508c9cee5c..eee41387b269 100644
+--- a/drivers/accel/habanalabs/gaudi2/gaudi2P.h
++++ b/drivers/accel/habanalabs/gaudi2/gaudi2P.h
+@@ -237,9 +237,8 @@
+ #define GAUDI2_SOB_INCREMENT_BY_ONE	(FIELD_PREP(DCORE0_SYNC_MNGR_OBJS_SOB_OBJ_VAL_MASK, 1) | \
+ 					FIELD_PREP(DCORE0_SYNC_MNGR_OBJS_SOB_OBJ_INC_MASK, 1))
  
- 		rc = gaudi2_mmu_update_asid_hop0_addr(hdev, stlb_base, asid, hop0_addr);
- 		if (rc) {
-diff --git a/drivers/accel/habanalabs/goya/goya.c b/drivers/accel/habanalabs/goya/goya.c
-index 1322cb330c57..5a359c3bdc78 100644
---- a/drivers/accel/habanalabs/goya/goya.c
-+++ b/drivers/accel/habanalabs/goya/goya.c
-@@ -413,8 +413,6 @@ int goya_set_fixed_properties(struct hl_device *hdev)
- 	else
- 		prop->mmu_pgt_size = MMU_PAGE_TABLES_SIZE;
- 	prop->mmu_pte_size = HL_PTE_SIZE;
--	prop->mmu_hop_table_size = HOP_TABLE_SIZE_512_PTE;
--	prop->mmu_hop0_tables_total_size = HOP0_512_PTE_TABLES_TOTAL_SIZE;
- 	prop->dram_page_size = PAGE_SIZE_2MB;
- 	prop->device_mem_alloc_default_page_size = prop->dram_page_size;
- 	prop->dram_supports_virtual_memory = true;
-@@ -435,8 +433,8 @@ int goya_set_fixed_properties(struct hl_device *hdev)
- 	prop->dmmu.num_hops = MMU_ARCH_5_HOPS;
- 	prop->dmmu.last_mask = LAST_MASK;
- 	/* TODO: will be duplicated until implementing per-MMU props */
--	prop->dmmu.hop_table_size = prop->mmu_hop_table_size;
--	prop->dmmu.hop0_tables_total_size = prop->mmu_hop0_tables_total_size;
-+	prop->dmmu.hop_table_size = HOP_TABLE_SIZE_512_PTE;
-+	prop->dmmu.hop0_tables_total_size = HOP0_512_PTE_TABLES_TOTAL_SIZE;
+-#define GAUDI2_NUM_TESTED_QS (GAUDI2_QUEUE_ID_CPU_PQ - GAUDI2_QUEUE_ID_PDMA_0_0)
++#define GAUDI2_NUM_TESTED_QS		(GAUDI2_QUEUE_ID_CPU_PQ - GAUDI2_QUEUE_ID_PDMA_0_0)
  
- 	/* shifts and masks are the same in PMMU and DMMU */
- 	memcpy(&prop->pmmu, &prop->dmmu, sizeof(prop->dmmu));
-@@ -446,8 +444,8 @@ int goya_set_fixed_properties(struct hl_device *hdev)
- 	prop->pmmu.num_hops = MMU_ARCH_5_HOPS;
- 	prop->pmmu.last_mask = LAST_MASK;
- 	/* TODO: will be duplicated until implementing per-MMU props */
--	prop->pmmu.hop_table_size = prop->mmu_hop_table_size;
--	prop->pmmu.hop0_tables_total_size = prop->mmu_hop0_tables_total_size;
-+	prop->pmmu.hop_table_size = HOP_TABLE_SIZE_512_PTE;
-+	prop->pmmu.hop0_tables_total_size = HOP0_512_PTE_TABLES_TOTAL_SIZE;
+-#define GAUDI2_NUM_OF_GLBL_ERR_CAUSE		8
  
- 	/* PMMU and HPMMU are the same except of page size */
- 	memcpy(&prop->pmmu_huge, &prop->pmmu, sizeof(prop->pmmu));
-@@ -2678,7 +2676,7 @@ int goya_mmu_init(struct hl_device *hdev)
- 
- 	for (i = 0 ; i < prop->max_asid ; i++) {
- 		hop0_addr = prop->mmu_pgt_addr +
--				(i * prop->mmu_hop_table_size);
-+				(i * prop->dmmu.hop_table_size);
- 
- 		rc = goya_mmu_update_asid_hop0_addr(hdev, i, hop0_addr);
- 		if (rc) {
+ enum gaudi2_reserved_sob_id {
+ 	GAUDI2_RESERVED_SOB_CS_COMPLETION_FIRST,
 -- 
 2.34.1
 
