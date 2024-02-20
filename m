@@ -1,71 +1,108 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E48566B5E;
-	Tue, 20 Feb 2024 11:21:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B584567C70
+	for <linux-kernel@vger.kernel.org>; Tue, 20 Feb 2024 11:21:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708428091; cv=none; b=D/v+kA4tHzN86vOjAMAXQHFinl61imqJeVVciQg9tl6JvdSiW0k3KgliJGgWD2tWlEzDn+Ql7bnymts+Wt9mvjvuQxsfpf9YXputs9maWjpNsTvB49+Cdb8qviT/H4qr2pJECKHwq7KxM9eg9+CoEOi7nspQl+JsVohYpOSpdkw=
+	t=1708428096; cv=none; b=j6AFDKABsGKlcSSQy/lWxZnlvio6eReh2aLTHZiKdBnUvYnrUPxw3rUCWycaUQlgNWXyE0F51WiYWETE0fN+XyoFKNIfRCgyBWRbHFRfX4AlXIIkFNH36Y3/CpKCOpiTktb/QfD0Dwv+lgHr7wh8D6SULGJgF8gfWTPLBuEU7I0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708428091; c=relaxed/simple;
-	bh=M58MZcQaPOao7iwprIie+9OLC12Mm/dqk+jYeODJ+8w=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fFd3FmIuEx90iz6hiYUR/aaIZoKnRdazM4VVNSBGTCnqMZe0+f4PUwEYw0VdWIBk9FpiIGVh6Z2/maiPE/ezjn6QvrMrR1QAK+rGPCx2mLzeXPTKmOF9rQ3QLD9zUSCDKTlfRUUvV9uvM33rrUF0r2Ox5fxb11MaKkH1Vmf4P1E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MJ4U8sCe; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MJ4U8sCe"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B9C81C43390;
-	Tue, 20 Feb 2024 11:21:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708428090;
-	bh=M58MZcQaPOao7iwprIie+9OLC12Mm/dqk+jYeODJ+8w=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=MJ4U8sCeL0HL/jwZrw4Wha5gWUQjlaqRi60kHel96GNuYSJ5ryvYvU0B18K7nDQ2y
-	 xscd5vuaE9pZZE1YUZ6Ua5q9cylQemqLVzbZ/4Mslve9trqo6fX+6VmiKpeFuN0+aN
-	 DychayaNwVCKoGUR4Y5qAMjpETzUbV7TeSkNJa6cb3tRg4djLxQbfOvpI391QoWNGf
-	 MJLOVa8C+uYc307n3SDOJWpB4+5UsLIj8lXsGxRSzhcn3ohJvG2QCVHk2FZt1Ee+3A
-	 1fiYJkUpeOPhOG1i1PCeGayRq70cfoKGqpoxblivXoM4XYOmQg3Yllxw+HeenwYoZj
-	 rFCt8Syw1DawA==
-Date: Tue, 20 Feb 2024 11:21:24 +0000
-From: Simon Horman <horms@kernel.org>
-To: "Ricardo B. Marliere" <ricardo@marliere.net>
-Cc: Oliver Neukum <oneukum@suse.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Andrew Lunn <andrew@lunn.ch>,
-	Florian Fainelli <f.fainelli@gmail.com>,
-	Vladimir Oltean <olteanv@gmail.com>,
-	Roopa Prabhu <roopa@nvidia.com>,
-	Nikolay Aleksandrov <razor@blackwall.org>,
-	Loic Poulain <loic.poulain@linaro.org>,
-	Sergey Ryazanov <ryazanov.s.a@gmail.com>,
-	Johannes Berg <johannes@sipsolutions.net>, netdev@vger.kernel.org,
-	linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-	bridge@lists.linux.dev, linux-ppp@vger.kernel.org,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH 07/12] net: hsr: constify the struct device_type usage
-Message-ID: <20240220112124.GU40273@kernel.org>
-References: <20240217-device_cleanup-net-v1-0-1eb31fb689f7@marliere.net>
- <20240217-device_cleanup-net-v1-7-1eb31fb689f7@marliere.net>
+	s=arc-20240116; t=1708428096; c=relaxed/simple;
+	bh=p3qHs+8yUn4gJnTCAezckQGse3mRhKycMBb4P4eMPqE=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=oEgagW8+spTewfq7luwEFJSMyPaiKwLLbQCT81YGPphW30fB9fyJjA4XMDKRGe9uUAVA6sjxb0lw5ENYZR0UWlfTWM1maogE1Nw11JS/M6vx3AnPXfNE8zGr8uHhgmrZ3U3miuc0h3FN78lOV5JnqVdQYc51yUzRqg3dU38f+2A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.44])
+	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4TfH4h2Rpyz1xnyq;
+	Tue, 20 Feb 2024 19:20:04 +0800 (CST)
+Received: from dggpemm500006.china.huawei.com (unknown [7.185.36.236])
+	by mail.maildlp.com (Postfix) with ESMTPS id E18C2140118;
+	Tue, 20 Feb 2024 19:21:25 +0800 (CST)
+Received: from mdc.huawei.com (10.175.112.208) by
+ dggpemm500006.china.huawei.com (7.185.36.236) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Tue, 20 Feb 2024 19:21:25 +0800
+From: =?UTF-8?q?=E9=99=88=E9=AA=8F?= <chenjun102@huawei.com>
+To: <tglx@linutronix.de>, <gregkh@linuxfoundation.org>,
+	<linux-kernel@vger.kernel.org>
+CC: <xuqiang36@huawei.com>, <chenjun102@huawei.com>
+Subject: [PATCH v3] irqchip/mbigen: Don't use bus_get_dev_root() to find the parent
+Date: Tue, 20 Feb 2024 19:14:29 +0800
+Message-ID: <20240220111429.110666-1-chenjun102@huawei.com>
+X-Mailer: git-send-email 2.17.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240217-device_cleanup-net-v1-7-1eb31fb689f7@marliere.net>
+Content-Type: text/plain
+X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
+ dggpemm500006.china.huawei.com (7.185.36.236)
 
-On Sat, Feb 17, 2024 at 05:13:29PM -0300, Ricardo B. Marliere wrote:
-> Since commit aed65af1cc2f ("drivers: make device_type const"), the driver
-> core can properly handle constant struct device_type. Move the hsr_type
-> variable to be a constant structure as well, placing it into read-only
-> memory which can not be modified at runtime.
-> 
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Signed-off-by: Ricardo B. Marliere <ricardo@marliere.net>
+From: Chen Jun <chenjun102@huawei.com>
 
-Reviewed-by: Simon Horman <horms@kernel.org>
+bus_get_dev_root() returns sp->dev_root set in subsys_register().
+And subsys_register() is not called by platform_bus_init().
+
+For platform_bus_type, bus_get_dev_root() always returns NULL.
+This makes mbigen_of_create_domain() always return -ENODEV.
+
+Don't try to retrieve the parent via bus_get_dev_root() and
+unconditionally hand a NULL pointer to of_platform_device_create() to
+fix this.
+
+Fixes: fea087fc291b ("irqchip/mbigen: move to use bus_get_dev_root()")
+Signed-off-by: Chen Jun <chenjun102@huawei.com>
+Cc: stable@vger.kernel.org
+---
+v3: Modify change log
+
+v2: Modify change log
+    https://lore.kernel.org/all/20240219085314.85363-1-chenjun102@huawei.com/
+
+v1: https://lore.kernel.org/all/20240129130003.18181-1-chenjun102@huawei.com/
+
+ drivers/irqchip/irq-mbigen.c | 8 +-------
+ 1 file changed, 1 insertion(+), 7 deletions(-)
+
+diff --git a/drivers/irqchip/irq-mbigen.c b/drivers/irqchip/irq-mbigen.c
+index 5101a3fb11df..58881d313979 100644
+--- a/drivers/irqchip/irq-mbigen.c
++++ b/drivers/irqchip/irq-mbigen.c
+@@ -235,22 +235,17 @@ static const struct irq_domain_ops mbigen_domain_ops = {
+ static int mbigen_of_create_domain(struct platform_device *pdev,
+ 				   struct mbigen_device *mgn_chip)
+ {
+-	struct device *parent;
+ 	struct platform_device *child;
+ 	struct irq_domain *domain;
+ 	struct device_node *np;
+ 	u32 num_pins;
+ 	int ret = 0;
+ 
+-	parent = bus_get_dev_root(&platform_bus_type);
+-	if (!parent)
+-		return -ENODEV;
+-
+ 	for_each_child_of_node(pdev->dev.of_node, np) {
+ 		if (!of_property_read_bool(np, "interrupt-controller"))
+ 			continue;
+ 
+-		child = of_platform_device_create(np, NULL, parent);
++		child = of_platform_device_create(np, NULL, NULL);
+ 		if (!child) {
+ 			ret = -ENOMEM;
+ 			break;
+@@ -273,7 +268,6 @@ static int mbigen_of_create_domain(struct platform_device *pdev,
+ 		}
+ 	}
+ 
+-	put_device(parent);
+ 	if (ret)
+ 		of_node_put(np);
+ 
+-- 
+2.17.1
 
