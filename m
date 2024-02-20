@@ -1,29 +1,30 @@
 Received: from elvis.franken.de (elvis.franken.de [193.175.24.41])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F0A716A34E;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F09FF6A348;
 	Tue, 20 Feb 2024 13:48:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.175.24.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708436934; cv=none; b=g4kV4FIz/kw3Tb7+ywwIZrfcvbyTjblVJCmlVeme6wY2eDmpx6Tyzuck4we2ZmpvzqNZCbMrIofoWCwfnZgDle5KdzPLKZGNecIR0FmVRJWybF7vZIE2RbiCdpNwqkSgQvuPCdwli0f5NVDCfKn7RQbFLHUAWWkpMmvyTZzJjOI=
+	t=1708436934; cv=none; b=I2MWgxHTZuy6rgT9Z0wX/6FK06xQWRibTa2KSa9kEZhXOEskjR0suve3uMVpQx8M4IrcD+gWLhkbTDFSKA3mJw0NFWog6e8pxzLxEiiuTj2vWQp+UcCpXp2qF6ybG/nwO/mg7J2j1aD3whBKeSa39dvdiBZ2OX3D0XA6cO+E9xY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1708436934; c=relaxed/simple;
-	bh=dnHyi2krLy55hbWApPwySj7GAp6hhfw9uc+3Pp2XTQQ=;
+	bh=8GvFNVF9duq/2bUVAkBo5DWH41frpnACDn9XWjN8Zj4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Gc+xGkWMb7XoeqzbJgdBNgTa8i7LyD/Ay11+SCg0CCuK+dMDrjx80ndTyHUyIHYPHXX90fFh332yEEaMDU9cl9EkQw/5/HEGpCJwoUvtJIw7w+7QDn9KuF3X0SIfSnlKgyFf4x46Hp36q5880ILWrklc7aq2gBIs5+gkqzABO2A=
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZcHCww2t04Lo7oD33q1djZ38xZ78ygIQV4P5lEZfUR8gUp9eKkeyDutpns3FINC5YLkJl96D47x4Uy8so5/egDnDfZIN36Ntwk5mnGNITv/H697DtLdb+m9Kj6QY8JNyxzJ6TivMxeHl6zqNkPVSJ+y1fhwELnUogzYtczI/4fc=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpha.franken.de; spf=pass smtp.mailfrom=alpha.franken.de; arc=none smtp.client-ip=193.175.24.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpha.franken.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alpha.franken.de
 Received: from uucp by elvis.franken.de with local-rmail (Exim 3.36 #1)
-	id 1rcQUF-0007OU-00; Tue, 20 Feb 2024 14:48:43 +0100
+	id 1rcQUF-0007Of-00; Tue, 20 Feb 2024 14:48:43 +0100
 Received: by alpha.franken.de (Postfix, from userid 1000)
-	id 6BFA0C069B; Tue, 20 Feb 2024 14:38:58 +0100 (CET)
-Date: Tue, 20 Feb 2024 14:38:58 +0100
+	id 4C9E7C0AFC; Tue, 20 Feb 2024 14:40:10 +0100 (CET)
+Date: Tue, 20 Feb 2024 14:40:10 +0100
 From: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
 To: "Ricardo B. Marliere" <ricardo@marliere.net>
-Cc: linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+Cc: Serge Semin <fancer.lancer@gmail.com>, linux-mips@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
 	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH 0/2] mips: struct bus_type cleanup
-Message-ID: <ZdSrclzKXvC9W/c4@alpha.franken.de>
-References: <20240204-bus_cleanup-mips-v1-0-05af5e9a7ead@marliere.net>
+Subject: Re: [PATCH] mips: bus: make mips_cdmm_bustype const
+Message-ID: <ZdSruvrpmTydq+M7@alpha.franken.de>
+References: <20240213-bus_cleanup-mips2-v1-1-9c0e3d4a1852@marliere.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -32,34 +33,22 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240204-bus_cleanup-mips-v1-0-05af5e9a7ead@marliere.net>
+In-Reply-To: <20240213-bus_cleanup-mips2-v1-1-9c0e3d4a1852@marliere.net>
 
-On Sun, Feb 04, 2024 at 12:06:56PM -0300, Ricardo B. Marliere wrote:
-> This series is part of an effort to cleanup the users of the driver
-> core, as can be seen in many recent patches authored by Greg across the
-> tree (e.g. [1]). Specifically, this series is part of the task of
-> splitting one of his TODOs [2].
-> 
-> ---
-> [1]: https://lore.kernel.org/lkml/?q=f%3Agregkh%40linuxfoundation.org+s%3A%22make%22+and+s%3A%22const%22
-> [2]: https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/driver-core.git/commit/?h=bus_cleanup&id=26105f537f0c60eacfeb430abd2e05d7ddcdd8aa
+On Tue, Feb 13, 2024 at 11:49:24AM -0300, Ricardo B. Marliere wrote:
+> Now that the driver core can properly handle constant struct bus_type,
+> move the mips_cdmm_bustype variable to be a constant structure as well,
+> placing it into read-only memory which can not be modified at runtime.
 > 
 > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Suggested-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 > Signed-off-by: Ricardo B. Marliere <ricardo@marliere.net>
-> 
 > ---
-> Ricardo B. Marliere (2):
->       mips: sgi-ip22: make gio_bus_type const
->       mips: txx9: make txx9_sramc_subsys const
-> 
->  arch/mips/sgi-ip22/ip22-gio.c  | 4 ++--
->  arch/mips/txx9/generic/setup.c | 2 +-
->  2 files changed, 3 insertions(+), 3 deletions(-)
-> ---
-> base-commit: 6613476e225e090cc9aad49be7fa504e290dd33d
-> change-id: 20240204-bus_cleanup-mips-be3d52c96e32
+>  arch/mips/include/asm/cdmm.h | 2 +-
+>  drivers/bus/mips_cdmm.c      | 2 +-
+>  2 files changed, 2 insertions(+), 2 deletions(-)
 
-series applied to mips-next.
+applied to mips-next.
 
 Thomas.
 
