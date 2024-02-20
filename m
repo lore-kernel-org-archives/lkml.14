@@ -1,62 +1,40 @@
-Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 544B75D8EA;
-	Tue, 20 Feb 2024 09:03:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 353025E3A0
+	for <linux-kernel@vger.kernel.org>; Tue, 20 Feb 2024 09:03:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708419816; cv=none; b=OVaI0/yGYtU5P6CKDtfafwMMMje18aorJgeBvJD5o+pgEP+yjW6MugI/Q1HM03JgxR/qBY0XExw0L3yvYLId+F9g61zCxEn27C3gFOlCft2ZBiVc3qMISu94ok7ebxCZOCkvv95nn8XPjVt4dtBq9qrKrCnPvlEqvXcMkGalAO8=
+	t=1708419832; cv=none; b=Gyf/MvOaFAP2G4X3I+JiJevo06C//Wjlsg+YNBxAjVcgmxmFljK9QtEnwTtZ8UO1pQ++qelT+dNS6fW5o/ZuBQY7+hOVpT+pNHt1PP1sycb6Sv8gJm8LFOM+lAmE8zKBvasaZBaOkJq9yMShIbYAQk9Q1WDuzH+pIX7MWE5h5oc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708419816; c=relaxed/simple;
-	bh=+QEWfSHhYBKuafjCwRIfOA10sASx6MgTqjF9OOhMZfw=;
-	h=From:Message-ID:Date:MIME-Version:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=B6C7mrONgJvzGR+RX/wCY8mBY0DwgqDyjJTDJvVsQdGUavdjWRJo3WHJ8UQT3I4mmYOAL0qFrztRSl8ukGk8HPZGVLsUWoXNyHJtGaUDKRtYrl4YHNjB8fO/BTo7OTe809eqVoJW5aA+XtqMo5mnsH2qFe3zP6fpvDz5zlK94O0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ncIqjJ42; arc=none smtp.client-ip=209.85.221.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1708419832; c=relaxed/simple;
+	bh=CbuUipgN3x0OtOMVl+Qzmre0d9c7fvRwbaMamF0Y22E=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=gaorNKBE5qFQBFh0hCBfZbiW/2wWZ5jPufa0N/JHTrrFTY/Kzpll4V0n0oLsVYQlTmrKysadGfAJtd+hQUiMrvCtshL4R5VUbFlwa/1WwP8SZCJLXUHAGa3W+S2qjQEoIyBO8mo9hS93DPVI1AM6gZJnjUTN1mo82DRJ8G4G3vY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=tK+lxaPH; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ncIqjJ42"
-Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-33d36736d4eso1690013f8f.1;
-        Tue, 20 Feb 2024 01:03:34 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1708419812; x=1709024612; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:organization:references:cc:to
-         :content-language:subject:reply-to:user-agent:mime-version:date
-         :message-id:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=s+OmS3xJIO7hb5gJugts8YXFx8Npo3EjobwfBSBe6mM=;
-        b=ncIqjJ42GRWsPJXQ4vL99HAmBoK4ClzKSITAjG8xO0pHqYiybXNm5A3LXPbmWZuccd
-         spfFj6ytsmfYmKkupcnbxpPdDaPyBc333SDl4CDqSN9d31zSCQth/4gnzFv+TaeokRVi
-         aJyB69RUdgGMfZcJBkvqoxEul2Bnir+A448cGLkuYG20Q+aYCWAay2ogdzRZ/1T1VIlr
-         vCj089ERY+5/twt1zRF9nLQnMu1QHeWIPyEpumsh2039e94KPHYa+UnqqU85IhCnPfCH
-         WDT1Xm+2vYced8tSLqpRX9FRCg0Z1ufx4Id7wgQq6cQ9kjomSckuyx07GL0fIRuwf2GH
-         cKIA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708419812; x=1709024612;
-        h=content-transfer-encoding:in-reply-to:organization:references:cc:to
-         :content-language:subject:reply-to:user-agent:mime-version:date
-         :message-id:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=s+OmS3xJIO7hb5gJugts8YXFx8Npo3EjobwfBSBe6mM=;
-        b=Hxu3qs3SdmZ+6l4LQwN4YFRPaYnT8HtIVv5bDjGB55byebQ5KZRKuid3FTfKnXjMf2
-         gyXyiok96GoUgST0LiyI/MqeggqBPM31PLz9IDpDtZVDGCVCZspoRGXMYpiYHTeYSa4b
-         UGrlXkeYgos2iegJNJFhA/+n4WbtGom/ZIeIjAEFEkO+o6tTsvgx8egqRB+Fmyb/VH7q
-         7DM01w7GNfdRWRDlNHdBuCWpm/c2zKRcj1wG620FXSKAKLAVha318FUc9olI244aMbRR
-         9rxa6yX7khu9NhbBxYPgcfUyz7amXi3e91ZwW7ojwKtigiCamf8Yc2umwpFimJObS5E0
-         bQOg==
-X-Forwarded-Encrypted: i=1; AJvYcCX8OeIRpcUFiyGXkEoLsaPloy2+E3DjqJ3nEj6s//ZRQbO8A+ydw/+wILGHtNKxvUT+VURvd2aEKv42AgggtW91aZlMntkLUmKInfcyI8NtJyCvsEAGdaTwrLRiusetHviA8lpakTR6kgFziqb/iBJtOTRyj+Pbwa6EOFv+0aCHc/2FoslVSf56/lKALicAVX0Nfsg1mAqUPBX74b36ePS08Fa+hheQkxqL/8iKVMgmY+qE61nASj3nvQ==
-X-Gm-Message-State: AOJu0YyXBZymyXbRtScwdm4KoZvLcaFEDe0zFQfBalKRbR1c5++A/zcq
-	FR4o6oCaMU9SdY6iWR0fJ5LmgOL4bS+Im20AY+MlFBDGfOx6A/tk
-X-Google-Smtp-Source: AGHT+IFyx3w1wlPEzpgR7Ybfr5R4Y2VTP7azarkJVPCcn5zXERIvj9cTPp2mnyLIEdlKjn5VJornuA==
-X-Received: by 2002:a5d:4104:0:b0:33b:4d24:18c7 with SMTP id l4-20020a5d4104000000b0033b4d2418c7mr9232891wrp.9.1708419812576;
-        Tue, 20 Feb 2024 01:03:32 -0800 (PST)
-Received: from [10.24.67.19] ([15.248.2.239])
-        by smtp.gmail.com with ESMTPSA id bx15-20020a5d5b0f000000b0033d202abf01sm12058043wrb.28.2024.02.20.01.03.31
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 20 Feb 2024 01:03:32 -0800 (PST)
-From: Paul Durrant <xadimgnik@gmail.com>
-X-Google-Original-From: Paul Durrant <paul@xen.org>
-Message-ID: <0f290ba9-4fd1-4986-8562-b90706fd1b5d@xen.org>
-Date: Tue, 20 Feb 2024 09:03:30 +0000
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="tK+lxaPH"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1708419829;
+	bh=CbuUipgN3x0OtOMVl+Qzmre0d9c7fvRwbaMamF0Y22E=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=tK+lxaPHpL7Vvwdd6Xf18pxAWv5XkHGIMP3RkL6KD+TeHZ5FIMEkzraxOQLUuoIkM
+	 fWdG3WYWYMw14SmZ4Wv1aoFkmKet4y7tM8zGjhEiZh6js3OmX0R6TwYpRw6jjpvviU
+	 vyMC07vHIuIWiilcF0ivZDeSX/5nr6K1Hl6avCjdhA820/jeIQQ8SztJFDLJmMqih1
+	 txaXfunCOYKFdUDxLWxQi/epLwy5R3zSlVAT79U0VMvAujSblcfVy/YgTXBj3RKp6Y
+	 Ueya6oQxkly9T4xCm5Uemwj3JM2MFqWnRUz8xxG92UP/n84GZjIzudkzJBEZcnCN0H
+	 zQxc2jIivH42Q==
+Received: from [100.113.186.2] (cola.collaboradmins.com [195.201.22.229])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: kholk11)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id D592F37813DF;
+	Tue, 20 Feb 2024 09:03:48 +0000 (UTC)
+Message-ID: <ab809d89-339a-44fc-8a5a-ac667d220ce1@collabora.com>
+Date: Tue, 20 Feb 2024 10:03:48 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -64,62 +42,84 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Reply-To: paul@xen.org
-Subject: Re: [PATCH v13 12/21] KVM: x86/xen: allow shared_info to be mapped by
- fixed HVA
+Subject: Re: [PATCH] soc: mediatek: mtk-socinfo: depends on CONFIG_SOC_BUS
 Content-Language: en-US
-To: Sean Christopherson <seanjc@google.com>
-Cc: Paolo Bonzini <pbonzini@redhat.com>, Jonathan Corbet <corbet@lwn.net>,
- Christian Borntraeger <borntraeger@linux.ibm.com>,
- Janosch Frank <frankja@linux.ibm.com>,
- Claudio Imbrenda <imbrenda@linux.ibm.com>,
- David Hildenbrand <david@redhat.com>, Heiko Carstens <hca@linux.ibm.com>,
- Vasily Gorbik <gor@linux.ibm.com>, Alexander Gordeev
- <agordeev@linux.ibm.com>, Sven Schnelle <svens@linux.ibm.com>,
- Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
- David Woodhouse <dwmw2@infradead.org>, Shuah Khan <shuah@kernel.org>,
- kvm@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
- linux-kselftest@vger.kernel.org
-References: <20240215152916.1158-1-paul@xen.org>
- <20240215152916.1158-13-paul@xen.org> <ZdPNw9evnWw2JzG-@google.com>
-Organization: Xen Project
-In-Reply-To: <ZdPNw9evnWw2JzG-@google.com>
+To: Chen-Yu Tsai <wenst@chromium.org>
+Cc: Daniel Golle <daniel@makrotopia.org>,
+ Matthias Brugger <matthias.bgg@gmail.com>,
+ William-tw Lin <william-tw.lin@mediatek.com>, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
+References: <cc8f7f7da5bdccce514a320e0ae7468659cf7346.1707327680.git.daniel@makrotopia.org>
+ <CAGXv+5EKCrvsvZwc2zYiMWAeT9vqvU0JnDrz=WBoebBBbcgp0g@mail.gmail.com>
+ <f1fc67d4-f979-4c3e-988f-a803b7b11c46@collabora.com>
+ <CAGXv+5Gxc3OP8nE681C6YQbDMUNmFDf21BfSvJZPBFgoncve=A@mail.gmail.com>
+From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+In-Reply-To: <CAGXv+5Gxc3OP8nE681C6YQbDMUNmFDf21BfSvJZPBFgoncve=A@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 19/02/2024 21:53, Sean Christopherson wrote:
-> On Thu, Feb 15, 2024, Paul Durrant wrote:
->> @@ -715,13 +731,23 @@ int kvm_xen_hvm_get_attr(struct kvm *kvm, struct kvm_xen_hvm_attr *data)
->>   		break;
->>   
->>   	case KVM_XEN_ATTR_TYPE_SHARED_INFO:
->> -		if (kvm->arch.xen.shinfo_cache.active)
->> +		if (kvm->arch.xen.shinfo_cache.active &&
->> +		    kvm->arch.xen.shinfo_cache.gpa != KVM_XEN_INVALID_GPA)
+Il 20/02/24 10:03, Chen-Yu Tsai ha scritto:
+> On Tue, Feb 20, 2024 at 4:56 PM AngeloGioacchino Del Regno
+> <angelogioacchino.delregno@collabora.com> wrote:
+>>
+>> Il 20/02/24 07:40, Chen-Yu Tsai ha scritto:
+>>> On Thu, Feb 8, 2024 at 1:43 AM Daniel Golle <daniel@makrotopia.org> wrote:
+>>>>
+>>>> The mtk-socinfo driver uses symbols 'soc_device_register' and
+>>>> 'soc_device_unregister' which are part of the bus driver for
+>>>> System-on-Chip devices.
+>>>>
+>>>> Select SOC_BUS to make sure that driver is built and the symbols are
+>>>> available.
+>>>>
+>>>> Fixes: 423a54da3c7e ("soc: mediatek: mtk-socinfo: Add driver for getting chip information")
+>>>> Signed-off-by: Daniel Golle <daniel@makrotopia.org>
+>>>
+>>> Reviewed-by: Chen-Yu Tsai <wenst@chromium.org>
+>>>
+>>> Angelo, I believe this should be picked up for -next?
+>>>
+>>
+>> I'll pick this up for fixes, as I've already sent the PRs for v6.9.
 > 
-> This should really use INVALID_GPA when checking internal gpc state.  Mostly to
-> help clarify what is/isn't KVM Xen ABI, but also because I don't like the subtle
-> assumption that KVM_XEN_INVALID_GPA == INVALID_GPA.
+> The socinfo driver is in -next, so I guess you could pick it up as a fix
+> for v6.9.
 > 
 
-Sorry, yes, that was miss on my part.
+Of course! :-)
 
-> Even better, if we slot in two helpers when the HVA-based GPC support is added,
-> then the Xen code doesn't need to to make assumptions about how the GPC code
-> manages HVA vs. GPA internally.  E.g. if we ever refactor the code again and use
-> a dedicated flag instead of gpc->gpa as the implicit flag.
-> 
->    static inline bool kvm_gpc_is_gpa_active(struct gfn_to_pfn_cache *gpc)
->    {
-> 	return gpc->active && !kvm_is_error_gpa(gpc->gpa);
->    }
-> 
->    static inline bool kvm_gpc_is_hva_active(struct gfn_to_pfn_cache *gpc)
->    {
-> 	return gpc->active && kvm_is_error_gpa(gpc->gpa);
->    }
+Cheers,
+Angelo
 
-Sure, sounds good to me. I'll add those.
+> ChenYu
+> 
+>>> Also, mediatek/v6.8-next/soc is missing from mediatek/for-next in today's
+>>> linux-next.
+>>>
+>>
+>> Fixing immediately.
+>>
+>>>> ---
+>>>>    drivers/soc/mediatek/Kconfig | 1 +
+>>>>    1 file changed, 1 insertion(+)
+>>>>
+>>>> diff --git a/drivers/soc/mediatek/Kconfig b/drivers/soc/mediatek/Kconfig
+>>>> index 50c664b65f4d4..1b7afb19ccd63 100644
+>>>> --- a/drivers/soc/mediatek/Kconfig
+>>>> +++ b/drivers/soc/mediatek/Kconfig
+>>>> @@ -72,6 +72,7 @@ config MTK_SOCINFO
+>>>>           tristate "MediaTek SoC Information"
+>>>>           default y
+>>>>           depends on NVMEM_MTK_EFUSE
+>>>> +       select SOC_BUS
+>>>>           help
+>>>>             The MediaTek SoC Information (mtk-socinfo) driver provides
+>>>>             information about the SoC to the userspace including the
+>>>> --
+>>>> 2.43.0
+>>>>
+>>>>
+>>
+>>
+
+
