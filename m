@@ -1,139 +1,111 @@
-Received: from out162-62-58-216.mail.qq.com (out162-62-58-216.mail.qq.com [162.62.58.216])
+Received: from out30-133.freemail.mail.aliyun.com (out30-133.freemail.mail.aliyun.com [115.124.30.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2037D1E48C
-	for <linux-kernel@vger.kernel.org>; Tue, 20 Feb 2024 03:36:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.58.216
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E74A481B3;
+	Tue, 20 Feb 2024 03:36:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708400173; cv=none; b=PWQPdCRjtx7GSFM80HFfmrBrKCrnBtl6VmcCoAkKSvG4S93mCnx4vIIglyXj7wECtyArP/p7zRt0vWIIvY4KxBpDemZFTgVxnW9But6XcUIoHEF1aUaQe38JBf3Jb6PYtcJzb8tOSvj6j+9LTSWR5cnQrYlSswlD+PYbpoizV6M=
+	t=1708400193; cv=none; b=O1FGLSjZBG/Eddq2YUfRT7SZ8dYxW3MpfoOejz0DTFhw58yREymPjp/4S1YIakM8LO9pw1I7A7QMQVxjAEGHyf0wU23Xpt70twjoiz8lAWfjQG0G1Gw14OZWfH481lSoUY0fKYRS+Chr32gghFzOgvJg3adEw3UbeGXFPC8XFNY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708400173; c=relaxed/simple;
-	bh=7dfTuCtjIpywIjCFVNk+ND2mztCjScKwiZKX6KQUwaA=;
-	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
-	 MIME-Version; b=IePsc/+AiSnTahGfSOTB8WBpPSoYDsxG5IAFqNBeTzEBMMHGaNYl1tWA+cM3gmPoAUq3a0yPNuu+M8xxJCDWX0o3INJRQms9vY7gGKWHdoPeRXykXsPn/6w+MoZpfb0yDscE5PoYpfnSzA4KTvjd8DkVenEL1eKN+tCt+Y+8aIk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=VUaSri3v; arc=none smtp.client-ip=162.62.58.216
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
+	s=arc-20240116; t=1708400193; c=relaxed/simple;
+	bh=aShSRLt3GevXA1Qx62ev9VFaOPlhkE/c4BBllw9Klyk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=frhOjJLnGhZfE63jOzgnu1tx7LxvJ1NoTi4EDRGq7c+1lT+pWgASbxkVmYXe7SnPr1V1j96fWral5Ljsg90zcbCCgjAmeb05PiqhK2U64b8yvarRz/rPuY/21TTKjFYv41smVwiAuDwPVTAPxkA1nLkXAVijAVhbXRPpo+UgTCI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=lvw5rR0n; arc=none smtp.client-ip=115.124.30.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="VUaSri3v"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1708400160; bh=rByPOF5dYZWIOnrULYHF63QAb6RsV3fcLXdjS8zqzAs=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=VUaSri3v1C8jamXwZxW9wIS9SFKQHB1hAWpWZUm+HnxNfVobZt4qBOEKx+5eeAfHB
-	 flww1mEzPiG9912s4UnYpBVgQq7oF4xsKdZBjGc/UxQKHodnWo/4aPXwc6snwtDugw
-	 QT8Lzd6y7jMNtRzt9hCDqjlvzglNTOBTk4/bDnLs=
-Received: from pek-lxu-l1.wrs.com ([111.198.228.140])
-	by newxmesmtplogicsvrszb9-1.qq.com (NewEsmtp) with SMTP
-	id 5F03184F; Tue, 20 Feb 2024 11:23:48 +0800
-X-QQ-mid: xmsmtpt1708399428tnfx932k7
-Message-ID: <tencent_6536044A2C75D97697660A3C4B371A963209@qq.com>
-X-QQ-XMAILINFO: MRgSEBbyGhwKNRa4nzGXIMM5JQOavNxRmrbjDfGuVvmxszX0I6U9rDuWiV+Bbo
-	 PkcrMoZW6UDw5DSlZp5G3eJW3+X0krJHML2Ti8TX6UTgbrl7XrEml+xjA0D24WJvDvdJclXO5TRf
-	 tVjhtm2xegMfXcck8ItCrion2n0XQRs5d7MW0cA/EF1h6LUfBrEDo7SYni8fsXyEEOfjHSsNx2GL
-	 Nm55cPyznTTQI6hcU/H81Mp1daixwukoUeGwI3wauE/g9/dRlAqsaF9BuG04qyp2gv2EgGA3lVls
-	 vrjAV8xbutJA1gCmoeZ3xRBc4BHuWSPy00Ry5TyofhKEN4ClI6cOIDufI/bnVNi3Jjs7MykV+BiM
-	 TGplXZTA1QbrXw+7BTdQTFgFEDk33LUPt3309hL2rS734lEfKH3Jx5T+FGFcIuelzWKK+I4kOVDo
-	 +uZBqxJ8h7mRGrDuQ0lYcUsd13Oh9OiFAkrVYYkRZ2YtRd9l9iCgfw+rXxMBfOY0D2tR5mlFpYLf
-	 40T3RFzpfnvze9ghgFqtHPmxeMMtQoVBGtT8/YOF5xMN/ctU+hAWSzrQ3hy7LgGv5m9CU9nco8Fi
-	 Iis5qi02u20puWVp8hZR9vyfHesRuWENRTyKkilEyJwCaJoxTJBxCPNaHJr3U1AYxEjF9ZPinMNu
-	 q1td/KyDfyhprZ6pr28OvbIPPCsKc9cMCoFoFqw93yitMiZJ7VrOKJ6oRGGZ0P3EsbyQ4r2A5r5e
-	 hRRtAoKW7+uj8ZaYvzReAvRk0Egcx4fRktv4jgZce4GyvOTzOtX76GmpuzhQo/9OPE9gxn10QtCE
-	 qfS/2SlrCAj+gdjGNY+UZKDBPBcCmn5tCyXBkegBaGBbHZmviTi64iW7eHItBx5hc/k1N0Bu4mwv
-	 kWRYhUabIi+DFhswUhR+P8iyVmih13P1MEM5R3WYpkMsPcn8mSo6oy+qOlAbhYMHK5HVV3l+469i
-	 3kHHZp+0zR+L+afwjpGw==
-X-QQ-XMRINFO: MPJ6Tf5t3I/ycC2BItcBVIA=
-From: Edward Adam Davis <eadavis@qq.com>
-To: syzbot+c244f4a09ca85dd2ebc1@syzkaller.appspotmail.com
-Cc: linux-kernel@vger.kernel.org,
-	syzkaller-bugs@googlegroups.com
-Subject: Re: [syzbot] [jfs?] KASAN: slab-use-after-free Read in jfs_syncpt
-Date: Tue, 20 Feb 2024 11:23:48 +0800
-X-OQ-MSGID: <20240220032348.2051875-2-eadavis@qq.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <0000000000003d021006119cbf46@google.com>
-References: <0000000000003d021006119cbf46@google.com>
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="lvw5rR0n"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1708400182; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=R/VW+J0LluQWcqmcYIaT+iX59/8UWwxw0zPEseH7/1A=;
+	b=lvw5rR0nMV6BCpc2t3XXBrlKqbWk+WjYzGO2FrdY4o1GAN44lcWIpGTT1NVtKLEpNydcGcC12t/2W37HCH3MeSI0yUdN/YRaTQW54k8jWppOuiuIasdliJkmnE4z6xGDmLhpNnfxi+iJMo4+p80tugyDHW0sfaz3fPrFhbARNhk=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R131e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045176;MF=guwen@linux.alibaba.com;NM=1;PH=DS;RN=18;SR=0;TI=SMTPD_---0W0v7u33_1708400180;
+Received: from 30.221.128.233(mailfrom:guwen@linux.alibaba.com fp:SMTPD_---0W0v7u33_1708400180)
+          by smtp.aliyun-inc.com;
+          Tue, 20 Feb 2024 11:36:21 +0800
+Message-ID: <58f36cb7-7427-4ed7-9a8e-baaacdd774cb@linux.alibaba.com>
+Date: Tue, 20 Feb 2024 11:36:20 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next 14/15] net/smc: introduce loopback-ism DMB data
+ copy control
+To: Wenjia Zhang <wenjia@linux.ibm.com>, wintera@linux.ibm.com,
+ hca@linux.ibm.com, gor@linux.ibm.com, agordeev@linux.ibm.com,
+ davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+ pabeni@redhat.com, jaka@linux.ibm.com, Gerd Bayer <gbayer@linux.ibm.com>
+Cc: borntraeger@linux.ibm.com, svens@linux.ibm.com,
+ alibuda@linux.alibaba.com, tonylu@linux.alibaba.com,
+ linux-s390@vger.kernel.org, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20240111120036.109903-1-guwen@linux.alibaba.com>
+ <20240111120036.109903-15-guwen@linux.alibaba.com>
+ <b3b71f26-239f-49c9-98e8-7eba2c4ecf69@linux.ibm.com>
+From: Wen Gu <guwen@linux.alibaba.com>
+In-Reply-To: <b3b71f26-239f-49c9-98e8-7eba2c4ecf69@linux.ibm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-please test uaf in jfs_syncpt
 
-#syz test https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
 
-diff --git a/fs/jfs/jfs_incore.h b/fs/jfs/jfs_incore.h
-index dd4264aa9bed..15955dd86bfd 100644
---- a/fs/jfs/jfs_incore.h
-+++ b/fs/jfs/jfs_incore.h
-@@ -197,6 +197,7 @@ struct jfs_sb_info {
- 	kgid_t		gid;		/* gid to override on-disk gid */
- 	uint		umask;		/* umask to override on-disk umask */
- 	uint		minblks_trim;	/* minimum blocks, for online trim */
-+	struct mutex log_mutex;
- };
- 
- /* jfs_sb_info commit_state */
-diff --git a/fs/jfs/jfs_txnmgr.c b/fs/jfs/jfs_txnmgr.c
-index be17e3c43582..eb60862dc61b 100644
---- a/fs/jfs/jfs_txnmgr.c
-+++ b/fs/jfs/jfs_txnmgr.c
-@@ -2665,6 +2665,9 @@ static void txLazyCommit(struct tblock * tblk)
- 
- 	log = (struct jfs_log *) JFS_SBI(tblk->sb)->log;
- 
-+	if (!log)
-+		return;
-+
- 	spin_lock_irq(&log->gclock);	// LOGGC_LOCK
- 
- 	tblk->flag |= tblkGC_COMMITTED;
-@@ -2730,10 +2733,12 @@ int jfs_lazycommit(void *arg)
- 				list_del(&tblk->cqueue);
- 
- 				LAZY_UNLOCK(flags);
-+				mutex_lock(&sbi->log_mutex);
- 				txLazyCommit(tblk);
-+				sbi->commit_state &= ~IN_LAZYCOMMIT;
-+				mutex_unlock(&sbi->log_mutex);
- 				LAZY_LOCK(flags);
- 
--				sbi->commit_state &= ~IN_LAZYCOMMIT;
- 				/*
- 				 * Don't continue in the for loop.  (We can't
- 				 * anyway, it's unsafe!)  We want to go back to
-diff --git a/fs/jfs/jfs_umount.c b/fs/jfs/jfs_umount.c
-index 8ec43f53f686..04788cf3a471 100644
---- a/fs/jfs/jfs_umount.c
-+++ b/fs/jfs/jfs_umount.c
-@@ -51,6 +51,7 @@ int jfs_umount(struct super_block *sb)
- 	 *
- 	 * if mounted read-write and log based recovery was enabled
- 	 */
-+	mutex_lock(&sbi->log_mutex);
- 	if ((log = sbi->log))
- 		/*
- 		 * Wait for outstanding transactions to be written to log:
-@@ -113,6 +114,7 @@ int jfs_umount(struct super_block *sb)
- 		 */
- 		rc = lmLogClose(sb);
- 	}
-+	mutex_unlock(&sbi->log_mutex);
- 	jfs_info("UnMount JFS Complete: rc = %d", rc);
- 	return rc;
- }
-diff --git a/fs/jfs/super.c b/fs/jfs/super.c
-index 8d8e556bd610..cf291bdd094f 100644
---- a/fs/jfs/super.c
-+++ b/fs/jfs/super.c
-@@ -504,6 +504,7 @@ static int jfs_fill_super(struct super_block *sb, void *data, int silent)
- 	sbi->uid = INVALID_UID;
- 	sbi->gid = INVALID_GID;
- 	sbi->umask = -1;
-+	mutex_init(&sbi->log_mutex);
- 
- 	/* initialize the mount flag and determine the default error handler */
- 	flag = JFS_ERR_REMOUNT_RO;
+On 2024/2/16 22:25, Wenjia Zhang wrote:
+> 
+> 
+> On 11.01.24 13:00, Wen Gu wrote:
+>> This provides a way to {get|set} whether loopback-ism device supports
+>> merging sndbuf with peer DMB to eliminate data copies between them.
+>>
+>> echo 0 > /sys/devices/virtual/smc/loopback-ism/dmb_copy # support
+>> echo 1 > /sys/devices/virtual/smc/loopback-ism/dmb_copy # not support
+>>
+> Besides the same confusing as Niklas already mentioned, the name of the option looks not clear enough to what it means. 
+> What about:
+> echo 1 > /sys/devices/virtual/smc/loopback-ism/nocopy_support # merge mode
+> echo 0 > /sys/devices/virtual/smc/loopback-ism/nocopy_support # copy mode
+>
 
+OK, if we decide to keep the knobs, I will improve the name. Thanks!
+
+>> The settings take effect after re-activating loopback-ism by:
+>>
+>> echo 0 > /sys/devices/virtual/smc/loopback-ism/active
+>> echo 1 > /sys/devices/virtual/smc/loopback-ism/active
+>>
+>> After this, the link group related to loopback-ism will be flushed and
+>> the sndbufs of subsequent connections will be merged or not merged with
+>> peer DMB.
+>>
+>> The motivation of this control is that the bandwidth will be highly
+>> improved when sndbuf and DMB are merged, but when virtually contiguous
+>> DMB is provided and merged with sndbuf, it will be concurrently accessed
+>> on Tx and Rx, then there will be a bottleneck caused by lock contention
+>> of find_vmap_area when there are many CPUs and CONFIG_HARDENED_USERCOPY
+>> is set (see link below). So an option is provided.
+>>
+>> Link: https://lore.kernel.org/all/238e63cd-e0e8-4fbf-852f-bc4d5bc35d5a@linux.alibaba.com/
+>> Signed-off-by: Wen Gu <guwen@linux.alibaba.com>
+>> ---
+> We tried some simple workloads, and the performance of the no-copy case was remarkable. Thus, we're wondering if it is 
+> necessary to have the tunable setting in this loopback case? Or rather, why do we need the copy option? Is that because 
+> of the bottleneck caused by using the combination of the no-copy and virtually contiguours DMA? Or at least let no-copy 
+> as the default one.
+
+Yes, it is because the bottleneck caused by using the combination of the no-copy
+and virtual-DMB. If we have to use virtual-DMB and CONFIG_HARDENED_USERCOPY is
+set, then we may be forced to use copy mode in many CPUs environment, to get the
+good latency performance (the bandwidth performance still drop because of copy mode).
+
+But if we agree that physical-DMB is acceptable (it costs 1 physical buffer per conn side
+in loopback-ism no-copy mode, same as what sndbuf costs when using s390 ISM), then
+there is no such performance issue and the two knobs can be removed. (see also the reply
+for 13/15 patch [1]).
+
+[1] https://lore.kernel.org/netdev/442061eb-107a-421d-bc2e-13c8defb0f7b@linux.alibaba.com/
+
+Thanks!
