@@ -1,337 +1,397 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CAAE6A8AC;
-	Tue, 20 Feb 2024 13:53:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 670396A8D3
+	for <linux-kernel@vger.kernel.org>; Tue, 20 Feb 2024 13:53:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708437227; cv=none; b=RMpGy7+slyiNQ2Jdwywe9Z4g3ErKPx4NHeUOW7PuCfHmen0ziix8iHK7LgkT1ePYT5nRiUZvKJ7HPcWSpSjV+aNEo1iREm0w3+iDEV9GUnzjDRwFDUubaYzsgQIRyUJ2BXfriQ4KhRiuS7BVkWxFyo4SnsoWpAc/caGgxYICO74=
+	t=1708437236; cv=none; b=Oa3kOcphyRRUSUVIebYl6rzT72gGYTn0aB6pGYwo7caoKvP3JRDh9xzGKTs2lzT0n4a+HgiY8M9TaTwE2O01llEbInYW0IjRcmnWmqg2L0kfE7+sTWO/dyhIqSdqDC4lvyhXLpCALxtsS8lF5dzZLUs8sWozE0hJEPHFGgmW+jk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708437227; c=relaxed/simple;
-	bh=zFDRMNa3e8QJEc1cf0XB3qPW7Boc9PCSl2ePK0ePn3s=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=H920U1dmuKq243BRy/l/Kh1EDY+NPkC1Hp2iqcdiSYwAFWm/Ue0Hv/dAKf4EcB1XwOmT3bS5bWzyXdxi8J+jeTiYrZ33bCkYNQdM7lSCiMVg0RT+CcIRvP2CUoujnSOdF7RCJwbq6xhnLMkyNSovdhL2L/5SiAT8fe/Zl2QN+Es=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=WUCw8bjr; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1708437236; c=relaxed/simple;
+	bh=kJZI3FK4QZU+Di6fh4itqdl7ucWmclUlXqxApwi7+SM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=tHaer45MFD8F/HhF92qEJtx603M+if/23QwB+Ny8x7rAdBy1Cz7gzefv2CV9JIlPAoA1NJ/tiZUajXkKU+v/sbzrtYm98iJwgfy1OvJJY0OJXOTmPtzVJkl3smOuXx8cgCDih/6B0mGW5mDAiro9erndviVr0pswUFszOqE1LoY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=3n507ENq; arc=none smtp.client-ip=209.85.208.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="WUCw8bjr"
-Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 41KDkGgX020547;
-	Tue, 20 Feb 2024 13:53:40 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	from:to:cc:subject:date:message-id:in-reply-to:references
-	:mime-version:content-transfer-encoding:content-type; s=
-	qcppdkim1; bh=2CeXBb6brcOzX90tGDoZylSI7pjaeUjja6xSoBj0seU=; b=WU
-	Cw8bjrYp62DyTV5Ff1TMnGuI5BEZ1mZppXcLZwq/mLzM7SUK94CRXfH2nJ7PYMqE
-	CjAhgmcuGPcjMNQoqsEYOYqUvEk1/X9jXRXYtHIQ7oVfEAKprJ+1cGRUUFxR+3NV
-	TLfnEXFc33b+7twWp8sSShfldbiB5Ks3fX4V9ukIg1hBzw4VyUHgYDPhgYder5GZ
-	jLeCEenLEl4VqlHaODxkbB4FrlykO+LydJ+jK3of21dl+x9GYXMZATCYJGWA8PFf
-	7t+BCAR5lZyVCZnvTXIVAr2K1kqRcna/yUZmGvEEJn55l6ENSlqheLnq8ufojlDF
-	Dy5g5SjHnpPJoLX1Xp4g==
-Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3wckv9h5mc-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 20 Feb 2024 13:53:40 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 41KDrNKW005095
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 20 Feb 2024 13:53:23 GMT
-Received: from hu-jkona-hyd.qualcomm.com (10.80.80.8) by
- nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Tue, 20 Feb 2024 05:53:17 -0800
-From: Jagadeesh Kona <quic_jkona@quicinc.com>
-To: Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio
-	<konrad.dybcio@linaro.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
-        "Krzysztof
- Kozlowski" <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley
-	<conor+dt@kernel.org>
-CC: Vladimir Zapolskiy <vladimir.zapolskiy@linaro.org>,
-        Jagadeesh Kona
-	<quic_jkona@quicinc.com>,
-        Taniya Das <quic_tdas@quicinc.com>, <linux-arm-msm@vger.kernel.org>,
-        <linux-clk@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, Ajit Pandey
-	<quic_ajipan@quicinc.com>,
-        Imran Shaik <quic_imrashai@quicinc.com>,
-        "Satya
- Priya Kakitapalli" <quic_skakitap@quicinc.com>,
-        Krzysztof Kozlowski
-	<krzysztof.kozlowski@linaro.org>
-Subject: [PATCH V2 4/6] dt-bindings: clock: qcom: Add SM8650 camera clock controller
-Date: Tue, 20 Feb 2024 19:21:19 +0530
-Message-ID: <20240220135121.22578-5-quic_jkona@quicinc.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240220135121.22578-1-quic_jkona@quicinc.com>
-References: <20240220135121.22578-1-quic_jkona@quicinc.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="3n507ENq"
+Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-563dd5bd382so28749a12.1
+        for <linux-kernel@vger.kernel.org>; Tue, 20 Feb 2024 05:53:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1708437233; x=1709042033; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=spBbznPNh4TAfNFhlhyDDg2OGTaBiEYUcTEdGHDr3/k=;
+        b=3n507ENqZfKUnpFFPBtBxRV6pODf4Drb+pZ6ZxF3d6PVkRZ15zz8lFBIcv+WOx4xdo
+         YNxbDpUvE9VTW8brE7qZD+AEW8bkwI5rpPs9amWtzaJRaeR4iCwobZnKsW/p/EYFfD+G
+         R/kCjPL7rhjHo/b+b6tB3rQF/gsY6lvrSEMxuPpRjqJ7nBI+msoD6brsmrhauZz2pPK+
+         3LE3RyX+exs9RIMNVIsL9cM7pSh7ugaUwVRTAZ+QewMBK7xaMweztmnhaDCDnCXPRnux
+         5vr/w2P0XWzkwDsIEZGprVTqjYwL9ePwFQXUV1e8EALl0lN5S6+Vhhu0xKG5IOlv0u5u
+         MYyw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708437233; x=1709042033;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=spBbznPNh4TAfNFhlhyDDg2OGTaBiEYUcTEdGHDr3/k=;
+        b=LXwFWokGJ7pgMQRqCfmAwo2AdnvRu817+8N13amUkETmFRarBfthrRa0lN0KY2EuJh
+         asq1AL+tlEfGMUfasfWcNscROaaqEsyBSMbJy94+aF38gPN+/DlwXwnYR+Ehyl9s9tT7
+         nODfBpfLYRFpscXwyiSW1LiH/XaRw0jrf0pjXdngSx09Us/IrKnqM7JLs9anqFkO/7tR
+         pvEIxmgwoplMsq5gfuI6K3lLV/DsDwuvvNyaixPssKYHvkRsQ5cwMetogDORyDsfDKHM
+         jw+wlUwtu3WpFuuVB2oNbavEAIkYmA6GmmLw6s5ZE8lSXJD2GK11yqTspSYLoXOHQtd0
+         /JnA==
+X-Gm-Message-State: AOJu0Yxuh+hMcBNIj83BawhK/iCYt5+aSeJaPP3I5WxKoDDWauvO+WNQ
+	GF2hgN2r4tmf5IRcG0eXEWnD8Z3bnfja6AW3RVNqAHp5VzEbSv+1SGqNGHrdo+wfe7p4zt6Zqm3
+	XavU1dEBqPJG2NPj5Tk6fshY3PwPO5S0FIccU
+X-Google-Smtp-Source: AGHT+IEKAtHicKOoEx0Jg0gKmaOHpOZTxdYbilWRQkEuKn8HSulbu0wo4VaGO+BR1K5BnT4XXuiTDbO/AV7mYFvsB6Q=
+X-Received: by 2002:aa7:d848:0:b0:564:5c91:10be with SMTP id
+ f8-20020aa7d848000000b005645c9110bemr291420eds.4.1708437232547; Tue, 20 Feb
+ 2024 05:53:52 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: Z1YZYmbI8fpKhgRSgnoSFsOCVZY6-lqL
-X-Proofpoint-GUID: Z1YZYmbI8fpKhgRSgnoSFsOCVZY6-lqL
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-02-20_06,2024-02-20_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- bulkscore=0 lowpriorityscore=0 phishscore=0 clxscore=1015 adultscore=0
- mlxlogscore=999 impostorscore=0 suspectscore=0 malwarescore=0 spamscore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2401310000 definitions=main-2402200100
+References: <20240215191402.681674-1-mathieu.desnoyers@efficios.com>
+In-Reply-To: <20240215191402.681674-1-mathieu.desnoyers@efficios.com>
+From: Dmitry Vyukov <dvyukov@google.com>
+Date: Tue, 20 Feb 2024 14:53:37 +0100
+Message-ID: <CACT4Y+YFQJE8tvHxXmJcd8Mr8NY2AYnYvQ1ZBxQQrN522KEbrg@mail.gmail.com>
+Subject: Re: [RFC PATCH 1/1] sched/rseq: Consider rseq abort in page fault handler
+To: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: linux-kernel@vger.kernel.org, Peter Oskolkov <posk@google.com>, 
+	Peter Zijlstra <peterz@infradead.org>, "Paul E. McKenney" <paulmck@kernel.org>, 
+	Boqun Feng <boqun.feng@gmail.com>, Chris Kennelly <ckennelly@google.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, Andy Lutomirski <luto@kernel.org>, 
+	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, linux-mm@kvack.org
+Content-Type: text/plain; charset="UTF-8"
 
-Add device tree bindings for the camera clock controller on
-Qualcomm SM8650 platform.
+On Thu, 15 Feb 2024 at 20:14, Mathieu Desnoyers
+<mathieu.desnoyers@efficios.com> wrote:
+>
+> Consider rseq abort before emitting the SIGSEGV or SIGBUS signals from
+> the page fault handler.
+>
+> This allows using membarrier MEMBARRIER_CMD_PRIVATE_EXPEDITED_RSEQ
+> to abort rseq critical sections which include memory accesses to
+> memory which mapping can be munmap'd or mprotect'd after the
+> membarrier "rseq fence" without causing SIGSEGV or SIGBUS when the page
+> fault handler triggered by a faulting memory access within a rseq
+> critical section is preempted before handling the page fault.
+>
+> The problematic scenario is:
+>
+> CPU 0                          CPU 1
+> ------------------------------------------------------------------
+>                                old_p = P
+>                                P = NULL
+> - rseq c.s. begins
+> - x = P
+> - if (x != NULL)
+>   - v = *x
+>     - page fault
+>     - preempted
+>                                membarrier(MEMBARRIER_CMD_PRIVATE_EXPEDITED_RSEQ)
+>                                munmap(old_p) (or mprotect(old_p))
+>     - handle page fault
+>     - force_sig_fault(SIGSEGV)
+>     - rseq resume notifier
+>       - move IP to abort IP
+>   -> SIGSEGV handler runs.
+>
+> This is solved by postponing the force_sig_fault() to return to
+> user-space when the page fault handler detects that rseq events will
+> cause the thread to call the rseq resume notifier before going back to
+> user-space. This allows the rseq resume notifier to load the userspace
+> memory pointed by rseq->rseq_cs to compare the IP with the rseq c.s.
+> range before either moving the IP to the abort handler or calling
+> force_sig_fault() with the parameters previously saved by the page fault
+> handler.
+>
+> Add a new AT_RSEQ_FEATURE_FLAGS getauxval(3) to allow user-space to
+> query whether the kernel implements this behavior (flag:
+> RSEQ_FEATURE_PAGE_FAULT_ABORT).
+>
+> Untested implementation submitted for early feedback.
+>
+> Only x86 is implemented in this PoC.
+>
+> Link: https://lore.kernel.org/lkml/CACT4Y+bXfekygoyhO7pCctjnL15=E=Zs31BUGXU0dk8d4rc1Cw@mail.gmail.com/
+> Signed-off-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+> Cc: Dmitry Vyukov <dvyukov@google.com>
+> Cc: Peter Oskolkov <posk@google.com>
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: "Paul E. McKenney" <paulmck@kernel.org>
+> Cc: Boqun Feng <boqun.feng@gmail.com>
+> Cc: Chris Kennelly <ckennelly@google.com>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Andy Lutomirski <luto@kernel.org>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: Borislav Petkov <bp@alien8.de>
+> Cc: Dave Hansen <dave.hansen@linux.intel.com>
+> Cc: "H. Peter Anvin" <hpa@zytor.com>
+> Cc: linux-mm@kvack.org
 
-Signed-off-by: Jagadeesh Kona <quic_jkona@quicinc.com>
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
----
- .../bindings/clock/qcom,sm8450-camcc.yaml     |   3 +
- include/dt-bindings/clock/qcom,sm8650-camcc.h | 195 ++++++++++++++++++
- 2 files changed, 198 insertions(+)
- create mode 100644 include/dt-bindings/clock/qcom,sm8650-camcc.h
+Hi Mathieu,
 
-diff --git a/Documentation/devicetree/bindings/clock/qcom,sm8450-camcc.yaml b/Documentation/devicetree/bindings/clock/qcom,sm8450-camcc.yaml
-index fa0e5b6b02b8..fcf6a50b6c01 100644
---- a/Documentation/devicetree/bindings/clock/qcom,sm8450-camcc.yaml
-+++ b/Documentation/devicetree/bindings/clock/qcom,sm8450-camcc.yaml
-@@ -8,6 +8,7 @@ title: Qualcomm Camera Clock & Reset Controller on SM8450
- 
- maintainers:
-   - Vladimir Zapolskiy <vladimir.zapolskiy@linaro.org>
-+  - Jagadeesh Kona <quic_jkona@quicinc.com>
- 
- description: |
-   Qualcomm camera clock control module provides the clocks, resets and power
-@@ -18,6 +19,7 @@ description: |
-     include/dt-bindings/clock/qcom,sm8550-camcc.h
-     include/dt-bindings/clock/qcom,sc8280xp-camcc.h
-     include/dt-bindings/clock/qcom,x1e80100-camcc.h
-+    include/dt-bindings/clock/qcom,sm8650-camcc.h
- 
- allOf:
-   - $ref: qcom,gcc.yaml#
-@@ -29,6 +31,7 @@ properties:
-       - qcom,sm8450-camcc
-       - qcom,sm8550-camcc
-       - qcom,x1e80100-camcc
-+      - qcom,sm8650-camcc
- 
-   clocks:
-     items:
-diff --git a/include/dt-bindings/clock/qcom,sm8650-camcc.h b/include/dt-bindings/clock/qcom,sm8650-camcc.h
-new file mode 100644
-index 000000000000..df73bf35f4bf
---- /dev/null
-+++ b/include/dt-bindings/clock/qcom,sm8650-camcc.h
-@@ -0,0 +1,195 @@
-+/* SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause) */
-+/*
-+ * Copyright (c) 2024, Qualcomm Innovation Center, Inc. All rights reserved.
-+ */
-+
-+#ifndef _DT_BINDINGS_CLK_QCOM_CAM_CC_SM8650_H
-+#define _DT_BINDINGS_CLK_QCOM_CAM_CC_SM8650_H
-+
-+/* CAM_CC clocks */
-+#define CAM_CC_BPS_AHB_CLK					0
-+#define CAM_CC_BPS_CLK						1
-+#define CAM_CC_BPS_CLK_SRC					2
-+#define CAM_CC_BPS_FAST_AHB_CLK					3
-+#define CAM_CC_BPS_SHIFT_CLK					4
-+#define CAM_CC_CAMNOC_AXI_NRT_CLK				5
-+#define CAM_CC_CAMNOC_AXI_RT_CLK				6
-+#define CAM_CC_CAMNOC_AXI_RT_CLK_SRC				7
-+#define CAM_CC_CAMNOC_DCD_XO_CLK				8
-+#define CAM_CC_CAMNOC_XO_CLK					9
-+#define CAM_CC_CCI_0_CLK					10
-+#define CAM_CC_CCI_0_CLK_SRC					11
-+#define CAM_CC_CCI_1_CLK					12
-+#define CAM_CC_CCI_1_CLK_SRC					13
-+#define CAM_CC_CCI_2_CLK					14
-+#define CAM_CC_CCI_2_CLK_SRC					15
-+#define CAM_CC_CORE_AHB_CLK					16
-+#define CAM_CC_CPAS_AHB_CLK					17
-+#define CAM_CC_CPAS_BPS_CLK					18
-+#define CAM_CC_CPAS_CRE_CLK					19
-+#define CAM_CC_CPAS_FAST_AHB_CLK				20
-+#define CAM_CC_CPAS_IFE_0_CLK					21
-+#define CAM_CC_CPAS_IFE_1_CLK					22
-+#define CAM_CC_CPAS_IFE_2_CLK					23
-+#define CAM_CC_CPAS_IFE_LITE_CLK				24
-+#define CAM_CC_CPAS_IPE_NPS_CLK					25
-+#define CAM_CC_CPAS_SBI_CLK					26
-+#define CAM_CC_CPAS_SFE_0_CLK					27
-+#define CAM_CC_CPAS_SFE_1_CLK					28
-+#define CAM_CC_CPAS_SFE_2_CLK					29
-+#define CAM_CC_CPHY_RX_CLK_SRC					30
-+#define CAM_CC_CRE_AHB_CLK					31
-+#define CAM_CC_CRE_CLK						32
-+#define CAM_CC_CRE_CLK_SRC					33
-+#define CAM_CC_CSI0PHYTIMER_CLK					34
-+#define CAM_CC_CSI0PHYTIMER_CLK_SRC				35
-+#define CAM_CC_CSI1PHYTIMER_CLK					36
-+#define CAM_CC_CSI1PHYTIMER_CLK_SRC				37
-+#define CAM_CC_CSI2PHYTIMER_CLK					38
-+#define CAM_CC_CSI2PHYTIMER_CLK_SRC				39
-+#define CAM_CC_CSI3PHYTIMER_CLK					40
-+#define CAM_CC_CSI3PHYTIMER_CLK_SRC				41
-+#define CAM_CC_CSI4PHYTIMER_CLK					42
-+#define CAM_CC_CSI4PHYTIMER_CLK_SRC				43
-+#define CAM_CC_CSI5PHYTIMER_CLK					44
-+#define CAM_CC_CSI5PHYTIMER_CLK_SRC				45
-+#define CAM_CC_CSI6PHYTIMER_CLK					46
-+#define CAM_CC_CSI6PHYTIMER_CLK_SRC				47
-+#define CAM_CC_CSI7PHYTIMER_CLK					48
-+#define CAM_CC_CSI7PHYTIMER_CLK_SRC				49
-+#define CAM_CC_CSID_CLK						50
-+#define CAM_CC_CSID_CLK_SRC					51
-+#define CAM_CC_CSID_CSIPHY_RX_CLK				52
-+#define CAM_CC_CSIPHY0_CLK					53
-+#define CAM_CC_CSIPHY1_CLK					54
-+#define CAM_CC_CSIPHY2_CLK					55
-+#define CAM_CC_CSIPHY3_CLK					56
-+#define CAM_CC_CSIPHY4_CLK					57
-+#define CAM_CC_CSIPHY5_CLK					58
-+#define CAM_CC_CSIPHY6_CLK					59
-+#define CAM_CC_CSIPHY7_CLK					60
-+#define CAM_CC_DRV_AHB_CLK					61
-+#define CAM_CC_DRV_XO_CLK					62
-+#define CAM_CC_FAST_AHB_CLK_SRC					63
-+#define CAM_CC_GDSC_CLK						64
-+#define CAM_CC_ICP_AHB_CLK					65
-+#define CAM_CC_ICP_CLK						66
-+#define CAM_CC_ICP_CLK_SRC					67
-+#define CAM_CC_IFE_0_CLK					68
-+#define CAM_CC_IFE_0_CLK_SRC					69
-+#define CAM_CC_IFE_0_FAST_AHB_CLK				70
-+#define CAM_CC_IFE_0_SHIFT_CLK					71
-+#define CAM_CC_IFE_1_CLK					72
-+#define CAM_CC_IFE_1_CLK_SRC					73
-+#define CAM_CC_IFE_1_FAST_AHB_CLK				74
-+#define CAM_CC_IFE_1_SHIFT_CLK					75
-+#define CAM_CC_IFE_2_CLK					76
-+#define CAM_CC_IFE_2_CLK_SRC					77
-+#define CAM_CC_IFE_2_FAST_AHB_CLK				78
-+#define CAM_CC_IFE_2_SHIFT_CLK					79
-+#define CAM_CC_IFE_LITE_AHB_CLK					80
-+#define CAM_CC_IFE_LITE_CLK					81
-+#define CAM_CC_IFE_LITE_CLK_SRC					82
-+#define CAM_CC_IFE_LITE_CPHY_RX_CLK				83
-+#define CAM_CC_IFE_LITE_CSID_CLK				84
-+#define CAM_CC_IFE_LITE_CSID_CLK_SRC				85
-+#define CAM_CC_IPE_NPS_AHB_CLK					86
-+#define CAM_CC_IPE_NPS_CLK					87
-+#define CAM_CC_IPE_NPS_CLK_SRC					88
-+#define CAM_CC_IPE_NPS_FAST_AHB_CLK				89
-+#define CAM_CC_IPE_PPS_CLK					90
-+#define CAM_CC_IPE_PPS_FAST_AHB_CLK				91
-+#define CAM_CC_IPE_SHIFT_CLK					92
-+#define CAM_CC_JPEG_1_CLK					93
-+#define CAM_CC_JPEG_CLK						94
-+#define CAM_CC_JPEG_CLK_SRC					95
-+#define CAM_CC_MCLK0_CLK					96
-+#define CAM_CC_MCLK0_CLK_SRC					97
-+#define CAM_CC_MCLK1_CLK					98
-+#define CAM_CC_MCLK1_CLK_SRC					99
-+#define CAM_CC_MCLK2_CLK					100
-+#define CAM_CC_MCLK2_CLK_SRC					101
-+#define CAM_CC_MCLK3_CLK					102
-+#define CAM_CC_MCLK3_CLK_SRC					103
-+#define CAM_CC_MCLK4_CLK					104
-+#define CAM_CC_MCLK4_CLK_SRC					105
-+#define CAM_CC_MCLK5_CLK					106
-+#define CAM_CC_MCLK5_CLK_SRC					107
-+#define CAM_CC_MCLK6_CLK					108
-+#define CAM_CC_MCLK6_CLK_SRC					109
-+#define CAM_CC_MCLK7_CLK					110
-+#define CAM_CC_MCLK7_CLK_SRC					111
-+#define CAM_CC_PLL0						112
-+#define CAM_CC_PLL0_OUT_EVEN					113
-+#define CAM_CC_PLL0_OUT_ODD					114
-+#define CAM_CC_PLL1						115
-+#define CAM_CC_PLL1_OUT_EVEN					116
-+#define CAM_CC_PLL2						117
-+#define CAM_CC_PLL3						118
-+#define CAM_CC_PLL3_OUT_EVEN					119
-+#define CAM_CC_PLL4						120
-+#define CAM_CC_PLL4_OUT_EVEN					121
-+#define CAM_CC_PLL5						122
-+#define CAM_CC_PLL5_OUT_EVEN					123
-+#define CAM_CC_PLL6						124
-+#define CAM_CC_PLL6_OUT_EVEN					125
-+#define CAM_CC_PLL7						126
-+#define CAM_CC_PLL7_OUT_EVEN					127
-+#define CAM_CC_PLL8						128
-+#define CAM_CC_PLL8_OUT_EVEN					129
-+#define CAM_CC_PLL9						130
-+#define CAM_CC_PLL9_OUT_EVEN					131
-+#define CAM_CC_PLL9_OUT_ODD					132
-+#define CAM_CC_PLL10						133
-+#define CAM_CC_PLL10_OUT_EVEN					134
-+#define CAM_CC_QDSS_DEBUG_CLK					135
-+#define CAM_CC_QDSS_DEBUG_CLK_SRC				136
-+#define CAM_CC_QDSS_DEBUG_XO_CLK				137
-+#define CAM_CC_SBI_CLK						138
-+#define CAM_CC_SBI_FAST_AHB_CLK					139
-+#define CAM_CC_SBI_SHIFT_CLK					140
-+#define CAM_CC_SFE_0_CLK					141
-+#define CAM_CC_SFE_0_CLK_SRC					142
-+#define CAM_CC_SFE_0_FAST_AHB_CLK				143
-+#define CAM_CC_SFE_0_SHIFT_CLK					144
-+#define CAM_CC_SFE_1_CLK					145
-+#define CAM_CC_SFE_1_CLK_SRC					146
-+#define CAM_CC_SFE_1_FAST_AHB_CLK				147
-+#define CAM_CC_SFE_1_SHIFT_CLK					148
-+#define CAM_CC_SFE_2_CLK					149
-+#define CAM_CC_SFE_2_CLK_SRC					150
-+#define CAM_CC_SFE_2_FAST_AHB_CLK				151
-+#define CAM_CC_SFE_2_SHIFT_CLK					152
-+#define CAM_CC_SLEEP_CLK					153
-+#define CAM_CC_SLEEP_CLK_SRC					154
-+#define CAM_CC_SLOW_AHB_CLK_SRC					155
-+#define CAM_CC_TITAN_TOP_SHIFT_CLK				156
-+#define CAM_CC_XO_CLK_SRC					157
-+
-+/* CAM_CC power domains */
-+#define CAM_CC_TITAN_TOP_GDSC					0
-+#define CAM_CC_BPS_GDSC						1
-+#define CAM_CC_IFE_0_GDSC					2
-+#define CAM_CC_IFE_1_GDSC					3
-+#define CAM_CC_IFE_2_GDSC					4
-+#define CAM_CC_IPE_0_GDSC					5
-+#define CAM_CC_SBI_GDSC						6
-+#define CAM_CC_SFE_0_GDSC					7
-+#define CAM_CC_SFE_1_GDSC					8
-+#define CAM_CC_SFE_2_GDSC					9
-+
-+/* CAM_CC resets */
-+#define CAM_CC_BPS_BCR						0
-+#define CAM_CC_DRV_BCR						1
-+#define CAM_CC_ICP_BCR						2
-+#define CAM_CC_IFE_0_BCR					3
-+#define CAM_CC_IFE_1_BCR					4
-+#define CAM_CC_IFE_2_BCR					5
-+#define CAM_CC_IPE_0_BCR					6
-+#define CAM_CC_QDSS_DEBUG_BCR					7
-+#define CAM_CC_SBI_BCR						8
-+#define CAM_CC_SFE_0_BCR					9
-+#define CAM_CC_SFE_1_BCR					10
-+#define CAM_CC_SFE_2_BCR					11
-+
-+#endif
--- 
-2.43.0
+Thanks for the quick fix.
+I can try to test this, but I can't apply this.
+What's the base commit for the patch?
 
+On top of latest upstream head v6.8-rc5:
+
+$ patch -p1 < /tmp/patch
+patching file arch/x86/mm/fault.c
+patching file fs/binfmt_elf.c
+patching file include/linux/sched.h
+Hunk #1 succeeded at 745 (offset 2 lines).
+Hunk #2 succeeded at 1329 (offset 3 lines).
+Hunk #3 succeeded at 2143 with fuzz 2 (offset -197 lines).
+Hunk #4 FAILED at 2402.
+Hunk #5 FAILED at 2417.
+2 out of 5 hunks FAILED -- saving rejects to file include/linux/sched.h.rej
+patching file include/linux/sched/signal.h
+Hunk #1 succeeded at 784 (offset 3 lines).
+patching file include/uapi/linux/auxvec.h
+patching file include/uapi/linux/rseq.h
+patching file kernel/rseq.c
+Hunk #2 succeeded at 299 with fuzz 1.
+
+
+> ---
+>  arch/x86/mm/fault.c          |  4 ++--
+>  fs/binfmt_elf.c              |  1 +
+>  include/linux/sched.h        | 16 ++++++++++++++++
+>  include/linux/sched/signal.h | 24 ++++++++++++++++++++++++
+>  include/uapi/linux/auxvec.h  |  1 +
+>  include/uapi/linux/rseq.h    |  7 +++++++
+>  kernel/rseq.c                | 36 +++++++++++++++++++++++++++++++-----
+>  7 files changed, 82 insertions(+), 7 deletions(-)
+>
+> diff --git a/arch/x86/mm/fault.c b/arch/x86/mm/fault.c
+> index 679b09cfe241..42ac39680cb6 100644
+> --- a/arch/x86/mm/fault.c
+> +++ b/arch/x86/mm/fault.c
+> @@ -854,7 +854,7 @@ __bad_area_nosemaphore(struct pt_regs *regs, unsigned long error_code,
+>         if (si_code == SEGV_PKUERR)
+>                 force_sig_pkuerr((void __user *)address, pkey);
+>         else
+> -               force_sig_fault(SIGSEGV, si_code, (void __user *)address);
+> +               rseq_lazy_force_sig_fault(SIGSEGV, si_code, (void __user *)address);
+>
+>         local_irq_disable();
+>  }
+> @@ -973,7 +973,7 @@ do_sigbus(struct pt_regs *regs, unsigned long error_code, unsigned long address,
+>                 return;
+>         }
+>  #endif
+> -       force_sig_fault(SIGBUS, BUS_ADRERR, (void __user *)address);
+> +       rseq_lazy_force_sig_fault(SIGBUS, BUS_ADRERR, (void __user *)address);
+>  }
+>
+>  static int spurious_kernel_fault_check(unsigned long error_code, pte_t *pte)
+> diff --git a/fs/binfmt_elf.c b/fs/binfmt_elf.c
+> index 5397b552fbeb..8fece0911c7d 100644
+> --- a/fs/binfmt_elf.c
+> +++ b/fs/binfmt_elf.c
+> @@ -273,6 +273,7 @@ create_elf_tables(struct linux_binprm *bprm, const struct elfhdr *exec,
+>  #ifdef CONFIG_RSEQ
+>         NEW_AUX_ENT(AT_RSEQ_FEATURE_SIZE, offsetof(struct rseq, end));
+>         NEW_AUX_ENT(AT_RSEQ_ALIGN, __alignof__(struct rseq));
+> +       NEW_AUX_ENT(AT_RSEQ_FEATURE_FLAGS, RSEQ_FEATURE_FLAGS);
+>  #endif
+>  #undef NEW_AUX_ENT
+>         /* AT_NULL is zero; clear the rest too */
+> diff --git a/include/linux/sched.h b/include/linux/sched.h
+> index 292c31697248..39aa585ba2a3 100644
+> --- a/include/linux/sched.h
+> +++ b/include/linux/sched.h
+> @@ -743,6 +743,15 @@ struct kmap_ctrl {
+>  #endif
+>  };
+>
+> +#ifdef CONFIG_RSEQ
+> +struct rseq_lazy_sig {
+> +       bool pending;
+> +       int sig;
+> +       int code;
+> +       void __user *addr;
+> +};
+> +#endif
+> +
+>  struct task_struct {
+>  #ifdef CONFIG_THREAD_INFO_IN_TASK
+>         /*
+> @@ -1317,6 +1326,7 @@ struct task_struct {
+>          * with respect to preemption.
+>          */
+>         unsigned long rseq_event_mask;
+> +       struct rseq_lazy_sig rseq_lazy_sig;
+>  #endif
+>
+>  #ifdef CONFIG_SCHED_MM_CID
+> @@ -2330,6 +2340,8 @@ unsigned long sched_cpu_util(int cpu);
+>
+>  #ifdef CONFIG_RSEQ
+>
+> +#define RSEQ_FEATURE_FLAGS     RSEQ_FEATURE_PAGE_FAULT_ABORT
+> +
+>  /*
+>   * Map the event mask on the user-space ABI enum rseq_cs_flags
+>   * for direct mask checks.
+> @@ -2390,6 +2402,8 @@ static inline void rseq_migrate(struct task_struct *t)
+>   */
+>  static inline void rseq_fork(struct task_struct *t, unsigned long clone_flags)
+>  {
+> +       WARN_ON_ONCE(current->rseq_lazy_sig.pending);
+> +
+>         if (clone_flags & CLONE_VM) {
+>                 t->rseq = NULL;
+>                 t->rseq_len = 0;
+> @@ -2405,6 +2419,8 @@ static inline void rseq_fork(struct task_struct *t, unsigned long clone_flags)
+>
+>  static inline void rseq_execve(struct task_struct *t)
+>  {
+> +       WARN_ON_ONCE(current->rseq_lazy_sig.pending);
+> +
+>         t->rseq = NULL;
+>         t->rseq_len = 0;
+>         t->rseq_sig = 0;
+> diff --git a/include/linux/sched/signal.h b/include/linux/sched/signal.h
+> index 3499c1a8b929..0d75dfde2f9b 100644
+> --- a/include/linux/sched/signal.h
+> +++ b/include/linux/sched/signal.h
+> @@ -781,4 +781,28 @@ static inline unsigned long rlimit_max(unsigned int limit)
+>         return task_rlimit_max(current, limit);
+>  }
+>
+> +#ifdef CONFIG_RSEQ
+> +
+> +static inline int rseq_lazy_force_sig_fault(int sig, int code, void __user *addr)
+> +{
+> +       struct task_struct *t = current;
+> +
+> +       if (!t->rseq_event_mask)
+> +               return force_sig_fault(sig, code, addr);
+> +       t->rseq_lazy_sig.pending = true;
+> +       t->rseq_lazy_sig.sig = sig;
+> +       t->rseq_lazy_sig.code = code;
+> +       t->rseq_lazy_sig.addr = addr;
+> +       return 0;
+> +}
+> +
+> +#else
+> +
+> +static inline int rseq_lazy_force_sig_fault(int sig, int code, void __user *addr)
+> +{
+> +       return force_sig_fault(sig, code, addr);
+> +}
+> +
+> +#endif
+> +
+>  #endif /* _LINUX_SCHED_SIGNAL_H */
+> diff --git a/include/uapi/linux/auxvec.h b/include/uapi/linux/auxvec.h
+> index 6991c4b8ab18..5044f367a219 100644
+> --- a/include/uapi/linux/auxvec.h
+> +++ b/include/uapi/linux/auxvec.h
+> @@ -32,6 +32,7 @@
+>  #define AT_HWCAP2 26   /* extension of AT_HWCAP */
+>  #define AT_RSEQ_FEATURE_SIZE   27      /* rseq supported feature size */
+>  #define AT_RSEQ_ALIGN          28      /* rseq allocation alignment */
+> +#define AT_RSEQ_FEATURE_FLAGS  29      /* rseq feature flags */
+>
+>  #define AT_EXECFN  31  /* filename of program */
+>
+> diff --git a/include/uapi/linux/rseq.h b/include/uapi/linux/rseq.h
+> index c233aae5eac9..0fdb192e3cd3 100644
+> --- a/include/uapi/linux/rseq.h
+> +++ b/include/uapi/linux/rseq.h
+> @@ -37,6 +37,13 @@ enum rseq_cs_flags {
+>                 (1U << RSEQ_CS_FLAG_NO_RESTART_ON_MIGRATE_BIT),
+>  };
+>
+> +/*
+> + * rseq feature flags. Query with getauxval(AT_RSEQ_FEATURE_FLAGS).
+> + */
+> +enum rseq_feature_flags {
+> +       RSEQ_FEATURE_PAGE_FAULT_ABORT = (1U << 0),
+> +};
+> +
+>  /*
+>   * struct rseq_cs is aligned on 4 * 8 bytes to ensure it is always
+>   * contained within a single cache-line. It is usually declared as
+> diff --git a/kernel/rseq.c b/kernel/rseq.c
+> index 9de6e35fe679..f686a97abb45 100644
+> --- a/kernel/rseq.c
+> +++ b/kernel/rseq.c
+> @@ -271,6 +271,25 @@ static bool in_rseq_cs(unsigned long ip, struct rseq_cs *rseq_cs)
+>         return ip - rseq_cs->start_ip < rseq_cs->post_commit_offset;
+>  }
+>
+> +static void rseq_clear_lazy_sig_fault(struct task_struct *t)
+> +{
+> +       if (!t->rseq_lazy_sig.pending)
+> +               return;
+> +       t->rseq_lazy_sig.pending = false;
+> +       t->rseq_lazy_sig.sig = 0;
+> +       t->rseq_lazy_sig.code = 0;
+> +       t->rseq_lazy_sig.addr = NULL;
+> +}
+> +
+> +static void rseq_force_lazy_sig_fault(struct task_struct *t)
+> +{
+> +       if (!t->rseq_lazy_sig.pending)
+> +               return;
+> +       force_sig_fault(t->rseq_lazy_sig.sig, t->rseq_lazy_sig.code,
+> +                       t->rseq_lazy_sig.addr);
+> +       rseq_clear_lazy_sig_fault(t);
+> +}
+> +
+>  static int rseq_ip_fixup(struct pt_regs *regs)
+>  {
+>         unsigned long ip = instruction_pointer(regs);
+> @@ -280,25 +299,32 @@ static int rseq_ip_fixup(struct pt_regs *regs)
+>
+>         ret = rseq_get_rseq_cs(t, &rseq_cs);
+>         if (ret)
+> -               return ret;
+> +               goto nofixup;
+>
+>         /*
+>          * Handle potentially not being within a critical section.
+>          * If not nested over a rseq critical section, restart is useless.
+>          * Clear the rseq_cs pointer and return.
+>          */
+> -       if (!in_rseq_cs(ip, &rseq_cs))
+> -               return clear_rseq_cs(t);
+> +       if (!in_rseq_cs(ip, &rseq_cs)) {
+> +               ret = clear_rseq_cs(t);
+> +               goto nofixup;
+> +       }
+>         ret = rseq_need_restart(t, rseq_cs.flags);
+>         if (ret <= 0)
+> -               return ret;
+> +               goto nofixup;
+>         ret = clear_rseq_cs(t);
+>         if (ret)
+> -               return ret;
+> +               goto nofixup;
+> +       rseq_clear_lazy_sig_fault(t);
+>         trace_rseq_ip_fixup(ip, rseq_cs.start_ip, rseq_cs.post_commit_offset,
+>                             rseq_cs.abort_ip);
+>         instruction_pointer_set(regs, (unsigned long)rseq_cs.abort_ip);
+>         return 0;
+> +
+> +nofixup:
+> +       rseq_force_lazy_sig_fault(t);
+> +       return ret;
+>  }
+>
+>  /*
+> --
+> 2.39.2
+>
