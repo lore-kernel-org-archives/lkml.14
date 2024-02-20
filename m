@@ -1,99 +1,99 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A557076031;
-	Tue, 20 Feb 2024 15:38:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0E486A35B;
+	Tue, 20 Feb 2024 15:39:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708443519; cv=none; b=HZnXLmdt580U3ZJTEO62hv1xmT5zGNQtHYjeJ5LoaZKpaR6QkSem1sGyMI1wK8zHiGd0nE3Vtr3HNcZaoHdmov3F7QKFeoGnOkS4GkjG/g1g7LP4pGCs2Rx/ESnzPXgbNPvvRARUD/4Ian1d1DaNLLt0klOgaPJtjVQzBzCDfZ4=
+	t=1708443573; cv=none; b=Tip+gniBozTovfRCH0p//Ij5SdykiIzmJvm+P9T1JsoD26+X1s8DfoCWIHq09OgCWnUhzn0p0NSEcPGuxmpghs2FfKhnuguVFv5vfItyo7c/WdG7p+rrFPYvmEn71M9TuhlhuLB8DZSp+GYIbyqbIJLdBUTOZQNPw8lzJSZm8dE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708443519; c=relaxed/simple;
-	bh=+GWUaKj8l/UOXz/ZncL8CGObQZYYkF42lOpmXt3dqRA=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=W2eVVX2V0bA+igMvwz2SpoqV8zi1sipwBuDKT35fgTWhLslLNl7PZSgY1j33ZYvsf70o/nPgZ8EwpPxCRGQEfaTYrM1QxOYvjjgLMORiOzIj0jqCPlZx8yA+VuAt3qCGiAaO1k/4stlMO+06oZFF02tyFYO+uiPjfE4wn9FDCYM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 795D7C433F1;
-	Tue, 20 Feb 2024 15:38:38 +0000 (UTC)
-Date: Tue, 20 Feb 2024 10:40:23 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v3] ring-buffer: Simplify reservation with try_cmpxchg()
- loop
-Message-ID: <20240220104023.2182b5c3@gandalf.local.home>
-In-Reply-To: <168765ff-98ea-42a1-82f7-56178bfcf7ec@efficios.com>
-References: <20240219182032.2605d0a3@gandalf.local.home>
-	<20240220091922.45848d9a@gandalf.local.home>
-	<168765ff-98ea-42a1-82f7-56178bfcf7ec@efficios.com>
-X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1708443573; c=relaxed/simple;
+	bh=SEgYYOX36WF+ylRme4jY6LEbb5z9zVVBxPDYpryyAvc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=eodeiOUD5HXTIOt9c5BRU/+2G68VNQx2+sLSdHHbDwHHpTluIhWaR9L7sR1Pm+vWIfxbdJdO9/n4yyt4I+tFYOKUD/ski/A62V//212K3gtlTr67EtGbpkDK9HtSOhyoRzXw7wi7SZc5zFRDouvYigQZ7E7ofkuyMdXQ80icTQ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=frjXQmRH; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="frjXQmRH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5D83BC433F1;
+	Tue, 20 Feb 2024 15:39:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1708443571;
+	bh=SEgYYOX36WF+ylRme4jY6LEbb5z9zVVBxPDYpryyAvc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=frjXQmRH7B360sJhKlJEt+m2CFVNjnwrajGam3GN1tNfnIb77jeeFuis3S/F+5aJf
+	 wlFMKnrIjhNpXQUCQjvYhd8YuUTWTmobpY7MMKa4N1TZJOPOLEytN5xoDRT2p9qB8N
+	 O7taf96Df5MDKvTLXjg7u1URwrJhPjvKstd79EpCQBa50KPr6FmkhvxROF2aThdwoq
+	 IwWROuSE1bzTtVymdUVyxrqVObMx6CTlVtlXLAoQcZPqs4DQjErhoyLtnbpE40ubhG
+	 tH5KDz+l3zoPZirVszNJaejC6BLQGXs4E8hmrvCiJdeTyuOb1AmIT8q4Y3WhVnPhnF
+	 QQjYNEacpTQ0A==
+Date: Tue, 20 Feb 2024 08:39:29 -0700
+From: Rob Herring <robh@kernel.org>
+To: Prabhakar <prabhakar.csengg@gmail.com>
+Cc: Conor Dooley <conor+dt@kernel.org>, linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>,
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>,
+	Rob Herring <robh+dt@kernel.org>,
+	Magnus Damm <magnus.damm@gmail.com>,
+	linux-renesas-soc@vger.kernel.org,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
+Subject: Re: [PATCH v3] dt-bindings: interrupt-controller:
+ renesas,rzg2l-irqc: Update interrupts
+Message-ID: <170844356767.3565819.9603342879693949125.robh@kernel.org>
+References: <20240213085912.56600-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240213085912.56600-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-On Tue, 20 Feb 2024 09:50:13 -0500
-Mathieu Desnoyers <mathieu.desnoyers@efficios.com> wrote:
 
-> On 2024-02-20 09:19, Steven Rostedt wrote:
-> > On Mon, 19 Feb 2024 18:20:32 -0500
-> > Steven Rostedt <rostedt@goodmis.org> wrote:
-> >   
-> >> Instead of using local_add_return() to reserve the ring buffer data,
-> >> Mathieu Desnoyers suggested using local_cmpxchg(). This would simplify the
-> >> reservation with the time keeping code.
-> >>
-> >> Although, it does not get rid of the double time stamps (before_stamp and
-> >> write_stamp), using cmpxchg() does get rid of the more complex case when
-> >> an interrupting event occurs between getting the timestamps and reserving
-> >> the data, as when that happens, it just tries again instead of dealing
-> >> with it.
-> >>
-> >> Before we had:
-> >>
-> >> 	w = local_read(&tail_page->write);
-> >> 	/* get time stamps */
-> >> 	write = local_add_return(length, &tail_page->write);
-> >> 	if (write - length == w) {
-> >> 		/* do simple case */
-> >> 	} else {
-> >> 		/* do complex case */
-> >> 	}
-> >>
-> >> By switching the local_add_return() to a local_try_cmpxchg() it can now be:
-> >>
-> >> 	 w = local_read(&tail_page->write);
-> >>   again:
-> >> 	/* get time stamps */
-> >> 	if (!local_try_cmpxchg(&tail_page->write, &w, w + length))
-> >> 		goto again;
-> >>
-> >> 	 /* do simple case */  
-> > 
-> > Something about this logic is causing __rb_next_reserve() to sometimes
-> > always return -EAGAIN and triggering the:
-> > 
-> >      RB_WARN_ON(cpu_buffer, ++nr_loops > 1000)
-> > 
-> > Which disables the ring buffer.
-> > 
-> > I'm not sure what it is, but until I do, I'm removing the patch from my
-> > queue.  
+On Tue, 13 Feb 2024 08:59:12 +0000, Prabhakar wrote:
+> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 > 
-> Try resetting the info->add_timestamp flags to add_ts_default on goto again
-> within __rb_reserve_next().
->
+> All the RZ/G2L and alike SoC's (listed below) have ECCRAM0/1 interrupts
+> supported by the IRQC block, reflect the same in DT binding doc.
+> 
+> - R9A07G043U              - RZ/G2UL
+> - R9A07G044L/R9A07G044LC  - RZ/{G2L,G2LC}
+> - R9A07G054               - RZ/V2L
+> - R9A08G045               - RZ/G3S
+> 
+> For the RZ/G3S SoC ("R9A08G045") ECCRAM0/1 interrupts combined into single
+> interrupt so we just use the below to represent them:
+> - ec7tie1-0
+> - ec7tie2-0
+> - ec7tiovf-0
+> 
+> Previously, it was assumed that BUS-error and ECCRAM0/1 error interrupts
+> were only supported by RZ/G2UL ("R9A07G043U") and RZ/G3S ("R9A08G045")
+> SoCs. However, in reality, all RZ/G2L and similar SoCs (listed above)
+> support these interrupts. Therefore, mark the 'interrupt-names' property
+> as required for all the SoCs and update the example node in the binding
+> document.
+> 
+> Fixes: 96fed779d3d4 ("dt-bindings: interrupt-controller: Add Renesas RZ/G2L Interrupt Controller")
+> Fixes: 1cf0697a24ef ("dt-bindings: interrupt-controller: renesas,rzg2l-irqc: Document RZ/G3S")
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> ---
+> v2 -> v3:
+> - Fixed IRQ description as pointed by Geert
+> - Sending this individual patch as DTSI patches have been Reviewed by Geert
+> 
+> v1 -> v2:
+> - Fixed review comments pointed by Conor
+> 
+> v1: https://patchwork.kernel.org/project/linux-renesas-soc/patch/20240202093907.9465-2-prabhakar.mahadev-lad.rj@bp.renesas.com/
+> ---
+>  .../renesas,rzg2l-irqc.yaml                   | 44 +++++++++++++++----
+>  1 file changed, 35 insertions(+), 9 deletions(-)
+> 
 
-I was looking at that too, but I don't know how it will make a difference.
+Applied, thanks!
 
-Note, the test that fails is in my test suite, and takes about a half hour
-to get there. Running that suite takes up resources (it's my main test
-suite for all changes). I'm currently testing other patches so I either
-need to figure it out through inspection, or this will need to wait a while.
-
--- Steve
