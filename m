@@ -1,57 +1,57 @@
-Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
+Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com [209.85.208.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4F2476914;
-	Tue, 20 Feb 2024 19:51:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0648014A4F4;
+	Tue, 20 Feb 2024 19:51:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708458695; cv=none; b=f0wk0iVxpPEL6crPr14Gp5qy39LBZ6uk0dbis7STd2q9BGN+zX+RvH44nfPV1UWqf//4iUekGbTcp4zy5ljbb2PVhzdiCyYhp5GwCBG9JNvW0JlmFrsaZSZOh7q/Yg2Ht5kQvISgHmyTSZdHiTN2vfo1EtRl1wmJcuaF9NcDtY0=
+	t=1708458697; cv=none; b=hv8nG5Q0Lo1ChHBxujXMO19MQuOmWdGLgLUpw/tt5koY8MzUV2Y/PNL31g0XQymK4TrguICQX7SAKWZE6eamTrRsLs3vYhz2pgwOGrIPhFvFGDNEPS7Ml45raL7R87CzS/DY8brIsmv2KZjGb+DkJ1GPkxwGrMDXpfYm1ouZVlU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708458695; c=relaxed/simple;
-	bh=YwAEprxX0yVAdpG5CpfTah0Pbx+hkBdLRt0EuDBsMEo=;
+	s=arc-20240116; t=1708458697; c=relaxed/simple;
+	bh=qm4J52zhk5u0MtOFjSjMJaCZJdPHiRD6eD1ZnGm+OIY=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=DPApeCIWsxxXLx0Nbs58KgaFwtZLdNN67bMoRJShZkAgMt1rryL2DWoH4UbolI9e3qXRtxkGPxYKmqA2TIwHgQkZRsfzB6UNAeaE5xnyfMyyHlohxdoNRY37zkxWFva8ctYFImqDuiVDeAQxXV36BjHOArQjhi5rT4exOqIMObA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TkoOGaSI; arc=none smtp.client-ip=209.85.208.175
+	 MIME-Version; b=J2XFSkXntTSR2nAr2+Qh+PBWAduAaM5aaMnCiFH55z35hFOe2erGtGXXx3CUoG91Z/dnqGpiMFUmojVYGVlmxUZHoprNnpb/0O9hP66JMrS9Fi48vAjNG23jQpKdMloIruyrIN3/SA+l4kClTcGzGOITokM56rTuGeHnD+gu5GQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CHdaNa0y; arc=none smtp.client-ip=209.85.208.169
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TkoOGaSI"
-Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-2d240d8baf6so24848681fa.3;
-        Tue, 20 Feb 2024 11:51:33 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CHdaNa0y"
+Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-2d22b8c6e0dso44297291fa.2;
+        Tue, 20 Feb 2024 11:51:35 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1708458692; x=1709063492; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1708458694; x=1709063494; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=yUr0wyu/jz5j+F30VmSGdk68hVqH2/LrI5G9Ml1dToY=;
-        b=TkoOGaSIwLTzR1zibJL52kNphUvjDsFDvM6uKLeMVK6J4cZzEAiGv/a2vBZ560rUOK
-         YgYDNkkob/0Be0h8GDr0eVZdEyjHUvZpP+XG9FZTXiTdBF2SD8DnJj2lCRhjUrqAsVDv
-         je+V8wxiTZ8QgN9VEYnqp8l05aF714i4BqFuzPWkYIFbCrNjQ9jZIrktzPKHaIRF/2Jg
-         kcFty7XnOxe29xgCHON1nWLqxFZReLFxnbJCeEO5Jmg4sFBJyW2UW1KqaNtARx719P2a
-         UgFIfVdpFVuFxTq1ndI9j45+0FjV1ncXfiS1oo3J8B7sVGWzPMowE+jrCOwMpDFh4MGR
-         rvFg==
+        bh=jh2L6RcGiFdKCx7zZiu22h0FVnPxtlYVoTMnMq0TsIY=;
+        b=CHdaNa0yR9+h484haJUUQBi5AbzmS1u9pwNzwmQXfGQZ3uonhe9Zv5hsCRK2eGvtiH
+         OCwXQY4L6/OA/yCQAeR2uxW4HyHVVVzI8LRzz7VooTwl+2oIPV+HlqiYO3ilwPmPfaHx
+         WQIVMTF2C1Cd0NDrxlyNvCZMUYGBFxuKipmb783rRzcYWEnIs29Q1b3n+iWhfqVE2tqV
+         AM8+0GwSe+fp6Mfp1oIzYpqQQJCeFXNBVJVx6P082EdLYdT36Q4gBxwDhhE/qObHdZn8
+         T0stanRsqrrlajxdbp5QfspgHbNSLgR7pN/IcaMRbCCby8RZj/FM5UuhtDdOwwfS2Gno
+         og7Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708458692; x=1709063492;
+        d=1e100.net; s=20230601; t=1708458694; x=1709063494;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=yUr0wyu/jz5j+F30VmSGdk68hVqH2/LrI5G9Ml1dToY=;
-        b=Yaj9afl0l+IPW0aWLliuFLzZOqCubFzPq9AgLAOsGfzLVUsdZR3SX7hEj7IAeICfOa
-         P0t6OSTAlwKQ5pdlpQ2RIYEAR3wUGXFyzhMturgqUSCkLqoEMWHwFi2vD9c026i84CVr
-         mBNMdZElzZEgunAzULW5T7o9NAlyai6EzyUVCxWweEn35xigAqQjCGXC/i+2NvhxCRY9
-         5NqiWVBjp1Hv/hNFyFFcAiTFJdA0Gsy3SE2UZgSmL1uUml18RbkB6zvNI7q+WHvPyceO
-         zovZaHSTVNAF9rbDV+CKmleZo3OVadTyfspTZ/fGNAfdECMPIIwPZbWsf3B/hVlO/OX+
-         /qxA==
-X-Forwarded-Encrypted: i=1; AJvYcCWRPbZGk/7ZbfV2YVIi6n0tssHP4FiVNVoSZWjtBJEwAgYqrej70ojE+k//h2lEVKSesOeC+vJQVWQkMAlIzOUVEB1GqtVSNTca+pgUTQMg+yVH0gmu1yAAloBV2Xg3RW9XFhfI
-X-Gm-Message-State: AOJu0YyeEVZB5GgWNXGUNXyzciejL99aMGg9npqMEtU0aAmuIHpFEV6h
-	8xa9Fdn6cisb15AB0r++Faj1LTHtPk+2e/RFGIJggZHUKAHfzrAn
-X-Google-Smtp-Source: AGHT+IH8XmbnjjLrqM2qNGyY6IrGAEhMVRS1fEYKTWML6/eZh09Mn6ciIvO9ybOc7OWHcbRo1DFpUw==
-X-Received: by 2002:a2e:a71e:0:b0:2d2:3d31:2200 with SMTP id s30-20020a2ea71e000000b002d23d312200mr3160066lje.24.1708458691752;
-        Tue, 20 Feb 2024 11:51:31 -0800 (PST)
+        bh=jh2L6RcGiFdKCx7zZiu22h0FVnPxtlYVoTMnMq0TsIY=;
+        b=FKo53wLRddiGpY4K95FfnfkPFb8CSLxK5GZa8pnNm4aTY2SrxBjbmJ6DbXyuw5EXsO
+         H4HGL3rSZPzl2JZAKlXgRlZhra50dcxJp8fpkLU6hmkeJjLijUykEIGwUioFIwStHndq
+         p7Z5QCe7uXs9LRQy0Lg7Qlsj1TF6nrwaAD/PI4QiY8c6/phh0K7jnk5lmSELWxAW3o9q
+         B3QlZcakak1q2EbW3GFUchhs/XlOVUbA74uaj5srHd5YCh9McIhUKy+qjePx6IKZKEp7
+         7OjCNB14evr5clr+UyB7kF5dD0FnPPbH+o2WZ8jxBli4uFuONS+e0RMPcUn3FTQTeysO
+         O2CA==
+X-Forwarded-Encrypted: i=1; AJvYcCVQzNpGkNAfCDRty2Dzup1d9WUz+bA7HwjILayHPqJWyRaPYgFJ/hiuJzy9lxt9MngAZMstpEzBe3qraY8gvZJghiOUC+sEUF/v5FLwhIBHNpVTrXmo5cglYUAlzR0uEZ9MXvA+
+X-Gm-Message-State: AOJu0YwSzzFCYwRuyv1x1R9loIj+LK12thovZn+N1E66xA90tWjlQj6r
+	pYKa1vSQ232JYoQ8q5Bz3TwiiYk57Ke5SXkwHfLLpt6Z3oToM0yD
+X-Google-Smtp-Source: AGHT+IE0uB67JIW5GgBoh+sWq5kdhOomUj2tauYSPRIJ1xo33wjPZfkuNU9PbDI3HaFeWna9el6yvw==
+X-Received: by 2002:a05:651c:102c:b0:2d2:3a60:e6bb with SMTP id w12-20020a05651c102c00b002d23a60e6bbmr4288545ljm.52.1708458694171;
+        Tue, 20 Feb 2024 11:51:34 -0800 (PST)
 Received: from localhost.localdomain (93-34-89-13.ip49.fastwebnet.it. [93.34.89.13])
-        by smtp.googlemail.com with ESMTPSA id fs14-20020a05600c3f8e00b00411a595d56bsm15494853wmb.14.2024.02.20.11.51.30
+        by smtp.googlemail.com with ESMTPSA id fs14-20020a05600c3f8e00b00411a595d56bsm15494853wmb.14.2024.02.20.11.51.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 20 Feb 2024 11:51:31 -0800 (PST)
+        Tue, 20 Feb 2024 11:51:33 -0800 (PST)
 From: Christian Marangi <ansuelsmth@gmail.com>
 To: Andrew Lunn <andrew@lunn.ch>,
 	Heiner Kallweit <hkallweit1@gmail.com>,
@@ -67,9 +67,9 @@ To: Andrew Lunn <andrew@lunn.ch>,
 	"Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>,
 	netdev@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [net-next RFC PATCH v2 1/3] net: phy: add support for defining multiple PHY IDs in PHY driver
-Date: Tue, 20 Feb 2024 20:50:48 +0100
-Message-ID: <20240220195103.15809-2-ansuelsmth@gmail.com>
+Subject: [net-next RFC PATCH v2 3/3] net: phy: bcm7xxx: rework phy_driver table to new multiple PHY ID format
+Date: Tue, 20 Feb 2024 20:50:50 +0100
+Message-ID: <20240220195103.15809-4-ansuelsmth@gmail.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240220195103.15809-1-ansuelsmth@gmail.com>
 References: <20240220195103.15809-1-ansuelsmth@gmail.com>
@@ -81,358 +81,190 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Some PHY driver might implement the same OPs for different PHY ID and
-using a mask is not enough to match similar PHYs.
-
-To reduce code duplication, add support for defining multiple PHY IDs in
-PHY driver struct.
-
-Introduce a new variable in phy_driver struct, .ids, where a table array of
-phy_driver_id can be defined to reference multiple PHY IDs (with their
-own masks) supporting the same group of OPs and flags. PHY driver also
-require to declare .ids_count to signal the amount of multiple PHYs the
-phy_driver supports.
-
-Introduce a new variable in phy_device, .drv_id, where the matching
-phy_driver_id is stored.
-
-To make this transparent and don't cause regression in ABI, mdiodrv
-registration logic is changed. Each element in .ids is registreted as a
-separate driver (mimicking them defined as an entire phy_driver), each
-element then points to the common phy_driver struct to reduce code
-duplication, permitting the correct driver name applied. Name of each
-driver is taken by the .name in phy_driver_id.
-
-If defined .name defined in phy_driver will be used for early PHY driver
-registration.
-
-Both implementation are mutually exclusive, phy_driver with .phy_id or
-.phy_id_mask and .ids are not supported and are rejected by the kernel
-with a WARN as this is a bugged/wrong PHY driver.
-
-to_phy_driver macro is updated to this new structure.
-
-Single PHY ID implementation is still supported and ID is internally
-converted to the .ids table with a single element.
+Rework bcm7xxx PHY driver table to new multiple PHY format
+implementation to reduce code duplication and final size of the compiled
+module.
 
 Signed-off-by: Christian Marangi <ansuelsmth@gmail.com>
 ---
- drivers/net/phy/phy_device.c | 127 ++++++++++++++++++++++++++---------
- include/linux/phy.h          |  38 +++++++++--
- 2 files changed, 129 insertions(+), 36 deletions(-)
+ drivers/net/phy/bcm7xxx.c | 140 ++++++++++++++++++++++----------------
+ 1 file changed, 82 insertions(+), 58 deletions(-)
 
-diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
-index d63dca535746..7125e16f4c70 100644
---- a/drivers/net/phy/phy_device.c
-+++ b/drivers/net/phy/phy_device.c
-@@ -524,12 +524,13 @@ static int phy_scan_fixups(struct phy_device *phydev)
- 
- static int phy_bus_match(struct device *dev, struct device_driver *drv)
- {
-+	struct phy_driver_id *phydrv_id = to_phy_driver_id(drv);
- 	struct phy_device *phydev = to_phy_device(dev);
--	struct phy_driver *phydrv = to_phy_driver(drv);
-+	struct phy_driver *phydrv = phydrv_id->driver;
- 	const int num_ids = ARRAY_SIZE(phydev->c45_ids.device_ids);
- 	int i;
- 
--	if (!(phydrv->mdiodrv.flags & MDIO_DEVICE_IS_PHY))
-+	if (!(phydrv_id->mdiodrv.flags & MDIO_DEVICE_IS_PHY))
- 		return 0;
- 
- 	if (phydrv->match_phy_device)
-@@ -541,13 +542,14 @@ static int phy_bus_match(struct device *dev, struct device_driver *drv)
- 				continue;
- 
- 			if (phy_id_compare(phydev->c45_ids.device_ids[i],
--					   phydrv->phy_id, phydrv->phy_id_mask))
-+					   phydrv_id->phy_id, phydrv_id->phy_id_mask))
- 				return 1;
- 		}
-+
- 		return 0;
- 	} else {
--		return phy_id_compare(phydev->phy_id, phydrv->phy_id,
--				      phydrv->phy_id_mask);
-+		return phy_id_compare(phydev->phy_id, phydrv_id->phy_id,
-+				      phydrv_id->phy_id_mask);
- 	}
+diff --git a/drivers/net/phy/bcm7xxx.c b/drivers/net/phy/bcm7xxx.c
+index 97638ba7ae85..6ff09c92f7fa 100644
+--- a/drivers/net/phy/bcm7xxx.c
++++ b/drivers/net/phy/bcm7xxx.c
+@@ -845,16 +845,6 @@ static int bcm7xxx_28nm_probe(struct phy_device *phydev)
+ 	.phy_id		= (_oui),					\
+ 	.phy_id_mask	= 0xfffffff0,					\
+ 	.name		= _name,					\
+-	/* PHY_GBIT_FEATURES */						\
+-	.flags		= PHY_IS_INTERNAL,				\
+-	.config_init	= bcm7xxx_28nm_config_init,			\
+-	.resume		= bcm7xxx_28nm_resume,				\
+-	.get_tunable	= bcm7xxx_28nm_get_tunable,			\
+-	.set_tunable	= bcm7xxx_28nm_set_tunable,			\
+-	.get_sset_count	= bcm_phy_get_sset_count,			\
+-	.get_strings	= bcm_phy_get_strings,				\
+-	.get_stats	= bcm7xxx_28nm_get_phy_stats,			\
+-	.probe		= bcm7xxx_28nm_probe,				\
  }
  
-@@ -1465,9 +1467,9 @@ int phy_attach_direct(struct net_device *dev, struct phy_device *phydev,
- 	 */
- 	if (!d->driver) {
- 		if (phydev->is_c45)
--			d->driver = &genphy_c45_driver.mdiodrv.driver;
-+			d->driver = &genphy_c45_driver.ids->mdiodrv.driver;
- 		else
--			d->driver = &genphy_driver.mdiodrv.driver;
-+			d->driver = &genphy_driver.ids->mdiodrv.driver;
- 
- 		using_genphy = true;
- 	}
-@@ -1649,14 +1651,14 @@ static bool phy_driver_is_genphy_kind(struct phy_device *phydev,
- bool phy_driver_is_genphy(struct phy_device *phydev)
- {
- 	return phy_driver_is_genphy_kind(phydev,
--					 &genphy_driver.mdiodrv.driver);
-+					 &genphy_driver.ids->mdiodrv.driver);
- }
- EXPORT_SYMBOL_GPL(phy_driver_is_genphy);
- 
- bool phy_driver_is_genphy_10g(struct phy_device *phydev)
- {
- 	return phy_driver_is_genphy_kind(phydev,
--					 &genphy_c45_driver.mdiodrv.driver);
-+					 &genphy_c45_driver.ids->mdiodrv.driver);
- }
- EXPORT_SYMBOL_GPL(phy_driver_is_genphy_10g);
- 
-@@ -3409,9 +3411,11 @@ static int phy_probe(struct device *dev)
- {
- 	struct phy_device *phydev = to_phy_device(dev);
- 	struct device_driver *drv = phydev->mdio.dev.driver;
--	struct phy_driver *phydrv = to_phy_driver(drv);
-+	struct phy_driver_id *id = to_phy_driver_id(drv);
-+	struct phy_driver *phydrv = id->driver;
- 	int err = 0;
- 
-+	phydev->drv_id = id;
- 	phydev->drv = phydrv;
- 
- 	/* Disable the interrupt if the PHY doesn't support it
-@@ -3551,6 +3555,42 @@ static int phy_remove(struct device *dev)
- 	return 0;
+ #define BCM7XXX_28NM_EPHY(_oui, _name)					\
+@@ -862,16 +852,6 @@ static int bcm7xxx_28nm_probe(struct phy_device *phydev)
+ 	.phy_id		= (_oui),					\
+ 	.phy_id_mask	= 0xfffffff0,					\
+ 	.name		= _name,					\
+-	/* PHY_BASIC_FEATURES */					\
+-	.flags		= PHY_IS_INTERNAL,				\
+-	.config_init	= bcm7xxx_28nm_ephy_config_init,		\
+-	.resume		= bcm7xxx_28nm_ephy_resume,			\
+-	.get_sset_count	= bcm_phy_get_sset_count,			\
+-	.get_strings	= bcm_phy_get_strings,				\
+-	.get_stats	= bcm7xxx_28nm_get_phy_stats,			\
+-	.probe		= bcm7xxx_28nm_probe,				\
+-	.read_mmd	= bcm7xxx_28nm_ephy_read_mmd,			\
+-	.write_mmd	= bcm7xxx_28nm_ephy_write_mmd,			\
  }
  
-+static int phy_driver_mdiodrv_register(struct mdio_driver_common *mdiodrv, char *name,
-+				       struct module *owner)
+ #define BCM7XXX_40NM_EPHY(_oui, _name)					\
+@@ -879,12 +859,6 @@ static int bcm7xxx_28nm_probe(struct phy_device *phydev)
+ 	.phy_id         = (_oui),					\
+ 	.phy_id_mask    = 0xfffffff0,					\
+ 	.name           = _name,					\
+-	/* PHY_BASIC_FEATURES */					\
+-	.flags          = PHY_IS_INTERNAL,				\
+-	.soft_reset	= genphy_soft_reset,				\
+-	.config_init    = bcm7xxx_config_init,				\
+-	.suspend        = bcm7xxx_suspend,				\
+-	.resume         = bcm7xxx_config_init,				\
+ }
+ 
+ #define BCM7XXX_16NM_EPHY(_oui, _name)					\
+@@ -892,41 +866,91 @@ static int bcm7xxx_28nm_probe(struct phy_device *phydev)
+ 	.phy_id		= (_oui),					\
+ 	.phy_id_mask	= 0xfffffff0,					\
+ 	.name		= _name,					\
+-	/* PHY_BASIC_FEATURES */					\
+-	.flags		= PHY_IS_INTERNAL,				\
+-	.get_sset_count	= bcm_phy_get_sset_count,			\
+-	.get_strings	= bcm_phy_get_strings,				\
+-	.get_stats	= bcm7xxx_28nm_get_phy_stats,			\
+-	.probe		= bcm7xxx_28nm_probe,				\
+-	.config_init	= bcm7xxx_16nm_ephy_config_init,		\
+-	.config_aneg	= genphy_config_aneg,				\
+-	.read_status	= genphy_read_status,				\
+-	.resume		= bcm7xxx_16nm_ephy_resume,			\
+ }
+ 
+ static struct phy_driver bcm7xxx_driver[] = {
+-	BCM7XXX_28NM_EPHY(PHY_ID_BCM72113, "Broadcom BCM72113"),
+-	BCM7XXX_28NM_EPHY(PHY_ID_BCM72116, "Broadcom BCM72116"),
+-	BCM7XXX_16NM_EPHY(PHY_ID_BCM72165, "Broadcom BCM72165"),
+-	BCM7XXX_28NM_GPHY(PHY_ID_BCM7250, "Broadcom BCM7250"),
+-	BCM7XXX_28NM_EPHY(PHY_ID_BCM7255, "Broadcom BCM7255"),
+-	BCM7XXX_28NM_EPHY(PHY_ID_BCM7260, "Broadcom BCM7260"),
+-	BCM7XXX_28NM_EPHY(PHY_ID_BCM7268, "Broadcom BCM7268"),
+-	BCM7XXX_28NM_EPHY(PHY_ID_BCM7271, "Broadcom BCM7271"),
+-	BCM7XXX_28NM_GPHY(PHY_ID_BCM7278, "Broadcom BCM7278"),
+-	BCM7XXX_28NM_GPHY(PHY_ID_BCM7364, "Broadcom BCM7364"),
+-	BCM7XXX_28NM_GPHY(PHY_ID_BCM7366, "Broadcom BCM7366"),
+-	BCM7XXX_16NM_EPHY(PHY_ID_BCM74165, "Broadcom BCM74165"),
+-	BCM7XXX_28NM_GPHY(PHY_ID_BCM74371, "Broadcom BCM74371"),
+-	BCM7XXX_28NM_GPHY(PHY_ID_BCM7439, "Broadcom BCM7439"),
+-	BCM7XXX_28NM_GPHY(PHY_ID_BCM7439_2, "Broadcom BCM7439 (2)"),
+-	BCM7XXX_28NM_GPHY(PHY_ID_BCM7445, "Broadcom BCM7445"),
+-	BCM7XXX_40NM_EPHY(PHY_ID_BCM7346, "Broadcom BCM7346"),
+-	BCM7XXX_40NM_EPHY(PHY_ID_BCM7362, "Broadcom BCM7362"),
+-	BCM7XXX_40NM_EPHY(PHY_ID_BCM7425, "Broadcom BCM7425"),
+-	BCM7XXX_40NM_EPHY(PHY_ID_BCM7429, "Broadcom BCM7429"),
+-	BCM7XXX_40NM_EPHY(PHY_ID_BCM7435, "Broadcom BCM7435"),
+-	BCM7XXX_16NM_EPHY(PHY_ID_BCM7712, "Broadcom BCM7712"),
 +{
-+	int retval;
-+
-+	/* PHYLIB device drivers must not match using a DT compatible table
-+	 * as this bypasses our checks that the mdiodev that is being matched
-+	 * is backed by a struct phy_device. If such a case happens, we will
-+	 * make out-of-bounds accesses and lockup in phydev->lock.
-+	 */
-+	if (WARN(mdiodrv->driver.of_match_table,
-+		 "%s: driver must not provide a DT match table\n",
-+		 name))
-+		return -EINVAL;
-+
-+	mdiodrv->flags |= MDIO_DEVICE_IS_PHY;
-+	mdiodrv->driver.name = name;
-+	mdiodrv->driver.bus = &mdio_bus_type;
-+	mdiodrv->driver.probe = phy_probe;
-+	mdiodrv->driver.remove = phy_remove;
-+	mdiodrv->driver.owner = owner;
-+	mdiodrv->driver.probe_type = PROBE_FORCE_SYNCHRONOUS;
-+
-+	retval = driver_register(&mdiodrv->driver);
-+	if (retval) {
-+		pr_err("%s: Error %d in registering driver\n",
-+		       name, retval);
-+
-+		return retval;
-+	}
-+
-+	pr_debug("%s: Registered new driver\n", name);
-+
-+	return 0;
-+}
-+
- /**
-  * phy_driver_register - register a phy_driver with the PHY layer
-  * @new_driver: new phy_driver to register
-@@ -3558,7 +3598,7 @@ static int phy_remove(struct device *dev)
-  */
- int phy_driver_register(struct phy_driver *new_driver, struct module *owner)
- {
--	int retval;
-+	int i, retval;
- 
- 	/* Either the features are hard coded, or dynamically
- 	 * determined. It cannot be both.
-@@ -3569,33 +3609,47 @@ int phy_driver_register(struct phy_driver *new_driver, struct module *owner)
- 		return -EINVAL;
- 	}
- 
--	/* PHYLIB device drivers must not match using a DT compatible table
--	 * as this bypasses our checks that the mdiodev that is being matched
--	 * is backed by a struct phy_device. If such a case happens, we will
--	 * make out-of-bounds accesses and lockup in phydev->lock.
-+	/* Either PHY driver define multiple PHY IDs, or a single one.
-+	 * It cannot be both.
- 	 */
--	if (WARN(new_driver->mdiodrv.driver.of_match_table,
--		 "%s: driver must not provide a DT match table\n",
--		 new_driver->name))
-+	if (WARN_ON((new_driver->phy_id || new_driver->phy_id_mask) &&
-+		    new_driver->ids)) {
-+		pr_err("%s: phy_id or phy_id_mask and ids table must not both be set\n",
-+		       new_driver->name);
- 		return -EINVAL;
-+	}
- 
--	new_driver->mdiodrv.flags |= MDIO_DEVICE_IS_PHY;
--	new_driver->mdiodrv.driver.name = new_driver->name;
--	new_driver->mdiodrv.driver.bus = &mdio_bus_type;
--	new_driver->mdiodrv.driver.probe = phy_probe;
--	new_driver->mdiodrv.driver.remove = phy_remove;
--	new_driver->mdiodrv.driver.owner = owner;
--	new_driver->mdiodrv.driver.probe_type = PROBE_FORCE_SYNCHRONOUS;
-+	/* Dynamically allocate ids table for PHY driver that define
-+	 * a single PHY ID.
-+	 */
-+	if (!new_driver->ids) {
-+		struct phy_driver_id *id;
- 
--	retval = driver_register(&new_driver->mdiodrv.driver);
--	if (retval) {
--		pr_err("%s: Error %d in registering driver\n",
--		       new_driver->name, retval);
-+		id = kzalloc(sizeof(*new_driver->ids), GFP_KERNEL);
-+		if (!id)
-+			return -ENOMEM;
- 
--		return retval;
-+		id->name = new_driver->name;
-+		id->phy_id = new_driver->phy_id;
-+		id->phy_id_mask = new_driver->phy_id_mask;
-+		new_driver->ids = id;
-+		new_driver->ids_count = 1;
- 	}
- 
--	pr_debug("%s: Registered new driver\n", new_driver->name);
-+	for (i = 0; i < new_driver->ids_count; i++) {
-+		struct phy_driver_id *ids = new_driver->ids;
-+
-+		/* Attach the phy_driver to the phy_driver_id */
-+		ids[i].driver = new_driver;
-+		retval = phy_driver_mdiodrv_register(&ids[i].mdiodrv,
-+						     ids[i].name, owner);
-+		if (retval) {
-+			while (i-- > 0)
-+				driver_unregister(&ids[i].mdiodrv.driver);
-+
-+			return retval;
-+		}
-+	}
- 
- 	return 0;
- }
-@@ -3620,7 +3674,16 @@ EXPORT_SYMBOL(phy_drivers_register);
- 
- void phy_driver_unregister(struct phy_driver *drv)
- {
--	driver_unregister(&drv->mdiodrv.driver);
-+	int i;
-+
-+	for (i = 0; i < drv->ids_count; i++)
-+		driver_unregister(&drv->ids[i].mdiodrv.driver);
-+
-+	/* With phy_id or phy_id_mask set in phy_driver, assume
-+	 * dynamically allocated ids table.
-+	 */
-+	if (drv->phy_id || drv->phy_id_mask)
-+		kfree(drv->ids);
- }
- EXPORT_SYMBOL(phy_driver_unregister);
- 
-diff --git a/include/linux/phy.h b/include/linux/phy.h
-index c2dda21b39e1..f341a9867f19 100644
---- a/include/linux/phy.h
-+++ b/include/linux/phy.h
-@@ -537,6 +537,7 @@ struct phy_c45_device_ids {
- 	u32 device_ids[MDIO_MMD_NUM];
++	.name		= "Broadcom BCM7XXX 16NM EPHY",
++	.ids		= (struct phy_driver_id []){
++		BCM7XXX_16NM_EPHY(PHY_ID_BCM72165, "Broadcom BCM72165"),
++		BCM7XXX_16NM_EPHY(PHY_ID_BCM74165, "Broadcom BCM74165"),
++		BCM7XXX_16NM_EPHY(PHY_ID_BCM7712, "Broadcom BCM7712"),
++	},
++	.ids_count	= 3,
++	/* PHY_BASIC_FEATURES */
++	.flags		= PHY_IS_INTERNAL,
++	.get_sset_count	= bcm_phy_get_sset_count,
++	.get_strings	= bcm_phy_get_strings,
++	.get_stats	= bcm7xxx_28nm_get_phy_stats,
++	.probe		= bcm7xxx_28nm_probe,
++	.config_init	= bcm7xxx_16nm_ephy_config_init,
++	.config_aneg	= genphy_config_aneg,
++	.read_status	= genphy_read_status,
++	.resume		= bcm7xxx_16nm_ephy_resume,
++},
++{
++	.name		= "Broadcom BCM7XXX 28NM GPHY",
++	.ids		= (struct phy_driver_id []){
++		BCM7XXX_28NM_GPHY(PHY_ID_BCM7250, "Broadcom BCM7250"),
++		BCM7XXX_28NM_GPHY(PHY_ID_BCM7278, "Broadcom BCM7278"),
++		BCM7XXX_28NM_GPHY(PHY_ID_BCM7364, "Broadcom BCM7364"),
++		BCM7XXX_28NM_GPHY(PHY_ID_BCM7366, "Broadcom BCM7366"),
++		BCM7XXX_28NM_GPHY(PHY_ID_BCM74371, "Broadcom BCM74371"),
++		BCM7XXX_28NM_GPHY(PHY_ID_BCM7439, "Broadcom BCM7439"),
++		BCM7XXX_28NM_GPHY(PHY_ID_BCM7439_2, "Broadcom BCM7439 (2)"),
++		BCM7XXX_28NM_GPHY(PHY_ID_BCM7445, "Broadcom BCM7445"),
++	},
++	.ids_count	= 8,
++	/* PHY_GBIT_FEATURES */
++	.flags		= PHY_IS_INTERNAL,
++	.config_init	= bcm7xxx_28nm_config_init,
++	.resume		= bcm7xxx_28nm_resume,
++	.get_tunable	= bcm7xxx_28nm_get_tunable,
++	.set_tunable	= bcm7xxx_28nm_set_tunable,
++	.get_sset_count	= bcm_phy_get_sset_count,
++	.get_strings	= bcm_phy_get_strings,
++	.get_stats	= bcm7xxx_28nm_get_phy_stats,
++	.probe		= bcm7xxx_28nm_probe,
++},
++{
++	.name		= "Broadcom BCM7XXX 28NM EPHY",
++	.ids		= (struct phy_driver_id []){
++		BCM7XXX_28NM_EPHY(PHY_ID_BCM72113, "Broadcom BCM72113"),
++		BCM7XXX_28NM_EPHY(PHY_ID_BCM72116, "Broadcom BCM72116"),
++		BCM7XXX_28NM_EPHY(PHY_ID_BCM7255, "Broadcom BCM7255"),
++		BCM7XXX_28NM_EPHY(PHY_ID_BCM7260, "Broadcom BCM7260"),
++		BCM7XXX_28NM_EPHY(PHY_ID_BCM7268, "Broadcom BCM7268"),
++		BCM7XXX_28NM_EPHY(PHY_ID_BCM7271, "Broadcom BCM7271"),
++	},
++	.ids_count	= 6,
++	/* PHY_BASIC_FEATURES */
++	.flags		= PHY_IS_INTERNAL,
++	.config_init	= bcm7xxx_28nm_ephy_config_init,
++	.resume		= bcm7xxx_28nm_ephy_resume,
++	.get_sset_count	= bcm_phy_get_sset_count,
++	.get_strings	= bcm_phy_get_strings,
++	.get_stats	= bcm7xxx_28nm_get_phy_stats,
++	.probe		= bcm7xxx_28nm_probe,
++	.read_mmd	= bcm7xxx_28nm_ephy_read_mmd,
++	.write_mmd	= bcm7xxx_28nm_ephy_write_mmd,
++},
++{
++	.name		= "Broadcom BCM7XXX 40NM EPHY",
++	.ids		= (struct phy_driver_id []){
++		BCM7XXX_40NM_EPHY(PHY_ID_BCM7346, "Broadcom BCM7346"),
++		BCM7XXX_40NM_EPHY(PHY_ID_BCM7362, "Broadcom BCM7362"),
++		BCM7XXX_40NM_EPHY(PHY_ID_BCM7425, "Broadcom BCM7425"),
++		BCM7XXX_40NM_EPHY(PHY_ID_BCM7429, "Broadcom BCM7429"),
++		BCM7XXX_40NM_EPHY(PHY_ID_BCM7435, "Broadcom BCM7435"),
++	},
++	.ids_count	= 5,
++	/* PHY_BASIC_FEATURES */
++	.flags          = PHY_IS_INTERNAL,
++	.soft_reset	= genphy_soft_reset,
++	.config_init    = bcm7xxx_config_init,
++	.suspend        = bcm7xxx_suspend,
++	.resume         = bcm7xxx_config_init,
++},
  };
  
-+struct phy_driver_id;
- struct macsec_context;
- struct macsec_ops;
- 
-@@ -544,6 +545,7 @@ struct macsec_ops;
-  * struct phy_device - An instance of a PHY
-  *
-  * @mdio: MDIO bus this PHY is on
-+ * @drv_id: Pointer to the driver ID for this PHY instance
-  * @drv: Pointer to the driver for this PHY instance
-  * @devlink: Create a link between phy dev and mac dev, if the external phy
-  *           used by current mac interface is managed by another mac interface.
-@@ -641,6 +643,7 @@ struct phy_device {
- 
- 	/* Information about the PHY type */
- 	/* And management functions */
-+	const struct phy_driver_id *drv_id;
- 	const struct phy_driver *drv;
- 
- 	struct device_link *devlink;
-@@ -881,9 +884,32 @@ struct phy_led {
- 
- #define to_phy_led(d) container_of(d, struct phy_led, led_cdev)
- 
-+/**
-+ * struct phy_driver_id - Driver structure id for a particular PHY type
-+ * @mdiodrv: Data common to all MDIO devices
-+ * @phy_id: The result of reading the UID registers of this PHY
-+ *   type, and ANDing them with the phy_id_mask.  This driver
-+ *   only works for PHYs with IDs which match this field
-+ * @name: The friendly name of this PHY type
-+ * @phy_id_mask: Defines the important bits of the phy_id
-+ *
-+ * @driver: Pointer to the associated PHY driver
-+ */
-+struct phy_driver_id {
-+	struct mdio_driver_common mdiodrv;
-+	u32 phy_id;
-+	char *name;
-+	u32 phy_id_mask;
-+
-+	struct phy_driver *driver;
-+};
-+
- /**
-  * struct phy_driver - Driver structure for a particular PHY type
-  *
-+ * @ids: array of mdio device IDs to match this driver (terminated with
-+ *   zero phy_id_mask)
-+ * @ids_count: count of mdio device IDs (not counting the sentinel)
-  * @mdiodrv: Data common to all MDIO devices
-  * @phy_id: The result of reading the UID registers of this PHY
-  *   type, and ANDing them with the phy_id_mask.  This driver
-@@ -905,7 +931,8 @@ struct phy_led {
-  * though it is not currently supported in the driver).
-  */
- struct phy_driver {
--	struct mdio_driver_common mdiodrv;
-+	struct phy_driver_id *ids;
-+	u32 ids_count;
- 	u32 phy_id;
- 	char *name;
- 	u32 phy_id_mask;
-@@ -1171,8 +1198,10 @@ struct phy_driver {
- 	int (*led_polarity_set)(struct phy_device *dev, int index,
- 				unsigned long modes);
- };
--#define to_phy_driver(d) container_of(to_mdio_common_driver(d),		\
--				      struct phy_driver, mdiodrv)
-+
-+#define to_phy_driver_id(d) container_of(to_mdio_common_driver(d),		\
-+					 struct phy_driver_id, mdiodrv)
-+#define to_phy_driver(d) to_phy_driver_id(d)->driver
- 
- #define PHY_ANY_ID "MATCH ANY PHY"
- #define PHY_ANY_UID 0xffffffff
-@@ -1206,7 +1235,8 @@ static inline bool phy_id_compare(u32 id1, u32 id2, u32 mask)
-  */
- static inline bool phydev_id_compare(struct phy_device *phydev, u32 id)
- {
--	return phy_id_compare(id, phydev->phy_id, phydev->drv->phy_id_mask);
-+	return phy_id_compare(id, phydev->phy_id,
-+			      phydev->drv_id->phy_id_mask);
- }
- 
- /* A Structure for boards to register fixups with the PHY Lib */
+ static struct mdio_device_id __maybe_unused bcm7xxx_tbl[] = {
 -- 
 2.43.0
 
