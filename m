@@ -1,128 +1,124 @@
-Received: from mail-oa1-f47.google.com (mail-oa1-f47.google.com [209.85.160.47])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 300366A02C
-	for <linux-kernel@vger.kernel.org>; Tue, 20 Feb 2024 13:17:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFDB769DE4;
+	Tue, 20 Feb 2024 13:18:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708435056; cv=none; b=TlZ5LvwPaZpPadScvnnOrPpwRZQOcTzUNXrIti3iQT/PQS+LQKyofDrduvxVhJQiW9Y47FZ7KBiDY8mQ1WPoiuLTl+i2ws1IoVmxx+B24cWbgfSgfQfGBv338Z6RZMhGjCGZaOzoVlLOu5y8xwNLCdO/H2etY4AjjO/QN+gMVjs=
+	t=1708435122; cv=none; b=ImQOWAK41kWZsi/mUBCsM9THR7A652LPsUEJ2Kud508dNoqePc5ZEzYXtZrGpS34LAhwQZelz6QZgWkW+7m1aGFFH2WzUh6SvE2IuI++rYT9IyEweVCDS7w6MtDyv8bUP3UCgzlHOl4fQIYU81qw7DCYOQdUdPDesmValehdTrg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708435056; c=relaxed/simple;
-	bh=qL9esCSTsbD1GdZPqIOF52zqtukaAoOtfw37L/iCfIE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=LmqueYlR9NzH5w1lmFw72q8BJxIUgy5TslhytS4YT7wh189+EBiPT/M0OAr9BXGVvXbMOJsazJUqbx/GANwe7LRYyr2aIDb6RM21HlKEJvLAS90P2vLIZXqhqDD8P+JT+9Dawja2/RSyxL3XN5khBJEhhUsZOA2ELjFJIdCjxW0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=1nBzoJkl; arc=none smtp.client-ip=209.85.160.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1708435122; c=relaxed/simple;
+	bh=UV/cpuRtRlaCri5lx4C7nu174G6nc2pEi2+tO4UB9kI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=K37vF0n78ZqtNQAEdGazBeR/sFW0TYh+CoA7Si8f7gamKJDfOHaqUkrtu35Y7wwNhntPehIU9Yj4MmcEFjU7iFIPXZ+cbwOgUzgNbxfoNWu/13WT5ThWyoG8bMPWbcpVKKLgcmHHkLxtTT4q/3aIPC108wXnY0NchUuPKT4v4sc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=SK62GqNJ; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=UAJcSX72; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="1nBzoJkl"
-Received: by mail-oa1-f47.google.com with SMTP id 586e51a60fabf-21edca2a89dso1079168fac.3
-        for <linux-kernel@vger.kernel.org>; Tue, 20 Feb 2024 05:17:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1708435054; x=1709039854; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=qL9esCSTsbD1GdZPqIOF52zqtukaAoOtfw37L/iCfIE=;
-        b=1nBzoJklVG6MRZ57Q47qkUkFL5A4A6xZjHblZrbhHHANcgwrWVUvkB3ahdzzJUFTTj
-         +wAZXnsFU50xZu+MfJAnZzgL6dNZCiXbjXJY3f6vyc6Yyxd2dGKwgXIm5UnhzT6KnJlV
-         5V/Wlkz5E0r+6OQbUGqnuSOZEk2Q5xchVNsYQhBxEbIbZD9iQ1NHXQGr38yiCeWhEM1Y
-         36KQffCLZgJK7W6WwsReGF/CNDx9tj2PnW7aSziuCDpplv6IykxcSR6gf7OsB0CW1C64
-         rmcFxSBAXy9tj2VxMPRnxyoG8rS3ztZ5LzxdJnmo30jgXnwq1ZuesWZ4JVC/vFZjH6Lv
-         CuDw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708435054; x=1709039854;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=qL9esCSTsbD1GdZPqIOF52zqtukaAoOtfw37L/iCfIE=;
-        b=CKqpVxUaoYJo3gznRC+MsXsbrHl+OQyiC2Sw26G8zrg50GIMhH1giFrSCi9j8du6MO
-         U+DuVFNzepNY1oIIIw2yAj/CXRWec1/fossHBl4dKt4ipZecKHDk5fv4WZxFHeUIiiet
-         6PrnBryoMl8JwZ8eWmNvcqCE2VN+md4BJSZkYuiUbGFVYV/Ur2Lix+3RoQ0071IZY1iR
-         s8xfaOwuXIVnDqTWXI7RtoKZemkocM5Y+uQWsBLZiJJzO5I9g5pzE6BQrsBXaQeSOnA7
-         N0j3jWsLftaPB/qb62WZScnUm3L83+afYokHj0P4T6/RBzJr4zPUkTc6p2Rg9l6YvalW
-         XdCA==
-X-Forwarded-Encrypted: i=1; AJvYcCUm1wA1XAOpvbgc/N9IE/opW72JNR9sziDbZQia9klHVEvRvT87G4ZhY20QCjMyx6/xmrY77IGa0aSfdYZ+nrStmnv/S8Bli5AhFszk
-X-Gm-Message-State: AOJu0YznKiirezB7rG3WLBk+TSzuhlATTTjVTrvp9xyKqU83SY7plif0
-	LKB1dcjm+2q7Pc1yBqDYWo+/o+Fvve4D2pmJVmrdmAelygoWp4GRw4xOSfAalp8ebZGL1zI7QqQ
-	pybNdb89O86IIG9E8fDy9pTVycnMJR9nN+WAQ
-X-Google-Smtp-Source: AGHT+IE0KzursJtPq+abIWMqtK5O1+xQJm+xa2/64BP3Y6r6RrQUFND+hye5sxQmu0NqoMrH5fj/TKGMGYpHWYzYVPM=
-X-Received: by 2002:a05:6870:4195:b0:21f:662:7f4 with SMTP id
- y21-20020a056870419500b0021f066207f4mr3540551oac.32.1708435053990; Tue, 20
- Feb 2024 05:17:33 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="SK62GqNJ";
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="UAJcSX72"
+Received: from blackpad (unknown [10.100.12.75])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id A5D7B21DFD;
+	Tue, 20 Feb 2024 13:18:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1708435117; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=UV/cpuRtRlaCri5lx4C7nu174G6nc2pEi2+tO4UB9kI=;
+	b=SK62GqNJCm6uU0Fa4MBbStGEj9foFB5OuS97qZTajQ5GavoJZZyohkDN2/S2NQ4yXptyja
+	+DWu6c9EZjfxoWm7joQohVu1tY9NJfo4yCkD3dPnr278iRH2e99zbKlH6CMX2C20QfLQMX
+	NrKAht9SApV9h66DG8DRA5nctCrCPZQ=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1708435116; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=UV/cpuRtRlaCri5lx4C7nu174G6nc2pEi2+tO4UB9kI=;
+	b=UAJcSX72EekECg5QLU6R/pfmVEasbhaK81mjqzyFjuZtSTHNNOuFX3oFrysF3XDF7t4Hw3
+	xBNEkenU+Q1qasUgYjsAgdpEN+7ET613iEuIYgSvuwSfaC84n/Pnp4XdLIh9KygOcLOYmi
+	dAMbtPCRLqwXmIcEjM5XxxCnftZsVKo=
+Date: Tue, 20 Feb 2024 14:18:35 +0100
+From: Michal =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>
+To: "Huang, Kai" <kai.huang@intel.com>
+Cc: "hpa@zytor.com" <hpa@zytor.com>, 
+	"tim.c.chen@linux.intel.com" <tim.c.chen@linux.intel.com>, "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>, 
+	"x86@kernel.org" <x86@kernel.org>, "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>, 
+	"jarkko@kernel.org" <jarkko@kernel.org>, "cgroups@vger.kernel.org" <cgroups@vger.kernel.org>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "tglx@linutronix.de" <tglx@linutronix.de>, 
+	"haitao.huang@linux.intel.com" <haitao.huang@linux.intel.com>, "Mehta, Sohil" <sohil.mehta@intel.com>, 
+	"tj@kernel.org" <tj@kernel.org>, "mingo@redhat.com" <mingo@redhat.com>, 
+	"bp@alien8.de" <bp@alien8.de>, "mikko.ylinen@linux.intel.com" <mikko.ylinen@linux.intel.com>, 
+	"seanjc@google.com" <seanjc@google.com>, "anakrish@microsoft.com" <anakrish@microsoft.com>, 
+	"Zhang, Bo" <zhanb@microsoft.com>, "kristen@linux.intel.com" <kristen@linux.intel.com>, 
+	"yangjie@microsoft.com" <yangjie@microsoft.com>, "Li, Zhiquan1" <zhiquan1.li@intel.com>, 
+	"chrisyan@microsoft.com" <chrisyan@microsoft.com>
+Subject: Re: Re: [PATCH v9 08/15] x86/sgx: Implement EPC reclamation flows
+ for cgroup
+Message-ID: <2ni2jychs6oe4ckplvbg7usrn7f4fsa2fi3ys6lrtyhbprpr7c@hokylc73dlwi>
+References: <20240205210638.157741-1-haitao.huang@linux.intel.com>
+ <20240205210638.157741-9-haitao.huang@linux.intel.com>
+ <fa091e657c2d3f3cc14aff15ad3484e0d7079b6f.camel@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240219163915.2705-1-dakr@redhat.com> <20240220093541.280140-1-aliceryhl@google.com>
- <e543b270-dea7-477a-b83d-62129d4ac708@redhat.com>
-In-Reply-To: <e543b270-dea7-477a-b83d-62129d4ac708@redhat.com>
-From: Alice Ryhl <aliceryhl@google.com>
-Date: Tue, 20 Feb 2024 14:17:22 +0100
-Message-ID: <CAH5fLggXiXGA_UWCxqqLhMpXe1kepDv2vMG+1jLGaDSzdRHvSw@mail.gmail.com>
-Subject: Re: [PATCH v4] rust: str: add {make,to}_{upper,lower}case() to CString
-To: Danilo Krummrich <dakr@redhat.com>
-Cc: a.hindborg@samsung.com, alex.gaynor@gmail.com, benno.lossin@proton.me, 
-	bjorn3_gh@protonmail.com, boqun.feng@gmail.com, gary@garyguo.net, 
-	linux-kernel@vger.kernel.org, ojeda@kernel.org, 
-	rust-for-linux@vger.kernel.org, wedsonaf@gmail.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="nwjkzrolygogphrr"
+Content-Disposition: inline
+In-Reply-To: <fa091e657c2d3f3cc14aff15ad3484e0d7079b6f.camel@intel.com>
+Authentication-Results: smtp-out1.suse.de;
+	none
+X-Spam-Level: 
+X-Spam-Score: -4.24
+X-Spamd-Result: default: False [-4.24 / 50.00];
+	 ARC_NA(0.00)[];
+	 TO_DN_EQ_ADDR_SOME(0.00)[];
+	 FROM_HAS_DN(0.00)[];
+	 TO_DN_SOME(0.00)[];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 NEURAL_HAM_LONG(-1.00)[-1.000];
+	 MIME_GOOD(-0.20)[multipart/signed,text/plain];
+	 DKIM_SIGNED(0.00)[suse.com:s=susede1];
+	 NEURAL_HAM_SHORT(-0.17)[-0.867];
+	 RCPT_COUNT_TWELVE(0.00)[23];
+	 DBL_BLOCKED_OPENRESOLVER(0.00)[intel.com:email];
+	 SIGNED_PGP(-2.00)[];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 RCVD_COUNT_ZERO(0.00)[0];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+,1:+,2:~];
+	 MID_RHS_NOT_FQDN(0.50)[];
+	 BAYES_HAM(-1.37)[90.67%]
+X-Spam-Flag: NO
 
-On Tue, Feb 20, 2024 at 1:02=E2=80=AFPM Danilo Krummrich <dakr@redhat.com> =
-wrote:
->
-> On 2/20/24 10:35, Alice Ryhl wrote:
-> >> Add functions to convert a CString to upper- / lowercase, either
-> >> in-place or by creating a copy of the original CString.
-> >>
-> >> Naming followes the one from the Rust stdlib, where functions starting
-> >> with 'to' create a copy and functions starting with 'make' perform an
-> >> in-place conversion.
-> >>
-> >> This is required by the Nova project (GSP only Rust successor of
-> >> Nouveau) to convert stringified enum values (representing different GP=
-U
-> >> chipsets) to strings in order to generate the corresponding firmware
-> >> paths. See also [1].
-> >>
-> >> [1] https://rust-for-linux.zulipchat.com/#narrow/stream/288089-General=
-/topic/String.20manipulation.20in.20kernel.20Rust
-> >>
-> >> Signed-off-by: Danilo Krummrich <dakr@redhat.com>
-> >
-> > This looks good to me, so you may add my
-> >
-> > Reviewed-by: Alice Ryhl <aliceryhl@google.com>
->
-> Thanks for reviewing this patch.
->
-> >
-> > However, it looks like this patch has some clippy warnings that need to
-> > be fixed before it can be merged.
->
-> It seems that those warnings are treated as fatal even, although, given t=
-he
-> rationale for these warnings, I'm not even sure those should be warnings =
-at
-> all.
 
-The build currently succeeds with zero warnings. That's a very useful
-property, and I would not like to give it up.
+--nwjkzrolygogphrr
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-You could submit a patch to silence these specific warnings. The
-clippy::explicit_auto_deref warning is not one I care for, but I would
-object to silencing clippy::needless_return. Using return statements
-when you are not doing an early-return really is extremely unidiomatic
-Rust.
+On Tue, Feb 20, 2024 at 09:52:39AM +0000, "Huang, Kai" <kai.huang@intel.com> wrote:
+> I am not sure, but is it possible or legal for an ancestor to have less limit
+> than children?
 
-Ultimately, I think there is a lot of value of just applying the code
-formatters and linters and following them to zero warnings. It ensures
-that the Rust code is relatively idiomatic, helps avoid long
-unproductive discussions, and makes it easy for me to fix formatting
-issues in my own patches (just run clippy and rustfmt on everything,
-and it lists only things that are my own fault).
+Why not?
+It is desired for proper hiearchical delegation and the tightest limit
+of ancestors applies (cf memory.max).
 
-Alice
+Michal
+
+--nwjkzrolygogphrr
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQQpEWyjXuwGT2dDBqAGvrMr/1gcjgUCZdSmqQAKCRAGvrMr/1gc
+jkKzAQDey//gJluYyxAmAACFkpQEQZs7Wq4LdwtcKfaXOfgwmwD8D4Tj0lWyyCDt
+aiID/E7nvQWorGQQc1J6VlBjBfMhagU=
+=CG6M
+-----END PGP SIGNATURE-----
+
+--nwjkzrolygogphrr--
