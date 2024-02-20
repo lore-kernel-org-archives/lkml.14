@@ -1,76 +1,101 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC1B113474E;
-	Tue, 20 Feb 2024 19:10:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A66412838D;
+	Tue, 20 Feb 2024 19:10:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708456229; cv=none; b=eA//JFwG/Z+nm0MDe1knvOtIbBoz+fQvPrQ+nraNvPV6V37CLlD86HBisx6QSmhTom7RwpbEHS7DYehL/Up4ZXgQlE+S0CMvlzkdyv8pKdNuwY/uoGZaaL9wjZC4qKcf7u2VXIwRhru+KCRaLG1NtOcPq1XEK1hOeDdb7eWJZFM=
+	t=1708456244; cv=none; b=bdBFCtNObWt5c9Gel4/nIOvf6TGJ8kOzkVbLj/rCvT8C5U6G3GsLAgeZutSZm/gIGVO1bh5Ft4lS4PijyYdRwWM7gWwPcRtf51t+BQK7OEAxHCKV2hthNbLF9l7Y+a+9IiQ9hMYkrpfaTBw/LBgNvQKxNz/wfAwGq7rGWSmN784=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708456229; c=relaxed/simple;
-	bh=vn5ABJYgQ7M+dIKSsVpDNA6SZwCuqt0TGeFxPC2AjMI=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=LKv0ol/afNmcf9DrD2eoggCjlQJ3LtULT2bYaroYdCPoD0J7XZI/j8R+RmkR0PSl9/EkL4Wn0wAq4YaTQxDq4WTcK1ppK499qKKZo1DlgScNaW28evALoiiGNX6m0vFS8B+KfBZfUYpbffHDpkbeciP2kbAMeqn0HU8fErq0Xa0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Q8OIZO8j; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1708456244; c=relaxed/simple;
+	bh=EFe3zrWR0LWM1ZcyrsqjHTnnESZFaVS5VCYSop5F4Uc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mHUYN2HbadX2c+VtS8Rt9TipR34oYZgI9IN6dnvwBbbLsnvwWwiSHlKrfeSSTLYo+fD9F23SAyTBNSF3LxX/i8S7BNhVU7icdjFucfAgn0JfroeCeeuR0zz7ywkkH/bvm1gt+oqNhWJVfNXxQyRBusl1eO2+NxGdhKEFiVFjoPE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=STAoQTDO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Q8OIZO8j"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 50AC0C433F1;
-	Tue, 20 Feb 2024 19:10:29 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="STAoQTDO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 00A23C433C7;
+	Tue, 20 Feb 2024 19:10:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708456229;
-	bh=vn5ABJYgQ7M+dIKSsVpDNA6SZwCuqt0TGeFxPC2AjMI=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=Q8OIZO8jGnpPmTohtXP8Y/g1a5gTJ33vKNF6Ut0fG5F4e0yeqSPSkYBwHotX6XaWW
-	 4pLa7NyBH1ULztBCs/4Ev+H2+4zTAr5fv0gOAosWipveXdOg9P4cFpvnOui4iuWVbT
-	 9OIzJoV0CbF+/hFg2Fd6inzSVYN1qdKs/ApDtnc7+vr3aanBVFh9+CyQN4MA9nvBMn
-	 vLP8Xz0t5/vBpTremtKSpuSjV221LVlvss1aOZMPRFz2gYU7LY8VMzG4VJwPOqvdF3
-	 jiN3sLFYZRc6IhY8lXCb2yyKjOgbIKNKIkoOSRGLF8dERAmuEiFk29uq+/jbBl38Qk
-	 FyGeomj0/AqdQ==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 3860DD84BBB;
-	Tue, 20 Feb 2024 19:10:29 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	s=k20201202; t=1708456243;
+	bh=EFe3zrWR0LWM1ZcyrsqjHTnnESZFaVS5VCYSop5F4Uc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=STAoQTDOpl9BLSR1MZMUXajWDDxXaE72uD0vlU/+O/v1Jm3Y+5jz2QdLWDNQmovnI
+	 Rz0JrLOjKJrUw6ux+KxWzOTkp9MrOqj2VhuUEt6TQdMvb6InRbptZWHzKrOS/KKNzk
+	 bg/qJ2s1qSexFpZCJFUZno3h0TrwnU9mawV6a6IeuKtYiWsT0ntYGbdg3MiSvRVE76
+	 OwMWaGbbXkiAPmlwdNngC9AF1mR5YAeHiaTJeLXBfDw4Wo005H26gTXIn7K2R1lylG
+	 A0z5HqW9BUXFVKcRwXLkqe2T5MMoQDj0CIVJgNVLlGzWqdtiW/PfTs+W/1GhTUBy62
+	 hXXLnqPVa8zGg==
+Date: Tue, 20 Feb 2024 19:10:37 +0000
+From: Conor Dooley <conor@kernel.org>
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: Alex Soo <yuklin.soo@starfivetech.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	Hal Feng <hal.feng@starfivetech.com>,
+	Ley Foon Tan <leyfoon.tan@starfivetech.com>,
+	Jianlong Huang <jianlong.huang@starfivetech.com>,
+	Emil Renner Berthing <kernel@esmil.dk>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Drew Fustini <drew@beagleboard.org>, linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-riscv@lists.infradead.org,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>
+Subject: Re: [RFC PATCH v2 1/6] dt-bindings: pinctrl: starfive: Add JH8100
+ pinctrl
+Message-ID: <20240220-bottling-reverence-e0ee08f48ccc@spud>
+References: <20240220064246.467216-1-yuklin.soo@starfivetech.com>
+ <20240220064246.467216-2-yuklin.soo@starfivetech.com>
+ <1a11cee2-2ef1-4ce0-8cc1-63c6cc97863f@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH 1/2] Bluetooth: btbcm: Use strreplace()
-From: patchwork-bot+bluetooth@kernel.org
-Message-Id: 
- <170845622922.2554.15489490730262371162.git-patchwork-notify@kernel.org>
-Date: Tue, 20 Feb 2024 19:10:29 +0000
-References: <79b9c9d9f86b4c573f0d3f2dac0a6fc9e6024058.1708154999.git.christophe.jaillet@wanadoo.fr>
-In-Reply-To: <79b9c9d9f86b4c573f0d3f2dac0a6fc9e6024058.1708154999.git.christophe.jaillet@wanadoo.fr>
-To: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Cc: marcel@holtmann.org, luiz.dentz@gmail.com, linux-kernel@vger.kernel.org,
- kernel-janitors@vger.kernel.org, linux-bluetooth@vger.kernel.org
-
-Hello:
-
-This series was applied to bluetooth/bluetooth-next.git (master)
-by Luiz Augusto von Dentz <luiz.von.dentz@intel.com>:
-
-On Sat, 17 Feb 2024 08:30:41 +0100 you wrote:
-> Use strreplace() instead of hand-writing it.
-> It is less verbose.
-> 
-> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-> ---
->  drivers/bluetooth/btbcm.c | 7 ++-----
->  1 file changed, 2 insertions(+), 5 deletions(-)
-
-Here is the summary with links:
-  - [1/2] Bluetooth: btbcm: Use strreplace()
-    https://git.kernel.org/bluetooth/bluetooth-next/c/76912dcbabc6
-  - [2/2] Bluetooth: btbcm: Use devm_kstrdup()
-    https://git.kernel.org/bluetooth/bluetooth-next/c/d095e06a1569
-
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="tADB2NrbVw9jbyhp"
+Content-Disposition: inline
+In-Reply-To: <1a11cee2-2ef1-4ce0-8cc1-63c6cc97863f@linaro.org>
 
 
+--tADB2NrbVw9jbyhp
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Tue, Feb 20, 2024 at 09:11:43AM +0100, Krzysztof Kozlowski wrote:
+> On 20/02/2024 07:42, Alex Soo wrote:
+> > Add documentation and header file for JH8100 pinctrl driver.
+> >=20
+> > Signed-off-by: Alex Soo <yuklin.soo@starfivetech.com>
+> > ---
+>=20
+>=20
+> RFC? Why isn't this patch ready for review?
+
+The TL;DR is that Emil and I didn't want to apply the dts patches to
+support a platform that hadn't actually been taped out yet.=20
+For an SoC in that state, at least the bindings for, clock and pinctrl
+could be subject to changes before tapeou. I think putting RFC on those
+patches is a good idea, but of course the rationale should be mentioned.
+
+Cheers,
+Conor.
+
+--tADB2NrbVw9jbyhp
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZdT5LQAKCRB4tDGHoIJi
+0q4/AP9aepRkgGMwUZFmvYfa5PLBEmZ95b0tJEUr42AOOQptlQEAvcfTGWd32hy5
+EqoPPciZYk30PuQQ68mEvIHOaYAqnwE=
+=gvQL
+-----END PGP SIGNATURE-----
+
+--tADB2NrbVw9jbyhp--
