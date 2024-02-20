@@ -1,38 +1,59 @@
-Received: from mout.web.de (mout.web.de [212.227.15.3])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0B7D53819;
-	Tue, 20 Feb 2024 08:26:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.3
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43A945D74A
+	for <linux-kernel@vger.kernel.org>; Tue, 20 Feb 2024 08:27:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708417622; cv=none; b=i8p91uWHXVYlI+SRd5azJYLhbKcFiJVTB3iMVMkchWUunOrpLRvoskfA/S3p6Ygf7aV0LpVjW6ZVVYh6KBKJwIRDLUqwo+RSkNmu5+1NFkzlos01pED9ADwTq/aJz34qbz6gnOSBK3WGn78TpJg06k8LTP2pDyjLPTKwpADWm3k=
+	t=1708417631; cv=none; b=tStCXAp7g4Jrx1s+eY5e5RVjV5TpHeiaZZgI4kw++niuJMIba65Khc+lNd42cPpe99r6KevcrZxLxdgZg5FHCPza2cMnsNk/Z0ozTzlBe3kEIyI11QsMD5jCtWd4bIpyT45upAW7lCgOJ15KNV84iWFqd4+4Mectizg8zFdmGEQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708417622; c=relaxed/simple;
-	bh=FbwtcBufwoXbPOYPnUNJ/O5sjaNC9PrMa+OFLq/9LlE=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
-	 In-Reply-To:Content-Type; b=iYG/fUczTpLnQEORFmXF4eV0HQ/cZcMrrZ1khpvNhxKV4kUkhPkmX9dMgbWRfWHR5PMMiFS7uF5bFXf0YGvy4cqpg7EzqqeIjt4JxB7ze6bDJktJSMD4Tq1pLh2fpRf8BgwbBFu8PHOR6eZd+/qce8KEPjtB8LXyYSzzcUOJ7IA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=e9uNO9s9; arc=none smtp.client-ip=212.227.15.3
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1708417631; c=relaxed/simple;
+	bh=kwcWngYqyX5CbSpe4MupYrA/JAKRDuxWBT615swjwHM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=az8TKYL8SVJLgkcZhSMhLjiLHghv8FOKKWg4VpMMDcptM3obfgiOAzXZQc2cV6YkvzsKuGzTpP1RQbkPtxJUCo8LKwiAcAukou/EdvP9hnhj6U5HgwZWs4wb0I0Xe9HKL5pLctRuRW5GGEviaaABYuCYRfE8Ix4UU0hP9h0v1Jk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=nYcly3aB; arc=none smtp.client-ip=209.85.128.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="e9uNO9s9"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de; s=s29768273;
-	t=1708417584; x=1709022384; i=markus.elfring@web.de;
-	bh=FbwtcBufwoXbPOYPnUNJ/O5sjaNC9PrMa+OFLq/9LlE=;
-	h=X-UI-Sender-Class:Date:To:Cc:References:Subject:From:
-	 In-Reply-To;
-	b=e9uNO9s9BlPlVK+KiQU0PIEORK8P37I2txeksl/zdJew63C90YrlGcWsm6Hu4Hue
-	 6ljrcEcfq9efe8BC4qP7lzSWY4/cJKmXgeh4kh2GA6Ab5pc2t4Cli6eI2aX+/LFxp
-	 eShaxJI1uQRCHSUgE/M3sDjBVhoE1PshpN9ZGPZkHhHvRA/Jh3hTsAAlJXuIIqiou
-	 /ybXYix9AEHJLFZcrGYmM8qwXF0a9IIvlTEwDgoNad3g+4s/ZKjH9MYInmI9bnlVc
-	 LySTN7kZRkolEB7j2W+DWXMcYupogIapYd+ltxsRyKb/3gdFzKFxO54FE+7JBNCSm
-	 er/rX3U/+vMS+IV7JQ==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.21] ([94.31.80.95]) by smtp.web.de (mrweb006
- [213.165.67.108]) with ESMTPSA (Nemesis) id 1M4bYo-1rbnUP3YVK-001fxX; Tue, 20
- Feb 2024 09:26:23 +0100
-Message-ID: <41ca529d-ad0c-40e7-b68c-c90297815bbc@web.de>
-Date: Tue, 20 Feb 2024 09:25:44 +0100
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nYcly3aB"
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-4126d65ace3so3970175e9.3
+        for <linux-kernel@vger.kernel.org>; Tue, 20 Feb 2024 00:27:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1708417627; x=1709022427; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=LCw/wGGBwxZAIXwywrBdVg7Trl9xRXaC7aK5zxfjDws=;
+        b=nYcly3aBH0K/vrx7HF9O7lJfunCx9Bgn0Eawoo+V5HD7LphNlj3Z4owq8qxkU6Zbjd
+         nlGmcuiUVjGVxWZKTDKH27c+puAlwVY91mZiircWCKXAkwMXUhveIAvPNjzplDjd59Rt
+         6EfFk/tjlmblCR/ai9HUqbkaseNAgp4buavsV1NeaCs0WSBjdypLxbEP0ZnzKs8rn3yb
+         09fF27R3xvJOs62Wf5VWirV8zSrGwWKZkub6WOKsft+Z7T1YNgsu8qZB4y+vgZIxA9b0
+         ZBC5vTPD023jCN2uc5gaYEF6i2P+7juEXRI6w2t+HuT6xpjsvnxqV0TxPW6VzizwmOqn
+         S/xQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708417627; x=1709022427;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=LCw/wGGBwxZAIXwywrBdVg7Trl9xRXaC7aK5zxfjDws=;
+        b=keH55XWAbNOC017+C3/SD3P0YXIlEexzqTBYjEvW3Zgn2uOMlOKPMtlkEkjd09ov73
+         Ha2Ky1AU4fwaINxNeh5g6irh46LmL8DgnnO3rmngTNzbGLVZ3SYhXyjueMhFu8GMoYjD
+         pnc4P7I7UCq3uASJxrVx67QgxbNORbFHRKu8hfmMM4OTBAOV8RpTra1DRF3esQ5jrD0T
+         cjBsyAoh5ZwurqLOwDqzVMKvet/tqPk2u0Acnx5C66dFFWXNAQ/Tjs865maB6Px19BFe
+         GMwpCVjwr5h6khtb0kIcw06RpRFiQnx7S9E778qGC1ityzWC/0fHnxf6s//scTWmgtVj
+         CbTQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXz6qtBzJXi6pj4jTPYG3gqgc/C09XVsOc0jLyF32Abxh1jKtlJRxSi1QtPKTtnHF9PYJ9s0+0zUPXSILLiDobtJOiKbqq7hghfAykg
+X-Gm-Message-State: AOJu0Ywa8KRQlouPWMHvTjJs7Zy6hN2QYQVXb9p0zMJo06EJ0+dQ9fXJ
+	jnRZBkjGDyFr5yMYChhUW/KecQndASSrYq7OeuNekgbffC4moklS8inZ2xbBh+U=
+X-Google-Smtp-Source: AGHT+IFLatSTu/8dGMzCnlY3MTdcpukk01QKrrwl3trfyFtOAOWoWPm/yG26D7CvwzgAsqlMNx2bDw==
+X-Received: by 2002:a05:600c:5490:b0:412:1f3f:db39 with SMTP id iv16-20020a05600c549000b004121f3fdb39mr10357045wmb.32.1708417627567;
+        Tue, 20 Feb 2024 00:27:07 -0800 (PST)
+Received: from [192.168.1.20] ([178.197.222.116])
+        by smtp.gmail.com with ESMTPSA id ay23-20020a05600c1e1700b004125ff0b572sm8943595wmb.8.2024.02.20.00.27.06
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 20 Feb 2024 00:27:07 -0800 (PST)
+Message-ID: <0d1dd262-b6dd-4d71-9239-8b0aec8cceff@linaro.org>
+Date: Tue, 20 Feb 2024 09:27:05 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -40,85 +61,164 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-To: Johan Hovold <johan+linaro@kernel.org>, freedreno@lists.freedesktop.org,
- dri-devel@lists.freedesktop.org, linux-phy@lists.infradead.org,
- linux-arm-msm@vger.kernel.org, kernel-janitors@vger.kernel.org,
- Andrzej Hajda <andrzej.hajda@intel.com>,
- Bjorn Andersson <andersson@kernel.org>, Daniel Vetter <daniel@ffwll.ch>,
- David Airlie <airlied@gmail.com>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>,
- Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>,
- Thomas Zimmermann <tzimmermann@suse.de>, Vinod Koul <vkoul@kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>,
- Abhinav Kumar <quic_abhinavk@quicinc.com>,
- Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
- Jernej Skrabec <jernej.skrabec@gmail.com>, Jonas Karlman <jonas@kwiboo.se>,
- Kishon Vijay Abraham I <kishon@kernel.org>,
- Konrad Dybcio <konrad.dybcio@linaro.org>,
- Kuogee Hsieh <quic_khsieh@quicinc.com>,
- Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
- Rob Clark <robdclark@gmail.com>, stable@vger.kernel.org
-References: <20240217150228.5788-4-johan+linaro@kernel.org>
-Subject: Re: [PATCH 3/6] soc: qcom: pmic_glink_altmode: fix drm bridge
- use-after-free
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <20240217150228.5788-4-johan+linaro@kernel.org>
+Subject: Re: [PATCH] dt-bindings: gpio: Convert Aspeed binding to YAML schema
+Content-Language: en-US
+To: Andrew Jeffery <andrew@codeconstruct.com.au>, linus.walleij@linaro.org,
+ brgl@bgdev.pl
+Cc: robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+ conor+dt@kernel.org, joel@jms.id.au, linux-gpio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org
+References: <20240220052918.742793-1-andrew@codeconstruct.com.au>
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <20240220052918.742793-1-andrew@codeconstruct.com.au>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:oGPEHuM2HIdXgcEMfwBFL/voM7jpNFUkHFQ+0xcJgl7i8MgwK7X
- JRpaE+mgDDalhXTyU2+1PFOILTsPDZpOepGGIJfCQ/2E3ldh+sgz6VTMBA01/EflCrvIeWY
- X6YhCNZlgsWrsvUtm8o2z+5W3E7+5Yd2k54efbPAD5SQDEAsv4P7H2BQFpKQnAy0uARDOGK
- 1wwp3iW69af1k6eyCiBoQ==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:dgtWsq+B+98=;0ssw8wp6F6jnkVukgPpAy80HpQc
- B0VMFA61OwPAzcw1oE4HEkJI7Op8/UpgfZD/rlEvXu7wBJAltZnVnEH4QBK3bR6eoqIkHYpQ3
- a+NQ7/veaLawT/cH0RCDP6lm/j3niZpzb0CUvZiz08gIn478ffjixzszvFQ3nwCu6Uk/2cbZw
- 1lBdOowsMiRl5XYsrKVcTqXngRFyOQ8SaTtPmk5Ocd6GHZGSPbPWnZhxXYQrACxB3DEfP0zj+
- OgghtCVE1xS7INrVaqaoFlTWicIfb+TO/All7DwO0jxT5TnGCvyj0xiK13IcPE4yfzG5cXk+4
- FXCNlG8KENRG+6N/YDVgCl1h5L13SfrSfon9XMCLUbeuC0bPlYx3ESm7tmaXMx+i9vLlnu3Ij
- cr4ajn/JugewLTyYfpvg3HGWrZDDvY0lgR18LO4Mgh2GkF0TXEwTYk6yeI8ehoClatHTPiMEQ
- UkriLgw2lJ7hxlS4YiX8OJneDycZUdyFCCs+GHFVgXnKzA8WLTuXBF0xhxkgbnmZaLPs9eOfk
- ld8pY8kpC0FpG1LcNjEY0PG9eOrGQfv8CNbfcmm5rf8dQiD/LdlXdJE1rbKpOW/YsnSIcGrEG
- JMfJTj7yCiFrNZJYI+RkVnf+dnQstf10h32TAnwbBfExX/OHZUBI0TH2W5pyXCscDYnThQKHW
- sLphBvemEcnXdJDIkba0ET40K11L5YTJuIuiZyQdVn+mtYfyfu9oBU610S+X5NC9FU2RlEEGJ
- XKH6PwGUwmR3NkZinJ70pekoeQfe9t4woQs0KZtNZDTWe0fhh65IQ6qWmSuccCqTsLcGVsImx
- Eesic4I3yq1Dcu9fB0rDoBFux2rfDY6Ba322mXCTCYqKQ=
+Content-Transfer-Encoding: 7bit
 
-=E2=80=A6
-> Specifically, the dp-hpd bridge is currently registered before all
-> resources have been acquired which means that it can also be
-> deregistered on probe deferrals.
->
-> In the meantime there is a race window where the new aux bridge driver
-> (or PHY driver previously) may have looked up the dp-hpd bridge and
-> stored a (non-reference-counted) pointer to the bridge which is about to
-> be deallocated.
-=E2=80=A6
+On 20/02/2024 06:29, Andrew Jeffery wrote:
+> Squash warnings such as:
+> 
 
-I got the impression that the change description can be improved another b=
-it.
-
-1. Will any additional imperative wordings become helpful?
-   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree=
-/Documentation/process/submitting-patches.rst?h=3Dv6.8-rc5#n94
+Missing subject prefix: aspeed,ast2400-gpio
 
 
-=E2=80=A6
-> +++ b/drivers/soc/qcom/pmic_glink_altmode.c
-> @@ -76,7 +76,7 @@ struct pmic_glink_altmode_port {
->
->  	struct work_struct work;
->
-> -	struct device *bridge;
-> +	struct auxiliary_device *bridge;
->
->  	enum typec_orientation orientation;
->  	u16 svid;
-=E2=80=A6
+> ```
+> arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-galaxy100.dtb: /ahb/apb@1e600000/gpio@1e780000: failed to match any schema with compatible: ['aspeed,ast2400-gpio']
+> ```
+> 
+> Signed-off-by: Andrew Jeffery <andrew@codeconstruct.com.au>
 
-2. How do you think about to stress such a data type adjustment?
+Thank you for your patch. There is something to discuss/improve.
 
-Regards,
-Markus
+
+> ---
+>  .../bindings/gpio/aspeed,ast2400-gpio.yaml    | 64 +++++++++++++++++++
+>  .../devicetree/bindings/gpio/gpio-aspeed.txt  | 39 -----------
+>  2 files changed, 64 insertions(+), 39 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/gpio/aspeed,ast2400-gpio.yaml
+>  delete mode 100644 Documentation/devicetree/bindings/gpio/gpio-aspeed.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/gpio/aspeed,ast2400-gpio.yaml b/Documentation/devicetree/bindings/gpio/aspeed,ast2400-gpio.yaml
+> new file mode 100644
+> index 000000000000..353c7620013f
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/gpio/aspeed,ast2400-gpio.yaml
+> @@ -0,0 +1,64 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/gpio/aspeed,ast2400-gpio.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Aspeed GPIO controller
+> +
+> +maintainers:
+> +  - Andrew Jeffery <andrew@codeconstruct.com.au>
+> +
+> +allOf:
+> +  - $ref: /schemas/gpio/gpio.yaml#
+
+From where did you take it? None of the bindings have such code. Start
+from recent bindings in given category when writing new ones.
+
+Please drop it.
+
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          contains:
+> +            const: aspeed,ast2600-gpio
+> +    then:
+> +      required:
+> +        - ngpios
+
+Please put entire allOf: after required: block. That's the convention
+when it has something more than $ref, because we still want the most
+important parts at the top of the file.
+
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - aspeed,ast2400-gpio
+> +      - aspeed,ast2500-gpio
+> +      - aspeed,ast2600-gpio
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    maxItems: 1
+> +    description: The clock to use for debounce timings
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  interrupt-controller: true
+> +
+> +  "#interrupt-cells":
+> +    const: 2
+> +
+
+ngpios with some constraints
+
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +  - interrupt-controller
+> +  - "#gpio-cells"
+> +  - gpio-controller
+> +
+> +unevaluatedProperties: false
+
+Instead additionalProperties: false.
+
+
+Best regards,
+Krzysztof
+
