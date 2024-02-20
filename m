@@ -1,128 +1,167 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD31D763EF;
-	Tue, 20 Feb 2024 16:22:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B4A97640F;
+	Tue, 20 Feb 2024 16:22:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708446144; cv=none; b=oDhj09IglQpjDJOd0gz5VwT9p9edaZro4VIsEPl82bg0JuKgY7nK1DhuF/CsmZUFgo3TQCqAxl3cFscJaVQaibN+vcdomMhGVkz3CdOrzxF4E6VsQG5hDBqj75KZIX+tlIBSIEssyvzVYjE+Q7/60OFBZ+VPZroCzSx3lQGYxAM=
+	t=1708446178; cv=none; b=MfvUvt3V0Kn7tI+YyHGqX7rob1aFGbXIUxKGw0Qaq/vLx7Sd1Yxlo9V6YlicHMbYphvesHjdlpdx7Fz3bNRK2Ko6mQ121MtVD0G6nTGehWd1YMwErskzZpWxYHHzSNa+MAKRXO0QqCKA3WiFH7SHjCiaCBGm/C/QmblAYTHlg7E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708446144; c=relaxed/simple;
-	bh=zFkxNm4XUPZy9yD4NN6KLdlxmc1jFsrfMD0v41KFIfU=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=ZWlRZvBNpzoIYIO12MNSiKtLhsOjsOUSMvQNSindWbVBMQhp7UJOQZSrV3PgmCMRqC+qpEMef4X2YSJAsUVAgmiazpjD2hVqqY2zkIgvJ7zW4TNv+FSo4Nso5VJwWyL0KmJEvGKe65I7munfGUQEMQLpKy2Br0jDTvBNtX1nZuc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=casper.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=hNkl1r8M; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=casper.srs.infradead.org
+	s=arc-20240116; t=1708446178; c=relaxed/simple;
+	bh=4EXMl5e7uXAcwic9xOAtMCb24DT48b9NpcADcBf9+fY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=BVLZWDsMI2p5v/7HrgPV4FOrs3sB0yIVdRP4S+5Vbt7nwrHTNWWzniHpJ4fBLQ8/9/FMjck4VrfOeL8S1Ht6KooYl9bmvwCIbREX0R3Clyr5dK09cYjgsrCbwmnFReMSGandfBt6Kr0lvtMGzyRbZwnz3CRr31vrbSK32hvFAWg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KUH1yyvS; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="hNkl1r8M"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
-	MIME-Version:Message-ID:References:In-Reply-To:Subject:CC:To:From:Date:Sender
-	:Reply-To:Content-ID:Content-Description;
-	bh=BzeL9c/hzzSWVv3MKsT7A/KR/PSkHXr2fqH3rJbXD/E=; b=hNkl1r8MrK0h7XuvdH3qSHJNeK
-	4DIQ/6TbXd8tHEsUs6nBa1ZRa+mvZx+9488lzdh3/KTqrQ0C3lwKKlmpJRgESnI2Cl1UlQhANoNMW
-	lb6VNQKrBJVEbFg0uRuYRZMRR3424F3EmhNMQe/68gwhGaf2FeAax5t2GwozfYVtlY/7lV5PxpigP
-	K+1B2BLgRuEKJQBSyq5cpY96o/0NgaYJpXPktU357ig/qcuBMUx+gyj0/xu5MTq3puAkISEDb6c4q
-	omQGSCGfwiPYYEOdi3uLiBkGJQw/qKavQHZcDtirpOTVRgNclzOl1gQLCr1j5Ezqnk3ns9TSFFQn1
-	wkb0ZBAw==;
-Received: from [145.224.98.163] (helo=[127.0.0.1])
-	by casper.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rcSsW-0000000G1oT-0zRv;
-	Tue, 20 Feb 2024 16:21:56 +0000
-Date: Tue, 20 Feb 2024 17:21:52 +0100
-From: David Woodhouse <dwmw2@infradead.org>
-To: Sean Christopherson <seanjc@google.com>, paul@xen.org
-CC: Paolo Bonzini <pbonzini@redhat.com>, Jonathan Corbet <corbet@lwn.net>,
- Christian Borntraeger <borntraeger@linux.ibm.com>,
- Janosch Frank <frankja@linux.ibm.com>,
- Claudio Imbrenda <imbrenda@linux.ibm.com>,
- David Hildenbrand <david@redhat.com>, Heiko Carstens <hca@linux.ibm.com>,
- Vasily Gorbik <gor@linux.ibm.com>,
- Alexander Gordeev <agordeev@linux.ibm.com>,
- Sven Schnelle <svens@linux.ibm.com>, Thomas Gleixner <tglx@linutronix.de>,
- Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
- Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
- "H. Peter Anvin" <hpa@zytor.com>, Shuah Khan <shuah@kernel.org>,
- kvm@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-s390@vger.kernel.org, linux-kselftest@vger.kernel.org
-Subject: =?US-ASCII?Q?Re=3A_=5BPATCH_v13_00/21=5D_KVM=3A_xen=3A_upda?= =?US-ASCII?Q?te_shared=5Finfo_and_vcpu=5Finfo_handling?=
-User-Agent: K-9 Mail for Android
-In-Reply-To: <ZdTQCuWor4ipxW6E@google.com>
-References: <20240215152916.1158-1-paul@xen.org> <170838297541.2281798.7838961694439257911.b4-ty@google.com> <05973da0-f68c-4c84-8806-bdba92f2ed6e@xen.org> <ZdTQCuWor4ipxW6E@google.com>
-Message-ID: <CFFFCD77-3B9E-4808-B084-E86F8EF265A7@infradead.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KUH1yyvS"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1708446177; x=1739982177;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=4EXMl5e7uXAcwic9xOAtMCb24DT48b9NpcADcBf9+fY=;
+  b=KUH1yyvSKQSgLdPrNnI9R4n01LxoiCePXG1NMMLuO974zHhn0f8LKor/
+   gE+l+lpknbHJ1fokxQs9Z5Lr94rrjz7m0FiM+UhXBrdjzr9hUL5XGMul6
+   nh5TJ1mT3wJwS4ho6e4l8Kh8LGihD6y3W+CAZDvLWauvTQwBikapj/rNB
+   tG6P3OwgBk+pbPE8YBS6yudayAzcHQ6lmJw2sQ6MBsmCevaUdVycKfUqQ
+   QMOcxkDfKeM+AIDbKKZ9iGvWr2hoCGc4y8x2DRBMhc7/EcxwjYfZXDrhG
+   jLXJPqsu072Cab1W5n83QLYwgB7d0hrfvzpBXuzwdfzRxv31OWgYSMclX
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10990"; a="3021833"
+X-IronPort-AV: E=Sophos;i="6.06,174,1705392000"; 
+   d="scan'208";a="3021833"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Feb 2024 08:19:38 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10990"; a="936472936"
+X-IronPort-AV: E=Sophos;i="6.06,174,1705392000"; 
+   d="scan'208";a="936472936"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmsmga001.fm.intel.com with ESMTP; 20 Feb 2024 08:19:35 -0800
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+	id E7399305; Tue, 20 Feb 2024 18:19:33 +0200 (EET)
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	linux-acpi@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Daniel Scally <djrscally@gmail.com>,
+	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Len Brown <lenb@kernel.org>,
+	Saravana Kannan <saravanak@google.com>
+Subject: [PATCH v1 1/1] device property: Don't use "proxy" headers
+Date: Tue, 20 Feb 2024 18:18:50 +0200
+Message-ID: <20240220161931.3091680-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.43.0.rc1.1.gbec44491f096
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-SRS-Rewrite: SMTP reverse-path rewritten from <dwmw2@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+Content-Transfer-Encoding: 8bit
 
-On 20 February 2024 17:15:06 CET, Sean Christopherson <seanjc@google=2Ecom>=
- wrote:
->On Tue, Feb 20, 2024, Paul Durrant wrote:
->> On 20/02/2024 15:55, Sean Christopherson wrote:
->> > On Thu, 15 Feb 2024 15:28:55 +0000, Paul Durrant wrote:
->> > > From: Paul Durrant <pdurrant@amazon=2Ecom>
->> > >=20
->> > > This series contains a new patch from Sean added since v12 [1]:
->> > >=20
->> > > * KVM: s390: Refactor kvm_is_error_gpa() into kvm_is_gpa_in_memslot=
-()
->> > >=20
->> > > This frees up the function name kvm_is_error_gpa() such that it can=
- then be
->> > > re-defined in:
->> > >=20
->> > > [=2E=2E=2E]
->> >=20
->> > *sigh*
->> >=20
->> > I forgot to hit "send" on this yesterday=2E  But lucky for me, that w=
-orked out in
->> > my favor as I needed to rebase on top of kvm/kvm-uapi to avoid pointl=
-ess conflicts
->> > in the uapi headeres=2E
->> >=20
->> > So=2E=2E=2E=2E
->> >=20
->> > Applied to kvm-x86 xen, minus 18 and 19 (trylock stuff) and 21 (locki=
-ng cleanup
->> > that we're doing elsewhere)=2E
->> >=20
->>=20
->> Looks like you meant 17 & 18?
->
->Doh, yes=2E
->
->> > Paul and David, please take (another) look at the end result to make =
-sure you don't
->> > object to any of my tweaks and that I didn't botch anything=2E
->> >=20
->>=20
->> What was the issue with 17? It was reasonable clean-up and I'd like to =
-keep
->> it even without 18 being applied (and I totally understand your reasons=
- for
->> that)=2E
->
->I omitted it purely to avoid creating an unnecessary dependency for the t=
-rylock
->patch=2E  That way the trylock patch (or whatever it morphs into) can be =
-applied on
->any branch (along with the cleanup), i=2Ee=2E doesn't need to be taken th=
-rough kvm-x86/xen=2E
+Update header inclusions to follow IWYU (Include What You Use)
+principle.
 
-What about if (in_atomic() && read_trylock()) return -EAGAIN; else read_lo=
-ck();
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
 
-That way we don't have any even theoretical fairness issues because the tr=
-ylock can fail just *once* which kicks us to the slow path and that'll take=
- the lock normally now=2E
+This one heavily depends on the 
+https://lore.kernel.org/r/20240220161002.2983334-1-andriy.shevchenko@linux.intel.com
 
-The condition might not actually be in_atomic() but I'm not working this w=
-eek and you get the idea=2E
+ drivers/base/property.c  | 11 ++++++-----
+ drivers/base/swnode.c    | 13 ++++++++++++-
+ include/linux/fwnode.h   |  4 ++--
+ include/linux/property.h |  1 +
+ 4 files changed, 21 insertions(+), 8 deletions(-)
+
+diff --git a/drivers/base/property.c b/drivers/base/property.c
+index afa1bf2b3c5a..7324a704a9a1 100644
+--- a/drivers/base/property.c
++++ b/drivers/base/property.c
+@@ -7,15 +7,16 @@
+  *          Mika Westerberg <mika.westerberg@linux.intel.com>
+  */
+ 
+-#include <linux/acpi.h>
++#include <linux/device.h>
++#include <linux/err.h>
+ #include <linux/export.h>
+-#include <linux/kernel.h>
++#include <linux/kconfig.h>
+ #include <linux/of.h>
+-#include <linux/of_address.h>
+-#include <linux/of_graph.h>
+-#include <linux/of_irq.h>
+ #include <linux/property.h>
+ #include <linux/phy.h>
++#include <linux/slab.h>
++#include <linux/string.h>
++#include <linux/types.h>
+ 
+ struct fwnode_handle *__dev_fwnode(struct device *dev)
+ {
+diff --git a/drivers/base/swnode.c b/drivers/base/swnode.c
+index 36512fb75a20..eb6eb25b343b 100644
+--- a/drivers/base/swnode.c
++++ b/drivers/base/swnode.c
+@@ -6,10 +6,21 @@
+  * Author: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+  */
+ 
++#include <linux/container_of.h>
+ #include <linux/device.h>
+-#include <linux/kernel.h>
++#include <linux/err.h>
++#include <linux/export.h>
++#include <linux/idr.h>
++#include <linux/init.h>
++#include <linux/kobject.h>
++#include <linux/kstrtox.h>
++#include <linux/list.h>
+ #include <linux/property.h>
+ #include <linux/slab.h>
++#include <linux/spinlock.h>
++#include <linux/string.h>
++#include <linux/sysfs.h>
++#include <linux/types.h>
+ 
+ #include "base.h"
+ 
+diff --git a/include/linux/fwnode.h b/include/linux/fwnode.h
+index 4228c45d5ccc..80f3cd91b471 100644
+--- a/include/linux/fwnode.h
++++ b/include/linux/fwnode.h
+@@ -9,10 +9,10 @@
+ #ifndef _LINUX_FWNODE_H_
+ #define _LINUX_FWNODE_H_
+ 
+-#include <linux/types.h>
+-#include <linux/list.h>
+ #include <linux/bits.h>
+ #include <linux/err.h>
++#include <linux/list.h>
++#include <linux/types.h>
+ 
+ enum dev_dma_attr {
+ 	DEV_DMA_NOT_SUPPORTED,
+diff --git a/include/linux/property.h b/include/linux/property.h
+index 1f0135e24d00..3a1045eb786c 100644
+--- a/include/linux/property.h
++++ b/include/linux/property.h
+@@ -11,6 +11,7 @@
+ #define _LINUX_PROPERTY_H_
+ 
+ #include <linux/args.h>
++#include <linux/array_size.h>
+ #include <linux/bits.h>
+ #include <linux/fwnode.h>
+ #include <linux/stddef.h>
+-- 
+2.43.0.rc1.1.gbec44491f096
+
