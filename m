@@ -1,251 +1,199 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71EE55F477
-	for <linux-kernel@vger.kernel.org>; Tue, 20 Feb 2024 09:21:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708420889; cv=none; b=nhGSAADByz1tSi84gOkcePFqgCU0rFSqZuqhngaeOJzf1LcH2EG9owPV2Vh8lV9W2D1Hnfy5pV/eHECm6vOGtQYcWJ82eKc56YZkyfl7mDHtoWZKs59s2/sDFxbHARAxv01fPmikkoQD2zvXgwO2KO57T5mQhbFDnWDDUC6zAB4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708420889; c=relaxed/simple;
-	bh=xQ1gQYA+ji+iUjW7UGzZja03wWizPQFAjUz0snoJtAk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=u1EJhE0eBh6+cBKQi1T5dlUdwYFTy+1CfUoOke0uit7zj1ASxc/wSZEXo7/5n2skhmxuPwTheegSxYg2mq2jQI89A8gadX0iAxwlbq4vhNJQsWqWN8VnHOG1lFkAdL8EFJI9rBKIc2Q2hErRKS68PxaePvjNQSPcry6q3L57i/c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=E/GiE8EK; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=YiMkR6mr; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=E/GiE8EK; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=YiMkR6mr; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0C055FBA8;
+	Tue, 20 Feb 2024 09:21:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.15
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1708420915; cv=fail; b=nqsQ3tynjvD9SwEtt8qqjLP2bKsMFxh6f7WARlxJAiY3aAU3/bDPs5amDThSyS24eP8RN9uc0uRVIhXiR5tyipPhH4uasj59zVc1wZmPerLYCV6B66zbSHVRMYacp7CJeEtYwje1F/IJsbHetnnVRcRRjRH2kyEz1Z/JCWDIZiE=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1708420915; c=relaxed/simple;
+	bh=KTzUhwozaFQkCyxWX/9l8OEbVVEqL4DRAmCKNNbTu30=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=u5lVga1b5utBNRCVnUKMbnigdKuHP/m9b7G64Ql32uXIc6kjufpaAN7CY6QxjO1IFobkLjbLTAgKNILkosEynGCJ8U8z9m93bcE/FlLEqiTXj+y2NMQ0JwJldft89uq8FIz3j2vNwficpKfg9CO5n3Or1BrdeUS963aisotoCVs=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GinGzWtV; arc=fail smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="E/GiE8EK";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="YiMkR6mr";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="E/GiE8EK";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="YiMkR6mr"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 57B4C21F61;
-	Tue, 20 Feb 2024 09:21:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1708420885; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=6Sjz5RfeGjBV7xfeElN3pstsDd1FoRAefaT6PJlcvpA=;
-	b=E/GiE8EKD9pbhN+BYbILJD+tM3xDhtj7srYKtbS8h+RhJTZp7Urc5YlkXdvlOJBkDKyJ80
-	s48Ta8BSjDAuMF0HRfQtil0ljGjZ1ZUuyFIjuWPbhIxJ9gHZKo85mnDo9hvYYhRAwy/ET1
-	MOB00Xi9FHkqYr4MiQIDvwcpTQ2nOL8=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1708420885;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=6Sjz5RfeGjBV7xfeElN3pstsDd1FoRAefaT6PJlcvpA=;
-	b=YiMkR6mrlwgQKkyAB1F65P0748ggXq6VbxQOmOBGSIU4xK0X9cMiOEaPRt198So/O27P5X
-	7H9u4aJEoxtSrGBQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1708420885; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=6Sjz5RfeGjBV7xfeElN3pstsDd1FoRAefaT6PJlcvpA=;
-	b=E/GiE8EKD9pbhN+BYbILJD+tM3xDhtj7srYKtbS8h+RhJTZp7Urc5YlkXdvlOJBkDKyJ80
-	s48Ta8BSjDAuMF0HRfQtil0ljGjZ1ZUuyFIjuWPbhIxJ9gHZKo85mnDo9hvYYhRAwy/ET1
-	MOB00Xi9FHkqYr4MiQIDvwcpTQ2nOL8=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1708420885;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=6Sjz5RfeGjBV7xfeElN3pstsDd1FoRAefaT6PJlcvpA=;
-	b=YiMkR6mrlwgQKkyAB1F65P0748ggXq6VbxQOmOBGSIU4xK0X9cMiOEaPRt198So/O27P5X
-	7H9u4aJEoxtSrGBQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 34895134E4;
-	Tue, 20 Feb 2024 09:21:25 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id WSSDDBVv1GXVZQAAD6G6ig
-	(envelope-from <vbabka@suse.cz>); Tue, 20 Feb 2024 09:21:25 +0000
-Message-ID: <60edefec-0a78-4c23-bfb6-17ebf326c61a@suse.cz>
-Date: Tue, 20 Feb 2024 10:21:24 +0100
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GinGzWtV"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1708420914; x=1739956914;
+  h=date:from:to:cc:subject:message-id:reply-to:references:
+   in-reply-to:mime-version;
+  bh=KTzUhwozaFQkCyxWX/9l8OEbVVEqL4DRAmCKNNbTu30=;
+  b=GinGzWtV9RPmdNm6oZq7LV8pVN6tAodSaOVj/T/cHpfdQ6fWHekCDiAd
+   hiXMOtk4OoFukSH0+WurwrX0+H7vZ4OF2K/VjvSf2YZtGEWc+SoEGhQv9
+   mxGKPpO/Xv8OAV5zNxXt+acgA7L6XuBLZxZd/qi0i+VpAO1fSQJvJZVp9
+   VvhygtAbn7meOEQgmIACEzzExvsK3SxZuII+nteUAkrmDGuLk8Xyxn6yR
+   GpLWOki9JaoU9bRJymGS7IXdmU7dD9bIOUbpsHiFa837Kr+FYdnhzFcWA
+   hsDic+OtPktYBLX4J/xzjkq/NJKKWyaDfplryY/Nu77xAAtiqCMMdZZSX
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10989"; a="6337302"
+X-IronPort-AV: E=Sophos;i="6.06,172,1705392000"; 
+   d="scan'208";a="6337302"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Feb 2024 01:21:54 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.06,172,1705392000"; 
+   d="scan'208";a="4716274"
+Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
+  by fmviesa010.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 20 Feb 2024 01:21:52 -0800
+Received: from orsmsx602.amr.corp.intel.com (10.22.229.15) by
+ ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Tue, 20 Feb 2024 01:21:51 -0800
+Received: from ORSEDG602.ED.cps.intel.com (10.7.248.7) by
+ orsmsx602.amr.corp.intel.com (10.22.229.15) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35 via Frontend Transport; Tue, 20 Feb 2024 01:21:51 -0800
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (104.47.66.40) by
+ edgegateway.intel.com (134.134.137.103) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Tue, 20 Feb 2024 01:21:51 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=XPkZXtZmwkXaErGCSrkxZV2ggtXvP0N/XEjsDohBRPp5T3eLFqWmfnTKaSig2f1PdyMx6ZxBOXlYx8mw6V2Fd7R+6+ThKtvs2pUyAxxTbbi+YKkfxNPIbc6JhLD0tKBnB33djZ//XNx6/Nun+jg3mU55YehLEcW02l0noFxCpSbWiTCju47cKi2pOWlRTNoLZ5pBGX+MpuQ09nPoezACCoTRUJi1mvjazDkJryrtdtrHglKsOyxdSQwvtn0Wa8/wrwTdJSvVbg5Pd9dzfqUC6Zql5WjE58zZQXtlI3B4DZ2FFrr8fOGqbrIojZbG6mgqYGdWqWVZ8lnPeXVn9ACVSA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=RsQkJYaRbdH2weUKw3J+KVkcutU8Y/Vlfipw50jTExQ=;
+ b=AJwWZtVXwSk8pBHdkTI9QH5tdsAHYHA+kVw0ra+Ywj059DOyP235igylurn9gljTEm9z+fF6OrwS32jsSDUz0G5KsgyE5l4sat96B7CxPH4dknB2fbAdQJhsqtcBxqqax3V9HUKa+abM+cfLWvaRqsiAp1ChFM+YC46jSXp1hfx4AbsItiJz0C2yLr2XrjRQKmkIMAdxSaoX/bgXDOv5Qqvi3/y2wIxME+AvH8SOGcGuyKPYYrndwpjml6rlmoUsNnR5pzA/331dvXmSB6+RuEo232To7+89l0iGd8gWoGHFRUTIFixgHxklBqGuvpLsBd7qOyZly49v+gVM+K+adw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from DS7PR11MB5966.namprd11.prod.outlook.com (2603:10b6:8:71::6) by
+ DM6PR11MB4738.namprd11.prod.outlook.com (2603:10b6:5:2a3::18) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.7292.39; Tue, 20 Feb 2024 09:21:49 +0000
+Received: from DS7PR11MB5966.namprd11.prod.outlook.com
+ ([fe80::81e3:37ec:f363:689e]) by DS7PR11MB5966.namprd11.prod.outlook.com
+ ([fe80::81e3:37ec:f363:689e%6]) with mapi id 15.20.7292.036; Tue, 20 Feb 2024
+ 09:21:49 +0000
+Date: Tue, 20 Feb 2024 16:52:09 +0800
+From: Yan Zhao <yan.y.zhao@intel.com>
+To: Sean Christopherson <seanjc@google.com>
+CC: <kvm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-kselftest@vger.kernel.org>, <pbonzini@redhat.com>, <shuah@kernel.org>,
+	<stevensd@chromium.org>
+Subject: Re: [RFC PATCH v2 1/3] KVM: allow mapping of compound tail pages for
+ IO or PFNMAP mapping
+Message-ID: <ZdRoOVA2jv+DXAzL@yzhao56-desk.sh.intel.com>
+Reply-To: Yan Zhao <yan.y.zhao@intel.com>
+References: <20240103084327.19955-1-yan.y.zhao@intel.com>
+ <20240103084424.20014-1-yan.y.zhao@intel.com>
+ <ZcrfQS883NfOso4r@google.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <ZcrfQS883NfOso4r@google.com>
+X-ClientProxiedBy: SI2PR02CA0019.apcprd02.prod.outlook.com
+ (2603:1096:4:195::13) To DS7PR11MB5966.namprd11.prod.outlook.com
+ (2603:10b6:8:71::6)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V2 2/2] Documentation: filesystems: introduce
- proc/slabinfo to users
-Content-Language: en-US
-To: zhang fangzheng <fangzheng.zhang1003@gmail.com>
-Cc: Matthew Wilcox <willy@infradead.org>,
- Fangzheng Zhang <fangzheng.zhang@unisoc.com>,
- Christoph Lameter <cl@linux.com>, Pekka Enberg <penberg@kernel.org>,
- David Rientjes <rientjes@google.com>, Joonsoo Kim <iamjoonsoo.kim@lge.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- Roman Gushchin <roman.gushchin@linux.dev>,
- Hyeonggon Yoo <42.hyeyoo@gmail.com>, Greg KH <gregkh@linuxfoundation.org>,
- linux-mm@kvack.org, linux-kernel@vger.kernel.org, tkjos@google.com,
- Yuming Han <yuming.han@unisoc.com>, Chunyan Zhang <zhang.lyra@gmail.com>
-References: <20240219031911.10372-1-fangzheng.zhang@unisoc.com>
- <20240219031911.10372-3-fangzheng.zhang@unisoc.com>
- <ZdLX51r1mOEZKUje@casper.infradead.org>
- <CA+kNDJ+C2b520afauSWbfNK=S1XiNHR_zF32_K-3Rf7R6m3n5Q@mail.gmail.com>
- <4591b2b3-398f-402e-b21d-55b244f05a2e@suse.cz>
- <CA+kNDJLCEdeQsaaLggxbUzF4mAqk_ZLKe=o3cnRkZO8_EKhoSQ@mail.gmail.com>
-From: Vlastimil Babka <vbabka@suse.cz>
-In-Reply-To: <CA+kNDJLCEdeQsaaLggxbUzF4mAqk_ZLKe=o3cnRkZO8_EKhoSQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Authentication-Results: smtp-out1.suse.de;
-	none
-X-Spam-Level: 
-X-Spam-Score: -2.79
-X-Spamd-Result: default: False [-2.79 / 50.00];
-	 ARC_NA(0.00)[];
-	 RCVD_VIA_SMTP_AUTH(0.00)[];
-	 XM_UA_NO_VERSION(0.01)[];
-	 FROM_HAS_DN(0.00)[];
-	 TO_DN_SOME(0.00)[];
-	 FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	 TO_MATCH_ENVRCPT_ALL(0.00)[];
-	 TAGGED_RCPT(0.00)[];
-	 MIME_GOOD(-0.10)[text/plain];
-	 NEURAL_HAM_LONG(-1.00)[-1.000];
-	 MID_RHS_MATCH_FROM(0.00)[];
-	 R_RATELIMIT(0.00)[to_ip_from(RLtz7ce9b89hw8xzamye9qeynd)];
-	 RCVD_COUNT_THREE(0.00)[3];
-	 DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	 NEURAL_HAM_SHORT(-0.20)[-1.000];
-	 BAYES_HAM(-3.00)[100.00%];
-	 RCPT_COUNT_TWELVE(0.00)[16];
-	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:email];
-	 FREEMAIL_TO(0.00)[gmail.com];
-	 FUZZY_BLOCKED(0.00)[rspamd.com];
-	 FROM_EQ_ENVFROM(0.00)[];
-	 MIME_TRACE(0.00)[0:+];
-	 FREEMAIL_CC(0.00)[infradead.org,unisoc.com,linux.com,kernel.org,google.com,lge.com,linux-foundation.org,linux.dev,gmail.com,linuxfoundation.org,kvack.org,vger.kernel.org];
-	 RCVD_TLS_ALL(0.00)[];
-	 SUSPICIOUS_RECIPS(1.50)[]
-X-Spam-Flag: NO
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS7PR11MB5966:EE_|DM6PR11MB4738:EE_
+X-MS-Office365-Filtering-Correlation-Id: 41a254a4-87ca-4268-f3d5-08dc31f55e1f
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: qbt2KpRNqMMYfZC7AVuwJxHMFL43u9OBMt26QeBDZpvOYBgUA6gKpeSVt/6V6BxCdzrCR9s0llkxfny+nZ2UJ0gz3GqkfxLn45Xzpk/zXBRoFv58yoKkGOp5PhofvEa331Qw6BH4Ucm8vQ0Fs6D3qN5j3z+bK1oUhI9xEIdjvKxYUKOKlgk/aDAyL/1Y6HUMAI/gZUhdqB1b26C7v13i3rCusQcBsnucuAMXhSq3qWRKjN6Myp24bC+OkaP+/m8bCVh3KnxOqWJsfA4supZJwysQi0sV61MwaCZXMOwrHACeyg2yCk86KCrEbDRCcCe3cZCgfkZQu+57SHN+h44t+j9GqeiklfJJyDyKW6B0iMQTWYVdQAob6Ww59sY0RAImW7FaZP8P7HW5ZUtvjWzH9L+lEwG4jzqT6qoNTmtJxk0iO8lDlIg6HVEI2YRzV48GZuOWLguoXUJFFmlKnHymzgHSbi2VU5gQCzq9JFnVcHm3Avfo12WC0QttkosamayzOV/l3vANEXRHSR7qRAqof1KJCSiRcEd5G3XdpiITuzU=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR11MB5966.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?DJAH5wyzXyx2AaPzWl0MP/tYltSmziWogyohxFunfJWmKQO8OR9FFtAaNXKR?=
+ =?us-ascii?Q?mv9ajrRoxVkOlDW+N9hZpADfPCTtn+TnyUOWHvgYFyUyU9TNBS/FbBxFA0if?=
+ =?us-ascii?Q?WcemlUEyQcnGUHKCUVSEJK9kOUwOV3fdbzWWagmd1hHeKByZv/CU+7D1CTCA?=
+ =?us-ascii?Q?+RqqLuadi4atLx7PAz52fhXm1SJtDrbYl+3DRy06VfiqPtR1I7xotXUIsQ1c?=
+ =?us-ascii?Q?u0LBMCYHRE2LUWYYmLJ3fLvdXQY8zxUeAGrenJd+RqsJTlXtmkkbLe00R6wz?=
+ =?us-ascii?Q?rPPCGc66+n8s2KYvGS7nVghtFjTg/5Zb6iqJPmSxDqncnLm/FnbS7HTx9V9o?=
+ =?us-ascii?Q?73NtgsqxLxAfiXFSfIita1hAwoerdUhVtFRjjsu+Auakh+TAn5WCmUYAWqvP?=
+ =?us-ascii?Q?cO2gmOoKu4BuGMsWWyfUxN44Lt2sl7s+TvsoB3co/bgrhULLd594ORpSjG/O?=
+ =?us-ascii?Q?e740Fr3NVXkmZf1TtE4swspDyLTLV1zCtm4CoPHZzLfBhh9LEMb3BhuEmXXn?=
+ =?us-ascii?Q?qgucV8q/0xV5gJzMb7nP/80uTlQayMVnfkfkBRQW4QHakWdDvhf4ZfU2uCUr?=
+ =?us-ascii?Q?7g8EvYYKwE5mwH6njnUMOamcPoT5SQLuwEZBr3HFKAZePKiEEwUNmrm0EXmF?=
+ =?us-ascii?Q?iaApjaWzEaKD/dzReWlSwmbAcaPrBXxERMgwsyT3jHdBh05cDTG5+nHNra/D?=
+ =?us-ascii?Q?Jf3+liUphUPF42dJibp0atQEwQyHlbEr5pMSrS4Fh9XQ0OMP4ZG6Z1a6g+f0?=
+ =?us-ascii?Q?N/fvWelqBaTS3bFVvmgbspTEkrJkBiDZbWewa0Z5vVP54icynWqOPg/5jJw0?=
+ =?us-ascii?Q?fHm4L7vF3yAdIiHQa5ATBhWTXtgD7EBOpYprR1IEcfwCdZhsOSA/52cxP2dH?=
+ =?us-ascii?Q?E4d+lQpw4F6//yo7Vp53uHWCTRhM7pmOSDZ7amXdHbRONWF7/OofhmyLOHiz?=
+ =?us-ascii?Q?Pfg1jUvQezHSZCqPbIVk0yCFbHQ4PkDa98E9UxprYc/9GbZ4ajFyyLi1K/WH?=
+ =?us-ascii?Q?sm2KXVPpC1PEJ3O5q7IZYiSC0LU7cFw7qN1Q81eCcZg3sktqp65P8E2ITe2U?=
+ =?us-ascii?Q?/bClxaEfh7zre6hK7O+NhKlRS4JLoCfLwNiNRmZkH9JPvPW1CGInRnqIivON?=
+ =?us-ascii?Q?7F9EU1nSX/SqCnrVWVFXlnybMFkPc0lTGsZPkmm12vwg46h2cwK1QDVyyJ8r?=
+ =?us-ascii?Q?niE5RVgmfunErO7449qW47FKKmJDZ8gjiX1bY17mtDeK5PzJrQo1JAvkKa3e?=
+ =?us-ascii?Q?QRAzZ8CWi5DRKHKt72gthyDvDQVpmCQWzcOKPwq8nTMSjA2sNhLQlqIRDG2r?=
+ =?us-ascii?Q?n2Dqd10ZJVLVv1etgJDWjSe3lBAeGxNjGnIUvEx/lOxGc7zFYDd5gIm06qQQ?=
+ =?us-ascii?Q?mAUTDM/qAbbN+WXmRDx3L9bYndmWSZ7VJla0YrL8WUq0xgxsl1sN3yEtjq+b?=
+ =?us-ascii?Q?LgdWXYdZpUVwG+Zzpalj09b1juA4JiaMgM719m4FAoYSrw5FvCFie4TM54xE?=
+ =?us-ascii?Q?QS0F0cWnUlAIxhLEWfM67uVYjup6jTQhCUGD9Bpp25GOmmI8/xt3OGPQ2bq+?=
+ =?us-ascii?Q?bhZdHF0jDIFdhFskdBIryq9P6XLSL6j1Ajuj/FOn?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 41a254a4-87ca-4268-f3d5-08dc31f55e1f
+X-MS-Exchange-CrossTenant-AuthSource: DS7PR11MB5966.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Feb 2024 09:21:49.7101
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: YBHWf/N+tP2DdVmA9WFEh9lBKdfOzWB8BS9wvc5QMw+k7Pf20W6YjV8l7Sf7zocjlnDI7skgQLa0hBQuZgXTqw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR11MB4738
+X-OriginatorOrg: intel.com
 
-On 2/20/24 09:49, zhang fangzheng wrote:
-> On Mon, Feb 19, 2024 at 4:09 PM Vlastimil Babka <vbabka@suse.cz> wrote:
->>
->> On 2/19/24 07:23, zhang fangzheng wrote:
->> > On Mon, Feb 19, 2024 at 12:24 PM Matthew Wilcox <willy@infradead.org> wrote:
->> >>
->> >> On Mon, Feb 19, 2024 at 11:19:11AM +0800, Fangzheng Zhang wrote:
->> >> > +Note, <slabreclaim> comes from the collected results in the file
->> >> > +/sys/kernel/slab/$cache/reclaim_account. Next, we will mark /proc/slabinfo
->> >> > +as deprecated and recommend the use of either sysfs directly or
->> >> > +use of the "slabinfo" tool that we have been providing in linux/tools/mm.
->> >>
->> >> Wait, so you're going to all of the trouble of changing the format of
->> >> slabinfo (with the associated costs of updating every tool that currently
->> >> parses it), only to recommend that we stop using it and start using
->> >> tools/mm/slabinfo instead?
->> >>
->>
->> Hi,
->>
->> > The initial purpose was to obtain the type of each slab through
->> > a simple command 'cat proc/slabinfo'. So here, my intention is not to
->> > update all slabinfo-related tools for the time being, but to modify
->> > the version number of proc/slabinfo and further display the results
->> > of using the command.
->>
->> I'm not sure you understand the concern. There are existing consumers of
->> /proc/slabinfo, that might become broken by patch 1/2. We don't even know
->> them all, they might not be all opensource etc. So we can't even make sure
->> all of them are updated. What can happen after patch 1/2:
->> - they keep working and ignore the new column (good)
->> - they include a version check and notice a new unsupported version and
->> refuse to work
->> - confused by the new column they start throwing error, or report wrong
->> stats (that's worse)
->>
-> I generally understand your concerns about modifying patch 1/2.
+On Mon, Feb 12, 2024 at 07:17:21PM -0800, Sean Christopherson wrote:
+> On Wed, Jan 03, 2024, Yan Zhao wrote:
+> > Allow mapping of tail pages of compound pages for IO or PFNMAP mapping
+> > by trying and getting ref count of its head page.
+> > 
+> > For IO or PFNMAP mapping, sometimes it's backed by compound pages.
+> > KVM will just return error on mapping of tail pages of the compound pages,
+> > as ref count of the tail pages are always 0.
+> > 
+> > So, rather than check and add ref count of a tail page, check and add ref
+> > count of its folio (head page) to allow mapping of the compound tail pages.
 > 
-> But judging from my modifications, this worry does not seem to be valid.
-> Because the “/proc/slabinfo” is not used in related slabinfo debugging tools
-> (such as tools/mm/slabinfo),
+> Can you add a blurb to call out that this is effectively what gup() does in
+> try_get_folio()?  That knowledge give me a _lot_ more confidence that this is
+> correct (I didn't think too deeply about what this patch was doing when I looked
+> at v1).
+Sure.
 
-Hi,
-
-we are not concerned about slabinfo debugging tools that are part of kernel
-source tree, but about those outside, including those created privately and
-we don't even know they exist.
-
-> but "/sys/kernel/slab/<slab_name>/" (in
-> Documentation/mm/slub.rst) or "/ sys/kernel/debug/slab" (in
-> tools/mm/slabinfo.c).
 > 
-> Furthermore, the current modification only involves optimizing the output
-> of proc/slabinfo,
-
-It's not "only", the output of /proc/slabinfo is what those tools consume,
-so that's what concerns us the most.
-
-> and does not modify the  struct slabinfo or struct kmem_cache.
-> So there is no need to adapt other modifications.
-
-These on the other hand are internal details of the kernel which we can
-modify as much we want
-
->> >> How about we simply do nothing?
->>
->> Agreed wrt modifying /proc/slabinfo
->>
->> > The note here means what changes will occur after
->> > we modify the version number of proc/slabinfo to 2.2.
->> > As for the replacement of tools/mm/slabinfo (that inspired
->> > by Christoph’s suggestions), it will be implemented in the next version
->> > or even the later version.
->>
->> So what is your motivation for all this in the first place? You have some
->> monitoring tool that relies on /proc/slabinfo and want to distinguish
->> reclaimable caches? So you can change it to parse the /sys directories. Is
->> it more work? Yes, but you only have to do that once per boot, because
->> unlike the object/memory stats in /proc/slabinfo, the reclaimable flag will
->> not change for a cache.
->>
-> The situation as you mentioned is very suitable for my current needs.
-> My original intention is just to get an intuitive slab screen through a
-> simple ‘cat proc/slabinfo’ command. As for the description "<slabreclaim>
-
-That would be nice, but again we must be careful about existing consumers of
-/proc/slabinfo so we can't always have nice things.
-
-> comes from the collected results in the file
-> /sys/kernel/slab/$cache/reclaim_account"
-> may not be appropriate. Here I want to express that the column <slabreclaim> has
-> the same effect as traversing "/sys/kernel/slab/$ cache/reclaim_account".
+> > This will not break the origial intention to disallow mapping of tail pages
+> > of non-compound higher order allocations as the folio of a non-compound
+> > tail page is the same as the page itself.
+> > 
+> > On the other side, put_page() has already converted page to folio before
+> > putting page ref.
+> > 
+> > Signed-off-by: Yan Zhao <yan.y.zhao@intel.com>
+> > ---
+> >  virt/kvm/kvm_main.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
+> > index acd67fb40183..f53b58446ac7 100644
+> > --- a/virt/kvm/kvm_main.c
+> > +++ b/virt/kvm/kvm_main.c
+> > @@ -2892,7 +2892,7 @@ static int kvm_try_get_pfn(kvm_pfn_t pfn)
+> >  	if (!page)
+> >  		return 1;
+> >  
+> > -	return get_page_unless_zero(page);
+> > +	return folio_try_get(page_folio(page));
 > 
->> Would tools/mm/slabinfo almost work for you, but you're missing something?
->> Then send patches for that in the first place. Changing /proc/slabinfo (and
->> breaking other consumers) for a quick and easy fix with a different solution
->> planned for the future is simply not feasible.
->>
-> Using the slabinfo tool to parse /sys/kernel/slab/$cache/reclaim_account
-> is what I think about optimizing future tools during the discussion.
-> It will not affect the current patch 1/2, and patch 2/2 is mainly to
-> supplement the output examples of proc/slabinfo.
+> This seems like it needs retry logic, a la try_get_folio(), to guard against a
+> race with the folio being split.  From page_folio():
+>   
+>  If the caller* does not hold a reference, this call may race with a folio split,
+>  so it should re-check the folio still contains this page after gaining a
+>  reference on the folio.
 > 
-> If the community is willing to accept it, I will only modify
-> patch 1/2 to implement it.
-> 
-> Thanks very much!
-> 
->> HTH,
->> Vlastimil
->>
->> > Thanks!
->>
-
+> I assume that splitting one of these folios is extremely unlikely, but I don't
+> see any harm in being paranoid (unless this really truly cannot race).
+Yes, you are right!
+Will do the retry. Thanks!
