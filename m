@@ -1,38 +1,39 @@
 Received: from box.trvn.ru (box.trvn.ru [194.87.146.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF98667C58;
-	Tue, 20 Feb 2024 11:57:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A264467C59;
+	Tue, 20 Feb 2024 11:57:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.87.146.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708430250; cv=none; b=Q3gmWfnmApHnSAosybR3OTY9e9+9C7S1638PumDlMTo7cYWysSL8CGyNdBvYGOkwfIcv2Jgouvat8DSFj5/g488aDfYYSicASJtCtAozzuvuF1JeDDKr7LYC/9bw+DWP72poemmmn/t1UqIWwjFG4bW9kgI6tIBxmLTpo0eLdeM=
+	t=1708430250; cv=none; b=cekms1HH2OPk2wgM9dh2r/IQNtonWcABpTwjz4S+jHyDCsqrkEDfYxuYTZ1UqICKqKsqA5lDqZq1qA4NZh/zhzfXcUB1AtNChwOLri38RZ4+h2TJGEsZ1TIC8dd6f/K7O1cEESUHY6cMuP43DqvQOXeTWmdGIsb+W7KU6pDBGaE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1708430250; c=relaxed/simple;
-	bh=ApiJ2S6pQ5GF5WwxHPrCGVwKlXhmPymVtb/IUGLJWjE=;
+	bh=BzuLtBM8Z955dJErgJ+79DGZL/rifhrYOSOpQyKhbDM=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=JnZ0XD7h5UapiN5rHWjFX37CtoTBMT5nhKylQSVJUKY2UuG5U+1pcVrHISP9ZcHaP2e8sSgubvMXZgOZg+ds+plynCi1TDqcZlzR6br5BmlDTGFljWioyuPbjEq0Z8eLDagdLCuPFTG8+BVBn4owY4cRwCbUJDj14wc4GJNx/kw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=trvn.ru; spf=pass smtp.mailfrom=trvn.ru; dkim=pass (2048-bit key) header.d=trvn.ru header.i=@trvn.ru header.b=ETV3Vi0W; arc=none smtp.client-ip=194.87.146.52
+	 In-Reply-To:To:Cc; b=GV7bL4BxzA4qZXVq3LXRr5FlrQy8uGARrCmEyZJpJ7e/vInJ47xAKercddvrhKZc5Rit3WJt4BXrjw0DJe3bq7wuvP88a3mFTfnimm865Tku7r0x0IJBgm5JBGC4RH0ACVTKT2aHc+WRjoLo6e6kM2MKn60rz8nJbA076WZV9K4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=trvn.ru; spf=pass smtp.mailfrom=trvn.ru; dkim=pass (2048-bit key) header.d=trvn.ru header.i=@trvn.ru header.b=Dod3ezI8; arc=none smtp.client-ip=194.87.146.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=trvn.ru
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=trvn.ru
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=trvn.ru header.i=@trvn.ru header.b="ETV3Vi0W"
+	dkim=pass (2048-bit key) header.d=trvn.ru header.i=@trvn.ru header.b="Dod3ezI8"
 Received: from authenticated-user (box.trvn.ru [194.87.146.52])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
 	(No client certificate requested)
-	by box.trvn.ru (Postfix) with ESMTPSA id 6A0B5408D8;
-	Tue, 20 Feb 2024 16:57:18 +0500 (+05)
+	by box.trvn.ru (Postfix) with ESMTPSA id 9350341992;
+	Tue, 20 Feb 2024 16:57:19 +0500 (+05)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=trvn.ru; s=mail;
-	t=1708430239; bh=ApiJ2S6pQ5GF5WwxHPrCGVwKlXhmPymVtb/IUGLJWjE=;
+	t=1708430241; bh=BzuLtBM8Z955dJErgJ+79DGZL/rifhrYOSOpQyKhbDM=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=ETV3Vi0Wg/WdSJIdxSWyrXFPpGTj+kbeIUT0LPS2Se4slN8Uo1c8DY7ijfuEQaYx9
-	 CXNqk6vdiDucjrSMelc7ZmUf8BJnpyKP+ghldMskHHyp02WlWglpfNAceG5tZceo4E
-	 DBFKN3RKudfj+il+xfeX325CnOVLFBn08Kryqqulos+TYdGbc2d9Rln/x0EYl2a8Kf
-	 Ao7QY1hKPQmFQCJ3moCltr9JTy2ninrR56xYIqhprX7vtkSKH0HlsKQwatpfVhh2NL
-	 qoK0yHwVoPKofceuY9JkC0WoHdudmcKHuKidI8anxgmQM9YykUPvo/5Pwxc+9lA3pi
-	 9EHrlQ2UjORiw==
+	b=Dod3ezI8NPNkKSgyjKhyoAEC3W/EwbKKvEAXC2uWJNCYUnv5hTAo3voBQjd+lL7wl
+	 W8K8HT+Z46XdoLM9NqmhB2F0K8omb0VZMBQyIiTEL9xrDjcpaffzhF2tDL9c7x01+j
+	 QbnxWIqB/XryCEj4NgD+p1vDEaH9/tTfnEi36hfwrXip4XJIry29LzVdDqyIOlNQ1V
+	 iSIMvlOEQwRKDakdwwhQ2I/hyC9ofwWnv/EIJS6O2bV9q/62XdxSJ46l7ug4ecoMao
+	 /LhUA9JSYhbbRihEZatFeVwQCAGdHJQzllPNVDIWgTpgqbChzyqYDnHJlsFWV3I7/D
+	 /CGGlknIXD1qQ==
 From: Nikita Travkin <nikita@trvn.ru>
-Date: Tue, 20 Feb 2024 16:57:12 +0500
-Subject: [PATCH v3 1/3] dt-bindings: power: supply: Add Acer Aspire 1 EC
+Date: Tue, 20 Feb 2024 16:57:14 +0500
+Subject: [PATCH v3 3/3] arm64: dts: qcom: acer-aspire1: Add embedded
+ controller
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,7 +42,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240220-aspire1-ec-v3-1-02cb139a4931@trvn.ru>
+Message-Id: <20240220-aspire1-ec-v3-3-02cb139a4931@trvn.ru>
 References: <20240220-aspire1-ec-v3-0-02cb139a4931@trvn.ru>
 In-Reply-To: <20240220-aspire1-ec-v3-0-02cb139a4931@trvn.ru>
 To: Sebastian Reichel <sre@kernel.org>, Rob Herring <robh+dt@kernel.org>, 
@@ -52,105 +53,108 @@ To: Sebastian Reichel <sre@kernel.org>, Rob Herring <robh+dt@kernel.org>,
 Cc: linux-pm@vger.kernel.org, devicetree@vger.kernel.org, 
  linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
  Nikita Travkin <nikita@trvn.ru>
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2488; i=nikita@trvn.ru;
- h=from:subject:message-id; bh=ApiJ2S6pQ5GF5WwxHPrCGVwKlXhmPymVtb/IUGLJWjE=;
- b=owEBbQKS/ZANAwAIAUMc7O4oGb91AcsmYgBl1JOc8rE2dI3hqLX96DfSRo6+tgB8i2jz80e1Q
- l3EkWcWQ2WJAjMEAAEIAB0WIQTAhK9UUj+qg34uxUdDHOzuKBm/dQUCZdSTnAAKCRBDHOzuKBm/
- dSAQD/0ckzoCZibBFoqGPVJzVznMl1JdV84XTv6BkcN6/EDTnSujDmRlVfrUVITT/UrLVS3RXU1
- X/kl5Wbkt6RsEvuiiXc0pslwwgv/rJAT/ocKbKp23kjxRDNUgdwkVXDx1iE7x2fk3ZWK+40Z89i
- lbIOYjTdIjrlXMEjd6G3xReaZ/G6+/zAWDHQ//0ymuORfcuWC7F6sUxhI8+kAdlGPHTP6is5GzF
- rncCpIUylx01nJxRrym5kkZiODUruhWY4ZY6pGuMXReNsAkyF4Vs8TrtFv/blyH97gjHxOp4Qnd
- CBnIcZprHooBWnut1aAZu4ZFkfdHWevSFhxmeagghAiT6p+gLZkm93nPu0Kb/urOAUL5FG1ewMf
- 3Di85jAnYH6ADvX2xe9htgayVtPjkIeR5ulMYoGjxexh0kyT4eBVx9DuQ6MXlb+jVeTu30y0/d4
- 2VODlrf4V2pB4yYM0yKmPNIMEo/ZmoOBxJF2xyw0JqIl0J1hcXRIZxycDGMKxIrFXJ7KBy53DMo
- 4JlLO3h+IU63CcMGcSAu144b0qoZCKwIZi7ETjgrvBGThx8VahRo/3bJSziCoxNJ1fhjqRLHqfN
- lvVJIv79jphmg5zUYD5gO4kvf656BCu2Gv2sWxO7KA5YcbRDP8/7FgkRi+YNUd++9Ly40EmMW0L
- +IRNaA/7XMSR0Gg==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2154; i=nikita@trvn.ru;
+ h=from:subject:message-id; bh=BzuLtBM8Z955dJErgJ+79DGZL/rifhrYOSOpQyKhbDM=;
+ b=owEBbQKS/ZANAwAIAUMc7O4oGb91AcsmYgBl1JOdjLtKA3uU7iIhdumgBqrkzI7Uw5sUxb96W
+ o37TfbdKbKJAjMEAAEIAB0WIQTAhK9UUj+qg34uxUdDHOzuKBm/dQUCZdSTnQAKCRBDHOzuKBm/
+ dUbEEACAB+i9Da8rjWBs0JGWrRLqj/dgFcl7yoFZP4q9MMYU/DN6F5HoIeOeI4EG6bghw8BGzvb
+ ANZsLaNzdoWYZ4IyfGvUKbp1lKtxHZyFhbv/gdl1+bZqjmi6aHtV53u048MgLtWEsfP/ROnTv1Q
+ XMJ739Z8W5I9aR5LcKk9gJYonV/SE+LgeuXP5C1oVC3ajt9gXoB/JRZjEg2+x+TBrZczFH/Xi1l
+ 51iW7trLU6efxIanKJXiNH8XHWkq9i/OJFy81BEt29kcJlNl5s6bIiKLZXHieWetXwOdlKcS5mE
+ JTDH+AluSkRFMEQZzmua/+IMmh8vKIPpLyIhDNFhsTrwQqIrutrZMvDb0zH+zG1OF4RzPeJwqKd
+ 26Cm3HtGflYycQon8BmK+9SRYHmP93iiBm5SZmxjjO6WSXCpbIEEtpjjXgA/j13Y0Wrf1jChrwv
+ Xn9e9X4mOi/svkdQOYEiQkdphedPPpfHoBY7lyPZHLNo/+lOvLXd2ajkfiXH3z/PpWpZbztMy2m
+ IEt6/XHcgZrhVRBYWfBPynsFMZ38YeSnAe8IMYsba/XK5xRbb9vbXS8K09qCtKHBIVLnofcHsBR
+ sgxVTPFNrrzKvjRSYOcRvQbABf7iUoesJgAI7bmDMhMZS6A+M3pnfnoeLPLKJZvKbQFHb5HdGH3
+ V/1jZDGBvnzXUIQ==
 X-Developer-Key: i=nikita@trvn.ru; a=openpgp;
  fpr=C084AF54523FAA837E2EC547431CECEE2819BF75
 
-Add binding for the EC found in the Acer Aspire 1 laptop.
+The laptop contains an embedded controller that provides a set of
+features:
+
+- Battery and charger monitoring
+- USB Type-C DP alt mode HPD monitoring
+- Lid status detection
+- Small amount of keyboard configuration*
+
+[*] The keyboard is handled by the same EC but it has a dedicated i2c
+bus and is already enabled. This port only provides fn key behavior
+configuration.
+
+Add the EC to the device tree and describe the relationship between the
+EC-managed type-c port and the SoC DisplayPort.
 
 Signed-off-by: Nikita Travkin <nikita@trvn.ru>
 ---
- .../bindings/power/supply/acer,aspire1-ec.yaml     | 69 ++++++++++++++++++++++
- 1 file changed, 69 insertions(+)
+ arch/arm64/boot/dts/qcom/sc7180-acer-aspire1.dts | 40 +++++++++++++++++++++++-
+ 1 file changed, 39 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/power/supply/acer,aspire1-ec.yaml b/Documentation/devicetree/bindings/power/supply/acer,aspire1-ec.yaml
-new file mode 100644
-index 000000000000..984cf19cf806
---- /dev/null
-+++ b/Documentation/devicetree/bindings/power/supply/acer,aspire1-ec.yaml
-@@ -0,0 +1,69 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/power/supply/acer,aspire1-ec.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
+diff --git a/arch/arm64/boot/dts/qcom/sc7180-acer-aspire1.dts b/arch/arm64/boot/dts/qcom/sc7180-acer-aspire1.dts
+index 5afcb8212f49..3f0d3e33894a 100644
+--- a/arch/arm64/boot/dts/qcom/sc7180-acer-aspire1.dts
++++ b/arch/arm64/boot/dts/qcom/sc7180-acer-aspire1.dts
+@@ -255,7 +255,25 @@ &i2c2 {
+ 	clock-frequency = <400000>;
+ 	status = "okay";
+ 
+-	/* embedded-controller@76 */
++	embedded-controller@76 {
++		compatible = "acer,aspire1-ec";
++		reg = <0x76>;
 +
-+title: Acer Aspire 1 Embedded Controller
++		interrupts-extended = <&tlmm 30 IRQ_TYPE_LEVEL_LOW>;
 +
-+maintainers:
-+  - Nikita Travkin <nikita@trvn.ru>
++		pinctrl-0 = <&ec_int_default>;
++		pinctrl-names = "default";
 +
-+description:
-+  The Acer Aspire 1 laptop uses an embedded controller to control battery
-+  and charging as well as to provide a set of misc features such as the
-+  laptop lid status and HPD events for the USB Type-C DP alt mode.
++		connector {
++			compatible = "usb-c-connector";
 +
-+properties:
-+  compatible:
-+    const: acer,aspire1-ec
++			port {
++				ec_dp_in: endpoint {
++					remote-endpoint = <&mdss_dp_out>;
++				};
++			};
++		};
++	};
+ };
+ 
+ &i2c4 {
+@@ -419,6 +437,19 @@ &mdss {
+ 	status = "okay";
+ };
+ 
++&mdss_dp {
++	data-lanes = <0 1>;
 +
-+  reg:
-+    const: 0x76
++	vdda-1p2-supply = <&vreg_l3c_1p2>;
++	vdda-0p9-supply = <&vreg_l4a_0p8>;
 +
-+  interrupts:
-+    maxItems: 1
++	status = "okay";
++};
 +
-+  acer,fn-selects-media-keys:
-+    description: Configure the keyboard layout to invert the Fn key.
-+      By default the function row of the keyboard inputs media keys
-+      (i.e Vol-Up) when Fn is not pressed. With this option set, pressing
-+      the key without Fn would input function keys (i.e. F11). The
-+      firmware may choose to add this property when user selects the fn
-+      mode in the firmware setup utility.
-+    type: boolean
++&mdss_dp_out {
++	remote-endpoint = <&ec_dp_in>;
++};
 +
-+  connector:
-+    $ref: /schemas/connector/usb-connector.yaml#
+ &mdss_dsi0 {
+ 	vdda-supply = <&vreg_l3c_1p2>;
+ 	status = "okay";
+@@ -857,6 +888,13 @@ codec_irq_default: codec-irq-deault-state {
+ 		bias-disable;
+ 	};
+ 
++	ec_int_default: ec-int-default-state {
++		pins = "gpio30";
++		function = "gpio";
++		drive-strength = <2>;
++		bias-disable;
++	};
 +
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+
-+additionalProperties: false
-+
-+examples:
-+  - |+
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+    i2c {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        embedded-controller@76 {
-+            compatible = "acer,aspire1-ec";
-+            reg = <0x76>;
-+
-+            interrupts-extended = <&tlmm 30 IRQ_TYPE_LEVEL_LOW>;
-+
-+            connector {
-+                compatible = "usb-c-connector";
-+
-+                port {
-+                    ec_dp_in: endpoint {
-+                        remote-endpoint = <&mdss_dp_out>;
-+                    };
-+                };
-+            };
-+        };
-+    };
+ 	edp_bridge_irq_default: edp-bridge-irq-default-state {
+ 		pins = "gpio11";
+ 		function = "gpio";
 
 -- 
 2.43.0
