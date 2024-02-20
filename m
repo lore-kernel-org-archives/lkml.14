@@ -1,22 +1,22 @@
 Received: from mail.nfschina.com (unknown [42.101.60.195])
-	by smtp.subspace.kernel.org (Postfix) with SMTP id 0F060482D0;
-	Tue, 20 Feb 2024 05:18:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with SMTP id CC6B64437C;
+	Tue, 20 Feb 2024 05:24:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=42.101.60.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708406347; cv=none; b=OmgTYeYRsM1e6Jj7khyqF3hR/mN95VwppG6RmY2FmIqDgcoXMLBZljEbpgkiGU9hurwrv6ipb4dD6BhdvXl3RtylKelmghrBo7v5CdEtvOTjpd2p3J5EFusGvUq/Q9OKWkpTZ6Cu1GzhVTn5zqpooAwL2hteph5t7O8tLEA3aU8=
+	t=1708406681; cv=none; b=gmL1uFTgTFWVSgrikkYpnX8KkYNbKvlrZyIwV/hoSkcQpQ0qPbDbopzrftkCj3Zfxa+6RzST3Kbcm5WeLX3Kb+xg2itojxim7vICQM/mGH1WCeLWytk/wWHL+EiNvvk+hm1K+CCs4bWId64jaEBIuSQCNjSR41m9Ue2MeuoDrB4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708406347; c=relaxed/simple;
-	bh=WW6nBO6M2oCGgiocdFG4e1PF8PO+zS+gCZmKFpHIpp8=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=SyW6wyixAF3KZRDpUYrJPyus1bECDYjWhxnrHDBuFBT7h25zWYdUf4ie0TJGiNhH8Wyw9g2utMoiNxqKlcPkvpS2uz+8uHPtFDHdatKhCN65d6Hzj9ApHyjpAJ1ISMRLVk6gkUVQsVd6WF0DHlRHU3Cdy0w9tw/5fAwGah6p1Jw=
+	s=arc-20240116; t=1708406681; c=relaxed/simple;
+	bh=a5OnPmoIxcMAgsvJWu6bEk2PslH7RK1XO/2kMFPZSD0=;
+	h=From:To:Cc:Subject:Date:Message-Id; b=Ac0aAtqtHK9SQE4RWtQ+2iI+KRByM3GK5EC13i3/E0O/C6xvxURUH4a4lHUwcrqBXJxPW/3ZOdY7iroy1/hrYeqypksrmhBGR3K/7Yb8bKl/fhXot6DEiUKrGWsNsBkzcigdwm65Fr+iqFbOkOKFQiOHuRPO89S0I372NYzCeIU=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nfschina.com; spf=pass smtp.mailfrom=nfschina.com; arc=none smtp.client-ip=42.101.60.195
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nfschina.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nfschina.com
 Received: from localhost.localdomain (unknown [219.141.250.2])
-	by mail.nfschina.com (Maildata Gateway V2.8.8) with ESMTPA id BD124602610CC;
-	Tue, 20 Feb 2024 13:18:37 +0800 (CST)
-X-MD-Sfrom: zeming@nfschina.com
+	by mail.nfschina.com (Maildata Gateway V2.8.8) with ESMTPA id 1D4A7602610D4;
+	Tue, 20 Feb 2024 13:24:33 +0800 (CST)
+X-MD-Sfrom: kunyu@nfschina.com
 X-MD-SrcIP: 219.141.250.2
-From: Li zeming <zeming@nfschina.com>
+From: Li kunyu <kunyu@nfschina.com>
 To: viro@zeniv.linux.org.uk,
 	brauner@kernel.org,
 	ebiederm@xmission.com,
@@ -24,41 +24,37 @@ To: viro@zeniv.linux.org.uk,
 Cc: linux-fsdevel@vger.kernel.org,
 	linux-mm@kvack.org,
 	linux-kernel@vger.kernel.org,
-	Li zeming <zeming@nfschina.com>
-Subject: [PATCH] =?UTF-8?q?exec:=20Remove=20unnecessary=20=E2=80=98NULL?= =?UTF-8?q?=E2=80=99=20values=20from=20vma?=
-Date: Tue, 20 Feb 2024 13:18:30 +0800
-Message-Id: <20240220051830.61099-1-zeming@nfschina.com>
+	Li kunyu <kunyu@nfschina.com>
+Subject: [PATCH] exec: Delete unnecessary statements in remove_arg_zero()
+Date: Tue, 20 Feb 2024 13:24:26 +0800
+Message-Id: <20240220052426.62018-1-kunyu@nfschina.com>
 X-Mailer: git-send-email 2.18.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
 
-vma is assigned first, so it does not need to initialize the
-assignment.
+'ret=0; ' In actual operation, the ret was not modified, so this
+sentence can be removed.
 
-Signed-off-by: Li zeming <zeming@nfschina.com>
+Signed-off-by: Li kunyu <kunyu@nfschina.com>
 ---
- fs/exec.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/exec.c | 1 -
+ 1 file changed, 1 deletion(-)
 
 diff --git a/fs/exec.c b/fs/exec.c
-index af4fbb61cd53e..7be0527f5ff25 100644
+index 7be0527f5ff25..10309a93d9c52 100644
 --- a/fs/exec.c
 +++ b/fs/exec.c
-@@ -254,7 +254,7 @@ static void flush_arg_page(struct linux_binprm *bprm, unsigned long pos,
- static int __bprm_mm_init(struct linux_binprm *bprm)
- {
- 	int err;
--	struct vm_area_struct *vma = NULL;
-+	struct vm_area_struct *vma;
- 	struct mm_struct *mm = bprm->mm;
+@@ -1747,7 +1747,6 @@ int remove_arg_zero(struct linux_binprm *bprm)
  
- 	bprm->vma = vma = vm_area_alloc(mm);
+ 	bprm->p++;
+ 	bprm->argc--;
+-	ret = 0;
+ 
+ out:
+ 	return ret;
 -- 
 2.18.2
 
