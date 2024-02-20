@@ -1,164 +1,104 @@
-Received: from mail-yb1-f174.google.com (mail-yb1-f174.google.com [209.85.219.174])
+Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A7E3153BFF
-	for <linux-kernel@vger.kernel.org>; Tue, 20 Feb 2024 22:43:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65E0F55787;
+	Tue, 20 Feb 2024 22:43:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708468983; cv=none; b=kNzsZYPj5s1pPgax8dU9sap71Uqpy3dfKRDgk21IwhxMR14fwnz+d9Kk5i6wzum2BUDyElSa7VlwKIWM7zABCfMORLp01I4iRfxVu+Es4aJWs3nYLJPEVkRLaVakEBzZi7f8nQxHT9ECVbHR8nqx9hgY/ZCt/rXe1bG1R9cP9DM=
+	t=1708469041; cv=none; b=W91yo1oRonU14lkK4phmJWz96oKqO7Rl0630VtV0hl7vMozq+xqI2JAcmd8InvK8/qyYQihVor3y6+2BccPHP8M36nVYbwfP2w4dq3lRQfe7+7tvdpQH0c4KjYuI+saJqfjZX6fF/UehscsCxrcGYcMIoa3XdRw0qZDuBP4Z8xg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708468983; c=relaxed/simple;
-	bh=DM/Mmtd0AI+H5Zh0+7h5Vn6CoAFtz2Xdt29XywQuhQM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=k7wFQmYbQJ2zkQcNdwrtB9qZp+pFqIYECNUG9JzuA22vzPsGIMS7H3+IzJfjQjptjRXXP53Un0tdhxSHiHf/+em8oSTXOcvrXsWY+zwDcngw6gbl7xyr8W5N6cdrPMCNvfb+lSU/SjjuYDBVpI0wnKUoXCuUPet96xMxGP80M/g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=l/zntwdq; arc=none smtp.client-ip=209.85.219.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1708469041; c=relaxed/simple;
+	bh=7OBXl7slkbYXNkGIWbZGvBwkUN2P3K/p4aq4Pl//018=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=uLYzlmlZjl1FtLjKUUp9k47ZGKnZ/SvNRHrOdtjYjmpcMLAV0NWRxCu8LHj2QGYrYlX5hXY7pZ1dnNMUSlw0tZWw9dcGM8Lx24Jh7TTcpOWkkgeULB6Nzj9h670RbaQGZTkQTwmY+kC8tz3xqerLFlRR2z3vbBlkTVbpo6S0LEo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ieqhiT33; arc=none smtp.client-ip=209.85.218.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="l/zntwdq"
-Received: by mail-yb1-f174.google.com with SMTP id 3f1490d57ef6-dcbef31a9dbso3899876276.1
-        for <linux-kernel@vger.kernel.org>; Tue, 20 Feb 2024 14:43:01 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ieqhiT33"
+Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-a3e87b2de41so266895866b.2;
+        Tue, 20 Feb 2024 14:43:59 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1708468981; x=1709073781; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=zH7DieykUQS2/nGJ68tfo7BTZhJKxdg5ci7aGgyYEiA=;
-        b=l/zntwdqraL7XB3wjNSFxN/CIg3/lkYxn4GMnpyPOtX+BtTTnld7CO0fCTVoElOL8e
-         sODQTAYwQlfEh0stlqGqZ7fuE/dSjcJKRQMeVQgVqSWZZasIDfCJuZdEdNoN0uEwQ11x
-         kKkGgM/vCSjDk8QbAfrvD0z2W2anFg0gEjDGUjKiIg0JmFkueIHt0PKiPwaLA07zjnuo
-         CCwNg6l41Jq614upd2WHoMY1O5agNdy+gU/Uef4dbClqJWfNLtOdyJyS9ph/yg6f/SX2
-         RKlANMQvwKa68334eL20XVgb8etNRJKFNo/L9sElMKldkufzQmrD+GBkSaDeDakoGOL/
-         tuPQ==
+        d=gmail.com; s=20230601; t=1708469038; x=1709073838; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=DHuB3jZibZ6qtCUb9uZTADnW27tWsLt6G/FLrbSZCEs=;
+        b=ieqhiT33QBrWIosXfxuF6R2nzZv/hAVRDUns/c/dsfVfni0XzH20tT7EZU0KbIhXRp
+         Tj1eznH/IceQX7ZRsF9Sc0f2qZKlbr/m2GpJw6o87oQeKtcN9MIYR47HnSGr8Wxd+tN1
+         p9onkqrANL4kanaFLljG91ooGEEOUxWFZx1gENvF66A3z60e+zr/tmLT+ecBpoJO2V5k
+         a39AHFG1wPNL2E67rKKj0yoyjce7xuR+CBm42HtynLHFy2av9F/8a/0+ol5zZctnp9dz
+         hTOo+KZwlR6eLtru6E6eG+zIXwNDJckGsBpSMpUCZCnpp2g7mbqE1Z+8ARVg5Q10/pjl
+         6eaw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708468981; x=1709073781;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=1e100.net; s=20230601; t=1708469038; x=1709073838;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=zH7DieykUQS2/nGJ68tfo7BTZhJKxdg5ci7aGgyYEiA=;
-        b=SOfZLcOt7yppqNM9bBUxhqAiY7pz8xGiv1DrFipKprKXW64+8Dzus6495SSb7c43/Y
-         IEwQDrNZ6eEonADUmR19WhDgurPd1wwsFOKbB4NNbD6xdZYX9QiWeqpjJKSyZnlK741u
-         2hes/Wa3o/noGD/zvu1XYx730iYH+cstwYgWvT53uK5OEQDxZy2PbLLB2w/CJoqtuC3Y
-         j8hxa0HwtI1087AfrTG8tys/0Vc4rFcxW2l5WOHSUF4QscvedozqPTLJACZP1tXF8q2e
-         7lCTEg580WCbJb3qsvdbHoPKhnqcKqsXPtCZ/UOAwZtAdJspm/anvciaxETqw+8jVf+k
-         U2xQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV2VLpOF0RQ0LDY4aO1JUwih3LN7Jl+CXo/xtypLUFLCWBknNJ31z4IAWfA09KbKpCRf5NceWiIo0+CWLez3bxqbLz2+w/F/DIgWJcd
-X-Gm-Message-State: AOJu0Ywxmtgteq2RfXQW2u/l/PdepzAiIT86/CqMb8b9KwSYv/hG6oIT
-	WDWlBg8ODZ+Cs3xG4M6w2vkMwx2zJWWOuohIVTfsyPE+uXY4/TDCK1t+f4r+9Acx0bYMpeHfHDM
-	IdrqpGXKsbRGBFz+Y6tgB9/eGPLG1aAshiKU5iw==
-X-Google-Smtp-Source: AGHT+IEoDDdMq6RX7QZdIBZt/yu5wB3n1Hn/zQ9cCylZvzZPzgSLW7DihxL8w0hx3qePCPboZ22CG6tWeZr3qSWXOLc=
-X-Received: by 2002:a5b:c81:0:b0:dcb:fb49:cb93 with SMTP id
- i1-20020a5b0c81000000b00dcbfb49cb93mr14196899ybq.45.1708468981109; Tue, 20
- Feb 2024 14:43:01 -0800 (PST)
+        bh=DHuB3jZibZ6qtCUb9uZTADnW27tWsLt6G/FLrbSZCEs=;
+        b=nh9lYMliKO8CF7ft53X+3N3PB/j4eS2+Zavu5C3E9lO7V7fG04OKD0ihjtUEEjbM0S
+         76v/DezBl9J340TBVoSJYpHlKbqCIkb28WWI6J65nnyvRxaJ6K54dHiMN1Mz9qsk+UID
+         d/r0Dgu0oOv5lTHaMMRlpkCHl/P+sLN+9ogdpHMCsWmMxwpDnIrX6vnZYmymBWtUi4HG
+         u1qIxU3SnDTdTKBakzy5Duz62GItO8aVhJRLEBdxy9AA65ge8cBnTmNgcT9yASXCKiSW
+         JyeRlhR8ofcMdHfPipV5/CWiKO6T07Dh1K/d2mGO7yQp6SPtLHZyXvYNsWQhz+teb2d7
+         mlpQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU/ESNCPBNtYAZX5Hx8Ed7mrVzZySQUZcILUegzHwqYBW+z/bmS3Tvt32Qzz4fPvxQRbo34NG5/XIgYsZPv/kV59WBbb2yO35hZhhanWwwwHLW3MNAjZbgsaySJf7/unSs/rbKTgWb3
+X-Gm-Message-State: AOJu0YxQQZHia4nexg0vpv8vDzADPyXtVqygZtHwUpsLkNzKNniNd8Nl
+	KuIdZrobyqDopmlgNk6jwejH83l+JDGalaL/0j49/T1v19jfDuZF
+X-Google-Smtp-Source: AGHT+IGef7cRx9p63So5jxOp2xHPGDx88OvziqNvplGafUO49cZ0JlsFYG1MOnGYkhXrNduPY2WEog==
+X-Received: by 2002:a17:906:af09:b0:a3e:d515:cdf3 with SMTP id lx9-20020a170906af0900b00a3ed515cdf3mr3933296ejb.27.1708469037440;
+        Tue, 20 Feb 2024 14:43:57 -0800 (PST)
+Received: from localhost.localdomain ([2a04:ee41:82:7577:4de1:dcc0:a48:7f])
+        by smtp.gmail.com with ESMTPSA id xg11-20020a170907320b00b00a3d83cff358sm4328489ejb.70.2024.02.20.14.43.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 20 Feb 2024 14:43:57 -0800 (PST)
+From: Vasileios Amoiridis <vassilisamir@gmail.com>
+To: jic23@kernel.org
+Cc: lars@metafoo.de,
+	ang.iglesiasg@gmail.com,
+	andriy.shevchenko@linux.intel.com,
+	linus.walleij@linaro.org,
+	semen.protsenko@linaro.org,
+	linux-iio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Vasileios Amoiridis <vassilisamir@gmail.com>
+Subject: [PATCH 1/2] drivers: iio: pressure: Sort headers of BMPxxx SPI driver
+Date: Tue, 20 Feb 2024 23:43:28 +0100
+Message-Id: <20240220224329.53729-1-vassilisamir@gmail.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240208-fd-dpu-debug-timeout-v2-1-9f907f1bdd87@linaro.org>
- <1cb90bff-ce5b-c6d1-a3df-24f6306f833a@quicinc.com> <CAA8EJpotiHKT_NYphDs0-vhpvsybgTW281XDYbteUx8qOX=v4g@mail.gmail.com>
- <63bba15b-6d8d-5ba8-d99d-8cd2dd763262@quicinc.com> <CAA8EJpqHmVBry9FyJ6HRB+qdVcVNN3Q7rHZz1daZL1Sz6yeZ=A@mail.gmail.com>
- <69d152d2-6a25-9ff4-ce6b-c4790247a661@quicinc.com>
-In-Reply-To: <69d152d2-6a25-9ff4-ce6b-c4790247a661@quicinc.com>
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Date: Wed, 21 Feb 2024 00:42:50 +0200
-Message-ID: <CAA8EJpo3XynBrm0S_BA_SxGOw963WQT9jh=YvLcT1N24FyEUsw@mail.gmail.com>
-Subject: Re: [PATCH v2] drm/msm/dpu: make "vblank timeout" more useful
-To: Abhinav Kumar <quic_abhinavk@quicinc.com>
-Cc: Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>, 
-	Marijn Suijten <marijn.suijten@somainline.org>, David Airlie <airlied@gmail.com>, 
-	Daniel Vetter <daniel@ffwll.ch>, linux-arm-msm@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-On Wed, 21 Feb 2024 at 00:40, Abhinav Kumar <quic_abhinavk@quicinc.com> wrote:
->
->
->
-> On 2/19/2024 3:52 AM, Dmitry Baryshkov wrote:
-> > On Wed, 14 Feb 2024 at 22:36, Abhinav Kumar <quic_abhinavk@quicinc.com> wrote:
-> >>
-> >>
-> >>
-> >> On 2/14/2024 11:20 AM, Dmitry Baryshkov wrote:
-> >>> On Wed, 14 Feb 2024 at 20:02, Abhinav Kumar <quic_abhinavk@quicinc.com> wrote:
-> >>>>
-> >>>>
-> >>>>
-> >>>> On 2/8/2024 6:50 AM, Dmitry Baryshkov wrote:
-> >>>>> We have several reports of vblank timeout messages. However after some
-> >>>>> debugging it was found that there might be different causes to that.
-> >>>>> To allow us to identify the DPU block that gets stuck, include the
-> >>>>> actual CTL_FLUSH value into the timeout message and trigger the devcore
-> >>>>> snapshot capture.
-> >>>>>
-> >>>>> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-> >>>>> ---
-> >>>>> Changes in v2:
-> >>>>> - Added a call to msm_disp_snapshot_state() to trigger devcore dump
-> >>>>>      (Abhinav)
-> >>>>> - Link to v1: https://lore.kernel.org/r/20240106-fd-dpu-debug-timeout-v1-1-6d9762884641@linaro.org
-> >>>>> ---
-> >>>>>     drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_vid.c | 3 ++-
-> >>>>>     1 file changed, 2 insertions(+), 1 deletion(-)
-> >>>>>
-> >>>>> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_vid.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_vid.c
-> >>>>> index d0f56c5c4cce..a8d6165b3c0a 100644
-> >>>>> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_vid.c
-> >>>>> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_vid.c
-> >>>>> @@ -489,7 +489,8 @@ static int dpu_encoder_phys_vid_wait_for_commit_done(
-> >>>>>                 (hw_ctl->ops.get_flush_register(hw_ctl) == 0),
-> >>>>>                 msecs_to_jiffies(50));
-> >>>>>         if (ret <= 0) {
-> >>>>> -             DPU_ERROR("vblank timeout\n");
-> >>>>> +             DPU_ERROR("vblank timeout: %x\n", hw_ctl->ops.get_flush_register(hw_ctl));
-> >>>>> +             msm_disp_snapshot_state(phys_enc->parent->dev);
-> >>>>
-> >>>>
-> >>>> There is no rate limiting in this piece of code unfortunately. So this
-> >>>> will flood the number of snapshots.
-> >>>
-> >>> Well... Yes and no. The devcoredump will destroy other snapshots if
-> >>> there is a pending one. So only the console will be flooded and only
-> >>> in case when MSM_DISP_SNAPSHOT_DUMP_IN_CONSOLE is enabled.
-> >>>
-> >>
-> >> Yes, true but at the same time this makes it hard to capture a good dump
-> >> as potentially every vblank you could timeout so this destroy/create
-> >> cycle wont end.
-> >
-> > Excuse me, maybe I miss something. On the first timeout the snapshot
-> > is created. It is held by the kernel until it is fully read out from
-> > the userspace. Other snapshots will not interfere with this snapshot.
-> >
->
-> For every new snapshot a new devcoredump device will be created which
-> should remain till it has been read. But now this will be created every
-> blank. IMO, this is really too much data for no reason.
+Alphabetical sorting and separation of headers for the BMPxxx
+SPI driver.
 
-No-no-no. If there is a devcoredump for a device, the next one will
-not be created. See dev_coredumpm().
-So all the snapshots will be created and then destroyed immediately.
+Signed-off-by: Vasileios Amoiridis <vassilisamir@gmail.com>
+---
+ drivers/iio/pressure/bmp280-spi.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
->
-> Subsequent vblank timeouts are not going to give any new information
-> compared to the existing snapshot of the first vblank timeout thats why
-> we should just create the snapshot when the first error happens and stop.
->
-> For other frame done timeouts, infact subsequent timeouts without any
-> sort of recovery in between are quite misleading because hardware was
-> already not able to fetch the previous frame so it will most likely not
-> fetch the next one either till it has recovered. Typically thats why
-> these vblank timeouts happen in a flurry as the hardware never really
-> recovered from the first timeout.
->
-> > Or are you worried that snapshotting takes time, so taking a snapshot
-> > will also interfere with the vblank timings for the next vblank?
-> >
->
-> Yes this is another point.
-
+diff --git a/drivers/iio/pressure/bmp280-spi.c b/drivers/iio/pressure/bmp280-spi.c
+index e8a5fed07e88..fd7ec6a5bca3 100644
+--- a/drivers/iio/pressure/bmp280-spi.c
++++ b/drivers/iio/pressure/bmp280-spi.c
+@@ -4,11 +4,12 @@
+  *
+  * Inspired by the older BMP085 driver drivers/misc/bmp085-spi.c
+  */
+-#include <linux/module.h>
+-#include <linux/spi/spi.h>
+ #include <linux/err.h>
++#include <linux/module.h>
+ #include <linux/regmap.h>
+ 
++#include <linux/spi/spi.h>
++
+ #include "bmp280.h"
+ 
+ static int bmp280_regmap_spi_write(void *context, const void *data,
 -- 
-With best wishes
-Dmitry
+2.25.1
+
