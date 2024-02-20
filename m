@@ -1,70 +1,132 @@
-Received: from elvis.franken.de (elvis.franken.de [193.175.24.41])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 912C569DFF;
-	Tue, 20 Feb 2024 13:48:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.175.24.41
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9AA06A8A2;
+	Tue, 20 Feb 2024 13:48:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708436934; cv=none; b=d9mD8hBPtQagykPxKbJnl48t9HvOzL8fcNy5x+KCQzjynYwrjMmmHWIrUDRGhd8KJ5cxC75hq4kJD2xIKKaNRza49CyNPQP6DAqsKEg0M0kzZ1cuGBcw+g7AT3dgvMBh4TfPmRqderxXqr1TAdRZxAC2BksbhukZidVt6RzGboE=
+	t=1708436933; cv=none; b=qk4R1MkPq3EP5Z8v1TKQjOvO/YKlOqWARYtlYhF8YWa7FPsCmHhEcGSGdNgHfWlKV5W4Lg2oFfjdN8/64sCegeo2TgyLpEUM8QRGnTrALmhhzi+yj1GTOrP4fSFV2oOK4nk2+42hJgLW3sN8/tbjf0GwILHlIRZeXtc3YNwWxH4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708436934; c=relaxed/simple;
-	bh=FXC6OCaMo6PBra09rv0mQ7fmtDHn40tyIY5riwAomwY=;
+	s=arc-20240116; t=1708436933; c=relaxed/simple;
+	bh=YC8rgxMYsXiObwoLfeP5CLE6j1/Tcmi0OcU5mPnZIww=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LrujmuqsVy2d3VSWVnaKDHC+6/Z1QpTfMQpo/eq67d2a2/riCvtYD7XhqB9Wb+/CRunukMLljWUXA9eev+jEIYMf372prRGGDoOMe7SA6mTu3FD5mceAvGma/ucX0xrybsLzbvwuap8yuukiTgWKzxfQt2FrikJjbBHwrfLW9OY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpha.franken.de; spf=pass smtp.mailfrom=alpha.franken.de; arc=none smtp.client-ip=193.175.24.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpha.franken.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alpha.franken.de
-Received: from uucp by elvis.franken.de with local-rmail (Exim 3.36 #1)
-	id 1rcQUF-0007OQ-00; Tue, 20 Feb 2024 14:48:43 +0100
-Received: by alpha.franken.de (Postfix, from userid 1000)
-	id 99382C0694; Tue, 20 Feb 2024 14:38:24 +0100 (CET)
-Date: Tue, 20 Feb 2024 14:38:24 +0100
-From: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-To: Masahiro Yamada <masahiroy@kernel.org>
-Cc: linux-mips@vger.kernel.org, linux-kbuild@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/1] MIPS: move unselectable entries out of the "CPU
- type" choice
-Message-ID: <ZdSrUKlV+Q37S3B7@alpha.franken.de>
-References: <20240127162309.1026549-1-masahiroy@kernel.org>
- <20240127162309.1026549-2-masahiroy@kernel.org>
+	 Content-Type:Content-Disposition:In-Reply-To; b=EuLz/4X7Nmaj9TpWE/FQndyhcEZTMQ3v9qR+Ge5Y+M0UlQvGvTJczOu3fYtkXBm9Wdcad9DV7oPvlxXJGhOmPHngE7H7bdK0Uu313HPHQUFR9cTOSqGzRErgQlfyF/03khxFGRwbUd/Sw5AtIXHey9EevXDC9+4jkquGLIUV9a8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Kzgo/kMY; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Kzgo/kMY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B5FBDC433C7;
+	Tue, 20 Feb 2024 13:48:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1708436933;
+	bh=YC8rgxMYsXiObwoLfeP5CLE6j1/Tcmi0OcU5mPnZIww=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Kzgo/kMY6kB8e16x373X+nZBYRtZPWjbszF/D10p4CrIs0z1D+/0cZouLeQB91n2j
+	 Gqy/BbAgiAHBMGPwPdGFVDf+u3kZgkwlW08V2RE/dLN2F4bEnxEmLXXZ8E4BV/si12
+	 1Bqf7tscKk+MgaQXW3tGv0Igcn2yO1AEvI58V7Bq/D2AQ0jY9LZh3udQPlnEwFC0hD
+	 CbHrl3JULRp6TrqbQH9VQcyAjoG4CJtWq9LkjxSDf9EoE9wqjWcD+fSFJwgPEcZvgL
+	 EW9IyDQgJPN1weelAN2llqQOZ9zLb5reAZvuQWF+aeLgGbd2BcvleXJ5gFGLeJBJiB
+	 0jDjiI4KxrkVw==
+Date: Tue, 20 Feb 2024 13:48:42 +0000
+From: Mark Brown <broonie@kernel.org>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Marcel Holtmann <marcel@holtmann.org>,
+	Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
+	"David S . Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>, Kalle Valo <kvalo@kernel.org>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Saravana Kannan <saravanak@google.com>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Marek Szyprowski <m.szyprowski@samsung.com>,
+	Alex Elder <elder@linaro.org>,
+	Srini Kandagatla <srinivas.kandagatla@linaro.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Abel Vesa <abel.vesa@linaro.org>,
+	Manivannan Sadhasivam <mani@kernel.org>,
+	Lukas Wunner <lukas@wunner.de>,
+	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+	linux-bluetooth@vger.kernel.org, netdev@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-wireless@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
+	linux-pm@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: [PATCH v5 09/18] arm64: dts: qcom: qrb5165-rb5: model the PMU of
+ the QCA6391
+Message-ID: <f72723f3-f5c5-4c16-a257-e5f57c4f9e73@sirena.org.uk>
+References: <20240216203215.40870-1-brgl@bgdev.pl>
+ <20240216203215.40870-10-brgl@bgdev.pl>
+ <48164f18-34d0-4053-a416-2bb63aaae74b@sirena.org.uk>
+ <CAMRc=Md7ymMTmF1OkydewF5C32jDNy0V+su7pcJPHKto6VLjLg@mail.gmail.com>
+ <8e392aed-b5f7-486b-b5c0-5568e13796ec@sirena.org.uk>
+ <CAMRc=MeAXEyV47nDO_WPQqEQxSYFWTrwVPAtLghkfONj56FGVA@mail.gmail.com>
+ <5a3f5e1b-8162-4619-a10b-d4711afe533b@sirena.org.uk>
+ <CAMRc=MdTub4u0dm5PgTQPnYPuR=SRnh=ympEZqo_UyrQDrQw6w@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="TzIdp7BUtsKYDYnZ"
 Content-Disposition: inline
-In-Reply-To: <20240127162309.1026549-2-masahiroy@kernel.org>
+In-Reply-To: <CAMRc=MdTub4u0dm5PgTQPnYPuR=SRnh=ympEZqo_UyrQDrQw6w@mail.gmail.com>
+X-Cookie: E = MC ** 2 +- 3db
 
-On Sun, Jan 28, 2024 at 01:23:09AM +0900, Masahiro Yamada wrote:
-> Move the following entries out of the "CPU type" choice:
-> 
->  - LOONGSON3_ENHANCEMENT
->  - CPU_LOONGSON3_WORKAROUNDS
->  - CPU_LOONGSON3_CPUCFG_EMULATION
-> 
-> These entries cannot be selected from the choice because they depend on
-> CPU_LOONGSON64, which is also located in the same choice.
-> 
-> In fact, Kconfig does not consider them as choice values because they
-> become children of CPU_LOOONGSON64 due to the automatic submenu creation
-> in menu_finalize().
-> 
-> However, it is hard to understand this behavior unless you are familiar
-> with the Kconfig internals.
-> 
-> "choice" should contain only selectable entries.
-> 
-> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
-> ---
-> 
->  arch/mips/Kconfig | 76 +++++++++++++++++++++++------------------------
->  1 file changed, 38 insertions(+), 38 deletions(-)
 
-applied to mips-next.
+--TzIdp7BUtsKYDYnZ
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Thomas.
+On Tue, Feb 20, 2024 at 02:38:33PM +0100, Bartosz Golaszewski wrote:
+> On Tue, Feb 20, 2024 at 2:31=E2=80=AFPM Mark Brown <broonie@kernel.org> w=
+rote:
+> > On Tue, Feb 20, 2024 at 12:16:10PM +0100, Bartosz Golaszewski wrote:
 
--- 
-Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
-good idea.                                                [ RFC1925, 2.3 ]
+> > > And what do you mean by there not being any consumers? The WLAN and BT
+> > > *are* the consumers.
+
+> > There are no drivers that bind to the regulators and vary the voltages
+> > at runtime.
+
+> Even with the above misunderstanding clarified: so what? DT is the
+> representation of hardware. There's nothing that obligates us to model
+> DT sources in drivers 1:1.
+
+It is generally a bad sign if there is a voltage range specified on a
+regulator that's not got any indication that the voltage is going to be
+actively managed, especially in situations like with several of the
+supplies the DT was specifying where there are clear indications that
+the supply is intended to be fixed voltage (or cases where every single
+supply has a voltage range which would be highly unusual).  Looking at
+the consumers might provide an explanation for such unusual and likely
+incorrect constraints, and the lack of any consumers in conjunction with=20
+other warning signs reenforces those warning signs.
+
+--TzIdp7BUtsKYDYnZ
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEyBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmXUrboACgkQJNaLcl1U
+h9AUegf4sL0ibn2WhQVo2jE/mB56ayVY4daCFJmLey10o3xzG6j5CHdfj7ZENBPk
+kozPN2BW9C/e0Er+hMKCtTgvm7nJUfVKNcxMd73sXUj44E9Bx57GVOwlBzREZd0w
+O1taO3DNZOTQqwGEaYjjeX9Rac+LU0m0+s/PHv5SbgO7ZlvvHUX0u2sEhyM4Sopl
+NZ1NA+cK9TLOo3ZZjtH5EF8sXMtvRaZr01MwXp+2fljFIkJLx84wdv1oVmOR0I8r
+vobnh7aFX0dyCHgCD1cWqm/QqR0Um0Fc9utXOXTByvvR6L4VlYZvCXnmgvw9Hn1O
+4UdINenyan4K1XpHuoZicZYZbwpU
+=v6IJ
+-----END PGP SIGNATURE-----
+
+--TzIdp7BUtsKYDYnZ--
