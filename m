@@ -1,48 +1,46 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDAF45FF0F;
-	Tue, 20 Feb 2024 08:56:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A510633F3;
+	Tue, 20 Feb 2024 08:56:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708419372; cv=none; b=Li/eTxrvfiYeTkkCx4M9md7G1pPkZ/mlDE8GTelHZvsLGXZTx/1ZpB/ExRT3R9X6hOjRSViHPN8/tAVjKOvsjA+AwFQS6R7RZixK2+NGPBGpPBeZe3wSnS/EYocw1Y5rTw/1GrGiTpJqCbfKzaGZC/GOOjnrTHxJ0LBfDRJfuAM=
+	t=1708419383; cv=none; b=lgj/YMAy2M2jXUWM5fMAExr8Mxv8QMabJAllCZbiRHNLrqCMuTdMw9QgP0OVsK5u5l3HsuhHMZP5R5MDEtBxuUcTX2EaX/EkoD0ttgSACy/QgUskhnEP7EAZRtL2Lm7QsiaIZp1ScDwb8PuLETsQL5EDAg32rVfePXLku7wSIBE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708419372; c=relaxed/simple;
-	bh=zDfSBLJbbIrbJcXCzH/p1UQgT0n+EWE9SZXW7U5XCyI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=T0evPhhfS1E31MtKyfO3gbq9/rHpY7nJNW/lfGfnJnzcGGtU6xLWTuIjh1cnKLzz58TiQd84gTgM4Xepl2g3e3xi4qTJNsy64+TC4jnwT+vLEDQPqdj9u8ryeCn60sUpkBEN2ZykKqiKF1uXuao4cAkNLtW4erOR0aOgnW2JFEE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=HFndHDmn; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1708419383; c=relaxed/simple;
+	bh=W7ULu2PbSiwXjM79NAjBueJ9JU/9Ysyic1LEtAhus+E=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=VHSS/qY2fL/JF74Lue1acoYB4n6Y34NCIbuQHxoxbZseKc130qy0i/vH+ew+1RX7ZqY7xVNsHGJk5i753wiIHkRYnpXHVnB5xp4+rFPTaYp0HY98ZBUEeQ9puN6H0ikk9Hm/OSJkdwxuKWI1Q6Dl+2vXMhRyUCpwk0rjjgW0DkE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ArNwfErr; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="HFndHDmn"
-Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 41K644pi002528;
-	Tue, 20 Feb 2024 08:56:05 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	qcppdkim1; bh=LEgPixatv3d0ywWoeBLBebOftW6W4Qx9nCBkHmjSrkI=; b=HF
-	ndHDmnd+7B9QTxfY5pLksAJ0U8T9ZNL9V0Tf9Q7wTE7G92u0tgoTfikBcjxvcisi
-	OSQtcfbfaUuMus+j6F2pVRXOFDCalnzrmtUWSNr2rSRQq1IdAe/QNupsyDP2bM8A
-	4/w9DWaafxdGgGXWaUQUr+AGhLyEvJ/NpdHI2oHA2y+PM1vxX0CISakj/O5GRicH
-	Y0NwT5YlIRl6DA2h6wgWSlJIJApqWQEp+o1KX2TkDwIPLBoC9N5ai0ayPHVwjaUv
-	xmYEu1HCcY0ZHnHJTZxJUR+kpsZO10g/TnB5Il0Ymy7MJzBOggxdcDh0DBe0b3wm
-	G2RBSoryw7MwqkcsnmFw==
-Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3wcnbd8e4q-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 20 Feb 2024 08:56:05 +0000 (GMT)
-Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
-	by NALASPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 41K8u4sC027490
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 20 Feb 2024 08:56:04 GMT
-Received: from [10.233.21.53] (10.80.80.8) by nalasex01b.na.qualcomm.com
- (10.47.209.197) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Tue, 20 Feb
- 2024 00:55:59 -0800
-Message-ID: <441ffff2-81a8-4b53-b15b-5ac6375d65c3@quicinc.com>
-Date: Tue, 20 Feb 2024 16:55:57 +0800
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ArNwfErr"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1708419382; x=1739955382;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=W7ULu2PbSiwXjM79NAjBueJ9JU/9Ysyic1LEtAhus+E=;
+  b=ArNwfErrA8W/kvXPMz90aXrrep64nNu9McjnyamnUHpR5XAYQVJSIo/2
+   b/4ExO3sLfeNI+bxAtwhDfUSyNRJmLvdCQZLUBJPcH7WzOHTroIzns0FX
+   43sLlx6Lv2a0zhvyJPnyNeczuhd9YpDHb3hi+7RbPcBcCMNW2iHU5O3xg
+   ZmPas+8VP0Xk/jtZ6JCo8P2pyFx/vQMvwfJSWccwAuTuKePHwETnbjR1b
+   FlmPeZR6YEL/IQ1lXCKGV3GmjLwJ/iHqlCFbVqWXA0NKbOtcY7EeXrH+X
+   prJkimw/3bBMpGEv0rwoaQ0rLNU3NMFfRTnGpb1A1GNpaAT9Knn1Z0PJw
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10989"; a="24970759"
+X-IronPort-AV: E=Sophos;i="6.06,172,1705392000"; 
+   d="scan'208";a="24970759"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Feb 2024 00:56:22 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.06,172,1705392000"; 
+   d="scan'208";a="27878939"
+Received: from binbinwu-mobl.ccr.corp.intel.com (HELO [10.238.1.66]) ([10.238.1.66])
+  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Feb 2024 00:56:18 -0800
+Message-ID: <f6214e3a-da8c-4bce-8a1f-a035b2ff909b@linux.intel.com>
+Date: Tue, 20 Feb 2024 16:56:16 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,90 +48,85 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 1/6] dt-bindings: arm: qcom: Document sm8650p soc and
- AIM500 AIoT board
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <andersson@kernel.org>,
-        <konrad.dybcio@linaro.org>, <robh@kernel.org>,
-        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>
-CC: <kernel@quicinc.com>
-References: <20240205115721.1195336-1-quic_jingyw@quicinc.com>
- <20240205115721.1195336-2-quic_jingyw@quicinc.com>
- <2fa4d857-7262-40df-a842-56945ecffb81@linaro.org>
-Content-Language: en-US
-From: Jingyi Wang <quic_jingyw@quicinc.com>
-In-Reply-To: <2fa4d857-7262-40df-a842-56945ecffb81@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01b.na.qualcomm.com (10.47.209.197)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: q43VoSriLbrKjtzjHQhM1QKpaZNyE-Rn
-X-Proofpoint-ORIG-GUID: q43VoSriLbrKjtzjHQhM1QKpaZNyE-Rn
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-02-20_06,2024-02-19_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=965 clxscore=1011
- priorityscore=1501 malwarescore=0 bulkscore=0 impostorscore=0 mlxscore=0
- lowpriorityscore=0 phishscore=0 suspectscore=0 adultscore=0 spamscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2401310000
- definitions=main-2402200063
+Subject: Re: [PATCH v18 069/121] KVM: TDX: restore host xsave state when exit
+ from the guest TD
+To: isaku.yamahata@intel.com
+Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+ isaku.yamahata@gmail.com, Paolo Bonzini <pbonzini@redhat.com>,
+ erdemaktas@google.com, Sean Christopherson <seanjc@google.com>,
+ Sagi Shahar <sagis@google.com>, Kai Huang <kai.huang@intel.com>,
+ chen.bo@intel.com, hang.yuan@intel.com, tina.zhang@intel.com
+References: <cover.1705965634.git.isaku.yamahata@intel.com>
+ <bfa1994b79687709aae011ff455147cc7dd97ffb.1705965635.git.isaku.yamahata@intel.com>
+From: Binbin Wu <binbin.wu@linux.intel.com>
+In-Reply-To: <bfa1994b79687709aae011ff455147cc7dd97ffb.1705965635.git.isaku.yamahata@intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
 
-Hi Krzysztof,
 
-On 2/5/2024 8:33 PM, Krzysztof Kozlowski wrote:
-> On 05/02/2024 12:57, Jingyi Wang wrote:
->> Document Qualcomm SM8650P SoC and AIM500 AIoT board.
-> 
-> Please describe shortly what is SM8650P and what are the differences
-> with SM8650.
-> 
->>
->> Signed-off-by: Jingyi Wang <quic_jingyw@quicinc.com>
->> ---
->>  Documentation/devicetree/bindings/arm/qcom.yaml | 9 +++++++++
->>  1 file changed, 9 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/arm/qcom.yaml b/Documentation/devicetree/bindings/arm/qcom.yaml
->> index 1999a5f2f254..e87ceb42853b 100644
->> --- a/Documentation/devicetree/bindings/arm/qcom.yaml
->> +++ b/Documentation/devicetree/bindings/arm/qcom.yaml
->> @@ -88,11 +88,13 @@ description: |
->>          sm8450
->>          sm8550
->>          sm8650
->> +        sm8650p
->>          x1e80100
->>  
->>    The 'board' element must be one of the following strings:
->>  
->>          adp
->> +        aim500-aiot
-> 
-> Drop this line.
-> 
-drop this line will cause fail dt binding check failure, any suggestion on that?
->>          cdp
->>          dragonboard
->>          idp
->> @@ -1051,6 +1053,13 @@ properties:
->>                - qcom,sm8650-qrd
->>            - const: qcom,sm8650
->>  
->> +      - items:
->> +          - enum:
->> +              - qcom,sm8650p-aim500-aiot
->> +          - const: qcom,sm8650p-aim500
->> +          - const: qcom,sm8650p
->> +          - const: qcom,sm8650
-> 
-> 
-> 
-> Best regards,
-> Krzysztof
-> 
-Thanks,
-Jingyi
+On 1/23/2024 7:53 AM, isaku.yamahata@intel.com wrote:
+> From: Isaku Yamahata <isaku.yamahata@intel.com>
+>
+> On exiting from the guest TD, xsave state is clobbered.  Restore xsave
+> state on TD exit.
+>
+> Signed-off-by: Isaku Yamahata <isaku.yamahata@intel.com>
+> ---
+> v15 -> v16:
+> - Added CET flag mask
+> ---
+>   arch/x86/kvm/vmx/tdx.c | 19 +++++++++++++++++++
+>   1 file changed, 19 insertions(+)
+>
+> diff --git a/arch/x86/kvm/vmx/tdx.c b/arch/x86/kvm/vmx/tdx.c
+> index 903f4abb3543..fe818cfde9e7 100644
+> --- a/arch/x86/kvm/vmx/tdx.c
+> +++ b/arch/x86/kvm/vmx/tdx.c
+> @@ -2,6 +2,7 @@
+>   #include <linux/cpu.h>
+>   #include <linux/mmu_context.h>
+>   
+> +#include <asm/fpu/xcr.h>
+>   #include <asm/tdx.h>
+>   
+>   #include "capabilities.h"
+> @@ -584,6 +585,23 @@ void tdx_vcpu_reset(struct kvm_vcpu *vcpu, bool init_event)
+>   	 */
+>   }
+>   
+> +static void tdx_restore_host_xsave_state(struct kvm_vcpu *vcpu)
+> +{
+> +	struct kvm_tdx *kvm_tdx = to_kvm_tdx(vcpu->kvm);
+> +
+> +	if (static_cpu_has(X86_FEATURE_XSAVE) &&
+> +	    host_xcr0 != (kvm_tdx->xfam & kvm_caps.supported_xcr0))
+> +		xsetbv(XCR_XFEATURE_ENABLED_MASK, host_xcr0);
+> +	if (static_cpu_has(X86_FEATURE_XSAVES) &&
+> +	    /* PT can be exposed to TD guest regardless of KVM's XSS support */
+> +	    host_xss != (kvm_tdx->xfam &
+> +			 (kvm_caps.supported_xss | XFEATURE_MASK_PT | TDX_TD_XFAM_CET)))
+> +		wrmsrl(MSR_IA32_XSS, host_xss);
+> +	if (static_cpu_has(X86_FEATURE_PKU) &&
+> +	    (kvm_tdx->xfam & XFEATURE_MASK_PKRU))
+> +		write_pkru(vcpu->arch.host_pkru);
+> +}
+> +
+
+The export of host_xcr0 in patch 67 can be moved to this path.
+
+  u64 __read_mostly host_xcr0;
++EXPORT_SYMBOL_GPL(host_xcr0);
+
+>   static noinstr void tdx_vcpu_enter_exit(struct vcpu_tdx *tdx)
+>   {
+>   	struct tdx_module_args args;
+> @@ -659,6 +677,7 @@ fastpath_t tdx_vcpu_run(struct kvm_vcpu *vcpu)
+>   
+>   	tdx_vcpu_enter_exit(tdx);
+>   
+> +	tdx_restore_host_xsave_state(vcpu);
+>   	tdx->host_state_need_restore = true;
+>   
+>   	vcpu->arch.regs_avail &= ~VMX_REGS_LAZY_LOAD_SET;
+
