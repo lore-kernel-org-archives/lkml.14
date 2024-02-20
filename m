@@ -1,225 +1,198 @@
-Received: from EUR04-DB3-obe.outbound.protection.outlook.com (mail-db3eur04on2066.outbound.protection.outlook.com [40.107.6.66])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 294D32E84E
-	for <linux-kernel@vger.kernel.org>; Tue, 20 Feb 2024 16:40:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.6.66
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708447250; cv=fail; b=rGgK+WB26oUtTImWLoqU4APmqNHpZbGgbog6Gyhk7ETWEX5ZMIQCf5UasaAhwsZzgLtixtDELir/kCCCOYa1Rm5QcRqrU8bi1Dj9iOjLjWBlJPBlbQKjgJBRw/XTwiNEP95BhqtkoZ7EyqgGEXCXDak/14WZqKTa33vrluDy1g4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708447250; c=relaxed/simple;
-	bh=5/SRf8WpWB4aa+3ju7yEbjjoFKYdbhuRHP+2Mne37po=;
-	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=OGcSIErtOzBFcPPn6NojOjEDa3zwurHDqbXbmxS70nEuHJIFCva5tEVJZWwJ6rb+GBB9RRzs2F1v0gderDyqdC3LDbJuOWOEYje7866xSJj6u5HZkWGkEo64R4deXIgdqzYlrsUdmG7bJ7eFfIGVjDlua7tRO6o6wpeCJ78X2cg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com; spf=pass smtp.mailfrom=oss.nxp.com; dkim=pass (1024-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b=PVzEZ+jf; arc=fail smtp.client-ip=40.107.6.66
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48AC47640E
+	for <linux-kernel@vger.kernel.org>; Tue, 20 Feb 2024 16:44:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1708447499; cv=none; b=hZl+6PdxFYFA4jkNCb/QtoBxUicI+u8SXV2VqrO8GLCnxwkezJNRqTIe0hBnKAJMUWAi6LdYYnfR84INUUeSsIrMdrEbZ01GiD30hTZdqnRIIwwpI3o6VERWTqkeGiZmdQfjou4rvhiL/1GucEbizR1NW1pfrVJLR4RwDl2yxtA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1708447499; c=relaxed/simple;
+	bh=CjH+6PgHWEOYqYXxllInAGxR2UMIFwwCpAknFU8MG5E=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=vC7vzQwdOIXDyuE1q337+yKKyyJFHnVCA/lqm4JfiF5TxQ3hEWZbk9BtXezYuAkJMGj2qHjsGC9SQ5u5XQp3WU+iC+Mhx4sK1MK2Ud+BF5c1yrGKYfgY4YKeg3pDmDz3wv4kL2BI7KH75fHb1gzjPgHcDhwor9yHObQoXXfQfTA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=UEk0WWiB; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="PVzEZ+jf"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=fB7gyDjOt18ISZwn3PrhpTd+oiaseLkEU1RN5HJpWC6BB9zA/LnDW7Ty0/6VljifigSVvRTSztRd4iVjjJORwX5W7WSybPJU0cJp14OV4+rKWz7HnqT1Vvuk/0QFpPTD1ExZ+GxWRokGZgO+QW9pKQ5s4T0eMTfh2mO0uNkc5cUYLTePRqdVsBugp4ekh7NrkefCBjf9L00rSWvAKwkj+9SRaX9sVDMe/Fc6mitxU9jQbifW8SMQcC2zbGul0U2gUTFArWIvjKrCIBYNzb7vL/yd4loExujM1ZpVsUI5s06QNUaagbGS6zOGzbnEN5ebmVyRkzqxVW3eRUXAyugQ8w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Uivvf5m7PIdxxKMliH9cXjrJ4d0g6Rf8rr128P0lgrU=;
- b=Iq0nczl6baGjh5TRlpLq2cqeLinX8yglrJUw9iDhb5hH4KLB7XOguAeKZzPEW2xyha1FSe86hL34YZJIwV6jri18YxEJF9BExc6f/Sa/UHxYpUgwU3yBvVyNawzUkjbMWIuYB6f3cejiBE3+v8tRwNv8B4J0HW+FyqxvKrjSUDCLrJAo1Pz/A+WfzUPh3u3sfcA9H90jbQ2dPXtoeeyjRAALg2mbABEavJYysFaYsRMTAJO+n7W1IaTlMo80KFE0SBqkteUiC4PkgVrZ1sh471wUbNeHvszdqDcwrNmxg7ABrL7/yC3UXikhYl2XGbf2f+I0tnU89uZ9BN2lQYb85A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
- dkim=pass header.d=oss.nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
- s=selector2-NXP1-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Uivvf5m7PIdxxKMliH9cXjrJ4d0g6Rf8rr128P0lgrU=;
- b=PVzEZ+jfpxcAbV9qqUAdAAXIKernLASH25heBfxlsvhx/q0WfZO6tnAuqleDsgpld+qdDRSfPbk5LdZZ8hAaI+9QnE2cz8kZ1V1VL/Qj5cJCD5P7wyoZ3+/aNpq6ojHnH+M/dmFiMdOkmED6ZYon706xeuC4G3CBLrC0eyIlqd0=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=oss.nxp.com;
-Received: from AS8PR04MB8247.eurprd04.prod.outlook.com (2603:10a6:20b:3f2::13)
- by DU0PR04MB9467.eurprd04.prod.outlook.com (2603:10a6:10:35b::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7292.29; Tue, 20 Feb
- 2024 16:40:44 +0000
-Received: from AS8PR04MB8247.eurprd04.prod.outlook.com
- ([fe80::1a09:3c2:866a:8b2b]) by AS8PR04MB8247.eurprd04.prod.outlook.com
- ([fe80::1a09:3c2:866a:8b2b%5]) with mapi id 15.20.7292.036; Tue, 20 Feb 2024
- 16:40:44 +0000
-From: "Daniel Baluta (OSS)" <daniel.baluta@oss.nxp.com>
-To: shawnguo@kernel.org
-Cc: aisheng.dong@nxp.com,
-	kernel@pengutronix.de,
-	f.fainelli@gmail.com,
-	kuba@kernel.org,
-	abel.vesa@linaro.org,
-	haibo.chen@nxp.com,
-	peng.fan@nxp.com,
-	shengjiu.wang@nxp.com,
-	Frank.Li@nxp.com,
-	laurentiu.palcu@nxp.com,
-	mirela.rabulea@nxp.com,
-	linux-kernel@vger.kernel.org,
-	Daniel Baluta <daniel.baluta@nxp.com>
-Subject: [PATCH] MAINTAINERS: Use a proper mailinglist for NXP i.MX development
-Date: Tue, 20 Feb 2024 18:40:05 +0200
-Message-Id: <20240220164005.1345603-1-daniel.baluta@oss.nxp.com>
-X-Mailer: git-send-email 2.25.1
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: AS4P251CA0021.EURP251.PROD.OUTLOOK.COM
- (2603:10a6:20b:5d3::11) To AS8PR04MB8247.eurprd04.prod.outlook.com
- (2603:10a6:20b:3f2::13)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UEk0WWiB"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1708447496;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=W0b9dFkQR2dCyovQiJIgphd8uee5rDy/BEugZxx0fbI=;
+	b=UEk0WWiBCXfw4efcCc7FMcv/aCQ7qeEeG05QYi3dU+YkTh9qjiY5lJnPm+Qe6xp+fMHnpC
+	W0UoLLVXWpbk3fCgn/xIQkZMzBc+W7agN30htcJgwFWExlt8wv90+aPPL0xsbx92Z3J39w
+	3P9HmFE6kpiaGvXL+rpY218EbIB0ZaE=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-664-SJYZ-yMnONSyN256_oY2qQ-1; Tue, 20 Feb 2024 11:44:53 -0500
+X-MC-Unique: SJYZ-yMnONSyN256_oY2qQ-1
+Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-4125670e7d1so15193065e9.1
+        for <linux-kernel@vger.kernel.org>; Tue, 20 Feb 2024 08:44:53 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708447492; x=1709052292;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt:from
+         :references:cc:to:content-language:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=W0b9dFkQR2dCyovQiJIgphd8uee5rDy/BEugZxx0fbI=;
+        b=o8ilqokp5s+h/MYS/J6b4tistYvvUpfvMe0XPZXVkuyFg7xfm9Uazj4yEwpaUdzl7M
+         mRAC3WpsZ+W5cz+GKTPfnessrqOLZfP6OvcQ3W+viCpkf1zPMfevYAyMXET6gv4YeXSM
+         YUX4pX6MSj7gn3NVSy9/LeOxn70D7z81eSJaNq6ErvFSdtxIrzl+6zvAa5IiKqna6zbx
+         jH/sSaYL6Ph4GXFH2lp9U0O1pOTnbjV/RpQerLKc43kRYuTF7iO0NqnPoC5knmdzD9bB
+         vVbgDBOXp5AdhYYo/XLGf7iI9dLFacPVdXMCOTMavZu7b6Y4ZGubARrR5aqwmz/63sfr
+         E0Zg==
+X-Forwarded-Encrypted: i=1; AJvYcCX4wDD9511wVrZb4mUGH7cL/Ru17QMlpPH/am6t61PePHHGyRYGh2qR5iZ2k8NXHr+L/uFdsw5MAmMWF56PHv3G5MUxh+z6L6xElh2q
+X-Gm-Message-State: AOJu0Yw/wzYpBRdwmlC6Gmj0EW/LMivlre/w+bdacSu1Vb/xYd/t6RLF
+	vRdK1ES0ljEDL0YNnIeyrZiB/lL+ijT7B97vMQV480VoWJelKRYOvu7zkpDcEouz8mzgTiMCkb3
+	pCkjcSiwEa/U58dSLvsVN/2bKvtbh/Ye+on/L5Pkd1abeeNJH/JPYu1QoieDSuw==
+X-Received: by 2002:a05:600c:358b:b0:412:6e83:b89d with SMTP id p11-20020a05600c358b00b004126e83b89dmr2219968wmq.8.1708447492214;
+        Tue, 20 Feb 2024 08:44:52 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IEX8Q2qvsZbQW9Hxvoq538E7rm1JI6oSBlTgiATvrgebXfhsXYiJz+t7g2P/7h71aEOFftHtw==
+X-Received: by 2002:a05:600c:358b:b0:412:6e83:b89d with SMTP id p11-20020a05600c358b00b004126e83b89dmr2219948wmq.8.1708447491824;
+        Tue, 20 Feb 2024 08:44:51 -0800 (PST)
+Received: from ?IPV6:2003:cb:c72a:bc00:9a2d:8a48:ef51:96fb? (p200300cbc72abc009a2d8a48ef5196fb.dip0.t-ipconnect.de. [2003:cb:c72a:bc00:9a2d:8a48:ef51:96fb])
+        by smtp.gmail.com with ESMTPSA id v16-20020a05600c471000b004126f8c68eesm2518805wmo.3.2024.02.20.08.44.50
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 20 Feb 2024 08:44:51 -0800 (PST)
+Message-ID: <b504ff21-4941-49e5-b1cb-3e5ed5177836@redhat.com>
+Date: Tue, 20 Feb 2024 17:44:50 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: AS8PR04MB8247:EE_|DU0PR04MB9467:EE_
-X-MS-Office365-Filtering-Correlation-Id: 99543da9-e486-44f5-594e-08dc3232aec0
-X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	IBbZBqVuDCnowJKFK3BQ4b+gXa0AZRu2seZ9/Ylk+QQvQoDvHBmELCrNFp1FMIwiG8/tg7xspKumMWmc1XfZFhPYz439TJ6EIxP7/s7ybUg7J7nPNZiJceFlws3TVoxyqE+ebB+B97vBJ+64mB4AXbWAdEmvOlJum1g3ppP9fCcHRgt0KaEu2i9WkCqG06IuAZ+viugswv1DNcDCC3z48aN3UcYc7AtWidHog9+xA8ANp+H5wwbQqxD1TbRKn0W+JIn97+2jUWKaSY+WiKCbTTva8UOBPfwJaul3de3iyk2IdcigNiChT1QLmC+4Qj8Kky9Ot+xs29IGx4gRzV+jYmcJ2GBxS06AJZN5YbEoVRwqSh6u1IMk/kxnH7tY9PXi94fNBK5RPJQljlYd7q3FUNPG36v8+V6+ecEVMnBlE+d9aEBRmhcO6fCzm/s2BCB3gtkrExBLwAuvXDlX7Wi7RqAsHtAztAqLGrsGzJt8KbguNm8pBjnJE3IgMxOEIqVyh2+kp0WrdTELmje7mkQsYBQXB4R1b97hSeBCyDnJGwUUlslGhrhPAIJobNlsVkLq24lO70yRBlGUUglMpZjBanxtOeTQA4+BBgLo0HguSVY=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AS8PR04MB8247.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(38350700005);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?qt+KStBEbip4adHododWJrmv77LBtB+sDrCA2WT/X3t+YqMOyYqA3/JNt6RY?=
- =?us-ascii?Q?8LFEBJUWEZoKaK+qclOrKY+K3BvTfswnWcbP8MmZVkeeYbYISeiJgDRi/kIj?=
- =?us-ascii?Q?8Rpgq/YhKmzbBp0Aj+6ctE9QyMXaM+QFLlAvVwQwyFNMC2qi7Tok0gM+1VdY?=
- =?us-ascii?Q?Mio4+nMkttRJcN0pI/zFTJMfc+PysynHH1BXlYELIl0Z1GkFp0JsZQcqL3KU?=
- =?us-ascii?Q?W/6VM95oJNsyHr2ypnxuqGPoJnwzx55u8QTKGH721eycOdhb6/InajPjvW/7?=
- =?us-ascii?Q?I04I8Ejd2vQOcEKBxHQBmyrttQZuQLGsWEamrgQcsbNM2X7b0/KjuQFe8n1+?=
- =?us-ascii?Q?GLCHy6DkPEy2tBwoAg+tnVM/17fmjt0A05X0HUJ2Ow+gnor23N2qsJUwzPev?=
- =?us-ascii?Q?saJRmGe7jv4cWTjYfrsz7doxNU/jgN68tKr0r1ydKqrO2F+1Q01jMJ6wF8pj?=
- =?us-ascii?Q?8+m1GykAl/XVSe9TCDhmlJ5wAsWHt/i8XToAYNsDDCJl1nrAbbuf4RxaHYfn?=
- =?us-ascii?Q?H5Uerb2u957vgaP1uXQYJ+cCpGtMVa5bTBFhprVCPlukqneT5HqExts1pcuv?=
- =?us-ascii?Q?XEpW7lRWjfImhJGcfXLdUjIusl1eyTPqPCCCBuAH+42zuv7Wy2ddOQMhPY6J?=
- =?us-ascii?Q?DpjCKtnOYNyQXfhJk9nmsAIDTrcHXGDZtpYjPslUUdCkZ2J9t5xNrlXaWdtH?=
- =?us-ascii?Q?b0M3RKX7hF5Jiy2sDBMqWjSSH0OIMKTV5ptJmNoCB6E2OODPxJAw2X+ykjb1?=
- =?us-ascii?Q?0WXdQs93Fooix5vmVAQnlv+OQAaUIp/ctCu5MF0cxP/c6IkEI+eGruAoJD2/?=
- =?us-ascii?Q?febnti7Nr7l8+qo9czJXDOCojivkHQh5/lbmJxzGC4HzO1p/P7leegT8AmMq?=
- =?us-ascii?Q?Y6Rzkmf3ZhFDnhHz2cOu7ZUgs2JAkiIsci3UAiiNXZOEhC4qsqEnriDNqXvF?=
- =?us-ascii?Q?0Xk/nUBm95sbI8GcL9TGh74McmpZEEKrT74oRNRrc5jGF4yvzXqyRF/nYfFo?=
- =?us-ascii?Q?/RmDuqnsl5oTQCxli6uNzRNo2o7VnpVOWxguRF1dEtJrMjtq9kv2kZrc6P0p?=
- =?us-ascii?Q?kutT1B8O4o0pZqscqRGdr9lA0QI7g3GM4qkDh1bjDuCI3RChCXcqNTarKDaT?=
- =?us-ascii?Q?7VCpClr0bb6Oxngp2T6xSCgH4EjATLR5qNaSALmde8CaWlPdDPb2vA9ijUN6?=
- =?us-ascii?Q?TpoBF2JBp0nu97cNyezxu1Mtq60+/fgVmnxYdFn2xCKbXF7JMCJmQJcKGGXN?=
- =?us-ascii?Q?SAoRaAMxlGfh2AvU6wKLcuekSad1V+nEfrgkamI4kVu/DcEfCwnqzd12uI2K?=
- =?us-ascii?Q?drfRDjkQjv0Mhyj1Hgef37YVKcrq2+bAcVkigjDYce3sULOJC0e2PCpjsB9T?=
- =?us-ascii?Q?bWrR1u/UXjOP34mmPqi5pw001qN/Eem7wLQPwGjupEU9zc8o7q8Xoi1+UohE?=
- =?us-ascii?Q?tJrD9VZPmnXq+j18QehgvJuyTKqunWMUzludvbMD2NriSwwtnPKtBzTuecvY?=
- =?us-ascii?Q?D/CfnvV3TRsbiHhOoOL3ANM80dMYw4ls+C5BeycQ6M91XEc3lnpok73VwhLR?=
- =?us-ascii?Q?j0ZNjavD8uh4H5VIMq9+HLJ4g+tmR5wWR5h+La5V?=
-X-OriginatorOrg: oss.nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 99543da9-e486-44f5-594e-08dc3232aec0
-X-MS-Exchange-CrossTenant-AuthSource: AS8PR04MB8247.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Feb 2024 16:40:44.5762
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: l7qP8E5GxEKheOI8e5inh0a4cGEaY51fgrz8wpg0tRU+1pAgBkxrFJlS7y4Q2aNd5D6//eckHykDQTNeGlWecw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DU0PR04MB9467
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v9 09/24] x86/resctrl: Use __set_bit()/__clear_bit()
+ instead of open coding
+Content-Language: en-US
+To: James Morse <james.morse@arm.com>, x86@kernel.org,
+ linux-kernel@vger.kernel.org
+Cc: Fenghua Yu <fenghua.yu@intel.com>,
+ Reinette Chatre <reinette.chatre@intel.com>,
+ Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, H Peter Anvin <hpa@zytor.com>,
+ Babu Moger <Babu.Moger@amd.com>, shameerali.kolothum.thodi@huawei.com,
+ D Scott Phillips OS <scott@os.amperecomputing.com>,
+ carl@os.amperecomputing.com, lcherian@marvell.com,
+ bobo.shaobowang@huawei.com, tan.shaopeng@fujitsu.com,
+ baolin.wang@linux.alibaba.com, Jamie Iles <quic_jiles@quicinc.com>,
+ Xin Hao <xhao@linux.alibaba.com>, peternewman@google.com,
+ dfustini@baylibre.com, amitsinght@marvell.com
+References: <20240213184438.16675-1-james.morse@arm.com>
+ <20240213184438.16675-10-james.morse@arm.com>
+ <b5bc883a-8a8a-4f07-a6ff-b1bd02ffc99d@redhat.com>
+ <91b58253-f682-49f7-914d-8faf1ce181ef@arm.com>
+From: David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <91b58253-f682-49f7-914d-8faf1ce181ef@arm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-From: Daniel Baluta <daniel.baluta@nxp.com>
+On 20.02.24 17:27, James Morse wrote:
+> Hi David,
+> 
+> On 20/02/2024 16:00, David Hildenbrand wrote:
+>> On 13.02.24 19:44, James Morse wrote:
+>>> The resctrl CLOSID allocator uses a single 32bit word to track which
+>>> CLOSID are free. The setting and clearing of bits is open coded.
+>>>
+>>> Convert the existing open coded bit manipulations of closid_free_map
+>>> to use __set_bit() and friends. These don't need to be atomic as this
+>>> list is protected by the mutex.
+> 
+>>> diff --git a/arch/x86/kernel/cpu/resctrl/rdtgroup.c
+>>> b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
+>>> index dcffd1c4a476..bc6e0f83c847 100644
+>>> --- a/arch/x86/kernel/cpu/resctrl/rdtgroup.c
+>>> +++ b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
+>>> @@ -111,7 +111,7 @@ void rdt_staged_configs_clear(void)
+>>>     * - Our choices on how to configure each resource become progressively more
+>>>     *   limited as the number of resources grows.
+>>>     */
+>>
+>> That comment talks about "free CLOSIDs in a single integer". Once could think about
+>> rephrasing that to "free CLOSIDs in a simple bitmap."
+>>
+>>> -static int closid_free_map;
+>>> +static unsigned long closid_free_map;
+>>>    static int closid_free_map_len;
+>>>      int closids_supported(void)
+>>> @@ -130,8 +130,8 @@ static void closid_init(void)
+>>>          closid_free_map = BIT_MASK(rdt_min_closid) - 1;
+>>
+>> Now that we use "unsigned long", I was wondering for a second if we should use "proper"
+>> bitmap functions here like
+>>
+>>      bitmap_fill(closid_free_map, rdt_min_closid);
+>>
+>> and converting the alloc path (replace ffs() in closid_alloc()):
+>>
+>>      closid = find_first_bit(closid_free_map, closid_free_map_len);
+>>      if (closid == closid_free_map_len)
+>>          return -ENOSPC;
+>>      __clear_bit(closid, &closid_free_map);
+>>
+>> (would get rid of the closid-- in closid_alloc())
+> 
+> Yup. I have this as something to post after all the MPAM changes as it's not necessary to
+> get MPAM going. The patch[0] uses the bitmap APIs you suggest to remove the fixed limit on
+> the number of CLOSID/PARTID.
+> MPAM systems are being built with more than 32, but will work without that patch.
 
-So far we used an internal linux-imx@nxp.com email address to
-gather all patches related to NXP i.MX development.
+Make sense, thanks!
 
-Let's switch to an open mailing list that provides ability
-for people from the community to subscribe and also have
-a proper archive.
-
-List interface at: https://lists.linux.dev.
-Archive is at: https://lore.kernel.org/imx/
-
-Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
----
-
-Shawn, can you please pick this up via your tree?
-
- MAINTAINERS | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 8d1052fa6a69..3db382dc8f7b 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -2156,7 +2156,7 @@ M:	Shawn Guo <shawnguo@kernel.org>
- M:	Sascha Hauer <s.hauer@pengutronix.de>
- R:	Pengutronix Kernel Team <kernel@pengutronix.de>
- R:	Fabio Estevam <festevam@gmail.com>
--R:	NXP Linux Team <linux-imx@nxp.com>
-+R:	NXP Linux Team <imx@lists.linux.dev>
- L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
- S:	Maintained
- T:	git git://git.kernel.org/pub/scm/linux/kernel/git/shawnguo/linux.git
-@@ -8489,7 +8489,7 @@ FREESCALE IMX / MXC FEC DRIVER
- M:	Wei Fang <wei.fang@nxp.com>
- R:	Shenwei Wang <shenwei.wang@nxp.com>
- R:	Clark Wang <xiaoning.wang@nxp.com>
--R:	NXP Linux Team <linux-imx@nxp.com>
-+R:	NXP Linux Team <imx@lists.linux.dev>
- L:	netdev@vger.kernel.org
- S:	Maintained
- F:	Documentation/devicetree/bindings/net/fsl,fec.yaml
-@@ -8524,7 +8524,7 @@ F:	drivers/i2c/busses/i2c-imx.c
- FREESCALE IMX LPI2C DRIVER
- M:	Dong Aisheng <aisheng.dong@nxp.com>
- L:	linux-i2c@vger.kernel.org
--L:	linux-imx@nxp.com
-+L:	imx@lists.linux.dev
- S:	Maintained
- F:	Documentation/devicetree/bindings/i2c/i2c-imx-lpi2c.yaml
- F:	drivers/i2c/busses/i2c-imx-lpi2c.c
-@@ -15704,7 +15704,7 @@ F:	drivers/iio/gyro/fxas21002c_spi.c
- NXP i.MX 7D/6SX/6UL/93 AND VF610 ADC DRIVER
- M:	Haibo Chen <haibo.chen@nxp.com>
- L:	linux-iio@vger.kernel.org
--L:	linux-imx@nxp.com
-+L:	imx@lists.linux.dev
- S:	Maintained
- F:	Documentation/devicetree/bindings/iio/adc/fsl,imx7d-adc.yaml
- F:	Documentation/devicetree/bindings/iio/adc/fsl,vf610-adc.yaml
-@@ -15741,7 +15741,7 @@ F:	drivers/gpu/drm/imx/dcss/
- NXP i.MX 8QXP ADC DRIVER
- M:	Cai Huoqing <cai.huoqing@linux.dev>
- M:	Haibo Chen <haibo.chen@nxp.com>
--L:	linux-imx@nxp.com
-+L:	imx@lists.linux.dev
- L:	linux-iio@vger.kernel.org
- S:	Maintained
- F:	Documentation/devicetree/bindings/iio/adc/nxp,imx8qxp-adc.yaml
-@@ -15749,7 +15749,7 @@ F:	drivers/iio/adc/imx8qxp-adc.c
- 
- NXP i.MX 8QXP/8QM JPEG V4L2 DRIVER
- M:	Mirela Rabulea <mirela.rabulea@nxp.com>
--R:	NXP Linux Team <linux-imx@nxp.com>
-+R:	NXP Linux Team <imx@lists.linux.dev>
- L:	linux-media@vger.kernel.org
- S:	Maintained
- F:	Documentation/devicetree/bindings/media/nxp,imx8-jpeg.yaml
-@@ -15759,7 +15759,7 @@ NXP i.MX CLOCK DRIVERS
- M:	Abel Vesa <abelvesa@kernel.org>
- R:	Peng Fan <peng.fan@nxp.com>
- L:	linux-clk@vger.kernel.org
--L:	linux-imx@nxp.com
-+L:	imx@lists.linux.dev
- S:	Maintained
- T:	git git://git.kernel.org/pub/scm/linux/kernel/git/abelvesa/linux.git clk/imx
- F:	Documentation/devicetree/bindings/clock/imx*
-@@ -19630,7 +19630,7 @@ F:	drivers/mmc/host/sdhci-of-at91.c
- 
- SECURE DIGITAL HOST CONTROLLER INTERFACE (SDHCI) NXP i.MX DRIVER
- M:	Haibo Chen <haibo.chen@nxp.com>
--L:	linux-imx@nxp.com
-+L:	imx@lists.linux.dev
- L:	linux-mmc@vger.kernel.org
- S:	Maintained
- F:	drivers/mmc/host/sdhci-esdhc-imx.c
 -- 
-2.25.1
+Cheers,
+
+David / dhildenb
 
