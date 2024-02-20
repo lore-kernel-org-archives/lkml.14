@@ -1,137 +1,129 @@
-Received: from gandalf.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D09833CF1;
-	Tue, 20 Feb 2024 03:39:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA41B4C610
+	for <linux-kernel@vger.kernel.org>; Tue, 20 Feb 2024 03:39:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708400364; cv=none; b=h9j1fy+RV+74ayz2YWP5oPXXz8MUNDw5Ovyp98xLR49RM7FQoiBQWTpHzdTLtqfxWONLJNtImA6HhMvJpJVu2j0B5rwG+5caEwtRFAOKNpUnxmLqN10NMNbBLS658Q8PfmBHND2BMoDxe9FzaQ8c2k4jb/lJND+Qb5vWKjluwmw=
+	t=1708400400; cv=none; b=uPEQBmXhF1y/vsB4Azn0IxEKEhRchLUrlLKG4WJ+WZRt8nHm58Rdnx8vTPp+JK8nOnK2ozYYwgaK8Y1tZleh92vJ+wxVESlbDLSEwQdrcguyw1DRv1d6aVLqRzxU2FgHP19+Xvsv/mrGOd/N0k1pVF+/SMhUns50lH5pXlDtQhM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708400364; c=relaxed/simple;
-	bh=7Y2sELjhel+6UxDpWMq0yReaC59tBmcYHAmG1877bbU=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=E8ICyvuzEBjtVt+DmMzMm1hfsSHYCjJVLvP71Pb70yUk6REjOPYqczSrDgD9FnPjpVVDjN9/WoOD465zisX/9PxT/tVHia4W6SdvWYklC2Wegfc3xb0Y49OLJIDSp32vHN3XcsVdcAWyU/i5CMWjVonTbeqdA6/ViZWUegBc3E0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=ZY0niVGy; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1708400400; c=relaxed/simple;
+	bh=yOKGA8wab/Ee/bmU7v/Q9RlZRsEjbjN+OuIsJAHhMJc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=BBcna4n+mjV35jxuPg7mc9T4daX/01mMJZ24UlrtVwlcXhr++vBeEDosUyZOcV5QzkFLBuGJqDsoYklGKyyql4uHDlxL3fLA2zckBh7P3HYVUiX5U89te2pFIHoTkLcIEuuMbdCL7Ie1TLmZOHo9hsh6JLoAnOwufdIdFrIkLNs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=XEH3dvn2; arc=none smtp.client-ip=209.85.214.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="ZY0niVGy"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=201702; t=1708400360;
-	bh=pcOAcbKO6ZfnI423BMyfLs6/TkEfSl8q4nsCTKKF2sk=;
-	h=Date:From:To:Cc:Subject:From;
-	b=ZY0niVGyjPW6TKiUMTjTm6asv4znW2vuz0lGHcu7cEZWkbYNj3x7QGOXZ+IIwhtul
-	 6D+w8H9TFo7q7zjE6XvGAq1nc3pWN0AtNfHpQM+lXaBlWrFA2cZR7U24z3cj39R8K+
-	 rzPU4U6QFv9famAKXky293jt3ZKDerlHgYKgFRGx/IfVGICjuN2Z9cV+/3OGE8HvwW
-	 4QZOWAOg8Se17tNfIOjvjIP3+u6/IAz1ssY32W4sJRB6JEdPgINAq4/nRYnN5l2zzQ
-	 broXmxyuBZS9Bbvm2WKnwuxeUIrj8SV536xL9YlrIjt6GNhzaGTzUB1r+kjm5TYCd8
-	 6oM4US9o//DXQ==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4Tf4s36R6jz4wc1;
-	Tue, 20 Feb 2024 14:39:19 +1100 (AEDT)
-Date: Tue, 20 Feb 2024 14:39:19 +1100
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Greg KH <greg@kroah.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Heikki Krogerus
- <heikki.krogerus@linux.intel.com>, Linux Kernel Mailing List
- <linux-kernel@vger.kernel.org>, Linux Next Mailing List
- <linux-next@vger.kernel.org>, Xu Yang <xu.yang_2@nxp.com>
-Subject: linux-next: manual merge of the usb tree with the usb.current tree
-Message-ID: <20240220143919.40257e7b@canb.auug.org.au>
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="XEH3dvn2"
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-1dc139ed11fso2499455ad.0
+        for <linux-kernel@vger.kernel.org>; Mon, 19 Feb 2024 19:39:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance.com; s=google; t=1708400398; x=1709005198; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=61gdFIOyAEtp7pfCHFQh+Fc/gqgVzNiO4CpvePAyVXw=;
+        b=XEH3dvn2pyH9j/S3WIMYsYramXGUDwDF4/ForYALcYwrSi0DYKi8Dozn295l+a5kSV
+         KoUAKCInuykmN2GPY52KsUuChoSUVXkZWWxu5Fst6ZjddOCAsu0wGLO6xdmOA20XbFnN
+         0//gzBxGoK1UfGUADANBy6oWYdcb9jxjNxw7OWJdjK3UtFSNSoVrqm4waiEsoK1FzQir
+         DzqbeX1mfm3riJuiYsfy9+8SReLlo03OpB2xfk2WfeIvQJu2lC7ydhZxX2wz4pJQjL4c
+         xs1K288WRBMA59YBGqsiB/aQWp0hIMEG0vsHYPhoIXEKWHiO1zDa91U+hpj6HiqpsHqk
+         ljnQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708400398; x=1709005198;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=61gdFIOyAEtp7pfCHFQh+Fc/gqgVzNiO4CpvePAyVXw=;
+        b=fQRyAStMJYIdr+MVHghpE8WWbj0KPMNwmZaCisF5LFL/yEYbXSD82bmlxvfgZiQkiN
+         VszOAOLNZUaDZs3y348w9Chf6wRBfoRxmLTAdFC9+aCo9Lt8IqI6GWqxjlRPIlqMRACi
+         cNqUH3sMhslD673ECEv4lpOpaliPFIZBLofb+T45tKSysfihnBi/AxnLkbmmrO9OMpqq
+         k3KLuzu7J24+ykbSU72SgME0YCTZhJg5iL19nxKiDnYrDjXGoRdLEGjKPw7x7xMfYkgP
+         2cihjbfXb4FzjKQOTBXWnYsII8luaRfwKzrLsQ4jr2Jpf/kmO0Ua/iW+vYaebNevZ/Rb
+         L9wA==
+X-Forwarded-Encrypted: i=1; AJvYcCWPmCUsO+wEN5JHE2IIPnN5LPPm5uJOwMNRCWdVRML/C6TepZjosxwYvo2wvUkejfaqJlOfXzHbJn28rdx1NO/r0CSIno7yo1RP1ImP
+X-Gm-Message-State: AOJu0YyxM+6JW0CFZ+hLI72qDEjOJ8D3YCGdvXxXvq2dg+TH754FZtXA
+	Hiq26QKpVCqZzWebXZ9Z+oSsVjhtIgIBkgQP7wnSICK6Z3wrQUdVFPKIU0sIbcc=
+X-Google-Smtp-Source: AGHT+IE2sqpkSGfsSyNt6OWk0KJ2ruc4yfEQBvhsEdatEOo2TxXHxnvqxWaQkQEoRQvOPY4CQbPr4A==
+X-Received: by 2002:a17:903:24f:b0:1d9:4106:b8b5 with SMTP id j15-20020a170903024f00b001d94106b8b5mr17488773plh.11.1708400398198;
+        Mon, 19 Feb 2024 19:39:58 -0800 (PST)
+Received: from [10.254.101.216] ([139.177.225.227])
+        by smtp.gmail.com with ESMTPSA id jx3-20020a170903138300b001d752c4f36asm5153333plb.78.2024.02.19.19.39.46
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 19 Feb 2024 19:39:57 -0800 (PST)
+Message-ID: <d99989d0-e2d6-490a-8f60-c08b98b12896@bytedance.com>
+Date: Tue, 20 Feb 2024 11:39:39 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/vjSNruKW=5aAeRpaXByyGmo";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+User-Agent: Mozilla Thunderbird
+Subject: Re: Re: Re: [linus:master] [sched/eevdf] 2227a957e1:
+ BUG:kernel_NULL_pointer_dereference,address
+Content-Language: en-US
+To: Chen Yu <yu.c.chen@intel.com>
+Cc: Tiwei Bie <tiwei.btw@antgroup.com>,
+ kernel test robot <oliver.sang@intel.com>, oe-lkp@lists.linux.dev,
+ lkp@intel.com, linux-kernel@vger.kernel.org,
+ Peter Zijlstra <peterz@infradead.org>, aubrey.li@linux.intel.com,
+ Honglei Wang <wanghonglei@didichuxing.com>, Aaron Lu <aaron.lu@intel.com>
+References: <202401301012.2ed95df0-oliver.sang@intel.com>
+ <23cbb613-c8a2-4f07-b83b-fa3104bef642@bytedance.com>
+ <8b21e697-c9b9-49aa-a7ad-e88a5d7f9c92@antgroup.com>
+ <5f8f4222-a706-45b1-8eb2-fd4553cc57d8@bytedance.com>
+ <ZdNLCYnJzPM2Ih2j@chenyu5-mobl2>
+From: Abel Wu <wuyun.abel@bytedance.com>
+In-Reply-To: <ZdNLCYnJzPM2Ih2j@chenyu5-mobl2>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
---Sig_/vjSNruKW=5aAeRpaXByyGmo
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Hi Chen,
 
-Hi all,
+On 2/19/24 8:35 PM, Chen Yu Wrote:
+> On 2024-01-31 at 20:28:19 +0800, Abel Wu wrote:
+>> On 1/31/24 8:10 PM, Tiwei Bie Wrote:
+>>> On 1/30/24 6:13 PM, Abel Wu wrote:
+>>>> On 1/30/24 3:24 PM, kernel test robot Wrote:
+>>>>>
+>>>>> [  512.079810][ T8305] BUG: kernel NULL pointer dereference, address: 0000002c
+>>>>> [  512.080897][ T8305] #PF: supervisor read access in kernel mode
+>>>>> [  512.081636][ T8305] #PF: error_code(0x0000) - not-present page
+>>>>> [  512.082337][ T8305] *pde = 00000000
+>>>>> [  512.082829][ T8305] Oops: 0000 [#1] PREEMPT SMP
+>>>>> [  512.083407][ T8305] CPU: 1 PID: 8305 Comm: watchdog Tainted: G        W        N 6.7.0-rc1-00006-g2227a957e1d5 #1 819e6d1a8b887f5f97adb4aed77d98b15504c836
+>>>>> [  512.084986][ T8305] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.16.2-debian-1.16.2-1 04/01/2014
+>>>>> [ 512.086203][ T8305] EIP: set_next_entity (fair.c:?)
+>>>>
+>>>> There was actually a NULL-test in pick_eevdf() before this commit,
+>>>> but I removed it by intent as I found it impossible to be NULL after
+>>>> examining 'all' the cases.
+>>>>
+>>>> Also cc Tiwei who once proposed to add this check back.
+>>>> https://lore.kernel.org/all/20231208112100.18141-1-tiwei.btw@antgroup.com/
+>>>
+>>> Thanks for cc'ing me. That's the case I worried about and why I thought
+>>> it might be worthwhile to add the sanity check back. I just sent out a
+>>> new version of the above patch with updated commit log and error message.
+>>
+>> I assuming the real problem is why it *can* be NULL at first place.
+>> IMHO the NULL check with a fallback selection doesn't solve this, but
+>> it indeed avoids kernel panic which is absolutely important.
+> 
+> I tried to reproduce this issue locally but with no luck. It might
 
-Today's linux-next merge of the usb tree got a conflict in:
+Me either, with a x86 machine. Staring at the dmesg provided by Oliver,
+I guess the bug is arch-specific.
 
-  drivers/usb/roles/class.c
+> be related to lkp's environment so I'm thinking of adding the following
+> change into lkp's test repo to help narrow down: when the pick_eevdf() finds
+> an NULL candidate, print the whole rb-tree, including each entity's vruntime,
+> min_vruntime, deadline, etc. So we can figure out why we failed to find a proper
+> entity, thoughts?
 
-between commit:
+It helps, but not in all ways IMHO. There might be someone else manipulating
+the rbtree under improper locking, and if it is the case, the time of debug
+could be late.
 
-  b787a3e78175 ("usb: roles: don't get/set_role() when usb_role_switch is u=
-nregistered")
-
-from the usb.current tree and commit:
-
-  9a270ec7bfb0 ("usb: roles: Link the switch to its connector")
-
-from the usb tree.
-
-I fixed it up (I think - see below) and can carry the fix as
-necessary. This is now fixed as far as linux-next is concerned, but any
-non trivial conflicts should be mentioned to your upstream maintainer
-when your tree is submitted for merging.  You may also want to consider
-cooperating with the maintainer of the conflicting tree to minimise any
-particularly complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc drivers/usb/roles/class.c
-index 70165dd86b5d,4ad03c93c17f..000000000000
---- a/drivers/usb/roles/class.c
-+++ b/drivers/usb/roles/class.c
-@@@ -361,8 -379,12 +388,14 @@@ usb_role_switch_register(struct device=20
-  		return ERR_PTR(ret);
-  	}
- =20
-+ 	if (dev_fwnode(&sw->dev)) {
-+ 		ret =3D component_add(&sw->dev, &connector_ops);
-+ 		if (ret)
-+ 			dev_warn(&sw->dev, "failed to add component\n");
-+ 	}
-+=20
- +	sw->registered =3D true;
- +
-  	/* TODO: Symlinks for the host port and the device controller. */
- =20
-  	return sw;
-@@@ -377,10 -399,11 +410,12 @@@ EXPORT_SYMBOL_GPL(usb_role_switch_regis
-   */
-  void usb_role_switch_unregister(struct usb_role_switch *sw)
-  {
-- 	if (!IS_ERR_OR_NULL(sw)) {
-- 		sw->registered =3D false;
-- 		device_unregister(&sw->dev);
-- 	}
-+ 	if (IS_ERR_OR_NULL(sw))
-+ 		return;
-++	sw->registered =3D false;
-+ 	if (dev_fwnode(&sw->dev))
-+ 		component_del(&sw->dev, &connector_ops);
-+ 	device_unregister(&sw->dev);
-  }
-  EXPORT_SYMBOL_GPL(usb_role_switch_unregister);
- =20
-
---Sig_/vjSNruKW=5aAeRpaXByyGmo
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmXUHucACgkQAVBC80lX
-0GynJggAgp2c1SBbsndc4wTiwdd2na4docb9SNOcYSCZaHqGzrUtJEVqhvBF0G7M
-O11/zmiEjFRFluIRCuFKWvdijXPBTgjHuRf6ulLz7wYNEu/3jUmLN9RH7f30U6EI
-HEqEuNF2tsZygAZC0+lVJqDqh0z1EAZnk/i3Bq5NzjmjIt9IXdurpQsyNX4iWpjD
-RatLKmYTq7iSQaxQF4Jg1uvqpYUn/GExpah0wXsgWMPcvPI7/T3gsij1LlG5Vg1n
-mVV939/96K5ztHkPFHtLOmvILkMJYB2LcAVNwlko3f2Tfx7VUqxu8BlpetAZw28C
-Pdpe1KtKTapHMMC+g+3Qmac5cvpqFg==
-=dl5s
------END PGP SIGNATURE-----
-
---Sig_/vjSNruKW=5aAeRpaXByyGmo--
