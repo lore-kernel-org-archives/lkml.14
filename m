@@ -1,151 +1,134 @@
-Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
+Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D81856777
-	for <linux-kernel@vger.kernel.org>; Tue, 20 Feb 2024 04:49:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABE04433D0
+	for <linux-kernel@vger.kernel.org>; Tue, 20 Feb 2024 04:51:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708404631; cv=none; b=t8r+UkhhWg6gtNYMJFfDFLqFKxSZG/TmnCBL9QTpWwnciQ5LqHQuCzu8yBos9c/Uv7F4gFbrdkcZoKWi3Q4rQ/ESJreJuNv/lhtsl+SZ2dwcRzxShLlOIKEzdEjih326Jtw1Cm/pV41cwwZexhftH613orJ88DWmWJPF98yrKbY=
+	t=1708404749; cv=none; b=LpxIK4JKUraapylPaexnmeM18XLA9WAyhwYoZDfuADJ3Wdlfa+K9x4UNTTlq7pZF7mQpf6wGe/diX7UH9ixdN8dlA7NaiEKmpNp3Sue9Nzk3BgGdNZTPzPji/yPzUU1v5+xKmgV4vKSS/RUiqDFHwf0TYNp0Ao/jdkVx0HvFf1E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708404631; c=relaxed/simple;
-	bh=gnYTVEhLa2UI/BXFUj5DRblz/ShatFGmeSySyZRlwEs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=mezc5E8NfNr6lgBehLWdIZX79uRUfBWdB2++hKmzQGwOzAvf0pSDofodrvI0/UUgLJ6wiFk4gg4HSdL1HEmWO+Q1RHH/CtwAaBdq6Ka0+9xpPGh0A17tciGH187Qm3V7oJ7BhBTj6UmvNXpUQNJlXfv40hVgkcQwupriHVllYbU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=kJ/phHWP; arc=none smtp.client-ip=209.85.208.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1708404749; c=relaxed/simple;
+	bh=Yza/gVyp6CjH0pAS498TOH+kGoqxz3vwiLg3tZ+l654=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=lgAkMIGdk3f9iituyEnv+P3avXZRk3lyeDGzgYTDlRD9HxYCgLS5pi98t8Tsqk+OFHliFPl+t7VeXGpSnsXLO+AzHw77eBB0JqFFsjGGWO+V239WKrVwZ4Zyf5NLqU5XWoHA3dqzi5si0aRKDeWPPNr3U48ch06RxSIgiOdAPJY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=ZngZhAvt; arc=none smtp.client-ip=209.85.210.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="kJ/phHWP"
-Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-563cb3ba9daso4910491a12.3
-        for <linux-kernel@vger.kernel.org>; Mon, 19 Feb 2024 20:49:52 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="ZngZhAvt"
+Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-6e466a679bfso905834b3a.1
+        for <linux-kernel@vger.kernel.org>; Mon, 19 Feb 2024 20:51:51 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1708404590; x=1709009390; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=JBhO9GN51pgFt/DHFo2a0IcTSs/s3/od7X4R5TK/fL0=;
-        b=kJ/phHWPfMdbwH0yo3aHTKlJQBZslvsniIY4q7aOO9tjUAs74hdSNQpwbVrLq8zIVj
-         aovF/FXmmcwuXI6dtISQNyWxUBmqrcgN8NhmDol+/vxszpACo7FssKQnlPeJsQAj5y4p
-         6PXudZAP6O8bPThU1WjL2L33KHb6JFQMZguG8=
+        d=bytedance.com; s=google; t=1708404711; x=1709009511; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=6mYygh8p6dlxobU8XBNj0jXg1IkFE8a0t479zKU+CTw=;
+        b=ZngZhAvt2Sim4/0DwEE2wLM/TWAOZK2mPGEyppfXh19Qahplpm02/93E19QgaZK3mj
+         fGf2d1VG/ppiPamzkoVojduD0ne9HxOd93GmBKCnRpGfCJCQFRbVzMPwtiWdciU3qJa0
+         GFNxgasy/AqmU8EL72cqRogzR8LqgEZr+kJOA93bafUxdcm1ZRKnjNhc4osH9cBjlh8L
+         DJl44qewDrX1cfD7EmFJu9CRK0cDlmngiCgF2fx5W8O8ita87yBEdG4KBtGpgMUTOg//
+         vg3Ojj8px/aeczTNiuRzvx4u1CwxaI73Mzr10NvA/xPWSqJ3n2gE+9q2mRwArd+rv9f0
+         sGzg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708404590; x=1709009390;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=JBhO9GN51pgFt/DHFo2a0IcTSs/s3/od7X4R5TK/fL0=;
-        b=KHXmRg/8X22zSwbiAqk3Kt4sKgET4RLme1TJD8T2wnBkkP1Ov+WJ9x3tErY5oWz2ir
-         yPRk8qGSnQGcIHz3ima38a5GwN7UzWdx1ZLWdxiHwK155VJovEBaiSUT+RPl7r9AVJGz
-         aqWRN9bp6AlGL6S7kBlxlz0SlJ5JGuWqurx3yknNpyPe5YFkZxN/x7cqjekf76ToauK5
-         fED/v126DGSOdOTGP4QNZvDgHnjJHlLpKuNWiGc8lq/CzJCq3QR+rP8Iveex2+CFqI/e
-         hzYfNYWIdcCSrlOQNYMVH7TrbyOXHnaDQWIkrQS8v+CEFtPyMFQAb28ULSa6HNPxqCIU
-         o/uQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWcBM+UxBo3McAGEvJuRPaWMvr4Il1b1jOsQ9anTz3ph3hGnHclUA1iP/XCBgIjojJCsS3CgXzNmEGzyRoVqVHer3GLu7z5E5gX7aBR
-X-Gm-Message-State: AOJu0Ywfzp0RMjLxfwciRm0PcrllPQjz/9Gi+QTSZIdSmb9zKQCuv9VF
-	UsHUc7TxoH2Lstc15N6wlX0LlCTClj/eStXm2aMFkeNRoasw8xSDa/CjVYeLU7/bk6k/OlqtDcZ
-	5Uw==
-X-Google-Smtp-Source: AGHT+IHcQ5PK8/gjPe5hdjRkEx3ZXM7LO5cJKLvDTCv7gtrkzk1UJXVIhkQGYyF5oWRDyGHjENLw0w==
-X-Received: by 2002:a17:906:bc4f:b0:a3e:b3e6:5b71 with SMTP id s15-20020a170906bc4f00b00a3eb3e65b71mr2298065ejv.62.1708404589936;
-        Mon, 19 Feb 2024 20:49:49 -0800 (PST)
-Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com. [209.85.221.46])
-        by smtp.gmail.com with ESMTPSA id un8-20020a170907cb8800b00a3df7003552sm3565057ejc.32.2024.02.19.20.49.48
-        for <linux-kernel@vger.kernel.org>
+        d=1e100.net; s=20230601; t=1708404711; x=1709009511;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=6mYygh8p6dlxobU8XBNj0jXg1IkFE8a0t479zKU+CTw=;
+        b=lS3fEqAPz+YsuTfbQe5TVAQNyd/7hazEK0yIGQZ1r6L6OUBir24qkNYktCw38ST0n+
+         VL6fmeeX65LH1v9dfNI+DICrktZM8iTdnpd8/LATLjdiyukhLVLxFJHEbwp12JXMReSN
+         73MbItCrjaZNpqzlj18Uh5u61yVziuVl5cGCQRJCY0JVWf1VuPB+zqa6+p+fxRVerP94
+         KAlgUymGOJ5x1Osi0m0B0NhujWv2gh6lK9BcfAqwm8dd7dyRMJMN0Gc0WkNlceACjlUb
+         IPCfna7gh+3XYDZw/lVwWAwbDpBEdkgwXRA+QP9yaGfBGoxtZPEHK7ErBYtuozQkqsAk
+         Q0iQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXoyytEsKeu+8vvAVgnHW9IeEF5u8xTkNeddZj8yEktOBqNgVsjlsDVppU+ZnH9S2X62JZpSm1gUZCauI73E7FJWJapIwrxLcn05dku
+X-Gm-Message-State: AOJu0YyvKbJZ8fnjjYuvkDvVXLzv4fYPLMtmdt4J7CEGLR/l8Nmdqp4i
+	v9FFdVVSteo6dJ1CexYw8fsPJ1Zn0PMC9M4v9mrxVIc9MdZzr5t+EZaTzTgN2vc=
+X-Google-Smtp-Source: AGHT+IGn1WTzy+QP7GoYHjjKhbmY/dTV/RzlOdfgmAWM2wYTzRqVoIZUZ6pNgpAYsdfo4cFoXCfVIA==
+X-Received: by 2002:a05:6a00:1acb:b0:6e4:6a40:1b36 with SMTP id f11-20020a056a001acb00b006e46a401b36mr4723444pfv.12.1708404710901;
+        Mon, 19 Feb 2024 20:51:50 -0800 (PST)
+Received: from [10.254.117.3] ([139.177.225.234])
+        by smtp.gmail.com with ESMTPSA id h15-20020a056a00000f00b006dd843734c8sm5247248pfk.81.2024.02.19.20.51.47
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 19 Feb 2024 20:49:48 -0800 (PST)
-Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-33d6f1f17e5so36812f8f.3
-        for <linux-kernel@vger.kernel.org>; Mon, 19 Feb 2024 20:49:48 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCV3QxNDnHXCNCekwfg42jC47/kX13NvvxCE0WTZDI725TDEl35aCpSAI2w2drBxmTjUSfrliEu37Qy/oYtMmVnL7X0PPE+3VNBZhO09
-X-Received: by 2002:a5d:44cd:0:b0:33d:3893:838a with SMTP id
- z13-20020a5d44cd000000b0033d3893838amr5261433wrr.56.1708404587902; Mon, 19
- Feb 2024 20:49:47 -0800 (PST)
+        Mon, 19 Feb 2024 20:51:50 -0800 (PST)
+Message-ID: <4f3c6c96-3bea-4369-a2de-e3c559505bba@bytedance.com>
+Date: Tue, 20 Feb 2024 12:51:46 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <000000000000cb40790611bbcffd@google.com> <98b81fbf-4905-4b45-a8c0-33e7399ef84a@collabora.com>
-In-Reply-To: <98b81fbf-4905-4b45-a8c0-33e7399ef84a@collabora.com>
-From: Tomasz Figa <tfiga@chromium.org>
-Date: Tue, 20 Feb 2024 13:49:30 +0900
-X-Gmail-Original-Message-ID: <CAAFQd5Cs-eeHsCZ6VWrzChTJqd4FSqBS4z6ncd8tPQPNMdN68Q@mail.gmail.com>
-Message-ID: <CAAFQd5Cs-eeHsCZ6VWrzChTJqd4FSqBS4z6ncd8tPQPNMdN68Q@mail.gmail.com>
-Subject: Re: [syzbot] [usb?] [media?] possible deadlock in vb2_video_unregister_device
-To: Benjamin Gaignard <benjamin.gaignard@collabora.com>
-Cc: syzbot <syzbot+3b1d4b3d5f7a358bf9a9@syzkaller.appspotmail.com>, hdanton@sina.com, 
-	hverkuil-cisco@xs4all.nl, hverkuil@xs4all.nl, 
-	laurent.pinchart@ideasonboard.com, linux-kernel@vger.kernel.org, 
-	linux-media@vger.kernel.org, linux-usb@vger.kernel.org, 
-	m.szyprowski@samsung.com, mchehab@kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/3] mm/zsmalloc: remove migrate_write_lock_nested()
+Content-Language: en-US
+To: Sergey Senozhatsky <senozhatsky@chromium.org>
+Cc: nphamcs@gmail.com, yosryahmed@google.com, Minchan Kim
+ <minchan@kernel.org>, Andrew Morton <akpm@linux-foundation.org>,
+ hannes@cmpxchg.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org
+References: <20240219-b4-szmalloc-migrate-v1-0-34cd49c6545b@bytedance.com>
+ <20240219-b4-szmalloc-migrate-v1-2-34cd49c6545b@bytedance.com>
+ <20240220044825.GD11472@google.com>
+From: Chengming Zhou <zhouchengming@bytedance.com>
+In-Reply-To: <20240220044825.GD11472@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, Feb 20, 2024 at 12:49=E2=80=AFAM Benjamin Gaignard
-<benjamin.gaignard@collabora.com> wrote:
->
->
-> Le 19/02/2024 =C3=A0 14:10, syzbot a =C3=A9crit :
-> > syzbot has bisected this issue to:
-> >
-> > commit c838530d230bc638d79b78737fc4488ffc28c1ee
-> > Author: Benjamin Gaignard <benjamin.gaignard@collabora.com>
-> > Date:   Thu Nov 9 16:34:59 2023 +0000
-> >
-> >      media: media videobuf2: Be more flexible on the number of queue st=
-ored buffers
-> >
-> > bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=3D166dc872=
-180000
-> > start commit:   b401b621758e Linux 6.8-rc5
-> > git tree:       upstream
-> > final oops:     https://syzkaller.appspot.com/x/report.txt?x=3D156dc872=
-180000
-> > console output: https://syzkaller.appspot.com/x/log.txt?x=3D116dc872180=
-000
-> > kernel config:  https://syzkaller.appspot.com/x/.config?x=3Deff9f3183d0=
-a20dd
-> > dashboard link: https://syzkaller.appspot.com/bug?extid=3D3b1d4b3d5f7a3=
-58bf9a9
-> > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=3D13ffaae81=
-80000
-> > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=3D13ef909c180=
-000
-> >
-> > Reported-by: syzbot+3b1d4b3d5f7a358bf9a9@syzkaller.appspotmail.com
-> > Fixes: c838530d230b ("media: media videobuf2: Be more flexible on the n=
-umber of queue stored buffers")
-> >
-> > For information about bisection process see: https://goo.gl/tpsmEJ#bise=
-ction
->
-> Hans,
-> I think the issue occur because of this part of the commit:
-> @@ -1264,7 +1264,7 @@ void vb2_video_unregister_device(struct video_devic=
-e *vdev)
->           */
->          get_device(&vdev->dev);
->          video_unregister_device(vdev);
-> -       if (vdev->queue && vdev->queue->owner) {
-> +       if (vdev->queue) {
->                  struct mutex *lock =3D vdev->queue->lock ?
->                          vdev->queue->lock : vdev->lock;
->
-> but I wonder if the correction shouldn't be to remove usbtv->vb2q_lock mu=
-tex in usbtv_video_free().
->
-> Any opinion ?
+On 2024/2/20 12:48, Sergey Senozhatsky wrote:
+> On (24/02/19 13:33), Chengming Zhou wrote:
+>>  static void migrate_write_unlock(struct zspage *zspage)
+>>  {
+>>  	write_unlock(&zspage->lock);
+>> @@ -2003,19 +1997,17 @@ static unsigned long __zs_compact(struct zs_pool *pool,
+>>  			dst_zspage = isolate_dst_zspage(class);
+>>  			if (!dst_zspage)
+>>  				break;
+>> -			migrate_write_lock(dst_zspage);
+>>  		}
+>>  
+>>  		src_zspage = isolate_src_zspage(class);
+>>  		if (!src_zspage)
+>>  			break;
+>>  
+>> -		migrate_write_lock_nested(src_zspage);
+>> -
+>> +		migrate_write_lock(src_zspage);
+>>  		migrate_zspage(pool, src_zspage, dst_zspage);
+>> -		fg = putback_zspage(class, src_zspage);
+>>  		migrate_write_unlock(src_zspage);
+>>  
+>> +		fg = putback_zspage(class, src_zspage);
+> 
+> Hmm. Lockless putback doesn't look right to me. We modify critical
+> zspage fileds in putback_zspage().
 
-That is probably what triggered the failure detected by syzbot, but I
-don't think we've ever had a guarantee that owner is NULL in that
-code.
+Which I think is protected by pool->lock, right? We already held it.
 
-Looking at the uvc driver [1], it doesn't seem to need any special
-locking there (after all the vb2 code acquires them).  (It also
-doesn't have the custom clean-up code that the usbtv driver has in
-usbtv_stop(), but that's another story). So maybe all we need to fix
-it is removing the mutex_lock/unlock() calls?
-
-[1] https://elixir.bootlin.com/linux/v6.8-rc4/source/drivers/media/usb/uvc/=
-uvc_driver.c#L1906
-
-Best,
-Tomasz
+> 
+>>  		if (fg == ZS_INUSE_RATIO_0) {
+>>  			free_zspage(pool, class, src_zspage);
+>>  			pages_freed += class->pages_per_zspage;
+>> @@ -2025,7 +2017,6 @@ static unsigned long __zs_compact(struct zs_pool *pool,
+>>  		if (get_fullness_group(class, dst_zspage) == ZS_INUSE_RATIO_100
+>>  		    || spin_is_contended(&pool->lock)) {
+>>  			putback_zspage(class, dst_zspage);
+>> -			migrate_write_unlock(dst_zspage);
+>>  			dst_zspage = NULL;
+>>  
+>>  			spin_unlock(&pool->lock);
+>> @@ -2034,15 +2025,12 @@ static unsigned long __zs_compact(struct zs_pool *pool,
+>>  		}
+>>  	}
+>>  
+>> -	if (src_zspage) {
+>> +	if (src_zspage)
+>>  		putback_zspage(class, src_zspage);
+>> -		migrate_write_unlock(src_zspage);
+>> -	}
+>>  
+>> -	if (dst_zspage) {
+>> +	if (dst_zspage)
+>>  		putback_zspage(class, dst_zspage);
+>> -		migrate_write_unlock(dst_zspage);
+>> -	}
