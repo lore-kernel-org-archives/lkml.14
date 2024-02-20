@@ -1,46 +1,46 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B50A6A325;
-	Tue, 20 Feb 2024 13:53:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF763745DE;
+	Tue, 20 Feb 2024 13:53:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708437220; cv=none; b=XiB9np3sRFj1DYk/XBUJU1AiXMYljy+RnL0X4N73I0sU73xdph1YKJVUPzOiH0hNocIqyn7ZNxlyBmBV/8Iv7r1Z30JrHVwntLz8MM7oOCrsoXzqswh/G1QRN7zKYaHQ9pIi21IiQm1dlWbr4OmK7j5bwp6c1Qom1KLrZXFSrgs=
+	t=1708437227; cv=none; b=JFeEb9bc6HlTPKpuhqtS9zrEW+CNuOudFwKfZ+6PwEvMKxf4lJS6Pc3xXWrUkFjL3GQ5HLwbeP7JGqtkDaxHyrcPw3VJvcafyRdZqKxlVwQfLSoUL0fB78PJjy4iJRbh9frKvk8Y62r5ia4VvWn2ptrYvGqsC2HQeJJl5C5z6UY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708437220; c=relaxed/simple;
-	bh=TNfpLvMdNStE9AqTbWTwF3b2YGkCtpaxKCpkoEa/i3M=;
+	s=arc-20240116; t=1708437227; c=relaxed/simple;
+	bh=8XWEOdKapLVhgNj0OiRoNdThFfoU0WXVrCU4na+Fs90=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=cXANRPNCN37xOr6JqOlULTVBExdghhQPou3ArjvaSAkx+yh9TQoZh3hHsqRvzxdSnxU3R+t7ZL/vMucHN4ijCHjnUCHw+7H30v/GFECYzRN6jxYuWiKHge5jMTiQPnjPXH30CNNsab+DyWO7Gm/uqQ83F5CtWI7+l/i/TKDH9Bg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=FZZ65AZb; arc=none smtp.client-ip=205.220.168.131
+	 MIME-Version:Content-Type; b=iOY08vz+aZnUcO1RjLyk5h9ZhtICZ7prFdJYwxCheWcLeHD7jjMl1zIgq2/LuCIuui1NDd9oNZ4mMkfStJSWQ6kn5CjV+dK6RGFp4UuFGgJYlntGH7KT3zsWD7oOqjC7yIzRGbnkSqh0GElj9y+eyZLyx9csuzhxWhf/Y5GqjTc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=TRX/qNwj; arc=none smtp.client-ip=205.220.180.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="FZZ65AZb"
-Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 41KA9hZP004175;
-	Tue, 20 Feb 2024 13:53:35 GMT
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="TRX/qNwj"
+Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 41KACT9J028655;
+	Tue, 20 Feb 2024 13:53:41 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
 	from:to:cc:subject:date:message-id:in-reply-to:references
 	:mime-version:content-transfer-encoding:content-type; s=
-	qcppdkim1; bh=UhjFKiNRki/99OML80iIrD51VgdtAEFOMJZgY7O/Nb8=; b=FZ
-	Z65AZbNU8PKRHHtGx3VgeV4pnKPhFrB9lfROoT89fbE71NuIckXqVZcB7lzoZFav
-	ty2AyWULBnrZittNt98GYzhg79RC06Jh4RapC0j4RgFtrvpXYMdWPXbKu3RUdico
-	dFkdSFhVSbXpoQq0AmF0uCkTUbBiyXLa/nvIQN14FUh8CX6916uLl5DgBSA1Kpyr
-	lfbZ4dv2mLuJISlRockSSOWVt1m6exELrsiPnJYCMPP5D1UUKnNfV11dSqtzowwM
-	xtkwY2gky3YvXg0AhrBeE5WbARoiAk+GEcuzW8YYQeXjwLUbgjqfUrNn1y2D6DH5
-	Slc1DcgWRCptYQa7TFUw==
-Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3wct390d5g-1
+	qcppdkim1; bh=+xUakRsrt3VKBLKGbRWgnEX+vZzasojdWPK4rBoSEO8=; b=TR
+	X/qNwjyjnD/i09etd1nWjTS577cKfMt0ob99j8Aynvzit17SmPuTFQItJWC6iLii
+	frJGjMD42UMECbJZDvNGlBe7MKRaQ9B48YRhc3wEbybh6b2W9+oh9r9mE4DR0Q1U
+	aOYR4WB8Xz/OsMThjVbUVQ86CPfi92SPPHgH1SGf4+oZHwulh3cgeLMx6jdo5KX9
+	kgex2yvpeZJfq0xA08TWOKczwCOa1Jz8+mhp399Zw25ToLSHh1lIrPvMbhY+4wTR
+	VzlNIg1J8Ltkqfx+dyNg+CoijYuLMvLoM47fXf+iV/dLZW/CoijFEgGJ7jQqfxZ9
+	zlrUlwDKg1S84SWDi1cw==
+Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3wct3d0d7f-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 20 Feb 2024 13:53:35 +0000 (GMT)
+	Tue, 20 Feb 2024 13:53:41 +0000 (GMT)
 Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 41KDrZ8a014721
+	by NALASPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 41KDrCNu005036
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 20 Feb 2024 13:53:35 GMT
+	Tue, 20 Feb 2024 13:53:12 GMT
 Received: from hu-jkona-hyd.qualcomm.com (10.80.80.8) by
  nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Tue, 20 Feb 2024 05:53:29 -0800
+ 15.2.1118.40; Tue, 20 Feb 2024 05:53:07 -0800
 From: Jagadeesh Kona <quic_jkona@quicinc.com>
 To: Bjorn Andersson <andersson@kernel.org>,
         Konrad Dybcio
@@ -61,9 +61,9 @@ CC: Vladimir Zapolskiy <vladimir.zapolskiy@linaro.org>,
         Imran Shaik <quic_imrashai@quicinc.com>,
         "Satya
  Priya Kakitapalli" <quic_skakitap@quicinc.com>
-Subject: [PATCH V2 6/6] arm64: dts: qcom: sm8650: Add video and camera clock controllers
-Date: Tue, 20 Feb 2024 19:21:21 +0530
-Message-ID: <20240220135121.22578-7-quic_jkona@quicinc.com>
+Subject: [PATCH V2 2/6] clk: qcom: videocc-sm8550: Add support for videocc XO clk ares
+Date: Tue, 20 Feb 2024 19:21:17 +0530
+Message-ID: <20240220135121.22578-3-quic_jkona@quicinc.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240220135121.22578-1-quic_jkona@quicinc.com>
 References: <20240220135121.22578-1-quic_jkona@quicinc.com>
@@ -79,71 +79,38 @@ X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
  nalasex01a.na.qualcomm.com (10.47.209.196)
 X-QCInternal: smtphost
 X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: 3vrUu6f55cYx1hkwcn5212WZREaWYh4W
-X-Proofpoint-GUID: 3vrUu6f55cYx1hkwcn5212WZREaWYh4W
+X-Proofpoint-ORIG-GUID: IZjPh_AEN4P3-UTpN6JsbYu3nvggOEof
+X-Proofpoint-GUID: IZjPh_AEN4P3-UTpN6JsbYu3nvggOEof
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
  definitions=2024-02-20_06,2024-02-20_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501 mlxscore=0
- lowpriorityscore=0 mlxlogscore=999 malwarescore=0 clxscore=1015
- spamscore=0 impostorscore=0 adultscore=0 suspectscore=0 bulkscore=0
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 phishscore=0
+ mlxscore=0 spamscore=0 mlxlogscore=999 bulkscore=0 clxscore=1015
+ adultscore=0 impostorscore=0 malwarescore=0 lowpriorityscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.19.0-2401310000 definitions=main-2402200100
 
-Add device nodes for video and camera clock controllers on Qualcomm
-SM8650 platform.
+Add support for videocc XO clk ares for consumer drivers to be
+able to request for this reset.
 
+Fixes: f53153a37969 ("clk: qcom: videocc-sm8550: Add video clock controller driver for SM8550")
 Signed-off-by: Jagadeesh Kona <quic_jkona@quicinc.com>
 ---
- arch/arm64/boot/dts/qcom/sm8650.dtsi | 28 ++++++++++++++++++++++++++++
- 1 file changed, 28 insertions(+)
+ drivers/clk/qcom/videocc-sm8550.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm64/boot/dts/qcom/sm8650.dtsi b/arch/arm64/boot/dts/qcom/sm8650.dtsi
-index d488b3b3265e..7021941660da 100644
---- a/arch/arm64/boot/dts/qcom/sm8650.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sm8650.dtsi
-@@ -4,6 +4,8 @@
-  */
+diff --git a/drivers/clk/qcom/videocc-sm8550.c b/drivers/clk/qcom/videocc-sm8550.c
+index d73f747d2474..3a19204a9063 100644
+--- a/drivers/clk/qcom/videocc-sm8550.c
++++ b/drivers/clk/qcom/videocc-sm8550.c
+@@ -380,6 +380,7 @@ static const struct qcom_reset_map video_cc_sm8550_resets[] = {
+ 	[CVP_VIDEO_CC_MVS1C_BCR] = { 0x8074 },
+ 	[VIDEO_CC_MVS0C_CLK_ARES] = { .reg = 0x8064, .bit = 2, .udelay = 1000 },
+ 	[VIDEO_CC_MVS1C_CLK_ARES] = { .reg = 0x8090, .bit = 2, .udelay = 1000 },
++	[VIDEO_CC_XO_CLK_ARES] = { .reg = 0x8124, .bit = 2, .udelay = 100 },
+ };
  
- #include <dt-bindings/clock/qcom,rpmh.h>
-+#include <dt-bindings/clock/qcom,sm8450-videocc.h>
-+#include <dt-bindings/clock/qcom,sm8650-camcc.h>
- #include <dt-bindings/clock/qcom,sm8650-dispcc.h>
- #include <dt-bindings/clock/qcom,sm8650-gcc.h>
- #include <dt-bindings/clock/qcom,sm8650-gpucc.h>
-@@ -3108,6 +3110,32 @@ opp-202000000 {
- 			};
- 		};
- 
-+		videocc: clock-controller@aaf0000 {
-+			compatible = "qcom,sm8650-videocc";
-+			reg = <0 0x0aaf0000 0 0x10000>;
-+			clocks = <&bi_tcxo_div2>,
-+				 <&gcc GCC_VIDEO_AHB_CLK>;
-+			power-domains = <&rpmhpd RPMHPD_MMCX>;
-+			required-opps = <&rpmhpd_opp_low_svs>;
-+			#clock-cells = <1>;
-+			#reset-cells = <1>;
-+			#power-domain-cells = <1>;
-+		};
-+
-+		camcc: clock-controller@ade0000 {
-+			compatible = "qcom,sm8650-camcc";
-+			reg = <0 0x0ade0000 0 0x20000>;
-+			clocks = <&gcc GCC_CAMERA_AHB_CLK>,
-+				 <&bi_tcxo_div2>,
-+				 <&bi_tcxo_ao_div2>,
-+				 <&sleep_clk>;
-+			power-domains = <&rpmhpd RPMHPD_MMCX>;
-+			required-opps = <&rpmhpd_opp_low_svs>;
-+			#clock-cells = <1>;
-+			#reset-cells = <1>;
-+			#power-domain-cells = <1>;
-+		};
-+
- 		mdss: display-subsystem@ae00000 {
- 			compatible = "qcom,sm8650-mdss";
- 			reg = <0 0x0ae00000 0 0x1000>;
+ static const struct regmap_config video_cc_sm8550_regmap_config = {
 -- 
 2.43.0
 
