@@ -1,150 +1,99 @@
-Received: from mail-wm1-f74.google.com (mail-wm1-f74.google.com [209.85.128.74])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3E4176415
-	for <linux-kernel@vger.kernel.org>; Tue, 20 Feb 2024 15:11:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49CF974E2A
+	for <linux-kernel@vger.kernel.org>; Tue, 20 Feb 2024 15:13:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708441909; cv=none; b=rsYbg5IQPaqzKDcw3b/NXH5/sGanjySuM2mawQyHnKS3I8oAhM6AR9qW8b1OvoMTgVn/aUgCLhg3Lku7CizYJzuuJYwuI0sRp/0hDq2xiW0kDI3yGCylb+j8IcWVO2zqL9wnAj7E5eAmjXFLvnwdE7MthzPKZcijOFLJjKkCWvI=
+	t=1708441992; cv=none; b=IqyUfArYLHS7s9y6NY+Po1mnB/WnuVaEf/h0TE97OhAFQAp/14Hfh+jIALj2aGJiYtfq+FEvHqpXYbMzDPVqPigDF/49zv8Rct51jH6sinXyLr7UzUOyk8gede4k2TknsPLSrlu9TasGYXX8/JlkgjiG6WUZ5lMuHEArCb3G1WM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708441909; c=relaxed/simple;
-	bh=iAbfp5RMm6S0VsTLeL0qLihHKZbBLamOM0a8x66sOYk=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=qe6wi1L7P14TOowR6ZHzfYQFBE1uN6ixvAblIoTDhH7nh48lQaFivwhytnCMk0dtvUYuziQZ4GTE4s8tDcwDY93RXVpj87Jkm81VlBziWD6F5GaLHzZtMZFwePXpxN+4lCh5Bp6bJs5S53QC312ggDtspky04tHnvW1EGcEaeNo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--sebastianene.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=SeB/23qB; arc=none smtp.client-ip=209.85.128.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--sebastianene.bounces.google.com
+	s=arc-20240116; t=1708441992; c=relaxed/simple;
+	bh=u9XzJSxwahXnlg4PyrwtpFwUO8y2aVA5WP+RZA2AYNw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MfToIf3TtYlydpR8p0/AA6zUIPLOJVFA0hwEd0ChXSsagqrC3bTLi2ScbReI8HsNqCr3J2SAW0E6sKKwFxZpGYOJiHfdg+7RRT69xgP/9egfEhr0f4gyvz1jba/UI/Q8sEQhix6m9lvCeAttLAfaYpLitYxEeypFQXnk2lnpDN4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pT5yJvk6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="SeB/23qB"
-Received: by mail-wm1-f74.google.com with SMTP id 5b1f17b1804b1-40f01cf71ceso32331395e9.1
-        for <linux-kernel@vger.kernel.org>; Tue, 20 Feb 2024 07:11:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1708441906; x=1709046706; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=H7oP8Hepk3ownDnPLORI/cfTnoWlrJNhVmX40NRmmOs=;
-        b=SeB/23qBiLQHIBwyrSbXj4AWgF3imIC5u4XC3L4VZjuNXwlzggVXLl0n9FvmRH0ALC
-         WJpeQIfqU45qhciXLALfD7O8mwOkM2mQygj1QrTTYNQTtKt6XUSI6tVeocrCZCmMVj4m
-         1LhJDDTxL+KMmkIG/ndedDTfMdWUuKwgPu15M7ovN/7RPpgXeBwbw8DtoQ7B6ILA7BZE
-         pym8pIgq+9sQKJJK6Dy3A0BMd2vZaHcO+OsOcGRRu+tDuQNmicsHT+wF06hE93UYIi94
-         irlp7VjGU5l10dAvKXrkA6+JWO2qOlIrEHc0fJgR2DqPOAjF1n0ojaLuwI+Lls5Uiot2
-         nHzQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708441906; x=1709046706;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=H7oP8Hepk3ownDnPLORI/cfTnoWlrJNhVmX40NRmmOs=;
-        b=v+IVTmH03VPMLZLsSQLI8/Yyw2V7KRqQ1i92wTBdBonuiBPR35YDj1MiB40jp0yQEk
-         uq8H6/kn6wXHVQqvbDOn/60N95Yu8ANwEgLSLA8RPNpgxhiMeyiblbCdg5/jhZifU1zj
-         ZSm/vUnHWJ2Zj1EsbusBOCNEgFiP25hgRVOSQ1saY+x/taAruLjtWooYoixLiT41qHN8
-         XILxGwW+Tm//D073SasfZtLGt4L5GRHD+d01/gtw34Yr39CpKD09Qg8IwAD9DHDisOKG
-         n9CWjqV+//S4ajr/bDfR/NplktoRcNbIpiIfgAP/LilBi+Ann1Uq2eDNrMCrhfkBmYFb
-         wwAw==
-X-Forwarded-Encrypted: i=1; AJvYcCUXQEHhgqJGvHFeO8fw83M4lGOeNWm4zZylUfBbvei6YdmrbcBrz5X1gfcgrreco4hjgu2AM4NPiob4JJZDKz92PZgISvDN+imHHmNx
-X-Gm-Message-State: AOJu0YwNYNiU2+okfiJkz+JBqNfZt1ikt53UjAZoEUGlimDqOhsQ7tSw
-	Z88VEq+ZRI1ufxNd2TuH/vpuuMAXIF4NU6tk7Yyb+Vg8H75tsS7UDHJkVIQVLDpNH3YXokxEXWj
-	+c0JzDxE1LUQCDL6HNcyfPkpgeA==
-X-Google-Smtp-Source: AGHT+IGB7BTGnDb3ZkCnAAs2rfcGHOBnu1LEeWRHD3gtXF/mQBI/OcbxgBVpxOTVwd/bVPF2OExz8lYc9i55R+XvxE0=
-X-Received: from sebkvm.c.googlers.com ([fda3:e722:ac3:cc00:28:9cb1:c0a8:cd5])
- (user=sebastianene job=sendgmr) by 2002:a05:600c:a:b0:411:ea5e:6142 with SMTP
- id g10-20020a05600c000a00b00411ea5e6142mr115684wmc.2.1708441906396; Tue, 20
- Feb 2024 07:11:46 -0800 (PST)
-Date: Tue, 20 Feb 2024 15:10:35 +0000
-In-Reply-To: <20240220151035.327199-1-sebastianene@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pT5yJvk6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9E822C433F1;
+	Tue, 20 Feb 2024 15:13:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1708441991;
+	bh=u9XzJSxwahXnlg4PyrwtpFwUO8y2aVA5WP+RZA2AYNw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=pT5yJvk6flBYCPEf/x8H0WbdPgXKvQogS4rcbkcykwsKObMLyUGKjKNkzA/kmPd92
+	 kXBDan9Pow1V7tosUgFrxMMRGTtaq7P1wOW20Q1Q10EaJkWlxrjxYwq+npuPEsGWyM
+	 XBzuYQ4Ly1arPgB4zir2OW28hAIhzHoylh9onaS1v/CQwr6HH5qV/pqM+nMZULhSRr
+	 fKItwbOmfXne58R8RqPkyQPUOSJE+LtP0H0IzA6AdTSvvGPUqdkilIWwusDwUj5P0B
+	 7+f5W41p3xv+XiRJoypp6Qseb3WLklD7PssD2ULw+hMXcDlES7nrlWhumjaOHEvk6o
+	 jIn5XLG/s/MNw==
+Date: Tue, 20 Feb 2024 15:13:07 +0000
+From: Mark Brown <broonie@kernel.org>
+To: Anshuman Khandual <anshuman.khandual@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V2] arm64/sysreg: Update ID_AA64DFR0_EL1 register
+Message-ID: <bea8006b-4f4e-44e8-af68-3a52f8bace73@sirena.org.uk>
+References: <20240220034829.3098373-1-anshuman.khandual@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20240220151035.327199-1-sebastianene@google.com>
-X-Mailer: git-send-email 2.44.0.rc0.258.g7320e95886-goog
-Message-ID: <20240220151035.327199-7-sebastianene@google.com>
-Subject: [PATCH v6 6/6] KVM: arm64: Expose guest stage-2 pagetable config to debugfs
-From: Sebastian Ene <sebastianene@google.com>
-To: catalin.marinas@arm.com, gshan@redhat.com, james.morse@arm.com, 
-	mark.rutland@arm.com, maz@kernel.org, oliver.upton@linux.dev, 
-	rananta@google.com, ricarkol@google.com, ryan.roberts@arm.com, 
-	shahuang@redhat.com, suzuki.poulose@arm.com, will@kernel.org, 
-	yuzenghui@huawei.com
-Cc: kvmarm@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, kernel-team@android.com, vdonnefort@google.com, 
-	Sebastian Ene <sebastianene@google.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="pRlXzp/2Iqf0vvJx"
+Content-Disposition: inline
+In-Reply-To: <20240220034829.3098373-1-anshuman.khandual@arm.com>
+X-Cookie: E = MC ** 2 +- 3db
 
-Make the start level and the IPA bits properties available in the
-virtual machine debugfs directory. Make sure that the KVM structure
-doesn't disappear behind our back and keep a reference to the KVM struct
-while these files are opened.
 
-Signed-off-by: Sebastian Ene <sebastianene@google.com>
----
- arch/arm64/kvm/ptdump.c | 50 +++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 50 insertions(+)
+--pRlXzp/2Iqf0vvJx
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-diff --git a/arch/arm64/kvm/ptdump.c b/arch/arm64/kvm/ptdump.c
-index 2c4e0c122d23..a68a22592e97 100644
---- a/arch/arm64/kvm/ptdump.c
-+++ b/arch/arm64/kvm/ptdump.c
-@@ -213,8 +213,58 @@ static const struct file_operations kvm_ptdump_guest_fops = {
- 	.release	= kvm_ptdump_guest_close,
- };
- 
-+static int kvm_pgtable_debugfs_show(struct seq_file *m, void *)
-+{
-+	const struct file *file = m->file;
-+	struct kvm_pgtable *pgtable = m->private;
-+
-+	if (!strcmp(file_dentry(file)->d_iname, "ipa_range"))
-+		seq_printf(m, "%2u\n", pgtable->ia_bits);
-+	else if (!strcmp(file_dentry(file)->d_iname, "stage2_levels"))
-+		seq_printf(m, "%1d\n", pgtable->start_level);
-+	return 0;
-+}
-+
-+static int kvm_pgtable_debugfs_open(struct inode *m, struct file *file)
-+{
-+	struct kvm *kvm = m->i_private;
-+	struct kvm_s2_mmu *mmu;
-+	struct kvm_pgtable *pgtable;
-+	int ret;
-+
-+	if (!kvm_get_kvm_safe(kvm))
-+		return -ENOENT;
-+
-+	mmu = &kvm->arch.mmu;
-+	pgtable = mmu->pgt;
-+
-+	ret = single_open(file, kvm_pgtable_debugfs_show, pgtable);
-+	if (ret < 0)
-+		kvm_put_kvm(kvm);
-+	return ret;
-+}
-+
-+static int kvm_pgtable_debugfs_close(struct inode *m, struct file *file)
-+{
-+	struct kvm *kvm = m->i_private;
-+
-+	kvm_put_kvm(kvm);
-+	return single_release(m, file);
-+}
-+
-+static const struct file_operations kvm_pgtable_debugfs_fops = {
-+	.open		= kvm_pgtable_debugfs_open,
-+	.read		= seq_read,
-+	.llseek		= seq_lseek,
-+	.release	= kvm_pgtable_debugfs_close,
-+};
-+
- void kvm_ptdump_guest_register(struct kvm *kvm)
- {
- 	debugfs_create_file("stage2_page_tables", 0400, kvm->debugfs_dentry,
- 			    kvm, &kvm_ptdump_guest_fops);
-+	debugfs_create_file("ipa_range", 0400, kvm->debugfs_dentry, kvm,
-+			    &kvm_pgtable_debugfs_fops);
-+	debugfs_create_file("stage2_levels", 0400, kvm->debugfs_dentry,
-+			    kvm, &kvm_pgtable_debugfs_fops);
- }
--- 
-2.44.0.rc0.258.g7320e95886-goog
+On Tue, Feb 20, 2024 at 09:18:29AM +0530, Anshuman Khandual wrote:
+> This updates ID_AA64DFR0_EL1.PMSVer and ID_AA64DFR0_EL1.DebugVer register
+> fields as per the definitions based on DDI0601 2023-12.
 
+Reviewed-by: Mark Brown <broonie@kernel.org>
+
+> @@ -1223,6 +1223,7 @@ UnsignedEnum	35:32	PMSVer
+>  	0b0010	V1P1
+>  	0b0011	V1P2
+>  	0b0100	V1P3
+> +	0b0101	V1P4
+>  EndEnum
+
+There's also a FEAT_SPE_SME documented in the text but not in the table
+of enumerated values (I've reported this) - it makes sense to me to skip
+this until the XML is internally consistent.
+
+>  Field	31:28	CTX_CMPs
+>  Res0	27:24
+> @@ -1249,6 +1250,7 @@ UnsignedEnum	3:0	DebugVer
+>  	0b1000	V8P2
+>  	0b1001	V8P4
+>  	0b1010	V8P8
+> +	0b1011	V8P9
+>  EndEnum
+
+There's an IMPDEF value defined for this like the 32 bit equivalent but
+that was a preexisting issue.
+
+--pRlXzp/2Iqf0vvJx
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmXUwYMACgkQJNaLcl1U
+h9AfJAf9EgSWYZatFiomGhYXIxcd639txspikzYCdkog8+OPQe8z0W0fI8NVVR1m
+VekaiqEUUvVJDdgZxq6mVnfEjehEcJMmZAM58MzRbvnrbjAPmw2N0p0+xhb0ciuU
+s0AfFhL8EBtQdaewN6oPqqGSV4+Vh1bRaxL6N9nFrRoMsKfgvCwn3Sn02fh8sqCa
+wshJ152hni7hP2MR39gVUGQ6ykOKM3jxvLRZ7t2Mv9OVRcWK4PVDNH3iL3+uI+ul
+LXjvKPtVqAajfQfpLaBGr4gHwqcWwT1wa0Bo0SBxA2KGx1xdJfkJFMCpXdOGMAL/
+dBIPvPpj1Hn9Ah5zhMASgpX5uRw5Uw==
+=a+nz
+-----END PGP SIGNATURE-----
+
+--pRlXzp/2Iqf0vvJx--
