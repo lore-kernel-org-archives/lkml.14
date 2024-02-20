@@ -1,258 +1,151 @@
-Received: from APC01-PSA-obe.outbound.protection.outlook.com (mail-psaapc01olkn2065.outbound.protection.outlook.com [40.92.52.65])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E822C6F53C;
-	Tue, 20 Feb 2024 14:57:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.52.65
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708441039; cv=fail; b=GZG3Wa+IKr1Onnbwi8rqdh8G6LG4hvNGUDRiNZepRH5u1GU9uselvKj78UpnkZtroJYSiRH8sqLfk9vwYe7VQpqznDNfM0uhnuw1inYzHynBe9YAO9GfrLJ+adDg3WaOak9qxbgxcEHs1VqEUKjcUXHfDUQil4i1+1y7iyG3SB8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708441039; c=relaxed/simple;
-	bh=0dV0o2GEDnlWMT/YqHZsv9iV6huXK9I/mgAl3274FWo=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=o9n8i0xTVwVdGOfWLvcMySYVnenVhPnV5Q1z41n9by8qg6f78HJQUNgdxZiOpQehviD7zjf3kfAjTy2+XyV+9AouYmpu8HFl62EH4AQcZqf/uQMyz81Rhl2/9EmaJHAD+BoNzE7sONYeXcyBBzUfDZOVk7Ft7BhAyX4DadjcT/A=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=fAEBhUGy; arc=fail smtp.client-ip=40.92.52.65
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B962B67E91;
+	Tue, 20 Feb 2024 14:59:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1708441189; cv=none; b=QDT2xJgRECCIp3P0Cf1eOVDMGwKV98+ZczTw9sush0Ne5/oGy8ngDEwANy42OADlNnhaz2XvjrQxiTLAc4Y7Ag/C9k5s0gaFecVeDvFSnAAdZaNjg/08rl6ja7v88AocgjvERQYklh6KUSz7ZZav6qm9DAN0TBLkXgKy0V6wp8c=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1708441189; c=relaxed/simple;
+	bh=+6dpGBqTRme9HOoPA5CvCblwTs/y4BuSqvP6fWdqjs8=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=Mpx13h8f2j9sH0PUjpnPY38TQTTDuvilrMK83fEc6epMJMgTNQ22fQJ8c1bmsV5xwWzERTlcgs3KHmZlRDP/9fX4lrngXaDRo+DgvsCxfaaBg5oqNh9SSjLNCA/Q4e/GE++eFgS0u4hnPiBMNLOFAGizGEPG2LZ7SrwxZ146Hl0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=1MHaQJL8; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=KvYwjIm3; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=1MHaQJL8; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=KvYwjIm3; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="fAEBhUGy"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=bmRswL0gkbsv/ZJZx8T3NWzNYu6FPq0UUWR3y8WIZjhhNXu4S7nO1yoci5B98jNVcLiSv8L1gxMCm1KuE7g1K+MWsRxhhI5XSvdfPJpfLdAkbi1WhsD0x0rA4bhN7izNp0J6AxXbM7D116LdUkiQ5JR9S+twgPsPK/76vZTgAt2hWB0KfXqHVXkathqoBxcuxdmLC2C4O3LTG9awPqrCd+8fs/RGEE2nIeiPPzE673PtIxX7weYoY48qykl+wsGNJ3AKa5tURea0zm+HtNgTw0QCYsDYIg41uf8d59VOmBJgZ012NNbUPjLOSzz+EU7kvWPG4PwQpM86UWQMyxgSTA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=on+q6omrZIA0FBW2dndMuhZyoAnmFamtB1/ZXt+x+5E=;
- b=EMXcLWZPnG0Fka8lBQtZcNcEAePcNWUql9mON2iCL+EJVePZcB+YEpwWZbtfVCxWZqJzXuVM9blwhR4G2PwDPflfILKcdMhNmDGp7RVOvzQyrTWWzsW43944kneh5y8du8mHyOWZeS9T8GtMkuoCb+q/WBpJxteEU7qbSQXAUnDDId7LB7oXESiqfeFgBpGRK9D/p0y0Z0NTUIEbDUpO+o2xN2ixMbv8rfa6/FmQW2cjiyNyAq2uQUI0ti720X/3mFLTLGrTLcN5Q+Vzi1YG0o8Msv2MLlYBElqfHaZr4ghfDPI6uPtDFgsXfONPdeIJZO0PLpdnxWrVTiXRS+XmNg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=on+q6omrZIA0FBW2dndMuhZyoAnmFamtB1/ZXt+x+5E=;
- b=fAEBhUGyDlQwj54iw2Y2XLNo/5vu2iV0eqcjEp/Fmu7fx3xan9IjMNYuJ+OZnxR43McnnXKC9n7uA9FQE9EH4DIfPAgCkPrj70MDh2LpgBu/Covq0QqXRa0pMOxr9HqI3uUqtrVq0CYRUoLkFq6FeEr8vJ/+o66ufh3o6drTVEPy8zahOE3Go4c2IOpXqt3AO7gZ+9xP5rVqh4SMCZabtiVA821DE+M9nROGQB3FcG2MK9er0nYEdE0OBJmffleYFDEwqk80Z43uIijG17dNmnzMXa50YhkLmb2WdOFNKnMaa103qQokRQ7QYXZS2Sp/6iGasCaxGbEEQI4WZJM2tw==
-Received: from SEZPR06MB6959.apcprd06.prod.outlook.com (2603:1096:101:1ed::14)
- by SEZPR06MB7363.apcprd06.prod.outlook.com (2603:1096:101:254::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7292.39; Tue, 20 Feb
- 2024 14:57:10 +0000
-Received: from SEZPR06MB6959.apcprd06.prod.outlook.com
- ([fe80::53da:a8a:83cb:b9ad]) by SEZPR06MB6959.apcprd06.prod.outlook.com
- ([fe80::53da:a8a:83cb:b9ad%4]) with mapi id 15.20.7292.036; Tue, 20 Feb 2024
- 14:57:10 +0000
-Message-ID:
- <SEZPR06MB695992D70F6002F7568B6D9A96502@SEZPR06MB6959.apcprd06.prod.outlook.com>
-Date: Tue, 20 Feb 2024 22:57:06 +0800
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next v3 3/6] net: hisilicon: add support for
- hisi_femac core on Hi3798MV200
-Content-Language: en-US
-To: Maxime Chevallier <maxime.chevallier@bootlin.com>,
- Yang Xiwen via B4 Relay <devnull+forbidden405.outlook.com@kernel.org>
-Cc: Yisen Zhuang <yisen.zhuang@huawei.com>,
- Salil Mehta <salil.mehta@huawei.com>, "David S. Miller"
- <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
- Heiner Kallweit <hkallweit1@gmail.com>, Russell King
- <linux@armlinux.org.uk>, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
- Simon Horman <horms@kernel.org>
-References: <20240220-net-v3-0-b68e5b75e765@outlook.com>
- <20240220-net-v3-3-b68e5b75e765@outlook.com>
- <20240220154737.705c33e5@device-28.home>
-From: Yang Xiwen <forbidden405@outlook.com>
-In-Reply-To: <20240220154737.705c33e5@device-28.home>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-TMN: [V1VpcjzCMQNMWgVsXNmC8vJgZFvYVLTq2elQKYTUF9UM+z/FKFHC1EPt/J8rEpAA]
-X-ClientProxiedBy: TYAPR01CA0066.jpnprd01.prod.outlook.com
- (2603:1096:404:2b::30) To SEZPR06MB6959.apcprd06.prod.outlook.com
- (2603:1096:101:1ed::14)
-X-Microsoft-Original-Message-ID:
- <366a6322-6456-401a-abee-29a116a3c59b@outlook.com>
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="1MHaQJL8";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="KvYwjIm3";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="1MHaQJL8";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="KvYwjIm3"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id C43111F898;
+	Tue, 20 Feb 2024 14:59:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1708441185; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Mvro3zekXoZ0IqphOQMb6DozUfJPZwilwfAcT3oRVog=;
+	b=1MHaQJL8i7D8jEJnULlFdqwVhl0mVJmTxyTAfnOT33B3Ex2QuFyhxl/cqxfxLO5aYih85i
+	7nflvsvX6whA4y8pu7ig/SCRzXkTON+G+OEOHDN11Za0LtUBpvU0LQ742MdGbVvgtkqrnr
+	3eOSj79u8cjfnuTj/hh5AQSc4GhghBo=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1708441185;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Mvro3zekXoZ0IqphOQMb6DozUfJPZwilwfAcT3oRVog=;
+	b=KvYwjIm34gjCXKk+/Khnf2ICGcGzqO8Mmy5RtPzBxH3pdVakyzgegMS4uu4Gjt7GLDZfY3
+	7/2yo2ZijfeAGtBg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1708441185; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Mvro3zekXoZ0IqphOQMb6DozUfJPZwilwfAcT3oRVog=;
+	b=1MHaQJL8i7D8jEJnULlFdqwVhl0mVJmTxyTAfnOT33B3Ex2QuFyhxl/cqxfxLO5aYih85i
+	7nflvsvX6whA4y8pu7ig/SCRzXkTON+G+OEOHDN11Za0LtUBpvU0LQ742MdGbVvgtkqrnr
+	3eOSj79u8cjfnuTj/hh5AQSc4GhghBo=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1708441185;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Mvro3zekXoZ0IqphOQMb6DozUfJPZwilwfAcT3oRVog=;
+	b=KvYwjIm34gjCXKk+/Khnf2ICGcGzqO8Mmy5RtPzBxH3pdVakyzgegMS4uu4Gjt7GLDZfY3
+	7/2yo2ZijfeAGtBg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 7FD76139D0;
+	Tue, 20 Feb 2024 14:59:45 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id pBv1GGG+1GU4PwAAD6G6ig
+	(envelope-from <krisman@suse.de>); Tue, 20 Feb 2024 14:59:45 +0000
+From: Gabriel Krisman Bertazi <krisman@suse.de>
+To: Eugen Hristev <eugen.hristev@collabora.com>
+Cc: tytso@mit.edu,  adilger.kernel@dilger.ca,  linux-ext4@vger.kernel.org,
+  jaegeuk@kernel.org,  chao@kernel.org,
+  linux-f2fs-devel@lists.sourceforge.net,  linux-fsdevel@vger.kernel.org,
+  linux-kernel@vger.kernel.org,  kernel@collabora.com,
+  viro@zeniv.linux.org.uk,  brauner@kernel.org,  jack@suse.cz,  Gabriel
+ Krisman Bertazi <krisman@collabora.com>
+Subject: Re: [PATCH v10 3/8] libfs: Introduce case-insensitive string
+ comparison helper
+In-Reply-To: <fb32fc72-5434-4852-b7e9-f63fc03a8248@collabora.com> (Eugen
+	Hristev's message of "Tue, 20 Feb 2024 09:36:40 +0200")
+Organization: SUSE
+References: <20240215042654.359210-1-eugen.hristev@collabora.com>
+	<20240215042654.359210-4-eugen.hristev@collabora.com>
+	<87zfw0bd6y.fsf@mailhost.krisman.be>
+	<50d2afaa-fd7e-4772-ac84-24e8994bfba8@collabora.com>
+	<87msrwbj18.fsf@mailhost.krisman.be>
+	<fb32fc72-5434-4852-b7e9-f63fc03a8248@collabora.com>
+Date: Tue, 20 Feb 2024 09:59:44 -0500
+Message-ID: <871q97b2qn.fsf@mailhost.krisman.be>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SEZPR06MB6959:EE_|SEZPR06MB7363:EE_
-X-MS-Office365-Filtering-Correlation-Id: be08d998-e2e4-412f-f8aa-08dc322436ce
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	lYIw/cd5HoTs2YhWzrAmeQTAsVn1DmnOk92u4FcIL3I/OefUqrzSxrZpHQ9GSANoa7Cb0DZwjJwJ74LcwX6gtdc3v//zixIe6tkUoxbUicS4XuH3QYqmQ09fTqfx3eiHW50BUjSA8p2r/dWStmrismFm5AVGYr4QADRpmPhExz4CoSjTbOKBqarbZSlyiwvtbrVqRCJRM3IskZRrPw5gkLETVnj8/5gA2m6fklyRhm800+ZfgjeCu5IAiQelZ4aX/540qY42GJcqNymYB8zNee+5IP+TnoZqEnf7OvioBAqyKYhhn8yxPyo+6N0tC2Xp0sS9VMMGvAhW3IQb7z7kXpZGhyg2mid77P+HxBZeVmU3L+qRV9EDfFv3i2cGpF8zZvlXuzzzBnFuiD8AWZAEo6KyDGctuVF9Haq6oKgDBUgXuTQoVq/HKOeWG+II/NKssrrGiBnk3gK2zczIHR6CWaLuvP6xLMsG73RhmkDTsZUDKqjXoMdNdYSzADKcQOF/Gr0N2Sbn76k0bRH6l/tgWEhZRHaoLD9w4jqvUM+MKa2kCh8TX9n0wyhWbVPE3GkG
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?OC9neldta1dwWjNXSEwvdjE1UmJydjEydkxEZU10UTJiMS8zUW43SlJna1hi?=
- =?utf-8?B?YW5yeW5wQnhGYTEvQUM2NStRVlByQlZvN1B6bXg5S0RQMmU3ZnkxRldmTlIx?=
- =?utf-8?B?RXlEVUluL0xOaDZWZ0NtU2Z5dkRGVTJvbnI4L1BlTGRna0ppTFNVa3N4TzEx?=
- =?utf-8?B?dEY2K040UjFDY3dITkhRb0xnajBtaTF2OTZOMFdoVklISHh6TXJlM3hnQXNh?=
- =?utf-8?B?VUZ6aDJGaUVjQ0o0UEdDeldzVUxyR0ZqdjVYYkNVTDhqM21nYU1NaGt0TTVa?=
- =?utf-8?B?ajdaYzNudDdnQUNkdk5iU3lWTGFyY2xKSmh4c3o0UWdrTUVDS3lqcjhabDkv?=
- =?utf-8?B?cFJ1N05WUm9RcGhqSEloMkhwanBaWkJ3cGk4Z2JyZE1RSnhyWnFxTUF1R2JN?=
- =?utf-8?B?S3lQMjJId2ZBOEEyV1hkTEFLVVZ1d1AzdWozd1B4SWRTL1dUcklqc1RObTJR?=
- =?utf-8?B?SFBaVkhZRmRMSEMwTWpjb3h3N3IvWkhxdk5FNGZabmVqTTRaT2hMdlFKZXJy?=
- =?utf-8?B?MW9RdGxNQUJ5S2xYajdJNVd6endZL1Ixa3R1MEJtVk5BT0szaXRQV0txVlU5?=
- =?utf-8?B?cFNkYXZXc09Vek5UQW04UktsV2F2NElEYXcreVZvWmFHQjNxUzNyR3NpRGZh?=
- =?utf-8?B?by9BM2VRL0xMekJmQy9mVHd1QVVIN014dVJVNFQwWFlpbXorcnRIMmZNeG1j?=
- =?utf-8?B?UzROdG1ValhtWjJYS3JiSFBVbTU2Y0dpTWFTeUI1RnYxQnhubUVMSmk4bG4r?=
- =?utf-8?B?bFNoTy9Ud2YxbTREZVFObTBJUUVhMW9Oa29vNWFCNE5ORTFjamhoVk1nRVkz?=
- =?utf-8?B?R0dITGxINDVaUm53MEFWbVY0dW04aWR4UEVxb1MzYmYxZGZoc0RpaE5MYUNG?=
- =?utf-8?B?dEhHQ1Y4Rys1eG5qbVNkQnNSZko0VlhvRUg3eXRwVzJicjJaVHZLcWhyaVky?=
- =?utf-8?B?RlByeU9MSDROZVZBd2xvZFJUcjNqN0VmOXU0YU1kejdSNjVBL29qMEd4aHpX?=
- =?utf-8?B?YkczdUw1eSs1cW1mY0FHdzFUQ1gwbDE4NlRZOWsweExURnlSeDgyWG1jcUhY?=
- =?utf-8?B?SlI0YXd1NE4vaGN4SDFBbkZjY0RFWFlDb3FpTXB6NTgrY1AyeXlNNG14bHZl?=
- =?utf-8?B?eDFTTVRyUERpRDVBV2JoWUlFSlY4WGF2amlLRU13SkdtZldzRUlZS3JDNWZn?=
- =?utf-8?B?czZFendXMXlKa2E4ditPUG96QUhic1QxVS9uV1RoeXRwckF0MDlQbDNHZW5O?=
- =?utf-8?B?Y2RrbGZRTGZEK0QxKzd4azMzeUVubGNRTElLazVXQ2JBT2tZeExzdnFpS3Bk?=
- =?utf-8?B?YWV4enVaNDZDTEFieVZaZDlXNkFhY2dPV1pTWGgvbUhmcGttTFU3a2d2NUpO?=
- =?utf-8?B?UTNNSk0wVUU2NEZZTmdDekFRT0g1cFJBQ2JBRjlUbFcrQ3VPOGJXcFN4VWJB?=
- =?utf-8?B?TDc3bHN6a0wwWDNTVFhkbkVUam9VdXNPdFVLa0QreEs1TVArcmFhQm1wb2tO?=
- =?utf-8?B?VGVmRkdzbTRubUtqZ29GMzRVV0hjZEZMRFhnQVZ0UGpPZXlYNTFWaFc2dGdo?=
- =?utf-8?B?eVBhMGE1NHVmM1k2T1RaR0wyQ1pIWTNLaGJTbmV5aUkzTjdIWm5pSGRjQThp?=
- =?utf-8?B?UysyWXhndkdFV3JQeGZLU01CdkxmSlJYSms1bmpjWEluTUJHVFJSUDNTcHMv?=
- =?utf-8?B?VzNoVnJDY291RlJZQ1NUZXRTcFFOQ24yR1lGTWRPcjlPYmRIOGRkMDlLamNU?=
- =?utf-8?Q?yX6ViS9w8CNfYD7G2csHKcfHCYOG023boLSa3O0?=
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: be08d998-e2e4-412f-f8aa-08dc322436ce
-X-MS-Exchange-CrossTenant-AuthSource: SEZPR06MB6959.apcprd06.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Feb 2024 14:57:10.1115
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
-	00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SEZPR06MB7363
+Content-Type: text/plain
+Authentication-Results: smtp-out2.suse.de;
+	none
+X-Spamd-Result: default: False [-0.90 / 50.00];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 TO_DN_SOME(0.00)[];
+	 HAS_ORG_HEADER(0.00)[];
+	 RCVD_COUNT_THREE(0.00)[3];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 BAYES_HAM(-0.80)[84.80%];
+	 ARC_NA(0.00)[];
+	 FROM_HAS_DN(0.00)[];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 MIME_GOOD(-0.10)[text/plain];
+	 DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	 RCPT_COUNT_TWELVE(0.00)[14];
+	 DBL_BLOCKED_OPENRESOLVER(0.00)[collabora.com:email];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 RCVD_TLS_ALL(0.00)[]
+X-Spam-Level: 
+X-Spam-Flag: NO
+X-Spam-Score: -0.90
 
-On 2/20/2024 10:47 PM, Maxime Chevallier wrote:
-> Hello,
+Eugen Hristev <eugen.hristev@collabora.com> writes:
+
+> Okay, I am changing it.
 >
-> On Tue, 20 Feb 2024 03:57:38 +0800
-> Yang Xiwen via B4 Relay <devnull+forbidden405.outlook.com@kernel.org>
-> wrote:
+> By the way, is this supposed to work like this on case-insensitive directories ?
 >
->> From: Yang Xiwen <forbidden405@outlook.com>
->>
->> Register the sub MDIO bus if it is found. Also implement the internal
->> PHY reset procedure as needed.
->>
->> Note it's unable to put the MDIO bus node outside of MAC controller
->> (i.e. at the same level in the parent bus node). Because we need to
->> control all clocks and resets in FEMAC driver due to the phy reset
->> procedure. So the clocks can't be assigned to MDIO bus device, which is
->> an essential resource for the MDIO bus to work.
->>
->> No backward compatibility is maintained since the only existing
->> user(Hi3516DV300) has not received any updates from HiSilicon for about
->> 8 years already. And till today, no mainline dts for this SoC is found.
->> It seems unlikely that there are still existing mainline Hi3516DV300
->> users. The effort to maintain the old binding seems gain a little.
->>
->> Signed-off-by: Yang Xiwen <forbidden405@outlook.com>
-> Besides what Andrew and Simon already mentionned, I have a few other
-> small comments :
+> user@debian-rockchip-rock5b-rk3588:~$ ls -la /media/CI_dir/*cuc
+> ls: cannot access '/media/CI_dir/*cuc': No such file or directory
+> user@debian-rockchip-rock5b-rk3588:~$ ls -la /media/CI_dir/*CUC
+> -rw-r--r-- 1 root root 0 Feb 12 17:47 /media/CI_dir/CUC
+> user@debian-rockchip-rock5b-rk3588:~$ ls -la /media/CI_dir/cuc
+> -rw-r--r-- 1 root root 0 Feb 12 17:47 /media/CI_dir/cuc
+> user@debian-rockchip-rock5b-rk3588:~$
 >
-> [...]
 >
->> @@ -797,23 +816,22 @@ static int hisi_femac_drv_probe(struct platform_device *pdev)
->>   		goto out_free_netdev;
->>   	}
->>   
->> -	priv->clk = devm_clk_get(&pdev->dev, NULL);
->> -	if (IS_ERR(priv->clk)) {
->> -		dev_err(dev, "failed to get clk\n");
->> -		ret = -ENODEV;
->> +	ret = devm_clk_bulk_get_all(&pdev->dev, &priv->clks);
->> +	if (ret < 0 || ret != CLK_NUM) {
->> +		dev_err(dev, "failed to get clk bulk: %d\n", ret);
->>   		goto out_free_netdev;
->>   	}
->>   
->> -	ret = clk_prepare_enable(priv->clk);
->> +	ret = clk_bulk_prepare_enable(CLK_NUM, priv->clks);
->>   	if (ret) {
->> -		dev_err(dev, "failed to enable clk %d\n", ret);
->> +		dev_err(dev, "failed to enable clk bulk: %d\n", ret);
->>   		goto out_free_netdev;
->>   	}
->>   
->>   	priv->mac_rst = devm_reset_control_get(dev, "mac");
->>   	if (IS_ERR(priv->mac_rst)) {
->>   		ret = PTR_ERR(priv->mac_rst);
->> -		goto out_disable_clk;
->> +		goto out_free_netdev;
-> When you return here (or even later), you are missing a call to
-> "clk_bulk_disable_unprepare" in the cleanup path
+> basically wildcards don't work.
 
+Yes, at least from a kernel point of view.  Your shell does wildcards in
+userspace, probably by doing getdents and then comparing with possible
+matches.  Since the shell itself is not case-insensitive aware, its
+comparison is case-sensitive, and you get these apparent weird
+semantics.
 
-I didn't notice that. Originally i'm using devm_clk_get_enabled() so 
-it's not needed.
-
-
-Maybe we can add a devm_clk_bulk_get_prepared_enabled() API to clk 
-framework too.
-
-
->
->>   	}
->>   	hisi_femac_core_reset(priv);
->>   
->> @@ -826,15 +844,34 @@ static int hisi_femac_drv_probe(struct platform_device *pdev)
->>   						 priv->phy_reset_delays,
->>   						 DELAYS_NUM);
->>   		if (ret)
->> -			goto out_disable_clk;
->> +			goto out_free_netdev;
->>   		hisi_femac_phy_reset(priv);
->>   	}
->>   
->> +	// Register the optional MDIO bus
-> I think this comment style should be avoided, in favor of C-style
-> comments ( /* blabla */ )
-
-
-Will fix in next release.
-
-
->
->> +	for_each_available_child_of_node(node, mdio_np) {
->> +		if (of_node_name_prefix(mdio_np, "mdio")) {
->> +			priv->mdio_pdev = of_platform_device_create(mdio_np, NULL, dev);
->> +			of_node_put(mdio_np);
->> +			if (!priv->mdio_pdev) {
->> +				dev_err(dev, "failed to register MDIO bus device\n");
->> +				ret = -ENODEV;
->> +				goto out_free_netdev;
->> +			}
->> +			mdio_registered = true;
->> +			break;
->> +		}
->> +		of_node_put(mdio_np);
->> +	}
->> +
->> +	if (!mdio_registered)
->> +		dev_warn(dev, "MDIO subnode not found. This is usually a bug.\n");
->> +
->>   	phy = of_phy_get_and_connect(ndev, node, hisi_femac_adjust_link);
->>   	if (!phy) {
->>   		dev_err(dev, "connect to PHY failed!\n");
->>   		ret = -ENODEV;
->> -		goto out_disable_clk;
->> +		goto out_unregister_mdio_bus;
->>   	}
->>   
->>   	phy_attached_print(phy, "phy_id=0x%.8lx, phy_mode=%s\n",
-> Thanks,
->
-> Maxime
-
+Not ideal from a user point of view.  But not a kernel bug.  If it
+pushes people away from using case-insensitive directories in their
+day-to-day work and leave it to only be used by Windows compatibility
+layers, maybe that's a win? :)
 
 -- 
-Regards,
-Yang Xiwen
-
+Gabriel Krisman Bertazi
