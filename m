@@ -1,122 +1,156 @@
-Received: from wfout2-smtp.messagingengine.com (wfout2-smtp.messagingengine.com [64.147.123.145])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A260D745F7
-	for <linux-kernel@vger.kernel.org>; Tue, 20 Feb 2024 15:10:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.145
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B30274E17
+	for <linux-kernel@vger.kernel.org>; Tue, 20 Feb 2024 15:10:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708441821; cv=none; b=hSZfm2toPf6coH8+qbDWNTZpJm5GqqKjhqkeraG7UUmk43m3xe3tf5Mgo55l7Pag7lEpOID9SHfc5pUE43Luu9PNsUbEHXeM6j667wPpbh7ywlHLdLoTu/pxDgaO5u2WIDr/IFb+yCIJdNk5/OdcLsc8ytUzS/0MvRMDUeeJSIs=
+	t=1708441843; cv=none; b=fn9bevkPF7tJajIpn8YrCflckDrpB1PfTjwoEig9OcpCTaNBeCDbh2D19HOnEM9Xh5hAgPDA6FGlTdJMVUWuIMPWpwaiOopKLfIcushjOlpJijPz5qKregUSTbp0QcS6vMS68n6aFu2TzbprTv1wGDMIWq1Eb6JCM9sPvneFibo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708441821; c=relaxed/simple;
-	bh=8uKXtErleUTOrIMNYktGodmojGKjihEgbYdtl9mFGgo=;
-	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
-	 Subject:Content-Type; b=ZHGPiB/8RFnyapIA7IZY2TtRg5yobhG6fkZMgW+W0bTaToGYm/D/eRuIvQTXrUiWwxurzuiEcw7VZ2o626a/H/Xizl3fgbyJ3NKENeXNDsTru2kzQb2yJ34sjuCXVG43EYyeNKDFP1p7+mgCIzPHO/+wwqbn7I/2GhaLzDoT7E4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=tY11oLHE; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=coHV/e+m; arc=none smtp.client-ip=64.147.123.145
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1708441843; c=relaxed/simple;
+	bh=gq82WFa6IDYKiSGDJkwUkXHp2KiwHIz0de8K52yYK3Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UkCTR6+rnGfz8uBCfWomtFGst7/R/kDVtJp8xaKTTWU+wkqYRN3daVkgC+zNxgJXHAihIoJgKnM3XMm6pfojHg96iO8/GrGrr1cffazt+elaRR3L/H5o4CTw6ND+FnUvVLMmXpfd0WkU7woDQZkvw0upvosIVQ4BuV65V7Mr0ko=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RuCOz0bV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="tY11oLHE";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="coHV/e+m"
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-	by mailfout.west.internal (Postfix) with ESMTP id 4B1E71C00096;
-	Tue, 20 Feb 2024 10:10:18 -0500 (EST)
-Received: from imap51 ([10.202.2.101])
-  by compute5.internal (MEProxy); Tue, 20 Feb 2024 10:10:18 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm3; t=1708441817; x=1708528217; bh=Atu0OpnXzZ
-	orWtqFeTIeosaeih3wF0IbqGTMPEqB/RI=; b=tY11oLHEtqcO9Z0if6sonscf2L
-	Z3Lf0sdP1MLmKYk7ZgAczwPZZMjpTqfG7nUKztQRS9iTCTAXqvsfiKhCa2fSrTMa
-	vbJSFqcFqPCU1uzHzSWceNQpx1THQT6hqYBIc/nhm0nqpdk4E2vgZFHJ4jHi1m8v
-	pK4MyfTI7RE6ls//2k/h7/tGOLYS+L3FtM0hHkngzjztfeIKjSm9wxu3AOEWD+v+
-	OMbr+nhzbOqeC1yaPGcnlDCckuCFu8EaOXAQ3xmw50xlerD0o4et+Z0iQrAjooy3
-	dX65zRJwHn4GznaoHgphXfhoWvMtkV03t4VZUReccLemtWu7Xy3iSBmqcqCw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm1; t=1708441817; x=1708528217; bh=Atu0OpnXzZorWtqFeTIeosaeih3w
-	F0IbqGTMPEqB/RI=; b=coHV/e+mdCsgad2PUKvoy/NyfCmXq7VHJWjPHaDkwlvg
-	VPguCg4KeV4YoLDCLrUbxxn4qFU1UG/uJiRLT/HNGgkV20/J1+PrxO2yrodIBDBi
-	U/zYAYjff22ZiZB+n1NyMRG5rxtEa2fCePrEbSLqKYi1zCRYAvH2uzXPA7EIkpAS
-	YapalWKD7otM5v02U7TM1GZQg5+xLlpPYoUc9BESn7UiWIzdnnUj7nA2uy5QbVQe
-	CI38HJx7blQDpZR9zym7LdSOfTlAkDl7rtHeFb7+gaMUC1shP/asQ0AexKLJ5t/u
-	GkH+Es+mH+s8AbgyA24gFJWiBVnqlobJ9yAc6j7rsw==
-X-ME-Sender: <xms:2cDUZUBNiOlJKcBW-QSbiwM96EB-wC302bX_pOTE-_x1bWfrer0N3w>
-    <xme:2cDUZWiAZuNAoz2BHoIne0qTy-oFEgLXwQ2ffOPIuqu3sc-IbX5CnRzw2DQOmz6q-
-    BvzsC63g5V12nHinMg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrfedtgdejgecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefofgggkfgjfhffhffvvefutgesthdtredtreertdenucfhrhhomhepfdetrhhn
-    ugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrghtth
-    gvrhhnpeevhfffledtgeehfeffhfdtgedvheejtdfgkeeuvefgudffteettdekkeeufeeh
-    udenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecuvehluhhsthgvrhfuihiivgeptd
-    enucfrrghrrghmpehmrghilhhfrhhomheprghrnhgusegrrhhnuggsrdguvg
-X-ME-Proxy: <xmx:2cDUZXl0QnFEwqEzGQL8_AHgws1Zt22IB8FTcfNdNfPeE4-z9fiuLg>
-    <xmx:2cDUZay5X4AokSEU5qsMAIUOTHgszMVpq8PJiV8I49KGNI4sSxxvSQ>
-    <xmx:2cDUZZRaZjhFd8jKM32FY6sggxM6ZVGcGQC5Q47axUEy5erRARzowQ>
-    <xmx:2cDUZSK7ZZCHC0pnlrvmmJeGntFcUcnSQeIrBAr4WaJoAKTFm5zRLjxmzUc>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id 16AFCB6008D; Tue, 20 Feb 2024 10:10:17 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.11.0-alpha0-153-g7e3bb84806-fm-20240215.007-g7e3bb848
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RuCOz0bV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 88C84C433C7;
+	Tue, 20 Feb 2024 15:10:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1708441842;
+	bh=gq82WFa6IDYKiSGDJkwUkXHp2KiwHIz0de8K52yYK3Y=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=RuCOz0bVQTkDORMbxMRelpJRa2dDOyb8VhgF0LHY9h4/5+ZKSUsufcCuH+IfKZZ84
+	 RCvreHuC87YqQN2A918ySqI7RerdPT/P+OaN8SPE4W5ZdeEUp65emWz/3sYXDvo91B
+	 mlw46zXpYEHTzXyXaO/NwUQ3G15kACtXMRwVVTJ2KFIU+KRZrHXWsxIHRhsjcBnYGl
+	 Z7p+wNWTfJpJf9oQyvjKVzD1YZ1a1UFwo6f6oBCZDA+PlMI8i6lmNiSuGv8E308Dr7
+	 6qR54sRuUwwmSJcYKilMV3CJOG4+wxiDu8EgxB9GPn52v/Kj5R94XJR7IStqSLvY7J
+	 kVHgKciRF+VYQ==
+Date: Tue, 20 Feb 2024 16:10:40 +0100
+From: Frederic Weisbecker <frederic@kernel.org>
+To: Anna-Maria Behnsen <anna-maria@linutronix.de>
+Cc: linux-kernel@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
+	John Stultz <jstultz@google.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Eric Dumazet <edumazet@google.com>,
+	"Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+	Arjan van de Ven <arjan@infradead.org>,
+	"Paul E . McKenney" <paulmck@kernel.org>,
+	Rik van Riel <riel@surriel.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Sebastian Siewior <bigeasy@linutronix.de>,
+	Giovanni Gherdovich <ggherdovich@suse.cz>,
+	Lukasz Luba <lukasz.luba@arm.com>,
+	"Gautham R . Shenoy" <gautham.shenoy@amd.com>,
+	Srinivas Pandruvada <srinivas.pandruvada@intel.com>,
+	K Prateek Nayak <kprateek.nayak@amd.com>
+Subject: Re: [PATCH v10a] timers: Move marking timer bases idle into
+ tick_nohz_stop_tick()
+Message-ID: <ZdTA8N7TkGG66Ay6@lothringen>
+References: <20240115143743.27827-4-anna-maria@linutronix.de>
+ <20240219085236.10624-1-anna-maria@linutronix.de>
+ <ZdPYEzno3KqIPo4S@localhost.localdomain>
+ <878r3f5s3w.fsf@somnus>
+ <ZdSQBD_ZpWvH5SoZ@localhost.localdomain>
+ <87zfvv4a45.fsf@somnus>
+ <ZdScXhIS_G1cjaWG@localhost.localdomain>
+ <87ttm344me.fsf@somnus>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <4824192b-5573-4246-a47c-ad6249e2900e@app.fastmail.com>
-In-Reply-To: <6f3b246e-7417-4455-abe4-ca3b42fdda4c@linux-m68k.org>
-References: <20240219160126.510498-1-thuth@redhat.com>
- <6f3b246e-7417-4455-abe4-ca3b42fdda4c@linux-m68k.org>
-Date: Tue, 20 Feb 2024 16:09:55 +0100
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Greg Ungerer" <gerg@linux-m68k.org>, "Thomas Huth" <thuth@redhat.com>,
- linux-m68k@lists.linux-m68k.org, "Geert Uytterhoeven" <geert@linux-m68k.org>
-Cc: linux-kernel@vger.kernel.org, "Oleg Nesterov" <oleg@redhat.com>
-Subject: Re: [PATCH v2] m68k: Avoid CONFIG_COLDFIRE switch in uapi header
-Content-Type: text/plain
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <87ttm344me.fsf@somnus>
 
-On Tue, Feb 20, 2024, at 15:13, Greg Ungerer wrote:
-> On 20/2/24 02:01, Thomas Huth wrote:
->> We should not use any CONFIG switches in uapi headers since these
->> only work during kernel compilation; they are not defined for
->> userspace. Fix it by moving the struct pt_regs to the kernel-internal
->> header instead - struct pt_regs does not seem to be required for
->> the userspace headers on m68k at all.
->> 
->> Suggested-by: Greg Ungerer <gerg@linux-m68k.org>
->> Signed-off-by: Thomas Huth <thuth@redhat.com>
->> ---
->>   v2: Move the struct instead of changing the #ifdef
->> 
->>   See previous discussion here:
->>   https://lore.kernel.org/lkml/6e3f2a2e-2430-4b4f-9ead-d9a4d5e42713@linux-m68k.org/
->
-> I am fine with this. FWIW the following architectures do
-> not define pt_regs in their uapi/ptrace.h header either:
-> arc, arm64, loongarch, nios2, openrisc, riscv, s390, xtensa
-> Though quite a few of them have a user_pt_regs instead.
->
-> So for me:
->
-> Acked-by: Greg Ungerer <gerg@linux-m68k.org>
->
-> Geert, Arnd, do you have any thoughts on this?
+On Tue, Feb 20, 2024 at 03:00:57PM +0100, Anna-Maria Behnsen wrote:
+> Frederic Weisbecker <frederic@kernel.org> writes:
+> 
+> > Le Tue, Feb 20, 2024 at 01:02:18PM +0100, Anna-Maria Behnsen a écrit :
+> >> Frederic Weisbecker <frederic@kernel.org> writes:
+> >> 
+> >> > Le Tue, Feb 20, 2024 at 11:48:19AM +0100, Anna-Maria Behnsen a écrit :
+> >> >> Frederic Weisbecker <frederic@kernel.org> writes:
+> >> >> diff --git a/kernel/time/tick-sched.c b/kernel/time/tick-sched.c
+> >> >> index 01fb50c1b17e..b93f0e6f273f 100644
+> >> >> --- a/kernel/time/tick-sched.c
+> >> >> +++ b/kernel/time/tick-sched.c
+> >> >> @@ -895,21 +895,6 @@ static void tick_nohz_stop_tick(struct tick_sched *ts, int cpu)
+> >> >>  	/* Make sure we won't be trying to stop it twice in a row. */
+> >> >>  	ts->timer_expires_base = 0;
+> >> >>  
+> >> >> -	/*
+> >> >> -	 * If this CPU is the one which updates jiffies, then give up
+> >> >> -	 * the assignment and let it be taken by the CPU which runs
+> >> >> -	 * the tick timer next, which might be this CPU as well. If we
+> >> >> -	 * don't drop this here, the jiffies might be stale and
+> >> >> -	 * do_timer() never gets invoked. Keep track of the fact that it
+> >> >> -	 * was the one which had the do_timer() duty last.
+> >> >> -	 */
+> >> >> -	if (cpu == tick_do_timer_cpu) {
+> >> >> -		tick_do_timer_cpu = TICK_DO_TIMER_NONE;
+> >> >> -		ts->do_timer_last = 1;
+> >> >> -	} else if (tick_do_timer_cpu != TICK_DO_TIMER_NONE) {
+> >> >> -		ts->do_timer_last = 0;
+> >> >> -	}
+> >> >> -
+> >> >>  	/* Skip reprogram of event if it's not changed */
+> >> >>  	if (ts->tick_stopped && (expires == ts->next_tick)) {
+> >> >>  		/* Sanity check: make sure clockevent is actually programmed */
+> >> >
+> >> > That should work but then you lose the optimization that resets
+> >> > ts->do_timer_last even if the next timer hasn't changed.
+> >> >
+> >> 
+> >> Beside of this optimization thing, I see onther problem. But I'm not
+> >> sure, if I understood it correctly: When the CPU drops the
+> >> tick_do_timer_cpu assignment and stops the tick, it is possible, that
+> >> this CPU nevertheless executes tick_sched_do_timer() and then reassigns
+> >> to tick_do_timer_cpu?
+> >
+> > Yes but in this case a timer interrupt has executed and ts->next_tick
+> > is cleared, so the above skip reprogramm branch is not taken.
+> >
+> 
+> Yes... So I need to change it without dropping the
+> optimization. Otherwise someone might complain about it.
+> 
+> Two possible solutions:
+> 
+> a) split out this if/else thing for dropping the tick_do_timer_cpu
+>    assignment into a separate function and call it:
+>    - before the return in the skip reprogramm branch
+>    - and after the if clause which contains stopping the tick (where it
+>      is executed in the current proposal)
+> 
+> b) Take my current proposal and add before the return in the skip
+>    reprogramm branch the following lines:
+> 
+>    if (tick_do_timer_cpu != TICK_DO_TIMER_NONE)
+>    	ts->do_timer_last = 0;
+> 
+>    as the first part of the tick_do_timer_cpu/last logic shouldn't be
+>    required (because then also ts->next_tick is already cleared).
+> 
+> What do you prefere? Or do you prefere something else?
 
-It clearly doesn't change the ABI, so that part is fine.
+Wouldn't the following work? If timer_idle is false, then the tick isn't
+even stopped and there is nothing to do? So you can early return.
 
-If asm/ptrace.h is included by some userspace tool to
-get the definition, it might cause a compile-time error
-that needs a trivial source change.
-
-This could be needed for ptrace (gdb, strace) or signal
-handling and setjmp (libc), though it's more likely that these
-already have their own copies.
-
-     Arnd
+diff --git a/kernel/time/tick-sched.c b/kernel/time/tick-sched.c
+index fdd57f1af1d7..1b2984acafbd 100644
+--- a/kernel/time/tick-sched.c
++++ b/kernel/time/tick-sched.c
+@@ -924,6 +924,9 @@ static void tick_nohz_stop_tick(struct tick_sched *ts, int cpu)
+ 		expires = ts->timer_expires;
+ 	}
+ 
++	if (!timer_idle)
++		return;
++
+ 	/*
+ 	 * If this CPU is the one which updates jiffies, then give up
+ 	 * the assignment and let it be taken by the CPU which runs
