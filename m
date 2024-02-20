@@ -1,281 +1,206 @@
-Received: from mx0a-00823401.pphosted.com (mx0a-00823401.pphosted.com [148.163.148.104])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A05A14F9E7;
-	Tue, 20 Feb 2024 20:37:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.148.104
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708461462; cv=none; b=FPM8EQ9W8C7X/Mp8q1B0nde4gCorspvGvpzBDAb12PohjZ8H3YRqvBgxPrx7LXhIsW7zm317y28qFfWro2lHYuT5pmLmaFPEBBH7IEKshLuegnrmfOoV5DRVm6H/6WQPEbc7XpVaS3A1b6Z+GaaEH3xyhRXBeXKCIy7Y0dClBLI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708461462; c=relaxed/simple;
-	bh=uBERHdw2LAkX/ox0xE0bEhdCEdWfMV2K3mU7Jp07W8M=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=Tet8q4tByhb+4cUmUwhHuw6olJtc+N7+mNBOJg0LnigN8Isf/zvzO7QqxfLi0EsCc3SY/tthveewi1QyUa2lI5ANkoY7cfcFhWdQcccV3GU9QykOryFY/qv5Td2lXkXk8g4f7fyXNXTCpjIAOxB+remxh8SIGpHbQSZOs4nUIO0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=motorola.com; spf=pass smtp.mailfrom=motorola.com; dkim=pass (2048-bit key) header.d=motorola.com header.i=@motorola.com header.b=G8c3FTHW; arc=none smtp.client-ip=148.163.148.104
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=motorola.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=motorola.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44754446C9;
+	Tue, 20 Feb 2024 20:39:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.7
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1708461582; cv=fail; b=ag3E+qhKfXiVms70cgHyOmrGAg1/MStrEdZbu6/KOdT9FmEv1disgDjbe1mH0kmKwgIyRZ3p8jTj5hBDjAmcsrYoAIlQawKjW8KO9SPTgMlAEoPV7OYe0M3d9/xE9/uybWx7uiNHKKUbBCsYOA1OU+cULywO//illbRJt4hMKnA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1708461582; c=relaxed/simple;
+	bh=91d+z8z2dTJJedFGMhpUaykojpFmQ6Sjgx5C5bw6myY=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=cIwDPRQv2wuRNKa55CrRC15uGUgCqU0arlsvmD4HCTnXWtGJeol19PX6VoHPt4HZJxAoKJQaMaiv5CBRUUZA2rmBojodDSiD10fIzn9EiVRUMNZvd27whJR5l2oZjwSRNjuQczFGYh+Ax16kHHEm8GgW5BTTwRfuZimJjHvZ0mA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SgXKsohy; arc=fail smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=motorola.com header.i=@motorola.com header.b="G8c3FTHW"
-Received: from pps.filterd (m0355088.ppops.net [127.0.0.1])
-	by m0355088.ppops.net (8.17.1.24/8.17.1.24) with ESMTP id 41KJD1Po003877;
-	Tue, 20 Feb 2024 20:33:23 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=motorola.com; h=
-	from:to:cc:subject:date:message-id:in-reply-to:references; s=
-	DKIM202306; bh=bbMfJLfH6G5a4s+Z0cFe2wOzrCFA0lQFMo+SQbxfAvI=; b=G
-	8c3FTHWyfPhIWnn3QaQguVptC48Uy9lbb+BcoCWa1nlQvoc+woWLCowBjoFNI/ix
-	dF3dTPLkKuRe51BCEWpmjjyoWUwOEeG1JP3K+L03xl7q88Lz8LruYRC/RRB3CTwB
-	VoNx/lEOcTE6WiCIHXgg5dkPsrrUKhnkMwA9g0o57GM1rcm1QJ1bJzqn4LBPaSvJ
-	5aZqXa8byiN8r8QcOQjWXqu7qO8ypNwY4E1F+FiRQQ8X2r4skIxi7eqpl2aUyNPQ
-	uI7mEb5ULBOlIP5YUGkeqB8pHq9Ly3Cnsty72nkRlu5/CiR5/fmbdecAA2NZSgUu
-	DRWYGLwsYmIHKfHyKYEXQ==
-Received: from va32lpfpp03.lenovo.com ([104.232.228.23])
-	by m0355088.ppops.net (PPS) with ESMTPS id 3wd21x05ua-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 20 Feb 2024 20:33:22 +0000 (GMT)
-Received: from ilclmmrp01.lenovo.com (ilclmmrp01.mot.com [100.65.83.165])
-	(using TLSv1.2 with cipher ADH-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by va32lpfpp03.lenovo.com (Postfix) with ESMTPS id 4TfWM54k8jz4ygs4;
-	Tue, 20 Feb 2024 20:33:21 +0000 (UTC)
-Received: from ilclasset01.mot.com (ilclasset01.mot.com [100.64.7.105])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: mbland)
-	by ilclmmrp01.lenovo.com (Postfix) with ESMTPSA id 4TfWM52tFkz3n3fr;
-	Tue, 20 Feb 2024 20:33:21 +0000 (UTC)
-From: Maxwell Bland <mbland@motorola.com>
-To: linux-arm-kernel@lists.infradead.org
-Cc: gregkh@linuxfoundation.org, agordeev@linux.ibm.com,
-        akpm@linux-foundation.org, andreyknvl@gmail.com, andrii@kernel.org,
-        aneesh.kumar@kernel.org, aou@eecs.berkeley.edu, ardb@kernel.org,
-        arnd@arndb.de, ast@kernel.org, borntraeger@linux.ibm.com,
-        bpf@vger.kernel.org, brauner@kernel.org, catalin.marinas@arm.com,
-        christophe.leroy@csgroup.eu, cl@linux.com, daniel@iogearbox.net,
-        dave.hansen@linux.intel.com, david@redhat.com, dennis@kernel.org,
-        dvyukov@google.com, glider@google.com, gor@linux.ibm.com,
-        guoren@kernel.org, haoluo@google.com, hca@linux.ibm.com,
-        hch@infradead.org, john.fastabend@gmail.com, jolsa@kernel.org,
-        kasan-dev@googlegroups.com, kpsingh@kernel.org,
-        linux-arch@vger.kernel.org, linux@armlinux.org.uk,
-        linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, linuxppc-dev@lists.ozlabs.org,
-        linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
-        lstoakes@gmail.com, mark.rutland@arm.com, martin.lau@linux.dev,
-        meted@linux.ibm.com, michael.christie@oracle.com, mjguzik@gmail.com,
-        mpe@ellerman.id.au, mst@redhat.com, muchun.song@linux.dev,
-        naveen.n.rao@linux.ibm.com, npiggin@gmail.com, palmer@dabbelt.com,
-        paul.walmsley@sifive.com, quic_nprakash@quicinc.com,
-        quic_pkondeti@quicinc.com, rick.p.edgecombe@intel.com,
-        ryabinin.a.a@gmail.com, ryan.roberts@arm.com, samitolvanen@google.com,
-        sdf@google.com, song@kernel.org, surenb@google.com,
-        svens@linux.ibm.com, tj@kernel.org, urezki@gmail.com,
-        vincenzo.frascino@arm.com, will@kernel.org, wuqiang.matt@bytedance.com,
-        yonghong.song@linux.dev, zlim.lnx@gmail.com, mbland@motorola.com,
-        awheeler@motorola.com
-Subject: [PATCH 3/4] arm64: separate code and data virtual memory allocation
-Date: Tue, 20 Feb 2024 14:32:55 -0600
-Message-Id: <20240220203256.31153-4-mbland@motorola.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20240220203256.31153-1-mbland@motorola.com>
-References: <20240220203256.31153-1-mbland@motorola.com>
-X-Proofpoint-ORIG-GUID: FwETS-WEm85ynHN23cNJXJC1VUZpgnFr
-X-Proofpoint-GUID: FwETS-WEm85ynHN23cNJXJC1VUZpgnFr
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-02-20_06,2024-02-20_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- mlxlogscore=999 clxscore=1015 suspectscore=0 phishscore=0 mlxscore=0
- malwarescore=0 adultscore=0 bulkscore=0 impostorscore=0 spamscore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2402120000 definitions=main-2402200146
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SgXKsohy"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1708461580; x=1739997580;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=91d+z8z2dTJJedFGMhpUaykojpFmQ6Sjgx5C5bw6myY=;
+  b=SgXKsohyD2Uibxow2/nRHXPNFW1Us4foXV+a6TTCkA7XPkjDbwtEmlu9
+   xBJmh6ee5jIpnVLQuct4jYIj7SQ4fhj4drS6KtKtN7NLtCyo+vLXAoby5
+   o5VdjRC7OTBOynCHOhdctlE2Zi237VOp15rpDNx8yqjT/DfCy4BVvHfIs
+   85UbIWsrOa9B/gGBkxKHYGKXXcJuIxqktUqoGEZK3VqSzHEbxWvemsreZ
+   borXqCzL6cbRnW75Mflb2f1sINILnBWbVfQEUChzbS3g/w+b0AfTbeiYB
+   Ztpx9CVrVZxndNqhZbm1tWwhJC09UNYBJKZbWdaNoF9/7KVUTeLdG7vTB
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10990"; a="28035277"
+X-IronPort-AV: E=Sophos;i="6.06,174,1705392000"; 
+   d="scan'208";a="28035277"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Feb 2024 12:39:39 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.06,174,1705392000"; 
+   d="scan'208";a="42380012"
+Received: from fmsmsx601.amr.corp.intel.com ([10.18.126.81])
+  by orviesa001.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 20 Feb 2024 12:39:39 -0800
+Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
+ fmsmsx601.amr.corp.intel.com (10.18.126.81) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Tue, 20 Feb 2024 12:39:38 -0800
+Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
+ fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Tue, 20 Feb 2024 12:39:37 -0800
+Received: from fmsedg602.ED.cps.intel.com (10.1.192.136) by
+ fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35 via Frontend Transport; Tue, 20 Feb 2024 12:39:37 -0800
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (104.47.59.169)
+ by edgegateway.intel.com (192.55.55.71) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Tue, 20 Feb 2024 12:39:37 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=NaTSWn0xs1B9T0vWO6bnAIqbprw99gA3RDfxnAqKJiD/6ilUEZFa6LFHRsBFtpSyQjIx83kA34d+Rfb4iaYbcl+El8ep/qZ4+ACquiBdpauA+K/agSs8TaEWhFDpVNqS+YSDyRc5E4jsswvASyDDg5HvSgbSO+zd5Ai/Tz5TtIhrJtXPGuxHhx0w+3Be/V9jSjae+35XalEdRZJuCR7re+2XJDOt2BZWMcizYaalRx5rHYbCh8JytuE8FigWxa11TRLJfEORW6yG6kJYiXduKdzVLgYBkCgN6RxOwqBF85s2CGIVHWu8BoRONKnrNk+KCmb2D3yPdpYRl9sYix+yXA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=HJRKqnop2iCAd28qQ0ARTJn33FzlaaeIMiGKRZJOZjw=;
+ b=OC78VlXPSG7QITbwc2SMrzjroQsMyq60WpDy2qYNJ1iJhIJFw6q8eaqQ8DmpMyJvHMpDx0HhXso1T4ecaMei+DkC3vFWFqfbFfNOg5GCMLqf9kavkyXoXR/z0JThqcn+ZRVtmQKVHhjvlyaVjkYnEoBRe1xpl/zc3CFaEDcA0qgS3cJIa687jPaQJwYqA3QrV+H/PzaGGcHrb6fQB8YmqOczll4kvXlaXpddE8ZQ59Iz/jLIR4CCXpDg8cbPc416XLmZZw9JrT5btwy4wu9af82ik9EyRDu/XQHynUa+YXZT7SpOpEP4Ap9tFM5sMNXX39idwQysdkOiiY+InMdxCg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from CY5PR11MB6139.namprd11.prod.outlook.com (2603:10b6:930:29::17)
+ by PH8PR11MB7989.namprd11.prod.outlook.com (2603:10b6:510:258::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7292.39; Tue, 20 Feb
+ 2024 20:39:35 +0000
+Received: from CY5PR11MB6139.namprd11.prod.outlook.com
+ ([fe80::9f32:ce50:1914:e954]) by CY5PR11MB6139.namprd11.prod.outlook.com
+ ([fe80::9f32:ce50:1914:e954%7]) with mapi id 15.20.7316.018; Tue, 20 Feb 2024
+ 20:39:34 +0000
+Date: Tue, 20 Feb 2024 14:39:31 -0600
+From: Lucas De Marchi <lucas.demarchi@intel.com>
+To: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+CC: Oded Gabbay <ogabbay@kernel.org>, Thomas =?utf-8?Q?Hellstr=C3=B6m?=
+	<thomas.hellstrom@linux.intel.com>, Maarten Lankhorst
+	<maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
+	Daniel Vetter <daniel@ffwll.ch>, <kernel-janitors@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
+	<intel-xe@lists.freedesktop.org>
+Subject: Re: Re: [PATCH] drm/xe/guc: Remove usage of the deprecated
+ ida_simple_xx() API
+Message-ID: <fzpptocruoesi4qdksksygpfbiarnatt75p4p7t4l4emjxunw3@xesto7hczmyx>
+References: <d6a9ec9dc426fca372eaa1423a83632bd743c5d9.1705244938.git.christophe.jaillet@wanadoo.fr>
+ <pshjojhgguhevgor6p724fs4pnw4a5nyclwfqnk4pfbommxyrh@jfha3y5whlei>
+Content-Type: text/plain; charset="us-ascii"; format=flowed
+Content-Disposition: inline
+In-Reply-To: <pshjojhgguhevgor6p724fs4pnw4a5nyclwfqnk4pfbommxyrh@jfha3y5whlei>
+X-ClientProxiedBy: SJ0PR05CA0091.namprd05.prod.outlook.com
+ (2603:10b6:a03:334::6) To CY5PR11MB6139.namprd11.prod.outlook.com
+ (2603:10b6:930:29::17)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CY5PR11MB6139:EE_|PH8PR11MB7989:EE_
+X-MS-Office365-Filtering-Correlation-Id: 2d260b9c-f055-48da-c263-08dc32540c52
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: f8UlFFb0OjKabvMEmBBH7LRLcapBT0n4phzXqBVhtF5v57KEFXZA6rj6F2COGn90aD0ZNdl+tspbkIPXi5BSWcnl23EdcFMrVQQbcI3JoSevS7o4BlyLRUBRQFgMxrzKSl2ewc+pqEGrvBOLkCh8qEExuIGHvAIn+dkINcKOiIojOCFu5Q65p8VDprXXewQhcHhNDivqBAlREgYSTsa5IbZ8SUWfe1fUPz1P7+7iRk/unSUYuAzh3i5Lp5NL4GzrCs/NNLPw6+0lx9p+pm/WPXAtClvCxRtXQOtxW2oFkGCUmVYEjsnWu7Is5FrQJy9346e5SipQCTt7tAg3glzkBFXAx/J0dpj9nyr0JLGuyiPCIdXXQl76jppRLi31yL4ZkrSGtC0cSIknKWgAwPrXb8O+npS7k44IwoQGJz/dlyWH+rpKx+4Vtb7Ph3wGlIviui71tREYEecuTZXLi3V88ayCuJqgO7/BKjlHIPUsuXB3gHMAEbYMkMR12Wuj2E+vO2EEJJEh0fi3PAza98dqZzoQe4PfdnYgWgyg3tUnZ54=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY5PR11MB6139.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?h/HPCUK+aaVuyyYkoOdBqGfvg0Ql1uuiyCo7QVC+O8+ZaAVtug0qQ4Kku/Vl?=
+ =?us-ascii?Q?6tXabDtnHL9iAEK0tdj0fs58Bdxv2UcUIJVM9+rpuhvPsYmWZ+BhGaxIiFoo?=
+ =?us-ascii?Q?LKmP8XCcjbOcRKbYF1kR7OUoJpWP2APdVPWi0GZSkJg+bK2ntzNHyXYUXsqa?=
+ =?us-ascii?Q?wZ6AeDTGM1mgmmMVlUM5zyrDoeQyXuO7tXNWdjGojdbUEx8F/NuVnan1wzmi?=
+ =?us-ascii?Q?K7rgGVPbE3PTAbHrX0vwdNQY7pfXMb2ltwR5FExb5SJ2tptAOrxkFb2p5Ziu?=
+ =?us-ascii?Q?2HrCnxfRaTddIDau9zEVpDurNlodeWcJHApaYPXJ3pFK17oppC/QgUPAXbr9?=
+ =?us-ascii?Q?pRSW8HZZannCbzJnhU0DRHzlEUaZR6+SvSPyHv3qzO7cxy7bvm6evFIYzW0X?=
+ =?us-ascii?Q?k030Cnp6T3KLLdFL2IDquPpT4TBFZHqA//e8jaWEUCJ6gPdZOpFm24+IgG1G?=
+ =?us-ascii?Q?QGxWgw3LyCZaa76G48/hLFbaCF4TYzImVOBtWMKVa3EplHv6pAHbwrftGg/s?=
+ =?us-ascii?Q?5Vd5Oy68O7EPQN4MpT82xq2Kubytn7rS99owK4S7VFxbO6gcQvu3thE+gThk?=
+ =?us-ascii?Q?UJWsEI9S+Z46Fs4xXFsIZR5Y3LlGHGlURMWiUmNta4ouuPStOhJufc1kF7NP?=
+ =?us-ascii?Q?IXDulXQ9+m+a188hCBcohfcunccqDzGd7YCArVnYQabWpY3ibRLgpwBiPOVs?=
+ =?us-ascii?Q?Fzxyr0oLxg0yH69DaXOUOGHJT1uzI+jiHDv+ECSnBahiVD/EMq6Dz/4fWOdt?=
+ =?us-ascii?Q?ETtAcaPfK2BjCADn0MxoLYYcEr9nqNwXDXTfePzuMSnZd5f+qYkj/vzLLeAf?=
+ =?us-ascii?Q?C4veA20AeXLezzjTnN089sx/tdFGAyxKMzJc8VzUuDFDDttOYIhav2tSYNjo?=
+ =?us-ascii?Q?ReedpXH7MyDkxYYE6QJut9H6PljKUvKE50zUhG/yXoUk9WuPt5Elbsr1g0Ww?=
+ =?us-ascii?Q?4ZebRG+zFimShsaKPRpqJPrpgABmExYrVm+4lArkBnL6FdSn7kH9YhMIVpVy?=
+ =?us-ascii?Q?tLZxHxGCLYfzqmefc1+HEPuoQInfj7f6ts/MSX0ojo/489Er86HIkqxTtDuB?=
+ =?us-ascii?Q?jxQk/96kSbpwkGUK97UUyHJ+yDig+yB+2ssBQ/op6mJpg9fcXJkV0qE9jPFv?=
+ =?us-ascii?Q?w+hCndVK13UUTlxwL+zh7dsWNVA98UDYx8AvKPTp9XfdQhesOmeqcCwy4CUB?=
+ =?us-ascii?Q?R+UoDwjHcP+kTLfsSFe6dfQvA99zDTVuNA5KC69T9sbDrzWDLpRZ3sNZMqdx?=
+ =?us-ascii?Q?H44/6b/0Ne8VJNzxnJ47JL4rzVKjtMFwKnsbdH00O4V0+Ba1KEaWTnrcVxJU?=
+ =?us-ascii?Q?z7J/WBIhPHbQcN8wbF/R1kAZnz1HDL+OwmuHcy4IU3HU2QO2SK2/pyNUf9uH?=
+ =?us-ascii?Q?rkOqCJriUMphge6emD/xtCtQ+hIeX1gFZjIF0k6qxEA3hdsAt0yO3tBVVDPg?=
+ =?us-ascii?Q?Wj7mXMwRfxQYJCFXKVTNPDkywT1BpI3MYXTYpl281PF9z+4+B7f5YSrx0W5d?=
+ =?us-ascii?Q?2CsLUxUczyxjK/EBmIO55itUVWFLjX0SK6TSDh72Opr5q35B8IfowozjrpOk?=
+ =?us-ascii?Q?B+qt1E+NN6cqTTdta236sphUZBUMIuiHK9evwRDqDoz88H1hOhIFPxus5SPL?=
+ =?us-ascii?Q?yQ=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2d260b9c-f055-48da-c263-08dc32540c52
+X-MS-Exchange-CrossTenant-AuthSource: CY5PR11MB6139.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Feb 2024 20:39:34.6598
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 2p2J7KlsmFWOW+BY0S26O2tlCXdB1yJ+BTNraaqk2Gf6vzzcAOHvwXlyQyOSP7rBn6m3HlVjHIFaKrAJ33qjMGAE6Cnlt5gAMhG5DoenaXs=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH8PR11MB7989
+X-OriginatorOrg: intel.com
 
-Current BPF and kprobe instruction allocation interfaces do not match
-the base kernel and intermingle code and data pages within the same
-sections. In the case of BPF, this appears to be a result of code
-duplication between the kernel's JIT compiler and arm64's JIT.  However,
-This is no longer necessary given the possibility of overriding vmalloc
-wrapper functions.
+On Tue, Feb 20, 2024 at 02:34:53PM -0600, Lucas De Marchi wrote:
+>On Sun, Jan 14, 2024 at 04:09:16PM +0100, Christophe JAILLET wrote:
+>>ida_alloc() and ida_free() should be preferred to the deprecated
+>>ida_simple_get() and ida_simple_remove().
+>>
+>>Note that the upper limit of ida_simple_get() is exclusive, but the one of
+>>ida_alloc_max() is inclusive. So a -1 has been added when needed.
+>>
+>>Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+>
+>
+>Reviewed-by: Lucas De Marchi <lucas.demarchi@intel.com>
 
-arm64's vmalloc_node routines now include a layer of indirection which
-splits the vmalloc region into two segments surrounding the middle
-module_alloc region determined by ASLR. To support this,
-code_region_start and code_region_end are defined to match the 2GB
-boundary chosen by the kernel module ASLR initialization routine.
+just noticed we already have CI results for this. Applied to
+drm-xe-next, thanks.
 
-The result is a large benefits to overall kernel security, as code pages
-now remain protected by this ASLR routine and protections can be defined
-linearly for code regions rather than through PTE-level tracking.
+Lucas De Marchi
 
-Signed-off-by: Maxwell Bland <mbland@motorola.com>
----
- arch/arm64/include/asm/vmalloc.h   |  3 ++
- arch/arm64/kernel/module.c         |  7 ++++
- arch/arm64/kernel/probes/kprobes.c |  2 +-
- arch/arm64/mm/Makefile             |  3 +-
- arch/arm64/mm/vmalloc.c            | 57 ++++++++++++++++++++++++++++++
- arch/arm64/net/bpf_jit_comp.c      |  5 +--
- 6 files changed, 73 insertions(+), 4 deletions(-)
- create mode 100644 arch/arm64/mm/vmalloc.c
-
-diff --git a/arch/arm64/include/asm/vmalloc.h b/arch/arm64/include/asm/vmalloc.h
-index 38fafffe699f..dbcf8ad20265 100644
---- a/arch/arm64/include/asm/vmalloc.h
-+++ b/arch/arm64/include/asm/vmalloc.h
-@@ -31,4 +31,7 @@ static inline pgprot_t arch_vmap_pgprot_tagged(pgprot_t prot)
- 	return pgprot_tagged(prot);
- }
- 
-+extern unsigned long code_region_start __ro_after_init;
-+extern unsigned long code_region_end __ro_after_init;
-+
- #endif /* _ASM_ARM64_VMALLOC_H */
-diff --git a/arch/arm64/kernel/module.c b/arch/arm64/kernel/module.c
-index dd851297596e..c4fe753a71a9 100644
---- a/arch/arm64/kernel/module.c
-+++ b/arch/arm64/kernel/module.c
-@@ -29,6 +29,10 @@
- static u64 module_direct_base __ro_after_init = 0;
- static u64 module_plt_base __ro_after_init = 0;
- 
-+/* For pre-init vmalloc, assume the worst-case code range */
-+unsigned long code_region_start __ro_after_init = (u64) (_end - SZ_2G);
-+unsigned long code_region_end __ro_after_init = (u64) (_text + SZ_2G);
-+
- /*
-  * Choose a random page-aligned base address for a window of 'size' bytes which
-  * entirely contains the interval [start, end - 1].
-@@ -101,6 +105,9 @@ static int __init module_init_limits(void)
- 		module_plt_base = random_bounding_box(SZ_2G, min, max);
- 	}
- 
-+	code_region_start = module_plt_base;
-+	code_region_end = module_plt_base + SZ_2G;
-+
- 	pr_info("%llu pages in range for non-PLT usage",
- 		module_direct_base ? (SZ_128M - kernel_size) / PAGE_SIZE : 0);
- 	pr_info("%llu pages in range for PLT usage",
-diff --git a/arch/arm64/kernel/probes/kprobes.c b/arch/arm64/kernel/probes/kprobes.c
-index 70b91a8c6bb3..c9e109d6c8bc 100644
---- a/arch/arm64/kernel/probes/kprobes.c
-+++ b/arch/arm64/kernel/probes/kprobes.c
-@@ -131,7 +131,7 @@ int __kprobes arch_prepare_kprobe(struct kprobe *p)
- 
- void *alloc_insn_page(void)
- {
--	return __vmalloc_node_range(PAGE_SIZE, 1, VMALLOC_START, VMALLOC_END,
-+	return __vmalloc_node_range(PAGE_SIZE, 1, code_region_start, code_region_end,
- 			GFP_KERNEL, PAGE_KERNEL_ROX, VM_FLUSH_RESET_PERMS,
- 			NUMA_NO_NODE, __builtin_return_address(0));
- }
-diff --git a/arch/arm64/mm/Makefile b/arch/arm64/mm/Makefile
-index dbd1bc95967d..730b805d8388 100644
---- a/arch/arm64/mm/Makefile
-+++ b/arch/arm64/mm/Makefile
-@@ -2,7 +2,8 @@
- obj-y				:= dma-mapping.o extable.o fault.o init.o \
- 				   cache.o copypage.o flush.o \
- 				   ioremap.o mmap.o pgd.o mmu.o \
--				   context.o proc.o pageattr.o fixmap.o
-+				   context.o proc.o pageattr.o fixmap.o \
-+				   vmalloc.o
- obj-$(CONFIG_HUGETLB_PAGE)	+= hugetlbpage.o
- obj-$(CONFIG_PTDUMP_CORE)	+= ptdump.o
- obj-$(CONFIG_PTDUMP_DEBUGFS)	+= ptdump_debugfs.o
-diff --git a/arch/arm64/mm/vmalloc.c b/arch/arm64/mm/vmalloc.c
-new file mode 100644
-index 000000000000..b6d2fa841f90
---- /dev/null
-+++ b/arch/arm64/mm/vmalloc.c
-@@ -0,0 +1,57 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+
-+#include <linux/vmalloc.h>
-+#include <linux/mm.h>
-+
-+static void *__vmalloc_node_range_split(unsigned long size, unsigned long align,
-+			unsigned long start, unsigned long end,
-+			unsigned long exclusion_start, unsigned long exclusion_end, gfp_t gfp_mask,
-+			pgprot_t prot, unsigned long vm_flags, int node,
-+			const void *caller)
-+{
-+	void *res = NULL;
-+
-+	res = __vmalloc_node_range(size, align, start, exclusion_start,
-+				gfp_mask, prot, vm_flags, node, caller);
-+	if (!res)
-+		res = __vmalloc_node_range(size, align, exclusion_end, end,
-+				gfp_mask, prot, vm_flags, node, caller);
-+
-+	return res;
-+}
-+
-+void *__vmalloc_node(unsigned long size, unsigned long align,
-+			    gfp_t gfp_mask, unsigned long vm_flags, int node,
-+			    const void *caller)
-+{
-+	return __vmalloc_node_range_split(size, align, VMALLOC_START,
-+				VMALLOC_END, code_region_start, code_region_end,
-+				gfp_mask, PAGE_KERNEL, vm_flags, node, caller);
-+}
-+
-+void *vmalloc_huge(unsigned long size, gfp_t gfp_mask)
-+{
-+	return __vmalloc_node_range_split(size, 1, VMALLOC_START, VMALLOC_END,
-+				code_region_start, code_region_end,
-+				gfp_mask, PAGE_KERNEL, VM_ALLOW_HUGE_VMAP,
-+				NUMA_NO_NODE, __builtin_return_address(0));
-+}
-+
-+void *vmalloc_user(unsigned long size)
-+{
-+	return __vmalloc_node_range_split(size, SHMLBA,  VMALLOC_START, VMALLOC_END,
-+				code_region_start, code_region_end,
-+				GFP_KERNEL | __GFP_ZERO, PAGE_KERNEL,
-+				VM_USERMAP, NUMA_NO_NODE,
-+				__builtin_return_address(0));
-+}
-+
-+void *vmalloc_32_user(unsigned long size)
-+{
-+	return __vmalloc_node_range_split(size, SHMLBA,  VMALLOC_START, VMALLOC_END,
-+				code_region_start, code_region_end,
-+				GFP_VMALLOC32 | __GFP_ZERO, PAGE_KERNEL,
-+				VM_USERMAP, NUMA_NO_NODE,
-+				__builtin_return_address(0));
-+}
-+
-diff --git a/arch/arm64/net/bpf_jit_comp.c b/arch/arm64/net/bpf_jit_comp.c
-index 8955da5c47cf..40426f3a9bdf 100644
---- a/arch/arm64/net/bpf_jit_comp.c
-+++ b/arch/arm64/net/bpf_jit_comp.c
-@@ -13,6 +13,7 @@
- #include <linux/memory.h>
- #include <linux/printk.h>
- #include <linux/slab.h>
-+#include <linux/moduleloader.h>
- 
- #include <asm/asm-extable.h>
- #include <asm/byteorder.h>
-@@ -1690,12 +1691,12 @@ u64 bpf_jit_alloc_exec_limit(void)
- void *bpf_jit_alloc_exec(unsigned long size)
- {
- 	/* Memory is intended to be executable, reset the pointer tag. */
--	return kasan_reset_tag(vmalloc(size));
-+	return kasan_reset_tag(module_alloc(size));
- }
- 
- void bpf_jit_free_exec(void *addr)
- {
--	return vfree(addr);
-+	return module_memfree(addr);
- }
- 
- /* Indicate the JIT backend supports mixing bpf2bpf and tailcalls. */
--- 
-2.39.2
-
+>
+>Lucas De Marchi
+>
+>>---
+>>drivers/gpu/drm/xe/xe_guc_submit.c | 6 +++---
+>>1 file changed, 3 insertions(+), 3 deletions(-)
+>>
+>>diff --git a/drivers/gpu/drm/xe/xe_guc_submit.c b/drivers/gpu/drm/xe/xe_guc_submit.c
+>>index 21ac68e3246f..11ffacd1dd58 100644
+>>--- a/drivers/gpu/drm/xe/xe_guc_submit.c
+>>+++ b/drivers/gpu/drm/xe/xe_guc_submit.c
+>>@@ -311,7 +311,7 @@ static void __release_guc_id(struct xe_guc *guc, struct xe_exec_queue *q, u32 xa
+>>				      q->guc->id - GUC_ID_START_MLRC,
+>>				      order_base_2(q->width));
+>>	else
+>>-		ida_simple_remove(&guc->submission_state.guc_ids, q->guc->id);
+>>+		ida_free(&guc->submission_state.guc_ids, q->guc->id);
+>>}
+>>
+>>static int alloc_guc_id(struct xe_guc *guc, struct xe_exec_queue *q)
+>>@@ -335,8 +335,8 @@ static int alloc_guc_id(struct xe_guc *guc, struct xe_exec_queue *q)
+>>		ret = bitmap_find_free_region(bitmap, GUC_ID_NUMBER_MLRC,
+>>					      order_base_2(q->width));
+>>	} else {
+>>-		ret = ida_simple_get(&guc->submission_state.guc_ids, 0,
+>>-				     GUC_ID_NUMBER_SLRC, GFP_NOWAIT);
+>>+		ret = ida_alloc_max(&guc->submission_state.guc_ids,
+>>+				    GUC_ID_NUMBER_SLRC - 1, GFP_NOWAIT);
+>>	}
+>>	if (ret < 0)
+>>		return ret;
+>>-- 
+>>2.43.0
+>>
