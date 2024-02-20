@@ -1,108 +1,170 @@
-Received: from mail-io1-f54.google.com (mail-io1-f54.google.com [209.85.166.54])
+Received: from vps.xff.cz (vps.xff.cz [195.181.215.36])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BD30193
-	for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 00:03:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63A52368;
+	Wed, 21 Feb 2024 00:03:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.181.215.36
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708473800; cv=none; b=sfnXy1YKGuvulAtJSYV6NnAzvMsArd1RxzoaDxgg/4Czey811sbWXVqpCZwg8PJtvfcQnOoUKSOLNCbrhcYtjK2SWGScg/Lxg1lyY8yATsvZ1YtPmR7NKmY+E++vN6evTWvDJzgeA+dqrqse0WIXJgEMRzGzn25wkt5lq6JKKlU=
+	t=1708473817; cv=none; b=N1bsp45cQPfN9xneprMQdki8LrfIWYstMXALJf02RTJ7jziNr7eiCbg5eoDBwJNMBxJv2izXiBRWO80Lwg86/PRxwMkiDpGzyWZtnbsvBiTA19vSMzSGjXcaydGqEwhMBqG3/5CF3ERcavA289XNGmiMvkY11QsGa7eJH1m6PHI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708473800; c=relaxed/simple;
-	bh=VLF6pe2KlpUaD/YQphYnv8Kbh60VcvVVFseFbIymCmM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=V6zH2Z34adCcitGzjWOXixKfDyPuRSHndPv1XhS1LI4XFwnlaXfj57UrF5U0a5U9hUr0i1zHa58UwV8NgrJ3ieNRDoM6a9kma2N5t0xNZPNFzygc8bYiGdVM5kWMGvox2wqQeo8jvtYnwYXUDBltXu0XdFRoUHLizuXawFeL5Ys=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=L3DQG/YT; arc=none smtp.client-ip=209.85.166.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1708473817; c=relaxed/simple;
+	bh=6lvUn+C/j0fNP/8+yUQCN4/RJ9aVo+rUL+TbSe1ZyHY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=md8nTyoUxMo9G+uawYsr5boqXpJIhKYRmCBxe1ni1rtyJQW9+C2WncuTVQ29xLYU1fgkz5ZcFRMWKeZtPS3sTNJnRBngPmF/zXncrQpPi5a1ZZVaiJ51NziurUumjm65fbEJo0nQWDQvqY2hVXJ3lktjAkvovdTDav0NsupXmBc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=xff.cz; spf=pass smtp.mailfrom=xff.cz; dkim=pass (1024-bit key) header.d=xff.cz header.i=@xff.cz header.b=sL4ypquH; arc=none smtp.client-ip=195.181.215.36
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=xff.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xff.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="L3DQG/YT"
-Received: by mail-io1-f54.google.com with SMTP id ca18e2360f4ac-7c495be1924so66151339f.1
-        for <linux-kernel@vger.kernel.org>; Tue, 20 Feb 2024 16:03:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1708473798; x=1709078598; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=KdzC+0SBOk3sPai1fZFmMCHYkj39Li+e17MeEWbItQM=;
-        b=L3DQG/YT5NSHJhgIeiJRsKRtmwX4mIYsiiZm8UGGXRNWNnOM0yyprJze8aRMdEqjC+
-         4b8WhkDYrWUSWDQIpXj8t67+OhhYY3DmruXKIBefPAEmIBRmtZFPx20AZi1KpJygZyOy
-         p+ShmNndsf2mlCRhUmGTeDtkf+sIsJZ/n8zjk=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708473798; x=1709078598;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=KdzC+0SBOk3sPai1fZFmMCHYkj39Li+e17MeEWbItQM=;
-        b=ZLB3aduvyMCoZZigjOdrzLYpypqtgSA/6j+BvW0/CsS94yn51s32pgpIYpYfLw1lYb
-         GG2jaGf3muY9OlkvurecTLKbrCQfom9Sp7u8rc5hQUor23DhBm2nlEiD6IWFGFhtNURg
-         IXsL5hdykkt0nwRJFB8FU7dzsrYFD1DHNo9FUu5v1govkdVAm4WQCmQG0+1xIksbyzJI
-         FYCiDClJXl9G8MKrBm7r1wEoHvJ9tShRgariSj5DdOOQ4030mQDEgDHTSO77rG1YuRFD
-         VQJMmstGGnZXJ7RS0cTq9VYbWpAwzBEyNLC5lRJiRbqlFECn4ZifSyFgIrDDF8asdij3
-         TvEg==
-X-Forwarded-Encrypted: i=1; AJvYcCXPV+532kEaK0A0d3BQXaS431hfEs4N+BDJiiQhL+hJnQBatfVkJj+GvCvZe4XICOOt1agFDqyNJfHxArsCLgo9r6HyhCNyxq6IkoDW
-X-Gm-Message-State: AOJu0YwCK6GzIHxsjSbyWREaTVSFMiU5eGkKjKDdDay/CEEAuiQpWlDG
-	DTPliVy3GcVYZDfo9o9nuq/wAmB2YUjUs5lwW1I3ItzZXHUNuQGWYTlEG2opwHI=
-X-Google-Smtp-Source: AGHT+IFMgAG/+Gs7T1z3Brdrd5ypm7xNwAGGeitjt89C6ZFuM6ml5/MdtM+cSsj3Ngry6ku+13mqYA==
-X-Received: by 2002:a05:6602:1582:b0:7c7:35f8:86ee with SMTP id e2-20020a056602158200b007c735f886eemr12142680iow.1.1708473798474;
-        Tue, 20 Feb 2024 16:03:18 -0800 (PST)
-Received: from [192.168.1.128] ([38.175.170.29])
-        by smtp.gmail.com with ESMTPSA id s18-20020a02ad12000000b0047137d479c1sm2360226jan.123.2024.02.20.16.03.17
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 20 Feb 2024 16:03:18 -0800 (PST)
-Message-ID: <5b1fa674-d6b4-41a3-86c3-be43467c32c7@linuxfoundation.org>
-Date: Tue, 20 Feb 2024 17:03:15 -0700
+	dkim=pass (1024-bit key) header.d=xff.cz header.i=@xff.cz header.b="sL4ypquH"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xff.cz; s=mail;
+	t=1708473395; bh=6lvUn+C/j0fNP/8+yUQCN4/RJ9aVo+rUL+TbSe1ZyHY=;
+	h=Date:From:To:Cc:Subject:X-My-GPG-KeyId:References:From;
+	b=sL4ypquHKN/JkzV80/vKNTwPeMicgmxFiuC1sY0sip6Qs4CUb0J2v3ur2tEs2MPRK
+	 AgjUlfMS3z48Msi8go3PHSbx5RPCX1GLI5eipvOahjGa6PCYrOkygFiKOSI+Xt/HXo
+	 zvfEa7F8C/uux9OZEuOTHQIpQ82iCrYOAX1Z3Jrk=
+Date: Wed, 21 Feb 2024 00:56:34 +0100
+From: =?utf-8?Q?Ond=C5=99ej?= Jirman <megi@xff.cz>
+To: Paul Elder <paul.elder@ideasonboard.com>
+Cc: Umang Jain <umang.jain@ideasonboard.com>, 
+	Adam Ford <aford173@gmail.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
+	linux-kernel@vger.kernel.org, Dafna Hirschfeld <dafna@fastmail.com>, 
+	Mauro Carvalho Chehab <mchehab@kernel.org>, Heiko Stuebner <heiko@sntech.de>, 
+	"open list:ROCKCHIP ISP V1 DRIVER" <linux-media@vger.kernel.org>, 
+	"open list:ROCKCHIP ISP V1 DRIVER" <linux-rockchip@lists.infradead.org>, 
+	"moderated list:ARM/Rockchip SoC support" <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH] media: rkisp1: Allow higher input resolution
+Message-ID: <amx55bzbmbuvuroulrsv5dxdlmsm7f32srut2e7ivpybl2lzze@ehonmk7wlowt>
+Mail-Followup-To: =?utf-8?Q?Ond=C5=99ej?= Jirman <megi@xff.cz>, 
+	Paul Elder <paul.elder@ideasonboard.com>, Umang Jain <umang.jain@ideasonboard.com>, 
+	Adam Ford <aford173@gmail.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
+	linux-kernel@vger.kernel.org, Dafna Hirschfeld <dafna@fastmail.com>, 
+	Mauro Carvalho Chehab <mchehab@kernel.org>, Heiko Stuebner <heiko@sntech.de>, 
+	"open list:ROCKCHIP ISP V1 DRIVER" <linux-media@vger.kernel.org>, 
+	"open list:ROCKCHIP ISP V1 DRIVER" <linux-rockchip@lists.infradead.org>, 
+	"moderated list:ARM/Rockchip SoC support" <linux-arm-kernel@lists.infradead.org>
+X-My-GPG-KeyId: EBFBDDE11FB918D44D1F56C1F9F0A873BE9777ED
+ <https://xff.cz/key.txt>
+References: <20240217185202.1754750-1-megi@xff.cz>
+ <20240218205908.GA12766@pendragon.ideasonboard.com>
+ <pftafukuzq7qzbhlvwtmeg3mburnttylgy4246timlghtrdgx4@r6munvmj6oqt>
+ <CAHCN7x+zi3WxnY-mxZFKePs1cS=-DprEmh_CnypJ4XK7xBzjMQ@mail.gmail.com>
+ <b500676e-431f-40fc-868b-9f9bb359a109@ideasonboard.com>
+ <ZdMpSLqYVFbU7sF0@pyrite.rasen.tech>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 08/10] selftests/sched: Migrate cs_prctl_test to
- kselfttest
-Content-Language: en-US
-To: Chris Hyser <chris.hyser@oracle.com>,
- "Joel Fernandes (Google)" <joel@joelfernandes.org>,
- linux-kernel@vger.kernel.org, Shuah Khan <shuah@kernel.org>
-Cc: Suleiman Souhlal <suleiman@google.com>,
- Youssef Esmat <youssefesmat@google.com>, Steven Rostedt
- <rostedt@goodmis.org>, David Vernet <void@manifault.com>,
- Thomas Gleixner <tglx@linutronix.de>, "Paul E . McKenney"
- <paulmck@kernel.org>, joseph.salisbury@canonical.com,
- Dietmar Eggemann <dietmar.eggemann@arm.com>, Ben Segall
- <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
- Daniel Bristot de Oliveira <bristot@redhat.com>,
- Valentin Schneider <vschneid@redhat.com>,
- Luca Abeni <luca.abeni@santannapisa.it>,
- Tommaso Cucinotta <tommaso.cucinotta@santannapisa.it>,
- Vineeth Pillai <vineeth@bitbyteword.org>, Phil Auld <pauld@redhat.com>,
- linux-kselftest@vger.kernel.org, Shuah Khan <skhan@linuxfoundation.org>
-References: <20240216183108.1564958-1-joel@joelfernandes.org>
- <20240216183108.1564958-9-joel@joelfernandes.org>
- <91a5dd24-3a91-3114-d73d-eb57f3128d2e@oracle.com>
-From: Shuah Khan <skhan@linuxfoundation.org>
-In-Reply-To: <91a5dd24-3a91-3114-d73d-eb57f3128d2e@oracle.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <ZdMpSLqYVFbU7sF0@pyrite.rasen.tech>
 
-On 2/16/24 12:18, Chris Hyser wrote:
-> On 2/16/24 13:31, Joel Fernandes (Google) wrote:
+On Mon, Feb 19, 2024 at 07:11:20PM +0900, Paul Elder wrote:
+> On Mon, Feb 19, 2024 at 02:33:21PM +0530, Umang Jain wrote:
+> > Hi All,
+> > 
+> > On 19/02/24 7:39 am, Adam Ford wrote:
+> > > On Sun, Feb 18, 2024 at 3:02 PM Ondřej Jirman <megi@xff.cz> wrote:
+> > > > On Sun, Feb 18, 2024 at 10:59:08PM +0200, Laurent Pinchart wrote:
+> > > > > Hi Ondrej,
+> > > > > 
+> > > > > (CC'ing Paul and Umang)
+> > > > > 
+> > > > > Thank you for the patch.
+> > > > > 
+> > > > > On Sat, Feb 17, 2024 at 07:51:58PM +0100, Ondřej Jirman wrote:
+> > > > > > From: Ondrej Jirman <megi@xff.cz>
+> > > > > > 
+> > > > > > In BSP driver, it is allowed, and it works in practice. Tested on
+> > > > > > Pinephone Pro/RK3399 with IMX258 at full res.
+> > > > > Paul, Umang, do I recall correctly that you have a similar change ?
+> > > > > Could you review and test this (especially on the i.MX8MP) ?
+> > > > It's also a limit from the datasheet, so the change should not be that
+> > > > controversial:
+> > > > 
+> > > >    https://megous.com/dl/tmp/d2b333043ecebaf3.png
+> > > > 
+> > > > (so that it doesn't sound like I just copied the BSP values)
+> > > > 
+> > >  From what I see in the i.MX8M Plus reference manual, it has a max
+> > > resolution of 4096x3072, so it might be necessary to move this off
+> > 
+> > This is what I (and I assume Paul too) have been working with on i.MX8M
+> > Plus. So it's the known and tested value of max ISP input from out side.
+> > > from a #define into a structure that varies by product family.
 > 
->> This test begs to be a kselftest, is in the kselftest hierarchy and does
->> not even use a single kselftest API. Convert it.
->>
->> It simplifies some of the code and the output also looks much nicer now:
->>
->>   Totals: pass:17 fail:0 xfail:0 xpass:0 skip:0 error:0
->>
->> Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+> Yes, this is what needs to be done. Here's what I have in my notes:
 > 
-> Reviewed-by: Chris Hyser <chris.hyser@oracle.com>
+> - The RK3399 TRM says 4416x3312 max input and output on main path, with
+>   1920x1080 max output on self path.
+> - The PX30 datasheet [1] says 3264x2448 max input and output on main
+>   path, with 1920x1080 max output on self path.
+> - The RK3288 documentation [2] (under "Camera Interface and Image
+>   Processor") says 4416x3312 max input and output on main path, with
+>   1920x1080 max output on self path.
+> - The i.MX8MP reference manual (the open one) [3] (in table 13-1) says
+>   4096x3072 max resolution in single ISP mode
+
+Yeah, RKISP1_RSZ_SP_SRC_MAX_HEIGHT in the driver also seems weird in
+this respect:
+
+  #define RKISP1_RSZ_SP_SRC_MAX_WIDTH             1920
+  #define RKISP1_RSZ_SP_SRC_MAX_HEIGHT            1920
+
+regards,
+	o.
+
+> The i.MX8M Plus seems to indeed be limited to 4096x3072, but the TPG is
+> capable of generating 4416x3312, and the ISP works fine in bypass (and
+> therefore raw) mode, so technically it has different maximum sizes
+> depending on the format which makes this more exciting.
 > 
-
-Assuming this is going through sched tree,
-
-Acked-by: Shuah Khan <skhan@linuxfoundation.org>
-
-thanks,
--- Shuah
+> In any case, the PX30 (assuming the datasheet is correct) only supports
+> up to 3264x2448, so the existing #define is incorrect anyway.
+> 
+> I don't have a PX30 nor an RK3288 so I can't test those, and I haven't
+> set up my OV64A40 yet which (I've heard) can be used to test even bigger
+> resolutions.
+> 
+> 
+> Paul
+> 
+> [1] https://opensource.rock-chips.com/images/8/87/Rockchip_PX30_Datasheet_V1.4-20191227.pdf
+> [2] https://opensource.rock-chips.com/images/4/49/Rockchip_RK3288_Datasheet_V2.7-20191227.pdf
+> [3] (requires login) https://www.nxp.com/products/processors-and-microcontrollers/arm-processors/i-mx-applications-processors/i-mx-8-applications-processors/i-mx-8m-plus-arm-cortex-a53-machine-learning-vision-multimedia-and-industrial-iot:IMX8MPLUS
+> 
+> 
+> > 
+> > Yeah!
+> > > 
+> > > adam
+> > > > regards,
+> > > >          o.
+> > > > 
+> > > > > > Signed-off-by: Ondrej Jirman <megi@xff.cz>
+> > > > > > ---
+> > > > > >   drivers/media/platform/rockchip/rkisp1/rkisp1-common.h | 4 ++--
+> > > > > >   1 file changed, 2 insertions(+), 2 deletions(-)
+> > > > > > 
+> > > > > > diff --git a/drivers/media/platform/rockchip/rkisp1/rkisp1-common.h b/drivers/media/platform/rockchip/rkisp1/rkisp1-common.h
+> > > > > > index 4b6b28c05b89..74098ddbeeb3 100644
+> > > > > > --- a/drivers/media/platform/rockchip/rkisp1/rkisp1-common.h
+> > > > > > +++ b/drivers/media/platform/rockchip/rkisp1/rkisp1-common.h
+> > > > > > @@ -33,8 +33,8 @@ struct dentry;
+> > > > > >   #define RKISP1_ISP_SD_SINK                 BIT(1)
+> > > > > > 
+> > > > > >   /* min and max values for the widths and heights of the entities */
+> > > > > > -#define RKISP1_ISP_MAX_WIDTH                       4032
+> > > > > > -#define RKISP1_ISP_MAX_HEIGHT                      3024
+> > > > > > +#define RKISP1_ISP_MAX_WIDTH                       4416
+> > > > > > +#define RKISP1_ISP_MAX_HEIGHT                      3312
+> > > > > >   #define RKISP1_ISP_MIN_WIDTH                       32
+> > > > > >   #define RKISP1_ISP_MIN_HEIGHT                      32
+> > > > > > 
+> > > > > --
+> > > > > Regards,
+> > > > > 
+> > > > > Laurent Pinchart
+> > 
