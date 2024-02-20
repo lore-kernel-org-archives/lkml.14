@@ -1,25 +1,48 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAA3B78697
-	for <linux-kernel@vger.kernel.org>; Tue, 20 Feb 2024 17:37:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9541277632
+	for <linux-kernel@vger.kernel.org>; Tue, 20 Feb 2024 17:38:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708450678; cv=none; b=mdh6D2R0202rxT+j8woJmm9IpQytiZbo37R5dmrL2d1Z0ZBLUOThtcxnPp+LrH2HlsMRsgAIByOjjcQHqYvzScbz6Bbx0cm2Ke4zhoNV+Km1DjmsfE85LLHtiCtPSjMW3D3FfXO4efM5LU4lAMD6Pw3JThDWNH+rX/zgpG3QZ1o=
+	t=1708450684; cv=none; b=mbVqKm+HtjAOwRZ1obBaC3IO1ebSYWrEEBHq3sYo8UjiIwKKv+8GRqt8iMjPeOdFSfJSsesSftVPOQglFj6HxpDsCxyTPTVuRZbkALzHv/yUAfWDzL3p06pL4xGO3jdtp7BtjKqkGVPTEE9DBpn00A6pa/W2wNfmBAho6GW2k98=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708450678; c=relaxed/simple;
-	bh=de9n0Cv+s4pee1ZqOlggG89EgBEekOgbO595UsG+NtA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ZbWcgoGdPUsBcHv8lVBJfCYCxxXNTMf3xqRf6m/cY5pwA5WFzmHMDGQmGZp+FREIlr0cPyYgtxn5pEr1P9/2wbcj5cvVteWDntLpi6EEWzHic3vJY7PdDOfapbQVovhwHIT9ASlhSejpFEEPajS17/Bqhfai+5JiS7u8BA4OCL4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from ptz.office.stw.pengutronix.de ([2a0a:edc0:0:900:1d::77] helo=[127.0.0.1])
-	by metis.whiteo.stw.pengutronix.de with esmtp (Exim 4.92)
-	(envelope-from <a.fatoum@pengutronix.de>)
-	id 1rcU3l-0007x7-Ow; Tue, 20 Feb 2024 18:37:37 +0100
-Message-ID: <05b7bf7f-9b5d-4ae3-a295-82f2b46abb4a@pengutronix.de>
-Date: Tue, 20 Feb 2024 18:37:36 +0100
+	s=arc-20240116; t=1708450684; c=relaxed/simple;
+	bh=chjHpOYI/dE8bwRfCd075t2HYI1qV4j36wPFpA4IeJU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=cAoc0YwWpCObZmXGk5z0m+yqlLWU0xN7M0uYaf4ZuZja6aHymuSrD8kyTZJd5B79f50hcoK1ey7HLYb+GY+ZwzYEpbusWbEMLYauNYkR+gAa+sxNjY5r3T4jDKAYJgkn4BGo/5B4KRVszzuis454srsRO5W6DzRbjndmMsbJTuk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=c4fF2e3o; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="c4fF2e3o"
+Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 41KEfweJ020497;
+	Tue, 20 Feb 2024 17:37:29 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	message-id:date:mime-version:subject:to:cc:references:from
+	:in-reply-to:content-type:content-transfer-encoding; s=
+	qcppdkim1; bh=p0D1qsOzFR10TiLIZJjIoMBY5kcbdzXOoGhUqlF4COU=; b=c4
+	fF2e3oKqnSwDQM9DHgUKV4p9CzwMAUXXwHmDZEq+576r4/MRXoYzX63Bz95FLYAP
+	DdcQzsp9/8EljJ1Fu3rV/TbNm+ZqD+RXAoxXdYwUeu1hhipokzunMklaSf9V277H
+	/Pd0xnwWRoYm9L3STBf2eFgl3Xhe8pKyxCg4cb8496wsXIo8gowo7KcIB/bMpYDA
+	KPhKDdr6DNbXB5Hoybe8LjX4JTLMDLpkBGUIL1GaU/dZHOfi+AFWAF5GR6NWrjWO
+	78OsFChLXT/80O/omjxspg2NHRE5yWL0AUOnjbL15wN6KpKnsiMrU+kwUnzIVM50
+	D2iMwusBgsURKmP1cYZA==
+Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3wct3egxmp-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 20 Feb 2024 17:37:28 +0000 (GMT)
+Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
+	by NALASPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 41KHbRVK031007
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 20 Feb 2024 17:37:27 GMT
+Received: from [10.71.110.192] (10.80.80.8) by nalasex01b.na.qualcomm.com
+ (10.47.209.197) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Tue, 20 Feb
+ 2024 09:37:24 -0800
+Message-ID: <e59f02e4-03c9-42dc-9c04-65d339fa8cc2@quicinc.com>
+Date: Tue, 20 Feb 2024 09:37:15 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -27,134 +50,81 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] MAINTAINERS: Use a proper mailinglist for NXP i.MX
- development
+Subject: Re: [PATCH] LoongArch: Call early_init_fdt_scan_reserved_mem()
+ earlier
+To: Huacai Chen <chenhuacai@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>
+CC: <loongarch@lists.linux.dev>, Xuefeng Li <lixuefeng@loongson.cn>,
+        Guo Ren
+	<guoren@kernel.org>, Xuerui Wang <kernel@xen0n.name>,
+        Jiaxun Yang
+	<jiaxun.yang@flygoat.com>, <linux-kernel@vger.kernel.org>,
+        <loongson-kernel@lists.loongnix.cn>, <kernel@quicinc.com>
+References: <20240218151403.2206980-1-chenhuacai@loongson.cn>
 Content-Language: en-US
-To: "Daniel Baluta (OSS)" <daniel.baluta@oss.nxp.com>, shawnguo@kernel.org
-Cc: aisheng.dong@nxp.com, peng.fan@nxp.com, f.fainelli@gmail.com,
- Daniel Baluta <daniel.baluta@nxp.com>, shengjiu.wang@nxp.com,
- Frank.Li@nxp.com, linux-kernel@vger.kernel.org, haibo.chen@nxp.com,
- mirela.rabulea@nxp.com, kernel@pengutronix.de, kuba@kernel.org,
- abel.vesa@linaro.org, laurentiu.palcu@nxp.com
-References: <20240220164005.1345603-1-daniel.baluta@oss.nxp.com>
-From: Ahmad Fatoum <a.fatoum@pengutronix.de>
-In-Reply-To: <20240220164005.1345603-1-daniel.baluta@oss.nxp.com>
-Content-Type: text/plain; charset=UTF-8
+From: Oreoluwa Babatunde <quic_obabatun@quicinc.com>
+In-Reply-To: <20240218151403.2206980-1-chenhuacai@loongson.cn>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:900:1d::77
-X-SA-Exim-Mail-From: a.fatoum@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01b.na.qualcomm.com (10.47.209.197)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: RHSoEzoEOeai5k1Ch4kMzEmb3QD2kcWV
+X-Proofpoint-GUID: RHSoEzoEOeai5k1Ch4kMzEmb3QD2kcWV
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-02-20_06,2024-02-20_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 bulkscore=0
+ spamscore=0 phishscore=0 clxscore=1011 mlxscore=0 mlxlogscore=999
+ priorityscore=1501 malwarescore=0 adultscore=0 lowpriorityscore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2401310000 definitions=main-2402200126
 
-Hello Daniel,
 
-On 20.02.24 17:40, Daniel Baluta (OSS) wrote:
-> From: Daniel Baluta <daniel.baluta@nxp.com>
-> 
-> So far we used an internal linux-imx@nxp.com email address to
-> gather all patches related to NXP i.MX development.
-> 
-> Let's switch to an open mailing list that provides ability
-> for people from the community to subscribe and also have
-> a proper archive.
-> 
-> List interface at: https://lists.linux.dev.
-> Archive is at: https://lore.kernel.org/imx/
-
-I think the R: should be changed to L: then?
-
-Thanks,
-Ahmad
-
-> 
-> Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
+On 2/18/2024 7:14 AM, Huacai Chen wrote:
+> The unflatten_and_copy_device_tree() function contains a call to
+> memblock_alloc(). This means that memblock is allocating memory before
+> any of the reserved memory regions are set aside in the arch_mem_init()
+> function which calls early_init_fdt_scan_reserved_mem(). Therefore,
+> there is a possibility for memblock to allocate from any of the
+> reserved memory regions.
+>
+> Hence, move the call to early_init_fdt_scan_reserved_mem() to be earlier
+> in the init sequence, so that the reserved memory regions are set aside
+> before any allocations are done using memblock.
+>
+> Signed-off-by: Oreoluwa Babatunde <quic_obabatun@quicinc.com>
+> Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
 > ---
-> 
-> Shawn, can you please pick this up via your tree?
-> 
->  MAINTAINERS | 16 ++++++++--------
->  1 file changed, 8 insertions(+), 8 deletions(-)
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 8d1052fa6a69..3db382dc8f7b 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -2156,7 +2156,7 @@ M:	Shawn Guo <shawnguo@kernel.org>
->  M:	Sascha Hauer <s.hauer@pengutronix.de>
->  R:	Pengutronix Kernel Team <kernel@pengutronix.de>
->  R:	Fabio Estevam <festevam@gmail.com>
-> -R:	NXP Linux Team <linux-imx@nxp.com>
-> +R:	NXP Linux Team <imx@lists.linux.dev>
->  L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
->  S:	Maintained
->  T:	git git://git.kernel.org/pub/scm/linux/kernel/git/shawnguo/linux.git
-> @@ -8489,7 +8489,7 @@ FREESCALE IMX / MXC FEC DRIVER
->  M:	Wei Fang <wei.fang@nxp.com>
->  R:	Shenwei Wang <shenwei.wang@nxp.com>
->  R:	Clark Wang <xiaoning.wang@nxp.com>
-> -R:	NXP Linux Team <linux-imx@nxp.com>
-> +R:	NXP Linux Team <imx@lists.linux.dev>
->  L:	netdev@vger.kernel.org
->  S:	Maintained
->  F:	Documentation/devicetree/bindings/net/fsl,fec.yaml
-> @@ -8524,7 +8524,7 @@ F:	drivers/i2c/busses/i2c-imx.c
->  FREESCALE IMX LPI2C DRIVER
->  M:	Dong Aisheng <aisheng.dong@nxp.com>
->  L:	linux-i2c@vger.kernel.org
-> -L:	linux-imx@nxp.com
-> +L:	imx@lists.linux.dev
->  S:	Maintained
->  F:	Documentation/devicetree/bindings/i2c/i2c-imx-lpi2c.yaml
->  F:	drivers/i2c/busses/i2c-imx-lpi2c.c
-> @@ -15704,7 +15704,7 @@ F:	drivers/iio/gyro/fxas21002c_spi.c
->  NXP i.MX 7D/6SX/6UL/93 AND VF610 ADC DRIVER
->  M:	Haibo Chen <haibo.chen@nxp.com>
->  L:	linux-iio@vger.kernel.org
-> -L:	linux-imx@nxp.com
-> +L:	imx@lists.linux.dev
->  S:	Maintained
->  F:	Documentation/devicetree/bindings/iio/adc/fsl,imx7d-adc.yaml
->  F:	Documentation/devicetree/bindings/iio/adc/fsl,vf610-adc.yaml
-> @@ -15741,7 +15741,7 @@ F:	drivers/gpu/drm/imx/dcss/
->  NXP i.MX 8QXP ADC DRIVER
->  M:	Cai Huoqing <cai.huoqing@linux.dev>
->  M:	Haibo Chen <haibo.chen@nxp.com>
-> -L:	linux-imx@nxp.com
-> +L:	imx@lists.linux.dev
->  L:	linux-iio@vger.kernel.org
->  S:	Maintained
->  F:	Documentation/devicetree/bindings/iio/adc/nxp,imx8qxp-adc.yaml
-> @@ -15749,7 +15749,7 @@ F:	drivers/iio/adc/imx8qxp-adc.c
+>  arch/loongarch/kernel/setup.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/arch/loongarch/kernel/setup.c b/arch/loongarch/kernel/setup.c
+> index edf2bba80130..634ef17fd38b 100644
+> --- a/arch/loongarch/kernel/setup.c
+> +++ b/arch/loongarch/kernel/setup.c
+> @@ -357,6 +357,8 @@ void __init platform_init(void)
+>  	acpi_gbl_use_default_register_widths = false;
+>  	acpi_boot_table_init();
+>  #endif
+> +
+> +	early_init_fdt_scan_reserved_mem();
+>  	unflatten_and_copy_device_tree();
 >  
->  NXP i.MX 8QXP/8QM JPEG V4L2 DRIVER
->  M:	Mirela Rabulea <mirela.rabulea@nxp.com>
-> -R:	NXP Linux Team <linux-imx@nxp.com>
-> +R:	NXP Linux Team <imx@lists.linux.dev>
->  L:	linux-media@vger.kernel.org
->  S:	Maintained
->  F:	Documentation/devicetree/bindings/media/nxp,imx8-jpeg.yaml
-> @@ -15759,7 +15759,7 @@ NXP i.MX CLOCK DRIVERS
->  M:	Abel Vesa <abelvesa@kernel.org>
->  R:	Peng Fan <peng.fan@nxp.com>
->  L:	linux-clk@vger.kernel.org
-> -L:	linux-imx@nxp.com
-> +L:	imx@lists.linux.dev
->  S:	Maintained
->  T:	git git://git.kernel.org/pub/scm/linux/kernel/git/abelvesa/linux.git clk/imx
->  F:	Documentation/devicetree/bindings/clock/imx*
-> @@ -19630,7 +19630,7 @@ F:	drivers/mmc/host/sdhci-of-at91.c
+>  #ifdef CONFIG_NUMA
+> @@ -390,8 +392,6 @@ static void __init arch_mem_init(char **cmdline_p)
 >  
->  SECURE DIGITAL HOST CONTROLLER INTERFACE (SDHCI) NXP i.MX DRIVER
->  M:	Haibo Chen <haibo.chen@nxp.com>
-> -L:	linux-imx@nxp.com
-> +L:	imx@lists.linux.dev
->  L:	linux-mmc@vger.kernel.org
->  S:	Maintained
->  F:	drivers/mmc/host/sdhci-esdhc-imx.c
+>  	check_kernel_sections_mem();
+>  
+> -	early_init_fdt_scan_reserved_mem();
+> -
+>  	/*
+>  	 * In order to reduce the possibility of kernel panic when failed to
+>  	 * get IO TLB memory under CONFIG_SWIOTLB, it is better to allocate
+Hi Huacai,
 
--- 
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+Thank you! This change looks good to me.
 
+Regards,
+
+Oreoluwa
