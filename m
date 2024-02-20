@@ -1,204 +1,291 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f173.google.com (mail-pg1-f173.google.com [209.85.215.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F17E67C61;
-	Tue, 20 Feb 2024 12:06:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78F01664AB;
+	Tue, 20 Feb 2024 12:09:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708430821; cv=none; b=aYAepljz79Oxi16vwrxfNc7ZKQvXo+/Pfp4ghDx3gfovIsN9SBqIi+8NxJsMms85SzyKe0xaU9A+jG4OMLUEr7XyQ6uU48o4rXMDACpfnM4FUSG03FJnH7Xcjnyel5XMjnTSLKZqYuvbmJ1Qv2wSBVFC4BdVSr9dL7l9D/48a7I=
+	t=1708430986; cv=none; b=kKoWij6W3WmRK7v/m1CKPEg0fyZmQFAGxfvDjsn/REmQd1O9UDM/UoMFYxV/mPfvpey2J6Zdjh7eu7oWne2qiktdfTvTO2HvBACgu4Jw+nyFUcTVmpFpbysqUk7eKttdlqA4N3BWf7HfvbwId3e/z21gdBKDhN6IgEcL8spLcY0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708430821; c=relaxed/simple;
-	bh=38bn2fHxN8Ck7genRflG7wkA4fCw3Vpd41PgBFZgUC0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=SDlP6oTvfM0Mi2vEsdTC2iiKtL5N3OjrrzQfKp7EIlNziVMfBsGcmzQ4eV8AiNWT4SnuP7d2p5Ex6KgTzayBQsMki/SQkBbaXjFlq6VH9XaSzVtfiGuKuGJ+2VmiHcHNTvOXQhqhjr6+m513IU1VVAy7AT3CsLiXHIkXNN35XEo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Kw14HRUB; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1708430986; c=relaxed/simple;
+	bh=33VirXyTFbVT+zysoG/H2c2cJMVZuHmlBqex6Y08+KY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=T43BPncVSnvzDoEG9FdlkioWKAGbits1zLZvfar3+lkonJRdmToZxnIQwJCtHyp5sudyBzN3+NWFGN6CPAZiBVsnsVN3JYGQJZOu/D0bKNL8NFdAELXjZ7zfhvcSWjFjg6SlwePhi70lBvgDF8rKhSS0NfMxuEWUtNbZUAzZh8w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cnbvSuoR; arc=none smtp.client-ip=209.85.215.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Kw14HRUB"
-Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 41KAteL1004369;
-	Tue, 20 Feb 2024 12:06:50 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	qcppdkim1; bh=3Un3DywxvOe0E6Au+Vjnmv8pOY2C5ymlgd6WWC4EYZo=; b=Kw
-	14HRUBbgb9LFrT62fSnlquI3rQRjJ11RaNMx24MuvUGkDMfqifKQYJ+jWquj9mGm
-	/9GDXhuIYTFaxH8sl00mn0+aBzOEiKYWMNp7R2TWN9kUWrpHgdvFaM273JhT7CQP
-	pZdVBfgO9VzgUgAzp+TTYuo3OfPrEPk7nFr3gJCevHfn5HSI1To2+gddB9TkwoW9
-	24KTHpwWG/DO6n6IH8OVg1CYwdTDZxvliB53sxT0Gg0YPdhckN31JYkfOCW435rr
-	U/tseWfZA7VwHX0lzaJdfXfM6ZR66f3vgv02Kuj5RzYAXklPrJQJjra7OEnV2yjB
-	LHH9VhcmVKSFfxmMDbOQ==
-Received: from nasanppmta02.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3wct3eg75b-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 20 Feb 2024 12:06:50 +0000 (GMT)
-Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
-	by NASANPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 41KC6mqI004735
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 20 Feb 2024 12:06:49 GMT
-Received: from [10.216.16.129] (10.80.80.8) by nasanex01a.na.qualcomm.com
- (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Tue, 20 Feb
- 2024 04:06:43 -0800
-Message-ID: <0dae7231-6bd1-b7fc-4a5e-b0787b0adaba@quicinc.com>
-Date: Tue, 20 Feb 2024 17:36:39 +0530
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cnbvSuoR"
+Received: by mail-pg1-f173.google.com with SMTP id 41be03b00d2f7-5a0dc313058so320932a12.0;
+        Tue, 20 Feb 2024 04:09:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1708430984; x=1709035784; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=NiO9eJtO+uVQrXr/q4ZZrBli+HXxDKVU2SENBjkhnPg=;
+        b=cnbvSuoRmGzViflTyfXA3EZkIPmk3vCOVBvKo3QrtiMO53ZmXR+XEA91t+49VZdmlc
+         u/JnBoUl3+bYX3/fuo9M77lkkmsQOMySuG4lfWJMmVImlvz4WQAhL3uOLlFDFaMF8657
+         0+0U5xOm2qZ4GzWprBQ2MULLowuHEbkF7HbkQiN2L9MAYGoSVTXGY1jt2oluXgwsDMRm
+         HN7AbE+vOVjZd03qumsC9euXa07t9K3hP9NOctxp27GTddLs+q/SVIlR8AeOk9ZnDZQ1
+         vJQWhI7ObK4qrMXGy32ShGSykAwJtzM1igh+gT4EfJaRwY430oO6gJjPG+oF1WDnlCV0
+         fplg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708430984; x=1709035784;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=NiO9eJtO+uVQrXr/q4ZZrBli+HXxDKVU2SENBjkhnPg=;
+        b=T824JsUop/J4Sgzi1EdZNQ4Zuw8cFIRKjoUydH3ZYsuTMrH8NHxbFcXNppBvC9cyjN
+         ZbHpyrdTAdmOxuQtZHhtqVDJDdILhOIhpJIkT7a97vBNLGP3hT6l2qB6ezgNIdWeFmGU
+         3zdF2YXGAh3l93QC8j4OSaHmKLSTPuc0ruTjmBZ3Y0glV5nBcWqVhZJ673zu1hOKqrgt
+         BLNUbiyJ3Y5Y3TfpZU9ocYvCj4q0PRlraoK8g5vORaIDa1Ds4x0ASXbZtpkLCvvLxaTt
+         tuOOLfB3p/j0l4Ft0o8QwizNtfOJvxQlD/N94MDuP9syCXr+hbhK9fml4j9I38mZrnkj
+         eYHg==
+X-Forwarded-Encrypted: i=1; AJvYcCX7HCIBTJs46MnQynFCvtQLxsSheGvw7QyoLDyHaHr1PBvn3Z7RYwzt+m3Mums7HFLXK0O3PRXm0pKuLB4bXI6XrcwfcCxh6D+QGQKMgkU4rMGctH76J4oQysx8gg6f5bdBUx4IBbTs8fNzRVLu1CGv1cOCLl0YtIBaKeuM0xplq4xNrw==
+X-Gm-Message-State: AOJu0Yyz1OfciaBDeCzIOQhKMJCQk2q3CD9YQq9kF0vm+7m7xfD7gDp1
+	As5BCu14PoYl+y5aC+pIXOhs8ISc7dih8VJa0by+5LQ81LlTtPPd9Iu16XDA61LayRKXp1a4Sfd
+	t6CBWUi+XhWHZBXOZHqzgalGBN4s=
+X-Google-Smtp-Source: AGHT+IH3W9d9qdi3QNlKqfqpXHy9SgKN+QOgk2wFLB6FpnYBYWEXNizsFHWgmT+Y0vTimhvdL78ifGCMazZTPhYS2+k=
+X-Received: by 2002:a17:90a:4e46:b0:299:1ae1:51b2 with SMTP id
+ t6-20020a17090a4e4600b002991ae151b2mr10432276pjl.4.1708430983668; Tue, 20 Feb
+ 2024 04:09:43 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.9.1
-Subject: Re: [PATCH 1/5] spi: dt-bindings: add binding doc for spi-qpic-snand
-Content-Language: en-US
-To: Conor Dooley <conor@kernel.org>
-CC: <andersson@kernel.org>, <konrad.dybcio@linaro.org>, <broonie@kernel.org>,
-        <robh@kernel.org>, <krzysztof.kozlowski+dt@linaro.org>,
-        <conor+dt@kernel.org>, <miquel.raynal@bootlin.com>, <richard@nod.at>,
-        <vigneshr@ti.com>, <manivannan.sadhasivam@linaro.org>,
-        <linux-arm-msm@vger.kernel.org>, <linux-spi@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-mtd@lists.infradead.org>, <quic_srichara@quicinc.com>,
-        <quic_varada@quicinc.com>
-References: <20240215134856.1313239-1-quic_mdalam@quicinc.com>
- <20240215134856.1313239-2-quic_mdalam@quicinc.com>
- <20240215-upon-anime-af032e49e84d@spud>
-From: Md Sadre Alam <quic_mdalam@quicinc.com>
-In-Reply-To: <20240215-upon-anime-af032e49e84d@spud>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01a.na.qualcomm.com (10.52.223.231)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: bz2KTbBLMa6vU1xmmZGH03T_QBaLtLKk
-X-Proofpoint-GUID: bz2KTbBLMa6vU1xmmZGH03T_QBaLtLKk
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-02-20_06,2024-02-20_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 bulkscore=0
- spamscore=0 phishscore=0 clxscore=1011 mlxscore=0 mlxlogscore=999
- priorityscore=1501 malwarescore=0 adultscore=0 lowpriorityscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2401310000 definitions=main-2402200087
+References: <20240218101831.113469-1-minda.chen@starfivetech.com>
+ <20240218101831.113469-2-minda.chen@starfivetech.com> <SHXPR01MB0863FCE82CA2155E52A3EB6FE650A@SHXPR01MB0863.CHNPR01.prod.partner.outlook.cn>
+In-Reply-To: <SHXPR01MB0863FCE82CA2155E52A3EB6FE650A@SHXPR01MB0863.CHNPR01.prod.partner.outlook.cn>
+From: David Abdurachmanov <david.abdurachmanov@gmail.com>
+Date: Tue, 20 Feb 2024 14:09:06 +0200
+Message-ID: <CAEn-LTphwFA6KgCZWsqiMMob2Xw4t4sCZ70U0u0z2=yJOpyGHA@mail.gmail.com>
+Subject: Re: [PATCH v15 15/23] PCI: microchip: Add event irqchip field to host
+ port and add PLDA irqchip
+To: Minda Chen <minda.chen@starfivetech.com>
+Cc: Conor Dooley <conor@kernel.org>, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
+	Rob Herring <robh+dt@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
+	Lorenzo Pieralisi <lpieralisi@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, 
+	Daire McNamara <daire.mcnamara@microchip.com>, 
+	Emil Renner Berthing <emil.renner.berthing@canonical.com>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
+	"linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>, 
+	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, Paul Walmsley <paul.walmsley@sifive.com>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+	Philipp Zabel <p.zabel@pengutronix.de>, Mason Huo <mason.huo@starfivetech.com>, 
+	Leyfoon Tan <leyfoon.tan@starfivetech.com>, Kevin Xie <kevin.xie@starfivetech.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Tue, Feb 20, 2024 at 1:02=E2=80=AFPM Minda Chen <minda.chen@starfivetech=
+.com> wrote:
+>
+>
+> >
+> > As PLDA dts binding doc(Documentation/devicetree/bindings/pci/
+> > plda,xpressrich3-axi-common.yaml) showed, PLDA PCIe contains an interru=
+pt
+> > controller.
+> >
+> > Microchip PolarFire PCIE event IRQs includes PLDA interrupts and Polarf=
+ire their
+> > own interrupts. The interrupt irqchip ops includes ack/mask/unmask inte=
+rrupt
+> > ops, which will write correct registers.
+> > Microchip Polarfire PCIe additional interrupts require to write Polarfi=
+re SoC
+> > self-defined registers. So Microchip PCIe event irqchip ops can not be =
+re-used.
+> >
+> > To support PLDA its own event IRQ process, implements PLDA irqchip ops =
+and
+> > add event irqchip field to struct pcie_plda_rp.
+> >
+> > Signed-off-by: Minda Chen <minda.chen@starfivetech.com>
+> > Acked-by: Conor Dooley <conor.dooley@microchip.com>
+> > ---
+> >  .../pci/controller/plda/pcie-microchip-host.c | 66 ++++++++++++++++++-
+> >  drivers/pci/controller/plda/pcie-plda.h       |  3 +
+> >  2 files changed, 68 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/pci/controller/plda/pcie-microchip-host.c
+> > b/drivers/pci/controller/plda/pcie-microchip-host.c
+> > index b3df373a2141..beaf5c27da84 100644
+> > --- a/drivers/pci/controller/plda/pcie-microchip-host.c
+> > +++ b/drivers/pci/controller/plda/pcie-microchip-host.c
+> > @@ -770,6 +770,64 @@ static struct irq_chip mc_event_irq_chip =3D {
+> >       .irq_unmask =3D mc_unmask_event_irq,
+> >  };
+> >
+> Hi Thomas
+>   I think this patch code it is easy to review. If you busy, Could you le=
+t other
+> IRQ maintainer review? Thanks.
+>
+> Hi Lorenzo, Bjorn and Krzysztof
 
+Hi Minda,
 
-On 2/15/2024 7:54 PM, Conor Dooley wrote:
-> On Thu, Feb 15, 2024 at 07:18:52PM +0530, Md Sadre Alam wrote:
->> Add device-tree binding documentation for QCOM QPIC-SNAND-NAND Flash
->> Interface.
->>
->> Co-developed-by: Sricharan Ramabadhran <quic_srichara@quicinc.com>
->> Signed-off-by: Sricharan Ramabadhran <quic_srichara@quicinc.com>
->> Co-developed-by: Varadarajan Narayanan <quic_varada@quicinc.com>
->> Signed-off-by: Varadarajan Narayanan <quic_varada@quicinc.com>
->> Signed-off-by: Md Sadre Alam <quic_mdalam@quicinc.com>
->> ---
->>   .../bindings/spi/qcom,spi-qpic-snand.yaml     | 82 +++++++++++++++++++
->>   1 file changed, 82 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/spi/qcom,spi-qpic-snand.yaml
->>
->> diff --git a/Documentation/devicetree/bindings/spi/qcom,spi-qpic-snand.yaml b/Documentation/devicetree/bindings/spi/qcom,spi-qpic-snand.yaml
->> new file mode 100644
->> index 000000000000..fa7484ce1319
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/spi/qcom,spi-qpic-snand.yaml
->> @@ -0,0 +1,82 @@
->> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
->> +%YAML 1.2
->> +---
->> +$id: http://devicetree.org/schemas/spi/qcom,spi-qpic-snand.yaml#
->> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->> +
->> +title: Qualcomm QPIC NAND controller
->> +
->> +maintainers:
->> +  - Md sadre Alam <quic_mdalam@quicinc.com>
->> +
->> +properties:
->> +  compatible:
->> +    enum:
->> +      - qcom,ipq9574-snand
->> +
->> +  reg:
->> +    maxItems: 1
->> +
->> +  clocks:
->> +    minItems: 2
->> +    maxItems: 3
->> +
->> +  clock-names:
->> +    minItems: 2
->> +    maxItems: 3
->> +
->> +allOf:
->> +  - $ref: /schemas/spi/spi-controller.yaml#
->> +  - if:
-> 
->> +      properties:
->> +        compatible:
->> +          contains:
->> +            enum:
->> +              - qcom,ipq9574-snand
->> +
->> +    then:
->> +      properties:
->> +        dmas:
->> +          items:
->> +            - description: tx DMA channel
->> +            - description: rx DMA channel
->> +            - description: cmd DMA channel
->> +
->> +        dma-names:
->> +          items:
->> +            - const: tx
->> +            - const: rx
->> +            - const: cmd
-> 
-> None of this complexity here is needed, you have only one device in this
-> binding and therefore can define these properties at the top level.
+This patchset seems to have broken threading (lore, mailman). I have
+seen other folks on IRC mentioning that too.
 
-  Thanks for reviewing, Will fix this in next patch.
-> 
-> Cheers,
-> Conor.
-> 
->> +required:
->> +  - compatible
->> +  - reg
->> +  - clocks
->> +  - clock-names
->> +
->> +unevaluatedProperties: false
->> +
->> +examples:
->> +  - |
->> +    #include <dt-bindings/clock/qcom,ipq9574-gcc.h>
->> +    qpic_nand: spi@79b0000 {
->> +        compatible = "qcom,ipq9574-snand";
->> +        reg = <0x1ac00000 0x800>;
->> +
->> +        clocks = <&gcc GCC_QPIC_CLK>,
->> +                 <&gcc GCC_QPIC_AHB_CLK>,
->> +                 <&gcc GCC_QPIC_IO_MACRO_CLK>;
->> +        clock-names = "core", "aon", "iom";
->> +
->> +        #address-cells = <1>;
->> +        #size-cells = <0>;
->> +
->> +        flash@0 {
->> +            compatible = "spi-nand";
->> +            reg = <0>;
->> +            #address-cells = <1>;
->> +            #size-cells = <1>;
->> +            nand-ecc-engine = <&qpic_nand>;
->> +            nand-ecc-strength = <4>;
->> +            nand-ecc-step-size = <512>;
->> +            };
->> +        };
->> -- 
->> 2.34.1
->>
+I am not sure if that requires re-sending, but let's wait for others to com=
+ment.
+
+Cheers,
+david
+
+>   Now the code is pending several weeks. Maybe this patch is blocking.
+> Actually I write irqchip ops(ack/mask/unmask) like microchip irqchip ops.
+> They looks very simple that write PLDA mask or status register. They all =
+call the
+> same function plda_hwirq_to_mask(). Now you can see this function below.
+> Except INTx interrupt, one irqnum mapping to one register bit. The PLDA r=
+egister
+> graph can be seen 14th patch, which can show all the PLDA interrupts and =
+easy to
+>  get PLDA codes logic.
+>
+>   Now the 6.9-next will be closed less than 20 days. I still hope the ref=
+actoring patches
+> (patch 1 - 16) can be accepted to 6.9. (Starfive and PLDA patches have to=
+ be delayed
+> to 6.10 or later). I will try my best to achieve it because this series p=
+atches reviewed lasts
+> a long period and Conor have reviewed all the refactoring patches.
+>
+> I have no experience in refactoring code before this series patches. I tr=
+y my best to do this.
+> Maybe I did something wrong in this. Please forgive me.
+>
+> > +static u32 plda_hwirq_to_mask(int hwirq) {
+> > +     u32 mask;
+> > +
+> > +     /* hwirq 23 - 0 are the same with register */
+> > +     if (hwirq < EVENT_PM_MSI_INT_INTX)
+> > +             mask =3D BIT(hwirq);
+> > +     else if (hwirq =3D=3D EVENT_PM_MSI_INT_INTX)
+> > +             mask =3D PM_MSI_INT_INTX_MASK;
+> > +     else
+> > +             mask =3D BIT(hwirq + PCI_NUM_INTX - 1);
+> > +
+> > +     return mask;
+> > +}
+> > +
+> > +static void plda_ack_event_irq(struct irq_data *data) {
+> > +     struct plda_pcie_rp *port =3D irq_data_get_irq_chip_data(data);
+> > +
+> > +     writel_relaxed(plda_hwirq_to_mask(data->hwirq),
+> > +                    port->bridge_addr + ISTATUS_LOCAL); }
+> > +
+> > +static void plda_mask_event_irq(struct irq_data *data) {
+> > +     struct plda_pcie_rp *port =3D irq_data_get_irq_chip_data(data);
+> > +     u32 mask, val;
+> > +
+> > +     mask =3D plda_hwirq_to_mask(data->hwirq);
+> > +
+> > +     raw_spin_lock(&port->lock);
+> > +     val =3D readl_relaxed(port->bridge_addr + IMASK_LOCAL);
+> > +     val &=3D ~mask;
+> > +     writel_relaxed(val, port->bridge_addr + IMASK_LOCAL);
+> > +     raw_spin_unlock(&port->lock);
+> > +}
+> > +
+> > +static void plda_unmask_event_irq(struct irq_data *data) {
+> > +     struct plda_pcie_rp *port =3D irq_data_get_irq_chip_data(data);
+> > +     u32 mask, val;
+> > +
+> > +     mask =3D plda_hwirq_to_mask(data->hwirq);
+> > +
+> > +     raw_spin_lock(&port->lock);
+> > +     val =3D readl_relaxed(port->bridge_addr + IMASK_LOCAL);
+> > +     val |=3D mask;
+> > +     writel_relaxed(val, port->bridge_addr + IMASK_LOCAL);
+> > +     raw_spin_unlock(&port->lock);
+> > +}
+> > +
+> > +static struct irq_chip plda_event_irq_chip =3D {
+> > +     .name =3D "PLDA PCIe EVENT",
+> > +     .irq_ack =3D plda_ack_event_irq,
+> > +     .irq_mask =3D plda_mask_event_irq,
+> > +     .irq_unmask =3D plda_unmask_event_irq,
+> > +};
+> > +
+> >  static const struct plda_event_ops plda_event_ops =3D {
+> >       .get_events =3D plda_get_events,
+> >  };
+> > @@ -777,7 +835,9 @@ static const struct plda_event_ops plda_event_ops =
+=3D
+> > {  static int plda_pcie_event_map(struct irq_domain *domain, unsigned i=
+nt irq,
+> >                              irq_hw_number_t hwirq)
+> >  {
+> > -     irq_set_chip_and_handler(irq, &mc_event_irq_chip, handle_level_ir=
+q);
+> > +     struct plda_pcie_rp *port =3D (void *)domain->host_data;
+> > +
+> > +     irq_set_chip_and_handler(irq, port->event_irq_chip, handle_level_=
+irq);
+> >       irq_set_chip_data(irq, domain->host_data);
+> >
+> >       return 0;
+> > @@ -962,6 +1022,9 @@ static int plda_init_interrupts(struct platform_de=
+vice
+> > *pdev,
+> >       if (!port->event_ops)
+> >               port->event_ops =3D &plda_event_ops;
+> >
+> > +     if (!port->event_irq_chip)
+> > +             port->event_irq_chip =3D &plda_event_irq_chip;
+> > +
+> >       ret =3D plda_pcie_init_irq_domains(port);
+> >       if (ret) {
+> >               dev_err(dev, "failed creating IRQ domains\n"); @@ -1039,6=
+ +1102,7
+> > @@ static int mc_platform_init(struct pci_config_window *cfg)
+> >               return ret;
+> >
+> >       port->plda.event_ops =3D &mc_event_ops;
+> > +     port->plda.event_irq_chip =3D &mc_event_irq_chip;
+> >
+> >       /* Address translation is up; safe to enable interrupts */
+> >       ret =3D plda_init_interrupts(pdev, &port->plda, &mc_event); diff =
+--git
+> > a/drivers/pci/controller/plda/pcie-plda.h
+> > b/drivers/pci/controller/plda/pcie-plda.h
+> > index e0e5e7cc8434..a3ce01735bea 100644
+> > --- a/drivers/pci/controller/plda/pcie-plda.h
+> > +++ b/drivers/pci/controller/plda/pcie-plda.h
+> > @@ -107,6 +107,8 @@ enum plda_int_event {
+> >
+> >  #define PLDA_NUM_DMA_EVENTS                  16
+> >
+> > +#define EVENT_PM_MSI_INT_INTX                        (PLDA_NUM_DMA_EVE=
+NTS +
+> > PLDA_INTX)
+> > +#define EVENT_PM_MSI_INT_MSI                 (PLDA_NUM_DMA_EVENTS +
+> > PLDA_MSI)
+> >  #define PLDA_MAX_EVENT_NUM                   (PLDA_NUM_DMA_EVENTS +
+> > PLDA_INT_EVENT_NUM)
+> >
+> >  /*
+> > @@ -155,6 +157,7 @@ struct plda_pcie_rp {
+> >       raw_spinlock_t lock;
+> >       struct plda_msi msi;
+> >       const struct plda_event_ops *event_ops;
+> > +     const struct irq_chip *event_irq_chip;
+> >       void __iomem *bridge_addr;
+> >       int num_events;
+> >  };
+> > --
+> > 2.17.1
+>
+>
+> _______________________________________________
+> linux-riscv mailing list
+> linux-riscv@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-riscv
