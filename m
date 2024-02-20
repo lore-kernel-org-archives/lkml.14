@@ -1,144 +1,93 @@
-Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 307395FDA6
-	for <linux-kernel@vger.kernel.org>; Tue, 20 Feb 2024 09:23:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 093715F552;
+	Tue, 20 Feb 2024 09:23:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708420996; cv=none; b=rs/hm1aJAxzHZicAqGQaHBD7Hn5EL62rPshV0u1f5yJUmhl2ZardOr9QUZqNahsgQpmhswKvv9DSvUtklbmHxBardHlO0pQqrGD0W2gPookwx8N7Eil8xP/HWjj6UnzV16FxH5PIlnlW3p2/Fyxw9fxXZ3xzOtK+s86xSnX9cfM=
+	t=1708421008; cv=none; b=MUtMRJktlgbfg+JfAc/Zgs3sTErjJO5UktM2C/pFETrjDvxdFAu81jVwDpKX1P6u0x7aTtQg3SzzDvTb2QvvxmJyis2UxKm01AqG7ElWcSnK7z2pXMCw2C82qAq43YHrDfvbbT9SoR4CNk3LXhbmbhjhHd2+2GIaHFtN6fCmFUk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708420996; c=relaxed/simple;
-	bh=1GyxVLus3y0Y3z7nhQnZBajXS2dyFfhURG0hJiCFSMs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Cv5xdYc5ndPk533Zef7fthGKMIKRr1Yjq1hb8TKRDXbU5mS0X0qYuqZxUwgBy9isdr9SVMQqwmffWRlQfEtVr69s1kw1DFBdw5zD7TYyV8uMZRlD1lWnfKL0c3StwiM6UcrJb9AMRD7s1koCyaKFusYs4GepbVBRzzM88Yz134A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=NGIS05Sb; arc=none smtp.client-ip=198.137.202.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
+	s=arc-20240116; t=1708421008; c=relaxed/simple;
+	bh=oE9usEZm8Gkp3CztCxfanlaxoA7z8FsMATKom3DsKN4=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=WXFW3I/7FThjbIU1v7kpi7TgIpxUY9gOpiHMAmquCtB2DST0kcaIL3KV26kzBb3eGicxj1TLjPqO0pyvKLpbdjTvKbVXROlbQ4rGTlBdjZRWB2dJ25q/GB5O3jlsjzzrxFNYFhma8WXFPynALb2r/1W8wTL4oqIgdp5g7U+GM5Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ignlrRqn; arc=none smtp.client-ip=209.85.167.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="NGIS05Sb"
-Received: from [192.168.7.187] ([71.202.166.45])
-	(authenticated bits=0)
-	by mail.zytor.com (8.17.2/8.17.1) with ESMTPSA id 41K8bhmh3560893
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-	Tue, 20 Feb 2024 00:37:43 -0800
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 41K8bhmh3560893
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2024021201; t=1708418264;
-	bh=WZhTIkMEDXfBS+v/xlQmW53/Jt7i6xPDZx3y3BeuvW0=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=NGIS05SboiOeG4Y+Hs6laMsl3tN6+kvZTgV33YE/77YlGbTVoNuDeQsG9ZkaO69uX
-	 cWKGPQwkj7/L2vA7W21wvEGhMfGnyTVKD2SK7CQgu6HqqA7zGi73DlWD/AP68jRpEW
-	 tdLtrPhSunhKn/XdnGOGpDEpzwFN0s34dcNC0Vb9Mx2uEYf36qxosDE/0rofd/LyL/
-	 Elk0ivIc4fxlTBY4iNscT6uMQ2b1IO/ss7X/mDhEij+PlQLT38NiSB+0hFRy/v332/
-	 Y+mgGcaBh6o+XR8LlAuZQeaP/bGul4cSQCanz5ngT8JMQLQM5XaNioPpv6LvjHmWbX
-	 CR8Wsek/z7J0w==
-Message-ID: <07d43633-d707-415d-a662-ecd3a50b12ae@zytor.com>
-Date: Tue, 20 Feb 2024 00:37:41 -0800
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ignlrRqn"
+Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-512be87a0f3so1488256e87.3;
+        Tue, 20 Feb 2024 01:23:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1708421005; x=1709025805; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=XLvk9b5FrIPa9pQNkAPaUlHUg45CZIFJBTlV1pT4Cxk=;
+        b=ignlrRqnShGwgmsxAn2R+6Ycs3urQR0z4JQ3Y6Xad/z72deg1UtRSEfOwJWeZ0Xzgk
+         XRa1KEGzvjOjliSmdDkZhNSDEsG00Z1JIOU0sqdGv8cki7XaqpGx2xahLkIrlyjPXuAb
+         rJuzKaPcHQSF8UYju5nJb00WgF7/EY9m7CTbRhh3zJJQ94wdhqTehXs1NbeIJGmW5HNf
+         pJi26+943EoVT/cbur1/6socf2c6M7CsToJQ4p96QZZo5dGilJRBV0K/pHFu1LkLAPpB
+         ONyn2UbbeFagPW6CJoFA5hBVBWb/DZvjnFL02Xi8uHZvq5DPjJgOAw3dO/cuxk7xbzbD
+         3jkw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708421005; x=1709025805;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=XLvk9b5FrIPa9pQNkAPaUlHUg45CZIFJBTlV1pT4Cxk=;
+        b=C/YwqVzRq2kWor/3jN11jGQwojRp3YTlHVmIx/+Rnz5VJABvW8QlcQuSJFpjAS9SyX
+         fc/9H4Ugbun8vY7ob8GBN6Lw5X6FP4vaGjOrSC/E7AIaLJk4CqaKe9XXCeDGo+YIzESQ
+         ext6mWBwVUE3iBfy5c9kpaVtJKJNNK1R33t8uMQPFE1qNMtFCbP9ku0bzvq7yy3Iemwp
+         7ltULBB82+MsnuU8B8M4e9+gD45V5Hn0JlBPMOYqL6a4axNAzy+K286aR+X3tPkM1sdK
+         xpRFWyOK3LFjZTszaL3hUmDxmFk5KbyNZTWAANCIdaxPF32J67B630xcVBOkQBwshc63
+         mYVQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWX4dgNUdZH1HJ9hlZiyN0yktpz0xnJmHVgSTsi4qgwJ42lL/BJTElX05XoGM16aF5VL5vuGNgtrZgeCNpJUxBrffKBfP/Ijwito4NAcLlkpDZGSdkPQboAAzEfcqTVAZ7QkD52oK7sBHG/cUZu
+X-Gm-Message-State: AOJu0YyS/ZnJPoTuJumKbdiHxFccSwozZwAErWcU2lG0IIwUC0oKIbp0
+	aihcR14sCBjSnDmhYu0g7ohugGyFOpWDeXMiMfVCOOaSfbzvZLYmQ/DMO8oq+o8=
+X-Google-Smtp-Source: AGHT+IGPiNJIo/RM+pfOcyAeGRF3Prk8bkLGVYcuh9JnZgt+oXGa8pSyuAQqK8HQq04q9jCkAqILvQ==
+X-Received: by 2002:a05:6512:23a5:b0:512:ca34:6666 with SMTP id c37-20020a05651223a500b00512ca346666mr612055lfv.0.1708421004952;
+        Tue, 20 Feb 2024 01:23:24 -0800 (PST)
+Received: from localhost (cpc154979-craw9-2-0-cust193.16-3.cable.virginm.net. [80.193.200.194])
+        by smtp.gmail.com with ESMTPSA id s6-20020a05600c45c600b00412696bd7d9sm4094405wmo.41.2024.02.20.01.23.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 20 Feb 2024 01:23:24 -0800 (PST)
+From: Colin Ian King <colin.i.king@gmail.com>
+To: Shuah Khan <shuah@kernel.org>,
+	linux-kselftest@vger.kernel.org
+Cc: kernel-janitors@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH][next] selftests: sched: Fix spelling mistake "hiearchy" -> "hierarchy"
+Date: Tue, 20 Feb 2024 09:23:23 +0000
+Message-Id: <20240220092323.2677156-1-colin.i.king@gmail.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 0/3] Cleanup for PAT
-To: Wupeng Ma <mawupeng1@huawei.com>, akpm@linux-foundation.org,
-        dave.hansen@linux.intel.com, luto@kernel.org, tglx@linutronix.de,
-        peterz@infradead.org, hpa@zytor.com
-Cc: linux-kernel@vger.kernel.org, x86@kernel.org, bp@suse.de, mingo@redhat.com,
-        rdunlap@infradead.org, bhelgaas@google.com, linux-mm@kvack.org
-References: <20240220034835.507022-1-mawupeng1@huawei.com>
-Content-Language: en-US
-From: Xin Li <xin@zytor.com>
-Autocrypt: addr=xin@zytor.com; keydata=
- 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
- l75w1xInsg==
-In-Reply-To: <20240220034835.507022-1-mawupeng1@huawei.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On 2/19/2024 7:48 PM, Wupeng Ma wrote:
-> From: Ma Wupeng <mawupeng1@huawei.com>
-> 
+There is a spelling mistake in a printed message. Fix it.
 
-This patch set is all about follow_phys() cleanups, so "Cleanup for PAT"
-seems too generic.
+Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
+---
+ tools/testing/selftests/sched/cs_prctl_test.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> Patch #1 move follow_phys to memtype.c since only pat use this.
-> Patch #2 cleanup parameter in follow_phys.
-> Patch #3 drop the unnecessary WARN_ON_ONCE if follow_phys fails.
-
-I'm more curious why follow_phys() ended up this way?
-
-follow_phys() was introduced in commit 28b2ee20c7cba ("access_process_vm
-device memory infrastructure") in 2008 for getting a physical page address
-for a virtual address, and used in generic_access_phys(). And later it's
-used in x86 PAT code.
-
-Commit 03668a4debf4f ("mm: use generic follow_pte() in follow_phys()") made
-follow_phys() more of a wrapper of follow_pte(), and commit 96667f8a4382d
-("mm: Close race in generic_access_phys") replaced follow_phys() with
-follow_pte() in generic_access_phys(). And the end result is that
-follow_phys() is used in x86 PAT code only.
-
-As follow_phys() in untrack_pfn() can be replaced with follow_pfn(), then
-maybe we don't have to keep follow_phys(), and just use follow_pte() in
-track_pfn_copy()?
-
-Thanks!
-     Xin
-
-> 
-> Changelog since v3:
-> - rebase to latest linux
-> - fix compile warnings
-> 
-> Changelog since v2:
-> - rebase to latest linux
-> 
-> Changelog since v1:
-> - split patch #1 into two patches based on Boris's advise
-> 
-> Ma Wupeng (3):
->    x86/mm/pat: Move follow_phys to pat-related file
->    x86/mm/pat: Cleanup unused parameter in follow_phys
->    x86/mm/pat: Remove WARN_ON_ONCE if follow_phys fails
-> 
->   arch/x86/mm/pat/memtype.c | 32 ++++++++++++++++++++++++++------
->   include/linux/mm.h        |  2 --
->   mm/memory.c               | 28 ----------------------------
->   3 files changed, 26 insertions(+), 36 deletions(-)
-> 
-
+diff --git a/tools/testing/selftests/sched/cs_prctl_test.c b/tools/testing/selftests/sched/cs_prctl_test.c
+index 7ba057154343..62fba7356af2 100644
+--- a/tools/testing/selftests/sched/cs_prctl_test.c
++++ b/tools/testing/selftests/sched/cs_prctl_test.c
+@@ -276,7 +276,7 @@ int main(int argc, char *argv[])
+ 	if (setpgid(0, 0) != 0)
+ 		handle_error("process group");
+ 
+-	printf("\n## Create a thread/process/process group hiearchy\n");
++	printf("\n## Create a thread/process/process group hierarchy\n");
+ 	create_processes(num_processes, num_threads, procs);
+ 	need_cleanup = 1;
+ 	disp_processes(num_processes, procs);
+-- 
+2.39.2
 
