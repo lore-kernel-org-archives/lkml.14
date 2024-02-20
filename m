@@ -1,99 +1,66 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2EEF36BB38
-	for <linux-kernel@vger.kernel.org>; Tue, 20 Feb 2024 14:48:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83F4A4C60;
+	Tue, 20 Feb 2024 14:49:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708440520; cv=none; b=Xk216TnlzeS0yeJBpKiHyuKN2cdDUXUt6M0VqUSH0qqDlp8XagAfM1j3/FrCWCRIfImYEwJsDjkjbioThuZLRBOxbO+g0UFtg6LenG7Du5rcWDgj0aZTwuD7wC7spbCz5MXJDH9PcJOpvc14J8FdLaI7zUJVu/1yu05JS/L9mkc=
+	t=1708440568; cv=none; b=ckPovDbskSujhNS5+rKWj60UQgh3XzcWQDZxCRRRP/H1umk1Ovf0OewxmCWwSvd2DG7odNG2d9wVr2R0r8SQQZ4THtEofpj0NNjRvfN47NLMCJ5gizBGfy8ZtNJg/dsPtlblSnFs9QcbsRWLdgTdRGOIoZxTGBeAFq5QfB/nEQ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708440520; c=relaxed/simple;
-	bh=XN9YZw6gqiGlmKU+T7UoDdupQ3CvU5WcIwPaA9Hk8Sw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=tlE6IbGkhGf+MNd8loh79CdfKX+ph3K86znZVpQWFZgaWdPeoeFVVecm9W3stTd81fRTwo8Zub1cUAQFGWrrXT14+WJBvbcIlSdODkGY5kYJJb50AhOeXB6k1H04Fa3ZZQGD9/uTJZ48/dEAesi/egNIDrayhIwJZz/j1a7Jz/Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7E896FEC;
-	Tue, 20 Feb 2024 06:49:15 -0800 (PST)
-Received: from [10.1.196.72] (e119884-lin.cambridge.arm.com [10.1.196.72])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DD30B3F73F;
-	Tue, 20 Feb 2024 06:48:35 -0800 (PST)
-Message-ID: <a32f4a4a-b2ce-4c34-aa8b-1954189436c9@arm.com>
-Date: Tue, 20 Feb 2024 14:48:34 +0000
+	s=arc-20240116; t=1708440568; c=relaxed/simple;
+	bh=a8t1iPdBa56JOkXzwJ9TrVm3w5eJG4iLEzNgpIdy/e8=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=TeXwDnhb0yW9GdUXCtHxxS6ZQD+hEyD9shNBiggy6R2JnaSdmz1JQmefJBQLH8gC8NrAaJJsymmOdwXf+059q/5Snyl/t8QNDLofY3XI2l7qM+TatWemGjEk4FPfl1kbGANlTGfwxV0JSHEJxlW1JdrxgWORbVK+T2UD/+DD1NE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 733EAC433C7;
+	Tue, 20 Feb 2024 14:49:27 +0000 (UTC)
+Date: Tue, 20 Feb 2024 09:51:12 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>
+Subject: [PATCH] ring-buffer: Do not let subbuf be bigger than write mask
+Message-ID: <20240220095112.77e9cb81@gandalf.local.home>
+X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 00/10] vdso: Misc cleanups and prevent code duplication
-To: Anna-Maria Behnsen <anna-maria@linutronix.de>,
- linux-kernel@vger.kernel.org
-Cc: Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
-References: <20240219153939.75719-1-anna-maria@linutronix.de>
-Content-Language: en-US
-From: Vincenzo Frascino <vincenzo.frascino@arm.com>
-In-Reply-To: <20240219153939.75719-1-anna-maria@linutronix.de>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
+From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 
+The data on the subbuffer is measured by a write variable that also
+contains status flags. The counter is just 20 bits in length. If the
+subbuffer is bigger than then counter, it will fail.
 
-On 19/02/2024 15:39, Anna-Maria Behnsen wrote:
-> Hi,
-> 
-> the vdso related cleanup queue contains two parts:
-> 
-> - Patch 1-3: Misc cleanups related to a comment, a superfluous header
-> 	     include and ifdeffery
-> 
-> - Patch 4-10: The union vdso_data_store is defined in seven
->   	      architectures. Make this union available in a generic vdso
->   	      header file to prevent code duplication and fix the
->   	      architectures one by one to use the generic vdso_data_store.
-> 
-> Thanks,
-> 
-> 	Anna-Maria
-> 
-> 
+Make sure that the subbuffer can not be set to greater than the counter
+that keeps track of the data on the subbuffer.
 
-Really good cleanup. Thank you for this.
+Fixes: 2808e31ec12e5 ("ring-buffer: Add interface for configuring trace sub buffer size")
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+ kernel/trace/ring_buffer.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-Reviewed-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
-
-> Anna-Maria Behnsen (10):
->   vdso/helpers: Fix grammar in comments
->   s390/vdso/data: Drop unnecessary header include
->   csky/vdso: Remove superfluous ifdeffery
->   vdso/arm: make union vdso_data_store available for all
->   arm64/vdso: Use generic union vdso_data_store
->   riscv/vdso: Use generic union vdso_data_store
->   s390/vdso: Use generic union vdso_data_store
->   loongarch/vdso: Use generic union vdso_data_store
->   mips/vdso: Use generic union vdso_data_store
->   csky/vdso: Use generic union vdso_data_store
-> 
->  arch/arm/include/asm/elf.h           |  1 -
->  arch/arm/include/asm/vdso_datapage.h | 26 --------------------------
->  arch/arm/kernel/asm-offsets.c        |  4 +++-
->  arch/arm/kernel/vdso.c               |  4 ----
->  arch/arm64/kernel/vdso.c             |  5 +----
->  arch/csky/include/asm/vdso.h         |  5 -----
->  arch/csky/kernel/vdso.c              | 14 ++------------
->  arch/loongarch/kernel/vdso.c         |  6 ++----
->  arch/mips/include/asm/vdso.h         |  5 -----
->  arch/mips/kernel/vdso.c              |  2 +-
->  arch/riscv/kernel/vdso.c             |  8 +-------
->  arch/s390/include/asm/vdso/data.h    |  1 -
->  arch/s390/kernel/vdso.c              |  5 +----
->  include/vdso/datapage.h              | 10 ++++++++++
->  include/vdso/helpers.h               |  8 ++++----
->  15 files changed, 25 insertions(+), 79 deletions(-)
->  delete mode 100644 arch/arm/include/asm/vdso_datapage.h
-> 
-
+diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+index aa54266f5e1f..3852f3b001cc 100644
+--- a/kernel/trace/ring_buffer.c
++++ b/kernel/trace/ring_buffer.c
+@@ -5878,6 +5878,10 @@ int ring_buffer_subbuf_order_set(struct trace_buffer *buffer, int order)
+ 	if (psize <= BUF_PAGE_HDR_SIZE)
+ 		return -EINVAL;
+ 
++	/* Size of a subbuf cannot be greater than the write counter */
++	if (psize > RB_WRITE_MASK + 1)
++		return -EINVAL;
++
+ 	old_order = buffer->subbuf_order;
+ 	old_size = buffer->subbuf_size;
+ 
 -- 
-Regards,
-Vincenzo
+2.43.0
+
