@@ -1,226 +1,267 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26F956997D;
-	Tue, 20 Feb 2024 12:32:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF85369941
+	for <linux-kernel@vger.kernel.org>; Tue, 20 Feb 2024 12:32:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708432329; cv=none; b=n7iJZB1sHtBLw86OotYGRSJHXBG7scCprEpfyU/Wi5eBR6CjP7yz8qBeAGvfxvXv99B3OdnjeHrYaH+XIRWDywd7dZrh7M28FfGFFjZjAceKw0/9Qs+uDDEsNc73H+wf9slzYBg2zNR8vbD12aHiAB/wRKVzIRuVTYOKGwJyo9Y=
+	t=1708432370; cv=none; b=Bqu8TgQJWyO2xoetjS7WNwOJiR2skyFASpGj1TZzLaZT3ftAasvgSYU01WDn0YT+yqoyro/dSSoK8foHCLKB6PbYqnkPuwWzEQsv/iMQ2R22guT7/pMqdQMo/xSStFbRirMEu0uSbvzjcwkHj+lhP9F3ik61HB13bMx8zkH3+Js=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708432329; c=relaxed/simple;
-	bh=sllmESvhwefKtD+mcwJUgwkGcuVOxcsWD1b0mvfzBoA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=FMPoHJy+3GvEc24jKldlSyLhdQyNPeh/pHUrxq9rZ7XDzJPlBsx4RF1z0IWi4aHeVu6jyrDstPIFu2a5x5Usekv/EYevXw6sdi/3CaipEDFSiLXv/GOouMM4o6Fp7hlp5ZOWdaZUK9hCvKYSxqUKX3o7iOCevEJxMAQNxs7T/wg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=UTizOyuf; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1708432370; c=relaxed/simple;
+	bh=cFxAPeixrrkBcvkFKM9uK9ciH82I1tyfkh8gtrX7CMc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=o7FJapD6K0qa5d7N4Ug6FUEzlwSe94dxa3TWVSJuyVeN13Hg9rS9Nx+CbACzNfiCUOJhGc9aLAVcS91GtecEfNU6DKfwWi6V0abpsqLgH11rdYDRX4J0PilZosmT9IvUw917uYVGK7zgd/dCXun9cgLPlx4sh8fbxQRxUxo0Arc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=aXLiwpgW; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="UTizOyuf"
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 41KAEioE025078;
-	Tue, 20 Feb 2024 12:31:48 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	qcppdkim1; bh=+LpGty1WpTBAu3u7mkOybl2Gl1+n/qkpH75rRLI6A+8=; b=UT
-	izOyufZn3dlb5lmhN0gMUnMZUzW3VhGArJoLZZ3pVDpdRNq9pJOp8px/4VG4wqt8
-	GWi0oktlhZLirGRpZGdf+HSOr/KT3gl+LzHndOrkK+NFiyhBd0Ql4fQQ8ma8y8yO
-	hBSLciudHciG4YxG/hl4LMkDl8lyXoXw1oMlpENSKM/9esowMnsyfYzhH1Pyfdzs
-	t3X5AQdus8elLzYDZ+JZNrZMCaY9CPJv3KivhIkkLx1fLEFzi82afhUe+2gKlgih
-	R6SzJzxUA3cbfj8CYY81fYbIpKjJQGQn/06IMovG0w/4b3QJoWUUcRd8zryFxOcM
-	gxygtLWW+rdzt2+iR/kA==
-Received: from nasanppmta01.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3wct5787v3-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 20 Feb 2024 12:31:48 +0000 (GMT)
-Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
-	by NASANPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 41KCVlQS017701
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 20 Feb 2024 12:31:47 GMT
-Received: from [10.216.16.129] (10.80.80.8) by nasanex01a.na.qualcomm.com
- (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Tue, 20 Feb
- 2024 04:31:41 -0800
-Message-ID: <3e1e56dc-adb6-e4ec-b99b-688c707ddf0a@quicinc.com>
-Date: Tue, 20 Feb 2024 18:01:38 +0530
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aXLiwpgW"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1708432368; x=1739968368;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=cFxAPeixrrkBcvkFKM9uK9ciH82I1tyfkh8gtrX7CMc=;
+  b=aXLiwpgW04wnbvJSpjC8LQk1GcQBgdmaNMhkYPgr8HzSnVi11hKmZf46
+   i8S39DSdiarrJx46j/GoQgcAhcsmIObMbsqzib1O8W3Awo9TZjKX4LFe/
+   6iUoCjtW0TVsTBE4aMkheiUmJNDduQ1PDBbVqm25VtXw4b8/g/XAQIaqf
+   Nxo8DLfJEaSYM5RPdiaJq4wiWErErwNdKDERbbKqFoR0LJPwDUztizs9g
+   ttWjKs3i/MV9PVcgndESzsOD4dQX5dEF9cJqpBKLFbFXZeht1W7ckI0u/
+   kpAb99r5NHDvy3YAKLCUC38q3/gjVwkR1uNAyTdEV0ZJpVLD36vDiyFlI
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10989"; a="13942899"
+X-IronPort-AV: E=Sophos;i="6.06,172,1705392000"; 
+   d="scan'208";a="13942899"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Feb 2024 04:32:47 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.06,172,1705392000"; 
+   d="scan'208";a="35528286"
+Received: from pjayasek-mobl.amr.corp.intel.com (HELO [10.246.112.112]) ([10.246.112.112])
+  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Feb 2024 04:32:45 -0800
+Message-ID: <ae5b3c49-308e-465c-8bc6-c0e1ac79f19f@linux.intel.com>
+Date: Tue, 20 Feb 2024 07:32:43 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.9.1
-Subject: Re: [PATCH 4/5] arm64: dts: qcom: ipq9574: Add SPI nand support
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v8] ASoc: tas2783: Add tas2783 codec driver
+To: Shenghao Ding <shenghao-ding@ti.com>, broonie@kernel.org
+Cc: andriy.shevchenko@linux.intel.com, lgirdwood@gmail.com, perex@perex.cz,
+ 13916275206@139.com, alsa-devel@alsa-project.org,
+ linux-kernel@vger.kernel.org, liam.r.girdwood@intel.com,
+ bard.liao@intel.com, mengdong.lin@intel.com,
+ yung-chuan.liao@linux.intel.com, baojun.xu@ti.com, kevin-lu@ti.com,
+ tiwai@suse.de, soyer@irl.hu
+References: <20240219022153.553-1-shenghao-ding@ti.com>
 Content-Language: en-US
-To: Kathiravan Thirumoorthy <quic_kathirav@quicinc.com>,
-        <andersson@kernel.org>, <konrad.dybcio@linaro.org>,
-        <broonie@kernel.org>, <robh@kernel.org>,
-        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
-        <miquel.raynal@bootlin.com>, <richard@nod.at>, <vigneshr@ti.com>,
-        <manivannan.sadhasivam@linaro.org>, <linux-arm-msm@vger.kernel.org>,
-        <linux-spi@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-mtd@lists.infradead.org>
-CC: <quic_srichara@quicinc.com>, <quic_varada@quicinc.com>
-References: <20240215134856.1313239-1-quic_mdalam@quicinc.com>
- <20240215134856.1313239-5-quic_mdalam@quicinc.com>
- <17c6b3df-2acd-45e2-8167-02c629b1e972@quicinc.com>
-From: Md Sadre Alam <quic_mdalam@quicinc.com>
-In-Reply-To: <17c6b3df-2acd-45e2-8167-02c629b1e972@quicinc.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01a.na.qualcomm.com (10.52.223.231)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: St93OQcwmYXz7tjkL789OcImyOxEtwXK
-X-Proofpoint-GUID: St93OQcwmYXz7tjkL789OcImyOxEtwXK
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-02-20_06,2024-02-20_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 mlxscore=0
- spamscore=0 bulkscore=0 impostorscore=0 priorityscore=1501 malwarescore=0
- adultscore=0 clxscore=1015 phishscore=0 lowpriorityscore=0 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2401310000
- definitions=main-2402200090
+From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+In-Reply-To: <20240219022153.553-1-shenghao-ding@ti.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+
+It's starting to look good, but the use of the dev_num is conceptually 
+broken. The only way to reliably identify a device is the combination of 
+link_id and unique_id. The information is present for both ACPI and DT 
+systems. See comments below.
+-Pierre
+
+> +static void tas2783_apply_calib(struct tasdevice_priv *tas_dev,
+> +	unsigned int *cali_data)
+> +{
+> +	struct regmap *map = tas_dev->regmap;
+> +	u8 *cali_start;
+> +	u16 dev_num;
+> +	int ret;
+> +
+> +	if (!tas_dev->sdw_peripheral) {
+> +		dev_err(tas_dev->dev, "%s: peripheral doesn't exist.\n",
+> +			__func__);
+> +		return;
+> +	}
+> +
+> +	dev_num = clamp(tas_dev->sdw_peripheral->dev_num, 1, 4) - 1;
+
+Not following what restrictions you are trying to enforce on the device 
+number. That's a value selected by the manager. You absolutely cannot 
+assume the value is between 1 and 4, the max value is 11.
+
+> +	/*
+> +	 * The area saving tas2783 calibrated data is specified by its
+> +	 * dev_num. cali_start is the first address of current tas2783's
+> +	 * calibrated data.
+> +	 */
+> +	cali_start = (u8 *)(cali_data + dev_num * sizeof(tas2783_cali_reg));
+> +	for (int i = 0; i < ARRAY_SIZE(tas2783_cali_reg); i++) {
+> +		ret = regmap_bulk_write(map, tas2783_cali_reg[i],
+> +			&cali_start[4 * i], 4);
+> +		if (ret) {
+> +			dev_err(tas_dev->dev, "Cali failed %x:%d\n",
+> +				tas2783_cali_reg[i], ret);
+> +			break;
+> +		}
+> +	}
+> +}
+> +
+> +/*
+> + * Load the calibration data, including speaker impedance, f0, etc.
+> + * Calibration is done by the manufacturer in the factory. The calibration
+> + * data are used by the algorithm for calculating the speaker temperature,
+> + * speaker membrane excursion and f0 in real time during playback.
+> + * The DSP will work with default data values if calibrated data are
+> + * missing or are invalid.
+> + * Layout of calibrated Data in UEFI:
+> + *	Calibrated Data of Dev 0 (20 bytes)
+> + *	Calibrated Data of Dev 1 (20 bytes)
+> + *	Calibrated Data of Dev 2 (20 bytes)
+> + *	Calibrated Data of Dev 3 (20 bytes)
+
+You will have a hard-time matching those device indices with the 
+dev_num, which depends on the enumeration order and the bus allocation.
+
+The only stable board-specific value is to use a combination of link_id 
+and unique_id (possibly controller id as well).
 
 
+> + *	CRC (4 bytes)
+> + */
 
-On 2/16/2024 9:10 PM, Kathiravan Thirumoorthy wrote:
-> 
-> 
-> On 2/15/2024 7:18 PM, Md Sadre Alam wrote:
->> Add SPI NAND support for ipq9574 SoC.
->>
->> Signed-off-by: Md Sadre Alam <quic_mdalam@quicinc.com>
->> ---
->>   .../boot/dts/qcom/ipq9574-rdp-common.dtsi     | 43 +++++++++++++++++++
->>   arch/arm64/boot/dts/qcom/ipq9574.dtsi         | 27 ++++++++++++
->>   2 files changed, 70 insertions(+)
->>
->> diff --git a/arch/arm64/boot/dts/qcom/ipq9574-rdp-common.dtsi b/arch/arm64/boot/dts/qcom/ipq9574-rdp-common.dtsi
->> index 91e104b0f865..5b54a027fa5d 100644
->> --- a/arch/arm64/boot/dts/qcom/ipq9574-rdp-common.dtsi
->> +++ b/arch/arm64/boot/dts/qcom/ipq9574-rdp-common.dtsi
->> @@ -139,6 +139,49 @@ gpio_leds_default: gpio-leds-default-state {
->>           drive-strength = <8>;
->>           bias-pull-up;
->>       };
->> +
->> +    qpic_snand_default_state: qpic-snand-default-state {
->> +        clock-pins {
->> +            pins = "gpio5";
->> +            function = "qspi_clk";
->> +            drive-strength = <8>;
->> +            bias-disable;
->> +        };
->> +
->> +        cs-pins {
->> +            pins = "gpio4";
->> +            function = "qspi_cs";
->> +            drive-strength = <8>;
->> +            bias-disable;
->> +        };
->> +
->> +        data-pins {
->> +            pins = "gpio0", "gpio1", "gpio2";
-> 
-> 
-> As per the pinctrl driver[1], there are 4 data pins.
-> 
-> [1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/pinctrl/qcom/pinctrl-ipq9574.c#n296
+> +static int tasdevice_comp_probe(struct snd_soc_component *comp)
+> +{
+> +	struct tasdevice_priv *tas_dev = snd_soc_component_get_drvdata(comp);
+> +	acpi_handle handle = ACPI_HANDLE(tas_dev->dev);
+> +	const struct firmware *fw_entry = NULL;
+> +	const char *sub = NULL;
+> +	int ret, value_sdw;
+> +
+> +	if (handle) {
+> +		sub = acpi_get_subsystem_id(handle);
+> +		if (IS_ERR(sub))
+> +			sub = NULL;
+> +	}
+> +
+> +	tas_dev->component = comp;
+> +
+> +	/*
+> +	 * Each tas2783 in the system has its own dspfw.
+> +	 */
+> +	if (comp->name_prefix) {
+> +		/*
+> +		 * name_prefix.bin stores the dsp firmware including speaker
+> +		 * protection algorithm, audio acoustic algorithm, speaker
+> +		 * characters and algorithm params, it must be copied into
+> +		 * firmware folder.
+> +		 */
+> +		scnprintf(tas_dev->dspfw_binaryname,
+> +			TAS2783_DSPFW_FILENAME_LEN, "%s-tas2783.bin",
+> +			comp->name_prefix);
+> +	} else {
+> +		/* Compatible with the previous naming rule */
+> +		if (sub) {
+> +		/*
+> +		 * subsystem_id-link_id[0,1,...,N]-dev_num[1,...,4].bin stores
+> +		 * the dsp firmware including speaker protection algorithm,
+> +		 * audio acoustic algorithm, speaker characters and algorithm
+> +		 * params, it must be copied into firmware folder.
 
-   Will fix in next patch.
-> 
-> 
->> +            function = "qspi_data";
->> +            drive-strength = <8>;
->> +            bias-disable;
->> +        };
->> +    };
->> +};
->> +
->> +&qpic_bam {
->> +    status = "okay";
->> +};
->> +
->> +&qpic_nand {
->> +    pinctrl-0 = <&qpic_snand_default_state>;
->> +    pinctrl-names = "default";
->> +    status = "okay";
->> +
->> +    flash@0 {
->> +        compatible = "spi-nand";
->> +        reg = <0>;
->> +        #address-cells = <1>;
->> +        #size-cells = <1>;
->> +        nand-ecc-engine = <&qpic_nand>;
->> +        nand-ecc-strength = <4>;
->> +        nand-ecc-step-size = <512>;
->> +    };
->>   };
->>   &usb_0_dwc3 {
->> diff --git a/arch/arm64/boot/dts/qcom/ipq9574.dtsi b/arch/arm64/boot/dts/qcom/ipq9574.dtsi
->> index 7f2e5cbf3bbb..d963dd2035dd 100644
->> --- a/arch/arm64/boot/dts/qcom/ipq9574.dtsi
->> +++ b/arch/arm64/boot/dts/qcom/ipq9574.dtsi
->> @@ -319,6 +319,33 @@ tcsr: syscon@1937000 {
->>               reg = <0x01937000 0x21000>;
->>           };
->> +        qpic_bam: dma-controller@7984000 {
-> 
-> 
-> Nodes should be ordered by unit address in ascending order. So please move these nodes to the right place.
-  Ok
-> 
-> 
->> +            compatible = "qcom,bam-v1.7.0";
->> +            reg = <0x7984000 0x1c000>;
-> 
-> 
-> address should be padded to 8 bytes.
-Ok
-> 
->> +            interrupts = <GIC_SPI 146 IRQ_TYPE_LEVEL_HIGH>;
->> +            clocks = <&gcc GCC_QPIC_AHB_CLK>;
->> +            clock-names = "bam_clk";
->> +            #dma-cells = <1>;
->> +            qcom,ee = <0>;
->> +            status = "disabled";
->> +        };
->> +
->> +        qpic_nand: spi@79b0000 {
->> +            compatible = "qcom,ipq9574-snand";
->> +            reg = <0x79b0000 0x10000>;
-> 
-> 
-> Ditto..
-Ok
-> 
->> +            #address-cells = <1>;
->> +            #size-cells = <0>;
->> +            clocks = <&gcc GCC_QPIC_CLK>,
->> +            <&gcc GCC_QPIC_AHB_CLK>,
->> +            <&gcc GCC_QPIC_IO_MACRO_CLK>;
-> 
-> 
-> Fix the alignment.
-Ok
-> 
->> +            clock-names = "core", "aon", "iom";
->> +            dmas = <&qpic_bam 0>,
->> +                <&qpic_bam 1>,
->> +                <&qpic_bam 2>;
-> 
-> 
-> Here as well.
-Ok
-> 
-> 
->> +            dma-names = "tx", "rx", "cmd";
->> +            status = "disabled";
->> +        };
->> +
->>           sdhc_1: mmc@7804000 {
->>               compatible = "qcom,ipq9574-sdhci", "qcom,sdhci-msm-v5";
->>               reg = <0x07804000 0x1000>,
+no the dev_num cannot be used. It's only used for host-device 
+communication and cannot be used to identify a device position.
+
+The link_id+unique_unique is the only way to go.
+
+But in addition you want want to consider a platform-specific prefix 
+which contains the OEM name or device SKU.
+
+> +		 */
+> +			scnprintf(tas_dev->dspfw_binaryname,
+> +				TAS2783_DSPFW_FILENAME_LEN,
+> +				"%s-%d-%d.bin", sub,
+> +				tas_dev->sdw_peripheral->bus->link_id,
+> +				tas_dev->sdw_peripheral->dev_num);
+> +		} else {
+> +		/*
+> +		 * tas2783-link_id[0,1,...,N]-dev_num[1,...,4].bin stores
+> +		 * the dsp firmware including speaker protection algorithm,
+> +		 * audio acoustic algorithm, speaker characters and algorithm
+> +		 * params, it must be copied into firmware folder.
+> +		 */
+> +			scnprintf(tas_dev->dspfw_binaryname,
+> +				TAS2783_DSPFW_FILENAME_LEN,
+> +				"tas2783-%d-%d.bin",
+> +				tas_dev->sdw_peripheral->bus->link_id,
+> +				tas_dev->sdw_peripheral->dev_num);
+> +		}
+> +	}
+> +
+> +	ret = request_firmware(&fw_entry, tas_dev->dspfw_binaryname,
+> +		tas_dev->dev);
+> +	if (ret) {
+> +		dev_err(tas_dev->dev,
+> +			"%s: request_firmware %x open status: %d.\n", __func__,
+> +			tas_dev->sdw_peripheral->id.unique_id, ret);
+> +		goto out;
+> +	}
+> +
+> +	tasdevice_dspfw_ready(fw_entry, tas_dev);
+> +
+> +	/* Select left/right channel based on device number. */
+> +	value_sdw = 0x1a;
+> +	value_sdw |= (tas_dev->sdw_peripheral->dev_num & BIT(0)) << 4;
+> +	dev_dbg(tas_dev->dev, "%s: dev_num = %u", __func__,
+> +		tas_dev->sdw_peripheral->dev_num);
+> +	regmap_write(tas_dev->regmap, TAS2783_REG_TDM_RX_CFG, value_sdw);
+> +	if (ret != 0)
+> +		dev_warn(tas_dev->dev, "%s: L/R setting failed: %d.\n",
+> +			__func__, ret);
+> +
+> +out:
+> +	if (fw_entry)
+> +		release_firmware(fw_entry);
+> +	return 0;
+> +}
+
+> +static int tasdevice_io_init(struct device *dev,
+> +	struct sdw_slave *slave)
+> +{
+> +	struct tasdevice_priv *tas_priv = dev_get_drvdata(dev);
+> +	int ret;
+> +
+> +	regcache_cache_only(tas_priv->regmap, false);
+> +
+> +	if (tas_priv->first_hw_init) {
+> +		regcache_cache_bypass(tas_priv->regmap, true);
+> +	} else {
+> +	/*
+> +	 * PM runtime is only enabled when a Slave reports as Attached
+> +	 * Update count of parent 'active' children
+> +	 */
+
+weird indentation for comments in multiple places.
+
+> +		pm_runtime_set_active(&slave->dev);
+> +	}
+> +
+> +	/* sw reset */
+> +	ret = regmap_write(tas_priv->regmap, TAS2873_REG_SWRESET,
+> +		TAS2873_REG_SWRESET_RESET);
+> +	if (ret) {
+> +		dev_err(tas_priv->dev, "Reset failed.\n");
+> +		goto out;
+> +	}
+> +
+> +	if (tas_priv->first_hw_init) {
+> +		regcache_cache_bypass(tas_priv->regmap, false);
+> +		regcache_mark_dirty(tas_priv->regmap);
+> +	}
+> +
+> +	tas_priv->first_hw_init = true;
+> +	tas_priv->hw_init = true;
+> +
+> +out:
+> +	return ret;
+> +}
+
+
