@@ -1,168 +1,144 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46D815F47D;
-	Tue, 20 Feb 2024 09:23:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 307395FDA6
+	for <linux-kernel@vger.kernel.org>; Tue, 20 Feb 2024 09:23:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708420988; cv=none; b=f5t2ZlV9hEjK/fhcPkjWq/vV0c7ctacV9bkWRL9m8vy9FbCOd6jm4LpGDu8b0LUzzM2SDDZCtYOqU40bzvqtR9E68Cq708dhrqMhlRBtlUau6cyCZvYHfh8ivwjoMAGb0Z82hicn2IrBhMkF0xuSZmgCyptivGS6r1VGm87Ls9I=
+	t=1708420996; cv=none; b=rs/hm1aJAxzHZicAqGQaHBD7Hn5EL62rPshV0u1f5yJUmhl2ZardOr9QUZqNahsgQpmhswKvv9DSvUtklbmHxBardHlO0pQqrGD0W2gPookwx8N7Eil8xP/HWjj6UnzV16FxH5PIlnlW3p2/Fyxw9fxXZ3xzOtK+s86xSnX9cfM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708420988; c=relaxed/simple;
-	bh=osi20qLqP/u+YS8hH5ohNztjjzr2XsST9kPCkjDKYPY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=twatv7oUfGnjdYMaJAV24DDczJEM70PFnlTEfUdW02iH1jntqOtfGYMOT4mwUUBrvE6D4L1Ve3R8def/ZVp7WgnwyKtYI3mw1yhq8x22mAdBwFQPondjRemczNYKt8HvlBcM9dJGH5BcnVwVotDXUygjCRwbACmc4dXA7MMnIaI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SsV8kq1x; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1708420996; c=relaxed/simple;
+	bh=1GyxVLus3y0Y3z7nhQnZBajXS2dyFfhURG0hJiCFSMs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Cv5xdYc5ndPk533Zef7fthGKMIKRr1Yjq1hb8TKRDXbU5mS0X0qYuqZxUwgBy9isdr9SVMQqwmffWRlQfEtVr69s1kw1DFBdw5zD7TYyV8uMZRlD1lWnfKL0c3StwiM6UcrJb9AMRD7s1koCyaKFusYs4GepbVBRzzM88Yz134A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=NGIS05Sb; arc=none smtp.client-ip=198.137.202.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SsV8kq1x"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EAC01C433F1;
-	Tue, 20 Feb 2024 09:23:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708420987;
-	bh=osi20qLqP/u+YS8hH5ohNztjjzr2XsST9kPCkjDKYPY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=SsV8kq1x7HobSqAQRbMoEXYiEuOXiWsPHba7F7GqG7gv3Jk5m+Oknxx30WrTMeH2P
-	 VTtNCgj6RnaKXBVRNLfMOorXZG0G3x2DQYMVVhgPGh+27skeckZT2lJN6Ev8FcpQ+k
-	 CXeHm6njCG+KirlbynZu7SZKmpiPYo3y/UjHvv6RiHsVht0Ki2/K8qAbxNC2wCxkV8
-	 eNx4nCUlFS5GgYKiZYnpm7SAwQKoVQ3tlV/3/Vq6YpP3qou4MMH8caojd2o9j6eICd
-	 lyOFmzieO8Ghh8gM6yJlY8c/Y93VKdHP7M2rvHTsDmHaNX6o441HruQP+l9L16oVvg
-	 fb0Ue3K5csgbA==
-Date: Tue, 20 Feb 2024 10:22:59 +0100
-From: Christian Brauner <brauner@kernel.org>
-To: Oleg Nesterov <oleg@redhat.com>
-Cc: Andy Lutomirski <luto@amacapital.net>, 
-	"Eric W. Biederman" <ebiederm@xmission.com>, Tycho Andersen <tycho@tycho.pizza>, linux-api@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/2] pidfd: change pidfd_send_signal() to respect
- PIDFD_THREAD
-Message-ID: <20240220-pragmatisch-parzelle-8a1d10a94fae@brauner>
-References: <20240210131518.GC27557@redhat.com>
- <20240210-chihuahua-hinzog-3945b6abd44a@brauner>
- <20240210165133.GD27557@redhat.com>
- <20240214123655.GB16265@redhat.com>
- <20240216-albern-aufwiegen-1de327c7dafd@brauner>
- <20240216130625.GA8723@redhat.com>
- <20240216-ohnedies-improvisieren-58edcc102b6a@brauner>
- <20240216181214.GA10393@redhat.com>
- <20240220-einwurf-depesche-d8682be0370c@brauner>
- <20240220090255.GA7783@redhat.com>
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="NGIS05Sb"
+Received: from [192.168.7.187] ([71.202.166.45])
+	(authenticated bits=0)
+	by mail.zytor.com (8.17.2/8.17.1) with ESMTPSA id 41K8bhmh3560893
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
+	Tue, 20 Feb 2024 00:37:43 -0800
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 41K8bhmh3560893
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+	s=2024021201; t=1708418264;
+	bh=WZhTIkMEDXfBS+v/xlQmW53/Jt7i6xPDZx3y3BeuvW0=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=NGIS05SboiOeG4Y+Hs6laMsl3tN6+kvZTgV33YE/77YlGbTVoNuDeQsG9ZkaO69uX
+	 cWKGPQwkj7/L2vA7W21wvEGhMfGnyTVKD2SK7CQgu6HqqA7zGi73DlWD/AP68jRpEW
+	 tdLtrPhSunhKn/XdnGOGpDEpzwFN0s34dcNC0Vb9Mx2uEYf36qxosDE/0rofd/LyL/
+	 Elk0ivIc4fxlTBY4iNscT6uMQ2b1IO/ss7X/mDhEij+PlQLT38NiSB+0hFRy/v332/
+	 Y+mgGcaBh6o+XR8LlAuZQeaP/bGul4cSQCanz5ngT8JMQLQM5XaNioPpv6LvjHmWbX
+	 CR8Wsek/z7J0w==
+Message-ID: <07d43633-d707-415d-a662-ecd3a50b12ae@zytor.com>
+Date: Tue, 20 Feb 2024 00:37:41 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20240220090255.GA7783@redhat.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 0/3] Cleanup for PAT
+To: Wupeng Ma <mawupeng1@huawei.com>, akpm@linux-foundation.org,
+        dave.hansen@linux.intel.com, luto@kernel.org, tglx@linutronix.de,
+        peterz@infradead.org, hpa@zytor.com
+Cc: linux-kernel@vger.kernel.org, x86@kernel.org, bp@suse.de, mingo@redhat.com,
+        rdunlap@infradead.org, bhelgaas@google.com, linux-mm@kvack.org
+References: <20240220034835.507022-1-mawupeng1@huawei.com>
+Content-Language: en-US
+From: Xin Li <xin@zytor.com>
+Autocrypt: addr=xin@zytor.com; keydata=
+ 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
+ l75w1xInsg==
+In-Reply-To: <20240220034835.507022-1-mawupeng1@huawei.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Tue, Feb 20, 2024 at 10:02:56AM +0100, Oleg Nesterov wrote:
-> On 02/20, Christian Brauner wrote:
-> >
-> > On Fri, Feb 16, 2024 at 07:12:14PM +0100, Oleg Nesterov wrote:
-> > > On 02/16, Christian Brauner wrote:
-> > > >
-> > > > > SI_USER means that the target can trust the values of si_pid/si_uid
-> > > > > in siginfo.
-> > > >
-> > > > Bah, what an annoying nonsense. I see that this can be used to emulate
-> > > > stuff like SI_TIMER and SI_ASYNCIO. But I very much doubt the value of
-> > > > e.g., emulating SI_DETHREAD. Maybe I'm missing something very obvious.
-> > >
-> > > I don't understand...
-> >
-> > My question was what the purpose of being able to to set si_code to
-> > e.g., SI_DETHREAD is and then to send a signal to yourself? Because it
-> > looks like that's what rt_{tg}sigqueueinfo() and pidfd_send_signal()
-> > allows the caller to do. I'm just trying to understand use-cases for
-> > this.
+On 2/19/2024 7:48 PM, Wupeng Ma wrote:
+> From: Ma Wupeng <mawupeng1@huawei.com>
 > 
-> Ah. IIRC criu uses this hack to restore the pending (arbitrary) signals
-> collected at dump time.
+
+This patch set is all about follow_phys() cleanups, so "Cleanup for PAT"
+seems too generic.
+
+> Patch #1 move follow_phys to memtype.c since only pat use this.
+> Patch #2 cleanup parameter in follow_phys.
+> Patch #3 drop the unnecessary WARN_ON_ONCE if follow_phys fails.
+
+I'm more curious why follow_phys() ended up this way?
+
+follow_phys() was introduced in commit 28b2ee20c7cba ("access_process_vm
+device memory infrastructure") in 2008 for getting a physical page address
+for a virtual address, and used in generic_access_phys(). And later it's
+used in x86 PAT code.
+
+Commit 03668a4debf4f ("mm: use generic follow_pte() in follow_phys()") made
+follow_phys() more of a wrapper of follow_pte(), and commit 96667f8a4382d
+("mm: Close race in generic_access_phys") replaced follow_phys() with
+follow_pte() in generic_access_phys(). And the end result is that
+follow_phys() is used in x86 PAT code only.
+
+As follow_phys() in untrack_pfn() can be replaced with follow_pfn(), then
+maybe we don't have to keep follow_phys(), and just use follow_pte() in
+track_pfn_copy()?
+
+Thanks!
+     Xin
+
 > 
-> I was a bit surprise sys_pidfd_send_signal() allows this hack too, I don't
+> Changelog since v3:
+> - rebase to latest linux
+> - fix compile warnings
+> 
+> Changelog since v2:
+> - rebase to latest linux
+> 
+> Changelog since v1:
+> - split patch #1 into two patches based on Boris's advise
+> 
+> Ma Wupeng (3):
+>    x86/mm/pat: Move follow_phys to pat-related file
+>    x86/mm/pat: Cleanup unused parameter in follow_phys
+>    x86/mm/pat: Remove WARN_ON_ONCE if follow_phys fails
+> 
+>   arch/x86/mm/pat/memtype.c | 32 ++++++++++++++++++++++++++------
+>   include/linux/mm.h        |  2 --
+>   mm/memory.c               | 28 ----------------------------
+>   3 files changed, 26 insertions(+), 36 deletions(-)
+> 
 
-I think that we simply mirrored the restrictions in the other system
-calls.
-
-> think that criu uses pidfd at restore time, but I do not know.
-
-Hm, I just checked and it doesn't use pidfd_send_signal(). It uses
-pidfds but only for pid reuse detection for RPC clients.
-
-So right now si_code is blocked for >= 0 and for SI_TKILL. If we were to
-simply ensure that si_code can't be < 0 then this amounts to effectively
-blocking @info from being filled in by userspace at all. Because 0 is a
-valid value.
-
-So could we just _try_ and either ignore the @info argument completely
-or consistenly report EINVAL when @info is non-NULL and see if anyone
-reports a regression? If there ever is a valid use-case then we can just
-add a flag argument PIDFD_SIGNAL_INFO to indicate that @info should be
-taken into account.
-
-So something like the completely untested?
-
-diff --git a/kernel/signal.c b/kernel/signal.c
-index cf6539a6b1cb..2cca42175480 100644
---- a/kernel/signal.c
-+++ b/kernel/signal.c
-@@ -3849,22 +3849,6 @@ static bool access_pidfd_pidns(struct pid *pid)
-        return true;
- }
-
--static int copy_siginfo_from_user_any(kernel_siginfo_t *kinfo,
--               siginfo_t __user *info)
--{
--#ifdef CONFIG_COMPAT
--       /*
--        * Avoid hooking up compat syscalls and instead handle necessary
--        * conversions here. Note, this is a stop-gap measure and should not be
--        * considered a generic solution.
--        */
--       if (in_compat_syscall())
--               return copy_siginfo_from_user32(
--                       kinfo, (struct compat_siginfo __user *)info);
--#endif
--       return copy_siginfo_from_user(kinfo, info);
--}
--
- static struct pid *pidfd_to_pid(const struct file *file)
- {
-        struct pid *pid;
-@@ -3911,6 +3895,10 @@ SYSCALL_DEFINE4(pidfd_send_signal, int, pidfd, int, sig,
-        if (hweight32(flags & PIDFD_SEND_SIGNAL_FLAGS) > 1)
-                return -EINVAL;
-
-+       /* Currently unused. */
-+       if (info)
-+               return -EINVAL;
-+
-        f = fdget(pidfd);
-        if (!f.file)
-                return -EBADF;
-@@ -3945,23 +3933,7 @@ SYSCALL_DEFINE4(pidfd_send_signal, int, pidfd, int, sig,
-                break;
-        }
-
--       if (info) {
--               ret = copy_siginfo_from_user_any(&kinfo, info);
--               if (unlikely(ret))
--                       goto err;
--
--               ret = -EINVAL;
--               if (unlikely(sig != kinfo.si_signo))
--                       goto err;
--
--               /* Only allow sending arbitrary signals to yourself. */
--               ret = -EPERM;
--               if ((task_pid(current) != pid) &&
--                   (kinfo.si_code >= 0 || kinfo.si_code == SI_TKILL))
--                       goto err;
--       } else {
--               prepare_kill_siginfo(sig, &kinfo, type);
--       }
-+       prepare_kill_siginfo(sig, &kinfo, type);
-
-        if (type == PIDTYPE_PGID)
-                ret = kill_pgrp_info(sig, &kinfo, pid);
 
