@@ -1,197 +1,183 @@
-Received: from NAM02-DM3-obe.outbound.protection.outlook.com (mail-dm3nam02on2057.outbound.protection.outlook.com [40.107.95.57])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAF205A4FF;
-	Tue, 20 Feb 2024 07:30:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.95.57
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708414244; cv=fail; b=gOue9MAsnUqmISL6prS4YiRcZwwPJeZD8QIChkTmdmELiqfqCQNvo8oArxHIORbiRzUwBOgTb39hOwMkdVdO4hAwMnwRQXihQjY+Njtl5tCqYU4cWDAIgjnlerC+RbTWFKazJKIg/nfC+b/3FDVWVjUjRCtx7ezX/OzaubJdWJQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708414244; c=relaxed/simple;
-	bh=9nmLiYxbILV+MjnM7nR4JOP0DeXX/Ob7LX8tmk+JTio=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=JNDMXgvOfffBTddfc36CUH4ME05XjvbWSYoZNzcyGRlFORq4OkitrTsrnvQYewB6WQid6Jelaow0la3SJEB6JN8bUsnqqoOI3Fzd9In6+UT3a79WSld9Qb4+vWS1gIXDIxQ9MJoR3f2p/+Ro38dNGSx1aMwQfX28ps+mV+ktNJc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=P8dxjSOJ; arc=fail smtp.client-ip=40.107.95.57
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9494A5B5BA
+	for <linux-kernel@vger.kernel.org>; Tue, 20 Feb 2024 07:30:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1708414250; cv=none; b=kS4jRJvD7ggwRULeJJCMFeydPCxOu9GhVoYp/PulNwAde30P5E611DbAIVYuV6BNmw1R4xaEJME5MhLDF36rMImAdLZnE7sUK1zI2GESyL/Stli6ItHBHf4CLWVndAm+8GFCReCjoybE4M+PyG1NEfQC100mkhyh5PN04gxjQfQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1708414250; c=relaxed/simple;
+	bh=OXGYwlEcvKSUcy2Rn7wKI35ffz8WjMg3NS9M274cDBk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=SI5/j5GTZCD4+18Pf6gvsWPIX7razdF3ILWmAb6GP1k9o5edz6WjjqQyuFlUhZJfXz5nHXP7OocCScHxb5jELgjsaxu4qE9W6OLUBdT2xsVP4LDXG1CId7vwBGjjVC36v8qpGNSRciZE+5sK11RV7ZsFqoHl7cQof/Bqy3xAh98=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fmVP63GF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="P8dxjSOJ"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=inHGrvtncYNmQA0SSNYxz2O9Zv4pzyhYuqjV5gRztnEyTs4s8y9LUq/iNezPzPBe646uD6A6taJRvUBWZ4uN4uQk6hfVe5830VO2iS15aDSHFoi9TM0jfC+l8WYZ+NxrhZJ46dfxlq3jHCH8m/aiPoESaK5TPuD2Fb3ueF2mqdr5FQHtFxn1Rw+eIgqp+WohIeM8dtQAx7AfwaSAw2WnS8LEhwu/Ncfbcdc68UJOm2sEhWS7cICnuCmIHLzAD10DKsdUixiK0lID+i4NTKspMsHftZhtzMTAwCmVkEv+1IhmXQhEQVRxmc6DU1QxSrL3k+ewsRtzooPI0xF5SY70+Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=GEUPBUp/mRSrwoBY6hHPxBFvFm1Cd4dE+qw16gP2bsw=;
- b=hnWmGRlpLQnaapNYoqzg0r1UGJHhLD41vPBwj3HOT9GVfyiVs7uYWggCPy51WHE2Mp1laWHi7SebDiviTdMs6lCs2sbhWV9PVDqSEEyBAPqhKLnU7uzq2bovCwAd0NwdhrhxJ1vF+1Q70/zM40T/3wwOXKgVu5C8rm+wwqzsW8I17S609Qk9yogE7CW8IcbLaRxCTcAnbYvYhnSSuNMPXiUIBNK+JiB6n9UquhdgchvxBUV9gvA3fS9JBuZdbIqxjyeEvXzgKOYH5V/37BopYTaKN0NwLqzcHqpEl7E7plfbdAsVLLPzz+bymtbyt2vpv1S4Rak8TONLbHckJQRPfQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.117.160) smtp.rcpttodomain=kernel.org smtp.mailfrom=nvidia.com;
- dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=GEUPBUp/mRSrwoBY6hHPxBFvFm1Cd4dE+qw16gP2bsw=;
- b=P8dxjSOJyVuRH67AcNtP8cxTAJ3hb/a574V4QUpha6qAi0g3+Rfa7ox+fOckXoDBSc3tAZdvA6bdLdStehJXj2WpNIu1W9rM1N8KK/juHRssHlS+yqzrtC8yN6T6Yd2kJItC3uiZJJ79FCUbbcqMse/kNwLwJ0UFOj7JYJddZIwkglA6xXkTcxgolnIh9BRjzNNcAVrDojl+SGm/UnD/Fv+H1lzBJ1OxY3ToP+mwh9zt4Qq837b8hG9dBfY1oJOhOplTk7epkEdPOhwb10k8NIUdps1M3ILFmCtDNOLEIBgDRvuqGt5K2dCNnci2Br5UpU+5f2HUgU2WeoN2vWsO0Q==
-Received: from CY8PR22CA0015.namprd22.prod.outlook.com (2603:10b6:930:45::14)
- by CY8PR12MB8242.namprd12.prod.outlook.com (2603:10b6:930:77::5) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7316.19; Tue, 20 Feb
- 2024 07:30:40 +0000
-Received: from CY4PEPF0000FCBE.namprd03.prod.outlook.com
- (2603:10b6:930:45:cafe::93) by CY8PR22CA0015.outlook.office365.com
- (2603:10b6:930:45::14) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7292.39 via Frontend
- Transport; Tue, 20 Feb 2024 07:30:40 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.160)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.117.160 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.117.160; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.117.160) by
- CY4PEPF0000FCBE.mail.protection.outlook.com (10.167.242.100) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.7292.25 via Frontend Transport; Tue, 20 Feb 2024 07:30:40 +0000
-Received: from rnnvmail204.nvidia.com (10.129.68.6) by mail.nvidia.com
- (10.129.200.66) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.41; Mon, 19 Feb
- 2024 23:30:23 -0800
-Received: from rnnvmail202.nvidia.com (10.129.68.7) by rnnvmail204.nvidia.com
- (10.129.68.6) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1258.12; Mon, 19 Feb
- 2024 23:30:23 -0800
-Received: from sgarnayak-dt.nvidia.com (10.127.8.9) by mail.nvidia.com
- (10.129.68.7) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1258.12 via Frontend
- Transport; Mon, 19 Feb 2024 23:30:09 -0800
-From: <ankita@nvidia.com>
-To: <ankita@nvidia.com>, <jgg@nvidia.com>, <maz@kernel.org>,
-	<oliver.upton@linux.dev>, <james.morse@arm.com>, <suzuki.poulose@arm.com>,
-	<yuzenghui@huawei.com>, <reinette.chatre@intel.com>, <surenb@google.com>,
-	<stefanha@redhat.com>, <brauner@kernel.org>, <catalin.marinas@arm.com>,
-	<will@kernel.org>, <mark.rutland@arm.com>, <alex.williamson@redhat.com>,
-	<kevin.tian@intel.com>, <yi.l.liu@intel.com>, <ardb@kernel.org>,
-	<akpm@linux-foundation.org>, <andreyknvl@gmail.com>,
-	<wangjinchao@xfusion.com>, <gshan@redhat.com>, <shahuang@redhat.com>,
-	<ricarkol@google.com>, <linux-mm@kvack.org>, <lpieralisi@kernel.org>,
-	<rananta@google.com>, <ryan.roberts@arm.com>, <david@redhat.com>,
-	<linus.walleij@linaro.org>, <bhe@redhat.com>
-CC: <aniketa@nvidia.com>, <cjia@nvidia.com>, <kwankhede@nvidia.com>,
-	<targupta@nvidia.com>, <vsethi@nvidia.com>, <acurrid@nvidia.com>,
-	<apopple@nvidia.com>, <jhubbard@nvidia.com>, <danw@nvidia.com>,
-	<kvmarm@lists.linux.dev>, <mochs@nvidia.com>, <zhiw@nvidia.com>,
-	<kvm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>
-Subject: [PATCH v8 3/4] kvm: arm64: set io memory s2 pte as normalnc for vfio pci device
-Date: Tue, 20 Feb 2024 12:59:25 +0530
-Message-ID: <20240220072926.6466-4-ankita@nvidia.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20240220072926.6466-1-ankita@nvidia.com>
-References: <20240220072926.6466-1-ankita@nvidia.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fmVP63GF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 295DEC433F1;
+	Tue, 20 Feb 2024 07:30:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1708414250;
+	bh=OXGYwlEcvKSUcy2Rn7wKI35ffz8WjMg3NS9M274cDBk=;
+	h=Date:Subject:To:References:From:In-Reply-To:From;
+	b=fmVP63GFYSZHSKWN5LDO/SlxUIB4eeyGvmf6n9OzQyvUKCrghxkUdaWEkcunV8FKU
+	 3wme0jcNiIVelsPo8KPbDgquH4XtPw4e8W5AnHm7cTMtI+Szxf8be37I9t/x1hJUEl
+	 mfAIfnMEciWPIw9RBbTrH9UvTpJa++4aREfmPYYbNSfPrtbS8xfJCEHu6LJbpMvsPY
+	 u31AD3Harai+DtetK25epW78qBcxQij+oCoNqxhkYJFLaYxuStcC+TWoIhs6AKPq4+
+	 GnjI1+V7pjqwjf2/Fk0Vj57b4aO3eTmBmd5H8tJzwrSATQaJb6Mez+iYCaYSk11wG5
+	 nKYWa67hK9D1A==
+Message-ID: <bded9fde-9541-465d-86f8-292249226cc9@kernel.org>
+Date: Tue, 20 Feb 2024 15:30:46 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-NV-OnPremToCloud: ExternallySecured
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CY4PEPF0000FCBE:EE_|CY8PR12MB8242:EE_
-X-MS-Office365-Filtering-Correlation-Id: 1e7e5fe0-ac1e-4e0f-2755-08dc31e5d6ee
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	qpLJyNWq3sY6o8aGbW1uTCBZ8xMGTbned0cGf7WeEH649MhkBsfFNv0F7bD3Id2MbGCRcYtBt/O+OCgSQvpxiGkEqMNiLFOFC1knnfjSOgo62mubXO0I9QrInBippSz1B+VxQfaAsjeigvx3uIFKUVNhgZTiJjaHFYeoFUfygNbL4nFd/9bmeguhtB7rqwgO10TLXsU1YJOIVXN3uWb0aaovquG3OoyohEkonZdQMe9zYdjwaXRww21Yu+JYCcAiyYHZVVGl5JV+iqfD6F8nZ9pLFpFn4BkSDohG5Omp9ctgFNjTtPRMhm7A0wj0UDpCYHAVO9BECoQQv+IeTfZ/lNUZfvkhxmAzW0p4gIfwuBqlyjnTcX08Jz3aQLh3/fpI9SLO6gltqtUTyonPNq0BqKGi+BVwhPO1Y3gtyk2J06ArR/XtpWt8rjAswBQAOemh4F97qts01urpAXc7VKIm3xckVITWFu8fyjQOUcD3XCXeiCi1RGREAb11otFuINznz48sE7eCvLIqzmfNu60mBWX8mjNtnfyTEHfXIJ1zIcWiSSZ48qW88NgdWSxQl3Ba+K+DAq2Fy5/tm0Q6CE04dCdqlUMcmra8D6QbMakX3QNnso2xWvvB0vdmzGCo+z3jhWezXmRKFRHYfBLUBdYgcHzIYkdqpoQK4QeSK5Hpjek=
-X-Forefront-Antispam-Report:
-	CIP:216.228.117.160;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge1.nvidia.com;CAT:NONE;SFS:(13230031)(36860700004)(40470700004)(46966006)(921011);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Feb 2024 07:30:40.1721
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1e7e5fe0-ac1e-4e0f-2755-08dc31e5d6ee
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.160];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	CY4PEPF0000FCBE.namprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR12MB8242
+User-Agent: Mozilla Thunderbird
+Subject: Re: [f2fs-dev] [PATCH 2/3 v2] f2fs: use BLKS_PER_SEG, BLKS_PER_SEC,
+ and SEGS_PER_SEC
+Content-Language: en-US
+To: Jaegeuk Kim <jaegeuk@kernel.org>, linux-kernel@vger.kernel.org,
+ linux-f2fs-devel@lists.sourceforge.net
+References: <20240207005105.3744811-1-jaegeuk@kernel.org>
+ <20240207005105.3744811-2-jaegeuk@kernel.org> <ZcpfF9UJz8bNW6ge@google.com>
+From: Chao Yu <chao@kernel.org>
+In-Reply-To: <ZcpfF9UJz8bNW6ge@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-From: Ankit Agrawal <ankita@nvidia.com>
+On 2024/2/13 2:10, Jaegeuk Kim wrote:
 
-To provide VM with the ability to get device IO memory with NormalNC
-property, map device MMIO in KVM for ARM64 at stage2 as NormalNC.
-Having NormalNC S2 default puts guests in control (based on [1],
-"Combining stage 1 and stage 2 memory type attributes") of device
-MMIO regions memory mappings. The rules are summarized below:
-([(S1) - stage1], [(S2) - stage 2])
+How do you think of appending below diff which cleans up missing
+parts?
 
-S1           |  S2           | Result
-NORMAL-WB    |  NORMAL-NC    | NORMAL-NC
-NORMAL-WT    |  NORMAL-NC    | NORMAL-NC
-NORMAL-NC    |  NORMAL-NC    | NORMAL-NC
-DEVICE<attr> |  NORMAL-NC    | DEVICE<attr>
-
-Still this cannot be generalized to non PCI devices such as GICv2.
-There is insufficient information and uncertainity in the behavior
-of non PCI driver. A driver must indicate support using the
-new flag VM_ALLOW_ANY_UNCACHED.
-
-Adapt KVM to make use of the flag VM_ALLOW_ANY_UNCACHED as indicator to
-activate the S2 setting to NormalNc.
-
-[1] section D8.5.5 of DDI0487J_a_a-profile_architecture_reference_manual.pdf
-
-Suggested-by: Catalin Marinas <catalin.marinas@arm.com>
-Acked-by: Jason Gunthorpe <jgg@nvidia.com>
-Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
-Signed-off-by: Ankit Agrawal <ankita@nvidia.com>
 ---
- arch/arm64/kvm/mmu.c | 14 ++++++++++----
- 1 file changed, 10 insertions(+), 4 deletions(-)
+  fs/f2fs/f2fs.h    |  2 +-
+  fs/f2fs/file.c    |  4 ++--
+  fs/f2fs/segment.c |  4 ++--
+  fs/f2fs/segment.h | 22 +++++++++++-----------
+  fs/f2fs/super.c   |  2 +-
+  5 files changed, 17 insertions(+), 17 deletions(-)
 
-diff --git a/arch/arm64/kvm/mmu.c b/arch/arm64/kvm/mmu.c
-index d14504821b79..1742fdccb432 100644
---- a/arch/arm64/kvm/mmu.c
-+++ b/arch/arm64/kvm/mmu.c
-@@ -1381,7 +1381,7 @@ static int user_mem_abort(struct kvm_vcpu *vcpu, phys_addr_t fault_ipa,
- 	int ret = 0;
- 	bool write_fault, writable, force_pte = false;
- 	bool exec_fault, mte_allowed;
--	bool device = false;
-+	bool device = false, vfio_allow_any_uc = false;
- 	unsigned long mmu_seq;
- 	struct kvm *kvm = vcpu->kvm;
- 	struct kvm_mmu_memory_cache *memcache = &vcpu->arch.mmu_page_cache;
-@@ -1472,6 +1472,8 @@ static int user_mem_abort(struct kvm_vcpu *vcpu, phys_addr_t fault_ipa,
- 	gfn = fault_ipa >> PAGE_SHIFT;
- 	mte_allowed = kvm_vma_mte_allowed(vma);
- 
-+	vfio_allow_any_uc = vma->vm_flags & VM_ALLOW_ANY_UNCACHED;
-+
- 	/* Don't use the VMA after the unlock -- it may have vanished */
- 	vma = NULL;
- 
-@@ -1557,10 +1559,14 @@ static int user_mem_abort(struct kvm_vcpu *vcpu, phys_addr_t fault_ipa,
- 	if (exec_fault)
- 		prot |= KVM_PGTABLE_PROT_X;
- 
--	if (device)
--		prot |= KVM_PGTABLE_PROT_DEVICE;
--	else if (cpus_have_final_cap(ARM64_HAS_CACHE_DIC))
-+	if (device) {
-+		if (vfio_allow_any_uc)
-+			prot |= KVM_PGTABLE_PROT_NORMAL_NC;
-+		else
-+			prot |= KVM_PGTABLE_PROT_DEVICE;
-+	} else if (cpus_have_final_cap(ARM64_HAS_CACHE_DIC)) {
- 		prot |= KVM_PGTABLE_PROT_X;
-+	}
- 
- 	/*
- 	 * Under the premise of getting a FSC_PERM fault, we just need to relax
+diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+index c4488e12c56e..fc9328655de8 100644
+--- a/fs/f2fs/f2fs.h
++++ b/fs/f2fs/f2fs.h
+@@ -3491,7 +3491,7 @@ static inline __le32 *get_dnode_addr(struct inode *inode,
+  		sizeof((f2fs_inode)->field))			\
+  		<= (F2FS_OLD_ATTRIBUTE_SIZE + (extra_isize)))	\
+
+-#define __is_large_section(sbi)		((sbi)->segs_per_sec > 1)
++#define __is_large_section(sbi)		(SEGS_PER_SEC(sbi) > 1)
+
+  #define __is_meta_io(fio) (PAGE_TYPE_OF_BIO((fio)->type) == META)
+
+diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
+index 20a26bb5b889..ef43d33278ea 100644
+--- a/fs/f2fs/file.c
++++ b/fs/f2fs/file.c
+@@ -2997,8 +2997,8 @@ static int f2fs_ioc_flush_device(struct file *filp, unsigned long arg)
+
+  	if (!f2fs_is_multi_device(sbi) || sbi->s_ndevs - 1 <= range.dev_num ||
+  			__is_large_section(sbi)) {
+-		f2fs_warn(sbi, "Can't flush %u in %d for segs_per_sec %u != 1",
+-			  range.dev_num, sbi->s_ndevs, sbi->segs_per_sec);
++		f2fs_warn(sbi, "Can't flush %u in %d for SEGS_PER_SEC %u != 1",
++			  range.dev_num, sbi->s_ndevs, SEGS_PER_SEC(sbi));
+  		return -EINVAL;
+  	}
+
+diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
+index 97ac733ceffe..b59e29608ae7 100644
+--- a/fs/f2fs/segment.c
++++ b/fs/f2fs/segment.c
+@@ -2750,7 +2750,7 @@ static unsigned int __get_next_segno(struct f2fs_sb_info *sbi, int type)
+  	if (f2fs_need_rand_seg(sbi))
+  		return get_random_u32_below(MAIN_SECS(sbi) * SEGS_PER_SEC(sbi));
+
+-	/* if segs_per_sec is large than 1, we need to keep original policy. */
++	/* if SEGS_PER_SEC() is large than 1, we need to keep original policy. */
+  	if (__is_large_section(sbi))
+  		return curseg->segno;
+
+@@ -3498,7 +3498,7 @@ int f2fs_allocate_data_block(struct f2fs_sb_info *sbi, struct page *page,
+  	 */
+  	if (segment_full) {
+  		if (type == CURSEG_COLD_DATA_PINNED &&
+-		    !((curseg->segno + 1) % sbi->segs_per_sec))
++		    !((curseg->segno + 1) % SEGS_PER_SEC(sbi)))
+  			goto skip_new_segment;
+
+  		if (from_gc) {
+diff --git a/fs/f2fs/segment.h b/fs/f2fs/segment.h
+index cb982af765c3..63f278210654 100644
+--- a/fs/f2fs/segment.h
++++ b/fs/f2fs/segment.h
+@@ -48,21 +48,21 @@ static inline void sanity_check_seg_type(struct f2fs_sb_info *sbi,
+
+  #define IS_CURSEC(sbi, secno)						\
+  	(((secno) == CURSEG_I(sbi, CURSEG_HOT_DATA)->segno /		\
+-	  (sbi)->segs_per_sec) ||	\
++	  SEGS_PER_SEC(sbi)) ||	\
+  	 ((secno) == CURSEG_I(sbi, CURSEG_WARM_DATA)->segno /		\
+-	  (sbi)->segs_per_sec) ||	\
++	  SEGS_PER_SEC(sbi)) ||	\
+  	 ((secno) == CURSEG_I(sbi, CURSEG_COLD_DATA)->segno /		\
+-	  (sbi)->segs_per_sec) ||	\
++	  SEGS_PER_SEC(sbi)) ||	\
+  	 ((secno) == CURSEG_I(sbi, CURSEG_HOT_NODE)->segno /		\
+-	  (sbi)->segs_per_sec) ||	\
++	  SEGS_PER_SEC(sbi)) ||	\
+  	 ((secno) == CURSEG_I(sbi, CURSEG_WARM_NODE)->segno /		\
+-	  (sbi)->segs_per_sec) ||	\
++	  SEGS_PER_SEC(sbi)) ||	\
+  	 ((secno) == CURSEG_I(sbi, CURSEG_COLD_NODE)->segno /		\
+-	  (sbi)->segs_per_sec) ||	\
++	  SEGS_PER_SEC(sbi)) ||	\
+  	 ((secno) == CURSEG_I(sbi, CURSEG_COLD_DATA_PINNED)->segno /	\
+-	  (sbi)->segs_per_sec) ||	\
++	  SEGS_PER_SEC(sbi)) ||	\
+  	 ((secno) == CURSEG_I(sbi, CURSEG_ALL_DATA_ATGC)->segno /	\
+-	  (sbi)->segs_per_sec))
++	  SEGS_PER_SEC(sbi)))
+
+  #define MAIN_BLKADDR(sbi)						\
+  	(SM_I(sbi) ? SM_I(sbi)->main_blkaddr : 				\
+@@ -93,7 +93,7 @@ static inline void sanity_check_seg_type(struct f2fs_sb_info *sbi,
+  #define GET_SEGNO_FROM_SEG0(sbi, blk_addr)				\
+  	(GET_SEGOFF_FROM_SEG0(sbi, blk_addr) >> (sbi)->log_blocks_per_seg)
+  #define GET_BLKOFF_FROM_SEG0(sbi, blk_addr)				\
+-	(GET_SEGOFF_FROM_SEG0(sbi, blk_addr) & ((sbi)->blocks_per_seg - 1))
++	(GET_SEGOFF_FROM_SEG0(sbi, blk_addr) & (BLKS_PER_SEG(sbi) - 1))
+
+  #define GET_SEGNO(sbi, blk_addr)					\
+  	((!__is_valid_data_blkaddr(blk_addr) ||			\
+@@ -101,9 +101,9 @@ static inline void sanity_check_seg_type(struct f2fs_sb_info *sbi,
+  	NULL_SEGNO : GET_L2R_SEGNO(FREE_I(sbi),			\
+  		GET_SEGNO_FROM_SEG0(sbi, blk_addr)))
+  #define GET_SEC_FROM_SEG(sbi, segno)				\
+-	(((segno) == -1) ? -1 : (segno) / (sbi)->segs_per_sec)
++	(((segno) == -1) ? -1 : (segno) / SEGS_PER_SEC(sbi))
+  #define GET_SEG_FROM_SEC(sbi, secno)				\
+-	((secno) * (sbi)->segs_per_sec)
++	((secno) * SEGS_PER_SEC(sbi))
+  #define GET_ZONE_FROM_SEC(sbi, secno)				\
+  	(((secno) == -1) ? -1 : (secno) / (sbi)->secs_per_zone)
+  #define GET_ZONE_FROM_SEG(sbi, segno)				\
+diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
+index 2a8b6cfaf683..9d2c680a61f5 100644
+--- a/fs/f2fs/super.c
++++ b/fs/f2fs/super.c
+@@ -4723,7 +4723,7 @@ static int f2fs_fill_super(struct super_block *sb, void *data, int silent)
+  			.reason = CP_DISCARD,
+  			.trim_start = 0,
+  			.trim_end = MAIN_SEGS(sbi) - 1,
+-			.trim_minlen = sbi->blocks_per_seg,
++			.trim_minlen = BLKS_PER_SEG(sbi),
+  		};
+  		f2fs_write_checkpoint(sbi, &cpc);
+  	}
 -- 
-2.34.1
+2.40.1
 
