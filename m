@@ -1,103 +1,78 @@
-Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED36C78693;
-	Tue, 20 Feb 2024 18:19:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AB24763F6;
+	Tue, 20 Feb 2024 18:19:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708453144; cv=none; b=TAOUwjBf+b16KMYq2K+RImCtx9HLq7jHB/UvAuAKLxN7SBjRodHkBjnXTFvHuA7G9ntaQa/UTVDnix3sApuVMaq1JHNbcqImED0/qelcElG2DXdZXJGdXihzPjZevxKZuSM+61wNPiwnQcfK0sFJPE9QOZHMly6xenjkYbJnhIM=
+	t=1708453188; cv=none; b=VwHjudjnSRF8JBZYDx0Lf89Domxh8+Vp6dggHqOxygeooZjm9FA30HaahSGtnS+sLkUwXifdU3QWOaZEOy8qOwRFMwQRQEqy9aRj/PuYx5L+1jNsPAqL5gY61FTWXuADCOvKlVrgXafR3io8ZhuENpYDkP0wk4UcfJgz5uaiEbQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708453144; c=relaxed/simple;
-	bh=PvYo74uoWhD41ohw8yNS2GUG6/U1gKH18FXvHsCmIKg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MDwwHqpY31H+L84jHn1xz9mp88oOiyDlgXI1IzCYYgFYe7aa6mEMANg+TS36rIZ8VVwfmW4njB3ukqudXY/7w8AC54UQQTGaLUXjCRgwhYBDnYuez5rRCsw9VyatyA90+qth2nMCcjnV3MW6tGZg3wg3PhPYA67PvvGCO4yehI0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gQd5iT9a; arc=none smtp.client-ip=209.85.210.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+	s=arc-20240116; t=1708453188; c=relaxed/simple;
+	bh=jyYnr1vl6x18LWQLd7EauTB9Xo3hvmJzMJZ0083i9Y4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=t+QmX37YxoXvTa+UHl7vmdMDq60eaW02dmtno2j6v516+jW31SnDy4OEiZTirik5HiDoHOovzVFPs3YWjGNXLBcqb31e3eSEPssPmhxlDkZ1y1rhdIdgxm2YsAsU9hGorsBV6Ll1pqn3Ur9T2feW0KrCM9RFJbr8lkcQyzVy9G8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=acm.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.214.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=acm.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gQd5iT9a"
-Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-6e471caaa71so1239708b3a.2;
-        Tue, 20 Feb 2024 10:19:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1708453142; x=1709057942; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=qFTpHAv0pmcOCj6fTcaqcOduTWlWxRQydUJGeHzrVhA=;
-        b=gQd5iT9acfCqGPOwI2HsPvERlOItk+chb9lEMLI9kz3jRL+Nol+I+ke8yq2Ila6PKH
-         IAK45mLOgttviJ/inxu2PKdNXHvX/DnkYjiWwZKep8tE0aNpvidq7eC9YMptoX44LpSa
-         XrfHbvmEJRq/IgXFyJZ+oV1WmZ5gWoAOrcT3aCIVb2U3eZ8jzPcuhEw3F1IuA3Y+KGYq
-         1u6QaY4eAhhbBwYV+B/x8a2nqwD8acQ+rKTRFezoD9e1QcYpLVXN6SdcKEAPZ3A3Z0Nb
-         90yKFGxa/5LDI90vrgNAXfDxlN6J1IOUoL9/Pg5+5xYOcrI/gTnZjZRorEvYIOIWLcdv
-         4GmA==
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-1d934c8f8f7so54620035ad.2;
+        Tue, 20 Feb 2024 10:19:47 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708453142; x=1709057942;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=qFTpHAv0pmcOCj6fTcaqcOduTWlWxRQydUJGeHzrVhA=;
-        b=vSqhDxyrw/Viei237C/yRue9anMo5rLTRUwwV0PLXrqW+H4k1hTpBsmipH5Ys2MPek
-         hMZMcrbyo46LEHl1J0Yzoz+DO10SALtAs0S218O8axkwYISE8iKNwimWZ1IV3gv4vNJD
-         DfHWFIhWOl9LHvA9oAypHMeMitwQuLnX812wJjIjOMhZuQ8tomYF3AAH5I8q/msS0JRX
-         v7kRp1GDtTMybXCNDHRQxdPfHns0FpoQvruOKn8eOAdvcnZ6/2xnTU9VM8zdsxNIfatq
-         KoXC8vCSTIU58BRXqM8S+NKRRaS3uR86b/c2jagIBlk5m5CdGR3rC2toDtLO0wpYjo2Q
-         SDog==
-X-Forwarded-Encrypted: i=1; AJvYcCWuL/rkonYQGJcgcwq7ViZxrBuB00+ebAh5XHfMPnTuuWyB0i9Zvs4ovN+/zVtvo7Pin+YFITPZcvifJY26C6vfuIYke6TP7wtqHq7s5YEmpPanqLaKZrb46HSPqZhfsYfZfwXSMOuzrMKVluyyWUw+6dI3hG8Q3lxe3ejko9pM
-X-Gm-Message-State: AOJu0YyBaZURL0iYCKUGvvw9igJMoDXeOumAqjRHAw0NKUwp6m1H8ble
-	2EXvF7IBsF0IqcjXAnisa3Cu9Btm1yfGUMavool7xoYzrKGgt2Ns
-X-Google-Smtp-Source: AGHT+IHctzEbCJ0zIC/W29fqRusdFNSQJRt7P7ntp+/eb2LVdwQ/FleSZOrJXKKIk+UeThHSav1Bbg==
-X-Received: by 2002:a05:6a20:c890:b0:19b:a07a:344d with SMTP id hb16-20020a056a20c89000b0019ba07a344dmr15658884pzb.7.1708453142076;
-        Tue, 20 Feb 2024 10:19:02 -0800 (PST)
-Received: from localhost (dhcp-141-239-158-86.hawaiiantel.net. [141.239.158.86])
-        by smtp.gmail.com with ESMTPSA id r8-20020a62e408000000b006e3a4766c7esm5984542pfh.68.2024.02.20.10.19.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 20 Feb 2024 10:19:01 -0800 (PST)
-Sender: Tejun Heo <htejun@gmail.com>
-Date: Tue, 20 Feb 2024 08:19:00 -1000
-From: Tejun Heo <tj@kernel.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: mpatocka@redhat.com, linux-kernel@vger.kernel.org,
-	dm-devel@lists.linux.dev, msnitzer@redhat.com, ignat@cloudflare.com,
-	damien.lemoal@wdc.com, bob.liu@oracle.com, houtao1@huawei.com,
-	peterz@infradead.org, mingo@kernel.org, netdev@vger.kernel.org,
-	allen.lkml@gmail.com, kernel-team@meta.com,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Alan Stern <stern@rowland.harvard.edu>, linux-usb@vger.kernel.org,
-	mchehab@kernel.org
-Subject: Re: [PATCH 5/8] usb: core: hcd: Convert from tasklet to BH workqueue
-Message-ID: <ZdTtFFRC7dmiS2wL@slm.duckdns.org>
-References: <20240130091300.2968534-1-tj@kernel.org>
- <20240130091300.2968534-6-tj@kernel.org>
- <bckroyio6l2nt54refuord4pm6mqylt3adx6z2bg6iczxkbnyk@bb5447rqahj5>
- <CAHk-=whqae-+7Q7wbtnEj7YmR8vsx6skTj6j-srV2Fz7cBZ2ag@mail.gmail.com>
+        d=1e100.net; s=20230601; t=1708453187; x=1709057987;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=IIaEw1j+qBtvH9M5w+a4/XEf+88yuJ80F8Q41APfGUI=;
+        b=wZyNewfMZsu822YNske5TKT67ENt2f9gQWvWXLcxEYcXhyWGYZS6bG/2sEQipUT7SC
+         xgDyRogRkGz/jHQSkgFCiOuiHE2PHkSEoNlOCzvZzmK7dwEaO1ej3Czhs287cmXyEM+F
+         799C7kMzozAleJ9ITzjBOWS+VXhjuiGoA3504BLI/qpAw3gJ/qAg5vD2Ay3e6J8MVxaD
+         u2CuhkKGFmOirazUhpqpP9ews3fkMLooHRqqoYxuutxgYJ0jg8ocxiCnYmQ5G9A0cZHm
+         o+Yk0EJUlH8fy1ZeBkYC5UmBiYDQbWOGM6biQ8s3nv1yX5g5X6kTIu3RTp+mRp7Ktlko
+         1+QA==
+X-Forwarded-Encrypted: i=1; AJvYcCXT0rJUgFydKuLf7KW/42/oskAtUffBaaaGiQIQ8oew7mX1uAZ+3bSSBNv2OyLAJ0bMC0Ss3YvcP9lfNlvTAn2osQDK3lS/UYzOaHcH3GJsUKRqFpkQbOHJZW3yF+jrRtm+XEKpyN/HYg==
+X-Gm-Message-State: AOJu0Yy9OjrYt3myFydTaw3d+bKz0cNJx7h7aHa0Kx5rdtp5moVfm+S3
+	5Y0PNLKsHYsbA+MV7Z+fb+SgJqIjaRHkDolEIhyT2KnYgdTEbImN
+X-Google-Smtp-Source: AGHT+IFLKIJ8T5RC9P8/uZ8FZkGizTQrrQBxZm4RJgH2uR30HVY5oRcERKtInkYamNv2sQyhKl6Puw==
+X-Received: by 2002:a17:903:22c6:b0:1db:d42f:fde9 with SMTP id y6-20020a17090322c600b001dbd42ffde9mr10215831plg.41.1708453186714;
+        Tue, 20 Feb 2024 10:19:46 -0800 (PST)
+Received: from ?IPV6:2620:0:1000:8411:455a:b76d:46a7:7189? ([2620:0:1000:8411:455a:b76d:46a7:7189])
+        by smtp.gmail.com with ESMTPSA id f12-20020a17090274cc00b001da1fae8a73sm6519834plt.12.2024.02.20.10.19.45
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 20 Feb 2024 10:19:46 -0800 (PST)
+Message-ID: <f55c36c5-0b8f-4b7a-a0b9-b11320781a4f@acm.org>
+Date: Tue, 20 Feb 2024 10:19:45 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHk-=whqae-+7Q7wbtnEj7YmR8vsx6skTj6j-srV2Fz7cBZ2ag@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] scsi: ufs: core: Fix setup_xfer_req invocation
+Content-Language: en-US
+To: Rohit Ner <rohitner@google.com>
+Cc: Can Guo <quic_cang@quicinc.com>, Bean Huo <beanhuo@micron.com>,
+ Stanley Chu <stanley.chu@mediatek.com>,
+ "Martin K. Petersen" <martin.petersen@oracle.com>,
+ Jaegeuk Kim <jaegeuk@kernel.org>, Avri Altman <avri.altman@wdc.com>,
+ linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20240220090805.2886914-1-rohitner@google.com>
+ <1920a2f6-e398-47af-a5d7-9dad9c70e03d@acm.org>
+ <CAGt9f=Qd8P4OUuT=KJQqpwJPYVB7zeCJjWn_4CTiXWce6ZRERg@mail.gmail.com>
+From: Bart Van Assche <bvanassche@acm.org>
+In-Reply-To: <CAGt9f=Qd8P4OUuT=KJQqpwJPYVB7zeCJjWn_4CTiXWce6ZRERg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hello,
+On 2/20/24 09:58, Rohit Ner wrote:
+> Do you propose to remove this callback altogether? This callback should
+> either support both transfer modes or none.
 
-On Tue, Feb 20, 2024 at 09:55:30AM -0800, Linus Torvalds wrote:
->    git://git.kernel.org/pub/scm/linux/kernel/git/tj/wq.git
-> refs/heads/for-6.9-bh-conversions
-> 
-> although it's possible that Tejun has a newer version in some other
-> branch. Tejun - maybe point Mauro at something he can try out if you
-> have updated the conversion since?
+The only UFSHCI controller I know of that needs this callback is the Exynos
+UFSHCI controller. As far as I know there are Exynos UFSHCI controllers that
+support UFSHCI 3.0 but UFSHCI 4.0 Exynos controllers are not yet available.
+Standard compliant controllers should not use the .setup_xfer_req() callback.
+As you may know invoking that callback means performing an indirect function
+call. Indirect function calls are slower than direct calls, especially if
+speculative execution  vulnerability security mitigations are enabled.
 
-Just pushed out the following branch for testing.
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/tj/wq.git for-6.9-bh-conversions-test
-
-It's the same branch but combined with the current linus#master to avoid the
-rc1 wonkiness.
-
-Thanks.
-
--- 
-tejun
+Bart.
