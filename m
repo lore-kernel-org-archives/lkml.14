@@ -1,144 +1,124 @@
-Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
+Received: from mout.web.de (mout.web.de [212.227.17.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70C4465BD7;
-	Tue, 20 Feb 2024 11:10:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE6E165BD9;
+	Tue, 20 Feb 2024 11:10:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708427439; cv=none; b=JRUqY9cJ/Sa1Cue5fjF6KnRaZKpUmH9JOYvh2Xq4VFSnmKo1mn3bDnt/0RUZmFma4wd0Zq8iMPh62XhSmKU6x7P5IXI2rH+4ST6vAMJmp9DVqIdM6dK19idPNfT8fQUYtba8k5u/j1yRmizWkX8wyXeENRWl2mC2UACMlP385uA=
+	t=1708427448; cv=none; b=NC20K2+LOAkvQA4956UXuvDUepetV0srKbQYauKXLNyJC9B39+S7dchpwBjoIbXAci/712k0BDg8JXXZMq1DgV+aX8Y8lBKM10Ikg10ARq/32VnZXRuiXFBECzk5K9q1LN3Yef9/57NOEv2Tdx7pdj6BLEte6tnzQpw2KaWxkoE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708427439; c=relaxed/simple;
-	bh=+gtPF82Psk+0scOoKi//Kqv72HSichWCQkcD4dfiT54=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Nkmalsi8tThYEDQFzZqvPp4IjvTlFLFJ1S3e5b0hFKBCb4kQCZoEJYRF2L2VXIe8AwWtqsYcfftXzvbTg4j0NEqfIcgw5BMO3UcI0LVVZr3mWvehjA1Q1jsveXjyI21jtz/xEUVguUIjAMZbrHC9/9UtxbemkHpX9po7CDmSHas=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=BVyvJKXa; arc=none smtp.client-ip=217.70.183.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1708427448; c=relaxed/simple;
+	bh=MpJcVGRKO8AWBDMnssLpCilOGC18nfaO9n9RoVZq7VQ=;
+	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
+	 In-Reply-To:Content-Type; b=cgEql6SejxSuarVPtVUuOgkRufbQN6a507YkaeJ8lXezjFlr7svcFkBdBz3qWTzuqaGVWbWS7+/v+feZy8pk/2hnT6DIs/yvNk3HUroEPA0MBPOYXe8NKG8J/7b30wcrbVLqjpvlyeZXhW0eOemNnDS+gZ7gv2b5s4DMRaV3QQ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=BLdU6PEu; arc=none smtp.client-ip=212.227.17.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="BVyvJKXa"
-Received: by mail.gandi.net (Postfix) with ESMTPA id DF7C51BF216;
-	Tue, 20 Feb 2024 11:10:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1708427428;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=c+dSIBMW24B1QEdw+4NnCXt+Ftn4RqDE56kLBoNW620=;
-	b=BVyvJKXaQGyrX5QqXRvRovkMd9I52tgnpBvFb8sGJW2ToyYfkTjQSpmRPbC7MWlr87qARC
-	UuykfAJ2Gzw/xw5HTJEEqnS9JgcllN4ozixRVIdJYUmaJ03EwrSA/HPHMJ0LyBIfwuFF1T
-	Vn1eXzZi+zEtjlgWodDARgePGpWww+XhLl3uCVA3aeN0DFXy7cgyb1C+jG8yyVHnXCLaiV
-	irE83aWO1lAbdCOCsco0uZvMOIkdgUuXesKYs7D8/MbzY6shCK+YPobQUfruQ4uRjyYmG/
-	JGkV8ouvIR9DZ5KZSudRIcYRPo7yRuxpmIc3uM6rb3FMCWiLekvld3vCTbWM1g==
-From: Herve Codina <herve.codina@bootlin.com>
-To: Bartosz Golaszewski <brgl@bgdev.pl>,
-	Kent Gibson <warthog618@gmail.com>,
-	Linus Walleij <linus.walleij@linaro.org>
-Cc: linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Luca Ceresoli <luca.ceresoli@bootlin.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	Herve Codina <herve.codina@bootlin.com>
-Subject: [PATCH 2/2] gpiolib: cdev: release IRQs when the gpio chip device is removed
-Date: Tue, 20 Feb 2024 12:10:18 +0100
-Message-ID: <20240220111019.133697-3-herve.codina@bootlin.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240220111019.133697-1-herve.codina@bootlin.com>
-References: <20240220111019.133697-1-herve.codina@bootlin.com>
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="BLdU6PEu"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de; s=s29768273;
+	t=1708427438; x=1709032238; i=markus.elfring@web.de;
+	bh=MpJcVGRKO8AWBDMnssLpCilOGC18nfaO9n9RoVZq7VQ=;
+	h=X-UI-Sender-Class:Date:To:Cc:References:Subject:From:
+	 In-Reply-To;
+	b=BLdU6PEuy96My08QHX+sfAMRWW4IK1X4d0T4z7p4DxV7MRkglWrcZf/j/tZKdw52
+	 YPMAa2l6FxXjQdxzj85XS/JNEH9oDG/yKaghQ2vCY2NfS1Kb49HmyUj+GrUD85WqQ
+	 8RNDEIiRbmSjIwPbGf/sSU2rQRZhM51J48MM7HybPKuk1Wofxj67i5sJb8fCQZu0v
+	 W/79FPqhyfb5sz0FQ05r+Usub8KlNKiZYpi0CoK3MsPsiy0LZ+Q9NgLIEq6arb5/3
+	 gu86okYONMl5QBxcn6SytaLQHWAyDAtkOmAFfD5zc4XMnhGSw7Qy4gsQb/CGAeWec
+	 m/95GOLhnMPpFIYZBQ==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.21] ([94.31.80.95]) by smtp.web.de (mrweb105
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 1M7Nig-1rZ6Xk3SFY-007pjU; Tue, 20
+ Feb 2024 11:56:00 +0100
+Message-ID: <9ff4221a-7083-4cb1-abde-1690f655da8d@web.de>
+Date: Tue, 20 Feb 2024 11:55:57 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-GND-Sasl: herve.codina@bootlin.com
+User-Agent: Mozilla Thunderbird
+To: Johan Hovold <johan+linaro@kernel.org>, freedreno@lists.freedesktop.org,
+ dri-devel@lists.freedesktop.org, linux-phy@lists.infradead.org,
+ linux-arm-msm@vger.kernel.org, kernel-janitors@vger.kernel.org,
+ Andrzej Hajda <andrzej.hajda@intel.com>,
+ Bjorn Andersson <andersson@kernel.org>, Daniel Vetter <daniel@ffwll.ch>,
+ David Airlie <airlied@gmail.com>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>,
+ Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>,
+ Thomas Zimmermann <tzimmermann@suse.de>, Vinod Koul <vkoul@kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+ Abhinav Kumar <quic_abhinavk@quicinc.com>,
+ Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+ Jernej Skrabec <jernej.skrabec@gmail.com>, Jonas Karlman <jonas@kwiboo.se>,
+ Kishon Vijay Abraham I <kishon@kernel.org>,
+ Konrad Dybcio <konrad.dybcio@linaro.org>,
+ Kuogee Hsieh <quic_khsieh@quicinc.com>,
+ Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+ Rob Clark <robdclark@gmail.com>, stable@vger.kernel.org
+References: <20240217150228.5788-4-johan+linaro@kernel.org>
+Subject: Re: [PATCH 3/6] soc: qcom: pmic_glink_altmode: fix drm bridge
+ use-after-free
+Content-Language: en-GB
+From: Markus Elfring <Markus.Elfring@web.de>
+In-Reply-To: <20240217150228.5788-4-johan+linaro@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:+nHgQKTeGuYog2KEpVvwroQxHKbVWgy4x84LyT/hTMOvc2YQpn3
+ JDDJBBZ8e8iXt3Iuyj6UFT2vAkr8MqMibV6zXbFxjjJ4NonyB3VINxG4cgtMo5Xs7xuC6zv
+ xHHA+wCH+zFVfPWvJKoIfdB4zOgAfy83sRz8V39oAy7aiZgIKyhsi1FhkeElCu/itLaX0BA
+ SMxSEIL5gaOlUNFNP274g==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:aOKHz1US+0c=;Y7LOb2uGXWAxALKRNeJNoMXdSED
+ 6mThPuSgax6MusWH8Ux/RV+9w1zP98fwHF/F/EFha/52Eso2NCDEZICzFoaqBbjVZwC8X9iXj
+ imqXDHI+XMO0+ZsKtOfqx24v88gE5o5vzibabRrgXDJNXGYIMVRv0FhA3zBLzLImf+0yKA0w3
+ JipXGp3SXIfH7L7HV9OeJp/lRlCX0T2dcB4emjiyAhry5gg7pglw5q81w+eBAmMASEC7p3QFl
+ fNJMxuiOt8h2Rezr4SEiSyEQA6eYjV9YL2u7jd2D7a/Z782fqk3AH3QRs5XYKldiKIQ/ET21w
+ kQy5vQRVco7VAXTQBMM4nu+jjOcrp7VwntKu1Lv8lSUeYMgoPk+03t1Jfd7Wq+v0DumL+b69s
+ EFpggdlfcwjmUZiY1H5L0aypyi1fqDno1dcoD3BThjr7HInZntawd5DklobDax+czHsflIRKo
+ EEald0kztZeVc20C//rszyjaE0lRLHAnbS1xEbuUhgIY6wQNfjOWsKpTlwmKkxJhg+G8V87Hw
+ CsGHwCQpWo8JUQ2u8u13to8icfvbIURNZ/+0TOfimg6fk1e3Xp6tk5ZST+n0FupyGgbuzh8Xk
+ /ckHy9ppsFBiMNkezud3jl9lRX5YB1WBEQYzDYOCWdxsFvo3mw715qMWQEMJjar3JQR4i/NFh
+ wpz15f441+KtAxdh9D+nYKtO57bx/KSH6YPyS0OgfVYWQnCwWw9/FSkWuNj+8E9Xouf+xnsSV
+ 7i9vSiZZCGaVCFmj7xKEWlGyBccfvDxkylTO9r0FdjfgxCZQFBHfYnKaMD47c7kVBC5lznyEq
+ 1ZP+jYKEtNDnFoMJvSTvMXP1v6aJ26Z0pgxbocw6whsgI=
 
-When gpio chip device is removed while some related gpio are used by the
-user-space, the following warning can appear:
-  remove_proc_entry: removing non-empty directory 'irq/233', leaking at least 'gpiomon'
-  WARNING: CPU: 2 PID: 72 at fs/proc/generic.c:717 remove_proc_entry+0x190/0x19c
-  ...
-  Call trace:
-    remove_proc_entry+0x190/0x19c
-    unregister_irq_proc+0xd0/0x104
-    free_desc+0x4c/0xc4
-    irq_free_descs+0x6c/0x90
-    irq_dispose_mapping+0x104/0x14c
-    gpiochip_irqchip_remove+0xcc/0x1a4
-    gpiochip_remove+0x48/0x100
-  ...
+=E2=80=A6
+> Specifically, the dp-hpd bridge is currently registered before all
+> resources have been acquired which means that it can also be
+> deregistered on probe deferrals.
+>
+> In the meantime there is a race window where the new aux bridge driver
+> (or PHY driver previously) may have looked up the dp-hpd bridge and
+> stored a (non-reference-counted) pointer to the bridge which is about to
+> be deallocated.
+=E2=80=A6
+> +++ b/drivers/soc/qcom/pmic_glink_altmode.c
+=E2=80=A6
+> @@ -454,7 +454,7 @@ static int pmic_glink_altmode_probe(struct auxiliary=
+_device *adev,
+>  		alt_port->index =3D port;
+>  		INIT_WORK(&alt_port->work, pmic_glink_altmode_worker);
+>
+> -		alt_port->bridge =3D drm_dp_hpd_bridge_register(dev, to_of_node(fwnod=
+e));
+> +		alt_port->bridge =3D devm_drm_dp_hpd_bridge_alloc(dev, to_of_node(fwn=
+ode));
+>  		if (IS_ERR(alt_port->bridge)) {
+>  			fwnode_handle_put(fwnode);
+>  			return PTR_ERR(alt_port->bridge);
+=E2=80=A6
 
-Indeed, the gpio cdev uses an IRQ but this IRQ is not released when the
-gpio chip device is removed.
+The function call =E2=80=9Cfwnode_handle_put(fwnode)=E2=80=9D is used in m=
+ultiple if branches.
+https://elixir.bootlin.com/linux/v6.8-rc5/source/drivers/soc/qcom/pmic_gli=
+nk_altmode.c#L435
 
-Release IRQs used in the device removal notifier functions.
-Also move one of these function definition in order to avoid a forward
-declaration (move after the edge_detector_stop() definition).
+I suggest to add a jump target so that a bit of exception handling
+can be better reused at the end of this function implementation.
 
-Signed-off-by: Herve Codina <herve.codina@bootlin.com>
----
- drivers/gpio/gpiolib-cdev.c | 33 ++++++++++++++++++++++-----------
- 1 file changed, 22 insertions(+), 11 deletions(-)
-
-diff --git a/drivers/gpio/gpiolib-cdev.c b/drivers/gpio/gpiolib-cdev.c
-index 2a88736629ef..aec4a4c8490a 100644
---- a/drivers/gpio/gpiolib-cdev.c
-+++ b/drivers/gpio/gpiolib-cdev.c
-@@ -688,17 +688,6 @@ static void line_set_debounce_period(struct line *line,
- 	 GPIO_V2_LINE_FLAG_EVENT_CLOCK_HTE | \
- 	 GPIO_V2_LINE_EDGE_FLAGS)
- 
--static int linereq_unregistered_notify(struct notifier_block *nb,
--				       unsigned long action, void *data)
--{
--	struct linereq *lr = container_of(nb, struct linereq,
--					  device_unregistered_nb);
--
--	wake_up_poll(&lr->wait, EPOLLIN | EPOLLERR);
--
--	return NOTIFY_OK;
--}
--
- static void linereq_put_event(struct linereq *lr,
- 			      struct gpio_v2_line_event *le)
- {
-@@ -1189,6 +1178,23 @@ static int edge_detector_update(struct line *line,
- 	return edge_detector_setup(line, lc, line_idx, edflags);
- }
- 
-+static int linereq_unregistered_notify(struct notifier_block *nb,
-+				       unsigned long action, void *data)
-+{
-+	struct linereq *lr = container_of(nb, struct linereq,
-+					  device_unregistered_nb);
-+	int i;
-+
-+	for (i = 0; i < lr->num_lines; i++) {
-+		if (lr->lines[i].desc)
-+			edge_detector_stop(&lr->lines[i]);
-+	}
-+
-+	wake_up_poll(&lr->wait, EPOLLIN | EPOLLERR);
-+
-+	return NOTIFY_OK;
-+}
-+
- static u64 gpio_v2_line_config_flags(struct gpio_v2_line_config *lc,
- 				     unsigned int line_idx)
- {
-@@ -1898,6 +1904,11 @@ static int lineevent_unregistered_notify(struct notifier_block *nb,
- 	struct lineevent_state *le = container_of(nb, struct lineevent_state,
- 						  device_unregistered_nb);
- 
-+	if (le->irq) {
-+		free_irq(le->irq, le);
-+		le->irq = 0;
-+	}
-+
- 	wake_up_poll(&le->wait, EPOLLIN | EPOLLERR);
- 
- 	return NOTIFY_OK;
--- 
-2.43.0
-
+Regards,
+Markus
