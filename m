@@ -1,158 +1,104 @@
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2046.outbound.protection.outlook.com [40.107.94.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EAE176C7C;
-	Tue, 20 Feb 2024 17:21:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.46
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708449694; cv=fail; b=h8w0DPmweeJX/mV6Q5+WDxvjgj7Vamb/c92Yil26vWLiqWpk7d/OjM29v6Vk8tVgOUcwCz4ia1VqWJUjyw77RyCZPSbY13YndjbFqK2mbX+6YdpSxXzym7TwP7WX6w4fuJrEocXTzZ5zAqc3EmP4B3USC38XVrjAr+Gx2BcUPJM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708449694; c=relaxed/simple;
-	bh=zB5HCu8lq8m4vBYi/4OiSqE5cfAkKSQqfZo8cLf/lNQ=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=fSINrWdMjqC/8K9rqPieL43IpQPe3w1tG+80xxYOkB8bBPXgbYB8BXlsJZkvlABbkF7HmdcBye93yP4Rd1KzqtjEzWGkNsqHFaKstpjO3Qy2ewBA2su5m2gi2yrqHa+9ZmTX11hKSjHiUxKx3nQwc7Gr+afYsp4AnosWZFFI9tQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=sWZ+ckhr; arc=fail smtp.client-ip=40.107.94.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="sWZ+ckhr"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=OHBzc09kc4uJhALUrynhh6qiCMbOjYmocKUl3qObm1PztqMzGNQKs1/vowM0pR5cxG31RoYkKpY8TBpkpnX0gGwMTDIsmSh578ohLn5nr4B5Uxu50Kzjas1OTjjUj+9eyQMSuD/pb7XV4YYaHzaiBsQoa3MaqsCG1FiiQMk2cLmF/mxlUhmZ3edWkhxXziJEtRXq5ynAdfYYMcjHDuRVs+/AJkbDzNO/PkMo6CYo2Vbg9NnuWDBO+LdYceGvNvtGamsCCM8zk7dBElwwY7ujXxh538fQeJs6oDW25Cdur0f7bZrfjsuYno/JahWsVcMlvXp9hii7L163VPEA9dKUgA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=2ZtcJG6gt4MGWD2GGDgFRpfnSYpgQ7vdwijBj/DzMOo=;
- b=VJk15+jAB1sZWBR/RSK/Bgw0XPHdi21PTsi4pzqPzHGqttONH0BqNJ8nNE8eB0hBvSdAxsPM+p6PJYtXHcijFkqCbDCMGdaIR2n9H2mgRCXazoRz02RTNk1YbNQZhpCBxDzinq4DBEwFf9aOLxq2uMV6VttyLFzpPPaAMqFKHCTyy4122CunWtYkT4V6vryuqa+wr0adAXTVul8qM9lwhzcrzRkyjc8Bb6uVa/16w55VHp8vOexxstG9LYFGq1E5RketxHd1oi+YUNAqK8qANITOrZtXAEMCdQT3NbU7hFiz8owKP0CiDJh5tZG9TK8eG3ZkQhoPYvomlyz/y/Poig==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=2ZtcJG6gt4MGWD2GGDgFRpfnSYpgQ7vdwijBj/DzMOo=;
- b=sWZ+ckhrXCTxQcBpmhKff8VZJIgEjXm2tpJmBdqLlZctDpwIF5s4j9lOoGf8TnIbJmc+4QJRCwwsTWiONXxw/0DhIBg0nMUmwMri82SbWJmEb0GDgXZB4Wle6fH5gLkNsV6tyNizJZK6dOtQ5aHn9xZx2vvEiHYp/X03TVNN8vs=
-Received: from PH8PR02CA0016.namprd02.prod.outlook.com (2603:10b6:510:2d0::25)
- by BN9PR12MB5289.namprd12.prod.outlook.com (2603:10b6:408:102::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7316.20; Tue, 20 Feb
- 2024 17:21:28 +0000
-Received: from SA2PEPF000015CC.namprd03.prod.outlook.com
- (2603:10b6:510:2d0:cafe::22) by PH8PR02CA0016.outlook.office365.com
- (2603:10b6:510:2d0::25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7292.40 via Frontend
- Transport; Tue, 20 Feb 2024 17:21:28 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- SA2PEPF000015CC.mail.protection.outlook.com (10.167.241.202) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.7292.25 via Frontend Transport; Tue, 20 Feb 2024 17:21:28 +0000
-Received: from BLR5CG134614W.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Tue, 20 Feb
- 2024 11:21:23 -0600
-From: K Prateek Nayak <kprateek.nayak@amd.com>
-To: <linux-kernel@vger.kernel.org>
-CC: "Gautham R. Shenoy" <gautham.shenoy@amd.com>, K Prateek Nayak
-	<kprateek.nayak@amd.com>, Michal Simek <monstr@monstr.eu>, "Rafael J.
- Wysocki" <rafael@kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>,
-	Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>, "Juri
- Lelli" <juri.lelli@redhat.com>, Vincent Guittot <vincent.guittot@linaro.org>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>, Steven Rostedt
-	<rostedt@goodmis.org>, Ben Segall <bsegall@google.com>, Mel Gorman
-	<mgorman@suse.de>, Daniel Bristot de Oliveira <bristot@redhat.com>, "Valentin
- Schneider" <vschneid@redhat.com>, <linux-pm@vger.kernel.org>
-Subject: [RFC PATCH 14/14] microblaze/thread_info: Introduce TIF_NOTIFY_IPI flag
-Date: Tue, 20 Feb 2024 22:44:57 +0530
-Message-ID: <20240220171457.703-15-kprateek.nayak@amd.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240220171457.703-1-kprateek.nayak@amd.com>
-References: <20240220171457.703-1-kprateek.nayak@amd.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2ACDC77626;
+	Tue, 20 Feb 2024 17:21:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.179
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1708449702; cv=none; b=Ga5CSM2k5xwranlZl+YJmESnqyx48h0o8U+jMal1UnpHt9GMjMstHBRrIq+YK1gv+477RogPX4Juxkq+AOYgMuY58TxTfrWlNv++UBuvpqQuGU8JHfj0MwXSjfW69P5bOzRstya1Ibt4WpZAPGFxn8qTV22S2xeiQtGq8HBzUsc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1708449702; c=relaxed/simple;
+	bh=mPo+l7s6R2Mn5HzTebtRduD2jfu/x8K/datW8X5vC90=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=q2+OpkUeas4pb8Dt/N4dct68D7PguvkyP2VOMx/sqsztDCcfjNBkfblko2CQ5bVLWJXU4DUQ0Nun/l3hPk/K/SVNoTbS14YzQ7EdCTgfOD+p4rZcZQwruOfa5Kose2kWoISvI4pI/vC2J3MmHinz37U+jxf4uChFLGEU3KRZzd4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=acm.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.210.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=acm.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-6e0f803d9dfso2903171b3a.0;
+        Tue, 20 Feb 2024 09:21:39 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708449699; x=1709054499;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=q2yUIPD7foX8u6Xdbasilcg/3p8ULKCtlmQtBTHBRrU=;
+        b=e/kosMAp12J+yiF6DGKXrEZV1tkuDDqC0SOtLxOfO8mgIOy4Dz7r1qSEZf6oupFoF/
+         02wKYY1lxGnKrC9NpVd2zzHiStrEUWWy8hAlh97ijzqcm1+YplTxMGAfAeiMgv5xEpHq
+         SPawy8MzbgG+TfY79r8xaHzNpjnbmxKeU9LPCK6+yzzrfxc1aUdVKTkdUTn4je2JbUDz
+         7c1iiXh4VBkKu6yx7bkYDPGLfSLfW+rJUGkqxONBzpi81tMPQZQ5qddBdoWPX9RpwgwX
+         8kwexL3MwdrXzI+VyoT8+RsprOIh7c/naz4/E7Et4lERLjdRSu0ovUY/gPB9IaKXsPGv
+         j1wQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWByMh4C5ZiEkgqW2yRsoX+fRY/iXFnHgIYxgfo2SKz0/Nkp+gLYk7vJiwE0iCzcFEgciuISwTO4TmAsJC/f4ZuXG13o6IiWnH5ZG5lr9bjkb5ioe7UDcmXbVxsyRXX1m2VwLQPAXx/FA==
+X-Gm-Message-State: AOJu0YxU1vWtfGQeD/WGaUwHy3D96lxG0nyLkpPdtCGWRqz11iqGp4N/
+	7GaqVIbhnzFbpE4s+5lEVYd41AoccsBVzZ21VAzgOlxeqSB+rLk8
+X-Google-Smtp-Source: AGHT+IE779i2QADDo/XfAUyVbShxQgDbClnCbfoX2CDYqxGWSdXQL6WKX7naG+PPOPmDkKWQE36Vow==
+X-Received: by 2002:a05:6a00:1897:b0:6e4:864a:9f68 with SMTP id x23-20020a056a00189700b006e4864a9f68mr1190636pfh.5.1708449699227;
+        Tue, 20 Feb 2024 09:21:39 -0800 (PST)
+Received: from ?IPV6:2620:0:1000:8411:455a:b76d:46a7:7189? ([2620:0:1000:8411:455a:b76d:46a7:7189])
+        by smtp.gmail.com with ESMTPSA id d5-20020aa78685000000b006e2301e702fsm6824989pfo.125.2024.02.20.09.21.38
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 20 Feb 2024 09:21:38 -0800 (PST)
+Message-ID: <1920a2f6-e398-47af-a5d7-9dad9c70e03d@acm.org>
+Date: Tue, 20 Feb 2024 09:21:37 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SA2PEPF000015CC:EE_|BN9PR12MB5289:EE_
-X-MS-Office365-Filtering-Correlation-Id: 9b945c27-2258-426b-bbd7-08dc32385fa3
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	nL3QqxHgKrMwekLYbHyUttd6yXqk0XCGJKqhHHEPr8Bo0A05W4jF1TLefwN9YQfPwJ7XZNpJ3q/p30l76EIdNKhQ1b64pg5PLz9k19ftA+S6aPboXSXxDRaM23cgTfGusP9LY2VKCkpp5i2fWcX2M/Fgkf3cl7K/GuN9T7HHB5YJgd8cvkosInHHh8ftN5MENr1Gai2HRW/c1bb7gN/9oJLM9wEwnC/2gwRRzE1UUsKh7TyjhfoN5QOpSZ5ruK7Ssv5En+Bk5h9gr/C7z4lw3XwwVhEPBUF513OS60MzrN169RKev1VRcMGwLrq87r4ejONi4k4ERwXrpwQ1zFZCfB+pHELlSWVjBBD9uX1H11oEFwrBuztHhrwBlSWQEoXgu+taneacTPhk7SIIZI/ASCEUm5gJDlnuMuGzAB3Fi5PiQJAy4FFrgxNPrEd7hGb9WsZP9Q9+ppUnQ5wWrUX9nicX5AhTHMN732Bw5NPVv3kdmIjp4Yrxy9vdHc7n9YCUnxtNd6AP7o+lVtOgwYre+UzAfZ6NeSnTeHMnopb58CQuc3q6/lGzY9L+NVapQ0MkNIOhF4JoCmFWNboA8E5socuaft2gfG04OhQCGZ0ZxD3b8kOfwjkf4q5rLfv7ZdvGLTJFX7kPnJU5OdJmGYIkOae1U5+4K8b8Coe5NjI2o4Y=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(36860700004)(40470700004)(46966006);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Feb 2024 17:21:28.3422
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9b945c27-2258-426b-bbd7-08dc32385fa3
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SA2PEPF000015CC.namprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN9PR12MB5289
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] scsi: ufs: core: Fix setup_xfer_req invocation
+Content-Language: en-US
+To: Rohit Ner <rohitner@google.com>, Can Guo <quic_cang@quicinc.com>,
+ Bean Huo <beanhuo@micron.com>, Stanley Chu <stanley.chu@mediatek.com>,
+ "Martin K. Petersen" <martin.petersen@oracle.com>,
+ Jaegeuk Kim <jaegeuk@kernel.org>
+Cc: Avri Altman <avri.altman@wdc.com>, linux-scsi@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20240220090805.2886914-1-rohitner@google.com>
+From: Bart Van Assche <bvanassche@acm.org>
+In-Reply-To: <20240220090805.2886914-1-rohitner@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Add support for TIF_NOTIFY_IPI on MicroBlaze. With TIF_NOTIFY_IPI, a
-sender sending an IPI to an idle CPU in TIF_POLLING mode will set the
-TIF_NOTIFY_IPI flag in the target's idle tasks's thread_info to pull the
-CPU out of idle, as opposed to setting TIF_NEED_RESCHED previously. This
-avoids spurious calls to schedule_idle() in cases where an IPI does not
-necessarily wake up a task on the idle CPU.
+On 2/20/24 01:08, Rohit Ner wrote:
+> Allow variant callback to setup transfers without
+> restricting the transfers to use legacy doorbell
+> 
+> Signed-off-by: Rohit Ner <rohitner@google.com>
+> ---
+>   drivers/ufs/core/ufshcd.c | 6 +++---
+>   1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/ufs/core/ufshcd.c b/drivers/ufs/core/ufshcd.c
+> index d77b25b79ae3..91e483dd3974 100644
+> --- a/drivers/ufs/core/ufshcd.c
+> +++ b/drivers/ufs/core/ufshcd.c
+> @@ -2280,6 +2280,9 @@ void ufshcd_send_command(struct ufs_hba *hba, unsigned int task_tag,
+>   		ufshcd_clk_scaling_start_busy(hba);
+>   	if (unlikely(ufshcd_should_inform_monitor(hba, lrbp)))
+>   		ufshcd_start_monitor(hba, lrbp);
+> +	if (hba->vops && hba->vops->setup_xfer_req)
+> +		hba->vops->setup_xfer_req(hba, lrbp->task_tag,
+> +						!!lrbp->cmd);
+>   
+>   	if (is_mcq_enabled(hba)) {
+>   		int utrd_size = sizeof(struct utp_transfer_req_desc);
+> @@ -2293,9 +2296,6 @@ void ufshcd_send_command(struct ufs_hba *hba, unsigned int task_tag,
+>   		spin_unlock(&hwq->sq_lock);
+>   	} else {
+>   		spin_lock_irqsave(&hba->outstanding_lock, flags);
+> -		if (hba->vops && hba->vops->setup_xfer_req)
+> -			hba->vops->setup_xfer_req(hba, lrbp->task_tag,
+> -						  !!lrbp->cmd);
+>   		__set_bit(lrbp->task_tag, &hba->outstanding_reqs);
+>   		ufshcd_writel(hba, 1 << lrbp->task_tag,
+>   			      REG_UTP_TRANSFER_REQ_DOOR_BELL);
 
-Cc: Michal Simek <monstr@monstr.eu>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Juri Lelli <juri.lelli@redhat.com>
-Cc: Vincent Guittot <vincent.guittot@linaro.org>
-Cc: Dietmar Eggemann <dietmar.eggemann@arm.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>
-Cc: Ben Segall <bsegall@google.com>
-Cc: Mel Gorman <mgorman@suse.de>
-Cc: Daniel Bristot de Oliveira <bristot@redhat.com>
-Cc: Valentin Schneider <vschneid@redhat.com>
-Cc: K Prateek Nayak <kprateek.nayak@amd.com>
-Cc: linux-kernel@vger.kernel.org
-Cc: linux-pm@vger.kernel.org
-Signed-off-by: K Prateek Nayak <kprateek.nayak@amd.com>
----
- arch/microblaze/include/asm/thread_info.h | 2 ++
- 1 file changed, 2 insertions(+)
+UFS controllers that are compliant with the JEDEC UFSHCI specification do
+not need the .setup_xfer_req() callback so I think a better motivation is
+needed to make this change.
 
-diff --git a/arch/microblaze/include/asm/thread_info.h b/arch/microblaze/include/asm/thread_info.h
-index a0ddd2a36fb9..953a334bb4fe 100644
---- a/arch/microblaze/include/asm/thread_info.h
-+++ b/arch/microblaze/include/asm/thread_info.h
-@@ -103,6 +103,7 @@ static inline struct thread_info *current_thread_info(void)
- #define TIF_SINGLESTEP		4
- #define TIF_NOTIFY_SIGNAL	5	/* signal notifications exist */
- #define TIF_MEMDIE		6	/* is terminating due to OOM killer */
-+#define TIF_NOTIFY_IPI		7	/* Pending IPI on TIF_POLLLING idle CPU */
- #define TIF_SYSCALL_AUDIT	9       /* syscall auditing active */
- #define TIF_SECCOMP		10      /* secure computing */
- 
-@@ -115,6 +116,7 @@ static inline struct thread_info *current_thread_info(void)
- #define _TIF_NEED_RESCHED	(1 << TIF_NEED_RESCHED)
- #define _TIF_SINGLESTEP		(1 << TIF_SINGLESTEP)
- #define _TIF_NOTIFY_SIGNAL	(1 << TIF_NOTIFY_SIGNAL)
-+#define _TIF_NOTIFY_IPI		(1 << TIF_NOTIFY_IPI)
- #define _TIF_POLLING_NRFLAG	(1 << TIF_POLLING_NRFLAG)
- #define _TIF_SYSCALL_AUDIT	(1 << TIF_SYSCALL_AUDIT)
- #define _TIF_SECCOMP		(1 << TIF_SECCOMP)
--- 
-2.34.1
+Thanks,
 
+Bart.
