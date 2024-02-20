@@ -1,255 +1,327 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F11455B20C;
-	Tue, 20 Feb 2024 07:26:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6814B29A8;
+	Tue, 20 Feb 2024 07:27:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708413973; cv=none; b=P1PapnsqgrVDurs5xc128jvxe8k788GRB5vRR8cI7Ubfoo1ZEzTlSY596GVjOykSaKQofO2A6m7/CUZUwsvvitAU4P82Ug5NiYW2iLySMHAj2mNBQzIvfsQlJFlwH54eXSg3VKKGhFnwNZP4PMPQ7Wqp5SsAgRSs0t+hhjB8FIo=
+	t=1708414066; cv=none; b=QjHM2ENrZdwoQ8ph+577Jkpmx++p6JHZoJsTxRdMZSHJowMVBznbopr3AReJiAvD44i/ZIXrxoiH8JK0CAywmm/uWZWjVz8NIJRD5dAGY9r6k8Dm1AbSztH4ntRNWZMSqGvRZhltwwkfS5YPx8wXovVSas+yZIQWyh0GGnbmWZE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708413973; c=relaxed/simple;
-	bh=4ZdxL7Umt/9O+UgZJKJOr1w06aqDDKOF2canpC9dDOM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gjMLQPrjRQGuwz2ng4YGETegt9DQWtCoeI1cQexVqnW2C9N8bppbVb+IeDarGV5b4sFAlkAvyrliHHauOYMmZStxeY2ZKAW2lVJVdotFPCBOjYXhU9shUCspJZLDDzPl7aGbGoBDJbrIXk4WeZEXPHQaJ82aj/NbTMaLspErMek=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ls8BbGdF; arc=none smtp.client-ip=198.175.65.17
+	s=arc-20240116; t=1708414066; c=relaxed/simple;
+	bh=f4UvqKki2ezx5bH4UbthoA6PVcyZtHRv0tfHWHAqWUk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=tTS6zs1PdSgQI0G/OqfzbfNa9uZ8gRsVzgct8uyhOTQuYM2lyjufVhYOfMv1+8GEnZ1AFXlzfaDh0plwrIjTbAS+WLWsphy1UOla3YBCX7FxhnHFqS+Duqvk0UNJEhIMVOqp9aAkEV5gHS7f74agl0fpNTLhAP7pq+ARC3tGyL8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CvGXIk9L; arc=none smtp.client-ip=192.198.163.12
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ls8BbGdF"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CvGXIk9L"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1708413971; x=1739949971;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=4ZdxL7Umt/9O+UgZJKJOr1w06aqDDKOF2canpC9dDOM=;
-  b=ls8BbGdFMTVu9BSlDfmctGyFTS/8satWZigx55rkwZ9TPSR9jKa+qJVy
-   GvHZnvwAsiUr893JJ0/OKDi7UmgKasSI9OBhvv7NkzYdBMLO3mA7EO3+u
-   HtVwMOxUr6yTu7eMOtW39PLaqIUNMyYDwqqK2u1ldosbcJQMwGnaMOdWa
-   ILZTro3ISA7WcxCeCesRvsDJcZobnBZAb/PlpBzteieB+V1oPCkmZwDeP
-   FoOFg6+zvQBxHI+svMmki+1GCEvusA6iki0aOTRcuhBzywuqnOvH8wRWT
-   +95d/PUWoi4CwVT7jf8fTseG/1TS0rmmWdjvgWttuO+SvltaXps+ag3oc
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10989"; a="2629619"
+  t=1708414064; x=1739950064;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=f4UvqKki2ezx5bH4UbthoA6PVcyZtHRv0tfHWHAqWUk=;
+  b=CvGXIk9LFXvBPf2WQihhBVNk5XovpjQnVFPWYVoFvYe0PuLiKyt/vfJJ
+   OJFTbl7jbMaSRH5Uvh3SGuG83xNSungwhSbKEF27dsXvLtUtsDJDhHz8b
+   Kk/7YWmT8s7PBwk/SNLDYy1YVFCxnIgie1MQ1tArkc5jTx30+cMhyzaXv
+   WgCOmxbSNlS7cf6d1PzxshlnIOwcLq0SIoHkXE2r+OnVVVlVIi4LmxbZ+
+   55F8teMZNH/GGTjJ9Kc8j/y+r7VNUDMoOHFKFq9hevDkd3e73G2NJEmg1
+   uQfQ5XdinQVRgYB7r/dH0uRyzyc18uI4cIi1lkECv/YT5ujqwEbAJIhip
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10989"; a="6274449"
 X-IronPort-AV: E=Sophos;i="6.06,172,1705392000"; 
-   d="scan'208";a="2629619"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Feb 2024 23:26:09 -0800
+   d="scan'208";a="6274449"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Feb 2024 23:27:36 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.06,172,1705392000"; 
-   d="scan'208";a="9386547"
-Received: from turnipsi.fi.intel.com (HELO kekkonen.fi.intel.com) ([10.237.72.44])
-  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Feb 2024 23:26:02 -0800
-Received: from kekkonen.localdomain (localhost [127.0.0.1])
-	by kekkonen.fi.intel.com (Postfix) with ESMTP id 63F5B11F7E1;
-	Tue, 20 Feb 2024 09:25:59 +0200 (EET)
-Date: Tue, 20 Feb 2024 07:25:59 +0000
-From: "sakari.ailus@linux.intel.com" <sakari.ailus@linux.intel.com>
-To: Zhi Mao =?utf-8?B?KOavm+aZuik=?= <zhi.mao@mediatek.com>
-Cc: "laurent.pinchart@ideasonboard.com" <laurent.pinchart@ideasonboard.com>,
-	"heiko@sntech.de" <heiko@sntech.de>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"robh+dt@kernel.org" <robh+dt@kernel.org>,
-	"yunkec@chromium.org" <yunkec@chromium.org>,
-	"linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>,
-	"dan.scally@ideasonboard.com" <dan.scally@ideasonboard.com>,
-	"gerald.loacker@wolfvision.net" <gerald.loacker@wolfvision.net>,
-	Shengnan Wang =?utf-8?B?KOeOi+Wco+eUtyk=?= <shengnan.wang@mediatek.com>,
-	"hdegoede@redhat.com" <hdegoede@redhat.com>,
-	"linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
-	"linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-	"andy.shevchenko@gmail.com" <andy.shevchenko@gmail.com>,
-	Yaya Chang =?utf-8?B?KOW8tembhea4hSk=?= <Yaya.Chang@mediatek.com>,
-	"mchehab@kernel.org" <mchehab@kernel.org>,
-	"jacopo.mondi@ideasonboard.com" <jacopo.mondi@ideasonboard.com>,
-	"jernej.skrabec@gmail.com" <jernej.skrabec@gmail.com>,
-	"bingbu.cao@intel.com" <bingbu.cao@intel.com>,
-	"tomi.valkeinen@ideasonboard.com" <tomi.valkeinen@ideasonboard.com>,
-	"10572168@qq.com" <10572168@qq.com>,
-	Project_Global_Chrome_Upstream_Group <Project_Global_Chrome_Upstream_Group@mediatek.com>,
-	"hverkuil-cisco@xs4all.nl" <hverkuil-cisco@xs4all.nl>,
-	"krzysztof.kozlowski+dt@linaro.org" <krzysztof.kozlowski+dt@linaro.org>,
-	"conor+dt@kernel.org" <conor+dt@kernel.org>,
-	"matthias.bgg@gmail.com" <matthias.bgg@gmail.com>,
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
-	"angelogioacchino.delregno@collabora.com" <angelogioacchino.delregno@collabora.com>,
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-	"macromorgan@hotmail.com" <macromorgan@hotmail.com>
-Subject: Re: [PATCH v4 2/2] media: i2c: Add GC08A3 image sensor driver
-Message-ID: <ZdRUB92gkbRGPyr_@kekkonen.localdomain>
-References: <20240204061538.2105-1-zhi.mao@mediatek.com>
- <20240204061538.2105-3-zhi.mao@mediatek.com>
- <20240206184542.GE2827@pendragon.ideasonboard.com>
- <598f62bbb55157eec1e23dd1dbc307fea3851b21.camel@mediatek.com>
- <20240220030104.GF20376@pendragon.ideasonboard.com>
- <115698c0c549e747026cc8841a3bd571533f8e6f.camel@mediatek.com>
+   d="scan'208";a="9285633"
+Received: from binbinwu-mobl.ccr.corp.intel.com (HELO [10.238.1.66]) ([10.238.1.66])
+  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Feb 2024 23:27:32 -0800
+Message-ID: <c0029d4d-3dee-4f11-a929-d64d2651bfb3@linux.intel.com>
+Date: Tue, 20 Feb 2024 15:27:29 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <115698c0c549e747026cc8841a3bd571533f8e6f.camel@mediatek.com>
-
-Hi Zhi,
-
-On Tue, Feb 20, 2024 at 05:45:54AM +0000, Zhi Mao (毛智) wrote:
-> Hi Laurent,
-> 
-> Thanks for you reply.
-> I'd like to ask for advice about how to contrl "reset-pin", please
-> check the below comments.
-> 
-> On Tue, 2024-02-20 at 05:01 +0200, Laurent Pinchart wrote:
-> >  	 
-> > External email : Please do not click links or open attachments until
-> > you have verified the sender or the content.
-> >  Hi Zhi,
-> > 
-> > On Tue, Feb 20, 2024 at 02:12:26AM +0000, Zhi Mao (毛智) wrote:
-> > > On Tue, 2024-02-06 at 20:45 +0200, Laurent Pinchart wrote:
-> > > > On Sun, Feb 04, 2024 at 02:15:38PM +0800, Zhi Mao wrote:
-> > > > > Add a V4L2 sub-device driver for Galaxycore GC08A3 image
-> > sensor.
-> > > > >
-> > > > > Signed-off-by: Zhi Mao <zhi.mao@mediatek.com>
-> > > > > ---
-> > > > >  drivers/media/i2c/Kconfig  |   10 +
-> > > > >  drivers/media/i2c/Makefile |    1 +
-> > > > >  drivers/media/i2c/gc08a3.c | 1448
-> > ++++++++++++++++++++++++++++++++++++
-> > > > >  3 files changed, 1459 insertions(+)
-> > > > >  create mode 100644 drivers/media/i2c/gc08a3.c
-> > 
-> > [snip]
-> > 
-> > > > > diff --git a/drivers/media/i2c/gc08a3.c
-> > b/drivers/media/i2c/gc08a3.c
-> > > > > new file mode 100644
-> > > > > index 000000000000..3fc7fffb815c
-> > > > > --- /dev/null
-> > > > > +++ b/drivers/media/i2c/gc08a3.c
-> > > > > @@ -0,0 +1,1448 @@
-> > 
-> > [snip]
-> > 
-> > > > > +static int gc08a3_power_on(struct device *dev)
-> > > > > +{
-> > > > > +struct i2c_client *client = to_i2c_client(dev);
-> > > > > +struct v4l2_subdev *sd = i2c_get_clientdata(client);
-> > > > > +struct gc08a3 *gc08a3 = to_gc08a3(sd);
-> > > > > +int ret;
-> > > > > +
-> > > > > +ret = regulator_bulk_enable(ARRAY_SIZE(gc08a3_supply_name),
-> > > > > +    gc08a3->supplies);
-> > > > > +if (ret < 0) {
-> > > > > +dev_err(gc08a3->dev, "failed to enable regulators: %d\n",
-> > ret);
-> > > > > +return ret;
-> > > > > +}
-> > > > > +
-> > > > > +ret = clk_prepare_enable(gc08a3->xclk);
-> > > > > +if (ret < 0) {
-> > > > > +regulator_bulk_disable(ARRAY_SIZE(gc08a3_supply_name),
-> > > > > +       gc08a3->supplies);
-> > > > > +dev_err(gc08a3->dev, "clk prepare enable failed\n");
-> > > > > +return ret;
-> > > > > +}
-> > > > > +
-> > > > > +usleep_range(GC08A3_MIN_SLEEP_US, GC08A3_MAX_SLEEP_US);
-> > > > > +
-> > > > > +gpiod_set_value_cansleep(gc08a3->reset_gpio, 1);
-> > > >
-> > > > Are you asserting reset when powering on ? That sounds wrong, you
-> > should
-> > > > de-assert reset here (and acquire the reset gpio in probe() with
-> > > > GPIOD_OUT_HIGH). Drivers should use logical levels for GPIOs,
-> > setting a
-> > > > GPIO named "reset" to 1 should assert the reset signal, even if
-> > the
-> > > > physical signal is active low. You may have the wrong polarity in
-> > the
-> > > > device tree.
-> > >
-> > > According to the sensor power sequence sepc, "reset" pin should be
-> > pull
-> > > from low to high after "dovdd/dvdd/avdd" power on, so I follow this
-> > > power sequece to pull "reset" pin high in software flow.
-> > 
-> > From a hardware point of view that's right, but the Linux kernel
-> > handles
-> > logical level of GPIOs. If a GPIO is named "reset", it is expected
-> > that
-> > calling
-> > 
-> > gpiod_set_value_cansleep(gc08a3->reset_gpio, 1);
-> > 
-> > will "assert" the reset signal, setting it to a logical "reset =
-> > true"
-> > level. This maps to the hardware 0V output level, as the signal is
-> > active-low. To achieve this, define the reset GPIO as active low in
-> > DT,
-> > and the GPIO framework will invert the signal for you. You should
-> > then
-> > call
-> > 
-> > gpiod_set_value_cansleep(gc08a3->reset_gpio, 1);
-> > 
-> > in the driver when you want to assert reset (set it to 0V), and
-> > 
-> > gpiod_set_value_cansleep(gc08a3->reset_gpio, 0);
-> > 
-> > when you want to deassert it (set it to 3.3V, or whatever the I/O
-> > voltage for the signal is).
-> > 
-> > This way all driver use logical states, and the inversion is handled
-> > in
-> > DT.
-> > 
-> 
-> Sensor power sequence as below:
->                       ------------------
->                      | | |
->                      | | | 
-> dvdd/avdd/dovdd  --------
->                                ---------
->                               |
->                               |
-> reset-pin        -------------
-> 
-> In order to match this power sequece, "reset-pin" contrl flow is below:
-> 1. config the "reset-pin" is "active-high" in DTS:
->     reset-gpios = <&pio 19 GPIO_ACTIVE_HIGH>;
-> 
-> 2. image sensor driver probe function:
-> gc08a3->reset_gpio = devm_gpiod_get(dev, "reset",
-> GPIOD_OUT_LOW);  //init "reset-pin" is low
-> 
-> 3. image sensor driver power_on function:
-> gpiod_set_value_cansleep(gc08a3->reset_gpio, 1); //pull "reset-pin"
-> high 
-> 
-> so, the expect state of "reset-pin" is from low to high.
-> If I am wrong, please correct me.
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v18 067/121] KVM: TDX: Implement TDX vcpu enter/exit path
+To: isaku.yamahata@intel.com
+Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+ isaku.yamahata@gmail.com, Paolo Bonzini <pbonzini@redhat.com>,
+ erdemaktas@google.com, Sean Christopherson <seanjc@google.com>,
+ Sagi Shahar <sagis@google.com>, Kai Huang <kai.huang@intel.com>,
+ chen.bo@intel.com, hang.yuan@intel.com, tina.zhang@intel.com
+References: <cover.1705965634.git.isaku.yamahata@intel.com>
+ <421905898dfe4966168bc0b7c29b7bcf682b440e.1705965635.git.isaku.yamahata@intel.com>
+From: Binbin Wu <binbin.wu@linux.intel.com>
+In-Reply-To: <421905898dfe4966168bc0b7c29b7bcf682b440e.1705965635.git.isaku.yamahata@intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
 
-From Documentation/driver-api/gpio/consumer.rst:
 
-	As a consumer should not have to care about the physical line
-	level, all of the gpiod_set_value_xxx() or
-	gpiod_set_array_value_xxx() functions operate with the *logical*
-	value. With this they take the active low property into account.
-	This means that they check whether the GPIO is configured to be
-	active low, and if so, they manipulate the passed value before the
-	physical line level is driven.
+On 1/23/2024 7:53 AM, isaku.yamahata@intel.com wrote:
+> From: Isaku Yamahata <isaku.yamahata@intel.com>
+>
+> This patch implements running TDX vcpu.  Once vcpu runs on the logical
+> processor (LP), the TDX vcpu is associated with it.  When the TDX vcpu
+> moves to another LP, the TDX vcpu needs to flush its status on the LP.
+> When destroying TDX vcpu, it needs to complete flush and flush cpu memory
+> cache.  Track which LP the TDX vcpu run and flush it as necessary.
+>
+> Do nothing on sched_in event as TDX doesn't support pause loop.
+>
+> TDX vcpu execution requires restoring PMU debug store after returning back
+> to KVM because the TDX module unconditionally resets the value.  To reuse
+> the existing code, export perf_restore_debug_store.
 
-I.e. when you want to enable reset, you set the value to 1 in the driver. I
-think you're now setting the value to 0 in that case. The opposite for
-disabling it of course.
+The changelog doesn't match the code implemented in this patch.
 
--- 
-Regards,
+>
+> Signed-off-by: Isaku Yamahata <isaku.yamahata@intel.com>
+>
+> ---
+> Changes v15 -> v16:
+> - use __seamcall_saved_ret()
+> - As struct tdx_module_args doesn't match with vcpu.arch.regs, copy regs
+>    before/after calling __seamcall_saved_ret().
+> ---
+>   arch/x86/kvm/vmx/main.c    | 21 +++++++++-
+>   arch/x86/kvm/vmx/tdx.c     | 84 ++++++++++++++++++++++++++++++++++++++
+>   arch/x86/kvm/vmx/tdx.h     | 33 +++++++++++++++
+>   arch/x86/kvm/vmx/x86_ops.h |  2 +
+>   arch/x86/kvm/x86.c         |  1 +
+>   5 files changed, 139 insertions(+), 2 deletions(-)
+>
+> diff --git a/arch/x86/kvm/vmx/main.c b/arch/x86/kvm/vmx/main.c
+> index 0784290d846f..89ab8411500d 100644
+> --- a/arch/x86/kvm/vmx/main.c
+> +++ b/arch/x86/kvm/vmx/main.c
+> @@ -173,6 +173,23 @@ static void vt_vcpu_reset(struct kvm_vcpu *vcpu, bool init_event)
+>   	vmx_vcpu_reset(vcpu, init_event);
+>   }
+>   
+> +static int vt_vcpu_pre_run(struct kvm_vcpu *vcpu)
+> +{
+> +	if (is_td_vcpu(vcpu))
+> +		/* Unconditionally continue to vcpu_run(). */
+> +		return 1;
+> +
+> +	return vmx_vcpu_pre_run(vcpu);
+> +}
+> +
+> +static fastpath_t vt_vcpu_run(struct kvm_vcpu *vcpu)
+> +{
+> +	if (is_td_vcpu(vcpu))
+> +		return tdx_vcpu_run(vcpu);
+> +
+> +	return vmx_vcpu_run(vcpu);
+> +}
+> +
+>   static void vt_flush_tlb_all(struct kvm_vcpu *vcpu)
+>   {
+>   	if (is_td_vcpu(vcpu)) {
+> @@ -325,8 +342,8 @@ struct kvm_x86_ops vt_x86_ops __initdata = {
+>   	.flush_tlb_gva = vt_flush_tlb_gva,
+>   	.flush_tlb_guest = vt_flush_tlb_guest,
+>   
+> -	.vcpu_pre_run = vmx_vcpu_pre_run,
+> -	.vcpu_run = vmx_vcpu_run,
+> +	.vcpu_pre_run = vt_vcpu_pre_run,
+> +	.vcpu_run = vt_vcpu_run,
+>   	.handle_exit = vmx_handle_exit,
+>   	.skip_emulated_instruction = vmx_skip_emulated_instruction,
+>   	.update_emulated_instruction = vmx_update_emulated_instruction,
+> diff --git a/arch/x86/kvm/vmx/tdx.c b/arch/x86/kvm/vmx/tdx.c
+> index faa04d8922b6..5a64ac4fd5fb 100644
+> --- a/arch/x86/kvm/vmx/tdx.c
+> +++ b/arch/x86/kvm/vmx/tdx.c
+> @@ -11,6 +11,9 @@
+>   #include "vmx.h"
+>   #include "x86.h"
+>   
+> +#include <trace/events/kvm.h>
+> +#include "trace.h"
+> +
+>   #undef pr_fmt
+>   #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+>   
+> @@ -541,6 +544,87 @@ void tdx_vcpu_reset(struct kvm_vcpu *vcpu, bool init_event)
+>   	 */
+>   }
+>   
+> +static noinstr void tdx_vcpu_enter_exit(struct vcpu_tdx *tdx)
+> +{
+> +	struct tdx_module_args args;
+> +
+> +	/*
+> +	 * Avoid section mismatch with to_tdx() with KVM_VM_BUG().  The caller
+> +	 * should call to_tdx().
+> +	 */
+> +	struct kvm_vcpu *vcpu = &tdx->vcpu;
+> +
+> +	guest_state_enter_irqoff();
+> +
+> +	/*
+> +	 * TODO: optimization:
+> +	 * - Eliminate copy between args and vcpu->arch.regs.
+> +	 * - copyin/copyout registers only if (tdx->tdvmvall.regs_mask != 0)
+> +	 *   which means TDG.VP.VMCALL.
+> +	 */
+> +	args = (struct tdx_module_args) {
+> +		.rcx = tdx->tdvpr_pa,
+> +#define REG(reg, REG)	.reg = vcpu->arch.regs[VCPU_REGS_ ## REG]
+> +		REG(rdx, RDX),
+> +		REG(r8,  R8),
+> +		REG(r9,  R9),
+> +		REG(r10, R10),
+> +		REG(r11, R11),
+> +		REG(r12, R12),
+> +		REG(r13, R13),
+> +		REG(r14, R14),
+> +		REG(r15, R15),
+> +		REG(rbx, RBX),
+> +		REG(rdi, RDI),
+> +		REG(rsi, RSI),
+> +#undef REG
+> +	};
+> +
+> +	tdx->exit_reason.full = __seamcall_saved_ret(TDH_VP_ENTER, &args);
+> +
+> +#define REG(reg, REG)	vcpu->arch.regs[VCPU_REGS_ ## REG] = args.reg
+> +		REG(rcx, RCX);
+> +		REG(rdx, RDX);
+> +		REG(r8,  R8);
+> +		REG(r9,  R9);
+> +		REG(r10, R10);
+> +		REG(r11, R11);
+> +		REG(r12, R12);
+> +		REG(r13, R13);
+> +		REG(r14, R14);
+> +		REG(r15, R15);
+> +		REG(rbx, RBX);
+> +		REG(rdi, RDI);
+> +		REG(rsi, RSI);
+> +#undef REG
+> +
+> +	WARN_ON_ONCE(!kvm_rebooting &&
+> +		     (tdx->exit_reason.full & TDX_SW_ERROR) == TDX_SW_ERROR);
+> +
+> +	guest_state_exit_irqoff();
+> +}
+> +
+> +fastpath_t tdx_vcpu_run(struct kvm_vcpu *vcpu)
+> +{
+> +	struct vcpu_tdx *tdx = to_tdx(vcpu);
+> +
+> +	if (unlikely(!tdx->initialized))
+> +		return -EINVAL;
+> +	if (unlikely(vcpu->kvm->vm_bugged)) {
+> +		tdx->exit_reason.full = TDX_NON_RECOVERABLE_VCPU;
+> +		return EXIT_FASTPATH_NONE;
+> +	}
+> +
+> +	trace_kvm_entry(vcpu);
+> +
+> +	tdx_vcpu_enter_exit(tdx);
+> +
+> +	vcpu->arch.regs_avail &= ~VMX_REGS_LAZY_LOAD_SET;
+> +	trace_kvm_exit(vcpu, KVM_ISA_VMX);
+> +
+> +	return EXIT_FASTPATH_NONE;
+> +}
+> +
+>   void tdx_load_mmu_pgd(struct kvm_vcpu *vcpu, hpa_t root_hpa, int pgd_level)
+>   {
+>   	td_vmcs_write64(to_tdx(vcpu), SHARED_EPT_POINTER, root_hpa & PAGE_MASK);
+> diff --git a/arch/x86/kvm/vmx/tdx.h b/arch/x86/kvm/vmx/tdx.h
+> index d589a2caedfb..45b0b88a9b28 100644
+> --- a/arch/x86/kvm/vmx/tdx.h
+> +++ b/arch/x86/kvm/vmx/tdx.h
+> @@ -25,6 +25,37 @@ struct kvm_tdx {
+>   	u64 tsc_offset;
+>   };
+>   
+> +union tdx_exit_reason {
+> +	struct {
+> +		/* 31:0 mirror the VMX Exit Reason format */
+> +		u64 basic		: 16;
+> +		u64 reserved16		: 1;
+> +		u64 reserved17		: 1;
+> +		u64 reserved18		: 1;
+> +		u64 reserved19		: 1;
+> +		u64 reserved20		: 1;
+> +		u64 reserved21		: 1;
+> +		u64 reserved22		: 1;
+> +		u64 reserved23		: 1;
+> +		u64 reserved24		: 1;
+> +		u64 reserved25		: 1;
+> +		u64 bus_lock_detected	: 1;
+> +		u64 enclave_mode	: 1;
+> +		u64 smi_pending_mtf	: 1;
+> +		u64 smi_from_vmx_root	: 1;
+> +		u64 reserved30		: 1;
+> +		u64 failed_vmentry	: 1;
+> +
+> +		/* 63:32 are TDX specific */
+> +		u64 details_l1		: 8;
+> +		u64 class		: 8;
+> +		u64 reserved61_48	: 14;
+> +		u64 non_recoverable	: 1;
+> +		u64 error		: 1;
+> +	};
+> +	u64 full;
+> +};
+> +
+>   struct vcpu_tdx {
+>   	struct kvm_vcpu	vcpu;
+>   
+> @@ -32,6 +63,8 @@ struct vcpu_tdx {
+>   	unsigned long *tdvpx_pa;
+>   	bool td_vcpu_created;
+>   
+> +	union tdx_exit_reason exit_reason;
+> +
+>   	bool initialized;
+>   
+>   	/*
+> diff --git a/arch/x86/kvm/vmx/x86_ops.h b/arch/x86/kvm/vmx/x86_ops.h
+> index 5a9aabf39c02..9061284487e8 100644
+> --- a/arch/x86/kvm/vmx/x86_ops.h
+> +++ b/arch/x86/kvm/vmx/x86_ops.h
+> @@ -150,6 +150,7 @@ int tdx_vm_ioctl(struct kvm *kvm, void __user *argp);
+>   int tdx_vcpu_create(struct kvm_vcpu *vcpu);
+>   void tdx_vcpu_free(struct kvm_vcpu *vcpu);
+>   void tdx_vcpu_reset(struct kvm_vcpu *vcpu, bool init_event);
+> +fastpath_t tdx_vcpu_run(struct kvm_vcpu *vcpu);
+>   u8 tdx_get_mt_mask(struct kvm_vcpu *vcpu, gfn_t gfn, bool is_mmio);
+>   
+>   int tdx_vcpu_ioctl(struct kvm_vcpu *vcpu, void __user *argp);
+> @@ -177,6 +178,7 @@ static inline int tdx_vm_ioctl(struct kvm *kvm, void __user *argp) { return -EOP
+>   static inline int tdx_vcpu_create(struct kvm_vcpu *vcpu) { return -EOPNOTSUPP; }
+>   static inline void tdx_vcpu_free(struct kvm_vcpu *vcpu) {}
+>   static inline void tdx_vcpu_reset(struct kvm_vcpu *vcpu, bool init_event) {}
+> +static inline fastpath_t tdx_vcpu_run(struct kvm_vcpu *vcpu) { return EXIT_FASTPATH_NONE; }
+>   static inline u8 tdx_get_mt_mask(struct kvm_vcpu *vcpu, gfn_t gfn, bool is_mmio) { return 0; }
+>   
+>   static inline int tdx_vcpu_ioctl(struct kvm_vcpu *vcpu, void __user *argp) { return -EOPNOTSUPP; }
+> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> index eee63b08f14f..2371a8df9be3 100644
+> --- a/arch/x86/kvm/x86.c
+> +++ b/arch/x86/kvm/x86.c
+> @@ -315,6 +315,7 @@ const struct kvm_stats_header kvm_vcpu_stats_header = {
+>   };
+>   
+>   u64 __read_mostly host_xcr0;
+> +EXPORT_SYMBOL_GPL(host_xcr0);
 
-Sakari Ailus
+It's not used in this patch, can it be moved to where it is used?
+
+>   
+>   static struct kmem_cache *x86_emulator_cache;
+>   
+
