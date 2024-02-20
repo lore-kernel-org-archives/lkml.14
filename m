@@ -1,125 +1,91 @@
-Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1267612FE
-	for <linux-kernel@vger.kernel.org>; Tue, 20 Feb 2024 09:06:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.189
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BB2E5BAC7;
+	Tue, 20 Feb 2024 09:07:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708420003; cv=none; b=cS/XLZ0Mo0XWNcHI6v9l+OoRSzNK/ZXqFZnZ3mCERob1vKHnrvjGyCjE+YMwjkjVG295dRTnIuKlyTJ8pJoZtfU6GhQxQJcL/OWsFDgdxQ1W3V1O5JuG2NeHCRRqQatJPtUT/M/33DB7aMWyA9L9WgnhzSmflgb+li4DSmFhTKY=
+	t=1708420036; cv=none; b=EfYq8eXijbrPEaS+bAEnL/ZElBiyX8rQ3LGIsCdhGjScU21CPvPnBW0l/d0TYz6wKaUIvZvodO84OFP8t5qL69vdDmIjt40STHhySodVqkx6WYkcanOe56tjd0rkwfRlCJW8MizGpfelJMLEIEqmfZGEAzZLIuDHquPF3fOz/ww=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708420003; c=relaxed/simple;
-	bh=BgDdgeT23PH+yWwPYSF9gJbEqkYMbmFf4IwbU1QNQWk=;
-	h=Message-ID:Date:MIME-Version:CC:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=l8/9RofhFfTjrW9W/Nvaf6maYnHboAgx2wDmJaX6kLcGkoK9LAxENpBr7iB9ztq3B7FzJb2oqCJWOrgLHm1P/25iDkX477+jsXBxXohqFEJNrHOqy6mYVBNvcjABRLzQkAhopVcXJjgWxqX9VsBqszbdW/LpgBFX/M4aN9pLnRU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.189
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.252])
-	by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4TfD511Fd2zNlnc;
-	Tue, 20 Feb 2024 17:05:09 +0800 (CST)
-Received: from dggpemd200001.china.huawei.com (unknown [7.185.36.224])
-	by mail.maildlp.com (Postfix) with ESMTPS id 0EE3818005E;
-	Tue, 20 Feb 2024 17:06:31 +0800 (CST)
-Received: from [10.174.178.120] (10.174.178.120) by
- dggpemd200001.china.huawei.com (7.185.36.224) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.2.1258.28; Tue, 20 Feb 2024 17:06:30 +0800
-Message-ID: <1f98fd3a-9a2c-437e-8e86-8c5f575917df@huawei.com>
-Date: Tue, 20 Feb 2024 17:06:30 +0800
+	s=arc-20240116; t=1708420036; c=relaxed/simple;
+	bh=0ptHOpcD+8+srSvx3GCLyJlqRgc5rBeYkiEmoUZwQ6I=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=cEaY28k0+Z+SNFwBlhsqE8bXLv0Qh4EsSO/mX6zjAlA1j9bPeXQWtbHV+oK5+VQoqHlx42h2YNPUedCZBCA72ekG2mdd2t6fwWMHl1ojBPrjLwoWFPevA+gekswmYosB3Ks+wVdhzKGXEwLUHzOfxWAV+hzxEJ1H34q7QzuJ2V0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
+X-UUID: eca98fc7509f40589942fbe30cfc6015-20240220
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.35,REQID:6c8d00cb-b530-4355-85a8-529f6d000f79,IP:10,
+	URL:0,TC:0,Content:0,EDM:25,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACT
+	ION:release,TS:20
+X-CID-INFO: VERSION:1.1.35,REQID:6c8d00cb-b530-4355-85a8-529f6d000f79,IP:10,UR
+	L:0,TC:0,Content:0,EDM:25,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACTIO
+	N:release,TS:20
+X-CID-META: VersionHash:5d391d7,CLOUDID:0a11fefe-c16b-4159-a099-3b9d0558e447,B
+	ulkID:2402201707093T4YQ6UG,BulkQuantity:0,Recheck:0,SF:66|38|24|17|19|44|1
+	02,TC:nil,Content:0,EDM:5,IP:-2,URL:0,File:nil,Bulk:nil,QS:nil,BEC:nil,COL
+	:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0
+X-CID-BVR: 0,NGT
+X-CID-BAS: 0,NGT,0,_
+X-CID-FACTOR: TF_CID_SPAM_FAS,TF_CID_SPAM_FSD,TF_CID_SPAM_FSI,TF_CID_SPAM_SNR
+X-UUID: eca98fc7509f40589942fbe30cfc6015-20240220
+Received: from mail.kylinos.cn [(39.156.73.10)] by mailgw
+	(envelope-from <chentao@kylinos.cn>)
+	(Generic MTA)
+	with ESMTP id 265101622; Tue, 20 Feb 2024 17:07:09 +0800
+Received: from mail.kylinos.cn (localhost [127.0.0.1])
+	by mail.kylinos.cn (NSMail) with SMTP id D75A5E000EBC;
+	Tue, 20 Feb 2024 17:07:08 +0800 (CST)
+X-ns-mid: postfix-65D46BBC-690154355
+Received: from kernel.. (unknown [172.20.15.254])
+	by mail.kylinos.cn (NSMail) with ESMTPA id 5C8B8E000EBD;
+	Tue, 20 Feb 2024 17:07:08 +0800 (CST)
+From: Kunwu Chan <chentao@kylinos.cn>
+To: clm@fb.com,
+	josef@toxicpanda.com,
+	dsterba@suse.com
+Cc: linux-btrfs@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Kunwu Chan <chentao@kylinos.cn>
+Subject: [PATCH 4/6] btrfs: Simplify the allocation of slab caches in btrfs_ctree_init
+Date: Tue, 20 Feb 2024 17:06:43 +0800
+Message-Id: <20240220090645.108625-5-chentao@kylinos.cn>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240220090645.108625-1-chentao@kylinos.cn>
+References: <20240220090645.108625-1-chentao@kylinos.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-CC: <mawupeng1@huawei.com>, <linux-kernel@vger.kernel.org>, <x86@kernel.org>,
-	<bp@suse.de>, <mingo@redhat.com>, <rdunlap@infradead.org>,
-	<bhelgaas@google.com>, <linux-mm@kvack.org>
-Subject: Re: [PATCH v4 0/3] Cleanup for PAT
-To: <xin@zytor.com>, <akpm@linux-foundation.org>,
-	<dave.hansen@linux.intel.com>, <luto@kernel.org>, <tglx@linutronix.de>,
-	<peterz@infradead.org>, <hpa@zytor.com>
-References: <20240220034835.507022-1-mawupeng1@huawei.com>
- <07d43633-d707-415d-a662-ecd3a50b12ae@zytor.com>
-Content-Language: en-US
-From: mawupeng <mawupeng1@huawei.com>
-In-Reply-To: <07d43633-d707-415d-a662-ecd3a50b12ae@zytor.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
- dggpemd200001.china.huawei.com (7.185.36.224)
+Content-Transfer-Encoding: quoted-printable
 
+Use the new KMEM_CACHE() macro instead of direct kmem_cache_create
+to simplify the creation of SLAB caches.
 
+Signed-off-by: Kunwu Chan <chentao@kylinos.cn>
+---
+ fs/btrfs/ctree.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-On 2024/2/20 16:37, Xin Li wrote:
-> On 2/19/2024 7:48 PM, Wupeng Ma wrote:
->> From: Ma Wupeng <mawupeng1@huawei.com>
->>
-> 
-> This patch set is all about follow_phys() cleanups, so "Cleanup for PAT"
-> seems too generic.
-> 
->> Patch #1 move follow_phys to memtype.c since only pat use this.
->> Patch #2 cleanup parameter in follow_phys.
->> Patch #3 drop the unnecessary WARN_ON_ONCE if follow_phys fails.
-> 
-> I'm more curious why follow_phys() ended up this way?
-> 
-> follow_phys() was introduced in commit 28b2ee20c7cba ("access_process_vm
-> device memory infrastructure") in 2008 for getting a physical page address
-> for a virtual address, and used in generic_access_phys(). And later it's
-> used in x86 PAT code.
-> 
-> Commit 03668a4debf4f ("mm: use generic follow_pte() in follow_phys()") made
-> follow_phys() more of a wrapper of follow_pte(), and commit 96667f8a4382d
-> ("mm: Close race in generic_access_phys") replaced follow_phys() with
-> follow_pte() in generic_access_phys(). And the end result is that
-> follow_phys() is used in x86 PAT code only.
+diff --git a/fs/btrfs/ctree.c b/fs/btrfs/ctree.c
+index 33145da449cc..cb9e79eb6140 100644
+--- a/fs/btrfs/ctree.c
++++ b/fs/btrfs/ctree.c
+@@ -5082,9 +5082,7 @@ int btrfs_previous_extent_item(struct btrfs_root *r=
+oot,
+=20
+ int __init btrfs_ctree_init(void)
+ {
+-	btrfs_path_cachep =3D kmem_cache_create("btrfs_path",
+-			sizeof(struct btrfs_path), 0,
+-			SLAB_MEM_SPREAD, NULL);
++	btrfs_path_cachep =3D KMEM_CACHE(btrfs_path, SLAB_MEM_SPREAD);
+ 	if (!btrfs_path_cachep)
+ 		return -ENOMEM;
+ 	return 0;
+--=20
+2.39.2
 
-Thanks for the explanation. I have a better understanding of the history of
-this function.
-
-> 
-> As follow_phys() in untrack_pfn() can be replaced with follow_pfn(), then
-
-Yes, this can be replaced with follow_pfn().
-
-> maybe we don't have to keep follow_phys(), and just use follow_pte() in
-> track_pfn_copy()?
-
-As follow_phys() will return unsigned long *prot which is need in track_pfn_copy(),
-we need to do something with this.
-
-Can we replace follow_pfn with follow_phys()?
-
-Thanks!
-Ma
-
-> 
-> Thanks!
->     Xin
-> 
->>
->> Changelog since v3:
->> - rebase to latest linux
->> - fix compile warnings
->>
->> Changelog since v2:
->> - rebase to latest linux
->>
->> Changelog since v1:
->> - split patch #1 into two patches based on Boris's advise
->>
->> Ma Wupeng (3):
->>    x86/mm/pat: Move follow_phys to pat-related file
->>    x86/mm/pat: Cleanup unused parameter in follow_phys
->>    x86/mm/pat: Remove WARN_ON_ONCE if follow_phys fails
->>
->>   arch/x86/mm/pat/memtype.c | 32 ++++++++++++++++++++++++++------
->>   include/linux/mm.h        |  2 --
->>   mm/memory.c               | 28 ----------------------------
->>   3 files changed, 26 insertions(+), 36 deletions(-)
->>
-> 
-> 
