@@ -1,212 +1,178 @@
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2083.outbound.protection.outlook.com [40.107.243.83])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f178.google.com (mail-yw1-f178.google.com [209.85.128.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18CF75F470;
-	Tue, 20 Feb 2024 10:15:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.83
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708424142; cv=fail; b=VofyHwUsOiWUHSm9Zqgt6fC75L/4/Kws9+EOrHLw+2/2QtPxcqr5iW9vbsQBfPS5DB8qWBGltEMO42FIsuhVI4At9hPiCbJ1R76RLdA/eBSLbdIJQ+iVoX/pLTZI20+/4fT/fc9Fs16eVm3nVuz5JESnYYe6LxVxtBEbYuA855w=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708424142; c=relaxed/simple;
-	bh=dH7j7MhFV22yc//w5gvEg+6OPK9C+zyoVlCatzwNvnc=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=NOHtlTl49/OvFVKVYZNQ8eohLWPZBEu0orpdl+hXTnWy8Gz4PDsQ+QPNrZ8qhXmbpoV17Ov9AnzCiouLh/7zr7f1m1sHBxrniMhjuRf2Jl/Ok2CVAo/+kvakened91Ypj2l12c15cb7BNFEFYQRwvSyZobwThD0+Eert4wyX8mU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=o1GZhuka; arc=fail smtp.client-ip=40.107.243.83
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9489B5FDC5
+	for <linux-kernel@vger.kernel.org>; Tue, 20 Feb 2024 10:16:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.178
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1708424165; cv=none; b=SWFlDKbyiRIfvNTpNMRwcfJf+wE4sh2TTgyGcZbhbKZrgW1COpYwJ2LIaVzh1DhkaRwOy0Ct/ZZvt6XWv0to31qjR6+7m2ZJiwHlOWVw82PlsW8kou/eKSDR4Lq24imh48gk6auQ7BR+zE5SbWdi5W2gC+nkkQGzY46li6pceCQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1708424165; c=relaxed/simple;
+	bh=uvy9dbKaRp8OwtO8eEkXBs3FsE0K1ieWy2Kp6/Qphx0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=GK4fFQ5PDx+8pX5HlD5BkiyXj9FZsi3e2t2g9fKwL48P6GkwTu4BpKJQSzBPFUwZ+/p/6QO/9vkX/1+2gA2Y521pQIaummoS1DPaLC77u+Ga8uGRG1bkHDIFs8+kAgFLYByiCm34JyDcvM3RzAjq3Eac2kJqfuumbXdgLPqbF40=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kvJAkDom; arc=none smtp.client-ip=209.85.128.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="o1GZhuka"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=kWiwDC9mT+xpDoO07rRML5j91meYSmLaMS6CYH35o1YAjehr9rtYa+Rs9s8QMx3IJp6nAohv1gcfd1mjrI7apOeNqtUpPeJ5VBd4qxCbqgfDHv6yImrBsl624uuIV4E5Kc7F74qCbdf58WGSwSTAoEDaWS4KNQ3WndoqjQNr0J/VlJwOonZhMwG+1g2s5ljDXZKR4AHu9INdcl2e6SoVLMu65DtlQTbfheoRERFTX4g0lmIuodXL6zIoDo7VtUX0urqoasSOVtQYuATkWTgxF4UIus9ubsASaIL5T2NTyC1zoyjNO8tCrbPLGSPhvvy2WmGcAtrwxeggH2sXgIatXg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=b4ABcmbyz/DciwLLfzoHyAsMujCz/I4k4JahDPtrmmc=;
- b=PTfgoe+Like9ZJg2ulnu3aMsKH/2abC06Fae2I+Zc8jswViEL+QcONUm5+6z5FLzxQUlhrrmp6xJBJydlRgmE0ASNbug7L52q6Asyc5lM4JfZzMpl6YDFGel19O3QgPz5BQsGlgxids+h5hlJRwINS29ge2NLoBJXeWSyNE0zn29+fdbkgOsiatsLtAf56GzLLsTZxoJrq2qICLVQkvxCHEy94RUUsGRFtRwFjX5KdeejxJPy3kH664f1xLEwv44t7auvFINqrCIi/e8Rw2W+dy2FZaQHYkcfkTurlhR8pJfkMWbVPfKRJkSWzHTz6meFTmIeWNdZ8SmzUyhHrUZfQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=b4ABcmbyz/DciwLLfzoHyAsMujCz/I4k4JahDPtrmmc=;
- b=o1GZhuka9vf7ATg2ijQdCblF6ALaYXJL55T9CUnHdmDEyJrKXkAnS1TlarctRbO9IFNmuOR8Kw07hZHmQ48o9j5vINXWhFhAcacIsvOiKkLLLaJe1VYwhxhUeVm2t8FkR+bfUn8T/te35K5yPotzjBrnzGSzmZ9pcKrzNYAxoHQ=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from DM6PR12MB4123.namprd12.prod.outlook.com (2603:10b6:5:21f::23)
- by CO6PR12MB5428.namprd12.prod.outlook.com (2603:10b6:5:35c::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7316.20; Tue, 20 Feb
- 2024 10:15:37 +0000
-Received: from DM6PR12MB4123.namprd12.prod.outlook.com
- ([fe80::57a8:313:6bf6:ccb3]) by DM6PR12MB4123.namprd12.prod.outlook.com
- ([fe80::57a8:313:6bf6:ccb3%3]) with mapi id 15.20.7316.018; Tue, 20 Feb 2024
- 10:15:36 +0000
-Message-ID: <0940c052-d834-4ddd-98ac-8395ab48ceb8@amd.com>
-Date: Tue, 20 Feb 2024 15:45:25 +0530
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] ASoC: SOF: amd: fix soundwire dependencies
-Content-Language: en-US
-To: Arnd Bergmann <arnd@arndb.de>, Arnd Bergmann <arnd@kernel.org>,
- Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
- Liam Girdwood <lgirdwood@gmail.com>,
- Peter Ujfalusi <peter.ujfalusi@linux.intel.com>,
- Bard Liao <yung-chuan.liao@linux.intel.com>,
- Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
- Daniel Baluta <daniel.baluta@nxp.com>, Mark Brown <broonie@kernel.org>
-Cc: Kai Vehmanen <kai.vehmanen@linux.intel.com>,
- Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
- Venkata Prasad Potturu <venkataprasad.potturu@amd.com>,
- sound-open-firmware@alsa-project.org, linux-sound@vger.kernel.org,
- linux-kernel@vger.kernel.org,
- "Dommati, Sunil-kumar" <Sunil-kumar.Dommati@amd.com>
-References: <20240219093900.644574-1-arnd@kernel.org>
- <465d1076-163c-4933-a9b5-e4e8736f5748@amd.com>
- <412c0a42-4c19-48dd-aa4e-de39b6ec3099@app.fastmail.com>
- <343f7b1d-1b4e-402e-bd54-4473b91b6f79@amd.com>
- <65f13ad3-989a-4699-9695-d7b1a95297eb@app.fastmail.com>
- <779d72f1-832a-4fef-a529-ebe8100b04f9@amd.com>
- <96f6e105-0e89-429f-a8c5-2e64087d7771@app.fastmail.com>
-From: "Mukunda,Vijendar" <vijendar.mukunda@amd.com>
-In-Reply-To: <96f6e105-0e89-429f-a8c5-2e64087d7771@app.fastmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: PN2PR01CA0019.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:c01:25::24) To DM6PR12MB4123.namprd12.prod.outlook.com
- (2603:10b6:5:21f::23)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kvJAkDom"
+Received: by mail-yw1-f178.google.com with SMTP id 00721157ae682-607bfa4c913so49251577b3.3
+        for <linux-kernel@vger.kernel.org>; Tue, 20 Feb 2024 02:16:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1708424162; x=1709028962; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=uvy9dbKaRp8OwtO8eEkXBs3FsE0K1ieWy2Kp6/Qphx0=;
+        b=kvJAkDom+cXpmnOBaQ+LAWy7K+NpEOuXN2TCzPjTKjaVhkojB06mGH/pA5E7si8NHI
+         sDi9scnbG36DJrkLZS8N6LPKZKuM98y1a1yYL3Jv2ZiYTHO0a9TbrbHx6cL0vbPdG5bp
+         4LYCqtAM39PQQKHP1dk/3f/p2TKkIewqoLfQmTjgCsmJeo2N9Wibv1meknXRqaiF8J9C
+         auRTxz3Zj05eHYhyd3WvhnOuakOBMWX0dRpGleZS3hTVIFHp9Xlkq5EbzkE/Vwi4ASMA
+         H5TbBr4eZqgugcOL6DDgEkNMq1gZRQHMU0mKF/oymrub+QRtLoZMNLV3GQFe8k6xxhw5
+         DOlQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708424162; x=1709028962;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=uvy9dbKaRp8OwtO8eEkXBs3FsE0K1ieWy2Kp6/Qphx0=;
+        b=M9OLPalI5OnebYBqQ0Q13Af3KVKHtkl8BoddNxquIi5oLO4XH10LC4dFfPbYBYSyqq
+         oyNjbDe8Kj3+vyL8Lkv6z1j6NtI/grdXRjoFAe4naOtxDKP8D32CVnUUjDfezySxjU5M
+         XPu4Kw4scTjpMZrKRbqIgLTgHMz/fzZZct73Cg14bTwcnO+ggbSEnWcBm51oJi/dd/my
+         UWD3Gkm8WFzRm/qJjSG+qMJqxffLkDHVXl3Mp3Oqd2uxDUB0sUgMTHO+FE02XWdtRyxE
+         5OjfIBrwa/oQo24q8tC8UoR4/rXaxGpHYbWtvrO6DEWquYHHVgmGzpO0ZP+zV7KtoUV4
+         y8/A==
+X-Forwarded-Encrypted: i=1; AJvYcCXY+Pgl9yp+SFlbXS6Rj/vWy9V7GnQSEWL0RvySQoRO4dLohyHD9bedhY1Mo+PFjYDtLvuNQo2AEoMdH4rf6Y/vwnQ83i3EJdgiaFcP
+X-Gm-Message-State: AOJu0YxUHQtsoashoaxh7Oli7Vc1gk2aOl9xzolq+aCoP6Ba9e0f1FWV
+	0ufhr934sgKGj5dGccgri7UoStCqER1lxV/ySkjeWNAn9nb/CMX3Z1CWI/juJwikdMA313vk4F6
+	+H4IhF6DxO/3s+DhTkGUhfrZWkE0=
+X-Google-Smtp-Source: AGHT+IEERfe6iW/E1dAnOCGoibxXNFpoPD9BgzOgYNqIFNzs9JcewOVVVUhEgwt2Tr9ifjKtiHGjho2ny43YNt4NLOM=
+X-Received: by 2002:a05:690c:d17:b0:608:4bab:8b06 with SMTP id
+ cn23-20020a05690c0d1700b006084bab8b06mr4145412ywb.45.1708424162444; Tue, 20
+ Feb 2024 02:16:02 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM6PR12MB4123:EE_|CO6PR12MB5428:EE_
-X-MS-Office365-Filtering-Correlation-Id: 4b50cd41-68ef-40d4-32a1-08dc31fce15e
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	ZoMl+HZGjghCauHRtOelLZdilEMtiOIXIIp5nd2ZCEP91H8zLZnEgx/0yytJYon8ZS0WvfOK2CtQ8C7W1MJ4ibHvxj3HPleLWver7YBm3zn8Yn/wdreN/6KMcAGGH7Yu6XWax/1C2DtBleqZmBZFSHIE/x4ZmA3gTvv9gnYbBvawvUGpNidqy/Ce4fxUvstoSGfsl0jbPpmsaH7M7Km5/nvqWbvjOCJGWIzum5YehiFhoTuD9RqlQilb5PAcISWCcxUw+Cr4Tt+xME79/B/pFgdK7GVTms3V9qTWxmiH3YsNGBJxscbAfX4Z4f2HHgDXXP6ixSd/6oRd9ClYhFUcJUVGu49an1GTDr4/UwqbI+SJGxw2hJXpaKpFJu5qoRu0qml0VB/JZJ1u40H98NAACeTpuohBf+h0BOPONjgyBZMrWfNmfF7wHizIcT9ca9O3Z9r7K5zIKR9Vfi5Pkeg+bwKQ0/NdZ1LKkcV96wPU0IBC/DUlfxwpwZMkbhNvSYdBlhzDTSHvK4BZDn3NpuHNMTcb8sZKck7wHX2Ao7pF3QE=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB4123.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?RkZvcEV0UzNqTFRPR2xFVDlodzV0MmYvVUNiM1ZNY3YwUXlGWkFMVFJXZkJX?=
- =?utf-8?B?VFNzNm9EWFE0MWoxRTkyWWdkNEtwQ2x5SzRCbEsxWG02ZGYrd1AyZ3Y5Rk5r?=
- =?utf-8?B?eWdvMTJCa3RINFF6Z2xkYjlqZVEzZlJ4YUViaWRjamxwaFZpSjFScVlHNGdu?=
- =?utf-8?B?cytab00xdWNxMjd0TkZPQjE2OVFSTGhpOWtkTnhoV051RzdQV29QTUh0enov?=
- =?utf-8?B?SDJPUHhNOFJEOVRaVmhoUE5QY2k4d2RUOU94elV1NEplTmhod25Od04zVmto?=
- =?utf-8?B?VC94T2Z5UldXVkpUUjU0MnhnZlJ5cS9xYk5TY2krZXpneWRyMVNIRjlrY3dU?=
- =?utf-8?B?ckM3VXNRK3QxdnpQT2FhR2FIdDhiZkVWcUJxRG5qRm9jV0oyNkNtOTVldVBQ?=
- =?utf-8?B?ZGZGU21HSHIvZjRtSDVJaFlkWENXd0dmalNYSGRXOVNEZEpZcjVDRVhtTUli?=
- =?utf-8?B?SVdCakpzUDN6SmNQMDRHVlk5N0lramZENTZUSFBaWkYwNjBhL0pBRGxudUg5?=
- =?utf-8?B?VnlVeXkrRmozM21zWWRXcG5qRVBpUUpaT01VZGFtaSs4MTlqWDgwazBpOUt3?=
- =?utf-8?B?amI5S29aMDVQSVQ3TnIwWHpBTkliODRlZG5STEZGeUNMK25RRlJxajdPZEFQ?=
- =?utf-8?B?SmVVR1FCTE1VUkpHSHBCRUpnVENLalV3NlV5U0pKWFN2RnFkai8wSTN1V1R5?=
- =?utf-8?B?c2ZhQUJ5SEVBQjI3YWtBdEpDb2JOaVZ6b1RjdVRuVDZXSWdaQkhLZzkzOHEw?=
- =?utf-8?B?d0g3WU84NjdNV0lhcmFVVGpjWU1MT0JOWDBGTTlRbDZ2TEJvc3RkNCt6RVRT?=
- =?utf-8?B?WmxBbzIxQlhaTFlvMlkvUTJ4dkl1a0RlRWFvSU44bjF4MW13ajdmVUJmdk5a?=
- =?utf-8?B?bXRBWEhsNHBGZTJkZ0s2UE1Tek1WRFBFd0w2WWQwVmUzSmZsM3FBMUg5SHN3?=
- =?utf-8?B?UDE0M1hvRzNKU09XZFQzVXRRcmhPaGFuY3dRMFd4SURvYmRhbjlWYXdrOEhu?=
- =?utf-8?B?NGxsMEt1SkRZMUlybWkxVDM4d0p0bGNQd080QmxpTzRhdTRJOU1vUUVYZ0JC?=
- =?utf-8?B?Q3ZVNlc4VlNyRzdCOFVmdHBSV3Uwa3BsNTNFVjg2MGo1R01rMEFIc3ZURHlW?=
- =?utf-8?B?Rmc1cjZXajZJK25iNllFU2duNGdmWHRqVnVCdkVsWUdTeHVDKzYwamJtNUdS?=
- =?utf-8?B?ZWwwL0xidTR0YnRsQnpHL1U4ZktmTnFZdUxuSEh4dGtXbWJPRDYzd2haMGRu?=
- =?utf-8?B?THZ4N0lvMjAvME9rK2tualNFOUhiTlJ0VTR2eE14QzdTeDcva25xcmxYZ2la?=
- =?utf-8?B?cTRCY2VFRm1wUVk2TmtxTzBJRjF2aGxKMVJsVzJTT3FKOEZsM2tnMGYyOERr?=
- =?utf-8?B?dTNxY055bVFhdG1ncVlQeWUvMXEvNTc4RU80a1l5V2RKZGJyUUdRRmcyMjdi?=
- =?utf-8?B?a25qNmx4TWhGcWUrM0VXQXQ0bDhlaUJVV2RQZ2RDakc2V3RMZjRKM0tYdlUw?=
- =?utf-8?B?V2dLbDkwa2hFQlEvb0RzTFNicUNjeXgraHE1bWxMNlNCNWt5RzVXdkR2Z2pU?=
- =?utf-8?B?ZHFKaWp3c2VQVVVhVncwY29vaU1tZzhWRk9CaEw0ajJXSDdVQWpTcU9GUEdD?=
- =?utf-8?B?R2RCVkxlRkg3U3prZkFNc1AyMFVMTHhxSGU2SVpJeGFiNDRPZFNTSkFaWDk1?=
- =?utf-8?B?M3krNGNVRlJXaUliNkczZ0txMnZ1N0JSYmxSYWVVdE50WWN4YXA3dVhGcEMv?=
- =?utf-8?B?Y014M1BlRjNNZnF2dU0vWEg1ODEzU3hlQmltcWxHVzNXdmFqMHhHM01xcTdL?=
- =?utf-8?B?SjllbEczUXgvSnNrcm52c0VyeVcvbC9MVEVMZ0lQeGswTHUzdW1Kb0lPUlhx?=
- =?utf-8?B?NGkyZEEwTDJhYWMyTVZBdmVHUnZjUmwxQWRxaWZIWmJubm9sR2wzbDZENkhv?=
- =?utf-8?B?Y3JPUWpoTFRQaGE3Tlk5L0pIdDhpUkc4azdrZk9RM2pnVXpweDBUbDgzcmxS?=
- =?utf-8?B?S0xRRmc3d09JaFJVZHRaamZncWhzRVduN1BXQUpVOFVmNmJkVlNpaVgyVGRC?=
- =?utf-8?B?RVJ5aWNOYmw1VmVtMGRyRVhMQ2k1akc3dkg0WUhCcUgzYTYwUVlwaVc3VnU3?=
- =?utf-8?Q?5G0GNZ3fM1o7GbV0xiuBObRyt?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4b50cd41-68ef-40d4-32a1-08dc31fce15e
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB4123.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Feb 2024 10:15:36.8924
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: I/IFFo2uKgcFg+RjEGvxyTuFfjSxaIQVHFAudRzqvKIWk5fV+mVEPa3bNW0mMK6vIr3DsEMyXQs1K/VkMU50zw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CO6PR12MB5428
+References: <20240201125226.28372-1-ioworker0@gmail.com> <Zby-sHLDlmTRaUcd@tiehlicka>
+ <CAK1f24=7sy_Bczpt5YeDbkhfriYUc1=zreSFdGCxfF3R0D6sRQ@mail.gmail.com>
+ <ZbzfxNn4AYnTVFLh@tiehlicka> <CAK1f24mvBkc2c=fHL6UxMhL2mgLHVrSwZfE5516bOR0yVdfZpQ@mail.gmail.com>
+ <ZbzmvwyTGeW18nJy@tiehlicka> <CAK1f24kdyOnUjcpnrk6j4cF6bSFXQwwzFk9tM+jD4RsO_Hc4hA@mail.gmail.com>
+ <Zbz_ao0uBKabzKB1@tiehlicka> <CAK1f24nHmvqm1XD_UkWUB7DmNdH0NEOKzpLgKDJ=UuPWO=rEHw@mail.gmail.com>
+ <CAHbLzkpYM3jGVP19hG6LcD0=C=LHgGXqjVhsMYhO4HQufsfy-g@mail.gmail.com>
+ <ZcCuHmCh7a8fU6_3@tiehlicka> <CAHbLzkrkbbm-AqXuk0oFf4DD4CJeVqwtsgXq-RwuSDDUoMc+4A@mail.gmail.com>
+ <CAAa6QmRjqob=HQ1K4c+vP5iydM_VA-wd5NcoDLVuX=13NwedSQ@mail.gmail.com>
+In-Reply-To: <CAAa6QmRjqob=HQ1K4c+vP5iydM_VA-wd5NcoDLVuX=13NwedSQ@mail.gmail.com>
+From: Lance Yang <ioworker0@gmail.com>
+Date: Tue, 20 Feb 2024 18:15:48 +0800
+Message-ID: <CAK1f24nhchLX98so=jmbdm4jF21FfvNbtxNaXxx059e_Da_uOg@mail.gmail.com>
+Subject: Re: [PATCH 1/1] mm/khugepaged: skip copying lazyfree pages on collapse
+To: "Zach O'Keefe" <zokeefe@google.com>, Yang Shi <shy828301@gmail.com>, 
+	Michal Hocko <mhocko@suse.com>, David Hildenbrand <david@redhat.com>
+Cc: akpm@linux-foundation.org, songmuchun@bytedance.com, peterx@redhat.com, 
+	minchan@kernel.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 20/02/24 13:51, Arnd Bergmann wrote:
-> On Tue, Feb 20, 2024, at 08:54, Mukunda,Vijendar wrote:
->> On 20/02/24 12:40, Arnd Bergmann wrote:
->>> On Tue, Feb 20, 2024, at 07:23, Mukunda,Vijendar wrote:
->>>> On 20/02/24 11:43, Arnd Bergmann wrote:
->>>>> On Tue, Feb 20, 2024, at 06:57, Mukunda,Vijendar wrote:
->>>>>> On 19/02/24 15:08, Arnd Bergmann wrote:
->>>>>>> From: Arnd Bergmann <arnd@arndb.de>
->>>>>>> In normal configs, they should all either be built-in or all loadable
->>>>>>> modules anyway, so this simplification does not limit any real usecases.
->>>>>> Tested this patch. SOUNWIRE_AMD flag is not selected by default causing
->>>>>> AMD SOF driver for ACP 6.3 platform is build without enabling SoundWire.
->>>>> Yes, that is what I described. But as SOUNWIRE_AMD is a user visible
->>>>> symbol, there is no problem in expecting users to enable it when they
->>>>> have this hardware, and distros just enable all the drivers anyway.
->>>> Want to set SOUNDWIRE_AMD flag by default, similar to Intel & Qcom
->>>> platforms instead of explicitly enabling the Kconfig option.
->>> Maybe use 'default SND_SOC_SOF_AMD_TOPLEVEL' then?
->> Didn't get your point.
->>
->> Even with the current patch, if we select 'SOUNDWIRE_AMD' flag explicitly
->> AMD ACP63 SOF driver Kconfig option is not visible for user configuration.
->> This results in ACP63 SOF driver won't be built at all.
-> I don't understand what you mean here. What I see
-> in linux-next both with and without my patch is
->
-> config SND_SOC_SOF_AMD_ACP63
->         tristate "SOF support for ACP6.3 platform"
->         depends on SND_SOC_SOF_PCI
->
-> so it clearly should be visible as long as SND_SOC_SOF_PCI
-> is enabled.
->
-> There is still a problem that SND_SOC_SOF_AMD_TOPLEVEL
-> can't use my "depends on SOUNDWIRE_AMD || !SOUNDWIRE_AMD"
-> trick if SOUNDWIRE_AMD in turn uses
-> "default SND_SOC_SOF_AMD_TOPLEVEL", but I don't think you
-> meant that, right?
-Yes, you are correct.
->
->>> I don't think copying the mistake from the intel driver
->>> is helpful, though I agree it would be nice to be consistent
->>> between them.
->>>
->>> As a general rule, you should not have a Kconfig symbol that
->>> is both user visible and also selected by the drivers that
->>> depend on it.
->>>
->>> To avoid the dependency problems from coming back and keep
->>> the complexity to a minimum, I think there are two logical
->>> ways to handle soundwire:
->>>
->>> a) keep the current drivers/soundwire/Kconfig contents and
->>>    change all the 'select SOUNDWIRE_foo' to 'depends on'.
->> Current patch already using 'depends on SOUNDWIRE_AMD" for
->> SND_SOC_SOF_AMD_SOUNDWIRE Kconfig option.
-> Correct, because this is the Kconfig option that actually
-> controls whether sound/soc/sof/amd/acp-common.c calls into
-> the soundwire-amd module.
->
->> Still we couldn't see SND_SOC_SOF_AMD_ACP63 Kconfig option
->> is enabled.
-> I need more information here. Do you have additional
-> patches on top of what is in today's linux-next?
-> I have it enabled on my build here.
-Sorry, it's my bad. My local patches created the problem.
-Validated patch on our side. It's working fine.
+Hey Zach, Yang, Michal, and David,
 
->
->       Arnd
+Please accept my sincerest apologies for the delayed
+response.
 
+Thanks for the replies; it=E2=80=98s been very helpful to me! I also
+appreciate the valuable information you=E2=80=99ve shared!
+
+I agree that it=E2=80=99s not a good idea to let khugepaged avoid
+any pages marked with MADV_FREE.
+
+Thanks again for your time!
+
+Best,
+Lance
+
+On Tue, Feb 6, 2024 at 4:27=E2=80=AFAM Zach O'Keefe <zokeefe@google.com> wr=
+ote:
+>
+> On Mon, Feb 5, 2024 at 11:43=E2=80=AFAM Yang Shi <shy828301@gmail.com> wr=
+ote:
+> >
+> > On Mon, Feb 5, 2024 at 1:45=E2=80=AFAM Michal Hocko <mhocko@suse.com> w=
+rote:
+> > >
+> > > On Fri 02-02-24 09:42:27, Yang Shi wrote:
+> > > > But if the partial range is MADV_FREE, khugepaged won't skip them.
+> > > > This is what your second test case does.
+> > > >
+> > > > Secondly, I think it depends on the semantics of MADV_FREE,
+> > > > particularly how to treat the redirtied pages. TBH I'm always confu=
+sed
+> > > > by the semantics. For example, the page contained "abcd", then it w=
+as
+> > > > MADV_FREE'ed, then it was written again with "1234" after "abcd". S=
+o
+> > > > the user should expect to see "abcd1234" or "00001234".
+> > >
+> > > Correct. You cannot assume the content of the first page as it could
+> > > have been reclaimed at any time.
+> > >
+> > > > I'm supposed it should be "abcd1234" since MADV_FREE pages are stil=
+l
+> > > > valid and available, if I'm wrong please feel free to correct me. I=
+f
+> > > > so we should always copy MADV_FREE pages in khugepaged regardless o=
+f
+> > > > whether it is redirtied or not otherwise it may incur data corrupti=
+on.
+> > > > If we don't copy, then the follow up redirty after collapse to the
+> > > > hugepage may return "00001234", right?
+> > >
+> > > Right. As pointed above this is a valid outcome if the page has been
+> > > dropped. User has means to tell that from /proc/vmstat though. Not in=
+ a
+> > > great precision but I think it would be really surprising to not see =
+any
+> > > pglazyfreed yet the content is gone. I think it would be legit to cal=
+l
+> > > it a bug. One could argue the bug would be in the accounting rather t=
+han
+> > > the khugepaged implementation because madvised pages could be dropped=
+ at
+> > > any time. But I think it makes more sense to copy the existing conten=
+t.
+>
+> +1. I agree that the content should be dropped iff pglazyfreed is
+> incremented. Of course, we could do that here, but I don't think there
+> is a good reason to, and we should just copy the contents.
+>
+> > Yeah, as long as khugepaged sees the MADV_FREE pages, it means they
+> > have "NOT" been dropped yet. It may be dropped later if memory
+> > pressure occurs, but anyway khugepaged wins the race and khugepaged
+> > can't assume the pages will be dropped before they get redirtied. So
+> > copying the content does make sense.
+>
+> Per Lance, I kinda get that this "undermines" MADV_FREE, insofar that,
+> from the user's perspective, that memory which was intended as a
+> buffer against OOM kill scenarios, is no longer there to reclaim triviall=
+y. I
+> don't have a real world example where this is an issue, however. Also,
+> not copying the contents doesn't change that fact.
+>
+> The proper alternative, if you want to make the "undermining"
+> argument, is for khugepaged to stay away from hugepage regions with
+> any MADV_FREE pages. I think it's fair to assume MADV_FREE'd memory is
+> likely cold memory, and therefore not a good hugepage target anyways.
+> However, it'd be unfortunate if there were a couple MADV_FREE pages in
+> the middle of an otherwise hot / highly-utilized hugepage region that
+> would prevent it from being pmd-mapped via khugepaged. But.. this is
+> exactly-ish what you get when hugepage-ware system/runtime allocators
+> split THPs to free up internal caches.
+>
+> Best,
+> Zach
+>
+>
+> > > --
+> > > Michal Hocko
+> > > SUSE Labs
