@@ -1,55 +1,55 @@
-Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
+Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE63814AD0F
-	for <linux-kernel@vger.kernel.org>; Tue, 20 Feb 2024 20:23:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A25C214D434
+	for <linux-kernel@vger.kernel.org>; Tue, 20 Feb 2024 20:23:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708460600; cv=none; b=EQsWRCNtroLJkTo/RLIImcmEWX2T7Mi0lHzfZLavbeePXV+x3xd0jIY/BmbsfCSWql6eltu1xeTLmOO0tEeUSwV2Se8aMeE3/CpQGUy4S5wuq33/8aVXPiNVjIfOF5bKq/yjczhhw02nlnySSsfrGFXAi4JGzKKhIBoUqdHcBgw=
+	t=1708460604; cv=none; b=Fu/K0zepzh1Fq16+I6ZtzqbhfY8RGYBbQZYUKzOiregwnEMhmsb785E7t99SvF9obVbkOmW4ISJDcaJ5n1NTq9oSqmDi2I5hm2u9mkJGlPhgWZMp/c+NZRULriLyMptZ3m/XvtU66+CBG7nYBYVSS4ZZgvUElxQquTFlE5mVJsE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708460600; c=relaxed/simple;
-	bh=okSYdCoqtYalJqTVBXSYlec5NVTxMVA7/+jsV6YNCNE=;
+	s=arc-20240116; t=1708460604; c=relaxed/simple;
+	bh=c11OTwgRSMGhQcGkXUr50s80GSv8XYTKEbItBCwkfmk=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=oDtv/Utnrz4/ZeqeTFLDUFWwBcIoAwRLf8hO78IPNdBLOmM54xhojhVza7mC+rDNEgIqDKUNR82z4ItgOex9wHhzNTpHW842AoTE4JAwBYmNpk0qIJW0SqGk9aL7iX4mx1pETTRpL9jU1pd/RerbVSZ2tCJBXWy2cG1j/XAWZvk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=XCe6XRjN; arc=none smtp.client-ip=209.85.219.201
+	 To:Cc:Content-Type; b=JNtDKfT35+jN3lZEdka/pInHwnTRs82/39kW0P+g2fmeiKiWRlPooBudW36RqLIerRppE/08DdVq8rxtHXwW22OnTZM66jqGZjxpiyK9mQCjwG1aS0tVIOtoC7uyZzoVmhV79l8EtpzN9sy3Mb26jjiO7a6rXtnQljjcbKfrfWY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Ylukd/Uv; arc=none smtp.client-ip=209.85.128.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XCe6XRjN"
-Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-dcd1779adbeso12442037276.3
-        for <linux-kernel@vger.kernel.org>; Tue, 20 Feb 2024 12:23:17 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Ylukd/Uv"
+Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-607b3038b3fso59633437b3.2
+        for <linux-kernel@vger.kernel.org>; Tue, 20 Feb 2024 12:23:22 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1708460597; x=1709065397; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1708460601; x=1709065401; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=U2evzm3HI5GwNbxXWo5kB/PowbSsdEjz5X/q5vGufRc=;
-        b=XCe6XRjNKl6p6D+QtnVQ1fd7smNuNNF4gBbip7rGWdP1a9Zwnxyxrd1pYVihv84RY9
-         WabywR95mB+MegEgdXAnDXr68KTYX1cqytlQb7wrnLOLVGuu2kqszQpbhTqqn1cIP/gC
-         d9Z72cSndzBGxmybUSkSBj0iZXd3pLfFhZ+Xqiyp2J9KCelQXOJymKmMr0PVBZdQsXHX
-         b+WskpkM1w1+CPsfhPajAZux0PI+FhOhO1WHZDlJ4Z9XT6lMcHxmK6YShuJe9FiMvtA9
-         EzuHCIyvpCTAMSnwjSIA1xUEz5rxDYnp+tx2OeAoW0w8YrhqLeAjLOKa7TU+znrT/IcW
-         pfrQ==
+        bh=1emHXkXXbazGKAEdzB+eG6Np9XJposqSjB6lDEqOmYs=;
+        b=Ylukd/UvcLlBIIVIcT34qrIivRrvcG0L2DC1sfPipgHJcTRB6lybDCSX542PMRLsCK
+         jS7oX8YVHVOGWiEL0N10bqd6/Wv9B/JBALzRSlwF4SF5iIL5Lsn5YM5RFiVved411GEI
+         LT8eVNk38ex17mhAZLtE1oyXeVd5I373lZmIgMWlC2YtJYlxGugwPYaCiH1rwAgi6x2M
+         FzE3nB7L9DuerLZhZdnbwlTflP/uXPRQDRRkDf7L4AQDtUQ/XbMP/l6xLLRonlXAm2xX
+         vto+gMd2LQOl2SSg9GACJQojPYYUBYAztnfddArmSAgiUB5zputk6ba/xJ96jEORx6ca
+         4rBA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708460597; x=1709065397;
+        d=1e100.net; s=20230601; t=1708460601; x=1709065401;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=U2evzm3HI5GwNbxXWo5kB/PowbSsdEjz5X/q5vGufRc=;
-        b=qroMiefGuoWRTtVnmreksaTG46fR7a6n4wByKUHoHP1sGIdkLy9cetvbDm83b1lZTD
-         bbEZyYWKquosXtgoNqwtc2GIuGyiOKN0NjSh59vjt791oNlMbiq9/AASMVMj7wMis7nq
-         MKFrDjBDRKRRiKU1uOP8g4biu1Kz9eaT4zelF05CWwgEHcO9FEO2Zl2dqUny4EzeZ90T
-         kM3i9uKyLLKeOEcmNaGYXZ4TGSForslqLuSEHHXmyc4VPPxAWYgzcWWZ4RYk0564o6pZ
-         WF4KSZTCMa9yhO63ctaVryRik3YAqHv4KrhtcXOcYo/GzFMd/OUebNKgJq2uIc9a8yyO
-         dfhQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXES5ZfaEfFl6HDW/Z90u0LP6PVhMabas/OzbNyEGjZ7qKSMtkcThe89f8EofpUEUOJ1SSAco8PDYvlzBy+f+a9E1Kk+qr9wFZABDfX
-X-Gm-Message-State: AOJu0YyoypzcglBPROaFAAtu9ZYmdZLTHtRrGzV+JMQ5DT4wer+NhjcN
-	ISXgfuZupUoj+yLP9xh5S2n7jbumgsxP97/IKTJOYbJ6g6BBXTTpkmUZM0EbUdfgudvf5/VUiHe
-	tajbA3Q1QbfKF7K+26g==
-X-Google-Smtp-Source: AGHT+IF9l0VKWnBaSreNF7S4sqi6G/8kgHmMrShHsp5wOZWAOcrtrpo0Vk2Q23Wkc3CzfLSQ6ShF4bsT3GENMm1y
+        bh=1emHXkXXbazGKAEdzB+eG6Np9XJposqSjB6lDEqOmYs=;
+        b=bc3fZ4/w3otf4iyeY6eS6gSG3ajPwlW1mkIW8RCzhi4OtDosu2yCIY0xOklQrsYaMY
+         jez5Kdq4nZgVZFw1QAjPRWHjCDLP86HvO6EdBHoggJJSfV4LvMLjPyOxBVlIx7uNauo7
+         daIkYvJNbMvWj2+VZNQ/A+El1bnjG4vhAr1v36Bci9gZTvrAGCl2u+YXw7C7LgO3XJF2
+         xW4ejZDsFfG28Gvc3TZ296jITj8ge/LI/E5jeF2nCnAzZKZ/GvBpOX4QPLHLHknpl+l4
+         EabFsxjl5I337Y6+mdgFEwZCKFjkZ6CqhSIM709zxeQvRuw6Jyea7Ox9wfBqKr1g8+ir
+         LJaA==
+X-Forwarded-Encrypted: i=1; AJvYcCX8IZy6ot0AWj5Bec/u0evOATobA/tWplAzP1wdITlgLaRrFxG3w+ELlOZ7Eal8unzH9e/TwB81l1ksrxhDS9Ap6hsiCEUsfMpstxTz
+X-Gm-Message-State: AOJu0YxjdPpDr+jmOMi53i1i665QvEyg2jXDJJ8AJRaqWwi02YOE1w/7
+	aba5ZnF7HbenZ/yL6mWk21v400qQNaYXtovGTv3uC0qdi/UWBrj2F+jtA9T4mD2LCgYA/bGEx/b
+	IlNGVoBJ2qtbADveP8A==
+X-Google-Smtp-Source: AGHT+IHKDofuoilOLCBE8uzcdmBWoDqhZMx1jiYJp+gc9AfJG0VNqjXEyyKxfFJaPJ9RW0Q2/KOSxyXLFA+kcZCn
 X-Received: from vdonnefort.c.googlers.com ([fda3:e722:ac3:cc00:28:9cb1:c0a8:2eea])
- (user=vdonnefort job=sendgmr) by 2002:a05:6902:2188:b0:dc7:6efe:1aab with
- SMTP id dl8-20020a056902218800b00dc76efe1aabmr4730294ybb.6.1708460597013;
- Tue, 20 Feb 2024 12:23:17 -0800 (PST)
-Date: Tue, 20 Feb 2024 20:23:05 +0000
+ (user=vdonnefort job=sendgmr) by 2002:a0d:d5d7:0:b0:607:9bfd:d0bc with SMTP
+ id x206-20020a0dd5d7000000b006079bfdd0bcmr2748611ywd.7.1708460601644; Tue, 20
+ Feb 2024 12:23:21 -0800 (PST)
+Date: Tue, 20 Feb 2024 20:23:07 +0000
 In-Reply-To: <20240220202310.2489614-1-vdonnefort@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -59,8 +59,8 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20240220202310.2489614-1-vdonnefort@google.com>
 X-Mailer: git-send-email 2.44.0.rc0.258.g7320e95886-goog
-Message-ID: <20240220202310.2489614-2-vdonnefort@google.com>
-Subject: [PATCH v18 1/6] ring-buffer: Zero ring-buffer sub-buffers
+Message-ID: <20240220202310.2489614-4-vdonnefort@google.com>
+Subject: [PATCH v18 3/6] tracing: Add snapshot refcount
 From: Vincent Donnefort <vdonnefort@google.com>
 To: rostedt@goodmis.org, mhiramat@kernel.org, linux-kernel@vger.kernel.org, 
 	linux-trace-kernel@vger.kernel.org
@@ -68,46 +68,350 @@ Cc: mathieu.desnoyers@efficios.com, kernel-team@android.com,
 	Vincent Donnefort <vdonnefort@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-In preparation for the ring-buffer memory mapping where each subbuf will
-be accessible to user-space, zero all the page allocations.
+When a ring-buffer is memory mapped by user-space, no trace or
+ring-buffer swap is possible. This means the snapshot feature is
+mutually exclusive with the memory mapping. Having a refcount on
+snapshot users will help to know if a mapping is possible or not.
+
+Instead of relying on the global trace_types_lock, a new spinlock is
+introduced to serialize accesses to trace_array->snapshot. This intends
+to allow access to that variable in a context where the mmap lock is
+already held.
 
 Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
-Reviewed-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-index fd4bfe3ecf01..ca796675c0a1 100644
---- a/kernel/trace/ring_buffer.c
-+++ b/kernel/trace/ring_buffer.c
-@@ -1472,7 +1472,8 @@ static int __rb_allocate_pages(struct ring_buffer_per_cpu *cpu_buffer,
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index 8198bfc54b58..8ae7c2cb63a0 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -1301,6 +1301,50 @@ static void free_snapshot(struct trace_array *tr)
+ 	tr->allocated_snapshot = false;
+ }
  
- 		list_add(&bpage->list, pages);
++static int tracing_arm_snapshot_locked(struct trace_array *tr)
++{
++	int ret;
++
++	lockdep_assert_held(&trace_types_lock);
++
++	spin_lock(&tr->snapshot_trigger_lock);
++	if (tr->snapshot == UINT_MAX) {
++		spin_unlock(&tr->snapshot_trigger_lock);
++		return -EBUSY;
++	}
++
++	tr->snapshot++;
++	spin_unlock(&tr->snapshot_trigger_lock);
++
++	ret = tracing_alloc_snapshot_instance(tr);
++	if (ret) {
++		spin_lock(&tr->snapshot_trigger_lock);
++		tr->snapshot--;
++		spin_unlock(&tr->snapshot_trigger_lock);
++	}
++
++	return ret;
++}
++
++int tracing_arm_snapshot(struct trace_array *tr)
++{
++	int ret;
++
++	mutex_lock(&trace_types_lock);
++	ret = tracing_arm_snapshot_locked(tr);
++	mutex_unlock(&trace_types_lock);
++
++	return ret;
++}
++
++void tracing_disarm_snapshot(struct trace_array *tr)
++{
++	spin_lock(&tr->snapshot_trigger_lock);
++	if (!WARN_ON(!tr->snapshot))
++		tr->snapshot--;
++	spin_unlock(&tr->snapshot_trigger_lock);
++}
++
+ /**
+  * tracing_alloc_snapshot - allocate snapshot buffer.
+  *
+@@ -1374,10 +1418,6 @@ int tracing_snapshot_cond_enable(struct trace_array *tr, void *cond_data,
  
--		page = alloc_pages_node(cpu_to_node(cpu_buffer->cpu), mflags,
-+		page = alloc_pages_node(cpu_to_node(cpu_buffer->cpu),
-+					mflags | __GFP_ZERO,
- 					cpu_buffer->buffer->subbuf_order);
- 		if (!page)
- 			goto free_pages;
-@@ -1557,7 +1558,8 @@ rb_allocate_cpu_buffer(struct trace_buffer *buffer, long nr_pages, int cpu)
+ 	mutex_lock(&trace_types_lock);
  
- 	cpu_buffer->reader_page = bpage;
+-	ret = tracing_alloc_snapshot_instance(tr);
+-	if (ret)
+-		goto fail_unlock;
+-
+ 	if (tr->current_trace->use_max_tr) {
+ 		ret = -EBUSY;
+ 		goto fail_unlock;
+@@ -1396,6 +1436,10 @@ int tracing_snapshot_cond_enable(struct trace_array *tr, void *cond_data,
+ 		goto fail_unlock;
+ 	}
  
--	page = alloc_pages_node(cpu_to_node(cpu), GFP_KERNEL, cpu_buffer->buffer->subbuf_order);
-+	page = alloc_pages_node(cpu_to_node(cpu), GFP_KERNEL | __GFP_ZERO,
-+				cpu_buffer->buffer->subbuf_order);
- 	if (!page)
- 		goto fail_free_reader;
- 	bpage->page = page_address(page);
-@@ -5525,7 +5527,8 @@ ring_buffer_alloc_read_page(struct trace_buffer *buffer, int cpu)
- 	if (bpage->data)
++	ret = tracing_arm_snapshot_locked(tr);
++	if (ret)
++		goto fail_unlock;
++
+ 	local_irq_disable();
+ 	arch_spin_lock(&tr->max_lock);
+ 	tr->cond_snapshot = cond_snapshot;
+@@ -1440,6 +1484,8 @@ int tracing_snapshot_cond_disable(struct trace_array *tr)
+ 	arch_spin_unlock(&tr->max_lock);
+ 	local_irq_enable();
+ 
++	tracing_disarm_snapshot(tr);
++
+ 	return ret;
+ }
+ EXPORT_SYMBOL_GPL(tracing_snapshot_cond_disable);
+@@ -1482,6 +1528,7 @@ int tracing_snapshot_cond_disable(struct trace_array *tr)
+ }
+ EXPORT_SYMBOL_GPL(tracing_snapshot_cond_disable);
+ #define free_snapshot(tr)	do { } while (0)
++#define tracing_arm_snapshot_locked(tr) ({ -EBUSY; })
+ #endif /* CONFIG_TRACER_SNAPSHOT */
+ 
+ void tracer_tracing_off(struct trace_array *tr)
+@@ -6595,11 +6642,12 @@ int tracing_set_tracer(struct trace_array *tr, const char *buf)
+ 		 */
+ 		synchronize_rcu();
+ 		free_snapshot(tr);
++		tracing_disarm_snapshot(tr);
+ 	}
+ 
+-	if (t->use_max_tr && !tr->allocated_snapshot) {
+-		ret = tracing_alloc_snapshot_instance(tr);
+-		if (ret < 0)
++	if (t->use_max_tr) {
++		ret = tracing_arm_snapshot_locked(tr);
++		if (ret)
+ 			goto out;
+ 	}
+ #else
+@@ -6608,8 +6656,13 @@ int tracing_set_tracer(struct trace_array *tr, const char *buf)
+ 
+ 	if (t->init) {
+ 		ret = tracer_init(t, tr);
+-		if (ret)
++		if (ret) {
++#ifdef CONFIG_TRACER_MAX_TRACE
++			if (t->use_max_tr)
++				tracing_disarm_snapshot(tr);
++#endif
+ 			goto out;
++		}
+ 	}
+ 
+ 	tr->current_trace = t;
+@@ -7711,10 +7764,11 @@ tracing_snapshot_write(struct file *filp, const char __user *ubuf, size_t cnt,
+ 		if (tr->allocated_snapshot)
+ 			ret = resize_buffer_duplicate_size(&tr->max_buffer,
+ 					&tr->array_buffer, iter->cpu_file);
+-		else
+-			ret = tracing_alloc_snapshot_instance(tr);
+-		if (ret < 0)
++
++		ret = tracing_arm_snapshot_locked(tr);
++		if (ret)
+ 			break;
++
+ 		/* Now, we're going to swap */
+ 		if (iter->cpu_file == RING_BUFFER_ALL_CPUS) {
+ 			local_irq_disable();
+@@ -7724,6 +7778,7 @@ tracing_snapshot_write(struct file *filp, const char __user *ubuf, size_t cnt,
+ 			smp_call_function_single(iter->cpu_file, tracing_swap_cpu_buffer,
+ 						 (void *)tr, 1);
+ 		}
++		tracing_disarm_snapshot(tr);
+ 		break;
+ 	default:
+ 		if (tr->allocated_snapshot) {
+@@ -8848,8 +8903,13 @@ ftrace_trace_snapshot_callback(struct trace_array *tr, struct ftrace_hash *hash,
+ 
+ 	ops = param ? &snapshot_count_probe_ops :  &snapshot_probe_ops;
+ 
+-	if (glob[0] == '!')
+-		return unregister_ftrace_function_probe_func(glob+1, tr, ops);
++	if (glob[0] == '!') {
++		ret = unregister_ftrace_function_probe_func(glob+1, tr, ops);
++		if (!ret)
++			tracing_disarm_snapshot(tr);
++
++		return ret;
++	}
+ 
+ 	if (!param)
+ 		goto out_reg;
+@@ -8868,12 +8928,13 @@ ftrace_trace_snapshot_callback(struct trace_array *tr, struct ftrace_hash *hash,
+ 		return ret;
+ 
+  out_reg:
+-	ret = tracing_alloc_snapshot_instance(tr);
++	ret = tracing_arm_snapshot(tr);
+ 	if (ret < 0)
  		goto out;
  
--	page = alloc_pages_node(cpu_to_node(cpu), GFP_KERNEL | __GFP_NORETRY,
-+	page = alloc_pages_node(cpu_to_node(cpu),
-+				GFP_KERNEL | __GFP_NORETRY | __GFP_ZERO,
- 				cpu_buffer->buffer->subbuf_order);
- 	if (!page) {
- 		kfree(bpage);
+ 	ret = register_ftrace_function_probe(glob, tr, ops, count);
+-
++	if (ret < 0)
++		tracing_disarm_snapshot(tr);
+  out:
+ 	return ret < 0 ? ret : 0;
+ }
+@@ -9680,7 +9741,9 @@ trace_array_create_systems(const char *name, const char *systems)
+ 	raw_spin_lock_init(&tr->start_lock);
+ 
+ 	tr->max_lock = (arch_spinlock_t)__ARCH_SPIN_LOCK_UNLOCKED;
+-
++#ifdef CONFIG_TRACER_MAX_TRACE
++	spin_lock_init(&tr->snapshot_trigger_lock);
++#endif
+ 	tr->current_trace = &nop_trace;
+ 
+ 	INIT_LIST_HEAD(&tr->systems);
+@@ -10650,7 +10713,9 @@ __init static int tracer_alloc_buffers(void)
+ 	global_trace.current_trace = &nop_trace;
+ 
+ 	global_trace.max_lock = (arch_spinlock_t)__ARCH_SPIN_LOCK_UNLOCKED;
+-
++#ifdef CONFIG_TRACER_MAX_TRACE
++	spin_lock_init(&global_trace.snapshot_trigger_lock);
++#endif
+ 	ftrace_init_global_array_ops(&global_trace);
+ 
+ 	init_trace_flags_index(&global_trace);
+diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
+index 00f873910c5d..bd312e9afe25 100644
+--- a/kernel/trace/trace.h
++++ b/kernel/trace/trace.h
+@@ -334,8 +334,8 @@ struct trace_array {
+ 	 */
+ 	struct array_buffer	max_buffer;
+ 	bool			allocated_snapshot;
+-#endif
+-#ifdef CONFIG_TRACER_MAX_TRACE
++	spinlock_t		snapshot_trigger_lock;
++	unsigned int		snapshot;
+ 	unsigned long		max_latency;
+ #ifdef CONFIG_FSNOTIFY
+ 	struct dentry		*d_max_latency;
+@@ -1973,12 +1973,16 @@ static inline void trace_event_eval_update(struct trace_eval_map **map, int len)
+ #ifdef CONFIG_TRACER_SNAPSHOT
+ void tracing_snapshot_instance(struct trace_array *tr);
+ int tracing_alloc_snapshot_instance(struct trace_array *tr);
++int tracing_arm_snapshot(struct trace_array *tr);
++void tracing_disarm_snapshot(struct trace_array *tr);
+ #else
+ static inline void tracing_snapshot_instance(struct trace_array *tr) { }
+ static inline int tracing_alloc_snapshot_instance(struct trace_array *tr)
+ {
+ 	return 0;
+ }
++static inline int tracing_arm_snapshot(struct trace_array *tr) { return 0; }
++static inline void tracing_disarm_snapshot(struct trace_array *tr) { }
+ #endif
+ 
+ #ifdef CONFIG_PREEMPT_TRACER
+diff --git a/kernel/trace/trace_events_trigger.c b/kernel/trace/trace_events_trigger.c
+index b33c3861fbbb..62e4f58b8671 100644
+--- a/kernel/trace/trace_events_trigger.c
++++ b/kernel/trace/trace_events_trigger.c
+@@ -597,20 +597,12 @@ static int register_trigger(char *glob,
+ 	return ret;
+ }
+ 
+-/**
+- * unregister_trigger - Generic event_command @unreg implementation
+- * @glob: The raw string used to register the trigger
+- * @test: Trigger-specific data used to find the trigger to remove
+- * @file: The trace_event_file associated with the event
+- *
+- * Common implementation for event trigger unregistration.
+- *
+- * Usually used directly as the @unreg method in event command
+- * implementations.
++/*
++ * True if the trigger was found and unregistered, else false.
+  */
+-static void unregister_trigger(char *glob,
+-			       struct event_trigger_data *test,
+-			       struct trace_event_file *file)
++static bool try_unregister_trigger(char *glob,
++				   struct event_trigger_data *test,
++				   struct trace_event_file *file)
+ {
+ 	struct event_trigger_data *data = NULL, *iter;
+ 
+@@ -626,8 +618,32 @@ static void unregister_trigger(char *glob,
+ 		}
+ 	}
+ 
+-	if (data && data->ops->free)
+-		data->ops->free(data);
++	if (data) {
++		if (data->ops->free)
++			data->ops->free(data);
++
++		return true;
++	}
++
++	return false;
++}
++
++/**
++ * unregister_trigger - Generic event_command @unreg implementation
++ * @glob: The raw string used to register the trigger
++ * @test: Trigger-specific data used to find the trigger to remove
++ * @file: The trace_event_file associated with the event
++ *
++ * Common implementation for event trigger unregistration.
++ *
++ * Usually used directly as the @unreg method in event command
++ * implementations.
++ */
++static void unregister_trigger(char *glob,
++			       struct event_trigger_data *test,
++			       struct trace_event_file *file)
++{
++	try_unregister_trigger(glob, test, file);
+ }
+ 
+ /*
+@@ -1470,7 +1486,7 @@ register_snapshot_trigger(char *glob,
+ 			  struct event_trigger_data *data,
+ 			  struct trace_event_file *file)
+ {
+-	int ret = tracing_alloc_snapshot_instance(file->tr);
++	int ret = tracing_arm_snapshot(file->tr);
+ 
+ 	if (ret < 0)
+ 		return ret;
+@@ -1478,6 +1494,14 @@ register_snapshot_trigger(char *glob,
+ 	return register_trigger(glob, data, file);
+ }
+ 
++static void unregister_snapshot_trigger(char *glob,
++					struct event_trigger_data *data,
++					struct trace_event_file *file)
++{
++	if (try_unregister_trigger(glob, data, file))
++		tracing_disarm_snapshot(file->tr);
++}
++
+ static int
+ snapshot_trigger_print(struct seq_file *m, struct event_trigger_data *data)
+ {
+@@ -1510,7 +1534,7 @@ static struct event_command trigger_snapshot_cmd = {
+ 	.trigger_type		= ETT_SNAPSHOT,
+ 	.parse			= event_trigger_parse,
+ 	.reg			= register_snapshot_trigger,
+-	.unreg			= unregister_trigger,
++	.unreg			= unregister_snapshot_trigger,
+ 	.get_trigger_ops	= snapshot_get_trigger_ops,
+ 	.set_filter		= set_trigger_filter,
+ };
 -- 
 2.44.0.rc0.258.g7320e95886-goog
 
