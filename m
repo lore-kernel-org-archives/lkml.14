@@ -1,92 +1,204 @@
-Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07CF064AAA;
-	Tue, 20 Feb 2024 09:10:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96E845FDB3
+	for <linux-kernel@vger.kernel.org>; Tue, 20 Feb 2024 09:11:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708420259; cv=none; b=Vzdaub9W05h6D//8RBkqOQ8cYGfp2XSdH28rz9yB25K4ZFD+Fc1DNLYsZ9MxMuLtmlmMQL4o//6n0flTrLjlJv/n9lA1YymCyUuUHsNOMVYnmNI6JLsIglEkko/o2A1s7a5KOBdw/I0FBVA9Tbg1rLoqTqZBJuU9QHKsNFFXeuc=
+	t=1708420314; cv=none; b=c4Q4aThXBRk2/5Xe3HvE87HsqVG0CUPQgUG2IFbxc+bVEgAsHtC6sXPo+epCHkt9Ay2x1F7PkKns7lgA4vpIV5icN+66D3vPHYxb255EX6u5d4iDBmv6VHaankcDaFUlqzwjAcTa3MQZilpyqyi3sq35HXpfz2dGKxPhqyid6+g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708420259; c=relaxed/simple;
-	bh=ByO2dT7JtpPvKkaZeVRsaOzbk+s4KDVPKrxRRc0C6tY=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=JllFDF4dcYcshK/SI/e96LV3HRcWGcWDYJdb+Hbkf3GtAUYKeCxlYNFbjEjsva82l0Iz7RrRvVP47pRdgBCgAAKmaL+LKcX4ySujsizEldPFmdGwpgezOG+6F6RKG1vczXcQ3xc3JR91xci/5APez5Q9/ybDuvbSagkqZQkqeMY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Iietwbf5; arc=none smtp.client-ip=209.85.221.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1708420314; c=relaxed/simple;
+	bh=Jw58d3PIRHMR6kihzKv0kkvazhIqV5r5fBFnMkfKw1c=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=dKWICJRs3vgbwpcNlbUTJPRH1dKVx14941zMOiOAIujWkMvtNz9NRiuyCP1jfJ/NIL087uuz7Zn/aoTHQHDG6hCEXYsuPRdPVv1chA+vqytufoK6k0vLj302FYACcFQB5ypsCywahm6rq5gsgKTFgolfrNqZ0aM1DxMiXO90WxI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=hVcyQQyi; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Iietwbf5"
-Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-33d375993f4so1300825f8f.1;
-        Tue, 20 Feb 2024 01:10:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1708420256; x=1709025056; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=J1QxAfuKOwJo1Q4eMgsPlCE9Pe85TkW/2/2T6KJzfX8=;
-        b=Iietwbf5w2+j33i29E8+t5l8eeWswe13ba+NPl1DpLuMas9FyWCyZVuAhqZMGz7DIP
-         ozrmcysNqEdiBrmHz9uA0tP0A41QcuqDREKf8yH+rKcJUGsK5vyzmBZwD9P1+tnxicDz
-         7oGVZuPeNQWy3ZOWjHnHWFZq0a53SQ9GmSDF3pJsEaBLr/escTO3jkzW9cH/3m/M9mh+
-         GylOMLnlRo0wypBkCyUi1gutLYtjjI7rxr9PfQDDgpS1aho4bhIOFEul6MgS0HqjM6A1
-         GCuHdeHUiIGoMU9jGlKB2e4ikJCGsE3axr2ke3kjR1TVgXZHAyyVXG74dzkvZXwp/k2D
-         xrDg==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hVcyQQyi"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1708420311;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=ydpv7uzb+kCUFp13gnlTxWS2SWh+s4umAAY6DmFWn44=;
+	b=hVcyQQyiNVW1a6mIeMZlOQmA41PvZu3RI9aElsh0tOs/Zb7mj/d/cB3IfpuNl5lK6BKx0T
+	AfR15ewoe0Z7AWFcSI+Q/3LadvOMRfyZEMVaiQC/UzrQlE1oYJ+2B0OX3CAe9Sl/2Jq29i
+	GAdvzHQT5Jyj+GIORkW5hlpi4Y32k8c=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-689-DSuHgl28OiK890VxS6rfNw-1; Tue, 20 Feb 2024 04:11:49 -0500
+X-MC-Unique: DSuHgl28OiK890VxS6rfNw-1
+Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-412567128ebso13993455e9.0
+        for <linux-kernel@vger.kernel.org>; Tue, 20 Feb 2024 01:11:49 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708420256; x=1709025056;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=J1QxAfuKOwJo1Q4eMgsPlCE9Pe85TkW/2/2T6KJzfX8=;
-        b=auMTXxgLNenaeRgvcTdNQnElfSV8JEWnkCw8lSbvTRI8NygJ2195DYfBWUOPbj3MkR
-         wBOOIle9VAjU6RNKMZHv/u0nflVDb2WlmIL5x5rEj48PJ5dzcVmcWoqh+bhNCTcrR0Uu
-         OeV7APuzEM8z3YVRmWUbiER69LIaFRYA1TdX2e+nEjtvxfRQcp+sawu/SPfW7VVSsRxc
-         6nlA7/+5znHTMV2Z1KzIAYvewKb7eUqq56lOsQoNqjrSSLKJL09Dln1AoxA6nEZsOeVk
-         SCVLIKgUugsprkpFOGXjY6K8H1sy29ToKwWAZSyPqoQ8hTSC00mGfp2KO/w+GR8rCo6M
-         3bXg==
-X-Forwarded-Encrypted: i=1; AJvYcCXSwSzUVbAWS4TO0U4K2HPMn/4fkpRRGorosXuP/HHVyY4wDmklGcHwG9ruRrtOj93k1m/qYEYB1SkSUXy5u2PzfLjaB/dPRWsAKH2a
-X-Gm-Message-State: AOJu0YyhTzU2lg/kqf4VlM0FbsSv2+ZNhrCCPk3Kh8l9+UGgzSAfUqPA
-	W6Ne8FFFvOX+ifUlqPmDJp+FW/m+Fm6bVxm7Y7HPWJk21yV6e31jEu2Cil8G
-X-Google-Smtp-Source: AGHT+IGQy/fQwxMahck/FXlqoUkhyK08LtRAagUHScMB3qr+o/gOGhrYsmy58O1bbJ56JDLuowi0gg==
-X-Received: by 2002:adf:e6c1:0:b0:33d:581c:5dc7 with SMTP id y1-20020adfe6c1000000b0033d581c5dc7mr3602418wrm.59.1708420256108;
-        Tue, 20 Feb 2024 01:10:56 -0800 (PST)
-Received: from localhost (cpc154979-craw9-2-0-cust193.16-3.cable.virginm.net. [80.193.200.194])
-        by smtp.gmail.com with ESMTPSA id b7-20020adfe647000000b0033b406bc689sm12928535wrn.75.2024.02.20.01.10.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 20 Feb 2024 01:10:55 -0800 (PST)
-From: Colin Ian King <colin.i.king@gmail.com>
-To: Christoph Hellwig <hch@infradead.org>
-Cc: kernel-janitors@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] freevxfs: Fix spelling mistake "ivalid" -> "invalid"
-Date: Tue, 20 Feb 2024 09:10:55 +0000
-Message-Id: <20240220091055.2676456-1-colin.i.king@gmail.com>
-X-Mailer: git-send-email 2.39.2
+        d=1e100.net; s=20230601; t=1708420308; x=1709025108;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :references:cc:to:from:content-language:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=ydpv7uzb+kCUFp13gnlTxWS2SWh+s4umAAY6DmFWn44=;
+        b=u6RaELi4lxd+LOFHp8CXDDPwOxR0jL6JxrugEO9PqPgMvGEOecfALQDMpfmRnYzcSz
+         rifbpMmuIYPN8M20cCZ9nw1FxOXu72Z7SoJmxxj+U1hwhGii/DXQI5ElbjP6JOjG4wOU
+         NHWOEbyxD3/E6vOmCS01GupF5aiUQUUcr3AbsMP5ILVW+qhPfXl2Lhk2E7JiUyHu4e7r
+         WmBf1i+Fq16XF3WrH6sfcE6ORIiQlY7U2CXj9IwqzqXZVM5tPjj8ubbhK/lclAKbjfAH
+         5d7USSJ+/Xjhbd68iYO7ncNvvEnoCsaYz0g7yvL+HraDJwesWC3z1t0HxoceKXcDizp8
+         ZceA==
+X-Forwarded-Encrypted: i=1; AJvYcCU6ezwIj6mZz6zgubpWKQLeoZnP+MJhnAdzjeSBclbJjyh9xsbV++ZWx6ZiE/XRZovCM95tk8lw9V0i7I1CaNX5d68z1p2ZBZjJdnq9
+X-Gm-Message-State: AOJu0YykX7/CcL2Ou4q/wYRbbZ0pzePC5GeU/g6Ed5PolA9BYN6yv8f7
+	4qSiJir+duDF/ZtDNI5Ytn/uxXUP8vFI0m+2lYXO4Z5dElb/auPlP8rowxPTx4XVL+vkM3neWl/
+	qo/cdyZZmuI0x3WnlpfZA2g68Q7NY3YKW4EsABmyJiQxv63iOuwXWk3GICwS5DjFmXBe5/A==
+X-Received: by 2002:a05:600c:4507:b0:412:6170:a178 with SMTP id t7-20020a05600c450700b004126170a178mr4893037wmo.29.1708420308557;
+        Tue, 20 Feb 2024 01:11:48 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IFssF+sD8CPNhU1u7409oVIchgUTNyuXbMg8IQSuvbCAer9kgBnItgkaMXweVY12fvn+e4dgQ==
+X-Received: by 2002:a05:600c:4507:b0:412:6170:a178 with SMTP id t7-20020a05600c450700b004126170a178mr4893018wmo.29.1708420308218;
+        Tue, 20 Feb 2024 01:11:48 -0800 (PST)
+Received: from ?IPV6:2003:cb:c72a:bc00:9a2d:8a48:ef51:96fb? (p200300cbc72abc009a2d8a48ef5196fb.dip0.t-ipconnect.de. [2003:cb:c72a:bc00:9a2d:8a48:ef51:96fb])
+        by smtp.gmail.com with ESMTPSA id u19-20020a05600c19d300b004126ca6c241sm2367328wmq.23.2024.02.20.01.11.47
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 20 Feb 2024 01:11:47 -0800 (PST)
+Message-ID: <7ca085eb-baa5-4085-a2b9-7402bb3fd9e9@redhat.com>
+Date: Tue, 20 Feb 2024 10:11:46 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 2/4] mm/compaction: enable compacting >0 order folios.
+Content-Language: en-US
+From: David Hildenbrand <david@redhat.com>
+To: Zi Yan <ziy@nvidia.com>, linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Cc: "Huang, Ying" <ying.huang@intel.com>, Ryan Roberts
+ <ryan.roberts@arm.com>, Andrew Morton <akpm@linux-foundation.org>,
+ "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+ "Yin, Fengwei" <fengwei.yin@intel.com>, Yu Zhao <yuzhao@google.com>,
+ Vlastimil Babka <vbabka@suse.cz>,
+ "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+ Johannes Weiner <hannes@cmpxchg.org>,
+ Baolin Wang <baolin.wang@linux.alibaba.com>,
+ Kemeng Shi <shikemeng@huaweicloud.com>,
+ Mel Gorman <mgorman@techsingularity.net>, Rohan Puri
+ <rohan.puri15@gmail.com>, Mcgrof Chamberlain <mcgrof@kernel.org>,
+ Adam Manzanares <a.manzanares@samsung.com>,
+ "Vishal Moola (Oracle)" <vishal.moola@gmail.com>
+References: <20240216170432.1268753-1-zi.yan@sent.com>
+ <20240216170432.1268753-3-zi.yan@sent.com>
+ <416d1450-6480-4113-b778-689a8f1d4e42@redhat.com>
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <416d1450-6480-4113-b778-689a8f1d4e42@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-There is a spelling mistake in a kernel message. Fix it.
+On 20.02.24 10:03, David Hildenbrand wrote:
+> On 16.02.24 18:04, Zi Yan wrote:
+>> From: Zi Yan <ziy@nvidia.com>
+>>
+>> migrate_pages() supports >0 order folio migration and during compaction,
+>> even if compaction_alloc() cannot provide >0 order free pages,
+>> migrate_pages() can split the source page and try to migrate the base
+>> pages from the split.  It can be a baseline and start point for adding
+>> support for compacting >0 order folios.
+>>
+>> Signed-off-by: Zi Yan <ziy@nvidia.com>
+>> Suggested-by: Huang Ying <ying.huang@intel.com>
+>> Reviewed-by: Baolin Wang <baolin.wang@linux.alibaba.com>
+>> Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
+>> Tested-by: Baolin Wang <baolin.wang@linux.alibaba.com>
+>> Tested-by: Yu Zhao <yuzhao@google.com>
+>> Cc: Adam Manzanares <a.manzanares@samsung.com>
+>> Cc: David Hildenbrand <david@redhat.com>
+>> Cc: Johannes Weiner <hannes@cmpxchg.org>
+>> Cc: Kemeng Shi <shikemeng@huaweicloud.com>
+>> Cc: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+>> Cc: Luis Chamberlain <mcgrof@kernel.org>
+>> Cc: Matthew Wilcox (Oracle) <willy@infradead.org>
+>> Cc: Mel Gorman <mgorman@techsingularity.net>
+>> Cc: Ryan Roberts <ryan.roberts@arm.com>
+>> Cc: Vishal Moola (Oracle) <vishal.moola@gmail.com>
+>> Cc: Vlastimil Babka <vbabka@suse.cz>
+>> Cc: Yin Fengwei <fengwei.yin@intel.com>
+>> ---
+>>    mm/compaction.c | 66 ++++++++++++++++++++++++++++++++++++++-----------
+>>    1 file changed, 52 insertions(+), 14 deletions(-)
+>>
+>> diff --git a/mm/compaction.c b/mm/compaction.c
+>> index cc801ce099b4..aa6aad805c4d 100644
+>> --- a/mm/compaction.c
+>> +++ b/mm/compaction.c
+>> @@ -816,6 +816,21 @@ static bool too_many_isolated(struct compact_control *cc)
+>>    	return too_many;
+>>    }
+>>    
+>> +/*
+> 
+> 
+> Can't you add these comments to the respective checks? Like
+> 
+> static bool skip_isolation_on_order(int order, int target_order)
+> {
+> 	/*
+> 	 * Unless we are performing global compaction (targert_order <
+> 	 * 0), skip any folios that are larger than the target order: we
+> 	 * wouldn't be here if we'd have a free folio with the desired
+> 	 * target_order, so migrating this folio would likely fail
+> 	 * later.
+> 	 */
+> 	if (target_order != -1 && order >= target_order)
+> 		return true;
 
-Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
----
- fs/freevxfs/vxfs_olt.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+I just stumbled over "is_via_compact_memory", likely that should be used 
+instead of the "!= -1 check.
 
-diff --git a/fs/freevxfs/vxfs_olt.c b/fs/freevxfs/vxfs_olt.c
-index 23f35187c289..48027a421fa3 100644
---- a/fs/freevxfs/vxfs_olt.c
-+++ b/fs/freevxfs/vxfs_olt.c
-@@ -63,7 +63,7 @@ vxfs_read_olt(struct super_block *sbp, u_long bsize)
- 
- 	op = (struct vxfs_olt *)bp->b_data;
- 	if (fs32_to_cpu(infp, op->olt_magic) != VXFS_OLT_MAGIC) {
--		printk(KERN_NOTICE "vxfs: ivalid olt magic number\n");
-+		printk(KERN_NOTICE "vxfs: invalid olt magic number\n");
- 		goto fail;
- 	}
- 
 -- 
-2.39.2
+Cheers,
+
+David / dhildenb
 
