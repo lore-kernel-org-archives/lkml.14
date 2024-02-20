@@ -1,132 +1,200 @@
-Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58FDB5D75A
-	for <linux-kernel@vger.kernel.org>; Tue, 20 Feb 2024 08:21:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DDE15C912;
+	Tue, 20 Feb 2024 08:21:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708417266; cv=none; b=C1KmIdU2HWR81pNNGxQ1eSOOMlq3vDOXm1GKg7s78j6F9kuKvF9XRhEmidXZflbKkFxTLGRoOPWu/fpET/uEcHH5WbcThUr0fPcjbI0RCCiRwQlwPOx1c98fw9efhpbSb+j6n8drRkwlaCQY8wa6xcEp060I13+V/R/r6btkk/E=
+	t=1708417287; cv=none; b=bUOCGCb7i5aWwzbHSZQiIDB/0572OPe350upvn4jxseJCqv4s60ofzL/Vsoyexg3nLur+VPLOjqjA6HIy1nr+bwIyGrm3nMSHcmuVXfugP9IbfCs2ZEzv8jncpJhwjmyphKnLu2nhSazC6321WZVl9CAHnlGKzmLnYyRZpxHdfU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708417266; c=relaxed/simple;
-	bh=o54ifFwgPSsxzCggMuxYL9ZhcWftfWMsUn207YwDOZ4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=aHFg+JNMXWX90NileV78sf2zTINdeTB8LWrw1TWGu81E3FQBcIhqe4uk7IvHtu92UcSwr+3Foe31mwBLJrNl67kVR/+qy3jhOURpJ8FmmRkG8X3NtSZGeFGnPGba9YRFfFmJ3c4R2v5yHTN9CBPr4V3UAckvTsPlECcBlaMWGxg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=E8sjxzfE; arc=none smtp.client-ip=209.85.208.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1708417287; c=relaxed/simple;
+	bh=pvEpXTJfYBO1izysVY89nja8dejLZqu6MdtK2FYb7A4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=oyLh1DpjlqjNG0VxPIdYI3rnHKrD12Mp1xZJsoEKuxe4UopBG0nEh263eB73LYSBrdrQbXmPt/qnIeqMhHwKcHJq/duo05Ms0DKLbx2geSRD1ZHo9710DrsWlJ2FcsiAYvMM+3nqCj+jv/B6yz315IboHosn06E/X651jJxCmQU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=gGkMqD15; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=T+SZd+Ja; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=gGkMqD15; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=T+SZd+Ja; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="E8sjxzfE"
-Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-564647bcdbfso2114595a12.2
-        for <linux-kernel@vger.kernel.org>; Tue, 20 Feb 2024 00:21:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1708417263; x=1709022063; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/y0ZRcM9AeqXbMHdo/rZFfK9pZ+QAzjI5XqSR9aH7rI=;
-        b=E8sjxzfE2lI6zaVTeZgAeYDNfF5b2uiqr1/kt+/M6nYCX61HS2fCn5D/wrPH6byMTJ
-         +IP0gG1d7EL/hU9ZA6HIHFGc1FqSHGIt7YnAp3TafnzgOZrLHiHLuM867gvyzOniA5GE
-         jrBVJk0niBaSp7ZAsMH2qmhza8ZA9YpteyxxxA7iVOtZ0Bs0unAI3DPozsYBhCOj82aL
-         JftLuuN26Ul6Wnb9KN77IybwvwgQaWu0zUy0iMkBU3NglD9Q7j7HTx5JraQrgSuhTMKZ
-         r1/y5KPFn4fOChsC4RcFVikbya2ici1YQEF27PgRAa4f42UWyUUxOYxCObN85BL7gBC7
-         8p+A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708417263; x=1709022063;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=/y0ZRcM9AeqXbMHdo/rZFfK9pZ+QAzjI5XqSR9aH7rI=;
-        b=IkHUOmqXuVvdMe5UUC8X9cXfoPulXy8tr7s7wAx+BGJ/WQujYzCM6UM1UByfYnt9Oo
-         RjkLjoKmBD1qkY3aNvYfBJRZPxtn957xxveGxzUQOESvi+Pzmm5kmYa4bhzjvEjsqTiq
-         a1FFB+DNz16OEcKiNaqpri5YMsEWc5eAOJExuLSb3jhKebV4zYi/HkVE+e0eJFWIV1tu
-         9TVu1cjxxEua2tAwh1LuyoScDMXNBaLS8NLB/2O4fLVkZkmnbTWk1786BBBhMEGe+9kU
-         GDJih/q1bCBuyBtNk0l5dNYa/CI2a0ItXIOBcV6IBXMuLZkeKreZ5GBNYw+LZAs2sAV9
-         E41g==
-X-Forwarded-Encrypted: i=1; AJvYcCW+Mu7QTVZEm/P13apZWUC5nN1TZ4q/SfQYPR5FZDvOvSSJgDk699b+q5cUmG6kBVNuF0ZzkvEN3xpu22kxd2DzxgogLTHVqI2W/XmW
-X-Gm-Message-State: AOJu0YzR2JmQThfW4/jKbAzjc0asIFER6XnhZBoGkUvwKZZgRWDWP4Ah
-	IMhhjTTVzQT3cERt/HrCi8/SGQCSI43vVtE7Qs4JXzVpA+3lxYJ895+fKOcb/tAC8CtGMPI+XGL
-	wEUF55r8qHXjAcxxrU7/ex2zJ/f9iWslzHIgS
-X-Google-Smtp-Source: AGHT+IFJd7ykTaiF5QgxEIxuB8aW3uriUy20BSKF+VODu+o5a9+WR16O88j7rZTp7Zcps7RfwH/iXdALxGGiS0b6mJo=
-X-Received: by 2002:aa7:d685:0:b0:564:67d0:b8c5 with SMTP id
- d5-20020aa7d685000000b0056467d0b8c5mr4053570edr.0.1708417262542; Tue, 20 Feb
- 2024 00:21:02 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="gGkMqD15";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="T+SZd+Ja";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="gGkMqD15";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="T+SZd+Ja"
+Received: from imap2.dmz-prg2.suse.org (imap2.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:98])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 455BC2201A;
+	Tue, 20 Feb 2024 08:21:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1708417283; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=TK+KPfpRCZ7wcgqo9liD0OTWXh2pITVRFFW0qNpSdxs=;
+	b=gGkMqD152XsnajV3d34i/L+4anKW9ReoXd1jy+tz5ZNJUVRxFXo4HQ/36uZjlk4wBC3DVB
+	N3UngC5VTkaFAjlv4/IqvBpuAEs+/2hAdONCvm4UI/w1vcQQwT4KhM7mRqGUHAmr9TClBl
+	UuUyrxQlsZOKXckoQF7mARq6tUadNXU=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1708417283;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=TK+KPfpRCZ7wcgqo9liD0OTWXh2pITVRFFW0qNpSdxs=;
+	b=T+SZd+JaT3JWmsgQ1SDwDXWpnKnK2XOo2TnwVBF+XOkuAGRj6FOmau0k70Z0g7MovGRnhM
+	mUOR5jw89T0AbiDQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1708417283; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=TK+KPfpRCZ7wcgqo9liD0OTWXh2pITVRFFW0qNpSdxs=;
+	b=gGkMqD152XsnajV3d34i/L+4anKW9ReoXd1jy+tz5ZNJUVRxFXo4HQ/36uZjlk4wBC3DVB
+	N3UngC5VTkaFAjlv4/IqvBpuAEs+/2hAdONCvm4UI/w1vcQQwT4KhM7mRqGUHAmr9TClBl
+	UuUyrxQlsZOKXckoQF7mARq6tUadNXU=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1708417283;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=TK+KPfpRCZ7wcgqo9liD0OTWXh2pITVRFFW0qNpSdxs=;
+	b=T+SZd+JaT3JWmsgQ1SDwDXWpnKnK2XOo2TnwVBF+XOkuAGRj6FOmau0k70Z0g7MovGRnhM
+	mUOR5jw89T0AbiDQ==
+Received: from imap2.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap2.dmz-prg2.suse.org (Postfix) with ESMTPS id 05ACD1358A;
+	Tue, 20 Feb 2024 08:21:22 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap2.dmz-prg2.suse.org with ESMTPSA
+	id FLmZOwJh1GUaWAAAn2gu4w
+	(envelope-from <tzimmermann@suse.de>); Tue, 20 Feb 2024 08:21:22 +0000
+Message-ID: <33618d22-f4c1-4d4a-a167-ace7d9a506c6@suse.de>
+Date: Tue, 20 Feb 2024 09:21:22 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240220081205.135063-1-raychi@google.com>
-In-Reply-To: <20240220081205.135063-1-raychi@google.com>
-From: Ray Chi <raychi@google.com>
-Date: Tue, 20 Feb 2024 16:20:50 +0800
-Message-ID: <CAPBYUsAnuyLwek39GJiwin_Pit0waH-2fhQv-G21OYkjoz051w@mail.gmail.com>
-Subject: Re: [PATCH] usb: dwc3: gadget: remove warning during kernel boot
-To: Thinh.Nguyen@synopsys.com, gregkh@linuxfoundation.org, 
-	quic_uaggarwa@quicinc.com
-Cc: albertccwang@google.com, linux-usb@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] sparc: Fix undefined reference to fb_is_primary_device
+To: Javier Martinez Canillas <javierm@redhat.com>,
+ linux-kernel@vger.kernel.org
+Cc: kernel test robot <lkp@intel.com>, oe-kbuild-all@lists.linux.dev,
+ Andreas Larsson <andreas@gaisler.com>, Arnd Bergmann <arnd@arndb.de>,
+ "David S. Miller" <davem@davemloft.net>, Helge Deller <deller@gmx.de>,
+ sparclinux@vger.kernel.org
+References: <20240220003433.3316148-1-javierm@redhat.com>
+Content-Language: en-US
+From: Thomas Zimmermann <tzimmermann@suse.de>
+Autocrypt: addr=tzimmermann@suse.de; keydata=
+ xsBNBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
+ XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
+ BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
+ hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
+ 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
+ AAHNJ1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPsLAjgQTAQgAOAIb
+ AwULCQgHAgYVCgkICwIEFgIDAQIeAQIXgBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftODH
+ AAoJEGgNwR1TC3ojx1wH/0hKGWugiqDgLNXLRD/4TfHBEKmxIrmfu9Z5t7vwUKfwhFL6hqvo
+ lXPJJKQpQ2z8+X2vZm/slsLn7J1yjrOsoJhKABDi+3QWWSGkaGwRJAdPVVyJMfJRNNNIKwVb
+ U6B1BkX2XDKDGffF4TxlOpSQzdtNI/9gleOoUA8+jy8knnDYzjBNOZqLG2FuTdicBXblz0Mf
+ vg41gd9kCwYXDnD91rJU8tzylXv03E75NCaTxTM+FBXPmsAVYQ4GYhhgFt8S2UWMoaaABLDe
+ 7l5FdnLdDEcbmd8uLU2CaG4W2cLrUaI4jz2XbkcPQkqTQ3EB67hYkjiEE6Zy3ggOitiQGcqp
+ j//OwE0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRHUE9eosYb
+ T6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgTRjP+qbU6
+ 3Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+RdhgATnWW
+ GKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zbehDda8lv
+ hFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r12+lqdsA
+ EQEAAcLAdgQYAQgAIAIbDBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftOH6AAoJEGgNwR1T
+ C3ojVSkIALpAPkIJPQoURPb1VWjh34l0HlglmYHvZszJWTXYwavHR8+k6Baa6H7ufXNQtThR
+ yIxJrQLW6rV5lm7TjhffEhxVCn37+cg0zZ3j7zIsSS0rx/aMwi6VhFJA5hfn3T0TtrijKP4A
+ SAQO9xD1Zk9/61JWk8OysuIh7MXkl0fxbRKWE93XeQBhIJHQfnc+YBLprdnxR446Sh8Wn/2D
+ Ya8cavuWf2zrB6cZurs048xe0UbSW5AOSo4V9M0jzYI4nZqTmPxYyXbm30Kvmz0rYVRaitYJ
+ 4kyYYMhuULvrJDMjZRvaNe52tkKAvMevcGdt38H4KSVXAylqyQOW5zvPc4/sq9c=
+In-Reply-To: <20240220003433.3316148-1-javierm@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Level: 
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=gGkMqD15;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=T+SZd+Ja
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Spamd-Result: default: False [-4.50 / 50.00];
+	 ARC_NA(0.00)[];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	 XM_UA_NO_VERSION(0.01)[];
+	 FROM_HAS_DN(0.00)[];
+	 TO_DN_SOME(0.00)[];
+	 FREEMAIL_ENVRCPT(0.00)[gmx.de];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 MIME_GOOD(-0.10)[text/plain];
+	 NEURAL_HAM_LONG(-1.00)[-1.000];
+	 BAYES_HAM(-3.00)[100.00%];
+	 RCVD_COUNT_THREE(0.00)[3];
+	 DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	 DKIM_TRACE(0.00)[suse.de:+];
+	 MX_GOOD(-0.01)[];
+	 RCPT_COUNT_SEVEN(0.00)[9];
+	 DBL_BLOCKED_OPENRESOLVER(0.00)[intel.com:email];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 NEURAL_HAM_SHORT(-0.20)[-1.000];
+	 FREEMAIL_CC(0.00)[intel.com,lists.linux.dev,gaisler.com,arndb.de,davemloft.net,gmx.de,vger.kernel.org];
+	 RCVD_TLS_ALL(0.00)[];
+	 MID_RHS_MATCH_FROM(0.00)[]
+X-Spam-Score: -4.50
+X-Rspamd-Queue-Id: 455BC2201A
+X-Spam-Flag: NO
 
-On Tue, Feb 20, 2024 at 4:12=E2=80=AFPM Ray Chi <raychi@google.com> wrote:
+
+
+Am 20.02.24 um 01:34 schrieb Javier Martinez Canillas:
+> Commit 55bffc8170bb ("fbdev: Split frame buffer support in FB and FB_CORE
+> symbols") added a new FB_CORE Kconfig symbol, that can be enabled to only
+> have fbcon/VT and DRM fbdev emulation, but without support for any legacy
+> fbdev driver.
 >
-> The dwc3->gadget_driver is not initialized during the dwc3 probe
-> process. This leads to a warning when the runtime power management (PM)
-> attempts to suspend the gadget using dwc3_gadget_suspend().
+> Unfortunately, it missed to change a CONFIG_FB in arch/sparc/Makefile and
+> that leads to the following linking error in some sparc64 configurations:
 >
-> This patch adds a check to prevent the warning.
->
-> Cc: stable@vger.kernel.org
-> Fixes: 61a348857e86 ("usb: dwc3: gadget: Fix NULL pointer dereference in =
-dwc3_gadget_suspend")
-> Signed-off-by: Ray Chi <raychi@google.com>
+>     sparc64-linux-ld: drivers/video/fbdev/core/fbcon.o: in function `fbcon_fb_registered':
+>>> fbcon.c:(.text+0x4f60): undefined reference to `fb_is_primary_device'
+> Fixes: 55bffc8170bb ("fbdev: Split frame buffer support in FB and FB_CORE symbols")
+> Reported-by: kernel test robot <lkp@intel.com>
+> Closes: https://lore.kernel.org/r/202401290306.IV8rhJ02-lkp@intel.com/
+> Signed-off-by: Javier Martinez Canillas <javierm@redhat.com>
+
+Reviewed-by: Thomas Zimmermann <tzimmermann@suse.de>
+
 > ---
->  drivers/usb/dwc3/gadget.c | 3 +++
->  1 file changed, 3 insertions(+)
 >
-> diff --git a/drivers/usb/dwc3/gadget.c b/drivers/usb/dwc3/gadget.c
-> index 28f49400f3e8..de987cffe1ec 100644
-> --- a/drivers/usb/dwc3/gadget.c
-> +++ b/drivers/usb/dwc3/gadget.c
-> @@ -4708,6 +4708,9 @@ int dwc3_gadget_suspend(struct dwc3 *dwc)
->         unsigned long flags;
->         int ret;
+> I don't have a sparc64 toolchain to test this patch, but I'm pretty sure
+> that this is the correct fix for the linking error reported by the robot.
 >
-> +       if (!dwc->gadget_driver)
-> +               return 0;
-> +
->         ret =3D dwc3_gadget_soft_disconnect(dwc);
->         if (ret)
->                 goto err;
-> --
-> 2.44.0.rc0.258.g7320e95886-goog
+>   arch/sparc/video/Makefile | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
 >
+> diff --git a/arch/sparc/video/Makefile b/arch/sparc/video/Makefile
+> index 6baddbd58e4d..d4d83f1702c6 100644
+> --- a/arch/sparc/video/Makefile
+> +++ b/arch/sparc/video/Makefile
+> @@ -1,3 +1,3 @@
+>   # SPDX-License-Identifier: GPL-2.0-only
+>   
+> -obj-$(CONFIG_FB) += fbdev.o
+> +obj-$(CONFIG_FB_CORE) += fbdev.o
 
-Attached the warning message.
+-- 
+--
+Thomas Zimmermann
+Graphics Driver Developer
+SUSE Software Solutions Germany GmbH
+Frankenstrasse 146, 90461 Nuernberg, Germany
+GF: Ivo Totev, Andrew Myers, Andrew McDonald, Boudien Moerman
+HRB 36809 (AG Nuernberg)
 
-02-20 06:01:24.227725  root    86    86 W Call trace:
-02-20 06:01:24.227730  root    86    86 W         :
-dwc3_ep0_out_start+0xec/0x22c
-02-20 06:01:24.227738  root    86    86 W         :
-dwc3_ep0_stall_and_restart+0xb8/0xd4
-02-20 06:01:24.227747  root    86    86 W         :
-dwc3_gadget_soft_disconnect+0x1a8/0x284
-02-20 06:01:24.227756  root    86    86 W         :
-dwc3_gadget_suspend+0x18/0xe4
-02-20 06:01:24.227764  root    86    86 W         :
-dwc3_suspend_common+0x5c/0x320
-02-20 06:01:24.227774  root    86    86 W         :
-dwc3_runtime_suspend+0x30/0x4c
-02-20 06:01:24.227783  root    86    86 W         :
-pm_generic_runtime_suspend+0x3c/0x54
-02-20 06:01:24.227793  root    86    86 W         : __rpm_callback+0xfc/0x7=
-6c
-02-20 06:01:24.227802  root    86    86 W         : rpm_suspend+0x534/0xd78
-02-20 06:01:24.227811  root    86    86 W         : dwc3_runtime_idle+0xcc/=
-0x104
-02-20 06:01:24.227819  root    86    86 W         : rpm_idle+0x228/0x4e0
-02-20 06:01:24.227827  root    86    86 W         : update_autosuspend+0x50=
-/0xb8
-02-20 06:01:24.227836  root    86    86 W         :
-__pm_runtime_use_autosuspend+0x50/0x6c
