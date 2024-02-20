@@ -1,133 +1,111 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+Received: from out30-133.freemail.mail.aliyun.com (out30-133.freemail.mail.aliyun.com [115.124.30.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09CCD59149
-	for <linux-kernel@vger.kernel.org>; Tue, 20 Feb 2024 06:27:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60A7D59149
+	for <linux-kernel@vger.kernel.org>; Tue, 20 Feb 2024 06:28:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708410426; cv=none; b=lKCaCbxJBBvr2hhDKAY6sThCooKPB2s8FzSa3gLGqLxxh0WAQhWhSauUrLRnJqj7yb0IC14mR6SR+PSB8GC73u7IjTxZr1444MS3NEoaT7a93OqE1gSbKYfHQAoWeOLGryXZPdhvyLudRqiVyxnYpOx4MNJcmwTFwXptDNAQ6FE=
+	t=1708410499; cv=none; b=kdnaxPtSkwk3eMo+JWkPaYYA6yeYjzv34+bglwXGmYxLXnB+L6OnxZHgwF1sp72syA8U6LQvMaPzdBbVS7kiwiO+39DcNQ+bChMFbMlk41C0gxnqmaW6Z2s9YBxbw0O0xCeW83GzAmJA0PvDwhvTQnWeAvfpcZnJ7jpJmBAtHLA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708410426; c=relaxed/simple;
-	bh=KjbpEsZcL6BLoOczV14V5gdnm8XEq0JhlG2bKfRK0nA=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=N8NDgOyr9WxlvFQP7UEf5UX50vyBJNYiuVh5vJEqXYyER3Ga2FzhFlSqYzXwOI8szo4tkK7GabdlQVYN7g4AvHpWcGK4JyJz+FiRY0BFdSZp6qhUmEEhkBPE3yInJXK04tu73t8Ld0wBp3VKPGpQHUQ4sfHJ9mjH3/Oout/ix6A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ahNPY3Aw; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1708410499; c=relaxed/simple;
+	bh=v1sEN7DrYpBxbelhKpz+nzMPVdPXSWyxn12i1zNGLMw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=cZpYZ1NiC6/5RJ6d8yVNw3uFaNo7J+JcfcW4riHddVtv81aCSazyvrLo7wEsBes6+JcQBOatvcWo88UfnSDArPtmaOzM23xrD4TBxetad5IuE8OGbYF5SSFo1iTfgHpxACqiZ6nZY8CMvEKUt+Ega5MYZCdD5YsOzfzAg91XgPI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=aPz21Wt2; arc=none smtp.client-ip=115.124.30.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ahNPY3Aw"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1708410425; x=1739946425;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version;
-  bh=KjbpEsZcL6BLoOczV14V5gdnm8XEq0JhlG2bKfRK0nA=;
-  b=ahNPY3AwbFpLa1SEt8FpZlVYc7uXRENmfD3+JEIXDWf4YbT9jwaw1BFU
-   D2FrjcrVC+uY0viMwO70++sif4yJBDndP5PXktGBalm/MPicDfIRvmrRd
-   vJl7f7GXjOUL+0rNQiZ2PB/aavaJjOFub3QCjjppHz2KnP/VchcE6TssA
-   rMreKARDjUm9W6aotACujfOsbW1Qo0Nq8Va9j0noPb20SejPKb9VlYq1q
-   UvVT3qGWlBdEb5d/EZN30av/izDfKJ2U49yYOmXOe2PpSup4fIu9vgg/0
-   sd3G8Nu3yGiaJsaiB5mTk6EE2kJJBZCRmFq17QcwTHpmPh5cvH6NcrEde
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10989"; a="2401599"
-X-IronPort-AV: E=Sophos;i="6.06,172,1705392000"; 
-   d="scan'208";a="2401599"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Feb 2024 22:27:04 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,172,1705392000"; 
-   d="scan'208";a="27842144"
-Received: from yhuang6-desk2.sh.intel.com (HELO yhuang6-desk2.ccr.corp.intel.com) ([10.238.208.55])
-  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Feb 2024 22:26:59 -0800
-From: "Huang, Ying" <ying.huang@intel.com>
-To: "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>,  Donet Tom
- <donettom@linux.ibm.com>,  linux-mm@kvack.org,
-  linux-kernel@vger.kernel.org,  Dave Hansen <dave.hansen@linux.intel.com>,
-  Mel Gorman <mgorman@suse.de>,  Ben Widawsky <ben.widawsky@intel.com>,
-  Feng Tang <feng.tang@intel.com>,  Michal Hocko <mhocko@kernel.org>,
-  Andrea Arcangeli <aarcange@redhat.com>,  Peter Zijlstra
- <peterz@infradead.org>,  Ingo Molnar <mingo@redhat.com>,  Rik van Riel
- <riel@surriel.com>,  Johannes Weiner <hannes@cmpxchg.org>,  Matthew Wilcox
- <willy@infradead.org>,  Mike Kravetz <mike.kravetz@oracle.com>,  Vlastimil
- Babka <vbabka@suse.cz>,  Dan Williams <dan.j.williams@intel.com>,  Hugh
- Dickins <hughd@google.com>,  Kefeng Wang <wangkefeng.wang@huawei.com>,
-  Suren Baghdasaryan <surenb@google.com>
-Subject: Re: [PATCH 1/3] mm/mempolicy: Use the already fetched local variable
-In-Reply-To: <21f343fa-84a7-4539-91e2-6fc963dbfb62@kernel.org> (Aneesh Kumar
-	K. V.'s message of "Tue, 20 Feb 2024 09:40:00 +0530")
-References: <9c3f7b743477560d1c5b12b8c111a584a2cc92ee.1708097962.git.donettom@linux.ibm.com>
-	<20240218133851.22c22b55460e866a099be5ce@linux-foundation.org>
-	<63a0f7c4-3c3f-4097-9a24-d1e3fc7b6030@linux.ibm.com>
-	<20240219172130.82a16c1ebecbf8ba86a8987d@linux-foundation.org>
-	<21f343fa-84a7-4539-91e2-6fc963dbfb62@kernel.org>
-Date: Tue, 20 Feb 2024 14:25:03 +0800
-Message-ID: <87frxnps8w.fsf@yhuang6-desk2.ccr.corp.intel.com>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="aPz21Wt2"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1708410494; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=puMJdMhcnkjp6kkrLK0SxE7fWXoN3haERSGZVmMXdyk=;
+	b=aPz21Wt28Y+2VU2UQZlxQqv/jtxe0cGkAPvccFjbxXmaUz3nwQffzvw8Bk6d1Jcz6Su6pvHNzKCJROvooA1+hxgEvDeUCh4dv9wjLGoxuW2vJ6fjqX7eiROtXzDeE7A81LnLmYz/O5TnQtcczDbpekMx6vTEwKa1yXxbIYvyokI=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R771e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046049;MF=baolin.wang@linux.alibaba.com;NM=1;PH=DS;RN=19;SR=0;TI=SMTPD_---0W0veSm2_1708410491;
+Received: from 30.97.56.48(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0W0veSm2_1708410491)
+          by smtp.aliyun-inc.com;
+          Tue, 20 Feb 2024 14:28:12 +0800
+Message-ID: <6da5c282-a522-4732-ad3c-73f6790c073e@linux.alibaba.com>
+Date: Tue, 20 Feb 2024 14:28:10 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=ascii
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 0/4] Enable >0 order folio memory compaction
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Zi Yan <ziy@nvidia.com>, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org, "Huang, Ying" <ying.huang@intel.com>,
+ Ryan Roberts <ryan.roberts@arm.com>,
+ "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+ David Hildenbrand <david@redhat.com>, "Yin, Fengwei"
+ <fengwei.yin@intel.com>, Yu Zhao <yuzhao@google.com>,
+ Vlastimil Babka <vbabka@suse.cz>,
+ "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+ Johannes Weiner <hannes@cmpxchg.org>, Kemeng Shi
+ <shikemeng@huaweicloud.com>, Mel Gorman <mgorman@techsingularity.net>,
+ Rohan Puri <rohan.puri15@gmail.com>, Mcgrof Chamberlain <mcgrof@kernel.org>,
+ Adam Manzanares <a.manzanares@samsung.com>,
+ "Vishal Moola (Oracle)" <vishal.moola@gmail.com>
+References: <20240216170432.1268753-1-zi.yan@sent.com>
+ <20240219180617.89a0daaba45ce124ef01be50@linux-foundation.org>
+ <9E3E6CD6-45DD-4E7F-B6DC-0897F38D5E81@nvidia.com>
+ <4f0b3586-25e2-4d21-bbb6-41f644d3d77f@linux.alibaba.com>
+ <20240219193048.cbd010579aa3d2c790f6e2b9@linux-foundation.org>
+From: Baolin Wang <baolin.wang@linux.alibaba.com>
+In-Reply-To: <20240219193048.cbd010579aa3d2c790f6e2b9@linux-foundation.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-"Aneesh Kumar K.V" <aneesh.kumar@kernel.org> writes:
 
-> On 2/20/24 6:51 AM, Andrew Morton wrote:
->> On Mon, 19 Feb 2024 14:04:23 +0530 Donet Tom <donettom@linux.ibm.com> wrote:
->> 
->>>>> --- a/mm/mempolicy.c
->>>>> +++ b/mm/mempolicy.c
->>>>> @@ -2526,7 +2526,7 @@ int mpol_misplaced(struct folio *folio, struct vm_area_struct *vma,
->>>>>   		if (node_isset(curnid, pol->nodes))
->>>>>   			goto out;
->>>>>   		z = first_zones_zonelist(
->>>>> -				node_zonelist(numa_node_id(), GFP_HIGHUSER),
->>>>> +				node_zonelist(thisnid, GFP_HIGHUSER),
->>>>>   				gfp_zone(GFP_HIGHUSER),
->>>>>   				&pol->nodes);
->>>>>   		polnid = zone_to_nid(z->zone);
->>>> 	int thisnid = cpu_to_node(thiscpu);
+
+On 2024/2/20 11:30, Andrew Morton wrote:
+> On Tue, 20 Feb 2024 11:00:39 +0800 Baolin Wang <baolin.wang@linux.alibaba.com> wrote:
+> 
+>>> The patch was based on top of my early version of this patchset, thus
+>>> uses "cc->nr_migratepages -= 1 << order;" and
+>>> "cc->nr_migratepages += 1 << order;", but now it is applied before
+>>> mine. The change should be "cc->nr_migratepages--;" and
+>>> "cc->nr_migratepages++;", respectively.
+>>>
 >>>>
->>>> Is there any dofference between numa_node_id() and
->>>> cpu_to_node(raw_smp_processor_id())?  And it it explicable that we're
->>>> using one here and not the other?
+>>>>> on nr_migratepages was based on this one, a better fixup
+>>>>> for it might be below. Since before my patchset, compaction only deals with
+>>>>> order-0 pages.
+>>>>
+>>>> I don't understand what this means.  The patchset you sent applies OK
+>>>> to mm-unstable so what else is there to do?
 >>>
->>> Hi Andrew
+>>> Your above fixup to Baolin's patch needs to be changed to the patch below
+>>> and my "mm/compaction: add support for >0 order folio memory compaction" will
+>>> need to be adjusted accordingly to be applied on top.
 >>>
->>> Both numa_node_id() and cpu_to_node(raw_smp_processor_id()) return the current execution node id,
->>> Since the current execution node is already fetched at the beginning (thisnid) we can reuse it instead of getting it again.
->> 
->> Sure, but mine was a broader thought: why do we have both?  Is one
->> preferable and if so why?
->
-> IIUC these are two helpers to fetch current numa node id. and either of them can be used based on need. The default implementation shows the details.
-> (One small difference is numa_node_id() can use optimized per cpu reader because it is fetching the per cpu variable of the currently running cpu.)
->
-> #ifndef numa_node_id
-> /* Returns the number of the current Node. */
-> static inline int numa_node_id(void)
-> {
-> 	return raw_cpu_read(numa_node);
-> }
-> #endif
->
-> #ifndef cpu_to_node
-> static inline int cpu_to_node(int cpu)
-> {
-> 	return per_cpu(numa_node, cpu);
-> }
-> #endif
->
-> In mpol_misplaced function, we need the cpu details because we are using that in other place (should_numa_migreate_memory()). So it makes it easy
-> to use cpu_to_node(thiscpu) instead of numa_node_id(). 
+>>> Let me know if anything is unclear.
+>>
+>> Hi Andrew,
+>>
+>> To avoid conflicts, you can drop these two patches, and I will send a
+>> new version with fixing the issue pointed by Vlastimilb on top of
+>> "mm/compaction: add support for >0 order folio memory compaction".
+>>
+>> https://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm.git/commit/?h=mm-everything-2024-02-16-01-35&id=97f749c7c82f677f89bbf4f10de7816ce9b071fe
+>>
+>> https://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm.git/commit/?h=mm-everything-2024-02-16-01-35&id=ea87b0558293a5ad597bea606fe261f7b2650cda
+> 
+> Well I thought I'd fixed everything up 10 minutes ago.  Please take a
+> look at next mm-unstable.
 
-IIUC, numa_node_id() is faster than cpu_to_node(thiscpu), even if we
-have thiscpu already.  cpu_to_node() is mainly used to get the node of
-NOT current CPU.  So, IMHO, we should only use numa_node_id() in this
-function.
+Sure. And I found a minor rebase error in the compaction_alloc() 
+function while Zi Yan's original patch is correct.
 
---
-Best Regards,
-Huang, Ying
++	cc->nr_freepages -= 1 << order;
+  	cc->nr_migratepages--;
+-
+-	return dst;
++	return page_rmappable_folio(&dst->page);
+  }
+
+should change to be:
+cc->nr_migratepages -= 1 << order;
