@@ -1,42 +1,33 @@
-Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41AA247A4C
-	for <linux-kernel@vger.kernel.org>; Tue, 20 Feb 2024 03:48:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BBCE642A88
+	for <linux-kernel@vger.kernel.org>; Tue, 20 Feb 2024 03:48:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708400926; cv=none; b=h/58vaSPM2kRei1xqkKb+iZzbYRXsT3mWk9guyi/sN+JeUBevyCtG3ENdQ7RyFy5bIBvFj5dr/MVIbIE6v8dqKlor0sLu8pR4/IcfHYJhTYiIehRupbFWthrpYYiFUNUTdcrSso0HHW+ilz3I/QybBdnRlNq9ESid+DvMTDisgc=
+	t=1708400926; cv=none; b=mnC5IAx8SB4t7B3+gOidLXPeMAn6DHOO/PXt/nRB3aBBrWRfGpMQmNAA3UUyhveSxccyDyIuAXPD4P7Ea8k1PjTPZg1E8hPTEKpjPGUUe7tuRq7/G5zVt6yVISy77dbr0YaXbdKTSzAFUIfRXwWPsif6E0INJXimx6bNSkoMXz8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1708400926; c=relaxed/simple;
-	bh=Z6elAPMbAM6XrnscquSpysia9b+peWJJ+5rOVH2M9ds=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Y2Vr7OWMf7P73mKSKAoU9Kz3tjc9KQK+NMCFXB79p0zviYVU05y3lI7oAME+JpdPKHo9A5ECf90VUMNw6Ba/tWSfMeEQFshRwsP1zEOMNVuVYX8iF+OYn/+8boEdbAkOyW6hPNR93reSH9mlTwf2dCxTXb0UfuxHhCKPDj9x6Ks=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.162.112])
-	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4Tf52J35Gtz1xnMy;
-	Tue, 20 Feb 2024 11:47:20 +0800 (CST)
-Received: from dggpemd200001.china.huawei.com (unknown [7.185.36.224])
-	by mail.maildlp.com (Postfix) with ESMTPS id A29B0140120;
-	Tue, 20 Feb 2024 11:48:41 +0800 (CST)
-Received: from localhost.localdomain (10.175.112.125) by
- dggpemd200001.china.huawei.com (7.185.36.224) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.2.1258.28; Tue, 20 Feb 2024 11:48:40 +0800
-From: Wupeng Ma <mawupeng1@huawei.com>
-To: <akpm@linux-foundation.org>, <dave.hansen@linux.intel.com>,
-	<luto@kernel.org>, <tglx@linutronix.de>, <peterz@infradead.org>,
-	<hpa@zytor.com>
-CC: <linux-kernel@vger.kernel.org>, <x86@kernel.org>, <mawupeng1@huawei.com>,
-	<bp@suse.de>, <mingo@redhat.com>, <rdunlap@infradead.org>,
-	<bhelgaas@google.com>, <linux-mm@kvack.org>
-Subject: [PATCH v4 3/3] x86/mm/pat: Remove WARN_ON_ONCE if follow_phys fails
-Date: Tue, 20 Feb 2024 11:48:35 +0800
-Message-ID: <20240220034835.507022-4-mawupeng1@huawei.com>
+	bh=b8LjkXT84906NkK5/yZUBGhJ7xE6H1O9jZlRmt6wdII=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=p3/SwXLpCRDItja6eTxVfJytldh2Si/w28pdZoBbJsDvkHzqYPAPvwlqfy5qXW0jV1ZzejkapJoE/aEYZtfREhQiV88/HO8TQem0WypLjOFQjCKY8WJDoKYaWCQe8APvq9wlB/6vMOFIpe0BmS+ZFrAHhFGd51BhB1Pxr7HlGqQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 310B5FEC;
+	Mon, 19 Feb 2024 19:49:22 -0800 (PST)
+Received: from a077893.blr.arm.com (a077893.blr.arm.com [10.162.42.8])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id C350A3F762;
+	Mon, 19 Feb 2024 19:48:40 -0800 (PST)
+From: Anshuman Khandual <anshuman.khandual@arm.com>
+To: linux-arm-kernel@lists.infradead.org
+Cc: Anshuman Khandual <anshuman.khandual@arm.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Mark Brown <broonie@kernel.org>,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH V2] arm64/sysreg: Update ID_AA64DFR0_EL1 register
+Date: Tue, 20 Feb 2024 09:18:29 +0530
+Message-Id: <20240220034829.3098373-1-anshuman.khandual@arm.com>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240220034835.507022-1-mawupeng1@huawei.com>
-References: <20240220034835.507022-1-mawupeng1@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -44,49 +35,50 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
- dggpemd200001.china.huawei.com (7.185.36.224)
 
-From: Ma Wupeng <mawupeng1@huawei.com>
+This updates ID_AA64DFR0_EL1.PMSVer and ID_AA64DFR0_EL1.DebugVer register
+fields as per the definitions based on DDI0601 2023-12.
 
-Since there is no obvious reason to keep this WARN_ON_ONCE if follow_phys
-fails in track_pfn_copy/untrack_pfn, Drop it.
-
-Signed-off-by: Ma Wupeng <mawupeng1@huawei.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Will Deacon <will@kernel.org>
+Cc: Mark Brown <broonie@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
 ---
- arch/x86/mm/pat/memtype.c | 9 +++------
- 1 file changed, 3 insertions(+), 6 deletions(-)
+This applies on v6.8-rc5
 
-diff --git a/arch/x86/mm/pat/memtype.c b/arch/x86/mm/pat/memtype.c
-index 5b56f08f8ce6..5b3a7a2b21e3 100644
---- a/arch/x86/mm/pat/memtype.c
-+++ b/arch/x86/mm/pat/memtype.c
-@@ -992,10 +992,9 @@ int track_pfn_copy(struct vm_area_struct *vma)
- 		 * reserve the whole chunk covered by vma. We need the
- 		 * starting address and protection from pte.
- 		 */
--		if (follow_phys(vma, vma->vm_start, &prot, &paddr)) {
--			WARN_ON_ONCE(1);
-+		if (follow_phys(vma, vma->vm_start, &prot, &paddr))
- 			return -EINVAL;
--		}
-+
- 		pgprot = __pgprot(prot);
- 		return reserve_pfn_range(paddr, vma_size, &pgprot, 1);
- 	}
-@@ -1079,10 +1078,8 @@ void untrack_pfn(struct vm_area_struct *vma, unsigned long pfn,
- 	/* free the chunk starting from pfn or the whole chunk */
- 	paddr = (resource_size_t)pfn << PAGE_SHIFT;
- 	if (!paddr && !size) {
--		if (follow_phys(vma, vma->vm_start, &prot, &paddr)) {
--			WARN_ON_ONCE(1);
-+		if (follow_phys(vma, vma->vm_start, &prot, &paddr))
- 			return;
--		}
+Changes in V2:
+
+- Split ID_AA64DFR0_EL1 changes in this patch and updated PMSVer per Mark
+
+Changes in V1:
+
+https://lore.kernel.org/all/20240215055159.2440898-1-anshuman.khandual@arm.com/
+
+ arch/arm64/tools/sysreg | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/arch/arm64/tools/sysreg b/arch/arm64/tools/sysreg
+index a9cab2b730a3..508224a0e078 100644
+--- a/arch/arm64/tools/sysreg
++++ b/arch/arm64/tools/sysreg
+@@ -1223,6 +1223,7 @@ UnsignedEnum	35:32	PMSVer
+ 	0b0010	V1P1
+ 	0b0011	V1P2
+ 	0b0100	V1P3
++	0b0101	V1P4
+ EndEnum
+ Field	31:28	CTX_CMPs
+ Res0	27:24
+@@ -1249,6 +1250,7 @@ UnsignedEnum	3:0	DebugVer
+ 	0b1000	V8P2
+ 	0b1001	V8P4
+ 	0b1010	V8P8
++	0b1011	V8P9
+ EndEnum
+ EndSysreg
  
- 		size = vma->vm_end - vma->vm_start;
- 	}
 -- 
 2.25.1
 
