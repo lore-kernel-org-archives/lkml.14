@@ -1,66 +1,71 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f199.google.com (mail-il1-f199.google.com [209.85.166.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5705510785
-	for <linux-kernel@vger.kernel.org>; Tue, 20 Feb 2024 02:55:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 463561EB3F
+	for <linux-kernel@vger.kernel.org>; Tue, 20 Feb 2024 02:56:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708397729; cv=none; b=Lh1wSv3TZBQ8UkrY6i3H2PScRgw7W+3hseneiwmxTsK3cqu/IfrxHW3FvnL0eydZ3/2HEiku2avWphS5oCLAXQHWHV4WcB+6Ti3KmSVUd5sWgNq58dXkLUI/75E9M6n8APAkxgbvSMU8km7sfEr+pRFXITfPsrz8mDmCxnXy+Uo=
+	t=1708397764; cv=none; b=muTrgzJyWG//u/WuWYA8DhIoZOuyznik6KvAi2gmFvwJ2RvOUoPyIwoxdLyVYlv9v8osCEZr+qDUbLIrsPg8+2JtYkjs2zlh8LeFq8CQlxlMO9DVZNMY6H8hzeEMcpOanLsxLudrFkw+REo1iW8R49eHhSq7HKyicPhXBu/msbI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708397729; c=relaxed/simple;
-	bh=GWKiOBaI1NXNEeTj4/i0Fubm8+QDhv/MlOX8mgicbwA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ciTnijyaBATTfGcP9vEnC4isWyMkBnAXFmsc9PDuPaEsOzF39oxkVYEWfTxTZ9A+DvhA8G7kBmf54yez9+1pnLLm9BfZipag2IC90AnpKDa9iFgZZctEUB7Yl/Dmt62iG7CirCXjJZPFpyRKayujaJZhPdfMcUoOv/Jh4ibjseM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=eoq6woNU; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="eoq6woNU"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Transfer-Encoding:
-	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-	Sender:Reply-To:Content-ID:Content-Description;
-	bh=1E5koHXnFE7yumxwYTorkvd0LXLJ4Nm9WirUlUAc9Pg=; b=eoq6woNUCQ8IdWXFKWSuL7LzpY
-	nN3krH6BPAkPmjI+H/isne2ul5IkYpkNumdZNoLJUKa0cXB39rZ3X5nuUF0t4sbt2ggVxE+IjYPji
-	rHEl73hk0rvuwQ0pRIIw29gfp+EuQos8mQMUoL2lAepuSaaBRYLum2KWtFvVyXytfJqMbfTWkpVL+
-	MWi6ovQTAo1Ou/NTNYijLFg2xcw0RTiqxRRjEqbpPQe4WBkessjZRUzWqH6j/c8lzCv6/3JTheHmp
-	YaRo+zzFE+dRlSMQ63bDMozLUDFq7/mbXbwhnai2WZuzvEhd2e3tT6NhNPoDAdhPkIpNIAN663n2y
-	QO7X3IrQ==;
-Received: from willy by casper.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rcGHx-0000000ESL2-2C4x;
-	Tue, 20 Feb 2024 02:55:21 +0000
-Date: Tue, 20 Feb 2024 02:55:21 +0000
-From: Matthew Wilcox <willy@infradead.org>
-To: =?utf-8?B?5p2O5Z+56ZSL?= <lipeifeng@oppo.com>
-Cc: akpm@linux-foundation.org, david@redhat.com, osalvador@suse.de,
-	linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-	v-songbaohua@oppo.com, gregkh@google.com, tkjos@google.com
-Subject: Re: [PATCH 0/2] Support kshrinkd
-Message-ID: <ZdQUmWxYuuP24w_1@casper.infradead.org>
-References: <20240219141703.3851-1-lipeifeng@oppo.com>
- <ZdOG-135dLP0IeU8@casper.infradead.org>
- <a642d9dc-6d48-016c-7007-c08ce8933d18@oppo.com>
+	s=arc-20240116; t=1708397764; c=relaxed/simple;
+	bh=GFBmUld2gf8Aiq7OvKwOtzT+ecJpTWZ6tCRvxcN7YnU=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=JQzeASdQ2lM2b4ivn4jbKRciMOSLd4ai/n1cORUpJ3njzlApBaRe/Q4fJgbQlp08pJVLeGSCMaAIEVNVeHQ+TCUrjNbkafSr6stWO3+YOVLtYV+8j6ZVjBCLg2c+Jlt67NxTrRAYdYY2NhJDEIvCcfnosRqzt0jdK7Z5wreXUS4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f199.google.com with SMTP id e9e14a558f8ab-365067c1349so34085325ab.3
+        for <linux-kernel@vger.kernel.org>; Mon, 19 Feb 2024 18:56:03 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708397762; x=1709002562;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=EwgEVLxq1VznkWz+vtJqB1ba9PeLsN+ROj5HvDyNL40=;
+        b=VEHO3Ojae5Tx14Ia2MW4atuFkFinhRPWzocWrtCc/3mL8ZijBn3z1CIOGwrmJWqJQs
+         zqRRxEWoxT7JGAOCfwsMX1S/63EgSnE9usngRS2gUN0S8+da2rsNEjorBqaCuoKVCM4V
+         dPD8v0wg7MQ1GO8bap+nxmu0frxpFsHvU9xpJ8jlEFosJ4PZ1f7mgeP4Ke7hqrsMs0p7
+         riz1ChZBYMMENkCP53vw4Qa/igGC1AuI0lHdbJhNTO28GgA8US9eI4vSVXezoYygRKhx
+         0k+oti4bCVng6Pj/+sZkxJKk3Ar5JUxbv6lRwzARy2ev5AqRD9aSK4ZFJbMShhA3WmL1
+         eRbg==
+X-Gm-Message-State: AOJu0YxkV1reXWCHFa7HusyaP9YjR/S+Rgg48MhxHoMRusGJp11+Ixil
+	GN5BkPiiucZGXFNJ3V3WMs9FKcBZyt95COUSB7ehipKYARXCnqIHtSig9RnCr8dyx4PAHuSJJu8
+	YtwpjAY8AfIiBmBUISQQeZy3SG3yb8c3i1JDuXWQl7vje03AomHtA1sIcCw==
+X-Google-Smtp-Source: AGHT+IE5x7fwAgwhNfl8Bk2CME3ORBBLXePDpGIdD7RQ8s+YGAMMutFcaLkPpwxhc1irtWMUDI0pw5ZmE/YDZElygU5vFF9IC+E/
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <a642d9dc-6d48-016c-7007-c08ce8933d18@oppo.com>
+X-Received: by 2002:a05:6e02:1d89:b0:365:2f9d:5f04 with SMTP id
+ h9-20020a056e021d8900b003652f9d5f04mr361464ila.5.1708397762525; Mon, 19 Feb
+ 2024 18:56:02 -0800 (PST)
+Date: Mon, 19 Feb 2024 18:56:02 -0800
+In-Reply-To: <ZdQRnIUGz-j1ubag@zeus>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000c5436c0611c759aa@google.com>
+Subject: Re: [syzbot] [net?] KMSAN: kernel-infoleak in __skb_datagram_iter (2)
+From: syzbot <syzbot+34ad5fab48f7bf510349@syzkaller.appspotmail.com>
+To: linux-kernel@vger.kernel.org, ryasuoka@redhat.com, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Tue, Feb 20, 2024 at 10:04:33AM +0800, 李培锋 wrote:
-> Monkey-test in phone with 16G-ram for 300 hours shows that almost one-third
-> 
-> of the contended-pages can be freed successfully next time, putting back
-> those
-> 
-> folios to LRU's head would break the rules of inative-LRU.
+Hello,
 
-You talk about "the rules of inactive LRU" like we care.  The LRU is
-an approximation at best.  What are the *consequences*?  Is there a
-benchmark that executes more operations per second as a result of
-this patch?
+syzbot tried to test the proposed patch but the build/boot failed:
+
+failed to checkout kernel repo git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git on commit 5bd7ef53ffe5: failed to run ["git" "fetch" "--force" "--tags" "f569e972c8e9057ee9c286220c83a480ebf30cc5" "5bd7ef53ffe5"]: exit status 128
+fatal: couldn't find remote ref 5bd7ef53ffe5
+
+
+
+Tested on:
+
+commit:         [unknown 
+git tree:       git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git 5bd7ef53ffe5
+kernel config:  https://syzkaller.appspot.com/x/.config?x=f3f069371247b697
+dashboard link: https://syzkaller.appspot.com/bug?extid=34ad5fab48f7bf510349
+compiler:       
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=17c8b658180000
 
