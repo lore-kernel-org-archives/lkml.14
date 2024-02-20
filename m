@@ -1,30 +1,28 @@
 Received: from elvis.franken.de (elvis.franken.de [193.175.24.41])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F09FF6A348;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9127F69DF5;
 	Tue, 20 Feb 2024 13:48:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.175.24.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708436934; cv=none; b=I2MWgxHTZuy6rgT9Z0wX/6FK06xQWRibTa2KSa9kEZhXOEskjR0suve3uMVpQx8M4IrcD+gWLhkbTDFSKA3mJw0NFWog6e8pxzLxEiiuTj2vWQp+UcCpXp2qF6ybG/nwO/mg7J2j1aD3whBKeSa39dvdiBZ2OX3D0XA6cO+E9xY=
+	t=1708436934; cv=none; b=LOoucKdKh3ktGp6P3rYTCB7GX+nl0R7zUCDRUltjjrB9NZwFn+C9bw9AUn8sqsau+ZlJoi72aOe5+2KAeITZBoIAF8yX+xAM1zK7wQcNKJlEK+hp832RjXfE8UXtO5ag2dMp2klwAhKZq1uEC+n2ZeAg7Ox3NPsaTelrJ+FCki8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1708436934; c=relaxed/simple;
-	bh=8GvFNVF9duq/2bUVAkBo5DWH41frpnACDn9XWjN8Zj4=;
+	bh=R8CQ9W7KiCJlUPJJxbdnZY4IKamu9E2eH9DKa/kjNuI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZcHCww2t04Lo7oD33q1djZ38xZ78ygIQV4P5lEZfUR8gUp9eKkeyDutpns3FINC5YLkJl96D47x4Uy8so5/egDnDfZIN36Ntwk5mnGNITv/H697DtLdb+m9Kj6QY8JNyxzJ6TivMxeHl6zqNkPVSJ+y1fhwELnUogzYtczI/4fc=
+	 Content-Type:Content-Disposition:In-Reply-To; b=pAxAT2u8ZcvGI/gsx8KY6+ihSvjvJesVJaDyJihAN5wMG3MEWG9QcV4fo/o9YinTfG9i5FQ5noUUlEW6pBhcSxVGBUoWWNrXPxJ2dlzfqwUS42S0NfcoHWxRTxai+XCHXSvqcCMajzbtj0sKC9+aaUZsI0/NRrT5VNKGzmHbGy8=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpha.franken.de; spf=pass smtp.mailfrom=alpha.franken.de; arc=none smtp.client-ip=193.175.24.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpha.franken.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alpha.franken.de
 Received: from uucp by elvis.franken.de with local-rmail (Exim 3.36 #1)
-	id 1rcQUF-0007Of-00; Tue, 20 Feb 2024 14:48:43 +0100
+	id 1rcQUF-0007OK-00; Tue, 20 Feb 2024 14:48:43 +0100
 Received: by alpha.franken.de (Postfix, from userid 1000)
-	id 4C9E7C0AFC; Tue, 20 Feb 2024 14:40:10 +0100 (CET)
-Date: Tue, 20 Feb 2024 14:40:10 +0100
+	id 22855C0A1E; Tue, 20 Feb 2024 14:48:33 +0100 (CET)
+Date: Tue, 20 Feb 2024 14:48:33 +0100
 From: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-To: "Ricardo B. Marliere" <ricardo@marliere.net>
-Cc: Serge Semin <fancer.lancer@gmail.com>, linux-mips@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH] mips: bus: make mips_cdmm_bustype const
-Message-ID: <ZdSruvrpmTydq+M7@alpha.franken.de>
-References: <20240213-bus_cleanup-mips2-v1-1-9c0e3d4a1852@marliere.net>
+To: Masahiro Yamada <masahiroy@kernel.org>
+Cc: linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] MIPS: merge CONFIG_MACH_TX49XX entries
+Message-ID: <ZdStsYqTkYBhCS4M@alpha.franken.de>
+References: <20240204141446.65055-1-masahiroy@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -33,22 +31,41 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240213-bus_cleanup-mips2-v1-1-9c0e3d4a1852@marliere.net>
+In-Reply-To: <20240204141446.65055-1-masahiroy@kernel.org>
 
-On Tue, Feb 13, 2024 at 11:49:24AM -0300, Ricardo B. Marliere wrote:
-> Now that the driver core can properly handle constant struct bus_type,
-> move the mips_cdmm_bustype variable to be a constant structure as well,
-> placing it into read-only memory which can not be modified at runtime.
+On Sun, Feb 04, 2024 at 11:14:45PM +0900, Masahiro Yamada wrote:
+> The 'config MACH_TX49XX' entry exists in arch/mips/Kconfig with a
+> prompt and one select statement, also in arch/mips/txx9/Kconfig with
+> the other select statements.
 > 
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Suggested-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Signed-off-by: Ricardo B. Marliere <ricardo@marliere.net>
+> Commit 8f8da9adebdf ("[MIPS] TXx9: Kconfig cleanup") added the second
+> entry to arch/mips/txx9/Kconfig.
+> 
+> There is no reason to split it in the two locations.
+> 
+> Merge them into the entry in arch/mips/txx9/Kconfig.
+> 
+> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 > ---
->  arch/mips/include/asm/cdmm.h | 2 +-
->  drivers/bus/mips_cdmm.c      | 2 +-
->  2 files changed, 2 insertions(+), 2 deletions(-)
+> 
+>  arch/mips/Kconfig      | 4 ----
+>  arch/mips/txx9/Kconfig | 3 ++-
+>  2 files changed, 2 insertions(+), 5 deletions(-)
+> 
+> diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
+> index a70b4f959fb1..b7c62f8d612e 100644
+> --- a/arch/mips/Kconfig
+> +++ b/arch/mips/Kconfig
+> @@ -881,10 +881,6 @@ config SNI_RM
+>  	  Technology and now in turn merged with Fujitsu.  Say Y here to
+>  	  support this machine type.
+>  
+> -config MACH_TX49XX
+> -	bool "Toshiba TX49 series based machines"
+> -	select WAR_TX49XX_ICACHE_INDEX_INV
 
-applied to mips-next.
+this is inside the choice for selecting the platform. Removing it here
+breaks the build. IMHO the merge must be here.
 
 Thomas.
 
