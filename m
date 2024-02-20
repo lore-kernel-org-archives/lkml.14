@@ -1,155 +1,108 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f50.google.com (mail-oo1-f50.google.com [209.85.161.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B024876411;
-	Tue, 20 Feb 2024 15:42:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C93D627EA
+	for <linux-kernel@vger.kernel.org>; Tue, 20 Feb 2024 15:43:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708443747; cv=none; b=hHSs5rKyvhRUd6nmhLMQSwDAi0EMRj5d+Wadj1Qgaxtpewo4EGrm3+au3ePO8jrlyXTyj+MiXpC71Yg7MaovttBXRnH336raZzZGwAN6lbKnYVJQYIHI/hgxNGRLHZ1oMI2cFXoC+A0BtYt+4qpY7Mnt5Jx55SgJRL3mlCTQ4Xk=
+	t=1708443788; cv=none; b=UaTZxwQ23E5YA2F7YbrHuk6vKwkB6m4oqGTiPhDeECHytk4ppJ0f6D8wiFAPABUW8PZjVFq+5aMpi65pkl3FeK828QjuW43RGCfx2Fpfq6TWAjBlH+qfDfP8RC0ypU04qqc1Cf0ahV6YRIf3IRX7gF7M8AtkJnJlkhGR5JIcyis=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708443747; c=relaxed/simple;
-	bh=kYdSQC9Wpn67FHvtXtQYWqDXcKHPW+LqtaL7SkwNwi4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hT7atA4s3HvZ22C2M8Bpn4a3TPT7sX6Y7yy6a5VPkFmiRsnZ+8nXuMreHKoqxAjAJbqWDKdKbvIQbDO5/yGsVrt3wwwYCn3Y3zQ7ohorT6ahXxv/pVnwl2FcC2VBvR/TlXC7Tbkr9LOZuBf0lF+Fg3NpR6z+5bjLtn62z+ny8f8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IKSESiIC; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1708443788; c=relaxed/simple;
+	bh=BHwUKr8biU6qwSoYRciff715r/Wq10MJ8jrCOgZ4EeI=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=VcZy380SU6gf233ivH/T3yQgzbF7AP+9+JgltTzj5IlPDNcGK8xlmOxB1fNJt3eUn2HnYjpIzEV0kwzmoRjEutDNZdGenOgHJrh1BqiQ1m8LQvTrkwf/B7cgYh0g0X9vOALKDTx/3jsipNtGMUSc+XY+yaD+ZP4BZkHRgBOLVt4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DL4j15bR; arc=none smtp.client-ip=209.85.161.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IKSESiIC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C0FBAC433C7;
-	Tue, 20 Feb 2024 15:42:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708443747;
-	bh=kYdSQC9Wpn67FHvtXtQYWqDXcKHPW+LqtaL7SkwNwi4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=IKSESiICcx/M53se7cXMGIuBqSRu0lEsxQO4kEyir1C0mY1HApxU0ywXTySiBza8H
-	 o7mZxG0z+8yJNa7lJa4DsWAVcOEn0ILt9ymEdWtgyPargeUKheiBNG6BPhACws+r5Z
-	 NKbsz0/bNYALLwzaqc6U9IEVsrZqCpD6mrPlK7Oc586ZBQq8eRexCHykXL/kg9wykU
-	 CSZIgjS/gWB41eHLJ07A5G/FlhxwtAIBInqQUKEy+R9IW4WkAlQGEqRe1OpgvbZd5h
-	 a/3PxTN8+E+9RXAAIaXjO9mmU5P6iXPH8ChFSmfq3LiQBBz5y0HYQdlcv3LrI6nuRS
-	 oJ2teBd2IxHZQ==
-Date: Tue, 20 Feb 2024 12:42:24 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Jann Horn <jannh@google.com>, Joe Mario <jmario@redhat.com>,
-	Jiri Olsa <jolsa@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Feng Tang <feng.tang@intel.com>, Andi Kleen <ak@linux.intel.com>,
-	the arch/x86 maintainers <x86@kernel.org>,
-	kernel list <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org,
-	"Liang, Kan" <kan.liang@linux.intel.com>,
-	Stephane Eranian <eranian@google.com>,
-	"Taylor, Perry" <perry.taylor@intel.com>,
-	"Alt, Samantha" <samantha.alt@intel.com>,
-	"Biggers, Caleb" <caleb.biggers@intel.com>,
-	"Wang, Weilin" <weilin.wang@intel.com>
-Subject: Re: [BUG] perf/x86/intel: HitM false-positives on Ice Lake / Tiger
- Lake (I think?)
-Message-ID: <ZdTIYLoJOdyu62LU@x1>
-References: <CAG48ez3RmV6SsVw9oyTXxQXHp3rqtKDk2qwJWo9TGvXCq7Xr-w@mail.gmail.com>
- <CAP-5=fXsFBwt9ARmQja0pKGL-_Vms_NDKeaH5CX=_om1aSvssw@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DL4j15bR"
+Received: by mail-oo1-f50.google.com with SMTP id 006d021491bc7-59d78deb469so3513849eaf.1
+        for <linux-kernel@vger.kernel.org>; Tue, 20 Feb 2024 07:43:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1708443786; x=1709048586; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Ba+FZT/y8DAA+ic+9F75Kom97L71NReEfdPzSuOXjjQ=;
+        b=DL4j15bRVw8JX0Ue+Ro2pio4rRhekzaUMSW1tEC7sQOMlxAiPh+xP330Y+nZm9Hlhz
+         Wk8IoeF0J8sC69vf7kGBNng3CHShuVURcTx34I0z4ynj/VCzw20J+FJiovGZAMjMINLV
+         T+QL2QgJhi4Gw41wbWkyuAQqlGVVqxInrfzyndyOqAuhuor/65HEnOqnSMDK90F3Er3I
+         T3eDTA1IxWlKiUca0YgoHAZazT4/HIzS4XjTcyjSs+UAxA1NGaATlG3Bsf3+/1pym/Ro
+         fgFld9PggqtwvfRmydvbmhjINQ1Uw2tyopRfRpr5nKD8Y1FyLzkkFYmLWywzzaNCeUvG
+         G6sA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708443786; x=1709048586;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Ba+FZT/y8DAA+ic+9F75Kom97L71NReEfdPzSuOXjjQ=;
+        b=LktsoA6HqA6Te1VklGP2MaC4euxQstPkxKBzZ8s4J8rKl78yxoCPSw0r4DsNz0EIXJ
+         HK338ASiRJ4BfDTzR6hUEwzdL+glQGNGLNyPWbijUr1dVE+JcwCRYjsy2ILNjghHfT2b
+         exrO/RmX2eEDiRXyFYbuZRuZtdDLjaprsI0gZ3OIk3c9ZEHIZG3SfQNb4JHCaKbeOWFg
+         mkC3tnX7LPVPiciitJmeADykqfUsD9ZcM0CmPNNNvVPpTviPWw29n1eQn0d6xV5PEL5f
+         17ULJbx5mQ+OKNrkaEzKqYqkCQbzCS+bq4GvyozJ1VRaquNonV8c56oFTTT40zO4/PYe
+         DQ3Q==
+X-Forwarded-Encrypted: i=1; AJvYcCW/ndu4QExu3rKkl83EjY03rgLO8iam8PyQLnHPlmlLu54CQ8To12lFOR2m8Y7v3c+sbv4rGAxOcoPC4H/aqomvmGVg07+hs7AhZazi
+X-Gm-Message-State: AOJu0Yy6+0M2OXbDgv8wopZDHKnWFoE1K/5b9IBL/ELhErVTciyz0u9A
+	xppQK5RQj1OeBIT9WaGPOnO8moA9hKMZEcjmjozRZxW7ohQn5+FN
+X-Google-Smtp-Source: AGHT+IGMh9C/THGjJ9L9lzGt8mkv2YzHJOx4qROhpehEf2GFdHrOOe/Lsm/J+pCmlIYkFTF5PQZHdg==
+X-Received: by 2002:a4a:355a:0:b0:59f:fc30:d3aa with SMTP id w26-20020a4a355a000000b0059ffc30d3aamr2191859oog.3.1708443786272;
+        Tue, 20 Feb 2024 07:43:06 -0800 (PST)
+Received: from localhost.localdomain ([129.41.86.2])
+        by smtp.gmail.com with ESMTPSA id p3-20020a4adfc3000000b0059aaa2bebb6sm1388768ood.48.2024.02.20.07.43.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 20 Feb 2024 07:43:05 -0800 (PST)
+From: Andrew Geissler <geissonator@gmail.com>
+To: minyard@acm.org,
+	joel@jms.id.au,
+	andrew@codeconstruct.com.au,
+	openipmi-developer@lists.sourceforge.net,
+	linux-arm-kernel@lists.infradead.org,
+	linux-aspeed@lists.ozlabs.org,
+	linux-kernel@vger.kernel.org
+Cc: Andrew Geissler <geissonator@yahoo.com>,
+	openbmc@lists.ozlabs.org
+Subject: [PATCH] ipmi: kcs: Update OBF poll timeout to reduce latency
+Date: Tue, 20 Feb 2024 06:36:15 -0600
+Message-Id: <20240220123615.963916-1-geissonator@gmail.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fXsFBwt9ARmQja0pKGL-_Vms_NDKeaH5CX=_om1aSvssw@mail.gmail.com>
 
-Just adding Joe Mario to the CC list.
+From: Andrew Geissler <geissonator@yahoo.com>
 
-On Mon, Feb 19, 2024 at 03:20:00PM -0800, Ian Rogers wrote:
-> On Mon, Feb 19, 2024 at 5:01 AM Jann Horn <jannh@google.com> wrote:
-> >
-> > Hi!
-> >
-> > From what I understand, "perf c2c" shows bogus HitM events on Ice Lake
-> > (and newer) because Intel added some feature where *clean* cachelines
-> > can get snoop-forwarded ("cross-core FWD"), and the PMU apparently
-> > treats this mostly the same as snoop-forwarding of modified cache
-> > lines (HitM)? On a Tiger Lake CPU, I can see addresses from the kernel
-> > rodata section in "perf c2c report".
-> >
-> > This is mentioned in the SDM, Volume 3B, section "20.9.7 Load Latency
-> > Facility", table "Table 20-101. Data Source Encoding for Memory
-> > Accesses (Ice Lake and Later Microarchitectures)", encoding 07H:
-> > "XCORE FWD. This request was satisfied by a sibling core where either
-> > a modified (cross-core HITM) or a non-modified (cross-core FWD)
-> > cache-line copy was found."
-> >
-> > I don't see anything about this in arch/x86/events/intel/ds.c - if I
-> > understand correctly, the kernel's PEBS data source decoding assumes
-> > that 0x07 means "L3 hit, snoop hitm" on these CPUs. I think this needs
-> > to be adjusted somehow - and maybe it just isn't possible to actually
-> > distinguish between HitM and cross-core FWD in PEBS events on these
-> > CPUs (without big-hammer chicken bit trickery)? Maybe someone from
-> > Intel can clarify?
-> >
-> > (The SDM describes that E-cores on the newer 12th Gen have more
-> > precise PEBS encodings that distinguish between "L3 HITM" and "L3
-> > HITF"; but I guess the P-cores there maybe still don't let you
-> > distinguish HITM/HITF?)
-> >
-> >
-> > I think https://perfmon-events.intel.com/tigerLake.html is also
-> > outdated, or at least it uses ambiguous grammar: The
-> > MEM_LOAD_L3_HIT_RETIRED.XSNP_FWD event (EventSel=D2H UMask=04H) is
-> > documented as "Counts retired load instructions where a cross-core
-> > snoop hit in another cores caches on this socket, the data was
-> > forwarded back to the requesting core as the data was modified
-> > (SNOOP_HITM) or the L3 did not have the data(SNOOP_HIT_WITH_FWD)" -
-> > from what I understand, a "cross-core FWD" should be a case where the
-> > L3 does have the data, unless L3 has become non-inclusive on Ice Lake?
-> >
-> > On a Tiger Lake CPU, I can see this event trigger for the
-> > sys_call_table, which is located in the rodata region and probably
-> > shouldn't be containing Modified cache lines:
-> >
-> > # grep -A1 -w sys_call_table /proc/kallsyms
-> > ffffffff82800280 D sys_call_table
-> > ffffffff82801100 d vdso_mapping
-> > # perf record -e mem_load_l3_hit_retired.xsnp_fwd:ppp --all-kernel -c 100 --data
-> > ^C[ perf record: Woken up 11 times to write data ]
-> > [ perf record: Captured and wrote 22.851 MB perf.data (43176 samples) ]
-> > # perf script -F event,ip,sym,addr | egrep --color 'ffffffff828002[89abcdef]'
-> > mem_load_l3_hit_retired.xsnp_fwd:ppp: ffffffff82800280
-> > ffffffff82526275 do_syscall_64
-> > mem_load_l3_hit_retired.xsnp_fwd:ppp: ffffffff828002d8
-> > ffffffff82526275 do_syscall_64
-> > mem_load_l3_hit_retired.xsnp_fwd:ppp: ffffffff82800280
-> > ffffffff82526275 do_syscall_64
-> > mem_load_l3_hit_retired.xsnp_fwd:ppp: ffffffff828002b8
-> > ffffffff82526275 do_syscall_64
-> > mem_load_l3_hit_retired.xsnp_fwd:ppp: ffffffff828002b8
-> > ffffffff82526275 do_syscall_64
-> > mem_load_l3_hit_retired.xsnp_fwd:ppp: ffffffff828002b8
-> > ffffffff82526275 do_syscall_64
-> > mem_load_l3_hit_retired.xsnp_fwd:ppp: ffffffff82800280
-> > ffffffff82526275 do_syscall_64
-> > mem_load_l3_hit_retired.xsnp_fwd:ppp: ffffffff82800288
-> > ffffffff82526275 do_syscall_64
-> > mem_load_l3_hit_retired.xsnp_fwd:ppp: ffffffff828002b8
-> > ffffffff82526275 do_syscall_64
-> >
-> >
-> > (For what it's worth, there is a thread on LKML where "cross-core FWD"
-> > got mentioned: <https://lore.kernel.org/lkml/b4aaf1ed-124d-1339-3e99-a120f6cc4d28@linux.intel.com/>)
-> 
-> +others better qualified than me to respond.
-> 
-> Hi Jann,
-> 
-> I'm not overly familiar with the issue, but it appears a similar issue
-> has been reported for Broadwell Xeon here:
-> https://community.intel.com/t5/Software-Tuning-Performance/Broadwell-Xeon-perf-c2c-showing-remote-HITM-but-remote-socket-is/td-p/1172120
-> I'm not sure that thread will be particularly useful, but having the
-> Intel people better qualified than me to answer is probably the better
-> service of this email.
-> 
-> Thanks,
-> Ian
+Commit f90bc0f97f2b ("ipmi: kcs: Poll OBF briefly to reduce OBE
+latency") introduced an optimization to poll when the host has
+read the output data register (ODR). Testing has shown that the 100us
+timeout was not always enough. When we miss that 100us window, it
+results in 10x the time to get the next message from the BMC to the
+host. When you're sending 100's of messages between the BMC and Host,
+this results in a server boot taking 50% longer for IBM P10 machines.
+
+Started with 1000 and worked it down until the issue started to reoccur.
+200 was the sweet spot in my testing. 150 showed the issue
+intermittently.
+Signed-off-by: Andrew Geissler <geissonator@yahoo.com>
+---
+ drivers/char/ipmi/kcs_bmc_aspeed.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/char/ipmi/kcs_bmc_aspeed.c b/drivers/char/ipmi/kcs_bmc_aspeed.c
+index 72640da55380..af1eae6153f6 100644
+--- a/drivers/char/ipmi/kcs_bmc_aspeed.c
++++ b/drivers/char/ipmi/kcs_bmc_aspeed.c
+@@ -422,7 +422,7 @@ static void aspeed_kcs_irq_mask_update(struct kcs_bmc_device *kcs_bmc, u8 mask,
+ 			 * missed the event.
+ 			 */
+ 			rc = read_poll_timeout_atomic(aspeed_kcs_inb, str,
+-						      !(str & KCS_BMC_STR_OBF), 1, 100, false,
++						      !(str & KCS_BMC_STR_OBF), 1, 200, false,
+ 						      &priv->kcs_bmc, priv->kcs_bmc.ioreg.str);
+ 			/* Time for the slow path? */
+ 			if (rc == -ETIMEDOUT)
+-- 
+2.39.2
+
