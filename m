@@ -1,97 +1,134 @@
-Received: from out30-111.freemail.mail.aliyun.com (out30-111.freemail.mail.aliyun.com [115.124.30.111])
+Received: from out203-205-251-27.mail.qq.com (out203-205-251-27.mail.qq.com [203.205.251.27])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0ECE02C1B9;
-	Tue, 20 Feb 2024 02:45:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.111
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A5932E400
+	for <linux-kernel@vger.kernel.org>; Tue, 20 Feb 2024 02:47:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.251.27
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708397127; cv=none; b=agtaWy4XMX4Bzrhsz0fp6SgYlR6SSRvlFV384JqufQZ/pvnOb8DR5mu1Y3xgbvfhdXdIKXqdrj5lgMT3VbLX2jeWq61zSTppQ/kR/NI1UBlW7nYAapk27BGkhVIr1k2MVOJBP6jCSGoo+uT+8vN1455AV/stHBo8cs4eDDqyX7c=
+	t=1708397262; cv=none; b=EJvWNNeYidpudiOP6G/7ltzWWs/1bUMz0eoM13vhkSJ8zQzsHrRQSN4oxOB2Y4CZGYLhlZ6K0cIsPXt18PQPnolQ8xwvoF/GjmqwWr3f1TVNzowSeXZ2RJQBS0pxCBHB0I5KgjZr5SqSmErMHglQJsgSXcD6YamK5Q9sR5HuKeU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708397127; c=relaxed/simple;
-	bh=BgI8KUUZGcJShWv42a+S7WU6a7VTrR2A3Zt6fAujEFo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=EAI5T1ZGjJWAgk/sBCTBtsRTTXXcLSvCcGpdHlbE8NYJy2gJEM1AzN60YvNMuqrR+v86by7Do1CkOqaA+24eZDKf8yiQ8m6lje2Mngu2XXF1F18gD15Xlhv0FFeUxsdJvuHUgQ7TTqcZdknuFCkMTZUwI25BGqfbSsax/98D0DM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=ZkIVs5tG; arc=none smtp.client-ip=115.124.30.111
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1708397262; c=relaxed/simple;
+	bh=WZhDQHVt/eFOTGy+6AFVtF1k0oHT7nXaK5YloFAu6TA=;
+	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
+	 MIME-Version; b=uVhjdjsNs15u9LjpJoHQgznDzbjaKqYM28lxwLwFksfeNJa7Rpd+DZywUp3VITLPDGGhLoSroKARAwwyhVoExxiGnFX6LKlJLUtshu7wsduTWGL/Gwvqae/tkiiEVOBTzDPBFAKctwavwb/JS2jGpc8sLxew15x84MPEgoF7UO8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=W6wxobJN; arc=none smtp.client-ip=203.205.251.27
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="ZkIVs5tG"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1708397121; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=epsRxanowU+Rvzj769kG7rng4wSLzPgisiNp8zQ07Ng=;
-	b=ZkIVs5tGRFpppVsmALZXF27NoJ9/Ezzs32Sii20jvWdKDKD5UOPqiuOM+Rk0AOSYQ9CKIGSoumvcqFNktl8d5Xs3ay9Z2KREsR9Ob/pWhBNA7PcgiN0XoKGhwtrPMWjzv2DbltBUzG5mkghuYL2LsVaxjBJxrnWMyFVuQcXGW8g=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R611e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046060;MF=guwen@linux.alibaba.com;NM=1;PH=DS;RN=17;SR=0;TI=SMTPD_---0W0v2plx_1708397119;
-Received: from 30.221.128.233(mailfrom:guwen@linux.alibaba.com fp:SMTPD_---0W0v2plx_1708397119)
-          by smtp.aliyun-inc.com;
-          Tue, 20 Feb 2024 10:45:21 +0800
-Message-ID: <cac6192e-85d8-4289-b5af-bc8143e76004@linux.alibaba.com>
-Date: Tue, 20 Feb 2024 10:45:19 +0800
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="W6wxobJN"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
+	t=1708397251; bh=5e0DqTGLAWCNHVUq2rJGy4hwpnKW2PqcQIQ2kpU6bKQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=W6wxobJNh7Y3I8JgyZDo/jXXYEVutz/JKvNINxHGph2i92W8IokfIORTdA6YRJGC3
+	 ywHIdbDb1QBeI5NUMKXGe4dJzj8Qm+0SA6t4H6MxbOKiw7BZYGVlsy8PO3Exn9AXJs
+	 9YUVoskkrG+F6hNH8DTVolOPKaEaq8g5PeR3UYeI=
+Received: from pek-lxu-l1.wrs.com ([111.198.228.140])
+	by newxmesmtplogicsvrsza1-0.qq.com (NewEsmtp) with SMTP
+	id 9CAA2661; Tue, 20 Feb 2024 10:39:10 +0800
+X-QQ-mid: xmsmtpt1708396750tbameql70
+Message-ID: <tencent_8712375DDCDDA9995CCFA38DF325920DFF07@qq.com>
+X-QQ-XMAILINFO: NioaTWkRhWwaqtUXUk0vapS/NBHwpJaO0zjwvvdYm8Qqnj0E8hSsN+36AKrv9s
+	 b8RqgpzXVzIH0Qwd4Lt6C1v04eqefETnFz4MXsxUmEUqKFUnmKssnVkKEXilD0s9b/oW3qDq+5+g
+	 KVeGYXRNiTHOWO9wW5U5W6sPmI18Ir26YDN1QM7GWTZJQspVTzfvmK/gsOPw7KSz967TS/OKQZzV
+	 hfh7I2rq4rx9HG6iR1o/AdNSBc/marc8aA4uSKNygvCXbpldZg2CW0ZLZBrKXBe9yCf7fj1NVKH1
+	 3DrMOoVm5vx5MDRs3avVbV4krMY3cL6+RThOECrWcSjb9Kr6jdpQpBJFrUXbzU+Y20SRxgxtio5W
+	 KGx/vUZc6/qUzL/wa3LyijMpeS8BhIeM0nuhCJdC+1i5XVosKF70l2EVmVPw9unoATzBKgz67UlR
+	 ffK0Jgdv+/alj39u/NcUIlN30LZUj5rchmwaRPJ9pWtSCnEUi/P4hGon/e/2iS1Rq8zYG1lUSC1T
+	 bLLH0Z8V7fyzb9Q2yDscQ6LPP094R9SNexySfCrgrvmIESmb2bsuTHP9CSmxdP6i0QE4P7OduloR
+	 /7C6aNhTlsH8kj4cuN4e6qddTl1GYbMKp0bdFlHGtQXa8uzW+oNaxe4t42hEN1jGMK4Fa0OkE2g6
+	 a1/aQbZi2wnQsTm3Hc6BnFbGMu6xj6wARDB5VblbRaEIxmZnJw86Z+UwjNOpTqhVLY78poYGBkUV
+	 VZE5yt9hAypGYN6M8a5yTn8MWenOCQkKKcAZ25eKKW+/C1hkMx5OzG65St5iM/mRrlSYhIT2ethF
+	 JE16f/0p+srnlHSelDa/N/SJWfWHji+niEhqlU9QtSaECdrFSaXQLAktYt3loUeSRompB3+4LgiQ
+	 71xIqG8t9mHJCLPudIQ86NgZUoI2jvLjHNY3QAmltuNDSUTj1j7TY=
+X-QQ-XMRINFO: OWPUhxQsoeAVDbp3OJHYyFg=
+From: Edward Adam Davis <eadavis@qq.com>
+To: syzbot+c244f4a09ca85dd2ebc1@syzkaller.appspotmail.com
+Cc: linux-kernel@vger.kernel.org,
+	syzkaller-bugs@googlegroups.com
+Subject: Re: [syzbot] [jfs?] KASAN: slab-use-after-free Read in jfs_syncpt
+Date: Tue, 20 Feb 2024 10:39:11 +0800
+X-OQ-MSGID: <20240220023910.2011462-2-eadavis@qq.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <0000000000003d021006119cbf46@google.com>
+References: <0000000000003d021006119cbf46@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next 09/15] net/smc: introduce loopback-ism statistics
- attributes
-To: Wenjia Zhang <wenjia@linux.ibm.com>, wintera@linux.ibm.com,
- hca@linux.ibm.com, gor@linux.ibm.com, agordeev@linux.ibm.com,
- davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
- pabeni@redhat.com, jaka@linux.ibm.com
-Cc: borntraeger@linux.ibm.com, svens@linux.ibm.com,
- alibuda@linux.alibaba.com, tonylu@linux.alibaba.com,
- linux-s390@vger.kernel.org, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20240111120036.109903-1-guwen@linux.alibaba.com>
- <20240111120036.109903-10-guwen@linux.alibaba.com>
- <417a1b7c-4136-4f96-a614-9fd976dc884d@linux.ibm.com>
-From: Wen Gu <guwen@linux.alibaba.com>
-In-Reply-To: <417a1b7c-4136-4f96-a614-9fd976dc884d@linux.ibm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
+please test uaf in jfs_syncpt
 
+#syz test https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
 
-On 2024/2/16 22:24, Wenjia Zhang wrote:
-> 
-> 
-> On 11.01.24 13:00, Wen Gu wrote:
->> This introduces some statistics attributes of loopback-ism. They can be
->> read from /sys/devices/virtual/smc/loopback-ism/{xfer_tytes|dmbs_cnt}.
->>
->> Signed-off-by: Wen Gu <guwen@linux.alibaba.com>
->> ---
->>   net/smc/smc_loopback.c | 74 ++++++++++++++++++++++++++++++++++++++++++
->>   net/smc/smc_loopback.h | 22 +++++++++++++
->>   2 files changed, 96 insertions(+)
->>
-> 
-> I've read the comments from Jiri and your answer. I can understand your thought. However, from the perspective of the 
-> end user, it makes more sense to integetrate the stats info into 'smcd stats'. Otherwise, it would make users confused 
-> to find out with which tool to check which statisic infornation. Sure, some improvement of the smc-tools is also needed
+diff --git a/fs/jfs/jfs_incore.h b/fs/jfs/jfs_incore.h
+index dd4264aa9bed..15955dd86bfd 100644
+--- a/fs/jfs/jfs_incore.h
++++ b/fs/jfs/jfs_incore.h
+@@ -197,6 +197,7 @@ struct jfs_sb_info {
+ 	kgid_t		gid;		/* gid to override on-disk gid */
+ 	uint		umask;		/* umask to override on-disk umask */
+ 	uint		minblks_trim;	/* minimum blocks, for online trim */
++	struct mutex log_mutex;
+ };
+ 
+ /* jfs_sb_info commit_state */
+diff --git a/fs/jfs/jfs_txnmgr.c b/fs/jfs/jfs_txnmgr.c
+index be17e3c43582..bd30b93e435c 100644
+--- a/fs/jfs/jfs_txnmgr.c
++++ b/fs/jfs/jfs_txnmgr.c
+@@ -2665,6 +2665,9 @@ static void txLazyCommit(struct tblock * tblk)
+ 
+ 	log = (struct jfs_log *) JFS_SBI(tblk->sb)->log;
+ 
++	if (!log)
++		return;
++
+ 	spin_lock_irq(&log->gclock);	// LOGGC_LOCK
+ 
+ 	tblk->flag |= tblkGC_COMMITTED;
+@@ -2730,7 +2733,9 @@ int jfs_lazycommit(void *arg)
+ 				list_del(&tblk->cqueue);
+ 
+ 				LAZY_UNLOCK(flags);
++				mutex_lock(&sbi->log_mutex);
+ 				txLazyCommit(tblk);
++				mutex_unlock(&sbi->log_mutex);
+ 				LAZY_LOCK(flags);
+ 
+ 				sbi->commit_state &= ~IN_LAZYCOMMIT;
+diff --git a/fs/jfs/jfs_umount.c b/fs/jfs/jfs_umount.c
+index 8ec43f53f686..04788cf3a471 100644
+--- a/fs/jfs/jfs_umount.c
++++ b/fs/jfs/jfs_umount.c
+@@ -51,6 +51,7 @@ int jfs_umount(struct super_block *sb)
+ 	 *
+ 	 * if mounted read-write and log based recovery was enabled
+ 	 */
++	mutex_lock(&sbi->log_mutex);
+ 	if ((log = sbi->log))
+ 		/*
+ 		 * Wait for outstanding transactions to be written to log:
+@@ -113,6 +114,7 @@ int jfs_umount(struct super_block *sb)
+ 		 */
+ 		rc = lmLogClose(sb);
+ 	}
++	mutex_unlock(&sbi->log_mutex);
+ 	jfs_info("UnMount JFS Complete: rc = %d", rc);
+ 	return rc;
+ }
+diff --git a/fs/jfs/super.c b/fs/jfs/super.c
+index 8d8e556bd610..cf291bdd094f 100644
+--- a/fs/jfs/super.c
++++ b/fs/jfs/super.c
+@@ -504,6 +504,7 @@ static int jfs_fill_super(struct super_block *sb, void *data, int silent)
+ 	sbi->uid = INVALID_UID;
+ 	sbi->gid = INVALID_GID;
+ 	sbi->umask = -1;
++	mutex_init(&sbi->log_mutex);
+ 
+ 	/* initialize the mount flag and determine the default error handler */
+ 	flag = JFS_ERR_REMOUNT_RO;
 
-Thank you Wenjia.
-
-Let's draw an analogy with RDMA devices, which is used in SMC-R. If we want
-to check the RNIC status or statistics, we may use rdma statistic command, or
-ibv_devinfo command, or check file under /sys/class/infiniband/mlx5_0. These
-provide details or attributes related to *devices*.
-
-Since s390 ISM can be used out of SMC, I guess it also has its own way (other
-than smc-tools) to check the statistic?
-
-What we can see in smcr stats or smcd stats command is about statistic or
-status of SMC *protocol* layer, such as DMB status, Tx/Rx, connections, fallbacks.
-
-If we put the underlying devices's statistics into smc-tools, should we also
-put RNIC statistics or s390 ISM statistics into smcr stat or smcd stat? and
-for each futures device that can be used by SMC-R/SMC-D, should we update them
-into smcr stat and smcd stat? And the attributes of each devices may be different,
-should we add entries in smcd stat for each of them?
-
-After considering the above things, I believe that the details of the underlying
-device should not be exposed to smc(smc-tools). What do you think?
-
-Thanks!
