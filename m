@@ -1,157 +1,145 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E25BF6A335;
-	Tue, 20 Feb 2024 13:39:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA1AE6A352;
+	Tue, 20 Feb 2024 13:40:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708436405; cv=none; b=FnXPsr5mZALH14OjFSUsCF32tniNV0KS7DeLzWgYAOf3bCBIL1jq1BP9j3r1qYdb3blcQ3Zoi/xjNbNVuT2WmhLOrI59IO4wj84jfNIehsb+jWctKPqqj0rwY9r2oFS+n2nbPgcJwONSmZ1q8uyPYt2C6tYN4BY/kWvUC+RyOqE=
+	t=1708436416; cv=none; b=d++mkchmLJ4puqaGtgy1fOfOdpxYDG8utNPN4EoPvrX5rOHrZ2zA/IoqFGO91r/CFrh9SzJkuNNo0eDSvObd4UmY3krWc4afNb3vD9kY4q44JoaMmkoYSfz2yrIloQPOH7VV2we3f6kN6m6hH5M/ZYiGUZHbCurdIu2S+k7wbes=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708436405; c=relaxed/simple;
-	bh=RqyAecBz4gdatYyS0Gw9MFoRwVagHCuhZhoMcCO0x84=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=SSn2pTtFAalxb/N/mrUgCoIs7WRmAzupE3DQ8jbvabOV4sh/Tx5y7pgl3sDRBDqyNTnO9QoiFpFuhoVwYuIa1kngiomzAv1jHNIiTMjt5cnzr81j8wAPFH5bjcYTGN85V1Zxx/RH2b5SEKTVAHvh0jdgXtiqFOBIWQyMG7h2pTU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4TfL5y4085z6K7MC;
-	Tue, 20 Feb 2024 21:36:22 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id 3C2E7140C72;
-	Tue, 20 Feb 2024 21:39:57 +0800 (CST)
-Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Tue, 20 Feb
- 2024 13:39:56 +0000
-Date: Tue, 20 Feb 2024 13:39:55 +0000
-From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: <shiju.jose@huawei.com>
-CC: <linux-cxl@vger.kernel.org>, <linux-acpi@vger.kernel.org>,
-	<linux-mm@kvack.org>, <dan.j.williams@intel.com>, <dave@stgolabs.net>,
-	<dave.jiang@intel.com>, <alison.schofield@intel.com>,
-	<vishal.l.verma@intel.com>, <ira.weiny@intel.com>,
-	<linux-edac@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<david@redhat.com>, <Vilas.Sridharan@amd.com>, <leo.duran@amd.com>,
-	<Yazen.Ghannam@amd.com>, <rientjes@google.com>, <jiaqiyan@google.com>,
-	<tony.luck@intel.com>, <Jon.Grimm@amd.com>, <dave.hansen@linux.intel.com>,
-	<rafael@kernel.org>, <lenb@kernel.org>, <naoya.horiguchi@nec.com>,
-	<james.morse@arm.com>, <jthoughton@google.com>, <somasundaram.a@hpe.com>,
-	<erdemaktas@google.com>, <pgonda@google.com>, <duenwen@google.com>,
-	<mike.malvestuto@intel.com>, <gthelen@google.com>,
-	<wschwartz@amperecomputing.com>, <dferguson@amperecomputing.com>,
-	<tanxiaofei@huawei.com>, <prime.zeng@hisilicon.com>,
-	<kangkang.shen@futurewei.com>, <wanghuiqiang@huawei.com>,
-	<linuxarm@huawei.com>
-Subject: Re: [RFC PATCH v6 08/12] cxl/memscrub: Register CXL device ECS with
- scrub configure driver
-Message-ID: <20240220133955.0000710b@Huawei.com>
-In-Reply-To: <20240215111455.1462-9-shiju.jose@huawei.com>
-References: <20240215111455.1462-1-shiju.jose@huawei.com>
-	<20240215111455.1462-9-shiju.jose@huawei.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+	s=arc-20240116; t=1708436416; c=relaxed/simple;
+	bh=JDJQNjVw0veG1VaCbbXgYBFSju4HC6XVDS/PqNxBn1k=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=amprxO7RUNPQv7fzMDmyx5qQKMVRTfj04sIbqeGIUh/+j1MMy+TXAnU+t7rSRx0k7KYpEk7J3eEz1IPHwTIVePMN34ldxVjm5AOkHe3Oute/DjXPPHwMK29Zt4bJhpNligYT98Na3lroFJoZt4+w6Ul3+vSyNZo+QsRNHl1nTe8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rLArZT+q; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rLArZT+q"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 64DB3C433F1;
+	Tue, 20 Feb 2024 13:40:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1708436415;
+	bh=JDJQNjVw0veG1VaCbbXgYBFSju4HC6XVDS/PqNxBn1k=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=rLArZT+qc+TFAcJdTODc0UbjE8Ongzr4+cb0ZJxf2TN1Ka+D5pZJFuHPrzb0pc9dO
+	 6UyOwJABmhW7fuWo0gNNceBhgT/q5UuWm4M3mZQGdHAPtNy9z6Vlm1IUSJ1Drn+mm0
+	 S9NfiPcK4NMifLJTfTTLms7lik6lkhByCWG41uXYRVK5H5SKfxE84OwSzstJQZp0BZ
+	 fA+m303Ekn9A+Pr4cWI6n6HFPlx05lwCzceXLp4LuUpBDN8cxSVn2l6vDbFCw8HbnZ
+	 DDynf9AOAm2wy3CHk7t/y6w/BwXeuTSZ2k5RTD2tnAKC9u2npE55UerLmvb3LoGQbJ
+	 95UXpH1wXk2ZA==
+Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-512be87a0f3so1780276e87.3;
+        Tue, 20 Feb 2024 05:40:15 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCW5dCYik3k6C9COKWfHSSBgcq8zGeuTPtDShDi5yCeJ9HodRiqp8nN46RtRAUIOHa9vcAYciFS4GS5myQ4XJ3d+QNZnMq207+8OZlz6TDPMT+bx3tw5Zk8BvTyFmQubQFgp0+da/jmAExL0
+X-Gm-Message-State: AOJu0YxYN+z/9TnmYC34zBi8srGC0jJ9+4q6DrLSBrNLk/dn0jz1n5eQ
+	nA67RHb1K83b3K0YQh2gTrNFK4LiySBaknHXkg7STasR8tEAKYkz1iY3i7X9Q0kVx/19fmpakwG
+	b/uz6nawKjZpUxRX3dw2xRwHLkAo=
+X-Google-Smtp-Source: AGHT+IGEDbJeXcckbzMiYZMx6O2WQYB/vnGFoZGu8Zv15CobuFxWqNDt17JsTSLOmf2HHpo6+Xodu81aQL1nhwKl4TM=
+X-Received: by 2002:ac2:505c:0:b0:512:a59d:27b3 with SMTP id
+ a28-20020ac2505c000000b00512a59d27b3mr5068137lfm.14.1708436413895; Tue, 20
+ Feb 2024 05:40:13 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500003.china.huawei.com (7.191.162.67) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
+References: <20240215151642.8970-1-petr.pavlu@suse.com>
+In-Reply-To: <20240215151642.8970-1-petr.pavlu@suse.com>
+From: Masahiro Yamada <masahiroy@kernel.org>
+Date: Tue, 20 Feb 2024 22:39:37 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAS=knGxd9ZRo37CaKTvjcc28bqNasx+XuqbV3S+XV=HtQ@mail.gmail.com>
+Message-ID: <CAK7LNAS=knGxd9ZRo37CaKTvjcc28bqNasx+XuqbV3S+XV=HtQ@mail.gmail.com>
+Subject: Re: [PATCH v2] kbuild: Use -fmin-function-alignment when available
+To: Petr Pavlu <petr.pavlu@suse.com>
+Cc: nathan@kernel.org, nicolas@fjasle.eu, mark.rutland@arm.com, 
+	linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, 15 Feb 2024 19:14:50 +0800
-<shiju.jose@huawei.com> wrote:
-
-> From: Shiju Jose <shiju.jose@huawei.com>
-> 
-> Register with the scrub configure driver to expose the sysfs attributes
-> to the user for configuring the CXL memory device's ECS feature.
-> Add the static CXL ECS specific attributes to support configuring the
-> CXL memory device ECS feature.
-> 
-> Signed-off-by: Shiju Jose <shiju.jose@huawei.com>
-
-The ABI in here needs documentation.  My key takeaway is that
-it is very ECS specific.  I think one of the big challenges of a common scrub
-control system is going to be trying to come up with some meaningful 
-common ABI.
-
+On Fri, Feb 16, 2024 at 12:16=E2=80=AFAM Petr Pavlu <petr.pavlu@suse.com> w=
+rote:
+>
+> GCC recently added option -fmin-function-alignment, which should appear
+> in GCC 14. Unlike -falign-functions, this option causes all functions to
+> be aligned at the specified value, including the cold ones.
+>
+> Detect availability of -fmin-function-alignment and use it instead of
+> -falign-functions when present. Introduce CC_HAS_SANE_FUNCTION_ALIGNMENT
+> and make the workarounds for the broken function alignment conditional
+> on this setting.
+>
+> Signed-off-by: Petr Pavlu <petr.pavlu@suse.com>
 > ---
->  drivers/cxl/core/memscrub.c | 253 +++++++++++++++++++++++++++++++++++-
->  1 file changed, 250 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/cxl/core/memscrub.c b/drivers/cxl/core/memscrub.c
-> index a1fb40f8307f..325084b22e7a 100644
-> --- a/drivers/cxl/core/memscrub.c
-> +++ b/drivers/cxl/core/memscrub.c
-> @@ -464,6 +464,8 @@ EXPORT_SYMBOL_NS_GPL(cxl_mem_patrol_scrub_init, CXL);
->  #define CXL_MEMDEV_ECS_GET_FEAT_VERSION	0x01
->  #define CXL_MEMDEV_ECS_SET_FEAT_VERSION	0x01
->  
-> +#define CXL_DDR5_ECS	"cxl_ecs"
-I would just put these name defines inline.
 
-> +enum cxl_mem_ecs_scrub_attributes {
-> +	cxl_ecs_log_entry_type,
-> +	cxl_ecs_log_entry_type_per_dram,
-> +	cxl_ecs_log_entry_type_per_memory_media,
-> +	cxl_ecs_mode,
-> +	cxl_ecs_mode_counts_codewords,
-> +	cxl_ecs_mode_counts_rows,
-> +	cxl_ecs_reset,
-> +	cxl_ecs_threshold,
-> +	cxl_ecs_threshold_available,
-> +	cxl_ecs_max_attrs,
-This is pretty much all custom ABI.  Challenging to make it common with
-the main scrub and RASF controls, but I think we do need to see if we can
-come up with something that is at least vaguely consistent across
-different forms of scrub control.
+[snip]
 
-What the user cares about is how likely an error is to get past the
-scrubbing that is running (I think - RAS folk speak up if I have
-this wrong!)
-
-So how do we go from the ECS parameters to that sort of info?
-I think ECS is effectively scrubbing at a fixed rate (google suggests
-all ram every 24 hours).  We are really controlling what info is
-reported rather than what scrub is carried out.
-
-Useful stuff to potentially control but different from the
-other cases.
-
-
-> +};
-
-> +
->  int cxl_mem_ecs_init(struct cxl_memdev *cxlmd, int region_id)
+> index dfb963d2f862..5a6fed4ad3df 100644
+> --- a/kernel/exit.c
+> +++ b/kernel/exit.c
+> @@ -1920,7 +1920,10 @@ EXPORT_SYMBOL(thread_group_exited);
+>   *
+>   * See https://gcc.gnu.org/bugzilla/show_bug.cgi?id=3D88345#c11
+>   */
+> -__weak __function_aligned void abort(void)
+> +#ifndef CONFIG_CC_HAS_SANE_FUNCTION_ALIGNMENT
+> +__function_aligned
+> +#endif
+> +__weak void abort(void)
 >  {
-> +	char scrub_name[CXL_MEMDEV_MAX_NAME_LENGTH];
->  	struct cxl_mbox_supp_feat_entry feat_entry;
->  	struct cxl_ecs_context *cxl_ecs_ctx;
-> +	struct device *cxl_scrub_dev;
+>         BUG();
 
-Make this more local as we don't need it out here?
 
->  	int nmedia_frus;
->  	int ret;
->  
-> @@ -755,6 +993,15 @@ int cxl_mem_ecs_init(struct cxl_memdev *cxlmd, int region_id)
->  		cxl_ecs_ctx->get_feat_size = feat_entry.get_feat_size;
->  		cxl_ecs_ctx->set_feat_size = feat_entry.set_feat_size;
->  		cxl_ecs_ctx->region_id = region_id;
-> +
-> +		snprintf(scrub_name, sizeof(scrub_name), "%s_%s_region%d",
-> +			 CXL_DDR5_ECS, dev_name(&cxlmd->dev), cxl_ecs_ctx->region_id);
-> +		cxl_scrub_dev = devm_scrub_device_register(&cxlmd->dev, scrub_name,
-> +							  cxl_ecs_ctx, NULL,
-> +							  cxl_ecs_ctx->region_id,
-> +							  &cxl_mem_ecs_attr_group);
-> +		if (IS_ERR(cxl_scrub_dev))
-> +			return PTR_ERR(cxl_scrub_dev);
->  	}
->  
->  	return 0;
 
+
+
+__function_aligned is conditionally defined in
+include/linux/compiler_types.h, and then it is
+conditionally used in kernel/exit.c
+
+This is unreadable.
+
+
+
+
+You may want to move CONFIG_CC_HAS_SANE_FUNCTION_ALIGNMENT
+to include/linux/compiler_types.h, as this is more
+aligned with what you did for __cold.
+
+
+
+if !defined(CONFIG_CC_HAS_SANE_FUNCTION_ALIGNMENT) && \
+               CONFIG_FUNCTION_ALIGNMENT > 0
+#define __function_aligned       __aligned(CONFIG_FUNCTION_ALIGNMENT)
+#else
+#define __function_aligned
+#endif
+
+
+
+
+
+However, an even more elegant approach is to unify
+the two #ifdef blocks because __cold and __function_aligned
+are related to each other.
+
+
+
+#if defined(CONFIG_CC_HAS_SANE_FUNCTION_ALIGNMENT) || \
+                 (CONFIG_FUNCTION_ALIGNMENT =3D=3D 0)
+#define __cold                 __attribute__((__cold__))
+#define __function_aligned
+#else
+#define __cold
+#define __function_aligned     __aligned(CONFIG_FUNCTION_ALIGNMENT)
+#endif
+
+
+
+
+
+
+
+
+
+--
+Best Regards
+Masahiro Yamada
