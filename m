@@ -1,84 +1,76 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81769374DD
-	for <linux-kernel@vger.kernel.org>; Tue, 20 Feb 2024 01:45:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45CDC12B76
+	for <linux-kernel@vger.kernel.org>; Tue, 20 Feb 2024 01:52:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708393550; cv=none; b=shiOjgXHMo21kjYw82jAOhbXpIXrRircPAktYGmvmldFLe0zlCeyc2XTwVzGEnLIhxkUT9umQDY/iG8Pf85VOasX0u+3Z63TUGzvgViSideZTKFOvo7QrRGa6lZbdgkpqIJC7vV0w5v1oei694iXDVeW2aafnN9CwUDCIJHE+/c=
+	t=1708393969; cv=none; b=am8QexsybBnJWU3gEHkii6pbABTKgLlSn5QpQStWAJE/Wy8YoPV9WBBaYxx+hD4Vf+cDMU79ur0jNmssGk14dBd/f8ovQUkaZ1aDrwulbQWMrVzCxtW8+lX2HAtqUsI5JNu/O+twy0H+FmKNuu37dyK1k5FlVOQ7oG6XZlaMGso=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708393550; c=relaxed/simple;
-	bh=xwMhIGtEqqY2ZsJjJOtA/QlKbBot/S9r36wBtxBVccA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=N9/RGDwCSGGz4vg0H6tGcVxU7puBESqxIZ66iNw6turgZsb+7acdLdJFESGTEbETU5A9Dr7p9e97hjixW6sQjcADsJdzC5vwZa8W4MsjflhgRd2sKQjhWSLe+yiiPJMDHV518qLiG+fwplwjCsYsdMqQldLDlQQ4YZr3l+6cjQA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O1W0cgbT; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1708393969; c=relaxed/simple;
+	bh=DvsroR4CVogEadvHGT6tZ/KiY5XSH4XgBmG24AenDes=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=dA67aDbgrGA6f7RoC2hq5ipqW3iXEdheJWi778tJfQyxFhK+9J6DL2OG1tGoPmS7YRBCP9ThXJnw5djYmnCgT6Zqkx0sUUrzkrAQJqccFiO4fJbMGxGiSPpzJJPSgVlgoqU7Y3vUI4tBrXlXKUL1wMyZSiyYJYqb8NWSEEXCaP4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=E5U0H4Vk; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O1W0cgbT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9EF93C433F1;
-	Tue, 20 Feb 2024 01:45:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708393550;
-	bh=xwMhIGtEqqY2ZsJjJOtA/QlKbBot/S9r36wBtxBVccA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=O1W0cgbTEGgHawrTybfrqZA2h4w70iM1SEZtnjXNGPMnrpImDFWWacaxZdDvQeVpw
-	 Tt2FSsPBWHrVRTCsluKvgjQVX9xG01G4hHeqhr5wvotXpT/xoxR/BtBuhVmGorB1S9
-	 6JJoiQIrM7kaocCdYogkW5qw1XjN8hfeGl516L5RGjaymvfCSP/Q2YDx8Nou7dTsje
-	 Fr8F1U32HoluRGf7UpFJOz0T7b6R8jAwoFZw/hoY+FHyGoU1cNvFpKQYdZuae0hSm0
-	 NNrEhiFU/R3INlK/0x/LxEyv8VApX/phDuvX7ph3ZKzXY7v7L55lOyZZBFNGTFNIPZ
-	 iIKEMP27yoHRA==
-Date: Tue, 20 Feb 2024 09:32:43 +0800
-From: Jisheng Zhang <jszhang@kernel.org>
-To: Yangyu Chen <cyy@cyyself.name>
-Cc: linux-riscv@lists.infradead.org,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>, Guo Ren <guoren@kernel.org>,
-	Alexandre Ghiti <alexghiti@rivosinc.com>,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] riscv: mm: fix NOCACHE_THEAD does not set bit[61]
- correctly
-Message-ID: <ZdQBO4JetdQGecoi@xhacker>
-References: <tencent_594131AD216D8DE97CCC8265DA5D8E45B808@qq.com>
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="E5U0H4Vk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B3C74C433C7;
+	Tue, 20 Feb 2024 01:52:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+	s=korg; t=1708393968;
+	bh=DvsroR4CVogEadvHGT6tZ/KiY5XSH4XgBmG24AenDes=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=E5U0H4VkRUHSfmZHaz4X0MdNium81DjQShT833QWQtqmHGNaFAbVuu9eNqQlgPAHX
+	 gk2dkGjxxaRey7bmKnH724jyAXwzkQbacf0Qk6pv6EN2APybf1VUfga09LJpBy1Bos
+	 v6CqDl9EmG2mdevZXg4qf1iCN7IO4itno004A98M=
+Date: Mon, 19 Feb 2024 17:52:48 -0800
+From: Andrew Morton <akpm@linux-foundation.org>
+To: Gang Li <gang.li@linux.dev>
+Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: [PATCH v1 0/2] hugetlb: two small improvements of hugetlb init
+ parallelization
+Message-Id: <20240219175248.bc70d8bddd28fced647eceb7@linux-foundation.org>
+In-Reply-To: <66232486-12a9-4097-baad-fa20655194b1@linux.dev>
+References: <20240213111347.3189206-1-gang.li@linux.dev>
+	<66232486-12a9-4097-baad-fa20655194b1@linux.dev>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <tencent_594131AD216D8DE97CCC8265DA5D8E45B808@qq.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Tue, Feb 20, 2024 at 12:32:09AM +0800, Yangyu Chen wrote:
-> Previous commit dbfbda3bd6bf("riscv: mm: update T-Head memory type
-> definitions") missed a `<` for bit shifting, result in bit[61] does not set
-> in _PAGE_NOCACHE_THEAD and leaves bit[0] set instead. This patch get this
-> fixed.
-> 
-> Link: https://lore.kernel.org/linux-riscv/20230912072510.2510-1-jszhang@kernel.org/ [1]
-> 
-> Signed-off-by: Yangyu Chen <cyy@cyyself.name>
+On Mon, 19 Feb 2024 11:03:29 +0800 Gang Li <gang.li@linux.dev> wrote:
 
-Good catch! We're lucky just because _PAGE_NOCACHE_THEAD isn't used now.
-
-Reviewed-by: Jisheng Zhang <jszhang@kernel.org>
-
-> ---
->  arch/riscv/include/asm/pgtable-64.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> On 2024/2/13 19:13, Gang Li wrote:
+> > This series includes two improvements: fixing the PADATA Kconfig warning
+> > and a potential bug in gather_bootmem_prealloc_parallel. Please refer to
+> > the specific commit message for details.
+> > 
+> > For Andrew:
+> > If you want me to include these two fixes into the previous series[1], I
+> > would be happy to send v6. Otherwise, you can directly apply these two
+> > patches.
+> > 
+> > [1]. https://lore.kernel.org/lkml/20240126152411.1238072-1-gang.li@linux.dev/
 > 
-> diff --git a/arch/riscv/include/asm/pgtable-64.h b/arch/riscv/include/asm/pgtable-64.h
-> index b42017d76924..b99bd66107a6 100644
-> --- a/arch/riscv/include/asm/pgtable-64.h
-> +++ b/arch/riscv/include/asm/pgtable-64.h
-> @@ -136,7 +136,7 @@ enum napot_cont_order {
->   * 10010 - IO   Strongly-ordered, Non-cacheable, Non-bufferable, Shareable, Non-trustable
->   */
->  #define _PAGE_PMA_THEAD		((1UL << 62) | (1UL << 61) | (1UL << 60))
-> -#define _PAGE_NOCACHE_THEAD	((1UL < 61) | (1UL << 60))
-> +#define _PAGE_NOCACHE_THEAD	((1UL << 61) | (1UL << 60))
->  #define _PAGE_IO_THEAD		((1UL << 63) | (1UL << 60))
->  #define _PAGE_MTMASK_THEAD	(_PAGE_PMA_THEAD | _PAGE_IO_THEAD | (1UL << 59))
->  
-> -- 
-> 2.43.0
+> Hi Andrew,
+> A gentle ping here :).
 > 
+> Do you want to apply these two patches, or would you like me to
+> include them into the original patch and send out v6?
+
+The patchset is now rather a mess and I'm not confidently identifying
+which issues remain open and which are addressed.
+
+So yes, a full redo and resend would be preferred, please.
+
+Links which I collected are:
+
+https://lkml.kernel.org/r/202402020454.6EPkP1hi-lkp@intel.com
+https://lkml.kernel.org/r/20240204072525.1986626-1-gang.li@linux.dev
+https://lkml.kernel.org/r/6A148F29-68B2-4365-872C-E6AB599C55F6@linux.dev
+https://lkml.kernel.org/r/j7xb7m5cy374ngbdm23rvryq6vy6jxtewtu3abjeidhho4bly7@t3aawaeybxlk
