@@ -1,105 +1,106 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48DAD5D758
-	for <linux-kernel@vger.kernel.org>; Tue, 20 Feb 2024 08:55:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3C1C5F545
+	for <linux-kernel@vger.kernel.org>; Tue, 20 Feb 2024 08:56:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708419332; cv=none; b=i8PL56XFnMv2QOBuxxixdw5BDunbnvsxKei6M02LhlUdqorGchf2WiPrR+oYXHKjntmC3F0mNFRgQDj3Da4ZY4s48EFydiKnMLWg2XpEY1wIUqRdCwHapjbf2R0cvRRfc2AQ1aQdh0+6N43VvM+DJ/NhFj/8JbuIjfuAo8E7SJs=
+	t=1708419370; cv=none; b=BHtgTPnl0bd14jshP1eT0inL1joWAGD/HZOVq8Zt9XR9WnPN8D4cIBq+PtO998pGbJ/0eEFwTutqJ14nIOkMVOQwzsPv7rGspcGrfjGYMz/J+sV1GZWX5lfCfHiz7OTwNUmjliSkOpb8ZoBG5YIvmj2sAW3t5ivFXmntsmb026o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708419332; c=relaxed/simple;
-	bh=saIJiiXqg1gft1yqsE9WJd4aKBYgkGy99q4iLko4Hzk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=THMOu1g9sBffYYKptVXgPum0C5gxiPd1zrKOP64ZzqSmzIuVK/UV/MC2xm8pz5NTPStS/jP/TnEyGV6cwk/8Nt+1kRTCwzsU6VeZdV3zYziEgs2CYa2kZQKbKFIPSt3IU60Z47jE9rhWXABGURrjk9ZbYCWRJKaK+/KmEz6UVPk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <mkl@pengutronix.de>)
-	id 1rcLuO-0002zB-0W; Tue, 20 Feb 2024 09:55:24 +0100
-Received: from [2a0a:edc0:0:b01:1d::7b] (helo=bjornoya.blackshift.org)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <mkl@pengutronix.de>)
-	id 1rcLuN-001oHi-AU; Tue, 20 Feb 2024 09:55:23 +0100
-Received: from pengutronix.de (unknown [172.20.34.65])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	(Authenticated sender: mkl-all@blackshift.org)
-	by smtp.blackshift.org (Postfix) with ESMTPSA id ED82C292F85;
-	Tue, 20 Feb 2024 08:55:22 +0000 (UTC)
-Date: Tue, 20 Feb 2024 09:55:22 +0100
-From: Marc Kleine-Budde <mkl@pengutronix.de>
-To: Eric Dumazet <edumazet@google.com>
-Cc: Oliver Hartkopp <socketcan@hartkopp.net>, 
-	"David S. Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>, 
-	Paolo Abeni <pabeni@redhat.com>, linux-can@vger.kernel.org, netdev@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] can: raw: raw_getsockopt(): reduce scope of err
-Message-ID: <20240220-demotion-upcountry-1929fa096489-mkl@pengutronix.de>
-References: <20240220-raw-setsockopt-v1-1-7d34cb1377fc@pengutronix.de>
- <CANn89iL7N-1zvBBLoz0qhCApVJRF1LKu=jSyC0yz-wHa3JLGNg@mail.gmail.com>
+	s=arc-20240116; t=1708419370; c=relaxed/simple;
+	bh=6LN+anVhIs46gCoUM3PrXmdfnXZO8f3moMRt0c1d/S8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=WzIWdFoDTJjF4Qa+zRfqUHPNuzzZGhbR1sFli+F+BlLLKW71A/PheG9rEtfdf1CiGCBEPJuPBt0Elvt8b6QBVfFMZYx/NR2eswDT8Ecd/8BN0XnM6x0/821wHklJfWixhVacSvD87yKocnG/Kd0bMOSq78Xki3Bm0LKSOvPEtu0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=ECln5RxC; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="ECln5RxC"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1708419367;
+	bh=6LN+anVhIs46gCoUM3PrXmdfnXZO8f3moMRt0c1d/S8=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=ECln5RxCydHLZFsD2Msh8x4Dpp5/8+AsnlAH0tcpHO7bRU+fcbo2MQ0mQm3WhJPtk
+	 4K6OcR3vjMYPZ70GlSdExViGFtnCRHYa/kMFq7qGfBcm8HW+qlz8UUcXBKKIx1RJnq
+	 igS+6xw/qUZ5UtAvj2jCW6iLIlPOWvGZVqfpOUYIbo5B9wRQuFpglpVMrJWITbY5wd
+	 72E5OtOLbA6qTVUrkMH9fJAXNVXEgypOEdnOSNw9RAkaJzMw9OIL9GjD96DTjjWdbB
+	 JZLkPe8Rni+AoB2nLwS7ZjKkyE+6NOCruKMk3F/HmR+HlsESwS/+ajnbLFJibOqUBE
+	 tLFSwdFA23f3g==
+Received: from [100.113.186.2] (cola.collaboradmins.com [195.201.22.229])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: kholk11)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 8897C3781FD9;
+	Tue, 20 Feb 2024 08:56:06 +0000 (UTC)
+Message-ID: <f1fc67d4-f979-4c3e-988f-a803b7b11c46@collabora.com>
+Date: Tue, 20 Feb 2024 09:56:05 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="zu7rus2awvrtgxvo"
-Content-Disposition: inline
-In-Reply-To: <CANn89iL7N-1zvBBLoz0qhCApVJRF1LKu=jSyC0yz-wHa3JLGNg@mail.gmail.com>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: mkl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] soc: mediatek: mtk-socinfo: depends on CONFIG_SOC_BUS
+Content-Language: en-US
+To: Chen-Yu Tsai <wenst@chromium.org>
+Cc: Daniel Golle <daniel@makrotopia.org>,
+ Matthias Brugger <matthias.bgg@gmail.com>,
+ William-tw Lin <william-tw.lin@mediatek.com>, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
+References: <cc8f7f7da5bdccce514a320e0ae7468659cf7346.1707327680.git.daniel@makrotopia.org>
+ <CAGXv+5EKCrvsvZwc2zYiMWAeT9vqvU0JnDrz=WBoebBBbcgp0g@mail.gmail.com>
+From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+In-Reply-To: <CAGXv+5EKCrvsvZwc2zYiMWAeT9vqvU0JnDrz=WBoebBBbcgp0g@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+
+Il 20/02/24 07:40, Chen-Yu Tsai ha scritto:
+> On Thu, Feb 8, 2024 at 1:43 AM Daniel Golle <daniel@makrotopia.org> wrote:
+>>
+>> The mtk-socinfo driver uses symbols 'soc_device_register' and
+>> 'soc_device_unregister' which are part of the bus driver for
+>> System-on-Chip devices.
+>>
+>> Select SOC_BUS to make sure that driver is built and the symbols are
+>> available.
+>>
+>> Fixes: 423a54da3c7e ("soc: mediatek: mtk-socinfo: Add driver for getting chip information")
+>> Signed-off-by: Daniel Golle <daniel@makrotopia.org>
+> 
+> Reviewed-by: Chen-Yu Tsai <wenst@chromium.org>
+> 
+> Angelo, I believe this should be picked up for -next?
+> 
+
+I'll pick this up for fixes, as I've already sent the PRs for v6.9.
+
+> Also, mediatek/v6.8-next/soc is missing from mediatek/for-next in today's
+> linux-next.
+> 
+
+Fixing immediately.
+
+>> ---
+>>   drivers/soc/mediatek/Kconfig | 1 +
+>>   1 file changed, 1 insertion(+)
+>>
+>> diff --git a/drivers/soc/mediatek/Kconfig b/drivers/soc/mediatek/Kconfig
+>> index 50c664b65f4d4..1b7afb19ccd63 100644
+>> --- a/drivers/soc/mediatek/Kconfig
+>> +++ b/drivers/soc/mediatek/Kconfig
+>> @@ -72,6 +72,7 @@ config MTK_SOCINFO
+>>          tristate "MediaTek SoC Information"
+>>          default y
+>>          depends on NVMEM_MTK_EFUSE
+>> +       select SOC_BUS
+>>          help
+>>            The MediaTek SoC Information (mtk-socinfo) driver provides
+>>            information about the SoC to the userspace including the
+>> --
+>> 2.43.0
+>>
+>>
 
 
---zu7rus2awvrtgxvo
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On 20.02.2024 09:25:58, Eric Dumazet wrote:
-> In net-next tree, syzbot complained about a bug added in
->=20
-> commit c83c22ec1493c0b7cc77327bedbd387e295872b6
-> Author: Oliver Hartkopp <socketcan@hartkopp.net>
-> Date:   Mon Feb 12 22:35:50 2024 +0100
->=20
->     can: canxl: add virtual CAN network identifier support
->=20
-> Patch to fix the issue has not been sent yet ?
-
-Done, it's part of this PR:
-
-| https://lore.kernel.org/all/20240220085130.2936533-9-mkl@pengutronix.de/
-
-regards,
-Marc
-
---=20
-Pengutronix e.K.                 | Marc Kleine-Budde          |
-Embedded Linux                   | https://www.pengutronix.de |
-Vertretung N=C3=BCrnberg              | Phone: +49-5121-206917-129 |
-Amtsgericht Hildesheim, HRA 2686 | Fax:   +49-5121-206917-9   |
-
---zu7rus2awvrtgxvo
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEUEC6huC2BN0pvD5fKDiiPnotvG8FAmXUaPcACgkQKDiiPnot
-vG+u/Qf6ArlJZ8OXjNG1q4O9+Vl+n3A0ODtuOnj0lSuHdh4YVwpf0yNkZrMyKmqe
-Z+9tYR3rz46Iii2um+DB9tsARVQxvjkP3bqVR4LWuuTOQTOj1rSEV1VQd2ljR/+i
-Cum8LOvRkLsmE9AS2/QWSsnZhc0reXN5XKW2fcOZAXtj75x6dhAXFCC0SnuYouG8
-vm5K39P1owWj6wsNX/IfGZ4C61k/MdG4rMUxP4jLi5BwIw2QxADAs3WTSPZNOCfB
-Y88zQPSR7tceDdmSNJuImmS2bixcbm0cuNr6ENjC/vMAUTPVpVyLLqEGDrdUyr+3
-RXrTlxozY1XNkFVDiXDTs3PgVhk2NQ==
-=jrOD
------END PGP SIGNATURE-----
-
---zu7rus2awvrtgxvo--
