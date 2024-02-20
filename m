@@ -1,195 +1,237 @@
-Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
+Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 620CC79941
-	for <linux-kernel@vger.kernel.org>; Tue, 20 Feb 2024 16:25:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E964D762FF
+	for <linux-kernel@vger.kernel.org>; Tue, 20 Feb 2024 16:27:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708446361; cv=none; b=B/FbmwQKrSkSWSATuqCtP/U5wWls+3TZCPnSO6Wenbk5s+uA40BDNddOlx4QOhYabLJ77n+EDs96S/l2s13fJEtvnRwLyRFFhcsJVJro+jsDYR9jayVO517WJwlohSSPGmA3su6UEc6JZHqtze2vmVjrLXKz0+kMjE7znXQCJUs=
+	t=1708446432; cv=none; b=M+EOdvZB/46OfqREyfCfW7I5fNhFeLvFZa1xyFQWlQFX8nwg7KfEGfq63mK+lornMy9oSx/SevrKtsyuLyLEc7nedmqK8uiCXOMmF/p471tg9Q/TTeEJSg7m7iUSVfh7xWwRpxzhZfUG4EOqVuLYO43hYAS4hkiI6nVVeze7nDQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708446361; c=relaxed/simple;
-	bh=MtNTYYK+6+28ekFQX5xbREmMjtYbjCbTHU3QVy5WdIc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qmnzHEcipZj+KOhGKYgG3nlx0oIIoETdNj85+wC6lMsj1TqlhHjSlKvl2hh9jxqb3vg4s1nV3laEAtk6VG3IGc8gTf0NaK08OmHwl7qtiNtBiNwZQehkhsX7F2Ykw2w9fkCFgJ8M3cTX6vA7WUnXzi1A4QUQ3T6r6QEQAQU1PTs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=UHldAhU6; arc=none smtp.client-ip=209.85.208.52
+	s=arc-20240116; t=1708446432; c=relaxed/simple;
+	bh=mGTXaZNNbdb3/xwmUtLv4oUiJfbUgvqfyphMUdqUELc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=r6vN4oxDZOiJET497T/3RQ6zLx5ftmDTxo45rKrmefR0EHaEJ+Tz6SrdsaatmyRt6NKN4IJcFNcEn1cL5haLttVFDqRjXtBzhFw8bhLIK/OVKArzck1VeIU8Agw6bL4Gvj9g4ZftOtvPJtILnfe0yzHw1Lm2NrVJR8jKfL9SXdI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=fmOmE77y; arc=none smtp.client-ip=209.85.167.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UHldAhU6"
-Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-561587ce966so11379068a12.1
-        for <linux-kernel@vger.kernel.org>; Tue, 20 Feb 2024 08:25:58 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fmOmE77y"
+Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-512b42b6697so2725101e87.1
+        for <linux-kernel@vger.kernel.org>; Tue, 20 Feb 2024 08:27:09 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1708446357; x=1709051157; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=OZ8v8X2fbB2BWapJA2Df3qbqU4Mifn6M/QSqXXZqY7c=;
-        b=UHldAhU6ftxK6UX4+A6zg4LTvsoATzfSmv3gob3hG+ZeTcuFzpo8I+wt8TP9qtP/bt
-         bHqp+hurSNdz5tBp8nNC2rYnkGJ51/ef8uRNEdjZEMy7Pl+A5Vdb93Yz7uHpYOieawp9
-         PSGHOhnA0f5qkNt+eyaPuBWvw6GQ5Dl5foRVguQ2NYRlx52n6Vs0SyIST/Fbi0r0KOLN
-         FVQ7KbNumw4kdN3maIu0gkf3QLgC+Gwzrui77O8B8LfV4Lslv/r22Uo7b2iIo4l1enyX
-         x9XAeKi6TME19CKMpxYgS9gLzq6AzaDh82nNn8vlxACLixXmN9T+62Ku1S4+AYC5aQir
-         6d8g==
+        d=linaro.org; s=google; t=1708446428; x=1709051228; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=0GoTG41kI5OtRvDaPRyIcuGxljet2n6lqDoeB3uJInM=;
+        b=fmOmE77yS5cRJFsKGPq0Al5o0OIXcUcikH/4x+wkMF0c80nmpwD9HNC8Lh1uyUJJ64
+         4Uxy2HLY8bC8Ag1yHWqSzclexzEPs0MIjspvXFFvvZeK9yyTQ9YlE0mWKDep4gZTAwmL
+         7IOMM+MGq0e6RTDV01szTKUC7miHYjiKwWMkTfFZ73kkrD7Osn99ZuExO8u2mE/6LKqT
+         gtGJcebKWgAXK6xtr/oG/XCaCJmxE6BhHqeDpy4gSQJaJ1Hls9flaU299s+/YtJuTxpM
+         AkEYclEgw9m1Ja2jBRtuG/bBcEa1FMtKrIUlfgMfFSXuv7aaUyNzSzZf7A48zDRK/pGq
+         Ff2Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708446357; x=1709051157;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=OZ8v8X2fbB2BWapJA2Df3qbqU4Mifn6M/QSqXXZqY7c=;
-        b=pTkcLKkedyMdHCs4mMTWWZ96JS1eLEIDODqA3uwdRTKHwsjhPIDVIU+xkAy0K4ajsi
-         SSYsBM/ERcICDwfwug9IZWqfr9+GjRNvlHttRrO/wUJOS8QIJ7euvXjQ9PpdNXW6T1Li
-         Q9KgFm64WjG9tTvS2VVLJDzTRzkzj8nad3XEwZmHbooC56kT5Xpr+ZZ4d/jDllCI77WK
-         xzc7hWyJ/3sQE+S4FutaFv+HwPAtbE3mGpj8lFNTbO2dk8JJ3owtqLuh+0iElbEZJUoI
-         D8nhcplDqulTLaW/fxOrM/hkDeEGKSif4isYZkt9szrxdf+r5Bboc2IsRStUpiDNiiza
-         H+GA==
-X-Forwarded-Encrypted: i=1; AJvYcCX7HD2iZUPu0IaIfc2h+IRU94LpCvSq/5W8lc6AdH26xF8avj5d+rUrMPesJ5oYVobqCYXUsgKH+DV0xXh2FlDLaYGJtlZk6Za+pxXw
-X-Gm-Message-State: AOJu0YxfQG6d/KZQjX6AIaORfrv0AxeIObX9+6gTZGZXk08xvI8dVeWe
-	cuEZkm+4R8AoDPSzJkcDIMLedEgcLv0QJSGndcy245yQrpdP0wCDwZRmlytbVGI=
-X-Google-Smtp-Source: AGHT+IFcYYJlEmNaqLGIavK/2e+eL7voViTM/Mm2lFBExB6izE82wDysrJtvZSWkNUc6UZ7uvH8OSg==
-X-Received: by 2002:aa7:c908:0:b0:564:b94d:70df with SMTP id b8-20020aa7c908000000b00564b94d70dfmr3036075edt.17.1708446356733;
-        Tue, 20 Feb 2024 08:25:56 -0800 (PST)
-Received: from [192.168.1.20] ([178.197.222.116])
-        by smtp.gmail.com with ESMTPSA id n11-20020a056402434b00b00560c07f986asm3759697edc.58.2024.02.20.08.25.55
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 20 Feb 2024 08:25:56 -0800 (PST)
-Message-ID: <3b6ab055-360b-4f73-8d11-8f52b272b7a8@linaro.org>
-Date: Tue, 20 Feb 2024 17:25:54 +0100
+        d=1e100.net; s=20230601; t=1708446428; x=1709051228;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=0GoTG41kI5OtRvDaPRyIcuGxljet2n6lqDoeB3uJInM=;
+        b=OEHQPwbB8v+shP/NY/4UaHIl1jhjqkFYjyXA0r6+6ZGmYVQFFc2uiMUAL6+35Nr4l2
+         Gtdf+gKXG/qaidKciYhzhen4RCDy/TOxO4KBQpgHzyeSSDa0+9GhPvbJxIm/42WIuwrd
+         YdYbkpx9z11ECkkwegUuVvHff+9c5nwuaBVL2/SaNb21mh4xcLFpdIBLCFN9bAYidXIr
+         Q1HarrPOfC83go6X/n2NrQckLz5v6hqFi7yBvhiBAa/jrncRXgqI1N8rE6qOfKw8ODq/
+         LDV2hCG+kOVOhURU7L7ceU20cx7KS/hR3Ay8GwwD3VA1esqFYXAYbIGV4os60cE6AYTS
+         nBSg==
+X-Forwarded-Encrypted: i=1; AJvYcCWju7zxnRgczy7C0qa/iS2Km462vnOD7zU9bwBn+/hzy/ZFmD9F1vvGiPFEYCCSeU/VrYfgHqqIE30zx8NWo0NYebcSfez32sAP1Yp1
+X-Gm-Message-State: AOJu0YwnUEEzubdw0FasuuLFis/m4vm4/0LDSYDrur2wmPqHY3ZmbHhL
+	7mZ5V+y+2TvzA95fgX9RxqL1AUrHJisCuhuvVEs0Eowao3lrSQ0tmdJI0GE4GFnjYSAbCEGH2Ly
+	eXbf+5xnTh5rU58rj4HpcJTN/yyvSkMdBQ8/6Ig==
+X-Google-Smtp-Source: AGHT+IEFePdHyB4lIz2wmU3Z2bj7F0YcGOkBh0oWxNDx7e4zJcf1y7GqHGBsRQjK+NcqyJXVqdo1IBFokFWvAC+Y484=
+X-Received: by 2002:ac2:4885:0:b0:512:be41:146f with SMTP id
+ x5-20020ac24885000000b00512be41146fmr2514899lfc.68.1708446427913; Tue, 20 Feb
+ 2024 08:27:07 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RFC v2 1/5] dt-bindings: clock: histb-clock: Add missing
- common clock and Hi3798MV200 specific clock definition
-Content-Language: en-US
-To: Yang Xiwen <forbidden405@outlook.com>,
- Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
- <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>
-Cc: David Yang <mmyangfl@gmail.com>, linux-clk@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20240217-clk-mv200-v2-0-b782e4eb66f7@outlook.com>
- <20240217-clk-mv200-v2-1-b782e4eb66f7@outlook.com>
- <875b706f-801a-4a4c-8806-411a67c5a5e7@linaro.org>
- <SEZPR06MB6959456E59D84C15F0C1B88396502@SEZPR06MB6959.apcprd06.prod.outlook.com>
- <90e0dc10-8514-4827-998f-15b4d45d874e@linaro.org>
- <SEZPR06MB69594CBF0625989A5C54DC9096502@SEZPR06MB6959.apcprd06.prod.outlook.com>
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
- 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
- D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <SEZPR06MB69594CBF0625989A5C54DC9096502@SEZPR06MB6959.apcprd06.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20231027000525.1278806-1-tina.zhang@intel.com> <20231027000525.1278806-6-tina.zhang@intel.com>
+In-Reply-To: <20231027000525.1278806-6-tina.zhang@intel.com>
+From: Zhangfei Gao <zhangfei.gao@linaro.org>
+Date: Wed, 21 Feb 2024 00:26:56 +0800
+Message-ID: <CABQgh9GWcqUeBkHQCpj5tzu6FnEgpOp3KOQ6s9c0X0KU7Ov1qw@mail.gmail.com>
+Subject: Re: [PATCH v10 5/6] iommu: Support mm PASID 1:n with sva domains
+To: Tina Zhang <tina.zhang@intel.com>
+Cc: iommu@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	David Woodhouse <dwmw2@infradead.org>, Lu Baolu <baolu.lu@linux.intel.com>, 
+	Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>, 
+	Jason Gunthorpe <jgg@ziepe.ca>, Kevin Tian <kevin.tian@intel.com>, Nicolin Chen <nicolinc@nvidia.com>, 
+	Michael Shavit <mshavit@google.com>, Vasant Hegde <vasant.hegde@amd.com>, 
+	Jason Gunthorpe <jgg@nvidia.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On 20/02/2024 17:19, Yang Xiwen wrote:
-> On 2/21/2024 12:13 AM, Krzysztof Kozlowski wrote:
->> On 20/02/2024 15:06, Yang Xiwen wrote:
->>> On 2/20/2024 6:10 PM, Krzysztof Kozlowski wrote:
->>>> On 17/02/2024 13:52, Yang Xiwen via B4 Relay wrote:
->>>>> From: Yang Xiwen <forbidden405@outlook.com>
->>>>>
->>>>> According to the datasheet, some clocks are missing, add their
->>>>> definitions first.
->>>>>
->>>>> Some aliases for hi3798mv200 are also introduced.
->>>>>
->>>>> Signed-off-by: Yang Xiwen <forbidden405@outlook.com>
->>>>> ---
->>>>>    include/dt-bindings/clock/histb-clock.h | 21 +++++++++++++++++++++
->>>>>    1 file changed, 21 insertions(+)
->>>>>
->>>>> diff --git a/include/dt-bindings/clock/histb-clock.h b/include/dt-bindings/clock/histb-clock.h
->>>>> index e64e5770ada6..68a53053586a 100644
->>>>> --- a/include/dt-bindings/clock/histb-clock.h
->>>>> +++ b/include/dt-bindings/clock/histb-clock.h
->>>>> @@ -58,6 +58,27 @@
->>>>>    #define HISTB_USB3_UTMI_CLK1		48
->>>>>    #define HISTB_USB3_PIPE_CLK1		49
->>>>>    #define HISTB_USB3_SUSPEND_CLK1		50
->>>>> +#define HISTB_SDIO1_BIU_CLK		51
->>>>> +#define HISTB_SDIO1_CIU_CLK		52
->>>>> +#define HISTB_SDIO1_DRV_CLK		53
->>>>> +#define HISTB_SDIO1_SAMPLE_CLK		54
->>>>> +#define HISTB_ETH0_PHY_CLK		55
->>>>> +#define HISTB_ETH1_PHY_CLK		56
->>>>> +#define HISTB_WDG0_CLK			57
->>>>> +#define HISTB_USB2_UTMI0_CLK		HISTB_USB2_UTMI_CLK
->>>> Why? It's anyway placed oddly, the entries are ordered by number/value.
->>>
->>> So this is somewhat broken at the beginning. It named after
->>> histb-clock.h but actually they are all clocks for Hi3798CV200 SoC. For
->>> Hi3798MV200(also a HiSTB SoC), there is one additional UTMI clock.
->>>
->>>
->>> What solution do you prefer? rename UTMI_CLK to UTMI0_CLK, add UTMI1_CLK
->>> after it and increment all the indexes after it? Then the diff would be
->>> very ugly.
->> I still don't understand what is the problem you are trying to solve
->> here. Your commit msg says add missing ID, but that ID -
->> HISTB_USB2_UTMI_CLK - is already there.
->>
->> I also do not get why there is a need to rename anything.
-> 
-> 
-> Because there are two USB2_UTMI_CLKs in total, at least for Hi3798MV200. 
-> UTMI1 is missing here. For other HiSTB SoCs, there could be even more.
+Hi, Tina
 
-My comment was under UTMI0. We do not talk about UTMI1...
+On Fri, 27 Oct 2023 at 08:06, Tina Zhang <tina.zhang@intel.com> wrote:
+>
+> Each mm bound to devices gets a PASID and corresponding sva domains
+> allocated in iommu_sva_bind_device(), which are referenced by iommu_mm
+> field of the mm. The PASID is released in __mmdrop(), while a sva domain
+> is released when no one is using it (the reference count is decremented
+> in iommu_sva_unbind_device()). However, although sva domains and their
+> PASID are separate objects such that their own life cycles could be
+> handled independently, an enqcmd use case may require releasing the
+> PASID in releasing the mm (i.e., once a PASID is allocated for a mm, it
+> will be permanently used by the mm and won't be released until the end
+> of mm) and only allows to drop the PASID after the sva domains are
+> released. To this end, mmgrab() is called in iommu_sva_domain_alloc() to
+> increment the mm reference count and mmdrop() is invoked in
+> iommu_domain_free() to decrement the mm reference count.
+>
+> Since the required info of PASID and sva domains is kept in struct
+> iommu_mm_data of a mm, use mm->iommu_mm field instead of the old pasid
+> field in mm struct. The sva domain list is protected by iommu_sva_lock.
+>
+> Besides, this patch removes mm_pasid_init(), as with the introduced
+> iommu_mm structure, initializing mm pasid in mm_init() is unnecessary.
+>
+> Reviewed-by: Lu Baolu <baolu.lu@linux.intel.com>
+> Reviewed-by: Vasant Hegde <vasant.hegde@amd.com>
+> Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
+> Tested-by: Nicolin Chen <nicolinc@nvidia.com>
+> Signed-off-by: Tina Zhang <tina.zhang@intel.com>
+> Signed-off-by: Jason Gunthorpe <jgg@nvidia.com>
+> ---
+>  drivers/iommu/iommu-sva.c | 92 +++++++++++++++++++++++----------------
+>  include/linux/iommu.h     | 23 ++++++++--
+>  2 files changed, 74 insertions(+), 41 deletions(-)
+>
+> diff --git a/drivers/iommu/iommu-sva.c b/drivers/iommu/iommu-sva.c
+> index 4a2f5699747f..5175e8d85247 100644
+> --- a/drivers/iommu/iommu-sva.c
+> +++ b/drivers/iommu/iommu-sva.c
+> @@ -12,32 +12,42 @@
+>  static DEFINE_MUTEX(iommu_sva_lock);
+>
+>  /* Allocate a PASID for the mm within range (inclusive) */
+> -static int iommu_sva_alloc_pasid(struct mm_struct *mm, struct device *dev)
+> +static struct iommu_mm_data *iommu_alloc_mm_data(struct mm_struct *mm, struct device *dev)
+>  {
+> +       struct iommu_mm_data *iommu_mm;
+>         ioasid_t pasid;
+> -       int ret = 0;
+> +
+> +       lockdep_assert_held(&iommu_sva_lock);
+>
+>         if (!arch_pgtable_dma_compat(mm))
+> -               return -EBUSY;
+> +               return ERR_PTR(-EBUSY);
+>
+> -       mutex_lock(&iommu_sva_lock);
+> +       iommu_mm = mm->iommu_mm;
+>         /* Is a PASID already associated with this mm? */
+> -       if (mm_valid_pasid(mm)) {
+> -               if (mm->pasid >= dev->iommu->max_pasids)
+> -                       ret = -EOVERFLOW;
+> -               goto out;
+> +       if (iommu_mm) {
+> +               if (iommu_mm->pasid >= dev->iommu->max_pasids)
+> +                       return ERR_PTR(-EOVERFLOW);
+> +               return iommu_mm;
+>         }
+>
+> +       iommu_mm = kzalloc(sizeof(struct iommu_mm_data), GFP_KERNEL);
+> +       if (!iommu_mm)
+> +               return ERR_PTR(-ENOMEM);
+> +
+>         pasid = iommu_alloc_global_pasid(dev);
+>         if (pasid == IOMMU_PASID_INVALID) {
+> -               ret = -ENOSPC;
+> -               goto out;
+> +               kfree(iommu_mm);
+> +               return ERR_PTR(-ENOSPC);
+>         }
+> -       mm->pasid = pasid;
+> -       ret = 0;
+> -out:
+> -       mutex_unlock(&iommu_sva_lock);
+> -       return ret;
+> +       iommu_mm->pasid = pasid;
+> +       INIT_LIST_HEAD(&iommu_mm->sva_domains);
+> +       /*
+> +        * Make sure the write to mm->iommu_mm is not reordered in front of
+> +        * initialization to iommu_mm fields. If it does, readers may see a
+> +        * valid iommu_mm with uninitialized values.
+> +        */
+> +       smp_store_release(&mm->iommu_mm, iommu_mm);
+> +       return iommu_mm;
+>  }
+>
+>  /**
+> @@ -58,31 +68,33 @@ static int iommu_sva_alloc_pasid(struct mm_struct *mm, struct device *dev)
+>   */
+>  struct iommu_sva *iommu_sva_bind_device(struct device *dev, struct mm_struct *mm)
+>  {
+> +       struct iommu_mm_data *iommu_mm;
+>         struct iommu_domain *domain;
+>         struct iommu_sva *handle;
+>         int ret;
+>
+> +       mutex_lock(&iommu_sva_lock);
+> +
+>         /* Allocate mm->pasid if necessary. */
+> -       ret = iommu_sva_alloc_pasid(mm, dev);
+> -       if (ret)
+> -               return ERR_PTR(ret);
+> +       iommu_mm = iommu_alloc_mm_data(mm, dev);
+> +       if (IS_ERR(iommu_mm)) {
+> +               ret = PTR_ERR(iommu_mm);
+> +               goto out_unlock;
+> +       }
+>
+>         handle = kzalloc(sizeof(*handle), GFP_KERNEL);
+> -       if (!handle)
+> -               return ERR_PTR(-ENOMEM);
+> -
+> -       mutex_lock(&iommu_sva_lock);
+> -       /* Search for an existing domain. */
+> -       domain = iommu_get_domain_for_dev_pasid(dev, mm->pasid,
+> -                                               IOMMU_DOMAIN_SVA);
+> -       if (IS_ERR(domain)) {
+> -               ret = PTR_ERR(domain);
+> +       if (!handle) {
+> +               ret = -ENOMEM;
+>                 goto out_unlock;
+>         }
+>
+> -       if (domain) {
+> -               domain->users++;
+> -               goto out;
 
-> 
-> 
-> If we add USB2_UTMI1_CLK, it looks silly to keep USB2_UTMI_CLK without 
-> renaming it to UTMI0. Just like all the other clocks. E.g. 
-> I2Cn_CLK(n=0,1,2,3,4) etc.., so the same for USB2_UTMI_CLK.
+Our multi bind test case broke since 6.8-rc1.
+The test case can use same domain & pasid, return different handle,
+6.7 simply  domain->users ++ and return.
 
-Then place it next to old name and explain why it is deprecated with
-comment.
+> +       /* Search for an existing domain. */
+> +       list_for_each_entry(domain, &mm->iommu_mm->sva_domains, next) {
+> +               ret = iommu_attach_device_pasid(domain, dev, iommu_mm->pasid);
 
-Best regards,
-Krzysztof
+Now iommu_attach_device_pasid return BUSY since the same pasid.
+And then iommu_sva_bind_device attach ret=-16
 
+> +               if (!ret) {
+
+Simply tried if (!ret || ret == -EBUSY)
+The test passes, but report waring
+WARNING: CPU: 12 PID: 2992 at drivers/iommu/iommu.c:3591
+iommu_detach_device_pasid+0xa4/0xd0
+
+Will check more tomorrow.
+
+> +                       domain->users++;
+> +                       goto out;
+> +               }
+>         }
+>
+
+Thanks
