@@ -1,110 +1,77 @@
-Received: from out30-99.freemail.mail.aliyun.com (out30-99.freemail.mail.aliyun.com [115.124.30.99])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f71.google.com (mail-io1-f71.google.com [209.85.166.71])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A0772E414;
-	Tue, 20 Feb 2024 07:16:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.99
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1F5D5A7AA
+	for <linux-kernel@vger.kernel.org>; Tue, 20 Feb 2024 07:16:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.71
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708413371; cv=none; b=HNX3DjHzNe9msufQrBO9WHz3ae0a7uaQvklSCRkvU6OStbxW03ZriicSSpIvJjNVYV26CmGmzhDjDbTNb8s6S69cVXkRlXtQevkRi7bLpUrdLqGH5SIAsyei4+mILxUoyNcnCGjR/MKOFmyqs5iR5mUlSL6svN5IrwlGCN4jKiY=
+	t=1708413375; cv=none; b=eR8ZgHiLDS4Ytxme8FGsL85ftnOo11QBz2pwRtvSjAihg7Rfh+yXDiAdgs9PmXM9dnb+pfD1tRHRIggWG25EeiIyr4kz9zWxwHpESuScijea7quR4QOqTklAYGc1kE9+PreqBAR0f1yJnKwSUqPuX4hY150ImtCaT0+yvOD3KXI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708413371; c=relaxed/simple;
-	bh=cu/T1BOs7iJNYFJOKO7j3SL4H6llYux4Y5Jm+sXsTL4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=eqIc88PGczjo9tKtzSmCxY7wwKZ4ds5MqfFVbextZGYepvVn75GON6WjZnfs7cdchVJVnb/ho2MMMvC7CMQQGefPmhsiuPTKnIgKiGTGlD3sB63EXu/RVd5pVlZtDdKy1DrpChT2WmuUYdvxgk9S5+Ir4zQo6bHvmC9Clh2lwCE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=kWA+ZmhB; arc=none smtp.client-ip=115.124.30.99
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="kWA+ZmhB"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1708413365; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=aRVK0RBqvwU9ESK4wUCOXJ5JGHcyUKkaoM4QJ3fPRkU=;
-	b=kWA+ZmhB9lo4K/EAOIii30ukVBvjUbQWy+Jvm3l7T3FJYZvcYARr1rVOPZixaFA6y8WnkNybUM2QkZZXxa0G13uR4ogobpgi7vWWA58f7VtCuP/OrrGWtxQTtFdyi8sqFJ7mp1Mkko6MG56dHe0eyWNOodmUIyT1ZZLlrAxp+8o=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R831e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046060;MF=alibuda@linux.alibaba.com;NM=1;PH=DS;RN=14;SR=0;TI=SMTPD_---0W0w0R3Y_1708413363;
-Received: from 30.221.148.206(mailfrom:alibuda@linux.alibaba.com fp:SMTPD_---0W0w0R3Y_1708413363)
-          by smtp.aliyun-inc.com;
-          Tue, 20 Feb 2024 15:16:05 +0800
-Message-ID: <e1c747a9-64b7-471b-8fb8-093b8f080490@linux.alibaba.com>
-Date: Tue, 20 Feb 2024 15:16:01 +0800
+	s=arc-20240116; t=1708413375; c=relaxed/simple;
+	bh=Y5g/NozKOkvYdEq6doQYTKN0YGh6Ay4GymYgkWKFTGo=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=fnCWkR24lGkjvUMv3U1hI4qcHF6Jy/G/qMs6UlEwaiAQdSyL5vGvcmk1X0m87ThnjVx7x9s0zNJKJ5gFh+HLUaRGK5VzZmuORXILKS9QAuC39wKP+hZ2ING1ZBZbEQh9ttRlcCfM+89BK3p8UIsPcqOFw2F+m5gDfoicbmu6Vjg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.71
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f71.google.com with SMTP id ca18e2360f4ac-7baa66ebd17so644118339f.1
+        for <linux-kernel@vger.kernel.org>; Mon, 19 Feb 2024 23:16:13 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708413373; x=1709018173;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=v/k/JrZr1BfcHhOAaV2oyCmSOvOCr7BBaqqXONQJem0=;
+        b=gg7EaGO7k66IEYBuhBwM9Dm9YO1M4iwmMWUUGC5qwVs39Y0VWDvOcDB71avqqopQch
+         /UfkSAr0E/PHYiUESNdNgygDqhSuGJIkC8z8L3Dpg+SoDz20Y/8OPwEb0wo3ByJNQ5/D
+         o5bJugJbyLu08lw2V57lVacPnixDXwgoLagSUAD8cSxIk72UoKvU2v8Y/uMgmGEVWyB9
+         9AwXSY6wnnEdl9BHgGS0TPFoM1Dtxj0iRdQMJUaduG4pX3YqZL6VbEmBm49LWEWvoxP2
+         iN2ZFqbeJPVnHXIZrubRWPnM7KA3JV7b4sIWSNl0OtwelfD2al9UZ8RGjZadybEvyKyD
+         y48A==
+X-Gm-Message-State: AOJu0YwRngAtj6/+pXGdeiAOr0uzCDkJmMUkibtH5ghNQzkqzSB1j2ps
+	HkYL0MAL4WecATJUtd6K3gfC3gF5xJGQeC6qgZrgif3q+jI7b1dXPgVXdzwRCx34hVcSITcdXyh
+	OgEMFTcWgN2RquzgCtTi3xEZ7Ulks/6Io7dV0CltdnkP8nwIN47K1zO1Yng==
+X-Google-Smtp-Source: AGHT+IFLa6a37A3Ttc9GvLlCffwoKXGlCdYtCzkj2b5rW2CSJb/4gq9zn/Ohj6OY5wIZYocvCRSiij+Mc9RhPU3V0uRLv4i34e6x
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC nf-next v5 0/2] netfilter: bpf: support prog update
-Content-Language: en-US
-To: Pablo Neira Ayuso <pablo@netfilter.org>, Quentin Deslandes <qde@naccy.de>
-Cc: kadlec@netfilter.org, fw@strlen.de, bpf@vger.kernel.org,
- linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
- coreteam@netfilter.org, netfilter-devel@vger.kernel.org,
- davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
- pabeni@redhat.com, ast@kernel.org
-References: <1704175877-28298-1-git-send-email-alibuda@linux.alibaba.com>
- <70114fff-43bd-4e27-9abf-45345624042c@naccy.de> <ZcztLZPiz+FkF8kF@calendula>
-From: "D. Wythe" <alibuda@linux.alibaba.com>
-In-Reply-To: <ZcztLZPiz+FkF8kF@calendula>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-Received: by 2002:a05:6e02:188c:b0:365:21f4:7030 with SMTP id
+ o12-20020a056e02188c00b0036521f47030mr760052ilu.4.1708413372910; Mon, 19 Feb
+ 2024 23:16:12 -0800 (PST)
+Date: Mon, 19 Feb 2024 23:16:12 -0800
+In-Reply-To: <0000000000002cf4690610660f71@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000038d3680611cafc4d@google.com>
+Subject: Re: [syzbot] Test for 34ad5fab48f7bf510349
+From: syzbot <syzbot+34ad5fab48f7bf510349@syzkaller.appspotmail.com>
+To: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
+For archival purposes, forwarding an incoming command email to
+linux-kernel@vger.kernel.org.
 
+***
 
-On 2/15/24 12:41 AM, Pablo Neira Ayuso wrote:
-> On Wed, Feb 14, 2024 at 05:10:46PM +0100, Quentin Deslandes wrote:
->> On 2024-01-02 07:11, D. Wythe wrote:
->>> From: "D. Wythe" <alibuda@linux.alibaba.com>
->>>
->>> This patches attempt to implements updating of progs within
->>> bpf netfilter link, allowing user update their ebpf netfilter
->>> prog in hot update manner.
->>>
->>> Besides, a corresponding test case has been added to verify
->>> whether the update works.
->>> --
->>> v1:
->>> 1. remove unnecessary context, access the prog directly via rcu.
->>> 2. remove synchronize_rcu(), dealloc the nf_link via kfree_rcu.
->>> 3. check the dead flag during the update.
->>> --
->>> v1->v2:
->>> 1. remove unnecessary nf_prog, accessing nf_link->link.prog in direct.
->>> --
->>> v2->v3:
->>> 1. access nf_link->link.prog via rcu_dereference_raw to avoid warning.
->>> --
->>> v3->v4:
->>> 1. remove mutex for link update, as it is unnecessary and can be replaced
->>> by atomic operations.
->>> --
->>> v4->v5:
->>> 1. fix error retval check on cmpxhcg
->>>
->>> D. Wythe (2):
->>>    netfilter: bpf: support prog update
->>>    selftests/bpf: Add netfilter link prog update test
->>>
->>>   net/netfilter/nf_bpf_link.c                        | 50 ++++++++-----
->>>   .../bpf/prog_tests/netfilter_link_update_prog.c    | 83 ++++++++++++++++++++++
->>>   .../bpf/progs/test_netfilter_link_update_prog.c    | 24 +++++++
->>>   3 files changed, 141 insertions(+), 16 deletions(-)
->>>   create mode 100644 tools/testing/selftests/bpf/prog_tests/netfilter_link_update_prog.c
->>>   create mode 100644 tools/testing/selftests/bpf/progs/test_netfilter_link_update_prog.c
->>>
->> It seems this patch has been forgotten, hopefully this answer
->> will give it more visibility.
->>
->> I've applied this change on 6.8.0-rc4 and tested BPF_LINK_UPDATE
->> with bpfilter and everything seems alright.
-> Just post it without RFC tag.
+Subject: Test for 34ad5fab48f7bf510349
+Author: syoshida@redhat.com
 
-Glad to know that, I will send a formal version soon.
+#syz test: git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git 5bd7ef53ffe5ca580e93e74eb8c81ed191ddc4bd
 
-D. Wythe
-
-
-
-
-
+diff --git a/net/netlink/af_netlink.c b/net/netlink/af_netlink.c
+index 9c962347cf85..c9ad41bce426 100644
+--- a/net/netlink/af_netlink.c
++++ b/net/netlink/af_netlink.c
+@@ -167,7 +167,8 @@ static inline u32 netlink_group_mask(u32 group)
+ static struct sk_buff *netlink_to_full_skb(const struct sk_buff *skb,
+ 					   gfp_t gfp_mask)
+ {
+-	unsigned int len = skb_end_offset(skb);
++	//unsigned int len = skb_end_offset(skb);
++	unsigned int len = skb->len;
+ 	struct sk_buff *new;
+ 
+ 	new = alloc_skb(len, gfp_mask);
 
