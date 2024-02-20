@@ -1,218 +1,661 @@
-Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com [209.85.208.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from CHN02-SH0-obe.outbound.protection.partner.outlook.cn (mail-sh0chn02on2110.outbound.protection.partner.outlook.cn [139.219.146.110])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC235535D0
-	for <linux-kernel@vger.kernel.org>; Tue, 20 Feb 2024 08:17:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.169
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708417022; cv=none; b=oL57BlnkAEmqNCAjUFNazr7PPkO/WohpJYHru6VsI/N4RoU5cq13S5x5nC6Xl5o/iqUaTEUPGoJf3fc3pXwLwYnmlFAZLJ6V6baQkEOkG4gFQuRZEYDEMj1lVdShuOLTgZw3g/H4/kPElL41g0Z42qLl3oI99A+W7v8dvDCzjJs=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708417022; c=relaxed/simple;
-	bh=XMY4tDptxbgfTL874aU0e1jAkTWTmhv9MQOUZIRP8N0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=AiMSAtdUCNiWuwpc3MyFB+U1JiKLKNLu0jDK3EjH1xa/i6KNUZ4n4tV2UCaqe0YuzoyktNkvBmE+hPuw02TaQzPSX+7XsQmfqIaJSI1MwhVaKwVO2SeDCKJtc0oYJ/2WI8NUm7jZDWbWo5IdbmOQd7rS7yG2m/ZXUk7TjrkG77c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=agWys5jj; arc=none smtp.client-ip=209.85.208.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="agWys5jj"
-Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-2d109e7bed2so67912461fa.2
-        for <linux-kernel@vger.kernel.org>; Tue, 20 Feb 2024 00:17:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1708417019; x=1709021819; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=2s9snNCdmson1o/B85ImsqEy6xXo5/r33ShXsHFKVVU=;
-        b=agWys5jjHZSwUSWIT9g3fg3B0mv8NUOwQVz4Ed6Uv3lQ36ECU7igol8p9p4ho/raV1
-         3TkApBJQ/RbYbZCEjd8P5f1rPSqHPOhEk0nFNaW1Q3C6dfScWpB09t8WyrquViZOF4s0
-         /RWRnlH4d9Si30QRkSpoqLZTcimJ5WmB9A0EKAmsuVCFdyfRcCOS8B3bPc6w4n6X5npY
-         QJ1OKHo5953Sa4XQHtEy+y9PopL2jMD/a6cKH3CDV3eoXXGIiDtDm6T622eRwlRVjPFx
-         wlQwZ6YbgtAO1exfOWgELBXaywZTbw1dlpTwwWZCVufDv5QDCHPiz4JSj6BewTnzBsjz
-         Np3w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708417019; x=1709021819;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=2s9snNCdmson1o/B85ImsqEy6xXo5/r33ShXsHFKVVU=;
-        b=RToqdcIBvt6s5OZ6DpuJMIC3f8YoYHo8S1ihYhV6f/pmGUui6YmvbhuWj7GDU8ApSC
-         e9XU96g0/QsBlUM57WZCIh8spqK1qiH4AJnbGlp4KT3a0uk8PbH74jzQs66xxmktSu/B
-         WSFKDx1kdAwxiwcAee7txAGhh+sykMew7jNiJ+VIAt7EHDqN8Y2qqlbTBM94K1/NQiaN
-         2qBmskOeQpIQrKRSjmelVPfhk8S9aI3/7WaEEEFf/ecn6yMSu+ZEZiEvx2madwhulf4U
-         K/gndFyDXC9YffHuNrXEZ7ntyG5pncRvvI5EUn3ScRZhF1opLg6H2o0JtDC3osaTKi6W
-         vH7Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVdbh1Tg3SEobrXDBuJXZ7U18tYUWBqOnvPioZI1olQG6os7MEiz0Uz/EfewS2S+SKMbrTcCnUzG2tjvbYT5hZD2kSMjwkoBNrmBq8s
-X-Gm-Message-State: AOJu0YyBHdJnRvpQoriwUtUlNCLhRccq4hKTiiUDEqvq0Zn7Im2/cuTR
-	ncNe4v/nWI1u/ds2PL841MTfHygQPFNFb2qMK+pJBHQ9DqDhRttwDsJ8ApduBCQ=
-X-Google-Smtp-Source: AGHT+IFpLOBR3vSEm1r1J6jmg6PvF5rfZq6Prwjcx3Mow3d1UkP8CPQM50ZwtvOsTyksTiFaIVtHhQ==
-X-Received: by 2002:a05:651c:1a0c:b0:2d2:3987:36b0 with SMTP id by12-20020a05651c1a0c00b002d2398736b0mr4057981ljb.43.1708417018906;
-        Tue, 20 Feb 2024 00:16:58 -0800 (PST)
-Received: from [192.168.1.20] ([178.197.222.116])
-        by smtp.gmail.com with ESMTPSA id bs20-20020a056000071400b0033d449f5f65sm7000414wrb.4.2024.02.20.00.16.57
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 20 Feb 2024 00:16:58 -0800 (PST)
-Message-ID: <9a5e9363-79eb-416c-89ae-c826062350b5@linaro.org>
-Date: Tue, 20 Feb 2024 09:16:56 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F08B5BAEA;
+	Tue, 20 Feb 2024 08:17:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=139.219.146.110
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1708417042; cv=fail; b=FCcShM0QLcFK5Cjyq5kGpNTZVthT373jBOd/vrNRT3+/uwqjKvp54ngr+7nOiGpBOYCBcKs3kgpeS7B4K9OxhqfvEWvG2hZwm2/0KyJoJOnDYXaCGw2Ad9dKn/Y7gY+XAzb9tU/u1yifuuRKhw6n/aDI7NTprPErGiJ0LJojFt8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1708417042; c=relaxed/simple;
+	bh=Mt623StHVktd9eMAU5MDBJCspGhitpouBzwF495C/S0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=fVkCuDz5XmwyifYg4WBLgsWI5dKtVps06JNAYfUJVX60Ss3d6ypmuFMFwFHUu8cqpwXQbL+BvEVx5prIQqjCaSJ0aLw+HxJXBhcIfV/pLfqkAtk4veHAOZ6StJI42E4stfaRKgFcTAResC7TYkI3hJ27gAoBpxHtHt3auBxH6YE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com; spf=pass smtp.mailfrom=starfivetech.com; arc=fail smtp.client-ip=139.219.146.110
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=starfivetech.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=HZ5yFD1Hliwr2fuYmJaMQJIrfBLYiwUJVdtT6m4M9yRkCWkQFQJxQUfnLDYQi7eHVtSaHSfT4KcETDShEyXREVna8JT8yvPw2/QgN0F+KVpKUW53a8aPho2F+BUI0o2DyzLIcCrCtEQniK669uWW1fnaPiqE1A1oE+bsWYTcyo7rmSWCAxMf92A+Li3a9Skzgu79dCK6gHeePWeW9DoFuqW4jzbdwdHMDwClIeP8CrAzbOQb3SkdyhJ296dshb6M3aKM/HwGo4OLrstv5fbotcciMPWaYI8zYOVe/OSOUEG1r1yoSA+S47Wbqcx+q5ehsbeUGeiCHSkwcDU/88+b4w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=UM9U8q5stWIMTykF//dTBjE2CSaJzzROOppKT9zt6kQ=;
+ b=NwNfvnseL/rRx7HC7kFXIe9nxFV16AmYnXP3HzR1ANqrX0PB2FJAwIP6jHY1w+GA2WXgWn77V2I1ggSHNB6JyZXEYRTnypCfjHmou76tYM/WbPSKQQceuPHjtVMOkRBmPXGkKfFeZn69onjw4ThKhKw477QqoELZoAv5ByvIvtoksacgas7XHew2dnCX3qCt2FEegWH0PopPcEDV3SZC4QyQeUJBvsQitcr+yVRFWhmSELYXHskcUsHGWIUWI9mrSN1pHVJgRK+vs7Fo/jnpoR06Kd2tkeFYVTf3U2SUQqV3LBSfhI4FqhYqLCHveEEGTDm8KDhxMqAJPsDGlSxzmw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=starfivetech.com; dmarc=pass action=none
+ header.from=starfivetech.com; dkim=pass header.d=starfivetech.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=starfivetech.com;
+Received: from ZQ0PR01MB1302.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c550:1b::9) by ZQ0PR01MB1286.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c550:1b::13) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7270.47; Tue, 20 Feb
+ 2024 06:43:17 +0000
+Received: from ZQ0PR01MB1302.CHNPR01.prod.partner.outlook.cn
+ ([fe80::9d68:58f1:62cc:f1d3]) by
+ ZQ0PR01MB1302.CHNPR01.prod.partner.outlook.cn ([fe80::9d68:58f1:62cc:f1d3%4])
+ with mapi id 15.20.7270.047; Tue, 20 Feb 2024 06:43:17 +0000
+From: Alex Soo <yuklin.soo@starfivetech.com>
+To: Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	Hal Feng <hal.feng@starfivetech.com>,
+	Ley Foon Tan <leyfoon.tan@starfivetech.com>,
+	Jianlong Huang <jianlong.huang@starfivetech.com>,
+	Emil Renner Berthing <kernel@esmil.dk>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Drew Fustini <drew@beagleboard.org>
+Cc: linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-riscv@lists.infradead.org,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Alex Soo <yuklin.soo@starfivetech.com>
+Subject: [RFC PATCH v2 6/6] riscv: dts: starfive: jh8100: add pinctrl device tree nodes
+Date: Tue, 20 Feb 2024 14:42:46 +0800
+Message-ID: <20240220064246.467216-7-yuklin.soo@starfivetech.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240220064246.467216-1-yuklin.soo@starfivetech.com>
+References: <20240220064246.467216-1-yuklin.soo@starfivetech.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: BJXPR01CA0055.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c211:12::22) To ZQ0PR01MB1302.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c550:1b::9)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RFC v3 1/5] dt-bindings: phy: hisi-inno-usb2: convert to
- YAML
-Content-Language: en-US
-To: Yang Xiwen <forbidden405@outlook.com>, Vinod Koul <vkoul@kernel.org>,
- Kishon Vijay Abraham I <kishon@kernel.org>, Rob Herring
- <robh+dt@kernel.org>, Krzysztof Kozlowski
- <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>,
- Jiancheng Xue <xuejiancheng@hisilicon.com>, Shawn Guo
- <shawn.guo@linaro.org>, Philipp Zabel <p.zabel@pengutronix.de>
-Cc: linux-phy@lists.infradead.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, Kishon Vijay Abraham I <kishon@ti.com>,
- David Yang <mmyangfl@gmail.com>
-References: <20240220-inno-phy-v3-0-893cdf8633b4@outlook.com>
- <20240220-inno-phy-v3-1-893cdf8633b4@outlook.com>
- <62221084-247c-4a0b-a030-e12cb2931411@linaro.org>
- <SEZPR06MB6959AAB6B43F3E1F5E1C526596512@SEZPR06MB6959.apcprd06.prod.outlook.com>
- <6f3f22f6-f659-494d-963c-544cf5f44adc@linaro.org>
- <SEZPR06MB69592FACB1EF1B9FEDA89E5996512@SEZPR06MB6959.apcprd06.prod.outlook.com>
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
- 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
- D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <SEZPR06MB69592FACB1EF1B9FEDA89E5996512@SEZPR06MB6959.apcprd06.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: ZQ0PR01MB1302:EE_|ZQ0PR01MB1286:EE_
+X-MS-Office365-Filtering-Correlation-Id: d22b807d-d043-456b-6572-08dc31df3817
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	gcSYswvhhRQ8f9LCSzFdiNtt450TJvrNKtgheIRh1xECuhqzlfpr30tgyjcgsCAViDjcVMDl+lDBJWUIWQLNPSz2SF6peqhosuBb5sUD5MO1Hl/Xrs9vOW+CCegVr1fztV9G31dGNB8Oesh8GWS7SLIHq984uIrRu0Ul6ZjvQbSAs+WVaXyYMSBL20Hqsgtel63qjEVN4Splidvx8IH4NcAfxBx4vFEVCROjh945FYlfqOvh4nsDzmQAuZ0oa2s3YQviZlVNa6v0f4p+/h/0Ux6fQODCUhs17jhN3UvR/LVFPCJoNElbo2BkGYAHdm4QCCZNYWorJVJpgBuQ7aWSBZaBa7sIR0e4JVk11EvBnEgP+nyHzAkdT64Jby17zN+P/jbIZFHqxeVNvIZPzAviz1bJUCL+umLiALbvDDPWkFkSxRNReL3FfBMkZKykyv86LsLc/6NjNE/CO47ZEPSpvpk4eXy7RnvvuRABjIST9sLdJa9VXPaWknYGw6LPcy0gRlMO8N26GgRAsCPonslxmPrL7uH2X2/uEUKKZO6xVMlpP1gTXJkZwsgOsZNgD8gXxlUEU9O3aLjij8Ksr1QzvA==
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:ZQ0PR01MB1302.CHNPR01.prod.partner.outlook.cn;PTR:;CAT:NONE;SFS:(13230031)(38350700005)(921011);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?KVl5P8DHnjLqxs9V9eu0jlvQfyC/uhXlbhpj6d7ZKHp6wc0XoKtMyLV/IJCu?=
+ =?us-ascii?Q?d92jnHYwOeWfxKvvm+2F82jbv8wG2BxFd8lQUp32RRgohutlmuljzXsShlHu?=
+ =?us-ascii?Q?AjZrhHyi7e+GPekE+pze23r6Gkmvt7UBi3oFyjeNrkNhKYWHGo5tNKc09JNJ?=
+ =?us-ascii?Q?4+so8ATMZ+S+vvYGXZjTILB8xGhjW9/UNz97f8V+/WpZLvnoqf6AcaML9YLU?=
+ =?us-ascii?Q?+5TcMkj2hn304dJp1mLD59OK/a9RCSiqGgSwPE9G7j0lvKtTVgsHJSH1O3A7?=
+ =?us-ascii?Q?+CIveH39EXlTbKQOMikOMIxbs4A+6H3bUEq9CswfXNIg18dZEWZgnqfYIYCi?=
+ =?us-ascii?Q?XpVb0VLa6od4mXjD10h566MG88Yvc5RENHcoJ0jDXf8ryRVvf0tLfb9SGICC?=
+ =?us-ascii?Q?iKYBSnEDBNhL2g9VFHKu1nm/etgTlRi4OlUqEAia0MCkm81zAfE0PJx0FK5q?=
+ =?us-ascii?Q?LfsRPTzAYWV/2X1pHy/4vE47bPZUnmcTkaXKgGLqRRcIDqLV3YYqGRfmtDTf?=
+ =?us-ascii?Q?0p6H48Rezsy3niYrb1YLb42yAHYldeCLOn/qNuTyckZi0UpVRuzhiRymlH9z?=
+ =?us-ascii?Q?JGajbfR5zscQvbgEKa11nn04WGFU+ThsFJxfc6RY19jvxFCBX5ygC/60yH4r?=
+ =?us-ascii?Q?HFid8IDpJX5HmCKkQw0/LyhFWaA9h9zYYtNz9hB919D4Y/XlqVtHqsszWKK1?=
+ =?us-ascii?Q?zt43tQluo1qXCDroZ4zm6w98oFBjaLyqJZZroGpohFiztdP8cahBXwBrHKBb?=
+ =?us-ascii?Q?ClT5DFOQDDGTXtjKcx6FSUqCfZK0itM61Vkfy7qHNwaHLyaya1OYdR5cxhnK?=
+ =?us-ascii?Q?JR9eqwYwmkc4xgqCBHpBVyT04ZDd3UzPnlvjNjE7rG7nlcepoy5cWzRN8H7X?=
+ =?us-ascii?Q?0Wsz7R4/xHRkkQhIGRsR1H9tTlYoPNBOGnH1lXEUnriwt5iTgyDrp7yjvfx5?=
+ =?us-ascii?Q?SknrlqArlhWLsQhOfe7UV2+BaWsmHUMcsc07Oqt7upY0YKyuFjlwagQ6mJoL?=
+ =?us-ascii?Q?VXfQK3J+lekQq4OaTuWZqi7DRfOKinWUAoKTUmbKlHu6OKxdzeT78xuf4BaU?=
+ =?us-ascii?Q?mXP/GWxlBh9CzzztdqNcfutCo4n5VzKiOxZa2CQqbbThrJAvoOt7R++NBTEr?=
+ =?us-ascii?Q?7phl/TLriAhgydIIrXP2CE1NCQ5gjuk4csGEBg6hHjjGx9vy3m57wlokcb6K?=
+ =?us-ascii?Q?tSnV/G8VbnFjVRt0VdoL8cm9Xo9Cet1VCTC1it4OUwlmWIHrH0r7r00D+hBq?=
+ =?us-ascii?Q?YMUQbCN6F7U6Of5ZJrh/mndSeAd88MtfmZvKC+NW11l6CeWqTL54Y0b9FfJH?=
+ =?us-ascii?Q?5Ksvm1RHemNtivzMVZqrhzCnacMdrVlgJjMKMku38bpG9UCT8C1LkS6P7lYe?=
+ =?us-ascii?Q?5mXBxF6RyWedFE2sJZ+Zj1qRCv9IvSwcXI6jBCcwt8XYHO4YhU85TVtwplMY?=
+ =?us-ascii?Q?Sse9XF63NjMAhEnpsbBpJv1y7E4fKo1kLo1Uu7vY0SsbegP2p36ff1oOggfB?=
+ =?us-ascii?Q?Q//R16drHbJwx23bVflw7Piqb+EvK/Gxv9nH0J9aPbECbeR+SV4p6hvENih0?=
+ =?us-ascii?Q?MfBOcgA/eJyBjC9C4KN6V5+UATsJtqsRT9EylHeA6exqVqlW4EmxjhkJ9qcT?=
+ =?us-ascii?Q?DQ=3D=3D?=
+X-OriginatorOrg: starfivetech.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d22b807d-d043-456b-6572-08dc31df3817
+X-MS-Exchange-CrossTenant-AuthSource: ZQ0PR01MB1302.CHNPR01.prod.partner.outlook.cn
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Feb 2024 06:43:17.0433
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 06fe3fa3-1221-43d3-861b-5a4ee687a85c
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: gE+DavRHaAdBBIw0zfyR2Ku90neIXskGR++LNzZSw8LAmOuuuCYX06WldEL3UcbFyJFhihW+ho6YsxKIyxhxf19te5Jp2SuJqLDYYtXocTc=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: ZQ0PR01MB1286
 
-On 19/02/2024 22:49, Yang Xiwen wrote:
-> On 2/20/2024 5:37 AM, Krzysztof Kozlowski wrote:
->> On 19/02/2024 22:35, Yang Xiwen wrote:
->>> On 2/20/2024 5:32 AM, Krzysztof Kozlowski wrote:
->>>> On 19/02/2024 22:27, Yang Xiwen via B4 Relay wrote:
->>>>> From: Yang Xiwen <forbidden405@outlook.com>
->>>>>
->>>>> Add missing compatible "hisilicon,hi3798mv100-usb2-phy" to compatible
->>>>> list due to prior driver change.
->>>>>
->>>>> Also rename to hisilicon,inno-usb2-phy.yaml and add this name to
->>>>> compatible lists.
->>>>>
->>>>> Fixes: 3940ffc65492 ("phy: hisilicon: Add inno-usb2-phy driver for Hi3798MV100")
->>>>> Signed-off-by: Yang Xiwen <forbidden405@outlook.com>
->>>>> ---
->>>>>    .../bindings/phy/hisilicon,inno-usb2-phy.yaml      | 95 ++++++++++++++++++++++
->>>>>    .../devicetree/bindings/phy/phy-hisi-inno-usb2.txt | 71 ----------------
->>>>>    2 files changed, 95 insertions(+), 71 deletions(-)
->>>>>
->>>>> diff --git a/Documentation/devicetree/bindings/phy/hisilicon,inno-usb2-phy.yaml b/Documentation/devicetree/bindings/phy/hisilicon,inno-usb2-phy.yaml
->>>>> new file mode 100644
->>>>> index 000000000000..1b57e0396209
->>>>> --- /dev/null
->>>>> +++ b/Documentation/devicetree/bindings/phy/hisilicon,inno-usb2-phy.yaml
->>>>> @@ -0,0 +1,95 @@
->>>>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
->>>>> +%YAML 1.2
->>>>> +---
->>>>> +$id: http://devicetree.org/schemas/phy/hisilicon,inno-usb2-phy.yaml#
->>>>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->>>>> +
->>>>> +title: HiSilicon HiSTB SoCs INNO USB2 PHY device
->>>>> +
->>>>> +maintainers:
->>>>> +  - Yang Xiwen <forbidden405@outlook.com>
->>>>> +
->>>>> +properties:
->>>>> +  compatible:
->>>>> +    items:
->>>>> +      - enum:
->>>>> +          - hisilicon,hi3798cv200-usb2-phy
->>>>> +          - hisilicon,hi3798mv100-usb2-phy
->>>>> +      - const: hisilicon,inno-usb2-phy
->>>> According to your driver hisilicon,hi3798mv100-usb2-phy and
->>>> hisilicon,inno-usb2-phy are not compatible.
->>> Ah, i didn't pay too much attention to that. I should remove the entry
->>> for hisilicon,inno-usb2-phy in the driver. Sorry for that.
->> We don't talk here about driver, although I used the driver as proof or
->> argument, because I don't have access to hardware datasheet (and no
->> intention to look there).
->>
->> What I claim is these are not compatible, so respond to this argument,
->> not some other one.
-> 
-> Why not? Of course they are compatible. All 3 SoCs are using 
+Add pinctrl_east/pinctrl_west/pinctrl_gmac/pinctrl_aon device
+tree nodes for JH8100 SoC.
 
-Why? Because...
+Signed-off-by: Alex Soo <yuklin.soo@starfivetech.com>
+---
+ arch/riscv/boot/dts/starfive/jh8100-evb.dts   |   5 +
+ arch/riscv/boot/dts/starfive/jh8100-pinfunc.h | 418 ++++++++++++++++++
+ arch/riscv/boot/dts/starfive/jh8100.dtsi      |  47 ++
+ 3 files changed, 470 insertions(+)
+ create mode 100644 arch/riscv/boot/dts/starfive/jh8100-pinfunc.h
 
-> inno-usb2-phy. The only difference here is the method to access the 
-
-... here! Different programming interface means not compatible.
-
-Please provide instead any argument that they are compatible, in the
-meaning of Devicetree of course. You are claiming inno-usb2-phy  can be
-used for hi3798mv100 and it will work fine?
-
-> registers. They are all enabled by `writing BIT(2) to address 0x6`. In 
-> the cover letter, I said the driver is actually doing things wrong. 
-
-Cover letter does not matter, I don't even read them. Your commits matter.
-
-> Especially the commit adding PHY_TYPE enums, the name is confusing and 
-> conveys the wrong info. It's not PHY which are not compatible, it's the 
-> bus. I'll fix the driver, but still the PHY hardwares are compatible 
-> between these 3 SoCs.
-
-Provide any argument.
-
-> 
-> I'll say the driver is broken from the beginning. They should move 
-> write_reg function to a separate regmap driver and only left `write 
-> BIT(2) to addr 0x6` to the PHY driver.
-> 
-
-Best regards,
-Krzysztof
+diff --git a/arch/riscv/boot/dts/starfive/jh8100-evb.dts b/arch/riscv/boot/dts/starfive/jh8100-evb.dts
+index c16bc25d8988..270a4bfa137a 100644
+--- a/arch/riscv/boot/dts/starfive/jh8100-evb.dts
++++ b/arch/riscv/boot/dts/starfive/jh8100-evb.dts
+@@ -26,3 +26,8 @@ memory@40000000 {
+ &uart0 {
+ 	status = "okay";
+ };
++
++&pinctrl_aon {
++	wakeup-gpios = <&pinctrl_aon PAD_RGPIO1 GPIO_ACTIVE_HIGH>;
++	wakeup-source;
++};
+diff --git a/arch/riscv/boot/dts/starfive/jh8100-pinfunc.h b/arch/riscv/boot/dts/starfive/jh8100-pinfunc.h
+new file mode 100644
+index 000000000000..3fb16ef62d90
+--- /dev/null
++++ b/arch/riscv/boot/dts/starfive/jh8100-pinfunc.h
+@@ -0,0 +1,418 @@
++/* SPDX-License-Identifier: GPL-2.0 OR MIT */
++/*
++ * Copyright (C) 2023 StarFive Technology Co., Ltd.
++ * Author: Alex Soo <yuklin.soo@starfivetech.com>
++ *
++ */
++
++#ifndef __JH8100_PINFUNC_H__
++#define __JH8100_PINFUNC_H__
++
++/*
++ * mux bits:
++ *  | 31 - 24 | 23 - 16 | 15 - 10 |  9 - 8   |  7 - 0  |
++ *  |  din    |  dout   |  doen   | function | gpio nr |
++ *
++ * dout:     output signal
++ * doen:     output enable signal
++ * din:      optional input signal, 0xff = none
++ * function:
++ * gpio nr:  gpio number, 0 - 63
++ */
++#define GPIOMUX(n, dout, doen, din) ( \
++		(((din)  & 0xff) << 24) | \
++		(((dout) & 0xff) << 16) | \
++		(((doen) & 0x3f) << 10) | \
++		((n) & 0x3f))
++
++#define PINMUX(n, func) ((1 << 10) | (((func) & 0x3) << 8) | ((n) & 0xff))
++
++/* sys_iomux_east dout */
++#define GPOUT_LOW				0
++#define GPOUT_HIGH				1
++#define GPOUT_SYS_CAN0_STBY			2
++#define GPOUT_SYS_CAN0_TST_NEXT_BIT		3
++#define GPOUT_SYS_CAN0_TST_SAMPLE_POINT		4
++#define GPOUT_SYS_CAN0_TXD			5
++#define GPOUT_SYS_I2C0_CLK			6
++#define GPOUT_SYS_I2C0_DATA			7
++#define GPOUT_SYS_I2S0_STEREO_RSCKO		8
++#define GPOUT_SYS_I2S0_STEREO_RWSO		9
++#define GPOUT_SYS_I2S0_STEREO_SDO_0		10
++#define GPOUT_SYS_I2S0_STEREO_SDO_1		11
++#define GPOUT_SYS_I2S0_STEREO_TSCKO		12
++#define GPOUT_SYS_I2S0_STEREO_TWSO		13
++#define GPOUT_SYS_SPI0_MO			14
++#define GPOUT_SYS_SPI0_SS0			15
++#define GPOUT_SYS_SPI0_SS1			16
++#define GPOUT_SYS_SPI0_SS2			17
++#define GPOUT_SYS_SPI0_SS3			18
++#define GPOUT_SYS_SPI0_SCLK			19
++#define GPOUT_SYS_SPI0_SO			20
++#define GPOUT_SYS_UART0_DTR			21
++#define GPOUT_SYS_UART0_RTS			22
++#define GPOUT_SYS_UART0_TX			23
++#define GPOUT_SYS_USB0_DBG_DRIVE_VBUS		24
++#define GPOUT_SYS_PDM_MCLK			25
++#define GPOUT_SYS_PWM_CHANNEL0			26
++#define GPOUT_SYS_PWM_CHANNEL1			27
++#define GPOUT_SYS_PWM_CHANNEL2			28
++#define GPOUT_SYS_PWM_CHANNEL3			29
++#define GPOUT_SYS_PWM_CHANNEL4			30
++#define GPOUT_SYS_PWM_CHANNEL5			31
++#define GPOUT_SYS_PWM_CHANNEL6			32
++#define GPOUT_SYS_PWM_CHANNEL7			33
++#define GPOUT_SYS_SMBUS0_CLK			34
++#define GPOUT_SYS_SMBUS0_DATA			35
++#define GPOUT_SYS_SMBUS0_SUSPEND		36
++#define GPOUT_SYS_CLK_GCLK1			37
++#define GPOUT_SYS_CLK_GCLK2			38
++#define GPOUT_SYS_CLK_GCLK3			39
++#define GPOUT_SYS_CLK_GCLK4			40
++#define GPOUT_SYS_CLK_GCLK6			41
++#define GPOUT_SYS_CLK_GCLK7			42
++#define GPOUT_SYS_MCLK				43
++#define GPOUT_SYS_USB0_TYPEC_DRIVE_VBUS		44
++#define GPOUT_SYS_WATCHDOG0_RESET		45
++#define GPOUT_SYS_CAN1_STBY			46
++#define GPOUT_SYS_CAN1_TST_NEXT_BIT		47
++#define GPOUT_SYS_CAN1_TST_SAMPLE_POINT		48
++#define GPOUT_SYS_CAN1_TXD			49
++#define GPOUT_SYS_I2C1_CLK			50
++#define GPOUT_SYS_I2C1_DATA			51
++#define GPOUT_SYS_I2S1_RSCKO			52
++#define GPOUT_SYS_I2S1_RWSO			53
++#define GPOUT_SYS_I2S1_SDO0			54
++#define GPOUT_SYS_I2S1_SDO1			55
++#define GPOUT_SYS_I2S1_SDO2			56
++#define GPOUT_SYS_I2S1_SDO3			57
++#define GPOUT_SYS_I2S1_SDO4			58
++#define GPOUT_SYS_I2S1_SDO5			59
++#define GPOUT_SYS_I2S1_SDO6			60
++#define GPOUT_SYS_I2S1_SDO7			61
++#define GPOUT_SYS_I2S1_TSCKO			62
++#define GPOUT_SYS_I2S1_TWSO			63
++#define GPOUT_SYS_SDIO1_PU_PD_DATA2		64
++#define GPOUT_SYS_SDIO1_BUS_POWER		65
++#define GPOUT_SYS_SDIO1_RESET			66
++#define GPOUT_SYS_SDIO1_BUS_VOLTAGE_0		67
++#define GPOUT_SYS_SDIO1_BUS_VOLTAGE_1		68
++#define GPOUT_SYS_SDIO1_BUS_VOLTAGE_2		69
++#define GPOUT_SYS_SDIO1_LED			70
++#define GPOUT_SYS_SPI1_MO			71
++#define GPOUT_SYS_SPI1_SS0			72
++#define GPOUT_SYS_SPI1_SS1			73
++#define GPOUT_SYS_SPI1_SS2			74
++#define GPOUT_SYS_SPI1_SS3			75
++#define GPOUT_SYS_SPI1_SCLK			76
++#define GPOUT_SYS_SPI1_SO			77
++#define GPOUT_SYS_UART1_DTR			78
++#define GPOUT_SYS_UART1_RTS			79
++#define GPOUT_SYS_UART1_TX			80
++#define GPOUT_SYS_USB1_DBG_DRIVE_VBUS		81
++#define GPOUT_SYS_I2C2_CLK			82
++#define GPOUT_SYS_I2C2_DATA			83
++#define GPOUT_SYS_UART2_DTR			84
++#define GPOUT_SYS_UART2_RTS			85
++#define GPOUT_SYS_UART2_TX			86
++#define GPOUT_SYS_USB2_DBG_DRIVE_VBUS		87
++#define GPOUT_SYS_I2C3_CLK			88
++#define GPOUT_SYS_I2C3_DATA			89
++#define GPOUT_SYS_UART3_DTR			90
++#define GPOUT_SYS_UART3_RTS			91
++#define GPOUT_SYS_UART3_TX			92
++#define GPOUT_SYS_USB3_DBG_DRIVE_VBUS		93
++#define GPOUT_SYS_I2C4_CLK			94
++#define GPOUT_SYS_I2C4_DATA			95
++#define GPOUT_SYS_UART4_DTR			96
++#define GPOUT_SYS_UART4_RTS			97
++#define GPOUT_SYS_UART4_TX			98
++#define GPOUT_SYS_I2C5_CLK			99
++#define GPOUT_SYS_I2C5_DATA			100
++
++/* sys_iomux_west dout */
++#define GPOUT_SYS_RSVD0				2
++#define GPOUT_SYS_RSVD1				3
++#define GPOUT_SYS_RSVD2				4
++#define GPOUT_SYS_RSVD3				5
++#define GPOUT_SYS_RSVD4				6
++#define GPOUT_SYS_RSVD5				7
++#define GPOUT_SYS_RSVD6				8
++#define GPOUT_SYS_RSVD7				9
++#define GPOUT_SYS_RSVD8				10
++#define GPOUT_SYS_HD_AUDIO0_BCLK		11
++#define GPOUT_SYS_HD_AUDIO0_RST			12
++#define GPOUT_SYS_HD_AUDIO0_SDI0_O		13
++#define GPOUT_SYS_HD_AUDIO0_SDI1_O		14
++#define GPOUT_SYS_HD_AUDIO0_SDO0		15
++#define GPOUT_SYS_HD_AUDIO0_SDO1		16
++#define GPOUT_SYS_HD_AUDIO0_SYNC		17
++#define GPOUT_SYS_HIFI4_JTAG_TDO		18
++#define GPOUT_SYS_CLK_GCLK5			19
++#define GPOUT_SYS_SMBUS1_CLK			20
++#define GPOUT_SYS_SMBUS1_DATA			21
++#define GPOUT_SYS_SMBUS1_SUSPEND		22
++#define GPOUT_SYS_SPI2_MO			23
++#define GPOUT_SYS_SPI2_SS0			24
++#define GPOUT_SYS_SPI2_SS1			25
++#define GPOUT_SYS_SPI2_SS2			26
++#define GPOUT_SYS_SPI2_SS3			27
++#define GPOUT_SYS_SPI2_SCLK			28
++#define GPOUT_SYS_SPI2_SO			29
++#define GPOUT_SYS_UART5_DTR			30
++#define GPOUT_SYS_UART5_RTS			31
++#define GPOUT_SYS_UART5_TX			32
++#define GPOUT_SYS_I2C6_CLK			33
++#define GPOUT_SYS_I2C6_DATA			34
++#define GPOUT_SYS_UART6_DTR			35
++#define GPOUT_SYS_UART6_RTS			36
++#define GPOUT_SYS_UART6_TX			37
++#define GPOUT_SYS_I2C7_CLK			38
++#define GPOUT_SYS_I2C7_DATA			39
++
++/* aon_iomux dout */
++#define GPOUT_AON_CLK_32K			2
++#define GPOUT_AON_CLK_GCLK0			3
++#define GPOUT_AON_CLK_GCLK_OSC			4
++#define GPOUT_AON_SIG_STUB_POWER_EN_O		5
++#define GPOUT_AON_EMMC_PU_PD_DATA2		6
++#define GPOUT_AON_EMMC_BUS_POWER		7
++#define GPOUT_AON_EMMC_BUS_VOLTAGE_0		8
++#define GPOUT_AON_EMMC_BUS_VOLTAGE_1		9
++#define GPOUT_AON_EMMC_BUS_VOLTAGE_2		10
++#define GPOUT_AON_EMMC_LED			11
++#define GPOUT_AON_SDIO0_PU_PD_DATA2		12
++#define GPOUT_AON_SDIO0_BUS_POWER		13
++#define GPOUT_AON_SDIO0_RESET			14
++#define GPOUT_AON_SDIO0_BUS_VOLTAGE_0		15
++#define GPOUT_AON_SDIO0_BUS_VOLTAGE_1		16
++#define GPOUT_AON_SDIO0_BUS_VOLTAGE_2		17
++#define GPOUT_AON_SDIO0_LED			18
++#define GPOUT_AON_JTAG_TDO			19
++#define GPOUT_AON_SCP_POWER_EN			20
++#define GPOUT_AON_WATCHDOG1_RESET		21
++#define GPOUT_AON_UART7_TX			22
++#define GPOUT_AON_I2C8_CLK			23
++#define GPOUT_AON_I2C8_DATA			24
++
++/* sys_iomux_east doen */
++#define GPOEN_SYS_ENABLE			0
++#define GPOEN_SYS_DISABLE			1
++#define GPOEN_SYS_I2C0_CLK			2
++#define GPOEN_SYS_I2C0_DATA			3
++#define GPOEN_SYS_I2S0_STEREO_SDOE_0		4
++#define GPOEN_SYS_I2S0_STEREO_SDOE_1		5
++#define GPOEN_SYS_SPI0_N_MO_EN			6
++#define GPOEN_SYS_SPI0_N_SCLK_EN		7
++#define GPOEN_SYS_SPI0_N_SO_EN			8
++#define GPOEN_SYS_SPI0_N_SS_EN			9
++#define GPOEN_SYS_PWM_CHANNEL0			10
++#define GPOEN_SYS_PWM_CHANNEL1			11
++#define GPOEN_SYS_PWM_CHANNEL2			12
++#define GPOEN_SYS_PWM_CHANNEL3			13
++#define GPOEN_SYS_PWM_CHANNEL4			14
++#define GPOEN_SYS_PWM_CHANNEL5			15
++#define GPOEN_SYS_PWM_CHANNEL6			16
++#define GPOEN_SYS_PWM_CHANNEL7			17
++#define GPOEN_SYS_SMBUS0_CLK			18
++#define GPOEN_SYS_SMBUS0_DATA			19
++#define GPOEN_SYS_SMBUS0_ALERT			20
++#define GPOEN_SYS_I2C1_CLK			21
++#define GPOEN_SYS_I2C1_DATA			22
++#define GPOEN_SYS_I2S1_SDO0			23
++#define GPOEN_SYS_I2S1_SDO1			24
++#define GPOEN_SYS_I2S1_SDO2			25
++#define GPOEN_SYS_I2S1_SDO3			26
++#define GPOEN_SYS_I2S1_SDO4			27
++#define GPOEN_SYS_I2S1_SDO5			28
++#define GPOEN_SYS_I2S1_SDO6			29
++#define GPOEN_SYS_I2S1_SDO7			30
++#define GPOEN_SYS_SPI1_N_MO_EN			31
++#define GPOEN_SYS_SPI1_N_SCLK_EN		32
++#define GPOEN_SYS_SPI1_N_SO_EN			33
++#define GPOEN_SYS_SPI1_N_SS_EN			34
++#define GPOEN_SYS_I2C2_CLK			35
++#define GPOEN_SYS_I2C2_DATA			36
++#define GPOEN_SYS_I2C3_CLK			37
++#define GPOEN_SYS_I2C3_DATA			38
++#define GPOEN_SYS_I2C4_CLK			39
++#define GPOEN_SYS_I2C4_DATA			40
++#define GPOEN_SYS_I2C5_CLK			41
++#define GPOEN_SYS_I2C5_DATA			42
++
++/* sys_iomux_west doen */
++#define GPOEN_SYS_RSVD0				2
++#define GPOEN_SYS_RSVD1				3
++#define GPOEN_SYS_RSVD2				4
++#define GPOEN_SYS_RSVD3				5
++#define GPOEN_SYS_RSVD4				6
++#define GPOEN_SYS_RSVD5				7
++#define GPOEN_SYS_RSVD6				8
++#define GPOEN_SYS_HD_AUDIO0_SDI0		9
++#define GPOEN_SYS_HD_AUDIO0_SDI1		10
++#define GPOEN_SYS_HIFI4_JTAG_TDO		11
++#define GPOEN_SYS_SMBUS1_CLK			12
++#define GPOEN_SYS_SMBUS1_DATA			13
++#define GPOEN_SYS_SMBUS1_ALERT			14
++#define GPOEN_SYS_SPI2_MO			15
++#define GPOEN_SYS_SPI2_SCLK			16
++#define GPOEN_SYS_SPI2_SO			17
++#define GPOEN_SYS_SPI2_SS			18
++#define GPOEN_SYS_I2C6_CLK			19
++#define GPOEN_SYS_I2C6_DATA			20
++#define GPOEN_SYS_I2C7_CLK			21
++#define GPOEN_SYS_I2C7_DATA			22
++
++/* aon_iomux doen */
++#define GPOEN_AON_JTAG_TDO			2
++#define GPOEN_AON_I2C8_CLK			3
++#define GPOEN_AON_I2C8_DATA			4
++
++/* sys_iomux din */
++#define GPI_NONE				255
++
++/* sys_iomux_east din */
++#define GPI_SYS_CAN0_RXD			0
++#define GPI_SYS_I2C0_CLK			1
++#define GPI_SYS_I2C0_DATA			2
++#define GPI_SYS_SPI0_SCLK			3
++#define GPI_SYS_SPI0_MI				4
++#define GPI_SYS_SPI0_SS_N			5
++#define GPI_SYS_SPI0_SI				6
++#define GPI_SYS_UART0_CTS			7
++#define GPI_SYS_UART0_DCD			8
++#define GPI_SYS_UART0_DSR			9
++#define GPI_SYS_UART0_RI			10
++#define GPI_SYS_UART0_RX			11
++#define GPI_SYS_USB0_DBG_OVERCURRENT		12
++#define GPI_SYS_PDM_DMIC0			13
++#define GPI_SYS_PDM_DMIC1			14
++#define GPI_SYS_I2SRX0_SDIN0			15
++#define GPI_SYS_I2SRX0_SDIN1			16
++#define GPI_SYS_SMBUS0_CLK			17
++#define GPI_SYS_SMBUS0_DATA			18
++#define GPI_SYS_SMBUS0_ALERT			19
++#define GPI_SYS_JTAG_TCK			20
++#define GPI_SYS_MCLK_EXT			21
++#define GPI_SYS_I2SRX0_BCLK			22
++#define GPI_SYS_I2SRX0_LRCK			23
++#define GPI_SYS_I2STX0_BCLK			24
++#define GPI_SYS_I2STX0_LRCK			25
++#define GPI_SYS_SPI0_SCLK_IN0			26
++#define GPI_SYS_SPI0_SCLK_IN1			27
++#define GPI_SYS_I2S0_STEREO_RX_BCLK		28
++#define GPI_SYS_I2S0_STEREO_RX_LRCK		29
++#define GPI_SYS_I2S0_STEREO_TX_BCLK		30
++#define GPI_SYS_I2S0_STEREO_TX_LRCK		31
++#define GPI_SYS_I2S1_RX_BCLK			32
++#define GPI_SYS_I2S1_RX_LRCK			33
++#define GPI_SYS_I2S1_TX_BCLK			34
++#define GPI_SYS_I2S1_TX_LRCK			35
++#define GPI_SYS_USB0_TYPEC_OVERCURRENT		36
++#define GPI_SYS_CAN1_RXD			37
++#define GPI_SYS_I2C1_CLK			38
++#define GPI_SYS_I2C1_DATA			39
++#define GPI_SYS_I2S1_SDI_0			40
++#define GPI_SYS_I2S1_SDI_1			41
++#define GPI_SYS_I2S1_SDI_2			42
++#define GPI_SYS_I2S1_SDI_3			43
++#define GPI_SYS_I2S1_SDI_4			44
++#define GPI_SYS_I2S1_SDI_5			45
++#define GPI_SYS_I2S1_SDI_6			46
++#define GPI_SYS_I2S1_SDI_7			47
++#define GPI_SYS_SDIO1_CARD_DETECT		48
++#define GPI_SYS_SDIO1_WRITE_PROTECT		49
++#define GPI_SYS_SPI1_EXT_CLK			50
++#define GPI_SYS_SPI1_MI				51
++#define GPI_SYS_SPI1_SS_IN			52
++#define GPI_SYS_SPI1_SI				53
++#define GPI_SYS_UART1_CTS			54
++#define GPI_SYS_UART1_DCD			55
++#define GPI_SYS_UART1_DSR			56
++#define GPI_SYS_UART1_RI			57
++#define GPI_SYS_UART1_RX			58
++#define GPI_SYS_USB1_DBG_OVERCURRENT		59
++#define GPI_SYS_I2C2_CLK			60
++#define GPI_SYS_I2C2_DATA			61
++#define GPI_SYS_UART2_CTS			62
++#define GPI_SYS_UART2_DCD			63
++#define GPI_SYS_UART2_DSR			64
++#define GPI_SYS_UART2_RI			65
++#define GPI_SYS_UART2_RX			66
++#define GPI_SYS_USB2_DBG_OVERCURRENT		67
++#define GPI_SYS_I2C3_CLK			68
++#define GPI_SYS_I2C3_DATA			69
++#define GPI_SYS_UART3_CTS			70
++#define GPI_SYS_UART3_DCD			71
++#define GPI_SYS_UART3_DSR			72
++#define GPI_SYS_UART3_RI			73
++#define GPI_SYS_UART3_RX			74
++#define GPI_SYS_USB3_DBG_OVERCURRENT		75
++#define GPI_SYS_I2C4_CLK			76
++#define GPI_SYS_I2C4_DATA			77
++#define GPI_SYS_UART4_CTS			78
++#define GPI_SYS_UART4_DCD			79
++#define GPI_SYS_UART4_DSR			80
++#define GPI_SYS_UART4_RI			81
++#define GPI_SYS_UART4_RX			82
++#define GPI_SYS_I2C5_CLK			83
++#define GPI_SYS_I2C5_DATA			84
++
++/* sys_iomux_west din */
++#define GPI_SYS_RSVD0				0
++#define GPI_SYS_RSVD1				1
++#define GPI_SYS_RSVD2				2
++#define GPI_SYS_RSVD3				3
++#define GPI_SYS_RSVD4				4
++#define GPI_SYS_RSVD5				5
++#define GPI_SYS_RSVD6				6
++#define GPI_SYS_HD_AUDIO0_SDI0_I		7
++#define GPI_SYS_HD_AUDIO0_SDI1_I		8
++#define GPI_SYS_HIFI4_JTAG_TDI			9
++#define GPI_SYS_HIFI4_JTAG_TMS			10
++#define GPI_SYS_HIFI4_JTAG_RST			11
++#define GPI_SYS_RSVD7				12
++#define GPI_SYS_HIFI4_JTAG_TCK			13
++#define GPI_SYS_RSVD8				14
++#define GPI_SYS_SPI0_SCLK_IN2			15
++#define GPI_SYS_SMBUS1_CLK			16
++#define GPI_SYS_SMBUS1_DATA			17
++#define GPI_SYS_SMBUS1_ALERT			18
++#define GPI_SYS_SPI2_EXT_CLK			19
++#define GPI_SYS_SPI2_MI				20
++#define GPI_SYS_SPI2_SS_IN			21
++#define GPI_SYS_SPI2_SI				22
++#define GPI_SYS_UART5_CTS			23
++#define GPI_SYS_UART5_DCD			24
++#define GPI_SYS_UART5_DSR			25
++#define GPI_SYS_UART5_RI			26
++#define GPI_SYS_UART5_RX			27
++#define GPI_SYS_I2C6_CLK			28
++#define GPI_SYS_I2C6_DATA			29
++#define GPI_SYS_UART6_CTS			30
++#define GPI_SYS_UART6_DCD			31
++#define GPI_SYS_UART6_DSR			32
++#define GPI_SYS_UART6_RI			33
++#define GPI_SYS_UART6_RX			34
++#define GPI_SYS_I2C7_CLK			35
++#define GPI_SYS_I2C7_DATA			36
++
++/* aon_iomux din */
++#define GPI_AON_JTAG_TCK			0
++#define GPI_AON_SIG_STUB_RESERVED_0		1
++#define GPI_AON_SIG_STUB_RESERVED_1		2
++#define GPI_AON_SIG_STUB_RESERVED_2		3
++#define GPI_AON_XSPI0_GP_OPEN_DRAIN_0		4
++#define GPI_AON_XSPI0_GP_OPEN_DRAIN_1		5
++#define GPI_AON_XSPI0_GP_OPEN_DRAIN_2		6
++#define GPI_AON_XSPI0_GP_OPEN_DRAIN_3		7
++#define GPI_AON_SDIO0_CARD_DETECTION		8
++#define GPI_AON_SDIO0_WRITE_PROTECTION		9
++#define GPI_AON_SRC_BUF_JTAG_RST		10
++#define GPI_AON_JTAG_TDI			11
++#define GPI_AON_JTAG_TMS			12
++#define GPI_AON_UART7_RX			13
++#define GPI_AON_I2C8_CLK			14
++#define GPI_AON_I2C8_DATA			15
++
++#endif
+diff --git a/arch/riscv/boot/dts/starfive/jh8100.dtsi b/arch/riscv/boot/dts/starfive/jh8100.dtsi
+index 5ba826e38ead..b7c440298ad9 100644
+--- a/arch/riscv/boot/dts/starfive/jh8100.dtsi
++++ b/arch/riscv/boot/dts/starfive/jh8100.dtsi
+@@ -5,6 +5,8 @@
+ 
+ /dts-v1/;
+ #include <dt-bindings/clock/starfive,jh8100-crg.h>
++#include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/pinctrl/starfive,jh8100-pinctrl.h>
+ #include <dt-bindings/reset/starfive,jh8100-crg.h>
+ 
+ / {
+@@ -563,6 +565,19 @@ uart4: serial@121a0000  {
+ 			status = "disabled";
+ 		};
+ 
++		pinctrl_east: pinctrl@122d0000 {
++			compatible = "starfive,jh8100-sys-pinctrl-east",
++				     "syscon", "simple-mfd";
++			reg = <0x0 0x122d0000 0x0 0x10000>;
++			clocks = <&necrg JH8100_NECLK_IOMUX_EAST_PCLK>;
++			resets = <&necrg JH8100_NERST_SYS_IOMUX_E>;
++			interrupts = <182>;
++			interrupt-controller;
++			gpio-controller;
++			#gpio-cells = <2>;
++			gpio-ranges = <&pinctrl_east 0 0 48>;
++		};
++
+ 		necrg: clock-controller@12320000 {
+ 			compatible = "starfive,jh8100-necrg";
+ 			reg = <0x0 0x12320000 0x0 0x10000>;
+@@ -634,6 +649,19 @@ nwcrg: clock-controller@123c0000 {
+ 			#reset-cells = <1>;
+ 		};
+ 
++		pinctrl_west: pinctrl@123e0000 {
++			compatible = "starfive,jh8100-sys-pinctrl-west",
++				     "syscon", "simple-mfd";
++			reg = <0x0 0x123e0000 0x0 0x10000>;
++			clocks = <&nwcrg JH8100_NWCLK_IOMUX_WEST_PCLK>;
++			resets = <&nwcrg JH8100_NWRST_SYS_IOMUX_W>;
++			interrupts = <183>;
++			interrupt-controller;
++			gpio-controller;
++			#gpio-cells = <2>;
++			gpio-ranges = <&pinctrl_west 0 0 16>;
++		};
++
+ 		syscrg: clock-controller@126d0000 {
+ 			compatible = "starfive,jh8100-syscrg";
+ 			reg = <0x0 0x126d0000 0x0 0x10000>;
+@@ -656,6 +684,13 @@ swcrg: clock-controller@12720000 {
+ 			#reset-cells = <1>;
+ 		};
+ 
++		pinctrl_gmac: pinctrl@12770000 {
++			compatible = "starfive,jh8100-sys-pinctrl-gmac",
++				     "syscon", "simple-mfd";
++			status = "disabled";
++			reg = <0x0 0x12770000 0x0 0x10000>;
++		};
++
+ 		uart5: serial@127d0000  {
+ 			compatible = "starfive,jh8100-uart", "cdns,uart-r1p8";
+ 			reg = <0x0 0x127d0000 0x0 0x10000>;
+@@ -674,6 +709,18 @@ uart6: serial@127e0000  {
+ 			status = "disabled";
+ 		};
+ 
++		pinctrl_aon: pinctrl@1f300000 {
++			compatible = "starfive,jh8100-aon-pinctrl",
++				     "syscon", "simple-mfd";
++			reg = <0x0 0x1f300000 0x0 0x10000>;
++			resets = <&aoncrg JH8100_AONRST_AON_IOMUX_PRESETN>;
++			interrupts = <160>;
++			interrupt-controller;
++			gpio-controller;
++			#gpio-cells = <2>;
++			gpio-ranges = <&pinctrl_aon 0 0 16>;
++		};
++
+ 		aoncrg: clock-controller@1f310000 {
+ 			compatible = "starfive,jh8100-aoncrg";
+ 			reg = <0x0 0x1f310000 0x0 0x10000>;
+-- 
+2.43.0
 
