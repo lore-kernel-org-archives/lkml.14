@@ -1,188 +1,153 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from dggsgout11.his.huawei.com (unknown [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7BB167C49
-	for <linux-kernel@vger.kernel.org>; Tue, 20 Feb 2024 12:02:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED939664D1;
+	Tue, 20 Feb 2024 12:03:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708430578; cv=none; b=dsDFM1YmHAA71/3MXYMZ59/OG3QiC7L7GZQFtn9xndZOv5zJjFUq+fRXo6mOmGJQCKKfCWijPOG4htDomqdrof43sARFJdvOn4B1zH8cpxDA9dy0X6AAmS80OlYWiMzsu4RiBMpwwJ9XdxXb6rGxoz5vRj9/ntWUC2QSlhGY/0Y=
+	t=1708430626; cv=none; b=m5uffgGZnUxavSyoMDQoogunnuB/P8PdcYDUiuaRwHWCuqlurauYD6u7fN3RN71AX3DM2rEJZ2JbcfrRih8V7NYCCU+5v0/OdY6Ul2/mEBkuIaTnxc78JxG3zt/Oc0gh/xYNBlbAqiCv5A2M6LPV2vKXoEucLA0wdq4/mgaJjdc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708430578; c=relaxed/simple;
-	bh=Qwei00/D5+DhbgFyfiZlK9K80IEw6DOD6oSgL5igAM0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Lw6lnaz+ojG82xVxipic96jBT3gbF8b60bZaM+xt7a2NXFlboxGbiCynKAq+9kvXGMhk9zOVmTQ+E/Wup7Bsf4O5RdhT4muZhpt1O6RrlmiPeTO/6pF/H7Rcg48gr6AZdQ5LHfYMacJZBtLQ7RCpsDrM1e7h8dEKikJ5bEYknOo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=NfYlWj0j; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NfYlWj0j"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1708430575;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=3ymRHd/JZiWlQ7BK0HpkEMNKkAfVIgEXtX8VQjIGxto=;
-	b=NfYlWj0j7mzeoHCVrmwRs73F63JwbsoU+4YOrPAms669R3LJKPTw3PlfjVqVQiLgIyE+O7
-	ZkPqHQbOL4vOYMakGSTpSRvXApK8I1ylWV1OhXtzz2XIKdNFE/r3682qcXow3+vB16tq3x
-	18DGFbmyQY/JnvlPvr/ZX8ErLQX+YHo=
-Received: from mail-lf1-f70.google.com (mail-lf1-f70.google.com
- [209.85.167.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-167-61yHECyrMeuRlDRliabLBA-1; Tue, 20 Feb 2024 07:02:54 -0500
-X-MC-Unique: 61yHECyrMeuRlDRliabLBA-1
-Received: by mail-lf1-f70.google.com with SMTP id 2adb3069b0e04-51161adad50so5472432e87.2
-        for <linux-kernel@vger.kernel.org>; Tue, 20 Feb 2024 04:02:53 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708430572; x=1709035372;
-        h=content-transfer-encoding:in-reply-to:organization:from:references
-         :cc:to:content-language:subject:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=3ymRHd/JZiWlQ7BK0HpkEMNKkAfVIgEXtX8VQjIGxto=;
-        b=BlAV6tUgZR/tjE7/4bytV4sQ4iiHPVuv7ZlETLD80XYcDOu/hNFY0gsg1ck1bYxme5
-         1aA+cpJpGOV+01a9l+fpkJcdR6kj7K20WDyfMVztkOe882QM0jxgF7t/XCvFvGLM6HFd
-         Iu73TXWcwPmBtvHt/Y8cDK8ZOLQk4FVoehsOyz1I/6hod1660RyjgqkBslAyVg+lNjNa
-         BRVnyFlvw/gUfFhp1lZRB0CZ+nVxDFS0E90GrcbsD+TNjgo56br+IsWpIxRlrqQiVZoD
-         9ZIhRlbasczFxNNpS5q8YX1NXWEL+KfxG3rSYFPzphsJmM83tBDPv+bo0yOCaufzW9uR
-         qmXg==
-X-Forwarded-Encrypted: i=1; AJvYcCVNkD1AqxB67Gsf6uHg+YAMvSno52MzVTap+ybzUmM5NHZBhS+NATHs2hW50fuLs47ML4asbgB5U1C2MLLMoV8kk1RnDk+nnrnmQE9G
-X-Gm-Message-State: AOJu0YyBQZ38o7DvKUoIpQ+q5ZcOA+3nYoaf0I/8LE+QqZFChmWFK7ZJ
-	BjyNR2fKEnMFF4/IwJP5GZKESLHeoCJZi+5hf3QccGq06eL+vgbQp4yNqI/zntTSsi24ZjKc1Tx
-	PfJDCs6GQwQ5++PAqgnMmuIufrdc2HS+S2YQAhfAIDO3k9UmTWt32zX1aKn3d3g==
-X-Received: by 2002:ac2:5e33:0:b0:512:bdcd:f22b with SMTP id o19-20020ac25e33000000b00512bdcdf22bmr1981484lfg.64.1708430572606;
-        Tue, 20 Feb 2024 04:02:52 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IF6w/fhcXDPnyA798UBa/GUqFRWQbgOG8VGTCfHDbaR2CAZ7+y/U97oxneA3LSvOcgBNEXS6w==
-X-Received: by 2002:ac2:5e33:0:b0:512:bdcd:f22b with SMTP id o19-20020ac25e33000000b00512bdcdf22bmr1981470lfg.64.1708430572227;
-        Tue, 20 Feb 2024 04:02:52 -0800 (PST)
-Received: from ?IPV6:2a02:810d:4b3f:ee94:abf:b8ff:feee:998b? ([2a02:810d:4b3f:ee94:abf:b8ff:feee:998b])
-        by smtp.gmail.com with ESMTPSA id et5-20020a056402378500b00561c666991csm3546875edb.73.2024.02.20.04.02.51
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 20 Feb 2024 04:02:51 -0800 (PST)
-Message-ID: <e543b270-dea7-477a-b83d-62129d4ac708@redhat.com>
-Date: Tue, 20 Feb 2024 13:02:50 +0100
+	s=arc-20240116; t=1708430626; c=relaxed/simple;
+	bh=bqSHcYdUOo83IiYutNNf7E+8lC2T8puCRxlGGfLZAmI=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=fOV9KU33aMI2RLiYhYXh5xjnlp71gTMYYtmC+84jfPC3Jz5GS67YY9/ErOCS2DZ3owf52xOaCWcKJ73/xJCmHJACsyWbKPoOMtriiMeReCK+lTUE//8kau8McAwah9/CYapBGcBgX/hdsZ29kgcGI7+sZ/DrtPU2oeP+lbjqNQI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.216])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4TfJ2x2S3zz4f3jqs;
+	Tue, 20 Feb 2024 20:03:37 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.112])
+	by mail.maildlp.com (Postfix) with ESMTP id 7A3681A0D50;
+	Tue, 20 Feb 2024 20:03:40 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.175.104.67])
+	by APP1 (Coremail) with SMTP id cCh0CgAn9g4PldRlJQxlEg--.17612S4;
+	Tue, 20 Feb 2024 20:03:40 +0800 (CST)
+From: Zhang Yi <yi.zhang@huaweicloud.com>
+To: linux-xfs@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	djwong@kernel.org,
+	hch@infradead.org,
+	brauner@kernel.org,
+	david@fromorbit.com,
+	tytso@mit.edu,
+	jack@suse.cz,
+	yi.zhang@huawei.com,
+	yi.zhang@huaweicloud.com,
+	chengzhihao1@huawei.com,
+	yukuai3@huawei.com
+Subject: [PATCH -next] iomap: add pos and dirty_len into trace_iomap_writepage_map
+Date: Tue, 20 Feb 2024 19:57:59 +0800
+Message-Id: <20240220115759.3445025-1-yi.zhang@huaweicloud.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4] rust: str: add {make,to}_{upper,lower}case() to
- CString
-Content-Language: en-US
-To: Alice Ryhl <aliceryhl@google.com>
-Cc: a.hindborg@samsung.com, alex.gaynor@gmail.com, benno.lossin@proton.me,
- bjorn3_gh@protonmail.com, boqun.feng@gmail.com, gary@garyguo.net,
- linux-kernel@vger.kernel.org, ojeda@kernel.org,
- rust-for-linux@vger.kernel.org, wedsonaf@gmail.com
-References: <20240219163915.2705-1-dakr@redhat.com>
- <20240220093541.280140-1-aliceryhl@google.com>
-From: Danilo Krummrich <dakr@redhat.com>
-Organization: RedHat
-In-Reply-To: <20240220093541.280140-1-aliceryhl@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:cCh0CgAn9g4PldRlJQxlEg--.17612S4
+X-Coremail-Antispam: 1UD129KBjvJXoWxZF43AFy3XF45WFWkWw17Wrg_yoW5Aw18pF
+	9FyFZ8Cr4kJr429w1fZa4rArZ0vF95ur4Utr13u3y5Zr4vyr17KF4vkFWjvF95ArnIyF13
+	XF4F9rykG3WUCw7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUvY14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
+	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
+	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
+	2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
+	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2
+	Y2ka0xkIwI1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4
+	xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43
+	MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I
+	0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWrZr1j6s0DMIIF0xvEx4A2jsIE14v2
+	6r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0J
+	UZa9-UUUUU=
+X-CM-SenderInfo: d1lo6xhdqjqx5xdzvxpfor3voofrz/
 
-On 2/20/24 10:35, Alice Ryhl wrote:
->> Add functions to convert a CString to upper- / lowercase, either
->> in-place or by creating a copy of the original CString.
->>
->> Naming followes the one from the Rust stdlib, where functions starting
->> with 'to' create a copy and functions starting with 'make' perform an
->> in-place conversion.
->>
->> This is required by the Nova project (GSP only Rust successor of
->> Nouveau) to convert stringified enum values (representing different GPU
->> chipsets) to strings in order to generate the corresponding firmware
->> paths. See also [1].
->>
->> [1] https://rust-for-linux.zulipchat.com/#narrow/stream/288089-General/topic/String.20manipulation.20in.20kernel.20Rust
->>
->> Signed-off-by: Danilo Krummrich <dakr@redhat.com>
-> 
-> This looks good to me, so you may add my
-> 
-> Reviewed-by: Alice Ryhl <aliceryhl@google.com>
+From: Zhang Yi <yi.zhang@huawei.com>
 
-Thanks for reviewing this patch.
+Since commit fd07e0aa23c4 ("iomap: map multiple blocks at a time"), we
+could map multi-blocks once a time, and the dirty_len indicates the
+expected map length, map_len won't large than it. The pos and dirty_len
+means the dirty range that should be mapped to write, add them into
+trace_iomap_writepage_map() could be more useful for debug.
 
-> 
-> However, it looks like this patch has some clippy warnings that need to
-> be fixed before it can be merged.
+Signed-off-by: Zhang Yi <yi.zhang@huawei.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+---
+ fs/iomap/buffered-io.c |  2 +-
+ fs/iomap/trace.h       | 43 +++++++++++++++++++++++++++++++++++++++++-
+ 2 files changed, 43 insertions(+), 2 deletions(-)
 
-It seems that those warnings are treated as fatal even, although, given the
-rationale for these warnings, I'm not even sure those should be warnings at
-all.
-
-> 
-> $ make LLVM=1 CLIPPY=1
-> error: unneeded `return` statement
-
-I fail to see why being explicit is a bad thing in this context, and even more
-why this is treated as error.
-
->     --> rust/kernel/str.rs:267:9
->      |
-> 267 |         return Ok(s);
->      |         ^^^^^^^^^^^^
->      |
->      = help: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#needless_return
-
-Following this link the given rationale is:
-
-"Removing the return and semicolon will make the code more rusty."
-
-That's the worst rationale I could think of. Without further rationale what that
-should mean and why this would be good, it's entirely meaningless.
-
-Instead, I'd argue that keeping it gives kernel people, who necessarily need to
-deal with both, Rust *and* C, more consistency in kernel code.
-
-At least, this shouldn't be fatal IMHO.
-
->      = note: `-D clippy::needless-return` implied by `-D clippy::style`
->      = help: to override `-D clippy::style` add `#[allow(clippy::needless_return)]`
-> help: remove `return`
->      |
-> 267 -         return Ok(s);
-> 267 +         Ok(s)
->      |
-> 
-> error: unneeded `return` statement
->     --> rust/kernel/str.rs:284:9
->      |
-> 284 |         return Ok(s);
->      |         ^^^^^^^^^^^^
->      |
->      = help: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#needless_return
-> help: remove `return`
->      |
-> 284 -         return Ok(s);
-> 284 +         Ok(s)
->      |
-> 
-> error: deref which would be done by auto-deref
-
-Similar story here. Why is it bad, and even *fatal*, to be explicit?
-
-The answer from the link below: "This unnecessarily complicates the code."
-
-Again, not a great rationale, this is entirely subjective and might even depend
-on the context of the project. Again, for kernel people who need to deal with Rust
-*and* C continuously it might be better to be explicit.
-
->     --> rust/kernel/str.rs:677:58
->      |
-> 677 |         unsafe { CStr::from_bytes_with_nul_unchecked_mut(&mut *self.buf) }
->      |                                                          ^^^^^^^^^^^^^^ help: try: `&mut self.buf`
->      |
->      = help: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#explicit_auto_deref
->      = note: `-D clippy::explicit-auto-deref` implied by `-D clippy::complexity`
->      = help: to override `-D clippy::complexity` add `#[allow(clippy::explicit_auto_deref)]`
-> 
-> error: aborting due to 3 previous errors
-> 
-> Alice
-> 
+diff --git a/fs/iomap/buffered-io.c b/fs/iomap/buffered-io.c
+index 2ad0e287c704..ae4e2026e59e 100644
+--- a/fs/iomap/buffered-io.c
++++ b/fs/iomap/buffered-io.c
+@@ -1776,7 +1776,7 @@ static int iomap_writepage_map_blocks(struct iomap_writepage_ctx *wpc,
+ 		error = wpc->ops->map_blocks(wpc, inode, pos, dirty_len);
+ 		if (error)
+ 			break;
+-		trace_iomap_writepage_map(inode, &wpc->iomap);
++		trace_iomap_writepage_map(inode, pos, dirty_len, &wpc->iomap);
+ 
+ 		map_len = min_t(u64, dirty_len,
+ 			wpc->iomap.offset + wpc->iomap.length - pos);
+diff --git a/fs/iomap/trace.h b/fs/iomap/trace.h
+index c16fd55f5595..3ef694f9489f 100644
+--- a/fs/iomap/trace.h
++++ b/fs/iomap/trace.h
+@@ -154,7 +154,48 @@ DEFINE_EVENT(iomap_class, name,	\
+ 	TP_ARGS(inode, iomap))
+ DEFINE_IOMAP_EVENT(iomap_iter_dstmap);
+ DEFINE_IOMAP_EVENT(iomap_iter_srcmap);
+-DEFINE_IOMAP_EVENT(iomap_writepage_map);
++
++TRACE_EVENT(iomap_writepage_map,
++	TP_PROTO(struct inode *inode, u64 pos, unsigned int dirty_len,
++		 struct iomap *iomap),
++	TP_ARGS(inode, pos, dirty_len, iomap),
++	TP_STRUCT__entry(
++		__field(dev_t, dev)
++		__field(u64, ino)
++		__field(u64, pos)
++		__field(u64, dirty_len)
++		__field(u64, addr)
++		__field(loff_t, offset)
++		__field(u64, length)
++		__field(u16, type)
++		__field(u16, flags)
++		__field(dev_t, bdev)
++	),
++	TP_fast_assign(
++		__entry->dev = inode->i_sb->s_dev;
++		__entry->ino = inode->i_ino;
++		__entry->pos = pos;
++		__entry->dirty_len = dirty_len;
++		__entry->addr = iomap->addr;
++		__entry->offset = iomap->offset;
++		__entry->length = iomap->length;
++		__entry->type = iomap->type;
++		__entry->flags = iomap->flags;
++		__entry->bdev = iomap->bdev ? iomap->bdev->bd_dev : 0;
++	),
++	TP_printk("dev %d:%d ino 0x%llx bdev %d:%d pos 0x%llx dirty len 0x%llx "
++		  "addr 0x%llx offset 0x%llx length 0x%llx type %s flags %s",
++		  MAJOR(__entry->dev), MINOR(__entry->dev),
++		  __entry->ino,
++		  MAJOR(__entry->bdev), MINOR(__entry->bdev),
++		  __entry->pos,
++		  __entry->dirty_len,
++		  __entry->addr,
++		  __entry->offset,
++		  __entry->length,
++		  __print_symbolic(__entry->type, IOMAP_TYPE_STRINGS),
++		  __print_flags(__entry->flags, "|", IOMAP_F_FLAGS_STRINGS))
++);
+ 
+ TRACE_EVENT(iomap_iter,
+ 	TP_PROTO(struct iomap_iter *iter, const void *ops,
+-- 
+2.39.2
 
