@@ -1,628 +1,393 @@
-Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com [209.85.208.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wout3-smtp.messagingengine.com (wout3-smtp.messagingengine.com [64.147.123.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D8E5127B42;
-	Tue, 20 Feb 2024 18:31:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0A9E77F13
+	for <linux-kernel@vger.kernel.org>; Tue, 20 Feb 2024 18:32:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708453884; cv=none; b=CALfGtYfQ1LPlw92gANIIpt4TbSpKgpXODVt+MjozXTWehIjG15K4IVPDacCpi3TgXgcYRLWola9M3+XeOr/oj3+9fPphxpDH1IC3HKOOKPt9lXtll1rG5wX+ksOKSJQ0o1tRZx58bMN5vI/XS7212jkq3R7HJ2dysKtpHbrhWU=
+	t=1708453960; cv=none; b=QlHdQoLEYNephFMuz94/T4Rxeb0c/QTts+b2uVlrOTLJ0OoDYb2IVvHhuKQnNyqgoLiMmiuCEDcE+eJFXBzdrka7xE9CHrazcRfJfz7JluqFu5kqmWkVADNSXfRFZSs3GusKRwroturkxkdgK5hv/fyEcjVxfNDHcCvkwHWjftI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708453884; c=relaxed/simple;
-	bh=FdF0mgTap9bXDrmQSaRzwCgS3LDsGplUhtEqGb0GcTQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Vbbmo3iUrg3ui57Co9pXn50yonwrrksmZ0EpCe+yX7UaG9eEZreK1EurnsTbZsZFWyclGsB/DmVrCPlWaq8YDPiSEqBN59+53UV3Il29a6ulhXhkt8ccxjqPYn9fYwJ9MPQcC2OCemJlXcACz1keeg7GcnBWPlsQ4SPcdx1eHyE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=F6XCHcoq; arc=none smtp.client-ip=209.85.208.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1708453960; c=relaxed/simple;
+	bh=9FcraHn2cUuK2kIvzHlvXsoEQRPWIFIM5vXwcEoq62U=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=eQBXxgG37+ydNAw6FJ54+oUeFZW0q4QGAKTFxr141wb9+HaOENXqZC7mucJ+L0b0Z59qP/AEZKqeRpgXRXVh4NVHtrI/R5dVzkjpAlV9mFJXXN/L8WL4G9CD1muLyoMxgUAf6NQDDVdBoHSP7wXzhM1i3dZPhaMv+ob/wV9JCtw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sent.com; spf=pass smtp.mailfrom=sent.com; dkim=pass (2048-bit key) header.d=sent.com header.i=@sent.com header.b=kHa+Dpg4; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=Tbyb1Euf; arc=none smtp.client-ip=64.147.123.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sent.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sent.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F6XCHcoq"
-Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-2d208be133bso60713851fa.2;
-        Tue, 20 Feb 2024 10:31:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1708453880; x=1709058680; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=wus0M0lyQQHcOlLysxUocxe/UwP6fnCb6fumk2LTjUE=;
-        b=F6XCHcoqsMOsLi4lNao4Pbisp6mpJM1GecH4m4yT0AZoR9AVHepHbtzeqoo4oaoZIJ
-         okIHB3hAeihWwe5VdZiKy42DkJsbsJVFL/1GPxZqSnWsp/OfFLJMbm1rNfppF90DkhBv
-         NGxmDZI9ySfJvFjGrhuSusaf+z0+F/ime0OmXVWCUpNWEMisy5CW6AsczaUA8wiFC89v
-         sG/nAmHgcWfjIPOUCrEUBaLB2BlZhNwR3gE7hrDR28z3MIm9zIARw6u/6LcpVeJ3C1YV
-         lpg0EoyBw3bXtRD76vXxJDfeGBJSyZj+m8SBEH36C2brPvEWKhVHhSScd1+tZoEdqSO3
-         M4QA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708453880; x=1709058680;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=wus0M0lyQQHcOlLysxUocxe/UwP6fnCb6fumk2LTjUE=;
-        b=MbmCcCC+0jj5gmySD+UzJrMcC9EqNgt7sqDnCwWS1W+l0IpIMcujSOgomCUyIJephd
-         fEjXTEKb6Anj5BPhlWTajS/B2tY29ajAOuxqzP9KCVHy939bLryPAmANDYa0JVYHKpYD
-         IikGdi2bXTt/Ebuv0wCZLdHHLDGX+YIlKLiy8fqw0aYN9eN+GDsNXMAQ9xFavgKKGAIY
-         XQ10OYaNBwqFo9KITLYAR0Vl3f9ME2l8q5CQFaxOiRqDyI7UuhgB56NC/jKVVumOCBWk
-         k0BpcPUKyQc5uMX3oWXYJHh1tBp7tFMIJSaC0cvSt2UuxWU//l3TVkF8AjMq4NWbVgdl
-         7V9g==
-X-Forwarded-Encrypted: i=1; AJvYcCX+eM2o4909rq4xe5CcrCnKI1tA1XLVPe8GnpkFMp9ltTqK+wBYND4FLm+lmbXTDT1joXzlsHRd41pvRvKj4J1KXLfLt83Na5bdak7I
-X-Gm-Message-State: AOJu0YxT6t+rNM6qy63iPxBzkU3QmBc6xaYUqtzaGk9T4gaYgeGCnw5o
-	dq3JSiXeKUFnzMa9eIuLqxEUcpNqLGlzQ2APt3zR1zIlnnkI0X/K
-X-Google-Smtp-Source: AGHT+IF869iG7UewWJD16vnzP5Kezt7YBbNT+sy5+ZXKwMYTCLeX8ifpPhPoJLMRHaNM6yCQejQglQ==
-X-Received: by 2002:a05:6512:3a5:b0:512:be45:2b9 with SMTP id v5-20020a05651203a500b00512be4502b9mr2995147lfp.45.1708453879477;
-        Tue, 20 Feb 2024 10:31:19 -0800 (PST)
-Received: from pc638.lan (host-185-121-47-193.sydskane.nu. [185.121.47.193])
-        by smtp.gmail.com with ESMTPSA id b14-20020ac247ee000000b005118add498asm1365937lfp.130.2024.02.20.10.31.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 20 Feb 2024 10:31:19 -0800 (PST)
-From: "Uladzislau Rezki (Sony)" <urezki@gmail.com>
-To: "Paul E . McKenney" <paulmck@kernel.org>
-Cc: RCU <rcu@vger.kernel.org>,
-	Neeraj upadhyay <Neeraj.Upadhyay@amd.com>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Hillf Danton <hdanton@sina.com>,
-	Joel Fernandes <joel@joelfernandes.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	Uladzislau Rezki <urezki@gmail.com>,
-	Oleksiy Avramchenko <oleksiy.avramchenko@sony.com>,
-	Frederic Weisbecker <frederic@kernel.org>
-Subject: [PATCH v5 2/4] rcu: Reduce synchronize_rcu() latency
-Date: Tue, 20 Feb 2024 19:31:13 +0100
-Message-Id: <20240220183115.74124-3-urezki@gmail.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240220183115.74124-1-urezki@gmail.com>
-References: <20240220183115.74124-1-urezki@gmail.com>
+	dkim=pass (2048-bit key) header.d=sent.com header.i=@sent.com header.b="kHa+Dpg4";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Tbyb1Euf"
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+	by mailout.west.internal (Postfix) with ESMTP id 2EFBB3200488;
+	Tue, 20 Feb 2024 13:32:35 -0500 (EST)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute5.internal (MEProxy); Tue, 20 Feb 2024 13:32:36 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sent.com; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:message-id:mime-version:reply-to
+	:reply-to:subject:subject:to:to; s=fm1; t=1708453954; x=
+	1708540354; bh=Huf2bIOm7lsuCQDjyWbxODs2ph/fcWRD5qUueHOel5g=; b=k
+	Ha+Dpg43cCHTveu54ci/blOWmZJ9zKbY/qeleedTafIET2wz1zK+cxvYlXsiLuVn
+	19s7QpYyQBiSjGYzizsfdtYkBesuh5qHs7BIJNJmDfU5X9iX2SlNw99B2Rf6pO9F
+	x4sIwTYwHDbMzOXX/lHUmd9+tCfKVwWz4HnF+CNE/rNYFenPskq9lXlxe9jOdonI
+	oTssDHjG07lF3p12Bhhagx/WzcJlTzyKXDSiyDCHosFKO1wG7c0kqw6kIdwDLMWo
+	1yUAP/VGktZG+QSDA3I887DXYVHqxm1e8Nvvrhz6acfhlxbW6RcNBFeeTUQd38Jp
+	5HN6VF5iPmeC+4sq7iX3g==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:message-id:mime-version:reply-to:reply-to
+	:subject:subject:to:to:x-me-proxy:x-me-proxy:x-me-sender
+	:x-me-sender:x-sasl-enc; s=fm1; t=1708453954; x=1708540354; bh=H
+	uf2bIOm7lsuCQDjyWbxODs2ph/fcWRD5qUueHOel5g=; b=Tbyb1EufPiYaez1JD
+	6GOMZnYHyldztueL8kSGwP8xRvRj6tZFabxPH7AbUYt2TfWlrgi10JXGOg0bxcmd
+	XdoD10USn09f7/aKnmv5XYjGkhWeOrlef+wI3an1ODahKYVsb4ZlbNObWwvX+7te
+	ZwQ1D8qKlfPqRK5MEWiS2RNz7CI1CWgBAX/AgQAOr4yVB/OcNjtiRVen11JG4Heh
+	90HQwjO0NoY3Ve9cmf1dNW6ktIAYvm8tUTu5IfN5m1KukUaVlPKQ4YeDoilrsCh9
+	p5l4PV+N+8Xez69+AIx/gqcc9KDQ+PWBzaMedSjrhX1UYgu5Xbu3rPKo0AAvudHI
+	kTDwg==
+X-ME-Sender: <xms:QPDUZebpc3zY5FTNaJJM3rtu1RBQ5oMDENdHJwssOpuK4tl8J0I6rA>
+    <xme:QPDUZRZXfX2IAQAjqAWwSuThGUrbx1x0r0GSz4mbZC6E9XaJn2wONyIi9SxgpydSy
+    OAqijc97F94jNa9Lw>
+X-ME-Received: <xmr:QPDUZY8wRF4n-RUuZOOqfUqTTdWV0NiWBPNollBtspi79HCuiFPdZJnRreb4i56vzJuu7Jug3gRV8s47vMzAsTslgemTW0jvl3X49x3NwtGKBKzwJlHtwI4f>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrfedtgdduudehucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhephffvvefufffkofhrgggtgfesthekredtredtjeenucfhrhhomhepkghiucgj
+    rghnuceoiihirdihrghnsehsvghnthdrtghomheqnecuggftrfgrthhtvghrnhepkefhle
+    duhffhjedttdetudejtdeuieevueetuddtuedthffffffgueffhfegjeffnecuffhomhgr
+    ihhnpehkvghrnhgvlhdrohhrghdpfhholhhiohhsrdhmmhdptghomhhprggtthhiohhnrd
+    hmmhdpshhplhhithdrmhhmnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehm
+    rghilhhfrhhomhepiihirdihrghnsehsvghnthdrtghomh
+X-ME-Proxy: <xmx:QPDUZQqTYHHK1y2UXwWW3jZJykWU_yFEzssg9Q7SppI5p-7fcLQzyg>
+    <xmx:QPDUZZpbtX_FjG_RUL72k1t8r8w4-AGEytCV03_eUsuFCH5gIoyCDg>
+    <xmx:QPDUZeT4Ys9Bumo7NqEe-wvrvJHYACHk0VEasU4J3H_i1xsa5CZMIA>
+    <xmx:QvDUZeieOGtisJVtlJqD7ik5pPCa2GMD1TcpbC-kPnZz59WOk1LpBw>
+Feedback-ID: iccd040f4:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
+ 20 Feb 2024 13:32:31 -0500 (EST)
+From: Zi Yan <zi.yan@sent.com>
+To: linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org
+Cc: Zi Yan <ziy@nvidia.com>,
+	"Huang, Ying" <ying.huang@intel.com>,
+	Ryan Roberts <ryan.roberts@arm.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	"Matthew Wilcox (Oracle)" <willy@infradead.org>,
+	David Hildenbrand <david@redhat.com>,
+	"Yin, Fengwei" <fengwei.yin@intel.com>,
+	Yu Zhao <yuzhao@google.com>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	"Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+	Johannes Weiner <hannes@cmpxchg.org>,
+	Baolin Wang <baolin.wang@linux.alibaba.com>,
+	Kemeng Shi <shikemeng@huaweicloud.com>,
+	Mel Gorman <mgorman@techsingularity.net>,
+	Rohan Puri <rohan.puri15@gmail.com>,
+	Mcgrof Chamberlain <mcgrof@kernel.org>,
+	Adam Manzanares <a.manzanares@samsung.com>,
+	"Vishal Moola (Oracle)" <vishal.moola@gmail.com>
+Subject: [PATCH v7 0/4] Enable >0 order folio memory compaction
+Date: Tue, 20 Feb 2024 13:32:16 -0500
+Message-ID: <20240220183220.1451315-1-zi.yan@sent.com>
+X-Mailer: git-send-email 2.43.0
+Reply-To: Zi Yan <ziy@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
-A call to a synchronize_rcu() can be optimized from a latency
-point of view. Workloads which depend on this can benefit of it.
+From: Zi Yan <ziy@nvidia.com>
 
-The delay of wakeme_after_rcu() callback, which unblocks a waiter,
-depends on several factors:
+Hi all,
 
-- how fast a process of offloading is started. Combination of:
-    - !CONFIG_RCU_NOCB_CPU/CONFIG_RCU_NOCB_CPU;
-    - !CONFIG_RCU_LAZY/CONFIG_RCU_LAZY;
-    - other.
-- when started, invoking path is interrupted due to:
-    - time limit;
-    - need_resched();
-    - if limit is reached.
-- where in a nocb list it is located;
-- how fast previous callbacks completed;
+This patchset enables >0 order folio memory compaction, which is one of
+the prerequisitions for large folio support[1]. It is on top of
+mm-everything-2024-02-20-04-19 (with V6 removed).
 
-Example:
+I am aware of that split free pages is necessary for folio
+migration in compaction, since if >0 order free pages are never split
+and no order-0 free page is scanned, compaction will end prematurely due
+to migration returns -ENOMEM. Free page split becomes a must instead of
+an optimization.
 
-1. On our embedded devices i can easily trigger the scenario when
-it is a last in the list out of ~3600 callbacks:
+lkp ncompare results (on a 8-CPU (Intel Xeon E5-2650 v4 @2.20GHz) 16G VM)
+for default LRU (-no-mglru) and CONFIG_LRU_GEN are shown at the bottom,
+copied from V3[4].
+In sum, most of vm-scalability applications do not see performance
+change, and the others see ~4% to ~26% performance boost under default LRU
+and ~2% to ~6% performance boost under CONFIG_LRU_GEN.
 
-<snip>
-  <...>-29      [001] d..1. 21950.145313: rcu_batch_start: rcu_preempt CBs=3613 bl=28
-...
-  <...>-29      [001] ..... 21950.152578: rcu_invoke_callback: rcu_preempt rhp=00000000b2d6dee8 func=__free_vm_area_struct.cfi_jt
-  <...>-29      [001] ..... 21950.152579: rcu_invoke_callback: rcu_preempt rhp=00000000a446f607 func=__free_vm_area_struct.cfi_jt
-  <...>-29      [001] ..... 21950.152580: rcu_invoke_callback: rcu_preempt rhp=00000000a5cab03b func=__free_vm_area_struct.cfi_jt
-  <...>-29      [001] ..... 21950.152581: rcu_invoke_callback: rcu_preempt rhp=0000000013b7e5ee func=__free_vm_area_struct.cfi_jt
-  <...>-29      [001] ..... 21950.152582: rcu_invoke_callback: rcu_preempt rhp=000000000a8ca6f9 func=__free_vm_area_struct.cfi_jt
-  <...>-29      [001] ..... 21950.152583: rcu_invoke_callback: rcu_preempt rhp=000000008f162ca8 func=wakeme_after_rcu.cfi_jt
-  <...>-29      [001] d..1. 21950.152625: rcu_batch_end: rcu_preempt CBs-invoked=3612 idle=....
-<snip>
 
-2. We use cpuset/cgroup to classify tasks and assign them into
-different cgroups. For example "backgrond" group which binds tasks
-only to little CPUs or "foreground" which makes use of all CPUs.
-Tasks can be migrated between groups by a request if an acceleration
-is needed.
+Changelog
+===
 
-See below an example how "surfaceflinger" task gets migrated.
-Initially it is located in the "system-background" cgroup which
-allows to run only on little cores. In order to speed it up it
-can be temporary moved into "foreground" cgroup which allows
-to use big/all CPUs:
+From V6 [7]:
+1. Properly commented skip_isolation_on_order() (per David Hildenbrand).
 
-cgroup_attach_task():
- -> cgroup_migrate_execute()
-   -> cpuset_can_attach()
-     -> percpu_down_write()
-       -> rcu_sync_enter()
-         -> synchronize_rcu()
-   -> now move tasks to the new cgroup.
- -> cgroup_migrate_finish()
+2. Fixed folio_test_large() check (per David Hildenbrand).
 
-<snip>
-         rcuop/1-29      [000] .....  7030.528570: rcu_invoke_callback: rcu_preempt rhp=00000000461605e0 func=wakeme_after_rcu.cfi_jt
-    PERFD-SERVER-1855    [000] d..1.  7030.530293: cgroup_attach_task: dst_root=3 dst_id=22 dst_level=1 dst_path=/foreground pid=1900 comm=surfaceflinger
-   TimerDispatch-2768    [002] d..5.  7030.537542: sched_migrate_task: comm=surfaceflinger pid=1900 prio=98 orig_cpu=0 dest_cpu=4
-<snip>
+3. Used is_via_compact_memory() instead of order == -1 check (per David
+Hildenbrand).
 
-"Boosting a task" depends on synchronize_rcu() latency:
 
-- first trace shows a completion of synchronize_rcu();
-- second shows attaching a task to a new group;
-- last shows a final step when migration occurs.
+From V5 [6]:
+1. Removed unused parameter in prepare_free_pages() and used it instead
+of my old prepare_free_pages_fpi_none() (per Vlastimil Babka).
 
-3. To address this drawback, maintain a separate track that consists
-of synchronize_rcu() callers only. After completion of a grace period
-users are deferred to a dedicated worker to process requests.
+2. Removed unnecessary INIT_LIST_HEAD() in compaction_free()
+(per Vlastimil Babka).
 
-4. This patch reduces the latency of synchronize_rcu() approximately
-by ~30-40% on synthetic tests. The real test case, camera launch time,
-shows(time is in milliseconds):
+3. Fixed cc->nr_migratepages update in compaction_free()
+(per Vlastimil Babka).
 
-1-run 542 vs 489 improvement 9%
-2-run 540 vs 466 improvement 13%
-3-run 518 vs 468 improvement 9%
-4-run 531 vs 457 improvement 13%
-5-run 548 vs 475 improvement 13%
-6-run 509 vs 484 improvement 4%
 
-Synthetic test(no "noise" from other callbacks):
-Hardware: x86_64 64 CPUs, 64GB of memory
-Linux-6.6
+From V4 [5]:
+1. Refactored code in compaction_alloc() in Patch 3 (per Yu Zhao).
 
-- 10K tasks(simultaneous);
-- each task does(1000 loops)
-     synchronize_rcu();
-     kfree(p);
 
-default: CONFIG_RCU_NOCB_CPU: takes 54 seconds to complete all users;
-patch: CONFIG_RCU_NOCB_CPU: takes 35 seconds to complete all users.
+From V3 [4]:
+1. Restructured isolate_migratepages_block() to minimize PageHuge() use
+in Patch 1 (per Vlastimil Babka).
 
-Running 60K gives approximately same results on my setup. Please note
-it is without any interaction with another type of callbacks, otherwise
-it will impact a lot a default case.
+2. Used folio_put_testzero() instead of folio_set_count() to properly
+handle free pages in compaction_free() (per Vlastimil Babka).
 
-5. By default it is disabled. To enable this perform one of the
-below sequence:
+3. Simplified code to use struct list_head instead of a new struct page_list
+(per Vlastimil Babka).
 
-echo 1 > /sys/module/rcutree/parameters/rcu_normal_wake_from_gp
-or pass a boot parameter "rcutree.rcu_normal_wake_from_gp=1"
+4. Restructured compaction_alloc() code to reduce indentation and
+increase readability (per Vlastimil Babka).
 
-Reviewed-by: Frederic Weisbecker <frederic@kernel.org>
-Co-developed-by: Neeraj Upadhyay <Neeraj.Upadhyay@amd.com>
-Signed-off-by: Uladzislau Rezki (Sony) <urezki@gmail.com>
----
- .../admin-guide/kernel-parameters.txt         |  14 +
- kernel/rcu/tree.c                             | 331 +++++++++++++++++-
- kernel/rcu/tree_exp.h                         |   2 +-
- 3 files changed, 345 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index 2244aa0a013b..7ca84cf7b4f4 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -5059,6 +5059,20 @@
- 			delay, memory pressure or callback list growing too
- 			big.
- 
-+	rcutree.rcu_normal_wake_from_gp= [KNL]
-+			Reduces a latency of synchronize_rcu() call. This approach
-+			maintains its own track of synchronize_rcu() callers, so it
-+			does not interact with regular callbacks because it does not
-+			use a call_rcu[_hurry]() path. Please note, this is for a
-+			normal grace period.
-+
-+			How to enable it:
-+
-+			echo 1 > /sys/module/rcutree/parameters/rcu_normal_wake_from_gp
-+			or pass a boot parameter "rcutree.rcu_normal_wake_from_gp=1"
-+
-+			Default is 0.
-+
- 	rcuscale.gp_async= [KNL]
- 			Measure performance of asynchronous
- 			grace-period primitives such as call_rcu().
-diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-index c8980d76f402..1328da63c3cd 100644
---- a/kernel/rcu/tree.c
-+++ b/kernel/rcu/tree.c
-@@ -75,6 +75,7 @@
- #define MODULE_PARAM_PREFIX "rcutree."
- 
- /* Data structures. */
-+static void rcu_sr_normal_gp_cleanup_work(struct work_struct *);
- 
- static DEFINE_PER_CPU_SHARED_ALIGNED(struct rcu_data, rcu_data) = {
- 	.gpwrap = true,
-@@ -93,6 +94,8 @@ static struct rcu_state rcu_state = {
- 	.exp_mutex = __MUTEX_INITIALIZER(rcu_state.exp_mutex),
- 	.exp_wake_mutex = __MUTEX_INITIALIZER(rcu_state.exp_wake_mutex),
- 	.ofl_lock = __ARCH_SPIN_LOCK_UNLOCKED,
-+	.srs_cleanup_work = __WORK_INITIALIZER(rcu_state.srs_cleanup_work,
-+		rcu_sr_normal_gp_cleanup_work),
- };
- 
- /* Dump rcu_node combining tree at boot to verify correct setup. */
-@@ -1422,6 +1425,282 @@ static void rcu_poll_gp_seq_end_unlocked(unsigned long *snap)
- 		raw_spin_unlock_irqrestore_rcu_node(rnp, flags);
- }
- 
-+/*
-+ * There is a single llist, which is used for handling
-+ * synchronize_rcu() users' enqueued rcu_synchronize nodes.
-+ * Within this llist, there are two tail pointers:
-+ *
-+ * wait tail: Tracks the set of nodes, which need to
-+ *            wait for the current GP to complete.
-+ * done tail: Tracks the set of nodes, for which grace
-+ *            period has elapsed. These nodes processing
-+ *            will be done as part of the cleanup work
-+ *            execution by a kworker.
-+ *
-+ * At every grace period init, a new wait node is added
-+ * to the llist. This wait node is used as wait tail
-+ * for this new grace period. Given that there are a fixed
-+ * number of wait nodes, if all wait nodes are in use
-+ * (which can happen when kworker callback processing
-+ * is delayed) and additional grace period is requested.
-+ * This means, a system is slow in processing callbacks.
-+ *
-+ * TODO: If a slow processing is detected, a first node
-+ * in the llist should be used as a wait-tail for this
-+ * grace period, therefore users which should wait due
-+ * to a slow process are handled by _this_ grace period
-+ * and not next.
-+ *
-+ * Below is an illustration of how the done and wait
-+ * tail pointers move from one set of rcu_synchronize nodes
-+ * to the other, as grace periods start and finish and
-+ * nodes are processed by kworker.
-+ *
-+ *
-+ * a. Initial llist callbacks list:
-+ *
-+ * +----------+           +--------+          +-------+
-+ * |          |           |        |          |       |
-+ * |   head   |---------> |   cb2  |--------->| cb1   |
-+ * |          |           |        |          |       |
-+ * +----------+           +--------+          +-------+
-+ *
-+ *
-+ *
-+ * b. New GP1 Start:
-+ *
-+ *                    WAIT TAIL
-+ *                      |
-+ *                      |
-+ *                      v
-+ * +----------+     +--------+      +--------+        +-------+
-+ * |          |     |        |      |        |        |       |
-+ * |   head   ------> wait   |------>   cb2  |------> |  cb1  |
-+ * |          |     | head1  |      |        |        |       |
-+ * +----------+     +--------+      +--------+        +-------+
-+ *
-+ *
-+ *
-+ * c. GP completion:
-+ *
-+ * WAIT_TAIL == DONE_TAIL
-+ *
-+ *                   DONE TAIL
-+ *                     |
-+ *                     |
-+ *                     v
-+ * +----------+     +--------+      +--------+        +-------+
-+ * |          |     |        |      |        |        |       |
-+ * |   head   ------> wait   |------>   cb2  |------> |  cb1  |
-+ * |          |     | head1  |      |        |        |       |
-+ * +----------+     +--------+      +--------+        +-------+
-+ *
-+ *
-+ *
-+ * d. New callbacks and GP2 start:
-+ *
-+ *                    WAIT TAIL                          DONE TAIL
-+ *                      |                                 |
-+ *                      |                                 |
-+ *                      v                                 v
-+ * +----------+     +------+    +------+    +------+    +-----+    +-----+    +-----+
-+ * |          |     |      |    |      |    |      |    |     |    |     |    |     |
-+ * |   head   ------> wait |--->|  cb4 |--->| cb3  |--->|wait |--->| cb2 |--->| cb1 |
-+ * |          |     | head2|    |      |    |      |    |head1|    |     |    |     |
-+ * +----------+     +------+    +------+    +------+    +-----+    +-----+    +-----+
-+ *
-+ *
-+ *
-+ * e. GP2 completion:
-+ *
-+ * WAIT_TAIL == DONE_TAIL
-+ *                   DONE TAIL
-+ *                      |
-+ *                      |
-+ *                      v
-+ * +----------+     +------+    +------+    +------+    +-----+    +-----+    +-----+
-+ * |          |     |      |    |      |    |      |    |     |    |     |    |     |
-+ * |   head   ------> wait |--->|  cb4 |--->| cb3  |--->|wait |--->| cb2 |--->| cb1 |
-+ * |          |     | head2|    |      |    |      |    |head1|    |     |    |     |
-+ * +----------+     +------+    +------+    +------+    +-----+    +-----+    +-----+
-+ *
-+ *
-+ * While the llist state transitions from d to e, a kworker
-+ * can start executing rcu_sr_normal_gp_cleanup_work() and
-+ * can observe either the old done tail (@c) or the new
-+ * done tail (@e). So, done tail updates and reads need
-+ * to use the rel-acq semantics. If the concurrent kworker
-+ * observes the old done tail, the newly queued work
-+ * execution will process the updated done tail. If the
-+ * concurrent kworker observes the new done tail, then
-+ * the newly queued work will skip processing the done
-+ * tail, as workqueue semantics guarantees that the new
-+ * work is executed only after the previous one completes.
-+ *
-+ * f. kworker callbacks processing complete:
-+ *
-+ *
-+ *                   DONE TAIL
-+ *                     |
-+ *                     |
-+ *                     v
-+ * +----------+     +--------+
-+ * |          |     |        |
-+ * |   head   ------> wait   |
-+ * |          |     | head2  |
-+ * +----------+     +--------+
-+ *
-+ */
-+static bool rcu_sr_is_wait_head(struct llist_node *node)
-+{
-+	return &(rcu_state.srs_wait_nodes)[0].node <= node &&
-+		node <= &(rcu_state.srs_wait_nodes)[SR_NORMAL_GP_WAIT_HEAD_MAX - 1].node;
-+}
-+
-+static struct llist_node *rcu_sr_get_wait_head(void)
-+{
-+	struct sr_wait_node *sr_wn;
-+	int i;
-+
-+	for (i = 0; i < SR_NORMAL_GP_WAIT_HEAD_MAX; i++) {
-+		sr_wn = &(rcu_state.srs_wait_nodes)[i];
-+
-+		if (!atomic_cmpxchg_acquire(&sr_wn->inuse, 0, 1))
-+			return &sr_wn->node;
-+	}
-+
-+	return NULL;
-+}
-+
-+static void rcu_sr_put_wait_head(struct llist_node *node)
-+{
-+	struct sr_wait_node *sr_wn = container_of(node, struct sr_wait_node, node);
-+	atomic_set_release(&sr_wn->inuse, 0);
-+}
-+
-+/* Disabled by default. */
-+static int rcu_normal_wake_from_gp;
-+module_param(rcu_normal_wake_from_gp, int, 0644);
-+
-+static void rcu_sr_normal_complete(struct llist_node *node)
-+{
-+	struct rcu_synchronize *rs = container_of(
-+		(struct rcu_head *) node, struct rcu_synchronize, head);
-+	unsigned long oldstate = (unsigned long) rs->head.func;
-+
-+	WARN_ONCE(IS_ENABLED(CONFIG_PROVE_RCU) &&
-+		!poll_state_synchronize_rcu(oldstate),
-+		"A full grace period is not passed yet: %lu",
-+		rcu_seq_diff(get_state_synchronize_rcu(), oldstate));
-+
-+	/* Finally. */
-+	complete(&rs->completion);
-+}
-+
-+static void rcu_sr_normal_gp_cleanup_work(struct work_struct *work)
-+{
-+	struct llist_node *done, *rcu, *next, *head;
-+
-+	/*
-+	 * This work execution can potentially execute
-+	 * while a new done tail is being updated by
-+	 * grace period kthread in rcu_sr_normal_gp_cleanup().
-+	 * So, read and updates of done tail need to
-+	 * follow acq-rel semantics.
-+	 *
-+	 * Given that wq semantics guarantees that a single work
-+	 * cannot execute concurrently by multiple kworkers,
-+	 * the done tail list manipulations are protected here.
-+	 */
-+	done = smp_load_acquire(&rcu_state.srs_done_tail);
-+	if (!done)
-+		return;
-+
-+	WARN_ON_ONCE(!rcu_sr_is_wait_head(done));
-+	head = done->next;
-+	done->next = NULL;
-+
-+	/*
-+	 * The dummy node, which is pointed to by the
-+	 * done tail which is acq-read above is not removed
-+	 * here.  This allows lockless additions of new
-+	 * rcu_synchronize nodes in rcu_sr_normal_add_req(),
-+	 * while the cleanup work executes. The dummy
-+	 * nodes is removed, in next round of cleanup
-+	 * work execution.
-+	 */
-+	llist_for_each_safe(rcu, next, head) {
-+		if (!rcu_sr_is_wait_head(rcu)) {
-+			rcu_sr_normal_complete(rcu);
-+			continue;
-+		}
-+
-+		rcu_sr_put_wait_head(rcu);
-+	}
-+}
-+
-+/*
-+ * Helper function for rcu_gp_cleanup().
-+ */
-+static void rcu_sr_normal_gp_cleanup(void)
-+{
-+	struct llist_node *wait_tail;
-+
-+	wait_tail = rcu_state.srs_wait_tail;
-+	if (wait_tail == NULL)
-+		return;
-+
-+	rcu_state.srs_wait_tail = NULL;
-+	ASSERT_EXCLUSIVE_WRITER(rcu_state.srs_wait_tail);
-+
-+	// concurrent sr_normal_gp_cleanup work might observe this update.
-+	smp_store_release(&rcu_state.srs_done_tail, wait_tail);
-+	ASSERT_EXCLUSIVE_WRITER(rcu_state.srs_done_tail);
-+
-+	if (wait_tail)
-+		queue_work(system_highpri_wq, &rcu_state.srs_cleanup_work);
-+}
-+
-+/*
-+ * Helper function for rcu_gp_init().
-+ */
-+static bool rcu_sr_normal_gp_init(void)
-+{
-+	struct llist_node *first;
-+	struct llist_node *wait_head;
-+	bool start_new_poll = false;
-+
-+	first = READ_ONCE(rcu_state.srs_next.first);
-+	if (!first || rcu_sr_is_wait_head(first))
-+		return start_new_poll;
-+
-+	wait_head = rcu_sr_get_wait_head();
-+	if (!wait_head) {
-+		// Kick another GP to retry.
-+		start_new_poll = true;
-+		return start_new_poll;
-+	}
-+
-+	/* Inject a wait-dummy-node. */
-+	llist_add(wait_head, &rcu_state.srs_next);
-+
-+	/*
-+	 * A waiting list of rcu_synchronize nodes should be empty on
-+	 * this step, since a GP-kthread, rcu_gp_init() -> gp_cleanup(),
-+	 * rolls it over. If not, it is a BUG, warn a user.
-+	 */
-+	WARN_ON_ONCE(rcu_state.srs_wait_tail != NULL);
-+	rcu_state.srs_wait_tail = wait_head;
-+	ASSERT_EXCLUSIVE_WRITER(rcu_state.srs_wait_tail);
-+
-+	return start_new_poll;
-+}
-+
-+static void rcu_sr_normal_add_req(struct rcu_synchronize *rs)
-+{
-+	llist_add((struct llist_node *) &rs->head, &rcu_state.srs_next);
-+}
-+
- /*
-  * Initialize a new grace period.  Return false if no grace period required.
-  */
-@@ -1432,6 +1711,7 @@ static noinline_for_stack bool rcu_gp_init(void)
- 	unsigned long mask;
- 	struct rcu_data *rdp;
- 	struct rcu_node *rnp = rcu_get_root();
-+	bool start_new_poll;
- 
- 	WRITE_ONCE(rcu_state.gp_activity, jiffies);
- 	raw_spin_lock_irq_rcu_node(rnp);
-@@ -1456,10 +1736,24 @@ static noinline_for_stack bool rcu_gp_init(void)
- 	/* Record GP times before starting GP, hence rcu_seq_start(). */
- 	rcu_seq_start(&rcu_state.gp_seq);
- 	ASSERT_EXCLUSIVE_WRITER(rcu_state.gp_seq);
-+	start_new_poll = rcu_sr_normal_gp_init();
- 	trace_rcu_grace_period(rcu_state.name, rcu_state.gp_seq, TPS("start"));
- 	rcu_poll_gp_seq_start(&rcu_state.gp_seq_polled_snap);
- 	raw_spin_unlock_irq_rcu_node(rnp);
- 
-+	/*
-+	 * The "start_new_poll" is set to true, only when this GP is not able
-+	 * to handle anything and there are outstanding users. It happens when
-+	 * the rcu_sr_normal_gp_init() function was not able to insert a dummy
-+	 * separator to the llist, because there were no left any dummy-nodes.
-+	 *
-+	 * Number of dummy-nodes is fixed, it could be that we are run out of
-+	 * them, if so we start a new pool request to repeat a try. It is rare
-+	 * and it means that a system is doing a slow processing of callbacks.
-+	 */
-+	if (start_new_poll)
-+		(void) start_poll_synchronize_rcu();
-+
- 	/*
- 	 * Apply per-leaf buffered online and offline operations to
- 	 * the rcu_node tree. Note that this new grace period need not
-@@ -1825,6 +2119,9 @@ static noinline void rcu_gp_cleanup(void)
- 	}
- 	raw_spin_unlock_irq_rcu_node(rnp);
- 
-+	// Make synchronize_rcu() users aware of the end of old grace period.
-+	rcu_sr_normal_gp_cleanup();
-+
- 	// If strict, make all CPUs aware of the end of the old grace period.
- 	if (IS_ENABLED(CONFIG_RCU_STRICT_GRACE_PERIOD))
- 		on_each_cpu(rcu_strict_gp_boundary, NULL, 0);
-@@ -3559,6 +3856,38 @@ static int rcu_blocking_is_gp(void)
- 	return true;
- }
- 
-+/*
-+ * Helper function for the synchronize_rcu() API.
-+ */
-+static void synchronize_rcu_normal(void)
-+{
-+	struct rcu_synchronize rs;
-+
-+	if (!READ_ONCE(rcu_normal_wake_from_gp)) {
-+		wait_rcu_gp(call_rcu_hurry);
-+		return;
-+	}
-+
-+	init_rcu_head_on_stack(&rs.head);
-+	init_completion(&rs.completion);
-+
-+	/*
-+	 * This code might be preempted, therefore take a GP
-+	 * snapshot before adding a request.
-+	 */
-+	if (IS_ENABLED(CONFIG_PROVE_RCU))
-+		rs.head.func = (void *) get_state_synchronize_rcu();
-+
-+	rcu_sr_normal_add_req(&rs);
-+
-+	/* Kick a GP and start waiting. */
-+	(void) start_poll_synchronize_rcu();
-+
-+	/* Now we can wait. */
-+	wait_for_completion(&rs.completion);
-+	destroy_rcu_head_on_stack(&rs.head);
-+}
-+
- /**
-  * synchronize_rcu - wait until a grace period has elapsed.
-  *
-@@ -3610,7 +3939,7 @@ void synchronize_rcu(void)
- 		if (rcu_gp_is_expedited())
- 			synchronize_rcu_expedited();
- 		else
--			wait_rcu_gp(call_rcu_hurry);
-+			synchronize_rcu_normal();
- 		return;
- 	}
- 
-diff --git a/kernel/rcu/tree_exp.h b/kernel/rcu/tree_exp.h
-index 6b83537480b1..8a1d9c8bd9f7 100644
---- a/kernel/rcu/tree_exp.h
-+++ b/kernel/rcu/tree_exp.h
-@@ -930,7 +930,7 @@ void synchronize_rcu_expedited(void)
- 
- 	/* If expedited grace periods are prohibited, fall back to normal. */
- 	if (rcu_gp_is_normal()) {
--		wait_rcu_gp(call_rcu_hurry);
-+		synchronize_rcu_normal();
- 		return;
- 	}
- 
+From V2 [3]:
+1. Added missing free page count in fast isolation path. This fixed the
+weird performance outcome.
+
+
+From V1 [2]:
+1. Used folio_test_large() instead of folio_order() > 0. (per Matthew
+Wilcox)
+
+2. Fixed code rebase error. (per Baolin Wang)
+
+3. Used list_split_init() instead of list_split(). (per Ryan Boberts)
+
+4. Added free_pages_prepare_fpi_none() to avoid duplicate free page code
+in compaction_free().
+
+5. Dropped source page order sorting patch.
+
+
+From RFC [1]:
+1. Enabled >0 order folio compaction in the first patch by splitting all
+to-be-migrated folios. (per Huang, Ying)
+
+2. Stopped isolating compound pages with order greater than cc->order
+to avoid wasting effort, since cc->order gives a hint that no free pages
+with order greater than it exist, thus migrating the compound pages will fail.
+(per Baolin Wang)
+
+3. Retained the folio check within lru lock. (per Baolin Wang)
+
+4. Made isolate_freepages_block() generate order-sorted multi lists.
+(per Johannes Weiner)
+
+Overview
+===
+
+To support >0 order folio compaction, the patchset changes how free pages used
+for migration are kept during compaction. Free pages used to be split into
+order-0 pages that are post allocation processed (i.e., PageBuddy flag cleared,
+page order stored in page->private is zeroed, and page reference is set to 1).
+Now all free pages are kept in a NR_PAGE_ORDER array of page lists based
+on their order without post allocation process. When migrate_pages() asks for
+a new page, one of the free pages, based on the requested page order, is
+then processed and given out. And THP <2MB would need this feature.
+
+
+Feel free to give comments and ask questions.
+
+Thanks.
+
+[1] https://lore.kernel.org/linux-mm/f8d47176-03a8-99bf-a813-b5942830fd73@arm.com/
+[2] https://lore.kernel.org/linux-mm/20231113170157.280181-1-zi.yan@sent.com/
+[3] https://lore.kernel.org/linux-mm/20240123034636.1095672-1-zi.yan@sent.com/
+[4] https://lore.kernel.org/linux-mm/20240202161554.565023-1-zi.yan@sent.com/
+[5] https://lore.kernel.org/linux-mm/20240212163510.859822-1-zi.yan@sent.com/
+[6] https://lore.kernel.org/linux-mm/20240214220420.1229173-1-zi.yan@sent.com/
+[7] https://lore.kernel.org/linux-mm/20240216170432.1268753-1-zi.yan@sent.com/
+
+
+
+vm-scalability results on CONFIG_LRU_GEN
+===
+
+=========================================================================================
+compiler/kconfig/rootfs/runtime/tbox_group/test/testcase:
+  gcc-13/defconfig/debian/300s/qemu-vm/mmap-xread-seq-mt/vm-scalability
+
+commit: 
+  6.8.0-rc1-mm-everything-2024-01-29-07-19+
+  6.8.0-rc1-split-folio-in-compaction+
+  6.8.0-rc1-folio-migration-in-compaction+
+  6.8.0-rc1-folio-migration-free-page-split+
+
+6.8.0-rc1-mm-eve 6.8.0-rc1-split-folio-in-co 6.8.0-rc1-folio-migration-i 6.8.0-rc1-folio-migration-f 
+---------------- --------------------------- --------------------------- --------------------------- 
+         %stddev     %change         %stddev     %change         %stddev     %change         %stddev
+             \          |                \          |                \          |                \  
+  15107616            +3.2%   15590339            +1.3%   15297619            +3.0%   15567998        vm-scalability.throughput
+
+=========================================================================================
+compiler/kconfig/rootfs/runtime/tbox_group/test/testcase:
+  gcc-13/defconfig/debian/300s/qemu-vm/mmap-pread-seq/vm-scalability
+
+commit: 
+  6.8.0-rc1-mm-everything-2024-01-29-07-19+
+  6.8.0-rc1-split-folio-in-compaction+
+  6.8.0-rc1-folio-migration-in-compaction+
+  6.8.0-rc1-folio-migration-free-page-split+
+
+6.8.0-rc1-mm-eve 6.8.0-rc1-split-folio-in-co 6.8.0-rc1-folio-migration-i 6.8.0-rc1-folio-migration-f 
+---------------- --------------------------- --------------------------- --------------------------- 
+         %stddev     %change         %stddev     %change         %stddev     %change         %stddev
+             \          |                \          |                \          |                \  
+  12611785            +1.8%   12832919            +0.9%   12724223            +1.6%   12812682        vm-scalability.throughput
+
+
+=========================================================================================
+compiler/kconfig/rootfs/runtime/tbox_group/test/testcase:
+  gcc-13/defconfig/debian/300s/qemu-vm/lru-file-readtwice/vm-scalability
+
+commit: 
+  6.8.0-rc1-mm-everything-2024-01-29-07-19+
+  6.8.0-rc1-split-folio-in-compaction+
+  6.8.0-rc1-folio-migration-in-compaction+
+  6.8.0-rc1-folio-migration-free-page-split+
+
+6.8.0-rc1-mm-eve 6.8.0-rc1-split-folio-in-co 6.8.0-rc1-folio-migration-i 6.8.0-rc1-folio-migration-f 
+---------------- --------------------------- --------------------------- --------------------------- 
+         %stddev     %change         %stddev     %change         %stddev     %change         %stddev
+             \          |                \          |                \          |                \  
+   9833393            +5.7%   10390190            +3.0%   10126606            +5.9%   10408804        vm-scalability.throughput
+
+=========================================================================================
+compiler/kconfig/rootfs/runtime/tbox_group/test/testcase:
+  gcc-13/defconfig/debian/300s/qemu-vm/lru-file-mmap-read/vm-scalability
+
+commit: 
+  6.8.0-rc1-mm-everything-2024-01-29-07-19+
+  6.8.0-rc1-split-folio-in-compaction+
+  6.8.0-rc1-folio-migration-in-compaction+
+  6.8.0-rc1-folio-migration-free-page-split+
+
+6.8.0-rc1-mm-eve 6.8.0-rc1-split-folio-in-co 6.8.0-rc1-folio-migration-i 6.8.0-rc1-folio-migration-f 
+---------------- --------------------------- --------------------------- --------------------------- 
+         %stddev     %change         %stddev     %change         %stddev     %change         %stddev
+             \          |                \          |                \          |                \  
+   7034709 ±  3%      +2.9%    7241429            +3.2%    7256680 ±  2%      +3.9%    7308375        vm-scalability.throughput
+
+
+
+vm-scalability results on default LRU (with -no-mglru suffix)
+===
+
+=========================================================================================
+compiler/kconfig/rootfs/runtime/tbox_group/test/testcase:
+  gcc-13/defconfig/debian/300s/qemu-vm/mmap-xread-seq-mt/vm-scalability
+
+commit: 
+  6.8.0-rc1-mm-everything-2024-01-29-07-19-no-mglru+
+  6.8.0-rc1-split-folio-in-compaction-no-mglru+
+  6.8.0-rc1-folio-migration-in-compaction-no-mglru+
+  6.8.0-rc1-folio-migration-free-page-split-no-mglru+
+
+6.8.0-rc1-mm-eve 6.8.0-rc1-split-folio-in-co 6.8.0-rc1-folio-migration-i 6.8.0-rc1-folio-migration-f 
+---------------- --------------------------- --------------------------- --------------------------- 
+         %stddev     %change         %stddev     %change         %stddev     %change         %stddev
+             \          |                \          |                \          |                \  
+  14401491            +3.7%   14940270            +2.4%   14748626            +4.0%   14975716        vm-scalability.throughput
+
+=========================================================================================
+compiler/kconfig/rootfs/runtime/tbox_group/test/testcase:
+  gcc-13/defconfig/debian/300s/qemu-vm/mmap-pread-seq/vm-scalability
+
+commit: 
+  6.8.0-rc1-mm-everything-2024-01-29-07-19-no-mglru+
+  6.8.0-rc1-split-folio-in-compaction-no-mglru+
+  6.8.0-rc1-folio-migration-in-compaction-no-mglru+
+  6.8.0-rc1-folio-migration-free-page-split-no-mglru+
+
+6.8.0-rc1-mm-eve 6.8.0-rc1-split-folio-in-co 6.8.0-rc1-folio-migration-i 6.8.0-rc1-folio-migration-f 
+---------------- --------------------------- --------------------------- --------------------------- 
+         %stddev     %change         %stddev     %change         %stddev     %change         %stddev
+             \          |                \          |                \          |                \  
+  11407497            +5.1%   11989632            -0.5%   11349272            +4.8%   11957423        vm-scalability.throughput
+
+=========================================================================================
+compiler/kconfig/rootfs/runtime/tbox_group/test/testcase:
+  gcc-13/defconfig/debian/300s/qemu-vm/mmap-pread-seq-mt/vm-scalability
+
+commit: 
+  6.8.0-rc1-mm-everything-2024-01-29-07-19-no-mglru+
+  6.8.0-rc1-split-folio-in-compaction-no-mglru+
+  6.8.0-rc1-folio-migration-in-compaction-no-mglru+
+  6.8.0-rc1-folio-migration-free-page-split-no-mglru+
+
+6.8.0-rc1-mm-eve 6.8.0-rc1-split-folio-in-co 6.8.0-rc1-folio-migration-i 6.8.0-rc1-folio-migration-f 
+---------------- --------------------------- --------------------------- --------------------------- 
+         %stddev     %change         %stddev     %change         %stddev     %change         %stddev
+             \          |                \          |                \          |                \  
+  11348474            +3.3%   11719453            -1.2%   11208759            +3.7%   11771926        vm-scalability.throughput
+
+=========================================================================================
+compiler/kconfig/rootfs/runtime/tbox_group/test/testcase:
+  gcc-13/defconfig/debian/300s/qemu-vm/lru-file-readtwice/vm-scalability
+
+commit: 
+  6.8.0-rc1-mm-everything-2024-01-29-07-19-no-mglru+
+  6.8.0-rc1-split-folio-in-compaction-no-mglru+
+  6.8.0-rc1-folio-migration-in-compaction-no-mglru+
+  6.8.0-rc1-folio-migration-free-page-split-no-mglru+
+
+6.8.0-rc1-mm-eve 6.8.0-rc1-split-folio-in-co 6.8.0-rc1-folio-migration-i 6.8.0-rc1-folio-migration-f 
+---------------- --------------------------- --------------------------- --------------------------- 
+         %stddev     %change         %stddev     %change         %stddev     %change         %stddev
+             \          |                \          |                \          |                \  
+   8065614 ±  3%      +7.7%    8686626 ±  2%      +5.0%    8467577 ±  4%     +11.8%    9016077 ±  2%  vm-scalability.throughput
+
+=========================================================================================
+compiler/kconfig/rootfs/runtime/tbox_group/test/testcase:
+  gcc-13/defconfig/debian/300s/qemu-vm/lru-file-mmap-read/vm-scalability
+
+commit: 
+  6.8.0-rc1-mm-everything-2024-01-29-07-19-no-mglru+
+  6.8.0-rc1-split-folio-in-compaction-no-mglru+
+  6.8.0-rc1-folio-migration-in-compaction-no-mglru+
+  6.8.0-rc1-folio-migration-free-page-split-no-mglru+
+
+6.8.0-rc1-mm-eve 6.8.0-rc1-split-folio-in-co 6.8.0-rc1-folio-migration-i 6.8.0-rc1-folio-migration-f 
+---------------- --------------------------- --------------------------- --------------------------- 
+         %stddev     %change         %stddev     %change         %stddev     %change         %stddev
+             \          |                \          |                \          |                \  
+   6438422 ±  2%     +27.5%    8206734 ±  2%     +10.6%    7118390           +26.2%    8127192 ±  4%  vm-scalability.throughput
+
+Zi Yan (4):
+  mm/page_alloc: remove unused fpi_flags in free_pages_prepare()
+  mm/compaction: enable compacting >0 order folios.
+  mm/compaction: add support for >0 order folio memory compaction.
+  mm/compaction: optimize >0 order folio compaction with free page
+    split.
+
+ mm/compaction.c | 260 ++++++++++++++++++++++++++++++++----------------
+ mm/internal.h   |   4 +-
+ mm/page_alloc.c |  12 +--
+ 3 files changed, 186 insertions(+), 90 deletions(-)
+
 -- 
-2.39.2
+2.43.0
 
