@@ -1,115 +1,128 @@
-Received: from mail-il1-f171.google.com (mail-il1-f171.google.com [209.85.166.171])
+Received: from mail-oa1-f47.google.com (mail-oa1-f47.google.com [209.85.160.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 446B26A02D
-	for <linux-kernel@vger.kernel.org>; Tue, 20 Feb 2024 13:16:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 300366A02C
+	for <linux-kernel@vger.kernel.org>; Tue, 20 Feb 2024 13:17:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708434961; cv=none; b=Qfxznyf/p2NcyQWjTAFo7ROTuwu3XZdYO6d+KN5aINL1P44NZd8+cxoipYoXl67HKpjdMj81UtSyqLz25W1tZB2IVfTQHukztBMVFU/rLbTnXCMBFLa0uVVaJ1D0DI59VoxWohwnVhSj8LHa7evl40B9SCmA9eLvVS+YNrpQsaU=
+	t=1708435056; cv=none; b=TlZ5LvwPaZpPadScvnnOrPpwRZQOcTzUNXrIti3iQT/PQS+LQKyofDrduvxVhJQiW9Y47FZ7KBiDY8mQ1WPoiuLTl+i2ws1IoVmxx+B24cWbgfSgfQfGBv338Z6RZMhGjCGZaOzoVlLOu5y8xwNLCdO/H2etY4AjjO/QN+gMVjs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708434961; c=relaxed/simple;
-	bh=IqjOTROjMQYB67bxRQ6W3keFDzFkSXSEKRuI3JlJhrA=;
+	s=arc-20240116; t=1708435056; c=relaxed/simple;
+	bh=qL9esCSTsbD1GdZPqIOF52zqtukaAoOtfw37L/iCfIE=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=j73LFy61f+z9A8DIWxawwaQqcfFMfVhx2SdwLRuxuGjlaiZJY2G1bC9GicUGvotz0GIZwusJMNp/I2rUAk9jFDvrHuIAKLumDABy1mIrHaRsdU2hDxvv1jNl5NM/KkQPPEAtgfRYMTn8BapWYShkPbNjSQbmh+K94UN6izp6sAU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brainfault.org; spf=none smtp.mailfrom=brainfault.org; dkim=pass (2048-bit key) header.d=brainfault-org.20230601.gappssmtp.com header.i=@brainfault-org.20230601.gappssmtp.com header.b=JZUUgBhi; arc=none smtp.client-ip=209.85.166.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brainfault.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=brainfault.org
+	 To:Cc:Content-Type; b=LmqueYlR9NzH5w1lmFw72q8BJxIUgy5TslhytS4YT7wh189+EBiPT/M0OAr9BXGVvXbMOJsazJUqbx/GANwe7LRYyr2aIDb6RM21HlKEJvLAS90P2vLIZXqhqDD8P+JT+9Dawja2/RSyxL3XN5khBJEhhUsZOA2ELjFJIdCjxW0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=1nBzoJkl; arc=none smtp.client-ip=209.85.160.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=brainfault-org.20230601.gappssmtp.com header.i=@brainfault-org.20230601.gappssmtp.com header.b="JZUUgBhi"
-Received: by mail-il1-f171.google.com with SMTP id e9e14a558f8ab-3651b948db6so7082845ab.0
-        for <linux-kernel@vger.kernel.org>; Tue, 20 Feb 2024 05:16:00 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="1nBzoJkl"
+Received: by mail-oa1-f47.google.com with SMTP id 586e51a60fabf-21edca2a89dso1079168fac.3
+        for <linux-kernel@vger.kernel.org>; Tue, 20 Feb 2024 05:17:35 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brainfault-org.20230601.gappssmtp.com; s=20230601; t=1708434959; x=1709039759; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1708435054; x=1709039854; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=IqjOTROjMQYB67bxRQ6W3keFDzFkSXSEKRuI3JlJhrA=;
-        b=JZUUgBhi4CmBa1e9THLSmdnIzP7xi0o/Ie8KGr+O2WSNgAXLwU8tb/ZZn4YaJH19Ay
-         I3kkZo5//m4bX9l0vVMOcgza+ysWKnlsOeQJwv5vfQSqG0WqlifwtVXpzMLAc3kd5Xdu
-         pskliOHc4z92llrsRYaKIC8GOKZM6+UCGVm63w3V8dz11HqYjJYs9yQw/eBp7MRX3oM3
-         o3lpiMDbDfyoOprh4cOmIfOqe7Yd360f68GcezPfqMgkpaKHcW8kn+g9/0wigM24Jxt5
-         97/kLgE4n4kgwHKRxoabUC4ck3pDpwUiSBzl7t8PAq8ybhgkBOYWRiUoGXdCkPK/tzbu
-         +/nw==
+        bh=qL9esCSTsbD1GdZPqIOF52zqtukaAoOtfw37L/iCfIE=;
+        b=1nBzoJklVG6MRZ57Q47qkUkFL5A4A6xZjHblZrbhHHANcgwrWVUvkB3ahdzzJUFTTj
+         +wAZXnsFU50xZu+MfJAnZzgL6dNZCiXbjXJY3f6vyc6Yyxd2dGKwgXIm5UnhzT6KnJlV
+         5V/Wlkz5E0r+6OQbUGqnuSOZEk2Q5xchVNsYQhBxEbIbZD9iQ1NHXQGr38yiCeWhEM1Y
+         36KQffCLZgJK7W6WwsReGF/CNDx9tj2PnW7aSziuCDpplv6IykxcSR6gf7OsB0CW1C64
+         rmcFxSBAXy9tj2VxMPRnxyoG8rS3ztZ5LzxdJnmo30jgXnwq1ZuesWZ4JVC/vFZjH6Lv
+         CuDw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708434959; x=1709039759;
+        d=1e100.net; s=20230601; t=1708435054; x=1709039854;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=IqjOTROjMQYB67bxRQ6W3keFDzFkSXSEKRuI3JlJhrA=;
-        b=eAdzkeVDJnJ2f0NBW01lfF3G/kAuNc4YdScXnuRYSxDAOvtNPKsFnSUqdgz3BtTxqb
-         6hSsmxFQ/C30jZ0nRTq/ngR8Uk5ECLPrOunYNXeulY3pu0MbV8CdibRXbwZvZ6k2xh5/
-         N43BRZrJghQfTfbe40V4ndDV4ImgwKy6OhjyIk0ma7uOpRoKXQbPOhQxmg+A8kOVj0nq
-         odrupQJ75jgZBg3sEPdwMj4hOAY3uQZUnQmgo4ToHgMLgUGPPl014oReG/AmFdzvQwid
-         fWfx81LV4IpMlXkQ1iiIP17aLdvtIitQ5HFVatd7rUSWTHX9K7gf4D8CHHNwxEzBV01p
-         lGlw==
-X-Forwarded-Encrypted: i=1; AJvYcCWMMs1VCuPfV9kQVlw3d3wvFVobwx4R1Z0Zbgd32xKEWpOAsCRQMPCtVC1WWYXp5uZzklclwgL1wdryJ1Ue3NPvkihMjDDRSez/xt2g
-X-Gm-Message-State: AOJu0YxmuIP9+JbErYObhmaJ3h1+XPXawxIjSjgKlphDEP5DOAZK5a61
-	FTKz2IOULI2EksApHhgMcYX9ltCbB+TP0LLe7BwoBed7sx4qHCfxYQhet+VqFtaZHZe9GGe6VOk
-	c6JJuJp74A2L1IMe0dgHu1pUsaQ3E4UA4xWhXJQ==
-X-Google-Smtp-Source: AGHT+IGBHyxhOfx+rHBkUEIb+UN9EusJtSraJpbfRqOa1twSLXdPbfjomfAe1MpQwps5BmFOHpbz4M0jqq6MI7Pf8d0=
-X-Received: by 2002:a92:cf0f:0:b0:365:1785:88f6 with SMTP id
- c15-20020a92cf0f000000b00365178588f6mr10945548ilo.3.1708434959388; Tue, 20
- Feb 2024 05:15:59 -0800 (PST)
+        bh=qL9esCSTsbD1GdZPqIOF52zqtukaAoOtfw37L/iCfIE=;
+        b=CKqpVxUaoYJo3gznRC+MsXsbrHl+OQyiC2Sw26G8zrg50GIMhH1giFrSCi9j8du6MO
+         U+DuVFNzepNY1oIIIw2yAj/CXRWec1/fossHBl4dKt4ipZecKHDk5fv4WZxFHeUIiiet
+         6PrnBryoMl8JwZ8eWmNvcqCE2VN+md4BJSZkYuiUbGFVYV/Ur2Lix+3RoQ0071IZY1iR
+         s8xfaOwuXIVnDqTWXI7RtoKZemkocM5Y+uQWsBLZiJJzO5I9g5pzE6BQrsBXaQeSOnA7
+         N0j3jWsLftaPB/qb62WZScnUm3L83+afYokHj0P4T6/RBzJr4zPUkTc6p2Rg9l6YvalW
+         XdCA==
+X-Forwarded-Encrypted: i=1; AJvYcCUm1wA1XAOpvbgc/N9IE/opW72JNR9sziDbZQia9klHVEvRvT87G4ZhY20QCjMyx6/xmrY77IGa0aSfdYZ+nrStmnv/S8Bli5AhFszk
+X-Gm-Message-State: AOJu0YznKiirezB7rG3WLBk+TSzuhlATTTjVTrvp9xyKqU83SY7plif0
+	LKB1dcjm+2q7Pc1yBqDYWo+/o+Fvve4D2pmJVmrdmAelygoWp4GRw4xOSfAalp8ebZGL1zI7QqQ
+	pybNdb89O86IIG9E8fDy9pTVycnMJR9nN+WAQ
+X-Google-Smtp-Source: AGHT+IE0KzursJtPq+abIWMqtK5O1+xQJm+xa2/64BP3Y6r6RrQUFND+hye5sxQmu0NqoMrH5fj/TKGMGYpHWYzYVPM=
+X-Received: by 2002:a05:6870:4195:b0:21f:662:7f4 with SMTP id
+ y21-20020a056870419500b0021f066207f4mr3540551oac.32.1708435053990; Tue, 20
+ Feb 2024 05:17:33 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240220060718.823229-1-apatel@ventanamicro.com>
- <20240220060718.823229-7-apatel@ventanamicro.com> <87a5nvfj2s.fsf@all.your.base.are.belong.to.us>
-In-Reply-To: <87a5nvfj2s.fsf@all.your.base.are.belong.to.us>
-From: Anup Patel <anup@brainfault.org>
-Date: Tue, 20 Feb 2024 18:45:47 +0530
-Message-ID: <CAAhSdy187H0E1-V4uhrik42qHoZrk-w499YWFzR13EWX-Wyu=g@mail.gmail.com>
-Subject: Re: [PATCH v13 06/13] irqchip: Add RISC-V incoming MSI controller
- early driver
-To: =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@kernel.org>
-Cc: Anup Patel <apatel@ventanamicro.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Paul Walmsley <paul.walmsley@sifive.com>, Thomas Gleixner <tglx@linutronix.de>, 
-	Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Frank Rowand <frowand.list@gmail.com>, 
-	Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org, 
-	Saravana Kannan <saravanak@google.com>, Marc Zyngier <maz@kernel.org>, linux-kernel@vger.kernel.org, 
-	Atish Patra <atishp@atishpatra.org>, linux-riscv@lists.infradead.org, 
-	linux-arm-kernel@lists.infradead.org, Andrew Jones <ajones@ventanamicro.com>
+References: <20240219163915.2705-1-dakr@redhat.com> <20240220093541.280140-1-aliceryhl@google.com>
+ <e543b270-dea7-477a-b83d-62129d4ac708@redhat.com>
+In-Reply-To: <e543b270-dea7-477a-b83d-62129d4ac708@redhat.com>
+From: Alice Ryhl <aliceryhl@google.com>
+Date: Tue, 20 Feb 2024 14:17:22 +0100
+Message-ID: <CAH5fLggXiXGA_UWCxqqLhMpXe1kepDv2vMG+1jLGaDSzdRHvSw@mail.gmail.com>
+Subject: Re: [PATCH v4] rust: str: add {make,to}_{upper,lower}case() to CString
+To: Danilo Krummrich <dakr@redhat.com>
+Cc: a.hindborg@samsung.com, alex.gaynor@gmail.com, benno.lossin@proton.me, 
+	bjorn3_gh@protonmail.com, boqun.feng@gmail.com, gary@garyguo.net, 
+	linux-kernel@vger.kernel.org, ojeda@kernel.org, 
+	rust-for-linux@vger.kernel.org, wedsonaf@gmail.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Feb 20, 2024 at 5:23=E2=80=AFPM Bj=C3=B6rn T=C3=B6pel <bjorn@kernel=
-.org> wrote:
+On Tue, Feb 20, 2024 at 1:02=E2=80=AFPM Danilo Krummrich <dakr@redhat.com> =
+wrote:
 >
-> Anup Patel <apatel@ventanamicro.com> writes:
->
-> > The RISC-V advanced interrupt architecture (AIA) specification
-> > defines a new MSI controller called incoming message signalled
-> > interrupt controller (IMSIC) which manages MSI on per-HART (or
-> > per-CPU) basis. It also supports IPIs as software injected MSIs.
-> > (For more details refer https://github.com/riscv/riscv-aia)
+> On 2/20/24 10:35, Alice Ryhl wrote:
+> >> Add functions to convert a CString to upper- / lowercase, either
+> >> in-place or by creating a copy of the original CString.
+> >>
+> >> Naming followes the one from the Rust stdlib, where functions starting
+> >> with 'to' create a copy and functions starting with 'make' perform an
+> >> in-place conversion.
+> >>
+> >> This is required by the Nova project (GSP only Rust successor of
+> >> Nouveau) to convert stringified enum values (representing different GP=
+U
+> >> chipsets) to strings in order to generate the corresponding firmware
+> >> paths. See also [1].
+> >>
+> >> [1] https://rust-for-linux.zulipchat.com/#narrow/stream/288089-General=
+/topic/String.20manipulation.20in.20kernel.20Rust
+> >>
+> >> Signed-off-by: Danilo Krummrich <dakr@redhat.com>
 > >
-> > Let us add an early irqchip driver for RISC-V IMSIC which sets
-> > up the IMSIC state and provide IPIs.
+> > This looks good to me, so you may add my
 > >
-> > Signed-off-by: Anup Patel <apatel@ventanamicro.com>
+> > Reviewed-by: Alice Ryhl <aliceryhl@google.com>
 >
-> This patch has a couple of checkpatch issues:
+> Thanks for reviewing this patch.
 >
-> CHECK: Alignment should match open parenthesis
-> CHECK: Please don't use multiple blank lines
-> CHECK: Please use a blank line after function/struct/union/enum declarati=
-ons
-> CHECK: Unnecessary parentheses around 'global->nr_guest_ids < IMSIC_MIN_I=
-D'
-> CHECK: Unnecessary parentheses around 'global->nr_guest_ids >=3D IMSIC_MA=
-X_ID'
-> CHECK: Unnecessary parentheses around 'global->nr_ids < IMSIC_MIN_ID'
-> CHECK: Unnecessary parentheses around 'global->nr_ids >=3D IMSIC_MAX_ID'
-> CHECK: Unnecessary parentheses around global->local
-> CHECK: Unnecessary parentheses around imsic->lpriv
-> CHECK: extern prototypes should be avoided in .h files
+> >
+> > However, it looks like this patch has some clippy warnings that need to
+> > be fixed before it can be merged.
 >
+> It seems that those warnings are treated as fatal even, although, given t=
+he
+> rationale for these warnings, I'm not even sure those should be warnings =
+at
+> all.
 
-Okay, I will address these in the next revision.
+The build currently succeeds with zero warnings. That's a very useful
+property, and I would not like to give it up.
 
-Regards,
-Anup
+You could submit a patch to silence these specific warnings. The
+clippy::explicit_auto_deref warning is not one I care for, but I would
+object to silencing clippy::needless_return. Using return statements
+when you are not doing an early-return really is extremely unidiomatic
+Rust.
+
+Ultimately, I think there is a lot of value of just applying the code
+formatters and linters and following them to zero warnings. It ensures
+that the Rust code is relatively idiomatic, helps avoid long
+unproductive discussions, and makes it easy for me to fix formatting
+issues in my own patches (just run clippy and rustfmt on everything,
+and it lists only things that are my own fault).
+
+Alice
