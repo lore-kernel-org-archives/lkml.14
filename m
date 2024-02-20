@@ -1,184 +1,127 @@
-Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
+Received: from mail-vk1-f170.google.com (mail-vk1-f170.google.com [209.85.221.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 216946D1B8
-	for <linux-kernel@vger.kernel.org>; Tue, 20 Feb 2024 13:50:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF3516FBB7
+	for <linux-kernel@vger.kernel.org>; Tue, 20 Feb 2024 13:51:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708437042; cv=none; b=JKQcyK/3qjXiSWwZbFU6uWWKQHo7dq5PPMFpIBUC+rrFtRrEevoQeM71BHee2G5Lj0cTp1pze2TRAgorFDuLf6BAVwHe0309XYVPByIWkBEpqcCJ8OMKXf3sY29p+MB8j9RKkv4vonXcfU9+C6H9SlwZ4d5+26XOzIBZ7sWk9eQ=
+	t=1708437098; cv=none; b=OLzzeuxFMWEyD+2Uoa69PaF4vrUHSM4/2MC1oNyBZJE8C3CF8DKHvdAXNntlY+Yp3yQtvYTH5dgZWRqYcfiz8UOf+DIh59HjMZq+y6wfyB/s+LbpxGN9kz+7NNi0NNRm4F+sj495MNBwC9cZqbSQkS5KoP5pCGF85s5HE8nAEXE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708437042; c=relaxed/simple;
-	bh=Jrx11QzEIynH7Lc7JLpWcoYA3bkny4IBJMQqUSnWar8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bBxIFlvsrIbgWCR6G/iUCOZCrsPga1GN6XQJTj9EXX1qyFZRdhqW6mWAi1WKjtBz+BLUqiRqC4I9HlcD6TF8nOlHiIkE0DpxbY1nC7NM8oXfU1qDUPrLFkjASuSU3henJsCyK0DuKH8xjVE01GqsePfHaeJoO9L0qbivV5bF+SM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=layalina.io; spf=pass smtp.mailfrom=layalina.io; dkim=pass (2048-bit key) header.d=layalina-io.20230601.gappssmtp.com header.i=@layalina-io.20230601.gappssmtp.com header.b=yRUccnPe; arc=none smtp.client-ip=209.85.221.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=layalina.io
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=layalina.io
+	s=arc-20240116; t=1708437098; c=relaxed/simple;
+	bh=0BcunvRrtaUmN0EFUUISMbneVhmBPJt6BIastJXPNP0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=oM/K2OGhzZQEcYjXoSu7huJKAu0q/67n/ClFlV7MSG5KtXQ3OudLFlJmQ0KEbtETIu6Vgd5gHocSPvOmTNQ+O3YurN4arCwYchBPFN5Px+a4587jf7CMgzSbAh5I9kPX8dnGPWLJMo+r788eHqIpuH5r26pI17/sK9YbmWQfNmI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=hQcYTdri; arc=none smtp.client-ip=209.85.221.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=layalina-io.20230601.gappssmtp.com header.i=@layalina-io.20230601.gappssmtp.com header.b="yRUccnPe"
-Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-33d146737e6so3384010f8f.0
-        for <linux-kernel@vger.kernel.org>; Tue, 20 Feb 2024 05:50:40 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="hQcYTdri"
+Received: by mail-vk1-f170.google.com with SMTP id 71dfb90a1353d-4ca2229d76fso424978e0c.2
+        for <linux-kernel@vger.kernel.org>; Tue, 20 Feb 2024 05:51:36 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=layalina-io.20230601.gappssmtp.com; s=20230601; t=1708437039; x=1709041839; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=3ilid/e5sP7UghfGnEg/Cgg4pyAzEewQR8WBetW5rMY=;
-        b=yRUccnPeog/jnLc+M9IUavyWKAlW5ZuP1b1WyaBWS2BZVO15pXWViLDSXEdyV1nbQ8
-         fkouReYc27gGGg7d6KTcAEumdAQveEoZhxP6sYGYElXR8+zoArEQzD0CndSueqLxmYKB
-         REmVvv/bSI/V5D7TUl+myZu3WZ0VI3S1B5vqvUsEkHwj3k4NEVsz9y9eYjSKqIo6Ukp6
-         pl8oJ13tiqyBbx6BkZymob6AbY723o3guVUZ8bQ/x5d1hb0xJHBGuvUR+uydtZ/7BQ1v
-         Qw49zxuFL27pu84rkzvSI5Ie/tz1+tgNi7j/cRzHr2BdRo2mosoj3O8Eao/xV8NHQ0Sp
-         YaMw==
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1708437096; x=1709041896; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=MgY4liOwTL5+3Z3CLB9W6IwO/t1zWSjoOMigtKjZYsE=;
+        b=hQcYTdriKl/a1Qla7Ad54f7TSy38NbHCV77k2LdJvfrKCCJBOeMtzPROeanlGdJpTy
+         TooU/kuQGLcoKpOAItES+lfOHNyXi0ye7J9OPAlLWIf1hB8W0RobhIImP+zwmYBatWrS
+         p0wGzPoQ/fViQv5wHRB5+ZhW0eahYDMF4yqUN++JjtNlXNopnwbvxz5EcEeKTIMHPmlX
+         QR2yMKpBFGvaNwkERPqX56Klh81YhkU4MsLOjnZB3IQYwnBWXOSTpww7u6C5ntY67bbJ
+         GtdbNfARaxCH/qjflNMRUejzXTxG9xq1Uly4SMQyOR0YbaZOFR5aHeY6xyfFx7tgWbGp
+         cn/g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708437039; x=1709041839;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=3ilid/e5sP7UghfGnEg/Cgg4pyAzEewQR8WBetW5rMY=;
-        b=FTtd+r4H1YZM2071vfIIbjnLbq6NlV8x6nDLcNJ76W/UJYxSR89VIQHzVFJ3bDHUDM
-         7RtDkLesgHNge06aXrNB04gFFui1woTRiSpdDSRMe5w5xMC1FMTReqLRTSlRJnfZET79
-         brGN9cFBMT/XsXZQk65JmSzyDyWx1tsEEyd69tLwgEQpwuTXc61mugCja8sxu2iE1EJi
-         AdCOoVAAsrEp9CA2mJcqzU4PdQKtEnOKOH8kwVm2TxEhX3MVsHVKQp5F+IMeRbtQrTzW
-         rxfOn4yR0pBp/JpunhKN+WdyBDPomVvmBwOS5cl/6bPK7Cb3YmHtjIb8VguA63Jtz8Dn
-         N/Og==
-X-Forwarded-Encrypted: i=1; AJvYcCU8AuaL/XsVfP//fr1R0R78EsXCSnqVSOTnWJvsBOI9EpN6tqEBIs6u103hbXrdEe4/hpIdVHL8ZYm3l3mFbtkNb4PbbYxaj5FkdwhA
-X-Gm-Message-State: AOJu0YxiqjBRpWAEFysJmVZPSfxrumNEjdY/l2AjpfuZRlHTbPp1iOgD
-	gBzDm3KMpcnR+EypEu7RswJ70tpktGoEWltAh28WK7pQYBcGagmYDCN2BDkgg60=
-X-Google-Smtp-Source: AGHT+IHhQGWV31zH86wvYhgr4JRITrjVnPUeUY8jjkgyFLLfbaTZNDF5uD++rL2UUzCCSKch0Zc3ZQ==
-X-Received: by 2002:adf:fdd1:0:b0:33d:2dd4:7f5b with SMTP id i17-20020adffdd1000000b0033d2dd47f5bmr6529768wrs.45.1708437039043;
-        Tue, 20 Feb 2024 05:50:39 -0800 (PST)
-Received: from airbuntu ([87.127.96.170])
-        by smtp.gmail.com with ESMTPSA id bn7-20020a056000060700b0033d3ff1cb67sm8199683wrb.66.2024.02.20.05.50.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 20 Feb 2024 05:50:38 -0800 (PST)
-Date: Tue, 20 Feb 2024 13:50:37 +0000
-From: Qais Yousef <qyousef@layalina.io>
-To: Pierre Gondois <pierre.gondois@arm.com>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
-	Viresh Kumar <viresh.kumar@linaro.org>,
-	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-	Ingo Molnar <mingo@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Christian.Loehle@arm.com
-Subject: Re: [PATCH] cpufreq: Change default transition delay to 2ms
-Message-ID: <20240220135037.qriyapwrznz2wdni@airbuntu>
-References: <20240205022500.2232124-1-qyousef@layalina.io>
- <20240205074514.kiolurpounokalum@vireshk-i7>
- <CAJZ5v0j2rA-+Jpdv6OZ_ymiqh0+RGzmJBNncKGBwuxO3PxgSKA@mail.gmail.com>
- <ca000b2d-b552-43cb-8807-0a5f1450c6a2@arm.com>
+        d=1e100.net; s=20230601; t=1708437096; x=1709041896;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=MgY4liOwTL5+3Z3CLB9W6IwO/t1zWSjoOMigtKjZYsE=;
+        b=YaSYG9kUEVdddUrERhkB8MJet98Hlo9L1eaENhqilyW1c5Ycp54kpxJJP7+SbcuEgj
+         Rq81f4FtFcbgllsFKo3DVP0FAW7JOc0teqE7HykAKpgYZFgi4W9etZrYnBtqERuONhZX
+         hWzElbGGB4GdMMJv5+OVGXF3bGljU4wTaZ8a35ogjYhZC4N2J4SbVQF+MSVSPvl98Z2K
+         dxVZYom83l58sJeC2I8VxqMVXu4bui4+E5jdob7oniVBOv5XvE9kLWifHegQa14FdpT/
+         kuqP2gFsk7wWze7jGo8gkCsr91IXNbScsd1U6Axw6HJddfR+2S6wm3rHUNHApbwLd016
+         4umQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVS0GeiE9/Uhciy6Qyk+YNOLESvSFKpVMBE2/7AzxED7FGoF16mWExoMva9ovfw5DOjYHB0kHuLCXTIqEgVP+n6jFre4Y9npx+SdfYq
+X-Gm-Message-State: AOJu0Yxf2wxkv7yR8M2mg1c3IbjfjAXr4SqSwAf56lgNi7skYssYQ+Ei
+	RysJyWzlq7EJHCyYsueH18AbMZIeZAhsV9sngYWyux8B/SOJXlZY8YZkeblcHd32ZBjFTvWtf2z
+	EqNx9nfKY5KwTy0wrxlOVtcMdPufzrvD7mHtUJA==
+X-Google-Smtp-Source: AGHT+IGDnnvca//PyvA7xbyGzNM8JoBNHW92qi1w5wyc30nxe7IfC8qAJelE3g8wqWvKnEEoyqcjA5KVWxpp8Z8yXZs=
+X-Received: by 2002:a1f:df81:0:b0:4c9:f704:38c with SMTP id
+ w123-20020a1fdf81000000b004c9f704038cmr4588564vkg.11.1708437095738; Tue, 20
+ Feb 2024 05:51:35 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ca000b2d-b552-43cb-8807-0a5f1450c6a2@arm.com>
+References: <20240216203215.40870-1-brgl@bgdev.pl> <20240216203215.40870-10-brgl@bgdev.pl>
+ <48164f18-34d0-4053-a416-2bb63aaae74b@sirena.org.uk> <CAMRc=Md7ymMTmF1OkydewF5C32jDNy0V+su7pcJPHKto6VLjLg@mail.gmail.com>
+ <8e392aed-b5f7-486b-b5c0-5568e13796ec@sirena.org.uk> <CAMRc=MeAXEyV47nDO_WPQqEQxSYFWTrwVPAtLghkfONj56FGVA@mail.gmail.com>
+ <5a3f5e1b-8162-4619-a10b-d4711afe533b@sirena.org.uk> <CAMRc=MdTub4u0dm5PgTQPnYPuR=SRnh=ympEZqo_UyrQDrQw6w@mail.gmail.com>
+ <f72723f3-f5c5-4c16-a257-e5f57c4f9e73@sirena.org.uk>
+In-Reply-To: <f72723f3-f5c5-4c16-a257-e5f57c4f9e73@sirena.org.uk>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Tue, 20 Feb 2024 14:51:25 +0100
+Message-ID: <CAMRc=McFCauVwpATbVqCOtpyP_buKQDiN0OdZP9EfXmc3CgSUA@mail.gmail.com>
+Subject: Re: [PATCH v5 09/18] arm64: dts: qcom: qrb5165-rb5: model the PMU of
+ the QCA6391
+To: Mark Brown <broonie@kernel.org>
+Cc: Marcel Holtmann <marcel@holtmann.org>, Luiz Augusto von Dentz <luiz.dentz@gmail.com>, 
+	"David S . Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Kalle Valo <kvalo@kernel.org>, Bjorn Andersson <andersson@kernel.org>, 
+	Konrad Dybcio <konrad.dybcio@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, 
+	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Saravana Kannan <saravanak@google.com>, 
+	Geert Uytterhoeven <geert+renesas@glider.be>, Arnd Bergmann <arnd@arndb.de>, 
+	Neil Armstrong <neil.armstrong@linaro.org>, Marek Szyprowski <m.szyprowski@samsung.com>, 
+	Alex Elder <elder@linaro.org>, Srini Kandagatla <srinivas.kandagatla@linaro.org>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Abel Vesa <abel.vesa@linaro.org>, 
+	Manivannan Sadhasivam <mani@kernel.org>, Lukas Wunner <lukas@wunner.de>, 
+	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, linux-bluetooth@vger.kernel.org, 
+	netdev@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org, 
+	linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-pci@vger.kernel.org, linux-pm@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 02/14/24 10:19, Pierre Gondois wrote:
-> Hello,
-> 
-> On 2/12/24 16:53, Rafael J. Wysocki wrote:
-> > On Mon, Feb 5, 2024 at 8:45 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
-> > > 
-> > > On 05-02-24, 02:25, Qais Yousef wrote:
-> > > > 10ms is too high for today's hardware, even low end ones. This default
-> > > > end up being used a lot on Arm machines at least. Pine64, mac mini and
-> > > > pixel 6 all end up with 10ms rate_limit_us when using schedutil, and
-> > > > it's too high for all of them.
-> > > > 
-> > > > Change the default to 2ms which should be 'pessimistic' enough for worst
-> > > > case scenario, but not too high for platforms with fast DVFS hardware.
-> > > > 
-> > > > Signed-off-by: Qais Yousef <qyousef@layalina.io>
-> > > > ---
-> > > >   drivers/cpufreq/cpufreq.c | 4 ++--
-> > > >   1 file changed, 2 insertions(+), 2 deletions(-)
-> > > > 
-> > > > diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
-> > > > index 44db4f59c4cc..8207f7294cb6 100644
-> > > > --- a/drivers/cpufreq/cpufreq.c
-> > > > +++ b/drivers/cpufreq/cpufreq.c
-> > > > @@ -582,11 +582,11 @@ unsigned int cpufreq_policy_transition_delay_us(struct cpufreq_policy *policy)
-> > > >                 * for platforms where transition_latency is in milliseconds, it
-> > > >                 * ends up giving unrealistic values.
-> > > >                 *
-> > > > -              * Cap the default transition delay to 10 ms, which seems to be
-> > > > +              * Cap the default transition delay to 2 ms, which seems to be
-> > > >                 * a reasonable amount of time after which we should reevaluate
-> > > >                 * the frequency.
-> > > >                 */
-> > > > -             return min(latency * LATENCY_MULTIPLIER, (unsigned int)10000);
-> > > > +             return min(latency * LATENCY_MULTIPLIER, (unsigned int)(2*MSEC_PER_SEC));
-> > > 
-> > > Please add spaces around '*'.
-> > > 
-> > > Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
-> > 
-> > I've adjusted the whitespace as suggested above and applied the patch
-> > as 5.9 material.
-> > 
-> > Thanks!
-> > 
-> 
-> To add some numbers, on a Juno-r2, with latency measured between the frequency
-> request on the kernel side and the SCP actually making the frequency update.
-> 
-> The SCP is the firmware responsible of making the frequency updates. It receives
-> the kernel requests and coordinate them/make the actual changes. The SCP also has
-> a mechanism called 'fast channel' (FC) where the kernel writes the requested
-> frequency to a memory area shared with the SCP. Every 4ms, the SCP polls/reads
-> these memory area and make the required modifications.
-> 
-> Latency values (in ms)
-> Workload:
-> Idle system, during ~30s
-> +---------------------------------------+
-> |       |   Without FC  |      With FC  |
-> +-------+---------------+---------------+
-> | count |       1663    |        1102   |
-> | mean  |          2.92 |          2.10 |
-> | std   |          1.90 |          1.58 |
-> | min   |          0.21 |          0.00 |
-> | 25%   |          1.64 |          0.91 |
-> | 50%   |          2.57 |          1.68 |
-> | 75%   |          3.66 |          2.97 |
-> | max   |         14.37 |         13.50 |
-> +-------+---------------+---------------+
-> 
-> Latency values (in ms)
-> Workload:
-> One 1% task per CPU, period = 32ms. This allows to wake up the CPU
-> every 32ms and send more requests/give more work to the SCP. Indeed
-> the SCP is also responsible of idle state transitions.
-> Test duration ~=30s.
-> +---------------------------------------+
-> |       |   Without FC  |      With FC  |
-> +-------+---------------+---------------+
-> | count |       1629    |       1446    |
-> | mean  |          3.23 |          2.31 |
-> | std   |          2.40 |          1.73 |
-> | min   |          0.05 |          0.02 |
-> | 25%   |          1.91 |          0.98 |
-> | 50%   |          2.65 |          2.00 |
-> | 75%   |          3.65 |          3.23 |
-> | max   |         20.56 |         16.73 |
-> +-------+---------------+---------------+
-> 
-> ---
-> 
-> The latency increases when fast channels are not used and when there is an actual
-> workload. On average it is always > 2ms. Juno's release date seems to be 2014,
-> so the platform is quite old, but it should also have benefited from regular
-> firmware updates.
+On Tue, Feb 20, 2024 at 2:48=E2=80=AFPM Mark Brown <broonie@kernel.org> wro=
+te:
+>
+> On Tue, Feb 20, 2024 at 02:38:33PM +0100, Bartosz Golaszewski wrote:
+> > On Tue, Feb 20, 2024 at 2:31=E2=80=AFPM Mark Brown <broonie@kernel.org>=
+ wrote:
+> > > On Tue, Feb 20, 2024 at 12:16:10PM +0100, Bartosz Golaszewski wrote:
+>
+> > > > And what do you mean by there not being any consumers? The WLAN and=
+ BT
+> > > > *are* the consumers.
+>
+> > > There are no drivers that bind to the regulators and vary the voltage=
+s
+> > > at runtime.
+>
+> > Even with the above misunderstanding clarified: so what? DT is the
+> > representation of hardware. There's nothing that obligates us to model
+> > DT sources in drivers 1:1.
+>
+> It is generally a bad sign if there is a voltage range specified on a
+> regulator that's not got any indication that the voltage is going to be
+> actively managed, especially in situations like with several of the
+> supplies the DT was specifying where there are clear indications that
+> the supply is intended to be fixed voltage (or cases where every single
+> supply has a voltage range which would be highly unusual).  Looking at
+> the consumers might provide an explanation for such unusual and likely
+> incorrect constraints, and the lack of any consumers in conjunction with
+> other warning signs reenforces those warning signs.
 
-Thanks for sharing the numbers
+What do you recommend? No values at all in these regulators as it's
+the PMU which will manage those on its own once powered up by the host
+PMIC?
 
-> 
-> Regards,
-> Pierre
+Bartosz
