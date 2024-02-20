@@ -1,130 +1,172 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9541277632
-	for <linux-kernel@vger.kernel.org>; Tue, 20 Feb 2024 17:38:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7CAB76C98
+	for <linux-kernel@vger.kernel.org>; Tue, 20 Feb 2024 17:38:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708450684; cv=none; b=mbVqKm+HtjAOwRZ1obBaC3IO1ebSYWrEEBHq3sYo8UjiIwKKv+8GRqt8iMjPeOdFSfJSsesSftVPOQglFj6HxpDsCxyTPTVuRZbkALzHv/yUAfWDzL3p06pL4xGO3jdtp7BtjKqkGVPTEE9DBpn00A6pa/W2wNfmBAho6GW2k98=
+	t=1708450707; cv=none; b=eedS51caEvlSfQpkugglX0iRdMhc+uAyZ2yBZmFdreJYthJt2q1iwhe3XN8jA9HfD57tqTqcx/y7JuTPDIHtU9+MBvnsHsrZLj9xJNZ9Ukxa8Hs2JR1PTpckytVEGd5VTPqmOb4Z/7Z2zJE7fnPFD/IuMbCYE9in59I76zBig7g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708450684; c=relaxed/simple;
-	bh=chjHpOYI/dE8bwRfCd075t2HYI1qV4j36wPFpA4IeJU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=cAoc0YwWpCObZmXGk5z0m+yqlLWU0xN7M0uYaf4ZuZja6aHymuSrD8kyTZJd5B79f50hcoK1ey7HLYb+GY+ZwzYEpbusWbEMLYauNYkR+gAa+sxNjY5r3T4jDKAYJgkn4BGo/5B4KRVszzuis454srsRO5W6DzRbjndmMsbJTuk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=c4fF2e3o; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1708450707; c=relaxed/simple;
+	bh=zUJsJOJwU+9vWXinj1PCgD7j7+9VeRB+NDrCeSHsh1o=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=MdDwBAsVkSOoXyftWTOShyW1IFDEma2ar+Pi3Un98gQ/2qR50h22+KNKIEFV0GDgFt3vbEfXTvjoGxMyrcxbDtG0afMYOJ1dT7XSeXKeqzaAkiGu8zkCfRy74diiettiOPPWWYYRy0eBo23rI09s4XXfs0J+AFwMHvaZocHku7I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=YoEHS9QH; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="c4fF2e3o"
-Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 41KEfweJ020497;
-	Tue, 20 Feb 2024 17:37:29 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	qcppdkim1; bh=p0D1qsOzFR10TiLIZJjIoMBY5kcbdzXOoGhUqlF4COU=; b=c4
-	fF2e3oKqnSwDQM9DHgUKV4p9CzwMAUXXwHmDZEq+576r4/MRXoYzX63Bz95FLYAP
-	DdcQzsp9/8EljJ1Fu3rV/TbNm+ZqD+RXAoxXdYwUeu1hhipokzunMklaSf9V277H
-	/Pd0xnwWRoYm9L3STBf2eFgl3Xhe8pKyxCg4cb8496wsXIo8gowo7KcIB/bMpYDA
-	KPhKDdr6DNbXB5Hoybe8LjX4JTLMDLpkBGUIL1GaU/dZHOfi+AFWAF5GR6NWrjWO
-	78OsFChLXT/80O/omjxspg2NHRE5yWL0AUOnjbL15wN6KpKnsiMrU+kwUnzIVM50
-	D2iMwusBgsURKmP1cYZA==
-Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3wct3egxmp-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 20 Feb 2024 17:37:28 +0000 (GMT)
-Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
-	by NALASPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 41KHbRVK031007
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 20 Feb 2024 17:37:27 GMT
-Received: from [10.71.110.192] (10.80.80.8) by nalasex01b.na.qualcomm.com
- (10.47.209.197) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Tue, 20 Feb
- 2024 09:37:24 -0800
-Message-ID: <e59f02e4-03c9-42dc-9c04-65d339fa8cc2@quicinc.com>
-Date: Tue, 20 Feb 2024 09:37:15 -0800
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YoEHS9QH"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1708450704;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Pf6j+i6h2iPgXMeO4/kpzSp22DRqb12CU6kjm37WMmQ=;
+	b=YoEHS9QH5UTfGH5Uef8MDSn2s+rMIEEMCBCvkZHjMgtmItGCN/cGCX0bklOMduhzofZpSF
+	Ux3Nkr0R8blPq/hGe0v/Y48/WPIMu2KVxGxNvx9qRr5hiQ5UTZ/eACq7b8uCkrvWmchKu2
+	DstiAVK43QWnaA4VrkuGN1v8yD97/rM=
+Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com
+ [209.85.160.198]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-265-sQd6Rw6hNSy47_NQYNDD4A-1; Tue, 20 Feb 2024 12:38:23 -0500
+X-MC-Unique: sQd6Rw6hNSy47_NQYNDD4A-1
+Received: by mail-qt1-f198.google.com with SMTP id d75a77b69052e-42c709698f8so120917531cf.1
+        for <linux-kernel@vger.kernel.org>; Tue, 20 Feb 2024 09:38:23 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708450702; x=1709055502;
+        h=content-transfer-encoding:mime-version:message-id:date:references
+         :in-reply-to:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Pf6j+i6h2iPgXMeO4/kpzSp22DRqb12CU6kjm37WMmQ=;
+        b=o8joHDjvS+WkkNHSxaFLRkMTbYYPlNEeXFJAggFGQyHaaXNlYM6j6SkkzjBqpKRjl9
+         rixM/sEm3AflDCEzQXYQipQWAAuX81lmrdCtemur0xhupjvIuzcFJaohSob/xJYJ27No
+         WTtmq/K33mJDjIeRH4lcoVN5+xhr5esJaMsQVFl1uNmxUnK7qHbLfo+zxcMFXeDfJXQx
+         ysHag+6K1f61p1AnZeDceZEPehKjpGwfzzkaUgkCE3UKJzu70aW2kz3cl5icEgzuv0xR
+         tHTRA3pK12mGOu+Gphk0VuVG+UDF1EefL2jTUIWp4Tx1+magnoeLgeBeS/GJJh+DBMyd
+         AkeA==
+X-Forwarded-Encrypted: i=1; AJvYcCVf5pi+WHJ9vOOyxTDWbojFy4jOf+TJFi+1JTLKQGnmxx808gc2Qg0iSEgWn5w3BSmu28usKbQAR6yKLbAN843UPhjyKNBXYpefR8y0
+X-Gm-Message-State: AOJu0YyFuN5O7MYt0Nw+k1Qm2lJudk6edI3h6QAc4LFQdzpLfvKkVBVW
+	Qu/kkRrmh+yVpSFwa7Qq718HGir5+C7A9JjxpbQTSRhPNwbKzaXwOoKhMBoFIKMfWYbNx9J5Vnq
+	ckq88KQzFulNfNeuE8YgJ8ntx0cV+cFlNhDsaZVaerwzdgV9ljOGS57Rhfk7Biw==
+X-Received: by 2002:ac8:5e4a:0:b0:42d:bf56:89b5 with SMTP id i10-20020ac85e4a000000b0042dbf5689b5mr23713078qtx.2.1708450702674;
+        Tue, 20 Feb 2024 09:38:22 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IFeTTqdWsD2ryQ/kvJUPCPUdscvF51pfdUzMyfl8GGrTtsY+R1PNuGVQ+5MrI0u/bBA+53tNA==
+X-Received: by 2002:ac8:5e4a:0:b0:42d:bf56:89b5 with SMTP id i10-20020ac85e4a000000b0042dbf5689b5mr23713056qtx.2.1708450702397;
+        Tue, 20 Feb 2024 09:38:22 -0800 (PST)
+Received: from vschneid-thinkpadt14sgen2i.remote.csb (213-44-141-166.abo.bbox.fr. [213.44.141.166])
+        by smtp.gmail.com with ESMTPSA id cx17-20020a05620a51d100b00785a64ba095sm3586336qkb.85.2024.02.20.09.38.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 20 Feb 2024 09:38:21 -0800 (PST)
+From: Valentin Schneider <vschneid@redhat.com>
+To: Eric Dumazet <edumazet@google.com>
+Cc: dccp@vger.kernel.org, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-rt-users@vger.kernel.org, "David S.
+ Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>, Paolo
+ Abeni <pabeni@redhat.com>, mleitner@redhat.com, David Ahern
+ <dsahern@kernel.org>, Juri Lelli <juri.lelli@redhat.com>, Tomas Glozar
+ <tglozar@redhat.com>, Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+ Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH v3 1/1] tcp/dcpp: Un-pin tw_timer
+In-Reply-To: <CANn89i+3-zgAkWukFavu1wgf1XG+K9U4BhJWw7H+QKwsfYL4WA@mail.gmail.com>
+References: <20240219095729.2339914-1-vschneid@redhat.com>
+ <20240219095729.2339914-2-vschneid@redhat.com>
+ <CANn89i+3-zgAkWukFavu1wgf1XG+K9U4BhJWw7H+QKwsfYL4WA@mail.gmail.com>
+Date: Tue, 20 Feb 2024 18:38:17 +0100
+Message-ID: <xhsmho7cbf33q.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] LoongArch: Call early_init_fdt_scan_reserved_mem()
- earlier
-To: Huacai Chen <chenhuacai@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>
-CC: <loongarch@lists.linux.dev>, Xuefeng Li <lixuefeng@loongson.cn>,
-        Guo Ren
-	<guoren@kernel.org>, Xuerui Wang <kernel@xen0n.name>,
-        Jiaxun Yang
-	<jiaxun.yang@flygoat.com>, <linux-kernel@vger.kernel.org>,
-        <loongson-kernel@lists.loongnix.cn>, <kernel@quicinc.com>
-References: <20240218151403.2206980-1-chenhuacai@loongson.cn>
-Content-Language: en-US
-From: Oreoluwa Babatunde <quic_obabatun@quicinc.com>
-In-Reply-To: <20240218151403.2206980-1-chenhuacai@loongson.cn>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01b.na.qualcomm.com (10.47.209.197)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: RHSoEzoEOeai5k1Ch4kMzEmb3QD2kcWV
-X-Proofpoint-GUID: RHSoEzoEOeai5k1Ch4kMzEmb3QD2kcWV
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-02-20_06,2024-02-20_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 bulkscore=0
- spamscore=0 phishscore=0 clxscore=1011 mlxscore=0 mlxlogscore=999
- priorityscore=1501 malwarescore=0 adultscore=0 lowpriorityscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2401310000 definitions=main-2402200126
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-
-On 2/18/2024 7:14 AM, Huacai Chen wrote:
-> The unflatten_and_copy_device_tree() function contains a call to
-> memblock_alloc(). This means that memblock is allocating memory before
-> any of the reserved memory regions are set aside in the arch_mem_init()
-> function which calls early_init_fdt_scan_reserved_mem(). Therefore,
-> there is a possibility for memblock to allocate from any of the
-> reserved memory regions.
+On 19/02/24 15:42, Eric Dumazet wrote:
+> On Mon, Feb 19, 2024 at 10:57=E2=80=AFAM Valentin Schneider <vschneid@red=
+hat.com> wrote:
+>>
+>> The TCP timewait timer is proving to be problematic for setups where sch=
+eduler
+>> CPU isolation is achieved at runtime via cpusets (as opposed to statical=
+ly via
+>> isolcpus=3Ddomains).
+>>
 >
-> Hence, move the call to early_init_fdt_scan_reserved_mem() to be earlier
-> in the init sequence, so that the reserved memory regions are set aside
-> before any allocations are done using memblock.
+> ...
 >
-> Signed-off-by: Oreoluwa Babatunde <quic_obabatun@quicinc.com>
-> Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
-> ---
->  arch/loongarch/kernel/setup.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+>>  void inet_twsk_deschedule_put(struct inet_timewait_sock *tw)
+>>  {
+>> +       /* This can race with tcp_time_wait() and dccp_time_wait(), as t=
+he timer
+>> +        * is armed /after/ adding it to the hashtables.
+>> +        *
+>> +        * If this is interleaved between inet_twsk_hashdance() and inet=
+_twsk_put(),
+>> +        * then this is a no-op: the timer will still end up armed.
+>> +        *
+>> +        * Conversely, if this successfully deletes the timer, then we k=
+now we
+>> +        * have already gone through {tcp,dcpp}_time_wait(), and we can =
+safely
+>> +        * call inet_twsk_kill().
+>> +        */
+>>         if (del_timer_sync(&tw->tw_timer))
+>>                 inet_twsk_kill(tw);
 >
-> diff --git a/arch/loongarch/kernel/setup.c b/arch/loongarch/kernel/setup.c
-> index edf2bba80130..634ef17fd38b 100644
-> --- a/arch/loongarch/kernel/setup.c
-> +++ b/arch/loongarch/kernel/setup.c
-> @@ -357,6 +357,8 @@ void __init platform_init(void)
->  	acpi_gbl_use_default_register_widths = false;
->  	acpi_boot_table_init();
->  #endif
-> +
-> +	early_init_fdt_scan_reserved_mem();
->  	unflatten_and_copy_device_tree();
->  
->  #ifdef CONFIG_NUMA
-> @@ -390,8 +392,6 @@ static void __init arch_mem_init(char **cmdline_p)
->  
->  	check_kernel_sections_mem();
->  
-> -	early_init_fdt_scan_reserved_mem();
-> -
->  	/*
->  	 * In order to reduce the possibility of kernel panic when failed to
->  	 * get IO TLB memory under CONFIG_SWIOTLB, it is better to allocate
-Hi Huacai,
+> I really do not think adding a comment will prevent races at netns disman=
+tle.
+>
+> We need to make sure the timer is not rearmed, we want to be absolutely
+> sure that after inet_twsk_purge() we have no pending timewait sockets,
+> otherwise UAF will happen on the netns structures.
+>
+> I _think_ that you need timer_shutdown_sync() here, instead of del_timer_=
+sync()
 
-Thank you! This change looks good to me.
+Hm so that would indeed prevent a concurrent inet_twsk_schedule() from
+re-arming the timer, but in case the calls are interleaved like so:
 
-Regards,
+                             tcp_time_wait()
+                               inet_twsk_hashdance()
+  inet_twsk_deschedule_put()
+    timer_shutdown_sync()
+                               inet_twsk_schedule()
 
-Oreoluwa
+inet_twsk_hashdance() will have left the refcounts including a count for
+the timer, and we won't arm the timer to clear it via the timer callback
+(via inet_twsk_kill()) - the patch in its current form relies on the timer
+being re-armed for that.
+
+I don't know if there's a cleaner way to do this, but we could catch that
+in inet_twsk_schedule() and issue the inet_twsk_kill() directly if we can
+tell the timer has been shutdown:
+---
+diff --git a/net/ipv4/inet_timewait_sock.c b/net/ipv4/inet_timewait_sock.c
+index 61a053fbd329c..c272da5046bb4 100644
+--- a/net/ipv4/inet_timewait_sock.c
++++ b/net/ipv4/inet_timewait_sock.c
+@@ -227,7 +227,7 @@ void inet_twsk_deschedule_put(struct inet_timewait_sock=
+ *tw)
+ 	 * have already gone through {tcp,dcpp}_time_wait(), and we can safely
+ 	 * call inet_twsk_kill().
+ 	 */
+-	if (del_timer_sync(&tw->tw_timer))
++	if (timer_shutdown_sync(&tw->tw_timer))
+ 		inet_twsk_kill(tw);
+ 	inet_twsk_put(tw);
+ }
+@@ -267,6 +267,10 @@ void __inet_twsk_schedule(struct inet_timewait_sock *t=
+w, int timeo, bool rearm)
+ 						     LINUX_MIB_TIMEWAITED);
+ 		BUG_ON(mod_timer(&tw->tw_timer, jiffies + timeo));
+ 		refcount_inc(&tw->tw_dr->tw_refcount);
++
++		/* XXX timer got shutdown */
++		if (!tw->tw_timer.function)
++			inet_twsk_kill(tw);
+ 	} else {
+ 		mod_timer_pending(&tw->tw_timer, jiffies + timeo);
+ 	}
+
