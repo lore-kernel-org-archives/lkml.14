@@ -1,126 +1,101 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B5D8612C2
-	for <linux-kernel@vger.kernel.org>; Tue, 20 Feb 2024 10:25:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFCF460DFD
+	for <linux-kernel@vger.kernel.org>; Tue, 20 Feb 2024 10:25:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708424724; cv=none; b=GhSsVr2aGHdK+g83Zw+jnc//DUmuzZxaM9UCC7FNBsy7y+uDtzN2JmBIruunwsD6eBir1L8mtyIKpEZTQBCHnqc9OB/dB8Umg+t5tqiJIhIFK60/ZUqE6K/taIyZ5eGe8QzZ3NSn30Huo9sdUd9Gwij/pQCcQzE6ppX2daZMeeo=
+	t=1708424750; cv=none; b=cJ3zLvQYAEDB28lHchBTRl7hCSKfyutA5LkyuvDWePOyZqpyaM9CukEFJRuHGE2O9idkjW745zERnbgokL8CjwLirdOHbC/qXQ7uovpXHYdLEcPRHMOsv6jDyAHWjoV5XjPGFdZ1V8pbeqAtZSNbYy4yRo9UrzaPQhwvtD/1Q7k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708424724; c=relaxed/simple;
-	bh=E1tm9W/v3jXRclKbHPuBtzfAnLGGVmHa4BlPy0BxmEc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=DiwwSBVZgDdAhWGLkpAwXzR1R+KXO/WcciLccbY0AGUZthgoT6nMZk3YCJ6zL84q+bqhRtM5qCdIlgmSEkZLxqtmOG92/e5xMOwyLOaMaEoJ3uiywTqWWsHMJ92PX3qarMoiWFaPWEG5ClNOvQ0cEpgis9934ntF3au32BKsDUU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=T8aXIan1; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1708424750; c=relaxed/simple;
+	bh=5ktclNbn2mEDXmqYAQYhA6bcJLKSeTx1A+GxurIEYMw=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=fjBEH6j0TkNRvqWft18Srkz8aCfmQ961O7RHG0T00GwtScbNnsBZbSvRzVCDB0o7yib/RWpCGiERXSSl3+Dc4i/5vZF3a47ScBx3hj8X1VDGqM03ivPweCUaDWGKzR3nBWyPiOwnT98dOiI9jYtTlFUlyJP1X8XKeYOR3qDkHmc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=HvHzJBqL; arc=none smtp.client-ip=209.85.208.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="T8aXIan1"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1708424721;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=vYDQrIFcrmGFEDFd/lQJSQdjifAhTBQLYF8vyTIdB5w=;
-	b=T8aXIan1md6zROmthD9dHf/wZuasBQ7Abn+MslOy86tK3Udvr1MQOnJNN/fNSu1CJgx7kk
-	UytDlkf9BOcUdEsBOGv7yQzVgc19TVk/kHl2z/sXazA15+B8TygRrsvt2HNJFv40SOqqpG
-	8Zodgoeql2BLD6EoFzQD3uCGn3aYkqE=
-Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com
- [209.85.219.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-517-wZFUbPTAM1akWqIUV6DG2g-1; Tue, 20 Feb 2024 05:25:19 -0500
-X-MC-Unique: wZFUbPTAM1akWqIUV6DG2g-1
-Received: by mail-qv1-f69.google.com with SMTP id 6a1803df08f44-68f740ea9a8so28478906d6.0
-        for <linux-kernel@vger.kernel.org>; Tue, 20 Feb 2024 02:25:19 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HvHzJBqL"
+Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-2d220e39907so52074921fa.1
+        for <linux-kernel@vger.kernel.org>; Tue, 20 Feb 2024 02:25:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1708424747; x=1709029547; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=djjvs/Usd09U05nC8p2eL3fflYkuMgnwDD4B9hrTwJI=;
+        b=HvHzJBqLP1oInkzpBfWLDEU3r1SZ1dx4JPqdFnc72c+joZTFZAuKGnTjXgAnkQR7XV
+         yR3Lyomi+uA5YbmFwjZXgCdM0KizaEQZ90AaFEYZqiGdZrWxkdL80oQObzSlQJzxmjV9
+         8EX86NybAmA7hbyT4oftmiH9A71CmNZav1qiGIzWcEK4qYFovI2WupCUAAZeOdDNC+2x
+         9jbpqWs+uXpcCwie9+XQgNBev3ouf7gK4/eXcbLPJ2C6jBpF4RnBBEdVzbq07b07zGqW
+         2GbN2kEuW8GRi++DzS3CW0GIQx1cU14Lvk5dut8N3n3Ny4zHRIrRnB/gTrLO9SUlenYh
+         HZeg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708424719; x=1709029519;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=vYDQrIFcrmGFEDFd/lQJSQdjifAhTBQLYF8vyTIdB5w=;
-        b=XR1KR35z+CfERt8ln4oupQbl2OBIVBlMbvtKMNO4DKaamiaD344TPtKmioHIsEANxs
-         WPPvsqRgUBX3NtRVs7w+wuqRFp+XCwue1iTYunL18Chva5sdAppPMKbWktNsMd3R1W0g
-         0+wBQWfvhzw9/pUu9U/59XyKGiTo3lWuYtYN1IAeTQCCZHh3RzjtfCNbTixjQ/WJExE3
-         D3dNt3Amg9Qh4QgGW6wiqGR+9xDB+icPWZDWK/3EfbHmBXyFfcEMNqSnpLu7TiX34OgH
-         apO2qdEBpQDzBK1xqKYBVCLpb5Peow9rVj7gX3lPj35HOozbCp5tLFcdS56XPJCTvn3s
-         cfZg==
-X-Forwarded-Encrypted: i=1; AJvYcCVAnWQ0aQ4L0tFE2hckfYr42AQaDimPmxv+wXHFWUlJJVxmF8PbPI4WzeQA0wXM64Tc5+5j0akkjrW2tL+3ujEd1y9IZG3d5EqXkyLS
-X-Gm-Message-State: AOJu0Yy+nHa55gbzBQbJlia9TQUtdWO4NwKQA16AfyEA7HeNkwi6KPSM
-	llvheKDHwN5/EYu5ylkavHqeprkFSe/z+pjsEyKGj4186nx5vHQ0jyDrxlg9/Vuh2/Sg1ttwp96
-	6R/W54cHbpFEP9NvNQ+HoYrShGCDCDEYOczo6yf4mkZVgHcJ6AQkctW0eyuMo
-X-Received: by 2002:a05:6214:5d0f:b0:68f:4df8:fef1 with SMTP id me15-20020a0562145d0f00b0068f4df8fef1mr9410792qvb.11.1708424719099;
-        Tue, 20 Feb 2024 02:25:19 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IG+3X6kRD0ZBg35AivR50jCJRUjHWkEAJBbACG4V/5NAALyyxhyTn6cv52exRIgQQkHwGN+DQ==
-X-Received: by 2002:a05:6214:5d0f:b0:68f:4df8:fef1 with SMTP id me15-20020a0562145d0f00b0068f4df8fef1mr9410777qvb.11.1708424718810;
-        Tue, 20 Feb 2024 02:25:18 -0800 (PST)
-Received: from [192.168.9.34] (net-2-34-24-75.cust.vodafonedsl.it. [2.34.24.75])
-        by smtp.gmail.com with ESMTPSA id u7-20020a05620a022700b007871a4b423fsm3244801qkm.110.2024.02.20.02.25.17
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 20 Feb 2024 02:25:18 -0800 (PST)
-Message-ID: <129e1b9d-ed1c-4dcf-86eb-7fee32bbcd7c@redhat.com>
-Date: Tue, 20 Feb 2024 11:25:14 +0100
+        d=1e100.net; s=20230601; t=1708424747; x=1709029547;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=djjvs/Usd09U05nC8p2eL3fflYkuMgnwDD4B9hrTwJI=;
+        b=qrR4MxHS8pZDFBO8vSo1X89nxCzx02Yommc5RiNqusxvnUqPLm3HA714aEojM3kRgR
+         Dmru/JHE26hG7qPjG8W6GPk6GZqLPAW8ZNshQhTq6A4wxo9aWVEdjTnasqStfBf9kn6N
+         +YcmYpbuDhGXhQSVHScxbmg4RnMiC4mWRvJwfSqHMuxRX4d4mahPDlf47w8SEMJrXrQn
+         B+HUylXX4N+501a5cCCCoO/8osy9GSei12Zho4MhcTOVCemS58GAAZdW96ElGvMTnp7R
+         I8BQplWMaJo42lOZf8y7t6//dbW1XyEJ6PSm5We0U63YS6vwo27pzax25VkEtCeNI3r5
+         LuwQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXWSlKIaXm2NGuHojstTPYj2myHZuzD4dJbaiHHlfHfATgIN4E7PqP+kwzwPRY2MwabxrwrgID3/USdqwUUNRz0lhsAEAVwTt0eheW7
+X-Gm-Message-State: AOJu0Yx2IEWZ/CEcALfT2t3gaQv2WipgHqawsVjr0x7bVr6mJ/5lzhch
+	lntd/YfHYZGIki8HfYH6uYBPkekT8PSs9hqLN8aXY1bUCf7iY8BNsYae7mm4Du4=
+X-Google-Smtp-Source: AGHT+IHx1YYP44dRDHsO0C5F7uarbJ+O3QPbQ0mRFH68guy+79lu+WX2haXFFwA4mOASYsRHEDAnjQ==
+X-Received: by 2002:a05:651c:454:b0:2d2:438a:11ec with SMTP id g20-20020a05651c045400b002d2438a11ecmr2878652ljg.2.1708424747273;
+        Tue, 20 Feb 2024 02:25:47 -0800 (PST)
+Received: from [127.0.1.1] ([178.197.222.116])
+        by smtp.gmail.com with ESMTPSA id q4-20020a5d5744000000b0033b47ee01f1sm13009716wrw.49.2024.02.20.02.25.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 20 Feb 2024 02:25:46 -0800 (PST)
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+To: =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+Cc: kernel@pengutronix.de, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ linux-kernel@vger.kernel.org, Rob Herring <robh@kernel.org>
+In-Reply-To: <cover.1708340114.git.u.kleine-koenig@pengutronix.de>
+References: <cover.1708340114.git.u.kleine-koenig@pengutronix.de>
+Subject: Re: [PATCH 0/4] w1: Convert to platform remove callback returning
+ void
+Message-Id: <170842474594.51528.5868628696022611171.b4-ty@linaro.org>
+Date: Tue, 20 Feb 2024 11:25:45 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] fpga: remove redundant checks for bridge ops
-To: Xu Yilun <yilun.xu@linux.intel.com>
-Cc: Moritz Fischer <mdf@kernel.org>, Wu Hao <hao.wu@intel.com>,
- Xu Yilun <yilun.xu@intel.com>, Tom Rix <trix@redhat.com>,
- linux-fpga@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20240201155713.82898-1-marpagan@redhat.com>
- <ZdGByar/ZmzA81cc@yilunxu-OptiPlex-7050>
-Content-Language: en-US
-From: Marco Pagani <marpagan@redhat.com>
-In-Reply-To: <ZdGByar/ZmzA81cc@yilunxu-OptiPlex-7050>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-Mailer: b4 0.12.4
 
 
-
-On 2024-02-18 05:04, Xu Yilun wrote:
-> On Thu, Feb 01, 2024 at 04:57:12PM +0100, Marco Pagani wrote:
->> Commit 0d70af3c2530 ("fpga: bridge: Use standard dev_release for class
->> driver") introduced a check in fpga_bridge_register() that prevents
->> registering a bridge without ops, making checking on every call
->> redundant.
->>
->> v2:
->> - removed ops check also in state_show()
+On Mon, 19 Feb 2024 11:59:26 +0100, Uwe Kleine-König wrote:
+> this series converts all drivers below drivers/w1 to struct
+> platform_driver::remove_new(). See commit 5c5a7680e67b ("platform:
+> Provide a remove callback that returns no value") for an extended
+> explanation and the eventual goal.
 > 
-> Don't put the history in changelog. 
-
-You're right, sorry.
-
+> All four conversations are trivial, because their .remove() callbacks
+> returned zero unconditionally.
 > 
-> I could fix it.
-> Acked-by: Xu Yilun <yilun.xu@intel.com>
-> 
+> [...]
 
-Yes, please.
+Applied, thanks!
 
->>
->> Signed-off-by: Marco Pagani <marpagan@redhat.com>
-> ---
-> v2:
-> - XXXX
-> 
-> This way the history could be discarded when apply.
-> 
->> ---
->>  drivers/fpga/fpga-bridge.c | 8 ++++----
->>  1 file changed, 4 insertions(+), 4 deletions(-)
->>
->> diff --git a/drivers/fpga/fpga-bridge.c b/drivers/fpga/fpga-bridge.c
->> index a024be2b84e2..79c473b3c7c3 100644
->> --- a/drivers/fpga/fpga-bridge.c
->> +++ b/drivers/fpga/fpga-bridge.c
+[1/4] w1: mxc_w1: Convert to platform remove callback returning void
+      https://git.kernel.org/krzk/linux-w1/c/63724bbfb1e6b5e202f9393da4b25d4e7a46f5ec
+[2/4] w1: omap_hdq: Convert to platform remove callback returning void
+      https://git.kernel.org/krzk/linux-w1/c/aa68465cf3d39996b291fb2080946c2e4d7cc100
+[3/4] w1: sgi_w1: Convert to platform remove callback returning void
+      https://git.kernel.org/krzk/linux-w1/c/d7516044f167b219dae13010e6ff790e3fc96ef5
+[4/4] w1: w1-gpio: Convert to platform remove callback returning void
+      https://git.kernel.org/krzk/linux-w1/c/d97d263132a69a0bda54efce3df04e55fa6341f7
 
-[...]
-Thanks,
-Marco
+Best regards,
+-- 
+Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
