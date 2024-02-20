@@ -1,57 +1,57 @@
-Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D05B474E3E
-	for <linux-kernel@vger.kernel.org>; Tue, 20 Feb 2024 15:00:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42D7D762E6
+	for <linux-kernel@vger.kernel.org>; Tue, 20 Feb 2024 15:00:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708441203; cv=none; b=lduAQxiFyqZI3Sr5fh/42Fb9HFtoA1PTEe8sI0Ubqy5tKfHMuA8oF2cyG+jCIqrq2Qu6I1dULDkGlFLHU81V7qIiAQ8DYcmhboyzXK9bTq4IfZD60+T8EgWR2IUN27Rz2gCzYIMXG98IQRIlGudL4ACToDvu6V2lkxXZWMl7z4M=
+	t=1708441207; cv=none; b=SrepIUyIH7S2ZgprtrWkY8b68H2QK12v/GT5h4PphVCPyKF1q3+ctwZOYct6rYDEp0SlJszeGFITNKEgiUWtIyeg2bPBISd3iO0PWYRR6EGN8k9COZv8SgEsWhfCV0eHiXRbry6QNJmCvGrqQBiw2Yy1xZuw0jNhfMtSY1adANU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708441203; c=relaxed/simple;
-	bh=RkjU3Ub4ClpkOSSOEN84+hu/XY6PSH0IWTUar1yt9s8=;
+	s=arc-20240116; t=1708441207; c=relaxed/simple;
+	bh=uqPQzpqpW1oWCehvSp8LygvJhWA+5XoquTYQhMHNHrY=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=pf1weQFFkaJYawTplTwa0nQ5wONqULK9N8YxJQd9N3KNaljZlO55qObMrW8byl5mJxjzNe752cV+khjEaXpStvZbq1SIXh2nXFRk0GwMLV/qbLZRLKMwBP93GhsHD13Iznpg3CRUTsspWdLh6mhy5pWt6VBAsiiiGY+lgGUJ/ko=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=znmVRaGS; arc=none smtp.client-ip=209.85.221.53
+	 MIME-Version; b=Q5LgWsgoHmBMdy8NK2iKcJmxQhRbLQ0aza6xm6/KiLoxqJDvyELhwgMm1EvOnhpPE/i6bbQlE9hudkdoo8ildpPs8hwNs7xFBgjOomucWrzONzhWBrMMpJP0jWtrMSvwOjuurMeGZHM35BsXc0Rfkf1Lio4cCZmO9Ip3qOdE2rc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=sazZ+4Tz; arc=none smtp.client-ip=209.85.221.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="znmVRaGS"
-Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-33ce8cbf465so2728543f8f.3
-        for <linux-kernel@vger.kernel.org>; Tue, 20 Feb 2024 07:00:00 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sazZ+4Tz"
+Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-33d73642accso122702f8f.1
+        for <linux-kernel@vger.kernel.org>; Tue, 20 Feb 2024 07:00:03 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1708441199; x=1709045999; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1708441202; x=1709046002; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=OJN21V1bop2AoQQK03hl+NSFZtBSAxp4abYemrkmzIE=;
-        b=znmVRaGSJ6JJlCDRmvJMD0FoWz4wH7Io0JTJVv1GpGtNarkmgou1jwAvuzZmOo5MCI
-         HCd8PBeBjeLbGtcijb43T+SdLsYkQw3q6BcNXCWO9rmQlHHxaUzul+kB/L+84LaS5xBl
-         gsvTH1G8EwlkLnA0Af+vFZiILbyuAw1t2WJGmOjsElm6NaJL35wEJMffdMBwYe/SZfEu
-         2n29Fq94TWG15u/qBUD/ivGqc3RW/zBAKaslQCHLVQ89+i83h2qu2TpXRjb39a3XE5bD
-         W9abNXLuCGLXTP3hJrROU//oxwC0oRBladnYYXehiP+ihZVOxVkhtnHqLSFS+pmB9zUo
-         frKA==
+        bh=oXsi9e0ZJaTq8tCuJHkWD66aNk20DvqQuX0JKE5P0uc=;
+        b=sazZ+4TzSqBtwKqibBN7eNNt+F534BEttEcpvsXx28MOgZydOmxB+TYMci/emI0oTo
+         Kiq16rELs8Il8gwahnkE+6DdTbtDjURFDltN/20c/NcsMYBStRhsQuqueHpcSgsE0PAH
+         gqINnk1sPGoOcpzyqs4iKkpteQHA/URt/pE6l+7/wwPx/LQMvZVN6Tq3+UgKb24tKxQ8
+         qJ1bPaEDAcsMqYAdoKnkW+cNyWLlcNxrbeMliO0glXULrAG/0URL8cz8p0mYmwQYEi+8
+         0CK7bd0ZqU8fvVgFYtd0kP4jw5Zd5FLjLjFMW/oCpoSUr+3JrKZ8U6TsrctxzbhKuaMD
+         3egQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708441199; x=1709045999;
+        d=1e100.net; s=20230601; t=1708441202; x=1709046002;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=OJN21V1bop2AoQQK03hl+NSFZtBSAxp4abYemrkmzIE=;
-        b=wdyvpO7QG6kIbboxvDwo5vnamWYfJ/wh6PVOzE+iRgfz4jC3mhRFeeAntqsMXFVdhk
-         XeHMv2HAIvLsjKQjDz6l+NUqfhzkSxwXdnHlzpQWiKOv2DfeEU+XvwSdhXrt6JY/8Or2
-         BDaryoosleBXaMj8KfL07cNL/GmS1DE9wZbcupcQ7QtFpJiqLjdhs+BjkxLXjVyo8AZK
-         iLkuPlmP1p5OOnbvMpnUxpvufEDB3eal/ifeh1D78SmDJwOdQN+r2EhnhQ7HIESVRzzl
-         8fe4lpAEVlps0EiuNjqW8jiu+9miU1Ftao14kb9ymu5wowj9aEejeE1/BVWnJQ5GkEPZ
-         W7tQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVtpH6fj3LHoiQ5RBgGH6L1Bs0nI1jspXYUA/9H4hw3TJ7aX/KvEOEQjUgT1GQexr8OW/t7YbjekOav8fxKESlZzyxVu5JMeoJ2SoGv
-X-Gm-Message-State: AOJu0YzzMelts8saJWayDHzaU5V6Q6p0DLVKNmSxLN/48QqEpnrJ3PCh
-	R2CcV49sjrp403e1Z/+u4Av9RysZtq6PiCj0Igrj9f2fM103Qw6osaRVB6XMgFY=
-X-Google-Smtp-Source: AGHT+IF9tJG6cYo5kMgHAyXSW6LLub4Cy4QdsaVLmULHXyA1+3Ik6b0caALozs4YQUihhJTnKqZHLg==
-X-Received: by 2002:a5d:64a7:0:b0:33d:ed4:5c86 with SMTP id m7-20020a5d64a7000000b0033d0ed45c86mr13698111wrp.63.1708441199370;
-        Tue, 20 Feb 2024 06:59:59 -0800 (PST)
+        bh=oXsi9e0ZJaTq8tCuJHkWD66aNk20DvqQuX0JKE5P0uc=;
+        b=eEg4eVpn8njkac6cnktwXpzjhxb15xsIkWZg8eUCZYTYs+VNP4gXJZxVqHEVdClA/V
+         o378J+Xf1Dp5QxcRqiK5JEF7qfbfGc6vAFdFzo/WaFcfgJmmRI4CiQRpeD6JYmBZ493k
+         7MDabpdsHygRcudrERaMkF6XbRFF336AItUlNakpVgB/TKef7l8Fnd2uCyyIzkz/rNMI
+         wk6wroJ6s9ojjdZaOEZ6zqQA2dnOBEnocTl2TnvLDlGoYV5MVL9hYc3kXgk2eJVXTLc7
+         lmb58gvlvsQlixHQMGMKS1rCkdEiohErlZDErJtDhXewUCu8/secq2UJ6YRlkHX9pqky
+         86HA==
+X-Forwarded-Encrypted: i=1; AJvYcCXx56gctN24sunoTrDtcoXsm4CZUMEIAs6Ga96/YJPu1HYgnBfR6JHh/mOJFofcyPO5DOWp66UXuT3Pd/lIUMo02cXJb0JW1rjPXWhN
+X-Gm-Message-State: AOJu0YwdbooyLZ35REaGKjCc3wgyYMAyBLXqupzjr6deC/GxNKzFilH/
+	Lk1CrAIwTor6fptGiZwp8enYW6G7wiqs3fa2cyOiLwGX4w6IsXI1GICC2iGtbf0=
+X-Google-Smtp-Source: AGHT+IEGJuS9S6rDAwOVJ71L9m5a65+6iLz6u9I0qEZvXUIWtxH6o/5l2zVbIcoozPQzIagXT47Q0A==
+X-Received: by 2002:a05:6000:1a43:b0:33d:32ff:9629 with SMTP id t3-20020a0560001a4300b0033d32ff9629mr6355629wry.23.1708441202610;
+        Tue, 20 Feb 2024 07:00:02 -0800 (PST)
 Received: from vingu-book.. ([2a01:e0a:f:6020:8deb:bfb9:b028:6d5c])
-        by smtp.gmail.com with ESMTPSA id v4-20020a5d6784000000b0033d39626c27sm9304405wru.76.2024.02.20.06.59.57
+        by smtp.gmail.com with ESMTPSA id v4-20020a5d6784000000b0033d39626c27sm9304405wru.76.2024.02.20.07.00.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 20 Feb 2024 06:59:58 -0800 (PST)
+        Tue, 20 Feb 2024 07:00:01 -0800 (PST)
 From: Vincent Guittot <vincent.guittot@linaro.org>
 To: linux@armlinux.org.uk,
 	catalin.marinas@arm.com,
@@ -84,10 +84,11 @@ To: linux@armlinux.org.uk,
 	linux-arm-msm@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org,
 	linux-doc@vger.kernel.org
-Cc: Vincent Guittot <vincent.guittot@linaro.org>
-Subject: [PATCH v5 3/5] thermal/cpufreq: Remove arch_update_thermal_pressure()
-Date: Tue, 20 Feb 2024 15:59:45 +0100
-Message-Id: <20240220145947.1107937-4-vincent.guittot@linaro.org>
+Cc: Vincent Guittot <vincent.guittot@linaro.org>,
+	Qais Yousef <qyousef@layalina.io>
+Subject: [PATCH v5 5/5] sched/pelt: Remove shift of thermal clock
+Date: Tue, 20 Feb 2024 15:59:47 +0100
+Message-Id: <20240220145947.1107937-6-vincent.guittot@linaro.org>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240220145947.1107937-1-vincent.guittot@linaro.org>
 References: <20240220145947.1107937-1-vincent.guittot@linaro.org>
@@ -99,42 +100,106 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-arch_update_thermal_pressure() aims to update fast changing signal which
-should be averaged using PELT filtering before being provided to the
-scheduler which can't make smart use of fast changing signal.
-cpufreq now provides the maximum freq_qos pressure on the capacity to the
-scheduler, which includes cpufreq cooling device. Remove the call to
-arch_update_thermal_pressure() in cpufreq cooling device as this is
-handled by cpufreq_get_pressure().
+The optional shift of the clock used by thermal/hw load avg has been
+introduced to handle case where the signal was not always a high frequency
+hw signal. Now that cpufreq provides a signal for firmware and
+SW pressure, we can remove this exception and always keep this PELT signal
+aligned with other signals.
+Mark sysctl_sched_migration_cost boot parameter as deprecated
 
 Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
-Reviewed-by: Lukasz Luba <lukasz.luba@arm.com>
-Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
+Reviewed-by: Qais Yousef <qyousef@layalina.io>
 ---
- drivers/thermal/cpufreq_cooling.c | 3 ---
- 1 file changed, 3 deletions(-)
+ .../admin-guide/kernel-parameters.txt          |  1 +
+ kernel/sched/core.c                            |  2 +-
+ kernel/sched/fair.c                            | 10 ++--------
+ kernel/sched/sched.h                           | 18 ------------------
+ 4 files changed, 4 insertions(+), 27 deletions(-)
 
-diff --git a/drivers/thermal/cpufreq_cooling.c b/drivers/thermal/cpufreq_cooling.c
-index e2cc7bd30862..e77d3b44903e 100644
---- a/drivers/thermal/cpufreq_cooling.c
-+++ b/drivers/thermal/cpufreq_cooling.c
-@@ -448,7 +448,6 @@ static int cpufreq_set_cur_state(struct thermal_cooling_device *cdev,
- 				 unsigned long state)
+diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+index 31b3a25680d0..4dc54bd1bbf2 100644
+--- a/Documentation/admin-guide/kernel-parameters.txt
++++ b/Documentation/admin-guide/kernel-parameters.txt
+@@ -5749,6 +5749,7 @@
+ 			but is useful for debugging and performance tuning.
+ 
+ 	sched_thermal_decay_shift=
++			[Deprecated]
+ 			[KNL, SMP] Set a decay shift for scheduler thermal
+ 			pressure signal. Thermal pressure signal follows the
+ 			default decay period of other scheduler pelt
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index 8bfe5ce4ccd3..b740dcdc86a0 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -5669,7 +5669,7 @@ void scheduler_tick(void)
+ 
+ 	update_rq_clock(rq);
+ 	hw_pressure = arch_scale_hw_pressure(cpu_of(rq));
+-	update_hw_load_avg(rq_clock_hw(rq), rq, hw_pressure);
++	update_hw_load_avg(rq_clock_task(rq), rq, hw_pressure);
+ 	curr->sched_class->task_tick(rq, curr, 0);
+ 	if (sched_feat(LATENCY_WARN))
+ 		resched_latency = cpu_resched_latency(rq);
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index 8961d307f232..f7c2bf0eba65 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -78,15 +78,9 @@ static unsigned int normalized_sysctl_sched_base_slice	= 750000ULL;
+ 
+ const_debug unsigned int sysctl_sched_migration_cost	= 500000UL;
+ 
+-int sched_hw_decay_shift;
+ static int __init setup_sched_thermal_decay_shift(char *str)
  {
- 	struct cpufreq_cooling_device *cpufreq_cdev = cdev->devdata;
--	struct cpumask *cpus;
- 	unsigned int frequency;
- 	int ret;
+-	int _shift = 0;
+-
+-	if (kstrtoint(str, 0, &_shift))
+-		pr_warn("Unable to set scheduler thermal pressure decay shift parameter\n");
+-
+-	sched_hw_decay_shift = clamp(_shift, 0, 10);
++	pr_warn("Ignoring the deprecated sched_thermal_decay_shift= option\n");
+ 	return 1;
+ }
+ __setup("sched_thermal_decay_shift=", setup_sched_thermal_decay_shift);
+@@ -9296,7 +9290,7 @@ static bool __update_blocked_others(struct rq *rq, bool *done)
  
-@@ -465,8 +464,6 @@ static int cpufreq_set_cur_state(struct thermal_cooling_device *cdev,
- 	ret = freq_qos_update_request(&cpufreq_cdev->qos_req, frequency);
- 	if (ret >= 0) {
- 		cpufreq_cdev->cpufreq_state = state;
--		cpus = cpufreq_cdev->policy->related_cpus;
--		arch_update_thermal_pressure(cpus, frequency);
- 		ret = 0;
- 	}
+ 	decayed = update_rt_rq_load_avg(now, rq, curr_class == &rt_sched_class) |
+ 		  update_dl_rq_load_avg(now, rq, curr_class == &dl_sched_class) |
+-		  update_hw_load_avg(rq_clock_hw(rq), rq, hw_pressure) |
++		  update_hw_load_avg(now, rq, hw_pressure) |
+ 		  update_irq_load_avg(rq, 0);
  
+ 	if (others_have_blocked(rq))
+diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
+index 1f8799788cea..638c61efe19d 100644
+--- a/kernel/sched/sched.h
++++ b/kernel/sched/sched.h
+@@ -1531,24 +1531,6 @@ static inline u64 rq_clock_task(struct rq *rq)
+ 	return rq->clock_task;
+ }
+ 
+-/**
+- * By default the decay is the default pelt decay period.
+- * The decay shift can change the decay period in
+- * multiples of 32.
+- *  Decay shift		Decay period(ms)
+- *	0			32
+- *	1			64
+- *	2			128
+- *	3			256
+- *	4			512
+- */
+-extern int sched_hw_decay_shift;
+-
+-static inline u64 rq_clock_hw(struct rq *rq)
+-{
+-	return rq_clock_task(rq) >> sched_hw_decay_shift;
+-}
+-
+ static inline void rq_clock_skip_update(struct rq *rq)
+ {
+ 	lockdep_assert_rq_held(rq);
 -- 
 2.34.1
 
