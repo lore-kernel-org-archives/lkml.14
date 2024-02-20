@@ -1,260 +1,193 @@
-Received: from NAM02-BN1-obe.outbound.protection.outlook.com (mail-bn1nam02on2049.outbound.protection.outlook.com [40.107.212.49])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D425514A4E4;
-	Tue, 20 Feb 2024 20:30:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.212.49
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708461003; cv=fail; b=Jy4gyAqnAe4jUYaN/oiihqUHXZypLSpdUXyhzW+HxD2gs1wGnuCeKHaUurvym7PsN3CApSU+oHsEM3l7su3JUd8FVXwGlJ5yY3UZ3nntuuYDE89mYR2GzCZTwqhZVcP4Lc6AqicLN7koePTjZjR/vBEu/xrlx+csvZYo+vbtoOk=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708461003; c=relaxed/simple;
-	bh=7NXxyjhpzdF5kD46hFaXaQ7ocothOqZjvD45hQGV7cI=;
-	h=References:From:To:Cc:Subject:Date:In-reply-to:Message-ID:
-	 Content-Type:MIME-Version; b=FQ7+ns40ZBNDHKVMJ5rZyXlqQemPKvuediD+CwR9qz2Iilb2tw8F2FH5dvoIpx6Yjnva7Uc/A8JvtfvS+ZJrbHT49r1mS6bxVusrT3PicuTLwMm5AlvC9n1/rFWKNkTFqRJ5IC++gbrKvGwMw/O7A2EdccEAyIXZe21eJiPIpdY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=dzQNd86z; arc=fail smtp.client-ip=40.107.212.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A35FC1FDB
+	for <linux-kernel@vger.kernel.org>; Tue, 20 Feb 2024 20:33:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1708461188; cv=none; b=JAqkh4FjMh4PpgLtYHJdSpUo31fKZxKa1175vJ/Mu6IsbWMXdczRyc1NW3PreaCNRrwIh4WdDgwEWiUr2lp+vpr+3RI4Ft9glVUyh8Tpm/LC1ffvBbDEXVpW/YvQPt9eoNa+XoNCQMUr4h1BPT4M82pelSZccl4Zg/nVdK4a2dA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1708461188; c=relaxed/simple;
+	bh=y24+8HryhdCnfgDslVi16sdwdT9XrKwEew71ZsPTtTo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=os61nlqwbF55bPTTRvZ4tzGJPZJTsBF+XqwUhmUVTN71UTNbOJHmyJVHA1/s7IBVIZr0qUiHNUz+JlSyHNVmHyr0NrBZSTg0e1NWTolAtGjZGvejNa/tU89m6YXrBfkPQIWJ5o0WtsaQUuahymMiKGr9IcHyIPV5xoUK0swaG+U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GlMXRWvQ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="dzQNd86z"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=BVFJ5SgisfuVsRyp/EJixJJ2Ho4P3p3x1ZMeDB8/R0Q99ec09qR/lI1ltdtaP8QwHLp5Z4Jzs1FiYpRN4HYZw2q/U4SiYkl1V04EW8EFoNwnlHJVWHoH8mKZplHLFgHl1t63GHvxMnu8DU6KSeEkh+yfU420pH/1M+kUBBYYJDdJ+OwzADaaFiDSovhcSs0KkFLxe0Wylv8GU71Bs/KL6bHuR7LeRaUzqc6MIsLmKM7NhXeYEle4so07514NweI+ESjqcvKm5Ul9cSuPCLDLMBG069pqX6zs0hpMiCYFitJRHKH7FuBP0SPTh/sa89ZAS5+mOos4wdSYjl/P3wxe4A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=SUCd6k+0G9SvEF4gIlNosCqVOEGAcbN+yNGQNGZ1ze8=;
- b=XmGcVeDHXOiGbZEvZKqU9Q7o3lJhVCP7ayLbW1WAJfkLQOY+Jou0JHyqNF2fMlQQDJUi9Q+LFUqiZqk0HY9goY7sz7Fm3Qd4XA00Z6gL2kNiFMoP/svzP3xCHxBiz2kY2Ie4VP+q9K03GDVKHp1Bpra1T3bSGLy5s2jerAwRpgBumPgTUEqX8MoosXXAUp6bDEzYGlGgM+wHevSNUJxjY243QAPRPyFu9c2m13+k7RiX1l5UiFCdGAXzLqGvNLlV2ZDsWRwSzsvaiCgPVcNjpkLyChL2axZET2yQv3RIJ3HgFTCnoZ3YHB46C0I1/HaBhfseaWfUOohNHeiLHFDIIA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=SUCd6k+0G9SvEF4gIlNosCqVOEGAcbN+yNGQNGZ1ze8=;
- b=dzQNd86ziFGiXB+Jzh6CBzF5HI70WhtV52IlYMipkCGYnCJLWMwXW2G1NNEWq1Akl80WzS04z5SiX2G+64V75Gst+qXtKrlEJkO7Yis5UmX8vLjF0b2BKtqVeCRUH32Vs97sYPPjMAApwt0fLNbTw70TksUZZi+EC0k5g2ouTqidSDarf5FRGPcIIJMrSdCBbMZCcowktJFuSUPirowg0xJ/I1EN1pOjcrAkrcF0B/rQ1HwKL2ghmFZ5x/LAM8aRai3Uk6J0+dggyJZZXmVUvqoNtZ7jxNhOR8+fHsGWpE6baWnDhn5N2ekgjkptg6yXQ4YgovHsUbFbKM0j6Vmu5A==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from BYAPR12MB2743.namprd12.prod.outlook.com (2603:10b6:a03:61::28)
- by DS7PR12MB8418.namprd12.prod.outlook.com (2603:10b6:8:e9::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7316.21; Tue, 20 Feb
- 2024 20:29:54 +0000
-Received: from BYAPR12MB2743.namprd12.prod.outlook.com
- ([fe80::e127:7911:8149:184c]) by BYAPR12MB2743.namprd12.prod.outlook.com
- ([fe80::e127:7911:8149:184c%3]) with mapi id 15.20.7316.018; Tue, 20 Feb 2024
- 20:29:54 +0000
-References: <20240216-feature_ptp_netnext-v8-0-510f42f444fb@bootlin.com>
- <20240216-feature_ptp_netnext-v8-4-510f42f444fb@bootlin.com>
- <87jzn4gtlv.fsf@nvidia.com> <b8926fe5-81ef-40ea-9e87-5e84b368b745@lunn.ch>
- <87o7cebx9z.fsf@nvidia.com> <9e2ce7a0-e938-4f5f-aae9-cfee3a066628@lunn.ch>
-User-agent: mu4e 1.10.8; emacs 28.2
-From: Rahul Rameshbabu <rrameshbabu@nvidia.com>
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: Kory Maincent <kory.maincent@bootlin.com>, Florian Fainelli
- <florian.fainelli@broadcom.com>, Broadcom internal kernel review list
- <bcm-kernel-feedback-list@broadcom.com>, Heiner Kallweit
- <hkallweit1@gmail.com>, Russell King <linux@armlinux.org.uk>, "David S.
- Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub
- Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Richard
- Cochran <richardcochran@gmail.com>, Radu Pirea
- <radu-nicolae.pirea@oss.nxp.com>, Jay Vosburgh <j.vosburgh@gmail.com>,
- Andy Gospodarek <andy@greyhouse.net>, Nicolas Ferre
- <nicolas.ferre@microchip.com>, Claudiu Beznea <claudiu.beznea@tuxon.dev>,
- Willem de Bruijn <willemdebruijn.kernel@gmail.com>, Jonathan Corbet
- <corbet@lwn.net>, Horatiu Vultur <horatiu.vultur@microchip.com>,
- UNGLinuxDriver@microchip.com, Simon Horman <horms@kernel.org>, Vladimir
- Oltean <vladimir.oltean@nxp.com>, Thomas Petazzoni
- <thomas.petazzoni@bootlin.com>, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, Maxime Chevallier
- <maxime.chevallier@bootlin.com>
-Subject: Re: [PATCH RFC net-next v8 04/13] net: Change the API of PHY
- default timestamp to MAC
-Date: Tue, 20 Feb 2024 12:17:52 -0800
-In-reply-to: <9e2ce7a0-e938-4f5f-aae9-cfee3a066628@lunn.ch>
-Message-ID: <87zfvuange.fsf@nvidia.com>
-Content-Type: text/plain
-X-ClientProxiedBy: BY3PR05CA0030.namprd05.prod.outlook.com
- (2603:10b6:a03:254::35) To BYAPR12MB2743.namprd12.prod.outlook.com
- (2603:10b6:a03:61::28)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GlMXRWvQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1CD92C433F1;
+	Tue, 20 Feb 2024 20:33:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1708461188;
+	bh=y24+8HryhdCnfgDslVi16sdwdT9XrKwEew71ZsPTtTo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=GlMXRWvQRj946i/YjgBAJYQOjssUYZfeurFaHCZ/uvJjzum7JJBhXh3o7xZW//z5M
+	 hyMXtM0+o/F3ObMtQuwL7A00kv0ZCCfZZVZ7SAQqupwd2OSzLCv7VqUv+447mAUYNr
+	 z61NZH5ChdwzqQhxM4E+qa4JL82C+fDrhFlbMwRPI0DlPdB909bSCd4q3eP7IdjWUq
+	 lhNKA2q3VqsIQFelDi+vP0rE9I9iKk5E2dwDKyldOgS5mRYOHjfhjJQCzYTuNBYsB4
+	 /T3mGWhx3dOUj6/CIHTxEDGs/IJM7fxidFrBZCM2ELjD8q4ZsnTYIqresFZDWHqf1z
+	 kxP5aQFXwwq6w==
+Date: Tue, 20 Feb 2024 12:33:06 -0800
+From: Jaegeuk Kim <jaegeuk@kernel.org>
+To: Chao Yu <chao@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net
+Subject: Re: [f2fs-dev] [PATCH 2/3 v2] f2fs: use BLKS_PER_SEG, BLKS_PER_SEC,
+ and SEGS_PER_SEC
+Message-ID: <ZdUMgrzpVHob6KvQ@google.com>
+References: <20240207005105.3744811-1-jaegeuk@kernel.org>
+ <20240207005105.3744811-2-jaegeuk@kernel.org>
+ <ZcpfF9UJz8bNW6ge@google.com>
+ <bded9fde-9541-465d-86f8-292249226cc9@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BYAPR12MB2743:EE_|DS7PR12MB8418:EE_
-X-MS-Office365-Filtering-Correlation-Id: 2884f26e-99e5-438c-e3bd-08dc3252b278
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	51kUlMgy21Z+YEfc1lmwcrFizJVR8OwJZxevDw1OHk3HuEtSOjuUjLhEtth+w4Z9jokBo2qkkTMuA0+b/uQFHyqXX0hL/Wd1yDUPfQvPpCu0JmOwWtZCLFlrG/OnYv366TXItaGavbAlm6GRPRhoXHWPoXCe8/4HBiijrgPJP63iJ92hq0lkD7leCEZDVAwW5Ux67wAASjaP6zcjQS7qktzWeklqzwOKbaZLZFI3rq9pl/0UV1zT5/D83odIhU/s9bU9EYOLVERKUoXSYyjTO2fO/QK+zB9xmlXthzaEiG5JaYhyRCtrlx8/PlNf6z6mBxdYlQRKmBCpAhDDrFWUlfrnMwU0e4ZEuIoip+txDepjCO1IhuR34tCr1Qk3qDi98tKUQ8qX43ZNuek4J8LzEq6roqoP6CoMgmkkzsdKrR5wB7wTtWBA67y2amsroa9XtqhQaNpmSFM/l+3Dlh9Z2jaEbQr9YoGsXLzpzO+pi2ZusNuIW/9QfeFgqK/xqGehy90uUVVg6Wvp8ltoMvvbktFb/cCkD4IE4UFKY9xXBdmhXSJbfjWp53Oz2f9u9cJYx+1uFfxJt3pQXAYLlkEr/g==
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR12MB2743.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?uUZBAdh5soer+JkXvNQP8lSDB1sVBqd3mpOkcVniVdNEoq4YFAxWFu1VRgyd?=
- =?us-ascii?Q?Xmy/aPT4sY1LGhhDyweJiHfJ9EYRsdUltLl0U3t1lcZZhqNg6hdrAUGaIu4C?=
- =?us-ascii?Q?+EzdxuM3EWf86K2dtTuIrRveEvmiRGZJjM050jUY1NNvCheAwDr5sf+N0G0z?=
- =?us-ascii?Q?Brwl83RMMjsYueqGIV2tkV8mLmHd0H5qzP3r9bf3CRZa3GDjV1XzFCq2J2GO?=
- =?us-ascii?Q?2Qo2M041PiotPUhgV/+KQ2r0dn9dTVXloucVdp95fMC6c8+/VAyi6JspRRno?=
- =?us-ascii?Q?TK+0E11d1ebP6xJCSr1ovkqo2iYQAsRC4Rs8seB0Arf+3+BZL8pBSBGQosQu?=
- =?us-ascii?Q?zqiTXnMWsmgElvdeO9scvyDAFNokap5/E056ySasWOiBvqQuPwBbynLMEHYy?=
- =?us-ascii?Q?CF3cTTSCNAyb2CRfH5p1ejs4oC8x4Qtbuiq2M6O3aG+lDGMEO7gG2dbd5Edb?=
- =?us-ascii?Q?D5UOi3dcEpHYArbtH+O5m5/XupjkGMyVpt4F3VYRvw7PAxgVPCDulwKCkO7v?=
- =?us-ascii?Q?6qQqRJ1dN1hBoaHqBQ1ImnMxw8JLsXCMSrnpnqlLNon+Tg/RoSok4H1Wj8ev?=
- =?us-ascii?Q?4XRIJb9I9RxNNA/FrmVVm31LB+xyuiqv8o2JtJqYEitbWtse8j3Pi+gdlIlt?=
- =?us-ascii?Q?UHZ6D4Cii0L/N7AtSGbAwZtSS0VeIeZY23GJh8sQPz+IByQkgEXEzkgt4q/P?=
- =?us-ascii?Q?QYkYKgZ++d3I1oyP7Z4CQ4Adogp5z9l5FTq+dLgV5m2hbfnc8i4ejWhrKI3L?=
- =?us-ascii?Q?GHa+I27pXT1JOMcUgMDYpHoDmKAKq2K5kCveT/EfLHPpAIcFKbN6scHI9C2y?=
- =?us-ascii?Q?clww9odRTzdOqIVyn+vANL1RpOitqu1VIrAiDrCV+3ZGBmRai3hJ0MLIhUi2?=
- =?us-ascii?Q?VSF8ZK8lv7IiB2FSIx3Ro+Sg5jaJCJTebYiAphhAIZV/d4GsQKyEKJtfDHwi?=
- =?us-ascii?Q?UZzqfBow/Qx6/LOMirPYlDPd/zUoicdEC10bW4Spd8FCR+HnUq/QjqlXy9wg?=
- =?us-ascii?Q?A3NGFViBzDUfJ3RBavytFVArKtTRzmAV4FI9QSqn+gsR3aHagSJ0Mlwx0fCw?=
- =?us-ascii?Q?mMfqjzERFimi9bNUbwPaaPpOs4YhWJ/KN/P2HRwJE1SI0blbDAgAdA0RXbin?=
- =?us-ascii?Q?f6d2RxDealwzvOZLx8vYwJYk2r8lpkbYqLiuVjA8Hd4hh3b5UDZEj8BRe0Cj?=
- =?us-ascii?Q?GmXOTu+PeLBOxAAlqOZwu8q8HTSBqx/ysfPwoDx+xnBy/cTixmSCeAFQlcg5?=
- =?us-ascii?Q?KnSIiPOUU0J90+GpWZW84J9whaYNSGTIRc7L7dS8BDuiOexcWOkJ6A/lm/kq?=
- =?us-ascii?Q?SGD/4LMVRZG1MA+b2Hn//etPNKipJq+ckOLCRAbTYeAKzZGreUM0wlSMh91S?=
- =?us-ascii?Q?qwjbcRx43yF8KXWZwkbvjiz8LgZ+HqHBATyqgLZWT2bfqJ0Set9N85jMJrqZ?=
- =?us-ascii?Q?xAxVWNCDd+n/H0HYH8Kz6ZeJDtKCU8n3uW+GiPT5EGFTHfjM5MY7FzjsLuN8?=
- =?us-ascii?Q?yvihNFyWkcUopl31cEldVBmQXRZgAPgZQTEYj7PlGfswKHANU7Bf/azPen5K?=
- =?us-ascii?Q?1L85CywRjJfPCclJ2qxzvl5ovAywDymJMudDhO11cy3vxP4tF6TOn8ZN38fg?=
- =?us-ascii?Q?GQ=3D=3D?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2884f26e-99e5-438c-e3bd-08dc3252b278
-X-MS-Exchange-CrossTenant-AuthSource: BYAPR12MB2743.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Feb 2024 20:29:54.3837
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: GiM2trBtu7XG6UTlrzlrw6g39fJTtt+T0iz/1DgWNrXJhEcHPiPsTfPh7tUNS4Kfbq08uimHUVEO4AAHQXOY+w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR12MB8418
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <bded9fde-9541-465d-86f8-292249226cc9@kernel.org>
 
+Hi Chao,
 
-On Sat, 17 Feb, 2024 23:10:07 +0100 Andrew Lunn <andrew@lunn.ch> wrote:
->> > Could you give some examples? It seems odd to me, the application
->> > wants a less accurate timestamp?
->> >
->> > Is it more about overheads? A MAC timestamp might be less costly than
->> > a PHY timestamp?
->> 
->> It's a combination of both though I think primarily about line rate.
->> This point is somewhat carried over from the previous discussions on
->> this patch series in the last revision.
->
-> Sorry, i've not been keeping up with the discussion. That could also
-> mean whatever i say below is total nonsense!
->
+I applied more tho, some are new and some are missing in your patch.
+Please see v2.
 
-No worries. I could also be off here. I am mostly using mlx5 for my
-perspective here and I think Kory and Russell sent some feedback that
-likely confirms that this patch makes sense. Will reply to that in a
-bit.
-
->> I assume the device in question
->> here cannot timestamp at the PHY at a high rate.
->> 
->>   https://lore.kernel.org/netdev/20231120093723.4d88fb2a@kernel.org/
->> 
->> >
->> > Or is the application not actually doing PTP, it does not care about
->> > the time of the packet on the wire, but it is more about media access
->> > control? Maybe the applications you are talking about are misusing the
->> > PTP API for something its not intended?
->> 
->> So hardware timestamping is not a PTP specific API or application right?
->
-> Well, we have drivers/ptp. The IOCTL numbers are all PTP_XXXX. It
-> seems like the subsystem started life in order to support PTP. It is
-> not unusual for a subsystem to gain extra capabilities, and maybe PTP
-> timestamps can be used in a more general way than the PTP
-> protocol.
->
-
-This is a great point to bring up. I think the PTP related ioctls can be
-confusing. Rather than calling them PTP ioctls, I think it would be best
-to call them PHC ioctls, where PHC stands for PTP hardware clock. These
-ioctls are more about controlling the local PTP clock devices rather
-than handling timestamps sent/received via the PTP protocol.
-
-https://docs.kernel.org/driver-api/ptp.html
-
-We can look at the ptp4l source code and see that PTP does indeed depend
-on the more generic PTP hardware timestamping socket options.
-
-  https://github.com/richardcochran/linuxptp/blob/f271257b799d390d9ec09d5c7dafb7f10a3bd99b/sk.c#L559
-
-Again, I do know the ioctls can be confusing. The ioctls tend to be more
-about adjusting the PHCs rather than controlling the timestamping flow
-if that makes sense.
-
->> It's purely a socket option that is not tied to PTP (unless I am missing
->> something here).
->> 
->>   https://docs.kernel.org/networking/timestamping.html#timestamp-generation
->> 
->> So you could use this information for other applications like congestion
->> control where you do not want to limit the line rate using the PHY
->> timestamping mechanism.
->
-> I think the key API point here is, you need to separate PTP stamping
-> from other sorts of stamping. PTP stamping generally works better at
-> the lowest point. So PTP stamping could be PHY stamping. If the PHY
-> does not support PTP, or its implementation is poor, PTP stamping can
-> be performed at the MAC. There are plenty of MACs which support that.
-> So we need an API to configure where PTP stamping is performed.
->
-
-I actually agree with this to a degree. However, I do think it is
-sensible for applications that understand their properties to explicitly
-select the timestamping layer in the application initialization as well.
-I think because of the impact on line rate, the MAC/DMA layer makes
-sense as the default.
-
-> I expect the socket option is more generic. It is more about, give me
-> a time stamp at a specific point in the stack. It is probably not
-> being used by PTP, it could be used for flow control, etc. We probably
-> need an API to configure that SOF_TIMESTAMPING_RX_HARDWARE actually
-> means. It could be the PHY time stamp, maybe the MAC timestamp. Same
-> for SOF_TIMESTAMPING_TX_HARDWARE, it could be the MAC, could be the
-> PHY. But whatever they mean, i expect they are separate PTP.
->
-
-As I linked above, the socket options are being utilized by the linuxptp
-userspace stack.
-
->> In mlx5, we only steering PTP traffic to our PHY timestamping mechanism
->> through a traffic matching logic.
->> 
->>   https://git.kernel.org/pub/scm/linux/kernel/git/netdev/net-next.git/tree/drivers/net/ethernet/mellanox/mlx5/core/en/ptp.h?id=a6e0cb150c514efba4aaba4069927de43d80bb59#n71
->> 
->> This is because we do not want to PHY/port timestamp timing related
->> applications such as congestion control. I think it makes sense for
->> specialized timestamping applications to instead use the ethtool ioctl
->> to reconfigure using the PHY timestamps if the device is capable of PHY
->> timestamping. (So have the change be in userspace application tools like
->> linuxptp where precise but low <relative> rate timestamp information is
->> ideal).
->
-> I would expect linuxptp is only interested in the PTP timestamp. It
-> might be interested where the stamp is coming from, PHY or MAC, but it
-> probably does not care too much, it just assumes the time stamp is
-> good for PTP. But i would expect linuxptp has no interest in what the
-> generic socket options are doing.
-
-For timestamping events and being able to generate and receive them for
-the userspace perspective, there is no special interface just for ptp.
-That said, maybe it makes sense versus having the userspace stack just
-make use of the generic timestamping options. I am slightly against
-doing something special for the ptp implementation since I do think it
-is a typically timestamping application with different configuration
-parameters (like which timestamping layer to select).
-
---
 Thanks,
 
-Rahul Rameshbabu
+On 02/20, Chao Yu wrote:
+> On 2024/2/13 2:10, Jaegeuk Kim wrote:
+> 
+> How do you think of appending below diff which cleans up missing
+> parts?
+> 
+> ---
+>  fs/f2fs/f2fs.h    |  2 +-
+>  fs/f2fs/file.c    |  4 ++--
+>  fs/f2fs/segment.c |  4 ++--
+>  fs/f2fs/segment.h | 22 +++++++++++-----------
+>  fs/f2fs/super.c   |  2 +-
+>  5 files changed, 17 insertions(+), 17 deletions(-)
+> 
+> diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+> index c4488e12c56e..fc9328655de8 100644
+> --- a/fs/f2fs/f2fs.h
+> +++ b/fs/f2fs/f2fs.h
+> @@ -3491,7 +3491,7 @@ static inline __le32 *get_dnode_addr(struct inode *inode,
+>  		sizeof((f2fs_inode)->field))			\
+>  		<= (F2FS_OLD_ATTRIBUTE_SIZE + (extra_isize)))	\
+> 
+> -#define __is_large_section(sbi)		((sbi)->segs_per_sec > 1)
+> +#define __is_large_section(sbi)		(SEGS_PER_SEC(sbi) > 1)
+> 
+>  #define __is_meta_io(fio) (PAGE_TYPE_OF_BIO((fio)->type) == META)
+> 
+> diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
+> index 20a26bb5b889..ef43d33278ea 100644
+> --- a/fs/f2fs/file.c
+> +++ b/fs/f2fs/file.c
+> @@ -2997,8 +2997,8 @@ static int f2fs_ioc_flush_device(struct file *filp, unsigned long arg)
+> 
+>  	if (!f2fs_is_multi_device(sbi) || sbi->s_ndevs - 1 <= range.dev_num ||
+>  			__is_large_section(sbi)) {
+> -		f2fs_warn(sbi, "Can't flush %u in %d for segs_per_sec %u != 1",
+> -			  range.dev_num, sbi->s_ndevs, sbi->segs_per_sec);
+> +		f2fs_warn(sbi, "Can't flush %u in %d for SEGS_PER_SEC %u != 1",
+> +			  range.dev_num, sbi->s_ndevs, SEGS_PER_SEC(sbi));
+>  		return -EINVAL;
+>  	}
+> 
+> diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
+> index 97ac733ceffe..b59e29608ae7 100644
+> --- a/fs/f2fs/segment.c
+> +++ b/fs/f2fs/segment.c
+> @@ -2750,7 +2750,7 @@ static unsigned int __get_next_segno(struct f2fs_sb_info *sbi, int type)
+>  	if (f2fs_need_rand_seg(sbi))
+>  		return get_random_u32_below(MAIN_SECS(sbi) * SEGS_PER_SEC(sbi));
+> 
+> -	/* if segs_per_sec is large than 1, we need to keep original policy. */
+> +	/* if SEGS_PER_SEC() is large than 1, we need to keep original policy. */
+>  	if (__is_large_section(sbi))
+>  		return curseg->segno;
+> 
+> @@ -3498,7 +3498,7 @@ int f2fs_allocate_data_block(struct f2fs_sb_info *sbi, struct page *page,
+>  	 */
+>  	if (segment_full) {
+>  		if (type == CURSEG_COLD_DATA_PINNED &&
+> -		    !((curseg->segno + 1) % sbi->segs_per_sec))
+> +		    !((curseg->segno + 1) % SEGS_PER_SEC(sbi)))
+>  			goto skip_new_segment;
+> 
+>  		if (from_gc) {
+> diff --git a/fs/f2fs/segment.h b/fs/f2fs/segment.h
+> index cb982af765c3..63f278210654 100644
+> --- a/fs/f2fs/segment.h
+> +++ b/fs/f2fs/segment.h
+> @@ -48,21 +48,21 @@ static inline void sanity_check_seg_type(struct f2fs_sb_info *sbi,
+> 
+>  #define IS_CURSEC(sbi, secno)						\
+>  	(((secno) == CURSEG_I(sbi, CURSEG_HOT_DATA)->segno /		\
+> -	  (sbi)->segs_per_sec) ||	\
+> +	  SEGS_PER_SEC(sbi)) ||	\
+>  	 ((secno) == CURSEG_I(sbi, CURSEG_WARM_DATA)->segno /		\
+> -	  (sbi)->segs_per_sec) ||	\
+> +	  SEGS_PER_SEC(sbi)) ||	\
+>  	 ((secno) == CURSEG_I(sbi, CURSEG_COLD_DATA)->segno /		\
+> -	  (sbi)->segs_per_sec) ||	\
+> +	  SEGS_PER_SEC(sbi)) ||	\
+>  	 ((secno) == CURSEG_I(sbi, CURSEG_HOT_NODE)->segno /		\
+> -	  (sbi)->segs_per_sec) ||	\
+> +	  SEGS_PER_SEC(sbi)) ||	\
+>  	 ((secno) == CURSEG_I(sbi, CURSEG_WARM_NODE)->segno /		\
+> -	  (sbi)->segs_per_sec) ||	\
+> +	  SEGS_PER_SEC(sbi)) ||	\
+>  	 ((secno) == CURSEG_I(sbi, CURSEG_COLD_NODE)->segno /		\
+> -	  (sbi)->segs_per_sec) ||	\
+> +	  SEGS_PER_SEC(sbi)) ||	\
+>  	 ((secno) == CURSEG_I(sbi, CURSEG_COLD_DATA_PINNED)->segno /	\
+> -	  (sbi)->segs_per_sec) ||	\
+> +	  SEGS_PER_SEC(sbi)) ||	\
+>  	 ((secno) == CURSEG_I(sbi, CURSEG_ALL_DATA_ATGC)->segno /	\
+> -	  (sbi)->segs_per_sec))
+> +	  SEGS_PER_SEC(sbi)))
+> 
+>  #define MAIN_BLKADDR(sbi)						\
+>  	(SM_I(sbi) ? SM_I(sbi)->main_blkaddr : 				\
+> @@ -93,7 +93,7 @@ static inline void sanity_check_seg_type(struct f2fs_sb_info *sbi,
+>  #define GET_SEGNO_FROM_SEG0(sbi, blk_addr)				\
+>  	(GET_SEGOFF_FROM_SEG0(sbi, blk_addr) >> (sbi)->log_blocks_per_seg)
+>  #define GET_BLKOFF_FROM_SEG0(sbi, blk_addr)				\
+> -	(GET_SEGOFF_FROM_SEG0(sbi, blk_addr) & ((sbi)->blocks_per_seg - 1))
+> +	(GET_SEGOFF_FROM_SEG0(sbi, blk_addr) & (BLKS_PER_SEG(sbi) - 1))
+> 
+>  #define GET_SEGNO(sbi, blk_addr)					\
+>  	((!__is_valid_data_blkaddr(blk_addr) ||			\
+> @@ -101,9 +101,9 @@ static inline void sanity_check_seg_type(struct f2fs_sb_info *sbi,
+>  	NULL_SEGNO : GET_L2R_SEGNO(FREE_I(sbi),			\
+>  		GET_SEGNO_FROM_SEG0(sbi, blk_addr)))
+>  #define GET_SEC_FROM_SEG(sbi, segno)				\
+> -	(((segno) == -1) ? -1 : (segno) / (sbi)->segs_per_sec)
+> +	(((segno) == -1) ? -1 : (segno) / SEGS_PER_SEC(sbi))
+>  #define GET_SEG_FROM_SEC(sbi, secno)				\
+> -	((secno) * (sbi)->segs_per_sec)
+> +	((secno) * SEGS_PER_SEC(sbi))
+>  #define GET_ZONE_FROM_SEC(sbi, secno)				\
+>  	(((secno) == -1) ? -1 : (secno) / (sbi)->secs_per_zone)
+>  #define GET_ZONE_FROM_SEG(sbi, segno)				\
+> diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
+> index 2a8b6cfaf683..9d2c680a61f5 100644
+> --- a/fs/f2fs/super.c
+> +++ b/fs/f2fs/super.c
+> @@ -4723,7 +4723,7 @@ static int f2fs_fill_super(struct super_block *sb, void *data, int silent)
+>  			.reason = CP_DISCARD,
+>  			.trim_start = 0,
+>  			.trim_end = MAIN_SEGS(sbi) - 1,
+> -			.trim_minlen = sbi->blocks_per_seg,
+> +			.trim_minlen = BLKS_PER_SEG(sbi),
 
+We don't have this.
+
+>  		};
+>  		f2fs_write_checkpoint(sbi, &cpc);
+>  	}
+> -- 
+> 2.40.1
