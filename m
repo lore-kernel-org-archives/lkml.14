@@ -1,56 +1,56 @@
-Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
+Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A9AD78688
-	for <linux-kernel@vger.kernel.org>; Tue, 20 Feb 2024 22:56:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5C3315442B
+	for <linux-kernel@vger.kernel.org>; Tue, 20 Feb 2024 22:56:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708469799; cv=none; b=qgiCuBQsOdwgK4IBJSvB7XqBiUHQg1jikkmRkgDayGkJFxRvAxfZekSc2+wWiCuyb3ldUmODg/C8YlVdk2a71LNKQ3Z/e4/dDPJ9dE9mqFBjdu7BAURPsyOOo6pVfbdkyR2rL/rOpWeyI3Z60FiMNx0GLW14ShU3zBUk4XD5iS4=
+	t=1708469801; cv=none; b=QVMfYoY4Rmv2ivr3bar9Mf/5pJVUcyd502xPuinXM0D2eVzSIHP1Wcq7PFL0m6uae+c4P5OW4pbQIs16IRQgux9e8ispKyC1Wsg218+Hoy4wvYRphDdmWI0nSJtamNfAdrKLopMcyppiH6B6MsfNUtbK1EwZPd+ou1aBEUiE5RM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708469799; c=relaxed/simple;
-	bh=pJbxNcidnAquuRUBnbM5G/Xt7klZVoRT5zrWcv5qa6I=;
+	s=arc-20240116; t=1708469801; c=relaxed/simple;
+	bh=FQQWqlHG9UJ+0lG2we8igF6gAoLLpYlVJt/gcnDLSiE=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=MvVyx7EOIInqaskGzESPDIaD72yKEoFjM8zEEVuJ8D9JkuPjS5yBr6kbj7cpOujfekU/GG3HahSeisT2szc0iFmnThX9d+TpLb50tO7DT4PWUA5rEW4mfiT6rE+TBBfHqoNYYjQ3mIs1wmnt8LNg1RRORBZ0eA7Lx0tTwHJ9mnU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=layalina.io; spf=pass smtp.mailfrom=layalina.io; dkim=pass (2048-bit key) header.d=layalina-io.20230601.gappssmtp.com header.i=@layalina-io.20230601.gappssmtp.com header.b=TtK4QeHY; arc=none smtp.client-ip=209.85.218.44
+	 MIME-Version; b=APcqM6fTOHHZwiuSw+40kHx1IoQE5TzeuYkGedTCerCkOFT+6z6odpZzMXHa5Y8UMXsauq4qXv/j0YQFOvsOrnBt3W1zizJVLwytx3Icd/wS5ezVbtS2ApocVqkKGnCcphb606mfq6mVR/ANSF2H2TA0nEkjjXpPGO6+pcYI42s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=layalina.io; spf=pass smtp.mailfrom=layalina.io; dkim=pass (2048-bit key) header.d=layalina-io.20230601.gappssmtp.com header.i=@layalina-io.20230601.gappssmtp.com header.b=NsUaWPf3; arc=none smtp.client-ip=209.85.218.47
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=layalina.io
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=layalina.io
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=layalina-io.20230601.gappssmtp.com header.i=@layalina-io.20230601.gappssmtp.com header.b="TtK4QeHY"
-Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-a3f1bf03722so91537066b.1
-        for <linux-kernel@vger.kernel.org>; Tue, 20 Feb 2024 14:56:37 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=layalina-io.20230601.gappssmtp.com header.i=@layalina-io.20230601.gappssmtp.com header.b="NsUaWPf3"
+Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-a3e7ce7dac9so344013966b.1
+        for <linux-kernel@vger.kernel.org>; Tue, 20 Feb 2024 14:56:39 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=layalina-io.20230601.gappssmtp.com; s=20230601; t=1708469796; x=1709074596; darn=vger.kernel.org;
+        d=layalina-io.20230601.gappssmtp.com; s=20230601; t=1708469798; x=1709074598; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=aT2II4hSJb5JlN6Q/dAyII0ZNTG9/pbj1emmIil5nPc=;
-        b=TtK4QeHYY3eKULAkUjZCc5wxcQqszXYiU1IjCYCTWVnRp/0gpbt9n7RlUoDxBv/iQ8
-         Dl0Hk85lrmqMSQS77IiV0tQn5xvPCxwla2j5Htuw2H7DgEBfIsV5XHcrZV2ko3VLZf+P
-         5B6Vt3euYWRBH8AP2Q6yTlNpoHlJYXs8nMoxYSchbyAnYscm7xd/hvchIqh+NP2SRECm
-         4nAYIgLR0+3+QD/v4AsGE3qkiZuxGn3Yz+OLZkRbvI4txvFg5YD0UQFViPuTrIoAPbd7
-         rGaG4xHw2/fRmPeBtLqrsBCxpodGfVzz5o0QEaQacNDvIW8KQV8KC1/HICYqgJZFoeLm
-         F2eQ==
+        bh=i0OJtBJmsVtrdWRAtlV2dG6TCQIPBabKpIehhsZoRq8=;
+        b=NsUaWPf3WunHtzuCbP65mzbLGe2uRo6oJf1C/MT2YynxCNXJKQ56PfUE1rP4neMA4N
+         i7avw1wjoT3zBMGvrtckWBQRcFU9oz+gg46tEwM1FXODHyHGLBqMrGzTrcbr/ufADA10
+         np6brSsDtizdOvA33iMkOvULk6ibBM2ghIQqcWNp/cyPOgGq8yc1MLf/iB8baDhEsm8d
+         89PY84Z/k/ggW2cZUCswBonnZ19557oAdZtQ4c3K/KAuiMsUUz3I4CYwcgeL5oSs7qTp
+         zaG8IXvON9zuQLKbC3N28k8unbroCoYOFrCaFECbvBAlfIsMRKd2ARNsecX7D5tYlU2j
+         Jlfg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708469796; x=1709074596;
+        d=1e100.net; s=20230601; t=1708469798; x=1709074598;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=aT2II4hSJb5JlN6Q/dAyII0ZNTG9/pbj1emmIil5nPc=;
-        b=fyglTSC56NlYwzuJEI0JocZn+LlFWLLgQ/0pxIdfY9CFM7xDGc0WrjEArtlk8/dG4i
-         bLs6LvgPWaAPuuYsK5lqEkdudg+EZ6mMOSQexA656QcGEmkW31FZh0p0irrwrZxJzsgz
-         1Qq6qxVZAYMIXZwI6c7ksuGuhysaionn4r8JUZBKpPGErrUEVNzEQg4H4TLBPc6YWrfW
-         lJUe08tNquQ6gzUipoXQXLozFAmDY3GEwC4fQ+9K9CdwmjqDy1eUqXufoR/y6VwY2OyA
-         yA1lSnx49Z28/e1zWQ3b1DYaFIzoPo91MRIPWxD0dUwpvcCwESKVgPNK8O7y/V3yNKk1
-         hx8w==
-X-Gm-Message-State: AOJu0YwDRt+6oVS2KwawqnH8G83a9nLG/0A72LsdyfYAG/WWQ8262HaN
-	Ki1hg8pC7spa6GxW6Quc5x8lK4szS29obPcaHFztq8ch2Zf6NCoWiVbZltdXbyE=
-X-Google-Smtp-Source: AGHT+IHdWfx7cLwsPeIhe8u/keSXJ7SEWTP42c9O/UxSWDheo2IV2uhYtI1XKt3FebDxbN6Z/OPI2g==
-X-Received: by 2002:a17:906:60b:b0:a3e:b8e4:2b6b with SMTP id s11-20020a170906060b00b00a3eb8e42b6bmr4372934ejb.17.1708469795797;
-        Tue, 20 Feb 2024 14:56:35 -0800 (PST)
+        bh=i0OJtBJmsVtrdWRAtlV2dG6TCQIPBabKpIehhsZoRq8=;
+        b=MZbH4fGENhusPg7mM+xnSttk1xozwRwHGuqeVnrVO5o+bWys1G+qQgFUETkTo7F89I
+         fULBy99uRVRwTiOn15t+XagOmssYQ+qQotl61oB5pnKgU8MuATW/NJqY5RdyS55gT+1Z
+         sKsE2mlNyYTisysMjgYE4SA7bncCBsNXGK6mFWhBoCRgsTDplHMFO5j2fBlIvc2EmlKU
+         EE/ZCuFmdzhyaGGOaw+X9CHiH4rwr2RxHSf1PVH+9DCMuKnw1dSjnM3dCtikunfV79uz
+         9nsaOfSv6MjeLOklEpP0WHVGsftvN4aKl7vKF7kpDi0WKYfSfI9WOPHyICMmnV5+tMf3
+         t3OA==
+X-Gm-Message-State: AOJu0YzMIFyEOOHBGjekq53YpO9zQ8+Md7eB92/67qclle/oFxYg+qzH
+	zRxIxY+WFXf8WxK13dIU+VeqaiqdNdf+8MmyhWBwdsZ1s7vaQZQoFhxg67Lcj5g=
+X-Google-Smtp-Source: AGHT+IFZQyaaLGWuPzBmBGRF1gnUaRaQLKADCauVFthMEcDdu2QqV2GE2sPbBHnr/hBFXmSLPPkLYQ==
+X-Received: by 2002:a17:906:b0d9:b0:a3d:6eb4:9769 with SMTP id bk25-20020a170906b0d900b00a3d6eb49769mr15638737ejb.15.1708469797818;
+        Tue, 20 Feb 2024 14:56:37 -0800 (PST)
 Received: from airbuntu.. (host109-154-46-208.range109-154.btcentralplus.com. [109.154.46.208])
-        by smtp.gmail.com with ESMTPSA id vw13-20020a170907a70d00b00a3c5d10bcdbsm4381946ejc.114.2024.02.20.14.56.35
+        by smtp.gmail.com with ESMTPSA id vw13-20020a170907a70d00b00a3c5d10bcdbsm4381946ejc.114.2024.02.20.14.56.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 20 Feb 2024 14:56:35 -0800 (PST)
+        Tue, 20 Feb 2024 14:56:37 -0800 (PST)
 From: Qais Yousef <qyousef@layalina.io>
 To: Ingo Molnar <mingo@kernel.org>,
 	Peter Zijlstra <peterz@infradead.org>,
@@ -59,9 +59,9 @@ To: Ingo Molnar <mingo@kernel.org>,
 Cc: linux-kernel@vger.kernel.org,
 	"Pierre Gondois" <Pierre.Gondois@arm.com>,
 	Qais Yousef <qyousef@layalina.io>
-Subject: [PATCH v6 1/4] sched/topology: Export asym_capacity_list
-Date: Tue, 20 Feb 2024 22:56:19 +0000
-Message-Id: <20240220225622.2626569-2-qyousef@layalina.io>
+Subject: [PATCH v6 3/4] sched/topology: Remove max_cpu_capacity from root_domain
+Date: Tue, 20 Feb 2024 22:56:21 +0000
+Message-Id: <20240220225622.2626569-4-qyousef@layalina.io>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240220225622.2626569-1-qyousef@layalina.io>
 References: <20240220225622.2626569-1-qyousef@layalina.io>
@@ -73,137 +73,62 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-So that we can use it to iterate through available capacities in the
-system. Sort asym_cap_list in descending order as expected users are
-likely to be interested on the highest capacity first.
-
-Make the list RCU protected to allow for cheap access in hot paths.
+The value is no longer used as we now keep track of max_allowed_capacity
+for each task instead.
 
 Signed-off-by: Qais Yousef <qyousef@layalina.io>
 ---
- kernel/sched/sched.h    | 14 ++++++++++++++
- kernel/sched/topology.c | 43 ++++++++++++++++++++++++-----------------
- 2 files changed, 39 insertions(+), 18 deletions(-)
+ kernel/sched/sched.h    |  2 --
+ kernel/sched/topology.c | 13 ++-----------
+ 2 files changed, 2 insertions(+), 13 deletions(-)
 
 diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
-index 001fe047bd5d..e85976bd2bab 100644
+index e85976bd2bab..bc9e598d6f62 100644
 --- a/kernel/sched/sched.h
 +++ b/kernel/sched/sched.h
-@@ -109,6 +109,20 @@ extern int sysctl_sched_rt_period;
- extern int sysctl_sched_rt_runtime;
- extern int sched_rr_timeslice;
+@@ -917,8 +917,6 @@ struct root_domain {
+ 	cpumask_var_t		rto_mask;
+ 	struct cpupri		cpupri;
  
-+/*
-+ * Asymmetric CPU capacity bits
-+ */
-+struct asym_cap_data {
-+	struct list_head link;
-+	struct rcu_head rcu;
-+	unsigned long capacity;
-+	unsigned long cpus[];
-+};
-+
-+extern struct list_head asym_cap_list;
-+
-+#define cpu_capacity_span(asym_data) to_cpumask((asym_data)->cpus)
-+
- /*
-  * Helpers for converting nanosecond timing to jiffy resolution
-  */
+-	unsigned long		max_cpu_capacity;
+-
+ 	/*
+ 	 * NULL-terminated list of performance domains intersecting with the
+ 	 * CPUs of the rd. Protected by RCU.
 diff --git a/kernel/sched/topology.c b/kernel/sched/topology.c
-index 10d1391e7416..1505677e4247 100644
+index 1505677e4247..a57c006d2923 100644
 --- a/kernel/sched/topology.c
 +++ b/kernel/sched/topology.c
-@@ -1329,24 +1329,13 @@ static void init_sched_groups_capacity(int cpu, struct sched_domain *sd)
- 	update_group_capacity(sd, cpu);
- }
- 
--/*
-- * Asymmetric CPU capacity bits
-- */
--struct asym_cap_data {
--	struct list_head link;
--	unsigned long capacity;
--	unsigned long cpus[];
--};
+@@ -2513,16 +2513,9 @@ build_sched_domains(const struct cpumask *cpu_map, struct sched_domain_attr *att
+ 	/* Attach the domains */
+ 	rcu_read_lock();
+ 	for_each_cpu(i, cpu_map) {
+-		unsigned long capacity;
 -
- /*
-  * Set of available CPUs grouped by their corresponding capacities
-  * Each list entry contains a CPU mask reflecting CPUs that share the same
-  * capacity.
-  * The lifespan of data is unlimited.
-  */
--static LIST_HEAD(asym_cap_list);
+ 		rq = cpu_rq(i);
+ 		sd = *per_cpu_ptr(d.sd, i);
+ 
+-		capacity = arch_scale_cpu_capacity(i);
+-		/* Use READ_ONCE()/WRITE_ONCE() to avoid load/store tearing: */
+-		if (capacity > READ_ONCE(d.rd->max_cpu_capacity))
+-			WRITE_ONCE(d.rd->max_cpu_capacity, capacity);
 -
--#define cpu_capacity_span(asym_data) to_cpumask((asym_data)->cpus)
-+LIST_HEAD(asym_cap_list);
+ 		cpu_attach_domain(sd, d.rd, i);
  
- /*
-  * Verify whether there is any CPU capacity asymmetry in a given sched domain.
-@@ -1386,21 +1375,39 @@ asym_cpu_capacity_classify(const struct cpumask *sd_span,
+ 		if (lowest_flag_domain(i, SD_CLUSTER))
+@@ -2536,10 +2529,8 @@ build_sched_domains(const struct cpumask *cpu_map, struct sched_domain_attr *att
+ 	if (has_cluster)
+ 		static_branch_inc_cpuslocked(&sched_cluster_active);
  
- }
+-	if (rq && sched_debug_verbose) {
+-		pr_info("root domain span: %*pbl (max cpu_capacity = %lu)\n",
+-			cpumask_pr_args(cpu_map), rq->rd->max_cpu_capacity);
+-	}
++	if (rq && sched_debug_verbose)
++		pr_info("root domain span: %*pbl\n", cpumask_pr_args(cpu_map));
  
-+static void free_asym_cap_entry(struct rcu_head *head)
-+{
-+	struct asym_cap_data *entry = container_of(head, struct asym_cap_data, rcu);
-+	kfree(entry);
-+}
-+
- static inline void asym_cpu_capacity_update_data(int cpu)
- {
- 	unsigned long capacity = arch_scale_cpu_capacity(cpu);
--	struct asym_cap_data *entry = NULL;
-+	struct asym_cap_data *insert_entry = NULL;
-+	struct asym_cap_data *entry;
- 
-+	/*
-+	 * Search if capacity already exits. If not, track which the entry
-+	 * where we should insert to keep the list ordered descendingly.
-+	 */
- 	list_for_each_entry(entry, &asym_cap_list, link) {
- 		if (capacity == entry->capacity)
- 			goto done;
-+		else if (!insert_entry && capacity > entry->capacity)
-+			insert_entry = list_prev_entry(entry, link);
- 	}
- 
- 	entry = kzalloc(sizeof(*entry) + cpumask_size(), GFP_KERNEL);
- 	if (WARN_ONCE(!entry, "Failed to allocate memory for asymmetry data\n"))
- 		return;
- 	entry->capacity = capacity;
--	list_add(&entry->link, &asym_cap_list);
-+
-+	/* If NULL then the new capacity is the smallest, add last. */
-+	if (!insert_entry)
-+		list_add_tail_rcu(&entry->link, &asym_cap_list);
-+	else
-+		list_add_rcu(&entry->link, &insert_entry->link);
- done:
- 	__cpumask_set_cpu(cpu, cpu_capacity_span(entry));
- }
-@@ -1423,8 +1430,8 @@ static void asym_cpu_capacity_scan(void)
- 
- 	list_for_each_entry_safe(entry, next, &asym_cap_list, link) {
- 		if (cpumask_empty(cpu_capacity_span(entry))) {
--			list_del(&entry->link);
--			kfree(entry);
-+			list_del_rcu(&entry->link);
-+			call_rcu(&entry->rcu, free_asym_cap_entry);
- 		}
- 	}
- 
-@@ -1434,8 +1441,8 @@ static void asym_cpu_capacity_scan(void)
- 	 */
- 	if (list_is_singular(&asym_cap_list)) {
- 		entry = list_first_entry(&asym_cap_list, typeof(*entry), link);
--		list_del(&entry->link);
--		kfree(entry);
-+		list_del_rcu(&entry->link);
-+		call_rcu(&entry->rcu, free_asym_cap_entry);
- 	}
- }
- 
+ 	ret = 0;
+ error:
 -- 
 2.34.1
 
