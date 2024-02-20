@@ -1,177 +1,190 @@
-Received: from CHN02-BJS-obe.outbound.protection.partner.outlook.cn (mail-bjschn02on2123.outbound.protection.partner.outlook.cn [139.219.17.123])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2389288CF;
-	Tue, 20 Feb 2024 05:39:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=139.219.17.123
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708407548; cv=fail; b=j5Z6EV/Ebxb9/PRgVMj8iCZaCZzIExO2ZppO+JbhbKqCmSJSyHdx6TTK8EVEX9tdRIxohGWdMrBZXzZUyW1q43FnKTfY85ILxNh0gD/5C0iFQWPzPVC9nkNBJxoiFpue13mtP7op/K+L1pYVWe6X4ooFFCEnoGK3Msrx6IOw9sI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708407548; c=relaxed/simple;
-	bh=vPVt+6N4qL9HCX/4iP0qojrAZa7/YgiYjfgWGOJLX1g=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=SDOtctT/oiciEAeW3X3RAqKFu78NLJRlol5zz4KxbGFSHhQRVU6BXLcZh+tO/MWEfEG5PlpUgep8I5aLZSYPI+xbAZXsQIH0IKlvCLXSdtS4pW4a5TACbUYcZR2T1VpuNlHDZBXiDvcyzvXapRqUll42JFsTFZPpwOubNg231fU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com; spf=pass smtp.mailfrom=starfivetech.com; arc=fail smtp.client-ip=139.219.17.123
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=starfivetech.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=bUyAOrqw955xZ2IBbuVMVIxRTm1LIxDQGKP5pztVtuLaBiv4UyqiGJ5uIcbxc3ezCYKQAtk9O4bdcLGr2G2j1AE1jltDtqolHi06eweWmq6x+8eZ1CIjgIXJHglkj/J5QutXmSDkeNgTgRr0kP/4lN184Sc6RZ7JPfNuqkr/uRnGhb9W+CJlGNO+Onxg5qDsC0dUGx+8yredqmKYKebQ+Gb7kIIjLfo103y9Tmt83ayoXFABjIg7aaUE9B+kGlkK2SfJTLSp0PoyXn0QrguuB/njzB3zQafSu4jzhcnmQKynDltoFT0/ul65JP/4rp7UcoFpmzK8bLVLF/FhYHMQBA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=vPVt+6N4qL9HCX/4iP0qojrAZa7/YgiYjfgWGOJLX1g=;
- b=aBeDrcbSyYbf+EX0s+zB3XHJu/38n8ch0gwDQmsIphfga3n4GUJXUF12ADsxwmtdgb41+4nq2gJUEiAlMSJKHoYh5yqCaQFUZuFCmEQ+9xm8Ktgyo5comUCU1XNHszDsMqSFPDjp12gAKEZk8hXZ37uKJckcgi7ndmYB4JAZRqD4acAbUt6lyoyccPlBP8POzsdK/gmO+TQrgyJfszfu8QO5+ErvMRQZy+pXyzQTmLWEBoY2zUqnTFv4DOlkwViHmTW4zr2hl5pT8baAFnIjwyGz3H0ijz6gMQASxgYABf14jym/18dpGaxVmH5w6QQTScnRyihQJiLk/6OpQTMi+w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=starfivetech.com; dmarc=pass action=none
- header.from=starfivetech.com; dkim=pass header.d=starfivetech.com; arc=none
-Received: from ZQ0PR01MB1302.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c550:1b::9) by ZQ0PR01MB1064.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c550:d::5) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7270.46; Tue, 20 Feb
- 2024 05:38:52 +0000
-Received: from ZQ0PR01MB1302.CHNPR01.prod.partner.outlook.cn
- ([fe80::9d68:58f1:62cc:f1d3]) by
- ZQ0PR01MB1302.CHNPR01.prod.partner.outlook.cn ([fe80::9d68:58f1:62cc:f1d3%4])
- with mapi id 15.20.7270.047; Tue, 20 Feb 2024 05:38:52 +0000
-From: Yuklin Soo <yuklin.soo@starfivetech.com>
-To: Linus Walleij <linus.walleij@linaro.org>, Yuklin Soo
-	<yuklin.soo@starfivetech.com>
-CC: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, Hal Feng
-	<hal.feng@starfivetech.com>, Leyfoon Tan <leyfoon.tan@starfivetech.com>,
-	Jianlong Huang <jianlong.huang@starfivetech.com>, Emil Renner Berthing
-	<kernel@esmil.dk>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
-	<krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, Drew
- Fustini <drew@beagleboard.org>, "linux-gpio@vger.kernel.org"
-	<linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org"
-	<devicetree@vger.kernel.org>, "linux-riscv@lists.infradead.org"
-	<linux-riscv@lists.infradead.org>, Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>
-Subject: RE: [RFC PATCH 0/6] Add Pinctrl driver for Starfive JH8100 SoC
-Thread-Topic: [RFC PATCH 0/6] Add Pinctrl driver for Starfive JH8100 SoC
-Thread-Index: AQHaM+jMLz7GJ6Ui60+OoD/LjAWT9LC1Ex6AgF4CGNA=
-Date: Tue, 20 Feb 2024 05:38:51 +0000
-Message-ID:
- <ZQ0PR01MB1302D57C95A3C2A564B3C529F650A@ZQ0PR01MB1302.CHNPR01.prod.partner.outlook.cn>
-References: <20231221083622.3445726-1-yuklin.soo@starfivetech.com>
- <CACRpkdZEu5AcdPtaH7MQSC88+CT-PhgegEVcWk6KAzAipzasPw@mail.gmail.com>
-In-Reply-To:
- <CACRpkdZEu5AcdPtaH7MQSC88+CT-PhgegEVcWk6KAzAipzasPw@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=starfivetech.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: ZQ0PR01MB1302:EE_|ZQ0PR01MB1064:EE_
-x-ms-office365-filtering-correlation-id: da77f901-5d3a-4736-598f-08dc31d63876
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info:
- D4ihqyjrSsyietMCXzdlSApgbnb8eZMkWUgjSuyDTFlXPYBWb+PbDyPHymls/+S3Tao+1tICn8hckJU2pCQSqznw346SEQL+8XcoobLQiG5wqSSExTWw0bN0T5WIgaMbOoIarSIUo8M3ofCzodG0JZmgAH3R1bWp/357zwU7W05yKQT2b4p9UeGQGcC4vwFWcg6DTnNwDynL6u3HM7rfYBf1KL1uSc/YXbpShXOF9y8K8k2VyaRBkLXQ0c9sVS6ekNYDuZxwWB/AmPjPQ0aUjB6vjgZ/yX4TSzTwo1lCycBQRb/U2BiRYm88Y6qA9uGlwUiRRZ+ovB23Ke91z/0ZsGIFFQypjhScmVlG2Dn7NMjfNzkhqx3S/d1Ea+q7Fs1ccw6SqSv0s9VkPRCAKHNRRJUM7KHCIIt6pFH+Ra44ultyui/6aV6AIsvKLU14QU2gPBBoOeQtgshE6v6jpXM3oz+VnZvCmCPxLNodrl6IwJO58hIF4O6j4lGda4FtyeM4IuxVEIaSlFxV8izkJh24n/B5AHvwUh/AdDdK1HUk7wnE3qzaF13F6aq2mSvuD2G2
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:ZQ0PR01MB1302.CHNPR01.prod.partner.outlook.cn;PTR:;CAT:NONE;SFS:(13230031)(38070700009);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?utf-8?B?cnAzRWlHRjFIUHlnQ29UenFNcm5sSjBJZnNlaDZsMjczTVF3M0R1ditMQXQr?=
- =?utf-8?B?MlhzRk9BZVE3V0p5dmtDTzkxM0NYOEdkN241SEFsaEEzOHgwQTYrb21Wa0JE?=
- =?utf-8?B?N1lXQlBaWldOaG0xcWR5Zk9sYXFQdkNuNUswT1VMdGdZR1hhbEI2dTlaZ2tn?=
- =?utf-8?B?bktLOE9tSG5BRUVjbWo3TjB4cHBkTUJoMnFQUVJXMGh4SWRKNmJqd2YwaDBy?=
- =?utf-8?B?WnozaWlaUVZzanRIMEtHbFhSVjlUYjczVTYxRFBPZmJ3OS9LTS9pWUF4cTBv?=
- =?utf-8?B?a0tDL3ZwekVpZGxscWRZUGJDZTViTSswWkRaWExvdEp6ZW1BVFN3UExVRm9v?=
- =?utf-8?B?NlhXeEtuRElDN1VoMW5kSnN5L3lWWm9mQkhWQStjdXIrZDdSRUduV2pWdDc4?=
- =?utf-8?B?RkVhVUthVVQ3V0RwVmNDS3NTcHpaeHpKbXdjaWRDaWZIaHJWWUtFOVVKUUor?=
- =?utf-8?B?b2NlMHYvS1Q1MCtHb0dYeUR2RE9xSzBXV3c3M1B6NjRVNk9NTENaN0o4WFpZ?=
- =?utf-8?B?QVBHZWFzQmFqdFpOLzVBWTJ5blB0Z1ZjdmJweFBmNGNucFJGd0d4eDBsdk9P?=
- =?utf-8?B?RmFBemtEbTVjbnpvRit3c0ZTamk1RThKM3JmQ3JBbjFoZlAxM0gxNmRQMkhn?=
- =?utf-8?B?cGNzNVJpdG85RGpnbFAveGo2azNsdC80elFObEU1OHFGQm9jMS9lVFQ1NHBE?=
- =?utf-8?B?N3NHNEswbXBsVTQ2ZVhMRHNUeEIzQjI2QVMxTUxYTk8ybjNCRjlvWXlvNVA0?=
- =?utf-8?B?THlxNXp2SnpZWVlDOXBCZnlxQ3ZpekhoQVNqbjFIeEoyRFNWbHBMZHpLanRa?=
- =?utf-8?B?RmNqV2FlRFZSdE5WbVp1MFl1d3JxTFIvUG1KN3EySndxdzM3WWNjMzFYaWNI?=
- =?utf-8?B?RHk0bVV1Y0tFaCt2SDJvenJtNW5hTXdkNXZhMUlVMDJWemlnZjFwa1UyNldO?=
- =?utf-8?B?SHUzNy9JU0tiR0ZFM2dHSG1IS2xtbk1KbU1OQjYzRFhxRFBibGViejBlTEVk?=
- =?utf-8?B?MHY1Qm1LWHRFRWpjR25zZzU2d0VQTWhIeUVNMTNzdENkSkgzeks0VWtvTG55?=
- =?utf-8?B?aHNlc3A5K05vMm1ERnJOenQvWnNPME5rOXBFTElCTS9Dc054dU1BZjA4R1I1?=
- =?utf-8?B?bnVzQXV0aXRiL1Y2QnprUWVQNGU5NjhtTDY1VGZPSG40TG9zQ3ZRZTBzbmJD?=
- =?utf-8?B?Q2pqbGw4ckt3Zjc1R2lubElFOFoyemtGeldkWmtHQlB4SkRQV2NNdGVLbTE3?=
- =?utf-8?B?NnYzbGxFdHFBTjJkWUxrOUdmVkt2cng0SlFGellzOHRNWmdmWkVEcmt3VkRE?=
- =?utf-8?B?SStHdW1VdHBrb29LeGJCd0ozUVU2RzlNQmRnMkJZT3MzOGN4bVdCU0JGVC9B?=
- =?utf-8?B?dUhvS1J1ZFlhTTlaaVFVRUNQRnM0N3VFdDRsaVNYN1dyT2JTWnp3c2VZOW5H?=
- =?utf-8?B?MTB0SkdRaVpaSVZsWVNiSFdoYnB3U0E4T3VJeTA2R21CQ3FRdEFnc3JuQU5a?=
- =?utf-8?B?cUhpUmtrN0o5K1VjZlI2SGJzZEwvR29HN0UrRzlpMnVRd0hXZEZvV1k0eGM5?=
- =?utf-8?B?aWxEeHBhVXVDWGFhWE8xdlMxbVl3NjM4YWNmWCtUQXhVbmZ1OWZjbzN5Tjdw?=
- =?utf-8?B?WjhzYnBMRVByVzBJMU80NTd1ckhmMmxhemJxenNRQm9icjZsZ1dMWktUVjRW?=
- =?utf-8?B?akxzZERLbXplYUFUWUR2aGZnS3lwTTNVa2dQcHo0TWRBY3FLdTU3NW5qODRM?=
- =?utf-8?B?WDUzSUZUM1pPamZBMFBjVmIrY0ZyWEhPQngzSVA2MUN1c0EvMkdOOVAzNmRU?=
- =?utf-8?B?Y25CTHNnQ3VRTHNNL1NhWEpSN24yRkZUZjQ0TEpNMXdaYUNQc0tBeTBZSVh5?=
- =?utf-8?B?L1A4SG5sODhoTXVxRS9PVEtBY2FLdXZ2TGVqTy9lNTZ2LzJ3eVBtdmRtdHdJ?=
- =?utf-8?B?ajFwY0dHWDMzRjdFVHYwUnM5R0s4RHVUVnd5NWlYNFNCUmh6WGd1WUJrMXlm?=
- =?utf-8?B?STJCQTh1Y1hHanV1ODV4bkY3TnoxTkcveG9xa2t4WHF6UHVUa0QwNUtSZmds?=
- =?utf-8?B?cGUyaEd4NUZHTWZUZHpvQ0VCSmJSS2l3cEFJcXdqdlZCZGthQmUrbUMrYjZw?=
- =?utf-8?B?REZpTnNLWCtwa04zR2x4ZWxiempwTi9CZnhEYW02bGRTd3hWZzNqRzhQa2Jw?=
- =?utf-8?B?elBkZEZlYjFud1BjdGJ2TEQxK2lLS2lJaGZoVHJqM2ZFcm9aVDl5RnBwbU8r?=
- =?utf-8?B?WXFuQ0dtT0xTU0dXN0dFTkhTWjh3PT0=?=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6B1445942;
+	Tue, 20 Feb 2024 05:39:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1708407597; cv=none; b=abvEqHAtMayusMNbOzbO7wyvWYEogv0aNhhr8SKuqAb9E1DPUSmVMdMfuDMAdNyNhc7GV8eH1aQ80CvKFjLW6DL3VzPQ6iUOs8OZyzmyUfQ6HCTwyDv0EtGIFHCiHhFS4ruXYPCi/PHH/fJdcjH1ocsqMAW8SHh0q4027mTnJ58=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1708407597; c=relaxed/simple;
+	bh=j4F3GnK0WJEVQCfLjxRK3gHJtsNHBIgfItsgPBYJDOA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=R0haeCJvIrXPMDsrA11CL28F2dB1Br6xWk1tcVgrTOr+1xZYNlto1C6u3+5vQx9X5k0lkSN6C4JrTqWjF51V5V4ma4heEDTI0953Z+1hwmAWxymq/Gd72ZJmlyAKAw6FIb7C31qBCLFgeirz1KT8jP1gervMHQac9OFAC1O4vK0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=PPTx3MZl; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="PPTx3MZl"
+Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 41K5Ib0j004258;
+	Tue, 20 Feb 2024 05:39:42 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
+ subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=pp1; bh=wh+1b4NkwIFc8fqqrUx24gGPPN326wrIGKLOXwHr89o=;
+ b=PPTx3MZl03ou0l88OZOsN1kvLNCwt5LWuJJHQc0f3YbBCEPW/cdA9Oy3lZ+AzfCoUX57
+ BNDI2HDtkJsPo6nS+ksPmKYhfIj+eA0ABF7EnXkpIHlND6pdn2i1O9U7wh+0jWr0jL7V
+ M5I8yB5h4ZM85KttfxfNrA3XezpsMyzpBv0QiFgitNYYDT8iPIk6OIWPgdzFGjVPAqhU
+ qMaXRtXhNBpVcHdbU+rIDM4CwKRaTC+YNZJ/bneoFnQavCpjiZCNUgMwYQ6voHS7qlJG
+ tUhb4IBCHtmNawPZiqFuj69SdjVtN3ieJZBhfbOUdll+SVR+dH2u7SuxCKh+WYdAunrO Ig== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3wcntfgaq1-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 20 Feb 2024 05:39:42 +0000
+Received: from m0360072.ppops.net (m0360072.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 41K5VOVo001828;
+	Tue, 20 Feb 2024 05:39:41 GMT
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3wcntfgapu-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 20 Feb 2024 05:39:41 +0000
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 41K4RTn4013492;
+	Tue, 20 Feb 2024 05:39:40 GMT
+Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3wb7h06c89-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 20 Feb 2024 05:39:40 +0000
+Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
+	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 41K5daoJ45154842
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 20 Feb 2024 05:39:38 GMT
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id C1C1F20040;
+	Tue, 20 Feb 2024 05:39:36 +0000 (GMT)
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id AB9FC20043;
+	Tue, 20 Feb 2024 05:39:34 +0000 (GMT)
+Received: from li-bb2b2a4c-3307-11b2-a85c-8fa5c3a69313.ibm.com (unknown [9.109.253.82])
+	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Tue, 20 Feb 2024 05:39:34 +0000 (GMT)
+Date: Tue, 20 Feb 2024 11:09:32 +0530
+From: Ojaswin Mujoo <ojaswin@linux.ibm.com>
+To: Baokun Li <libaokun1@huawei.com>
+Cc: linux-ext4@vger.kernel.org, tytso@mit.edu, adilger.kernel@dilger.ca,
+        jack@suse.cz, ritesh.list@gmail.com, linux-kernel@vger.kernel.org,
+        yi.zhang@huawei.com, yangerkun@huawei.com, chengzhihao1@huawei.com,
+        yukuai3@huawei.com, stable@vger.kernel.org
+Subject: Re: [PATCH 5/7] ext4: fix slab-out-of-bounds in
+ ext4_mb_find_good_group_avg_frag_lists()
+Message-ID: <ZdQ7FEA7KC4eAMpg@li-bb2b2a4c-3307-11b2-a85c-8fa5c3a69313.ibm.com>
+References: <20240126085716.1363019-1-libaokun1@huawei.com>
+ <20240126085716.1363019-6-libaokun1@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: starfivetech.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: ZQ0PR01MB1302.CHNPR01.prod.partner.outlook.cn
-X-MS-Exchange-CrossTenant-Network-Message-Id: da77f901-5d3a-4736-598f-08dc31d63876
-X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Feb 2024 05:38:51.9553
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 06fe3fa3-1221-43d3-861b-5a4ee687a85c
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: LgOApM/l2IngKMRIbTxmVdJJIQUupOJgXleMR2DF/FSwgn1sYc/SIIwQ2YphTSCPMnh5jUtwnmp6M/G1OTGk/D6zNt4w4lf/YyQiC8fjofg=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: ZQ0PR01MB1064
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240126085716.1363019-6-libaokun1@huawei.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: uISKJ3kK8j0ru3Up3bEpo81VzY_ptFFM
+X-Proofpoint-ORIG-GUID: 8t_E9KrAWrXNar7JdpkHkEwc5cmFAHOL
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-02-20_04,2024-02-19_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 spamscore=0
+ suspectscore=0 adultscore=0 priorityscore=1501 malwarescore=0
+ lowpriorityscore=0 impostorscore=0 mlxscore=0 mlxlogscore=999 bulkscore=0
+ clxscore=1011 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2311290000 definitions=main-2402200038
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogTGludXMgV2FsbGVpaiA8
-bGludXMud2FsbGVpakBsaW5hcm8ub3JnPg0KPiBTZW50OiBTYXR1cmRheSwgRGVjZW1iZXIgMjMs
-IDIwMjMgMTo1OSBBTQ0KPiBUbzogWXVrbGluIFNvbyA8eXVrbGluLnNvb0BzdGFyZml2ZXRlY2gu
-Y29tPg0KPiBDYzogQmFydG9zeiBHb2xhc3pld3NraSA8YmFydG9zei5nb2xhc3pld3NraUBsaW5h
-cm8ub3JnPjsgSGFsIEZlbmcNCj4gPGhhbC5mZW5nQHN0YXJmaXZldGVjaC5jb20+OyBMZXlmb29u
-IFRhbiA8bGV5Zm9vbi50YW5Ac3RhcmZpdmV0ZWNoLmNvbT47DQo+IEppYW5sb25nIEh1YW5nIDxq
-aWFubG9uZy5odWFuZ0BzdGFyZml2ZXRlY2guY29tPjsgRW1pbCBSZW5uZXIgQmVydGhpbmcNCj4g
-PGtlcm5lbEBlc21pbC5kaz47IFJvYiBIZXJyaW5nIDxyb2JoQGtlcm5lbC5vcmc+OyBLcnp5c3p0
-b2YgS296bG93c2tpDQo+IDxrcnp5c3p0b2Yua296bG93c2tpK2R0QGxpbmFyby5vcmc+OyBDb25v
-ciBEb29sZXkgPGNvbm9yK2R0QGtlcm5lbC5vcmc+Ow0KPiBEcmV3IEZ1c3RpbmkgPGRyZXdAYmVh
-Z2xlYm9hcmQub3JnPjsgbGludXgtZ3Bpb0B2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LQ0KPiBrZXJu
-ZWxAdmdlci5rZXJuZWwub3JnOyBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsgbGludXgtDQo+
-IHJpc2N2QGxpc3RzLmluZnJhZGVhZC5vcmc7IFBhdWwgV2FsbXNsZXkgPHBhdWwud2FsbXNsZXlA
-c2lmaXZlLmNvbT47DQo+IFBhbG1lciBEYWJiZWx0IDxwYWxtZXJAZGFiYmVsdC5jb20+OyBBbGJl
-cnQgT3UNCj4gPGFvdUBlZWNzLmJlcmtlbGV5LmVkdT4NCj4gU3ViamVjdDogUmU6IFtSRkMgUEFU
-Q0ggMC82XSBBZGQgUGluY3RybCBkcml2ZXIgZm9yIFN0YXJmaXZlIEpIODEwMCBTb0MNCj4gDQo+
-IEhpIEFsZXgsDQo+IA0KPiB0aGFua3MgZm9yIHlvdXIgcGF0Y2ghDQo+IA0KPiBPbiBUaHUsIERl
-YyAyMSwgMjAyMyBhdCA5OjM24oCvQU0gQWxleCBTb28gPHl1a2xpbi5zb29Ac3RhcmZpdmV0ZWNo
-LmNvbT4NCj4gd3JvdGU6DQo+IA0KPiA+ICAgcGluY3RybDogc3RhcmZpdmU6IGpoODEwMDogYWRk
-IHBpbmN0cmwgZHJpdmVyIGZvciBzeXNfZWFzdCBkb21haW4NCj4gPiAgIHBpbmN0cmw6IHN0YXJm
-aXZlOiBqaDgxMDA6IGFkZCBwaW5jdHJsIGRyaXZlciBmb3Igc3lzX3dlc3QgZG9tYWluDQo+ID4g
-ICBwaW5jdHJsOiBzdGFyZml2ZTogamg4MTAwOiBhZGQgcGluY3RybCBkcml2ZXIgZm9yIHN5c19n
-bWFjIGRvbWFpbg0KPiA+ICAgcGluY3RybDogc3RhcmZpdmU6IGpoODEwMDogYWRkIHBpbmN0cmwg
-ZHJpdmVyIGZvciBBT04gZG9tYWluDQo+IA0KPiBUbyBteSBleWUgaXQgbG9va3MgbGlrZSBhIGxv
-dCBvZiBjb2RlIGlzIGR1cGxpY2F0ZWQgYmV0d2VlbiB0aGUgZm91ciBzdWJkcml2ZXJzLg0KPiAN
-Cj4gVGhlIHBhdHRlcm4gZnJvbSBvdGhlciBwaW4gY29udHJvbGxlcnMgaXMgdG8gY3JlYXRlIGEg
-ZmlsZSB3aXRoIGFsbCB0aGUgY29tbW9uDQo+IGNvZGUgYW5kIHRoZW4gc3ViZHJpdmVycyBmb3Ig
-ZWFjaCBzdWItcGluY29udHJvbGxlciB0aGF0IGhhdmUgdGhlaXIgb3duDQo+IHByb2JlIGJ1dCBj
-YWxscyBpbnRvIHRoZSBsaWJyYXJ5Lg0KPiANCj4gQy5mLg0KPiBkcml2ZXJzL3BpbmN0cmwvcWNv
-bS9waW5jdHJsLWFwcTgwNjQuYzoNCj4gDQo+IHN0YXRpYyBpbnQgYXBxODA2NF9waW5jdHJsX3By
-b2JlKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYpIHsNCj4gICAgICAgICByZXR1cm4gbXNt
-X3BpbmN0cmxfcHJvYmUocGRldiwgJmFwcTgwNjRfcGluY3RybCk7IH0NCj4gDQo+IEFuZCB0aGF0
-IGZ1bmN0aW9uIGlzIGluIGRyaXZlcnMvcGluY3RybC9xY29tL3BpbmN0cmwtbXNtLmMNCj4gYW5k
-IHlvdSBmaW5kIGdyZWF0IGluc3BpcmF0aW9uIGluIHRoZSBxY29tIEtjb25maWcgYW5kIE1ha2Vm
-aWxlIGFuZA0KPiBkcml2ZXJzL3BpbmN0cmwvcWNvbS9waW5jdHJsLW1zbS5oDQo+IHRoYXQgeW91
-IGNhbiBjb3B5cGFzdGUgdG8gcHVsbCB0aGlzIG9mZi4NCj4gDQo+IE1heWJlIHlvdSBzaG91bGQg
-c3RhcnQgd2l0aCBhIHBhdGNoIHRoYXQgZXh0cmFjdCB0aGUgY29tbW9uIHN0dWZmIGZyb20gdGhl
-DQo+IGV4aXN0aW5nIGpoNzEwMC9qaDcxMTAgZHJpdmVycyBhbmQgdGhlbiByZXVzZSB0aGF0IGZv
-ciBqaDgxMDA/DQoNClRoZSBkdXBsaWNhdGVkIGNvZGVzIGluIHRoZSBzdWJkcml2ZXJzIGhhdmUg
-YmVlbiBtb3ZlZCB0byB0aGUgbWFpbiBkcml2ZXIuDQpUaGUgc3ViZHJpdmVycyB3aWxsIGNhbGwg
-dGhvc2UgZnVuY3Rpb25zIGZyb20gdGhlIG1haW4gZHJpdmVyLg0KVGhlIHRlc3QgcmVzdWx0cyBh
-cmUgc3VjY2Vzc2Z1bCBhbmQgd2lsbCBzdWJtaXQgaW4gdGhlIG5leHQgdmVyc2lvbiBmb3IgcmV2
-aWV3Lg0KDQo+IA0KPiBZb3VycywNCj4gTGludXMgV2FsbGVpag0K
+On Fri, Jan 26, 2024 at 04:57:14PM +0800, Baokun Li wrote:
+
+Hey Baokun, 
+
+Good catch! I've added some minor comments below. Other than that feel
+free to add 
+
+Reviewed-by: Ojaswin Mujoo <ojaswin@linux.ibm.com>
+
+> We can trigger a slab-out-of-bounds with the following commands:
+> 
+>     mkfs.ext4 -F /dev/$disk 10G
+>     mount /dev/$disk /tmp/test
+>     echo 2147483647 > /sys/fs/ext4/$disk/mb_group_prealloc
+>     echo test > /tmp/test/file && sync
+> 
+> ==================================================================
+> BUG: KASAN: slab-out-of-bounds in ext4_mb_find_good_group_avg_frag_lists+0x8a/0x200 [ext4]
+> Read of size 8 at addr ffff888121b9d0f0 by task kworker/u2:0/11
+> CPU: 0 PID: 11 Comm: kworker/u2:0 Tainted: GL 6.7.0-next-20240118 #521
+> Call Trace:
+>  dump_stack_lvl+0x2c/0x50
+>  kasan_report+0xb6/0xf0
+>  ext4_mb_find_good_group_avg_frag_lists+0x8a/0x200 [ext4]
+>  ext4_mb_regular_allocator+0x19e9/0x2370 [ext4]
+>  ext4_mb_new_blocks+0x88a/0x1370 [ext4]
+>  ext4_ext_map_blocks+0x14f7/0x2390 [ext4]
+>  ext4_map_blocks+0x569/0xea0 [ext4]
+>  ext4_do_writepages+0x10f6/0x1bc0 [ext4]
+> [...]
+> ==================================================================
+> 
+> The flow of issue triggering is as follows:
+> 
+> // Set s_mb_group_prealloc to 2147483647 via sysfs
+> ext4_mb_new_blocks
+>   ext4_mb_normalize_request
+>     ext4_mb_normalize_group_request
+>       ac->ac_g_ex.fe_len = EXT4_SB(sb)->s_mb_group_prealloc
+>   ext4_mb_regular_allocator
+>     ext4_mb_choose_next_group
+>       ext4_mb_choose_next_group_best_avail
+>         mb_avg_fragment_size_order
+>           order = fls(len) - 2 = 29
+>         ext4_mb_find_good_group_avg_frag_lists
+>           frag_list = &sbi->s_mb_avg_fragment_size[order]
+>           if (list_empty(frag_list)) // Trigger SOOB!
+> 
+> At 4k block size, the length of the s_mb_avg_fragment_size list is 14, but
+> an oversized s_mb_group_prealloc is set, causing slab-out-of-bounds to be
+> triggered by an attempt to access an element at index 29.
+> 
+> Therefore it is not allowed to set s_mb_group_prealloc to a value greater
+> than s_clusters_per_group via sysfs, and to avoid returning an order from
+> mb_avg_fragment_size_order() that is greater than MB_NUM_ORDERS(sb).
+> 
+> Fixes: 7e170922f06b ("ext4: Add allocation criteria 1.5 (CR1_5)")
+> CC: stable@vger.kernel.org
+> Signed-off-by: Baokun Li <libaokun1@huawei.com>
+> ---
+>  fs/ext4/mballoc.c | 2 ++
+>  fs/ext4/sysfs.c   | 9 ++++++++-
+>  2 files changed, 10 insertions(+), 1 deletion(-)
+> 
+> diff --git a/fs/ext4/mballoc.c b/fs/ext4/mballoc.c
+> index f44f668e407f..1ea6491b6b00 100644
+> --- a/fs/ext4/mballoc.c
+> +++ b/fs/ext4/mballoc.c
+> @@ -832,6 +832,8 @@ static int mb_avg_fragment_size_order(struct super_block *sb, ext4_grpblk_t len)
+>     return 0;
+>   if (order == MB_NUM_ORDERS(sb))
+>     order--;
+> + if (WARN_ON_ONCE(order > MB_NUM_ORDERS(sb)))
+> +   order = MB_NUM_ORDERS(sb) - 1;
+>   return order;
+>  }
+
+So along with this change, I think it'll also be good to add an extra 
+check in ext4_mb_choose_next_group_best_avail() as:
+
+  if (1 << min_order < ac->ac_o_ex.fe_len)
+    min_order = fls(ac->ac_o_ex.fe_len);
+ 
++ if (order >= MB_NUM_ORDERS(ac->ac_sb))
++   order = MB_NUM_ORDERS(ac->ac_sb) - 1;
++
+  for (i = order; i >= min_order; i--) {
+    int frag_order;
+    /*
+
+
+The reason for this is that otherwise when order is large eg 29,
+we would unnecessarily loop from i=29 to i=13 while always
+looking at the same avg_fragment_list[13].
+
+Regards,
+ojaswin
