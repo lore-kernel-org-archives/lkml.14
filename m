@@ -1,65 +1,65 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42AC014C5AA;
-	Tue, 20 Feb 2024 20:04:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E765314D44A;
+	Tue, 20 Feb 2024 20:04:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708459473; cv=none; b=iv2DN6dxTfTkQ1c6v2Ay5/bZ3nCtykjzy25E5pzP4CayBDzV1ZYpqeXZ5qWlSfMiLWBUkYyIOADk+dQxwipGk+9O7/+xnHKw35tO6MuoF0NcWMeh/+gTpKqKheyGmV78GbGKaft5lThyJqj9deEqFUXqBSE00gLRG/gkjw7R34s=
+	t=1708459475; cv=none; b=rLIlLTuTxSmw9stdVzsbXpnmZORlz5U2/lRH1x1+Xem4yPxoySYUCLtT0w3TZERgrUpRM7ZdnObYsVCn0fS9dWxh0SOhtPNq1qQQfFeWPdXSnNg/ueXCftm9AudpARXIQcmzXo+bxZtZx/shGWml9Zg5Va51IazqIHkUTbnyfBI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708459473; c=relaxed/simple;
-	bh=qKd6PC8dt2Zlr75sWVig97tmMH/ZSxNd9EQoZmCCVgQ=;
+	s=arc-20240116; t=1708459475; c=relaxed/simple;
+	bh=eEoqsfwjMP7shFa4kXo0PsUew5lxMiJtKf43SuYBnXU=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=rnDZ/UNI2CQX5yoLLiphgDH4I2cP9tcxDHimXhBN/rvUiOrK9xzTX/bfFVEgtcK1g3GveA/hR/76cqtPVfQGA3IQZ9fSp/CqCnc0OKmNteqykLMDJyScCn9gbgZmLAOpzeywX7cTZt0ibu0u8OtmCBn56b5k7hZXfkyzBOTXqMI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=nliHQMg8; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=jBtZEobJ; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=MnntzAAxi/RJviOVJcVKEU+dZh3/RAsagLJPYybD2h12NUYYWsIveaJylhZYUtdBdhuxIFG5RBTBSwMDQZWfJfm+3kJNfo2Yv+oqPa0nOTseQ8R0c4QbUf8zb1OHf/Ui5dOEVX/GKpgQDxoy0YU91fdOX7HpJFYOItabYYmoXAE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=R2/dHB3z; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=GKYi36CV; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="nliHQMg8";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="jBtZEobJ"
-Date: Tue, 20 Feb 2024 20:04:29 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="R2/dHB3z";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="GKYi36CV"
+Date: Tue, 20 Feb 2024 20:04:31 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1708459470;
+	s=2020; t=1708459472;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=cupOez831WwgEQmmUacsYkV3FYrJtoBbvg1wYq5V8T4=;
-	b=nliHQMg8fqgI7Hq2TqY2G4eQz3zuRrZrGggGvf2vkSRiXkouqkgFv2jvdrpzGKDa/h3p6E
-	OwMVOAwCiGW9Fkn1fOTivsPdiR6megC9gvNRKE0gXyBHE5UEVzN7lXddsz4TI9YFElaNa+
-	2EYY8AZTvZV75+BiIEiOZQtc/oupUYkCr7JgyPcvCobNzP77toibBkqdXYAKW9rC609cNc
-	x9+tPZB2fw9YijCFCbvMpUsRHaBDNkRcVtn7Z+c8ZTAlhmouxl6TyiyrQuncoFXJQLNA7v
-	TQjhystPmhiqtJcznDsCCpj60yFYo+KlKJBgmAM/4k1Qxk/FnVkIjGx5mkyOPQ==
+	bh=RIBUMm6O87L0p27q8995FI6EXw/DkNExRcvosaiWqiY=;
+	b=R2/dHB3zEnqAmfhe03HDL6UiFKhuvLPaA5aG+Pb7XtiUpP7l9xAVYC5FJul9hDEzABdmWM
+	viS37m4bczW5xscEBChEpsIWxTHe0veo6GTxX/kZl/uM+gjuuogY1yk+6Je1+q/s5rPPK6
+	S6hXIDxh/0qbjRnPF653O5Txcr+7YMX5zMqQHRaAO/TdPuEsZ0k/ilmBlF4kGMYOrKM4V8
+	lBHzskFGEN1I6dBzg6XlbRFGn5K1CP4hmIkqw+UUoTbHTP2FSsQuB9XXv9jFLeV+kbRJZe
+	2tu4jKLO+XpZPGTORoX7Mjj4/Ew9qPl9VBxccSvhxelsjWWHaUtPYqQDOhKu7A==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1708459470;
+	s=2020e; t=1708459472;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=cupOez831WwgEQmmUacsYkV3FYrJtoBbvg1wYq5V8T4=;
-	b=jBtZEobJ1ZFtS/vh570/4FEVY/2ew3lKZAyC5HQIQnafsyJXm8l5m2jFEpkZx4gBii+Ofn
-	0itGioZhGa1D8JCg==
+	bh=RIBUMm6O87L0p27q8995FI6EXw/DkNExRcvosaiWqiY=;
+	b=GKYi36CVnaMDf6+iWqVxEhFjR4rQKzATNKzBTRAUb0wiJJdua7beVA6x4+louGgRy4WkBO
+	9sGy/iycR0VVdCBQ==
 From: "tip-bot2 for Anna-Maria Behnsen" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject: [tip: timers/core] arm64: vdso: Use generic union vdso_data_store
+Subject: [tip: timers/core] csky/vdso: Remove superfluous ifdeffery
 Cc: "Anna-Maria Behnsen" <anna-maria@linutronix.de>,
  Thomas Gleixner <tglx@linutronix.de>,
  Vincenzo Frascino <vincenzo.frascino@arm.com>,
- Kees Cook <keescook@chromium.org>, x86@kernel.org,
- linux-kernel@vger.kernel.org
-In-Reply-To: <20240219153939.75719-6-anna-maria@linutronix.de>
-References: <20240219153939.75719-6-anna-maria@linutronix.de>
+ Kees Cook <keescook@chromium.org>, Guo Ren <guoren@kernel.org>,
+ x86@kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20240219153939.75719-4-anna-maria@linutronix.de>
+References: <20240219153939.75719-4-anna-maria@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <170845946975.398.3528963742493792295.tip-bot2@tip-bot2>
+Message-ID: <170845947148.398.9186363038131049493.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -69,43 +69,59 @@ Content-Transfer-Encoding: 7bit
 
 The following commit has been merged into the timers/core branch of tip:
 
-Commit-ID:     d0fba04847ae1dc7015a2e87d5e4ae1111f7744e
-Gitweb:        https://git.kernel.org/tip/d0fba04847ae1dc7015a2e87d5e4ae1111f7744e
+Commit-ID:     4eb0833d7de058735a424f1f783126c60a346b34
+Gitweb:        https://git.kernel.org/tip/4eb0833d7de058735a424f1f783126c60a346b34
 Author:        Anna-Maria Behnsen <anna-maria@linutronix.de>
-AuthorDate:    Mon, 19 Feb 2024 16:39:34 +01:00
+AuthorDate:    Mon, 19 Feb 2024 16:39:32 +01:00
 Committer:     Thomas Gleixner <tglx@linutronix.de>
 CommitterDate: Tue, 20 Feb 2024 20:56:00 +01:00
 
-arm64: vdso: Use generic union vdso_data_store
+csky/vdso: Remove superfluous ifdeffery
 
-There is already a generic union definition for vdso_data_store in vdso
-datapage header.
-
-Use this definition to prevent code duplication.
+CSKY selects GENERIC_TIME_VSYSCALL. GENERIC_TIME_VSYSCALL dependent
+ifdeffery is superfluous. Clean it up.
 
 Signed-off-by: Anna-Maria Behnsen <anna-maria@linutronix.de>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 Reviewed-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
 Reviewed-by: Kees Cook <keescook@chromium.org>
-Link: https://lore.kernel.org/r/20240219153939.75719-6-anna-maria@linutronix.de
+Acked-by: Guo Ren <guoren@kernel.org>
+Link: https://lore.kernel.org/r/20240219153939.75719-4-anna-maria@linutronix.de
 
 ---
- arch/arm64/kernel/vdso.c | 5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
+ arch/csky/include/asm/vdso.h | 5 -----
+ arch/csky/kernel/vdso.c      | 4 ----
+ 2 files changed, 9 deletions(-)
 
-diff --git a/arch/arm64/kernel/vdso.c b/arch/arm64/kernel/vdso.c
-index 5562daf..89b6e78 100644
---- a/arch/arm64/kernel/vdso.c
-+++ b/arch/arm64/kernel/vdso.c
-@@ -69,10 +69,7 @@ static struct vdso_abi_info vdso_info[] __ro_after_init = {
- /*
-  * The vDSO data page.
-  */
--static union {
--	struct vdso_data	data[CS_BASES];
--	u8			page[PAGE_SIZE];
--} vdso_data_store __page_aligned_data;
-+static union vdso_data_store vdso_data_store __page_aligned_data;
- struct vdso_data *vdso_data = vdso_data_store.data;
+diff --git a/arch/csky/include/asm/vdso.h b/arch/csky/include/asm/vdso.h
+index bdce581..181a15e 100644
+--- a/arch/csky/include/asm/vdso.h
++++ b/arch/csky/include/asm/vdso.h
+@@ -5,11 +5,6 @@
  
- static int vdso_mremap(const struct vm_special_mapping *sm,
+ #include <linux/types.h>
+ 
+-#ifndef GENERIC_TIME_VSYSCALL
+-struct vdso_data {
+-};
+-#endif
+-
+ /*
+  * The VDSO symbols are mapped into Linux so we can just use regular symbol
+  * addressing to get their offsets in userspace.  The symbols are mapped at an
+diff --git a/arch/csky/kernel/vdso.c b/arch/csky/kernel/vdso.c
+index 16c20d6..e74a250 100644
+--- a/arch/csky/kernel/vdso.c
++++ b/arch/csky/kernel/vdso.c
+@@ -8,11 +8,7 @@
+ #include <linux/slab.h>
+ 
+ #include <asm/page.h>
+-#ifdef GENERIC_TIME_VSYSCALL
+ #include <vdso/datapage.h>
+-#else
+-#include <asm/vdso.h>
+-#endif
+ 
+ extern char vdso_start[], vdso_end[];
+ 
