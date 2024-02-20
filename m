@@ -1,114 +1,103 @@
-Received: from mx1.sberdevices.ru (mx1.sberdevices.ru [37.18.73.165])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com [209.85.216.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D5D476C9C;
-	Tue, 20 Feb 2024 17:36:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=37.18.73.165
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 236B177F0E
+	for <linux-kernel@vger.kernel.org>; Tue, 20 Feb 2024 17:37:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708450595; cv=none; b=Fecn16lq1PbIcfIo+Uy6zOas08rqhU9J3PbUIQhfj+tS9Up+zNPlImqTnc2V7KHvtkvmCqpD9A+o2qy8wOzuAWb6v82+r/d5v8mcYIrmumIsheIa63dAj51typJBzMaHt8ke/VaNJ6VsRfBfVgv9c0QYewHYn+EsRRjjmAo05jk=
+	t=1708450665; cv=none; b=N0vUp9T/rGw/Ul8RIAoMAwFaX+UR4rOL84p8sr3uRzyFFTesjR1+LV72LWDVhGYJJH/gDIYYKz1ltDLD+UowJPGgnndOoXcMHctD3jKv0w9jlsnnJXiu0WpR4XUVE+Wq/j+Q5rBaTOoCiOw46G6I482NaMKmg+XRiawgzDFMnio=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708450595; c=relaxed/simple;
-	bh=cmTEJiha2tFDubjqRfGi+KdNyZivDUyjm8JbT+qL5uo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=Fd7yUt1K1RV4WwWm8rav8eZkBsjhBJopH3XV0mOxV2S5b9SeTYb1IL8SXoz3LJEo6KmFyX6vEAOoJMg+mAiWrNOjn0oTI9Be1knAAUiV3LEC2R4vZF33QAciOwDIQraK2ld0+Ou5qLzrjPr8O+XYP/uRx6O9ZKNmLSv7sB7JIKw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com; spf=pass smtp.mailfrom=sberdevices.ru; dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b=NMO8NtBn; arc=none smtp.client-ip=37.18.73.165
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sberdevices.ru
+	s=arc-20240116; t=1708450665; c=relaxed/simple;
+	bh=WKpzNcvIK0P/NIuxFDXvfATWYBYq86v97mLTcUnLeqg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ufL7h0dJiaWUEY9ylgRfkun2lfNYfX94XUCR7WTLNo7xC2oQNek89L/Je4NqIRtKkhp8qrEW5ueXEVtRchTzK51QYa2gHaoIAguK+fG21DGkfygWhymiT8k0hQoCfgnbmsaui0PEpr6VI8J5IAMpNSIGaQfyqmYG+TGIKreshac=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=mlHoopGF; arc=none smtp.client-ip=209.85.216.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b="NMO8NtBn"
-Received: from p-infra-ksmg-sc-msk01 (localhost [127.0.0.1])
-	by mx1.sberdevices.ru (Postfix) with ESMTP id 3789F100322;
-	Tue, 20 Feb 2024 20:36:22 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mx1.sberdevices.ru 3789F100322
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=salutedevices.com;
-	s=mail; t=1708450582;
-	bh=CT2QMXS2awc1UaugLcYawqtrm8RuYnHBK31jT43QizI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type:From;
-	b=NMO8NtBn7IkhhTHIh+4qe3rb8AJgePA80AUDKl2Jh0f9msCkzvOsYcsI+orVuKYw3
-	 KkLezKeEuOlsZzYNQC788a1Lg/g7HHZxF4VTu5Ic6f/RF2zobGj0JpUBj5H+k+aE0b
-	 c0WwZ+scGjZcW4Na2zSk2Rir4nWJWLiGiamhMCaHIa3KHh3Ivjv/ZRoyBGIgwe7VwO
-	 jqIsOmbFPWRpsESeF0mxOq2Cu71rHvsb+TfEOcl8jdN0He0SBwzf60QcyXy0Q1HVWk
-	 CpeSnvelkUGEDXQYp1IVVzXLNxH9+nRQVWgo5EtfrxRChM2ikxbUzDuaaI3jx58ZlS
-	 vKQr3zKgkpMfg==
-Received: from smtp.sberdevices.ru (p-i-exch-sc-m01.sberdevices.ru [172.16.192.107])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mx1.sberdevices.ru (Postfix) with ESMTPS;
-	Tue, 20 Feb 2024 20:36:22 +0300 (MSK)
-Received: from [172.28.64.15] (100.64.160.123) by
- p-i-exch-sc-m01.sberdevices.ru (172.16.192.107) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Tue, 20 Feb 2024 20:36:21 +0300
-Message-ID: <a25ff51d-d328-43d8-98af-91598c1ef23d@salutedevices.com>
-Date: Tue, 20 Feb 2024 20:34:52 +0300
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mlHoopGF"
+Received: by mail-pj1-f41.google.com with SMTP id 98e67ed59e1d1-299354e5f01so2908981a91.1
+        for <linux-kernel@vger.kernel.org>; Tue, 20 Feb 2024 09:37:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1708450654; x=1709055454; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=qhuni0civ32K5iUKCYdlSRc+Waum7V0xwhUm0rPzhhY=;
+        b=mlHoopGFd+69Ex1jDpWqYHxcFw4rtiUeO/ti8Tdg7Azx7UeqL0roFdsSG7GbFwfkoF
+         NsSbMIMpjjKIc1X8grlygtwVmNzxS2ToFP/Wok537ThWTG9UGz0d6Sw0E9xLs/Kvy8+1
+         8D7cAwguCdo3hDIlxjBRFvy3HvaLJUE67rXPheSOQkdegZmuXo4KmPdDEcz0ujjvsqQo
+         JstigPF9fwfQzaC+E/5ZBMAGWya4sLjgugrj7WZVCA0/qzJc+Jl9OrWQaVHmgoG6g+aI
+         zcuiPjz36a4UoDloLUMSgucr3NHs3jhpzAsOe3non7JicTUPDm4a8sNGM8sve6/pfZpC
+         5cbQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708450654; x=1709055454;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=qhuni0civ32K5iUKCYdlSRc+Waum7V0xwhUm0rPzhhY=;
+        b=GobtQeUyAzF/79qpHcTceSgQdIDnSXIij5QdZsOo8G0YGBCjk90V2rB3rqpSH4TfV9
+         ZkjZMGzenCrL8cGNfo3ZFbaw/jPWVkqr+QUAgmoWs7Ro2EbNd1f0upNsp6dt+NC30zDI
+         DVY30fsQL3beo85fba8Hpp8SC0GCZvqxyP2xY2YTPremqWcSZHfUZNP0HLZHP/9073Di
+         xI3usAD74gRE2AEXfZzZE32slzRBW6PL4xxdR93wIVgzZFDQc5Eop3pkFGO0VjyLT3Pr
+         VFWu5stagbpq2/PC8dskr9YBk6jzUk7eu7U6y2me4/yYEX8dx3jwQtqcNaFYluDyYInW
+         yPJg==
+X-Forwarded-Encrypted: i=1; AJvYcCUMFPVa0GDltBpd6ipBBZOojDZT+lIR/DvEV4iA5r+49OublGjYkzHc7kwtZIikwsx0R4ITfMDMECt2/DqfPa8lPJbPxSYeKYkpAQty
+X-Gm-Message-State: AOJu0YxB745mDT0+rIUWQ/ZpbCwVwsaipz9zOhf0sDaY33H767IuNZ+A
+	kxph1M/VV7EvoE31DkW/4M54925NHbRZT3/GI3Y7/e9spi22XldDyqdHUd8ncrkrrRvqpaT57Ml
+	bsNegiQOnVzvCT1uOZL8NxojRlhTEM1MoyDyvMw==
+X-Google-Smtp-Source: AGHT+IF0E7p3xEhZaG2DRCXUZ6Y/iTvEcWqkaMIgiq8fc5zLouls5yDaamySwCKx14Lnh+WGWbXnjhylJHxjzIqdudQ=
+X-Received: by 2002:a17:90a:c598:b0:299:41dd:95c0 with SMTP id
+ l24-20020a17090ac59800b0029941dd95c0mr15044844pjt.16.1708450654484; Tue, 20
+ Feb 2024 09:37:34 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] clk: allow to skip clk_core_req_round_rate_nolock()
-To: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
-	<sboyd@kernel.org>, <linux-clk@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>
-CC: <kernel@salutedevices.com>
-References: <20240126201433.1830600-1-jan.dakinevich@salutedevices.com>
-Content-Language: en-US
-From: Jan Dakinevich <jan.dakinevich@salutedevices.com>
-In-Reply-To: <20240126201433.1830600-1-jan.dakinevich@salutedevices.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: p-i-exch-sc-m01.sberdevices.ru (172.16.192.107) To
- p-i-exch-sc-m01.sberdevices.ru (172.16.192.107)
-X-KSMG-Rule-ID: 10
-X-KSMG-Message-Action: clean
-X-KSMG-AntiSpam-Lua-Profiles: 183586 [Feb 20 2024]
-X-KSMG-AntiSpam-Version: 6.1.0.3
-X-KSMG-AntiSpam-Envelope-From: YVDakinevich@sberdevices.ru
-X-KSMG-AntiSpam-Rate: 0
-X-KSMG-AntiSpam-Status: not_detected
-X-KSMG-AntiSpam-Method: none
-X-KSMG-AntiSpam-Auth: dkim=none
-X-KSMG-AntiSpam-Info: LuaCore: 7 0.3.7 6d6bf5bd8eea7373134f756a2fd73e9456bb7d1a, {Tracking_smtp_not_equal_from}, {Tracking_from_domain_doesnt_match_to}, salutedevices.com:7.1.1;100.64.160.123:7.1.2;127.0.0.199:7.1.2;sberdevices.ru:5.0.1,7.1.1;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;smtp.sberdevices.ru:5.0.1,7.1.1, FromAlignment: n, {Tracking_smtp_domain_mismatch}, {Tracking_smtp_domain_2level_mismatch}, {Tracking_white_helo}, ApMailHostAddress: 100.64.160.123
-X-MS-Exchange-Organization-SCL: -1
-X-KSMG-AntiSpam-Interceptor-Info: scan successful
-X-KSMG-AntiPhishing: Clean
-X-KSMG-LinksScanning: Clean
-X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 2.0.1.6960, bases: 2024/02/20 16:18:00 #23712592
-X-KSMG-AntiVirus-Status: Clean, skipped
+References: <20240205021123.2225933-1-qyousef@layalina.io> <20240205021123.2225933-3-qyousef@layalina.io>
+ <CAKfTPtAsij+_=n9JCxHw==j3-wC9rYZHEJyVmyBJsx_-Udhzgw@mail.gmail.com>
+ <20240220155913.n7uxb3e56kuhcxs2@airbuntu> <20240220161546.7r3leteuqygf6jxc@airbuntu>
+In-Reply-To: <20240220161546.7r3leteuqygf6jxc@airbuntu>
+From: Vincent Guittot <vincent.guittot@linaro.org>
+Date: Tue, 20 Feb 2024 18:37:22 +0100
+Message-ID: <CAKfTPtAv-9HuX5xqEdMamo=YtyryA+K2nHBBG5XX7oyNybnUVA@mail.gmail.com>
+Subject: Re: [PATCH v5 2/2] sched/fair: Check a task has a fitting cpu when
+ updating misfit
+To: Qais Yousef <qyousef@layalina.io>
+Cc: Ingo Molnar <mingo@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
+	Dietmar Eggemann <dietmar.eggemann@arm.com>, linux-kernel@vger.kernel.org, 
+	Pierre Gondois <Pierre.Gondois@arm.com>
+Content-Type: text/plain; charset="UTF-8"
 
-Please take a look at this patch.
+On Tue, 20 Feb 2024 at 17:15, Qais Yousef <qyousef@layalina.io> wrote:
+>
+> On 02/20/24 15:59, Qais Yousef wrote:
+>
+> > I realized that I wanted to also add a new patch to not double balance_interval
+> > for misfit failures. I think you indicated that seems the right thing to do?
+>
+> I think this should do it?
 
-On 1/26/24 23:14, Jan Dakinevich wrote:
-> Calling of clk_core_req_round_rate_nolock() can be time-consuming in a
-> case of deep hierarchy with multiple dividers/parents. But if the clock
-> already has exactly the same rate as desired, there is no need to
-> determine how it could be rounded.
-> 
-> Signed-off-by: Jan Dakinevich <jan.dakinevich@salutedevices.com>
-> ---
->   drivers/clk/clk.c | 6 ++++++
->   1 file changed, 6 insertions(+)
-> 
-> diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
-> index 2253c154a824..04f0ddced932 100644
-> --- a/drivers/clk/clk.c
-> +++ b/drivers/clk/clk.c
-> @@ -2423,6 +2423,12 @@ static int clk_core_set_rate_nolock(struct clk_core *core,
->   	if (!core)
->   		return 0;
->   
-> +	/* skip calculation of rounded rate if the clock already has exactly
-> +	 * the same rate as desired
-> +	 */
-> +	if (req_rate == clk_core_get_rate_nolock(core))
-> +		return 0;
-> +
->   	rate = clk_core_req_round_rate_nolock(core, req_rate);
->   
->   	/* bail early if nothing to do */
+yes it should do it
 
--- 
-Best regards
-Jan Dakinevich
+>
+> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> index 70ffbb1aa15c..b12b7de495d0 100644
+> --- a/kernel/sched/fair.c
+> +++ b/kernel/sched/fair.c
+> @@ -11552,8 +11552,13 @@ static int load_balance(int this_cpu, struct rq *this_rq,
+>          * repeatedly reach this code, which would lead to balance_interval
+>          * skyrocketing in a short amount of time. Skip the balance_interval
+>          * increase logic to avoid that.
+> +        *
+> +        * Similarly misfit migration which is not necessarily an indication of
+> +        * the system being busy and requires lb to backoff to let it settle
+> +        * down.
+>          */
+> -       if (env.idle == CPU_NEWLY_IDLE)
+> +       if (env.idle == CPU_NEWLY_IDLE ||
+> +           env.migration_type == migrate_misfit)
+>                 goto out;
+>
+>         /* tune up the balancing interval */
