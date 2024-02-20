@@ -1,124 +1,102 @@
-Received: from mail-pg1-f179.google.com (mail-pg1-f179.google.com [209.85.215.179])
+Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 253BA5917C
-	for <linux-kernel@vger.kernel.org>; Tue, 20 Feb 2024 06:09:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 377D458205
+	for <linux-kernel@vger.kernel.org>; Tue, 20 Feb 2024 06:12:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708409344; cv=none; b=bUco6iLzdimGGFGpOoHURa2yVR/DJfyHIdkTj1rXfrWOutKtM+SSWO1Pp79tNWYop/E5DiuZFcpyGyJ88qJj+18lDOrQTgRm9YD9pYsaWdXAfZ9Uuo+afyeHu/AiTdpQL8CBlP5+Wj/kcRM1PxYiwTLIhMkgvZDTNWa0z1JWNk4=
+	t=1708409544; cv=none; b=rdJ9quAxwkOEAMKCdMbCZ4tig29zKivgd3neiB1zR9ColrU7FHhNFnEd2fVZLToUGXgcqAAD4aJopDFeg+ByDCmP7umBVv/s+gSk2Ylo7wGxxxQ7qLw95sriVjF6sMQzMTuDY8MsT0vf4xafSRedo+kObBLarERr7FusyyoRtZE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708409344; c=relaxed/simple;
-	bh=cHX9yVZX2U/M0SSdzvjQb4m+7zWASmD9kQu3egh0Rao=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=SNKpZj6oZF2P1aS2eFTkOvwtKuRP559kPOBcjVJDb63/jEYXECPgLtsBLJcPMF5UlmxXGXC6ga+1iEAl6Y3292UbfEcR/5TaE/4d31PbbJmOWiA1sMm4K+UmYU/fulUf3tXAK+oKaPYTFTKS6SA/pyvXC+wjE5WYGZyfZulb104=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=BFcegst6; arc=none smtp.client-ip=209.85.215.179
+	s=arc-20240116; t=1708409544; c=relaxed/simple;
+	bh=YwxziMJHXX2W98fYvbTdPERYnB552e6dw+lv8Xxeaik=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=dwwbd3kEui+Go9Tt/9E8Zd54Ol32vMni6eCf6BWBCmaQuIpoh5k0XmBQtnTM7NbBfdvEKU0Gu1vwtbgTvz1jEEh3MJwXaPub0WnocVSABgij1JoWXvO6teptakk4rSaMBPzAiFEbMnnGjfbKtwjcgrifm72pkKN2BB1HTi7jgB4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=O/RcjSY9; arc=none smtp.client-ip=209.85.208.170
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="BFcegst6"
-Received: by mail-pg1-f179.google.com with SMTP id 41be03b00d2f7-5c6bd3100fcso2647587a12.3
-        for <linux-kernel@vger.kernel.org>; Mon, 19 Feb 2024 22:09:03 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="O/RcjSY9"
+Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-2d0a4e1789cso60600161fa.3
+        for <linux-kernel@vger.kernel.org>; Mon, 19 Feb 2024 22:12:22 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ventanamicro.com; s=google; t=1708409342; x=1709014142; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+        d=ventanamicro.com; s=google; t=1708409541; x=1709014341; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=KTFsbe7fY6CIFM3QbszGAvcCN7xF4yBveTkrIBLrPJ8=;
-        b=BFcegst6a8/p/P+PUITfAlq8/+c+zurC5hvygCIaw5nb96Jr2K3GYTR4jgmrNikbm/
-         hQ8CKcJ8i9wQcIsVaDzEDBuVTzDxLb3cZ+ZAcvU0Y4o647EVilMLwzNTpRDoFcSblDQ8
-         +DRQgXJKCu38jAu9iQtmtHqc9yZEOSfY2jzWHXgsmJ4AWVt7HLqrhZYfzuK2G5gNACi8
-         6ktgTI5N2Fb8KekP/baFsGfusMrjuIHTvLUMJgqtIxoVGnHfe0mUwb3sOn5FBStGrBKN
-         J9RZBjRWJOI1oPrwCILdjo8JnlzzndHzHnOSjWPQqzK0TwKePiFr6kc15T+YPYjfRAKK
-         AShQ==
+        bh=45sEQuqSChb4TFdk2aFCbPunV2X7Zp2Ggfs8QlVxLCE=;
+        b=O/RcjSY94OAL/Y9ZG6azBiEDoKYTLLN7PUZejAf3JPSFl0t5fd7dv+4EXsrnH0jqp/
+         1YlYt0dNzU5gpnoQ9TzYxmpE4uX2Qg//pc5EEf1wtcYMUMRx05c1DsXew/Y30iA77mXX
+         b99Z0LLzvUKtFVCw1cI28DsJ3Xzp6mAE2rjpdnWNNUAbcvYBc9e+BzYNyzYbkQGoEPzn
+         So/axWQ5Y8KY2hBMqbc6xxHpOIZ/gTgA71ltfMFjgB6Dm2M/Kx6IZSWfo2Vba+uR1Dfj
+         vwcrDmxcV0jQrxVGZD+fGLUpD512Oa5Mv13J+3+4ba8K8kZeSOhIhdsMJkMwIwJoZVaJ
+         nVmQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708409342; x=1709014142;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1708409541; x=1709014341;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=KTFsbe7fY6CIFM3QbszGAvcCN7xF4yBveTkrIBLrPJ8=;
-        b=vnl2pB9Xj8A/fZsNKk0olgjYmEx8GlIOIyMSMp4co5kKLlcmM0Yz00j1Fh5y5Yy1gz
-         O1tUKzljue5e8mqI5k4WUI9LOigkLXe67sNs/m3duZsf5H1J5TMbn5vhI1TeWB5JRtfI
-         POrGLPqPuDOIGexXeJdjSOIq0buW0ASO+Wnp+snHtvHt8UZnNEtRnDWKGzfqEUxyNK1G
-         YeyV8ODHaEphxpUKPyseskg2n2xNRX9J3Wh5svdrrQNkx2qVqO8lNwqZTcVQs+id5yAr
-         z9qaRp2fFCo63gIfILwuDRRE07XQAuePyCcB3WFbWLFEM8ftC7Ab7QoTlHhpwSSrlqCB
-         3OSQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUf7Gl24zvZD5fYJ9oOq3P0SKmoD5Q/NvPP7H/kKNlopU35VytNW943TR6t20fhfK0yc9DcFrM8CIBthQEolSkOirfkNoCItqqU6MfR
-X-Gm-Message-State: AOJu0Yw7GL+E8KvBIOZARXSjvRKOSSdDhqXgneL1lCzfbGhoGHppj+DZ
-	BoPkSqSqhy0nYfTI1/Z+t/F3op+b0e+gVltrZAu4hv27OrenJgjY5wtRkHYgP6s=
-X-Google-Smtp-Source: AGHT+IEBBH3jBOTouE3fPQJ+zX117KApfGEgQ3veE5qYZqE2RMAHzwyj/h4hK1b0zjfKKWY60Y75oQ==
-X-Received: by 2002:a05:6a20:93aa:b0:1a0:7fa2:305 with SMTP id x42-20020a056a2093aa00b001a07fa20305mr14510461pzh.47.1708409342479;
-        Mon, 19 Feb 2024 22:09:02 -0800 (PST)
-Received: from anup-ubuntu-vm.localdomain ([171.76.80.86])
-        by smtp.gmail.com with ESMTPSA id j6-20020a17090276c600b001db4c89aea5sm5368114plt.158.2024.02.19.22.08.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 19 Feb 2024 22:09:02 -0800 (PST)
-From: Anup Patel <apatel@ventanamicro.com>
-To: Palmer Dabbelt <palmer@dabbelt.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Frank Rowand <frowand.list@gmail.com>,
-	Conor Dooley <conor+dt@kernel.org>
-Cc: Marc Zyngier <maz@kernel.org>,
-	=?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn@kernel.org>,
-	Atish Patra <atishp@atishpatra.org>,
-	Andrew Jones <ajones@ventanamicro.com>,
-	Sunil V L <sunilvl@ventanamicro.com>,
-	Saravana Kannan <saravanak@google.com>,
-	Anup Patel <anup@brainfault.org>,
-	linux-riscv@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	Anup Patel <apatel@ventanamicro.com>
-Subject: [PATCH v13 13/13] MAINTAINERS: Add entry for RISC-V AIA drivers
-Date: Tue, 20 Feb 2024 11:37:18 +0530
-Message-Id: <20240220060718.823229-14-apatel@ventanamicro.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240220060718.823229-1-apatel@ventanamicro.com>
-References: <20240220060718.823229-1-apatel@ventanamicro.com>
+        bh=45sEQuqSChb4TFdk2aFCbPunV2X7Zp2Ggfs8QlVxLCE=;
+        b=gED86vJ//fz/IraephNVFL5QqoUFMEI8G4q0wO/uiy1TSuwxtv0WXcHeSkgV9p0ehQ
+         Fx6GTDrqwLkPMkAd/byZu4T9ca0KqHHzjGSMGNmDOvy3VUxqmOwv5cW+y9/erxaKrwHG
+         tqsGHLSTy0VjSmV/MHMZl/wCorYbbk9/2IUVfroZM55ELCyCmINtcu2TlxeT9+tY/i8Z
+         9kGtcpZ4Bu22Al2EprrG8s/Cc848UCn7g4Q2WQAIrrNIOnT3RBzXtDoGekrw8nLvhX43
+         Yrk38cSza4wrl3QnZcwxWgll5a9QHlccpzM6etcD0SNWlkQjSqXbnaEvMdupBSZM/6cT
+         Kviw==
+X-Forwarded-Encrypted: i=1; AJvYcCUorxs30VM8/68q9sS1aETeeMYjtpI/tbNKrTbyXaJgA8OyG/EGmJygF3R5GO6IyKrvwbdupo3oTrc3g64ZK6uO8gkF38x9Cj3EK559
+X-Gm-Message-State: AOJu0YxffUy6dLECRe/TUGAb4E13tKWkkUK8BEBurbRLkerhSciGnejr
+	lUNjAoSo9kSx4PsIti0tTBLl9yzaa4ArtXdVDBdJwOf33Y1iezaELGZy/rtwuQnDWA0BR1t1QXg
+	UUrcCNa0amhHhLFzfJgruqVaT2IOsNvFy2g/UPw==
+X-Google-Smtp-Source: AGHT+IHMJBI/oMtcWEZVPK92GP05YnjcAeWF8XgBIuxDTLOi4XZzV5Qx4HMrS5IUdIaPjB4EYUfB3IKgxGQZLGSs3mQ=
+X-Received: by 2002:a2e:b8c8:0:b0:2d2:bd9:f100 with SMTP id
+ s8-20020a2eb8c8000000b002d20bd9f100mr10605944ljp.20.1708409541306; Mon, 19
+ Feb 2024 22:12:21 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240127161753.114685-1-apatel@ventanamicro.com>
+ <CAK9=C2Vwtj2gZg-P73yLMxu0rPXQ3YrRRuxq6HcpHMXgs-jHaw@mail.gmail.com>
+ <87bk8ig6t2.ffs@tglx> <CAK9=C2WsSSHgDF+7ruxx_QF0Lk+Dsx2F2Y-_NabnxrJ_qWhgGQ@mail.gmail.com>
+ <87v86pcxcb.ffs@tglx> <87zfw0azmn.ffs@tglx>
+In-Reply-To: <87zfw0azmn.ffs@tglx>
+From: Anup Patel <apatel@ventanamicro.com>
+Date: Tue, 20 Feb 2024 11:42:09 +0530
+Message-ID: <CAK9=C2W3cv0yd0faMrKjKwmSjGQ4zVVMkcbr=PtxJ1K0sn=SLQ@mail.gmail.com>
+Subject: Re: [PATCH v12 00/25] Linux RISC-V AIA Support
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: Paul Walmsley <paul.walmsley@sifive.com>, Marc Zyngier <maz@kernel.org>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@kernel.org>, 
+	Rob Herring <robh+dt@kernel.org>, Atish Patra <atishp@atishpatra.org>, 
+	Andrew Jones <ajones@ventanamicro.com>, Sunil V L <sunilvl@ventanamicro.com>, 
+	Saravana Kannan <saravanak@google.com>, Anup Patel <anup@brainfault.org>, 
+	linux-riscv@lists.infradead.org, linux-arm-kernel@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Frank Rowand <frowand.list@gmail.com>, 
+	Conor Dooley <conor+dt@kernel.org>, "Ahmed S. Darwish" <darwi@linutronix.de>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Add myself as maintainer for RISC-V AIA drivers including the
-RISC-V INTC driver which supports both AIA and non-AIA platforms.
+On Sat, Feb 17, 2024 at 2:35=E2=80=AFAM Thomas Gleixner <tglx@linutronix.de=
+> wrote:
+>
+> Anup!
+>
+> On Thu, Feb 15 2024 at 20:59, Thomas Gleixner wrote:
+> > I'm going over the rest of the series after I dealt with my other patch
+> > backlog.
+>
+> Aside of the nitpicks I had, this looks pretty reasonable.
 
-Signed-off-by: Anup Patel <apatel@ventanamicro.com>
----
- MAINTAINERS | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+Thanks for your review.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 9ed4d3868539..d948f9210f1b 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -18801,6 +18801,20 @@ S:	Maintained
- F:	drivers/mtd/nand/raw/r852.c
- F:	drivers/mtd/nand/raw/r852.h
- 
-+RISC-V AIA DRIVERS
-+M:	Anup Patel <anup@brainfault.org>
-+L:	linux-riscv@lists.infradead.org
-+S:	Maintained
-+F:	Documentation/devicetree/bindings/interrupt-controller/riscv,aplic.yaml
-+F:	Documentation/devicetree/bindings/interrupt-controller/riscv,imsics.yaml
-+F:	drivers/irqchip/irq-riscv-aplic-*.c
-+F:	drivers/irqchip/irq-riscv-aplic-*.h
-+F:	drivers/irqchip/irq-riscv-imsic-*.c
-+F:	drivers/irqchip/irq-riscv-imsic-*.h
-+F:	drivers/irqchip/irq-riscv-intc.c
-+F:	include/linux/irqchip/riscv-aplic.h
-+F:	include/linux/irqchip/riscv-imsic.h
-+
- RISC-V ARCHITECTURE
- M:	Paul Walmsley <paul.walmsley@sifive.com>
- M:	Palmer Dabbelt <palmer@dabbelt.com>
--- 
-2.34.1
+I have sent v13 series. Please have a look.
 
+Regards,
+Anup
+
+>
+> Thanks,
+>
+>         tglx
