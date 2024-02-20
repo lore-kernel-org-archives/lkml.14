@@ -1,125 +1,189 @@
-Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com [209.85.216.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailout2.w1.samsung.com (mailout2.w1.samsung.com [210.118.77.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 606E964A98
-	for <linux-kernel@vger.kernel.org>; Tue, 20 Feb 2024 08:56:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0F895F554
+	for <linux-kernel@vger.kernel.org>; Tue, 20 Feb 2024 08:57:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708419387; cv=none; b=JDbG/+C9P8/Y1VIFw9e10Fjd4kvucOOkLeNTxMtwHlmHUR6wXugjYHmKIe4LOCNKec1fDQ78g6SStNkQ+oPIpU4WAaV4TL65Thg4DwyP4tNIklAljIWuw9Km1HLcvHqinSiz5RydAA8M3yotJ8OBcdwMhkoxnrXlFRhx3/D9KyY=
+	t=1708419459; cv=none; b=oxkKRdKLqc3zN0i2E0NPhx54JpuB++rymz6xNA5UdEAw6d7UZgE6RfGGDTWMuZh6H2i391cPCLmovysl7UqJ/gcZr8pTm61NZV2dhUwdR7oO4bz5C+FHJS+rOZlqwVDOb/XxLdbPyBglnbvGUFoeUafjrF65XIHLO2fLVGfLC3o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708419387; c=relaxed/simple;
-	bh=XxS2PiR8TvPD6PooYcEaHBnRrtlm5KfcjvweKguWnMg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=giMdH0DcitI0hQWQWwz4AuS68034hTaowyphlDzaajZddd1LnGZobsJBCihX5CVTrf80jQgbNEiDYvoXm8OOYNbaCxd0gAHKMTRH5PtFUOuiyrbiUjTsAANzIzv7ZBinrv/iYx2QVsvisHvbplyyFtkY2/LOPg4J2p0xmtBuK18=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=anyfinetworks.com; spf=none smtp.mailfrom=anyfinetworks.com; dkim=pass (2048-bit key) header.d=anyfinetworks-com.20230601.gappssmtp.com header.i=@anyfinetworks-com.20230601.gappssmtp.com header.b=h0GLh4RQ; arc=none smtp.client-ip=209.85.216.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=anyfinetworks.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=anyfinetworks.com
+	s=arc-20240116; t=1708419459; c=relaxed/simple;
+	bh=d3J2viCIupmNu/Zrz/TXpO4/KSnq3KH1ha9ME5ghR1w=;
+	h=Date:From:To:CC:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To:References; b=aPzhYj/Qh4AzHC8pgDJOBhu4iXQ/gemG7YgZe47HpCHeO3tG9XCx/et/zXWrEKWwxWqXqBh59+NvchNEqRHK2ue0uxtA98qHS4L0+yhMm9Ao3B3j5OHN20DTRpAICKLw4afiazdvoXy0OVGSspf0km+yHNhUpORrFJPEIzo7x2o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=dvifq2gp; arc=none smtp.client-ip=210.118.77.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=anyfinetworks-com.20230601.gappssmtp.com header.i=@anyfinetworks-com.20230601.gappssmtp.com header.b="h0GLh4RQ"
-Received: by mail-pj1-f45.google.com with SMTP id 98e67ed59e1d1-299566373d4so1742788a91.1
-        for <linux-kernel@vger.kernel.org>; Tue, 20 Feb 2024 00:56:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=anyfinetworks-com.20230601.gappssmtp.com; s=20230601; t=1708419384; x=1709024184; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=dchRxoxVGKioFcq/L4EKVcfcET3Jr75StrPrjuqQjL0=;
-        b=h0GLh4RQIVLzVLbe8bp+bnwWfCCl8/am1azMVG8j9x/pf7WzYHYHqrdPyClK6ldiVt
-         RVgydbd581CGpeqebpB8wUsuydpAbR9W8qxBbrNvHITYCwMzGiVtIHoeWIOdea3jJXLW
-         BK4Rko4LsKB4/W0Yjo8eQ9QGAGGG1FABugsJDm6e0LtBV+XIlIu7YaGGiRZmgEviLbHj
-         m8ioux5EFen4Y6eMkO6DjL0809cTtD05/5/z8uOLyi7kaurzT4AG55ErqCpDyZGDEsdt
-         KmtCD5kmTU9JzJTI7xd/B53T32FQXpslVn25zUtK3oiF2zfZT8ieYnl8vRQs14v1qrKi
-         6tSQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708419384; x=1709024184;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=dchRxoxVGKioFcq/L4EKVcfcET3Jr75StrPrjuqQjL0=;
-        b=b4HBRIS91lM/u+pJh3cqZL9yX0yWEOua5SJsgiTBQMDT/Bz8EyGIXuIiYSe1p4hy+z
-         XGtrU1JELS7uPyoEfw+MxFqpz+XVMEzQsWZlJmqSpBWjGACLSLWZJ/TmDRl8WcaLltR1
-         rwYRAQ64G/1q+ah8tF+1YRXg15Z0iDG8cPKKPr7TqWwCX5yMoZjKYwDFvrlgzOgq1GIb
-         15cTppAdUc6wm+XrMzjImQrArkMFmdLdlBUCh52bGspfePOXTPdKso6j31x3UdO7EkW8
-         LulSupcl0JdZYyQqAxLFpi25hOT2Kee1kU7o48xWkH3rivGr9lesYjzEArC9L5leeH3H
-         4feQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXYuFkRZrXCmTuKTNFCdiMgKL7MgXGpWhNPoI3t1A9HBuiFNqaMNHSAY73IUkCcgWHStrdWtlATWi5DGaHKzJdEBiR3fZ3PZ7GMcEAX
-X-Gm-Message-State: AOJu0YydlGj1xdueMWczvBimLMYWELl8iarVNQH54HH3m4o69CoULufn
-	vma8jXBAbw8GfA/S37HiolwkiAX7+gmGJzyl9omqI8DWczJWbFEtylnaHLIcNtb2G6MiSlz4LxG
-	VH8RkF+z38cW/swB6z8kA+YukAa13aiuBraSSYg==
-X-Google-Smtp-Source: AGHT+IHl7TYiCYsEXMrh4VmDGMZtMQoKh4DXw10jPMT7TOqjy20gTUqscrvJKqfiSDRCNiwo83Vx2RGvwz2GtNa0WA4=
-X-Received: by 2002:a17:90a:34cf:b0:299:5b95:cd7d with SMTP id
- m15-20020a17090a34cf00b002995b95cd7dmr4504419pjf.45.1708419384629; Tue, 20
- Feb 2024 00:56:24 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="dvifq2gp"
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+	by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20240220085729euoutp02afb6d61807c26413710282e4b09636c6~1hnAVSdJD0613906139euoutp02L;
+	Tue, 20 Feb 2024 08:57:29 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20240220085729euoutp02afb6d61807c26413710282e4b09636c6~1hnAVSdJD0613906139euoutp02L
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1708419449;
+	bh=6Jrr4BErpksEcMV4nXO6UqABNIRBF9KHU7/F0KYEIJU=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
+	b=dvifq2gp76nXlC4cEs/gnf4WII2EsnAlggPKd2dqgh21MCcKgUsxG/nWVhUn2CLtf
+	 OZ3TR07Lip2uRa5+0JyttTa9Uz6SiZub8dr4xE5cZaEIUqm7JKtsMkRJgk9YPgZKkE
+	 D+0QD5rFgDXA/sOqWf0CJG9wQnecHhnTvy9MMQ0g=
+Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
+	eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+	20240220085729eucas1p1861faba1147f1de9f5021959fd68cb8c~1hnAKtA4P0622906229eucas1p1G;
+	Tue, 20 Feb 2024 08:57:29 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+	eusmges1new.samsung.com (EUCPMTA) with SMTP id 4F.3B.09539.97964D56; Tue, 20
+	Feb 2024 08:57:29 +0000 (GMT)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+	eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+	20240220085729eucas1p23994be6aaf97fe2f41fa1a29c61dd30c~1hm-zsUIc1250512505eucas1p2p;
+	Tue, 20 Feb 2024 08:57:29 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+	eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+	20240220085729eusmtrp1b456ef066080312b9669d778ca9cf87b~1hm-zJ9rL0761307613eusmtrp1q;
+	Tue, 20 Feb 2024 08:57:29 +0000 (GMT)
+X-AuditID: cbfec7f2-515ff70000002543-02-65d469791c0c
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+	eusmgms1.samsung.com (EUCPMTA) with SMTP id C0.DA.09146.87964D56; Tue, 20
+	Feb 2024 08:57:28 +0000 (GMT)
+Received: from CAMSVWEXC02.scsc.local (unknown [106.1.227.72]) by
+	eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+	20240220085728eusmtip1538581640047c60aabeecc96ae099761~1hm-oA0pd0281902819eusmtip1P;
+	Tue, 20 Feb 2024 08:57:28 +0000 (GMT)
+Received: from localhost (106.210.248.172) by CAMSVWEXC02.scsc.local
+	(2002:6a01:e348::6a01:e348) with Microsoft SMTP Server (TLS) id 15.0.1497.2;
+	Tue, 20 Feb 2024 08:57:28 +0000
+Date: Tue, 20 Feb 2024 09:57:26 +0100
+From: Joel Granados <j.granados@samsung.com>
+To: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>
+CC: Luis Chamberlain <mcgrof@kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 0/3] scripts: check-sysctl-docs: adapt to new API
+Message-ID: <20240220085726.bnlusgy5qdmcwpar@joelS2.panther.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <135feeafe6fe8d412e90865622e9601403c42be5.1708253445.git.christophe.leroy@csgroup.eu>
- <ec35e06dbe8672a36415ebe2b9273277c2921977.1708253445.git.christophe.leroy@csgroup.eu>
-In-Reply-To: <ec35e06dbe8672a36415ebe2b9273277c2921977.1708253445.git.christophe.leroy@csgroup.eu>
-From: Johan Almbladh <johan.almbladh@anyfinetworks.com>
-Date: Tue, 20 Feb 2024 09:56:13 +0100
-Message-ID: <CAM1=_QTF1amgOZUWJ4BA872RW3DE_papO5yi7ak+-WCkBfvC5g@mail.gmail.com>
-Subject: Re: [PATCH bpf-next 2/2] bpf: Take return from set_memory_rox() into
- account with bpf_jit_binary_lock_ro()
-To: Christophe Leroy <christophe.leroy@csgroup.eu>
-Cc: Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, 
-	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
-	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, 
-	Jiri Olsa <jolsa@kernel.org>, Russell King <linux@armlinux.org.uk>, 
-	Puranjay Mohan <puranjay12@gmail.com>, Zi Shen Lim <zlim.lnx@gmail.com>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
-	Tiezhu Yang <yangtiezhu@loongson.cn>, Hengqi Chen <hengqi.chen@gmail.com>, 
-	Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
-	Paul Burton <paulburton@kernel.org>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
-	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>, Helge Deller <deller@gmx.de>, 
-	Ilya Leoshkevich <iii@linux.ibm.com>, Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, 
-	Alexander Gordeev <agordeev@linux.ibm.com>, Christian Borntraeger <borntraeger@linux.ibm.com>, 
-	Sven Schnelle <svens@linux.ibm.com>, "David S. Miller" <davem@davemloft.net>, 
-	Andreas Larsson <andreas@gaisler.com>, Wang YanQing <udknight@gmail.com>, 
-	David Ahern <dsahern@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
-	Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	"H. Peter Anvin" <hpa@zytor.com>, bpf@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, 
-	linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org, 
-	linux-s390@vger.kernel.org, sparclinux@vger.kernel.org, 
-	netdev@vger.kernel.org, Kees Cook <keescook@chromium.org>, 
-	"linux-hardening @ vger . kernel . org" <linux-hardening@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg="pgp-sha512";
+	protocol="application/pgp-signature"; boundary="2i76zjxmk6xwic6d"
+Content-Disposition: inline
+In-Reply-To: <20240219-sysctl-check-v3-0-6940d5ff747b@weissschuh.net>
+X-ClientProxiedBy: CAMSVWEXC01.scsc.local (2002:6a01:e347::6a01:e347) To
+	CAMSVWEXC02.scsc.local (2002:6a01:e348::6a01:e348)
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrPKsWRmVeSWpSXmKPExsWy7djP87qVmVdSDQ6/F7W4vGsOm8XvH8+Y
+	LG5MeMrowOyxaVUnm8fnTXIe/d3H2AOYo7hsUlJzMstSi/TtErgy+mZ8YSxoE6nY+PQaYwPj
+	CsEuRk4OCQETiXUTNjB2MXJxCAmsYJT4vXYlI0hCSOALo8Sh//YQic+MEhvOzGWF6eh9P4EF
+	IrGcUaL1wBQmuKq7z6ZBZbYySnw4tpQJpIVFQFXizu6nYHPZBHQkzr+5wwxiiwjYSKz89pm9
+	i5GDg1nAQ2LvhFCQsDCQ+fP2LbBWXgEHidW/5rNB2IISJ2c+YQGxmQUqJJY332aDaJWWWP6P
+	AyTMKeAqcfDWVWaIQ5Ul5rzeAWXXSpzacgvsTgmBJxwSZzd2MUIkXCQ+7JvGBmELS7w6voUd
+	wpaROD25hwWiYTKjxP5/H9ghnNWMEssavzJBVFlLtFx5AtXhKLHncCMzyEUSAnwSN94KQhzK
+	JzFp23SoMK9ER5sQRLWaxOp7b1gmMCrPQvLaLCSvzUJ4DSKsJ3Fj6hRMYW2JZQtfM0PYthLr
+	1r1nWcDIvopRPLW0ODc9tdgwL7Vcrzgxt7g0L10vOT93EyMwHZ3+d/zTDsa5rz7qHWJk4mA8
+	xKgC1Pxow+oLjFIsefl5qUoivO5NF1KFeFMSK6tSi/Lji0pzUosPMUpzsCiJ86qmyKcKCaQn
+	lqRmp6YWpBbBZJk4OKUamAR3JXD+nXlEwXuBp0dktalK9vRFXDu1vptdEm5cebqs8ciV146v
+	Fq2z0vY6arvXxSqbkXERZ7V1fMz2D+dUr5qsnyz3ablrcf+x5CeN5lWfbv01naT/qWoLU92M
+	Yqmykr9tM0I/bfEvrdwhW+/GGrZcZZl/w/Nd4RoWmkzW+mm5hyMsZvur2dm8eB/8R8f9T178
+	XNeaQ1lq7GWrUz+6Xm0U/5oTzVMTEXe90O4Jg1rptZgN6gef7ujfsebTFRG2JatYfme/l9Yx
+	4v2kYW4873XcgZb1BZ1ikzyj0n48XOlWG6eqMOv+bk4t3e0bjpTtNmieuVbm3tk5JxadEWsM
+	VXBpMREx+Bmadvig9dx9SizFGYmGWsxFxYkA0tOgFMIDAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrFIsWRmVeSWpSXmKPExsVy+t/xu7oVmVdSDR71Wllc3jWHzeL3j2dM
+	FjcmPGV0YPbYtKqTzePzJjmP/u5j7AHMUXo2RfmlJakKGfnFJbZK0YYWRnqGlhZ6RiaWeobG
+	5rFWRqZK+nY2Kak5mWWpRfp2CXoZf/69YS5oEalo/fWQuYFxmWAXIyeHhICJRO/7CSxdjFwc
+	QgJLGSUeLj/JBJGQkdj45SorhC0s8edaFxtE0UdGif1L9jJBOFsZJbat+ATWwSKgKnFn91NG
+	EJtNQEfi/Js7zCC2iICNxMpvn9m7GDk4mAU8JPZOCAUJCwOZP2/fAmvlFXCQWP1rPtSCGYxA
+	zmo2iISgxMmZT1ggesskOs/lQpjSEsv/cYBUcAq4Shy8dZUZ4k5liTmvd0DZtRKf/z5jnMAo
+	PAvJoFkIg2YhDAKpYAY6eefWO2wYwtoSyxa+ZoawbSXWrXvPsoCRfRWjSGppcW56brGhXnFi
+	bnFpXrpecn7uJkZgRG479nPzDsZ5rz7qHWJk4mA8xKgC1Plow+oLjFIsefl5qUoivO5NF1KF
+	eFMSK6tSi/Lji0pzUosPMZoCg3Ais5Rocj4wVeSVxBuaGZgamphZGphamhkrifN6FnQkCgmk
+	J5akZqemFqQWwfQxcXBKNTBJ9b68ZK//lp0/zuDYvAeiPBe3We7QU/27wvZXy6ItfZMrQ9bY
+	JJcoXbrwefHvmao+i85Y5cvtLJy75rKWYBDn3peR0qXes5ZKGWYVzzvnNLtcc5fN67qihqmO
+	Zhz/Nim+zLlqdGrqtb7fG8+x6lT//qLFKHJASIx98e+TU1Zuf8zHpHm2ILXpq47mnsgLT8pu
+	Wr9Ynroy2WxZ0ZmpKz391MROXbY8nMB6f/tk779diq5Pd2p179hSKlxT5ftoaT7/v0jrxNSa
+	Ay6LzmneMj0yy4v9eVTIBe/Xjy1nXDtw9Zcd96RTD09s8zFpdOZe8euW1OYr3EnrpzWy5u1Y
+	9i1ioucKEU02/c3e6826ohq5lViKMxINtZiLihMBNwl5bV0DAAA=
+X-CMS-MailID: 20240220085729eucas1p23994be6aaf97fe2f41fa1a29c61dd30c
+X-Msg-Generator: CA
+X-RootMTR: 20240219201941eucas1p13b89861348f250d5e9b6b3b7441a56ed
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20240219201941eucas1p13b89861348f250d5e9b6b3b7441a56ed
+References: <CGME20240219201941eucas1p13b89861348f250d5e9b6b3b7441a56ed@eucas1p1.samsung.com>
+	<20240219-sysctl-check-v3-0-6940d5ff747b@weissschuh.net>
+
+--2i76zjxmk6xwic6d
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Sun, Feb 18, 2024 at 11:55=E2=80=AFAM Christophe Leroy
-<christophe.leroy@csgroup.eu> wrote:
->
-> set_memory_rox() can fail, leaving memory unprotected.
->
-> Check return and bail out when bpf_jit_binary_lock_ro() returns
-> and error.
->
-> Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
-> ---
-> Previous patch introduces a dependency on this patch because it modifies =
-bpf_prog_lock_ro(), but they are independant.
-> It is possible to apply this patch as standalone by handling trivial conf=
-lict with unmodified bpf_prog_lock_ro().
-> ---
->  arch/arm/net/bpf_jit_32.c        | 25 ++++++++++++-------------
->  arch/arm64/net/bpf_jit_comp.c    | 21 +++++++++++++++------
->  arch/loongarch/net/bpf_jit.c     | 21 +++++++++++++++------
->  arch/mips/net/bpf_jit_comp.c     |  3 ++-
->  arch/parisc/net/bpf_jit_core.c   |  8 +++++++-
->  arch/s390/net/bpf_jit_comp.c     |  6 +++++-
->  arch/sparc/net/bpf_jit_comp_64.c |  6 +++++-
->  arch/x86/net/bpf_jit_comp32.c    |  3 +--
->  include/linux/filter.h           |  4 ++--
->  9 files changed, 64 insertions(+), 33 deletions(-)
+Hey Thomas
 
-For the MIPS part:
-Reviewed-by: Johan Almbladh <johan.almbladh@anyfinetworks.com>
+Thx for your V3. I'll put it on my sysctl todo list for friday.
 
-Thanks,
-Johan
+Best
+
+On Mon, Feb 19, 2024 at 09:19:21PM +0100, Thomas Wei=DFschuh wrote:
+> The script expects the old sysctl_register_paths() API which was removed
+> some time ago. Adapt it to work with the new
+> sysctl_register()/sysctl_register_sz()/sysctl_register_init() APIs.
+>=20
+> Per-namespace tables via __register_sysctl_table() are also handled.
+>=20
+> Note that the script is already prepared for a potential constification
+> of the ctl_table structs.
+>=20
+> Signed-off-by: Thomas Wei=DFschuh <linux@weissschuh.net>
+> ---
+> Changes in v3:
+> - Handle per-namespace tables
+> - Link to v2: https://lore.kernel.org/r/20231226-sysctl-check-v2-1-2d4f50=
+b30d34@weissschuh.net
+>=20
+> Changes in v2:
+> - Remove unused global variable "paths"
+> - Remove docs for deleted variables "children" and "paths"
+> - Link to v1: https://lore.kernel.org/r/20231220-sysctl-check-v1-1-420ced=
+4a69d7@weissschuh.net
+>=20
+> ---
+> Thomas Wei=DFschuh (3):
+>       scripts: check-sysctl-docs: adapt to new API
+>       ipc: remove linebreaks from arguments of __register_sysctl_table
+>       scripts: check-sysctl-docs: handle per-namespace sysctls
+>=20
+>  ipc/ipc_sysctl.c          |  3 +--
+>  scripts/check-sysctl-docs | 65 +++++++++++++++++++++++------------------=
+------
+>  2 files changed, 33 insertions(+), 35 deletions(-)
+> ---
+> base-commit: b401b621758e46812da61fa58a67c3fd8d91de0d
+> change-id: 20231220-sysctl-check-8802651d945d
+>=20
+> Best regards,
+> --=20
+> Thomas Wei=DFschuh <linux@weissschuh.net>
+>=20
+
+--=20
+
+Joel Granados
+
+--2i76zjxmk6xwic6d
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQGzBAABCgAdFiEErkcJVyXmMSXOyyeQupfNUreWQU8FAmXUaXQACgkQupfNUreW
+QU/AFgv/XEA3IprJj+PBJmCrtoq5UR/KHlhkecyLtD2L3yZay1hq/4F4Ydd86hNa
+2PVyHKkpSnyD0cvEAi9KFBqjFuVxVpFfZ64jPykxSHDGrGCRRnLoDaQCClRCxkLC
+4T8aCSHyWZkkW3mcfxRA+LWolzhGKl9F5ySM8DiSuP+5HXrCQejFoyasuX3ctjnt
+BX2OMrCkr5djUcLr94r7cHPp/gOzkE1Zi6BJY/VjwwbihdmNlE2ErftmyLWuK66W
+w18vKfYdwua8ZKEFuXo021mwIpI+paTIaxCCovvJcwUOdmhfFDpwR87S3D5P+ObK
+kUy/YsVe1R5QLNGh5AHoNW4WS69fBeEDb9yf9UTKVTuCOb6BEFjR5dzECTSlZWrp
+omMqk8Rdu2ZM3j5b9u+cU37T6sWQ8KhdSQABbgyUQ/KPdnt84axSOdcyFYRVKS3D
+fSx18kyq/jSp1L58RQPncU73M7Igcv0MlU51ktOk0pf5s90VgeqW98eLTxr7t59M
+l9Vvhnuq
+=tMNS
+-----END PGP SIGNATURE-----
+
+--2i76zjxmk6xwic6d--
