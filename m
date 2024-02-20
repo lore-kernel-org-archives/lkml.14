@@ -1,185 +1,129 @@
-Received: from prime.voidband.net (prime.voidband.net [199.247.17.104])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 410745C8E9;
-	Tue, 20 Feb 2024 09:03:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.247.17.104
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30EEA60BBB
+	for <linux-kernel@vger.kernel.org>; Tue, 20 Feb 2024 09:03:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708419794; cv=none; b=Fjq7aGPWiFhdFHNM3n49Zhf7b+SJTKh6gSlvn3bx5CAXHO5pov7JxSB5QjNjuKkuw9acav8itiFT3E+7s+7fqbIaQzLF9dVoenZIyoEGyMLt37Xlr1uRT2W/CG4TejkN+4NbNFeIizRpo7jK8uy4Q4WoNM63Ow4lFn00frtoAQw=
+	t=1708419798; cv=none; b=mqeHbWBRZV3yu+rKsE/8P5xE+s64GPqKdQGpTLe3gCd8wv14I0Rfqp8+OIU+Ok5Pff89TzNj2WzE+cKoZufCaDiSL7EuYoyx1PQ3ZqGWkyvmwdctAONyrHdXEOrtPf1f76msWCNXDafOTlGnkQlg0a+qweLLn06Lp37BDl7Ybe0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708419794; c=relaxed/simple;
-	bh=JceG0EdglJthXyZekPMBQ1UrnXqMgMpzZET8QvST5k0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=nuxhyBJflhToNLG1nug+m4a7ywuBBZ9rSvd2Vi385mkr7npd7ZE0P1idihuRWlMssDjKQsRyR4FA1+t9s70iYuQXmMARZiT6yobTOPaSivFD66AWzSPI8O031W40kA3oUx8mIyMuptOCKJpHvQWlVEpI02bUQs7D6zmaX2YeS0Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=natalenko.name; spf=pass smtp.mailfrom=natalenko.name; dkim=pass (1024-bit key) header.d=natalenko.name header.i=@natalenko.name header.b=rKWXKsfJ; arc=none smtp.client-ip=199.247.17.104
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=natalenko.name
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=natalenko.name
+	s=arc-20240116; t=1708419798; c=relaxed/simple;
+	bh=uY3svUHWUub7nR3FLXjSvI6L3yObQUxfv1yWYIzPr1M=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=O4aPhwaLFQ0/dYQMkx8FWZAEN1JFcCT4GWUNDG+uibU+iKGOx011wJOKWYAll8sZU0MsUi77Sb2umSEDm7PBZqLyprOagLXdil68LGVobz5xphCZT/S2K/guXD8rXEAaGIQTKr11+Px5fFnIt3ZNAKF/diwEjEREcUGT7iqTPPc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=L4gpQ8Gh; arc=none smtp.client-ip=209.85.208.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=natalenko.name header.i=@natalenko.name header.b="rKWXKsfJ"
-Received: from spock.localnet (unknown [94.142.239.106])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
-	(No client certificate requested)
-	by prime.voidband.net (Postfix) with ESMTPSA id BFA16635B056;
-	Tue, 20 Feb 2024 10:03:01 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=natalenko.name;
-	s=dkim-20170712; t=1708419782;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=yqtS9OdSkKTkmUyYkJaIlBJaviSDyIFjBjSZbNBn07E=;
-	b=rKWXKsfJ8o3lefY6RKvN3UuSJvK4ybWAncvyjvNfyyN3kLsGnjZ83xEQS73j9psgeqrgkK
-	od6Es83fuZI/nffi5iSKfYGZbM42qtRvc/g0R8KJeyxuZwXXpBG9u1Vz/Ltlnl3PwWw6gK
-	KMNOqhDkuF3LM6aMFmWKNtuiOeAlwTs=
-From: Oleksandr Natalenko <oleksandr@natalenko.name>
-To: rafael@kernel.org, Lucas Lee Jing Yi <lucasleeeeeeeee@gmail.com>
-Cc: Perry.Yuan@amd.com, Xiaojian.Du@amd.com, alexander.deucher@amd.com,
- bp@alien8.de, deepak.sharma@amd.com, li.meng@amd.com,
- linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-kselftest@vger.kernel.org, linux-pm@vger.kernel.org,
- mario.limonciello@amd.com, nathan.fontenot@amd.com,
- rafael.j.wysocki@intel.com, ray.huang@amd.com, shimmer.huang@amd.com,
- skhan@linuxfoundation.org, viresh.kumar@linaro.org, x86@kernel.org,
- Lucas Lee Jing Yi <lucasleeeeeeeee@gmail.com>
-Subject:
- Re: [PATCH] [PATCH] amd_pstate: fix erroneous highest_perf value on some CPUs
-Date: Tue, 20 Feb 2024 10:02:48 +0100
-Message-ID: <3868832.mvXUDI8C0e@natalenko.name>
-In-Reply-To: <20240218161435.38312-2-lucasleeeeeeeee@gmail.com>
-References:
- <CAJZ5v0hRk3tME7yeC+1r0RM4-oPPrnSu2=JCsOshBbJp_Nq2Hg@mail.gmail.com>
- <20240218161435.38312-1-lucasleeeeeeeee@gmail.com>
- <20240218161435.38312-2-lucasleeeeeeeee@gmail.com>
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="L4gpQ8Gh"
+Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-2d228a132acso39176851fa.0
+        for <linux-kernel@vger.kernel.org>; Tue, 20 Feb 2024 01:03:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1708419794; x=1709024594; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=y4iT5ETvYJMsi5q/HB6faKSI8PkV3OtFKN0qmQ5ivP4=;
+        b=L4gpQ8Ghh9xzWgxXWRZdQ/G9AkzfYgA0kZSWU2tmcH6jIEyePinWdEEAIiuM2b8UxV
+         rVxGfWL9mKZufRUnHrzkhxYFeZwTuqFD75gPCafT7GlX7OV+uCMltsobeXBe+Bs+hsF+
+         vGk9AQAUrjsaznyLkIafRLo7qoYALJ/p0H38Y=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708419794; x=1709024594;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=y4iT5ETvYJMsi5q/HB6faKSI8PkV3OtFKN0qmQ5ivP4=;
+        b=dVVrLp/bYRa/AOFm/TsvCIvUFdR5VvYsK4t8wQMu6XqUKpokcSl4LivWNkFVKwhrGI
+         Cg+S0zHgiG0qwdAr4mUQDtIHnqOGGy8EZGBl6mWZfWWECLDDsKQssC/YPQZhmyXnSLkv
+         jly0CKWuM8zhFMBUvO9Ltp2g6n4lm6jeXYSbAVuRU4k3XTBnornHIbnP9aazDqva2EJp
+         HYmL+FVjtpmxd/OMrNtFF693c2ylgH9kTM1fhqWLkVovIHDZi7TZbElZwFj1HGQ9/HsI
+         SVJDqk4cHHTthWCD7truGgwqVvRc1pnXmw3/+LT6UAnNt6FPDVk8j4rv6OBC16/4izDM
+         c8Ig==
+X-Forwarded-Encrypted: i=1; AJvYcCVOrksGwew043sFXQAvOztspshx4KvIBpcYGoiosrkrBlcyeJn0VaActQ6vqIg3sVsjPBSP2vfSWteekKS28zpY53H8gxEivMl9be9l
+X-Gm-Message-State: AOJu0Yxoj49Fhv7SoV/LHCjC7sNWWqpskmJC6LVf1iKkWobvuvVtUthN
+	OrZkufshhs/1nuEn0N92+/tu1E1tEdr7eEjCdVQQ2s8dYpdJDtbWiiPsViDuNK50S27ieCxGlQ7
+	vYY0J4wZrz66ZaxFcFtqk8C4NbsJcJjLHC8ps
+X-Google-Smtp-Source: AGHT+IGoUwt6VSMd/dOjGOl0b2TERUUu8zmaj8e7XgFEns+bkkahzHjMnNw6K0ZDdL0dT7DZxQOQvViK5UEn40pteiQ=
+X-Received: by 2002:a05:651c:b1f:b0:2d2:36ae:46a0 with SMTP id
+ b31-20020a05651c0b1f00b002d236ae46a0mr4748236ljr.53.1708419794100; Tue, 20
+ Feb 2024 01:03:14 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart13532597.O9o76ZdvQC";
- micalg="pgp-sha256"; protocol="application/pgp-signature"
-
---nextPart13532597.O9o76ZdvQC
+References: <cc8f7f7da5bdccce514a320e0ae7468659cf7346.1707327680.git.daniel@makrotopia.org>
+ <CAGXv+5EKCrvsvZwc2zYiMWAeT9vqvU0JnDrz=WBoebBBbcgp0g@mail.gmail.com> <f1fc67d4-f979-4c3e-988f-a803b7b11c46@collabora.com>
+In-Reply-To: <f1fc67d4-f979-4c3e-988f-a803b7b11c46@collabora.com>
+From: Chen-Yu Tsai <wenst@chromium.org>
+Date: Tue, 20 Feb 2024 17:03:02 +0800
+Message-ID: <CAGXv+5Gxc3OP8nE681C6YQbDMUNmFDf21BfSvJZPBFgoncve=A@mail.gmail.com>
+Subject: Re: [PATCH] soc: mediatek: mtk-socinfo: depends on CONFIG_SOC_BUS
+To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Cc: Daniel Golle <daniel@makrotopia.org>, Matthias Brugger <matthias.bgg@gmail.com>, 
+	William-tw Lin <william-tw.lin@mediatek.com>, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="UTF-8"; protected-headers="v1"
-From: Oleksandr Natalenko <oleksandr@natalenko.name>
-To: rafael@kernel.org, Lucas Lee Jing Yi <lucasleeeeeeeee@gmail.com>
-Date: Tue, 20 Feb 2024 10:02:48 +0100
-Message-ID: <3868832.mvXUDI8C0e@natalenko.name>
-In-Reply-To: <20240218161435.38312-2-lucasleeeeeeeee@gmail.com>
-MIME-Version: 1.0
 
-Hello.
+On Tue, Feb 20, 2024 at 4:56=E2=80=AFPM AngeloGioacchino Del Regno
+<angelogioacchino.delregno@collabora.com> wrote:
+>
+> Il 20/02/24 07:40, Chen-Yu Tsai ha scritto:
+> > On Thu, Feb 8, 2024 at 1:43=E2=80=AFAM Daniel Golle <daniel@makrotopia.=
+org> wrote:
+> >>
+> >> The mtk-socinfo driver uses symbols 'soc_device_register' and
+> >> 'soc_device_unregister' which are part of the bus driver for
+> >> System-on-Chip devices.
+> >>
+> >> Select SOC_BUS to make sure that driver is built and the symbols are
+> >> available.
+> >>
+> >> Fixes: 423a54da3c7e ("soc: mediatek: mtk-socinfo: Add driver for getti=
+ng chip information")
+> >> Signed-off-by: Daniel Golle <daniel@makrotopia.org>
+> >
+> > Reviewed-by: Chen-Yu Tsai <wenst@chromium.org>
+> >
+> > Angelo, I believe this should be picked up for -next?
+> >
+>
+> I'll pick this up for fixes, as I've already sent the PRs for v6.9.
 
-On ned=C4=9Ble 18. =C3=BAnora 2024 17:10:31 CET Lucas Lee Jing Yi wrote:
-> On a Ryzen 7840HS the highest_perf value is 196, not 166 as AMD assumed.
-> This leads to the advertised max clock speed to only be 4.35ghz instead o=
-f 5.14ghz , leading to a large degradation in performance.
->=20
-> Fix the broken assumption and revert back to the old logic for getting hi=
-ghest_perf.
->=20
-> TEST:
-> Geekbench 6 Before Patch:
-> Single Core:	2325 (-22%)!
-> Multi Core:	11335 (-10%)
->=20
-> Geekbench 6 AFTER Patch:
-> Single Core:	2635
-> Multi Core:	12487
->=20
-> Signed-off-by: Lucas Lee Jing Yi <lucasleeeeeeeee@gmail.com>
-> ---
->  drivers/cpufreq/amd-pstate.c | 22 ++++++++++------------
->  1 file changed, 10 insertions(+), 12 deletions(-)
->=20
-> diff --git a/drivers/cpufreq/amd-pstate.c b/drivers/cpufreq/amd-pstate.c
-> index 08e112444c27..54df68773620 100644
-> --- a/drivers/cpufreq/amd-pstate.c
-> +++ b/drivers/cpufreq/amd-pstate.c
-> @@ -50,7 +50,6 @@
-> =20
->  #define AMD_PSTATE_TRANSITION_LATENCY	20000
->  #define AMD_PSTATE_TRANSITION_DELAY	1000
-> -#define AMD_PSTATE_PREFCORE_THRESHOLD	166
-> =20
->  /*
->   * TODO: We need more time to fine tune processors with shared memory so=
-lution
-> @@ -299,15 +298,12 @@ static int pstate_init_perf(struct amd_cpudata *cpu=
-data)
->  				     &cap1);
->  	if (ret)
->  		return ret;
-> -
-> -	/* For platforms that do not support the preferred core feature, the
-> -	 * highest_pef may be configured with 166 or 255, to avoid max frequency
-> -	 * calculated wrongly. we take the AMD_CPPC_HIGHEST_PERF(cap1) value as
-> -	 * the default max perf.
-> +=20
-> +	/* Some CPUs have different highest_perf from others, it is safer=20
-> +	 * to read it than to assume some erroneous value, leading to performan=
-ce issues.
->  	 */
-> -	if (cpudata->hw_prefcore)
-> -		highest_perf =3D AMD_PSTATE_PREFCORE_THRESHOLD;
-> -	else
-> +	highest_perf =3D amd_get_highest_perf();
-> +	if(highest_perf > AMD_CPPC_HIGHEST_PERF(cap1))
->  		highest_perf =3D AMD_CPPC_HIGHEST_PERF(cap1);
-> =20
->  	WRITE_ONCE(cpudata->highest_perf, highest_perf);
-> @@ -329,9 +325,11 @@ static int cppc_init_perf(struct amd_cpudata *cpudat=
-a)
->  	if (ret)
->  		return ret;
-> =20
-> -	if (cpudata->hw_prefcore)
-> -		highest_perf =3D AMD_PSTATE_PREFCORE_THRESHOLD;
-> -	else
-> +	/* Some CPUs have different highest_perf from others, it is safer=20
-> +	 * to read it than to assume some erroneous value, leading to performan=
-ce issues.
-> +	 */
-> +	highest_perf =3D amd_get_highest_perf();
-> +	if(highest_perf > cppc_perf.highest_perf)
->  		highest_perf =3D cppc_perf.highest_perf;
-> =20
->  	WRITE_ONCE(cpudata->highest_perf, highest_perf);
->=20
+The socinfo driver is in -next, so I guess you could pick it up as a fix
+for v6.9.
 
-Please pay attention to trailing whitespaces, adding whitespaces to blank l=
-ines, and whitespaces between `if` and opening `(`.
+ChenYu
 
-`scripts/checkpatch.pl` may help you with that.
-
-Thank you.
-
-=2D-=20
-Oleksandr Natalenko (post-factum)
---nextPart13532597.O9o76ZdvQC
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part.
-Content-Transfer-Encoding: 7Bit
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEZUOOw5ESFLHZZtOKil/iNcg8M0sFAmXUargACgkQil/iNcg8
-M0uKvBAA75ErCLUkoBjqYUXvYnxdCiWChCP3YbRF+TZpge2SRBrdHkP37tb0h5xj
-/YidBER2zYHcqz5PKoflu54fCIQod0VkX33TQ8HkXjm4tytT75WKs6invTYQOMOD
-wrZmWRw5AvsjKNxUGuhtg2sp3CJjigzk7E8JUdeE2L07Wo5//npN2T4uNZAzI3wA
-MX6ACRYwwh8yY4iIRTv2PJZfZATo69iRnNbo7UlLAgKqQA+GOsF+jwio2d41O+ZE
-5xUfZQDx8DV7Bg/nbhTR0gg0Il3SwsxBg5lIeeLxJch7Rex6tI/Qhj6M0QCPViEA
-w+ZyB9yMNhwy5yHH0t3KiSBB3ONy7CI0Umw+xriblr0iWRhlDCktI4/PkGhu6QfB
-CLNk2Xrh8zYVUuZ91YBkxE0HEWxRBlI8c5RdMvS2qYqjdBgvdR8n1ZRVfDioIUHc
-GCrQSI3/bkfvZDgHJIqFJAQTwS2o4SLUHiNgbrB0V66V9RRvqTlWbqIdztXgWhKi
-egIAdiyKMEckiymU9Cqh8Q34Voaf2+o7mOE3Hj1l5s2NCBxk4fWoYJP1uRRF+wZm
-FRQ/DuT2EgDDynHHLybnLl5Fy2LAEFh5cdWdZum8aOuCmruEsG06srI6j8qJ1FLk
-NjH/oCDfkMemqkVHUFmOO4W9MgY89I4UVQuZGaYDAg2vTDY8+0E=
-=MiiV
------END PGP SIGNATURE-----
-
---nextPart13532597.O9o76ZdvQC--
-
-
-
+> > Also, mediatek/v6.8-next/soc is missing from mediatek/for-next in today=
+'s
+> > linux-next.
+> >
+>
+> Fixing immediately.
+>
+> >> ---
+> >>   drivers/soc/mediatek/Kconfig | 1 +
+> >>   1 file changed, 1 insertion(+)
+> >>
+> >> diff --git a/drivers/soc/mediatek/Kconfig b/drivers/soc/mediatek/Kconf=
+ig
+> >> index 50c664b65f4d4..1b7afb19ccd63 100644
+> >> --- a/drivers/soc/mediatek/Kconfig
+> >> +++ b/drivers/soc/mediatek/Kconfig
+> >> @@ -72,6 +72,7 @@ config MTK_SOCINFO
+> >>          tristate "MediaTek SoC Information"
+> >>          default y
+> >>          depends on NVMEM_MTK_EFUSE
+> >> +       select SOC_BUS
+> >>          help
+> >>            The MediaTek SoC Information (mtk-socinfo) driver provides
+> >>            information about the SoC to the userspace including the
+> >> --
+> >> 2.43.0
+> >>
+> >>
+>
+>
