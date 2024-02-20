@@ -1,55 +1,57 @@
-Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
+Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9211D7603D;
-	Tue, 20 Feb 2024 15:35:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F28E1762C1;
+	Tue, 20 Feb 2024 15:36:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708443361; cv=none; b=OpWM+o9UzeXwCOoocBM0uFtaYrwHa2oZzIG5PiICX6Z53yJB0tQztsiZGoFxLu8903XfkjhcLpI3hX2yuHw6uyfzTZJW7JC8psw6KR0NmF1EpQHCwfU17WJtae5FbPN2Dhwk4G29sZT52LZYEMx2ihaUR6kCbBj95OGj4Sd1gr0=
+	t=1708443363; cv=none; b=R0cO1Z1WUAW7RwDDxQ2OeOHuyLhD2QJNmxSyFHmtK1g2W1tu8b9sFKCYZ5VpKGYjgXD02exe4xGAvM+P9KypXWaeUDOihXxz8Xlo7pCVGMH6Qke/74/vWtBxvRN6mYgv87xuVUmSCROOxphx4HEMQhsZYygPDiFqEkBqtXGLBto=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708443361; c=relaxed/simple;
-	bh=Po5utv3fA/luMbcWwBO4VwP9A8cuznOrLBVfb0lAcNc=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=pn2O9gWSlOwiynQXgITa9sSj+/Nb4qHXsZnCQLZHG/toF8XgOq0Tc78PhTOhU32NwHs4QhOFFHE6Pv/RDfetA8EckiLMu+rcd0uB9YRfDh0im8XvHkB0CRLmDmeB9/Lz0+G+tPQEK9a6Kks/OrR2KmcGdgUnuchMRCZM8c3yWCw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MWWHTzqx; arc=none smtp.client-ip=209.85.218.44
+	s=arc-20240116; t=1708443363; c=relaxed/simple;
+	bh=lL9tEj72B8RLSGVKGJnXqHrnROs1OMlmSlpmLn/ellk=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=MBTPNhUEUpAjuBPpZT2DTU6n5QxExUr9pgkPvJX83wYuyHrzqbeQVSuGcppMceU9KomN02ePremnEBXhoRU+jF5JjIpcuabKp2jje8kX/QTkjBq3iP/mKY88PN20pTJHXowEHCRj+sOmLdh2tAGt1tY78U2LCkc1/Ds6DHkHwqs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kTqAR25f; arc=none smtp.client-ip=209.85.218.43
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MWWHTzqx"
-Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-a3f1bf03722so43488666b.1;
-        Tue, 20 Feb 2024 07:35:59 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kTqAR25f"
+Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-a3d5e77cfbeso976900066b.0;
+        Tue, 20 Feb 2024 07:36:01 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1708443358; x=1709048158; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=jZEnw7vNP6fBmQ9T0aAwTaPsoq+/YHVzJE/SsdyjyGA=;
-        b=MWWHTzqxIAYlHnwsqXoGjxKqfP+ItKAJkpwW+7ffWsKYaGMXgfsaJlq5uNLgX/0eh6
-         /T90Br3fj+HhCbEeUJMcp1CHHsWpYxdqAhu39o11LrslYaqQ6PRK8xoOBCrP3sAuGjkW
-         hwEtT2ATWqWFx5ZNNfkHzzyKMkLF5AXZmQyaoe7t9zZY7ums+iRDj61N55iVg3ImcKhE
-         TntCLK9BiY2gUp8sYR107FEDad5q6PWwEbpkFdnNPJ6zFqoEa+40mVj6Kday3/JXJOmz
-         nFQy35AYQiXtkg02iR8elBCYzrYVXKZiBz/4Dh2MsBYNZIpMHmST1EoU0shp7Qbr+NLH
-         vjPQ==
+        d=gmail.com; s=20230601; t=1708443360; x=1709048160; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=6wlAJ3HOeN+i9mwkmiHE0QT6wa1Z9g6FI4uNkE/zgM8=;
+        b=kTqAR25ffcg+gyYO1uYasAd1ngFZxToWo+jE9VEm0+RP8JGl63dKbsJKexDPYKG74T
+         dj33VKV0T2PhTwICCNiWm1TJUq23NA8qX2SMZ6nBCvX+oqPY5OYdSLBXLdKymPgeH0lb
+         Twzshfqsgd82kc3GlfjJ5AvHaHZqD90lH+9Rv77g794bEZsEfcdrglIMLTZQAIX3G5BG
+         JSkOmzDnRg7nRPkJ9heD3Bj3CIKfkPseUj0XzFMI/iYa4Z6E3Uv1v3wWrUqGsobb6oXM
+         uf+dgLTzeloiD5o2CjEp/a6pwQpIUjhVL2KIjbDnggRCZ981XbOB7uO8pmW0tklSdtLa
+         be/Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708443358; x=1709048158;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=jZEnw7vNP6fBmQ9T0aAwTaPsoq+/YHVzJE/SsdyjyGA=;
-        b=oT7oxzthakQTLPzVVHSaJ8eAecDCKjJ9QURmQRNPuGI7kzK306jsen2FPkIEWM+oLy
-         pYftKbO+iutEz2IZ7HFPzF1KyINjrBMb6WhZxQMkLlY7bpXVlLhUGnfykWPrdf98EvtF
-         UzZ4Cqv1+qJIMyuji488gmcIZwwwlQFmt5aQ0JiKJqGToqoDmQVOhTEaF1kNbBEdEpHZ
-         0u/HdPBfesMMCTaiI1MxnjSZrURcLUWIRHStycDYrCACL9JwGq1T4gtcwd3zvcjGmarW
-         N5BgubB+mJY08wJDF6n6nADfkwNiAYCnv7+9kE2WSs8cZHfHmZUsnjq7BYXd+x3H1c3t
-         mRyg==
-X-Forwarded-Encrypted: i=1; AJvYcCXSGygfFMJ0YZn2etPwz6Qrm4b2xxynpn4r1O+Xgh4IE+/VfDyU5aYOkj/lO3MC0IqP+6QzxbQ7xTr5IHHAYF5dlx/qJx1gNp9JKM1urQ+7oUr2R/WZdjY61HiLsV/a7xCyxrWRRC2JqWJbCKFnxTpeRz2awegYRGsRwTyQb25DX5gVjg==
-X-Gm-Message-State: AOJu0YxNU4BplY470VnlEPksMFWKAnR8XWRr+1bA57cdRvkGgrqJ7h/l
-	hCu61b7jkmSUmJCUPOWT3Va9ZDg8GX/rhuj5S0FaBPnsqaKJJ9ib
-X-Google-Smtp-Source: AGHT+IFxUmK1xZSXePm+guZXPJGQe4Tlm1Ulsa3heQ3mpM7aJXESFuiCzizx31MC4umz2QvpTOY62g==
-X-Received: by 2002:a17:907:11c2:b0:a3e:88fb:3e23 with SMTP id va2-20020a17090711c200b00a3e88fb3e23mr4760515ejb.7.1708443357502;
-        Tue, 20 Feb 2024 07:35:57 -0800 (PST)
+        d=1e100.net; s=20230601; t=1708443360; x=1709048160;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=6wlAJ3HOeN+i9mwkmiHE0QT6wa1Z9g6FI4uNkE/zgM8=;
+        b=qfLov3+xtxWORa62ZbgVzSiVFK3hfxp9GmSPECYz65ZG0WTej4PlBPr2mYJJ033XVO
+         wESAdGeMH/ytPiJvQzUqBwbibE9nIq3wwqhBsoq3FzeE8zdD/zpX7L+laWd1UHolUsMX
+         9PnVPvvwNawhq4H9oL3YYsPHfwmXd8f4tbzb3G1hSsotym6dZAoWHgpEvQrFnHocwQjo
+         kFZrLqtMNkG81ZIDumyfL08nSBcHIYPSzjnu95jaXGIcp/jzvRlrkmRicBoxVI2xKyH3
+         58pMp6tdVaQVpWDBYDh4mZxSSsW6dO8bjzO7Br+TcjK6UpN0n1T2nIqTmUgCBZCiXH2s
+         Cr7g==
+X-Forwarded-Encrypted: i=1; AJvYcCU0OxMBCDnZ0PxRggrjKGnDf0TUDFFwKm/4iFAc8HWbzhz63iSbGN+BpG0tDsh4ZKmYkOPU2/sdzj7ML8fQfhoNAnXOz9/PoLCTI7lWMdnmXfSiZ1tX6bgHrzzYyrz3rlVqHhDTFOW/bJp7P3tHfxsr+CAI/o9fakQSwRF77a9sCt9KEw==
+X-Gm-Message-State: AOJu0YxrvpRN+Gu71As4bb+Gb/n4rvcYm9Vfy4zp3yWt5iNaYHD+EHBa
+	hrVwHiJlMuCYtQQD97eMQT8j4kqaabML98ieT1ixd94fK5S8Jm/F
+X-Google-Smtp-Source: AGHT+IEaEVLVkF6Ocqna7U7WUPQHf22hyEVx9loZfFpXuZ8kcIk2TziFTViujCaF6lqxII4o1vR26A==
+X-Received: by 2002:a17:906:2786:b0:a3f:1cd:69a5 with SMTP id j6-20020a170906278600b00a3f01cd69a5mr1739507ejc.5.1708443360224;
+        Tue, 20 Feb 2024 07:36:00 -0800 (PST)
 Received: from HYB-hhAwRlzzMZb.ad.analog.com ([5.2.194.157])
-        by smtp.gmail.com with ESMTPSA id r22-20020a170906281600b00a3d777aa8fesm4039024ejc.69.2024.02.20.07.35.56
+        by smtp.gmail.com with ESMTPSA id r22-20020a170906281600b00a3d777aa8fesm4039024ejc.69.2024.02.20.07.35.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 20 Feb 2024 07:35:56 -0800 (PST)
+        Tue, 20 Feb 2024 07:35:59 -0800 (PST)
 From: Dumitru Ceclan <mitrutzceclan@gmail.com>
 To: 
 Cc: Lars-Peter Clausen <lars@metafoo.de>,
@@ -61,11 +63,14 @@ Cc: Lars-Peter Clausen <lars@metafoo.de>,
 	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Ceclan Dumitru <dumitru.ceclan@analog.com>,
-	Dumitru Ceclan <mitrutzceclan@gmail.com>
-Subject: [PATCH v5 0/5] Add support for LTC6373
-Date: Tue, 20 Feb 2024 17:34:48 +0200
-Message-ID: <20240220153553.2432-1-mitrutzceclan@gmail.com>
+	Dumitru Ceclan <mitrutzceclan@gmail.com>,
+	Conor Dooley <conor.dooley@microchip.com>
+Subject: [PATCH v5 1/5] dt-bindings: iio: hmc425a: add conditional GPIO array size constraints
+Date: Tue, 20 Feb 2024 17:34:50 +0200
+Message-ID: <20240220153553.2432-3-mitrutzceclan@gmail.com>
 X-Mailer: git-send-email 2.42.0
+In-Reply-To: <20240220153553.2432-1-mitrutzceclan@gmail.com>
+References: <20240220153553.2432-1-mitrutzceclan@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -74,53 +79,64 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The LTC6373 is a silicon, 3-bit Fully-Differential digital instrumentation
-amplifier that supports the following programmable gains (Vout/Vin):
- G = 0.25, 0.5, 1, 2, 4, 8, 16 + Shutdown.
-The programmable interface consists of 3 digitally controled inputs.
+ADRF5740 and HMC540S have a 4 bit parallel interface.
+Update ctrl-gpios description and min/maxItems values depending on the
+matched compatible to correctly reflect the hardware properties.
 
-V4->V5
- Move converion logic:
- - Modify to use callbacks
- Use pointers in match table:
- - Drop enum type from state
- Driver:
- - Use DIV_ROUND_CLOSEST for conversion
- - Remove comma from ltc6373_ext_info[]
-V3->V4
- - Fix git commit message typo and remove newline between tags
-V2->V3
- - Use return instead of break in *_gain_dB_to_code()
- - Add new line before return in *_code_to_gain_dB()
- - Match parameter alignment for added _powerdown functions
- - Add precursor patch for using pointers in the match table
- - Add chip_info attributes: has_powerdown and powerdown_val
- - Change probe logic to use has_powerdown for default powerdown state
- - Added 'Fixes' tag to commit message of 'add conditional GPIO array...' 
-V1->V2
- Driver:
- - Fix chip info table indent
- - Remove enable attribute
- - Add ext_info powerdown attribute
- - Enable by default powerdown attribute
- - Set default gain after disabling powerdown to min value
- Binding:
- - Fix conditional checking of GPIO array size for LTC6373
- - Add precursor commit for correctly checking gpio size depending upon compatible
+Fixes: 79f2ff6461e7 ("dt-bindings: iio: hmc425a: add entry for ADRF5740 Attenuator")
+Fixes: 20f87a9a26be ("dt-bindings: iio: hmc425a: add entry for HMC540S")
+Acked-by: Conor Dooley <conor.dooley@microchip.com>
+Signed-off-by: Dumitru Ceclan <mitrutzceclan@gmail.com>
+---
+ .../bindings/iio/amplifiers/adi,hmc425a.yaml  | 33 +++++++++++++++++--
+ 1 file changed, 30 insertions(+), 3 deletions(-)
 
-
-Dumitru Ceclan (5):
-  dt-bindings: iio: hmc425a: add conditional GPIO array size constraints
-  dt-bindings: iio: hmc425a: add entry for LTC6373
-  iio: amplifiers: hmc425a: move conversion logic
-  iio: amplifiers: hmc425a: use pointers in match table
-  iio: amplifiers: hmc425a: add support for LTC6373 Instrumentation
-    Amplifier
-
- .../bindings/iio/amplifiers/adi,hmc425a.yaml  |  47 ++-
- drivers/iio/amplifiers/hmc425a.c              | 273 ++++++++++++++----
- 2 files changed, 259 insertions(+), 61 deletions(-)
-
+diff --git a/Documentation/devicetree/bindings/iio/amplifiers/adi,hmc425a.yaml b/Documentation/devicetree/bindings/iio/amplifiers/adi,hmc425a.yaml
+index 67de9d4e3a1d..a434cb8ddcc9 100644
+--- a/Documentation/devicetree/bindings/iio/amplifiers/adi,hmc425a.yaml
++++ b/Documentation/devicetree/bindings/iio/amplifiers/adi,hmc425a.yaml
+@@ -33,11 +33,38 @@ properties:
+ 
+   ctrl-gpios:
+     description:
+-      Must contain an array of 6 GPIO specifiers, referring to the GPIO pins
+-      connected to the control pins V1-V6.
+-    minItems: 6
++      Must contain an array of GPIO specifiers, referring to the GPIO pins
++      connected to the control pins.
++        ADRF5740  - 4 GPIO connected to D2-D5
++        HMC540S   - 4 GPIO connected to V1-V4
++        HMC425A   - 6 GPIO connected to V1-V6
++    minItems: 1
+     maxItems: 6
+ 
++allOf:
++  - if:
++      properties:
++        compatible:
++          contains:
++            const: adi,hmc425a
++    then:
++      properties:
++        ctrl-gpios:
++          minItems: 6
++          maxItems: 6
++  - if:
++      properties:
++        compatible:
++          contains:
++            anyOf:
++              - const: adi,adrf5740
++              - const: adi,hmc540s
++    then:
++      properties:
++        ctrl-gpios:
++          minItems: 4
++          maxItems: 4
++
+ required:
+   - compatible
+   - ctrl-gpios
 -- 
 2.42.0
 
