@@ -1,152 +1,282 @@
-Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from pegase1.c-s.fr (pegase1.c-s.fr [93.17.236.30])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C0A041C66
-	for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 14:45:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE1477FBA2;
+	Wed, 21 Feb 2024 14:45:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.17.236.30
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708526727; cv=none; b=rAa7VWilV99KlhgB2cDySZrlcjFQ6PZB8C0GaG9MbuVf/Sf/rEEfPkGjzrB5ZkBOgNWJK/S7FQ/V/eny9mFqRk614UaHBRvCXYi3hA4jTNhWz9iURMiGooZ+ZfdZX3IlM4wdb5jTJlAdShUDtL6EKAqhiDkfmYHqSLARLjGQ9iY=
+	t=1708526762; cv=none; b=WZGvrP5YHxX5MYzVv3q3F2JIttoCDaT2IHCQX2uXq+NYocbIhqxEz3mC9OkzeyvL9Qem6DEcRI0xI9ojkfhAkNBuF0anCf8Ou8uU8SIxyQ510Jx2Z3O4CjVwGOUNF5Ab938ep94G6AGcZSbSNdYYVNGuEKPIygh7PCoAoRd0HSE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708526727; c=relaxed/simple;
-	bh=wZPpLKBPLCLGsd6kTmZnEaMJ48F3WaJCrHgdDHxjYcc=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=ubv7PaxB37gsTFDgeGv59vy6het28nzQ6/tp4Abw667+GfJyUeznbBWklEfLdtzlWgihGoXj8x2nwlYPEIuheaB52nhgs98GhgnplU0ifWm45Fpnsftd2XxnRK8oGB6GGPZUAWN2DuuIG+d4tJR3dg2ayoSj+ntQNBPyaisZ/YI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=du9wN9Q0; arc=none smtp.client-ip=209.85.208.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="du9wN9Q0"
-Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-564d9b0e96dso2293898a12.2
-        for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 06:45:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1708526724; x=1709131524; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:references:cc:to
-         :from:content-language:subject:user-agent:mime-version:date
-         :message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=WjyeNfwggCjpbW8wL8jNpb/QkgImBKqp+2wL70wVTJA=;
-        b=du9wN9Q0JYXaMkJQ+FO3EWelDv+tzY50KMV7c2L5a87h45cTVdeOXQEtjDrVEhCC3K
-         VVliWI2+Cm6cMB1NVWuhlgVWlX8QA+REy15d1Cz4ICvyeC0x0UvDtoJE500CZ/oCLolm
-         tzfDMwAQwscqzU2Ml/ViXW5mhEbOj+8sQhiDsBxTLoROHnJXp3d+L5inCALWjWnozPZf
-         +DCzlP9AHGEoT0sNUNIu2IBca2UnomiXrXWzzkC02w+Qo80U9+h0Q9cpU1mbCFriGHkT
-         AHAlFRwj9JikrcLcWsRJU3B/IEWixZ3Zgpayuwv6fAyV5rjOX94zn7QCLFNdTwQoPgNx
-         O/BA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708526724; x=1709131524;
-        h=content-transfer-encoding:in-reply-to:autocrypt:references:cc:to
-         :from:content-language:subject:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=WjyeNfwggCjpbW8wL8jNpb/QkgImBKqp+2wL70wVTJA=;
-        b=KhlgiTPheBoOUpL+964uDQhAfQlZga89pZDk0rUqhf+qVJrQDx3gznitlzhGGGRj3i
-         kmBrAOHtcIgV6ghekzuK3a0WVHTpbnG0mtTx2RqtP1/bFrq4WMlAPnUXmG+QP7Y6oBi9
-         Z4oimKVBLO/RVOe44Zw6Y7Fvr3p7+B9bMRdUs98PZ3OGeqEhApRaK41dEBvl/FeknFh3
-         zNOPNxeCxWuPxBVgW1CqsAJdG6f8lp0fUQUWWiNZxdZDv/Y9FjP91k5L9S9n0qtWJ+yY
-         Iq4iVW9w0Na5oEtYoKsLIN5sEejTN6sEgAuDZDgo8gw0u7G8pGr8ft2yjLJX8GBf0XYK
-         6EDw==
-X-Forwarded-Encrypted: i=1; AJvYcCU8/iHbOFMM56RAer/Eq+cq1n2jo81iqq4ummFzdNAH96SlLC+NslfUtDG33j6ULkFMPBVXA3Trs8QRDmCgkUBdxDC25ka1C/g/qV9z
-X-Gm-Message-State: AOJu0YxpFrbWJVJKPlCHp8t+QqKFKRkPBGCHw3tj26SP4ST3qHudgiLn
-	DGx9rsuSlEeGKuH2wqTSo7+Eu2hIzyjzzKFK+VGIYPoWIzItARdd+HJPOuB7V7g=
-X-Google-Smtp-Source: AGHT+IFOQwr4pPv82Vjgtcp/1o0V2Lg7dT+QzsMNDevJBDGDjSVGcQa2NCJWVVcxsqqgwDwslEoVrA==
-X-Received: by 2002:a17:906:b094:b0:a3d:1cbd:67f7 with SMTP id x20-20020a170906b09400b00a3d1cbd67f7mr11894515ejy.0.1708526724327;
-        Wed, 21 Feb 2024 06:45:24 -0800 (PST)
-Received: from [192.168.1.20] ([178.197.222.116])
-        by smtp.gmail.com with ESMTPSA id g25-20020a1709063b1900b00a3f45b80563sm535615ejf.77.2024.02.21.06.45.22
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 21 Feb 2024 06:45:23 -0800 (PST)
-Message-ID: <403e32c2-910e-4745-9ebe-fbf377c3fde8@linaro.org>
-Date: Wed, 21 Feb 2024 15:45:20 +0100
+	s=arc-20240116; t=1708526762; c=relaxed/simple;
+	bh=px5R6j4CfBD6L+NyH1bzxUD/SxQ6vZa1DBOK9wlHvDM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ZUpHSKMjWVeXNbEA9U0abFJh8TIOPXnDsAKqXNk2JstyOf58zfuOztGDnc2mGDh4s5bbi6fQtIwwY9F95o7JRKHhQGVricCXgRQHcdjYkszFQ6qRbh843+jqi1k+WuDs1gooH0HM2XqJapAnpa2unugskMIQsmqrbGtj2IywGok=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; arc=none smtp.client-ip=93.17.236.30
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
+Received: from localhost (mailhub3.si.c-s.fr [192.168.12.233])
+	by localhost (Postfix) with ESMTP id 4Tfzbg5LQ0z9txb;
+	Wed, 21 Feb 2024 15:45:51 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+	by localhost (pegase1.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id hANmYnw3DOMc; Wed, 21 Feb 2024 15:45:51 +0100 (CET)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+	by pegase1.c-s.fr (Postfix) with ESMTP id 4Tfzbg4Rs7z9tFS;
+	Wed, 21 Feb 2024 15:45:51 +0100 (CET)
+Received: from localhost (localhost [127.0.0.1])
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id 8DED38B76D;
+	Wed, 21 Feb 2024 15:45:51 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+	with ESMTP id 4ZYUsQVw3Cpp; Wed, 21 Feb 2024 15:45:51 +0100 (CET)
+Received: from PO20335.idsi0.si.c-s.fr (unknown [172.25.230.108])
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id 398788B768;
+	Wed, 21 Feb 2024 15:45:51 +0100 (CET)
+From: Christophe Leroy <christophe.leroy@csgroup.eu>
+To: "David S. Miller" <davem@davemloft.net>,
+	David Ahern <dsahern@kernel.org>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	Eduard Zingerman <eddyz87@gmail.com>,
+	Song Liu <song@kernel.org>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	John Fastabend <john.fastabend@gmail.com>,
+	KP Singh <kpsingh@kernel.org>,
+	Stanislav Fomichev <sdf@google.com>,
+	Hao Luo <haoluo@google.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>
+Cc: Christophe Leroy <christophe.leroy@csgroup.eu>,
+	bpf@vger.kernel.org,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Kees Cook <keescook@chromium.org>
+Subject: [PATCH bpf-next v2] bpf: Check return from set_memory_rox() and friends
+Date: Wed, 21 Feb 2024 15:45:19 +0100
+Message-ID: <883c5a268483a89ab13ed630210328a926f16e5b.1708526584.git.christophe.leroy@csgroup.eu>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/1] MAINTAINERS: Add maintainer for NXP S32G boards
-Content-Language: en-US
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-To: Ghennadi Procopciuc <ghennadi.procopciuc@oss.nxp.com>,
- Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>,
- Chester Lin <chester62515@gmail.com>, krzysztof.kozlowski+dt@linaro.org,
- =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>,
- Matthias Brugger <mbrugger@suse.com>, robh+dt@kernel.org
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- soc@kernel.org, NXP S32 Linux Team <s32@nxp.com>,
- Ghennadi Procopciuc <ghennadi.procopciuc@nxp.com>
-References: <20240221120123.1118552-1-ghennadi.procopciuc@oss.nxp.com>
- <20240221120123.1118552-2-ghennadi.procopciuc@oss.nxp.com>
- <f4465547-1fb1-4578-9a69-7d399e7661b3@linaro.org>
-Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
- 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
- D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <f4465547-1fb1-4578-9a69-7d399e7661b3@linaro.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1708526720; l=7152; i=christophe.leroy@csgroup.eu; s=20211009; h=from:subject:message-id; bh=px5R6j4CfBD6L+NyH1bzxUD/SxQ6vZa1DBOK9wlHvDM=; b=5fyB6RbnqOSvhWk+nkpg1uqyuXjHfBWovHDcw9RzvTxBWVm802UGzWAm2DpZ2bZ9CHAAOxwGW 8Y4dIkxnweyCBz/O5h2TCcoI8fqwp689VQh4Vjvlh2ppNALjSkFKCaR
+X-Developer-Key: i=christophe.leroy@csgroup.eu; a=ed25519; pk=HIzTzUj91asvincQGOFx6+ZF5AoUuP9GdOtQChs7Mm0=
+Content-Transfer-Encoding: 8bit
 
-On 21/02/2024 15:42, Krzysztof Kozlowski wrote:
-> On 21/02/2024 13:01, Ghennadi Procopciuc wrote:
->> From: Ghennadi Procopciuc <ghennadi.procopciuc@nxp.com>
->>
->> Add myself as a maintainer of the NXP S32G DT files.
-> 
-> No need for cover letters for single patches. OTOH, this commit msg is
-> empty...
-> 
-> Plus your patch looks corrupted (wrong encoding): F??rber
-> 
-> BTW, did you contribute anything to the upstream Linux kernel? Do you
-> know the process? Downstream does not really matter.
+arch_protect_bpf_trampoline() and alloc_new_pack() call
+set_memory_rox() which can fail, leading to unprotected memory.
 
-I found the answer:
+Take into account return from set_memory_XX() functions and add
+__must_check flag to arch_protect_bpf_trampoline().
 
-From: Ghennadi Procopciuc <ghennadi.procopciuc@nxp.com>
-Signed-off-by: Ghennadi Procopciuc <ghennadi.procopciuc@oss.nxp.com>
+Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
+Reviewed-by: Kees Cook <keescook@chromium.org>
+---
+v2:
+- Move list_add_tail(&pack->list, &pack_list) at the end of alloc_new_pack()
+- Split 2 lines that are reported longer than 80 chars by BPF patchwork's checkpatch report.
+---
+ arch/x86/net/bpf_jit_comp.c    |  6 ++++--
+ include/linux/bpf.h            |  4 ++--
+ kernel/bpf/bpf_struct_ops.c    |  9 +++++++--
+ kernel/bpf/core.c              | 29 ++++++++++++++++++++++-------
+ kernel/bpf/trampoline.c        | 18 ++++++++++++------
+ net/bpf/bpf_dummy_struct_ops.c |  4 +++-
+ 6 files changed, 50 insertions(+), 20 deletions(-)
 
-Does not look like. Please get some upstream work experience first.
-
-https://lore.kernel.org/all/?q=f%3Aghennadi.procopciuc%40oss.nxp.com
-
-Best regards,
-Krzysztof
+diff --git a/arch/x86/net/bpf_jit_comp.c b/arch/x86/net/bpf_jit_comp.c
+index e1390d1e331b..128c8ec9164e 100644
+--- a/arch/x86/net/bpf_jit_comp.c
++++ b/arch/x86/net/bpf_jit_comp.c
+@@ -2780,12 +2780,14 @@ void arch_free_bpf_trampoline(void *image, unsigned int size)
+ 	bpf_prog_pack_free(image, size);
+ }
+ 
+-void arch_protect_bpf_trampoline(void *image, unsigned int size)
++int arch_protect_bpf_trampoline(void *image, unsigned int size)
+ {
++	return 0;
+ }
+ 
+-void arch_unprotect_bpf_trampoline(void *image, unsigned int size)
++int arch_unprotect_bpf_trampoline(void *image, unsigned int size)
+ {
++	return 0;
+ }
+ 
+ int arch_prepare_bpf_trampoline(struct bpf_tramp_image *im, void *image, void *image_end,
+diff --git a/include/linux/bpf.h b/include/linux/bpf.h
+index b86bd15a051d..bb2723c264df 100644
+--- a/include/linux/bpf.h
++++ b/include/linux/bpf.h
+@@ -1116,8 +1116,8 @@ int arch_prepare_bpf_trampoline(struct bpf_tramp_image *im, void *image, void *i
+ 				void *func_addr);
+ void *arch_alloc_bpf_trampoline(unsigned int size);
+ void arch_free_bpf_trampoline(void *image, unsigned int size);
+-void arch_protect_bpf_trampoline(void *image, unsigned int size);
+-void arch_unprotect_bpf_trampoline(void *image, unsigned int size);
++int __must_check arch_protect_bpf_trampoline(void *image, unsigned int size);
++int arch_unprotect_bpf_trampoline(void *image, unsigned int size);
+ int arch_bpf_trampoline_size(const struct btf_func_model *m, u32 flags,
+ 			     struct bpf_tramp_links *tlinks, void *func_addr);
+ 
+diff --git a/kernel/bpf/bpf_struct_ops.c b/kernel/bpf/bpf_struct_ops.c
+index 0decd862dfe0..d920afb0dd60 100644
+--- a/kernel/bpf/bpf_struct_ops.c
++++ b/kernel/bpf/bpf_struct_ops.c
+@@ -488,7 +488,9 @@ static long bpf_struct_ops_map_update_elem(struct bpf_map *map, void *key,
+ 			if (err)
+ 				goto reset_unlock;
+ 		}
+-		arch_protect_bpf_trampoline(st_map->image, PAGE_SIZE);
++		err = arch_protect_bpf_trampoline(st_map->image, PAGE_SIZE);
++		if (err)
++			goto reset_unlock;
+ 		/* Let bpf_link handle registration & unregistration.
+ 		 *
+ 		 * Pair with smp_load_acquire() during lookup_elem().
+@@ -497,7 +499,10 @@ static long bpf_struct_ops_map_update_elem(struct bpf_map *map, void *key,
+ 		goto unlock;
+ 	}
+ 
+-	arch_protect_bpf_trampoline(st_map->image, PAGE_SIZE);
++	err = arch_protect_bpf_trampoline(st_map->image, PAGE_SIZE);
++	if (err)
++		goto reset_unlock;
++
+ 	err = st_ops->reg(kdata);
+ 	if (likely(!err)) {
+ 		/* This refcnt increment on the map here after
+diff --git a/kernel/bpf/core.c b/kernel/bpf/core.c
+index c49619ef55d0..eb2256ba6daf 100644
+--- a/kernel/bpf/core.c
++++ b/kernel/bpf/core.c
+@@ -898,23 +898,31 @@ static LIST_HEAD(pack_list);
+ static struct bpf_prog_pack *alloc_new_pack(bpf_jit_fill_hole_t bpf_fill_ill_insns)
+ {
+ 	struct bpf_prog_pack *pack;
++	int err;
+ 
+ 	pack = kzalloc(struct_size(pack, bitmap, BITS_TO_LONGS(BPF_PROG_CHUNK_COUNT)),
+ 		       GFP_KERNEL);
+ 	if (!pack)
+ 		return NULL;
+ 	pack->ptr = bpf_jit_alloc_exec(BPF_PROG_PACK_SIZE);
+-	if (!pack->ptr) {
+-		kfree(pack);
+-		return NULL;
+-	}
++	if (!pack->ptr)
++		goto out;
+ 	bpf_fill_ill_insns(pack->ptr, BPF_PROG_PACK_SIZE);
+ 	bitmap_zero(pack->bitmap, BPF_PROG_PACK_SIZE / BPF_PROG_CHUNK_SIZE);
+-	list_add_tail(&pack->list, &pack_list);
+ 
+ 	set_vm_flush_reset_perms(pack->ptr);
+-	set_memory_rox((unsigned long)pack->ptr, BPF_PROG_PACK_SIZE / PAGE_SIZE);
++	err = set_memory_rox((unsigned long)pack->ptr,
++			     BPF_PROG_PACK_SIZE / PAGE_SIZE);
++	if (err)
++		goto out_free;
++	list_add_tail(&pack->list, &pack_list);
+ 	return pack;
++
++out_free:
++	bpf_jit_free_exec(pack->ptr);
++out:
++	kfree(pack);
++	return NULL;
+ }
+ 
+ void *bpf_prog_pack_alloc(u32 size, bpf_jit_fill_hole_t bpf_fill_ill_insns)
+@@ -929,9 +937,16 @@ void *bpf_prog_pack_alloc(u32 size, bpf_jit_fill_hole_t bpf_fill_ill_insns)
+ 		size = round_up(size, PAGE_SIZE);
+ 		ptr = bpf_jit_alloc_exec(size);
+ 		if (ptr) {
++			int err;
++
+ 			bpf_fill_ill_insns(ptr, size);
+ 			set_vm_flush_reset_perms(ptr);
+-			set_memory_rox((unsigned long)ptr, size / PAGE_SIZE);
++			err = set_memory_rox((unsigned long)ptr,
++					     size / PAGE_SIZE);
++			if (err) {
++				bpf_jit_free_exec(ptr);
++				ptr = NULL;
++			}
+ 		}
+ 		goto out;
+ 	}
+diff --git a/kernel/bpf/trampoline.c b/kernel/bpf/trampoline.c
+index d382f5ebe06c..6e64ac9083b6 100644
+--- a/kernel/bpf/trampoline.c
++++ b/kernel/bpf/trampoline.c
+@@ -456,7 +456,9 @@ static int bpf_trampoline_update(struct bpf_trampoline *tr, bool lock_direct_mut
+ 	if (err < 0)
+ 		goto out_free;
+ 
+-	arch_protect_bpf_trampoline(im->image, im->size);
++	err = arch_protect_bpf_trampoline(im->image, im->size);
++	if (err)
++		goto out_free;
+ 
+ 	WARN_ON(tr->cur_image && total == 0);
+ 	if (tr->cur_image)
+@@ -1072,17 +1074,21 @@ void __weak arch_free_bpf_trampoline(void *image, unsigned int size)
+ 	bpf_jit_free_exec(image);
+ }
+ 
+-void __weak arch_protect_bpf_trampoline(void *image, unsigned int size)
++int __weak arch_protect_bpf_trampoline(void *image, unsigned int size)
+ {
+ 	WARN_ON_ONCE(size > PAGE_SIZE);
+-	set_memory_rox((long)image, 1);
++	return set_memory_rox((long)image, 1);
+ }
+ 
+-void __weak arch_unprotect_bpf_trampoline(void *image, unsigned int size)
++int __weak arch_unprotect_bpf_trampoline(void *image, unsigned int size)
+ {
++	int err;
+ 	WARN_ON_ONCE(size > PAGE_SIZE);
+-	set_memory_nx((long)image, 1);
+-	set_memory_rw((long)image, 1);
++
++	err = set_memory_nx((long)image, 1);
++	if (err)
++		return err;
++	return set_memory_rw((long)image, 1);
+ }
+ 
+ int __weak arch_bpf_trampoline_size(const struct btf_func_model *m, u32 flags,
+diff --git a/net/bpf/bpf_dummy_struct_ops.c b/net/bpf/bpf_dummy_struct_ops.c
+index 02de71719aed..2aaecd8931fc 100644
+--- a/net/bpf/bpf_dummy_struct_ops.c
++++ b/net/bpf/bpf_dummy_struct_ops.c
+@@ -137,7 +137,9 @@ int bpf_struct_ops_test_run(struct bpf_prog *prog, const union bpf_attr *kattr,
+ 	if (err < 0)
+ 		goto out;
+ 
+-	arch_protect_bpf_trampoline(image, PAGE_SIZE);
++	err = arch_protect_bpf_trampoline(image, PAGE_SIZE);
++	if (err)
++		goto out;
+ 	prog_ret = dummy_ops_call_op(image, args);
+ 
+ 	err = dummy_ops_copy_args(args);
+-- 
+2.43.0
 
