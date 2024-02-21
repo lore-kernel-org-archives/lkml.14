@@ -1,163 +1,316 @@
-Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BD8E7F7EA;
-	Wed, 21 Feb 2024 17:24:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D5E7583A1F;
+	Wed, 21 Feb 2024 17:25:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708536247; cv=none; b=BqrLuvgKsZzfcV+U8FYxceDRYHc3g+YbuF75zLX13banCzi+VAFrZKSUwKsXndFXfrq+/FUWkP7FxZFhZnpckwJSfLhofJxgORkZ1h4/oi07wKYdC15rF2akznRipid49X4SgOsLW/Sf7I419pf9Nt6pMkvxYnpLZXCasA5EWu0=
+	t=1708536316; cv=none; b=CyaKGOpwORpCLrlZeedJes2zJbQVJRMW9DUN9TKQxGza4B3393JCViKpgGkfPz4uNbWtQfKEkr115LLtKxvDyDkzB0f2ntMuxS0stf1LmwbcUY0YwykP0XJHJU5NqUYwgu3YyanSrMID9HsNlclOufq/nEnln9IrfkLBJi2jVhY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708536247; c=relaxed/simple;
-	bh=2gSFdXQslCcELEmt27ii408bUhhDY+Jb6gfi1b9Tkpc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=tdo6W0XccmEg/0dnwx/cJUIUdx3XfEurMmwHqCqwAvzU7WquNxoPMPjTrBoTkcmCpkQ+qiSl8KqSW8c34uSFbbTTKj0ilCVQ97Wt3mN2uUR4uPtgafkBn0UG8YKgRJdCIN+oQcDQ3QqnZncX5HDfrSNqnTkVv7zB8Am+zuCsZR0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iFPdqD7r; arc=none smtp.client-ip=209.85.210.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iFPdqD7r"
-Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-6e46e07ff07so2234161b3a.3;
-        Wed, 21 Feb 2024 09:24:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1708536245; x=1709141045; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=OsPQKiy0Sm1aIRngHvDF4ALP8VICeSJz60rKu9HhQtM=;
-        b=iFPdqD7rJlhrdq1rZ2iIIM5fne7PalZ2RGwItbpXO49N3kwHAKkWz6svs94iRLkwMy
-         2nezhgz+L4XY+OCuLARTO1g991lMf5PPy3pkWHs83O/IIgaXYMwNETn6fJx+6VXo9l2H
-         Pp5vvf2c/wWbCDqAbHjWkaDgTswvWcrlbsV6J6DvIprIAuX8LVIzmW+F3tKKfjO7Vu3i
-         eSUPXtM5ixQV1m890sTJa9Li4x9G0auLdYzMeg5mB5n/foBSgzf3hj79Y8hFTM6qCrES
-         Snt6MqjXPM1xKBu2sKu8NNCUBw7urrnJqy3t66xcxerT6+XsxFCifYVrBVWWrMI2Nq8h
-         DNTg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708536245; x=1709141045;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=OsPQKiy0Sm1aIRngHvDF4ALP8VICeSJz60rKu9HhQtM=;
-        b=aonDHotImSBWkv6MystKNGAVJjK1/99Zu/XJmxSqBtWLy1TLOrpTPHxM3Nnty+knja
-         0lmHJZHZ2T3+QQWgWZoA62q3Abz27zmyIhmC5mWCB78fOwDToHOZ2Oi1TSElSX/zOSyc
-         k48G60oqCxb1RTbsIsFuFA2lAx2To7mnp7I4iK3s4V7mrdJdOlQWZln5r3OwM+vNoFtq
-         Y9zpov0T4S4eJZrfmBLlc2NZdMbUVgAQ7LjOtjqif2CEI92w+JkDkkuoPwXbOxX/vz/E
-         9EJnt1vav+Orj0VbE3tYtGJDt7epitprVvbfHKNn9fIQrmj3Fzqzvu6j7SVXgTxzzxmJ
-         37YA==
-X-Forwarded-Encrypted: i=1; AJvYcCXqOyPnp/b2kx3yexoNxY1SCZGW0hal5rjuI4eopNUlDZhoZ/f0n01bGpv+Z2s1XLlC4yH5FZt7KzezWk3oR4i76V4HACX9zubUuZE79JMnN38gI7kyxohqubAmm5VxgGGsOUwqNIOK1CRl9pHbhGer8bZh0K2vby6NN14kfCAET2Retnl+f4VdOswFIXW9GOfXqwT+Rtm7TUn4ZpVeOI83T5wd
-X-Gm-Message-State: AOJu0YxutujlJBX/VerlDNOvD3kFmvya9bUZgiu1xYM+T52g6kYiHWEA
-	LRWHRrWNw9fKbxo1jRgGy3U3YkdKlef4nRhZxiQuA06yO9xwZcRoqrqtylK5A4JsMQ==
-X-Google-Smtp-Source: AGHT+IE2pFiY338XU8TevuAvOfaaljl4D74mPTJNZR7osicnvccdCwPz3FojZy2vOUYswhqDgFHi5g==
-X-Received: by 2002:a05:6a00:a88:b0:6e0:f3f4:8da9 with SMTP id b8-20020a056a000a8800b006e0f3f48da9mr24499791pfl.4.1708536245357;
-        Wed, 21 Feb 2024 09:24:05 -0800 (PST)
-Received: from localhost.localdomain ([2406:3003:2000:500f:a246:8a16:bee7:140f])
-        by smtp.gmail.com with ESMTPSA id fn15-20020a056a002fcf00b006e324e33ab8sm8640356pfb.218.2024.02.21.09.24.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 21 Feb 2024 09:24:05 -0800 (PST)
-From: Lucas Lee Jing Yi <lucasleeeeeeeee@gmail.com>
-To: oleksandr@natalenko.name
-Cc: Perry.Yuan@amd.com,
-	Xiaojian.Du@amd.com,
-	alexander.deucher@amd.com,
-	bp@alien8.de,
-	deepak.sharma@amd.com,
-	li.meng@amd.com,
-	linux-acpi@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-kselftest@vger.kernel.org,
-	linux-pm@vger.kernel.org,
-	lucasleeeeeeeee@gmail.com,
-	mario.limonciello@amd.com,
-	nathan.fontenot@amd.com,
-	rafael.j.wysocki@intel.com,
-	rafael@kernel.org,
-	ray.huang@amd.com,
-	shimmer.huang@amd.com,
-	skhan@linuxfoundation.org,
-	viresh.kumar@linaro.org,
-	x86@kernel.org
-Subject: [PATCH] [PATCH] amd_pstate: fix erroneous highest_perf value on some CPUs
-Date: Thu, 22 Feb 2024 01:19:15 +0800
-Message-ID: <20240221172404.99765-2-lucasleeeeeeeee@gmail.com>
-X-Mailer: git-send-email 2.43.2
-In-Reply-To: <20240221172404.99765-1-lucasleeeeeeeee@gmail.com>
-References: <3868832.mvXUDI8C0e@natalenko.name>
- <20240221172404.99765-1-lucasleeeeeeeee@gmail.com>
+	s=arc-20240116; t=1708536316; c=relaxed/simple;
+	bh=pi3m3lINB34XM4b05DNPw2Om1XAK5T2xa3AtMdE8pgw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HKGy3yAVXGBJC0Pmx5pSrgrSz01PxwAVf5y1Mria76fEPNsKRD0nkf42xjDCMsCMOm7TRqvGBsQXdoDIBxKzwbg7NgD2677UJcQPhmWEQhElk+9iEqfJW+glATY0GdVBLCgsxspWgNonRjdHlP/B9etSPle1i26S5xTNqVDEArk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8DA351007;
+	Wed, 21 Feb 2024 09:25:51 -0800 (PST)
+Received: from FVFF77S0Q05N (unknown [10.57.65.165])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0D45D3F73F;
+	Wed, 21 Feb 2024 09:25:10 -0800 (PST)
+Date: Wed, 21 Feb 2024 17:25:05 +0000
+From: Mark Rutland <mark.rutland@arm.com>
+To: Anshuman Khandual <anshuman.khandual@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	will@kernel.org, catalin.marinas@arm.com,
+	Mark Brown <broonie@kernel.org>, James Clark <james.clark@arm.com>,
+	Rob Herring <robh@kernel.org>, Marc Zyngier <maz@kernel.org>,
+	Suzuki Poulose <suzuki.poulose@arm.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH V16 3/8] drivers: perf: arm_pmuv3: Enable branch stack
+ sampling framework
+Message-ID: <ZdYx8cawn0sAbktv@FVFF77S0Q05N>
+References: <20240125094119.2542332-1-anshuman.khandual@arm.com>
+ <20240125094119.2542332-4-anshuman.khandual@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240125094119.2542332-4-anshuman.khandual@arm.com>
 
-On a Ryzen 7840HS the highest_perf value is 196, not 166 as AMD assumed.
-This leads to the advertised max clock speed to only be 4.35ghz
-instead of 5.14ghz leading to a large degradation in performance.
+Hi Anshuman,
 
-Fix the broken assumption and revert back to the old logic for
-getting highest_perf.
+On Thu, Jan 25, 2024 at 03:11:14PM +0530, Anshuman Khandual wrote:
+> Branch stack sampling support i.e capturing branch records during execution
+> in core perf, rides along with normal HW events being scheduled on the PMU.
+> This prepares ARMV8 PMU framework for branch stack support on relevant PMUs
+> with required HW implementation.
 
-TEST:
-Geekbench 6 Before Patch:
-Single Core:	2325 (-22%)!
-Multi Core:	11335 (-10%)
+Please can we start a bit more clearly, e.g.
 
-Geekbench 6 AFTER Patch:
-Single Core:	2635
-Multi Core:	12487
+| drivers: perf: arm_pmu: add instructure for branch stack sampling
+| 
+| In order to support the Branch Record Buffer Extension (BRBE), we need to
+| extend the arm_pmu framework with some basic infrastructure for branch stack
+| sampling which arm_pmu drivers can opt-in to using. Subsequent patches will
+| use this to add support for BRBE in the PMUv3 driver.
 
-Signed-off-by: Lucas Lee Jing Yi <lucasleeeeeeeee@gmail.com>
----
- drivers/cpufreq/amd-pstate.c | 22 ++++++++++------------
- 1 file changed, 10 insertions(+), 12 deletions(-)
+> ARMV8 PMU hardware support for branch stack sampling is indicated via a new
+> feature flag called 'has_branch_stack' that can be ascertained via probing.
+> This modifies current gate in armpmu_event_init() which blocks branch stack
+> sampling based perf events unconditionally. Instead allows such perf events
+> getting initialized on supporting PMU hardware.
 
-diff --git a/drivers/cpufreq/amd-pstate.c b/drivers/cpufreq/amd-pstate.c
-index 08e112444c27..54df68773620 100644
---- a/drivers/cpufreq/amd-pstate.c
-+++ b/drivers/cpufreq/amd-pstate.c
-@@ -50,7 +50,6 @@
- 
- #define AMD_PSTATE_TRANSITION_LATENCY	20000
- #define AMD_PSTATE_TRANSITION_DELAY	1000
--#define AMD_PSTATE_PREFCORE_THRESHOLD	166
- 
- /*
-  * TODO: We need more time to fine tune processors with shared memory solution
-@@ -299,15 +298,12 @@ static int pstate_init_perf(struct amd_cpudata *cpudata)
- 				     &cap1);
- 	if (ret)
- 		return ret;
--
--	/* For platforms that do not support the preferred core feature, the
--	 * highest_pef may be configured with 166 or 255, to avoid max frequency
--	 * calculated wrongly. we take the AMD_CPPC_HIGHEST_PERF(cap1) value as
--	 * the default max perf.
-+
-+	/* Some CPUs have different highest_perf from others, it is safer
-+	 * to read it than to assume some erroneous value, leading to performance issues.
- 	 */
--	if (cpudata->hw_prefcore)
--		highest_perf = AMD_PSTATE_PREFCORE_THRESHOLD;
--	else
-+	highest_perf = amd_get_highest_perf();
-+	if (highest_perf > AMD_CPPC_HIGHEST_PERF(cap1))
- 		highest_perf = AMD_CPPC_HIGHEST_PERF(cap1);
- 
- 	WRITE_ONCE(cpudata->highest_perf, highest_perf);
-@@ -329,9 +325,11 @@ static int cppc_init_perf(struct amd_cpudata *cpudata)
- 	if (ret)
- 		return ret;
- 
--	if (cpudata->hw_prefcore)
--		highest_perf = AMD_PSTATE_PREFCORE_THRESHOLD;
--	else
-+	/* Some CPUs have different highest_perf from others, it is safer
-+	 * to read it than to assume some erroneous value, leading to performance issues.
-+	 */
-+	highest_perf = amd_get_highest_perf();
-+	if (highest_perf > cppc_perf.highest_perf)
- 		highest_perf = cppc_perf.highest_perf;
- 
- 	WRITE_ONCE(cpudata->highest_perf, highest_perf);
--- 
-2.43.2
+This paragraph can be deleted. The addition of 'has_branch_stack' and its use
+in armpmu_event_init() is trivial and obvious in-context, and this distracts
+from the important parts of this patch.
 
+> Branch stack sampling is enabled and disabled along with regular PMU events
+> . This adds required function callbacks in armv8pmu_branch_xxx() format, to
+> drive the PMU branch stack hardware when supported. This also adds fallback
+> stub definitions for these callbacks for PMUs which would not have required
+> support.
+
+Those additions to the PMUv3 driver should all be in the next patch.
+
+We don't add anything for the other PMU drivers that don't support branch
+sampling, so why do we need to do *anything* to the PMUv3 driver here, given we
+add the support in the next patch? Those additions only make this patch bigger
+and more confusing (and hence more painful to review).
+
+> If a task gets scheduled out, the current branch records get saved in the
+> task's context data, which can be later used to fill in the records upon an
+> event overflow. Hence, we enable PERF_ATTACH_TASK_DATA (event->attach_state
+> based flag) for branch stack requesting perf events. But this also requires
+> adding support for pmu::sched_task() callback to arm_pmu.
+
+I think what this is trying to say is:
+
+| With BRBE, the hardware records branches into a hardware FIFO, which will be
+| sampled by software when perf events overflow. A task may be context-switched
+| an arbitrary number of times between overflows, and to avoid losing samples
+| we need to save the current records when a task is context-switched out. To
+| do these we'll need to use the pmu::sched_task() callback, and we'll need to
+| allocate some per-task storage space using PERF_ATTACH_TASK_DATA.
+
+> Cc: Catalin Marinas <catalin.marinas@arm.com>
+> Cc: Will Deacon <will@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: linux-kernel@vger.kernel.org
+> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+> ---
+> Changes in V16:
+> 
+> - Renamed arm_brbe.h as arm_pmuv3_branch.h
+> - Updated perf_sample_save_brstack()'s new argument requirements with NULL
+> 
+>  drivers/perf/arm_pmu.c          |  57 ++++++++++++-
+>  drivers/perf/arm_pmuv3.c        | 141 +++++++++++++++++++++++++++++++-
+>  drivers/perf/arm_pmuv3_branch.h |  50 +++++++++++
+>  include/linux/perf/arm_pmu.h    |  29 ++++++-
+>  include/linux/perf/arm_pmuv3.h  |   1 -
+>  5 files changed, 273 insertions(+), 5 deletions(-)
+>  create mode 100644 drivers/perf/arm_pmuv3_branch.h
+> 
+> diff --git a/drivers/perf/arm_pmu.c b/drivers/perf/arm_pmu.c
+> index 8458fe2cebb4..16f488ae7747 100644
+> --- a/drivers/perf/arm_pmu.c
+> +++ b/drivers/perf/arm_pmu.c
+> @@ -317,6 +317,15 @@ armpmu_del(struct perf_event *event, int flags)
+>  	struct hw_perf_event *hwc = &event->hw;
+>  	int idx = hwc->idx;
+>  
+> +	if (has_branch_stack(event)) {
+> +		WARN_ON_ONCE(!hw_events->brbe_users);
+> +		hw_events->brbe_users--;
+> +		if (!hw_events->brbe_users) {
+> +			hw_events->brbe_context = NULL;
+> +			hw_events->brbe_sample_type = 0;
+> +		}
+> +	}
+> +
+
+If this is going to leak into the core arm_pmu code, use "branch_stack" rather
+than "brbe" for these field names.
+
+However, I reckon we could just have two new callbacks on arm_pmu:
+
+	branch_stack_add(struct perf_event *event, ...);
+	branch_stack_del(struct perf_event *event, ...);
+
+... and hide all of the details in the PMUv3 (or BRBE) driver for now, and the
+code above can just do:
+
+	if (has_branch_stack(event))
+		branch_stack_del(event, ...);
+
+... and likewise in armpmu_add().
+
+That way the actuel management logic for the context and so on can be added in
+the next patch, where the lifetime would be *much* clearer.
+
+>  	armpmu_stop(event, PERF_EF_UPDATE);
+>  	hw_events->events[idx] = NULL;
+>  	armpmu->clear_event_idx(hw_events, event);
+> @@ -333,6 +342,38 @@ armpmu_add(struct perf_event *event, int flags)
+>  	struct hw_perf_event *hwc = &event->hw;
+>  	int idx;
+>  
+> +	if (has_branch_stack(event)) {
+> +		/*
+> +		 * Reset branch records buffer if a new CPU bound event
+> +		 * gets scheduled on a PMU. Otherwise existing branch
+> +		 * records present in the buffer might just leak into
+> +		 * such events.
+> +		 *
+> +		 * Also reset current 'hw_events->brbe_context' because
+> +		 * any previous task bound event now would have lost an
+> +		 * opportunity for continuous branch records.
+> +		 */
+
+Doesn't this mean some user silently loses events? Why is that ok?
+
+> +		if (!event->ctx->task) {
+> +			hw_events->brbe_context = NULL;
+> +			if (armpmu->branch_reset)
+> +				armpmu->branch_reset();
+> +		}
+> +
+> +		/*
+> +		 * Reset branch records buffer if a new task event gets
+> +		 * scheduled on a PMU which might have existing records.
+> +		 * Otherwise older branch records present in the buffer
+> +		 * might leak into the new task event.
+> +		 */
+> +		if (event->ctx->task && hw_events->brbe_context != event->ctx) {
+> +			hw_events->brbe_context = event->ctx;
+> +			if (armpmu->branch_reset)
+> +				armpmu->branch_reset();
+> +		}
+
+Same question here.
+
+How does this work on other architectures?
+
+What do we do if the CPU-bound and task-bound events want different filters,
+etc?
+
+This is the sort of gnarly detail that should be explained (or at least
+introduced) in the commit message.
+
+> +		hw_events->brbe_users++;
+> +		hw_events->brbe_sample_type = event->attr.branch_sample_type;
+
+What exactly is brbe_sample_type, and why does it get overriden *every time* we
+add a new event? What happens when events have different values for
+brbe_sample_type? Or is that forbidden somehow?
+
+> +	}
+> +
+>  	/* An event following a process won't be stopped earlier */
+>  	if (!cpumask_test_cpu(smp_processor_id(), &armpmu->supported_cpus))
+>  		return -ENOENT;
+
+Unless this cpumask check has been made redundant, it means that the code above
+it is obviously wrong, since that pokes the BRBE HW and increments brbe_users
+*before* we decide whether the event can be installed on this CPU. That'll blow
+up on big.LITTLE,  e.g. we try and install a 'big' CPU event on a 'little' CPU,
+poke the BRBE HW and increment brbe_users, then *after* that we abort
+installing the event.
+
+Even ignoring big.LITTLE, we can fail immediately after this when we don't have
+enough counters, since the following code is:
+
+|        /* An event following a process won't be stopped earlier */
+|        if (!cpumask_test_cpu(smp_processor_id(), &armpmu->supported_cpus))
+|                return -ENOENT;
+|
+|        /* If we don't have a space for the counter then finish early. */
+|        idx = armpmu->get_event_idx(hw_events, event);
+|        if (idx < 0)
+|                return idx;
+
+... which'll go wrong if you try to open 1 more event than the CPU has
+counters.
+
+> @@ -511,13 +552,24 @@ static int armpmu_event_init(struct perf_event *event)
+>  		!cpumask_test_cpu(event->cpu, &armpmu->supported_cpus))
+>  		return -ENOENT;
+>  
+> -	/* does not support taken branch sampling */
+> -	if (has_branch_stack(event))
+> +	/*
+> +	 * Branch stack sampling events are allowed
+> +	 * only on PMU which has required support.
+> +	 */
+> +	if (has_branch_stack(event) && !armpmu->has_branch_stack)
+>  		return -EOPNOTSUPP;
+>  	return __hw_perf_event_init(event);
+>  }
+>  
+
+I think we can delete the comment entirely here, but the code itself looks
+fine here.
+
+> +static void armpmu_sched_task(struct perf_event_pmu_context *pmu_ctx, bool sched_in)
+> +{
+> +	struct arm_pmu *armpmu = to_arm_pmu(pmu_ctx->pmu);
+> +
+> +	if (armpmu->sched_task)
+> +		armpmu->sched_task(pmu_ctx, sched_in);
+> +}
+
+This looks fine.
+
+>  static void armpmu_enable(struct pmu *pmu)
+>  {
+>  	struct arm_pmu *armpmu = to_arm_pmu(pmu);
+> @@ -864,6 +916,7 @@ struct arm_pmu *armpmu_alloc(void)
+>  	}
+>  
+>  	pmu->pmu = (struct pmu) {
+> +		.sched_task	= armpmu_sched_task,
+>  		.pmu_enable	= armpmu_enable,
+>  		.pmu_disable	= armpmu_disable,
+>  		.event_init	= armpmu_event_init,
+> diff --git a/drivers/perf/arm_pmuv3.c b/drivers/perf/arm_pmuv3.c
+> index 23fa6c5da82c..9e17764a0929 100644
+> --- a/drivers/perf/arm_pmuv3.c
+> +++ b/drivers/perf/arm_pmuv3.c
+> @@ -26,6 +26,7 @@
+>  #include <linux/nmi.h>
+>  
+>  #include <asm/arm_pmuv3.h>
+> +#include "arm_pmuv3_branch.h"
+
+As above, I do not thing that the PMUv3 driver should change at all in this
+patch. As of this patch it achieves nothing, and it makes it really hard to
+understand what's going on because the important aspects are spread randomly
+across this patch and the next patch which actually adds the BRBE management.
+
+Please factor the PMUv3 changes out into the patch adding the actual BRBE code.
+
+[...]
+
+> diff --git a/include/linux/perf/arm_pmuv3.h b/include/linux/perf/arm_pmuv3.h
+> index 46377e134d67..c3e7d2cfb737 100644
+> --- a/include/linux/perf/arm_pmuv3.h
+> +++ b/include/linux/perf/arm_pmuv3.h
+> @@ -308,5 +308,4 @@
+>  		default: WARN(1, "Invalid PMEV* index\n");	\
+>  		}						\
+>  	} while (0)
+> -
+>  #endif
+
+Unrelated whitespace change.
+
+Mark.
