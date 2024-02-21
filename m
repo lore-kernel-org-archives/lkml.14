@@ -1,213 +1,180 @@
-Received: from EUR05-VI1-obe.outbound.protection.outlook.com (mail-vi1eur05on2100.outbound.protection.outlook.com [40.107.21.100])
+Received: from smtp-fw-6002.amazon.com (smtp-fw-6002.amazon.com [52.95.49.90])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BEDE83CA0
-	for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 17:10:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.21.100
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708535452; cv=fail; b=jcIJndZGYr8oO3BUUkI6/Oz8bg+Ac7xLRfTb34AX5T6B2Jqc6/0fpiQtwKxFNgDYn7zlpr/ki0TLwFe6xbch/U3rBkRrhX/yZKAwJyMNcoTyPbNp9B5vXF2YViFkDE8pFhYM/a6J8bXRTEvY5z1Y2UA8f436vNgAHdFnbCNQWFM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708535452; c=relaxed/simple;
-	bh=LCxoHJKlvCzkg+gCcy6lxRcFLxAI3D2/dSRbrSLftd4=;
-	h=From:To:CC:Subject:Date:Message-ID:Content-Type:MIME-Version; b=dd9K9fRdp3UKLZuwHA3QYrsdm8Sy6kmYPzz7hdZzec7KdG7kpvRMYlCNBfNVuAV9+GOMwjRodCmcfRSW9cYkqt3REuiHif3Qt6N6ZwaD7cMnSDNRGu8qvJSCLrQsqn//8igHzIoGgwabc0OPmLCjRxSz4Cf57fbGFZuz+vdnsp4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kontron.com; spf=pass smtp.mailfrom=kontron.com; dkim=pass (1024-bit key) header.d=mysnt.onmicrosoft.com header.i=@mysnt.onmicrosoft.com header.b=DKg9z21F; arc=fail smtp.client-ip=40.107.21.100
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kontron.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kontron.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF02C7FBD2;
+	Wed, 21 Feb 2024 17:11:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.95.49.90
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1708535483; cv=none; b=Dcl3M567R0PEpiuQEllPHsuYT+VjhyvXsjiVGBjhzBt/HtpG4ACwOezxGbtL57gIn5n+ciGJoB45hWjY/Q8Vh/pnMNdkiV8j49PNPYlRntJ9zfDhJPUZpByvS5RUq9ERF1i2Z4gObewONG9xCCmnb6LDRPaOe7fLLQ9GLBQmBd0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1708535483; c=relaxed/simple;
+	bh=RdPgpa+YXsbUuiD5e/mvq6eImHUit013/agYC5hJ5NQ=;
+	h=Subject:MIME-Version:Content-Type:Date:Message-ID:To:CC:From:
+	 References:In-Reply-To; b=lgx+C9NLNtJgHX/LxMU8lSsjsvz7FVgnH8WtqHkIBhKgai3CUU9btk8fr1aPwi0Oar0Y+CSmkeGSDmhDLjluOz2K/aCNrqIN0bSlUoBHtH8GnUXLrMo+etE8FujF6BxrZmxB42WYtRanGqs1pSuxAyBr7PzAye9da+HSKNe/TZs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.es; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=j3vcledb; arc=none smtp.client-ip=52.95.49.90
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.es
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mysnt.onmicrosoft.com header.i=@mysnt.onmicrosoft.com header.b="DKg9z21F"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=bSvmnflAz0lMqeGNaWGklVWSpcAaOi1FT9jIeh2SrPiJ0ekZM59ZMykAEc2XEd3tBGupxdVD9rPWxGUQn4cMoWnyqiRzB13108uQnJ0kFtw6Ni6dzEAxSCywz36/RiSkShgpOR/ZXmcaLWIwWyHC/veI3ntEZx/BBp1bGGNOyeVJzO7VysN4g0g9Uw2NrYq5ONmc18Dhu87tB2m2sSi29BPGxXEap0ECqSzD0uS1DzIK+COPntBuZ96EzA2611aA4sToBC74q3KYMubVZFUmuLVQdq+mgAp3roNkOmRfh8xXg/KBqHuSv0hM4BFHqrUILSpoUQg5VIN5lubWqrRfhA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=jcXygmdCL1kMhs5XlsdmhMDfG+iyNyYT/HLrcPNSL4U=;
- b=PhPV1/MktiXuZRCUfw5swnQjvN6K+60m8u/UVvV9ucB89reOvRfa8IWTdRuAsHxJWAyX35O+RUnQtYS3wY6YzYHOOdQyVybILhr0Yv/SrOk4prVJkXIYvzZ1ZJHhi2O4hhf/e8ZYbkgGGq5blke+jAFeSJtDgXz/VK7yRHdqkWWzu9Rd229/+pWaG3QqZclKVmuwHtpJkSWyAYoVI7N3ZTSqMihAbxa9Nl5q3ZIQebEDFBcDYF0Bs8urAdUFWmerWGFhooKBYoyXo6QbnJHXybsIfpXoHi5QkUdNCySDgS6hato/dW/0EDuVWczvztH6o3t3is9DVwFLDS/6FU+DAg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=kontron.com; dmarc=pass action=none header.from=kontron.com;
- dkim=pass header.d=kontron.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mysnt.onmicrosoft.com;
- s=selector2-mysnt-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=jcXygmdCL1kMhs5XlsdmhMDfG+iyNyYT/HLrcPNSL4U=;
- b=DKg9z21F/+WT+gPhszFcT+YOYqAh1QnWqZvDjEXmKppLO3DIgPj4E+EsvpYyXjggpcau15c6G0t135BT3AzWpi98QZTo9fcFevCcc2cuILPLW0CaxkEEQcIcwoxWKWz/mNrOk0lTaFbFTIAy8PMgo+PMB4kMRYiRPtn4YxlFsI8=
-Received: from AS2PR10MB7551.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:20b:591::19)
- by GV1PR10MB5842.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:150:51::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7292.38; Wed, 21 Feb
- 2024 17:10:44 +0000
-Received: from AS2PR10MB7551.EURPRD10.PROD.OUTLOOK.COM
- ([fe80::5208:477d:77da:84f8]) by AS2PR10MB7551.EURPRD10.PROD.OUTLOOK.COM
- ([fe80::5208:477d:77da:84f8%7]) with mapi id 15.20.7292.036; Wed, 21 Feb 2024
- 17:10:44 +0000
-From: Michael Brunner <michael.brunner@kontron.com>
-To: "lee.jones@linaro.org" <lee.jones@linaro.org>
-CC: "linux@roeck-us.net" <linux@roeck-us.net>, "mibru@gmx.de" <mibru@gmx.de>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: [PATCH] mfd: kempld-core: don't replace resources provided by ACPI
-Thread-Topic: [PATCH] mfd: kempld-core: don't replace resources provided by
- ACPI
-Thread-Index: AQHaZOjnqjSdKUSjjUiE5C/QNxRHxA==
-Date: Wed, 21 Feb 2024 17:10:44 +0000
-Message-ID: <09855448430a5f090dbe09cbb269959a08881ee7.camel@kontron.com>
-Accept-Language: de-DE, en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-user-agent: Evolution 3.36.5-0ubuntu1 
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=kontron.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: AS2PR10MB7551:EE_|GV1PR10MB5842:EE_
-x-ms-office365-filtering-correlation-id: de5f6482-278e-44b4-a019-08dc33000a2c
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info:
- RoeUgac9jm0GTRAiY+4p0XeJumm7/bv8NIWdnH8EASyWbmfA5oDaOP1yKMBKZiYw8XPK+g4ZjyrUurLBfnIucDDAI3uyVvnta+66A+0yq8kYBiSQ9pvvDU3tLMKlMkp8EP/mx15AI751k9lmhOyD1wviuXqfvmqWqLUVzN12A7nZIVVFXE9sIiFxV5kQTpVQV4ufP+SDBJzNSW8o0Y8rntprad2p/8fC0Kl3aOREmGse0eAaeQfJc8p+L8yw8FIVxKDoaEml0Q7POWMrs9t5sVOfPgj7XKTPvX2wQXnQBktVrlLXMCPGTYG0PrSuf+fPPtJFCYGGKsGgZp/ZK9oUpxRy3KQ7N2yMZB1of4knIsyJFrnKhwcDnB1QhmThXsW4p1J0NZwSeXysgJ/cHJjmZps1wX7OzTSngmU4t3lz/duAUkiUW/IFYZR/f0CBBO7RonsXMO2DXn0FrJfLmPcW1rHLUDb9JGYCjvfK6AnDBRSrx0faw2ABvvNvX/6Gr5Ei1kOKzAmcIIZcIK3rNwNJXyHfVXk2HBvBvXPHmr2/LA7fqf4q9JWlg2G1rwGOspymfmHl3tP/ARiZWD5KOZup3LEEeoawQxBFcx22EfUGErHT1QdFwkLHJ0WY9gSt5ZPm
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AS2PR10MB7551.EURPRD10.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230031)(38070700009);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?iso-8859-15?Q?WIaCDyn598zJz5tLFojEiGjIzFfkRKTCLRKQhSrTEs/zr5NRrZyNA4TOc?=
- =?iso-8859-15?Q?KgEw44aOfOxsa451O4gCv9xsW/lnh8OD58JDfY0Pu7zLMFPN7q7aSX12N?=
- =?iso-8859-15?Q?zdHPJ5OjwJuxqO2zPBujnXiHPSX4/eYzySMW3Xm+npwsbtiI4RNqkHawL?=
- =?iso-8859-15?Q?gnQwYTjdHb7aeW4S9M+WsXIVWQmy0lXjNbEDNUNx17rotWUTysbVmpb2x?=
- =?iso-8859-15?Q?od/DCTxbWc63WCVMUqicLgynjLL3gxhyjEeDMPv8zXDTLw9t5hK1A8DaB?=
- =?iso-8859-15?Q?g0NLsNylVA1BoCHi7GWNF5yJf0VmjKP1W/9xtsUKg3eYrXKNriTa3Mqjg?=
- =?iso-8859-15?Q?2nFR/4oaalyDdqW2JhKiEi0UAmRgsYLmufwjGPm/MxpShOqu88xw52PcG?=
- =?iso-8859-15?Q?zPxEKN1OgCcfcrWwHrLz4ILV4w55tfFY0u9A5JSqppktqsyWMGip8z82g?=
- =?iso-8859-15?Q?7PIZ5N9Q+m28R+suSNnoPSt67xd1bSGNWOCBkdA4YghSr0JXZk/cNGalM?=
- =?iso-8859-15?Q?avvkoiu3sbfhCPxQiPE+qVtziyUlJ/BqEDzSpUymjXdhDaCwd3xYMoGO5?=
- =?iso-8859-15?Q?nPIFZBWQbgE1k/YObgwbQco3eWZ99HRI9+wIG5i9Q3ekOKvRYhlGQMumM?=
- =?iso-8859-15?Q?xvWDrlfEygqWR6W2lLg88Tp+d4vNQvjqaObsLylESlk/u2Vxon+uMpMFp?=
- =?iso-8859-15?Q?aoU1bvUWq52gxVMIKTEHuyntIkSUjzV0O7cgaLnN9hDp9/9M0GIXp6JvA?=
- =?iso-8859-15?Q?mjuGZbQ5sH5/hzqlZjSre5IJnMD8ZKGo4UiCoBLb50xz8YRWEWilVb8tp?=
- =?iso-8859-15?Q?3D4p/6fxUYwRywa96zZH7NikO7PmbtSaJ/U/vCOGlwaRPy8M/Xm5EB6Hv?=
- =?iso-8859-15?Q?IzMOtixVg2L7yHWGyn3+n+6MasBsvArx/Ge91A6d/dElOHhup+FaUxHIB?=
- =?iso-8859-15?Q?uBDDSv8gCOoztjjqj+lhkqg2w37mI2wS4fzM6rOXEfC2CJRBY4k2r+RWt?=
- =?iso-8859-15?Q?lSTzpwHUKdWN1dlyk67nF+pR98PXHlJxkOTb+lelNAZBUrAtuyuS2RRLH?=
- =?iso-8859-15?Q?SoIzSaLPNuo6zR3Y+PmLq4VhP1TbXtEgIFF0Q/FUNAPWqTVPLMQiVXWAl?=
- =?iso-8859-15?Q?C6clsQLRaAH2L8yP8CtXKzMtWDxoDTiXriDsYgNxyxYpLsyoZODIzmSJD?=
- =?iso-8859-15?Q?Hic6xD6gcmeO9+NpOj2lyphNI+KViqmmTi/j+LC8AmNa3ha0+N0xZiYCR?=
- =?iso-8859-15?Q?itP5hAzrHoiy26m55NzVyy1TOIY2a2GuciXAQjy+ZWNfhhpOfV6m/Uc9t?=
- =?iso-8859-15?Q?4SXdCEXE8vZiMswBq8rVQRomv7rF8FRwEqigJ/5o+HXWb4fN3kAS7oIAI?=
- =?iso-8859-15?Q?e62CoB0aot9apeigTeYeKmyqGqownafyIOga09+FVs7OYDP4OH0pwN2BW?=
- =?iso-8859-15?Q?UVPQWWnW59NOo0df/cGQoxH608j3sCcViU8EcSZwsENvbE8xR6uyY3wQ9?=
- =?iso-8859-15?Q?mSn2pA/cH6djVHpCgCFOw9VfBsfCjcIxFA3qGAn7Rp1jYKAb0QNTye5ua?=
- =?iso-8859-15?Q?1dQIQZjx5TD8ygc3loJELUSoxP9El3gCnG/VlCHClHdIZXCCKtV0wp5bP?=
- =?iso-8859-15?Q?6rzBma1r60Bdic7mrIM1ZF3AHk1bOU365DK07PnRa7rIEuGeyxnP0DkCq?=
- =?iso-8859-15?Q?DbyzD2+pvSCLlTzm2FVdM3d+HShNk1+NB3GWV1Ant9SJsJc=3D?=
-Content-Type: text/plain; charset="iso-8859-15"
-Content-ID: <1CD61F589FD32F4BA1D650EDB7C5F110@EURPRD10.PROD.OUTLOOK.COM>
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="j3vcledb"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1708535481; x=1740071481;
+  h=mime-version:content-transfer-encoding:date:message-id:
+   to:cc:from:references:in-reply-to:subject;
+  bh=HNyaS2ubZ/63dCqupZWCaWz7EUlNlA2EX3ub2DgQAs8=;
+  b=j3vcledbFp2X4L5NKxF5ZbNCSleHjgGNQNQ4WL4ZQbeXGyYc2Fiiz1jI
+   C+HZ6J4IBvCL1cbW7yVHZUk8OUUX/ZsECyRwy2AgTFqXdTmW/ADKQld5E
+   1gCbe9cHhiN8C9gFCTQFUMfij0JDG3UWMj4+td/I383/FxgsXxT3tCmcp
+   k=;
+X-IronPort-AV: E=Sophos;i="6.06,176,1705363200"; 
+   d="scan'208";a="388182292"
+Subject: Re: [RFC] cputime: Introduce option to force full dynticks accounting on
+ NOHZ & NOHZ_IDLE CPUs
+Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO smtpout.prod.us-east-1.prod.farcaster.email.amazon.dev) ([10.43.8.6])
+  by smtp-border-fw-6002.iad6.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Feb 2024 17:11:18 +0000
+Received: from EX19MTAEUC001.ant.amazon.com [10.0.17.79:46546]
+ by smtpin.naws.eu-west-1.prod.farcaster.email.amazon.dev [10.0.16.90:2525] with esmtp (Farcaster)
+ id 90dc1c36-4357-440a-b4ed-45fb23dc3039; Wed, 21 Feb 2024 17:11:17 +0000 (UTC)
+X-Farcaster-Flow-ID: 90dc1c36-4357-440a-b4ed-45fb23dc3039
+Received: from EX19D004EUC001.ant.amazon.com (10.252.51.190) by
+ EX19MTAEUC001.ant.amazon.com (10.252.51.155) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.40; Wed, 21 Feb 2024 17:11:17 +0000
+Received: from localhost (10.13.235.138) by EX19D004EUC001.ant.amazon.com
+ (10.252.51.190) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Wed, 21 Feb
+ 2024 17:11:13 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: kontron.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: AS2PR10MB7551.EURPRD10.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-Network-Message-Id: de5f6482-278e-44b4-a019-08dc33000a2c
-X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Feb 2024 17:10:44.2915
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 8c9d3c97-3fd9-41c8-a2b1-646f3942daf1
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: fvIm5ywXNH9DeOHGHdYtFl+1aG9ww7E9oreOX9PjCF6h9ZTAV9v/+SfXr9WykbbquRPOqgOaHdVdbwAZllGVxmZnRlxbxA/+zTyPn1vKzmI=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: GV1PR10MB5842
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="UTF-8"
+Date: Wed, 21 Feb 2024 17:11:09 +0000
+Message-ID: <CZAX9ZA1VRUZ.353NNERCBGKUU@amazon.com>
+To: Sean Christopherson <seanjc@google.com>
+CC: <frederic@kernel.org>, <paulmck@kernel.org>, <jalliste@amazon.co.uk>,
+	<mhiramat@kernel.org>, <akpm@linux-foundation.org>, <pmladek@suse.com>,
+	<rdunlap@infradead.org>, <tsi@tuyoix.net>, <nphamcs@gmail.com>,
+	<gregkh@linuxfoundation.org>, <linux-kernel@vger.kernel.org>,
+	<kvm@vger.kernel.org>, <pbonzini@redhat.com>
+From: Nicolas Saenz Julienne <nsaenz@amazon.com>
+X-Mailer: aerc 0.16.0-127-gec0f4a50cf77
+References: <20240219175735.33171-1-nsaenz@amazon.com>
+ <ZdTQyb23KJEYqbcw@google.com> <CZA43Y64EK8R.1M8J5Q6L39LFB@amazon.com>
+ <ZdYjvBItrl20oHXC@google.com>
+In-Reply-To: <ZdYjvBItrl20oHXC@google.com>
+X-ClientProxiedBy: EX19D040UWA002.ant.amazon.com (10.13.139.113) To
+ EX19D004EUC001.ant.amazon.com (10.252.51.190)
 
-The current implementation to retrieve ACPI resources is faulty
-and may cause issues that even can lead to non-booting systems.
+On Wed Feb 21, 2024 at 4:24 PM UTC, Sean Christopherson wrote:
+> On Tue, Feb 20, 2024, Nicolas Saenz Julienne wrote:
+> > Hi Sean,
+> >
+> > On Tue Feb 20, 2024 at 4:18 PM UTC, Sean Christopherson wrote:
+> > > On Mon, Feb 19, 2024, Nicolas Saenz Julienne wrote:
+> > > > Under certain extreme conditions, the tick-based cputime accounting=
+ may
+> > > > produce inaccurate data. For instance, guest CPU usage is sensitive=
+ to
+> > > > interrupts firing right before the tick's expiration.
+>
+> Ah, this confused me.  The "right before" is a bit misleading.  It's more=
+ like
+> "shortly before", because if the interrupt that occurs due to the guest's=
+ tick
+> arrives _right_ before the host tick expires, then commit 160457140187 sh=
+ould
+> avoid horrific accounting.
+>
+> > > > This forces the guest into kernel context, and has that time slice
+> > > > wrongly accounted as system time. This issue is exacerbated if the
+> > > > interrupt source is in sync with the tick,
+>
+> It's worth calling out why this can happen, to make it clear that getting=
+ into
+> such syncopation can happen quite naturally.  E.g. something like:
+>
+>       interrupt source is in sync with the tick, e.g. if the guest's tick
+>       is configured to run at the same frequency as the host tick, and th=
+e
+>       guest tick is every so slightly ahead of the host tick.
 
-When adding data from an ACPI device, the resources are already
-assigned to the platform device. Therefore there is no need to
-retrieve the resource list from ACPI and manually assign it to
-the platform device. Also there shouldn't be any BIOS in the wild
-anymore, that does not have resources added to the KEMPLD ACPI
-data.
+I'll incorporate both comments into the description. :)
 
-In particular this fixes an issue where the retrieval of the
-resource list using /proc/ioports is disturbed and does not list
-the assigned resource for the kempld device or even no resources
-at all.
-On some distributions this also leads to problems during system
-initialization (e.g. with udev) and causes the system to not
-boot at all.
+> > > > significantly skewing usage metrics towards system time.
+> > >
+> > > ...
+> > >
+> > > > NOTE: This wasn't tested in depth, and it's mostly intended to high=
+light
+> > > > the issue we're trying to solve. Also ccing KVM folks, since it's
+> > > > relevant to guest CPU usage accounting.
+> > >
+> > > How bad is the synchronization issue on upstream kernels?  We tried t=
+o address
+> > > that in commit 160457140187 ("KVM: x86: Defer vtime accounting 'til a=
+fter IRQ handling").
+> > >
+> > > I don't expect it to be foolproof, but it'd be good to know if there'=
+s a blatant
+> > > flaw and/or easily closed hole.
+> >
+> > The issue is not really about the interrupts themselves, but their side
+> > effects.
+> >
+> > For instance, let's say the guest sets up an Hyper-V stimer that
+> > consistently fires 1 us before the preemption tick. The preemption tick
+> > will expire while the vCPU thread is running with !PF_VCPU (maybe insid=
+e
+> > kvm_hv_process_stimers() for ex.). As long as they both keep in sync,
+> > you'll get a 100% system usage. I was able to reproduce this one throug=
+h
+> > kvm-unit-tests, but the race window is too small to keep the interrupts
+> > in sync for long periods of time, yet still capable of producing random
+> > system usage bursts (which unacceptable for some use-cases).
+> >
+> > Other use-cases have bigger race windows and managed to maintain high
+> > system CPU usage over long periods of time. For example, with user-spac=
+e
+> > HPET emulation, or KVM+Xen (don't know the fine details on these, but
+> > VIRT_CPU_ACCOUNTING_GEN fixes the mis-accounting). It all comes down to
+> > the same situation. Something triggers an exit, and the vCPU thread goe=
+s
+> > past 'vtime_account_guest_exit()' just in time for the tick interrupt t=
+o
+> > show up.
+>
+> I suspect the common "problem" with those flows is that emulating the gue=
+st timer
+> interrupt is (a) slow, relatively speaking and (b) done with interrupts e=
+nabled.
+>
+> E.g. on VMX, the TSC deadline timer is emulated via VMX preemption timer,=
+ and both
+> the programming of the guest's TSC deadline timer and the handling of the=
+ expiration
+> interrupt is done in the VM-Exit fastpath with IRQs disabled.  As a resul=
+t, even
+> if the host tick interrupt is a hair behind the guest tick, it doesn't af=
+fect
+> accounting because the host tick interrupt will never be delivered while =
+KVM is
+> emulating the guest's periodic tick.
+>
+> I'm guessing that if you tested on SVM (or a guest that doesn't use the A=
+PIC timer
+> in deadline mode), which doesn't utilize the fastpath since KVM needs to =
+bounce
+> through hrtimers, then you'd see similar accounting problems even without=
+ using
+> any of the problematic "slow" timer sources.
 
-I have reproduced the issue with the following kernel versions:
-    5.10.209
-    5.15.148
-    6.1.25
-    6.6.17
-    6.7.5
-    6.8-rc5
+That's right, the "problem" will show up when periodically emulating
+something with interrupts enabled. The slower the emulation the bigger
+the race window. It's just a limitation of tick based accounting, I have
+the feeling there isn't much KVM can do.
 
-The patch applies to all of those versions and seems to resolve
-the issue.
-
-Signed-off-by: Michael Brunner <michael.brunner@kontron.com>
----
- drivers/mfd/kempld-core.c | 37 -------------------------------------
- 1 file changed, 37 deletions(-)
-
-diff --git a/drivers/mfd/kempld-core.c b/drivers/mfd/kempld-core.c
-index 67af36a38913..5557f023a173 100644
---- a/drivers/mfd/kempld-core.c
-+++ b/drivers/mfd/kempld-core.c
-@@ -428,50 +428,13 @@ static int kempld_detect_device(struct kempld_device_=
-data *pld)
- #ifdef CONFIG_ACPI
- static int kempld_get_acpi_data(struct platform_device *pdev)
- {
--	struct list_head resource_list;
--	struct resource *resources;
--	struct resource_entry *rentry;
- 	struct device *dev =3D &pdev->dev;
--	struct acpi_device *acpi_dev =3D ACPI_COMPANION(dev);
- 	const struct kempld_platform_data *pdata;
- 	int ret;
--	int count;
-=20
- 	pdata =3D acpi_device_get_match_data(dev);
- 	ret =3D platform_device_add_data(pdev, pdata,
- 				       sizeof(struct kempld_platform_data));
--	if (ret)
--		return ret;
--
--	INIT_LIST_HEAD(&resource_list);
--	ret =3D acpi_dev_get_resources(acpi_dev, &resource_list, NULL, NULL);
--	if (ret < 0)
--		goto out;
--
--	count =3D ret;
--
--	if (count =3D=3D 0) {
--		ret =3D platform_device_add_resources(pdev, pdata->ioresource, 1);
--		goto out;
--	}
--
--	resources =3D devm_kcalloc(&acpi_dev->dev, count, sizeof(*resources),
--				 GFP_KERNEL);
--	if (!resources) {
--		ret =3D -ENOMEM;
--		goto out;
--	}
--
--	count =3D 0;
--	list_for_each_entry(rentry, &resource_list, node) {
--		memcpy(&resources[count], rentry->res,
--		       sizeof(*resources));
--		count++;
--	}
--	ret =3D platform_device_add_resources(pdev, resources, count);
--
--out:
--	acpi_dev_free_resource_list(&resource_list);
-=20
- 	return ret;
- }
---=20
-2.25.1
-
+Nicolas
