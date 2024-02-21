@@ -1,34 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D4198004E
-	for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 18:10:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C35584FD8;
+	Wed, 21 Feb 2024 18:10:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708539031; cv=none; b=IV2YI0vr8/LDFyvOemQxVzcrMuT5fO6C8mj4+4Mt3s2jiftU5q2zsuboll8E5YB8IPE3QyIzlxUrjMF1PtH8RQmDQmvQ6c9Z8hzGrUZyhspuVZuG4LeoCJnzDIJAxL82hagw5wDPq75/yq/YhXJHwQ52Uft42oBCc1TjZiZyvb8=
+	t=1708539031; cv=none; b=cvrtwBi5lWElckc/fOJGsoG2w1n/6ObWkicyXxXhY7CS/x9FT7xVHG/S7yJyzLzimH9XVotilku8TB0NvSvt77lKrfflVCV2e5CfZptDSX35Ghsav9CCtwFMNX7OYcoKJ5463MVl5Lp/TZFdURDf1Y7x+1ONbg0IBgZSUzGcPaY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1708539031; c=relaxed/simple;
-	bh=fpf+8arTk6Z5iQdXwHgM6+5zvas75nnHpQQnSHAKwD8=;
+	bh=oX4EdpTpbO8MejBIv3YlvOvhveBN1t+BKjJS4l8AiCA=;
 	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=k9bcWpsQkDk+2dBm4dt6EvyofmP4mbSqwzGIKzVjMFjBnV7niKNGyfqz6chlez6MszOiEF9/XDTBfDvvVHyHbpRfTdoJa389BMLeoFFsjCQD086mq57CBYqdaYz4LYZ41E9JkOK4othFluKxZCmb4bny97Eo/JyRtYYf8CbeE+0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=P1ZCwLfk; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=LsUqAbnV5rpNDY/WJ+gewlD83QK2lmbZTHTJLfcscCEV2tdOXgJglqv+alviyiYS9U4pnUaHZDNvXhepsPD6JHhLisTfWq9i9iOJvPxNYtHJs+PLiwq8xZVDc/xskRaCS+a4hSlA0+Fk8Sf4GpNE30yo8rJErfC9EUCDrQ6Qy50=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a5nTa5SE; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="P1ZCwLfk"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id F2D1CC433C7;
-	Wed, 21 Feb 2024 18:10:30 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a5nTa5SE"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 24B9AC43609;
+	Wed, 21 Feb 2024 18:10:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1708539031;
-	bh=fpf+8arTk6Z5iQdXwHgM6+5zvas75nnHpQQnSHAKwD8=;
+	bh=oX4EdpTpbO8MejBIv3YlvOvhveBN1t+BKjJS4l8AiCA=;
 	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=P1ZCwLfk2rUyT4GsM32Gy6mwVk4HWtyw91aGodg2bWt7MjexxNoEbwH38ZjZZtNso
-	 aMW2y63EsnjXr6V9MIn5yu35R7JP/e+RwvhOvtWOW+XlvKlkDxgrmUNvzoYc9WnmNn
-	 xEJeMLS8QQrgZbQ77nFGxDmJFMybqbg3O6e0Xy1L2CE6Vf2HxsdTTzBcU8Dvk2taAm
-	 XJGwJRWStZRxqH6pQGyE2lrR6n5MnniMmdOKn+y/xGn7SpkYvVty4lY0240/4WD1lY
-	 1soXKvtphie9sd0Oj3OQ7erRdZA5zVZVgUCt9HyC/9FAVbIaG5726CJgronOvfrRhc
-	 9qLlIe5G/5jqg==
+	b=a5nTa5SEaMxM4vHu942onhLIICKUgYn7Q19DgYidK7JLBiT7FqaZCzgunXlwEJiuZ
+	 Sb45adoMh6XjrIiPjC3u2V5VDXR/MB1YAnZMnnxHTyDrEk58kaK/UzzHdEdIHp3teH
+	 P6p9rcbUpSIG8Vkf146UKlBQE7nABz2lVcFVmkbCjxPntTclLdOhZvzM2+ZvoPh7bm
+	 zcNhcPmOZ5JWv5pXJRXTqhwIQRVE5iakwdrF3z4fyc2kpRFNgK5mexBkgxW/lIBDov
+	 breV/8cxigGnl506a31c0XkugLdz0CpCie2BavlG0jH+vr0qll9Gf8QmdZbmEH/IjM
+	 vgJBEw4J7f6rA==
 Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id D811BD84BB9;
-	Wed, 21 Feb 2024 18:10:30 +0000 (UTC)
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 00E7FD84BD0;
+	Wed, 21 Feb 2024 18:10:31 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -37,46 +37,38 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [f2fs-dev] [PATCH v2 0/4] f2fs: fix panic issue in small capacity
- device
+Subject: Re: [f2fs-dev] [PATCH] f2fs: doc: Fix bouncing email address for
+ Sahitya Tummala
 From: patchwork-bot+f2fs@kernel.org
 Message-Id: 
- <170853903087.7043.18353630972928163245.git-patchwork-notify@kernel.org>
+ <170853903099.7043.6155002050076801898.git-patchwork-notify@kernel.org>
 Date: Wed, 21 Feb 2024 18:10:30 +0000
-References: <1707271264-5551-1-git-send-email-zhiguo.niu@unisoc.com>
-In-Reply-To: <1707271264-5551-1-git-send-email-zhiguo.niu@unisoc.com>
-To: Zhiguo Niu <zhiguo.niu@unisoc.com>
-Cc: jaegeuk@kernel.org, chao@kernel.org, ke.wang@unisoc.com,
- linux-kernel@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net,
- hongyu.jin@unisoc.com, niuzhiguo84@gmail.com
+References: <20240202165208.4091800-1-quic_jhugo@quicinc.com>
+In-Reply-To: <20240202165208.4091800-1-quic_jhugo@quicinc.com>
+To: Jeffrey Hugo <quic_jhugo@quicinc.com>
+Cc: jaegeuk@kernel.org, chao@kernel.org, quic_stummala@quicinc.com,
+ quic_bjorande@quicinc.com, linux-arm-msm@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net
 
 Hello:
 
-This series was applied to jaegeuk/f2fs.git (dev)
+This patch was applied to jaegeuk/f2fs.git (dev)
 by Jaegeuk Kim <jaegeuk@kernel.org>:
 
-On Wed, 7 Feb 2024 10:01:00 +0800 you wrote:
-> A panic issue happened in a reboot test in small capacity device
-> as following:
-> 1.The device size is 64MB, and main area has 24 segments, and
-> CONFIG_F2FS_CHECK_FS is not enabled.
-> 2.There is no any free segments left shown in free_segmap_info,
-> then another write request cause get_new_segment get a out-of-bound
-> segment with segno 24.
-> 3.panic happen in update_sit_entry because access invalid bitmap
-> pointer.
+On Fri, 2 Feb 2024 09:52:08 -0700 you wrote:
+> The servers for the @codeaurora domain are long retired and any messages
+> addressed there will bounce.  Sahitya Tummala has a .mailmap entry to an
+> updated address, but the documentation files still list @codeaurora
+> which might be a problem for anyone reading the documentation directly.
+> Update the documentation files to match the .mailmap update.
+> 
+> Signed-off-by: Jeffrey Hugo <quic_jhugo@quicinc.com>
 > 
 > [...]
 
 Here is the summary with links:
-  - [f2fs-dev,v2,1/4] f2fs: correct counting methods of free_segments in __set_inuse
-    https://git.kernel.org/jaegeuk/f2fs/c/8bac4167fd14
-  - [f2fs-dev,v2,2/4] f2fs: fix panic issue in update_sit_entry
-    https://git.kernel.org/jaegeuk/f2fs/c/4acac2bf18d6
-  - [f2fs-dev,v2,3/4] f2fs: enhance judgment conditions of GET_SEGNO
-    (no matching commit)
-  - [f2fs-dev,v2,4/4] f2fs: stop checkpoint when get a out-of-bounds segment
-    (no matching commit)
+  - [f2fs-dev] f2fs: doc: Fix bouncing email address for Sahitya Tummala
+    https://git.kernel.org/jaegeuk/f2fs/c/bb516cc086ca
 
 You are awesome, thank you!
 -- 
