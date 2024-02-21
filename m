@@ -1,44 +1,44 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A58F3CF7C
-	for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 09:06:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D68D3D0B4
+	for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 09:06:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708506377; cv=none; b=JABC1poGEa3Mj0h6IWjHvYtQUDWUFsmwMTL/QKkQ8Z62gsCycSGQLFkbp4Y+YCG+zw0krU2IdASj8Q4AIxOZ6M3JW/O4LUaeh5miZd4JhcuacrXUOd7l7h8e+J9imP30sFKClF0YBd17c7Bo/lnNfLesgFJx4t0b8yQvW2x/NcA=
+	t=1708506378; cv=none; b=MWgKu9LMEJHDy6uRQxViUyLk7zV59o+EpAJxujkbQ0yL8Tiw+liT7MSGT3jbzTR0BeOPW+hjoPr/ybLtjKZ/uz5SGoHibore1PqBxnYb341eA+WpaSoLv7rWQn/LEMA4Zm/4D349nKrLQoDjHd0lzRioqN+XZkjzOzN07o2ubZI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708506377; c=relaxed/simple;
-	bh=cx7W79/0JOWapdXA61gJNfkyrPTg/Tmal7MREy72obs=;
+	s=arc-20240116; t=1708506378; c=relaxed/simple;
+	bh=ws4UsvqTVPEJwlRcuRRnPZASwZHWSXxgj2cFVwZJl0g=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=hJtnK4S2PnqIMip9I5ZLMDkFjzkV2SRMwJtojivOexWGcvxMAS5VXtnxiunVEJQJ+gLzpn+ApnHvF/0wQ/6TgX8s5ljpdAaBImRBjkxWxRjn4KMc2sWX56N1lLw5sA0gSA2UDKjavxkFmco73QKZM009xJBde7/iEcWbgDPrZVk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=bW6c6uDK; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=NS4V0cz9; arc=none smtp.client-ip=193.142.43.55
+	 MIME-Version; b=VuhR7wKrB2ogeC8svnWDZA969Ac2KTroZ9zaZxUSqhD/zPTgReGocAlYgXsB2FPfvRyMyOKjN3YyYLWNJyRGrCjqI509gY6Np/VOOhsZt5Iq9ReenyFPbEDEA677Kzc3GLDKLcfy/aG2YgTShYpR82yoMmmIE+0PVr3D01Lb1I0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Hx8+Knr8; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=tf7n+Sll; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="bW6c6uDK";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="NS4V0cz9"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Hx8+Knr8";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="tf7n+Sll"
 From: Anna-Maria Behnsen <anna-maria@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1708506367;
+	s=2020; t=1708506369;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=ZnbOpzCKzJr8GVlvDiuyFIftQ7kDyRb60zxIswiDeKE=;
-	b=bW6c6uDKTlx+T/vPLW1QjAk5/ewWlAA3hBGqgC9UyIcgRmbVKwt8YMB1ME9UbPI1X+adBZ
-	bpZNeGpLBPsv8hISm32Ex5iKN1Us0mBVRcPt/s0dx9I2FAF2sRKwfWdnHTKadaJu2Sq9MQ
-	NU8svm0LqSj+jtzDp3/Nr5a9zdBYsuQ9JqvFk/98VfqLWmOAelKS1Cylt8SQP01uAHuRhy
-	6le2M5D/nGeoo9tZltDBWE/OOfxfFEx6DR+/RPUKhgEjiSrGqt7PVbJRyxnd/AYwXTTZYG
-	DmYgq/08QwA3BlV9qooRhwlLTMai0bsDEgRUf8BPorQNXpO8wWzuLkFsgc+7nw==
+	bh=8x8V66oedAQdLiHPaHBR+VdwFWZt1XkVYVwYivWxpoM=;
+	b=Hx8+Knr8Z4dJ4chBC2NafZksHEPbKTCpR5IGhR5LRCe/JaVTRP1EVRAFVm/VJOl7MBivfe
+	CPlw95EYEMRha70OszFXL+AVP8hFXZvntTYUYhybEgjSL5i3kmhQp7jFVcIZXwns/6tYGk
+	q41Akso+7a0DWowVMQ3bmFU9ahEdtwN0UzW39j5mrSGuZrYeWnqnaMPlbWS3/e5rMXTftv
+	vUPeQ9XL5zaV5IPOK+3s4AZJH2yqCvgWtbAoJ8ZbUQf2ROC3DW22hZe2oqukjmo/F3ggA6
+	Tncb3XnmNgp98CMmz3BrCv7Q9FsIO9MNd7eAnYKhhIOGIRlWbnXmRRiLeltMkw==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1708506367;
+	s=2020e; t=1708506369;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=ZnbOpzCKzJr8GVlvDiuyFIftQ7kDyRb60zxIswiDeKE=;
-	b=NS4V0cz9P1b+jOQ8gLhCmi/ndTdsC5DQxDsMA7Yt/YaXthsygD5Ayo469VqNwBqmfIiZTO
-	j4SdOyTl0bcTMUAQ==
+	bh=8x8V66oedAQdLiHPaHBR+VdwFWZt1XkVYVwYivWxpoM=;
+	b=tf7n+SllvBHbEQu6a0UoCrngxBM8lQ8i8OnvMAJYCfZztbbKhMtwZZwKcgArYXicK4Ufuj
+	Q4BGYcmQOmDy/TAw==
 To: linux-kernel@vger.kernel.org
 Cc: Peter Zijlstra <peterz@infradead.org>,
 	John Stultz <jstultz@google.com>,
@@ -58,9 +58,9 @@ Cc: Peter Zijlstra <peterz@infradead.org>,
 	K Prateek Nayak <kprateek.nayak@amd.com>,
 	Christian Loehle <christian.loehle@arm.com>,
 	Anna-Maria Behnsen <anna-maria@linutronix.de>
-Subject: [PATCH v11 02/20] timers: Split out get next timer interrupt
-Date: Wed, 21 Feb 2024 10:05:30 +0100
-Message-Id: <20240221090548.36600-3-anna-maria@linutronix.de>
+Subject: [PATCH v11 04/20] timers: Optimization for timer_base_try_to_set_idle()
+Date: Wed, 21 Feb 2024 10:05:32 +0100
+Message-Id: <20240221090548.36600-5-anna-maria@linutronix.de>
 In-Reply-To: <20240221090548.36600-1-anna-maria@linutronix.de>
 References: <20240221090548.36600-1-anna-maria@linutronix.de>
 Precedence: bulk
@@ -71,58 +71,59 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Split out get_next_timer_interrupt() to be able to extend it and make it
-reusable for other call sites.
-
-No functional change.
+When tick is stopped also the timer base is_idle flag is set. When
+reentering the timer_base_try_to_set_idle() with the tick stopped, there is
+no need to check whether the timer base needs to be set idle again. When a
+timer was enqueued in the meantime, this is already handled by the
+tick_nohz_next_event() call which was executed before
+tick_nohz_stop_tick().
 
 Signed-off-by: Anna-Maria Behnsen <anna-maria@linutronix.de>
 Reviewed-by: Frederic Weisbecker <frederic@kernel.org>
 ---
- kernel/time/timer.c | 23 ++++++++++++++---------
- 1 file changed, 14 insertions(+), 9 deletions(-)
+ kernel/time/tick-sched.c |  2 +-
+ kernel/time/timer.c      | 11 ++++++++---
+ 2 files changed, 9 insertions(+), 4 deletions(-)
 
+diff --git a/kernel/time/tick-sched.c b/kernel/time/tick-sched.c
+index 72c80f6e7bed..384723314c1f 100644
+--- a/kernel/time/tick-sched.c
++++ b/kernel/time/tick-sched.c
+@@ -886,7 +886,7 @@ static void tick_nohz_stop_tick(struct tick_sched *ts, int cpu)
+ 	struct clock_event_device *dev = __this_cpu_read(tick_cpu_device.evtdev);
+ 	unsigned long basejiff = ts->last_jiffies;
+ 	u64 basemono = ts->timer_expires_base;
+-	bool timer_idle;
++	bool timer_idle = ts->tick_stopped;
+ 	u64 expires;
+ 
+ 	/* Make sure we won't be trying to stop it twice in a row. */
 diff --git a/kernel/time/timer.c b/kernel/time/timer.c
-index 5f21db4fa3ca..2aea55d53416 100644
+index 3a668060692e..2f69a485a070 100644
 --- a/kernel/time/timer.c
 +++ b/kernel/time/timer.c
-@@ -1911,15 +1911,7 @@ static u64 cmp_next_hrtimer_event(u64 basem, u64 expires)
- 	return DIV_ROUND_UP_ULL(nextevt, TICK_NSEC) * TICK_NSEC;
- }
- 
--/**
-- * get_next_timer_interrupt - return the time (clock mono) of the next timer
-- * @basej:	base time jiffies
-- * @basem:	base time clock monotonic
-- *
+@@ -1999,13 +1999,18 @@ u64 get_next_timer_interrupt(unsigned long basej, u64 basem)
+  * timer_base_try_to_set_idle() - Try to set the idle state of the timer bases
+  * @basej:	base time jiffies
+  * @basem:	base time clock monotonic
+- * @idle:	pointer to store the value of timer_base->is_idle
++ * @idle:	pointer to store the value of timer_base->is_idle on return;
++ *		*idle contains the information whether tick was already stopped
+  *
 - * Returns the tick aligned clock monotonic time of the next pending
 - * timer or KTIME_MAX if no timer is pending.
-- */
--u64 get_next_timer_interrupt(unsigned long basej, u64 basem)
-+static inline u64 __get_next_timer_interrupt(unsigned long basej, u64 basem)
++ * Returns the tick aligned clock monotonic time of the next pending timer or
++ * KTIME_MAX if no timer is pending. When tick was already stopped KTIME_MAX is
++ * returned as well.
+  */
+ u64 timer_base_try_to_set_idle(unsigned long basej, u64 basem, bool *idle)
  {
- 	struct timer_base *base = this_cpu_ptr(&timer_bases[BASE_STD]);
- 	unsigned long nextevt = basej + NEXT_TIMER_MAX_DELTA;
-@@ -1978,6 +1970,19 @@ u64 get_next_timer_interrupt(unsigned long basej, u64 basem)
- 	return cmp_next_hrtimer_event(basem, expires);
++	if (*idle)
++		return KTIME_MAX;
++
+ 	return __get_next_timer_interrupt(basej, basem, idle);
  }
  
-+/**
-+ * get_next_timer_interrupt() - return the time (clock mono) of the next timer
-+ * @basej:	base time jiffies
-+ * @basem:	base time clock monotonic
-+ *
-+ * Returns the tick aligned clock monotonic time of the next pending
-+ * timer or KTIME_MAX if no timer is pending.
-+ */
-+u64 get_next_timer_interrupt(unsigned long basej, u64 basem)
-+{
-+	return __get_next_timer_interrupt(basej, basem);
-+}
-+
- /**
-  * timer_clear_idle - Clear the idle state of the timer base
-  *
 -- 
 2.39.2
 
