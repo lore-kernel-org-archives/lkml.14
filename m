@@ -1,205 +1,202 @@
-Received: from mail-pj1-f44.google.com (mail-pj1-f44.google.com [209.85.216.44])
+Received: from mail-yw1-f173.google.com (mail-yw1-f173.google.com [209.85.128.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F04542A8DA
-	for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 20:29:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 777F186AD5
+	for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 20:30:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708547360; cv=none; b=daLCrmfbhFEJqhUokhICZaggxHWQk22bLtz3i6a3rGbxUndurdVROXXU9hELeXUPeFhD2xGB/SmKAlJbAyUVROqaXo16LHS6GmJtM+0+6zE4BmGV5Cx1BBnpAy7XbpPn/aoc/xIT7ZsQ8VILZnj+kN7DPmPuRecUrhIpLRd7L0c=
+	t=1708547417; cv=none; b=tIDPZ3oxIZWZRvpsT9RVbeSa3MTU5K2Ft5OzV/nxFOHUQ7KsWs1umIGJ2MMZ6VkjeF8Hrtkr+BjpGAApvWgMvnWcGF5npaVzVSrOdvPkZDNJf7dqXj+ByTmR0StUUHrpVPMOiEaOv4hXHNFvGPjcJHQ86ZzHE7PHdCEo/E+ZjDo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708547360; c=relaxed/simple;
-	bh=KgITQNa+cv8Wh8c0n2C2fUy/aaeCcLti0CzXRzvryps=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Qjdq7rYdBLVzGAkc3mqUsy3LkWJIY8Hp4K54n9xJv64KiLVS2CPAiXcGvZdySzbm8EiFY94IjydSlcOz9Pd+F+LEjxebkSHvi9DAVgKYrPxnECUHTnbUQtwuxyZ96L443mys5Jfbr7Ts6rVAHDnm6MyPtRIn0iekoJBqN0FkHSE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=O67kK4WF; arc=none smtp.client-ip=209.85.216.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	s=arc-20240116; t=1708547417; c=relaxed/simple;
+	bh=bOi+E2c42NJObr0z9FwqIGRycwQ0piUWsGffVcGcaYs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Gv6HxrnJfBuHZVLT+KEPysjrzhuG02E820kzVwrsLVcj2Ifs2UyBvJ2OSFx6DOEuzXJ0GzkeII6kkBMcPAq3pJKQuwcSG+gEI4RHgON0RiwqDuu1WtG3JM49RsrH4n8vgzXy+xpkQW6eTc7xaD/6PxvFoS9uh6s+AxgR9mjReOo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=hxSob6Z5; arc=none smtp.client-ip=209.85.128.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="O67kK4WF"
-Received: by mail-pj1-f44.google.com with SMTP id 98e67ed59e1d1-299b818d63aso145773a91.0
-        for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 12:29:17 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hxSob6Z5"
+Received: by mail-yw1-f173.google.com with SMTP id 00721157ae682-6083dc087b3so36690137b3.0
+        for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 12:30:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1708547357; x=1709152157; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=sTCGMEew0Fipe902SlrRK/D4WW/nSfSfZfwf/W230pM=;
-        b=O67kK4WFweUsPmYxrCTIK1TmK4E4xT4/zZZVo7Qb3ZTUjOucEE9Wxp+Y9+VgqVZTNd
-         Dz74+3IctO6TEKAhsxP+oVEoKQwNL1cFbrf77m6WjN+U3EpWBuBFe2J6yHcLuJhhWIiB
-         gVJeB/x1xY8I0tm8zFNIYVtpOH179Cki3k7ZYJELLL2Nvu4pOv0D3p6SX4rII0x3bxho
-         Fz+kFkmQmILbv5WOBZOBtX3F1JHm4+zOohvZcZgPs3OMXEoHg9beEMn+5+holdLhaC8t
-         wgrz3hAwbJ93WIPgbersrhJj1FQm72AEgTO/89Qdc8A/t5bNF+NrqXJtAWW+/9PVfZCo
-         ytAg==
+        d=linaro.org; s=google; t=1708547414; x=1709152214; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=66B5lNp4yjRK1cO3QunmxwT8ngO+zkQK07F7H5Y6E9A=;
+        b=hxSob6Z5MuOO2A387Yo9e0BU7zWvj2VF08QllRmOY6XRZ43bCGGBhOi3q88slCbxY4
+         3jDSVVWUXap5XNCnAcpZ7ZlRdKcsfSIBgK926u7tj8Qh8cqjcjxCFC6b7CSUHe864tuB
+         iEfYd2kMCJ/S6gwxQjFZnk3nvSh4+3rhuzVnJIzA4RPgu2nrYNaXtdoT8cC0kv6WRvgb
+         2BVLHxoCnNGBsjMgfdqGLshKG3ScO1eUhk+j4WMbktO20CxmC6J3UJoIENsE2kwHyHzF
+         3uleIBEcm/H/vXKprqZIDMU+91d1sHqMaVLqLg7aj0WtRdn6C1h1ms1RmTQR1Vbq8v3W
+         LsKA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708547357; x=1709152157;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=sTCGMEew0Fipe902SlrRK/D4WW/nSfSfZfwf/W230pM=;
-        b=nz40MHF+si4Tkxk6uz5yVjerHA6cGTWbVx5bh6pJ/KBwjpyJp4K/UWLBRSbxSsdCg9
-         eBRIQn/g/IivSwFQ5154AQSNmvLb93+RhbaEJ+pI7BFfgovJ+86IDux6AEyluTUkxWH3
-         mORlX1nqbO/Za3srvLArjU7cFofWXtYld/HoaHQRGxRzdKpb/ldlTWGkfzdHfagHVdts
-         ShXouK3xkz565IC+DItdntPRYu4RhtmOzmWOB96WFVEq5vxrkap8X83UVrpEtamFFJjM
-         GYnkhRu6F6eIt35EMb/QHGvG7ybjWumUHpWdDcBLFpDFO1m+25pXS+Cq4OB8voPjkdZY
-         ibKg==
-X-Forwarded-Encrypted: i=1; AJvYcCWkr+Co/42/bYaSAiKM7LwgvEudQbSzULmsJSSbCHooiwuPnfBqxycxxkEJ3Nh4F/jg4UUyUassbwKF0dlMP/ryUQj5BpqAd3y4c1RV
-X-Gm-Message-State: AOJu0Yy4QSa9yB2pfsRHPqgj+3FbxOw5cp9iF52C8L0DtWrXk+B2L/bF
-	lxzrwGPGqY2QtPPWopise2YkDw7XdJPo1RXbumjZjgcoFUHX1u/dpHlEqEbB1vI=
-X-Google-Smtp-Source: AGHT+IEv0rIXEEFymfbI7hv6WvIwIaG4wxAzbyU2mSU6ZNYe3WU2p1qg0ejBWvWUS0oTykMJfq8rng==
-X-Received: by 2002:a17:90b:3007:b0:299:8e05:4d7b with SMTP id hg7-20020a17090b300700b002998e054d7bmr783238pjb.4.1708547357279;
-        Wed, 21 Feb 2024 12:29:17 -0800 (PST)
-Received: from [172.16.0.69] (c-67-188-2-18.hsd1.ca.comcast.net. [67.188.2.18])
-        by smtp.gmail.com with ESMTPSA id pd18-20020a17090b1dd200b0029696f7f443sm2303021pjb.50.2024.02.21.12.29.14
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 21 Feb 2024 12:29:16 -0800 (PST)
-Message-ID: <b5673bce-09e7-4531-a074-e252aa9e38e8@rivosinc.com>
-Date: Wed, 21 Feb 2024 12:29:13 -0800
+        d=1e100.net; s=20230601; t=1708547414; x=1709152214;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=66B5lNp4yjRK1cO3QunmxwT8ngO+zkQK07F7H5Y6E9A=;
+        b=r6jA5hTW6quu5ofqf58WphdMA6Pr0ug6941OkBQrHRrW71FuDzAbf60+tM8KmrMDcf
+         Gb8/ghlxdo6e/T7cZsIb29D9m0fBdKbRI60XJcSd/2y5UePDxltFqqy3VJSrWS/MHDep
+         fH5MLDnTfQPC9HGzvPiTT4HGJrLXzO60jDfU5cMFPWMsNMPRwS7hwApHrGmuvf3LWNXB
+         i+RBKsccMO7180zlfscp8Ir1hgp4lQcxnjqx6pz+iLK++d3zVdj8gfuT0RShJWMRIglN
+         83jBeunv0CZgHnltVBQewVvlrrlhZ6X0VCWaClt4RoCERoRQD1iZjPzzZq/E62LT5y4b
+         +MRA==
+X-Forwarded-Encrypted: i=1; AJvYcCXmYtZW74M/ACoiHocL+LL+GIDg05AWeksZYGU03Mc6/VNAV55ZCx8T58Ur3b+537NWakm9zdECI3iBHTHVE/rRdKlNKYQCjwe4/5In
+X-Gm-Message-State: AOJu0YwOo4p3vd4qfRLTGW1YzBx7lM1vXBSNNWSELJDuDt1sY2Xn0Hse
+	Rr3DzyuxeXZCNciNYfxDSrq0dr+5KeLonGAJ3SfIUiezXJuSjmNGOJj3Of6zBQW2zLnzPSlog1k
+	0ovwlRBuHPuH2YG/l0Hp++gKVCBIVQiBTC4oMGU6zRCcOI4tjyhs=
+X-Google-Smtp-Source: AGHT+IEBJ9EDSOCDzcvz7VBrxp74vTA+LiZnGpzF2He2gzOhDMIin/sW0TGoX6jQApCBgxyOafwrV0IfLSI9PYFqSYU=
+X-Received: by 2002:a0d:d88b:0:b0:604:92e1:14fd with SMTP id
+ a133-20020a0dd88b000000b0060492e114fdmr17320806ywe.45.1708547414408; Wed, 21
+ Feb 2024 12:30:14 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 11/12] KVM: riscv: selftests: Change vcpu_has_ext to a
- common function
-Content-Language: en-US
-To: Haibo Xu <xiaobo55x@gmail.com>, Anup Patel <anup@brainfault.org>
-Cc: Atish Patra <atishp@atishpatra.org>, Haibo Xu <haibo1.xu@intel.com>,
- ajones@ventanamicro.com, Paul Walmsley <paul.walmsley@sifive.com>,
- Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
- Paolo Bonzini <pbonzini@redhat.com>, Shuah Khan <shuah@kernel.org>,
- Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>,
- James Morse <james.morse@arm.com>, Suzuki K Poulose
- <suzuki.poulose@arm.com>, Zenghui Yu <yuzenghui@huawei.com>,
- Guo Ren <guoren@kernel.org>, Mayuresh Chitale <mchitale@ventanamicro.com>,
- Daniel Henrique Barboza <dbarboza@ventanamicro.com>,
- Conor Dooley <conor.dooley@microchip.com>,
- Samuel Holland <samuel@sholland.org>,
- Minda Chen <minda.chen@starfivetech.com>, Jisheng Zhang
- <jszhang@kernel.org>, Sean Christopherson <seanjc@google.com>,
- Peter Xu <peterx@redhat.com>, Like Xu <likexu@tencent.com>,
- Vipin Sharma <vipinsh@google.com>, Thomas Huth <thuth@redhat.com>,
- Aaron Lewis <aaronlewis@google.com>,
- Maciej Wieczor-Retman <maciej.wieczor-retman@intel.com>,
- linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
- kvm@vger.kernel.org, linux-kselftest@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
- kvm-riscv@lists.infradead.org
-References: <cover.1705916069.git.haibo1.xu@intel.com>
- <68856b86a93a4188558e5d0ebac0dd6aac8e404c.1705916069.git.haibo1.xu@intel.com>
- <CAOnJCULwRTSnrQkR2o1P53R=tJ3TAxX+y+XRBesW6OFEzgFv2g@mail.gmail.com>
- <CAJve8om2oOLg5-wKX7m7cBTgzwqiMcb35x=nDi1edY8evXjyMw@mail.gmail.com>
- <2c96c61a-2685-4cee-9cef-963ed833bf92@rivosinc.com>
- <CAJve8omCZxsiP1jF0n5SBh0_U6q7Exj5A1ACFahWpdBoxohaMA@mail.gmail.com>
-From: Atish Patra <atishp@rivosinc.com>
-In-Reply-To: <CAJve8omCZxsiP1jF0n5SBh0_U6q7Exj5A1ACFahWpdBoxohaMA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+References: <20240208074521.577076-1-lucas.demarchi@intel.com> <20240208074521.577076-2-lucas.demarchi@intel.com>
+In-Reply-To: <20240208074521.577076-2-lucas.demarchi@intel.com>
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Date: Wed, 21 Feb 2024 22:30:02 +0200
+Message-ID: <CAA8EJpprfrtOjNzT6TFhV1n6MXzLdTahanfxcRW4uVjeHaBduA@mail.gmail.com>
+Subject: Re: [PATCH v3 1/3] bits: introduce fixed-type genmasks
+To: Lucas De Marchi <lucas.demarchi@intel.com>
+Cc: Yury Norov <yury.norov@gmail.com>, linux-kernel@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org, 
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+	Jani Nikula <jani.nikula@linux.intel.com>, intel-xe@lists.freedesktop.org, 
+	intel-gfx@lists.freedesktop.org, Jani Nikula <jani.nikula@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On 2/21/24 05:08, Haibo Xu wrote:
-> On Wed, Feb 21, 2024 at 4:37 PM Atish Patra <atishp@rivosinc.com> wrote:
->>
->> On 2/20/24 18:13, Haibo Xu wrote:
->>> On Wed, Feb 21, 2024 at 7:03 AM Atish Patra <atishp@atishpatra.org> wrote:
->>>>
->>>> On Mon, Jan 22, 2024 at 1:48 AM Haibo Xu <haibo1.xu@intel.com> wrote:
->>>>>
->>>>> Move vcpu_has_ext to the processor.c and rename it to __vcpu_has_ext
->>>>> so that other test cases can use it for vCPU extension check.
->>>>>
->>>>> Signed-off-by: Haibo Xu <haibo1.xu@intel.com>
->>>>> Reviewed-by: Andrew Jones <ajones@ventanamicro.com>
->>>>> ---
->>>>>    tools/testing/selftests/kvm/include/riscv/processor.h |  2 ++
->>>>>    tools/testing/selftests/kvm/lib/riscv/processor.c     | 10 ++++++++++
->>>>>    tools/testing/selftests/kvm/riscv/get-reg-list.c      | 11 +----------
->>>>>    3 files changed, 13 insertions(+), 10 deletions(-)
->>>>>
->>>>> diff --git a/tools/testing/selftests/kvm/include/riscv/processor.h b/tools/testing/selftests/kvm/include/riscv/processor.h
->>>>> index b68b1b731a34..bd27e1c67579 100644
->>>>> --- a/tools/testing/selftests/kvm/include/riscv/processor.h
->>>>> +++ b/tools/testing/selftests/kvm/include/riscv/processor.h
->>>>> @@ -42,6 +42,8 @@ static inline uint64_t __kvm_reg_id(uint64_t type, uint64_t idx,
->>>>>    #define RISCV_ISA_EXT_REG(idx) __kvm_reg_id(KVM_REG_RISCV_ISA_EXT, \
->>>>>                                                idx, KVM_REG_SIZE_ULONG)
->>>>>
->>>>> +bool __vcpu_has_ext(struct kvm_vcpu *vcpu, int ext);
->>>>> +
->>>>>    struct ex_regs {
->>>>>           unsigned long ra;
->>>>>           unsigned long sp;
->>>>> diff --git a/tools/testing/selftests/kvm/lib/riscv/processor.c b/tools/testing/selftests/kvm/lib/riscv/processor.c
->>>>> index 39a1e9902dec..dad73ce18164 100644
->>>>> --- a/tools/testing/selftests/kvm/lib/riscv/processor.c
->>>>> +++ b/tools/testing/selftests/kvm/lib/riscv/processor.c
->>>>> @@ -15,6 +15,16 @@
->>>>>
->>>>>    static vm_vaddr_t exception_handlers;
->>>>>
->>>>> +bool __vcpu_has_ext(struct kvm_vcpu *vcpu, int ext)
->>>>> +{
->>>>> +       unsigned long value = 0;
->>>>> +       int ret;
->>>>> +
->>>>> +       ret = __vcpu_get_reg(vcpu, RISCV_ISA_EXT_REG(ext), &value);
->>>>> +
->>>>> +       return !ret && !!value;
->>>>> +}
->>>>> +
->>>>
->>>> Not sure what was the base patch on which this was rebased. The actual
->>>> commit in the queue branch looks different.
->>>>
->>>
->>> This patch set was based on 6.7-rc8.
->>>
->>>> https://github.com/kvm-riscv/linux/commit/5563517cc2012e3326411b360c9924d3f2706c8d
->>>>
->>>> Both seem to have the same bug though the tests fail now and require
->>>> the following fix.
->>>> The ext id should be uint64_t and we need to pass ext directly so that
->>>> SBI extension tests can also pass.
->>>>
->>>
->>> It's weird that 6.7-rc8 has already included Andrew's change on the ISA ext reg,
->>> but this patch was not generated against his change.
->>>
->>> commit bdf6aa328f137e184b0fce607fd585354c3742f1
->>> Author: Andrew Jones <ajones@ventanamicro.com>
->>> Date:   Wed Dec 13 18:09:58 2023 +0100
->>>
->>>       RISC-V: KVM: selftests: Treat SBI ext regs like ISA ext regs
->>>
->>> Anyway, your changes were right. Please go ahead to include them when merging.
->>>
->>
->> I am not sure what happened. Probably, a merge conflict issue.
->>
->> I just realized I forgot to copy paste another fix in arch timer
->>
->> +++ b/tools/testing/selftests/kvm/riscv/arch_timer.c
->> @@ -85,7 +85,7 @@ struct kvm_vm *test_vm_create(void)
->>           int nr_vcpus = test_args.nr_vcpus;
->>
->>           vm = vm_create_with_vcpus(nr_vcpus, guest_code, vcpus);
->> -       __TEST_REQUIRE(__vcpu_has_ext(vcpus[0], KVM_RISCV_ISA_EXT_SSTC),
->> +       __TEST_REQUIRE(__vcpu_has_ext(vcpus[0],
->> RISCV_ISA_EXT_REG(KVM_RISCV_ISA_EXT_SSTC)),
->>
-> 
-> Right Fix!
-> Please let me know if I need to rebase this patch series on your tree
-> and resent it.
-> 
+On Thu, 8 Feb 2024 at 09:45, Lucas De Marchi <lucas.demarchi@intel.com> wrote:
+>
+> From: Yury Norov <yury.norov@gmail.com>
+>
+> Generalize __GENMASK() to support different types, and implement
+> fixed-types versions of GENMASK() based on it. The fixed-type version
+> allows more strict checks to the min/max values accepted, which is
+> useful for defining registers like implemented by i915 and xe drivers
+> with their REG_GENMASK*() macros.
+>
+> The strict checks rely on shift-count-overflow compiler check to
+> fail the build if a number outside of the range allowed is passed.
+> Example:
+>
+>         #define FOO_MASK GENMASK_U32(33, 4)
+>
+> will generate a warning like:
+>
+>         ../include/linux/bits.h:41:31: error: left shift count >= width of type [-Werror=shift-count-overflow]
+>            41 |          (((t)~0ULL - ((t)(1) << (l)) + 1) & \
+>               |                               ^~
+>
+> Signed-off-by: Yury Norov <yury.norov@gmail.com>
+> Signed-off-by: Lucas De Marchi <lucas.demarchi@intel.com>
+> Acked-by: Jani Nikula <jani.nikula@intel.com>
+> ---
+>  include/linux/bitops.h |  1 -
+>  include/linux/bits.h   | 32 ++++++++++++++++++++++----------
+>  2 files changed, 22 insertions(+), 11 deletions(-)
+>
+> diff --git a/include/linux/bitops.h b/include/linux/bitops.h
+> index 2ba557e067fe..1db50c69cfdb 100644
+> --- a/include/linux/bitops.h
+> +++ b/include/linux/bitops.h
+> @@ -15,7 +15,6 @@
+>  #  define aligned_byte_mask(n) (~0xffUL << (BITS_PER_LONG - 8 - 8*(n)))
+>  #endif
+>
+> -#define BITS_PER_TYPE(type)    (sizeof(type) * BITS_PER_BYTE)
+>  #define BITS_TO_LONGS(nr)      __KERNEL_DIV_ROUND_UP(nr, BITS_PER_TYPE(long))
+>  #define BITS_TO_U64(nr)                __KERNEL_DIV_ROUND_UP(nr, BITS_PER_TYPE(u64))
+>  #define BITS_TO_U32(nr)                __KERNEL_DIV_ROUND_UP(nr, BITS_PER_TYPE(u32))
+> diff --git a/include/linux/bits.h b/include/linux/bits.h
+> index 7c0cf5031abe..bd56f32de44e 100644
+> --- a/include/linux/bits.h
+> +++ b/include/linux/bits.h
+> @@ -6,6 +6,8 @@
+>  #include <vdso/bits.h>
+>  #include <asm/bitsperlong.h>
+>
+> +#define BITS_PER_TYPE(type)    (sizeof(type) * BITS_PER_BYTE)
+> +
+>  #define BIT_MASK(nr)           (UL(1) << ((nr) % BITS_PER_LONG))
+>  #define BIT_WORD(nr)           ((nr) / BITS_PER_LONG)
+>  #define BIT_ULL_MASK(nr)       (ULL(1) << ((nr) % BITS_PER_LONG_LONG))
+> @@ -30,16 +32,26 @@
+>  #define GENMASK_INPUT_CHECK(h, l) 0
+>  #endif
+>
+> -#define __GENMASK(h, l) \
+> -       (((~UL(0)) - (UL(1) << (l)) + 1) & \
+> -        (~UL(0) >> (BITS_PER_LONG - 1 - (h))))
+> -#define GENMASK(h, l) \
+> -       (GENMASK_INPUT_CHECK(h, l) + __GENMASK(h, l))
+> +/*
+> + * Generate a mask for the specified type @t. Additional checks are made to
+> + * guarantee the value returned fits in that type, relying on
+> + * shift-count-overflow compiler check to detect incompatible arguments.
+> + * For example, all these create build errors or warnings:
+> + *
+> + * - GENMASK(15, 20): wrong argument order
+> + * - GENMASK(72, 15): doesn't fit unsigned long
+> + * - GENMASK_U32(33, 15): doesn't fit in a u32
+> + */
+> +#define __GENMASK(t, h, l) \
+> +       (GENMASK_INPUT_CHECK(h, l) + \
+> +        (((t)~0ULL - ((t)(1) << (l)) + 1) & \
+> +        ((t)~0ULL >> (BITS_PER_TYPE(t) - 1 - (h)))))
+>
+> -#define __GENMASK_ULL(h, l) \
+> -       (((~ULL(0)) - (ULL(1) << (l)) + 1) & \
+> -        (~ULL(0) >> (BITS_PER_LONG_LONG - 1 - (h))))
+> -#define GENMASK_ULL(h, l) \
+> -       (GENMASK_INPUT_CHECK(h, l) + __GENMASK_ULL(h, l))
+> +#define GENMASK(h, l)          __GENMASK(unsigned long,  h, l)
+> +#define GENMASK_ULL(h, l)      __GENMASK(unsigned long long, h, l)
+> +#define GENMASK_U8(h, l)       __GENMASK(u8,  h, l)
+> +#define GENMASK_U16(h, l)      __GENMASK(u16, h, l)
+> +#define GENMASK_U32(h, l)      __GENMASK(u32, h, l)
+> +#define GENMASK_U64(h, l)      __GENMASK(u64, h, l)
 
-That's Anup's call.
+This breaks drm-tip on arm64 architecture:
 
-> Thanks,
-> Haibo
-> 
-> _______________________________________________
-> linux-riscv mailing list
-> linux-riscv@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-riscv
+arch/arm64/kernel/entry-fpsimd.S: Assembler messages:
+465arch/arm64/kernel/entry-fpsimd.S:271: Error: found 'l', expected: ')'
+466arch/arm64/kernel/entry-fpsimd.S:66: Info: macro invoked from here
+467arch/arm64/kernel/entry-fpsimd.S:271: Error: found 'l', expected: ')'
+468arch/arm64/kernel/entry-fpsimd.S:66: Info: macro invoked from here
+469arch/arm64/kernel/entry-fpsimd.S:271: Error: found 'l', expected: ')'
+470arch/arm64/kernel/entry-fpsimd.S:66: Info: macro invoked from here
+471arch/arm64/kernel/entry-fpsimd.S:271: Error: found 'l', expected: ')'
+472arch/arm64/kernel/entry-fpsimd.S:66: Info: macro invoked from here
+473arch/arm64/kernel/entry-fpsimd.S:271: Error: unexpected characters
+following instruction at operand 3 -- `bic x2,x1,(0+(((unsigned
+long)~0ULL-((unsigned long)(1)<<(0))+1)&((unsigned
+long)~0ULL>>((sizeof(unsigned long)*8)-1-(3)))))'
+474arch/arm64/kernel/entry-fpsimd.S:66: Info: macro invoked from here
+475arch/arm64/kernel/entry-fpsimd.S:282: Error: found 'l', expected: ')'
+476arch/arm64/kernel/entry-fpsimd.S:98: Info: macro invoked from here
+477arch/arm64/kernel/entry-fpsimd.S:282: Error: found 'l', expected: ')'
+478arch/arm64/kernel/entry-fpsimd.S:98: Info: macro invoked from here
+479arch/arm64/kernel/entry-fpsimd.S:282: Error: found 'l', expected: ')'
+480arch/arm64/kernel/entry-fpsimd.S:98: Info: macro invoked from here
+481arch/arm64/kernel/entry-fpsimd.S:282: Error: found 'l', expected: ')'
+482arch/arm64/kernel/entry-fpsimd.S:98: Info: macro invoked from here
+483arch/arm64/kernel/entry-fpsimd.S:282: Error: unexpected characters
+following instruction at operand 3 -- `bic x2,x1,(0+(((unsigned
+long)~0ULL-((unsigned long)(1)<<(0))+1)&((unsigned
+long)~0ULL>>((sizeof(unsigned long)*8)-1-(3)))))'
+484arch/arm64/kernel/entry-fpsimd.S:98: Info: macro invoked from here
 
+>
+>  #endif /* __LINUX_BITS_H */
+> --
+> 2.43.0
+>
+
+
+-- 
+With best wishes
+Dmitry
