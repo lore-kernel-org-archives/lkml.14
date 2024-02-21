@@ -1,168 +1,242 @@
-Received: from mout.kundenserver.de (mout.kundenserver.de [212.227.126.133])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5A63EEB3;
-	Wed, 21 Feb 2024 21:58:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.126.133
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708552690; cv=none; b=B+0ibRukL//XMpPZuZa8mha4DrJ+fUjzGGmINW+3/s4emqIpGFAW08hAQusFqLzZNa8RNWvtOVhzdO3FkfubioX5yvP9cfDl1fHXPJv2lR8RSAR4izKukYKS+FA/fowjdoKa8K8l0A/h2uYL5VqJfWCo4UYsPzyeRONeshrX8mo=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708552690; c=relaxed/simple;
-	bh=dF9IwFLl0Po1lq5MLlVQLSbQsLpawdVgsA5ipOvGk4w=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=qsbKpO1tQZ4QuMyYtcop5ocM5EcsxGDBuY3nbLXdPeBy/0Rtwemb6YUX6jmrsM7Jq7Nz5XPBvCIl7iqKq2LX0oggtDOT2SRiEdT1i0JAAeUgZ5lYKzskDcGp1gzqxEWC//E+kr/uHEAseNOUVjiZ5GyS4pq+RPWgWAsaBU8r3b4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=valentinobst.de; spf=pass smtp.mailfrom=valentinobst.de; dkim=pass (2048-bit key) header.d=valentinobst.de header.i=kernel@valentinobst.de header.b=RvBAoFPk; arc=none smtp.client-ip=212.227.126.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=valentinobst.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=valentinobst.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 109B62574F
+	for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 21:59:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.20
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1708552755; cv=fail; b=Tefh85TiIKp+vmZ9BSbtxwqlVDmRj1qPIoOjNLtIoGVDyRfGQbEr7q6m7wdVzwVKyvpn3FSJ619Ax1vCP5+W5n4cL+lHcnQWgGZuUBU5qQT2/zI9aiq/qW1m1Hf42N2c45xGsBEvIwH1Wq2v2g+V1/MFfu1/yFeMvdyojJCS600=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1708552755; c=relaxed/simple;
+	bh=+lKyxplhkfn2ludHMlsltaV7SU+tYIWQAS4xHplhPC8=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=sQ7n+JFG3VhKRNbJRQuh1/KmF8yIBYywYox6LehScmBGZ5XbLT+qrA+k+2D9mGJr9SxLpi1QLokiGNhmPl+IifmRbx/uOKof2Qx5kc41bIg/agblLRKhzZypjAn+JTuszirDdetrZxurKri3R1sEcD2BCnGiIc2KxkYnCFzgAtU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fZpwq1Bf; arc=fail smtp.client-ip=198.175.65.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=valentinobst.de header.i=kernel@valentinobst.de header.b="RvBAoFPk"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=valentinobst.de;
-	s=s1-ionos; t=1708552677; x=1709157477; i=kernel@valentinobst.de;
-	bh=dF9IwFLl0Po1lq5MLlVQLSbQsLpawdVgsA5ipOvGk4w=;
-	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:
-	 References;
-	b=RvBAoFPkDZs3ltUxVkZMu5Vo0E+IkHtH4imzi9XFQY6rL3XzqN/UTtCAztj36ViR
-	 nSuNQ15iabcrPNMNSv2gjThTnG84DjXv7+A+wwqvpzVeFvkqGjTdLgeq1SGzxCCxH
-	 d/J5th/78wf+yDoRAJEtXQP0mz/LVkSUCLczBtKGid7y0Lrbv1IH9U5UbcNfHGk34
-	 lSsmbonQfwnnXyz4O/x0UtVEBK83UUTkXvJ/uMqx0yA1FWTBzBzaFtabGCYKgJfWl
-	 lvcN7GSAgq3fcN01sD7SGi3pHKyiBNG6K3I3ExmFI0r92xa/UwiAawj+9G8Aq1XhU
-	 xLplmZ7BdEdOm26y7g==
-X-UI-Sender-Class: 55c96926-9e95-11ee-ae09-1f7a4046a0f6
-Received: from archbook.fritz.box ([217.249.70.154]) by
- mrelayeu.kundenserver.de (mreue012 [213.165.67.97]) with ESMTPSA (Nemesis) id
- 1MavF5-1r5ms727pb-00cMdL; Wed, 21 Feb 2024 22:51:36 +0100
-From: Valentin Obst <kernel@valentinobst.de>
-To: miguel.ojeda.sandonis@gmail.com
-Cc: a.hindborg@samsung.com,
-	david@readahead.eu,
-	gregkh@linuxfoundation.org,
-	hpa@zytor.com,
-	john.m.baublitz@gmail.com,
-	kernel@valentinobst.de,
-	linux-kernel@vger.kernel.org,
-	mhiramat@kernel.org,
-	mingo@kernel.org,
-	mingo@redhat.com,
-	ojeda@kernel.org,
-	peterz@infradead.org,
-	sergio.collado@gmail.com,
-	stable@vger.kernel.org,
-	tglx@linutronix.de,
-	x86@kernel.org
-Subject: Re: [PATCH] x86/tools: fix line number reported for malformed lines
-Date: Wed, 21 Feb 2024 22:49:32 +0100
-Message-ID: <20240221214939.4715-1-kernel@valentinobst.de>
-X-Mailer: git-send-email 2.43.2
-In-Reply-To: <CANiq72=gYWZ24EEqRL71Vh+YjjK9Bu0QfxGEBzee16QAf4Q6XA@mail.gmail.com>
-References: <CANiq72=gYWZ24EEqRL71Vh+YjjK9Bu0QfxGEBzee16QAf4Q6XA@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fZpwq1Bf"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1708552753; x=1740088753;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=+lKyxplhkfn2ludHMlsltaV7SU+tYIWQAS4xHplhPC8=;
+  b=fZpwq1Bft5EEYk8kqaIEC//YDMjreJzw1xAfb1dUXuMD7XES57KjG++n
+   uwZYX5mE6J3wQsRqo3V1ed7CK9tHIsC3YivSe+gpqby/VCch8OQMwr1b0
+   p9zxiOXdYG+r+5jqAbyJBsHwedmAxo/qZ6AVa6HpvYVIsuMBYJRQs1Piv
+   GOor3H1sIzQOuv8rRiu5ywFD7UZl3RZwW8SDXvceAl/sOLVeo2tSEZVPP
+   dvQk0SL+Tro4Y7Gr7vfS7RwEb2iy1dIuRiMppXZ3nHwHmnD96rXVgNPmA
+   4kuDepFJF/s9Ui8/TldcJoPTn/qh2dar8sVt49uCiSvWxC1g0HN8D7/cV
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10991"; a="2614185"
+X-IronPort-AV: E=Sophos;i="6.06,176,1705392000"; 
+   d="scan'208";a="2614185"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Feb 2024 13:59:12 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.06,176,1705392000"; 
+   d="scan'208";a="36062088"
+Received: from fmsmsx601.amr.corp.intel.com ([10.18.126.81])
+  by orviesa002.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 21 Feb 2024 13:59:11 -0800
+Received: from fmsmsx611.amr.corp.intel.com (10.18.126.91) by
+ fmsmsx601.amr.corp.intel.com (10.18.126.81) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Wed, 21 Feb 2024 13:59:11 -0800
+Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
+ fmsmsx611.amr.corp.intel.com (10.18.126.91) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Wed, 21 Feb 2024 13:59:11 -0800
+Received: from fmsedg602.ED.cps.intel.com (10.1.192.136) by
+ fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35 via Frontend Transport; Wed, 21 Feb 2024 13:59:11 -0800
+Received: from NAM02-BN1-obe.outbound.protection.outlook.com (104.47.51.41) by
+ edgegateway.intel.com (192.55.55.71) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Wed, 21 Feb 2024 13:59:10 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=kqAQXAgwEV4oAMtwS3FQh2S4Mnk/QKmai7imf2ScGWrGcV+xId4em16hTRA/+EeQJrU1IPxv7SswtkIqirTDXszr4PmQD3PhI5xt8/RlwQum5QqhuOtREM6QeUL3ftD81ehb2hCHi3ZmHTaPLMcM6My8949ZTNuFxuY5uqKCTf6yuUb++JOcPJcH1sjBjPuoDoNNd2Nga3rkmoro5LktOk39FJmgSA4+4t9gL0YFJRSDOoOX7Iei/DLspUiSG/oC3k3yFT4FeEKPWm2krDVA4WG0MziSRfjGclKYhx3Ac0dhBlHY0qW7HfABMBDkN6uBREvRcXvtz1e8k1IzTvJuLA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=1whcz++vsgADkqWJHDuQFbC0PC/jVC270cQDadCjjBs=;
+ b=TAaXfPqWnlhj9LjQQf2ugZMEW62aKLOuvwluwqhApxf6vLUY5kKasyS/FgHNAI7sdoRZXW58vk3GjK7oo4UiArr3Ghvm24988DXdOwSpDpZcogqpLXULPwBcFPe/Hl2/IlvQs9VY2bv6gMsDD5piKJxqiZB6GHyKfUzaDz6fxmk0v+bQkEKg5piUyQWkmpBe2ODqwSyKMb4F4gxhsdGeRNsUQY7QVb86TUlGg04zODP7Lz+PTDdzTyMUPqyRZ12nB/rllZcyhUVGJ4XY8k2PLXhPeEy7Q89IsimlcZe0BZMKN2bBYvt/Ni5U0bP7G8gf4L7w2M/cLOPiZT/EOzDesQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from CY5PR11MB6139.namprd11.prod.outlook.com (2603:10b6:930:29::17)
+ by IA0PR11MB8419.namprd11.prod.outlook.com (2603:10b6:208:48b::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7292.39; Wed, 21 Feb
+ 2024 21:59:08 +0000
+Received: from CY5PR11MB6139.namprd11.prod.outlook.com
+ ([fe80::9f32:ce50:1914:e954]) by CY5PR11MB6139.namprd11.prod.outlook.com
+ ([fe80::9f32:ce50:1914:e954%7]) with mapi id 15.20.7316.018; Wed, 21 Feb 2024
+ 21:59:08 +0000
+Date: Wed, 21 Feb 2024 15:59:06 -0600
+From: Lucas De Marchi <lucas.demarchi@intel.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+CC: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, Yury Norov
+	<yury.norov@gmail.com>, <linux-kernel@vger.kernel.org>,
+	<dri-devel@lists.freedesktop.org>, Jani Nikula <jani.nikula@linux.intel.com>,
+	<intel-xe@lists.freedesktop.org>, <intel-gfx@lists.freedesktop.org>, "Jani
+ Nikula" <jani.nikula@intel.com>
+Subject: Re: Re: [PATCH v3 1/3] bits: introduce fixed-type genmasks
+Message-ID: <btssirjumey2kcp5dyhe6m3embdwd5bswjz3c6swrhxfijfhld@lztxaptkegw6>
+References: <20240208074521.577076-1-lucas.demarchi@intel.com>
+ <20240208074521.577076-2-lucas.demarchi@intel.com>
+ <CAA8EJpprfrtOjNzT6TFhV1n6MXzLdTahanfxcRW4uVjeHaBduA@mail.gmail.com>
+ <ZdZlVn9BI-0q1Xdn@smile.fi.intel.com>
+Content-Type: text/plain; charset="us-ascii"; format=flowed
+Content-Disposition: inline
+In-Reply-To: <ZdZlVn9BI-0q1Xdn@smile.fi.intel.com>
+X-ClientProxiedBy: SJ0PR05CA0208.namprd05.prod.outlook.com
+ (2603:10b6:a03:330::33) To CY5PR11MB6139.namprd11.prod.outlook.com
+ (2603:10b6:930:29::17)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:WW7p1+B4htmtBfW2x6I9T6uskQjvijUcuFVC6Pqcxdich+azJUw
- qmMgxKKJZsEuziGBdXIaiOokAujPVQlssvay9UqRD4+fLNmAQFZVaXiEkgaluX1HkNVLkW6
- lIdZKx60UPGYU4CJPeEjjvOC5PQs/SQxKZUJjwN/mVlrGoat20iSi59yocWcwAyrsxYrYHi
- Tezy9PHa4OXOnxdT+VwqA==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:mOOoXRIRWVQ=;kxOewaJtG6hZXrCnHemyZf/SZrx
- QQ/Q+2L73TzGrKO2bu0S6XlU3HcPKWw7Rzm/0CstjBGrSiMIvOMpA3mjerIkMfPA85ENlvqiO
- oG+N6zVs4Jiyzwapz3JUW21+DhI9MhP7kaRmKcAXbRw0Kc+22XNubcetaXPk5ptrIkwHmoNYk
- vuK8EBaL3+OKf4Be+i5yvcYkC5x3Y0VdK9OQUWypSvBaONhscT+X3BhQ8fdYcoq7bj9SgIjlw
- bhHMO35bgNV9JUfexPKDPLgt37o7xkw51NkTKOIwrwSP9QIjWohMwFGVbI26UEOolSena7OZy
- ewPGNvePYYb2DPWNgUvtzdXo4XuIsc9KZZ9AMqltppIzct0YC/sEtimbdQ6Lg0C1x5VewNJq7
- vdbvwrgFkNcoDyFYBbzWIalK/TTAj2PJ9uFM8D4BEKKTZ6YC6WDo8fqM+QNH0Q1IjxVlT3xDV
- V8rKbfhoQiIvpiEq1Vyedm6vckWTllAw4DGAUWCGf7dyXsQcXFYpOHf4y3sBJTEwEgknL3YvG
- RKFlsE7SxFTln3jlDSlSwBnTPk0LOOAR4XeXj9x8duNdzKh2C9M6j9BQ2/KtAdXYdsbF2C/ls
- r+Rc9mbEdx7HdC62kFlQvB1NtLLpz7/CnpWzNoi8PSbig3tlBM5Mreji4uQcfVM6s0EUEqptT
- qHT90jIX3GJ20xOAUDM7E7nxf1Wn9/FCa4RLCpCXDlC/UfQe2/HLvIe9BDoSd+31HqgBJIIYO
- t74x7AwE/GuYbpMlFNajsNmySR/RH3oHaqsCSPu2k2BlYfiv719eUw=
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CY5PR11MB6139:EE_|IA0PR11MB8419:EE_
+X-MS-Office365-Filtering-Correlation-Id: 11fb31bf-1282-44d2-23f9-08dc33285441
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: MCLwKQEc6nGTi1ja6H+G0t+OAD3D5R17fJeDlldyCMmNxQnhbp7wRv8u+4DJaN+7/cL+x9xEa/dqvfpTOWlGkFIImsc0Sg5M25RUsZGY6Gk9JddNDKpifut0D9SA+bw9cpQQ00GU7YE8y31/Vs7XwNeg1I+Rgt/8whQWRK099XRF4WdKDWLMhsUfnThTczg/ppz5LaQEtM45t6DjKqDrjpOhQ/uY0vjXKSShEZVt9tUjzJOF7aU1/629klkh59QWYUohrO5wDwCx+zIz9OYp7b9jDO0z3UQ5vvgkKPGdcDwSQmNv4tRvmzHMRNleP5CVUbdItVSAAX7i8I8u+WljtzpWJ2ZqfEJPp+C679UxXgZSGbnAV4Gz3O6DXQ4svPxXHQN17Z1ZbcPNj72daalNDfLHcVVRWWGMkhsDBOqJuNubMVSGGwOEgGo0kdAhmT8Y/cI01Q9xePtfys4wWnoqpmx8AJWLUsvpCaX0PqmBY0Dj4wu0j7Qo7nDewhBD/2vABNh+aY+qfhatKI3DBzCBVP2cSU05sV5L4ZSYAvqsf/A=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY5PR11MB6139.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?t0+hVZM9O7bpkrVjANFHZn/+6adcSG8sGsxw/Wy/siSoMlXYJViHB3E7hd/G?=
+ =?us-ascii?Q?CkHYFZUHzWZeFDADan63nICD06B7VmnmQegMHU355wmjNAJTWaJK4qySZaJI?=
+ =?us-ascii?Q?E2x/Uo19XJpf8ldG7F494ZTcwtqlw60vSOJWSjR6xhF88NOV5WTA5/MTx1nD?=
+ =?us-ascii?Q?61daJ8w6vFCCU0ZmQ4kBWTkA5x3NBcmgVSkwuttyytbSOr86n82GeTBKTaNO?=
+ =?us-ascii?Q?uR5z3cP8LirIXLcPiKcqI/78pkFjMcTDeiuT8wQ9txUNYtI1484qxpCRyX1e?=
+ =?us-ascii?Q?4iH9jiwccoh2yy2a7ZI5pB/nNw2Y4NgMljYa0zwnM10YytHc4Ol00zql3RZk?=
+ =?us-ascii?Q?7Ep8ipZI+uz9KdYzETm0lhMOqJgzIDK7xagHDPAiOCHcNd0YvmC1sjlILzhR?=
+ =?us-ascii?Q?h0uYQobXZ4Bx6TlnYke6IxshHf13KKDoLoH9tGfm0GYG2lI0ffavV7pnxJrW?=
+ =?us-ascii?Q?07Gn1Cb+FE59V9LlWvv+4NCd9YuEMIkdHrdceKG1YIE8Q20pyHzkfsx4XtNb?=
+ =?us-ascii?Q?G3S20QEBj/k/SD7FzIsqwdhki2OnN7j3WYcaIKJBxOQ8WCPHp/LZuwhLMyUe?=
+ =?us-ascii?Q?KxlAAaqP80SIycC0LVUDZn4Fiej6WCNjBR5wEZveNcwcM779q1FNyWbEZ2sC?=
+ =?us-ascii?Q?nOaT9SjULfSF1RV68AaQSO3P++h1M/YKx1MHksAPeAfvQqEzx7DS9zyPeOUv?=
+ =?us-ascii?Q?gTTWp/UShx0A4ANBMLtEj2HBqUJFjvKmzjBwzgFh5gLwGC/XV7bBC8Ky6TRg?=
+ =?us-ascii?Q?m74S0zVuQ+SPLQdh8hIKmi0DZhfaZt2KiWdjCZXyzfKIym/KvXzMntacVX1Z?=
+ =?us-ascii?Q?AXVoUR7kRMHUVfQxtplDBRY9RmVAW4seZrohYa5DLTpyNe1v2k43i/goI6qV?=
+ =?us-ascii?Q?z5zaCCfXiSrq0xAM926c7o7UxbpdBXOoK4pQyImvKIlo/OSh/ylRNXqwNNTg?=
+ =?us-ascii?Q?83OFMim50TwVPUjp//VGB/jMyi4oocKT8WF1pZWA/FmsLxQdpwpUmnjWKHTU?=
+ =?us-ascii?Q?pdkI72nfSt/Uck8SintMeSZmTwma2jJvL4IvRdiJL+NzvFT6ZpeeQ9js599l?=
+ =?us-ascii?Q?DtF15V5RCSyGxGBg47mIzOCk+v9x8H19guFBaFvB5VeeASnX1LQxP/7fDukF?=
+ =?us-ascii?Q?zK9cFqNeFv7nTz/k7g6l+84fgsMNIOGdHfeRblMD1GruPYNC/mKLY75vrOdU?=
+ =?us-ascii?Q?eEEFMqRHYgB9dIMbTj1u29rvK5lh7+vFmW/n1qrb9gK0TqpjXjGPbb7ojUAk?=
+ =?us-ascii?Q?YRxQ+OHS/fK99j2Dqttaq4qr2X3AZIGIxEojj+Y45+UzM1CuTmXH75AlTbeH?=
+ =?us-ascii?Q?vkJEtNuJAELEuTgyuzsxa42Bziip9e5JFMURZ6gri/IPLuW/NE7AwpL0OTq0?=
+ =?us-ascii?Q?1Jpdy96lk3WwsCbM99Me1uoQVfxy4QDYHAxQbYWzw7j0pIuuG30+wGGyLEta?=
+ =?us-ascii?Q?tm7qF1YR36TeuaZvTDa9EyGSPMt0HkyGgWEutA50JMnS0jzNmlZfVAFDkx3g?=
+ =?us-ascii?Q?86GyLgAo6YBUA+LzhoI3RyLMWF+JiJo0k4WB7UrLBN0/FvXpRobdcc34RIht?=
+ =?us-ascii?Q?S9dETvTqjjwRJQH20neOsOtJUHqhE4ps2LogpGA6PcAIa/Wzj8UeBY/tVL2s?=
+ =?us-ascii?Q?LQ=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 11fb31bf-1282-44d2-23f9-08dc33285441
+X-MS-Exchange-CrossTenant-AuthSource: CY5PR11MB6139.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Feb 2024 21:59:08.6558
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 5y5PGFW1l7rzE8x6TEP0NvHisQvIXTwMs0G3jeGnx4Itm0qMykNVA0IfiJ42TqOkXPJd0lZvxIGQs34zmfroY2Soe/0f3ydLhnr1qW1CyFg=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR11MB8419
+X-OriginatorOrg: intel.com
 
-> On Wed, Feb 21, 2024 at 10:00=E2=80=AFAM Valentin Obst <kernel@valentino=
-bst.de> wrote:
-> >
-> > While debugging the `X86_DECODER_SELFTEST` failure first reported in [=
-1],
-> > [In this case the line causing the failure is interpreted as two lines=
- by
-> > the tool (due to its length, but this is fixed by [1, 2]), and the sec=
-ond
-> > line is reported. Still the spatial closeness between the reported lin=
-e and
-> > the line causing the failure would have made debugging a lot easier.]
+On Wed, Feb 21, 2024 at 11:04:22PM +0200, Andy Shevchenko wrote:
+>On Wed, Feb 21, 2024 at 10:30:02PM +0200, Dmitry Baryshkov wrote:
+>> On Thu, 8 Feb 2024 at 09:45, Lucas De Marchi <lucas.demarchi@intel.com> wrote:
 >
-> Thanks Valentin, John et al. for digging into this (and the related
-> issue) -- very much appreciated.
+>...
 >
-> It looks good to me:
+>> > +#define BITS_PER_TYPE(type)    (sizeof(type) * BITS_PER_BYTE)
 >
-> Reviewed-by: Miguel Ojeda <ojeda@kernel.org>
-> Tested-by: Miguel Ojeda <ojeda@kernel.org>
+>Can sizeof() be used in assembly?
+>
+>...
+>
+>> > -#define __GENMASK(h, l) \
+>> > -       (((~UL(0)) - (UL(1) << (l)) + 1) & \
+>> > -        (~UL(0) >> (BITS_PER_LONG - 1 - (h))))
+>> > -#define GENMASK(h, l) \
+>> > -       (GENMASK_INPUT_CHECK(h, l) + __GENMASK(h, l))
+>
+>> > +#define __GENMASK(t, h, l) \
+>> > +       (GENMASK_INPUT_CHECK(h, l) + \
+>> > +        (((t)~0ULL - ((t)(1) << (l)) + 1) & \
+>> > +        ((t)~0ULL >> (BITS_PER_TYPE(t) - 1 - (h)))))
+>
+>Nevertheless, the use ~0ULL is not proper assembly, this broke initial
+>implementation using UL() / ULL().
 
-Thanks!
-
->
-> This should probably have a Fixes tag -- from a quick look, the
-> original test did not seem to have the problem because `insns` was
-> equivalent to the number of lines since there was no `if ... {
-> continue; }` for the symbol case. At some point that branch was added,
-> so that was not true anymore, thus that one should probably be the
-> Fixes tag, though please double-check:
->
->     Fixes: 35039eb6b199 ("x86: Show symbol name if insn decoder test fai=
-led")
-
-Cross checked this as well, can confirm your assessment. Thanks for
-bringing this up.
-
->
-> It is a minor issue for sure, so perhaps not worth backporting, but
-> nevertheless the hash is in a very old kernel, and thus the issue
-> applies to all stable kernels. So it does not hurt flagging it to the
-> stable team:
->
->     Cc: stable@vger.kernel.org
->
-> In addition, John reported the original issue, but this one was found
-> due to that one, and I am not exactly sure who did what here. Please
-> consider whether one of the following (or similar) may be fair:
->
->     Reported-by: John Baublitz <john.m.baublitz@gmail.com>
->     Debugged-by: John Baublitz <john.m.baublitz@gmail.com>
-
-Absolutely, without him reporting the test failure and narrowing down the
-config I'd have never looked at this file. Adding him for **both** is fair=
-.
-(This particular fix was not discussed on Zulip though, its just something
-I noticed along the way.)
-
->
-> An extra Link to the discussion in Zulip could be nice too:
->
->     Link: https://rust-for-linux.zulipchat.com/#narrow/stream/291565-Hel=
-p/topic/insn_decoder_test.20failure/near/421075039
-
-Didn't add it because the discussion does not mention this particular
-issue, but it might indeed be good for some context.
-
-Will this need a v2, or are all of the 'Fixes', 'Reported-By',
-'Debugged-By', 'Tested-By', 'Reviewed-By' and 'Link' tags something that
-maintainers may add when merging?
-
-    - Best Valentin
+indeed.
 
 >
-> Finally, a nit: links are typically written like the following -- you
-> can still use bracket references at the end:
 >
->     Link: https://lore.kernel.org/lkml/Y9ES4UKl%2F+DtvAVS@gmail.com/T/ [=
-1]
->     Link: https://lore.kernel.org/rust-for-linux/20231119180145.157455-1=
--sergio.collado@gmail.com/
-> [2]
+>> > -#define __GENMASK_ULL(h, l) \
+>> > -       (((~ULL(0)) - (ULL(1) << (l)) + 1) & \
+>> > -        (~ULL(0) >> (BITS_PER_LONG_LONG - 1 - (h))))
+>> > -#define GENMASK_ULL(h, l) \
+>> > -       (GENMASK_INPUT_CHECK(h, l) + __GENMASK_ULL(h, l))
 >
-> Cheers,
-> Miguel
+>Ditto.
+
+problem here seems actually because of the cast to the final type. My
+previous impl was avoiding that, but was too verbose compared to this.
+
+I will look at reverting this.
+
+Lucas De Marchi
+
+>
+>> > +#define GENMASK(h, l)          __GENMASK(unsigned long,  h, l)
+>> > +#define GENMASK_ULL(h, l)      __GENMASK(unsigned long long, h, l)
+>> > +#define GENMASK_U8(h, l)       __GENMASK(u8,  h, l)
+>> > +#define GENMASK_U16(h, l)      __GENMASK(u16, h, l)
+>> > +#define GENMASK_U32(h, l)      __GENMASK(u32, h, l)
+>> > +#define GENMASK_U64(h, l)      __GENMASK(u64, h, l)
+>>
+>> This breaks drm-tip on arm64 architecture:
+>>
+>> arch/arm64/kernel/entry-fpsimd.S: Assembler messages:
+>> 465arch/arm64/kernel/entry-fpsimd.S:271: Error: found 'l', expected: ')'
+>> 466arch/arm64/kernel/entry-fpsimd.S:66: Info: macro invoked from here
+>> 467arch/arm64/kernel/entry-fpsimd.S:271: Error: found 'l', expected: ')'
+>> 468arch/arm64/kernel/entry-fpsimd.S:66: Info: macro invoked from here
+>> 469arch/arm64/kernel/entry-fpsimd.S:271: Error: found 'l', expected: ')'
+>> 470arch/arm64/kernel/entry-fpsimd.S:66: Info: macro invoked from here
+>> 471arch/arm64/kernel/entry-fpsimd.S:271: Error: found 'l', expected: ')'
+>> 472arch/arm64/kernel/entry-fpsimd.S:66: Info: macro invoked from here
+>> 473arch/arm64/kernel/entry-fpsimd.S:271: Error: unexpected characters
+>> following instruction at operand 3 -- `bic x2,x1,(0+(((unsigned
+>> long)~0ULL-((unsigned long)(1)<<(0))+1)&((unsigned
+>> long)~0ULL>>((sizeof(unsigned long)*8)-1-(3)))))'
+>> 474arch/arm64/kernel/entry-fpsimd.S:66: Info: macro invoked from here
+>> 475arch/arm64/kernel/entry-fpsimd.S:282: Error: found 'l', expected: ')'
+>> 476arch/arm64/kernel/entry-fpsimd.S:98: Info: macro invoked from here
+>> 477arch/arm64/kernel/entry-fpsimd.S:282: Error: found 'l', expected: ')'
+>> 478arch/arm64/kernel/entry-fpsimd.S:98: Info: macro invoked from here
+>> 479arch/arm64/kernel/entry-fpsimd.S:282: Error: found 'l', expected: ')'
+>> 480arch/arm64/kernel/entry-fpsimd.S:98: Info: macro invoked from here
+>> 481arch/arm64/kernel/entry-fpsimd.S:282: Error: found 'l', expected: ')'
+>> 482arch/arm64/kernel/entry-fpsimd.S:98: Info: macro invoked from here
+>> 483arch/arm64/kernel/entry-fpsimd.S:282: Error: unexpected characters
+>> following instruction at operand 3 -- `bic x2,x1,(0+(((unsigned
+>> long)~0ULL-((unsigned long)(1)<<(0))+1)&((unsigned
+>> long)~0ULL>>((sizeof(unsigned long)*8)-1-(3)))))'
+>> 484arch/arm64/kernel/entry-fpsimd.S:98: Info: macro invoked from here
+>
+>-- 
+>With Best Regards,
+>Andy Shevchenko
+>
+>
