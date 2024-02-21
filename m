@@ -1,172 +1,147 @@
-Received: from mail-out.aladdin-rd.ru (mail-out.aladdin-rd.ru [91.199.251.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 239837FBC5;
-	Wed, 21 Feb 2024 14:59:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.199.251.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26C807FBA9
+	for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 15:02:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708527555; cv=none; b=IfxdTPJN4yoCaH7OxpE0RdDMjhXzYLXGxWJfdEVGFUEavruucKNR3Mv8wqJuzdBFaSOwmrmHs+Fhl7f6L2OtvL0DiIFmAXZ3+HZi54WidmtRU0hin6pC5fc1P0G1M061RrevMCr825czOTCrDSNen99jD3dnewAvljjjUqPBvik=
+	t=1708527774; cv=none; b=ZqmyrC7pA8GbuIC0AV/ViyerzDQ9mongYbCf+Gzd1DQOtERXAUumK/SWbxHRvbUjX3EP+rf4WYIsas7e1Vu6eA9RUu8rfQzCeuNZhZby4V/FR5czLXhgsazxZoXCHulxAmmn4ZbJlM72ketwVtHx/0oN23z977myr/mLEjjJ+Ic=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708527555; c=relaxed/simple;
-	bh=rOXs7IK7BPd47XxyU2z2y1odp+Wf1KbCWQduP9pOyt0=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=CuiCS5ec7ckfYz8Si+26TUHEIhc8RXWS0Fgamh+slhvSfPBGvfefaSGfom3HqkXEkgjHGjYafuoGAlHsRAB0lay8q/MOeiQ2Kf3iytIM0AFbCUlF10b2dfZ6MlGr1u6KgEhIflXvK2hTHhPbdchpfX7sVGeQAce5p+IFJ8GKzrE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=aladdin.ru; spf=pass smtp.mailfrom=aladdin.ru; arc=none smtp.client-ip=91.199.251.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=aladdin.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aladdin.ru
-From: Daniil Dulov <d.dulov@aladdin.ru>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, <stable@vger.kernel.org>
-CC: Daniil Dulov <d.dulov@aladdin.ru>, Marcel Holtmann <marcel@holtmann.org>,
-	Johan Hedberg <johan.hedberg@gmail.com>, Luiz Augusto von Dentz
-	<luiz.dentz@gmail.com>, Arkadiusz Bokowy <arkadiusz.bokowy@gmail.com>,
-	<linux-bluetooth@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<lvc-project@linuxtesting.org>, Ying Hsu <yinghsu@chromium.org>, Luiz Augusto
- von Dentz <luiz.von.dentz@intel.com>
-Subject: [PATCH 5.10/5.15 1/1] Bluetooth: Fix deadlock in vhci_send_frame
-Date: Wed, 21 Feb 2024 17:57:44 +0300
-Message-ID: <20240221145744.27895-2-d.dulov@aladdin.ru>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240221145744.27895-1-d.dulov@aladdin.ru>
-References: <20240221145744.27895-1-d.dulov@aladdin.ru>
+	s=arc-20240116; t=1708527774; c=relaxed/simple;
+	bh=IA04EINEhiUmPausJhAIhNYoBrh5gGBDp2/hkWPg5UY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=aP0ESfeSSfN3h2n4vvolgsoFac8sy7587570KJdXJswTK17JsAbrzTpN2NTY9TxzO7q4Phm1Sglp9Lyj1i86L9pRnkupcn+OTY5Oc3nCxYqRYmdemnPR7eX7Le8YBxUWeNRyZObNlRZr0kmHSpHKwW4H7gfJ64PJV+8H2RgV+8k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=do9bUBOQ; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="do9bUBOQ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1708527772;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=I/8ZW7ehoVJm2qwscz6N6lVDOiwYLRnszTC5mnwo62I=;
+	b=do9bUBOQvYA+/ZP+wtGq4/Nfwr/9xTsBbzhhZvBRQoJMPtNiCG6zGOCIpZHmvhreg+6hoe
+	d4cekELr5N/X1d0u4VSBXkVp1B4EgozOgarw0TJyYDXGcekVLfz453nCIa0kNOTmj0wA16
+	6OUsX0GQInSvMx0ojeHw04I4oK6Cge0=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-50-GoGBrqZeNrapIN-UUqWtHg-1; Wed, 21 Feb 2024 10:02:50 -0500
+X-MC-Unique: GoGBrqZeNrapIN-UUqWtHg-1
+Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-41277d0cbc0so2395155e9.3
+        for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 07:02:48 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708527767; x=1709132567;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=I/8ZW7ehoVJm2qwscz6N6lVDOiwYLRnszTC5mnwo62I=;
+        b=Xn+OMstoqaGBrRHEZ+0HZxpMAXoUy3zYqMvxw1blloglnvAedQyesxjIOhoa1+jjoc
+         BBCVaRB2kwzntC9YoIiIa050CQBZqjcn3CxVo/ydgdxpcMkGdX3NHRZAby5PQUyVkh+O
+         ZG7JHGMiwtVr3BFilRhCgag8oMQV94UTfw2S6INDBN9g1lQ8w+7HNK6s9SGptcV1l/Al
+         QqEH7aWx1DOtJDdC2itj6/T5G2HPipkgr8OjtEVfPtptyWiRuOHgSwrJcHK5vsz58wVW
+         bHGmW5Y58mfWir8YSuwxFM+vdd4kF7BzoOaarCQSelu7iMzuxVH42ryGhXYVHNACccCM
+         0xpA==
+X-Forwarded-Encrypted: i=1; AJvYcCXj8sNfqoGtcjkjqrqp4afx3lIHXcJuHyBeXOe5tKHpzJrC6TdoaKzWhnSbJ6fXkXGWws92a4kjFA6WJ8q++pMMZje9XuMzan9cpH4r
+X-Gm-Message-State: AOJu0Yx9xS1JJp47HZeIJI8cQHAmrh/I5c/KVwvLhI87QqYJ2jvHQ7a+
+	OSAVfyLhujvJwa+k6iPV/0YU9TWJ+DIGrH6XI5kr3SXF5BO6+XK/8JEmz2cOkawPF2gat0eTgWB
+	rN9/D9fpKXIO6W2g+PujvD0ds7qU0tdYtdJP9n/4JBg6kLQ+krmP/GS4bG9GUHA==
+X-Received: by 2002:a05:6000:120f:b0:33d:3c05:ce4b with SMTP id e15-20020a056000120f00b0033d3c05ce4bmr6141271wrx.60.1708527767531;
+        Wed, 21 Feb 2024 07:02:47 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IEBgxqKp5L8LW1pipPH/hbqBw/uqVR71+hXezyMWvFcMTmbBmgKlDVlbUwu4tetHkSPduKGrg==
+X-Received: by 2002:a05:6000:120f:b0:33d:3c05:ce4b with SMTP id e15-20020a056000120f00b0033d3c05ce4bmr6141256wrx.60.1708527767109;
+        Wed, 21 Feb 2024 07:02:47 -0800 (PST)
+Received: from ?IPV6:2001:b07:6468:f312:9af8:e5f5:7516:fa89? ([2001:b07:6468:f312:9af8:e5f5:7516:fa89])
+        by smtp.googlemail.com with ESMTPSA id x11-20020a5d490b000000b0033cf29a67c7sm17283919wrq.7.2024.02.21.07.02.46
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 21 Feb 2024 07:02:46 -0800 (PST)
+Message-ID: <a9652aa2-e79b-4144-b3b7-746587af9eca@redhat.com>
+Date: Wed, 21 Feb 2024 16:02:45 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: CVE-2023-52437: Revert "md/raid5: Wait for MD_SB_CHANGE_PENDING
+ in raid5d"
+Content-Language: en-US
+To: Sasha Levin <sashal@kernel.org>
+Cc: cve@kernel.org, linux-cve-announce@vger.kernel.org,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Jiri Kosina <jkosina@suse.cz>, linux-kernel@vger.kernel.org
+References: <2024022009-subsoil-halt-4b28@gregkh>
+ <7ae646b3-28e4-4344-a7a4-730a0d6e3f38@redhat.com>
+ <CABgObfYDcFPRNpGtsY=UbstXbqVCMcxy3LPS_xJ65aFcByC=Nw@mail.gmail.com>
+ <ZdXt09vL4GJy6PbP@sashalap> <0e8675e0-165d-4cf7-9755-666278868ab8@redhat.com>
+ <ZdX2LcAWR6wyvYC5@sashalap> <bec7c1db-c13e-4b00-a968-4ae69539d7ac@redhat.com>
+ <ZdYKSkqRckOc5aRO@sashalap>
+From: Paolo Bonzini <pbonzini@redhat.com>
+Autocrypt: addr=pbonzini@redhat.com; keydata=
+ xsEhBFRCcBIBDqDGsz4K0zZun3jh+U6Z9wNGLKQ0kSFyjN38gMqU1SfP+TUNQepFHb/Gc0E2
+ CxXPkIBTvYY+ZPkoTh5xF9oS1jqI8iRLzouzF8yXs3QjQIZ2SfuCxSVwlV65jotcjD2FTN04
+ hVopm9llFijNZpVIOGUTqzM4U55sdsCcZUluWM6x4HSOdw5F5Utxfp1wOjD/v92Lrax0hjiX
+ DResHSt48q+8FrZzY+AUbkUS+Jm34qjswdrgsC5uxeVcLkBgWLmov2kMaMROT0YmFY6A3m1S
+ P/kXmHDXxhe23gKb3dgwxUTpENDBGcfEzrzilWueOeUWiOcWuFOed/C3SyijBx3Av/lbCsHU
+ Vx6pMycNTdzU1BuAroB+Y3mNEuW56Yd44jlInzG2UOwt9XjjdKkJZ1g0P9dwptwLEgTEd3Fo
+ UdhAQyRXGYO8oROiuh+RZ1lXp6AQ4ZjoyH8WLfTLf5g1EKCTc4C1sy1vQSdzIRu3rBIjAvnC
+ tGZADei1IExLqB3uzXKzZ1BZ+Z8hnt2og9hb7H0y8diYfEk2w3R7wEr+Ehk5NQsT2MPI2QBd
+ wEv1/Aj1DgUHZAHzG1QN9S8wNWQ6K9DqHZTBnI1hUlkp22zCSHK/6FwUCuYp1zcAEQEAAc0j
+ UGFvbG8gQm9uemluaSA8cGJvbnppbmlAcmVkaGF0LmNvbT7CwU0EEwECACMFAlRCcBICGwMH
+ CwkIBwMCAQYVCAIJCgsEFgIDAQIeAQIXgAAKCRB+FRAMzTZpsbceDp9IIN6BIA0Ol7MoB15E
+ 11kRz/ewzryFY54tQlMnd4xxfH8MTQ/mm9I482YoSwPMdcWFAKnUX6Yo30tbLiNB8hzaHeRj
+ jx12K+ptqYbg+cevgOtbLAlL9kNgLLcsGqC2829jBCUTVeMSZDrzS97ole/YEez2qFpPnTV0
+ VrRWClWVfYh+JfzpXmgyhbkuwUxNFk421s4Ajp3d8nPPFUGgBG5HOxzkAm7xb1cjAuJ+oi/K
+ CHfkuN+fLZl/u3E/fw7vvOESApLU5o0icVXeakfSz0LsygEnekDbxPnE5af/9FEkXJD5EoYG
+ SEahaEtgNrR4qsyxyAGYgZlS70vkSSYJ+iT2rrwEiDlo31MzRo6Ba2FfHBSJ7lcYdPT7bbk9
+ AO3hlNMhNdUhoQv7M5HsnqZ6unvSHOKmReNaS9egAGdRN0/GPDWr9wroyJ65ZNQsHl9nXBqE
+ AukZNr5oJO5vxrYiAuuTSd6UI/xFkjtkzltG3mw5ao2bBpk/V/YuePrJsnPFHG7NhizrxttB
+ nTuOSCMo45pfHQ+XYd5K1+Cv/NzZFNWscm5htJ0HznY+oOsZvHTyGz3v91pn51dkRYN0otqr
+ bQ4tlFFuVjArBZcapSIe6NV8C4cEiSTOwE0EVEJx7gEIAMeHcVzuv2bp9HlWDp6+RkZe+vtl
+ KwAHplb/WH59j2wyG8V6i33+6MlSSJMOFnYUCCL77bucx9uImI5nX24PIlqT+zasVEEVGSRF
+ m8dgkcJDB7Tps0IkNrUi4yof3B3shR+vMY3i3Ip0e41zKx0CvlAhMOo6otaHmcxr35sWq1Jk
+ tLkbn3wG+fPQCVudJJECvVQ//UAthSSEklA50QtD2sBkmQ14ZryEyTHQ+E42K3j2IUmOLriF
+ dNr9NvE1QGmGyIcbw2NIVEBOK/GWxkS5+dmxM2iD4Jdaf2nSn3jlHjEXoPwpMs0KZsgdU0pP
+ JQzMUMwmB1wM8JxovFlPYrhNT9MAEQEAAcLBMwQYAQIACQUCVEJx7gIbDAAKCRB+FRAMzTZp
+ sadRDqCctLmYICZu4GSnie4lKXl+HqlLanpVMOoFNnWs9oRP47MbE2wv8OaYh5pNR9VVgyhD
+ OG0AU7oidG36OeUlrFDTfnPYYSF/mPCxHttosyt8O5kabxnIPv2URuAxDByz+iVbL+RjKaGM
+ GDph56ZTswlx75nZVtIukqzLAQ5fa8OALSGum0cFi4ptZUOhDNz1onz61klD6z3MODi0sBZN
+ Aj6guB2L/+2ZwElZEeRBERRd/uommlYuToAXfNRdUwrwl9gRMiA0WSyTb190zneRRDfpSK5d
+ usXnM/O+kr3Dm+Ui+UioPf6wgbn3T0o6I5BhVhs4h4hWmIW7iNhPjX1iybXfmb1gAFfjtHfL
+ xRUr64svXpyfJMScIQtBAm0ihWPltXkyITA92ngCmPdHa6M1hMh4RDX+Jf1fiWubzp1voAg0
+ JBrdmNZSQDz0iKmSrx8xkoXYfA3bgtFN8WJH2xgFL28XnqY4M6dLhJwV3z08tPSRqYFm4NMP
+ dRsn0/7oymhneL8RthIvjDDQ5ktUjMe8LtHr70OZE/TT88qvEdhiIVUogHdo4qBrk41+gGQh
+ b906Dudw5YhTJFU3nC6bbF2nrLlB4C/XSiH76ZvqzV0Z/cAMBo5NF/w=
+In-Reply-To: <ZdYKSkqRckOc5aRO@sashalap>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: EXCH-2016-03.aladdin.ru (192.168.1.103) To
- EXCH-2016-01.aladdin.ru (192.168.1.101)
 
-From: Ying Hsu <yinghsu@chromium.org>
+On 2/21/24 15:35, Sasha Levin wrote:
+> On Wed, Feb 21, 2024 at 02:15:12PM +0100, Paolo Bonzini wrote:
+>>> On 2/21/24 14:10, Sasha Levin wrote:
+>>>> On Wed, Feb 21, 2024 at 01:58:04PM +0100, Paolo Bonzini wrote:
+>>>>> On 2/21/24 13:34, Sasha Levin wrote:
+>>>>>> [snip]
+>>
+>> This conversation needs to be public.
+> 
+> I've cc'ed lkml.
 
-commit 769bf60e17ee1a56a81e7c031192c3928312c52e upstream.
+This is an empty message, so it's not going to help making public the 
+part of the discussion that was CC'd to the moderator-only list.  I take 
+it that I can quote any part of the private thread?  I'd like to have 
+your explicit permission for that, if you are not going to resend your 
+answer.
 
-syzbot found a potential circular dependency leading to a deadlock:
-    -> #3 (&hdev->req_lock){+.+.}-{3:3}:
-    __mutex_lock_common+0x1b6/0x1bc2 kernel/locking/mutex.c:599
-    __mutex_lock kernel/locking/mutex.c:732 [inline]
-    mutex_lock_nested+0x17/0x1c kernel/locking/mutex.c:784
-    hci_dev_do_close+0x3f/0x9f net/bluetooth/hci_core.c:551
-    hci_rfkill_set_block+0x130/0x1ac net/bluetooth/hci_core.c:935
-    rfkill_set_block+0x1e6/0x3b8 net/rfkill/core.c:345
-    rfkill_fop_write+0x2d8/0x672 net/rfkill/core.c:1274
-    vfs_write+0x277/0xcf5 fs/read_write.c:594
-    ksys_write+0x19b/0x2bd fs/read_write.c:650
-    do_syscall_x64 arch/x86/entry/common.c:55 [inline]
-    do_syscall_64+0x51/0xba arch/x86/entry/common.c:93
-    entry_SYSCALL_64_after_hwframe+0x61/0xcb
+> You'll find that the convention for *-announce mailing list is that
+> they, as the name suggests, are used only for announces and are
+> moderated.
 
-    -> #2 (rfkill_global_mutex){+.+.}-{3:3}:
-    __mutex_lock_common+0x1b6/0x1bc2 kernel/locking/mutex.c:599
-    __mutex_lock kernel/locking/mutex.c:732 [inline]
-    mutex_lock_nested+0x17/0x1c kernel/locking/mutex.c:784
-    rfkill_register+0x30/0x7e3 net/rfkill/core.c:1045
-    hci_register_dev+0x48f/0x96d net/bluetooth/hci_core.c:2622
-    __vhci_create_device drivers/bluetooth/hci_vhci.c:341 [inline]
-    vhci_create_device+0x3ad/0x68f drivers/bluetooth/hci_vhci.c:374
-    vhci_get_user drivers/bluetooth/hci_vhci.c:431 [inline]
-    vhci_write+0x37b/0x429 drivers/bluetooth/hci_vhci.c:511
-    call_write_iter include/linux/fs.h:2109 [inline]
-    new_sync_write fs/read_write.c:509 [inline]
-    vfs_write+0xaa8/0xcf5 fs/read_write.c:596
-    ksys_write+0x19b/0x2bd fs/read_write.c:650
-    do_syscall_x64 arch/x86/entry/common.c:55 [inline]
-    do_syscall_64+0x51/0xba arch/x86/entry/common.c:93
-    entry_SYSCALL_64_after_hwframe+0x61/0xcb
+Indeed, all two of them.  ¯\_(ツ)_/¯
 
-    -> #1 (&data->open_mutex){+.+.}-{3:3}:
-    __mutex_lock_common+0x1b6/0x1bc2 kernel/locking/mutex.c:599
-    __mutex_lock kernel/locking/mutex.c:732 [inline]
-    mutex_lock_nested+0x17/0x1c kernel/locking/mutex.c:784
-    vhci_send_frame+0x68/0x9c drivers/bluetooth/hci_vhci.c:75
-    hci_send_frame+0x1cc/0x2ff net/bluetooth/hci_core.c:2989
-    hci_sched_acl_pkt net/bluetooth/hci_core.c:3498 [inline]
-    hci_sched_acl net/bluetooth/hci_core.c:3583 [inline]
-    hci_tx_work+0xb94/0x1a60 net/bluetooth/hci_core.c:3654
-    process_one_work+0x901/0xfb8 kernel/workqueue.c:2310
-    worker_thread+0xa67/0x1003 kernel/workqueue.c:2457
-    kthread+0x36a/0x430 kernel/kthread.c:319
-    ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:298
-
-    -> #0 ((work_completion)(&hdev->tx_work)){+.+.}-{0:0}:
-    check_prev_add kernel/locking/lockdep.c:3053 [inline]
-    check_prevs_add kernel/locking/lockdep.c:3172 [inline]
-    validate_chain kernel/locking/lockdep.c:3787 [inline]
-    __lock_acquire+0x2d32/0x77fa kernel/locking/lockdep.c:5011
-    lock_acquire+0x273/0x4d5 kernel/locking/lockdep.c:5622
-    __flush_work+0xee/0x19f kernel/workqueue.c:3090
-    hci_dev_close_sync+0x32f/0x1113 net/bluetooth/hci_sync.c:4352
-    hci_dev_do_close+0x47/0x9f net/bluetooth/hci_core.c:553
-    hci_rfkill_set_block+0x130/0x1ac net/bluetooth/hci_core.c:935
-    rfkill_set_block+0x1e6/0x3b8 net/rfkill/core.c:345
-    rfkill_fop_write+0x2d8/0x672 net/rfkill/core.c:1274
-    vfs_write+0x277/0xcf5 fs/read_write.c:594
-    ksys_write+0x19b/0x2bd fs/read_write.c:650
-    do_syscall_x64 arch/x86/entry/common.c:55 [inline]
-    do_syscall_64+0x51/0xba arch/x86/entry/common.c:93
-    entry_SYSCALL_64_after_hwframe+0x61/0xcb
-
-This change removes the need for acquiring the open_mutex in
-vhci_send_frame, thus eliminating the potential deadlock while
-maintaining the required packet ordering.
-
-Fixes: 92d4abd66f70 ("Bluetooth: vhci: Fix race when opening vhci device")
-Signed-off-by: Ying Hsu <yinghsu@chromium.org>
-Signed-off-by: Luiz Augusto von Dentz <luiz.von.dentz@intel.com>
-[Daniil: In order to adapt this patch to branches 5.10 and 5.15
-redundant fields of struct vhci_data were removed as these fields are
-not used in 5.10 and 5.15.]
-Signed-off-by: Daniil Dulov <d.dulov@aladdin.ru>
----
- drivers/bluetooth/hci_vhci.c | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/bluetooth/hci_vhci.c b/drivers/bluetooth/hci_vhci.c
-index 31d70bad83d2..93773ec90795 100644
---- a/drivers/bluetooth/hci_vhci.c
-+++ b/drivers/bluetooth/hci_vhci.c
-@@ -11,6 +11,7 @@
- #include <linux/module.h>
- #include <asm/unaligned.h>
- 
-+#include <linux/atomic.h>
- #include <linux/kernel.h>
- #include <linux/init.h>
- #include <linux/slab.h>
-@@ -37,6 +38,7 @@ struct vhci_data {
- 
- 	struct mutex open_mutex;
- 	struct delayed_work open_timeout;
-+	atomic_t initialized;
- };
- 
- static int vhci_open_dev(struct hci_dev *hdev)
-@@ -68,11 +70,10 @@ static int vhci_send_frame(struct hci_dev *hdev, struct sk_buff *skb)
- 
- 	memcpy(skb_push(skb, 1), &hci_skb_pkt_type(skb), 1);
- 
--	mutex_lock(&data->open_mutex);
- 	skb_queue_tail(&data->readq, skb);
--	mutex_unlock(&data->open_mutex);
- 
--	wake_up_interruptible(&data->read_wait);
-+	if (atomic_read(&data->initialized))
-+		wake_up_interruptible(&data->read_wait);
- 	return 0;
- }
- 
-@@ -139,7 +140,8 @@ static int __vhci_create_device(struct vhci_data *data, __u8 opcode)
- 	skb_put_u8(skb, 0xff);
- 	skb_put_u8(skb, opcode);
- 	put_unaligned_le16(hdev->id, skb_put(skb, 2));
--	skb_queue_tail(&data->readq, skb);
-+	skb_queue_head(&data->readq, skb);
-+	atomic_inc(&data->initialized);
- 
- 	wake_up_interruptible(&data->read_wait);
- 	return 0;
--- 
-2.25.1
+Paolo
 
