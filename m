@@ -1,127 +1,202 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6A8E69DF2
-	for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 13:15:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6898869D09;
+	Wed, 21 Feb 2024 13:15:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708521325; cv=none; b=O9sRyFi3Ak1kKg3BkTeyFVi6i2XSUaGxjf0l/rviHRXwM4fHXEcL35fsAb3/RWGGEqsg0eej/OH1LcmR8ObND/C2Knc57+ugjKzrv90QfJWa0coP5moSgYANxPiump6f1Djl1LbJ9OPa3lOOAk+95UnoTMEAd5NK7W8x8pR8nBo=
+	t=1708521347; cv=none; b=Tj14UbHqKBVMkvDHfNyK55BAf+DAe9GL8SEJzOvhGaAcPI48ajxt3g9biaA8dxgX0uyTQew7QLdneG3SZu11z7mPqi92zKbIzHxWnXvZ/gB1v/+yBa1P5W8Bi/hCOQTq6qzkyA6qlkagFbyFaWMUK6p/KXeTwHSZThEYQ/34OLA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708521325; c=relaxed/simple;
-	bh=nPne4q7JlWz3mcWsYUNx4f2M8e4DzRnR7m7tEam7xpg=;
-	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=ZS9/iO3uyZTeMdn4mI3rI5Uw4QsQkqbg6tfKmlfNynm6KiAnorSuIT5wf0lPn/Mq8CsJIR1pmQOaNeJOAJAACHbibrN9RjHBMDVOWCd/U/T0cD4LrJGc1lLAXlToGzPM25i44VO52w9GuQvpci1/41xTCYTdZt+Azm3wsWFT4B0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <p.zabel@pengutronix.de>)
-	id 1rcmR4-0001CI-QA; Wed, 21 Feb 2024 14:14:54 +0100
-Received: from [2a0a:edc0:0:900:1d::4e] (helo=lupine)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <p.zabel@pengutronix.de>)
-	id 1rcmR1-00237N-FS; Wed, 21 Feb 2024 14:14:51 +0100
-Received: from pza by lupine with local (Exim 4.96)
-	(envelope-from <p.zabel@pengutronix.de>)
-	id 1rcmR1-0008xE-1G;
-	Wed, 21 Feb 2024 14:14:51 +0100
-Message-ID: <d203819f09749f0ff9e08a80471b7fed3dad67a8.camel@pengutronix.de>
-Subject: Re: [PATCH v14 3/3] hwmon: (aspeed-g6-pwm-tacho): Support for
- ASPEED g6 PWM/Fan tach
-From: Philipp Zabel <p.zabel@pengutronix.de>
-To: Billy Tsai <billy_tsai@aspeedtech.com>, jdelvare@suse.com, 
- linux@roeck-us.net, robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org, 
- conor+dt@kernel.org, joel@jms.id.au, andrew@codeconstruct.com.au,
- corbet@lwn.net,  u.kleine-koenig@pengutronix.de,
- naresh.solanki@9elements.com,  linux-hwmon@vger.kernel.org,
- devicetree@vger.kernel.org,  linux-arm-kernel@lists.infradead.org,
- linux-aspeed@lists.ozlabs.org,  linux-kernel@vger.kernel.org,
- linux-doc@vger.kernel.org,  linux-pwm@vger.kernel.org,
- BMC-SW@aspeedtech.com, patrick@stwcx.xyz
-Date: Wed, 21 Feb 2024 14:14:51 +0100
-In-Reply-To: <20240221104025.1306227-4-billy_tsai@aspeedtech.com>
-References: <20240221104025.1306227-1-billy_tsai@aspeedtech.com>
-	 <20240221104025.1306227-4-billy_tsai@aspeedtech.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.46.4-2 
+	s=arc-20240116; t=1708521347; c=relaxed/simple;
+	bh=ftWuBdO0JcBz5ZpTPaW+smTKtB8dbs4rOByOV6biaB0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ntC/+M9tWwP2iUEmcnYzIksuNrN4zaYUF+wUUVYUdTtheF/a31+Aod+zLSgIX94fDJemGGeyF5G/yM55JcSvz6uxk/ZJTgR8E8iLrZcvkQMv4+vOCv5cqqysiE/lj/fS6/OjSLMqu1vjlKNzWgD2OeX/IFKkzx0bBiCiTYAZK2k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=1m8/Gvn7; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=DDdkVqxA; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=1m8/Gvn7; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=DDdkVqxA; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="1m8/Gvn7";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="DDdkVqxA";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="1m8/Gvn7";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="DDdkVqxA"
+Received: from imap2.dmz-prg2.suse.org (imap2.dmz-prg2.suse.org [10.150.64.98])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 7F2461FB5D;
+	Wed, 21 Feb 2024 13:15:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1708521343; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=c1q+3O+PlbOI5pZ5NbAJnd5M96l97I4OwjtAWw0vYtw=;
+	b=1m8/Gvn7K59jCByvWKztNp3YWT8CqQjqB+leAzVmDJAcJUWFqGR+3T6QPvpHMNVobx7qwx
+	TepME9apOxb05L8J7XbCvBAmoha3GGVgDlHj7NRfWMbQNRTdSLScKTYiX6ar/4ZjAeatBR
+	m6ND2M2BZAdlBD/vLmY+UYC+Se0ktlk=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1708521343;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=c1q+3O+PlbOI5pZ5NbAJnd5M96l97I4OwjtAWw0vYtw=;
+	b=DDdkVqxAy7gQJk5zJCxhHwR/BZVzVmqKdxr6B8HsoSDwwEPrdpjOlclcVi7l0DT0J40bWl
+	UYV3pW1c7YM7FMDw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1708521343; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=c1q+3O+PlbOI5pZ5NbAJnd5M96l97I4OwjtAWw0vYtw=;
+	b=1m8/Gvn7K59jCByvWKztNp3YWT8CqQjqB+leAzVmDJAcJUWFqGR+3T6QPvpHMNVobx7qwx
+	TepME9apOxb05L8J7XbCvBAmoha3GGVgDlHj7NRfWMbQNRTdSLScKTYiX6ar/4ZjAeatBR
+	m6ND2M2BZAdlBD/vLmY+UYC+Se0ktlk=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1708521343;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=c1q+3O+PlbOI5pZ5NbAJnd5M96l97I4OwjtAWw0vYtw=;
+	b=DDdkVqxAy7gQJk5zJCxhHwR/BZVzVmqKdxr6B8HsoSDwwEPrdpjOlclcVi7l0DT0J40bWl
+	UYV3pW1c7YM7FMDw==
+Received: from imap2.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap2.dmz-prg2.suse.org (Postfix) with ESMTPS id 64F9A13A25;
+	Wed, 21 Feb 2024 13:15:43 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([10.150.64.162])
+	by imap2.dmz-prg2.suse.org with ESMTPSA
+	id g0CiGH/31WVHOwAAn2gu4w
+	(envelope-from <jack@suse.cz>); Wed, 21 Feb 2024 13:15:43 +0000
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+	id 0E782A0807; Wed, 21 Feb 2024 14:15:39 +0100 (CET)
+Date: Wed, 21 Feb 2024 14:15:39 +0100
+From: Jan Kara <jack@suse.cz>
+To: Chuck Lever <cel@kernel.org>
+Cc: viro@zeniv.linux.org.uk, brauner@kernel.org, jack@suse.cz,
+	hughd@google.com, akpm@linux-foundation.org,
+	Liam.Howlett@oracle.com, oliver.sang@intel.com, feng.tang@intel.com,
+	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+	maple-tree@lists.infradead.org, linux-mm@kvack.org, lkp@intel.com
+Subject: Re: [PATCH v2 1/6] libfs: Re-arrange locking in offset_iterate_dir()
+Message-ID: <20240221131539.wmr5xde7xode2xn5@quack3>
+References: <170820083431.6328.16233178852085891453.stgit@91.116.238.104.host.secureserver.net>
+ <170820142021.6328.15047865406275957018.stgit@91.116.238.104.host.secureserver.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: p.zabel@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <170820142021.6328.15047865406275957018.stgit@91.116.238.104.host.secureserver.net>
+Authentication-Results: smtp-out2.suse.de;
+	none
+X-Spam-Level: 
+X-Spam-Score: -3.80
+X-Spamd-Result: default: False [-3.80 / 50.00];
+	 ARC_NA(0.00)[];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 FROM_HAS_DN(0.00)[];
+	 TO_DN_SOME(0.00)[];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 NEURAL_HAM_LONG(-1.00)[-1.000];
+	 MIME_GOOD(-0.10)[text/plain];
+	 RCVD_COUNT_THREE(0.00)[3];
+	 DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	 NEURAL_HAM_SHORT(-0.20)[-1.000];
+	 RCPT_COUNT_TWELVE(0.00)[14];
+	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 MID_RHS_NOT_FQDN(0.50)[];
+	 RCVD_TLS_ALL(0.00)[];
+	 BAYES_HAM(-3.00)[100.00%]
+X-Spam-Flag: NO
 
-On Mi, 2024-02-21 at 18:40 +0800, Billy Tsai wrote:
-> The driver support two functions: PWM and Tachometer. The PWM feature can
-> handle up to 16 output ports, while the Tachometer can monitor to up to 1=
-6
-> input ports as well. This driver implements them by exposing two kernel
-> subsystems: PWM and HWMON. The PWM subsystem can be utilized alongside
-> existing drivers for controlling elements such as fans (pwm-fan.c),
-> beepers (pwm-beeper.c) and so on. Through the HWMON subsystem, the driver
-> provides sysfs interfaces for fan.
->=20
-> Signed-off-by: Billy Tsai <billy_tsai@aspeedtech.com>
+On Sat 17-02-24 15:23:40, Chuck Lever wrote:
+> From: Chuck Lever <chuck.lever@oracle.com>
+> 
+> Liam and Matthew say that once the RCU read lock is released,
+> xa_state is not safe to re-use for the next xas_find() call. But the
+> RCU read lock must be released on each loop iteration so that
+> dput(), which might_sleep(), can be called safely.
+> 
+> Thus we are forced to walk the offset tree with fresh state for each
+> directory entry. xa_find() can do this for us, though it might be a
+> little less efficient than maintaining xa_state locally.
+> 
+> We believe that in the current code base, inode->i_rwsem provides
+> protection for the xa_state maintained in
+> offset_iterate_dir(). However, there is no guarantee that will
+> continue to be the case in the future.
+> 
+> Since offset_iterate_dir() doesn't build xa_state locally any more,
+> there's no longer a strong need for offset_find_next(). Clean up by
+> rolling these two helpers together.
+> 
+> Suggested-by: Liam R. Howlett <Liam.Howlett@Oracle.com>
+> Message-ID: <170785993027.11135.8830043889278631735.stgit@91.116.238.104.host.secureserver.net>
+> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+
+Looks good. Feel free to add:
+
+Reviewed-by: Jan Kara <jack@suse.cz>
+
+								Honza
+
 > ---
->  Documentation/hwmon/aspeed-g6-pwm-tach.rst |  26 +
->  Documentation/hwmon/index.rst              |   1 +
->  drivers/hwmon/Kconfig                      |  11 +
->  drivers/hwmon/Makefile                     |   1 +
->  drivers/hwmon/aspeed-g6-pwm-tach.c         | 549 +++++++++++++++++++++
->  5 files changed, 588 insertions(+)
->  create mode 100644 Documentation/hwmon/aspeed-g6-pwm-tach.rst
->  create mode 100644 drivers/hwmon/aspeed-g6-pwm-tach.c
->=20
-[...]
-> diff --git a/drivers/hwmon/aspeed-g6-pwm-tach.c b/drivers/hwmon/aspeed-g6=
--pwm-tach.c
-> new file mode 100644
-> index 000000000000..597b3b019d49
-> --- /dev/null
-> +++ b/drivers/hwmon/aspeed-g6-pwm-tach.c
-> @@ -0,0 +1,549 @@
-[...]
-> +static void aspeed_pwm_tach_reset_assert(void *data)
-> +{
-> +	struct reset_control *rst =3D data;
-> +
-> +	reset_control_assert(rst);
-> +}
-> +
-> +static int aspeed_pwm_tach_probe(struct platform_device *pdev)
-> +{
-[...]
-> +	priv->reset =3D devm_reset_control_get_exclusive(dev, NULL);
-> +	if (IS_ERR(priv->reset))
-> +		return dev_err_probe(dev, PTR_ERR(priv->reset),
-> +				     "Couldn't get reset control\n");
-> +
-> +	ret =3D reset_control_deassert(priv->reset);
-> +	if (ret)
-> +		return dev_err_probe(dev, ret,
-> +				     "Couldn't deassert reset control\n");
-> +	ret =3D devm_add_action_or_reset(dev, aspeed_pwm_tach_reset_assert,
-> +				       priv->reset);
-[...]
-> +}
-> +
-> +static int aspeed_pwm_tach_remove(struct platform_device *pdev)
-> +{
-> +	struct aspeed_pwm_tach_data *priv =3D platform_get_drvdata(pdev);
-> +
-> +	reset_control_assert(priv->reset);
-
-This is already done by aspeed_pwm_tach_reset_assert(), looks like
-aspeed_pwm_tach_remove() can be removed. With that, priv->reset can
-become a local variable in aspeed_pwm_tach_probe().
-
-regards
-Philipp
+>  fs/libfs.c |   12 ++++++------
+>  1 file changed, 6 insertions(+), 6 deletions(-)
+> 
+> diff --git a/fs/libfs.c b/fs/libfs.c
+> index eec6031b0155..752e24c669d9 100644
+> --- a/fs/libfs.c
+> +++ b/fs/libfs.c
+> @@ -402,12 +402,13 @@ static loff_t offset_dir_llseek(struct file *file, loff_t offset, int whence)
+>  	return vfs_setpos(file, offset, U32_MAX);
+>  }
+>  
+> -static struct dentry *offset_find_next(struct xa_state *xas)
+> +static struct dentry *offset_find_next(struct offset_ctx *octx, loff_t offset)
+>  {
+>  	struct dentry *child, *found = NULL;
+> +	XA_STATE(xas, &octx->xa, offset);
+>  
+>  	rcu_read_lock();
+> -	child = xas_next_entry(xas, U32_MAX);
+> +	child = xas_next_entry(&xas, U32_MAX);
+>  	if (!child)
+>  		goto out;
+>  	spin_lock(&child->d_lock);
+> @@ -430,12 +431,11 @@ static bool offset_dir_emit(struct dir_context *ctx, struct dentry *dentry)
+>  
+>  static void *offset_iterate_dir(struct inode *inode, struct dir_context *ctx)
+>  {
+> -	struct offset_ctx *so_ctx = inode->i_op->get_offset_ctx(inode);
+> -	XA_STATE(xas, &so_ctx->xa, ctx->pos);
+> +	struct offset_ctx *octx = inode->i_op->get_offset_ctx(inode);
+>  	struct dentry *dentry;
+>  
+>  	while (true) {
+> -		dentry = offset_find_next(&xas);
+> +		dentry = offset_find_next(octx, ctx->pos);
+>  		if (!dentry)
+>  			return ERR_PTR(-ENOENT);
+>  
+> @@ -444,8 +444,8 @@ static void *offset_iterate_dir(struct inode *inode, struct dir_context *ctx)
+>  			break;
+>  		}
+>  
+> +		ctx->pos = dentry2offset(dentry) + 1;
+>  		dput(dentry);
+> -		ctx->pos = xas.xa_index + 1;
+>  	}
+>  	return NULL;
+>  }
+> 
+> 
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
