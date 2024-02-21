@@ -1,55 +1,55 @@
-Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
+Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B88071332AC
-	for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 19:41:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01B0E1353EC
+	for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 19:41:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708544487; cv=none; b=M73Uw0sbrQ4VUXIp8ctSpoKGM1r+YldxL06kFunV0ZCc71OmvmbVX32poSOAC5Ix716uRI5OLEmOJ263TqbshL8eJnc9qAI5rMyKbtpG4aJyrRwusVKpaBopZbnMIpO+dttxi6402iCGUz8x2PJpGPXyfOAcrrn/HfBYtG6huxo=
+	t=1708544491; cv=none; b=alkbGJUOweisbVLNDBv3A2Nww2OrHw9sKkEVAz3LOf0GhXOV/PBtCtpvPVfflf5HezD+m8vl+oetiK8ifO8wDuOyHq/SDZvojLr3VYyB1D5FUq1FrMWkt2Y4vv/KG+l+vDhFGUlwBXlzEmlaCzHW7UrXXPEZiYv8RuAbHBM1/lo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708544487; c=relaxed/simple;
-	bh=eCsJ+v6o2QHK/0h9JtFQQD/5L5rMspo1ijoAAfQ6j/Y=;
+	s=arc-20240116; t=1708544491; c=relaxed/simple;
+	bh=puJIbCLWfrIUII5pKTTjgeMb6QT8U3kwNs7dRud9WEg=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=FjbYJ+kRoVCUya0vp5xsjn56z00irCTjMBb+XLPJXLul3VYcrVZBjYpoCh4fJ7+apK0uLS7FJJ7AFE2rOgNOoNeqmpWdYwcMlTjtXHs48axYab4PBIo9IQaf6wqzsR4rsyrlzz3lo3BsS2uzXXkMqukvtDYTNxoCoQFaFyyZcek=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--surenb.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=luKDJSRU; arc=none smtp.client-ip=209.85.128.201
+	 To:Cc:Content-Type; b=jK1VjDLX8GntOH/91HlxaLOAm6lEzuRUYnyRtOslEVQUyb2L+Bc0aM19zQqwlQrFtVXYxaTDAuVz+NrweWXDthR8O5bu454NUgzaXF8KL9nM/kHwbGpbYaCrr3417egNl78cYtkDv90SRA3WTy/VzjQEOXJX1/7WQGOOEdnloek=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--surenb.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=IQ720HD0; arc=none smtp.client-ip=209.85.219.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--surenb.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="luKDJSRU"
-Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-6087e575573so22030227b3.1
-        for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 11:41:25 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="IQ720HD0"
+Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-dc6b26eef6cso10349431276.3
+        for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 11:41:29 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1708544485; x=1709149285; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1708544489; x=1709149289; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=BvZ08b/3oavcBvAkiQZyOMSmbVmpa+4ihUtpMl+Uc6w=;
-        b=luKDJSRUUpIWqV7sOAWHwz6eTkDrb0gbw5mNExPukqdt85VIzQ5BJsf+nfnqcTGb1C
-         sKqLjazxbfM9WmiHJA6Q7h7JWwIog0d1Jxfhh1jgyNQ8zWwBt387apjDY7hVyzblFoWb
-         RjVySVXg3A7J/f/g0ZbKC3bJhbqia6dNNqE93QEUcOTNvH2qfe3NO9NXucaufZqJ1ZGF
-         n2sAO9PLp7bjdIEkUsqzZZ1xII6mg7bZCV9xFmmaJGAqAJwygNiysWDjzRWi1nV6hsJq
-         7tgHftwL7zTRsgbeISfFWBJku3EenJiAaLIipdFTVLYV8LHD3IEKJhHt7F9vG4mHluDA
-         lsqQ==
+        bh=NsY6yp7iUYgjdAZV5EeYqd6Hb5QC4jbV+S+/t/cRTHY=;
+        b=IQ720HD08WTIG2KUNVhQyUgt6+AEmAuMKzvX9DB3Psrb7mIzXzhCL+n4oHXVqNMWPv
+         uhpk4v10/axEE9PnlJnCAXfwFYLbrA+hWcwxoyTtv7JQm1domu373QBK85k8tz0NqQFz
+         BUDbjvjEI6NI2SFqKOEEqYe96o1xRvcYe/EgBrkGeeZBLvZ7sllGym2KoTp9Eal7Hod0
+         PshaRwjOcr3UCApkxZIdpjiaNcN4tfUkSxi21u4UbhWtfFcc5/a0tpUfpPsDabZiY1w2
+         eIkovDH+gost3W9wHEF9Tr70rSQ0jWYM3bhAydK9ER4Jao+uUBg3lAJ9SBlOgHPeoadv
+         384Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708544485; x=1709149285;
+        d=1e100.net; s=20230601; t=1708544489; x=1709149289;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=BvZ08b/3oavcBvAkiQZyOMSmbVmpa+4ihUtpMl+Uc6w=;
-        b=oKc56KcA8HcaDd4667q0ONxPzCJCWhPVldmWxzAVBzA6OJdlnLeAnDEFgmO7Lt8QVK
-         Et0gio+3ZAtagTGK7yhfGsEvTM9MDCqgATnzenZfXR6X5FYeEVieN521u9as9ZD7FM0w
-         M+jA3lj5CVIAdpQKVrRsMdrvc3dhRTtxdHzatRWFK/TKd4mHZe1r3lvsX64eIUD0PVK7
-         MGhqguy/a4wEQFfCbz46W1rY5lT0WdwGseK5TtSELe+fKnzTt7ZPxL+YK0Uh9BmG9o15
-         mDEr9YcxdeScTiR8i4ea4Wy0O6fBJavZbz0bTQ2N5SHmN9Y3mLpJBHD7QfZiOkVQn+Yr
-         uPXg==
-X-Forwarded-Encrypted: i=1; AJvYcCVAC1pFTY6YPS3b4da8cz8Fl/GUrkQr5/nCO/RhEheAEveYhfapk0heZ+xK90yAB1ad87pwu8lIBtW79cQxcnGup7edPs37GKActGNj
-X-Gm-Message-State: AOJu0YzUmFpqpdqj0TiZCTlyt+VApbAqhgda4ZLgTetKCS2LdiurTvPA
-	yyNpTYcM5cBbryjbtD7cgWoMh4n7qP7CBheze5hE46lMd/+qb9qRyJQe+qqTQL/7bOSXe3ZYiC2
-	gPQ==
-X-Google-Smtp-Source: AGHT+IFD0XqCfLl4qYutYla1ZL6XgTrX5S7AO9uCahzWsTmMPZ4BnZi9haYMKld7cdjfFju71XrA0wuJzw0=
+        bh=NsY6yp7iUYgjdAZV5EeYqd6Hb5QC4jbV+S+/t/cRTHY=;
+        b=NB6ij+q8XVsRiEFSRg9fekds8FCkOWAAv0kpXgwZW+1J/pR8PYorWO3CPZKHtv7apE
+         htD59ofoQdd4pgSJ9BJwqagdbDKBLFZv/y5NhlWhw522r3bP6BvAAKHrBUpAsaPLhrnH
+         SIDiOHbiRPhrGzw56//Q7Lff3qsTuIl+09smG9/epL0btSyqBN06KKx0NQMC/QYaRCOq
+         7uD5crY3HbdgdlWW202n3djv/BJMPZ1vAlaxUMVG9YQr6BmWsqZe/HGCSp0uHEkPnVIf
+         LTRx5qS6TM8+f1z0LrV8rpo93KUc4OE+Fo/jp3O/rkuC4tMA3d0EqitDCPAoQ9eeevzA
+         YNSw==
+X-Forwarded-Encrypted: i=1; AJvYcCV3zeCo41pPoJiqDSckAa5sVisI2HCYxiJEjAqvgqgH4BZFfiMAGapMjs359+Tqy7autLKD7mipcuM3MokqZy0q3WVn4hbvMm7lAutQ
+X-Gm-Message-State: AOJu0YzMAuWU9DhVsCOofHqwF4j+dypFrc5T1+JmB9cbBEdlk/75wAal
+	8uZTUin05MEJl0zTAWrhT0Gq14EHzzOQQThururrKYMxyH1fv3wvoKA6pLvwvuNlYGivCc7ItM4
+	GYw==
+X-Google-Smtp-Source: AGHT+IFZ5XVcmon2QJStstDyBIA3gzHqbB5IX2wfVdmT9vHWe4Ppvi0XQTFXMMtNZdjP18VCozhnu+gMIw4=
 X-Received: from surenb-desktop.mtv.corp.google.com ([2620:15c:211:201:953b:9a4e:1e10:3f07])
- (user=surenb job=sendgmr) by 2002:a81:7956:0:b0:607:c633:2997 with SMTP id
- u83-20020a817956000000b00607c6332997mr4958335ywc.5.1708544484752; Wed, 21 Feb
- 2024 11:41:24 -0800 (PST)
-Date: Wed, 21 Feb 2024 11:40:26 -0800
+ (user=surenb job=sendgmr) by 2002:a25:26cf:0:b0:dcc:41ad:fb3b with SMTP id
+ m198-20020a2526cf000000b00dcc41adfb3bmr6925ybm.10.1708544489081; Wed, 21 Feb
+ 2024 11:41:29 -0800 (PST)
+Date: Wed, 21 Feb 2024 11:40:28 -0800
 In-Reply-To: <20240221194052.927623-1-surenb@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -59,8 +59,8 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20240221194052.927623-1-surenb@google.com>
 X-Mailer: git-send-email 2.44.0.rc0.258.g7320e95886-goog
-Message-ID: <20240221194052.927623-14-surenb@google.com>
-Subject: [PATCH v4 13/36] lib: prevent module unloading if memory is not freed
+Message-ID: <20240221194052.927623-16-surenb@google.com>
+Subject: [PATCH v4 15/36] lib: introduce support for page allocation tagging
 From: Suren Baghdasaryan <surenb@google.com>
 To: akpm@linux-foundation.org
 Cc: kent.overstreet@linux.dev, mhocko@suse.com, vbabka@suse.cz, 
@@ -90,168 +90,237 @@ Cc: kent.overstreet@linux.dev, mhocko@suse.com, vbabka@suse.cz,
 	cgroups@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Skip freeing module's data section if there are non-zero allocation tags
-because otherwise, once these allocations are freed, the access to their
-code tag would cause UAF.
+Introduce helper functions to easily instrument page allocators by
+storing a pointer to the allocation tag associated with the code that
+allocated the page in a page_ext field.
 
 Signed-off-by: Suren Baghdasaryan <surenb@google.com>
+Co-developed-by: Kent Overstreet <kent.overstreet@linux.dev>
+Signed-off-by: Kent Overstreet <kent.overstreet@linux.dev>
 ---
- include/linux/codetag.h |  6 +++---
- kernel/module/main.c    | 23 +++++++++++++++--------
- lib/codetag.c           | 11 ++++++++---
- 3 files changed, 26 insertions(+), 14 deletions(-)
+ include/linux/page_ext.h    |  1 -
+ include/linux/pgalloc_tag.h | 78 +++++++++++++++++++++++++++++++++++++
+ lib/Kconfig.debug           |  1 +
+ lib/alloc_tag.c             | 17 ++++++++
+ mm/mm_init.c                |  1 +
+ mm/page_alloc.c             |  4 ++
+ mm/page_ext.c               |  4 ++
+ 7 files changed, 105 insertions(+), 1 deletion(-)
+ create mode 100644 include/linux/pgalloc_tag.h
 
-diff --git a/include/linux/codetag.h b/include/linux/codetag.h
-index c44f5b83f24d..bfd0ba5c4185 100644
---- a/include/linux/codetag.h
-+++ b/include/linux/codetag.h
-@@ -35,7 +35,7 @@ struct codetag_type_desc {
- 	size_t tag_size;
- 	void (*module_load)(struct codetag_type *cttype,
- 			    struct codetag_module *cmod);
--	void (*module_unload)(struct codetag_type *cttype,
-+	bool (*module_unload)(struct codetag_type *cttype,
- 			      struct codetag_module *cmod);
- };
+diff --git a/include/linux/page_ext.h b/include/linux/page_ext.h
+index be98564191e6..07e0656898f9 100644
+--- a/include/linux/page_ext.h
++++ b/include/linux/page_ext.h
+@@ -4,7 +4,6 @@
  
-@@ -71,10 +71,10 @@ codetag_register_type(const struct codetag_type_desc *desc);
+ #include <linux/types.h>
+ #include <linux/stacktrace.h>
+-#include <linux/stackdepot.h>
  
- #if defined(CONFIG_CODE_TAGGING) && defined(CONFIG_MODULES)
- void codetag_load_module(struct module *mod);
--void codetag_unload_module(struct module *mod);
-+bool codetag_unload_module(struct module *mod);
- #else
- static inline void codetag_load_module(struct module *mod) {}
--static inline void codetag_unload_module(struct module *mod) {}
-+static inline bool codetag_unload_module(struct module *mod) { return true; }
- #endif
+ struct pglist_data;
  
- #endif /* _LINUX_CODETAG_H */
-diff --git a/kernel/module/main.c b/kernel/module/main.c
-index f400ba076cc7..658b631e76ad 100644
---- a/kernel/module/main.c
-+++ b/kernel/module/main.c
-@@ -1211,15 +1211,19 @@ static void *module_memory_alloc(unsigned int size, enum mod_mem_type type)
- 	return module_alloc(size);
- }
- 
--static void module_memory_free(void *ptr, enum mod_mem_type type)
-+static void module_memory_free(void *ptr, enum mod_mem_type type,
-+			       bool unload_codetags)
- {
-+	if (!unload_codetags && mod_mem_type_is_core_data(type))
-+		return;
+diff --git a/include/linux/pgalloc_tag.h b/include/linux/pgalloc_tag.h
+new file mode 100644
+index 000000000000..b49ab955300f
+--- /dev/null
++++ b/include/linux/pgalloc_tag.h
+@@ -0,0 +1,78 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * page allocation tagging
++ */
++#ifndef _LINUX_PGALLOC_TAG_H
++#define _LINUX_PGALLOC_TAG_H
 +
- 	if (mod_mem_use_vmalloc(type))
- 		vfree(ptr);
- 	else
- 		module_memfree(ptr);
- }
- 
--static void free_mod_mem(struct module *mod)
-+static void free_mod_mem(struct module *mod, bool unload_codetags)
- {
- 	for_each_mod_mem_type(type) {
- 		struct module_memory *mod_mem = &mod->mem[type];
-@@ -1230,20 +1234,23 @@ static void free_mod_mem(struct module *mod)
- 		/* Free lock-classes; relies on the preceding sync_rcu(). */
- 		lockdep_free_key_range(mod_mem->base, mod_mem->size);
- 		if (mod_mem->size)
--			module_memory_free(mod_mem->base, type);
-+			module_memory_free(mod_mem->base, type,
-+					   unload_codetags);
- 	}
- 
- 	/* MOD_DATA hosts mod, so free it at last */
- 	lockdep_free_key_range(mod->mem[MOD_DATA].base, mod->mem[MOD_DATA].size);
--	module_memory_free(mod->mem[MOD_DATA].base, MOD_DATA);
-+	module_memory_free(mod->mem[MOD_DATA].base, MOD_DATA, unload_codetags);
- }
- 
- /* Free a module, remove from lists, etc. */
- static void free_module(struct module *mod)
- {
-+	bool unload_codetags;
++#include <linux/alloc_tag.h>
 +
- 	trace_module_free(mod);
- 
--	codetag_unload_module(mod);
-+	unload_codetags = codetag_unload_module(mod);
- 	mod_sysfs_teardown(mod);
- 
- 	/*
-@@ -1285,7 +1292,7 @@ static void free_module(struct module *mod)
- 	kfree(mod->args);
- 	percpu_modfree(mod);
- 
--	free_mod_mem(mod);
-+	free_mod_mem(mod, unload_codetags);
- }
- 
- void *__symbol_get(const char *symbol)
-@@ -2298,7 +2305,7 @@ static int move_module(struct module *mod, struct load_info *info)
- 	return 0;
- out_enomem:
- 	for (t--; t >= 0; t--)
--		module_memory_free(mod->mem[t].base, t);
-+		module_memory_free(mod->mem[t].base, t, true);
- 	return ret;
- }
- 
-@@ -2428,7 +2435,7 @@ static void module_deallocate(struct module *mod, struct load_info *info)
- 	percpu_modfree(mod);
- 	module_arch_freeing_init(mod);
- 
--	free_mod_mem(mod);
-+	free_mod_mem(mod, true);
- }
- 
- int __weak module_finalize(const Elf_Ehdr *hdr,
-diff --git a/lib/codetag.c b/lib/codetag.c
-index 9af22648dbfa..b13412ca57cc 100644
---- a/lib/codetag.c
-+++ b/lib/codetag.c
-@@ -5,6 +5,7 @@
++#ifdef CONFIG_MEM_ALLOC_PROFILING
++
++#include <linux/page_ext.h>
++
++extern struct page_ext_operations page_alloc_tagging_ops;
++extern struct page_ext *page_ext_get(struct page *page);
++extern void page_ext_put(struct page_ext *page_ext);
++
++static inline union codetag_ref *codetag_ref_from_page_ext(struct page_ext *page_ext)
++{
++	return (void *)page_ext + page_alloc_tagging_ops.offset;
++}
++
++static inline struct page_ext *page_ext_from_codetag_ref(union codetag_ref *ref)
++{
++	return (void *)ref - page_alloc_tagging_ops.offset;
++}
++
++/* Should be called only if mem_alloc_profiling_enabled() */
++static inline union codetag_ref *get_page_tag_ref(struct page *page)
++{
++	if (page) {
++		struct page_ext *page_ext = page_ext_get(page);
++
++		if (page_ext)
++			return codetag_ref_from_page_ext(page_ext);
++	}
++	return NULL;
++}
++
++static inline void put_page_tag_ref(union codetag_ref *ref)
++{
++	page_ext_put(page_ext_from_codetag_ref(ref));
++}
++
++static inline void pgalloc_tag_add(struct page *page, struct task_struct *task,
++				   unsigned int order)
++{
++	if (mem_alloc_profiling_enabled()) {
++		union codetag_ref *ref = get_page_tag_ref(page);
++
++		if (ref) {
++			alloc_tag_add(ref, task->alloc_tag, PAGE_SIZE << order);
++			put_page_tag_ref(ref);
++		}
++	}
++}
++
++static inline void pgalloc_tag_sub(struct page *page, unsigned int order)
++{
++	if (mem_alloc_profiling_enabled()) {
++		union codetag_ref *ref = get_page_tag_ref(page);
++
++		if (ref) {
++			alloc_tag_sub(ref, PAGE_SIZE << order);
++			put_page_tag_ref(ref);
++		}
++	}
++}
++
++#else /* CONFIG_MEM_ALLOC_PROFILING */
++
++static inline void pgalloc_tag_add(struct page *page, struct task_struct *task,
++				   unsigned int order) {}
++static inline void pgalloc_tag_sub(struct page *page, unsigned int order) {}
++
++#endif /* CONFIG_MEM_ALLOC_PROFILING */
++
++#endif /* _LINUX_PGALLOC_TAG_H */
+diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
+index 78d258ca508f..7bbdb0ddb011 100644
+--- a/lib/Kconfig.debug
++++ b/lib/Kconfig.debug
+@@ -978,6 +978,7 @@ config MEM_ALLOC_PROFILING
+ 	depends on PROC_FS
+ 	depends on !DEBUG_FORCE_WEAK_PER_CPU
+ 	select CODE_TAGGING
++	select PAGE_EXTENSION
+ 	help
+ 	  Track allocation source code and record total allocation size
+ 	  initiated at that code location. The mechanism can be used to track
+diff --git a/lib/alloc_tag.c b/lib/alloc_tag.c
+index f09c8a422bc2..cb5adec4b2e2 100644
+--- a/lib/alloc_tag.c
++++ b/lib/alloc_tag.c
+@@ -3,6 +3,7 @@
+ #include <linux/fs.h>
+ #include <linux/gfp.h>
  #include <linux/module.h>
++#include <linux/page_ext.h>
+ #include <linux/proc_fs.h>
  #include <linux/seq_buf.h>
- #include <linux/slab.h>
-+#include <linux/vmalloc.h>
- 
- struct codetag_type {
- 	struct list_head link;
-@@ -239,12 +240,13 @@ void codetag_load_module(struct module *mod)
- 	mutex_unlock(&codetag_lock);
+ #include <linux/seq_file.h>
+@@ -115,6 +116,22 @@ static bool alloc_tag_module_unload(struct codetag_type *cttype,
+ 	return module_unused;
  }
  
--void codetag_unload_module(struct module *mod)
-+bool codetag_unload_module(struct module *mod)
- {
- 	struct codetag_type *cttype;
-+	bool unload_ok = true;
- 
- 	if (!mod)
--		return;
-+		return true;
- 
- 	mutex_lock(&codetag_lock);
- 	list_for_each_entry(cttype, &codetag_types, link) {
-@@ -261,7 +263,8 @@ void codetag_unload_module(struct module *mod)
- 		}
- 		if (found) {
- 			if (cttype->desc.module_unload)
--				cttype->desc.module_unload(cttype, cmod);
-+				if (!cttype->desc.module_unload(cttype, cmod))
-+					unload_ok = false;
- 
- 			cttype->count -= range_size(cttype, &cmod->range);
- 			idr_remove(&cttype->mod_idr, mod_id);
-@@ -270,4 +273,6 @@ void codetag_unload_module(struct module *mod)
- 		up_write(&cttype->mod_lock);
- 	}
- 	mutex_unlock(&codetag_lock);
++static __init bool need_page_alloc_tagging(void)
++{
++	return true;
++}
 +
-+	return unload_ok;
++static __init void init_page_alloc_tagging(void)
++{
++}
++
++struct page_ext_operations page_alloc_tagging_ops = {
++	.size = sizeof(union codetag_ref),
++	.need = need_page_alloc_tagging,
++	.init = init_page_alloc_tagging,
++};
++EXPORT_SYMBOL(page_alloc_tagging_ops);
++
+ static struct ctl_table memory_allocation_profiling_sysctls[] = {
+ 	{
+ 		.procname	= "mem_profiling",
+diff --git a/mm/mm_init.c b/mm/mm_init.c
+index 2c19f5515e36..e9ea2919d02d 100644
+--- a/mm/mm_init.c
++++ b/mm/mm_init.c
+@@ -24,6 +24,7 @@
+ #include <linux/page_ext.h>
+ #include <linux/pti.h>
+ #include <linux/pgtable.h>
++#include <linux/stackdepot.h>
+ #include <linux/swap.h>
+ #include <linux/cma.h>
+ #include <linux/crash_dump.h>
+diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+index 150d4f23b010..edb79a55a252 100644
+--- a/mm/page_alloc.c
++++ b/mm/page_alloc.c
+@@ -53,6 +53,7 @@
+ #include <linux/khugepaged.h>
+ #include <linux/delayacct.h>
+ #include <linux/cacheinfo.h>
++#include <linux/pgalloc_tag.h>
+ #include <asm/div64.h>
+ #include "internal.h"
+ #include "shuffle.h"
+@@ -1100,6 +1101,7 @@ static __always_inline bool free_pages_prepare(struct page *page,
+ 		/* Do not let hwpoison pages hit pcplists/buddy */
+ 		reset_page_owner(page, order);
+ 		page_table_check_free(page, order);
++		pgalloc_tag_sub(page, order);
+ 		return false;
+ 	}
+ 
+@@ -1139,6 +1141,7 @@ static __always_inline bool free_pages_prepare(struct page *page,
+ 	page->flags &= ~PAGE_FLAGS_CHECK_AT_PREP;
+ 	reset_page_owner(page, order);
+ 	page_table_check_free(page, order);
++	pgalloc_tag_sub(page, order);
+ 
+ 	if (!PageHighMem(page)) {
+ 		debug_check_no_locks_freed(page_address(page),
+@@ -1532,6 +1535,7 @@ inline void post_alloc_hook(struct page *page, unsigned int order,
+ 
+ 	set_page_owner(page, order, gfp_flags);
+ 	page_table_check_alloc(page, order);
++	pgalloc_tag_add(page, current, order);
  }
+ 
+ static void prep_new_page(struct page *page, unsigned int order, gfp_t gfp_flags,
+diff --git a/mm/page_ext.c b/mm/page_ext.c
+index 4548fcc66d74..3c58fe8a24df 100644
+--- a/mm/page_ext.c
++++ b/mm/page_ext.c
+@@ -10,6 +10,7 @@
+ #include <linux/page_idle.h>
+ #include <linux/page_table_check.h>
+ #include <linux/rcupdate.h>
++#include <linux/pgalloc_tag.h>
+ 
+ /*
+  * struct page extension
+@@ -82,6 +83,9 @@ static struct page_ext_operations *page_ext_ops[] __initdata = {
+ #if defined(CONFIG_PAGE_IDLE_FLAG) && !defined(CONFIG_64BIT)
+ 	&page_idle_ops,
+ #endif
++#ifdef CONFIG_MEM_ALLOC_PROFILING
++	&page_alloc_tagging_ops,
++#endif
+ #ifdef CONFIG_PAGE_TABLE_CHECK
+ 	&page_table_check_ops,
+ #endif
 -- 
 2.44.0.rc0.258.g7320e95886-goog
 
