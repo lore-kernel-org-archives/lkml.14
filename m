@@ -1,101 +1,99 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EAED4F885
-	for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 12:56:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6765F6996E;
+	Wed, 21 Feb 2024 12:56:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708520213; cv=none; b=lqOmPEp2YYijCdEgdfVtN/8amaWVqOnwCn3wlxib9DBBg1/g94BAidX/h54ydDx9mHTtyZ8ZUgUOWwFFk/+vpsDjX9/07AnJR+TEoXAJapycXTkBJqsgRjJeklC/MSK2aInD62Lu9z3BT9DS4n0AAmn4oNwmB9GquvK/kr+cWpU=
+	t=1708520215; cv=none; b=jkkXQUYCzr+VRQNUzb3KK4pQBOPUH6+EQYF81PzOtL+oIcNLuhfqyQsiGLsuMouYaXIlx9o6jXPzptuQZGcL2tNclwmrA/Quix1YaTE4ZXaWHsF/s9KYWUGADs55ylGon6LYiawJAn4Rma/99OxhoQK/bJuELVXh2YZxuUue3Cg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708520213; c=relaxed/simple;
-	bh=pg1mcNVSjCSg//U1qEGOAKr/92rgrkQahsiIB89xZPs=;
+	s=arc-20240116; t=1708520215; c=relaxed/simple;
+	bh=HAX5S+BTjvUlYTQx15Q4/Wc2BtqYGg56lJDNdzggQJQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=P1JLskG6HwkDqH0n8FVQWLPpcaIVkqDYBf9TJKhLGv8Yf5wFk+QTdLqRCIhKjFmjy9nc4vG8wFCRAdGLX+YM4p3cdKfBnhhaPN3kHloFoT1nDZa9mAyYjAlQJpJSjY5EMnBldLJXlpbTv+vu99JAcRiWRkdxpt2Qy6t9tJi25LI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ZBN9BLQe; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=Zrt66dnuhlDaFsgZkkcvRGIMKnb0dCNwq/rieBk8NLe0VTJc8cqLEMati7gLcVis7SHSZOS3aS+w4bhIjp4nlyYPB7jRJFK89aI6zlkJd1iBAQiDS1/iqYx7uYM7JiRmxhhfd+Im5Y+YZZQF2hinY8NIge4fXMu1s8j+jNZwpKE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QyLXrVWu; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZBN9BLQe"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1708520211;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=qeM6ln5GPe+54z6KZr8QF1BPN1lbild34z3N9RGW30M=;
-	b=ZBN9BLQecB9PZpriCFPxaGUCSMz2NjdcFxAYFp+e9gxHxvN614QDc11BfBGmgylpP/aIUS
-	YrJl5/b+Aqio0ragnEh1i8ZV9JPOCELjc1vZK145tVuo+ua7JbP+dwXNfbYDlh0obqOaIu
-	TkAhdGCL5x8FYpaafrt8N6jcsF5XUKg=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-376-bWiMgYo1NRyg3lvkXBfQGQ-1; Wed, 21 Feb 2024 07:56:46 -0500
-X-MC-Unique: bWiMgYo1NRyg3lvkXBfQGQ-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com [10.11.54.5])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 6AB5B8630C0;
-	Wed, 21 Feb 2024 12:56:46 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.78])
-	by smtp.corp.redhat.com (Postfix) with SMTP id D677C8CE8;
-	Wed, 21 Feb 2024 12:56:44 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Wed, 21 Feb 2024 13:55:28 +0100 (CET)
-Date: Wed, 21 Feb 2024 13:55:26 +0100
-From: Oleg Nesterov <oleg@redhat.com>
-To: Christian Brauner <brauner@kernel.org>
-Cc: Andy Lutomirski <luto@amacapital.net>,
-	"Eric W. Biederman" <ebiederm@xmission.com>,
-	Tycho Andersen <tycho@tycho.pizza>, linux-api@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/2] pidfd: change pidfd_send_signal() to respect
- PIDFD_THREAD
-Message-ID: <20240221125525.GA16773@redhat.com>
-References: <20240216130625.GA8723@redhat.com>
- <20240216-ohnedies-improvisieren-58edcc102b6a@brauner>
- <20240216181214.GA10393@redhat.com>
- <20240220-einwurf-depesche-d8682be0370c@brauner>
- <20240220090255.GA7783@redhat.com>
- <20240220-pragmatisch-parzelle-8a1d10a94fae@brauner>
- <20240220110012.GB7783@redhat.com>
- <20240220-anlegen-feinmechaniker-3c2cfcc3ec01@brauner>
- <20240220162201.GD7783@redhat.com>
- <20240221-zapfhahn-pulsschlag-e8f9d919c350@brauner>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QyLXrVWu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D9AAFC433F1;
+	Wed, 21 Feb 2024 12:56:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1708520214;
+	bh=HAX5S+BTjvUlYTQx15Q4/Wc2BtqYGg56lJDNdzggQJQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=QyLXrVWuk5d7FDYobtFkn7Ym2aBumPiZGGwTV+4h8bi7812iaGMvRoXappbSRswAV
+	 Av+NrT0ZPectHtDAk3qObtyDHCkg1Fu9AhFK24dMnnpBCiKejBMgE6Ft3IEXTpdzI2
+	 xeaI9dh/RpJpKyUngscif87Xa6r3fqT7BIkyFo/GosimiScoTtOK7t3hwYjxiykgp8
+	 /yW1ReLAbf2A/5BFcWguB1DHjDvzoa3KVooTb4TrTiKWuyFI4wHFunawvJko7RGlsp
+	 bWMSQloivLA4PR+Bpu8+B+z3fzNwgzwBzZebdtQNUUY9MlzwFTAotm2PJAHPgi/S3F
+	 bgkQbwExYFIPw==
+Date: Wed, 21 Feb 2024 12:56:46 +0000
+From: Mark Brown <broonie@kernel.org>
+To: James Clark <james.clark@arm.com>
+Cc: coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
+	kvmarm@lists.linux.dev, maz@kernel.org, suzuki.poulose@arm.com,
+	acme@kernel.org, oliver.upton@linux.dev,
+	James Morse <james.morse@arm.com>,
+	Zenghui Yu <yuzenghui@huawei.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Mike Leach <mike.leach@linaro.org>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Anshuman Khandual <anshuman.khandual@arm.com>,
+	Miguel Luis <miguel.luis@oracle.com>,
+	Joey Gouly <joey.gouly@arm.com>, Ard Biesheuvel <ardb@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Arnd Bergmann <arnd@arndb.de>, Mark Rutland <mark.rutland@arm.com>,
+	Kalesh Singh <kaleshsingh@google.com>,
+	Vincent Donnefort <vdonnefort@google.com>,
+	Ryan Roberts <ryan.roberts@arm.com>, Fuad Tabba <tabba@google.com>,
+	Jing Zhang <jingzhangos@google.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 3/7] arm64/sysreg/tools: Move TRFCR definitions to
+ sysreg
+Message-ID: <d50cabc9-25ef-4992-99be-a2cdb55bc98e@sirena.org.uk>
+References: <20240220100924.2761706-1-james.clark@arm.com>
+ <20240220100924.2761706-4-james.clark@arm.com>
+ <18995343-e43e-4e92-a97d-3df74ec6ddb7@sirena.org.uk>
+ <c1e159b7-c884-e498-6b01-64a897117036@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="IZ9CMNvB/XRkGgFW"
+Content-Disposition: inline
+In-Reply-To: <c1e159b7-c884-e498-6b01-64a897117036@arm.com>
+X-Cookie: The second best policy is dishonesty.
+
+
+--IZ9CMNvB/XRkGgFW
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240221-zapfhahn-pulsschlag-e8f9d919c350@brauner>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.5
 
-On 02/21, Christian Brauner wrote:
->
-> On Tue, Feb 20, 2024 at 05:22:02PM +0100, Oleg Nesterov wrote:
-> >
-> > > > > +       /* Currently unused. */
-> > > > > +       if (info)
-> > > > > +               return -EINVAL;
-> > > >
-> > > > Well, to me this looks like the unnecessary restriction... And why?
-> > >
-> > > Because right now we aren't sure that it's used
-> >
-> > Yes, but...
-> >
-> > > and we aren't sure what use-cases are there.
-> >
-> > the same use-cases as for rt_sigqueueinfo() ?
->
-> Specifically for pidfd_send_signal() I mean. To me it seems very
-> unlikely that anyone would be opening a pidfd to itself
+On Wed, Feb 21, 2024 at 10:10:18AM +0000, James Clark wrote:
+> On 20/02/2024 16:11, Mark Brown wrote:
 
-Ah, with this, I do agree. And that is why (I think) we can remove
-the "task_pid(current) != pid" check in the "info != NULL" branch.
+> > These are generally sorted by encoding (simiarly to how sysreg.h was
+> > sorted historically).
 
-Oleg.
+> Ah I didn't know that. Can I add a comment to the top of the file saying
+> that it should be kept sorted?
 
+Sure.
+
+--IZ9CMNvB/XRkGgFW
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmXV8w4ACgkQJNaLcl1U
+h9CzxQf7BV+iitFKiE5Yfp41C2YaahJUkZWUWtIalxW3hnrKUnONhG98NPi83g9i
+oR/RvAotkFwNS8MInImbAVL7Ni+LYlXTsdYzxYgBLSwZSp0FEd8ALzZpqV2S3sQb
+T32XtAkshhi0/Q64XrwMXFY8pPGN3wn0pUgQRC25EX3V/cDfpB0wgX16UNMS4Zmz
+bCaCQNWNH6Zhl7rjXeit6HT17AYMm31r6pJkmXvxZXGRZmLNFMp2jJ/+dlhWu7rB
+keUdSyMXIFJY1cNGy7RIIDdG4KeFmNvy++iaFjYabKeG20P8hjIYa5d2PCkFHpoc
+Q24j9vsMBhATBV450Z9saT8JwijmuQ==
+=mGFC
+-----END PGP SIGNATURE-----
+
+--IZ9CMNvB/XRkGgFW--
