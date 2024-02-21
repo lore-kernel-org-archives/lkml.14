@@ -1,365 +1,162 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+Received: from out203-205-221-155.mail.qq.com (out203-205-221-155.mail.qq.com [203.205.221.155])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D77D6994A;
-	Wed, 21 Feb 2024 16:14:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0560181740
+	for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 16:14:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.155
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708532047; cv=none; b=OlpKm+uKT3/y9BsptAsIRu77k+Bg2svvZugG8w+MjZ6Hkylm3HssESDXiYxuY9OZ5HqnCtgv7o3ZJpV0rWyhBX7zWWpUCRtZ1qrzHvyumdWB2w/ahjLyUOjAavvsro0FNZW5VZ6KSoplBz7i1IsF4aFvrhUQQ/BGj8NOVoNlZrQ=
+	t=1708532053; cv=none; b=giqWL4rUEyxEVUYwTBT0mmXRE6+DfHDThXHkZ1ZdLKHkEN/8LlJQ7nf/2KcMNsYVxAAELGdcs9FdqR9kC4uTJL8ZjfdkYb7h3OArOqeZi6drUGWZB6ilzawqNBls9tfGJLT5r+X2xg0HMkcCSfaIGCfPW3h9GuV/iS5GIwUBvAY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708532047; c=relaxed/simple;
-	bh=JHBed4HhRS/+miDeC1Vba8uHd/woC+WKGVjOOcm9Eoc=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=OxhT/oiaCH0TW2Yzo0cq447gTi0vhWztuCqZZxuMwg6SoDksRgfZ69alz1uEC0Z3nCC7jMPC0f30YpofiUWwVnN0lJq6P5yOvf667nZSmEkGV+gFmE52cyIu0qexG7YGDRw8pthmIsBc2RYd6TiBQRIdDkxWNcAP5J+KOdkIKRQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=QyEFEWg4; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1708532053; c=relaxed/simple;
+	bh=o30YxW+0vC5nhH8nIdtk++JEI6g7NEVrxqIYs8Uhm8w=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=n9bjBOJ6fZSUjYInqnEq4bBtdOJHAS1d/fGcKhvieCkyNkrRUI6e6uQxNiCk6GvG6FggCXCOvMGwn4XOdx0505xEVNUwj4GoxfHfIYWCLj7IJNroDm9tmYZd6G9Wos3Tu6zP0Chpx6jv+DPQ6WT8HHLWn8GLhIIFnx4/B+rArhM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com; spf=pass smtp.mailfrom=foxmail.com; dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b=x63z3L9w; arc=none smtp.client-ip=203.205.221.155
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foxmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="QyEFEWg4"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1708532042;
-	bh=JHBed4HhRS/+miDeC1Vba8uHd/woC+WKGVjOOcm9Eoc=;
-	h=From:To:Cc:Subject:Date:From;
-	b=QyEFEWg4iOj696uNgzJEjM7VVBBxs5TR8MhbBa8yDqmZLFylpV17ZC0v+v3V1T7eL
-	 pP9udLVigJOnISA+mi+rJ4g8a+h5shEq/PPyk46PGcQ0Md91kcwNlstwT6y0Rg+ObK
-	 BLIlnYBBWgEsHvj7P3H1+88kWgNH1/234/bRn+hxbMm89EtVU7tnkXDn6w9flCNiQ3
-	 PnnxudmewEbTwgpv8sghHFxNCpba4YwuosgP666VBzEWGNhMHaT0efTJn4vzRMIVwp
-	 EM1loMtnW8am0K6rs3rzjdzSTAcmVnwwiP+ut2tL412oBvJqzwXypJWOaMf7XSMtxR
-	 GbBeI+CJg8v2w==
-Received: from localhost.localdomain (cola.collaboradmins.com [195.201.22.229])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: alarumbe)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 9FB2F3781FE6;
-	Wed, 21 Feb 2024 16:14:01 +0000 (UTC)
-From: =?UTF-8?q?Adri=C3=A1n=20Larumbe?= <adrian.larumbe@collabora.com>
-To: Boris Brezillon <boris.brezillon@collabora.com>,
-	Rob Herring <robh@kernel.org>,
-	Steven Price <steven.price@arm.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>,
-	Daniel Vetter <daniel@ffwll.ch>,
-	Jonathan Corbet <corbet@lwn.net>
-Cc: kernel@collabora.com,
-	=?UTF-8?q?Adri=C3=A1n=20Larumbe?= <adrian.larumbe@collabora.com>,
-	linux-kernel@vger.kernel.org,
-	dri-devel@lists.freedesktop.org,
-	linux-doc@vger.kernel.org
-Subject: [PATCH] drm/panfrost: Replace fdinfo's profiling debugfs knob with sysfs
-Date: Wed, 21 Feb 2024 16:12:32 +0000
-Message-ID: <20240221161237.2478193-1-adrian.larumbe@collabora.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b="x63z3L9w"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foxmail.com;
+	s=s201512; t=1708532049;
+	bh=lo2sqSQSOVhDGBNAF0F7wDJW1xK+XfdFElPtmyue/5g=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=x63z3L9w2DN8D/HPnTxgVpQRPtqusX4WvK8AuJZVfZED71Vapi9fApu1oYDWioP2a
+	 51hg/StRPIIzrLyg80DVhuBkVB1pBVW8Z1ocp7CEDkRdtwRo1uDPr3hqBvdZVS/Cp3
+	 S8TR7uUaTWeyXtNJVXLh7AbKm7+e4Sgg2CX1E6SM=
+Received: from [IPV6:2409:8a60:2a61:ef40:13de:49e4:e117:4535] ([2409:8a60:2a61:ef40:13de:49e4:e117:4535])
+	by newxmesmtplogicsvrszc5-0.qq.com (NewEsmtp) with SMTP
+	id 3733CE9; Thu, 22 Feb 2024 00:00:55 +0800
+X-QQ-mid: xmsmtpt1708531255tcqq3g14c
+Message-ID: <tencent_842730EBF8FD3CA3564D50CF04654D52A40A@qq.com>
+X-QQ-XMAILINFO: MR/iVh5QLeie/LinN1MEGkxd71++CII6n4zoODpFSn1bXWkn6ir62udQUnGbba
+	 YtaxOKUQjqdNDNQPxv0MW0xxsoQQWEPCgqlRp7NpP5t5Pu42lVg0FOcQpZxSE9D3rWJFiAyLdx1E
+	 Y8Y7FUSBys2vp7BWGWQqky8ZuONy8QQAcWefF5Lk7NG00A66BFQNwIXlx/a7Eop4SfMiNtuR4BjH
+	 HkQt2MXKUtLEC2fyWtBBD1QIQVefghrQaIeyM1/ClYYKIy80nIaV/7tpTRWZRnxtLI0BiT90+MBD
+	 QZm9tUSZQc02fo/DTx/LA88l1FUiC0B3DkzvWj8ISCN+FqnmzyytLFMRVhatu3UtNjdb4g+RU5h3
+	 iNpmLDpMtSISF9XBqTJQqBL5BEVPDxc95+miBhtaABqdVObKB06sz8/hOv2FNmCWRxmOa2+xhypX
+	 /6zoDk1zv91ZIeb+A3xtwCZVcHurb50MB4ORFqxKu583vWxnlu8dh0cGNGgj0B1hwam+SO9+7Z3E
+	 y4K+eRtRZKEIhZBXyQaV4DqmWnMwhXUFwVf+7vCMKVW90ZzeWw1dbQ/9lLYhfD5+ykh6eddED5dH
+	 rye3ZdDafU0VDh0a14sOnmEGy5GcxIAPKaNWx43Rs55KDXEikzmliCrtS9P6ksbUAyhzNxnQXvtI
+	 DZ4E+9C63IBTskyWhWvhzWgLXLQ6gWltXNo/oFFJLOoQze8aKb3w45/G78Yl7/Zd0RT6jDB0B8TF
+	 JR9QYweT/AWqJy0xT8y7JOVvcDbuhc+nitsE3bx6MOFCC5fEW/EWsYilHoKNF/FYFIUUExJHaG2y
+	 2U0+k7JCovaCvGRn/RVYM0iNo0n6oZq9sdEY/dZgRA99YMJCWOpgwGnmmcWPXb50GafOf0FIn7Bh
+	 yT4WADLa6WZiRM7Gx6jqY3vNLTAbzURGtDFWS6BqL2qSu1BE4Guua82S8mDbSgjEHEGGj5tlBir+
+	 6IT8FhOdtOhdhaYQQlKfwrxWLOAfeU
+X-QQ-XMRINFO: Nq+8W0+stu50PRdwbJxPCL0=
+X-OQ-MSGID: <cb147ab8-fd24-2680-2a6a-9cdfb3ae48e8@foxmail.com>
+Date: Thu, 22 Feb 2024 00:00:55 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.0
+Subject: Re: [PATCH] coredump debugging: add a tracepoint to report the
+ coredumping
+Content-Language: en-US
+To: Steven Rostedt <rostedt@goodmis.org>, Oleg Nesterov <oleg@redhat.com>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Mel Gorman <mgorman@techsingularity.net>,
+ Peter Zijlstra <peterz@infradead.org>, linux-kernel@vger.kernel.org
+References: <tencent_5CD40341EC9384E9B7CC127EA5CF2655B408@qq.com>
+ <20240217104924.GB10393@redhat.com>
+ <20240219112926.77ac16f8@gandalf.local.home>
+ <20240219170038.GA710@redhat.com>
+ <20240219122825.31579a1e@gandalf.local.home>
+From: Wen Yang <wenyang.linux@foxmail.com>
+In-Reply-To: <20240219122825.31579a1e@gandalf.local.home>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Debugfs isn't always available in production builds that try to squeeze
-every single byte out of the kernel image, but we still need a way to
-toggle the timestamp and cycle counter registers so that jobs can be
-profiled for fdinfo's drm engine and cycle calculations.
 
-Drop the debugfs knob and replace it with a sysfs file that accomplishes
-the same functionality, and document its ABI in a separate file.
 
-Signed-off-by: Adrián Larumbe <adrian.larumbe@collabora.com>
----
- .../testing/sysfs-driver-panfrost-profiling   | 10 +++
- Documentation/gpu/panfrost.rst                |  9 +++
- drivers/gpu/drm/panfrost/Makefile             |  5 +-
- drivers/gpu/drm/panfrost/panfrost_debugfs.c   | 21 ------
- drivers/gpu/drm/panfrost/panfrost_debugfs.h   | 14 ----
- drivers/gpu/drm/panfrost/panfrost_device.h    |  5 +-
- drivers/gpu/drm/panfrost/panfrost_drv.c       | 14 ++--
- drivers/gpu/drm/panfrost/panfrost_job.c       |  2 +-
- drivers/gpu/drm/panfrost/panfrost_sysfs.c     | 74 +++++++++++++++++++
- drivers/gpu/drm/panfrost/panfrost_sysfs.h     | 15 ++++
- 10 files changed, 124 insertions(+), 45 deletions(-)
- create mode 100644 Documentation/ABI/testing/sysfs-driver-panfrost-profiling
- delete mode 100644 drivers/gpu/drm/panfrost/panfrost_debugfs.c
- delete mode 100644 drivers/gpu/drm/panfrost/panfrost_debugfs.h
- create mode 100644 drivers/gpu/drm/panfrost/panfrost_sysfs.c
- create mode 100644 drivers/gpu/drm/panfrost/panfrost_sysfs.h
+On 2024/2/20 01:28, Steven Rostedt wrote:
+> On Mon, 19 Feb 2024 18:00:38 +0100
+> Oleg Nesterov <oleg@redhat.com> wrote:
+> 
+>>> void __noreturn do_exit(long code)
+>>> {
+>>> 	struct task_struct *tsk = current;
+>>> 	int group_dead;
+>>>
+>>> [...]
+>>> 	acct_collect(code, group_dead);
+>>> 	if (group_dead)
+>>> 		tty_audit_exit();
+>>> 	audit_free(tsk);
+>>>
+>>> 	tsk->exit_code = code;
+>>> 	taskstats_exit(tsk, group_dead);
+>>>
+>>> 	exit_mm();
+>>>
+>>> 	if (group_dead)
+>>> 		acct_process();
+>>> 	trace_sched_process_exit(tsk);
+>>>
+>>> There's a lot that happens before we trigger the above event.
+>>
+>> and a lot after.
+> 
+> True. There really isn't a meaningful location here is there?
+> 
+> I actually use this tracepoint in my pid tracing.
+> 
+> The set_ftrace_pid and set_event_pid from /sys/kernel/tracing will add and
+> remove PIDs if the options function-fork or event-fork are set respectively.
+> 
+> I hook to the sched_process_fork tracepoint to add new PIDs if the parent
+> pid is already in one of the files, and remove a PID via the
+> sched_process_exit function.
+> 
+> Honestly, if anything, it should probably be moved down right next to
+> () (I never understood why  needed its own hooks
+> and not just use tracepoints).
+> 
 
-diff --git a/Documentation/ABI/testing/sysfs-driver-panfrost-profiling b/Documentation/ABI/testing/sysfs-driver-panfrost-profiling
-new file mode 100644
-index 000000000000..ce54069714f3
---- /dev/null
-+++ b/Documentation/ABI/testing/sysfs-driver-panfrost-profiling
-@@ -0,0 +1,10 @@
-+What:		/sys/bus/.../drivers/panfrost/.../drm/../profiling/status
-+Date:		February 2024
-+KernelVersion:	6.8.0
-+Contact:	Adrian Larumbe <adrian.larumbe@collabora.com>
-+Description:
-+                Get/set drm fdinfo's engine and cycles profiling status.
-+                Valid values are:
-+		0: Disable fdinfo job profiling sources. This disables both the GPU's
-+                timestamp and cycle counter registers.
-+		1: Enable the above.
-diff --git a/Documentation/gpu/panfrost.rst b/Documentation/gpu/panfrost.rst
-index b80e41f4b2c5..be4ac282ef63 100644
---- a/Documentation/gpu/panfrost.rst
-+++ b/Documentation/gpu/panfrost.rst
-@@ -38,3 +38,12 @@ the currently possible format options:
- 
- Possible `drm-engine-` key names are: `fragment`, and  `vertex-tiler`.
- `drm-curfreq-` values convey the current operating frequency for that engine.
-+
-+Users must bear in mind that engine and cycle sampling are disabled by default,
-+because of power saving concerns. `fdinfo` users and benchmark applications which
-+query the fdinfo file must make sure to toggle the job profiling status of the
-+driver by writing into the appropriate sysfs node::
-+
-+    echo <N> > /sys/bus/platform/drivers/panfrost/[a-f0-9]*.gpu/drm/card1/profiling
-+
-+Where `N` is either `0` or `1`, depending on the desired enablement status.
-diff --git a/drivers/gpu/drm/panfrost/Makefile b/drivers/gpu/drm/panfrost/Makefile
-index 2c01c1e7523e..6e718595d8a6 100644
---- a/drivers/gpu/drm/panfrost/Makefile
-+++ b/drivers/gpu/drm/panfrost/Makefile
-@@ -10,8 +10,7 @@ panfrost-y := \
- 	panfrost_job.o \
- 	panfrost_mmu.o \
- 	panfrost_perfcnt.o \
--	panfrost_dump.o
--
--panfrost-$(CONFIG_DEBUG_FS) += panfrost_debugfs.o
-+	panfrost_dump.o \
-+	panfrost_sysfs.o
- 
- obj-$(CONFIG_DRM_PANFROST) += panfrost.o
-diff --git a/drivers/gpu/drm/panfrost/panfrost_debugfs.c b/drivers/gpu/drm/panfrost/panfrost_debugfs.c
-deleted file mode 100644
-index 72d4286a6bf7..000000000000
---- a/drivers/gpu/drm/panfrost/panfrost_debugfs.c
-+++ /dev/null
-@@ -1,21 +0,0 @@
--// SPDX-License-Identifier: GPL-2.0
--/* Copyright 2023 Collabora ltd. */
--/* Copyright 2023 Amazon.com, Inc. or its affiliates. */
--
--#include <linux/debugfs.h>
--#include <linux/platform_device.h>
--#include <drm/drm_debugfs.h>
--#include <drm/drm_file.h>
--#include <drm/panfrost_drm.h>
--
--#include "panfrost_device.h"
--#include "panfrost_gpu.h"
--#include "panfrost_debugfs.h"
--
--void panfrost_debugfs_init(struct drm_minor *minor)
--{
--	struct drm_device *dev = minor->dev;
--	struct panfrost_device *pfdev = platform_get_drvdata(to_platform_device(dev->dev));
--
--	debugfs_create_atomic_t("profile", 0600, minor->debugfs_root, &pfdev->profile_mode);
--}
-diff --git a/drivers/gpu/drm/panfrost/panfrost_debugfs.h b/drivers/gpu/drm/panfrost/panfrost_debugfs.h
-deleted file mode 100644
-index c5af5f35877f..000000000000
---- a/drivers/gpu/drm/panfrost/panfrost_debugfs.h
-+++ /dev/null
-@@ -1,14 +0,0 @@
--/* SPDX-License-Identifier: GPL-2.0 */
--/*
-- * Copyright 2023 Collabora ltd.
-- * Copyright 2023 Amazon.com, Inc. or its affiliates.
-- */
--
--#ifndef PANFROST_DEBUGFS_H
--#define PANFROST_DEBUGFS_H
--
--#ifdef CONFIG_DEBUG_FS
--void panfrost_debugfs_init(struct drm_minor *minor);
--#endif
--
--#endif  /* PANFROST_DEBUGFS_H */
-diff --git a/drivers/gpu/drm/panfrost/panfrost_device.h b/drivers/gpu/drm/panfrost/panfrost_device.h
-index 62f7e3527385..56c8e5551335 100644
---- a/drivers/gpu/drm/panfrost/panfrost_device.h
-+++ b/drivers/gpu/drm/panfrost/panfrost_device.h
-@@ -130,7 +130,10 @@ struct panfrost_device {
- 	struct list_head scheduled_jobs;
- 
- 	struct panfrost_perfcnt *perfcnt;
--	atomic_t profile_mode;
-+	struct kobj_profiling {
-+		struct kobject base;
-+		atomic_t profile_mode;
-+	} profiling;
- 
- 	struct mutex sched_lock;
- 
-diff --git a/drivers/gpu/drm/panfrost/panfrost_drv.c b/drivers/gpu/drm/panfrost/panfrost_drv.c
-index a926d71e8131..6db1ea453514 100644
---- a/drivers/gpu/drm/panfrost/panfrost_drv.c
-+++ b/drivers/gpu/drm/panfrost/panfrost_drv.c
-@@ -20,7 +20,7 @@
- #include "panfrost_job.h"
- #include "panfrost_gpu.h"
- #include "panfrost_perfcnt.h"
--#include "panfrost_debugfs.h"
-+#include "panfrost_sysfs.h"
- 
- static bool unstable_ioctls;
- module_param_unsafe(unstable_ioctls, bool, 0600);
-@@ -600,10 +600,6 @@ static const struct drm_driver panfrost_drm_driver = {
- 
- 	.gem_create_object	= panfrost_gem_create_object,
- 	.gem_prime_import_sg_table = panfrost_gem_prime_import_sg_table,
--
--#ifdef CONFIG_DEBUG_FS
--	.debugfs_init		= panfrost_debugfs_init,
--#endif
- };
- 
- static int panfrost_probe(struct platform_device *pdev)
-@@ -663,8 +659,14 @@ static int panfrost_probe(struct platform_device *pdev)
- 	if (err)
- 		goto err_out2;
- 
-+	err = panfrost_sysfs_init(pfdev);
-+	if (err)
-+		goto err_out3;
-+
- 	return 0;
- 
-+err_out3:
-+	panfrost_gem_shrinker_cleanup(ddev);
- err_out2:
- 	drm_dev_unregister(ddev);
- err_out1:
-@@ -681,6 +683,8 @@ static void panfrost_remove(struct platform_device *pdev)
- 	struct panfrost_device *pfdev = platform_get_drvdata(pdev);
- 	struct drm_device *ddev = pfdev->ddev;
- 
-+	panfrost_sysfs_cleanup(pfdev);
-+
- 	drm_dev_unregister(ddev);
- 	panfrost_gem_shrinker_cleanup(ddev);
- 
-diff --git a/drivers/gpu/drm/panfrost/panfrost_job.c b/drivers/gpu/drm/panfrost/panfrost_job.c
-index 0c2dbf6ef2a5..49413dfda2ea 100644
---- a/drivers/gpu/drm/panfrost/panfrost_job.c
-+++ b/drivers/gpu/drm/panfrost/panfrost_job.c
-@@ -243,7 +243,7 @@ static void panfrost_job_hw_submit(struct panfrost_job *job, int js)
- 	subslot = panfrost_enqueue_job(pfdev, js, job);
- 	/* Don't queue the job if a reset is in progress */
- 	if (!atomic_read(&pfdev->reset.pending)) {
--		if (atomic_read(&pfdev->profile_mode)) {
-+		if (atomic_read(&pfdev->profiling.profile_mode)) {
- 			panfrost_cycle_counter_get(pfdev);
- 			job->is_profiled = true;
- 			job->start_time = ktime_get();
-diff --git a/drivers/gpu/drm/panfrost/panfrost_sysfs.c b/drivers/gpu/drm/panfrost/panfrost_sysfs.c
-new file mode 100644
-index 000000000000..072d3bf349d2
---- /dev/null
-+++ b/drivers/gpu/drm/panfrost/panfrost_sysfs.c
-@@ -0,0 +1,74 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/* Copyright 2023 Collabora ltd. */
-+/* Copyright 2023 Amazon.com, Inc. or its affiliates. */
-+
-+#include <linux/platform_device.h>
-+#include <drm/drm_file.h>
-+#include <drm/panfrost_drm.h>
-+
-+#include "panfrost_device.h"
-+#include "panfrost_gpu.h"
-+#include "panfrost_sysfs.h"
-+
-+static ssize_t
-+profiling_show(struct kobject *kobj, struct kobj_attribute *attr, char *buf)
-+{
-+	atomic_t *profile_mode =
-+		&container_of(kobj, struct {
-+			struct kobject base;
-+			atomic_t profile_mode; },
-+			base)->profile_mode;
-+
-+	return sysfs_emit(buf, "%d\n", atomic_read(profile_mode));
-+}
-+
-+static ssize_t
-+profiling_store(struct kobject *kobj, struct kobj_attribute *attr,
-+	       const char *buf, size_t count)
-+{
-+	atomic_t *profile_mode =
-+		&container_of(kobj, struct {
-+			struct kobject base;
-+			atomic_t profile_mode; },
-+			base)->profile_mode;
-+	int err, value;
-+
-+	err = kstrtoint(buf, 0, &value);
-+	if (err)
-+		return err;
-+
-+	atomic_set(profile_mode, !!value);
-+
-+	return count;
-+}
-+
-+static const struct kobj_attribute profiling_status =
-+__ATTR(status, 0644, profiling_show, profiling_store);
-+
-+static const struct kobj_type kobj_profile_type = {
-+	.sysfs_ops = &kobj_sysfs_ops,
-+};
-+
-+int panfrost_sysfs_init(struct panfrost_device *pfdev)
-+{
-+	struct device *kdev = pfdev->ddev->primary->kdev;
-+	int err;
-+
-+	kobject_init(&pfdev->profiling.base, &kobj_profile_type);
-+
-+	err = kobject_add(&pfdev->profiling.base, &kdev->kobj, "%s", "profiling");
-+	if (err)
-+		return err;
-+
-+	err = sysfs_create_file(&pfdev->profiling.base, &profiling_status.attr);
-+	if (err)
-+		kobject_del(&pfdev->profiling.base);
-+
-+	return err;
-+}
-+
-+void panfrost_sysfs_cleanup(struct panfrost_device *pfdev)
-+{
-+	sysfs_remove_file(&pfdev->profiling.base, &profiling_status.attr);
-+	kobject_del(&pfdev->profiling.base);
-+}
-diff --git a/drivers/gpu/drm/panfrost/panfrost_sysfs.h b/drivers/gpu/drm/panfrost/panfrost_sysfs.h
-new file mode 100644
-index 000000000000..5fc9c8c1091a
---- /dev/null
-+++ b/drivers/gpu/drm/panfrost/panfrost_sysfs.h
-@@ -0,0 +1,15 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Copyright 2023 Collabora ltd.
-+ * Copyright 2023 Amazon.com, Inc. or its affiliates.
-+ */
-+
-+#ifndef PANFROST_SYSFS_H
-+#define PANFROST_SYSFS_H
-+
-+struct panfrost_device;
-+
-+int panfrost_sysfs_init(struct panfrost_device *pfdev);
-+void panfrost_sysfs_cleanup(struct panfrost_device *pfdev);
-+
-+#endif  /* PANFROST_SYSFS_H */
--- 
-2.43.0
+Perhaps it's just because perf appeared earlier, and it doesn't rely on 
+TRACEPOINTS.
+It is indeed reasonable to replace perf_event_exit_task() with 
+TRACEPOINT, and we are willing to try to modify it. It will require some 
+work and time.
+
+--
+Best wishes,
+Wen
+
+>>
+>> To me the current placement of trace_sched_process_exit() looks absolutely
+>> random.
+> 
+> Agreed.
+> 
+>>
+>>> I could
+>>> imagine that there are users expecting those actions to have taken place by
+>>> the time the event triggered. Like the "exit_mm()" call, as well as many
+>>> others.
+>>>
+>>> I would be leery of moving that tracepoint.
+>>
+>> And I agree. I am always scared of every user-visible change, simply
+>> because it is user-visbible.
+>>
+>> If it was not clear, I didn't try to nack this patch. I simply do not know
+>> how people use the tracepoints and for what. Apart from debugging.
+>>
+>> But if we add the new one into coredump_task_exit(), then we probably want
+>> another one in ptrace_event(PTRACE_EVENT_EXIT) ? It too can "take some time"
+>> before the exiting task actually exits.
+>>
+>> So I think this needs some discussion, and the changelog should probably say
+>> more.
+>>
+>> In short: I am glad you are here, I leave this to you and Wen ;)
+> 
+> I still would like to have your input too ;-)
+> 
+> -- Steve
 
