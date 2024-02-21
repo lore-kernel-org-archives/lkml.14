@@ -1,128 +1,116 @@
-Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE10B3D0C0
-	for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 09:23:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 225AF383BF;
+	Wed, 21 Feb 2024 09:23:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708507385; cv=none; b=lxm3mTJuGaKoDqCVk4z7qyRrER53hos2MXJ8BI5/3zmLCUgZG4n0snWIx4iVfDALs+khnJDDa9Mg6HX0QYkafvY+Pa3s/QVwlOgiN5Bqm+TL4/OocLM0gUwsEptIX22VZGikcgmMlaH4jXo1yNN7Dmrj9qCbhfxKQMB9Yor0/44=
+	t=1708507394; cv=none; b=HGP1NSwJJ8qr890u7VrW3u7HlkPF8YNF7pWFVI4GSrG8dwzBQIj43REdRyHjuFU5Nh/9qx4LLkKAdA7U0YE/p9T2rYQBDOjLfYBjlRIoU5BrDOi/A+t3uu0/jkBWRSBmIthTdOlybq7jQgHf1fVmOomO2DyLNW21brTRXoopMS4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708507385; c=relaxed/simple;
-	bh=K+gCIizEIOhF3THCA2HhsJVEYG4bJvjGS9rZ4eiaFR0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=i/7tJfq9HiciGJgbifRBXuvu2Sjyvg4DVhqeMEk8tGqTnrJ6Fs1/zIaOzyXrGQ55CKC6UaEbp4tN1wJvKO2e4/28bnpzmPAOiXubBFoPW+0n3AFOMC8Hb2yLf+YVZ0B69y9gRh0/Nc7taJGapSEcx+aoAeSZ8uS+q4uoXhfJzV4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=o4VwYngi; arc=none smtp.client-ip=209.85.208.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1708507394; c=relaxed/simple;
+	bh=0QR9CkrQOkYy9tKXZSu0qJqpOgrTbQV4Pwczfzxc8Ws=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=gWBhXP6NTreXNLdz/O57IeEXlzmuDhHeeRlF/ILPyO3pQDB6/F0WgmURTMbjkSJz0jgA8V+YIBooBsCwLtOG4yLm/Ql3kq/qlQydw339aO4OPrYK48bXbE8xB/J/Zy7bYaYUJIY0nwwnPCfGcN3ZE2EEl24qE63v3Go4HvsEcSg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=MP0cVlVC; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="o4VwYngi"
-Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-564e4477b7cso7166a12.1
-        for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 01:23:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1708507382; x=1709112182; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=y8Iw+ecnsAvxKiT4ujJzI0in5wASuEUFoB3j6AJ1Ekw=;
-        b=o4VwYngi+VEtdgvjFZw90hyG3NDQnRtUUxGoDJ77v95hA/IE7CFRa3xGt/0GcEaYXw
-         mU7ynDtnpQSawYUB+WECzesZE7u5rzp3OITErpJ2nld0dVY5+8dMlVhkeYrqPfiAMwKm
-         H8Hh3Y/3nE5H1qXnealBgI2Uk59GUXC/iKQnBlJhAPYQWUywzm6wl4otTDm/B0ty33OJ
-         AW7Ti+4vmqyzAOAtBqxX1VoGoPLh4+Pid+WBX/z/zFsebT9S8XZVTpif6ywVIHLdu5t+
-         EuQ9Hn/9+OkpvtokhF/qWROB20GNq6fqnckG0SkDmFvqzRSRbt5fQGe9K+UhemeThnYU
-         u+GA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708507382; x=1709112182;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=y8Iw+ecnsAvxKiT4ujJzI0in5wASuEUFoB3j6AJ1Ekw=;
-        b=ae62pt+dfUxK/UIKJnYB/6udNyyETbaW5NBoiT9QARwsLLJAiN/DpwRERnbc+PZbIT
-         UPEZiwydWOLAxL91/CJLGozAd2dwRMb/UhqHZQOnIXAicp8zKBEYCvBS7rAVcl2pC5ks
-         H+toZrfbEaXjlsK6s0fwZi252YpDnnDUaEeqcdTV5GEyqY+MQnJnnHbdXZw3KB89ZchT
-         Ut6k2EOsyo5cggUSkq+z3QTRY1cypqySWI/AscSf0SRqLGuYVzOAwwD2+2dMNyQZQeWT
-         RlC5UOvHf7fMALTjmulmy1YsUWJIR/M5JOHsPjxYX8Ws2jato6Lfij+IwqZvtTNWeszG
-         Bebw==
-X-Forwarded-Encrypted: i=1; AJvYcCVhD2EiVWRAONP9d61ID6Pw9NU0UNzy3snkp9PsNAEKGzb3hChfHU/JEwfnyabhpHnk/18TgpWYblrZhytbqOsHn7NNnibXHzHb5PBA
-X-Gm-Message-State: AOJu0YwocB74IJdf+oWXJIcSWga3rhcSxhQXdiEIdip38IT9EY/cCt5Q
-	wSK7QJXZn7ka6WqENU/adH2zHgiV1P3bxMiD33CI3Oe97Hzsq3ctLpnZJJFmHTCvc9cVzHpJxej
-	7muN9opvSZzQotfi67unJ11/wOY2SMys5bCJL
-X-Google-Smtp-Source: AGHT+IEy6kNcDvH8qV/VRy8uplqs4byx2iWbcUCj2utl/wZ7ZtNrmbmJN8hiP8u5MtxV1VFQ7vtdsIPdMmY5qpXruRs=
-X-Received: by 2002:a50:bae7:0:b0:563:fc50:37f9 with SMTP id
- x94-20020a50bae7000000b00563fc5037f9mr84099ede.3.1708507381744; Wed, 21 Feb
- 2024 01:23:01 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="MP0cVlVC"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:From:
+	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
+	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
+	References; bh=a5Y+jbVzMCuiskWa37OxLyCmdTfxWKxLyTZ3/6MLB0k=; t=1708507392;
+	x=1708939392; b=MP0cVlVCG9MH5+TEumEcBDB3ppnbXhkML/1DPSbQK13Z7VQ6MEp0KipAZxwLq
+	VnTXzVPhb/eN9TclYdgf0mhcaNSaIqeyTZ7JZgqFu2gJOUeTn5Lwwd9vrQhqIrWsISh8M+/IYTc/o
+	RoAnf4rPScBh+J1AE6S8NCdkvL/Dk9VT1+wVfDQFCeRnKHt68wFo6943hKjaKGhqmSlBEq0JP7ad9
+	FyMdxbuilSrZYMfNfsZxmwazA1jY56bRk/vzrB4DHW3olddyrAy0Eiq7HSMpox4IBRap8+ZDKAIBp
+	N+K8OTZgu4HMIo5Zd6d0x8YV7eRNTHshz/oy8yZ+HKXzL0SGYg==;
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1rciom-0008Qf-JP; Wed, 21 Feb 2024 10:23:08 +0100
+Message-ID: <27ee0d22-18aa-453e-9020-76f4687bc044@leemhuis.info>
+Date: Wed, 21 Feb 2024 10:23:08 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240219061008.1761102-1-pumahsu@google.com> <20240219061008.1761102-3-pumahsu@google.com>
- <2024021906-celestial-tuesday-bd24@gregkh>
-In-Reply-To: <2024021906-celestial-tuesday-bd24@gregkh>
-From: Puma Hsu <pumahsu@google.com>
-Date: Wed, 21 Feb 2024 17:22:24 +0800
-Message-ID: <CAGCq0LYYkg0NR2pVS0sTn0vrW3oWXoSg6DgJN0v8ADY_poykag@mail.gmail.com>
-Subject: Re: [PATCH 2/3] usb: xhci: Add support for Google XHCI controller
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: mathias.nyman@intel.com, Thinh.Nguyen@synopsys.com, badhri@google.com, 
-	royluo@google.com, howardyen@google.com, albertccwang@google.com, 
-	raychi@google.com, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] fs/ntfs3: fix build without CONFIG_NTFS3_LZX_XPRESS
+Content-Language: en-US, de-DE
+To: Chris Clayton <chris2553@googlemail.com>,
+ Mark O'Donovan <shiftee@posteo.net>, linux-kernel@vger.kernel.org
+Cc: ntfs3@lists.linux.dev, almaz.alexandrovich@paragon-software.com
+References: <20240214224500.811609-1-shiftee@posteo.net>
+ <89630027-f93c-4e1d-a9c0-a120b8f0bc9e@googlemail.com>
+ <0f3542a4-d558-447c-9dd7-cbb410c88e23@googlemail.com>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+In-Reply-To: <0f3542a4-d558-447c-9dd7-cbb410c88e23@googlemail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1708507392;987ebf7b;
+X-HE-SMSGID: 1rciom-0008Qf-JP
 
-On Mon, Feb 19, 2024 at 2:30=E2=80=AFPM Greg KH <gregkh@linuxfoundation.org=
-> wrote:
->
-> On Mon, Feb 19, 2024 at 02:10:07PM +0800, Puma Hsu wrote:
-> > diff --git a/drivers/usb/host/xhci-goog.c b/drivers/usb/host/xhci-goog.=
-c
-> > new file mode 100644
-> > index 000000000000..db027a5866db
-> > --- /dev/null
-> > +++ b/drivers/usb/host/xhci-goog.c
-> > @@ -0,0 +1,154 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +/*
-> > + * xhci-goog.c - xHCI host controller driver platform Bus Glue.
-> > + *
-> > + * Copyright (c) 2024 Google LLC
->
-> This code is older than 2024, right?  :)
+On 21.02.24 09:27, Chris Clayton wrote:
+> 
+> This build regression also shows up, along with other problems, in a
+> report to the ntfs3 list by the kernel test robot.[1]
+> 
+> Also, as this patch seems not to have been picked up by the NTFS3
+> maintainer I've added Thorsten Leemhuis so he can consider adding
+> this egression to the tracker.
 
-Yes, this actually started from 2023, will fix it.
+You mistyped my email address, but I noticed this by chance. :-D
 
->
-> > +     if (WARN_ON(!sysdev->dma_mask)) {
->
-> If this triggers, you just rebooted your device (as you run with
-> panic-on-warn enabled), so please, if this is something that can
-> actually happen, handle it properly and move on, don't reboot a device.
+Mark, could you do me a favor and send a v2 that picked up the Tested-by
+and includes a Fixes: tag for the commit causing it? Then in case
+Konstantin doesn't pick this up any time soon I'll ask Linus to pick
+this up straight from the list.
 
-Thank you for advising. Will review and handle it properly.
+Ciao, Thorsten
 
->
-> > +MODULE_ALIAS("platform:xhci-hcd-goog");
->
-> Why is this alias needed?  I thought that was only for older-style
-> platform devices
-
-I will change to module_platform_driver(). Thank you for advising.
-
->
-> > +static int __init xhci_goog_init(void)
-> > +{
-> > +     return platform_driver_register(&usb_goog_xhci_driver);
-> > +}
-> > +module_init(xhci_goog_init);
-> > +
-> > +static void __exit xhci_goog_exit(void)
-> > +{
-> > +     platform_driver_unregister(&usb_goog_xhci_driver);
-> > +}
-> > +module_exit(xhci_goog_exit);
->
-> module_platform_driver()?
->
-> thanks,
->
-> greg k-h
+> [1]
+> https://lore.kernel.org/ntfs3/202402211322.4GbTCzp8-lkp@intel.com/T/#u>
+> Chris>
+> On 19/02/2024 07:21, Chris Clayton wrote:
+>> Hi.
+>>
+>> On 14/02/2024 22:45, Mark O'Donovan wrote:
+>>> When CONFIG_NTFS3_LZX_XPRESS is not set then we get the following:
+>>> fs/ntfs3/frecord.c:2460:16: error: unused variable ‘i_size’
+>>>
+>>> Signed-off-by: Mark O'Donovan <shiftee@posteo.net>
+>>> ---
+>>>  fs/ntfs3/frecord.c | 2 +-
+>>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>>
+>>> diff --git a/fs/ntfs3/frecord.c b/fs/ntfs3/frecord.c
+>>> index 3b42938a9d3b..7f27382e0ce2 100644
+>>> --- a/fs/ntfs3/frecord.c
+>>> +++ b/fs/ntfs3/frecord.c
+>>> @@ -2457,7 +2457,6 @@ int ni_read_frame(struct ntfs_inode *ni, u64 frame_vbo, struct page **pages,
+>>>  	struct ATTR_LIST_ENTRY *le = NULL;
+>>>  	struct runs_tree *run = &ni->file.run;
+>>>  	u64 valid_size = ni->i_valid;
+>>> -	loff_t i_size = i_size_read(&ni->vfs_inode);
+>>>  	u64 vbo_disk;
+>>>  	size_t unc_size;
+>>>  	u32 frame_size, i, npages_disk, ondisk_size;
+>>> @@ -2509,6 +2508,7 @@ int ni_read_frame(struct ntfs_inode *ni, u64 frame_vbo, struct page **pages,
+>>>  		err = -EOPNOTSUPP;
+>>>  		goto out1;
+>>>  #else
+>>> +		loff_t i_size = i_size_read(&ni->vfs_inode);
+>>>  		u32 frame_bits = ni_ext_compress_bits(ni);
+>>>  		u64 frame64 = frame_vbo >> frame_bits;
+>>>  		u64 frames, vbo_data;
+>>>
+>>> base-commit: 7e90b5c295ec1e47c8ad865429f046970c549a66
+>>
+>> Mark - Thanks for the patch.
+>> Alex - Fixes a build bug introduced by 4fd6c08a16d7f1ba10212c9ef7bc73218144b463.
+>>
+>> Tested-by: Chris Clayton <chris2553@googlemail.com>
