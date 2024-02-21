@@ -1,85 +1,82 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD8AC4879B
-	for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 11:39:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1DD83FE2A;
+	Wed, 21 Feb 2024 11:40:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708515559; cv=none; b=Fu6WeBQfyLMsk8A4N2sWoS2jVZwe6ru8a5N/fX//lUZCusYRvQxoUo1pKBl4TMR3XwCWZJalOYmOD0QxRPrH6MNy1FJ9xh0l0lpGZyU/0rezmtNWVSPSH8g+plTYMU5ymb5OpaQK9peurMe4l6O/u0RR8RIWDDDfUT4fxMkuCrE=
+	t=1708515610; cv=none; b=JOH/A7KpUmWkiLzOnZ35jIFJfkyBR3mDirU2YA3EjzvAzbAgnNaeGmYmcTjbZXuhbKR3g0HYeXHl7hwow6PaXAs3ldOT8ENOELn2khpN8MmNkIIPHYe3qr0wg2kT3SWEAVSGma41N/JOL/aSmlS64M2baGX1rOoeInHv22TkUgc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708515559; c=relaxed/simple;
-	bh=WN29FhHIbaFhzOpidBbq2yPCWUFc+rFagYVzvFv0258=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=m6rYR9+UKBQV7rkJDEdqFWs/opRJ47t4dbJR8m7M3tRvZyfP3psbxvAtaDzdnab59ckeSQFHVwj5XO20m7acxd0hSeu8LHWvqlrt5B8Z3J5HMlkYyVagYMB9/NdOpsn8z2yDrkojJKCvJm3UU+4yggQqfduXLtjQK1pLpqk/nJI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=VV9x1OiZ; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1708515610; c=relaxed/simple;
+	bh=+eM3L2jQ1c3/EkECcIctZhwAG4oNsnSIQ9tvDOA6y24=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lFzZ0aRElIP2Xr9whxg5R7OxcuI1RL4IhaxZace1Mremi3fPTAuxXFMT6TV2p0TyOMLl+3LkdqgNO5EAoNdfimD5PWjPBtZ/3pKxQXNnOaz4tTEdxO61ohB3q2ZP+6z0BR1UTnz7xv2ug35rXxgQ+ILmCR/2LLQCkmOcAfVHg8k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=marliere.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=marliere.net header.i=@marliere.net header.b=ArEgsrUE; arc=none smtp.client-ip=209.85.214.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=marliere.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VV9x1OiZ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1708515556;
+	dkim=pass (2048-bit key) header.d=marliere.net header.i=@marliere.net header.b="ArEgsrUE"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-1d93edfa76dso40933275ad.1;
+        Wed, 21 Feb 2024 03:40:08 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708515608; x=1709120408;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:dkim-signature:date:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=Yl4Yd7l6TYZU1Jog2Q2J8JIIFkiLifa9PPpHpro0uUw=;
+        b=BTRG9uhd7QbzaEktClEFP3s/t3efrtBzDDGQOLk8fXz2Hh4UuDn3p5innpT18ql5sq
+         WgFxf2JQ5JOhiytaGwVv/yEM9Up8lqZ0QMaU7bMTif3ypXM0kbtzRiSplOfuLaTIE6wX
+         v3O/wDEVmvZ3GqR8gpu6Be0WcEm1VulHYakl5DjIC5ucxcQIAikma2z9Xc8G1Z1CT1BC
+         1AWoVNofEkQBUcycrxlbHTUCF9nEZQAxG7XHLfdcQGspli3MNsgaXXGOmfDkqpwA+Nqn
+         KC9NtnvV9W470ZaPr4Za6zo7QK63vUa3nsuFH60F4Yp0rcWY7cqQ6KdCgZeD8sszltE6
+         kGuA==
+X-Forwarded-Encrypted: i=1; AJvYcCXErYGq1/mex/aL4aFQgAvBgecvMadbVm733vnbjXPYZ8vQ1SozlHViX6+o7q/Kq6XyzzRNPxM23dNiCQn6cDbdyJp8GLELAgpbg2vO
+X-Gm-Message-State: AOJu0YzSb88jdzNkBJ9aDdn9JUo4X+rSKolKTYtw8aA5Wb5byjMpxE58
+	niu2O9yWL3uDpf1CPUPhG05td28O3WAUZrsqjjswGt3trlIuvsU/H+G/2VY1RGgxeQ==
+X-Google-Smtp-Source: AGHT+IEPh87FxIADyrDGjRgnUG3+jpMxIwnao9q6vRGyJRhoL9lQkvY6SbdjyiuWReYJnELCQoxmbQ==
+X-Received: by 2002:a17:902:e74d:b0:1db:e7a4:90a5 with SMTP id p13-20020a170902e74d00b001dbe7a490a5mr11000670plf.12.1708515608093;
+        Wed, 21 Feb 2024 03:40:08 -0800 (PST)
+Received: from mail.marliere.net ([24.199.118.162])
+        by smtp.gmail.com with ESMTPSA id kv8-20020a17090328c800b001d9641003cfsm7843102plb.142.2024.02.21.03.40.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 21 Feb 2024 03:40:07 -0800 (PST)
+Date: Wed, 21 Feb 2024 08:40:54 -0300
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marliere.net;
+	s=2024; t=1708515606;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=a2Dtr1oYPq5h+UmaIBvjfi/Gm7gWRD+25qD/vc/SHLA=;
-	b=VV9x1OiZxs7/T8CkCVs6ZvkKwQ0Wa4S4dF4bl7EabTmB6U41UHr0IQywt2xpL/YZZk5aHa
-	BK2Xs3uo+1fjdMdZT7SWWsziGcs7sflBJXFUEuPmKaov303E3ic2A/aVrgr4CqaS0H5/1M
-	UWfR5oYSDKAAaYlDOfkZJzLX8U4yWUE=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-533-xhTwOjeCPh6_F_GL_nOHXg-1; Wed,
- 21 Feb 2024 06:39:14 -0500
-X-MC-Unique: xhTwOjeCPh6_F_GL_nOHXg-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.rdu2.redhat.com [10.11.54.2])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 6C38628EA6EB;
-	Wed, 21 Feb 2024 11:39:14 +0000 (UTC)
-Received: from virtlab701.virt.lab.eng.bos.redhat.com (virtlab701.virt.lab.eng.bos.redhat.com [10.19.152.228])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 4E7694031FBF;
-	Wed, 21 Feb 2024 11:39:14 +0000 (UTC)
-From: Paolo Bonzini <pbonzini@redhat.com>
-To: torvalds@linux-foundation.org
-Cc: linux-kernel@vger.kernel.org,
-	kvm@vger.kernel.org
-Subject: [GIT PULL] KVM fixes for Linux 6.8-rc6
-Date: Wed, 21 Feb 2024 06:39:13 -0500
-Message-Id: <20240221113913.215306-1-pbonzini@redhat.com>
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Yl4Yd7l6TYZU1Jog2Q2J8JIIFkiLifa9PPpHpro0uUw=;
+	b=ArEgsrUE3uaLXti4ONyWRuNkizyUNaFbYpUr3birHmvyTHjvLoOd8gyw0ZAXpTykQuJZu9
+	FO79KxOpiZD+5N8VL15K54WCLzXFK8AoKL5W7Ovr0bZqFAMEHKaoEdMYJbUV8lgWhAQVsz
+	ARLgxn7QtCjz3S0BJuWflLR0Lmxo7gexui2FHiFEUB/A/4Afc+5Q2EjyNDb+c5LwXz2Yh1
+	JBq7wE+2kHzkQ6QRKYJnpBX3EqFmnJK0RaetamMcRAjXdXbrOMMyzlz5cYoWrQomGq5tvJ
+	LjBUcVymVohS72s6BRgaSa7T1OC89I1+/DPh/+gyNd9VxrpIZ9Icw+oBR3HEmw==
+Authentication-Results: ORIGINATING;
+	auth=pass smtp.auth=ricardo@marliere.net smtp.mailfrom=ricardo@marliere.net
+From: "Ricardo B. Marliere" <ricardo@marliere.net>
+To: Sebastian Reichel <sre@kernel.org>
+Cc: linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH] power: supply: core: make power_supply_class constant
+Message-ID: <6zdex6yenicex5mjtqkshtfcuauqib64wmjvfzjpdo5xvkk22b@ljakfogmvuwg>
+References: <20240220-class_cleanup-power-v1-1-9ef579404351@marliere.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.2
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240220-class_cleanup-power-v1-1-9ef579404351@marliere.net>
 
-Linus,
+Hi Sebastian,
 
-The following changes since commit 9895ceeb5cd61092f147f8d611e2df575879dd6f:
+please disregard this patch, it's missing some changes. I will send a v2
+later.
 
-  Merge tag 'kvmarm-fixes-6.8-2' of git://git.kernel.org/pub/scm/linux/kernel/git/kvmarm/kvmarm into HEAD (2024-02-16 12:02:38 -0500)
+Thanks,
+-	Ricardo.
 
-are available in the Git repository at:
-
-  https://git.kernel.org/pub/scm/virt/kvm/kvm.git tags/for-linus
-
-for you to fetch changes up to c48617fbbe831d4c80fe84056033f17b70a31136:
-
-  Merge tag 'kvmarm-fixes-6.8-3' of git://git.kernel.org/pub/scm/linux/kernel/git/kvmarm/kvmarm into HEAD (2024-02-21 05:18:56 -0500)
-
-----------------------------------------------------------------
-ARM: Two fixes for the ITS emulation.  Unmapped interrupts were
-used instead of ignored, causing NULL pointer dereferences.
-
-----------------------------------------------------------------
-Oliver Upton (2):
-      KVM: arm64: vgic-its: Test for valid IRQ in its_sync_lpi_pending_table()
-      KVM: arm64: vgic-its: Test for valid IRQ in MOVALL handler
-
-Paolo Bonzini (1):
-      Merge tag 'kvmarm-fixes-6.8-3' of git://git.kernel.org/pub/scm/linux/kernel/git/kvmarm/kvmarm into HEAD
-
- arch/arm64/kvm/vgic/vgic-its.c | 5 +++++
- 1 file changed, 5 insertions(+)
 
