@@ -1,111 +1,147 @@
-Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
+Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D60317C082
-	for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 13:36:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF0277BB18
+	for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 13:37:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708522567; cv=none; b=YD/I7DesfRVhrKRpoV+UvNCQzvYb5r3T6yev2ScsEzKuKNVAS4FP/hGhDO6TnAgXm7HbcxCQX6RZZvpfheqIW3Cikf4z9c9d0H15spTV00V8gyGLkOJaZ7lWMzPC1wqt/ijMqC8jlOJXGo/xJDcgQHE3yef91dnrMR1p5QP9Rmo=
+	t=1708522650; cv=none; b=K3NkoBpOwhBUWtlDEuQfsoiAzmRdeLRzCc+xBRC8wfmlgx7Xtr9h9Pf0BEJszXLOAs59HtFN2I7aC8jeSJPAvdn5mREoGpO09LGErT0zgGGkzNFARAqbe6Cib6+1cfpzd5hnLoVn7X6qllWh9LBpkVpJr4tSIbapLs5VGtgK8js=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708522567; c=relaxed/simple;
-	bh=ulH7hnX2Ka/tGtvJe1+k7ag+F+iUxmyXMwzC4BFf4Qs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Wd3Nt+Ebi0Qb2p0lk7gjM15lfQa5Ss9gR8hRwHpX0vaIh+aiRGRtxJC5yb6vjQyjmMqDbLOrjhmnC2E0vMhjjLpMfgqWDwhzCQayQA/aHgskps1CioxopZEw5e4NCsfLl+PeG38bBRcnlWUyFVQ8Oo6zk8xAnfkSDOAXa+qJpDk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=be4nUlCE; arc=none smtp.client-ip=209.85.208.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
+	s=arc-20240116; t=1708522650; c=relaxed/simple;
+	bh=rdN/6YII7vuoqoQ0M/mdYu6Vc/hmpn03eQ0O+V4PSVk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=TjPdXUPd7EvqlcuW9o2zBUOid13veaJocn3lX7f+EVSZnHlqMu7+q82X5P8B7GEVZj1cHHJq6aqQNBU+daYDuz9TJVGmxQuAQ1gc25FnbOmYEvolfWPX+z8LMJZWgLzZY0/aA8nTV8ryExpmU0DSOfquF2ItCzMEMU43YMrxKOI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=eQGe8UlL; arc=none smtp.client-ip=209.85.218.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="be4nUlCE"
-Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-2d208d0b282so88550051fa.0
-        for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 05:36:05 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="eQGe8UlL"
+Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-a3122b70439so829169966b.3
+        for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 05:37:28 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ventanamicro.com; s=google; t=1708522564; x=1709127364; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=iZa1EUK27qQ8Ow9XjJUdv9AmKUGFVXbnGB6joJ/bp7Q=;
-        b=be4nUlCEObteBzdd/JkodxVu/bQP3WStHVl6wQDW6xunOPPW8Ax0CPUOVbtNglusH/
-         XACgZI+NpCQx/dxW+nPWVpttDVo9fYHs0OeSoGpaTezaQ91cNeFyX/mQEryqdci0OYct
-         Cq2T6qvKm2gQCH3Lmq6ittUp9qwgXhsgeBx1AJn/RKSMGDlUe9uMq1rAQ2ViwscKb+GM
-         63IswkfGzCT1lMp9NLtY8VoupaSURUTVarPxYQR49e/ukp06owAmO4ZCwpmqHZ1yhzrU
-         s1wO2GqFK0nd1ABxG5rRlp+AgucctbuMV1k7g1Jkr8aFPXJqx5U5z4rRD1k0gZN/Ypop
-         TS4A==
+        d=linaro.org; s=google; t=1708522647; x=1709127447; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=5eajfoTymGJwv3pZSD39+xNRSQER4xqy/S/sNmOZC4U=;
+        b=eQGe8UlLa0rrKWQiw4jViMGv/0vi3l580D9u7GdG3dTBr5+vBKAyPV+BJ2iZcGbMiS
+         1HNfOmjBjJIvQA028HiuV9TeV7UpuGu/afDCO+MhdqRJnd95dRKm12BKSdZ2r9ORGrrZ
+         2E0eSpitx/Y9zdzgmTPNlZ7qBYNicg/cyaRKCl/P8KxNeJIZJgnn2LRJGSNzlgniUjFs
+         heH9kL6C5+RUqsBB+i0RuCEiMekEHVQ2Aj85sw6fJ6LeGd7Bp53P1zLiaabHa39riIcm
+         LXvLAFdhrljy7D6rVjj/mIJ4B2iZSrsMeO8DpCtshwweGpJaX6dcQMUnm8uDXKzp2/HO
+         FagQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708522564; x=1709127364;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=iZa1EUK27qQ8Ow9XjJUdv9AmKUGFVXbnGB6joJ/bp7Q=;
-        b=J8lBqf8p1NdffBycd9r+Poj9Em7fGnsRWTgWOuqi03u6VNu6n/tXtUyT9dCAEsBjuz
-         KUDO41I/Q/HB7flW1za4aYJaaxa4PsgfoWm2QzX9DL0bNaL2dHb/zR6AMA60+ZtJc9dS
-         wbYko3IbNj9duqHpo9EN2MlJUAO3L9h5rrbIF6Ux1D1XUm90GdSm7+qaMt3dXwM9la2G
-         5PLRzwjPib0fWuDgQGqk5W1ZrYPQ/LPClyTBw2HX0iPvuudgFyYGXWtAVRnQz4mh/FT1
-         7lCq9X68Dth8eRq2vPdrXTc4nO0g+xX9qyoP1laCRu8YTNPK2ExCoL0aqZKhe7rsl+Xx
-         zmYg==
-X-Forwarded-Encrypted: i=1; AJvYcCUlNRTXgLTbb70nMIylau8RPgv3e74xXVS0c49FLRs2MBOWbO7WF+F1Ee6mY2vQbIhrCdJPrR6SokApYRd0AkTEcKo1wQHv4gk/k8Ls
-X-Gm-Message-State: AOJu0YysbIDuA5oNcTevJYdazTZB/RPGGXJaZsrtYaRLMxzEIzJC33Yz
-	/Oa9RXLv4bpU1a5s6Yczh9dqj/to73LItxQV7BuNmUC2LCuWb1GW1sWATUlk7QzsiiSm+8ndlDQ
-	SaOhTXGuoUPhUZmTewXYxRcXoMrMMtbWOlFbtpg==
-X-Google-Smtp-Source: AGHT+IH8PbfqK4LbbkaSU1nojq4bUVMOQpkZmRdtlm1F7WODSQlRTVfG1+cQD421y+B/I3PNrpXgs8sPl3SY+UGKWfs=
-X-Received: by 2002:a2e:86d0:0:b0:2d2:3d1c:148f with SMTP id
- n16-20020a2e86d0000000b002d23d1c148fmr5452288ljj.42.1708522563808; Wed, 21
- Feb 2024 05:36:03 -0800 (PST)
+        d=1e100.net; s=20230601; t=1708522647; x=1709127447;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=5eajfoTymGJwv3pZSD39+xNRSQER4xqy/S/sNmOZC4U=;
+        b=Bhk4TWWsI0P6om07tjaVMVoWgPF7xL3jagiYp+JmHj+b1D75layQOnSNmcoZlKDgiH
+         6S5LVnTn81Mwy2kuw2fHo17NOIiBKUc/FTRcAYZoAtB2WqutDQ0xkXMC+TWf/BXzJMf7
+         ZhJd+i/nj8WGweh9/3aT6rtxe4tVwB9s068Tr/iyLQqqHBprvhg7YAGonvULfaYbX3ho
+         L37AGBEnBdyMLJaUC/QbThYC78KcOxexcRIa/LwnynYvbQHDqafUY0cIi78fLldTC0C+
+         ONWZKMiD0e2m+O9rdeJxTDyqvjA/LosPiqvb3N75nnI9ZQ+5w3W0zZTEXDjr+WFaYK6K
+         u+iw==
+X-Forwarded-Encrypted: i=1; AJvYcCVCcW/UCLGFveUJfOcbJ2bA2wZqOlYqBuJ3huN3mk6rbIUGT4dLZHO8iD+FFP7E9dIAKS/uUNWGzp7qnkBiLyxK3y4XmRdIiU69bK2r
+X-Gm-Message-State: AOJu0Yx/BHeuqXo77tNpcLTDWoqDKS80JXNlfYMQx7rmlP06nbi2yRbh
+	Xsh6L0LqZ1HUhnq6Er3r4cNrTDfhxxAQX7ua1I7QRkBEwheT/txGz1Nyszea4gQ=
+X-Google-Smtp-Source: AGHT+IEIgR3cQ74TYoZyC61RuNeT+e7u1BkGFZFDGxQOH8KvSD7It6YYbD0Q2EyO71OLMdDyo8yuQg==
+X-Received: by 2002:a17:906:48cc:b0:a3e:6501:339d with SMTP id d12-20020a17090648cc00b00a3e6501339dmr6557544ejt.61.1708522647151;
+        Wed, 21 Feb 2024 05:37:27 -0800 (PST)
+Received: from [192.168.192.135] (078088045141.garwolin.vectranet.pl. [78.88.45.141])
+        by smtp.gmail.com with ESMTPSA id th7-20020a1709078e0700b00a3e059c5c5fsm4970319ejc.188.2024.02.21.05.37.24
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 21 Feb 2024 05:37:26 -0800 (PST)
+Message-ID: <466efa71-bd42-46b7-b81f-2a70d80e3f03@linaro.org>
+Date: Wed, 21 Feb 2024 14:37:23 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240220060718.823229-1-apatel@ventanamicro.com>
- <20240220060718.823229-3-apatel@ventanamicro.com> <87frxnigxk.ffs@tglx>
-In-Reply-To: <87frxnigxk.ffs@tglx>
-From: Anup Patel <apatel@ventanamicro.com>
-Date: Wed, 21 Feb 2024 19:05:52 +0530
-Message-ID: <CAK9=C2VFksO054kVVHkrBRyZqte8Q4Gpup97VhLBRDCbOyQdqQ@mail.gmail.com>
-Subject: Re: [PATCH v13 02/13] irqchip/sifive-plic: Improve locking safety by
- using irqsave/irqrestore
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: Palmer Dabbelt <palmer@dabbelt.com>, Paul Walmsley <paul.walmsley@sifive.com>, 
-	Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Frank Rowand <frowand.list@gmail.com>, 
-	Conor Dooley <conor+dt@kernel.org>, Marc Zyngier <maz@kernel.org>, =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@kernel.org>, 
-	Atish Patra <atishp@atishpatra.org>, Andrew Jones <ajones@ventanamicro.com>, 
-	Sunil V L <sunilvl@ventanamicro.com>, Saravana Kannan <saravanak@google.com>, 
-	Anup Patel <anup@brainfault.org>, linux-riscv@lists.infradead.org, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 20/20] media: venus: pm_helpers: Use reset_bulk API
+Content-Language: en-US
+To: Philipp Zabel <p.zabel@pengutronix.de>,
+ Stanimir Varbanov <stanimir.k.varbanov@gmail.com>,
+ Vikash Garodia <quic_vgarodia@quicinc.com>,
+ Bryan O'Donoghue <bryan.odonoghue@linaro.org>, Andy Gross
+ <agross@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
+ Mauro Carvalho Chehab <mchehab@kernel.org>,
+ Dikshita Agarwal <quic_dikshita@quicinc.com>
+Cc: Marijn Suijten <marijn.suijten@somainline.org>,
+ Stanimir Varbanov <stanimir.varbanov@linaro.org>,
+ Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+ linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20230911-topic-mars-v2-0-3dac84b88c4b@linaro.org>
+ <20230911-topic-mars-v2-20-3dac84b88c4b@linaro.org>
+ <a25224f5d28aa65e8bfd14fe0a8f599b9f9e3f40.camel@pengutronix.de>
+ <ad20b872-0b50-4a16-b342-582d2f33eeca@linaro.org>
+ <1cf19cf23ffd88d9ffb673e8f382f3b1d24545bb.camel@pengutronix.de>
+From: Konrad Dybcio <konrad.dybcio@linaro.org>
+Autocrypt: addr=konrad.dybcio@linaro.org; keydata=
+ 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
+ izWDgYvmBE8=
+In-Reply-To: <1cf19cf23ffd88d9ffb673e8f382f3b1d24545bb.camel@pengutronix.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, Feb 20, 2024 at 3:41=E2=80=AFPM Thomas Gleixner <tglx@linutronix.de=
-> wrote:
->
-> On Tue, Feb 20 2024 at 11:37, Anup Patel wrote:
-> > Now that PLIC driver is probed as a regular platform driver, the lock
-> > dependency validator complains about the safety of handler->enable_lock
-> > usage:
-> >
-> > [    0.956775]  Possible interrupt unsafe locking scenario:
-> >
-> > [    0.956998]        CPU0                    CPU1
-> > [    0.957247]        ----                    ----
-> > [    0.957439]   lock(&handler->enable_lock);
-> > [    0.957607]                                local_irq_disable();
-> > [    0.957793]                                lock(&irq_desc_lock_class=
-);
-> > [    0.958021]                                lock(&handler->enable_loc=
-k);
-> > [    0.958246]   <Interrupt>
-> > [    0.958342]     lock(&irq_desc_lock_class);
-> > [    0.958501]
-> >                 *** DEADLOCK ***
-> >
-> > To address above, let's use raw_spin_lock_irqsave/unlock_irqrestore()
-> > instead of raw_spin_lock/unlock().
->
-> s/let's//
+On 21.02.2024 14:34, Philipp Zabel wrote:
+> On Mi, 2024-02-14 at 22:20 +0100, Konrad Dybcio wrote:
+>> On 14.02.2024 14:31, Philipp Zabel wrote:
+>>> Hi Konrad,
+>>>
+>>> On Fr, 2024-02-09 at 22:10 +0100, Konrad Dybcio wrote:
+>>>> All of the resets are toggled together. Use the bulk api to save on some
+>>>> code complexity.
+>>>>
+>>>> The delay between resets is now correctly determined by the reset
+>>>> framework.
+>>>
+>>> If this is a recent change, could you reference the commit?
+>>
+>> It's a series that recently landed in -next [1]
+> 
+> Missing link?
 
-Okay, I will update.
+Yes, sorry!
 
-Regards,
-Anup
+Konrad
+
+[1] https://lore.kernel.org/linux-arm-msm/20240105-topic-venus_reset-v2-0-c37eba13b5ce@linaro.org/
+
+
