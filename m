@@ -1,28 +1,28 @@
 Received: from cloudserver094114.home.pl (cloudserver094114.home.pl [79.96.170.134])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A54B42A8E;
-	Wed, 21 Feb 2024 20:04:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E47DE86151;
+	Wed, 21 Feb 2024 20:04:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.96.170.134
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708545886; cv=none; b=qgVcRa2w010hYfhV5UBjLq7TrzelbvHqCZKXl78Kw+wnmYX0s3Mu386qAJTSTVVEDV7RFhJ/5KNRisU2CCwWNK9oyq0H80R9qTOlsyFXqm9tpo7rl4kCDJoIBC9rTlMkHXmOctIvhVS/Q9reW+hndfI3JB1xzwW96IhgrfqLPfc=
+	t=1708545888; cv=none; b=om4YFqH/hsPNeMM0o02w+DPUdSGnbzenTKXXB5lgDfH6xbeYeHItXdo3uyd0wqRyItsRw1g51GW0TwWvBFd6w8JTuZG+FcP85iOBdVkkbYxu6PuQxhr4WVJlR4SucuBnaEjST6w02sJhryR//TCkCT44ibvbc+u6bCAEwybrPEQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708545886; c=relaxed/simple;
-	bh=HyUVCsjQzKDy4y3IbS6W3hreF7bH4BoXJ2aTGIKqH1Q=;
+	s=arc-20240116; t=1708545888; c=relaxed/simple;
+	bh=ZsHdlJrJVlvGSfzCG6LWBqpX9udtvXpPnuXEOa0+fSY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=C20tbOh3VqSDNCPPQ1TcQPJshIzZgqd3nZGf74o9SsEFqW8snINRYAyYAFpobIMHAmwW4WDNQ4V5YoSomNw0xw07WddLVqQmovj5ttmsDSLZWbtGS0QhDHWxYUx9ajRK6FmG3LzD/FWoouKUb7OJ66LdetCh7m6udcl6eHPFk+k=
+	 MIME-Version:Content-Type; b=dTk0zeuKKalDGrFxydzLXsGXe9+pQBRZxVLZPqNLF3Fy0EULIRFeJW7jXHDIQvnnzhHknxSmV4L2Tty2HMWnF2+cKxZpKpzCt6G/7x9HWUlhFr4uXTv02SSISTEIMV2VIraDxQ1eZasDF84C5uUL3IFkLakCxDN5Ye1ewPqy15Q=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net; spf=pass smtp.mailfrom=rjwysocki.net; arc=none smtp.client-ip=79.96.170.134
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rjwysocki.net
 Received: from localhost (127.0.0.1) (HELO v370.home.net.pl)
  by /usr/run/smtp (/usr/run/postfix/private/idea_relay_lmtp) via UNIX with SMTP (IdeaSmtpServer 5.4.0)
- id a3ca0b28fd2e1865; Wed, 21 Feb 2024 21:04:35 +0100
+ id 67b712691066ea71; Wed, 21 Feb 2024 21:04:38 +0100
 Received: from kreacher.localnet (unknown [195.136.19.94])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by cloudserver094114.home.pl (Postfix) with ESMTPSA id 5C1A066A243;
-	Wed, 21 Feb 2024 21:04:35 +0100 (CET)
+	by cloudserver094114.home.pl (Postfix) with ESMTPSA id 89EF366A243;
+	Wed, 21 Feb 2024 21:04:37 +0100 (CET)
 From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
 To: Linux ACPI <linux-acpi@vger.kernel.org>,
  Jonathan Cameron <jonathan.cameron@huawei.com>
@@ -30,11 +30,9 @@ Cc: LKML <linux-kernel@vger.kernel.org>,
  Mika Westerberg <mika.westerberg@linux.intel.com>,
  "Rafael J. Wysocki" <rafael@kernel.org>,
  "Russell King (Oracle)" <linux@armlinux.org.uk>
-Subject:
- [PATCH v1 4/4] ACPI: scan: Make acpi_processor_add() check the device enabled
- bit
-Date: Wed, 21 Feb 2024 21:03:17 +0100
-Message-ID: <3298279.44csPzL39Z@kreacher>
+Subject: [PATCH v1 2/4] ACPI: scan: Relocate acpi_bus_trim_one()
+Date: Wed, 21 Feb 2024 21:01:48 +0100
+Message-ID: <2189881.irdbgypaU6@kreacher>
 In-Reply-To: <4562925.LvFx2qVVIh@kreacher>
 References: <4562925.LvFx2qVVIh@kreacher>
 Precedence: bulk
@@ -48,35 +46,91 @@ Content-Type: text/plain; charset="UTF-8"
 X-CLIENT-IP: 195.136.19.94
 X-CLIENT-HOSTNAME: 195.136.19.94
 X-VADE-SPAMSTATE: clean
-X-VADE-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedvledrfedvgddufedvucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecujffqoffgrffnpdggtffipffknecuuegrihhlohhuthemucduhedtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevufffkfgjfhgggfgtsehtufertddttdejnecuhfhrohhmpedftfgrfhgrvghlucflrdcuhgihshhotghkihdfuceorhhjfiesrhhjfiihshhotghkihdrnhgvtheqnecuggftrfgrthhtvghrnhepkedtvdevieejkeevkedvffeiffehiedtheekkeefieehffekgfeltdehleehvddunecuffhomhgrihhnpehuvghfihdrohhrghenucfkphepudelhedrudefiedrudelrdelgeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeduleehrddufeeirdduledrleegpdhhvghlohepkhhrvggrtghhvghrrdhlohgtrghlnhgvthdpmhgrihhlfhhrohhmpedftfgrfhgrvghlucflrdcuhgihshhotghkihdfuceorhhjfiesrhhjfiihshhotghkihdrnhgvtheqpdhnsggprhgtphhtthhopeeipdhrtghpthhtoheplhhinhhugidqrggtphhisehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepjhhonhgrthhhrghnrdgtrghmvghrohhnsehhuhgrfigvihdrtghomhdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehmihhkrgdrfigvshhtvghrsggvrhhgsehlihhnuhigrdhinhhtvghlrdgtohhmpdhrtghpthhtoheprhgrfhgrvghlsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigsegrrhhmlhhinhhugidrohhrghdruhhk
+X-VADE-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedvledrfedvgddufedvucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecujffqoffgrffnpdggtffipffknecuuegrihhlohhuthemucduhedtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevufffkfgjfhgggfgtsehtufertddttdejnecuhfhrohhmpedftfgrfhgrvghlucflrdcuhgihshhotghkihdfuceorhhjfiesrhhjfiihshhotghkihdrnhgvtheqnecuggftrfgrthhtvghrnhepvdffueeitdfgvddtudegueejtdffteetgeefkeffvdeftddttdeuhfegfedvjefhnecukfhppeduleehrddufeeirdduledrleegnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepudelhedrudefiedrudelrdelgedphhgvlhhopehkrhgvrggthhgvrhdrlhhotggrlhhnvghtpdhmrghilhhfrhhomhepfdftrghfrggvlhculfdrucghhihsohgtkhhifdcuoehrjhifsehrjhifhihsohgtkhhirdhnvghtqedpnhgspghrtghpthhtohepiedprhgtphhtthhopehlihhnuhigqdgrtghpihesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehjohhnrghthhgrnhdrtggrmhgvrhhonheshhhurgifvghirdgtohhmpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepmhhikhgrrdifvghsthgvrhgsvghrgheslhhinhhugidrihhnthgvlhdrtghomhdprhgtphhtthhopehrrghfrggvlheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugiesrghrmhhlihhnuhigrdhorhhgrdhukh
 X-DCC--Metrics: v370.home.net.pl 1024; Body=6 Fuz1=6 Fuz2=6
 
 From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-Modify acpi_processor_add() return an error if _STA returns the enabled
-bit clear for the given processor device, so as to avoid using processors
-that don't decode their resources, as per the ACPI specification. [1]
+Relocate acpi_bus_trim_one() (without modifications) so as to avoid the
+need to add a forward declaration of it in a subsequent patch.
 
-Link: https://uefi.org/specs/ACPI/6.5/06_Device_Configuration.html#sta-device-status # [1]
+No functional changes.
+
 Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 ---
- drivers/acpi/acpi_processor.c |    3 +++
- 1 file changed, 3 insertions(+)
+ drivers/acpi/scan.c |   52 ++++++++++++++++++++++++++--------------------------
+ 1 file changed, 26 insertions(+), 26 deletions(-)
 
-Index: linux-pm/drivers/acpi/acpi_processor.c
+Index: linux-pm/drivers/acpi/scan.c
 ===================================================================
---- linux-pm.orig/drivers/acpi/acpi_processor.c
-+++ linux-pm/drivers/acpi/acpi_processor.c
-@@ -381,6 +381,9 @@ static int acpi_processor_add(struct acp
- 	struct device *dev;
- 	int result = 0;
+--- linux-pm.orig/drivers/acpi/scan.c
++++ linux-pm/drivers/acpi/scan.c
+@@ -244,6 +244,32 @@ static int acpi_scan_try_to_offline(stru
+ 	return 0;
+ }
  
-+	if (!acpi_device_is_enabled(device))
-+		return -ENODEV;
++static int acpi_bus_trim_one(struct acpi_device *adev, void *not_used)
++{
++	struct acpi_scan_handler *handler = adev->handler;
 +
- 	pr = kzalloc(sizeof(struct acpi_processor), GFP_KERNEL);
- 	if (!pr)
- 		return -ENOMEM;
++	acpi_dev_for_each_child_reverse(adev, acpi_bus_trim_one, NULL);
++
++	adev->flags.match_driver = false;
++	if (handler) {
++		if (handler->detach)
++			handler->detach(adev);
++
++		adev->handler = NULL;
++	} else {
++		device_release_driver(&adev->dev);
++	}
++	/*
++	 * Most likely, the device is going away, so put it into D3cold before
++	 * that.
++	 */
++	acpi_device_set_power(adev, ACPI_STATE_D3_COLD);
++	adev->flags.initialized = false;
++	acpi_device_clear_enumerated(adev);
++
++	return 0;
++}
++
+ static int acpi_scan_hot_remove(struct acpi_device *device)
+ {
+ 	acpi_handle handle = device->handle;
+@@ -2547,32 +2573,6 @@ int acpi_bus_scan(acpi_handle handle)
+ }
+ EXPORT_SYMBOL(acpi_bus_scan);
+ 
+-static int acpi_bus_trim_one(struct acpi_device *adev, void *not_used)
+-{
+-	struct acpi_scan_handler *handler = adev->handler;
+-
+-	acpi_dev_for_each_child_reverse(adev, acpi_bus_trim_one, NULL);
+-
+-	adev->flags.match_driver = false;
+-	if (handler) {
+-		if (handler->detach)
+-			handler->detach(adev);
+-
+-		adev->handler = NULL;
+-	} else {
+-		device_release_driver(&adev->dev);
+-	}
+-	/*
+-	 * Most likely, the device is going away, so put it into D3cold before
+-	 * that.
+-	 */
+-	acpi_device_set_power(adev, ACPI_STATE_D3_COLD);
+-	adev->flags.initialized = false;
+-	acpi_device_clear_enumerated(adev);
+-
+-	return 0;
+-}
+-
+ /**
+  * acpi_bus_trim - Detach scan handlers and drivers from ACPI device objects.
+  * @adev: Root of the ACPI namespace scope to walk.
 
 
 
