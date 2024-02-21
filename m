@@ -1,100 +1,163 @@
-Received: from mail-yb1-f169.google.com (mail-yb1-f169.google.com [209.85.219.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 112F47FBC0
-	for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 14:31:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 948A647F48;
+	Wed, 21 Feb 2024 14:32:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708525910; cv=none; b=tXnUIthYfHMvOhNt6kNNgpwUv0kAHm/7eQkre8lrR3pxRnnQnwlj5pRq5BtH7RZTXSIjTuIltKo1QwC4MOXjLizxBe99Y0QQttTKR+l9xCUwBho1DTOiMSU9naloqHjnGYStbh1rIj+DBqh17a3dn0rOqPt/Vd3sv/N2D53Dr2I=
+	t=1708525927; cv=none; b=YlSGEHUjN9bZCcTUKDjDToYcXH9LQxUCwVh2vcs188xI5JtRu35fsqHMNb8681scH7PuJKpHYTsEGuUtxXr9N0vqEWVzl8SQKReLMAlrKtP1J9m9yeBORv3z5de2R7w/UPk/CDkuziTMEDsPQXYOp27FGnmKuGIuesmiax3Huko=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708525910; c=relaxed/simple;
-	bh=SzQd87jZwG+oQiOKEili2Q5rk6+fGGD3FVIw4/CT1CM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=h/ltcjU8Il0efQlUN4uUi9IeGvTzZ5CJETOylHzBlH3ycVdoaLBs6+Qz7WXqPiNIfwCIWLNNHc6mkpS8O/VA6KRNXv4B1Ao0xJ3M7WobCSiAvjO504zX0jQBx6zSdmjjeElUKwbd0K01ZpLCuQtnbRaGN49WMgoejSQGP6SFwZA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=WvBwT6Kx; arc=none smtp.client-ip=209.85.219.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1708525927; c=relaxed/simple;
+	bh=ETU59JMcllMSB/or4eosb1YfI1+Lc4q0wczytbrnDNQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UzgSSkKnH5CXNBd/xtzRKnGRqXQxrfxtH1dcEo830FDe8vLZEjq0Y8gS6cTSMlBpXP7OjMjNKmtjnrwJfWA9ONHB9i/Jsp7scoifSpvNe2xMIV+8Slu2VAKRttNQQub7jWFPemjadgUIx+h1hnxZBvFm3QUz6bUJV/8kDHtb+2k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=No2piR1T; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WvBwT6Kx"
-Received: by mail-yb1-f169.google.com with SMTP id 3f1490d57ef6-dc6d8bd612dso751061276.1
-        for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 06:31:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1708525907; x=1709130707; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=SzQd87jZwG+oQiOKEili2Q5rk6+fGGD3FVIw4/CT1CM=;
-        b=WvBwT6Kxg0pz41I5TVkIu6EVzlO3ZDVkCIV9Z+g8N0BHND5m7t8ljeJzvjBSHum0nk
-         fzp23KDC3LOWR4Bx0hebzKNR6NvbzbTAMNq9B7gfVse5yw8y+SZvP+Ak81S91jQyX/8L
-         3Htg9i3w4wF+RICufExVT1gX1Y6VUlQgr+ePd3Tzz21PO+SxKVKCGQImxb46c+y/2ifm
-         cuPZEYaImpDBi971tR+T118AzAP/0R+tTQXH4i5R4yy21S1tXI/hVgbipb5iamrXxfHj
-         QuolaT5uWejS1o3TNuYztREzKcG3kMlMJHvDKSnQukwSm0/u0qB2iNOXPXdzWLViqIpA
-         IE7g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708525907; x=1709130707;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=SzQd87jZwG+oQiOKEili2Q5rk6+fGGD3FVIw4/CT1CM=;
-        b=pt3haZ+GFakxOpuKgDpt6SUlFPMpdSV7brTy6CNot1f3foAK5hELheTI5SKGE+BYeB
-         gBrCW/uyWvh6xms0NAzJsfqvzuY18GHRPvgEL0VGMjy6MlPhDJ8Rjm1z2Z7Vf2bCxHI0
-         2Oj0A7eHdXkOCN81Ua0GhQMcQI418JhKEBlDl8IdnSYlgP0Q1VStM4mtTCxDY1n/oGie
-         PVwb6cv1SE/B/obVVmSQnNcDulHS+qOBds8S2mdmMbKqmCfYrpKtFFxc56A7ygC4W5e5
-         z7q2qYVOTWOz30wSpG5N/ZPqp6s6/U9zCCKSRk9Y2zuP1ej43MZzABeW6eh0tKgFcGoy
-         sfAA==
-X-Forwarded-Encrypted: i=1; AJvYcCVEgyLct7IAIjXLVsafqeXSGVs7eb0bLTdsAaKJTheYwEzMNwZQ63Wc2CifrRBJ3ePxXeNi/vwtRqWVb88YYXyi0zcnZCkuj+ar+JL0
-X-Gm-Message-State: AOJu0YwmufAKvkUj2HNmZ9oQh6AIuCsteLCk0TxKOhX5YxgUB6AJvENB
-	GeEmCsRoUKrviS1YKYz5SpBAM20UDB2sM7yNWNarqqbNkkn5Xs5kQ+VgnN7ZmJVdn/6/WtC6hw5
-	AltoGSWouBNIuR1r1yFNUEnIedQrk9k9jr+9yFg==
-X-Google-Smtp-Source: AGHT+IHtPHuNmDP1ivorhMWyf7CtrVAVcOmamjArI6U21e7odr0+fcnGW+8ENjWO4dIYPF7XJm3UqeeahMkOdj2+Yic=
-X-Received: by 2002:a25:e0d2:0:b0:dc7:5c37:5420 with SMTP id
- x201-20020a25e0d2000000b00dc75c375420mr15986478ybg.60.1708525907011; Wed, 21
- Feb 2024 06:31:47 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="No2piR1T"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 160ABC433C7;
+	Wed, 21 Feb 2024 14:32:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1708525927;
+	bh=ETU59JMcllMSB/or4eosb1YfI1+Lc4q0wczytbrnDNQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=No2piR1TxZde8nJFFXemM2a3+zqfT436aGB+BMcjfAbgT7qoNeY3Ugzq2eYbu+wh7
+	 +hwltOlGdL/UB4JE+TY8cLUBK8DpBP1uuFfW4MYCxZ1QEZ3+51k0b/t/2+G9iuwwDk
+	 P5Itmhah8RpUWeJjtbXpSRe0mrC6qAZXUoTnutiVH1LtyKU32ARVkjr+AZNdB6o7c5
+	 QG0YuXMGYeXL26sbnFcx9E0BAMmUG2NCS63m/IJZWdi/v704kE34N6ZNPx4dgUlof7
+	 5a0BoTqhnE0SoLRWJs3vfmbuYmuDIJjDCT8o/3UF9qlg1ZqrsieGf1N67iw+04QylX
+	 VI16bpwZCgZ/A==
+Date: Wed, 21 Feb 2024 07:32:04 -0700
+From: Rob Herring <robh@kernel.org>
+To: Saravana Kannan <saravanak@google.com>
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Frank Rowand <frowand.list@gmail.com>, Len Brown <lenb@kernel.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Daniel Scally <djrscally@gmail.com>,
+	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	kernel-team@android.com, linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-efi@vger.kernel.org,
+	linux-acpi@vger.kernel.org
+Subject: Re: [PATCH v2 3/4] dt-bindings: Add post-init-supplier property
+Message-ID: <20240221143204.GA2773516-robh@kernel.org>
+References: <20240212213147.489377-1-saravanak@google.com>
+ <20240212213147.489377-4-saravanak@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240214-mbly-gpio-v1-0-f88c0ccf372b@bootlin.com> <20240214-mbly-gpio-v1-18-f88c0ccf372b@bootlin.com>
-In-Reply-To: <20240214-mbly-gpio-v1-18-f88c0ccf372b@bootlin.com>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Wed, 21 Feb 2024 15:31:35 +0100
-Message-ID: <CACRpkdYLBGsphNkmWyPXQZvFaO2hHGHGTMt1eqz-HAa2k5F3bg@mail.gmail.com>
-Subject: Re: [PATCH 18/23] gpio: nomadik: support mobileye,eyeq5-gpio
-To: =?UTF-8?B?VGjDqW8gTGVicnVu?= <theo.lebrun@bootlin.com>
-Cc: Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Philipp Zabel <p.zabel@pengutronix.de>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
-	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-mips@vger.kernel.org, Gregory CLEMENT <gregory.clement@bootlin.com>, 
-	Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>, 
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Tawfik Bayouk <tawfik.bayouk@mobileye.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240212213147.489377-4-saravanak@google.com>
 
-On Wed, Feb 14, 2024 at 5:24=E2=80=AFPM Th=C3=A9o Lebrun <theo.lebrun@bootl=
-in.com> wrote:
+On Mon, Feb 12, 2024 at 01:31:44PM -0800, Saravana Kannan wrote:
+> The post-init-supplier property can be used to break a dependency cycle by
+> marking some supplier(s) as a post device initialization supplier(s). This
+> allows an OS to do a better job at ordering initialization and
+> suspend/resume of the devices in a dependency cycle.
+> 
+> Signed-off-by: Saravana Kannan <saravanak@google.com>
+> ---
+>  .../bindings/post-init-supplier.yaml          | 101 ++++++++++++++++++
+>  MAINTAINERS                                   |  13 +--
+>  2 files changed, 108 insertions(+), 6 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/post-init-supplier.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/post-init-supplier.yaml b/Documentation/devicetree/bindings/post-init-supplier.yaml
+> new file mode 100644
+> index 000000000000..aab75b667259
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/post-init-supplier.yaml
+> @@ -0,0 +1,101 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +# Copyright (c) 2020, Google LLC. All rights reserved.
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/post-init-supplier.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Post device initialization supplier
+> +
+> +maintainers:
+> +  - Saravana Kannan <saravanak@google.com>
+> +
+> +description: |
+> +  This property is used to indicate that the device(s) pointed to by the
+> +  property are not needed for the initialization of the device that lists this
+> +  property. This property is meaningful only when pointing to direct suppliers
+> +  of a device that are pointed to by other properties in the device.
+> +
+> +  A device can list its suppliers in devicetree using one or more of the
+> +  standard devicetree bindings. By default, it would be safe to assume the
+> +  supplier device can be initialized before the consumer device is initialized.
+> +
+> +  However, that assumption cannot be made when there are cyclic dependencies
+> +  between devices. Since each device is a supplier (directly or indirectly) of
+> +  the others in the cycle, there is no guaranteed safe order for initializing
+> +  the devices in a cycle. We can try to initialize them in an arbitrary order
+> +  and eventually successfully initialize all of them, but that doesn't always
+> +  work well.
+> +
+> +  For example, say,
+> +  * The device tree has the following cyclic dependency X -> Y -> Z -> X (where
+> +    -> denotes "depends on").
+> +  * But X is not needed to fully initialize Z (X might be needed only when a
+> +    specific functionality is requested post initialization).
+> +
+> +  If all the other -> are mandatory initialization dependencies, then trying to
+> +  initialize the devices in a loop (or arbitrarily) will always eventually end
+> +  up with the devices being initialized in the order Z, Y and X.
+> +
+> +  However, if Y is an optional supplier for X (where X provides limited
+> +  functionality when Y is not initialized and providing its services), then
+> +  trying to initialize the devices in a loop (or arbitrarily) could end up with
+> +  the devices being initialized in the following order:
+> +
+> +  * Z, Y and X - All devices provide full functionality
+> +  * Z, X and Y - X provides partial functionality
+> +  * X, Z and Y - X provides partial functionality
+> +
+> +  However, we always want to initialize the devices in the order Z, Y and X
+> +  since that provides the full functionality without interruptions.
+> +
+> +  One alternate option that might be suggested is to have the driver for X
+> +  notice that Y became available at a later point and adjust the functionality
+> +  it provides. However, other userspace applications could have started using X
+> +  with the limited functionality before Y was available and it might not be
+> +  possible to transparently transition X or the users of X to full
+> +  functionality while X is in use.
+> +
+> +  Similarly, when it comes to suspend (resume) ordering, it's unclear which
+> +  device in a dependency cycle needs to be suspended/resumed first and trying
+> +  arbitrary orders can result in system crashes or instability.
+> +
+> +  Explicitly calling out which link in a cycle needs to be broken when
+> +  determining the order, simplifies things a lot, improves efficiency, makes
+> +  the behavior more deterministic and maximizes the functionality that can be
+> +  provided without interruption.
+> +
+> +  This property is used to provide this additional information between devices
+> +  in a cycle by telling which supplier(s) is not needed for initializing the
+> +  device that lists this property.
+> +
+> +  In the example above, Z would list X as a post-init-supplier and the
+> +  initialization dependency would become X -> Y -> Z -/-> X. So the best order
+> +  to initialize them become clear: Z, Y and then X.
+> +
+> +select: true
 
-> We create a custom compatible for the STA2X11 IP block as integrated
-> into the Mobileye EyeQ5 platform. Its wake and alternate functions have
-> been disabled, we want to avoid touching those registers.
->
-> We both do: (1) early return in functions that do not support the
-> platform, but with warnings, and (2) avoid calling those functions in
-> the first place.
->
-> We ensure that pinctrl-nomadik is not used with this STA2X11 variant.
->
-> Signed-off-by: Th=C3=A9o Lebrun <theo.lebrun@bootlin.com>
+blank line
 
-When testing I noticed that this patch breaks Ux500 (up until patch 17
-all works fine!).
+> +properties:
+> +  post-init-supplier:
 
-But I don't know why.
+'supply' is already used for regulators. Let's make it 
+'post-init-providers'.
 
-Trying to figure it out...
-
-Yours,
-Linus Walleij
+Rob
