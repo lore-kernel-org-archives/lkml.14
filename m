@@ -1,107 +1,86 @@
-Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68F7724B57;
-	Wed, 21 Feb 2024 07:36:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4D8E3AC2D;
+	Wed, 21 Feb 2024 07:36:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708500967; cv=none; b=crehpF5X/fHK57Xf09fl47mUsygPALzZ09LkQHsGRZgwvADxGabTvZGtdqcJE1DKYGEGFTDaCYXT0vDzJ9AyFJwfALLtKcXxZpm00la+q1Os1AHHqrn1cKebUuWJGzVABlC7EOZMvd95d+fwuRwG1C2f6OAxskVFW04SQqTDGkQ=
+	t=1708500968; cv=none; b=sKubdbNZCv3cl/9GcwrXsWzidpPaP6AVUMY24n6utYA6hG5jz73s9XM7LRIR9Kn5ITL/Syq5PObNgR8Z+lVx8fQMzdsQTSyvU4JRbuoFtA9rz75Wi+tvPNwmg1Xkj0L7e98wF++syV9GrLP4xt80SOac+1ohGapG5IkwvpWie+U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708500967; c=relaxed/simple;
-	bh=7Vu3rzmObUR+9w2tRopA/lV1r2L5Wu7SYWF1FkmQ0a4=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=iMJXmmaQukw21+oaM4+LoiBMg1IoSejz8mIrsKnOSoKYbVc/BVocYgunSsXlfO6a3S0g82aiyfXKVCc7Ks4p4tpf/BrWCZddJbaWCHuGAwNG75W0GQlwYHKfugY/43QiYSRLY3Rv3tod6jOhEDHs3WZJdhTRDALEJ+ImoFadTjc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VuiWCloo; arc=none smtp.client-ip=209.85.208.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1708500968; c=relaxed/simple;
+	bh=Xu/mivu9Omjv8pN+LQWQfTamnCS30TCS4XhU3t8yUjk=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=AyyhfT979xDEvTEAT+NRT8RVZC/9JkNMmf5bHbaq0E15+0svbDWNOzPg76PHP+nkbJ6WhjEmpIQi7p1GadDSuve+S2STWoOmV1dEzgnLkKdE6giwj0lzHrPN1zMa5eTwv+eHaEV4ClcLg7dpXK62hl8EkK/9iEjj7jAnCWB0g9o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=r4EkjjN2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VuiWCloo"
-Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-2d208d0b282so84721891fa.0;
-        Tue, 20 Feb 2024 23:36:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1708500963; x=1709105763; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=8M8/d2Svm/+PW4IDvaS8Rs5nXrVhcfBCXs/zLlxxKUw=;
-        b=VuiWCloocMFbD1MSntf+L1a9UIdOimknj+YVjhI7g4sdCHJQX/L5eeGBVGQwUcm8y2
-         9szToLb+78ZISolGAFkh4TuUpfKP4z+oVbWmXTBpfqEANhn30k88kFFZ6LpXZ4XGYzX+
-         E4umzNeoyD4Ucg74mLfm9wNizm5QQKzf0vReFy56f15t6v14CPBXIBw9j69shergWhBb
-         IwEoySulXIPSQjYBu3ionBVOdUCgbQtVt9Bi+63xZMockpcYvZ+YwqDZBuhM3+cbQ7V6
-         0MfmdiClBdU7rVUQLTMIKNn/nIbV5IkuEm4HalpBZz220/JHq4HSkXZF+3tkTx8R78fy
-         HKyg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708500963; x=1709105763;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=8M8/d2Svm/+PW4IDvaS8Rs5nXrVhcfBCXs/zLlxxKUw=;
-        b=TW6qEma/mx81kbM5AkwhAy3DANhOvbNjCXVETrorppYhYOESuRrkXwA7OmGN5gALNV
-         x6Ph693JQpI7B6UF2ZiAqxWbLXmfGL9t6P5TGAQWB0Bs6l0wkYDb5OiqOzTTqk8a0nUn
-         tmAnHBxVyW7sYkAmHpDIrI9asY/oRLy/TdBROlHDpqFN/gqg6iA4N7BSVEiAlKuffBz4
-         0yGWvCZSgdNPfZFh919u1zjzKOYLga09HyMIHOkJbv7/3XnH4gjzVr3IJeBSdeslJrcs
-         s5maQM14XvwM8lkBkC4VbiTevUjeaQ54dBN3tlNuxuaxl/bZQ5WJlz9s15qjQdbsRZN9
-         FbOA==
-X-Forwarded-Encrypted: i=1; AJvYcCUh+hSJtTd5+d8tz2uW31LP8qNnAoCYcIHSWeujNcKuvO1qD5G840w2mTNMz1IXYlIc6qH5bYbtyBVzXut1NKI9nm9pkr3LNuohP+qmq9tzLGmiqs1jbOqnFwbxzDPuoqPzXRzhNb804w==
-X-Gm-Message-State: AOJu0Yyhy7NIZc6KsYsb8hyCqSI0YAe5D5u4UZEE10rpeR15mzHM2ftb
-	sBws9UgXCa6GzRWFXjpB5uV2mn1J5YPOA9LM1DU8bXUEUVG9yV3T
-X-Google-Smtp-Source: AGHT+IFE6VuOfV8rlKed7pgakLr9/jErXT6huX7tGt/A7H+Xjl8Zbc3QW5Xe879Z7XUiPdk5AR8aUw==
-X-Received: by 2002:a2e:980e:0:b0:2d2:40c6:b7d2 with SMTP id a14-20020a2e980e000000b002d240c6b7d2mr4278968ljj.26.1708500963176;
-        Tue, 20 Feb 2024 23:36:03 -0800 (PST)
-Received: from localhost.lan (031011218106.poznan.vectranet.pl. [31.11.218.106])
-        by smtp.gmail.com with ESMTPSA id z3-20020a2e7e03000000b002d0f99a7fc4sm1722330ljc.79.2024.02.20.23.36.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 20 Feb 2024 23:36:02 -0800 (PST)
-From: =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5@gmail.com>
-To: Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>
-Cc: Chen-Yu Tsai <wenst@chromium.org>,
-	Hsin-Yi Wang <hsinyi@chromium.org>,
-	=?UTF-8?q?N=C3=ADcolas=20F=20=2E=20R=20=2E=20A=20=2E=20Prado?= <nfraprado@collabora.com>,
-	Heiko Stuebner <heiko.stuebner@cherry.de>,
-	Jernej Skrabec <jernej.skrabec@gmail.com>,
-	Chris Morgan <macromorgan@hotmail.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Sean Wang <sean.wang@mediatek.com>,
-	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="r4EkjjN2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9CE7CC433C7;
+	Wed, 21 Feb 2024 07:36:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1708500967;
+	bh=Xu/mivu9Omjv8pN+LQWQfTamnCS30TCS4XhU3t8yUjk=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=r4EkjjN2rN6/boK0EZlODV0TR7jjemYr4U950rKgH56CTKob338bpI8+wJt03o4QB
+	 EOv5h0cY1XcCd05mTjYl0A3JaccjmOy4Oakql6uNU0V9CPF0o1z3PQ36zQ8xXeqUJH
+	 3La9kd83G1s1Rv7I6yat2xdVEJcA8QokRVBLhhPaIoOFAA2pOLweVOj8Otw+kKZrka
+	 xjHLk3AAtO74IWQeYVzud5pCsho3dkbHJLJz9OkNtbogeDMa+dm2+iZ4f1YK2gKHAO
+	 Vak+4GKV7B6abpo5ul8Biu+xLclemWRkeusryZSaYQkTB9AcCcpfJPMHfcWFaVP5+s
+	 l3obGQ/QOVx1g==
+From: Christian Brauner <brauner@kernel.org>
+To: Zhang Yi <yi.zhang@huaweicloud.com>
+Cc: Christian Brauner <brauner@kernel.org>,
 	linux-kernel@vger.kernel.org,
-	=?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal@milecki.pl>
-Subject: [PATCH 0/4] dts: mediatek: add Cudy WR3000 V1 wireless router
-Date: Wed, 21 Feb 2024 08:35:20 +0100
-Message-Id: <20240221073524.20947-1-zajec5@gmail.com>
-X-Mailer: git-send-email 2.35.3
+	djwong@kernel.org,
+	hch@infradead.org,
+	david@fromorbit.com,
+	tytso@mit.edu,
+	jack@suse.cz,
+	yi.zhang@huawei.com,
+	chengzhihao1@huawei.com,
+	yukuai3@huawei.com,
+	linux-xfs@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH -next] iomap: add pos and dirty_len into trace_iomap_writepage_map
+Date: Wed, 21 Feb 2024 08:35:58 +0100
+Message-ID: <20240221-vorwiegend-klebrig-74a49733a441@brauner>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240220115759.3445025-1-yi.zhang@huaweicloud.com>
+References: <20240220115759.3445025-1-yi.zhang@huaweicloud.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1198; i=brauner@kernel.org; h=from:subject:message-id; bh=Xu/mivu9Omjv8pN+LQWQfTamnCS30TCS4XhU3t8yUjk=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMaReXX6fyWaPmseh2lMhRuLJ20XXK975YJLO8u3nFFGHz b+T7Fkud5SyMIhxMciKKbI4tJuEyy3nqdhslKkBM4eVCWQIAxenAExk8WxGhs11Tc3JgSmuB6+d ufTmiuZBFomVeTHa5Xu/1hi8Ebt96DMjw4mJFY/OzwxR+HWDg3vFl7Wy3Rv6ZrNYnI0qED3ZVto axgYA
+X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
 Content-Transfer-Encoding: 8bit
 
-From: Rafał Miłecki <rafal@milecki.pl>
+On Tue, 20 Feb 2024 19:57:59 +0800, Zhang Yi wrote:
+> Since commit fd07e0aa23c4 ("iomap: map multiple blocks at a time"), we
+> could map multi-blocks once a time, and the dirty_len indicates the
+> expected map length, map_len won't large than it. The pos and dirty_len
+> means the dirty range that should be mapped to write, add them into
+> trace_iomap_writepage_map() could be more useful for debug.
+> 
+> 
+> [...]
 
-Cudy WR3000 V1 is a MediaTek Filogic 820 based 802.11ax wireless router.
+Applied to the vfs.iomap branch of the vfs/vfs.git tree.
+Patches in the vfs.iomap branch should appear in linux-next soon.
 
-https://www.cudy.com/productinfo/1637722.html
+Please report any outstanding bugs that were missed during review in a
+new review to the original patch series allowing us to drop it.
 
-Rafał Miłecki (4):
-  dt-bindings: vendor-prefixes: add Cudy
-  dt-bindings: arm64: dts: mediatek: Add Cudy WR3000 V1 router
-  arm64: dts: mediatek: mt7981: add pinctrl
-  arm64: dts: mediatek: Add Cudy WR3000 V1
+It's encouraged to provide Acked-bys and Reviewed-bys even though the
+patch has now been applied. If possible patch trailers will be updated.
 
- .../devicetree/bindings/arm/mediatek.yaml     |  1 +
- .../devicetree/bindings/vendor-prefixes.yaml  |  2 +
- arch/arm64/boot/dts/mediatek/Makefile         |  1 +
- .../dts/mediatek/mt7981b-cudy-wr3000-v1.dts   | 74 +++++++++++++++++++
- arch/arm64/boot/dts/mediatek/mt7981b.dtsi     | 37 ++++++++++
- 5 files changed, 115 insertions(+)
- create mode 100644 arch/arm64/boot/dts/mediatek/mt7981b-cudy-wr3000-v1.dts
+Note that commit hashes shown below are subject to change due to rebase,
+trailer updates or similar. If in doubt, please check the listed branch.
 
--- 
-2.35.3
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
+branch: vfs.iomap
 
+[1/1] iomap: add pos and dirty_len into trace_iomap_writepage_map
+      https://git.kernel.org/vfs/vfs/c/1284865eff6a
