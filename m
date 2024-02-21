@@ -1,209 +1,195 @@
-Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7367C126F2A
-	for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 21:23:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708550591; cv=none; b=Gf3FqoSYpvhogWz4Ao4WyXaNQihoqL8QBK308kA59kLDnRj/W3rRIEUT5UN2K3qLUA/nqfL02pWK4tObhv03QnnnD+9TLxrlp63PI1RtVlIRWSZFZ4lqCs+YFvJRvVxasCXbbtZZz5glQWSSwOI2C2nJba0dYsHyhPL/bas9rHY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708550591; c=relaxed/simple;
-	bh=Q97GKjG618rmqzYhuKBwtMVC+Xp1EdypCJVY/5vfUc0=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=nabHzdxNlLW587kcAxKPCNV15RH8864LSDkgsJWgmuikupPUYmOStYIEwrf040ALlhKqbr+f656wVsVR8JFDGX2I76E4LJw0WN7PdJr7vVG6/84tBeVF2Lkb0XHLCW8B4zrVq/sfrPx9cZ/2UsQJaXCznfaXUa/3AAGLMqGF/yY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=EihzY5jA; arc=none smtp.client-ip=209.85.208.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 492EB126F2A
+	for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 21:23:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1708550596; cv=fail; b=IbNaM31PSo8IViB+GQZZFJSV4oC/2DOK2OVIdzLfkOqWTHfI1mwMeiM+uyh/56f/9rELgp5qO6EIntA82RxjUhmG6QBMCN8HhjXot66qKLz/Fxg93oXp5f6DXZCyuKsrNms1tBNukgRT4O0xk5b4DHObZjUI5ootsDcZdKw7B/c=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1708550596; c=relaxed/simple;
+	bh=tZup0GmRnQT1lzwVoASBfs7EHVYPuRWbDqwAkJyXLkc=;
+	h=References:From:To:Cc:Subject:In-reply-to:Date:Message-ID:
+	 Content-Type:MIME-Version; b=WuYpsHcZSZGe1ERT3tpjtlDml/K2WwRcfO8FqTzNHwtM2vFcpkDIptBYr0KbCf7xYFrPvxFYWDhV1shxp/vIge6qcmf62KPX0bhlJ18unQvHvZG4co/cyj3EaXLQOtvQ/rN5y+6DPKDiyYuumrft4ZGsgo/mfdIGgfydOOgc8JE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=YjRyO2y7; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=vehO3MTt; arc=fail smtp.client-ip=205.220.165.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="EihzY5jA"
-Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-5645960cd56so5429890a12.1
-        for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 13:23:09 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="YjRyO2y7";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="vehO3MTt"
+Received: from pps.filterd (m0246629.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 41LJDiGX011339;
+	Wed, 21 Feb 2024 21:21:56 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=references : from :
+ to : cc : subject : in-reply-to : date : message-id : content-type :
+ mime-version; s=corp-2023-11-20;
+ bh=ZmvHLylK44mEm3ubgCkbz84ucVoiy0amBtOdV/V1xmk=;
+ b=YjRyO2y7OWNsIjZ+9AiM+qYy7s7DYRZWjhyJLA9oGjfITRA2Q0rcHIepk6CQkYnQzULh
+ sC4H8MEliluZRtADX42t1F2p/oYTvxTXJ3QTpy4wX8l3n0DCQU5XfLCj0y+gaNh8rcQG
+ JQokXBy2VQA0JD3QsrNc3KP1B4XAQM/l9mL6YGJHvlElgfk+PEWzSpvAEW1sAOR5vgki
+ DoKZTQsU+Nm5gmZgz9iKvq3sKNXfWydv9AJZpk8LwlQxGDwdAfYQAZPjC/985NIpW5vj
+ cnD8Pk1wtHpPqjOn1210eEgMxeTdBYMyZ1+fzs/AQRYDkcQOQIhOEBI/62bn50PvTBd0 IA== 
+Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.appoci.oracle.com [130.35.100.223])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3wd5fw2m4b-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 21 Feb 2024 21:21:56 +0000
+Received: from pps.filterd (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 41LKaeBX039716;
+	Wed, 21 Feb 2024 21:21:54 GMT
+Received: from nam12-bn8-obe.outbound.protection.outlook.com (mail-bn8nam12lp2168.outbound.protection.outlook.com [104.47.55.168])
+	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3wak89njxd-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 21 Feb 2024 21:21:54 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Ogz4I5assQ10r0Nowd/XnZDp/RMQM3DSvAo2p+EevPKZrglUea4RtrorBtJNuxzQhE0E5KnWMMB2enKI8cV+uVa1YHU4jSZfQEp3Menme079r/h/YwaGEuG8oi2nLSOnI6Y38lftPWcg7mTPtcO6utAd1RbXgObbT/Yj18JJx91QNcvMg/Ee56EYJHEJvB3AS/4fAvuZzStOJF02u3ZyiQye7thcc8S6NSS4CGxtgNmy5DZY8K0sX051njVXuu+yTB6ky+1SxAZlTlCnT+Di508BvhniKe0//Z9GEB/pGG4BrRG4l7G3gcKAglbCukrzXLyoSUNwL48DkYjHbA9Bnw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=ZmvHLylK44mEm3ubgCkbz84ucVoiy0amBtOdV/V1xmk=;
+ b=ArqRNyJuX5Z6+25aZnFJCuPT+JWkNcj2e0tMwoQhnXzno+cHBeofSLgAM1gmy2wrx4FfV6F+KCN1afCSszg1cwj2XhXsBNCHqyDBKrcP3mcY/rXFSHcR2aknnEtteTz+SbMHi2Yrk3tBk4KDWhP90vG3ZyEjOR1F4oLJOC7QqreIIPvpC64lGiPnvAuOcFfHkFtJJBIu3Ju6e+fnFINTjrHoPRqp+Y02COJP1hwXz3s4wFH1ErcDgovLQt+myCrt6jP31RKbUbD71gvYF/9PGYjDvLbUhBNJmw5P4N9v9baub2nqpbINnn+DRmyk1aeFiW0LdVebuJ7wjsF1t9oGJg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1708550588; x=1709155388; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=2SSSSEzfunpVKo3VA6iNBnH3HhYtnjVDxAPoRZgjZUQ=;
-        b=EihzY5jAsxL8fZz8P2tCF4cQT2GaF5bo/XJZrTehc8gltRmqiCU5QtV3c+14kki8b6
-         6fxn+LhdhhgpPkjy5W1i6kakUe14QhDMzU6RhONg2zo6bCXP4rLqZvS9rqQVPXuu3BTT
-         dMxQeAFiCspT59Sm1ygXneojtZGCLanNgHn0NoovtbPndbK4Re8DjrntuvvEp3vKCnhS
-         yvERnGG11hHezSrea65BN/wnD7BgcR14skMVdwfnszYWb9XsN6KixIEzBzGoe6qcPzTY
-         +27JZlr2x5w5v2n0mUD3B6NjvoEiP2n4sFweNypOU4LnRGXwXpEDcvGxaApGjsnHIIEv
-         IhIA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708550588; x=1709155388;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=2SSSSEzfunpVKo3VA6iNBnH3HhYtnjVDxAPoRZgjZUQ=;
-        b=clALUf6A5MRmXpVO5K1iAfKf2oJ9gFY2gwKL4aKf3/RSPz+ORgWRlEoRaZrvX9vJUP
-         AuJ2ricIZ/CRiERmrOFFpLOA5nlgicRwDDCxzpgFBRUEYjFfdjA1QmHEGdki6vjBZIqe
-         1X+HHFrMR6Wzuyu0y0jn7ySigJuH2X6WsH+a2sG5cpgVXpN7RxJcw3dd1iYbdAd9oodm
-         lKblKCN5vYnQRZebGO+13P3zggk7Pc3l2VQXMZVE/M07sRM+UPamKoFtUDLAg8jllkZh
-         24xCzVvab4HdjgavKc2O8J9e+S9fyi6L7II6vG1jgIsJDpdsFdvZxJZI5KgK8pvtTUxl
-         mSQQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXGigmEM2r64yepnWqmxWsA2ce94urGraYqBClzR6yJUFpIBaVlnyxsUTCICNhWWmC4/CcH0yl39Pp/xlXM4h5QzpOqCXVrhX1ZuZfu
-X-Gm-Message-State: AOJu0Yz6GgLgpYDvEM21N530/Fjnn9KxgMPBYSRJ/CAGUHmzZpy7JRXu
-	vW5WbCmdDbLYOvgXWwYM/dNcNUQ60VIX39GjXSE4HUQ8RpjRg+rSRmD5YXRstUc=
-X-Google-Smtp-Source: AGHT+IETkKAOcMl6EOtyDkXpzlXf09WLA7KktxIAQUyZJqVUTFRkn9d1Km8IRmcUakvpCDMyUAyXkQ==
-X-Received: by 2002:aa7:d609:0:b0:565:26f7:4bf8 with SMTP id c9-20020aa7d609000000b0056526f74bf8mr357391edr.8.1708550587743;
-        Wed, 21 Feb 2024 13:23:07 -0800 (PST)
-Received: from [127.0.1.1] ([85.235.12.238])
-        by smtp.gmail.com with ESMTPSA id h14-20020a056402094e00b005644221a3desm4018764edz.3.2024.02.21.13.23.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 21 Feb 2024 13:23:07 -0800 (PST)
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Wed, 21 Feb 2024 22:23:01 +0100
-Subject: [PATCH v2 2/2] mmc: sh_mmcif: Advance sg_miter before reading
- blocks
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ZmvHLylK44mEm3ubgCkbz84ucVoiy0amBtOdV/V1xmk=;
+ b=vehO3MTtYUva8X962GRMaqrMnoFRChb02kX+M9T2R7qd32mD+lPoS4W0QDTa7jl8EAxrUkrK3hn9sgslAEeM4Jq5N04ThunfghLLTNvcX1b4LWGc0QKZnAiVOZ8A5jINgq8jcHGtlbEYLmJSDAKFzNPoiJDxNVJi4CuBuqrjtoY=
+Received: from CO6PR10MB5409.namprd10.prod.outlook.com (2603:10b6:5:357::14)
+ by CY8PR10MB6612.namprd10.prod.outlook.com (2603:10b6:930:54::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7316.21; Wed, 21 Feb
+ 2024 21:21:52 +0000
+Received: from CO6PR10MB5409.namprd10.prod.outlook.com
+ ([fe80::91b3:fd53:a6ee:8685]) by CO6PR10MB5409.namprd10.prod.outlook.com
+ ([fe80::91b3:fd53:a6ee:8685%4]) with mapi id 15.20.7292.036; Wed, 21 Feb 2024
+ 21:21:52 +0000
+References: <20240213055554.1802415-1-ankur.a.arora@oracle.com>
+ <20240213055554.1802415-4-ankur.a.arora@oracle.com>
+ <ZczJU8uZdbRKvcAE@FVFF77S0Q05N> <87v86k8opr.ffs@tglx>
+ <877ciykc9v.fsf@oracle.com> <875xyhhhju.ffs@tglx>
+User-agent: mu4e 1.4.10; emacs 27.2
+From: Ankur Arora <ankur.a.arora@oracle.com>
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: Mark Rutland <mark.rutland@arm.com>,
+        Ankur Arora
+ <ankur.a.arora@oracle.com>, linux-kernel@vger.kernel.org,
+        peterz@infradead.org, torvalds@linux-foundation.org,
+        paulmck@kernel.org, akpm@linux-foundation.org, luto@kernel.org,
+        bp@alien8.de, dave.hansen@linux.intel.com, hpa@zytor.com,
+        mingo@redhat.com, juri.lelli@redhat.com, vincent.guittot@linaro.org,
+        willy@infradead.org, mgorman@suse.de, jpoimboe@kernel.org,
+        jgross@suse.com, andrew.cooper3@citrix.com, bristot@kernel.org,
+        mathieu.desnoyers@efficios.com, geert@linux-m68k.org,
+        glaubitz@physik.fu-berlin.de, anton.ivanov@cambridgegreys.com,
+        mattst88@gmail.com, krypton@ulrich-teichert.org, rostedt@goodmis.org,
+        David.Laight@aculab.com, richard@nod.at, mjguzik@gmail.com,
+        jon.grimm@amd.com, bharata@amd.com, raghavendra.kt@amd.com,
+        boris.ostrovsky@oracle.com, konrad.wilk@oracle.com,
+        Arnd Bergmann
+ <arnd@arndb.de>,
+        "Rafael J. Wysocki" <rafael@kernel.org>
+Subject: Re: [PATCH 03/30] thread_info: tif_need_resched() now takes
+ resched_t as param
+In-reply-to: <875xyhhhju.ffs@tglx>
+Date: Wed, 21 Feb 2024 13:22:15 -0800
+Message-ID: <87il2hfr7c.fsf@oracle.com>
+Content-Type: text/plain
+X-ClientProxiedBy: MW3PR06CA0001.namprd06.prod.outlook.com
+ (2603:10b6:303:2a::6) To CO6PR10MB5409.namprd10.prod.outlook.com
+ (2603:10b6:5:357::14)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240221-fix-sh-mmcif-v2-2-5e521eb25ae4@linaro.org>
-References: <20240221-fix-sh-mmcif-v2-0-5e521eb25ae4@linaro.org>
-In-Reply-To: <20240221-fix-sh-mmcif-v2-0-5e521eb25ae4@linaro.org>
-To: Geert Uytterhoeven <geert+renesas@glider.be>, 
- Ulf Hansson <ulf.hansson@linaro.org>
-Cc: linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Linus Walleij <linus.walleij@linaro.org>, 
- Geert Uytterhoeven <geert@linux-m68k.org>
-X-Mailer: b4 0.12.4
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CO6PR10MB5409:EE_|CY8PR10MB6612:EE_
+X-MS-Office365-Filtering-Correlation-Id: 5003007e-b621-4ae7-f9c4-08dc33231f64
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 
+	Lx4Jq5LAw4N3mxwOsIabEjiJ73DX9d5vGOOSiSt23blk8DheOeuri8DqDBzMAndMtqdMAc1CI2w2SAe77cx0IOG8nKc6QEetz/dMFaYAFk1zZBU9jdLteHQ5TC33VSrcnQQC8IS+1NUrYzgXJuaneckaRgVtJe1nAN/JexOTKyxVTEDk+SZc7x7f2Ro109LISTK1SMy9Qnwl4O2YaDeH5b7exoqp6HnizoTnrfZbIzSOxvpqRWaXLij2rs9WHJ7g6bx8eruXtUsspCll+5fzDU+9RM9x46vT6d3etBES3yUHr58GUlk0BrncXkn+nz7f8JLXjyxnhqwzDbU3g8OY1d+SA47+3HaLxaKs0PC7Bvj5ceQigkcNsXL3K/hljv/oZ1J8buNoneCSDAaV0v6z3jYfhzGLZwg5XhUONgcvJQthYkVKh6u0mX/2IhCjYQTzPEt3r8rpBGesiWrbGbS51jH1OC/BJ53ExM1QnmOGDcEx/CuH4KoHn6gju3yIJnonzR4bujCAPkRSHon1dgDHd4aEtF+1nUXBtJ2ydXVazzI=
+X-Forefront-Antispam-Report: 
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CO6PR10MB5409.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: 
+	=?us-ascii?Q?MWXFfuz5nbb8kunbJkJUDC6Wo8GrCmz+sey4eV/QvSnbugvv3C116vvV325x?=
+ =?us-ascii?Q?GUQAo81qE+c7ZQNfhMxXnGPMC8bpOpwT81VuPau3WFFGbx4l50CFRtnBK5YP?=
+ =?us-ascii?Q?57y8nJ18WVFDs5Bey981tvQMCfviHkBD6kwFSs7Zfzddy3N0wkeQgKjILZNG?=
+ =?us-ascii?Q?bqSrabS5dxYxoRVIYFzuQ52hqz6xgIRGR0yiOo/digmCb+jWnzQnuutCzHZ/?=
+ =?us-ascii?Q?UIB+8iyKLhEncKt+z/94u3MHLTl558X4EqoK+kPuC1069hBcDnU+qKl6Dbdv?=
+ =?us-ascii?Q?mT0gxit/NGC53M9ngXB1rgVWjWeyVRUpNlOwidtUCSJ0doYy3Hb+AfVj4KJ/?=
+ =?us-ascii?Q?R9l8+D/oq6ZqhMJzIFmJ6bAUEAjRoz6ycciSf4tWEiRn2DilzrvFJOVXvSVr?=
+ =?us-ascii?Q?0LSxAofH1APkHBagUUsqnGy/BeneQgQrDW44ZSD3ey3wM+R6FOK9NARX3N2f?=
+ =?us-ascii?Q?Bljd2XJ1F1BDY9KsSCjBzCvEiWi9cOAyauhKhbhdnhVY2c14z0ciK4BveKP7?=
+ =?us-ascii?Q?0b+oblc0/BpoWB3zTzI+5/xIV5bHb+ohTRQJczElTwcH1FmuUV+zcaAi3zta?=
+ =?us-ascii?Q?M6xOEz9SyYMkrevlPjn6DCB0kfgkOJmJI7RaIr6rsjEjlC3Ac3WBA7pXZEy2?=
+ =?us-ascii?Q?kCRkAPep+Bq9Tu1tf08KMZcWFV73Uq/vfSsy+cfam73dtbBI/eI6vM7BOZ4a?=
+ =?us-ascii?Q?Ha3SYNgxen+Y7RWi2ZErGsNewHkAiGRGg8FjgeCIKjj7T0tYTB3hhBKc4dJW?=
+ =?us-ascii?Q?m+Z3y3h6sGrDntvoMHK7UHwTjP1oKWfQfe2bW9GoSlnk8sOM71/u/CEGPvn9?=
+ =?us-ascii?Q?MpBJtser3aA0nF1VrIqMzhUFissix2OOGPMkbfLfPs6bzzy9MtcwtKFBqnv4?=
+ =?us-ascii?Q?QGoaxaG4RZYcPivXsggC3zZXNM2Q8I0IZsmzleVmom2FjZCX53FLghDxdkX+?=
+ =?us-ascii?Q?uHX+StHNM1Ucy0Y4XvBrEYsv1wy/6h4BdI8VLxQyaSJQyOlxIPY1+ezALMst?=
+ =?us-ascii?Q?DjPSLdemOSuLW0YycmhT4Ot4CVpoBqB1sx5bS+Mxyitmgz0stCHpz2jnoVjF?=
+ =?us-ascii?Q?E9Lwo+LowUBOBR4YvEZUoT5Fnh7EpTiOhRozClCTUkZ84jHhsHXVqJyG8Mc3?=
+ =?us-ascii?Q?LmqPKOzQid4XbCGfLMzeTjOrEgLMq/Lu0kSX8x1W5N4BzY0ZMciLP/c1J1X9?=
+ =?us-ascii?Q?6NqTpLRg0o1y7j2chU9J/JQye1UtkMISvG6vm127lmuFbRTHRqXtWrAt8GT8?=
+ =?us-ascii?Q?Ql8TLgs85mpAR/3TLriuLRN2/5nTGvRU7RMNmoISB42i8ichVUGoFSbwzDtO?=
+ =?us-ascii?Q?k9YdS5Ye7pJ5buMQMijBRf7QPpE+KGR7Pq6MDvHnZdKIZpHyT7am4A6eO7Fc?=
+ =?us-ascii?Q?KdfbhG0/VyLHPL8O38brL4AcUeopnI3reCgXDDusZoTbGCVwvqXvRMUDtd9t?=
+ =?us-ascii?Q?Io5ai4v1CqzRprL0tB3EYiMB3X5BsZ5p70mxGg85eYdnxkJI02Cy9K6kcROx?=
+ =?us-ascii?Q?uuNekJXAGhx3aBeREjERMfZ4IoI/UIumNkIzDlpFhiMOjoeagF+b1HyXZ5lv?=
+ =?us-ascii?Q?GwlKifdbElSgtX6DxH/+lvYf0GwtsRfDwBZ10dLV2tlpXD7JDA6Tg7Y2DpQS?=
+ =?us-ascii?Q?4A=3D=3D?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 
+	077G335tT9fzH/eWl6o8DEE8tIy7iOcxvIKFYY4nUz0MOpD+Cp+4QjQ1CrPGZdVcxTIVt1sZfqBczSXh57vqhF2+7fh20pLqSNGF61X/AJWQNIJo9r4WpKViJhD6rpiu7o4Ab8qDMIQMjedCs7StYMc7bqKkg52k6/EjKzbyZJDLmxc1tCIZSrTRPuCrdC6/gaZlG3aBL8PvU8uqPXU3aFmBZZ2WoaX/TJaRoNocYV3t1etLUvBFZa6ARYdHuTmgM1qDloGI34YtZZfiRBQVrGSI2A1u+qHl8zsdyhND29cxqB/hNw+zjxK1F/wY+EyuWfeqEDiL2rhaI3eS7B3lXiwMe9Z6kEm0FbHO7Slx8IMbDNxWaCZ4OI/x4QVFbfctiAjA7ewgsYq2RTqS29fxyrOn0fP7EtrNmSp5zJjManObXOc+OXaCzFcx/4m0s0yeLttN37eN3RXPOwFHp0h5k98zwDzCzSXFcdOWF2Xm345lIC/8qbqm+z9vUjQJTRYIUYmWiC1Z0zVmOUXrwjijs5kIbjkzETCt+n0hOJu1xXPJtLL/7qizIhMdOHLg24AAanyCL2TO81ZpvvPLl9z7KpB8gRc+A0WN+usjNPwXSVw=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5003007e-b621-4ae7-f9c4-08dc33231f64
+X-MS-Exchange-CrossTenant-AuthSource: CO6PR10MB5409.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Feb 2024 21:21:52.4546
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: WzPDQrisAxDK0yp+6Sz+rey2UqOfMhc7if4P2UnGP4nhw1wJJISnFsK2aHfBEOb0IpL2iDNPTZ1iL0qgjTD1HFFf1Vt9O80cCMGuIAOfNvw=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR10MB6612
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-02-21_09,2024-02-21_02,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 phishscore=0
+ suspectscore=0 mlxscore=0 bulkscore=0 spamscore=0 mlxlogscore=706
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2311290000 definitions=main-2402210167
+X-Proofpoint-GUID: dWoEUpfPdYPl9HZcOObB_HJpTbTxnqQS
+X-Proofpoint-ORIG-GUID: dWoEUpfPdYPl9HZcOObB_HJpTbTxnqQS
 
-The introduction of sg_miter was a bit sloppy as it didn't
-exactly mimic the semantics of the old code on multiblock reads
-and writes: these like you to:
 
-- Advance to the first sglist entry *before* starting to read
-  any blocks from the card.
+Thomas Gleixner <tglx@linutronix.de> writes:
 
-- Advance and check availability of the next entry *right after*
-  processing one block.
+> On Tue, Feb 20 2024 at 14:21, Ankur Arora wrote:
+>> Thomas Gleixner <tglx@linutronix.de> writes:
+>>>> static __always_inline bool tif_need_resched_lazy(void)
+>>>> {
+>>>> 	return IS_ENABLED(CONFIG_PREEMPT_AUTO) &&
+>>>> 	        __tif_need_resched(TIF_NEED_RESCHED_LAZY);
+>>>> }
+>>>
+>>> Yes please.
+>>
+>> As I wrote to Mark in the sibling subthread, I think exposing
+>> the lazy variants outside of the scheduler isn't really needed.
+>
+> But having a proper wrapper inline in the scheduler code (local header)
+> makes still a lot of sense.
 
-Not checking if we have more sglist entries right after
-reading a block will lead to this not being checked until we
-return to the callback to read out more blocks, i.e. until the
-next interrupt arrives. Since the last block is the last one
-(no more data will arrive) there will not be a next interrupt,
-and we will be waiting forever resulting in a timeout for
-command 18 when reading multiple blocks.
+Yeah, there are a few callsites where this will help. Will do.
 
-The same bug was fixed also in the writing of multiple blocks.
+Thanks
 
-Reported-by: Geert Uytterhoeven <geert@linux-m68k.org>
-Fixes: 27b57277d9ba ("mmc: sh_mmcif: Use sg_miter for PIO")
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
----
- drivers/mmc/host/sh_mmcif.c | 38 ++++++++++++++++++++++++++------------
- 1 file changed, 26 insertions(+), 12 deletions(-)
-
-diff --git a/drivers/mmc/host/sh_mmcif.c b/drivers/mmc/host/sh_mmcif.c
-index 669555b5e8fa..08b4312af94e 100644
---- a/drivers/mmc/host/sh_mmcif.c
-+++ b/drivers/mmc/host/sh_mmcif.c
-@@ -653,6 +653,7 @@ static bool sh_mmcif_read_block(struct sh_mmcif_host *host)
- static void sh_mmcif_multi_read(struct sh_mmcif_host *host,
- 				struct mmc_request *mrq)
- {
-+	struct sg_mapping_iter *sgm = &host->sg_miter;
- 	struct mmc_data *data = mrq->data;
- 
- 	if (!data->sg_len || !data->sg->length)
-@@ -661,9 +662,15 @@ static void sh_mmcif_multi_read(struct sh_mmcif_host *host,
- 	host->blocksize = sh_mmcif_readl(host->addr, MMCIF_CE_BLOCK_SET) &
- 		BLOCK_SIZE_MASK;
- 
--	sg_miter_start(&host->sg_miter, data->sg, data->sg_len,
-+	sg_miter_start(sgm, data->sg, data->sg_len,
- 		       SG_MITER_TO_SG);
- 
-+	/* Advance to the first sglist entry */
-+	if (!sg_miter_next(sgm)) {
-+		sg_miter_stop(sgm);
-+		return;
-+	}
-+
- 	host->wait_for = MMCIF_WAIT_FOR_MREAD;
- 
- 	sh_mmcif_bitset(host, MMCIF_CE_INT_MASK, MASK_MBUFREN);
-@@ -684,11 +691,6 @@ static bool sh_mmcif_mread_block(struct sh_mmcif_host *host)
- 		return false;
- 	}
- 
--	if (!sg_miter_next(sgm)) {
--		sg_miter_stop(sgm);
--		return false;
--	}
--
- 	p = sgm->addr;
- 
- 	for (i = 0; i < host->blocksize / 4; i++)
-@@ -698,6 +700,11 @@ static bool sh_mmcif_mread_block(struct sh_mmcif_host *host)
- 
- 	sh_mmcif_bitset(host, MMCIF_CE_INT_MASK, MASK_MBUFREN);
- 
-+	if (!sg_miter_next(sgm)) {
-+		sg_miter_stop(sgm);
-+		return false;
-+	}
-+
- 	return true;
- }
- 
-@@ -756,6 +763,7 @@ static bool sh_mmcif_write_block(struct sh_mmcif_host *host)
- static void sh_mmcif_multi_write(struct sh_mmcif_host *host,
- 				struct mmc_request *mrq)
- {
-+	struct sg_mapping_iter *sgm = &host->sg_miter;
- 	struct mmc_data *data = mrq->data;
- 
- 	if (!data->sg_len || !data->sg->length)
-@@ -764,9 +772,15 @@ static void sh_mmcif_multi_write(struct sh_mmcif_host *host,
- 	host->blocksize = sh_mmcif_readl(host->addr, MMCIF_CE_BLOCK_SET) &
- 		BLOCK_SIZE_MASK;
- 
--	sg_miter_start(&host->sg_miter, data->sg, data->sg_len,
-+	sg_miter_start(sgm, data->sg, data->sg_len,
- 		       SG_MITER_FROM_SG);
- 
-+	/* Advance to the first sglist entry */
-+	if (!sg_miter_next(sgm)) {
-+		sg_miter_stop(sgm);
-+		return;
-+	}
-+
- 	host->wait_for = MMCIF_WAIT_FOR_MWRITE;
- 
- 	sh_mmcif_bitset(host, MMCIF_CE_INT_MASK, MASK_MBUFWEN);
-@@ -787,11 +801,6 @@ static bool sh_mmcif_mwrite_block(struct sh_mmcif_host *host)
- 		return false;
- 	}
- 
--	if (!sg_miter_next(sgm)) {
--		sg_miter_stop(sgm);
--		return false;
--	}
--
- 	p = sgm->addr;
- 
- 	for (i = 0; i < host->blocksize / 4; i++)
-@@ -799,6 +808,11 @@ static bool sh_mmcif_mwrite_block(struct sh_mmcif_host *host)
- 
- 	sgm->consumed = host->blocksize;
- 
-+	if (!sg_miter_next(sgm)) {
-+		sg_miter_stop(sgm);
-+		return false;
-+	}
-+
- 	sh_mmcif_bitset(host, MMCIF_CE_INT_MASK, MASK_MBUFWEN);
- 
- 	return true;
-
--- 
-2.34.1
-
+--
+ankur
