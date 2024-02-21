@@ -1,144 +1,97 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB93F82865;
-	Wed, 21 Feb 2024 17:36:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4287A7FBD5;
+	Wed, 21 Feb 2024 17:37:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708536983; cv=none; b=oar2RshXI3OCV8qDYcrJvi1AW99x0vWqXR9A+fMDneD7eJcRpefdD6mrzG7Sy2LAg3QLX6eB9YgkVvLAd76il2NnbxB6/QK+Q5smlBcS3769SSafM7OWuHPF96IEuM5tZpy+kfHyOQse2Fo0mFY5cVxgI+JywSir8w1oT/Ab8dU=
+	t=1708537079; cv=none; b=K87cQMLJhIUzZ9fgY3NF9FbkylUVfYbPdTWPGxY8pxCaZ7pBT/EJUASLEUXAOfp3D3jAc92Ic3WuZIufBv1tdVkFq2SuCw88bGkQSPbe2mYG9M3STFLheX+F5RCDaDajJW/6XYm174q1ASUMsxLLdqh6t1krzs80dEgWm17Hs3U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708536983; c=relaxed/simple;
-	bh=yiMUcDHHU5n4NoQ84wGw656HnuqVIwBmqSIpUYSySM0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pm4hsDeN3YzFtJKMeEL4BpULGS6KHPSDVs55bYyiDpFpGaTnAW3znsuhOLg6vgMKtlOvKxvsvNhDKjuKYxpK4msIPatgic+wc/M2tHGFwruH2t/WTg16ZiC4rWWLZSKhznxa12MjoM5z5gljdXApqog/KsUKDz7T1nKtyGq7hXU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O12n148t; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1708537079; c=relaxed/simple;
+	bh=RSJEdvZKXkX3yGEIkS9DaCnaNb3HO5rM3mqCc71lxT8=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=eeI7Wqgn8ZwpQ6CCdsOo+v7m1gXmE6Os3P1cxe04Xsu95O88qGmChvB55xf+CPCBVXM9FyzhUOEeiKo9+cr0fkQQGIfMWIiDMzslSYdX5Utjp3Ou+gkAsAjV4E84qRBTZBmwVooEL5H7W5j88sK0gAGqIguyBTqWByaoRtZY9FU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=xLEbcmth; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=xQf2fTtB; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O12n148t"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 569D2C433F1;
-	Wed, 21 Feb 2024 17:36:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708536983;
-	bh=yiMUcDHHU5n4NoQ84wGw656HnuqVIwBmqSIpUYSySM0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=O12n148tnxl0hHrH0KNUw308nap2CMfsjiJaCO+G6etl5udAA3V57bqbWZBFQUGZs
-	 Kj4x4GxnB2NHbhBuzMjO33ReX0o4unLwDVUsx7rE6BrK0mSY+AQVi1U20errE3mUk7
-	 nVTIbjx7vjPf0I68CWxX1fA4b1OFc0RyrKyDq5swD9NlwBDQWruvA/i+WNXsvWkpRM
-	 uYyCW+odtKyrAny0HBpdXJaxNnNh93OFpmEFT500VAoVKZsfjMLpKQM8nF17WmQNVZ
-	 f7b+uqFxyhSA53z6Utjz7HKlp+QYfzdvrhQRfPQSg/ENFM+J0kh3Y5lihL5FmDHnX1
-	 07XkRuq4u5RdA==
-Date: Wed, 21 Feb 2024 17:36:12 +0000
-From: Mark Brown <broonie@kernel.org>
-To: "dalias@libc.org" <dalias@libc.org>
-Cc: "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>,
-	"linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
-	"suzuki.poulose@arm.com" <suzuki.poulose@arm.com>,
-	"Szabolcs.Nagy@arm.com" <Szabolcs.Nagy@arm.com>,
-	"musl@lists.openwall.com" <musl@lists.openwall.com>,
-	"linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-	"linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-	"kvmarm@lists.linux.dev" <kvmarm@lists.linux.dev>,
-	"corbet@lwn.net" <corbet@lwn.net>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-	"oliver.upton@linux.dev" <oliver.upton@linux.dev>,
-	"palmer@dabbelt.com" <palmer@dabbelt.com>,
-	"debug@rivosinc.com" <debug@rivosinc.com>,
-	"aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>,
-	"shuah@kernel.org" <shuah@kernel.org>,
-	"arnd@arndb.de" <arnd@arndb.de>, "maz@kernel.org" <maz@kernel.org>,
-	"oleg@redhat.com" <oleg@redhat.com>,
-	"fweimer@redhat.com" <fweimer@redhat.com>,
-	"keescook@chromium.org" <keescook@chromium.org>,
-	"james.morse@arm.com" <james.morse@arm.com>,
-	"ebiederm@xmission.com" <ebiederm@xmission.com>,
-	"will@kernel.org" <will@kernel.org>,
-	"brauner@kernel.org" <brauner@kernel.org>,
-	"hjl.tools@gmail.com" <hjl.tools@gmail.com>,
-	"linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>,
-	"paul.walmsley@sifive.com" <paul.walmsley@sifive.com>,
-	"ardb@kernel.org" <ardb@kernel.org>,
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
-	"linux-mm@kvack.org" <linux-mm@kvack.org>,
-	"thiago.bauermann@linaro.org" <thiago.bauermann@linaro.org>,
-	"akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-	"sorear@fastmail.com" <sorear@fastmail.com>,
-	"linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
-Subject: Re: [musl] Re: [PATCH v8 00/38] arm64/gcs: Provide support for GCS
- in userspace
-Message-ID: <4a3809e8-61b2-4341-a868-292ba6e64e8a@sirena.org.uk>
-References: <20240203-arm64-gcs-v8-0-c9fec77673ef@kernel.org>
- <22a53b78-10d7-4a5a-a01e-b2f3a8c22e94@app.fastmail.com>
- <4c7bdf8fde9cc45174f10b9221fa58ffb450b755.camel@intel.com>
- <20240220185714.GO4163@brightrain.aerifal.cx>
- <9fc9c45ff6e14df80ad023e66ff7a978bd4ec91c.camel@intel.com>
- <20240220235415.GP4163@brightrain.aerifal.cx>
- <a57d6c7eada4b9a7c35addbc8556f5b53a0c3e6f.camel@intel.com>
- <20240221012736.GQ4163@brightrain.aerifal.cx>
- <d18f060d-37ac-48b1-9f67-a5c5db79b34e@sirena.org.uk>
- <20240221145800.GR4163@brightrain.aerifal.cx>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="xLEbcmth";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="xQf2fTtB"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1708537076;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=rNP/pSU4Q89ArPZAYOkavXsZq7rBfQprq8vBcMveDTI=;
+	b=xLEbcmthFRfBygzZ69VL2DG/D0gBYdP2sN2Lgb8itqPYkU2o1cKTqlQ9JHvN9mWqw1vFEf
+	5FkMFYZDTJoe/BqGdmY+A/NaVuf49L514Y+kGdUneY5FIX7EdlE+mxfgfQL6NcEvHMEyVP
+	2HB9Gn75wHE39/Iwnc1QGEr5A1Kfae8HlwjYAnOAaDb+b+VUsA/OW74yWiGP70IqnV1ZHv
+	a+N6AfJAhsWBDCo/gUomai03e6H9G5Reh2aU0g6h/C72VAEZ8mi23zSDyTBOlbqj2aieJc
+	aD845IESs2nX6iPzvlHCMqUdWfI4i7/NQsWtjRWTJMeXzGaj00flY4bLm/gQVg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1708537076;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=rNP/pSU4Q89ArPZAYOkavXsZq7rBfQprq8vBcMveDTI=;
+	b=xQf2fTtB4GWLnzNERvE/GFUF0GEltMGR9pYEU1fe90JMgmi5FmXkeB6Xdj5dZJ0u1y5IjA
+	4I/r2JPMR/kcPXAg==
+To: Changhuang Liang <changhuang.liang@starfivetech.com>, Rob Herring
+ <robh+dt@kernel.org>, Krzysztof Kozlowski
+ <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>,
+ Philipp Zabel <p.zabel@pengutronix.de>
+Cc: Ley Foon Tan <leyfoon.tan@starfivetech.com>, Jack Zhu
+ <jack.zhu@starfivetech.com>, Changhuang Liang
+ <changhuang.liang@starfivetech.com>, linux-kernel@vger.kernel.org,
+ devicetree@vger.kernel.org
+Subject: Re: [PATCH v3 2/2] irqchip: Add StarFive external interrupt controller
+In-Reply-To: <20240221022647.5297-3-changhuang.liang@starfivetech.com>
+References: <20240221022647.5297-1-changhuang.liang@starfivetech.com>
+ <20240221022647.5297-3-changhuang.liang@starfivetech.com>
+Date: Wed, 21 Feb 2024 18:37:56 +0100
+Message-ID: <87ttm1g1l7.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="SXzKVr6cSzokmvVK"
-Content-Disposition: inline
-In-Reply-To: <20240221145800.GR4163@brightrain.aerifal.cx>
-X-Cookie: The second best policy is dishonesty.
+Content-Type: text/plain
 
+On Tue, Feb 20 2024 at 18:26, Changhuang Liang wrote:
+> +static void starfive_intc_unmask(struct irq_data *d)
+> +{
+> +	struct starfive_irq_chip *irqc = irq_data_get_irq_chip_data(d);
+> +	unsigned long flags;
+> +
+> +	raw_spin_lock_irqsave(&irqc->lock, flags);
 
---SXzKVr6cSzokmvVK
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+This does not need the _irqsave() variant as this is guaranteed to be
+called with interrupts disabled from the core code.
 
-On Wed, Feb 21, 2024 at 09:58:01AM -0500, dalias@libc.org wrote:
-> On Wed, Feb 21, 2024 at 01:53:10PM +0000, Mark Brown wrote:
-> > On Tue, Feb 20, 2024 at 08:27:37PM -0500, dalias@libc.org wrote:
-> > > On Wed, Feb 21, 2024 at 12:35:48AM +0000, Edgecombe, Rick P wrote:
+> +	starfive_intc_bit_clear(irqc, STARFIVE_INTC_SRC0_MASK, BIT(d->hwirq));
+> +	raw_spin_unlock_irqrestore(&irqc->lock, flags);
+> +}
 
-> > > > (INCSSP, RSTORSSP, etc). These are a collection of instructions that
-> > > > allow limited control of the SSP. When shadow stack gets disabled,
-> > > > these suddenly turn into #UD generating instructions. So any other
-> > > > threads executing those instructions when shadow stack got disabled
-> > > > would be in for a nasty surprise.
+> +	chained_irq_enter(chip, desc);
+> +
+> +	value = ioread32(irqc->base + STARFIVE_INTC_SRC0_INT);
+> +	while (value) {
+> +		hwirq = ffs(value) - 1;
+> +
+> +		generic_handle_domain_irq(irqc->domain, hwirq);
+> +
+> +		starfive_intc_bit_set(irqc, STARFIVE_INTC_SRC0_CLEAR, BIT(hwirq));
+> +		starfive_intc_bit_clear(irqc, STARFIVE_INTC_SRC0_CLEAR, BIT(hwirq));
+> +
+> +		clear_bit(hwirq, &value);
 
-> > > This is the kernel's problem if that's happening. It should be
-> > > trapping these and returning immediately like a NOP if shadow stack
-> > > has been disabled, not generating SIGILL.
+As this is a local variable you really don't want to have the atomic
+variant for clearing the bit. __clear_bit() is your friend.
 
-> > I'm not sure that's going to work out well, all it takes is some code
-> > that's looking at the shadow stack and expecting something to happen as
-> > a result of the instructions it's executing and we run into trouble.  A
+Other than those nitpicks this looks good.
 
-> I said NOP but there's no reason it strictly needs to be a NOP. It
-> could instead do something reasonable to convey the state of racing
-> with shadow stack being disabled.
+Thanks,
 
-This feels like it's getting complicated and I fear it may be an uphill
-struggle to get such code merged, at least for arm64.  My instinct is
-that it's going to be much more robust and generally tractable to let
-things run to some suitable synchronisation point and then disable
-there, but if we're going to do that then userspace can hopefully
-arrange to do the disabling itself through the standard disable
-interface anyway.  Presumably it'll want to notice things being disabled
-at some point anyway?  TBH that's been how all the prior proposals for
-process wide disable I've seen were done.
-
---SXzKVr6cSzokmvVK
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmXWNIwACgkQJNaLcl1U
-h9CDBQf/b2osUy8IL9ugqihJXvxZdZ2gjHyphrXKAEbbUT4oT2dVS/P4nlvlYurY
-9IML2O8yTSshh0R+WaZCQ28PqhVENeRSLmgsuSIDiSrLY66okGApL4XVaAWAek2d
-KvQ3CU5OkGfGONdHJpiaDdcQbFBuEvUq258Kv+jUJnTKUnmFIjGeM1SIZzQMbrUH
-6cXrpAA0Pqc5yrwYFzYxky0ZScQRgr1RQMV43e7IbCtfGnFfbvevfzgWwzZINjf9
-kjz8RcfyhXuAoW1sAaXsPz49nL0NGr4l5riEdr3SmDYyvhJ5LEpDnFtANzD4lD3E
-cZMNKqJyog/SgaLaqh6dMTlV5Qd9gw==
-=pmML
------END PGP SIGNATURE-----
-
---SXzKVr6cSzokmvVK--
+        tglx
