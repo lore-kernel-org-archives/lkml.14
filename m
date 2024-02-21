@@ -1,196 +1,153 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from EUR04-VI1-obe.outbound.protection.outlook.com (mail-vi1eur04on2121.outbound.protection.outlook.com [40.107.8.121])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4823E3C6AB;
-	Wed, 21 Feb 2024 09:13:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708506785; cv=none; b=ATIuPnL777uhePdTnhhHbVBy+gs0upHB3rvhp3b8tObiCwpPoPar4aA9CpWXj57fv3XVwlU8JHyMgWNMoi6Utq94JYFmNdJXz7eVR2RfzFCRZCYaDOijFFWiRMpzTIQVxALtDWIVeIpOBB3V81bRYQXlMPbpuNlA8pD/ML46b5I=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708506785; c=relaxed/simple;
-	bh=1SkocYH3fo2j2uDv5WnCnFcUqIuX9Fi1/HdKKH2UY0Q=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=ubp5lLFFl6un/EVMn62xdIvyZhbf79ce9VVEGkx1HTTiAm6SQrZlIzspbHC50FVH3sbwsYHmBu1Y8ia/GDmXsf7qL0MMFIHVQZwUr5JwqGPN8Hpa2LCEWZ7RF8Rn2p3hGjluWBy4bTqNzM/YBQLFIFvXpquQxZ39a5JupXzCcPY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=ehfED+vb; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7F473D386;
+	Wed, 21 Feb 2024 09:13:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.8.121
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1708506826; cv=fail; b=it6un8x6a5X4uGbyyjFJCYqY7UAXvqteyoKgloZq05a4xGeEcoUJP7gEyP2LtyfE0ORyE85oy6Kia/5d4DfFE2DwgeBkZHpdZb7MJs2LQQZPDWJ+IO9h+9kFBfnW4maUJo/qWX9vrB1Zi3yfBIw6h1xRWI894vDN+oeNvY4qUYc=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1708506826; c=relaxed/simple;
+	bh=zDnlRCXvCwoZdhaGfEfd/MscPP9r+nGxv8LlMA9hbLY=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=fsL0Kx79tfWCP996m9Qk5ZxOisW4+GNmJP7knct+uy79QLhYixf/vctkSyfUQvQ+yeOY2PnOhufP+oHaxNoLo1ivRvjKiv1ibFjRLHlCq9Ix7ox6Vd/jQBa8PTbCRml1FQ4zZ3AQQ4/KMcYMO2VwCh40qumdgtPEmpcMiUTGJ+c=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=solid-run.com; spf=pass smtp.mailfrom=solid-run.com; dkim=pass (1024-bit key) header.d=solidrn.onmicrosoft.com header.i=@solidrn.onmicrosoft.com header.b=P/SAc2Ra; arc=fail smtp.client-ip=40.107.8.121
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=solid-run.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=solid-run.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="ehfED+vb"
-Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 41L2bCow027853;
-	Wed, 21 Feb 2024 09:13:00 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	qcppdkim1; bh=B3vXZICwlVLnOSYVFqiY/q6uGIvLfgq4175ICymiVU4=; b=eh
-	fED+vbmKkfkY6wOO/LaCh+CNzunLAntCLcGfh7y9sJF3Q86xIxelmsgaj253c251
-	EApmtfhUUU9W2jL1Go5fUKrTBvVC8Ct75wHkquzF5v696wX+cqE3IktasfKQaUbc
-	W9tujCfJDl2EPfiyYn8EpZL7ftd4KiltjB2Qu3x9CqN3RnXOfbvNJRLlv+Tjhhcl
-	j96OoSgUG/Oz7CEQxLNBItku/zMfEC7aOGlbtfbCq6wF0XoQSX6Rp4dG8Jcmq19W
-	/XOGucPU/c/CbLY9kzi9QVjBaEHGNxI54DNr4j3bcYo8Wuna+1+9LCV1WAz4qin/
-	6ZxSa+52YehvNR+kxhHg==
-Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3wd21qsgem-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 21 Feb 2024 09:12:59 +0000 (GMT)
-Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
-	by NALASPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 41L9CwW7001678
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 21 Feb 2024 09:12:58 GMT
-Received: from [10.239.154.73] (10.80.80.8) by nalasex01c.na.qualcomm.com
- (10.47.97.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Wed, 21 Feb
- 2024 01:12:56 -0800
-Message-ID: <6b36bdc2-0ffb-491f-a1ae-93a20822e6f0@quicinc.com>
-Date: Wed, 21 Feb 2024 17:11:24 +0800
+	dkim=pass (1024-bit key) header.d=solidrn.onmicrosoft.com header.i=@solidrn.onmicrosoft.com header.b="P/SAc2Ra"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=TCuSRbHe/pZVJkmJXmUWYCMIWrDq7fTwqBwN4moWww5nHFWhpDK1lXYKTbTHUYna/myG6HK8H64s/BTtwmj7ED4rtkfHiADigCPzQnm2Olay1tdJBnW39RNyvVEm+TWZejmBplRJp2YZr47MBsPipAb1wgOtTBHjpnMBb9QypkducSarMzWkx9id2/Iv7WE2KwAFo1Kamz8wmWEsCS7ESkcQrmYhCmyGf02bHOhYBXCaST+N59atf9T+ja2CXy0QwYFZBNyKP2Spv6Wrp2+4EUzHsfKaxmuQgSNevup45gC/oCQcmG9Aka2FKy1HmlYHFGqWXsasDqn0d/OuBf7ipw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=587H76IecIJxT33cbb45zEx3aaTR4CwiwqQD/7FGoCE=;
+ b=mz4aY/rOnaiXnPK/ZSHjoYNoTWCz0V36n8RLTZTPPU02w/v/MLdgT6DSekysQgh8aeC+FPl8ab7QfAVdGzYKrCuJ7ef0rJ/fSQrV81lDgZ/CgKox+N2PDN1XclIxn8lULWgseOhLooTLYBvOcXmtBdlRmb+qtUH7OqGBqH9UO+fRdd9r75ALMHhyMnmh5D4NWGgM3jS3scxc52/Pba+s6kbJ9CyL5LRf1n8Xgl0tSTDxOq1UABhR+BHBlC1lvPVhyM5mDAP4FcryEwwjxwWCPRFzYJMIJEDFh51E+t6J413VknWghfiOIrH8n6Ku9MmUkl/DFbY5VV4Fx3ZYe3tZaw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=solid-run.com; dmarc=pass action=none
+ header.from=solid-run.com; dkim=pass header.d=solid-run.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=solidrn.onmicrosoft.com; s=selector1-solidrn-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=587H76IecIJxT33cbb45zEx3aaTR4CwiwqQD/7FGoCE=;
+ b=P/SAc2Ra/rSo8vtpjfphyIwzX63kYaywZ96a14FqGggjjN9QrGgVAUk69rmMiunSD3W1FU4Kuow1b8ZzWzp7ez0o/lgUvtCrJWJaizYakQQCrqAM7OotS0PQ2/9iMA5jjhnMjUUZmt0T1+rpfkHyT/7fAWOG124CZsJ971pu2/k=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=solid-run.com;
+Received: from AM9PR04MB7586.eurprd04.prod.outlook.com (2603:10a6:20b:2d5::17)
+ by AM9PR04MB8634.eurprd04.prod.outlook.com (2603:10a6:20b:43d::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7292.29; Wed, 21 Feb
+ 2024 09:13:41 +0000
+Received: from AM9PR04MB7586.eurprd04.prod.outlook.com
+ ([fe80::3b94:f607:ebe1:7d6c]) by AM9PR04MB7586.eurprd04.prod.outlook.com
+ ([fe80::3b94:f607:ebe1:7d6c%7]) with mapi id 15.20.7292.036; Wed, 21 Feb 2024
+ 09:13:41 +0000
+Message-ID: <a0144c5b-4095-4a0c-84b6-93dfe9631a6b@solid-run.com>
+Date: Wed, 21 Feb 2024 10:13:36 +0100
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v7] dt-bindings: mtd: spi-nor: add optional interrupts
+ property
+To: Michael Walle <mwalle@kernel.org>,
+ Tudor Ambarus <tudor.ambarus@linaro.org>,
+ Pratyush Yadav <pratyush@kernel.org>,
+ Miquel Raynal <miquel.raynal@bootlin.com>,
+ Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>,
+ Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>, linux-mtd@lists.infradead.org
+Cc: Yazan Shhady <yazan.shhady@solid-run.com>, Rob Herring <robh@kernel.org>,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20240219-mtd-flash-interrupt-binding-v7-1-206e30a656fa@solid-run.com>
+ <CZAM553H2H56.2TDN36QEL90XX@kernel.org>
+Content-Language: en-US
+From: Josua Mayer <josua@solid-run.com>
+In-Reply-To: <CZAM553H2H56.2TDN36QEL90XX@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: TL0P290CA0014.ISRP290.PROD.OUTLOOK.COM (2603:1096:950:5::8)
+ To AM9PR04MB7586.eurprd04.prod.outlook.com (2603:10a6:20b:2d5::17)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] regulator: qcom-rpmh: Fix pm8010 pmic5_pldo502ln minimum
- voltage
-To: Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
-        Mark Brown
-	<broonie@kernel.org>
-CC: <andersson@kernel.org>, <konrad.dybcio@linaro.org>, <lgirdwood@gmail.com>,
-        <quic_collinsd@quicinc.com>, <linux-arm-msm@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20240214121614.2723085-1-bryan.odonoghue@linaro.org>
- <13baed68-1014-4a48-874a-94027a6dd061@sirena.org.uk>
- <f38468b4-8b16-4180-9738-0a2b557651a1@linaro.org>
- <dcce3fa9-ecf3-42be-adf6-ca653a79ba2e@sirena.org.uk>
- <3851e21f-f8cb-487b-9ed4-9975949ff922@linaro.org>
- <a09d6450-95e7-4ed6-a0ad-5e7bb661533a@sirena.org.uk>
- <df6a49f3-88e9-46b4-b7c3-e5419fd01eca@linaro.org>
- <6f6dfaa2-f529-c9fe-7dde-402c92f0daf6@quicinc.com>
- <bc05fe84-0700-4587-bb18-eb39d30f10a8@linaro.org>
-Content-Language: en-US
-From: Fenglin Wu <quic_fenglinw@quicinc.com>
-In-Reply-To: <bc05fe84-0700-4587-bb18-eb39d30f10a8@linaro.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01c.na.qualcomm.com (10.47.97.35)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: NZbMFwcvnBhDiZdoiWZQEpX3zpdwKpHD
-X-Proofpoint-ORIG-GUID: NZbMFwcvnBhDiZdoiWZQEpX3zpdwKpHD
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-02-20_06,2024-02-20_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- priorityscore=1501 malwarescore=0 mlxscore=0 spamscore=0 suspectscore=0
- phishscore=0 adultscore=0 impostorscore=0 bulkscore=0 mlxlogscore=999
- clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2402120000 definitions=main-2402210071
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: AM9PR04MB7586:EE_|AM9PR04MB8634:EE_
+X-MS-Office365-Filtering-Correlation-Id: f5e0d8d0-ce8d-4e8c-2b5b-08dc32bd6586
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	guQWJu99vRn8CWTGsq+FGIvLy+67ysN5PyyW/oXhM32bm4k/e1c5DzKmnlzvLWdjIBLKSlj6cdV8Sn0fAxwkdpdCyTqgJzwuR7iocH1PCFMNNaYSainuneBqHfndFvLz1xLL1JemXgi3AcGu8QpVSHfsyGSai4vUsXKmOm8QXj7Vs/uUDHXpw8rFMWrljNOFqwIkVVyW5UduUS2XIDjDp4TT7tHLjUWS1V/Qj3ObOgqHm1xSNImC580DJyxeFNrzO6vqO6kRkJOrQbC421jILW6/c6eAIvRLdFUMqjsgQgydrMBkbCZlZs/7eUsl/wLR4QFIGm75kW+vMrTU41P0tk5/HszDBdfLietJWLh/Pqxv5zd/araktTZlun8bIoLJ8KtuWFnYfuFZgCciDHMJlUsgmv/eMWn/YjGUySmmq5NUOBWszx8n2zvLy0dqmCRISq4qTIsZRSsqBeRUGSZOEnGf9N/aLmLCJYMjjmTk/WYvehoZelW78CqBr7prsb1DK6mdYPDm4+Ler4FI+B1N6GBfDHTde7tm8UIdN1n9zYVq8z+vDMR5n8sCxnE/SQc1xItTSyYTeT6JKDYOB7KFd8S0ERuzE+lwz4i8oSjXmls=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM9PR04MB7586.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(921011);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?eFVscko4cjJVL1dmczJYQzBBeEJQaDZXTlYzY2FJbmZVaGtaaGhxb0NoUTNR?=
+ =?utf-8?B?KzFKSW8vVmttY09XNFJLeWFhdGtzOTBCNklGQ0NzUTd5WWdDcEJiR3dwTGRv?=
+ =?utf-8?B?cHJ4QUswOFlRRTBJZG1nVjRKc3JMZnBOTEgyUDI5cE1DVU5kMHZyQWE1NUVh?=
+ =?utf-8?B?RGZXOHdmT1hyTEZLNlNDSStjdjd3SlBlZVFKTDJ6RUM4YXRZZW1lalBjRnN1?=
+ =?utf-8?B?SEhPdUdYNDg3alpaK3BpMllnSGxtbVhhME9uTHZGbFdmU3dTZ3R0Q1FVZWxO?=
+ =?utf-8?B?U1JqVkt6WDl3UU03RDkyS2pQLzJnc2YyUkl0cys3TXNnWTFYOUVvOEM5SEk5?=
+ =?utf-8?B?anlENFRSb0VPclhmOElETDhiNlBRbzljTnhkbEM3YXcrMHFjdnF5ak9HRzdl?=
+ =?utf-8?B?dXEwdkx0NlhaeER1aWlnMXNDL2trQkwxa3RJNFBGeFJscTRCd3Vkc3IyQ0lQ?=
+ =?utf-8?B?Ui9tT21aZkswdWdsdlpKdDFwWEw0TFZaNVlIUXY1TFo2TmY2djNHRng0V3VO?=
+ =?utf-8?B?eDRWdHYyVkx2K3BFUzY4MkJuZVdmTHZZcnZJWE91RlAydTc0dFhUQ3RSZy9a?=
+ =?utf-8?B?Rm01N1dvUWp3U3JCNVcwSkcza0pKV25nY0c4Z0ZpczFHdnd3cE5yUHJXaUYw?=
+ =?utf-8?B?cmRtMzNab0JTSlVSdkRZYzhtbFdTMFAweWxvM3lCSnRVdzV0VE1kTVBjbkVG?=
+ =?utf-8?B?RG4zOUdaeVRJZGhOZnRjdEdablZ4U1R1L0VKQUFIbE9pUzN2NUt2U2toVUVv?=
+ =?utf-8?B?dU5uTFZhOHNucmF0TTVQRDNKZk9TQjVOQXYzK25OS2lYNDBWc05XVFBCRkpQ?=
+ =?utf-8?B?NWRtOHdVek95Y3pOYmkwK2I1V2w2SFR2OEhQZ2NBdkhLRkJ6RVoyTlBLK3ZY?=
+ =?utf-8?B?TGNHRlZFaS9iaGRmazRWZExYRnYzeE40bjRGSE94OFhYYmdvYnN5Rmlmeit4?=
+ =?utf-8?B?L2RyTGgxTkNIaWNHc1ZsRHY5bTlWYUFjMUFHUnNTbXdPYlpzd3Z3VkxncFBJ?=
+ =?utf-8?B?T3ZHWk1yV0xTZy9HU2lOZC9SVnIraUFRU3EyVTNNZWJWUUluZTNCSDhROFpI?=
+ =?utf-8?B?VVJXeWVXUzBSbGdrUUcvTVBIT2oreVpkQVlVYWx4WHB3UkNXYkQrYmU5L2hv?=
+ =?utf-8?B?MEozVjRhMVkzRDFadGxaS2ZyRkhhSGV1UU40RFhEaWdBMzM2UkYvdHlOcW5t?=
+ =?utf-8?B?RzgyOTJnTldseWlkaWNwT0lPeFZFdkgxTjRZdmdib1dBaTY4TjYzK3prV1RC?=
+ =?utf-8?B?UUJCVlQ1Q243TUhyRzdTQUZpNThQYU0yZ0ZmOVlkT3FtZmIxRzB6NC92ZlQ1?=
+ =?utf-8?B?T2JiOFhDdlNIT3BGanNEYi9JclZlWXhOWWlqZVk5YzBEMk92dXNUb3BWei90?=
+ =?utf-8?B?cVJITzMyWEFaNWY4N0lsaG1kbzY3TW9WbTdJYWNSMi9YR3RoVXJLUjZDT1Bw?=
+ =?utf-8?B?Q2M0V0d5a2huTGRXMVZUY0Qwb2Nuay82TWx6Qk0yYXNuQTJZZmJCRWQvZzRq?=
+ =?utf-8?B?RytYNDF5MGZFOWJwZ1FuNXl0V3lCSFI0ckJGbEE0M3FTZnhtNWVNckZWdll0?=
+ =?utf-8?B?bkxDY3RWV1o4clFrTE9ZZWN2SU1HVVlkK05XL1NoYzY3ZzRGKzVrN00vOEg2?=
+ =?utf-8?B?SDlzSmFaaFVNQTJzU3gzb0tESS9zU09XTzE5aDl4L0tKK2xMbGhqQUk0cEYy?=
+ =?utf-8?B?dmZjT0ZJdnBlbUdMVDNpM1owbVlTQ2p0Q0tneFZ0TGlRTUp3ZXlhcWJma3hX?=
+ =?utf-8?B?S2dpR2E1R2NrTVU2MVpoUXQ0STIrdEJpTU5FLzJkc2dLTkNTRzNVc2xxSGVr?=
+ =?utf-8?B?TWtNVXdIZUtvQ210d1A3QTBmWmxyOHlacFE1czJkVFo3Q1R1dTZuTVQ1QVE4?=
+ =?utf-8?B?Z0lUWkZxWTJoYkhnUDBLWXBWNWx0ODJSbEU2OEZLZXlaWUp4WVNpNk9vSERX?=
+ =?utf-8?B?TUNNWUJOWFJpbzBERGtCVG9NRVRpY0ZMQU9ZOFR6MjZJZW90azEyR0VGcVVh?=
+ =?utf-8?B?TkgrL0JMa3NHQlRFTXhNWGRUby8vSExYaGFjZ2dqVTRGSU5kb2VONTVQWUtt?=
+ =?utf-8?B?QzdqdFN4cEtkczh1OFBTVTlEWlBvQ3hzeGdDZEdJZ3RkanJhMnA1eW9YSkpR?=
+ =?utf-8?Q?elmcWbxRuMOgAI/gvEpjZ4Q/b?=
+X-OriginatorOrg: solid-run.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f5e0d8d0-ce8d-4e8c-2b5b-08dc32bd6586
+X-MS-Exchange-CrossTenant-AuthSource: AM9PR04MB7586.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Feb 2024 09:13:41.5122
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: a4a8aaf3-fd27-4e27-add2-604707ce5b82
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: iydicO59NyaDEBRQ5CvmbnPhQaDeH6Quy5Sz5l18h7OCufLEd9mLwuMKj4HhL8DBwC7BDHYxiPtFCP9sKzUD0g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM9PR04MB8634
 
+Hi,
 
+Am 21.02.24 um 09:27 schrieb Michael Walle:
+> Hi,
+>
+> On Mon Feb 19, 2024 at 3:41 PM CET, Josua Mayer wrote:
+>> Some spi flash memories have an interrupt signal which can be used for
+>> signalling on-chip events such as busy status or ecc errors to the host.
+> Do you have an example? Maybe one with a public datasheet?
 
-On 2/20/2024 4:20 PM, Bryan O'Donoghue wrote:
-> On 19/02/2024 3:06 a.m., Fenglin Wu wrote:
->>
->>
->> On 2024/2/15 6:47, Bryan O'Donoghue wrote:
->>> On 14/02/2024 14:52, Mark Brown wrote:
->>>> On Wed, Feb 14, 2024 at 02:44:56PM +0000, Bryan O'Donoghue wrote:
->>>>> On 14/02/2024 14:13, Mark Brown wrote:
->>>>
->>>>>> Not just that but also note that every voltage step in the range will
->>>>>> have the 8mV offset added.
->>>>
->>>>> The documents I have just show sensors attached to ldo3, ldo4 and 
->>>>> ldo6 fixed
->>>>> at 1.808.
->>>>
->>>>> I don't think there's any better or different information than a 
->>>>> +200000uV
->>>>> increment TBH.
->>>>
->>>> This seems like a very surprising and unusual hardware design, the
->>>> 1.808V voltage is already unusual.  Note that this may break systems
->>>> that are trying to set a range of say 1.8-2.0V if they actually need to
->>>> set 2V.
->>>
->>> Hmm. I'm sure the rail value should be 1.808 its all over the 
->>> documentation for example when we get to index 3 we hit 2608000
->>>
->>> REGULATOR_LINEAR_RANGE(1808000, 0,  2,  200000),
->>> 1808000 0
->>> 2008000 1
->>> 2208000 2
->>> 2408000 x
->>> REGULATOR_LINEAR_RANGE(2608000, 3,  28, 16000),
->>>
->>> And there are other rails @ 1v8 if 1v8
->>>
->>> The one thing I can't easily verify is index 0 = 1808000 and not say 
->>> 1800000 or indeed that the increment is 200000 and not say 8000.
->>>
->>> I'll see if I can ask around with the hw people and get a more 
->>> complete answer.
->>>
->>> Similarly now that you've gotten me digging into this problem, it's 
->>> not clear to me why this regulator isn't just a linear regulator with 
->>> an 8mv increment over a range of indexes.
->>>
->>> At least the documentation I'm looking at doesn't elucidate.
->>>
->>> I'll dig some more.
->> Please see the voltage steps for LDO3/4/6 described in the PM8010 TDOS 
->> document which is the most authoritative that we used internally for 
->> PMIC driver development:
-> 
-> I will look - however
-> 
-> 1. The powertree internal docs for xe801000 show 1.808 rails derived
->     from 1.856 rails for camera sensors
-> 
-> 2. Publicly available with registration : 80-185821-1
-> 
-> https://docs.qualcomm.com/bundle/80-18582-1/resource/80-18582-1_REV_AV_PM8010_Data_Sheet.pdf
-> 
->     Table 3-7 Linear/low-voltage regulator summary
-> 
->     Specified programmable range (V)
->     ldo3, ldo4, ldo6 = 1.808 to 3.312
-> 
-> 3. The pmic ranges I'm looking at on the internal
->     show increases of 8000 mv linearly
-> 
->> And I do see from the document change history that step 0 was changed 
->> from 1808mV and step 2 was changed from 2512mV, I don't know the 
->> reason of the change though.
-> 
-> Hrmm...
-> 
-> OK, that's enough to investigate further.
-> 
+My example is Infineon S28HS512T, however datasheet download requires 
+user account.
 
-Got feedback from the chip designer: "1.808V is the typical digital Vset 
-logic output – always round up to the integer multiples of 8mV.
-However, 1.8V is a more commonly used output. So we made analog only 
-change, move the tap point of the reference generator to 1.8V when it is 
-programmed to 1.808V.
-If user program it to 1.8V, digital logic will round it up to 1.808V, 
-send it to analog, then analog will map it to 1.8V. So the end result is 
-the same regardless customer program it to 1.8V or 1.808V from PMIC 
-register point of view. "
+S26HS512T has interrupt line, too, and datasheet is downloadable without 
+registration:
+https://www.infineon.com/cms/en/product/memories/nor-flash/semper-nor-flash-family/semper-nor-flash/#!documents
 
-So, programming it to either 1.8V or 1.808V, the HW will output 1.8V. I 
-understand there is a problem for x1e801000 because its AOP side limits 
-the voltage range to [1.808V, 1.808V] for LDO3/4/6 power rails, it won't 
-work if linux side updates to use 1.8V. Actually the same issue applies 
-to SM8550 and SM8650 if you simply update the voltage level to 1.808V, 
-because their AOP side limits the voltage ranges for some of these LDOs 
-to [1.8V, 1.8V].
-
-One possible fix is just adding 1.808v as another level for these LDOs.
-
-Fenglin
-
-> ---
-> bod
-> 
+>
+> -michael
