@@ -1,126 +1,128 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from gandalf.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0CDF3AC2D
-	for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 06:21:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B97E3A27E
+	for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 06:21:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708496487; cv=none; b=O1LZ0msvhL0Y2lGcCDS9PKRbbCPfrbfDrK7f4XinNnTkb9omkZ7hl7vtDkgBgVvAmVe0keZc8rQtlMu/oHS1x/BxE3DLtWig8eRE5G02ng+sztFmqUJ4y6CDy4xamCiWIoBU3276TFs8EEW1Xit9gL1W6Dg2Q9Y3fXq+452zBYU=
+	t=1708496486; cv=none; b=gx7yX/v/W1XiF8MHuTRS0EikoafrTi9IJ+vjBw64WJKnXYQdjDfatgnFvNRN+2dBYy2QfzXlD/JhT6PdvjZ0hZm27qrRze63kj94XUyU2m+8iTz18/vjdVIs9Mm7llLrevR4fmU4RzqrG2cgd40cxTLoJsWx7ZyjJaV1agu9C8E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708496487; c=relaxed/simple;
-	bh=sCu7CsPnjRQfodfi0hEsEkf+BIEEHY2CoyGZE7cOM1o=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=pCEV9cgaCN3Ftoy77adCTxVUq96+/kaai/xp450SIP1eX5M+arm7acS2PtXxl8DGfjd9iO78euf4AGgbCM389wyPhhspo1OD/tYNzEbvhy/2kYEC8ibecQ5dWm4jXtAb5y/e6YCbbs0JyQn6xGQmtsGsrYoe3o/I+Hn6TXqlW+o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <ore@pengutronix.de>)
-	id 1rcfyh-00010P-4X; Wed, 21 Feb 2024 07:21:11 +0100
-Received: from [2a0a:edc0:0:1101:1d::ac] (helo=dude04.red.stw.pengutronix.de)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <ore@pengutronix.de>)
-	id 1rcfye-001zF9-Kk; Wed, 21 Feb 2024 07:21:08 +0100
-Received: from ore by dude04.red.stw.pengutronix.de with local (Exim 4.96)
-	(envelope-from <ore@pengutronix.de>)
-	id 1rcfye-003GZm-1s;
-	Wed, 21 Feb 2024 07:21:08 +0100
-From: Oleksij Rempel <o.rempel@pengutronix.de>
-To: Wei Fang <wei.fang@nxp.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Andrew Lunn <andrew@lunn.ch>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Russell King <linux@armlinux.org.uk>
-Cc: Russell King <rmk+kernel@armlinux.org.uk>,
-	Oleksij Rempel <o.rempel@pengutronix.de>,
-	kernel@pengutronix.de,
-	linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org,
-	Shenwei Wang <shenwei.wang@nxp.com>,
-	Clark Wang <xiaoning.wang@nxp.com>,
-	NXP Linux Team <linux-imx@nxp.com>
-Subject: [PATCH net-next v5 1/8] net: add helpers for EEE configuration
-Date: Wed, 21 Feb 2024 07:21:00 +0100
-Message-Id: <20240221062107.778661-2-o.rempel@pengutronix.de>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240221062107.778661-1-o.rempel@pengutronix.de>
-References: <20240221062107.778661-1-o.rempel@pengutronix.de>
+	s=arc-20240116; t=1708496486; c=relaxed/simple;
+	bh=gX7KHInciv38nM5PUIPyHqMHG5OywB5O7Caz0hTTrT0=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=TiykzD6sYuYCir6kU79+5RZs1HFy9T7ze3k03Q+EbiNskXIn5V+6DTEWbSKUo+2F19xvHrIP5g/2JEuGG4WqUgy7K4Pi40jFozQD227Ay7JroazLJdrz7M4OFfFyk2K18ASuVjFFcEy7/RjXniSRHmDE8zheQ8dcSKaDDO/NoL4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=tjD4s9aj; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="tjD4s9aj"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=201702; t=1708496480;
+	bh=nKyibOl+ZTy1QoSmUoL2WccZoRzifYwx7mjfckl50Ic=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=tjD4s9ajy9eOvP4VzHG1NvjHeEv01xDnOauj9fCN81zKBfAxAxanPFi0UifA+WID4
+	 CX6X8p6me6Wt6y5pkOjiTK0DidBcyEnsYvJaK+Qe+zjZxyUmmcUtcxwBogsHtdNG/p
+	 Eg8KfD0L7IrGJlgPERDzkocm8Cmyl3+o/PwHro9inAlnwtUFPTK69zoeq5X20JgNBS
+	 vBYoQlxLJ0jF/E99W1s19/pjR0kEbOEEvSuj3You4lFF46/37017TNdl2ZQUUJkJP2
+	 dRaFwqb3QLB4F5tnCULCKAqoakNOo9mRulcUII7UIqd6tcHb1j16HYiKpiaQ7kaBEu
+	 Ko+CecGFPbvEg==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4TfmPV0zt5z4wby;
+	Wed, 21 Feb 2024 17:21:17 +1100 (AEDT)
+Date: Wed, 21 Feb 2024 17:21:17 +1100
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Lucas De Marchi <lucas.demarchi@intel.com>
+Cc: Arnd Bergmann <arnd@arndb.de>, Jani Nikula
+ <jani.nikula@linux.intel.com>, Arnd Bergmann <arnd@kernel.org>, Oded Gabbay
+ <ogabbay@kernel.org>, Thomas =?UTF-8?B?SGVsbHN0csO2bQ==?=
+ <thomas.hellstrom@linux.intel.com>, "Maarten Lankhorst"
+ <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
+ Thomas Zimmermann <tzimmermann@suse.de>, Dave Airlie <airlied@gmail.com>,
+ Daniel Vetter <daniel@ffwll.ch>, Rodrigo Vivi <rodrigo.vivi@intel.com>,
+ Matt Roper <matthew.d.roper@intel.com>, "Matthew Brost"
+ <matthew.brost@intel.com>, Riana Tauro <riana.tauro@intel.com>, "Daniele
+ Ceraolo Spurio" <daniele.ceraolospurio@intel.com>,
+ <intel-xe@lists.freedesktop.org>, <dri-devel@lists.freedesktop.org>,
+ <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] drm/xe: skip building debugfs code for
+ CONFIG_DEBUG_FS=n
+Message-ID: <20240221172117.243799cf@canb.auug.org.au>
+In-Reply-To: <ngu6vq5izal6suyr57p4vlxnrn4kxyii4ewdktxvw7k3uezlcz@6oevav3wpcjh>
+References: <20240213134817.3347574-1-arnd@kernel.org>
+	<877cj88lck.fsf@intel.com>
+	<17209419-093b-4674-8b43-06c92312ef61@app.fastmail.com>
+	<ngu6vq5izal6suyr57p4vlxnrn4kxyii4ewdktxvw7k3uezlcz@6oevav3wpcjh>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ore@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Type: multipart/signed; boundary="Sig_/F5A94gSepNQOsNsZBCFEmzQ";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-From: Russell King <rmk+kernel@armlinux.org.uk>
+--Sig_/F5A94gSepNQOsNsZBCFEmzQ
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Add helpers that phylib and phylink can use to manage EEE configuration
-and determine whether the MAC should be permitted to use LPI based on
-that configuration.
+Hi Lucas,
 
-Signed-off-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
-Signed-off-by: Andrew Lunn <andrew@lunn.ch>
-Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
----
- include/net/eee.h | 38 ++++++++++++++++++++++++++++++++++++++
- 1 file changed, 38 insertions(+)
- create mode 100644 include/net/eee.h
+On Tue, 20 Feb 2024 23:29:54 -0600 Lucas De Marchi <lucas.demarchi@intel.co=
+m> wrote:
+>=20
+> Looking at https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-nex=
+t.git/commit/?id=3D2d5c7b7eb345249cb34d42cbc2b97b4c57ea944e
+> it seems we still don't have drm-xe-next branch in linux-next.
+>=20
+> Stephen, could you please add it? Or do I have to do something on my end
+> before that?  This is the branch:
+>=20
+> https://gitlab.freedesktop.org/drm/xe/kernel drm-xe-next
 
-diff --git a/include/net/eee.h b/include/net/eee.h
-new file mode 100644
-index 000000000000..1232658b32f4
---- /dev/null
-+++ b/include/net/eee.h
-@@ -0,0 +1,38 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+#ifndef _EEE_H
-+#define _EEE_H
-+
-+#include <linux/types.h>
-+
-+struct eee_config {
-+	u32 tx_lpi_timer;
-+	bool tx_lpi_enabled;
-+	bool eee_enabled;
-+};
-+
-+static inline bool eeecfg_mac_can_tx_lpi(const struct eee_config *eeecfg)
-+{
-+	/* eee_enabled is the master on/off */
-+	if (!eeecfg->eee_enabled || !eeecfg->tx_lpi_enabled)
-+		return false;
-+
-+	return true;
-+}
-+
-+static inline void eeecfg_to_eee(const struct eee_config *eeecfg,
-+			  struct ethtool_keee *eee)
-+{
-+	eee->tx_lpi_timer = eeecfg->tx_lpi_timer;
-+	eee->tx_lpi_enabled = eeecfg->tx_lpi_enabled;
-+	eee->eee_enabled = eeecfg->eee_enabled;
-+}
-+
-+static inline void eee_to_eeecfg(const struct ethtool_keee *eee,
-+				 struct eee_config *eeecfg)
-+{
-+	eeecfg->tx_lpi_timer = eee->tx_lpi_timer;
-+	eeecfg->tx_lpi_enabled = eee->tx_lpi_enabled;
-+	eeecfg->eee_enabled = eee->eee_enabled;
-+}
-+
-+#endif
--- 
-2.39.2
+Added from tomorrow.  Currently the only contact is yourself.  Do you
+want anyone else (or a mailing list) as well?
 
+Do you want the drm-xe-fixes branch included as well?
+
+Thanks for adding your subsystem tree as a participant of linux-next.  As
+you may know, this is not a judgement of your code.  The purpose of
+linux-next is for integration testing and to lower the impact of
+conflicts between subsystems in the next merge window.=20
+
+You will need to ensure that the patches/commits in your tree/series have
+been:
+     * submitted under GPL v2 (or later) and include the Contributor's
+        Signed-off-by,
+     * posted to the relevant mailing list,
+     * reviewed by you (or another maintainer of your subsystem tree),
+     * successfully unit tested, and=20
+     * destined for the current or next Linux merge window.
+
+Basically, this should be just what you would send to Linus (or ask him
+to fetch).  It is allowed to be rebased if you deem it necessary.
+
+--=20
+Cheers,
+Stephen Rothwell=20
+sfr@canb.auug.org.au
+
+--Sig_/F5A94gSepNQOsNsZBCFEmzQ
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmXVll0ACgkQAVBC80lX
+0GwELQf/Q/n3K4HqKLq39MDQhZAAJUBm1YxvwNnirZMlCmqiK66yOw8Mt0c3ThO4
+c61KtjDLov3dlY8sJ5Ho+E4j2z4Q62GPf+dIwwFaSTrNDg57qhBfo9J00ioJur2n
+jzIF+kR38PSXCvIsblWTjV7GpGgp6fTLhULvVXnxs9Dc20NomGmaEtiyiN5M4kt0
+tMYge3qsrS4d2CPy3wkDlSCWjrc4paWLwmTmZ2Uf+PlyAdgPtIzlvAz2uAGr6hFQ
+oIN+q++HxtJExWkQuFhZU2QwjAVRHJXYblDtQdu5ePuj2wckNnRTWHX8ldHkNdSF
+/BsXRvfeQCBnd1jkkTz0zyprAVdF0Q==
+=K4kr
+-----END PGP SIGNATURE-----
+
+--Sig_/F5A94gSepNQOsNsZBCFEmzQ--
