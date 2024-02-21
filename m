@@ -1,114 +1,86 @@
-Received: from relay3-d.mail.gandi.net (relay3-d.mail.gandi.net [217.70.183.195])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75A4A69D38;
-	Wed, 21 Feb 2024 14:19:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B4AA4C62;
+	Wed, 21 Feb 2024 14:21:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708525173; cv=none; b=s7ySvEIystER1Exlmf7nlxhO7zqogkvTYkVF0bXduOEv8q4nYgDjljihpuZanuvIAwqVUCfQlmHxhIRarxBnOYSHJdOKeXtO+kJIpvWBVpuNemFezceCgjN7g+Fa3HZdg4W1OHZf3rxW3ilWasLWFIUbTg0lWvZdxRhIQpnWA9c=
+	t=1708525285; cv=none; b=AebVgJ4wICl2AU6Hc99XCoTx/X+is6obuieMng64xE4D8X8uA9JoIoLd/u/rfyvOi+v/ZTa85lAjtp1BtmcHAM/Xa0S2MvD5aMFyNxtLYxU87S73GGAEqZJPW0J5pRDMM3t2M73H/a/zYzCHVQzgR6/QzGcmU2wsGDSylkAwBig=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708525173; c=relaxed/simple;
-	bh=7wFKTVlWizL57RttcaVLGrwRB1DayJIhODEBnM4Uul8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Qu53vKhUD7q0rP+F1rk6XZ9xzUEhDWZe0P+BPAIjW8RDbUKJHHg8B5vOHfBxrgOZX9V4sxqLct62hRmO3ew40ndCdtnGz9UjD0IcMFapzU7PZmYgLpwQ9PAyZJKZ3jdDIpByagp2ZSPxoGcptHAi8gdMprfh32D0dJrZf2TSBXU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=BH3RU58z; arc=none smtp.client-ip=217.70.183.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="BH3RU58z"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 334A660005;
-	Wed, 21 Feb 2024 14:19:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1708525167;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=djgIwKG8h1E1vBHOq7Yx/ZY0Ehwdq+Fa2OAPhHy5Bg0=;
-	b=BH3RU58z7cr7I5bVawgKgfnYC5GysBok+JTGHq7LVbJ85EirfpHA2o2XLzRR+7UrXVwEfR
-	/wZa6tcSK+DMxgMWmUsnNDaOR0N1r8YgkoRdYceug+1Yk4JmUTFRDvRCA3/cymZ9XpUHr/
-	vd1WaoQ4pQTMeRzCHOJKwuvBlu9/+rOifdvv6q5fqfzwFEr1d5o71iFGgd3kc3AOzFnAO1
-	A1snWfe4kw4sZl4URubjBTzCzQTc4uqweCPYbYIuoPmUagYG9LKMcqiXTtnvElDi8wKgo0
-	I0H6nXBonAHEME2N7LD4uGH31cYGjo3LmMOeUpuFAYUSps2nLsFC7ihsE8gNUA==
-Message-ID: <b0220b02-5058-42ec-ba06-251caa4813dc@bootlin.com>
-Date: Wed, 21 Feb 2024 15:19:14 +0100
+	s=arc-20240116; t=1708525285; c=relaxed/simple;
+	bh=A4HgXRGDVVWg5a5ZtE9lWeLwYz5CzwymEup8k2SG11U=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=BC1EJVHD3R0zZCKynpJKn/TwQ5ne0THN922PxXvtaceUwdvdEMmRRtplKQmiV+WP1ZYOLg2nifs4KXHMWFFXDQSd/VdfV4680Y+8XjyBgKpXuflhlD8YeO3U3etZWLEu9/q+FX+bcYQTvvl98XJK08QsLumgCgJG608aHmzmA/k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BA07CC43390;
+	Wed, 21 Feb 2024 14:21:21 +0000 (UTC)
+Date: Wed, 21 Feb 2024 09:23:09 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Metin Kaya <metin.kaya@arm.com>
+Cc: linux-kernel@vger.kernel.org, John Stultz <jstultz@google.com>, Joel
+ Fernandes <joelaf@google.com>, Qais Yousef <qyousef@google.com>, Ingo
+ Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>, Juri
+ Lelli <juri.lelli@redhat.com>, Vincent Guittot
+ <vincent.guittot@linaro.org>, Dietmar Eggemann <dietmar.eggemann@arm.com>,
+ Valentin Schneider <vschneid@redhat.com>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Ben Segall <bsegall@google.com>, Zimuzo Ezeozue <zezeozue@google.com>,
+ Youssef Esmat <youssefesmat@google.com>, Mel Gorman <mgorman@suse.de>,
+ Daniel Bristot de Oliveira <bristot@redhat.com>, Will Deacon
+ <will@kernel.org>, Waiman Long <longman@redhat.com>, Boqun Feng
+ <boqun.feng@gmail.com>, "Paul E. McKenney" <paulmck@kernel.org>, Xuewen Yan
+ <xuewen.yan94@gmail.com>, K Prateek Nayak <kprateek.nayak@amd.com>, Thomas
+ Gleixner <tglx@linutronix.de>, kernel-team@android.com,
+ linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH] sched: Add trace events for Proxy Execution (PE)
+Message-ID: <20240221092309.00432f37@gandalf.local.home>
+In-Reply-To: <20240202083338.1328060-1-metin.kaya@arm.com>
+References: <20240202083338.1328060-1-metin.kaya@arm.com>
+X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 02/18] pinctrl: pinctrl-single: remove dead code in
- suspend() and resume() callbacks
-Content-Language: en-US
-To: Andy Shevchenko <andy@kernel.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
- Bartosz Golaszewski <brgl@bgdev.pl>, Tony Lindgren <tony@atomide.com>,
- Haojian Zhuang <haojian.zhuang@linaro.org>, Vignesh R <vigneshr@ti.com>,
- Aaro Koskinen <aaro.koskinen@iki.fi>,
- Janusz Krzysztofik <jmkrzyszt@gmail.com>, Andi Shyti
- <andi.shyti@kernel.org>, Peter Rosin <peda@axentia.se>,
- Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>,
- Philipp Zabel <p.zabel@pengutronix.de>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>,
- =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
- Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
- linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org,
- linux-i2c@vger.kernel.org, linux-phy@lists.infradead.org,
- linux-pci@vger.kernel.org, gregory.clement@bootlin.com,
- theo.lebrun@bootlin.com, thomas.petazzoni@bootlin.com, u-kumar1@ti.com
-References: <20240102-j7200-pcie-s2r-v3-0-5c2e4a3fac1f@bootlin.com>
- <20240102-j7200-pcie-s2r-v3-2-5c2e4a3fac1f@bootlin.com>
- <Zc4tedAhqYX3bQcw@smile.fi.intel.com>
- <78add459-a96a-46c6-83ff-e2657d4d3db4@bootlin.com>
- <Zc96dSff5Y-dufrJ@smile.fi.intel.com>
- <a2c3c5b9-79a3-4793-892c-b1ab79b71c7d@bootlin.com>
- <ZdX28EJ9LtDWfVmH@smile.fi.intel.com>
-From: Thomas Richard <thomas.richard@bootlin.com>
-In-Reply-To: <ZdX28EJ9LtDWfVmH@smile.fi.intel.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-GND-Sasl: thomas.richard@bootlin.com
 
-On 2/21/24 14:13, Andy Shevchenko wrote:
-> On Wed, Feb 21, 2024 at 12:01:43PM +0100, Thomas Richard wrote:
->> On 2/16/24 16:08, Andy Shevchenko wrote:
->>> On Fri, Feb 16, 2024 at 08:59:47AM +0100, Thomas Richard wrote:
->>>> On 2/15/24 16:27, Andy Shevchenko wrote:
->>>>> On Thu, Feb 15, 2024 at 04:17:47PM +0100, Thomas Richard wrote:
->>>>>> No need to check the pointer returned by platform_get_drvdata(), as
->>>>>> platform_set_drvdata() is called during the probe.
->>>>>
->>>>> This patch should go _after_ the next one, otherwise the commit message doesn't
->>>>> tell full story and the code change bring a potential regression.
->>>>
->>>> Hello Andy,
->>>>
->>>> I'm ok to move this patch after the next one.
->>>> But for my understanding, could you explain me why changing the order is
->>>> important in this case ?
->>>
->>> Old PM calls obviously can be called in different circumstances and these
->>> checks are important.
->>>
->>> Just squash these two patches to avoid additional churn and we are done.
->>
->> You mean invert the order instead of squash.
+On Fri,  2 Feb 2024 08:33:38 +0000
+Metin Kaya <metin.kaya@arm.com> wrote:
+
+> Add sched_[start, finish]_task_selection trace events to measure the
+> latency of PE patches in task selection.
 > 
-> Either would work, but see how much churn in terms of changing just changed
-> lines it adds.
+> Moreover, introduce trace events for interesting events in PE:
+> 1. sched_pe_enqueue_sleeping_task: a task gets enqueued on wait queue of
+>    a sleeping task (mutex owner).
+> 2. sched_pe_cross_remote_cpu: dependency chain crosses remote CPU.
+> 3. sched_pe_task_is_migrating: mutex owner task migrates.
+> 
+> New trace events can be tested via this command:
+> $ perf trace \
+>   -e sched:sched_start_task_selection \
+>   -e sched:sched_finish_task_selection \
+>   -e sched:sched_pe_enqueue_sleeping_task \
+>   -e sched:sched_pe_cross_remote_cpu \
+>   -e sched:sched_pe_task_is_migrating
+> 
+> Notes:
+> 1. These trace events are not intended to merge upstream. Instead, they
+>    are only for making PE tests easier and will be converted to trace
+>    points once PE patches hit upstream.
 
-OK thanks.
+I wonder if the tracepoints should be added though? That is, not adding the
+trace_events that show up in tracefs, but just the tracepoints so that bpf
+or local modules could hook to them?
 
-I'll squash the two patches. And I'll add a comment which explains that
-I dropped some dead code.
+-- Steve
 
-Regards,
 
--- 
-Thomas Richard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+> 2. This patch is based on John's Proxy Execution v7 patch series (see
+>    the link below) which is also available at
+>    https://github.com/johnstultz-work/linux-dev/commits/proxy-exec-v7-6.7-rc6/.
+> 
+> Link: https://lore.kernel.org/linux-kernel/CANDhNCrHd+5twWVNqBAhVLfhMhkiO0KjxXBmwVgaCD4kAyFyWw@mail.gmail.com/
 
