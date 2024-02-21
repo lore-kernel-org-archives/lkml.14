@@ -1,604 +1,223 @@
-Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
+Received: from mail-yw1-f171.google.com (mail-yw1-f171.google.com [209.85.128.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8AD03B2AD;
-	Wed, 21 Feb 2024 22:55:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A2C43EA8F
+	for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 22:55:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708556112; cv=none; b=TI9XtIHPdVtTCB7mVsNI/n3XlyK2gsskLHj5HCTCaMIePztRkIKdPNGajq+Ozh1u+ZHH7OQUjbeOm3poQNEovOgSp1ZkehPV7fp8IYfXNOeiTwk/jAro+JKeLrl/o/Jcp+orD4dxHiIrx+Lp0K6bGYoXaYdpcoG6dOIfgE1U47g=
+	t=1708556132; cv=none; b=jSUW7L7c0mS6lP+gCu0sJHB1nM/rSwtGkBO4rGAlB+4wYBPgB9kF239IMqzD9C0pk8whZJS4xn41zLNefVvkfscDM9rbA+314x0461+pHE59qc8PhVE6sG1ktDibmHcokBh48pSqs8IoEy8oV63gg2F4Nx1yGtL9kLNDV/TMAXI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708556112; c=relaxed/simple;
-	bh=WBhScTVcWgTF5n7+GZjUT+MuddAiwE1gR7nX3o2GBmU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qeg0EVBeXC98EGQdltWhU778ZTMKyJXxhcOFz3lf3wUAJVmZE7jNG8fz/5TPsLzC1cIMd1jHV+z+mH76hPt1mPNjdaWa3N2kAznHIVa0s2xCIn6ZRcdvm1u/6Nnwrop9KQsVIdXL7JQGDZJ3tQV+Lt/gvb3FT716ugJYW5HZz3k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=A3Y88hpO; arc=none smtp.client-ip=209.85.216.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1708556132; c=relaxed/simple;
+	bh=Wwde3rA5tjYRA65lr69fJ02UloO7h2osuwWzVIpWHmI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=E7eeyf25t0DZaVZiyquNuzznaugpRGcst3AH6IP3AqTFlCYQakJ8INKZDPqpnNCfQQL5B8vePhmzGCmmBx0ib8F+Lcj4Dbp19WlG9/+SHpfZkMjVof7Wk4PFE8oYoKXTpeuJp6QXyjH87OxjbXFZWt57rDx6hu+vI/7FRFb4LB8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=sgUXToH/; arc=none smtp.client-ip=209.85.128.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A3Y88hpO"
-Received: by mail-pj1-f52.google.com with SMTP id 98e67ed59e1d1-2997c5fe6abso883820a91.1;
-        Wed, 21 Feb 2024 14:55:09 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sgUXToH/"
+Received: by mail-yw1-f171.google.com with SMTP id 00721157ae682-60495209415so70786097b3.3
+        for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 14:55:30 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1708556109; x=1709160909; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :sender:from:to:cc:subject:date:message-id:reply-to;
-        bh=7rwmodBfxYiy17gUU45H7KHIT1wScHcDfBe/9mMA44k=;
-        b=A3Y88hpOJzxP6QqWgJEg4hpa4xmeQqXzqsCBbsz4s3mGtCxsVuhL+YB8IihOvcTHlz
-         Vtx1WYXe+UFmy2Q+lZqUQ4T2ynpcxy3GxNw85qFaFWN3vFbjKXrdBQGNOEhdzN3OP48U
-         YYIY16EuyY066G1xFe4YvVHx2Gcjfwa+fmquJ0SLwQQpR2ouO43hgBWyk0DMXZJK3zoR
-         pQtxOHZK4S/teEBeHJ19LxPvBiEunsynDoJJrl9soHNc6WWdLjV41akrkxaCEtUa1B1a
-         wy2fCPgBfARMuvSalj9+31mowJjysnxnBNVQ3pI1RzLVKpiLan62Du+BJobW2tUWYTgd
-         y6Pg==
+        d=google.com; s=20230601; t=1708556129; x=1709160929; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=pAMt/hLWAxcvMGr5+QIpeSl7/TSI4+J3f6SxfqhNwSU=;
+        b=sgUXToH/5O4ShiNiiu1EJPkdzhC9VNqsBc+LPRFJBSWKvhPmQzAPGUX6vbGHcu4Fov
+         Lk99RP24EgXYR4onS8rENSTlCvkdEKBv65yv0rpciTNNjY4S/m6xDw8VVz6GvRf1Qn9r
+         IZlb23aeb+U6n6IJv6Y/ss+RojeN98quxXF/0pLuj44kHFuUu7Oit1qb3k6Al3RtBQL8
+         eYKZjvi1F1hkr3pOpVA/5GDn3WTuKX/tqVRcRhRHZInQhpJ5Mm/5p5M7d/8jY/uClFLg
+         LqwtWc1ZvElmOJZLvxfqsNAawIUClIeznD8IPIeX+LbsivKOzqjSbmq4jGfkzxt2CbqH
+         5Jww==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708556109; x=1709160909;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :sender:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=7rwmodBfxYiy17gUU45H7KHIT1wScHcDfBe/9mMA44k=;
-        b=AEA3+54p7DC4rG3NKyd5Ka34otdfTp3yzRnR2ieWwprrw9zU1bRUptp85nJP/CYezs
-         RM/AXyGRU3KVgDIDp5J8mhC6Q8ZjjFLWC1kwZkNYZ/WVzx6u8oqAWAgWFVoOCFhonAQH
-         7SZQqXyRwEZjC8tLprbwt79Ci083ZiwEgvuhKefoOPwLhycwrs+vrpONoPlXwaVF6nwC
-         8b5u0iW+Pyvmtfxc0SDB/tcsefyP2NxbDeT+5ZXCf0Jk1wsxYKgiGHMKBFEL3AxAnrem
-         psPIVNAh8knxpxkMXuf5gHoijPraoBDhmtkjlNUHefA5hVKwH4X2QBfWI1jU+ZTUYRRC
-         Hl3w==
-X-Forwarded-Encrypted: i=1; AJvYcCXPpa3AnLZ/Wkez/ZmRWxol7pis8RsxvIGBlHhPcyM6UPXOfJMKBowWuHdIT2E5UALSRUKL98eZQZFSAmbtBV2QdaxXZRXPniUuxH/sB57AT3RM/MLV5PC0Z5Q32YE+tXoW1jJ2qfBjX9xvRcc2iLymQYyruXGW0UB+lIS3wmMfXzQioSlea0gJd0jPZFyg
-X-Gm-Message-State: AOJu0Yz1Pkl+VXabvLjnHczitVhrJJ+ZT8A6qmQ9Qfp8qg3GNtOwayMP
-	tQEUg/hvrvsJ2Ii+8IKzuUGtYYxGaIC9vEAhsacmlb1IlTh9DMdT
-X-Google-Smtp-Source: AGHT+IG3SLb2WGBg3Rr+szKxu6dFc8v5xn3HjWturR4i2E0POc/UdzX64khru8ftoYfDovHc8Kg5wg==
-X-Received: by 2002:a17:90b:4f83:b0:29a:20cf:2f5a with SMTP id qe3-20020a17090b4f8300b0029a20cf2f5amr2649387pjb.26.1708556108745;
-        Wed, 21 Feb 2024 14:55:08 -0800 (PST)
-Received: from ?IPV6:2600:1700:e321:62f0:329c:23ff:fee3:9d7c? ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id sx15-20020a17090b2ccf00b00296f3401cabsm2400141pjb.41.2024.02.21.14.55.07
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 21 Feb 2024 14:55:07 -0800 (PST)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Message-ID: <042951f1-200f-4d89-b968-ea68c52ea607@roeck-us.net>
-Date: Wed, 21 Feb 2024 14:55:06 -0800
+        d=1e100.net; s=20230601; t=1708556129; x=1709160929;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=pAMt/hLWAxcvMGr5+QIpeSl7/TSI4+J3f6SxfqhNwSU=;
+        b=uHJlJ4WpulFNt1i8YrhKlG3c7adkyIgah78kzN+Lyfz/iIqYNIXAhgQ2QjmObxbmES
+         46EHBKEs1vahuu4VA1xpn+ax/qasppytpTCXV1SGmuGdasGH5OcH3v1GNTHBXJtqaQI9
+         WQ3jgfz3qL/4URUMmajtUYX6qixttC8NnYzMWTn81FT8h+H5kwpUHmdu/czGobEDakiK
+         u9uFRhsUPxnl6h7icG6F5CQV6SrxK/BqDxc9fv8BWxlpUW1cI6PzskdgLDR1weemqn+X
+         5ksBw7nu5zGP9/rO3buBDykIlItt0ltnyvTn3Hw5sreN7jCNBrNDfZUheVGCSVGe+EWR
+         WfPA==
+X-Forwarded-Encrypted: i=1; AJvYcCUJK4I4q5r9NtatRXka8ajs9yF+v2WdiyoaVcNNLz3BdD4g+JFLgLQp6G+QoQApE0qQXOG5gLmuEQ3fKrrQbzw65dEXBW9bi15nRADX
+X-Gm-Message-State: AOJu0YwRNUEMWufTnSvQaRYPH3culHrXWo015GqV0CP6qwDhEQakFrL8
+	6G6Gvhe2KYl3Q+B+XqQl9dn8K7oxe3KtwXVSZiwOyq3BVGnr9NMlZoUqFM0Yu9R1JBHY6qhdt7f
+	XZzF1gnAJnDzeiyBp3pBuuG9PdY+uD2ppyG7PYGXT3MFnJZhlXwd8
+X-Google-Smtp-Source: AGHT+IHZgx3StvUWO+J2QBwaDpZO9EaUbE1rjq6scoyDsKilkifQneLa/6jcOZKMSEj18fd8Q8NpDmYaHoUQYyupNg8=
+X-Received: by 2002:a1f:6dc3:0:b0:4c9:79d6:7f17 with SMTP id
+ i186-20020a1f6dc3000000b004c979d67f17mr8003678vkc.9.1708555812137; Wed, 21
+ Feb 2024 14:50:12 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] Add wmi driver support for Casper Excalibur laptops.
-Content-Language: en-US
-To: =?UTF-8?Q?Mustafa_Ek=C5=9Fi?= <mustafa.eskieksi@gmail.com>,
- hdegoede@redhat.com, ilpo.jarvinen@linux.intel.com,
- linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
- linux-hwmon@vger.kernel.org
-Cc: jdelvare@suse.com
-References: <20240221221549.640515-1-mustafa.eskieksi@gmail.com>
-From: Guenter Roeck <linux@roeck-us.net>
-Autocrypt: addr=linux@roeck-us.net; keydata=
- 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
- mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
-In-Reply-To: <20240221221549.640515-1-mustafa.eskieksi@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+References: <20240213040747.1745939-1-kevinloughlin@google.com>
+ <170785457569.2934648.10119965441921727215@amd.com> <CAGdbjmJAE5Uo5LA=hkMFwp+LdnNxxKgSwgkpdWZ69kwS-tLkFw@mail.gmail.com>
+ <20240216225019.upcxwd6vkxv5dp4n@amd.com>
+In-Reply-To: <20240216225019.upcxwd6vkxv5dp4n@amd.com>
+From: Kevin Loughlin <kevinloughlin@google.com>
+Date: Wed, 21 Feb 2024 14:50:00 -0800
+Message-ID: <CAGdbjmK9WoOQSbKUvcTdLJDW-RB=qe2tHFDZ-MeD266xZOxh7w@mail.gmail.com>
+Subject: Re: [PATCH] x86/kernel: Validate ROM before DMI scanning when SEV-SNP
+ is active
+To: Michael Roth <michael.roth@amd.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>, Ard Biesheuvel <ardb@kernel.org>, 
+	Baoquan He <bhe@redhat.com>, Borislav Petkov <bp@alien8.de>, Brijesh Singh <brijesh.singh@amd.com>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, Dionna Glaze <dionnaglaze@google.com>, 
+	"H.Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>, Josh Poimboeuf <jpoimboe@kernel.org>, 
+	Kai Huang <kai.huang@intel.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Ross Lagerwall <ross.lagerwall@citrix.com>, Thomas Gleixner <tglx@linutronix.de>, 
+	Tom Lendacky <thomas.lendacky@amd.com>, Yuntao Wang <ytcoode@gmail.com>, 
+	linux-kernel@vger.kernel.org, x86@kernel.org, 
+	Adam Dunlap <acdunlap@google.com>, Peter Gonda <pgonda@google.com>, Jacob Xu <jacobhxu@google.com>, 
+	Sidharth Telang <sidtelang@google.com>, Conrad Grobler <grobler@google.com>, 
+	Andri Saar <andrisaar@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 2/21/24 14:15, Mustafa Ekşi wrote:
-> Signed-off-by: Mustafa Ekşi <mustafa.eskieksi@gmail.com>
-> ---
->   MAINTAINERS                       |   6 +
->   drivers/platform/x86/Kconfig      |  14 ++
->   drivers/platform/x86/Makefile     |   1 +
->   drivers/platform/x86/casper-wmi.c | 344 ++++++++++++++++++++++++++++++
->   4 files changed, 365 insertions(+)
->   create mode 100644 drivers/platform/x86/casper-wmi.c
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 9ed4d386853..d0142a75d2c 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -4723,6 +4723,12 @@ S:	Maintained
->   W:	https://wireless.wiki.kernel.org/en/users/Drivers/carl9170
->   F:	drivers/net/wireless/ath/carl9170/
->   
-> +CASPER EXCALIBUR WMI DRIVER
-> +M:	Mustafa Ekşi <mustafa.eskieksi@gmail.com>
-> +L:	platform-driver-x86@vger.kernel.org
-> +S:	Maintained
-> +F:	drivers/platform/x86/casper-wmi.c
-> +
->   CAVIUM I2C DRIVER
->   M:	Robert Richter <rric@kernel.org>
->   S:	Odd Fixes
-> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-> index bdd302274b9..ebef9c9dfb6 100644
-> --- a/drivers/platform/x86/Kconfig
-> +++ b/drivers/platform/x86/Kconfig
-> @@ -1127,6 +1127,20 @@ config SEL3350_PLATFORM
->   	  To compile this driver as a module, choose M here: the module
->   	  will be called sel3350-platform.
->   
-> +config CASPER_WMI
-> +	tristate "Casper Excalibur Laptop WMI driver"
-> +	depends on ACPI_WMI
-> +	depends on HWMON
-> +	select NEW_LEDS
-> +	select LEDS_CLASS
-> +	help
-> +	  Say Y here if you want to support WMI-based fan speed reporting,
-> +	  power management and keyboard backlight support on Casper Excalibur
-> +	  Laptops.
-> +
-> +	  To compile this driver as a module, choose M here: the module will
-> +	  be called casper-wmi.
-> +
->   endif # X86_PLATFORM_DEVICES
->   
->   config P2SB
-> diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
-> index 1de432e8861..4b527dd44ad 100644
-> --- a/drivers/platform/x86/Makefile
-> +++ b/drivers/platform/x86/Makefile
-> @@ -14,6 +14,7 @@ obj-$(CONFIG_MXM_WMI)			+= mxm-wmi.o
->   obj-$(CONFIG_NVIDIA_WMI_EC_BACKLIGHT)	+= nvidia-wmi-ec-backlight.o
->   obj-$(CONFIG_XIAOMI_WMI)		+= xiaomi-wmi.o
->   obj-$(CONFIG_GIGABYTE_WMI)		+= gigabyte-wmi.o
-> +obj-$(CONFIG_CASPER_WMI)		+= casper-wmi.o
->   
->   # Acer
->   obj-$(CONFIG_ACERHDF)		+= acerhdf.o
-> diff --git a/drivers/platform/x86/casper-wmi.c b/drivers/platform/x86/casper-wmi.c
-> new file mode 100644
-> index 00000000000..aae08202b19
-> --- /dev/null
-> +++ b/drivers/platform/x86/casper-wmi.c
-> @@ -0,0 +1,344 @@
-> +// SPDX-License-Identifier: GPL-2.0-or-later
-> +
-> +#include <linux/acpi.h>
-> +#include <linux/leds.h>
-> +#include <linux/slab.h>
-> +#include <linux/module.h>
-> +#include <linux/wmi.h>
-> +#include <linux/device.h>
-> +#include <linux/dev_printk.h>
-> +#include <linux/hwmon.h>
-> +#include <linux/sysfs.h>
-> +#include <linux/types.h>
-> +#include <linux/dmi.h>
-> +#include <acpi/acexcep.h>
-> +
-> +MODULE_AUTHOR("Mustafa Ekşi <mustafa.eskieksi@gmail.com>");
-> +MODULE_DESCRIPTION("Casper Excalibur Laptop WMI driver");
-> +MODULE_LICENSE("GPL");
-> +
-> +#define CASPER_WMI_GUID "644C5791-B7B0-4123-A90B-E93876E0DAAD"
-> +
-> +#define CASPER_READ 0xfa00
-> +#define CASPER_WRITE 0xfb00
-> +#define CASPER_GET_HARDWAREINFO 0x0200
-> +#define CASPER_SET_LED 0x0100
-> +#define CASPER_POWERPLAN 0x0300
-> +
-> +#define CASPER_KEYBOARD_LED_1 0x03
-> +#define CASPER_KEYBOARD_LED_2 0x04
-> +#define CASPER_KEYBOARD_LED_3 0x05
-> +#define CASPER_ALL_KEYBOARD_LEDS 0x06
-> +#define CASPER_CORNER_LEDS 0x07
-> +
-> +struct casper_wmi_args {
-> +	u16 a0, a1;
-> +	u32 a2, a3, a4, a5, a6, a7, a8;
-> +};
-> +
-> +static u32 casper_last_color;
-> +static u8 casper_last_led;
-> +
-> +static acpi_status casper_set(struct wmi_device *wdev, u16 a1, u8 led_id,
-> +			      u32 data)
-> +{
-> +	struct casper_wmi_args wmi_args = {
-> +		.a0 = CASPER_WRITE,
-> +		.a1 = a1,
-> +		.a2 = led_id,
-> +		.a3 = data
-> +	};
-> +	struct acpi_buffer input = {
-> +		(acpi_size) sizeof(struct casper_wmi_args),
-> +		&wmi_args
-> +	};
-> +	return wmidev_block_set(wdev, 0, &input);
-> +}
-> +
-> +static ssize_t led_control_show(struct device *dev, struct device_attribute
-> +				*attr, char *buf)
-> +{
-> +	return sprintf("%u%08x\n", buf, casper_last_led,
-> +		       casper_last_color);
-> +}
-> +
-> +
-> +// input is formatted as "IMARRGGBB", I: led_id, M: mode, A: brightness, ...
-> +static ssize_t led_control_store(struct device *dev, struct device_attribute
-> +				 *attr, const char *buf, size_t count)
-> +{
-> +	u64 tmp;
-> +	int ret;
-> +
-> +	ret = kstrtou64(buf, 16, &tmp);
+On Fri, Feb 16, 2024 at 2:50=E2=80=AFPM Michael Roth <michael.roth@amd.com>=
+ wrote:
+>
+> On Tue, Feb 13, 2024 at 03:10:46PM -0800, Kevin Loughlin wrote:
+> > On Tue, Feb 13, 2024 at 12:03=E2=80=AFPM Michael Roth <michael.roth@amd=
+.com> wrote:
+> > >
+> > > Quoting Kevin Loughlin (2024-02-12 22:07:46)
+> > > > SEV-SNP requires encrypted memory to be validated before access. Th=
+e
+> > > > kernel is responsible for validating the ROM memory range because t=
+he
+> > > > range is not part of the e820 table and therefore not pre-validated=
+ by
+> > > > the BIOS.
+> > > >
+> > > > While the current SEV-SNP code attempts to validate the ROM range i=
+n
+> > > > probe_roms(), this does not suffice for all existing use cases. In
+> > > > particular, if EFI_CONFIG_TABLES are not enabled and
+> > > > CONFIG_DMI_SCAN_MACHINE_NON_EFI_FALLBACK is set, the kernel will
+> > > > attempt to access the memory at SMBIOS_ENTRY_POINT_SCAN_START (whic=
+h
+> > > > falls in the ROM range) prior to validation. The specific problemat=
+ic
+> > > > call chain occurs during dmi_setup() -> dmi_scan_machine() and resu=
+lts
+> > > > in a crash during boot if SEV-SNP is enabled under these conditions=
+.
+> > >
+> > > AFAIK, QEMU doesn't actually include any legacy ROMs as part of the i=
+nitial
+> > > encrypted guest image, and I'm not aware of any VMM implementations t=
+hat
+> > > do this either.
+> >
+> > I'm using a VMM implementation that uses (non-EFI) Oak stage0 firmware =
+[0].
+> >
+> > [0] https://github.com/project-oak/oak/tree/main/stage0_bin
+> >
+> > > If dmi_setup() similarly scans these ranges, it seems likely the same
+> > > issue would be present: the validated/private regions would only cont=
+ain
+> > > ciphertext rather than the expected ROM data. Does that agree with th=
+e
+> > > behavior you are seeing?
+> > >
+> > > If so, maybe instead probe_roms should just be skipped in the case of=
+ SNP?
+> >
+> > If probe_roms() is skipped, SEV-SNP guest boot also currently crashes;
+> > I just quickly tried that (though admittedly haven't looked into why).
+>
+> default_find_smp_config() will also call smp_scan_config() on
+> 0xF0000-0x10000, so that might be the additional issue you're hitting.
+> If I skip that for in addition to probe_roms, then boot works for me.
 
-What exatly is the point of u64 and kstrtou64() ?
+Yeah, smp_scan_config() was the culprit. Thanks.
 
-> +
-> +	if (ret)
-> +		return ret;
-> +
-> +	u8 led_id = (tmp >> (8 * 4))&0xFF;
+> It seems the currently handling has a bug that has been in place since th=
+e
+> original SEV guest code was added. If you dump the data that probe_roms()
+> sees while it is scanning for instances of ROMSIGNATURE (0xaa55) in the
+> region, you'll see that it is random data that changes on every boot.
+> The root issue is that this region does not contain encrypted data, and
+> is only being accessed that way because the early page table has the
+> encryption bit set for this range.
+>
+> The effects are subtle: if the code ever sees a pair of bytes that look
+> like ROMSIGNATURE, it will reserve that memory so it can be accessed
+> later, generally just 0xc0000-0xc7fff. In extremely rare cases where the
+> ciphertext's data has a checksum that happens to match the contents, it
+> will use a random byte, multiple it by 512, and reserve up to 64k for
+> this bogus ROM region.
+>
+> For SNP this resulted in a more obvious failure: a #VC exception because
+> the supposedly encrypted memory was in fact not encrypted, and thus not
+> PVALIDATED. Unfortunately the fix you linked to involved maintaining the
+> broken SEV behavior rather than fixing this mismatch.
+>
+> >
+> > > And perhaps dmi_setup() should similarly skip the legacy ROM ranges f=
+or
+> > > the kernel configs in question?
+> >
+> > Given (a) non-EFI firmware is supported in other SME/SEV boot code
+> > patches [2], (b) this patch does not seem to introduce significant
+> > complexity (it just moves [1] to earlier in the boot process to
+> > additionally handle the non-EFI case), and (c) skipping
+> > probe_roms()+dmi_setup() doesn't work without additional changes, I'm
+> > currently still inclined to simply validate the legacy ROM ranges
+> > early enough to prevent this issue (as is already done when using EFI
+> > firmware).
+>
+> The 2 options I see are:
+>
+>   a) Skipping accesses to these regions for SEV. It is vaguely possible
+>      some implementation out there actually did measure/load the ROM as
+>      part of the initial guest image for SEV, but for SNP this would
+>      have been impossible since it would have lead to the guest crashing
+>      when snp_prep_roms() was called, since RMPUPDATE on the host only
+>      rescinds the validated bit if there is a change to the RMP entry.
+>      If it was already assigned/private/validated then the guest code
+>      would detected that PVALIDATE resulted in no changes, and so it
+>      would have failed with PVALIDATE_FAIL_NOUPDATE. So if you want to
+>      be super sure you don't break legacy SEV implementations then you
+>      could limit the change to SNP guests where it's essentially
+>      guaranteed these regions are not being utilized in any functional
+>      way.
 
-This will result in interesting LED IDs based on u64 input. To me it looks
-very much like a poor random number generator. Does this follow wome kind
-of LED subsystem API ?
+Based on your explanation, I agree that (at a minimum) it makes sense
+to rectify the behavior for SEV-SNP guests.
 
-> +
-> +	ret =
-> +	    casper_set(to_wmi_device(dev->parent), CASPER_SET_LED, led_id,
-> +		       (u32) tmp
-> +	    );
+On that note, as you describe here, I skipped the 3 ROM region scans
+on platforms with CC_ATTR_GUEST_SEV_SNP (and deleted the call to
+snp_prep_memory()) and successfully booted. I can send that as v2.
 
-Odd line breaks. Does this pass checkpatch ?
+Note that I have *not* tried skipping the scans for all SEV guest
+variants (CC_ATTR_GUEST_MEM_ENCRYPT) since those boots appear to be
+functioning without the change (and there is a risk of breaking the
+sorts of implementations that you described); also note that
+clang-built SEV-SNP guests still require [0] and [1] to function.
 
-> +	if (ACPI_FAILURE(ret)) {
-> +		dev_err(dev, "casper-wmi ACPI status: %d\n", ret);
-> +		return ret;
+[0] https://lore.kernel.org/all/20240206223620.1833276-1-acdunlap@google.co=
+m/
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/com=
+mit/?id=3D1c811d403afd73f04bde82b83b24c754011bd0e8
 
-The function return code is supposed to be a Linux error code.
-As for the functions below, I would reject this patch due to its
-logging noise.
+>   b) Modifying the early page table setup by early_make_pgtable() to
+>      clear the encrypted bit for 0xC0000-0x100000 legacy region. The
+>      challenge there is everything is PMD-mapped at that stage of boot
+>      and there's no infrastructure for splitting page tables to handle
+>      non-2MB-aligned/sized regions.
 
-> +	}
-> +	if (led_id != CASPER_CORNER_LEDS) {
-> +		casper_last_color = (u32) tmp;
-> +		casper_last_led = led_id;
-> +	}
-> +	return count;
-> +}
-> +
-> +static DEVICE_ATTR_RW(led_control);
-> +
-> +static struct attribute *casper_kbd_led_attrs[] = {
-> +	&dev_attr_led_control.attr,
-> +	NULL,
-> +};
-> +
-> +ATTRIBUTE_GROUPS(casper_kbd_led);
-> +
-> +static void set_casper_backlight_brightness(struct led_classdev *led_cdev,
-> +					    enum led_brightness brightness)
-> +{
-> +	// Setting any of the keyboard leds' brightness sets brightness of all
-> +	acpi_status ret =
-> +	    casper_set(to_wmi_device(led_cdev->dev->parent), CASPER_SET_LED,
-> +		       CASPER_KEYBOARD_LED_1,
-> +		       (casper_last_color & 0xF0FFFFFF) |
-> +		       (((u32) brightness) << 24)
-> +	    );
-> +
-> +	if (ret != 0)
-> +		dev_err(led_cdev->dev,
-> +			"Couldn't set brightness acpi status: %d\n", ret);
-> +}
-> +
-> +static enum led_brightness get_casper_backlight_brightness(struct led_classdev
-> +							   *led_cdev)
-> +{
-> +	return (casper_last_color&0x0F000000)>>24;
-> +}
-> +
-> +static struct led_classdev casper_kbd_led = {
-> +	.name = "casper::kbd_backlight",
-> +	.brightness = 0,
-> +	.brightness_set = set_casper_backlight_brightness,
-> +	.brightness_get = get_casper_backlight_brightness,
-> +	.max_brightness = 2,
-> +	.groups = casper_kbd_led_groups,
-> +};
-> +
-> +static acpi_status casper_query(struct wmi_device *wdev, u16 a1,
-> +				struct casper_wmi_args *out)
-> +{
-> +	struct casper_wmi_args wmi_args = {
-> +		.a0 = CASPER_READ,
-> +		.a1 = a1
-> +	};
-> +	struct acpi_buffer input = {
-> +		(acpi_size) sizeof(struct casper_wmi_args),
-> +		&wmi_args
-> +	};
-> +
-> +	acpi_status ret = wmidev_block_set(wdev, 0, &input);
-> +
-> +	if (ACPI_FAILURE(ret)) {
-> +		dev_err(&wdev->dev,
-> +			"Could not query acpi status: %u", ret);
-
-This code generates _way_ too much logging noise for my liking.
-
-> +		return ret;
-
-Is there any value in having this function return acpi error
-codes instead of Linux error codes ?
-
-> +	}
-> +
-> +	union acpi_object *obj = wmidev_block_query(wdev, 0);
-> +
-> +	if (obj == NULL) {
-> +		dev_err(&wdev->dev,
-> +			"Could not query hardware information");
-> +		return AE_ERROR;
-> +	}
-> +	if (obj->type != ACPI_TYPE_BUFFER) {
-> +		dev_err(&wdev->dev, "Return type is not a buffer");
-> +		return AE_TYPE;
-> +	}
-> +
-> +	if (obj->buffer.length != 32) {
-> +		dev_err(&wdev->dev, "Return buffer is not long enough");
-> +		return AE_ERROR;
-> +	}
-> +	memcpy(out, obj->buffer.pointer, 32);
-> +	kfree(obj);
-> +	return ret;
-> +}
-> +
-> +static umode_t casper_wmi_hwmon_is_visible(const void *drvdata,
-> +					   enum hwmon_sensor_types type,
-> +					   u32 attr, int channel)
-> +{
-> +	switch (type) {
-> +	case hwmon_fan:
-> +		return 0444;
-> +	case hwmon_pwm:
-> +		return 0644;
-> +	default:
-> +		return 0;
-> +	}
-> +	return 0;
-> +}
-> +
-> +static int casper_wmi_hwmon_read(struct device *dev,
-> +				 enum hwmon_sensor_types type, u32 attr,
-> +				 int channel, long *val)
-> +{
-> +	struct casper_wmi_args out = { 0 };
-> +
-> +	switch (type) {
-> +	case hwmon_fan:
-> +		acpi_status ret = casper_query(to_wmi_device(dev->parent),
-> +					       CASPER_GET_HARDWAREINFO, &out);
-> +
-> +		if (ACPI_FAILURE(ret))
-> +			return ret;
-
-This function is expected to return a Linux error code, not an acpi error code.
-
-Also, if CASPER_GET_HARDWAREINFO is not always available, the attributes
-needing it should not be created in the first place.
-
-> +
-> +		if (channel == 0) { // CPU fan
-> +			u32 cpu_fanspeed = out.a4;
-> +
-> +			cpu_fanspeed <<= 8;
-> +			cpu_fanspeed += out.a4 >> 8;
-> +			*val = (long) cpu_fanspeed;
-> +		} else if (channel == 1) { // GPU fan
-> +			u32 gpu_fanspeed = out.a5;
-> +
-> +			gpu_fanspeed <<= 8;
-> +			gpu_fanspeed += out.a5 >> 8;
-
-I don't know what this is supposed to be doing, but it will return
-odd values. For example, if out.a5 is 0xabcd, the returned value
-will be 0xabcdab. That seems to be unlikely I suspect this is supposed
-to be
-			*val = ((out.a5 & 0xff) << 8) | ((out.a5 >> 8) & 0xff);
-but I am not even sure about that because a5 is u32 and the above would suggest
-a 16-bit unsigned short in big endian format. Please check return values
-and implement any necessary endiannes conversion correctly.
-
-> +			*val = (long) gpu_fanspeed;
-
-FWIW, those type casts are unnecessary.
-
-> +		}
-> +		return 0;
-> +	case hwmon_pwm:
-> +		casper_query(to_wmi_device(dev->parent), CASPER_POWERPLAN,
-> +			     &out);
-
-Why no error check here ?
-
-> +		if (channel == 0)
-> +			*val = (long)out.a2;
-> +		else
-> +			return -EOPNOTSUPP;
-
-The coonditional and else case is unnecessary since only
-a single pwm channel is declared.
-
-> +		return 0;
-> +	default:
-> +		return -EOPNOTSUPP;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int casper_wmi_hwmon_read_string(struct device *dev,
-> +					enum hwmon_sensor_types type, u32 attr,
-> +					int channel, const char **str)
-> +{
-> +	switch (type) {
-> +	case hwmon_fan:
-> +		switch (channel) {
-> +		case 0:
-> +			*str = "cpu_fan_speed";
-> +			break;
-> +		case 1:
-> +			*str = "gpu_fan_speed";
-> +			break;
-> +		default:
-> +			return -EOPNOTSUPP;
-> +		}
-> +		break;
-> +	default:
-> +		return -EOPNOTSUPP;
-> +	}
-> +	return 0;
-> +}
-> +
-> +static int casper_wmi_hwmon_write(struct device *dev,
-> +				  enum hwmon_sensor_types type, u32 attr,
-> +				  int channel, long val)
-> +{
-> +	acpi_status ret;
-> +
-> +	switch (type) {
-> +	case hwmon_pwm:
-> +		if (channel != 0)
-> +			return -EOPNOTSUPP;
-
-This is unnecessary. Only a single pwm channel is declared,
-so channel will never be != 0.
-
-> +		ret =
-> +		    casper_set(to_wmi_device(dev->parent), CASPER_POWERPLAN,
-> +			       val, 0);
-> +
-The first line split is unnecessary.
-
-> +		if (ACPI_FAILURE(ret)) {
-> +			dev_err(dev, "Couldn't set power plan, acpi_status: %d",
-> +				ret);
-
-Drivers should not generate such logging noise, even more so after user input.
-Also, the valid range (0..255) should be checked before trying to set it.
-
-> +			return -EINVAL;
-> +		}
-> +		return 0;
-> +	default:
-> +		return -EOPNOTSUPP;
-> +	}
-> +}
-> +
-> +static const struct hwmon_ops casper_wmi_hwmon_ops = {
-> +	.is_visible = &casper_wmi_hwmon_is_visible,
-> +	.read = &casper_wmi_hwmon_read,
-> +	.read_string = &casper_wmi_hwmon_read_string,
-> +	.write = &casper_wmi_hwmon_write
-> +};
-> +
-> +static const struct hwmon_channel_info *const casper_wmi_hwmon_info[] = {
-> +	HWMON_CHANNEL_INFO(fan,
-> +			   HWMON_F_INPUT | HWMON_F_LABEL,
-> +			   HWMON_F_INPUT | HWMON_F_LABEL),
-> +	HWMON_CHANNEL_INFO(pwm, HWMON_PWM_MODE),
-> +	NULL
-> +};
-> +
-> +static const struct hwmon_chip_info casper_wmi_hwmon_chip_info = {
-> +	.ops = &casper_wmi_hwmon_ops,
-> +	.info = casper_wmi_hwmon_info,
-> +};
-> +
-> +static int casper_wmi_probe(struct wmi_device *wdev, const void *context)
-> +{
-> +	struct device *hwmon_dev;
-> +
-> +	// All Casper Excalibur Laptops use this GUID
-> +	if (!wmi_has_guid(CASPER_WMI_GUID))
-> +		return -ENODEV;
-> +
-How would the device ever be instantiated with a different GUID,
-making this check necessary ?
-
-> +	hwmon_dev =
-> +	    devm_hwmon_device_register_with_info(&wdev->dev, "casper_wmi", wdev,
-> +						 &casper_wmi_hwmon_chip_info,
-> +						 NULL);
-> +
-> +	acpi_status result = led_classdev_register(&wdev->dev, &casper_kbd_led);
-> +
-> +	if (result != 0)
-> +		return -ENODEV;
-> +
-> +	return PTR_ERR_OR_ZERO(hwmon_dev);
-
-This would leave the LED device registered if instantiating the hwmon device
-failed. However, the probe function would return an error, meaning the driver
-core will believe that instantiation failed. Is that intentional ? I am quite
-sure that this would result in interesting crashes.
-
-> +	}
-> +
-> +static void casper_wmi_remove(struct wmi_device *wdev)
-> +{
-> +	led_classdev_unregister(&casper_kbd_led);
-> +}
-> +
-> +static const struct wmi_device_id casper_wmi_id_table[] = {
-> +	{ CASPER_WMI_GUID, NULL },
-> +	{ }
-> +};
-> +
-> +static struct wmi_driver casper_wmi_driver = {
-> +	.driver = {
-> +		   .name = "casper-wmi",
-> +		    },
-> +	.id_table = casper_wmi_id_table,
-> +	.probe = casper_wmi_probe,
-> +	.remove = &casper_wmi_remove
-> +};
-> +
-> +module_wmi_driver(casper_wmi_driver);
-> +
-> +MODULE_DEVICE_TABLE(wmi, casper_wmi_id_table);
-
+If ever needed/desired, a slight variant of this second option might
+also be providing a temporary unencrypted mapping on the fly during
+the few times the regions are scanned during early boot, similar to
+how __sme_early_map_unmap_mem() is already used for sme_map_bootdata()
+in head64.c. I haven't tried it, but I just wanted to note it down in
+case it becomes relevant.
