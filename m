@@ -1,155 +1,118 @@
-Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com [209.85.160.176])
+Received: from mail-qt1-f180.google.com (mail-qt1-f180.google.com [209.85.160.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FF87386
-	for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 00:19:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EFAC384
+	for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 00:22:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708474800; cv=none; b=E4MeWeOf3h+91S2fht7RjQccoT726KXDB+ScUprohJLRwZCt1HmqCK7P456ZpjTF4VyDWIkb+fKTffpsxBRnQXrrWmVOCuywx5q6+JeNuUuB4TP337a6OMiJu3+pVMvzf1Qr7ianlMrA6oxOIYueZvtLRKV3q3U/zAEI7CI2BNg=
+	t=1708474971; cv=none; b=d9P5qu8ORN8stDdsXcH7SphejGZIllAObDF8eMtTPa9uJCeHbWC3gKrx7tb/WqdE4TqGEJJrmvym+JBlKBfw0BZeDlHN+BTmonFhcy9RBFCbeEDoBira4QrayAR7iD2rz4MG+DbJHrhpSnHBL8yfAx0NJ2xj1DGIQpdJU8bj3Z4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708474800; c=relaxed/simple;
-	bh=3OGmQp9jl/lZp1xDC/yACtLHUmqxrcuBnE1lkKvfFjc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=IYnDQGsH7Qr3bLUQ+3PhbhcI8ka+Vu5XmFB8FkyL9MIf50xC1XfEv7IWlGb2Ad7LVUge8I7vP/GsjIxm6W+c+lbHMxP330D6pvgJczUyN0kf/ZENGcK0VLtUFOtn3svFOCJ5z+bJNv5CcHSFji62yg1R4kx56YZZz9jRayA5eO8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=cbe9sLT6; arc=none smtp.client-ip=209.85.160.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1708474971; c=relaxed/simple;
+	bh=8WZKHSERv1Qml7vaoGY8qsCxDz2HE26cW/okoCj1S1Y=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=HkKT7GLen1Q+FzF46XEYuw2+Ox0pfbpIxxdU+ZKj1kuppp0eAxvxY6F15rLFlk7gI312U9W0/vsla66vmITOmw3qcONHWq2Uta45EDFtWyhdO7XMG5Oaqs8bMuLrGDuWWVGWlmVUG9W6y9qiLNRG6hnbJaAb+o5QDVJ644khpsU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=joelfernandes.org; spf=pass smtp.mailfrom=joelfernandes.org; dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b=dCEcZzUV; arc=none smtp.client-ip=209.85.160.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=joelfernandes.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=joelfernandes.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cbe9sLT6"
-Received: by mail-qt1-f176.google.com with SMTP id d75a77b69052e-428405a0205so77981cf.1
-        for <linux-kernel@vger.kernel.org>; Tue, 20 Feb 2024 16:19:58 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="dCEcZzUV"
+Received: by mail-qt1-f180.google.com with SMTP id d75a77b69052e-42db60ebcd7so678641cf.0
+        for <linux-kernel@vger.kernel.org>; Tue, 20 Feb 2024 16:22:49 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1708474797; x=1709079597; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Y/TQWtFPNQYwuUbM58vJfJouHPDo5TFgHn3V4mtboY0=;
-        b=cbe9sLT6NBJ53qnrkItt+QfhMVdbzUzxbsjZGYYta/jIRaVA3Xk8RT4cT8e8dDjCbH
-         0gwgLbIxQmRTppKGo+kKLZP3UbS2yHLox8LXJLN6he6yzFGFEA3jP1X2ykWNMkfOXgMu
-         +VQJduYJ6FtTrdXn2s3G1suduUjpwyaP1qzIOQMZckXaVJw/i1Izew7CvpVdgL6yW6fr
-         4BGslG7cGIo8+tC21MdK6F5wEcY629fFiIO7K4yCjO6eDFWoCxcBgzKLxW6jaLHnSIkx
-         8+l2pvySGCy9FTu8g4nfBPniqnhE74DhYPNMH1BXSIohvs2UsPVLGLI34AT1SgULfbwD
-         wJsg==
+        d=joelfernandes.org; s=google; t=1708474968; x=1709079768; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=CNzWCTUy9JFU/dlrovuUssQto5vHi7/OuWTxzbCEBhA=;
+        b=dCEcZzUVCwpF25X9tqVGSvgcNLTGzT/X5FJ/nYzFP4eFvFXvni5PxD4swkZnST6tbZ
+         +NzMZ7b17zLKU3iRqCuNOc/mIJDttZjDgTNendqKM36PD/pGFSmHJak3fUBne2Gr2bn1
+         pL6drN9Q0QVz9M7Cwl5szxC0ZPUEUpJ02xxjA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708474797; x=1709079597;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Y/TQWtFPNQYwuUbM58vJfJouHPDo5TFgHn3V4mtboY0=;
-        b=gVje25sjcuAYX/HGu6xfqDNsQYC7lW7tFaHar0Swmu87s70a7S1CqknDIe7l2ar9ka
-         iC/jlmbNT/VMhgrxFi/qo3+JGqwRfdshAqQN/Naq9eWOQK7Xrm+9Hz7UhdWavEcMZrxA
-         zrN8txJtL1CyStS62GGXf6FOM1jsD16pJ3OIzvjqGBZQD1bE2VozrTXqZRg7UsjEQQX5
-         Qt4GjIrrYNQT9Y/lH1+AxGKAlPg2F2naPDqUJG5a6m8qNPgVWkNh/v+IdKzYmS/c6DjM
-         KI/LoAl8q9TxK4U4HR2v/eFKxdQqHqzDXyi68BnHEv9VfjpwfzcnoDXsT8QupMcb7TzZ
-         gjtA==
-X-Forwarded-Encrypted: i=1; AJvYcCUt7UH5qgN6mjZT1HMQrRq3/LoyIQKslITLWzf2ooY3xddtBHbaXpA69w5Ztxqi3vao1ZwMAcCCgrkQuR4D6wLKILKkjyF97c6uNHPS
-X-Gm-Message-State: AOJu0Yw+Jsii4IrvPetV9HuhatfVNGF2g0nyJGefkB1ajvcClICew2E8
-	LGoiazaoEL6owH1WeTE9XtYUGotmGgKUrwP7OvJ02JmptOw4PzWprHUHJ7Z4/1RXmiPcf2lwjzk
-	X86v0wIsg4QKWktZJFsiaEEbiduLXuHSkmDS1
-X-Google-Smtp-Source: AGHT+IGRjMhTXMToPyT3CZJgKg9Mvn8SxquIAjAE3c8fR0p9QQqaZPhqkxRsGlOQtFhZiP7wJlLX+Njjx899K6P22Wc=
-X-Received: by 2002:ac8:6ed1:0:b0:42c:5fd3:dc85 with SMTP id
- f17-20020ac86ed1000000b0042c5fd3dc85mr43812qtv.7.1708474797183; Tue, 20 Feb
- 2024 16:19:57 -0800 (PST)
+        d=1e100.net; s=20230601; t=1708474968; x=1709079768;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=CNzWCTUy9JFU/dlrovuUssQto5vHi7/OuWTxzbCEBhA=;
+        b=wiKciJnTbfct21A86AwJm9dayJ97xn2R5s52qYTNf6937qlYyHoTiPkglW+C99KhI8
+         eJdpQaJdSs6JP4C5NMG3P0f4KtH3sfUsXD6/GGTHfna5PiBUKWt4YFRxszoQIzWGaZUl
+         hD/U/xXd//HOIclgYb803H5KuI1ZITBjDQUTRX5ZnEBtolNpG4/uHcq9tdrlUeRipCVz
+         jKZNa34SQAddCeay8Pzk4/JP00oRArI5RgTm4uMuqeI1GZHElDrMCx0JkZwYRS0yjG7Z
+         qlqhHhcv5xZKUE92F2hM4wxocFlmk9fNdSz50sCRZgJaJOjyh/cT5xOMqkJzotZcNS/F
+         bIdg==
+X-Forwarded-Encrypted: i=1; AJvYcCVhA7ZtwQaQyxUSX03SML1hrupPBiztsTeYEow5evRKCsNpA0QryNkNxnYcQjSfMQmRNXD9T99+nLq5w0xvyYvfVEFkwJwKsdDl4Gd8
+X-Gm-Message-State: AOJu0Yz6bu6V6iKKMUQkJijwHErZ7kuENz1G9cpJWG7y4LvQhRQVZ95q
+	s9RAoUdCbr9cj5up71TeJ7DpbRzYP4lGsnLJS8vCNPO4vTy0uTh3DiOSl0YIsOo=
+X-Google-Smtp-Source: AGHT+IGkEKD5s4h+KVSBolVi/KlyQ6g705fjRLMKfE75hTkTjwe3yoI9olwSKK13//mX6vNwgW7HbQ==
+X-Received: by 2002:ac8:59c6:0:b0:42e:24c4:ca0c with SMTP id f6-20020ac859c6000000b0042e24c4ca0cmr4792013qtf.60.1708474968337;
+        Tue, 20 Feb 2024 16:22:48 -0800 (PST)
+Received: from [10.5.0.2] ([217.114.38.27])
+        by smtp.gmail.com with ESMTPSA id fu19-20020a05622a5d9300b0042e1498d645sm2061807qtb.92.2024.02.20.16.22.46
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 20 Feb 2024 16:22:47 -0800 (PST)
+Message-ID: <55e64c9c-8c12-4d1a-b508-3165f7078b8b@joelfernandes.org>
+Date: Tue, 20 Feb 2024 19:22:43 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231130174126.688486-1-herve.codina@bootlin.com>
- <20231206171540.GA2697853-robh@kernel.org> <CAGETcx-F8G3dcN-VTMrbya_=19zXP=S2ORA_qZqy+yND7S41_Q@mail.gmail.com>
-In-Reply-To: <CAGETcx-F8G3dcN-VTMrbya_=19zXP=S2ORA_qZqy+yND7S41_Q@mail.gmail.com>
-From: Saravana Kannan <saravanak@google.com>
-Date: Tue, 20 Feb 2024 16:19:21 -0800
-Message-ID: <CAGETcx_Lv3EW+Mz94LJqzh1QW+NVmxrw6_HS3vYU6K5t8fci-A@mail.gmail.com>
-Subject: Re: [PATCH 0/2] Synchronize DT overlay removal with devlink removals
-To: Rob Herring <robh@kernel.org>
-Cc: Herve Codina <herve.codina@bootlin.com>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Frank Rowand <frowand.list@gmail.com>, Lizhi Hou <lizhi.hou@amd.com>, Max Zhen <max.zhen@amd.com>, 
-	Sonal Santan <sonal.santan@amd.com>, Stefano Stabellini <stefano.stabellini@xilinx.com>, 
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>, linux-kernel@vger.kernel.org, 
-	devicetree@vger.kernel.org, Allan Nielsen <allan.nielsen@microchip.com>, 
-	Horatiu Vultur <horatiu.vultur@microchip.com>, 
-	Steen Hegelund <steen.hegelund@microchip.com>, 
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Nuno Sa <nuno.sa@analog.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 08/10] selftests/sched: Migrate cs_prctl_test to
+ kselfttest
+Content-Language: en-US
+To: Shuah Khan <skhan@linuxfoundation.org>,
+ Chris Hyser <chris.hyser@oracle.com>, linux-kernel@vger.kernel.org,
+ Shuah Khan <shuah@kernel.org>
+Cc: Suleiman Souhlal <suleiman@google.com>,
+ Youssef Esmat <youssefesmat@google.com>, Steven Rostedt
+ <rostedt@goodmis.org>, David Vernet <void@manifault.com>,
+ Thomas Gleixner <tglx@linutronix.de>, "Paul E . McKenney"
+ <paulmck@kernel.org>, joseph.salisbury@canonical.com,
+ Dietmar Eggemann <dietmar.eggemann@arm.com>, Ben Segall
+ <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+ Daniel Bristot de Oliveira <bristot@redhat.com>,
+ Valentin Schneider <vschneid@redhat.com>,
+ Luca Abeni <luca.abeni@santannapisa.it>,
+ Tommaso Cucinotta <tommaso.cucinotta@santannapisa.it>,
+ Vineeth Pillai <vineeth@bitbyteword.org>, Phil Auld <pauld@redhat.com>,
+ linux-kselftest@vger.kernel.org
+References: <20240216183108.1564958-1-joel@joelfernandes.org>
+ <20240216183108.1564958-9-joel@joelfernandes.org>
+ <91a5dd24-3a91-3114-d73d-eb57f3128d2e@oracle.com>
+ <5b1fa674-d6b4-41a3-86c3-be43467c32c7@linuxfoundation.org>
+From: Joel Fernandes <joel@joelfernandes.org>
+In-Reply-To: <5b1fa674-d6b4-41a3-86c3-be43467c32c7@linuxfoundation.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Wed, Dec 6, 2023 at 7:09=E2=80=AFPM Saravana Kannan <saravanak@google.co=
-m> wrote:
->
-> On Wed, Dec 6, 2023 at 9:15=E2=80=AFAM Rob Herring <robh@kernel.org> wrot=
-e:
-> >
-> > On Thu, Nov 30, 2023 at 06:41:07PM +0100, Herve Codina wrote:
-> > > Hi,
-> >
-> > +Saravana for comment
->
-> I'll respond to this within a week -- very swamped at the moment. The
-> main thing I want to make sure is that we don't cause an indirect
-> deadlock with this wait(). I'll go back and look at why we added the
-> work queue and then check for device/devlink locking issues.
->
 
-Sorry about the long delay, but I finally got back to this because
-Nuno nudged me to review a similar patch they sent. I'll leave some
-easy to address comments in the patches.
 
--Saravana
+On 2/20/2024 7:03 PM, Shuah Khan wrote:
+> On 2/16/24 12:18, Chris Hyser wrote:
+>> On 2/16/24 13:31, Joel Fernandes (Google) wrote:
+>>
+>>> This test begs to be a kselftest, is in the kselftest hierarchy and does
+>>> not even use a single kselftest API. Convert it.
+>>>
+>>> It simplifies some of the code and the output also looks much nicer now:
+>>>
+>>>   Totals: pass:17 fail:0 xfail:0 xpass:0 skip:0 error:0
+>>>
+>>> Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+>>
+>> Reviewed-by: Chris Hyser <chris.hyser@oracle.com>
+>>
+> 
+> Assuming this is going through sched tree,
+> 
+> Acked-by: Shuah Khan <skhan@linuxfoundation.org>
 
-> -Saravana
->
-> >
-> > Looks okay to me though.
-> >
-> > >
-> > > In the following sequence:
-> > >   of_platform_depopulate(); /* Remove devices from a DT overlay node =
-*/
-> > >   of_overlay_remove(); /* Remove the DT overlay node itself */
-> > >
-> > > Some warnings are raised by __of_changeset_entry_destroy() which  was
-> > > called from of_overlay_remove():
-> > >   ERROR: memory leak, expected refcount 1 instead of 2 ...
-> > >
-> > > The issue is that, during the device devlink removals triggered from =
-the
-> > > of_platform_depopulate(), jobs are put in a workqueue.
-> > > These jobs drop the reference to the devices. When a device is no mor=
-e
-> > > referenced (refcount =3D=3D 0), it is released and the reference to i=
-ts
-> > > of_node is dropped by a call to of_node_put().
-> > > These operations are fully correct except that, because of the
-> > > workqueue, they are done asynchronously with respect to function call=
-s.
-> > >
-> > > In the sequence provided, the jobs are run too late, after the call t=
-o
-> > > __of_changeset_entry_destroy() and so a missing of_node_put() call is
-> > > detected by __of_changeset_entry_destroy().
-> > >
-> > > This series fixes this issue introducing device_link_wait_removal() i=
-n
-> > > order to wait for the end of jobs execution (patch 1) and using this
-> > > function to synchronize the overlay removal with the end of jobs
-> > > execution (patch 2).
-> > >
-> > > Best regards,
-> > > Herv=C3=A9
-> > >
-> > > Herve Codina (2):
-> > >   driver core: Introduce device_link_wait_removal()
-> > >   of: overlay: Synchronize of_overlay_remove() with the devlink remov=
-als
-> > >
-> > >  drivers/base/core.c    | 26 +++++++++++++++++++++++---
-> > >  drivers/of/overlay.c   |  6 ++++++
-> > >  include/linux/device.h |  1 +
-> > >  3 files changed, 30 insertions(+), 3 deletions(-)
-> > >
-> > > --
-> > > 2.42.0
-> > >
+Thanks, I think Peter is out so it may take a while going through the sched
+tree. This individual patch is independent as such and could go through the
+kselftest tree. However, I am totally Ok with either option.
+
+Also, thanks to you and Chris for the tags and I will add them for future
+submissions.
+
+ - Joel
