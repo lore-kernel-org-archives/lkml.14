@@ -1,103 +1,120 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from out30-113.freemail.mail.aliyun.com (out30-113.freemail.mail.aliyun.com [115.124.30.113])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD2B945976
-	for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 11:41:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01FB241740;
+	Wed, 21 Feb 2024 11:41:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.113
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708515678; cv=none; b=MQPBV5ea9ggnioqJA9ze1dx/qgp7fGUpWOvzWY5kCaL16G+lGz+FGbTcHsL7sbOg+OOnqQEExWKOLGmliD2ot+ArteneBKWnFzVwu5DWq1+7+qZwjIYZcyTcXCvD4hrlEa5c/k4CxXWSqdIhnmSnbK5G0gEWSn56v8MqWU5XDvc=
+	t=1708515715; cv=none; b=f/UQwkx2bgxr3KTlROXLdBvgxIhuuRLmF9NpsCP3SloQJxm+5emztHDyUropgaC6HhdftW5b8arlf2QjtGzvu/JCHu6Z2/SZfhza/s4/PtBSIA8PL3lpOBU8YFHD11Qayn+uaur4F4YbA4kZp7SA3MgS0GhWpXDJftV4PM/wvnQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708515678; c=relaxed/simple;
-	bh=N88ZAVmfemoKev6jlYmIQMcDug/YAdpNBEedT/wfwl8=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=MIgliugwsolEF/w3Y2kbxd8yC24kytdNsuk+aGlGPi1G8O5MYjhn7y5/IiB4WnXZVcYTg4NyyvDUhTdLDCB234FeguWBSHGzU/iUEKFOqwokaj7XonKmaYkuVEBiAO1Xvfdrwvjfb2RZx4GjLzo6IWJYHSWnltABWDfGQZPTHKk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <p.zabel@pengutronix.de>)
-	id 1rckyI-0002lV-Sp; Wed, 21 Feb 2024 12:41:06 +0100
-Received: from [2a0a:edc0:0:900:1d::4e] (helo=lupine)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <p.zabel@pengutronix.de>)
-	id 1rckyE-0021v1-Of; Wed, 21 Feb 2024 12:41:02 +0100
-Received: from pza by lupine with local (Exim 4.96)
-	(envelope-from <p.zabel@pengutronix.de>)
-	id 1rckyE-00061g-2E;
-	Wed, 21 Feb 2024 12:41:02 +0100
-Message-ID: <f2e3d662e92b76e43b89a3c99669c3dadb2176b5.camel@pengutronix.de>
-Subject: Re: [PATCH 05/23] gpio: nomadik: extract GPIO platform driver from
- drivers/pinctrl/nomadik/
-From: Philipp Zabel <p.zabel@pengutronix.de>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: =?ISO-8859-1?Q?Th=E9o?= Lebrun <theo.lebrun@bootlin.com>, Linus Walleij
- <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Krzysztof
- Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley
- <conor+dt@kernel.org>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
- linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- linux-mips@vger.kernel.org, Gregory CLEMENT <gregory.clement@bootlin.com>, 
- Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>, Thomas Petazzoni
- <thomas.petazzoni@bootlin.com>, Tawfik Bayouk <tawfik.bayouk@mobileye.com>
-Date: Wed, 21 Feb 2024 12:41:02 +0100
-In-Reply-To: <CAMRc=Me-oEx9S0w=XhwC4MzV9uzV0o0HnWBfNSstcqg5jpXyZg@mail.gmail.com>
-References: <20240214-mbly-gpio-v1-0-f88c0ccf372b@bootlin.com>
-	 <20240214-mbly-gpio-v1-5-f88c0ccf372b@bootlin.com>
-	 <e031566a85ae0da0ee71dffba5d87c6414ef83e1.camel@pengutronix.de>
-	 <CAMRc=Me-oEx9S0w=XhwC4MzV9uzV0o0HnWBfNSstcqg5jpXyZg@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.46.4-2 
+	s=arc-20240116; t=1708515715; c=relaxed/simple;
+	bh=ILaW+tmU19Hc2hM6tJl9+D6rdU+hAvnyjOgyR8UveG4=;
+	h=Message-ID:Subject:Date:From:To:Cc:References:In-Reply-To; b=s9GOvm3q4lrM9YxKr7ScWzKrCAuWDhKBUeV+EeJa/etDzXBA8fDgTVkzRPk7O56GJMzRUcxp0qT3ID7Fun6zO+42V5xQ6xDqXFcN2PG5wrUmtE6Qd1AmGcBb87GOVs7cMAQx9DZyO0mbxR9V6zqWA3WQhx54dZNMdbNbBfDmlE0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=QneGEIeJ; arc=none smtp.client-ip=115.124.30.113
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="QneGEIeJ"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1708515709; h=Message-ID:Subject:Date:From:To;
+	bh=0phsHgifgaYaoJTCL91u0y1uTS0FvlbXLUwQ30Yr5i8=;
+	b=QneGEIeJXIpMpaLXE6ZxGwFfr1l0qipg0DZzqwX2RD3yNtbDjcLG6RLa4jzJKxsGQXpfm0cJ3S0/mWvPyEvciRLImyCOaHAK+Ahmo0//g5U4JoBhfhfiW3LLW/VOwE31+zAOaLB6x3800StsQOA1H925x48wem+s05/ymdyWOvI=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R111e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046059;MF=xuanzhuo@linux.alibaba.com;NM=1;PH=DS;RN=12;SR=0;TI=SMTPD_---0W0zjbGX_1708515708;
+Received: from localhost(mailfrom:xuanzhuo@linux.alibaba.com fp:SMTPD_---0W0zjbGX_1708515708)
+          by smtp.aliyun-inc.com;
+          Wed, 21 Feb 2024 19:41:49 +0800
+Message-ID: <1708515555.2820647-2-xuanzhuo@linux.alibaba.com>
+Subject: Re: RE: [PATCH net-next 1/2] xsk: Remove non-zero 'dma_page' check in xp_assign_dev
+Date: Wed, 21 Feb 2024 19:39:15 +0800
+From: Xuan Zhuo <xuanzhuo@linux.alibaba.com>
+To: wangyunjian <wangyunjian@huawei.com>
+Cc: "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+ "virtualization@lists.linux.dev" <virtualization@lists.linux.dev>,
+ xudingke <xudingke@huawei.com>,
+ "mst@redhat.com" <mst@redhat.com>,
+ "willemdebruijn.kernel@gmail.com" <willemdebruijn.kernel@gmail.com>,
+ "jasowang@redhat.com" <jasowang@redhat.com>,
+ "kuba@kernel.org" <kuba@kernel.org>,
+ "davem@davemloft.net" <davem@davemloft.net>,
+ "magnus.karlsson@intel.com" <magnus.karlsson@intel.com>
+References: <1706089058-1364-1-git-send-email-wangyunjian@huawei.com>
+ <1708509152.9501102-1-xuanzhuo@linux.alibaba.com>
+ <0fce8b64808f4c6faa0eb60e44687c36@huawei.com>
+In-Reply-To: <0fce8b64808f4c6faa0eb60e44687c36@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: p.zabel@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-Hi Bartosz,
+On Wed, 21 Feb 2024 11:37:22 +0000, wangyunjian <wangyunjian@huawei.com> wrote:
+> > -----Original Message-----
+> > From: Xuan Zhuo [mailto:xuanzhuo@linux.alibaba.com]
+> > Sent: Wednesday, February 21, 2024 5:53 PM
+> > To: wangyunjian <wangyunjian@huawei.com>
+> > Cc: netdev@vger.kernel.org; linux-kernel@vger.kernel.org;
+> > kvm@vger.kernel.org; virtualization@lists.linux.dev; xudingke
+> > <xudingke@huawei.com>; wangyunjian <wangyunjian@huawei.com>;
+> > mst@redhat.com; willemdebruijn.kernel@gmail.com; jasowang@redhat.com;
+> > kuba@kernel.org; davem@davemloft.net; magnus.karlsson@intel.com
+> > Subject: Re: [PATCH net-next 1/2] xsk: Remove non-zero 'dma_page' check in
+> > xp_assign_dev
+> >
+> > On Wed, 24 Jan 2024 17:37:38 +0800, Yunjian Wang
+> > <wangyunjian@huawei.com> wrote:
+> > > Now dma mappings are used by the physical NICs. However the vNIC maybe
+> > > do not need them. So remove non-zero 'dma_page' check in
+> > > xp_assign_dev.
+> >
+> > Could you tell me which one nic can work with AF_XDP without DMA?
+>
+> TUN will support AF_XDP Tx zero-copy, which does not require DMA mappings.
 
-On Mo, 2024-02-19 at 16:33 +0100, Bartosz Golaszewski wrote:
-> On Thu, Feb 15, 2024 at 11:03=E2=80=AFAM Philipp Zabel <p.zabel@pengutron=
-ix.de> wrote:
-> >=20
-> > On Mi, 2024-02-14 at 17:23 +0100, Th=C3=A9o Lebrun wrote:
-> > [...]
-> > > diff --git a/drivers/gpio/gpio-nomadik.c b/drivers/gpio/gpio-nomadik.=
-c
-> > > new file mode 100644
-> > > index 000000000000..e39477e1a58f
-> > > --- /dev/null
-> > > +++ b/drivers/gpio/gpio-nomadik.c
-> > > @@ -0,0 +1,660 @@
-> > [...]
-> > > +static int nmk_gpio_probe(struct platform_device *dev)
-> > > +{
-> > [...]
-> > > +     ret =3D gpiochip_add_data(chip, nmk_chip);
-> >=20
-> > Use devm_gpiochip_add_data() to cleanup on unbind, before nmk_chip goes
-> > away. Or make the driver un-unbindable via suppress_bind_attrs. In that
-> > case you could drop devm_ prefixes everywhere for consistency.
-> >=20
->=20
-> No! Why? What about error paths in probe() where you want to undo everyth=
-ing?
 
-Brain fog moment. I was triggered by the mixture of devm_ and non-devm_
-calls and jumped to the wrong conclusion.
+Great. Though I do not know how it works, but I think a new option or feature
+is better.
 
-Yes, keeping devm_ for error cleanup is of course correct, and with
-suppress_bind_attrs it'd even be ok to use non-devm_
-gpiochip_add_data(), as long as there can be no error return
-afterwards.
+Thanks.
 
-regards
-Philipp
+
+>
+> Thanks
+>
+> >
+> > Thanks.
+> >
+> >
+> > >
+> > > Signed-off-by: Yunjian Wang <wangyunjian@huawei.com>
+> > > ---
+> > >  net/xdp/xsk_buff_pool.c | 7 -------
+> > >  1 file changed, 7 deletions(-)
+> > >
+> > > diff --git a/net/xdp/xsk_buff_pool.c b/net/xdp/xsk_buff_pool.c index
+> > > 28711cc44ced..939b6e7b59ff 100644
+> > > --- a/net/xdp/xsk_buff_pool.c
+> > > +++ b/net/xdp/xsk_buff_pool.c
+> > > @@ -219,16 +219,9 @@ int xp_assign_dev(struct xsk_buff_pool *pool,
+> > >  	if (err)
+> > >  		goto err_unreg_pool;
+> > >
+> > > -	if (!pool->dma_pages) {
+> > > -		WARN(1, "Driver did not DMA map zero-copy buffers");
+> > > -		err = -EINVAL;
+> > > -		goto err_unreg_xsk;
+> > > -	}
+> > >  	pool->umem->zc = true;
+> > >  	return 0;
+> > >
+> > > -err_unreg_xsk:
+> > > -	xp_disable_drv_zc(pool);
+> > >  err_unreg_pool:
+> > >  	if (!force_zc)
+> > >  		err = 0; /* fallback to copy mode */
+> > > --
+> > > 2.33.0
+> > >
+> > >
