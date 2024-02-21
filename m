@@ -1,162 +1,173 @@
-Received: from out203-205-221-155.mail.qq.com (out203-205-221-155.mail.qq.com [203.205.221.155])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0560181740
-	for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 16:14:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.155
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4738C8121A;
+	Wed, 21 Feb 2024 16:14:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708532053; cv=none; b=giqWL4rUEyxEVUYwTBT0mmXRE6+DfHDThXHkZ1ZdLKHkEN/8LlJQ7nf/2KcMNsYVxAAELGdcs9FdqR9kC4uTJL8ZjfdkYb7h3OArOqeZi6drUGWZB6ilzawqNBls9tfGJLT5r+X2xg0HMkcCSfaIGCfPW3h9GuV/iS5GIwUBvAY=
+	t=1708532078; cv=none; b=dLp3+HOI9zTHoScSJ3TKblFyT+lVhQDu9nPXJ3HZtYCltc/bDYVF879kBUw0vg/A9zIaacxoN0Ya8mMqdWNfiw4o85wMB1IxLNoH5PqRkvewAbYmkqe4eg3ZTjFx1t9zBH1KAk1BTl9saQSN5ippo9ZNbYQVrBJH9PaAOJihdoc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708532053; c=relaxed/simple;
-	bh=o30YxW+0vC5nhH8nIdtk++JEI6g7NEVrxqIYs8Uhm8w=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=n9bjBOJ6fZSUjYInqnEq4bBtdOJHAS1d/fGcKhvieCkyNkrRUI6e6uQxNiCk6GvG6FggCXCOvMGwn4XOdx0505xEVNUwj4GoxfHfIYWCLj7IJNroDm9tmYZd6G9Wos3Tu6zP0Chpx6jv+DPQ6WT8HHLWn8GLhIIFnx4/B+rArhM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com; spf=pass smtp.mailfrom=foxmail.com; dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b=x63z3L9w; arc=none smtp.client-ip=203.205.221.155
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foxmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b="x63z3L9w"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foxmail.com;
-	s=s201512; t=1708532049;
-	bh=lo2sqSQSOVhDGBNAF0F7wDJW1xK+XfdFElPtmyue/5g=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=x63z3L9w2DN8D/HPnTxgVpQRPtqusX4WvK8AuJZVfZED71Vapi9fApu1oYDWioP2a
-	 51hg/StRPIIzrLyg80DVhuBkVB1pBVW8Z1ocp7CEDkRdtwRo1uDPr3hqBvdZVS/Cp3
-	 S8TR7uUaTWeyXtNJVXLh7AbKm7+e4Sgg2CX1E6SM=
-Received: from [IPV6:2409:8a60:2a61:ef40:13de:49e4:e117:4535] ([2409:8a60:2a61:ef40:13de:49e4:e117:4535])
-	by newxmesmtplogicsvrszc5-0.qq.com (NewEsmtp) with SMTP
-	id 3733CE9; Thu, 22 Feb 2024 00:00:55 +0800
-X-QQ-mid: xmsmtpt1708531255tcqq3g14c
-Message-ID: <tencent_842730EBF8FD3CA3564D50CF04654D52A40A@qq.com>
-X-QQ-XMAILINFO: MR/iVh5QLeie/LinN1MEGkxd71++CII6n4zoODpFSn1bXWkn6ir62udQUnGbba
-	 YtaxOKUQjqdNDNQPxv0MW0xxsoQQWEPCgqlRp7NpP5t5Pu42lVg0FOcQpZxSE9D3rWJFiAyLdx1E
-	 Y8Y7FUSBys2vp7BWGWQqky8ZuONy8QQAcWefF5Lk7NG00A66BFQNwIXlx/a7Eop4SfMiNtuR4BjH
-	 HkQt2MXKUtLEC2fyWtBBD1QIQVefghrQaIeyM1/ClYYKIy80nIaV/7tpTRWZRnxtLI0BiT90+MBD
-	 QZm9tUSZQc02fo/DTx/LA88l1FUiC0B3DkzvWj8ISCN+FqnmzyytLFMRVhatu3UtNjdb4g+RU5h3
-	 iNpmLDpMtSISF9XBqTJQqBL5BEVPDxc95+miBhtaABqdVObKB06sz8/hOv2FNmCWRxmOa2+xhypX
-	 /6zoDk1zv91ZIeb+A3xtwCZVcHurb50MB4ORFqxKu583vWxnlu8dh0cGNGgj0B1hwam+SO9+7Z3E
-	 y4K+eRtRZKEIhZBXyQaV4DqmWnMwhXUFwVf+7vCMKVW90ZzeWw1dbQ/9lLYhfD5+ykh6eddED5dH
-	 rye3ZdDafU0VDh0a14sOnmEGy5GcxIAPKaNWx43Rs55KDXEikzmliCrtS9P6ksbUAyhzNxnQXvtI
-	 DZ4E+9C63IBTskyWhWvhzWgLXLQ6gWltXNo/oFFJLOoQze8aKb3w45/G78Yl7/Zd0RT6jDB0B8TF
-	 JR9QYweT/AWqJy0xT8y7JOVvcDbuhc+nitsE3bx6MOFCC5fEW/EWsYilHoKNF/FYFIUUExJHaG2y
-	 2U0+k7JCovaCvGRn/RVYM0iNo0n6oZq9sdEY/dZgRA99YMJCWOpgwGnmmcWPXb50GafOf0FIn7Bh
-	 yT4WADLa6WZiRM7Gx6jqY3vNLTAbzURGtDFWS6BqL2qSu1BE4Guua82S8mDbSgjEHEGGj5tlBir+
-	 6IT8FhOdtOhdhaYQQlKfwrxWLOAfeU
-X-QQ-XMRINFO: Nq+8W0+stu50PRdwbJxPCL0=
-X-OQ-MSGID: <cb147ab8-fd24-2680-2a6a-9cdfb3ae48e8@foxmail.com>
-Date: Thu, 22 Feb 2024 00:00:55 +0800
+	s=arc-20240116; t=1708532078; c=relaxed/simple;
+	bh=2iWCWyWeXir+yENq3pCgwfuM/1uLLEcUhOADN7bYtWI=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=ZsjYn5UeBOm0fVIQveJUzmWLghxWqBIZ/6WmKc/biMeuhB0SUE4HjRQB9gD8HqSTSjqy6Vgxs0nisZC2YW2uq3YWPNihq8ur2hIWTNVm3lL+fsv9E6bE0Y4lqDxmmMSIRiWPFD7YfWeBzNct1WPnQQKgWPxLangzqt2adWgemAQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Received: from imap2.dmz-prg2.suse.org (imap2.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:98])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id A53D42222F;
+	Wed, 21 Feb 2024 16:14:34 +0000 (UTC)
+Received: from imap2.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap2.dmz-prg2.suse.org (Postfix) with ESMTPS id 0385813A42;
+	Wed, 21 Feb 2024 16:14:33 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([10.150.64.162])
+	by imap2.dmz-prg2.suse.org with ESMTPSA
+	id KMI5O2kh1mVrYwAAn2gu4w
+	(envelope-from <tzimmermann@suse.de>); Wed, 21 Feb 2024 16:14:33 +0000
+From: Thomas Zimmermann <tzimmermann@suse.de>
+To: arnd@arndb.de,
+	javierm@redhat.com,
+	deller@gmx.de,
+	suijingfeng@loongson.cn
+Cc: linux-arch@vger.kernel.org,
+	dri-devel@lists.freedesktop.org,
+	linux-fbdev@vger.kernel.org,
+	sparclinux@vger.kernel.org,
+	linux-sh@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org,
+	linux-parisc@vger.kernel.org,
+	linux-mips@vger.kernel.org,
+	linux-m68k@lists.linux-m68k.org,
+	loongarch@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org,
+	linux-snps-arc@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	"James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Andreas Larsson <andreas@gaisler.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>
+Subject: [PATCH 1/3] arch: Select fbdev helpers with CONFIG_VIDEO
+Date: Wed, 21 Feb 2024 17:05:24 +0100
+Message-ID: <20240221161431.8245-2-tzimmermann@suse.de>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240221161431.8245-1-tzimmermann@suse.de>
+References: <20240221161431.8245-1-tzimmermann@suse.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-Subject: Re: [PATCH] coredump debugging: add a tracepoint to report the
- coredumping
-Content-Language: en-US
-To: Steven Rostedt <rostedt@goodmis.org>, Oleg Nesterov <oleg@redhat.com>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Ingo Molnar <mingo@kernel.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Mel Gorman <mgorman@techsingularity.net>,
- Peter Zijlstra <peterz@infradead.org>, linux-kernel@vger.kernel.org
-References: <tencent_5CD40341EC9384E9B7CC127EA5CF2655B408@qq.com>
- <20240217104924.GB10393@redhat.com>
- <20240219112926.77ac16f8@gandalf.local.home>
- <20240219170038.GA710@redhat.com>
- <20240219122825.31579a1e@gandalf.local.home>
-From: Wen Yang <wenyang.linux@foxmail.com>
-In-Reply-To: <20240219122825.31579a1e@gandalf.local.home>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Spam-Level: 
+Authentication-Results: smtp-out1.suse.de;
+	none
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Spamd-Result: default: False [-4.00 / 50.00];
+	 REPLY(-4.00)[]
+X-Spam-Score: -4.00
+X-Rspamd-Queue-Id: A53D42222F
+X-Spam-Flag: NO
 
+Various Kconfig options selected the per-architecture helpers for
+fbdev. But none of the contained code depends on fbdev. Standardize
+on CONFIG_VIDEO, which will allow to add more general helpers for
+video functionality.
 
+CONFIG_VIDEO protects each architecture's video/ directory. This
+allows for the use of more fine-grained control for each directory's
+files, such as the use of CONFIG_STI_CORE on parisc.
 
-On 2024/2/20 01:28, Steven Rostedt wrote:
-> On Mon, 19 Feb 2024 18:00:38 +0100
-> Oleg Nesterov <oleg@redhat.com> wrote:
-> 
->>> void __noreturn do_exit(long code)
->>> {
->>> 	struct task_struct *tsk = current;
->>> 	int group_dead;
->>>
->>> [...]
->>> 	acct_collect(code, group_dead);
->>> 	if (group_dead)
->>> 		tty_audit_exit();
->>> 	audit_free(tsk);
->>>
->>> 	tsk->exit_code = code;
->>> 	taskstats_exit(tsk, group_dead);
->>>
->>> 	exit_mm();
->>>
->>> 	if (group_dead)
->>> 		acct_process();
->>> 	trace_sched_process_exit(tsk);
->>>
->>> There's a lot that happens before we trigger the above event.
->>
->> and a lot after.
-> 
-> True. There really isn't a meaningful location here is there?
-> 
-> I actually use this tracepoint in my pid tracing.
-> 
-> The set_ftrace_pid and set_event_pid from /sys/kernel/tracing will add and
-> remove PIDs if the options function-fork or event-fork are set respectively.
-> 
-> I hook to the sched_process_fork tracepoint to add new PIDs if the parent
-> pid is already in one of the files, and remove a PID via the
-> sched_process_exit function.
-> 
-> Honestly, if anything, it should probably be moved down right next to
-> () (I never understood why  needed its own hooks
-> and not just use tracepoints).
-> 
+Signed-off-by: Thomas Zimmermann <tzimmermann@suse.de>
+Cc: "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>
+Cc: Helge Deller <deller@gmx.de>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Andreas Larsson <andreas@gaisler.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: x86@kernel.org
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+---
+ arch/parisc/Makefile      | 2 +-
+ arch/sparc/Makefile       | 4 ++--
+ arch/sparc/video/Makefile | 2 +-
+ arch/x86/Makefile         | 2 +-
+ arch/x86/video/Makefile   | 3 ++-
+ 5 files changed, 7 insertions(+), 6 deletions(-)
 
-Perhaps it's just because perf appeared earlier, and it doesn't rely on 
-TRACEPOINTS.
-It is indeed reasonable to replace perf_event_exit_task() with 
-TRACEPOINT, and we are willing to try to modify it. It will require some 
-work and time.
-
---
-Best wishes,
-Wen
-
->>
->> To me the current placement of trace_sched_process_exit() looks absolutely
->> random.
-> 
-> Agreed.
-> 
->>
->>> I could
->>> imagine that there are users expecting those actions to have taken place by
->>> the time the event triggered. Like the "exit_mm()" call, as well as many
->>> others.
->>>
->>> I would be leery of moving that tracepoint.
->>
->> And I agree. I am always scared of every user-visible change, simply
->> because it is user-visbible.
->>
->> If it was not clear, I didn't try to nack this patch. I simply do not know
->> how people use the tracepoints and for what. Apart from debugging.
->>
->> But if we add the new one into coredump_task_exit(), then we probably want
->> another one in ptrace_event(PTRACE_EVENT_EXIT) ? It too can "take some time"
->> before the exiting task actually exits.
->>
->> So I think this needs some discussion, and the changelog should probably say
->> more.
->>
->> In short: I am glad you are here, I leave this to you and Wen ;)
-> 
-> I still would like to have your input too ;-)
-> 
-> -- Steve
+diff --git a/arch/parisc/Makefile b/arch/parisc/Makefile
+index 316f84f1d15c8..21b8166a68839 100644
+--- a/arch/parisc/Makefile
++++ b/arch/parisc/Makefile
+@@ -119,7 +119,7 @@ export LIBGCC
+ 
+ libs-y	+= arch/parisc/lib/ $(LIBGCC)
+ 
+-drivers-y += arch/parisc/video/
++drivers-$(CONFIG_VIDEO) += arch/parisc/video/
+ 
+ boot	:= arch/parisc/boot
+ 
+diff --git a/arch/sparc/Makefile b/arch/sparc/Makefile
+index 5f60359361312..757451c3ea1df 100644
+--- a/arch/sparc/Makefile
++++ b/arch/sparc/Makefile
+@@ -59,8 +59,8 @@ endif
+ libs-y                 += arch/sparc/prom/
+ libs-y                 += arch/sparc/lib/
+ 
+-drivers-$(CONFIG_PM) += arch/sparc/power/
+-drivers-$(CONFIG_FB) += arch/sparc/video/
++drivers-$(CONFIG_PM)    += arch/sparc/power/
++drivers-$(CONFIG_VIDEO) += arch/sparc/video/
+ 
+ boot := arch/sparc/boot
+ 
+diff --git a/arch/sparc/video/Makefile b/arch/sparc/video/Makefile
+index 6baddbd58e4db..9dd82880a027a 100644
+--- a/arch/sparc/video/Makefile
++++ b/arch/sparc/video/Makefile
+@@ -1,3 +1,3 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+ 
+-obj-$(CONFIG_FB) += fbdev.o
++obj-y	+= fbdev.o
+diff --git a/arch/x86/Makefile b/arch/x86/Makefile
+index 15a5f4f2ff0aa..c0ea612c62ebe 100644
+--- a/arch/x86/Makefile
++++ b/arch/x86/Makefile
+@@ -265,7 +265,7 @@ drivers-$(CONFIG_PCI)            += arch/x86/pci/
+ # suspend and hibernation support
+ drivers-$(CONFIG_PM) += arch/x86/power/
+ 
+-drivers-$(CONFIG_FB_CORE) += arch/x86/video/
++drivers-$(CONFIG_VIDEO) += arch/x86/video/
+ 
+ ####
+ # boot loader support. Several targets are kept for legacy purposes
+diff --git a/arch/x86/video/Makefile b/arch/x86/video/Makefile
+index 5ebe48752ffc4..9dd82880a027a 100644
+--- a/arch/x86/video/Makefile
++++ b/arch/x86/video/Makefile
+@@ -1,2 +1,3 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+-obj-$(CONFIG_FB_CORE)		+= fbdev.o
++
++obj-y	+= fbdev.o
+-- 
+2.43.0
 
