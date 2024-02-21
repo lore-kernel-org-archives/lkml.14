@@ -1,44 +1,44 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B23173D555
-	for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 09:06:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B83503D967
+	for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 09:06:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708506380; cv=none; b=gFk546+GjgDhdkBqnRqhm17ovgf1AUJASbcngun9wuirXY1xjxlgWFTo8tR4p6xcON70+c7GYVxsVyqaD+3935bTPkarIMsZH0WQNwmJLHF8hfti9riE7XDqmQw5t0v7AT981276Jo6OxA0QfYbTy4hPNdvlTOSR+yoPdVJuBVo=
+	t=1708506381; cv=none; b=ugUN//gixsh+jNJYQp9kFRx+r5x/5vgmd8pDnys8iGXS4uATdssViXO8nGXdVs1RW52PNgL4jR2yHzNDSobIxkZnHVVYeym8cj6uEKHEudr9eOFRsduDdUbwV1ztLOb1qGHPyqKh/EF+hj5hNXvMEaklfQdreiTeqpKJl4PsyZU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708506380; c=relaxed/simple;
-	bh=NKQqux4Wr2JtrfLkCkoLP8yZaKcp+XfdbugCAa+8pIE=;
+	s=arc-20240116; t=1708506381; c=relaxed/simple;
+	bh=A1ak4c05RsMMc85EHNnnsqJhV5a1qxUJ9DF2MBZohj8=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Fgi1smnfAixYA65yMI0EFvOeHkDm8h8MPD46j6vxVXeSOzSdnKBGjEWB72KctKngVIhCpueH64I74qms00e63b32iijYYG5iL9xao/AaMEC6i1xSJs1H+Q0oD0puL0VJo7Pygp7fVyHrJZTIGm5t2gCnKshVmcaC6F9S95ryLgY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=bhJCVGIR; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=vzezfTvZ; arc=none smtp.client-ip=193.142.43.55
+	 MIME-Version; b=X8n3bo0ZeJKuAhgjynaj07HZuQPaUzUYHkL8FCHPSE5mfDtuXpL1PEDqnw3EHa9o1yUd7JfTqHA+hFspNn7Kbv63Zc02IUG6zWhTI8ku7OLncPEWIRkRVM4pgpzhAaG8m4B2cH0jEhem353twPHBnqZGVKLftZLJFyxwG9FemTY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=nyXedZ4U; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=tGyZD5Ps; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="bhJCVGIR";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="vzezfTvZ"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="nyXedZ4U";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="tGyZD5Ps"
 From: Anna-Maria Behnsen <anna-maria@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1708506372;
+	s=2020; t=1708506374;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=RQOeVJJgEWbHRW0ZjUOmxv5PwcZZzcUZxTpzkcXB+IU=;
-	b=bhJCVGIRnZW5nAb+MFHLSIXlvn8q2m7FJaOZLtBWZMNfNwFPIiYDIJKJqTKXk6mSGiiG2i
-	9JWochTRL81HVTQQ1BZLtr0RVgG8kk2D/pJx5eWjFMMChce0FXBxYcpBbge1KxVqAhYif2
-	k/0qGm1eGbmph+yFsfz10pk3nf9RTbLdfbLp6CTGdTGizr720SnFShAg3nyqa2kIlStZGf
-	ahYQkRnuKsyOuS6vo44TMUQ3P++puSNRVhedU5mV0Z7n7NoorcZOlvkY2KSASgT7DN8PCr
-	F9WogggMSm8/1Uvzqsr3qP8IAssQL7p+WlqL21OR4W9+mrsynu9Rtlc4r86kZA==
+	bh=7M+cLD3z/7BiBVC+tTh5mmcK9KmfYufY+d1NGfjIUd0=;
+	b=nyXedZ4ULMKfhslx9q3MBFhD3FvdgJXdxLmS7rdCWmnguxXTcrGasMApsH5yxBaJmDV0bM
+	4zGkijLbX5rjWdTXQ4xW4TgfEx5XXugDVd82s+HPg9k+p3cQSIjTmcOHYF5cobkjo/CRld
+	uw5A1NYLuXE0km8oXvt0ULuhxY4m12QW4qbTi20kWYS9u4x4nW/kBIK0qWrRqvU21GP2E/
+	dUVV0zCP6N598KXHNQSsLKWrOD/tvimhPiSMv8Ctl7go9r1a1oncyClCIezMfwdz0OVuFu
+	DfLJUjJ9NUmHQ/V8dMelUO3AKziMWJPwQLVpSQkg2wexHwOA6Ud/JGmIVGrzSg==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1708506372;
+	s=2020e; t=1708506374;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=RQOeVJJgEWbHRW0ZjUOmxv5PwcZZzcUZxTpzkcXB+IU=;
-	b=vzezfTvZ41R9PIB5ATY7KiiCPyXomXAqaa8iw9Ah00ue7GuKChysnRLHA/f++2b8iavEOB
-	9RyGtvtQ9fkUSEAw==
+	bh=7M+cLD3z/7BiBVC+tTh5mmcK9KmfYufY+d1NGfjIUd0=;
+	b=tGyZD5Pslo4rbM64ULduxSkn9Zve72LNFv+ut6WRELNpeDBPyG/Mq/S2mEYluwGVPbn8MH
+	/WGMnqEd2EyulpAA==
 To: linux-kernel@vger.kernel.org
 Cc: Peter Zijlstra <peterz@infradead.org>,
 	John Stultz <jstultz@google.com>,
@@ -57,11 +57,10 @@ Cc: Peter Zijlstra <peterz@infradead.org>,
 	Srinivas Pandruvada <srinivas.pandruvada@intel.com>,
 	K Prateek Nayak <kprateek.nayak@amd.com>,
 	Christian Loehle <christian.loehle@arm.com>,
-	Anna-Maria Behnsen <anna-maria@linutronix.de>,
-	Richard Cochran <richardcochran@gmail.com>
-Subject: [PATCH v11 10/20] timers: Keep the pinned timers separate from the others
-Date: Wed, 21 Feb 2024 10:05:38 +0100
-Message-Id: <20240221090548.36600-11-anna-maria@linutronix.de>
+	Anna-Maria Behnsen <anna-maria@linutronix.de>
+Subject: [PATCH v11 13/20] timers: Add get next timer interrupt functionality for remote CPUs
+Date: Wed, 21 Feb 2024 10:05:41 +0100
+Message-Id: <20240221090548.36600-14-anna-maria@linutronix.de>
 In-Reply-To: <20240221090548.36600-1-anna-maria@linutronix.de>
 References: <20240221090548.36600-1-anna-maria@linutronix.de>
 Precedence: bulk
@@ -72,226 +71,186 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Separate the storage space for pinned timers. Deferrable timers (doesn't
-matter if pinned or non pinned) are still enqueued into their own base.
+To prepare for the conversion of the NOHZ timer placement to a pull at
+expiry time model it's required to have functionality available getting the
+next timer interrupt on a remote CPU.
 
-This is preparatory work for changing the NOHZ timer placement from a push
-at enqueue time to a pull at expiry time model.
+Locking of the timer bases and getting the information for the next timer
+interrupt functionality is split into separate functions. This is required
+to be compliant with lock ordering when the new model is in place.
 
-Originally-by: Richard Cochran (linutronix GmbH) <richardcochran@gmail.com>
 Signed-off-by: Anna-Maria Behnsen <anna-maria@linutronix.de>
-Reviewed-by: Frederic Weisbecker <frederic@kernel.org>
 ---
-v10:
-  - Simplify local_first check in __get_next_timer_interrupt() due to
-    updated next_expiry values of empty timer bases
+v11:
+ - Update tevt.global when global is first event to make sure during remote
+   timer handling, this global timer does not get lost
 
-v9:
-  - Update was required (change of preceding patches)
+v10:
+ - sparse annotations for locks
+
+v8:
+ - Update comment
+
+v7:
+ - Move functions into CONFIG_SMP && CONFIG_NO_HZ_COMMON section
+ - change lock, fetch functions to be unconditional
+ - split out unlock function into a separate function
 
 v6:
-  - Drop set TIMER_PINNED flag in add_timer_on() and drop related
-    warning. add_timer_on() fix is splitted into a separate
-    patch. Therefore also drop "Reviewed-by" of Frederic Weisbecker
-
-v5:
-  - Add WARN_ONCE() in add_timer_on()
-  - Decrease patch size by splitting into three patches (this patch and the
-    two before)
-
-v4:
-  - split out logic to forward base clock into a helper function
-    forward_base_clk() (Frederic)
-  - ease the code in run_local_timers() and timer_clear_idle() (Frederic)
+ - introduce timer_lock_remote_bases() to fix race
 ---
- kernel/time/timer.c | 85 +++++++++++++++++++++++++++++----------------
- 1 file changed, 56 insertions(+), 29 deletions(-)
+ kernel/time/tick-internal.h | 10 ++++
+ kernel/time/timer.c         | 95 +++++++++++++++++++++++++++++++++++--
+ 2 files changed, 100 insertions(+), 5 deletions(-)
 
+diff --git a/kernel/time/tick-internal.h b/kernel/time/tick-internal.h
+index 47df30b871e4..8b0c28edbd09 100644
+--- a/kernel/time/tick-internal.h
++++ b/kernel/time/tick-internal.h
+@@ -8,6 +8,11 @@
+ #include "timekeeping.h"
+ #include "tick-sched.h"
+ 
++struct timer_events {
++	u64	local;
++	u64	global;
++};
++
+ #ifdef CONFIG_GENERIC_CLOCKEVENTS
+ 
+ # define TICK_DO_TIMER_NONE	-1
+@@ -154,6 +159,11 @@ extern unsigned long tick_nohz_active;
+ extern void timers_update_nohz(void);
+ # ifdef CONFIG_SMP
+ extern struct static_key_false timers_migration_enabled;
++extern void fetch_next_timer_interrupt_remote(unsigned long basej, u64 basem,
++					      struct timer_events *tevt,
++					      unsigned int cpu);
++extern void timer_lock_remote_bases(unsigned int cpu);
++extern void timer_unlock_remote_bases(unsigned int cpu);
+ # endif
+ #else /* CONFIG_NO_HZ_COMMON */
+ static inline void timers_update_nohz(void) { }
 diff --git a/kernel/time/timer.c b/kernel/time/timer.c
-index 4d6cf49a2fd1..5ca831444954 100644
+index 9fa759dd80f5..88160b3461e0 100644
 --- a/kernel/time/timer.c
 +++ b/kernel/time/timer.c
-@@ -187,12 +187,18 @@ EXPORT_SYMBOL(jiffies_64);
- #define WHEEL_SIZE	(LVL_SIZE * LVL_DEPTH)
+@@ -221,11 +221,6 @@ struct timer_base {
  
+ static DEFINE_PER_CPU(struct timer_base, timer_bases[NR_BASES]);
+ 
+-struct timer_events {
+-	u64	local;
+-	u64	global;
+-};
+-
  #ifdef CONFIG_NO_HZ_COMMON
--# define NR_BASES	2
--# define BASE_STD	0
--# define BASE_DEF	1
-+/*
-+ * If multiple bases need to be locked, use the base ordering for lock
-+ * nesting, i.e. lowest number first.
+ 
+ static DEFINE_STATIC_KEY_FALSE(timers_nohz_active);
+@@ -2013,6 +2008,21 @@ static unsigned long fetch_next_timer_interrupt(unsigned long basej, u64 basem,
+ 		if (time_before(nextevt, basej))
+ 			nextevt = basej;
+ 		tevt->local = basem + (u64)(nextevt - basej) * TICK_NSEC;
++
++		/*
++		 * This is required for the remote check only but it doesn't
++		 * hurt, when it is done for both call sites:
++		 *
++		 * * The remote callers will only take care of the global timers
++		 *   as local timers will be handled by CPU itself. When not
++		 *   updating tevt->global with the already missed first global
++		 *   timer, it is possible that it will be missed completely.
++		 *
++		 * * The local callers will ignore the tevt->global anyway, when
++		 *   nextevt is max. one tick away.
++		 */
++		if (!local_first)
++			tevt->global = tevt->local;
+ 		return nextevt;
+ 	}
+ 
+@@ -2031,6 +2041,81 @@ static unsigned long fetch_next_timer_interrupt(unsigned long basej, u64 basem,
+ 	return nextevt;
+ }
+ 
++# ifdef CONFIG_SMP
++/**
++ * fetch_next_timer_interrupt_remote() - Store next timers into @tevt
++ * @basej:	base time jiffies
++ * @basem:	base time clock monotonic
++ * @tevt:	Pointer to the storage for the expiry values
++ * @cpu:	Remote CPU
++ *
++ * Stores the next pending local and global timer expiry values in the
++ * struct pointed to by @tevt. If a queue is empty the corresponding
++ * field is set to KTIME_MAX. If local event expires before global
++ * event, global event is set to KTIME_MAX as well.
++ *
++ * Caller needs to make sure timer base locks are held (use
++ * timer_lock_remote_bases() for this purpose).
 + */
-+# define NR_BASES	3
-+# define BASE_LOCAL	0
-+# define BASE_GLOBAL	1
-+# define BASE_DEF	2
- #else
- # define NR_BASES	1
--# define BASE_STD	0
-+# define BASE_LOCAL	0
-+# define BASE_GLOBAL	0
- # define BASE_DEF	0
- #endif
- 
-@@ -899,7 +905,10 @@ static int detach_if_pending(struct timer_list *timer, struct timer_base *base,
- 
- static inline struct timer_base *get_timer_cpu_base(u32 tflags, u32 cpu)
- {
--	struct timer_base *base = per_cpu_ptr(&timer_bases[BASE_STD], cpu);
-+	int index = tflags & TIMER_PINNED ? BASE_LOCAL : BASE_GLOBAL;
-+	struct timer_base *base;
++void fetch_next_timer_interrupt_remote(unsigned long basej, u64 basem,
++				       struct timer_events *tevt,
++				       unsigned int cpu)
++{
++	struct timer_base *base_local, *base_global;
 +
-+	base = per_cpu_ptr(&timer_bases[index], cpu);
- 
- 	/*
- 	 * If the timer is deferrable and NO_HZ_COMMON is set then we need
-@@ -912,7 +921,10 @@ static inline struct timer_base *get_timer_cpu_base(u32 tflags, u32 cpu)
- 
- static inline struct timer_base *get_timer_this_cpu_base(u32 tflags)
- {
--	struct timer_base *base = this_cpu_ptr(&timer_bases[BASE_STD]);
-+	int index = tflags & TIMER_PINNED ? BASE_LOCAL : BASE_GLOBAL;
-+	struct timer_base *base;
++	/* Preset local / global events */
++	tevt->local = tevt->global = KTIME_MAX;
 +
-+	base = this_cpu_ptr(&timer_bases[index]);
- 
- 	/*
- 	 * If the timer is deferrable and NO_HZ_COMMON is set then we need
-@@ -1961,6 +1973,9 @@ static unsigned long next_timer_interrupt(struct timer_base *base,
- 	 * Move next_expiry for the empty base into the future to prevent an
- 	 * unnecessary raise of the timer softirq when the next_expiry value
- 	 * will be reached even if there is no timer pending.
-+	 *
-+	 * This update is also required to make timer_base::next_expiry values
-+	 * easy comparable to find out which base holds the first pending timer.
- 	 */
- 	if (!base->timers_pending)
- 		base->next_expiry = basej + NEXT_TIMER_MAX_DELTA;
-@@ -1971,9 +1986,10 @@ static unsigned long next_timer_interrupt(struct timer_base *base,
++	base_local = per_cpu_ptr(&timer_bases[BASE_LOCAL], cpu);
++	base_global = per_cpu_ptr(&timer_bases[BASE_GLOBAL], cpu);
++
++	lockdep_assert_held(&base_local->lock);
++	lockdep_assert_held(&base_global->lock);
++
++	fetch_next_timer_interrupt(basej, basem, base_local, base_global, tevt);
++}
++
++/**
++ * timer_unlock_remote_bases - unlock timer bases of cpu
++ * @cpu:	Remote CPU
++ *
++ * Unlocks the remote timer bases.
++ */
++void timer_unlock_remote_bases(unsigned int cpu)
++	__releases(timer_bases[BASE_LOCAL]->lock)
++	__releases(timer_bases[BASE_GLOBAL]->lock)
++{
++	struct timer_base *base_local, *base_global;
++
++	base_local = per_cpu_ptr(&timer_bases[BASE_LOCAL], cpu);
++	base_global = per_cpu_ptr(&timer_bases[BASE_GLOBAL], cpu);
++
++	raw_spin_unlock(&base_global->lock);
++	raw_spin_unlock(&base_local->lock);
++}
++
++/**
++ * timer_lock_remote_bases - lock timer bases of cpu
++ * @cpu:	Remote CPU
++ *
++ * Locks the remote timer bases.
++ */
++void timer_lock_remote_bases(unsigned int cpu)
++	__acquires(timer_bases[BASE_LOCAL]->lock)
++	__acquires(timer_bases[BASE_GLOBAL]->lock)
++{
++	struct timer_base *base_local, *base_global;
++
++	base_local = per_cpu_ptr(&timer_bases[BASE_LOCAL], cpu);
++	base_global = per_cpu_ptr(&timer_bases[BASE_GLOBAL], cpu);
++
++	lockdep_assert_irqs_disabled();
++
++	raw_spin_lock(&base_local->lock);
++	raw_spin_lock_nested(&base_global->lock, SINGLE_DEPTH_NESTING);
++}
++# endif /* CONFIG_SMP */
++
  static inline u64 __get_next_timer_interrupt(unsigned long basej, u64 basem,
  					     bool *idle)
  {
--	struct timer_base *base = this_cpu_ptr(&timer_bases[BASE_STD]);
-+	unsigned long nextevt, nextevt_local, nextevt_global;
-+	struct timer_base *base_local, *base_global;
- 	u64 expires = KTIME_MAX;
--	unsigned long nextevt;
-+	bool local_first;
- 
- 	/*
- 	 * Pretend that there is no timer pending if the cpu is offline.
-@@ -1985,10 +2001,20 @@ static inline u64 __get_next_timer_interrupt(unsigned long basej, u64 basem,
- 		return expires;
- 	}
- 
--	raw_spin_lock(&base->lock);
--	nextevt = next_timer_interrupt(base, basej);
-+	base_local = this_cpu_ptr(&timer_bases[BASE_LOCAL]);
-+	base_global = this_cpu_ptr(&timer_bases[BASE_GLOBAL]);
- 
--	if (base->timers_pending) {
-+	raw_spin_lock(&base_local->lock);
-+	raw_spin_lock_nested(&base_global->lock, SINGLE_DEPTH_NESTING);
-+
-+	nextevt_local = next_timer_interrupt(base_local, basej);
-+	nextevt_global = next_timer_interrupt(base_global, basej);
-+
-+	local_first = time_before_eq(nextevt_local, nextevt_global);
-+
-+	nextevt = local_first ? nextevt_local : nextevt_global;
-+
-+	if (base_local->timers_pending || base_global->timers_pending) {
- 		/* If we missed a tick already, force 0 delta */
- 		if (time_before(nextevt, basej))
- 			nextevt = basej;
-@@ -1999,31 +2025,31 @@ static inline u64 __get_next_timer_interrupt(unsigned long basej, u64 basem,
- 	 * We have a fresh next event. Check whether we can forward the
- 	 * base.
- 	 */
--	__forward_timer_base(base, basej);
-+	__forward_timer_base(base_local, basej);
-+	__forward_timer_base(base_global, basej);
- 
- 	/*
- 	 * Set base->is_idle only when caller is timer_base_try_to_set_idle()
- 	 */
- 	if (idle) {
- 		/*
--		 * Base is idle if the next event is more than a tick away.
-+		 * Bases are idle if the next event is more than a tick away.
- 		 *
- 		 * If the base is marked idle then any timer add operation must
- 		 * forward the base clk itself to keep granularity small. This
--		 * idle logic is only maintained for the BASE_STD base,
--		 * deferrable timers may still see large granularity skew (by
--		 * design).
-+		 * idle logic is only maintained for the BASE_LOCAL and
-+		 * BASE_GLOBAL base, deferrable timers may still see large
-+		 * granularity skew (by design).
- 		 */
--		if (!base->is_idle) {
--			if (time_after(nextevt, basej + 1)) {
--				base->is_idle = true;
--				trace_timer_base_idle(true, base->cpu);
--			}
-+		if (!base_local->is_idle && time_after(nextevt, basej + 1)) {
-+			base_local->is_idle = base_global->is_idle = true;
-+			trace_timer_base_idle(true, base_local->cpu);
- 		}
--		*idle = base->is_idle;
-+		*idle = base_local->is_idle;
- 	}
- 
--	raw_spin_unlock(&base->lock);
-+	raw_spin_unlock(&base_global->lock);
-+	raw_spin_unlock(&base_local->lock);
- 
- 	return cmp_next_hrtimer_event(basem, expires);
- }
-@@ -2067,15 +2093,14 @@ u64 timer_base_try_to_set_idle(unsigned long basej, u64 basem, bool *idle)
-  */
- void timer_clear_idle(void)
- {
--	struct timer_base *base = this_cpu_ptr(&timer_bases[BASE_STD]);
--
- 	/*
- 	 * We do this unlocked. The worst outcome is a remote enqueue sending
- 	 * a pointless IPI, but taking the lock would just make the window for
- 	 * sending the IPI a few instructions smaller for the cost of taking
- 	 * the lock in the exit from idle path.
- 	 */
--	base->is_idle = false;
-+	__this_cpu_write(timer_bases[BASE_LOCAL].is_idle, false);
-+	__this_cpu_write(timer_bases[BASE_GLOBAL].is_idle, false);
- 	trace_timer_base_idle(false, smp_processor_id());
- }
- #endif
-@@ -2126,11 +2151,13 @@ static inline void __run_timers(struct timer_base *base)
-  */
- static __latent_entropy void run_timer_softirq(struct softirq_action *h)
- {
--	struct timer_base *base = this_cpu_ptr(&timer_bases[BASE_STD]);
-+	struct timer_base *base = this_cpu_ptr(&timer_bases[BASE_LOCAL]);
- 
- 	__run_timers(base);
--	if (IS_ENABLED(CONFIG_NO_HZ_COMMON))
-+	if (IS_ENABLED(CONFIG_NO_HZ_COMMON)) {
-+		__run_timers(this_cpu_ptr(&timer_bases[BASE_GLOBAL]));
- 		__run_timers(this_cpu_ptr(&timer_bases[BASE_DEF]));
-+	}
- }
- 
- /*
-@@ -2138,7 +2165,7 @@ static __latent_entropy void run_timer_softirq(struct softirq_action *h)
-  */
- static void run_local_timers(void)
- {
--	struct timer_base *base = this_cpu_ptr(&timer_bases[BASE_STD]);
-+	struct timer_base *base = this_cpu_ptr(&timer_bases[BASE_LOCAL]);
- 
- 	hrtimer_run_queues();
- 
 -- 
 2.39.2
 
