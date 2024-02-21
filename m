@@ -1,220 +1,173 @@
-Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E29C64CC6;
-	Wed, 21 Feb 2024 09:50:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A39F3D564;
+	Wed, 21 Feb 2024 09:52:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708509039; cv=none; b=jpVT2yzH1eliLWPJtzdRHH/i7eTL256y9rSrerR1VaXUFYhqG+LEpDNl16szoFhTYpi65lWFWMIm3guydrYiXcyIf5L7KlE08XkceV1zkDjzF48KDhbL4hgyc/eqCeEpqscWfNShaL3CPQt89u01qIGmDJt7J2CawXG2I6Tbihw=
+	t=1708509178; cv=none; b=kt6F+Brld8/13jmLpQ0xj9mtPao/pZ78dvi4maFq9GhVnnk+SVkGrGVHA70q9Ystn6BtHZ827gM0iX2YPqhUcqezlZ3+S4CCwczLiWT8A4O4hdDk7xqsZwiv9x6frhYT61C/FT34TzvvHnmFVsphASmrGHDJfmulZWYGprMhwFY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708509039; c=relaxed/simple;
-	bh=kP+69lggN24+/u7AHL8nNpSMUDvoOVAEHGVt3fccQBI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=u5rkBekSNdjY7QPQ8/b8VzjeVXTOBI4LycF4VqxLCxd++I6117jmAV1R48kyPAVvqxcKaZkmYxSFZQjNBzD45dgn/p9wlkFOgso+ohgHvtyp5/Rt2BqIB6PPfYxZzpDN+YqQRiHmh+7dgOgoGu14sv3Bv0PwApfr2NlcvnNUqXY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.191
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.162.112])
-	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4TfrxL2KXZz1FKs7;
-	Wed, 21 Feb 2024 17:45:42 +0800 (CST)
-Received: from dggpemd100002.china.huawei.com (unknown [7.185.36.164])
-	by mail.maildlp.com (Postfix) with ESMTPS id 0625C1402CA;
-	Wed, 21 Feb 2024 17:50:34 +0800 (CST)
-Received: from [10.67.110.48] (10.67.110.48) by dggpemd100002.china.huawei.com
- (7.185.36.164) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.2.1258.28; Wed, 21 Feb
- 2024 17:50:33 +0800
-Message-ID: <5436af7a-26d4-7c04-466a-7163d5a26040@huawei.com>
-Date: Wed, 21 Feb 2024 17:50:27 +0800
+	s=arc-20240116; t=1708509178; c=relaxed/simple;
+	bh=n+F3zfUjjh0FcowZvUt7zMvLrVajwJGpsuxCwXX6+io=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=j8N/xjna7MyljJKF+JztNrXd755PWiRVJxb0DfzvkHDsPRkm8BeLfzxD+ySZYYBoedE9AwwYyVmcu6q59qbuajeXveVUXrslCqcDq6Vl8S2v0fPRYFO0TIV7qFYD7VCRqwtc8LOkAEi9TEShHBGu31oQgAiof+TclmlDwHa9o/0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=j/cClNDH; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="j/cClNDH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 725E0C433F1;
+	Wed, 21 Feb 2024 09:52:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1708509177;
+	bh=n+F3zfUjjh0FcowZvUt7zMvLrVajwJGpsuxCwXX6+io=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=j/cClNDHf5DPCLnlNAtv51eNkyM3+JZg3cpj30hyd/au43bgg7+XDqv4wJp3SEdm7
+	 HslEbEs0xdVbUvUt5tpF8jDvQUg9uxBL63bTPPBlbw7be4fFIfk1Dv91wzSytUwde6
+	 Vj0pRam/eVXk8WmkPoE17SK6Iky3eq01eGhZjDl2OyYkuK1FD8ydHAer79YWacywJz
+	 6B9RLZRj26wUavBTrf/5dkOqmcgh4bMJjlvJXEYu2ZOJJXklz5oxbMO3wiRKQwTAoL
+	 /BZT+iMnpHb6MVBy9lnNLY4t7e6+T/V8FrolTVPil8bgtEjdUASi1YF0lJBC9BnDRM
+	 /hYodnqz+aRLA==
+Message-ID: <bea850fe-19e8-492e-b885-6d01b389c32c@kernel.org>
+Date: Wed, 21 Feb 2024 10:52:49 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Subject: Re: [PATCH stable] memcg: add refcnt for pcpu stock to avoid UAF
- problem in drain_all_stock()
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/3] usb: xhci: Add support for Google XHCI controller
 Content-Language: en-US
-To: Michal Hocko <mhocko@suse.com>
-CC: <linux-kernel@vger.kernel.org>, <stable@vger.kernel.org>, Johannes Weiner
-	<hannes@cmpxchg.org>, Roman Gushchin <roman.gushchin@linux.dev>, Shakeel Butt
-	<shakeelb@google.com>, Muchun Song <muchun.song@linux.dev>,
-	<cgroups@vger.kernel.org>, <linux-mm@kvack.org>, Wang Weiyang
-	<wangweiyang2@huawei.com>, Xiu Jianfeng <xiujianfeng@huawei.com>
-References: <20240221081801.69764-1-gongruiqi1@huawei.com>
- <ZdW2gMajIw_cUN2-@tiehlicka>
-From: Gong Ruiqi <gongruiqi1@huawei.com>
-In-Reply-To: <ZdW2gMajIw_cUN2-@tiehlicka>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
- dggpemd100002.china.huawei.com (7.185.36.164)
+To: Puma Hsu <pumahsu@google.com>
+Cc: mathias.nyman@intel.com, gregkh@linuxfoundation.org,
+ Thinh.Nguyen@synopsys.com, badhri@google.com, royluo@google.com,
+ howardyen@google.com, albertccwang@google.com, raychi@google.com,
+ linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
+References: <20240219061008.1761102-1-pumahsu@google.com>
+ <20240219061008.1761102-3-pumahsu@google.com>
+ <0b4464eb-631e-4c9f-a7c8-3451be15d8b4@kernel.org>
+ <CAGCq0LYFMrFmxeKZE9g-O61+N03rJoGL0XvXJVya0Yx-ZasvBA@mail.gmail.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <CAGCq0LYFMrFmxeKZE9g-O61+N03rJoGL0XvXJVya0Yx-ZasvBA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-
-On 2024/02/21 16:38, Michal Hocko wrote:
-> On Wed 21-02-24 16:18:01, GONG, Ruiqi wrote:
->> commit 1a3e1f40962c445b997151a542314f3c6097f8c3 upstream.
+On 21/02/2024 10:31, Puma Hsu wrote:
+> On Mon, Feb 19, 2024 at 8:22 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
+>>
+>> On 19/02/2024 07:10, Puma Hsu wrote:
+>>> In our SoC platform, we support allocating dedicated memory spaces
+>>> other than system memory for XHCI, which also requires IOMMU mapping.
+>>> The rest of driver probing and executing will use the generic
+>>> xhci-plat driver.
+>>>
+>>> We support USB dual roles and switch roles by generic dwc3 driver,
+>>> the dwc3 driver always probes xhci-plat driver now, so we introduce
+>>> a device tree property to probe a XHCI glue driver.
+>>>
+>>> Sample:
+>>>   xhci_dma: xhci_dma@99C0000 {
+>>>     compatible = "shared-dma-pool";
+>>>     reg = <0x00000000 0x99C0000 0x00000000 0x40000>;
+>>>     no-map;
+>>>   };
+>>>
+>>>   dwc3: dwc3@c400000 {
+>>>     compatible = "snps,dwc3";
+>>>     reg = <0 0x0c400000  0 0x10000>;
+>>>     xhci-glue = "xhci-hcd-goog";
+>>
+>> NAK, that's not DWC3 hardware in such case.
 > 
-> I think it would be good to mention that this is only a partial backport
-> and also explain why to do a partial rather than the full one.
->
+> By introducing this property, users can specify the name of their
+> dedicated driver in the device tree. The generic dwc3 driver will
 
-Okay. I think to fix this problem we should add refcnt relation between
-memcg and stock, and since higher versions have achieved this, maybe
-it's better to use the same code and align with them. So I put a "commit
-xxx upstream" here, as requested in kernel docs[1]. So yes it's a
-partial backport as we only need the stock part.
+DT is not a place for driver stuff.
 
-[1]:
-https://www.kernel.org/doc/html/latest/process/stable-kernel-rules.html#stable-kernel-rules
 
->> There was a kernel panic happened on an in-house environment running
->> 3.10, and the same problem was reproduced on 4.19:
->>
->> general protection fault: 0000 [#1] SMP PTI
->> CPU: 1 PID: 2085 Comm: bash Kdump: loaded Tainted: G             L    4.19.90+ #7
->> Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.15.0-0-g2dd4b9b3f840-prebuilt.qemu.org 04/01/2014
->> RIP: 0010 drain_all_stock+0xad/0x140
->> Code: 00 00 4d 85 ff 74 2c 45 85 c9 74 27 4d 39 fc 74 42 41 80 bc 24 28 04 00 00 00 74 17 49 8b 04 24 49 8b 17 48 8b 88 90 02 00 00 <48> 39 8a 90 02 00 00 74 02 eb 86 48 63 88 3c 01 00 00 39 8a 3c 01
->> RSP: 0018:ffffa7efc5813d70 EFLAGS: 00010202
->> RAX: ffff8cb185548800 RBX: ffff8cb89f420160 RCX: ffff8cb1867b6000
->> RDX: babababababababa RSI: 0000000000000001 RDI: 0000000000231876
->> RBP: 0000000000000000 R08: 0000000000000415 R09: 0000000000000002
->> R10: 0000000000000000 R11: 0000000000000001 R12: ffff8cb186f89040
->> R13: 0000000000020160 R14: 0000000000000001 R15: ffff8cb186b27040
->> FS:  00007f4a308d3740(0000) GS:ffff8cb89f440000(0000) knlGS:0000000000000000
->> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
->> CR2: 00007ffe4d634a68 CR3: 000000010b022000 CR4: 00000000000006e0
->> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
->> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
->> Call Trace:
->>  mem_cgroup_force_empty_write+0x31/0xb0
->>  cgroup_file_write+0x60/0x140
->>  ? __check_object_size+0x136/0x147
->>  kernfs_fop_write+0x10e/0x190
->>  __vfs_write+0x37/0x1b0
->>  ? selinux_file_permission+0xe8/0x130
->>  ? security_file_permission+0x2e/0xb0
->>  vfs_write+0xb6/0x1a0
->>  ksys_write+0x57/0xd0
->>  do_syscall_64+0x63/0x250
->>  ? async_page_fault+0x8/0x30
->>  entry_SYSCALL_64_after_hwframe+0x5c/0xc1
->> Modules linked in: ...
->>
->> It is found that in case of stock->nr_pages == 0, the memcg on
->> stock->cached could be freed due to its refcnt decreased to 0, which
->> made stock->cached become a dangling pointer. It could cause a UAF
->> problem in drain_all_stock() in the following concurrent scenario. Note
->> that drain_all_stock() doesn't disable irq but only preemption.
->>
->> CPU1                             CPU2
->> ==============================================================================
->> stock->cached = memcgA (freed)
->>                                  drain_all_stock(memcgB)
->>                                   rcu_read_lock()
->>                                   memcg = CPU1's stock->cached (memcgA)
->>                                   (interrupted)
->> refill_stock(memcgC)
->>  drain_stock(memcgA)
->>  stock->cached = memcgC
->>  stock->nr_pages += xxx (> 0)
->>                                   stock->nr_pages > 0
->>                                   mem_cgroup_is_descendant(memcgA, memcgB) [UAF]
->>                                   rcu_read_unlock()
->>
->> This problem is, unintenionally, fixed at 5.9, where commit 1a3e1f40962c
->> ("mm: memcontrol: decouple reference counting from page accounting")
->> adds memcg refcnt for stock. Therefore affected LTS versions include
->> 4.19 and 5.4.
->>
->> For 4.19, memcg's css offline process doesn't call drain_all_stock(). so
->> it's easier for the released memcg to be left on the stock. For 5.4,
->> although mem_cgroup_css_offline() does call drain_all_stock(), but the
->> flushing could be skipped when stock->nr_pages happens to be 0, and
->> besides the async draining could be delayed and take place after the UAF
->> problem has happened.
->>
->> Fix this problem by adding (and decreasing) memcg's refcnt when memcg is
->> put onto (and removed from) stock, just like how commit 1a3e1f40962c
->> ("mm: memcontrol: decouple reference counting from page accounting")
->> does. After all, "being on the stock" is a kind of reference with
->> regards to memcg. As such, it's guaranteed that a css on stock would not
->> be freed.
-> 
-> What does prevent from the following?
-> 
-> refill_stock(memcgC)		drain_all_stock(memcgB)
->   drain_stock(memcgA)		  rcu_read_lock()
->     css_put(old->css)		  memcgA = stock->cached
->                                   mem_cgroup_is_descendant(memcgA, memcgB) UAF
->     stock->cached = NULL
-> 
+> read this property to initiate the probing of the dedicated driver.
 
-I think it's not a problem since refill_stock() has disabled irq before
-calling drain_stock():
+I know, but it is not a reason to add stuff to DT.
 
-refill_stock(memcgC)
-  local_irq_save
-  drain_stock(memcgA)
-    css_put(old->css)
-    <1>
-    stock->cached = NULL
-  local_irq_restore
-  <2>
+> The motivation behind this is that we have dedicated things
+> (described in commit message) to do for the XHCI driver in our
+> device. BTW, I put this property here because currently there is
+> no xhci node, xhci related properties are put under dwc3 node.
 
-And since css_put(old->css) is an RCU free, memcgA would not be freed at
-<1> as it's still in grace period. The actual release of memcgA could
-happen only after irq is enabled (at <2>).
+Sorry, you miss the point. Either you have pure DWC3 hardware or not.
+You claim now you do not have pure hardware, which is reasonable,
+because it is always customized per-vendor. In such case you cannot
+claim this is a pure DWC3. You must provide bindings for your hardware.
 
-And for CPU2, the access to stock->cached in drain_all_stock() is
-protected by rcu_read_lock(), so from stock->cached we get either NULL,
-or a memcgA that is still not freed.
+Now, if you claim you have a pure DWC3 hardware without need for any
+vendor customizations, then entire patchset is fake try to upstream your
+Android vendor stuff. We talked about such stuff many times on mailing
+list, so for obvious reasons I won't repeat it. Trying to push vendor
+hooks and vendor quirks is one of the most common mistakes, so several
+talks already say: don't do this.
 
-Please correct me if I have some wrong understanding to RCU.
+> It will be appreciated if there are alternative or more appropriate
+> approaches, we welcome discussion to explore the best possible
+> solution. Thanks.
 
->>
->> Cc: stable@vger.kernel.org      # 4.19 5.4
->> Fixes: cdec2e4265df ("memcg: coalesce charging via percpu storage")
->> Signed-off-by: GONG, Ruiqi <gongruiqi1@huawei.com>
->> ---
->>  mm/memcontrol.c | 6 ++++++
->>  1 file changed, 6 insertions(+)
->>
->> diff --git a/mm/memcontrol.c b/mm/memcontrol.c
->> index 5a366cf79821..8c04296df1c7 100644
->> --- a/mm/memcontrol.c
->> +++ b/mm/memcontrol.c
->> @@ -2015,6 +2015,9 @@ static void drain_stock(struct memcg_stock_pcp *stock)
->>  {
->>  	struct mem_cgroup *old = stock->cached;
->>  
->> +	if (!old)
->> +		return;
->> +
->>  	if (stock->nr_pages) {
->>  		page_counter_uncharge(&old->memory, stock->nr_pages);
->>  		if (do_memsw_account())
->> @@ -2022,6 +2025,8 @@ static void drain_stock(struct memcg_stock_pcp *stock)
->>  		css_put_many(&old->css, stock->nr_pages);
->>  		stock->nr_pages = 0;
->>  	}
->> +
->> +	css_put(&old->css);
->>  	stock->cached = NULL;
->>  }
->>  
->> @@ -2057,6 +2062,7 @@ static void refill_stock(struct mem_cgroup *memcg, unsigned int nr_pages)
->>  	stock = this_cpu_ptr(&memcg_stock);
->>  	if (stock->cached != memcg) { /* reset if necessary */
->>  		drain_stock(stock);
->> +		css_get(&memcg->css);
->>  		stock->cached = memcg;
->>  	}
->>  	stock->nr_pages += nr_pages;
->> -- 
->> 2.25.1
->>
-> 
+And what's wrong with all previous feedbacks for similar
+Google/Samsung/Artpec/Tensor vendor hacks? Once or twice per year some
+folks around Google or Samsung try to push such, they all receive the
+same feedback and they disappear, so I have to repeat the same feedback
+to the next person... Please go through previous patches from
+@samsung.com for various subsystems.
+
+Documentation/devicetree/bindings/submitting-patches.rst
+Documentation/devicetree/bindings/writing-bindings.rst
++other people or my talks on Devicetree
+
+Summarizing: Devicetree is for hardware, not for your driver
+hooks/quirks/needs. Describe properly and fully the hardware, not your
+driver.
+
+
+Best regards,
+Krzysztof
+
