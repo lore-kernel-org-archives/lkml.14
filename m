@@ -1,60 +1,48 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC856127B40;
-	Wed, 21 Feb 2024 21:12:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62472128826;
+	Wed, 21 Feb 2024 21:12:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708549928; cv=none; b=cVeciyJqomGc91FPmxxo3/X5mV236LABq2N8ibZGW38z1vnrCQi72QG2oqR3RiDYVoH6DtH3GkFJVj3v0F+cIK0b0Bj7EVPStwMmEwkq6n5xg2mWhziGzoV1wrNPPmb5sBPIbYA2syQD+hfc2/NDeY+VFlPtxhyceoKdD7mEWvs=
+	t=1708549928; cv=none; b=WjnWPiVAkEBovAAK0p0JlQDUEQOg1UdPnQHw9yyj5zev+k4sxyhhLTpS8jjl2xk5p00UX3n6uYYui94hZ5WvzijPyzQNCt0rqPMbkOw8Yl0nutc7DFK4PMvtlxC2CG6MssHaCSeRPeLJoQG1uDDGx6WlGOzlLYpibhQH87xZmsg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1708549928; c=relaxed/simple;
-	bh=KRiyyGKk5c6LKsxkMPIkDheNqkttEI3XK8ef20ZlAzk=;
-	h=From:To:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=QzCzeAsuej3vB0VfITtiaoTbom86Sl6mS1NwjQbVEv+kra0+qbvS01TfND4TZuzEsU5r4Aw1a/gL7JVaQqjDYZTxywEwd9UY00L1c5kgpuxczhWLSATjdedWQy9Ih36+Jx07sAyvPfIeodCR1V3/onVoTH7NF/tf9zf2zZFBNG4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Hikl12X7; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	bh=9BlBPgb/1NguIw/UJ8/Mo4WKvkfkqSFsJN+5E6ZcO44=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=nSeEcR13INJqVdEMx92oUbfc656od8WUsQl+jKDEYJvl+Y5D8xdwrMrQESfaWSN3xpb2rEDDGweRoQIRrt2B3MrYb07xH4JeWC3Cq77B0Y03iXyoHNwhvYu+bQza356t9Ltwl/L8D+34u8+8szli/I8nFXWUZoAgW47N1QplaNw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BJV8EzuQ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Hikl12X7"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1708549927; x=1740085927;
-  h=from:to:subject:date:message-id:in-reply-to:references:
-   mime-version:content-transfer-encoding;
-  bh=KRiyyGKk5c6LKsxkMPIkDheNqkttEI3XK8ef20ZlAzk=;
-  b=Hikl12X74uIJcEHQh1cO4CnkqpS49bjoNP3g5y4DfIQLZBBXZZVri6YP
-   hhrotc7ePC28xflWxg7Hk7QALgsAIZN6fHkr5uU/UzMpbH0GDAoRcIH75
-   hFelE1y0O2l9hIjpct1t5P4xZpZKNYkIavy1yHHbDP3b3VRV+Mlf3etzX
-   W0hS77EKUVpbLQzZNteLQGn2ekkzcojVBOwxj77GEbLpRzNtjzG7TRLfW
-   eaSKKspTNe6u4tT42btenLhDyWh1foHMChbW/jV/x2xo+nd0r3eibqgIa
-   s43tASIxrxNXHkXKk0hn5bQy0VGuU8sgSAncP3fj5I8XenHAD5gkGTrwO
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10991"; a="13865880"
-X-IronPort-AV: E=Sophos;i="6.06,176,1705392000"; 
-   d="scan'208";a="13865880"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Feb 2024 13:12:06 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,176,1705392000"; 
-   d="scan'208";a="5214083"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmviesa009.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Feb 2024 13:12:05 -0800
-Received: from debox1-desk4.lan (unknown [10.209.70.184])
-	by linux.intel.com (Postfix) with ESMTP id 8128C580DB4;
-	Wed, 21 Feb 2024 13:12:04 -0800 (PST)
-From: "David E. Box" <david.e.box@linux.intel.com>
-To: david.e.box@linux.intel.com,
-	rajvi.jingar@linux.intel.com,
-	platform-driver-x86@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BJV8EzuQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 35D0CC43390;
+	Wed, 21 Feb 2024 21:12:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1708549927;
+	bh=9BlBPgb/1NguIw/UJ8/Mo4WKvkfkqSFsJN+5E6ZcO44=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=BJV8EzuQkcwQ0vqZ++PLUCIAcDW1cjYIPy0NBUhk330uJw3WU1BxY8SiPSfs0dhEM
+	 g6nW+RnYhKk3v1H1xkH+IU5xtq4+PUdks3mSUFKh0xLpDZPg6rsJIZiaoyBIc8CwIX
+	 8X4JKWbE6ZP8Qm7lfLU+/FE3A/iG8u+AGQbHcw7xQhw4Grvi34wqHWxQeWiWkTbsX1
+	 ct+uKKIe7wk9b+y5Jzt8rmVJOCWT/63YqZC3HgLO8Oqt7eXZIotEStmstZvRyPOizC
+	 26a5KWqsDj1YYRnZnG7ekVus4cjxGkDzxXw01570jMgHve4bCBFqNSAoEc52bS4fNt
+	 WAd6fCsvfJJcw==
+From: SeongJae Park <sj@kernel.org>
+To: akpm@linux-foundation.org
+Cc: vincenzo.mezzela@gmail.com,
+	javier.carrasco.cruz@gmail.com,
+	bernd.edlinger@hotmail.de,
+	shuah@kernel.org,
+	damon@lists.linux.dev,
+	linux-mm@kvack.org,
+	linux-kselftest@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	hdegoede@redhat.com,
-	ilpo.jarvinen@linux.intel.com
-Subject: [PATCH 3/3] platform/x86/intel/pmc/arl: Put GNA device in D3
-Date: Wed, 21 Feb 2024 13:12:03 -0800
-Message-Id: <20240221211204.515159-3-david.e.box@linux.intel.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240221211204.515159-1-david.e.box@linux.intel.com>
-References: <20240221211204.515159-1-david.e.box@linux.intel.com>
+	SeongJae Park <sj@kernel.org>
+Subject: [PATCH 2/2] selftests: damon: add access_memory to .gitignore
+Date: Wed, 21 Feb 2024 13:11:48 -0800
+Message-Id: <20240221211148.46522-3-sj@kernel.org>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240221211148.46522-1-sj@kernel.org>
+References: <20240221211148.46522-1-sj@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -63,35 +51,29 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-To unblock Package C state entry, put the GNA device in D3 by default if no
-driver is loaded for it.
+From: Javier Carrasco <javier.carrasco.cruz@gmail.com>
 
-Fixes: 83f168a1a437 ("platform/x86/intel/pmc: Add Arrow Lake S support to intel_pmc_core driver")
-Signed-off-by: David E. Box <david.e.box@linux.intel.com>
+This binary is missing in the .gitignore and stays as an untracked file.
+
+Link: https://lore.kernel.org/r/20240214-damon_selftest_gitignore-v1-1-f517d0f9f783@gmail.com
+Reported-by: Bernd Edlinger <bernd.edlinger@hotmail.de>
+Closes: https://lore.kernel.org/all/AS8P193MB1285C963658008F1B2702AF7E4792@AS8P193MB1285.EURP193.PROD.OUTLOOK.COM/
+Reviewed-by: SeongJae Park <sj@kernel.org>
+Signed-off-by: Javier Carrasco <javier.carrasco.cruz@gmail.com>
+Singed-off-by: SeongJae Park <sj@kernel.org>
 ---
- drivers/platform/x86/intel/pmc/arl.c | 2 ++
- 1 file changed, 2 insertions(+)
+ tools/testing/selftests/damon/.gitignore | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/platform/x86/intel/pmc/arl.c b/drivers/platform/x86/intel/pmc/arl.c
-index 683ae828276b..34b4cd23bfe5 100644
---- a/drivers/platform/x86/intel/pmc/arl.c
-+++ b/drivers/platform/x86/intel/pmc/arl.c
-@@ -673,6 +673,7 @@ static struct pmc_info arl_pmc_info_list[] = {
- };
- 
- #define ARL_NPU_PCI_DEV			0xad1d
-+#define ARL_GNA_PCI_DEV			0xae4c
- /*
-  * Set power state of select devices that do not have drivers to D3
-  * so that they do not block Package C entry.
-@@ -680,6 +681,7 @@ static struct pmc_info arl_pmc_info_list[] = {
- static void arl_d3_fixup(void)
- {
- 	pmc_core_set_device_d3(ARL_NPU_PCI_DEV);
-+	pmc_core_set_device_d3(ARL_GNA_PCI_DEV);
- }
- 
- static int arl_resume(struct pmc_dev *pmcdev)
+diff --git a/tools/testing/selftests/damon/.gitignore b/tools/testing/selftests/damon/.gitignore
+index d861701f0327..e65ef9d9cedc 100644
+--- a/tools/testing/selftests/damon/.gitignore
++++ b/tools/testing/selftests/damon/.gitignore
+@@ -2,3 +2,4 @@
+ huge_count_read_write
+ debugfs_target_ids_read_before_terminate_race
+ debugfs_target_ids_pid_leak
++access_memory
 -- 
-2.34.1
+2.39.2
 
