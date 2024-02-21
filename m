@@ -1,1251 +1,251 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B717D81AB5;
-	Wed, 21 Feb 2024 15:59:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A1D63A1B1
+	for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 16:01:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708531162; cv=none; b=BLZicdvCgH3dXdkHQiF57smdAfvybSY4RjxJm6WujgHAKEyWuWuxzXKR7B5mpH1oQ8rjigTkVcKIbXCMi37cZCIiFKhZ+jJ3BFpclL9aOAVr7CdOUWuH9jzDZ8Q6OoA7LyyVadNPjIVbOo32Rkf6+ihsZjfuNtoi+teidI2sJGY=
+	t=1708531270; cv=none; b=fB5/xX86pGfBPPIPDMpYJ2nSCYQ4tnF04ZeaGqk1+2BH0F2AOdjx11LFKqu+I8ESdeuhdoFJyDdWxAECKHtkp98e6U5t0SVQlB3kP6P8z5Xe9fXPe2JUyNpncVPKNoJEos5im0VR+YB/5H4/vZgkmCUq5YBMTXvDrzbgX0TnZA8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708531162; c=relaxed/simple;
-	bh=5kL2qGcpYIF2FuKsncCMkF+poSBCzAn8pMOmSX+bNFg=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=krGhCA+NFv3iKgLZWwzvF0j0SnIg8Ysl1UwYM6NHFGIjAOPNHpuDRIi6CTXPkXmKr2nYyxTFWrigOHt/YijEf4fVwgKZ3eOE7b+LV0SS3PqzwGT3HjbL53WobZub1AQhCUEEzG4F3kZL4VGD0zGn9JcjEBpaDOnnBjfgCuUUid4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NqOpZC3S; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1708531270; c=relaxed/simple;
+	bh=1k59YrIVaPjJx1ubHFEUmm62pajXQMmT6WdFVKhOu6Y=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=DFgAEMJGigMsWnqW/y7NUfBFTS+PxwDopl9+V+YgVU3hpD7DPUSs3Eby8FUAvnwoZ2aHkLM7sM7Jz3Br3nAjieufV+n6BJGv0IJL99rfn6hy17cW0YJMsyjzo9zE7Edi4nsR4CEg5//Q1Sdx8sbbTO3LnX0gUmwqfb9Yx8GsB90=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=YZIYBEUl; arc=none smtp.client-ip=209.85.214.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NqOpZC3S"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 39248C4166B;
-	Wed, 21 Feb 2024 15:59:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708531162;
-	bh=5kL2qGcpYIF2FuKsncCMkF+poSBCzAn8pMOmSX+bNFg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=NqOpZC3S6+Q34cqhvcC3ylqJfS0q+owv8zs2veCMjJGAtxpu8u450e7U+mcyC6J3D
-	 q6pNUHYnxCbVfk9NhOWYVvPKqjExqD/crvYDAhnY9c7IZJibo1rTV2xSEDgAftOt39
-	 IfjdJuSW8GvvGMB0MuUXz9la/MSjkzy8ZhuX6UjnM9aFFe5b5QYRKlniSiXDUDhlWO
-	 tAoh1wfuSIHzxM6ri2WYvAi6jEW9AMlycDlaFj7Wy7ViXglsvrkJQkuzlWXAsom/Nm
-	 5hzt3OGbmVK9DEBawxwe64UwfR/brJY3o6nvCj+DgXM3suq8bXmyGDzR+qp0frBroP
-	 yJ3n4iQhDrqSg==
-From: Michael Walle <mwalle@kernel.org>
-To: Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Cc: devicetree@vger.kernel.org,
-	Sean Wang <sean.wang@mediatek.com>,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org,
-	Michael Walle <mwalle@kernel.org>
-Subject: [PATCH v3 2/2] arm64: dts: mediatek: add Kontron 3.5"-SBC-i1200
-Date: Wed, 21 Feb 2024 16:59:05 +0100
-Message-Id: <20240221155905.1217340-2-mwalle@kernel.org>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240221155905.1217340-1-mwalle@kernel.org>
-References: <20240221155905.1217340-1-mwalle@kernel.org>
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="YZIYBEUl"
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-1dc3b4b9b62so3988605ad.1
+        for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 08:01:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google; t=1708531268; x=1709136068; darn=vger.kernel.org;
+        h=in-reply-to:autocrypt:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=DtAVaa/G9H4P9pxRTxqtO4pchZnzRybdHkcNyRxJFQo=;
+        b=YZIYBEUlwTbWaFSmBR2igIkFoIzgv1RQfudzTN+b/0YX03hJEvG25H7YOlRgdjxKAQ
+         voUtw++wV/na4MRmM+Nkc6W/YehWS7AGwBD9tHX+zat0CyjIn2rMjVX8STV8DO1po4/0
+         Fm1I3/OBsfaAJA6TqSu0smt/y5dVGThQXyd5A=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708531268; x=1709136068;
+        h=in-reply-to:autocrypt:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=DtAVaa/G9H4P9pxRTxqtO4pchZnzRybdHkcNyRxJFQo=;
+        b=mv0BlA4Qs/Mbk0+MkfWcQsWGKKGxO7SXA26HJmxm/nljgxNlQBTxE1JQ7csxoRAvk5
+         fJnOGRw3EakyOk1EbunJ+YKL466buSr1k0RBFLYqet16q2P2Qg+bXGpKbB/NoWLPtsxM
+         8qOEpCWOgXveDXERd7WP1qeV+v/dPLu8LFMPHi9ETqdphofr7EWCvQafk5GZrDbvWtKz
+         vISwcZc5eAVBG+ibn0KorjYhIyx7HMagByfeSqjOVWCQivarx1U2krMbTcJTQbCnqX0g
+         /XiRlwoMVNoRt14U2sPh4r2PGUT5wgG0D9tAgMgqQAapHB5UI14T+VSincq3ourXEqQt
+         roPA==
+X-Forwarded-Encrypted: i=1; AJvYcCW42rl++TuEarmvOJr17IQsxC19OnPRCi59CoC5WW6qPyh3Smqk7Pwqt2tLiER/KiuRr5nwGAsf+hQoU+xLK0cqavl+/j2bokobDzPW
+X-Gm-Message-State: AOJu0Yys8z3nnYbsXPg6jZCa6nlUWRM+H2f7fxNMDDgidatdfLMFusUX
+	NH+lCphRUlSxkulsY6vgVKXW2W2AYFZOGJa5mgIYFfz25yFqKN121M/Ps/YqHw==
+X-Google-Smtp-Source: AGHT+IEcuHzN6EaQGHeMVlgWDCNyqaQeckm4yTk4s4hr/EuwYr+Fvj0IoVLB6tOl3u216P2gp+gYoA==
+X-Received: by 2002:a17:902:ce81:b0:1db:e244:78 with SMTP id f1-20020a170902ce8100b001dbe2440078mr15486103plg.20.1708531267498;
+        Wed, 21 Feb 2024 08:01:07 -0800 (PST)
+Received: from [192.168.1.3] (ip68-4-215-93.oc.oc.cox.net. [68.4.215.93])
+        by smtp.gmail.com with ESMTPSA id lb14-20020a170902fa4e00b001d9558689cfsm8270423plb.111.2024.02.21.08.01.02
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 21 Feb 2024 08:01:03 -0800 (PST)
+Message-ID: <38a8b097-d5d1-433f-9735-512dce4b1b2e@broadcom.com>
+Date: Wed, 21 Feb 2024 08:01:02 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 11/12] mtd: rawnand: brcmnand: exec_op helper functions
+ return type fixes
+To: Miquel Raynal <miquel.raynal@bootlin.com>,
+ Dan Carpenter <dan.carpenter@linaro.org>
+Cc: William Zhang <william.zhang@broadcom.com>,
+ Linux MTD List <linux-mtd@lists.infradead.org>,
+ Linux ARM List <linux-arm-kernel@lists.infradead.org>,
+ Broadcom Kernel List <bcm-kernel-feedback-list@broadcom.com>,
+ f.fainelli@gmail.com, kursad.oney@broadcom.com, joel.peshkin@broadcom.com,
+ anand.gore@broadcom.com, dregan@mail.com, kamal.dasu@broadcom.com,
+ tomer.yacoby@broadcom.com, dan.beygelman@broadcom.com,
+ David Regan <dregan@broadcom.com>, linux-kernel@vger.kernel.org,
+ Vignesh Raghavendra <vigneshr@ti.com>,
+ Brian Norris <computersforpeace@gmail.com>,
+ Richard Weinberger <richard@nod.at>
+References: <20240207202257.271784-1-william.zhang@broadcom.com>
+ <20240207202257.271784-12-william.zhang@broadcom.com>
+ <20240220110240.1ad5b995@xps-13>
+ <f6e61482-b51a-4970-9257-8db7975148fa@moroto.mountain>
+ <20240221093247.5297f1f3@xps-13>
+From: Florian Fainelli <florian.fainelli@broadcom.com>
+Autocrypt: addr=florian.fainelli@broadcom.com; keydata=
+ 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
+In-Reply-To: <20240221093247.5297f1f3@xps-13>
+Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
+	boundary="000000000000523eec0611e66ff1"
 
-Add basic support for the Kontron 3.5" single board computer featuring a
-Mediatek i1200 SoC (MT8395/MT8195).
+--000000000000523eec0611e66ff1
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Signed-off-by: Michael Walle <mwalle@kernel.org>
----
-v3:
-- add vsys regulator
-- correct the LDO input of the mt6360 regulator
-- add missing interrupt-cells
-- no underscores in node names
-- dropped regulator-compatible everywhere and use the correc node name
-  instead
-- reordered mmc0 properties
-- split mmc1 pinctrl properties, add no-mmc
-- removed all MTK_DRIVE_8mA
-- add i2c0 and i2c1
-- add comments for spi and i2c busses
-- add firmware-name property for scp (this should probably go into the
-  base dtsi?!)
-- add missing tpm compatible
-- renamed thermal zones to something more meaningful
-- add correct bias-pull-up to (some) i2c busses
-- moved reset handling into the PHY node, also added a compatible string
-  for the PHY.
 
-Mh, my memory is hazy, but IIRC I run into the same problem which was
-discussed on netdev some time ago. That is, the PHY driver cannot be
-probed unless it is taken out of reset. Which will only happen if you
-probe it. And the workaround/advise was to use the compatible string in
-that case, which is unfortunate.
-Just wanted to point out, that it is *not* the same as snps,reset-*
-because the latter will work just fine without the compatible. I'll
-go with the compatible for now.
 
-I did *not* add the vbus to the USB ports, not even on the front port.
-That is because of:
-  dependencies:
-    connector: [ usb-role-switch ]
-and we just have a simple USB3.2 USB-A connector, no dual roles. IMHO
-that is a bug in the driver, which should handle the vbus supply as
-optional.
+On 2/21/2024 12:32 AM, 'Miquel Raynal' via BCM-KERNEL-FEEDBACK-LIST,PDL 
+wrote:
+> Hi,
+> 
+> dan.carpenter@linaro.org wrote on Wed, 21 Feb 2024 09:16:31 +0300:
+> 
+>> On Tue, Feb 20, 2024 at 11:02:40AM +0100, Miquel Raynal wrote:
+>>>
+>>> william.zhang@broadcom.com wrote on Wed,  7 Feb 2024 12:22:56 -0800:
+>>>    
+>>>> From: David Regan <dregan@broadcom.com>
+>>>>
+>>>> fix return type for exec_op reset and status detect helper functions
+>>>>
+>>>> Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
+>>>> Closes: http://lists.infradead.org/pipermail/linux-mtd/2023-December/102423.html
+>>>> Fixes: 3c8260ce7663 ("mtd: rawnand: brcmnand: exec_op implementation")
+>>>> Signed-off-by: David Regan <dregan@broadcom.com>
+>>>> Signed-off-by: William Zhang <william.zhang@broadcom.com>
+>>>> Reviewed-by: William Zhang <william.zhang@broadcom.com>
+>>>
+>>> By the way, a Cc: stable tag might be useful as otherwise you may leak
+>>> an error code in a status value (which is a bug). And move this patch
+>>> first in your series so we're sure it does not conflict with any of the
+>>> other patches and can be backported more easily.
+>>
+>> The original commit 3c8260ce7663 ("mtd: rawnand: brcmnand: exec_op
+>> implementation") is not in stable so we should be okay on this.
+> 
+> Right.
+> 
+> However please send again this patch quickly so I can queue it up
+> before the rest of the series.
 
-v2:
-- none
----
- arch/arm64/boot/dts/mediatek/Makefile         |    1 +
- .../mediatek/mt8395-kontron-3-5-sbc-i1200.dts | 1127 +++++++++++++++++
- 2 files changed, 1128 insertions(+)
- create mode 100644 arch/arm64/boot/dts/mediatek/mt8395-kontron-3-5-sbc-i1200.dts
+Also just to be clear, please do not omit the Fixes: tag, even if the 
+commit being fixed is not yet in any released kernel, it is valuable to 
+have that information, for say, people who might consider backporting 
+features into specific kernel versions. The stable team's tooling should 
+be able to figure out that it is not required to pick up that fix since 
+the offending commit is not in a released kernel yet anyway.
 
-diff --git a/arch/arm64/boot/dts/mediatek/Makefile b/arch/arm64/boot/dts/mediatek/Makefile
-index 37b4ca3a87c9..697b6b5de3cb 100644
---- a/arch/arm64/boot/dts/mediatek/Makefile
-+++ b/arch/arm64/boot/dts/mediatek/Makefile
-@@ -76,5 +76,6 @@ dtb-$(CONFIG_ARCH_MEDIATEK) += mt8195-demo.dtb
- dtb-$(CONFIG_ARCH_MEDIATEK) += mt8195-evb.dtb
- dtb-$(CONFIG_ARCH_MEDIATEK) += mt8365-evk.dtb
- dtb-$(CONFIG_ARCH_MEDIATEK) += mt8395-genio-1200-evk.dtb
-+dtb-$(CONFIG_ARCH_MEDIATEK) += mt8395-kontron-3-5-sbc-i1200.dtb
- dtb-$(CONFIG_ARCH_MEDIATEK) += mt8395-radxa-nio-12l.dtb
- dtb-$(CONFIG_ARCH_MEDIATEK) += mt8516-pumpkin.dtb
-diff --git a/arch/arm64/boot/dts/mediatek/mt8395-kontron-3-5-sbc-i1200.dts b/arch/arm64/boot/dts/mediatek/mt8395-kontron-3-5-sbc-i1200.dts
-new file mode 100644
-index 000000000000..e4b2af9489a8
---- /dev/null
-+++ b/arch/arm64/boot/dts/mediatek/mt8395-kontron-3-5-sbc-i1200.dts
-@@ -0,0 +1,1127 @@
-+// SPDX-License-Identifier: (GPL-2.0 OR MIT)
-+/*
-+ * Copyright (C) 2024 Kontron Europe GmbH
-+ *
-+ * Author: Michael Walle <mwalle@kernel.org>
-+ */
-+/dts-v1/;
-+
-+#include "mt8195.dtsi"
-+#include "mt6359.dtsi"
-+
-+#include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/input/input.h>
-+#include <dt-bindings/leds/common.h>
-+#include <dt-bindings/pinctrl/mt8195-pinfunc.h>
-+#include <dt-bindings/regulator/mediatek,mt6360-regulator.h>
-+#include <dt-bindings/spmi/spmi.h>
-+
-+/ {
-+	model = "Kontron 3.5\"-SBC-i1200";
-+	compatible = "kontron,3-5-sbc-i1200", "mediatek,mt8395", "mediatek,mt8195";
-+
-+	aliases {
-+		mmc0 = &mmc0;
-+		mmc1 = &mmc1;
-+		serial0 = &uart1;
-+		serial1 = &uart2;
-+		serial2 = &uart3;
-+		serial3 = &uart4;
-+		serial4 = &uart0;
-+	};
-+
-+	chosen {
-+		stdout-path = "serial0:115200n8";
-+	};
-+
-+	firmware {
-+		optee {
-+			compatible = "linaro,optee-tz";
-+			method = "smc";
-+		};
-+	};
-+
-+	gpio-keys {
-+		compatible = "gpio-keys";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&gpio_keys_pins>;
-+
-+		key-0 {
-+			gpios = <&pio 106 GPIO_ACTIVE_LOW>;
-+			label = "volume_up";
-+			linux,code = <KEY_VOLUMEUP>;
-+			wakeup-source;
-+			debounce-interval = <15>;
-+		};
-+	};
-+
-+	leds {
-+		compatible = "gpio-leds";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&led_pins>;
-+
-+		led-0 {
-+			gpios = <&pio 107 GPIO_ACTIVE_HIGH>;
-+			default-state = "keep";
-+			function = LED_FUNCTION_POWER;
-+			color = <LED_COLOR_ID_GREEN>;
-+		};
-+	};
-+
-+	memory@40000000 {
-+		device_type = "memory";
-+		reg = <0 0x40000000 0x0 0x80000000>;
-+	};
-+
-+	vsys: regulator-vsys {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vsys";
-+		regulator-always-on;
-+		regulator-boot-on;
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+	};
-+
-+	reserved-memory {
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges;
-+
-+		/*
-+		 * 12 MiB reserved for OP-TEE (BL32)
-+		 * +-----------------------+ 0x43e0_0000
-+		 * |      SHMEM 2MiB       |
-+		 * +-----------------------+ 0x43c0_0000
-+		 * |        | TA_RAM  8MiB |
-+		 * + TZDRAM +--------------+ 0x4340_0000
-+		 * |        | TEE_RAM 2MiB |
-+		 * +-----------------------+ 0x4320_0000
-+		 */
-+		optee_reserved: optee@43200000 {
-+			no-map;
-+			reg = <0 0x43200000 0 0x00c00000>;
-+		};
-+
-+		scp_mem: memory@50000000 {
-+			compatible = "shared-dma-pool";
-+			reg = <0 0x50000000 0 0x2900000>;
-+			no-map;
-+		};
-+
-+		vpu_mem: memory@53000000 {
-+			compatible = "shared-dma-pool";
-+			reg = <0 0x53000000 0 0x1400000>; /* 20 MB */
-+		};
-+
-+		/* 2 MiB reserved for ARM Trusted Firmware (BL31) */
-+		bl31_secmon_mem: memory@54600000 {
-+			no-map;
-+			reg = <0 0x54600000 0x0 0x200000>;
-+		};
-+
-+		snd_dma_mem: memory@60000000 {
-+			compatible = "shared-dma-pool";
-+			reg = <0 0x60000000 0 0x1100000>;
-+			no-map;
-+		};
-+
-+		apu_mem: memory@62000000 {
-+			compatible = "shared-dma-pool";
-+			reg = <0 0x62000000 0 0x1400000>; /* 20 MB */
-+		};
-+	};
-+
-+	thermal_sensor0: thermal-sensor-0 {
-+		compatible = "generic-adc-thermal";
-+		#thermal-sensor-cells = <0>;
-+		io-channels = <&auxadc 0>;
-+		io-channel-names = "sensor-channel";
-+		temperature-lookup-table = <(-25000) 1474
-+					    (-20000) 1374
-+					    (-15000) 1260
-+					    (-10000) 1134
-+					     (-5000) 1004
-+						   0 874
-+						5000 750
-+					       10000 635
-+					       15000 532
-+					       20000 443
-+					       25000 367
-+					       30000 303
-+					       35000 250
-+					       40000 206
-+					       45000 170
-+					       50000 141
-+					       55000 117
-+					       60000 97
-+					       65000 81
-+					       70000 68
-+					       75000 57
-+					       80000 48
-+					       85000 41
-+					       90000 35
-+					       95000 30
-+					      100000 25
-+					      105000 22
-+					      110000 19
-+					      115000 16
-+					      120000 14
-+					      125000 12
-+					      130000 10
-+					      135000 9
-+					      140000 8
-+					      145000 7
-+					      150000 6>;
-+	};
-+
-+	thermal_sensor1: thermal-sensor-1 {
-+		compatible = "generic-adc-thermal";
-+		#thermal-sensor-cells = <0>;
-+		io-channels = <&auxadc 1>;
-+		io-channel-names = "sensor-channel";
-+		temperature-lookup-table = <(-25000) 1474
-+					    (-20000) 1374
-+					    (-15000) 1260
-+					    (-10000) 1134
-+					     (-5000) 1004
-+						   0 874
-+						5000 750
-+					       10000 635
-+					       15000 532
-+					       20000 443
-+					       25000 367
-+					       30000 303
-+					       35000 250
-+					       40000 206
-+					       45000 170
-+					       50000 141
-+					       55000 117
-+					       60000 97
-+					       65000 81
-+					       70000 68
-+					       75000 57
-+					       80000 48
-+					       85000 41
-+					       90000 35
-+					       95000 30
-+					      100000 25
-+					      105000 22
-+					      110000 19
-+					      115000 16
-+					      120000 14
-+					      125000 12
-+					      130000 10
-+					      135000 9
-+					      140000 8
-+					      145000 7
-+					      150000 6>;
-+	};
-+
-+	thermal_sensor2: thermal-sensor-2 {
-+		compatible = "generic-adc-thermal";
-+		#thermal-sensor-cells = <0>;
-+		io-channels = <&auxadc 2>;
-+		io-channel-names = "sensor-channel";
-+		temperature-lookup-table = <(-25000) 1474
-+					    (-20000) 1374
-+					    (-15000) 1260
-+					    (-10000) 1134
-+					     (-5000) 1004
-+						   0 874
-+						5000 750
-+					       10000 635
-+					       15000 532
-+					       20000 443
-+					       25000 367
-+					       30000 303
-+					       35000 250
-+					       40000 206
-+					       45000 170
-+					       50000 141
-+					       55000 117
-+					       60000 97
-+					       65000 81
-+					       70000 68
-+					       75000 57
-+					       80000 48
-+					       85000 41
-+					       90000 35
-+					       95000 30
-+					      100000 25
-+					      105000 22
-+					      110000 19
-+					      115000 16
-+					      120000 14
-+					      125000 12
-+					      130000 10
-+					      135000 9
-+					      140000 8
-+					      145000 7
-+					      150000 6>;
-+	};
-+};
-+
-+&auxadc {
-+	status = "okay";
-+};
-+
-+&eth {
-+	phy-mode ="rgmii-id";
-+	phy-handle = <&ethernet_phy0>;
-+	pinctrl-names = "default", "sleep";
-+	pinctrl-0 = <&eth_default_pins>;
-+	pinctrl-1 = <&eth_sleep_pins>;
-+	status = "okay";
-+
-+	mdio {
-+		ethernet_phy0: ethernet-phy@1 {
-+			compatible = "ethernet-phy-id001c.c916";
-+			reg = <0x1>;
-+			interrupts-extended = <&pio 94 IRQ_TYPE_LEVEL_LOW>;
-+			reset-assert-us = <10000>;
-+			reset-deassert-us = <80000>;
-+			reset-gpios = <&pio 93 GPIO_ACTIVE_HIGH>;
-+		};
-+	};
-+};
-+
-+&gpu {
-+	status = "okay";
-+	mali-supply = <&mt6315_7_vbuck1>;
-+};
-+
-+/* CSI1/CSI2 connector */
-+&i2c0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&i2c0_pins>;
-+	clock-frequency = <100000>;
-+	status = "okay";
-+};
-+
-+/* CSI3 connector */
-+&i2c1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&i2c1_pins>;
-+	clock-frequency = <100000>;
-+	status = "okay";
-+};
-+
-+&i2c2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&i2c2_pins>;
-+	clock-frequency = <400000>;
-+	status = "okay";
-+
-+	/* LVDS bridge @f */
-+};
-+
-+/* Touch panel connector */
-+&i2c3 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&i2c3_pins>;
-+	clock-frequency = <100000>;
-+	status = "okay";
-+};
-+
-+/* B2B connector */
-+&i2c4 {
-+	clock-frequency = <100000>;
-+	pinctrl-0 = <&i2c4_pins>;
-+	pinctrl-names = "default";
-+	status = "okay";
-+};
-+
-+&i2c6 {
-+	clock-frequency = <400000>;
-+	pinctrl-0 = <&i2c6_pins>;
-+	pinctrl-names = "default";
-+	status = "okay";
-+
-+	mt6360: pmic@34 {
-+		compatible = "mediatek,mt6360";
-+		reg = <0x34>;
-+		interrupt-controller;
-+		interrupts-extended = <&pio 101 IRQ_TYPE_EDGE_FALLING>;
-+		interrupt-names = "IRQB";
-+		#interrupt-cells = <1>;
-+
-+		regulator {
-+			compatible = "mediatek,mt6360-regulator";
-+			LDO_VIN1-supply = <&vsys>;
-+			LDO_VIN2-supply = <&vsys>;
-+			LDO_VIN3-supply = <&vsys>;
-+
-+			mt6360_buck1: BUCK1 {
-+				regulator-name = "emi_vdd2";
-+				regulator-min-microvolt = <600000>;
-+				regulator-max-microvolt = <1800000>;
-+				regulator-allowed-modes = <MT6360_OPMODE_NORMAL
-+							   MT6360_OPMODE_LP
-+							   MT6360_OPMODE_ULP>;
-+				regulator-always-on;
-+			};
-+
-+			mt6360_buck2: BUCK2 {
-+				regulator-name = "emi_vddq";
-+				regulator-min-microvolt = <300000>;
-+				regulator-max-microvolt = <1300000>;
-+				regulator-allowed-modes = <MT6360_OPMODE_NORMAL
-+							   MT6360_OPMODE_LP
-+							   MT6360_OPMODE_ULP>;
-+				regulator-always-on;
-+			};
-+
-+			mt6360_ldo1: LDO1 {
-+				regulator-name = "mt6360_ldo1"; /* Test point */
-+				regulator-min-microvolt = <1200000>;
-+				regulator-max-microvolt = <3600000>;
-+				regulator-allowed-modes = <MT6360_OPMODE_NORMAL
-+							   MT6360_OPMODE_LP>;
-+			};
-+
-+			mt6360_ldo2: LDO2 {
-+				regulator-name = "panel1_p1v8";
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <1800000>;
-+				regulator-allowed-modes = <MT6360_OPMODE_NORMAL
-+							   MT6360_OPMODE_LP>;
-+			};
-+
-+			mt6360_ldo3: LDO3 {
-+				regulator-name = "vmc_pmu";
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-allowed-modes = <MT6360_OPMODE_NORMAL
-+							   MT6360_OPMODE_LP>;
-+			};
-+
-+			mt6360_ldo5: LDO5 {
-+				regulator-name = "vmch_pmu";
-+				regulator-min-microvolt = <3300000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-allowed-modes = <MT6360_OPMODE_NORMAL
-+							   MT6360_OPMODE_LP>;
-+			};
-+
-+			mt6360_ldo6: LDO6 {
-+				regulator-name = "mt6360_ldo6"; /* Test point */
-+				regulator-min-microvolt = <500000>;
-+				regulator-max-microvolt = <2100000>;
-+				regulator-allowed-modes = <MT6360_OPMODE_NORMAL
-+							   MT6360_OPMODE_LP>;
-+			};
-+
-+			mt6360_ldo7: LDO7 {
-+				regulator-name = "emi_vmddr_en";
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <1800000>;
-+				regulator-allowed-modes = <MT6360_OPMODE_NORMAL
-+							   MT6360_OPMODE_LP>;
-+				regulator-always-on;
-+			};
-+		};
-+	};
-+};
-+
-+&mmc0 {
-+	pinctrl-names = "default", "state_uhs";
-+	pinctrl-0 = <&mmc0_default_pins>;
-+	pinctrl-1 = <&mmc0_uhs_pins>;
-+	bus-width = <8>;
-+	max-frequency = <200000000>;
-+	hs400-ds-delay = <0x14c11>;
-+	cap-mmc-highspeed;
-+	cap-mmc-hw-reset;
-+	mmc-hs200-1_8v;
-+	mmc-hs400-1_8v;
-+	no-sdio;
-+	no-sd;
-+	non-removable;
-+	vmmc-supply = <&mt6359_vemc_1_ldo_reg>;
-+	vqmmc-supply = <&mt6359_vufs_ldo_reg>;
-+	status = "okay";
-+};
-+
-+&mmc1 {
-+	pinctrl-names = "default", "state_uhs";
-+	pinctrl-0 = <&mmc1_default_pins>, <&mmc1_detect_pins>;
-+	pinctrl-1 = <&mmc1_default_pins>;
-+	cd-gpios = <&pio 129 GPIO_ACTIVE_LOW>;
-+	bus-width = <4>;
-+	max-frequency = <200000000>;
-+	cap-sd-highspeed;
-+	sd-uhs-sdr50;
-+	sd-uhs-sdr104;
-+	no-mmc;
-+	vmmc-supply = <&mt6360_ldo5>;
-+	vqmmc-supply = <&mt6360_ldo3>;
-+	status = "okay";
-+};
-+
-+&mt6359_vbbck_ldo_reg {
-+	regulator-always-on;
-+};
-+
-+&mt6359_vcore_buck_reg {
-+	regulator-always-on;
-+};
-+
-+&mt6359_vgpu11_buck_reg {
-+	regulator-always-on;
-+};
-+
-+&mt6359_vproc1_buck_reg {
-+	regulator-always-on;
-+};
-+
-+&mt6359_vproc2_buck_reg {
-+	regulator-always-on;
-+};
-+
-+&mt6359_vpu_buck_reg {
-+	regulator-always-on;
-+};
-+
-+&mt6359_vrf12_ldo_reg {
-+	regulator-always-on;
-+};
-+
-+&mt6359_vsram_md_ldo_reg {
-+	regulator-always-on;
-+};
-+
-+&mt6359_vsram_others_ldo_reg {
-+	regulator-always-on;
-+};
-+
-+&nor_flash {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&nor_pins_default>;
-+	status = "okay";
-+
-+	flash@0 {
-+		compatible = "jedec,spi-nor";
-+		reg = <0>;
-+		spi-max-frequency = <52000000>;
-+		spi-rx-bus-width = <2>;
-+		spi-tx-bus-width = <2>;
-+	};
-+};
-+
-+&pcie0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pcie0_pins_default>;
-+	status = "okay";
-+};
-+
-+&pcie1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pcie1_pins_default>;
-+	status = "okay";
-+};
-+
-+&pciephy {
-+	status = "okay";
-+};
-+
-+&pio {
-+	eth_default_pins: eth-default-pins {
-+		pins-txd {
-+			pinmux = <PINMUX_GPIO77__FUNC_GBE_TXD3>,
-+				 <PINMUX_GPIO78__FUNC_GBE_TXD2>,
-+				 <PINMUX_GPIO79__FUNC_GBE_TXD1>,
-+				 <PINMUX_GPIO80__FUNC_GBE_TXD0>;
-+			drive-strength = <8>;
-+		};
-+
-+		pins-rxd {
-+			pinmux = <PINMUX_GPIO81__FUNC_GBE_RXD3>,
-+				 <PINMUX_GPIO82__FUNC_GBE_RXD2>,
-+				 <PINMUX_GPIO83__FUNC_GBE_RXD1>,
-+				 <PINMUX_GPIO84__FUNC_GBE_RXD0>;
-+		};
-+
-+		pins-cc {
-+			pinmux = <PINMUX_GPIO85__FUNC_GBE_TXC>,
-+				 <PINMUX_GPIO86__FUNC_GBE_RXC>,
-+				 <PINMUX_GPIO87__FUNC_GBE_RXDV>,
-+				 <PINMUX_GPIO88__FUNC_GBE_TXEN>;
-+			drive-strength = <8>;
-+		};
-+
-+		pins-mdio {
-+			pinmux = <PINMUX_GPIO89__FUNC_GBE_MDC>,
-+				 <PINMUX_GPIO90__FUNC_GBE_MDIO>;
-+			input-enable;
-+		};
-+
-+		pins-power {
-+			pinmux = <PINMUX_GPIO91__FUNC_GPIO91>,
-+				 <PINMUX_GPIO92__FUNC_GPIO92>;
-+			output-high;
-+		};
-+
-+		pins-reset {
-+			pinmux = <PINMUX_GPIO93__FUNC_GPIO93>;
-+			output-high;
-+		};
-+
-+		pins-interrupt {
-+			pinmux = <PINMUX_GPIO94__FUNC_GPIO94>;
-+			input-enable;
-+		};
-+	};
-+
-+	eth_sleep_pins: eth-sleep-pins {
-+		pins-txd {
-+			pinmux = <PINMUX_GPIO77__FUNC_GPIO77>,
-+				 <PINMUX_GPIO78__FUNC_GPIO78>,
-+				 <PINMUX_GPIO79__FUNC_GPIO79>,
-+				 <PINMUX_GPIO80__FUNC_GPIO80>;
-+		};
-+
-+		pins-cc {
-+			pinmux = <PINMUX_GPIO85__FUNC_GPIO85>,
-+				 <PINMUX_GPIO88__FUNC_GPIO88>,
-+				 <PINMUX_GPIO87__FUNC_GPIO87>,
-+				 <PINMUX_GPIO86__FUNC_GPIO86>;
-+		};
-+
-+		pins-rxd {
-+			pinmux = <PINMUX_GPIO81__FUNC_GPIO81>,
-+				 <PINMUX_GPIO82__FUNC_GPIO82>,
-+				 <PINMUX_GPIO83__FUNC_GPIO83>,
-+				 <PINMUX_GPIO84__FUNC_GPIO84>;
-+		};
-+
-+		pins-mdio {
-+			pinmux = <PINMUX_GPIO89__FUNC_GPIO89>,
-+				 <PINMUX_GPIO90__FUNC_GPIO90>;
-+			input-disable;
-+			bias-disable;
-+		};
-+	};
-+
-+	gpio_keys_pins: gpio-keys-pins {
-+		pins {
-+			pinmux = <PINMUX_GPIO106__FUNC_GPIO106>;
-+			input-enable;
-+		};
-+	};
-+
-+	i2c0_pins: i2c0-pins {
-+		pins {
-+			pinmux = <PINMUX_GPIO8__FUNC_SDA0>,
-+				 <PINMUX_GPIO9__FUNC_SCL0>;
-+			bias-pull-up = <MTK_PULL_SET_RSEL_111>;
-+			drive-strength-microamp = <1000>;
-+		};
-+	};
-+
-+	i2c1_pins: i2c1-pins {
-+		pins {
-+			pinmux = <PINMUX_GPIO10__FUNC_SDA1>,
-+				 <PINMUX_GPIO11__FUNC_SCL1>;
-+			bias-pull-up = <MTK_PULL_SET_RSEL_111>;
-+			drive-strength-microamp = <1000>;
-+		};
-+	};
-+
-+	i2c2_pins: i2c2-default-pins {
-+		pins-bus {
-+			pinmux = <PINMUX_GPIO12__FUNC_SDA2>,
-+				 <PINMUX_GPIO13__FUNC_SCL2>;
-+			bias-pull-up = <MTK_PULL_SET_RSEL_111>;
-+			drive-strength-microamp = <1000>;
-+		};
-+	};
-+
-+	i2c3_pins: i2c3-pins {
-+		pins {
-+			pinmux = <PINMUX_GPIO14__FUNC_SDA3>,
-+				 <PINMUX_GPIO15__FUNC_SCL3>;
-+			bias-pull-up = <MTK_PULL_SET_RSEL_111>;
-+			drive-strength-microamp = <1000>;
-+		};
-+	};
-+
-+	i2c4_pins: i2c4-pins {
-+		pins {
-+			pinmux = <PINMUX_GPIO16__FUNC_SDA4>,
-+				 <PINMUX_GPIO17__FUNC_SCL4>;
-+			bias-pull-up = <MTK_PULL_SET_RSEL_111>;
-+			drive-strength-microamp = <1000>;
-+		};
-+	};
-+
-+	i2c6_pins: i2c6-pins {
-+		pins {
-+			pinmux = <PINMUX_GPIO25__FUNC_SDA6>,
-+				 <PINMUX_GPIO26__FUNC_SCL6>;
-+			bias-pull-up;
-+			drive-strength-microamp = <1000>;
-+		};
-+	};
-+
-+	mmc0_default_pins: mmc0-default-pins {
-+		pins-clk {
-+			pinmux = <PINMUX_GPIO122__FUNC_MSDC0_CLK>;
-+			drive-strength = <6>;
-+			bias-pull-down = <MTK_PUPD_SET_R1R0_10>;
-+		};
-+
-+		pins-cmd-dat {
-+			pinmux = <PINMUX_GPIO126__FUNC_MSDC0_DAT0>,
-+				 <PINMUX_GPIO125__FUNC_MSDC0_DAT1>,
-+				 <PINMUX_GPIO124__FUNC_MSDC0_DAT2>,
-+				 <PINMUX_GPIO123__FUNC_MSDC0_DAT3>,
-+				 <PINMUX_GPIO119__FUNC_MSDC0_DAT4>,
-+				 <PINMUX_GPIO118__FUNC_MSDC0_DAT5>,
-+				 <PINMUX_GPIO117__FUNC_MSDC0_DAT6>,
-+				 <PINMUX_GPIO116__FUNC_MSDC0_DAT7>,
-+				 <PINMUX_GPIO121__FUNC_MSDC0_CMD>;
-+			input-enable;
-+			drive-strength = <6>;
-+			bias-pull-up = <MTK_PUPD_SET_R1R0_01>;
-+		};
-+
-+		pins-rst {
-+			pinmux = <PINMUX_GPIO120__FUNC_MSDC0_RSTB>;
-+			drive-strength = <6>;
-+			bias-pull-up = <MTK_PUPD_SET_R1R0_01>;
-+		};
-+	};
-+
-+	mmc0_uhs_pins: mmc0-uhs-pins {
-+		pins-clk {
-+			pinmux = <PINMUX_GPIO122__FUNC_MSDC0_CLK>;
-+			drive-strength = <8>;
-+			bias-pull-down = <MTK_PUPD_SET_R1R0_10>;
-+		};
-+
-+		pins-cmd-dat {
-+			pinmux = <PINMUX_GPIO126__FUNC_MSDC0_DAT0>,
-+				 <PINMUX_GPIO125__FUNC_MSDC0_DAT1>,
-+				 <PINMUX_GPIO124__FUNC_MSDC0_DAT2>,
-+				 <PINMUX_GPIO123__FUNC_MSDC0_DAT3>,
-+				 <PINMUX_GPIO119__FUNC_MSDC0_DAT4>,
-+				 <PINMUX_GPIO118__FUNC_MSDC0_DAT5>,
-+				 <PINMUX_GPIO117__FUNC_MSDC0_DAT6>,
-+				 <PINMUX_GPIO116__FUNC_MSDC0_DAT7>,
-+				 <PINMUX_GPIO121__FUNC_MSDC0_CMD>;
-+			input-enable;
-+			drive-strength = <8>;
-+			bias-pull-up = <MTK_PUPD_SET_R1R0_01>;
-+		};
-+
-+		pins-ds {
-+			pinmux = <PINMUX_GPIO127__FUNC_MSDC0_DSL>;
-+			drive-strength = <8>;
-+			bias-pull-down = <MTK_PUPD_SET_R1R0_10>;
-+		};
-+
-+		pins-rst {
-+			pinmux = <PINMUX_GPIO120__FUNC_MSDC0_RSTB>;
-+			drive-strength = <8>;
-+			bias-pull-up = <MTK_PUPD_SET_R1R0_01>;
-+		};
-+	};
-+
-+	mmc1_default_pins: mmc1-default-pins {
-+		pins-clk {
-+			pinmux = <PINMUX_GPIO111__FUNC_MSDC1_CLK>;
-+			drive-strength = <8>;
-+			bias-pull-down = <MTK_PUPD_SET_R1R0_10>;
-+		};
-+
-+		pins-cmd-dat {
-+			pinmux = <PINMUX_GPIO110__FUNC_MSDC1_CMD>,
-+				 <PINMUX_GPIO112__FUNC_MSDC1_DAT0>,
-+				 <PINMUX_GPIO113__FUNC_MSDC1_DAT1>,
-+				 <PINMUX_GPIO114__FUNC_MSDC1_DAT2>,
-+				 <PINMUX_GPIO115__FUNC_MSDC1_DAT3>;
-+			input-enable;
-+			drive-strength = <8>;
-+			bias-pull-up = <MTK_PUPD_SET_R1R0_01>;
-+		};
-+	};
-+
-+	mmc1_detect_pins: mmc1-detect-pins {
-+		pins-insert {
-+			pinmux = <PINMUX_GPIO129__FUNC_GPIO129>;
-+			bias-pull-up;
-+		};
-+	};
-+
-+	nor_pins_default: nor-default-pins {
-+		pins-ck-io {
-+			pinmux = <PINMUX_GPIO142__FUNC_SPINOR_IO0>,
-+				 <PINMUX_GPIO141__FUNC_SPINOR_CK>,
-+				 <PINMUX_GPIO143__FUNC_SPINOR_IO1>;
-+			drive-strength = <6>;
-+			bias-pull-down;
-+		};
-+
-+		pins-cs {
-+			pinmux = <PINMUX_GPIO140__FUNC_SPINOR_CS>;
-+			drive-strength = <6>;
-+			bias-pull-up;
-+		};
-+	};
-+
-+	pcie0_pins_default: pcie0-default-pins {
-+		pins-bus {
-+			pinmux = <PINMUX_GPIO19__FUNC_WAKEN>,
-+				 <PINMUX_GPIO20__FUNC_PERSTN>,
-+				 <PINMUX_GPIO21__FUNC_CLKREQN>;
-+			bias-pull-up;
-+		};
-+	};
-+
-+	pcie1_pins_default: pcie1-default-pins {
-+		pins-bus {
-+			pinmux = <PINMUX_GPIO0__FUNC_PERSTN_1>,
-+				 <PINMUX_GPIO1__FUNC_CLKREQN_1>,
-+				 <PINMUX_GPIO2__FUNC_WAKEN_1>;
-+			bias-pull-up = <MTK_PUPD_SET_R1R0_01>;
-+		};
-+	};
-+
-+	led_pins: led-pins {
-+		pins-power-en {
-+			pinmux = <PINMUX_GPIO107__FUNC_GPIO107>;
-+			output-high;
-+		};
-+	};
-+
-+	spi0_pins: spi0-default-pins {
-+		pins-cs-mosi-clk {
-+			pinmux = <PINMUX_GPIO132__FUNC_SPIM0_CSB>,
-+				 <PINMUX_GPIO134__FUNC_SPIM0_MO>,
-+				 <PINMUX_GPIO133__FUNC_SPIM0_CLK>;
-+			bias-disable;
-+		};
-+
-+		pins-miso {
-+			pinmux = <PINMUX_GPIO135__FUNC_SPIM0_MI>;
-+			bias-pull-down;
-+		};
-+	};
-+
-+	spi1_pins: spi1-default-pins {
-+		pins-cs-mosi-clk {
-+			pinmux = <PINMUX_GPIO136__FUNC_SPIM1_CSB>,
-+				 <PINMUX_GPIO138__FUNC_SPIM1_MO>,
-+				 <PINMUX_GPIO137__FUNC_SPIM1_CLK>;
-+			bias-disable;
-+		};
-+
-+		pins-miso {
-+			pinmux = <PINMUX_GPIO139__FUNC_SPIM1_MI>;
-+			bias-pull-down;
-+		};
-+	};
-+
-+	uart0_pins: uart0-pins {
-+		pins-rx {
-+			pinmux = <PINMUX_GPIO99__FUNC_URXD0>;
-+			input-enable;
-+			bias-pull-up;
-+		};
-+
-+		pins-tx {
-+			pinmux = <PINMUX_GPIO98__FUNC_UTXD0>;
-+		};
-+	};
-+
-+	uart1_pins: uart1-pins {
-+		pins-rx {
-+			pinmux = <PINMUX_GPIO103__FUNC_URXD1>;
-+			input-enable;
-+			bias-pull-up;
-+		};
-+
-+		pins-tx {
-+			pinmux = <PINMUX_GPIO102__FUNC_UTXD1>;
-+		};
-+
-+		pins-rts {
-+			pinmux = <PINMUX_GPIO100__FUNC_URTS1>;
-+		};
-+
-+		pins-cts {
-+			pinmux = <PINMUX_GPIO101__FUNC_UCTS1>;
-+			input-enable;
-+		};
-+	};
-+
-+	uart2_pins: uart2-pins {
-+		pins-rx {
-+			pinmux = <PINMUX_GPIO68__FUNC_URXD2>;
-+			input-enable;
-+			bias-pull-up;
-+		};
-+
-+		pins-tx {
-+			pinmux = <PINMUX_GPIO67__FUNC_UTXD2>;
-+		};
-+
-+		pins-rts {
-+			pinmux = <PINMUX_GPIO66__FUNC_URTS2>;
-+		};
-+
-+		pins-cts {
-+			pinmux = <PINMUX_GPIO65__FUNC_UCTS2>;
-+			input-enable;
-+		};
-+	};
-+
-+	uart3_pins: uart3-pins {
-+		pins-rx {
-+			pinmux = <PINMUX_GPIO5__FUNC_URXD3>;
-+			input-enable;
-+			bias-pull-up = <MTK_PUPD_SET_R1R0_01>;
-+		};
-+
-+		pins-tx {
-+			pinmux = <PINMUX_GPIO4__FUNC_UTXD3>;
-+		};
-+	};
-+
-+	uart4_pins: uart4-pins {
-+		pins-rx {
-+			pinmux = <PINMUX_GPIO7__FUNC_URXD4>;
-+			input-enable;
-+			bias-pull-up;
-+		};
-+
-+		pins-tx {
-+			pinmux = <PINMUX_GPIO6__FUNC_UTXD4>;
-+		};
-+	};
-+};
-+
-+&pmic {
-+	interrupts-extended = <&pio 222 IRQ_TYPE_LEVEL_HIGH>;
-+};
-+
-+&scp {
-+	memory-region = <&scp_mem>;
-+	firmware-name = "mediatek/mt8195/scp.img";
-+	status = "okay";
-+};
-+
-+&spmi {
-+	#address-cells = <2>;
-+	#size-cells = <0>;
-+
-+	mt6315@6 {
-+		compatible = "mediatek,mt6315-regulator";
-+		reg = <0x6 SPMI_USID>;
-+
-+		regulators {
-+			mt6315_6_vbuck1: vbuck1 {
-+				regulator-name = "Vbcpu";
-+				regulator-min-microvolt = <300000>;
-+				regulator-max-microvolt = <1193750>;
-+				regulator-enable-ramp-delay = <256>;
-+				regulator-ramp-delay = <6250>;
-+				regulator-allowed-modes = <0 1 2>;
-+				regulator-always-on;
-+			};
-+		};
-+	};
-+
-+	mt6315@7 {
-+		compatible = "mediatek,mt6315-regulator";
-+		reg = <0x7 SPMI_USID>;
-+
-+		regulators {
-+			mt6315_7_vbuck1: vbuck1 {
-+				regulator-name = "Vgpu";
-+				regulator-min-microvolt = <625000>;
-+				regulator-max-microvolt = <1193750>;
-+				regulator-enable-ramp-delay = <256>;
-+				regulator-ramp-delay = <6250>;
-+				regulator-allowed-modes = <0 1 2>;
-+				regulator-always-on;
-+			};
-+		};
-+	};
-+};
-+
-+/* USB3.2 front port */
-+&ssusb0 {
-+	dr_mode = "host";
-+	vusb33-supply = <&mt6359_vusb_ldo_reg>;
-+	status = "okay";
-+};
-+
-+/* USB2.0 M.2 Key-E */
-+&ssusb2 {
-+	vusb33-supply = <&mt6359_vusb_ldo_reg>;
-+	status = "okay";
-+};
-+
-+/* USB2.0 to on-board usb hub */
-+&ssusb3 {
-+	vusb33-supply = <&mt6359_vusb_ldo_reg>;
-+	status = "okay";
-+};
-+
-+&spi0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&spi0_pins>;
-+	mediatek,pad-select = <0>;
-+	status = "okay";
-+
-+	tpm: tpm@0 {
-+		compatible = "infineon,slb9670", "tcg,tpm_tis-spi";
-+		reg = <0>;
-+		spi-max-frequency = <18500000>;
-+	};
-+};
-+
-+/* B2B connector */
-+&spi1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&spi1_pins>;
-+	mediatek,pad-select = <0>;
-+	status = "okay";
-+};
-+
-+&thermal_zones {
-+	cpu-thermal {
-+		polling-delay = <1000>; /* milliseconds */
-+		polling-delay-passive = <0>; /* milliseconds */
-+		thermal-sensors = <&thermal_sensor0>;
-+
-+		trips {
-+			trip-alert {
-+				temperature = <85000>;
-+				hysteresis = <2000>;
-+				type = "passive";
-+			};
-+
-+			trip-crit {
-+				temperature = <95000>;
-+				hysteresis = <2000>;
-+				type = "critical";
-+			};
-+		};
-+	};
-+
-+	pcb-top-thermal {
-+		polling-delay = <1000>; /* milliseconds */
-+		polling-delay-passive = <0>; /* milliseconds */
-+		thermal-sensors = <&thermal_sensor1>;
-+
-+		trips {
-+			trip-alert {
-+				temperature = <75000>;
-+				hysteresis = <2000>;
-+				type = "passive";
-+			};
-+
-+			trip-crit {
-+				temperature = <85000>;
-+				hysteresis = <2000>;
-+				type = "critical";
-+			};
-+		};
-+	};
-+
-+	pcb-bottom-thermal {
-+		polling-delay = <1000>; /* milliseconds */
-+		polling-delay-passive = <0>; /* milliseconds */
-+		thermal-sensors = <&thermal_sensor2>;
-+
-+		trips {
-+			trip-alert {
-+				temperature = <75000>;
-+				hysteresis = <2000>;
-+				type = "passive";
-+			};
-+
-+			trip-crit {
-+				temperature = <85000>;
-+				hysteresis = <2000>;
-+				type = "critical";
-+			};
-+		};
-+	};
-+};
-+
-+&uart0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart0_pins>;
-+	status = "okay";
-+};
-+
-+&uart1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart1_pins>;
-+	uart-has-rtscts;
-+	status = "okay";
-+};
-+
-+&uart2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart2_pins>;
-+	uart-has-rtscts;
-+	status = "okay";
-+};
-+
-+&uart3 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart3_pins>;
-+	status = "okay";
-+};
-+
-+&uart4 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart4_pins>;
-+	status = "okay";
-+};
-+
-+/* USB3 */
-+&u3phy0 {
-+	status = "okay";
-+};
-+
-+/* PCIe1/USB2 */
-+&u3phy1 {
-+	status = "okay";
-+};
-+
-+/* USB2 */
-+&u3phy2 {
-+	status = "okay";
-+};
-+
-+/* USB2 */
-+&u3phy3 {
-+	status = "okay";
-+};
-+
-+/* USB3.2 front port */
-+&xhci0 {
-+	status = "okay";
-+};
-+
-+/* USB2.0 M.2 Key-B */
-+&xhci1 {
-+	vusb33-supply = <&mt6359_vusb_ldo_reg>;
-+	mediatek,u3p-dis-msk = <0x01>;
-+	status = "okay";
-+};
-+
-+/* USB2.0 M.2 Key-E */
-+&xhci2 {
-+	status = "okay";
-+};
-+
-+/* USB2.0 to on-board usb hub */
-+&xhci3 {
-+	status = "okay";
-+};
+Thanks!
 -- 
-2.39.2
+Florian
 
+--000000000000523eec0611e66ff1
+Content-Type: application/pkcs7-signature; name="smime.p7s"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="smime.p7s"
+Content-Description: S/MIME Cryptographic Signature
+
+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
+riBJ/K1AFUjRAjFhGV64l++td7dkmnq/X8ET75ti+w1s4FRpFqkD2m7pg5NxdsZphYIXAgMBAAGj
+QjBAMA4GA1UdDwEB/wQEAwIBBjAPBgNVHRMBAf8EBTADAQH/MB0GA1UdDgQWBBSP8Et/qC5FJK5N
+UPpjmove4t0bvDANBgkqhkiG9w0BAQsFAAOCAQEAS0DbwFCq/sgM7/eWVEVJu5YACUGssxOGhigH
+M8pr5nS5ugAtrqQK0/Xx8Q+Kv3NnSoPHRHt44K9ubG8DKY4zOUXDjuS5V2yq/BKW7FPGLeQkbLmU
+Y/vcU2hnVj6DuM81IcPJaP7O2sJTqsyQiunwXUaMld16WCgaLx3ezQA3QY/tRG3XUyiXfvNnBB4V
+14qWtNPeTCekTBtzc3b0F5nCH3oO4y0IrQocLP88q1UOD5F+NuvDV0m+4S4tfGCLw0FREyOdzvcy
+a5QBqJnnLDMfOjsl0oZAzjsshnjJYS8Uuu7bVW/fhO4FCU29KNhyztNiUGUe65KXgzHZs7XKR1g/
+XzCCBVgwggRAoAMCAQICDBP8P9hKRVySg3Qv5DANBgkqhkiG9w0BAQsFADBbMQswCQYDVQQGEwJC
+RTEZMBcGA1UEChMQR2xvYmFsU2lnbiBudi1zYTExMC8GA1UEAxMoR2xvYmFsU2lnbiBHQ0MgUjMg
+UGVyc29uYWxTaWduIDIgQ0EgMjAyMDAeFw0yMjA5MTAxMjE4MTFaFw0yNTA5MTAxMjE4MTFaMIGW
+MQswCQYDVQQGEwJJTjESMBAGA1UECBMJS2FybmF0YWthMRIwEAYDVQQHEwlCYW5nYWxvcmUxFjAU
+BgNVBAoTDUJyb2FkY29tIEluYy4xGTAXBgNVBAMTEEZsb3JpYW4gRmFpbmVsbGkxLDAqBgkqhkiG
+9w0BCQEWHWZsb3JpYW4uZmFpbmVsbGlAYnJvYWRjb20uY29tMIIBIjANBgkqhkiG9w0BAQEFAAOC
+AQ8AMIIBCgKCAQEA+oi3jMmHltY4LMUy8Up5+1zjd1iSgUBXhwCJLj1GJQF+GwP8InemBbk5rjlC
+UwbQDeIlOfb8xGqHoQFGSW8p9V1XUw+cthISLkycex0AJ09ufePshLZygRLREU0H4ecNPMejxCte
+KdtB4COST4uhBkUCo9BSy1gkl8DJ8j/BQ1KNUx6oYe0CntRag+EnHv9TM9BeXBBLfmMRnWNhvOSk
+nSmRX0J3d9/G2A3FIC6WY2XnLW7eAZCQPa1Tz3n2B5BGOxwqhwKLGLNu2SRCPHwOdD6e0drURF7/
+Vax85/EqkVnFNlfxtZhS0ugx5gn2pta7bTdBm1IG4TX+A3B1G57rVwIDAQABo4IB3jCCAdowDgYD
+VR0PAQH/BAQDAgWgMIGjBggrBgEFBQcBAQSBljCBkzBOBggrBgEFBQcwAoZCaHR0cDovL3NlY3Vy
+ZS5nbG9iYWxzaWduLmNvbS9jYWNlcnQvZ3NnY2NyM3BlcnNvbmFsc2lnbjJjYTIwMjAuY3J0MEEG
+CCsGAQUFBzABhjVodHRwOi8vb2NzcC5nbG9iYWxzaWduLmNvbS9nc2djY3IzcGVyc29uYWxzaWdu
+MmNhMjAyMDBNBgNVHSAERjBEMEIGCisGAQQBoDIBKAowNDAyBggrBgEFBQcCARYmaHR0cHM6Ly93
+d3cuZ2xvYmFsc2lnbi5jb20vcmVwb3NpdG9yeS8wCQYDVR0TBAIwADBJBgNVHR8EQjBAMD6gPKA6
+hjhodHRwOi8vY3JsLmdsb2JhbHNpZ24uY29tL2dzZ2NjcjNwZXJzb25hbHNpZ24yY2EyMDIwLmNy
+bDAoBgNVHREEITAfgR1mbG9yaWFuLmZhaW5lbGxpQGJyb2FkY29tLmNvbTATBgNVHSUEDDAKBggr
+BgEFBQcDBDAfBgNVHSMEGDAWgBSWM9HmWBdbNHWKgVZk1b5I3qGPzzAdBgNVHQ4EFgQUUwwfJ6/F
+KL0fRdVROal/Lp4lAF0wDQYJKoZIhvcNAQELBQADggEBAKBgfteDc1mChZjKBY4xAplC6uXGyBrZ
+kNGap1mHJ+JngGzZCz+dDiHRQKGpXLxkHX0BvEDZLW6LGOJ83ImrW38YMOo3ZYnCYNHA9qDOakiw
+2s1RH00JOkO5SkYdwCHj4DB9B7KEnLatJtD8MBorvt+QxTuSh4ze96Jz3kEIoHMvwGFkgObWblsc
+3/YcLBmCgaWpZ3Ksev1vJPr5n8riG3/N4on8gO5qinmmr9Y7vGeuf5dmZrYMbnb+yCBalkUmZQwY
+NxADYvcRBA0ySL6sZpj8BIIhWiXiuusuBmt2Mak2eEv0xDbovE6Z6hYyl/ZnRadbgK/ClgbY3w+O
+AfUXEZ0xggJtMIICaQIBATBrMFsxCzAJBgNVBAYTAkJFMRkwFwYDVQQKExBHbG9iYWxTaWduIG52
+LXNhMTEwLwYDVQQDEyhHbG9iYWxTaWduIEdDQyBSMyBQZXJzb25hbFNpZ24gMiBDQSAyMDIwAgwT
+/D/YSkVckoN0L+QwDQYJYIZIAWUDBAIBBQCggdQwLwYJKoZIhvcNAQkEMSIEIBMRVirxLUi/2BvJ
+vJ45rxH8qyk2myyl5APDYZdSVft/MBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcN
+AQkFMQ8XDTI0MDIyMTE2MDEwOFowaQYJKoZIhvcNAQkPMVwwWjALBglghkgBZQMEASowCwYJYIZI
+AWUDBAEWMAsGCWCGSAFlAwQBAjAKBggqhkiG9w0DBzALBgkqhkiG9w0BAQowCwYJKoZIhvcNAQEH
+MAsGCWCGSAFlAwQCATANBgkqhkiG9w0BAQEFAASCAQBUFlZp2JB9PRCKK0Kbbk5aJcgGzEw0bVT2
+etlSzIWMxD38aMejbGWB5MCxT3+XZ9AGlpYfsMWLVu+a0EFCGqDcGIywX2Il4jHzqlHxOHGxwUWH
+tDVdYjr+p/2hkiI+2RyoM6BnuWgvNflVKLciq0tXgjw9AVyoXbeNgmDrPGUgELHG0DcFRuOHnfmL
+dGWkisoncfq47Pp+x5y0ZpL80Kzhxcv6vN2CRcNA8esZWCrjkHusE9O1noUzR5PBvOqp64WVP2zB
+XpnFPhE5rt+ILIvx4f108O/SviEUnP5p0mQ5fPpkEa3Yg0Yyyrj7vY4jfdFQfCbV0VXZKuTtDrxS
+4dax
+--000000000000523eec0611e66ff1--
