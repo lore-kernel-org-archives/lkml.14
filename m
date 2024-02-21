@@ -1,156 +1,94 @@
-Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com [209.85.160.169])
+Received: from mail-ua1-f47.google.com (mail-ua1-f47.google.com [209.85.222.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2228312CDBB
-	for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 22:48:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AE9C126F35
+	for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 22:49:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708555723; cv=none; b=MJdeDp81ACtrP+Bg9mwkm0x1tUwqz/Mew4YSq48R8yfUp0OFGID+3wWudBFju0BTuptIL7kPFtGRBra2BuDsZSsglqNPMsQ6pCENI+yfPQb66rXXEiQxcmXmhlM5CsqRxo+9dlaKvGWAByjHyPl7NzbtaKlqv/Y27BKVd15NaA0=
+	t=1708555823; cv=none; b=lm6OevkgH6FbW1S3aAUotd3dPI8q47CcMRICgUu1I5CURim2u2gDFUsjoHmEXJgNiEt0aoRszCO28xR8GGy98ZRcIauNhE6D0RzRPyDZ4k83y1w+qIToRpQRgYniPEnMMW1l/tJXEvtWwPxZZ0ybIe6QABU0fKx2Tns2WqvQmcQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708555723; c=relaxed/simple;
-	bh=1CkGcXdG+KrlM+x9gWekq+WBiUkt/eToiyx5uT4ML+8=;
+	s=arc-20240116; t=1708555823; c=relaxed/simple;
+	bh=Pip35SH9+CdhvlajwI853O451jz6n1f18cqP9XQpX2k=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=PnJldJdyfdsw4MxlghM/il88fAwcLDKHmUlvewJ7ExWqTOMnE1+Je4meNFU2mhNuxPY8H48xvfT0pAEi8BJiZs6zCxXZypIrFgFcTZqSlEQxYImqKbudvJg8UkeNywD+/WtJ0D2POCITu098Sp/D9xYVDGCugVxT5b0eTOBc0TM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=4E9he3p9; arc=none smtp.client-ip=209.85.160.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 To:Cc:Content-Type; b=kWSwQy7XYX8ponGAKAs/BwUvFsMZPN/m3L/miOElRAkUXQoR6Qx9CqREE/IPV9RY3lDAFhq+XZGO067LvsmfvNTRgk4u+spJ/dSiwt+mXzDgtaP3Xo40ByfLzgWG79M9lUZo64JvlVy7Ti57OAbS03hi3k1Y+zy870rH0+btPeE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=T4BGRkzg; arc=none smtp.client-ip=209.85.222.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="4E9he3p9"
-Received: by mail-qt1-f169.google.com with SMTP id d75a77b69052e-428405a0205so54081cf.1
-        for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 14:48:13 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="T4BGRkzg"
+Received: by mail-ua1-f47.google.com with SMTP id a1e0cc1a2514c-7d5bfdd2366so530265241.3
+        for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 14:49:50 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1708555684; x=1709160484; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1708555789; x=1709160589; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=gw5fc5I26kdjc0zlKV7SIy+DOj8voXJyqY3HQnL2RuU=;
-        b=4E9he3p9Gt5DJ4bz0VKbMtIezXkJVB1PMFthc06+xcYvzk2p8jeO8bCiTaEqPCnlJC
-         TJSmMaQGZoTEoGcZUCib8edHI60UA6zfh0Ccww0hUFNo/eN581y2yd+zhd2XCShqN5MD
-         gXfdUgtQOq1SzQiceBbALEFyPAnoCoOe8zcwqCYX4cS3KvVF6rrZOA770g36Y4XuajH3
-         3jU1rCkLgNbe5tIj8Q6dL0A07OcHM1vQMLV+rwNIXDv0n1CzjvS7G/GALHLtIis+AEpN
-         Yr8LA+ASYHUapVw3SJeZuw2+fPbD8KckiatUIrA5/XdUAkGgj0gCLwZEP0PDGUYTEtrl
-         a9Pg==
+        bh=8kIUQjuesaJXPbW05RrE0sIWWykVRMpIc4Kl99N/9cg=;
+        b=T4BGRkzgI8/uzDOXKFcPvS12TTjG0+sP3vHbwK803mgCJqqq6xoTEtdZP37LLDDrIQ
+         3aXzRcUnrzpedHIcQPJfC9/xZHLXsKK9HdJcEEfSdYT7Fn4tYxQx4rrf2X7GeUXE8i2h
+         kEGQW1tRZw+QdjgRJXzgb5l6SQuiSVjrxJumVcbNGHa8+hfDRS+DMsqMGIWtoWNh6NWA
+         T6kBjV6pmG1gTMUi6YmvKXFQxfkMiCp4O6eVuro0aWL7DtdUeXUcOc8PqXOBikC40bAU
+         eRWJksh3YtYS18X1X/AsXDsG7FWF/65jVUj1fo3zFXfJOjtQgzCDxcZbGWknbo8OZuWF
+         Ly5A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708555684; x=1709160484;
+        d=1e100.net; s=20230601; t=1708555789; x=1709160589;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=gw5fc5I26kdjc0zlKV7SIy+DOj8voXJyqY3HQnL2RuU=;
-        b=vEtxcOnBd3FweFduWfBtf+HKDDOjvbPohc0ComLUKeDiAtVlhQO0aK4zPcG7L6rGAe
-         4+GQKbYLNAJ0UCOFvx3HJe1Jt239qi1erKoQIIkgKEtNqEbneu0xH/l8EGpgTd6ID80W
-         +QSRXS2d6EqWd1lhIMQYX14cZqbItlutryHfL1ufXg+8JYbS7u64fU1dg7igzYwjPpza
-         VvTI8e8J/uWRxOJuF+plw+Kfo9vzlQc+g1Tt2N2DIPiMPbDYc9iI0mSzPHXZ0pAnWygj
-         FmRGE6u9SUzeCANo4BzWtJdD7jQA5qpkpVInTV8haWltdqurt4bylH0u89Wjnrf1xKoG
-         oCRg==
-X-Forwarded-Encrypted: i=1; AJvYcCU5mlC733ac+z7CeuB/PNyp3NlohhiuqvSYXaexkQ4ISsulOlMcVIgT5zaDrpuxAHTtEMeK30w9ZwK+iTw4rcG8j3rxPmdCbDA80x1Z
-X-Gm-Message-State: AOJu0YyYkF4595f6IcgYWkRUFXRJ+34awHgg/mHYWsl0uk+MZfrC4Lxe
-	/Rpm7RcfKZZ93Oe+2qR7FM+f0sVs67CJBcRU2R6XTvl5uh7oU8ZaTblSRCcd0pnM9qgqpdWTxRy
-	tiD6MjJMY0A0SBQb5yW3ZB7EWJIu9rxTqPZ+0
-X-Google-Smtp-Source: AGHT+IHIiztHrlPVGbWlf9kC0Qn60zcxekXTmFXaa6Zvf6bxngg4By83+kUKNWAWtpmAT3Koc+UzgsGYRi3muOBgwgE=
-X-Received: by 2002:ac8:1242:0:b0:42d:dbd8:e12 with SMTP id
- g2-20020ac81242000000b0042ddbd80e12mr441467qtj.2.1708555683602; Wed, 21 Feb
- 2024 14:48:03 -0800 (PST)
+        bh=8kIUQjuesaJXPbW05RrE0sIWWykVRMpIc4Kl99N/9cg=;
+        b=g7++aHd/ES+Gy00URVI6Wbw7loRBycSmByvZau+Xv8fkNeMWoqbNDYyK1Z137I90it
+         XTBlcDP12KtUszWU5GDNGfIJid4J/95x7bGAG0xgvUpzEHh+ELcYTn9qFJkP0SeANo1u
+         LXukYD3w9yM2IhsWBQM+YI/v0YI8fb0e6WK5FQ7+kqFChn5Xe7+e4/qI3IeS695bj7/b
+         IWzlgjDWt239C1OXag56Ep2SPS3KPK6GtFt0edtoFHaB80pcdxom8I1FSeUdNYi/umZd
+         peaDNU7GZ6ppT5YLcY/N7r8yGf4J5x19VZm7P0AcUVdN56oUOnAJ4LKKP7/Ig17cLOGF
+         V6hA==
+X-Forwarded-Encrypted: i=1; AJvYcCWbq0sGLfxRP8Tn0R2OvXUkYSzWQf7oNBfq403Wzmionrrg1xaqs9hbU2xLs7p7Idppg1YTss+qAn+VXpY8vLdWTSsxLQHWGCS7e9Xx
+X-Gm-Message-State: AOJu0Yz986br5yAOy2OCm4AoKqK5G52tWA53T/6h0+qjbtZ87peMfSNj
+	JvHWxXQQNdXL4bbPm/VFL6lSzqey2S94KBXhFOtE+uC77r7G5rwk2In3uQDF4XqTPThQWMlWlTZ
+	fNBSEpChsV4bAiosd92cCVSYNNuAe6vTbnm+zMajWTID+YXPu
+X-Google-Smtp-Source: AGHT+IElkiaCXsCJBCsUxDG0AfmMhYZFKXDXyel91r1laTg8k0E10NkHbyD70fwtw6ZHo/kgp8Mz8TgJNiCqtyZiR4E=
+X-Received: by 2002:a05:690c:72a:b0:608:8582:8a12 with SMTP id
+ bt10-20020a05690c072a00b0060885828a12mr2571986ywb.4.1708555768842; Wed, 21
+ Feb 2024 14:49:28 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240212213147.489377-1-saravanak@google.com> <20240212213147.489377-4-saravanak@google.com>
- <20240214-stable-anytime-b51b898d87af@spud> <CAGETcx-tBjfaLQqmGW=ap2N5FLK_gvTzxskA6sVsr_SUEpvomA@mail.gmail.com>
- <20240215-unstirred-rearrange-d619a2524a63@spud> <CAGETcx8EBta8dUSELUJ6_ibZABnnhSYX0VEGa8s-CbHFYuskkQ@mail.gmail.com>
- <20240221-emblaze-ripeness-7ad4e41343fa@spud>
-In-Reply-To: <20240221-emblaze-ripeness-7ad4e41343fa@spud>
-From: Saravana Kannan <saravanak@google.com>
-Date: Wed, 21 Feb 2024 14:47:26 -0800
-Message-ID: <CAGETcx99Dob1D6Cr7+wN5+4aARgBdGdwEkNUjRAc6d_Ls9dqrQ@mail.gmail.com>
-Subject: Re: [PATCH v2 3/4] dt-bindings: Add post-init-supplier property
-To: Conor Dooley <conor@kernel.org>
-Cc: Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Ard Biesheuvel <ardb@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Len Brown <lenb@kernel.org>, 
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Daniel Scally <djrscally@gmail.com>, 
-	Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
-	Sakari Ailus <sakari.ailus@linux.intel.com>, kernel-team@android.com, 
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-efi@vger.kernel.org, linux-acpi@vger.kernel.org
+References: <20240220135431.22910-1-brgl@bgdev.pl>
+In-Reply-To: <20240220135431.22910-1-brgl@bgdev.pl>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Wed, 21 Feb 2024 23:49:18 +0100
+Message-ID: <CACRpkday6DfkxfRNxjh+T+-i2E1=Ty5hSecnK+o_we+nAZ47GQ@mail.gmail.com>
+Subject: Re: [PATCH] gpio: sim: delimit the fwnode name with a ":" when
+ generating labels
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Feb 21, 2024 at 11:34=E2=80=AFAM Conor Dooley <conor@kernel.org> wr=
-ote:
->
-> On Tue, Feb 20, 2024 at 08:13:31PM -0800, Saravana Kannan wrote:
-> > I made that fix and now I'm getting this:
-> > $ make DT_CHECKER_FLAGS=3D-m dt_binding_check
-> > DT_SCHEMA_FILES=3DDocumentation/devicetree/bindings/post-init-suppliers=
-.yaml
-> >   DTEX    Documentation/devicetree/bindings/post-init-suppliers.example=
-.dts
-> >   LINT    Documentation/devicetree/bindings
-> >   CHKDT   Documentation/devicetree/bindings/processed-schema.json
-> > /mnt/android/linus-tree/Documentation/devicetree/bindings/post-init-sup=
-pliers.yaml:
-> > 'oneOf' conditional failed, one must be fixed:
-> >         'unevaluatedProperties' is a required property
-> >         'additionalProperties' is a required property
-> >         hint: Either unevaluatedProperties or additionalProperties
-> > must be present
-> >         from schema $id: http://devicetree.org/meta-schemas/core.yaml#
-> >   SCHEMA  Documentation/devicetree/bindings/processed-schema.json
-> > /mnt/android/linus-tree/Documentation/devicetree/bindings/tpm/ibm,vtpm.=
-yaml:
-> > ignoring, error in schema: properties
-> > /mnt/android/linus-tree/Documentation/devicetree/bindings/post-init-sup=
-pliers.yaml:
-> > ignoring, error in schema:
-> > /mnt/android/linus-tree/Documentation/devicetree/bindings/soc/tegra/nvi=
-dia,tegra20-pmc.yaml:
-> > ignoring, error in schema: allOf: 0: then: properties: pinmux
-> > /mnt/android/linus-tree/Documentation/devicetree/bindings/net/lantiq,pe=
-f2256.yaml:
-> > ignoring, error in schema: properties: lantiq,data-rate-bps
-> > /mnt/android/linus-tree/Documentation/devicetree/bindings/post-init-sup=
-plier.yaml:
-> > ignoring, error in schema:
-> > /mnt/android/linus-tree/Documentation/devicetree/bindings/iio/pressure/=
-honeywell,mprls0025pa.yaml:
-> > ignoring, error in schema: properties: honeywell,pmax-pascal
-> > /mnt/android/linus-tree/Documentation/devicetree/bindings/iio/pressure/=
-honeywell,hsc030pa.yaml:
-> > ignoring, error in schema: properties: honeywell,pmax-pascal
->
-> >   DTC_CHK Documentation/devicetree/bindings/post-init-suppliers.example=
-.dtb
-> > Documentation/devicetree/bindings/post-init-suppliers.example.dtb:0:0:
-> > /example-0/clock-controller@1000: failed to match any schema with
-> > compatible: ['vendor,soc4-gcc', 'vendor,soc1-gcc']
-> > Documentation/devicetree/bindings/post-init-suppliers.example.dtb:0:0:
-> > /example-0/clock-controller@1000: failed to match any schema with
-> > compatible: ['vendor,soc4-gcc', 'vendor,soc1-gcc']
-> > Documentation/devicetree/bindings/post-init-suppliers.example.dtb:0:0:
-> > /example-0/clock-controller@2000: failed to match any schema with
-> > compatible: ['vendor,soc4-dispcc', 'vendor,soc1-dispcc']
-> > Documentation/devicetree/bindings/post-init-suppliers.example.dtb:0:0:
-> > /example-0/clock-controller@2000: failed to match any schema with
-> > compatible: ['vendor,soc4-dispcc', 'vendor,soc1-dispcc']
->
-> FWIW, I don't see these or the other errors you see above. You really
-> need to get yourself a newer version of dt-schema, or else avoid
-> working on this using whatever castrated system google provides you with!
+On Tue, Feb 20, 2024 at 2:54=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.pl>=
+ wrote:
 
-Ok, finally found the workaround to updating these packages and the
-output is a lot cleaner now.
-
-> > But I guess the "oneOf" error is because the yaml is being treated as
-> > a description of a DT node and not a schema?
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 >
-> The oneOf is due to missing "additionalProperties: true" - As far as I
-> understand you need that regardless of whether this is going into
-> dt-schema or the kernel.
+> Typically, whenever a human-readable name is created for objects using
+> a software node, its name is delimited with ":" as dashes are often used
+> in other parts of the name. Make gpio-sim use the same pattern. This
+> results in better looking default names:
+>
+>   gpio-sim.0:node0
+>   gpio-sim.0:node1
+>   gpio-sim.1:node0
+>
+> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-Ok, I added that and the errors go away. I'll send out a v3 and
-hopefully Rob can pick it up.
+LGTM
+Acked-by: Linus Walleij <linus.walleij@linaro.org>
 
--Saravana
+I guess it could affect some tests?
+
+Yours,
+Linus Walleij
