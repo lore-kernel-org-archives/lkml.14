@@ -1,157 +1,140 @@
-Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
+Received: from mail-oo1-f48.google.com (mail-oo1-f48.google.com [209.85.161.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 799443A8CA
-	for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 03:42:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59EC03A8DD
+	for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 03:42:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708486937; cv=none; b=a3TFLH+sv+QdGpm0abBGmB7MokPhSPEW9SJ7YgXL6zfi38ciDM/mRh4Hg4xZi0TLMZWZLkwi240gkebcyWqyO8IxmoFIkzYskhNbmEGz3O46WULw+0UHu027pgdq3Q26UzCgm1r0oF57Ep3hLg1oeRU8uBGx8i360/dE2WSRM8c=
+	t=1708486938; cv=none; b=iqD9mWZGSdPKEg4Otxpw0d4p+SsJTmPaO6TBDnwL51am1dU9rEL1/94CkD0PxL7sGvak6CtQkvwlch4wt3dpbV8BSuS3Q/v5i+/n5yuTTyOcm20JpvH1GBygYvzqnneN7KXA2AW61bjwyrVKKK6B1weGaQ2lXN1yt6EnvPc++7k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708486937; c=relaxed/simple;
-	bh=I+UE93RRTXaqRw/ye3XEqbtXPztsO4QkZJrrM8rzem4=;
-	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Content-Type; b=Rp3lxFwEwfDnNAF18kkoQ1q1KGKS4AlslL3tm8NfpVwd53srPca6qqgZmXXdxcWIQaSdU4OQgO2aOYPVMQWrPkuGQCETrqm4oJzmpzj2G4xC1sIbLcA6J+KBihzS33FhUBMG4jiQBGaoUgGKouJ4BabbqA2qJgdyOux9rVJJOTk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=G7s7dV87; arc=none smtp.client-ip=209.85.128.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+	s=arc-20240116; t=1708486938; c=relaxed/simple;
+	bh=O5og4OchozAQWq8Cp+6rFJKQ0XxsxNLCk+2059Ri2hQ=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=gyqJRSWq59BCx3Vu7kCLPlVQUdbjT0E+CO4T0oP+lrOKLgb5XyY3jgY/4x8WvxVnMtkG3NUM9lhQmUJPAyIVgUwLTZc9R3AKQpZ1N6OaTRUeF0b+Ie4LfCY+qeeUVYHE6qP0PNOVk/1l2ZejE1AWg42s7cit47DEjBDqlq23MnA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=zMe917S/; arc=none smtp.client-ip=209.85.161.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="G7s7dV87"
-Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-602dae507caso101484457b3.0
-        for <linux-kernel@vger.kernel.org>; Tue, 20 Feb 2024 19:42:15 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zMe917S/"
+Received: by mail-oo1-f48.google.com with SMTP id 006d021491bc7-59a8b9b327aso42638eaf.2
+        for <linux-kernel@vger.kernel.org>; Tue, 20 Feb 2024 19:42:16 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1708486934; x=1709091734; darn=vger.kernel.org;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=BDoXWFUllq5r9qvxHaqqdOtetQC7wmYhYSm0N03NFTM=;
-        b=G7s7dV87iO7rxKFJv9uTv0T1850IFJiqgrvwCcDPdq0FC+X0wep23+WCGp0dPGoVbM
-         01jMp13UL+SxmzadnLAuXPcPAeBtizvqRdz/5i2kLfbU4g2EoOP3RXgIHxfiRnMT9sHX
-         gJqY6toDXfXHwLqtY52TdO/m5vzeuTXF4RJMzo5lp6JDykqY5FSE+ZqkXauIpG4AEFG4
-         6ceRYgOHwcESECTb15RJ6Q/L7z9iOsKbjSaANfEw069U42R/qfk4Z9P+mKI+i5uelsgA
-         edgVtFCit60f9F8yUdJyfqifUhJssCpu+G5RHjlXAbPkK235MPWTnSiuIfAJEHsAEDlb
-         3mYQ==
+        d=linaro.org; s=google; t=1708486935; x=1709091735; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=jhFwmGfAyp+KPgy1YNp5dgOHOitxxPzL4bzjbrdh2qo=;
+        b=zMe917S/CM62eKt3aNxF07cnUppXFgC/C+B0w29/psv4CdWSFy5p27jdBUw4MoTYfi
+         RWtcgFcpK0qxMRxo6mopJQY6khWMopFnTCKjQwLm0sS1143b+YUJvoLgZqFPIjwa/IzN
+         uNOy+GgZ7wuPJuf9FvoX1zMfWvd2HWsemw0VxkqvTjwheHDcv6Zbmn7TvW5JHpFPPZpy
+         lcKGuimLRNCIzGesoNKiFBAwlMbfj3b2djtDT3EB/CfOGzCYIvaTyqWvppjwnsmLflNg
+         vafdNtqC5NEftPhn8sMK1X/UT5J2AOQ+TmUQv1PZk5iSZnJhN3lLXveoJhowSz3KesGn
+         ylzA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708486934; x=1709091734;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=BDoXWFUllq5r9qvxHaqqdOtetQC7wmYhYSm0N03NFTM=;
-        b=UhnvGM5/uB0t966AObf+mlGttFvlraOKw7WJFKt5tNH+bL7b4E5KHXejB2pyGTZeoK
-         5lUEkbyQcjw9+qnzBsdsXLyNT7cdj3iVWAqJVsphYmof9cfN+Zk4OYTWCY+okkHBwcLj
-         H7hHMcw7Jz4OSjrsL9FAutESiEk5I6mE6M7vuaKTWDLxeSNgxmT5veV+Vajja2FBtLCa
-         dwH8HNPOLs2PGP/tZrIbz6SnV0FxmfYOGbrQzo04DI8Ucfs6MUy30mfXzWCaiwDd2Ab6
-         3+nJ2g3jLwPw86VUiEOPfMnDxwORR8p/aEtZqkcBNfrGKIKjBNch0QY+VTYtw2ZJZ+qk
-         BbKA==
-X-Forwarded-Encrypted: i=1; AJvYcCXbFzug7755cEULLGJfmPvLFw+/WspA7BdtJDQpZZ0WCeMyzMfoEM1WhP71MmDYKHNkyUyfppJozNC9z8+UMNlO6vNlNsJe1uW9GJ+i
-X-Gm-Message-State: AOJu0Yz7+vrOFBVBFecXIowFeJvJsJXOktQY69K8qrTTQBOgDP50/NsH
-	4KwPuIHJ69HVCB5/zyjvBYBiDhSwpTvcHL/0sHHOtxCCzAOLf775efoP4sB3QvwPegOHBo/RArc
-	yLsOppQ==
-X-Google-Smtp-Source: AGHT+IEKcmdKTjHr2xWWJkj/LRomPZ1pY+pgf9xS7sna0/bb350+idRqAo6Uz+mbnsKjTAEDSZ8CywccCPNe
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:3c02:f882:5876:b7ab])
- (user=irogers job=sendgmr) by 2002:a81:f008:0:b0:607:f6f0:bdca with SMTP id
- p8-20020a81f008000000b00607f6f0bdcamr3613089ywm.7.1708486934605; Tue, 20 Feb
- 2024 19:42:14 -0800 (PST)
-Date: Tue, 20 Feb 2024 19:41:52 -0800
-In-Reply-To: <20240221034155.1500118-1-irogers@google.com>
-Message-Id: <20240221034155.1500118-6-irogers@google.com>
+        d=1e100.net; s=20230601; t=1708486935; x=1709091735;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=jhFwmGfAyp+KPgy1YNp5dgOHOitxxPzL4bzjbrdh2qo=;
+        b=gJ1CMfy6BnEApXoWVKz1+ZTXyplxoOzdYc3qv8HyClMImAbedQAk6uCkdgF5tzABeB
+         6+2W32q/BZ+CBkmcQSpgWCZrK+cl8aQ6XQ1OTf06y4+yssN9NHDoKGuv3+bWzqMV4ocK
+         gzS16peHW6GKH7oC/HBg3X7R4VB8Iqo2bogECoYyDqxYEYM9Qw0rUwe+Hz3SkXGK0e8d
+         8PEwjzZL4Lj8wXIZarVryk+jGNxlrcEqbdrBJHfj2n3p7qTl35ol/CxWvlS1ugAVrTWB
+         ltOoFafbZqoPVCTO9WzF9SIr/gF/nXqS5lTedFmLSeobx/Yz+yBzaQLJ31QkjchUrczT
+         9gRw==
+X-Forwarded-Encrypted: i=1; AJvYcCVXO0Xgn5G0+po58zrKzlhJ6bpRgf84ArhWCuHoqy1AMP2Ne4a9yJVMeo1k123B9N2HRs1/ItCnZrKsjRkpNn21pD/RvT2to/k2zBBp
+X-Gm-Message-State: AOJu0YyHeCW9BqiDbV+oCwbD+KnfJx4Z2IstsFkjkYcfFRI0YHdOE8Ww
+	vIXAfS7njdEVJotCTjd3qTuuo8RB9uvoVK17x+JucOCQQ7+DtvlRbCUtMugry9JqhvJPXd5qpzs
+	=
+X-Google-Smtp-Source: AGHT+IFSKx6GZ4yxulHPpTju/HaIehaHxCGHrqoUPm0YfYGbYPjQYdJI6R94uzZ5myHGjPluz6NN8g==
+X-Received: by 2002:a05:6358:e4a5:b0:17a:cfb0:828a with SMTP id by37-20020a056358e4a500b0017acfb0828amr20251290rwb.19.1708486935010;
+        Tue, 20 Feb 2024 19:42:15 -0800 (PST)
+Received: from [127.0.1.1] ([117.207.28.224])
+        by smtp.gmail.com with ESMTPSA id o23-20020a056a001b5700b006e466369645sm4436231pfv.132.2024.02.20.19.42.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 20 Feb 2024 19:42:14 -0800 (PST)
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Date: Wed, 21 Feb 2024 09:11:48 +0530
+Subject: [PATCH 02/21] arm64: dts: qcom: sdm845: Add PCIe bridge node
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20240221034155.1500118-1-irogers@google.com>
-X-Mailer: git-send-email 2.44.0.rc0.258.g7320e95886-goog
-Subject: [PATCH v6 5/8] perf test: Rename builtin-test-list and add missed
- header guard
-From: Ian Rogers <irogers@google.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Nathan Chancellor <nathan@kernel.org>, Nick Desaulniers <ndesaulniers@google.com>, 
-	Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, 
-	Athira Jajeev <atrajeev@linux.vnet.ibm.com>, James Clark <james.clark@arm.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, Yang Jihong <yangjihong1@huawei.com>, 
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	llvm@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240221-pcie-qcom-bridge-dts-v1-2-6c6df0f9450d@linaro.org>
+References: <20240221-pcie-qcom-bridge-dts-v1-0-6c6df0f9450d@linaro.org>
+In-Reply-To: <20240221-pcie-qcom-bridge-dts-v1-0-6c6df0f9450d@linaro.org>
+To: Bjorn Andersson <andersson@kernel.org>, 
+ Konrad Dybcio <konrad.dybcio@linaro.org>, Rob Herring <robh+dt@kernel.org>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+ Conor Dooley <conor+dt@kernel.org>, cros-qcom-dts-watchers@chromium.org
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, 
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+X-Mailer: b4 0.12.4
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1223;
+ i=manivannan.sadhasivam@linaro.org; h=from:subject:message-id;
+ bh=O5og4OchozAQWq8Cp+6rFJKQ0XxsxNLCk+2059Ri2hQ=;
+ b=owEBbQGS/pANAwAKAVWfEeb+kc71AcsmYgBl1XEFB56RCU+KeRm0TqjjtZdY2xuOfLd0HbpOI
+ eg3yrsgWzOJATMEAAEKAB0WIQRnpUMqgUjL2KRYJ5dVnxHm/pHO9QUCZdVxBQAKCRBVnxHm/pHO
+ 9Vp5B/0Xvnk+89DL2B2kXhbUkU17AS0b/4yteiC/i/vFI2Fj70O/IwPyIHJ782fqMaBMSuThV2Z
+ 5mf23v05A15lNpMTpXNCVDMdoHGv+fyBn8gyCTMXgQtTz3a8Smdbg+L7RiL85V/OxL+inb8NNYU
+ 0P0AaagGlL0t8kVKSc7Adv3NIWQYgBBniVtJqGBU7ArtnpVMyacm9/7SVJgTCuNvAJ44TMTVvJW
+ mHlB5gLPuq7MH7hQde7tahQ3nb0mOLCh1NMccD5PsQlPXd80aJApI+gtN7r2KzK8ce5ry5MObgE
+ IRG30t0ALKjO96Iy1wXDkgUe8OiP4l7mM5F7iz67oKqsy4Vq
+X-Developer-Key: i=manivannan.sadhasivam@linaro.org; a=openpgp;
+ fpr=C668AEC3C3188E4C611465E7488550E901166008
 
-builtin-test-list is primarily concerned with shell script
-tests. Rename the file to better reflect this and add a missed header
-guard.
+On Qcom SoCs, the PCIe host bridge is connected to a single PCIe bridge
+for each controller instance. Hence, add a node to represent the bridge.
 
-Signed-off-by: Ian Rogers <irogers@google.com>
+Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 ---
- tools/perf/tests/Build                                    | 2 +-
- tools/perf/tests/builtin-test.c                           | 2 +-
- tools/perf/tests/{builtin-test-list.c => tests-scripts.c} | 2 +-
- tools/perf/tests/{builtin-test-list.h => tests-scripts.h} | 4 ++++
- 4 files changed, 7 insertions(+), 3 deletions(-)
- rename tools/perf/tests/{builtin-test-list.c => tests-scripts.c} (99%)
- rename tools/perf/tests/{builtin-test-list.h => tests-scripts.h} (79%)
+ arch/arm64/boot/dts/qcom/sdm845.dtsi | 20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
 
-diff --git a/tools/perf/tests/Build b/tools/perf/tests/Build
-index 53ba9c3e20e0..c7f9d9676095 100644
---- a/tools/perf/tests/Build
-+++ b/tools/perf/tests/Build
-@@ -1,7 +1,7 @@
- # SPDX-License-Identifier: GPL-2.0
+diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+index c2244824355a..9a6e3bcdc5e4 100644
+--- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
++++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+@@ -2375,6 +2375,16 @@ pcie0: pcie@1c00000 {
+ 			phy-names = "pciephy";
  
- perf-y += builtin-test.o
--perf-y += builtin-test-list.o
-+perf-y += tests-scripts.o
- perf-y += parse-events.o
- perf-y += dso-data.o
- perf-y += attr.o
-diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
-index 4a5973f9bb9b..eff3c62e9b47 100644
---- a/tools/perf/tests/builtin-test.c
-+++ b/tools/perf/tests/builtin-test.c
-@@ -29,7 +29,7 @@
- #include <subcmd/exec-cmd.h>
- #include <linux/zalloc.h>
- 
--#include "builtin-test-list.h"
-+#include "tests-scripts.h"
- 
- static bool dont_fork;
- const char *dso_to_test;
-diff --git a/tools/perf/tests/builtin-test-list.c b/tools/perf/tests/tests-scripts.c
-similarity index 99%
-rename from tools/perf/tests/builtin-test-list.c
-rename to tools/perf/tests/tests-scripts.c
-index a65b9e547d82..4ebd841da05b 100644
---- a/tools/perf/tests/builtin-test-list.c
-+++ b/tools/perf/tests/tests-scripts.c
-@@ -15,7 +15,7 @@
- #include <sys/wait.h>
- #include <sys/stat.h>
- #include "builtin.h"
--#include "builtin-test-list.h"
-+#include "tests-scripts.h"
- #include "color.h"
- #include "debug.h"
- #include "hist.h"
-diff --git a/tools/perf/tests/builtin-test-list.h b/tools/perf/tests/tests-scripts.h
-similarity index 79%
-rename from tools/perf/tests/builtin-test-list.h
-rename to tools/perf/tests/tests-scripts.h
-index eb81f3aa6683..3a3ec6191848 100644
---- a/tools/perf/tests/builtin-test-list.h
-+++ b/tools/perf/tests/tests-scripts.h
-@@ -1,4 +1,6 @@
- /* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef TESTS_SCRIPTS_H
-+#define TESTS_SCRIPTS_H
- 
- struct script_file {
- 	char *dir;
-@@ -10,3 +12,5 @@ struct script_file {
- const struct script_file *list_script_files(void);
- /* Get maximum width of description string */
- int list_script_max_width(void);
+ 			status = "disabled";
 +
-+#endif /* TESTS_SCRIPTS_H */
++			pcie@0 {
++				device_type = "pci";
++				reg = <0x0 0x0 0x0 0x0 0x0>;
++				bus-range = <0x01 0xff>;
++
++				#address-cells = <3>;
++				#size-cells = <2>;
++				ranges;
++			};
+ 		};
+ 
+ 		pcie0_phy: phy@1c06000 {
+@@ -2479,6 +2489,16 @@ pcie1: pcie@1c08000 {
+ 			phy-names = "pciephy";
+ 
+ 			status = "disabled";
++
++			pcie@0 {
++				device_type = "pci";
++				reg = <0x0 0x0 0x0 0x0 0x0>;
++				bus-range = <0x01 0xff>;
++
++				#address-cells = <3>;
++				#size-cells = <2>;
++				ranges;
++			};
+ 		};
+ 
+ 		pcie1_phy: phy@1c0a000 {
+
 -- 
-2.44.0.rc0.258.g7320e95886-goog
+2.25.1
 
