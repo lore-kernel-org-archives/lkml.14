@@ -1,44 +1,44 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D870E3D3A0
-	for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 09:06:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 689143D547
+	for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 09:06:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708506379; cv=none; b=A3EJSyW5mC/USX1/Mv3EFRiJSFP61jjgLOSN8FsASmSCosgiB1FvuPSTcJ/JJYTnVslMlc8gCJ2UReF6lDX8i9wEaLo+Qtu35yob7Iy5rAKBMtyhNFciEHOtJ7+bwnjmrCRllPZU5kOR1kGUYHR+myO5AU5vIFqV6hKh5xkb5m4=
+	t=1708506380; cv=none; b=Z2F4luefy8t3l8If0tenMcCrA1X54ewKs7/AKFmFWiaJTvzytCn9lb8nucOGA9Jt2NzXeG9PDtI9vIXOVST3Uflm8jm8fSDL76cIcK5odCcqyzFdWb4WzB9PpGb7MJOdjQbq8OWgzT+VcBX9FKZmiT3UKf+TA8HGI9p7pY0KkEg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708506379; c=relaxed/simple;
-	bh=fAB5xEIJhUT2xY7i5T7pqKYPBAt3GNmgTzm/jf5bOqc=;
+	s=arc-20240116; t=1708506380; c=relaxed/simple;
+	bh=V1CbKsW0rcYBYg8RiJijs3cSGDAOjzbv3oQTZO9JY7Y=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=nPloMWIQcl+0i6pcCp1uSmpLkoV+3m1wRxuK9rgkEQDlSBe0BQxPoArVQBJL0Cc4LHRypgsVEtRASp9kfLJFru9/NFEM22cxoj6f0Ajui/aL9UumljXwUsC4FrbE3bD1ky7XzfHq4YQvHs2MwnAFWgIiQf9xPgj4EJkK0kqqIcM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=cxbjYNYY; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Sc1xvsMr; arc=none smtp.client-ip=193.142.43.55
+	 MIME-Version; b=NNQwv1mLzutSYh+uwH7KVym7ryAM8vEXn/+AOIl9lWsSOi0vqUMkY4sXInJ8WsfrvunGzIlhBcoBSkVtzBeKlarGaQFcuknqDjTkKmyhTgssEiNfRKJUlNP/iJSgMY2AXQZo7ixVNnAXKw6uAR6dNIS+92Q93YE/ARKloXCU8jY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=N+iH1EA+; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=s9SUakEH; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="cxbjYNYY";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Sc1xvsMr"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="N+iH1EA+";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="s9SUakEH"
 From: Anna-Maria Behnsen <anna-maria@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1708506369;
+	s=2020; t=1708506370;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=QisrBEswo4w1Tqs9XJzYOTpU4VJaqEco1Cayy0t85z0=;
-	b=cxbjYNYYvJE7nTIXnHt66nKWJdXP5gSGl1ZHzbW7WkQraHBGShczZFlaWC8cCHv0Nlal1u
-	Fgamecy9zmNMhW2C0uGmgDvM69iP/PZMvYe2bvDUdZ08ArHoNyjsPaehvmFa/0QBvxF6iS
-	xOUURNmNr2dh+yA2+0/MaUVZKJltKwceAY4+JdI1yCxjeo16RZRhbE9tH7KIV/PCW2YvZx
-	sFQoYjOCGp/mMBCgUTlccfwSKqlvkWxIyO6PRn0Ic7SDK26DnHSkLJD2EXet6/LPX7QUZ7
-	riN0pjbWCiDzxPCOwMrkoQwFfaCn+onpcsvvD4zfpZdl997LzAQlqnAU5HHBXg==
+	bh=BSKskFBA3hNZnL8AqDErkBhwO140lD1i26cDtauIZEw=;
+	b=N+iH1EA+Q9CrW9USEa9Lre+aORR0RMKuhVcaHRNSEUiOMsemgtGOAfodGmv1rzBpTfvXgT
+	6qusX02SD9UMY2rZ4g0bQ3pcedlUjJWAnrF3XB5osCHnOGtkn6CCIPRW782IZdOLbLlhWm
+	eqNfp/mmcACeg3FPdt8VAa8ODhXhyJn4ZEgfnp2m/9mSL7d308dYaUbjcT1RngK13Kkv0G
+	uVtf7UE0TBCL+w+xHSwF0LqPo7Zrn/QRuTMR3oML7qUAKvksGJfLUc9vkG9piZgMhAQeaN
+	s3J9JlGdO8sA1S0dFEh8nSSVVGOGykitdu/jsMkV0IKd/RLJa95EzQyOgS1EJQ==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1708506369;
+	s=2020e; t=1708506370;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=QisrBEswo4w1Tqs9XJzYOTpU4VJaqEco1Cayy0t85z0=;
-	b=Sc1xvsMrcCn5y3enYMmEDN21px5+dzmS0F3umaqNg/3PyQcflgyKmwhjWEo13yzGEfeU1K
-	lFRuIkDk5XebubDQ==
+	bh=BSKskFBA3hNZnL8AqDErkBhwO140lD1i26cDtauIZEw=;
+	b=s9SUakEHFB8KfG5IVhDcJfSAriaMylPMWg2po4rwWWAUBOw3GaG0+PNTrQjlt9gOeIdBKO
+	pi8ytFiJk4eY3VBw==
 To: linux-kernel@vger.kernel.org
 Cc: Peter Zijlstra <peterz@infradead.org>,
 	John Stultz <jstultz@google.com>,
@@ -58,9 +58,9 @@ Cc: Peter Zijlstra <peterz@infradead.org>,
 	K Prateek Nayak <kprateek.nayak@amd.com>,
 	Christian Loehle <christian.loehle@arm.com>,
 	Anna-Maria Behnsen <anna-maria@linutronix.de>
-Subject: [PATCH v11 05/20] timers: Introduce add_timer() variants which modify timer flags
-Date: Wed, 21 Feb 2024 10:05:33 +0100
-Message-Id: <20240221090548.36600-6-anna-maria@linutronix.de>
+Subject: [PATCH v11 07/20] timers: add_timer_on(): Make sure TIMER_PINNED flag is set
+Date: Wed, 21 Feb 2024 10:05:35 +0100
+Message-Id: <20240221090548.36600-8-anna-maria@linutronix.de>
 In-Reply-To: <20240221090548.36600-1-anna-maria@linutronix.de>
 References: <20240221090548.36600-1-anna-maria@linutronix.de>
 Precedence: bulk
@@ -71,91 +71,44 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-A timer might be used as a pinned timer (using add_timer_on()) and later on
-as non-pinned timer using add_timer(). When the "NOHZ timer pull at expiry
-model" is in place, the TIMER_PINNED flag is required to be used whenever a
-timer needs to expire on a dedicated CPU. Otherwise the flag must not be
-set if expiration on a dedicated CPU is not required.
+When adding a timer to the timer wheel using add_timer_on(), it is an
+implicitly pinned timer. With the timer pull at expiry time model in place,
+TIMER_PINNED flag is required to make sure timers end up in proper base.
 
-add_timer_on()'s behavior will be changed during the preparation patches
-for the "NOHZ timer pull at expiry model" to unconditionally set
-TIMER_PINNED flag. To be able to clear/ set the flag when queueing a
-timer, two variants of add_timer() are introduced.
-
-This is a preparatory patch and has no functional change.
+Add TIMER_PINNED flag unconditionally when add_timer_on() is executed.
 
 Signed-off-by: Anna-Maria Behnsen <anna-maria@linutronix.de>
 Reviewed-by: Frederic Weisbecker <frederic@kernel.org>
 ---
-v10: Commit message reworded as suggested by bigeasy
+ kernel/time/timer.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-v9: Update documentation to match kernel-doc style (missing brackets after
-    function names)
-
-New in v6
----
- include/linux/timer.h |  2 ++
- kernel/time/timer.c   | 34 ++++++++++++++++++++++++++++++++++
- 2 files changed, 36 insertions(+)
-
-diff --git a/include/linux/timer.h b/include/linux/timer.h
-index f18a2f1eb79e..2be8be6dd317 100644
---- a/include/linux/timer.h
-+++ b/include/linux/timer.h
-@@ -165,6 +165,8 @@ extern int timer_reduce(struct timer_list *timer, unsigned long expires);
- #define NEXT_TIMER_MAX_DELTA	((1UL << 30) - 1)
- 
- extern void add_timer(struct timer_list *timer);
-+extern void add_timer_local(struct timer_list *timer);
-+extern void add_timer_global(struct timer_list *timer);
- 
- extern int try_to_del_timer_sync(struct timer_list *timer);
- extern int timer_delete_sync(struct timer_list *timer);
 diff --git a/kernel/time/timer.c b/kernel/time/timer.c
-index 2f69a485a070..3cf016d6fa59 100644
+index 3cf016d6fa59..fc4c406c9ec7 100644
 --- a/kernel/time/timer.c
 +++ b/kernel/time/timer.c
-@@ -1245,6 +1245,40 @@ void add_timer(struct timer_list *timer)
- }
- EXPORT_SYMBOL(add_timer);
- 
-+/**
-+ * add_timer_local() - Start a timer on the local CPU
-+ * @timer:	The timer to be started
-+ *
-+ * Same as add_timer() except that the timer flag TIMER_PINNED is set.
-+ *
-+ * See add_timer() for further details.
-+ */
-+void add_timer_local(struct timer_list *timer)
-+{
-+	if (WARN_ON_ONCE(timer_pending(timer)))
-+		return;
-+	timer->flags |= TIMER_PINNED;
-+	__mod_timer(timer, timer->expires, MOD_TIMER_NOTPENDING);
-+}
-+EXPORT_SYMBOL(add_timer_local);
-+
-+/**
-+ * add_timer_global() - Start a timer without TIMER_PINNED flag set
-+ * @timer:	The timer to be started
-+ *
-+ * Same as add_timer() except that the timer flag TIMER_PINNED is unset.
-+ *
-+ * See add_timer() for further details.
-+ */
-+void add_timer_global(struct timer_list *timer)
-+{
-+	if (WARN_ON_ONCE(timer_pending(timer)))
-+		return;
-+	timer->flags &= ~TIMER_PINNED;
-+	__mod_timer(timer, timer->expires, MOD_TIMER_NOTPENDING);
-+}
-+EXPORT_SYMBOL(add_timer_global);
-+
- /**
-  * add_timer_on - Start a timer on a particular CPU
+@@ -1284,7 +1284,10 @@ EXPORT_SYMBOL(add_timer_global);
   * @timer:	The timer to be started
+  * @cpu:	The CPU to start it on
+  *
+- * Same as add_timer() except that it starts the timer on the given CPU.
++ * Same as add_timer() except that it starts the timer on the given CPU and
++ * the TIMER_PINNED flag is set. When timer shouldn't be a pinned timer in
++ * the next round, add_timer_global() should be used instead as it unsets
++ * the TIMER_PINNED flag.
+  *
+  * See add_timer() for further details.
+  */
+@@ -1298,6 +1301,9 @@ void add_timer_on(struct timer_list *timer, int cpu)
+ 	if (WARN_ON_ONCE(timer_pending(timer)))
+ 		return;
+ 
++	/* Make sure timer flags have TIMER_PINNED flag set */
++	timer->flags |= TIMER_PINNED;
++
+ 	new_base = get_timer_cpu_base(timer->flags, cpu);
+ 
+ 	/*
 -- 
 2.39.2
 
