@@ -1,91 +1,100 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5E9283CCE;
-	Wed, 21 Feb 2024 18:54:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2002985926;
+	Wed, 21 Feb 2024 18:54:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708541684; cv=none; b=IVEv30orgwj2xsEmj1PuPhYOssptTanTFC9gZY0F92hVi/81ltCLY7ZGJQYxFkSAyU2ikJhMOVkoqcn1dMEifSCRjotzF9bO9osO/4RkXvOidhly1kx/gz0grT8iEyMnMiA9Eg+tbUPIlMmwfTHW5ekIdGJPG76KEha/bmAiFHg=
+	t=1708541700; cv=none; b=GX3Hgr51uT1pGN7nUU/iTAh1fTIjb+kF4tWS2uPhulLBW8EkpqMPhL9MmkJR9rag2Jos9922R17sz4au1dXnuDaD6PbPnD/u+rIZVW/YRR4J/mODg9j1nL/VseXKzQveX/20XeA1Dfw9N6FRLpyKkCgoxGe5sLqVZB8MpDFu91g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708541684; c=relaxed/simple;
-	bh=b/p+fxSCKAw7wiBKITe2X7yTKmf+xbNvYQZ58i6OmbQ=;
-	h=Content-Type:MIME-Version:Subject:From:In-Reply-To:References:To:
-	 Cc:Message-ID:Date; b=btf/rr0WZkbb5yISwXkEAdG4lL3SdUI/wD19HQqwoE5YAJfJ8O6OZlclkOIax5WERGEheP/fCw+EelGxU0fpgUeuYiq2FeKKx8SsL5U3IFsNMIVjvYMQKLGja9rIqMVztsxRKzzI5mm/fJlmsnulor1cIwM8mRNrivtXEyvbbOg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YX0oeWJz; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1708541700; c=relaxed/simple;
+	bh=Jh0l9s/OaCV3bCuHry8sm0OOyqREosn9JrZQ9umrq7Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=c0OA1XXgYlzqEFasC3zZcc8DK8iA8mEV264viZ2wgDx2Of2My8Yemb4KH0kKyp5y1KQOd8g0g1tcMHwKS+j29hPypKy7IJwktg1XGWWoe0j3IXAAS00hdiNmJZRhukP0Q1tKMtw8Dl7gTHXPQoAvmm9PeLngq1E2rp0/Lj0qmBE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JL4f1MhE; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YX0oeWJz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5354DC433C7;
-	Wed, 21 Feb 2024 18:54:41 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JL4f1MhE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 27454C433F1;
+	Wed, 21 Feb 2024 18:54:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708541683;
-	bh=b/p+fxSCKAw7wiBKITe2X7yTKmf+xbNvYQZ58i6OmbQ=;
-	h=Subject:From:In-Reply-To:References:To:Cc:Date:From;
-	b=YX0oeWJzVn5Uva2Oc3cKr/Mp8sWYNfTnMZrzYfPemrGbaPTJGUK/6NpWLd3pb7LK2
-	 r4yKiA4ASt0AigwCJ42VuKy7UtuR8i2Gud8R+/rwFWkL5TyS91060BKaoeC7/sGfDI
-	 idxfcCy/bBi2rkGQ9ufRa6j+JDcLQeG3ZQxr+nlihh6KNwtLHFOQFUM9c9WkTxrZQd
-	 P2XlOQq+oFPHJFlvka9fTNnGWGvVn+PKb7z2iXOSOzzGx0Nu7AX2Oama4tgqRXK/54
-	 rY57mtwj8OryjoAznRy6yuNZSKyV6goWm/sUdTD1+lAr0t+fuIMkPlFn67ic/Shcra
-	 QdgQdTzImS5Kw==
-Content-Type: text/plain; charset="utf-8"
+	s=k20201202; t=1708541699;
+	bh=Jh0l9s/OaCV3bCuHry8sm0OOyqREosn9JrZQ9umrq7Y=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=JL4f1MhE9m1YXkzejJB5OF1kGPwFEykYLL1M/7+97FQgC+jq4QFKX48DFP/S0mf7n
+	 MfJghzF9K/8iKnp0ciL+XJa2goHThVZvq+w2r7HZdBLw4EtGnnOvl35UZ7VAvMkdfM
+	 qvjmQsdDpKoMBhClfDcc69oUoom7ndnkx1XBRDNfO9GYYc0KQvBUHzqrQcIU9mXArW
+	 hwXpl/PzgYTU34J4eV1YIlA4MTQYDSCpW1kh7+FhGZ0U/ntMLHcroTymfugEv79JBn
+	 +3szynYfd1Zaylc9o1KYoGyDMZgDGLc4VDIp/KUBnj+zYV/8b764Bz1j45uOZwOpd1
+	 aazsaavG9dNmw==
+Date: Wed, 21 Feb 2024 18:54:54 +0000
+From: Conor Dooley <conor@kernel.org>
+To: Marco Felsch <m.felsch@pengutronix.de>
+Cc: jic23@kernel.org, lars@metafoo.de, robh+dt@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+	denis.ciocca@st.com, linus.walleij@linaro.org,
+	linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, kernel@pengutronix.de
+Subject: Re: [PATCH] dt-bindings: iio: st-sensors: Add IIS2MDC magnetometer
+Message-ID: <20240221-undecided-union-4078db711693@spud>
+References: <20240221175810.3581399-1-m.felsch@pengutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH 2/2] wifi: wilc1000: remove AKM suite be32 conversion for
- external auth request
-From: Kalle Valo <kvalo@kernel.org>
-In-Reply-To: 
- <20240215-nl80211_fix_akm_suites_endianness-v1-2-57e902632f9d@bootlin.com>
-References: 
- <20240215-nl80211_fix_akm_suites_endianness-v1-2-57e902632f9d@bootlin.com>
-To: =?utf-8?q?Alexis_Lothor=C3=A9?= <alexis.lothore@bootlin.com>
-Cc: Johannes Berg <johannes@sipsolutions.net>,
- Ajay Singh <ajay.kathat@microchip.com>,
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
- linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
- Igor Mitsyanko <imitsyanko@quantenna.com>,
- Sergey Matyukevich <geomatsi@gmail.com>,
- =?utf-8?q?Alexis_Lothor=C3=A9?= <alexis.lothore@bootlin.com>,
- kernel test robot <lkp@intel.com>
-User-Agent: pwcli/0.1.1-git (https://github.com/kvalo/pwcli/) Python/3.11.2
-Message-ID: <170854167959.1918455.695828297472841721.kvalo@kernel.org>
-Date: Wed, 21 Feb 2024 18:54:41 +0000 (UTC)
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="ULmJpzOTRNdVIOBt"
+Content-Disposition: inline
+In-Reply-To: <20240221175810.3581399-1-m.felsch@pengutronix.de>
 
-Alexis Lothoré <alexis.lothore@bootlin.com> wrote:
 
-> The driver currently raises the following sparse warning:
-> [...] cfg80211.c:360:42: warning: incorrect type in assignment (different
-> base types)
-> [...] cfg80211.c:360:42:    expected unsigned int key_mgmt_suite
-> [...] cfg80211.c:360:42:    got restricted __be32 [usertype]
->   CHECK   drivers/net/wireless/microchip/wilc1000/netdev.c
-> 
-> This conversion was needed because historically the external supplicant
-> (observed with wpa_supplicant) expects AKM suite as big endian in
-> NL80211_CMD_EXTERNAL_AUTH message when the AKM suite is WLAN_AKM_SUITE_SAE.
-> This is not needed anymore:
-> - new (to be released) versions of wpa_supplicant now reads it in host
->   endian _while_ keeping compatibility for older drivers
-> - for new drivers used with current/old wpa_supplicant, this conversion has
->   been added to nl80211 to force big endian when the AKM suite is
->   WLAN_AKM_SUITE_SAE
-> 
-> Remove this not-needed-anymore conversion to fix the sparse warning.
-> 
-> Reported-by: kernel test robot <lkp@intel.com>
-> Closes: https://lore.kernel.org/oe-kbuild-all/202308290615.lUTIgqUl-lkp@intel.com/
-> Tested-on: WILC1000 hwB SPI WILC_WIFI_FW_REL_16_1-13452
-> Signed-off-by: Alexis Lothoré <alexis.lothore@bootlin.com>
+--ULmJpzOTRNdVIOBt
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Patch applied to wireless-next.git, thanks.
+On Wed, Feb 21, 2024 at 06:58:10PM +0100, Marco Felsch wrote:
+> Add the iis2mdc magnetometer support which is equivalent to the lis2mdl.
+>=20
+> Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
+> ---
+>  Documentation/devicetree/bindings/iio/st,st-sensors.yaml | 1 +
+>  1 file changed, 1 insertion(+)
+>=20
+> diff --git a/Documentation/devicetree/bindings/iio/st,st-sensors.yaml b/D=
+ocumentation/devicetree/bindings/iio/st,st-sensors.yaml
+> index fff7e3d83a02..ee593c8bbb65 100644
+> --- a/Documentation/devicetree/bindings/iio/st,st-sensors.yaml
+> +++ b/Documentation/devicetree/bindings/iio/st,st-sensors.yaml
+> @@ -64,6 +64,7 @@ properties:
+>            - st,lsm9ds0-gyro
+>        - description: STMicroelectronics Magnetometers
+>          enum:
+> +          - st,iis2mdc
 
-00413dd36414 wifi: wilc1000: remove AKM suite be32 conversion for external auth request
+Without a fallback compatible to the equivilent device, how does a
+driver bind to this device?
 
--- 
-https://patchwork.kernel.org/project/linux-wireless/patch/20240215-nl80211_fix_akm_suites_endianness-v1-2-57e902632f9d@bootlin.com/
+Cheers,
+Conor.
 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+>            - st,lis2mdl
+>            - st,lis3mdl-magn
+>            - st,lsm303agr-magn
+> --=20
+> 2.39.2
+>=20
 
+--ULmJpzOTRNdVIOBt
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZdZG/gAKCRB4tDGHoIJi
+0u+ZAP9Zr+6N1XZjes/rf+rNJqpgfQs8owLck2P23SipRZVnXAEAr0zKQ7xJNxz0
+MpFoROjvKA9vwOuXthDy41hZuXC6ngk=
+=gf8S
+-----END PGP SIGNATURE-----
+
+--ULmJpzOTRNdVIOBt--
