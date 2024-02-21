@@ -1,48 +1,47 @@
 Received: from mx0b-001ae601.pphosted.com (mx0a-001ae601.pphosted.com [67.231.149.25])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A742880023;
-	Wed, 21 Feb 2024 15:05:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1162C80609;
+	Wed, 21 Feb 2024 15:05:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.149.25
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708527928; cv=none; b=iGRk2FyFeRw4RU9iCPA3gbFjnOwDXidIoudjdbw7l7QTGJJ81MIWHbJOe2PQoXqQhaU9TJ3AEN6y4ctAlNeFTeQAAYuY1G1HwwKfDFt0WxDMBHKOZSs4pg74rqKUggSGpeMRZgKSW/Sf1E5aUULgxE+Z7CrrCSo73puSAMn01Zc=
+	t=1708527929; cv=none; b=IguRlApvFd7iaAwuURyhxT8J+SOqTTpLpo+yFjmhpySv2GgcAK6ErnLNXTbSd13mC+ctWuUPZB6+uwCigfXIe2VKh3IVNFFyrS5gZfoOUB1L5T7lw8Ac0e3XbNApH4NuPxAFkn88MsqZTjS4j1lHBwoyysgnTBGinjPrglLTsHs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708527928; c=relaxed/simple;
-	bh=uf6vpbcIoUtdbhnJ3basXbSQ/u2ojbk1oT1gnr/GaPg=;
+	s=arc-20240116; t=1708527929; c=relaxed/simple;
+	bh=w+dJPyOkY5qsuIzQgZfSwqb9xanTcEuadfMSXxqoeBM=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=jbmp2RCUU6XvxtwVmbkU4pqxVlxUfnSivfEsSkJZ3g+zN4a99VJHf50S+wcDin1bz6FlDsXrEe4nZUCYdz5NsPtyTSArrg/sbgZq2YDGGj7x/B4gHEfmoaRLQy+QSyy6U33txJRaJvZWweHUOU8E+iyZLkAMZRvmMStqNgomasI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com; spf=pass smtp.mailfrom=opensource.cirrus.com; dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b=D6E2nmUs; arc=none smtp.client-ip=67.231.149.25
+	 MIME-Version:Content-Type; b=jZPDKUnYOhR+UkA3g+ARaUf48FlSZduGBvgsYMJCMSElaOG/EEUF/HdJF5Tk4q62ZbK+o5x3vAjTCqa/NMq0dsKoVd5/C9kCqHN1fm5/aovK6fB+RX/0mrQnwQ8biF26sBN0y+37iVQ0rY8P3FrGdJucvNYwt4R3cJSuQudqJXw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com; spf=pass smtp.mailfrom=opensource.cirrus.com; dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b=Xa6Z0iZR; arc=none smtp.client-ip=67.231.149.25
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=opensource.cirrus.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="D6E2nmUs"
+	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="Xa6Z0iZR"
 Received: from pps.filterd (m0077473.ppops.net [127.0.0.1])
-	by mx0a-001ae601.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 41L72AP2020807;
-	Wed, 21 Feb 2024 09:05:12 -0600
+	by mx0a-001ae601.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 41L72AOx020807;
+	Wed, 21 Feb 2024 09:05:10 -0600
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=
 	from:to:cc:subject:date:message-id:in-reply-to:references
 	:mime-version:content-transfer-encoding:content-type; s=
-	PODMain02222019; bh=jxurZ9g8byiCpiiilA/KSypC/QlK/0d0/qRchJfkX/o=; b=
-	D6E2nmUsC1Dv7F3EMC4iI4D9UrsdLWIVk7rDEd4DH1psPQmOnSFmgjzW0ijNNxqH
-	47VzgMsIlooEwFJcGUimPMxbI46E+p/DDUvv/LWAabsc6IlnTzDcpeMR2HyI4aWt
-	k7Oj9uFHBezZuVP+ID6WW2Ndve4MYak047jaMXWiK5seBVrydSCYjfYICtKMl92z
-	Jb/mL/TayVb1dT9zhjKsXJhrZ3I1p9TcxVU487p3ao7nyQhuAasQItWFZIfocNmj
-	SfDghvp3cJeRTDBdgkhGg58XSTiMYGlTHyR/orReDxz+51LtX/wDDqSIuRRxeOm9
-	fO8nc7r0HC6zydFWhUbBKA==
+	PODMain02222019; bh=4PkYbCkiKIkB58Faq2G3nqngCiyJ4P2kQI5muB7wT6Q=; b=
+	Xa6Z0iZR+77w3EQxC+7S5zndnTobyRZiyo+e5k8x1hUZN0LhlCITeHhOpWaAfDBs
+	oQnO/HkXNVbLgLFqM9C+lKsYMYVZS5NY/4DVMjATfNKXRgInRvUOt5krwrczAFpu
+	UwKImNX8guoDPICSlHB1ZiHrlf2m2/c/OKCaCpXPZnInJWmka/a6G+4PJaFnQOi2
+	fk7WBleRuL4tqlYKF9/PjoCpdDYRZ3rw6Sqv2LnvECuLHnkQADXYcggabQZvYpar
+	HkFSQ724eFQp0uPUPXFX3keKIUhGGFEokjugFBinxt3DkuI9tzLszVan98Skex60
+	3uSsIg/lYSXIHq5aD+TyZA==
 Received: from ediex02.ad.cirrus.com ([84.19.233.68])
-	by mx0a-001ae601.pphosted.com (PPS) with ESMTPS id 3wd207h58t-4
+	by mx0a-001ae601.pphosted.com (PPS) with ESMTPS id 3wd207h58t-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 21 Feb 2024 09:05:12 -0600 (CST)
-Received: from ediex01.ad.cirrus.com (198.61.84.80) by ediex02.ad.cirrus.com
+	Wed, 21 Feb 2024 09:05:09 -0600 (CST)
+Received: from ediex02.ad.cirrus.com (198.61.84.81) by ediex02.ad.cirrus.com
  (198.61.84.81) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Wed, 21 Feb
  2024 15:05:07 +0000
 Received: from ediswmail9.ad.cirrus.com (198.61.86.93) by
- ediex01.ad.cirrus.com (198.61.84.80) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ anon-ediex02.ad.cirrus.com (198.61.84.81) with Microsoft SMTP Server id
  15.2.1118.40 via Frontend Transport; Wed, 21 Feb 2024 15:05:07 +0000
 Received: from ediswws06.ad.cirrus.com (ediswws06.ad.cirrus.com [198.90.208.18])
-	by ediswmail9.ad.cirrus.com (Postfix) with ESMTP id 48CA8820259;
+	by ediswmail9.ad.cirrus.com (Postfix) with ESMTP id 1721E820248;
 	Wed, 21 Feb 2024 15:05:07 +0000 (UTC)
 From: Richard Fitzgerald <rf@opensource.cirrus.com>
 To: <broonie@kernel.org>, <tiwai@suse.com>
@@ -50,9 +49,9 @@ CC: <linux-sound@vger.kernel.org>, <alsa-devel@alsa-project.org>,
         <linux-kernel@vger.kernel.org>, <patches@opensource.cirrus.com>,
         "Richard
  Fitzgerald" <rf@opensource.cirrus.com>
-Subject: [PATCH 7/9] ALSA: hda: hda_cs_dsp_ctl: Add helper function to write calibration
-Date: Wed, 21 Feb 2024 15:05:05 +0000
-Message-ID: <20240221150507.1039979-8-rf@opensource.cirrus.com>
+Subject: [PATCH 1/9] ASoC: wm_adsp: Fix missing mutex_lock in wm_adsp_write_ctl()
+Date: Wed, 21 Feb 2024 15:04:59 +0000
+Message-ID: <20240221150507.1039979-2-rf@opensource.cirrus.com>
 X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20240221150507.1039979-1-rf@opensource.cirrus.com>
 References: <20240221150507.1039979-1-rf@opensource.cirrus.com>
@@ -64,109 +63,42 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-Proofpoint-GUID: w0IK1iOTQqvTEzp0K88FP1p3gONu8Es5
-X-Proofpoint-ORIG-GUID: w0IK1iOTQqvTEzp0K88FP1p3gONu8Es5
+X-Proofpoint-GUID: uDnOhEGR_jtgGxSdppD9YoZ1qcO6fB7t
+X-Proofpoint-ORIG-GUID: uDnOhEGR_jtgGxSdppD9YoZ1qcO6fB7t
 X-Proofpoint-Spam-Reason: safe
 
-Add hda_cs_dsp_write_cal_coeffs(), a helper function to write amp
-calibration data to firmware controls.
+wm_adsp_write_ctl() must hold the pwr_lock mutex when calling
+cs_dsp_get_ctl().
 
-The calibration data is passed in a struct cirrus_amp_cal_data and
-a definition of the firmware algorithm controls in a struct
-cirrus_amp_cal_controls.
+This was previously partially fixed by commit 781118bc2fc1
+("ASoC: wm_adsp: Fix missing locking in wm_adsp_[read|write]_ctl()")
+but this only put locking around the call to cs_dsp_coeff_write_ctrl(),
+missing the call to cs_dsp_get_ctl().
 
 Signed-off-by: Richard Fitzgerald <rf@opensource.cirrus.com>
+Fixes: 781118bc2fc1 ("ASoC: wm_adsp: Fix missing locking in wm_adsp_[read|write]_ctl()")
 ---
- sound/pci/hda/hda_cs_dsp_ctl.c | 47 ++++++++++++++++++++++++++++++++++
- sound/pci/hda/hda_cs_dsp_ctl.h |  4 +++
- 2 files changed, 51 insertions(+)
+ sound/soc/codecs/wm_adsp.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/sound/pci/hda/hda_cs_dsp_ctl.c b/sound/pci/hda/hda_cs_dsp_ctl.c
-index 0f5fdd44721c..bdc21a117dd2 100644
---- a/sound/pci/hda/hda_cs_dsp_ctl.c
-+++ b/sound/pci/hda/hda_cs_dsp_ctl.c
-@@ -10,6 +10,7 @@
- #include <sound/soc.h>
- #include <linux/firmware/cirrus/cs_dsp.h>
- #include <linux/firmware/cirrus/wmfw.h>
-+#include <sound/cs-amp-lib.h>
- #include "hda_cs_dsp_ctl.h"
+diff --git a/sound/soc/codecs/wm_adsp.c b/sound/soc/codecs/wm_adsp.c
+index 36ea0dcdc7ab..9cb9068c0462 100644
+--- a/sound/soc/codecs/wm_adsp.c
++++ b/sound/soc/codecs/wm_adsp.c
+@@ -683,11 +683,12 @@ static void wm_adsp_control_remove(struct cs_dsp_coeff_ctl *cs_ctl)
+ int wm_adsp_write_ctl(struct wm_adsp *dsp, const char *name, int type,
+ 		      unsigned int alg, void *buf, size_t len)
+ {
+-	struct cs_dsp_coeff_ctl *cs_ctl = cs_dsp_get_ctl(&dsp->cs_dsp, name, type, alg);
++	struct cs_dsp_coeff_ctl *cs_ctl;
+ 	struct wm_coeff_ctl *ctl;
+ 	int ret;
  
- #define ADSP_MAX_STD_CTRL_SIZE               512
-@@ -247,6 +248,52 @@ int hda_cs_dsp_read_ctl(struct cs_dsp *dsp, const char *name, int type,
- }
- EXPORT_SYMBOL_NS_GPL(hda_cs_dsp_read_ctl, SND_HDA_CS_DSP_CONTROLS);
+ 	mutex_lock(&dsp->cs_dsp.pwr_lock);
++	cs_ctl = cs_dsp_get_ctl(&dsp->cs_dsp, name, type, alg);
+ 	ret = cs_dsp_coeff_write_ctrl(cs_ctl, 0, buf, len);
+ 	mutex_unlock(&dsp->cs_dsp.pwr_lock);
  
-+static int hda_cs_dsp_write_cal_coeff(struct cs_dsp *cs_dsp,
-+				      const struct cirrus_amp_cal_controls *controls,
-+				      const char *ctl_name, unsigned int val)
-+{
-+	__be32 beval = cpu_to_be32(val);
-+	int ret;
-+
-+	ret = hda_cs_dsp_write_ctl(cs_dsp, ctl_name, controls->mem_region,
-+				   controls->alg_id, &beval, 4);
-+	if (ret) {
-+		dev_err(cs_dsp->dev, "Failed to write control %s: %d\n", ctl_name, ret);
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+int hda_cs_dsp_write_cal_coeffs(struct cs_dsp *cs_dsp,
-+				const struct cirrus_amp_cal_controls *controls,
-+				const struct cirrus_amp_cal_data *data)
-+{
-+	int ret;
-+
-+	dev_dbg(cs_dsp->dev, "Calibration: Ambient=%#x, Status=%#x, R0=%d\n",
-+		data->calAmbient, data->calStatus, data->calR);
-+
-+	ret = hda_cs_dsp_write_cal_coeff(cs_dsp, controls, controls->ambient, data->calAmbient);
-+	if (ret)
-+		return ret;
-+
-+	ret = hda_cs_dsp_write_cal_coeff(cs_dsp, controls, controls->calr, data->calR);
-+	if (ret)
-+		return ret;
-+
-+	ret = hda_cs_dsp_write_cal_coeff(cs_dsp, controls, controls->status, data->calStatus);
-+	if (ret)
-+		return ret;
-+
-+	ret = hda_cs_dsp_write_cal_coeff(cs_dsp, controls, controls->checksum, data->calR + 1);
-+	if (ret)
-+		return ret;
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL_NS_GPL(hda_cs_dsp_write_cal_coeffs, SND_HDA_CS_DSP_CONTROLS);
-+
- MODULE_DESCRIPTION("CS_DSP ALSA Control HDA Library");
- MODULE_AUTHOR("Stefan Binding, <sbinding@opensource.cirrus.com>");
- MODULE_LICENSE("GPL");
-diff --git a/sound/pci/hda/hda_cs_dsp_ctl.h b/sound/pci/hda/hda_cs_dsp_ctl.h
-index 2cf93359c4f2..329531672005 100644
---- a/sound/pci/hda/hda_cs_dsp_ctl.h
-+++ b/sound/pci/hda/hda_cs_dsp_ctl.h
-@@ -10,6 +10,7 @@
- #ifndef __HDA_CS_DSP_CTL_H__
- #define __HDA_CS_DSP_CTL_H__
- 
-+#include <sound/cs-amp-lib.h>
- #include <sound/soc.h>
- #include <linux/firmware/cirrus/cs_dsp.h>
- 
-@@ -35,5 +36,8 @@ int hda_cs_dsp_write_ctl(struct cs_dsp *dsp, const char *name, int type,
- 			 unsigned int alg, const void *buf, size_t len);
- int hda_cs_dsp_read_ctl(struct cs_dsp *dsp, const char *name, int type,
- 			unsigned int alg, void *buf, size_t len);
-+int hda_cs_dsp_write_cal_coeffs(struct cs_dsp *cs_dsp,
-+				const struct cirrus_amp_cal_controls *controls,
-+				const struct cirrus_amp_cal_data *data);
- 
- #endif /*__HDA_CS_DSP_CTL_H__*/
 -- 
 2.30.2
 
