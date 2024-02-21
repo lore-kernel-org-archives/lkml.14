@@ -1,164 +1,176 @@
-Received: from fout3-smtp.messagingengine.com (fout3-smtp.messagingengine.com [103.168.172.146])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 735E380BED
-	for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 15:42:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.146
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E10314F8AB
+	for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 15:43:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708530122; cv=none; b=aLgwMRdM06mYZHYca6KlcDqOAHa4KhUVcEbFDcLCpMduZ66RiRUQspLRfsCLD3e87SetDeA9UekdPYk6I0rCh6thdh7Lv3syG0xwOUIQ/xs4xLHhArxEwvn9/WoZyUpoySIyEQhDV3oqd8q7o8SMNrB8WwQpf06oLYKxZqsQqAQ=
+	t=1708530199; cv=none; b=J8t82KGLWN8cUToFTO9ghZpItsudlN/sZLTSv1LIZd5pZi73qZwj6jgmbUZ17tw+GnAx3NpAcDSx8lZxgpmxHGdXdF+agRkb6g9uxkfU1wLRqVuaT3R/FlDWtyiMotTmjhGl221JV2AIhfW2yClRmr5zmtUAalJud/W16DGx7fM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708530122; c=relaxed/simple;
-	bh=QNjyzFAK+0FPQYRPSv8eliLqWbki78LLyVo70giiKok=;
-	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
-	 Subject:Content-Type; b=ccaTPCk3AgyrPqmmsCVmsRFi1R735trmNVlrhpsacOVXQg312mIArjihujTBMNJI4L4K18sZ3V99ne9OgT0bA+gvBcWLERxnOvyi5roSB32IizOselD3cwrwByiei5UhqOW3vjx05zZqF9eu/3HLcvl8IblidESom82ErV2XiQA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=j7GfqZqi; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=TOGJOkc0; arc=none smtp.client-ip=103.168.172.146
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1708530199; c=relaxed/simple;
+	bh=eTCwPInH3FUXyO/jeetzCnGXL2RbtJ3Kz+Mpn+kujGs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=pIWAf4hVOnVIZn2hjYhTmqd5FYXWMoQqdExUDQEBup3UEl3n/a1MLzVeZULK9n7fMlOXitbRcdkv4a3tIGtURQFiSq4conYfKdaKJ+RRo3eTPJkLHaCEiiPTcJMs8IE9uzShRlWksMETB39NCxwUqmimeB2GQHvOhMIAWrVLqSA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=r0+9htwG; arc=none smtp.client-ip=209.85.208.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="j7GfqZqi";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="TOGJOkc0"
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-	by mailfout.nyi.internal (Postfix) with ESMTP id 7C7B31380095;
-	Wed, 21 Feb 2024 10:41:59 -0500 (EST)
-Received: from imap51 ([10.202.2.101])
-  by compute5.internal (MEProxy); Wed, 21 Feb 2024 10:41:59 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm3; t=1708530119; x=1708616519; bh=3SOuYtscV2
-	53CfoXRPBVU4MmlFp7PxBuOoBfx+N0S3A=; b=j7GfqZqiKBWH2r5jayJ4RwTTv+
-	Jq2sjrtxvDXWYigKj5zaxkqgbxGUpaCG4IZTwSCdAzxx51CPPFJfP4dtSALpC3oS
-	4Z4jw06Q1tgnNcjYukiGHTZd3+Vea+OZfgopnDJaOJpXlO/FAY5axtxA05Ygd1Il
-	FbDXtzYvw2RQLJru8/YorSAXmRF/OmkPK+/TyZvC0MxiO2mS9td8SfF0elypXYUb
-	ZlyDYrCJuVYRg3oaZaVfMIdQvKhnGeOmGg3SZ9DNQ81Yfyvdpqu6l3h2stf2wtnd
-	JsdUCicZ4pDiKuGPq9/65QeVR8BOwmZWhLe7INBicGoJ4VIUB+2xxS/fcYxA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm1; t=1708530119; x=1708616519; bh=3SOuYtscV253CfoXRPBVU4MmlFp7
-	PxBuOoBfx+N0S3A=; b=TOGJOkc0mAJ/17Ewn/A+k88M4FzQsdMz9TRDunQYRMGE
-	nrwZ8Lz0Ik99aQrsxW9uPmFqtOJ/4w2gl09cVqII26kyeD4uOYJI9/8kwd0PVU8Y
-	L4YweNdC48QBKXCbv5ZDj1GStxLr2fJ6RibTlTaHZucW/N0rtgD6c7bcquzbH7vn
-	yeELZr/LlyNrcj51Ir2qbsUHeidB3BM6HxBReOUcGGwPoNrhrWG6IdeoAkhoJq8j
-	nOmwbbOtdt6SikIpRLQYZwdQd+CMqK98YiZaA/4M7/E2SxHA2tPPLsgXAPDoun/5
-	P9w9cjf7mdSHND+HpL6Q9p/NcJArlaOjh18paXtsQA==
-X-ME-Sender: <xms:xhnWZTprflkntv8BVrjfJwldaazH57cVkEO7uWn1zjItQz5xBdAadg>
-    <xme:xhnWZdrflxw9Zap76j796nEy-lznFHNynL-NVlAs2sbu1GvGvhjOKVAH5MumVxJol
-    rF5C0yfREQ3m0eFNJA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrfedvgdejlecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefofgggkfgjfhffhffvvefutgesthdtredtreertdenucfhrhhomhepfdetrhhn
-    ugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrghtth
-    gvrhhnpeevhfffledtgeehfeffhfdtgedvheejtdfgkeeuvefgudffteettdekkeeufeeh
-    udenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecuvehluhhsthgvrhfuihiivgeptd
-    enucfrrghrrghmpehmrghilhhfrhhomheprghrnhgusegrrhhnuggsrdguvg
-X-ME-Proxy: <xmx:xxnWZQOEIADDLEhXFWIexIt7ABB-JMTDB7yuUbS5h5Am7CqrLuCGdA>
-    <xmx:xxnWZW5TGtbWyI5zhzH7KXRz3DjulS32IbeYKNpCNofGib1xEQQL0Q>
-    <xmx:xxnWZS4e1lmk5Gz8OzdqIMZjjd2cV61dRqfvN3LlqpP01B9x9eBVsA>
-    <xmx:xxnWZRQ_SwRMF_XSSPHbWhxbsjYut1VpeyCX9dEg8HAwD6KCQX9vPQ>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id E7868B6008D; Wed, 21 Feb 2024 10:41:58 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.11.0-alpha0-153-g7e3bb84806-fm-20240215.007-g7e3bb848
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="r0+9htwG"
+Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-5645960cd56so4991910a12.1
+        for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 07:43:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1708530196; x=1709134996; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=HYPJBlpSkFCHdVgLslmiqUOZByirVW8qunK061Blp0U=;
+        b=r0+9htwGHaD+rgcCiDDay67QqfIMddE0+lYajlqMKUuUn7ilqhUZRM5BE0vfi3SFl8
+         l9mivjAkj/6ScFBMYp8al3e8pRqrfGj7mWTqzyTjTBkI1LzrUEkRY/CTXlmFZQ77dyUd
+         Z4z4J3AikATSGTi+ET1KZchtOXnkNRQAThViZjydmk3PEWMAM1CGrhAeEChkGOy9Wb5E
+         LBcGHl+LHw4LFzt2xG3TFjrPyMOh/md0cBvJN1am2KB6GH6Nrr83SRXKayiTz1/IwWPF
+         NCA6nNmvqHFXhstn9IqyqIVmROeY7ix7JdqEscCYZjIO7bcXWKnv1g10AhJTDPhGV6nL
+         ax2Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708530196; x=1709134996;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=HYPJBlpSkFCHdVgLslmiqUOZByirVW8qunK061Blp0U=;
+        b=DNN01fYZqQIR/2T6sqjGraa5BkQokniVYt1CugtfFp7PjtuOWtqTqb7FaWwYaJR3KY
+         NnvWmA72GIi6uW9z7Om9YYfGE8VSrNTaUgVYNoyephJnZQ0izBFBZIi73F4dwFfZtQrS
+         6slawibcZWZndoxPgX9uPZDRWJjFzsRL9tvUOOGx24oyZmpTLB68a2rzSo54+d69+Iye
+         WBS7JnyiZ1FGe+5fwwuth96xl9DVo88BceXLdIHD6VZ4UDvnRv+zFHJqNy/P4LULDtCP
+         iIpPoD3CheYGH0qWYNKemf4m1EfA/I8O96Yo3XC5bK3Yxd7TOlSul6EAf0LXYe+tNWFH
+         qzZg==
+X-Forwarded-Encrypted: i=1; AJvYcCU6T/UvazW+AbqIdAGZfg5V9jzU4bwnH79WoHkYsGZL8xzc6i6B2KhvfFHrktoFHCpzGu9ErYkx2c0GqOHperT/ofSB9sGWEe96Sbra
+X-Gm-Message-State: AOJu0YyxPtHs6+Zt8V8/PBUvrtc2Ar6XhgwU34Fjs/JG7vQuZZsyC5E0
+	ORw3ibwaVuvBqSUXr6Ixh+1yw5QzXtQwiObl8vFS5eoYie8FweEMLnCDt1wh/k4=
+X-Google-Smtp-Source: AGHT+IEOwSPfl5OGhGHb2pcaVwCbGIpWDZ4oXyQBlaoUkbrefM9619gNRMmJfGuQvWA24LA6eO0j5Q==
+X-Received: by 2002:a17:906:5906:b0:a3e:d9ca:259f with SMTP id h6-20020a170906590600b00a3ed9ca259fmr5147972ejq.14.1708530195776;
+        Wed, 21 Feb 2024 07:43:15 -0800 (PST)
+Received: from [192.168.1.20] ([178.197.222.116])
+        by smtp.gmail.com with ESMTPSA id lj8-20020a170907188800b00a3e0c8f4afbsm4916042ejc.110.2024.02.21.07.43.14
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 21 Feb 2024 07:43:15 -0800 (PST)
+Message-ID: <e538ded0-bd3a-4ca4-b2bd-8d20d8c8c3fe@linaro.org>
+Date: Wed, 21 Feb 2024 16:43:13 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <56625c21-1b34-479b-b5b2-4c4d8b7a11b3@app.fastmail.com>
-In-Reply-To: 
- <fy3wffb2jwv4veo3golfn5olri77clxywbuwuokese7sbobixd@mird5k66cl2w>
-References: <20240221141350.3740488-1-javierm@redhat.com>
- <1f28256c-e436-4add-aa67-2cfb2248b220@linaro.org>
- <6scz7iti3tzzrd4ph3gnuc2pvkcbtuuicgfgujh3pa3c34kdkt@bhfa4xbxeu7t>
- <cb8bf006-57df-494e-80f3-947582ec71f1@linaro.org>
- <fy3wffb2jwv4veo3golfn5olri77clxywbuwuokese7sbobixd@mird5k66cl2w>
-Date: Wed, 21 Feb 2024 16:41:38 +0100
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Maxime Ripard" <mripard@redhat.com>,
- "Krzysztof Kozlowski" <krzysztof.kozlowski@linaro.org>
-Cc: "Javier Martinez Canillas" <javierm@redhat.com>,
- linux-kernel@vger.kernel.org,
- "Enric Balletbo i Serra" <eballetbo@redhat.com>,
- "Erico Nunes" <nunes.erico@gmail.com>, "Brian Masney" <bmasney@redhat.com>,
- "Bjorn Andersson" <quic_bjorande@quicinc.com>,
- "Catalin Marinas" <catalin.marinas@arm.com>,
- "Geert Uytterhoeven" <geert+renesas@glider.be>,
- "Konrad Dybcio" <konrad.dybcio@linaro.org>,
- "Marek Szyprowski" <m.szyprowski@samsung.com>,
- "Neil Armstrong" <neil.armstrong@linaro.org>,
- "Will Deacon" <will@kernel.org>, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v2] arm64: defconfig: Enable zram, xfs and loading compressed FW
- support
-Content-Type: text/plain
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/1] MAINTAINERS: Add maintainer for NXP S32G boards
+Content-Language: en-US
+To: Ghennadi Procopciuc <ghennadi.procopciuc@oss.nxp.com>,
+ Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>,
+ Chester Lin <chester62515@gmail.com>, krzysztof.kozlowski+dt@linaro.org,
+ =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>,
+ Matthias Brugger <mbrugger@suse.com>, robh+dt@kernel.org
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ soc@kernel.org, NXP S32 Linux Team <s32@nxp.com>,
+ Ghennadi Procopciuc <ghennadi.procopciuc@nxp.com>
+References: <20240221120123.1118552-1-ghennadi.procopciuc@oss.nxp.com>
+ <20240221120123.1118552-2-ghennadi.procopciuc@oss.nxp.com>
+ <f4465547-1fb1-4578-9a69-7d399e7661b3@linaro.org>
+ <403e32c2-910e-4745-9ebe-fbf377c3fde8@linaro.org>
+ <ad856766-8903-46c0-93af-24e101ad51dc@oss.nxp.com>
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <ad856766-8903-46c0-93af-24e101ad51dc@oss.nxp.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, Feb 21, 2024, at 16:24, Maxime Ripard wrote:
-> On Wed, Feb 21, 2024 at 04:10:12PM +0100, Krzysztof Kozlowski wrote:
->> On 21/02/2024 15:48, Maxime Ripard wrote:
->> > On Wed, Feb 21, 2024 at 03:22:38PM +0100, Krzysztof Kozlowski wrote:
->> >> On 21/02/2024 15:13, Javier Martinez Canillas wrote:
->> >>> These options are needed by some Linux distributions (e.g: Fedora), so
->> >>
->> >> How ZRAM is needed? Why Fedora cannot boot without it? Debian, which I
->> >> use on my arm64 boards, does not have any problem.
->> > 
->> > Is it relevant in any way?
->> 
->> Yes, because it is justification why we are doing it. Each commit is
->> supposed to explain "why" and the explanation here is not enough.
->
-> There's a why though: it makes Fedora boot. It might not be enough for
-> you, but that's a different story. So, if it's not enough, please state
-> exactly what you expect from that patch description so Javier can
-> provide it.
+On 21/02/2024 16:19, Ghennadi Procopciuc wrote:
+> On 2/21/24 16:45, Krzysztof Kozlowski wrote:
+>> On 21/02/2024 15:42, Krzysztof Kozlowski wrote:
+>>> On 21/02/2024 13:01, Ghennadi Procopciuc wrote:
+>>>> From: Ghennadi Procopciuc <ghennadi.procopciuc@nxp.com>
+>>>>
+>>>> Add myself as a maintainer of the NXP S32G DT files.
+>>>
+>>> No need for cover letters for single patches. OTOH, this commit msg is
+>>> empty...
+> Thank you, I can correct that.
+> 
+>>> Plus your patch looks corrupted (wrong encoding): F??rber
+> 
+> Indeed, it is due to 'Content-Type: text/plain; charset="us-ascii"'.
+> I can fix this as part of v2.
+> 
+>>> BTW, did you contribute anything to the upstream Linux kernel? Do you
+>>> know the process? Downstream does not really matter.
+>>
+>> I found the answer:
+>>
+>> From: Ghennadi Procopciuc <ghennadi.procopciuc@nxp.com>
+>> Signed-off-by: Ghennadi Procopciuc <ghennadi.procopciuc@oss.nxp.com>
+>>
+>> Does not look like. Please get some upstream work experience first.
+>>
+>> https://lore.kernel.org/all/?q=f%3Aghennadi.procopciuc%40oss.nxp.com
+> 
+> Although I am new to upstream communities and may make mistakes, I am
+> eager to learn and improve.
+> 
+> After leaving SuSe[0], the current maintainer of the NXP S32G DT files
+> became inactive[1]. As a result, this area is not currently being
+> maintained. This is the actual reason why I attempted to add myself as a
+> maintainer of that area. Although I acknowledge that I may not have
+> enough experience to become a maintainer, I am concerned that the NXP
+> S32G DT patch submission may be blocked for everyone due to the current
+> situation.
 
-It's definitely enough for me. It makes a lot of sense to have
-a defconfig that boots common and popular distros.
+I would be just happy to see first actual contributions or any sort of
+activity, like reviewing, before taking over something.
 
-I don't use ZRAM either, but I can see that being useful to
-avoid swapping to SD cards or eMMC when that is the only
-available swap device.
+You do not need to become maintainer to provide reviews. By reviewing
+patches you already reduce burden/work from the maintainers.
 
->> >> I kind of repeat comments from similar patch earlier:
->> >> https://lore.kernel.org/all/fe1e74a2-e933-7cd9-f740-86d871076191@linaro.org/
->> >>
->> >> About XFS: I don't think it is needed to boot anything.
->> > 
->> > Just like 9P_FS, NFS or UBIFS.
->> 
->> NFS is often used on targets, e.g. my board farm, but also by other people.
->> 
->> UBIFS was added recently because one device was using it - you needed
->> it. 9P_FS looks unnecessary.
->
-> So all we need is one person or use case to require it? Sounds like
-> we've checked that mark here.
+Best regards,
+Krzysztof
 
-I think we want all of the above. We can probably drop ext2 since
-we already need ext4, but that is a different question.
-
->> I was working in distro so trust me - they do stuff differently
->> and they not need XFS in our defconfig for anything.
->
-> Sure, but you're not just arguing for XFS there.
->
-> What I really don't get is this: this makes the life of people easier.
->
-> Being able to test an upstream kernel quickly when you have a bug in a
-> downstream distro is super valuable for any distro developper. And on
-> the long run, if we don't make the switch from a kernel distro to a
-> mainline kernel relatively easy, we're the ones that will lose out.
-> Because people just won't bother, or be frustrated and thus super
-> reluctant to do that work.
-
-We had previously discussed adding config fragments for common
-distros the way we have kvm_guest.config, but if the Javier's
-patch is all that is actually needed for Fedora, that seems better
-to me than the added complexity of fragments.
-
-      Arnd
