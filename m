@@ -1,168 +1,110 @@
-Received: from dggsgout12.his.huawei.com (unknown [45.249.212.56])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14EF33D576;
-	Wed, 21 Feb 2024 09:07:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A2E23A269;
+	Wed, 21 Feb 2024 09:07:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708506445; cv=none; b=O78TAYCRh69oZIy+LQJudGI10j7Fe/rXGtQ9a6oGcaSQlf6Gn2wTppcLXyq0lshY/plvLhVlT795BJg08hBXeSmiZTS97rg5Fa5DYSW9D1IkUzvYKCVQ8H5ZNl0An71HkTKtwlBJb/LTU3k4lPQC5kmapxaQJl08A+L3Wr2G/PQ=
+	t=1708506461; cv=none; b=sWmrqcEmHXtVv2eri0Vt/mA35IhtAw4/5x1vks9WCctVqyCc9I4+PRMHz8Wot1dXYEJ6JhPDKzxl40ES+wGyxEK+c+fRbQl6mRtzX3y0lLucsHnsmwAEX9DPQGKIZVvj2l0pyGf/HVhDhLGhGZtXNNLnfZjLDOM/NXr043Zl6c0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708506445; c=relaxed/simple;
-	bh=YYB5LvmnN6Hst4z0XRzNTIaIeLr1z5XlifL/wMlc+bo=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=QgaFjnS929WYrvAqRIGPUbkTHb/6JmFnl3fiowSgxhGBMxcdhVVnkOTfnk0HWvT7Bn3pOlSONXbbXT3sJJWenmC4zY/Sxziw9IaSJbRiZD00/SWVSX5vu/2j7Gw5pvU/GHNa7hYZGqIoVjZ1Lu3dBdCq1HIuwAQmQ5pY3cJmsYo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.235])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4Tfr4d34rCz4f3jdL;
-	Wed, 21 Feb 2024 17:06:57 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.112])
-	by mail.maildlp.com (Postfix) with ESMTP id 653541A0568;
-	Wed, 21 Feb 2024 17:07:02 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.175.104.67])
-	by APP1 (Coremail) with SMTP id cCh0CgDHlxAsvdVlKPi+Eg--.18486S4;
-	Wed, 21 Feb 2024 17:06:54 +0800 (CST)
-From: linan666@huaweicloud.com
-To: axboe@kernel.dk,
-	song@kernel.org,
-	yukuai3@huawei.com
-Cc: linux-raid@vger.kernel.org,
-	linux-block@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linan666@huaweicloud.com,
-	yi.zhang@huawei.com,
-	houtao1@huawei.com,
-	yangerkun@huawei.com
-Subject: [PATCH v2] block: fix deadlock between bd_link_disk_holder and partition scan
-Date: Wed, 21 Feb 2024 17:01:22 +0800
-Message-Id: <20240221090122.1281868-1-linan666@huaweicloud.com>
-X-Mailer: git-send-email 2.39.2
+	s=arc-20240116; t=1708506461; c=relaxed/simple;
+	bh=mciGcG1/7XQyHXY9pTQf0Pnd9D3SNVyA+vi37R1v1PE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=Ypotl8itmJ61GG/Z/g+6T4D+OT7YnpShJ8Uv1WClY4nCpOgeg3JpM2Ad510sUx6ENzU7K4OfG5OhRlgjyWUd8tsWnZitf5vOenJiU6sPJyPRf9RSsq/Dr7Wfuo+72jp0AqY6WYd96+C3INrPx6OiY4quOaGQAE0ytfLQV7qazs8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=cXEZj7+0; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="cXEZj7+0"
+Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 41L7hgtc015736;
+	Wed, 21 Feb 2024 09:07:30 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	message-id:date:mime-version:subject:to:cc:references:from
+	:in-reply-to:content-type:content-transfer-encoding; s=
+	qcppdkim1; bh=Rm9nfXyllOUZ4Ibd5UKs+r2t8KUwgkJ+x+imnhOfPek=; b=cX
+	EZj7+0P12cPG+nxnzIP3cykoFWzA4w3PPmZhz1KjB+xwUWMqiaD+5LA7fU4ZFb/m
+	psOD8bceG4X+LN2x1kneoD3stSbyDCI3fFOog6kbP34id3QlhxyB+zOF4/6e0D1B
+	eRj8LW/2zf0xQ9BK4VMjwPEMnGI1v2NsGOZ9M2ZcV1O2S1UJ7rHq8zmGLVn4pykT
+	l1KOvnzbzGPy0yHrzoqOJZ/rBs1L3z925sCNSwM7US0YlVKDKrLlWx6hvN49nMFi
+	gGO5wmCG+wS1+Eq0C9WHp4PilBX6CmTBz1V0LRJNBbvD2fiW5l2WKI7O4/yi/qhL
+	Gknzw1q9vgk2up3o/WJg==
+Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3wd22rhfpk-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 21 Feb 2024 09:07:29 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 41L97SEC020735
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 21 Feb 2024 09:07:28 GMT
+Received: from [10.253.11.235] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Wed, 21 Feb
+ 2024 01:07:26 -0800
+Message-ID: <5ac69cde-24d6-4d31-a1bb-10e91dd289ce@quicinc.com>
+Date: Wed, 21 Feb 2024 17:07:06 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:cCh0CgDHlxAsvdVlKPi+Eg--.18486S4
-X-Coremail-Antispam: 1UD129KBjvJXoWxZFy8KF45WF43KryfXFyftFb_yoW5uF48pF
-	Z8KFWktry8tF4DuF4Dt3y7ur4UKw18Wa1xJr97KrWS9rZrAr4v9Fy2yFy7uFy8KrWIyFWD
-	tF1UX3yYva10k3DanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUBj14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
-	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
-	CE3s1lnxkEFVAIw20F6cxK64vIFxWle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xv
-	F2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r
-	4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I
-	648v4I1lFIxGxcIEc7CjxVA2Y2ka0xkIwI1lw4CEc2x0rVAKj4xxMxAIw28IcxkI7VAKI4
-	8JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xv
-	wVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjx
-	v20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20E
-	Y4v20xvaj40_WFyUJVCq3wCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I
-	0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x0JUBSoJUUUUU=
-X-CM-SenderInfo: polqt0awwwqx5xdzvxpfor3voofrz/
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] scsi: ufs: core: Fix mcq mac configuration
+To: Rohit Ner <rohitner@google.com>, Bean Huo <beanhuo@micron.com>,
+        "Bart Van
+ Assche" <bvanassche@acm.org>,
+        "Martin K. Petersen"
+	<martin.petersen@oracle.com>
+CC: Avri Altman <avri.altman@wdc.com>,
+        "Bao D. Nguyen"
+	<quic_nguyenb@quicinc.com>,
+        <linux-scsi@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20240220095637.2900067-1-rohitner@google.com>
+Content-Language: en-US
+From: Can Guo <quic_cang@quicinc.com>
+In-Reply-To: <20240220095637.2900067-1-rohitner@google.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: hLHaYREpg8i8MLinWT63Eeuvb_fR_0wZ
+X-Proofpoint-GUID: hLHaYREpg8i8MLinWT63Eeuvb_fR_0wZ
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-02-20_06,2024-02-20_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1011 adultscore=0
+ priorityscore=1501 phishscore=0 impostorscore=0 bulkscore=0 mlxscore=0
+ lowpriorityscore=0 spamscore=0 mlxlogscore=999 malwarescore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2402120000 definitions=main-2402210071
 
-From: Li Nan <linan122@huawei.com>
 
-'open_mutex' of gendisk is used to protect open/close block devices. But
-in bd_link_disk_holder(), it is used to protect the creation of symlink
-between holding disk and slave bdev, which introduces some issues.
 
-When bd_link_disk_holder() is called, the driver is usually in the process
-of initialization/modification and may suspend submitting io. At this
-time, any io hold 'open_mutex', such as scanning partitions, can cause
-deadlocks. For example, in raid:
+On 2/20/2024 5:56 PM, Rohit Ner wrote:
+> As per JEDEC Standard No. 223E Section 5.9.2,
+> the max # active commands value programmed by the host sw
+> in MCQConfig.MAC should be one less than the actual value.
+> 
+> Signed-off-by: Rohit Ner <rohitner@google.com>
+> ---
+>   drivers/ufs/core/ufs-mcq.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/ufs/core/ufs-mcq.c b/drivers/ufs/core/ufs-mcq.c
+> index 0787456c2b89..c873fd823942 100644
+> --- a/drivers/ufs/core/ufs-mcq.c
+> +++ b/drivers/ufs/core/ufs-mcq.c
+> @@ -94,7 +94,7 @@ void ufshcd_mcq_config_mac(struct ufs_hba *hba, u32 max_active_cmds)
+>   
+>   	val = ufshcd_readl(hba, REG_UFS_MCQ_CFG);
+>   	val &= ~MCQ_CFG_MAC_MASK;
+> -	val |= FIELD_PREP(MCQ_CFG_MAC_MASK, max_active_cmds);
+> +	val |= FIELD_PREP(MCQ_CFG_MAC_MASK, max_active_cmds - 1);
+>   	ufshcd_writel(hba, val, REG_UFS_MCQ_CFG);
+>   }
+>   EXPORT_SYMBOL_GPL(ufshcd_mcq_config_mac);
 
-T1                              T2
-bdev_open_by_dev
- lock open_mutex [1]
- ...
-  efi_partition
-  ...
-   md_submit_bio
-				md_ioctl mddev_syspend
-				  -> suspend all io
-				 md_add_new_disk
-				  bind_rdev_to_array
-				   bd_link_disk_holder
-				    try lock open_mutex [2]
-    md_handle_request
-     -> wait mddev_resume
-
-T1 scan partition, T2 add a new device to raid. T1 waits for T2 to resume
-mddev, but T2 waits for open_mutex held by T1. Deadlock occurs.
-
-Fix it by introducing a local mutex 'blk_holder_mutex' to replace
-'open_mutex'.
-
-Fixes: 1b0a2d950ee2 ("md: use new apis to suspend array for ioctls involed array reconfiguration")
-Reported-by: mgperkow@gmail.com
-Closes: https://bugzilla.kernel.org/show_bug.cgi?id=218459
-Signed-off-by: Li Nan <linan122@huawei.com>
----
-v2: add a blk_ prefix to 'holder_mutex'.
-
- block/holder.c | 12 +++++++-----
- 1 file changed, 7 insertions(+), 5 deletions(-)
-
-diff --git a/block/holder.c b/block/holder.c
-index 37d18c13d958..791091a7eac2 100644
---- a/block/holder.c
-+++ b/block/holder.c
-@@ -8,6 +8,8 @@ struct bd_holder_disk {
- 	int			refcnt;
- };
- 
-+static DEFINE_MUTEX(blk_holder_mutex);
-+
- static struct bd_holder_disk *bd_find_holder_disk(struct block_device *bdev,
- 						  struct gendisk *disk)
- {
-@@ -80,7 +82,7 @@ int bd_link_disk_holder(struct block_device *bdev, struct gendisk *disk)
- 	kobject_get(bdev->bd_holder_dir);
- 	mutex_unlock(&bdev->bd_disk->open_mutex);
- 
--	mutex_lock(&disk->open_mutex);
-+	mutex_lock(&blk_holder_mutex);
- 	WARN_ON_ONCE(!bdev->bd_holder);
- 
- 	holder = bd_find_holder_disk(bdev, disk);
-@@ -108,7 +110,7 @@ int bd_link_disk_holder(struct block_device *bdev, struct gendisk *disk)
- 		goto out_del_symlink;
- 	list_add(&holder->list, &disk->slave_bdevs);
- 
--	mutex_unlock(&disk->open_mutex);
-+	mutex_unlock(&blk_holder_mutex);
- 	return 0;
- 
- out_del_symlink:
-@@ -116,7 +118,7 @@ int bd_link_disk_holder(struct block_device *bdev, struct gendisk *disk)
- out_free_holder:
- 	kfree(holder);
- out_unlock:
--	mutex_unlock(&disk->open_mutex);
-+	mutex_unlock(&blk_holder_mutex);
- 	if (ret)
- 		kobject_put(bdev->bd_holder_dir);
- 	return ret;
-@@ -140,7 +142,7 @@ void bd_unlink_disk_holder(struct block_device *bdev, struct gendisk *disk)
- 	if (WARN_ON_ONCE(!disk->slave_dir))
- 		return;
- 
--	mutex_lock(&disk->open_mutex);
-+	mutex_lock(&blk_holder_mutex);
- 	holder = bd_find_holder_disk(bdev, disk);
- 	if (!WARN_ON_ONCE(holder == NULL) && !--holder->refcnt) {
- 		del_symlink(disk->slave_dir, bdev_kobj(bdev));
-@@ -149,6 +151,6 @@ void bd_unlink_disk_holder(struct block_device *bdev, struct gendisk *disk)
- 		list_del_init(&holder->list);
- 		kfree(holder);
- 	}
--	mutex_unlock(&disk->open_mutex);
-+	mutex_unlock(&blk_holder_mutex);
- }
- EXPORT_SYMBOL_GPL(bd_unlink_disk_holder);
--- 
-2.39.2
-
+Reviewed-by: Can Guo <quic_cang@quicinc.com>
