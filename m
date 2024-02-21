@@ -1,107 +1,104 @@
-Received: from mail-oi1-f180.google.com (mail-oi1-f180.google.com [209.85.167.180])
+Received: from mail-yw1-f173.google.com (mail-yw1-f173.google.com [209.85.128.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 590583FB26;
-	Wed, 21 Feb 2024 09:41:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 909343D546;
+	Wed, 21 Feb 2024 09:43:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708508513; cv=none; b=OjM8St2IgJv08XUusVZ5kNVP72fcGO5GE8vxBtmMj4yl3GV7JfnCm43DRZtvbMTlbY2XqkYyvDdXvKewKX2IddNlsRdctiv0/sFsCoUL5/S6RH00qUg/VgDQDU+p1G71qpor2omaCciXNQ9c1Zphqu3Vt1ZYZPnIt6R7IgRFRLQ=
+	t=1708508607; cv=none; b=U3upUYCVTSvy2Y+RFxH+kWD9d1q8xz3uivqTuJUaqFpLIm21EkXMCLY4rUkFFhaMGKeSye/RqXp3ureIVupkL1v1sKtKZwPqJ5BOk9Y/7hmA91957+vQgVvd5Y9yT+pvrCOFLeo+HE+2iCAmyuHLsXpAi5hg2Nv3Es81GM+YLcw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708508513; c=relaxed/simple;
-	bh=KvrYko7yQ7YG5N9k9gL8eUh9EO/Yp27eJfOJxnBH0qs=;
-	h=From:To:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=haQFA8qR0M/Xl8YovzQdjrGY+tGb3TtfgthD86pUbNjFFU8i+8WnDUKbRzih65maKPcxFaCMHw/7u5NIgI0eOFGGP/HlXdd24jLC9X/yPeZZpZjH9H8EeiSyv4z4GwwyIp7GY8mvRq7qSHeR1upDRqd0lp47zD9hNtFEBWeBcpA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UqiBVoc6; arc=none smtp.client-ip=209.85.167.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+	s=arc-20240116; t=1708508607; c=relaxed/simple;
+	bh=Jc+mU+fS9kSA/mfu1aWjRFbkp1oUlojmjOw+I1ndkTs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ILd8RxPKOI0KzQ/6hQPtOjoAnsS4G5ULXRMKWhGCpPXH663OgOjRnINq7qZHtNRDJujcvCkWkZ8IhieZlIYEJ1LtVsKBieq0Ea0fylemM7k1B4SjWIKQOJM1V7DaC+2LaKOGD3mQwrp/01PmlCtfhn1opACJ0GUB3uudtWQudcg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UqiBVoc6"
-Received: by mail-oi1-f180.google.com with SMTP id 5614622812f47-3c15b7b367aso49905b6e.1;
-        Wed, 21 Feb 2024 01:41:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1708508511; x=1709113311; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=oeRB8Ae3MB3D0N5Amo8nBZXsnfNgL0uq7S0EnYN/MPk=;
-        b=UqiBVoc6SJNPBU2POP6NU5APTwiR7YxERLkS9T9OdZYU80+/1hx3b99nihZh/pfEf9
-         /HAlCItJZ1ki2V6ktsskvfZgYpS0WwvJS0iEf8xvNmBXkzK6CKqbEBtcsMdq0zX1ViVX
-         /7GmZvnhr/xSq4Coipuj8eouCClhB/cjRW6H5sBgyYPEA3XExniOYuJYKTKsWLfrvmtY
-         QufLQsG62dRwMCBKeeblK086NZVZIMByLyGLa2FLwlhnDu0k3VDUZohzLsbMWZMH1zcP
-         pdK7L+BcEw/nw6j6nsLBqwYtsnCx0Xic8/WUdrkiY7fZw2MGeZrTSgkX+Rdw46s/9OT2
-         vWiQ==
+Received: by mail-yw1-f173.google.com with SMTP id 00721157ae682-6080a3eecd4so44715617b3.2;
+        Wed, 21 Feb 2024 01:43:25 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708508511; x=1709113311;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1708508604; x=1709113404;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=oeRB8Ae3MB3D0N5Amo8nBZXsnfNgL0uq7S0EnYN/MPk=;
-        b=rbpKkuiB7MDW3awaTJ2IgD7as4A9P3edKRIbey4LGSiCaQIb9L78KFvkL/DRdZfM9a
-         QipH6e6zJY5Q/7kLm5mnI359T0PdG1ld0Ud2KHbETuEWrTr4eK5VH1CHYGSTVGBQtCwe
-         tdwcVG6jJNLmincnICy28dUBF/2V+kz+D4VUqiGOXwrludSayHuyX4BWXqKKDUovVZdC
-         aAGyg6GZk+rUywjlWdY4HaZUwT2NA7LUK0OqoXb0AJwVHFj69F3ONuTyhyfSCH6kPQ86
-         7uHjjzGrBGIEi1ClMzsvFS1NAwuZImYUYdo2QBP7qBy+Rbc+BSBM7I/sYBidBlx4KsJA
-         A1eg==
-X-Forwarded-Encrypted: i=1; AJvYcCVCnJmLM3D7mYeSLsfcugvuFkBDIAcnSc1xIhC3GHVtnvbMLaQ6VJTc+Oo3SRz6nikIBn+0oexkqpaAe4o76mndvLAAGe9oJ5yA+gfzS54klzx5YuVeD7q0nua02jMS8qGIgKLtCPkgpg==
-X-Gm-Message-State: AOJu0YzaRnAX/pCX+tAIt0TB+NdA+QRMDa4dAxlrn2bxTONkILEIt8xM
-	PUjO2A3G7JUs0lB9e9jSQgWT1h2YylysqsGrbV0diUD8brK9rymT
-X-Google-Smtp-Source: AGHT+IExxMpSW5KGc7JdiMVfUhTqkZRdgnXU7hINm16MFTbij3Pmc6wBGllC0RqE1D9rQrP1LC1JKQ==
-X-Received: by 2002:a05:6808:34c:b0:3bf:fcae:17c6 with SMTP id j12-20020a056808034c00b003bffcae17c6mr16681430oie.30.1708508511591;
-        Wed, 21 Feb 2024 01:41:51 -0800 (PST)
-Received: from peter-bmc.dhcpserver.bu9bmc.local (1-34-21-66.hinet-ip.hinet.net. [1.34.21.66])
-        by smtp.gmail.com with ESMTPSA id lm4-20020a056a003c8400b006e488553f09sm1645026pfb.81.2024.02.21.01.41.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 21 Feb 2024 01:41:51 -0800 (PST)
-From: Peter Yin <peteryin.openbmc@gmail.com>
-To: patrick@stwcx.xyz,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Joel Stanley <joel@jms.id.au>,
-	Andrew Jeffery <andrew@aj.id.au>,
-	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-aspeed@lists.ozlabs.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v3 9/9] ARM: dts: aspeed: Harma: Add ltc4286 device
-Date: Wed, 21 Feb 2024 17:39:24 +0800
-Message-Id: <20240221093925.2393604-10-peteryin.openbmc@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240221093925.2393604-1-peteryin.openbmc@gmail.com>
-References: <20240221093925.2393604-1-peteryin.openbmc@gmail.com>
+        bh=e1rnWifO1FlLZJnQ/CQ0KYuFIGdPw6XFGeepCZz6o/g=;
+        b=wYvZzRqA9kptrfAG6KDr6SkS5kSFw0PvbaM8ywP8hcdzBgqJZvQbYfK5nCXsuCqecT
+         go6HjRAXSLE17OZjqGcMeaVlQb/LfXfBXjZHpaukY/hK7so7QTj11h+V3EAltwZG0jJJ
+         7EawFV8KjbpCZ1a012QkD0e77FV0QUE321FPImYxk/i8uG0TnEHiwadswjK63iJw4w+f
+         bKALAq1vQrFvdK0/yqvWN5kaUNWTcfMKoTUYn5KMFeGGuhiTYCeunmzvgUbD7YY+0Xzq
+         ihFCegZ2rtr2cIZp2L+CwNJCZrVEg8PcuOdNcK0bJ08X/t/93w7M6gy3F4xyDLm93KSe
+         Q0Dg==
+X-Forwarded-Encrypted: i=1; AJvYcCV1p2ZUd1AJcj/XBQVxGEq1GZTAztG7KqMqD+8J/2J51AipQ2o3TTXjKOaDU6SgSBL9T4RtOz0MCKqWPhDiwkTYNCm9btpl2Y/8DogaTsEmsRTGJLkyiiIU73hVY6NZxyeIz9vE4xu72y7UwQwZq+Ek7bNKehFrSACCPijt3By+AZ0TFrFUoFPjOE8=
+X-Gm-Message-State: AOJu0YwU3kNN5VMaLvIofHOavaUI77r8IxG0ointLqa44h3nfgZO6P2L
+	jvxTvsHA51sOJ36LNcpe9uiA4hE2CiVVS1FTg4cFOuzWRXEuI9UbbPmevNGjuR0=
+X-Google-Smtp-Source: AGHT+IGj9TtbgopCymErpNaDh0X35/h/j2kKShvb/9rwU6y4+K+n0HV7U0iH6uTmgB7yCEZS5VJerA==
+X-Received: by 2002:a81:99cf:0:b0:607:f708:6c5e with SMTP id q198-20020a8199cf000000b00607f7086c5emr13458250ywg.10.1708508604150;
+        Wed, 21 Feb 2024 01:43:24 -0800 (PST)
+Received: from mail-yw1-f182.google.com (mail-yw1-f182.google.com. [209.85.128.182])
+        by smtp.gmail.com with ESMTPSA id e203-20020a8169d4000000b0060487d30610sm2527429ywc.45.2024.02.21.01.43.24
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 21 Feb 2024 01:43:24 -0800 (PST)
+Received: by mail-yw1-f182.google.com with SMTP id 00721157ae682-60821136c5aso23642517b3.1;
+        Wed, 21 Feb 2024 01:43:24 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCWYYU3bsDJ2FljiX4eKMVLM3pFRAxucVfbEi2J1Yestfi01X06RW46eJuOkcvHCrkGuyg/2ZQmHH/+q03lv5dJAydgy1XAjkMY+AA2cDV4WGCeivGS7A5F9th1CycA4Yo9LXfBMfA6QQMe9O5rQv7zb0iatHbRf0ubZXT2lNVLqgErjFkmV+Td8jJw=
+X-Received: by 2002:a0d:ebc6:0:b0:607:ec66:37e6 with SMTP id
+ u189-20020a0debc6000000b00607ec6637e6mr15264804ywe.42.1708508603832; Wed, 21
+ Feb 2024 01:43:23 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240220-fix-sh-mmcif-v1-1-b9d08a787c1f@linaro.org>
+In-Reply-To: <20240220-fix-sh-mmcif-v1-1-b9d08a787c1f@linaro.org>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Wed, 21 Feb 2024 10:43:12 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdXdatXk4H2M0tr3fiZMGzx9FbuNUvCbhRbT0W2wfMVKdA@mail.gmail.com>
+Message-ID: <CAMuHMdXdatXk4H2M0tr3fiZMGzx9FbuNUvCbhRbT0W2wfMVKdA@mail.gmail.com>
+Subject: Re: [PATCH] mmc: sh_mmcif: sg_miter does not need to be atomic
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Ulf Hansson <ulf.hansson@linaro.org>, linux-mmc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, 
+	Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Add ltc4286 device.
+Hi Linus,
 
-Signed-off-by: Peter Yin <peteryin.openbmc@gmail.com>
----
- arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-harma.dts | 7 +++++++
- 1 file changed, 7 insertions(+)
+Thanks for your patch!
 
-diff --git a/arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-harma.dts b/arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-harma.dts
-index d5c5c5b3ab4b..bbbab8023cd6 100644
---- a/arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-harma.dts
-+++ b/arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-harma.dts
-@@ -271,6 +271,13 @@ tmp75@49 {
- 		compatible = "ti,tmp75";
- 		reg = <0x49>;
- 	};
-+
-+	power-monitor@22 {
-+		compatible = "lltc,ltc4286";
-+		reg = <0x22>;
-+		adi,vrange-low-enable;
-+		shunt-resistor-micro-ohms = <500>;
-+	};
- };
- 
- &i2c5 {
--- 
-2.25.1
+s/does not need to/must/?
 
+On Tue, Feb 20, 2024 at 11:58=E2=80=AFPM Linus Walleij <linus.walleij@linar=
+o.org> wrote:
+> All the sglist iterations happen in the *threaded* interrupt handler
+> and that context is not atomic, so don't request an atomic
+> sglist miter. Using an atomic miter results in "BUG: scheduling while
+> atomic" splats.
+>
+> Reported-by: Geert Uytterhoeven <geert@linux-m68k.org>
+> Fixes: 27b57277d9ba ("mmc: sh_mmcif: Use sg_miter for PIO")
+> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+> ---
+> Hi Geert, it'd be great if you could test this!
+
+Thanks, that fixes the BUG, so
+Tested-by: Geert Uytterhoeven <geert+renesas@glider.be>
+
+Unfortunately it is not sufficient to make the eMMC work fully.
+I will follow up in the original thread...
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--=20
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
+
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
