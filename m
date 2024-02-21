@@ -1,149 +1,158 @@
-Received: from NAM02-SN1-obe.outbound.protection.outlook.com (mail-sn1nam02on2041.outbound.protection.outlook.com [40.107.96.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D04212DDA3;
-	Wed, 21 Feb 2024 19:49:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.96.41
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708544978; cv=fail; b=deDdZpIREttdhIueE9RUivMsL+M/vVME36w3NMm3qcQ6T+15dBDym4LYob9PJd0LqdEoGi3LxRH5DIw3nhE9kEplbk5TPVdE7dn31rj3s0EAIxqvdIH3R2p3vqj8ygEQBGO9bAOhE3yQgK5Ry/MQ70ojsRrPYGioCqd/YzhW6Ls=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708544978; c=relaxed/simple;
-	bh=Su3VbTsWvXweSo6P/S5cht0h49elarkPg7ZKaOqihBs=;
-	h=From:To:CC:Subject:In-Reply-To:References:Content-Type:
-	 MIME-Version:Message-ID:Date; b=ie7b0JNpou883/0RWF6tI8SV1L8EcyG+/iXRiaem1MsqWq2RuLhgLZ4IthgFk3WIt03NeHt6bIhZnHHxK5z6u1IiOVC6gKP/Im4XhsYOeccRNLVaiHr8PJoJrA/GgwFO5c7A965ESqKzJEHiyQLLGbDPT9N2Zl28N3xysc7cO3g=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=ujVBKRsC; arc=fail smtp.client-ip=40.107.96.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86B7A12E1D7
+	for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 19:49:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1708544989; cv=none; b=S8USJ5Os4mmlB0mzP7/XwdxSqFHpN1AnW+qVmPWXbmB5Cr98xX3N+Ra2I9jTfn3f+RWOOTaFScydiY2zob3WhD6H9+CVgHg7d1MoM2odpPedc0SYNFVDuxS8HLdXaM6dsIdVTWrNIggk9/T7Vtfty24RPTRISpzX9NCp4/2JchE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1708544989; c=relaxed/simple;
+	bh=dHsou/hd8ny3LwFZsjdRpHG0mjn9OJ8AgEw33Ge0uiQ=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=gg+IsmEf9mnahl0KQyEWtQW+AWG/xX9+3L9og3h5h+k/Fs1pFfGJiwlsn4UP0KIFxWAxZtoFiivPPMXd4Zd4Cjs3saoRql/MCmqS9iGJyp3k4YHajBSuEr+WYnjgPnlaoZl4Fy1eKwsvc1JhEIYAJKycKtAFLpPUYixDsJ9sHo0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--vilasbhat.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=QtC+K8Ky; arc=none smtp.client-ip=209.85.219.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--vilasbhat.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="ujVBKRsC"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=KRGNJHD/fYk+n2+d54QYQC/ZjPaYEWY2QbsHyQTQyLYwSY8+KnOcijvuSuyHvqqf5ON72Aba9Br0bouqqiV4dtG9oDoc3LIkhSgU5a9AXSQJVdZZQCFqWjVlyQCXcVffesqiyrFYdMIbcQ7TMMIt8v2pVGb/s9bTnK9A3xVAPTmbn+yputXmPyLA9U/WGeZh1bsXN3uyoXfFg3hvipBjteEZ6D6R8h5dd+dfpCsHyOQ7xuVDJP9B0vgkqGgAIY9vUXgAPHY024hxvYwf8xmpr2POe5Ff+S0njI0G65NIhBQyeVxI8Mk9YlyvuoIynAWGy7n1uA8oCM/H8jC3fhic+A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=MsuV82kHM4ODMGEYDQ8syz1j7qZMhkgfNel+e2WMHdE=;
- b=eCmdvQvVe1VZQ3F4JpYTG3UZ4IOL+UarRRUN8kZD0PZl6KS4H0owjKTuSQ6WYg9X9Fmj4z1tHE9wq1sddlR64P4bAHPB7ctwMQrRqDfgtGWd0kopPVb/dqs+qVdj0z4KILHpvKNu26hVD+1IP2hlu0QREzc3ywxWdoecSLh/UsyzhezacPp/ytnjmevDmoZjmrPJekRdo19AnNZaCM69sSrvfU57EU3QA/G0LQDY4poFsHtt+Ek9Qh3mq6ALfWUH1PMnNVRc6kc6i63j8JuE9nqOMc3H/PZrVTVfrkWepzaoj7hOBCKOFU8CHkqhNd5zZSB6acP5WY/OsVS215XCFQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.117.160) smtp.rcpttodomain=linuxfoundation.org
- smtp.mailfrom=nvidia.com; dmarc=pass (p=reject sp=reject pct=100) action=none
- header.from=nvidia.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=MsuV82kHM4ODMGEYDQ8syz1j7qZMhkgfNel+e2WMHdE=;
- b=ujVBKRsCDAaPcI5Q6QQH2QKKCTZYMiNKyUH9xfTwr0o0jbouyCNmLugkEwGqodBW6NOOTPGl8eggrfsaj/dLp3qXkU6JMQo0BBV1A9JFk+8ryjW+dSHsyNnscbc/Ki4OBU/EuPdZnIbxkQ6nvcLnKmnGThRdPsOxr5XdB9yeSZ7UH9xMVRg3NgE5QLcL/EO22r7vpdhGXqRMsPAy3jah7r0Ez9oq+UZP8FmPS3pwHjmKTnOdEOk3VeyYIfqPcYb9iOsY0On+zPFrd8+n7whCEibXhyhp180ORrU3dmAiXNZySmYXCu8jE5I5pc34/TAOoYY3goCbWkifz5ih1D0FAg==
-Received: from BL6PEPF00013DFC.NAMP222.PROD.OUTLOOK.COM
- (2603:10b6:22e:400:0:1001:0:21) by SA0PR12MB7462.namprd12.prod.outlook.com
- (2603:10b6:806:24b::5) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7316.21; Wed, 21 Feb
- 2024 19:49:32 +0000
-Received: from BL6PEPF0001AB50.namprd04.prod.outlook.com
- (2a01:111:f403:f902::) by BL6PEPF00013DFC.outlook.office365.com
- (2603:1036:903:4::4) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7270.39 via Frontend
- Transport; Wed, 21 Feb 2024 19:49:32 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.160)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.117.160 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.117.160; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.117.160) by
- BL6PEPF0001AB50.mail.protection.outlook.com (10.167.242.74) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.7292.25 via Frontend Transport; Wed, 21 Feb 2024 19:49:32 +0000
-Received: from rnnvmail201.nvidia.com (10.129.68.8) by mail.nvidia.com
- (10.129.200.66) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.41; Wed, 21 Feb
- 2024 11:49:13 -0800
-Received: from rnnvmail204.nvidia.com (10.129.68.6) by rnnvmail201.nvidia.com
- (10.129.68.8) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1258.12; Wed, 21 Feb
- 2024 11:49:13 -0800
-Received: from jonathanh-vm-01.nvidia.com (10.127.8.9) by mail.nvidia.com
- (10.129.68.6) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1258.12 via Frontend
- Transport; Wed, 21 Feb 2024 11:49:13 -0800
-From: Jon Hunter <jonathanh@nvidia.com>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-CC: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	<patches@lists.linux.dev>, <linux-kernel@vger.kernel.org>,
-	<torvalds@linux-foundation.org>, <akpm@linux-foundation.org>,
-	<linux@roeck-us.net>, <shuah@kernel.org>, <patches@kernelci.org>,
-	<lkft-triage@lists.linaro.org>, <pavel@denx.de>, <jonathanh@nvidia.com>,
-	<f.fainelli@gmail.com>, <sudipm.mukherjee@gmail.com>, <srw@sladewatkins.net>,
-	<rwarsow@gmx.de>, <conor@kernel.org>, <allen.lkml@gmail.com>,
-	<linux-tegra@vger.kernel.org>, <stable@vger.kernel.org>
-Subject: Re: [PATCH 6.1 000/206] 6.1.79-rc2 review
-In-Reply-To: <20240221130223.073542172@linuxfoundation.org>
-References: <20240221130223.073542172@linuxfoundation.org>
-X-NVConfidentiality: public
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QtC+K8Ky"
+Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-dcbee93a3e1so9048511276.3
+        for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 11:49:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1708544986; x=1709149786; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=dY3bbKQ8BuzJKDn9eA4y8nGoIVfjx/oyPxLya0zWCzo=;
+        b=QtC+K8KymGSyWXQXRZw3+gsPVh21/O9+nbP8grLN+uHSavHeKQCHvQNUug/kNhfSS8
+         fNeu1nEXtZGa7+dwqAHefeWs9Gq1iSCx8rbUe+o0KG4XWiecCgRgt4vPu+BELWj/Erqi
+         5LGC9rUkIhlLvz9mr1Zk+mLzF6ifW7DS4OI4kKZjJSANhES8wUtPp8czdn5c1mGkv7iS
+         YNC43CNLCei/n7MXxWvY4rv2xT6/7/aqjb6DXn2vNy26detZlE+tmmjTTQXupdbO2OEY
+         UfE9fHvOzBPOytn/v5Hx6SaxBtewSL+F7cJNE8r5IXDwNMKMaCdGfumRxvNxKITo/Zqe
+         VD2g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708544986; x=1709149786;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=dY3bbKQ8BuzJKDn9eA4y8nGoIVfjx/oyPxLya0zWCzo=;
+        b=sbxWSl0N8C/Zz8RNL/N/GKxUs5v6sreB6fp5ivU5Mm915QPwEDFiot3xLbRy5WuNaY
+         t+VlH49BBqb9VVtVRLbnLWK1X5IUWPyKaO70R6Gn8j1g5ooH56pdeCdKeVjUqfti1xL5
+         lCK1qO+bCxPGfmZQZMefzLDV6t196KK0qmgcE2ofW62TJtFfvuKGwjTeEsKzDbHEHOtP
+         u2YKoUOQ56OEM0RRTT8BhzJWmfLmvQxv757xD6iM5ziOR7rJ+sWK+yY57k3taVBvUScG
+         361vyrXaoDaY+gi8YNu0v9nyCZb+9YHZ8aVV025BudC146Dr6udDMtco9EVGJeop3Tgl
+         5ipg==
+X-Forwarded-Encrypted: i=1; AJvYcCU05fAALZifmHtRQCCYI5t08pbTLEKiGfts2yauVA1ODJCz1LknngfcjnGxWJCDX3QWxXxuu3ZNNAdYJTdevhRX7oeQGTHI3pxC+C1R
+X-Gm-Message-State: AOJu0YyWMUU3IjjQGNxuDT4G2oUgbt8wGMOHW6uc/kbVkxt8sRSvgpHW
+	GBolf3HtUQHUBlkG1GKwiR9rVcs69exBe54JOYT/aYyo7+6Kpitw1qwGDonepMhjOZoPofiuI0i
+	YImst1BlB19MO0Q==
+X-Google-Smtp-Source: AGHT+IGVZJXwF6/QCuP/A9p4bu1a4NrgucjWHGMyzguHpAm/ajLSlOvbRCDMJ+PRNq41mWXAZmFOJh1k/WHVZQM=
+X-Received: from vilasbhat-emu.c.googlers.com ([fda3:e722:ac3:cc00:dc:567e:c0a8:8f2])
+ (user=vilasbhat job=sendgmr) by 2002:a05:6902:701:b0:dc8:27e6:cde1 with SMTP
+ id k1-20020a056902070100b00dc827e6cde1mr18718ybt.5.1708544986720; Wed, 21 Feb
+ 2024 11:49:46 -0800 (PST)
+Date: Wed, 21 Feb 2024 19:47:53 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Message-ID: <81c783fa-5e5c-4a2d-acaa-d3190f774737@rnnvmail204.nvidia.com>
-Date: Wed, 21 Feb 2024 11:49:13 -0800
-X-NV-OnPremToCloud: ExternallySecured
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BL6PEPF0001AB50:EE_|SA0PR12MB7462:EE_
-X-MS-Office365-Filtering-Correlation-Id: ffedaf9c-4982-4d62-40ea-08dc3316394d
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	esGha5lEZ6YIPkFgdON+fhnuIE7vbJTsOQ7+G18soxHpsknyTcpEb1xSCQTPVrd1/BgsLpDQnFgpypR3ZKEfHGadMG/al+O8b2unQxvb2QSFQueBWszyHbxcSU8B1ljwx0OhT60EJFgbAh0FG5muFtmfce09nUz+DKxWzJrOuJQsQUYMHz5RA+Zur8803RVKid28yYMqbpxTnJzYerqtMyuyTtrPB1xlnppNRCP1WY27IoBvqe00BJyHNEFMzpg6SCPEDOIYeqmkMn8xtTiMN6bzbYyh+t94BJ46vPjFBuCEgHJkg5w8R5rBiHAA+bU/Vzt9fQ3kJwk9D42lLKOV9KVJurSsF00IEpIiYWb7Xj8Qd5PI6fiD/9j2D9/ihEX8WKQcwvf62saub2gElhq6WB9YPiIZX1wjBt5+cZtN2/qRRVlBsGTMP7MsrTkZZJNcTzZje/XkNkoWqdxnaGCLelM25pVGxCmTGBMbN4WesNJbzGfvaGFA+Z5q1jgHYAnCaP4ERFSxJeGRK4t0jfqojIzp3f6AEjo8pC62sxlv/subAI64VnGpJDg+EeCRaSvAsDPjOpcuw+ISzK7xbXBt3IeIEJs3Snywa1hucE1n+YAjpSTHou5Ouewwxb5R/yzxh+EwOzicS2j00Z1ftCr0zyQLZ1M+GbqTCfYPW4W3FAVjFLozpkOhdaAGPU9FotL/l5VCoVKvmCqlkTpUICoL0w==
-X-Forefront-Antispam-Report:
-	CIP:216.228.117.160;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge1.nvidia.com;CAT:NONE;SFS:(13230031)(36860700004)(40470700004)(46966006);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Feb 2024 19:49:32.0772
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: ffedaf9c-4982-4d62-40ea-08dc3316394d
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.160];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	BL6PEPF0001AB50.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA0PR12MB7462
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.44.0.rc0.258.g7320e95886-goog
+Message-ID: <20240221194754.986300-1-vilasbhat@google.com>
+Subject: [PATCH v2] PM: runtime: add tracepoint for runtime_status changes
+From: Vilas Bhat <vilasbhat@google.com>
+To: "Rafael J. Wysocki" <rafael@kernel.org>, Pavel Machek <pavel@ucw.cz>, Len Brown <len.brown@intel.com>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Steven Rostedt <rostedt@goodmis.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: Vilas Bhat <vilasbhat@google.com>, Saravana Kannan <saravanak@google.com>, kernel-team@android.com, 
+	linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Wed, 21 Feb 2024 14:03:19 +0100, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 6.1.79 release.
-> There are 206 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Fri, 23 Feb 2024 13:01:46 +0000.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.1.79-rc2.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.1.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
+Existing runtime PM ftrace events (`rpm_suspend`, `rpm_resume`,
+`rpm_return_int`) offer limited visibility into the exact timing of device
+runtime power state transitions, particularly when asynchronous operations
+are involved. When the `rpm_suspend` or `rpm_resume` functions are invoked
+with the `RPM_ASYNC` flag, a return value of 0 i.e., success merely
+indicates that the device power state request has been queued, not that
+the device has yet transitioned.
 
-All tests passing for Tegra ...
+A new ftrace event, `rpm_status`, is introduced. This event directly logs
+the `power.runtime_status` value of a device whenever it changes providing
+granular tracking of runtime power state transitions regardless of
+synchronous or asynchronous `rpm_suspend` / `rpm_resume` usage.
 
-Test results for stable-v6.1:
-    10 builds:	10 pass, 0 fail
-    26 boots:	26 pass, 0 fail
-    102 tests:	102 pass, 0 fail
+Signed-off-by: Vilas Bhat <vilasbhat@google.com>
+---
+V1 -> V2: Modified enum value definition as per reviewer comments.
+---
+ drivers/base/power/runtime.c |  1 +
+ include/trace/events/rpm.h   | 42 ++++++++++++++++++++++++++++++++++++
+ 2 files changed, 43 insertions(+)
 
-Linux version:	6.1.79-rc2-g64fdfe5f1a1d
-Boards tested:	tegra124-jetson-tk1, tegra186-p2771-0000,
-                tegra194-p2972-0000, tegra194-p3509-0000+p3668-0000,
-                tegra20-ventana, tegra210-p2371-2180,
-                tegra210-p3450-0000, tegra30-cardhu-a04
+diff --git a/drivers/base/power/runtime.c b/drivers/base/power/runtime.c
+index 05793c9fbb84..d10354847878 100644
+--- a/drivers/base/power/runtime.c
++++ b/drivers/base/power/runtime.c
+@@ -94,6 +94,7 @@ static void update_pm_runtime_accounting(struct device *dev)
+ static void __update_runtime_status(struct device *dev, enum rpm_status status)
+ {
+ 	update_pm_runtime_accounting(dev);
++	trace_rpm_status(dev, status);
+ 	dev->power.runtime_status = status;
+ }
+ 
+diff --git a/include/trace/events/rpm.h b/include/trace/events/rpm.h
+index 3c716214dab1..bd120e23ce12 100644
+--- a/include/trace/events/rpm.h
++++ b/include/trace/events/rpm.h
+@@ -101,6 +101,48 @@ TRACE_EVENT(rpm_return_int,
+ 		__entry->ret)
+ );
+ 
++#define RPM_STATUS_STRINGS \
++	EM(RPM_INVALID, "RPM_INVALID") \
++	EM(RPM_ACTIVE, "RPM_ACTIVE") \
++	EM(RPM_RESUMING, "RPM_RESUMING") \
++	EM(RPM_SUSPENDED, "RPM_SUSPENDED") \
++	EMe(RPM_SUSPENDING, "RPM_SUSPENDING")
++
++/* Enums require being exported to userspace, for user tool parsing. */
++#undef EM
++#undef EMe
++#define EM(a, b)	TRACE_DEFINE_ENUM(a);
++#define EMe(a, b)	TRACE_DEFINE_ENUM(a);
++
++RPM_STATUS_STRINGS
++
++/*
++ * Now redefine the EM() and EMe() macros to map the enums to the strings that
++ * will be printed in the output.
++ */
++#undef EM
++#undef EMe
++#define EM(a, b)	{ a, b },
++#define EMe(a, b)	{ a, b }
++
++TRACE_EVENT(rpm_status,
++	TP_PROTO(struct device *dev, enum rpm_status status),
++	TP_ARGS(dev, status),
++
++	TP_STRUCT__entry(
++		__string(name,	dev_name(dev))
++		__field(int,	status)
++	),
++
++	TP_fast_assign(
++		__assign_str(name, dev_name(dev));
++		__entry->status = status;
++	),
++
++	TP_printk("%s status=%s", __get_str(name),
++		__print_symbolic(__entry->status, RPM_STATUS_STRINGS))
++);
++
+ #endif /* _TRACE_RUNTIME_POWER_H */
+ 
+ /* This part must be outside protection */
+-- 
+2.44.0.rc0.258.g7320e95886-goog
 
-Tested-by: Jon Hunter <jonathanh@nvidia.com>
-
-Jon
