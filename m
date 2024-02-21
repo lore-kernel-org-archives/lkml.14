@@ -1,162 +1,148 @@
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2051.outbound.protection.outlook.com [40.107.93.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B9727FBC2
-	for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 23:04:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.51
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708556668; cv=fail; b=cCpXa62EIx04HQHz/L7ubQnu7HXdtJXa1YdCzdYwreclrHv5MZPf2d9ra/e73yIbj1s7Zwp/PelHzPrvle+0dxC55hQXUchf3zLBHFC8yseY1Il3mKDCoy0H2G8c3vpjjFdsJ636r+m/qvH2u8qsZtMHa+FZbRX/OVYIWmlnJpU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708556668; c=relaxed/simple;
-	bh=kI/pMkzpn0k3z7Tb4t6xv8jqrRb5BWVdzI+iHZJ22nM=;
-	h=Message-ID:Date:Subject:To:References:Cc:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=Ggcfc3ISGYNQfn9O4R02yUXTxHOM2VnKJzJP4q6go/gd3BRZmWvS/2q2OVQzvN2Fu/kaAjILfWbDQ8dBziCl+WbsCm+JifmcbPYhkDzxhpvn1RAw/uPtZIHsMDLfRSaM2pTlLRfowltohchl0GejYZlLU3Icj8zRlRqMRjUr91Q=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=j5FlUEge; arc=fail smtp.client-ip=40.107.93.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BAAB86632
+	for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 23:05:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1708556736; cv=none; b=jrTYJsunJ/JY5jQIVHHfRsZBt/ElvqhoWm6C22p88/sWZl61i/UqAyt12xekVgGkmXrugCuao+jk/LC+QUxt3F9VZMyVYH5SWeZjv72a58h0MkiFmmmvuxUTLN1y8HjF5ypILUk9Q4b5eHoi9sidDJSqbVAIADdi641+yXa3SXg=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1708556736; c=relaxed/simple;
+	bh=zssxqx37knagHcWIMKikX95cYC9xskvO7oxvfidP8XA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GqiHcwCExBcc4806C3oscm3wHo1MlUlmUW/sZDVv4YSd6167ilkykBmO9Ad4umMk/Po/oB/lmVyCNOHq0nf16y/dmFfYlEgCCjEJahQ9zAhAYZYBJiX2iuopGDGT1SsBqKCRHf+IFs1ekcpZ7F3unnW7r4k/qh4oGYGZjTyfE3M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=YaN0kVu6; arc=none smtp.client-ip=209.85.214.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="j5FlUEge"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=nwlDAGn+wcHaUFQHTJ8OVr3pBoPRQOyYEZPqweMUJPiLA6rOvz86G/IUkIwT52U3RLn+BluW/wGpP9x06uLlIy0IR0Y22xZMUA5bx9m4j7+nVy0bdzUTpvi+8vcj30gOF5f/dsDvli+DhgHonH9vIiyN6pgtkFAMwIgAnPRkTeagpZG/cU/9WGIMInEAj96UwRUSmhXW1MPx7esUyUaSiXw4vCvFjINCtAOULv0Si2q4vaFcUzHijjbVaQqLRtqsTf28uBiPidtELCd5qokKWyQz30A7XC79s03IeOtNTfVe7CM85FSPfUrW+lcxZ86x0bxOUDZ27+CLLPeNPOGf0g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=WplncR8qMNJq04yTm3fQi4iwGpvlF+TxwRCbzXTwAA0=;
- b=MR3BfaGWkDfOrR0V47nWsz+zpLprgdkfcuLolRXL+YrOFiV9GQZsojxW+3DzoxlAbuEyagLUeEWIquRNjdU4y2VB6doaQdpUIYXkfzAXjmHynHL78bY9unay7/0RGtTnsoK14ovuwwRbPBHJerqFIh6nYlzBGuDE7fb5KiFBNgiTTgSqSlsj2lUCKg/gO32aKr9SqTE4AsblUCVFEgdIMoDizBaD2zoM13p3UoDB/fnnMrS1lhUpAdV48wyZe6het9LUgxfkUMucsEM20hPwF2/1Ysj67Ey1lPgMd2PWtB6T8lMO3bHVL8qF9J4Egh0dNfLEWpe8j3gTx/C6fCx3yw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=WplncR8qMNJq04yTm3fQi4iwGpvlF+TxwRCbzXTwAA0=;
- b=j5FlUEge/kxnW8lT3smfvieo/WcbNNyxNOJB9+1vcWwrFUbaATzcDY4fzXvVda2ztvEDNz0ef7E1cTE4bGKHnKLVKpe3Azb89Xj/cJvMgteJKhFGVhELDjg617bLvPbD0T4jtyEYkfVn9iMoKh1MdAmhHN5l6aT/pTokXV12gM8=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from SA1PR12MB8722.namprd12.prod.outlook.com (2603:10b6:806:373::9)
- by DM4PR12MB7551.namprd12.prod.outlook.com (2603:10b6:8:10d::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7316.20; Wed, 21 Feb
- 2024 23:04:23 +0000
-Received: from SA1PR12MB8722.namprd12.prod.outlook.com
- ([fe80::4b3:427e:7f83:2130]) by SA1PR12MB8722.namprd12.prod.outlook.com
- ([fe80::4b3:427e:7f83:2130%4]) with mapi id 15.20.7316.018; Wed, 21 Feb 2024
- 23:04:22 +0000
-Message-ID: <bccf8567-1b5e-497f-9724-e858447216e6@amd.com>
-Date: Wed, 21 Feb 2024 16:04:18 -0700
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] drm/amd/display: Use kcalloc() instead of kzalloc()
-Content-Language: en-US
-To: Lenko Donchev <lenko.donchev@gmail.com>
-References: <ZbYYpky2sb8p8hjx@nixos>
-Cc: Harry Wentland <harry.wentland@amd.com>, Leo Li <sunpeng.li@amd.com>,
- Alex Deucher <alexander.deucher@amd.com>,
- =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
- "Pan, Xinhui" <Xinhui.Pan@amd.com>, David Airlie <airlied@gmail.com>,
- Daniel Vetter <daniel@ffwll.ch>, amd-gfx@lists.freedesktop.org,
- dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-From: Rodrigo Siqueira Jordao <Rodrigo.Siqueira@amd.com>
-In-Reply-To: <ZbYYpky2sb8p8hjx@nixos>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: BN9PR03CA0631.namprd03.prod.outlook.com
- (2603:10b6:408:13b::6) To SA1PR12MB8722.namprd12.prod.outlook.com
- (2603:10b6:806:373::9)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="YaN0kVu6"
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-1dc49b00bdbso1423145ad.3
+        for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 15:05:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1708556733; x=1709161533; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=IaQv6IYiHqQsQRwxagN42nrCoy2L36X/io0NIlSKpEE=;
+        b=YaN0kVu68tjoY2VWfrn+E6uvbAVTphdtX2sn1L28iRKphMDLBI9svC4bsq2VmT/eR8
+         rwRvkCCtNjWgHofEkG8E7Fa9EScJZEtSHQyWJ/LpBDz2lqo6oxVVa3zIO1ynxdFuk3sE
+         2H4E1XYMIw5Mwkk//ZqWOw1PorI89LsVlxO/A=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708556733; x=1709161533;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=IaQv6IYiHqQsQRwxagN42nrCoy2L36X/io0NIlSKpEE=;
+        b=nnqDKx4KAafVE1uLgrw9jXuSf10Ss+EzmInm3hs+qYsNZq38O+vsDA0wZt0kG0+aRJ
+         4A6GDB7S192+SY0+/9WWQ6pi1i5WkWofmr/baBkgMmHzTNd0kWKPS4Pp/qJg7RrsSSYS
+         xaenKjVz6kl8NkEJUX2Ke+t1W88LesMe8PZJbU08HBOrgnaI+1db4uDZjgVy4GDhhtNr
+         IgrPGKouVzpbOdhSQPRxgdR7+b8RIP1ITJLNA3jd6h23wL5Z7Sp1ZKGNxQGxGlMgYrfe
+         aGa9SUjGg+G3ocSwVfVOrZwd/Zc3wZ5fZ+vV3loiPUQGPANCKBpPIcMgN96EaTB0nJ0Y
+         uueQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWu2/znwhRhmO9FzPp7hjwpwU7/+SoSPz0GrTI7zaqf6TS5rvcdwRNws5dKARDGaMGF54eLjWAdZdM8vlis5vIEz9LtcFpOZMLoHi8b
+X-Gm-Message-State: AOJu0YwwDXtNgRSWtl+O2iTd2rkSZExdjKWnL3ohiZsuu4vQLbcgDhIe
+	i02Qo5QNcuZNWZaWCxG7FVc2p32M0sqpCM28CC1AJFaBmo7kr5NkfqOswDmF9w==
+X-Google-Smtp-Source: AGHT+IH1309ck0C/2D22VOAASZNUEEf4x9Q57P9Qvk9iAKdRznvrywgHAh+2sanfhM2Axko6bAh9XQ==
+X-Received: by 2002:a17:902:c086:b0:1dc:7b6:867a with SMTP id j6-20020a170902c08600b001dc07b6867amr6026373pld.21.1708556733655;
+        Wed, 21 Feb 2024 15:05:33 -0800 (PST)
+Received: from www.outflux.net ([198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id h18-20020a170902f2d200b001d913992d8csm8631586plc.242.2024.02.21.15.05.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 21 Feb 2024 15:05:33 -0800 (PST)
+Date: Wed, 21 Feb 2024 15:05:32 -0800
+From: Kees Cook <keescook@chromium.org>
+To: Suren Baghdasaryan <surenb@google.com>
+Cc: akpm@linux-foundation.org, kent.overstreet@linux.dev, mhocko@suse.com,
+	vbabka@suse.cz, hannes@cmpxchg.org, roman.gushchin@linux.dev,
+	mgorman@suse.de, dave@stgolabs.net, willy@infradead.org,
+	liam.howlett@oracle.com, penguin-kernel@i-love.sakura.ne.jp,
+	corbet@lwn.net, void@manifault.com, peterz@infradead.org,
+	juri.lelli@redhat.com, catalin.marinas@arm.com, will@kernel.org,
+	arnd@arndb.de, tglx@linutronix.de, mingo@redhat.com,
+	dave.hansen@linux.intel.com, x86@kernel.org, peterx@redhat.com,
+	david@redhat.com, axboe@kernel.dk, mcgrof@kernel.org,
+	masahiroy@kernel.org, nathan@kernel.org, dennis@kernel.org,
+	tj@kernel.org, muchun.song@linux.dev, rppt@kernel.org,
+	paulmck@kernel.org, pasha.tatashin@soleen.com,
+	yosryahmed@google.com, yuzhao@google.com, dhowells@redhat.com,
+	hughd@google.com, andreyknvl@gmail.com, ndesaulniers@google.com,
+	vvvvvv@google.com, gregkh@linuxfoundation.org, ebiggers@google.com,
+	ytcoode@gmail.com, vincent.guittot@linaro.org,
+	dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
+	bristot@redhat.com, vschneid@redhat.com, cl@linux.com,
+	penberg@kernel.org, iamjoonsoo.kim@lge.com, 42.hyeyoo@gmail.com,
+	glider@google.com, elver@google.com, dvyukov@google.com,
+	shakeelb@google.com, songmuchun@bytedance.com, jbaron@akamai.com,
+	rientjes@google.com, minchan@google.com, kaleshsingh@google.com,
+	kernel-team@android.com, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org, iommu@lists.linux.dev,
+	linux-arch@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+	linux-mm@kvack.org, linux-modules@vger.kernel.org,
+	kasan-dev@googlegroups.com, cgroups@vger.kernel.org
+Subject: Re: [PATCH v4 14/36] lib: add allocation tagging support for memory
+ allocation profiling
+Message-ID: <202402211449.401382D2AF@keescook>
+References: <20240221194052.927623-1-surenb@google.com>
+ <20240221194052.927623-15-surenb@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SA1PR12MB8722:EE_|DM4PR12MB7551:EE_
-X-MS-Office365-Filtering-Correlation-Id: 30a57a13-2844-4a1a-cac9-08dc3331714f
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	ZDaMsQPIHfENyk9JqrjJGIqIlwmZteeDBEUr6W1oG/0urdVI8VLp9/7OeJg6bt5XtxAmdHei7YY9uzceUCh4pfac2kpzc3fTC8agw0o1ZK94r2Oas/rjsyANTtf0NvRevNHe0LUPDjOX6s4kAygPBZFwyeV4cOf84bvbbjmq9WjJFcQEujnoCsFs7cwutea4813v+65HnTuxuM3HYOT2DBd2FT9zhKvNMnTE/ajAYIyo2qYVettMvdSmXyN9sxAEIEA7LtRyMNlT+4IU8SSxNBGExT1oBPkHAg584hB4836U9rLQiEHghOhMKURHauog4yVmbbZKpiSo22iZYqTGB0wFeI0Hmt4F2HDwEnnc9eeNV/y8/Nh1M3LnfVm2RMzMoaxe1ZzQccZri1Kqbcq9b1BhFWAZRYSNb2kZzQkRNwAnNZmx0+E0JAwjcxwNJ2vdZVaSF4/xcejQxjL77zw7G5iESyCQiGH/pYoCr4vhPjTRBFokuKs7JFl5sdXtFJ+YclWqzaxfnTtWpbqkj2ZFtg==
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR12MB8722.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?VmpvYmtpRnk0Zk9kcENxYXZqWlIzVXFmNTdkMW9JSllTa1BQNTBaWDIxNnVM?=
- =?utf-8?B?WGNwZG9SNHpkU053RTlvNlVIT0Z1MzVSamUvQmhqclFkYnk4SlZoZ0tRMVFC?=
- =?utf-8?B?VFBtV3RmR3lKblM0emJrTnZNTC93cGwzSUJkRm1VNTI1YXBlZCtPdFhEczVW?=
- =?utf-8?B?cHV6L0MwVVA0K1A3ekRiNmkxbW5SWHFQZU40OFJjVjA0TnpxU2V6UURjSG1I?=
- =?utf-8?B?OTFUS0Rlc1V6aTROZG1taHRJNUZzcW15MmRyV0FQQzZLYU85d2dOd1FMeW9V?=
- =?utf-8?B?cDVBYlluc2JOdWdMQjlJSm52ZVArc09CalZrMFZpR3BQQzlxenB1ZUkzNkto?=
- =?utf-8?B?OVNKTjA4NEVVd2JTREdCdXF1cStUU0M0SGFodVRaVDBYd3V6OTJsK3MxU0FF?=
- =?utf-8?B?WHRvYWRPcE1ML3E5Qmo4cEV0TVpzelIyR1RUWERkN0VUckt1YjM4Z2tBdGlQ?=
- =?utf-8?B?NHN6QWVBQXp4YzcwYWhnTng3RDVYMWEzWWtpNkRhZHR4aUVqUUZ5WWZoL016?=
- =?utf-8?B?K2NjTGhJZlRvdkZuL1FXWlZYY1hOYXp1bTVnamtkdzhzV29Lck9ub3gwdVVQ?=
- =?utf-8?B?MzRNSHZaYWxJb000NWVQOXlkRTlxMlNmMHRlZnJwNHo3Q3J6RGtYT3hXd3BX?=
- =?utf-8?B?YTlyNEs4WjI5UWNIbmpEMjJsVUxVOXFrOFltZ1J0OWF1QVFJKy9NYUhCOVZv?=
- =?utf-8?B?RW1BYVlEdnlvd0xQbEFsbU1BV3dkUWc1RXg5Q2dyZFhJK2RaUEJib3BPbFN3?=
- =?utf-8?B?WEZWTkhxdVlScXcreGxIQVRzRVZaRlhhZWRFa3lTRWR0d2NUQ2pmUWdNZytU?=
- =?utf-8?B?c0hmaWZFSTgvNU5DM21oS2RtVkRHdGtIbW9FWmZDZkRzc0JUUGhZMjVmL3Qw?=
- =?utf-8?B?bjYyMzgwWWJpTzlVeXRiRUtnR3Bqa1VvUE5lcVNYYjNpbkJ0UFFrZkJFYmFK?=
- =?utf-8?B?VjhOMmJZYUp1UmFqSGhtb0xKSGwramRaR0RVT0t1eDlicU5UbUZzNXZOR25K?=
- =?utf-8?B?RnA5Tmg5QlVRWHB3RFhnbXkxOXhuR1RMVksxcEpNNXRmNWdsSXl5Y1R6eGVT?=
- =?utf-8?B?YytabjJYSmZaZ3RDZ2JRQTVNYmlWTmczeHR4Mm4zY3lWZWFXVDJDbWdlejVV?=
- =?utf-8?B?MVEyZGloM21MbHBkZlhpZG5ZWTBSaXhIR2JJRUptWkMzcDFlcGxTRDZBQytW?=
- =?utf-8?B?UWZFdExhQ0JpYVMveGNwbzZjVWVBYWZMYVZ1aVUvRUlrbS8zS3VqcGFEZHN4?=
- =?utf-8?B?UWtxSlVBM2dwSkJyMWtpaThDL1lrRXZMMzRqcTZNR0tzQ0M4aWF0a0Q1Z2dI?=
- =?utf-8?B?WW5XSXFYdExlUjIzY1JEUzJ3cG1CWm5ibG1FU3FoaEp5VG1ZdzlxeG1ZdFpo?=
- =?utf-8?B?S2haQ3JCczF3bzA5Ymp4UkZZQnFVdEh2clYrc3haTXk3Nlp0K1VwbXZRZDB6?=
- =?utf-8?B?SjN2K1R2OHNqRDNGVVk5NVpIT2NNY3hQYXdoWUg3NUtVSVhzR1ZBZDhDci9x?=
- =?utf-8?B?VHRLVzhTRi9ESG14eVNvdjV4bW8xMUlZQlppMzdYOUt0WTBSZE94ZlNteVlz?=
- =?utf-8?B?NElSQ1hRL3hqRnJaSjEvWnFaY3BGRWF6Z1ZobWRMNHpNWUJVN3R3OWNuRDlI?=
- =?utf-8?B?cGEzREgyYVpPTEx2MTJhYWxyZGNpU3NRMlJzZG5mV2U3dkwvUGY0SEh4c28z?=
- =?utf-8?B?d1J1VG15UkpHUndJUzhNTTk1ZUpvcHMzWjlML1ZLUzR4VU5idVdlVlRRZ0dB?=
- =?utf-8?B?NDlva1VBai9OMkxIb3A1QWViWGJhbTlzZjFJenFXL0k2VHBMemhMejIwYnUr?=
- =?utf-8?B?ZkdYU0J4eTlZQWV2eVhXbTVBSVhDRmpMNlhDZWdjZG9vUDk5eXpra3VzM2xN?=
- =?utf-8?B?K0E4cXlMQzdsYTBxOWRwYUhsY3dTcCsxVHhZWlU2WXk0OGw2MFNJcUw0NFdM?=
- =?utf-8?B?NFBxQjNNd0pXUDFzaXFIMkcwTnptU0lzeldiT3MwczhKZ00vdU9VWkRFYW55?=
- =?utf-8?B?czlNcXZUenpZdDNwbDJNOXNkZDExbk5hWlVpZXRJV1FGc0pDRFVFOG1SdU90?=
- =?utf-8?B?VGhWTTJzTUw1dUY1SWxrTVRJUGF3UGQrVVgrZU9HZHVqY0NnOUR2V3M5ays3?=
- =?utf-8?Q?C4iP5LYwhceF/Q9lJfT6VugIP?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 30a57a13-2844-4a1a-cac9-08dc3331714f
-X-MS-Exchange-CrossTenant-AuthSource: SA1PR12MB8722.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Feb 2024 23:04:22.8913
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: GzCtf/D+OFOuUa2Dz/YG5hl10qFDVFe+UZV1OEK3DCqf9qVJSDcmaGTpxAShAL29FRjf5jIJsOdfR4aAMeLoaw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB7551
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240221194052.927623-15-surenb@google.com>
 
+On Wed, Feb 21, 2024 at 11:40:27AM -0800, Suren Baghdasaryan wrote:
+> [...]
+> +struct alloc_tag {
+> +	struct codetag			ct;
+> +	struct alloc_tag_counters __percpu	*counters;
+> +} __aligned(8);
+> [...]
+> +#define DEFINE_ALLOC_TAG(_alloc_tag)						\
+> +	static DEFINE_PER_CPU(struct alloc_tag_counters, _alloc_tag_cntr);	\
+> +	static struct alloc_tag _alloc_tag __used __aligned(8)			\
+> +	__section("alloc_tags") = {						\
+> +		.ct = CODE_TAG_INIT,						\
+> +		.counters = &_alloc_tag_cntr };
+> [...]
+> +static inline struct alloc_tag *alloc_tag_save(struct alloc_tag *tag)
+> +{
+> +	swap(current->alloc_tag, tag);
+> +	return tag;
+> +}
 
+Future security hardening improvement idea based on this infrastructure:
+it should be possible to implement per-allocation-site kmem caches. For
+example, we could create:
 
-On 1/28/24 02:04, Lenko Donchev wrote:
-> We are trying to get rid of all multiplications from allocation
-> functions to prevent integer overflows. Here the multiplication is
-> obviously safe, but using kcalloc() is more appropriate and improves
-> readability. This patch has no effect on runtime behavior.
-> 
-> Link: https://www.kernel.org/doc/html/next/process/deprecated.html#open-coded-arithmetic-in-allocator-arguments
-> Link: https://github.com/KSPP/linux/issues/162
-> 
-> Signed-off-by: Lenko Donchev <lenko.donchev@gmail.com>
-> ---
->   drivers/gpu/drm/amd/display/dc/link/protocols/link_dpcd.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/gpu/drm/amd/display/dc/link/protocols/link_dpcd.c b/drivers/gpu/drm/amd/display/dc/link/protocols/link_dpcd.c
-> index 5c9a30211c10..b67cd78e7c58 100644
-> --- a/drivers/gpu/drm/amd/display/dc/link/protocols/link_dpcd.c
-> +++ b/drivers/gpu/drm/amd/display/dc/link/protocols/link_dpcd.c
-> @@ -164,7 +164,7 @@ static void dpcd_extend_address_range(
->   	if (new_addr_range.start != in_address || new_addr_range.end != end_address) {
->   		*out_address = new_addr_range.start;
->   		*out_size = ADDRESS_RANGE_SIZE(new_addr_range.start, new_addr_range.end);
-> -		*out_data = kzalloc(*out_size * sizeof(**out_data), GFP_KERNEL);
-> +		*out_data = kcalloc(*out_size, sizeof(**out_data), GFP_KERNEL);
->   	}
->   }
->   
+struct alloc_details {
+	u32 flags;
+	union {
+		u32 size; /* not valid after __init completes */
+		struct kmem_cache *cache;
+	};
+};
 
-lgtm,
+- add struct alloc_details to struct alloc_tag
+- move the tags section into .ro_after_init
+- extend alloc_hooks() to populate flags and size:
+	.flags = __builtin_constant_p(size) ? KMALLOC_ALLOCATE_FIXED
+					    : KMALLOC_ALLOCATE_BUCKETS;
+	.size = __builtin_constant_p(size) ? size : SIZE_MAX;
+- during kernel start or module init, walk the alloc_tag list
+  and create either a fixed-size kmem_cache or to allocate a
+  full set of kmalloc-buckets, and update the "cache" member.
+- adjust kmalloc core routines to use current->alloc_tag->cache instead
+  of using the global buckets.
 
-Reviewed-by: Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>
+This would get us fully separated allocations, producing better than
+type-based levels of granularity, exceeding what we have currently with
+CONFIG_RANDOM_KMALLOC_CACHES.
+
+Does this look possible, or am I misunderstanding something in the
+infrastructure being created here?
+
+-- 
+Kees Cook
