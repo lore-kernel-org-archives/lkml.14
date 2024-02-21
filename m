@@ -1,103 +1,72 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59B588060B;
-	Wed, 21 Feb 2024 15:45:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46E6C7FBC0;
+	Wed, 21 Feb 2024 15:45:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708530303; cv=none; b=oCRT9rHfZBOYqvbWgskL/dp+frsxXTRf5pFxMZXa2FEHiO3yh0s5ifLA+z7AMZkt2Amp6m/MF2aAC/N1FT5Dg2c7mYBZWpoqFZ8mnEqqXpR+KOXZEZ7ipFQpkQHrh9RJATNrBjnFgxgw/qI4BOCxZlOh+1EwD6UXHVrvPvod6yI=
+	t=1708530328; cv=none; b=tbsJ9eUxVOiP3hAgqlIxr6sdSjo4pOf7/ciAXMFIPzppCd2tHzNf28+5dS/RWmyRgYUYd1MFSD7KfbVmgKDwIQ4IhEqFqIcjiiEms1WIoHgKAlgxPS+zOAfxZhDcxrVQ7c/KjISApcNWXJt3cn9lrzESzZ3Hsj4WpeRRu6ZnkmA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708530303; c=relaxed/simple;
-	bh=Dx1Syz9O7J+YAvuPHu3WZWipG8gNA1k5VFmM93qyay0=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=f3BNrN+R112FhM2bHye12Px2+ozZyKUPWv01RUeUoewxfbIiNrsKOUd2+vuqBrn+5XWY/LIAVyufw3MKWF9zql/k7HoPTzD5aHpXgwP59PsdmgdWM7NXsS8/3bKhOjBuw82cVYPWLNKXMiiiFMUWMpyBxsueNUrmILc/SgpHz1c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=inS2MZoI; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="inS2MZoI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 05F0EC43142;
-	Wed, 21 Feb 2024 15:45:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708530302;
-	bh=Dx1Syz9O7J+YAvuPHu3WZWipG8gNA1k5VFmM93qyay0=;
-	h=From:To:Cc:Subject:Date:From;
-	b=inS2MZoI7gFXzSn1OqaDYssIZN6F+jKDv0klzkkRDqjzr1Eid3oa1ab8ohcoq7RHl
-	 Ph/53TomNjZqyH/2+MJyw6w6r+vJyEB6H1dVH61lizDeZOD0R8MPh1PDRFYbQ2ubrE
-	 //Sr6E2bjoFqGp1iM5t7kSkr/lyBMOnIRtNFD1WyErTmUbx7yYiUnoCyzpH50yMYnO
-	 BbUREfBcFRGeWi34XfuyED1VwAbs+m8QLHHp9INeKs4zbx+8VcVdWdHOVmuRMEItML
-	 17u4UUbPksP9Q2kWvyM4XoexTdehAa1ZqL5ZKoRIVKxr9RuMpSHhJjMY/cMRSKWamG
-	 VYtLGZXxJEwhw==
-From: Arnd Bergmann <arnd@kernel.org>
-To: Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konrad.dybcio@linaro.org>,
-	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc: Arnd Bergmann <arnd@arndb.de>,
-	Rob Herring <robh@kernel.org>,
-	Yangtao Li <frank.li@vivo.com>,
-	linux-arm-msm@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] soc: qcom: spm: fix building with CONFIG_REGULATOR=n
-Date: Wed, 21 Feb 2024 16:44:51 +0100
-Message-Id: <20240221154457.2007420-1-arnd@kernel.org>
-X-Mailer: git-send-email 2.39.2
+	s=arc-20240116; t=1708530328; c=relaxed/simple;
+	bh=izx0Q7NNyB7voMGWRFN3PuhM1xFPObSAyP9CPSxruuw=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=HvuUiSmpsA5mEuL1sDqHGRC9CFXvBCTBc3pw9TpcDC+B+Bg297lBAvOSpVrRWhSZeyvlDD/6d1LCTEoYE2vvGZ5My6gl6LB9Fb/iknKpv3obCbpq5LYB7icOFo6x/BFss4nMEQKmBQ7suCfVrnuwnFQC1kQC6yppiCHz4ddzonA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 907D2C433C7;
+	Wed, 21 Feb 2024 15:45:26 +0000 (UTC)
+Date: Wed, 21 Feb 2024 10:47:14 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Dmitry Safonov <dima@arista.com>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland
+ <mark.rutland@arm.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Jonathan Corbet <corbet@lwn.net>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org, Dmitry
+ Safonov <0x7f454c46@gmail.com>
+Subject: Re: [PATCH] Documentation/ftrace: Correct wording on trace_options
+ sharing
+Message-ID: <20240221104714.1f7bc208@gandalf.local.home>
+In-Reply-To: <1027d6bc-f4c7-4da5-bf46-3809b7c487d4@arista.com>
+References: <20240220-ftrace-options-docs-v1-1-95448f535056@arista.com>
+	<1027d6bc-f4c7-4da5-bf46-3809b7c487d4@arista.com>
+X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-From: Arnd Bergmann <arnd@arndb.de>
+On Wed, 21 Feb 2024 01:59:53 +0000
+Dmitry Safonov <dima@arista.com> wrote:
 
-The newly added code causes a build failure when -Werror is set:
+> On 2/20/24 21:00, Dmitry Safonov wrote:
+> [..]
+> > diff --git a/Documentation/trace/ftrace.rst b/Documentation/trace/ftrace.rst
+> > index 7e7b8ec17934..c79a6bcef3c9 100644
+> > --- a/Documentation/trace/ftrace.rst
+> > +++ b/Documentation/trace/ftrace.rst
+> > @@ -3603,9 +3603,9 @@ The files in the new directory work just like the files with the
+> >  same name in the tracing directory except the buffer that is used
+> >  is a separate and new buffer. The files affect that buffer but do not
+> >  affect the main buffer with the exception of trace_options. Currently,
+> > -the trace_options affect all instances and the top level buffer
+> > -the same, but this may change in future releases. That is, options
+> > -may become specific to the instance they reside in.
+> > +most of the options are specific to the instance they reside in, but
+> > +trace_printk, printk-msg-only and record-cmd are affecting all instances
+> > +and the top level buffer, but this may change in future releases.  
+> 
+> Actually, it seems that at least on -next these 3 are not shared as
+> well? (if my tests aren't misbehaving)
+> 
+> So, just remove the part about trace_options exception?
+>
 
-drivers/soc/qcom/spm.c:388:12: error: 'spm_get_cpu' defined but not used [-Werror=unused-function]
+In reality, if we want to be specific. It should state that all options
+listed in the instance options directory are unique to the instance. If an
+option only exists in the top directory, then it is global or for a tracer
+that can only be used in the top directory.
 
-Remove the #ifdef and instead use an IS_ENABLED() check that lets the
-compiler perform dead code elimination instead of the preprocessor.
-
-Fixes: 6496dba142f4 ("soc: qcom: spm: add support for voltage regulator")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- drivers/soc/qcom/spm.c | 12 ++++--------
- 1 file changed, 4 insertions(+), 8 deletions(-)
-
-diff --git a/drivers/soc/qcom/spm.c b/drivers/soc/qcom/spm.c
-index 5eefaec72a13..06e2c4c2a4a8 100644
---- a/drivers/soc/qcom/spm.c
-+++ b/drivers/soc/qcom/spm.c
-@@ -411,7 +411,6 @@ static int spm_get_cpu(struct device *dev)
- 	return -EOPNOTSUPP;
- }
- 
--#ifdef CONFIG_REGULATOR
- static int spm_register_regulator(struct device *dev, struct spm_driver_data *drv)
- {
- 	struct regulator_config config = {
-@@ -474,12 +473,6 @@ static int spm_register_regulator(struct device *dev, struct spm_driver_data *dr
- 
- 	return 0;
- }
--#else
--static int spm_register_regulator(struct device *dev, struct spm_driver_data *drv)
--{
--	return 0;
--}
--#endif
- 
- static const struct of_device_id spm_match_table[] = {
- 	{ .compatible = "qcom,sdm660-gold-saw2-v4.1-l2",
-@@ -559,7 +552,10 @@ static int spm_dev_probe(struct platform_device *pdev)
- 	if (drv->reg_data->reg_offset[SPM_REG_SPM_CTL])
- 		spm_set_low_power_mode(drv, PM_SLEEP_MODE_STBY);
- 
--	return spm_register_regulator(&pdev->dev, drv);
-+	if (IS_ENABLED(CONFIG_REGULATOR))
-+		return spm_register_regulator(&pdev->dev, drv);
-+
-+	return 0;
- }
- 
- static struct platform_driver spm_driver = {
--- 
-2.39.2
-
+-- Steve
