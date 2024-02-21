@@ -1,149 +1,130 @@
-Received: from mail-yb1-f172.google.com (mail-yb1-f172.google.com [209.85.219.172])
+Received: from mail-yw1-f173.google.com (mail-yw1-f173.google.com [209.85.128.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA8DC12AAD3
-	for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 23:38:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6718EC5
+	for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 23:38:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708558726; cv=none; b=Q7p07lK/GSlXo+27vtMrza6YLnk25DNV5cC4YFS76ealbmJxtpmO8hA47xVynOU5O6GCN2IBzXDXK7wT+EsXoAIla/fDamgAnbNHG90tKxnO5pS4I2x6GUigWCVKEx783Al9BalzF7r+QeH+cQhhX1RdrU9/gtsCLegA7OK2V0I=
+	t=1708558740; cv=none; b=UPNDG5jlpVgaYtK5jzsigNJF29xTlU7Pma3wDGlky9WGsZjSQfZcERMQbox4QUQ0WegCnTXrBtORdcQ9pEmWoqeuHYPCms6CGmLDKxXAormYK0eBuKGjW5jQJeujty+U9ZppFmdaIGw1s/hbr9b0175gcXvPX8LCQBnBtmgSiRo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708558726; c=relaxed/simple;
-	bh=VbnWhAoLr3EeawQyolNDrQRXZNQkuXxI4yM52Iy8tIc=;
+	s=arc-20240116; t=1708558740; c=relaxed/simple;
+	bh=zwQaUfTd5VGQ23NzTxo29zCF6MbG+EiG7CQ+klarN7E=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=DFIEuG8fn9J7u3RSCfhTrbPmIfVNUHrF7YD+TkA9D5TxRirnUFKuojnnjUvhZRuxDKQ9sxNv4OkDvZZ4MlmF5/Az90u4P1pa6vwCKZRWv7Hp7em7Z3PsY65zIPXD39ExbkMx6j8WaeuNOkqD/s89gNZaTQ2fWUCBAEn2Tw61Gwk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com; spf=pass smtp.mailfrom=paul-moore.com; dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b=YPmVQ38K; arc=none smtp.client-ip=209.85.219.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paul-moore.com
+	 To:Cc:Content-Type; b=E31ixNumPn3jFk9BqYCXrzuLeyDGO8BjMJxQe3lC5el2HSyayhnltLQEawDIWjZX2X5Ss+/5Y2IvkIgWQO2ywdPqPZVTAJHTdoYNfa0Zk5s5WZ4eKDwAQF87ZPkeasSCj6R4aGtoQ8xGo3bkA96NkmofrYiluRUizwz3eCPyXUA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=GHWBp9rd; arc=none smtp.client-ip=209.85.128.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b="YPmVQ38K"
-Received: by mail-yb1-f172.google.com with SMTP id 3f1490d57ef6-dcc4de7d901so6501214276.0
-        for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 15:38:44 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GHWBp9rd"
+Received: by mail-yw1-f173.google.com with SMTP id 00721157ae682-60495209415so71080097b3.3
+        for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 15:38:57 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore.com; s=google; t=1708558724; x=1709163524; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=qdOxMAkyl5yi4MjXJFORjz39p90zOjZ6/27YgpZJWJY=;
-        b=YPmVQ38KfNBCioWnQH9i31aCO3qWe8g4FexNNDFGDhqNeUuG3XWPmFpEmA9awwJb5A
-         XJMx1A4m8+BVZ1p3XAzZC0zKg0x2+yDBARbViUOghFqUGf+dz8CsnJ5TtGF1E2scHF+n
-         V6duZxQp4Ar9bMK4gSSNOGSTRmg+5RW72XtCgnbZaFQ2Fdd7MiWjHHmP4E3GtBuFibTP
-         IgYgbe2K/n8oF+Bbf6blxarTZldQ732ran3ZxPn05Tb9kRx/ux++hkqS0FRC2yAvwcXG
-         pXLxyhQUGJkLQbYP71i9C14lJBPG5F27nJWtaJSiNcmk2DhBaP2K5piPo2wLFuE4tLYA
-         p1IQ==
+        d=linaro.org; s=google; t=1708558737; x=1709163537; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=/dnZ6qXwhjaIXNXWlJKsv9Hd+U+Uq/9NkmI5u+eHav8=;
+        b=GHWBp9rdKNBLa9ItaUOjcsoQABVCL8u0XsemikGmqzKl1ZJtcac4+4OQs4HTZHNrie
+         /FHnkZVV5Z8y9Eee6s16au2tUW4qaaPY7z51g64PU95wU9fjM8g7dGsxcWDqZF03QjLb
+         ohLCtAMzwvPquEC+C2UyEqvcdUGdO2blu+SeJ6WcyBiW0LuWLtLRwSE1Pn0OvaR0oqvx
+         YBLWcTXYMG9fWR3undOueHHMq+A9sjorLqCWPGtYz8Jc2NEdXO2hPy+C/WWPGofk8Lah
+         Zss431F6P0VP1RE6H7WerMLZmmQyOdr8ABPEBiGTeOeLilD6KW+kvO9ZuPL6F+oeMwoo
+         wU4Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708558724; x=1709163524;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=qdOxMAkyl5yi4MjXJFORjz39p90zOjZ6/27YgpZJWJY=;
-        b=JOt4paojmxgK1JPbuUArPRHply9nXx5MY2+3A1qS8N0Iz9COfjeeYMQnfRcyPPooMC
-         1t+vzzqXOObeTHAOWludfQbdprvMbw9kEvGTwfvN/1DN5DebKuX4dM+2UdUvfhtMJCUA
-         TWvj96nnXxJrsx1aclJ5Z/8hmMSiI5OCqzhRO/x6x12paFyzBC5K2qvB/dzx5qcCZ8n8
-         sjU1eYj7MrXcO8ZydKwuIuj/Mnvl8ay1ctSTaOXylMFDj6+rIoeRA7DCNmLE6OjIxSv2
-         tkYD/CL5ZnnJDHdMFY0G+BVwxillGe/odER1k/i1t98703fPGgMrIhVshqkYsz7m+AYi
-         eJkg==
-X-Forwarded-Encrypted: i=1; AJvYcCXmSnYWjPFxK9iGBcXMo/elHc9zXLxfOa7osUcEoueCwuz0N210xGyktUXeLh0xiBowquQiMExwkhb4+QLmitKzZ0H20TRqv5saerIm
-X-Gm-Message-State: AOJu0YzN/aMRif2WjXJLbeUotEVil27FKOPrJrNVNiSWp9R80YZ98rEC
-	/sjIbfCURRgOaeEoOznwaVTj9+4XaftCPMEyRxioAcjNjlEBniZb9QQVUnldtGqb2qTuSlF39PP
-	kyYE/nLByEOGsj7AyNpBjgn6VExFYNCRh9v9P
-X-Google-Smtp-Source: AGHT+IHA2xpXRb1sDUe9q9FIIpvonGFzRGzz6GZyMO19EZeTrYiVFDtuhUjox8KLin5Elu441vcMmgEKrRzPPcEqg0U=
-X-Received: by 2002:a5b:c85:0:b0:dc6:d2d3:a57c with SMTP id
- i5-20020a5b0c85000000b00dc6d2d3a57cmr742866ybq.59.1708558723714; Wed, 21 Feb
- 2024 15:38:43 -0800 (PST)
+        d=1e100.net; s=20230601; t=1708558737; x=1709163537;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=/dnZ6qXwhjaIXNXWlJKsv9Hd+U+Uq/9NkmI5u+eHav8=;
+        b=DQGSfpnQFvTfu4e6Wk2j8fFVVbKs6FwctKVLF3Wup7gJRG3Kn4pJQaRhy6aoSemy3v
+         q+hIG+78Hzmm2KVae+MebZqyGUeCpu0fOJuHs3HZDc3oE5lm0DsMPQQ+qVrsaJGyGUCb
+         LhqQsA39ixSAfgYdUzyBW21XzChrEGFwyx1kkOfmWdRxgEnTWQn2YgOfRy/6o0fKjuhc
+         VVIm4N16x47/1Oj3RrRb1uSwfhuxv8w0u8E/n6ru8GLlYI2xMPE3/sXkjKa85xrkWvUL
+         y81OsknmNfFLAB8X2+wiaq5PCAz2wDJDqdoRj6hOh/5o/7fHpxMQBQQ4WO3MY+x57Y/m
+         u77w==
+X-Forwarded-Encrypted: i=1; AJvYcCXcaY2RuEEo1N0LQBj7lzBv2WWDW9tNQN0zN1uwn/7G4BnqDn9pOHEIj+hRp1OJsRkr4NMDDyjk6cN09uxxW4Qaj7gKE+OAvzGuV9Kp
+X-Gm-Message-State: AOJu0Yx7d/UDsZBlAtWfJtrepdBxtmmEb2xRZZqU2HCLf0BCM+2GSZMJ
+	3uxlk5DjbgmPyCbTtsrTRBg0Xl6/WchlqXWPbjlQk2T0hZEQb1RNbZ8WUIm4mrsZJ20DuDgqKaQ
+	hF9T0JHQ8roahiwPhuFUy720+gi4jJC01xnUulw==
+X-Google-Smtp-Source: AGHT+IE0tGrX7UsWdp8xy5caWpOZ9THC0fnnletXSK4P9Z3hp437QPqk/DB8NiySph7r7h/gOnZ8DNQ5BKCpKPKAobA=
+X-Received: by 2002:a81:7184:0:b0:604:230a:a823 with SMTP id
+ m126-20020a817184000000b00604230aa823mr19674257ywc.50.1708558736962; Wed, 21
+ Feb 2024 15:38:56 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240221-idmap-fscap-refactor-v2-0-3039364623bd@kernel.org> <20240221-idmap-fscap-refactor-v2-12-3039364623bd@kernel.org>
-In-Reply-To: <20240221-idmap-fscap-refactor-v2-12-3039364623bd@kernel.org>
-From: Paul Moore <paul@paul-moore.com>
-Date: Wed, 21 Feb 2024 18:38:33 -0500
-Message-ID: <CAHC9VhTgHP=3Te4=t6chGte15CA_tMoVjFuzBwh+FxQ6Ri4mQQ@mail.gmail.com>
-Subject: Re: [PATCH v2 12/25] selinux: add hooks for fscaps operations
-To: "Seth Forshee (DigitalOcean)" <sforshee@kernel.org>
-Cc: Christian Brauner <brauner@kernel.org>, Serge Hallyn <serge@hallyn.com>, Eric Paris <eparis@redhat.com>, 
-	James Morris <jmorris@namei.org>, Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>, 
-	Stephen Smalley <stephen.smalley.work@gmail.com>, Ondrej Mosnacek <omosnace@redhat.com>, 
-	Casey Schaufler <casey@schaufler-ca.com>, Mimi Zohar <zohar@linux.ibm.com>, 
-	Roberto Sassu <roberto.sassu@huawei.com>, Dmitry Kasatkin <dmitry.kasatkin@gmail.com>, 
-	Eric Snowberg <eric.snowberg@oracle.com>, "Matthew Wilcox (Oracle)" <willy@infradead.org>, 
-	Jonathan Corbet <corbet@lwn.net>, Miklos Szeredi <miklos@szeredi.hu>, Amir Goldstein <amir73il@gmail.com>, 
-	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-security-module@vger.kernel.org, audit@vger.kernel.org, 
-	selinux@vger.kernel.org, linux-integrity@vger.kernel.org, 
-	linux-doc@vger.kernel.org, linux-unionfs@vger.kernel.org
+References: <20240221-rb3gen2-dp-connector-v1-0-dc0964ef7d96@quicinc.com> <20240221-rb3gen2-dp-connector-v1-1-dc0964ef7d96@quicinc.com>
+In-Reply-To: <20240221-rb3gen2-dp-connector-v1-1-dc0964ef7d96@quicinc.com>
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Date: Thu, 22 Feb 2024 01:38:45 +0200
+Message-ID: <CAA8EJprXXjvanBU_HGv7X_dS3nyZ867AsvKj5+S3pnWcpsk1ug@mail.gmail.com>
+Subject: Re: [PATCH 1/9] drm/msm/dp: Add DP support to combo instance in SC7280
+To: Bjorn Andersson <quic_bjorande@quicinc.com>
+Cc: Rob Clark <robdclark@gmail.com>, Abhinav Kumar <quic_abhinavk@quicinc.com>, 
+	Sean Paul <sean@poorly.run>, Marijn Suijten <marijn.suijten@somainline.org>, 
+	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, cros-qcom-dts-watchers@chromium.org, 
+	Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konrad.dybcio@linaro.org>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+	Conor Dooley <conor+dt@kernel.org>, linux-arm-msm@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org, 
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Wed, Feb 21, 2024 at 4:25=E2=80=AFPM Seth Forshee (DigitalOcean)
-<sforshee@kernel.org> wrote:
+On Thu, 22 Feb 2024 at 01:19, Bjorn Andersson <quic_bjorande@quicinc.com> wrote:
 >
-> Add hooks for set/get/remove fscaps operations which perform the same
-> checks as the xattr hooks would have done for XATTR_NAME_CAPS.
+> When upstreamed the SC7280 DP controllers where described as one being
+> DP and one eDP, but they can infact both be DP or eDP.
 >
-> Signed-off-by: Seth Forshee (DigitalOcean) <sforshee@kernel.org>
+> Extend the list of DP controllers to cover both instances, and rely on
+> the newly introduced mechanism for selecting which mode they should
+> operate in.
+>
+> Move qcom,sc7280-edp to a dedicated list, to ensure existing DeviceTree
+> will continue to select eDP.
+>
+> Signed-off-by: Bjorn Andersson <quic_bjorande@quicinc.com>
 > ---
->  security/selinux/hooks.c | 26 ++++++++++++++++++++++++++
->  1 file changed, 26 insertions(+)
+>  drivers/gpu/drm/msm/dp/dp_display.c | 9 +++++++--
+>  1 file changed, 7 insertions(+), 2 deletions(-)
 >
-> diff --git a/security/selinux/hooks.c b/security/selinux/hooks.c
-> index a6bf90ace84c..da129a387b34 100644
-> --- a/security/selinux/hooks.c
-> +++ b/security/selinux/hooks.c
-> @@ -3367,6 +3367,29 @@ static int selinux_inode_removexattr(struct mnt_id=
-map *idmap,
->         return -EACCES;
->  }
+> diff --git a/drivers/gpu/drm/msm/dp/dp_display.c b/drivers/gpu/drm/msm/dp/dp_display.c
+> index 7b8c695d521a..1792ba9f7259 100644
+> --- a/drivers/gpu/drm/msm/dp/dp_display.c
+> +++ b/drivers/gpu/drm/msm/dp/dp_display.c
+> @@ -129,7 +129,12 @@ static const struct msm_dp_desc sc7180_dp_descs[] = {
+>  };
 >
-> +static int selinux_inode_set_fscaps(struct mnt_idmap *idmap,
-> +                                   struct dentry *dentry,
-> +                                   const struct vfs_caps *caps, int flag=
-s)
-> +{
-> +       return dentry_has_perm(current_cred(), dentry, FILE__SETATTR);
-> +}
+>  static const struct msm_dp_desc sc7280_dp_descs[] = {
+> -       { .io_start = 0x0ae90000, .id = MSM_DP_CONTROLLER_0, .connector_type = DRM_MODE_CONNECTOR_DisplayPort, .wide_bus_en = true },
+> +       { .io_start = 0x0ae90000, .id = MSM_DP_CONTROLLER_0, .wide_bus_en = true },
+> +       { .io_start = 0x0aea0000, .id = MSM_DP_CONTROLLER_1, .wide_bus_en = true },
 
-The selinux_inode_setxattr() code also has a cap_inode_setxattr()
-check which is missing here.  Unless you are handling this somewhere
-else, I would expect the function above to look similar to
-selinux_inode_remove_fscaps(), but obviously tweaked for setting the
-fscaps and not removing them.
+I think we need to keep .connector_type here, don't we?
 
-> +static int selinux_inode_get_fscaps(struct mnt_idmap *idmap,
-> +                                   struct dentry *dentry)
-> +{
-> +       return dentry_has_perm(current_cred(), dentry, FILE__GETATTR);
-> +}
+> +       {}
+> +};
 > +
-> +static int selinux_inode_remove_fscaps(struct mnt_idmap *idmap,
-> +                                      struct dentry *dentry)
-> +{
-> +       int rc =3D cap_inode_removexattr(idmap, dentry, XATTR_NAME_CAPS);
-> +       if (rc)
-> +               return rc;
-> +
-> +       return dentry_has_perm(current_cred(), dentry, FILE__SETATTR);
-> +}
-> +
->  static int selinux_path_notify(const struct path *path, u64 mask,
->                                                 unsigned int obj_type)
->  {
-> @@ -7165,6 +7188,9 @@ static struct security_hook_list selinux_hooks[] __=
-ro_after_init =3D {
->         LSM_HOOK_INIT(inode_set_acl, selinux_inode_set_acl),
->         LSM_HOOK_INIT(inode_get_acl, selinux_inode_get_acl),
->         LSM_HOOK_INIT(inode_remove_acl, selinux_inode_remove_acl),
-> +       LSM_HOOK_INIT(inode_set_fscaps, selinux_inode_set_fscaps),
-> +       LSM_HOOK_INIT(inode_get_fscaps, selinux_inode_get_fscaps),
-> +       LSM_HOOK_INIT(inode_remove_fscaps, selinux_inode_remove_fscaps),
->         LSM_HOOK_INIT(inode_getsecurity, selinux_inode_getsecurity),
->         LSM_HOOK_INIT(inode_setsecurity, selinux_inode_setsecurity),
->         LSM_HOOK_INIT(inode_listsecurity, selinux_inode_listsecurity),
+> +static const struct msm_dp_desc sc7280_edp_descs[] = {
+>         { .io_start = 0x0aea0000, .id = MSM_DP_CONTROLLER_1, .connector_type = DRM_MODE_CONNECTOR_eDP, .wide_bus_en = true },
+>         {}
+>  };
+> @@ -182,7 +187,7 @@ static const struct msm_dp_desc x1e80100_dp_descs[] = {
+>  static const struct of_device_id dp_dt_match[] = {
+>         { .compatible = "qcom,sc7180-dp", .data = &sc7180_dp_descs },
+>         { .compatible = "qcom,sc7280-dp", .data = &sc7280_dp_descs },
+> -       { .compatible = "qcom,sc7280-edp", .data = &sc7280_dp_descs },
+> +       { .compatible = "qcom,sc7280-edp", .data = &sc7280_edp_descs },
+>         { .compatible = "qcom,sc8180x-dp", .data = &sc8180x_dp_descs },
+>         { .compatible = "qcom,sc8180x-edp", .data = &sc8180x_dp_descs },
+>         { .compatible = "qcom,sc8280xp-dp", .data = &sc8280xp_dp_descs },
 >
 > --
-> 2.43.0
+> 2.25.1
+>
 
---=20
-paul-moore.com
+
+-- 
+With best wishes
+Dmitry
