@@ -1,129 +1,122 @@
-Received: from out-181.mta0.migadu.com (out-181.mta0.migadu.com [91.218.175.181])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C7141097B
-	for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 18:34:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E3671097B;
+	Wed, 21 Feb 2024 18:34:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708540455; cv=none; b=cXpWTsSaen4Mb7PJAK63qPj8f+ilVP2i+HLUwRqKNkMl58+dv61bi0af+a91UgL9dUEXMl+ulLK6DaWKjBDKzC6jZSf5ZofolkYHxuGKY2KVGJWkvHUcYWnw76GWOcRxw+oH5u66a4ZdbLASA0O/vDqveeJf+CFLPDVbBUz7+sY=
+	t=1708540497; cv=none; b=bpxMIzJAnsRzdkz9w/ItRz15lybubQQvRmajyP3TmyLc7WHBkf1c5eI0fR9gqnBaNsjXgO0NZx6xjEjLBTpy0kO4eyhXmzZEF+S13A+VYuaK+sDIM12rhvb4aDt6Pgv0uKm/UKqLpLcEJHo573jErp7ZDA3HEgbPrUtcAJOxgiU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708540455; c=relaxed/simple;
-	bh=LgjqrzXO+tkiNjtq7bVcYwIGi3coMgZGbOl9VQtJOO8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VpxKGVq3l9Tnke1J696BmJWkw8lAHvcJWaafyY4nvHtP0FGlCGp8yL9DjfoSDteAXPQjkrqEawDfRGl9G7ldbvUUwF3QbNUa3O+hu66Lk8OYat521ddIba3C8g79xgIhThfz0ospqZVCA7k88AK+6HF/x/21VIELsMCaBMGySNk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Z+qxW5XT; arc=none smtp.client-ip=91.218.175.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1708540497; c=relaxed/simple;
+	bh=SXh9o6lcdXir6m04bi7g64vXsMqCpE0OVYelVUUwvJE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=C7jDY3Oj9gF54nsxZiBCoaacZnhy/bBVqDZWWfa0bD1M89uDrVp81jQctZqYksyyfddRcj/y4o1xFMUwXz59atYLtd5Iu9rQynmVOwoO2g2HKhQjafGOwTa/HKIgkf0auBYZ/NcAg4BnL4JNBTtIt+d7KUq7Sm9184N/xBcYxjU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Hm8Ta5Av; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Z+qxW5XT"
-Date: Wed, 21 Feb 2024 10:33:48 -0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1708540450;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=5ZfYq+o4HUAg6zk4DYlNdaruLQWY+JIsadSfBudqmUQ=;
-	b=Z+qxW5XTS5ZBzmp50/Rw0CQto8fpUGAvw1L9hMrCBlgRWfmWCZL2QMyMRJBhhvUXyZrCZQ
-	7I1L3xEY0CBBjHvs/Nkvq6QoC4K4YDSewb5cbAQFUxNPOxqyAUBKyLOz9LQ0CPf5K9diqz
-	sLS+cybCN1xIPho6etnzuEUulDq//M0=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Roman Gushchin <roman.gushchin@linux.dev>
-To: Vlastimil Babka <vbabka@suse.cz>
-Cc: Christoph Lameter <cl@linux.com>, Pekka Enberg <penberg@kernel.org>,
-	David Rientjes <rientjes@google.com>,
-	Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Hyeonggon Yoo <42.hyeyoo@gmail.com>,
-	Andrey Ryabinin <ryabinin.a.a@gmail.com>,
-	Alexander Potapenko <glider@google.com>,
-	Andrey Konovalov <andreyknvl@gmail.com>,
-	Dmitry Vyukov <dvyukov@google.com>,
-	Vincenzo Frascino <vincenzo.frascino@arm.com>,
-	Zheng Yejian <zhengyejian1@huawei.com>,
-	Xiongwei Song <xiongwei.song@windriver.com>,
-	Chengming Zhou <chengming.zhou@linux.dev>, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org, kasan-dev@googlegroups.com
-Subject: Re: [PATCH 2/3] mm, slab: use an enum to define SLAB_ cache creation
- flags
-Message-ID: <ZdZCDEFX4_UuHSWR@P9FQF9L96D.corp.robot.car>
-References: <20240220-slab-cleanup-flags-v1-0-e657e373944a@suse.cz>
- <20240220-slab-cleanup-flags-v1-2-e657e373944a@suse.cz>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Hm8Ta5Av"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1708540496; x=1740076496;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=SXh9o6lcdXir6m04bi7g64vXsMqCpE0OVYelVUUwvJE=;
+  b=Hm8Ta5AvbyPfws3ExSEsD4tx48RydUqtvKZ0z7Qgojt0Rk0bF7Xv869o
+   6X2ALCdlnJWaBt6n4vP2i4dYlPm20sdlaJjEvkO79RfAscYjJLVxrQxca
+   B868aFyJ7cklN2lo1sAxSJjuDCcj527uZ2t2u1261AVxQMWqDX0IF40jZ
+   EimihVwygUSRteB6f62iUkE0H6n1YDLZodpx2UI/j/2bu7RELfSvBuq0w
+   qa8s3YOdTOLaEfRwnafxEaGpbRW2FBRiRoSv3wKZzZi8MyRxPN4eIbZtc
+   bKAK/Mto/BswmibRUDplkE5W6oV25UA7hCB5mQLQnJS3CJSqnSlIOvgf3
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10991"; a="28164672"
+X-IronPort-AV: E=Sophos;i="6.06,176,1705392000"; 
+   d="scan'208";a="28164672"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Feb 2024 10:34:54 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10991"; a="936684737"
+X-IronPort-AV: E=Sophos;i="6.06,176,1705392000"; 
+   d="scan'208";a="936684737"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmsmga001.fm.intel.com with ESMTP; 21 Feb 2024 10:34:47 -0800
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+	id A7CB11FD; Wed, 21 Feb 2024 20:34:46 +0200 (EET)
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	linux-kernel@vger.kernel.org,
+	linux-serial@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-aspeed@lists.ozlabs.org,
+	linux-rpi-kernel@lists.infradead.org,
+	linux-mips@vger.kernel.org,
+	linux-tegra@vger.kernel.org
+Cc: Jiri Slaby <jirislaby@kernel.org>,
+	Joel Stanley <joel@jms.id.au>,
+	Andrew Jeffery <andrew@codeconstruct.com.au>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Ray Jui <rjui@broadcom.com>,
+	Scott Branden <sbranden@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Al Cooper <alcooperx@gmail.com>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Paul Cercueil <paul@crapouillou.net>,
+	Vladimir Zapolskiy <vz@mleia.com>,
+	Thierry Reding <thierry.reding@gmail.com>,
+	Jonathan Hunter <jonathanh@nvidia.com>,
+	Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>
+Subject: [rft, PATCH v1 00/14]  serial: Add a helper to parse device properties and more
+Date: Wed, 21 Feb 2024 20:31:16 +0200
+Message-ID: <20240221183442.4124354-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.43.0.rc1.1.gbec44491f096
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240220-slab-cleanup-flags-v1-2-e657e373944a@suse.cz>
-X-Migadu-Flow: FLOW_OUT
+Content-Transfer-Encoding: 8bit
 
-On Tue, Feb 20, 2024 at 05:58:26PM +0100, Vlastimil Babka wrote:
-> The values of SLAB_ cache creation flagsare defined by hand, which is
-> tedious and error-prone. Use an enum to assign the bit number and a
-> __SF_BIT() macro to #define the final flags.
-> 
-> This renumbers the flag values, which is OK as they are only used
-> internally.
-> 
-> Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
-> ---
->  include/linux/slab.h | 81 ++++++++++++++++++++++++++++++++++++++--------------
->  mm/slub.c            |  6 ++--
->  2 files changed, 63 insertions(+), 24 deletions(-)
-> 
-> diff --git a/include/linux/slab.h b/include/linux/slab.h
-> index 6252f44115c2..f893a132dd5a 100644
-> --- a/include/linux/slab.h
-> +++ b/include/linux/slab.h
-> @@ -21,29 +21,68 @@
->  #include <linux/cleanup.h>
->  #include <linux/hash.h>
->  
-> +enum _slab_flag_bits {
-> +	_SLAB_CONSISTENCY_CHECKS,
-> +	_SLAB_RED_ZONE,
-> +	_SLAB_POISON,
-> +	_SLAB_KMALLOC,
-> +	_SLAB_HWCACHE_ALIGN,
-> +	_SLAB_CACHE_DMA,
-> +	_SLAB_CACHE_DMA32,
-> +	_SLAB_STORE_USER,
-> +	_SLAB_PANIC,
-> +	_SLAB_TYPESAFE_BY_RCU,
-> +	_SLAB_TRACE,
-> +#ifdef CONFIG_DEBUG_OBJECTS
-> +	_SLAB_DEBUG_OBJECTS,
-> +#endif
-> +	_SLAB_NOLEAKTRACE,
-> +	_SLAB_NO_MERGE,
-> +#ifdef CONFIG_FAILSLAB
-> +	_SLAB_FAILSLAB,
-> +#endif
-> +#ifdef CONFIG_MEMCG_KMEM
-> +	_SLAB_ACCOUNT,
-> +#endif
-> +#ifdef CONFIG_KASAN_GENERIC
-> +	_SLAB_KASAN,
-> +#endif
-> +	_SLAB_NO_USER_FLAGS,
-> +#ifdef CONFIG_KFENCE
-> +	_SLAB_SKIP_KFENCE,
-> +#endif
-> +#ifndef CONFIG_SLUB_TINY
-> +	_SLAB_RECLAIM_ACCOUNT,
-> +#endif
-> +	_SLAB_OBJECT_POISON,
-> +	_SLAB_CMPXCHG_DOUBLE,
-> +	_SLAB_FLAGS_LAST_BIT
-> +};
-> +
-> +#define __SF_BIT(nr)	((slab_flags_t __force)(1U << (nr)))
+I have noticed that many drivers are using the subset of the common
+properties and IRQ retrieval code. With the moving it to one place
+we have got a common parser one for many.
 
-I'd rename it to (__)SLAB_FLAG_BIT(), as SF is a bit cryptic, but not a strong
-preference. Otherwise looks really good to me, nice cleanup.
+Tested on Intel Apollo Lake with DesingWare 8250 UARTs.
+The rest has been compile tested on x86_64 with clang.
 
-Reviewed-by: Roman Gushchin <roman.gushchin@linux.dev>
+Andy Shevchenko (14):
+  serial: core: Move struct uart_port::quirks closer to possible values
+  serial: core: Add UPIO_UNSET constant for unset port type
+  serial: port: Introduce a common helper to read properties
+  serial: 8250_aspeed_vuart: Switch to use uart_read_port_properties()
+  serial: 8250_bcm2835aux: Switch to use uart_read_port_properties()
+  serial: 8250_bcm7271: Switch to use uart_read_port_properties()
+  serial: 8250_dw: Switch to use uart_read_port_properties()
+  serial: 8250_ingenic: Switch to use uart_read_port_properties()
+  serial: 8250_lpc18xx: Switch to use uart_read_port_properties()
+  serial: 8250_of: Switch to use uart_read_port_properties()
+  serial: 8250_omap: Switch to use uart_read_port_properties()
+  serial: 8250_pxa: Switch to use uart_read_port_properties()
+  serial: 8250_tegra: Switch to use uart_read_port_properties()
+  serial: 8250_uniphier: Switch to use uart_read_port_properties()
 
-Thanks!
+ drivers/tty/serial/8250/8250_aspeed_vuart.c |  50 +++-----
+ drivers/tty/serial/8250/8250_bcm2835aux.c   |  92 ++++++-------
+ drivers/tty/serial/8250/8250_bcm7271.c      |  53 +++-----
+ drivers/tty/serial/8250/8250_dw.c           |  67 ++++------
+ drivers/tty/serial/8250/8250_ingenic.c      |  20 +--
+ drivers/tty/serial/8250/8250_lpc18xx.c      |  20 ++-
+ drivers/tty/serial/8250/8250_of.c           | 105 ++++-----------
+ drivers/tty/serial/8250/8250_omap.c         |  29 ++---
+ drivers/tty/serial/8250/8250_pxa.c          |  22 ++--
+ drivers/tty/serial/8250/8250_tegra.c        |  26 ++--
+ drivers/tty/serial/8250/8250_uniphier.c     |  17 +--
+ drivers/tty/serial/serial_port.c            | 135 ++++++++++++++++++++
+ include/linux/serial_core.h                 |  10 +-
+ 13 files changed, 313 insertions(+), 333 deletions(-)
+
+-- 
+2.43.0.rc1.1.gbec44491f096
+
