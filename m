@@ -1,86 +1,125 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f175.google.com (mail-yw1-f175.google.com [209.85.128.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B4AA4C62;
-	Wed, 21 Feb 2024 14:21:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70E8A7BB11;
+	Wed, 21 Feb 2024 14:22:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708525285; cv=none; b=AebVgJ4wICl2AU6Hc99XCoTx/X+is6obuieMng64xE4D8X8uA9JoIoLd/u/rfyvOi+v/ZTa85lAjtp1BtmcHAM/Xa0S2MvD5aMFyNxtLYxU87S73GGAEqZJPW0J5pRDMM3t2M73H/a/zYzCHVQzgR6/QzGcmU2wsGDSylkAwBig=
+	t=1708525322; cv=none; b=dnJ/4zHw/02uSacXyKGRwJIIQGVsRIXGR4xV/JA/+DIM+AeJS0bm6zRgWCDtxwtqefjz/wxWQRUGbWJPnjxDwESBd5DM9y38Vc6W1vUV3YhrxZr5GA7dxwSWJeVhHcgur58wIb/+iTOpht3l8+SuR6iZRWqNjleFeoezDm2agE8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708525285; c=relaxed/simple;
-	bh=A4HgXRGDVVWg5a5ZtE9lWeLwYz5CzwymEup8k2SG11U=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=BC1EJVHD3R0zZCKynpJKn/TwQ5ne0THN922PxXvtaceUwdvdEMmRRtplKQmiV+WP1ZYOLg2nifs4KXHMWFFXDQSd/VdfV4680Y+8XjyBgKpXuflhlD8YeO3U3etZWLEu9/q+FX+bcYQTvvl98XJK08QsLumgCgJG608aHmzmA/k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BA07CC43390;
-	Wed, 21 Feb 2024 14:21:21 +0000 (UTC)
-Date: Wed, 21 Feb 2024 09:23:09 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Metin Kaya <metin.kaya@arm.com>
-Cc: linux-kernel@vger.kernel.org, John Stultz <jstultz@google.com>, Joel
- Fernandes <joelaf@google.com>, Qais Yousef <qyousef@google.com>, Ingo
- Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>, Juri
- Lelli <juri.lelli@redhat.com>, Vincent Guittot
- <vincent.guittot@linaro.org>, Dietmar Eggemann <dietmar.eggemann@arm.com>,
- Valentin Schneider <vschneid@redhat.com>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Ben Segall <bsegall@google.com>, Zimuzo Ezeozue <zezeozue@google.com>,
- Youssef Esmat <youssefesmat@google.com>, Mel Gorman <mgorman@suse.de>,
- Daniel Bristot de Oliveira <bristot@redhat.com>, Will Deacon
- <will@kernel.org>, Waiman Long <longman@redhat.com>, Boqun Feng
- <boqun.feng@gmail.com>, "Paul E. McKenney" <paulmck@kernel.org>, Xuewen Yan
- <xuewen.yan94@gmail.com>, K Prateek Nayak <kprateek.nayak@amd.com>, Thomas
- Gleixner <tglx@linutronix.de>, kernel-team@android.com,
- linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH] sched: Add trace events for Proxy Execution (PE)
-Message-ID: <20240221092309.00432f37@gandalf.local.home>
-In-Reply-To: <20240202083338.1328060-1-metin.kaya@arm.com>
-References: <20240202083338.1328060-1-metin.kaya@arm.com>
-X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1708525322; c=relaxed/simple;
+	bh=tbyIxQREtNsFl1chxmmOOxgq+9kmqvxm0SE09qbdS3U=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=CY3Oglk4B7hwI14DKRQMz8czfp+JKKIMTiaDZVmjpuuZs70aXWX9li3RmEb6GXTAwL0lJzVCwzn13ZWc4s+IksGCWdxII5qaszDprfTZ3YQnDcNJxzMl4AKRcU8lSNHAlxqEVdyXlgMXHaRCeU+Rt0fN3ukIs9aObGq01hYvBJw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-yw1-f175.google.com with SMTP id 00721157ae682-60893d33269so183937b3.1;
+        Wed, 21 Feb 2024 06:22:00 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708525318; x=1709130118;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=1d06i49LL9s1ZMGyde7w44zWXOkIzOdUii8V8sAQFpI=;
+        b=NTRx488gZvLGLnd/od895OIil+ZBy1TC0mNLeM4izgnD5Hs1uas2t+ayuEIVMdzbJZ
+         Q2GEpA4ezz1XYTVLu9IIMW5vkRJnNbxRGYXLKLgJN00dOG6/MCB2ilYnfhLasEr61YhH
+         hB76nVtGtlwI6uKTM+6ilPALO+BJzS6dGIVj6B+uKxeKQEysLAsvSqce1km1KersM33f
+         3cun18oNMKnxRCEoxDMOKT2SHOSUdouV2+7pjYCKrmq72pynsefzooCaZnyeYVfIR7iP
+         gtNJ5KRRIlI/U7ZS3ACHZCYai1Qi+QalM7CkIIq1A3V6ALmI1aQEBVHbpy7t8fjTYi7S
+         W6IQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXUc5+ivMr1yhMWDfbUwexHhY+Q97SFo6mN9C3a9m/DbcEopgIUpbOcmWcE0NKUSCxIJRbjIHeqKaCRRiDrgQy/NzHM8qOUdBV6JwIruFWvZF7sW54kaIkInoa27IwfqaYEpcXcfoyINU9yUxWWQnBiBGjGUnbwuQxnDYZxbsyJBdauvgOQ5foxpal9
+X-Gm-Message-State: AOJu0YxuNqm6GRnEcLu1mwCwrM+fowxrFY3kd22SLZgVSwrthlZsKmWh
+	4wvxsMOwJOWwYEfXcUtYJ2dGEWaamsSfNmcTFdUgSfg7oMmxXDji8DM4Lar+3AU=
+X-Google-Smtp-Source: AGHT+IEOXOIwfrVvLYMLiVSmayIuAMz+72BSqjQLMFmTQMawKKL2HeLttcbTR5CJP7/8ts4S8FgGdQ==
+X-Received: by 2002:a0d:d685:0:b0:5ff:790d:62a with SMTP id y127-20020a0dd685000000b005ff790d062amr18310762ywd.5.1708525318664;
+        Wed, 21 Feb 2024 06:21:58 -0800 (PST)
+Received: from mail-yb1-f179.google.com (mail-yb1-f179.google.com. [209.85.219.179])
+        by smtp.gmail.com with ESMTPSA id c129-20020a0dc187000000b00607ecc4212csm2614164ywd.80.2024.02.21.06.21.58
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 21 Feb 2024 06:21:58 -0800 (PST)
+Received: by mail-yb1-f179.google.com with SMTP id 3f1490d57ef6-dcd9e34430cso6800358276.1;
+        Wed, 21 Feb 2024 06:21:58 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCWaE0v0rOSdBTWnYXAdEAxUKJDD0RgobQnLkao4qzilJU6q9/pax/SMMq2nrFvSbTOOd+O8V+uA6dfarue84E25nhASHwD1kpwFl2BwOFYL1PZmRpgAU6v+cjA9fL4N258BZZpH9DtVd/PINz2jpTGuMeRGPAf/mcWt/BZXmZevfHJ8T0odyT6qEHGP
+X-Received: by 2002:a5b:445:0:b0:dc2:48af:bf17 with SMTP id
+ s5-20020a5b0445000000b00dc248afbf17mr14910452ybp.62.1708525318012; Wed, 21
+ Feb 2024 06:21:58 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20240215124112.2259103-1-claudiu.beznea.uj@bp.renesas.com>
+ <20240215124112.2259103-2-claudiu.beznea.uj@bp.renesas.com> <CAMuHMdVi5vN5JSf9TAbdyrNa8_7eM=RajH8Mm=Qxhj5chWcK9A@mail.gmail.com>
+In-Reply-To: <CAMuHMdVi5vN5JSf9TAbdyrNa8_7eM=RajH8Mm=Qxhj5chWcK9A@mail.gmail.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Wed, 21 Feb 2024 15:21:45 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdU7jFzkX7dozKYnhp5RUPr4-1tG0Eba1he+t3nskagZMg@mail.gmail.com>
+Message-ID: <CAMuHMdU7jFzkX7dozKYnhp5RUPr4-1tG0Eba1he+t3nskagZMg@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] pinctrl: renesas: Select CONFIG_IRQ_DOMAIN_HIERARCHY
+ for pinctrl-rzg2l
+To: Claudiu <claudiu.beznea@tuxon.dev>
+Cc: linus.walleij@linaro.org, linux-renesas-soc@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri,  2 Feb 2024 08:33:38 +0000
-Metin Kaya <metin.kaya@arm.com> wrote:
+On Wed, Feb 21, 2024 at 3:13=E2=80=AFPM Geert Uytterhoeven <geert@linux-m68=
+k.org> wrote:
+> On Thu, Feb 15, 2024 at 1:41=E2=80=AFPM Claudiu <claudiu.beznea@tuxon.dev=
+> wrote:
+> > From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+> >
+> > The pinctrl-rzg2l driver uses APIs that are defined only if
+> > CONFIG_IRQ_DOMAIN_HIERARCHY=3Dy (irq_chip_*_parent() APIs). On the ARCH=
+_RZG2L
+> > CONFIG_IRQ_DOMAIN_HIERARCHY is selected anyway, e.g., by the
+> > CONFIG_ARM_GIC_V3. Even so, make it explicit at the driver level for a
+> > clearer view of the dependencies.
+> >
+> > Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+>
+> Thanks for your patch!
+>
+> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+>
+> Compile-testing on m68k reveals that you also need
+>
+>     select GPIOLIB_IRQCHIP
 
-> Add sched_[start, finish]_task_selection trace events to measure the
-> latency of PE patches in task selection.
-> 
-> Moreover, introduce trace events for interesting events in PE:
-> 1. sched_pe_enqueue_sleeping_task: a task gets enqueued on wait queue of
->    a sleeping task (mutex owner).
-> 2. sched_pe_cross_remote_cpu: dependency chain crosses remote CPU.
-> 3. sched_pe_task_is_migrating: mutex owner task migrates.
-> 
-> New trace events can be tested via this command:
-> $ perf trace \
->   -e sched:sched_start_task_selection \
->   -e sched:sched_finish_task_selection \
->   -e sched:sched_pe_enqueue_sleeping_task \
->   -e sched:sched_pe_cross_remote_cpu \
->   -e sched:sched_pe_task_is_migrating
-> 
-> Notes:
-> 1. These trace events are not intended to merge upstream. Instead, they
->    are only for making PE tests easier and will be converted to trace
->    points once PE patches hit upstream.
+FTR:
 
-I wonder if the tracepoints should be added though? That is, not adding the
-trace_events that show up in tracefs, but just the tracepoints so that bpf
-or local modules could hook to them?
+drivers/pinctrl/renesas/pinctrl-rzg2l.c: In function =E2=80=98rzg2l_gpio_fr=
+ee=E2=80=99:
+drivers/pinctrl/renesas/pinctrl-rzg2l.c:1472:30: error: =E2=80=98struct
+gpio_chip=E2=80=99 has no member named =E2=80=98irq=E2=80=99
+ 1472 |  virq =3D irq_find_mapping(chip->irq.domain, offset);
+      |                              ^~
+drivers/pinctrl/renesas/pinctrl-rzg2l.c: In function
+=E2=80=98rzg2l_gpio_populate_parent_fwspec=E2=80=99:
+drivers/pinctrl/renesas/pinctrl-rzg2l.c:1953:23: error: =E2=80=98struct
+gpio_chip=E2=80=99 has no member named =E2=80=98irq=E2=80=99
+ 1953 |  fwspec->fwnode =3D chip->irq.parent_domain->fwnode;
+      |                       ^~
+drivers/pinctrl/renesas/pinctrl-rzg2l.c: In function =E2=80=98rzg2l_gpio_re=
+gister=E2=80=99:
+drivers/pinctrl/renesas/pinctrl-rzg2l.c:2057:14: error: =E2=80=98struct
+gpio_chip=E2=80=99 has no member named =E2=80=98irq=E2=80=99
+ 2057 |  girq =3D &chip->irq;
+      |              ^~
 
--- Steve
+Gr{oetje,eeting}s,
 
+                        Geert
 
-> 2. This patch is based on John's Proxy Execution v7 patch series (see
->    the link below) which is also available at
->    https://github.com/johnstultz-work/linux-dev/commits/proxy-exec-v7-6.7-rc6/.
-> 
-> Link: https://lore.kernel.org/linux-kernel/CANDhNCrHd+5twWVNqBAhVLfhMhkiO0KjxXBmwVgaCD4kAyFyWw@mail.gmail.com/
+--=20
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
 
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
