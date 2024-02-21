@@ -1,326 +1,104 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f172.google.com (mail-oi1-f172.google.com [209.85.167.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8485412E1E8;
-	Wed, 21 Feb 2024 21:25:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EB90126F0F
+	for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 21:26:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708550707; cv=none; b=dseJqO9nVSpov9Srg1XmV/laayeeRhiBmTUAwUz0HAHvYL68s0K2quPuJ2Z/60QqBZYqIpX7WX/uct1bWFtBorquXOtwIiPbkGaNDsPGsl782h0XJVVJNs+/SVB+EJ7YZ4TlSbHl92pfh7EXoNtX/pUzj2i48Pzo/TZeDii8LqE=
+	t=1708550774; cv=none; b=dPCLM5OSk/N6fCU/KIttgwDZov4HmKTpIYa3hIVJl1QqBAy7Iu41I4trnfApoHHTEcRhuI+2Uk3edRPlT+zNlIz618YKsz2vc2OjuzYZwCWr/5iTNFrA7SHoQ7aHGGliSQjk0HLRCx7s5ZUyI3SIJD8KW8HOkgdjVDfBQSwUNNU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708550707; c=relaxed/simple;
-	bh=RQFtdcZgDrf45vR2XiLoEkCPweXmO4ZdGDXy9B9n38k=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=ZtfBuVHrXmTD87yDgF+ldZY87NqvSgHzUWCiWADHbeyxfflQpnPattt7A9kYnTapEc8R7B5jaESXZ1XEyjJkUSvsNsuqN4n0oQ3d8bUdcoM2/SCytjbuxElEO9yo1kujPzRCK0ZfBfCA5IWWa556Na+j0fhIQSZonrrf1HR+khY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a/DrHt2k; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1708550774; c=relaxed/simple;
+	bh=1oEaHzezRAll9SQ0JkGYVz7chMh/UI28PlbGaomS6oA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=A9SFyzQBhiAQd0jKc/VUQ27SAj9RMtHRPyDhVh9lFyBQ3zH4sNMQcVgNmFY56vEJyrxJN9uS/SvNYJMoRH40F2SzKG4FbNsmRmuPe5pmcgHzL4BOw0oG5964KaGCTnPsE46Rnu6tNT8dadcrRLN07sAc7uRqhe8apsZe2aO2Y8w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=soleen.com; spf=pass smtp.mailfrom=soleen.com; dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b=twlEEf1y; arc=none smtp.client-ip=209.85.167.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=soleen.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=soleen.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a/DrHt2k"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 4B21FC341C8;
-	Wed, 21 Feb 2024 21:25:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708550707;
-	bh=RQFtdcZgDrf45vR2XiLoEkCPweXmO4ZdGDXy9B9n38k=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=a/DrHt2kmlpWdSvlfpEqoT+ztdgYDFlQx+ciof4tYe7LF1KVF37Ba0B1z/zcyF//n
-	 s/dlkzoyTrW/XbIz6ACIbJMaJDxL0HYAp3dFFCwBDQ7am4xSVN6FUDOLsMqbmX9cZY
-	 aAJ6QYC9tQ1u54O1o8ca7yjXn1UXn3Wf1oe4DdekQxO04Vb4vMi8wqF71bscivyze5
-	 x12nGIE5ZVRLGAa9NKLmtCvOH9Yo+uNjkqPPBzdqQeiTytcs5MBMnRSG1VXyPmkoEr
-	 +1dq6dIcfoeKPPFybfp7hf1Do4+6+Im1/z/ONhjKneEdbOzK77kI1L3Xbn2PJ5yURn
-	 5wMgcIUYJh90g==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38EA8C54798;
-	Wed, 21 Feb 2024 21:25:07 +0000 (UTC)
-From: "Seth Forshee (DigitalOcean)" <sforshee@kernel.org>
-Date: Wed, 21 Feb 2024 15:24:53 -0600
-Subject: [PATCH v2 22/25] fs: use vfs interfaces for capabilities xattrs
+	dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b="twlEEf1y"
+Received: by mail-oi1-f172.google.com with SMTP id 5614622812f47-3c15dd2a1fdso2682692b6e.2
+        for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 13:26:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=soleen-com.20230601.gappssmtp.com; s=20230601; t=1708550770; x=1709155570; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=1oEaHzezRAll9SQ0JkGYVz7chMh/UI28PlbGaomS6oA=;
+        b=twlEEf1yUUSQY4M7jcQpxVobd+dWC5ezggwrEwNE60AZ8QeMObLxP14XTPx38VQ2eQ
+         TyrB4dnaVh7ipn13+vKwt6sJKS491Skg4KAMlL9NyxSI8HytAsFXSzZSk+umh+bpebcW
+         YHwErdKYko8+z7QnDr0g9jOg0w3y7Juvk+0CXSSikE8fwrDLZhKCz4YDBKFAX8UfBeYy
+         jUTHfw76ke8UM5rMB3x0u8xRuKsnecR7d8tvj0OaUwXWM9ceEuSwr94Fi6j2NKkbOyG0
+         vuocKoz75fJUtkV5Hsf7vnXoE01wfziYx61d427gMjkLIq2cHgMjI++ZqF99CfNbPmnQ
+         VnhQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708550770; x=1709155570;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=1oEaHzezRAll9SQ0JkGYVz7chMh/UI28PlbGaomS6oA=;
+        b=p/S7zIyLBxsJRxUXJUmjLTTFJex4r+nfZInYxeauRHCvODyKpErKLrs05A630fEbSV
+         9zXY71Dt5aB061Hv0rfRkumfnvQhYzJtwbXr+vDnMatyz9BQh7u5uL33OqecYgS5jfC8
+         ZakZOF873sHluZdWF0R+nan5Qn1131+LjXHsXjIrfn3R3Pq5pmLLfrgoPXAq3yJo2tUB
+         L6gweNM1fqP6QrTk0Nbv1C4GZnCGxbThkNgM4/MwVYPRkfir/shIypmGS77Xt/4nve/8
+         tYvk3Ns9Jg1V9rloQgCBF9qEi9FmKUbEyMbXiZHNwaAA3f3g+K3CGP7ItboEZ4PHjQA9
+         ZmAg==
+X-Forwarded-Encrypted: i=1; AJvYcCU691ZhFO31YJ73GdJx4aTxDqeib9+DFzW1Lnmua21OEheI+IN+cqj/5brSboihDVBMgsuIWN1wq5Iz4N92QR5HmkLj3wxNY0D1U/ya
+X-Gm-Message-State: AOJu0YwedpRAjXXVYFN0gcwwzB/Wv1BbZVxi6+wYRB6rP5yZmgi7M0JN
+	2/lmCU0d2px8bDS5gjjvwTvHgUz2i7eWAMynsgnI1akzpDHsHNtWhOpojRZYpqq1jtqgFdaQe4j
+	H4uHqB6kNsUY7fgCY3yF20HCe6i77GQ2jRxuADg==
+X-Google-Smtp-Source: AGHT+IFZSNXNYlAy0AiXEzXx4upknBW0nGNBljw/bbiwmtTqAeSgHzhF6z+ApQTHTR9DUqPj2ju2fMwMSbPw53G4Luo=
+X-Received: by 2002:a05:6808:1208:b0:3c0:3d12:2002 with SMTP id
+ a8-20020a056808120800b003c03d122002mr24802049oil.13.1708550769929; Wed, 21
+ Feb 2024 13:26:09 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240221-idmap-fscap-refactor-v2-22-3039364623bd@kernel.org>
-References: <20240221-idmap-fscap-refactor-v2-0-3039364623bd@kernel.org>
-In-Reply-To: <20240221-idmap-fscap-refactor-v2-0-3039364623bd@kernel.org>
-To: Christian Brauner <brauner@kernel.org>, 
- Seth Forshee <sforshee@kernel.org>, Serge Hallyn <serge@hallyn.com>, 
- Paul Moore <paul@paul-moore.com>, Eric Paris <eparis@redhat.com>, 
- James Morris <jmorris@namei.org>, Alexander Viro <viro@zeniv.linux.org.uk>, 
- Jan Kara <jack@suse.cz>, Stephen Smalley <stephen.smalley.work@gmail.com>, 
- Ondrej Mosnacek <omosnace@redhat.com>, 
- Casey Schaufler <casey@schaufler-ca.com>, Mimi Zohar <zohar@linux.ibm.com>, 
- Roberto Sassu <roberto.sassu@huawei.com>, 
- Dmitry Kasatkin <dmitry.kasatkin@gmail.com>, 
- Eric Snowberg <eric.snowberg@oracle.com>, 
- "Matthew Wilcox (Oracle)" <willy@infradead.org>, 
- Jonathan Corbet <corbet@lwn.net>, Miklos Szeredi <miklos@szeredi.hu>, 
- Amir Goldstein <amir73il@gmail.com>
-Cc: linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
- linux-security-module@vger.kernel.org, audit@vger.kernel.org, 
- selinux@vger.kernel.org, linux-integrity@vger.kernel.org, 
- linux-doc@vger.kernel.org, linux-unionfs@vger.kernel.org
-X-Mailer: b4 0.12.4
-X-Developer-Signature: v=1; a=openpgp-sha256; l=8472; i=sforshee@kernel.org;
- h=from:subject:message-id; bh=RQFtdcZgDrf45vR2XiLoEkCPweXmO4ZdGDXy9B9n38k=; 
- =?utf-8?q?b=3DowEBbQGS/pANAwAKAVMDma7l9DHJAcsmYgBl1mosKTAjMWeC0JwdcAIeT/V7q?=
- =?utf-8?q?bWgZMaWg9RP69NM_lVsgG1+JATMEAAEKAB0WIQSQnt+rKAvnETy4Hc9TA5mu5fQxy?=
- =?utf-8?q?QUCZdZqLAAKCRBTA5mu5fQxyYsNB/_9Y4IU7+FdOu481pv/83xdJkuv3HJDQ0OP6d?=
- =?utf-8?q?PEatAyIagnNoameoxxxOXPAJKIj5Q4CkEed978+mLU2_kAgoUny2gWC/i4OaBfuMH?=
- =?utf-8?q?hHIX/npJMtYubeIoEdBcvSEMwkUj8HT7HP0Ximcmuy/CiumUMSn1i8uyI_6q6X5c1?=
- =?utf-8?q?Bamvez+8NIfJ9Dh+OUk4jDZgWUc0rOzf5WprMEmBnUKNDF5R0erPvqoJ2wgO2BbCx?=
- =?utf-8?q?6eErI4_s++SjtCrwT16me5yj5VUN+2Ix7qkRevh08dpk06QcqYJENzMHW9hkJmy5g?=
- =?utf-8?q?/XjN3HtxwEWdW7qnUJ05?= E9Boh3G9Ai9l4Tn+77y40mzF1cubex
-X-Developer-Key: i=sforshee@kernel.org; a=openpgp;
- fpr=2ABCA7498D83E1D32D51D3B5AB4800A62DB9F73A
-X-Endpoint-Received:
- by B4 Relay for sforshee@kernel.org/default with auth_id=103
+References: <20240221194052.927623-1-surenb@google.com> <20240221194052.927623-7-surenb@google.com>
+In-Reply-To: <20240221194052.927623-7-surenb@google.com>
+From: Pasha Tatashin <pasha.tatashin@soleen.com>
+Date: Wed, 21 Feb 2024 16:25:33 -0500
+Message-ID: <CA+CK2bDX7v8+NHi2ioxQ4KF+vBYA0JhR3=Sj6ZxBS0jD7i2Gmw@mail.gmail.com>
+Subject: Re: [PATCH v4 06/36] mm: enumerate all gfp flags
+To: Suren Baghdasaryan <surenb@google.com>
+Cc: akpm@linux-foundation.org, kent.overstreet@linux.dev, mhocko@suse.com, 
+	vbabka@suse.cz, hannes@cmpxchg.org, roman.gushchin@linux.dev, mgorman@suse.de, 
+	dave@stgolabs.net, willy@infradead.org, liam.howlett@oracle.com, 
+	penguin-kernel@i-love.sakura.ne.jp, corbet@lwn.net, void@manifault.com, 
+	peterz@infradead.org, juri.lelli@redhat.com, catalin.marinas@arm.com, 
+	will@kernel.org, arnd@arndb.de, tglx@linutronix.de, mingo@redhat.com, 
+	dave.hansen@linux.intel.com, x86@kernel.org, peterx@redhat.com, 
+	david@redhat.com, axboe@kernel.dk, mcgrof@kernel.org, masahiroy@kernel.org, 
+	nathan@kernel.org, dennis@kernel.org, tj@kernel.org, muchun.song@linux.dev, 
+	rppt@kernel.org, paulmck@kernel.org, yosryahmed@google.com, yuzhao@google.com, 
+	dhowells@redhat.com, hughd@google.com, andreyknvl@gmail.com, 
+	keescook@chromium.org, ndesaulniers@google.com, vvvvvv@google.com, 
+	gregkh@linuxfoundation.org, ebiggers@google.com, ytcoode@gmail.com, 
+	vincent.guittot@linaro.org, dietmar.eggemann@arm.com, rostedt@goodmis.org, 
+	bsegall@google.com, bristot@redhat.com, vschneid@redhat.com, cl@linux.com, 
+	penberg@kernel.org, iamjoonsoo.kim@lge.com, 42.hyeyoo@gmail.com, 
+	glider@google.com, elver@google.com, dvyukov@google.com, shakeelb@google.com, 
+	songmuchun@bytedance.com, jbaron@akamai.com, rientjes@google.com, 
+	minchan@google.com, kaleshsingh@google.com, kernel-team@android.com, 
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	iommu@lists.linux.dev, linux-arch@vger.kernel.org, 
+	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org, 
+	linux-modules@vger.kernel.org, kasan-dev@googlegroups.com, 
+	cgroups@vger.kernel.org, =?UTF-8?B?UGV0ciBUZXNhxZnDrWs=?= <petr@tesarici.cz>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Now that all the plumbing is in place, switch over to using the new
-inode operations to get/set fs caps. This pushes all mapping of ids into
-the caller's user ns to above the vfs_*() level, making this consistent
-with other vfs_*() interfaces.
+On Wed, Feb 21, 2024 at 2:41=E2=80=AFPM Suren Baghdasaryan <surenb@google.c=
+om> wrote:
+>
+> Introduce GFP bits enumeration to let compiler track the number of used
+> bits (which depends on the config options) instead of hardcoding them.
+> That simplifies __GFP_BITS_SHIFT calculation.
+>
+> Suggested-by: Petr Tesa=C5=99=C3=ADk <petr@tesarici.cz>
+> Signed-off-by: Suren Baghdasaryan <surenb@google.com>
+> Reviewed-by: Kees Cook <keescook@chromium.org>
 
-cap_convert_nscap() is updated to return vfs_caps and moved to be called
-from the new code path for setting fscaps. This means that use of
-vfs_setxattr() will no longer remap ids in fscap xattrs, but all code
-which used vfs_setxattr() for fscaps xattrs has been converted to the
-new interfaces.
-
-Removing the mapping of fscaps rootids from vfs_getxattr() is more
-invovled and will be addressed in a later commit.
-
-Signed-off-by: Seth Forshee (DigitalOcean) <sforshee@kernel.org>
----
- fs/xattr.c                 | 49 ++++++++++++++++++++++++----
- include/linux/capability.h |  2 +-
- security/commoncap.c       | 79 +++++++++++++++-------------------------------
- 3 files changed, 69 insertions(+), 61 deletions(-)
-
-diff --git a/fs/xattr.c b/fs/xattr.c
-index 8b0f7384cbc9..30eff6bc4f6d 100644
---- a/fs/xattr.c
-+++ b/fs/xattr.c
-@@ -534,13 +534,6 @@ vfs_setxattr(struct mnt_idmap *idmap, struct dentry *dentry,
- 	const void  *orig_value = value;
- 	int error;
- 
--	if (size && is_fscaps_xattr(name)) {
--		error = cap_convert_nscap(idmap, dentry, &value, size);
--		if (error < 0)
--			return error;
--		size = error;
--	}
--
- retry_deleg:
- 	inode_lock(inode);
- 	error = __vfs_setxattr_locked(idmap, dentry, name, value, size,
-@@ -851,6 +844,24 @@ int do_setxattr(struct mnt_idmap *idmap, struct dentry *dentry,
- 		return do_set_acl(idmap, dentry, ctx->kname->name,
- 				  ctx->kvalue, ctx->size);
- 
-+	if (is_fscaps_xattr(ctx->kname->name)) {
-+		struct vfs_caps caps;
-+		int ret;
-+
-+		/*
-+		 * rootid is already in the mount idmap, so pass nop_mnt_idmap
-+		 * so that it won't be mapped.
-+		 */
-+		ret = vfs_caps_from_xattr(&nop_mnt_idmap, current_user_ns(),
-+					  &caps, ctx->kvalue, ctx->size);
-+		if (ret)
-+			return ret;
-+		ret = cap_convert_nscap(idmap, dentry, &caps);
-+		if (ret)
-+			return ret;
-+		return vfs_set_fscaps(idmap, dentry, &caps, ctx->flags);
-+	}
-+
- 	return vfs_setxattr(idmap, dentry, ctx->kname->name,
- 			ctx->kvalue, ctx->size, ctx->flags);
- }
-@@ -949,6 +960,27 @@ do_getxattr(struct mnt_idmap *idmap, struct dentry *d,
- 	ssize_t error;
- 	char *kname = ctx->kname->name;
- 
-+	if (is_fscaps_xattr(kname)) {
-+		struct vfs_caps caps;
-+		struct vfs_ns_cap_data data;
-+		int ret;
-+
-+		ret = vfs_get_fscaps(idmap, d, &caps);
-+		if (ret)
-+			return ret;
-+		/*
-+		 * rootid is already in the mount idmap, so pass nop_mnt_idmap
-+		 * so that it won't be mapped.
-+		 */
-+		ret = vfs_caps_to_user_xattr(&nop_mnt_idmap, current_user_ns(),
-+					     &caps, &data, ctx->size);
-+		if (ret < 0)
-+			return ret;
-+		if (ctx->size && copy_to_user(ctx->value, &data, ret))
-+			return -EFAULT;
-+		return ret;
-+	}
-+
- 	if (ctx->size) {
- 		if (ctx->size > XATTR_SIZE_MAX)
- 			ctx->size = XATTR_SIZE_MAX;
-@@ -1139,6 +1171,9 @@ removexattr(struct mnt_idmap *idmap, struct dentry *d,
- 	if (is_posix_acl_xattr(kname))
- 		return vfs_remove_acl(idmap, d, kname);
- 
-+	if (is_fscaps_xattr(kname))
-+		return vfs_remove_fscaps(idmap, d);
-+
- 	return vfs_removexattr(idmap, d, kname);
- }
- 
-diff --git a/include/linux/capability.h b/include/linux/capability.h
-index eb06d7c6224b..5e7cbf07e3a7 100644
---- a/include/linux/capability.h
-+++ b/include/linux/capability.h
-@@ -229,6 +229,6 @@ int get_vfs_caps_from_disk(struct mnt_idmap *idmap,
- 			   struct vfs_caps *cpu_caps);
- 
- int cap_convert_nscap(struct mnt_idmap *idmap, struct dentry *dentry,
--		      const void **ivalue, size_t size);
-+		      struct vfs_caps *caps);
- 
- #endif /* !_LINUX_CAPABILITY_H */
-diff --git a/security/commoncap.c b/security/commoncap.c
-index 19affcfa3126..4254e5e46024 100644
---- a/security/commoncap.c
-+++ b/security/commoncap.c
-@@ -485,27 +485,21 @@ int cap_inode_getsecurity(struct mnt_idmap *idmap,
- }
- 
- /**
-- * rootid_from_xattr - translate root uid of vfs caps
-+ * rootid_from_vfs_caps - translate root uid of vfs caps
-  *
-- * @value:	vfs caps value which may be modified by this function
-- * @size:	size of @ivalue
-+ * @caps:	vfs caps value which may be modified by this function
-  * @task_ns:	user namespace of the caller
-+ *
-+ * Return the rootid from a v3 fs cap, or the id of root in the task's user
-+ * namespace for v1 and v2 fs caps.
-  */
--static vfsuid_t rootid_from_xattr(const void *value, size_t size,
--				  struct user_namespace *task_ns)
-+static vfsuid_t rootid_from_vfs_caps(const struct vfs_caps *caps,
-+				     struct user_namespace *task_ns)
- {
--	const struct vfs_ns_cap_data *nscap = value;
--	uid_t rootid = 0;
--
--	if (size == XATTR_CAPS_SZ_3)
--		rootid = le32_to_cpu(nscap->rootid);
--
--	return VFSUIDT_INIT(make_kuid(task_ns, rootid));
--}
-+	if ((caps->magic_etc & VFS_CAP_REVISION_MASK) == VFS_CAP_REVISION_3)
-+		return caps->rootid;
- 
--static bool validheader(size_t size, const struct vfs_cap_data *cap)
--{
--	return is_v2header(size, cap) || is_v3header(size, cap);
-+	return VFSUIDT_INIT(make_kuid(task_ns, 0));
- }
- 
- /**
-@@ -513,11 +507,10 @@ static bool validheader(size_t size, const struct vfs_cap_data *cap)
-  *
-  * @idmap:	idmap of the mount the inode was found from
-  * @dentry:	used to retrieve inode to check permissions on
-- * @ivalue:	vfs caps value which may be modified by this function
-- * @size:	size of @ivalue
-+ * @caps:	vfs caps which may be modified by this function
-  *
-- * User requested a write of security.capability.  If needed, update the
-- * xattr to change from v2 to v3, or to fixup the v3 rootid.
-+ * User requested a write of security.capability.  Check permissions, and if
-+ * needed, update the xattr to change from v2 to v3.
-  *
-  * If the inode has been found through an idmapped mount the idmap of
-  * the vfsmount must be passed through @idmap. This function will then
-@@ -525,59 +518,39 @@ static bool validheader(size_t size, const struct vfs_cap_data *cap)
-  * permissions. On non-idmapped mounts or if permission checking is to be
-  * performed on the raw inode simply pass @nop_mnt_idmap.
-  *
-- * Return: On success, return the new size; on error, return < 0.
-+ * Return: On success, return 0; on error, return < 0.
-  */
- int cap_convert_nscap(struct mnt_idmap *idmap, struct dentry *dentry,
--		      const void **ivalue, size_t size)
-+		      struct vfs_caps *caps)
- {
--	struct vfs_ns_cap_data *nscap;
--	uid_t nsrootid;
--	const struct vfs_cap_data *cap = *ivalue;
--	__u32 magic, nsmagic;
- 	struct inode *inode = d_backing_inode(dentry);
- 	struct user_namespace *task_ns = current_user_ns(),
- 		*fs_ns = inode->i_sb->s_user_ns;
--	kuid_t rootid;
- 	vfsuid_t vfsrootid;
--	size_t newsize;
-+	__u32 revision;
- 
--	if (!*ivalue)
--		return -EINVAL;
--	if (!validheader(size, cap))
-+	revision = sansflags(caps->magic_etc);
-+	if (revision != VFS_CAP_REVISION_2 && revision != VFS_CAP_REVISION_3)
- 		return -EINVAL;
- 	if (!capable_wrt_inode_uidgid(idmap, inode, CAP_SETFCAP))
- 		return -EPERM;
--	if (size == XATTR_CAPS_SZ_2 && (idmap == &nop_mnt_idmap))
-+	if (revision == VFS_CAP_REVISION_2 && (idmap == &nop_mnt_idmap))
- 		if (ns_capable(inode->i_sb->s_user_ns, CAP_SETFCAP))
- 			/* user is privileged, just write the v2 */
--			return size;
-+			return 0;
- 
--	vfsrootid = rootid_from_xattr(*ivalue, size, task_ns);
-+	vfsrootid = rootid_from_vfs_caps(caps, task_ns);
- 	if (!vfsuid_valid(vfsrootid))
- 		return -EINVAL;
- 
--	rootid = from_vfsuid(idmap, fs_ns, vfsrootid);
--	if (!uid_valid(rootid))
-+	if (!vfsuid_has_fsmapping(idmap, fs_ns, vfsrootid))
- 		return -EINVAL;
- 
--	nsrootid = from_kuid(fs_ns, rootid);
--	if (nsrootid == -1)
--		return -EINVAL;
-+	caps->rootid = vfsrootid;
-+	caps->magic_etc = VFS_CAP_REVISION_3 |
-+			  (caps->magic_etc & VFS_CAP_FLAGS_EFFECTIVE);
- 
--	newsize = sizeof(struct vfs_ns_cap_data);
--	nscap = kmalloc(newsize, GFP_ATOMIC);
--	if (!nscap)
--		return -ENOMEM;
--	nscap->rootid = cpu_to_le32(nsrootid);
--	nsmagic = VFS_CAP_REVISION_3;
--	magic = le32_to_cpu(cap->magic_etc);
--	if (magic & VFS_CAP_FLAGS_EFFECTIVE)
--		nsmagic |= VFS_CAP_FLAGS_EFFECTIVE;
--	nscap->magic_etc = cpu_to_le32(nsmagic);
--	memcpy(&nscap->data, &cap->data, sizeof(__le32) * 2 * VFS_CAP_U32);
--
--	*ivalue = nscap;
--	return newsize;
-+	return 0;
- }
- 
- /*
-
--- 
-2.43.0
-
+Reviewed-by: Pasha Tatashin <pasha.tatashin@soleen.com>
