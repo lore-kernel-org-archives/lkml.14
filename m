@@ -1,118 +1,94 @@
-Received: from out203-205-221-192.mail.qq.com (out203-205-221-192.mail.qq.com [203.205.221.192])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6C744C62;
-	Wed, 21 Feb 2024 14:26:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.192
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE0354C62;
+	Wed, 21 Feb 2024 14:27:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708525592; cv=none; b=RqPX1asokhiRl0S34IzWCIiKYno0zVryM9H2BL5Ij8fgA7DuqDz5J8z5jgszKVoOqVrn18X0MJuj63YVTvGaIyQPt9LPDaHivgv99Bxdhz5s3wiPpcBKcF89ro87zp6PdIqiVEXnbG0D19qxaAoNFqelqEV2/perfNKmS8VnSBI=
+	t=1708525638; cv=none; b=Lh+M+k2hNUjA5RU2FhwSbdk8y5KQDwtiM3g6kf4waiInTEXH/9NcfMJ4oQOBHykQsly6K4cRi2oPUFWI2VonLI7Dn5Ud5Dhtr+lV9fpiN5gY8HTTBHrOu30kgfmd7vYaPeQcEyKIGp0WNqqlz5OSt2PNWWES8l9HbY34tYNPYhM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708525592; c=relaxed/simple;
-	bh=v11Pc7CIFtiDJvtTdFEr5KXDbTe1sppjg1bvGaMcSho=;
-	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
-	 MIME-Version; b=OsTodSaHXhyT8t2XlcGbOdMEi3fO4zVjFREu9pDag7TC2gcH9Y/MYnVSPBbalF9YoLH8304RDja96fioK42crz9TUGarywvyhprlq3xlqjpMIyEahLf1mbujkNKhyYfgc2sczJBcBzba0JTc9yrAyvha9SpOOnyw+Y4iJz2gz5I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=a6Z0xQtB; arc=none smtp.client-ip=203.205.221.192
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
+	s=arc-20240116; t=1708525638; c=relaxed/simple;
+	bh=jqfY/bXjQ6+7/Pv/b/zONWyvdkAuIKWkIxD2H+3zPwk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=sG4WBjSMCSWD6QjrIyVw72ttbFeAKj1Ns4noUchs4blr194ATlMYaMFA9Tb+aAD3+EVosZGmfrGV+daHejRf1Il8IdIlbLNCkWOROZD5ffhb9GiVykgbU3zFHBtM3VQOysdSyXFXiymO3KyZxOYDnCl+bdMGfJl47f5uhnNq7Qw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IlKRO4/t; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="a6Z0xQtB"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1708525581; bh=pj6LoP7IKnvmbi/dGc8hKKjxVKAxUr0Pi1wWsmEFVu4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=a6Z0xQtBUzux2mkhM+3ZTBkc7GG9xTbe5w9a3P5Qj9eONYB9lhI+lZ/8y/Xfi10We
-	 qC6QKRn0J675XN+M7FRePWYQjtl3gFQuh4XGUkXL7lTKCVGc/wkjvKJMi08Mh7kVZ9
-	 M2MHha0CiKjnwuMDuJsIXwyEl7LofK3onaR3rf7M=
-Received: from pek-lxu-l1.wrs.com ([111.198.228.140])
-	by newxmesmtplogicsvrsza10-0.qq.com (NewEsmtp) with SMTP
-	id 50418A1B; Wed, 21 Feb 2024 22:20:04 +0800
-X-QQ-mid: xmsmtpt1708525204t0xgoj2qr
-Message-ID: <tencent_941B48254CBA00BB4933069E391B6E4B5408@qq.com>
-X-QQ-XMAILINFO: M3ziZXKDk+iOt7Y7H7kR7VuOyouwPtJP/BqzCiDi509G429y8WTRXNEwOEy1HQ
-	 KNti5PBaUD73kBsZTMmNaElFH/FiHZ8JaXm+T+38IpASlsWsBNyeBArNa0Pr9w04+SKoRbN8beoy
-	 23SB0wvVYLyQLj6gla93Y5kiUbMbv7jXhifKWb6o5zAZe0Df9dhrmcfq29TyvPfz9uyaR//JS8q/
-	 WNEB/BotOa/knSUCMDx2B4PX+01xpCsrdA8an0jr8Ien++5gph+y/FMQnTZu0wRYt463ZHjvj+A+
-	 4DIbuzCmwlMRS/KF63NEa+5bbh1K6jvCNxYlVJqavgUGa2yge7kHc4gbsb4kNng6xd+78e08Z4QI
-	 ZL++SU+WugkOqsPYHguh4yae5/rpUx8ZMgjIppocoljZEpVBlbgd81cbDl88EaciZeJ/iJyS7UNV
-	 r0l/AxBa41EJbikFa8R/HTaBis4EHY8BTWSXep2UQmwvOTijwhRK+fCVQetq9TiwVqAj8p4ky32i
-	 K3a1ase94OZEsUrCxVyRmXvvLeaTxggMKL+z0ZwS1lBNWM4g72RTyriOr8mKCX4QOchd/auaOk4V
-	 AqYX46h4esToenJvpwS3vsKhUsIxOh5j7ytb6iUhrX+GTdCXrsFIKnS2dr/UdFYHrzp69rKAI3ny
-	 8IFy7aXOxMuppn94MNIc6HLgmaJMMn5+MJNPn0qNnc20m6iRhAAZJcsU0Q/lI4B6mrEzvLhaE/st
-	 ZJEpe8P58ktoFFCsC6uhDxo9D88FpBoaRo8F9RvOLZssOFRZVBGDhbiefKCQfcjgf26KBEPDyx3C
-	 ZrryfrzthXJ+lBmlAXevgjnkfrYIU5+YGxNKkK2qLXXQC7SgTB+niI00IUuB3amn4uHHHIpkR2bs
-	 fzCgWRjzOCVh+N9KheWwLoENBaZN1hLFlmY2RPwXDGTGHQ7P00VcA=
-X-QQ-XMRINFO: M/715EihBoGSf6IYSX1iLFg=
-From: Edward Adam Davis <eadavis@qq.com>
-To: syzbot+116b65a23bc791ae49a6@syzkaller.appspotmail.com
-Cc: hverkuil-cisco@xs4all.nl,
-	linux-kernel@vger.kernel.org,
-	linux-media@vger.kernel.org,
-	mchehab@kernel.org,
-	syzkaller-bugs@googlegroups.com
-Subject: [PATCH] media/cec/core: fix task hung in cec_claim_log_addrs
-Date: Wed, 21 Feb 2024 22:20:05 +0800
-X-OQ-MSGID: <20240221142004.159200-2-eadavis@qq.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <0000000000006d96200611de3986@google.com>
-References: <0000000000006d96200611de3986@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IlKRO4/t"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 391BFC433F1;
+	Wed, 21 Feb 2024 14:27:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1708525638;
+	bh=jqfY/bXjQ6+7/Pv/b/zONWyvdkAuIKWkIxD2H+3zPwk=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=IlKRO4/tz2DIUo9D/Ve0z0iwzyPYRMxVE/2mqFqJtKFbFjk+w9U7pn8uYmBXEnrMT
+	 zuPw8w8rqvd3DykvhfemioBQESVJFGtGJ5msabci4ZMAtaOM+eOBst4kGE926EmWl7
+	 12TrmCfTQThg2Tfqiqa2q1znl5hJecb4mOOmha9qIhh2SkRB2mnD5PK+HmXH9ddIh9
+	 qJHelqxecgUAqpEq8/eBw6Asy9J5cX/erUQn/DCOyHM1WbQfCD233MTWZFq4dGbf0/
+	 CIBO1eV0sjcOqbch86ZHzvKhdCJprB1WP3auOw1VpBnEloFcZYqCQbymxYJEu0DEoq
+	 frWsUpnbN4z9Q==
+Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-2d180d6bd32so76296521fa.1;
+        Wed, 21 Feb 2024 06:27:18 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCV6gl8bqKPJS86HB7Mxs0IAEiMhCi2lCG1vxRyrJwUhL9BUrODamkqVd88YXanZU6pkbaa+9pTQZ0NhLh5y5IJnTrJ+rieBMexwMA+cF4oJJt+3z37d68iOHY1qHTCRz6MfM9TzkDHCTA==
+X-Gm-Message-State: AOJu0YxduhNWcR8W+TBYfus5MYWTs8zIMpgDuoZsujysno1jkaaBm9I6
+	JDs8RMfaxqI5LKrtHrTZaV1SGEwPFlHaWiuWiiAf6aXhU46VJ/SiKW1mRNCShp18m6zR8JgYRK2
+	m+D49XGRXd5mXeu7jyWTkuON5oA==
+X-Google-Smtp-Source: AGHT+IEkkBZ+CJ4wHV1j1+uMZjnmhfwLLMpaC2D4+NoL2Pue13rh+y7OEdfITs5OjTiQCWgg5vBr6ZsQVriymYYNmdI=
+X-Received: by 2002:a2e:3a10:0:b0:2d2:384e:4918 with SMTP id
+ h16-20020a2e3a10000000b002d2384e4918mr6543075lja.53.1708525636437; Wed, 21
+ Feb 2024 06:27:16 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240221092826.748e70c4@canb.auug.org.au> <CAL_JsqKw9OXb=aOMni1qprzeWDBgmjdJef-6VAjwx0R--D+URw@mail.gmail.com>
+ <ac9ddf79-6bc9-4daf-a271-82f8b3bca988@app.fastmail.com>
+In-Reply-To: <ac9ddf79-6bc9-4daf-a271-82f8b3bca988@app.fastmail.com>
+From: Rob Herring <robh@kernel.org>
+Date: Wed, 21 Feb 2024 07:27:04 -0700
+X-Gmail-Original-Message-ID: <CAL_Jsq+L7uPimQfATs14EWCbqRO1vxDUmPie7=cChTLCf2od2g@mail.gmail.com>
+Message-ID: <CAL_Jsq+L7uPimQfATs14EWCbqRO1vxDUmPie7=cChTLCf2od2g@mail.gmail.com>
+Subject: Re: linux-next: build warning after merge of the arm-soc-fixes tree
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Stephen Rothwell <sfr@canb.auug.org.au>, Geert Uytterhoeven <geert+renesas@glider.be>, 
+	Olof Johansson <olof@lixom.net>, ARM <linux-arm-kernel@lists.infradead.org>, 
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-next <linux-next@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-After unlocking adap->lock in cec_claim_log_addrs(), cec_claim_log_addrs() may
-re-enter, causing this issue to occur.
+On Wed, Feb 21, 2024 at 7:00=E2=80=AFAM Arnd Bergmann <arnd@arndb.de> wrote=
+:
+>
+> On Wed, Feb 21, 2024, at 14:53, Rob Herring wrote:
+> > On Tue, Feb 20, 2024 at 3:28=E2=80=AFPM Stephen Rothwell <sfr@canb.auug=
+.org.au> wrote:
+> >> arch/arm/boot/dts/renesas/r8a7793-gose.dtb: Warning (interrupt_map): F=
+ailed prerequisite 'interrupt_provider'
+> >>
+> >> Introduced/exposed by commit
+> >>
+> >>   78b6f8e7379b ("dtc: Enable dtc interrupt_provider check")
+> >>
+> >> I guess you missed some :-(
+> >
+> > No, Geert separately posted fixes for already.
+>
+> I did make the mistake of applying the final patch "dtc:
+> Enable dtc interrupt_provider check" to the arm/fixes branch
+> for 6.8 along with the other fixes.
+>
+> Clearly that should be separate and only go into mainline
+> after there are no more regressions, but now I'm unsure
+> about the other patches -- did you intend the dts fixes
+> for 6.8 or for the coming merge window?
 
-In the thread function cec_config_thread_func() adap->lock is also used, so there
-is no need to unlock adap->lock in cec_claim_log_addrs(), and then use adap->lock
-in cec_config_thread_func() to protect.
+Either is fine with me. My intent was the whole series plus the
+Renesas fix to be applied together. Anything new that crops up we can
+fix on top.
 
-Reported-and-tested-by: syzbot+116b65a23bc791ae49a6@syzkaller.appspotmail.com
-Signed-off-by: Edward Adam Davis <eadavis@qq.com>
----
- drivers/media/cec/core/cec-adap.c | 5 -----
- 1 file changed, 5 deletions(-)
+Yes, there are lots of powerpc warnings, but those are on top of lots
+of existing powerpc warnings no one seems to care about. I suppose we
+can turn them off for powerpc if desired.
 
-diff --git a/drivers/media/cec/core/cec-adap.c b/drivers/media/cec/core/cec-adap.c
-index 5741adf09a2e..21b3ff504524 100644
---- a/drivers/media/cec/core/cec-adap.c
-+++ b/drivers/media/cec/core/cec-adap.c
-@@ -1436,7 +1436,6 @@ static int cec_config_thread_func(void *arg)
- 	int err;
- 	int i, j;
- 
--	mutex_lock(&adap->lock);
- 	dprintk(1, "physical address: %x.%x.%x.%x, claim %d logical addresses\n",
- 		cec_phys_addr_exp(adap->phys_addr), las->num_log_addrs);
- 	las->log_addr_mask = 0;
-@@ -1565,7 +1564,6 @@ static int cec_config_thread_func(void *arg)
- 	}
- 	adap->kthread_config = NULL;
- 	complete(&adap->config_completion);
--	mutex_unlock(&adap->lock);
- 	call_void_op(adap, configured);
- 	return 0;
- 
-@@ -1577,7 +1575,6 @@ static int cec_config_thread_func(void *arg)
- 	adap->must_reconfigure = false;
- 	adap->kthread_config = NULL;
- 	complete(&adap->config_completion);
--	mutex_unlock(&adap->lock);
- 	return 0;
- }
- 
-@@ -1602,9 +1599,7 @@ static void cec_claim_log_addrs(struct cec_adapter *adap, bool block)
- 		adap->kthread_config = NULL;
- 		adap->is_configuring = false;
- 	} else if (block) {
--		mutex_unlock(&adap->lock);
- 		wait_for_completion(&adap->config_completion);
--		mutex_lock(&adap->lock);
- 	}
- }
- 
--- 
-2.43.0
-
+Rob
