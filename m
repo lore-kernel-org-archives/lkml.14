@@ -1,112 +1,109 @@
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+Received: from mail-qt1-f178.google.com (mail-qt1-f178.google.com [209.85.160.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13C0C6FBE;
-	Wed, 21 Feb 2024 00:51:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92CDE1C20
+	for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 00:53:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708476710; cv=none; b=G70z3ExGM1bX0n3PrvQdG5q5XOjBH+tCTJhD5F6pblwnYaFthvXbXqDFbmfOc4ErIuebnPpblipHtoeiTPbYFkRm/WzojMJUn/h29dhkvplk2fj0Tpw05s5wczgwWNTu8N41GjZODl6mdCyds9Q79NW5Si8l6djHHphkjR+MbvQ=
+	t=1708476792; cv=none; b=cZAftpa3i7E5azt7MgtOy+o9ZYILEo1QB1fq/YQMefGHepD3EHTQhdUCNbmMjCjGJMpWqr8PK+cNarYpvnsF4UJ1o4VHCGpiIl+I1LPVY2swKZVe2t58gWlFiSnuOYT4wVR0FPXTrKIHu8D226wv7WQBCdWCKhMi5PVYH/muKsw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708476710; c=relaxed/simple;
-	bh=MieXVm22ma551iVFmKtgUAOJPGMkvDbr5o0lgBA3X8M=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fmfl4VOaLuYtYH6ZHqr11iDUSSrchBmA1gfxyWaC1G/78AcX/rn6IAfe3dGzyShgCsDW34IQJbwvHGTv4sNHWl3vz+diygWcA5LM6gAqEUaw4zPGP5tWJhvJOWCAQw9kTZZ/EiZyq0XpFm6eMIoL8ElaWOYtFMJuLsTxIeNET0w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=J7USTkxr; arc=none smtp.client-ip=209.85.214.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1708476792; c=relaxed/simple;
+	bh=hd0lhH+wZU4zitJitsjtcio44xa5sDrhwLIhJx54M48=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=PNW8x+6g9kpFumMQlQNOFkKY2qhAJ5JEKWudZX1UfxLrYXdFMAx1vl//z7vlbOf7fQSQKnpCOJC/tboGorBk1TOQfKaaoMa6iBD6Sw2vjl8NHBu8h6Z1GdNAwSPvObccmgFl9sa5tmln6AFx+EzJGuWjA+ZXWLmy1aSvzKqr2Mg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=kWOT7l0O; arc=none smtp.client-ip=209.85.160.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J7USTkxr"
-Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-1d8da50bffaso30966745ad.2;
-        Tue, 20 Feb 2024 16:51:48 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kWOT7l0O"
+Received: by mail-qt1-f178.google.com with SMTP id d75a77b69052e-428405a0205so86751cf.1
+        for <linux-kernel@vger.kernel.org>; Tue, 20 Feb 2024 16:53:10 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1708476708; x=1709081508; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=B0SlzYf9q4r5oo3cnCmgPLBf9yL53UG8nb29+3uRtXs=;
-        b=J7USTkxr/V0zCXI/6QuqmR4yBLA7UTlue+U6jYfCGfz8FOTFbXnN5ddjTflQL98o7n
-         Ej24WbK7Q9mxP0IFjgmFAyAkjtjLFkuVK71IrQE459mBQur1Vsc8pA9Qn3ujZLmVt6QQ
-         OMEdn8dP64qTXbHakZRRqU8m4Feyv5txGSnwnohsnjEnWL6DMo86V5z+E2+6WMPaIhQP
-         PWg5b6+G6n1O5dXCwZd67ulI2UTTr4O/ps2fvv/Jf/IY+nkeknXXqfxph0k0TuGe+wqT
-         Ms5w6J5NWjwap0/xqQif8vVuqX9php8F0vHDzyxCA8pOL3z1WqSFoLzgOrwHNPgTd6iA
-         cLeA==
+        d=google.com; s=20230601; t=1708476789; x=1709081589; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=t3aliKXEbglyQXiBZG3IVeVy5el2cZXqVD0gVl1TNUU=;
+        b=kWOT7l0OVNXQJZGbA0M2wa8mXmNF1FzbDVMSzI8aBoJlPp8DAsoPt5ay+l9NA0qIDN
+         ST85QDVzD2RnqQnK2kkylX5HySvD6oj+ys2U/pPzHCih2jwfFd5OjD41xjMTlPTSY0Gd
+         vtmDD8G+imhgluv4ZRtdPo/F2xG8rbhPOAoWM4Gi37eNTscCafk2/N5devtB7AS2b1cr
+         hKOCsm+VcJKUN3+owsqWk4/PYWJ5npvYrkA1/14SQknr72D43w1VsbmKGwK29j337cHx
+         8tjup32fJy0MOEowzOcRrMJalOoULQCoqeyBB2qjueWfVSLLmrjjEyNfaUfSAn9vVfaN
+         rhSQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708476708; x=1709081508;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=B0SlzYf9q4r5oo3cnCmgPLBf9yL53UG8nb29+3uRtXs=;
-        b=i3pBjz1FA/sBxcf1yzegSxFIvIn1buj/T9XvERJHlfPzkDM4fYFGsaJ1HfKKgYMkNP
-         cLNfI/mUciMml1KzgobsrnrgF+HJXOQKOc+kxBge/eWzfsTM3vjD7vieUHqAnHuuRoqR
-         LAFdJNYJqDTFkJetwIyjbE71e5SL/yioKpfaUIuQAsU5CgX5MOedb8VrYzlCK3x5Ua6a
-         AK9VUZmiD252Bn/1XKe4G2cVR5uXr4KnErkpV0Lix9t+i6+f3dTmruOXv1eHXV3FiAhe
-         99g4p/p0ryu8annH1e9D01a+cLYkLRU6E6cChDKO2IDPeZYG6ECOx29XpkJdK1cyGqJ/
-         OlFg==
-X-Forwarded-Encrypted: i=1; AJvYcCVrrmtvuayv/ZL0aE/89lZ7lSt1dU7F/WHKnB3sInL2bL2/hJmKbRna7Ir0W6hh1PH+fVPGjDEjZZxYidODH7SqViFtf4ztXSSTXBlPxsHIhZjGVt/TRygiEuJ967Jbq4CJcY8Prxj9+HWnLudlq2AANyI6nUm6P9CdNVrYjnMNUfvy++c=
-X-Gm-Message-State: AOJu0YxWbAZUSm1pbFSI8Ch3VzUZHP/5LHWAmzBnUrhS7/ya12o1ys1n
-	ww0lu9gx0JOwhZJPfvny44U5yG3ONhJ61hZnoEzaKuRVP49ZBweF
-X-Google-Smtp-Source: AGHT+IHpWBNu8g6t7YfE+qIGbFSW1RZzQSg9X2TrRyMpgRBhzWoeu63O8KOYi+IXdOVYZh0DRmDQOg==
-X-Received: by 2002:a17:902:c084:b0:1dc:20f2:77bb with SMTP id j4-20020a170902c08400b001dc20f277bbmr2027961pld.29.1708476708315;
-        Tue, 20 Feb 2024 16:51:48 -0800 (PST)
-Received: from [172.19.1.47] (60-250-192-107.hinet-ip.hinet.net. [60.250.192.107])
-        by smtp.gmail.com with ESMTPSA id w16-20020a1709029a9000b001db7ee44ff9sm6790232plp.263.2024.02.20.16.51.45
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 20 Feb 2024 16:51:47 -0800 (PST)
-Message-ID: <9c0f9285-4418-4ae9-9f72-ea74bfcf92cc@gmail.com>
-Date: Wed, 21 Feb 2024 08:51:43 +0800
+        d=1e100.net; s=20230601; t=1708476789; x=1709081589;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=t3aliKXEbglyQXiBZG3IVeVy5el2cZXqVD0gVl1TNUU=;
+        b=X8DuZfXNEVl0cPtt7hDvcNCxKGPidzNPc143q/LFpK3ei9I9fZfBhunAVCC/HcVwDp
+         APOdzZPeaB5wBkn65RwhM6JuLSxaIfYyZGlTZZbyDevVpqbQt3qnM4hCVV/9Khu8EboS
+         tADlpoB8Uvw1XQup0F3oghQSwWS9l78cRPzY2B6+pkcLjObD1DvePv9hDVBw7HLioLE7
+         htDMxA3yzLqFump0qZkTJYXnyQnad3JPmO/BiJ/YXjE22dWtKimEIqJ60GLF9QvJIW9F
+         W6FEacVBOAn29Sy1WKwtTkzugNQVPpmFOoFzkpVKaf19mBPfvFwZPhe4lBf7aTvAOqmF
+         8ObQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV2Krm6TWKi7Foac3xlj7jp3wYFN+4MJFGTtdjDjfATNGs3xrtrT9k/4rD71ZJgmm+pDaESbiN5HWakdrAMk6mPktQlDO0PW3g5mHKf
+X-Gm-Message-State: AOJu0YzKvg7DOomQAZqzgkJjW+ZL/d0f6LLiRr0Efz+c7ETgy2NWQl8t
+	FvnQ96E9AbxaKhgqBmvfSBKlp3LeAS+sWoQbSoYiVF6sqOisYanU0Dk+96jfdqYaQX7AiyqlY6y
+	4t5c2k0SSKK4ZA4vW3zeQ0NNzg4yFtBWup8bW
+X-Google-Smtp-Source: AGHT+IGuojBOIL3NwHNGp1txCVvfo0pbzvMxcixAlnHZkwYRAeUSF6WVNWbxiaJVoKHnLXQs66Ob2cvkY1Z84vxB6qY=
+X-Received: by 2002:ac8:7c47:0:b0:42e:36fe:df90 with SMTP id
+ o7-20020ac87c47000000b0042e36fedf90mr46324qtv.1.1708476789278; Tue, 20 Feb
+ 2024 16:53:09 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 4/4] pinctrl: nuvoton: Add ma35d1 pinctrl and GPIO
- driver
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
- linus.walleij@linaro.org, robh+dt@kernel.org,
- krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
- p.zabel@pengutronix.de, j.neuschaefer@gmx.net
-Cc: linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- ychuang3@nuvoton.com, schung@nuvoton.com
-References: <20240220004159.1580108-1-ychuang570808@gmail.com>
- <20240220004159.1580108-5-ychuang570808@gmail.com>
- <b40f5b2d-d41f-47fa-8aae-30290e0d2737@linaro.org>
-Content-Language: en-US
-From: Jacky Huang <ychuang570808@gmail.com>
-In-Reply-To: <b40f5b2d-d41f-47fa-8aae-30290e0d2737@linaro.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+References: <20240220175333.3242277-1-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <20240220175333.3242277-1-andriy.shevchenko@linux.intel.com>
+From: Saravana Kannan <saravanak@google.com>
+Date: Tue, 20 Feb 2024 16:52:31 -0800
+Message-ID: <CAGETcx8w8YhC89JOYkQgcXrZgqfXOUXHXq5+86OdHGSfqz0D=w@mail.gmail.com>
+Subject: Re: [PATCH v2 1/1] driver core: Drop unneeded 'extern' keyword in fwnode.h
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Daniel Scally <djrscally@gmail.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
+	Sakari Ailus <sakari.ailus@linux.intel.com>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Len Brown <lenb@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Dear Krzysztof,
-
-
-On 2024/2/20 下午 04:28, Krzysztof Kozlowski wrote:
-> On 20/02/2024 01:41, Jacky Huang wrote:
->> From: Jacky Huang <ychuang3@nuvoton.com>
->>
->> Add common pinctrl and GPIO driver for Nuvoton MA35 series SoC, and
->> add support for ma35d1 pinctrl.
->>
->> Signed-off-by: Jacky Huang <ychuang3@nuvoton.com>
->> ---
->>   drivers/pinctrl/nuvoton/Kconfig          |   19 +
->>   drivers/pinctrl/nuvoton/Makefile         |    2 +
->>   drivers/pinctrl/nuvoton/pinctrl-ma35.c   | 1211 +++++++++++++++
->>   drivers/pinctrl/nuvoton/pinctrl-ma35.h   |   51 +
->>   drivers/pinctrl/nuvoton/pinctrl-ma35d1.c | 1797 ++++++++++++++++++++++
->>   5 files changed, 3080 insertions(+)
->>   create mode 100644 drivers/pinctrl/nuvoton/pinctrl-ma35.c
->>   create mode 100644 drivers/pinctrl/nuvoton/pinctrl-ma35.h
->>   create mode 100644 drivers/pinctrl/nuvoton/pinctrl-ma35d1.c
-> Driver cannot depend on DTS, so please reorganize patchset so DTS is not
-> in the middle or even split the DTS to separate patchset.
+On Tue, Feb 20, 2024 at 9:53=E2=80=AFAM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
 >
-> Best regards,
-> Krzysztof
+> We do not use 'extern' keyword with functions. Remove the last one
+> mistakenly added to fwnode.h.
 >
+> Fixes: 19d0f5f6bff8 ("driver core: Add fw_devlink.strict kernel param")
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-Thank you for your explanation. In the next version, I will adjust the 
-order and move the DTS to the end of this patchset. Best Regards, Jacky 
-Huang
+Acked-by: Saravana Kannan <saravanak@google.com>
+
+> ---
+> v2: fixed a couple of typos in the Subject
+>  include/linux/fwnode.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/include/linux/fwnode.h b/include/linux/fwnode.h
+> index 2a72f55d26eb..2d23a14857c7 100644
+> --- a/include/linux/fwnode.h
+> +++ b/include/linux/fwnode.h
+> @@ -209,9 +209,9 @@ static inline void fwnode_dev_initialized(struct fwno=
+de_handle *fwnode,
+>                 fwnode->flags &=3D ~FWNODE_FLAG_INITIALIZED;
+>  }
+>
+> -extern bool fw_devlink_is_strict(void);
+>  int fwnode_link_add(struct fwnode_handle *con, struct fwnode_handle *sup=
+);
+>  void fwnode_links_purge(struct fwnode_handle *fwnode);
+>  void fw_devlink_purge_absent_suppliers(struct fwnode_handle *fwnode);
+> +bool fw_devlink_is_strict(void);
+>
+>  #endif
+> --
+> 2.43.0.rc1.1.gbec44491f096
+>
