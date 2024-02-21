@@ -1,107 +1,104 @@
-Received: from mail-qt1-f171.google.com (mail-qt1-f171.google.com [209.85.160.171])
+Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3B721272B2
-	for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 21:21:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B720C86158
+	for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 21:23:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708550471; cv=none; b=CI7VRGrbqHBPT6z9x5IpDIfMKuTXzEDqoU7uPLh0qY4/lODYCXjjszMpXDfZ+QCVpm6Qco8Xj+TfFtu4BRIX6XQNYcVpunwPwivR5f+NZwYrwRk6x87tgfbOgYE7bE/HhLbXXrHzHJ8R7A4PTrq6m3EDwHls3iNsBYd/E9iKmKI=
+	t=1708550589; cv=none; b=LLsHmwI3OaYAhzdPtTDLgy7H9kOhEpO7YQop97DVSawXKeN4LYStbt3tZ3yd5TTQFQl8iLJlsE4j+17HfcgtNq11skk/09U/R11LifX8Z9RJGeA4hnHEJzusOl6sjsZwoHIXJqc7QuJkcmD+thVP4uhN7/YCpERHWDhhb0YY44o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708550471; c=relaxed/simple;
-	bh=JFD4yQzqaLEAi4PA03QBYwNo3rIHnJT2RUQoKF+C/Mg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=KgbKYvLIKD1v6pxQYYQA5VN6mQ6YXb7qFgEe8e9RPJMUyNRUxFQbQk0OyMOqSxu2n2iAmd7rheVZlHy9wg+l7EiRX4oKw2LfApWBo+nludJdKLuk4wQ5enwMUUEAYDDO3nbc2m+H+IGrC4UdjHZ1cOZVOsOQpm3YJAAkhm2/9fI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=soleen.com; spf=pass smtp.mailfrom=soleen.com; dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b=JxUB1ljL; arc=none smtp.client-ip=209.85.160.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=soleen.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=soleen.com
+	s=arc-20240116; t=1708550589; c=relaxed/simple;
+	bh=iiRktMYHLIJ9fptDhlCR5IFkYS+XarAW+y4+IYRyFw8=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=pYXSA7a6I+8HgUafMzFeuaW5ljWrsl5TtSmbmPO7/CKWudTTSAMla7gZuZ/Ztfacow2M2Qt0WIbKoM7yVDGMnQ/8M9QZhumpRbEgjBfxpM9Ijere0nB5E0ijjiqx1vfQgsyG0PwoQ6is6CA1hd/XlKP9czG4LVZaAutFu1lyJTA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=CeU+u+gH; arc=none smtp.client-ip=209.85.208.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b="JxUB1ljL"
-Received: by mail-qt1-f171.google.com with SMTP id d75a77b69052e-42a0ba5098bso40436271cf.0
-        for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 13:21:03 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CeU+u+gH"
+Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-55a8fd60af0so10453719a12.1
+        for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 13:23:07 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen-com.20230601.gappssmtp.com; s=20230601; t=1708550462; x=1709155262; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=JFD4yQzqaLEAi4PA03QBYwNo3rIHnJT2RUQoKF+C/Mg=;
-        b=JxUB1ljL7XvovtiVCEiIV+ZgtEh/WCr4kltgFFgJQOX/Nze6UEOtT6SfoHf94oS5jO
-         F3PgJkRi/OzC+uTdyAXVDZmtuBXx1QevUcedfG5duFQQZh76wbB6L3+KWuUhGIpLKmeg
-         lE+A8eFEnzaYCiggTXZqyAlSoc8Xi3sSVCBTwEevS3Nb7Wvz9IiH3Mvo9QqvuKM1Exzq
-         rmwxKg2TCPQiLQ4fmnLgyPwn+aTdMq13ksJqrR7dXfzOnHvMAEgoLrl3ha+pGyxeENnF
-         JY0D23vKekg6Y0NHqqHpT8rjyB+aP5mxYFacnV4aFLgKRoeUbHuCMt7fUBTn/1Ola9MY
-         AQdw==
+        d=linaro.org; s=google; t=1708550586; x=1709155386; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=+9Q8p0SNxiEFE6O8wlGL+9mnBksm30FOR3CroGvtLII=;
+        b=CeU+u+gHSpthGT9lD1Z7wo9COU75Ry8rfrq+gqRGck12/9xV5bW7HP+Fv/+bAwC2MA
+         21xfSvuSRDy2+DzOLShNmbuAeIpkTiDBgHxXbhKzXHBOKnKF46jNqjKiMaSO2UxINLJe
+         2z0WhZNqi9kBEHNxFW51BF+HwQ3NJgwpSF3TBHNhXYAuSmjvyKATuaDviiZxglKL3dKu
+         /SPb+T/HJ1o4P8B6mqP16iUezS+uNPKu91cEVvGP+6BVCdPyx0C9SR8mOktZ89WSd2Pi
+         4iqZg6pZLAqotiIYvgdV0fnC+ACoQwtl8OWw74a9ZrTiKg36kwyfaqmJNMQkFiZVp5az
+         /Wkw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708550462; x=1709155262;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=JFD4yQzqaLEAi4PA03QBYwNo3rIHnJT2RUQoKF+C/Mg=;
-        b=e+xwzI2CwIxS0J8BQKh40wv1xYwofpkMi8RjSiYKqm7IGDL+IwkHUY+YeSuSM+s1hG
-         n8Sj4TJgMpeLf0QCTAEDEZFQ538zXf2yJ+NP52LELelPMyfSSnd4/p3jS2SPb2B04y9k
-         n5Pltd2WfP0GpIjl+dRnHoLlnVkOnrB1ahHpuOhrtE+s7o6fnChtMQ4yNNW8fD6Vwy7x
-         B9SXOFGdwdTbn4R07k0YicbTLPW9HZRPkpcqVX0+yuRlHcTbJViWEkLhaoVg0tDt7nwu
-         VqX7TlHHpOtdEIS2bBalcavPinZ0LZB58whBCaNORW4RdMZmu22f3P7pF8LzXOebmHM6
-         Jq/Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVU6p6COJySoBgReArKW+04zqG3TNvyPMGO3BigRbZwAoD9srbmqBSXtfto92FIYO/xFSrIYLRHuCumoyQFVYjYUfK6vFUgbgbi0rmE
-X-Gm-Message-State: AOJu0YzP0BMuWA4/oBZMqENG1nY9BrX4oKEjj5fy7m/7AQy/T1SqH/aG
-	lOn+fddAOR+GpiN4IUPJApF+yBwE9PniTQnKI8YlKWwpMWq0EXoydHU5Ogds1xXkufRWlqgRu3O
-	gTqMP1YS70Ea1Nlpzk4hS+O1c0d6H1DkgcnmtTw==
-X-Google-Smtp-Source: AGHT+IGJtekCGEzDieaihS15p2Hc5EreGxKXqPCCpXJixs6Ac2iIPaw+nCtg/oETMxVwF6eTa85a+lNh3bwEt5JkkGQ=
-X-Received: by 2002:ac8:5981:0:b0:42e:17d9:f8bd with SMTP id
- e1-20020ac85981000000b0042e17d9f8bdmr9654015qte.24.1708550462298; Wed, 21 Feb
- 2024 13:21:02 -0800 (PST)
+        d=1e100.net; s=20230601; t=1708550586; x=1709155386;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=+9Q8p0SNxiEFE6O8wlGL+9mnBksm30FOR3CroGvtLII=;
+        b=VmG5hcjCRiYw6QhTyS8uhlyxsZdT/qm5zDAa/Q+AxedCK6tPUT90ksoQNFiWonaeZf
+         ZN7H1Z63+WR7X+6xWyMRLS/iUSs0e86xse12M82kDfUkwJGm+hFjJdxEnYZzKoVK5cY9
+         iIEveuOY+u+U1hPywhMl3Ra8qdfiAdu0NLnE3eDff/Ug35UVbrO4kqbphFzXfhIs75EY
+         MZTktyemnxiJmNRIVL3wP9b2ZzTSBEIILDaOrKisYPy2ykNCCxB7pLQOK0sl8v6mtpCw
+         Jfc/w3ZDp30d7fL80QhqfZ6n1ovnp46lqjZL9rzbqzGKnYOSahQiJ30bMqRplpBOrPfD
+         gp6Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVXZoa/xWz4OMi9ZAzjpJ6872VljyKSVkw0qmC3LYhJD6gisCtYWLxQObc+0CLiYvTyxyQEL73qAZZ+9GgSpEC6MpEMB0/9HavzpsQX
+X-Gm-Message-State: AOJu0YxuAffk+tED60Ju4lJ9AMv0Y85nRWv+Jhmc/J1DcyehQ/HEMtxA
+	NZjao3Ik+whaSDDR7EA0Xvi1FAHDuO1CywB9G5o1DtkBI+McIiHeYAV9ZjjKHLw=
+X-Google-Smtp-Source: AGHT+IEYXrfFWthgj6BeXcG46KD0grv5egr0h3pCKVPoxAcyTPYvN8NKxie1AqmF9wHr9/fz7MOoXA==
+X-Received: by 2002:aa7:d697:0:b0:564:56ce:5570 with SMTP id d23-20020aa7d697000000b0056456ce5570mr6568833edr.33.1708550585958;
+        Wed, 21 Feb 2024 13:23:05 -0800 (PST)
+Received: from [127.0.1.1] ([85.235.12.238])
+        by smtp.gmail.com with ESMTPSA id h14-20020a056402094e00b005644221a3desm4018764edz.3.2024.02.21.13.23.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 21 Feb 2024 13:23:05 -0800 (PST)
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: [PATCH v2 0/2] Try to fix the sg_mitet bugs in SH MMCIF
+Date: Wed, 21 Feb 2024 22:22:59 +0100
+Message-Id: <20240221-fix-sh-mmcif-v2-0-5e521eb25ae4@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240221194052.927623-1-surenb@google.com> <20240221194052.927623-5-surenb@google.com>
-In-Reply-To: <20240221194052.927623-5-surenb@google.com>
-From: Pasha Tatashin <pasha.tatashin@soleen.com>
-Date: Wed, 21 Feb 2024 16:20:26 -0500
-Message-ID: <CA+CK2bBqUV-mTOYSuDCBaMjy+HyEs+=YnY9Ay9iQ45mStSn47w@mail.gmail.com>
-Subject: Re: [PATCH v4 04/36] scripts/kallysms: Always include __start and
- __stop symbols
-To: Suren Baghdasaryan <surenb@google.com>
-Cc: akpm@linux-foundation.org, kent.overstreet@linux.dev, mhocko@suse.com, 
-	vbabka@suse.cz, hannes@cmpxchg.org, roman.gushchin@linux.dev, mgorman@suse.de, 
-	dave@stgolabs.net, willy@infradead.org, liam.howlett@oracle.com, 
-	penguin-kernel@i-love.sakura.ne.jp, corbet@lwn.net, void@manifault.com, 
-	peterz@infradead.org, juri.lelli@redhat.com, catalin.marinas@arm.com, 
-	will@kernel.org, arnd@arndb.de, tglx@linutronix.de, mingo@redhat.com, 
-	dave.hansen@linux.intel.com, x86@kernel.org, peterx@redhat.com, 
-	david@redhat.com, axboe@kernel.dk, mcgrof@kernel.org, masahiroy@kernel.org, 
-	nathan@kernel.org, dennis@kernel.org, tj@kernel.org, muchun.song@linux.dev, 
-	rppt@kernel.org, paulmck@kernel.org, yosryahmed@google.com, yuzhao@google.com, 
-	dhowells@redhat.com, hughd@google.com, andreyknvl@gmail.com, 
-	keescook@chromium.org, ndesaulniers@google.com, vvvvvv@google.com, 
-	gregkh@linuxfoundation.org, ebiggers@google.com, ytcoode@gmail.com, 
-	vincent.guittot@linaro.org, dietmar.eggemann@arm.com, rostedt@goodmis.org, 
-	bsegall@google.com, bristot@redhat.com, vschneid@redhat.com, cl@linux.com, 
-	penberg@kernel.org, iamjoonsoo.kim@lge.com, 42.hyeyoo@gmail.com, 
-	glider@google.com, elver@google.com, dvyukov@google.com, shakeelb@google.com, 
-	songmuchun@bytedance.com, jbaron@akamai.com, rientjes@google.com, 
-	minchan@google.com, kaleshsingh@google.com, kernel-team@android.com, 
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	iommu@lists.linux.dev, linux-arch@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org, 
-	linux-modules@vger.kernel.org, kasan-dev@googlegroups.com, 
-	cgroups@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIALNp1mUC/3WMywrCMBBFf6XM2pEkVNK68j+kizSPZsAmMpGil
+ Py7sXuX517O2aF4Jl/g2u3AfqNCOTVQpw5sNGnxSK4xKKF6oZTAQG8sEdfVUsB+tNJ5Lexl1tC
+ UJ/v2H7n71DhSeWX+HPVN/tY/oU2ixHl0YjB60FaG24OS4XzOvMBUa/0Cd6QVcqkAAAA=
+To: Geert Uytterhoeven <geert+renesas@glider.be>, 
+ Ulf Hansson <ulf.hansson@linaro.org>
+Cc: linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Linus Walleij <linus.walleij@linaro.org>, 
+ Geert Uytterhoeven <geert@linux-m68k.org>
+X-Mailer: b4 0.12.4
 
-On Wed, Feb 21, 2024 at 2:41=E2=80=AFPM Suren Baghdasaryan <surenb@google.c=
-om> wrote:
->
-> From: Kent Overstreet <kent.overstreet@linux.dev>
->
-> These symbols are used to denote section boundaries: by always including
-> them we can unify loading sections from modules with loading built-in
-> sections, which leads to some significant cleanup.
->
-> Signed-off-by: Kent Overstreet <kent.overstreet@linux.dev>
-> Signed-off-by: Suren Baghdasaryan <surenb@google.com>
-> Reviewed-by: Kees Cook <keescook@chromium.org>
+This adresses some bugs found after the introduction of the
+memory iterator sg_miter to the sh mmcif driver.
 
-Reviewed-by: Pasha Tatashin <pasha.tatashin@soleen.com>
+This was first just one patch for fixing the atomic bug, but
+now also a second patch is needed to fix a semantic issue.
+
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+---
+Changes in v2:
+- Collect Geerts test tag on patch 1
+- Add a second patch fixing the problem with advancing to
+  the next sglist entry before reading/writing the first block and
+  after reading/writing each block in a multiblock operation.
+- Link to v1: https://lore.kernel.org/r/20240220-fix-sh-mmcif-v1-1-b9d08a787c1f@linaro.org
+
+---
+Linus Walleij (2):
+      mmc: sh_mmcif: sg_miter does not need to be atomic
+      mmc: sh_mmcif: Advance sg_miter before reading blocks
+
+ drivers/mmc/host/sh_mmcif.c | 46 +++++++++++++++++++++++++++++----------------
+ 1 file changed, 30 insertions(+), 16 deletions(-)
+---
+base-commit: 2d5c7b7eb345249cb34d42cbc2b97b4c57ea944e
+change-id: 20240220-fix-sh-mmcif-49c1de70c5b7
+
+Best regards,
+-- 
+Linus Walleij <linus.walleij@linaro.org>
+
