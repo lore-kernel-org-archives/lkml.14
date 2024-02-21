@@ -1,229 +1,241 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B273F1EB45;
-	Wed, 21 Feb 2024 10:42:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708512169; cv=none; b=Ay4zEJyh9L08f7LD8/Z3w1Wql9ZiZYUcRyZ8dXlhuHfR5n5hS/WBe4fE3zScJwbHdsBEhnU8vm15N6UNKYvarwshJkHNT/g6wjt/5QOf236R83FtGBbhmqTdHhYbcV+cX5DesvmIEi+153ENhxF18wZzb2tV9deL9Dj91aDRfNA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708512169; c=relaxed/simple;
-	bh=KLZBJdcF9biH0WRi4jGDqDVkVcZbbFEdykM15vAw0ow=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=W8ed18Y46SzOOie5YhxwvYj3j7TSd94XZFCRYd90LtT29zIiU/jJutJIZDj0EryRecvU3911HwPra8F2qBIcOZ4shr3LoRB2qoFbz3DLGjequTuYjj1f+T7qVBkVNRijPlTSzCAeBs4k0teuFb+UQhtEI4r3aMiltrMLTZ72opA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LTtTTzAk; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 554402E637;
+	Wed, 21 Feb 2024 10:44:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1708512265; cv=fail; b=lScymQVdJA/z4DuDQdsalpn2shaAnVtatxirTw2QmrcP9f1oktiWk84z28SuzDasRK1D4U9GAKHvaIYTCymYE8B89jIiQAZd1+s3vr2Y7BffJibQG9B+iGYlOteMLVJcYI2bUbE8RlyLuKqCRB9MDuj6vPXmAzdpYsDhZrC0xPk=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1708512265; c=relaxed/simple;
+	bh=GtAoxXwKpJt+4prnWytYYXuIfa+tAgKU7tiv4zUOGbk=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=SYHxdlvw/2HZ4W7M1llCIkXNiBYoD8SHDF0EGB8x4knRtWI5CmNEePHC2AAml9H9SiDfMWjgWbZncJku7zvQKt5P1JnNgtoAU5JL0pI3qRR+D8+2bC4KX8DsBLqSuvT+kJqzelTR18adOa8Vd8Wli6h2f5kP6fsWXLkp+IEqO2o=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=ZnPn4NeV; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=jkDVTNMj; arc=fail smtp.client-ip=205.220.177.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LTtTTzAk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1FF08C433F1;
-	Wed, 21 Feb 2024 10:42:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708512169;
-	bh=KLZBJdcF9biH0WRi4jGDqDVkVcZbbFEdykM15vAw0ow=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=LTtTTzAkMSa2q/Vc+OjCcXFqE4L9WJz2bThCwT+fk21o1v4vf/B+1KFplaev8LRe1
-	 WdvUndqCrQx0Rty+xNQqFrvyF2xaQbNlFFxt/qFrZ1cVbjWxeRjYEFr6AImKmvWEU4
-	 VH4K8pxz+PZEf0NS4+cJl2L8u7mDdxl0lmaA9VlHaiYKljjn1vYUNivQWYlPEPownn
-	 Et71oiAKwrTMOUiJenHE9eKzaHulfju5ROFMpNPANNPCgg4xSUKn1VHefeiI9tSYuB
-	 ilMNM7+6mQ4RMQeNmO8Uojg5XJiJ6jB9t9Nwpg8DJwtCRT1pdPYUmXIfndT0aXS116
-	 cajVx8qP+banA==
-Date: Wed, 21 Feb 2024 11:42:41 +0100
-From: Lorenzo Pieralisi <lpieralisi@kernel.org>
-To: Frank Li <Frank.Li@nxp.com>
-Cc: bhelgaas@google.com, cassel@kernel.org, conor+dt@kernel.org,
-	devicetree@vger.kernel.org, festevam@gmail.com, helgaas@kernel.org,
-	hongxing.zhu@nxp.com, imx@lists.linux.dev, kernel@pengutronix.de,
-	krzysztof.kozlowski+dt@linaro.org, krzysztof.kozlowski@linaro.org,
-	kw@linux.com, l.stach@pengutronix.de,
-	linux-arm-kernel@lists.infradead.org, linux-imx@nxp.com,
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-	manivannan.sadhasivam@linaro.org, robh@kernel.org,
-	s.hauer@pengutronix.de, shawnguo@kernel.org
-Subject: Re: [PATCH v11 10/14] PCI: imx6: Add iMX95 PCIe Root Complex support
-Message-ID: <ZdXTof/fSOuBw4MW@lpieralisi>
-References: <20240220161924.3871774-1-Frank.Li@nxp.com>
- <20240220161924.3871774-11-Frank.Li@nxp.com>
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="ZnPn4NeV";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="jkDVTNMj"
+Received: from pps.filterd (m0333520.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 41L9i3L1019713;
+	Wed, 21 Feb 2024 10:44:14 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : references : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=corp-2023-11-20;
+ bh=/FZkRIT5Hdv5nCekNuPpJOz3Y/Vyd8B7iMqjacDZLtA=;
+ b=ZnPn4NeVe3iv7fDpf119/tq4ssWD9N+B4IzY43LeR03dH/V7f4DlmLpy/L6dIvBehybv
+ WGCqLdPYVOaz7g+22cf/tCI4UnOpx6Y92Bjbu+pTg3BmjT8YURU07vt3MIkidAPV7Wxg
+ 1gB0kp0IvdmdSOct6BrzDIy4GsLLHruU/OfZ1gDLECqWvvq6L7lAQNw5JROyNoYIShW8
+ bGso4QYDe4MFPEHzJ89YUfQwOMBOhXc6xQGRZrrNYrHOp/m5FXSQZZFHytozx3/PKzJd
+ /KlLcnKsyYtidjfY2LloKpX4t97b4kiA+CRSYBcyiArTCg/DlZAErussYTQOx3NBkIbX bQ== 
+Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.appoci.oracle.com [147.154.18.20])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3wamud1gn9-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 21 Feb 2024 10:44:13 +0000
+Received: from pps.filterd (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 41LA56N7032495;
+	Wed, 21 Feb 2024 10:44:13 GMT
+Received: from nam04-dm6-obe.outbound.protection.outlook.com (mail-dm6nam04lp2040.outbound.protection.outlook.com [104.47.73.40])
+	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3wak88trsy-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 21 Feb 2024 10:44:13 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=P7oLX2FWgw4GfXO1y73PGOeWwJhxTTeBrM7zjBv4KI1JLmKnt2aSDq+z5XO/8qXhCvA9tCe6uXL8IRnfZB/fejtxpeWf5C5u7/NT1kloaKpIZZ2QjoRZS5jfxSJV9aHPdg8d14I9UycRtBisnuS6WVyBetTo2b3tYHT6MjVRcVymuwTGjn0VUB2sN9FOZbPvLvEY04iH/oQmFbBSnT3kPbaF74p19I5yMANljlpO/wQ1wJ3N8wwZcLehBRxRJ5yN/izeSHUNVv4KD6FxMjzu1hM1pL5ZseYTtFHohya1oMK10JJo3zkOQi+hGCfVuVeu3SVGEefbEGHMmQST/jG/Hg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=/FZkRIT5Hdv5nCekNuPpJOz3Y/Vyd8B7iMqjacDZLtA=;
+ b=NHCBJBzWq6m6V6L0JVOVIs+vSsyCaq5aX2zg8lnjgSurPcmI62bZtCz0mOxQ88Lf7jgwUkGMWI5pRyMMEMPFXPWYwWesCPLznvEqd+cgrh0R2ObYe2Z432+IV+//t9jj3DuFKqGbny2WH++7+0100VVpUKkMDpDf9RvQ6yknJi/v/CZRjDfvzwu5Ii17l3NCnihtF4SDzvBWKLM/rXyXtszHWtgK+ZZY0WsLWp0YXd96Jqtczlw9a+XUUrEOC1PMT5hPWJ1d/7pugFf1xmJADR1wFwfFRu+zg/9cQygeVeu0dmjv7Ayc7mpsXI4MFURevH0Y2qBqlolITaWmXpQPXw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=/FZkRIT5Hdv5nCekNuPpJOz3Y/Vyd8B7iMqjacDZLtA=;
+ b=jkDVTNMjRqWiWovE8xJKz3CC15XpDFSC1QCULjtnJ1a0IbznnJhipD/UAA3MOUAh/Y8s1QsqoD0MtZQ5FEAtP7jcG3ZrE4vwxJxGfbiOQYfqQmwLNbgd4777TwMTyyC/sZhZPS7XP76kOSsIBQlSuYVUrhnk1KYeA6bzaGAQmqY=
+Received: from SA1PR10MB6445.namprd10.prod.outlook.com (2603:10b6:806:29d::6)
+ by BN0PR10MB5272.namprd10.prod.outlook.com (2603:10b6:408:124::24) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7316.21; Wed, 21 Feb
+ 2024 10:44:11 +0000
+Received: from SA1PR10MB6445.namprd10.prod.outlook.com
+ ([fe80::f51a:7f6d:973d:c219]) by SA1PR10MB6445.namprd10.prod.outlook.com
+ ([fe80::f51a:7f6d:973d:c219%4]) with mapi id 15.20.7292.028; Wed, 21 Feb 2024
+ 10:44:10 +0000
+From: Praveen Kannoju <praveen.kannoju@oracle.com>
+To: Simon Horman <horms@kernel.org>
+CC: "j.vosburgh@gmail.com" <j.vosburgh@gmail.com>,
+        "andy@greyhouse.net"
+	<andy@greyhouse.net>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "edumazet@google.com" <edumazet@google.com>,
+        "kuba@kernel.org"
+	<kuba@kernel.org>,
+        "pabeni@redhat.com" <pabeni@redhat.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Rajesh
+ Sivaramasubramaniom <rajesh.sivaramasubramaniom@oracle.com>,
+        Rama
+ Nichanamatlu <rama.nichanamatlu@oracle.com>,
+        Manjunath Patil
+	<manjunath.b.patil@oracle.com>
+Subject: RE: [PATCH net-next v6] bonding: rate-limit bonding driver inspect
+ messages
+Thread-Topic: [PATCH net-next v6] bonding: rate-limit bonding driver inspect
+ messages
+Thread-Index: AQHaZJ/z/dX/Wg+OFkqAMns3Aqcnw7EUmxOAgAABAFA=
+Date: Wed, 21 Feb 2024 10:44:10 +0000
+Message-ID: 
+ <SA1PR10MB6445FD1C1390E0D7186896E78C572@SA1PR10MB6445.namprd10.prod.outlook.com>
+References: <20240221082752.4660-1-praveen.kannoju@oracle.com>
+ <20240221103853.GD352018@kernel.org>
+In-Reply-To: <20240221103853.GD352018@kernel.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SA1PR10MB6445:EE_|BN0PR10MB5272:EE_
+x-ms-office365-filtering-correlation-id: dd7adae8-b311-4c67-e90c-08dc32ca0995
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 
+ attlVRVkFLgZs3sSrCoiFbGGLJi9AdofVdNaEtuLH8NfrDy5wCeOElYGLFCWrWBGNIt7FnapLDgP4Hto1r7L56Pffwsu/GeH1hJxJ9K4aMNibPhcOYP2NruxGJ8brf83DNuYfJz4shgmfS80xFVElwMlF1aKsgR4ARELyeXJ2odW2tdap1xrDy4i551Tn8+HfnjQWFgFMeML/PfTiScG/RU/kOZ3XxsH4gcJhgpnpV8K3zXHA/y89aXz1khgsBQ0dHKjj+8/Uu8eQg56EINaQpp8slMYt0YsoSd6S9ne6jNG5Aur36sPf/U5fy/Df4ia2I5iJKS+00X6WymlNZdpvJ2Rg6Emm4O1FoXFs/t37g1j800f9HCBqvwgE9DfjjMN6LLM3ciZJXO8q4M80/CHMojIe9rZ5XvvuQm+kSCRG1aglmXsnbxDWYRrza+57QQQ9UgVcQzj2DEMJ51GWGFkC1I1LP+K9OgKr8curfQU6Vgks5F+eVusHtvQLegcVU9pPaD6npWwJ78CvE8dE2XT7Z5EdtOjcwFHZuMvMHbI40JpvOsk1+CgVhVToPO3CEAvGPQfFXH5/h6a2cdzu1vjs6ls44IsONwHkqF45FRM010=
+x-forefront-antispam-report: 
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR10MB6445.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(38070700009);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: 
+ =?us-ascii?Q?wo6heOpgrlUbloT8bQSVvLSzjjRCRApOh+kSgPOF2ZmECfyF4E8B6c14fOXe?=
+ =?us-ascii?Q?bD6P72r8FPMF6EchnkCTtEwOPG45VGHzIwOtteDndYQrfgmszj7191yi9r4i?=
+ =?us-ascii?Q?HwPJcOaGrZJW6diaclhDftoSV3IvSGD9tK6F04RzuOXWhp+rI6vruvGmLo5H?=
+ =?us-ascii?Q?2Ik1SIdxLtxzltG0vBHuDN4yXevagVGoy4LC7IQZ8e0yr0o0QXckseIoH9NZ?=
+ =?us-ascii?Q?1FtlF7C6bYYcS4BBM8nKSBTb1iIjcCyZPTNOJ4T/zl8NgWVMveUQOJ1Puu2u?=
+ =?us-ascii?Q?9QxGte9g8b+6zLDmjF7whsrxvUce9X95nCqHzPt8QSmP0q/nxLfN+1mJdPmz?=
+ =?us-ascii?Q?MiqTnRvSbVFs2ceVw0i5CQLCTSwybbg3HKsTEcVStpeJb9exwtGaJXB5XR6k?=
+ =?us-ascii?Q?/SIJY7IzIof6Sk272K3PEAuU4KPT8h4A8KlrUxYrno13bi0wOcgo34QXIGqC?=
+ =?us-ascii?Q?lv+x1qt0qTJOes2ILVi+vvS9q9cTEUjyUqC5RTyKiwDl4LqAoC82Q8Wt2+Yb?=
+ =?us-ascii?Q?TmmLZt9ZdH1xAAWxxkKUjHJceKCVOmg7rU9c0shsR5EG+4aTxGX0d8hfok5o?=
+ =?us-ascii?Q?oRBup0ZQhxf+XHsu07m9TBt09lBBfILQzdqVafEVWds7NZJtrAWdXoOuY9cH?=
+ =?us-ascii?Q?47flTCYE1ZRQ3jZQF2JpM2KwVYvKP1vuJUADtHp6CtB8A/WN7qs2c2U+Hl4p?=
+ =?us-ascii?Q?AYFqP+Vd9wwvKx4rYpSPYpN1Rz1I0CF+jbE+rtz7+9JSktWZIgNY2HzPSTkh?=
+ =?us-ascii?Q?4JzOmmD9JrL5TghXabYS/y1SHolrTQxuiXNHLlC9/33oE4mBnf+qWcoy12WG?=
+ =?us-ascii?Q?W/y7X1oDYg46e10py0hATcpj6WeK9cgQ95SrPGqBAj8K7FTrzsivUedDVzom?=
+ =?us-ascii?Q?AJ/7h/Z/fjwB9hEFWYO3EVrihQT2mwQdOY1cRvrrMiv2D+uefSpJL4o65Hlp?=
+ =?us-ascii?Q?NjO1WDyuskTUBoWG96EZ2L40HCq8kSFGJLy6Y+VZGleeLe1wlLTtT4TDGXV2?=
+ =?us-ascii?Q?kppeAC5FIILGqvZm6ATKD/Ka7jCHAchV31ZjVHC9L0CBEqxYngxngwI5ZZBW?=
+ =?us-ascii?Q?Js3mS4OJfbERCD3xxiuFkr8vBzaTs4CXkSLp3Sf43O3pdf6ZVZ12KrM7nGmx?=
+ =?us-ascii?Q?7/O+c9/2ygf7nVKz1i+//xRTytXrkxo1QXbYQMPdmKYeZEQKnVllI8MTnb3L?=
+ =?us-ascii?Q?r3RXeNQ3ArQ07xyyT1FsmlBdCrfDh9FT+btWu/UzsfVhETI5Q/Dt95KVTQbA?=
+ =?us-ascii?Q?0EBcY56Zj6WJLeHSEeIM2Oelm8PvoBtKJev8TJvOxKbKFjJkGD9mV/Axokmr?=
+ =?us-ascii?Q?SxgOpM/DkI0jimEjJ39f9z17v1KJRh10IFS2EBeGTLdx5kSFe4an0rO05WrV?=
+ =?us-ascii?Q?aMuoVv7AXu4bKKUXrd1v0wRlFswBS5WgxU01pq7AEFkvoXuT4WCW+8fhTs0m?=
+ =?us-ascii?Q?bYZKU1sEfawTqNJ5zFE2ULZd45WQ+S2ZA8jgmWYUkQW8hmYX0VLgi6ErIPj0?=
+ =?us-ascii?Q?o1bINV3uw5LnJfTjcnLghSNGr9nOU1jxUFq1Dep+l8TpNrMvPYrXdn/U9wM/?=
+ =?us-ascii?Q?plwr0D/6rmJufOhTLo+S5CPLs3GiSakHGhckp8HrO4EbXJvjHqcb6kWfx5J1?=
+ =?us-ascii?Q?Kg=3D=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240220161924.3871774-11-Frank.Li@nxp.com>
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 
+	mM825wEfbCNJOCBWZ1owrHGG4JdMfkMUskJ0eTlpf/Ru1LcVugbxqo5mdpV+ADv+K8yJNG+lot/LkgsR3Dui9jwCenvJk70N1wUHLuqzStbVZ+URBACxjwnsw5kAGNo7Ttx59rFoWrbP4gkkHv9Gd4p1G9xNNkEraf7d7HP+TUaECzN6lStVJ+YsCQUfGE5Y7Sj/x/3kcZS2VVKqaPxJVKq1nRVp3/9BcSe4fmmdYfAe2QVZ1bbQpib61M/jl5IVnlQw6LCwjcEA2l4kpwzUaizZYl9YGNmAZDmIv4FkhKFPEtqB3bH+Pg9C5uXyp4jXjK211Hnd+tMpBGGi4adudH9i0ha+ki8wZPdqWHfABhCdbIVcLCtKUILru+s01R2yLGSCi38xaNk1xXjdpfJVeYahcHSV/dN5wqoQT839vrJwvs4YSMpw5AedRoLhBxgiZwK2ODJp2/pQlTRENKnppaO70gJNq6uKP2tk1hcGkXy3/lzCNXM78A3/z3ysPL7UygRjU6Uxyu7RGD+JkUe1wXv/qO8rMjA2FYVeFTKotCjXW1CJQq22FirTcffVbSzp0w+vSKG7u7hfYblSSpgw8HnYVsZ30hVdGZWBfHJ1FLY=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SA1PR10MB6445.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: dd7adae8-b311-4c67-e90c-08dc32ca0995
+X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Feb 2024 10:44:10.5216
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: SydhAKUZG31jCqtMqyxlT0KYcnLOPfdeGVd8Gc+DDSpngdv0/UeJeHQRb2KLmK6CaxTqvvfDNJjjxW773xeLEMROxFbLGC1FLW1KqbIFYh8=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN0PR10MB5272
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-02-20_06,2024-02-21_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 phishscore=0 malwarescore=0
+ bulkscore=0 adultscore=0 suspectscore=0 spamscore=0 mlxlogscore=999
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2311290000
+ definitions=main-2402210082
+X-Proofpoint-GUID: eLbW7RwgHcBzy_RVYItpjkw2_FzSeGuM
+X-Proofpoint-ORIG-GUID: eLbW7RwgHcBzy_RVYItpjkw2_FzSeGuM
 
-On Tue, Feb 20, 2024 at 11:19:20AM -0500, Frank Li wrote:
-> Add iMX95 PCIe Root Complex support.
-> 
-> Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> Signed-off-by: Frank Li <Frank.Li@nxp.com>
-> ---
-> 
-> Notes:
->     Change from v8 to v9
->     - Add mani's review tag
->     
->     Change from v7 to v8
->     - Update commit subject
->     - add const from regmap
->     - remove unnessary logic in imx6_pcie_deassert_core_reset()
->     
->     Change from v4 to v7
->     - none
->     Change from v1 to v3
->     - none
-> 
->  drivers/pci/controller/dwc/pci-imx6.c | 82 +++++++++++++++++++++++++--
->  1 file changed, 77 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
-> index 71ce6b7ac1de0..582ba00d628a1 100644
-> --- a/drivers/pci/controller/dwc/pci-imx6.c
-> +++ b/drivers/pci/controller/dwc/pci-imx6.c
-> @@ -42,6 +42,25 @@
->  #define IMX8MQ_GPR12_PCIE2_CTRL_DEVICE_TYPE	GENMASK(11, 8)
->  #define IMX8MQ_PCIE2_BASE_ADDR			0x33c00000
->  
-> +#define IMX95_PCIE_PHY_GEN_CTRL			0x0
-> +#define IMX95_PCIE_REF_USE_PAD			BIT(17)
-> +
-> +#define IMX95_PCIE_PHY_MPLLA_CTRL		0x10
-> +#define IMX95_PCIE_PHY_MPLL_STATE		BIT(30)
+> -----Original Message-----
+> From: Simon Horman <horms@kernel.org>
+> Sent: 21 February 2024 04:09 PM
+> To: Praveen Kannoju <praveen.kannoju@oracle.com>
+> Cc: j.vosburgh@gmail.com; andy@greyhouse.net; davem@davemloft.net; edumaz=
+et@google.com; kuba@kernel.org;
+> pabeni@redhat.com; netdev@vger.kernel.org; linux-kernel@vger.kernel.org; =
+Rajesh Sivaramasubramaniom
+> <rajesh.sivaramasubramaniom@oracle.com>; Rama Nichanamatlu <rama.nichanam=
+atlu@oracle.com>; Manjunath Patil
+> <manjunath.b.patil@oracle.com>
+> Subject: Re: [PATCH net-next v6] bonding: rate-limit bonding driver inspe=
+ct messages
+>=20
+> On Wed, Feb 21, 2024 at 01:57:52PM +0530, Praveen Kumar Kannoju wrote:
+> > Through the routine bond_mii_monitor(), bonding driver inspects and
+> > commits the slave state changes. During the times when slave state
+> > change and failure in aqcuiring rtnl lock happen at the same time, the
+> > routine
+> > bond_mii_monitor() reschedules itself to come around after 1 msec to
+> > commit the new state.
+> >
+> > During this, it executes the routine bond_miimon_inspect() to
+> > re-inspect the state chane and prints the corresponding slave state on =
+to the console.
+> > Hence we do see a message at every 1 msec till the rtnl lock is
+> > acquired and state chage is committed.
+> >
+> > This patch doesn't change how bond functions. It only simply limits
+> > this kind of log flood.
+> >
+> > Signed-off-by: Praveen Kumar Kannoju <praveen.kannoju@oracle.com>
+> > ---
+> > v6:
+> >   - Minor space additions addressed.
+> > v5: https://lore.kernel.org/all/20240221050809.4372-1-praveen.kannoju@o=
+racle.com/
+> >   - Redundant indentation addressed.
+> > v4: https://lore.kernel.org/all/20240220050437.5623-1-praveen.kannoju@o=
+racle.com/
+> >   - Rectification in the patch subject and versioning details.
+> > v3: https://lore.kernel.org/lkml/20240219133721.4567-1-praveen.kannoju@=
+oracle.com/
+> >   - Commit message is modified to provide summary of the issue, because=
+ of
+> >     which rate-limiting the bonding driver messages is needed.
+> > v2: https://lore.kernel.org/lkml/20240215172554.4211-1-praveen.kannoju@=
+oracle.com/
+> >   - Use exising net_ratelimit() instead of introducing new rate-limit
+> >     parameter.
+> > v1:
+> > https://lore.kernel.org/lkml/20240214044245.33170-1-praveen.kannoju@or
+> > acle.com/
+> > ---
+> >  drivers/net/bonding/bond_main.c | 18 ++++++++++--------
+> >  1 file changed, 10 insertions(+), 8 deletions(-)
+>=20
+> Hi Praveen,
+>=20
+> Thanks for addressing my review of v4.
+> This version looks good to me.
+>=20
+> Reviewed-by: Simon Horman <horms@kernel.org>
+>=20
+> ...
 
-These two defines are unused, I will remove them.
+Thank you for the review, Simon, Hangbin and Jay.
 
-> +#define IMX95_PCIE_SS_RW_REG_0			0xf0
-> +#define IMX95_PCIE_REF_CLKEN			BIT(23)
-> +#define IMX95_PCIE_PHY_CR_PARA_SEL		BIT(9)
-> +
-> +#define IMX95_PE0_GEN_CTRL_1			0x1050
-> +#define IMX95_PCIE_DEVICE_TYPE			GENMASK(3, 0)
-> +
-> +#define IMX95_PE0_GEN_CTRL_3			0x1058
-> +#define IMX95_PCIE_LTSSM_EN			BIT(0)
-> +
-> +#define IMX95_PE0_PM_STS			0x1064
-> +#define IMX95_PCIE_PM_LINKST_IN_L2		BIT(14)
-
-These two defines are unused. I will remove them.
-
-> +
->  #define to_imx6_pcie(x)	dev_get_drvdata((x)->dev)
->  
->  enum imx6_pcie_variants {
-> @@ -52,6 +71,7 @@ enum imx6_pcie_variants {
->  	IMX8MQ,
->  	IMX8MM,
->  	IMX8MP,
-> +	IMX95,
->  	IMX8MQ_EP,
->  	IMX8MM_EP,
->  	IMX8MP_EP,
-> @@ -63,6 +83,7 @@ enum imx6_pcie_variants {
->  #define IMX6_PCIE_FLAG_HAS_PHYDRV			BIT(3)
->  #define IMX6_PCIE_FLAG_HAS_APP_RESET		BIT(4)
->  #define IMX6_PCIE_FLAG_HAS_PHY_RESET		BIT(5)
-> +#define IMX6_PCIE_FLAG_HAS_SERDES		BIT(6)
->  
->  #define imx6_check_flag(pci, val)     (pci->drvdata->flags & val)
->  
-> @@ -179,6 +200,24 @@ static unsigned int imx6_pcie_grp_offset(const struct imx6_pcie *imx6_pcie)
->  	return imx6_pcie->controller_id == 1 ? IOMUXC_GPR16 : IOMUXC_GPR14;
->  }
->  
-> +static int imx95_pcie_init_phy(struct imx6_pcie *imx6_pcie)
-> +{
-> +	regmap_update_bits(imx6_pcie->iomuxc_gpr,
-> +			IMX95_PCIE_SS_RW_REG_0,
-> +			IMX95_PCIE_PHY_CR_PARA_SEL,
-> +			IMX95_PCIE_PHY_CR_PARA_SEL);
-> +
-> +	regmap_update_bits(imx6_pcie->iomuxc_gpr,
-> +			   IMX95_PCIE_PHY_GEN_CTRL,
-> +			   IMX95_PCIE_REF_USE_PAD, 0);
-> +	regmap_update_bits(imx6_pcie->iomuxc_gpr,
-> +			   IMX95_PCIE_SS_RW_REG_0,
-> +			   IMX95_PCIE_REF_CLKEN,
-> +			   IMX95_PCIE_REF_CLKEN);
-> +
-> +	return 0;
-> +}
-> +
->  static void imx6_pcie_configure_type(struct imx6_pcie *imx6_pcie)
->  {
->  	const struct imx6_pcie_drvdata *drvdata = imx6_pcie->drvdata;
-> @@ -575,6 +614,7 @@ static int imx6_pcie_enable_ref_clk(struct imx6_pcie *imx6_pcie)
->  				   IMX6Q_GPR1_PCIE_REF_CLK_EN, 1 << 16);
->  		break;
->  	case IMX7D:
-> +	case IMX95:
->  		break;
->  	case IMX8MM:
->  	case IMX8MM_EP:
-> @@ -1279,12 +1319,32 @@ static int imx6_pcie_probe(struct platform_device *pdev)
->  		return PTR_ERR(imx6_pcie->turnoff_reset);
->  	}
->  
-> +	if (imx6_pcie->drvdata->gpr) {
->  	/* Grab GPR config register range */
-> -	imx6_pcie->iomuxc_gpr =
-> -		 syscon_regmap_lookup_by_compatible(imx6_pcie->drvdata->gpr);
-> -	if (IS_ERR(imx6_pcie->iomuxc_gpr)) {
-> -		dev_err(dev, "unable to find iomuxc registers\n");
-> -		return PTR_ERR(imx6_pcie->iomuxc_gpr);
-> +		imx6_pcie->iomuxc_gpr =
-> +			 syscon_regmap_lookup_by_compatible(imx6_pcie->drvdata->gpr);
-> +		if (IS_ERR(imx6_pcie->iomuxc_gpr))
-> +			return dev_err_probe(dev, PTR_ERR(imx6_pcie->iomuxc_gpr),
-> +					     "unable to find iomuxc registers\n");
-> +	}
-> +
-> +	if (imx6_check_flag(imx6_pcie, IMX6_PCIE_FLAG_HAS_SERDES)) {
-> +		void __iomem *off = devm_platform_ioremap_resource_byname(pdev, "app");
-> +
-> +		if (IS_ERR(off))
-> +			return dev_err_probe(dev, PTR_ERR(off),
-> +					     "unable to find serdes registers\n");
-> +
-> +		static const struct regmap_config regmap_config = {
-> +			.reg_bits = 32,
-> +			.val_bits = 32,
-> +			.reg_stride = 4,
-> +		};
-> +
-> +		imx6_pcie->iomuxc_gpr = devm_regmap_init_mmio(dev, off, &regmap_config);
-> +		if (IS_ERR(imx6_pcie->iomuxc_gpr))
-> +			return dev_err_probe(dev, PTR_ERR(imx6_pcie->iomuxc_gpr),
-> +					     "unable to find iomuxc registers\n");
->  	}
->  
->  	/* Grab PCIe PHY Tx Settings */
-> @@ -1457,6 +1517,17 @@ static const struct imx6_pcie_drvdata drvdata[] = {
->  		.mode_off[0] = IOMUXC_GPR12,
->  		.mode_mask[0] = IMX6Q_GPR12_DEVICE_TYPE,
->  	},
-> +	[IMX95] = {
-> +		.variant = IMX95,
-> +		.flags = IMX6_PCIE_FLAG_HAS_SERDES,
-> +		.clk_names = imx8mq_clks,
-> +		.clks_cnt = ARRAY_SIZE(imx8mq_clks),
-> +		.ltssm_off = IMX95_PE0_GEN_CTRL_3,
-> +		.ltssm_mask = IMX95_PCIE_LTSSM_EN,
-> +		.mode_off[0]  = IMX95_PE0_GEN_CTRL_1,
-> +		.mode_mask[0] = IMX95_PCIE_DEVICE_TYPE,
-> +		.init_phy = imx95_pcie_init_phy,
-> +	},
->  	[IMX8MQ_EP] = {
->  		.variant = IMX8MQ_EP,
->  		.flags = IMX6_PCIE_FLAG_HAS_APP_RESET |
-> @@ -1501,6 +1572,7 @@ static const struct of_device_id imx6_pcie_of_match[] = {
->  	{ .compatible = "fsl,imx8mq-pcie", .data = &drvdata[IMX8MQ], },
->  	{ .compatible = "fsl,imx8mm-pcie", .data = &drvdata[IMX8MM], },
->  	{ .compatible = "fsl,imx8mp-pcie", .data = &drvdata[IMX8MP], },
-> +	{ .compatible = "fsl,imx95-pcie", .data = &drvdata[IMX95], },
->  	{ .compatible = "fsl,imx8mq-pcie-ep", .data = &drvdata[IMX8MQ_EP], },
->  	{ .compatible = "fsl,imx8mm-pcie-ep", .data = &drvdata[IMX8MM_EP], },
->  	{ .compatible = "fsl,imx8mp-pcie-ep", .data = &drvdata[IMX8MP_EP], },
-> -- 
-> 2.34.1
-> 
+-
+Praveen.
