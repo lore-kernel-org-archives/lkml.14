@@ -1,37 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BDC9129A66;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74082128819;
 	Wed, 21 Feb 2024 21:25:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708550706; cv=none; b=PW9yPz5xZBz4e/8ZDHG/QhwWbmae9CMKl7ZJgv+I227ztFV24o4Gs3V7kWX7qepelMoaf7QobYEIiykOPw0EHbEBZLDvnl6LirdejzZUipxatoMkoUUd4pz/zFV7MqAH3ESgDW5AXovfUl19RviveDOeJ4HHw5oWF1GiG6Q83kY=
+	t=1708550706; cv=none; b=XmFZyYXmXVX50b8ufSxdjg3F1sN8kGvjB3m9VTxOLmBydO851FkizF7fp7Wp7xTu94KBDaTVFsRj5rjy1PI+PIHNuPCA05uWhhF8rBMeItvhD+Hc1vRbzqtAyZxUahaqDOcyAjnd6pnWDpH8ozBpr+E2hP6APVtw5/nR0FheoTE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1708550706; c=relaxed/simple;
-	bh=4t7VYe2pfzhO0kZ+94iPfJDYCD1vDaacDt9TOtFcBjg=;
+	bh=OhFFK2aqwLPE1WOUvtrX8svKCrxfnUe+iJ8IlWQVyNc=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=ZiN6/S4x5rCfz5ZDSdocvpHcrRS8Utix04RHxBfIV8QF5e1b1/48XanMunTdHIiUXYqmRh6aCQLsCPLZbrYXkKm2LYa+YTB1NXSs6qD53ABOPobqvqQiExl5x0sjoJBptMPadRvPl9xzm1dBwtSNIy0WFuUfr0qAl0ZoIQiJSXE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H4NDZ9Yn; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=tYB1YnHxIwzGatyRWOScTdI0L3OG9DXzJCi+ZQRK9OLaN+ftkwTAeoGXlwL5g7ucUtuMLqmcbJkJg/C0fjbkD/WC3KgAfiQyaz0TH2/LiyHMhRRbZaPDdefoHN3jl8cqfULtEEY7ZG/jwFOYrg/2CRwO0dyutrBdcRH91H6xiTE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RZlkCZR8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H4NDZ9Yn"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 56CF4C32781;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RZlkCZR8"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 39E73C41679;
 	Wed, 21 Feb 2024 21:25:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1708550706;
-	bh=4t7VYe2pfzhO0kZ+94iPfJDYCD1vDaacDt9TOtFcBjg=;
+	bh=OhFFK2aqwLPE1WOUvtrX8svKCrxfnUe+iJ8IlWQVyNc=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=H4NDZ9Yn8LguadXM61Cv/+vC8MjNfXRmyxgNTVcyElmxvP+ZVw35iZ9BJ7IdwcyOr
-	 klDsbyltojrU0OZIrg8apY3dBD2mSdC9xU4iNyYTVOU+M7zy9hRPndMTn9IsdtNmGd
-	 +NGF0WBfpQ/oslQMoZB282va2ZI//vz8DD+t6UG5UTpaoI7rIHvvb7jfcDYEcaa+Mb
-	 giTO54jW/xYtFV4hilLZPOJpxEgkHYGZnrNk0IHVgTmsWiPXt0ryuHgHBoBoVoQ3bT
-	 oqSiQ+KhKGX5vi4s7hXECA+uIRFLqgZfgsuBoIokLmn0KsVR1p8kXZYZqesP1XLXpj
-	 NjPpJnOPGKXBg==
+	b=RZlkCZR8EhACEKs533voXeKxdPegitqhuX3z+DURsKNsWzw1nUSRXg2qO1/O6bxVa
+	 hD7SyJbDNexmwxY61JfdIwdNgEW6W7AFebONEMq3JprI4reQniICejGasqx21vLFe8
+	 dz/LgdGWyvQxSaMlRaqObz2+vDyr5myLud3DDlJs38QPVyyPnLD+RDini2/Yrpswhz
+	 W0l9eQB0jsOGpSmO6FLVQxpfGYwxztqIwdmwpEfvMJjJFLLERzKZHmKXYZGQ3vVtco
+	 9mCq8U5hUgfCLcx/54VhcMsDn70tRVjAUfrxbSYtg6L1PV3X0t3uVI7zjwzETq+Ojj
+	 3eh/MiuqF1P+A==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45A39C48BEB;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04FC0C54791;
 	Wed, 21 Feb 2024 21:25:06 +0000 (UTC)
 From: "Seth Forshee (DigitalOcean)" <sforshee@kernel.org>
-Date: Wed, 21 Feb 2024 15:24:40 -0600
-Subject: [PATCH v2 09/25] commoncap: use is_fscaps_xattr()
+Date: Wed, 21 Feb 2024 15:24:38 -0600
+Subject: [PATCH v2 07/25] capability: provide a helper for converting
+ vfs_caps to xattr for userspace
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -40,7 +41,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240221-idmap-fscap-refactor-v2-9-3039364623bd@kernel.org>
+Message-Id: <20240221-idmap-fscap-refactor-v2-7-3039364623bd@kernel.org>
 References: <20240221-idmap-fscap-refactor-v2-0-3039364623bd@kernel.org>
 In-Reply-To: <20240221-idmap-fscap-refactor-v2-0-3039364623bd@kernel.org>
 To: Christian Brauner <brauner@kernel.org>, 
@@ -61,48 +62,150 @@ Cc: linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
  selinux@vger.kernel.org, linux-integrity@vger.kernel.org, 
  linux-doc@vger.kernel.org, linux-unionfs@vger.kernel.org
 X-Mailer: b4 0.12.4
-X-Developer-Signature: v=1; a=openpgp-sha256; l=972; i=sforshee@kernel.org;
- h=from:subject:message-id; bh=4t7VYe2pfzhO0kZ+94iPfJDYCD1vDaacDt9TOtFcBjg=; 
- =?utf-8?q?b=3DowEBbQGS/pANAwAKAVMDma7l9DHJAcsmYgBl1mogZOFLFrTJHOsqMGqEXCfSc?=
- =?utf-8?q?BiIf9AXwC8KoSVV_frhhLcCJATMEAAEKAB0WIQSQnt+rKAvnETy4Hc9TA5mu5fQxy?=
- =?utf-8?q?QUCZdZqIAAKCRBTA5mu5fQxyQbxCA_CB/noEJJlpI9g151/fViGjdeWOgiQrNeYPr?=
- =?utf-8?q?agty6p9bGZUks5yPjNApObB+aefC+H5tKHvGXzIrbEB_n9MzhIumjZYNHrsibS1d5?=
- =?utf-8?q?sAG1Bwqgggfi9Sx3VOvIsDip4pg6NtDhmVtW5+Yt20+5GnTd/jGezJryP_a1EhXCI?=
- =?utf-8?q?xhToqhCm8BjKwufrx88FED6FORWo9DmD92IwhJWEvf6SQrnn5DKY/aXw9kF7Fzdce?=
- =?utf-8?q?VCDrAw_kxY/MZXXVqwEedLkAlP4Q3sx8JCqZPzpoVZj2Q7z9g1oNDJDGWXr/KWOlB?=
- =?utf-8?q?YRxWFr5V1dFQ0WXy9iP4?= Ig0HUzkQv1L68QjY8iH4SVVE9ldej/
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4882; i=sforshee@kernel.org;
+ h=from:subject:message-id; bh=OhFFK2aqwLPE1WOUvtrX8svKCrxfnUe+iJ8IlWQVyNc=; 
+ =?utf-8?q?b=3DowEBbQGS/pANAwAKAVMDma7l9DHJAcsmYgBl1moe+AhIBa2iFKus4HKFQ2il7?=
+ =?utf-8?q?yas4jPP3dyS1+Ne_5Mxo69eJATMEAAEKAB0WIQSQnt+rKAvnETy4Hc9TA5mu5fQxy?=
+ =?utf-8?q?QUCZdZqHgAKCRBTA5mu5fQxybNwB/_0Q84CMY/0WnJZlUjjtKZuKkVW2vuFaN8zeS?=
+ =?utf-8?q?2QYvI/A8cu38Pd7o4lvanR9S9hXj4vl4S6oG1Mty8l9_rvg72P/DOk5fedO0P0xte?=
+ =?utf-8?q?tekIGcH2ISDFUwuzWZV6bEEezmJxftYAfqlz43NxT/FQmhxVP0HxL/T7C_6axOrX9?=
+ =?utf-8?q?+LATljuFCYBTlmEJxQYbvp8gb/zhITu0gcFUULQFVRJRLB6qe+6k4BQbXc9MO5E5Y?=
+ =?utf-8?q?Q8d0NA_k+rEqS6CmssspC20ypVSjz2/p2jiq8s2SQRQOicbBpeL5eObtE35O2Aa2h?=
+ =?utf-8?q?gGTIjwO9eFWGTjh3O3Ca?= xgnvBlVxCegczqxtnWEXgMFeBGeNVF
 X-Developer-Key: i=sforshee@kernel.org; a=openpgp;
  fpr=2ABCA7498D83E1D32D51D3B5AB4800A62DB9F73A
 X-Endpoint-Received:
  by B4 Relay for sforshee@kernel.org/default with auth_id=103
 
+cap_inode_getsecurity() implements a handful of policies for capability
+xattrs read by userspace:
+
+ - It returns EINVAL if the on-disk capability is in v1 format.
+
+ - It masks off all bits in magic_etc except for the version and
+   VFS_CAP_FLAGS_EFFECTIVE.
+
+ - v3 capabilities are converted to v2 format if the rootid returned to
+   userspace would be 0 or if the rootid corresponds to root in an
+   ancestor user namespace.
+
+ - It returns EOVERFLOW for a v3 capability whose rootid does not map to
+   a valid id in current_user_ns() or to root in an ancestor namespace.
+
+These policies must be maintained when converting vfs_caps to an xattr
+for userspace. Provide a vfs_caps_to_user_xattr() helper which will
+enforce these policies.
+
 Signed-off-by: Seth Forshee (DigitalOcean) <sforshee@kernel.org>
 ---
- security/commoncap.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ include/linux/capability.h |  4 +++
+ security/commoncap.c       | 78 ++++++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 82 insertions(+)
 
+diff --git a/include/linux/capability.h b/include/linux/capability.h
+index a0893ac4664b..eb06d7c6224b 100644
+--- a/include/linux/capability.h
++++ b/include/linux/capability.h
+@@ -218,6 +218,10 @@ ssize_t vfs_caps_to_xattr(struct mnt_idmap *idmap,
+ 			  struct user_namespace *dest_userns,
+ 			  const struct vfs_caps *vfs_caps,
+ 			  void *data, size_t size);
++ssize_t vfs_caps_to_user_xattr(struct mnt_idmap *idmap,
++			       struct user_namespace *dest_userns,
++			       const struct vfs_caps *vfs_caps,
++			       void *data, size_t size);
+ 
+ /* audit system wants to get cap info from files as well */
+ int get_vfs_caps_from_disk(struct mnt_idmap *idmap,
 diff --git a/security/commoncap.c b/security/commoncap.c
-index 289530e58c37..19affcfa3126 100644
+index 7531c9634997..289530e58c37 100644
 --- a/security/commoncap.c
 +++ b/security/commoncap.c
-@@ -1205,7 +1205,7 @@ int cap_inode_setxattr(struct dentry *dentry, const char *name,
- 	 * For XATTR_NAME_CAPS the check will be done in
- 	 * cap_convert_nscap(), called by setxattr()
- 	 */
--	if (strcmp(name, XATTR_NAME_CAPS) == 0)
-+	if (is_fscaps_xattr(name))
- 		return 0;
+@@ -791,6 +791,84 @@ ssize_t vfs_caps_to_xattr(struct mnt_idmap *idmap,
+ 	return ret;
+ }
  
- 	if (!ns_capable(user_ns, CAP_SYS_ADMIN))
-@@ -1242,7 +1242,7 @@ int cap_inode_removexattr(struct mnt_idmap *idmap,
- 			XATTR_SECURITY_PREFIX_LEN) != 0)
- 		return 0;
- 
--	if (strcmp(name, XATTR_NAME_CAPS) == 0) {
-+	if (is_fscaps_xattr(name)) {
- 		/* security.capability gets namespaced */
- 		struct inode *inode = d_backing_inode(dentry);
- 		if (!inode)
++/**
++ * vfs_caps_to_user_xattr - convert vfs_caps to caps xattr for userspace
++ *
++ * @idmap:       idmap of the mount the inode was found from
++ * @dest_userns: user namespace for ids in xattr data
++ * @vfs_caps:    source vfs_caps data
++ * @data:        destination buffer for rax xattr caps data
++ * @size:        size of the @data buffer
++ *
++ * Converts a kernel-internal capability into the raw security.capability
++ * xattr format. Implements the following policies required for fscaps
++ * returned to userspace:
++ *
++ *  - Returns -EINVAL if the on-disk capability is in v1 format.
++ *  - Masks off all bits in magic_etc except for the version and
++ *    VFS_CAP_FLAGS_EFFECTIVE.
++ *  - Converts v3 capabilities to v2 format if the rootid returned to
++ *    userspace would be 0 or if the rootid corresponds to root in an
++ *    ancestor user namespace.
++ *  - Returns EOVERFLOW for a v3 capability whose rootid does not map to a
++ *    valid id in current_user_ns() or to root in an ancestor namespace.
++ *
++ * If the xattr is being read or written through an idmapped mount the
++ * idmap of the vfsmount must be passed through @idmap. This function
++ * will then take care to map the rootid according to @idmap.
++ *
++ * Return: On success, return the size of the xattr data. On error,
++ * return < 0.
++ */
++ssize_t vfs_caps_to_user_xattr(struct mnt_idmap *idmap,
++			       struct user_namespace *dest_userns,
++			       const struct vfs_caps *vfs_caps,
++			       void *data, size_t size)
++{
++	struct vfs_ns_cap_data *ns_caps = data;
++	bool is_v3;
++	u32 magic;
++
++	/* Preserve previous behavior of returning EINVAL for v1 caps */
++	if ((vfs_caps->magic_etc & VFS_CAP_REVISION_MASK) == VFS_CAP_REVISION_1)
++		return -EINVAL;
++
++	size = __vfs_caps_to_xattr(idmap, dest_userns, vfs_caps, data, size);
++	if (size < 0)
++		return size;
++
++	magic = vfs_caps->magic_etc &
++		(VFS_CAP_REVISION_MASK | VFS_CAP_FLAGS_EFFECTIVE);
++	ns_caps->magic_etc = cpu_to_le32(magic);
++
++	/*
++	 * If this is a v3 capability with a valid, non-zero rootid, return
++	 * the v3 capability to userspace. A v3 capability with a rootid of
++	 * 0 will be converted to a v2 capability below for compatibility
++	 * with old userspace.
++	 */
++	is_v3 = (vfs_caps->magic_etc & VFS_CAP_REVISION_MASK) == VFS_CAP_REVISION_3;
++	if (is_v3) {
++		uid_t rootid = le32_to_cpu(ns_caps->rootid);
++		if (rootid != (uid_t)-1 && rootid != (uid_t)0)
++			return size;
++	}
++
++	if (!rootid_owns_currentns(vfs_caps->rootid))
++		return -EOVERFLOW;
++
++	/* This comes from a parent namespace. Return as a v2 capability. */
++	if (is_v3) {
++		magic = VFS_CAP_REVISION_2 |
++			(vfs_caps->magic_etc & VFS_CAP_FLAGS_EFFECTIVE);
++		ns_caps->magic_etc = cpu_to_le32(magic);
++		ns_caps->rootid = cpu_to_le32(0);
++		size = XATTR_CAPS_SZ_2;
++	}
++
++	return size;
++}
++
+ /**
+  * get_vfs_caps_from_disk - retrieve vfs caps from disk
+  *
 
 -- 
 2.43.0
