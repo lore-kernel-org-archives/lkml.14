@@ -1,83 +1,168 @@
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+Received: from mout.kundenserver.de (mout.kundenserver.de [212.227.126.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDC943C469
-	for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 21:57:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5A63EEB3;
+	Wed, 21 Feb 2024 21:58:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.126.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708552638; cv=none; b=XFUPMUS/5k6GGDtiNWbz0271IO0Thkyvl9oPsHz0Bew5mgEd/VjRYsqTRiMGeuPoKi8mlmxH4a0SMwrnE0NveIWawulvBECddG/jOpNDVgovRmL4sAOZbi/H3i2JpdQToyOi0ZmI/RdxsVwU0kEJXXcSyCJ1yTABBz89WFozBuo=
+	t=1708552690; cv=none; b=B+0ibRukL//XMpPZuZa8mha4DrJ+fUjzGGmINW+3/s4emqIpGFAW08hAQusFqLzZNa8RNWvtOVhzdO3FkfubioX5yvP9cfDl1fHXPJv2lR8RSAR4izKukYKS+FA/fowjdoKa8K8l0A/h2uYL5VqJfWCo4UYsPzyeRONeshrX8mo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708552638; c=relaxed/simple;
-	bh=ibxTlhN5MoDPOlT+ANu5l2nVH2J8CNPgYyG8UXQV5vs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ddYOWezXeyDUNOVZ11t9OcVxRaE0REGnm6AFneUe4ITnRYcbr8vLGWedHHzXoVWgrT+DcbogAXEv4/n3cpyzFrbKQDsEW4maNIRbhR41293U0xvw0QlPn3dPvPZLeAWTvt5iMyuD7P9H/kOPlDev4wtMvf09ArZER2qng3p3R4Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=M7N8f6yA; arc=none smtp.client-ip=78.32.30.218
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
+	s=arc-20240116; t=1708552690; c=relaxed/simple;
+	bh=dF9IwFLl0Po1lq5MLlVQLSbQsLpawdVgsA5ipOvGk4w=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=qsbKpO1tQZ4QuMyYtcop5ocM5EcsxGDBuY3nbLXdPeBy/0Rtwemb6YUX6jmrsM7Jq7Nz5XPBvCIl7iqKq2LX0oggtDOT2SRiEdT1i0JAAeUgZ5lYKzskDcGp1gzqxEWC//E+kr/uHEAseNOUVjiZ5GyS4pq+RPWgWAsaBU8r3b4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=valentinobst.de; spf=pass smtp.mailfrom=valentinobst.de; dkim=pass (2048-bit key) header.d=valentinobst.de header.i=kernel@valentinobst.de header.b=RvBAoFPk; arc=none smtp.client-ip=212.227.126.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=valentinobst.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=valentinobst.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="M7N8f6yA"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=DxwjOJIsFQjRzr4/dwZ/wXiHdh9ufDgj/YF2uuzFhQk=; b=M7N8f6yAZG9Q4j75df8d2cXfxe
-	1dnxylJgVzlZ7uRldGGjEQxP+GOJaV60Sjny9+UlxcuVcWqei83ZB6yiqxZ8AfMQtUsD0z+WgRNps
-	z6k0K0Imy0Jmxz+7kLsHFqyPwoFxmDr720p5aDO4uLmVZ0+NR9vDETn1NtgVRGq0YWoOfR1y42R30
-	PyEYhtIhBG0US5RL9SP7V9/UbdfBavqzC2lpexLYj0hrs1JSnkb0b+jyvRoGzZAt/J0dSdHU2JeAX
-	YsIyyI0QG5f+Fa29kYXHq7Rfcj4HFwQYaBGKf1RsfgsMbVpKlsypMYavegSG0TMi+HajzopKQr31M
-	HuJ6I2YQ==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:44572)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1rcuaR-0000al-2z;
-	Wed, 21 Feb 2024 21:57:07 +0000
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1rcuaQ-000266-AF; Wed, 21 Feb 2024 21:57:06 +0000
-Date: Wed, 21 Feb 2024 21:57:06 +0000
-From: "Russell King (Oracle)" <linux@armlinux.org.uk>
-To: Alfredo Cruz <alfredo.carlon@gmail.com>
-Cc: arnd@arndb.de, u.kleine-koenig@pengutronix.de, shawnguo@kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] ARM: sa1111: fix put_device() before device_add() in
- error path
-Message-ID: <ZdZxsrhLNCt+bCOB@shell.armlinux.org.uk>
-References: <20240221213837.27605-1-alfredo.carlon@gmail.com>
+	dkim=pass (2048-bit key) header.d=valentinobst.de header.i=kernel@valentinobst.de header.b="RvBAoFPk"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=valentinobst.de;
+	s=s1-ionos; t=1708552677; x=1709157477; i=kernel@valentinobst.de;
+	bh=dF9IwFLl0Po1lq5MLlVQLSbQsLpawdVgsA5ipOvGk4w=;
+	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:
+	 References;
+	b=RvBAoFPkDZs3ltUxVkZMu5Vo0E+IkHtH4imzi9XFQY6rL3XzqN/UTtCAztj36ViR
+	 nSuNQ15iabcrPNMNSv2gjThTnG84DjXv7+A+wwqvpzVeFvkqGjTdLgeq1SGzxCCxH
+	 d/J5th/78wf+yDoRAJEtXQP0mz/LVkSUCLczBtKGid7y0Lrbv1IH9U5UbcNfHGk34
+	 lSsmbonQfwnnXyz4O/x0UtVEBK83UUTkXvJ/uMqx0yA1FWTBzBzaFtabGCYKgJfWl
+	 lvcN7GSAgq3fcN01sD7SGi3pHKyiBNG6K3I3ExmFI0r92xa/UwiAawj+9G8Aq1XhU
+	 xLplmZ7BdEdOm26y7g==
+X-UI-Sender-Class: 55c96926-9e95-11ee-ae09-1f7a4046a0f6
+Received: from archbook.fritz.box ([217.249.70.154]) by
+ mrelayeu.kundenserver.de (mreue012 [213.165.67.97]) with ESMTPSA (Nemesis) id
+ 1MavF5-1r5ms727pb-00cMdL; Wed, 21 Feb 2024 22:51:36 +0100
+From: Valentin Obst <kernel@valentinobst.de>
+To: miguel.ojeda.sandonis@gmail.com
+Cc: a.hindborg@samsung.com,
+	david@readahead.eu,
+	gregkh@linuxfoundation.org,
+	hpa@zytor.com,
+	john.m.baublitz@gmail.com,
+	kernel@valentinobst.de,
+	linux-kernel@vger.kernel.org,
+	mhiramat@kernel.org,
+	mingo@kernel.org,
+	mingo@redhat.com,
+	ojeda@kernel.org,
+	peterz@infradead.org,
+	sergio.collado@gmail.com,
+	stable@vger.kernel.org,
+	tglx@linutronix.de,
+	x86@kernel.org
+Subject: Re: [PATCH] x86/tools: fix line number reported for malformed lines
+Date: Wed, 21 Feb 2024 22:49:32 +0100
+Message-ID: <20240221214939.4715-1-kernel@valentinobst.de>
+X-Mailer: git-send-email 2.43.2
+In-Reply-To: <CANiq72=gYWZ24EEqRL71Vh+YjjK9Bu0QfxGEBzee16QAf4Q6XA@mail.gmail.com>
+References: <CANiq72=gYWZ24EEqRL71Vh+YjjK9Bu0QfxGEBzee16QAf4Q6XA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240221213837.27605-1-alfredo.carlon@gmail.com>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:WW7p1+B4htmtBfW2x6I9T6uskQjvijUcuFVC6Pqcxdich+azJUw
+ qmMgxKKJZsEuziGBdXIaiOokAujPVQlssvay9UqRD4+fLNmAQFZVaXiEkgaluX1HkNVLkW6
+ lIdZKx60UPGYU4CJPeEjjvOC5PQs/SQxKZUJjwN/mVlrGoat20iSi59yocWcwAyrsxYrYHi
+ Tezy9PHa4OXOnxdT+VwqA==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:mOOoXRIRWVQ=;kxOewaJtG6hZXrCnHemyZf/SZrx
+ QQ/Q+2L73TzGrKO2bu0S6XlU3HcPKWw7Rzm/0CstjBGrSiMIvOMpA3mjerIkMfPA85ENlvqiO
+ oG+N6zVs4Jiyzwapz3JUW21+DhI9MhP7kaRmKcAXbRw0Kc+22XNubcetaXPk5ptrIkwHmoNYk
+ vuK8EBaL3+OKf4Be+i5yvcYkC5x3Y0VdK9OQUWypSvBaONhscT+X3BhQ8fdYcoq7bj9SgIjlw
+ bhHMO35bgNV9JUfexPKDPLgt37o7xkw51NkTKOIwrwSP9QIjWohMwFGVbI26UEOolSena7OZy
+ ewPGNvePYYb2DPWNgUvtzdXo4XuIsc9KZZ9AMqltppIzct0YC/sEtimbdQ6Lg0C1x5VewNJq7
+ vdbvwrgFkNcoDyFYBbzWIalK/TTAj2PJ9uFM8D4BEKKTZ6YC6WDo8fqM+QNH0Q1IjxVlT3xDV
+ V8rKbfhoQiIvpiEq1Vyedm6vckWTllAw4DGAUWCGf7dyXsQcXFYpOHf4y3sBJTEwEgknL3YvG
+ RKFlsE7SxFTln3jlDSlSwBnTPk0LOOAR4XeXj9x8duNdzKh2C9M6j9BQ2/KtAdXYdsbF2C/ls
+ r+Rc9mbEdx7HdC62kFlQvB1NtLLpz7/CnpWzNoi8PSbig3tlBM5Mreji4uQcfVM6s0EUEqptT
+ qHT90jIX3GJ20xOAUDM7E7nxf1Wn9/FCa4RLCpCXDlC/UfQe2/HLvIe9BDoSd+31HqgBJIIYO
+ t74x7AwE/GuYbpMlFNajsNmySR/RH3oHaqsCSPu2k2BlYfiv719eUw=
 
-On Wed, Feb 21, 2024 at 10:38:37PM +0100, Alfredo Cruz wrote:
-> When request_resource() fails, a jump is made to err_resource label which
-> calls put_device() on &dev->res without adding it first.
-> Kept the err_resource label and moved put_device() to err_add label.
+> On Wed, Feb 21, 2024 at 10:00=E2=80=AFAM Valentin Obst <kernel@valentino=
+bst.de> wrote:
+> >
+> > While debugging the `X86_DECODER_SELFTEST` failure first reported in [=
+1],
+> > [In this case the line causing the failure is interpreted as two lines=
+ by
+> > the tool (due to its length, but this is fixed by [1, 2]), and the sec=
+ond
+> > line is reported. Still the spatial closeness between the reported lin=
+e and
+> > the line causing the failure would have made debugging a lot easier.]
+>
+> Thanks Valentin, John et al. for digging into this (and the related
+> issue) -- very much appreciated.
+>
+> It looks good to me:
+>
+> Reviewed-by: Miguel Ojeda <ojeda@kernel.org>
+> Tested-by: Miguel Ojeda <ojeda@kernel.org>
 
-You fail to explain why this is incorrect. I think this patch is
-incorrect. The reason is as follows:
+Thanks!
 
-"dev" is allocated.
-dev->dev is then initialised. This initialises the struct device,
-setting its initial refcount to '1'.
+>
+> This should probably have a Fixes tag -- from a quick look, the
+> original test did not seem to have the problem because `insns` was
+> equivalent to the number of lines since there was no `if ... {
+> continue; }` for the symbol case. At some point that branch was added,
+> so that was not true anymore, thus that one should probably be the
+> Fixes tag, though please double-check:
+>
+>     Fixes: 35039eb6b199 ("x86: Show symbol name if insn decoder test fai=
+led")
 
-We then request the resource. If this fails, then the device needs to
-be released. As refcounting has been initialised, it is *not*
-appropriate to simply kfree() "dev". The correct action, as noted by
-the device_initialize() documentation is to call put_device() on it.
-This is what the code does.
+Cross checked this as well, can confirm your assessment. Thanks for
+bringing this up.
 
-I _do_ hope you haven't submitted other patches like this, because if
-you have, they could well also be wrong.
+>
+> It is a minor issue for sure, so perhaps not worth backporting, but
+> nevertheless the hash is in a very old kernel, and thus the issue
+> applies to all stable kernels. So it does not hurt flagging it to the
+> stable team:
+>
+>     Cc: stable@vger.kernel.org
+>
+> In addition, John reported the original issue, but this one was found
+> due to that one, and I am not exactly sure who did what here. Please
+> consider whether one of the following (or similar) may be fair:
+>
+>     Reported-by: John Baublitz <john.m.baublitz@gmail.com>
+>     Debugged-by: John Baublitz <john.m.baublitz@gmail.com>
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+Absolutely, without him reporting the test failure and narrowing down the
+config I'd have never looked at this file. Adding him for **both** is fair=
+.
+(This particular fix was not discussed on Zulip though, its just something
+I noticed along the way.)
+
+>
+> An extra Link to the discussion in Zulip could be nice too:
+>
+>     Link: https://rust-for-linux.zulipchat.com/#narrow/stream/291565-Hel=
+p/topic/insn_decoder_test.20failure/near/421075039
+
+Didn't add it because the discussion does not mention this particular
+issue, but it might indeed be good for some context.
+
+Will this need a v2, or are all of the 'Fixes', 'Reported-By',
+'Debugged-By', 'Tested-By', 'Reviewed-By' and 'Link' tags something that
+maintainers may add when merging?
+
+    - Best Valentin
+
+>
+> Finally, a nit: links are typically written like the following -- you
+> can still use bracket references at the end:
+>
+>     Link: https://lore.kernel.org/lkml/Y9ES4UKl%2F+DtvAVS@gmail.com/T/ [=
+1]
+>     Link: https://lore.kernel.org/rust-for-linux/20231119180145.157455-1=
+-sergio.collado@gmail.com/
+> [2]
+>
+> Cheers,
+> Miguel
