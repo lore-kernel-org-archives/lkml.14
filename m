@@ -1,180 +1,124 @@
-Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f193.google.com (mail-lj1-f193.google.com [209.85.208.193])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 600143BB20;
-	Wed, 21 Feb 2024 08:16:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.104.207.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C5B33A8F5
+	for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 08:20:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.193
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708503419; cv=none; b=RZQwvH8MmrtFJ2mCYlECf43uLMPYnc9KYKD1Kwk+pQdT6NfSyx3DhataXoikm5ACsjLfPb6zEH65dXzXMN790zyVDlgmkxihhOv99EzpNC8OxRRjlP+K9c1FDn42irkZQ0p0/XkGOkAOzVCgG9p8U+8jeHFIA2L6h/dqTIyx82s=
+	t=1708503620; cv=none; b=MFSHsxs4sOkSqhQ+wCtwSZB7rkWsReWWsIs56pCMgVJ2C3DD/CSE8pXte9CgGdY4wvYOL+eo0YDYhS6T4yutwigpscmI7hNX61yuyCFE4LTbSdd+zc6LkgdyydwTGoljJ9owWIjTQjZiMQjtNzujwXsmsJu8P3zcDuTfKrXa7RM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708503419; c=relaxed/simple;
-	bh=ImDO1ptRcuiSvjyuf1c7UuMOp5LedFax4WXeJTjLDPc=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=ZqknnvMjSOHhpRQnfezdb2Q1c6MiVOB6IXdKXPkMM7YSVtiFjudzofzick3z9j10dM68ViJX7r9s27kAg44D6oKO/Vy/vnKAI9xmeRORcxOfKRFuZSzK8ZEPA0m5mo51adXkLPnMRwqn71AQzNZxImLGoEe6T6ishmGVvEGEtIs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com; spf=pass smtp.mailfrom=ew.tq-group.com; dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b=FRZ8GEDg; dkim=fail (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b=g4yn0CHZ reason="key not found in DNS"; arc=none smtp.client-ip=93.104.207.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ew.tq-group.com
+	s=arc-20240116; t=1708503620; c=relaxed/simple;
+	bh=Um5+f0FrZXtSaIH4pDGP51HZ/k5cYcZctwOZ85WPZXI=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=hKrMGVxinJLeA67UJq54c9ef+px2qkMfp+hZdrnuxbfAAhTlCWfFZZmAEfe3KAS1dakGfxQqvfjhT08YfnM6/aw0eAJ61S7+ODGTmfqZSdUzvBVXbrE+UzsHIpg7+dzOwpoutT7E9ArS9qHP26DZQgHHGcrmcHcwXmBQKYANm0Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=smartx.com; spf=none smtp.mailfrom=smartx.com; dkim=pass (2048-bit key) header.d=smartx-com.20230601.gappssmtp.com header.i=@smartx-com.20230601.gappssmtp.com header.b=Yg7xS3CF; arc=none smtp.client-ip=209.85.208.193
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=smartx.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=smartx.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="FRZ8GEDg";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b="g4yn0CHZ"
+	dkim=pass (2048-bit key) header.d=smartx-com.20230601.gappssmtp.com header.i=@smartx-com.20230601.gappssmtp.com header.b="Yg7xS3CF"
+Received: by mail-lj1-f193.google.com with SMTP id 38308e7fff4ca-2d22b8801b9so4619621fa.0
+        for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 00:20:17 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
-  t=1708503415; x=1740039415;
-  h=message-id:subject:from:to:cc:date:in-reply-to:
-   references:content-transfer-encoding:mime-version;
-  bh=eG8P+rnyI2xfiyStzAxuAUfnk5thsJblifMaExi1E7E=;
-  b=FRZ8GEDgsr+USbq2dOH4+iUMLRTuW2/Rr84jRunrcuZbcfxAsPVSWBmc
-   fu0BVJkrUSjsjm6OYaefsiL6wmHDL97vU0+vFRkxUbLjuKFXKi/bQOefT
-   P3HmCy8UPzkEe4DTfiSQVk2XDwangq8gKI8uDtGfzFNMdcsklnacicEB5
-   4EiSGOqUED2ramUh0+1KEkSzCPbfaTjZiVdD+FYfx9tO70QqHMJOdRiWL
-   qykyCcoTV8tanjlfy4sB8uznFSXuexb0teDb36zQBndCvsumHN8aUj+Ao
-   dXWXV03QH4osG84Pasiww2aHyCNSOBXRTiuQnfeLqfbKdSAUOKBppLHd/
-   g==;
-X-IronPort-AV: E=Sophos;i="6.06,175,1705359600"; 
-   d="scan'208";a="35514693"
-Received: from vmailcow01.tq-net.de ([10.150.86.48])
-  by mx1.tq-group.com with ESMTP; 21 Feb 2024 09:16:52 +0100
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 0ABCB170D96;
-	Wed, 21 Feb 2024 09:16:44 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ew.tq-group.com;
-	s=dkim; t=1708503407;
-	h=from:subject:date:message-id:to:cc:mime-version:content-type:
-	 content-transfer-encoding:in-reply-to:references;
-	bh=eG8P+rnyI2xfiyStzAxuAUfnk5thsJblifMaExi1E7E=;
-	b=g4yn0CHZiOBUJqPxWCfvfeyvve7kFL7lYbskofXYjiiw0VMUHGMLtulodvGn56l0Lz+sBR
-	rqopJ7qUu87ZpDZM8jSYhwdF7D8l5luepJedo3TjF+AkTeNCh6Ig+FOdyvDoHdwNgGIU3C
-	6a9kkpS3+7sMJDXYcQ2ltX08YJTfMsr3rUyj3X4Q8BB945BWGbyRzpPtmXxX8tZtGQt4CJ
-	+7Bb/KpBnMuZCw0OQQz5OeEroo8OudlEttIuV3T7p6m1Q8Yso6N0zJvF5aG4k/bhOi0/uj
-	1OfBOcAXFoAB7RPLLJQPTBx/R8tD2GmtSvNKTTA5J+keWgKmltguPDPdfEh1+Q==
-Message-ID: <10ad8f935e598244d4cb68aa20130952a26ba2ef.camel@ew.tq-group.com>
-Subject: Re: [PATCH 6.1 000/197] 6.1.79-rc1 review
-From: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
-To: Daniel =?ISO-8859-1?Q?D=EDaz?= <daniel.diaz@linaro.org>, Greg
-	Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
-Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org, 
- torvalds@linux-foundation.org, akpm@linux-foundation.org,
- linux@roeck-us.net,  shuah@kernel.org, patches@kernelci.org,
- lkft-triage@lists.linaro.org,  pavel@denx.de, jonathanh@nvidia.com,
- f.fainelli@gmail.com,  sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
- rwarsow@gmx.de, conor@kernel.org,  allen.lkml@gmail.com, Christophe Leroy
- <christophe.leroy@csgroup.eu>, Michael Ellerman <mpe@ellerman.id.au>
-Date: Wed, 21 Feb 2024 09:16:32 +0100
-In-Reply-To: <7e1faa29-a154-41fc-aebc-38d5f355ea90@linaro.org>
-References: <20240220204841.073267068@linuxfoundation.org>
-	 <c873370c-c12f-4f03-a722-1ae59743089b@linaro.org>
-	 <7e1faa29-a154-41fc-aebc-38d5f355ea90@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.44.4-0ubuntu2 
+        d=smartx-com.20230601.gappssmtp.com; s=20230601; t=1708503616; x=1709108416; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=MysAWxNbCc//vI31BIPucjF70SlQY+heO/NoaZw6Ql0=;
+        b=Yg7xS3CFYTRmwGdoznfV03gBYlzWeVYBuJDYIY9p++62+//JEA/piPCIEZc1ywA/5L
+         QTBELrLGL/kmhsGf+l3s1vjd/WIsswkDl/MO2Oyq/moNjsDK7kfptQBV8LLbaxZ03wrT
+         vRldgqVmkP98M9MSr1gy2/z4A/pSxJ0gKfqerV93pAxhY0ssd/eT4mLXTr1cUwk6+r+T
+         AR+cng8Os3grgQjVy8mnXz3i+vD+d36KPQBrnNgJRwbidqCOIhMkkQvLzz4JMCBX1rjj
+         UWUoMj6xXjMXCQzheqzxs6J4l+hFEENDssvngNU17ksbHgkVfKdTLabhvkLa8GwrmRYH
+         fo3w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708503616; x=1709108416;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=MysAWxNbCc//vI31BIPucjF70SlQY+heO/NoaZw6Ql0=;
+        b=ocE8iFQ3y9Q7LzA5qcah5jiWPDefwc4xpRi4idpeJucg3R2anKxDM0TwNw+Z3rcJNh
+         0rplZZ/3immMtjWBX3/uXsmHdJHN/xhI4IBvco1B8uNeXa8PFX+nTNRcQow0gCInssIe
+         /5MYgvXX1AST7tjl0T4vfXiS4Mb3vV5VmCddzFiHRVdeGyvrUMnZZPre1M87R97PPhc9
+         tD6LMzOwABXGBl5kUEKoZEkxHCfQlE06A7wCO8T9/yrBhA8EGpfErCQ2gmd/HdFhJL2J
+         jBeDFAKtzJhrsS3L6rZz1DkcK93qTxkULJeXIfx14mv1Nx8c3TQrGTXskED50WyItU32
+         /kNg==
+X-Forwarded-Encrypted: i=1; AJvYcCWgsT04FJiHu0D2Dji5w+VRxSF+EFf71rEfbAPh/i5CJa6mY/MCQqodvYx45Yl7XWxq1ugbhTMzOQ6/BMoSNb8HF43z0JwYjP+lwepi
+X-Gm-Message-State: AOJu0YxlcdqO/PKf+JR/kzNuoFMfqVTGVc2ocFy09gaB/Eh8/L33+JZW
+	AFI9qNuyq88AqcwQ/qaydGQ5OPvH/gjSF8PtfeL3EAweDtZ1OUxJdsJf+PFZ1hTuwWB4N/pJq3w
+	9O1KaDktM0oAn70xIlCRINnlP2YQsZKgB9ug1HQ==
+X-Google-Smtp-Source: AGHT+IG8BAQ2Gu7OHNA4ftEbbbJU0FZLf8ClOhtXCEcoK/cXoZTQ08otPgZ5OHMjQYFAHngVnpgUaRS9PGRBqGW2S08=
+X-Received: by 2002:a2e:9790:0:b0:2d2:3db6:b168 with SMTP id
+ y16-20020a2e9790000000b002d23db6b168mr4391133lji.14.1708503615614; Wed, 21
+ Feb 2024 00:20:15 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Last-TLS-Session-Version: TLSv1.3
+From: Zhitao Li <zhitao.li@smartx.com>
+Date: Wed, 21 Feb 2024 16:20:02 +0800
+Message-ID: <CAPKjjnrYvzH8hEk9boaBt-fETX3VD2cjjN-Z6iNgwZpHqYUjWw@mail.gmail.com>
+Subject: PROBLEM: NFS client IO fails with ERESTARTSYS when another mount
+ point with the same export is unmounted with force [NFS] [SUNRPC]
+To: Trond Myklebust <trond.myklebust@hammerspace.com>, Anna Schumaker <anna@kernel.org>, 
+	Chuck Lever <chuck.lever@oracle.com>, Jeff Layton <jlayton@kernel.org>, Neil Brown <neilb@suse.de>, 
+	Olga Kornievskaia <kolga@netapp.com>, Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>
+Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Ping Huang <huangping@smartx.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On Tue, 2024-02-20 at 19:40 -0600, Daniel D=C3=ADaz wrote:
-> ********************
-> Achtung externe E-Mail: =C3=96ffnen Sie Anh=C3=A4nge und Links nur, wenn =
-Sie wissen, dass diese aus einer sicheren Quelle stammen und sicher sind. L=
-eiten Sie die E-Mail im Zweifelsfall zur Pr=C3=BCfung an den IT-Helpdesk we=
-iter.
-> Attention external email: Open attachments and links only if you know tha=
-t they are from a secure source and are safe. In doubt forward the email to=
- the IT-Helpdesk to check it.
-> ********************
->=20
-> Hello!
->=20
-> On 20/02/24 7:04 p.=C2=A0m., Daniel D=C3=ADaz wrote:
-> > On 20/02/24 2:49 p.=C2=A0m., Greg Kroah-Hartman wrote:
-> > > This is the start of the stable review cycle for the 6.1.79 release.
-> > > There are 197 patches in this series, all will be posted as a respons=
-e
-> > > to this one.=C2=A0 If anyone has any issues with these being applied,=
- please
-> > > let me know.
-> > >=20
-> > > Responses should be made by Thu, 22 Feb 2024 20:48:08 +0000.
-> > > Anything received after that time might be too late.
-> > >=20
-> > > The whole patch series can be found in one patch at:
-> > > =C2=A0=C2=A0=C2=A0=C2=A0https://www.kernel.org/pub/linux/kernel/v6.x/=
-stable-review/patch-6.1.79-rc1.gz
-> > > or in the git tree and branch at:
-> > > =C2=A0=C2=A0=C2=A0=C2=A0git://git.kernel.org/pub/scm/linux/kernel/git=
-/stable/linux-stable-rc.git linux-6.1.y
-> > > and the diffstat can be found below.
-> > >=20
-> > > thanks,
-> > >=20
-> > > greg k-h
-> >=20
-> > We see a regression with PowerPC:
-> >=20
-> > -----8<-----
-> >  =C2=A0 /builds/linux/arch/powerpc/kernel/cpu_setup_6xx.S: Assembler me=
-ssages:
-> >  =C2=A0 /builds/linux/arch/powerpc/kernel/cpu_setup_6xx.S:124: Error: u=
-nrecognized opcode: `sym_func_start_local(setup_g2_le_hid2)'
-> >  =C2=A0 /builds/linux/arch/powerpc/kernel/cpu_setup_6xx.S:131: Error: u=
-nrecognized opcode: `sym_func_end(setup_g2_le_hid2)'
-> >  =C2=A0 make[4]: *** [/builds/linux/scripts/Makefile.build:382: arch/po=
-werpc/kernel/cpu_setup_6xx.o] Error 1
-> > ----->8-----
-> >=20
-> > This is seen only on PowerPC with GCC 8, GCC 13, Clang 17, Clang nightl=
-y, on:
-> > * allnoconfig
-> > * tinyconfig
-> > * mpc83xx_defconfig
-> > * ppc6xx_defconfig
-> > (at least)
-> >=20
-> > Reproducer:
-> >=20
-> >  =C2=A0 tuxmake \
-> >  =C2=A0=C2=A0=C2=A0 --runtime podman \
-> >  =C2=A0=C2=A0=C2=A0 --target-arch powerpc \
-> >  =C2=A0=C2=A0=C2=A0 --toolchain gcc-8 \
-> >  =C2=A0=C2=A0=C2=A0 --kconfig tinyconfig
-> >=20
->=20
-> Bisection points to:
->=20
->    commit a65d7a833f486d0c162fdc854d2d5dd2e66ddd95
->    Author: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
->    Date:   Wed Jan 24 11:38:38 2024 +0100
->=20
->        powerpc/6xx: set High BAT Enable flag on G2_LE cores
->       =20
->        [ Upstream commit a038a3ff8c6582404834852c043dadc73a5b68b4 ]
->=20
->=20
-> Reverting that commit makes the build pass again.
+Hi, everyone,
 
-It seems that backporting the mentioned commit verbatim would also require
-2da37761671b5bdedbe04e6469cfa57cd6b6ae45 ("powerpc/32: Fix objtool unannota=
-ted intra-function call
-warnings") to make SYM_FUNC_START_LOCAL/SYM_FUNC_END available. Please drop=
- this patch from 6.1 and
-older for now.
+- Facts:
+I have a remote NFS export and I mount the same export on two
+different directories in my OS with the same options. There is an
+inflight IO under one mounted directory. And then I unmount another
+mounted directory with force. The inflight IO ends up with "Unknown
+error 512", which is ERESTARTSYS.
 
-Adding Christophe and Michael to cc. Is backporting the additional patch an=
- option (and if so, for
-which kernel versions?), or should I send a new patch that does not use
-SYM_FUNC_START_LOCAL/SYM_FUNC_END for stable?
-
-Thanks,
-Matthias
+OS: Linux kernel v6.7.0
+NFS mount options: vers=4.1
 
 
+- My speculation:
+When the same export is mounted on different directories with the same
+options, superblock and sunrpc_client will be shared. Unmount with
+force will kill all rpc_tasks with ERESTARTSYS in rpc_killall_tasks().
+However, no signal gets involved in this case. So ERESTARTSYS is not
+handled before entering user mode.
 
->=20
-> Greetings!
->=20
-> Daniel D=C3=ADaz
-> daniel.diaz@linaro.org
->=20
+I think there are two unexpected points here:
+1. The inflight IO should not fail when I unmount another directory,
+though the two directories share the same export.
+2. "ERESTARTSYS" should not be seen in user space. EIO may be better.
 
+
+- Reproduction:
+1. Prepare some NFS export, nfsd or nfs-ganesha. For example, the
+export is "ip:/export_path".
+2. On the latest stable mainstream Linux kernel v6.7.0, mount the
+export into two different directories with the same options:
+      mount -t nfs -o vers=4.1 ip:/export_path  /mnt/test1
+      mount -t nfs -o vers=4.1 ip:/export_path  /mnt/test2
+3. Start an inflight IO in "/mnt/test1":
+      dd if=/dev/urandom of=/mnt/test1/1G bs=1M count=1024 oflag=direct
+4. Umount "/mnt/test2" with force when IO in step 3 is going:
+      umount -f /mnt/test2
+5. The "dd" is expected to fail with following information:
+       # dd if=/dev/urandom of=/mnt/test1/1G bs=1M count=1024 oflag=direct
+       dd: error writing '/mnt/test1/1G': Unknown error 512
+       214+0 records in
+       213+0 records out
+       223346688 bytes (223 MB, 213 MiB) copied, 7.87017 s, 28.4 MB/s.
+
+
+- Helpful links
+1. v6.7.0 rpc_killall_tasks():
+https://elixir.bootlin.com/linux/v6.7/source/net/sunrpc/clnt.c#L869
+2. COMMIT "SUNRPC: Fix up task signalling v5.2-rc1" changes the error
+code of rpc_tasks in rpc_killall_tasks() from EIO to ERESTARTSYS. The
+link is https://github.com/torvalds/linux/commit/ae67bd3821bb0a54d97e7883d211196637d487a9?diff=split&w=0
+
+
+Looking forward to your early reply :)
+
+Best regards,
+Zhitao Li, in SmartX.
