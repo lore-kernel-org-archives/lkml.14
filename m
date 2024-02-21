@@ -1,100 +1,166 @@
-Received: from mail.zeus03.de (www.zeus03.de [194.117.254.33])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BCA983A06
-	for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 19:30:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2844983A06
+	for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 19:30:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708543833; cv=none; b=g2qTAfcQDViYO2EOFo3ronzw4oIa7jSzywbsv3TXEMPMgGlOok+p6vzkEtqyZwWXMpbFw/kr7QcOQGeLrBxFVpO4jjlmUVdh1iOYxLz4t7g6Yd76WtObUwi+oAM2N9lFg0H6KCu7JdJgy4Yuxg/6K9Y1CbMfNeyYrYFzrDN7C24=
+	t=1708543860; cv=none; b=sqPMqhMlS4VFd0JoDo0q5/llwWvWsUKOVgEnmSWQfbfKLwLg2jOUuQT5YC6X8+GNIGJ7DTE3UbMyH4bICIMxtY77dnas23jR4lzxvNcQoGJLEQOAs/pUgwOeOFAlI2iY8+PfCYwLBrPTStZ7fUSptKreXb8BxaovgNfJLSsWpds=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708543833; c=relaxed/simple;
-	bh=eI73Aixk2ZKHUCC+WBNzciPi+YGny+3Nqau0gA+LQpY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=RPDcJpZAWP2PtHbuRjcs8JYckclEzSPyOr1DVzfa+c4xnMbuz1p4Bkb5T7W2+yJ9/f21QTAUhl8uyG8vBXqybPFLRij6dMEUIcmAHGH1QKzaXu5NYNZYZyNr3DF8hIds2K9RSVEJ/FIycQHCLb1o7dWnGtCFJOgtekNmjeRJbOM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=BvYDj5kG; arc=none smtp.client-ip=194.117.254.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
+	s=arc-20240116; t=1708543860; c=relaxed/simple;
+	bh=n8rm99TQBU0HI9VQaP2Yzv/1b/39idLuaopiNlQpNCc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=SNra02b1NIevhDRhJ27O97ZckBlw4gMMoxjfXZcTwxlz0G/6Fh/hpW/bEmUUAZSb5WJ9cYo8z91cB+wBb3AXnuXux8Nth6riWdBND5RGbSrUbcSYoR3UgqkmDrPMQiBL3JEUe3fHEfCVKzK9BpwC1aDUaE6VadXCMaJ+pjmD1NE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=PQYH7P0o; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="BvYDj5kG"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	sang-engineering.com; h=from:to:cc:subject:date:message-id
-	:mime-version:content-transfer-encoding; s=k1; bh=KYNKdWlES08xC8
-	IxQFhBeyr/WjAKjrL7fnuvAKo0ujM=; b=BvYDj5kG40dEMpit8vA9MSanfwXVLL
-	zGh9UGUyFGrSltMzj9QJdbQjLztaE0KpG6N0wN5mGg1BGH5dGVLfdPQHZ1ornxrV
-	1diT9JHYxlBVgdeLEqPgeNMytpXIAREJ2Z8QM7W/CTw6ko6NYX1R1Z/SSpb025Du
-	hjuRxw1hRIGtAIVgk+LadiWFZDfKep0fb87jwzovL61CRKSDfrXStiTGU4NAmKTe
-	9Z5ZQdrc+obfCZtQpCnY0KaQm4SHInVoaSW1WX+QsS8vYpXmmrtYP+KRc0wOTB2N
-	dVeNwASObWBRct3ixqLoS3/bUvuf0eF3zV15WdypKeguHcwBsCuWmmRA==
-Received: (qmail 3720737 invoked from network); 21 Feb 2024 20:30:20 +0100
-Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 21 Feb 2024 20:30:20 +0100
-X-UD-Smtp-Session: l3s3148p1@WCl5W+kRkr8ujnsZ
-From: Wolfram Sang <wsa+renesas@sang-engineering.com>
-To: linux-i2c@vger.kernel.org
-Cc: Corey Minyard <minyard@acm.org>,
-	Andrew Manley <andrew.manley@sealingtech.com>,
-	Oleksij Rempel <o.rempel@pengutronix.de>,
-	Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Andi Shyti <andi.shyti@kernel.org>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	NXP Linux Team <linux-imx@nxp.com>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v3] i2c: imx: when being a target, mark the last read as processed
-Date: Wed, 21 Feb 2024 20:27:13 +0100
-Message-ID: <20240221193013.14233-2-wsa+renesas@sang-engineering.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PQYH7P0o"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1708543858;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=e92swIaUqEXhIB7gf6Yq/Avzv/ncoPBOXFnJskwAgWg=;
+	b=PQYH7P0or7DfG4bx7ZAL1f9mem5oDZ6CS7e0vtIAjUbJ2SeI+mMuS3EsvBLI9c3/jXGxin
+	hKDsw9eu5YqNTyX77dJRTRiDtIU6kf2iLZlnpQhQyx8x2gNkm8AKr9LcJ+hWJyzzV0G7pg
+	wcV+ektqRD8M6vzdSb0lAwHhyP85c90=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-617-K4fLZ6vQNRSnBTNKDRhgBA-1; Wed, 21 Feb 2024 14:30:56 -0500
+X-MC-Unique: K4fLZ6vQNRSnBTNKDRhgBA-1
+Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-4125edd9c6bso20207675e9.2
+        for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 11:30:56 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708543855; x=1709148655;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=e92swIaUqEXhIB7gf6Yq/Avzv/ncoPBOXFnJskwAgWg=;
+        b=NYx0dxfo6j7t0jl78f24h4yWN42GvmZY/+LOoHkU7nUXYuIStU7EpcblCgc6QUqXeR
+         /9884/r/8DVLfnp330kJDe48+R/o69NYZ5JshQOy6SkCbzoeAkTkm+nBEi6KtlGwfU+4
+         WVHmdF+lZegxgCfvo4j1+KgHsuZR/4HxQw3H0zrX6bAU+9Uoomd+hjrRzHyI/YNLBWyR
+         2lRC2MWXKgiYIR73R6WOeWX+UxNt8MK5yBFXY3z/h6GKR9hrFCkNRUoF15lZNCliVr42
+         r/iZaUi0KE78AWFa2Uf4viUQWwVp0kekks1ASVWRquCa4OZkWWGfJ1RJ1EqD42oF/yNH
+         So9A==
+X-Forwarded-Encrypted: i=1; AJvYcCVVHesnXuJ1UEFyTZalC14El4Sie62OV1fCd0T6nEZO/jsvM73ZGGxePrH5eZVcPX+MlchOXmZqumQLnTnO18TI0+5rhPZ3X7MFH+aq
+X-Gm-Message-State: AOJu0YyWP1j6BrjAX04Q/Sa8DGLvF1n756shLkBzGG9kHJWlqaKw/rg6
+	pzHU8fAd9Sth+vXyo4r04i7P5d2UUvDXTzpmcPMeyxznpYW46ixnz5Xiwlm0o13dnZ/v6WIoPDa
+	pwFItwiB/YbYkhQDKFjFibBSad8JM7e4X25jMBSVDNicgQp7LV5dOt9JEFOS+XA==
+X-Received: by 2002:a05:600c:3b9d:b0:412:6ea6:8206 with SMTP id n29-20020a05600c3b9d00b004126ea68206mr3882422wms.3.1708543855656;
+        Wed, 21 Feb 2024 11:30:55 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IG6JyNCqtS4prmjexnVFCpGuUHYuxVCVVfbgiUensLVbTQNTKifSwoaAOzgWz/I+um13e3+jA==
+X-Received: by 2002:a05:600c:3b9d:b0:412:6ea6:8206 with SMTP id n29-20020a05600c3b9d00b004126ea68206mr3882402wms.3.1708543855277;
+        Wed, 21 Feb 2024 11:30:55 -0800 (PST)
+Received: from ?IPV6:2003:cb:c70b:4200:ef82:84d2:3d2d:f069? (p200300cbc70b4200ef8284d23d2df069.dip0.t-ipconnect.de. [2003:cb:c70b:4200:ef82:84d2:3d2d:f069])
+        by smtp.gmail.com with ESMTPSA id p6-20020adfe606000000b0033cdbe335bcsm17888920wrm.71.2024.02.21.11.30.54
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 21 Feb 2024 11:30:54 -0800 (PST)
+Message-ID: <edebfa0b-7955-41c0-89d2-8a86fd3d0c55@redhat.com>
+Date: Wed, 21 Feb 2024 20:30:53 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] mm/mmu_gather: change __tlb_remove_tlb_entry() to an
+ inline function
+To: Arnd Bergmann <arnd@kernel.org>, Andrew Morton <akpm@linux-foundation.org>
+Cc: Arnd Bergmann <arnd@arndb.de>, Will Deacon <will@kernel.org>,
+ "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+ Nick Piggin <npiggin@gmail.com>, Peter Zijlstra <peterz@infradead.org>,
+ Nathan Chancellor <nathan@kernel.org>,
+ Nick Desaulniers <ndesaulniers@google.com>, Bill Wendling
+ <morbo@google.com>, Justin Stitt <justinstitt@google.com>,
+ Ryan Roberts <ryan.roberts@arm.com>,
+ "Vishal Moola (Oracle)" <vishal.moola@gmail.com>,
+ Alistair Popple <apopple@nvidia.com>, linux-arch@vger.kernel.org,
+ linux-mm@kvack.org, linux-kernel@vger.kernel.org, llvm@lists.linux.dev
+References: <20240221154549.2026073-1-arnd@kernel.org>
+Content-Language: en-US
+From: David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <20240221154549.2026073-1-arnd@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-From: Corey Minyard <minyard@acm.org>
+On 21.02.24 16:45, Arnd Bergmann wrote:
+> From: Arnd Bergmann <arnd@arndb.de>
+> 
 
-When being a target, NAK from the controller means that all bytes have
-been transferred. So, the last byte needs also to be marked as
-'processed'. Otherwise index registers of backends may not increase.
+Hi Arnd,
 
-Signed-off-by: Corey Minyard <minyard@acm.org>
-Tested-by: Andrew Manley <andrew.manley@sealingtech.com>
-Reviewed-by: Andrew Manley <andrew.manley@sealingtech.com>
-Reviewed-by: Oleksij Rempel <o.rempel@pengutronix.de>
-[wsa: fixed comment and commit message to properly describe the case]
-Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
----
+> clang complains about tlb_remove_tlb_entries() not using the 'ptep' variable
+> when __tlb_remove_tlb_entry() is an empty macro:
+> 
+> include/asm-generic/tlb.h:627:10: error: parameter 'ptep' set but not used [-Werror,-Wunused-but-set-parameter]
+> 
+> Change it to an equivalent inline function that avoids the warning since
+> the compiler can see how the variable gets passed into it.
+> 
 
-Changes since v2:
-* updated commit message and comment
+Ugh, quite an annoying clang behavior in this particular case. I wonder 
+why no build bot complained so far.
 
-In the stalled discussion[1], it seems I couldn't make my suggestions
-clear. So, here are the changes how I meant them. I hope this can be
-agreed on.
+Thanks!
 
-[1] http://patchwork.ozlabs.org/project/linux-i2c/patch/20211112133956.655179-3-minyard@acm.org/
+> Fixes: 66958b447695 ("mm/mmu_gather: add tlb_remove_tlb_entries()")
 
- drivers/i2c/busses/i2c-imx.c | 5 +++++
- 1 file changed, 5 insertions(+)
+That commit id is not stable yet. So Andrew might want to fold it into 
+that commit before moving it to mm-stable.
 
-diff --git a/drivers/i2c/busses/i2c-imx.c b/drivers/i2c/busses/i2c-imx.c
-index 88a053987403..60e813137f84 100644
---- a/drivers/i2c/busses/i2c-imx.c
-+++ b/drivers/i2c/busses/i2c-imx.c
-@@ -803,6 +803,11 @@ static irqreturn_t i2c_imx_slave_handle(struct imx_i2c_struct *i2c_imx,
- 		ctl &= ~I2CR_MTX;
- 		imx_i2c_write_reg(ctl, i2c_imx, IMX_I2C_I2CR);
- 		imx_i2c_read_reg(i2c_imx, IMX_I2C_I2DR);
-+
-+		/* flag the last byte as processed */
-+		i2c_imx_slave_event(i2c_imx,
-+				    I2C_SLAVE_READ_PROCESSED, &value);
-+
- 		i2c_imx_slave_finish_op(i2c_imx);
- 		return IRQ_HANDLED;
- 	}
+
 -- 
-2.43.0
+Cheers,
+
+David / dhildenb
 
