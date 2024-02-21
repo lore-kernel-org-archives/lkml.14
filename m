@@ -1,218 +1,141 @@
-Received: from mail-io1-f45.google.com (mail-io1-f45.google.com [209.85.166.45])
+Received: from mail-oi1-f179.google.com (mail-oi1-f179.google.com [209.85.167.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA1D912BEAA
-	for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 21:29:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96C2512882E
+	for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 21:31:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708550998; cv=none; b=JRHnhaLsXHtU/A55QPu/II8+KZ4xL5r2qOtxgAW5T8/y32jDYjj1N/lMrTC90XJVuvkL5b+yhcskJurDwlrT/Hh/szHPLotKcQK8MJg/hg+2hh5XC3dcEgFWN0W8rLuNjcsi39cWked2o4tEhrwTGvNmZADdgj8p3S8iW4LBi10=
+	t=1708551067; cv=none; b=bfino+V5BiByAY5sxB80PKac/rY94U52crKoWee3q0LsMj3t3fMz4LqATKc88RPk3SzlX1jBy+4xr/iXayNHt3KRkb3JAcYtStmYnkNmnoH/Z1TdoWHKK9814U7P1SnUPiUhr2i77ZVkvLfNR5dM1wNFi3NzGQBenhgf3njheP4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708550998; c=relaxed/simple;
-	bh=jhbT5Cr5KxXONXs4T6cwnDbtOKqKVBRtP9a65KT+oaM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YzedvxynxA2q992kFTScLjF9QfO838B/4lw7h2PqggjiT6Gz8GR4tB1wpUzphb0bErKrxIsc71Ho42NazzybmI8ukJfsIy33ZmMnUobXyXq0IAffNZBhszVMTu3NoQkoKQE5FXIDlR6W3s2wygVbTN2krKfooJMkaL3wipOGThc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=D0FOyXkc; arc=none smtp.client-ip=209.85.166.45
+	s=arc-20240116; t=1708551067; c=relaxed/simple;
+	bh=vkGTScK5M6Sthovdj0M+72XV5UMq/lWO1wwEeMwIR1o=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=CvLaaBbmTZhLRl0nj2UY68kQNsTapqNHbztLjCJJGIX+wXdk+DOyyJtQFN19HtVPJHLkFndJCRC/rYMCzQqsVDmOD4bIBfS0HDWPqiaVatPIAavbTuVuI1Bx1CIOW1v8qSAubUeF5Mtry9mj5AUa6CLXxWnAcpulvKoumwekgn0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Okuurdc1; arc=none smtp.client-ip=209.85.167.179
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="D0FOyXkc"
-Received: by mail-io1-f45.google.com with SMTP id ca18e2360f4ac-7c00128de31so202247639f.3
-        for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 13:29:56 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Okuurdc1"
+Received: by mail-oi1-f179.google.com with SMTP id 5614622812f47-3bbbc6b4ed1so5263222b6e.2
+        for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 13:31:05 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1708550996; x=1709155796; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=fHJzWSZbaUVkrjgtkdycbYKuoIbcz4QqReZXQuIUTd8=;
-        b=D0FOyXkcN99A8U2pypJobo/iI1rVmSj6DKFobDqrZr7YyzHGpvKpwcRQGEIDw6EbPC
-         +T4++/maF4JeYetwSfFO1/M/uhMW1BA3g7/eQWpodAJUFczLM1SgEa/ggFfvp+ENwyEU
-         0UvCXNhbjPVfWedQ2lVqe+3tPm0k0dQq/2hEQJZlmUS9fOuiy9CKIKwPDyU0Bxi7qK4/
-         INhd6nuqer6EPWnAx+EQrbhjntKaiU84ERlIbiNO3i1oV7jrKMNXvYOznFFw1IAURQig
-         UVDg6rHDUUQfu57sr5rpsWUSd0oP3nArNmCYR/OK43USKT7O5o2cfmCLOM4gtI4sGOJ7
-         XrfA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708550996; x=1709155796;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=google.com; s=20230601; t=1708551064; x=1709155864; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=fHJzWSZbaUVkrjgtkdycbYKuoIbcz4QqReZXQuIUTd8=;
-        b=gZ4t/aoGzMRtRKUEhFOehyy7sKWZW34rT61VyYrCaVBusI1CteIqb8MMj6R/SEzE4B
-         xSm6QgyTt8OD43SJjBQcLu1NpUbKEbhrmKeDm/SYWPKu0DRaghzdt9SJSh+5jCmHKgLz
-         wGPmOvElTxmNzm4NnoiJAqm+TVWlzUE+Sj/Yk0zP+GkIrG5rSnmSQNscpA0T7+cBA7jU
-         hHYRMgN4NKMKbYG57j+vR+mEtB1rwmRp+gzJy/06ZCF4/CQBDWLfwjmc4vQcJ2uNXAc6
-         b1qr9TgOo+Rl9PP1Rf5yh8gkfNpzt8f8A0dtYgHqtfgZRQH9RIzmS7c800ugLuhyQhhO
-         Noig==
-X-Forwarded-Encrypted: i=1; AJvYcCU+QdgW55RXWAYrFE5zkhAJMewGjswq1gyaef2tZKvgvGIQNoSDf+K+2wpRPd7xpTkNji4bF787axfUoa5TL3u8YnPfdLqtQsy6sltO
-X-Gm-Message-State: AOJu0YzP9BB70dqFrXhSalvZ6iEg0+rtMA9yNpM+UJtWeB9uWrFn39L0
-	IeUHeg+hBNEupfsuk/a16QbPRkhZnZ+buVYwKjWagTdPot8NJIP5Pe4Y3rsbaw==
-X-Google-Smtp-Source: AGHT+IH3xGOF+O0PatOjKRFVOXKn3+X8AKF5AtBxottFnw4acxjqjkkOFdnbYMdTb0txcBwNyBSoFw==
-X-Received: by 2002:a05:6602:3fd1:b0:7c7:397c:6690 with SMTP id fc17-20020a0566023fd100b007c7397c6690mr17957645iob.17.1708550995732;
-        Wed, 21 Feb 2024 13:29:55 -0800 (PST)
-Received: from google.com (161.74.123.34.bc.googleusercontent.com. [34.123.74.161])
-        by smtp.gmail.com with ESMTPSA id h21-20020a02c735000000b004742bbf11c0sm1712244jao.120.2024.02.21.13.29.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 21 Feb 2024 13:29:54 -0800 (PST)
-Date: Wed, 21 Feb 2024 21:29:52 +0000
-From: Justin Stitt <justinstitt@google.com>
-To: David Gow <davidgow@google.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>,
-	Shuah Khan <skhan@linuxfoundation.org>,
-	Guenter Roeck <linux@roeck-us.net>, Rae Moar <rmoar@google.com>,
-	Matthew Auld <matthew.auld@intel.com>,
-	Arunpravin Paneer Selvam <arunpravin.paneerselvam@amd.com>,
-	Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
-	Kees Cook <keescook@chromium.org>,
-	=?utf-8?B?TWHDrXJh?= Canal <mcanal@igalia.com>,
-	Rodrigo Vivi <rodrigo.vivi@intel.com>,
-	Matthew Brost <matthew.brost@intel.com>,
-	Willem de Bruijn <willemb@google.com>,
-	Florian Westphal <fw@strlen.de>,
-	Cassio Neri <cassio.neri@gmail.com>,
-	Javier Martinez Canillas <javierm@redhat.com>,
-	Arthur Grillo <arthur.grillo@usp.br>,
-	Brendan Higgins <brendan.higgins@linux.dev>,
-	Daniel Latypov <dlatypov@google.com>,
-	Stephen Boyd <sboyd@kernel.org>, David Airlie <airlied@gmail.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	"David S . Miller" <davem@davemloft.net>,
-	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-	intel-xe@lists.freedesktop.org, linux-rtc@vger.kernel.org,
-	linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com,
-	linux-hardening@vger.kernel.org, netdev@vger.kernel.org
-Subject: Re: [PATCH 7/9] drm: tests: Fix invalid printf format specifiers in
- KUnit tests
-Message-ID: <20240221212952.bqw4rdz2i2yf3now@google.com>
-References: <20240221092728.1281499-1-davidgow@google.com>
- <20240221092728.1281499-8-davidgow@google.com>
+        bh=gyDvZIu7lyAMZr8iHtIW9gaK0zzbqkQ/ZarxVd+kbsw=;
+        b=Okuurdc17ebSBJG7qhyTr9oJhy3C7On7Xn1CRRLP73dXm9Zd0IoaeRPZn2T/m4A/1p
+         fO9vrZn8w9av70NWsDAuxnn8+HTGjTgpRIYYzJDrM85LDjhZp4L1ovNig38AntgOeL+G
+         Ddfj7XnTRf3qU7qcKuliJqUR4HBwWk+zm+cEHDoR1M3wdM/qwiN86MZ/EyMMPrHOrEHi
+         lVuQba0mQRqnpNllwCbTvbgdbL7h5trOZq8qh7A7XdGBAeL0gqrpRarm+BunqoaJ3MgE
+         gSRULSoqJGwFwdW7nQFa/kAHrb0tA4OFkNCVIHflzk7pgtZvsmcpd4gn/a9q35wu6De4
+         /ajw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708551064; x=1709155864;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=gyDvZIu7lyAMZr8iHtIW9gaK0zzbqkQ/ZarxVd+kbsw=;
+        b=KJm0pHhOddV7wKPFsbZEdNn+sxkb6GtXAVnpurD1evKlbJluiC7K8W1fD1jwisoVsG
+         E+sPKbOqRYW0iu6ocjDwAt62B05C9By9OB548LfZ566R6XxrVZrybnmvbpaPxRI/3dOb
+         HE83YwKFEkxHLyW5Ug/jmF+1lXuGe/H314r+MyGdJDNhToUsQwJGaeWx93Q+piACET+V
+         qJ7MV3EkTbJ+KkxA9iTWtt21eJAfdu+kqsjaldq/a1WiZrHnXC+Azd8E4v+IEG9my6fx
+         W1cqyCppzkKtF0iSMQC2LUToh7QR5e67MgSmqweqkNQQUYJNjl8WTHv6i3NFjGwR2ZkG
+         QBfw==
+X-Forwarded-Encrypted: i=1; AJvYcCWR7CZCMTRb5igES8g1ocaRgalrqu94i4F//VSX+VGxH63xfJ2hUEOdrZUo/famBZ856ank3hjJZ8n5IvhRoEjUkAAY0EkKPiG87Tmb
+X-Gm-Message-State: AOJu0YxoB2Ks4DBgnXjiglbIB/jKjveZZA9VqsbcPjI91r3ix8M904ka
+	cKNd2L5hvtR6IoHA0GFM6srBmzDdiMY+xjcxG8HHVwmWzBPFb1UK/QzxAypW9EoLTXstvoD7vha
+	eR91F9gu1F4i3n5NH2v2WJ25a1PunH/S/nM+L
+X-Google-Smtp-Source: AGHT+IG7j3+ZxAmTcECSokeLQXuBK0cuQtwLdGeOlZvOqznQYFNFe5YbgpRUaAFW0uN3IZ6N5EAeSRZ29mohF0it6i4=
+X-Received: by 2002:a05:6808:120e:b0:3c1:67d3:694 with SMTP id
+ a14-20020a056808120e00b003c167d30694mr6194946oil.30.1708551064423; Wed, 21
+ Feb 2024 13:31:04 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240221092728.1281499-8-davidgow@google.com>
+References: <20240111210539.636607-1-carlosgalo@google.com> <ZdWshXSoLthv6J6b@tiehlicka>
+In-Reply-To: <ZdWshXSoLthv6J6b@tiehlicka>
+From: Carlos Galo <carlosgalo@google.com>
+Date: Wed, 21 Feb 2024 13:30:51 -0800
+Message-ID: <CABtOLR+gpU2BYxcGCCqccZGcRDF337z3JJ=7nvC47ANHmS1tNA@mail.gmail.com>
+Subject: Re: [PATCH v2] mm: Update mark_victim tracepoints fields
+To: Michal Hocko <mhocko@suse.com>
+Cc: rostedt@goodmis.org, akpm@linux-foundation.org, surenb@google.com, 
+	android-mm@google.com, kernel-team@android.com, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	linux-mm@kvack.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi,
+On Tue, Feb 20, 2024 at 11:55=E2=80=AFPM Michal Hocko <mhocko@suse.com> wro=
+te:
+>
+> Hi,
+> sorry I have missed this before.
+>
+> On Thu 11-01-24 21:05:30, Carlos Galo wrote:
+> > The current implementation of the mark_victim tracepoint provides only
+> > the process ID (pid) of the victim process. This limitation poses
+> > challenges for userspace tools that need additional information
+> > about the OOM victim. The association between pid and the additional
+> > data may be lost after the kill, making it difficult for userspace to
+> > correlate the OOM event with the specific process.
+>
+> You are correct that post OOM all per-process information is lost. On
+> the other hand we do dump all this information to the kernel log. Could
+> you explain why that is not suitable for your purpose?
 
-On Wed, Feb 21, 2024 at 05:27:20PM +0800, David Gow wrote:
-> The drm_buddy_test's alloc_contiguous test used a u64 for the page size,
-> which was then updated to be an 'unsigned long' to avoid 64-bit
-> multiplication division helpers.
->
-> However, the variable is logged by some KUNIT_ASSERT_EQ_MSG() using the
-> '%d' or '%llu' format specifiers, the former of which is always wrong,
-> and the latter is no longer correct now that ps is no longer a u64. Fix
-> these to all use '%lu'.
->
-> Also, drm_mm_test calls KUNIT_FAIL() with an empty string as the
-> message. gcc warns if a printf format string is empty (apparently), so
+Userspace tools often need real-time visibility into OOM situations
+for userspace intervention. Our use case involves utilizing BPF
+programs, along with BPF ring buffers, to provide OOM notification to
+userspace. Parsing kernel logs would be significant overhead as
+opposed to the event based BPF approach.
 
-clang does too; under -Wformat-zero-length
+> > In order to mitigate this limitation, add the following fields:
+> >
+> > - UID
+> >    In Android each installed application has a unique UID. Including
+> >    the `uid` assists in correlating OOM events with specific apps.
+> >
+> > - Process Name (comm)
+> >    Enables identification of the affected process.
+> >
+> > - OOM Score
+> >    Allows userspace to get additional insights of the relative kill
+> >    priority of the OOM victim.
+>
+> What is the oom score useful for?
+>
+The OOM score provides us a measure of the victim's importance. On the
+android side, it allows us to identify if top or foreground apps are
+killed, which have user perceptible impact.
 
-> give these some more detailed error messages, which should be more
-> useful anyway.
+> Is there any reason to provide a different information from the one
+> reported to the kernel log?
+> __oom_kill_process:
+> pr_err("%s: Killed process %d (%s) total-vm:%lukB, anon-rss:%lukB, file-r=
+ss:%lukB, shmem-rss:%lukB, UID:%u pgtables:%lukB oom_score_adj:%hd\n",
+>                 message, task_pid_nr(victim), victim->comm, K(mm->total_v=
+m),
+>                 K(get_mm_counter(mm, MM_ANONPAGES)),
+>                 K(get_mm_counter(mm, MM_FILEPAGES)),
+>                 K(get_mm_counter(mm, MM_SHMEMPAGES)),
+>                 from_kuid(&init_user_ns, task_uid(victim)),
+>                 mm_pgtables_bytes(mm) >> 10, victim->signal->oom_score_ad=
+j);
 >
-> Fixes: a64056bb5a32 ("drm/tests/drm_buddy: add alloc_contiguous test")
-> Fixes: fca7526b7d89 ("drm/tests/drm_buddy: fix build failure on 32-bit targets")
-> Fixes: fc8d29e298cf ("drm: selftest: convert drm_mm selftest to KUnit")
-> Signed-off-by: David Gow <davidgow@google.com>
 
-Reviewed-by: Justin Stitt <justinstitt@google.com>
-> ---
->  drivers/gpu/drm/tests/drm_buddy_test.c | 14 +++++++-------
->  drivers/gpu/drm/tests/drm_mm_test.c    |  6 +++---
->  2 files changed, 10 insertions(+), 10 deletions(-)
->
-> diff --git a/drivers/gpu/drm/tests/drm_buddy_test.c b/drivers/gpu/drm/tests/drm_buddy_test.c
-> index 8a464f7f4c61..3dbfa3078449 100644
-> --- a/drivers/gpu/drm/tests/drm_buddy_test.c
-> +++ b/drivers/gpu/drm/tests/drm_buddy_test.c
-> @@ -55,30 +55,30 @@ static void drm_test_buddy_alloc_contiguous(struct kunit *test)
->  		KUNIT_ASSERT_FALSE_MSG(test,
->  				       drm_buddy_alloc_blocks(&mm, 0, mm_size,
->  							      ps, ps, list, 0),
-> -				       "buddy_alloc hit an error size=%d\n",
-> +				       "buddy_alloc hit an error size=%lu\n",
->  				       ps);
->  	} while (++i < n_pages);
->
->  	KUNIT_ASSERT_TRUE_MSG(test, drm_buddy_alloc_blocks(&mm, 0, mm_size,
->  							   3 * ps, ps, &allocated,
->  							   DRM_BUDDY_CONTIGUOUS_ALLOCATION),
-> -			       "buddy_alloc didn't error size=%d\n", 3 * ps);
-> +			       "buddy_alloc didn't error size=%lu\n", 3 * ps);
->
->  	drm_buddy_free_list(&mm, &middle);
->  	KUNIT_ASSERT_TRUE_MSG(test, drm_buddy_alloc_blocks(&mm, 0, mm_size,
->  							   3 * ps, ps, &allocated,
->  							   DRM_BUDDY_CONTIGUOUS_ALLOCATION),
-> -			       "buddy_alloc didn't error size=%llu\n", 3 * ps);
-> +			       "buddy_alloc didn't error size=%lu\n", 3 * ps);
->  	KUNIT_ASSERT_TRUE_MSG(test, drm_buddy_alloc_blocks(&mm, 0, mm_size,
->  							   2 * ps, ps, &allocated,
->  							   DRM_BUDDY_CONTIGUOUS_ALLOCATION),
-> -			       "buddy_alloc didn't error size=%llu\n", 2 * ps);
-> +			       "buddy_alloc didn't error size=%lu\n", 2 * ps);
->
->  	drm_buddy_free_list(&mm, &right);
->  	KUNIT_ASSERT_TRUE_MSG(test, drm_buddy_alloc_blocks(&mm, 0, mm_size,
->  							   3 * ps, ps, &allocated,
->  							   DRM_BUDDY_CONTIGUOUS_ALLOCATION),
-> -			       "buddy_alloc didn't error size=%llu\n", 3 * ps);
-> +			       "buddy_alloc didn't error size=%lu\n", 3 * ps);
->  	/*
->  	 * At this point we should have enough contiguous space for 2 blocks,
->  	 * however they are never buddies (since we freed middle and right) so
-> @@ -87,13 +87,13 @@ static void drm_test_buddy_alloc_contiguous(struct kunit *test)
->  	KUNIT_ASSERT_FALSE_MSG(test, drm_buddy_alloc_blocks(&mm, 0, mm_size,
->  							    2 * ps, ps, &allocated,
->  							    DRM_BUDDY_CONTIGUOUS_ALLOCATION),
-> -			       "buddy_alloc hit an error size=%d\n", 2 * ps);
-> +			       "buddy_alloc hit an error size=%lu\n", 2 * ps);
->
->  	drm_buddy_free_list(&mm, &left);
->  	KUNIT_ASSERT_FALSE_MSG(test, drm_buddy_alloc_blocks(&mm, 0, mm_size,
->  							    3 * ps, ps, &allocated,
->  							    DRM_BUDDY_CONTIGUOUS_ALLOCATION),
-> -			       "buddy_alloc hit an error size=%d\n", 3 * ps);
-> +			       "buddy_alloc hit an error size=%lu\n", 3 * ps);
->
->  	total = 0;
->  	list_for_each_entry(block, &allocated, link)
-> diff --git a/drivers/gpu/drm/tests/drm_mm_test.c b/drivers/gpu/drm/tests/drm_mm_test.c
-> index 1eb0c304f960..f37c0d765865 100644
-> --- a/drivers/gpu/drm/tests/drm_mm_test.c
-> +++ b/drivers/gpu/drm/tests/drm_mm_test.c
-> @@ -157,7 +157,7 @@ static void drm_test_mm_init(struct kunit *test)
->
->  	/* After creation, it should all be one massive hole */
->  	if (!assert_one_hole(test, &mm, 0, size)) {
-> -		KUNIT_FAIL(test, "");
-> +		KUNIT_FAIL(test, "mm not one hole on creation");
->  		goto out;
->  	}
->
-> @@ -171,14 +171,14 @@ static void drm_test_mm_init(struct kunit *test)
->
->  	/* After filling the range entirely, there should be no holes */
->  	if (!assert_no_holes(test, &mm)) {
-> -		KUNIT_FAIL(test, "");
-> +		KUNIT_FAIL(test, "mm has holes when filled");
->  		goto out;
->  	}
->
->  	/* And then after emptying it again, the massive hole should be back */
->  	drm_mm_remove_node(&tmp);
->  	if (!assert_one_hole(test, &mm, 0, size)) {
-> -		KUNIT_FAIL(test, "");
-> +		KUNIT_FAIL(test, "mm does not have single hole after emptying");
->  		goto out;
->  	}
->
+We added these fields we need (UID, process name, and OOM score), but
+we're open to adding the others if you prefer that for consistency
+with the kernel log.
+
+Thanks,
+Carlos
+
 > --
-> 2.44.0.rc0.258.g7320e95886-goog
->
-
-Thanks
-Justin
+> Michal Hocko
+> SUSE Labs
