@@ -1,194 +1,217 @@
-Received: from mout.kundenserver.de (mout.kundenserver.de [212.227.17.10])
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 487BF3CF72
-	for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 09:00:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.10
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708506042; cv=none; b=cC95Zji5n+jEnlWg6eHH2V8WDr5Yuwmz2FTfi3Ij+aTsEgDq1EGFrZbk50cP+5wHW8JGeecpxgDz7/M4df40hFGyg6a03Di0JlWsWY0/nNbbY3xkmvCN1jlc0cV3GKmsvItiU2XF68Zh6twOW7jsQ66dfdaA/pmJN0kRnZGi3mk=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708506042; c=relaxed/simple;
-	bh=lOk/Sj21EXxCRmBe+YSmEWfqFcljKsQ0DRuxtfgqqT0=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=s92lYTg1Pp11zczyhGDHzAFYayfA+VRZa8maWIUPtVI7e40N2n0vBHt/hIWg14SzPxBPnINEKw9LcFCPVtQydlrO+D+ssu+PCl6Iyn0QiXQvaLWikuRrYCwuMgVgW8aaKQ53q+BVtfxQNwyN+ZXcOgkiVWGbrIBnzLCtj+uP+ng=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=valentinobst.de; spf=pass smtp.mailfrom=valentinobst.de; dkim=pass (2048-bit key) header.d=valentinobst.de header.i=kernel@valentinobst.de header.b=gEGdeNEd; arc=none smtp.client-ip=212.227.17.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=valentinobst.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=valentinobst.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E0C33CF72;
+	Wed, 21 Feb 2024 09:01:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1708506069; cv=fail; b=XFWw6uxK0Wc/Qp5Hqcbt/CmVtGGErUtaTUPZprEeI1hM+z1AmPKBZTX8P33IEznKBWHr518wkxd2nrXF0+E6djget7Qz+4SNVtUi4BIEf7HG223qMxa3/qnKCp0LIuLdyXxfVXv4Wao2vNj2p0n8FF7ckMcmo6HbRRm2+MVeXyQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1708506069; c=relaxed/simple;
+	bh=yCdMT0XRUuNhgrQq2qMpigSCQ/h5wHpdF0xY0D08QTA=;
+	h=Message-ID:Date:Subject:From:To:Cc:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=jndH1qWdDc3czIlYeiFI2w1NhIfbG2rlf3Q7IzWR7vEXoyL89ELAGffwCSBxxhcCwBOWj9o6Bkv1awYSSb+f6nEm/8KhyOZuHim8w2mKs8OKp8em3sMR/aOVpmNiZutrMwCZsDC15EPn4Is+V8FRnZzVyean0Vil72wqirJcSp8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=UIqn0Bhj; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=iXolGIo7; arc=fail smtp.client-ip=205.220.165.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=valentinobst.de header.i=kernel@valentinobst.de header.b="gEGdeNEd"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=valentinobst.de;
-	s=s1-ionos; t=1708506030; x=1709110830; i=kernel@valentinobst.de;
-	bh=lOk/Sj21EXxCRmBe+YSmEWfqFcljKsQ0DRuxtfgqqT0=;
-	h=X-UI-Sender-Class:From:Date:Subject:To:Cc;
-	b=gEGdeNEdnMF8XKOrjBbVFcFz8tB7/dKO+hCk8n4MeBxU+pBTLNmEY4K75BA2tttk
-	 gtbQMFJuPNoUzlnbUTXqEeYnbQ51B+K56zgrZQa3CaUeSPuCz3hxWmfUPsJ+EpjlW
-	 zXK3MFjmybz74et4o6Snf3WkIuiZHBk3devfZ4lsT5Z7xmPBxOKnIusdPXX/iZYbX
-	 pSRzc/Saa6jkAzYezvbJAPsIBFovozXdhSxjO2491Qmro0MFHD7p9DjJGp14StJ7I
-	 wM8jorlnyecylKWKVmZP7n6pMeQnYo1RKgEwIomKiqsgcpcMA/2AeLln3Fy+eA7Xm
-	 yGPi+0dzx8j0CB9m/g==
-X-UI-Sender-Class: 55c96926-9e95-11ee-ae09-1f7a4046a0f6
-Received: from [192.168.2.229] ([79.233.63.110]) by mrelayeu.kundenserver.de
- (mreue108 [213.165.67.113]) with ESMTPSA (Nemesis) id
- 1N6KQZ-1qs7DZ2vsH-016j74; Wed, 21 Feb 2024 09:54:04 +0100
-From: Valentin Obst <kernel@valentinobst.de>
-Date: Wed, 21 Feb 2024 09:53:37 +0100
-Subject: [PATCH] x86/tools: fix line number reported for malformed lines
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="UIqn0Bhj";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="iXolGIo7"
+Received: from pps.filterd (m0333521.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 41L6dCUT026198;
+	Wed, 21 Feb 2024 09:00:34 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=message-id : date :
+ subject : from : to : cc : references : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=corp-2023-11-20;
+ bh=3yWWJb0QUEBCFczZYI+Mi9E0zqDXIpITjbVssSMS328=;
+ b=UIqn0BhjmMsgD9O8Xozdn7h4s0rpyLgeFfALOY8cCW4dIOwsmi/3beRexrpLZos4R48o
+ kSNg01FfjPH8YN25RFTBvGKLFprA4gmCJPj/7AXiqeZUN5IwW5bb1QjuouiWjcca4Uw2
+ 6vn5pk0Gk5KKJ76UwKkc0ddU/Py4vCQjwyoj9WJBWa8tavhLgzYszw9779d95nAYH7W8
+ uosk/zHkLd7J6x7kGetY7mPmgc9flnzOMzRALHmJIojeLxolwIKtJrAFnAGTolQ2PwYx
+ 2YcZ89KCJXMNlAQHMQgyET12PUS2Ht5/pSbHM8GMFWGq5fG5RutDxCz5yiT5UmocG9KS eA== 
+Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.appoci.oracle.com [147.154.114.232])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3wakqc95ss-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 21 Feb 2024 09:00:34 +0000
+Received: from pps.filterd (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 41L7iquE038126;
+	Wed, 21 Feb 2024 09:00:33 GMT
+Received: from nam04-dm6-obe.outbound.protection.outlook.com (mail-dm6nam04lp2040.outbound.protection.outlook.com [104.47.73.40])
+	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3wak88n74s-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 21 Feb 2024 09:00:33 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ofmgY0nHF4Cf00GAIlJ18POm3YVpheVZwkNmeH5ugpfm2pgMeGkbojzijDVZG+ZboqDFyoddANdHRpHlKjeJgOzqJpOmN0vGIJ0rr3oyDtoDTc8O4gcg1j3gwqyHaKPRl+J39hRWVw2PKtTzR1Dz4P+L4Kh/XOe3eRE51uY4hUgZ4U/qycL25wphKE74Xs+AabULe2QLpGCyx45UnVkZqiCvyv8t6OBX+hd+gJnKSra9vOY7DbQMwjjwdrkT0q4AtRkw/08RBOyY+s8D3IS5jYZXALLcD6T5nSslXttp46J89hmADaFPPKjzGliWHjFvcumHrT7GhKNAC89gMG8+9Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=3yWWJb0QUEBCFczZYI+Mi9E0zqDXIpITjbVssSMS328=;
+ b=GDFVaXM8TbZO1opCqA/CIdKagps+Wa0gqa+jTqxkcbvJEVJFao2jSSP20txRfLgJzBb+eFR8Wy4kevHNXAIGrMt6yIG8/1Mwr72rR76+1i0EXU39u/HkPUSXnGDLs6ab8IySwQBsJY2ncqSv1pdIyd6D4TflHUi0UQOByJMNAeYgZu/xXME8U10It1Q2hoQ7NQdvdtFPFB2O//BR3pvONzGL7Cg1A46damZuf6lbC+MNMyNEefWhb27MjQm/QMc9xFopnWdHflhCudRQMYUpXJygim7vbktQFw/uEo+dqaY7elizNmEc39SDbOQMxwZBnP8Mc+w+GUOy2AwcHsgfsA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=3yWWJb0QUEBCFczZYI+Mi9E0zqDXIpITjbVssSMS328=;
+ b=iXolGIo7ZS0LVk72tK2HQSAiEpCF9uMCyIwK1+yHWIorutysXkrfAcfjfkVu01NDLYexpwGLc6S6vSPkgNIN/6715veQOCFwnbX2Dprc5zp8imAQlPE3obkPzKGyylITtKMCSG3vTToMzm6bQZKhAA5sSB2FvwSbQkAygXk4+Cs=
+Received: from DM6PR10MB4313.namprd10.prod.outlook.com (2603:10b6:5:212::20)
+ by PH7PR10MB6553.namprd10.prod.outlook.com (2603:10b6:510:204::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7292.39; Wed, 21 Feb
+ 2024 09:00:31 +0000
+Received: from DM6PR10MB4313.namprd10.prod.outlook.com
+ ([fe80::56f9:2210:db18:61c4]) by DM6PR10MB4313.namprd10.prod.outlook.com
+ ([fe80::56f9:2210:db18:61c4%4]) with mapi id 15.20.7316.018; Wed, 21 Feb 2024
+ 09:00:31 +0000
+Message-ID: <fb8d24cb-b5c4-41be-abf4-33bda08a1059@oracle.com>
+Date: Wed, 21 Feb 2024 09:00:26 +0000
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RFC 0/4] Introduce uts_release
+From: John Garry <john.g.garry@oracle.com>
+To: Masahiro Yamada <masahiroy@kernel.org>
+Cc: mcgrof@kernel.org, russ.weight@linux.dev, gregkh@linuxfoundation.org,
+        rafael@kernel.org, rostedt@goodmis.org, mhiramat@kernel.org,
+        mathieu.desnoyers@efficios.com, davem@davemloft.net,
+        edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+        keescook@chromium.org, nathan@kernel.org, nicolas@fjasle.eu,
+        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, linux-kbuild@vger.kernel.org
+References: <20240131104851.2311358-1-john.g.garry@oracle.com>
+ <CAK7LNATDMjzmgpBHZFTOJCkTCqpLPq8jEjdrwzEZ3uu7WMG7jg@mail.gmail.com>
+ <23c67ffc-64a5-4e19-8fbd-ecb9bfe9d3ff@oracle.com>
+ <CAK7LNASfTW+OMk1cJJWb4E6P+=k0FEsm_=6FDfDF_mTrxJCSMQ@mail.gmail.com>
+ <3e2c2def-e7d6-458f-81b3-ab666b41ad21@oracle.com>
+Content-Language: en-US
+Organization: Oracle Corporation
+In-Reply-To: <3e2c2def-e7d6-458f-81b3-ab666b41ad21@oracle.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: LO4P123CA0080.GBRP123.PROD.OUTLOOK.COM
+ (2603:10a6:600:190::13) To DM6PR10MB4313.namprd10.prod.outlook.com
+ (2603:10b6:5:212::20)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <20240221-x86-insn-decoder-line-fix-v1-1-47cd5a1718c6@valentinobst.de>
-X-B4-Tracking: v=1; b=H4sIABC61WUC/x2MwQqDMBAFf0X27EKyFlP6K+JBzYtdKKskIIL47
- 4YeZ2DmooKsKPRpLso4tOhmFXzb0PKdbAVrrEzi5OVEPJ/vntWKccSyRWT+qYGTnhxmnwQ+dJI
- S1X7PqPr/Hsb7fgBrqPPNawAAAA==
-To: Ingo Molnar <mingo@kernel.org>, Ingo Molnar <mingo@redhat.com>
-Cc: Andreas Hindborg <a.hindborg@samsung.com>, 
- John Baublitz <john.m.baublitz@gmail.com>, 
- David Rheinsberg <david@readahead.eu>, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- "H. Peter Anvin" <hpa@zytor.com>, Masami Hiramatsu <mhiramat@kernel.org>, 
- Miguel Ojeda <ojeda@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
- =?utf-8?q?Sergio_Gonz=C3=A1lez_Collado?= <sergio.collado@gmail.com>, 
- Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org, 
- x86@kernel.org, Valentin Obst <kernel@valentinobst.de>
-X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1708505639; l=4033;
- i=kernel@valentinobst.de; s=20240131; h=from:subject:message-id;
- bh=6jeuUZIWEEM6MczBBiqjTLcxOXq2Iex7vvCz0nnWibU=;
- b=vXw4UH3+h4Qo0u+jiIR3NzJr4RQ9SMlFuITEcLk/vPHJsi6whbcvNbyijjDj9XN0DjBIYg/FV
- lTfVcXooyCEDOAQGIQIh1dkqZwedw7Vykc53VahcxLmO3k1TzO3oxEi
-X-Developer-Key: i=kernel@valentinobst.de; a=ed25519;
- pk=3s7U8y0mqkaiurgHSQQTYWOo2tw5HgzCg5vnJVfw37Y=
-X-Provags-ID: V03:K1:8CQzPJdQOevycA67JGlkGzRtIoqyGOvtDOELvrhAlxXlRmeumAw
- cyMmaQAENoJQGOAzF5Pv8KuiJJO4FjsxaaMSo0Ix69jlCjZ1JMVGJSy8M5zvJe0BY1gZIgK
- VjGeMniG37PWoh8uMaDSBy/tZ8/S6Ib0uLef55V5Y2CUFFVfCg9Excxkvk4CpbUEZqhXNWR
- nv9Lh8Lb9a1HBI9YRKFwg==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:BlQJO2SEwwM=;giTIobp/tT9baZQjNYx+KP3oR6G
- BKjF31uEjg5Uv1fyIwznEnBu+8XXRq3NDOvZS3btIqZvof2KY/FX68Dtzqt5t2ymgdUmJA2G1
- jV2nkbdHbeXSrTYnTBbMP1Qx1JCGyg7Fyh+6+L7epc8quLv+nwsayV3R+ij0JY54K6awOthMb
- kbzMHUkvuU4jtAy/Mw/o1JufpYcTNA4GY6ywLounjl11FwgYgAEwvYRdiZiw0+UdmCBJVRFKP
- IXpfULIavtVKTU7gMOCLlc2K2ujb1oFBw117auc7/1ln8G7XsWS/VWmjBOews1CtLKa8CxxtV
- IqkRf5hd5X/9NyKTc625iObWD2sc6J6Zt2Qe+6pOmEqah0gBqschqEugXd2siCCWmZ+zMzgBu
- viD5nX2vtqZkck6x4XGf4BjoLGIFZjrQEjknVcmTIwdVaQQrDsurQs9nlTWHxDloNFpXI2obg
- uzxJrB+EEzJeWWvXMbxY0Wzo6yMnLv8B4tz0alU407RJRgXsTkJS2cCgrRx7xnGZtBqJdDrpc
- SjkdtBcjGGQU6Isy3qxoSgD+rYbpORl5TGYODEYrGoUJlJQhd8uJovgJxRqfqNI0EmSseapg9
- QCyKUcQoaPcMKokSccIyNDSoTvBeoTpHq7HQj6BFAlRo+Txo4ZUkfB8K2qiAcohTEpLWcS+vk
- 3Nd45+BXeDb922Uph/r9jwAzjwxvVEqSNgVs4+YfV9Ew4lcNqcv6/0DcJpDer6SYifJLPBtN3
- G2sPwW7+rc3yYmvqv2aeca7nXyyanr3D2Fl9E27ihoIURWCuts3JrI=
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM6PR10MB4313:EE_|PH7PR10MB6553:EE_
+X-MS-Office365-Filtering-Correlation-Id: b2f347a6-8d12-4821-f1e7-08dc32bb8e51
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 
+	7crI+W4V9zsKqCUibifJu9AHz7dTuspvvdS4CpIU0SNC2ZvHJNq2/ysVXwt3OuZ/Qu+izhhWRPBrS+2o794n6DZ0HBNbosF64rLBYkgviC+fvUekrKkiOqElW9jhlHWSe5YTwOGj7/6b9FKXL7ELA+R43pnYy743VlLO5bA7Bk2P3myMXEE5IGqkHREwzwywX5DEudXTHRH40oWY80arl62q0vhbbNiU4OGLGArPCdXn7unv4Uf+W6D62XGi021igELF9jILrvUgTfb44ljeGJco7GCJB3xxpPHqdnvWQpgp/Y2/xdJAxZEH7x5ocu1sUMZKIxQmO1pNERl5hkkrUn4AvpNtnfleXtWMuWAQ1Jh4YSiXcX20sNvn7LoCyOvGWLhVS46RbmBNQte0c+eyk7gF4ulOuB52rK0pfUV5NPboRe/T8Dj2oecFbKOAG3ms/9ZFwTL+oQhx567XO/0Dx+eS+lRsahLbUqoTVYAfQ5z/4jXiafU6aT04rmFO6gq/nu8dqAjRBmUV3UulNmnCgoeHx9/oyPGnumtiqeFRU+g=
+X-Forefront-Antispam-Report: 
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR10MB4313.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: 
+	=?utf-8?B?VlROQjFySGVIV243RDF2TGlnbDgwUlJ4WUoyZTNkMUxDWHdZcGh1TFgzdEpR?=
+ =?utf-8?B?TFpueVpKR3MydC9YMCs1RTRzTDJDRWY0UTlLdW5yd1g5WWZZd0J0dnlqNnlx?=
+ =?utf-8?B?R3JTbG1Ra0tPNnQ1QVNkc05wQ0Q5cDVlYmFUM1hNS2NEdndvdzlNWjFneXF5?=
+ =?utf-8?B?aXdqY245TUZHT3R5L2JldHIvTmg2TXhNdXdMaWIvWmk3SzIyNGxIK0hMS3do?=
+ =?utf-8?B?dkNXL2dmUG9rellTL2JqUUo0YStjL3hWTWhrQ25ub2k0RzNmbmR3cmVzU1hG?=
+ =?utf-8?B?TWhrK25vQ1o5TEwvdUUyUXZMWm9vbXJtL3lxYWhCM1dlM0xqQlRmSG02b1lo?=
+ =?utf-8?B?bm1Id09ZMjNYMFNmSFFFbkZOZTFpUnRWdjRXcnJpUTRvbnhGd1ZGUU9pUGt3?=
+ =?utf-8?B?bzNWY0g4UGtTRHdBQ3orVTVOQVp5UmVFNFplaGhYR3BPM2RDNUlKYlI3UVBu?=
+ =?utf-8?B?YVZKMXJpOTY5K0RtUjJ1blZVM2thRzdCcXhhb0h1Z29nK001SjVQSm9LQUxl?=
+ =?utf-8?B?V1ZRcEVCMjhJV25ucFNyWkxtc0RoUzhJL1ZLVTc4SDZrcXp3MHBMR05aWWwr?=
+ =?utf-8?B?dWlXcDZwSG1WSTlNMHNiNys4NkVpK3JQNENpRTZnUDlQU3FrR3JLc1RwTXpJ?=
+ =?utf-8?B?OC9RRDJHZ1BiYXZmTktPKzNJMngrSTJXdlM3emVNTCtqZ2ZnaFJEU2g4NHN0?=
+ =?utf-8?B?dHoyMFk3dHpxdkNmMnM4M3o5Sml2NXZUZ3IwWmZlM3BLSE9XazlOWG5hdXFB?=
+ =?utf-8?B?cWZWS0J2SW1WV1BObWxGM1FPMG1yUndvdEdmWlQ0THJlNzIyLzdhaFBkWFpT?=
+ =?utf-8?B?QjU5ZjZtTGYvampiais3cGNHN1ZGb2hLOFpNbEs5ODZYUFdnZWNJNHI0Q0Rs?=
+ =?utf-8?B?OGFJYVhaS2IxeHNlVy9zT2ZKQkxPOFFWamxSSVNPT01ldjBVYlExL3B3amY2?=
+ =?utf-8?B?d0hNMWw4M0Q0SlJsMDlqS2gwRlBrdXYyNUE2YnFqaHovdlVneWVsK2J3TnhK?=
+ =?utf-8?B?b0wrY0V0Rlh5RTFXN0R5ekY1Slg0NmQrRUlLbWduZ3h3clJmU3dkUlRYUEtK?=
+ =?utf-8?B?Nm1kYmJYOExDNUY2RGZ1eHRyRG5EdGNidWFzOTkxakhibndOTC9wdVFWaEhQ?=
+ =?utf-8?B?ZkczSVBFNjFjbDM3em5CNHVjdFlwMXJjSVRKQ2phOHMzOUNURVdEbityeFJl?=
+ =?utf-8?B?Y0U2SHVscmxWMEI1YnRyTGxSbGQxMzNGQ3RIemRIUVdNbWxuQlpnOTYxa01K?=
+ =?utf-8?B?TERhVlBTUlNzb0Z1eUtEeDUzLzRlWGFMaVhvdU5ENUhkOU4xR0lrRnFGb1hk?=
+ =?utf-8?B?MmU1cEt1TzNCMUZoTU4wQlF2SW91c3hRbWgybUtaL3VCM1JJaC8zb3FsTm0y?=
+ =?utf-8?B?SGRaKzBOZU5ZNG16dzFoUWVNRzJIWklIemptSENRcU83aU4vYmdQUXdsRzA2?=
+ =?utf-8?B?WDNXb3N1cXFpZVYyS3lVS1cvenR4cEdiZDVZbzlqQ2pnaGNUYnhOQlhEY05l?=
+ =?utf-8?B?Zmo2aFlrZWJIVmVCQUU0Uldwam56QS9VOWhHTUgvZFFhNnlEVm0vdDg4SUdN?=
+ =?utf-8?B?UXBmYVB3ZjQybHZ0QmdTSGk2UjVFMkVUbm1WaERqRFJnZGZTVGpWSi9BeHNK?=
+ =?utf-8?B?eHkrRFBMTm1ySXNkT2FzWGhPNk5ZUkovTVNaZkFhbThNeFVtcGRUNmEvKzVP?=
+ =?utf-8?B?Q3dPRmwxWEFCZWFLamRDWnVpL0NGQ08zeVpMS1Z6Mmc3MXFaMzJOSXdVRzhr?=
+ =?utf-8?B?dFdTeUc0ZVR0SFFvdEMrNTVDRnMxK3Q5Q1NSK09SanQwYis2dURmM0p1Y2Q4?=
+ =?utf-8?B?VE41cWExOTVKZTRqTlhJZGlmMDJzbEI3RnZLL2t0dUVpNU45em5iTUZ3WElV?=
+ =?utf-8?B?cE1EKzcwUjIrWGZPa3A1NlUwaXFBbjVvWk0rRXJ5ZFF6VHhKWWdEbE80RmJW?=
+ =?utf-8?B?aHpaQktuUDRka1o4UWlQVVY5U2F4bjhtenhKZ2g4cFVvcmZ0VHNkSktQZlVW?=
+ =?utf-8?B?MndEQmdySGN3aTRjWi93d1VCeTR4dzBjMVNOMjFhUXBPcE1oQzltTUttYUNs?=
+ =?utf-8?B?S1BrZy9zS0VhcHNlMEQ5VDkvQlRRUEZzTU9kSHNPUGRLWklIQWV3QmJ3Qlhy?=
+ =?utf-8?B?NEJrbzhBRGJDUHZtV21waU9BUXA2SGg5UTNGZ0o2NERCTHdmcjRERXBPbC9O?=
+ =?utf-8?B?MkE9PQ==?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 
+	sdaVZuEGsKLBFda5oaapyQctESl20p8+kirVNy2RsSLCpAVEHfJTyzh4qxotfiqvDnlqRI0pqV0W8ZSOaE9UMET5uqHH4LpBdTJF5G//EN58G09RTiru6/WIUPfv1q32MoxXdMLdsa1ZDOnzS2+OpkwpTvqSkLetoMqqZ/cSkWJyefBU+MXtcazwsZReroY0jt5Cljx9VREyNfKxLNZeEPsdGThYz5/NYgyiP1evxTJp1DqhY4it88Y6kQFcJNd3mIWPweyJ4ry6cROF1aMfOM6y4E3WrT2xfFG/GLR7kk/dK+J8uR6w9Idjz3llSOkcGneVlE2++M1tLEVspY+shGdOhxxv5gkoc2jwwI1ALWCMniU0FsxOJlz4fW9zNU2w1jccapt/QdbW+h7jHmdDFe3Sjgz2hR4ZNYXy9Jn1sqHI57luCuxlkXSoL3TQyZanij24lFcws7lnrV959k0xUKZqSLl8sjqZn51rdjJaBUm8BGUepxywf/Fdmus8vMZxbzYzTYsxqKeBuaLHbYHCRWIJXp/LSt7HZ7r9QiGQYv5pFtSazslNRQ1I2q1zspnFyGetmvERJmi0GX900elieFMMH4f0ZpwKCzG9iMvL3VU=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b2f347a6-8d12-4821-f1e7-08dc32bb8e51
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR10MB4313.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Feb 2024 09:00:31.0883
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: crNZ2iTtI3FEULCmn6PTg4YuUYGRNm1hXMgz45IQRXhIxM68cLL2Ak1Hb+3DhfAHOOITQIbZflun4v2+3w/xjg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR10MB6553
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-02-20_06,2024-02-20_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 phishscore=0
+ adultscore=0 mlxlogscore=999 mlxscore=0 bulkscore=0 malwarescore=0
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2311290000 definitions=main-2402210069
+X-Proofpoint-GUID: bte4BEvFiQYujsdECVXqsN9eEgE5wzKe
+X-Proofpoint-ORIG-GUID: bte4BEvFiQYujsdECVXqsN9eEgE5wzKe
 
-While debugging the `X86_DECODER_SELFTEST` failure first reported in [1],
-we noticed that the line numbers reported by the `insn_decoder_test` tool
-do not correspond to the line in the output of `objdump_reformat.awk` that
-was causing the failure:
+On 08/02/2024 10:08, John Garry wrote:
+> On 05/02/2024 23:10, Masahiro Yamada wrote:
+>>>> I think what you can contribute are:
+>>>>
+>>>>    - Explore the UTS_RELEASE users, and check if you can get rid of it.
+>>> Unfortunately I expect resistance for this. I also expect places like FW
+>>> loader it is necessary. And when this is used in sysfs, people will say
+>>> that it is part of the ABI now.
+>>>
+>>> How about I send the patch to update to use init_uts_ns and mention also
+>>> that it would be better to not use at all, if possible? I can cc you.
+>>
+>> OK.
+>>
+>>
+>> As I mentioned in the previous reply, the replacement is safe
+>> for builtin code.
+>>
+>> When you touch modular code, please pay a little more care,
+>> because UTS_RELEASE and init_utsname()->release
+>> may differ when CONFIG_MODVERSIONS=y.
+>>
+> 
+> Are you saying that we may have a different release version kernel and 
+> module built with CONFIG_MODVERSIONS=y, and the module was using 
+> UTS_RELEASE for something? That something may be like setting some info 
+> in a sysfs file, like in this example:
+> 
+> static ssize_t target_core_item_version_show(struct config_item *item,
+>          char *page)
+> {
+>      return sprintf(page, "Target Engine Core ConfigFS Infrastructure %s"
+>          " on %s/%s on "UTS_RELEASE"\n", TARGET_CORE_VERSION,
+>          utsname()->sysname, utsname()->machine);
+> }
+> 
+> And the intention is to use the module codebase release version and not 
+> the kernel codebase release version. Hence utsname() is used for 
+> .sysname and .machine, but not .release .
 
-  # TEST    posttest
-    llvm-objdump -d -j .text ./vmlinux | \
-    awk -f ./arch/x86/tools/objdump_reformat.awk | \
-    arch/x86/tools/insn_decoder_test -y -v
-  arch/x86/tools/insn_decoder_test: error: malformed line 1657116:
-  68db0
+Hi Masahiro,
 
-  $ llvm-objdump -d -j .text ./vmlinux | \
-  awk -f ./arch/x86/tools/objdump_reformat.awk > objdump_reformat.txt
-  $ head -n `echo 1657116+2 | bc` objdump_reformat.txt | tail -n 5
-  ffffffff815430b1        41 8b 47 1c             movl
-  ffffffff815430b5        89 c1                   movl
-  ffffffff815430b7        81 c9 00 40 00 00       orl
-  ffffffff815430bd        41 89 4e 18             movl
-  ffffffff815430c1        a8 40                   testb
+Can you comment on whether I am right about CONFIG_MODVERSIONS, above?
 
-These lines are perfectly fine. The reason is that the line count reported
-by the tool only includes instruction lines, i.e., it does not count symbo=
-l
-lines.
-
-Add a new variable to count the combined (insn+symbol) line count and
-report this in the error message. With this patch, the line reported by th=
-e
-tool is the line causing the failure (long line wrapped at 75 chars):
-
-  # TEST    posttest
-    llvm-objdump -d -j .text ./vmlinux | \
-    awk -f ./arch/x86/tools/objdump_reformat.awk | \
-    arch/x86/tools/insn_decoder_test -y -v
-  arch/x86/tools/insn_decoder_test: error: malformed line 1699686:
-  68db0
-
-  $ head -n ` echo 1699686+2 | bc` objdump_reformat.txt | tail -n 5
-  ffffffff81568dac        c3                      retq
-  <_RNvXsP_NtCs7qddEHlz8fK_4core3fmtRINtNtNtNtB7_4iter8adapters5chain5Chai=
-n
-  INtNtBA_7flatten7FlattenINtNtB7_6option8IntoIterNtNtB7_4char11EscapeDebu=
-g
-  EEINtB1a_7FlatMapNtNtNtB7_3str4iter5CharsB1T_NtB2D_23CharEscapeDebugCont=
-i
-  nueEENtB5_5Debug3fmtB7_>:ffffffff81568db0
-  ffffffff81568dad        0f 1f 00                nopl
-  ffffffff81568db0        f3 0f 1e fa             endbr64
-  ffffffff81568db4        41 56                   pushq
-
-[In this case the line causing the failure is interpreted as two lines by
-the tool (due to its length, but this is fixed by [1, 2]), and the second
-line is reported. Still the spatial closeness between the reported line an=
-d
-the line causing the failure would have made debugging a lot easier.]
-
-[1]: https://lore.kernel.org/lkml/Y9ES4UKl%2F+DtvAVS@gmail.com/T/
-[2]: https://lore.kernel.org/rust-for-linux/20231119180145.157455-1-sergio=
-.collado@gmail.com/
-
-Signed-off-by: Valentin Obst <kernel@valentinobst.de>
-=2D--
- arch/x86/tools/insn_decoder_test.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
-
-diff --git a/arch/x86/tools/insn_decoder_test.c b/arch/x86/tools/insn_deco=
-der_test.c
-index 472540aeabc2..727017a3c3c7 100644
-=2D-- a/arch/x86/tools/insn_decoder_test.c
-+++ b/arch/x86/tools/insn_decoder_test.c
-@@ -114,6 +114,7 @@ int main(int argc, char **argv)
- 	unsigned char insn_buff[16];
- 	struct insn insn;
- 	int insns =3D 0;
-+	int lines =3D 0;
- 	int warnings =3D 0;
-
- 	parse_args(argc, argv);
-@@ -123,6 +124,8 @@ int main(int argc, char **argv)
- 		int nb =3D 0, ret;
- 		unsigned int b;
-
-+		lines++;
-+
- 		if (line[0] =3D=3D '<') {
- 			/* Symbol line */
- 			strcpy(sym, line);
-@@ -134,12 +137,12 @@ int main(int argc, char **argv)
- 		strcpy(copy, line);
- 		tab1 =3D strchr(copy, '\t');
- 		if (!tab1)
--			malformed_line(line, insns);
-+			malformed_line(line, lines);
- 		s =3D tab1 + 1;
- 		s +=3D strspn(s, " ");
- 		tab2 =3D strchr(s, '\t');
- 		if (!tab2)
--			malformed_line(line, insns);
-+			malformed_line(line, lines);
- 		*tab2 =3D '\0';	/* Characters beyond tab2 aren't examined */
- 		while (s < tab2) {
- 			if (sscanf(s, "%x", &b) =3D=3D 1) {
-
-=2D--
-base-commit: b401b621758e46812da61fa58a67c3fd8d91de0d
-change-id: 20240221-x86-insn-decoder-line-fix-7b1f2e1732ff
-
-Best regards,
-=2D-
-Valentin Obst <kernel@valentinobst.de>
-
+Thanks,
+John
