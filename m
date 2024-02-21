@@ -1,87 +1,133 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93E62126F37
-	for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 21:36:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7C5F25619;
+	Wed, 21 Feb 2024 21:38:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708551414; cv=none; b=bjo6hu3YRU+O6zloiGiBgw0eGc1+JKBEggPp48+m/9yqMA1G0Y5g/FpFg1aYo09rT3rzlv46VIbsGf0ltWtHeAfl2BHog/LnsFdXX9zjPIXjeUe+eI+1hMI8jvrX+wEyvvwRyefwcu+tEX2iAxcrYf9I8MXyYXk9mv69psOayR8=
+	t=1708551480; cv=none; b=hx8qS3rhGsg4T3XD6BoMLp1elz2s7ZlC1urW+uLUTLjgAtZAaML2Fj/X/92jr2ZUsDBd2djEh/2xAiAhUn+sDXDeZELF0CgaivcDB45cfZAicubrJqu8iSNOEN2ExcaHDT7cpKcvthF5b9hxuLbOGLpmG3WumwRNaoad7Wr0B+4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708551414; c=relaxed/simple;
-	bh=0RWRYjgzZ8namkUbz7x0brecXpRx2iB3QKzERWdrecE=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=rF49PlUFTsNQgViU0YXMMGszuiwMa62EiqP8UtPIPsnLFiXMLXAnqUWBB3LCnii5Qptwy4ZcAb40Skc1I1SOkKh6DgpLM7KUO5B5wv5sJRI8wfdiHsZ3u+lhbFpUD5NBWdtogrto4SvKwT3e6KChSWJmY95yVL8MT0a2UskIgfg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 67D08C433F1;
-	Wed, 21 Feb 2024 21:36:50 +0000 (UTC)
-Date: Wed, 21 Feb 2024 16:38:38 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Ankur Arora <ankur.a.arora@oracle.com>
-Cc: linux-kernel@vger.kernel.org, tglx@linutronix.de, peterz@infradead.org,
- torvalds@linux-foundation.org, paulmck@kernel.org,
- akpm@linux-foundation.org, luto@kernel.org, bp@alien8.de,
- dave.hansen@linux.intel.com, hpa@zytor.com, mingo@redhat.com,
- juri.lelli@redhat.com, vincent.guittot@linaro.org, willy@infradead.org,
- mgorman@suse.de, jpoimboe@kernel.org, mark.rutland@arm.com,
- jgross@suse.com, andrew.cooper3@citrix.com, bristot@kernel.org,
- mathieu.desnoyers@efficios.com, geert@linux-m68k.org,
- glaubitz@physik.fu-berlin.de, anton.ivanov@cambridgegreys.com,
- mattst88@gmail.com, krypton@ulrich-teichert.org, David.Laight@ACULAB.COM,
- richard@nod.at, mjguzik@gmail.com, jon.grimm@amd.com, bharata@amd.com,
- raghavendra.kt@amd.com, boris.ostrovsky@oracle.com, konrad.wilk@oracle.com
-Subject: Re: [PATCH 23/30] sched/fair: handle tick expiry under lazy
- preemption
-Message-ID: <20240221163838.780caaa9@gandalf.local.home>
-In-Reply-To: <20240213055554.1802415-24-ankur.a.arora@oracle.com>
-References: <20240213055554.1802415-1-ankur.a.arora@oracle.com>
-	<20240213055554.1802415-24-ankur.a.arora@oracle.com>
-X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1708551480; c=relaxed/simple;
+	bh=9oOl86N850lxplmi/fO/ptHo5glf8VI/jrIlpQnN4nQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=altsWRO64cvSk5owsplFmr1vQKWBwYEKtXad2qswvYXdetsfVgvnpfPAjrOrsWHPwhxkfM14dvkfcEk5CdE4erLNDRVxAg4NGIf45QVMjevSgcMW1VWGKVDArz4qpSNnDNrALHNWdD9SfU0u+t4/eqJeuDED1kK8N7e2Ux8yy4w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gUwpgeHS; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gUwpgeHS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B38A2C433C7;
+	Wed, 21 Feb 2024 21:37:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1708551480;
+	bh=9oOl86N850lxplmi/fO/ptHo5glf8VI/jrIlpQnN4nQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=gUwpgeHSO142RKuGwIXhScBu/2cWKaelACWeOtQaATMpwLNtmAhe7poC6xPinYXbi
+	 Pw0h3MgztfEi/qIXYF4mTyADgknquKPVgPLWiDPGfUKSPJSkGugrBQpwooGSCI5ykE
+	 PTJ1B7I9pd3+cNrqFs6TUychg9izY9QUcKU0XKL5Fcgp5faOxC9TwvqMJARlVuctr1
+	 zXwUV3b4PUd9uAW4vxP1qrfXqMeSARav+HY9fub4BB6q1p+eiMb7mPyNguEK7ULMTt
+	 CLAXyxk0TWXK+F62AuVAzwbnUpt8avb8GaWIV0Id0n7h+mCLi7n0+tMy37jeISGSIT
+	 gbmzKWRLlukmg==
+Date: Wed, 21 Feb 2024 21:37:54 +0000
+From: Conor Dooley <conor@kernel.org>
+To: Marco Felsch <m.felsch@pengutronix.de>
+Cc: jic23@kernel.org, lars@metafoo.de, robh+dt@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+	denis.ciocca@st.com, linus.walleij@linaro.org,
+	linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, kernel@pengutronix.de
+Subject: Re: [PATCH] dt-bindings: iio: st-sensors: Add IIS2MDC magnetometer
+Message-ID: <20240221-lubricant-machine-79054f117eb0@spud>
+References: <20240221175810.3581399-1-m.felsch@pengutronix.de>
+ <20240221-undecided-union-4078db711693@spud>
+ <20240221191644.5r3ylr5w3cnfnrzj@pengutronix.de>
+ <20240221-imitate-molar-81d93285ac77@spud>
+ <20240221194518.3sm4o5i274ldpvzf@pengutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="aCdhMTuN5ae1nNlN"
+Content-Disposition: inline
+In-Reply-To: <20240221194518.3sm4o5i274ldpvzf@pengutronix.de>
 
-On Mon, 12 Feb 2024 21:55:47 -0800
-Ankur Arora <ankur.a.arora@oracle.com> wrote:
 
-> The default policy for lazy scheduling is to schedule in exit-to-user,
-> assuming that would happen within the remaining time quanta of the
-> task.
-> 
-> However, that runs into the 'hog' problem -- the target task might
-> be running in the kernel and might not relinquish CPU on its own.
-> 
-> Handle that by upgrading the ignored tif_resched(NR_lazy) bit to
-> tif_resched(NR_now) at the next tick.
-> 
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Juri Lelli <juri.lelli@redhat.com>
-> Cc: Vincent Guittot <vincent.guittot@linaro.org>
-> Originally-by: Thomas Gleixner <tglx@linutronix.de>
-> Link: https://lore.kernel.org/lkml/87jzshhexi.ffs@tglx/
-> Signed-off-by: Ankur Arora <ankur.a.arora@oracle.com>
-> 
-> ---
-> Note:
->   Instead of special casing the tick, it might be simpler to always
->   do the upgrade on the second resched_curr().
-> 
->   The theoretical problem with doing that is that the current
->   approach deterministically provides a well-defined extra unit of
->   time. Going with a second resched_curr() might mean that the
->   amount of extra time the task gets depends on the vagaries of
->   the incoming resched_curr() (which is fine if it's mostly from
->   the tick; not fine if we could get it due to other reasons.)
-> 
->   Practically, both performed equally well in my tests.
-> 
->   Thoughts?
+--aCdhMTuN5ae1nNlN
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I personally prefer the determinism of using the tick to force the resched.
+On Wed, Feb 21, 2024 at 08:45:18PM +0100, Marco Felsch wrote:
+> Hi Conor,
+>=20
+> On 24-02-21, Conor Dooley wrote:
+> > On Wed, Feb 21, 2024 at 08:16:44PM +0100, Marco Felsch wrote:
+> > > On 24-02-21, Conor Dooley wrote:
+> > > > On Wed, Feb 21, 2024 at 06:58:10PM +0100, Marco Felsch wrote:
+> > > > > Add the iis2mdc magnetometer support which is equivalent to the l=
+is2mdl.
+> > > > >=20
+> > > > > Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
+> > > > > ---
+> > > > >  Documentation/devicetree/bindings/iio/st,st-sensors.yaml | 1 +
+> > > > >  1 file changed, 1 insertion(+)
+> > > > >=20
+> > > > > diff --git a/Documentation/devicetree/bindings/iio/st,st-sensors.=
+yaml b/Documentation/devicetree/bindings/iio/st,st-sensors.yaml
+> > > > > index fff7e3d83a02..ee593c8bbb65 100644
+> > > > > --- a/Documentation/devicetree/bindings/iio/st,st-sensors.yaml
+> > > > > +++ b/Documentation/devicetree/bindings/iio/st,st-sensors.yaml
+> > > > > @@ -64,6 +64,7 @@ properties:
+> > > > >            - st,lsm9ds0-gyro
+> > > > >        - description: STMicroelectronics Magnetometers
+> > > > >          enum:
+> > > > > +          - st,iis2mdc
+> > > >=20
+> > > > Without a fallback compatible to the equivilent device, how does a
+> > > > driver bind to this device?
+> > >=20
+> > > I skimed the datasheets and the driver already handles this binding
+> > > exactly the same as the st,lis2mdl, so my assumption is they do match.
+> > >=20
+> > > Why do I you think we need a fallback compatible here?
+> >=20
+> > I didn't look at the driver, there was no mention of the driver already
+> > having (undocumented) support for it. Since there was no driver change
+> > alongside this patch, I thought you'd need a fallback compatible to
+> > allow the driver to match against a compatible it recognises.
+>=20
+> I explicitly did not mention the driver in the commit message else I
+> would have got a response like "dt-bindings have no dependency to
+> drivers" ;)
 
--- Steve
+Putting it under the --- line is always an option. Where there are
+existing users but the compatible is just undocumented, this it's
+helpful to do.
+
+> > Besides, having fallback compatibles is the norm when one device has the
+> > same programming model as another.
+>=20
+> Not for this binding according the driver.
+
+If they don't have the same programming model, then describing them as
+"equivalent" wouldn't be correct. That said, they seem to use the same
+sensor settings when alls said and done (see st_magn_sensors_settings),
+so I think they are actually compatible even if the driver has separate
+match data for each.
+
+Cheers,
+Conor.
+
+--aCdhMTuN5ae1nNlN
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZdZtMgAKCRB4tDGHoIJi
+0mhFAP4uPT1KilNvuJy11JVEqyK46NkPn3I0vD5H1rPev9iSUQD/c2IAJZDAfJpg
+j6ckgYP2rWSx/t9GqIONxFD8RfJMegM=
+=nU5D
+-----END PGP SIGNATURE-----
+
+--aCdhMTuN5ae1nNlN--
