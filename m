@@ -1,110 +1,164 @@
-Received: from mail-pg1-f175.google.com (mail-pg1-f175.google.com [209.85.215.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E30818643
-	for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 02:35:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2A1D249E4
+	for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 02:37:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708482948; cv=none; b=ZnJ5xIxm1TghKhX4uzlA826R5ih7wTpaaMbH5o1mJnFzwlDW+ldoiL6d/EPpBZ14PJK9HpN2zRP4Wmu6PJY44GiuBJ0GADHKMnt1YeEoe12S9wnLyS8LSUgT79Erux4QkIia1rHvQ6YK6IqJdxVSYWJ4+Db+pgsqfpJvCGwi9W8=
+	t=1708483067; cv=none; b=AK3KVKlN+jEhyOGj3wi6KP16qLJjGDR9XNJ4RaYppAqfuau1eO0ZYmte7WymgSAHx+Wpr5zdCV6zhJO9B6GXTFDqtqCyHxtU9lEnlDDH/G3WpN9j2/ju8xhAizHmPlkiNuC0E/ytOwSf+A7b5VJN0JXS/pf5m+8zukZlJs6abdk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708482948; c=relaxed/simple;
-	bh=p9KaH1kG3VIAPvn6SehcGM/nl6oCx50robP1zVqyyiY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=cxlrCTslD4Kg5gKCxzzXcqqGlLPISJukMsIdyYRC17FmoGr3RowNYAiGOwMgS1qL3rKfZE2CX51euNMebw6l2d+TQ2tEX08aJtwam4MseDoS+PLwF/Vg8t2elAPQ5hfNw49DD5pI+DuMeEQosqnnVcx27g4hkgLTFwv06fLHrKY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=Knc4WKsL; arc=none smtp.client-ip=209.85.215.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
+	s=arc-20240116; t=1708483067; c=relaxed/simple;
+	bh=pPTKCdY9creDjcLWMyQf0xXSOqUquqJnbrHQ99XuHvA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GBrx/ehK6Mt8AGNyg8QcNkYGjwwrpwkNLNALOUDsjGsf3hUthGILDi+DqEvNKrOU/PXa7VGOtLhXVsJNDWQcLBuqYFUvFTlSiR2B2Eh9en6l3KLJOZKkURKy/3xk6L6f3sJVnwQz87MTXKqeHKH53TthWfDyWOLxkCi/QkbQAUY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=GEDvp+FT; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="Knc4WKsL"
-Received: by mail-pg1-f175.google.com with SMTP id 41be03b00d2f7-5d8ddbac4fbso5080862a12.0
-        for <linux-kernel@vger.kernel.org>; Tue, 20 Feb 2024 18:35:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1708482946; x=1709087746; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=p9KaH1kG3VIAPvn6SehcGM/nl6oCx50robP1zVqyyiY=;
-        b=Knc4WKsLbxXXhhybJwmLWgSyt/SdRfHGPu/1RlvyOD/bm135Tozsb+xXYWj/1shIva
-         TAVJm/g4jzYZT/M/TSl3ktqZNgR6yi2oDfcYnQmDwqB6pgPPD4ULaOlauugsCEpAeMUw
-         KuNYWZhM6PkZxPcZpLCSDbV43uOE8MPaFUpHXJxWX400hHc//v/JaKZnyAcYXh0mW2bi
-         feh7Gzy3c9faRCvBkRak6v4yi8F7UCU2NxFOTmEs5b5RCpN+Oh3/P8kIPZ/F055t5T/6
-         mTM955odnTsWZc3zxDPqnRzX4HhwM2cgVqaY7JQOzD8+iekn9G/lG8HPbTnYY+9YtV9v
-         lQnw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708482946; x=1709087746;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=p9KaH1kG3VIAPvn6SehcGM/nl6oCx50robP1zVqyyiY=;
-        b=HgW+k7+QL6+Qb1KmXhCYEvY8egqcaJuhYLUBt8NXaQVuLI7jqinAlCsN2i5uMEWoU/
-         ZGvx6wpoRmMFM1MfWpd4Vt6vkYiYe7+a3QeZB3GrdUto3zzwKXJhaZ8mFa8HN7H39bYW
-         upKghuFWYyb7H0SzpC6tp6XQ7dAFYRFcAGMd0waaxrnfXDC4gGx1MQftl48XiwkkaEXo
-         x8ESwXZ3je0e4kfbEvYvjTiIcif2DZ2CYkNzDsJyfvpx/aRApIwfxAjdotJSl+1uUNRr
-         ohZqCToHVzjs6cCXRgJCL4bhhH+1Tw03PVI7jkYPNZF5XMjgohvJ9R8z0XGoIha2hI+8
-         uw8A==
-X-Forwarded-Encrypted: i=1; AJvYcCXvjVZI1JCyKa08aU8Gd0Qx8z15rPKWI78GIxwUG/mEcjAMLF7co5mvKCgBLKi+mc1c2v6bc6TIy35ojjbHXblTokP9RRwah75Am0Do
-X-Gm-Message-State: AOJu0Ywv3lvBOVn3/WWe4UyQLeq05VsMCYrJKMUBGH4HTqJvA4kUTqy8
-	0uWJBwLt4U/btexuMyUStjFlu2btyxy/VMg7/9s5t8Q0REI50cmsmyBLZfoSIVwVp9zaMXDrYv+
-	PHhmF42Z9VIHFSa3l1HAXw2zyVswZadRESEmTSg==
-X-Google-Smtp-Source: AGHT+IGBqVse+WdjABfmLP3ERXaSmAAVszht4JUGqKAyn/R0pWRIclJneX1cjoLELZhhU7yURPemUQm9OhzpBLcsGpM=
-X-Received: by 2002:a17:90b:1bc1:b0:299:6717:e54d with SMTP id
- oa1-20020a17090b1bc100b002996717e54dmr8268880pjb.36.1708482945724; Tue, 20
- Feb 2024 18:35:45 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GEDvp+FT"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1708483063;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=GIMDrzpnacEme9gLjUpWeDhxio/wVIn1riqvLCd96I4=;
+	b=GEDvp+FTwyWEWP4kLtTDZt/SPCNC1sE8BJgPEuZbX7lJ4XAtL+ZctcfAiiKvrUVbfqcI3i
+	9T28gOFhW6oL+JUwcsii6Qbkask0USbEogLlNpNglQ8ByRRl2n4hp4OlrQd0KudGQgfqDl
+	JI38ibRHevfbwkYeEgPvd1+EklWBjzQ=
+Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
+ by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-102-Yf2dw5QQPkmYmsDRr--p_Q-1; Tue,
+ 20 Feb 2024 21:37:35 -0500
+X-MC-Unique: Yf2dw5QQPkmYmsDRr--p_Q-1
+Received: from smtp.corp.redhat.com (int-mx10.intmail.prod.int.rdu2.redhat.com [10.11.54.10])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 875453C40B56;
+	Wed, 21 Feb 2024 02:37:34 +0000 (UTC)
+Received: from localhost (unknown [10.72.116.2])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 7AC77492BD7;
+	Wed, 21 Feb 2024 02:37:32 +0000 (UTC)
+Date: Wed, 21 Feb 2024 10:37:29 +0800
+From: Baoquan He <bhe@redhat.com>
+To: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
+	Elena Reshetova <elena.reshetova@intel.com>,
+	Jun Nakajima <jun.nakajima@intel.com>,
+	Rick Edgecombe <rick.p.edgecombe@intel.com>,
+	Tom Lendacky <thomas.lendacky@amd.com>,
+	"Kalra, Ashish" <ashish.kalra@amd.com>,
+	Sean Christopherson <seanjc@google.com>,
+	"Huang, Kai" <kai.huang@intel.com>, kexec@lists.infradead.org,
+	linux-coco@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: Re: [PATCHv7 07/16] x86/mm: Return correct level from
+ lookup_address() if pte is none
+Message-ID: <ZdVh6efExdt687YY@MiWiFi-R3L-srv>
+References: <20240212104448.2589568-1-kirill.shutemov@linux.intel.com>
+ <20240212104448.2589568-8-kirill.shutemov@linux.intel.com>
+ <ZdLjQCaxhOnR+GzX@MiWiFi-R3L-srv>
+ <zhbhgq27kjrhkdgbxomjykjez2i4hckguvmxyptvfvoftue5ca@zowl5qbl6psl>
+ <ZdR+JzfHjES3zytp@MiWiFi-R3L-srv>
+ <ic4v3q4muffjq2jhlkk3k4lg5xxvjwlw22hctzubl5573euzu2@er3m7ztog2a6>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240220035105.34626-1-dongmenglong.8@bytedance.com> <CAADnVQ+E4ygZV6dcs8wj5FdFz9bfrQ=61235uiRoxe9RqQvR9Q@mail.gmail.com>
-In-Reply-To: <CAADnVQ+E4ygZV6dcs8wj5FdFz9bfrQ=61235uiRoxe9RqQvR9Q@mail.gmail.com>
-From: =?UTF-8?B?5qKm6b6Z6JGj?= <dongmenglong.8@bytedance.com>
-Date: Wed, 21 Feb 2024 10:35:34 +0800
-Message-ID: <CALz3k9g__P+UdO2vLPrR5Y4sQonQJjOnGPNmhmxtRfhLKoV7Rg@mail.gmail.com>
-Subject: Re: [External] Re: [PATCH bpf-next 0/5] bpf: make tracing program
- support multi-attach
-To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc: Andrii Nakryiko <andrii@kernel.org>, Alexei Starovoitov <ast@kernel.org>, 
-	Daniel Borkmann <daniel@iogearbox.net>, Martin KaFai Lau <martin.lau@linux.dev>, Eddy Z <eddyz87@gmail.com>, 
-	Song Liu <song@kernel.org>, Yonghong Song <yonghong.song@linux.dev>, 
-	John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>, 
-	Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Mykola Lysenko <mykolal@fb.com>, Shuah Khan <shuah@kernel.org>, mcoquelin.stm32@gmail.com, 
-	alexandre.torgue@foss.st.com, Kui-Feng Lee <thinker.li@gmail.com>, 
-	Feng Zhou <zhoufeng.zf@bytedance.com>, Dave Marchevsky <davemarchevsky@fb.com>, 
-	Daniel Xu <dxu@dxuuu.xyz>, LKML <linux-kernel@vger.kernel.org>, bpf <bpf@vger.kernel.org>, 
-	"open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>, linux-stm32@st-md-mailman.stormreply.com, 
-	linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ic4v3q4muffjq2jhlkk3k4lg5xxvjwlw22hctzubl5573euzu2@er3m7ztog2a6>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.10
 
-Hello,
+On 02/20/24 at 02:36pm, Kirill A. Shutemov wrote:
+> On Tue, Feb 20, 2024 at 06:25:43PM +0800, Baoquan He wrote:
+> > > I am not sure what part of the comment you see doesn't reflect the
+> > > behaviour. From my PoV, changed code matches the comment closer that
+> > > original.
+> > 
+> > Oh, I didn't make it clear. I mean update the code comment for
+> > lookup_address(), and add code comment for lookup_address_in_pgd() to
+> > mention the level thing. Maybe it's a chance to do that.
+> > 
+> > ===1>
+> > *
+> >  * Lookup the page table entry for a virtual address. Return a pointer
+> >  * to the entry and the level of the mapping.
+> >  *
+> >  * Note: We return pud and pmd either when the entry is marked large
+> >                    ~~~~~~~~~~~ seems we return p4d too
+> >  * or when the present bit is not set. Otherwise we would return a
+> >  * pointer to a nonexisting mapping.
+> >               ~~~~~~~~~~~~~~~ NULL?
+> >  */                          
+> > pte_t *lookup_address(unsigned long address, unsigned int *level)
+> > {
+> >         return lookup_address_in_pgd(pgd_offset_k(address), address, level);
+> > }
+> > EXPORT_SYMBOL_GPL(lookup_address);
+> > ===
+> > 
+> > ===2>
+> > /*
+> >  * Lookup the page table entry for a virtual address in a specific pgd.
+> >  * Return a pointer to the entry and the level of the mapping.
+> >    ~~ also could return NULL if it's none entry. And do we need to
+> > mention the level thing?
+> >  */
+> > pte_t *lookup_address_in_pgd(pgd_t *pgd, unsigned long address,
+> >                              unsigned int *level)
+> > ...
+> > }
+> > 
+> 
+> What about this fixup:
 
-On Wed, Feb 21, 2024 at 9:24=E2=80=AFAM Alexei Starovoitov
-<alexei.starovoitov@gmail.com> wrote:
->
-> On Mon, Feb 19, 2024 at 7:51=E2=80=AFPM Menglong Dong
-> <dongmenglong.8@bytedance.com> wrote:
-> >
-> > For now, the BPF program of type BPF_PROG_TYPE_TRACING is not allowed t=
-o
-> > be attached to multiple hooks, and we have to create a BPF program for
-> > each kernel function, for which we want to trace, even through all the
-> > program have the same (or similar) logic. This can consume extra memory=
-,
-> > and make the program loading slow if we have plenty of kernel function =
-to
-> > trace.
->
-> Should this be combined with multi link ?
-> (As was recently done for kprobe_multi and uprobe_multi).
-> Loading fentry prog once and attaching it through many bpf_links
-> to multiple places is a nice addition,
-> but we should probably add a multi link right away too.
+Some nitpicks.
+> 
+> diff --git a/arch/x86/mm/pat/set_memory.c b/arch/x86/mm/pat/set_memory.c
+> index 3612e3167147..425ff6e192e6 100644
+> --- a/arch/x86/mm/pat/set_memory.c
+> +++ b/arch/x86/mm/pat/set_memory.c
+> @@ -657,7 +657,8 @@ static inline pgprot_t verify_rwx(pgprot_t old, pgprot_t new, unsigned long star
+>  
+>  /*
+>   * Lookup the page table entry for a virtual address in a specific pgd.
+> - * Return a pointer to the entry and the level of the mapping.
+> + * Return a pointer to the entry and the level of the mapping (or NULL if
+> + * the entry is none) and level of the entry.
+                       ^ this right parenthesis may need be moved to the end.
 
-I was planning to implement the multi link for tracing after this
-series in another series. I can do it together with this series
-if you prefer.
 
-Thanks!
-Menglong Dong
+=======
+ * Return a pointer to the entry and the level of the mapping (or NULL if
+ * the entry is none and level of the entry).
+=======
+
+>   */
+>  pte_t *lookup_address_in_pgd(pgd_t *pgd, unsigned long address,
+>  			     unsigned int *level)
+> @@ -704,9 +705,8 @@ pte_t *lookup_address_in_pgd(pgd_t *pgd, unsigned long address,
+>   * Lookup the page table entry for a virtual address. Return a pointer
+>   * to the entry and the level of the mapping.
+>   *
+> - * Note: We return pud and pmd either when the entry is marked large
+> - * or when the present bit is not set. Otherwise we would return a
+> - * pointer to a nonexisting mapping.
+> + * Note: the function returns p4d, pud and pmd either when the entry is marked
+                                          ~~~
+                                           ^ s/and/or/
+> + * large or when the present bit is not set. Otherwise it returns NULL.
+>   */
+>  pte_t *lookup_address(unsigned long address, unsigned int *level)
+>  {
+> -- 
+>   Kiryl Shutsemau / Kirill A. Shutemov
+> 
+
