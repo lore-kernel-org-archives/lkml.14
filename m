@@ -1,113 +1,85 @@
-Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out30-119.freemail.mail.aliyun.com (out30-119.freemail.mail.aliyun.com [115.124.30.119])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D92223D97F
-	for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 09:28:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E68D23D995
+	for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 09:28:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.119
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708507693; cv=none; b=atzNs0lfP1vrGgS4VbLxHQLvH3oF+8pPFPwDVyxndQ/ggypif/ReV/T1N3uBiQzG3mZdl+dGi0+/KT6UT4wunSa0XGf6x4U3T8V8nncMTl0B+LFJTCoJpRa9aTLlWOzxyjKMShzGvKQFyKQP/6coxZF/BwNNtZ9nrore/efgGaU=
+	t=1708507694; cv=none; b=p8bXm41CZrGg8wSdxWBL4y5679y/Y3Lvd8bQUhhZSkrShntnOW7jg8dyqAe95mO84TqsbdXRVca860KVNa1lERxAXn8B4IgS8qxwe87GvjXOOBWInHWli8cS5IYXL1UiNILkhoMVaCiGtr6LSUXtFZFjLKTCIR87TBNfiPwFrfM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708507693; c=relaxed/simple;
-	bh=Dmbe5BP8c+8aPc1x3J6VMn8AMWKKdm1dWr1AhfYnkWA=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=IGbHC4nv97ojVDVbxRJzTgclL4iqOS4RZ9WLr12Y7TySM6KNETOC0m8pCCLDEvbeRuhyVzMSJGzfh/LZYQXUUR39p3I2a0S940sRBnugpqGEif03i7eCwIg+3kLTuNTEUR8vWNl8+cN2ejnSbPPjhbxiRtffTu0/nqbotmXpELo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--davidgow.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=hpU1mo4c; arc=none smtp.client-ip=209.85.219.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--davidgow.bounces.google.com
+	s=arc-20240116; t=1708507694; c=relaxed/simple;
+	bh=xGOSTdXDYUi+SjIBZYAGjzSV7++NmcYSboolnpaIb6U=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=NCnWG7Vh395Xx/iMER4M3MUMFz0/Jp7l+tF+uSbB+CM0B1RtgxwW6v5Wgl7eEYWKPbVpVnEinSeZ531DFg7Hi/UYlIcmQ9YsGBbnd+zXPN2YDFnB7X5TinfpvZMcPNkXcR4/ENf96TuIYFQgdVwXmzXz7vS1/XjL7L0gIRNxTkc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=iP6DBYRf; arc=none smtp.client-ip=115.124.30.119
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hpU1mo4c"
-Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-dc6b269686aso9891154276.1
-        for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 01:28:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1708507690; x=1709112490; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=NeQowu5ygMbqfsZc+b92OS1HjirLANcwpz/yagEqKMA=;
-        b=hpU1mo4c4VTOaQ/zVlQmv4i7QNv4xa1OmIftHY/i6aT9JV07sXoNBTk2w44z94zsIz
-         Ljhu+Zn3S0/XMosXhJs2mf6h7qi8QKM4NG4iCHeLwUds3lrrUTDD3ZnkgPffF1gheDyV
-         7sOjZ1fEm166dcVzljViZzv3N73d79lOwT64ZIXsoMWhQPeeZt0QeANi4WpYEAsbLk6s
-         DHm35Y91ZMS3uKeZ3dELhM9GT6JmM3d7QIcRfGGIHhz/jktGtdqlE3u7envfX1YL7g0H
-         LUplByodsH6N2WrPeNquOH57ZL4BXva3havvfWeeB1f4Hopkypmg384oEusnYKnPo1Bn
-         QrCA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708507690; x=1709112490;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=NeQowu5ygMbqfsZc+b92OS1HjirLANcwpz/yagEqKMA=;
-        b=GG7FgK1W50a4OVZLEKMJpUwdTbZ4t1pzIBML8UprTVhhfpYuLqvKKmye4Hd22L6vDf
-         g7UgsJjcMRBf3XquZFx3jlv5N4ytg1mBHqyK1WPALFECJEA+FOSh0TZo4+iO/Apw9SID
-         xQaExPozEn2inBNHACcKz53m+v2zFQCRQNcIsA63bDLWTCdfr/bKVuCcHA9fhazGIm2L
-         xjNa1I0kPNoC/GnLO8+Fw4qYsGyeWMWi/xKtzC8SacRVrDci/vKOl9nr9VBlpYi6dKw0
-         bb4Bc9pDcZDgiSB9OQA/DHqmYz3EhGPQ4Pj2M0jTC/MqRoAejBFMsyLXhgLxIcLAnQFx
-         LlZw==
-X-Forwarded-Encrypted: i=1; AJvYcCXnip+C76zJz6Mv6Ikmgl/4QBhM3dum0ErlUJ5E0criaARikegvUEx6Wkbrs0zJHgHsUzfNV3ZOGsjlG8ue/1YUcx/tttgFe/4g7LKd
-X-Gm-Message-State: AOJu0YyOChik0EnVYDrTyWKJXITNpa0hlkkw16wm5vs4M0aH/aWHmB02
-	wIoK7UM2Wp2Va44vsT1Kh3sMGGJW9z56FVZ09MYBJXp+h6CA9UZUghCtCaaYtKBNG//mM8ktbqB
-	LDOjJSfJ59A==
-X-Google-Smtp-Source: AGHT+IGKmHDvlseXRZ4Y+4ut8ocdYLBEplEGH+dd9qwAR6JMHTXNGTF3psUQFQki1OvQHuO3rgwKUwj3z7weqQ==
-X-Received: from slicestar.c.googlers.com ([fda3:e722:ac3:cc00:4f:4b78:c0a8:20a1])
- (user=davidgow job=sendgmr) by 2002:a05:6902:1001:b0:dcc:79ab:e522 with SMTP
- id w1-20020a056902100100b00dcc79abe522mr728743ybt.11.1708507689903; Wed, 21
- Feb 2024 01:28:09 -0800 (PST)
-Date: Wed, 21 Feb 2024 17:27:15 +0800
-In-Reply-To: <20240221092728.1281499-1-davidgow@google.com>
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="iP6DBYRf"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1708507684; h=From:To:Subject:Date:Message-Id:MIME-Version;
+	bh=R/jDsBhNjN3BwyEA1BOhHb8+crI49fZWr9saM6bffNI=;
+	b=iP6DBYRfHSg1l+PmxlHF3+SSdn3JZBG+7VApp8GGkLd1rj2W9PpGpZZrT2E9AhOzrKbPUq/4iDxtaW+h7qJeuOMGxqcu/6uAun7vUij+8QPnK4lRJydUkdgHzr3lOhndL7lJgWa0/WFU4evMlGtWLc4mm6H2V0we3MWovOTF8Og=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R101e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045170;MF=baolin.wang@linux.alibaba.com;NM=1;PH=DS;RN=10;SR=0;TI=SMTPD_---0W0zUu5Y_1708507682;
+Received: from localhost(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0W0zUu5Y_1708507682)
+          by smtp.aliyun-inc.com;
+          Wed, 21 Feb 2024 17:28:03 +0800
+From: Baolin Wang <baolin.wang@linux.alibaba.com>
+To: akpm@linux-foundation.org
+Cc: muchun.song@linux.dev,
+	osalvador@suse.de,
+	david@redhat.com,
+	linmiaohe@huawei.com,
+	naoya.horiguchi@nec.com,
+	mhocko@kernel.org,
+	baolin.wang@linux.alibaba.com,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org
+Subject: [RFC PATCH 0/3] make the hugetlb migration strategy consistent
+Date: Wed, 21 Feb 2024 17:27:52 +0800
+Message-Id: <cover.1708507022.git.baolin.wang@linux.alibaba.com>
+X-Mailer: git-send-email 2.39.3
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20240221092728.1281499-1-davidgow@google.com>
-X-Mailer: git-send-email 2.44.0.rc0.258.g7320e95886-goog
-Message-ID: <20240221092728.1281499-3-davidgow@google.com>
-Subject: [PATCH 2/9] lib/cmdline: Fix an invalid format specifier in an
- assertion msg
-From: David Gow <davidgow@google.com>
-To: Linus Torvalds <torvalds@linux-foundation.org>, Shuah Khan <skhan@linuxfoundation.org>, 
-	Guenter Roeck <linux@roeck-us.net>, Rae Moar <rmoar@google.com>, 
-	Matthew Auld <matthew.auld@intel.com>, 
-	Arunpravin Paneer Selvam <arunpravin.paneerselvam@amd.com>, 
-	"=?UTF-8?q?Christian=20K=C3=B6nig?=" <christian.koenig@amd.com>, Kees Cook <keescook@chromium.org>, 
-	"=?UTF-8?q?Ma=C3=ADra=20Canal?=" <mcanal@igalia.com>, Rodrigo Vivi <rodrigo.vivi@intel.com>, 
-	Matthew Brost <matthew.brost@intel.com>, Willem de Bruijn <willemb@google.com>, 
-	Florian Westphal <fw@strlen.de>, Cassio Neri <cassio.neri@gmail.com>, 
-	Javier Martinez Canillas <javierm@redhat.com>, Arthur Grillo <arthur.grillo@usp.br>
-Cc: David Gow <davidgow@google.com>, Brendan Higgins <brendan.higgins@linux.dev>, 
-	Daniel Latypov <dlatypov@google.com>, Stephen Boyd <sboyd@kernel.org>, David Airlie <airlied@gmail.com>, 
-	Maxime Ripard <mripard@kernel.org>, "David S . Miller" <davem@davemloft.net>, 
-	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
-	intel-xe@lists.freedesktop.org, linux-rtc@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com, 
-	linux-hardening@vger.kernel.org, netdev@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-The correct format specifier for p - n (both p and n are pointers) is
-%td, as the type should be ptrdiff_t.
+Hi,
 
-This was discovered by annotating KUnit assertion macros with gcc's
-printf specifier, but note that gcc incorrectly suggested a %d or %ld
-specifier (depending on the pointer size of the architecture being
-built).
+As discussed in previous thread [1], there is an inconsistency when handling
+hugetlb migration. When handling the migration of freed hugetlb, it prevents
+fallback to other NUMA nodes in alloc_and_dissolve_hugetlb_folio(). However,
+when dealing with in-use hugetlb, it allows fallback to other NUMA nodes in
+alloc_hugetlb_folio_nodemask(), which can break the per-node hugetlb pool
+and might result in unexpected failures when node bound workloads doesn't get
+what is asssumed available.
 
-Fixes: 0ea09083116d ("lib/cmdline: Allow get_options() to take 0 to validate the input")
-Signed-off-by: David Gow <davidgow@google.com>
----
- lib/cmdline_kunit.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+This patch set tries to make the hugetlb migration strategy more clear
+and consistent. Please find details in each patch.
 
-diff --git a/lib/cmdline_kunit.c b/lib/cmdline_kunit.c
-index d4572dbc9145..705b82736be0 100644
---- a/lib/cmdline_kunit.c
-+++ b/lib/cmdline_kunit.c
-@@ -124,7 +124,7 @@ static void cmdline_do_one_range_test(struct kunit *test, const char *in,
- 			    n, e[0], r[0]);
- 
- 	p = memchr_inv(&r[1], 0, sizeof(r) - sizeof(r[0]));
--	KUNIT_EXPECT_PTR_EQ_MSG(test, p, NULL, "in test %u at %u out of bound", n, p - r);
-+	KUNIT_EXPECT_PTR_EQ_MSG(test, p, NULL, "in test %u at %td out of bound", n, p - r);
- }
- 
- static void cmdline_test_range(struct kunit *test)
+[1] https://lore.kernel.org/all/6f26ce22d2fcd523418a085f2c588fe0776d46e7.1706794035.git.baolin.wang@linux.alibaba.com/
+
+Baolin Wang (3):
+  mm: record the migration reason for struct migration_target_control
+  mm: hugetlb: make the hugetlb migration strategy consistent
+  docs: hugetlbpage.rst: add hugetlb migration description
+
+ Documentation/admin-guide/mm/hugetlbpage.rst |  7 +++++
+ include/linux/hugetlb.h                      |  4 +--
+ mm/gup.c                                     |  1 +
+ mm/hugetlb.c                                 | 28 ++++++++++++++++++--
+ mm/internal.h                                |  1 +
+ mm/memory-failure.c                          |  1 +
+ mm/memory_hotplug.c                          |  1 +
+ mm/mempolicy.c                               |  3 ++-
+ mm/migrate.c                                 |  3 ++-
+ mm/page_alloc.c                              |  1 +
+ mm/vmscan.c                                  |  3 ++-
+ 11 files changed, 46 insertions(+), 7 deletions(-)
+
 -- 
-2.44.0.rc0.258.g7320e95886-goog
+2.39.3
 
