@@ -1,342 +1,228 @@
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E7E680607
-	for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 15:12:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A24D80058
+	for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 15:13:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708528335; cv=none; b=ZSmiucLc/fTLwC/HBucoL/fmF6Slq8BQqf0OgSUf37ivDKx/ATogKSOkjWRkp6mOq7jPMqHD8/NWByhRVPOvp7fPFHpi7s24LVkwB9/BWjDOq79n9GR45O6sktqCJw3h6OTruNt8xqi0hR7UTU41m1mp3PBfsqBlGTTxEDYkXXI=
+	t=1708528431; cv=none; b=Hl43ZmsbKrtgsxXySD+t2+uJ6gVFmptXpgvlNsX+9WPdNLJ3hHjvBGvD2Q3aOZ/RAv3+bo4lzHZl76r1GFwDYduY0ITC9WFR7s61BYIMP2RH26iMEwU6eJ0g+SaCoW9mLqaCBjRajsxSlFjkbdZm4ZfkiAr5iwJfyX0FoPFTB+U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708528335; c=relaxed/simple;
-	bh=X3WasE9KQ70MN0Vh4+bqPFmp29TXlEdA2D5rh4MfY18=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=CYGJs6oG+wQDBjQaoGKd+B4P8WOotGWBXDKvev+A+9igVrrzXAIFLrY+EAGhdP08Ycc9XyrpXV9fFIpbQwCDU2QAXbQfnuYxbR2Ce1lzpKclCSWqRIPFrL/7d/24vqr5uhhpLRdYsBpt62HduHXj0Xn1mQgH+Z6M3YjQiS1asAY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=tKaSVONl; arc=none smtp.client-ip=209.85.128.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1708528431; c=relaxed/simple;
+	bh=xZV8Brd8oeYSukjoVFEMo2YA68l0w4nZw9ZRHheRZFU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Dh+VoqU0df6O8BGl8XU7RZT2J2PhuaSm0wii4f84TcSwgrlhF9xCA4SkQTk+fB8MdtQgw8hyzBQrDzUC0LctAc2OM472+5INfzza3+rbl7GnxJFp1gredzTBec65PdOwzr8KrJlRWELLBnWDnRyZmmzZO79Eru6lmXHIAYMuDJ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=fcPxyOkL; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="tKaSVONl"
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-41273f53c71so6615755e9.1
-        for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 07:12:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1708528332; x=1709133132; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=h74FeFDIe1tQA6L7395dqtw/ncyV+KOTJre2S3F/uNM=;
-        b=tKaSVONlRDeqDMg/2j8gNpfxGRgVNQVENe7h+yFMpV9LvaVFxDj670ipTJzv9qqTR6
-         1k2EGFV9FDStfBCtpQLNqH4ixTdy+ZVynBcfjfiY3nQ9wgefcN8rl9HCyqmAMN+UxnkE
-         dCc4OaeVg8HxveMvxO8pXiuEbq+UbSy0mxIcutb1jPAUqTXlkA+jYo0WNdrIdKryMrrV
-         oiF3+eEWuDLJLo6XvFTAlRBnFg5jte/FDYsCJWOG5AeL9ABoy3zn/Zn9m0ROyzdpCvj2
-         +Imy6StO65B3UtN6JVWtiUPqPv8nLlRck3hOslnm4cXVLPr1jJxIFSg0kiDWa/749U0H
-         fPeA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708528332; x=1709133132;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=h74FeFDIe1tQA6L7395dqtw/ncyV+KOTJre2S3F/uNM=;
-        b=rtywm/wGSQhr19lb4P/6EMrOgV1a3NAFXGDfJhCPbIZvRV7nqBAJnl/9tawiAXmuN1
-         Dv9zikTuvIfr6SmLtB0/RM/5izzQoVqobAKwq8T5UjWB45d6KPJoYPFM5sRQ7VJI6f2O
-         /AH1wvMu/IdYrWzufMUGuF6O2k0g31fXq/P84ZgZcUtJoI8MswX3IRJBjJLAv59+RMRB
-         rtVUFFsatau5fhq+qKQcC4HSiqjMWYSu6nOzfrz4SVPACf6XVC3YPHbGUY3Ap19d5/1J
-         kGcFMv4biarHAHjPJh4wThA69rt2KQF8MdtrJ8+4DtYY/TzExWWekRX3XRyPOydoDil0
-         Z3hw==
-X-Forwarded-Encrypted: i=1; AJvYcCUFiepD4izGDf4gz09K2jgxSm52mikQ3E+tWhwIKbnnTpdJ+NnevN86Sb1CXME62bwQyKduwnsr7J6IzSu6U6bf8d9NkRZr6hLjcHtx
-X-Gm-Message-State: AOJu0YzPG2aM0mUfN9GxWwM4CrBugzFj79PRy4V4XKI6dpuEzLvWK5lN
-	EdFJ87jbf2jHqQdtYQcDXXEuN4NeJjMX7AAyOkE1zIm0geJwaJfMCcRnN1ZSt7I=
-X-Google-Smtp-Source: AGHT+IH0BIGfDcyECWrL+G0YcnBelN2VYVCfDRoTAKneFYafATVPl+LVdCn8hr7FrY+5box9ZQGFEg==
-X-Received: by 2002:a05:600c:4f83:b0:411:ddc2:28b2 with SMTP id n3-20020a05600c4f8300b00411ddc228b2mr17153344wmq.27.1708528332062;
-        Wed, 21 Feb 2024 07:12:12 -0800 (PST)
-Received: from toaster.lan ([2a01:e0a:3c5:5fb1:1b1a:d907:d735:9f9e])
-        by smtp.googlemail.com with ESMTPSA id bg22-20020a05600c3c9600b0040fc56712e8sm18725342wmb.17.2024.02.21.07.12.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 21 Feb 2024 07:12:11 -0800 (PST)
-From: Jerome Brunet <jbrunet@baylibre.com>
-To: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>
-Cc: Jerome Brunet <jbrunet@baylibre.com>,
-	Kevin Hilman <khilman@baylibre.com>,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-amlogic@lists.infradead.org,
-	linux-pwm@vger.kernel.org,
-	JunYi Zhao <junyi.zhao@amlogic.com>
-Subject: [PATCH v5 5/5] pwm: meson: add generic compatible for meson8 to sm1
-Date: Wed, 21 Feb 2024 16:11:51 +0100
-Message-ID: <20240221151154.26452-6-jbrunet@baylibre.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240221151154.26452-1-jbrunet@baylibre.com>
-References: <20240221151154.26452-1-jbrunet@baylibre.com>
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="fcPxyOkL"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1708528422;
+	bh=xZV8Brd8oeYSukjoVFEMo2YA68l0w4nZw9ZRHheRZFU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=fcPxyOkLoXNkmwKInGb3iHceJZ6HM/ekQsjErQ5nZ1HbTe2KjwUQuwQL+oS9R4EJg
+	 ipVEYZwzYEGFCaVnigywF/082BWTANWelJiqDtK0J+iQHaB/wdqNPOq+PteJ1xz3Vw
+	 uu2yGKhJi9CobfatYaSrr+G5dG4RjgmHmCCZEMSAI9oVPGC9nAAcrsbfYSxu3j6QCf
+	 8pkCxSclPV4+H9em072OTIXqYzW3oj733U4UxZG3UWVULlUShFRt2gWkf4zOFQEQa5
+	 8rQQ9yofJJeP4/NGY6B6LVOyCrmkJGzZuAVgX3Wu0qqKqsBVNK5KDcx010T5AXMl9J
+	 SX2juxfuVcMTQ==
+Received: from localhost (cola.collaboradmins.com [195.201.22.229])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: alarumbe)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 9C1BE3781FE6;
+	Wed, 21 Feb 2024 15:13:42 +0000 (UTC)
+Date: Wed, 21 Feb 2024 15:13:41 +0000
+From: =?utf-8?Q?Adri=C3=A1n?= Larumbe <adrian.larumbe@collabora.com>
+To: Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>
+Cc: Daniel Vetter <daniel@ffwll.ch>, Steven Price <steven.price@arm.com>, 
+	Lionel Landwerlin <lionel.g.landwerlin@linux.intel.com>, Boris Brezillon <boris.brezillon@collabora.com>, 
+	Rob Herring <robh@kernel.org>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+	David Airlie <airlied@gmail.com>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, 
+	Umesh Nerlige Ramappa <umesh.nerlige.ramappa@intel.com>
+Subject: Re: [PATCH 0/1] Always record job cycle and timestamp information
+Message-ID: <63vgotmjzngc2u7f6egxxgol6wtepjev5ct43sozkrove7w4co@4tkgqawcscxb>
+References: <20240214121435.3813983-1-adrian.larumbe@collabora.com>
+ <ba987da3-b4aa-410c-95ae-434e94793d85@arm.com>
+ <CAKMK7uH=QKSyMgsOYCHMwE7iv6jQZRwUMcKq=HiXsBXBCv5BCQ@mail.gmail.com>
+ <cfe1870f-16ff-45b4-8966-6bb536d3cae7@linux.intel.com>
+ <jvohxwzrgwqmzhwws3tzn53ii6eyexkutwl7pdj5buk6k6wx7c@ucxoohk5e3iw>
+ <0c001651-0339-4872-bf4f-d1a3e4f2aa43@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Patchwork-Bot: notify
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <0c001651-0339-4872-bf4f-d1a3e4f2aa43@linux.intel.com>
 
-Introduce a new compatible support in the Amlogic PWM driver.
+> On 21.02.2024 14:34, Tvrtko Ursulin wrote:
+> 
+> On 21/02/2024 09:40, Adrián Larumbe wrote:
+> > Hi,
+> > 
+> > I just wanted to make sure we're on the same page on this matter. So in
+> > Panfrost, and I guess in almost every other single driver out there, HW perf
+> > counters and their uapi interface are orthogonal to fdinfo's reporting on drm
+> > engine utilisation.
+> > 
+> > At the moment it seems like HW perfcounters and the way they're exposed to UM
+> > are very idiosincratic and any attempt to unify their interface into a common
+> > set of ioctl's sounds like a gargantuan task I wouldn't like to be faced with.
+> 
+> I share the same feeling on this sub-topic.
+> 
+> > As for fdinfo, I guess there's more room for coming up with common helpers that
+> > could handle the toggling of HW support for drm engine calculations, but I'd at
+> > least have to see how things are being done in let's say, Freedreno or Intel.
+> 
+> For Intel we don't need this ability, well at least for pre-GuC platforms.
+> Stat collection is super cheap and permanently enabled there.
+> 
+> But let me copy Umesh because something at the back of my mind is telling me
+> that perhaps there was something expensive about collecting these stats with
+> the GuC backend? If so maybe a toggle would be beneficial there.
+> 
+> > Right now there's a pressing need to get rid of the debugfs knob for fdinfo's
+> > drm engine profiling sources in Panfrost, after which I could perhaps draw up an
+> > RFC for how to generalise this onto other drivers.
+> 
+> There is a knob currently meaning fdinfo does not work by default? If that is
+> so, I would have at least expected someone had submitted a patch for gputop to
+> handle this toggle. It being kind of a common reference implementation I don't
+> think it is great if it does not work out of the box.
 
-The PWM HW is actually the same for all SoCs supported so far. A specific
-compatible is needed only because the clock sources of the PWMs are
-hard-coded in the driver.
+It does sound like I forgot to document this knob at the time I submited fdinfo
+support for Panforst.  I'll make a point of mentioning it in a new patch where I
+drop debugfs support and enable toggling from sysfs instead.
 
-It is better to have the clock source described in DT but this changes the
-bindings so a new compatible must be introduced.
+> The toggle as an idea sounds a bit annoying, but if there is no other
+> realistic way maybe it is not too bad. As long as it is documented in the
+> drm-usage-stats.rst, doesn't live in debugfs, and has some common plumbing
+> implemented both on the kernel side and for the aforementioned gputop /
+> igt_drm_fdinfo / igt_drm_clients. Where and how exactly TBD.
 
-When all supported platform have migrated to the new compatible, support
-for the legacy ones may be removed from the driver.
+As soon as the new patch is merged, I'll go and reflect the driver uAPI changes
+in all three of these.
 
-The addition of this new compatible makes the old ones obsolete, as
-described in the DT documentation.
+> Regards,
+> 
+> Tvrtko
+> 
 
-Adding a callback to setup the clock will also make it easier to add
-support for the new PWM HW found in a1, s4, c3 and t7 SoC families.
+Cheers,
+Adrian
 
-Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
----
- drivers/pwm/pwm-meson.c | 195 +++++++++++++++++++++++++---------------
- 1 file changed, 121 insertions(+), 74 deletions(-)
-
-diff --git a/drivers/pwm/pwm-meson.c b/drivers/pwm/pwm-meson.c
-index fe61335d87d0..90fc7b349723 100644
---- a/drivers/pwm/pwm-meson.c
-+++ b/drivers/pwm/pwm-meson.c
-@@ -101,6 +101,7 @@ struct meson_pwm_channel {
- 
- struct meson_pwm_data {
- 	const char *const parent_names[MESON_NUM_MUX_PARENTS];
-+	int (*channels_init)(struct pwm_chip *chip);
- };
- 
- struct meson_pwm {
-@@ -341,86 +342,16 @@ static const struct pwm_ops meson_pwm_ops = {
- 	.get_state = meson_pwm_get_state,
- };
- 
--static const struct meson_pwm_data pwm_meson8b_data = {
--	.parent_names = { "xtal", NULL, "fclk_div4", "fclk_div3" },
--};
--
--/*
-- * Only the 2 first inputs of the GXBB AO PWMs are valid
-- * The last 2 are grounded
-- */
--static const struct meson_pwm_data pwm_gxbb_ao_data = {
--	.parent_names = { "xtal", "clk81", NULL, NULL },
--};
--
--static const struct meson_pwm_data pwm_axg_ee_data = {
--	.parent_names = { "xtal", "fclk_div5", "fclk_div4", "fclk_div3" },
--};
--
--static const struct meson_pwm_data pwm_axg_ao_data = {
--	.parent_names = { "xtal", "axg_ao_clk81", "fclk_div4", "fclk_div5" },
--};
--
--static const struct meson_pwm_data pwm_g12a_ao_ab_data = {
--	.parent_names = { "xtal", "g12a_ao_clk81", "fclk_div4", "fclk_div5" },
--};
--
--static const struct meson_pwm_data pwm_g12a_ao_cd_data = {
--	.parent_names = { "xtal", "g12a_ao_clk81", NULL, NULL },
--};
--
--static const struct of_device_id meson_pwm_matches[] = {
--	{
--		.compatible = "amlogic,meson8b-pwm",
--		.data = &pwm_meson8b_data
--	},
--	{
--		.compatible = "amlogic,meson-gxbb-pwm",
--		.data = &pwm_meson8b_data
--	},
--	{
--		.compatible = "amlogic,meson-gxbb-ao-pwm",
--		.data = &pwm_gxbb_ao_data
--	},
--	{
--		.compatible = "amlogic,meson-axg-ee-pwm",
--		.data = &pwm_axg_ee_data
--	},
--	{
--		.compatible = "amlogic,meson-axg-ao-pwm",
--		.data = &pwm_axg_ao_data
--	},
--	{
--		.compatible = "amlogic,meson-g12a-ee-pwm",
--		.data = &pwm_meson8b_data
--	},
--	{
--		.compatible = "amlogic,meson-g12a-ao-pwm-ab",
--		.data = &pwm_g12a_ao_ab_data
--	},
--	{
--		.compatible = "amlogic,meson-g12a-ao-pwm-cd",
--		.data = &pwm_g12a_ao_cd_data
--	},
--	{},
--};
--MODULE_DEVICE_TABLE(of, meson_pwm_matches);
--
--static int meson_pwm_init_channels(struct pwm_chip *chip)
-+static int meson_pwm_init_clocks_meson8b(struct pwm_chip *chip,
-+					 struct clk_parent_data *mux_parent_data)
- {
- 	struct meson_pwm *meson = to_meson_pwm(chip);
--	struct clk_parent_data mux_parent_data[MESON_NUM_MUX_PARENTS] = {};
- 	struct device *dev = pwmchip_parent(chip);
- 	unsigned int i;
- 	char name[255];
- 	int err;
- 
--	for (i = 0; i < MESON_NUM_MUX_PARENTS; i++) {
--		mux_parent_data[i].index = -1;
--		mux_parent_data[i].name = meson->data->parent_names[i];
--	}
--
--	for (i = 0; i < chip->npwm; i++) {
-+	for (i = 0; i < MESON_NUM_PWMS; i++) {
- 		struct meson_pwm_channel *channel = &meson->channels[i];
- 		struct clk_parent_data pdata = {};
- 		struct meson8b_pwm_clocks *clks;
-@@ -502,6 +433,122 @@ static int meson_pwm_init_channels(struct pwm_chip *chip)
- 	return 0;
- }
- 
-+static int meson_pwm_init_channels_meson8b_legacy(struct pwm_chip *chip)
-+{
-+	struct clk_parent_data mux_parent_data[MESON_NUM_MUX_PARENTS] = {};
-+	struct meson_pwm *meson = to_meson_pwm(chip);
-+	int i;
-+
-+	dev_warn_once(pwmchip_parent(chip),
-+		      "using obsolete compatible, please consider updating dt\n");
-+
-+	for (i = 0; i < MESON_NUM_MUX_PARENTS; i++) {
-+		mux_parent_data[i].index = -1;
-+		mux_parent_data[i].name = meson->data->parent_names[i];
-+	}
-+
-+	return meson_pwm_init_clocks_meson8b(chip, mux_parent_data);
-+}
-+
-+static int meson_pwm_init_channels_meson8b_v2(struct pwm_chip *chip)
-+{
-+	struct clk_parent_data mux_parent_data[MESON_NUM_MUX_PARENTS] = {};
-+	int i;
-+
-+	/*
-+	 * NOTE: Instead of relying on the hard coded names in the driver
-+	 * as the legacy version, this relies on DT to provide the list of
-+	 * clocks.
-+	 * For once, using input numbers actually makes more sense than names.
-+	 * Also DT requires clock-names to be explicitly ordered, so there is
-+	 * no point bothering with clock names in this case.
-+	 */
-+	for (i = 0; i < MESON_NUM_MUX_PARENTS; i++)
-+		mux_parent_data[i].index = i;
-+
-+	return meson_pwm_init_clocks_meson8b(chip, mux_parent_data);
-+}
-+
-+static const struct meson_pwm_data pwm_meson8b_data = {
-+	.parent_names = { "xtal", NULL, "fclk_div4", "fclk_div3" },
-+	.channels_init = meson_pwm_init_channels_meson8b_legacy,
-+};
-+
-+/*
-+ * Only the 2 first inputs of the GXBB AO PWMs are valid
-+ * The last 2 are grounded
-+ */
-+static const struct meson_pwm_data pwm_gxbb_ao_data = {
-+	.parent_names = { "xtal", "clk81", NULL, NULL },
-+	.channels_init = meson_pwm_init_channels_meson8b_legacy,
-+};
-+
-+static const struct meson_pwm_data pwm_axg_ee_data = {
-+	.parent_names = { "xtal", "fclk_div5", "fclk_div4", "fclk_div3" },
-+	.channels_init = meson_pwm_init_channels_meson8b_legacy,
-+};
-+
-+static const struct meson_pwm_data pwm_axg_ao_data = {
-+	.parent_names = { "xtal", "axg_ao_clk81", "fclk_div4", "fclk_div5" },
-+	.channels_init = meson_pwm_init_channels_meson8b_legacy,
-+};
-+
-+static const struct meson_pwm_data pwm_g12a_ao_ab_data = {
-+	.parent_names = { "xtal", "g12a_ao_clk81", "fclk_div4", "fclk_div5" },
-+	.channels_init = meson_pwm_init_channels_meson8b_legacy,
-+};
-+
-+static const struct meson_pwm_data pwm_g12a_ao_cd_data = {
-+	.parent_names = { "xtal", "g12a_ao_clk81", NULL, NULL },
-+	.channels_init = meson_pwm_init_channels_meson8b_legacy,
-+};
-+
-+static const struct meson_pwm_data pwm_meson8_v2_data = {
-+	.channels_init = meson_pwm_init_channels_meson8b_v2,
-+};
-+
-+static const struct of_device_id meson_pwm_matches[] = {
-+	{
-+		.compatible = "amlogic,meson8-pwm-v2",
-+		.data = &pwm_meson8_v2_data
-+	},
-+	/* The following compatibles are obsolete */
-+	{
-+		.compatible = "amlogic,meson8b-pwm",
-+		.data = &pwm_meson8b_data
-+	},
-+	{
-+		.compatible = "amlogic,meson-gxbb-pwm",
-+		.data = &pwm_meson8b_data
-+	},
-+	{
-+		.compatible = "amlogic,meson-gxbb-ao-pwm",
-+		.data = &pwm_gxbb_ao_data
-+	},
-+	{
-+		.compatible = "amlogic,meson-axg-ee-pwm",
-+		.data = &pwm_axg_ee_data
-+	},
-+	{
-+		.compatible = "amlogic,meson-axg-ao-pwm",
-+		.data = &pwm_axg_ao_data
-+	},
-+	{
-+		.compatible = "amlogic,meson-g12a-ee-pwm",
-+		.data = &pwm_meson8b_data
-+	},
-+	{
-+		.compatible = "amlogic,meson-g12a-ao-pwm-ab",
-+		.data = &pwm_g12a_ao_ab_data
-+	},
-+	{
-+		.compatible = "amlogic,meson-g12a-ao-pwm-cd",
-+		.data = &pwm_g12a_ao_cd_data
-+	},
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, meson_pwm_matches);
-+
- static int meson_pwm_probe(struct platform_device *pdev)
- {
- 	struct pwm_chip *chip;
-@@ -522,7 +569,7 @@ static int meson_pwm_probe(struct platform_device *pdev)
- 
- 	meson->data = of_device_get_match_data(&pdev->dev);
- 
--	err = meson_pwm_init_channels(chip);
-+	err = meson->data->channels_init(chip);
- 	if (err < 0)
- 		return err;
- 
--- 
-2.43.0
+> > On 16.02.2024 17:43, Tvrtko Ursulin wrote:
+> > > 
+> > > On 16/02/2024 16:57, Daniel Vetter wrote:
+> > > > On Wed, Feb 14, 2024 at 01:52:05PM +0000, Steven Price wrote:
+> > > > > Hi Adrián,
+> > > > > 
+> > > > > On 14/02/2024 12:14, Adrián Larumbe wrote:
+> > > > > > A driver user expressed interest in being able to access engine usage stats
+> > > > > > through fdinfo when debugfs is not built into their kernel. In the current
+> > > > > > implementation, this wasn't possible, because it was assumed even for
+> > > > > > inflight jobs enabling the cycle counter and timestamp registers would
+> > > > > > incur in additional power consumption, so both were kept disabled until
+> > > > > > toggled through debugfs.
+> > > > > > 
+> > > > > > A second read of the TRM made me think otherwise, but this is something
+> > > > > > that would be best clarified by someone from ARM's side.
+> > > > > 
+> > > > > I'm afraid I can't give a definitive answer. This will probably vary
+> > > > > depending on implementation. The command register enables/disables
+> > > > > "propagation" of the cycle/timestamp values. This propagation will cost
+> > > > > some power (gates are getting toggled) but whether that power is
+> > > > > completely in the noise of the GPU as a whole I can't say.
+> > > > > 
+> > > > > The out-of-tree kbase driver only enables the counters for jobs
+> > > > > explicitly marked (BASE_JD_REQ_PERMON) or due to an explicit connection
+> > > > > from a profiler.
+> > > > > 
+> > > > > I'd be happier moving the debugfs file to sysfs rather than assuming
+> > > > > that the power consumption is small enough for all platforms.
+> > > > > 
+> > > > > Ideally we'd have some sort of kernel interface for a profiler to inform
+> > > > > the kernel what it is interested in, but I can't immediately see how to
+> > > > > make that useful across different drivers. kbase's profiling support is
+> > > > > great with our profiling tools, but there's a very strong connection
+> > > > > between the two.
+> > > > 
+> > > > Yeah I'm not sure whether a magic (worse probably per-driver massively
+> > > > different) file in sysfs is needed to enable gpu perf monitoring stats in
+> > > > fdinfo.
+> > > > 
+> > > > I get that we do have a bit a gap because the linux perf pmu stuff is
+> > > > global, and you want per-process, and there's kinda no per-process support
+> > > > for perf stats for devices. But that's probably the direction we want to
+> > > > go, not so much fdinfo. At least for hardware performance counters and
+> > > > things like that.
+> > > > 
+> > > > Iirc the i915 pmu support had some integration for per-process support,
+> > > > you might want to chat with Tvrtko for kernel side and Lionel for more
+> > > > userspace side. At least if I'm not making a complete mess and my memory
+> > > > is vaguely related to reality. Adding them both.
+> > > 
+> > > Yeah there are two separate things, i915 PMU and i915 Perf/OA.
+> > > 
+> > > If my memory serves me right I indeed did have a per-process support for i915
+> > > PMU implemented as an RFC (or at least a branch somewhere) some years back.
+> > > IIRC it only exposed the per engine GPU utilisation and did not find it very
+> > > useful versus the complexity. (I think it at least required maintaining a map
+> > > of drm clients per task.)
+> > > 
+> > > Our more useful profiling is using a custom Perf/OA interface (Observation
+> > > Architecture) which is possibly similar to kbase mentioned above. Why it is a
+> > > custom interface is explained in a large comment on top of i915_perf.c. Not
+> > > sure if all of them still hold but on the overall perf does not sound like the
+> > > right fit for detailed GPU profiling.
+> > > 
+> > > Also PMU drivers are very challenging to get the implementation right, since
+> > > locking model and atomicity requirements are quite demanding.
+> > > 
+> > >  From my point of view, at least it is my initial thinking, if custom per
+> > > driver solutions are strongly not desired, it could be interesting to look
+> > > into whether there is enough commonality, in at least concepts, to see if a
+> > > new DRM level common but extensible API would be doable. Even then it may be
+> > > tricky to "extract" enough common code to justify it.
+> > > 
+> > > Regards,
+> > > 
+> > > Tvrtko
+> > > 
+> > > > 
+> > > > Cheers, Sima
+> > > > 
+> > > > 
+> > > > > 
+> > > > > Steve
+> > > > > 
+> > > > > > Adrián Larumbe (1):
+> > > > > >     drm/panfrost: Always record job cycle and timestamp information
+> > > > > > 
+> > > > > >    drivers/gpu/drm/panfrost/Makefile           |  2 --
+> > > > > >    drivers/gpu/drm/panfrost/panfrost_debugfs.c | 21 ------------------
+> > > > > >    drivers/gpu/drm/panfrost/panfrost_debugfs.h | 14 ------------
+> > > > > >    drivers/gpu/drm/panfrost/panfrost_device.h  |  1 -
+> > > > > >    drivers/gpu/drm/panfrost/panfrost_drv.c     |  5 -----
+> > > > > >    drivers/gpu/drm/panfrost/panfrost_job.c     | 24 ++++++++-------------
+> > > > > >    drivers/gpu/drm/panfrost/panfrost_job.h     |  1 -
+> > > > > >    7 files changed, 9 insertions(+), 59 deletions(-)
+> > > > > >    delete mode 100644 drivers/gpu/drm/panfrost/panfrost_debugfs.c
+> > > > > >    delete mode 100644 drivers/gpu/drm/panfrost/panfrost_debugfs.h
+> > > > > > 
+> > > > > > 
+> > > > > > base-commit: 6b1f93ea345947c94bf3a7a6e668a2acfd310918
+> > > > > 
+> > > > 
+> > > > --
+> > > > Daniel Vetter
+> > > > Software Engineer, Intel Corporation
+> > > > http://blog.ffwll.ch
 
