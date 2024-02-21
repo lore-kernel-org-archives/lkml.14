@@ -1,155 +1,197 @@
-Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
+Received: from mail-ot1-f49.google.com (mail-ot1-f49.google.com [209.85.210.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47A554A1D
-	for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 06:27:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41C224A1D
+	for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 06:33:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708496825; cv=none; b=eQS+PQCrkLdy2Cl8V0YHC/ZiFme2SDZSLn0vmALz4OSnxmE45DGfPENL5o14pZ+A7ifnhqT+YN1I54CGLcVRM/npoTf882DsHxNvEvaj4i0tiU/0zZWzFTAZVNiC9XordAvfw5UhB9JoqGH3IIZwQfSgqQ0Njqn9FaWYisSEAWw=
+	t=1708497223; cv=none; b=Svl25o6hUjAvzrN5iGUZVV/oZHs1cGbI1L3dbo3cHDx80Mg+yu5uBAo6HmRfqNszekCInP5Sdf71hYU4fOcWRA5P6b3cef3KBRd8/IvFv8orfEH5f0jxOfJcNyCXl4hwskmsxLaWSJs0pzdAvLoQgkmWdsZIM/JyB+5JmGHwBgU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708496825; c=relaxed/simple;
-	bh=/V5T+YQftfD2tRWQGhzHzmXn6qVrJBWkMhBmJM5xGrw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=fnLXwx7h3m0/dVxxxRV/kzbRanO4XAwUunRlkUIIvN+UahtzCvpb8DdyaiHdrx+n50wQrbwcRyM8aTl3zmpmsIx2Xn2yT1l2FP7RLifsgC3cwg07ylCm7fzNWxnwdMC+VqPdI4G5iW+L6NktnWCJq/a+KZenYAt+ePWbFgwVgtM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=X+0XEG20; arc=none smtp.client-ip=209.85.208.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1708497223; c=relaxed/simple;
+	bh=9U1qnNv3hOvzoqGjHv7re9Rl7YDROl8tLzYgiXvD8C8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lgnUcHoXRz1qM2Sy8fFtq/ZsCUi9AOm8QAQWpkIwlZHrmjhMt2GQIZYi5rSvyIHLCx4YMj+CgqtoI/rbMSSVpugiho6IkdgFD4DrF42EZU8pBaXT0MzRfjUUy3sMEniCayxkZVwY25XhYPqxffO6wBszqBYYOsHrvpxfl2cpUkc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=dnxuGOqj; arc=none smtp.client-ip=209.85.210.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="X+0XEG20"
-Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-2d1094b5568so82783051fa.1
-        for <linux-kernel@vger.kernel.org>; Tue, 20 Feb 2024 22:27:02 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="dnxuGOqj"
+Received: by mail-ot1-f49.google.com with SMTP id 46e09a7af769-6e461a9e40eso603966a34.2
+        for <linux-kernel@vger.kernel.org>; Tue, 20 Feb 2024 22:33:40 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1708496821; x=1709101621; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=O4SCakJf3fMGKD4Pc9DX3Fmx60D6/XewjZTTvU4lsUQ=;
-        b=X+0XEG20oH3gTiWdjKMlBQDZMej0xMp6ft+S9UPrdyFHlRb92QjNaK2SWPfQcJwZs0
-         ShaS0fCSywiH6R0YdhUiqAdUEc/cGqTCZtdjtDFMgNtLA2Ju/xeZdan+/XdjHdd4eghr
-         AZXN5paPr/VDy4emRkEO9Ey1ByIIMWrrJqsKcn2x67feGW/1HHB8BfpaNbiXdr3/M63T
-         jLWnBg50AOOkFnZ+uloZl77fh3wByQ9tlKPYgj9+CrJXTTLs1ZQAu19tciLO61gW7X1O
-         HKqVHlTzbGjoLmo0VvU4y5U/MCu6ccQj5HLOBCA/7pOIp70z3YFAYK/7fUds/6gaDLF9
-         WnBA==
+        d=chromium.org; s=google; t=1708497220; x=1709102020; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=nzG1h3rFdE35vHs4nCO34Dzxpa3CLJjuLbNEkFJHymk=;
+        b=dnxuGOqjQYE1lvChAb1rUVy8+8bd0kZhJXAef+kOuUKVHoC4IyZ5hfd/qZMjiTAfBx
+         Bjvw8nzmeVSi0XwZPS+VKmR/4CVOdIt75fwcaciPxVIAfZye+e6mEGh+jTuO7c0PBQPQ
+         yG+NxBxgHMo4vbbyXpP8gK/QtXWUWA/VvOw+8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708496821; x=1709101621;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=O4SCakJf3fMGKD4Pc9DX3Fmx60D6/XewjZTTvU4lsUQ=;
-        b=Mcn+D6EMxG+807MEQR8PJeLm0elKIojphKDs4TOEI3IW4r4qlOdp6DsvHUNZ2wUkDZ
-         z7wj01anEyE0L3lO1sqhYAM3HJsalUIMtMqiKAIf9yPhE3H1oor/YKbNbehjSmIAYDIz
-         uwTB866GOwk2iKpmzPj1AtHV/SKTYkXBSgvFyL9OVB2mvVdLI1P+g6dNA0f8b/HJOgqc
-         cHIyIsFqsprOLQmWLE2dbrSvTDEu+qdyOHGjotKbCtf9CkOf8NWuY1k6szctpGvIxnVn
-         np3M5ElFlwljFltr8FbR2NMQM5/brV4Mj2W34URea9r/8vrIDRcnyGpUEL4RnBxzWJaC
-         sztQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUcbvrRjhGHY/mEiQUihaS/QlArj1zTF78rHeic4dzp5xV2gWsXAETejlaMDNvmUdBukfyG2tcJYqTp3/naOvvy5kw5lJ4HGv58RKp1
-X-Gm-Message-State: AOJu0YwzZI5FNyxo86syOciAPyz+OqSnDeAN2/1hf17f5vTQK+h1GqWG
-	HW0KtyduiIuXHFCuheN0KcuxpXBOQyKxnfcwH37XCGS3sbGZg0c0xLRThHMnFTBE6Tf0qQKcNpw
-	j3KJKdbFJuCJDjwHTKfkGzYvVQ08DJwZHMC3jKQ==
-X-Google-Smtp-Source: AGHT+IGAk9uU00zF5FiQ3NZBmkalTm/vo9IQ4bsTZa6Kjs7HQJX88+nLTvnpaddJgnUhtZkssQt6m05of8wqFGM+sVc=
-X-Received: by 2002:a2e:988a:0:b0:2d2:31f1:1a2e with SMTP id
- b10-20020a2e988a000000b002d231f11a2emr5776674ljj.12.1708496821260; Tue, 20
- Feb 2024 22:27:01 -0800 (PST)
+        d=1e100.net; s=20230601; t=1708497220; x=1709102020;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=nzG1h3rFdE35vHs4nCO34Dzxpa3CLJjuLbNEkFJHymk=;
+        b=cKt1Bmc88qc4h4I0SemCN2Kb/i2nS9N8sQkX9SQ2jAu0k1eW22dph5ReEYNx/yM1gJ
+         qlIC3QY0oLKzaVzMLHDytjpecsP75l2JUpa2CaCmyDWeGfsxX5bOy6AENK137Tp1BfUY
+         6KJfscDF/hwhx4+gMQ65tNi4RK4p3LEdUjvT0F83xOuat09fV7lyooSTiD/SFvfFayDA
+         /KwrjqI0ht1MT4qHRn3Q9SUkepXf63Li6dw3xgPtrkX46gZy0wkCclpugy1iZp9VV9ok
+         dT+OJ5OcMKxQLQV8hyeUG0ZB523L02E86n3erDP4OidayF19gsx6bxMcjlNzMOzXDQPU
+         +hiw==
+X-Forwarded-Encrypted: i=1; AJvYcCXmjpjfFvTXaPKuFRVCf1fkZtZbLdt8ZqecwE8BGglUS61uY5vEqqg9JsxW71ko46EO683sRresWXnEiNBp2Xz1MKGry8lfhLENv4vx
+X-Gm-Message-State: AOJu0YxN1Jcy7Pqd55dQ3Gg6Ij9qrMTmJvTTNiFo8lLdqDWfID+hbHKn
+	ztZucCyVggvjUKJRRVO7ENV+J40Fptsfocop9bUPizYX49jEeTf5KxfFtb0tfw==
+X-Google-Smtp-Source: AGHT+IHS0EkkrYoLQUwOe/rW4LoTJCwu0I6ZorfS97z10oAfJ3Ro71jhHZu8xNKWwV345YFzvVeUNg==
+X-Received: by 2002:a05:6871:3a2a:b0:21e:d654:5c3f with SMTP id pu42-20020a0568713a2a00b0021ed6545c3fmr8228175oac.37.1708497220277;
+        Tue, 20 Feb 2024 22:33:40 -0800 (PST)
+Received: from www.outflux.net ([198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id n14-20020a635c4e000000b005dc2ca5b667sm6682307pgm.10.2024.02.20.22.33.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 20 Feb 2024 22:33:39 -0800 (PST)
+Date: Tue, 20 Feb 2024 22:33:39 -0800
+From: Kees Cook <keescook@chromium.org>
+To: Jeremy Linton <jeremy.linton@arm.com>,
+	"Jason A. Donenfeld" <Jason@zx2c4.com>
+Cc: linux-arm-kernel@lists.infradead.org, catalin.marinas@arm.com,
+	will@kernel.org, gustavoars@kernel.org, mark.rutland@arm.com,
+	rostedt@goodmis.org, arnd@arndb.de, broonie@kernel.org,
+	guohui@uniontech.com, Manoj.Iyer@arm.com,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+	James Yang <james.yang@arm.com>,
+	Shiyou Huang <shiyou.huang@arm.com>
+Subject: Re: [RFC] arm64: syscall: Direct PRNG kstack randomization
+Message-ID: <202402202226.A6817927@keescook>
+References: <20240221020258.1210148-1-jeremy.linton@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231027000525.1278806-1-tina.zhang@intel.com>
- <20231027000525.1278806-6-tina.zhang@intel.com> <CABQgh9GWcqUeBkHQCpj5tzu6FnEgpOp3KOQ6s9c0X0KU7Ov1qw@mail.gmail.com>
- <MW5PR11MB5881C5CC15452017867B412889502@MW5PR11MB5881.namprd11.prod.outlook.com>
- <CABQgh9GxQmGU2HR73bSoZLuf4XZFhThXwUs_HJx6KwxDmXrXgg@mail.gmail.com>
- <b05958ba-0c47-45ba-8159-372779f9cc8b@linux.intel.com> <CABQgh9FFpL=mEZ-7PqRRVg1eniYV176B7USbGP5MLPvhJaGo9A@mail.gmail.com>
- <55a4b5e5-e0ad-4aa4-a29b-5fff4ef69063@linux.intel.com>
-In-Reply-To: <55a4b5e5-e0ad-4aa4-a29b-5fff4ef69063@linux.intel.com>
-From: Zhangfei Gao <zhangfei.gao@linaro.org>
-Date: Wed, 21 Feb 2024 14:26:49 +0800
-Message-ID: <CABQgh9FD2fup3awxNyu3LpQcB6f-HF5eb1B4fhVHxLJ0O76oVQ@mail.gmail.com>
-Subject: Re: [PATCH v10 5/6] iommu: Support mm PASID 1:n with sva domains
-To: Baolu Lu <baolu.lu@linux.intel.com>
-Cc: "Zhang, Tina" <tina.zhang@intel.com>, "iommu@lists.linux.dev" <iommu@lists.linux.dev>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, David Woodhouse <dwmw2@infradead.org>, 
-	Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>, 
-	Jason Gunthorpe <jgg@ziepe.ca>, "Tian, Kevin" <kevin.tian@intel.com>, Nicolin Chen <nicolinc@nvidia.com>, 
-	Michael Shavit <mshavit@google.com>, Vasant Hegde <vasant.hegde@amd.com>, 
-	Jason Gunthorpe <jgg@nvidia.com>, Jean-Philippe Brucker <jean-philippe@linaro.org>, 
-	Hao Fang <fanghao11@huawei.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240221020258.1210148-1-jeremy.linton@arm.com>
 
-On Wed, 21 Feb 2024 at 11:52, Baolu Lu <baolu.lu@linux.intel.com> wrote:
->
-> On 2024/2/21 10:45, Zhangfei Gao wrote:
-> > On Wed, 21 Feb 2024 at 10:06, Baolu Lu<baolu.lu@linux.intel.com>
-> > wrote:
-> >> On 2024/2/21 9:28, Zhangfei Gao wrote:
-> >>> On Wed, 21 Feb 2024 at 07:58, Zhang, Tina<tina.zhang@intel.com>
-> >>> wrote:
-> >>>
-> >>>>>> struct iommu_sva *iommu_sva_bind_device(struct device
-> >>>>>> *dev, struct mm_struct *mm)  { +       struct
-> >>>>>> iommu_mm_data *iommu_mm; struct iommu_domain *domain;
-> >>>>>> struct iommu_sva *handle; int ret;
-> >>>>>>
-> >>>>>> +       mutex_lock(&iommu_sva_lock); + /* Allocate
-> >>>>>> mm->pasid if necessary. */ -       ret =
-> >>>>>> iommu_sva_alloc_pasid(mm, dev); -       if (ret) - return
-> >>>>>> ERR_PTR(ret); +       iommu_mm = iommu_alloc_mm_data(mm,
-> >>>>>> dev); +       if (IS_ERR(iommu_mm)) { +               ret =
-> >>>>>> PTR_ERR(iommu_mm); + goto out_unlock; +       }
-> >>>>>>
-> >>>>>> handle = kzalloc(sizeof(*handle), GFP_KERNEL); -       if
-> >>>>>> (!handle) -               return ERR_PTR(-ENOMEM); - -
-> >>>>>> mutex_lock(&iommu_sva_lock); -       /* Search for an
-> >>>>>> existing domain. */ -       domain =
-> >>>>>> iommu_get_domain_for_dev_pasid(dev, mm->pasid, -
-> >>>>>> IOMMU_DOMAIN_SVA); -       if (IS_ERR(domain)) { - ret =
-> >>>>>> PTR_ERR(domain); +       if (!handle) { + ret = -ENOMEM;
-> >>>>>> goto out_unlock; }
-> >>>>>>
-> >>>>>> -       if (domain) { -               domain->users++; -
-> >>>>>> goto out;
-> >>>>> Our multi bind test case broke since 6.8-rc1. The test case
-> >>>>> can use same domain & pasid, return different handle, 6.7
-> >>>>> simply  domain->users ++ and return.
-> >>>>>
-> >>>>>> +       /* Search for an existing domain. */ +
-> >>>>>> list_for_each_entry(domain, &mm->iommu_mm->sva_domains,
-> >>>>>> next)
-> >>>>> {
-> >>>>>> +               ret = iommu_attach_device_pasid(domain,
-> >>>>>> dev, + iommu_mm->pasid);
-> >>>>> Now iommu_attach_device_pasid return BUSY since the same
-> >>>>> pasid. And then iommu_sva_bind_device attach ret=-16
-> >>>> Sounds like the test case tries to bind a device to a same mm
-> >>>> multiple times without unbinding the device and the
-> >>>> expectation is that it can always return a valid handle to pass
-> >>>> the test. Right?
-> >>> Yes
-> >>>
-> >>> The device can bind to the same mm multi-times and return
-> >>> different handle, Since the refcount, no need to unbind and bind
-> >>> sequently, The unbind can happen later with the handle.
-> >> Is there any real use case to bind an mm to the pasid of a device
-> >> multiple times? If there are cases, is it better to handle this in
-> >> the uacce driver?
-> > Yes, it is required for multi-thread, the device can provide
-> > multi-queue to speed up.
-> >
-> >> From iommu core's perspective, it doesn't make sense to attach the
-> >> same domain to the same device (or pasid) multiple times.
-> > But is it the refcount domain->user++ used for? Is there any reason
-> > not doing this.
->
-> I was just thinking about whether to do this in the iommu core, or in
-> the upper layers, like uacce or iommufd. It seems that there is no need
-> to attach a domain to a device or pasid again if it has already been
-> attached.
+On Tue, Feb 20, 2024 at 08:02:58PM -0600, Jeremy Linton wrote:
+> The existing arm64 stack randomization uses the kernel rng to acquire
+> 5 bits of address space randomization. This is problematic because it
+> creates non determinism in the syscall path when the rng needs to be
+> generated or reseeded. This shows up as large tail latencies in some
+> benchmarks and directly affects the minimum RT latencies as seen by
+> cyclictest.
 
-It would be more complicated since the return handle can be used to
-distinguish different queues of the device.
+Some questions:
 
-I think domain->user should handle this case as before.
+- for benchmarks, why not disable kstack randomization?
+- if the existing pRNG reseeding is a problem here, why isn't it a
+  problem in the many other places it's used?
+- I though the pRNG already did out-of-line reseeding?
 
-Anyway, I have sent a patch to get more feedback.
+> Other architectures are using timers/cycle counters for this function,
+> which is sketchy from a randomization perspective because it should be
+> possible to estimate this value from knowledge of the syscall return
+> time, and from reading the current value of the timer/counters.
 
-Thanks
+The expectation is that it would be, at best, unstable.
+
+> So, a poor rng should be better than the cycle counter if it is hard
+> to extract the stack offsets sufficiently to be able to detect the
+> PRNG's period.
+> 
+> So, we can potentially choose a 'better' or larger PRNG, going as far
+> as using one of the CSPRNGs already in the kernel, but the overhead
+> increases appropriately. Further, there are a few options for
+> reseeding, possibly out of the syscall path, but is it even useful in
+> this case?
+
+I'd love to find a way to avoid an pRNG that could be reconstructed
+given enough samples. (But perhaps this xorshift RNG resists that?)
+
+-Kees
+
+> Reported-by: James Yang <james.yang@arm.com>
+> Reported-by: Shiyou Huang <shiyou.huang@arm.com>
+> Signed-off-by: Jeremy Linton <jeremy.linton@arm.com>
+> ---
+>  arch/arm64/kernel/syscall.c | 55 ++++++++++++++++++++++++++++++++++++-
+>  1 file changed, 54 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm64/kernel/syscall.c b/arch/arm64/kernel/syscall.c
+> index 9a70d9746b66..70143cb8c7be 100644
+> --- a/arch/arm64/kernel/syscall.c
+> +++ b/arch/arm64/kernel/syscall.c
+> @@ -37,6 +37,59 @@ static long __invoke_syscall(struct pt_regs *regs, syscall_fn_t syscall_fn)
+>  	return syscall_fn(regs);
+>  }
+>  
+> +#ifdef CONFIG_RANDOMIZE_KSTACK_OFFSET
+> +DEFINE_PER_CPU(u32, kstackrng);
+> +static u32 xorshift32(u32 state)
+> +{
+> +	/*
+> +	 * From top of page 4 of Marsaglia, "Xorshift RNGs"
+> +	 * This algorithm is intended to have a period 2^32 -1
+> +	 * And should not be used anywhere else outside of this
+> +	 * code path.
+> +	 */
+> +	state ^= state << 13;
+> +	state ^= state >> 17;
+> +	state ^= state << 5;
+> +	return state;
+> +}
+> +
+> +static u16 kstack_rng(void)
+> +{
+> +	u32 rng = raw_cpu_read(kstackrng);
+> +
+> +	rng = xorshift32(rng);
+> +	raw_cpu_write(kstackrng, rng);
+> +	return rng & 0x1ff;
+> +}
+> +
+> +/* Should we reseed? */
+> +static int kstack_rng_setup(unsigned int cpu)
+> +{
+> +	u32 rng_seed;
+> +
+> +	do {
+> +		rng_seed = get_random_u32();
+> +	} while (!rng_seed);
+> +	raw_cpu_write(kstackrng, rng_seed);
+> +	return 0;
+> +}
+> +
+> +static int kstack_init(void)
+> +{
+> +	int ret;
+> +
+> +	ret = cpuhp_setup_state(CPUHP_AP_ONLINE_DYN, "arm64/cpuinfo:kstackrandomize",
+> +				kstack_rng_setup, NULL);
+> +	if (ret < 0)
+> +		pr_err("kstack: failed to register rng callbacks.\n");
+> +	return 0;
+> +}
+> +
+> +arch_initcall(kstack_init);
+> +#else
+> +static u16 kstack_rng(void) { return 0; }
+> +#endif /* CONFIG_RANDOMIZE_KSTACK_OFFSET */
+> +
+>  static void invoke_syscall(struct pt_regs *regs, unsigned int scno,
+>  			   unsigned int sc_nr,
+>  			   const syscall_fn_t syscall_table[])
+> @@ -66,7 +119,7 @@ static void invoke_syscall(struct pt_regs *regs, unsigned int scno,
+>  	 *
+>  	 * The resulting 5 bits of entropy is seen in SP[8:4].
+>  	 */
+> -	choose_random_kstack_offset(get_random_u16() & 0x1FF);
+> +	choose_random_kstack_offset(kstack_rng());
+>  }
+>  
+>  static inline bool has_syscall_work(unsigned long flags)
+> -- 
+> 2.43.0
+> 
+
+-- 
+Kees Cook
