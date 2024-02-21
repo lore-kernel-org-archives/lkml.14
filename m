@@ -1,147 +1,170 @@
-Received: from wout3-smtp.messagingengine.com (wout3-smtp.messagingengine.com [64.147.123.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 867533B781;
-	Wed, 21 Feb 2024 09:48:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.19
+Received: from invmail4.hynix.com (exvmail4.hynix.com [166.125.252.92])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1C44F3D3A7;
+	Wed, 21 Feb 2024 09:49:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708508919; cv=none; b=sh8caVVozQPmhJM+J9WPNtQZWGoho5ulofqYOxSKpaoPeKNsDqJ6RDYkuIl/eTq8pXRH9gyaycRBfWKkUIQETTG9FWAY60iAeISjaxILbk8Nt+CZo0MAuVbX3mDrfVONM7+xsrYzepqHg0K3iTO7u4PUoMMQJ30MsCuQuDqOK0Y=
+	t=1708508996; cv=none; b=B3ehnE+L8HHmubv6fVl80SVz/+keDdAhyb1MkGtu2Kl0LJNQ5uhi3mXh90JX8xdRYeTDfCoe3hSW3BXQ9jdXDFcA+QVw9KEAyU3pJUoLcXOpyEBUnrzjH2PssN3xRwsn2b/HPgU+M6k8hbcCyugYryj+EoMHnIl4HxXpMYtPlM0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708508919; c=relaxed/simple;
-	bh=HLE/MP1SWWxlDamRNgvoEaBeblwna1EiTKCiw4WhSCk=;
-	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
-	 Subject:Content-Type; b=qlQVm70MABritlQ+1hPoW+/GoZ4whfytwiisEdxksZp9vVn4rH/PmraoFfa01biAJpfPjE1CZdWG/KrYqJvKpo635wEF01hgIpxe6PeBccXcaiuitTh8HTs+3w/gvMzRpTif4YLf3tWFx1xw0PQFfI8PM8078SfVfuZrCkKHu4M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=2gNEAT4p; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=Y+jJlUhw; arc=none smtp.client-ip=64.147.123.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="2gNEAT4p";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Y+jJlUhw"
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-	by mailout.west.internal (Postfix) with ESMTP id 2719432001AB;
-	Wed, 21 Feb 2024 04:48:35 -0500 (EST)
-Received: from imap51 ([10.202.2.101])
-  by compute5.internal (MEProxy); Wed, 21 Feb 2024 04:48:36 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm3; t=1708508914; x=1708595314; bh=Fw9lSJoYft
-	ih2HH5DSoXI7rUStJLYAI4RgfN/FK3Rx8=; b=2gNEAT4pin6JGIAnt8bwDF8i/y
-	dxEN6bb4iHtQoqbP3lVzUxytZUW00tT3+JjWU4qg5fqI1guNgjRy68mUGWNgV+C1
-	1xsIejWLV5OQjEbNMzcU9ggp2RXzud15v35SiCS5UfBcpIi54yCe5dWmJzkIL9rL
-	a85RIpRD6ZPv8sumhAKtm/SjOdRGS9qDJHCplrWv0KxQtQxIHRBgoh8JkG3gGMlF
-	l3rZp8xOBpMN514u8tm8+XqwkMeHYVD6/TiJ1fIT+4bMBiVJBFg4ubv0kBt9unFi
-	zyiKRdecuT7mGCXTG+ndxo47a1cBssKpv2IL+4/fXQ3YbJUnlv4N3DXldFPg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm1; t=1708508914; x=1708595314; bh=Fw9lSJoYftih2HH5DSoXI7rUStJL
-	YAI4RgfN/FK3Rx8=; b=Y+jJlUhwn2Xxw5axMqBCkm6M4C2Y/yBLWAoNSy1RShLI
-	rH+TmCdFjkJZdQGKN3t5GMVXjg2YsNhOTxq/QE5OClC0Q78aNRlYT9fitKY4qjNh
-	7HdM9Zsn5R8FHlfPhM51nE3duHAaqeQFDsewCNZKoTC0jIqwE2OMZkzuso39OsBc
-	HX7mT5kCvkWZWLq2vqUV6m7nhKZ5rNn/vDmB4snjDXQTD2/m1kvDgPB9cLTx86YH
-	zMWH0YCJjC1c+Nmmcu67f7jfPAPR8fIakBOo40agc+LrYMynVH4lTuFuW3ZVIHJU
-	8db1OhMLygnZ7OzdKAjFPmg24CGKNskQTeZiovWsPA==
-X-ME-Sender: <xms:8sbVZSMzblp1OEWPd-v2NpPQ3PjdRcaZ6kawcqduEoE1wmkFiC4rAg>
-    <xme:8sbVZQ9UF0lyRCoMoN3qphU4tyTxrkMnMY7wvbGVpIoA-Ee1QyvgddQzqg-oMyFzw
-    0h-WoRsXuxA8HCcZ2w>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrfedvgddtkecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefofgggkfgjfhffhffvvefutgesthdtredtreertdenucfhrhhomhepfdetrhhn
-    ugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrghtth
-    gvrhhnpeffheeugeetiefhgeethfejgfdtuefggeejleehjeeutefhfeeggefhkedtkeet
-    ffenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrrh
-    hnugesrghrnhgusgdruggv
-X-ME-Proxy: <xmx:8sbVZZScqItcSO1tcHZc2YIG43a4PawB7RjYMfePrVwiKUDm_Nj1-g>
-    <xmx:8sbVZSsPy-iXcZYKkJBjOqyfVl3mn41HoUdesiYlscHAb7rsu3HDEA>
-    <xmx:8sbVZafb_Q_hf0W56ovGZceEXz-ISsc8LWRtIJHrP-TyyjQa6KVYpA>
-    <xmx:8sbVZR-j0XCHrDFtXulF0JMNDiCyjeGvkH7SCCCy8xLd2UCKXEMO2Q>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id 29F20B6008D; Wed, 21 Feb 2024 04:48:34 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.11.0-alpha0-153-g7e3bb84806-fm-20240215.007-g7e3bb848
+	s=arc-20240116; t=1708508996; c=relaxed/simple;
+	bh=3z6wcnzZigmy1AnwKW6EWYXgb3eqsvFGY6rKaYlxPHE=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=pd/ia2amR2KX9FI+m9ITsBApz4TLSvyjk6RXADwglwoxdslZUV/jcR5em3qLrQKn0UQ6/IpwWR5z32KN5nMa9gjIgfdbc5Tn8q0dCAY4uAm5DpuIwX4QtzgKkVe97FIYMDm9mXXkRDkWwuZ4f8LjQq6QeOWHObR1gfdgvGgW79w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
+X-AuditID: a67dfc5b-d85ff70000001748-96-65d5c7387f8b
+From: Byungchul Park <byungchul@sk.com>
+To: linux-kernel@vger.kernel.org
+Cc: kernel_team@skhynix.com,
+	torvalds@linux-foundation.org,
+	damien.lemoal@opensource.wdc.com,
+	linux-ide@vger.kernel.org,
+	adilger.kernel@dilger.ca,
+	linux-ext4@vger.kernel.org,
+	mingo@redhat.com,
+	peterz@infradead.org,
+	will@kernel.org,
+	tglx@linutronix.de,
+	rostedt@goodmis.org,
+	joel@joelfernandes.org,
+	sashal@kernel.org,
+	daniel.vetter@ffwll.ch,
+	duyuyang@gmail.com,
+	johannes.berg@intel.com,
+	tj@kernel.org,
+	tytso@mit.edu,
+	willy@infradead.org,
+	david@fromorbit.com,
+	amir73il@gmail.com,
+	gregkh@linuxfoundation.org,
+	kernel-team@lge.com,
+	linux-mm@kvack.org,
+	akpm@linux-foundation.org,
+	mhocko@kernel.org,
+	minchan@kernel.org,
+	hannes@cmpxchg.org,
+	vdavydov.dev@gmail.com,
+	sj@kernel.org,
+	jglisse@redhat.com,
+	dennis@kernel.org,
+	cl@linux.com,
+	penberg@kernel.org,
+	rientjes@google.com,
+	vbabka@suse.cz,
+	ngupta@vflare.org,
+	linux-block@vger.kernel.org,
+	josef@toxicpanda.com,
+	linux-fsdevel@vger.kernel.org,
+	viro@zeniv.linux.org.uk,
+	jack@suse.cz,
+	jlayton@kernel.org,
+	dan.j.williams@intel.com,
+	hch@infradead.org,
+	djwong@kernel.org,
+	dri-devel@lists.freedesktop.org,
+	rodrigosiqueiramelo@gmail.com,
+	melissa.srw@gmail.com,
+	hamohammed.sa@gmail.com,
+	42.hyeyoo@gmail.com,
+	chris.p.wilson@intel.com,
+	gwan-gyeong.mun@intel.com,
+	max.byungchul.park@gmail.com,
+	boqun.feng@gmail.com,
+	longman@redhat.com,
+	hdanton@sina.com,
+	her0gyugyu@gmail.com
+Subject: [PATCH v12 01/27] llist: Move llist_{head,node} definition to types.h
+Date: Wed, 21 Feb 2024 18:49:07 +0900
+Message-Id: <20240221094933.36348-2-byungchul@sk.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20240221094933.36348-1-byungchul@sk.com>
+References: <20240221094933.36348-1-byungchul@sk.com>
+X-Brightmail-Tracker: H4sIAAAAAAAAAzXSa0xTZxgHcN5zec+h0nlSyXbELC4Vxft0inuye1zC3kUlZi7RoMZ1cmKr
+	BbVFkCUuRbm4So24ABPQFHC1g6JyKtFN23QwqUjECtUxghWIUZAik63NKkxtNX558stz+X96
+	eFp1mU3iddk5kiFbo1djBaMYS6hdAt7b0rLOoiQoK10GoX8PM1BzzoHBd7YRgeNCAQUjV7+A
+	P8NBBJM3btJQWe5DUDt4l4YL7QEELvtBDD333wB/aBxDR/kRDIfqz2G4NTpFQX/FcQoa5XXQ
+	eayOAk/kIQOVIxiqKw9R0TJMQcTWwIHNNBeG7FUcTA0uh47AHRZcfYvgxKl+DFdcHQy0Xxqi
+	oOe3GgwBx3MWOtuvMeArs7DQ9LgOw2jYRoMtNM5Bt8dKwfnCaFDxP89Y8Fo8FBSfbqbA/9dl
+	BO7DAxTIjjsY2kJBCpxyOQ1Pz1xFMHR0jIOi0ggH1QVHERwpqmDg5v9eFgr7U2Hyvxr82Qek
+	LThOk0JnHnGFrQy5XieSX6vucqTQ3ccRq7yPOO0LSf2VEYrUToRYIjf8gIk8cZwj5jE/RR53
+	dXHk2k+TDLnvr6TWz8pQfJQp6XW5kuHdT75RaIu7TnF7Tir2W39uwSbk5s0onheFlaLXbOFe
+	W37S+tJYSBF7eyN0zInCO6LT8oA1IwVPCyXTRPvfN3BsMENIF9uetKOYGWGu2O18ysSsFFLF
+	Zvke/Sp0tth43vPS8cIq8ZfqIBuzKrpz+1YLHQsVhZJ4sbnDz746mCn+bu9ljiGlFcU1IJUu
+	OzdLo9OvXKrNz9btX7p9d5aMoi9lOzC1+RKa8G1oRQKP1AlK7UW/pGI1ucb8rFYk8rQ6Ucnk
+	RVvKTE3+d5Jh9zbDPr1kbEWzeEb9lvK9cF6mStihyZF2SdIeyfB6SvHxSSaUX+PZ7uub83G6
+	Y/rMjOSAO/F5sXHtl6umhXdgLrJkhVWf8uOWtEdfzclBi60DcV+nxun+2Lxl9rfX530/uMa8
+	Vrt4IFC1KaGntCR1tXera3hFyuemt+OaCg5+augyZQQe1L1pcY/WB8u6328qWZ+80+Lb+2Ha
+	cPLGBblp5EBL+omh1fPVjFGrWb6QNhg1LwC9bUM1TgMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAAzXSf0yMcRwHcN/v8zzf5+k4e5Y2jx/z47bm16RG9pkMfxgPxowN87ObHu5W
+	l9wlMmflUqSiLKGyKzmpQ56roZTWzeVEHR1iCc2vJkpccxW5Y/757LXP+7P3Xx+OCixkxnPa
+	2HhJH6uOUREFrVgTYZoNjU+l0KsuDNkZoeD5cYyGgutWAq5r5QislckYuu4th+f93QgGH7VQ
+	kJfrQlD09hUFlY4OBLWlRwi0vhsNbk8PAWfuCQKmi9cJPP48hKH9TA6Gcnk1NJ0qxlDv/UhD
+	XheB/DwT9o1PGLyWMhYsScHQWXqehaG3YeDseMaAvdDJQO3LWXDuQjuBO7VOGhy3OjG0VhcQ
+	6LAOM9DkuE+DKzuTgatfiwl87rdQYPH0sPCk3oyhIsXXlvr9NwONmfUYUktuYHC/qEFQd+wN
+	Btn6jIDd043BJudSMHD5HoLOrC8sHM3wspCfnIXgxNEzNLT8amQgpT0cBn8WkCURor27hxJT
+	bPvF2n4zLT4oFsTb51+xYkrdS1Y0y/tEW+lM8eKdLiwW9XkYUS47TkS5L4cV07+4sfi1uZkV
+	758dpMV37jy8duJmxcIoKUabIOnnLIpUaFKbL7BxhYoD5ktVJAnVcekogBP4eYL8rYH1m/DT
+	hLY2L+V3ED9FsGV+YNKRgqP4tJFCae8j4g/G8GsE+zcH8pvmg4UntgHabyUfLtyQX1P/SicL
+	5RX1fx3Azxeu5Hczfgf6bp4+rqJOIYUZjShDQdrYBJ1aGxMeYojWJMZqD4Ts3KOTke9pLMah
+	7FvoR+vyBsRzSDVKqbnplgIZdYIhUdeABI5SBSnp/b6VMkqdeFDS79mh3xcjGRrQBI5WjVWu
+	3ChFBvK71fFStCTFSfr/KeYCxiehu8kObfyy6etqhpWjjORwm77lnHPRgqIJe9dHbtpspgYq
+	pvZmZ6SVlMct3pH50bLJEjLJrK8arMia8XpdY5P1Yc5coZ8aGxzw/sHzjfZVp71jjLs0C8eN
+	q+x1VW+4dNx0syPthVHdpzN1bivZoltx0HgolHxwbd86HBmxZenJGaqouyraoFGHzaT0BvUf
+	NFPz6TADAAA=
+X-CFilter-Loop: Reflected
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Message-Id: <938f3418-fd88-476d-b67f-3f7ada98e444@app.fastmail.com>
-In-Reply-To: <20240221020258.1210148-1-jeremy.linton@arm.com>
-References: <20240221020258.1210148-1-jeremy.linton@arm.com>
-Date: Wed, 21 Feb 2024 10:48:12 +0100
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Jeremy Linton" <jeremy.linton@arm.com>,
- linux-arm-kernel@lists.infradead.org
-Cc: "Catalin Marinas" <catalin.marinas@arm.com>,
- "Will Deacon" <will@kernel.org>, "Kees Cook" <keescook@chromium.org>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- "Mark Rutland" <mark.rutland@arm.com>,
- "Steven Rostedt" <rostedt@goodmis.org>, "Mark Brown" <broonie@kernel.org>,
- "Guo Hui" <guohui@uniontech.com>, Manoj.Iyer@arm.com,
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
- "James Yang" <james.yang@arm.com>, "Shiyou Huang" <shiyou.huang@arm.com>
-Subject: Re: [RFC] arm64: syscall: Direct PRNG kstack randomization
-Content-Type: text/plain
 
-On Wed, Feb 21, 2024, at 03:02, Jeremy Linton wrote:
-> The existing arm64 stack randomization uses the kernel rng to acquire
-> 5 bits of address space randomization. This is problematic because it
-> creates non determinism in the syscall path when the rng needs to be
-> generated or reseeded. This shows up as large tail latencies in some
-> benchmarks and directly affects the minimum RT latencies as seen by
-> cyclictest.
+llist_head and llist_node can be used by very primitives. For example,
+Dept for tracking dependency uses llist things in its header. To avoid
+header dependency, move those to types.h.
 
-Hi Jeremy,
+Signed-off-by: Byungchul Park <byungchul@sk.com>
+---
+ include/linux/llist.h | 8 --------
+ include/linux/types.h | 8 ++++++++
+ 2 files changed, 8 insertions(+), 8 deletions(-)
 
-I think from your description it's clear that reseeding the
-rng is a problem for predictable RT latencies, but at the same
-time we have too many things going on to fix this by
-special-casing kstack randomization on one architecture:
+diff --git a/include/linux/llist.h b/include/linux/llist.h
+index 2c982ff7475a..3ac071857612 100644
+--- a/include/linux/llist.h
++++ b/include/linux/llist.h
+@@ -53,14 +53,6 @@
+ #include <linux/stddef.h>
+ #include <linux/types.h>
+ 
+-struct llist_head {
+-	struct llist_node *first;
+-};
+-
+-struct llist_node {
+-	struct llist_node *next;
+-};
+-
+ #define LLIST_HEAD_INIT(name)	{ NULL }
+ #define LLIST_HEAD(name)	struct llist_head name = LLIST_HEAD_INIT(name)
+ 
+diff --git a/include/linux/types.h b/include/linux/types.h
+index 253168bb3fe1..10d94b7f9e5d 100644
+--- a/include/linux/types.h
++++ b/include/linux/types.h
+@@ -199,6 +199,14 @@ struct hlist_node {
+ 	struct hlist_node *next, **pprev;
+ };
+ 
++struct llist_head {
++	struct llist_node *first;
++};
++
++struct llist_node {
++	struct llist_node *next;
++};
++
+ struct ustat {
+ 	__kernel_daddr_t	f_tfree;
+ #ifdef CONFIG_ARCH_32BIT_USTAT_F_TINODE
+-- 
+2.17.1
 
-- if reseeding latency is a problem, can we be sure that
-  none of the other ~500 files containing a call to
-  get_random_{bytes,long,u8,u16,u32,u64} are in an equally
-  critical path for RT? Maybe those are just harder to hit?
-
-- CONFIG_RANDOMIZE_KSTACK_OFFSET can already be disabled
-  at compile or at at boot time to avoid the overhead entirely,
-  which may be the right thing to do for users that care more
-  deeply about syscall latencies than the fairly weak stack
-  randomization. Most architectures don't implement it at all.
-
-- It looks like the unpredictable latency from reseeding
-  started with f5b98461cb81 ("random: use chacha20 for
-  get_random_int/long"), which was intended to make
-  get_random() faster and better, but it could be seen
-  as  regression for real-time latency guarantees. If this
-  turns out to be a general problem for RT workloads,
-  the answer might be to bring back an option to make
-  get_random() have predictable overhead everywhere
-  rather than special-casing the stack randomization.
-
-> Other architectures are using timers/cycle counters for this function,
-> which is sketchy from a randomization perspective because it should be
-> possible to estimate this value from knowledge of the syscall return
-> time, and from reading the current value of the timer/counters.
->
-> So, a poor rng should be better than the cycle counter if it is hard
-> to extract the stack offsets sufficiently to be able to detect the
-> PRNG's period.
-
-I'm not convinced by the argument that the implementation you
-have here is less predictable than the cycle counter, but I
-have not done any particular research here and would rely on
-others to take a closer look. The 32 bit global state variable
-does appear weak, and I know that 
-
-OTOH if we can show that a particular implementation is in fact
-better than a cycle counter, I strongly think we should
-use the same one across all architectures that currently
-use the cycle counter.
-
-      Arnd
