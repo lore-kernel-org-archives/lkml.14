@@ -1,119 +1,242 @@
-Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2235D446D9;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 382D26994A;
 	Wed, 21 Feb 2024 16:18:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.170
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708532288; cv=none; b=UZuFggm8Nhatr06MlmOyVu4lfkRjXSnNt2t1G9xmrhyr7dB1vHHxVfetVv1kM71T6nxa6rKYsEPpBSrqrfVwUHeTwmvLg1+C7jOVHRY3mSdNWkqYluVK3xRQrZqLttENhpvRfPIFK+mhFgzWDLTHNgNwJIX0pVf/qUHryqX/qKg=
+	t=1708532288; cv=none; b=dz6uVdB7lI46DjQO6YMW6KT31PcvwSaTAz+iqIx8Yw0KMJUGksjWGEcUShvMBiSBTSlxYU2PUEA7z9xcVQR68ERtKHhjRGAB4He1NyOIfIcwhmUpm2erxrHPYMkLTE8ud0GOjZXDWNPHp/GLVkRsw2NKEhMqnRnBeIaPLqtGvaE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1708532288; c=relaxed/simple;
-	bh=/kpFXS2EwZl6WC5jy5PmXQiF+/eQUFkgRYhkxKfh0kE=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=k/kC6FL56p3PLsKZXbg+sfADq0awWBbcw1pCY1ng4rfnqy4aPYmvHGLNBt3p6IETgNAiYNZKWwMxujmVBHbMttleWbUkNxsh1V/V4y7DyxZDpIDBe5STV5IXVuBiKCOg5wcPrVUVgrovw/M2I9FcVdq+xiidv7g+krRVDHvm4Kg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.208.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-2d21cdbc85bso10916511fa.2;
-        Wed, 21 Feb 2024 08:18:06 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708532285; x=1709137085;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=9Sihn+OQP2RXoSGGMUwVUZ2ON16ouXq3GovfkSaPw3Y=;
-        b=WsxQmUFHcBzBi+Iz9i+0KUWpWu6LEsOFcazJUHVooXa9oywIZ/5mC3vznvngobOGgn
-         2+e357V1BD6WNPmJmWVlPE/MmR+/MNNOtfUNeXXfs9sdEhQ9u3GnVrusqY/i4i7VM/lS
-         OoJVfBesLNs2bzsTEBFfDD25951HyuSXKT4/4uKRz/ovwSI9PLA3Fs5/XFkKeUQpCJbE
-         RVFEPAL8QUDRw6KxNO0HFG63NSihVslUMKWqiyd4trG+7haTuFwKdDwxZmiylweYqphC
-         vm/SnLr8Yqm9TxK8YB3oblynaO+EuNfTnZBs5RllWrU2nqcOKtjgsISdWwe7ilR/PmP0
-         Fnng==
-X-Forwarded-Encrypted: i=1; AJvYcCVIjMKFDMBwiOBjENwVu9tAypW2sLnhFPzCGwUekTu8iMynViDn7d3ibFqC4SVBGejKttRKNVAYzLiB19aMBNMdELU6a4voXx6MzFqp
-X-Gm-Message-State: AOJu0YzX7yw2Q4QyeudY56vOdcQhK8BT/azlKvU67B7GV8yUw+DA4K60
-	OHMYC+twHXs+pL4vHPoxS/uEju7rj9PYuY7ampYW83bfvtrDQ9clsuLjsbHErQ0=
-X-Google-Smtp-Source: AGHT+IHt4rZ/meSl1g3jJEI+lEUS+n3f2D8JDvU7nz30+XQJU73eFFId6Dc8DKReF9u/kRtR9m3oBw==
-X-Received: by 2002:a2e:9201:0:b0:2d2:37ff:f54a with SMTP id k1-20020a2e9201000000b002d237fff54amr6803294ljg.41.1708532284991;
-        Wed, 21 Feb 2024 08:18:04 -0800 (PST)
-Received: from localhost (fwdproxy-lla-004.fbsv.net. [2a03:2880:30ff:4::face:b00c])
-        by smtp.gmail.com with ESMTPSA id u6-20020aa7d546000000b0056503299e26sm557848edr.88.2024.02.21.08.18.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 21 Feb 2024 08:18:04 -0800 (PST)
-From: Breno Leitao <leitao@debian.org>
-To: kuba@kernel.org,
-	davem@davemloft.net,
-	pabeni@redhat.com,
-	edumazet@google.com,
-	David Ahern <dsahern@kernel.org>
-Cc: netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	horms@kernel.org
-Subject: [PATCH net-next] ipv6/sit: Do not allocate stats in the driver
-Date: Wed, 21 Feb 2024 08:17:32 -0800
-Message-Id: <20240221161732.3026127-1-leitao@debian.org>
-X-Mailer: git-send-email 2.39.3
+	bh=BOE7ZLv14uGTlO6KAsv6/doL9GayurXClMerkYD0HBg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=T4vz5TlBLlrba7LXPaQ5GLoD+1eFmnzRfat4UaI4KuMh8Osq0D6hrIChXygxKeT1lFQLZUT5ykJ0BFlr5DyYMS8euwr4oXV26JZrJ7LpAkzs4VB7hB2gUUk2WHUT0T7D+ObF1y1+0nvZqmnWhyVrnzaVzB7ZV4gpigMwVTvRpmM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CsQXC7qO; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CsQXC7qO"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1708532287; x=1740068287;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=BOE7ZLv14uGTlO6KAsv6/doL9GayurXClMerkYD0HBg=;
+  b=CsQXC7qOTfRXkppOUhzCfOJqGH80ywuHsZ5vFMxr5RwaSrH8PCYtdIli
+   809kjJTatsyhkFnxvZs0MjKYv4qdNfk0licjwD5rJi+yKlN6jAcnefAfj
+   BkaRl692EYg1pXot/XtK1ItoQs316KyRnPfe/YcWPVEfmEO/vnBin2Tje
+   zzz4v18oBHf+eGvpuDzEzQpYoIpqYQgJTSlpqi61iySmlAH/B6fVo8zrV
+   YPoMzycKUzNrgnegxhth9lFpLBgDtuB7QFxHQY6CItPaGnJ9xmBLGpQkZ
+   RSHNx4oH6IY5YRRPIE2igjEqGqIi2O7X4JcNQP0ns2t7a6gFV8a2QsvJm
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10991"; a="3183909"
+X-IronPort-AV: E=Sophos;i="6.06,176,1705392000"; 
+   d="scan'208";a="3183909"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Feb 2024 08:18:06 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.06,176,1705392000"; 
+   d="scan'208";a="5344100"
+Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.165])
+  by fmviesa008.fm.intel.com with ESMTP; 21 Feb 2024 08:18:04 -0800
+Date: Thu, 22 Feb 2024 00:14:08 +0800
+From: Xu Yilun <yilun.xu@linux.intel.com>
+To: matthew.gerlach@linux.intel.com
+Cc: hao.wu@intel.com, trix@redhat.com, mdf@kernel.org, yilun.xu@intel.com,
+	linux-fpga@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] fpga: dfl: afu: support Rev 2 of DFL Port feature
+Message-ID: <ZdYhUK5yFFlhVV62@yilunxu-OptiPlex-7050>
+References: <20240125233715.861883-1-matthew.gerlach@linux.intel.com>
+ <ZbjHl8ptQG5FdHvC@yilunxu-OptiPlex-7050>
+ <alpine.DEB.2.22.394.2401300948590.112016@sj-4150-psse-sw-opae-dev2>
+ <Zbnd8W1ciTKeoKc4@yilunxu-OptiPlex-7050>
+ <alpine.DEB.2.22.394.2401311610020.112016@sj-4150-psse-sw-opae-dev2>
+ <ZcBIjcFJjGKf0qcO@yilunxu-OptiPlex-7050>
+ <alpine.DEB.2.22.394.2402051600190.122158@sj-4150-psse-sw-opae-dev2>
+ <ZdF4JvYQQL8irnbW@yilunxu-OptiPlex-7050>
+ <alpine.DEB.2.22.394.2402201658400.191484@sj-4150-psse-sw-opae-dev2>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <alpine.DEB.2.22.394.2402201658400.191484@sj-4150-psse-sw-opae-dev2>
 
-With commit 34d21de99cea9 ("net: Move {l,t,d}stats allocation to core and
-convert veth & vrf"), stats allocation could be done on net core
-instead of this driver.
+On Tue, Feb 20, 2024 at 05:49:04PM -0800, matthew.gerlach@linux.intel.com wrote:
+> 
+> 
+> On Sun, 18 Feb 2024, Xu Yilun wrote:
+> 
+> > On Wed, Feb 07, 2024 at 08:40:55AM -0800, matthew.gerlach@linux.intel.com wrote:
+> > > 
+> > > 
+> > > On Mon, 5 Feb 2024, Xu Yilun wrote:
+> > > 
+> > > > On Wed, Jan 31, 2024 at 04:26:27PM -0800, matthew.gerlach@linux.intel.com wrote:
+> > > > > 
+> > > > > 
+> > > > > On Wed, 31 Jan 2024, Xu Yilun wrote:
+> > > > > 
+> > > > > > On Tue, Jan 30, 2024 at 10:00:16AM -0800, matthew.gerlach@linux.intel.com wrote:
+> > > > > > > 
+> > > > > > > 
+> > > > > > > On Tue, 30 Jan 2024, Xu Yilun wrote:
+> > > > > > > 
+> > > > > > > > On Thu, Jan 25, 2024 at 03:37:15PM -0800, Matthew Gerlach wrote:
+> > > > > > > > > Revision 2 of the Device Feature List (DFL) Port feature
+> > > > > > > > > adds support for connecting the contents of the port to
+> > > > > > > > > multiple PCIe Physical Functions (PF).
+> > > > > > > > > 
+> > > > > > > > > This new functionality requires changing the port reset
+> > > > > > > > > behavior during FPGA and software initialization from
+> > > > > > > > > revision 1 of the port feature. With revision 1, the initial
+> > > > > > > > > state of the logic inside the port was not guaranteed to
+> > > > > > > > > be valid until a port reset was performed by software during
+> > > > > > > > > driver initialization. With revision 2, the initial state
+> > > > > > > > > of the logic inside the port is guaranteed to be valid,
+> > > > > > > > > and a port reset is not required during driver initialization.
+> > > > > > > > > 
+> > > > > > > > > This change in port reset behavior avoids a potential race
+> > > > > > > > > condition during PCI enumeration when a port is connected to
+> > > > > > > > > multiple PFs. Problems can occur if the driver attached to
+> > > > > > > > > the PF managing the port asserts reset in its probe function
+> > > > > > > > > when a driver attached to another PF accesses the port in its
+> > > > > > > > > own probe function. The potential problems include failed or hung
+> > > > > > > > 
+> > > > > > > > Only racing during probe functions? I assume any time port_reset()
+> > > > > > > > would fail TLPs for the other PF. And port_reset() could be triggered
+> > > > > > > > at runtime by ioctl().
+> > > > > > > 
+> > > > > > > Yes, a port_reset() triggered by ioctl could result in failed TLP for the
+> > > > > > > other PFs. The user space SW performing the ioctl needs to ensure all PFs
+> > > > > > > involved are properly quiesced before the port_reset is performed.
+> > > > > > 
+> > > > > > How would user get an insight into other PF drivers to know everything
+> > > > > > is quiesced?  I mean do we need driver level management for this?
+> > > > > 
+> > > > > Since this is an FPGA, the number of other PFs and the drivers bound to
+> > > > > those PFs depends on the FPGA image. There would also be user space software
+> > > > > stacks involved with the other PFs as well. The user would have to ensure
+> > > > > all the SW stacks and drivers are quiesced as appropriate for the FPGA
+> > > > 
+> > > > User may not know everything about the device, they only get part of the
+> > > > controls that drivers grant. This is still true for vfio + userspace
+> > > > drivers.
+> > > 
+> > > A user performing a port reset would have to know the impact to the specific
+> > > FPGA image being run in order to ensure all SW stacks are ready for the
+> > > reset.
+> > 
+> > We are not going to change the logic of the whole driver model just
+> > because the device is backed up by an FPGA image.  The *driver* should be
+> > fully responsible for matched devices.  A HW reset unaware to the
+> > device driver is not wanted.  Assuming that the userspace could control
+> > every access to device makes no sense.
+> > 
+> > For your case, there is no garantee userspace could block every access
+> > to "other PF" initiated by "other PF" driver.  There is also no
+> > notification to "other PF" driver that userspace is doing reset to
+> > "other PF" via "management PF" interface.  "other PF" driver just break
+> > on reset.
+> 
+> Hi Yilun,
+> 
+> I think this conversation has gotten a little off track. This patch only
+> changes the port reset behavior at driver initialization for revision 2 of
+> the port IP. The behavior and the requirements of port reset during run time
+> have not changed. The existing implementation requires the user performing
+> the port reset to ensure appropriate SW was quiesced. This patch does not
+> change this requirement.
 
-With this new approach, the driver doesn't have to bother with error
-handling (allocation failure checking, making sure free happens in the
-right spot, etc). This is core responsibility now.
+You are actually adding support to the new devices behavior defined by
+revision 2.  Previously the user requires the management PF driver to do port
+reset, and this only affects some logic in the PF itself and the impact could
+be handled inside the driver.  The current PF driver doesn't actually do anything
+because it (or any kernel component) never touches the disabled logic, and the
+user accessing of the mmapped but disabled logic won't cause system issues.
 
-Remove the allocation in the ipv6/sit driver and leverage the network
-core allocation.
+But the new management PF does port reset and affect other PFs, and may
+cause disorder in other drivers. so you need extra code to support the
+behavior.
 
-Signed-off-by: Breno Leitao <leitao@debian.org>
----
- net/ipv6/sit.c | 12 ++++--------
- 1 file changed, 4 insertions(+), 8 deletions(-)
+This patch does make some progress, as you said, "With revision 2,the
+initial state of the logic inside the port is guaranteed to be valid, and
+a port reset is not required during driver initialization".  But it
+should not be the only patch to enable the new port reset behavior.
 
-diff --git a/net/ipv6/sit.c b/net/ipv6/sit.c
-index ed3a44aa1e9d..5ad01480854d 100644
---- a/net/ipv6/sit.c
-+++ b/net/ipv6/sit.c
-@@ -1408,7 +1408,6 @@ static void ipip6_dev_free(struct net_device *dev)
- 	struct ip_tunnel *tunnel = netdev_priv(dev);
- 
- 	dst_cache_destroy(&tunnel->dst_cache);
--	free_percpu(dev->tstats);
- }
- 
- #define SIT_FEATURES (NETIF_F_SG	   | \
-@@ -1437,6 +1436,8 @@ static void ipip6_tunnel_setup(struct net_device *dev)
- 	dev->features		|= NETIF_F_LLTX;
- 	dev->features		|= SIT_FEATURES;
- 	dev->hw_features	|= SIT_FEATURES;
-+	dev->pcpu_stat_type	= NETDEV_PCPU_STAT_TSTATS;
-+
- }
- 
- static int ipip6_tunnel_init(struct net_device *dev)
-@@ -1449,16 +1450,11 @@ static int ipip6_tunnel_init(struct net_device *dev)
- 	strcpy(tunnel->parms.name, dev->name);
- 
- 	ipip6_tunnel_bind_dev(dev);
--	dev->tstats = netdev_alloc_pcpu_stats(struct pcpu_sw_netstats);
--	if (!dev->tstats)
--		return -ENOMEM;
- 
- 	err = dst_cache_init(&tunnel->dst_cache, GFP_KERNEL);
--	if (err) {
--		free_percpu(dev->tstats);
--		dev->tstats = NULL;
-+	if (err)
- 		return err;
--	}
-+
- 	netdev_hold(dev, &tunnel->dev_tracker, GFP_KERNEL);
- 	netdev_lockdep_set_classes(dev);
- 	return 0;
--- 
-2.39.3
+> 
+> > 
+> > > 
+> > > > 
+> > > > > image. I don't think the driver performing the port_reset() can know all the
+> > > > 
+> > > > Other PF drivers should know their own components. They should be aware
+> > > > that their devices are being reset.
+> > > 
+> > > The other PF drivers depend on the actual FPGA image being run.
+> > > 
+> > > > 
+> > > > > components to be able to provide any meaningful management.
+> > > > 
+> > > > If the reset provider and reset consumer are not in the same driver,
+> > > > they should interact with each other. IIRC, some reset controller class
+> > > > works for this purpose.
+> > > 
+> > > The other PFs in many cases can present as standard devices with existing
+> > > drivers like virtio-net or virtio-blk. It does not seem desireable to have
+> > > to change existing drivers for a particular FPGA implementation
+> > 
+> > If you have to use a specific method for reset, it is not a standard virtio
+> > pci device, and you have to make some change.
+> 
+> From the perspective of the PCI PF/VF implementing the virtio or other
+> standard device, the pci endpoint is completely compliant to the standard,
+> and no driver changes should be required. As mentioned above, this patch
+> does nothing to change any of this behavior. Consider a port reset that is
+> part of a partial configuration flow. The virtio endpoint can become
+> something completely different with a completely different driver. This
 
+Then how could the virtio driver stop and remove itself to avoid crashing the
+kernel, and how could the new driver be probed.  If the answer is still
+userspace responsible for everything, that's not good to me.
+
+Thanks,
+Yilun
+
+> patch does not affect this flow either.
+> 
+> Thanks,
+> Matthew
+> 
+> > 
+> > Thanks,
+> > Yilun
+> > 
+> > > 
+> > > Thanks,
+> > > Matthew
+> > > > 
+> > > > Thanks,
+> > > > Yilun
+> > > > 
+> > > > > 
+> > > > > Thanks,
+> > > > > Matthew
+> > > > > 
+> > > > > > 
+> > > > > > Thanks,
+> > > > > > Yilun
+> > > > > > 
+> > > > > > > 
+> > > > > > > Do you want me to update the commit message with this information?
+> > > > > > > 
+> > > > > > > Thanks,
+> > > > > > > Matthew
+> > > > > > 
+> > > > > > 
+> > > > 
+> > > > 
+> > 
