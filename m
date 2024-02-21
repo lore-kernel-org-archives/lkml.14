@@ -1,133 +1,135 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from brightrain.aerifal.cx (brightrain.aerifal.cx [104.156.224.86])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4140785953
-	for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 19:06:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB39E86130
+	for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 19:06:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=104.156.224.86
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708542379; cv=none; b=OMep+rdxlfcUOaPtmx9TAE/QGPQ/SKWfF4rQjpOxqH8gXcfxfIXXnqiRq5UVCxg5rO9c3V2hE8wPXY0YXbfGXEnhzV8h1/jkgZI9n1M8i6IWIOIUJxOlHCKRaWYZ/hLY5wznSOuq7m3L45i7Fkov10hD1AXVKnbUQYQPrq+siso=
+	t=1708542402; cv=none; b=gsrvHNv8t7B7WSVdPlaZbEVsFfb1071cJoRrTrNrixbGbu8waYuMidpyfR/9AxZRGpgbNhuTjzkyhCpPTT6XHgzzZcwy/ZdYECryZLduN28nZMSqbKViyAaN0doTLpjm+IRkSpxJRZaVeddErqrWztQSex8yorj0jch7NJnEjyY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708542379; c=relaxed/simple;
-	bh=nQkkE0SX6fHuurzKVAkKwMHh5voYItjllI504GFJs9w=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=fcviOgBZl9cJAjLPrZ5WYDYeWMENV45Sx1TDgin8J++WKdCp9q4dw+rcEYl4ue0dTkw6nLkFrYVNtPEVWPxLmh89u0/tRPT8d6DGWqXrrzjCNRksX2+GAx5GdtRyqGz8CZP125ur+yh2u1fj3Cqk9OGWOdfC9jkkWQ0TlElVUAw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=S+LqEYHc; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="S+LqEYHc"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1708542372;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=1+0GfmbbV4DODzs8pIpHmthRZ4DdD4fcuCjWWmIUvxg=;
-	b=S+LqEYHcvUKeK0J0AKr5UHCDIJvpIwt7A17zJs/tr6GBkMDBSZPYo3GUEeL8DL6pPDTXgy
-	fY+QL4bBadpFG5d6gAFWwwZ8hLyMh6mGUjY93JERW1pOk7AZ50RABTQy1CXfWWLP6Ft56C
-	mOgY37anRuBvCt/WrqGe2tGAIUjAMi0=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-447-FMTaN4zXOmy1_ryCwkOMEQ-1; Wed, 21 Feb 2024 14:06:11 -0500
-X-MC-Unique: FMTaN4zXOmy1_ryCwkOMEQ-1
-Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-41225f78258so30732965e9.0
-        for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 11:06:11 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708542370; x=1709147170;
-        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=1+0GfmbbV4DODzs8pIpHmthRZ4DdD4fcuCjWWmIUvxg=;
-        b=Fznh00pT1Bt+s0TDxtZHnQyJ/xpostEgYIgXjzHf/3CGKK3YGf7x2YdGENIUS1qJ1F
-         xsH/vOaenX0/O7RVJHLfkjX2aUXXQFMKlhj3/S7cpzaQ+RIy350SYf5MQ2hweyhkDpON
-         kdzXvksIABCMC+J4D18KNWPRB+tjUEkwl+IMksUfFKEbVGDsrfn7dgp51cjPr7+BQ9MX
-         3wAU0at7mS6gAVRlqAFqNNL0m5Wlw83vte+YYH1lvfsH+EIe8G+m57s1K3V0jL1Z/TrE
-         0Izmg11Qwm1bkTX1gsWSHB+XEwgdnCs5lWKzV4vbQ4ZRvL9zq1FQw2vKZ9feAB4bj91n
-         jPww==
-X-Forwarded-Encrypted: i=1; AJvYcCWoEWYtBApuN/X6/VhV0FNKOHHHHUm4icDjscS8+qJFMXYvGqfmAVE89EddAoqYoVH6cUHslQafCyXx7ietXqc3+kJxahrHJLigCKO8
-X-Gm-Message-State: AOJu0YzX+fZJoT5T2z1nQUBVlf2a61JivhSWlBCepqoo6RUqpJQfgVBu
-	jAT57lfeByFkxiEv98p//h2qVEUFwyouC9z3JX+l36Hc9LA8MUj8fLlc4sTMq4pQeHMqlHAreiw
-	eeScC8fKgmc28JSS4+S7Xb5JNaurEoOySiqxhwU80jahLi58fEdcs40M6V08jAw==
-X-Received: by 2002:adf:fd4f:0:b0:33d:1ad9:a20c with SMTP id h15-20020adffd4f000000b0033d1ad9a20cmr9442757wrs.28.1708542370260;
-        Wed, 21 Feb 2024 11:06:10 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IEQmcpgowPakeWncE3IieRygGUzL5vkebbFf8TXwJDnljKUdqE0lTBWMTsTBxgmz+NxqoFNNg==
-X-Received: by 2002:adf:fd4f:0:b0:33d:1ad9:a20c with SMTP id h15-20020adffd4f000000b0033d1ad9a20cmr9442743wrs.28.1708542369872;
-        Wed, 21 Feb 2024 11:06:09 -0800 (PST)
-Received: from localhost (205.pool92-176-231.dynamic.orange.es. [92.176.231.205])
-        by smtp.gmail.com with ESMTPSA id u11-20020a056000038b00b0033d7dd27d97sm2816317wrf.45.2024.02.21.11.06.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 21 Feb 2024 11:06:09 -0800 (PST)
-From: Javier Martinez Canillas <javierm@redhat.com>
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, Arnd Bergmann
- <arnd@arndb.de>, linux-kernel@vger.kernel.org
-Cc: Maxime Ripard <mripard@redhat.com>, Erico Nunes <nunes.erico@gmail.com>,
- Enric Balletbo i Serra <eballetbo@redhat.com>, Brian Masney
- <bmasney@redhat.com>, Bjorn Andersson <quic_bjorande@quicinc.com>, Catalin
- Marinas <catalin.marinas@arm.com>, Geert Uytterhoeven
- <geert+renesas@glider.be>, Konrad Dybcio <konrad.dybcio@linaro.org>, Marek
- Szyprowski <m.szyprowski@samsung.com>, Neil Armstrong
- <neil.armstrong@linaro.org>, Will Deacon <will@kernel.org>,
- linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH] arm64: defconfig: Enable zram, xfs and loading
- compressed FW support
-In-Reply-To: <205248ce-caeb-4090-998e-379f79639bec@linaro.org>
-References: <20240221125928.3711050-1-javierm@redhat.com>
- <9f419e86-6e14-42a1-84e1-31cab62d8ea2@app.fastmail.com>
- <205248ce-caeb-4090-998e-379f79639bec@linaro.org>
-Date: Wed, 21 Feb 2024 20:06:08 +0100
-Message-ID: <877cixiqn3.fsf@minerva.mail-host-address-is-not-set>
+	s=arc-20240116; t=1708542402; c=relaxed/simple;
+	bh=tMAboUzIpbI8r0aCkLKiq7wam/35ifq+uf2tH3/h5q4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qD3BfcNw9YVIKaLHic8bOdmVJWV1iDIKom2pdYBb2iJu8fLmuOb9mov7LzDbIMelfdcJy+FOlY5dZFP5/IR8R3BrRa9XoL6747kQTYyNzUdgsC9y2osOh1gpQqCygNBtfs7pIPq9cqAO6hue53MLzxH+5vr2LXuAbq/o33E2+5g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=libc.org; spf=pass smtp.mailfrom=libc.org; arc=none smtp.client-ip=104.156.224.86
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=libc.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=libc.org
+Date: Wed, 21 Feb 2024 14:06:39 -0500
+From: "dalias@libc.org" <dalias@libc.org>
+To: "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>
+Cc: "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
+	"suzuki.poulose@arm.com" <suzuki.poulose@arm.com>,
+	"Szabolcs.Nagy@arm.com" <Szabolcs.Nagy@arm.com>,
+	"musl@lists.openwall.com" <musl@lists.openwall.com>,
+	"linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+	"linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+	"kvmarm@lists.linux.dev" <kvmarm@lists.linux.dev>,
+	"corbet@lwn.net" <corbet@lwn.net>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+	"broonie@kernel.org" <broonie@kernel.org>,
+	"oliver.upton@linux.dev" <oliver.upton@linux.dev>,
+	"palmer@dabbelt.com" <palmer@dabbelt.com>,
+	"debug@rivosinc.com" <debug@rivosinc.com>,
+	"aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>,
+	"shuah@kernel.org" <shuah@kernel.org>,
+	"arnd@arndb.de" <arnd@arndb.de>, "maz@kernel.org" <maz@kernel.org>,
+	"oleg@redhat.com" <oleg@redhat.com>,
+	"fweimer@redhat.com" <fweimer@redhat.com>,
+	"keescook@chromium.org" <keescook@chromium.org>,
+	"james.morse@arm.com" <james.morse@arm.com>,
+	"ebiederm@xmission.com" <ebiederm@xmission.com>,
+	"will@kernel.org" <will@kernel.org>,
+	"brauner@kernel.org" <brauner@kernel.org>,
+	"hjl.tools@gmail.com" <hjl.tools@gmail.com>,
+	"linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>,
+	"paul.walmsley@sifive.com" <paul.walmsley@sifive.com>,
+	"ardb@kernel.org" <ardb@kernel.org>,
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
+	"linux-mm@kvack.org" <linux-mm@kvack.org>,
+	"thiago.bauermann@linaro.org" <thiago.bauermann@linaro.org>,
+	"akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+	"sorear@fastmail.com" <sorear@fastmail.com>,
+	"linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
+Subject: Re: [musl] Re: [PATCH v8 00/38] arm64/gcs: Provide support for GCS
+ in userspace
+Message-ID: <20240221190639.GU4163@brightrain.aerifal.cx>
+References: <20240220235415.GP4163@brightrain.aerifal.cx>
+ <a57d6c7eada4b9a7c35addbc8556f5b53a0c3e6f.camel@intel.com>
+ <20240221012736.GQ4163@brightrain.aerifal.cx>
+ <d18f060d-37ac-48b1-9f67-a5c5db79b34e@sirena.org.uk>
+ <20240221145800.GR4163@brightrain.aerifal.cx>
+ <4a3809e8-61b2-4341-a868-292ba6e64e8a@sirena.org.uk>
+ <20240221175717.GS4163@brightrain.aerifal.cx>
+ <f4a54297767eb098d903404cbe8860d655d79bed.camel@intel.com>
+ <20240221183055.GT4163@brightrain.aerifal.cx>
+ <c3085fbe10193dfe59b25bc7da776e60779b0e8c.camel@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <c3085fbe10193dfe59b25bc7da776e60779b0e8c.camel@intel.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 
-Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org> writes:
+On Wed, Feb 21, 2024 at 06:53:44PM +0000, Edgecombe, Rick P wrote:
+> On Wed, 2024-02-21 at 13:30 -0500, dalias@libc.org wrote:
+> > > 3 is the cleanest and safest I think, and it was thought it might
+> > > not
+> > > need kernel help, due to a scheme Florian had to direct signals to
+> > > specific threads. It's my preference at this point.
+> > 
+> > The operations where the shadow stack has to be processed need to be
+> > executable from async-signal context, so this imposes a requirement
+> > to
+> > block all signals around the lock. This makes all longjmps a heavy,
+> > multi-syscall operation rather than O(1) userspace operation. I do
+> > not
+> > think this is an acceptable implementation, especially when there are
+> > clearly superior alternatives without that cost or invasiveness.
+> 
+> That is a good point. Could the per-thread locks be nestable to address
+> this? We just need to know if a thread *might* be using shadow stacks.
+> So we really just need a per-thread count.
 
-> On 21/02/2024 16:31, Arnd Bergmann wrote:
->> On Wed, Feb 21, 2024, at 13:59, Javier Martinez Canillas wrote:
->>> These options are needed by some Linux distributions (e.g: Fedora), so
->>> let's enable them to make it easier for developers using such distros.
->>>
->>> Signed-off-by: Javier Martinez Canillas <javierm@redhat.com>
->>> ---
->> 
->> Acked-by: Arnd Bergmann <arnd@arndb.de>
->> 
->>> @@ -1595,6 +1599,7 @@ CONFIG_HTE_TEGRA194_TEST=m
->>>  CONFIG_EXT2_FS=y
->>>  CONFIG_EXT3_FS=y
->>>  CONFIG_EXT4_FS_POSIX_ACL=y
->>> +CONFIG_XFS_FS=m
->>>  CONFIG_BTRFS_FS=m
->>>  CONFIG_BTRFS_FS_POSIX_ACL=y
->> 
->> Unfortunately this will increase build time noticeably, but
->> I agree it is the right thing to do.
->> 
->> Can you send it (with any other acks) to soc@kernel.org so
->> I can merge it from there?
->
-> Due to XFS, please include:
->
-> Nacked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
->
+Due to arbitrarily nestable signal frames, no, this does not suffice.
+An interrupted operation using the lock could be arbitrarily delayed,
+even never execute again, making any call to dlopen deadlock.
 
-Don't worry, I won't to re-send anything if you disagree with the change.
+> > > 1 and 2 are POCed here, if you are interested:
+> > > https://github.com/rpedgeco/linux/commits/shstk_suppress_rfc/
+> > 
+> > I'm not clear why 2 (suppression of #CP) is desirable at all. If
+> > shadow stack is being disabled, it should just be disabled, with
+> > minimal fault handling to paper over any racing operations at the
+> > moment it's disabled. Leaving it on with extreme slowness to make it
+> > not actually do anything does not seem useful.
+> 
+> The benefit is that code that is using shadow stack instructions won't
+> crash if it relies on them working. For example RDSSP turns into a NOP
+> if shadow stack is disabled, and the intrinsic is written such that a
+> NULL pointer is returned if shadow stack is disabled. The shadow stack
+> is normally readable, and this happens in glibc sometimes. So if there
+> was code like:
+> 
+>    long foo = *(long *)_get_ssp();
+> 
+> ...then it could suddenly read a NULL pointer if shadow stack got
+> disabled. (notice, it's not even a "shadow stack access" fault-wise. So
+> it was looked at as somewhat more robust. But neither 1 or 2 are
+> perfect for apps that are manually using shadow stack instructions.
 
-> so this will not be precedence used for further patches like this
-> (Maxime already used such argument, so I want to be sure it will not be
-> used against me in the future)
->
+It's fine to turn RDSSP into an actual emulated read of the SSP, or at
+least an emulated load of zero so that uninitialized data is not left
+in the target register. If doing the latter, code working with the
+shadow stack just needs to be prepared for the possibility that it
+could be async-disabled, and check the return value.
 
-I used the same argument and is a fair one in my opinion. Removing other
-filesystems should send the correct message, if that is the agreegment.
+I have not looked at all the instructions that become #UD but I
+suspect they all have reasonable trivial ways to implement a
+"disabled" version of them that userspace can act upon reasonably.
 
--- 
-Best regards,
-
-Javier Martinez Canillas
-Core Platforms
-Red Hat
-
+Rich
