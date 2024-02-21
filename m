@@ -1,92 +1,104 @@
-Received: from out30-112.freemail.mail.aliyun.com (out30-112.freemail.mail.aliyun.com [115.124.30.112])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3BBD3D0DB;
-	Wed, 21 Feb 2024 09:53:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.112
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F5173FB22
+	for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 09:54:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708509236; cv=none; b=HZTIVxJlO1hPazhTJxFyJWUlBlkPHjp8GO42NMY93hM3txVKhKLDvoT9Q0wUlOGQ2q8ho2wpGF2gkwPM1roiQVhopF6H3nvUzNqKrvsIBQZoxbsc0o0zqG7gKiAkTOUR961BeaJg2muzde0d2AGCoubMDOViytfldsds8DxSZZU=
+	t=1708509261; cv=none; b=Nqc8su8iiRHjHv9xLqI+qztzVu+ik350ZWyZB1kdfKvTJcAC5312x+eADPIJJtv2KlQiBPrxv6tWuf5lQiVuOUQ39VZC1WEYRI2xH5BL/bAWljMReUMQ1VLcdCmWzMLM8iprSzGIE7LSr48e1o9AfK40OYnuzmPvx89XPuGthMs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708509236; c=relaxed/simple;
-	bh=9rQKbf/XB71bS0VjPXbpawybpWP+a4gMQOoTUb1QXKM=;
-	h=Message-ID:Subject:Date:From:To:Cc:References:In-Reply-To; b=X8bAumJGJhBBEbtKlG1628AP7KCs+cb98/cowTmCeWjfXQHPpfFouaaIv2creALy/X7W7rZDy3z6C0x4pe5sel8Qhvw9OPXXmfXBTZ+Ccjolu1XqUr7mAVjgTG4pWYMyZpGucSwc0EoQtCeO3HWxgod7U/C3go/38htvYFha/F4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=HIqycl3r; arc=none smtp.client-ip=115.124.30.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="HIqycl3r"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1708509230; h=Message-ID:Subject:Date:From:To;
-	bh=iMfzMLI+K5kpzH+OCBW/f2plocUmWvxeNdyqymsPQs0=;
-	b=HIqycl3r251f7rLtINT+YGG/9HaU2hZFuMUVmGmFV0Gf1ObUT7eTO5fMdraWUKUMdB45Hqe1Jr6xzvlz6RvKQ0siXSQ2M+YQ7LO5GJkCRLobBUC7sSjbpOl2bAhrus3cY3/+2KLTIwyiFTLaWdwJxVuWTe9j7+w5yQjBLV7DFpE=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R121e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046050;MF=xuanzhuo@linux.alibaba.com;NM=1;PH=DS;RN=12;SR=0;TI=SMTPD_---0W0zZSyp_1708509229;
-Received: from localhost(mailfrom:xuanzhuo@linux.alibaba.com fp:SMTPD_---0W0zZSyp_1708509229)
-          by smtp.aliyun-inc.com;
-          Wed, 21 Feb 2024 17:53:49 +0800
-Message-ID: <1708509152.9501102-1-xuanzhuo@linux.alibaba.com>
-Subject: Re: [PATCH net-next 1/2] xsk: Remove non-zero 'dma_page' check in xp_assign_dev
-Date: Wed, 21 Feb 2024 17:52:32 +0800
-From: Xuan Zhuo <xuanzhuo@linux.alibaba.com>
-To: Yunjian Wang <wangyunjian@huawei.com>
-Cc: <netdev@vger.kernel.org>,
- <linux-kernel@vger.kernel.org>,
- <kvm@vger.kernel.org>,
- <virtualization@lists.linux.dev>,
- <xudingke@huawei.com>,
- Yunjian Wang <wangyunjian@huawei.com>,
- <mst@redhat.com>,
- <willemdebruijn.kernel@gmail.com>,
- <jasowang@redhat.com>,
- <kuba@kernel.org>,
- <davem@davemloft.net>,
- <magnus.karlsson@intel.com>
-References: <1706089058-1364-1-git-send-email-wangyunjian@huawei.com>
-In-Reply-To: <1706089058-1364-1-git-send-email-wangyunjian@huawei.com>
+	s=arc-20240116; t=1708509261; c=relaxed/simple;
+	bh=ir78vHUD8SOpgHLYnJu/TctAQqKxSR//CX4Gftp+PpY=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=FIljlpyBRxm6Nk/BHN+/mhP9SPcaX0bioeMuVshx6fFGgFFQ4U+1ZHAcOTPtVUBn+2grWpVUy1z4g/AAjVadH/a0u1ZIMVcuVENgek7Y55BXLF7R9CvAic/LdkI79e/B3M03u5TUiEa0JGYQOyAPSwbJ3X/PowTDR/sOKua6K/M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rcjIp-0007Gx-Gz; Wed, 21 Feb 2024 10:54:11 +0100
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rcjIp-0020pc-4K; Wed, 21 Feb 2024 10:54:11 +0100
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rcjIp-008mZV-0B;
+	Wed, 21 Feb 2024 10:54:11 +0100
+From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To: Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: kernel@pengutronix.de,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 06/11] misc: open-dice: Convert to platform remove callback returning void
+Date: Wed, 21 Feb 2024 10:53:50 +0100
+Message-ID:  <8e7179794ffbcaa4ad3d0db50cc4aa03f377fc8c.1708508896.git.u.kleine-koenig@pengutronix.de>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <cover.1708508896.git.u.kleine-koenig@pengutronix.de>
+References: <cover.1708508896.git.u.kleine-koenig@pengutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1730; i=u.kleine-koenig@pengutronix.de; h=from:subject:message-id; bh=ir78vHUD8SOpgHLYnJu/TctAQqKxSR//CX4Gftp+PpY=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBl1cgxxQVwARjfqVxgcJw3tXAI+x5CthZ2JXeuX Ph3s96a2UWJATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCZdXIMQAKCRCPgPtYfRL+ Tl/4B/oDzrUTvZhPFmAHuCemhm9wCHb2gzHHLh8/xzfjRirJyt1OK4OSn80BF3Fj6lJ/QC9UIIa VWVwciSnaQ/sbGJl5HfT7LmcggyYQJwLj3SYMD0PnBcKNE3anhI2I2M+zsmbH+F5Tyb3rITMq5V b09z6B2AxH7mV+RpaNEMBqIxfNb8z/rbcUZfJuRm20nHEJ4Rc9E4zWvU49ulXImF8l/+fRK/U8A xRzIgeQ3oXKx/5w33e6iLPMUcytIefLP1TV74ngh5mKrbee6t3y+c84IjH+q1WDodDPI2dIAmx7 XXZIEbS89r+gDjyCfxz6j2EO0NX9Q9P3JtRTahMPQeBPlLSz
+X-Developer-Key: i=u.kleine-koenig@pengutronix.de; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-On Wed, 24 Jan 2024 17:37:38 +0800, Yunjian Wang <wangyunjian@huawei.com> wrote:
-> Now dma mappings are used by the physical NICs. However the vNIC
-> maybe do not need them. So remove non-zero 'dma_page' check in
-> xp_assign_dev.
+The .remove() callback for a platform driver returns an int which makes
+many driver authors wrongly assume it's possible to do error handling by
+returning an error code. However the value returned is ignored (apart
+from emitting a warning) and this typically results in resource leaks.
 
-Could you tell me which one nic can work with AF_XDP without DMA?
+To improve here there is a quest to make the remove callback return
+void. In the first step of this quest all drivers are converted to
+.remove_new(), which already returns void. Eventually after all drivers
+are converted, .remove_new() will be renamed to .remove().
 
-Thanks.
+Trivially convert this driver from always returning zero in the remove
+callback to the void returning variant.
 
+Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+---
+ drivers/misc/open-dice.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
->
-> Signed-off-by: Yunjian Wang <wangyunjian@huawei.com>
-> ---
->  net/xdp/xsk_buff_pool.c | 7 -------
->  1 file changed, 7 deletions(-)
->
-> diff --git a/net/xdp/xsk_buff_pool.c b/net/xdp/xsk_buff_pool.c
-> index 28711cc44ced..939b6e7b59ff 100644
-> --- a/net/xdp/xsk_buff_pool.c
-> +++ b/net/xdp/xsk_buff_pool.c
-> @@ -219,16 +219,9 @@ int xp_assign_dev(struct xsk_buff_pool *pool,
->  	if (err)
->  		goto err_unreg_pool;
->
-> -	if (!pool->dma_pages) {
-> -		WARN(1, "Driver did not DMA map zero-copy buffers");
-> -		err = -EINVAL;
-> -		goto err_unreg_xsk;
-> -	}
->  	pool->umem->zc = true;
->  	return 0;
->
-> -err_unreg_xsk:
-> -	xp_disable_drv_zc(pool);
->  err_unreg_pool:
->  	if (!force_zc)
->  		err = 0; /* fallback to copy mode */
-> --
-> 2.33.0
->
->
+diff --git a/drivers/misc/open-dice.c b/drivers/misc/open-dice.c
+index d279a4f195e2..1e3eb2aa44d9 100644
+--- a/drivers/misc/open-dice.c
++++ b/drivers/misc/open-dice.c
+@@ -165,12 +165,11 @@ static int __init open_dice_probe(struct platform_device *pdev)
+ 	return 0;
+ }
+ 
+-static int open_dice_remove(struct platform_device *pdev)
++static void open_dice_remove(struct platform_device *pdev)
+ {
+ 	struct open_dice_drvdata *drvdata = platform_get_drvdata(pdev);
+ 
+ 	misc_deregister(&drvdata->misc);
+-	return 0;
+ }
+ 
+ static const struct of_device_id open_dice_of_match[] = {
+@@ -179,7 +178,7 @@ static const struct of_device_id open_dice_of_match[] = {
+ };
+ 
+ static struct platform_driver open_dice_driver = {
+-	.remove = open_dice_remove,
++	.remove_new = open_dice_remove,
+ 	.driver = {
+ 		.name = DRIVER_NAME,
+ 		.of_match_table = open_dice_of_match,
+-- 
+2.43.0
+
