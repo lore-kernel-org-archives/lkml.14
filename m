@@ -1,81 +1,96 @@
-Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC0ED3B78B
-	for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 07:08:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 032BF39FED
+	for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 07:08:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708499288; cv=none; b=d/n5IuBRG7y6TaEpNRjGpu+O8klnK+v8FNrmS2fvKpxzhOObtoHlMaZmJLEalvot2IwrhFa0+oFQC+gYWQFlmlUdqobkUq/Bcp1RFKj4H+ne7Qf5coEdaLdfQdLGc2kbQJ67r3EHm15gtpw7i0kSCI+J5e2/SH2E7q1wvUAFZZA=
+	t=1708499314; cv=none; b=eNv/7XGpX1Kjjg/WmTecHaFidutEz549FVVYCWeFhtplGbXjPYXYoSKd4BxdvxJMzGs/tgW1W1qgLghadVdUfL8QmCCVkhk0ZfYUViDo/54Y2YrTnyVrIKTiZQcbk22RBLB9lteLGNoBC5tsF3HOq73ktIVGoxkxinTR4/NZ1eY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708499288; c=relaxed/simple;
-	bh=L6zbD+r4iAQVkolpUdqaC5kdIDlOZs92K4PNPYeqx8Y=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Vs186qEZ5D9z5WOqCJ8murJvrCmpseUmGQFQAU6mLhxTJ08x+oEprI30tAGkZfEZdWmNjA9s9g+9PWLcWxzUfNliEwPBV8WxRmH5UzB/rkAcXYyFulNmAzQaAs+jNOLTtXD1GBnI/Zi2PGpCGHhfzF66HDlwIoVaKi3OstzdTFk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=vkQfgsQD; arc=none smtp.client-ip=209.85.167.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1708499314; c=relaxed/simple;
+	bh=ILMWXHf1c4fKHxaiL2VfH6xoMnEXAVo72XaCgHVtOAI=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=ipdG70aGIJLQKg7hLh+6TNSS42HGWmEDP/AiLr8xSMPCO/I4ZGUCf+923N+YcWUS9xH4cp+lx04Wz2WMgsVVyfZ3GL93Ch4NIv5wda6N4xoDLMKw9FZuKtNGiVfI2CObeZh6AofXDoqxEdn/kfzvHSDSmdmU8xM6mwuMFqsZ6Qc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=rKmildM2; arc=none smtp.client-ip=209.85.128.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vkQfgsQD"
-Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-511976c126dso402590e87.1
-        for <linux-kernel@vger.kernel.org>; Tue, 20 Feb 2024 23:08:06 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rKmildM2"
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-41272d42207so5879615e9.2
+        for <linux-kernel@vger.kernel.org>; Tue, 20 Feb 2024 23:08:32 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1708499285; x=1709104085; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=L6zbD+r4iAQVkolpUdqaC5kdIDlOZs92K4PNPYeqx8Y=;
-        b=vkQfgsQDHrbxG0DiaoWAnw8FsfnbUdtZib000uWHg0wIlYT+HrgSStHuiYTFUcJX+e
-         WxuIkK2ISklm7coEPKp5c4WxJ1ItMjJcaNB8ViHy0TMQQou9LBHAhK8lNrXNP1UFDnmj
-         0PC0tcY6HTPeoetxu516Pf+mF4jHWA3jzFvgNzv3dSdg4L83oGnRoGj6PvPKG0wgqado
-         oXMgHUNtdrh61hAjN49nc9F36tiScy25yxpJYLLhwKySzAuU9+zoHH24k2aRZOjzq/n/
-         jgDtVQNmz3Cy8icJcJZdMLlt0wqpN9qNPWLCE0UozdxYIJUcxYOwIkkojnyKbpr0Qq0+
-         zRsg==
+        d=linaro.org; s=google; t=1708499311; x=1709104111; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Wz/aacgnQr6q7J4QTYXshFSvodlW8ID/l/+tL4l/K6I=;
+        b=rKmildM2H485LDT1Lcl3yjYXtkhF6AgUCCufhtZrnrswDT3qyGcwH2x0miM8iYxyRS
+         r5mr5yAuxodts+4Hj84m4dlNt3ilKBEcmFYPJ3sZ79pDYGrnE6hTooJUmKn9KSewdkzh
+         2vKHQCrRyCYTzEsJVCTeBkDoRBm9YvMMRYMRhjZ90n+mJRwFCEEUqmTGtaq0SZpgNXmm
+         0W9mbfBA6XVQdqSpxnniaz5MHztQ/Loa4tpyv7b9p+AVskxN/am0rc1qP+52i+OcVz2p
+         di9E0MYvj+ZC+DtM/PD4kRQW13H8DBIIWCbWs7G2vWriXUBPbITfVnGvhA7wXXGARqMw
+         DuKA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708499285; x=1709104085;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=L6zbD+r4iAQVkolpUdqaC5kdIDlOZs92K4PNPYeqx8Y=;
-        b=KaCBIJPMdnpTdHLplxAnudOukmt7SVRbOFiRe8Uy/ON1aD64SNrQgsWt+fHWX1y372
-         AKdKW9qaOz7zd3L7N3MrAOz4zAjLDGlaYuKQomb9w0YoUaO5P4FfsHRDejPAVAHU/xfr
-         KIymzwLqnAVtF34cpLIErwrXI9NklTEQNbRM5hEUnaKxuhdVonxC0ODCIqIRUs+WuCKD
-         U1K2uukQrDLi9a1yxFnyp66eFYTsg3Iq2uwm9bK80zU9tTb/FW/yMQ6LCZL/bNbYHFMY
-         n3SspL/uYhZtQPaMOL8UDbQPkuN5a6q9tUxDdihLLEfTQQD0wqoKR8BAA3V7rGd0XAG2
-         qWRQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV8nxpI3SCQ4CpE+9dcK/G4vAf0mQ+p4aGL5i4Dq9/u4IcL0AQjTG9rZbuf/80H9Fa8QaN65nAwpBXeeU1LVFzQMaJFbUUldZWDxVgp
-X-Gm-Message-State: AOJu0YzjOh/n8BfccW/1t8u42qC54eVu19XEC/6TCPvI73vVe9W7srGM
-	b7eMeZ+JcuZ234cQ57/pBIdfIA1cQFtRybePaEbshHf7KdLpPDuIUFgHLPuuzzbqza7Sf0kLATm
-	H6+k/vws5g4yt9qL2hvMOJLNfib2DpDqCkqT8
-X-Google-Smtp-Source: AGHT+IHa365tMHI74PcJwpoL4by21xl2KdQYoT7uJGyPBKgsElto/rB7Qh2SvL3fkLhg7dgdD64D4s6+6hqom1eKg68=
-X-Received: by 2002:a05:6512:2107:b0:512:d6ca:71ae with SMTP id
- q7-20020a056512210700b00512d6ca71aemr61918lfr.31.1708499284887; Tue, 20 Feb
- 2024 23:08:04 -0800 (PST)
+        d=1e100.net; s=20230601; t=1708499311; x=1709104111;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Wz/aacgnQr6q7J4QTYXshFSvodlW8ID/l/+tL4l/K6I=;
+        b=L0x98DQnIphdF6bWpQsykjbKQedU793ZZFT4i8GltsdGBwS8aJKMQD1EyDd1BSb+HZ
+         SA1sxeFNqcIHLNSN1n+ooScBRe3dPZBVDTgW7Ezi4lp8VZ3T0y3YpZmURVoHjJrG/XEq
+         SgMGsUZFoa7eIRl2UGgWWieaFhz/039otAR7sL/kYzdk4hhNL7d7qn9OmxZygoCsKdML
+         8Yf8Ufpt8Gx7gWLj10c5DSY7z5eWLXopcH8xNaUtFnp8jXBv0N1XF82h/1R1bNOzEBCx
+         JNXADQdt2om2EydwUe5af2hibkjZykRM3noiZjeE906ybDJF5XAFC2cvRyCXooQ45V9G
+         i2ww==
+X-Forwarded-Encrypted: i=1; AJvYcCU+ymnTosPCoagRD7Epuwct/AJ8wpUCm21eHirc2dvpA/rYW/HBGxQ6HaJtoS3IueeWgHSGdl6ajiiqR6Ztn5msdthqyWjQ2cu7ryRL
+X-Gm-Message-State: AOJu0YzC2ZiIzzbJuv3k+0nM4bav9bEyorza9B486mFIcEl2BHuV1ZXH
+	y5+V13+6VjNnoXyJOARHCL+/tiJUVIX327H7fvRGHpBp1HuOMzfjBSmVQqRCbWE=
+X-Google-Smtp-Source: AGHT+IHkNCk1VUxhjyPZwK1t9iqMEkJTTUWnWg1Cbi1kKmz7lDz1AItpjPBmJIU2ebvjOgJ900bIrg==
+X-Received: by 2002:a05:600c:1c1e:b0:412:1d7d:6c51 with SMTP id j30-20020a05600c1c1e00b004121d7d6c51mr12626174wms.6.1708499311213;
+        Tue, 20 Feb 2024 23:08:31 -0800 (PST)
+Received: from [192.168.1.195] ([5.133.47.210])
+        by smtp.gmail.com with ESMTPSA id m16-20020a05600c3b1000b0041262ec5f0esm10700077wms.1.2024.02.20.23.08.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 20 Feb 2024 23:08:30 -0800 (PST)
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+To: linux-arm-msm@vger.kernel.org, Ekansh Gupta <quic_ekangupt@quicinc.com>
+Cc: gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, 
+ stable <stable@kernel.org>
+In-Reply-To: <20240108100513.19993-1-quic_ekangupt@quicinc.com>
+References: <20240108100513.19993-1-quic_ekangupt@quicinc.com>
+Subject: Re: [PATCH v1] misc: fastrpc: Pass proper arguments to scm call
+Message-Id: <170849930946.22958.1400106110222273867.b4-ty@linaro.org>
+Date: Wed, 21 Feb 2024 07:08:29 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240220191114.3272126-1-dhavale@google.com> <6c2d5345-98bc-49b1-adc7-bcc349a0a6bb@linux.alibaba.com>
-In-Reply-To: <6c2d5345-98bc-49b1-adc7-bcc349a0a6bb@linux.alibaba.com>
-From: Sandeep Dhavale <dhavale@google.com>
-Date: Tue, 20 Feb 2024 23:07:52 -0800
-Message-ID: <CAB=BE-Se6nO_VTncA9CH7k65xRPtyxo=xSH__i_OhV8++LfEYQ@mail.gmail.com>
-Subject: Re: [PATCH v1] erofs: fix refcount on the metabuf used for inode lookup
-To: Gao Xiang <hsiangkao@linux.alibaba.com>
-Cc: Gao Xiang <xiang@kernel.org>, Chao Yu <chao@kernel.org>, Yue Hu <huyue2@coolpad.com>, 
-	Jeffle Xu <jefflexu@linux.alibaba.com>, quic_wenjieli@quicinc.com, 
-	stable@vger.kernel.org, kernel-team@android.com, linux-erofs@lists.ozlabs.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.12.2
 
->
-> If it looks good to you, could you resend a formal patch? Thanks!
->
-Hi Gao,
-This looks better and more readable. I will send a v2.
 
-Thanks,
-Sandeep.
+On Mon, 08 Jan 2024 15:35:13 +0530, Ekansh Gupta wrote:
+> For CMA memory allocation, ownership is assigned to DSP to make it
+> accessible by the PD running on the DSP. With current implementation
+> HLOS VM is stored in the channel structure during rpmsg_probe and
+> this VM is passed to qcom_scm call as the source VM.
+> 
+> The qcom_scm call will overwrite the passed source VM with the next
+> VM which would cause a problem in case the scm call is again needed.
+> Adding a local copy of source VM whereever scm call is made to avoid
+> this problem.
+> 
+> [...]
 
-> Thanks,
-> Gao Xiang
+Applied, thanks!
+
+[1/1] misc: fastrpc: Pass proper arguments to scm call
+      commit: 5169a077f22a23d27660d048d5f43a592fd2c62f
+
+Best regards,
+-- 
+Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+
