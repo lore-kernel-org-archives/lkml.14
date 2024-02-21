@@ -1,105 +1,77 @@
-Received: from outgoing.mit.edu (outgoing-auth-1.mit.edu [18.9.28.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f52.google.com (mail-oo1-f52.google.com [209.85.161.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E13E280C04
-	for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 15:53:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=18.9.28.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E03AF80BFF
+	for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 15:53:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708530782; cv=none; b=EcdioNRONrhHyoAQ0CYigulrVZTb5GOaWmfqYBhZAh8biO6DjRYFsxxnB6JBLYR+PeuyInfMDe8XG9ASnr0B0D67FXyYcKl7jun2+PduavXXRYV1HJI3KUlMDAZ7HZifCwZkYEA6oLhOx1cjgVKqVVEKMrPuEkkJSyWKvxmYeIA=
+	t=1708530785; cv=none; b=IsQOHFpfL+MN3sLLG9vRe2qpaKKk3mYWZDpi1weTSz6CGnxcM6pAEXP43Rb6m/D4CpuKPEH8x4M757R9hNK3Il6uLTtVBdQMvt83p8zyIcVlf1TEHCsQ550bv5N7pikSpKdXoW8RiUbjogK4+KBpHd+aTuRwDSm/nFRVIIus6ZY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708530782; c=relaxed/simple;
-	bh=Ra9/UKRL6qZi0vZz1rdmAVM+RpYX5dfMa4L3P5pdOAc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=H6OoifpVaMX6gCCjBR/uZGxKwYkaqvtLdUkw0a/SMKd+w3PeWgzwgTq+T11MHjbjTQvdFCb5Zq6XggAF3+7tK4ndXssjTyXLfSi+MABcjWW6XMtaacb5c2g3sp5aeyhD170UH/59DhE0wjC8gzRivuKW4ZqAmWkF6NsoTITg434=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mit.edu; spf=pass smtp.mailfrom=mit.edu; dkim=pass (2048-bit key) header.d=mit.edu header.i=@mit.edu header.b=ki+ifFrU; arc=none smtp.client-ip=18.9.28.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mit.edu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mit.edu
+	s=arc-20240116; t=1708530785; c=relaxed/simple;
+	bh=9VgNrg7E3WxzPLbpdW7b+fQZzMzEpRyOCT/6WT2Sf4Y=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=HzdUUKzcSU/QtOUqAazee86C6TQ6J2xi+hrzYz3UU3QQkfHewbrH7yGklB0P/S6rADK0nEDYsamF2+lM7TZH4+mCUlBTFyJReSojt12XlMp+tZuJoMaDGiXUhf5yJniAAB5BdLFdi1AgHvzTusHITrWAv26SWrh9XyKtWF37YG4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=KPVNGf/J; arc=none smtp.client-ip=209.85.161.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mit.edu header.i=@mit.edu header.b="ki+ifFrU"
-Received: from cwcc.thunk.org (pool-173-48-102-198.bstnma.fios.verizon.net [173.48.102.198])
-	(authenticated bits=0)
-        (User authenticated as tytso@ATHENA.MIT.EDU)
-	by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 41LFpwMs001015
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 21 Feb 2024 10:51:59 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mit.edu; s=outgoing;
-	t=1708530721; bh=efKwvL9uolpwwXii1YLcblvLBk1Mkbsw9Oy9VotAMtk=;
-	h=Date:From:Subject:Message-ID:MIME-Version:Content-Type;
-	b=ki+ifFrU+r4cRsszgtOQQkvuU8AnK11ChkT5VsV8okX/4tPPZv/N0zZwFcraoxJcX
-	 xXwHcov90zmAowqGIJ4yZiC8WPGoFN7WAxYbfa9Ro5H2nY9JOLn8RALnRzQLMz4mXi
-	 PSvltheY44N+df/l11hoGrSkvVM6hcD1/kP6+yeFdEQhyNDFO44Bbd0wZ1UBTcOciP
-	 Be9ufPu6gYU02l+7GS/I8nF1rQxUALOkWsFfbRtFdYqU6AxKkvhtYccJvCNfFeMbz3
-	 Gl+Ag+qhnQ2MRd5dcj1zcOBxWTNkLXH+uCnhSY/FNrFZxI4pzRF0wr1EZLYHNQO3KQ
-	 uJE9Yj0ro6KfA==
-Received: by cwcc.thunk.org (Postfix, from userid 15806)
-	id DA42915C0336; Wed, 21 Feb 2024 10:51:57 -0500 (EST)
-Date: Wed, 21 Feb 2024 10:51:57 -0500
-From: "Theodore Ts'o" <tytso@mit.edu>
-To: "Jason A. Donenfeld" <Jason@zx2c4.com>
-Cc: x86@kernel.org, linux-coco@lists.linux.dev, linux-kernel@vger.kernel.org,
-        Borislav Petkov <bp@alien8.de>,
-        Daniel P =?iso-8859-1?Q?=2E_Berrang=E9?= <berrange@redhat.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Elena Reshetova <elena.reshetova@intel.com>,
-        "H . Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH v3] x86/coco: Require seeding RNG with RDRAND on CoCo
- systems
-Message-ID: <20240221155157.GB594407@mit.edu>
-References: <20240221123248.25570-1-Jason@zx2c4.com>
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="KPVNGf/J"
+Received: by mail-oo1-f52.google.com with SMTP id 006d021491bc7-5a020f5a4c5so73665eaf.1
+        for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 07:53:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1708530783; x=1709135583; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=9VgNrg7E3WxzPLbpdW7b+fQZzMzEpRyOCT/6WT2Sf4Y=;
+        b=KPVNGf/JFzGtwRewRMQg5bShOJa0Dgvza0OeCoUI1GWDo3nuIs/PNoWjuu8dwSGmAf
+         SZPCubx3OIjthO+2MmVHtovqUtncme4JxvyCFCCOmhxRsa6LoP9T/D5mw9loiBQBUzeo
+         HdjFsS431y7wY1GXtpOUY9cN0BW3QNQF26OSI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708530783; x=1709135583;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=9VgNrg7E3WxzPLbpdW7b+fQZzMzEpRyOCT/6WT2Sf4Y=;
+        b=g08rVR3Q6+aJhtaWIE/y25pHu+O60xqOSJPqLNQYwaIr7cmam2PUzj2f6NgVD95zn0
+         j2oE6BzZAXakiiS6lbdjrrrkeJZ23NVt1ejVgG12RVXvQZ3FzN8fivGpl4R0QgEWhqNE
+         cRXiJPlELaHNnNeQGu+Ad4HOZKJAm4NHjO6nVZeHUfNxMfVAIPG0yrDZSfncRMJBdInd
+         ChTNqbYo/MOMzwkDQzc9Z7cw3bxPDwZjbPcOgy3Kwcxp5pSehRu/PG/+nRZ6rpP2EaoJ
+         acZ5j2E+1J9s39cfqP6KBo/wtksH5f28NHSXhs2R5yXhwz1tgZ60KbvkJ9H82lfTq6DO
+         271A==
+X-Forwarded-Encrypted: i=1; AJvYcCUXOsSyqRpacMXcyOyEf3xXrgIySyxa2vyKDWkqwWDGrCp92X9vURFq5UA1m/Wf1mVtthFWRUVZLV7cyJ/8TifyYfy5Vt+apuM8PXkV
+X-Gm-Message-State: AOJu0YwrnB3PrQTNAE5cbX5RUHLqLM0U9sL0VnFdQGmfSkVN2t0L5VgQ
+	uMOeSC3Y3oy+L8c6W/RkgeKf5CtqJN/yp6Y7UQ/pM24kQ9yVtois60GwZZK4Hw3X8S7McmSfLxt
+	UKZSnQVUt1UdzQ/lUrVa/++ISn/yR7ld0YQNe
+X-Google-Smtp-Source: AGHT+IHQpFoZXWJNF9xVniu1c31fdFShm2fJtfOtAD0LYOdmrGGoF9j9d5Fv7SW7EM5r/4boF5/8ahxD5g+W+hfI9X4=
+X-Received: by 2002:a4a:355a:0:b0:59f:fc30:d3aa with SMTP id
+ w26-20020a4a355a000000b0059ffc30d3aamr5366824oog.3.1708530782898; Wed, 21 Feb
+ 2024 07:53:02 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240221123248.25570-1-Jason@zx2c4.com>
+References: <CAG-rBihs_xMKb3wrMO1+-+p4fowP9oy1pa_OTkfxBzPUVOZF+g@mail.gmail.com>
+ <20240221114357.13655-2-vbabka@suse.cz>
+In-Reply-To: <20240221114357.13655-2-vbabka@suse.cz>
+From: Sven van Ashbrook <svenva@chromium.org>
+Date: Wed, 21 Feb 2024 10:52:52 -0500
+Message-ID: <CAG-rBihOr+aAZhO4D2VBwSx-EGg_gbgBYKN3fSBTPKCXdz9AqA@mail.gmail.com>
+Subject: Re: [PATCH] mm, vmscan: prevent infinite loop for costly GFP_NOIO |
+ __GFP_RETRY_MAYFAIL allocations
+To: Vlastimil Babka <vbabka@suse.cz>
+Cc: Andrew Morton <akpm@linux-foundation.org>, bgeffon@google.com, 
+	cujomalainey@chromium.org, kramasub@chromium.org, 
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org, linux-sound@vger.kernel.org, 
+	perex@perex.cz, stable@vger.kernel.org, tiwai@suse.com, tiwai@suse.de, 
+	Michal Hocko <mhocko@kernel.org>, Mel Gorman <mgorman@techsingularity.net>
+Content-Type: text/plain; charset="UTF-8"
 
-On Wed, Feb 21, 2024 at 01:32:40PM +0100, Jason A. Donenfeld wrote:
-> There are few uses of CoCo that don't rely on working cryptography and
-> hence a working RNG. Unfortunately, the CoCo threat model means that the
-> VM host cannot be trusted and may actively work against guests to
-> extract secrets or manipulate computation. Since a malicious host can
-> modify or observe nearly all inputs to guests, the only remaining source
-> of entropy for CoCo guests is RDRAND.
-> 
-> If RDRAND is broken -- due to CPU hardware fault -- the RNG as a whole
-> is meant to gracefully continue on gathering entropy from other sources,
-> but since there aren't other sources on CoCo, this is catastrophic.
-> This is mostly a concern at boot time when initially seeding the RNG, as
-> after that the consequences of a broken RDRAND are much more
-> theoretical.
-> 
-> So, try at boot to seed the RNG using 256 bits of RDRAND output. If this
-> fails, panic(). This will also trigger if the system is booted without
-> RDRAND, as RDRAND is essential for a safe CoCo boot.
-> 
-> This patch is deliberately written to be "just a CoCo x86 driver
-> feature" and not part of the RNG itself. Many device drivers and
-> platforms have some desire to contribute something to the RNG, and
-> add_device_randomness() is specifically meant for this purpose. Any
-> driver can call this with seed data of any quality, or even garbage
-> quality, and it can only possibly make the quality of the RNG better or
-> have no effect, but can never make it worse. Rather than trying to
-> build something into the core of the RNG, this patch interprets the
-> particular CoCo issue as just a CoCo issue, and therefore separates this
-> all out into driver (well, arch/platform) code.
-> 
-> Cc: Borislav Petkov <bp@alien8.de>
-> Cc: Daniel P. Berrangé <berrange@redhat.com>
-> Cc: Dave Hansen <dave.hansen@linux.intel.com>
-> Cc: Elena Reshetova <elena.reshetova@intel.com>
-> Cc: H. Peter Anvin <hpa@zytor.com>
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-> Cc: Theodore Ts'o <tytso@mit.edu>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Signed-off-by: Jason A. Donenfeld <Jason@zx2c4.com>
+Thanks so much ! We will stress test this on our side.
 
-Reviewed-by: Theodore Ts'o <tytso@mit.edu>
+We do this by exhausting memory and triggering many suspend/resume
+cycles. This reliably reproduces the problem (before this patch).
 
-						- Ted
+Of course, as we all know, absence of evidence (no more stalls in stress tests)
+does not equal evidence of absence (stalls are gone in all code paths).
