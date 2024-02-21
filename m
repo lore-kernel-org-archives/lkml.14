@@ -1,159 +1,168 @@
-Received: from EUR03-AM7-obe.outbound.protection.outlook.com (mail-am7eur03on2050.outbound.protection.outlook.com [40.107.105.50])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E08483D579;
-	Wed, 21 Feb 2024 08:03:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.105.50
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708502606; cv=fail; b=pTo3xO0BBNxVfPtztUu76dvEpjGQtwm43cdYwEykU11+HFz+mNjYejVH0Swhmz22v0mrepBpoz7xmzF5WcsgOGoX9q9egsz66hnD2X6ysNFygorfH7oQP+daOBoh43xlOEGqhqoKqfdLMEJ1Rj4dJlhisZBqfigbtpC64pltONU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708502606; c=relaxed/simple;
-	bh=1rOvfG3CVvw0sQpSUWtVmBbFTH39Wh/LYtTjrBe3UyQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=L0YruydEvLO1wGRcHft0Dnk4ht61qdYzFBftNrvFfZV5LUBu+z8D+3+a8gCxFVMGJlqFMAxIlGUr4OuO7haSCTbXg52rSL+a82rqlXufKE8MgHmGIwWVE+QrkxC717hdPWIAENxUVV/j8CDsfEwC1NDpn5ph7ryvosEeHIv4FD8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=jPXdRbbH; arc=fail smtp.client-ip=40.107.105.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE40E3A269;
+	Wed, 21 Feb 2024 08:05:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1708502730; cv=none; b=TezZUO6M84Ep+HIMbQiskYsOHIQAFvVPYioL8I+CyGdD38mBSHwkQ8WqGIPW2w5kISTo4Z90ZUY+T98Z+/JsHNomn/461uUphCTmGvRfc/y4zJm8N3hkTTsICyt1f7QQGuBHAOwAsNpVmyYTT/i0Qt93tNfkLuh9iXWYkgdmKKY=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1708502730; c=relaxed/simple;
+	bh=Tpr/yec3AGC4Lc2eJDg1OjnAD9sBLP7h0jxhyqIYTUQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RvMCgaHuWbVU3OlQmOqJ3vYPDGHFhbaL5Whsickfh9y2a1dr3AVYl0t/HirioYTq3fv4nvcmKRRbJfwgcjfq45LHqCqMO/eYLLVL6koBBPb8ce/Wr4/pDIDeVQLSEIVfuA5jNrlRsNvzE0xNDFVco8oqP228BLNKcYNw1CYoGJI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eK6ijRXR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="jPXdRbbH"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=exzMYKUvWU6IAhB1bgqCJBldd+ja82dOxqU80kL3/rqDM6gS719SzhDKFR/F/lOWn9yyEznSNqeDnD9VnSutlhOIczbCaiR3jfWH/Y9pDDmV/MfANJpOKRuX+TrA/ZEqfLGhu1lwjwNxy49pFbpoVjKYllKQZsBkRdVK/td6/rA1fgIAvLZ63CVzwQpH2bgBMA7sE/hWpesEftZQhYv9kPb0PnLfD4/c6YqIaMqw2w4/GdgJQPcqLKU9pnOSiL4WxBKfJ8/fpJEq5ltxDR14Jsxv3GYpavhkZR29lWmrgczcM6WhT72pSdUISPw8ulhx1fQcfGxi6zUMNWWBnedDFw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=xxAZWu6W5ALc+lct55lahttCBBz52BPvq60V32g4JA4=;
- b=GnSsvh11CZiDYXO+SNtezQKCutQKHVc3PgJbGxI/XhhlpXjOV2ALiHcNFI+3huypWg2qM1ld4D7wLVKBakzbiKd+8fk5d56AUtHOJEdYZzioahUsfHWPs1e/u1S9b6OXmgDsdJQhpazgI+Ml6rj+o7JD3viCxsEs5QSe5V0tFAu11X/1ThimPgQpXJhxeRdHk2DBQoR1M4LcxMg6CB0TD3zfx9LZmgvLWZHlTrZ7Q1wTa/C+iaXDN/4Tz2TUiCHvkk/sMZVsID9BuxW52V56W8WQM6WnM7YbHQkwFOMigFyvQYqLEHLOhJeL4sCGyB7GQKyuOI0PNPP8OVzcZuNnGw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=xxAZWu6W5ALc+lct55lahttCBBz52BPvq60V32g4JA4=;
- b=jPXdRbbHbKOwUc3AE5+n1iNuk+sCTq5wN2zlTQBRLPTdNRZ5KhsNLvznupIPeeu92hTC6aXfmztiE3HycX5xcNyHATegCdFy2+y8axofQWxMj4kZhRXEFNn3kAurCe0oRED449lKRRrq1oQdD++zkI2zfgM3JicNbTjop/+cRxc=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from DU2PR04MB8822.eurprd04.prod.outlook.com (2603:10a6:10:2e1::11)
- by AM7PR04MB6997.eurprd04.prod.outlook.com (2603:10a6:20b:10d::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7292.37; Wed, 21 Feb
- 2024 08:03:22 +0000
-Received: from DU2PR04MB8822.eurprd04.prod.outlook.com
- ([fe80::d45f:4483:c11:68b0]) by DU2PR04MB8822.eurprd04.prod.outlook.com
- ([fe80::d45f:4483:c11:68b0%7]) with mapi id 15.20.7292.029; Wed, 21 Feb 2024
- 08:03:22 +0000
-From: Xu Yang <xu.yang_2@nxp.com>
-To: gregkh@linuxfoundation.org,
-	robh+dt@kernel.org,
-	krzysztof.kozlowski+dt@linaro.org,
-	shawnguo@kernel.org,
-	conor+dt@kernel.org
-Cc: s.hauer@pengutronix.de,
-	kernel@pengutronix.de,
-	festevam@gmail.com,
-	linux-imx@nxp.com,
-	peter.chen@kernel.org,
-	xu.yang_2@nxp.com,
-	jun.li@nxp.com,
-	linux-usb@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eK6ijRXR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 68B0DC433C7;
+	Wed, 21 Feb 2024 08:05:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1708502729;
+	bh=Tpr/yec3AGC4Lc2eJDg1OjnAD9sBLP7h0jxhyqIYTUQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=eK6ijRXRympTy7Dlryxc1+ccz+sSc9s0V1MK9EzciMsOwCX31RlKWS1sIRNlLJZOl
+	 nNXm/VKIPBSVHaaNT4XyAGeUwcPHOffWPNyCwwX0+nJCVmevA9E8CLAmGbhFpzDN5i
+	 gNF1JoS+qJE4Du1iQMrDeb0MtjwdodkrHmvMa+4mVt5chON5GQBTtJVUNvDNQwEUCa
+	 0HIEAJejS3pOB2BbCfmA/xZODMcpB6TjHBgD1ZtL4YmsLwENycTADaiN9TTZnwfMf+
+	 zT2IK655ADuV66esW14ijM7EDLGHrRR4PSXMazD2xJGOMUn2JbiYJplEH9ruicueIK
+	 +V/92rXlMN8Bw==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan@kernel.org>)
+	id 1rchbe-000000004Sj-2sC5;
+	Wed, 21 Feb 2024 09:05:30 +0100
+Date: Wed, 21 Feb 2024 09:05:30 +0100
+From: Johan Hovold <johan@kernel.org>
+To: Abhinav Kumar <quic_abhinavk@quicinc.com>
+Cc: Rob Clark <robdclark@gmail.com>,
+	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+	Kuogee Hsieh <quic_khsieh@quicinc.com>, Sean Paul <sean@poorly.run>,
+	Marijn Suijten <marijn.suijten@somainline.org>,
+	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+	Bjorn Andersson <quic_bjorande@quicinc.com>,
+	quic_jesszhan@quicinc.com, quic_sbillaka@quicinc.com,
+	dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org,
+	linux-arm-msm@vger.kernel.org, regressions@lists.linux.dev,
 	linux-kernel@vger.kernel.org
-Subject: [RESEND v6 9/9] usb: chipidea: ci_hdrc_imx: align usb wakeup clock name with dt-bindings
-Date: Wed, 21 Feb 2024 16:02:38 +0800
-Message-Id: <20240221080238.1615536-9-xu.yang_2@nxp.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240221080238.1615536-1-xu.yang_2@nxp.com>
-References: <20240221080238.1615536-1-xu.yang_2@nxp.com>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SI2PR04CA0017.apcprd04.prod.outlook.com
- (2603:1096:4:197::15) To DU2PR04MB8822.eurprd04.prod.outlook.com
- (2603:10a6:10:2e1::11)
+Subject: Re: drm/msm: Second DisplayPort regression in 6.8-rc1
+Message-ID: <ZdWuygp4HuRVXvyl@hovoldconsulting.com>
+References: <ZctVmLK4zTwcpW3A@hovoldconsulting.com>
+ <343710b1-f0f4-5c05-70e6-3c221cdc9580@quicinc.com>
+ <ZczFhVjHIm55JTfO@hovoldconsulting.com>
+ <ZdDNcrf4KpflGeYQ@hovoldconsulting.com>
+ <ZdMwZa98L23mu3u6@hovoldconsulting.com>
+ <2df31f2d-8271-d966-158a-27c6e0581d72@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DU2PR04MB8822:EE_|AM7PR04MB6997:EE_
-X-MS-Office365-Filtering-Correlation-Id: 9e72621f-7d2a-44b5-f118-08dc32b3929b
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	2eQM1p8E1UnTw0jVDfb3l+ScvMcHcCE+5BaErDqJATJ/RLH/lQBwueh+lCQUp+EXU6QJ+AJxtjGdwJO3cX/HTI88vBqerZyx267cCK6hphA6F+jOkMHk87Aff22j4YavN5ikUWlwhGy4X/fjMqWoik1P1d7Y7jyBuiEMiMjZTdvCG5g7yHvghEVFxAUf7s48hLhV5QbNB1+QLfuOS0PGzNT9VRQOCHYkYBwDPs8fMdYMSGxOajLnclqxsnplxukdf4j5OqI6oe1ipHTHCyBkGEICuTdlTDV6AOGlyd3//YEfnspICYV97ltqCNqjYRfG5eDDzLKhhTp7JUni/28QjzxmLVZ8dULLXUnuTKbtdpVOQuHRfJe731/kM1oSXpnmprQqDNqKUWmH5/1Z6m9ZW5s+GALZlXDsVjGa0yLUDW2VH+wV3qP7vLZ+uUiIqeOtcqEhu5AU0zeawKR/welUWe4JETNK12+Y7sbMgOwEqOIsSo2W+BU/O0ce5GlnsrlwU71GkJe0Fbhy7nypYpUm93gQeMwWX3QL/4IoUYvkS0pAlfchE2X9eBeXcojduVoF4N2sxInd/wvksjy3JrPkLn7cdtTYTBSS98tp61N4cAjCLE17DTRtYJ3iI27Ki6ID
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DU2PR04MB8822.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(38350700005);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?CA63DFkg+xu9RT+iJMVxbAYAmW2YMsjvCRJ0ZfiwX+Ku+FkUzIckFEczSbAt?=
- =?us-ascii?Q?EhpjOPvMI7sImwtkGCih4JijlKmbC/AA/wB9vo5GqJ7eAv/yqKNmJDztetBe?=
- =?us-ascii?Q?aDe/GigWtggnpE7xpBW7/GmvWS/PkLQzdYU5VJiy/TJIh3BMwcRG4e6Oi8ZP?=
- =?us-ascii?Q?UnDQgInZ1LtTJcJ2cNWIdV5e/U0EXkdheVmjaUTPEbj+0juVtwoQ9i3KfXxx?=
- =?us-ascii?Q?wA6I0fvbZwuWR1X98D1teIQqladgvJLDuQ/dCVe6+ixBw5hQkwRwFbBshNuE?=
- =?us-ascii?Q?w9GkAiYaT0DGsG0xHl+rROHj4dVqzPG/ndpsKi5iylyLjHIZP2Tw88F4PWaN?=
- =?us-ascii?Q?9viDSvZO6ZgdW/Xjutig+E1v6+3aUmMg4VmpWOrf4C/Wrd4uSyt9Ub6v5OSf?=
- =?us-ascii?Q?v6YojK4mpIv694sZOggSU/RcDBpSQ0XAuoQLffM7lL8CWmo7bU8DEHeq1/bI?=
- =?us-ascii?Q?v50dGNgTzOwrpk6iOkP7Jkw/NstLqZBoImTKtn3wUsM6xVLCss/S9Vg9lniz?=
- =?us-ascii?Q?DJJgahyttw83VtDPOP+B0mBGXVaRMIFWBxsweb1FQ8ls5irJqRcGMNxrRl5s?=
- =?us-ascii?Q?TaUISzTO48nD9m0V0OI3HeEh+nNZaJZ6Ce5ChMjZLE0drQzIhqVCSCx0lUqR?=
- =?us-ascii?Q?AD+Y00qv6H9r5v4vgsLHdiPhvyTQ88M81/EJ5/OtIxHRxCqikajbNjJyqj0x?=
- =?us-ascii?Q?gaTsWRDI3iTvLdTaPpoPubJQ5HpUsNGoBlM3fbidFjfrG21C1ZYNiva7i+R7?=
- =?us-ascii?Q?aPzHdyuHP7ie4CH5pzDkkYy2Enud9WBxIR8xjmeeGprA0wM8VjtVtlUji56G?=
- =?us-ascii?Q?HkDF2jhhL9kyVonu4nM243Gqp2I9TSWuFfOzKslrzA2wxUBSX9+BvyuBYhC3?=
- =?us-ascii?Q?M866l6uznZerq2N1azxhr4rMfRd6cCBkqaGGKelDoMi+tYS5BiKSOFjpv/qv?=
- =?us-ascii?Q?l9OgaocP9HyxWkSwYWFo3930g9GBTpWCiUJhguhtk/HnsuDCbpednePM8Tnf?=
- =?us-ascii?Q?7KmKvpf0RTuY3qQ1SbntX8IfZtZpGiVtwVNwXIL1nHhC/DZHPs1tG/I5L2n+?=
- =?us-ascii?Q?t2WNDm5GCUtca1lomycOZoLD61r37SRaNS8SgbbKdQKXPg0jUhtnbKF9P/Hg?=
- =?us-ascii?Q?iLYCD47lyJAIxaokeifAsF2otKKxL+vdDQtiw/LhD0lLKItlRZ0MLK7sIHqt?=
- =?us-ascii?Q?kStn1v1GnpGDyZMtgZsDzsd/JVtezXSq+6vzCH9g+i6aXLKJIMgXIeEqPbw3?=
- =?us-ascii?Q?8eW+VCP/ar8ycBQbvVCEVMzvL3moxu0s4cgCJLBzt9yR7je0vE1FLISgpIyl?=
- =?us-ascii?Q?mjc7/km9v9wbO0tZqxVyKGmd/d5vsmnBk9KikAYqZJtUmRrwiXIwE5eB03oY?=
- =?us-ascii?Q?QRYhZ5lCg+aI/C0qQXfouwVN+npvlEq/sRHh+D1tvT6Law4//hKTR8hUeCJy?=
- =?us-ascii?Q?FeZpjsM2fV6+a/jU4ga8cC5vefOTWlNdjXHyoOtLfZTK34CKsZCehfQt9AwD?=
- =?us-ascii?Q?r7Rwl9GX6FQdxfzf9hHOMu1QcfVhOQ7a+BCMZxjz3Q/mJqW9rR0pZeisSYfH?=
- =?us-ascii?Q?G0THrqnSwS6HNs/gKIo/yrfP17HV7hHQT7cuag1a?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9e72621f-7d2a-44b5-f118-08dc32b3929b
-X-MS-Exchange-CrossTenant-AuthSource: DU2PR04MB8822.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Feb 2024 08:03:22.2786
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: E9uncaHSosn3SaIg0XldRGJ3pLlVZWwZ4uDiwrncnYx9yzpzdrBd2Fk2LneV59bEIfzXFl2e6KlifI2mIq6fww==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM7PR04MB6997
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2df31f2d-8271-d966-158a-27c6e0581d72@quicinc.com>
 
-The dt-bindings is going to use "usb_wakeup" as wakup clock name. This will
-align the change with dt-bindings.
+On Tue, Feb 20, 2024 at 01:19:54PM -0800, Abhinav Kumar wrote:
+> On 2/19/2024 2:41 AM, Johan Hovold wrote:
 
-Acked-by: Peter Chen <peter.chen@kernel.org>
-Signed-off-by: Xu Yang <xu.yang_2@nxp.com>
+> > It seems my initial suspicion that at least some of these regressions
+> > were related to the runtime PM work was correct. The hard resets happens
+> > when the DP controller is runtime suspended after being probed:
 
----
-Changes in v5:
- - new patch
-Changes in v6:
- - add Acked-by tag
----
- drivers/usb/chipidea/ci_hdrc_imx.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> > [   17.074925] bus: 'platform': __driver_probe_device: matched device aea0000.displayport-controller with driver msm-dp-display
+> > [        Starting Network Time Synchronization...
+> > [   17.112000] msm-dp-display aea0000.displayport-controller: dp_display_probe - populate aux bus
+> > [   17.125208] msm-dp-display aea0000.displayport-controller: dp_pm_runtime_resume
+> >           Starting Record System Boot/Shutdown in UTMP...
+> >           Starting Virtual Console Setup...
+> > [  OK  ] Finished Load/Save Screen Backlight Brightness of backlight:backlight.
+> > [   17.197909] msm-dp-display aea0000.displayport-controller: dp_pm_runtime_suspend
+> > [   17.198079] probe of aea0Format: Log Type - Time(microsec) - Message - Optional Info
+> > Log Type: B - Since Boot(Power On Reset),  D - Delta,  S - Statistic
+> > S - QC_IMAGE_VERSION_STRING=BOOT.MXF.1.1-00470-MAKENA-1
+> > S - IMAGE_VARIANT_STRING=SocMakenaWP
+> > S - OEM_IMAGE_VERSION_STRING=crm-ubuntu92
+> > 
+> >    < machine is reset by hypervisor >
+> > 
+> > Presumably the reset happens when controller is being shut down while
+> > still being used by the EFI framebuffer.
+> 
+> I am not sure if we can conclude like that. Even if we shut off the 
+> controller when the framebuffer was still being fetched that should only 
+> cause a blank screen and not a reset because we really don't trigger a 
+> new register write / read while its fetching so as such there is no new 
+> hardware access.
 
-diff --git a/drivers/usb/chipidea/ci_hdrc_imx.c b/drivers/usb/chipidea/ci_hdrc_imx.c
-index ae9a6a17ec6e..a17b6d619305 100644
---- a/drivers/usb/chipidea/ci_hdrc_imx.c
-+++ b/drivers/usb/chipidea/ci_hdrc_imx.c
-@@ -212,7 +212,7 @@ static int imx_get_clks(struct device *dev)
- 		/* Get wakeup clock. Not all of the platforms need to
- 		 * handle this clock. So make it optional.
- 		 */
--		data->clk_wakeup = devm_clk_get_optional(dev, "usb_wakeup_clk");
-+		data->clk_wakeup = devm_clk_get_optional(dev, "usb_wakeup");
- 		if (IS_ERR(data->clk_wakeup))
- 			ret = dev_err_probe(dev, PTR_ERR(data->clk_wakeup),
- 					"Failed to get wakeup clk\n");
--- 
-2.34.1
+It specifically looks like the reset happens when shutting down the PHY,
+that is, the call to dp_display_host_phy_exit(dp) in
+dp_pm_runtime_suspend() never returns.
 
+That seems like more than a coincidence to me.
+ 
+> One thing I must accept is that there are two differences between 
+> sc8280xp where we are hitting these resets and sc7180/sc7280 chromebooks 
+> where we tested it more thoroughly without any such issues:
+> 
+> 1) with the chromebooks we have depthcharge and not the QC UEFI.
+> 
+> If we are suspecting a hand-off issue here, will it help if we try to 
+> disable the display in EFI by using "fastboot oem select-display-panel 
+> none" (assuming this is a fastboot enabled device) and see if you still 
+> hit the reset issue?
+
+No, we don't have fastboot.
+
+But as I mentioned I still do see resets when I instrument the code to
+not shut down the display, which could indicate more than one issue
+here.
+
+> 2) chromebooks used "internal_hpd" whereas the pmic_glink method used in 
+> the sc8280xp.
+> 
+> I am still checking if there are any code paths in the eDP/DP driver 
+> left exposed due to this difference with pm_runtime which can cause 
+> this. I am wondering if some sort of drm tracing will help to narrow 
+> down the reset point.
+> 
+> > In the cases where the machines survives boot, the controller is never
+> > suspended.
+> > 
+> > When investigating this I've also seen intermittent:
+> > 
+> > 	[drm:dp_display_probe [msm]] *ERROR* device tree parsing failed
+> 
+> So this error I think is because in dp_parser_parse() ---> 
+> dp_parser_ctrl_res(), we also have a devm_phy_get().
+> 
+> This can return -EDEFER if the phy driver has not yet probed.
+> 
+> I checked the other things inside dp_parser_parse(), others calls seem 
+> to be purely DT parsing except this one. I think to avoid the confusion, 
+> we should move devm_phy_get() outside of DT parsing into a separate call 
+> or atleast add an error log inside devm_phy_get() failure below to 
+> indicate that it deferred
+> 
+>          io->phy = devm_phy_get(&pdev->dev, "dp");
+>          if (IS_ERR(io->phy))
+>                  return PTR_ERR(io->phy);
+> 
+> If my hypothesis is correct on this, then this error log (even though 
+> misleading) should be harmless for this issue because if we hit 
+> DRM_ERROR("device tree parsing failed\n"); we will skip the 
+> devm_pm_runtime_enable().
+
+Yeah, this seems to be the case as boot appears to recover from this, so
+this may indeed be a probe deferral.
+
+Probe deferrals should not be logged as errors however, so the fix is
+not to add another error message but rather to suppress the current one
+(e.g. using dev_err_probe()).
+
+> > Has anyone given some thought to how the framebuffer handover is
+> > supposed to work? It seems we're currently just relying on luck with
+> > timing.
+
+Any comments to this? It seems we should not be shutting down (runtime
+suspend) the display during boot as can currently happen.
+
+Johan
