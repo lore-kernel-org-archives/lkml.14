@@ -1,157 +1,119 @@
-Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
+Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9851C39FD8
-	for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 03:42:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 094F438DCC
+	for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 03:42:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708486933; cv=none; b=feQaovco4LgBEhO/U09IMJ1d64kfR+WTVXeiI6QOsqBPGpo1n0ghEQ7ZuPHbJFRhq/xOZbXFv9U7EBxvWfmVVPcg/oIybDmXObzN75lZXzUQQXgCpe4amcycczKzVZFLIvjQUy0qfmoQ5xDCkK9qHkVnXUu3ZtJ0kYEyLpxHepI=
+	t=1708486934; cv=none; b=SyzAYYWGtdqww8T1QvZEH96pfbgoaNfYxKcGWzhQAj+Bx+5y8ouHdlYs8QtRqqApIvDXcbIfq4KmVpqLem4hCxuchAs6I4y+KibgUhYmpTXESuI5lE/kMOTxajt6SmfHFhP7XsuaZ4oHOYs4Ux7RGSjR48PP5mgd/4Ouz6ZPAK4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708486933; c=relaxed/simple;
-	bh=uG/9KOG8Z17eKXEtbxH9o5AmhzmNnY1T/Q7m5dFGLnw=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Y4dZPaAl00xeD/lqSrl9WVZaD/kdDB23ciVyV5i8kgDufk8801iNtQJSDyzxPq9+iDRbDq7NMBoIwj1Rv/XXa1LyPczSqqjHreDjH0KGH7zqsvNcZJqmW8Sxn8YzZYPK/B/cXy7/22DbLN92lVi8Ymx+Owk6vzX83Mb3zPEpeXI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=HEB+pa8F; arc=none smtp.client-ip=209.85.210.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1708486934; c=relaxed/simple;
+	bh=nIwADbFncYymlWUg/R60jRadSx8+xe1bkn0KEBii9rU=;
+	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
+	 To:Content-Type; b=aU05VRF3cspvmfriS9PWeSYJTXvqcdQy5N4yVrZoVEDqB7+2/Ikr5M3utOAuYFEZj4M4+0d1te64tUim3uCASocKtReGx72PKL5AAjhT2oBigNmBObFZIFGbZOnxJXeNNw9e9k84GfrecVLWcHI3v8Zd+OjFj4GalTJ+ZvDNEJA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=h3bnIIED; arc=none smtp.client-ip=209.85.128.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HEB+pa8F"
-Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-6e34d12404eso2892954b3a.2
-        for <linux-kernel@vger.kernel.org>; Tue, 20 Feb 2024 19:42:11 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="h3bnIIED"
+Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-6081639fecfso41735927b3.1
+        for <linux-kernel@vger.kernel.org>; Tue, 20 Feb 2024 19:42:12 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1708486931; x=1709091731; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ImXGIB7mWb7ZNVnOu2+1J6Z04awCO5hHkqZsUmjx4z8=;
-        b=HEB+pa8F86X7b7Tlcg++wBIQwEdaDbwlrN583v2T/1CPFp3kak1PN47GDigs7OZN/8
-         lV0Wx5aiUrfxjcsSqshLa3tgqi2NAklgMF4PVPqPiX94AVhkZ0TGzpV9S8LSkswPx8re
-         KNkmak5i4J7me2gTmHxSCa81JSd1J79GWN6itjbXjIOBo5OsIWo0mkflTDH+1aczitpo
-         yxkn+tNGSBKrxpx+W51uDsJ4T5S2Z8XJnHm9m1UG/4TzAr3WIuWUG2lrEuay1FlXCOva
-         8Ie2r4GWRwmAr2LyVnWZdMPgV/b2Ll5hxoHV17rAtBzqKuVAQt658ZmbT9QqNk3zpp7m
-         N2hQ==
+        d=google.com; s=20230601; t=1708486932; x=1709091732; darn=vger.kernel.org;
+        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=eF36kSIEMlGOGF+Ru4Ee+ArAeIU+1BDlU+YfXMm89FI=;
+        b=h3bnIIEDWRDfKD/YMR00cbHb9S5+to8IdxcG+rp2/cD33J5Rqai7CqWB3pkNS+9ILI
+         +1fMJ3foXETnFYJhMICrxS6uy3cYGIPqwvb92Mv1ZkXgN734XZP4igLGLSUANfrxcus4
+         hOovDO3gRWuoMCNEdivgzGzsJM9FBUPaugc0fTcnSRtSItvvg7Dla6Qxm22LLl7MYa2N
+         fegE7djwCJP418WFzc4M75C2H7QwTPg/Dk4E/MtBGY0prZUdeOndGof3+GtyTCXp6JXO
+         ICmMHxT33+SOgDb933qi0nzWrW4UMK9W3Sai9royTTQ5ko7A6SxjyC6CJ+BqPoTNKuAr
+         re4Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708486931; x=1709091731;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ImXGIB7mWb7ZNVnOu2+1J6Z04awCO5hHkqZsUmjx4z8=;
-        b=es8sXzu0AYwcG0mbtQdiH3Q2iTRVkGgYvv86CA5Lx12QsMPYenEYmoG47T5b239bRN
-         Hh+2tFaH/O58b+/tNqQIn+i3rOrkcKCXciJcpG1/jpbzO0GOzRVkSkVbuIvH0Ps+ehtR
-         Uh5JgF/clVcFDzRUGkoF/8vG5+Xs2Esm4A/L/9Vank4UiAApoiJE0ToiM08IyiNELVO7
-         QL7fh/HkVHIEWyuJ0QFzV1c3X07q7hvMqWMGeK7hIuiCzuGbpbWjomk5ufzJx31m95iJ
-         KZIROUvmFpXHW30g2vlchfPE4uP58MUeThA/K4qngIylM10XecYR54O24HC8US6PokoK
-         yr0A==
-X-Forwarded-Encrypted: i=1; AJvYcCXoJXHF+2DdwgP3Mbm4IUgsmvrWD7eCYH2zR2Vlmh0vydxD8DVeuqYkWBfdyqbVstVlcYcYKOACw4xXnVwKtYWNuGMsOKk7z5pWxvVZ
-X-Gm-Message-State: AOJu0YxwgXH/H20VgMoU2kGceSVxSeBDF+7BXM1JHDBtzSzuikhyf2Zz
-	aj0IcOBIL73DO6pneZz2ez1V/jS8UMpfZ3LseUoVns0Tzs14v6zwl8ShM794dpy3lWxErhPwew0
-	=
-X-Google-Smtp-Source: AGHT+IF5eijTp/+XCue4i8inAVgdXDs95Vy9lc3aj26IyJDDAl/hNRkfFWOiR7Sg5/P1i9q0prIWbA==
-X-Received: by 2002:aa7:9819:0:b0:6e4:67bd:10fa with SMTP id e25-20020aa79819000000b006e467bd10famr6201338pfl.0.1708486930793;
-        Tue, 20 Feb 2024 19:42:10 -0800 (PST)
-Received: from [127.0.1.1] ([117.207.28.224])
-        by smtp.gmail.com with ESMTPSA id o23-20020a056a001b5700b006e466369645sm4436231pfv.132.2024.02.20.19.42.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 20 Feb 2024 19:42:10 -0800 (PST)
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Date: Wed, 21 Feb 2024 09:11:47 +0530
-Subject: [PATCH 01/21] arm64: dts: qcom: sm8250: Add PCIe bridge node
+        d=1e100.net; s=20230601; t=1708486932; x=1709091732;
+        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=eF36kSIEMlGOGF+Ru4Ee+ArAeIU+1BDlU+YfXMm89FI=;
+        b=FdOnP9PGLF+4sQg90fgnxhgLDxUbBVtBQxnIXW4sPHIltvGzrxKCibtDyFU2TUnJ3p
+         BTTC6xaehr5Lz+odXcX1s8Dz9MpaDcg5XLHEKgjsi5J97ubn+OQB+BJljVfuw2eHBo4F
+         YTnRZPNSnp7drKgcD13qEhzI4TvGH09MNTm8KKl0PDk5I0WPedTeYsio2UVy0sZSBNuN
+         vnZr0mHq2EYOt5wH75Tocc4xKX77RmY8ghRl0LqKywXTdH9oyB1gFzsVq2Y75J71SQOi
+         PyFHFrQAhNFu+XH66rSczt68txYv+XMjxoFB8M90bHsp1HSE5rxCg8VwDRRpuFkA2NGo
+         uV3Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXEpGu1RdLgJYVqSQyQnNlMLjlbJPebtgDHJgQMbuAo4TUAriQz/SDfrXfBDoHj/C/yNWzu/iLC9GIHDIzlWXUiJz85xL4Rn//yNWHf
+X-Gm-Message-State: AOJu0YwHwJ6v7h0mD/bu3MfB/vWwa4BGvqvmZQScvE2ShJjo4UzFcOOC
+	UIsWi3qN8pwnentRxQb057k4ssgUcu1eMxk95E5nY6awYvlsxpHT0BQYXYaFPLXDnLGTNJcGAeh
+	5lIl8xQ==
+X-Google-Smtp-Source: AGHT+IE/on57IS2xafUtNQKU7p+VrGTBQkCYynjxRso5yRXY1KPrBnnB3HTy5IyNKzr/8fPp2V2mhgp0xx+K
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:3c02:f882:5876:b7ab])
+ (user=irogers job=sendgmr) by 2002:a05:6902:704:b0:dc7:6f13:61d9 with SMTP id
+ k4-20020a056902070400b00dc76f1361d9mr660785ybt.4.1708486932038; Tue, 20 Feb
+ 2024 19:42:12 -0800 (PST)
+Date: Tue, 20 Feb 2024 19:41:51 -0800
+In-Reply-To: <20240221034155.1500118-1-irogers@google.com>
+Message-Id: <20240221034155.1500118-5-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240221-pcie-qcom-bridge-dts-v1-1-6c6df0f9450d@linaro.org>
-References: <20240221-pcie-qcom-bridge-dts-v1-0-6c6df0f9450d@linaro.org>
-In-Reply-To: <20240221-pcie-qcom-bridge-dts-v1-0-6c6df0f9450d@linaro.org>
-To: Bjorn Andersson <andersson@kernel.org>, 
- Konrad Dybcio <konrad.dybcio@linaro.org>, Rob Herring <robh+dt@kernel.org>, 
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
- Conor Dooley <conor+dt@kernel.org>, cros-qcom-dts-watchers@chromium.org
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, 
- Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-X-Mailer: b4 0.12.4
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1536;
- i=manivannan.sadhasivam@linaro.org; h=from:subject:message-id;
- bh=uG/9KOG8Z17eKXEtbxH9o5AmhzmNnY1T/Q7m5dFGLnw=;
- b=owEBbQGS/pANAwAKAVWfEeb+kc71AcsmYgBl1XEF9/fHNekkvPUiaqVD1hZQ8DqFjrazu7GqQ
- IHE7EVUO76JATMEAAEKAB0WIQRnpUMqgUjL2KRYJ5dVnxHm/pHO9QUCZdVxBQAKCRBVnxHm/pHO
- 9aefB/wOjD+6DG3lTAmXaj2NFcWPHTZlUrH+fNNDnmDiSjCYy1JhJV1mRvt6uqqoAvEjKOs5jAL
- XU69S7rZ/WPztMNu/HWFJBXdaPFpBfVqgU7isZCbtV/rsziS+4zPpnIlQ5qDN4kiUFJBNiMVYxE
- muUtwqZbCn5mk93f7nwDi17H1p4CvgVOmHw8lT0kgEWUtOmVBAW8lLFutR7PzEKL1/u/wtWBATr
- RnRYQ8SG9qPb+CWgVyagKenq16lkhab1jMvW7ACR9wXTtggQToeexOIDpN/7/ufZ7VNL1AdcY75
- MMmWI01hqDfvEgm+hzw/lVUxWUuhMAG+jNEmU2nz9hYMqfoV
-X-Developer-Key: i=manivannan.sadhasivam@linaro.org; a=openpgp;
- fpr=C668AEC3C3188E4C611465E7488550E901166008
+Mime-Version: 1.0
+References: <20240221034155.1500118-1-irogers@google.com>
+X-Mailer: git-send-email 2.44.0.rc0.258.g7320e95886-goog
+Subject: [PATCH v6 4/8] tools subcmd: Add a no exec function call option
+From: Ian Rogers <irogers@google.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Nathan Chancellor <nathan@kernel.org>, Nick Desaulniers <ndesaulniers@google.com>, 
+	Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, 
+	Athira Jajeev <atrajeev@linux.vnet.ibm.com>, James Clark <james.clark@arm.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, Yang Jihong <yangjihong1@huawei.com>, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	llvm@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
 
-On Qcom SoCs, the PCIe host bridge is connected to a single PCIe bridge
-for each controller instance. Hence, add a node to represent the bridge.
+Tools like perf fork tests in case they crash, but they don't want to
+exec a full binary. Add an option to call a function rather than do an
+exec. The child process exits with the result of the function call and
+is passed the struct of the run_command, things like container_of can
+then allow the child process function to determine additional
+arguments.
 
-Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- arch/arm64/boot/dts/qcom/sm8250.dtsi | 30 ++++++++++++++++++++++++++++++
- 1 file changed, 30 insertions(+)
+ tools/lib/subcmd/run-command.c | 2 ++
+ tools/lib/subcmd/run-command.h | 2 ++
+ 2 files changed, 4 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/qcom/sm8250.dtsi b/arch/arm64/boot/dts/qcom/sm8250.dtsi
-index 760501c1301a..0c61623d9be9 100644
---- a/arch/arm64/boot/dts/qcom/sm8250.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sm8250.dtsi
-@@ -2197,6 +2197,16 @@ pcie0: pcie@1c00000 {
- 			dma-coherent;
+diff --git a/tools/lib/subcmd/run-command.c b/tools/lib/subcmd/run-command.c
+index 5cdac2162532..d435eb42354b 100644
+--- a/tools/lib/subcmd/run-command.c
++++ b/tools/lib/subcmd/run-command.c
+@@ -122,6 +122,8 @@ int start_command(struct child_process *cmd)
+ 		}
+ 		if (cmd->preexec_cb)
+ 			cmd->preexec_cb();
++		if (cmd->no_exec_cmd)
++			exit(cmd->no_exec_cmd(cmd));
+ 		if (cmd->exec_cmd) {
+ 			execv_cmd(cmd->argv);
+ 		} else {
+diff --git a/tools/lib/subcmd/run-command.h b/tools/lib/subcmd/run-command.h
+index 17d969c6add3..d794138a797f 100644
+--- a/tools/lib/subcmd/run-command.h
++++ b/tools/lib/subcmd/run-command.h
+@@ -47,6 +47,8 @@ struct child_process {
+ 	unsigned exec_cmd:1; /* if this is to be external sub-command */
+ 	unsigned stdout_to_stderr:1;
+ 	void (*preexec_cb)(void);
++	 /* If set, call function in child rather than doing an exec. */
++	int (*no_exec_cmd)(struct child_process *process);
+ };
  
- 			status = "disabled";
-+
-+			pcie@0 {
-+				device_type = "pci";
-+				reg = <0x0 0x0 0x0 0x0 0x0>;
-+				bus-range = <0x01 0xff>;
-+
-+				#address-cells = <3>;
-+				#size-cells = <2>;
-+				ranges;
-+			};
- 		};
- 
- 		pcie0_phy: phy@1c06000 {
-@@ -2298,6 +2308,16 @@ pcie1: pcie@1c08000 {
- 			dma-coherent;
- 
- 			status = "disabled";
-+
-+			pcie@0 {
-+				device_type = "pci";
-+				reg = <0x0 0x0 0x0 0x0 0x0>;
-+				bus-range = <0x01 0xff>;
-+
-+				#address-cells = <3>;
-+				#size-cells = <2>;
-+				ranges;
-+			};
- 		};
- 
- 		pcie1_phy: phy@1c0e000 {
-@@ -2399,6 +2419,16 @@ pcie2: pcie@1c10000 {
- 			dma-coherent;
- 
- 			status = "disabled";
-+
-+			pcie@0 {
-+				device_type = "pci";
-+				reg = <0x0 0x0 0x0 0x0 0x0>;
-+				bus-range = <0x01 0xff>;
-+
-+				#address-cells = <3>;
-+				#size-cells = <2>;
-+				ranges;
-+			};
- 		};
- 
- 		pcie2_phy: phy@1c16000 {
-
+ int start_command(struct child_process *);
 -- 
-2.25.1
+2.44.0.rc0.258.g7320e95886-goog
 
