@@ -1,88 +1,118 @@
-Received: from mout01.posteo.de (mout01.posteo.de [185.67.36.65])
+Received: from mail-40134.protonmail.ch (mail-40134.protonmail.ch [185.70.40.134])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E614620DC5
-	for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 10:44:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.67.36.65
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AD552E637
+	for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 10:45:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.40.134
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708512298; cv=none; b=APwo/Gwv1WbevbwIaxJSFYi97sM4W//cR8w0S6VgmuP1+YxVRz9dNe8JSXo/kryDC8sZvLfPd40p7XRZw9Tgb0KIKMMY9qwadJ9xTSiTf5r9fHIcfa9wewSU0DUxzMOECons0FUJoW8x7h65bY0m2VmSrgY1I1bRrUbXOAuJRHU=
+	t=1708512312; cv=none; b=i63K60wa/gtX4J28nQaTaVwBapo984+xiKjDADt4gih0X75JJF8z6W1pBLDaZun7MxNWZCUNzICxNZkQNr/5V8ddM9icL8/yh+da5SeT8T4sNDuZEguoniW3HkfVVoCQme3yowEAg7WpGDBQkoNqsrWsM7QBX7agpILwNYQlZ9g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708512298; c=relaxed/simple;
-	bh=ghhI+nFDhm0hnOFhmWeoRf94hHK/gPArrHEfJeQ/EBo=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=YdfLR8iD5lPmueli5XEe+a6/vnZJr/FaP9CnVFQhKBkoAe3yNIZW3PigZ5Q6r2LzDU5ZIeimeyoLdbUpJpysRTs9nrxPo5A0eVHsvoyy0+TG3QxKvdu4cWNTOOJSFf4M2gkRIWEOpHqx3XqJkGc5h4yvI31qnpsNNtCb7+DABgM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.net; spf=pass smtp.mailfrom=posteo.net; dkim=pass (2048-bit key) header.d=posteo.net header.i=@posteo.net header.b=Oi6z7vhJ; arc=none smtp.client-ip=185.67.36.65
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=posteo.net
+	s=arc-20240116; t=1708512312; c=relaxed/simple;
+	bh=B+pFKzfHCAn1l9phqimNCv3GOadgzMPuRi6KuJaaOLo=;
+	h=Date:To:From:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=UIMtwVGaOoigbBLWpD2fBZvi5OekHiHQeZNYxkavu/FX/ryBZmCSdrRZ39dO8C/WQlffIQApjbX5tfGpGXEjAwPkENAZMMoEn4Rbe6c4KqLvRCWc8SYLMnrdVBY0aQohDNtUiHUuLV7uZpG+tyrE2fRUyhtJ2mhrLd4F/5wZwd0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=protonmail.com; spf=pass smtp.mailfrom=protonmail.com; dkim=pass (2048-bit key) header.d=protonmail.com header.i=@protonmail.com header.b=m+svlqX1; arc=none smtp.client-ip=185.70.40.134
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=protonmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=protonmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=posteo.net header.i=@posteo.net header.b="Oi6z7vhJ"
-Received: from submission (posteo.de [185.67.36.169]) 
-	by mout01.posteo.de (Postfix) with ESMTPS id 30210240027
-	for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 11:44:48 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=posteo.net; s=2017;
-	t=1708512288; bh=ghhI+nFDhm0hnOFhmWeoRf94hHK/gPArrHEfJeQ/EBo=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type:
-	 Content-Transfer-Encoding:From;
-	b=Oi6z7vhJIUx+/QyafXRCdMFngP+BSIvcY4JjGHxacW4b1sOP3E3NwYU4dNHaI9ezt
-	 f/P1ez3QdLHnQV1U2citr8UM1vMw+UDavSuJ7VN8u0sYt8h0TbREiEPUMg2pmG/hcp
-	 jLKaQsRSsX/FoRwaRxSsMC2J8Xgx9xa1BEypPPVdlt6ImkK6CTYmglfVATfDWtTYdp
-	 x3HHNmftGJP6VJMQffun7ragIxowbF3Na86f8ukyd8lNmDRlSjg+5KK3pDEGwiwd/N
-	 5SPbgaN+rjV9ouUlLFRwu6pAz4RG4ZcyPgQVT9cpgfBiQkVZVVpbRG7XkNGsDsLKUS
-	 iqPuJTJxV+EEg==
-Received: from customer (localhost [127.0.0.1])
-	by submission (posteo.de) with ESMTPSA id 4TftFV4nPvz6twm;
-	Wed, 21 Feb 2024 11:44:46 +0100 (CET)
-From: Mark O'Donovan <shiftee@posteo.net>
-To: linux-kernel@vger.kernel.org
-Cc: ntfs3@lists.linux.dev,
-	almaz.alexandrovich@paragon-software.com,
-	chris2553@googlemail.com,
-	regressions@leemhuis.info,
-	Mark O'Donovan <shiftee@posteo.net>
-Subject: [PATCH v2] fs/ntfs3: fix build without CONFIG_NTFS3_LZX_XPRESS
-Date: Wed, 21 Feb 2024 10:43:58 +0000
-Message-Id: <20240221104358.2290969-1-shiftee@posteo.net>
+	dkim=pass (2048-bit key) header.d=protonmail.com header.i=@protonmail.com header.b="m+svlqX1"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
+	s=protonmail3; t=1708512302; x=1708771502;
+	bh=ALAUWDo1q/pR2NBpJFnmEYadC1ZlGbn8mjRrWt60C40=;
+	h=Date:To:From:Cc:Subject:Message-ID:Feedback-ID:From:To:Cc:Date:
+	 Subject:Reply-To:Feedback-ID:Message-ID:BIMI-Selector;
+	b=m+svlqX1hRCs4J4W5yLiwQZfqk4xDYx8LnEnZJYACPKrr+fBDgNxqDhlQClYyMeTH
+	 lhaYUtTEOoMFmciUkS+W8ooZFZHVLPkq3TuZ/UxtljFazPcJExt9L7mJ6O4wNt5e3Y
+	 5HN9iwJocnRPinMTSaS0qN+5vPCG49ywpY6lgZvg2DDVA0bWXBjcWjngogij9ZmyXp
+	 Dp15QVBASSQ4nB5JTrwzGK5fhQxlvTG0VdAuZGwW7HQtgV+x+qr2tXmMh5Vn+EoTUc
+	 sPVsnc4jer6r/d8llyroTgJSs24At98KKlTdMUhSmLdDnA9kxeaNm1ERQkEQ+QafV1
+	 jM8RUe/upHodQ==
+Date: Wed, 21 Feb 2024 10:44:53 +0000
+To: linux-bluetooth@vger.kernel.org, luiz.von.dentz@intel.com
+From: Emil Kronborg <emil.kronborg@protonmail.com>
+Cc: linux-kernel@vger.kernel.org
+Subject: Bluetooth issues with hci_sync after v6.4+
+Message-ID: <4o3o7jaskrim3aajexbhlxn46d3ej5y6bjwe6htevzywgymn7d@uvdewtfe444z>
+Feedback-ID: 20949900:user:proton
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-When CONFIG_NTFS3_LZX_XPRESS is not set then we get the following:
-fs/ntfs3/frecord.c:2460:16: error: unused variable ‘i_size’
+Hi,
 
-Signed-off-by: Mark O'Donovan <shiftee@posteo.net>
+After updating Linux on an i.MX28 board, I encountered errors related to
+Bluetooth:
 
-Fixes: 4fd6c08a16d7 ("fs/ntfs3: Use i_size_read and i_size_write")
-Tested-by: Chris Clayton <chris2553@googlemail.com>
----
- fs/ntfs3/frecord.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+$ journalctl -p3 -xb
+(...)
+Feb 06 14:05:49 hp1 bluetoothd[183]: /usr/src/debug/bluez5/5.69-r0/src/adap=
+ter.c:reset_adv_monitors_complete() Failed to reset Adv Monitors: Failed (0=
+x03)
+Feb 06 14:05:50 hp1 bluetoothd[183]: Failed to clear UUIDs: Failed (0x03)
+Feb 06 14:05:50 hp1 bluetoothd[183]: Failed to add UUID: Failed (0x03)
+Feb 06 14:05:50 hp1 bluetoothd[183]: Failed to add UUID: Failed (0x03)
+Feb 06 14:05:50 hp1 bluetoothd[183]: Failed to add UUID: Failed (0x03)
 
-diff --git a/fs/ntfs3/frecord.c b/fs/ntfs3/frecord.c
-index 3b42938a9d3b..7f27382e0ce2 100644
---- a/fs/ntfs3/frecord.c
-+++ b/fs/ntfs3/frecord.c
-@@ -2457,7 +2457,6 @@ int ni_read_frame(struct ntfs_inode *ni, u64 frame_vbo, struct page **pages,
- 	struct ATTR_LIST_ENTRY *le = NULL;
- 	struct runs_tree *run = &ni->file.run;
- 	u64 valid_size = ni->i_valid;
--	loff_t i_size = i_size_read(&ni->vfs_inode);
- 	u64 vbo_disk;
- 	size_t unc_size;
- 	u32 frame_size, i, npages_disk, ondisk_size;
-@@ -2509,6 +2508,7 @@ int ni_read_frame(struct ntfs_inode *ni, u64 frame_vbo, struct page **pages,
- 		err = -EOPNOTSUPP;
- 		goto out1;
- #else
-+		loff_t i_size = i_size_read(&ni->vfs_inode);
- 		u32 frame_bits = ni_ext_compress_bits(ni);
- 		u64 frame64 = frame_vbo >> frame_bits;
- 		u64 frames, vbo_data;
+I found that [1] encountered similar errors, which were addressed in
+95b701543305 ("Bluetooth: btusb: Fix bluetooth on Intel Macbook 2014").
+However, the board I am working with uses the Bluetooth HCI UART driver
+instead of the USB driver. After bisecting, I identified the offending
+commit as d883a4669a1d ("Bluetooth: hci_sync: Only allow
+hci_cmd_sync_queue if running"). While reverting the commit would
+resolve my issues, I am uncertain if this problem is unique to my setup,
+as I have not come across other reports for ARM boards or the Bluetooth
+HCI UART driver. Do you have any ideas how to solve this? Any pointers
+are appreciated.
 
-base-commit: 9fc1ccccfd8d53dc7936fe6d633f2373fc9f62e8
--- 
-2.39.2
+Below is (some) of the log when running the daemon in debug mode. I only
+included part of it to not clutter the mail. Let me know if you want the
+full log instead.
+
+$ /usr/libexec/bluetooth/bluetoothd -n -d
+(...)
+bluetoothd[384]: /usr/src/debug/bluez5/5.69-r0/src/shared/mgmt.c:send_reque=
+st() [0x0000] command 0x0053
+bluetoothd[384]: /usr/src/debug/bluez5/5.69-r0/src/shared/mgmt.c:can_read_d=
+ata() [0x0000] command 0x53 status: 0x03
+bluetoothd[384]: /usr/src/debug/bluez5/5.69-r0/src/adapter.c:reset_adv_moni=
+tors_complete() Failed to reset Adv Monitors: Failed (0x03)
+bluetoothd[384]: /usr/src/debug/bluez5/5.69-r0/src/shared/mgmt.c:send_reque=
+st() write failed: Network is down
+bluetoothd[384]: Failed to clear UUIDs: Failed (0x03)
+bluetoothd[384]: /usr/src/debug/bluez5/5.69-r0/src/shared/mgmt.c:send_reque=
+st() write failed: Network is down
+bluetoothd[384]: Failed to add UUID: Failed (0x03)
+
+And here is some information about the device. Note that I anonymized
+the MAC address.
+
+$ hciconfig -a
+hci0:   Type: Primary  Bus: UART
+        BD Address: XX:XX:XX:XX:XX:XX  ACL MTU: 1021:6  SCO MTU: 180:4
+        UP RUNNING
+        RX bytes:5761 acl:0 sco:0 events:494 errors:0
+        TX bytes:70546 acl:0 sco:0 commands:494 errors:0
+        Features: 0xff 0xfe 0x2d 0xfe 0xdb 0xff 0x7b 0x87
+        Packet type: DM1 DM3 DM5 DH1 DH3 DH5 HV1 HV2 HV3
+        Link policy: RSWITCH HOLD SNIFF
+        Link mode: PERIPHERAL ACCEPT
+        Name: 'BlueZ 5.69'
+        Class: 0x000000
+        Service Classes: Unspecified
+        Device Class: Miscellaneous,
+        HCI Version: 4.2 (0x8)  Revision: 0x0
+        LMP Version: 4.2 (0x8)  Subversion: 0xac0f
+        Manufacturer: Texas Instruments Inc. (13)
+
+Let me know if I can provide more information.
+
+[1]:
+https://bugs.archlinux.org/task/78980.html
+
+--=20
+Emil Kronborg
 
