@@ -1,136 +1,144 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 150F77CF33;
-	Wed, 21 Feb 2024 14:04:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C02E762C1;
+	Wed, 21 Feb 2024 14:04:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708524275; cv=none; b=DQSGkH/rxDtuQMBDftl2b0HtAFhikJbUFpUSXv6ZJpg2XTNJEG6lnmRz2BXMg/g8DL3HtUMvvchOYRBfqbJZ1jrYwqOFpNEo4wo6Uwlnm4fY5geQkrFMBLxGysL5K+akisQBSjlJg25zvWYOTNyD22z3teP1kN6U84yR2PWkxWM=
+	t=1708524276; cv=none; b=KAPNZzhebzNjH/Oiy7Pr2Rc1QyvuAaJqlhn0dmpEggjTjeZU7qANse9mBOm3gOkQPfGIe6LUilEH1w/cuTd9Cn5oxSlZlhZ6pvqJjZXsLgVKa9XCweExRZrSiifk/DKHJ4IOjZUedATYCDsVvcyHMYlEBEoFZXAR1kjr1VSHBK0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708524275; c=relaxed/simple;
-	bh=13M8Fwxd5qbS/Bqd6jnBJB6olP2gXVCbF3jc11UFfgU=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=lDH7NNGzQDaeFQeCzXXhb2kn9TtL5LylO5H/wTjDRDvzycptdjRdA6dwDkOT6fThx//bEfYSS2cKb0xZIHU4MsWubJnBh8rg8BEWVYyqniWo5t9awoUWsJ6qQWphtINdmrZIQ3CA58kvkTO7pKI26MSHvbE5wnwH4TTGW9GT3Lo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=hu-msarkar-hyd.qualcomm.com; spf=pass smtp.mailfrom=qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=goVEGZZ2; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=hu-msarkar-hyd.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qualcomm.com
+	s=arc-20240116; t=1708524276; c=relaxed/simple;
+	bh=kNEIz7DluXXh2TDoFbuW54XyZrWn7/EUT/Q4+LwUoBs=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
+	 MIME-Version:Content-Type; b=InIwWDxiq9F9+p+vKvyXSNGYldti2ro7PUPDG7ulCs15rI2vfmKS4RxGFVnZypGHGyofMUML+rOmWgRMpa89h/OEJ5XEENtB4itzAFLuNLhE+j81pIBHXuR4U9F10BqdrO9MrtIXSWLYY2cb9G9H/ipkXaDQGZCjxT/87eT78VU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=hMPZjQiP; arc=none smtp.client-ip=198.137.202.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="goVEGZZ2"
-Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 41L7P0hQ013507;
-	Wed, 21 Feb 2024 14:04:17 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	from:to:cc:subject:date:message-id:in-reply-to:references
-	:mime-version:content-transfer-encoding; s=qcppdkim1; bh=LopbBaJ
-	MkUd7zsUQmDUm/ztdJn+MZ4GTTnsFnoD6hMs=; b=goVEGZZ25vOliWe9VzBTN0D
-	KY/RXgtaodnM1w2pgceSFZWNMfxAVFUk+CZae1Rh6jUJsAito4p0TSLHA1a4zI+S
-	FCcUvXVyN+X1VzKxFQ1IDdnfwdPE/HXF2nMnhB7l2htvRl4vbrBoJ2Vz0iuQejDT
-	h9kPm6z/i9LcY0hksYiOvmzbta4mPe6orzXGuUXshPdUwSqImXThxhfOH+qqUqj3
-	sLv2lUICUA7fpmlTcnYf+KtNbnTeI2qgNM+eXf7KtrItlnvioOkABk2xNo+tnqCK
-	p9gn7OFcTi5BsTsg8c1iszkcE6U49ExSbpUbmJ+ZH5PVvcHOzo5JiIH+6huYenw=
-	=
-Received: from apblrppmta01.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3wdcrs0u78-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 21 Feb 2024 14:04:16 +0000 (GMT)
-Received: from pps.filterd (APBLRPPMTA01.qualcomm.com [127.0.0.1])
-	by APBLRPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTP id 41LE4B7b013249;
-	Wed, 21 Feb 2024 14:04:13 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-	by APBLRPPMTA01.qualcomm.com (PPS) with ESMTP id 3wanvkycg2-1;
-	Wed, 21 Feb 2024 14:04:13 +0000
-Received: from APBLRPPMTA01.qualcomm.com (APBLRPPMTA01.qualcomm.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 41LE4Dsk013291;
-	Wed, 21 Feb 2024 14:04:13 GMT
-Received: from hu-sgudaval-hyd.qualcomm.com (hu-msarkar-hyd.qualcomm.com [10.213.111.194])
-	by APBLRPPMTA01.qualcomm.com (PPS) with ESMTP id 41LE4Dn1013288;
-	Wed, 21 Feb 2024 14:04:13 +0000
-Received: by hu-sgudaval-hyd.qualcomm.com (Postfix, from userid 0)
-	id 2F78339C4; Wed, 21 Feb 2024 19:34:12 +0530 (+0530)
-From: root <root@hu-msarkar-hyd.qualcomm.com>
-To: andersson@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-        jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
-        konrad.dybcio@linaro.org, manivannan.sadhasivam@linaro.org,
-        conor+dt@kernel.org, quic_nitegupt@quicinc.com
-Cc: quic_shazhuss@quicinc.com, quic_ramkri@quicinc.com,
-        quic_nayiluri@quicinc.com, quic_krichai@quicinc.com,
-        quic_vbadigan@quicinc.com, Mrinmay Sarkar <quic_msarkar@quicinc.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-        Rob Herring <robh@kernel.org>, linux-arm-msm@vger.kernel.org,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v1 2/3] arm64: dts: qcom: sa8775p: Enable global irq support for SA8775p
-Date: Wed, 21 Feb 2024 19:34:03 +0530
-Message-Id: <20240221140405.28532-3-root@hu-msarkar-hyd.qualcomm.com>
-X-Mailer: git-send-email 2.40.1
-In-Reply-To: <20240221140405.28532-1-root@hu-msarkar-hyd.qualcomm.com>
-References: <20240221140405.28532-1-root@hu-msarkar-hyd.qualcomm.com>
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="hMPZjQiP"
+Received: from [127.0.0.1] ([76.133.66.138])
+	(authenticated bits=0)
+	by mail.zytor.com (8.17.2/8.17.1) with ESMTPSA id 41LE2W5O4032626
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
+	Wed, 21 Feb 2024 06:02:33 -0800
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 41LE2W5O4032626
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+	s=2024021201; t=1708524157;
+	bh=F8smVVCqOcx2eQeGpp+uPqQ1cqFR564JCusQLeNYovA=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
+	b=hMPZjQiPo0IXyXhQ+XmIdKygX3w7dHdoubyXEZ6mQt2adBYxofhlGC6MzfmfGSVxc
+	 hB4TIDljjzrBYPeqbuhtXMlHBW+BnSrems13Pi1i9sMY+JGT6ulxcYN1tO5jmRjiPL
+	 mbUWt9qW0N1U8DRdh78jm3Ir6mEkld740nOjUMsZ8f667NsbDRgXgexyl4hIb3jKDq
+	 ZAVOoQ9AfYmPKKntUpJi2U8471nHwC+jbNdQj8hWKa8SlzPTh5dlsE8BLjOKfRMF+9
+	 tRTQn7Dc9t5psqS1H1Tdcw1cvm60NJ53KzjkeS6eqX15hjSkSHVS6G/AnnEEdylaY/
+	 mhnU3LEJAB9Sw==
+Date: Wed, 21 Feb 2024 06:02:30 -0800
+From: "H. Peter Anvin" <hpa@zytor.com>
+To: Petr Tesarik <petr.tesarik1@huawei-partners.com>,
+        Roberto Sassu <roberto.sassu@huaweicloud.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Petr Tesarik <petrtesarik@huaweicloud.com>
+CC: Dave Hansen <dave.hansen@intel.com>,
+        =?UTF-8?Q?Petr_Tesa=C5=99=C3=ADk?= <petr@tesarici.cz>,
+        Jonathan Corbet <corbet@lwn.net>, Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        Andy Lutomirski <luto@kernel.org>, Oleg Nesterov <oleg@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>, Xin Li <xin3.li@intel.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Rick Edgecombe <rick.p.edgecombe@intel.com>,
+        Kees Cook <keescook@chromium.org>,
+        "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
+        Pengfei Xu <pengfei.xu@intel.com>,
+        Josh Poimboeuf <jpoimboe@kernel.org>, Ze Gao <zegao2021@gmail.com>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Kai Huang <kai.huang@intel.com>, David Woodhouse <dwmw@amazon.co.uk>,
+        Brian Gerst <brgerst@gmail.com>, Jason Gunthorpe <jgg@ziepe.ca>,
+        Joerg Roedel <jroedel@suse.de>,
+        "Mike Rapoport (IBM)" <rppt@kernel.org>,
+        Tina Zhang <tina.zhang@intel.com>,
+        Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        David Howells <dhowells@redhat.com>
+Subject: Re: [RFC 6/8] KEYS: PGP data parser
+User-Agent: K-9 Mail for Android
+In-Reply-To: <773dd9fb-e668-4652-8b24-712553bb7ab1@huawei-partners.com>
+References: <fb4a40c7-af9a-406a-95ab-406595f3ffe5@intel.com> <20240216152435.1575-1-petrtesarik@huaweicloud.com> <20240216152435.1575-7-petrtesarik@huaweicloud.com> <Zc-Q5pVHjngq9lpX@casper.infradead.org> <5916fa3ac3d0ce2ade71e7ed1c9eb6923e374c1f.camel@huaweicloud.com> <EC53BCED-0D4C-4561-9041-584378326DD5@zytor.com> <773dd9fb-e668-4652-8b24-712553bb7ab1@huawei-partners.com>
+Message-ID: <70F9F1E7-4803-46C8-AB6E-AC1CF345F03E@zytor.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-QCInternal: smtphost
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: 4wALU_qVqBbKAMtbv--65L8fdB7rohgw
-X-Proofpoint-GUID: 4wALU_qVqBbKAMtbv--65L8fdB7rohgw
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-02-20_06,2024-02-21_02,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- phishscore=0 suspectscore=0 impostorscore=0 priorityscore=1501 spamscore=0
- mlxscore=0 adultscore=0 mlxlogscore=734 bulkscore=0 clxscore=1034
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2402120000 definitions=main-2402210109
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-From: Mrinmay Sarkar <quic_msarkar@quicinc.com>
+On February 20, 2024 2:55:12 AM PST, Petr Tesarik <petr=2Etesarik1@huawei-p=
+artners=2Ecom> wrote:
+>On 2/16/2024 6:08 PM, H=2E Peter Anvin wrote:
+>> On February 16, 2024 8:53:01 AM PST, Roberto Sassu <roberto=2Esassu@hua=
+weicloud=2Ecom> wrote:
+>>> On Fri, 2024-02-16 at 16:44 +0000, Matthew Wilcox wrote:
+>>>> On Fri, Feb 16, 2024 at 04:24:33PM +0100, Petr Tesarik wrote:
+>>>>> From: David Howells <dhowells@redhat=2Ecom>
+>>>>>
+>>>>> Implement a PGP data parser for the crypto key type to use when
+>>>>> instantiating a key=2E
+>>>>>
+>>>>> This parser attempts to parse the instantiation data as a PGP packet
+>>>>> sequence (RFC 4880) and if it parses okay, attempts to extract a pub=
+lic-key
+>>>>> algorithm key or subkey from it=2E
+>>>>
+>>>> I don't understand why we want to do this in-kernel instead of in
+>>>> userspace and then pass in the actual key=2E
+>>>
+>>> Sigh, this is a long discussion=2E
+>>>
+>>> PGP keys would be used as a system-wide trust anchor to verify RPM
+>>> package headers, which already contain file digests that can be used a=
+s
+>>> reference values for kernel-enforced integrity appraisal=2E
+>>>
+>>> With the assumptions that:
+>>>
+>>> - In a locked-down system the kernel has more privileges than root
+>>> - The kernel cannot offload this task to an user space process due to
+>>>  insufficient isolation
+>>>
+>>> the only available option is to do it in the kernel (that is what I go=
+t
+>>> as suggestion)=2E
+>>>
+>>> Roberto
+>>>
+>>>
+>>=20
+>> Ok, at least one of those assumptions is false, and *definitely* this a=
+pproach seems to be a solution in search of a problem=2E
+>
+>As a matter of fact, there is some truth to this observation=2E
+>
+>The frustrating story of Roberto's PGP parser sparked the idea, but it
+>would clearly be overkill to add all this code just for this one parser=
+=2E
+>I started looking around if there are other potential uses of a sandbox
+>mode, which might justify the effort=2E I quickly found out that it is
+>difficult to find a self-contained part of the kernel=2E
+>
+>Now I believe that these dependencies among different parts of the
+>kernel present an issue, both to kernel security and to maintainability
+>of the source code=2E Even if sandbox mode as such is rejected (hopefully
+>with an explanation of the reasons), I believe that it is good to split
+>the kernel into smaller parts and reduce their interdependencies=2E In
+>this sense, sandbox mode is a way to express and enforce the remaining
+>dependencies=2E
+>
+>Petr T
 
-Global irq needed for PCIe controller related error reporting.
-So adding change to add global irq support for SA8775p RC platform.
-
-Signed-off-by: Mrinmay Sarkar <quic_msarkar@quicinc.com>
----
- arch/arm64/boot/dts/qcom/sa8775p.dtsi | 12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
-
-diff --git a/arch/arm64/boot/dts/qcom/sa8775p.dtsi b/arch/arm64/boot/dts/qcom/sa8775p.dtsi
-index 73c52f465f87..68efccba50b0 100644
---- a/arch/arm64/boot/dts/qcom/sa8775p.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sa8775p.dtsi
-@@ -3552,9 +3552,11 @@ pcie0: pcie@1c00000 {
- 			     <GIC_SPI 313 IRQ_TYPE_LEVEL_HIGH>,
- 			     <GIC_SPI 314 IRQ_TYPE_LEVEL_HIGH>,
- 			     <GIC_SPI 374 IRQ_TYPE_LEVEL_HIGH>,
--			     <GIC_SPI 375 IRQ_TYPE_LEVEL_HIGH>;
-+			     <GIC_SPI 375 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 306 IRQ_TYPE_LEVEL_HIGH>;
- 		interrupt-names = "msi0", "msi1", "msi2", "msi3",
--				  "msi4", "msi5", "msi6", "msi7";
-+				  "msi4", "msi5", "msi6", "msi7",
-+				  "global";
- 		#interrupt-cells = <1>;
- 		interrupt-map-mask = <0 0 0 0x7>;
- 		interrupt-map = <0 0 0 1 &intc GIC_SPI 434 IRQ_TYPE_LEVEL_HIGH>,
-@@ -3652,9 +3654,11 @@ pcie1: pcie@1c10000 {
- 			     <GIC_SPI 143 IRQ_TYPE_LEVEL_HIGH>,
- 			     <GIC_SPI 144 IRQ_TYPE_LEVEL_HIGH>,
- 			     <GIC_SPI 145 IRQ_TYPE_LEVEL_HIGH>,
--			     <GIC_SPI 146 IRQ_TYPE_LEVEL_HIGH>;
-+			     <GIC_SPI 146 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 518 IRQ_TYPE_LEVEL_HIGH>;
- 		interrupt-names = "msi0", "msi1", "msi2", "msi3",
--				  "msi4", "msi5", "msi6", "msi7";
-+				  "msi4", "msi5", "msi6", "msi7",
-+				  "global";
- 		#interrupt-cells = <1>;
- 		interrupt-map-mask = <0 0 0 0x7>;
- 		interrupt-map = <0 0 0 1 &intc GIC_SPI 148 IRQ_TYPE_LEVEL_HIGH>,
--- 
-2.40.1
-
+Congratulations=2E You just reinvented the microkernel=2E
