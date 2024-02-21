@@ -1,165 +1,181 @@
-Received: from bedivere.hansenpartnership.com (bedivere.hansenpartnership.com [96.44.175.130])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E91888460;
-	Wed, 21 Feb 2024 03:54:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=96.44.175.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C444939867
+	for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 03:54:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708487646; cv=none; b=eCSI35Um2Ai8plr2ocmfXO7bRt6EBefW7oIp07ASGfbgJM3E6lDNh/BElqhxQVl6Fnem8kwhMHKddXu/f/xSTtCM10uO9TpepX4NA7qp4KuTQan6GILY3/Y8VVOdzZ+07K5zfESOJ+w3tfAkXKET3YSq2gmlqqLp0GFM74E54UU=
+	t=1708487661; cv=none; b=Z9OxZo35sbDK5bzaRx1gG7goqFlkaMy8hL0JYbm3QOYESIXuGhOGIKOk+VIDJlZCcnQgJJ7bZXe+/b1bfunVveKk/BasW4tHPxjadAev8BJtRzV9BqUW2jyhrVazT07RZDXfPkNmLSKrIsU1ZRVKii+0jPJuVZpsz5WWoJKQAYo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708487646; c=relaxed/simple;
-	bh=0r2eJcR8uv882dJ9kLZyiUPHOvlr5JnQiM8ZYXv2ZJc=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=hhWI2bnkAZzO2+wUpzgbuIJ4px01eF+AVGhJ/hrvg59v9J0SLPg6RZU9AKps4Q6+HFDe4Gcd6ZXL303nMaI2ApUY67YnRkIQedI1SCp7TuJMHu1zNBD4dReteTxlNO94yYYea5GilnbmNUum01FNkYKhDh8uolHB54aAy9c2CC8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=HansenPartnership.com; spf=pass smtp.mailfrom=HansenPartnership.com; dkim=pass (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b=YfX3c0Tn; dkim=pass (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b=VqUWuhgt; arc=none smtp.client-ip=96.44.175.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=HansenPartnership.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=HansenPartnership.com
+	s=arc-20240116; t=1708487661; c=relaxed/simple;
+	bh=TFAvA1/yz76l+ryudayP2LNvIDPNPKxdKoM54HtDt/Q=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=D4mZ0PRX0uig1JfSuyyy/PWFnYpa1ZV567xYiHrFQHFE0vmIiMAophY/dldvvnNGClWtM2nUguNLtiPCUbyZi8LcVBgmZ6lSGHkw4GeSoSM9ZZh6GBg5yHVXBgjdyq5IHfcRZwUUA/tTvmhYAOgWwTx4zu/Oq1sC3DvAKjAW8UE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OSoSp0Tk; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="YfX3c0Tn";
-	dkim=pass (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="VqUWuhgt"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OSoSp0Tk"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-	d=hansenpartnership.com; s=20151216; t=1708487643;
-	bh=0r2eJcR8uv882dJ9kLZyiUPHOvlr5JnQiM8ZYXv2ZJc=;
-	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:From;
-	b=YfX3c0TntyHI8jdtoxPpk+ZYgyUGFb8Gh6wRlHJTXpgr/R9lpu0ABt/o7hC94caTT
-	 5HwenwvpBlhjEsuqFV70peOrhbtZP9xPEUx1P032BvJjrTvSgd5oG+YIW3ewbWAs0W
-	 dkVvOHRPErqJtOIxqEINQHuAhsMtsffho4ucQnXI=
-Received: from localhost (localhost [127.0.0.1])
-	by bedivere.hansenpartnership.com (Postfix) with ESMTP id 0668D1285D5F;
-	Tue, 20 Feb 2024 22:54:03 -0500 (EST)
-Received: from bedivere.hansenpartnership.com ([127.0.0.1])
- by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavis, port 10024)
- with ESMTP id vxWwJu1JQ3zD; Tue, 20 Feb 2024 22:54:02 -0500 (EST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-	d=hansenpartnership.com; s=20151216; t=1708487642;
-	bh=0r2eJcR8uv882dJ9kLZyiUPHOvlr5JnQiM8ZYXv2ZJc=;
-	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:From;
-	b=VqUWuhgtJPh4hzKc/KzZn+SA7lmOu65DUWsBKXmk9looUKGW8ku3QC7WXOHOmYwQ6
-	 ziQ51aFNCyBdfVevey8YdvrW+iTNIVlJp3M+BaEsFfNNpZ/zz4okCKdoXnc13Jxm+1
-	 /c8+jjbKMnDeKDe0Bz5SD440NezZJaqoR/v84hcI=
-Received: from lingrow.int.hansenpartnership.com (unknown [IPv6:2601:5c4:4302:c21::a774])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id B6DAA1281C36;
-	Tue, 20 Feb 2024 22:54:01 -0500 (EST)
-Message-ID: <bfbb1e9b521811b234f4f603c2616a9840da9ece.camel@HansenPartnership.com>
-Subject: Re: [LSF TOPIC] beyond uidmapping, & towards a better security model
-From: James Bottomley <James.Bottomley@HansenPartnership.com>
-To: Kent Overstreet <kent.overstreet@linux.dev>
-Cc: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
- lsf-pc@lists.linux-foundation.org, Christian Brauner
- <christian@brauner.io>,  =?ISO-8859-1?Q?St=E9phane?= Graber
- <stgraber@stgraber.org>
-Date: Tue, 20 Feb 2024 22:53:58 -0500
-In-Reply-To: <qlmv2hjwzgnkmtvjpyn6zdnnmja3a35tx4nh6ldl23tkzh5reb@r3dseusgs3x6>
-References: 
-	<tixdzlcmitz2kvyamswcpnydeypunkify5aifsmfihpecvat7d@pmgcepiilpi6>
-	 <141b4c7ecda2a8c064586d064b8d1476d8de3617.camel@HansenPartnership.com>
-	 <qlmv2hjwzgnkmtvjpyn6zdnnmja3a35tx4nh6ldl23tkzh5reb@r3dseusgs3x6>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.42.4 
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1708487659; x=1740023659;
+  h=date:from:to:cc:subject:message-id;
+  bh=TFAvA1/yz76l+ryudayP2LNvIDPNPKxdKoM54HtDt/Q=;
+  b=OSoSp0TkSurdJ19QrezQuzX8lHVwtSBcJl5uAm3tLpZ4D7Ct+CQSZOuq
+   pap3X/lG5js8j630OX+rC0lvxAPUpXjjhoVEbtnfRiy3vj1ZOFsrr8nTb
+   X6P4XT/CNCF8FplWTrq3O2izyUc3pnyMUtOepPDHLlK5WYkz7GDCBdHib
+   3Otp89ejt8beySVXieXnPpK7inFQ8N2Yjz1TOTSA7nJwUdfb2dQhe1qOr
+   qWsTiDjq8EC3hPaK2AD2bOtd7JoqFDu57L07bMPppSZcC1EHNJx3smk03
+   gBuW5/h8VuVjYEsUOw7WZq6UpkLnCz70XxttdaKsAMO16sxGq9qpf5Hin
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10990"; a="6446168"
+X-IronPort-AV: E=Sophos;i="6.06,174,1705392000"; 
+   d="scan'208";a="6446168"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Feb 2024 19:54:19 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.06,174,1705392000"; 
+   d="scan'208";a="5311392"
+Received: from lkp-server02.sh.intel.com (HELO 3c78fa4d504c) ([10.239.97.151])
+  by orviesa007.jf.intel.com with ESMTP; 20 Feb 2024 19:54:19 -0800
+Received: from kbuild by 3c78fa4d504c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1rcdg6-0004zK-22;
+	Wed, 21 Feb 2024 03:54:00 +0000
+Date: Wed, 21 Feb 2024 11:50:58 +0800
+From: kernel test robot <lkp@intel.com>
+To: "x86-ml" <x86@kernel.org>
+Cc: linux-kernel@vger.kernel.org
+Subject: [tip:x86/mtrr] BUILD SUCCESS
+ ffc92cf3db62443c626469ef160f9276f296f6c6
+Message-ID: <202402211153.Ei0vXAGU-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-On Tue, 2024-02-20 at 19:25 -0500, Kent Overstreet wrote:
-> On Mon, Feb 19, 2024 at 09:26:25AM -0500, James Bottomley wrote:
-> > I would have to say that changing kuid for a string doesn't really
-> > buy us anything except a load of complexity for no very real gain. 
-> > However, since the current kuid is u32 and exposed uid is u16 and
-> > there is already a proposal to make use of this somewhat in the way
-> > you envision,
-> 
-> Got a link to that proposal?
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86/mtrr
+branch HEAD: ffc92cf3db62443c626469ef160f9276f296f6c6  x86/pat: Simplify the PAT programming protocol
 
-I think this is the latest presentation on it:
+elapsed time: 829m
 
-https://fosdem.org/2024/schedule/event/fosdem-2024-3217-converting-filesystems-to-support-idmapped-mounts/
+configs tested: 108
+configs skipped: 135
 
-> 
-> > there might be a possibility to re-express kuid as an array
-> > of u16s without much disruption.  Each adjacent pair could
-> > represent the owner at the top and the userns assigned uid
-> > underneath.  That would neatly solve the nesting problem the
-> > current upper 16 bits proposal has.
-> 
-> At a high level, there's no real difference between a variable length
-> integer, or a variable length array of integers, or a string.
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-Right, so the advantage is the kernel already does an integer
-comparison all over the place.
+tested configs:
+alpha                             allnoconfig   gcc  
+alpha                            allyesconfig   gcc  
+alpha                               defconfig   gcc  
+arc                              allmodconfig   gcc  
+arc                               allnoconfig   gcc  
+arc                              allyesconfig   gcc  
+arc                                 defconfig   gcc  
+arm                              allmodconfig   gcc  
+arm                              allyesconfig   gcc  
+arm                           h3600_defconfig   gcc  
+arm                       spear13xx_defconfig   gcc  
+arm64                             allnoconfig   gcc  
+arm64                               defconfig   gcc  
+csky                             allmodconfig   gcc  
+csky                              allnoconfig   gcc  
+csky                             allyesconfig   gcc  
+csky                                defconfig   gcc  
+hexagon                          allmodconfig   clang
+hexagon                          allyesconfig   clang
+i386                             allmodconfig   gcc  
+i386                              allnoconfig   gcc  
+i386                             allyesconfig   gcc  
+i386         buildonly-randconfig-002-20240221   clang
+i386                                defconfig   clang
+i386                  randconfig-002-20240221   clang
+i386                  randconfig-003-20240221   clang
+i386                  randconfig-006-20240221   clang
+i386                  randconfig-012-20240221   clang
+i386                  randconfig-014-20240221   clang
+i386                  randconfig-016-20240221   clang
+loongarch                        allmodconfig   gcc  
+loongarch                         allnoconfig   gcc  
+loongarch                           defconfig   gcc  
+m68k                             allmodconfig   gcc  
+m68k                              allnoconfig   gcc  
+m68k                             allyesconfig   gcc  
+m68k                                defconfig   gcc  
+microblaze                       alldefconfig   gcc  
+microblaze                       allmodconfig   gcc  
+microblaze                        allnoconfig   gcc  
+microblaze                       allyesconfig   gcc  
+microblaze                          defconfig   gcc  
+mips                              allnoconfig   gcc  
+mips                             allyesconfig   gcc  
+mips                 decstation_r4k_defconfig   gcc  
+nios2                            allmodconfig   gcc  
+nios2                             allnoconfig   gcc  
+nios2                            allyesconfig   gcc  
+nios2                               defconfig   gcc  
+openrisc                          allnoconfig   gcc  
+openrisc                            defconfig   gcc  
+openrisc                    or1ksim_defconfig   gcc  
+parisc                            allnoconfig   gcc  
+parisc                              defconfig   gcc  
+parisc64                            defconfig   gcc  
+powerpc                           allnoconfig   gcc  
+powerpc                          allyesconfig   clang
+powerpc                         wii_defconfig   gcc  
+riscv                            allmodconfig   clang
+riscv                             allnoconfig   gcc  
+riscv                            allyesconfig   clang
+riscv                               defconfig   clang
+s390                              allnoconfig   clang
+s390                             allyesconfig   gcc  
+s390                                defconfig   clang
+sh                               allmodconfig   gcc  
+sh                                allnoconfig   gcc  
+sh                               allyesconfig   gcc  
+sh                                  defconfig   gcc  
+sh                        dreamcast_defconfig   gcc  
+sh                          sdk7786_defconfig   gcc  
+sh                        sh7763rdp_defconfig   gcc  
+sparc                            allmodconfig   gcc  
+sparc                             allnoconfig   gcc  
+sparc                               defconfig   gcc  
+sparc64                          allmodconfig   gcc  
+sparc64                          allyesconfig   gcc  
+sparc64                             defconfig   gcc  
+um                               allmodconfig   clang
+um                                allnoconfig   clang
+um                               allyesconfig   gcc  
+um                                  defconfig   clang
+um                             i386_defconfig   gcc  
+um                           x86_64_defconfig   clang
+x86_64                            allnoconfig   clang
+x86_64                           allyesconfig   clang
+x86_64       buildonly-randconfig-002-20240221   gcc  
+x86_64       buildonly-randconfig-003-20240221   gcc  
+x86_64                              defconfig   gcc  
+x86_64                randconfig-001-20240221   gcc  
+x86_64                randconfig-002-20240221   gcc  
+x86_64                randconfig-003-20240221   gcc  
+x86_64                randconfig-004-20240221   gcc  
+x86_64                randconfig-005-20240221   gcc  
+x86_64                randconfig-006-20240221   gcc  
+x86_64                randconfig-012-20240221   gcc  
+x86_64                randconfig-014-20240221   gcc  
+x86_64                randconfig-015-20240221   gcc  
+x86_64                randconfig-016-20240221   gcc  
+x86_64                randconfig-071-20240221   gcc  
+x86_64                randconfig-072-20240221   gcc  
+x86_64                randconfig-073-20240221   gcc  
+x86_64                randconfig-074-20240221   gcc  
+x86_64                randconfig-076-20240221   gcc  
+x86_64                          rhel-8.3-func   gcc  
+x86_64                          rhel-8.3-rust   clang
+x86_64                               rhel-8.3   gcc  
+xtensa                            allnoconfig   gcc  
 
-> But there's real advantages to getting rid of the string <-> integer
-> identifier mapping and plumbing strings all the way through:
-> 
->  - creating a new sub-user can be done with nothing more than the new
->    username version of setuid(); IOW, we can start a new named
-> subuser
->    for e.g. firefox without mucking with _any_ system state or tables
-> 
->  - sharing filesystems between machines is always a pita because
->    usernames might be the same but uids never are - let's kill that
-> off,
->    please
-> 
-> Doing anything as big as an array of integers is going to be a major
-> compatibiltiy break anyways, so we might as well do it right.
-
-I'm not really convinced it's right.  Strings are trickier to handle
-and compare than integer arrays and all of the above can be done by
-either.
-
-> Either way we're going to need a mapping to 16 bit uids for
-> compatibility; doing this right gives userspace an incentive to get
-> _off_ that compatibility layer so we're not dealing with that
-> impedence mismatch forever.
-
-Fundamentally we have a load of integer to pretty name things we use in
-the kernel (protocol, port, ...).  The point though is the kernel
-doesn't need to know the pretty name, it deals with integers and user
-space does the conversion.
-
-> > However, neither proposal would get us out of the problem of mount
-> > mapping because we'd have to keep the filesystem permission check
-> > on the owning uid unless told otherwise.
-> 
-> Not sure I follow?
-
-Mounting a filesystem inside a userns can cause huge security problems
-if we map fs root to inner root without the admin blessing it.  Think
-of binding /bin into the userns and then altering one of the root owned
-binaries as inner root: if the permission check passes, the change
-appears in system /bin.
-
-> We're always going to need mount mapping, but if the mount mapping is
-> just "usernames here get mapped to this subtree of the system
-> username namespace", then that potentially simplifies things quite a
-> bit - the mount mapping is no longer a _table_.
-
-But what then is it?  If you allow the user arbitrarily to assign
-subuids, you can't trust them for the mapping to the fs uid.  The
-current newidmap/newgidmap are somewhat nasty but at least they're
-controlled.
-
-I did try a prototype where all we cared about was the root<->root
-mapping, but a unix system has other uids that are privileged as well,
-so it didn't solve the security problem.
-
-> And it wouldn't have to be administrator assigned. Some administrator
-> assignment might be required for the username <-> 16 bit uid mapping,
-> but if those mappings are ephemeral (i.e. if we get filesystems
-> persistently storing usernames, which is easy enough with xattrs)
-> then that just becomes "reserve x range of the 16 bit uid space for
-> ephemeral translations".
-
-*if* the user names you're dealing with are all unprivileged.  When we
-have a mix of privileged and unprivileged users owning the files, the
-problems begin.
-
-James
-
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
