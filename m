@@ -1,38 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BD917BB1E
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FC507C093
 	for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 14:06:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708524400; cv=none; b=tZ2tDJ/NJFoAAZ0qspJvsisHohGR8+wYQpW7vwymbbhqnjSM2kzoK/YSQ+EU8W1Eub5nHZOxMDr1b/b87D5DsHF9IcSIKNnGc/E/uLmcVmNhRI9CVCxmJgsTDQNdfOc2IsALyFtNFavRD0P0pSE6ghCiq4JwWCG1lilJhP1CVG4=
+	t=1708524400; cv=none; b=L5pUz7jf49PSE6wz4PG3UvTIgFucHY5GJbS8y+BaYubmLT9akHHHE2At4VKcvm//19KMfpQZXN8Wgx30KXfn0ghNukNwsFT+E60v2G58Ty1Cv1lo8xN186Oyw18CTjRlY+8+6dUx1lYS/JNsziAWGhMl/vxqa1xId+TNhWelJ3M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1708524400; c=relaxed/simple;
-	bh=nL4DEb/ABUB0gZnwIH/oIgImYb0Z/fdbaS/trT70KF0=;
+	bh=dbYZpa01gBm8dnFQ3bsiWZKxefe6r9i28byH8LL9dDg=;
 	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=mWXKVjqWTUstpPmb1DxksqcUZLE+ZIezWrJ0+B7KkUHa3+QNKS0zRHd9AZl2wuP5OkR5iegi7DctUzCObwiOfltfROm+mmIoiB3rKnO6UqBRhpEUlCfjrNw5RHDmc8WO60/apZ40Cm6VaMUry9MEtHz+J127n/VIh2agVteI3OU=
+	 Content-Type; b=qEVUEcnpKzPtdwi1erzS513TB+dXEfPYPrryZ8SQGqZNmXMI78e0h1VePJ043q9NZCvJt6IGfWAp/vlLYSfZH6caSHaBAL6Ci/I9xc+RBGqTFSJhp0i/A8j+ZRQ5j8mz7jPE4mI4qToKtlvFk39MruHBnTgR9/S/OIB4Z4qflWg=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ECA15C43399;
-	Wed, 21 Feb 2024 14:06:39 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4C281C43601;
+	Wed, 21 Feb 2024 14:06:40 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.97)
 	(envelope-from <rostedt@goodmis.org>)
-	id 1rcnGu-00000002i7Q-0hdt;
+	id 1rcnGu-00000002i8O-21Kr;
 	Wed, 21 Feb 2024 09:08:28 -0500
-Message-ID: <20240221140828.033019650@goodmis.org>
+Message-ID: <20240221140828.346521235@goodmis.org>
 User-Agent: quilt/0.67
-Date: Wed, 21 Feb 2024 09:07:57 -0500
+Date: Wed, 21 Feb 2024 09:07:59 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org
 Cc: Masami Hiramatsu <mhiramat@kernel.org>,
  Mark Rutland <mark.rutland@arm.com>,
  Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
  Andrew Morton <akpm@linux-foundation.org>,
- Linus Torvalds <torvalds@linux-foundation.org>,
- Al Viro <viro@ZenIV.linux.org.uk>,
- Christian Brauner <brauner@kernel.org>,
- Ajay Kaher <ajay.kaher@broadcom.com>,
- Al Viro <viro@zeniv.linux.org.uk>
-Subject: [for-next][PATCH 01/11] eventfs: Add WARN_ON_ONCE() to checks in eventfs_root_lookup()
+ Tim Chen <tim.c.chen@linux.intel.com>,
+ Vincent Donnefort <vdonnefort@google.com>,
+ Sven Schnelle <svens@linux.ibm.com>,
+ Mete Durlu <meted@linux.ibm.com>
+Subject: [for-next][PATCH 03/11] tracing: Have saved_cmdlines arrays all in one allocation
 References: <20240221140756.797572998@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -44,54 +43,97 @@ Content-Type: text/plain; charset=UTF-8
 
 From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 
-There's a couple of if statements in eventfs_root_lookup() that should
-never be true. Instead of removing them, add WARN_ON_ONCE() around them.
+The saved_cmdlines have three arrays for mapping PIDs to COMMs:
 
-  One is a tracefs_inode not being for eventfs.
+ - map_pid_to_cmdline[]
+ - map_cmdline_to_pid[]
+ - saved_cmdlines
 
-  The other is a child being freed but still on the parent's children
-  list. When a child is freed, it is removed from the list under the
-  same mutex that is held during the iteration.
+The map_pid_to_cmdline[] is PID_MAX_DEFAULT in size and holds the index
+into the other arrays. The map_cmdline_to_pid[] is a mapping back to the
+full pid as it can be larger than PID_MAX_DEFAULT. And the
+saved_cmdlines[] just holds the COMMs associated to the pids.
 
-Link: https://lore.kernel.org/linux-trace-kernel/20240201002719.GS2087318@ZenIV/
-Link: https://lore.kernel.org/linux-trace-kernel/20240201123346.724afa46@gandalf.local.home
+Currently the map_pid_to_cmdline[] and saved_cmdlines[] are allocated
+together (in reality the saved_cmdlines is just in the memory of the
+rounding of the allocation of the structure as it is always allocated in
+powers of two). The map_cmdline_to_pid[] array is allocated separately.
 
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Al Viro <viro@ZenIV.linux.org.uk>
-Cc: Christian Brauner <brauner@kernel.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Since the rounding to a power of two is rather large (it allows for 8000
+elements in saved_cmdlines), also include the map_cmdline_to_pid[] array.
+(This drops it to 6000 by default, which is still plenty for most use
+cases). This saves even more memory as the map_cmdline_to_pid[] array
+doesn't need to be allocated.
+
+Link: https://lore.kernel.org/linux-trace-kernel/20240212174011.068211d9@gandalf.local.home/
+Link: https://lore.kernel.org/linux-trace-kernel/20240220140703.182330529@goodmis.org
+
 Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Ajay Kaher <ajay.kaher@broadcom.com>
-Reported-by: Al Viro <viro@zeniv.linux.org.uk>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Tim Chen <tim.c.chen@linux.intel.com>
+Cc: Vincent Donnefort <vdonnefort@google.com>
+Cc: Sven Schnelle <svens@linux.ibm.com>
+Cc: Mete Durlu <meted@linux.ibm.com>
+Fixes: 44dc5c41b5b1 ("tracing: Fix wasted memory in saved_cmdlines logic")
+Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- fs/tracefs/event_inode.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ kernel/trace/trace.c | 18 ++++++++----------
+ 1 file changed, 8 insertions(+), 10 deletions(-)
 
-diff --git a/fs/tracefs/event_inode.c b/fs/tracefs/event_inode.c
-index 110e8a272189..9d9c7dc3114b 100644
---- a/fs/tracefs/event_inode.c
-+++ b/fs/tracefs/event_inode.c
-@@ -483,7 +483,7 @@ static struct dentry *eventfs_root_lookup(struct inode *dir,
- 	struct dentry *result = NULL;
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index 8198bfc54b58..52faa30e64ed 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -2325,6 +2325,10 @@ struct saved_cmdlines_buffer {
+ };
+ static struct saved_cmdlines_buffer *savedcmd;
  
- 	ti = get_tracefs(dir);
--	if (!(ti->flags & TRACEFS_EVENT_INODE))
-+	if (WARN_ON_ONCE(!(ti->flags & TRACEFS_EVENT_INODE)))
- 		return ERR_PTR(-EIO);
++/* Holds the size of a cmdline and pid element */
++#define SAVED_CMDLINE_MAP_ELEMENT_SIZE(s)			\
++	(TASK_COMM_LEN + sizeof((s)->map_cmdline_to_pid[0]))
++
+ static inline char *get_saved_cmdlines(int idx)
+ {
+ 	return &savedcmd->saved_cmdlines[idx * TASK_COMM_LEN];
+@@ -2339,7 +2343,6 @@ static void free_saved_cmdlines_buffer(struct saved_cmdlines_buffer *s)
+ {
+ 	int order = get_order(sizeof(*s) + s->cmdline_num * TASK_COMM_LEN);
  
- 	mutex_lock(&eventfs_mutex);
-@@ -495,7 +495,8 @@ static struct dentry *eventfs_root_lookup(struct inode *dir,
- 	list_for_each_entry(ei_child, &ei->children, list) {
- 		if (strcmp(ei_child->name, name) != 0)
- 			continue;
--		if (ei_child->is_freed)
-+		/* A child is freed and removed from the list at the same time */
-+		if (WARN_ON_ONCE(ei_child->is_freed))
- 			goto out;
- 		result = lookup_dir_entry(dentry, ei, ei_child);
- 		goto out;
+-	kfree(s->map_cmdline_to_pid);
+ 	kmemleak_free(s);
+ 	free_pages((unsigned long)s, order);
+ }
+@@ -2352,7 +2355,7 @@ static struct saved_cmdlines_buffer *allocate_cmdlines_buffer(unsigned int val)
+ 	int order;
+ 
+ 	/* Figure out how much is needed to hold the given number of cmdlines */
+-	orig_size = sizeof(*s) + val * TASK_COMM_LEN;
++	orig_size = sizeof(*s) + val * SAVED_CMDLINE_MAP_ELEMENT_SIZE(s);
+ 	order = get_order(orig_size);
+ 	size = 1 << (order + PAGE_SHIFT);
+ 	page = alloc_pages(GFP_KERNEL, order);
+@@ -2364,16 +2367,11 @@ static struct saved_cmdlines_buffer *allocate_cmdlines_buffer(unsigned int val)
+ 	memset(s, 0, sizeof(*s));
+ 
+ 	/* Round up to actual allocation */
+-	val = (size - sizeof(*s)) / TASK_COMM_LEN;
++	val = (size - sizeof(*s)) / SAVED_CMDLINE_MAP_ELEMENT_SIZE(s);
+ 	s->cmdline_num = val;
+ 
+-	s->map_cmdline_to_pid = kmalloc_array(val,
+-					      sizeof(*s->map_cmdline_to_pid),
+-					      GFP_KERNEL);
+-	if (!s->map_cmdline_to_pid) {
+-		free_saved_cmdlines_buffer(s);
+-		return NULL;
+-	}
++	/* Place map_cmdline_to_pid array right after saved_cmdlines */
++	s->map_cmdline_to_pid = (unsigned *)&s->saved_cmdlines[val * TASK_COMM_LEN];
+ 
+ 	s->cmdline_idx = 0;
+ 	memset(&s->map_pid_to_cmdline, NO_CMDLINE_MAP,
 -- 
 2.43.0
 
