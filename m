@@ -1,152 +1,97 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E39397F7EA;
-	Wed, 21 Feb 2024 17:22:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66F647F7EA;
+	Wed, 21 Feb 2024 17:23:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708536164; cv=none; b=NMwIovxXcnpJYY+WmxV1vm1KpOboXrzpvTR150GYf2WuOJUe9rFN3SqEUM5AK74UgL9ZXJTqQI5FAZ8RN9LqgchviWeAgmyHsKwmSaAUtALSxEbgXtx37BLnvTFH1yKlI+wrWdP0XJ4yXQjKuJzRk3lGOBUt6S2sEx5aY4/hSQs=
+	t=1708536236; cv=none; b=Bed+v8hT8MCPRlIfBnLL1w6Q5tRdkgV8gc43RBBbznTSTNKymkaXEKqC+VGCm0Kmyr+//pH3/Sy121WbxpQcC2O2QUDGcyVNSXuo1JVqHZcy8WTxm5aeJ+G/vZYZWKivRCNuQFTyQlUYnXbyQExLXYwlz8nGylp2JNSvGlfkdLM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708536164; c=relaxed/simple;
-	bh=blg5JU8tDMyTEMnxPmEINNG8w4b5crwe8Ll8EbiY46w=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=JgQDKxVpaOzs8cEwb+TmHyt5zQJufgRRj36oqMPg8/bNNVgSAOsUs3lKfieZ05eMJCeUKr5DhiYoAaZjv2OZGdeBPUDYX71235s15R+C/HIS+eRmGoC1U+b/Aono9rBeDWruLvJdw97cnOr7QtyP66qqeU2N+0H9UfKiMaJPUZc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uS6BeSvp; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1708536236; c=relaxed/simple;
+	bh=wfo3IqN4Mq3KWjYAejdmJ2nwaWZQJuRCWSSTiTO0wro=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=ZTEp+cwN+8d1i90JB2EbUnKChudVPAqqpaaTOlYxYfAx2uPXNXLoGllBXwdtiMgxBesk+2x0BXh/XO7sSbrm8C8wIKbD+xWbsgMI/ZX7htFnMCnjHUWbSsXs8jaNtXKAi7h1durytH/uGOn6nvOyx+CMz0jDQ+S5A2Ue8Ey/gFM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MGA654KS; arc=none smtp.client-ip=209.85.210.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uS6BeSvp"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DE996C433C7;
-	Wed, 21 Feb 2024 17:22:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708536163;
-	bh=blg5JU8tDMyTEMnxPmEINNG8w4b5crwe8Ll8EbiY46w=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=uS6BeSvp5tQGb7tUlatSA/6AdxlnEqgjZPLPhr6LKL2tCyHmyDbdKRfzPS5FAWS9h
-	 5m1LOHkjES0ipSOeDSL5tcJz44ykKBaIkXK8HNmJI96vuZZ3SAnXIoqD45xVPGoOYt
-	 o8QzAj15C6JcXC/J6h42DDG/vCskLuUz3ocow7c4bExBhrXzOZumMNiTCvqsInTi5C
-	 PvHc0P00mfCSC2JJZ2ksFd/m4QmfmQy5BhzTAnSFHQoJBD1ZndQam64PHic0VPDW9S
-	 rI+bVOD5JBrV2noI1rPqGMASyOA+IQuUeceifL3AcwuLzdiwnImYBY46T27+Ob5deH
-	 k03G6v925g45Q==
-From: =?utf-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@kernel.org>
-To: Anup Patel <apatel@ventanamicro.com>
-Cc: Palmer Dabbelt <palmer@dabbelt.com>, Paul Walmsley
- <paul.walmsley@sifive.com>, Thomas Gleixner <tglx@linutronix.de>, Rob
- Herring <robh+dt@kernel.org>, Krzysztof Kozlowski
- <krzysztof.kozlowski+dt@linaro.org>, Frank Rowand
- <frowand.list@gmail.com>, Conor Dooley <conor+dt@kernel.org>,
- devicetree@vger.kernel.org, Saravana Kannan <saravanak@google.com>, Marc
- Zyngier <maz@kernel.org>, Anup Patel <anup@brainfault.org>,
- linux-kernel@vger.kernel.org, Atish Patra <atishp@atishpatra.org>,
- linux-riscv@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
- Andrew Jones <ajones@ventanamicro.com>
-Subject: Re: [PATCH v13 06/13] irqchip: Add RISC-V incoming MSI controller
- early driver
-In-Reply-To: <CAK9=C2WXR49KZg3rstChqAHda+hUhPm3AEo6o2jh0NM3kvoSUA@mail.gmail.com>
-References: <20240220060718.823229-1-apatel@ventanamicro.com>
- <20240220060718.823229-7-apatel@ventanamicro.com>
- <87frxnfj3p.fsf@all.your.base.are.belong.to.us>
- <CAK9=C2Xnzg3KAVETXN+ZGLWhVtaJuU4uXs3WH2ZondkBJMHFcA@mail.gmail.com>
- <874je2yqn9.fsf@all.your.base.are.belong.to.us>
- <CAK9=C2WXR49KZg3rstChqAHda+hUhPm3AEo6o2jh0NM3kvoSUA@mail.gmail.com>
-Date: Wed, 21 Feb 2024 18:22:40 +0100
-Message-ID: <87frxl3f6n.fsf@all.your.base.are.belong.to.us>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MGA654KS"
+Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-6de3141f041so4834506b3a.0;
+        Wed, 21 Feb 2024 09:23:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1708536235; x=1709141035; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=wfo3IqN4Mq3KWjYAejdmJ2nwaWZQJuRCWSSTiTO0wro=;
+        b=MGA654KSGTHjdQEAHneNkQ6Ss10crprjbVg4M5SF8fGbQAv03wkL9s+bwgVqqyWyJk
+         jGVzRVzwCfiiaGA+dOwhhg2a49vr/eqIzPVh9zPiMAYuzt0GVxeszelKyY1C0w3UdrQ7
+         UV98q1X48qw+yWyDN87vor2l6aDmJqZzl6fGXc4HBzl8+sBXDZ29C7yjhUahvrKwWU9v
+         nvR3lB3+8WMh3sEdMfR+lnUmXK6qvcQeJnDmg2svvZnW0bd4Fu2dZb2NLijDdwDdyxMd
+         E4Yh81oUjJBM66zk8j08u27lkirSySekQg+8klhGKZV7viAroOXziRjyEEsUWLbGq/qP
+         7WNw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708536235; x=1709141035;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=wfo3IqN4Mq3KWjYAejdmJ2nwaWZQJuRCWSSTiTO0wro=;
+        b=d+4zFedWl1BQ/kFAprKyeAt+bVO1QMUdmXu/qjShwDNi/cK7oXp5XofQIo2cq1c4vr
+         yianZTTRtcCfUgMIKXAZud1AY5voFMnhB31zRsDLgOL8hZ0jis7o6I6r/UvOtJRvTsA/
+         hJAVlZ2rnkXBSGqM58ShxJ9lO0b9KlmGtzZxZu+irA8MQhYezLgRPmnzxe4mZd9+VFUk
+         3Pf41/Gg/rsH5mUPUYh1JxKejyl5/fiysbVxoOMzGlW1UM7Dj+fF344zVdkrf2QYgTlV
+         I8ffdaBzPQI3YjcrVM+Xh6p/wU6eUZ05DKTvv3Ux9PkYOPVdMC6YdOS4dm+dnnpif0S1
+         itVA==
+X-Forwarded-Encrypted: i=1; AJvYcCUY97ycuLRJB8s5y7m4ridtjVjNgXAStfND4zCV9RbbiFhmlOuvXqFSzZHw+FWv7XRiasYEWYDM5xGYZjKlV1Z0g/Ou18BmzOipElXoMN/98PfavYEp6/qBPaBlxnItmRY+fT9aB0l1COv/4Vc3RiVdzugnMzCkxeCdqIJTA7Gc+xoeUxgRajnBvy7ePpsVbjxmmNfWmejuWy0bJxFSEjEB/Itn
+X-Gm-Message-State: AOJu0YxIxkgnaJYeACHtAmdgYi2EYL3BC1RzfqHmuTt6Iu3vMQgXYet2
+	OMN5qeCECGpQY6qMapY8SDkiDZJtua3gkB95WQirRrp5upzBXPLG
+X-Google-Smtp-Source: AGHT+IE59FCC/t+zMXkdlfOszaAbcfam4PoFW8ZvkAA8ellpnl6GKzpZod9gKRIYj9HKw1ZNyXXkCA==
+X-Received: by 2002:a62:aa0c:0:b0:6e4:5a6c:957a with SMTP id e12-20020a62aa0c000000b006e45a6c957amr9182990pff.12.1708536234610;
+        Wed, 21 Feb 2024 09:23:54 -0800 (PST)
+Received: from localhost.localdomain ([2406:3003:2000:500f:a246:8a16:bee7:140f])
+        by smtp.gmail.com with ESMTPSA id fn15-20020a056a002fcf00b006e324e33ab8sm8640356pfb.218.2024.02.21.09.23.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 21 Feb 2024 09:23:53 -0800 (PST)
+From: Lucas Lee Jing Yi <lucasleeeeeeeee@gmail.com>
+To: oleksandr@natalenko.name
+Cc: Perry.Yuan@amd.com,
+	Xiaojian.Du@amd.com,
+	alexander.deucher@amd.com,
+	bp@alien8.de,
+	deepak.sharma@amd.com,
+	li.meng@amd.com,
+	linux-acpi@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org,
+	linux-pm@vger.kernel.org,
+	lucasleeeeeeeee@gmail.com,
+	mario.limonciello@amd.com,
+	nathan.fontenot@amd.com,
+	rafael.j.wysocki@intel.com,
+	rafael@kernel.org,
+	ray.huang@amd.com,
+	shimmer.huang@amd.com,
+	skhan@linuxfoundation.org,
+	viresh.kumar@linaro.org,
+	x86@kernel.org
+Subject: Re: [PATCH] [PATCH] amd_pstate: fix erroneous highest_perf value on some CPUs
+Date: Thu, 22 Feb 2024 01:19:14 +0800
+Message-ID: <20240221172404.99765-1-lucasleeeeeeeee@gmail.com>
+X-Mailer: git-send-email 2.43.2
+In-Reply-To: <3868832.mvXUDI8C0e@natalenko.name>
+References: <3868832.mvXUDI8C0e@natalenko.name>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Anup Patel <apatel@ventanamicro.com> writes:
 
-> On Wed, Feb 21, 2024 at 5:29=E2=80=AFPM Bj=C3=B6rn T=C3=B6pel <bjorn@kern=
-el.org> wrote:
->>
->> Anup Patel <apatel@ventanamicro.com> writes:
->>
->> >> > +void imsic_vector_mask(struct imsic_vector *vec)
->> >> > +{
->> >> > +     struct imsic_local_priv *lpriv;
->> >> > +
->> >> > +     lpriv =3D per_cpu_ptr(imsic->lpriv, vec->cpu);
->> >> > +     if (WARN_ON(&lpriv->vectors[vec->local_id] !=3D vec))
->> >> > +             return;
->> >> > +
->> >> > +     /*
->> >> > +      * This function is called through Linux irq subsystem with
->> >> > +      * irqs disabled so no need to save/restore irq flags.
->> >> > +      */
->> >> > +
->> >> > +     raw_spin_lock(&lpriv->lock);
->> >> > +
->> >> > +     vec->enable =3D false;
->> >> > +     bitmap_set(lpriv->dirty_bitmap, vec->local_id, 1);
->> >> > +     __imsic_remote_sync(lpriv, vec->cpu);
->> >> > +
->> >> > +     raw_spin_unlock(&lpriv->lock);
->> >> > +}
->> >>
->> >> Really nice that you're using a timer for the vector affinity change,
->> >> and got rid of the special/weird IMSIC/sync IPI. Can you really use a
->> >> timer for mask/unmask? That makes the mask/unmask operation
->> >> asynchronous!
->> >>
->> >> That was what I was trying to get though with this comment:
->> >> https://lore.kernel.org/linux-riscv/87sf24mo1g.fsf@all.your.base.are.=
-belong.to.us/
->> >>
->> >> Also, using the smp_* IPI functions, you can pass arguments, so you
->> >> don't need the dirty_bitmap tracking the changes.
->> >
->> > The mask/unmask operations are called with irqs disabled so if
->> > CPU X does synchronous IPI to another CPU Y from mask/unmask
->> > operation then while CPU X is waiting for IPI to complete it cannot
->> > receive IPI from other CPUs which can lead to crashes and stalls.
->> >
->> > In general, we should not do any block/busy-wait work in
->> > mask/unmask operation of an irqchip driver.
->>
->> Hmm, OK. Still, a bit odd that when the .irq_mask callback return, the
->> masking is not actually completed.
->>
->> 1. CPU 0 tries to mask an interrupt tried to CPU 1.
->> 2. The timer is queued on CPU 1.
->> 3. The call irq_mask returns on CPU 0
->> 4. ...the irq is masked at some future point, determined by the callback
->>    at CPU 1
->>
->> Is that the expected outcome?
->
-> Yes, that's right.
->
->>
->> There are .irq_mask implementation that does seem to go at length
->> (blocking) to perform the mask, e.g.: gic_mask_irq() which calls
->> gic_{re,}dist_wait_for_rwp that have sleep/retry loops. The GIC3 ITS
->> code has similar things going on.
->
-> The gic_{re,}dist_wait_for_rwp() polls on a HW register for completion
-> which will certainly complete in a predictable time whereas waiting
-> for IPI to be executed by another CPU is not predictable and fragile.
->
->>
->> I'm not saying you're wrong, I'm just trying to wrap my head around the
->> masking semantics.
->>
->> > The AIA IMSIC spec allows setting ID pending bit using MSI write
->> > irrespective whether ID is enabled or not but the interrupt will be
->> > taken only after ID is enabled. In other words, there will be no
->> > loss of interrupt with delayed mask/unmask using async IPI or
->> > lazy timer.
->>
->> No loss, but we might *get* an interrupt when we explicitly asked not to
->> get any. Maybe that's ok?
->>
->
-> The delayed spurious interrupt after masking is avoided by additional
-> masking at the source of interrupt. For wired-to-MSI interrupts, we have
-> additional masking on the APLIC MSI-mode. For PCI MSI interrupts, we
-> have additional masking at PCI device level using pci_msi_mask_irq().
+Hi Oleksandr,
 
-Thanks for the clarifications, Anup! Much appreciated!
+Thanks, sent in a new patch with the recommendations highlighted by the script.
+
+Regards,
+Lucas
