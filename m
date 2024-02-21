@@ -1,81 +1,81 @@
-Received: from out-185.mta0.migadu.com (out-185.mta0.migadu.com [91.218.175.185])
+Received: from new-mail.astralinux.ru (new-mail.astralinux.ru [51.250.53.244])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 717194F894
-	for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 12:13:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.185
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D39E33B794;
+	Wed, 21 Feb 2024 12:14:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=51.250.53.244
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708517598; cv=none; b=lq8zwqOZpQ86AcsCtRAS/AaBH3aOiNy2+4gNONNJzvUDUMiv1IQHtFtknKKfCsvcqc1mpTu6IOdAEMoICic4askzwPcxBflOvgrhfwkUh3en7/b18hKqomRmWTcbePE3F4iWIQscSvNpjSOSh7U0AfPlkEH7YCn1eEMZjPkEbTc=
+	t=1708517647; cv=none; b=OOSm5q11P1djgUbh18Zlnv0jEyFm4Eg/rRGP1i77bRtHTguJmBFSmNn3rs6mkCSFwla0uSuKAHGXUq6cd9TnNXi+ME7uc762xjwq9oXetuILSrLQ4zlvY7fAq2k7t7nqnR9/1p60l4TJLX//okIEi4+oZCCM2ZgvaSN8LfNUk28=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708517598; c=relaxed/simple;
-	bh=ofDIzQwuszXOaZHAYe8/D7AxU3OQRgHCtFquTvgqqfY=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=YoXgD/LJ4+bbM5MUYwhkYhcF6QcDbKNIj66rd+PbssmNiS0quTH9FRSPZvo3XPBnX4xQKNqy6GvxA/OHJuKAJhlAZAgm2rOGeLH+hh19snJVk1fdSsPllUzfEGagcSTGaol+jtiBWNgIUILLJzp+yekSQ4xNCJNeBjCjstSk268=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=mteirsb+; arc=none smtp.client-ip=91.218.175.185
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="mteirsb+"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1708517594;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=qhS11vlbSRPVjtePx2vj2SfRKzyV/eHJgrhw6EiukQI=;
-	b=mteirsb+AwFzqqexC55Jbjfm6efaZXq7mGfkk8IMH14fHRl1HuaJkF4MVDThAb1urEtC/4
-	BTrNOQrySCuH5Xei2D2GZSWyUWkUztG/0JdZBft/y7yHadlE6Vxw9e7zYsisbcduj/GOix
-	ObbyANIoXE4b16ue/uDg/afpdLYdq6k=
-From: Chengming Zhou <chengming.zhou@linux.dev>
-Date: Wed, 21 Feb 2024 12:12:54 +0000
-Subject: [PATCH 2/2] mm, slab: fix the comment
+	s=arc-20240116; t=1708517647; c=relaxed/simple;
+	bh=MqhbnS1NjXDY8Qh9eFNNfw3K5AIjRJ9BCE+okMQm6tI=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=TDRMKHXLBxEhbbinfjHjXF3YCe7yeeR/gMflUMI+qSgJaVbxkVzwBzj0Jf/chpMtEYhZlEhRKwwBH1NFlJu4Dbqe7o9197oVqXXaN9Iw+jMWenSJ2oBczSoxqftbQI6GlzyuDSN9vu1RNjhxsjpb6/DcjdjpUwh2vytDytZ6qsY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=astralinux.ru; spf=pass smtp.mailfrom=astralinux.ru; arc=none smtp.client-ip=51.250.53.244
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=astralinux.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=astralinux.ru
+Received: from rbta-msk-lt-302690.astralinux.ru (unknown [10.177.233.36])
+	by new-mail.astralinux.ru (Postfix) with ESMTPA id 4Tfw1m5C1dzlVxB;
+	Wed, 21 Feb 2024 15:04:44 +0300 (MSK)
+From: Alexandra Diupina <adiupina@astralinux.ru>
+To: "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>
+Cc: Alexandra Diupina <adiupina@astralinux.ru>,
+	"Martin K. Petersen" <martin.petersen@oracle.com>,
+	linux-scsi@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	lvc-project@linuxtesting.org
+Subject: [PATCH] Add NULL check for SCp in process_script_interrupt()
+Date: Wed, 21 Feb 2024 15:04:14 +0300
+Message-Id: <20240221120414.29192-1-adiupina@astralinux.ru>
+X-Mailer: git-send-email 2.30.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20240221-slab-cleanup-v1-2-63382f41d699@linux.dev>
-References: <20240221-slab-cleanup-v1-0-63382f41d699@linux.dev>
-In-Reply-To: <20240221-slab-cleanup-v1-0-63382f41d699@linux.dev>
-To: Pekka Enberg <penberg@kernel.org>, Joonsoo Kim <iamjoonsoo.kim@lge.com>, Andrew Morton <akpm@linux-foundation.org>,
- David Rientjes <rientjes@google.com>, Christoph Lameter <cl@linux.com>, Hyeonggon Yoo <42.hyeyoo@gmail.com>,
- Vlastimil Babka <vbabka@suse.cz>, Roman Gushchin <roman.gushchin@linux.dev>
-Cc: Chengming Zhou <chengming.zhou@linux.dev>, linux-mm@kvack.org, linux-kernel@vger.kernel.org
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1708517585; l=780;
- i=chengming.zhou@linux.dev; s=20240220; h=from:subject:message-id;
- bh=ofDIzQwuszXOaZHAYe8/D7AxU3OQRgHCtFquTvgqqfY=;
- b=9SVMJ2TH7SmFMqZ6TgcaMs/Z/nVtEURX7uP3QgENgkurJ8/77EOzV8658D0efom6qkPkGuVqp
- kp/Iejh0mjvAiWCJXNazK9Uny3roCoOMjFtYej0VrI0+uCtwsertYQi
-X-Developer-Key: i=chengming.zhou@linux.dev; a=ed25519;
- pk=5+68Wfci+T30FoQos5RH+hfToF6SlC+S9LMPSPBFWuw=
-X-Migadu-Flow: FLOW_OUT
+X-DrWeb-SpamScore: -100
+X-DrWeb-SpamState: legit
+X-DrWeb-SpamDetail: gggruggvucftvghtrhhoucdtuddrgedvfedrvdehuddgtddvucetufdoteggodetrfcurfhrohhfihhlvgemucfftfghgfeunecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevufffkffoggfgsedtkeertdertddtnecuhfhrohhmpeetlhgvgigrnhgurhgrucffihhuphhinhgruceorgguihhuphhinhgrsegrshhtrhgrlhhinhhugidrrhhuqeenucggtffrrghtthgvrhhnpeduleetfeehffekueeuffektefgudfgffeutdefudfghedvieffheehleeuieehteenucffohhmrghinheplhhinhhugihtvghsthhinhhgrdhorhhgnecukfhppedutddrudejjedrvdeffedrfeeinecurfgrrhgrmhephhgvlhhopehrsghtrgdqmhhskhdqlhhtqdeftddvieeltddrrghsthhrrghlihhnuhigrdhruhdpihhnvghtpedutddrudejjedrvdeffedrfeeimeegvdeiudegpdhmrghilhhfrhhomheprgguihhuphhinhgrsegrshhtrhgrlhhinhhugidrrhhupdhnsggprhgtphhtthhopeeipdhrtghpthhtoheplfgrmhgvshdruehothhtohhmlhgvhiesjfgrnhhsvghnrfgrrhhtnhgvrhhshhhiphdrtghomhdprhgtphhtthhopegrughiuhhpihhnrgesrghsthhrrghlihhnuhigrdhruhdprhgtphhtthhopehmrghrthhinhdrphgvthgvrhhsvghnsehorhgrtghlvgdrtghomhdprhgtphhtthhopehlihhnuhigqdhstghsihesvhhgvghrrd
+ hkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlvhgtqdhprhhojhgvtghtsehlihhnuhigthgvshhtihhnghdrohhrgh
+X-DrWeb-SpamVersion: Vade Retro 01.423.251#02 AS+AV+AP Profile: DRWEB; Bailout: 300
+X-AntiVirus: Checked by Dr.Web [MailD: 11.1.19.2307031128, SE: 11.1.12.2210241838, Core engine: 7.00.62.01180, Virus records: 12454253, Updated: 2024-Feb-21 10:21:39 UTC]
 
-The partial slabs on cpu partial list are not frozen after the commit
-8cd3fa428b56 ("slub: Delay freezing of partial slabs") merged. So fix
-the comment.
+SCp is 3rd argument of process_script_interrupt()
+(calls in drivers/scsi/53c700.c:1346 where SCp != NULL and
+drivers/scsi/53c700.c:1672 where this condition is not guaranteed).
+Before call process_script_interrupt() in drivers/scsi/53c700.c:1672
+there is SCp = hostdata->cmd, wherein (type casts omitted)
+hostdata = host->hostdata[0], host = dev_id,
+dev_id - 2nd argument of NCR_700_intr().
+NCR_700_intr() is used when calling request_irq() -> request_threaded_irq()
+as the 2nd argument.
+Last argument of call request_irq(..., NCR_700_intr, ... host) is host.
+host = NCR_700_detect(), host->hostdata[0] = hostdata, hostdata->cmd = NULL.
+So, there is possible NULL pointer dereference,
+so add NULL check for SCp in process_script_interrupt() to avoid it.
 
-Signed-off-by: Chengming Zhou <chengming.zhou@linux.dev>
+Found by Linux Verification Center (linuxtesting.org) with SVACE.
+
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Signed-off-by: Alexandra Diupina <adiupina@astralinux.ru>
 ---
- mm/slub.c | 2 +-
+ drivers/scsi/53c700.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/mm/slub.c b/mm/slub.c
-index 95700f2b17ae..d5ca58e65053 100644
---- a/mm/slub.c
-+++ b/mm/slub.c
-@@ -391,7 +391,7 @@ struct kmem_cache_cpu {
- 	};
- 	struct slab *slab;	/* The slab from which we are allocating */
- #ifdef CONFIG_SLUB_CPU_PARTIAL
--	struct slab *partial;	/* Partially allocated frozen slabs */
-+	struct slab *partial;	/* Partially allocated slabs */
- #endif
- 	local_lock_t lock;	/* Protects the fields above */
- #ifdef CONFIG_SLUB_STATS
-
+diff --git a/drivers/scsi/53c700.c b/drivers/scsi/53c700.c
+index 857be0f3ae5b..54bcc5727fbb 100644
+--- a/drivers/scsi/53c700.c
++++ b/drivers/scsi/53c700.c
+@@ -1067,7 +1067,7 @@ process_script_interrupt(__u32 dsps, __u32 dsp, struct scsi_cmnd *SCp,
+ 			//}
+ 			NCR_700_scsi_done(hostdata, SCp, hostdata->status[0]);
+ 		}
+-	} else if((dsps & 0xfffff0f0) == A_UNEXPECTED_PHASE) {
++	} else if ((dsps & 0xfffff0f0) == A_UNEXPECTED_PHASE && SCp) {
+ 		__u8 i = (dsps & 0xf00) >> 8;
+ 
+ 		scmd_printk(KERN_ERR, SCp, "UNEXPECTED PHASE %s (%s)\n",
 -- 
-b4 0.10.1
+2.30.2
+
