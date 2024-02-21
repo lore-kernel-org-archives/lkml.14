@@ -1,153 +1,97 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E1AE23FE0;
-	Wed, 21 Feb 2024 02:03:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D7E54C86;
+	Wed, 21 Feb 2024 02:04:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708481000; cv=none; b=mYR8ZWTzEzGvL4PYFjkaGEf2LZWbKXqPohw2GYaIg1LGJd4oVF4owKCJNybbuPZUpUiaWcmsUk2inFImXMpJFZxCwhGzBBKQ8J9mQ1h5DDqFpZYMSVCFCZ1d7AoamOYIImrl462RRlYZXHpp7KEQfiectRIUo1YbH/aeOIDpd/8=
+	t=1708481090; cv=none; b=KhFK22caR1aVDKg55E2W0CP1hViqG6O+bykxxBSMDI9pzXqFATxfH3LIyTbp+4OHn9ki1+OohaF8NauCxswGQ20Tb1yeouEo6XLs3lzbSHPw+dDv03VfienSX6DbR80ifjUpSkZmbLr4DHvbR79dlq/Cn3J2ktSbBCHVzyjTIFc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708481000; c=relaxed/simple;
-	bh=KEbCD0+Yt5WycZBGFG+KMXcNoaLDk8sz4dr4unOnTvM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=XqXjQ8ZmG2sUOrb1NrN0Avxs+40lf4XZwMRRWQtr8ZsfbQ4nJ9u4z9rQEJp2EpXV7o1cHLucY0rATN+GT4FQm1S6EkrGXtM4Klj3uQsfNM+oiWOZpj4Oyh6oWxxKr1k+nn0JWIdIwzKrgbNisp7Iw4vyxcQQZfSPC+mBX85+6UY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9EE08FEC;
-	Tue, 20 Feb 2024 18:03:54 -0800 (PST)
-Received: from mammon-tx2.austin.arm.com (mammon-tx2.austin.arm.com [10.118.28.65])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id DAC763F766;
-	Tue, 20 Feb 2024 18:03:15 -0800 (PST)
-From: Jeremy Linton <jeremy.linton@arm.com>
-To: linux-arm-kernel@lists.infradead.org
-Cc: catalin.marinas@arm.com,
-	will@kernel.org,
-	keescook@chromium.org,
-	gustavoars@kernel.org,
-	mark.rutland@arm.com,
-	rostedt@goodmis.org,
-	arnd@arndb.de,
-	broonie@kernel.org,
-	guohui@uniontech.com,
-	Manoj.Iyer@arm.com,
-	linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org,
-	Jeremy Linton <jeremy.linton@arm.com>,
-	James Yang <james.yang@arm.com>,
-	Shiyou Huang <shiyou.huang@arm.com>
-Subject: [RFC] arm64: syscall: Direct PRNG kstack randomization
-Date: Tue, 20 Feb 2024 20:02:58 -0600
-Message-ID: <20240221020258.1210148-1-jeremy.linton@arm.com>
-X-Mailer: git-send-email 2.41.0
+	s=arc-20240116; t=1708481090; c=relaxed/simple;
+	bh=zoLNIyU6H5r0VawvX8GIESdSRbRovZ8tl3Az1EnVhKA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=c8vQ9mHm/cISN6YhlYp1T/cJ8KEE2dupmaAz1rmR7TUsq8FRD6r26o4sbSM/09SrPL6h4zb5dKStMRxdMBIBSYEtJTeRtlWu1HY2+W6B9H5BwdPNqUGfgQky5cMzUGiR035BRrFxl4+74yi2sVlJallAxQcZgxC+cK1eCsNIL8I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.216.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-299372abcfeso3147568a91.1;
+        Tue, 20 Feb 2024 18:04:49 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708481088; x=1709085888;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=J0ybMa3hOnERERDnqEPR8wrCPlA+a/LBcKmgYHmGB3Y=;
+        b=DKUZd2/ZmQQiLycNb7Ebz5ro6ZHMS53VeAj5ny+mICRrGR/rccVBfFGuBhgmo7Rkck
+         BJlsTbaa4lqbrJWFs+lOsbMWmAaM5qp8uPK3XcYTKI7ukuJFdfYJR2x2KYw042apBJgh
+         qDmD37xFw8FFeRnDQnNJ6xOTKufk/GHymAjEOakR90sgvDzWUZWgZkmw5SHFNs83YuPI
+         LM1NlGg5YgO6hHb/GCqRLVVNWdLl7sjFxDIPgv42xN31cFemn8eH6myZMiKd+C8REeLF
+         EluUY1NXlemRlWVqPPRBrH5Zm8kAFk5TVA8+wpTPKG3VeTzYhlphwWzL1IsQep3dhr4Y
+         kPug==
+X-Forwarded-Encrypted: i=1; AJvYcCXzRMzcETPdyF1qsFDRte2SE91xp96oyG4WbkrBam7aERANXejwXLS1DnH3za79/H3GDwu0SosyfE/KIYV5AA90xhBu+xTYHhXnZAJHzFvu1rUPtmoLUfVPMhr7ezyhMtDJS5ERFcSUXLj0UwtYdA==
+X-Gm-Message-State: AOJu0Yyr6xcLYM0hnHjuBX1e9J4ebgRBIJyUlV4dUJw9Qr6VCcwJ8WaI
+	Jnk5diRNgAmdrt3pKA2ossnj44qssDISrmUYGGg19FNS+KTACR4f5C0TpDtVDddxMZs682cr5LM
+	W2YqJeTh/x053YKtgKSDe3ob6914=
+X-Google-Smtp-Source: AGHT+IEZo0nMICe6f0BltzaRpHEaOEBr9f+j59VnoZhsA+S85FA+1x7YAXz4vFUvaLecPeCbfz+f+Bsrb8zzAVJPY94=
+X-Received: by 2002:a17:90b:4b4e:b0:299:7f65:7cd1 with SMTP id
+ mi14-20020a17090b4b4e00b002997f657cd1mr12507853pjb.9.1708481088545; Tue, 20
+ Feb 2024 18:04:48 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+References: <20240217074046.4100789-1-changbin.du@huawei.com>
+ <20240217074046.4100789-3-changbin.du@huawei.com> <9699d30b-f6cb-44d5-ae58-0bdefe3f24eb@intel.com>
+In-Reply-To: <9699d30b-f6cb-44d5-ae58-0bdefe3f24eb@intel.com>
+From: Namhyung Kim <namhyung@kernel.org>
+Date: Tue, 20 Feb 2024 18:04:36 -0800
+Message-ID: <CAM9d7cjZO+URmNE0SQBrFR5-rsLobNpYdiT4s=5svCUwoYbRVQ@mail.gmail.com>
+Subject: Re: [PATCH v8 2/5] perf: util: use capstone disasm engine to show
+ assembly instructions
+To: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Changbin Du <changbin.du@huawei.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, Andi Kleen <ak@linux.intel.com>, 
+	Thomas Richter <tmricht@linux.ibm.com>, changbin.du@gmail.com, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The existing arm64 stack randomization uses the kernel rng to acquire
-5 bits of address space randomization. This is problematic because it
-creates non determinism in the syscall path when the rng needs to be
-generated or reseeded. This shows up as large tail latencies in some
-benchmarks and directly affects the minimum RT latencies as seen by
-cyclictest.
+Hi Adrian and Changbin,
 
-Other architectures are using timers/cycle counters for this function,
-which is sketchy from a randomization perspective because it should be
-possible to estimate this value from knowledge of the syscall return
-time, and from reading the current value of the timer/counters.
+On Sun, Feb 18, 2024 at 10:33=E2=80=AFPM Adrian Hunter <adrian.hunter@intel=
+.com> wrote:
+>
+> On 17/02/24 09:40, Changbin Du wrote:
+> > Currently, the instructions of samples are shown as raw hex strings
+> > which are hard to read. x86 has a special option '--xed' to disassemble
+> > the hex string via intel XED tool.
+> >
+> > Here we use capstone as our disassembler engine to give more friendly
+> > instructions. We select libcapstone because capstone can provide more
+> > insn details. Perf will fallback to raw instructions if libcapstone is
+> > not available.
+> >
+> > The advantages compared to XED tool:
+> >  * Support arm, arm64, x86-32, x86_64 (more could be supported),
+> >    xed only for x86_64.
+> >  * Immediate address operands are shown as symbol+offs.
+> >
+> > Signed-off-by: Changbin Du <changbin.du@huawei.com>
+>
+> This is the only patch of V8 that made it to my inbox, Namhyung
+> also mentioned problems receiving V7, but the patches are on lore.
+>
+> For whole patch set:
+>
+> Reviewed-by: Adrian Hunter <adrian.hunter@intel.com>
 
-So, a poor rng should be better than the cycle counter if it is hard
-to extract the stack offsets sufficiently to be able to detect the
-PRNG's period.
+I found it in my spam box, maybe there was a change in the spam
+filtering logic.
 
-So, we can potentially choose a 'better' or larger PRNG, going as far
-as using one of the CSPRNGs already in the kernel, but the overhead
-increases appropriately. Further, there are a few options for
-reseeding, possibly out of the syscall path, but is it even useful in
-this case?
-
-Reported-by: James Yang <james.yang@arm.com>
-Reported-by: Shiyou Huang <shiyou.huang@arm.com>
-Signed-off-by: Jeremy Linton <jeremy.linton@arm.com>
----
- arch/arm64/kernel/syscall.c | 55 ++++++++++++++++++++++++++++++++++++-
- 1 file changed, 54 insertions(+), 1 deletion(-)
-
-diff --git a/arch/arm64/kernel/syscall.c b/arch/arm64/kernel/syscall.c
-index 9a70d9746b66..70143cb8c7be 100644
---- a/arch/arm64/kernel/syscall.c
-+++ b/arch/arm64/kernel/syscall.c
-@@ -37,6 +37,59 @@ static long __invoke_syscall(struct pt_regs *regs, syscall_fn_t syscall_fn)
- 	return syscall_fn(regs);
- }
- 
-+#ifdef CONFIG_RANDOMIZE_KSTACK_OFFSET
-+DEFINE_PER_CPU(u32, kstackrng);
-+static u32 xorshift32(u32 state)
-+{
-+	/*
-+	 * From top of page 4 of Marsaglia, "Xorshift RNGs"
-+	 * This algorithm is intended to have a period 2^32 -1
-+	 * And should not be used anywhere else outside of this
-+	 * code path.
-+	 */
-+	state ^= state << 13;
-+	state ^= state >> 17;
-+	state ^= state << 5;
-+	return state;
-+}
-+
-+static u16 kstack_rng(void)
-+{
-+	u32 rng = raw_cpu_read(kstackrng);
-+
-+	rng = xorshift32(rng);
-+	raw_cpu_write(kstackrng, rng);
-+	return rng & 0x1ff;
-+}
-+
-+/* Should we reseed? */
-+static int kstack_rng_setup(unsigned int cpu)
-+{
-+	u32 rng_seed;
-+
-+	do {
-+		rng_seed = get_random_u32();
-+	} while (!rng_seed);
-+	raw_cpu_write(kstackrng, rng_seed);
-+	return 0;
-+}
-+
-+static int kstack_init(void)
-+{
-+	int ret;
-+
-+	ret = cpuhp_setup_state(CPUHP_AP_ONLINE_DYN, "arm64/cpuinfo:kstackrandomize",
-+				kstack_rng_setup, NULL);
-+	if (ret < 0)
-+		pr_err("kstack: failed to register rng callbacks.\n");
-+	return 0;
-+}
-+
-+arch_initcall(kstack_init);
-+#else
-+static u16 kstack_rng(void) { return 0; }
-+#endif /* CONFIG_RANDOMIZE_KSTACK_OFFSET */
-+
- static void invoke_syscall(struct pt_regs *regs, unsigned int scno,
- 			   unsigned int sc_nr,
- 			   const syscall_fn_t syscall_table[])
-@@ -66,7 +119,7 @@ static void invoke_syscall(struct pt_regs *regs, unsigned int scno,
- 	 *
- 	 * The resulting 5 bits of entropy is seen in SP[8:4].
- 	 */
--	choose_random_kstack_offset(get_random_u16() & 0x1FF);
-+	choose_random_kstack_offset(kstack_rng());
- }
- 
- static inline bool has_syscall_work(unsigned long flags)
--- 
-2.43.0
-
+Thanks,
+Namhyung
