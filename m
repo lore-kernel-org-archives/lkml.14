@@ -1,133 +1,163 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f43.google.com (mail-oo1-f43.google.com [209.85.161.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFAF184FAD;
-	Wed, 21 Feb 2024 18:04:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED82D33F7
+	for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 18:08:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708538683; cv=none; b=XfVkWY6JCBMIqDOhTe0Kmzo8G9PfiYd3BjRjK5Sx0DQKMIw4QcLriEwMOpGcyGB8KpOpvex+VjkS+V8l0txaMyKXv+m0yWKvM7USA1O8dqOhOwrx4TDjYLUtUiVU7F5LUvMgY7Y8U1Fp/d8TLt33tMIyuyJ/NoFY7nJp1nOpl5k=
+	t=1708538902; cv=none; b=P5tSSvhS7t9cOxQPYADy8Wyu45a4QgN7e+wHuMi4h1ABH5mrmIlitIIDoU5nlwtQGyxEhNG7gFT8jQpNHxzyN1zDQt/FFQjSbEGz2+CRl8St1troJNcZHrq2G7A/0xU0jSNEZX6d8YSP0Zc+CBrQIbVtpSvSpnXPVrFsK2q/2b8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708538683; c=relaxed/simple;
-	bh=N3hyQeCD6IQBf8tWP+/hKiWNxUyx+FYv+Qik7aMVPn8=;
+	s=arc-20240116; t=1708538902; c=relaxed/simple;
+	bh=1p/8NvuyZYpCVrfbqqK5Vg//TA2N3vASs0mwKJR9M4E=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RfVru2FI34IFWdF1gnKooEWaYgGHXIGXUV9TJ5W3heK2enSNcKFxXf2wxdLM1IEtuEgMstOrAOm3ChbLhRh7iIADikiq9gZumjXIyYXmPl6aHtvrxtPYp4LRBpWb/zQKPm6ptrcZoIbYBVNq8awPBMoBcoh2vSu9atrcAZB2cts=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cQt+VtgO; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=JYSWyotW0AnN40ZKpzb2FbMLRcSX4/06Ms+G9FXYqhGIrQU7KieXxIgELKwpL8bFgIghsqe4Wu01J6PWav/yz2ZPOsag/GlIsbmdIXTtwd36rwBELkqopE6c6S29Ox/tbKjWLQ251iIxG1slIetsUegrJzxxhobn8CFBAuzRaEU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=acm.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KrYPdTNF; arc=none smtp.client-ip=209.85.161.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=acm.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cQt+VtgO"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1708538682; x=1740074682;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=N3hyQeCD6IQBf8tWP+/hKiWNxUyx+FYv+Qik7aMVPn8=;
-  b=cQt+VtgOuFecBhjBLeA3z/jGGPVXZmbLde5sBJSHaaT2GciMMyexjCB+
-   QE5hqZ0mXZfuY5jJ5hX3kVqkKDPG5oDLbC7D4fMdEbYoQD1aVQFgFg7hs
-   DUdWpdmFO9MS+0/U+UInzOc72wArD2Uzzflq3ol1aU8PSrg5PBDMxFbTr
-   /AEePP6XLzsvzPLvTlnUkIYeyZhd6Sh14OZqqd5V59sb/j4pWMOnvsmw6
-   HEkoR2D4f9xcFAbDNb4A1kcb7MpsmTEZzStaSmvaCcube+GAVUuk4TKnx
-   UHcmpVVROOrPNxJ8sZiQYcK/IXe7BHNQbdYlnxTENJSByCTh6+FDfRN0s
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10991"; a="13845918"
-X-IronPort-AV: E=Sophos;i="6.06,176,1705392000"; 
-   d="scan'208";a="13845918"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Feb 2024 10:04:33 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,176,1705392000"; 
-   d="scan'208";a="5420455"
-Received: from lkp-server02.sh.intel.com (HELO 3c78fa4d504c) ([10.239.97.151])
-  by fmviesa006.fm.intel.com with ESMTP; 21 Feb 2024 10:04:29 -0800
-Received: from kbuild by 3c78fa4d504c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rcqwz-0005ZM-24;
-	Wed, 21 Feb 2024 18:04:26 +0000
-Date: Thu, 22 Feb 2024 02:04:02 +0800
-From: kernel test robot <lkp@intel.com>
-To: Chris Packham <chris.packham@alliedtelesis.co.nz>,
-	antoniu.miclaus@analog.com, alexandre.belloni@bootlin.com,
-	robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-	conor+dt@kernel.org, jdelvare@suse.com, linux@roeck-us.net
-Cc: oe-kbuild-all@lists.linux.dev, linux-rtc@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-hwmon@vger.kernel.org,
-	Ibrahim Tilki <Ibrahim.Tilki@analog.com>,
-	Zeynep Arslanbenzer <Zeynep.Arslanbenzer@analog.com>,
-	Chris Packham <chris.packham@alliedtelesis.co.nz>
-Subject: Re: [PATCH v7 1/2] drivers: rtc: add max313xx series rtc driver
-Message-ID: <202402220139.EmXyZO4Q-lkp@intel.com>
-References: <20240219221827.3821415-2-chris.packham@alliedtelesis.co.nz>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KrYPdTNF"
+Received: by mail-oo1-f43.google.com with SMTP id 006d021491bc7-59fe5b77c0cso495669eaf.0
+        for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 10:08:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1708538900; x=1709143700; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:reply-to:message-id:subject:cc:to:from:date
+         :sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=yE3xYE9b0PADKF8ltORqAx3XVvlJ9P1Y3jeB29+/qOg=;
+        b=KrYPdTNFkodRXXKs8yXEMlhmZnBt1nm6XYeTal7c2A6HopzoVU5NQMcK/Uo1qpE5QJ
+         cnQeDU1gT7cIOHJUrmF7VcyDeOAhBiyobIBLZu67lz/iRQpdKDEU5I/fYhIJUCvoJcVr
+         CJd/vHJeFfv6IKCf8qfXE5XygrqjBLFZezjLkx1bC4Y9znqLuFDYka2D7B3CKrRaMb3W
+         rYv11GZkWGfJBamkq2Rt5CR1imRgGFBIPvSrDBLkF7OfEUT/sIS01cQ1YFRdHS1ag5T/
+         9Dd2tEM/zFpdF/VKZ5nfiabfRjoiTVlLNJoHRVseh869/AfNCISqy8W8s3fFOyB8w0y5
+         efug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708538900; x=1709143700;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:reply-to:message-id:subject:cc:to:from:date
+         :sender:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=yE3xYE9b0PADKF8ltORqAx3XVvlJ9P1Y3jeB29+/qOg=;
+        b=drGHfZskDBvSz0W2P8VGat12uu011HAiFQK/on61fhHUPEaT/FVpt6yl4xoi11GJ10
+         bbnQMX5mLZya3PDR2vDLgb4gXSS5utRHbB0FVyYzIYSvnAqOviL04tQvWEjHGXmRIj3p
+         UaiQ8w7zKrLGioTG6tKBmH9JRtNaJrzNfWTRQF9rI11K/UC9CKtiGpEc85ephyqKC9xC
+         4ZkJAYw8wqpRtKxcCfsd1syIKB/CVFP7xpclFNtCAkhhksN9loQJP+yQBEpUO7esJzy6
+         yZlcoo5rvF2C62dOm2E4607qcZ+COEF9GTdg8bm1iAfIYjnkpFLN2c6Hw37q5RkSWk7b
+         mvXw==
+X-Forwarded-Encrypted: i=1; AJvYcCXIcnxd/jdRbBr+K3CCFbISD6DuqyrUMS4otB2m0O4TQRjSj5hCEjotQxkUuWZtGysNm13b5x+VpG0J9lXdZnvLMhqgyWqTRnjd3CwB
+X-Gm-Message-State: AOJu0YzI0o7DNYjOVtoz0GD3NXJJYC/TUZmkGQ3bbjZrkjsQ2s3elNsW
+	6Nrry2B3UWtjBuRPU0VgdxDjbnEuC+YbWtukcT6PYXIe4dhRP3A=
+X-Google-Smtp-Source: AGHT+IE7Jl89TMdslT9Xstr1epQWCcXolp3sqaBdeNYzQrNiseiNxKWZkq7GYlWCsP8bfbZaGYK6yg==
+X-Received: by 2002:a4a:d2ce:0:b0:5a0:2a9:574b with SMTP id j14-20020a4ad2ce000000b005a002a9574bmr5993289oos.9.1708538899972;
+        Wed, 21 Feb 2024 10:08:19 -0800 (PST)
+Received: from serve.minyard.net (serve.minyard.net. [2001:470:b8f6:1b::1])
+        by smtp.gmail.com with ESMTPSA id g6-20020a9d6206000000b006e2df00aaa8sm1665305otj.70.2024.02.21.10.08.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 21 Feb 2024 10:08:19 -0800 (PST)
+Sender: Corey Minyard <tcminyard@gmail.com>
+Received: from mail.minyard.net (unknown [IPv6:2001:470:b8f6:1d::35])
+	by serve.minyard.net (Postfix) with ESMTPSA id 412431800B8;
+	Wed, 21 Feb 2024 18:08:18 +0000 (UTC)
+Date: Wed, 21 Feb 2024 12:08:16 -0600
+From: Corey Minyard <minyard@acm.org>
+To: Andrew Geissler <geissonator@gmail.com>
+Cc: Andrew Jeffery <andrew@codeconstruct.com.au>,
+	Paul Menzel <pmenzel@molgen.mpg.de>, Joel Stanley <joel@jms.id.au>,
+	openipmi-developer@lists.sourceforge.net,
+	Linux ARM <linux-arm-kernel@lists.infradead.org>,
+	linux-aspeed <linux-aspeed@lists.ozlabs.org>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	openbmc@lists.ozlabs.org
+Subject: Re: [PATCH] ipmi: kcs: Update OBF poll timeout to reduce latency
+Message-ID: <ZdY8EDfeePse3c1s@mail.minyard.net>
+Reply-To: minyard@acm.org
+References: <20240220123615.963916-1-geissonator@gmail.com>
+ <a9169894-6972-49c0-a1d4-d80863f5b511@molgen.mpg.de>
+ <ZdT+eThnYqb3iawF@mail.minyard.net>
+ <9680ad7d7a48fc36a0572dc2286a1229a29341fe.camel@codeconstruct.com.au>
+ <527F52AB-0070-43EA-BE82-945280CA2AEE@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20240219221827.3821415-2-chris.packham@alliedtelesis.co.nz>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <527F52AB-0070-43EA-BE82-945280CA2AEE@gmail.com>
 
-Hi Chris,
+On Wed, Feb 21, 2024 at 10:57:38AM -0600, Andrew Geissler wrote:
+> 
+> 
+> > On Feb 20, 2024, at 4:36 PM, Andrew Jeffery <andrew@codeconstruct.com.au> wrote:
+> > 
+> > On Tue, 2024-02-20 at 13:33 -0600, Corey Minyard wrote:
+> >> On Tue, Feb 20, 2024 at 04:51:21PM +0100, Paul Menzel wrote:
+> >>> Dear Andrew,
+> >> 
+> >> It's because increasing that number causes it to poll longer for the
+> >> event, the host takes longer than 100us to generate the event, and if
+> >> the event is missed the time when it is checked again is very long.
+> >> 
+> >> Polling for 100us is already pretty extreme. 200us is really too long.
+> >> 
+> >> The real problem is that there is no interrupt for this.  I'd also guess
+> >> there is no interrupt on the host side, because that would solve this
+> >> problem, too, as it would certainly get around to handling the interupt
+> >> in 100us.  I'm assuming the host driver is not the Linux driver, as it
+> >> should also handle this in a timely manner, even when polling.
+> > 
+> > I expect the issues Andrew G is observing are with the Power10 boot
+> > firmware. The boot firmware only polls. The runtime firmware enables
+> > interrupts.
+> 
+> Yep, this is with the low level host boot firmware.
+> Also, further testing over night showed that 200us wasn’t enough for
+> our larger Everest P10 machines, I needed to go to 300us. As we
+> were struggling to allow 200us, I assume 300us is going to be a no-go.
 
-kernel test robot noticed the following build warnings:
+It seems odd to me that firmware polling would be an issue.  Usually,
+with firmware, you have it just spinning waiting for something.  At
+least in the firmware I worked with.
 
-[auto build test WARNING on abelloni/rtc-next]
-[also build test WARNING on linus/master v6.8-rc5 next-20240221]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+I'm not familiar with this firmware, though, maybe it has timers and
+such and parallel execution.  Can this be fixed on the firmware side?
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Chris-Packham/drivers-rtc-add-max313xx-series-rtc-driver/20240220-062057
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/abelloni/linux.git rtc-next
-patch link:    https://lore.kernel.org/r/20240219221827.3821415-2-chris.packham%40alliedtelesis.co.nz
-patch subject: [PATCH v7 1/2] drivers: rtc: add max313xx series rtc driver
-config: x86_64-randconfig-123-20240220 (https://download.01.org/0day-ci/archive/20240222/202402220139.EmXyZO4Q-lkp@intel.com/config)
-compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240222/202402220139.EmXyZO4Q-lkp@intel.com/reproduce)
+> 
+> >> 
+> > 
+> >> 
+> >> The right way to fix this is probably to do the same thing the host side
+> >> Linux driver does.  It has a kernel thread that is kicked off to do
+> >> this.  Unfortunately, that's more complicated to implement, but it
+> >> avoids polling in this location (which causes latency issues on the BMC
+> >> side) and lets you poll longer without causing issues.
+> > 
+> > In Andrew G's case he's talking MCTP over KCS using a vendor-defined
+> > transport binding (that also leverages LPC FWH cycles for bulk data
+> > transfers)[1]. I think it could have taken more inspiration from the
+> > IPMI KCS protocol: It might be worth an experiment to write the dummy
+> > command value to IDR from the host side after each ODR read to signal
+> > the host's clearing of OBF (no interrupt for the BMC) with an IBF
+> > (which does interrupt the BMC). And doing the obverse for the BMC. Some
+> > brief thought suggests that if the dummy value is read there's no need
+> > to send a dummy value in reply (as it's an indicator to read the status
+> > register). With that the need for the spin here (or on the host side)
+> > is reduced at the cost of some constant protocol overhead.
+> > 
+> 
+> Thanks for the quick reviews and ideas.
+> I’ll see if I can find someone on the team to help out with Andrew J’s
+> thoughts and if that doesn’t work, look into the kernel thread idea.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202402220139.EmXyZO4Q-lkp@intel.com/
+I don't really understand Andrew J's ideas very well, but hopefully they
+help.  The kernel thread idea is fairly complicated to implement, and
+there has been an impetus in the kernel to not create new kernel
+threads.  But there just has to be a good reason, and this probably is
+one.  We worked on it a lot in the IPMI host driver to tune it and got
+it to a point where it provided decent performance without causing power
+management issues.  When I first read the title I was worried it was
+talking about this code; I'm lothe to touch it for fear of breaking
+things.
 
-sparse warnings: (new ones prefixed by >>)
->> drivers/rtc/rtc-max31335.c:727:22: sparse: sparse: symbol 'max313xx_clk_init' was not declared. Should it be static?
->> drivers/rtc/rtc-max31335.c:750:21: sparse: sparse: symbol 'max313xx_nvmem_cfg' was not declared. Should it be static?
-
-vim +/max313xx_clk_init +727 drivers/rtc/rtc-max31335.c
-
-   726	
- > 727	struct clk_init_data max313xx_clk_init = {
-   728		.name = "max313xx-clkout",
-   729		.ops = &max313xx_clkout_ops,
-   730	};
-   731	
-   732	static int max313xx_nvmem_reg_read(void *priv, unsigned int offset,
-   733					   void *val, size_t bytes)
-   734	{
-   735		struct max313xx *rtc = priv;
-   736		unsigned int reg = rtc->chip->ram_reg + offset;
-   737	
-   738		return regmap_bulk_read(rtc->regmap, reg, val, bytes);
-   739	}
-   740	
-   741	static int max313xx_nvmem_reg_write(void *priv, unsigned int offset,
-   742					    void *val, size_t bytes)
-   743	{
-   744		struct max313xx *rtc = priv;
-   745		unsigned int reg = rtc->chip->ram_reg + offset;
-   746	
-   747		return regmap_bulk_write(rtc->regmap, reg, val, bytes);
-   748	}
-   749	
- > 750	struct nvmem_config max313xx_nvmem_cfg = {
-   751		.reg_read = max313xx_nvmem_reg_read,
-   752		.reg_write = max313xx_nvmem_reg_write,
-   753		.word_size = 8,
-   754	};
-   755	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+-corey
