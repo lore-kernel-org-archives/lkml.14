@@ -1,120 +1,103 @@
-Received: from out2-smtp.messagingengine.com (out2-smtp.messagingengine.com [66.111.4.26])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f200.google.com (mail-il1-f200.google.com [209.85.166.200])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E50A455E5E;
-	Wed, 21 Feb 2024 13:52:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=66.111.4.26
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2C63762C1
+	for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 13:53:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708523573; cv=none; b=CU/vx4boDLrG7SowFIgO0KABa2qT9nAH9TFvuxUlmJX0TuITvcBmTHUGsq0YpF6mz54y+1f2Tqv+BTFhO/qOZQHuXquTrJ3T8yqt2fnzzJHG+enf9I+bALi4g6BWlQnZvnfyLuD2//cwC+m6zv+fSNNWQR1sxbcuWSV9UsC3/dY=
+	t=1708523586; cv=none; b=H1z5LKK5FkRF31DbBwcJzaKLdKP0Y7aeHqGnN14/5SdI77BnhApvkC9faUXOG/x7r/SBDl+bkWWeaqmlsup5lTeIsA50EJuzf61MMABhRc0vMT29Ej3+2HD+lo0YLZQDS1/pKGA72F9SGum1XTZacjRwKWu50tiIHq530R4Aa2A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708523573; c=relaxed/simple;
-	bh=Fv8kuaoza9YOxN8E6T3xT5ybKEYe2If0/PtQZaqhls0=;
-	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
-	 Subject:Content-Type; b=WNBwpdV0QDotHpSGDvaouyf4WYf/m+C9m5iiHoz/RSTNWBbEcLRCJWgRLLfEa0i5ajzZVZ21Uum9vTiLzyxREPOD3yGVkzET0+WG6q/P43+XjsmAk3pkuT5i5rqKtJ4M4VTz6Gv4KhId61uPWCQKx+ddOfL/wMqQ+/x45m0UEvI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=qncFkFv7; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=AbOLWOz/; arc=none smtp.client-ip=66.111.4.26
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="qncFkFv7";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="AbOLWOz/"
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-	by mailout.nyi.internal (Postfix) with ESMTP id DA7365C006D;
-	Wed, 21 Feb 2024 08:52:50 -0500 (EST)
-Received: from imap51 ([10.202.2.101])
-  by compute5.internal (MEProxy); Wed, 21 Feb 2024 08:52:50 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm3; t=1708523570;
-	 x=1708609970; bh=Fv8kuaoza9YOxN8E6T3xT5ybKEYe2If0/PtQZaqhls0=; b=
-	qncFkFv7ETvjKcESrtavSqlH8Tf+3LAaBrjA1uzsklwIASXX/c1esyC31T1IFopl
-	qbqZCvKxuDv0tpex9rautEhrSajiNQ1LYzwb425bUZ0uCQ9IkKgAqRcleL7W3Gvb
-	J79Y5toy+NfiZ1BPQlzoWpcd8oNA4GiHm7riKMHsPuS8K9BKsEl3Ouw87n3uo3+s
-	G/pb6ClCPRbNesxdAuxoooB5QP7VN/MGYATPOsLZgbHwyUzlh6t7cvN1CVB6bOst
-	y+TjHH97qwla56bNSgHN9bhUOJQT9WlAin1XXGHlZVCNKjnlUeQFnPMiiT+g4V9J
-	JjwNHdDCrlvbq6+oPxGVaQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1708523570; x=
-	1708609970; bh=Fv8kuaoza9YOxN8E6T3xT5ybKEYe2If0/PtQZaqhls0=; b=A
-	bOLWOz/VPER9zHZyg+eUyR4mscAN4boRgccGe0TBxUO8HrP5kwyW74UjHP6G248W
-	PFDU7DfdQY3tll5lBCN/4+Dnno5f1RfggzA/6l0Hfo8Hf19nOeqW3Z3wbMSMDyVQ
-	9OkYF1fti9Z/PzATKtYtZRtjr3ACGbxfxMjI39TB56N7z3G3CGWP2zUNgXHA8JZ5
-	dCXFv8B9gNEuu2Hpev42+ldkmX6MmwjbrQJpHc2AyXpoh86Hvga74ihTS9c4kJCA
-	rd0SmvDTvoC3gGT6+d0/D9Xc0UhvTv0OY6KRWDMxTAxof5lZOGgxFveWZ16QqhmF
-	ZyFhuV7IhcIKF4s/R4f8A==
-X-ME-Sender: <xms:MgDWZQfR5BNm678P3PLqS1SqEstXMQrpRw-jpfDzDcyGHFA0AkQn3Q>
-    <xme:MgDWZSNmoxj7K5-Yu-LkOzbXlqngLLoxbkGgaZZuvnT3N55kuwIMaaG5-HiGK2qly
-    S02pZeogiN-Vyvwb8Y>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrfedvgdehjecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefofgggkfgjfhffhffvvefutgfgsehtqhertderreejnecuhfhrohhmpedftehr
-    nhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrth
-    htvghrnhepgeefjeehvdelvdffieejieejiedvvdfhleeivdelveehjeelteegudektdfg
-    jeevnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprg
-    hrnhgusegrrhhnuggsrdguvg
-X-ME-Proxy: <xmx:MgDWZRhH-sTKPdtaQ6Mc8ClwL8DfOjzDFRGPdW_1dbbA1gX1yzZylg>
-    <xmx:MgDWZV9Bc1kwqifJ_TguKAr6DhGpm0-ECx-Xbxc_4Hkud_NV2GuHHA>
-    <xmx:MgDWZcvzpYRsIq_i1a9RxvyriULbMmv5ADZZ4I_6lS28GSWobCybOg>
-    <xmx:MgDWZdMnxMV2Zg6pTtR-mMX79CjzwddXh0BwJAdvl5BIzDbErqhk9g>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id 7FD5DB6008D; Wed, 21 Feb 2024 08:52:50 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.11.0-alpha0-153-g7e3bb84806-fm-20240215.007-g7e3bb848
+	s=arc-20240116; t=1708523586; c=relaxed/simple;
+	bh=VWXccFbysa1rP6LCm230g4wFngBWx7wgJA6oH3HMuIU=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=KbfqOnkYanPDBRg17DbuHEpgQ0HOm96wy4U1U6CuBlSj66IbcWtCZ2w/7Yho25XNfh1ICYfMEThFyarN631YeNTs0B5WzMmvKrJi+tmMnzlVvSSe5LUC59dq2E9rvpkcsDq6rbgVAZKPkqMjG61mwHIP18lb5kQLDvYdneoeJuI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.200
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f200.google.com with SMTP id e9e14a558f8ab-365116383bdso6687085ab.3
+        for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 05:53:04 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708523584; x=1709128384;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=8TmmxVKmOx7JUR4pXKSv9WPFUBql9re87YVO51w+Pe4=;
+        b=HCZWahDylxhbu3ahrNBzC2TXAcJdAYQn94oh/JT6ijkUzYzrt/l0nuaR+kQPYgKx5u
+         SiQscGXFbvGJwDiG+NJ6Wv+aHbcV2A7eM3yMmyd+TA123dXEU+WOYVeHAjN7920zRx5Q
+         Lnd1Rg896UNpVpjmfxmIz8nIVDzqvD9xSbGT0Re0CU3FAb9tkiRPx6JtLZpLRPs8dLqx
+         7qr2gpBb/KHe9llXkEbHz5fMBpPlDcaVqVMnFZAfdVAdnxkXuoKzzDnMPFwXrbdqggig
+         y3wEIBDtvmmlmSkuCKDaBwECJ//YXUyt2MdkFn3F9EIhd3bAFo2SSeSTdrpriU7RlWsg
+         ywpg==
+X-Forwarded-Encrypted: i=1; AJvYcCW3Rb9rhdAFa1nR9UJ6UOFq9ZkI7X4lxhU15LTcH+aA2J3DWYw3HPhXJZNK54d6NPbLNQFHYeihip52Zb8WVQRzIMs3vVpl4nMAe8et
+X-Gm-Message-State: AOJu0YwtH5CemO+J8t1ljtrZqsoDhDZ9Ij6JUEfz4O336ZLIaUjc3knl
+	vqy4IQ9nOJBfpqYZspvib8ccivLhXJmoETpfYYP34AGP1ajIvB8IIyyWpselumestrC/tsi8/yY
+	zKYdlUNRCQaK4sbwB2IQU0ov34rAOfVINBWXf0Rz5RAho5vaZxyNyS7w=
+X-Google-Smtp-Source: AGHT+IGXk7K6uDXVLTh3rlHTvKS2wUcmz6qXFPdmMHDjENDdeEYEnvmGfmTrOFd7ff8HTJHvpPpYrBuhBZ2YyFsWXAtM6pq9DbQc
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <d6c4ff9e-756a-4604-993a-cf14cfdbc53c@app.fastmail.com>
-In-Reply-To: <cover.1708508896.git.u.kleine-koenig@pengutronix.de>
-References: <cover.1708508896.git.u.kleine-koenig@pengutronix.de>
-Date: Wed, 21 Feb 2024 14:52:29 +0100
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
- "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>
-Cc: "Alexandre Belloni" <alexandre.belloni@bootlin.com>,
- "derek.kiernan@amd.com" <derek.kiernan@amd.com>,
- "Andrew Donnellan" <ajd@linux.ibm.com>, "Jiri Slaby" <jirislaby@kernel.org>,
- linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
- "Claudiu Beznea" <claudiu.beznea@tuxon.dev>,
- "Michal Simek" <michal.simek@amd.com>,
- "Srinivas Kandagatla" <srinivas.kandagatla@linaro.org>,
- "dragan.cvetic@amd.com" <dragan.cvetic@amd.com>,
- "Pengutronix Kernel Team" <kernel@pengutronix.de>,
- "Justin Stitt" <justinstitt@google.com>,
- "Frederic Barrat" <fbarrat@linux.ibm.com>,
- "John Stultz" <jstultz@google.com>,
- "Tomas Winkler" <tomas.winkler@intel.com>,
- "Amol Maheshwari" <amahesh@qti.qualcomm.com>, linuxppc-dev@lists.ozlabs.org,
- "Appana Durga Kedareswara rao" <appana.durga.kedareswara.rao@amd.com>,
- linux-arm-kernel@lists.infradead.org, "Kees Cook" <keescook@chromium.org>
-Subject: Re: [PATCH 00/11] misc: Convert to platform remove callback returning void
-Content-Type: text/plain;charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+X-Received: by 2002:a92:c56a:0:b0:365:4e45:7922 with SMTP id
+ b10-20020a92c56a000000b003654e457922mr160003ilj.5.1708523584003; Wed, 21 Feb
+ 2024 05:53:04 -0800 (PST)
+Date: Wed, 21 Feb 2024 05:53:03 -0800
+In-Reply-To: <20240221122904.1393-1-hdanton@sina.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000050a83e0611e4a597@google.com>
+Subject: Re: [syzbot] [media?] INFO: task hung in cec_claim_log_addrs
+From: syzbot <syzbot+116b65a23bc791ae49a6@syzkaller.appspotmail.com>
+To: hdanton@sina.com, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Wed, Feb 21, 2024, at 10:53, Uwe Kleine-K=C3=B6nig wrote:
-> Hello,
->
-> this series converts all drivers below drivers/misc to struct
-> platform_driver::remove_new(). See commit 5c5a7680e67b ("platform:
-> Provide a remove callback that returns no value") for an extended
-> explanation and the eventual goal.
->
-> All conversations are trivial, because their .remove() callbacks
-> returned zero unconditionally.
->
-> There are no interdependencies between these patches, so they could be
-> picked up individually. But I'd hope that Greg or Arnd picks them up a=
-ll
-> together.
+Hello,
 
-These all look good to me, whole series
+syzbot has tested the proposed patch but the reproducer is still triggering an issue:
+INFO: task hung in cec_claim_log_addrs
 
-Acked-by: Arnd Bergmann <arnd@arndb.de>
+INFO: task syz-executor.1:9052 blocked for more than 143 seconds.
+      Tainted: G    B              6.8.0-rc5-syzkaller-00063-ge6ac7c55d3ec-dirty #0
+"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+task:syz-executor.1  state:D stack:0     pid:9052  tgid:9051  ppid:6538   flags:0x0000000d
+Call trace:
+ __switch_to+0x314/0x560 arch/arm64/kernel/process.c:556
+ context_switch kernel/sched/core.c:5400 [inline]
+ __schedule+0x1498/0x24b4 kernel/sched/core.c:6727
+ __schedule_loop kernel/sched/core.c:6802 [inline]
+ schedule+0xb8/0x19c kernel/sched/core.c:6817
+ schedule_timeout+0xb8/0x348 kernel/time/timer.c:2159
+ do_wait_for_common+0x30c/0x468 kernel/sched/completion.c:95
+ __wait_for_common kernel/sched/completion.c:116 [inline]
+ wait_for_common kernel/sched/completion.c:127 [inline]
+ wait_for_completion+0x48/0x60 kernel/sched/completion.c:148
+ cec_claim_log_addrs+0x180/0x244 drivers/media/cec/core/cec-adap.c:1607
+ __cec_s_log_addrs+0x1238/0x18d8 drivers/media/cec/core/cec-adap.c:1922
+ cec_adap_s_log_addrs drivers/media/cec/core/cec-api.c:184 [inline]
+ cec_ioctl+0x2684/0x37b0 drivers/media/cec/core/cec-api.c:528
+ vfs_ioctl fs/ioctl.c:51 [inline]
+ __do_sys_ioctl fs/ioctl.c:871 [inline]
+ __se_sys_ioctl fs/ioctl.c:857 [inline]
+ __arm64_sys_ioctl+0x14c/0x1c8 fs/ioctl.c:857
+ __invoke_syscall arch/arm64/kernel/syscall.c:37 [inline]
+ invoke_syscall+0x98/0x2b8 arch/arm64/kernel/syscall.c:51
+ el0_svc_common+0x130/0x23c arch/arm64/kernel/syscall.c:136
+ do_el0_svc+0x48/0x58 arch/arm64/kernel/syscall.c:155
+ el0_svc+0x54/0x168 arch/arm64/kernel/entry-common.c:712
+ el0t_64_sync_handler+0x84/0xfc arch/arm64/kernel/entry-common.c:730
+ el0t_64_sync+0x190/0x194 arch/arm64/kernel/entry.S:598
+INFO: lockdep is turned off.
+
+
+Tested on:
+
+commit:         e6ac7c55 Merge branch 'for-next/core' into for-kernelci
+git tree:       https://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git for-kernelci
+console output: https://syzkaller.appspot.com/x/log.txt?x=1772604a180000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=af5c6c699e57bbb3
+dashboard link: https://syzkaller.appspot.com/bug?extid=116b65a23bc791ae49a6
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+userspace arch: arm64
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=13488eb4180000
+
