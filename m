@@ -1,50 +1,48 @@
 Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D567E33E7;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D56F08663D;
 	Wed, 21 Feb 2024 23:19:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708557568; cv=none; b=FXl2ZzJoIOsdfwvcrpS9QBRPFkHGYitAXy6czNPWKsUIGw25XlPXz/P/WLLTC5+/x+Ta9SkULHwIO9y6i7M2dba9cqARF7RL8vl1omC8KxjynstCJmnw5hd08vsb1sX3gv9vk+Hn1ThDJiTYS1VgPmIrTuPh42cl72b7cEM/gew=
+	t=1708557568; cv=none; b=knmLHfvRJy0WeEKVmwFx6aZ3i5m6VxkXWdZjcoshQK21sSLO3WmNRh5cf07Zf9Dnxg7qxAPHJGCGUzdDZR2Ht1x0RWwIl0zGIo4JVJeNuVd66t0FmAMwsoSvUMN+jaP9pn6vDHxeew/Bdwndi1coO4ie9akZI0C8tDSdkeDIvEA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1708557568; c=relaxed/simple;
-	bh=Xi76758O8gLvkGbRp7EOuBiUydIRX2M7O+sk78GqznY=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
-	 In-Reply-To:To:CC; b=G2/51URSnqjHTHFGj1/V3eSj9Uj07cFb6gt601ifD9BwMYw5Bhr/kt/Xf96VNt64zqeK+nWYgUMf6fQF6f2A/Yyo/7cvev0iENr5VOvYLhvHnqZtd/gajsuYedZXpudHvXcy2GDTPNW9xoLxO0wsulE24YShozQ9nBmlf/8Sv/8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=KA/ZqMJR; arc=none smtp.client-ip=205.220.168.131
+	bh=UawKxY/wNEpZe/K6ZSBOrWoORz1ZeMn1m4HSMFS0WhU=;
+	h=From:Subject:Date:Message-ID:MIME-Version:Content-Type:To:CC; b=bJgqVDmFlIyTn2U9J2LNAH2F08HsHoKvtiE+F5TVicSL9sxYC+orK+lrZWSPTZYryhMLZQPzJQlnAZeSxqHRO1a+4WtR/WLHMuh+8fiT8e1jORkkYaGcMFJqa5cA8BIC/8Rlw0BfQq3+h/k7xNNpr3kngHDRsTat9JUyjiWjDpI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=THqXg8nE; arc=none smtp.client-ip=205.220.168.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="KA/ZqMJR"
-Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 41LNJGmB018809;
-	Wed, 21 Feb 2024 23:19:16 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	from:date:subject:mime-version:content-type
-	:content-transfer-encoding:message-id:references:in-reply-to:to
-	:cc; s=qcppdkim1; bh=ur45TCIIr7JTEptbZE7But9EX9i+/jd9YFm5bhHuyxk
-	=; b=KA/ZqMJRlVvez8ofVCpY/6etgej2xEhHjBDZOqtHpkmYS0Nn5XV5QQA8FXv
-	Xrt8pf55nqS/q/IwYjNBJyY7eOYbsKZxLhEhOQG4cXHO64E6erVxScBqD08BlaC3
-	NGRfKXibylMl3bjlM1R5m58QcB0Xe0FWVMKmYDhpbcxFPl4rNZXoQkoKZd2vUWcf
-	+c3B7+ermjLB/8c8zqbxT4tvXEDis9RkTqg0G4aqhpqunvAaNj+BTsoSUouNpTF7
-	d6ndClqkK2y1jrJu06FvvQpSPWOVl8qB4RUV0EWNNhIZTxvMBZn2+yntLU2VAEe3
-	nw7JDy1MWuwMdyH3oXrHj3oOeWA==
-Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3wdddg20uj-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 21 Feb 2024 23:19:16 +0000 (GMT)
-Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
-	by NALASPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 41LNJF8L029641
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="THqXg8nE"
+Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 41LNEoYG028626;
 	Wed, 21 Feb 2024 23:19:15 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	from:subject:date:message-id:mime-version:content-type
+	:content-transfer-encoding:to:cc; s=qcppdkim1; bh=CelsGDIFSPLJqy
+	fTWpBCJuduVZTYRQTelZocddmgQHE=; b=THqXg8nE2G+HwdHynohBH/K53Zm95a
+	L3p8ffLBH29wrdHUk4cScjB8uYh/dS/oDKncmYlTa0pBNdzDFJ3zTwhNZneTpzq+
+	ppEeu1N7yd7WYzj8o6XU8Av/lq9Uv7XSrspjrJfsDdT+5KMPDF19XI9hEaEnd/6M
+	PrB0+KgUHKe7pdzboJ7eq9ERLjXFrs9ly+dt3yOPX/spFodD27Os3qvtVeHkB9qN
+	1ZhJ3pJ9WVWCuPBY13K1flu4EiMgFqyou1xFJT3HBCgLRJVUO7936i8C8zoTKq4P
+	bseTt6ONdybGVXpA0z55EngPsgcUSIYAF3rRvjxA7Pc/RBZkZIEbcdsg==
+Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3wdfx4hmpv-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 21 Feb 2024 23:19:14 +0000 (GMT)
+Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
+	by NALASPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 41LNJDok020290
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 21 Feb 2024 23:19:13 GMT
 Received: from [169.254.0.1] (10.49.16.6) by nalasex01c.na.qualcomm.com
  (10.47.97.35) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Wed, 21 Feb
- 2024 15:19:14 -0800
+ 2024 15:19:13 -0800
 From: Bjorn Andersson <quic_bjorande@quicinc.com>
-Date: Wed, 21 Feb 2024 15:19:13 -0800
-Subject: [PATCH 5/9] arm64: dts: qcom: qcs6490-rb3gen2: Enable adsp and
- cdsp
+Subject: [PATCH 0/9] arm64: dts: qcom: qcs6490-rb3gen2: Enable two displays
+Date: Wed, 21 Feb 2024 15:19:08 -0800
+Message-ID: <20240221-rb3gen2-dp-connector-v1-0-dc0964ef7d96@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -53,9 +51,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-ID: <20240221-rb3gen2-dp-connector-v1-5-dc0964ef7d96@quicinc.com>
-References: <20240221-rb3gen2-dp-connector-v1-0-dc0964ef7d96@quicinc.com>
-In-Reply-To: <20240221-rb3gen2-dp-connector-v1-0-dc0964ef7d96@quicinc.com>
+X-B4-Tracking: v=1; b=H4sIAOyE1mUC/x3MQQqEMAxA0atI1hOo0YV6FXExbVPNJpVUhgHp3
+ S0u3+L/GwqbcIGlu8H4J0WyNvSfDsLx1Z1RYjOQo9GRm9H8sLMSxhNDVuVwZUMfY/LTTCmRg5a
+ exkn+73bdan0AX5LCMGYAAAA=
 To: Rob Clark <robdclark@gmail.com>,
         Abhinav Kumar
 	<quic_abhinavk@quicinc.com>,
@@ -76,57 +74,62 @@ CC: <linux-arm-msm@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
         <devicetree@vger.kernel.org>,
         Bjorn Andersson <quic_bjorande@quicinc.com>
 X-Mailer: b4 0.12.4
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1708557553; l=849;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1708557553; l=1606;
  i=quic_bjorande@quicinc.com; s=20230915; h=from:subject:message-id;
- bh=Xi76758O8gLvkGbRp7EOuBiUydIRX2M7O+sk78GqznY=;
- b=9aeS5n9nGCWsVfomnuUsNyHRZXOMDoyhCXkXjiw3lJrz7jeE9gEDSrcl2nfNMRwtIjTGUnG/n
- EHVdvtgEfC9C4mgAUn3iMj8r5g4bwhQ8w0wM/rSHbe5ACibAMiGTova
+ bh=UawKxY/wNEpZe/K6ZSBOrWoORz1ZeMn1m4HSMFS0WhU=;
+ b=VgHOPv2y0TUisMlKhdQwzFNj5emloYz3HorglSQbNjzyMT9whYMj6lmIabHBG2z6g66EgDik7
+ LYpk2ossgV5CnDvwjylGFbmrNVdkMoKcSOFYoQ3jE1FCHk+GxvdbYh9
 X-Developer-Key: i=quic_bjorande@quicinc.com; a=ed25519;
  pk=VkhObtljigy9k0ZUIE1Mvr0Y+E1dgBEH9WoLQnUtbIM=
 X-ClientProxiedBy: nalasex01c.na.qualcomm.com (10.47.97.35) To
  nalasex01c.na.qualcomm.com (10.47.97.35)
 X-QCInternal: smtphost
 X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: lp1Sshncjd2VaxzxgAkx9Js7qJD2CpDh
-X-Proofpoint-ORIG-GUID: lp1Sshncjd2VaxzxgAkx9Js7qJD2CpDh
+X-Proofpoint-ORIG-GUID: V37K1f2kbY2gyjU0XptpF_1ASXcal3l1
+X-Proofpoint-GUID: V37K1f2kbY2gyjU0XptpF_1ASXcal3l1
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
  definitions=2024-02-21_09,2024-02-21_02,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 mlxlogscore=862
- spamscore=0 adultscore=0 impostorscore=0 suspectscore=0 clxscore=1015
- priorityscore=1501 lowpriorityscore=0 bulkscore=0 malwarescore=0
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 bulkscore=0
+ mlxlogscore=544 clxscore=1011 mlxscore=0 malwarescore=0 impostorscore=0
+ priorityscore=1501 phishscore=0 spamscore=0 lowpriorityscore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.19.0-2402120000 definitions=main-2402210184
 
-Define firmware paths and enable the ADSP and CDSP remoteprocs.
+RB3Gen2 is capable of producing DisplayPort output on a dedicated
+mini-DP connector and USB Type-C.
+
+Utilize Abel's work for DP vs eDP selection to allow configuring both
+controllers in DP-mode, then enable the two output paths.
+
+Tested by driving fbcon to 4k@60 + 4k@30 concurrently.
+
+Depends on https://lore.kernel.org/linux-arm-msm/20240220-x1e80100-display-v4-0-971afd9de861@linaro.org/
 
 Signed-off-by: Bjorn Andersson <quic_bjorande@quicinc.com>
 ---
- arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+Bjorn Andersson (9):
+      drm/msm/dp: Add DP support to combo instance in SC7280
+      arm64: dts: qcom: sc7280: Make eDP/DP controller default DP
+      arm64: dts: qcom: sc7280: Enable MDP turbo mode
+      arm64: dts: qcom: qcs6490-rb3gen2: Add DP output
+      arm64: dts: qcom: qcs6490-rb3gen2: Enable adsp and cdsp
+      arm64: dts: qcom: qcs6490-rb3gen2: Enable USB role switching
+      arm64: dts: qcom: qcs6490-rb3gen2: Introduce USB redriver
+      arm64: dts: qcom: qcs6490-rb3gen2: Enable USB Type-C display
+      arm64: defconfig: Enable sc7280 display and gpu clock controllers
 
-diff --git a/arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts b/arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts
-index 32313f47602a..ab498494caea 100644
---- a/arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts
-+++ b/arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts
-@@ -451,6 +451,16 @@ &qupv3_id_0 {
- 	status = "okay";
- };
- 
-+&remoteproc_adsp {
-+	firmware-name = "qcom/qcs6490/rb3gen2/adsp.mbn";
-+	status = "okay";
-+};
-+
-+&remoteproc_cdsp {
-+	firmware-name = "qcom/qcs6490/rb3gen2/cdsp.mbn";
-+	status = "okay";
-+};
-+
- &tlmm {
- 	gpio-reserved-ranges = <32 2>, /* ADSP */
- 			       <48 4>; /* NFC */
+ arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts | 154 ++++++++++++++++++++++++++-
+ arch/arm64/boot/dts/qcom/sc7280-qcard.dtsi   |   2 +
+ arch/arm64/boot/dts/qcom/sc7280.dtsi         |   7 +-
+ arch/arm64/configs/defconfig                 |   2 +
+ drivers/gpu/drm/msm/dp/dp_display.c          |   9 +-
+ 5 files changed, 170 insertions(+), 4 deletions(-)
+---
+base-commit: aba508318eec7acad2373296279d6447fd35f83f
+change-id: 20240209-rb3gen2-dp-connector-bddfb892ff20
 
+Best regards,
 -- 
-2.25.1
+Bjorn Andersson <quic_bjorande@quicinc.com>
 
