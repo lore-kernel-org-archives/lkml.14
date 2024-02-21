@@ -1,106 +1,81 @@
-Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
+Received: from bioarchlinux.org (bioarchlinux.org [194.169.181.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7FDC3C48A
-	for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 08:49:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDF773B793;
+	Wed, 21 Feb 2024 08:50:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.169.181.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708505364; cv=none; b=sDLwAHhtsePMXvlWCvrqgcs1+VKIQtlkELbJzMGfRKz6RRBuIsQzPBFpher5dT3n9nkIFw8vnuGvm9IfrNpahPjMVU8dob0s3swUv4fCUUT4izEzZpjNLnroRPWP5ftLBy4XMm9wHuVJBIUT0nDmzwcyEqf1WodIMCIY+zQPRaM=
+	t=1708505411; cv=none; b=kuJxJGqH0Nz3rVJU9kgtsCy2GnCSX+UvgtV0n2vBRsUcakQ2pilQN2IbJU24dFZRfVDUL5SfOCnji473A/d/T/pc0spPgBlzi23/NnjBwtNarXY9MMtAmA2LsQ7PuCVIlM0CABITk5E2il8cRLa1fDMswR/6w6+a2yuCSjaTrRo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708505364; c=relaxed/simple;
-	bh=XkuaRxJkQSF/7nCet1D50bgwrru3r4Ru5QgZ3T7rMRk=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=h6XlgSaTCuhHk9bFD/b9rgAYqD7NriDdYuYRNDnZ7keSHQ2Mij+Ti3a9CicCeUMivgrYd0x+SowRKmQ0MGFu9AmnCj7DdjAqjWuct4HY95nuZsMaCz4OvoScde5IZ3gcGI7wr6cwBfWjPYfrr7ZH5/PsLuEZTEWgKRCRfLnXatM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Kmu0AQNn; arc=none smtp.client-ip=209.85.221.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1708505411; c=relaxed/simple;
+	bh=u9RZVNHmoguHW4+QAiRhir6A/moENxliS29YW2DJD5s=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=XljLXH5UqlOAS6400SV6xJtaOcU1UT7wgJTDIBpPAy2jAkqrt54VUlCC1xI4jAomvo5NTs+mpLOap9dqW+5Vds1eprY6KjbVPAJDCRwE5p6QFKV+t+d0SyNjfyYF3cp+kjhuCcRzjJ7lVJ620AtrBz30Z2lnrvzGqKtDMLgrgrc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bioarchlinux.org; spf=pass smtp.mailfrom=bioarchlinux.org; dkim=pass (2048-bit key) header.d=bioarchlinux.org header.i=@bioarchlinux.org header.b=sQR0zNoP; arc=none smtp.client-ip=194.169.181.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bioarchlinux.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bioarchlinux.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Kmu0AQNn"
-Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-33d6cc6d2fcso270707f8f.2
-        for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 00:49:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1708505360; x=1709110160; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:references:cc:to:from
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=YoxlnSr09FiTnNUULYo8MqJGBOYUjcsnJwXawkN7t8I=;
-        b=Kmu0AQNnPrxTB1P2eFKjhq2RVz6r19AYR9ToSkU8QYdkGcxB7o+Z2RSLau+n1NF7Ur
-         8qGvdwvwB0ezE0aFuX0BZW3sw5rH/Mr1wV8kPofVF5OHv546PaPQxc7U+vTn2R+G7Ukh
-         kODLmJvdMhys6SxQjtxRh/jaUeBIhfpOHZztUbjpJvHSV/zhchnTF5eR+0ISPZF/ilkX
-         9akv3lI7ihpByOONLcc1eTQOtHHOT2vdTtdSeoGSTgfmiYVQGu9B6j6xUrjHQHb8vtkP
-         etSDrqWj1N9neS3RjnkpZQjaUVMEyPhdYFhB9Vc/o4dlTfIoKJXRMOdhSYDAMXPhZyRa
-         T30g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708505360; x=1709110160;
-        h=content-transfer-encoding:in-reply-to:references:cc:to:from
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=YoxlnSr09FiTnNUULYo8MqJGBOYUjcsnJwXawkN7t8I=;
-        b=m+pg0wSskb6UgCdpQTtsEjWBRd3S4pG6AfDse1lO2XPv78HKGZdz7PI3aAUruwjulk
-         bC0DFrYCojXRzDSd4jLa+s/4A0h6MQn+/5+yPe/jMX+7BmusTf++1daxkfILyyxq2wSC
-         j7W2UNOE6EHzd29hMLFRwRwYeIwkNatbuTeWXIESOyFMkxEzRrEd538YOgNPR8HzjM5F
-         e4ye5oDo/evUAhJuVxAjZeahBFY096o48FN5YLXY8KbxvOlnqhKBFBoVUZsIZWXt73X5
-         DZlovHqvN41VJMYiysmwzfk1fz+0BZaSdojvzuDqPflsiYPaTAeBub23Np1LV/elvw+X
-         BbsA==
-X-Gm-Message-State: AOJu0Yz25moy+E9hHkkAjdFdq4+XtVFd6mo93qi9UoUlVh82NaYH2ZxO
-	+8pUs/2jDbHjID6hjxXG3pkeJnCDKH+uLipX+c2b3n+ph1FMS00iIhyz2Hu9z20=
-X-Google-Smtp-Source: AGHT+IEYXaFsyWPoCNiRz2bRIoyKm0rY4vIfEIf3/J0g3R3wtKXdfDmy+z1iSFxfi1joiLdRoyM12A==
-X-Received: by 2002:a5d:584f:0:b0:33d:7afa:fb0b with SMTP id i15-20020a5d584f000000b0033d7afafb0bmr1114431wrf.15.1708505359939;
-        Wed, 21 Feb 2024 00:49:19 -0800 (PST)
-Received: from [192.168.10.46] (146725694.box.freepro.com. [130.180.211.218])
-        by smtp.googlemail.com with ESMTPSA id ci3-20020a5d5d83000000b0033cf2063052sm16119296wrb.111.2024.02.21.00.49.19
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 21 Feb 2024 00:49:19 -0800 (PST)
-Message-ID: <ce571a9f-fe6c-4131-ab3b-cba39f537ab7@linaro.org>
-Date: Wed, 21 Feb 2024 09:49:18 +0100
+	dkim=pass (2048-bit key) header.d=bioarchlinux.org header.i=@bioarchlinux.org header.b="sQR0zNoP"
+DKIM-Signature: a=rsa-sha256; bh=d0060id0R0zVW8i2sFEopZ4wmRxTFwkqlvBcU/pCIlk=;
+ c=relaxed/relaxed; d=bioarchlinux.org;
+ h=Subject:Subject:Sender:To:To:Cc:Cc:From:From:Date:Date:MIME-Version:MIME-Version:Content-Type:Content-Transfer-Encoding:Content-Transfer-Encoding:Reply-To:In-Reply-To:Message-Id:Message-Id:References:Autocrypt:Openpgp;
+ i=@bioarchlinux.org; s=default; t=1708504470; v=1; x=1708936470;
+ b=sQR0zNoPQAMEeU9zmwwgCCAfYshgfuHPqBos7n64iv4ib0aH9rQQLcJkDNNlereocX4kQo54
+ L6LnPS9zls7XefjIvL54cu4njwExbHrDc/EHY3jmck78t4coQnNMNor6aQyS+N4xCj3NyOUl5/E
+ 6qf0k0d4dhwKU317wT99L2sjt8rNHwJavsFO4Qpetb0jm9AFe49z6mmt2ls7sM4uYPF0ViTu4JI
+ SYIfmWzFIu99IGHphlm9QpPPaLy3c83MB/1Kxk01RosXkgTV3TCkvkN3RVR4yyjipEf0YxEAkxu
+ zDc9Xy6PYQYZT3U8IiLFAa7sBCDFm3XYhqDDvEpAJNGnA==
+Received: by bioarchlinux.org (envelope-sender <kuoi@bioarchlinux.org>) with
+ ESMTPS id 74a676f5; Wed, 21 Feb 2024 08:34:30 +0000
+From: Guoyi Zhang <kuoi@bioarchlinux.org>
+To: sre@kernel.org,
+	wens@csie.org,
+	hdegoede@redhat.com
+Cc: Guoyi Zhang <kuoi@bioarchlinux.org>,
+	linux-pm@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] power: supply: axp288_fuel_gauge: Deny ROCK Pi X
+Date: Wed, 21 Feb 2024 16:34:25 +0800
+Message-ID: <20240221083425.440108-1-kuoi@bioarchlinux.org>
+X-Mailer: git-send-email 2.43.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 0/3] clocksource: imx-sysctr: support i.MX95
-Content-Language: en-US
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-To: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>,
- Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>, Bai Ping <ping.bai@nxp.com>,
- Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>,
- Pengutronix Kernel Team <kernel@pengutronix.de>,
- Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>,
- Marco Felsch <m.felsch@pengutronix.de>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, Peng Fan <peng.fan@nxp.com>
-References: <20240126-imx-sysctr-v3-0-33fe801d5f31@nxp.com>
- <225c8489-0b81-402b-987a-09a46349c10d@linaro.org>
-In-Reply-To: <225c8489-0b81-402b-987a-09a46349c10d@linaro.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-On 21/02/2024 09:47, Daniel Lezcano wrote:
-> On 26/01/2024 08:09, Peng Fan (OSS) wrote:
->> i.MX95 System Counter module control register space is blocked
->> by SCMI firmware, so we use Read Register space to get the counter.
->>
->> V2:
->>    - imx95 is not compatible with the existing hardware, so add a
->>      seperate entry for i.MX95 in dt-binding.
->>    - Per Marco's comments, the global variables was removed except
->>      to_sysctr. And add a new TIMER_OF_DECLARE entry for i.MX95
->>
->> Signed-off-by: Peng Fan <peng.fan@nxp.com>
->> ---
-> 
-> Applied, thanks
+The ROCK Pi X is a single board computer without batteries using the
+AXP288 PMIC where the EFI code does not disable the charger part of 
+the PMIC causing us to report a discharging battery with a continuously
+consumed battery charge to userspace.
 
-Never mind, I did a confusion with another series. V4 is actually applied.
+Add it to the deny-list to avoid the bogus battery status reporting.
 
+Signed-off-by: Guoyi Zhang <kuoi@bioarchlinux.org>
+---
+ drivers/power/supply/axp288_fuel_gauge.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/drivers/power/supply/axp288_fuel_gauge.c b/drivers/power/supply/axp288_fuel_gauge.c
+index 3be6f3b10..8f67f5d0d 100644
+--- a/drivers/power/supply/axp288_fuel_gauge.c
++++ b/drivers/power/supply/axp288_fuel_gauge.c
+@@ -599,6 +599,14 @@ static const struct dmi_system_id axp288_quirks[] = {
+ 		},
+ 		.driver_data = NULL,
+ 	},
++	{
++		/* Radxa ROCK Pi X Single Board Computer */
++		.matches = {
++			DMI_MATCH(DMI_BOARD_NAME, "ROCK Pi X"),
++			DMI_MATCH(DMI_BOARD_VENDOR, "Radxa"),
++		},
++		.driver_data = (void *)AXP288_QUIRK_NO_BATTERY,
++	},
+ 	{
+ 		/*
+ 		 * Various Ace PC/Meegopad/MinisForum/Wintel Mini-PCs/HDMI-sticks
 -- 
-<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+2.43.2
 
