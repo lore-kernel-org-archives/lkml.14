@@ -1,209 +1,174 @@
-Received: from smtp-relay-internal-1.canonical.com (smtp-relay-internal-1.canonical.com [185.125.188.123])
+Received: from out162-62-57-252.mail.qq.com (out162-62-57-252.mail.qq.com [162.62.57.252])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F6C68062F
-	for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 15:49:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.123
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B36C8002D
+	for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 15:51:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.57.252
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708530590; cv=none; b=LiuHU3lqxQH+R69xLjkdxVGfqDU9ImySv4lXkrvsX7CqqM8qkzPhp6VzJZP28w/cR/WKiFhJJWmu3NEkVQLHzc6odZai2ESKNjzXPoattWFvBC96SvNUsHiWOYvqvffjVVqN7ALUNG3GRdA7LiIIQZfhw31fXYri91wyFAkc2B0=
+	t=1708530671; cv=none; b=do9CsasExLYKxwliqMxfZvk35JQnvadsAGqGdRjQiWmpWBtNK5Mp55eaY7VN5ZQhuOwku3H1SPQ73v80oQGHIUsz+acKy/MNTKMl3pbLIrobIIThn0zZL04MgO4ehLxNY0gg7ySLg5Tvskz6S2bjAwmWG95JI8a08wf3PIsR6ZQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708530590; c=relaxed/simple;
-	bh=OrAXqg8G4bMev0Hn4tGa3WDTsAxqPNXZWs/8AjY+XdU=;
-	h=From:To:cc:Subject:In-reply-to:References:MIME-Version:
-	 Content-Type:Date:Message-ID; b=gyljwWsNO7x3O7M2Ar+u0MkuoBcYOP1QBGgmDLTFug0pJ5XJdyJwXjtByom86rTklRGTcatAStm1DLrTVBuSqLDhvVpdbzYe4Y7QPeLUqpMFZ2iDDoeB+Kw2TmZ5/VK4i/3K5xpOJRs8o1o7YDMIBiC8A8hygoEGbLXkfrCoR4E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=Uo9b62mG; arc=none smtp.client-ip=185.125.188.123
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
+	s=arc-20240116; t=1708530671; c=relaxed/simple;
+	bh=vEoM1UN5fw8alEuNhj3NG53aylvxNxq2uZ8DS3N6ANs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=DpX+9mRm1Wq9gs9S99JzaG44rWiWhVQRc6Tw1u3ax1Q8rIJQ5QkxDZDoT5qmo+O12ikKOT8x5XqSbTMRrJJ8e98JpeLo7motHou1ndv7uD1X9ipd3c5kf8I/b4ueuG8Wie39hbt3eJz1MXmwFXum2u+LuKUNa5ESQc2IhPE0Tsg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com; spf=pass smtp.mailfrom=foxmail.com; dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b=cs78EL+o; arc=none smtp.client-ip=162.62.57.252
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foxmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="Uo9b62mG"
-Received: from mail-pj1-f71.google.com (mail-pj1-f71.google.com [209.85.216.71])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id C2E853F636
-	for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 15:49:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-	s=20210705; t=1708530578;
-	bh=WGNYfSNQTh19goOzHyiLxZdYWOcX+I0Fp1z5zFe70r8=;
-	h=From:To:cc:Subject:In-reply-to:References:MIME-Version:
-	 Content-Type:Date:Message-ID;
-	b=Uo9b62mGurlXLnDmdU9f5uhkdHP6G8pjyKRAg29iDJpj/claPFfk6vlc+Wu63Y3Ld
-	 tzCDXkuTVji9mJWstV/loGlhJkD9Pok0fpUzFD43HorrvJnHcoht+orwLHTgOU8L5j
-	 SShUwhw2xi8CupfAciAWxAGa13/mXRa0LV8Rt4ilLQoZLnAKirCIIE4prubBgHPsrE
-	 NYYogsRv+ec2AekX8qPt7X304YyaLWv+rorweDfeyC4Zze42RogrRjH+XkLkfpTAin
-	 91pGCBTh/EaPM7eEXbS4SVIT/YSxFZn+gQt2PP67Rpsa74tosDWX1PZRR4Gk2nb/IO
-	 QDD/yo+POGiAA==
-Received: by mail-pj1-f71.google.com with SMTP id 98e67ed59e1d1-299c5a61099so2161040a91.0
-        for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 07:49:38 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708530577; x=1709135377;
-        h=message-id:date:content-transfer-encoding:content-id:mime-version
-         :comments:references:in-reply-to:subject:cc:to:from
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=WGNYfSNQTh19goOzHyiLxZdYWOcX+I0Fp1z5zFe70r8=;
-        b=fAmq2uJgqyA+dX3IIKHihOk78SUh8fGXMpJzb8h2bztMI6oMMHX5PNJtBP6uxZYWml
-         CCLjscXS3XTumdRKaVXIbTB8VXbshNZrCEMEYG88D+DjSavt7850p7fiZGS6jqcLuZ9D
-         kSRnTwLoOFkv52BVem+WkNQj5qXsO9IOxEVauTdpGrFh2WHzpHFeN/G0Nw9jBmK+LfgW
-         Q/TXdg9OvN1ZAmRq1Dm+Q52/SbdnaJg+Csx9Kqmvu4YT5ulMheYhoYPf7TXVi1xzzRqA
-         nqKQtkcBbcuqjVgBw9mZAWB1wQVmnKgYpFz2mmP1gpJNlgalCnBxJxXaCECTzhMmdQLz
-         bndQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWvG4/gJAAGUHd284jpCQoPBQKNwKb/wV1EKOtZ6Ht6q2XMPi1FadWZq4GpHts4E/zRilebskVp9qI4636xquZ8crjwFM7ulCBcD+9K
-X-Gm-Message-State: AOJu0YzU+lqFf5cWd6mBouoeXHrnWLd3WN9XAi7Z7Xr43zAvkUIuWqrP
-	+LKsz/9E7ahF5wxXgKIVs5SnTtCEu5iujbhMvMD9ohzZr+meKqEM2kK471CyE4wPNnxHSk1mKvR
-	1AxWpTX0OEPCfcd3xZPiMBQ3azQXyhVj3APfRMR5PYl3avXufJjn0ce4BeW51QEqvlUCkSXi8qI
-	1tpg==
-X-Received: by 2002:a17:90a:3482:b0:299:3990:4e11 with SMTP id p2-20020a17090a348200b0029939904e11mr13049868pjb.34.1708530577457;
-        Wed, 21 Feb 2024 07:49:37 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IGKsZ7CC/ov1NYWAU3H+jSsNO7zKzi0int6CRZ3wTWthcM19jkflIkqy/TgGvLmivXMt/b9mA==
-X-Received: by 2002:a17:90a:3482:b0:299:3990:4e11 with SMTP id p2-20020a17090a348200b0029939904e11mr13049857pjb.34.1708530577133;
-        Wed, 21 Feb 2024 07:49:37 -0800 (PST)
-Received: from famine.localdomain ([50.125.80.253])
-        by smtp.gmail.com with ESMTPSA id si11-20020a17090b528b00b00296d9c4d5f0sm1978109pjb.10.2024.02.21.07.49.36
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 21 Feb 2024 07:49:36 -0800 (PST)
-Received: by famine.localdomain (Postfix, from userid 1000)
-	id 436895FF14; Wed, 21 Feb 2024 07:49:36 -0800 (PST)
-Received: from famine (localhost [127.0.0.1])
-	by famine.localdomain (Postfix) with ESMTP id 3C3689FAAA;
-	Wed, 21 Feb 2024 07:49:36 -0800 (PST)
-From: Jay Vosburgh <jay.vosburgh@canonical.com>
-To: Praveen Kumar Kannoju <praveen.kannoju@oracle.com>
-cc: andy@greyhouse.net, davem@davemloft.net, edumazet@google.com,
-    kuba@kernel.org, pabeni@redhat.com, netdev@vger.kernel.org,
-    linux-kernel@vger.kernel.org, rajesh.sivaramasubramaniom@oracle.com,
-    rama.nichanamatlu@oracle.com, manjunath.b.patil@oracle.com
-Subject: Re: [PATCH net-next v6] bonding: rate-limit bonding driver inspect messages
-In-reply-to: <20240221082752.4660-1-praveen.kannoju@oracle.com>
-References: <20240221082752.4660-1-praveen.kannoju@oracle.com>
-Comments: In-reply-to Praveen Kumar Kannoju <praveen.kannoju@oracle.com>
-   message dated "Wed, 21 Feb 2024 13:57:52 +0530."
-X-Mailer: MH-E 8.6+git; nmh 1.6; Emacs 29.0.50
+	dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b="cs78EL+o"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foxmail.com;
+	s=s201512; t=1708530361;
+	bh=sKtJeLMhCOAL5wfw/Z58CF7RfJkhujGF5xFaWZx4CKY=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=cs78EL+omCfN77vdA7iQ0DmgMkqzk+ng8QqI/XfrB+sGosDYvZpZQzphlMiR0/+Qx
+	 vZylD/RJkwdn5hBbNymT/eckZsA2pkoBnjsezqk2ljlRm3gWt6gu9pDVu6Pic0VI8l
+	 CXT79mLmnYw66qkZE1I7C8O/h6TlTvOeE7ynv+A8=
+Received: from [IPV6:2409:8a60:2a61:ef40:1517:f202:3311:4bf] ([2409:8a60:2a61:ef40:1517:f202:3311:4bf])
+	by newxmesmtplogicsvrszb9-0.qq.com (NewEsmtp) with SMTP
+	id B7AAB49D; Wed, 21 Feb 2024 23:45:58 +0800
+X-QQ-mid: xmsmtpt1708530358t3pny71lz
+Message-ID: <tencent_649330BFF9D93CB7540D508B05514FCEA40A@qq.com>
+X-QQ-XMAILINFO: OVFdYp27KdlJoGk7u5nYniAJ4Up/dNZVH2qBLkC6pDqrKaGd1/G1th+DGipfTH
+	 e9oOUXIULI29mRd7NpqutYBOpRckNLhxdLJfKvaRIBjslO/xHp7VT8GBonIT9WXdvoGERq/YfH12
+	 Wxb1XLcoTPIoTJaqpRDBpqiD1yq8ruckc8V3F034BtD515leRQZReOECXCjI4/2j8s1+7dIr84ZH
+	 UlIQaEnm1D/E7svyKzgRpavbXYB+XHZVmW2LWCTJWX9BbEHzn3tqCGr0nB9BRUrs6Ab4CNw3BEPe
+	 EEDRxaf1c7PBwIpRf2R8Slvb/8saHDUljrRdhIfOzffyUAtqHkmsYfsf3Tk7VMcK/iRnLX0oTt8a
+	 4OI37Z1OnG2pRDQcqIX3DFEUkjetGIrR+muujne3tp45wN+2i9lsfowzqL5NRt3vsBbHAsIzKlVe
+	 uy+bQfN6ap+4jRczQm9Y46qr1fqzEFcO3TpJk9QP+eUFgexbPyZ5he9xiaJJo/+eDIrAlkUpO9XE
+	 7mdcxcKQqu1ll/1MTY/uce+fvaRAVcnw5lqbS3utln8nWFSahyUyp7LFsrFekxSG+mZBpXfSgxCH
+	 YIQykuodOEkRWNmGhP6WTL1HsUkvAMNCDvY3ViBJLy8GEuKN7X735Z/e5CG3+C+9hWEZTAqVex7b
+	 aU3je6jhzTwca2duzRHxyFaGbcfCIdPKtnSJtn9FXaqpUc2ziuQksK/hNjRQ+hudPgzr9U/8pZWH
+	 GdIkKK0WJ83Eskl3/+31FgmAEZ2s8ynMAQ6Lcobad31Rxnxq55IScrL7iIe8aWOrZunuVsSokJ2S
+	 sYIIyvBKldYu9GvYRvFIYf3+fV0VHNrqIf02/0r1HbA9aXbqnWlwEp8tgM/uI/l9eRIxHk6+pIRw
+	 N+JPeSUHgIWWneNSHFkrQ1aNM1odJtfwtPLlfMBMZWKadTrLQeYLEGv6b7O3yRUwBQfMFi6D2Wgt
+	 bk44eovs7zgVXM1oUTzL6J1kLF82IupcRgVY6eI8tYP9zDEG5ljaGu0GFj/4zX5kEKMyYdjd00Rw
+	 I2q9vYYUxeNgXmcJr0WzmpK2qoCsY=
+X-QQ-XMRINFO: MSVp+SPm3vtS1Vd6Y4Mggwc=
+X-OQ-MSGID: <5167001c-a318-addd-2470-80376b5096df@foxmail.com>
+Date: Wed, 21 Feb 2024 23:45:58 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <32545.1708530576.1@famine>
-Content-Transfer-Encoding: quoted-printable
-Date: Wed, 21 Feb 2024 07:49:36 -0800
-Message-ID: <32546.1708530576@famine>
-
-Praveen Kumar Kannoju <praveen.kannoju@oracle.com> wrote:
-
->Through the routine bond_mii_monitor(), bonding driver inspects and commi=
-ts
->the slave state changes. During the times when slave state change and
->failure in aqcuiring rtnl lock happen at the same time, the routine
->bond_mii_monitor() reschedules itself to come around after 1 msec to comm=
-it
->the new state.
->
->During this, it executes the routine bond_miimon_inspect() to re-inspect
->the state chane and prints the corresponding slave state on to the consol=
-e.
->Hence we do see a message at every 1 msec till the rtnl lock is acquired
->and state chage is committed.
->
->This patch doesn't change how bond functions. It only simply limits this
->kind of log flood.
->
->Signed-off-by: Praveen Kumar Kannoju <praveen.kannoju@oracle.com>
-
-Acked-by: Jay Vosburgh <jay.vosburgh@canonical.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.0
+Subject: Re: [PATCH] coredump debugging: add a tracepoint to report the
+ coredumping
+Content-Language: en-US
+To: Oleg Nesterov <oleg@redhat.com>, Steven Rostedt <rostedt@goodmis.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Mel Gorman <mgorman@techsingularity.net>,
+ Peter Zijlstra <peterz@infradead.org>, linux-kernel@vger.kernel.org
+References: <tencent_5CD40341EC9384E9B7CC127EA5CF2655B408@qq.com>
+ <20240217104924.GB10393@redhat.com>
+ <20240219112926.77ac16f8@gandalf.local.home>
+ <20240219170038.GA710@redhat.com>
+From: Wen Yang <wenyang.linux@foxmail.com>
+In-Reply-To: <20240219170038.GA710@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
 
->---
->v6: =
 
->  - Minor space additions addressed. =
+On 2024/2/20 01:00, Oleg Nesterov wrote:
+> On 02/19, Steven Rostedt wrote:
+>>
+>> On Sat, 17 Feb 2024 11:49:24 +0100
+>> Oleg Nesterov <oleg@redhat.com> wrote:
+>>
+>>> On 02/17, wenyang.linux@foxmail.com wrote:
+>>>>
+>>>> From: Wen Yang <wenyang.linux@foxmail.com>
+>>>>
+>>>> Currently coredump_task_exit() takes some time to wait for the generation
+>>>> of the dump file. But if the user-space wants to receive a notification
+>>>> as soon as possible it maybe inconvenient.
+>>>>
+>>>> Add the new trace_sched_process_coredump() into coredump_task_exit(),
+>>>> this way a user-space monitor could easily wait for the exits and
+>>>> potentially make some preparations in advance.
+>>>
+>>> Can't comment, I never know when the new tracepoint will make sense.
+>>>
+>>> Stupid question. Can we simply shift trace_sched_process_exit() up
+>>> before coredump_task_exit() ?
+>>
+>> Reading the rest of the thread and looking at the code, we do have this:
+>>
+>> void __noreturn do_exit(long code)
+>> {
+>> 	struct task_struct *tsk = current;
+>> 	int group_dead;
+>>
+>> [...]
+>> 	acct_collect(code, group_dead);
+>> 	if (group_dead)
+>> 		tty_audit_exit();
+>> 	audit_free(tsk);
+>>
+>> 	tsk->exit_code = code;
+>> 	taskstats_exit(tsk, group_dead);
+>>
+>> 	exit_mm();
+>>
+>> 	if (group_dead)
+>> 		acct_process();
+>> 	trace_sched_process_exit(tsk);
+>>
+>> There's a lot that happens before we trigger the above event.
+> 
+> and a lot after.
+> 
+> To me the current placement of  looks absolutely
+> random.
+> 
+>> I could
+>> imagine that there are users expecting those actions to have taken place by
+>> the time the event triggered. Like the "exit_mm()" call, as well as many
+>> others.
+>>
+>> I would be leery of moving that tracepoint.
+> 
+> And I agree. I am always scared of every user-visible change, simply
+> because it is user-visbible.
+> 
+> If it was not clear, I didn't try to nack this patch. I simply do not know
+> how people use the tracepoints and for what. Apart from debugging.
+> 
+> But if we add the new one into coredump_task_exit(), then we probably want
+> another one in ptrace_event(PTRACE_EVENT_EXIT) ? It too can "take some time"
+> before the exiting task actually exits.
+> 
+> So I think this needs some discussion, and the changelog should probably say
+> more.
+> 
+> In short: I am glad you are here, I leave this to you and Wen ;)
+> 
 
->v5: https://lore.kernel.org/all/20240221050809.4372-1-praveen.kannoju@ora=
-cle.com/
->  - Redundant indentation addressed.
->v4: https://lore.kernel.org/all/20240220050437.5623-1-praveen.kannoju@ora=
-cle.com/
->  - Rectification in the patch subject and versioning details.
->v3: https://lore.kernel.org/lkml/20240219133721.4567-1-praveen.kannoju@or=
-acle.com/
->  - Commit message is modified to provide summary of the issue, because o=
-f
->    which rate-limiting the bonding driver messages is needed.
->v2: https://lore.kernel.org/lkml/20240215172554.4211-1-praveen.kannoju@or=
-acle.com/
->  - Use exising net_ratelimit() instead of introducing new rate-limit
->    parameter.
->v1: https://lore.kernel.org/lkml/20240214044245.33170-1-praveen.kannoju@o=
-racle.com/
->---
-> drivers/net/bonding/bond_main.c | 18 ++++++++++--------
-> 1 file changed, 10 insertions(+), 8 deletions(-)
->
->diff --git a/drivers/net/bonding/bond_main.c b/drivers/net/bonding/bond_m=
-ain.c
->index 4e0600c..51fdb79 100644
->--- a/drivers/net/bonding/bond_main.c
->+++ b/drivers/net/bonding/bond_main.c
->@@ -2609,7 +2609,7 @@ static int bond_miimon_inspect(struct bonding *bond=
-)
-> 			bond_propose_link_state(slave, BOND_LINK_FAIL);
-> 			commit++;
-> 			slave->delay =3D bond->params.downdelay;
->-			if (slave->delay) {
->+			if (slave->delay && net_ratelimit()) {
-> 				slave_info(bond->dev, slave->dev, "link status down for %sinterface,=
- disabling it in %d ms\n",
-> 					   (BOND_MODE(bond) =3D=3D
-> 					    BOND_MODE_ACTIVEBACKUP) ?
->@@ -2623,9 +2623,10 @@ static int bond_miimon_inspect(struct bonding *bon=
-d)
-> 				/* recovered before downdelay expired */
-> 				bond_propose_link_state(slave, BOND_LINK_UP);
-> 				slave->last_link_up =3D jiffies;
->-				slave_info(bond->dev, slave->dev, "link status up again after %d ms\=
-n",
->-					   (bond->params.downdelay - slave->delay) *
->-					   bond->params.miimon);
->+				if (net_ratelimit())
->+					slave_info(bond->dev, slave->dev, "link status up again after %d ms=
-\n",
->+						   (bond->params.downdelay - slave->delay) *
->+						   bond->params.miimon);
-> 				commit++;
-> 				continue;
-> 			}
->@@ -2647,7 +2648,7 @@ static int bond_miimon_inspect(struct bonding *bond=
-)
-> 			commit++;
-> 			slave->delay =3D bond->params.updelay;
-> =
+Thank you Oleg, thank you Steven，
 
->-			if (slave->delay) {
->+			if (slave->delay && net_ratelimit()) {
-> 				slave_info(bond->dev, slave->dev, "link status up, enabling it in %d=
- ms\n",
-> 					   ignore_updelay ? 0 :
-> 					   bond->params.updelay *
->@@ -2657,9 +2658,10 @@ static int bond_miimon_inspect(struct bonding *bon=
-d)
-> 		case BOND_LINK_BACK:
-> 			if (!link_state) {
-> 				bond_propose_link_state(slave, BOND_LINK_DOWN);
->-				slave_info(bond->dev, slave->dev, "link status down again after %d m=
-s\n",
->-					   (bond->params.updelay - slave->delay) *
->-					   bond->params.miimon);
->+				if (net_ratelimit())
->+					slave_info(bond->dev, slave->dev, "link status down again after %d =
-ms\n",
->+						   (bond->params.updelay - slave->delay) *
->+						   bond->params.miimon);
-> 				commit++;
-> 				continue;
-> 			}
->-- =
+We could first put trace_sched_process_exit() aside and take a look at 
+these three patches:
 
->1.8.3.1
->
->
+2d4bcf886e42f0f4846a3d9bdc3a90d278903a2e ("exit: Remove 
+profile_task_exit & profile_munmap")
+
+586b58cac8b4683eb58a1446fbc399de18974e40 (“exit: Move preemption fixup 
+up, move blocking operations down”)
+
+And the original: 1da177e4c3f41524e886b7f1b8a0c1fc7321cac2
+
+
+Could we add a new TP similar to profile_task_exit()?
+
+--
+Best wishes,
+Wen
+
+
+
+
+
