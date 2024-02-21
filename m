@@ -1,121 +1,118 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f41.google.com (mail-io1-f41.google.com [209.85.166.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD78C382;
-	Wed, 21 Feb 2024 00:18:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E436FA48
+	for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 00:19:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708474716; cv=none; b=IKjx7VUrnNeko0iJjSx1x5afhfwWksXCtJKJ7jHNot5HTCtRv/9PAt1nPCLGtGZpaHFb/eNHErkAW8ItsOcuVoEOXXRBaq5APomkk1lgdunzy1pajaKEaXNIyBZA/Xf+ab+XxWvpPpBLCvj9xaPSnY52FmWNsT2HKa537euPPpE=
+	t=1708474798; cv=none; b=OhMkjCM6RzJ8gq2MoCs/4tzUbN74KG3YKGONY/ybKJQKVVdkN6QobJDDroQfnI/zg+LjGbM3A6oEzfd61fzsjl8Y1XyFv4DCa9Mbk+rQNy0VwCrh+4pTJebiKqUgO/Ue771YVtceSIViRG1U6Ax3uePQCtZ7VtrDIHFHBD5V05s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708474716; c=relaxed/simple;
-	bh=aY2cRLPJ27QJEhF0HRytD4hTShWIn0xOvpDbviBJK9M=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=av/FKi8Rgn83jXDiY2MhLMvKSCIRZW/ro5KBvyD1ct6/MsFzAl0j1/H73RBhAkhiRCw1cf+VGCpkW8Q3wW84F8xXpGFTWyCU41TGtdl633Jdt4XubPk6Db3n27zepA4/tqqPTVfw906KhrUxzoJoLWqzjrUeBRqReilT8HAKjzY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=n6kDY+Hg; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1708474798; c=relaxed/simple;
+	bh=K7QkEMeFgCEOBDdteVUHDL15AVxzWVVyz5SmmokOZXs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=eOO9yoD0hFu1xXBzUZCydUNAB5NxUHNJjXhKx2cGt+PSnJQPeZcAlp/mA67QFXksycDco0dA5f9qiOrRQv/PKwZ57xsUfFMtFbXMICIOzO5hhuQwoUPRT7SasbsrO3/QSC0lYNu0kYHjhanD2zjyWDSj8u1wexEIhOats6GLkR4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=ZGmgz4In; arc=none smtp.client-ip=209.85.166.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="n6kDY+Hg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F257AC433F1;
-	Wed, 21 Feb 2024 00:18:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708474716;
-	bh=aY2cRLPJ27QJEhF0HRytD4hTShWIn0xOvpDbviBJK9M=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=n6kDY+HgdW+VpmmSFpy+6lBXqR5FGn0zIV2bPB92kjuuWC43yobjuF5RYvucXJDLf
-	 Z+kmwFfBim/iti9g0+B1PWMhiOw+4V/98+mIKFa8IWYRRjp2yNl7NigQtKgSc8jn8/
-	 Xgsirl/4I5vVbIkJAoJrRbae46CLw343QCY2ihvM8X9tFugMtGTVXnqoWNdRCwMcYT
-	 JZfmdJlXnu9Qy9BoTjXIyLANSrowjf/kL8aL4rNxB38M0sxm/yum0RA4wADmlTk9L8
-	 +Hkd0soJhpqQMzAm3pAO5MYIoh1Skz3LachW/Rys8i3/ZYZPn+oyHtkoVOcqY9EEZD
-	 DUr4tkBaLi7HA==
-From: SeongJae Park <sj@kernel.org>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: stable@vger.kernel.org,
-	patches@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	torvalds@linux-foundation.org,
-	akpm@linux-foundation.org,
-	linux@roeck-us.net,
-	shuah@kernel.org,
-	patches@kernelci.org,
-	lkft-triage@lists.linaro.org,
-	pavel@denx.de,
-	jonathanh@nvidia.com,
-	f.fainelli@gmail.com,
-	sudipm.mukherjee@gmail.com,
-	srw@sladewatkins.net,
-	rwarsow@gmx.de,
-	conor@kernel.org,
-	allen.lkml@gmail.com,
-	damon@lists.linux.dev,
-	SeongJae Park <sj@kernel.org>
-Subject: Re: [PATCH 6.1 000/197] 6.1.79-rc1 review
-Date: Tue, 20 Feb 2024 16:18:33 -0800
-Message-Id: <20240221001833.46786-1-sj@kernel.org>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240220204841.073267068@linuxfoundation.org>
-References: 
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="ZGmgz4In"
+Received: by mail-io1-f41.google.com with SMTP id ca18e2360f4ac-7c49c979b5dso99597739f.1
+        for <linux-kernel@vger.kernel.org>; Tue, 20 Feb 2024 16:19:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google; t=1708474796; x=1709079596; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=1SSchokFBeolQFf43F1Ki91lkNWxa302wO4DNZKIww8=;
+        b=ZGmgz4InfEOdPa4mtx0gqh8QkxsZbhOmJeVjxYaB+LKKYiQHYVu2v8wK0eki469hUp
+         sdh8TGch/eG9NHkPfsm8VVXCBDe7F27k46EpRzNErcdiNmkR/HSXhVmZVZHeAzv+MmFv
+         WjtKjbvDCcsUSg2hRfQTuRfDlrSbcexNclV88=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708474796; x=1709079596;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=1SSchokFBeolQFf43F1Ki91lkNWxa302wO4DNZKIww8=;
+        b=ow+3OhDWu/ecsXsSooNCqAmrrv57ttUKaU8Whok5P4RHz7vyaTAKU39IjVPr0/+L1Z
+         Yn5897KR2uUOXMWtHhGh4/Nq+QK8jfh0QShxPQhq8k323MuCqENLtnubrXnExadNQ8VY
+         KWYs43oWF78ZrnH/MEAxRQ/2hSziOy2NjwgoJWXzkouV9XKI6aZYptrRkQjtbTiWW2PE
+         n4x6XJwSXIWhTHWsizmyKMwEBzn/wkIK3yllEc4UTSUa315Fqh0jllv3GnTglX4GFF4+
+         8CVO1ndbhLP8kFiiVBO1eZZ2YKCgpdBbiE+w6BfVjx0ocH9FQFfQVmQ6S+sOtOK/b/th
+         17Lg==
+X-Forwarded-Encrypted: i=1; AJvYcCWhHZE/6Xy7R+iQzyfTdrQt6S629eWTqeMEg//8RUHl/0a+hsbxFZQTMGvBOrfwlUhfltu8AK2yjqWT1rX4Kvb8GtfY72gfnn4vexNC
+X-Gm-Message-State: AOJu0YxFUsJ40p0BFhlMwusU17HNHeUAVrO30Xalvp8vPfxny/5f9jZy
+	UxAIVa9X7WcpzfnpmTZkoqsmKh/Bl8iKzYynuIOFqI9FLKKs3pJ6m9VxPfWPi88=
+X-Google-Smtp-Source: AGHT+IHjKllnuZm8GTJktzvD7k1+Fmvk1+TpjJvDUR7WXcS/dDJj3/rdo98ETt9VO7T5uUrGvECeJg==
+X-Received: by 2002:a05:6602:f15:b0:7c7:28f7:cc81 with SMTP id hl21-20020a0566020f1500b007c728f7cc81mr11052980iob.1.1708474795830;
+        Tue, 20 Feb 2024 16:19:55 -0800 (PST)
+Received: from [192.168.1.128] ([38.175.170.29])
+        by smtp.gmail.com with ESMTPSA id d5-20020a056602280500b007c73e9033fcsm1884269ioe.2.2024.02.20.16.19.55
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 20 Feb 2024 16:19:55 -0800 (PST)
+Message-ID: <c3ee4083-fca7-43cc-b955-3b7e4faed2b0@linuxfoundation.org>
+Date: Tue, 20 Feb 2024 17:19:54 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/3] selftests: lib.mk: Do not process TEST_GEN_MODS_DIR
+Content-Language: en-US
+To: Marcos Paulo de Souza <mpdesouza@suse.com>
+Cc: kernel test robot <lkp@intel.com>, Josh Poimboeuf <jpoimboe@kernel.org>,
+ Jiri Kosina <jikos@kernel.org>, Miroslav Benes <mbenes@suse.cz>,
+ Petr Mladek <pmladek@suse.com>, Joe Lawrence <joe.lawrence@redhat.com>,
+ oe-kbuild-all@lists.linux.dev, linux-kselftest@vger.kernel.org,
+ linux-kernel@vger.kernel.org, live-patching@vger.kernel.org,
+ Shuah Khan <skhan@linuxfoundation.org>
+References: <20240219135325.2280-1-mpdesouza@suse.com>
+From: Shuah Khan <skhan@linuxfoundation.org>
+In-Reply-To: <20240219135325.2280-1-mpdesouza@suse.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hello,
-
-On Tue, 20 Feb 2024 21:49:19 +0100 Greg Kroah-Hartman <gregkh@linuxfoundation.org> wrote:
-
-> This is the start of the stable review cycle for the 6.1.79 release.
-> There are 197 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+On 2/19/24 06:53, Marcos Paulo de Souza wrote:
+> On Mon, 19 Feb 2024 09:15:15 -0300 Marcos Paulo de Souza <mpdesouza@suse.com> wrote:
 > 
-> Responses should be made by Thu, 22 Feb 2024 20:48:08 +0000.
-> Anything received after that time might be too late.
+>> On Mon, 19 Feb 2024 14:35:16 +0800 kernel test robot <lkp@intel.com> wrote:
+>>
+>>> Hi Marcos,
+>>>
+>>> kernel test robot noticed the following build errors:
+>>>
+>>> [auto build test ERROR on 345e8abe4c355bc24bab3f4a5634122e55be8665]
+>>>
+>>> url:    https://github.com/intel-lab-lkp/linux/commits/Marcos-Paulo-de-Souza/selftests-lib-mk-Do-not-process-TEST_GEN_MODS_DIR/20240216-021601
+>>> base:   345e8abe4c355bc24bab3f4a5634122e55be8665
+>>> patch link:    https://lore.kernel.org/r/20240215-lp-selftests-fixes-v1-1-89f4a6f5cddc%40suse.com
+>>> patch subject: [PATCH 1/3] selftests: lib.mk: Do not process TEST_GEN_MODS_DIR
+>>> compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
+>>> reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240219/202402191417.XULH88Ct-lkp@intel.com/reproduce)
+>>>
+>>> If you fix the issue in a separate patch/commit (i.e. not just a new version of
+>>> the same patch/commit), kindly add following tags
+>>> | Reported-by: kernel test robot <lkp@intel.com>
+>>> | Closes: https://lore.kernel.org/oe-kbuild-all/202402191417.XULH88Ct-lkp@intel.com/
+>>>
+>>> All errors (new ones prefixed by >>):
+>>>
+>>>>> make[3]: *** /lib/modules/5.9.0-2-amd64/build: No such file or directory.  Stop.
+>>
+>> We should ask the kernel test robot machine owners to install kernel-devel
+>> package in order to have this fixed.
 > 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.1.79-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.1.y
-> and the diffstat can be found below.
+> Or maybe ask them to change the reproducer to specify KDIR to the git tree,
+> instead of /lib/modules/?
+> 
 
-This rc kernel passes DAMON functionality test[1] on my test machine.
-Attaching the test results summary below.  Please note that I retrieved the
-kernel from linux-stable-rc tree[2].
+This would be a regression to automated test rings. Do you have any other
+solutions?
 
-Tested-by: SeongJae Park <sj@kernel.org>
+We could remove livepatch from default test until these changes are made
+to test ring environments?
 
-[1] https://github.com/awslabs/damon-tests/tree/next/corr
-[2] cc64836e147d ("Linux 6.1.79-rc1")
+thanks,
+-- Shuah
 
-Thanks,
-SJ
-
-[...]
-
----
-
-ok 1 selftests: damon: debugfs_attrs.sh
-ok 2 selftests: damon: debugfs_schemes.sh
-ok 3 selftests: damon: debugfs_target_ids.sh
-ok 4 selftests: damon: debugfs_empty_targets.sh
-ok 5 selftests: damon: debugfs_huge_count_read_write.sh
-ok 6 selftests: damon: debugfs_duplicate_context_creation.sh
-ok 7 selftests: damon: sysfs.sh
-ok 1 selftests: damon-tests: kunit.sh
-ok 2 selftests: damon-tests: huge_count_read_write.sh
-ok 3 selftests: damon-tests: buffer_overflow.sh
-ok 4 selftests: damon-tests: rm_contexts.sh
-ok 5 selftests: damon-tests: record_null_deref.sh
-ok 6 selftests: damon-tests: dbgfs_target_ids_read_before_terminate_race.sh
-ok 7 selftests: damon-tests: dbgfs_target_ids_pid_leak.sh
-ok 8 selftests: damon-tests: damo_tests.sh
-ok 9 selftests: damon-tests: masim-record.sh
-ok 10 selftests: damon-tests: build_i386.sh
-ok 11 selftests: damon-tests: build_arm64.sh
-ok 12 selftests: damon-tests: build_m68k.sh
-ok 13 selftests: damon-tests: build_i386_idle_flag.sh
-ok 14 selftests: damon-tests: build_i386_highpte.sh
-ok 15 selftests: damon-tests: build_nomemcg.sh
- [33m
- [92mPASS [39m
