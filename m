@@ -1,95 +1,144 @@
-Received: from mail-yw1-f180.google.com (mail-yw1-f180.google.com [209.85.128.180])
+Received: from mail-il1-f173.google.com (mail-il1-f173.google.com [209.85.166.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C94A1128817
-	for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 21:46:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBEDE127B66
+	for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 21:46:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708551970; cv=none; b=M4juUwm25JmeuftaoE6dUKHQFZUq7mnG22uBxxfHfggUYCKjFC72vcN0q/yVv9+dWHl/ETYSz3kQLmD1fUIlRsg1WumRBrB2N5/XyFDtOiks0uS9Fzhn8Glm3YyTQ9hr/BfqJv/SBIh751Aq5pRh0DPHap/cMZ9EdgIEe9ETxpk=
+	t=1708552001; cv=none; b=iKpzk90IaWdLRM8JI0MAOxrO3/1NGGgApNM/2Dfl4F+5QTndlk6rOIFh0sKuTqIhZtXCzo1XcNQ7J17Zo+igTSNjO03uvk05xTfmrSAHU296ik8lVO3x14l883Cq0snkJMsH5ZJhvjWaFZzQlvUGyEH5oKpCqxuMInMy1k3RH/w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708551970; c=relaxed/simple;
-	bh=ApJiKKxB8Nyth68y0DtWmEyhbZzJmJ7hb4rk78a9X3k=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=NMrLaKx5eDBwsI/5AJ5OCxNRpjW3j49GKYks3mOK4SsB1nM0KHtJFckbMOlvFVnqcUUwr6w6rfWEZGe1cDv4mX+Y9GVB01hsbibHpXLjNIoO9T5eh+dJxUMeHrKT4KNRVQcOTNqIR7PiSfRmzpjq2dzRkVf+yo+x352D6zTQ8ps=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ZmgKXD4Q; arc=none smtp.client-ip=209.85.128.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1708552001; c=relaxed/simple;
+	bh=of9bAtEogX5ECgh9Cm9HB0yowv3h3jorHP2cz4TfNmI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NXfnuzniEzfXPWs1Sae/HinPn2NcjpcD1b0+sr7xGr/l2Obc26ewxxZ1yCirWMRKKcwqd8tBstrC9QPzWs9tw+6vKd5JqdSIDvS56uPAt419pDR4VCujwc0wlJZQ8MPz46PuUGgIg6cd7cwcRdLuCw9mLLxSGiOKL3sfIh6IiG4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=KdPSqg9w; arc=none smtp.client-ip=209.85.166.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZmgKXD4Q"
-Received: by mail-yw1-f180.google.com with SMTP id 00721157ae682-607f8482b88so55755967b3.0
-        for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 13:46:08 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="KdPSqg9w"
+Received: by mail-il1-f173.google.com with SMTP id e9e14a558f8ab-3651c1e1022so18182305ab.0
+        for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 13:46:39 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1708551968; x=1709156768; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ApJiKKxB8Nyth68y0DtWmEyhbZzJmJ7hb4rk78a9X3k=;
-        b=ZmgKXD4QqBpUGTTOaClU1KEg7SESooeNJvUqz50ldEDb4DMDj07do5q5ckq6e76baV
-         iH9JC9m2Li2u9fAg06XwUavptLrozxORGEzzgfD7YUb+v31o6VCO83OO/K/Bi4K48sLj
-         Egyd4CB0D5zQ7oYdy8RhbR+5G2oOGDW89oFHNPJXeaEgJJxAqzmkuITnTFLyIlRGwzfA
-         RahxWx6l0DBmwHAifjfNhlqUIPWj3zX2bpwVghKKPzkQFag7VcK+iMcDEsRN/nBpHbN8
-         VunW2vcpAnHmZJCTdIfW6RBmI/EmU6yEc0GzHH8Jt45IBZhaEGr0qCVsXxjSga/Ic11M
-         njnQ==
+        d=chromium.org; s=google; t=1708551999; x=1709156799; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=7+QKepU2MbI4a/2CEG6x48g/5yOOaTqkeikoyN0HwE4=;
+        b=KdPSqg9w51T7mvoBvMapZ4uHalkw+HZdr4AM5nOb1DMOYnXNzQRN4VRJV444r/39Bb
+         Zril6J9mHKplS8MH0XzLxng943Uec2oSGERvWfGSe4QgYZnQNiMwiVBfiWQZULj2An9A
+         Co1H9UGeJf6uJqacJPwgeGAa1eKs2bWERAYu8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708551968; x=1709156768;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ApJiKKxB8Nyth68y0DtWmEyhbZzJmJ7hb4rk78a9X3k=;
-        b=FkhbHgS9DdmRDUtNIJy+ggRje8BDGPqE2g0/qMRoQCuCnXjvxOsAn/GAHEHFyY2Au/
-         lPkqtyrTGqA+EYOJbEDJAn9/6+qMtmzr5DNOjP2/EX72s43uiIBc8uGg/sPi3CSXalDx
-         XcehkjZUgPbAl9Q3RHwgBKYsc1qDLkVnp0aa0phTdDzdFrkPRuApgLiruOVXlj1emUCa
-         tKGj6t6JOqN3D0ahRGk6tl7L6OiBH1zV3H6hg8D0/ZqLwjgjeCO7K6JheYqJxjIOoCRJ
-         Jv4Rs745yVHTguDDlmlMZ7NoAYr/cjcRp9DX4ZPTUlcd0SzX+pDfyci9OymS3HyQnNEL
-         AIqw==
-X-Forwarded-Encrypted: i=1; AJvYcCWBdWyd+RlPJADzYbxPPdIZi+1tF6l4N/DmjxG+cUC/T7MUFNY/bpGJBmPxbiCPiha/eyeZt4WO72P+kAbHUQB7GvLEzD+nSasNV7j1
-X-Gm-Message-State: AOJu0YxgGHdDhswjVuAFnibR5OR1LVyhFO6IK+psiUp9hq0ENid3lQEs
-	PH/Oy/9l0AhOKFEc2vRdyZZJXiR32/n+lVrFI0HoqmtiBjEizSFKBDBuWeUQxK+aIRYcKkANDqI
-	oviSTZ6FXGszfxlgOYe1kjpUXcYfEK1YN1V50cQ==
-X-Google-Smtp-Source: AGHT+IG35FL34FRkreasSN16iQ0A7ZizHlYBrbzNgWJgEIvCTWPg+r3aAeiuFzNZX9nNiJhrUEFDNT+VQtzT44Ma+pc=
-X-Received: by 2002:a05:690c:82e:b0:604:b08c:348d with SMTP id
- by14-20020a05690c082e00b00604b08c348dmr17415466ywb.1.1708551967845; Wed, 21
- Feb 2024 13:46:07 -0800 (PST)
+        d=1e100.net; s=20230601; t=1708551999; x=1709156799;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=7+QKepU2MbI4a/2CEG6x48g/5yOOaTqkeikoyN0HwE4=;
+        b=srVXXnKOYIaVMCtbYFaaElCcULMHeVWzQBMXYGR6XTSDo6bqj23BDMkGlMVLxG9PwG
+         n1kphbIOff63J5n7ssQ/TuNj5EzGd0yc6dB64/Ul1GtclCqwdhcSfiff4Y8I5ub4FgKS
+         TFJA0ZnzR0Ckm98LK5O4H9/VYNA5KGRn+f9vaefCoH876rtfP1ouPYnYPOEJoInLLgHS
+         /WR4NBHc/RVTkDPAJDj7nOpbbtYLndGb1E/B/2/VJlhN1FV1L5Sq1S04ohb1mzXMExWQ
+         mCq0IafYDMrt27D3vFC6pDISzghhzaOGrm9cKZF66uop1z7mp7dThOThrFX4Br5iOpYQ
+         7bNA==
+X-Forwarded-Encrypted: i=1; AJvYcCXGiMpLtGGAzd4U578prXf4K3lmzYwrkunP5O6vswgvD3QJGl6Xy1qEZ0aXuHZbSVqAl3fLyesANq9Szfka3rDMkAfD0Su53xn1JXPN
+X-Gm-Message-State: AOJu0Yy3iauk+S9oxdFAN4BDyyt7zq0DenMPcvD6szXNOFNerWLwgX7m
+	w5gYgR5SZ6oKlw6tZcj771JtYDDUkVnkWUmGU8Qw2/3nuWt3t34oc4orEdMX5g==
+X-Google-Smtp-Source: AGHT+IFBUZzWY7+Gyh4073StMQynW71O1XhzOlaNGslbtvVVdGagjjqiCcd5gNO5djx/h05+c4TUWg==
+X-Received: by 2002:a05:6e02:c6f:b0:364:2406:992e with SMTP id f15-20020a056e020c6f00b003642406992emr20453456ilj.23.1708551998951;
+        Wed, 21 Feb 2024 13:46:38 -0800 (PST)
+Received: from localhost (147.220.222.35.bc.googleusercontent.com. [35.222.220.147])
+        by smtp.gmail.com with UTF8SMTPSA id b11-20020a05663801ab00b00473e844f978sm456921jaq.32.2024.02.21.13.46.38
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 21 Feb 2024 13:46:38 -0800 (PST)
+Date: Wed, 21 Feb 2024 21:46:38 +0000
+From: Matthias Kaehlcke <mka@chromium.org>
+To: Javier Carrasco <javier.carrasco@wolfvision.net>
+Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Helen Koike <helen.koike@collabora.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Russell King <linux@armlinux.org.uk>,
+	linux-sound@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+	dri-devel@lists.freedesktop.org,
+	linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v4 6/8] usb: misc: onboard_dev: use device supply names
+Message-ID: <ZdZvPiEVKgciB-cg@google.com>
+References: <20240220-onboard_xvf3500-v4-0-dc1617cc5dd4@wolfvision.net>
+ <20240220-onboard_xvf3500-v4-6-dc1617cc5dd4@wolfvision.net>
+ <ZdZcLOlSc3FScjLK@google.com>
+ <503d9ea9-9812-498b-a5ee-2579ba8a7ecf@wolfvision.net>
+ <ZdZokatitviYZ7rg@google.com>
+ <6a4f1862-ccb1-4d6d-bab2-f22090a1a08b@wolfvision.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240214084419.6194-1-brgl@bgdev.pl> <4a08c610-c249-4b56-b09c-09e1fd07f723@paulmck-laptop>
- <CAMRc=McXr_3OD6Uf+PKD-wLQfJKJSWes3fh_ZD9fnrPyF9GoSQ@mail.gmail.com>
-In-Reply-To: <CAMRc=McXr_3OD6Uf+PKD-wLQfJKJSWes3fh_ZD9fnrPyF9GoSQ@mail.gmail.com>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Wed, 21 Feb 2024 22:45:56 +0100
-Message-ID: <CACRpkdZd0FVSee-PbNdW8+fmkvV802jS45xLk4Of8-+WseiZxg@mail.gmail.com>
-Subject: Re: [PATCH v2 0/4] gpio: fix SRCU bugs
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: paulmck@kernel.org, Kent Gibson <warthog618@gmail.com>, Alex Elder <elder@linaro.org>, 
-	Geert Uytterhoeven <geert+renesas@glider.be>, 
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Wolfram Sang <wsa@the-dreams.de>, 
-	Mark Brown <broonie@kernel.org>, Dan Carpenter <dan.carpenter@linaro.org>, 
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <6a4f1862-ccb1-4d6d-bab2-f22090a1a08b@wolfvision.net>
 
-On Wed, Feb 14, 2024 at 8:08=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.pl>=
- wrote:
+On Wed, Feb 21, 2024 at 10:33:53PM +0100, Javier Carrasco wrote:
+> On 21.02.24 22:18, Matthias Kaehlcke wrote:
+> >>>> +/*
+> >>>> + * Fallback supply names for backwards compatibility. If the device requires
+> >>>> + * more than the currently supported supplies, add a new one here, and if
+> >>>> + * possible, the real name supplies to the device-specific data.
+> >>>> + */
+> >>>> +static const char * const generic_supply_names[] = {
+> >>>> +	"vdd",
+> >>>> +	"vdd2",
+> >>>> +};
+> >>>> +
+> >>>> +#define MAX_SUPPLIES ARRAY_SIZE(generic_supply_names)
+> >>>
+> >>> This will have to change when support for a device with more than 2 non-generic
+> >>> supply names gets added. Please use a literal value for MAX_SUPPLIES instead of
+> >>> ARRAY_SIZE. If the literal is 2 it would still need to change for future devices
+> >>> with more supplies, but that change would be more straighforward.
+> >>>
+> >>
+> >> I am not completely sure about this. Someone could increase MAX_SUPPLIES
+> >> without adding a generic name.
+> > 
+> > That's perfectly fine and intended. MAX_SUPPLIES is a max, any list
+> > shorther than that is valid. Any longer list will result in probe()
+> > being aborted with a clear error message.
+> > 
+> >> Actually two modifications will be necessary for every addition (name
+> >> and MAX_SUPPLIES). If ARRAY_SIZE is used, only new names are required,
+> >> and MAX_SUPPLIES is automatically increased.
+> > 
+> > As per above it's not necessary to add a new name when MAX_SUPPLIES is
+> > increased to support more non-generic names. It would only be necessary
+> > if more generic names were added, my understanding is that this
+> > should not happen because any newly supported onboard devices are
+> > supposed to use device specific supply names. I don't like to idea of
+> > adding unused pseudo supply names to the list, just for the sake of
+> > using ARRAY_SIZE.
+> > 
+> >> I understand that the whole point of this is getting rid of the generic
+> >> names, but we still have to provide generic names for every extra
+> >> supply, at least for code consistency and to avoid size mismatches
+> >> between real an generic supply names.
+> > 
+> > Please let me know if you still think the extra names are needed.
+> 
+> Not really, the only case I could come up is if an existing device that
+> uses generic names might end up requiring a third supply, which would
+> also be generic. But even such an unlikely event would be cover without
+> ARRAY_SIZE.
+> 
+> Actually one could argue that every existing device could have "vdd" and
+> "vdd2" as their supply names and remove checks and the generic array.
 
-> Unfortunately, it's hard to fix 15 years of technical debt. :(
-
-If it's any consolation I didn't create this one technical debt on purpose.
-
-The actual mistake creating it goes something like: /dev/gpiochipN files ar=
-e
-nice and we can clean up after a file handle is closed or terminated,
-I wonder why people insist on using sysfs for so many things.
-
-All the file semantics of handles going away by being used etc, that's
-why sysfs is good. I was too inexperienced to understand that, or I would
-have paid more attention...
-
-Yet I think we ended up in a reasonable place.
-
-Yours,
-Linus Walleij
+Sounds good to me. Another similar option would be to assign
+'generic_supply_names' to '.supply_names'. I don't have a strong
+preference.
