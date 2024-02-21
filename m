@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D3BE42A8B
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DCD684A26
 	for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 18:10:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708539031; cv=none; b=UMg514YH2UL3TuTFUPg0rwxE1pGZtrP3tuEFl8qnDvnR/T+X3z1lwN7GN0QxlzCwyJP+Csd4cmApyaqkYIjfApVHarFySwy6kleUm6Te5yCi/jeC+Z1oWUMnylyeV3+9r7Rj9HhNG4h1jd2K+E2AOQ0jkEW0d3AR8JzMEz3UMSw=
+	t=1708539031; cv=none; b=QTA2d6Vgfv/9U5g6Pi9s7amYqmDJ8L52ITZeywtwJr03gGjVZnGaa82dvCS1SdYGui8jQeE1aWr2a1xb2Sm4UERvMExzH0LVKFD6wmfNkaheV3sO9ScmgyqZZPGJzF82DaA/wOmyJcFfCUqwg+XehyrU0wig6A1OKmjW2iDwLsQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1708539031; c=relaxed/simple;
-	bh=LSFSDBN2BbV4Ss6DjtJcV5DIXFbLDO9Oe2KGI/JU90s=;
+	bh=m+WgYxlYIKix88Gefl0qOHfj0XJUP9gj9mnEbpOqYwk=;
 	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=Hngq2TXvLCQimsTWq0tDVzG3GxMpLuYxKSf896cRErU+X9Ek/+mvzy9lhroLrIsF2tSlY9WG/s8qxlY/nezbyLOIzw6zhgj/Nz+1nqNAB1KZiVE4DN07hK4ZqnfSVmmVpbv0ruAQ3WPkUJDe7b8OeJSwA+wFdqAP4xNjcQ+5sd4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bsQmEVwU; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=lrmd+zT6JZeCS88+GMROGsXRCBlZjBVz0TuSiug7TCcxLyJWH++IAEXWssIGgder15njlHanNCu/11NskslD3JzpQ8tqp+S4QILYcQhvpxOuy8/056+ddFUqQOqJQVrJBK8mh0KxvWDXi4ykdAGJ+HWd/K5koe18WvX54p9lrj8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PuLDK1fF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bsQmEVwU"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 0663AC43390;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PuLDK1fF"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 102F8C43399;
 	Wed, 21 Feb 2024 18:10:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1708539031;
-	bh=LSFSDBN2BbV4Ss6DjtJcV5DIXFbLDO9Oe2KGI/JU90s=;
+	bh=m+WgYxlYIKix88Gefl0qOHfj0XJUP9gj9mnEbpOqYwk=;
 	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=bsQmEVwUXjdVtTfsHXMUs1WEBqVwsmHT8htXjGEvXEOXUWUnwM4MYrT/DJBoRSEC/
-	 El3PxgYnfxjxK9B4bhz5NCiVE3T+/TIsWVdMYZzfnCGYcuI/ObVQ6qRQgMlw+WzTJY
-	 aNgbubCBLz+isAtPWE9MfC93bMK1GAm0uQi4Ra/q9xKTCDWo4AmNr488MI2m3aXNru
-	 qMjhpCLETG2UQ5AObHkcENTrb9YE9PPxGKdH0h4TEwXhwPgjRuawt9vvBZdLhq0pA6
-	 wSUHcqrameM/Jaks5n3KiRD7bNftWPs0QH9hfQPKdbG+iNADWdkJh0wwU3I7IbzgN4
-	 Xh6/qMG6+Tsfg==
+	b=PuLDK1fF7Z7eEJ/258n6I6WDfnqCl2/fyH+dUS6tLkQ9xxUpIZHaQKwI8UTrponrL
+	 MuUly7g0fl2X1yfRSQG5esKwtyO2KaBu1xkSZhj1/WsULNjY8JNbG4lp2PeuIGKEUz
+	 +FtMrn8C2SvwBX5HAWRRfy6HEv29Sbr+en0D8lKXCA92Yi72+Ac6ETZ4TsSZ8D+Kos
+	 oCc3npGr2JUd+m3FNFgnt1KlaPGx93QZsMDf0KPVTZOdhQzbfr1FRgu73QvaI1jQcq
+	 POiBC/yV0zP8Xqk6QMexhLj9jVzVQ2gd4UM3H0wgjZlrSbxMdR+u2ymVEZVWriHarv
+	 snVmisN3++14g==
 Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id E1581D84BCD;
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id EA033D84BCC;
 	Wed, 21 Feb 2024 18:10:30 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
@@ -37,38 +37,36 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [f2fs-dev] [PATCH v3 1/2] f2fs: separate f2fs_gc_range() to use GC
- for a range
+Subject: Re: [f2fs-dev] [PATCH] f2fs: support SEEK_DATA and SEEK_HOLE for
+ compression files
 From: patchwork-bot+f2fs@kernel.org
 Message-Id: 
- <170853903091.7043.10526328421276609740.git-patchwork-notify@kernel.org>
+ <170853903095.7043.8191554159559684336.git-patchwork-notify@kernel.org>
 Date: Wed, 21 Feb 2024 18:10:30 +0000
-References: <20240213173812.1432663-1-daeho43@gmail.com>
-In-Reply-To: <20240213173812.1432663-1-daeho43@gmail.com>
+References: <20240215201633.2365333-1-daeho43@gmail.com>
+In-Reply-To: <20240215201633.2365333-1-daeho43@gmail.com>
 To: Daeho Jeong <daeho43@gmail.com>
 Cc: linux-kernel@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net,
- kernel-team@android.com, jaegeuk@kernel.org, daehojeong@google.com
+ kernel-team@android.com, daehojeong@google.com
 
 Hello:
 
-This series was applied to jaegeuk/f2fs.git (dev)
+This patch was applied to jaegeuk/f2fs.git (dev)
 by Jaegeuk Kim <jaegeuk@kernel.org>:
 
-On Tue, 13 Feb 2024 09:38:11 -0800 you wrote:
+On Thu, 15 Feb 2024 12:16:33 -0800 you wrote:
 > From: Daeho Jeong <daehojeong@google.com>
 > 
-> Make f2fs_gc_range() an extenal function to use it for GC for a range.
+> Fix to support SEEK_DATA and SEEK_HOLE for compression files
 > 
 > Signed-off-by: Daeho Jeong <daehojeong@google.com>
-> Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
-> 
-> [...]
+> ---
+>  fs/f2fs/file.c | 21 ++++++++++++++++++---
+>  1 file changed, 18 insertions(+), 3 deletions(-)
 
 Here is the summary with links:
-  - [f2fs-dev,v3,1/2] f2fs: separate f2fs_gc_range() to use GC for a range
-    https://git.kernel.org/jaegeuk/f2fs/c/50581e3bda8f
-  - [f2fs-dev,v3,2/2] f2fs: support file pinning for zoned devices
-    https://git.kernel.org/jaegeuk/f2fs/c/2fded30d8dce
+  - [f2fs-dev] f2fs: support SEEK_DATA and SEEK_HOLE for compression files
+    https://git.kernel.org/jaegeuk/f2fs/c/ef952ede4a7b
 
 You are awesome, thank you!
 -- 
