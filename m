@@ -1,160 +1,342 @@
-Received: from mail-yb1-f178.google.com (mail-yb1-f178.google.com [209.85.219.178])
+Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A63A85958;
-	Wed, 21 Feb 2024 20:25:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B70C42A8E
+	for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 20:27:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708547145; cv=none; b=CK9hIprvKLoxuh/ciZlvw/bskDc71VqBCVABOguiAQZOxD6kfuYF82RTTW2SXtFxz15YXWA+xSuVUoAdpgh+5P+e8ETLpiRdaBQbKZwaBiWfZ1kAynslmz3EERw3bX9dQ/6a3sBt9QeEq3Ze2PrHXTYCuQnxwT3YuihtIvWRyk4=
+	t=1708547228; cv=none; b=JP2l0uq2pVWqz21uVgAETfX1TQlhsc4YgkrASMoOgPR9lJbNFIPHZfJXGMw1jKUL21H+w60d6VEi4pp0KLNVgjNFI5hpjYJ9as5auiL44ndRaAvPYWoTInagjffuDbhegAvIPwMcAQmgI2FKf586HBETLyCGq1P/4W06El2FhJ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708547145; c=relaxed/simple;
-	bh=ctqglnnCAjYhrU7DgoFcCYpe21K+LqH9msD+JxCEk8I=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=G1fB5bGYpKLnQURZ9fqXLszzzd4WZpv2Z21mWVqfCELa/XF5Dd8X0BidG1y7OJk2Q3ezKzZOvEmVp+tTzjZyDAjWB8n6Vu52F1RCDhXSO/kg0ak+iwUpy5u1dwu43wMCsOwq4AQ+Rfgtoq9NX6AAkgUXBadVHq/c853RdhFLgCw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CXJvB53F; arc=none smtp.client-ip=209.85.219.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1708547228; c=relaxed/simple;
+	bh=3j03Qb0xtShAH05XRNVvgv/2gAOfWYxJvB9YxzR5lhg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=YnUN78loVYHjc0O+TDqO+DJdRRqHRs0pJvAd4aKkCzwvJMw+4pY391suUWloOUK3oY/yYIYItVY/QrZnNdosxTzzPYj7XsZEIx0gX4D+532RgQUJhc3MvLk5Vm1hIrDAtcOl9ArnPkMHMsNAXi5Zqo2DWNvCwWQn5IcBvt+vb00=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=BqN+db4E; arc=none smtp.client-ip=209.85.208.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CXJvB53F"
-Received: by mail-yb1-f178.google.com with SMTP id 3f1490d57ef6-dcc7cdb3a98so7347067276.2;
-        Wed, 21 Feb 2024 12:25:43 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BqN+db4E"
+Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-5650c27e352so38a12.0
+        for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 12:27:05 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1708547142; x=1709151942; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=KUZZ04EW9/qUv3qL29C/Oq6T36PR4Q6EbgcYZzQ1nWg=;
-        b=CXJvB53FdF2inK8jk9wO2zptQSqDu+Zxhe3+4/pIN1AY7sFtJ1Pk8QAcId214t79od
-         HF+YAY2kLt26GZ/8tKP3vXlxmb2rWXpKTqVCGxuQx3BmK4S0da2XtlQa2oGddEA6vo+A
-         XmXXIm7yaLBlIAGgJfjaCU9cwdgehlCTAeoUkTDDr6i4CANDXjFLzjaJqMfjjFjuZrgg
-         6EMbYDF/pacSNmj7Uhc43mlc8RytVfwmye/sGndpiZSzXPoz9jOiKe376nVyEfBycMKB
-         u7DhtFsJYxZ/wPEQlcSQ2DxTc6Ze7c6e5I6hFy3j9wvKFA4Qvb3BHC1EM6Qny0aKeanD
-         ofVg==
+        d=google.com; s=20230601; t=1708547224; x=1709152024; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=LVMC4eb66pNSxPeBaeLVvkGzXsMPDRJGzt+F/nlnaOI=;
+        b=BqN+db4EtI0L3LKiFaoRPsTVeR5F0Sw1fOpll0x9Hxv40VIrAlF4bmRWsnMIxQMN5r
+         1hrqQUyor8OO2z92zNcHEsXofA9+h+CriToLGQSyj5+Py7nJsmVtS6ECPfO74dqss21N
+         sZEz5hEymHc7TtdmmrGRc4TnEEfGyxGxuDsN6uI0BAf7IuyW6f7qOpMlE2ahk4pDXcI5
+         w6xDfa8rGrFy5gDmPg+pW2+pnlTR4OcuAvzJf5Bgkpp8c7QMsqXR2DcZ3cM78BABwyl0
+         9wx+UN9+t36GblJSlOwgrPnEO3ubgEUe9alCrVz0clV5V0/f6SonQXU+aAxXdQ22jYCB
+         MH/g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708547142; x=1709151942;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=KUZZ04EW9/qUv3qL29C/Oq6T36PR4Q6EbgcYZzQ1nWg=;
-        b=ZYiLcqP8Eh0plARBI8zkjPWq0/X1WQt42I6TyRfIrMFl+2uYXWfC0f1JBqRU/SdCAY
-         Z12470ai2RvrzCRRvn1WXQgQfMPTmYWxymhidwd6V4YrDDg46ImKk3UQIhOu/tLwft4s
-         sPoDjj0GBcULLxt11p8JO8xsit+DfLymBE8XF7wP3C6bcb29JiSDWz5zI0FQvuB4zVTw
-         vLUqw34XxSe+9H6Hk7o+mlGoqEdeAbKT6AWC7PeBnIw816PNIRKW3LLWnuJtsBrS3ilj
-         2dzWC0P0wmqzNHBDkOQJnrIuv2tqVzGWt318yWhblVaSOy3c9+h4Izla94pdCLeWSG8Z
-         vnYg==
-X-Forwarded-Encrypted: i=1; AJvYcCXOuIpvE5g86kH2IFKZlvjQRNuQVtImbh+wE2dAhAOv4fghoIpfInBQztIA0lokalOS6dlEcN2CadVsayad998XjAlMk3Yzxla/qO+baw1LznXjttK6LCjBYEX+WuINQVbYGYFS6M8WNLhrh6Vq8urSZNDwgOewMYxLTEKgxlrwcX4TN/EfPponbzxJMXMPG/PDgyEc8jdpLPAhc0L+wytkvAqq06xF5BNLYltCBugdatoGWVvM8+YgUc8zH5xobjaJLbw=
-X-Gm-Message-State: AOJu0YzV1y/KGW6NlgEMnz0XxfOsWrfh3Tc06CFG3revtGvcBPbvhw8W
-	LBqoCzdcD6a/jQKEpb/MjXlWog1lUpu6q55jIhZvPpPPjKnkOmvc5ddMGG+ZgsvuG4bhb5dIVwG
-	PNmiCCraExD+nhPcha9qpXT490QU=
-X-Google-Smtp-Source: AGHT+IHulW4fhdXYsgZSX5RqxAxS95jeQrXQWkLqG01c1LAdpuKIFalEI/fkzodUlC0P2/EUntFG0c+fYBgzVA4WA2w=
-X-Received: by 2002:a25:1f8b:0:b0:dc7:46ef:8b9e with SMTP id
- f133-20020a251f8b000000b00dc746ef8b9emr389206ybf.29.1708547142617; Wed, 21
- Feb 2024 12:25:42 -0800 (PST)
+        d=1e100.net; s=20230601; t=1708547224; x=1709152024;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=LVMC4eb66pNSxPeBaeLVvkGzXsMPDRJGzt+F/nlnaOI=;
+        b=nlznNtcRiQeGK1oB3LVHi3A9MuKilGgPO3oYgFhYEnGUKS4lVs95BxXLME/SjI6Ccb
+         ZllhqW0Cuqe247x8zGOwjME9HUuLqdX8p83m5KHDE8U/fDgKBac9wefxP127lDL8cRXq
+         carXvNa9ZsmjFFJyfJSTaNT7pAA1O7IRUwNtwRmqRG44IbB2tEDNawz60myR/AnrRic6
+         5WapRw+IWxGYFfktGfWKyHdGiFaF9QMg5sYyfoEst6ZSdJRw60krdsUCJFgejcGOQ4Vl
+         woh6f6YVU3DkyOvt39XacpxoGmJawm/6TT663Dnqe64BzIQIhIUu+ciDyglxIbmqujqG
+         fLag==
+X-Forwarded-Encrypted: i=1; AJvYcCW3UVR7FA1vo1HQUaWM7fhjd3DDvTDGnxfGVNvX/caSSrxqx6yUE+LOzNef+DsgNhdT7mxw/pa+1sI2bmTfS0p5mCie5USWbTXhZ0dt
+X-Gm-Message-State: AOJu0YwaDSQLiwSRy++YgNvMNC5X+t0KwA1GDMmusLzow2e3R5HRCAIw
+	zby75QLMVJ1Zic+0XGwqv0J4FqqfBu2yV1mTf8GwkT79AFz3+TFHQOFuS4/a4w==
+X-Google-Smtp-Source: AGHT+IGjx+evP+twUluQUI6O+JiuvrpCAU/fVnlCmHOMImFnPwTJ7Sz9pQMXDaki4rJG2oSqaNnNDw==
+X-Received: by 2002:a50:c30f:0:b0:564:55e5:6ee1 with SMTP id a15-20020a50c30f000000b0056455e56ee1mr261447edb.2.1708547224123;
+        Wed, 21 Feb 2024 12:27:04 -0800 (PST)
+Received: from localhost ([2a02:168:96c5:1:2c31:2431:3037:f162])
+        by smtp.gmail.com with ESMTPSA id k3-20020a056000004300b0033b79d385f6sm17912611wrx.47.2024.02.21.12.27.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 21 Feb 2024 12:27:03 -0800 (PST)
+From: Jann Horn <jannh@google.com>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Masahiro Yamada <masahiroy@kernel.org>,
+	Nick Desaulniers <ndesaulniers@google.com>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Zhen Lei <thunder.leizhen@huawei.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	linux-kernel@vger.kernel.org,
+	linux-kbuild@vger.kernel.org,
+	Jann Horn <jannh@google.com>
+Subject: [PATCH 1/2] kallsyms: get rid of code for absolute kallsyms
+Date: Wed, 21 Feb 2024 21:26:53 +0100
+Message-ID: <20240221202655.2423854-1-jannh@google.com>
+X-Mailer: git-send-email 2.44.0.rc0.258.g7320e95886-goog
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240220235415.GP4163@brightrain.aerifal.cx> <a57d6c7eada4b9a7c35addbc8556f5b53a0c3e6f.camel@intel.com>
- <20240221012736.GQ4163@brightrain.aerifal.cx> <d18f060d-37ac-48b1-9f67-a5c5db79b34e@sirena.org.uk>
- <20240221145800.GR4163@brightrain.aerifal.cx> <4a3809e8-61b2-4341-a868-292ba6e64e8a@sirena.org.uk>
- <20240221175717.GS4163@brightrain.aerifal.cx> <f4a54297767eb098d903404cbe8860d655d79bed.camel@intel.com>
- <20240221183055.GT4163@brightrain.aerifal.cx> <c3085fbe10193dfe59b25bc7da776e60779b0e8c.camel@intel.com>
- <20240221190639.GU4163@brightrain.aerifal.cx> <e3a432c0fa9f5fe837e9d2fc7b36304709a34428.camel@intel.com>
- <CAMe9rOoUO-D7Uoj9s3eq+w9pJBZ=iucEDpU4hqtJYtPmW5T4dQ@mail.gmail.com>
-In-Reply-To: <CAMe9rOoUO-D7Uoj9s3eq+w9pJBZ=iucEDpU4hqtJYtPmW5T4dQ@mail.gmail.com>
-From: "H.J. Lu" <hjl.tools@gmail.com>
-Date: Wed, 21 Feb 2024 12:25:06 -0800
-Message-ID: <CAMe9rOr1frpnKSnVQrqeiKK3aAR3xpG=VAiPYLOR9OpHnHhYUw@mail.gmail.com>
-Subject: Re: [musl] Re: [PATCH v8 00/38] arm64/gcs: Provide support for GCS in userspace
-To: "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>
-Cc: "dalias@libc.org" <dalias@libc.org>, 
-	"linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>, 
-	"suzuki.poulose@arm.com" <suzuki.poulose@arm.com>, "Szabolcs.Nagy@arm.com" <Szabolcs.Nagy@arm.com>, 
-	"musl@lists.openwall.com" <musl@lists.openwall.com>, 
-	"linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>, 
-	"linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>, 
-	"kvmarm@lists.linux.dev" <kvmarm@lists.linux.dev>, "corbet@lwn.net" <corbet@lwn.net>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
-	"catalin.marinas@arm.com" <catalin.marinas@arm.com>, "broonie@kernel.org" <broonie@kernel.org>, 
-	"oliver.upton@linux.dev" <oliver.upton@linux.dev>, "palmer@dabbelt.com" <palmer@dabbelt.com>, 
-	"debug@rivosinc.com" <debug@rivosinc.com>, "aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>, 
-	"shuah@kernel.org" <shuah@kernel.org>, "arnd@arndb.de" <arnd@arndb.de>, "maz@kernel.org" <maz@kernel.org>, 
-	"oleg@redhat.com" <oleg@redhat.com>, "fweimer@redhat.com" <fweimer@redhat.com>, 
-	"keescook@chromium.org" <keescook@chromium.org>, "james.morse@arm.com" <james.morse@arm.com>, 
-	"ebiederm@xmission.com" <ebiederm@xmission.com>, "will@kernel.org" <will@kernel.org>, 
-	"brauner@kernel.org" <brauner@kernel.org>, 
-	"linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>, 
-	"paul.walmsley@sifive.com" <paul.walmsley@sifive.com>, "ardb@kernel.org" <ardb@kernel.org>, 
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, 
-	"linux-mm@kvack.org" <linux-mm@kvack.org>, 
-	"thiago.bauermann@linaro.org" <thiago.bauermann@linaro.org>, 
-	"akpm@linux-foundation.org" <akpm@linux-foundation.org>, "sorear@fastmail.com" <sorear@fastmail.com>, 
-	"linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Wed, Feb 21, 2024 at 12:18=E2=80=AFPM H.J. Lu <hjl.tools@gmail.com> wrot=
-e:
->
-> On Wed, Feb 21, 2024 at 11:22=E2=80=AFAM Edgecombe, Rick P
-> <rick.p.edgecombe@intel.com> wrote:
-> >
-> > On Wed, 2024-02-21 at 14:06 -0500, dalias@libc.org wrote:
-> > > Due to arbitrarily nestable signal frames, no, this does not suffice.
-> > > An interrupted operation using the lock could be arbitrarily delayed,
-> > > even never execute again, making any call to dlopen deadlock.
-> >
-> > Doh! Yep, it is not robust to this. The only thing that could be done
-> > would be a timeout in dlopen(). Which would make the whole thing just
-> > better than nothing.
-> >
-> > >
-> > > >
-> > >
-> > > It's fine to turn RDSSP into an actual emulated read of the SSP, or
-> > > at
-> > > least an emulated load of zero so that uninitialized data is not left
-> > > in the target register.
-> >
-> > We can't intercept RDSSP, but it becomes a NOP by default. (disclaimer
-> > x86-only knowledge).
-> >
-> > >  If doing the latter, code working with the
-> > > shadow stack just needs to be prepared for the possibility that it
-> > > could be async-disabled, and check the return value.
-> > >
-> > > I have not looked at all the instructions that become #UD but I
-> > > suspect they all have reasonable trivial ways to implement a
-> > > "disabled" version of them that userspace can act upon reasonably.
-> >
-> > This would have to be thought through functionally and performance
-> > wise. I'm not opposed if can come up with a fully fleshed out plan. How
-> > serious are you in pursuing musl support, if we had something like
-> > this?
-> >
-> > HJ, any thoughts on whether glibc would use this as well?
->
-> Assuming that we are talking about permissive mode,  if kernel can
-> suppress UD, we don't need to disable SHSTK.   Glibc can enable
-> ARCH_SHSTK_SUPPRESS_UD instead.
+To compile code for absolute kallsyms, you had to turn off
+KALLSYMS_BASE_RELATIVE. I think based on the way it was declared in
+Kconfig (without a string after "bool"), it wasn't even possible to
+select it.
 
-Kernel must suppress all possible SHSTK UDs.
+Get rid of this config option, as preparation for some kallsyms
+optimizations that would otherwise be infeasible.
 
-> > It is probably worth mentioning that from the security side (as Mark
-> > mentioned there is always tension in the tradeoffs on these features),
-> > permissive mode is seen by some as something that weakens security too
-> > much. Apps could call dlopen() on a known unsupported DSO before doing
-> > ROP. I don't know if you have any musl users with specific shadow stack
-> > use cases to ask about this.
->
->
->
-> --
-> H.J.
+Signed-off-by: Jann Horn <jannh@google.com>
+---
+ init/Kconfig                        | 18 -------
+ kernel/crash_core.c                 |  4 --
+ kernel/kallsyms.c                   | 10 +---
+ kernel/kallsyms_internal.h          |  1 -
+ scripts/kallsyms.c                  | 78 ++++++++++++-----------------
+ scripts/link-vmlinux.sh             |  4 --
+ tools/perf/tests/vmlinux-kallsyms.c |  1 -
+ 7 files changed, 34 insertions(+), 82 deletions(-)
 
+diff --git a/init/Kconfig b/init/Kconfig
+index 8426d59cc634..ef525aacfc4c 100644
+--- a/init/Kconfig
++++ b/init/Kconfig
+@@ -1791,24 +1791,6 @@ config KALLSYMS_ABSOLUTE_PERCPU
+ 	depends on KALLSYMS
+ 	default X86_64 && SMP
+ 
+-config KALLSYMS_BASE_RELATIVE
+-	bool
+-	depends on KALLSYMS
+-	default y
+-	help
+-	  Instead of emitting them as absolute values in the native word size,
+-	  emit the symbol references in the kallsyms table as 32-bit entries,
+-	  each containing a relative value in the range [base, base + U32_MAX]
+-	  or, when KALLSYMS_ABSOLUTE_PERCPU is in effect, each containing either
+-	  an absolute value in the range [0, S32_MAX] or a relative value in the
+-	  range [base, base + S32_MAX], where base is the lowest relative symbol
+-	  address encountered in the image.
+-
+-	  On 64-bit builds, this reduces the size of the address table by 50%,
+-	  but more importantly, it results in entries whose values are build
+-	  time constants, and no relocation pass is required at runtime to fix
+-	  up the entries based on the runtime load address of the kernel.
+-
+ # end of the "standard kernel features (expert users)" menu
+ 
+ config ARCH_HAS_MEMBARRIER_CALLBACKS
+diff --git a/kernel/crash_core.c b/kernel/crash_core.c
+index 75cd6a736d03..1e72e65ca344 100644
+--- a/kernel/crash_core.c
++++ b/kernel/crash_core.c
+@@ -817,12 +817,8 @@ static int __init crash_save_vmcoreinfo_init(void)
+ 	VMCOREINFO_SYMBOL(kallsyms_num_syms);
+ 	VMCOREINFO_SYMBOL(kallsyms_token_table);
+ 	VMCOREINFO_SYMBOL(kallsyms_token_index);
+-#ifdef CONFIG_KALLSYMS_BASE_RELATIVE
+ 	VMCOREINFO_SYMBOL(kallsyms_offsets);
+ 	VMCOREINFO_SYMBOL(kallsyms_relative_base);
+-#else
+-	VMCOREINFO_SYMBOL(kallsyms_addresses);
+-#endif /* CONFIG_KALLSYMS_BASE_RELATIVE */
+ #endif /* CONFIG_KALLSYMS */
+ 
+ 	arch_crash_save_vmcoreinfo();
+diff --git a/kernel/kallsyms.c b/kernel/kallsyms.c
+index 18edd57b5fe8..db9bd5ff6383 100644
+--- a/kernel/kallsyms.c
++++ b/kernel/kallsyms.c
+@@ -148,9 +148,6 @@ static unsigned int get_symbol_offset(unsigned long pos)
+ 
+ unsigned long kallsyms_sym_address(int idx)
+ {
+-	if (!IS_ENABLED(CONFIG_KALLSYMS_BASE_RELATIVE))
+-		return kallsyms_addresses[idx];
+-
+ 	/* values are unsigned offsets if --absolute-percpu is not in effect */
+ 	if (!IS_ENABLED(CONFIG_KALLSYMS_ABSOLUTE_PERCPU))
+ 		return kallsyms_relative_base + (u32)kallsyms_offsets[idx];
+@@ -326,12 +323,9 @@ static unsigned long get_symbol_pos(unsigned long addr,
+ 	unsigned long i, low, high, mid;
+ 
+ 	/* This kernel should never had been booted. */
+-	if (!IS_ENABLED(CONFIG_KALLSYMS_BASE_RELATIVE))
+-		BUG_ON(!kallsyms_addresses);
+-	else
+-		BUG_ON(!kallsyms_offsets);
++	BUG_ON(!kallsyms_offsets);
+ 
+-	/* Do a binary search on the sorted kallsyms_addresses array. */
++	/* Do a binary search on the sorted kallsyms_offsets array. */
+ 	low = 0;
+ 	high = kallsyms_num_syms;
+ 
+diff --git a/kernel/kallsyms_internal.h b/kernel/kallsyms_internal.h
+index 27fabdcc40f5..451a38b88db9 100644
+--- a/kernel/kallsyms_internal.h
++++ b/kernel/kallsyms_internal.h
+@@ -8,7 +8,6 @@
+  * These will be re-linked against their real values
+  * during the second link stage.
+  */
+-extern const unsigned long kallsyms_addresses[] __weak;
+ extern const int kallsyms_offsets[] __weak;
+ extern const u8 kallsyms_names[] __weak;
+ 
+diff --git a/scripts/kallsyms.c b/scripts/kallsyms.c
+index 653b92f6d4c8..f35be95adfbe 100644
+--- a/scripts/kallsyms.c
++++ b/scripts/kallsyms.c
+@@ -6,7 +6,7 @@
+  * of the GNU General Public License, incorporated herein by reference.
+  *
+  * Usage: kallsyms [--all-symbols] [--absolute-percpu]
+- *                         [--base-relative] [--lto-clang] in.map > out.S
++ *                         [--lto-clang] in.map > out.S
+  *
+  *      Table compression uses all the unused char codes on the symbols and
+  *  maps these to the most used substrings (tokens). For instance, it might
+@@ -63,7 +63,6 @@ static struct sym_entry **table;
+ static unsigned int table_size, table_cnt;
+ static int all_symbols;
+ static int absolute_percpu;
+-static int base_relative;
+ static int lto_clang;
+ 
+ static int token_profit[0x10000];
+@@ -76,7 +75,7 @@ static unsigned char best_table_len[256];
+ static void usage(void)
+ {
+ 	fprintf(stderr, "Usage: kallsyms [--all-symbols] [--absolute-percpu] "
+-			"[--base-relative] [--lto-clang] in.map > out.S\n");
++			"[--lto-clang] in.map > out.S\n");
+ 	exit(1);
+ }
+ 
+@@ -484,54 +483,43 @@ static void write_src(void)
+ 		printf("\t.short\t%d\n", best_idx[i]);
+ 	printf("\n");
+ 
+-	if (!base_relative)
+-		output_label("kallsyms_addresses");
+-	else
+-		output_label("kallsyms_offsets");
++	output_label("kallsyms_offsets");
+ 
+ 	for (i = 0; i < table_cnt; i++) {
+-		if (base_relative) {
+-			/*
+-			 * Use the offset relative to the lowest value
+-			 * encountered of all relative symbols, and emit
+-			 * non-relocatable fixed offsets that will be fixed
+-			 * up at runtime.
+-			 */
++		/*
++		 * Use the offset relative to the lowest value
++		 * encountered of all relative symbols, and emit
++		 * non-relocatable fixed offsets that will be fixed
++		 * up at runtime.
++		 */
+ 
+-			long long offset;
+-			int overflow;
+-
+-			if (!absolute_percpu) {
+-				offset = table[i]->addr - relative_base;
+-				overflow = (offset < 0 || offset > UINT_MAX);
+-			} else if (symbol_absolute(table[i])) {
+-				offset = table[i]->addr;
+-				overflow = (offset < 0 || offset > INT_MAX);
+-			} else {
+-				offset = relative_base - table[i]->addr - 1;
+-				overflow = (offset < INT_MIN || offset >= 0);
+-			}
+-			if (overflow) {
+-				fprintf(stderr, "kallsyms failure: "
+-					"%s symbol value %#llx out of range in relative mode\n",
+-					symbol_absolute(table[i]) ? "absolute" : "relative",
+-					table[i]->addr);
+-				exit(EXIT_FAILURE);
+-			}
+-			printf("\t.long\t%#x	/* %s */\n", (int)offset, table[i]->sym);
+-		} else if (!symbol_absolute(table[i])) {
+-			output_address(table[i]->addr);
++		long long offset;
++		int overflow;
++
++		if (!absolute_percpu) {
++			offset = table[i]->addr - relative_base;
++			overflow = (offset < 0 || offset > UINT_MAX);
++		} else if (symbol_absolute(table[i])) {
++			offset = table[i]->addr;
++			overflow = (offset < 0 || offset > INT_MAX);
+ 		} else {
+-			printf("\tPTR\t%#llx\n", table[i]->addr);
++			offset = relative_base - table[i]->addr - 1;
++			overflow = (offset < INT_MIN || offset >= 0);
+ 		}
++		if (overflow) {
++			fprintf(stderr, "kallsyms failure: "
++				"%s symbol value %#llx out of range in relative mode\n",
++				symbol_absolute(table[i]) ? "absolute" : "relative",
++				table[i]->addr);
++			exit(EXIT_FAILURE);
++		}
++		printf("\t.long\t%#x	/* %s */\n", (int)offset, table[i]->sym);
+ 	}
+ 	printf("\n");
+ 
+-	if (base_relative) {
+-		output_label("kallsyms_relative_base");
+-		output_address(relative_base);
+-		printf("\n");
+-	}
++	output_label("kallsyms_relative_base");
++	output_address(relative_base);
++	printf("\n");
+ 
+ 	if (lto_clang)
+ 		for (i = 0; i < table_cnt; i++)
+@@ -813,7 +801,6 @@ int main(int argc, char **argv)
+ 		static const struct option long_options[] = {
+ 			{"all-symbols",     no_argument, &all_symbols,     1},
+ 			{"absolute-percpu", no_argument, &absolute_percpu, 1},
+-			{"base-relative",   no_argument, &base_relative,   1},
+ 			{"lto-clang",       no_argument, &lto_clang,       1},
+ 			{},
+ 		};
+@@ -834,8 +821,7 @@ int main(int argc, char **argv)
+ 	if (absolute_percpu)
+ 		make_percpus_absolute();
+ 	sort_symbols();
+-	if (base_relative)
+-		record_relative_base();
++	record_relative_base();
+ 	optimize_token_table();
+ 	write_src();
+ 
+diff --git a/scripts/link-vmlinux.sh b/scripts/link-vmlinux.sh
+index 7862a8101747..5127371d3393 100755
+--- a/scripts/link-vmlinux.sh
++++ b/scripts/link-vmlinux.sh
+@@ -157,10 +157,6 @@ kallsyms()
+ 		kallsymopt="${kallsymopt} --absolute-percpu"
+ 	fi
+ 
+-	if is_enabled CONFIG_KALLSYMS_BASE_RELATIVE; then
+-		kallsymopt="${kallsymopt} --base-relative"
+-	fi
+-
+ 	if is_enabled CONFIG_LTO_CLANG; then
+ 		kallsymopt="${kallsymopt} --lto-clang"
+ 	fi
+diff --git a/tools/perf/tests/vmlinux-kallsyms.c b/tools/perf/tests/vmlinux-kallsyms.c
+index 822f893e67d5..1bb91f2ec5ba 100644
+--- a/tools/perf/tests/vmlinux-kallsyms.c
++++ b/tools/perf/tests/vmlinux-kallsyms.c
+@@ -26,7 +26,6 @@ static bool is_ignored_symbol(const char *name, char type)
+ 		 * when --all-symbols is specified so exclude them to get a
+ 		 * stable symbol list.
+ 		 */
+-		"kallsyms_addresses",
+ 		"kallsyms_offsets",
+ 		"kallsyms_relative_base",
+ 		"kallsyms_num_syms",
+-- 
+2.44.0.rc0.258.g7320e95886-goog
 
-
---=20
-H.J.
