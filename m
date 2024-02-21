@@ -1,196 +1,149 @@
-Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com [209.85.208.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E5AA3C484;
-	Wed, 21 Feb 2024 07:36:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0287039879
+	for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 07:37:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708500973; cv=none; b=GEMiKHNP+KmvNxC2lRysT20j0o8fBK+32QpnqQDPKQmjWE2V3blCwo0VLRPI4JQPNXgpJe0vcukMs4h8/pjUYZslonZrhFnqszeIHYioJUS+0OTX5Eooz7r6dGiYb0HXo/+G7QGDiYjcoYa4dEYITYxvTWud67hUwu9Soh1ePRc=
+	t=1708501061; cv=none; b=ovX7uVWK05ujhQdckwsQDIT0My6iLpcyPQscMflttOIVt/SNg6R34F1jbdyNVrJogAE3CuJAMrVr/lRc3+yU7Z5RylnnsydZO7PsoonN3WvrI5FW/0oYPtHGFdbjjv+TXyLQgjO81zJFrcA7jlIqRm3c/AhNjdykqz88YJehOWg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708500973; c=relaxed/simple;
-	bh=F3Sf0JiF6x4iJ+PX/ACP+GxQSz0ogVWMEW4G4AWPfyQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=SLgQWdsLKelC0uKVVmOvcqpEFA4swgN74u9gYO8sIhzqA5AsEK1vVTmbDUNxWariW6WIFROndy275xqEIOeXXkhgEKSgSn6pGuF40RaaBOfwEdm4Ox2d5mYWwceIKWFMOhwrj9nKaLiFWgacNofx8aSi2epkGm5JKUYKdVF7Is8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MGWviKJA; arc=none smtp.client-ip=209.85.208.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1708501061; c=relaxed/simple;
+	bh=JceDNvK/M7QV+iUrBQaGfshcPpFauLuTbcLabhJ8U4s=;
+	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=OA79A/vRiS9p6xkGWoiYW202OsLe7Ig/4l4j4QhWfac/H2jg6Wnon8QSvV96MKdePbhJDcOXWHycF/GNwpR8pyokkOXcO05L+3YrXAdDzgrqW3AvKBEwpeOy2K+QRWIfR+fuIWCndpSES9+e8Si9euaboN09GfYJ4Agt0LLEjqU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lGr2DN+s; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MGWviKJA"
-Received: by mail-lj1-f173.google.com with SMTP id 38308e7fff4ca-2d1094b5568so83301761fa.1;
-        Tue, 20 Feb 2024 23:36:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1708500970; x=1709105770; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=NbLgMoZR4t08q5k+O843alwk/f3OePOmG2WLruO1CqU=;
-        b=MGWviKJAA6dYyKCQ0aay8a7OCxazyH4xSQkHSfS9PdFNOGw/RdLpKl8C39Rb3J6sMr
-         g5WdoRcC/mNSk0e1R2TscBkuusW2OBKEonTXOBdvTTVvvRmGx60L7xGQHGGYGvUElTxa
-         tnDMsm0qvj1PDCdvX9W3tY57oE+wtZorBaRTueEI6x/584IlEcIkqUZJ3LrTYmxDvBJl
-         V/b8LSWjGimmN9OM9f2zVk2PLHP21GtuSzd/NeN3SD+L477eJfIphDomm56RLgpB5/Vb
-         ck7e+RITbdiihAC/pe0O4y3Ys8xEmiHBMsVs8z96MLjma8yr5DVL0+lmv0U3L1IAB/Eg
-         Kkiw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708500970; x=1709105770;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=NbLgMoZR4t08q5k+O843alwk/f3OePOmG2WLruO1CqU=;
-        b=Hjv1yw38SnsGKheS7AyBGmGFAEA960fHrkoTOaxvdSbsMZMapcvv7HAueS9RS8CbFZ
-         FlruvwrcYyLNJbcG6HYTTFLmyCDZqIt6tMtNRIlipW+dlOQ3S7MkAtueMMESHEhpwMa+
-         bcF9RWbbqA+xEwtsZ/90cljjXG+xpqLMXOCv5gU2rvRLGD77s2S6TvtpnvcnOvblF6ZE
-         pbvzsP5tORs19zUlN3qAiuvwES2+QVJoeWCj3zxQO+IKNCVPc6bbYTtjMGcjzfILXaNa
-         QCr+mCt6j4pC9oKZknoO5aX/Rx6Q3r5zYx+vClkJx+Ase6Xkwt6+i5QVx3O9Nd0YYVTF
-         KJ9A==
-X-Forwarded-Encrypted: i=1; AJvYcCXyT42HF8LNgVQyRJqtcboZDD9OLLirhqvocJBfo7ly4VNwulkAoIJ44gWu9cvLXsrGgZm4v6JICm79CWNse7KXNK8TX2ZZIDMLILAcsFfc7GfjGD/V6U2Co9/KmZNKT7zofAuz1ReX2g==
-X-Gm-Message-State: AOJu0YwWOr1V6zNtHY6m9WsX4HSJKSz43Sy382XFiVyWXQNUuKRhBl++
-	byQuGc5rnN8Gbtzx5gViJmaHkvzyjqCwmE8GDvihNycI4NDlFCf2
-X-Google-Smtp-Source: AGHT+IGbhTXvfJwY454gP9jL76eAJGY29TsXCEdiPrgqL7hjr4TGYQ2YlFcD/47YCPPm1w0ctPzyyA==
-X-Received: by 2002:a2e:c49:0:b0:2d2:40cb:8182 with SMTP id o9-20020a2e0c49000000b002d240cb8182mr3976818ljd.49.1708500970465;
-        Tue, 20 Feb 2024 23:36:10 -0800 (PST)
-Received: from localhost.lan (031011218106.poznan.vectranet.pl. [31.11.218.106])
-        by smtp.gmail.com with ESMTPSA id z3-20020a2e7e03000000b002d0f99a7fc4sm1722330ljc.79.2024.02.20.23.36.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 20 Feb 2024 23:36:10 -0800 (PST)
-From: =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5@gmail.com>
-To: Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>
-Cc: Chen-Yu Tsai <wenst@chromium.org>,
-	Hsin-Yi Wang <hsinyi@chromium.org>,
-	=?UTF-8?q?N=C3=ADcolas=20F=20=2E=20R=20=2E=20A=20=2E=20Prado?= <nfraprado@collabora.com>,
-	Heiko Stuebner <heiko.stuebner@cherry.de>,
-	Jernej Skrabec <jernej.skrabec@gmail.com>,
-	Chris Morgan <macromorgan@hotmail.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Sean Wang <sean.wang@mediatek.com>,
-	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	=?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal@milecki.pl>
-Subject: [PATCH 4/4] arm64: dts: mediatek: Add Cudy WR3000 V1
-Date: Wed, 21 Feb 2024 08:35:24 +0100
-Message-Id: <20240221073524.20947-5-zajec5@gmail.com>
-X-Mailer: git-send-email 2.35.3
-In-Reply-To: <20240221073524.20947-1-zajec5@gmail.com>
-References: <20240221073524.20947-1-zajec5@gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lGr2DN+s"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1708501061; x=1740037061;
+  h=message-id:date:mime-version:cc:subject:to:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=JceDNvK/M7QV+iUrBQaGfshcPpFauLuTbcLabhJ8U4s=;
+  b=lGr2DN+sqD+HkFSnL9MWGHMR9eLPDou/Hh0ncm0V/Bf7ifGcVaE2p+Zf
+   n2OQPbXO8jmfdHoiX8QQMPmAGWH+lwqChwmdoFZaCrZxpNtDHHrMBDgSa
+   atMWnodxTkzypN/TLLKf1nfddVv1yKX9l6czuHP+5rIHE0yfo1JD83EG0
+   3WHcQaVu7ibSIfnW1dH9nJ3h8kJksddnznWOV54X9GS2j0tMNm2Rnh6Qe
+   erxr0AmCylRA01RjMwo08n6NM+meCRgks5Zk/Viyb0DtWB/0pP1hrBc2y
+   B4C6XgGajrcXV03x/rR1AsbUvJJh/A2HYfQG4JcZ4PShXKA//ca1dmxeP
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10990"; a="25108117"
+X-IronPort-AV: E=Sophos;i="6.06,175,1705392000"; 
+   d="scan'208";a="25108117"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Feb 2024 23:37:40 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.06,175,1705392000"; 
+   d="scan'208";a="9688812"
+Received: from blu2-mobl.ccr.corp.intel.com (HELO [10.249.171.203]) ([10.249.171.203])
+  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Feb 2024 23:37:37 -0800
+Message-ID: <02680b8d-ac70-40ba-9242-c50aeab88857@linux.intel.com>
+Date: Wed, 21 Feb 2024 15:37:34 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+User-Agent: Mozilla Thunderbird
+Cc: baolu.lu@linux.intel.com, Joerg Roedel <joro@8bytes.org>,
+ Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
+ Kevin Tian <kevin.tian@intel.com>, Huang Jiaqing <jiaqing.huang@intel.com>,
+ iommu@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] iommu/vt-d: Use device rbtree in iopf reporting path
+Content-Language: en-US
+To: Ethan Zhao <haifeng.zhao@linux.intel.com>, Jason Gunthorpe <jgg@ziepe.ca>
+References: <20240215072249.4465-1-baolu.lu@linux.intel.com>
+ <20240215072249.4465-3-baolu.lu@linux.intel.com>
+ <20240215175534.GD1299735@ziepe.ca>
+ <2049ec79-b081-4ae2-80d2-50899d461339@linux.intel.com>
+From: Baolu Lu <baolu.lu@linux.intel.com>
+In-Reply-To: <2049ec79-b081-4ae2-80d2-50899d461339@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-From: Rafał Miłecki <rafal@milecki.pl>
+On 2024/2/21 15:04, Ethan Zhao wrote:
+> On 2/16/2024 1:55 AM, Jason Gunthorpe wrote:
+>> On Thu, Feb 15, 2024 at 03:22:49PM +0800, Lu Baolu wrote:
+>>> The existing IO page fault handler currently locates the PCI device by
+>>> calling pci_get_domain_bus_and_slot(). This function searches the list
+>>> of all PCI devices until the desired device is found. To improve lookup
+>>> efficiency, a helper function named device_rbtree_find() is introduced
+>>> to search for the device within the rbtree. Replace
+>>> pci_get_domain_bus_and_slot() in the IO page fault handling path.
+>>>
+>>> Co-developed-by: Huang Jiaqing <jiaqing.huang@intel.com>
+>>> Signed-off-by: Huang Jiaqing <jiaqing.huang@intel.com>
+>>> Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
+>>> ---
+>>>   drivers/iommu/intel/iommu.h |  1 +
+>>>   drivers/iommu/intel/iommu.c | 29 +++++++++++++++++++++++++++++
+>>>   drivers/iommu/intel/svm.c   | 14 ++++++--------
+>>>   3 files changed, 36 insertions(+), 8 deletions(-)
+>>>
+>>> diff --git a/drivers/iommu/intel/iommu.h b/drivers/iommu/intel/iommu.h
+>>> index 54eeaa8e35a9..f13c228924f8 100644
+>>> --- a/drivers/iommu/intel/iommu.h
+>>> +++ b/drivers/iommu/intel/iommu.h
+>>> @@ -1081,6 +1081,7 @@ void free_pgtable_page(void *vaddr);
+>>>   void iommu_flush_write_buffer(struct intel_iommu *iommu);
+>>>   struct iommu_domain *intel_nested_domain_alloc(struct iommu_domain 
+>>> *parent,
+>>>                              const struct iommu_user_data *user_data);
+>>> +struct device *device_rbtree_find(struct intel_iommu *iommu, u16 rid);
+>>>   #ifdef CONFIG_INTEL_IOMMU_SVM
+>>>   void intel_svm_check(struct intel_iommu *iommu);
+>>> diff --git a/drivers/iommu/intel/iommu.c b/drivers/iommu/intel/iommu.c
+>>> index 09009d96e553..d92c680bcc96 100644
+>>> --- a/drivers/iommu/intel/iommu.c
+>>> +++ b/drivers/iommu/intel/iommu.c
+>>> @@ -120,6 +120,35 @@ static int device_rid_cmp(struct rb_node *lhs, 
+>>> const struct rb_node *rhs)
+>>>       return device_rid_cmp_key(&key, rhs);
+>>>   }
+>>> +/*
+>>> + * Looks up an IOMMU-probed device using its source ID.
+>>> + *
+>>> + * If the device is found:
+>>> + *  - Increments its reference count.
+>>> + *  - Returns a pointer to the device.
+>>> + *  - The caller must call put_device() after using the pointer.
+>>> + *
+>>> + * If the device is not found, returns NULL.
+>>> + */
+>>> +struct device *device_rbtree_find(struct intel_iommu *iommu, u16 rid)
+>>> +{
+>>> +    struct device_domain_info *info;
+>>> +    struct device *dev = NULL;
+>>> +    struct rb_node *node;
+>>> +    unsigned long flags;
+>>> +
+>>> +    spin_lock_irqsave(&iommu->device_rbtree_lock, flags);
+>>> +    node = rb_find(&rid, &iommu->device_rbtree, device_rid_cmp_key);
+>>> +    if (node) {
+>>> +        info = rb_entry(node, struct device_domain_info, node);
+>>> +        dev = info->dev;
+>>> +        get_device(dev);
+>> This get_device() is a bit troubling. It eventually calls into
+>> iommu_report_device_fault() which does:
+>>
+>>     struct dev_iommu *param = dev->iommu;
+> 
+> So far no protection to dev->iommu structure access in generic
+> iommu layer between different threads, such as hot removal interrupt &
+> iopf handling thread, so we should enhance that in generic iommu code ?
 
-Cudy WR3000 V1 is an MT7981B (AKA Filogic 820) based wireless router. It
-has 256 MiB of RAM, some LEDs & buttons and (not described yet) 4
-Ethernet ports.
+The iommu core is sitting between the upper layers and individual iommu
+drivers. All calls from the upper layers are made within the driver
+context. The device driver framework and iommu subsystem guarantee that
+dev->iommu is always valid in the driver context.
 
-Signed-off-by: Rafał Miłecki <rafal@milecki.pl>
----
- arch/arm64/boot/dts/mediatek/Makefile         |  1 +
- .../dts/mediatek/mt7981b-cudy-wr3000-v1.dts   | 74 +++++++++++++++++++
- 2 files changed, 75 insertions(+)
- create mode 100644 arch/arm64/boot/dts/mediatek/mt7981b-cudy-wr3000-v1.dts
+However, iommu_report_device_fault() is different. It's called in the
+interrupt thread, not in any driver context. Hence, the individual iommu
+driver should guarantee that dev->iommu is valid when calling
+iommu_report_device_fault().
 
-diff --git a/arch/arm64/boot/dts/mediatek/Makefile b/arch/arm64/boot/dts/mediatek/Makefile
-index 37b4ca3a87c9..96da4ad640aa 100644
---- a/arch/arm64/boot/dts/mediatek/Makefile
-+++ b/arch/arm64/boot/dts/mediatek/Makefile
-@@ -8,6 +8,7 @@ dtb-$(CONFIG_ARCH_MEDIATEK) += mt6797-evb.dtb
- dtb-$(CONFIG_ARCH_MEDIATEK) += mt6797-x20-dev.dtb
- dtb-$(CONFIG_ARCH_MEDIATEK) += mt7622-rfb1.dtb
- dtb-$(CONFIG_ARCH_MEDIATEK) += mt7622-bananapi-bpi-r64.dtb
-+dtb-$(CONFIG_ARCH_MEDIATEK) += mt7981b-cudy-wr3000-v1.dtb
- dtb-$(CONFIG_ARCH_MEDIATEK) += mt7981b-xiaomi-ax3000t.dtb
- dtb-$(CONFIG_ARCH_MEDIATEK) += mt7986a-acelink-ew-7886cax.dtb
- dtb-$(CONFIG_ARCH_MEDIATEK) += mt7986a-bananapi-bpi-r3.dtb
-diff --git a/arch/arm64/boot/dts/mediatek/mt7981b-cudy-wr3000-v1.dts b/arch/arm64/boot/dts/mediatek/mt7981b-cudy-wr3000-v1.dts
-new file mode 100644
-index 000000000000..cb36a089518a
---- /dev/null
-+++ b/arch/arm64/boot/dts/mediatek/mt7981b-cudy-wr3000-v1.dts
-@@ -0,0 +1,74 @@
-+// SPDX-License-Identifier: GPL-2.0-only OR MIT
-+
-+/dts-v1/;
-+#include <dt-bindings/input/input.h>
-+#include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/leds/common.h>
-+
-+#include "mt7981b.dtsi"
-+
-+/ {
-+	compatible = "cudy,wr3000-v1", "mediatek,mt7981b";
-+	model = "Cudy WR3000 V1";
-+
-+	memory@40000000 {
-+		reg = <0 0x40000000 0 0x10000000>;
-+		device_type = "memory";
-+	};
-+
-+	keys {
-+		compatible = "gpio-keys";
-+
-+		key-wps {
-+			label = "WPS";
-+			gpios = <&pio 0 GPIO_ACTIVE_LOW>;
-+			linux,code = <KEY_WPS_BUTTON>;
-+		};
-+
-+		key-reset {
-+			label = "RESET";
-+			gpios = <&pio 1 GPIO_ACTIVE_LOW>;
-+			linux,code = <KEY_RESTART>;
-+		};
-+	};
-+
-+	leds {
-+		compatible = "gpio-leds";
-+
-+		led-0 {
-+			function = LED_FUNCTION_WAN;
-+			color = <LED_COLOR_ID_BLUE>;
-+			gpios = <&pio 5 GPIO_ACTIVE_LOW>;
-+		};
-+
-+		led-1 {
-+			function = LED_FUNCTION_WLAN_2GHZ;
-+			color = <LED_COLOR_ID_BLUE>;
-+			gpios = <&pio 6 GPIO_ACTIVE_LOW>;
-+		};
-+
-+		led-2 {
-+			function = LED_FUNCTION_WLAN_5GHZ;
-+			color = <LED_COLOR_ID_BLUE>;
-+			gpios = <&pio 7 GPIO_ACTIVE_LOW>;
-+		};
-+
-+		led-3 {
-+			function = LED_FUNCTION_LAN;
-+			color = <LED_COLOR_ID_BLUE>;
-+			gpios = <&pio 9 GPIO_ACTIVE_LOW>;
-+		};
-+
-+		led-4 {
-+			function = LED_FUNCTION_STATUS;
-+			color = <LED_COLOR_ID_BLUE>;
-+			gpios = <&pio 10 GPIO_ACTIVE_LOW>;
-+		};
-+
-+		led-5 {
-+			function = "online";
-+			color = <LED_COLOR_ID_BLUE>;
-+			gpios = <&pio 11 GPIO_ACTIVE_LOW>;
-+		};
-+	};
-+};
--- 
-2.35.3
-
+Best regards,
+baolu
