@@ -1,112 +1,171 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 505F038F9A
-	for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 04:09:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D71D38FA1
+	for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 04:14:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708488587; cv=none; b=kpBaBsbJfe+6rXKkYn0aV18QK9/+tZswUAFREKlNXNmvEmOXG2tRSZCgnbVofm+JMh7pSDdwPVIQN6gGqk+HQpGYU+lgGc4e0NCt4Yf1J1udTwTt2Z9B6t3dGZjoo9o/p2qOb+qrXkmJpKuph1xwCOhr65X0oQVkr0pCHCQ2ZAk=
+	t=1708488852; cv=none; b=dqqZmpxWn6ryXQLU/r5EiT2VR+G5rzbCKdjh7q7riRTBrZymF0ZIAopy/S/N9gdYfUJsBewzQ2fc2I3lB9yf4ybgh3Ob/fCt6P8aviKXDh/7i4+P6pgBhjwO5GZdDeMhSXnrbzadWoE4PprBDUgq2IwnLbqdFqXfwBAKLB36mf0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708488587; c=relaxed/simple;
-	bh=BoyCv2XA0C+7+JVVbWVZj+xrfGVaW1aWdR2j51+n5oo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OHrkAoAff96kf6PkFoaeLyDfqOil2sChyL6hivLCIh7RMPjA9ccAsvOGK8nBEf4QiUsRvXW0iWh52iQPiqTmPo8w5np9B2qkCP98cPq4vqRMWznzrXYL714aG3KSiYnfT6TwXG0SR19fmplSnpH8NO6j4CudvPj96BmldzqafzM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=N3m4VCty; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1708488852; c=relaxed/simple;
+	bh=dBG1F20hu98eigBkepFynMNfxKqRaLMacnj06c7mr/Q=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=b79bH6zn2MITfj0X3HtEUTMgmTEQSN/AKhw1EaX9BlpFzN2+ftLVoZO/jnMbmUwYuQYjm3MKc76QBmY5uiYacG6mBvKFpULfiI8GhEwPhDdoZUCE/G128fyW0vY4qb9lnpmH9oS3dsRSH+t6qLqi+z2QA1WIgmHA1eiD00Zx/zk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jjteLDhv; arc=none smtp.client-ip=192.198.163.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="N3m4VCty"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1708488585;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=RsQAEkKxZb0aZZCrLYFKwxoDfNw0XHFkzbzp2yj/GkI=;
-	b=N3m4VCtyRKZV+zd8ZEVZ+duFKEAggx1bKWpHK0tEPueO2lg4ioT4oBmHtltMOhYYQkXkXY
-	6aYavhG3M84OF4WB5CZRNIimS64Awf7O+nVzh4YXof+2kA328HeMjL3pNmVkwjRMb2eNo0
-	8X+adkFOd3ZN5+CFIYxugcRu1dK7DyM=
-Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com
- [209.85.222.197]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-454-2UcE3aclOLOVLXgp_FzhfA-1; Tue, 20 Feb 2024 23:09:42 -0500
-X-MC-Unique: 2UcE3aclOLOVLXgp_FzhfA-1
-Received: by mail-qk1-f197.google.com with SMTP id af79cd13be357-787729caa1aso34249485a.3
-        for <linux-kernel@vger.kernel.org>; Tue, 20 Feb 2024 20:09:42 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708488582; x=1709093382;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=RsQAEkKxZb0aZZCrLYFKwxoDfNw0XHFkzbzp2yj/GkI=;
-        b=IkloUe29CSDcgNl3Tk5WWYWuYXPGlrIqtvIjEOH/1xqA0WgPX64KehF8v6/7CV00/T
-         nu6Pi7ZQB0+DKfkvCIF5qqdAEqNhK9g92Gv3IdcMvtZEUgMo/i3b1xY5nbGve5tg0yRb
-         OhZmYU9cULmqo2XojclJwxSo3mueoN5slDtxmufsofpfJ5UrrqRcMqPjsGQPNv7vbq1t
-         srIy3+D7uwVNCaXJMi5sE0sOoS4aIB4HSx9bvd0yE7C8UbKtE8lrwBZYtPK80NAMoW+Q
-         n0OGcoDsopDNUlu9sg6EAhBbOqovVlrdC04OlUmp+f/4vM/sgUk/OTsjosH8MVflOQGj
-         CS0A==
-X-Forwarded-Encrypted: i=1; AJvYcCWcwgcqLnHwAn+ZqZLHaJ41LTIkOc2s0bxUrRQNtZ0Ll+QqPyF8zWyZpVk4z9VFzU5wAokQS5iX2tDIFU6SDYb/yQLAkf2eTDbRcvvm
-X-Gm-Message-State: AOJu0YzfjGTzFyHN/qmaAgELtAVh9ct2Pzdi0v7j9KDpXRoCQu9FpLHN
-	1iXVCW9MwQyGl4yRIIo/HOFz+R2JI0fZiMCNDvcEAPzpWKKhtAu+1GGfF6O/XL0qZd5IZBfYiRF
-	e45YAu2+L/qiTBqESJYcaZF96nBdpU9qrFOuOvfj975NW6k+Azk2zCmJDDQ4PGQ==
-X-Received: by 2002:ae9:e909:0:b0:787:2be6:f572 with SMTP id x9-20020ae9e909000000b007872be6f572mr18916159qkf.44.1708488581877;
-        Tue, 20 Feb 2024 20:09:41 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IG5y9sT0LbGkPWM3P5wTe+4FBnoWsvYcHd8UtO9gZCCHpP2FiZzrnexj0maTEh9uzunTOHKag==
-X-Received: by 2002:ae9:e909:0:b0:787:2be6:f572 with SMTP id x9-20020ae9e909000000b007872be6f572mr18916145qkf.44.1708488581624;
-        Tue, 20 Feb 2024 20:09:41 -0800 (PST)
-Received: from localhost (pool-71-184-142-128.bstnma.fios.verizon.net. [71.184.142.128])
-        by smtp.gmail.com with ESMTPSA id z17-20020a05620a101100b00787375c5b64sm3967768qkj.17.2024.02.20.20.09.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 20 Feb 2024 20:09:41 -0800 (PST)
-Date: Tue, 20 Feb 2024 23:09:40 -0500
-From: Eric Chanudet <echanude@redhat.com>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Changbin Du <changbin.du@huawei.com>, 
-	Luis Chamberlain <mcgrof@kernel.org>, linux-modules@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Xiaoyi Su <suxiaoyi@huawei.com>
-Subject: Re: [PATCH v3] modules: wait do_free_init correctly
-Message-ID: <5bq77rkoutmjzv2fuw2jjsmqxfzsv2wiyz3swvpgs7hsbyxtpx@pgczoajxjvuy>
-References: <20240217081810.4155871-1-changbin.du@huawei.com>
- <20240218132153.d93675d0d241f021565a08b6@linux-foundation.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jjteLDhv"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1708488851; x=1740024851;
+  h=date:from:to:cc:subject:message-id;
+  bh=dBG1F20hu98eigBkepFynMNfxKqRaLMacnj06c7mr/Q=;
+  b=jjteLDhvxPYL2GoRSLwbDiGlvJU3W2k4L738vCgcSwjbtdtd/or3dIAi
+   VSY5Daqd1DoCnYAXtuZMihQrHDK7JiBzfPAADl39pwzN8N/qwTiTiOT6D
+   Lk5FpIKD21yd9MZSiZjccr0/4i/16Ltv30WU0fbHz2byLMn17mKW0rxk/
+   AlhWAAwqA/UL3eaAd5YYl0hk+mpOAAb/iaDnh7UeLyI+OewE3zr8MXoxm
+   7g89/qlMI388l7axbNe1ScuPrumm8EtQ9pmzweti343Z5qHYVNIoKLt6a
+   wt5HDvvIG66yjWISLtBHksk/AbxLxg7Qc0AXrOzBpNbaPAQhlH1tT5l9O
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10990"; a="13333771"
+X-IronPort-AV: E=Sophos;i="6.06,174,1705392000"; 
+   d="scan'208";a="13333771"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Feb 2024 20:14:10 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.06,174,1705392000"; 
+   d="scan'208";a="9624336"
+Received: from lkp-server02.sh.intel.com (HELO 3c78fa4d504c) ([10.239.97.151])
+  by fmviesa005.fm.intel.com with ESMTP; 20 Feb 2024 20:14:09 -0800
+Received: from kbuild by 3c78fa4d504c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1rcdzi-00051a-34;
+	Wed, 21 Feb 2024 04:14:06 +0000
+Date: Wed, 21 Feb 2024 12:13:36 +0800
+From: kernel test robot <lkp@intel.com>
+To: "x86-ml" <x86@kernel.org>
+Cc: linux-kernel@vger.kernel.org
+Subject: [tip:master] BUILD SUCCESS
+ c56ac217a3c00d12e23606e0635cc95d6eb8c36a
+Message-ID: <202402211233.UGguDXU5-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240218132153.d93675d0d241f021565a08b6@linux-foundation.org>
 
-On Sun, Feb 18, 2024 at 01:21:53PM -0800, Andrew Morton wrote:
-> On Sat, 17 Feb 2024 16:18:10 +0800 Changbin Du <changbin.du@huawei.com> wrote:
-> > The synchronization here is just to ensure the module init's been freed
-> > before doing W+X checking. But the commit 1a7b7d922081 ("modules: Use
-> > vmalloc special flag") moves do_free_init() into a global workqueue
-> > instead of call_rcu(). So now rcu_barrier() can not ensure that do_free_init
-> > has completed. We should wait it via flush_work().
-> > 
-> > Without this fix, we still could encounter false positive reports in
-> > W+X checking, and the rcu synchronization is unnecessary which can
-> > introduce significant delay.
-> > 
-> > Eric Chanudet reports that the rcu_barrier introduces ~0.1s delay on a
-> > PREEMPT_RT kernel.
-> >   [    0.291444] Freeing unused kernel memory: 5568K
-> >   [    0.402442] Run /sbin/init as init process
-> > 
-> > With this fix, the above delay can be eliminated.
-> 
-> Thanks, I'll queue this as a delta, to be folded into the base patch
-> prior to upstreaming.
-> 
-> I added a Tested-by: Eric, if that's OK by him?
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git master
+branch HEAD: c56ac217a3c00d12e23606e0635cc95d6eb8c36a  Merge branch into tip/master: 'x86/vdso'
 
-Absolutely, I should have put it in my initial reply.
-Adding here as confirmation:
-Tested-by: Eric Chanudet <echanude@redhat.com>
+elapsed time: 1062m
 
-Thanks,
+configs tested: 98
+configs skipped: 3
+
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+tested configs:
+alpha                             allnoconfig   gcc  
+alpha                            allyesconfig   gcc  
+alpha                               defconfig   gcc  
+arc                              allmodconfig   gcc  
+arc                               allnoconfig   gcc  
+arc                              allyesconfig   gcc  
+arc                                 defconfig   gcc  
+arm                              alldefconfig   gcc  
+arm                              allmodconfig   gcc  
+arm                               allnoconfig   clang
+arm                              allyesconfig   gcc  
+arm                        clps711x_defconfig   clang
+arm                                 defconfig   clang
+arm                          exynos_defconfig   clang
+arm                           omap1_defconfig   gcc  
+arm                         s3c6400_defconfig   gcc  
+arm64                            allmodconfig   clang
+arm64                             allnoconfig   gcc  
+arm64                               defconfig   gcc  
+csky                             allmodconfig   gcc  
+csky                              allnoconfig   gcc  
+csky                             allyesconfig   gcc  
+csky                                defconfig   gcc  
+hexagon                          allmodconfig   clang
+hexagon                           allnoconfig   clang
+hexagon                          allyesconfig   clang
+hexagon                             defconfig   clang
+i386                             allmodconfig   gcc  
+i386                              allnoconfig   gcc  
+i386                             allyesconfig   gcc  
+i386                                defconfig   clang
+loongarch                        allmodconfig   gcc  
+loongarch                         allnoconfig   gcc  
+loongarch                           defconfig   gcc  
+m68k                             allmodconfig   gcc  
+m68k                              allnoconfig   gcc  
+m68k                             allyesconfig   gcc  
+m68k                                defconfig   gcc  
+m68k                            q40_defconfig   gcc  
+microblaze                       allmodconfig   gcc  
+microblaze                        allnoconfig   gcc  
+microblaze                       allyesconfig   gcc  
+microblaze                          defconfig   gcc  
+mips                              allnoconfig   gcc  
+mips                             allyesconfig   gcc  
+mips                          ath25_defconfig   clang
+mips                           gcw0_defconfig   clang
+mips                        qi_lb60_defconfig   clang
+nios2                            allmodconfig   gcc  
+nios2                             allnoconfig   gcc  
+nios2                            allyesconfig   gcc  
+nios2                               defconfig   gcc  
+openrisc                          allnoconfig   gcc  
+openrisc                         allyesconfig   gcc  
+openrisc                            defconfig   gcc  
+parisc                           allmodconfig   gcc  
+parisc                            allnoconfig   gcc  
+parisc                           allyesconfig   gcc  
+parisc                              defconfig   gcc  
+parisc64                            defconfig   gcc  
+powerpc                          allmodconfig   gcc  
+powerpc                           allnoconfig   gcc  
+powerpc                          allyesconfig   clang
+powerpc                    amigaone_defconfig   gcc  
+powerpc                      bamboo_defconfig   clang
+powerpc                      mgcoge_defconfig   clang
+powerpc                     redwood_defconfig   clang
+riscv                            allmodconfig   clang
+riscv                             allnoconfig   gcc  
+riscv                            allyesconfig   clang
+riscv                               defconfig   clang
+s390                             allmodconfig   clang
+s390                              allnoconfig   clang
+s390                             allyesconfig   gcc  
+s390                                defconfig   clang
+sh                               allmodconfig   gcc  
+sh                                allnoconfig   gcc  
+sh                               allyesconfig   gcc  
+sh                                  defconfig   gcc  
+sh                          landisk_defconfig   gcc  
+sh                           se7780_defconfig   gcc  
+sparc                            allmodconfig   gcc  
+sparc                             allnoconfig   gcc  
+sparc                               defconfig   gcc  
+sparc64                          allmodconfig   gcc  
+sparc64                          allyesconfig   gcc  
+sparc64                             defconfig   gcc  
+um                               allmodconfig   clang
+um                                allnoconfig   clang
+um                               allyesconfig   gcc  
+um                                  defconfig   clang
+um                             i386_defconfig   gcc  
+um                           x86_64_defconfig   clang
+x86_64                            allnoconfig   clang
+x86_64                           allyesconfig   clang
+x86_64                              defconfig   gcc  
+x86_64                          rhel-8.3-rust   clang
+xtensa                            allnoconfig   gcc  
 
 -- 
-Eric Chanudet
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
