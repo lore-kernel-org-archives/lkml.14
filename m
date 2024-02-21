@@ -1,237 +1,133 @@
-Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 462243CF42;
-	Wed, 21 Feb 2024 14:19:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.104.207.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C443C69D38;
+	Wed, 21 Feb 2024 14:19:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708525151; cv=none; b=RMWiziafMIa+1/r+KZ04ekUAmiLn4g/BKJe+tHTZeyvUh8vRcdu+E/SDayJ95iQ6XeMbv3X78/6s/AdqFBSUa5K3aHECK4QYAqA/xq0CLJUbooEokI+dp2W5lJoxG0shMvcQWsOJe4FO/K58PBWas5lg9sCBrBeSFQVuKITuJds=
+	t=1708525161; cv=none; b=OcoA8ginLsodMlFk2OfNuRyGj5GzRE43WKmc+MpETkusXoX1p8tts+E3VSX2AeBiSQPR8vl5wr/AePSaChqFUj2eQNFvRDa91vVWs1U2u9e3ZYxh3tg9CdjqM4DMYNavC4oYBDQyWVbFid2mt3dUIVYowkgDGmEnWYOqNWNx4u0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708525151; c=relaxed/simple;
-	bh=484XVZMEV57wsb7+3XUHDx88xuKknYIRkJzEl41wSd0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=a1HPtPDltzZAdKBIs0AIrNd4I63BlU+PL7LiN04/JDZaz8wKB0uHOMAQCKb2+S7Ip1m4IZDkatW+acoejwIGuacFTcHNBuRGlGOSiYHmV9OKYX+gCfBk142LFl1vzRu092TOqDJCIOPZYNBleFRIqxkiHxjmZa1LJVw+BpfADDI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com; spf=pass smtp.mailfrom=ew.tq-group.com; dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b=KN6Nomwx; arc=none smtp.client-ip=93.104.207.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ew.tq-group.com
+	s=arc-20240116; t=1708525161; c=relaxed/simple;
+	bh=pBP4apZEIb1BfKNb3zOTB1MGhktsRwpxUnHa99kXSi8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=IGafaXrJ4wQmUYUcO/JO32ygbjBebA+u1T8CiGsBkjr/sObiJKcXlAxoV02HIDP6d/+DM7dwoh9edVtUmHjO/D3N0eOI23HEgiKtWsxRNLONYWuQuM0XhKveK5mFb+Q1orjMd61bPFSMijns16/MwaNQ32sn0E/N1M1wDe3Zq1M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hEiH24lQ; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="KN6Nomwx"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
-  t=1708525147; x=1740061147;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=4tGYCuZ8S9Z/8bIyUQU7cinajEjRFCnLFwqKv4o4HsY=;
-  b=KN6NomwxsbywSV83rUmr+RkXr4grvoxoJbBXz8mXMawbMjK7TmvdEcCS
-   IK/jLmBvy4sS3W5EtPlDKmLK65soErECU9LMyMJ1uBP0NzCGuRiexKGdx
-   gnpjlEBjDfD+ixd6TyZsDCEgnKZTubeRoykmO2JiSYzMyGjPUMGsHMLGf
-   nAbnySfK4bmQBo9L/ba5gD1y5s6ttuMHu8gy0cgufKiQdpawKYAeiqeuN
-   SI8jJ2VykOLr9dldka5edLiPxHCEFgL2S3BILebY1JeHCDcaX0+lSrS1D
-   9r/UzBYfJUDqHhgcd/XOXWXVhUfO85A9eAYFN3UmAAXGevNNGIuJ5HR/u
-   g==;
-X-IronPort-AV: E=Sophos;i="6.06,175,1705359600"; 
-   d="scan'208";a="35525266"
-Received: from vtuxmail01.tq-net.de ([10.115.0.20])
-  by mx1.tq-group.com with ESMTP; 21 Feb 2024 15:18:58 +0100
-Received: from steina-w.localnet (steina-w.tq-net.de [10.123.53.25])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by vtuxmail01.tq-net.de (Postfix) with ESMTPSA id 603C7280075;
-	Wed, 21 Feb 2024 15:18:58 +0100 (CET)
-From: Alexander Stein <alexander.stein@ew.tq-group.com>
-To: "dmitry.baryshkov@linaro.org" <dmitry.baryshkov@linaro.org>, "andrzej.hajda@intel.com" <andrzej.hajda@intel.com>, "neil.armstrong@linaro.org" <neil.armstrong@linaro.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, "jonas@kwiboo.se" <jonas@kwiboo.se>, "jernej.skrabec@gmail.com" <jernej.skrabec@gmail.com>, "airlied@gmail.com" <airlied@gmail.com>, "daniel@ffwll.ch" <daniel@ffwll.ch>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "krzysztof.kozlowski+dt@linaro.org" <krzysztof.kozlowski+dt@linaro.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "vkoul@kernel.org" <vkoul@kernel.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-phy@lists.infradead.org" <li
- nux-phy@lists.infradead.org>, Sandor Yu <sandor.yu@nxp.com>
-Cc: "kernel@pengutronix.de" <kernel@pengutronix.de>, dl-linux-imx <linux-imx@nxp.com>, Oliver Brown <oliver.brown@nxp.com>, "sam@ravnborg.org" <sam@ravnborg.org>, Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v14 5/7] dt-bindings: phy: Add Freescale iMX8MQ DP and HDMI PHY
-Date: Wed, 21 Feb 2024 15:18:58 +0100
-Message-ID: <12385213.O9o76ZdvQC@steina-w>
-Organization: TQ-Systems GmbH
-In-Reply-To: <PAXPR04MB9448F3065AE9F838C4553CB1F4572@PAXPR04MB9448.eurprd04.prod.outlook.com>
-References: <cover.1708395604.git.Sandor.yu@nxp.com> <10421561.nUPlyArG6x@steina-w> <PAXPR04MB9448F3065AE9F838C4553CB1F4572@PAXPR04MB9448.eurprd04.prod.outlook.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hEiH24lQ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1708525159; x=1740061159;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=pBP4apZEIb1BfKNb3zOTB1MGhktsRwpxUnHa99kXSi8=;
+  b=hEiH24lQoLUcWGjscdt0R9nB/F5dveWGHhloVHH/r3eyB0ygzx/V8W1k
+   l7/y+OA29+8rC6G2UG3wGOXdLCGm/3xcLnu+AUu0HPbk4y1yQdXz3O5Cr
+   OnSip6Zm7sV9Fd0u4WCim8LSnm/7YcC/usT7EwxxkqkQzRD9ddC+2rO3/
+   j5B0lh0qb7cKqfuV+K6c5BTuoSDjx59vc/nzwxNJRAEhx3BR7TiaFvcMX
+   6QX95b+FlBI9b3vm9FLPxS0qOAOVpSuPIiKZsRRG7D6Jc5pl6zcc3hJ5a
+   U9jHxcz57vt6dO5pOtPzOD/lNtmVKLrnMWbq2rfAXhkfrxrHh6yfcTR9B
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10990"; a="25149096"
+X-IronPort-AV: E=Sophos;i="6.06,175,1705392000"; 
+   d="scan'208";a="25149096"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Feb 2024 06:19:19 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.06,175,1705392000"; 
+   d="scan'208";a="28298325"
+Received: from lkp-server02.sh.intel.com (HELO 3c78fa4d504c) ([10.239.97.151])
+  by fmviesa002.fm.intel.com with ESMTP; 21 Feb 2024 06:19:17 -0800
+Received: from kbuild by 3c78fa4d504c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1rcnRD-0005Om-19;
+	Wed, 21 Feb 2024 14:19:08 +0000
+Date: Wed, 21 Feb 2024 22:18:06 +0800
+From: kernel test robot <lkp@intel.com>
+To: Justin Iurman <justin.iurman@uliege.be>, netdev@vger.kernel.org
+Cc: oe-kbuild-all@lists.linux.dev, davem@davemloft.net, dsahern@kernel.org,
+	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+	linux-kernel@vger.kernel.org, justin.iurman@uliege.be
+Subject: Re: [PATCH net-next 2/3] ioam6: multicast event
+Message-ID: <202402212253.mfysd5E1-lkp@intel.com>
+References: <20240220194444.36127-3-justin.iurman@uliege.be>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="iso-8859-1"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240220194444.36127-3-justin.iurman@uliege.be>
 
-Hi,
+Hi Justin,
 
-Am Mittwoch, 21. Februar 2024, 08:46:46 CET schrieb Sandor Yu:
-> Hi Alexander,
->=20
-> Thanks for your comments,
->=20
-> >
-> >
-> > Hi,
-> >
-> > thanks for the update.
-> >
-> > Am Dienstag, 20. Februar 2024, 04:23:53 CET schrieb Sandor Yu:
-> > > Add bindings for Freescale iMX8MQ DP and HDMI PHY.
-> > >
-> > > Signed-off-by: Sandor Yu <Sandor.yu@nxp.com>
-> > > Reviewed-by: Rob Herring <robh@kernel.org>
-> > > ---
-> > > v9->v14:
-> > >  *No change.
-> > >
-> > >  .../bindings/phy/fsl,imx8mq-dp-hdmi-phy.yaml  | 53
-> > > +++++++++++++++++++
-> > >  1 file changed, 53 insertions(+)
-> > >  create mode 100644
-> > > Documentation/devicetree/bindings/phy/fsl,imx8mq-dp-hdmi-phy.yaml
-> > >
-> > > diff --git
-> > > a/Documentation/devicetree/bindings/phy/fsl,imx8mq-dp-hdmi-phy.yaml
-> > > b/Documentation/devicetree/bindings/phy/fsl,imx8mq-dp-hdmi-phy.yaml
-> > > new file mode 100644
-> > > index 0000000000000..917f113503dca
-> > > --- /dev/null
-> > > +++
-> > b/Documentation/devicetree/bindings/phy/fsl,imx8mq-dp-hdmi-phy.yam
-> > > +++ l
-> > > @@ -0,0 +1,53 @@
-> > > +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause) %YAML 1.2
-> > > +---
-> > > +$id:
-> > > +http://devi/
-> > >
-> > +cetree.org%2Fschemas%2Fphy%2Ffsl%2Cimx8mq-dp-hdmi-phy.yaml%23&da
-> > ta=3D05
-> > >
-> > +%7C02%7CSandor.yu%40nxp.com%7Ce79b4d15c204494963c508dc31fbab5d
-> > %7C686e
-> > >
-> > +a1d3bc2b4c6fa92cd99c5c301635%7C0%7C0%7C638440204190687801%7C
-> > Unknown%7
-> > >
-> > +CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWw
-> > iLCJX
-> > >
-> > +VCI6Mn0%3D%7C0%7C%7C%7C&sdata=3DrKWiYc1wbOvKMO%2BWnvT6agxo
-> > 9V%2B1ndZVTxh
-> > > +gLT0g7h8%3D&reserved=3D0
-> > > +$schema:
-> > > +http://devi/
-> > >
-> > +cetree.org%2Fmeta-schemas%2Fcore.yaml%23&data=3D05%7C02%7CSandor.y
-> > u%40n
-> > >
-> > +xp.com%7Ce79b4d15c204494963c508dc31fbab5d%7C686ea1d3bc2b4c6fa9
-> > 2cd99c5
-> > >
-> > +c301635%7C0%7C0%7C638440204190709341%7CUnknown%7CTWFpbGZsb
-> > 3d8eyJWIjoi
-> > >
-> > +MC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C0
-> > %7C%7C%
-> > >
-> > +7C&sdata=3D%2FuCSz0aVVsRLorOqrorbZIyT7iU5BavPKCbA9qL9qDI%3D&reserv
-> > ed=3D0
-> > > +
-> > > +title: Cadence HDP-TX DP/HDMI PHY for Freescale i.MX8MQ SoC
-> > > +
-> > > +maintainers:
-> > > +  - Sandor Yu <sandor.yu@nxp.com>
-> > > +
-> > > +properties:
-> > > +  compatible:
-> > > +    enum:
-> > > +      - fsl,imx8mq-dp-phy
-> > > +      - fsl,imx8mq-hdmi-phy
-> >
-> > While reading cdns-mhdp8501-core.c I'm not so sure about this. There is=
- only
-> > a single PHY which can be configured for either DP or HDMI.
-> > Using separate compatibles for that somehow bugs me.
-> > Maybe the DT maintainers can add some input if this should be single or
-> > double compatibles.
-> >
-> When user enable MHDP8501 HDMI or DP, he should clearly know which type h=
-e want to enable,
-> From board type, flash.bin(firmware) to dts(connector and phy type), they=
- are all need align to HDMI or DP.
+kernel test robot noticed the following build warnings:
 
-I understand your concerns. On the other hand cdns_mhdp8501_dt_parse() from
-patch 4 already parses DT setup to decide whether the output is DP or HDMI.
-mhdp->connector_type can be used to configure the PHY accordingly.
+[auto build test WARNING on a6e0cb150c514efba4aaba4069927de43d80bb59]
 
-Best regards,
-Alexander
+url:    https://github.com/intel-lab-lkp/linux/commits/Justin-Iurman/uapi-ioam6-API-for-netlink-multicast-events/20240221-034623
+base:   a6e0cb150c514efba4aaba4069927de43d80bb59
+patch link:    https://lore.kernel.org/r/20240220194444.36127-3-justin.iurman%40uliege.be
+patch subject: [PATCH net-next 2/3] ioam6: multicast event
+config: parisc-defconfig (https://download.01.org/0day-ci/archive/20240221/202402212253.mfysd5E1-lkp@intel.com/config)
+compiler: hppa-linux-gcc (GCC) 13.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240221/202402212253.mfysd5E1-lkp@intel.com/reproduce)
 
-> B.R
-> Sandor
->=20
-> > Thanks and best regards,
-> > Alexander
-> >
-> > > +
-> > > +  reg:
-> > > +    maxItems: 1
-> > > +
-> > > +  clocks:
-> > > +    items:
-> > > +      - description: PHY reference clock.
-> > > +      - description: APB clock.
-> > > +
-> > > +  clock-names:
-> > > +    items:
-> > > +      - const: ref
-> > > +      - const: apb
-> > > +
-> > > +  "#phy-cells":
-> > > +    const: 0
-> > > +
-> > > +required:
-> > > +  - compatible
-> > > +  - reg
-> > > +  - clocks
-> > > +  - clock-names
-> > > +  - "#phy-cells"
-> > > +
-> > > +additionalProperties: false
-> > > +
-> > > +examples:
-> > > +  - |
-> > > +    #include <dt-bindings/clock/imx8mq-clock.h>
-> > > +    #include <dt-bindings/phy/phy.h>
-> > > +    dp_phy: phy@32c00000 {
-> > > +        compatible =3D "fsl,imx8mq-dp-phy";
-> > > +        reg =3D <0x32c00000 0x100000>;
-> > > +        #phy-cells =3D <0>;
-> > > +        clocks =3D <&hdmi_phy_27m>, <&clk
-> > IMX8MQ_CLK_DISP_APB_ROOT>;
-> > > +        clock-names =3D "ref", "apb";
-> > > +    };
-> > >
-> >
-> >
-> > --
-> > TQ-Systems GmbH | M=FChlstra=DFe 2, Gut Delling | 82229 Seefeld, Germany
-> > Amtsgericht M=FCnchen, HRB 105018
-> > Gesch=E4ftsf=FChrer: Detlef Schneider, R=FCdiger Stahl, Stefan Schneider
-> > http://www.tq-/
-> > group.com%2F&data=3D05%7C02%7CSandor.yu%40nxp.com%7Ce79b4d15c2044
-> > 94963c508dc31fbab5d%7C686ea1d3bc2b4c6fa92cd99c5c301635%7C0%7C0
-> > %7C638440204190726471%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjA
-> > wMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C0%7C%7C%7
-> > C&sdata=3D7xs1%2FC%2BK1cSFDc3rlBEZdNBsYw6Gc8AR6CWr2Djz4s0%3D&res
-> > erved=3D0
-> >
->=20
->=20
->=20
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202402212253.mfysd5E1-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+   net/ipv6/ioam6.c: In function 'ioam6_event':
+>> net/ipv6/ioam6.c:657:9: warning: enumeration value 'IOAM6_EVENT_UNSPEC' not handled in switch [-Wswitch]
+     657 |         switch (type) {
+         |         ^~~~~~
 
 
-=2D-=20
-TQ-Systems GmbH | M=FChlstra=DFe 2, Gut Delling | 82229 Seefeld, Germany
-Amtsgericht M=FCnchen, HRB 105018
-Gesch=E4ftsf=FChrer: Detlef Schneider, R=FCdiger Stahl, Stefan Schneider
-http://www.tq-group.com/
+vim +/IOAM6_EVENT_UNSPEC +657 net/ipv6/ioam6.c
 
+   638	
+   639	void ioam6_event(enum ioam6_event_type type, struct net *net, gfp_t gfp,
+   640			 void *opt, unsigned int opt_len)
+   641	{
+   642		struct nlmsghdr *nlh;
+   643		struct sk_buff *skb;
+   644	
+   645		if (!genl_has_listeners(&ioam6_genl_family, net,
+   646					IOAM6_GENL_EV_GRP_OFFSET))
+   647			return;
+   648	
+   649		skb = nlmsg_new(NLMSG_DEFAULT_SIZE, gfp);
+   650		if (!skb)
+   651			return;
+   652	
+   653		nlh = genlmsg_put(skb, 0, 0, &ioam6_genl_family, 0, type);
+   654		if (!nlh)
+   655			goto nla_put_failure;
+   656	
+ > 657		switch (type) {
+   658		case IOAM6_EVENT_TRACE:
+   659			if (ioam6_event_put_trace(skb, (struct ioam6_trace_hdr *)opt,
+   660						  opt_len))
+   661				goto nla_put_failure;
+   662			break;
+   663		}
+   664	
+   665		genlmsg_end(skb, nlh);
+   666		genlmsg_multicast_netns(&ioam6_genl_family, net, skb, 0,
+   667					IOAM6_GENL_EV_GRP_OFFSET, gfp);
+   668		return;
+   669	
+   670	nla_put_failure:
+   671		nlmsg_free(skb);
+   672	}
+   673	
 
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
