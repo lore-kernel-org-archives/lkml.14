@@ -1,44 +1,44 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29F9E3D570
-	for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 09:06:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E65903E468
+	for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 09:06:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708506382; cv=none; b=j/jFcqXtP24xwM9p9WR3TSGQeBJHlB/IBmLwHamsGtSdle6+OKFQPBCWjc0N3oVjrDBwDyCfw8RNsdjsPrMRJWZKcj+TE5niGZswmQaouUeYC6MQRfORmIXLOS3IeDYmzckrvP7GwQJcH5FUplmD+Y8mttYHlB7K0BBwsKFKO1Y=
+	t=1708506382; cv=none; b=GmSCiox3g8nc0OnBrYNi6sOBNHb5WoH0oo8CZ96D1EIUsZhn096hCJW3Ia3sGVcW+iUDjWaMRvZLVY3LveI5MvG2j50vS78DBQUYfFpPl0rgFolcxYGGfB0Qk4RMU8SbZpRNJTaiYFBUIsldQV7CyKgR9fnbBcbY7fW7PXSecYE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1708506382; c=relaxed/simple;
-	bh=+PFtgywkqe7EU2O4wsgXtoFK8yKu231t3eYiycwv0as=;
+	bh=Ud9pgOn2B/0m50aOpIF31SSVvpgQRaOUxbGunhq51UI=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=l2ggfdbk5fAl+h3Qw58r8ScCzH/SCpMdYqLiqxoeSSpvBE5wReMoUASKrF7I+1BRTyrXQXfeASM5Zvigr/pQ2Zx5R/UzZEp1rfKXFiLFxu0bho//Mmv63RpyZDKo/f3pu/1PLSGtpguGg9waG6tFVkFItWG4abfxbQ08s9LR3y8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=erx+rjUr; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ALe/TX7h; arc=none smtp.client-ip=193.142.43.55
+	 MIME-Version; b=pGMoyrZOuJddnwOWCFilyaEROf5iqNNiGYFJmp2bbBiR9uf85kj42iynxSLRBQyxYOxUnC5+0vs0C0CGsIo1A7cqyrj5bBEtQnBZtBNtmCipXK2BiDdhExlyWLavWp1oYaY1A6/Usa58EjaYtoq1qtscYbuwvPPBchhI86nyFJg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ZKiwyV2z; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=eIB2QWWz; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="erx+rjUr";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ALe/TX7h"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ZKiwyV2z";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="eIB2QWWz"
 From: Anna-Maria Behnsen <anna-maria@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1708506373;
+	s=2020; t=1708506375;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=0rdV5ipuCK7k881Y4gsklU0XL1atEsQC6N/1j4oq3gU=;
-	b=erx+rjUrJdkST1kCUsNdV3qpWn4r06LFiSqvkL7kmB4JHRJ9LiuzUpm9g63+X8yOzssUjl
-	sk3O9UMZK+QH6OrOfToxhnMwwKJv1ABH8CinEpiw5cqz+SH+qjq3cEKUIa8C8BNxiXl3LV
-	wZI8VvXSqNZ10X9/mTy02OFuQDVje6Diz8yLYnTqbyTr+wNtM/EO2CxMa/5At/82+G7Rq+
-	Tha+7iNgOUlyRPFqLDHPzjo2Xpy6f5jkAiVFTAjNPNKkt+B6MBN+ofr4agIfeSP5ongHnE
-	vVuefPq1ocPlR932unA/U6qIYuFxxbCeHZyDVw/cufC81ligWvamgylWIbkKgg==
+	bh=84mTYhbxH69oUoy6SwRp7poh6N58HyKxHp1SCrdM7O4=;
+	b=ZKiwyV2zkZ+h+SdEAzRyGq5O9LN9CHu1eeIzWsHowWJu6xsGLtpPL44lQ4YBsCFe8D8cwy
+	zrenZpCWFkeb9u4ZxmK2v+tJNJ9J2qmrOY5jyCHgWcf8zBZGh+nsPVcERkERUy+TWpWT/m
+	YQruHpAStbSFmkVs8rkOd3Rs7KQF6LOSmpubfL2ukplL/lVvaKcd8HoceXpy3Pujk9nKcC
+	udmHmsSrpVB7uNBPmNXUEk/W9YoiMguuEdhDkPXqC8Q2R4NoARbheI7LEQC5179OikwtqY
+	RWWy6jTQuiqsmpNFvQBxkB3NJA4KOyhSXnWIVgvYwQM2LfjyhiKaVPvBBQkIZw==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1708506373;
+	s=2020e; t=1708506375;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=0rdV5ipuCK7k881Y4gsklU0XL1atEsQC6N/1j4oq3gU=;
-	b=ALe/TX7h7OMA4pyk46Rv7ZfsqFG3JzoYB32BJWYlgCRvXZET1YkekoXmmuFdcUshUynjrc
-	9kP8mFmyhR+x/VCw==
+	bh=84mTYhbxH69oUoy6SwRp7poh6N58HyKxHp1SCrdM7O4=;
+	b=eIB2QWWzcZQPTgaK4YkWqHopYbdU70bbtzBJsBK1v6l+WFLnw8dlk2GujZTaEKWDnqOHqp
+	RC7nGW6K89ngf5AQ==
 To: linux-kernel@vger.kernel.org
 Cc: Peter Zijlstra <peterz@infradead.org>,
 	John Stultz <jstultz@google.com>,
@@ -57,11 +57,10 @@ Cc: Peter Zijlstra <peterz@infradead.org>,
 	Srinivas Pandruvada <srinivas.pandruvada@intel.com>,
 	K Prateek Nayak <kprateek.nayak@amd.com>,
 	Christian Loehle <christian.loehle@arm.com>,
-	Anna-Maria Behnsen <anna-maria@linutronix.de>,
-	Richard Cochran <richardcochran@gmail.com>
-Subject: [PATCH v11 11/20] timers: Retrieve next expiry of pinned/non-pinned timers separately
-Date: Wed, 21 Feb 2024 10:05:39 +0100
-Message-Id: <20240221090548.36600-12-anna-maria@linutronix.de>
+	Anna-Maria Behnsen <anna-maria@linutronix.de>
+Subject: [PATCH v11 15/20] timers: Check if timers base is handled already
+Date: Wed, 21 Feb 2024 10:05:43 +0100
+Message-Id: <20240221090548.36600-16-anna-maria@linutronix.de>
 In-Reply-To: <20240221090548.36600-1-anna-maria@linutronix.de>
 References: <20240221090548.36600-1-anna-maria@linutronix.de>
 Precedence: bulk
@@ -72,105 +71,40 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-For the conversion of the NOHZ timer placement to a pull at expiry time
-model it's required to have separate expiry times for the pinned and the
-non-pinned (movable) timers. Therefore struct timer_events is introduced.
+Due to the conversion of the NOHZ timer placement to a pull at expiry
+time model, the per CPU timer bases with non pinned timers are no
+longer handled only by the local CPU. In case a remote CPU already
+expires the non pinned timers base of the local CPU, nothing more
+needs to be done by the local CPU. A check at the begin of the expire
+timers routine is required, because timer base lock is dropped before
+executing the timer callback function.
 
-No functional change
+This is a preparatory work, but has no functional impact right now.
 
-Originally-by: Richard Cochran (linutronix GmbH) <richardcochran@gmail.com>
 Signed-off-by: Anna-Maria Behnsen <anna-maria@linutronix.de>
 Reviewed-by: Frederic Weisbecker <frederic@kernel.org>
 ---
-v10: Fix no functional change message
+v10: s/cpu/CPU/ in commit message
 
-v9: Update was required (change of preceding patches)
+v6: Drop double negation
 ---
- kernel/time/timer.c | 35 +++++++++++++++++++++++++++++++----
- 1 file changed, 31 insertions(+), 4 deletions(-)
+ kernel/time/timer.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
 diff --git a/kernel/time/timer.c b/kernel/time/timer.c
-index 5ca831444954..f119b44e44e0 100644
+index 52af50d00ae6..7b9f9ed25fc2 100644
 --- a/kernel/time/timer.c
 +++ b/kernel/time/timer.c
-@@ -221,6 +221,11 @@ struct timer_base {
+@@ -2240,6 +2240,9 @@ static inline void __run_timers(struct timer_base *base)
  
- static DEFINE_PER_CPU(struct timer_base, timer_bases[NR_BASES]);
+ 	lockdep_assert_held(&base->lock);
  
-+struct timer_events {
-+	u64	local;
-+	u64	global;
-+};
++	if (base->running_timer)
++		return;
 +
- #ifdef CONFIG_NO_HZ_COMMON
- 
- static DEFINE_STATIC_KEY_FALSE(timers_nohz_active);
-@@ -1986,10 +1991,11 @@ static unsigned long next_timer_interrupt(struct timer_base *base,
- static inline u64 __get_next_timer_interrupt(unsigned long basej, u64 basem,
- 					     bool *idle)
- {
-+	struct timer_events tevt = { .local = KTIME_MAX, .global = KTIME_MAX };
- 	unsigned long nextevt, nextevt_local, nextevt_global;
- 	struct timer_base *base_local, *base_global;
--	u64 expires = KTIME_MAX;
- 	bool local_first;
-+	u64 expires;
- 
- 	/*
- 	 * Pretend that there is no timer pending if the cpu is offline.
-@@ -1998,7 +2004,7 @@ static inline u64 __get_next_timer_interrupt(unsigned long basej, u64 basem,
- 	if (cpu_is_offline(smp_processor_id())) {
- 		if (idle)
- 			*idle = true;
--		return expires;
-+		return tevt.local;
- 	}
- 
- 	base_local = this_cpu_ptr(&timer_bases[BASE_LOCAL]);
-@@ -2014,13 +2020,32 @@ static inline u64 __get_next_timer_interrupt(unsigned long basej, u64 basem,
- 
- 	nextevt = local_first ? nextevt_local : nextevt_global;
- 
--	if (base_local->timers_pending || base_global->timers_pending) {
-+	/*
-+	 * If the @nextevt is at max. one tick away, use @nextevt and store
-+	 * it in the local expiry value. The next global event is irrelevant in
-+	 * this case and can be left as KTIME_MAX.
-+	 */
-+	if (time_before_eq(nextevt, basej + 1)) {
- 		/* If we missed a tick already, force 0 delta */
- 		if (time_before(nextevt, basej))
- 			nextevt = basej;
--		expires = basem + (u64)(nextevt - basej) * TICK_NSEC;
-+		tevt.local = basem + (u64)(nextevt - basej) * TICK_NSEC;
-+		goto forward;
- 	}
- 
-+	/*
-+	 * Update tevt.* values:
-+	 *
-+	 * If the local queue expires first, then the global event can be
-+	 * ignored. If the global queue is empty, nothing to do either.
-+	 */
-+	if (!local_first && base_global->timers_pending)
-+		tevt.global = basem + (u64)(nextevt_global - basej) * TICK_NSEC;
-+
-+	if (base_local->timers_pending)
-+		tevt.local = basem + (u64)(nextevt_local - basej) * TICK_NSEC;
-+
-+forward:
- 	/*
- 	 * We have a fresh next event. Check whether we can forward the
- 	 * base.
-@@ -2051,6 +2076,8 @@ static inline u64 __get_next_timer_interrupt(unsigned long basej, u64 basem,
- 	raw_spin_unlock(&base_global->lock);
- 	raw_spin_unlock(&base_local->lock);
- 
-+	expires = min_t(u64, tevt.local, tevt.global);
-+
- 	return cmp_next_hrtimer_event(basem, expires);
- }
- 
+ 	while (time_after_eq(jiffies, base->clk) &&
+ 	       time_after_eq(jiffies, base->next_expiry)) {
+ 		levels = collect_expired_timers(base, heads);
 -- 
 2.39.2
 
