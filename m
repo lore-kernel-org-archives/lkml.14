@@ -1,86 +1,78 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C44A6129A6C
-	for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 22:30:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCAE269318;
+	Wed, 21 Feb 2024 22:30:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708554616; cv=none; b=FvWB9Ii14DhM/8WJLMlic0udQJTfbjI8VFe3zhz3Q7gdHwripb0UJw5+whrxm1plAq9lOlFNfI8eZOsG3+69g9RrYU6hlzuPmYH2yrRYHZ4KhcZaezOpn0HHZukWHH6Y6qWyavRyZ16TqsH3aNI+lxiDk59UiY6QDQvCa2bCtHQ=
+	t=1708554630; cv=none; b=sAHvN4u4m9hniESHZs88LJuMHiE1athXGzxeSrcneJI1KsZ0q+bhkGi81ecuX8FdjIm0lmYT8eOiliPNFUKKsYuN0BjhPJlm+tQiTxJOlzjb3kNLtaLgd6PgDlvRFU0SU49p+imek8fq1mnkZ+gFgkfVLqV/GjKqZipiK4uagik=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708554616; c=relaxed/simple;
-	bh=GU7BcpQegK/Po/OrazsdN3umuvQx2U8gfB37BUk9oaM=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=eKjk9tHBEEUnRnQeVyj8Tw5Wp0fT7kaBq1cKjWhlV3Uf8dRDNaGxbTe5QRn2RlOHjpAFzWDC95dDLW1zxfgYqA7Hc5yxCl9XyXov2v0Db8mbNt3bLouxsgfAgizD8j9JjEPih3sZyeqjusenYD6gb4dqBHzft5VpTw1RVzeAwZY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=IKSCSYPd; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1708554630; c=relaxed/simple;
+	bh=OT7EOi/ourfNVtCJMunc3Vcywb1aP07ZDVjFhX6VFOI=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=Mw+gRrh+mSV5D2Fjc5rorllKgyT9P+7xEsRXkE3dQpN8cbzCqO8qQ+WPLWs4d1OmBQaKff1d3bPt3mdViR76yBoZGm56Vt/BD/BbrmAez9+TBOyayY8rBxp9nogjK01X6JUWA7+es9q67McRJBfRvn0+aGR5QYoPC0YETkncAik=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AaoCCqzN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="IKSCSYPd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 91630C433F1;
-	Wed, 21 Feb 2024 22:30:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-	s=korg; t=1708554613;
-	bh=GU7BcpQegK/Po/OrazsdN3umuvQx2U8gfB37BUk9oaM=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=IKSCSYPdaXS3m4XBwaV529Y9WSat1k7rPJMU+j1OFvO+L2/5dr5bBeBIdjalBytpi
-	 TkqTHqaYMLShAITeks9Zs4m3aAUQFs2azGSu9G7UWUjPGjTQOQ4qelDkCrDUlTn+Ly
-	 SYmU/YF2+MdeLaGeAafH+HLapQtdF+8eAL/jrYDI=
-Date: Wed, 21 Feb 2024 14:30:13 -0800
-From: Andrew Morton <akpm@linux-foundation.org>
-To: Yu Zhao <yuzhao@google.com>
-Cc: Byungchul Park <byungchul@sk.com>, linux-kernel@vger.kernel.org,
- linux-mm@kvack.org, kernel_team@skhynix.com
-Subject: Re: [PATCH] mm, vmscan: Don't turn on cache_trim_mode at the
- highest scan priority
-Message-Id: <20240221143013.d130b310a1306dfed0f6603a@linux-foundation.org>
-In-Reply-To: <CAOUHufbGQ_ZFLhVSPG78pbMtvcfZ5v-E3oRdfZDP2mtHtkrPVg@mail.gmail.com>
-References: <20240208061825.36640-1-byungchul@sk.com>
-	<CAOUHufYUC-oWePfqbbmm15Ue9QLfPg1G2nhXn6iSX_A460O6Uw@mail.gmail.com>
-	<20240216072434.GC32626@system.software.com>
-	<CAOUHufbGQ_ZFLhVSPG78pbMtvcfZ5v-E3oRdfZDP2mtHtkrPVg@mail.gmail.com>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AaoCCqzN"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 35E49C433A6;
+	Wed, 21 Feb 2024 22:30:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1708554629;
+	bh=OT7EOi/ourfNVtCJMunc3Vcywb1aP07ZDVjFhX6VFOI=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=AaoCCqzNI/fZmqRVXFGH6nfYvlCKzDu/oi16Ru3I4J3K87KKsb/Gw7iRw3R0/nEd/
+	 GnrE3Cv9EF7HjiOZvQOQr3cBCH/qMiJVNrjeeoXEiqX32VqtUDcHOK2Qdw76MAVLos
+	 FBzGS0BFL7pviE2d2Nie27Gma/lSXFQs/F4BOhfgnYd2J2aZLMgzcbVTeNSdLECyuD
+	 CiTFupC73iF00Hw7hMnj65TYZpvx6DQxIYQIFwB2qC8cHimWGpop1E1/OEMrUluw2M
+	 fLtgQZK9pMhWqlPASUmEhO0vHIt06DXG/Lt4P09SnFjkHZYbQzyx3cy8L7PhwliR+Q
+	 P4Hw1ek4HJPug==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 1A50BC00446;
+	Wed, 21 Feb 2024 22:30:29 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH ver.2] gtp: fix use-after-free and null-ptr-deref in
+ gtp_genl_dump_pdp()
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <170855462910.28356.12191334633977961990.git-patchwork-notify@kernel.org>
+Date: Wed, 21 Feb 2024 22:30:29 +0000
+References: <20240214162733.34214-1-kovalev@altlinux.org>
+In-Reply-To: <20240214162733.34214-1-kovalev@altlinux.org>
+To: None <kovalev@altlinux.org>
+Cc: linux-kernel@vger.kernel.org, netdev@vger.kernel.org, edumazet@google.com,
+ pablo@netfilter.org, laforge@gnumonks.org, davem@davemloft.net,
+ kuba@kernel.org, pabeni@redhat.com, nickel@altlinux.org,
+ oficerovas@altlinux.org, dutyrok@altlinux.org, stable@vger.kernel.org
 
-On Sat, 17 Feb 2024 00:11:25 -0500 Yu Zhao <yuzhao@google.com> wrote:
+Hello:
 
-> On Fri, Feb 16, 2024 at 2:24 AM Byungchul Park <byungchul@sk.com> wrote:
-> >
-> > On Fri, Feb 16, 2024 at 12:55:17AM -0500, Yu Zhao wrote:
-> > > On Thu, Feb 8, 2024 at 1:18 AM Byungchul Park <byungchul@sk.com> wrote:
-> > > >
-> > > > With cache_trim_mode on, reclaim logic doesn't bother reclaiming anon
-> > > > pages. However, it should be more careful to turn on the mode because
-> > > > it's going to prevent anon pages from reclaimed even if there are huge
-> > > > ammount of anon pages that are very cold so should be reclaimed. Even
-> > > > worse, that can lead kswapd_failures to be MAX_RECLAIM_RETRIES and stop
-> > > > until direct reclaim eventually works to resume kswapd.
-> > >
-> > > Is a theory or something observed in the real world? If it's the
-> > > former, would this change risk breaking existing use cases? It's the
-> >
-> > I faced the latter case.
-> >
-> > > latter, where are the performance numbers to show what it looks like
-> > > before and after this patch?
+This patch was applied to netdev/net.git (main)
+by Jakub Kicinski <kuba@kernel.org>:
+
+On Wed, 14 Feb 2024 19:27:33 +0300 you wrote:
+> From: Vasiliy Kovalev <kovalev@altlinux.org>
 > 
-> Let me ask again: where are the performance numbers to show what it
-> looks like before and after this patch?
+> The gtp_net_ops pernet operations structure for the subsystem must be
+> registered before registering the generic netlink family.
 > 
-> > Before:
-> >
-> > Whenever the system meets the condition to turn on cache_trim_mode but
-> > few cache pages to trim, kswapd fails without scanning anon pages that
-> > are plenty and cold for sure and it retries 8 times and looks *stopped
-> > for ever*.
+> Syzkaller hit 'general protection fault in gtp_genl_dump_pdp' bug:
+> 
+> [...]
 
-Does "stopped for ever" mean that kswapd simply stops functioning?
+Here is the summary with links:
+  - [ver.2] gtp: fix use-after-free and null-ptr-deref in gtp_genl_dump_pdp()
+    https://git.kernel.org/netdev/net/c/136cfaca2256
 
-If so, that's a pretty serious issue.  Please fully describe all of
-this in the changelog.  Please also address Yu Zhao's review comments
-and send us a v2 patch?  Thanks.
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
 
