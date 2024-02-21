@@ -1,32 +1,37 @@
-Received: from new-mail.astralinux.ru (new-mail.astralinux.ru [51.250.53.244])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D39E33B794;
-	Wed, 21 Feb 2024 12:14:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=51.250.53.244
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C3FA34F8A2
+	for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 12:23:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708517647; cv=none; b=OOSm5q11P1djgUbh18Zlnv0jEyFm4Eg/rRGP1i77bRtHTguJmBFSmNn3rs6mkCSFwla0uSuKAHGXUq6cd9TnNXi+ME7uc762xjwq9oXetuILSrLQ4zlvY7fAq2k7t7nqnR9/1p60l4TJLX//okIEi4+oZCCM2ZgvaSN8LfNUk28=
+	t=1708518226; cv=none; b=suBWxo2A6iICSYsX7gazHyznfqAHvYDQ9TGPRk7sEPWclGL5OMJCWRa3WczXno9Tg2h9i7A9juXSh5zpuElPQnYoAMtpxbJg09FXTviqdfNKG3+3pKZTtxBqAKdCDTNRdlDRrz+iDQI4Bc9L9cDzEyO3eu37gwYBWPdsW0reUNk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708517647; c=relaxed/simple;
-	bh=MqhbnS1NjXDY8Qh9eFNNfw3K5AIjRJ9BCE+okMQm6tI=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=TDRMKHXLBxEhbbinfjHjXF3YCe7yeeR/gMflUMI+qSgJaVbxkVzwBzj0Jf/chpMtEYhZlEhRKwwBH1NFlJu4Dbqe7o9197oVqXXaN9Iw+jMWenSJ2oBczSoxqftbQI6GlzyuDSN9vu1RNjhxsjpb6/DcjdjpUwh2vytDytZ6qsY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=astralinux.ru; spf=pass smtp.mailfrom=astralinux.ru; arc=none smtp.client-ip=51.250.53.244
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=astralinux.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=astralinux.ru
-Received: from rbta-msk-lt-302690.astralinux.ru (unknown [10.177.233.36])
-	by new-mail.astralinux.ru (Postfix) with ESMTPA id 4Tfw1m5C1dzlVxB;
-	Wed, 21 Feb 2024 15:04:44 +0300 (MSK)
-From: Alexandra Diupina <adiupina@astralinux.ru>
-To: "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>
-Cc: Alexandra Diupina <adiupina@astralinux.ru>,
-	"Martin K. Petersen" <martin.petersen@oracle.com>,
-	linux-scsi@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	lvc-project@linuxtesting.org
-Subject: [PATCH] Add NULL check for SCp in process_script_interrupt()
-Date: Wed, 21 Feb 2024 15:04:14 +0300
-Message-Id: <20240221120414.29192-1-adiupina@astralinux.ru>
-X-Mailer: git-send-email 2.30.2
+	s=arc-20240116; t=1708518226; c=relaxed/simple;
+	bh=oX9aizoUCrRamqQe1T5d8/5QrboBphelf0aIZYAOE6I=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=YPVVU09sY7KtdIooLQbwQYe/rS70rP/F5CdpP7Vp1XRkFu4MWjbULfU6D9+izfZ7VDPyQU0bR6VV4+S5Cenmnnpa95FeXpdIy5UoKyv3Jvctl41o1/mErmoYiIDplmk2lE4TBOxj1uL5sD+0ln62rXyWb6/KSQCLFCI6CWBA/JY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5B572FEC;
+	Wed, 21 Feb 2024 04:24:22 -0800 (PST)
+Received: from eglon.cambridge.arm.com (eglon.cambridge.arm.com [10.1.197.60])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6FCC43F762;
+	Wed, 21 Feb 2024 04:23:42 -0800 (PST)
+From: James Morse <james.morse@arm.com>
+To: x86@kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Fenghua Yu <fenghua.yu@intel.com>,
+	Reinette Chatre <reinette.chatre@intel.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	H Peter Anvin <hpa@zytor.com>,
+	Tony Luck <tony.luck@intel.com>,
+	James Morse <james.morse@arm.com>
+Subject: [PATCH] x86/resctrl: Remove lockdep annotation that triggers false positive
+Date: Wed, 21 Feb 2024 12:23:06 +0000
+Message-Id: <20240221122306.633273-1-james.morse@arm.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -34,48 +39,43 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-DrWeb-SpamScore: -100
-X-DrWeb-SpamState: legit
-X-DrWeb-SpamDetail: gggruggvucftvghtrhhoucdtuddrgedvfedrvdehuddgtddvucetufdoteggodetrfcurfhrohhfihhlvgemucfftfghgfeunecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevufffkffoggfgsedtkeertdertddtnecuhfhrohhmpeetlhgvgigrnhgurhgrucffihhuphhinhgruceorgguihhuphhinhgrsegrshhtrhgrlhhinhhugidrrhhuqeenucggtffrrghtthgvrhhnpeduleetfeehffekueeuffektefgudfgffeutdefudfghedvieffheehleeuieehteenucffohhmrghinheplhhinhhugihtvghsthhinhhgrdhorhhgnecukfhppedutddrudejjedrvdeffedrfeeinecurfgrrhgrmhephhgvlhhopehrsghtrgdqmhhskhdqlhhtqdeftddvieeltddrrghsthhrrghlihhnuhigrdhruhdpihhnvghtpedutddrudejjedrvdeffedrfeeimeegvdeiudegpdhmrghilhhfrhhomheprgguihhuphhinhgrsegrshhtrhgrlhhinhhugidrrhhupdhnsggprhgtphhtthhopeeipdhrtghpthhtoheplfgrmhgvshdruehothhtohhmlhgvhiesjfgrnhhsvghnrfgrrhhtnhgvrhhshhhiphdrtghomhdprhgtphhtthhopegrughiuhhpihhnrgesrghsthhrrghlihhnuhigrdhruhdprhgtphhtthhopehmrghrthhinhdrphgvthgvrhhsvghnsehorhgrtghlvgdrtghomhdprhgtphhtthhopehlihhnuhigqdhstghsihesvhhgvghrrd
- hkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlvhgtqdhprhhojhgvtghtsehlihhnuhigthgvshhtihhnghdrohhrgh
-X-DrWeb-SpamVersion: Vade Retro 01.423.251#02 AS+AV+AP Profile: DRWEB; Bailout: 300
-X-AntiVirus: Checked by Dr.Web [MailD: 11.1.19.2307031128, SE: 11.1.12.2210241838, Core engine: 7.00.62.01180, Virus records: 12454253, Updated: 2024-Feb-21 10:21:39 UTC]
 
-SCp is 3rd argument of process_script_interrupt()
-(calls in drivers/scsi/53c700.c:1346 where SCp != NULL and
-drivers/scsi/53c700.c:1672 where this condition is not guaranteed).
-Before call process_script_interrupt() in drivers/scsi/53c700.c:1672
-there is SCp = hostdata->cmd, wherein (type casts omitted)
-hostdata = host->hostdata[0], host = dev_id,
-dev_id - 2nd argument of NCR_700_intr().
-NCR_700_intr() is used when calling request_irq() -> request_threaded_irq()
-as the 2nd argument.
-Last argument of call request_irq(..., NCR_700_intr, ... host) is host.
-host = NCR_700_detect(), host->hostdata[0] = hostdata, hostdata->cmd = NULL.
-So, there is possible NULL pointer dereference,
-so add NULL check for SCp in process_script_interrupt() to avoid it.
+get_domain_from_cpu() walks a list of domains to find the one that
+contains the specified CPU. This needs to be protected against races
+with CPU hotplug when the list is modified. It has recently gained a
+lockdep annotation to check this.
 
-Found by Linux Verification Center (linuxtesting.org) with SVACE.
+The lockdep annotation causes false positives when called via IPI
+as the lock is held, but by another process. Remove it.
 
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Signed-off-by: Alexandra Diupina <adiupina@astralinux.ru>
+Reported-by: Tony Luck <tony.luck@intel.com>
+Link: https://lore.kernel.org/all/ZdUSwOM9UUNpw84Y@agluck-desk3/
+Fixes: fb700810d30b ("x86/resctrl: Separate arch and fs resctrl locks")
+Signed-off-by: James Morse <james.morse@arm.com>
 ---
- drivers/scsi/53c700.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/x86/kernel/cpu/resctrl/core.c | 9 ---------
+ 1 file changed, 9 deletions(-)
 
-diff --git a/drivers/scsi/53c700.c b/drivers/scsi/53c700.c
-index 857be0f3ae5b..54bcc5727fbb 100644
---- a/drivers/scsi/53c700.c
-+++ b/drivers/scsi/53c700.c
-@@ -1067,7 +1067,7 @@ process_script_interrupt(__u32 dsps, __u32 dsp, struct scsi_cmnd *SCp,
- 			//}
- 			NCR_700_scsi_done(hostdata, SCp, hostdata->status[0]);
- 		}
--	} else if((dsps & 0xfffff0f0) == A_UNEXPECTED_PHASE) {
-+	} else if ((dsps & 0xfffff0f0) == A_UNEXPECTED_PHASE && SCp) {
- 		__u8 i = (dsps & 0xf00) >> 8;
+diff --git a/arch/x86/kernel/cpu/resctrl/core.c b/arch/x86/kernel/cpu/resctrl/core.c
+index 9f1aa555a8ea..83e40341583e 100644
+--- a/arch/x86/kernel/cpu/resctrl/core.c
++++ b/arch/x86/kernel/cpu/resctrl/core.c
+@@ -362,15 +362,6 @@ struct rdt_domain *get_domain_from_cpu(int cpu, struct rdt_resource *r)
+ {
+ 	struct rdt_domain *d;
  
- 		scmd_printk(KERN_ERR, SCp, "UNEXPECTED PHASE %s (%s)\n",
+-	/*
+-	 * Walking r->domains, ensure it can't race with cpuhp.
+-	 * Because this is called via IPI by rdt_ctrl_update(), assertions
+-	 * about locks this thread holds will lead to false positives. Check
+-	 * someone is holding the CPUs lock.
+-	 */
+-	if (IS_ENABLED(CONFIG_LOCKDEP))
+-		lockdep_is_cpus_held();
+-
+ 	list_for_each_entry(d, &r->domains, list) {
+ 		/* Find the domain that contains this CPU */
+ 		if (cpumask_test_cpu(cpu, &d->cpu_mask))
 -- 
-2.30.2
+2.39.2
 
