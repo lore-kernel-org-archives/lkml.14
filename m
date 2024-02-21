@@ -1,104 +1,154 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1634942A8B;
-	Wed, 21 Feb 2024 18:16:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33B3D42A8B
+	for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 18:17:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708539407; cv=none; b=NzaBqxI7wnYIq0Ksu4Ehda6RGB+yFjIxcK004WADPESsyGSGPPO9hT/G55JwOO1LxIDKaHiDYlUaMiLy2xGSYaes/ObjZaaTsxRPopxvOWAwQ9D7tYHBemKc7X49km3bNYLHd3F0+XeyDfGRp3VogRS1C8mGpX3La5yedZpxryc=
+	t=1708539437; cv=none; b=UjIUsP1/C/aaU1pqvl6CzwMKNlj/j7hxAFWuuBxv42O+xi6doYbV3Enepq909RlwV0OVYpgEsUh+HXAumEm/KcyfZatdQyRYzmsAxn1CxroTG2mEyAIzptompcUDklFW+zslQsgy8XVg+cKXREh4WkdKE5sIvbeCm0Xl2bQVw6Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708539407; c=relaxed/simple;
-	bh=csK/DsyAOVnlfATFEXn3F2y/yVFcNC3OQEkT5JeAyec=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QETOAmcgOuVTIdhj/j0sjngR3fPaEYLjLe1XHAIXz5zdrTNLa2UPx/r9UDBZO8YsM2z+FT8fnd0vvHjh+xeKEGiW2/CcBuRqSVdJBBpZQUuu1OVNfbJnUS2U/JNyz6AiE7kci9IfjGO4vqGuiLHTGdwHUp+TmcbDhKXIOCSFglI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ov6cm/hg; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ov6cm/hg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EBCEEC433F1;
-	Wed, 21 Feb 2024 18:16:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708539406;
-	bh=csK/DsyAOVnlfATFEXn3F2y/yVFcNC3OQEkT5JeAyec=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Ov6cm/hg2mleRWqUd3r9/W+rkcAFVU7c27Hx8hcFb4M7UnzZrk5N2v269pkhvIIp6
-	 bYnBdTUndPV/TFw7qV/WyGz5Y5QL0nzqxYt/dpw22VmM8LawYB+liEKK4qt6TGiyDk
-	 QjYeo/CJfpAl1TAZ9ES5BuQc1+oqqSXYqQ4XvqrYCwSuthuV4CUrHLGWw1uQydZLOx
-	 AwoNAI6RkOBmr3gjndpgIT+LOuOI9T5Q22ViTkf+qm8p7en2UwVaM3vLN4MN3sD7yL
-	 3uBtCIJ1v9SEg1kQuOc2Sf9OQiw+ZsqkoXTxilnmDq1+1x53S/cyRAhhlK17+JAJew
-	 /3/DRkmjzoJ7g==
-Date: Wed, 21 Feb 2024 18:16:36 +0000
-From: Mark Brown <broonie@kernel.org>
-To: Thiago Jung Bauermann <thiago.bauermann@linaro.org>
-Cc: Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Marc Zyngier <maz@kernel.org>,
-	Oliver Upton <oliver.upton@linux.dev>,
-	James Morse <james.morse@arm.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Arnd Bergmann <arnd@arndb.de>, Oleg Nesterov <oleg@redhat.com>,
-	Eric Biederman <ebiederm@xmission.com>,
-	Kees Cook <keescook@chromium.org>, Shuah Khan <shuah@kernel.org>,
-	"Rick P. Edgecombe" <rick.p.edgecombe@intel.com>,
-	Deepak Gupta <debug@rivosinc.com>, Ard Biesheuvel <ardb@kernel.org>,
-	Szabolcs Nagy <Szabolcs.Nagy@arm.com>,
-	"H.J. Lu" <hjl.tools@gmail.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Florian Weimer <fweimer@redhat.com>,
-	Christian Brauner <brauner@kernel.org>,
-	linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org,
-	kvmarm@lists.linux.dev, linux-fsdevel@vger.kernel.org,
-	linux-arch@vger.kernel.org, linux-mm@kvack.org,
-	linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-riscv@lists.infradead.org
-Subject: Re: [PATCH v8 20/38] arm64/gcs: Ensure that new threads have a GCS
-Message-ID: <9400cfc3-0e87-4abd-afbc-172736d77a1b@sirena.org.uk>
-References: <20240203-arm64-gcs-v8-0-c9fec77673ef@kernel.org>
- <20240203-arm64-gcs-v8-20-c9fec77673ef@kernel.org>
- <874je399ld.fsf@linaro.org>
+	s=arc-20240116; t=1708539437; c=relaxed/simple;
+	bh=XaMobFpXAK8tIXrf0/UQugdaVpU+uyKO0rivX2fVDtI=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=FWybEEloO9mJY3m9S/ZpOEREYr1N7Mn8XoSaSxrh5EArBRnFj09QFxA4EV8Pk1Kdbq68FgWFn75DDdVh6eBCbiaiTbc+hJuzmM+7eHL8Auok3PfdV8VI/EzxzODsPn6Tqw3qF+lpYXCU5oGqmZw7l+OmMKKv3xbOrcwvrkuMjCM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 64274C433F1;
+	Wed, 21 Feb 2024 18:17:13 +0000 (UTC)
+Date: Wed, 21 Feb 2024 13:19:01 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: "Paul E. McKenney" <paulmck@kernel.org>
+Cc: Ankur Arora <ankur.a.arora@oracle.com>, linux-kernel@vger.kernel.org,
+ tglx@linutronix.de, peterz@infradead.org, torvalds@linux-foundation.org,
+ akpm@linux-foundation.org, luto@kernel.org, bp@alien8.de,
+ dave.hansen@linux.intel.com, hpa@zytor.com, mingo@redhat.com,
+ juri.lelli@redhat.com, vincent.guittot@linaro.org, willy@infradead.org,
+ mgorman@suse.de, jpoimboe@kernel.org, mark.rutland@arm.com,
+ jgross@suse.com, andrew.cooper3@citrix.com, bristot@kernel.org,
+ mathieu.desnoyers@efficios.com, glaubitz@physik.fu-berlin.de,
+ anton.ivanov@cambridgegreys.com, mattst88@gmail.com,
+ krypton@ulrich-teichert.org, David.Laight@aculab.com, richard@nod.at,
+ jon.grimm@amd.com, bharata@amd.com, boris.ostrovsky@oracle.com,
+ konrad.wilk@oracle.com
+Subject: Re: [PATCH 00/30] PREEMPT_AUTO: support lazy rescheduling
+Message-ID: <20240221131901.69c80c47@gandalf.local.home>
+In-Reply-To: <2b735ba4-8081-4ddb-9397-4fe83143d97f@paulmck-laptop>
+References: <87le7mpjpr.fsf@oracle.com>
+	<4e070ae0-29dc-41ee-aee6-0d3670304825@paulmck-laptop>
+	<0d4a4eec-ce91-48da-91b6-1708a97edaeb@paulmck-laptop>
+	<871q9dmndg.fsf@oracle.com>
+	<9916c73f-510c-47a6-a9b4-ea6b438e82c0@paulmck-laptop>
+	<87le7lkzj6.fsf@oracle.com>
+	<4bc4ea06-e3e9-4d22-bacf-71cae0ba673d@paulmck-laptop>
+	<0be4df28-99be-41a3-9e24-2b7cfc740b4a@paulmck-laptop>
+	<87r0hbkafi.fsf@oracle.com>
+	<7db5c057-8bd4-4209-8484-3a0f9f3cd02d@paulmck-laptop>
+	<2b735ba4-8081-4ddb-9397-4fe83143d97f@paulmck-laptop>
+X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="kWxKAN+nLkxhoap7"
-Content-Disposition: inline
-In-Reply-To: <874je399ld.fsf@linaro.org>
-X-Cookie: The second best policy is dishonesty.
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
+On Mon, 19 Feb 2024 08:48:20 -0800
+"Paul E. McKenney" <paulmck@kernel.org> wrote:
 
---kWxKAN+nLkxhoap7
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+> > I will look again -- it is quite possible that I was confused by earlier
+> > in-fleet setups that had Tasks RCU enabled even when preemption was
+> > disabled.  (We don't do that anymore, and, had I been paying sufficient
+> > attention, would not have been doing it to start with.  Back in the day,
+> > enabling rcutorture, even as a module, had the side effect of enabling
+> > Tasks RCU.  How else to test it, right?  Well...)  
+> 
+> OK, I got my head straight on this one...
+> 
+> And the problem is in fact that Tasks RCU isn't normally present
+> in non-preemptible kernels.  This is because normal RCU will wait
+> for preemption-disabled regions of code, and in PREMPT_NONE and
+> PREEMPT_VOLUNTARY kernels, that includes pretty much any region of code
+> lacking an explicit schedule() or similar.  And as I understand it,
+> tracing trampolines rely on this implicit lack of preemption.
+> 
+> So, with lazy preemption, we could preempt in the middle of a
+> trampoline, and synchronize_rcu() won't save us.
+> 
+> Steve and Mathieu will correct me if I am wrong.
+> 
+> If I do understand this correctly, one workaround is to remove the
+> "if PREEMPTIBLE" on all occurrences of "select TASKS_RCU".  That way,
+> all kernels would use synchronize_rcu_tasks(), which would wait for
+> a voluntary context switch.
+> 
+> This workaround does increase the overhead and tracepoint-removal
+> latency on non-preemptible kernels, so it might be time to revisit the
+> synchronization of trampolines.  Unfortunately, the things I have come
+> up with thus far have disadvantages:
+> 
+> o	Keep a set of permanent trampolines that enter and exit
+> 	some sort of explicit RCU read-side critical section.
+> 	If the address for this trampoline to call is in a register,
+> 	then these permanent trampolines remain constant so that
+> 	no synchronization of them is required.  The selected
+> 	flavor of RCU can then be used to deal with the non-permanent
+> 	trampolines.
+> 
+> 	The disadvantage here is a significant increase in the complexity
+> 	and overhead of trampoline code and the code that invokes the
+> 	trampolines.  This overhead limits where tracing may be used
+> 	in the kernel, which is of course undesirable.
 
-On Mon, Feb 19, 2024 at 11:02:22PM -0300, Thiago Jung Bauermann wrote:
-> Mark Brown <broonie@kernel.org> writes:
+I wonder if we can just see if the instruction pointer at preemption is at
+something that was allocated? That is, if it __is_kernel(addr) returns
+false, then we need to do more work. Of course that means modules will also
+trigger this. We could check __is_module_text() but that does a bit more
+work and may cause too much overhead. But who knows, if the module check is
+only done if the __is_kernel() check fails, maybe it's not that bad.
 
-> > +		gcspr_el0 = addr + size - (2 * sizeof(u64));
-> > +		if (!gcs_consume_token(tsk, gcspr_el0)) {
+-- Steve
 
-> Should this code validate the end of stack marker? Or doesn't it matter
-> whether the marker is correct or not?
-
-I don't think we specifically care, we're just looking for a token here.
-
---kWxKAN+nLkxhoap7
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmXWPgMACgkQJNaLcl1U
-h9BotQf9GJn/XYpiDfL/lza1ZizUnGoNmGMVjrNpXn5ZUEXw+EsNed40zfVPg2As
-MDBjwYmG0UWQjuOimqAPlqsQL2hNSgmuQpeOCdUJXv2+/WBRUOfix+1xhtnPUUlf
-VWqNyLLSjFbbzOAmYFiN1HTJkHsSs8FHbtskrWealJQ/wV+6GLXjkz4cP7dP84lL
-IZOifB9YSPxwaW7RKUtEJ3D6CfX0xZhD5eahzIbO4E74kha8flAy/1AuHvtlI/+O
-0oN9+6kUfQNptazvZMa8wZib2BDF1ORpASOrzn+hmFWgoUD2j2wbkMt/E8sH9ckT
-HygbfdF0QU3Xk7fxczBPUTsczeTLeA==
-=2YH/
------END PGP SIGNATURE-----
-
---kWxKAN+nLkxhoap7--
+> 
+> o	Check for being preempted within a trampoline, and track this
+> 	within the tasks structure.  The disadvantage here is that this
+> 	requires keeping track of all of the trampolines and adding a
+> 	check for being in one on a scheduler fast path.
+> 
+> o	Have a variant of Tasks RCU which checks the stack of preempted
+> 	tasks, waiting until all have been seen without being preempted
+> 	in a trampoline.  This still requires keeping track of all the
+> 	trampolines in an easy-to-search manner, but gets the overhead
+> 	of searching off of the scheduler fastpaths.
+> 
+> 	It is also necessary to check running tasks, which might have
+> 	been interrupted from within a trampoline.
+> 
+> 	I would have a hard time convincing myself that these return
+> 	addresses were unconditionally reliable.  But maybe they are?
+> 
+> o	Your idea here!
+> 
+> Again, the short-term workaround is to remove the "if PREEMPTIBLE" from
+> all of the "select TASKS_RCU" clauses.
+> 
+> > > > My next step is to try this on bare metal on a system configured as
+> > > > is the fleet.  But good progress for a week!!!  
+> > > 
+> > > Yeah this is great. Fingers crossed for the wider set of tests.  
+> > 
+> > I got what might be a one-off when hitting rcutorture and KASAN harder.
+> > I am running 320*TRACE01 to see if it reproduces.  
+> 
+> [ . . . ]
+> 
+> > So, first see if it is reproducible, second enable more diagnostics,
+> > third make more grace-period sequence numbers available to rcutorture,
+> > fourth recheck the diagnostics code, and then see where we go from there.
+> > It might be that lazy preemption needs adjustment, or it might be that
+> > it just tickled latent diagnostic issues in rcutorture.
+> > 
+> > (I rarely hit this WARN_ON() except in early development, when the
+> > problem is usually glaringly obvious, hence all the uncertainty.)  
+> 
+> And it is eminently reproducible.  Digging into it...
