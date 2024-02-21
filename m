@@ -1,189 +1,115 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BA6C3D3A1
-	for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 09:40:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 230803D3A1;
+	Wed, 21 Feb 2024 09:41:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708508429; cv=none; b=s6fI6xIXJgbkwybMtlFkxFVepcVZzO7VYUdklnK9Injh22EbF1CpUljHstJTTks1avI70Qkvc9FNlsl1A0gFsESZAuLzmbOAWCgGqCbS8nBCu+2uSF/TckQQw3tX0Dp68dKXnJMH/c1Sc/9+bLqBv0ztGLOvHWOOWTh9qB6DtPY=
+	t=1708508490; cv=none; b=OCX+HvVgO4OltOLoY+NGmYSZ1fV7/L0xMACRU3nC0JvyqO/3xMnhAg/R9/QHxa0TX8VstZ4ONoEJhK/+ekJ8ugV0cnSK8n+63X/iSpm8RXXKcSlcLLGF9I5WYMTpmji/Nxj7U1IKpTqTLmHzd3330Xw1jCaSXtoPqFe09squQNY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708508429; c=relaxed/simple;
-	bh=v5pG0UUUE/LoBnEvASxYM5p6sqdzBp802B5VBTcG/qg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jlLmAlNCSBJCxIE26IS1NnJZOmho08CLzBepL1CLhtdXvt/6GIAiM3d1Yspj6BgSHmEso8j3cUoUfhE7BcaRC6/wksS+eguaQZ2b+LfydOnkcdUq00bHJP7HEVyp9Qq28rlRj3t69vX+VdZzpR33QQ8OdC++yobGTsC4Z4KKN8w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=UNRPbhjT; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1708508490; c=relaxed/simple;
+	bh=yzhPkGmyhDClujHspv4zU8ozbniJXsmsLHFQtn3+hB4=;
+	h=From:To:Subject:Date:Message-Id:MIME-Version; b=nSc1zlQt1Z2N16RvOFwkJa+npzpmMukig2xvm8gwLmCFAkwdPul+1ju1ZtuHxbruxxEXp5GwpgRYGcN4Q6meJvWaIYyNhNxmiKAonBQR2ka40x/jaWqU+syvQDohzzeQAKdWJ2lTbwPZIF/pEciw72fjjMnXVfVQj8wFoWZdN+w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=X2yWFv6P; arc=none smtp.client-ip=209.85.210.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="UNRPbhjT"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1708508425;
-	bh=v5pG0UUUE/LoBnEvASxYM5p6sqdzBp802B5VBTcG/qg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=UNRPbhjTQ+sbeuVe7B4KQAmiuK4dMtRlSeTddzOJVLYk4u5TK3IdxE3q1hNh8bvF2
-	 Z10OJWvcXdOuQ7Fa38o03ZHhB3cizSNuM/K8scDKPU6xdBHWmCNb+sm98aW6SW2U/x
-	 xfckvfnbRti9ajjsooGXkrR0Qxet9jKQ0iY41ngRa5oW7MsDd1hEFvpZKTzACAi4Js
-	 L1JB0POBH4XRkTN30TIjnrBRxqIDTaBXRzFjU2JAlWElczm10avgUY7k25VTjqp5xP
-	 WJEM9sddmIRwuwnrstsehDTTF7Utgt7LRept6/q7NnE/tQKeEkgdUElyb3W6eoFi2D
-	 myQYMKkb+8H3w==
-Received: from localhost (cola.collaboradmins.com [195.201.22.229])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: alarumbe)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 83D2D378107C;
-	Wed, 21 Feb 2024 09:40:25 +0000 (UTC)
-Date: Wed, 21 Feb 2024 09:40:24 +0000
-From: =?utf-8?Q?Adri=C3=A1n?= Larumbe <adrian.larumbe@collabora.com>
-To: Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>
-Cc: Daniel Vetter <daniel@ffwll.ch>, Steven Price <steven.price@arm.com>, 
-	Lionel Landwerlin <lionel.g.landwerlin@linux.intel.com>, Boris Brezillon <boris.brezillon@collabora.com>, 
-	Rob Herring <robh@kernel.org>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
-	David Airlie <airlied@gmail.com>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
-Subject: Re: [PATCH 0/1] Always record job cycle and timestamp information
-Message-ID: <jvohxwzrgwqmzhwws3tzn53ii6eyexkutwl7pdj5buk6k6wx7c@ucxoohk5e3iw>
-References: <20240214121435.3813983-1-adrian.larumbe@collabora.com>
- <ba987da3-b4aa-410c-95ae-434e94793d85@arm.com>
- <CAKMK7uH=QKSyMgsOYCHMwE7iv6jQZRwUMcKq=HiXsBXBCv5BCQ@mail.gmail.com>
- <cfe1870f-16ff-45b4-8966-6bb536d3cae7@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X2yWFv6P"
+Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-6de3141f041so4480503b3a.0;
+        Wed, 21 Feb 2024 01:41:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1708508488; x=1709113288; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=jxPgBDv3C3dcuReLG+Pr4kZ7NGxk76ia560ll/5bMEk=;
+        b=X2yWFv6PPs7MO/iVMQFvFoNF/k1N4qzpQ7Et3K3IBd+kGmFod8nmBB1snnx/chLeif
+         6vqJMx0Z8PWNbmQSuCi6NPqh1BLCwpkbWOOOZFbKNqi8xBl7BpVA+4QMTqO1R+yj4QUQ
+         oaSZLBUaUqGIh8QhgnSqH6NgjhSESFwBpcCbHVATW7Nkx2pl9acFxwhG6rR7kl85/aBX
+         55ovLBIFDq3K/Sjsg7SVb2n06/MhRE+WTrJiW07uCqEjDeozc3Ck5yKMzOemozxhqex5
+         NxPDwjBezjsNk4rfqlNlAD13VzjibxgPxMWaF3Qrzi9N8N13amm5scM20w6J2nL9L6QH
+         hkVg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708508488; x=1709113288;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=jxPgBDv3C3dcuReLG+Pr4kZ7NGxk76ia560ll/5bMEk=;
+        b=fC4u5Gr9eo7uI0OXIHHV7er+cMM/MiMVKgjG3Qm2cRaZIX89JQqSYIZAZXVL6Xzsqk
+         h171zY2VGZu9gcvbVc24yLen/A0HgWr5Rci1hE5tyzPOq6liESIslWK1g6QEPH5L0+zV
+         wedQAcu6NrLRD4bLOQ3u4a79HV3n8abZ0F4aDssEPC4jOaG3VTI9WCcCRwsXjhNL7+Mc
+         EgHjOYE09Wj7BoKuUB56XnkRLCkRejcVHiwCsbAhjFEUMVBLJlQDbsy5pXbTQwHXW6EQ
+         DeWh6mfhmMCjwABYKc2m+Hq5TanMEsceZcS5K7dhX6GLhVlIVLO7FUO6cgIur2eom5yx
+         KWbw==
+X-Forwarded-Encrypted: i=1; AJvYcCUXFALdeA5LDapNeZ1t4JNR5NUlSBgfvfLd7RHqYMGbg+kZZOAMDe4VWM1UdAZcDQl++u7WtiUmouqnpNDRbMuJ5xNIR3F88fICVCu/fgL+1Kpe4eYW2llwys4pAHUOWX2dEPVlKP1ybw==
+X-Gm-Message-State: AOJu0Yw56/wzdrqeDUV+II3e+H41f9RAKowL7ZJaMWmmFonmNl0xb3Xc
+	dk3fAh9Ofk+0sq84cqT8xDjmapzDkNFIFY7cUUL3qpESmL/s7Qd1
+X-Google-Smtp-Source: AGHT+IEpYDF/aIErFO50W/tttHeceZ9QK7f/ypdE9/vLUtf1QQi2UI/UoCC3API4C5Z9wcpvGwoo9g==
+X-Received: by 2002:a05:6a00:2d0d:b0:6e4:5cf5:1b5b with SMTP id fa13-20020a056a002d0d00b006e45cf51b5bmr10524465pfb.30.1708508488450;
+        Wed, 21 Feb 2024 01:41:28 -0800 (PST)
+Received: from peter-bmc.dhcpserver.bu9bmc.local (1-34-21-66.hinet-ip.hinet.net. [1.34.21.66])
+        by smtp.gmail.com with ESMTPSA id lm4-20020a056a003c8400b006e488553f09sm1645026pfb.81.2024.02.21.01.41.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 21 Feb 2024 01:41:28 -0800 (PST)
+From: Peter Yin <peteryin.openbmc@gmail.com>
+To: patrick@stwcx.xyz,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Joel Stanley <joel@jms.id.au>,
+	Andrew Jeffery <andrew@aj.id.au>,
+	devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-aspeed@lists.ozlabs.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v3 0/9] Revise Meta(Facebook) Harma BMC(AST2600)
+Date: Wed, 21 Feb 2024 17:39:15 +0800
+Message-Id: <20240221093925.2393604-1-peteryin.openbmc@gmail.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <cfe1870f-16ff-45b4-8966-6bb536d3cae7@linux.intel.com>
 
-Hi,
+Summary:
+Revise linux device tree entry related to Meta(Facebook) Harma
+specific devices connected to BMC(AST2600) SoC.
 
-I just wanted to make sure we're on the same page on this matter. So in
-Panfrost, and I guess in almost every other single driver out there, HW perf
-counters and their uapi interface are orthogonal to fdinfo's reporting on drm
-engine utilisation.
+Base on : https://lore.kernel.org/all/CACPK8XePx+PvDKzPMjPRn_g9z8yrtAmLvP8Qbepm1AVjuCbaKw@mail.gmail.com/
 
-At the moment it seems like HW perfcounters and the way they're exposed to UM
-are very idiosincratic and any attempt to unify their interface into a common
-set of ioctl's sounds like a gargantuan task I wouldn't like to be faced with.
+Change log:
 
-As for fdinfo, I guess there's more room for coming up with common helpers that
-could handle the toggling of HW support for drm engine calculations, but I'd at
-least have to see how things are being done in let's say, Freedreno or Intel.
+v2 -> v3
+  - Patch 0007 - Revise max31790 address
+  - Patch 0008 - Harma: Add NIC Fru device
+  - Patch 0009 - Add ltc4286 device
 
-Right now there's a pressing need to get rid of the debugfs knob for fdinfo's
-drm engine profiling sources in Panfrost, after which I could perhaps draw up an
-RFC for how to generalise this onto other drivers.
+v1 -> v2
+  - Add infineon,slb9670 information for tpm.
+  - Patch 0006 - Add PDB temperature.
 
-Adrian
+v1
+  - Patch 0001 - Revise SGPIO line name.
+  - Patch 0002 - Mapping ttyS2 to UART4.
+  - Patch 0003 - Remove Vuart.
+  - Patch 0004 - Add cpu power good line name.
+  - Patch 0005 - Add spi-gpio.
 
-On 16.02.2024 17:43, Tvrtko Ursulin wrote:
-> 
-> On 16/02/2024 16:57, Daniel Vetter wrote:
-> > On Wed, Feb 14, 2024 at 01:52:05PM +0000, Steven Price wrote:
-> > > Hi Adrián,
-> > > 
-> > > On 14/02/2024 12:14, Adrián Larumbe wrote:
-> > > > A driver user expressed interest in being able to access engine usage stats
-> > > > through fdinfo when debugfs is not built into their kernel. In the current
-> > > > implementation, this wasn't possible, because it was assumed even for
-> > > > inflight jobs enabling the cycle counter and timestamp registers would
-> > > > incur in additional power consumption, so both were kept disabled until
-> > > > toggled through debugfs.
-> > > > 
-> > > > A second read of the TRM made me think otherwise, but this is something
-> > > > that would be best clarified by someone from ARM's side.
-> > > 
-> > > I'm afraid I can't give a definitive answer. This will probably vary
-> > > depending on implementation. The command register enables/disables
-> > > "propagation" of the cycle/timestamp values. This propagation will cost
-> > > some power (gates are getting toggled) but whether that power is
-> > > completely in the noise of the GPU as a whole I can't say.
-> > > 
-> > > The out-of-tree kbase driver only enables the counters for jobs
-> > > explicitly marked (BASE_JD_REQ_PERMON) or due to an explicit connection
-> > > from a profiler.
-> > > 
-> > > I'd be happier moving the debugfs file to sysfs rather than assuming
-> > > that the power consumption is small enough for all platforms.
-> > > 
-> > > Ideally we'd have some sort of kernel interface for a profiler to inform
-> > > the kernel what it is interested in, but I can't immediately see how to
-> > > make that useful across different drivers. kbase's profiling support is
-> > > great with our profiling tools, but there's a very strong connection
-> > > between the two.
-> > 
-> > Yeah I'm not sure whether a magic (worse probably per-driver massively
-> > different) file in sysfs is needed to enable gpu perf monitoring stats in
-> > fdinfo.
-> > 
-> > I get that we do have a bit a gap because the linux perf pmu stuff is
-> > global, and you want per-process, and there's kinda no per-process support
-> > for perf stats for devices. But that's probably the direction we want to
-> > go, not so much fdinfo. At least for hardware performance counters and
-> > things like that.
-> > 
-> > Iirc the i915 pmu support had some integration for per-process support,
-> > you might want to chat with Tvrtko for kernel side and Lionel for more
-> > userspace side. At least if I'm not making a complete mess and my memory
-> > is vaguely related to reality. Adding them both.
-> 
-> Yeah there are two separate things, i915 PMU and i915 Perf/OA.
-> 
-> If my memory serves me right I indeed did have a per-process support for i915
-> PMU implemented as an RFC (or at least a branch somewhere) some years back.
-> IIRC it only exposed the per engine GPU utilisation and did not find it very
-> useful versus the complexity. (I think it at least required maintaining a map
-> of drm clients per task.)
-> 
-> Our more useful profiling is using a custom Perf/OA interface (Observation
-> Architecture) which is possibly similar to kbase mentioned above. Why it is a
-> custom interface is explained in a large comment on top of i915_perf.c. Not
-> sure if all of them still hold but on the overall perf does not sound like the
-> right fit for detailed GPU profiling.
-> 
-> Also PMU drivers are very challenging to get the implementation right, since
-> locking model and atomicity requirements are quite demanding.
-> 
-> From my point of view, at least it is my initial thinking, if custom per
-> driver solutions are strongly not desired, it could be interesting to look
-> into whether there is enough commonality, in at least concepts, to see if a
-> new DRM level common but extensible API would be doable. Even then it may be
-> tricky to "extract" enough common code to justify it.
-> 
-> Regards,
-> 
-> Tvrtko
-> 
-> > 
-> > Cheers, Sima
-> > 
-> > 
-> > > 
-> > > Steve
-> > > 
-> > > > Adrián Larumbe (1):
-> > > >    drm/panfrost: Always record job cycle and timestamp information
-> > > > 
-> > > >   drivers/gpu/drm/panfrost/Makefile           |  2 --
-> > > >   drivers/gpu/drm/panfrost/panfrost_debugfs.c | 21 ------------------
-> > > >   drivers/gpu/drm/panfrost/panfrost_debugfs.h | 14 ------------
-> > > >   drivers/gpu/drm/panfrost/panfrost_device.h  |  1 -
-> > > >   drivers/gpu/drm/panfrost/panfrost_drv.c     |  5 -----
-> > > >   drivers/gpu/drm/panfrost/panfrost_job.c     | 24 ++++++++-------------
-> > > >   drivers/gpu/drm/panfrost/panfrost_job.h     |  1 -
-> > > >   7 files changed, 9 insertions(+), 59 deletions(-)
-> > > >   delete mode 100644 drivers/gpu/drm/panfrost/panfrost_debugfs.c
-> > > >   delete mode 100644 drivers/gpu/drm/panfrost/panfrost_debugfs.h
-> > > > 
-> > > > 
-> > > > base-commit: 6b1f93ea345947c94bf3a7a6e668a2acfd310918
-> > > 
-> > 
-> > --
-> > Daniel Vetter
-> > Software Engineer, Intel Corporation
-> > http://blog.ffwll.ch
+Peter Yin (9):
+  ARM: dts: aspeed: Harma: Revise SGPIO line name.
+  ARM: dts: aspeed: Harma: mapping ttyS2 to UART4.
+  ARM: dts: aspeed: Harma: Remove Vuart
+  ARM: dts: aspeed: Harma: Add cpu power good line name
+  ARM: dts: aspeed: Harma: Add spi-gpio
+  ARM: dts: aspeed: Harma: Add PDB temperature
+  ARM: dts: aspeed: Harma: Revise max31790 address
+  ARM: dts: aspeed: Harma: Add NIC Fru device
+  ARM: dts: aspeed: Harma: Add ltc4286 device
+
+ .../dts/aspeed/aspeed-bmc-facebook-harma.dts  | 59 +++++++++++++++----
+ 1 file changed, 47 insertions(+), 12 deletions(-)
+
+-- 
+2.25.1
 
