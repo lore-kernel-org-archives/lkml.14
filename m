@@ -1,144 +1,87 @@
-Received: from mail-io1-f46.google.com (mail-io1-f46.google.com [209.85.166.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C0D412DD81;
-	Wed, 21 Feb 2024 21:35:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93E62126F37
+	for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 21:36:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708551358; cv=none; b=oO5k34ddnqqxwmKoXCvb8IUiCSxHK0KprAsUzG+8M9CIxKwfej8gMUbyB4MEYZy7Xcp6wsfH7BgDTa7c3t2WkYzp4mZJLb8M6ewfMsPW12saKuTNmj42dM8h98kBUb0HJLh9aRH8EydR9Mvgqie3XTb7OkH/ADZOdM7bPWVa44E=
+	t=1708551414; cv=none; b=bjo6hu3YRU+O6zloiGiBgw0eGc1+JKBEggPp48+m/9yqMA1G0Y5g/FpFg1aYo09rT3rzlv46VIbsGf0ltWtHeAfl2BHog/LnsFdXX9zjPIXjeUe+eI+1hMI8jvrX+wEyvvwRyefwcu+tEX2iAxcrYf9I8MXyYXk9mv69psOayR8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708551358; c=relaxed/simple;
-	bh=7kAfcN1/13WrOj7hm7Y4/wFCohh865CFE4P/KUkvp1c=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rJ9W/S4jyJGaaYvE6kmuMEP20SgK+f3rB6MfRgYQu6/bIGFUtE+Kfd32zX+c5oFkctZGWANoq5nO1/Mj+5Nocyb+uXYtHdWY2imv87GPTw/EeCTeGqHxJ2D+0dXDEgk9d4U0ISCY6roKthUA+ajR7A7ic8FwS/qNFZ5qavqmyb0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MxjvrMMI; arc=none smtp.client-ip=209.85.166.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MxjvrMMI"
-Received: by mail-io1-f46.google.com with SMTP id ca18e2360f4ac-7c488a5af5eso6964539f.1;
-        Wed, 21 Feb 2024 13:35:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1708551356; x=1709156156; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=hEhygBtosGq+EZCjwlVt0RPtsTFLG976dZg39gbKTO0=;
-        b=MxjvrMMIEUwucQ17vwd1WU657hQ3Mm/unPdh9zSRwzcimFA0yUD8FAOLu8iYnRz9P0
-         vZQOub1Qpr3nRaHhDXIVA+QwLmtW6FPuElHS/mtn2k8ypdW9xX4bTI8eyBMJcTIHvRyh
-         E9+wO0PjkpbWDpJHMepg/81PHMr4VGEgvHyw/+lOxQYBgwjsK868aGtXfvJ6p69HsUJx
-         z/R1Q2uY7b97PPcGBVWtxlrxt+kaYO6mss9BnbwiRrtuTNgr6+LH8Lc44oocoKUAreJC
-         isQC8kPnhh0xiYdNPLMeAdI6714LYR4sCoWh8D4pvrmY8rnO2qtgzxFBI0oeyEykgp4Z
-         h+Rg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708551356; x=1709156156;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=hEhygBtosGq+EZCjwlVt0RPtsTFLG976dZg39gbKTO0=;
-        b=eagmxiH88QEgN2sfeU8tc9ur4z3BoIcnD9SLGjQ0zpUOqNDZZh8GywJxbBtBHcCkJy
-         pSgaTMrehvYlIWFuxwLSj+m7Sn39uLkHwVBF5Zq6O/DcgPuPdijNd9eTohese8aLN2tE
-         BtEwf7yJW6b9ti2MPHJVqaduK8ufGm/TKvCLS31EhmRElZE2WqcjALiECJ4jHOZmRfoe
-         KqLDksQYhL9BYoQQVwayL2ONnN5Bi9FdnWQO/ZTyZjqRFRaaUZtoQU5rjltRoJuj9C8A
-         0Cr51WqK3XWCPMJb5nDiqqqM8gQPXQqxKViQXF6iNJHPPZSALvDKiyVzjVk0/BV04SLA
-         n0/g==
-X-Forwarded-Encrypted: i=1; AJvYcCWuw0QrLmmRumJi2PxUvMCY/0nbMRV3m1h4TaUi4kcfUeTR3N/G/iOgaGyuRHKEpqDNEhgAD+q4A8ZDj+RBH0jgokKjayDAb5FZNPWSQ4xUWVIn3IGnkzxRfJqB7zugrc9JfaD1UwCwA+u/eBoaRT0m1l7JJGN7Gdaqp1hGA3/9S8pe6+9FuJN/unIcXR6/sxSgwtEEYLX3z2PmQbzuF4pM1E0hYRXMZXESqa+F
-X-Gm-Message-State: AOJu0Yzi+wEBAYtX7uHT0kiKQV6E4TxRlrva4A6xsmNoj55iHmMfAyDZ
-	WoDtuzoYMfNFrU4khwuZc4ZHwu+8LCVx9OdmE3rmGBFcd3ctTprCidKktZjT
-X-Google-Smtp-Source: AGHT+IFmF1+6vZPUdEg3sXIJoAZI1kHF31CDjrsju8l+yXoRnYkhWW8unvAUdMdGtN7NXXgO7XVipQ==
-X-Received: by 2002:a6b:6f15:0:b0:7bf:e57f:3ecf with SMTP id k21-20020a6b6f15000000b007bfe57f3ecfmr657115ioc.0.1708551356458;
-        Wed, 21 Feb 2024 13:35:56 -0800 (PST)
-Received: from localhost ([2a02:168:59f0:1:63b6:5e21:e19f:4684])
-        by smtp.gmail.com with ESMTPSA id f32-20020a0284a3000000b00473c8573648sm3007942jai.146.2024.02.21.13.35.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 21 Feb 2024 13:35:56 -0800 (PST)
-Date: Wed, 21 Feb 2024 22:35:50 +0100
-From: =?iso-8859-1?Q?G=FCnther?= Noack <gnoack3000@gmail.com>
-To: =?iso-8859-1?Q?Micka=EBl_Sala=FCn?= <mic@digikod.net>
-Cc: =?iso-8859-1?Q?G=FCnther?= Noack <gnoack@google.com>,
-	Paul Moore <paul@paul-moore.com>,
-	"Serge E . Hallyn" <serge@hallyn.com>,
-	Konstantin Meskhidze <konstantin.meskhidze@huawei.com>,
-	Shervin Oloumi <enlightened@chromium.org>,
-	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-security-module@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH] landlock: Warn once if a Landlock action is requested
- while disabled
-Message-ID: <20240221.b8dcd9590c37@gnoack.org>
-References: <20240219191804.2978911-1-mic@digikod.net>
+	s=arc-20240116; t=1708551414; c=relaxed/simple;
+	bh=0RWRYjgzZ8namkUbz7x0brecXpRx2iB3QKzERWdrecE=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=rF49PlUFTsNQgViU0YXMMGszuiwMa62EiqP8UtPIPsnLFiXMLXAnqUWBB3LCnii5Qptwy4ZcAb40Skc1I1SOkKh6DgpLM7KUO5B5wv5sJRI8wfdiHsZ3u+lhbFpUD5NBWdtogrto4SvKwT3e6KChSWJmY95yVL8MT0a2UskIgfg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 67D08C433F1;
+	Wed, 21 Feb 2024 21:36:50 +0000 (UTC)
+Date: Wed, 21 Feb 2024 16:38:38 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Ankur Arora <ankur.a.arora@oracle.com>
+Cc: linux-kernel@vger.kernel.org, tglx@linutronix.de, peterz@infradead.org,
+ torvalds@linux-foundation.org, paulmck@kernel.org,
+ akpm@linux-foundation.org, luto@kernel.org, bp@alien8.de,
+ dave.hansen@linux.intel.com, hpa@zytor.com, mingo@redhat.com,
+ juri.lelli@redhat.com, vincent.guittot@linaro.org, willy@infradead.org,
+ mgorman@suse.de, jpoimboe@kernel.org, mark.rutland@arm.com,
+ jgross@suse.com, andrew.cooper3@citrix.com, bristot@kernel.org,
+ mathieu.desnoyers@efficios.com, geert@linux-m68k.org,
+ glaubitz@physik.fu-berlin.de, anton.ivanov@cambridgegreys.com,
+ mattst88@gmail.com, krypton@ulrich-teichert.org, David.Laight@ACULAB.COM,
+ richard@nod.at, mjguzik@gmail.com, jon.grimm@amd.com, bharata@amd.com,
+ raghavendra.kt@amd.com, boris.ostrovsky@oracle.com, konrad.wilk@oracle.com
+Subject: Re: [PATCH 23/30] sched/fair: handle tick expiry under lazy
+ preemption
+Message-ID: <20240221163838.780caaa9@gandalf.local.home>
+In-Reply-To: <20240213055554.1802415-24-ankur.a.arora@oracle.com>
+References: <20240213055554.1802415-1-ankur.a.arora@oracle.com>
+	<20240213055554.1802415-24-ankur.a.arora@oracle.com>
+X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240219191804.2978911-1-mic@digikod.net>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Hello!
+On Mon, 12 Feb 2024 21:55:47 -0800
+Ankur Arora <ankur.a.arora@oracle.com> wrote:
 
-I think this is a good idea.
-Some minor implementation remarks below.
-
-On Mon, Feb 19, 2024 at 08:18:04PM +0100, Mickaël Salaün wrote:
-> Because sandboxing can be used as an opportunistic security measure,
-> user space may not log unsupported features.  Let the system
-> administrator know if an application tries to use Landlock but failed
-> because it isn't enabled at boot time.  This may be caused by bootloader
-> configurations with outdated "lsm" kernel's command-line parameter.
+> The default policy for lazy scheduling is to schedule in exit-to-user,
+> assuming that would happen within the remaining time quanta of the
+> task.
 > 
-> Cc: Günther Noack <gnoack@google.com>
-> Cc: stable@vger.kernel.org
-> Fixes: 265885daf3e5 ("landlock: Add syscall implementations")
-> Signed-off-by: Mickaël Salaün <mic@digikod.net>
+> However, that runs into the 'hog' problem -- the target task might
+> be running in the kernel and might not relinquish CPU on its own.
+> 
+> Handle that by upgrading the ignored tif_resched(NR_lazy) bit to
+> tif_resched(NR_now) at the next tick.
+> 
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: Juri Lelli <juri.lelli@redhat.com>
+> Cc: Vincent Guittot <vincent.guittot@linaro.org>
+> Originally-by: Thomas Gleixner <tglx@linutronix.de>
+> Link: https://lore.kernel.org/lkml/87jzshhexi.ffs@tglx/
+> Signed-off-by: Ankur Arora <ankur.a.arora@oracle.com>
+> 
 > ---
->  security/landlock/syscalls.c | 18 +++++++++++++++---
->  1 file changed, 15 insertions(+), 3 deletions(-)
+> Note:
+>   Instead of special casing the tick, it might be simpler to always
+>   do the upgrade on the second resched_curr().
 > 
-> diff --git a/security/landlock/syscalls.c b/security/landlock/syscalls.c
-> index f0bc50003b46..b5b424819dee 100644
-> --- a/security/landlock/syscalls.c
-> +++ b/security/landlock/syscalls.c
-> @@ -33,6 +33,18 @@
->  #include "ruleset.h"
->  #include "setup.h"
->  
-> +static bool is_not_initialized(void)
-> +{
-> +	if (likely(landlock_initialized))
-> +		return false;
+>   The theoretical problem with doing that is that the current
+>   approach deterministically provides a well-defined extra unit of
+>   time. Going with a second resched_curr() might mean that the
+>   amount of extra time the task gets depends on the vagaries of
+>   the incoming resched_curr() (which is fine if it's mostly from
+>   the tick; not fine if we could get it due to other reasons.)
+> 
+>   Practically, both performed equally well in my tests.
+> 
+>   Thoughts?
 
-Optional stylistic remark; I try to avoid predicate functions which
-have a "negated" meaning, because double negations are slightly more
-error prone.  (We return false here, so Landlock is not not
-initialized.)
+I personally prefer the determinism of using the tick to force the resched.
 
-> +
-> +	pr_warn_once(
-> +		"Disabled but requested by user space. "
-> +		"You should enable Landlock at boot time: "
-> +		"https://docs.kernel.org/userspace-api/landlock.html#kernel-support\n");
-> +	return true;
-> +}
-> +
->  /**
->   * copy_min_struct_from_user - Safe future-proof argument copying
->   *
-> @@ -173,7 +185,7 @@ SYSCALL_DEFINE3(landlock_create_ruleset,
->  	/* Build-time checks. */
->  	build_check_abi();
->  
-> -	if (!landlock_initialized)
-> +	if (is_not_initialized())
->  		return -EOPNOTSUPP;
-
-Technically, any Landlock user needs to go through the
-landlock_create_ruleset() system call anyway; it might be enough to
-just add it in that place and leave the other system calls as they
-were.  Then you could also omit the special function.
-
-Reviewed-by: Günther Noack <gnoack3000@gmail.com>
-
-–Günther
+-- Steve
