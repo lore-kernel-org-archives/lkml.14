@@ -1,90 +1,126 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 950001E485
-	for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 20:36:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 974293B298
+	for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 20:36:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708547778; cv=none; b=rmQwqHpljeuIc5/lR0ShXuO/2pMksfM9KCVzttdSJK7onJ5RpSkJ5q9Jis3J13uRnj2L3jWXVFzqU8E8gHslOGnc4T8s0hVgAzb/+vvh7ziuKpPCFa3Mn8VU9foqKduZZZLYqpkpG1YHEx7tDo/cqqk+L5/nBv2NXiiuPTP66B0=
+	t=1708547797; cv=none; b=TGWP3yg9D2U/R6lxyvGSYpVfV8BPjBIZA+fxrNY2DCTwqFHCy8t/WjB95EVPiGYYb1zHwUh91Rtl+SMyYsBj296Ca4b9J960sQz1DPNDkm58VQikOwzFYSW6eAUt5kNzziDBitPO7JqE/6WgkWY6QwbJDPPw8/XG5Xv0z2XQVd0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708547778; c=relaxed/simple;
-	bh=NzM1hRe8wv7YB8wEXVEeZHO9YYwtH/8T9TsFR/fw1pc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QVRr9nkgNXZPdORhSjQPCIPeR+kSV31KNRft2UVk/eNkkdTUkedYZB4WkSPlLMnHQIzP7Z6963ocdAZdrhIlZD9vbEWsgArzblISuXci74/GDfqA7te9az9hYiWM003YVscU2/EfEAF18BJQGQpnSBdMA6YySfVbHk4NRsV7hbY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=P8epUoUG; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1708547797; c=relaxed/simple;
+	bh=GFhPlma8ElxwHflsLYpQTVGFiMO4B/Q3z9xrY8lb7y0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=V1rg9ojBawlxM+WLCTFh23RetCGk8tlboiILyquDej5PW6AUIZA7+UCF+60qSvr2OAbTUHO5IoDTogpnsAuQclDIIXpcn1ZBOeQC3HvAY6VJNBwY8QIpCi8onZIoQW/xjl83pOof4GTDVrR4Wfz9dFSYqHLLJtB/BKERNeUfd48=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=2YfyKTCa; arc=none smtp.client-ip=209.85.214.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="P8epUoUG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AED03C433F1;
-	Wed, 21 Feb 2024 20:36:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708547778;
-	bh=NzM1hRe8wv7YB8wEXVEeZHO9YYwtH/8T9TsFR/fw1pc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=P8epUoUGnpHiIhKsWaClqpSTWhBTyfSj0xBYoD3c7ohSqqA/9Gjgx/6cLZELHvmAD
-	 gj4IOz7qx2eHbUQuP1o4nnoT+AZnev4OM3sfqyH9Xqz77uVAwoydmw67lUVh3TeYTf
-	 bPFbfN/OZWQkTCEDlp4WXILExjHFj2HBpD1n3RuGYA1DvnTaBM09hHqhf09zXdZwXv
-	 Z+DS0Cv8+tyl0DxVL4MZ7NO2h5Mh4jASHEyL7olz4qBp1a3BbYk9l6EdJ9sB0RvvyL
-	 Jwc4mu84vwvS5Vz5Gfet+XfC1zZJNh0ZZ15LwFTH6UN8hu6fUIjB6HAa1+sebzKqiV
-	 /c/biw5Xdli3w==
-Date: Wed, 21 Feb 2024 21:36:14 +0100
-From: Frederic Weisbecker <frederic@kernel.org>
-To: Anna-Maria Behnsen <anna-maria@linutronix.de>
-Cc: linux-kernel@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
-	John Stultz <jstultz@google.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Eric Dumazet <edumazet@google.com>,
-	"Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-	Arjan van de Ven <arjan@infradead.org>,
-	"Paul E . McKenney" <paulmck@kernel.org>,
-	Rik van Riel <riel@surriel.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Sebastian Siewior <bigeasy@linutronix.de>,
-	Giovanni Gherdovich <ggherdovich@suse.cz>,
-	Lukasz Luba <lukasz.luba@arm.com>,
-	"Gautham R . Shenoy" <gautham.shenoy@amd.com>,
-	Srinivas Pandruvada <srinivas.pandruvada@intel.com>,
-	K Prateek Nayak <kprateek.nayak@amd.com>,
-	Christian Loehle <christian.loehle@arm.com>
-Subject: Re: [PATCH v11 03/20] timers: Move marking timer bases idle into
- tick_nohz_stop_tick()
-Message-ID: <ZdZevnP0p1y476jn@pavilion.home>
-References: <20240221090548.36600-1-anna-maria@linutronix.de>
- <20240221090548.36600-4-anna-maria@linutronix.de>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="2YfyKTCa"
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-1d89f0ab02bso27805ad.1
+        for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 12:36:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1708547795; x=1709152595; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=8iAiTEgCppjIE3t1disnBeWTtqYJCr/gkvmRX972lsA=;
+        b=2YfyKTCalqJEmT09oHd6tBBIhAKQCDxF7k9cZJRi+n2VzJnUWP+niT0r4LbNCPyOgH
+         6cZtFztITsdtDbUsJtrYkw4REvWYKreLhbQVwfgKK4NNmGXKfPqCiyYl5yPwkUIazorc
+         4THvpwq5OQSfZv4K6eGeoTGY9mC5T4O9Cf1AF8comXvGUNUFC5BNyBsi3s36iEKWlJoV
+         ALdfecMsG/cbTmNWMtrX9CVd/7Li88L6+ffBqCRgY6vZzpe58W81Nz25zs81BUPDkz35
+         DnwufmVEwZ1+v+XvfhM7tvBhCcRreE0DLCdSh1dvhSjdmcRli/gV0g0mBgZ7XoDFuXWW
+         Wrgg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708547795; x=1709152595;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=8iAiTEgCppjIE3t1disnBeWTtqYJCr/gkvmRX972lsA=;
+        b=g703IEZ+Npb9D+DhkWQy/5FEU5iV3+MwIbBSNPXdwkNfiI7Ts2T+ASEXSMdY1yfx4+
+         zFiKYeaLXLOITDvJia0X5b3/UCD7XW40l0gDv+VC92b3P5D89YrJ+WkcteA6YVpQL5zw
+         MHFqvGWpWC/PIODzHpn6xeFP2f5ySz77IT9zaHcK00IvutGpAgf6/VEE4BcuGGSfJMnE
+         0D6LDL0A0h7l7GMT5NbOvIZO9K07hUx3lZJMNg5Nw/FyjBkphBfQ0BkC1/9F4ma6wqY0
+         JdxpHdKGmhUtYvsjvxI4jhAzMBfvj51WSKomR42W5pBuC4ijj28u2fMgYFGZarCH8YoQ
+         RJlQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW/Q5ec+BNy8uu+u5QGnjkiyV94L0dxnGOio46XJpjKKepwRl7CfDH6IDIdrnvUaB8QSqJNZlof+08lxSkF6PJGFq5SKolfWBNgPVLz
+X-Gm-Message-State: AOJu0Yxzdi+YEjmU+P4XlRdkRmKPtFz6DyAXFU58vgbRaJLbcNcH6JHp
+	ZH3RkZIqbjUi3rXcG9Z5muhKrKCUI58vuOSp+UHVtxs6+6Ubrs+c6LXydM012YdRojxmGmt2Hyi
+	WaUIwQSvIuPAXroFNFz34+65+h8O77MYB/cudoh5psr33H6UVrg==
+X-Google-Smtp-Source: AGHT+IHkUH8682wBjX2MlXCiKDKRKTZ78A7IDkSZwKh62FAeHimOB2zWqCHjoUmuvZXD72aiFX0+O0WGwp10g7NziwQ=
+X-Received: by 2002:ac8:4907:0:b0:42e:660:eb8d with SMTP id
+ e7-20020ac84907000000b0042e0660eb8dmr285459qtq.5.1708547393077; Wed, 21 Feb
+ 2024 12:29:53 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240221090548.36600-4-anna-maria@linutronix.de>
+References: <20240221092728.1281499-1-davidgow@google.com> <20240221092728.1281499-2-davidgow@google.com>
+In-Reply-To: <20240221092728.1281499-2-davidgow@google.com>
+From: Daniel Latypov <dlatypov@google.com>
+Date: Wed, 21 Feb 2024 12:29:38 -0800
+Message-ID: <CAGS_qxpyNVqigHB+kS-1xqzR4BAOQXoMSNS+d5khkLYrkpmOgA@mail.gmail.com>
+Subject: Re: [PATCH 1/9] kunit: test: Log the correct filter string in executor_test
+To: David Gow <davidgow@google.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, Shuah Khan <skhan@linuxfoundation.org>, 
+	Guenter Roeck <linux@roeck-us.net>, Rae Moar <rmoar@google.com>, 
+	Matthew Auld <matthew.auld@intel.com>, 
+	Arunpravin Paneer Selvam <arunpravin.paneerselvam@amd.com>, 
+	=?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
+	Kees Cook <keescook@chromium.org>, =?UTF-8?B?TWHDrXJhIENhbmFs?= <mcanal@igalia.com>, 
+	Rodrigo Vivi <rodrigo.vivi@intel.com>, Matthew Brost <matthew.brost@intel.com>, 
+	Willem de Bruijn <willemb@google.com>, Florian Westphal <fw@strlen.de>, Cassio Neri <cassio.neri@gmail.com>, 
+	Javier Martinez Canillas <javierm@redhat.com>, Arthur Grillo <arthur.grillo@usp.br>, 
+	Brendan Higgins <brendan.higgins@linux.dev>, Stephen Boyd <sboyd@kernel.org>, 
+	David Airlie <airlied@gmail.com>, Maxime Ripard <mripard@kernel.org>, 
+	"David S . Miller" <davem@davemloft.net>, dri-devel@lists.freedesktop.org, 
+	linux-kernel@vger.kernel.org, intel-xe@lists.freedesktop.org, 
+	linux-rtc@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	kunit-dev@googlegroups.com, linux-hardening@vger.kernel.org, 
+	netdev@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Le Wed, Feb 21, 2024 at 10:05:31AM +0100, Anna-Maria Behnsen a écrit :
-> The timer base is marked idle when get_next_timer_interrupt() is
-> executed. But the decision whether the tick will be stopped and whether the
-> system is able to go idle is done later. When the timer bases is marked
-> idle and a new first timer is enqueued remote an IPI is raised. Even if it
-> is not required because the tick is not stopped and the timer base is
-> evaluated again at the next tick.
-> 
-> To prevent this, the timer base is marked idle in tick_nohz_stop_tick() and
-> get_next_timer_interrupt() is streamlined by only looking for the next timer
-> interrupt. All other work is postponed to timer_base_try_to_set_idle() which is
-> called by tick_nohz_stop_tick(). timer_base_try_to_set_idle() never resets
-> timer_base::is_idle state. This is done when the tick is restarted via
-> tick_nohz_restart_sched_tick().
-> 
-> With this, tick_sched::tick_stopped and timer_base::is_idle are always in
-> sync. So there is no longer the need to execute timer_clear_idle() in
-> tick_nohz_idle_retain_tick(). This was required before, as
-> tick_nohz_next_event() set timer_base::is_idle even if the tick would not be
-> stopped. So timer_clear_idle() is only executed, when timer base is idle. So the
-> check whether timer base is idle, is now no longer required as well.
-> 
-> While at it fix some nearby whitespace damage as well.
-> 
-> Signed-off-by: Anna-Maria Behnsen <anna-maria@linutronix.de>
+On Wed, Feb 21, 2024 at 1:28=E2=80=AFAM David Gow <davidgow@google.com> wro=
+te:
+>
+> KUnit's executor_test logs the filter string in KUNIT_ASSERT_EQ_MSG(),
+> but passed a random character from the filter, rather than the whole
+> string.
 
-Reviewed-by: Frederic Weisbecker <frederic@kernel.org>
+Note: it's worse than that, afaict.
+
+It's printing from a random bit of memory.
+I was curious about this, so I found under UML, the string I got was
+always "efault)" if I make it fail for j=3D0.
+
+>
+> This was found by annotating KUNIT_ASSERT_EQ_MSG() to let gcc validate
+> the format string.
+>
+> Fixes: 76066f93f1df ("kunit: add tests for filtering attributes")
+> Signed-off-by: David Gow <davidgow@google.com>
+
+Reviewed-by: Daniel Latypov <dlatypov@google.com>
+
+> ---
+>  lib/kunit/executor_test.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/lib/kunit/executor_test.c b/lib/kunit/executor_test.c
+> index 22d4ee86dbed..3f7f967e3688 100644
+> --- a/lib/kunit/executor_test.c
+> +++ b/lib/kunit/executor_test.c
+> @@ -129,7 +129,7 @@ static void parse_filter_attr_test(struct kunit *test=
+)
+>                         GFP_KERNEL);
+>         for (j =3D 0; j < filter_count; j++) {
+>                 parsed_filters[j] =3D kunit_next_attr_filter(&filter, &er=
+r);
+> -               KUNIT_ASSERT_EQ_MSG(test, err, 0, "failed to parse filter=
+ '%s'", filters[j]);
+> +               KUNIT_ASSERT_EQ_MSG(test, err, 0, "failed to parse filter=
+ from '%s'", filters);
+
+note: if there is a v2, it might be nice to include `j` in the message.
