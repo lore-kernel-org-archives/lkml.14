@@ -1,97 +1,144 @@
-Received: from mail-yw1-f182.google.com (mail-yw1-f182.google.com [209.85.128.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B6AF7FBBD
-	for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 15:21:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D00F87F7DA;
+	Wed, 21 Feb 2024 15:22:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708528867; cv=none; b=j160fc5I3ClVg9U1qhS2R8plIwBqgLWd8TS/flUOqweRHUSpA2+OdcHaYDXyxIbMokNZg7PDjsa0bQK77FKaBiT5y3TjmI79UQZL8zusOoy1BGH+aFLzGNGn2seihq6EFsCy+rQSUiKWVRDPs11wF4NmRqzXa3K0YL8Z5l0UJAM=
+	t=1708528949; cv=none; b=Mxs3TDUUphblV4lI/gfwPKv+SutYfGyw0aVrvNUntRST7cnMdH/TyDOicKSKN47326nlavF3YPfOxPcZ70QerOtFnyaq/9G9ATCKOvXXSYDKxAT3+hETd39/9pOKP2zxL72f9q/9NEuYerVKd2zueAixYEBWGbY6LvBtPSIENW4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708528867; c=relaxed/simple;
-	bh=obX6VQ0u+XXyt/sOpBUh6IqBL2pGAjmHzdJMUaZZSfs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=oQUcjv9S0d7dmTsU+LbtC26aiRqtt35/an1H6vPKZIyjbu2nH6HWCI8QkHgkuuTVMGhVzm+MnVolwsNQ6k6N1Qy67sS8Ct7dCNsPmM2+c9pMOcVxXdUJpiaHMpQpVA0OrVnIME1NV6IfGFTgbPk4sKQLTNyqnBflO6Ih+OXnMkg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yw1-f182.google.com with SMTP id 00721157ae682-60822b444c9so26626807b3.2
-        for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 07:21:05 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708528864; x=1709133664;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=1PRp8JfSe6siv3SHwP32rn6vZ13B8Nd0cz95uDsbJEs=;
-        b=FqODviUfU7FJOOmJU2q8w4qm8Fmiz4+czTMy+QU9ZwH6KKqp8fWJf2OI15ZNCDb9p6
-         Zgol8WEfJbxifDcUJRI5ewTEITHnTs1UGEkCD+1dV6XZIc1P7Dx7c+fBF9DhpiDYoxDq
-         fRu+j+Y+TMM2sbDN1vtKiOD71JdFY7k5cbs3oqwLoLbpf1CsGKhFCYe6DaqMViOFBvNk
-         awQjfVwYYpdfvokg/PQddhdQz04GV6U4rauMJZ7cQ5OJnGf1N2v9wW4AXo+41nyLSkFu
-         hg2s5qtZ+ayS1Bykp5hIq3Mi8RRdoIDoYZRNZNFIKLCwXnyw1iwhYmqcEbhAjZ4uQuq4
-         FxYQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWYWPksjYyPU+503HNJXJCR7IN4TUKIR3GlF+wb9xpRg9OIessDPnp1UkLm7PQbMplzeujcM6iX1e6Uhx21DdY+eR29hfU+0hbUIVhq
-X-Gm-Message-State: AOJu0Yy/+MdcjBWSEjVawnWEJ+NNIHkC82mCFhO3Tlay5ldMsgGD+XX4
-	gNLaYRIOHv0KDXuLlBltQp9SrL+kgOObApf2G3aUWi0MHzSYyCox5wHUczYeU34=
-X-Google-Smtp-Source: AGHT+IGhLbhIpk1/eHRFwRymSgNIi6w8EcwMbyADRQH4griT6EQYmC34XpeIpiJchGeut9TocUWGzg==
-X-Received: by 2002:a81:9945:0:b0:607:d9fb:5144 with SMTP id q66-20020a819945000000b00607d9fb5144mr16528178ywg.13.1708528864663;
-        Wed, 21 Feb 2024 07:21:04 -0800 (PST)
-Received: from mail-yw1-f177.google.com (mail-yw1-f177.google.com. [209.85.128.177])
-        by smtp.gmail.com with ESMTPSA id a188-20020a0df1c5000000b00607c9160c22sm2628748ywf.119.2024.02.21.07.21.04
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 21 Feb 2024 07:21:04 -0800 (PST)
-Received: by mail-yw1-f177.google.com with SMTP id 00721157ae682-60822b444c9so26626547b3.2
-        for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 07:21:04 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCWUMMND/TjmtHEQ+A6eN7XnZdOhCMda/ftiTxkbPreUlpBiSSpYP/EYSF5HtqfTdGvBPqJ0UqpKw899GWenlCMSp7iiBAMvs79SngvH
-X-Received: by 2002:a0d:df86:0:b0:608:7376:afa4 with SMTP id
- i128-20020a0ddf86000000b006087376afa4mr3751103ywe.18.1708528864179; Wed, 21
- Feb 2024 07:21:04 -0800 (PST)
+	s=arc-20240116; t=1708528949; c=relaxed/simple;
+	bh=TCtBpdIY7450Ty+SdGZtoT1IyppeoEDJ8gGAm0LnTiM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=eDKFGEebFGc0lzWZFVRniqnVLM2XtTCwSHd777HZn9YpouD1zo2E9uikYk1ZhC25fOGYbUSKhNIehA56zO+XDYmQHUsZ6+wjDLYYgPW+y7JhiqSLA5dtoRd76S7TookBeEuq4p6t2ocoJLaeUjgpFq1N2DCllEft3vZRvVtZqgs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MMGyCEkB; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MMGyCEkB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0F5EBC433F1;
+	Wed, 21 Feb 2024 15:22:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1708528949;
+	bh=TCtBpdIY7450Ty+SdGZtoT1IyppeoEDJ8gGAm0LnTiM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=MMGyCEkBJYH1XwA80dc+qUCu/cOXpEl3HiZXgftka+aMyQbtI3GIlyhflIWpSZLe3
+	 iGDsz3jH4054EU0NKQv0fEJ7P/kTV2kusLyGo+Ws9keDj1mnLeGazBq3cmiYPvEtZF
+	 roD9hoj4iqu6Qh+iCsuosQVpsei+XZHMw4NnsFFE6atsvo07Gy+ouAZG1Hs6a3BRH9
+	 9B67sx7ijI39SgJX2fX9fk49wlYljyxe6qnCxcVChR8dkeGuMWpdcy3hhyI1b8e1zM
+	 C5aO8WeTqtqEbiPNl9w/p2yG0X0p5R3XVcFGZYEsMemAGlenhaPrXinHPw+KNmgRJP
+	 4zdBYxpn+/yJw==
+Date: Wed, 21 Feb 2024 08:22:26 -0700
+From: Rob Herring <robh@kernel.org>
+To: David Lechner <dlechner@baylibre.com>
+Cc: linux-iio@vger.kernel.org,
+	Michael Hennerich <Michael.Hennerich@analog.com>,
+	Jonathan Cameron <jic23@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] dt-bindings: iio: adc: add ad7944 ADCs
+Message-ID: <20240221152226.GA2868707-robh@kernel.org>
+References: <20240216-ad7944-mainline-v2-0-7eb69651e592@baylibre.com>
+ <20240216-ad7944-mainline-v2-1-7eb69651e592@baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240221141350.3740488-1-javierm@redhat.com> <1f28256c-e436-4add-aa67-2cfb2248b220@linaro.org>
- <6scz7iti3tzzrd4ph3gnuc2pvkcbtuuicgfgujh3pa3c34kdkt@bhfa4xbxeu7t> <cb8bf006-57df-494e-80f3-947582ec71f1@linaro.org>
-In-Reply-To: <cb8bf006-57df-494e-80f3-947582ec71f1@linaro.org>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Wed, 21 Feb 2024 16:20:52 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdWYyDzzy1-arw=Yt=cTpJ-crx58oKdQsity2EaRtSNk1w@mail.gmail.com>
-Message-ID: <CAMuHMdWYyDzzy1-arw=Yt=cTpJ-crx58oKdQsity2EaRtSNk1w@mail.gmail.com>
-Subject: Re: [PATCH v2] arm64: defconfig: Enable zram, xfs and loading
- compressed FW support
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: Maxime Ripard <mripard@redhat.com>, Javier Martinez Canillas <javierm@redhat.com>, linux-kernel@vger.kernel.org, 
-	Enric Balletbo i Serra <eballetbo@redhat.com>, Erico Nunes <nunes.erico@gmail.com>, 
-	Brian Masney <bmasney@redhat.com>, Arnd Bergmann <arnd@arndb.de>, 
-	Bjorn Andersson <quic_bjorande@quicinc.com>, Catalin Marinas <catalin.marinas@arm.com>, 
-	Geert Uytterhoeven <geert+renesas@glider.be>, Konrad Dybcio <konrad.dybcio@linaro.org>, 
-	Marek Szyprowski <m.szyprowski@samsung.com>, Neil Armstrong <neil.armstrong@linaro.org>, 
-	Will Deacon <will@kernel.org>, linux-arm-kernel@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240216-ad7944-mainline-v2-1-7eb69651e592@baylibre.com>
 
-Hi Krzysztof,
+On Fri, Feb 16, 2024 at 01:46:18PM -0600, David Lechner wrote:
+> This adds a new binding for the Analog Devices, Inc. AD7944, AD7985, and
+> AD7986 ADCs.
+> 
+> Signed-off-by: David Lechner <dlechner@baylibre.com>
+> ---
+>  .../devicetree/bindings/iio/adc/adi,ad7944.yaml    | 204 +++++++++++++++++++++
+>  MAINTAINERS                                        |   8 +
+>  2 files changed, 212 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad7944.yaml b/Documentation/devicetree/bindings/iio/adc/adi,ad7944.yaml
+> new file mode 100644
+> index 000000000000..61ee81326660
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/adc/adi,ad7944.yaml
+> @@ -0,0 +1,204 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/iio/adc/adi,ad7944.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Analog Devices PulSAR LFCSP Analog to Digital Converters
+> +
+> +maintainers:
+> +  - Michael Hennerich <Michael.Hennerich@analog.com>
+> +  - Nuno Sá <nuno.sa@analog.com>
+> +
+> +description: |
+> +  A family of pin-compatible single channel differential analog to digital
+> +  converters with SPI support in a LFCSP package.
+> +
+> +  * https://www.analog.com/en/products/ad7944.html
+> +  * https://www.analog.com/en/products/ad7985.html
+> +  * https://www.analog.com/en/products/ad7986.html
+> +
+> +$ref: /schemas/spi/spi-peripheral-props.yaml#
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - adi,ad7944
+> +      - adi,ad7985
+> +      - adi,ad7986
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  spi-max-frequency:
+> +    maximum: 111111111
+> +
+> +  spi-cpol: true
+> +  spi-cpha: true
+> +
+> +  adi,spi-mode:
+> +    $ref: /schemas/types.yaml#/definitions/string
+> +    enum: [ single, multi, chain ]
+> +    default: multi
+> +    description: |
+> +      * single: The datasheet calls this "3-wire mode". It is often used when
+> +        the ADC is the only device on the bus. In this mode, SDI is tied to VIO,
+> +        and the CNV line can be connected to the CS line of the SPI controller
+> +        or to a GPIO, in which case the CS line of the controller is unused.
 
-On Wed, Feb 21, 2024 at 4:10=E2=80=AFPM Krzysztof Kozlowski
-<krzysztof.kozlowski@linaro.org> wrote:
-> UBIFS was added recently because one device was using it - you needed
-> it. 9P_FS looks unnecessary.
+We have a standard property for this.
 
-9P_FS is used commonly for file transfer between host and guest, cfr.
-commit af9b99647cd2a6a2 ("arm64: defconfig: add virtio support for
-running as a kvm guest").
+> +      * multi: The datasheet calls this "4-wire mode". This is the convential
+> +        SPI mode used when there are multiple devices on the same bus. In this
+> +        mode, the CNV line is used to initiate the conversion and the SDI line
+> +        is connected to CS on the SPI controller.
 
-Gr{oetje,eeting}s,
+That's "normal" mode.
 
-                        Geert
+> +      * chain: The datasheet calls this "chain mode". This mode is used to save
+> +        on wiring when multiple ADCs are used. In this mode, the SDI line of
+> +        one chip is tied to the SDO of the next chip in the chain and the SDI of
+> +        the last chip in the chain is tied to GND. Only the first chip in the
+> +        chain is connected to the SPI bus. The CNV line of all chips are tied
+> +        together. The CS line of the SPI controller is unused.
 
---=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
+Don't you need to know how many chips are chained? In any case, you just 
+need a property for chain mode. There's some existing properties for 
+chained devices I think. Standard logic shift register based GPIO IIRC.
 
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
+CNV are tied together, but must be driven by something? I suppose 
+cnv-gpios? But wouldn't that be the same as the SPI controller GPIO CS? 
+Does a SPI controller CS line connected to CNV not work in this case?
+
+Rob
