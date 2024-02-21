@@ -1,133 +1,198 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7C5F25619;
-	Wed, 21 Feb 2024 21:38:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A3D5128819
+	for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 21:38:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708551480; cv=none; b=hx8qS3rhGsg4T3XD6BoMLp1elz2s7ZlC1urW+uLUTLjgAtZAaML2Fj/X/92jr2ZUsDBd2djEh/2xAiAhUn+sDXDeZELF0CgaivcDB45cfZAicubrJqu8iSNOEN2ExcaHDT7cpKcvthF5b9hxuLbOGLpmG3WumwRNaoad7Wr0B+4=
+	t=1708551523; cv=none; b=Tya5+704dismUVlpYuxffxZV/5sEZuoGmPeXXvnFL4PUAh6rULrO6rm0Wr8ir474moFa1tfpQ204dp5bKhiweXzynG9XXXHfdKYZ3oWQ4hbR7Vypp2njput+RwF9LCOp08tLMwCl31HiEf4Bkp2pXcLklm1YF84lZMBX65AXseU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708551480; c=relaxed/simple;
-	bh=9oOl86N850lxplmi/fO/ptHo5glf8VI/jrIlpQnN4nQ=;
+	s=arc-20240116; t=1708551523; c=relaxed/simple;
+	bh=tdC/CiuVWPHSufrgRHTfCGIP/BXt+NRLyAohkR1KzmM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=altsWRO64cvSk5owsplFmr1vQKWBwYEKtXad2qswvYXdetsfVgvnpfPAjrOrsWHPwhxkfM14dvkfcEk5CdE4erLNDRVxAg4NGIf45QVMjevSgcMW1VWGKVDArz4qpSNnDNrALHNWdD9SfU0u+t4/eqJeuDED1kK8N7e2Ux8yy4w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gUwpgeHS; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=TS3r8mcJDwgqwoiVZ+KmhFtyVNzu4vnXTjwJ7kBfJjp6EFqecC270gmyUsKhNMfKwO4U1uCygN4D8Rql6gKpmGa7tTDP2fsaLTpKTBrN7cjDt5VuFfTKC/UlwtFj9XHNZ1UY9Jxl3qauu6AKuphPOWthEMIW0lnHhKhpK9Zwh18=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=LNhDoZGR; arc=none smtp.client-ip=209.85.210.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gUwpgeHS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B38A2C433C7;
-	Wed, 21 Feb 2024 21:37:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708551480;
-	bh=9oOl86N850lxplmi/fO/ptHo5glf8VI/jrIlpQnN4nQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=gUwpgeHSO142RKuGwIXhScBu/2cWKaelACWeOtQaATMpwLNtmAhe7poC6xPinYXbi
-	 Pw0h3MgztfEi/qIXYF4mTyADgknquKPVgPLWiDPGfUKSPJSkGugrBQpwooGSCI5ykE
-	 PTJ1B7I9pd3+cNrqFs6TUychg9izY9QUcKU0XKL5Fcgp5faOxC9TwvqMJARlVuctr1
-	 zXwUV3b4PUd9uAW4vxP1qrfXqMeSARav+HY9fub4BB6q1p+eiMb7mPyNguEK7ULMTt
-	 CLAXyxk0TWXK+F62AuVAzwbnUpt8avb8GaWIV0Id0n7h+mCLi7n0+tMy37jeISGSIT
-	 gbmzKWRLlukmg==
-Date: Wed, 21 Feb 2024 21:37:54 +0000
-From: Conor Dooley <conor@kernel.org>
-To: Marco Felsch <m.felsch@pengutronix.de>
-Cc: jic23@kernel.org, lars@metafoo.de, robh+dt@kernel.org,
-	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
-	denis.ciocca@st.com, linus.walleij@linaro.org,
-	linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, kernel@pengutronix.de
-Subject: Re: [PATCH] dt-bindings: iio: st-sensors: Add IIS2MDC magnetometer
-Message-ID: <20240221-lubricant-machine-79054f117eb0@spud>
-References: <20240221175810.3581399-1-m.felsch@pengutronix.de>
- <20240221-undecided-union-4078db711693@spud>
- <20240221191644.5r3ylr5w3cnfnrzj@pengutronix.de>
- <20240221-imitate-molar-81d93285ac77@spud>
- <20240221194518.3sm4o5i274ldpvzf@pengutronix.de>
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="LNhDoZGR"
+Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-6e0f803d9dfso3913188b3a.0
+        for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 13:38:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1708551521; x=1709156321; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=UQex++ttS4RzCrpq+AKJPUO9eah2DR726vpHNT3YCIg=;
+        b=LNhDoZGRhp2bqQOiJ1qjqrA970ZBKux361+V7tI+5aENf+JiyIYxOvdBaFVR9h+3q2
+         72iEdCibq48fBJwOeWpyJArrnwMXfg5ilHXZmRgkQCipKC/b6Qq0A60XAOswRFlzDELW
+         C6DCRbL8VGc1seF8EQHY+PwqXmAgx+GyrtFe4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708551521; x=1709156321;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=UQex++ttS4RzCrpq+AKJPUO9eah2DR726vpHNT3YCIg=;
+        b=el93n+lSCjdMBZDqMnOGtikC4so17k1DNOLPov1HxDK0AUo3W01BpZZXzWKzajx0ep
+         1XlYEuMeC5kHbflG7Y74PxisnjXEvAZu3S/MswCgUahMDt1PuQEkHKt+nH4g7S9Gd2oK
+         eA7q5uJGxd+BH5ZBQqsOdHhNN/oszbllhXywC/A1g8wodMxL3zLbWn2QnnDkajYMQPvv
+         Jf4X5KRYr14qhTZAfkUDPFZtq0pETw8/G7fJD0G85jkS/YdhEDw9n/7kjN/Rrc8vvMsA
+         tlhe+o5gRZYUM+jSqxfT594W1xvT+zDe/rgc97XPCBFcG8BKmP7RSB/zanxf7AJE8V4o
+         M9XA==
+X-Forwarded-Encrypted: i=1; AJvYcCUCy/UTL/uxOt5L6buIfikYnzphICpfqu1wut17mn88yoUuN1r5SQ9xhnr1oNS7ktsJDCLu36VWPW36653TIda5/+r7VBsD4zwqNJyp
+X-Gm-Message-State: AOJu0Yz8Qoqq4C0+xq5wcJ/7RloM2xuQbb2BxhpDFV0EAC4KBLVeEnXe
+	0ysS8b2cEoomQ3K5VOy3ZZQO7byktlRNZ0XDEjO++b/Rd4sHmfmtqDhZll5jow==
+X-Google-Smtp-Source: AGHT+IHDh/MRb5Op0VGAH3i2K/wXYQriert54RdfL+L6lC7CA/epD+rsZx/gHYIBfDp8bfXy2Py4ow==
+X-Received: by 2002:a05:6a21:1014:b0:1a0:c46f:62be with SMTP id nk20-20020a056a21101400b001a0c46f62bemr3014569pzb.38.1708551521543;
+        Wed, 21 Feb 2024 13:38:41 -0800 (PST)
+Received: from www.outflux.net ([198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id y5-20020a056a00180500b006e45daf9e89sm7123140pfa.131.2024.02.21.13.38.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 21 Feb 2024 13:38:40 -0800 (PST)
+Date: Wed, 21 Feb 2024 13:38:40 -0800
+From: Kees Cook <keescook@chromium.org>
+To: Daniel Borkmann <daniel@iogearbox.net>
+Cc: Mark Rutland <mark.rutland@arm.com>,
+	"Gustavo A . R . Silva" <gustavoars@kernel.org>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>,
+	Yonghong Song <yhs@fb.com>,
+	John Fastabend <john.fastabend@gmail.com>,
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>,
+	Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
+	Mykola Lysenko <mykolal@fb.com>, Shuah Khan <shuah@kernel.org>,
+	Haowen Bai <baihaowen@meizu.com>, bpf@vger.kernel.org,
+	linux-kselftest@vger.kernel.org,
+	Yonghong Song <yonghong.song@linux.dev>,
+	Jonathan Corbet <corbet@lwn.net>,
+	"David S. Miller" <davem@davemloft.net>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Jesper Dangaard Brouer <hawk@kernel.org>,
+	Joanne Koong <joannelkoong@gmail.com>,
+	Yafang Shao <laoar.shao@gmail.com>, Kui-Feng Lee <kuifeng@meta.com>,
+	Anton Protopopov <aspsk@isovalent.com>,
+	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+	netdev@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v4] bpf: Replace bpf_lpm_trie_key 0-length array with
+ flexible array
+Message-ID: <202402211317.4D3DEDCA2@keescook>
+References: <20240220185421.it.949-kees@kernel.org>
+ <da75b2bf-0d14-6ed5-91c2-dfeba9ad55c4@iogearbox.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="aCdhMTuN5ae1nNlN"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20240221194518.3sm4o5i274ldpvzf@pengutronix.de>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <da75b2bf-0d14-6ed5-91c2-dfeba9ad55c4@iogearbox.net>
 
+On Wed, Feb 21, 2024 at 05:39:55PM +0100, Daniel Borkmann wrote:
+> On 2/20/24 7:54 PM, Kees Cook wrote:
+> > Replace deprecated 0-length array in struct bpf_lpm_trie_key with
+> > flexible array. Found with GCC 13:
+> > 
+> > ../kernel/bpf/lpm_trie.c:207:51: warning: array subscript i is outside array bounds of 'const __u8[0]' {aka 'const unsigned char[]'} [-Warray-bounds=]
+> >    207 |                                        *(__be16 *)&key->data[i]);
+> >        |                                                   ^~~~~~~~~~~~~
+> > ../include/uapi/linux/swab.h:102:54: note: in definition of macro '__swab16'
+> >    102 | #define __swab16(x) (__u16)__builtin_bswap16((__u16)(x))
+> >        |                                                      ^
+> > ../include/linux/byteorder/generic.h:97:21: note: in expansion of macro '__be16_to_cpu'
+> >     97 | #define be16_to_cpu __be16_to_cpu
+> >        |                     ^~~~~~~~~~~~~
+> > ../kernel/bpf/lpm_trie.c:206:28: note: in expansion of macro 'be16_to_cpu'
+> >    206 |                 u16 diff = be16_to_cpu(*(__be16 *)&node->data[i]
+> > ^
+> >        |                            ^~~~~~~~~~~
+> > In file included from ../include/linux/bpf.h:7:
+> > ../include/uapi/linux/bpf.h:82:17: note: while referencing 'data'
+> >     82 |         __u8    data[0];        /* Arbitrary size */
+> >        |                 ^~~~
+> > 
+> > And found at run-time under CONFIG_FORTIFY_SOURCE:
+> > 
+> >    UBSAN: array-index-out-of-bounds in kernel/bpf/lpm_trie.c:218:49
+> >    index 0 is out of range for type '__u8 [*]'
+> > 
+> > Changing struct bpf_lpm_trie_key is difficult since has been used by
+> > userspace. For example, in Cilium:
+> > 
+> > 	struct egress_gw_policy_key {
+> > 	        struct bpf_lpm_trie_key lpm_key;
+> > 	        __u32 saddr;
+> > 	        __u32 daddr;
+> > 	};
+> > 
+> > While direct references to the "data" member haven't been found, there
+> > are static initializers what include the final member. For example,
+> > the "{}" here:
+> > 
+> >          struct egress_gw_policy_key in_key = {
+> >                  .lpm_key = { 32 + 24, {} },
+> >                  .saddr   = CLIENT_IP,
+> >                  .daddr   = EXTERNAL_SVC_IP & 0Xffffff,
+> >          };
+> > 
+> > To avoid the build time and run time warnings seen with a 0-sized
+> > trailing array for struct bpf_lpm_trie_key, introduce a new struct
+> > that correctly uses a flexible array for the trailing bytes,
+> > struct bpf_lpm_trie_key_u8. As part of this, include the "header"
+> > portion (which is just the "prefixlen" member), so it can be used
+> > by anything building a bpf_lpr_trie_key that has trailing members that
+> > aren't a u8 flexible array (like the self-test[1]), which is named
+> > struct bpf_lpm_trie_key_hdr.
+> > 
+> > Adjust the kernel code to use struct bpf_lpm_trie_key_u8 through-out,
+> > and for the selftest to use struct bpf_lpm_trie_key_hdr. Add a comment
+> > to the UAPI header directing folks to the two new options.
+> > 
+> > Link: https://lore.kernel.org/all/202206281009.4332AA33@keescook/ [1]
+> > Reported-by: Mark Rutland <mark.rutland@arm.com>
+> > Closes: https://paste.debian.net/hidden/ca500597/
+> > Acked-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> > Signed-off-by: Kees Cook <keescook@chromium.org>
+> [...]
+> 
+> The build in BPF CI is still broken, did you try to build selftests?
 
---aCdhMTuN5ae1nNlN
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I did! I didn't have this error. :(
 
-On Wed, Feb 21, 2024 at 08:45:18PM +0100, Marco Felsch wrote:
-> Hi Conor,
->=20
-> On 24-02-21, Conor Dooley wrote:
-> > On Wed, Feb 21, 2024 at 08:16:44PM +0100, Marco Felsch wrote:
-> > > On 24-02-21, Conor Dooley wrote:
-> > > > On Wed, Feb 21, 2024 at 06:58:10PM +0100, Marco Felsch wrote:
-> > > > > Add the iis2mdc magnetometer support which is equivalent to the l=
-is2mdl.
-> > > > >=20
-> > > > > Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
-> > > > > ---
-> > > > >  Documentation/devicetree/bindings/iio/st,st-sensors.yaml | 1 +
-> > > > >  1 file changed, 1 insertion(+)
-> > > > >=20
-> > > > > diff --git a/Documentation/devicetree/bindings/iio/st,st-sensors.=
-yaml b/Documentation/devicetree/bindings/iio/st,st-sensors.yaml
-> > > > > index fff7e3d83a02..ee593c8bbb65 100644
-> > > > > --- a/Documentation/devicetree/bindings/iio/st,st-sensors.yaml
-> > > > > +++ b/Documentation/devicetree/bindings/iio/st,st-sensors.yaml
-> > > > > @@ -64,6 +64,7 @@ properties:
-> > > > >            - st,lsm9ds0-gyro
-> > > > >        - description: STMicroelectronics Magnetometers
-> > > > >          enum:
-> > > > > +          - st,iis2mdc
-> > > >=20
-> > > > Without a fallback compatible to the equivilent device, how does a
-> > > > driver bind to this device?
-> > >=20
-> > > I skimed the datasheets and the driver already handles this binding
-> > > exactly the same as the st,lis2mdl, so my assumption is they do match.
-> > >=20
-> > > Why do I you think we need a fallback compatible here?
-> >=20
-> > I didn't look at the driver, there was no mention of the driver already
-> > having (undocumented) support for it. Since there was no driver change
-> > alongside this patch, I thought you'd need a fallback compatible to
-> > allow the driver to match against a compatible it recognises.
->=20
-> I explicitly did not mention the driver in the commit message else I
-> would have got a response like "dt-bindings have no dependency to
-> drivers" ;)
+>   https://github.com/kernel-patches/bpf/actions/runs/7978647641
 
-Putting it under the --- line is always an option. Where there are
-existing users but the compatible is just undocumented, this it's
-helpful to do.
+Thanks for the pointer. It took a bit of digging, but I found this:
+https://github.com/libbpf/ci/blob/main/build-selftests/build_selftests.sh
+which is much more involved than just "make -C tools/testing/selftests/bpf"
 
-> > Besides, having fallback compatibles is the norm when one device has the
-> > same programming model as another.
->=20
-> Not for this binding according the driver.
+> 
+>   [...]
+>     GEN-SKEL [test_progs] linked_funcs.skel.h
+>     LINK-BPF [test_progs] test_usdt.bpf.o
+>     GEN-SKEL [test_progs-no_alu32] profiler1.skel.h
+>     GEN-SKEL [test_progs] test_usdt.skel.h
+>   In file included from /tmp/work/bpf/bpf/tools/include/uapi/linux/bpf.h:11,
+>                    from test_cpp.cpp:4:
+>   /tmp/work/bpf/bpf/tools/include/uapi/linux/bpf.h:92:17: error: ‘struct bpf_lpm_trie_key_u8::<unnamed union>::bpf_lpm_trie_key_hdr’ invalid; an anonymous union may only have public non-static data members [-fpermissive]
+>      92 |  __struct_group(bpf_lpm_trie_key_hdr, hdr, /* no attrs */,
+>         |                 ^~~~~~~~~~~~~~~~~~~~
+>   /tmp/work/bpf/bpf/tools/include/uapi/linux/stddef.h:29:10: note: in definition of macro ‘__struct_group’
+>      29 |   struct TAG { MEMBERS } ATTRS NAME; \
+>         |          ^~~
 
-If they don't have the same programming model, then describing them as
-"equivalent" wouldn't be correct. That said, they seem to use the same
-sensor settings when alls said and done (see st_magn_sensors_settings),
-so I think they are actually compatible even if the driver has separate
-match data for each.
+I'll see if I can figure out where this is coming from. This sounds like
+something is being built with an unexpectedly strict option. (The above
+report seems weird -- this isn't coming from -fpermissive, and is
+actually an _error_ not a warning, which is the opposite of what
+-fpermissive is supposed to do.) Also the mention of "public" is scary
+here... that implies a C++ compiler is involved? Maybe that's why my
+builds didn't catch this?
 
-Cheers,
-Conor.
+>   make: *** [Makefile:703: /tmp/work/bpf/bpf/tools/testing/selftests/bpf/test_cpp] Error 1
 
---aCdhMTuN5ae1nNlN
-Content-Type: application/pgp-signature; name="signature.asc"
+Ah yes, cpp. Fun. I will try to reproduce this failure.
 
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZdZtMgAKCRB4tDGHoIJi
-0mhFAP4uPT1KilNvuJy11JVEqyK46NkPn3I0vD5H1rPev9iSUQD/c2IAJZDAfJpg
-j6ckgYP2rWSx/t9GqIONxFD8RfJMegM=
-=nU5D
------END PGP SIGNATURE-----
-
---aCdhMTuN5ae1nNlN--
+-- 
+Kees Cook
