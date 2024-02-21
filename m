@@ -1,147 +1,126 @@
-Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B85E839879;
-	Wed, 21 Feb 2024 07:18:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC9BC364BC
+	for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 07:19:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708499920; cv=none; b=BNluWrTr6iGYKx/MuDGBrgYP1Pn3rHBa/soKfF/sOpV7b09QOfZrZVOmKgvUxs7SmCKucyncl3zkdarIzwCuxT9C77Q0TpsoeX9d8x2wQQ/qaG9qtqhAWwVpMVv6p8RW/cfta44bDtSoeD7xmBlTqBFev/ZAccZJt3ZuSyLf81U=
+	t=1708499961; cv=none; b=qiyhUF8w0a3sLZmVzzVHv9SMD5ZKo9Nt9svIiWhvPBBGJnLZCV0xgEx/AZgKxo811+jQZi7VsWrTRsHQOLRyVnKq0ROaeVu4z13TigTwGwR+3ANGRTFra56ZM1ajs6bZCHMKna+sFNnL9HQusZPavt/lcIPnTEH91XlmI4K9tOQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708499920; c=relaxed/simple;
-	bh=X6Cq+RW0HDSyeBS3C6pwEfX3WHpgDSCQAseO5Swl1dA=;
-	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
-	 Mime-Version:Content-Type; b=cKXtc9df4/lH1FAL6k/+Vqdiqu5IzIP9Y/R7s9jGBK4BMQCC0GywAcW61ljkZD4Ls61Lp7dyA5DuYH44IqZqp2qXm0bW5rMoAkKnATkH7S7OSWrE07ugoqdZBM9FFyaWU29Yit3CQ6RGMh3YsbvxJ5R1jgamDm9Adtxpmgg5CLA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BiASDH47; arc=none smtp.client-ip=209.85.210.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BiASDH47"
-Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-6e486abf3a5so702023b3a.0;
-        Tue, 20 Feb 2024 23:18:38 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1708499918; x=1709104718; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:subject:references
-         :in-reply-to:message-id:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=vh6UXdERl+gUl9cBq4S+KjIngsWFhxQy1ohOrIZDnMw=;
-        b=BiASDH47jvZkJ0z52bxcHNEpXdseRGf2OkI4M/G9EnDKIjEWrXtaRd+NWijJNpBmxf
-         x5BHcRRzmwPq/dzRmhWb8tv5iVTkWiMdJA1S2nrp1fBPyp6mVN0rKnb8skO0P7IM3dru
-         wPIOWqEKypah3dx7hckfQLwFH4KloObmXI69q6OHG+BVyk2Gy5094pDBX3qnx5B2x4cc
-         oMR6UT5wD9Uz9SiRKH48eLuMqsHeVaqUYO3dB8a3QgsTraL5+brTitI+8iTiml1+80O9
-         6hbYVqXPJBEv6oIR0SBzpGyrDImpEQMsglAXxh26N9FJ89mnlCOd0qB96ixHdZMc6aTL
-         kNQg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708499918; x=1709104718;
-        h=content-transfer-encoding:mime-version:subject:references
-         :in-reply-to:message-id:cc:to:from:date:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=vh6UXdERl+gUl9cBq4S+KjIngsWFhxQy1ohOrIZDnMw=;
-        b=kZaEhT01vhKL/0O5nJSs/QxEdaupsUO/r71TfBgTuLQnpbH9Cs6lURWpD93QAG1Ss/
-         Q9nsGEinN0k5wVAOInWq9TzZcr6fTLg5kmUbDNbufCGymFL4TggTIh6VvSk8VGPoxcMe
-         hLbMTlOtWirNPPZO7yfAuL1zg5bHUrZOJJ2i/bvBV2mP6NI2OIsmZoxcCNrkfTmD9jC+
-         +AmpGWprY/cj58ksr0uPIs3ioa0lc3remohP+pq7RJXA3qsnTL1n89I1l2pfJry7csBz
-         dxJ2JGum3jlLrBU3DaSBXG/XLl/AAo7TJLjiAAWhT3za/gmITWFcL3Fc41MBPb5wi4X8
-         xkLg==
-X-Forwarded-Encrypted: i=1; AJvYcCWoG+TC0zSXXWDilnVmKZhwkTEZgi3U0gRKaNFim8MHF+3F1CK6gjFGtxD18ynQKIXCpxnnwcdROg4EkmLWolVE3hQ10EetEk7injq0L+SnH7jCaA2iwa5HmfrS95ORGaf2v4RnFAAyI2L0AdvvXMkQjT4adpnAhg2n
-X-Gm-Message-State: AOJu0Yz3NKJsDDzKchmB58HMV9p6WzBpr16D6k1tKSBFyA9XKcnWo0ui
-	+xVOWEj+j5mh5HIy1mYB6G+LqYhTjOO4NdtDM4bFgcgm4PfKkfUr
-X-Google-Smtp-Source: AGHT+IEsDwnkEgqxa8FKaQSFlLHTLHQYY7+7eWZBn1A6weVllWR2ITEMm/gF7mdKILPGjLUPblDM+Q==
-X-Received: by 2002:a05:6a00:2d89:b0:6e4:8d1d:7770 with SMTP id fb9-20020a056a002d8900b006e48d1d7770mr1622981pfb.3.1708499917882;
-        Tue, 20 Feb 2024 23:18:37 -0800 (PST)
-Received: from localhost ([98.97.113.214])
-        by smtp.gmail.com with ESMTPSA id v2-20020a62a502000000b006e4362d0d8csm6156788pfm.36.2024.02.20.23.18.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 20 Feb 2024 23:18:36 -0800 (PST)
-Date: Tue, 20 Feb 2024 23:18:35 -0800
-From: John Fastabend <john.fastabend@gmail.com>
-To: Shigeru Yoshida <syoshida@redhat.com>, 
- john.fastabend@gmail.com, 
- jakub@cloudflare.com
-Cc: davem@davemloft.net, 
- edumazet@google.com, 
- pabeni@redhat.com, 
- netdev@vger.kernel.org, 
- bpf@vger.kernel.org, 
- linux-kernel@vger.kernel.org, 
- Shigeru Yoshida <syoshida@redhat.com>, 
- syzbot+fd7b34375c1c8ce29c93@syzkaller.appspotmail.com
-Message-ID: <65d5a3cbac150_5fc5920879@john.notmuch>
-In-Reply-To: <20240218150933.6004-1-syoshida@redhat.com>
-References: <20240218150933.6004-1-syoshida@redhat.com>
-Subject: RE: [PATCH bpf] bpf, sockmap: Fix NULL pointer dereference in
- sk_psock_verdict_data_ready()
+	s=arc-20240116; t=1708499961; c=relaxed/simple;
+	bh=qbA3HmjcAuokoqF8fAWQfarIxcWYV9/MEXRBff9Syic=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PivjtWFB1HLF9Vx1gPojGT4t6A1qxWSJgEp9mlOo1lQVn1XJN0YziPXVSi34W+foX6qsII+hbIg0OTcCwrE1JBVNWadDOO/rIz9OTX8t+yPzeeqVn22kunR6TMZwOTBvCH9EfKiLxv+/a5mEYqDNqDqqAVeSmo5vQihL+Nlc0FI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rcgst-00007V-Tn; Wed, 21 Feb 2024 08:19:15 +0100
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rcgst-001zjm-5E; Wed, 21 Feb 2024 08:19:15 +0100
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rcgst-008kPz-0E;
+	Wed, 21 Feb 2024 08:19:15 +0100
+Date: Wed, 21 Feb 2024 08:19:14 +0100
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To: Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: linux-kernel@vger.kernel.org, kernel@pengutronix.de
+Subject: Re: [PATCH 7/8] intel_th: Convert to platform remove callback
+ returning void
+Message-ID: <qiiln66o6uy2nsqdjcykygp3yumonn7jqp7q4wxf56i6pazics@iqfaiglmsgwt>
+References: <20231107202818.4005791-1-u.kleine-koenig@pengutronix.de>
+ <20231107202818.4005791-8-u.kleine-koenig@pengutronix.de>
+ <i3oybmf3axeyk5rcef5kgfdb4cucd63h24gup6idn62nq3vvav@4mfzwzyamq27>
+ <jawceotzgdydpz74qr2e5dwgfumwjmt4wxvi43qlwldlbgemzf@v3qa2hoopawv>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: 7bit
-
-Shigeru Yoshida wrote:
-> syzbot reported the following NULL pointer dereference issue [1]:
-> 
-> BUG: kernel NULL pointer dereference, address: 0000000000000000
-> ...
-> RIP: 0010:0x0
-> ...
-> Call Trace:
->  <TASK>
->  sk_psock_verdict_data_ready+0x232/0x340 net/core/skmsg.c:1230
->  unix_stream_sendmsg+0x9b4/0x1230 net/unix/af_unix.c:2293
->  sock_sendmsg_nosec net/socket.c:730 [inline]
->  __sock_sendmsg+0x221/0x270 net/socket.c:745
->  ____sys_sendmsg+0x525/0x7d0 net/socket.c:2584
->  ___sys_sendmsg net/socket.c:2638 [inline]
->  __sys_sendmsg+0x2b0/0x3a0 net/socket.c:2667
->  do_syscall_64+0xf9/0x240
->  entry_SYSCALL_64_after_hwframe+0x6f/0x77
-> 
-> If sk_psock_verdict_data_ready() and sk_psock_stop_verdict() are called
-> concurrently, psock->saved_data_ready can be NULL, causing the above issue.
-> 
-> This patch fixes this issue by calling the appropriate data ready function
-> using the sk_psock_data_ready() helper and protecting it from concurrency
-> with sk->sk_callback_lock.
-> 
-> Fixes: 6df7f764cd3c ("bpf, sockmap: Wake up polling after data copy")
-> Reported-and-tested-by: syzbot+fd7b34375c1c8ce29c93@syzkaller.appspotmail.com
-> Closes: https://syzkaller.appspot.com/bug?extid=fd7b34375c1c8ce29c93 [1]
-> Signed-off-by: Shigeru Yoshida <syoshida@redhat.com>
-> ---
-
-By ensuring order of ops on teardown we should never have a loop here. Also
-this aligns with strp usage that also uses sk_callback_lock. Thanks. I
-suspect we haven't seen it because when this is being used we never remove
-socks from the map before the socket is released.
-
-Acked-by: John Fastabend <john.fastabend@gmail.com>
-
->  net/core/skmsg.c | 7 +++++--
->  1 file changed, 5 insertions(+), 2 deletions(-)
-> 
-> diff --git a/net/core/skmsg.c b/net/core/skmsg.c
-> index 93ecfceac1bc..4d75ef9d24bf 100644
-> --- a/net/core/skmsg.c
-> +++ b/net/core/skmsg.c
-> @@ -1226,8 +1226,11 @@ static void sk_psock_verdict_data_ready(struct sock *sk)
->  
->  		rcu_read_lock();
->  		psock = sk_psock(sk);
-> -		if (psock)
-> -			psock->saved_data_ready(sk);
-> +		if (psock) {
-> +			read_lock_bh(&sk->sk_callback_lock);
-> +			sk_psock_data_ready(sk, psock);
-> +			read_unlock_bh(&sk->sk_callback_lock);
-> +		}
->  		rcu_read_unlock();
->  	}
->  }
-> -- 
-> 2.43.0
-> 
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="uof22c77cnfofesy"
+Content-Disposition: inline
+In-Reply-To: <jawceotzgdydpz74qr2e5dwgfumwjmt4wxvi43qlwldlbgemzf@v3qa2hoopawv>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
 
+--uof22c77cnfofesy
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hello Greg,
+
+On Thu, Feb 15, 2024 at 10:16:41PM +0100, Uwe Kleine-K=F6nig wrote:
+> On Wed, Jan 10, 2024 at 09:41:54AM +0100, Uwe Kleine-K=F6nig wrote:
+> > On Tue, Nov 07, 2023 at 09:28:26PM +0100, Uwe Kleine-K=F6nig wrote:
+> > > The .remove() callback for a platform driver returns an int which mak=
+es
+> > > many driver authors wrongly assume it's possible to do error handling=
+ by
+> > > returning an error code. However the value returned is ignored (apart
+> > > from emitting a warning) and this typically results in resource leaks.
+> > >=20
+> > > To improve here there is a quest to make the remove callback return
+> > > void. In the first step of this quest all drivers are converted to
+> > > .remove_new(), which already returns void. Eventually after all drive=
+rs
+> > > are converted, .remove_new() will be renamed to .remove().
+> > >=20
+> > > Trivially convert this driver from always returning zero in the remove
+> > > callback to the void returning variant.
+> > >=20
+> > > Signed-off-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
+> >=20
+> > I didn't get any feedback to this patch and it didn't make it into next
+> > up to now.
+> >=20
+> > Is this still on someone's radar?
+>=20
+> Is there a chance to get this patch into v6.9-rc1? Are you the right one
+> to talk to about this patch? (According to MAINTAINERS you are.)
+>=20
+> The patch was sent during the 6.7 merge window and now already missed
+> the 6.8 one :-\
+
+I failed in several attempts to get feedback on this patch. You applied
+the last two patches for this driver (that is all patches since the
+driver was born). Would you care for that one, too? Tell me if you want
+a resend. Note that the other 7 patches from this series are already
+cared for, so if you're using b4 am or shazam, make use of -P7.
+
+Thanks
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--uof22c77cnfofesy
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmXVo/IACgkQj4D7WH0S
+/k5dzQf/UN8pkmIH4/ffQO0quVHcOVG6MP8lmxHhmGS6FziCt5yBWxEOvwUGBdPD
+9IPg8W1mMNALhv+KyAQoCjxilyXYtcbIYrScru9SkHMogipUHd1PT1rqhNtfVakG
+Je8PrOzcbN/SED/JE+jLKmG0KNo/z057Rw71sI58cPX5ZmA9hVNjjzKCOyzxnWOB
+VMTZ74SQrzkh5M1RUf5YGbmqXiXWc/47YQn/UGBBI7sRFfeTttaKeiNHHaNXRPtZ
+OJQ/1o9ATflPeHVvUIMjFfmXqAoQoIGM4fTtYPMgsBTpZhKNHekTWdaXQImJjpTF
+HvqIWmixPve3JrQSIfEpU6kAHzUqIA==
+=WL9n
+-----END PGP SIGNATURE-----
+
+--uof22c77cnfofesy--
