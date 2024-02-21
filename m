@@ -1,173 +1,166 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED2C382870;
-	Wed, 21 Feb 2024 15:54:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AEB343AAB
+	for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 15:54:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708530891; cv=none; b=CpCCmnrpF9Eytqm4+6u4PEV6S50XoaTIexFJnwTglRfrzu8NWTptZCGFeYj5SJX5wThczJ5M6Ob6aOZ3ToCurJ6UGrsnmoSvbYP8Evl0yHFufzhOHGG55NKfL7zi3s9ttlokdrC+XXulzTp56cu3w2dUiv9TXfqPz+5WHyDL5kk=
+	t=1708530894; cv=none; b=Q9VBd92koDr2Wfgew7Efd09reogXDsq//WbUz53I9YelnbM9iNijRm5L0KMSu4b2XsNvdHPCTKnhUO0s0sbcA1tsWvvR3zq3U+HUKqERcQrEgbdmj0OZGMMtWgtrOZHjpyelTA2EuR/jvjwl9z/LOAQITvwqJ3nFKmTq/7E5myE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708530891; c=relaxed/simple;
-	bh=xkha4D8zVSPTP3prmB5KEcjW0rkv3j+VZiNxrnoa80M=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=cvm04aHZWRPjV/0RfG+Rec5d7pIwhTUTBengVfjE8Ffgflb0/X51N/Uc2UP6CUjEVuCw9s/AXTiCgujU6Of02vPY7RPeE1Rn5wxUiwcjjVwSI4X3C6RD+ry+fYeqcnqYjFfttTEMIgwNfJNbtqEamrn6tkNIfyd3OunLHHv02lI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=2e4mvyoO; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1708530894; c=relaxed/simple;
+	bh=yYK8rjdco7k6wR7fbp001J/0WmDT+IOZd2JC50HKr0I=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=LfKkzl0r+GYZCV+6ADENolsIel/bI8/5t3NjgGSeH1S9ipI+U0baV8a3J2ahj7mDtNI5y49HOLqyT5xOFBfUItnByZlT72hcCXYGRYMk2GTRNBKqHzpMrRKrVYkQn8gtnGRgMMaaLLZZhr15/HMOTKj+4KyrplvIkHXqdUWfVy8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=XNtWvL40; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=NhHE5x0C; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=XNtWvL40; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=NhHE5x0C; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="2e4mvyoO"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1708530888;
-	bh=xkha4D8zVSPTP3prmB5KEcjW0rkv3j+VZiNxrnoa80M=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=2e4mvyoOeIXC48yaN3hIVxFb884yiG49Qk9Gl+RPrOQ5EA8QawrdcgDXnS2vNWioy
-	 8LlxDn/GCJLV9/vF/zQ0jlyYfP78zBGSfxUAYCRPeyovNnfEpsYo3odix458VBWaeq
-	 jqiREMJ1gkYb4z0qeY/wk9mJEeryy9qFiNESySWG2zbO5MEpD5Hu5IlGsoYRwzPo90
-	 MVq0zvglbrn5fPmTHGgkRBfNwP9vQeHcC6Sg53wJZaKi7WekI8uRWNGrjvRFwXTjrc
-	 ZHxEZ+KfFkDrAwVE+qLKGeyww+K5pPrkmWCIQckPp1j+TFSpRr9a4j1pGF5SYe3Y4K
-	 LSEPlWVSs7FpA==
-Received: from benjamin-XPS-13-9310.. (cola.collaboradmins.com [195.201.22.229])
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="XNtWvL40";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="NhHE5x0C";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="XNtWvL40";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="NhHE5x0C"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	(Authenticated sender: benjamin.gaignard)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id C78D937820D5;
-	Wed, 21 Feb 2024 15:54:47 +0000 (UTC)
-From: Benjamin Gaignard <benjamin.gaignard@collabora.com>
-To: mchehab@kernel.org,
-	tfiga@chromium.org,
-	m.szyprowski@samsung.com,
-	ezequiel@vanguardiasur.com.ar,
-	p.zabel@pengutronix.de,
-	hverkuil-cisco@xs4all.nl,
-	nicolas@ndufresne.ca
-Cc: linux-media@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-rockchip@lists.infradead.org,
-	kernel@collabora.com,
-	Benjamin Gaignard <benjamin.gaignard@collabora.com>
-Subject: [PATCH v20 8/9] media: v4l2: Add mem2mem helpers for REMOVE_BUFS ioctl
-Date: Wed, 21 Feb 2024 16:54:34 +0100
-Message-Id: <20240221155435.100093-9-benjamin.gaignard@collabora.com>
-X-Mailer: git-send-email 2.40.1
-In-Reply-To: <20240221155435.100093-1-benjamin.gaignard@collabora.com>
-References: <20240221155435.100093-1-benjamin.gaignard@collabora.com>
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 4A9F51FB66;
+	Wed, 21 Feb 2024 15:54:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1708530890; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=6c+PIWb1/kLk20NMKkb+j7MqFsNYlIIxImscXImM/9c=;
+	b=XNtWvL40Iu08zXUOV+Sd+vmATzuaOVs9doAzk7GuDloLhRKMTXXVsR+xJSnBSWwUdPijyF
+	Sng8zA0PuuVIBPF+5NvGOD+wqwOtw7P7Zi6vFLGToL9uYW3SGnE/8dlIOIFRbDBnk0IG6k
+	pJ4ZIuSJ1yOR+ct+92djhpBiTJQHTrM=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1708530890;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=6c+PIWb1/kLk20NMKkb+j7MqFsNYlIIxImscXImM/9c=;
+	b=NhHE5x0CR69m3vLr7eJZgwAjcfuq2WnLoyfrltcZ1b07lYud/ZPEmbGXG3wSk71QLEMX2w
+	kYtQulQM/YzpNfBA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1708530890; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=6c+PIWb1/kLk20NMKkb+j7MqFsNYlIIxImscXImM/9c=;
+	b=XNtWvL40Iu08zXUOV+Sd+vmATzuaOVs9doAzk7GuDloLhRKMTXXVsR+xJSnBSWwUdPijyF
+	Sng8zA0PuuVIBPF+5NvGOD+wqwOtw7P7Zi6vFLGToL9uYW3SGnE/8dlIOIFRbDBnk0IG6k
+	pJ4ZIuSJ1yOR+ct+92djhpBiTJQHTrM=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1708530890;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=6c+PIWb1/kLk20NMKkb+j7MqFsNYlIIxImscXImM/9c=;
+	b=NhHE5x0CR69m3vLr7eJZgwAjcfuq2WnLoyfrltcZ1b07lYud/ZPEmbGXG3wSk71QLEMX2w
+	kYtQulQM/YzpNfBA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 3CA2E13A69;
+	Wed, 21 Feb 2024 15:54:48 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([10.150.64.162])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id YByTCcgc1mWjFgAAD6G6ig
+	(envelope-from <hare@suse.de>); Wed, 21 Feb 2024 15:54:48 +0000
+Message-ID: <95116d62-b254-4973-ad0e-01dc4dae7359@suse.de>
+Date: Wed, 21 Feb 2024 16:54:48 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 3/5] nvme-fabrics: introduce ref counting for
+ nvmf_ctrl_options
+Content-Language: en-US
+To: Daniel Wagner <dwagner@suse.de>, James Smart <james.smart@broadcom.com>
+Cc: Keith Busch <kbusch@kernel.org>, Christoph Hellwig <hch@lst.de>,
+ Sagi Grimberg <sagi@grimberg.me>, linux-nvme@lists.infradead.org,
+ linux-kernel@vger.kernel.org
+References: <20240221132404.6311-1-dwagner@suse.de>
+ <20240221132404.6311-4-dwagner@suse.de>
+From: Hannes Reinecke <hare@suse.de>
+In-Reply-To: <20240221132404.6311-4-dwagner@suse.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-Spam-Level: 
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=XNtWvL40;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=NhHE5x0C
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Spamd-Result: default: False [-4.50 / 50.00];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 XM_UA_NO_VERSION(0.01)[];
+	 SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	 TO_DN_SOME(0.00)[];
+	 DWL_DNSWL_BLOCKED(0.00)[suse.de:dkim];
+	 RCVD_COUNT_THREE(0.00)[3];
+	 DKIM_TRACE(0.00)[suse.de:+];
+	 MX_GOOD(-0.01)[];
+	 RCPT_COUNT_SEVEN(0.00)[7];
+	 NEURAL_HAM_SHORT(-0.20)[-1.000];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 MID_RHS_MATCH_FROM(0.00)[];
+	 BAYES_HAM(-3.00)[100.00%];
+	 ARC_NA(0.00)[];
+	 R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	 FROM_HAS_DN(0.00)[];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 NEURAL_HAM_LONG(-1.00)[-1.000];
+	 MIME_GOOD(-0.10)[text/plain];
+	 DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim,suse.de:email];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 RCVD_TLS_ALL(0.00)[]
+X-Spam-Score: -4.50
+X-Rspamd-Queue-Id: 4A9F51FB66
+X-Spam-Flag: NO
 
-Create v4l2-mem2mem helpers for VIDIOC_REMOVE_BUFS ioctl and
-make test drivers use it.
+On 2/21/24 14:24, Daniel Wagner wrote:
+> The FC transport is offloading the connect attempt to a workqueue. When
+> the attempt fails the transport is starting to cleanup resources. It is
+> possible for user space to trigger a crash because nvmf_ctrl_options are
+> exposed to sysfs.
+> 
+> This crash wasn't observed with blktests nvme/041 until now because the
+> retry loop was usually trying for several times (e.g. with defaults
+> 600s) and the test would trigger the cleanup itself. Though we the
+> recent change not retrying to use invalid credentials the crash can be
+> easily triggered.
+> 
+> The simplest way to control the life time of nvmf_ctrl_options is by
+> using ref counting.
+> 
+> Signed-off-by: Daniel Wagner <dwagner@suse.de>
+> ---
+>   drivers/nvme/host/fabrics.c | 22 +++++++++++++++++++---
+>   drivers/nvme/host/fabrics.h |  6 +++++-
+>   drivers/nvme/host/fc.c      | 14 +++++++++-----
+>   drivers/nvme/host/rdma.c    | 18 +++++++++++++-----
+>   drivers/nvme/host/tcp.c     | 21 ++++++++++++++-------
+>   drivers/nvme/target/loop.c  | 19 +++++++++++++------
+>   6 files changed, 73 insertions(+), 27 deletions(-)
+> 
+Reviewed-by: Hannes Reinecke <hare@suse.de>
 
-Signed-off-by: Benjamin Gaignard <benjamin.gaignard@collabora.com>
----
- drivers/media/test-drivers/vicodec/vicodec-core.c |  1 +
- drivers/media/test-drivers/vim2m.c                |  1 +
- drivers/media/test-drivers/vimc/vimc-capture.c    |  1 +
- drivers/media/test-drivers/visl/visl-video.c      |  1 +
- drivers/media/test-drivers/vivid/vivid-core.c     |  1 +
- drivers/media/v4l2-core/v4l2-mem2mem.c            | 10 ++++++++++
- include/media/v4l2-mem2mem.h                      |  2 ++
- 7 files changed, 17 insertions(+)
+Cheers,
 
-diff --git a/drivers/media/test-drivers/vicodec/vicodec-core.c b/drivers/media/test-drivers/vicodec/vicodec-core.c
-index e13f5452b927..3e011fe62ae1 100644
---- a/drivers/media/test-drivers/vicodec/vicodec-core.c
-+++ b/drivers/media/test-drivers/vicodec/vicodec-core.c
-@@ -1345,6 +1345,7 @@ static const struct v4l2_ioctl_ops vicodec_ioctl_ops = {
- 	.vidioc_prepare_buf	= v4l2_m2m_ioctl_prepare_buf,
- 	.vidioc_create_bufs	= v4l2_m2m_ioctl_create_bufs,
- 	.vidioc_expbuf		= v4l2_m2m_ioctl_expbuf,
-+	.vidioc_remove_bufs	= v4l2_m2m_ioctl_remove_bufs,
- 
- 	.vidioc_streamon	= v4l2_m2m_ioctl_streamon,
- 	.vidioc_streamoff	= v4l2_m2m_ioctl_streamoff,
-diff --git a/drivers/media/test-drivers/vim2m.c b/drivers/media/test-drivers/vim2m.c
-index 3e3b424b4860..14aff4ad576b 100644
---- a/drivers/media/test-drivers/vim2m.c
-+++ b/drivers/media/test-drivers/vim2m.c
-@@ -960,6 +960,7 @@ static const struct v4l2_ioctl_ops vim2m_ioctl_ops = {
- 	.vidioc_dqbuf		= v4l2_m2m_ioctl_dqbuf,
- 	.vidioc_prepare_buf	= v4l2_m2m_ioctl_prepare_buf,
- 	.vidioc_create_bufs	= v4l2_m2m_ioctl_create_bufs,
-+	.vidioc_remove_bufs	= v4l2_m2m_ioctl_remove_bufs,
- 	.vidioc_expbuf		= v4l2_m2m_ioctl_expbuf,
- 
- 	.vidioc_streamon	= v4l2_m2m_ioctl_streamon,
-diff --git a/drivers/media/test-drivers/vimc/vimc-capture.c b/drivers/media/test-drivers/vimc/vimc-capture.c
-index 97693561f1e4..ba7550b8ba7e 100644
---- a/drivers/media/test-drivers/vimc/vimc-capture.c
-+++ b/drivers/media/test-drivers/vimc/vimc-capture.c
-@@ -221,6 +221,7 @@ static const struct v4l2_ioctl_ops vimc_capture_ioctl_ops = {
- 	.vidioc_expbuf = vb2_ioctl_expbuf,
- 	.vidioc_streamon = vb2_ioctl_streamon,
- 	.vidioc_streamoff = vb2_ioctl_streamoff,
-+	.vidioc_remove_bufs = vb2_ioctl_remove_bufs,
- };
- 
- static void vimc_capture_return_all_buffers(struct vimc_capture_device *vcapture,
-diff --git a/drivers/media/test-drivers/visl/visl-video.c b/drivers/media/test-drivers/visl/visl-video.c
-index b9a4b44bd0ed..f8d970319764 100644
---- a/drivers/media/test-drivers/visl/visl-video.c
-+++ b/drivers/media/test-drivers/visl/visl-video.c
-@@ -539,6 +539,7 @@ const struct v4l2_ioctl_ops visl_ioctl_ops = {
- 	.vidioc_prepare_buf		= v4l2_m2m_ioctl_prepare_buf,
- 	.vidioc_create_bufs		= v4l2_m2m_ioctl_create_bufs,
- 	.vidioc_expbuf			= v4l2_m2m_ioctl_expbuf,
-+	.vidioc_remove_bufs		= v4l2_m2m_ioctl_remove_bufs,
- 
- 	.vidioc_streamon		= v4l2_m2m_ioctl_streamon,
- 	.vidioc_streamoff		= v4l2_m2m_ioctl_streamoff,
-diff --git a/drivers/media/test-drivers/vivid/vivid-core.c b/drivers/media/test-drivers/vivid/vivid-core.c
-index 11b8520d9f57..771392f67dda 100644
---- a/drivers/media/test-drivers/vivid/vivid-core.c
-+++ b/drivers/media/test-drivers/vivid/vivid-core.c
-@@ -769,6 +769,7 @@ static const struct v4l2_ioctl_ops vivid_ioctl_ops = {
- 	.vidioc_expbuf			= vb2_ioctl_expbuf,
- 	.vidioc_streamon		= vb2_ioctl_streamon,
- 	.vidioc_streamoff		= vb2_ioctl_streamoff,
-+	.vidioc_remove_bufs		= vb2_ioctl_remove_bufs,
- 
- 	.vidioc_enum_input		= vivid_enum_input,
- 	.vidioc_g_input			= vivid_g_input,
-diff --git a/drivers/media/v4l2-core/v4l2-mem2mem.c b/drivers/media/v4l2-core/v4l2-mem2mem.c
-index 75517134a5e9..ba21c60f1ed3 100644
---- a/drivers/media/v4l2-core/v4l2-mem2mem.c
-+++ b/drivers/media/v4l2-core/v4l2-mem2mem.c
-@@ -1386,6 +1386,16 @@ int v4l2_m2m_ioctl_create_bufs(struct file *file, void *priv,
- }
- EXPORT_SYMBOL_GPL(v4l2_m2m_ioctl_create_bufs);
- 
-+int v4l2_m2m_ioctl_remove_bufs(struct file *file, void *priv,
-+			       struct v4l2_remove_buffers *remove)
-+{
-+	struct v4l2_fh *fh = file->private_data;
-+
-+	return vb2_core_remove_bufs(v4l2_m2m_get_vq(fh->m2m_ctx, remove->type),
-+				    remove->index, remove->count);
-+}
-+EXPORT_SYMBOL_GPL(v4l2_m2m_ioctl_remove_bufs);
-+
- int v4l2_m2m_ioctl_querybuf(struct file *file, void *priv,
- 				struct v4l2_buffer *buf)
- {
-diff --git a/include/media/v4l2-mem2mem.h b/include/media/v4l2-mem2mem.h
-index 7f1af1f7f912..0af330cf91c3 100644
---- a/include/media/v4l2-mem2mem.h
-+++ b/include/media/v4l2-mem2mem.h
-@@ -867,6 +867,8 @@ int v4l2_m2m_ioctl_reqbufs(struct file *file, void *priv,
- 				struct v4l2_requestbuffers *rb);
- int v4l2_m2m_ioctl_create_bufs(struct file *file, void *fh,
- 				struct v4l2_create_buffers *create);
-+int v4l2_m2m_ioctl_remove_bufs(struct file *file, void *priv,
-+			       struct v4l2_remove_buffers *d);
- int v4l2_m2m_ioctl_querybuf(struct file *file, void *fh,
- 				struct v4l2_buffer *buf);
- int v4l2_m2m_ioctl_expbuf(struct file *file, void *fh,
+Hannes
+
 -- 
-2.40.1
+Dr. Hannes Reinecke                  Kernel Storage Architect
+hare@suse.de                                +49 911 74053 688
+SUSE Software Solutions GmbH, Frankenstr. 146, 90461 Nürnberg
+HRB 36809 (AG Nürnberg), GF: I. Totev, A. McDonald, W. Knoblich
 
