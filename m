@@ -1,117 +1,124 @@
-Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com [209.85.216.45])
+Received: from mail-il1-f197.google.com (mail-il1-f197.google.com [209.85.166.197])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88C012837E;
-	Wed, 21 Feb 2024 02:59:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D90728374
+	for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 03:00:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708484349; cv=none; b=csqehXsatSuD0j2F3LVg2lYeHEqEApyrtOzTBR7ww+7yFezT837+HJ/JbMvzXXFq64UMhCVHfLLI5MXWWmPSn883qbrm3BonKbe05NW4+iWT5blv6fmpGa+xieNhzBFCwQpPr81q65/v5AsmXqzehfqw28gEow+YkGcW0PKbB1M=
+	t=1708484429; cv=none; b=uxzWJgV/nMMl3D312pVXjoEM8GISPZFLOs4DkkeEfRCDwOelYHkNVj9ftCC5GBMaxpqG5jzkmjYB8HqoZPSDyuLhVkxg30aQJLRzVyfRGXqi6s/ewJIWGeTAucnfNZ2l0vuInmgd7pnLAwAzGLiyk3ZIeWnIc4+X6vSv4CjNyro=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708484349; c=relaxed/simple;
-	bh=ki7oZqPLTBBU4e9QixFjvu/JrFVfmPfGr4kBpBiuZ54=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cE1uA2XgQhG14HJF/JTVK/VRFavCWFztbi4Vl4IG/fHu3F6nO1Ds9k9U5yFaMyG9Lle5JofLdcIGuXhqk3wGyz7xiKfznZRAtozsNJ+dffSxMzHI6U2OcqDmSdtCEETnOmEsq3ToKC0OiuH0ucIritRuoMLvjw8uJC4JpJbu1Hs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bwNL6Y+8; arc=none smtp.client-ip=209.85.216.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bwNL6Y+8"
-Received: by mail-pj1-f45.google.com with SMTP id 98e67ed59e1d1-2997a9f4d61so2305000a91.3;
-        Tue, 20 Feb 2024 18:59:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1708484347; x=1709089147; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=rKRR1jeoUaWk2hMXPXX2OybDUOW0Xq12PBDdL5AGBKI=;
-        b=bwNL6Y+8qjOyLB+DqaMtGAIpKquvsbtfWnghCa6NymM2uah81RKAr/8xuC4parLLPc
-         Cm8YPHq1zyuh7+ZJroPhh6el0CLRKP4NUiQKzzBlZ7JpIpX1PfAZ3Xyd1IUjSoBhquzV
-         UfybgqXVpHuXoaNS1t/vRo7vpqsZlTun8xBRgTLY01/AJwN/HEdrJemxQIa2hOMZlncf
-         6VXU90H+nFnn6ofjpTCO0J44t0Mdy/W6MJ3qehbVlZyVa0rCIQ1rG39wKD0IiPSV767+
-         Fn3Y/4MTLWYf3N9DYj816Al3JsEm3wBXW71kXD5L8Z8Y0RdILHggboYnAWHRaGrbRKXZ
-         kw/A==
+	s=arc-20240116; t=1708484429; c=relaxed/simple;
+	bh=rkLKCDZNjb6J0IiHPCSnK1SOv3Zj9iEVmYNgMObi7/Y=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=TagSFBjKPTiHqVbzwKeasVm1tSTR4xGWC+faaI9BgJveylx21ZnemBG2gu/5LqRRYEiHJzlQ1benuGGvqWs2uXx3V2vd5XCc6jrp3wN5Ng8ZJvQ3SsfWYUVA7aXkpXcPoVpurQbs6FyplEKPx9IZiqrRm93IJ70Ei8epAYU0ha0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f197.google.com with SMTP id e9e14a558f8ab-36424431577so47950165ab.3
+        for <linux-kernel@vger.kernel.org>; Tue, 20 Feb 2024 19:00:27 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708484347; x=1709089147;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=rKRR1jeoUaWk2hMXPXX2OybDUOW0Xq12PBDdL5AGBKI=;
-        b=CLuYWYOsie0mHLVToPocc2T7wmviNWS+cTluQ5Iy2Iie5IeqTmMl8o+ktMlEu/NBQ/
-         5bnHwnFHYl4VTF4jOvOSwm8bHF57zkiG5HC6fMxhgo7zHfvmLKVCKfEPj0FuX9Ty5Szg
-         Eastous87nAwD5rZfgKyrtVBOeRTJJQzPu5VIlaKMxumxW6IOdxMYElcU3drUkCqKzob
-         KAyNJm9CRaa75ggJL+wKJ+WZAFvsCOmT2HlWlLfFhH4jrZkuISlMwdT15PA2VGwtCzia
-         F6vJSyGKUPEx0Owil2JzwZzHtG41h6yvXKwL53qh+srJgW1k7ODnc/yvNcfxPllp7I57
-         oZvg==
-X-Forwarded-Encrypted: i=1; AJvYcCU4JazQ+Z2Xy1tyQUI3qAtv9+/QJcktpGCOu51WQ3Vi1bp1MGJq1nLCCYrX8xs3iCnFW0xOrHCdyEwIcGkI9T/kALbpq0oghigAFX/ETh1I5Lg+gmmrOSg9MF37kjGqcfn3KFYi3xiiusp6N2CXLKVSbjPQjiBZ+4j+ADnnfRPlFoyvTAY3aF0zuKKdCTeMK14JNaJlTcHw8TBZczFvY1WWa+iqmmzrt2RIh72x9Ilc8wii6aQ3/nH+08o=
-X-Gm-Message-State: AOJu0Yz4kvYOSfo9U3ptbqclifaoWFE5Ry+VGxlULmKc2S3M1Xmb5f+D
-	C8IxxiY0rWnDi8toi4n8lBSa/Q+f0Up36KsZBiKBcbpMlx/g620i
-X-Google-Smtp-Source: AGHT+IE2gQvSK+KiBH2dx0Jzo04yUo8mrIkZhKNv7p0hXChfvZRY6ZjsADui/Js2Q+b5v2KsXmCBVg==
-X-Received: by 2002:a17:90b:4a0c:b0:299:3334:51d1 with SMTP id kk12-20020a17090b4a0c00b00299333451d1mr11593925pjb.10.1708484346801;
-        Tue, 20 Feb 2024 18:59:06 -0800 (PST)
-Received: from macbook-pro-49.dhcp.thefacebook.com ([2620:10d:c090:400::4:b11c])
-        by smtp.gmail.com with ESMTPSA id v11-20020a170902f0cb00b001d937bc5602sm6946664pla.227.2024.02.20.18.59.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 20 Feb 2024 18:59:06 -0800 (PST)
-Date: Tue, 20 Feb 2024 18:59:03 -0800
-From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-To: Benjamin Tissoires <bentiss@kernel.org>
-Cc: Alexei Starovoitov <ast@kernel.org>, 
-	Daniel Borkmann <daniel@iogearbox.net>, John Fastabend <john.fastabend@gmail.com>, 
-	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, 
-	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
-	Yonghong Song <yonghong.song@linux.dev>, KP Singh <kpsingh@kernel.org>, 
-	Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Jiri Kosina <jikos@kernel.org>, Benjamin Tissoires <benjamin.tissoires@redhat.com>, 
-	Jonathan Corbet <corbet@lwn.net>, Shuah Khan <shuah@kernel.org>, bpf@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-input@vger.kernel.org, linux-doc@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH RFC bpf-next v2 02/10] bpf/helpers: introduce sleepable
- timers
-Message-ID: <i2womwfk2bvxh3h7ubmj2p4aqywci36hcfufuqflcusg73ilsq@chpndguq7bgu>
-References: <20240214-hid-bpf-sleepable-v2-0-5756b054724d@kernel.org>
- <20240214-hid-bpf-sleepable-v2-2-5756b054724d@kernel.org>
- <mth43jfjhwtatwfo3unefrze62opht3yklleblslyz2adc6p5p@wm3miaqhhtkt>
- <rhdu4st5tfabsdqs27ewhvdlwblhj2re4o56iz3fq3bsuokxxe@gtuqdjffj2hn>
+        d=1e100.net; s=20230601; t=1708484427; x=1709089227;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=HKC2FBRzuJ/NpphNyy1cXiWj+k3pGRIjMpvVMN1CXGA=;
+        b=boLqqgfbXKXNefTdDuLAIkngQiUj0YujNtNTXGpmW4OPHkt2rP7bBEeU/OozN+jgyX
+         2AbygwM9jTYOaLyFrCEh1tKTa5oNy95ANNPXq6UrWNgi24Rm0Mav6PGKfWd/PYzkqwKw
+         i+X20ZDgXpN1WVsMK8SQxx1nPNhhLjF8EZE9fbTBjXGi5jqxfiD4JxbJC0IHVJP8jHqp
+         M4XYaHTkaZMafuv5/iMhOcxi0EPtwD+L631/MkKm4CzY3ihSdBO18nQN9gXq5CJCZEmP
+         CfQIcpNikD4yKmh7F7sD/1kX51k0hLuZ155YyfGnR0t7kec+9EjYin+mLS+VZyXh0Wy5
+         0fIQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV/HNR6r7Vea+grOn9xqrQvXjDenY9JKCjbwk1P1JOUG0W1Jb4VXLo68te6RQEFCrA304lx+q6c3vfQhM2ujkKUSx0w/Rz6qvsdZPYD
+X-Gm-Message-State: AOJu0YwSabxZWcaAghOnoTQXtYh4rYVJ7PzC53L8b1YICGIV3ErCVGIv
+	LW6Wh0lYvjfzZEggBA/AkyrIHlVekeuL7yLbteE11VJ8bThCGQajiAtyQw6hyJ0zY74SIYVc4P6
+	QnQ5U5PkxDyMnc8A/f0WkvKn6A5b+ASXVJTb0i+qOBdiqYMnoep8hQeQ=
+X-Google-Smtp-Source: AGHT+IFhevZLLMLv1IVMNBUKv01dHF2q9cfQse+2XCEwbDYmSERfOxBEyUgWtenQFYc/t3MOcpGbZpvWrk5sSN0cP3XHp8gbRQvt
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <rhdu4st5tfabsdqs27ewhvdlwblhj2re4o56iz3fq3bsuokxxe@gtuqdjffj2hn>
+X-Received: by 2002:a05:6e02:1889:b0:365:3355:38fe with SMTP id
+ o9-20020a056e02188900b00365335538femr402622ilu.5.1708484427281; Tue, 20 Feb
+ 2024 19:00:27 -0800 (PST)
+Date: Tue, 20 Feb 2024 19:00:27 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000647d640611db8789@google.com>
+Subject: [syzbot] [kvm?] KMSAN: uninit-value in em_ret_near_imm
+From: syzbot <syzbot+c9aca2253922f806a75a@syzkaller.appspotmail.com>
+To: bp@alien8.de, dave.hansen@linux.intel.com, hpa@zytor.com, 
+	kvm@vger.kernel.org, linux-kernel@vger.kernel.org, mingo@redhat.com, 
+	pbonzini@redhat.com, seanjc@google.com, syzkaller-bugs@googlegroups.com, 
+	tglx@linutronix.de, x86@kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Fri, Feb 16, 2024 at 10:50:10AM +0100, Benjamin Tissoires wrote:
->  static bool is_rbtree_lock_required_kfunc(u32 btf_id)
->  {
->  	return is_bpf_rbtree_api_kfunc(btf_id);
-> @@ -12140,6 +12143,16 @@ static int check_kfunc_call(struct bpf_verifier_env *env, struct bpf_insn *insn,
->  		}
->  	}
->  
-> +	if (is_bpf_timer_set_sleepable_cb_kfunc(meta.func_id)) {
-> +		err = push_callback_call(env, insn, insn_idx, meta.subprogno,
-> +					 set_timer_callback_state);
-> +		if (err) {
-> +			verbose(env, "kfunc %s#%d failed callback verification\n",
-> +				func_name, meta.func_id);
-> +			return err;
-> +		}
-> +	}
+Hello,
 
-All makes sense so far.
-Please squash all the fix and repost.
-It's hard to do a proper review in this shape of the patch.
-As far as rcu_read_lock/unlock that is done in callback...
-it feels buggy and unnecessary.
-bpf prog and timer won't disappear while work is queued.
-array and hash map will call bpf_obj_free_timer() before going away.
+syzbot found the following issue on:
 
-And things like:
-+       rcu_read_lock();
-+       callback_fn = rcu_dereference(t->sleepable_cb_fn);
-+       rcu_read_unlock();
-+       if (!callback_fn)
-+               return;
+HEAD commit:    0f1dd5e91e2b Merge tag 'sound-6.8-rc5' of git://git.kernel..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=17bec778180000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=e3dd779fba027968
+dashboard link: https://syzkaller.appspot.com/bug?extid=c9aca2253922f806a75a
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
 
-is 99% broken. if (!callback_fn) line is UAF.
+Unfortunately, I don't have any reproducer for this issue yet.
+
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/b6e52e101a62/disk-0f1dd5e9.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/64025c9168bf/vmlinux-0f1dd5e9.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/491e1a922dc9/bzImage-0f1dd5e9.xz
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+c9aca2253922f806a75a@syzkaller.appspotmail.com
+
+=====================================================
+BUG: KMSAN: uninit-value in assign_eip_near arch/x86/kvm/emulate.c:829 [inline]
+BUG: KMSAN: uninit-value in em_ret_near_imm+0x13c/0x580 arch/x86/kvm/emulate.c:3192
+ assign_eip_near arch/x86/kvm/emulate.c:829 [inline]
+ em_ret_near_imm+0x13c/0x580 arch/x86/kvm/emulate.c:3192
+ x86_emulate_insn+0x1d87/0x5880 arch/x86/kvm/emulate.c:5292
+ x86_emulate_instruction+0x13c9/0x30a0 arch/x86/kvm/x86.c:9175
+ kvm_emulate_instruction arch/x86/kvm/x86.c:9255 [inline]
+ complete_emulated_io arch/x86/kvm/x86.c:11212 [inline]
+ complete_emulated_mmio+0x70b/0x8b0 arch/x86/kvm/x86.c:11272
+ kvm_arch_vcpu_ioctl_run+0x1837/0xb890 arch/x86/kvm/x86.c:11384
+ kvm_vcpu_ioctl+0xbfc/0x1770 arch/x86/kvm/../../../virt/kvm/kvm_main.c:4441
+ vfs_ioctl fs/ioctl.c:51 [inline]
+ __do_sys_ioctl fs/ioctl.c:871 [inline]
+ __se_sys_ioctl+0x225/0x410 fs/ioctl.c:857
+ __x64_sys_ioctl+0x96/0xe0 fs/ioctl.c:857
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0xcf/0x1e0 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x63/0x6b
+
+Local variable eip created at:
+ em_ret_near_imm+0x3a/0x580 arch/x86/kvm/emulate.c:3189
+ x86_emulate_insn+0x1d87/0x5880 arch/x86/kvm/emulate.c:5292
+
+CPU: 0 PID: 6232 Comm: syz-executor.3 Not tainted 6.8.0-rc4-syzkaller-00267-g0f1dd5e91e2b #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/25/2024
+=====================================================
+
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
