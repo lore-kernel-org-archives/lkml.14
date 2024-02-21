@@ -1,50 +1,59 @@
-Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E6F34C61B;
-	Wed, 21 Feb 2024 09:54:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 516E44CE19
+	for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 09:54:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708509272; cv=none; b=lys0VGLjXYoj47V6Q8zCjWv48rIbVUVHrylavSTxj194fBIGBktE908AcPZPKX1fShlo7sN75EWaptGKFatnBZWQMktBEzH+VicoeHVnQNBokK0EVz0psWDetruN9DizNtCbTybahwPowIjy1ugCVxNpIrb174J2+m2L5GlUS5g=
+	t=1708509301; cv=none; b=b21gh6K4UocSEjFKcWiItkis4Tpj5QtuFYfb8SoQwCI5VOrfmTfnTKjATRdRwfFEKSYDZdD9+yWiKtPLCi66HfQNRRnGh9/XTOBWmKAvkB0XBrYd+gO3i2i4PeHDrASIGqXdw10aZoX4J9lER6WE6kyshga6EaGE9vNp+Qi9ouE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708509272; c=relaxed/simple;
-	bh=D4a6qDhm/r1zitj6K4QT5PaTygu+/3cz0YZaNV8v6hc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=ZCwPbDh2mQLCd/rJfkDWS56niQxqsp/JzjgHZSc0fxaAycD79SBfmi4VkGSD/o3sfqTpi1qNBFh06ohb7frcCTpq3puTNaMDXyufjoosgDnqdKKYhivzNhyTFJ2RSkMq1jPuEBuQy3BZhkrQBircvstgO+sd7AZZLP6wt0Jxdu4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=CmKjDyny; arc=none smtp.client-ip=185.132.182.106
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+	s=arc-20240116; t=1708509301; c=relaxed/simple;
+	bh=zm/vBibTZ3Rw1+e1hTTVkyysGtZeGEl4z6JnweURqmg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=NrynhWmwtHNBmp3vlNEY2Us9sXa9XZFB2xYYHsD645q7MopD09+ebFX+JdmR9Ydz0KnbtISgeVlQqJ+px+LGfLmRbFj4Y8Jl+ynmcBnprBFHwa9MykIkQn3dKI0aL8WMob8nOMRyW3QGuw7nzRv2gdm+u5wcvh1tFgoKrB4Stus=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=m7O2Saz+; arc=none smtp.client-ip=209.85.218.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="CmKjDyny"
-Received: from pps.filterd (m0241204.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 41L7H87L021527;
-	Wed, 21 Feb 2024 10:54:07 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	selector1; bh=tGWKi3XRrYtmuARfCajUNkylogiWFbJvSMiv0BOvGE0=; b=Cm
-	KjDyny3E82jh462D50nD6iH3WH8IaDkECoKy3+F033mPxLSmyHaUAygGk1paftxf
-	MdF55AHvDGSZCeDkJW/NX1eyDd7G60FM75zwN9VQH4FtsyP1Np+yGhRaOCRrH3k2
-	Mo9dw/mXq3vDQ8AvOC8s1PkuL+No2LCrlfX+dY8fJL9zQ4qxywJ+oLKNkA1lKiXe
-	9bQX1nPAeNNote3eo1xc2jvtmV9FnPg+0FhXwiUL1CjPIREecsoC4koOcKLcubwY
-	k/GZM3Azom3PgBwKH2L0+7c2tGXM9oHcQhtAIvVFuLRWITnPFx63KBf1eSJrSSC7
-	ygbIBPzWT4bfebdCkVsg==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3wd202tjj1-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 21 Feb 2024 10:54:07 +0100 (CET)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 801B540051;
-	Wed, 21 Feb 2024 10:53:49 +0100 (CET)
-Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id A5ADB232FEA;
-	Wed, 21 Feb 2024 10:53:13 +0100 (CET)
-Received: from [10.201.20.71] (10.201.20.71) by SHFDAG1NODE1.st.com
- (10.75.129.69) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Wed, 21 Feb
- 2024 10:53:13 +0100
-Message-ID: <b381cb72-943d-473f-b2f2-eb288132aaac@foss.st.com>
-Date: Wed, 21 Feb 2024 10:53:12 +0100
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="m7O2Saz+"
+Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-a3e5d82ad86so452016966b.2
+        for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 01:54:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1708509297; x=1709114097; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=KcmtWXC+eeRLQpsTOmN8RmXIXynGIPAPPuNNVvjXO7E=;
+        b=m7O2Saz+5wDh3x6N5ZUcOfeF9V2tItGVJg6mVNNfVPyniR1NoN/VITvuHIjufOzaUC
+         ml37e3oSdenjgR/6qdhubNaI3ptbh9YLBXIAafKq9Rye9Em4X0ZRuA0IaiMK7I4YEj9c
+         aKt7NhkZIdiZaJhtnbbh/hAQPx7t4ioamIoK4UiUAd58Mp5fs5/D4fFbNJmhfLcjMbun
+         ilDx+cTbZuMQh8AtPDmP7bSd0bz7y8ye7sQihnyB1TTMe7ghdkzVjXnDOg6t5YiOV0Os
+         L2SR6geTDqjulkDkKdUeOB6K7d9mbK5YKkCXByrTwwd4ECYPUpETrz4F3aXwZv5oToP/
+         OUgw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708509297; x=1709114097;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=KcmtWXC+eeRLQpsTOmN8RmXIXynGIPAPPuNNVvjXO7E=;
+        b=EbZ13oom51reR4K9bGC1yD6wgovrMhVTk+4JxWRCcpsa0llfb0WB4tO29ZwZQGEyWc
+         QBTg/uCy21T8E33avBmOD5eP/oDdEMbiNRadNAh6cqGr81ZAQoJmjV238KxBIr/fnuYe
+         92w/ZhHPqtGWOHYRVc18XutFgQrU2ekfT2ecwZd/JR+jkZrnwtfi8eNjJ0tYNHBhVSbd
+         HSi9qaaGzEA0VvpnMsLu3ocofKnSEOw7dN+9Ujl6YzHCsgxPgDzXPj3IzVGsHuXD63b9
+         tI6q4Oam3eguUQyH5wdrJgSi3Avp+1cNuZigtBONqzLyXYCvKVx6gui2IXtdixOVPeBv
+         FQDQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXu2KtvvXwU7DjhMM6Ucz6fyC+jNPC+AiPvmdN66nHBz/pmwRlsP9LM94vDqbKGpO/T5Qb+ufba6udLB5o3X8K1IzDudPbskSSQLUzZ
+X-Gm-Message-State: AOJu0YxHv4P4lSOgg9Q+yXNLbu74MpwrxlkIB+6bdC8tCkRtyAwrjesS
+	5MiUvHWx2qv1U/BYSq4ZkMNKtq5UDwI6OFiSnEyXUU1RKyAc716P+8pf0M0ALrE=
+X-Google-Smtp-Source: AGHT+IEU1nxc4NKao6byiVMdxqkd2y5TaHUyEJZs+U3hYhmscxhdnGmUNo/hj6bQWgubkdGHXQX7Ew==
+X-Received: by 2002:a17:906:4f0d:b0:a3e:8aeb:c198 with SMTP id t13-20020a1709064f0d00b00a3e8aebc198mr7655196eju.17.1708509297621;
+        Wed, 21 Feb 2024 01:54:57 -0800 (PST)
+Received: from [192.168.1.20] ([178.197.222.116])
+        by smtp.gmail.com with ESMTPSA id ss15-20020a170907c00f00b00a3e0dc787bfsm4745061ejc.17.2024.02.21.01.54.56
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 21 Feb 2024 01:54:57 -0800 (PST)
+Message-ID: <c532285c-6104-473f-be12-a5e833484bd3@linaro.org>
+Date: Wed, 21 Feb 2024 10:54:54 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,134 +61,89 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3] serial: st-asc: don't get/put GPIOs in atomic context
-To: Bartosz Golaszewski <brgl@bgdev.pl>,
-        Greg Kroah-Hartman
-	<gregkh@linuxfoundation.org>,
-        Jiri Slaby <jirislaby@kernel.org>,
-        Dan
- Carpenter <dan.carpenter@linaro.org>,
-        Linus Walleij
-	<linus.walleij@linaro.org>
-CC: <linux-kernel@vger.kernel.org>, <linux-serial@vger.kernel.org>,
-        Bartosz
- Golaszewski <bartosz.golaszewski@linaro.org>
-References: <20240220113410.16613-1-brgl@bgdev.pl>
+Subject: Re: [PATCH v3 6/9] ARM: dts: aspeed: Harma: Add PDB temperature
 Content-Language: en-US
-From: Patrice CHOTARD <patrice.chotard@foss.st.com>
-In-Reply-To: <20240220113410.16613-1-brgl@bgdev.pl>
-Content-Type: text/plain; charset="UTF-8"
+To: Peter Yin <peteryin.openbmc@gmail.com>, patrick@stwcx.xyz,
+ Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>, Joel Stanley <joel@jms.id.au>,
+ Andrew Jeffery <andrew@aj.id.au>, devicetree@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org,
+ linux-kernel@vger.kernel.org
+References: <20240221093925.2393604-1-peteryin.openbmc@gmail.com>
+ <20240221093925.2393604-7-peteryin.openbmc@gmail.com>
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <20240221093925.2393604-7-peteryin.openbmc@gmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SHFCAS1NODE2.st.com (10.75.129.73) To SHFDAG1NODE1.st.com
- (10.75.129.69)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-02-20_06,2024-02-20_01,2023-05-22_02
 
-
-
-On 2/20/24 12:34, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+On 21/02/2024 10:39, Peter Yin wrote:
+> Add PDB temperature sensor.
 > 
-> Since commit 1f2bcb8c8ccd ("gpio: protect the descriptor label with
-> SRCU") gpiod_set_consumer_name() calls synchronize_srcu() which led to
-> a "sleeping in atomic context" smatch warning.
-> 
-> This function (along with gpiod_get/put() and all other GPIO APIs apart
-> from gpiod_get/set_value() and gpiod_direction_input/output()) should
-> have never been called with a spinlock taken. We're only fixing this now
-> as GPIOLIB has been rebuilt to use SRCU for access serialization which
-> uncovered this problem.
-> 
-> Move the calls to gpiod_get/put() outside the spinlock critical section.
-> 
-> Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
-> Closes: https://lore.kernel.org/linux-gpio/deee1438-efc1-47c4-8d80-0ab2cf01d60a@moroto.mountain/
-> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> Signed-off-by: Peter Yin <peteryin.openbmc@gmail.com>
 > ---
-> v2 -> v3:
-> - we only need to change the GPIO configuration for RTS in certain situations
->   so use a separate variable for storing that information; if we don't then we
->   may end up putting the descriptor when setting a different option
-> - I dropped Linus tag as the code change significantly
+>  arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-harma.dts | 5 +++++
+>  1 file changed, 5 insertions(+)
 > 
-> v1 -> v2:
-> - initialize the 'manual_rts' variable to false as we don't always get to
->   the place where it's set
-> 
->  drivers/tty/serial/st-asc.c | 40 ++++++++++++++++++++++---------------
->  1 file changed, 24 insertions(+), 16 deletions(-)
-> 
-> diff --git a/drivers/tty/serial/st-asc.c b/drivers/tty/serial/st-asc.c
-> index bbb5595d7e24..a23e59551848 100644
-> --- a/drivers/tty/serial/st-asc.c
-> +++ b/drivers/tty/serial/st-asc.c
-> @@ -465,6 +465,7 @@ static void asc_set_termios(struct uart_port *port, struct ktermios *termios,
->  			    const struct ktermios *old)
->  {
->  	struct asc_port *ascport = to_asc_port(port);
-> +	bool manual_rts, toggle_rts = false;
->  	struct gpio_desc *gpiod;
->  	unsigned int baud;
->  	u32 ctrl_val;
-> @@ -518,25 +519,13 @@ static void asc_set_termios(struct uart_port *port, struct ktermios *termios,
->  
->  		/* If flow-control selected, stop handling RTS manually */
->  		if (ascport->rts) {
-> -			devm_gpiod_put(port->dev, ascport->rts);
-> -			ascport->rts = NULL;
-> -
-> -			pinctrl_select_state(ascport->pinctrl,
-> -					     ascport->states[DEFAULT]);
-> +			toggle_rts = true;
-> +			manual_rts = false;
->  		}
->  	} else {
->  		/* If flow-control disabled, it's safe to handle RTS manually */
-> -		if (!ascport->rts && ascport->states[NO_HW_FLOWCTRL]) {
-> -			pinctrl_select_state(ascport->pinctrl,
-> -					     ascport->states[NO_HW_FLOWCTRL]);
-> -
-> -			gpiod = devm_gpiod_get(port->dev, "rts", GPIOD_OUT_LOW);
-> -			if (!IS_ERR(gpiod)) {
-> -				gpiod_set_consumer_name(gpiod,
-> -						port->dev->of_node->name);
-> -				ascport->rts = gpiod;
-> -			}
-> -		}
-> +		if (!ascport->rts && ascport->states[NO_HW_FLOWCTRL])
-> +			manual_rts = toggle_rts = true;
->  	}
->  
->  	if ((baud < 19200) && !ascport->force_m1) {
-> @@ -595,6 +584,25 @@ static void asc_set_termios(struct uart_port *port, struct ktermios *termios,
->  	asc_out(port, ASC_CTL, (ctrl_val | ASC_CTL_RUN));
->  
->  	uart_port_unlock_irqrestore(port, flags);
+> diff --git a/arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-harma.dts b/arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-harma.dts
+> index ca3052cce0e0..4d5d1c822fa3 100644
+> --- a/arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-harma.dts
+> +++ b/arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-harma.dts
+> @@ -260,6 +260,11 @@ delta_brick@69 {
+>  		compatible = "pmbus";
+>  		reg = <0x69>;
+>  	};
 > +
-> +	if (toggle_rts) {
-> +		if (manual_rts) {
-> +			pinctrl_select_state(ascport->pinctrl,
-> +					     ascport->states[NO_HW_FLOWCTRL]);
-> +
-> +			gpiod = devm_gpiod_get(port->dev, "rts", GPIOD_OUT_LOW);
-> +			if (!IS_ERR(gpiod)) {
-> +				gpiod_set_consumer_name(gpiod,
-> +							port->dev->of_node->name);
-> +				ascport->rts = gpiod;
-> +			}
-> +		} else {
-> +				devm_gpiod_put(port->dev, ascport->rts);
-> +				ascport->rts = NULL;
-> +				pinctrl_select_state(ascport->pinctrl,
-> +						     ascport->states[DEFAULT]);
-> +		}
-> +	}
->  }
->  
->  static const char *asc_type(struct uart_port *port)
+> +	tmp75@49 {
 
-Reviewed-by: Patrice Chotard <patrice.chotard@foss.st.com>
+Node names should be generic. See also an explanation and list of
+examples (not exhaustive) in DT specification:
+https://devicetree-specification.readthedocs.io/en/latest/chapter2-devicetree-basics.html#generic-names-recommendation
 
-Thanks
-Patrice
+Best regards,
+Krzysztof
+
