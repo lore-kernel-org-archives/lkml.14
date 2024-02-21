@@ -1,127 +1,99 @@
-Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DEEB40C04;
-	Wed, 21 Feb 2024 11:37:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CB18481A8;
+	Wed, 21 Feb 2024 11:38:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708515449; cv=none; b=Vp6FPHxWgwov8BLkZtg9nOKUhFPHSNd3osbkB0ZU6XBIPpZYSW88ORchZapLzUE07Z7KhBj+Lr9w+db8BgXzEfnTh69teCqn30+5ATMyIP0nCNG+LyD23dhfGIKgepTY9antlAEHK1efpyjR2j5UQuErk5zaTN/zgVVrw5vbQuw=
+	t=1708515494; cv=none; b=DhnhxlxBqznWkxb0grjdN9ePW+zQTR4K+7o0JfV/fozEvzxqvzmBwhKuxfe0h+01BReQPRuu/sHWxhcRRf9k1Q0zYRQg/PSAEXGkTfOB6got5ZS7FrptTBBTJhhhR/YmZuxLPVeIhPOmf40s4i3ryPo+e1AOkbYhXREVgLkpi5k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708515449; c=relaxed/simple;
-	bh=UDbteaw/i+JCOAl6Fun2vw1m/RM/qsD67b3kyaqjNr8=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=spQqVdE2kvtLHYBOusIZQk9Y8mHlJIW1lahYO2QLpzk1akDZ8RoeJc48I0UBsK1MjctcXt/uApRtsFW7LahGszyEVXjdlDykz3tm36clr10LXU7phva1j/kfGQXEB12Y3N6/9spYBs/HcYSJvm3nKDsjSXju4SFpJ4Qlf1hT9mk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.191
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.163])
-	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4TfvJc0MqXz1FKbt;
-	Wed, 21 Feb 2024 19:32:32 +0800 (CST)
-Received: from kwepemd500002.china.huawei.com (unknown [7.221.188.104])
-	by mail.maildlp.com (Postfix) with ESMTPS id C51BA18005F;
-	Wed, 21 Feb 2024 19:37:23 +0800 (CST)
-Received: from kwepemd200011.china.huawei.com (7.221.188.251) by
- kwepemd500002.china.huawei.com (7.221.188.104) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.28; Wed, 21 Feb 2024 19:37:23 +0800
-Received: from dggpemm500008.china.huawei.com (7.185.36.136) by
- kwepemd200011.china.huawei.com (7.221.188.251) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.2.1258.28; Wed, 21 Feb 2024 19:37:23 +0800
-Received: from dggpemm500008.china.huawei.com ([7.185.36.136]) by
- dggpemm500008.china.huawei.com ([7.185.36.136]) with mapi id 15.01.2507.035;
- Wed, 21 Feb 2024 19:37:22 +0800
-From: wangyunjian <wangyunjian@huawei.com>
-To: Xuan Zhuo <xuanzhuo@linux.alibaba.com>
-CC: "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"kvm@vger.kernel.org" <kvm@vger.kernel.org>, "virtualization@lists.linux.dev"
-	<virtualization@lists.linux.dev>, xudingke <xudingke@huawei.com>,
-	"mst@redhat.com" <mst@redhat.com>, "willemdebruijn.kernel@gmail.com"
-	<willemdebruijn.kernel@gmail.com>, "jasowang@redhat.com"
-	<jasowang@redhat.com>, "kuba@kernel.org" <kuba@kernel.org>,
-	"davem@davemloft.net" <davem@davemloft.net>, "magnus.karlsson@intel.com"
-	<magnus.karlsson@intel.com>
-Subject: RE: [PATCH net-next 1/2] xsk: Remove non-zero 'dma_page' check in
- xp_assign_dev
-Thread-Topic: [PATCH net-next 1/2] xsk: Remove non-zero 'dma_page' check in
- xp_assign_dev
-Thread-Index: AQHaTqj5aHEEh4wXi06uw11VbniHk7EUM/IAgAChCpA=
-Date: Wed, 21 Feb 2024 11:37:22 +0000
-Message-ID: <0fce8b64808f4c6faa0eb60e44687c36@huawei.com>
-References: <1706089058-1364-1-git-send-email-wangyunjian@huawei.com>
- <1708509152.9501102-1-xuanzhuo@linux.alibaba.com>
-In-Reply-To: <1708509152.9501102-1-xuanzhuo@linux.alibaba.com>
-Accept-Language: zh-CN, en-US
-Content-Language: zh-CN
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	s=arc-20240116; t=1708515494; c=relaxed/simple;
+	bh=EhrWngD9RDOax6weTU9Ro/qRRNM2e3wDxLZFUYJCqFk=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=groxgjMrHrpRKyVnBW4pO+AYxqLqSUJdpSrVFoXa3sUk6D0nqaFP+1IpbEfmpWgkhZjOWkw1ULxVjJkWn33t1XSfe0XiuLMihc1K0iH+fqlz6YuA8rfMxaNMT5JdEYOASuQQRCNDjlJ2stk5iYdJ6HRjlJnDNbpyYBFTljanCSU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZrUP+WxG; arc=none smtp.client-ip=209.85.128.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZrUP+WxG"
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-4127188dd5cso10082685e9.0;
+        Wed, 21 Feb 2024 03:38:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1708515491; x=1709120291; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=C/HFIcoSw75hDTLYVUPwa8rzXmjiPlpAtt6qgGaK/RA=;
+        b=ZrUP+WxGt8IhN8QaymqyVGVaNfa/2ay4BRlBwkzOryk3m7iloqecPpcrl4M2wyJsmn
+         pbOymW+JVS7z1JX9HVcow1H6/UHeI47By8SkX5s/ncppbNAS1F8KIMgDRISCDG8cJYJ4
+         WwdFKCC+/8FDoKjVCyoNW53NnWtvwagqyc4vK5Cy+BCnpYUpt/ar80eF6P0tvfUphws0
+         f1eP/shbMV8MHFJ7L8y2R4SRB4Yv+M24sCxS21MtJdT283/Cw5/lrWSCbA0hEUXtz75n
+         jWrF5fN158YRpvFkOzAlb1gwxElu7KK5+v2CK4Er/2AJhKcSvop6bn615Y6yAv29TJmY
+         T55Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708515491; x=1709120291;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=C/HFIcoSw75hDTLYVUPwa8rzXmjiPlpAtt6qgGaK/RA=;
+        b=W0e81M+pA1LTQzDETxDEqUiw2wELQNeTLovUBHMnHy9+YlOkSakQYyUDIO53irrxfj
+         0oOSBrk2Uo8tU3tjdVZ5LqXSzhKbj2P0NBFLWeam8aWh/UFiTLcgOoYaJhdXY9Cl0p4b
+         fBFvVnJG4dd6Et1GcxiJDxkcebRpZ/vF4hR30P8a4nQtSsNejUCnwvaeSjt4Nkim3LTU
+         Y48t74UgrNcG8J8at93EEi0vTNnwYVSLciQzOjIA7krAZDPlTd79sEfjgJkxw9xv8HKJ
+         D5QtdKeSCiTbSqgBI9hl7N/uqlzvSpNcsc8DkNs9Wi0dz/gwrgvR03cu2GgHB8ur1hpO
+         AzfQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXy91V7Qrr8ob+fR4ZwL4epuc8Tu8PWLaxh9wXK1uU+Ge9fhWfWJM9kpudoEvxYSsQUL/VgQ6z9FmhVfPP6DAmIExcusGjRhkp+tQUKcntOO6NPu9Q99A5YiwzQkUiVbhedgS5hoHtZcWk=
+X-Gm-Message-State: AOJu0Ywbv7Lg9TJqETS2Umrd4AURRR4z6gx6y2NA18H9cvq3WRoP3yhL
+	1xuraN2/sLU4PbxuqPPkA9XcFcj3VcBfn2L2Cu8H8k+wC+jOAnh5loim9brC
+X-Google-Smtp-Source: AGHT+IEdSBNCbVnHf3xsKaHEyqKW8117YV+/I23ry7Dd9181w3oMZZfnGyOO2Vg//jXHeha/rb+Otg==
+X-Received: by 2002:a5d:64e9:0:b0:33d:2833:a163 with SMTP id g9-20020a5d64e9000000b0033d2833a163mr10021781wri.29.1708515491151;
+        Wed, 21 Feb 2024 03:38:11 -0800 (PST)
+Received: from localhost (cpc154979-craw9-2-0-cust193.16-3.cable.virginm.net. [80.193.200.194])
+        by smtp.gmail.com with ESMTPSA id k14-20020a5d428e000000b0033ce5b3390esm16657238wrq.38.2024.02.21.03.38.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 21 Feb 2024 03:38:10 -0800 (PST)
+From: Colin Ian King <colin.i.king@gmail.com>
+To: Jaroslav Kysela <perex@perex.cz>,
+	Takashi Iwai <tiwai@suse.com>,
+	linux-sound@vger.kernel.org
+Cc: kernel-janitors@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH][next] ALSA: echoaudio: remove redundant assignment to variable clock
+Date: Wed, 21 Feb 2024 11:38:09 +0000
+Message-Id: <20240221113809.3410109-1-colin.i.king@gmail.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-> -----Original Message-----
-> From: Xuan Zhuo [mailto:xuanzhuo@linux.alibaba.com]
-> Sent: Wednesday, February 21, 2024 5:53 PM
-> To: wangyunjian <wangyunjian@huawei.com>
-> Cc: netdev@vger.kernel.org; linux-kernel@vger.kernel.org;
-> kvm@vger.kernel.org; virtualization@lists.linux.dev; xudingke
-> <xudingke@huawei.com>; wangyunjian <wangyunjian@huawei.com>;
-> mst@redhat.com; willemdebruijn.kernel@gmail.com; jasowang@redhat.com;
-> kuba@kernel.org; davem@davemloft.net; magnus.karlsson@intel.com
-> Subject: Re: [PATCH net-next 1/2] xsk: Remove non-zero 'dma_page' check i=
-n
-> xp_assign_dev
->=20
-> On Wed, 24 Jan 2024 17:37:38 +0800, Yunjian Wang
-> <wangyunjian@huawei.com> wrote:
-> > Now dma mappings are used by the physical NICs. However the vNIC maybe
-> > do not need them. So remove non-zero 'dma_page' check in
-> > xp_assign_dev.
->=20
-> Could you tell me which one nic can work with AF_XDP without DMA?
+The variable clock is being assigned a value that is never read,
+it is being re-assigned a new value in every case in the following
+switch statement. The assignment is redundant and can be removed.
 
-TUN will support AF_XDP Tx zero-copy, which does not require DMA mappings.
+Cleans up clang scan build warning:
+sound/pci/echoaudio/echoaudio_3g.c:277:2: warning: Value stored
+to 'clock' is never read [deadcode.DeadStores]
 
-Thanks
+Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
+---
+ sound/pci/echoaudio/echoaudio_3g.c | 1 -
+ 1 file changed, 1 deletion(-)
 
->=20
-> Thanks.
->=20
->=20
-> >
-> > Signed-off-by: Yunjian Wang <wangyunjian@huawei.com>
-> > ---
-> >  net/xdp/xsk_buff_pool.c | 7 -------
-> >  1 file changed, 7 deletions(-)
-> >
-> > diff --git a/net/xdp/xsk_buff_pool.c b/net/xdp/xsk_buff_pool.c index
-> > 28711cc44ced..939b6e7b59ff 100644
-> > --- a/net/xdp/xsk_buff_pool.c
-> > +++ b/net/xdp/xsk_buff_pool.c
-> > @@ -219,16 +219,9 @@ int xp_assign_dev(struct xsk_buff_pool *pool,
-> >  	if (err)
-> >  		goto err_unreg_pool;
-> >
-> > -	if (!pool->dma_pages) {
-> > -		WARN(1, "Driver did not DMA map zero-copy buffers");
-> > -		err =3D -EINVAL;
-> > -		goto err_unreg_xsk;
-> > -	}
-> >  	pool->umem->zc =3D true;
-> >  	return 0;
-> >
-> > -err_unreg_xsk:
-> > -	xp_disable_drv_zc(pool);
-> >  err_unreg_pool:
-> >  	if (!force_zc)
-> >  		err =3D 0; /* fallback to copy mode */
-> > --
-> > 2.33.0
-> >
-> >
+diff --git a/sound/pci/echoaudio/echoaudio_3g.c b/sound/pci/echoaudio/echoaudio_3g.c
+index cc3c79387194..18b4d4b4d38d 100644
+--- a/sound/pci/echoaudio/echoaudio_3g.c
++++ b/sound/pci/echoaudio/echoaudio_3g.c
+@@ -274,7 +274,6 @@ static int set_sample_rate(struct echoaudio *chip, u32 rate)
+ 		       chip->digital_mode == DIGITAL_MODE_ADAT))
+ 		return -EINVAL;
+ 
+-	clock = 0;
+ 	control_reg = le32_to_cpu(chip->comm_page->control_register);
+ 	control_reg &= E3G_CLOCK_CLEAR_MASK;
+ 
+-- 
+2.39.2
+
