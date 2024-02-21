@@ -1,120 +1,154 @@
-Received: from mail-pg1-f175.google.com (mail-pg1-f175.google.com [209.85.215.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bg1.exmail.qq.com (bg1.exmail.qq.com [114.132.58.6])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7648F25632
-	for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 02:45:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D484E79FD
+	for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 02:46:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.132.58.6
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708483561; cv=none; b=QmDjyU/q7JRQeM2y0XhRbTf0rrnykyv17tgwxKoaQjyiIP/Kn0GoRiXB8MJsRAsOGeIRllsq9eIq26Yv/KgBfp9S/mDpO/3kh0xnzB1VPALG4VHa//74A5VS3Ed6VoAC/JZD1CPvB9qh5M+OPV4Xfvmlyi/Qb50vp4+pz5ybEoA=
+	t=1708483581; cv=none; b=lMn7k4Y5Xfx3qi85WgsA0yPGvszi93a+gNWXRNKpkvZMm/7lYSGxi/1p7bJzkG5uaXVXnPdQ3oNf1iOeXPeJO2TjaiNOewR/e61to9++Ds+Qvom+yRTMf/+T7JY+/Du02/BOJ5YtpkP3jQ8t07/m4qqSWjL61QJ2L/O/0on/nyc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708483561; c=relaxed/simple;
-	bh=ve1P36IQxgQSH5e/j0CQ97PbRHxGM/0Cwkl/MH1SMuI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=F77s3kJLoBqL7EnwhF3FoTiEX7Xj+bEa2rU6TQAI5MXaOJI4N0YJKi7dUQ0OnFesMgt05yRhBKb+YVC+ZMIjXev1YufxwfIEyMGyfLjBpstAOZEemklLo6Sj6nBoSnJ2UVMrO1KCwhXxVSXI9v2VwJBrcGgEhC4xRiteIOV0HVU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=eY+mcvmr; arc=none smtp.client-ip=209.85.215.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="eY+mcvmr"
-Received: by mail-pg1-f175.google.com with SMTP id 41be03b00d2f7-5dca1efad59so5691584a12.2
-        for <linux-kernel@vger.kernel.org>; Tue, 20 Feb 2024 18:45:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1708483559; x=1709088359; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ve1P36IQxgQSH5e/j0CQ97PbRHxGM/0Cwkl/MH1SMuI=;
-        b=eY+mcvmrLFndy3vMd8abbvvdkULPrS9j/rbHuiS6BpOmmsCTwnlklWp6M+wxwAdgeN
-         UfoXCNMgSyr5wD1t0VfJ/nMZvzlUdWEoo3e9O6+/v4f32pq7c8hJZ6LYGE17SdTBXkEj
-         dRg70wiXqBwr4B3w77PZLgPkW8N0tWg6vRSrytbCzsL1e4enAjTMxJbQ5Eg2QIMEARVQ
-         Da5+Iyty92uH2Np1ZUyWQ2X2NhtHK8SN9oDQHOLc+TRCKfj5qtrmTgMBaoJUlPpqV2zB
-         RB7capCvii6EPMsLb5g+m23QkBLccOm+NdTIDL2hXEna+MSiUfRgQ+HsXk/0IgJ80vla
-         rRYw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708483559; x=1709088359;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ve1P36IQxgQSH5e/j0CQ97PbRHxGM/0Cwkl/MH1SMuI=;
-        b=lvY7AL+kSPFnnnlo1ffsueEXtLZxfnPJ9PEcXcMTwyT9huwSs13Z6GpyWuf+VDPkTl
-         u49PqH3lM+D+dza9NDee9XOccvjCQnQQeghnZlrPxZQDJ9/dsUmjHSryzEQNardeSuWV
-         YA3lfxqrf2lWNDCOVAgIOlu2PP91VGuUXekqAVRPpHyxUVqklkBfb/+cTdj/xohwpRr9
-         QvTRTUNbdjU8hJsjj0hhx3WzdLgODxH9Wc/OF2EWSQbATDdOOTTaBGXYnBG8iZYpfRej
-         qcPt4Gczwx9e3YrVWM47jya+IDDaUer6GxkbFH3m0kYZR7LxwJorU8vYMmKoPWfEGKlf
-         PjMg==
-X-Forwarded-Encrypted: i=1; AJvYcCXdZTsuA923hCbUt40qW5Ol2FwTwZYwu0ipZ4hGKtzyk6JwR5gx0uqh0O3me+1zyaQYaJPwLxJlZk1YbxDKWZNa/9EpA3u5a/1LmiQR
-X-Gm-Message-State: AOJu0YyvOjxu+ekZtXprZkcPiBfeRa3QiSQM/aU6C1tB9B8C+qvxkl6U
-	Rl1mxdVGnW/s4jydjn5xV7dfyVwbR5Ehxe7IAsv6PsMVcY48Is171JnHM4XAMRj71YFCbDEEGeT
-	41IkOCPbAAtTlb0/dOerGF0d/sXDEd4TQbSUsbQ==
-X-Google-Smtp-Source: AGHT+IGashesbOHbcyrknzxfVk2lf4tXLZJ5jdamBO+1t79MQQSOI9DHPUj6TjyB6Xz8pKhd36pDvEFEfQoRdh2c6sc=
-X-Received: by 2002:a17:90b:1281:b0:299:6848:28c1 with SMTP id
- fw1-20020a17090b128100b00299684828c1mr7815650pjb.26.1708483558766; Tue, 20
- Feb 2024 18:45:58 -0800 (PST)
+	s=arc-20240116; t=1708483581; c=relaxed/simple;
+	bh=jISVa8nDibYniU2mn5Vk9qwOWLjCxCu8I+7+17XxWTo=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=o09mZDqP7FWeG04byV5yckgV7PX9OOY7UoJsn/0aYO4pYxRpJCXob8PgPQLkEXPio01OvggWoN4cvVWtvgOtYa/rZli7NIv6zMt5UfY0BucGcadc33/b8wgOr33RZeNetuiy40OtMtuMC2pePzc7Rix0NVqrLJHUDftceXccrQc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; arc=none smtp.client-ip=114.132.58.6
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=uniontech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
+X-QQ-mid: bizesmtp85t1708483327t8z2ke3f
+X-QQ-Originating-IP: fdqu/5R07Br02wHR3lffm800aYSI2+LHQlDoDxoz+6o=
+Received: from [10.7.13.112] ( [125.76.217.162])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Wed, 21 Feb 2024 10:42:05 +0800 (CST)
+X-QQ-SSF: 01400000000000D0I000000A0000000
+X-QQ-FEAT: +ynUkgUhZJllNiNwmDGrjsnkv2+iV9NBYRHn0nBq4veJ2AT0m/jH+gIocW2Sn
+	7SUvHsI+L8kZDnWQ1GlHpyPQSVrn49/D5kVnfkbB+GSRv6wHh56YtdPOqnKaNkqH+GvDYFh
+	aypP4RQ8G3dsWLLGEyozJtj+lvAlYppnQEymrpy8jRxgtMFRXvX37cqW6W9PiH18wIUTDCf
+	djCk9obywWqBUYPXENYHieAVzEdC0rFp09BtPhwu7JO/QqrDAsYoQC+SnqSEmLfqiTZdLPt
+	t6lqFo62hlROiLNB4M5nHbMitk0YJVXRKwB9RNXqk/2AiInDMmLUnL1nXOWPpkaOIbNp7Od
+	KRg4ESsN3BXc7zbuzO8EuF4Sc7SfCyK3em1g8GLvrhyY5tEU3LaHLbP02eU7tIUuiaAdcVE
+X-QQ-GoodBg: 1
+X-BIZMAIL-ID: 10674637185529186905
+Subject: Re: [PATCH] locking/osq_lock: Optimize osq_lock performance using
+ per-NUMA
+To: Waiman Long <longman@redhat.com>, peterz@infradead.org, mingo@redhat.com,
+ will@kernel.org, boqun.feng@gmail.com, David.Laight@ACULAB.COM
+Cc: linux-kernel@vger.kernel.org
+References: <20240220073058.6435-1-guohui@uniontech.com>
+ <03c1eb2e-4eae-49be-94cb-b90894cc00a9@redhat.com>
+From: Guo Hui <guohui@uniontech.com>
+Message-ID: <1EEDB3CB3E97FFDE+e8c7acce-ec6b-f2b7-9c2d-0d1b471a671f@uniontech.com>
+Date: Wed, 21 Feb 2024 10:42:04 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.12.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240220035105.34626-1-dongmenglong.8@bytedance.com>
- <CAADnVQ+E4ygZV6dcs8wj5FdFz9bfrQ=61235uiRoxe9RqQvR9Q@mail.gmail.com> <CALz3k9g__P+UdO2vLPrR5Y4sQonQJjOnGPNmhmxtRfhLKoV7Rg@mail.gmail.com>
-In-Reply-To: <CALz3k9g__P+UdO2vLPrR5Y4sQonQJjOnGPNmhmxtRfhLKoV7Rg@mail.gmail.com>
-From: =?UTF-8?B?5qKm6b6Z6JGj?= <dongmenglong.8@bytedance.com>
-Date: Wed, 21 Feb 2024 10:45:47 +0800
-Message-ID: <CALz3k9h8CoAP8+ZmNvNGeXL9D_Q83Ovrubz9zHECr6C0TXuoVg@mail.gmail.com>
-Subject: Re: [External] Re: [PATCH bpf-next 0/5] bpf: make tracing program
- support multi-attach
-To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc: Andrii Nakryiko <andrii@kernel.org>, Alexei Starovoitov <ast@kernel.org>, 
-	Daniel Borkmann <daniel@iogearbox.net>, Martin KaFai Lau <martin.lau@linux.dev>, Eddy Z <eddyz87@gmail.com>, 
-	Song Liu <song@kernel.org>, Yonghong Song <yonghong.song@linux.dev>, 
-	John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>, 
-	Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Mykola Lysenko <mykolal@fb.com>, Shuah Khan <shuah@kernel.org>, mcoquelin.stm32@gmail.com, 
-	alexandre.torgue@foss.st.com, Kui-Feng Lee <thinker.li@gmail.com>, 
-	Feng Zhou <zhoufeng.zf@bytedance.com>, Dave Marchevsky <davemarchevsky@fb.com>, 
-	Daniel Xu <dxu@dxuuu.xyz>, LKML <linux-kernel@vger.kernel.org>, bpf <bpf@vger.kernel.org>, 
-	"open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>, linux-stm32@st-md-mailman.stormreply.com, 
-	linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <03c1eb2e-4eae-49be-94cb-b90894cc00a9@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-QQ-SENDSIZE: 520
+Feedback-ID: bizesmtp:uniontech.com:qybglogicsvrsz:qybglogicsvrsz4a-0
 
-On Wed, Feb 21, 2024 at 10:35=E2=80=AFAM =E6=A2=A6=E9=BE=99=E8=91=A3 <dongm=
-englong.8@bytedance.com> wrote:
->
-> Hello,
->
-> On Wed, Feb 21, 2024 at 9:24=E2=80=AFAM Alexei Starovoitov
-> <alexei.starovoitov@gmail.com> wrote:
-> >
-> > On Mon, Feb 19, 2024 at 7:51=E2=80=AFPM Menglong Dong
-> > <dongmenglong.8@bytedance.com> wrote:
-> > >
-> > > For now, the BPF program of type BPF_PROG_TYPE_TRACING is not allowed=
- to
-> > > be attached to multiple hooks, and we have to create a BPF program fo=
-r
-> > > each kernel function, for which we want to trace, even through all th=
-e
-> > > program have the same (or similar) logic. This can consume extra memo=
-ry,
-> > > and make the program loading slow if we have plenty of kernel functio=
-n to
-> > > trace.
-> >
-> > Should this be combined with multi link ?
-> > (As was recently done for kprobe_multi and uprobe_multi).
-> > Loading fentry prog once and attaching it through many bpf_links
-> > to multiple places is a nice addition,
-> > but we should probably add a multi link right away too.
->
-> I was planning to implement the multi link for tracing after this
-> series in another series. I can do it together with this series
-> if you prefer.
->
+On 2/21/24 2:16 AM, Waiman Long wrote:
 
-Should I introduce the multi link for tracing first, then this series?
-(Furthermore, this series seems not necessary.)
+>
+> On 2/20/24 02:30, Guo Hui wrote:
+>> After extensive testing of osq_lock,
+>> we found that the performance of osq_lock is closely related to
+>> the distance between NUMA nodes.The greater the distance
+>> between NUMA nodes,the more serious the performance degradation of
+>> osq_lock.When a group of processes that need to compete for
+>> the same lock are on the same NUMA node,the performance of osq_lock
+>> is the best.when the group of processes is distributed on
+>> different NUMA nodes,as the distance between NUMA nodes increases,
+>> the performance of osq_lock becomes worse.
+>>
+>> This patch uses the following solutions to improve performance:
+>> Divide the osq_lock linked list according to NUMA nodes.
+>> Each NUMA node corresponds to an osq linked list.
+>> Each CPU is added to the linked list corresponding to
+>> its respective NUMA node.When the last CPU of
+>> the NUMA node releases osq_lock,osq_lock is passed to
+>> the next NUMA node.
+>>
+>> As shown in the figure below, the last osq_node1 on NUMA0 passes the 
+>> lock
+>> to the first node (osq_node3) of the next NUMA1 node.
+>>
+>> -----------------------------------------------------------
+>> |            NUMA0           |            NUMA1           |
+>> |----------------------------|----------------------------|
+>> |  osq_node0 ---> osq_node1 -|-> osq_node3 ---> osq_node4 |
+>> -----------------------------|-----------------------------
+>>
+>> Set an atomic type global variable osq_lock_node to
+>> record the NUMA node number that can currently obtain
+>> the osq_lock lock.When the osq_lock_node value is
+>> a certain node number,the CPU on the node obtains
+>> the osq_lock lock in turn,and the CPUs on
+>> other NUMA nodes poll wait.
+>>
+>> This solution greatly reduces the performance degradation caused
+>> by communication between CPUs on different NUMA nodes.
+>>
+>> The effect on the 96-core 4-NUMA ARM64 platform is as follows:
+>> System Benchmarks Partial Index       with patch  without patch promote
+>> File Copy 1024 bufsize 2000 maxblocks   2060.8      980.3 +110.22%
+>> File Copy 256 bufsize 500 maxblocks     1346.5      601.9 +123.71%
+>> File Copy 4096 bufsize 8000 maxblocks   4229.9      2216.1 +90.87%
+>>
+>> The effect on the 128-core 8-NUMA X86_64 platform is as follows:
+>> System Benchmarks Partial Index       with patch  without patch promote
+>> File Copy 1024 bufsize 2000 maxblocks   841.1       553.7 +51.91%
+>> File Copy 256 bufsize 500 maxblocks     517.4       339.8 +52.27%
+>> File Copy 4096 bufsize 8000 maxblocks   2058.4      1392.8 +47.79%
+> That is similar in idea to the numa-aware qspinlock patch series.
+>> Signed-off-by: Guo Hui <guohui@uniontech.com>
+>> ---
+>>   include/linux/osq_lock.h  | 20 +++++++++++--
+>>   kernel/locking/osq_lock.c | 60 +++++++++++++++++++++++++++++++++------
+>>   2 files changed, 69 insertions(+), 11 deletions(-)
+>>
+>> diff --git a/include/linux/osq_lock.h b/include/linux/osq_lock.h
+>> index ea8fb31379e3..c016c1cf5e8b 100644
+>> --- a/include/linux/osq_lock.h
+>> +++ b/include/linux/osq_lock.h
+>> @@ -2,6 +2,8 @@
+>>   #ifndef __LINUX_OSQ_LOCK_H
+>>   #define __LINUX_OSQ_LOCK_H
+>>   +#include <linux/nodemask.h>
+>> +
+>>   /*
+>>    * An MCS like lock especially tailored for optimistic spinning for 
+>> sleeping
+>>    * lock implementations (mutex, rwsem, etc).
+>> @@ -11,8 +13,9 @@ struct optimistic_spin_queue {
+>>       /*
+>>        * Stores an encoded value of the CPU # of the tail node in the 
+>> queue.
+>>        * If the queue is empty, then it's set to OSQ_UNLOCKED_VAL.
+>> +     * The actual number of NUMA nodes is generally not greater than 
+>> 32.
+>>        */
+>> -    atomic_t tail;
+>> +    atomic_t tail[32];
+>
+> That is a no-go. You are increasing the size of a mutex/rwsem by 128 
+> bytes. If you want to enable this numa-awareness, you have to do it in 
+> a way without increasing the size of optimistic_spin_queue. My 
+> suggestion is to queue optimistic_spin_node in a numa-aware way in 
+> osq_lock.c without touching optimistic_spin_queue.
+>
+> Cheers,
+> Longman
+>
+>
+>
+Thank you for your suggestion, I will make a better solution according 
+to your suggestion.
 
-> Thanks!
-> Menglong Dong
+
