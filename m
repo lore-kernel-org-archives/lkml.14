@@ -1,132 +1,164 @@
-Received: from brightrain.aerifal.cx (brightrain.aerifal.cx [104.156.224.86])
+Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8CD784FAD
-	for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 17:57:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=104.156.224.86
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B149984FAD
+	for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 17:57:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708538225; cv=none; b=Wed/RiXHzqqAZaW1yU29kmnHrb46YdM9n7Bkw0V1g8IcN6sKMFN5T/tn3MCAhS6aMPPiF0ESdcHkSF+ib/PbM3y2EsfSfS23Pn9H8IgfIc8SgktZZ92qFwPpe5HjsmTOUPacKH/phs6kFUUBFmt4JKqn7jrjRw5XAefB6drM0NU=
+	t=1708538239; cv=none; b=Ihvw3Oh3AnKLTAYV5EuMdvhDXMM7nKa3ki1ff7NUGo7vjUBoQIcjq5+vWGemaMQCF60r+odlayKTLlrry6DMSUg1hJ39C8Gtl0aIZEZrG/MLWOzsRrr0JkDjsSfqFpdeO0uWjwL7kzX9NEszTbcmhCiRrNb5GqyQ2oEySodOLoc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708538225; c=relaxed/simple;
-	bh=+QLcuEiiCvBLANsK9jrSNNm+hbOucpscqS9eo+SVwXw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FyQYvJQ00awgNlVSYijFi8L2I72G+IPDpTadoTdCOlU2VIuT35WTlTjlc3GAG3KMMbIDYz/iP3vfqOETnEIFPxz2ybmGctVa8BQsh3DRS1z3LunA3DtEtgBV4NAvbGlmqh0xvMn1b9T99zyhW8FOo9PsUao5daiR8QFKkVU5AK4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=libc.org; spf=pass smtp.mailfrom=libc.org; arc=none smtp.client-ip=104.156.224.86
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=libc.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=libc.org
-Date: Wed, 21 Feb 2024 12:57:19 -0500
-From: "dalias@libc.org" <dalias@libc.org>
-To: Mark Brown <broonie@kernel.org>
-Cc: "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>,
-	"linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
-	"suzuki.poulose@arm.com" <suzuki.poulose@arm.com>,
-	"Szabolcs.Nagy@arm.com" <Szabolcs.Nagy@arm.com>,
-	"musl@lists.openwall.com" <musl@lists.openwall.com>,
-	"linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-	"linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-	"kvmarm@lists.linux.dev" <kvmarm@lists.linux.dev>,
-	"corbet@lwn.net" <corbet@lwn.net>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-	"oliver.upton@linux.dev" <oliver.upton@linux.dev>,
-	"palmer@dabbelt.com" <palmer@dabbelt.com>,
-	"debug@rivosinc.com" <debug@rivosinc.com>,
-	"aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>,
-	"shuah@kernel.org" <shuah@kernel.org>,
-	"arnd@arndb.de" <arnd@arndb.de>, "maz@kernel.org" <maz@kernel.org>,
-	"oleg@redhat.com" <oleg@redhat.com>,
-	"fweimer@redhat.com" <fweimer@redhat.com>,
-	"keescook@chromium.org" <keescook@chromium.org>,
-	"james.morse@arm.com" <james.morse@arm.com>,
-	"ebiederm@xmission.com" <ebiederm@xmission.com>,
-	"will@kernel.org" <will@kernel.org>,
-	"brauner@kernel.org" <brauner@kernel.org>,
-	"hjl.tools@gmail.com" <hjl.tools@gmail.com>,
-	"linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>,
-	"paul.walmsley@sifive.com" <paul.walmsley@sifive.com>,
-	"ardb@kernel.org" <ardb@kernel.org>,
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
-	"linux-mm@kvack.org" <linux-mm@kvack.org>,
-	"thiago.bauermann@linaro.org" <thiago.bauermann@linaro.org>,
-	"akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-	"sorear@fastmail.com" <sorear@fastmail.com>,
-	"linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
-Subject: Re: [musl] Re: [PATCH v8 00/38] arm64/gcs: Provide support for GCS
- in userspace
-Message-ID: <20240221175717.GS4163@brightrain.aerifal.cx>
-References: <22a53b78-10d7-4a5a-a01e-b2f3a8c22e94@app.fastmail.com>
- <4c7bdf8fde9cc45174f10b9221fa58ffb450b755.camel@intel.com>
- <20240220185714.GO4163@brightrain.aerifal.cx>
- <9fc9c45ff6e14df80ad023e66ff7a978bd4ec91c.camel@intel.com>
- <20240220235415.GP4163@brightrain.aerifal.cx>
- <a57d6c7eada4b9a7c35addbc8556f5b53a0c3e6f.camel@intel.com>
- <20240221012736.GQ4163@brightrain.aerifal.cx>
- <d18f060d-37ac-48b1-9f67-a5c5db79b34e@sirena.org.uk>
- <20240221145800.GR4163@brightrain.aerifal.cx>
- <4a3809e8-61b2-4341-a868-292ba6e64e8a@sirena.org.uk>
+	s=arc-20240116; t=1708538239; c=relaxed/simple;
+	bh=snF2AHY120g3OhxA2vENPtcrzHOEEZsmVGU8tDA7DVc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=bL27TfPzIw9a/nxP+/7Ly5NjeEwYiWnz3YbH08xkGQAnmKtjYUBSB2B2ak7HiuSEhOYs8aXWu2ADa6ESkXb6SKCJ9UxCYmuqh1lglRYg02s4dty4ZxZ3B7c6nAytvb47qyK/LDagDIVmaTkNrdDWfoG2AEWW2RQ2n12OZdqrU88=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=grs3g+Tx; arc=none smtp.client-ip=209.85.208.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="grs3g+Tx"
+Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-564e4477b7cso108a12.1
+        for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 09:57:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1708538236; x=1709143036; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=TNXJGwZ1V9rRdN3pg0jgyM1bnXXSlvPDHdCD030Tkqc=;
+        b=grs3g+TxMO16uAGgKnZcudGakRDZfecL5XTEFG9ss2Voo9F35kOIDveQwItKuz7sjv
+         0J1V0p81CDM3Qa806IT325Zg78T+3FNFzu9N32yiFuWKB82K6MWq9nLMvwEUn4AoSiVA
+         VpmClX0qXO4UKKKuklGinDSGO4JTOOUwSaFHRlUuWC/sEUXd56rKSGu3uKxdGBHRpCXu
+         DHCgwgc9ZMj7qBQd1hlaokn24vOFpV4dRBIZiD5jDm4ykztIrTESrhYt5p9fGydmiBvH
+         SeOoXC8Zbb0DGjonhK5j+vatUMFvknxmsIG2mY5UBeBMkELd0CHUppSsgHp8Pr8bGKdc
+         cLJw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708538236; x=1709143036;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=TNXJGwZ1V9rRdN3pg0jgyM1bnXXSlvPDHdCD030Tkqc=;
+        b=ugE6myr+REmENwT7zmVJ/0dMO5ZaLd/CY1C8UayC3dGhKqm3zjGJ0RIsYSnshy0Vez
+         47rtyABgV6+fKHTMdxBftYG+ebjFIduzRUAvcqB0Vu2p8ss9YH9lXbz60dWe8dAD6zBj
+         jsQAnEoliii2nXaWB6v3uT69GqQhxgWkV3puxot7J6u6uPm2beQ8Y+QXH93f2AZCfbtD
+         xZZIUCQnZABrV3Xa1yVDUa+5F2Ry40MEPOizIFxR8wVYrGXnTVfnSDrMHqyEG+VDF8DL
+         aObOkoPWsSk9ZoFCWRW2VdEW1MNRCdtf73cZKFiqihDS0BMmZbm9d4rG0dpbrn5WBsSy
+         Zyrw==
+X-Forwarded-Encrypted: i=1; AJvYcCUY/un72NsD1GGtTWp58t/Z4zPFdgEj58bqJhKkGm099UUy2qafGjgLOG5f7v77rT9iCIA8kGijhVfVCIna7n+jR4ulGD3Ohie/6zEt
+X-Gm-Message-State: AOJu0YxuqEt5gvzyjM/gjTdkz4j8d4IY081oCR+E4A0WgyscpTwgj4x2
+	VTe1gxvyGbnR8Aq5mwEuxGf5nxdR1692B5krw3k9ijlR1XkpAPTm+DI/BZyFJjt32GDEtfrOFBo
+	fDnqA0EvV47jQkpMv7X2tBlnDOp37dX0KWr/n
+X-Google-Smtp-Source: AGHT+IGieBwCGp1ECmxryncPYyi3r957SefzYuTlHBgpp8Lk7jz3qwLnAxBAaJ10d7ZTmmPhPmfgf1P51pspPyb5g/s=
+X-Received: by 2002:a50:9fc1:0:b0:563:afb0:28a with SMTP id
+ c59-20020a509fc1000000b00563afb0028amr238422edf.0.1708538235826; Wed, 21 Feb
+ 2024 09:57:15 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <4a3809e8-61b2-4341-a868-292ba6e64e8a@sirena.org.uk>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+References: <20240221164112.846409-1-vilasbhat@google.com> <20240221121420.2e32fd00@gandalf.local.home>
+In-Reply-To: <20240221121420.2e32fd00@gandalf.local.home>
+From: Vilas Bhat <vilasbhat@google.com>
+Date: Wed, 21 Feb 2024 09:57:03 -0800
+Message-ID: <CAJNZHTTeFJvCjxUX_e_RVtJWcXW=1cjdF8EqvojnObm7jiyLKg@mail.gmail.com>
+Subject: Re: [PATCH v1] PM: runtime: add tracepoint for runtime_status changes
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Pavel Machek <pavel@ucw.cz>, Len Brown <len.brown@intel.com>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Saravana Kannan <saravanak@google.com>, 
+	kernel-team@android.com, linux-pm@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Feb 21, 2024 at 05:36:12PM +0000, Mark Brown wrote:
-> On Wed, Feb 21, 2024 at 09:58:01AM -0500, dalias@libc.org wrote:
-> > On Wed, Feb 21, 2024 at 01:53:10PM +0000, Mark Brown wrote:
-> > > On Tue, Feb 20, 2024 at 08:27:37PM -0500, dalias@libc.org wrote:
-> > > > On Wed, Feb 21, 2024 at 12:35:48AM +0000, Edgecombe, Rick P wrote:
-> 
-> > > > > (INCSSP, RSTORSSP, etc). These are a collection of instructions that
-> > > > > allow limited control of the SSP. When shadow stack gets disabled,
-> > > > > these suddenly turn into #UD generating instructions. So any other
-> > > > > threads executing those instructions when shadow stack got disabled
-> > > > > would be in for a nasty surprise.
-> 
-> > > > This is the kernel's problem if that's happening. It should be
-> > > > trapping these and returning immediately like a NOP if shadow stack
-> > > > has been disabled, not generating SIGILL.
-> 
-> > > I'm not sure that's going to work out well, all it takes is some code
-> > > that's looking at the shadow stack and expecting something to happen as
-> > > a result of the instructions it's executing and we run into trouble.  A
-> 
-> > I said NOP but there's no reason it strictly needs to be a NOP. It
-> > could instead do something reasonable to convey the state of racing
-> > with shadow stack being disabled.
-> 
-> This feels like it's getting complicated and I fear it may be an uphill
-> struggle to get such code merged, at least for arm64.  My instinct is
-> that it's going to be much more robust and generally tractable to let
-> things run to some suitable synchronisation point and then disable
-> there, but if we're going to do that then userspace can hopefully
-> arrange to do the disabling itself through the standard disable
-> interface anyway.  Presumably it'll want to notice things being disabled
-> at some point anyway?  TBH that's been how all the prior proposals for
-> process wide disable I've seen were done.
+On Wed, Feb 21, 2024 at 9:12=E2=80=AFAM Steven Rostedt <rostedt@goodmis.org=
+> wrote:
+>
+> On Wed, 21 Feb 2024 16:41:10 +0000
+> Vilas Bhat <vilasbhat@google.com> wrote:
+>
+>
+> > diff --git a/include/trace/events/rpm.h b/include/trace/events/rpm.h
+> > index 3c716214dab1..f1dc4e95dbce 100644
+> > --- a/include/trace/events/rpm.h
+> > +++ b/include/trace/events/rpm.h
+> > @@ -101,6 +101,42 @@ TRACE_EVENT(rpm_return_int,
+> >               __entry->ret)
+> >  );
+> >
+> > +#define RPM_STATUS_STRINGS \
+> > +     { RPM_INVALID, "RPM_INVALID" }, \
+> > +     { RPM_ACTIVE, "RPM_ACTIVE" }, \
+> > +     { RPM_RESUMING, "RPM_RESUMING" }, \
+> > +     { RPM_SUSPENDED, "RPM_SUSPENDED" }, \
+> > +     { RPM_SUSPENDING, "RPM_SUSPENDING" }
+> > +
+> > +/*
+> > + * ftrace's __print_symbolic requires that all enum values be wrapped =
+in the
+> > + * TRACE_DEFINE_ENUM macro so that the enum value can be encoded in th=
+e ftrace
+> > + * ring buffer.
+> > + */
+> > +TRACE_DEFINE_ENUM(RPM_INVALID);
+> > +TRACE_DEFINE_ENUM(RPM_ACTIVE);
+> > +TRACE_DEFINE_ENUM(RPM_RESUMING);
+> > +TRACE_DEFINE_ENUM(RPM_SUSPENDED);
+> > +TRACE_DEFINE_ENUM(RPM_SUSPENDING);
+>
+> You could do what everyone else does:
+>
+> #define RPM_STATUS_STRINGS                      \
+>         EM( RPM_INVALID, "RPM_INVALID" )        \
+>         EM( RPM_ACTIVE, "RPM_ACTIVE" )          \
+>         EM( RPM_RESUMING, "RPM_RESUMING" )      \
+>         EM( RPM_SUSPENDED, "RPM_SUSPENDED" )    \
+>         EMe( RPM_SUSPENDING, "RPM_SUSPENDING" )
+>
+> #undef EM
+> #undef EMe
+> #define EM(a, b)        TRACE_DEFINE_ENUM(a);
+> #define EMe(a, b)       TRACE_DEFINE_ENUM(a);
+>
+> RPM_STATUS_STRINGS
+>
+> #undef EM
+> #undef EMe
+> #define EM(a, b)        { a, b },
+> #define EMe(a, b)       { a, b }
+>
 
-If it's possible to disable per-thread rather than per-process, some
-things are easier. Disabling on account of using alt stacks only needs
-to be done on the threads using those stacks. However, for dlopen
-purposes you need a way to disable shadow stack for the whole process.
-Initially this is only needed for the thread that called dlopen, but
-it needs to have propagated to any thread that synchronizes with
-completion of the call to dlopen by the time that synchronization
-occurs, and since that synchronization can happen in lots of different
-ways that are purely userspace (thanks to futexes being userspace in
-the uncontended case), I don't see any way to make it work without
-extremely invasive, high-cost checks.
+Thanks for the comment, Steven. I did notice both methods of defining
+enum values for tracepoints and chose this method because it felt
+clearer. Could you clarify on why the method you suggested is
+preferred?
 
-If folks on the kernel side are not going to be amenable to doing the
-things that are easy for the kernel to make it work without breaking
-compatibility with existing interfaces, but that are impossible or
-near-impossible for userspace to do, this seems like a dead-end. And I
-suspect an operation to "disable shadow stack, but without making
-threads still in SS-critical sections crash" is going to be
-necessary..
-
-Rich
+> > +
+> > +TRACE_EVENT(rpm_status,
+> > +     TP_PROTO(struct device *dev, enum rpm_status status),
+> > +     TP_ARGS(dev, status),
+> > +
+> > +     TP_STRUCT__entry(
+> > +             __string(name,  dev_name(dev))
+> > +             __field(int,    status)
+> > +     ),
+> > +
+> > +     TP_fast_assign(
+> > +             __assign_str(name, dev_name(dev));
+> > +             __entry->status =3D status;
+> > +     ),
+> > +
+> > +     TP_printk("%s status=3D%s", __get_str(name),
+> > +             __print_symbolic(__entry->status, RPM_STATUS_STRINGS))
+>
+> This will be what you want with that last redefine of EM*()
+>
+> -- Steve
+>
+>
+> > +);
+> > +
+> >  #endif /* _TRACE_RUNTIME_POWER_H */
+> >
+> >  /* This part must be outside protection */
+>
