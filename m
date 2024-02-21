@@ -1,137 +1,108 @@
-Received: from mail-qk1-f169.google.com (mail-qk1-f169.google.com [209.85.222.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001ae601.pphosted.com (mx0b-001ae601.pphosted.com [67.231.152.168])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D27E138398;
-	Wed, 21 Feb 2024 15:04:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D952B7FBA9;
+	Wed, 21 Feb 2024 15:05:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.152.168
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708527842; cv=none; b=kaqNQ58dYjH9L1alGNGFAt396VQz7RozFJMg/b2e1gjKeTR3q/LxP5+UGaMx0VEjUl4AxQJyGM4i0XPYauAHXRkgdUZ8Urvq37BE00kcoi59NFhHo2W38wBpoWc0+4zGm1yovHO7TXjOomIN+1Kr3GalrQV4hE0Y2KTBeZZ8h2M=
+	t=1708527926; cv=none; b=R5Aw0Ny+8aA/ynAyIYTI6TGIil6Kuk8huDSpeyHlOVSnWJwdhf1Kb9Cy2ZVH8yjBQrZdE21ngM2P8u7ORfFPO7LkybA5b5smRZRuuQIMCx1juDMpbJqYEiLCpYxk78luG1A91GhBj/MG4NJ2tkfhyh3/DG4VJ/J35DNDI+3LSAM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708527842; c=relaxed/simple;
-	bh=k0YKRdcXLv7T6Y/xtVvaPhBbS5q+kGmG8nilLb4h+RM=;
-	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
-	 Mime-Version:Content-Type; b=bClQcKKRH8aog0h/oGsdcD7YSn/ipVWib7Yowg58HyYNGymE9Xuz+HlMpLfHgp7U/fb+JgHu1EtRGBWhRmNOmqT+ad3zc+/FrvnFL51nIVVj7L2OdOTpKG5M8OzL7yQKUIVEoLWzDVyMP8/hIqBxzd7yTgKebk5B3qI4DtYPyM0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZoA6nDhx; arc=none smtp.client-ip=209.85.222.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1708527926; c=relaxed/simple;
+	bh=UyKUyA0qy67u/z9olIiAbwtiRO0bhToCby8jmDX8fYg=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=sTyO4i26kOG+o+qSWW782fhJ+V0hO9mmNnJUoKSqCPHBPWPa7c1/RH53U/sr9V1IgMw1aVRObWp4FWEoX/A5VOhDVmFYvKAMZI2A8aD/80lqTyR8MjXf8WAqf7ahujHat2vsZkzV7rgTWYNF4S6PEliYyl1bow2nC913QdpxVQs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com; spf=pass smtp.mailfrom=opensource.cirrus.com; dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b=mzO4ha5z; arc=none smtp.client-ip=67.231.152.168
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=opensource.cirrus.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZoA6nDhx"
-Received: by mail-qk1-f169.google.com with SMTP id af79cd13be357-78725b62cf2so325089185a.1;
-        Wed, 21 Feb 2024 07:04:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1708527839; x=1709132639; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:subject:references
-         :in-reply-to:message-id:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=8pSFKbDD0hHRKl9KpChoMfKBPYL3gXyV4FEuLeI7tSI=;
-        b=ZoA6nDhxJk2x/4YztFdkWvP9DW1XWqS7yAlH2ffZCbx2lZRvR8O0r9pJqPSmFZfAYf
-         CTCPMk1yOYqfd2qXEpmapnHUYIQAavAiydo/Nz92Z8psuvb/EAXAjf72c76XsfVo4nCi
-         /wXgpnBUivk4vmlorXiCtCnGWejb4pHr4Fv9fvics8RxYb85QYN1z/RU71kTLp6UOdqz
-         C5mlui/IMwNZbD4EYFJAV1UtHQCN/UP7u+wlUoLDhe+I2TnRbZ1U+XpFn388c1ilH+vt
-         EoRwKnsRKVp+qbL9mhz6HmJDcU6bulLGkLYS8ztr+u7k7SiFl5+gkM52eBvWS7UKd7Dz
-         dGvQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708527839; x=1709132639;
-        h=content-transfer-encoding:mime-version:subject:references
-         :in-reply-to:message-id:cc:to:from:date:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=8pSFKbDD0hHRKl9KpChoMfKBPYL3gXyV4FEuLeI7tSI=;
-        b=aNLSwGkCyEExsFpwU1bupbCojSrOYhPShxXHefnrSGmBGE9yoXcRvaH6R6Nsh+UM23
-         oFbl/8kxALJkqbwI22msVVSEhJ/Z9RL+d+swMkbdl1pZnTt0ll8IGsk8qWJRI61+YF/8
-         KjT5xgFrwDdxtVeBwNi2slgA4jx68PfHZIiezkapDHx2RBKy9sIamLLACfu3qTh3pLCK
-         /12NC9HGKSsbf21sTDj0TTuup/4eHpmxOqTxDb+Zp69gjIKiSbr/r03R+PWMuuhkTNS1
-         sYXtP/mib98zWdcxL+eosoiLd+qJ1ouh1V2a0dWM1Xd+0Dx+Cw0aZKY7l/iIbq2pSNIL
-         FEkA==
-X-Forwarded-Encrypted: i=1; AJvYcCWXyZ74xd/jkQ8apP6OwM0x3dYNUN1I4nBQZ7kxQUaU+bINC4hDPqnKbA0ihalXqmpx/TahlNKSz6ghWA5r+r475c0QTZqr3CwidQVp
-X-Gm-Message-State: AOJu0YwJArH2LhrDG1SS5l6PUjA0hHYQ86nJgwaa0KI9v15txb6F8V+k
-	06it3YyfAqQv4aXZbTAu819FkRgNRWxQs12EZy7jFfy5jlAl8AvfhHDeNSRv
-X-Google-Smtp-Source: AGHT+IH63gtd8yjx7ZG5d5Ka7XZEN4srWldxBljYBBHyYU3jY3K5r3913jDT7+5S75z4g8aq6t5jsA==
-X-Received: by 2002:a05:620a:c16:b0:787:2275:3aa1 with SMTP id l22-20020a05620a0c1600b0078722753aa1mr18098886qki.10.1708527839421;
-        Wed, 21 Feb 2024 07:03:59 -0800 (PST)
-Received: from localhost (56.148.86.34.bc.googleusercontent.com. [34.86.148.56])
-        by smtp.gmail.com with ESMTPSA id qs21-20020a05620a395500b00787388490d3sm4369591qkn.89.2024.02.21.07.03.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 21 Feb 2024 07:03:58 -0800 (PST)
-Date: Wed, 21 Feb 2024 10:03:58 -0500
-From: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-To: wangyunjian <wangyunjian@huawei.com>, 
- Willem de Bruijn <willemdebruijn.kernel@gmail.com>, 
- "jasowang@redhat.com" <jasowang@redhat.com>, 
- "kuba@kernel.org" <kuba@kernel.org>, 
- "davem@davemloft.net" <davem@davemloft.net>, 
- Jesper Dangaard Brouer <hawk@kernel.org>
-Cc: "netdev@vger.kernel.org" <netdev@vger.kernel.org>, 
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
- xudingke <xudingke@huawei.com>
-Message-ID: <65d610de7cd07_2824ff29494@willemb.c.googlers.com.notmuch>
-In-Reply-To: <3f175a5ef4e34a0394ae584a0b84523e@huawei.com>
-References: <1708398727-46308-1-git-send-email-wangyunjian@huawei.com>
- <65d4cc4b88e56_23483829431@willemb.c.googlers.com.notmuch>
- <3f175a5ef4e34a0394ae584a0b84523e@huawei.com>
-Subject: RE: [PATCH net] tun: Fix xdp_rxq_info's queue_index when detaching
+	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="mzO4ha5z"
+Received: from pps.filterd (m0077474.ppops.net [127.0.0.1])
+	by mx0b-001ae601.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 41LCUQsF011338;
+	Wed, 21 Feb 2024 09:05:09 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=
+	from:to:cc:subject:date:message-id:in-reply-to:references
+	:mime-version:content-transfer-encoding:content-type; s=
+	PODMain02222019; bh=GPX9S1rm9Vg8m5o14NSvRKfN2x1/7W0W6eYoN9/iRhQ=; b=
+	mzO4ha5zy8nyIjrVN2bdR++IumITPnNQBE1Rnu3EWPYm4e2Iy8sKD53722eVlyVR
+	CZWirtpVIqTH/GAsp35DtOPAhssdnG5gTzLXQDILZNOPQIZklk7fMMXytYm5eZDX
+	Fn3Hftjs4a1RwPjmCyjbz+nKbvV0ZipvI1qDpfT3OHjAQTzj2SAw1NyPE/Ha5aCP
+	e0StsRlVcPDXsQq0BR+vdqvpkLzrKy9U8vTkk25G4ygO30YJujQtvVPUwAIf55K1
+	yrhD3/4NcZZCtkR5BepZIyJSTm9RHHQkH/4ihWtQT2pzPduVWE4bguQ5xLarHwPo
+	8VPu8g8aTlwkHOmufmr5CQ==
+Received: from ediex01.ad.cirrus.com ([84.19.233.68])
+	by mx0b-001ae601.pphosted.com (PPS) with ESMTPS id 3wd205h4tk-2
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 21 Feb 2024 09:05:09 -0600 (CST)
+Received: from ediex01.ad.cirrus.com (198.61.84.80) by ediex01.ad.cirrus.com
+ (198.61.84.80) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Wed, 21 Feb
+ 2024 15:05:07 +0000
+Received: from ediswmail9.ad.cirrus.com (198.61.86.93) by
+ ediex01.ad.cirrus.com (198.61.84.80) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.40 via Frontend Transport; Wed, 21 Feb 2024 15:05:07 +0000
+Received: from ediswws06.ad.cirrus.com (ediswws06.ad.cirrus.com [198.90.208.18])
+	by ediswmail9.ad.cirrus.com (Postfix) with ESMTP id 248E0820249;
+	Wed, 21 Feb 2024 15:05:07 +0000 (UTC)
+From: Richard Fitzgerald <rf@opensource.cirrus.com>
+To: <broonie@kernel.org>, <tiwai@suse.com>
+CC: <linux-sound@vger.kernel.org>, <alsa-devel@alsa-project.org>,
+        <linux-kernel@vger.kernel.org>, <patches@opensource.cirrus.com>,
+        "Simon
+ Trimmer" <simont@opensource.cirrus.com>,
+        Richard Fitzgerald
+	<rf@opensource.cirrus.com>
+Subject: [PATCH 2/9] ALSA: hda: hda_cs_dsp_ctl: Only call notify when a control has been added to a card
+Date: Wed, 21 Feb 2024 15:05:00 +0000
+Message-ID: <20240221150507.1039979-3-rf@opensource.cirrus.com>
+X-Mailer: git-send-email 2.30.2
+In-Reply-To: <20240221150507.1039979-1-rf@opensource.cirrus.com>
+References: <20240221150507.1039979-1-rf@opensource.cirrus.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Proofpoint-ORIG-GUID: dLqKW47PULXLedpvlwNu-fXJ16-lFzlY
+X-Proofpoint-GUID: dLqKW47PULXLedpvlwNu-fXJ16-lFzlY
+X-Proofpoint-Spam-Reason: safe
 
-wangyunjian wrote:
-> 
-> 
-> > -----Original Message-----
-> > From: Willem de Bruijn [mailto:willemdebruijn.kernel@gmail.com]
-> > Sent: Tuesday, February 20, 2024 11:59 PM
-> > To: wangyunjian <wangyunjian@huawei.com>;
-> > willemdebruijn.kernel@gmail.com; jasowang@redhat.com; kuba@kernel.org;
-> > davem@davemloft.net
-> > Cc: netdev@vger.kernel.org; linux-kernel@vger.kernel.org;
-> > brouer@redhat.com; xudingke <xudingke@huawei.com>; wangyunjian
-> > <wangyunjian@huawei.com>
-> > Subject: Re: [PATCH net] tun: Fix xdp_rxq_info's queue_index when detaching
-> > 
-> > Yunjian Wang wrote:
-> > > When a queue(tfile) is detached, we only update tfile's queue_index,
-> > > but do not update xdp_rxq_info's queue_index. This patch fixes it.
-> > >
-> > > Fixes: 8bf5c4ee1889 ("tun: setup xdp_rxq_info")
-> > > Signed-off-by: Yunjian Wang <wangyunjian@huawei.com>
-> > > ---
-> > >  drivers/net/tun.c | 1 +
-> > >  1 file changed, 1 insertion(+)
-> > >
-> > > diff --git a/drivers/net/tun.c b/drivers/net/tun.c index
-> > > bc80fc1d576e..be37235af55d 100644
-> > > --- a/drivers/net/tun.c
-> > > +++ b/drivers/net/tun.c
-> > > @@ -652,6 +652,7 @@ static void __tun_detach(struct tun_file *tfile, bool
-> > clean)
-> > >  				   tun->tfiles[tun->numqueues - 1]);
-> > >  		ntfile = rtnl_dereference(tun->tfiles[index]);
-> > >  		ntfile->queue_index = index;
-> > > +		ntfile->xdp_rxq.queue_index = index;
-> > >  		rcu_assign_pointer(tun->tfiles[tun->numqueues - 1],
-> > >  				   NULL);
-> > 
-> > Does it matter that this value is stale when undetached?
-> 
-> Yes, the detach tfile'queue_index is not important because the re-attach will update.
-> But this patch is to fix the 'ntfile'(that replaces the detach tfile)'s queue_index, it is wrong.
+From: Simon Trimmer <simont@opensource.cirrus.com>
 
-Oh yes. This looks correct to me. Let's cc: the author of the patch listed as Fixed too.
+There is a window of time where the cs_dsp_coeff_ctl has been created
+but has not been registered as a control with ALSA.
 
-> 
-> Thanks
-> > 
-> > It is replaced in tun_attach if previously attached:
-> > 
-> > 		/* Re-attach detached tfile, updating XDP queue_index */
-> >                 WARN_ON(!xdp_rxq_info_is_reg(&tfile->xdp_rxq));
-> > 
-> >                 if (tfile->xdp_rxq.queue_index    != tfile->queue_index)
-> >                         tfile->xdp_rxq.queue_index = tfile->queue_index;
+The hda_cs_dsp_write_ctl() helper function can be used update the cs_dsp
+coefficient before it has been registered, but it should only call
+snd_ctl_notify() once the control is associated with a card.
 
+Signed-off-by: Simon Trimmer <simont@opensource.cirrus.com>
+Signed-off-by: Richard Fitzgerald <rf@opensource.cirrus.com>
+Fixes: e414b05e724f ("ALSA: hda: hda_cs_dsp_ctl: Add apis to write the controls directly")
+---
+ sound/pci/hda/hda_cs_dsp_ctl.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/sound/pci/hda/hda_cs_dsp_ctl.c b/sound/pci/hda/hda_cs_dsp_ctl.c
+index 463ca06036bf..0f5fdd44721c 100644
+--- a/sound/pci/hda/hda_cs_dsp_ctl.c
++++ b/sound/pci/hda/hda_cs_dsp_ctl.c
+@@ -224,9 +224,10 @@ int hda_cs_dsp_write_ctl(struct cs_dsp *dsp, const char *name, int type,
+ 	if (ret == 0 || (cs_ctl->flags & WMFW_CTL_FLAG_SYS))
+ 		return 0;
+ 
++	/* Notify when a control has been added to a card */
+ 	ctl = cs_ctl->priv;
+-
+-	snd_ctl_notify(ctl->card, SNDRV_CTL_EVENT_MASK_VALUE, &ctl->kctl->id);
++	if (ctl && ctl->kctl)
++		snd_ctl_notify(ctl->card, SNDRV_CTL_EVENT_MASK_VALUE, &ctl->kctl->id);
+ 
+ 	return 0;
+ }
+-- 
+2.30.2
 
