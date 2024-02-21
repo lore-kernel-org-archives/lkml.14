@@ -1,130 +1,78 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 361E282D7B;
-	Wed, 21 Feb 2024 17:17:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AEBB81737
+	for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 17:18:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708535849; cv=none; b=KPcE+bU3b4ulW791Swx4+iBUAlPBf+SCOclVYwW26xUtD1hHnzXEqsUHgBp5JcdtGtfXmU2iFjEDoonG9oGOcBS9JPciD8UObPYVGg+wYfFikVcydrwM9SoIxUpIxBhWs/CHWFMG+6G5rMBJ+c8gzcV6bJ3pEV66ApUUosV/HIU=
+	t=1708535900; cv=none; b=ZqX6amxFGaX1QXj4U9jk10WnvMH4l8bBxaKMlEbQ3A6zeizfgpVXglSsgZYmROqVnbKezQ5vqwcUbHzpgdLVlwPI6J5eYeM2Lui5Wm46d89iMQsAUEB2R1aRyAFpYPHtaKBLpM7pUxLFgA8jBn5Qiy1z46e1BiJv8rfC0oLndRA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708535849; c=relaxed/simple;
-	bh=4sRYEFsMr0x8AvEq/m65uPROo9JRLFixj6hIrz82inQ=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=D4ldHZ9PRQQACiZBOcxVZGOSa4Pu8dLQR2A86bjQNrCr07t2opDsXfo5sCDwASRAketz/vX6TXEx8zXX1e4h6+Bz+T2ShSR6W2A1coyz/aMdy2oMA70Cl3P9WGLD20sCHF36EBLw36FxWDebRoltzB/VRCQTZzpCHd8rYTmxe2s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
-Received: from imap2.dmz-prg2.suse.org (imap2.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:98])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 7D1DD22102;
-	Wed, 21 Feb 2024 17:17:26 +0000 (UTC)
-Received: from imap2.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap2.dmz-prg2.suse.org (Postfix) with ESMTPS id 0480813A25;
-	Wed, 21 Feb 2024 17:17:25 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([10.150.64.162])
-	by imap2.dmz-prg2.suse.org with ESMTPSA
-	id NDH0LiUw1mUfcQAAn2gu4w
-	(envelope-from <mpdesouza@suse.com>); Wed, 21 Feb 2024 17:17:25 +0000
-From: Marcos Paulo de Souza <mpdesouza@suse.com>
-Date: Wed, 21 Feb 2024 14:17:06 -0300
-Subject: [PATCH v2 4/4] selftests: lib.mk: Simplify TEST_GEN_MODS_DIR
- handling
+	s=arc-20240116; t=1708535900; c=relaxed/simple;
+	bh=YbOHfwnWQEH/uqhlwHn4KCf+jK984Zh3XKCPyzW+VDw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Zyq5R7a4S9zwnzvASN1+YgymoDvqaVsRa8yltwWgQCRey5lMUJWqr9thAbT3u7DC3hPEce863cfRNy7KbPKIqPnZLEhw0XLmJVQU1wVLr7PIS5HcwmQje0JxyHcq8Cl4XRlIOcM1WTU0CWFo5QcrQyn4E2LRDsXHRHgvK+KftlI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=Wa0cQajd; arc=none smtp.client-ip=159.69.126.157
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=weissschuh.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="Wa0cQajd"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
+	s=mail; t=1708535887;
+	bh=YbOHfwnWQEH/uqhlwHn4KCf+jK984Zh3XKCPyzW+VDw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Wa0cQajdcPBgwV+9xc7gP2N+5mAfqqEeC77Yh96WOG2kYWqsUQOPJQRxK/Cg6YBxo
+	 hz3AfdXjvo5kSQTGDR8vTnPXaafN7zCeIbFGZ8xDwJDPON+i/7hXDa0E/6xF2/u4WN
+	 zDHSZ6oNAivpBQqrB/ukWTE3uqREFodMD/GJzk5I=
+Date: Wed, 21 Feb 2024 18:18:06 +0100
+From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: "Michael S. Tsirkin" <mst@redhat.com>, Arnd Bergmann <arnd@arndb.de>, 
+	linux-kernel@vger.kernel.org, Zhangjin Wu <falcon@tinylab.org>, Willy Tarreau <w@1wt.eu>, 
+	Yuan Tan <tanyuan@tinylab.org>
+Subject: Re: [PATCH RFC] misc/pvpanic: add support for normal shutdowns
+Message-ID: <a24494f9-2ef5-4f69-a756-88b3e942b5e8@t-8ch.de>
+References: <20231104-pvpanic-shutdown-v1-1-5ee7c9b3e301@weissschuh.net>
+ <2023110407-unselect-uptight-b96d@gregkh>
+ <20240213053953-mutt-send-email-mst@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240221-lp-selftests-fixes-v2-4-a19be1e029a7@suse.com>
-References: <20240221-lp-selftests-fixes-v2-0-a19be1e029a7@suse.com>
-In-Reply-To: <20240221-lp-selftests-fixes-v2-0-a19be1e029a7@suse.com>
-To: Shuah Khan <shuah@kernel.org>, Josh Poimboeuf <jpoimboe@kernel.org>, 
- Jiri Kosina <jikos@kernel.org>, Miroslav Benes <mbenes@suse.cz>, 
- Petr Mladek <pmladek@suse.com>, Joe Lawrence <joe.lawrence@redhat.com>
-Cc: linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org, 
- live-patching@vger.kernel.org, Marcos Paulo de Souza <mpdesouza@suse.com>
-X-Mailer: b4 0.14-dev
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1708535830; l=1959;
- i=mpdesouza@suse.com; s=20231031; h=from:subject:message-id;
- bh=4sRYEFsMr0x8AvEq/m65uPROo9JRLFixj6hIrz82inQ=;
- b=k6aiuIGTtALvQQFLvW+j9toVR32WNNHnB+49PPw7VA8Piw3BViCkI+7gk2tvRfCvK8nNHpNmf
- +GfzkX3mrywBQDOhYhJOj0Oc6/3/ZgsNF/dVbog8Tek694UPM3odrvF
-X-Developer-Key: i=mpdesouza@suse.com; a=ed25519;
- pk=/Ni/TsKkr69EOmdZXkp1Q/BlzDonbOBRsfPa18ySIwU=
-X-Spam-Level: 
-Authentication-Results: smtp-out1.suse.de;
-	none
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Spamd-Result: default: False [-4.00 / 50.00];
-	 REPLY(-4.00)[]
-X-Spam-Score: -4.00
-X-Rspamd-Queue-Id: 7D1DD22102
-X-Spam-Flag: NO
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240213053953-mutt-send-email-mst@kernel.org>
 
-We don't need new targets only to run two make modules and make clean.
-We can test if TEST_GEN_MODS_DIR is specified, and then run the
-commands.
+Hi Greg,
 
-Signed-off-by: Marcos Paulo de Souza <mpdesouza@suse.com>
----
- tools/testing/selftests/lib.mk | 16 +++++++---------
- 1 file changed, 7 insertions(+), 9 deletions(-)
+On 2024-02-13 05:41:48-0500, Michael S. Tsirkin wrote:
+> On Sat, Nov 04, 2023 at 02:05:02PM +0100, Greg Kroah-Hartman wrote:
+> > > diff --git a/include/uapi/misc/pvpanic.h b/include/uapi/misc/pvpanic.h
+> > > index 54b7485390d3..82fc618bfbcf 100644
+> > > --- a/include/uapi/misc/pvpanic.h
+> > > +++ b/include/uapi/misc/pvpanic.h
+> > > @@ -5,5 +5,6 @@
+> > >  
+> > >  #define PVPANIC_PANICKED	(1 << 0)
+> > >  #define PVPANIC_CRASH_LOADED	(1 << 1)
+> > > +#define PVPANIC_SHUTDOWN	(1 << 2)
+> > 
+> > Why are these in a uapi file?
+> > 
+> > And if they need to be here, why not use the proper BIT() macro for it?
+> > 
+> > thanks,
+> > 
+> > greg k-h
+> 
+> This is interface with hypervisor not userspace, but for PV historically
+> we do this since the compatibility implications are about the same,
+> hypervisors (e.g. QEMU) are mostly userspace and so it is convenient for
+> them to reuse the same machinery to export the headers.
+> 
+> Let's stick to that, cleaner than duplicating everything I think.
 
-diff --git a/tools/testing/selftests/lib.mk b/tools/testing/selftests/lib.mk
-index 286ce0ee102b..eddcd4a849dc 100644
---- a/tools/testing/selftests/lib.mk
-+++ b/tools/testing/selftests/lib.mk
-@@ -58,8 +58,9 @@ TEST_GEN_PROGS := $(patsubst %,$(OUTPUT)/%,$(TEST_GEN_PROGS))
- TEST_GEN_PROGS_EXTENDED := $(patsubst %,$(OUTPUT)/%,$(TEST_GEN_PROGS_EXTENDED))
- TEST_GEN_FILES := $(patsubst %,$(OUTPUT)/%,$(TEST_GEN_FILES))
- 
--all: $(TEST_GEN_PROGS) $(TEST_GEN_PROGS_EXTENDED) $(TEST_GEN_FILES) \
--	$(if $(TEST_GEN_MODS_DIR),gen_mods_dir)
-+all: $(TEST_GEN_PROGS) $(TEST_GEN_PROGS_EXTENDED) $(TEST_GEN_FILES)
-+	$(if $(TEST_GEN_MODS_DIR), \
-+		$(Q)$(MAKE) -C $(TEST_GEN_MODS_DIR))
- 
- define RUN_TESTS
- 	BASE_DIR="$(selfdir)";			\
-@@ -85,11 +86,6 @@ else
- 	@$(call RUN_TESTS, $(TEST_GEN_PROGS) $(TEST_CUSTOM_PROGS) $(TEST_PROGS))
- endif
- 
--gen_mods_dir:
--	$(Q)$(MAKE) -C $(TEST_GEN_MODS_DIR)
--
--clean_mods_dir:
--	$(Q)$(MAKE) -C $(TEST_GEN_MODS_DIR) clean
- 
- define INSTALL_SINGLE_RULE
- 	$(if $(INSTALL_LIST),@mkdir -p $(INSTALL_PATH))
-@@ -133,9 +129,11 @@ endif
- 
- define CLEAN
- 	$(RM) -r $(TEST_GEN_PROGS) $(TEST_GEN_PROGS_EXTENDED) $(TEST_GEN_FILES) $(EXTRA_CLEAN)
-+	$(if $(TEST_GEN_MODS_DIR), \
-+		$(Q)$(MAKE) -C $(TEST_GEN_MODS_DIR) clean)
- endef
- 
--clean: $(if $(TEST_GEN_MODS_DIR),clean_mods_dir)
-+clean:
- 	$(CLEAN)
- 
- # Enables to extend CFLAGS and LDFLAGS from command line, e.g.
-@@ -166,4 +164,4 @@ $(OUTPUT)/%:%.S
- 	$(LINK.S) $^ $(LDLIBS) -o $@
- endif
- 
--.PHONY: run_tests all clean install emit_tests gen_mods_dir clean_mods_dir
-+.PHONY: run_tests all clean install emit_tests
+could you confirm that it's fine to keep this UAPI header file?
 
--- 
-2.42.1
-
+Thomas
