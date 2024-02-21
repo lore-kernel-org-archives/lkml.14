@@ -1,99 +1,109 @@
-Received: from relay3-d.mail.gandi.net (relay3-d.mail.gandi.net [217.70.183.195])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f169.google.com (mail-yb1-f169.google.com [209.85.219.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAAF378B53;
-	Wed, 21 Feb 2024 13:44:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8779F55E5E
+	for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 13:45:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708523079; cv=none; b=QG5khIVkdxLYc6TmDS/0cRB8Z0NhML3Lt49uV/CFQRXU3r5Xaf7SN+6btbuyLthPp3+g6hORr+loGhfChCjmQddRKvubKCjIMq9z8qeoARLZuXFS48Bh+gywD5ewhPHBPtRk5hdGUfdI9lt/V/KkYSDsl0+WTKdr60ezLdRrGSU=
+	t=1708523122; cv=none; b=NdCscdaCiAlnGpAAZ9QSzKKWvcnAqpBNzGwGiSh9brDK+FRQwCHC9I+rGGQmqY6zli0eFYPL9HY1CKk/6IXfVl++6bXLgnIG0QBjSWqUu8yK7oIPeaE3v8l/ASuOxz0J26/6C1NFxcj40N56i5Dxa8chFiFxojDGTKdfmDj6lvE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708523079; c=relaxed/simple;
-	bh=jZFVlaoxSO28+3NT998Mf72mtvHwv/LubVSsk9HbnJs=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=DKut4VhT30QQuoDMHN4meIItMUZZnXDo5CWzuBWPP65WZPkKCBu7Bf4fo8WYrt54Q6nZ6YPs791hzzJCTblYL5UaIZTjGno22+B/i3AqPvEjSGhaZuGyfvHMB7sW1YJAJxiejh9fMFEasLfEEoiEYH1SDWnIxH6okzJktYNlFxk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=kdesK/7Y; arc=none smtp.client-ip=217.70.183.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1708523122; c=relaxed/simple;
+	bh=uko49LY5PDi6sJGCc3e37qoxszoEEaGB98cU8E8eW+E=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=XKeacJjvCaV9bWs1izaAJZjOW/cLSyoASKJNOxh4omES3EGjkxRb/JTkav1CGs7uQGdDxy8wQ8X6SN2mYlRV0rmerC8K4BJOKW8PlfCokUbGyajaqvWykVfAHg6+I0kX9AeNuFyIrCDB+wufyu7KYycTw5DtykE31h/ZUOBkkmk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=KUyuvw68; arc=none smtp.client-ip=209.85.219.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="kdesK/7Y"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 5980660002;
-	Wed, 21 Feb 2024 13:44:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1708523074;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=jrp+YmUU+v0EhVwMHcIQvcwO/VqJPYfeVs/EWjoSXJA=;
-	b=kdesK/7Y8qVDLsCghR0aipV1MYMOWBJevJpEdYlrmc+vqk331xncXZaKQoDfbTKsCCgSY4
-	pFkpEI4J2SsnRORd0MParLYiqNXZEC0a3TnwNaqQy/0YWUbt+Tq47dTm+couH/C06schmB
-	ydviN/SiZmK85C5VpjWmT8eZImWf0aZqcjg3/r0+a9W/sFC/IbYkakP5vMepKmLSsKfJFx
-	s42dEoJyKi2pBT/xce43VCQsZDEyc8Qc6JToSDqcToxLTiFiLAJbQ7NiJpSbD6ZzQ64ov1
-	QG0Jsv2yr0Ect/roDJsitO0mbz/6jScd4Mnbg7Y/Zm4Fn/90vLBKjJ/ueMtQqw==
-Date: Wed, 21 Feb 2024 14:44:31 +0100
-From: Herve Codina <herve.codina@bootlin.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Yury Norov <yury.norov@gmail.com>, Vadim Fedorenko
- <vadim.fedorenko@linux.dev>, "David S. Miller" <davem@davemloft.net>, Eric
- Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo
- Abeni <pabeni@redhat.com>, Rasmus Villemoes <linux@rasmusvillemoes.dk>,
- linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
- linuxppc-dev@lists.ozlabs.org, Andrew Lunn <andrew@lunn.ch>, Mark Brown
- <broonie@kernel.org>, Christophe Leroy <christophe.leroy@csgroup.eu>,
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v3 RESEND 3/6] bitmap: Make bitmap_onto() available to
- users
-Message-ID: <20240221144431.149c3a16@bootlin.com>
-In-Reply-To: <Zc5jQ3zR51MDIovB@smile.fi.intel.com>
-References: <20240212075646.19114-1-herve.codina@bootlin.com>
-	<20240212075646.19114-4-herve.codina@bootlin.com>
-	<ZcoOpPb9HfXOYmAr@smile.fi.intel.com>
-	<20240212143753.620ddd6e@bootlin.com>
-	<ZcokwpMb6SFWhLBB@smile.fi.intel.com>
-	<20240212152022.75b10268@bootlin.com>
-	<Zcos9F3ZCX5c936p@smile.fi.intel.com>
-	<Zcptyd/AWrDD3EAL@yury-ThinkPad>
-	<20240215184612.438bd4f2@bootlin.com>
-	<Zc5jQ3zR51MDIovB@smile.fi.intel.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.2.0 (GTK 3.24.38; x86_64-redhat-linux-gnu)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KUyuvw68"
+Received: by mail-yb1-f169.google.com with SMTP id 3f1490d57ef6-dc745927098so620505276.3
+        for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 05:45:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1708523119; x=1709127919; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=YLd0dJHTNtVDHjhS0Xex16qn1DWjQskUbDg6XGDd1Bk=;
+        b=KUyuvw68RXeyNuMRTTY83+f468Q7iU2AeJan6dROpwKidGcuOCUI2yKWvLDpLhOAZP
+         IS2cmHzaKbs8h5aPGcGGuxuZp4VDGTFY+AbcudSXYBCnnSnhjnpB/GuF6DNUWJWSbtNB
+         jpbL5s+Z6T2r12j/iWh6QGm+XYdHNIOOBvUoHF2gPVb721yvzDFUxM58RMD91nth7Cg7
+         KHL8sc9Y5Pah7GxZ3mVKOLxJxMPOrEY9+8ovwjNyNrfqFwKS3ZjiTNw4ZwG5/BKHC3Sh
+         fL3HmeUYhvqk+ZRss1YLvjKHp0eVytglqTbMpf3PW7MeaEetlTSWVBGwpqnC09NZ0gVB
+         vsMA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708523119; x=1709127919;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=YLd0dJHTNtVDHjhS0Xex16qn1DWjQskUbDg6XGDd1Bk=;
+        b=gr98mXnEam5Q2k20dv9TpekAwKNtEIhg68bZjfaieQ8mNfSN+fZXKuYpSHVw8U2XUE
+         6U9nVv0b/AQn1/zouxIh2h8lpvWkvxPf0L81+g10b6N4l5GNHb/LMadB/1pmseUp8Zuy
+         ILAVrLSO4vgr5p+8EwvWqj1i3sAc7qyHckwjimlvYAeo4R1WCxsZMPdQaznCZ88wdkpp
+         mN2iqlHdfxx/of9i8hxmDKKaZyU6iMyk59MmhWT9Tgmq7RSHSLYGY7v1XwwI6qQ+JybD
+         4oZHUhG9HOxf8BP4pnupKSAw73wPDQhrQTxHQxNBwR4YXwUjw7ZOIAkgIvjuY7DkJgEA
+         /i7w==
+X-Forwarded-Encrypted: i=1; AJvYcCWXMzf7QKAVoyNkcpMUiXivfnq8393+J68K2F023K6HnmWKnneQrkj82+3BpA6omiL6iuj0mDuL7zyXDPad/8+9SfvCcXGBNBSF2bnN
+X-Gm-Message-State: AOJu0YxIpYnpPdlBpjELX2/a+iqosAaZLT8JJCRX6Iim7LODiKUOAIKq
+	d9W5hURnS5UN/fxHdQkOKr9ecWiin3u6FdnRQntZoL7iXztolbgSWddbnEZVp+OcBpjqr5mDPyH
+	dCRtl/NHeNaP3T4y8VWuOVw7gPqFtHq/8fWIOrQ==
+X-Google-Smtp-Source: AGHT+IGFBZLHG4YEWBicAng577AS9VIS0KD8vWVWha8/tAFMiKzC1C1Hv2xo8F+45n6/9msqO0M9ChNKgr/xdK8THek=
+X-Received: by 2002:a25:e0d2:0:b0:dc7:5c37:5420 with SMTP id
+ x201-20020a25e0d2000000b00dc75c375420mr15835997ybg.60.1708523119618; Wed, 21
+ Feb 2024 05:45:19 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-GND-Sasl: herve.codina@bootlin.com
+References: <20240214-mbly-gpio-v1-0-f88c0ccf372b@bootlin.com> <20240214-mbly-gpio-v1-18-f88c0ccf372b@bootlin.com>
+In-Reply-To: <20240214-mbly-gpio-v1-18-f88c0ccf372b@bootlin.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Wed, 21 Feb 2024 14:45:08 +0100
+Message-ID: <CACRpkdYb4V5EouMBYRRrZvLT1v6zKEtjHGPAs5orDKoo6dz6nA@mail.gmail.com>
+Subject: Re: [PATCH 18/23] gpio: nomadik: support mobileye,eyeq5-gpio
+To: =?UTF-8?B?VGjDqW8gTGVicnVu?= <theo.lebrun@bootlin.com>
+Cc: Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Philipp Zabel <p.zabel@pengutronix.de>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
+	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-mips@vger.kernel.org, Gregory CLEMENT <gregory.clement@bootlin.com>, 
+	Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>, 
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Tawfik Bayouk <tawfik.bayouk@mobileye.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Andy, Yury,
+Hi Theo,
 
-On Thu, 15 Feb 2024 21:17:23 +0200
-Andy Shevchenko <andriy.shevchenko@linux.intel.com> wrote:
+thanks for your patch!
 
-[...]
+On Wed, Feb 14, 2024 at 5:24=E2=80=AFPM Th=C3=A9o Lebrun <theo.lebrun@bootl=
+in.com> wrote:
 
-> > Now what's the plan ?
-> > Andy, do you want to send a v2 of this patch or may I get the patch, modify it
-> > according to reviews already present in v1 and integrate it in my current
-> > series ?  
-> 
-> I would like to do that, but under pile of different things.
-> I would try my best but if you have enough time and motivation feel free
-> to take over, address the comments and integrate in your series.
-> 
-> I dunno what to do with bitmap_onto(), perhaps in a separate patch we can
-> replace it with bitmap_scatter() (IIUC) with explanation that the former
-> 1) uses atomic ops while being non-atomic as a whole, and b) having quite
-> hard to get documentation. At least that's how I see it, I mean that I would
-> like to leave bitmap_onto() alone and address it separately.
-> 
+> We create a custom compatible for the STA2X11 IP block as integrated
+> into the Mobileye EyeQ5 platform. Its wake and alternate functions have
+> been disabled, we want to avoid touching those registers.
+>
+> We both do: (1) early return in functions that do not support the
+> platform, but with warnings, and (2) avoid calling those functions in
+> the first place.
+>
+> We ensure that pinctrl-nomadik is not used with this STA2X11 variant.
+>
+> Signed-off-by: Th=C3=A9o Lebrun <theo.lebrun@bootlin.com>
+(...)
+>+       bool quirk_mbly;
 
-I will take the Andy's bitmap_{scatter,gather}() patch in my next iteration.
-And use bitmap_{scatter,gather}() in my code.
+Compulsive abbreviation? I would just rename it:
 
-For bitmap_onto() replacement, nothing will be done in my next iteration as
-it is out of this series scope.
+bool is_mobileye_soc;
 
-Hervé
+Nevermind the long name, it makes it crystal clear for readers
+what is going on. (Rusty Russell's API naming guidelines.)
+
+With that changed:
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+
+Yours,
+Linus Walleij
