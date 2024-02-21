@@ -1,147 +1,95 @@
-Received: from mail-io1-f46.google.com (mail-io1-f46.google.com [209.85.166.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 116031272AC
-	for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 20:02:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 122CB42A8E
+	for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 20:04:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708545733; cv=none; b=Fk49iTJlod7AU71JhSzT8VSmaD0Whz9woft5vG5Y1PNn0qy+khFnk8HdkNmPWiNnSHGYWtFkOHUEXRiI/Nvkidlm5tzXBOJ9Ui220bLmui0vyWRS8dLFDyvJbHghRKq4lhOoeGyiclrn4AFijQWY96WqpPT7zj+yDB8ogsNkONQ=
+	t=1708545843; cv=none; b=T6lOthTiNmJzMX1dRsJZLHie0OS+ZxCqkYOd6+9vM492N7E5DcJ+bIyPxNWbds5SU8TUjnhMphlSELpMXSoE5eyZuDVilhL9Gq4FNhyAPIdLqyMuISY1yvNUONT2Nv4lXe66mZQnfwejDHDv16DfPofAZnkC6wiw2+kh6XdGzkU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708545733; c=relaxed/simple;
-	bh=b48lXPZQ+02Q0x3yLHzWYedk9fLZtBBvGY00YBRj8DY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jU/0i5KBDwTt3u3T5Zyj/c8CWNYmgDusFnb7LItyQf1xJlfl03vUU9CSIXB5jn1EVClAZXZjJLjVcJn19WREJlk29wfkck0jQt2/A6678KvkwR5zaeEl/lCqdGLTOJAyODwEliYjQrYnH6x7im5idra9VEYK4mLcPYeFoMBkH14=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=bLAOop5P; arc=none smtp.client-ip=209.85.166.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1708545843; c=relaxed/simple;
+	bh=n8fGNnznHfh77+sx3WW++XnwJfwz6VtbM6RKxG6zHIE=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=KLNPVvpN0AqgtP/fVuUsppa8w2+GYJI92l9eLLs7NJf6J0yWRDXtWQYsNcnxSBRcJZ0sMSSxnOv9crZz7F9wNEZGybeWZ9gGinVsvjI3dTdoA+c2MK5nwhQfLVm96mPpyXxNoEyxVEm9mx5rRxJGIFC3yJ6yiF9I5mc9DcHrrGM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=kxmP2EBj; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=SuPK7wK6; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bLAOop5P"
-Received: by mail-io1-f46.google.com with SMTP id ca18e2360f4ac-7beda6a274bso41470739f.2
-        for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 12:02:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1708545731; x=1709150531; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=hW/eD+217SwbFSrd+7OlcqgqqQaX2xcDsJgsLrnW3ms=;
-        b=bLAOop5PY9nIMWtJBK0X4o+9ohSJFVebjUsn5fEj/Pbi+RE3nBNv6UFiiGyj6gA4VP
-         pw/74OJosTSnESt4IkCbHrL0tmvqRKVB5IvGRf9Nm8/XA8ByA7rBWnFCW/e+zoGfCNra
-         gqu3oc9ctgVEHwA5BAptS2Br5zo13+P6//I5mQS6ApOiXciEAiNr5iQXdGMvSak2iFqq
-         xzAmtlZRJx5Yd6RPxRa5QN45nmqIt7wH9SBhG7NwCB8v87ZmeCSNwvAarFSFN7cr4nOC
-         6VSfgJLNSN2sTx5EDAcjRtb4F1wjF04ac1lIpq+fCMpOA/TZVcInz0aPFxfP6sNTsMUX
-         GnXA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708545731; x=1709150531;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=hW/eD+217SwbFSrd+7OlcqgqqQaX2xcDsJgsLrnW3ms=;
-        b=s4q9uJTc4HDUCtVRqGQs0Byc/VdDChxF88ekTMpyEMcInvbthV+zirxGpjt+oquw/8
-         tWmhS81++EX2cOm6B+WT6XAcVKmmmjybLAWh7jS7x+QPKj9Ji4N8j22T1Fh1nOyE/Bhk
-         i1QI2OAbPunUT+ozHARCXn3krqUYVCky0r+zmczbnK9sF7Bl9/XPMdYSl/XvsE1XB6e6
-         OL3487d6fnFxIwk2U1fXhpHPv/N/eRTZku5KzRO4gukDDHqrPKF+BGpvPyd6WDdyfas3
-         saPMqf4qZs/w1DgZBibLr5bbDqyIVphVJS4gURPnYaBqGr8VN3OcDGTgai44II4F+I0T
-         fAAA==
-X-Forwarded-Encrypted: i=1; AJvYcCW0KeZFQwIOUxvVnuKO3ijZy63TD8fksWAMqgm380llhE1UVmcxS+6zCZh9HjEVXUzqCa0v1kn3kKbNg/6gaHHQk6ZA4WDkpLT2pdne
-X-Gm-Message-State: AOJu0YxSJNX4Lq9QVwPoIZLpr8kA2WWhJUJlRSiug8p/+4SvSa1G+Fyj
-	4K0Epug0KkHR2v72VcM16/iRK0EGveIqXaR/DzbRHgZSh9DnycLv3PJSKhHDRQ==
-X-Google-Smtp-Source: AGHT+IG39BbcKPU1il8vkTs2a8eXqdOP0Ld0XjhZHI7TKaGTsFOA7fu8B9CXr669y5rm4dsiJ0Wmbg==
-X-Received: by 2002:a5d:929a:0:b0:7c7:4d7e:de87 with SMTP id s26-20020a5d929a000000b007c74d7ede87mr10763875iom.1.1708545731187;
-        Wed, 21 Feb 2024 12:02:11 -0800 (PST)
-Received: from google.com (161.74.123.34.bc.googleusercontent.com. [34.123.74.161])
-        by smtp.gmail.com with ESMTPSA id fv5-20020a05663866c500b004741f7683ebsm2243287jab.154.2024.02.21.12.02.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 21 Feb 2024 12:02:10 -0800 (PST)
-Date: Wed, 21 Feb 2024 20:02:04 +0000
-From: Justin Stitt <justinstitt@google.com>
-To: David Gow <davidgow@google.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>,
-	Shuah Khan <skhan@linuxfoundation.org>,
-	Guenter Roeck <linux@roeck-us.net>, Rae Moar <rmoar@google.com>,
-	Matthew Auld <matthew.auld@intel.com>,
-	Arunpravin Paneer Selvam <arunpravin.paneerselvam@amd.com>,
-	Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
-	Kees Cook <keescook@chromium.org>,
-	=?utf-8?B?TWHDrXJh?= Canal <mcanal@igalia.com>,
-	Rodrigo Vivi <rodrigo.vivi@intel.com>,
-	Matthew Brost <matthew.brost@intel.com>,
-	Willem de Bruijn <willemb@google.com>,
-	Florian Westphal <fw@strlen.de>,
-	Cassio Neri <cassio.neri@gmail.com>,
-	Javier Martinez Canillas <javierm@redhat.com>,
-	Arthur Grillo <arthur.grillo@usp.br>,
-	Brendan Higgins <brendan.higgins@linux.dev>,
-	Daniel Latypov <dlatypov@google.com>,
-	Stephen Boyd <sboyd@kernel.org>, David Airlie <airlied@gmail.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	"David S . Miller" <davem@davemloft.net>,
-	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-	intel-xe@lists.freedesktop.org, linux-rtc@vger.kernel.org,
-	linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com,
-	linux-hardening@vger.kernel.org, netdev@vger.kernel.org
-Subject: Re: [PATCH 9/9] kunit: Annotate _MSG assertion variants with gnu
- printf specifiers
-Message-ID: <20240221200204.frzov7n5bxb4cekd@google.com>
-References: <20240221092728.1281499-1-davidgow@google.com>
- <20240221092728.1281499-10-davidgow@google.com>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="kxmP2EBj";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="SuPK7wK6"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1708545839;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=PJV7loMZTRQ0FhjaTpou0/RnFid/HWFLt2zWSAPq0Q0=;
+	b=kxmP2EBje1EDqUZzrqw8lKEkIK2TY81EkS7MrcCiYeT1XQ09DOQz8GzxGwC4LnhHvadbH/
+	JeLioIeKDtMJqFShP5JBmFHB++fMn9SVxTs+zAsxFu46uOqKaFwT+G98Fdk5ivg2MxALvP
+	a9RJr5R/rAh7ZzKyscWFy5AEr9aJDAOBzYOUiGCcNsIbKULoqOi8f/HgYT2LNoLRKoIgjT
+	DoqjB5OX41j2eJ0XgPbqJz8bf9bqpyuOYrKlY8HABpybQwlbSDFVR0eox9puk8adeHgBwl
+	ojqazFnWHp6O0n719Gv2fDzIuG7/YAd4evdvGvOTSQLyGHbUPARHvAyf0QUOkQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1708545839;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=PJV7loMZTRQ0FhjaTpou0/RnFid/HWFLt2zWSAPq0Q0=;
+	b=SuPK7wK6zrpRCiRcWfuNzn0f+Mc95S0Z8m4/MX3Rg2vbECjhD+GnKfz1mqMCyoDB9PPcgb
+	tBYAns3+EoSTZyCg==
+To: Steven Rostedt <rostedt@goodmis.org>, Ankur Arora
+ <ankur.a.arora@oracle.com>
+Cc: linux-kernel@vger.kernel.org, peterz@infradead.org,
+ torvalds@linux-foundation.org, paulmck@kernel.org,
+ akpm@linux-foundation.org, luto@kernel.org, bp@alien8.de,
+ dave.hansen@linux.intel.com, hpa@zytor.com, mingo@redhat.com,
+ juri.lelli@redhat.com, vincent.guittot@linaro.org, willy@infradead.org,
+ mgorman@suse.de, jpoimboe@kernel.org, mark.rutland@arm.com,
+ jgross@suse.com, andrew.cooper3@citrix.com, bristot@kernel.org,
+ mathieu.desnoyers@efficios.com, geert@linux-m68k.org,
+ glaubitz@physik.fu-berlin.de, anton.ivanov@cambridgegreys.com,
+ mattst88@gmail.com, krypton@ulrich-teichert.org, David.Laight@ACULAB.COM,
+ richard@nod.at, mjguzik@gmail.com, jon.grimm@amd.com, bharata@amd.com,
+ raghavendra.kt@amd.com, boris.ostrovsky@oracle.com, konrad.wilk@oracle.com
+Subject: Re: [PATCH 02/30] thread_info: selector for TIF_NEED_RESCHED[_LAZY]
+In-Reply-To: <20240221132651.5d1b0a24@gandalf.local.home>
+References: <20240213055554.1802415-1-ankur.a.arora@oracle.com>
+ <20240213055554.1802415-3-ankur.a.arora@oracle.com>
+ <20240221132651.5d1b0a24@gandalf.local.home>
+Date: Wed, 21 Feb 2024 21:03:59 +0100
+Message-ID: <87plwpfuts.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240221092728.1281499-10-davidgow@google.com>
+Content-Type: text/plain
 
-Hi,
+On Wed, Feb 21 2024 at 13:26, Steven Rostedt wrote:
+> On Mon, 12 Feb 2024 21:55:26 -0800
+> Ankur Arora <ankur.a.arora@oracle.com> wrote:
+>
+>> +/*
+>> + * tif_resched(r) maps to TIF_NEED_RESCHED[_LAZY] with CONFIG_PREEMPT_AUTO.
+>> + *
+>> + * With !CONFIG_PREEMPT_AUTO, both tif_resched(NR_now) and tif_resched(NR_lazy)
+>> + * reduce to the same value (TIF_NEED_RESCHED) leaving any scheduling behaviour
+>> + * unchanged.
+>> + */
+>> +static inline int tif_resched(resched_t rs)
+>> +{
+>> +	return TIF_NEED_RESCHED + rs * TIF_NEED_RESCHED_LAZY_OFFSET;
+>> +}
+>> +
+>> +static inline int _tif_resched(resched_t rs)
+>> +{
+>> +	return 1 << tif_resched(rs);
+>> +}
+>> +
+>
+> This may have been mentioned in another thread (don't remember) but please
+> make the above __always_inline, as that also matches tif_need_resched() as
+> it is today.
 
-On Wed, Feb 21, 2024 at 05:27:22PM +0800, David Gow wrote:
-> KUnit's assertion macros have variants which accept a printf format
-> string, to allow tests to specify a more detailed message on failure.
-> These (and the related KUNIT_FAIL() macro) ultimately wrap the
-> __kunit_do_failed_assertion() function, which accepted a printf format
-> specifier, but did not have the __printf attribute, so gcc couldn't warn
-> on incorrect agruments.
->
-> It turns out there were quite a few tests with such incorrect arguments.
->
-> Add the __printf() specifier now that we've fixed these errors, to
-> prevent them from recurring.
->
-> Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
-> Signed-off-by: David Gow <davidgow@google.com>
-
-Reviewed-by: Justin Stitt <justinstitt@google.com>
-> ---
->  include/kunit/test.h | 12 ++++++------
->  1 file changed, 6 insertions(+), 6 deletions(-)
->
-> diff --git a/include/kunit/test.h b/include/kunit/test.h
-> index fcb4a4940ace..61637ef32302 100644
-> --- a/include/kunit/test.h
-> +++ b/include/kunit/test.h
-> @@ -579,12 +579,12 @@ void __printf(2, 3) kunit_log_append(struct string_stream *log, const char *fmt,
->
->  void __noreturn __kunit_abort(struct kunit *test);
->
-> -void __kunit_do_failed_assertion(struct kunit *test,
-> -			       const struct kunit_loc *loc,
-> -			       enum kunit_assert_type type,
-> -			       const struct kunit_assert *assert,
-> -			       assert_format_t assert_format,
-> -			       const char *fmt, ...);
-> +void __printf(6, 7) __kunit_do_failed_assertion(struct kunit *test,
-> +						const struct kunit_loc *loc,
-> +						enum kunit_assert_type type,
-> +						const struct kunit_assert *assert,
-> +						assert_format_t assert_format,
-> +						const char *fmt, ...);
->
->  #define _KUNIT_FAILED(test, assert_type, assert_class, assert_format, INITIALIZER, fmt, ...) do { \
->  	static const struct kunit_loc __loc = KUNIT_CURRENT_LOC;	       \
-> --
-> 2.44.0.rc0.258.g7320e95886-goog
->
-
-Thanks
-Justin
+It's required as this is used in noinstr sections.
