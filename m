@@ -1,137 +1,143 @@
-Received: from fllv0016.ext.ti.com (fllv0016.ext.ti.com [198.47.19.142])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com [209.85.216.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C216039FC7;
-	Wed, 21 Feb 2024 05:16:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.142
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B23E3A8C5
+	for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 05:16:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708492596; cv=none; b=OUlHLZU1ugHhtqDb+vT9Qk8LQOxWRhmT1z5v4dm8ehPYk1N+n13RA3KAZ59L2NnQIbUej0Q56S8+LIVWrZ8yjWpJK8ytwjnA5yrIXA/BBhjhay/STSsfr+1V90ERlRFzoY74esmPgE5yJ3SEBl5AGGK21CvP3b2LoSLOsrlbwSE=
+	t=1708492603; cv=none; b=sbqbaXrmHEpxtP491c+bWDDdWairQbzrngNp/I9IKpFmUb+egR160HGML1YW0lQMKs63KadJsuoM4yM+/MfSfuKVmobui2B3GlZYnXKqWQBohiA1DJEH7whUbaqZJJ7m+eDcoaCb7N69zQh4tB6zEcRrD0sXSH3TPeI8EZW0NFY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708492596; c=relaxed/simple;
-	bh=E3YXeUL6VcIZtvmC37iXEwJDVjp8w8qU1h3KKc3cShs=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=D54fdcx0HtvGoS7B64PKON932IYf2+ire0IZnzqOm1/LH1zmi3PiwN7ONX70lflsREicTvA7CZsqu4lPWg3zKyh1SnDlUVvyJiugOe5uXiyWIVUB+CzPvuzrEbQ6E9bg1XXRrIU7OA/HUx7UL/I5SGy37H+EroAb3qoJALcDf6s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=N2Nsfs1H; arc=none smtp.client-ip=198.47.19.142
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1708492603; c=relaxed/simple;
+	bh=cY2KqIQK1pcG7S9aS/1nKIllmRZnaU4rHJB4e+mP73E=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=RrnBLGMA9811vch0AZRf/Ct/gekLpws/L7AzAkmZEiz/4g/Mkp510/7NA9He0jake+bHcVMMkVwwmQiLWTQouqcEeUQ/41jU7SDmZ0WeN17XxeunFHJjCnD+BPnXDxojw0zo4k6CwKGWWKaCQrEs+66f+RBYOA9m9iTeChDEf48=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=DIWu+iB3; arc=none smtp.client-ip=209.85.216.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="N2Nsfs1H"
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-	by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 41L5FWZh053151;
-	Tue, 20 Feb 2024 23:15:32 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1708492532;
-	bh=ZlGxvwlOvptscZmYgg9wSjM+aipQ7IA7FbnFZnyyMjw=;
-	h=From:To:CC:Subject:Date:In-Reply-To:References;
-	b=N2Nsfs1HnmGpnBS6saJxv8Sky94m3n5B2C0IFXADCba9EjTs0ifUf7UpWWGY/AHng
-	 8z78U4IpcQkS9Pn5WlMaF0bAhwhOY2r4X/4qOpn29M3sbvbDQZz2dQ4khIyHLMDU1U
-	 YJXXPI/MhuYeIBP/zqNVZMUbHHSBkTOHaDOIT5uI=
-Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
-	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 41L5FWiL031593
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Tue, 20 Feb 2024 23:15:32 -0600
-Received: from DFLE101.ent.ti.com (10.64.6.22) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 20
- Feb 2024 23:15:32 -0600
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE101.ent.ti.com
- (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Tue, 20 Feb 2024 23:15:32 -0600
-Received: from LT5CG31242FY.dhcp.ti.com (lt5cg31242fy.dhcp.ti.com [10.85.14.246])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 41L5F59w108039;
-	Tue, 20 Feb 2024 23:15:25 -0600
-From: Shenghao Ding <shenghao-ding@ti.com>
-To: <linux-kernel@vger.kernel.org>
-CC: <lgirdwood@gmail.com>, <broonie@kernel.org>, <robh+dt@kernel.org>,
-        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
-        <linux-sound@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <perex@perex.cz>, <tiwai@suse.com>, <13916275206@139.com>,
-        <mohit.chawla@ti.com>, <soyer@irl.hu>, <jkhuang3@ti.com>,
-        <tiwai@suse.de>, <pdjuandi@ti.com>, <manisha.agrawal@ti.com>,
-        <s-hari@ti.com>, <aviel@ti.com>, <hnagalla@ti.com>, <praneeth@ti.com>,
-        Shenghao Ding <shenghao-ding@ti.com>
-Subject: [PATCH v5 3/4] ASoc: PCM6240: Add compile item for PCM6240 Family driver
-Date: Wed, 21 Feb 2024 13:14:59 +0800
-Message-ID: <20240221051501.627-3-shenghao-ding@ti.com>
-X-Mailer: git-send-email 2.33.0.windows.2
-In-Reply-To: <20240221051501.627-1-shenghao-ding@ti.com>
-References: <20240221051501.627-1-shenghao-ding@ti.com>
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="DIWu+iB3"
+Received: by mail-pj1-f45.google.com with SMTP id 98e67ed59e1d1-29954bb87b4so124036a91.2
+        for <linux-kernel@vger.kernel.org>; Tue, 20 Feb 2024 21:16:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1708492601; x=1709097401; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=mCX15b4uTdTDs85v9N/M2uNmy7WTmpFalSMszsfCM1Y=;
+        b=DIWu+iB3CM+PzhJHuWGzGTuqKlqYiNQfcvLJ/PX4RDaStF1syeqm9USB64pTxtWrfw
+         tMYWa7OPzOgwO731w/znoT7+gKujH7rNgpEFK/IFTTVHisQkJLeholXXWgKz72Y21N8X
+         OGwqeZtw8JewE/1dnQIrhqO/JTDlUGBrgsw38=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708492601; x=1709097401;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=mCX15b4uTdTDs85v9N/M2uNmy7WTmpFalSMszsfCM1Y=;
+        b=wQbd77zSZQmRrUKArK7b3qS8D6AH1EGwfK2Be866F4cI49f7fXATeA/gPqXBvIDetA
+         032a2YPvCjBeMURlyF3txuK/Dd0yNL+Lsu1GkaEbdfrSvBOKWYRisLi24wMHAMZd9LSR
+         KzqPPcq7d/qNBUQspss0j0ZUIS/AjSEgDM+5BX00yKLBEwQNTkkvO9r2+TKMXeWt7cxL
+         bkWiuQH5StIrK8KIsYislY0ora/aoj7Kela8CmuwZu22DxUWKfYLQpYoC0+MTbrFOIpC
+         7qT04ENt0SjyolW+dQucqdHpIhVxQCWwtCGy4nhKPfWMSRYhW7JrMLOGi0BxH8zdQZL3
+         pPEg==
+X-Forwarded-Encrypted: i=1; AJvYcCVMaAtg9gUmunjFV63EiGOiAhnnnT1Zid2lXnJMzuKioAzwoCN6Aapjc/DjCHMn1bIYrw8SgBa3C2ci0fJ/h13AiJS2T0Hh5n3SAgPG
+X-Gm-Message-State: AOJu0Yy9x7CoNbA/eK5XMqEhg6HycCAc96ZBsxbtk1rhai0i216atjD8
+	WD2LH/3HJwoePYtmIyZaqEDVg0KEhVPk6+UyamPx3lFr6lp62AqMy2bxaoeKMg==
+X-Google-Smtp-Source: AGHT+IH6vlBc4p680bubCDZNA0oNP0RifAfPX6oWVT4hfOMxVEtRMhKGR1BWhGFV7xIsCkGgOuR3oQ==
+X-Received: by 2002:a17:90b:1094:b0:299:1c53:113f with SMTP id gj20-20020a17090b109400b002991c53113fmr15169117pjb.0.1708492600737;
+        Tue, 20 Feb 2024 21:16:40 -0800 (PST)
+Received: from www.outflux.net ([198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id w9-20020a17090aea0900b002997cf20314sm656146pjy.28.2024.02.20.21.16.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 20 Feb 2024 21:16:40 -0800 (PST)
+From: Kees Cook <keescook@chromium.org>
+To: Miguel Ojeda <ojeda@kernel.org>
+Cc: Kees Cook <keescook@chromium.org>,
+	Will Deacon <will@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-hardening@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] refcount: Annotated intentional signed integer wrap-around
+Date: Tue, 20 Feb 2024 21:16:38 -0800
+Message-Id: <20240221051634.work.287-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2035; i=keescook@chromium.org;
+ h=from:subject:message-id; bh=cY2KqIQK1pcG7S9aS/1nKIllmRZnaU4rHJB4e+mP73E=;
+ b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBl1Yc2qj2v95a8MncuEjOaS6rwqcyJ0914acvqi
+ 04tQHzd1KGJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZdWHNgAKCRCJcvTf3G3A
+ JohaD/9NCQi7lx5d6xm0eljAyda1wjpSCLIW9ZrSFIcwGwuSrjOwJdCQBMVDt6CoGY3thuTRjNq
+ y2IZey2D3DGPvnD7qvmd6HZ376YLAaslABETK5wtg8Qa0cVlmFNggME4eE8nM5lsKpOZa8cPKjq
+ 5J8jbjXoiry5uQWQAwdLJT4yKeGN1avAV6l2YcivLs6hlQwZxDOBVKFwW8cNaSCsVO9P4fnUWwJ
+ 756mKPpceBnLMjD/yNr6BZT1in/bbAbvV811UxhlctNROrVG41LkyiAZu2AH688nhDu9LrGl5fe
+ z3mfF3PDrjOnoTATm70EAvMfMYQhCLfVl/Lbtihm8yYftYZa6f0pGaHVi+qei4mRDR30ScEMqYd
+ nAiwJc1Cpl0u2s4NMV9ZMbZU+qxfd3xiKpKsLaOna45NSA1tholfS7n8iqaai60GByG+y1UwDX6
+ MGww115zQ2qAYwJZufEu3jpaUAlmraW52SQH+ZAOBy2nhAXAvHqz1+hTADGXu4BAIn9zPHvqUoj
+ r13N6N3TFg6dmnKnM4a1njm+SjsLMeEbA1AeH0zd2Xq8Ilsx0cyVwwngrcVu7M+k37w1N1GU/2p
+ gMkBPyJb8BAzuEgE1Mc/PPEorXmxLZsxMhhYYcXvV3XrhdaPpTWdsQdXzqETHvNz5ziav6HujsG
+ DutSAQG AbCs3NlA==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-PCM6240 driver implements a flexible and configurable setting for register
-and filter coefficients, to one, two or even multiple PCM6240 Family Audio
-chips.
+Mark the various refcount_t functions with __signed_wrap, as we depend
+on the wrapping behavior to detect the overflow and perform saturation.
+Silences warnings seen with the LKDTM REFCOUNT_* tests:
 
-Signed-off-by: Shenghao Ding <shenghao-ding@ti.com>
+  UBSAN: signed-integer-overflow in ../include/linux/refcount.h:189:11
+  2147483647 + 1 cannot be represented in type 'int'
 
+Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
-Change in v5:
- - All these chips have only a portion of the codec's functionality, such
-   as ADC or DAC, and so on, but their audio performance is far superior
-   to the codec's, and cost is lower than codec, and much easier to
-   program than codec.
+Cc: Miguel Ojeda <ojeda@kernel.org>
+Cc: Will Deacon <will@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Boqun Feng <boqun.feng@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: linux-hardening@vger.kernel.org
 ---
- sound/soc/codecs/Kconfig  | 10 ++++++++++
- sound/soc/codecs/Makefile |  2 ++
- 2 files changed, 12 insertions(+)
+ include/linux/refcount.h | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/sound/soc/codecs/Kconfig b/sound/soc/codecs/Kconfig
-index 59f9742e9ff4..bab0ed032b5d 100644
---- a/sound/soc/codecs/Kconfig
-+++ b/sound/soc/codecs/Kconfig
-@@ -178,6 +178,7 @@ config SND_SOC_ALL_CODECS
- 	imply SND_SOC_PCM5102A
- 	imply SND_SOC_PCM512x_I2C
- 	imply SND_SOC_PCM512x_SPI
-+	imply SND_SOC_PCM6240
- 	imply SND_SOC_PEB2466
- 	imply SND_SOC_RK3328
- 	imply SND_SOC_RK817
-@@ -1389,6 +1390,15 @@ config SND_SOC_PCM512x_SPI
- 	select SND_SOC_PCM512x
- 	select REGMAP_SPI
+diff --git a/include/linux/refcount.h b/include/linux/refcount.h
+index 85c6df0d1bef..59b3b752394d 100644
+--- a/include/linux/refcount.h
++++ b/include/linux/refcount.h
+@@ -136,7 +136,8 @@ static inline unsigned int refcount_read(const refcount_t *r)
+ 	return atomic_read(&r->refs);
+ }
  
-+config SND_SOC_PCM6240
-+	tristate "Texas Instruments PCM6240 Family Audio chips based on I2C"
-+	depends on I2C
-+	help
-+	  Enable support for Texas Instruments PCM6240 Family Audio chips.
-+	  Note the PCM6240 driver implements a flexible and configurable
-+	  setting for register and filter coefficients, to one, two or
-+	  even multiple PCM6240 Family Audio chips.
-+
- config SND_SOC_PEB2466
- 	tristate "Infineon PEB2466 quad PCM codec"
- 	depends on SPI
-diff --git a/sound/soc/codecs/Makefile b/sound/soc/codecs/Makefile
-index f53baa2b9565..c2ae573b62dd 100644
---- a/sound/soc/codecs/Makefile
-+++ b/sound/soc/codecs/Makefile
-@@ -201,6 +201,7 @@ snd-soc-pcm5102a-objs := pcm5102a.o
- snd-soc-pcm512x-objs := pcm512x.o
- snd-soc-pcm512x-i2c-objs := pcm512x-i2c.o
- snd-soc-pcm512x-spi-objs := pcm512x-spi.o
-+snd-soc-pcm6240-objs := pcm6240.o
- snd-soc-peb2466-objs := peb2466.o
- snd-soc-rk3328-objs := rk3328_codec.o
- snd-soc-rk817-objs := rk817_codec.o
-@@ -586,6 +587,7 @@ obj-$(CONFIG_SND_SOC_PCM5102A)	+= snd-soc-pcm5102a.o
- obj-$(CONFIG_SND_SOC_PCM512x)	+= snd-soc-pcm512x.o
- obj-$(CONFIG_SND_SOC_PCM512x_I2C)	+= snd-soc-pcm512x-i2c.o
- obj-$(CONFIG_SND_SOC_PCM512x_SPI)	+= snd-soc-pcm512x-spi.o
-+obj-$(CONFIG_SND_SOC_PCM6240)	+= snd-soc-pcm6240.o
- obj-$(CONFIG_SND_SOC_PEB2466)	+= snd-soc-peb2466.o
- obj-$(CONFIG_SND_SOC_RK3328)	+= snd-soc-rk3328.o
- obj-$(CONFIG_SND_SOC_RK817)	+= snd-soc-rk817.o
+-static inline __must_check bool __refcount_add_not_zero(int i, refcount_t *r, int *oldp)
++static inline __must_check __signed_wrap
++bool __refcount_add_not_zero(int i, refcount_t *r, int *oldp)
+ {
+ 	int old = refcount_read(r);
+ 
+@@ -177,7 +178,8 @@ static inline __must_check bool refcount_add_not_zero(int i, refcount_t *r)
+ 	return __refcount_add_not_zero(i, r, NULL);
+ }
+ 
+-static inline void __refcount_add(int i, refcount_t *r, int *oldp)
++static inline __signed_wrap
++void __refcount_add(int i, refcount_t *r, int *oldp)
+ {
+ 	int old = atomic_fetch_add_relaxed(i, &r->refs);
+ 
+@@ -256,7 +258,8 @@ static inline void refcount_inc(refcount_t *r)
+ 	__refcount_inc(r, NULL);
+ }
+ 
+-static inline __must_check bool __refcount_sub_and_test(int i, refcount_t *r, int *oldp)
++static inline __must_check __signed_wrap
++bool __refcount_sub_and_test(int i, refcount_t *r, int *oldp)
+ {
+ 	int old = atomic_fetch_sub_release(i, &r->refs);
+ 
 -- 
 2.34.1
 
