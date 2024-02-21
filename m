@@ -1,39 +1,38 @@
 Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A41A8562A;
-	Wed, 21 Feb 2024 18:22:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 574A286631;
+	Wed, 21 Feb 2024 18:22:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708539741; cv=none; b=te+lD4kCCF0n96wCdBmoj9to/Axpket2xE8PWKtQFp5mcWfVXRZn4uL3iG393ddW7KShfSsNf+3mhNHefBACvgYi8FAEorj6wBsV79WPFDDpPTBYt2Q6XPFrNfFjxT9Jlqw2Z1O8so4KRbCuXjShJQx3nt2HlCKIvD5jeUDPAKE=
+	t=1708539744; cv=none; b=lNhNWL2Pc1xTWQq3V3stHUuZtqjN5kLt1W9lX0dzMq/L6VNPum6TGbjUpsqvoQoKoifQAaMtKXJ1bmyWBKg5BUG01oiuQvXW0XEY6ZpSu01lhc1c+OBHMMM0Hc3/uq5Od/yI04zBkH4Y/Ditsw9UPW9Ywer0DxMewAsKicAW6DI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708539741; c=relaxed/simple;
-	bh=hlVwgMh6vQJLRhT70ZA+dY5Xj4I2r5nE/bOKjpoSlXs=;
+	s=arc-20240116; t=1708539744; c=relaxed/simple;
+	bh=vnCORcptsMYT519sO0h3l7zszPgUG7xa4ihpqMAWw90=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=M07LVIjMBoVavFZP8YCHoJpwwlGCG1DG7Z28x8hA9jQziOTcGDYeXVutC35T4T59+eSADpXFlbjgoFaYWHdezfDpLnLs47JN2khPJ6b1AlKzi7pWnbEx2t6ElOV/kcDLfL/sCY8PVaY9qX7p93XPyKTtxVPFeOSDxySjz1oUUJA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=itideOej; arc=none smtp.client-ip=217.70.183.197
+	 In-Reply-To:To:Cc; b=qS6IHGodOROTiXRJ7wUTerKf3k0rXl3R8p4IqelogqO27VjNCBWsOnr0KEwUMdSMWiRpdeJ568ZKlqhP8DTpCliVPAZ3Bo6UOzA+LNQmsLmFwm+foJMviWy0nzZtigZEmE5k3eJe3vxzrxyaBpa4NvMs/Qyzd7OECncazo8Z5bM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=JjcYP60m; arc=none smtp.client-ip=217.70.183.197
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="itideOej"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id ABB781C0009;
-	Wed, 21 Feb 2024 18:22:15 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="JjcYP60m"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id EF6501C000A;
+	Wed, 21 Feb 2024 18:22:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1708539736;
+	t=1708539740;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=ObKOxx9XB93Vo9Nkq5fgZqM1lGObrm27AeQ2i1inbII=;
-	b=itideOejB5NcywugFWWXYKPaXNvkaUqSIVm6Wp0236kwiCNVqBSnf6BkvgxmmS10R8idos
-	wMWnn19nd9l8oqJWAkzh1RPKGOYxmspkYX+APuzzgDssDP9ICvi7EOqLUPjy2EAYStjGLK
-	sbK7poyymAwy7sAerAlGHMnOald1AKwaB1Ti9E9ifcita41K42VXGPKyBqey0+7zEYPjH6
-	lHTdJxFMwRjcpIae6yVvDuLpX1J7ok0LJ2/4umVcsJ9mN8onDBdPdKW0N6tDHZl7/2J1a7
-	WspAj5ef8hlriM3fO1RIyyR9JzqSbTV/lqnXueFoSZyitXPiMOh7EWSjxfCZtQ==
+	bh=AvNqNx1fTtdrlAJg5eBSDYK4NTtMWF14aEw5+Swezo4=;
+	b=JjcYP60m+1p0K0oQAQciprkfVEhwBClb5x4alejnqZavRB5mmx/s2VynOcIYLOEDaHmf2N
+	O6poKtf+96mDVEmCQgC2IJIYGYXkIonwmXKB59t4rPwxomDOiwFQeKXBMhtwTiey30Om6t
+	fKbKjazUwetmnzpFI+02WHzCYhDrlzZ4QPgb5czRUh3dqfmjDm6UcocPZRAK5+k3WQb0V4
+	MSzzzhUaW1r3lmZkqXNIc5Uko8Igg/TLj3M+6SVNP/ECqvCa4+XDXTaRYtwFXysClS2GGq
+	lbmnREEVN/T5TcD+oGkcSeUg+E9htfVdh1v304Y2NNI6oO+y5Jzu2cnM2n28TQ==
 From: =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>
-Date: Wed, 21 Feb 2024 19:22:13 +0100
-Subject: [PATCH v7 05/14] dt-bindings: pinctrl: mobileye,eyeq5-pinctrl: add
- bindings
+Date: Wed, 21 Feb 2024 19:22:18 +0100
+Subject: [PATCH v7 10/14] MAINTAINERS: Map OLB files to Mobileye SoCs
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,7 +41,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20240221-mbly-clk-v7-5-31d4ce3630c3@bootlin.com>
+Message-Id: <20240221-mbly-clk-v7-10-31d4ce3630c3@bootlin.com>
 References: <20240221-mbly-clk-v7-0-31d4ce3630c3@bootlin.com>
 In-Reply-To: <20240221-mbly-clk-v7-0-31d4ce3630c3@bootlin.com>
 To: Gregory CLEMENT <gregory.clement@bootlin.com>, 
@@ -59,268 +58,51 @@ Cc: Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>,
  devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
  Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
  Tawfik Bayouk <tawfik.bayouk@mobileye.com>, linux-gpio@vger.kernel.org, 
- =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>, 
- Rob Herring <robh@kernel.org>
+ =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>
 X-Mailer: b4 0.13.0
 X-GND-Sasl: theo.lebrun@bootlin.com
 
-Add dt-schema type bindings for the Mobileye EyeQ5 pin controller.
+Add all OLB related (system-controller) files to the MOBILEYE MIPS SOCS
+entry.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Théo Lebrun <theo.lebrun@bootlin.com>
----
- .../bindings/pinctrl/mobileye,eyeq5-pinctrl.yaml   | 242 +++++++++++++++++++++
- 1 file changed, 242 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/mobileye,eyeq5-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/mobileye,eyeq5-pinctrl.yaml
-new file mode 100644
-index 000000000000..5f00604bf48c
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pinctrl/mobileye,eyeq5-pinctrl.yaml
-@@ -0,0 +1,242 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/pinctrl/mobileye,eyeq5-pinctrl.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Mobileye EyeQ5 pin controller
-+
-+description: >
-+  The EyeQ5 pin controller handles the two pin banks of the system. It belongs
-+  to a system-controller block called OLB.
-+
-+  Pin control is about bias (pull-down, pull-up), drive strength and muxing. Pin
-+  muxing supports two functions for each pin: first is GPIO, second is
-+  pin-dependent.
-+
-+  Pins and groups are bijective.
-+
-+maintainers:
-+  - Grégory Clement <gregory.clement@bootlin.com>
-+  - Théo Lebrun <theo.lebrun@bootlin.com>
-+  - Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>
-+
-+$ref: pinctrl.yaml#
-+
-+properties:
-+  compatible:
-+    enum:
-+      - mobileye,eyeq5-pinctrl
-+
-+  reg:
-+    maxItems: 1
-+
-+patternProperties:
-+  "-pins?$":
-+    type: object
-+    description: Pin muxing configuration.
-+    $ref: pinmux-node.yaml#
-+    additionalProperties: false
-+    properties:
-+      pins: true
-+      function:
-+        enum: [gpio,
-+               # Bank A
-+               timer0, timer1, timer2, timer5, uart0, uart1, can0, can1, spi0,
-+               spi1, refclk0,
-+               # Bank B
-+               timer3, timer4, timer6, uart2, can2, spi2, spi3, mclk0]
-+      bias-disable: true
-+      bias-pull-down: true
-+      bias-pull-up: true
-+      drive-strength: true
-+    required:
-+      - pins
-+      - function
-+    allOf:
-+      - if:
-+          properties:
-+            function:
-+              const: gpio
-+        then:
-+          properties:
-+            pins:
-+              items: # PA0 - PA28, PB0 - PB22
-+                pattern: '^(P(A|B)1?[0-9]|PA2[0-8]|PB2[0-2])$'
-+      - if:
-+          properties:
-+            function:
-+              const: timer0
-+        then:
-+          properties:
-+            pins:
-+              items:
-+                enum: [PA0, PA1]
-+      - if:
-+          properties:
-+            function:
-+              const: timer1
-+        then:
-+          properties:
-+            pins:
-+              items:
-+                enum: [PA2, PA3]
-+      - if:
-+          properties:
-+            function:
-+              const: timer2
-+        then:
-+          properties:
-+            pins:
-+              items:
-+                enum: [PA4, PA5]
-+      - if:
-+          properties:
-+            function:
-+              const: timer5
-+        then:
-+          properties:
-+            pins:
-+              items:
-+                enum: [PA6, PA7, PA8, PA9]
-+      - if:
-+          properties:
-+            function:
-+              const: uart0
-+        then:
-+          properties:
-+            pins:
-+              items:
-+                enum: [PA10, PA11]
-+      - if:
-+          properties:
-+            function:
-+              const: uart1
-+        then:
-+          properties:
-+            pins:
-+              items:
-+                enum: [PA12, PA13]
-+      - if:
-+          properties:
-+            function:
-+              const: can0
-+        then:
-+          properties:
-+            pins:
-+              items:
-+                enum: [PA14, PA15]
-+      - if:
-+          properties:
-+            function:
-+              const: can1
-+        then:
-+          properties:
-+            pins:
-+              items:
-+                enum: [PA16, PA17]
-+      - if:
-+          properties:
-+            function:
-+              const: spi0
-+        then:
-+          properties:
-+            pins:
-+              items:
-+                enum: [PA18, PA19, PA20, PA21, PA22]
-+      - if:
-+          properties:
-+            function:
-+              const: spi1
-+        then:
-+          properties:
-+            pins:
-+              items:
-+                enum: [PA23, PA24, PA25, PA26, PA27]
-+      - if:
-+          properties:
-+            function:
-+              const: refclk0
-+        then:
-+          properties:
-+            pins:
-+              items:
-+                enum: [PA28]
-+      - if:
-+          properties:
-+            function:
-+              const: timer3
-+        then:
-+          properties:
-+            pins:
-+              items:
-+                enum: [PB0, PB1]
-+      - if:
-+          properties:
-+            function:
-+              const: timer4
-+        then:
-+          properties:
-+            pins:
-+              items:
-+                enum: [PB2, PB3]
-+      - if:
-+          properties:
-+            function:
-+              const: timer6
-+        then:
-+          properties:
-+            pins:
-+              items:
-+                enum: [PB4, PB5, PB6, PB7]
-+      - if:
-+          properties:
-+            function:
-+              const: uart2
-+        then:
-+          properties:
-+            pins:
-+              items:
-+                enum: [PB8, PB9]
-+      - if:
-+          properties:
-+            function:
-+              const: can2
-+        then:
-+          properties:
-+            pins:
-+              items:
-+                enum: [PB10, PB11]
-+      - if:
-+          properties:
-+            function:
-+              const: spi2
-+        then:
-+          properties:
-+            pins:
-+              items:
-+                enum: [PB12, PB13, PB14, PB15, PB16]
-+      - if:
-+          properties:
-+            function:
-+              const: spi3
-+        then:
-+          properties:
-+            pins:
-+              items:
-+                enum: [PB17, PB18, PB19, PB20, PB21]
-+      - if:
-+          properties:
-+            function:
-+              const: mclk0
-+        then:
-+          properties:
-+            pins:
-+              items:
-+                enum: [PB22]
-+
-+required:
-+  - compatible
-+  - reg
-+
-+additionalProperties: false
+---
+
+This does not follow the standard of adding MAINTAINERS entries with
+file additions. We avoid dependencies inbetween maintainer trees. The
+MOBILEYE MIPS SOCS is added by [0] series. It is currently in
+mips-next [1].
+
+[0]: https://lore.kernel.org/lkml/20240216174227.409400-1-gregory.clement@bootlin.com/
+[1]: https://lore.kernel.org/lkml/ZdSst3fM3EOQGH03@alpha.franken.de/
+---
+ MAINTAINERS | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/MAINTAINERS b/MAINTAINERS
+index d2cc66b92f5f..389e3a987bde 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -14793,10 +14793,18 @@ M:	Gregory CLEMENT <gregory.clement@bootlin.com>
+ M:	Théo Lebrun <theo.lebrun@bootlin.com>
+ L:	linux-mips@vger.kernel.org
+ S:	Maintained
++F:	Documentation/devicetree/bindings/clock/mobileye,eyeq5-clk.yaml
+ F:	Documentation/devicetree/bindings/mips/mobileye.yaml
++F:	Documentation/devicetree/bindings/pinctrl/mobileye,eyeq5-pinctrl.yaml
++F:	Documentation/devicetree/bindings/reset/mobileye,eyeq5-reset.yaml
++F:	Documentation/devicetree/bindings/soc/mobileye/
+ F:	arch/mips/boot/dts/mobileye/
+ F:	arch/mips/configs/eyeq5_defconfig
+ F:	arch/mips/mobileye/board-epm5.its.S
++F:	drivers/clk/clk-eyeq5.c
++F:	drivers/pinctrl/pinctrl-eyeq5.c
++F:	drivers/reset/reset-eyeq5.c
++F:	include/dt-bindings/clock/mobileye,eyeq5-clk.h
+ F:	include/dt-bindings/soc/mobileye,eyeq5.h
+ 
+ MODULE SUPPORT
 
 -- 
 2.43.2
