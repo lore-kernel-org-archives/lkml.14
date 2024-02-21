@@ -1,38 +1,39 @@
 Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D79E37FBD5;
-	Wed, 21 Feb 2024 18:22:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B9E184A45;
+	Wed, 21 Feb 2024 18:22:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708539737; cv=none; b=GwEhAvcUF2ggrpLBIYUtd4vtHNnbiXjR/ewYenRlth8aZXKJ9AHeZF7Vr7g0iVZ5sUz0nuPyBtBUFhsoZvH7MNWmrAEN6B1wToL6vmdJeBI1OA1iWxjMLOHm4AAbudO1lCWuYZPfp1noX4wCIdO2uQkXs/8lphGMRqWmhlWG32I=
+	t=1708539739; cv=none; b=o6V7nUHzMHS36ogNjLBtpv1QCP/O8PyFoVPfOzcK2IreqM3bs1Hlf94Ru1Z/00NKXhbQJ06AYXSejXx/9B50EExXdSWFbLBdQjhae6hlgH1psqs5vGhqKcY0Xc0vpW6dSeM4sgZnqv2Jf6CPTf6hteXJCh7r2opGoQ+NjWe+oPs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708539737; c=relaxed/simple;
-	bh=RFY7ut+rYoNyROemcFQ4SPLXjLR+Hh3fj3dk+W3dUTY=;
+	s=arc-20240116; t=1708539739; c=relaxed/simple;
+	bh=Ta0uwkMoQaUVf68ZIjlVJVYXMCn37o9xzzGO0+7BgAw=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=UIrbOV1hE60lf79rP9jgheZCVRYpAnSfb1QvjvBLEyIBnH9TVGjz/c02eJyFU7URFKAXZE/qo6wVHoPAGuTSoNsn4wZtCtFo5sVCXm6zgZ2x0y/epK9K6A6QqgllZNC6d0ncANFHhEbIuhIJ9p6oM4vtiJgRvADAk6E6bInjcXw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=ChqVUceC; arc=none smtp.client-ip=217.70.183.197
+	 In-Reply-To:To:Cc; b=VNFNLUgVC7N1XZ+lmr9oW7QLr4Qy4iOpxTZdGQHjLf/8FRlCMtAA6fNvZmnCfB23t72giaAynn3gz1UVdeJRLyKgcTucL0p5CUQvFwZGLE8Ss6tcC4N6PJC17A9JJCAtHophjixsMV35WI/lUc+DsLSLMl5c+pRBUC6Xv//Y5kg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=NKusQvi5; arc=none smtp.client-ip=217.70.183.197
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="ChqVUceC"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 3CF8B1C000B;
-	Wed, 21 Feb 2024 18:22:12 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="NKusQvi5"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id DB50F1C000D;
+	Wed, 21 Feb 2024 18:22:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1708539733;
+	t=1708539734;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=4q8B4FHnqm+Q9SZFv8e202u5pyLWu9j+3pZ0RNxIqVE=;
-	b=ChqVUceCPkJTlZw8xSx2cVMM27qR9bmOYfIwNpzLYx/+AogIhe+3hXEJbS0j4sKsZbHHlp
-	bcq8/zQVK7/akstNq074hnOEjBW85+8feh0zJHPWCMIAWetYICRvltgMW5ciHXx8gk9/Uh
-	c6g7zNLsLJ/T2OLV26sV31PkGBTKWGqaP77eTPmNgd4kiMWKZanjJe1RfyT9+c5+02LUmA
-	sr0LCfMZEcr8viAkmjKttUS74svJcyCLXNfc9F6WJlCvw7LEBIut2YbdZRMG7CAfZRPeIw
-	eousLVtd0Mp6jWKlAq5kZYB52z2LqUb9Vf6KIr4c+D2fahK12rMFBGP5t2wExQ==
+	bh=FOCBLr6BiDX7250O2XUhumlqLIiTQxaUMTYnh1sWS1o=;
+	b=NKusQvi5DqjWL+U7TJMy3Pt5+ZgJDMplzdKH6gUZ5ps26DGQV2g+C2PmrVnQEnRkQTLbgC
+	xi/T9oZw88oWuIAvPFow4YziUU/oBdAgAwWAz9onlATu17SYlI/IUxxySXO0qj0XlU8T3e
+	0JsZj02DptY0ZgS8A5qfxPDO7RCIDdIfm4pV2/WJmGmAr3620h5whMhIiymr9Vg6upwDx9
+	CxZWlY4FQq4rEdeSIlj28tYfQOgtujmGHcrRBPWPJU/ULk3hOCnOIJpzoMP4cCIBO6bY31
+	Joz/l3PeZQEczr+mOVZhXy4C/tbNRloMQQNKuAKTUC9zGFxUbd3dP+IK5VuVTw==
 From: =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>
-Date: Wed, 21 Feb 2024 19:22:09 +0100
-Subject: [PATCH v7 01/14] clk: fixed-factor: add optional accuracy support
+Date: Wed, 21 Feb 2024 19:22:11 +0100
+Subject: [PATCH v7 03/14] dt-bindings: clock: mobileye,eyeq5-clk: add
+ bindings
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,7 +42,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20240221-mbly-clk-v7-1-31d4ce3630c3@bootlin.com>
+Message-Id: <20240221-mbly-clk-v7-3-31d4ce3630c3@bootlin.com>
 References: <20240221-mbly-clk-v7-0-31d4ce3630c3@bootlin.com>
 In-Reply-To: <20240221-mbly-clk-v7-0-31d4ce3630c3@bootlin.com>
 To: Gregory CLEMENT <gregory.clement@bootlin.com>, 
@@ -58,154 +59,105 @@ Cc: Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>,
  devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
  Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
  Tawfik Bayouk <tawfik.bayouk@mobileye.com>, linux-gpio@vger.kernel.org, 
- =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>
+ =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 X-Mailer: b4 0.13.0
 X-GND-Sasl: theo.lebrun@bootlin.com
 
-Fixed factor clock reports the parent clock accuracy. Add flags and acc
-fields to `struct clk_fixed_factor` to support setting a fixed
-accuracy. The default if no flag is set is not changed: use the parent
-clock accuracy.
+Add DT schema bindings for the EyeQ5 clock controller driver.
 
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 Signed-off-by: Théo Lebrun <theo.lebrun@bootlin.com>
 ---
- drivers/clk/clk-fixed-factor.c | 28 +++++++++++++++++++++-------
- include/linux/clk-provider.h   | 12 +++++++++++-
- 2 files changed, 32 insertions(+), 8 deletions(-)
+ .../bindings/clock/mobileye,eyeq5-clk.yaml         | 51 ++++++++++++++++++++++
+ include/dt-bindings/clock/mobileye,eyeq5-clk.h     | 22 ++++++++++
+ 2 files changed, 73 insertions(+)
 
-diff --git a/drivers/clk/clk-fixed-factor.c b/drivers/clk/clk-fixed-factor.c
-index b3e66202b942..bc2644a9bd7d 100644
---- a/drivers/clk/clk-fixed-factor.c
-+++ b/drivers/clk/clk-fixed-factor.c
-@@ -57,10 +57,22 @@ static int clk_factor_set_rate(struct clk_hw *hw, unsigned long rate,
- 	return 0;
- }
- 
-+static unsigned long clk_factor_recalc_accuracy(struct clk_hw *hw,
-+						unsigned long parent_accuracy)
-+{
-+	struct clk_fixed_factor *fix = to_clk_fixed_factor(hw);
+diff --git a/Documentation/devicetree/bindings/clock/mobileye,eyeq5-clk.yaml b/Documentation/devicetree/bindings/clock/mobileye,eyeq5-clk.yaml
+new file mode 100644
+index 000000000000..2d4f2cde1e58
+--- /dev/null
++++ b/Documentation/devicetree/bindings/clock/mobileye,eyeq5-clk.yaml
+@@ -0,0 +1,51 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/clock/mobileye,eyeq5-clk.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+	if (fix->flags & CLK_FIXED_FACTOR_FIXED_ACCURACY)
-+		return fix->acc;
++title: Mobileye EyeQ5 clock controller
 +
-+	return parent_accuracy;
-+}
++description:
++  The EyeQ5 clock controller handles 10 read-only PLLs derived from the main
++  crystal clock. It also exposes one divider clock, a child of one of the PLLs.
++  Its registers live in a shared region called OLB.
 +
- const struct clk_ops clk_fixed_factor_ops = {
- 	.round_rate = clk_factor_round_rate,
- 	.set_rate = clk_factor_set_rate,
- 	.recalc_rate = clk_factor_recalc_rate,
-+	.recalc_accuracy = clk_factor_recalc_accuracy,
- };
- EXPORT_SYMBOL_GPL(clk_fixed_factor_ops);
- 
-@@ -81,7 +93,7 @@ __clk_hw_register_fixed_factor(struct device *dev, struct device_node *np,
- 		const char *name, const char *parent_name,
- 		const struct clk_hw *parent_hw, int index,
- 		unsigned long flags, unsigned int mult, unsigned int div,
--		bool devm)
-+		unsigned long acc, unsigned int fixflags, bool devm)
- {
- 	struct clk_fixed_factor *fix;
- 	struct clk_init_data init = { };
-@@ -105,6 +117,8 @@ __clk_hw_register_fixed_factor(struct device *dev, struct device_node *np,
- 	fix->mult = mult;
- 	fix->div = div;
- 	fix->hw.init = &init;
-+	fix->acc = acc;
-+	fix->flags = fixflags;
- 
- 	init.name = name;
- 	init.ops = &clk_fixed_factor_ops;
-@@ -152,7 +166,7 @@ struct clk_hw *devm_clk_hw_register_fixed_factor_index(struct device *dev,
- 		unsigned int mult, unsigned int div)
- {
- 	return __clk_hw_register_fixed_factor(dev, NULL, name, NULL, NULL, index,
--					      flags, mult, div, true);
-+					      flags, mult, div, 0, 0, true);
- }
- EXPORT_SYMBOL_GPL(devm_clk_hw_register_fixed_factor_index);
- 
-@@ -174,7 +188,7 @@ struct clk_hw *devm_clk_hw_register_fixed_factor_parent_hw(struct device *dev,
- 		unsigned long flags, unsigned int mult, unsigned int div)
- {
- 	return __clk_hw_register_fixed_factor(dev, NULL, name, NULL, parent_hw,
--					      -1, flags, mult, div, true);
-+					      -1, flags, mult, div, 0, 0, true);
- }
- EXPORT_SYMBOL_GPL(devm_clk_hw_register_fixed_factor_parent_hw);
- 
-@@ -184,7 +198,7 @@ struct clk_hw *clk_hw_register_fixed_factor_parent_hw(struct device *dev,
- {
- 	return __clk_hw_register_fixed_factor(dev, NULL, name, NULL,
- 					      parent_hw, -1, flags, mult, div,
--					      false);
-+					      0, 0, false);
- }
- EXPORT_SYMBOL_GPL(clk_hw_register_fixed_factor_parent_hw);
- 
-@@ -193,7 +207,7 @@ struct clk_hw *clk_hw_register_fixed_factor(struct device *dev,
- 		unsigned int mult, unsigned int div)
- {
- 	return __clk_hw_register_fixed_factor(dev, NULL, name, parent_name, NULL, -1,
--					      flags, mult, div, false);
-+					      flags, mult, div, 0, 0, false);
- }
- EXPORT_SYMBOL_GPL(clk_hw_register_fixed_factor);
- 
-@@ -240,7 +254,7 @@ struct clk_hw *devm_clk_hw_register_fixed_factor(struct device *dev,
- 		unsigned int mult, unsigned int div)
- {
- 	return __clk_hw_register_fixed_factor(dev, NULL, name, parent_name, NULL, -1,
--			flags, mult, div, true);
-+			flags, mult, div, 0, 0, true);
- }
- EXPORT_SYMBOL_GPL(devm_clk_hw_register_fixed_factor);
- 
-@@ -267,7 +281,7 @@ static struct clk_hw *_of_fixed_factor_clk_setup(struct device_node *node)
- 	of_property_read_string(node, "clock-output-names", &clk_name);
- 
- 	hw = __clk_hw_register_fixed_factor(NULL, node, clk_name, NULL, NULL, 0,
--					    0, mult, div, false);
-+					    0, mult, div, 0, 0, false);
- 	if (IS_ERR(hw)) {
- 		/*
- 		 * Clear OF_POPULATED flag so that clock registration can be
-diff --git a/include/linux/clk-provider.h b/include/linux/clk-provider.h
-index 1293c38ddb7f..7ddc952c8c67 100644
---- a/include/linux/clk-provider.h
-+++ b/include/linux/clk-provider.h
-@@ -1084,18 +1084,28 @@ void of_fixed_factor_clk_setup(struct device_node *node);
-  * @hw:		handle between common and hardware-specific interfaces
-  * @mult:	multiplier
-  * @div:	divider
-+ * @acc:	fixed accuracy in ppb
-+ * @flags:	behavior modifying flags
-  *
-  * Clock with a fixed multiplier and divider. The output frequency is the
-  * parent clock rate divided by div and multiplied by mult.
-- * Implements .recalc_rate, .set_rate and .round_rate
-+ * Implements .recalc_rate, .set_rate, .round_rate and .recalc_accuracy
-+ *
-+ * Flags:
-+ * * CLK_FIXED_FACTOR_FIXED_ACCURACY - Use the value in @acc instead of the
-+ *                                     parent clk accuracy.
-  */
- 
- struct clk_fixed_factor {
- 	struct clk_hw	hw;
- 	unsigned int	mult;
- 	unsigned int	div;
-+	unsigned long	acc;
-+	unsigned int	flags;
- };
- 
-+#define CLK_FIXED_FACTOR_FIXED_ACCURACY	BIT(0)
++maintainers:
++  - Grégory Clement <gregory.clement@bootlin.com>
++  - Théo Lebrun <theo.lebrun@bootlin.com>
++  - Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>
 +
- #define to_clk_fixed_factor(_hw) container_of(_hw, struct clk_fixed_factor, hw)
- 
- extern const struct clk_ops clk_fixed_factor_ops;
++properties:
++  compatible:
++    const: mobileye,eyeq5-clk
++
++  reg:
++    maxItems: 2
++
++  reg-names:
++    items:
++      - const: plls
++      - const: ospi
++
++  "#clock-cells":
++    const: 1
++
++  clocks:
++    maxItems: 1
++    description:
++      Input parent clock to all PLLs. Expected to be the main crystal.
++
++  clock-names:
++    items:
++      - const: ref
++
++required:
++  - compatible
++  - reg
++  - reg-names
++  - "#clock-cells"
++  - clocks
++  - clock-names
++
++additionalProperties: false
+diff --git a/include/dt-bindings/clock/mobileye,eyeq5-clk.h b/include/dt-bindings/clock/mobileye,eyeq5-clk.h
+new file mode 100644
+index 000000000000..26d8930335e4
+--- /dev/null
++++ b/include/dt-bindings/clock/mobileye,eyeq5-clk.h
+@@ -0,0 +1,22 @@
++/* SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause) */
++/*
++ * Copyright (C) 2024 Mobileye Vision Technologies Ltd.
++ */
++
++#ifndef _DT_BINDINGS_CLOCK_MOBILEYE_EYEQ5_CLK_H
++#define _DT_BINDINGS_CLOCK_MOBILEYE_EYEQ5_CLK_H
++
++#define EQ5C_PLL_CPU	0
++#define EQ5C_PLL_VMP	1
++#define EQ5C_PLL_PMA	2
++#define EQ5C_PLL_VDI	3
++#define EQ5C_PLL_DDR0	4
++#define EQ5C_PLL_PCI	5
++#define EQ5C_PLL_PER	6
++#define EQ5C_PLL_PMAC	7
++#define EQ5C_PLL_MPC	8
++#define EQ5C_PLL_DDR1	9
++
++#define EQ5C_DIV_OSPI	10
++
++#endif
 
 -- 
 2.43.2
