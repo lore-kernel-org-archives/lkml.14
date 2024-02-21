@@ -1,84 +1,106 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9F0E33F7
-	for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 17:19:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC7A633F7
+	for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 17:20:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708535999; cv=none; b=deALYakqR48UqofXNOH9vyo7ASteJitNW8LO8f0M2bLORMg5OXHmJ1Zf//661LOLJF9W5vJJ0M4pNArZbhRcx3tEIROu/VbekH7hj3xlIK4CilvH51qO9dO+a/qzIumZrK6YzJ1IfrScMPJtquD5G0xkpq0+jO0SJH/TG43x2uE=
+	t=1708536013; cv=none; b=EmpzULyDG0Tz3bdgp40NyS/N7qvnPC0LQzkMdZUFtrwJt4vz7950khI4o8OBrgMKKLY2FITiwSXU6zhGYm7M42djqkZjn0RJskjxUG7R+FG6tAVS6OOzqpplWfwjBmSwHd1lSBKFkShwN1ZhPSQ1DaF92kfhATVmMuGLMZRP4kQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708535999; c=relaxed/simple;
-	bh=mohUC8yf/GvhUgtVjjHOvP3YR1w8wLsVqsCFCBn5yXo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=SksRUkGQ0NLz25ePe/lS1xPRB7sP3wOmTtQ03akzGspRPwEpuYRWxUw5GjogVemi7G+wn16RzkPiwvttbsIBjlVHhxbbGLeM8SEwVoG4uM0c97oB1H10X8I3C1moW+SGS14/6of+MBmegsww12veyhEdPk9FdHA7PJJNFAO2V5A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b=J9luFRKb; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1708536013; c=relaxed/simple;
+	bh=++9n50pQO7aqp8TegiEiO0jfaK/HiXc23sT1u5Ch4O0=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=HBlFVrZw3M/a5nA9Qf4FAxTwuUx3gLDCvtTJz5EDiwutcAQR2nz2mCeEJq1xY4YZlUJVdtqxLP/5z95Ql2SsYv2/37RSm8tIPheGWBhbKgIYMspXrdI5XmWpU1qTSN6Dy5k4sdXxq0xsWBADDWGu00SZZLJpewKwV+TTDFkb+Fg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=41RCnjsy; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Z8D6Mi/H; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="J9luFRKb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4262CC433A6
-	for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 17:19:59 +0000 (UTC)
-Authentication-Results: smtp.kernel.org;
-	dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="J9luFRKb"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zx2c4.com; s=20210105;
-	t=1708535995;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="41RCnjsy";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Z8D6Mi/H"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1708536010;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=+OG+ecKsQYxVgvbBvL/TtgozTpt4MGBiORcM4WnZxHk=;
-	b=J9luFRKbMsBggAKjcd6FoCQCFqK3url7Sdh3XZYJSr4mA1puXzkyaxHqj6pupLqSCWKODQ
-	RNvHBA3KLaP2mjI97rQQtGZkGNkiNYfLecKiKSTRd4TZSrptHSQxNdrKhTN+qZxCisxLkS
-	ewB8VipIPkj8LHt2k6mBzw1NRSS9BQk=
-Received: 
-	by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id 5f056f35 (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO)
-	for <linux-kernel@vger.kernel.org>;
-	Wed, 21 Feb 2024 17:19:55 +0000 (UTC)
-Received: by mail-yw1-f179.google.com with SMTP id 00721157ae682-60884277a6dso8161497b3.1
-        for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 09:19:54 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCUNaN9GuYeloOIGuCg6uRXWFDvU5D/qLf23R3OZ9SljR1wGAJsr2gRwqNH0P44L1xP6k0UvfWSIPo/hIGenbxAG4P1m5zqA6Ph+VYb9
-X-Gm-Message-State: AOJu0Ywq339mDingVJklGc/aQ+4khCutQTWT/UEM/g9uzxEcz0h5GAQv
-	vMmDy2xkKaGR9ZnJ6X3PLK/tHOj8C7Og59+G/E2q0Bs/HrKijoy446Hu+E1RVBLSGoyXz2a4YIq
-	T+VF/RSy9FdfxUIRczDUySAghYK0=
-X-Google-Smtp-Source: AGHT+IFiRSo8oJLeIG6A89DqtzR4YnG0l7JPRWlYtBL46DIFRZVdsbWf6zNNIK8u00F1s0mkvbKIVpuC66RE/4PkDno=
-X-Received: by 2002:a0d:e250:0:b0:608:94b5:3e2 with SMTP id
- l77-20020a0de250000000b0060894b503e2mr418397ywe.4.1708535993716; Wed, 21 Feb
- 2024 09:19:53 -0800 (PST)
+	bh=ac5Ts2okIGt76uSF8yzJLI8Lv0A+lkmpdYSHwg+CsDI=;
+	b=41RCnjsy9GqzjI/EjAsG2Nl9Ul1+jqA2nHNhXS8hB6moxhF9XZeGeXr28VfbaRtQRcw3B/
+	HuRljZovpK0SxkJKOTKR0/nnNhuIZmZtZZr1qq7cjnWsk1GyUEw9GzKXkrG5IwTMthyVTM
+	YW//30Z+5th12Q7SHF/+UoqybGxQLX1fUcH8djgX56uqUfrXi4kGQaePSU4U3h6I/Oz6Al
+	931KK7nl7ymoAHsYKYXbbXTpDZ96WilEUE6nYB7FTR0z1TBAki33izo7q80ebWLijlPjqG
+	dtOKJjKMLSmGcXBBJYbdZWx4F3gy7Z1j6T3lo02xozqV2GHGvXZRbdOSkIgeLQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1708536010;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ac5Ts2okIGt76uSF8yzJLI8Lv0A+lkmpdYSHwg+CsDI=;
+	b=Z8D6Mi/HPHEfVUXBpyqGEv8BJHjpHfRLCLrF0VnOUNM3m0xGvYWSuXF3WLZAc9UFwC/Ov3
+	v2OkPqho2uV/koCA==
+To: "Gupta, Nipun" <nipun.gupta@amd.com>, gregkh@linuxfoundation.org,
+ maz@kernel.org, jgg@ziepe.ca, linux-kernel@vger.kernel.org
+Cc: git@amd.com, harpreet.anand@amd.com, pieter.jansen-van-vuuren@amd.com,
+ nikhil.agarwal@amd.com, michal.simek@amd.com, abhijit.gangurde@amd.com,
+ srivatsa@csail.mit.edu
+Subject: Re: [PATCH v7] cdx: add MSI support for CDX bus
+In-Reply-To: <929bf3bd-fb5a-4d1d-aa46-a5ce43ce574b@amd.com>
+References: <20240202113811.2546311-1-nipun.gupta@amd.com>
+ <877cj0a4fj.ffs@tglx> <929bf3bd-fb5a-4d1d-aa46-a5ce43ce574b@amd.com>
+Date: Wed, 21 Feb 2024 18:20:09 +0100
+Message-ID: <87wmqxg2eu.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240221123248.25570-1-Jason@zx2c4.com> <eada8acd-9341-401b-b6c9-a05848eb91d6@intel.com>
-In-Reply-To: <eada8acd-9341-401b-b6c9-a05848eb91d6@intel.com>
-From: "Jason A. Donenfeld" <Jason@zx2c4.com>
-Date: Wed, 21 Feb 2024 18:19:41 +0100
-X-Gmail-Original-Message-ID: <CAHmME9o75KzsfMRDtr2K0+N-UM-MX7MWL4AZhy27CedZRNd2Tg@mail.gmail.com>
-Message-ID: <CAHmME9o75KzsfMRDtr2K0+N-UM-MX7MWL4AZhy27CedZRNd2Tg@mail.gmail.com>
-Subject: Re: [PATCH v3] x86/coco: Require seeding RNG with RDRAND on CoCo systems
-To: Dave Hansen <dave.hansen@intel.com>
-Cc: x86@kernel.org, linux-coco@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	Borislav Petkov <bp@alien8.de>, =?UTF-8?Q?Daniel_P_=2E_Berrang=C3=A9?= <berrange@redhat.com>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, Elena Reshetova <elena.reshetova@intel.com>, 
-	"H . Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>, 
-	"Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>, "Theodore Ts'o" <tytso@mit.edu>, 
-	Thomas Gleixner <tglx@linutronix.de>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
 
-On Wed, Feb 21, 2024 at 5:55=E2=80=AFPM Dave Hansen <dave.hansen@intel.com>=
- wrote:
+On Wed, Feb 21 2024 at 18:10, Gupta, Nipun wrote:
+> On 2/19/2024 8:26 PM, Thomas Gleixner wrote:
+>>> +int cdx_msi_domain_alloc_irqs(struct device *dev, unsigned int irq_count)
+>>> +{
+>>> +	int ret;
+>>> +
+>>> +	ret = msi_setup_device_data(dev);
+>>> +	if (ret)
+>>> +		return ret;
+>>> +
+>>> +	ret = msi_domain_alloc_irqs_range(dev, MSI_DEFAULT_DOMAIN,
+>>> +					  0, irq_count - 1);
+>>> +	if (ret)
+>>> +		dev_err(dev, "Failed to allocate IRQs: %d\n", ret);
+>>> +
+>>> +	return ret;
+>>> +}
+>>> +EXPORT_SYMBOL_GPL(cdx_msi_domain_alloc_irqs);
+>> 
+>> Why does this need a special allocation function instead of setting the
+>> irq domain of the device and using the generic allocation function
+>> directly?
 >
-> On 2/21/24 04:32, Jason A. Donenfeld wrote:
-> > +__init void cc_random_init(void)
-> > +{
-> > +     unsigned long rng_seed[32 / sizeof(long)];
->
-> My only nit with this is the magic "32".
->
-> Why not 16?  Or 64?
+> Do you suggest we call msi_setup_device_data() during the 
+> cdx_device_add() in the CDX bus where we also assign the IRQ domain to 
+> the device; so CDX device driver can directly call 
+> msi_domain_alloc_irqs_range() API to allocate the IRQs?
 
-32 bytes =3D 256-bits =3D what we're targeting. Very normal thing to see
-places in the RNG, used all over random.c and lots of platform
-drivers. Pretty obvious and straightforward to anyone familiar with
-this kind of code. Not the kind of thing you'd want to replace with
-some abstracted constant that makes you search.
+That sounds about right. It avoids doing it in the drivers and does not
+require a special function. Maybe an inline wrapper to convert the
+simple count to the range required.
+
+>>> +
+>>> +#ifdef GENERIC_MSI_DOMAIN_OPS
+>>> +	/* Set the device Id to be passed to the GIC-ITS */
+>>> +	info->scratchpad[0].ul = dev_id;
+>>> +#endif
+>> 
+>> Is this ever used on a platform which does not have
+>> GENERIC_MSI_DOMAIN_OPS ?
+>
+> This was added to enable the COMPILE_TEST.
+
+Ah. Ok.
+
+Thanks,
+
+        tglx
