@@ -1,39 +1,39 @@
-Received: from out30-124.freemail.mail.aliyun.com (out30-124.freemail.mail.aliyun.com [115.124.30.124])
+Received: from out30-131.freemail.mail.aliyun.com (out30-131.freemail.mail.aliyun.com [115.124.30.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 022113D556
-	for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 09:18:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 209423D97F
+	for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 09:18:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708507093; cv=none; b=s8R3L9jLkdvbr85eqhOoWBlZzTr2RAkmid9fXA8zudYzIhTJre0PPTQ66ulOkvTKxGeiNmVW1nToaRubzN17p1yLP5Doi0kF6O2zkyd80O5LYwMezJ5rz91Sx2J/NtWTLZXJSai0JEfKskrWrUiBYOiXgmXEOYtNXfc9DqY8QA8=
+	t=1708507096; cv=none; b=EisIogA3KREGNf1tDCxLRfuKCUIDdH66b9S0wW0hUXNH3HyozFzI7FCk68NhS7o8uWASV+Q+hh9DTlf+IHS8pbVO9OjI0HkMLWl0PkK/ruAdFjUwDpInJvjBaKhoGwBy7fSFltR1veXLmMGMFsEobjjkD0xjYmc5uivIGCUNlNo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708507093; c=relaxed/simple;
-	bh=Ro149mtR33sBAX78qfBcjmuA+prlryiG9GLzx79kIRk=;
+	s=arc-20240116; t=1708507096; c=relaxed/simple;
+	bh=3KXb9nXpObxqm6iBD7n6ssU5Vsa79GNEX+w8fQbJzKY=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=DCcEBL91UEr/tgyV1DIKz0IjOS/IFssY+CdolMA/EdiG8ZSfNPpe5B+2TSZryT/qQ26GSTbulsFDdoPMqmyV65INfnLaYZiBXEPDO4gQYektLnq7IDckMEGLLl5fA589783eg6hjmvss/gjJBZQEQtUFu8U/0KTach3LCTnt+g8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=IQd1Nuev; arc=none smtp.client-ip=115.124.30.124
+	 MIME-Version; b=F3OiEw7k3bkLc6z+S5L85WueIFptbisxJCdeXkkiwakj/pltK3yP3T92pCCZxleI2SuG0Ha1uNq39yZGnA05LciyCUDBROVXCumlMqy0XM1kQRyWNkckJt8tAKmOZjrnWijVAowNdb5nUSNSStMwGjHKhQkmyhIIsK+282D/iI0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=Hja2l3Tc; arc=none smtp.client-ip=115.124.30.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="IQd1Nuev"
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="Hja2l3Tc"
 DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linux.alibaba.com; s=default;
-	t=1708507082; h=From:To:Subject:Date:Message-Id:MIME-Version;
-	bh=110m7iZc1QLgWsXce59I4X/s2/RhnD8RnHOHhZoz85g=;
-	b=IQd1NuevHtDTaw39RcHDYewFAw57AJXzkpS2QqKJz+60rla7WEinc7zy79Sp7R2JvXXCjb2KRELXyxTG/SB2lcP16lAw80IDsHZ/e+6OD+zfKpu723DiWxde9Ur1VZbTcTcR1HOBfHMWaSumLt9Ip/KIaiJgxwD+WKnxk15Ncm0=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R161e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045170;MF=jiapeng.chong@linux.alibaba.com;NM=1;PH=DS;RN=5;SR=0;TI=SMTPD_---0W0zSe40_1708507080;
-Received: from localhost(mailfrom:jiapeng.chong@linux.alibaba.com fp:SMTPD_---0W0zSe40_1708507080)
+	t=1708507092; h=From:To:Subject:Date:Message-Id:MIME-Version;
+	bh=hCL7kDhpLqny3OO9KnxYcH7qd7yJnytkUmwgoFbh7d0=;
+	b=Hja2l3Tc24Dh7ZXHxNuhOx8dRPj2Lu7Dq77PoYXK8P5UCovcQzEWW3xEoP7GOcQOWph5Sz8JZ4Wczrxx6JSAZQEvH1DpJ8spj1jjzy6w57iDJaIO0xrviiVru7/wPPa1hhrIazOkNUNO/9EVcL/uA771ntuFWYHADJzUeo90j1w=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R161e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046049;MF=jiapeng.chong@linux.alibaba.com;NM=1;PH=DS;RN=5;SR=0;TI=SMTPD_---0W0zPi4s_1708507089;
+Received: from localhost(mailfrom:jiapeng.chong@linux.alibaba.com fp:SMTPD_---0W0zPi4s_1708507089)
           by smtp.aliyun-inc.com;
-          Wed, 21 Feb 2024 17:18:02 +0800
+          Wed, 21 Feb 2024 17:18:11 +0800
 From: Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
 To: msakai@redhat.com
 Cc: dm-devel@lists.linux.dev,
 	linux-kernel@vger.kernel.org,
 	Jiapeng Chong <jiapeng.chong@linux.alibaba.com>,
 	Abaci Robot <abaci@linux.alibaba.com>
-Subject: [PATCH 6/8] dm vdo: Modify mismatched function name
-Date: Wed, 21 Feb 2024 17:17:26 +0800
-Message-Id: <20240221091731.7007-3-jiapeng.chong@linux.alibaba.com>
+Subject: [PATCH 4/8] dm vdo: Modify mismatched function name
+Date: Wed, 21 Feb 2024 17:17:28 +0800
+Message-Id: <20240221091731.7007-5-jiapeng.chong@linux.alibaba.com>
 X-Mailer: git-send-email 2.20.1.7.g153144c
 In-Reply-To: <20240221091731.7007-1-jiapeng.chong@linux.alibaba.com>
 References: <20240221091731.7007-1-jiapeng.chong@linux.alibaba.com>
@@ -47,28 +47,28 @@ Content-Transfer-Encoding: 8bit
 
 No functional modification involved.
 
-drivers/md/dm-vdo/flush.c:97: warning: expecting prototype for waiter_as_flush(). Prototype was for vdo_waiter_as_flush() instead.
+drivers/md/dm-vdo/logical-zone.c:303: warning: expecting prototype for void attempt_generation_complete_notification()(). Prototype was for attempt_generation_complete_notification() instead.
 
 Reported-by: Abaci Robot <abaci@linux.alibaba.com>
-Closes: https://bugzilla.openanolis.cn/show_bug.cgi?id=8278
+Closes: https://bugzilla.openanolis.cn/show_bug.cgi?id=8276
 Signed-off-by: Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
 ---
- drivers/md/dm-vdo/flush.c | 2 +-
+ drivers/md/dm-vdo/logical-zone.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/md/dm-vdo/flush.c b/drivers/md/dm-vdo/flush.c
-index e4be450aa12c..57e87f0d7069 100644
---- a/drivers/md/dm-vdo/flush.c
-+++ b/drivers/md/dm-vdo/flush.c
-@@ -88,7 +88,7 @@ static inline struct vdo_flush *completion_as_vdo_flush(struct vdo_completion *c
+diff --git a/drivers/md/dm-vdo/logical-zone.c b/drivers/md/dm-vdo/logical-zone.c
+index a040fe9c0779..131161e0c152 100644
+--- a/drivers/md/dm-vdo/logical-zone.c
++++ b/drivers/md/dm-vdo/logical-zone.c
+@@ -295,7 +295,7 @@ static void notify_flusher(struct vdo_completion *completion)
  }
  
  /**
-- * waiter_as_flush() - Convert a vdo_flush's generic wait queue entry back to the vdo_flush.
-+ * vdo_waiter_as_flush() - Convert a vdo_flush's generic wait queue entry back to the vdo_flush.
-  * @waiter: The wait queue entry to convert.
-  *
-  * Return: The wait queue entry as a vdo_flush.
+- * void attempt_generation_complete_notification() - Notify the flusher if some generation no
++ * attempt_generation_complete_notification() - Notify the flusher if some generation no
+  *                                                   longer has active VIOs.
+  * @completion: The zone completion.
+  */
 -- 
 2.20.1.7.g153144c
 
