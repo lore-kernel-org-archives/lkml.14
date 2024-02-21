@@ -1,137 +1,81 @@
-Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
+Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1ADAA3A8F5
-	for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 07:08:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC0ED3B78B
+	for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 07:08:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708499283; cv=none; b=YH4/5ntWLtqbyW5ROkHJ7RK9kRhw94f3ZzoDUJztvUO3/9U/rzeRTCTNL7S5rolhIHSpcGFDMTjsn6slLU7tpv1b1o/J29oc2GmcD5ktOWBVvdMKFxIYQcCySsIa291aT6qp8aoIzOKebDLxXDpr8Z6yfDv7m5VAmwDcAVu2O+4=
+	t=1708499288; cv=none; b=d/n5IuBRG7y6TaEpNRjGpu+O8klnK+v8FNrmS2fvKpxzhOObtoHlMaZmJLEalvot2IwrhFa0+oFQC+gYWQFlmlUdqobkUq/Bcp1RFKj4H+ne7Qf5coEdaLdfQdLGc2kbQJ67r3EHm15gtpw7i0kSCI+J5e2/SH2E7q1wvUAFZZA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708499283; c=relaxed/simple;
-	bh=VTnFedSHbWRXdPeVX5bVM50OyRSGy300r/pvDJawCfs=;
-	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Cc:Content-Type; b=dUmFoBO7ZhKQTiwyalHiBkSWvC9dEMu9FkKSQYKYWzMlYgRvCYJfoEFyzkoxcYReiYBADplcnqHj0TcPtBD2hFrtvWXZFs3CaCUxq0CyzFpepfvxmfzsxYNShbsbCB3vTQz1KbVR99bx4D/CKmK+HBI6rHAwVnIYiVdJmW9Ib0U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=u5WMWwiS; arc=none smtp.client-ip=209.85.219.202
+	s=arc-20240116; t=1708499288; c=relaxed/simple;
+	bh=L6zbD+r4iAQVkolpUdqaC5kdIDlOZs92K4PNPYeqx8Y=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Vs186qEZ5D9z5WOqCJ8murJvrCmpseUmGQFQAU6mLhxTJ08x+oEprI30tAGkZfEZdWmNjA9s9g+9PWLcWxzUfNliEwPBV8WxRmH5UzB/rkAcXYyFulNmAzQaAs+jNOLTtXD1GBnI/Zi2PGpCGHhfzF66HDlwIoVaKi3OstzdTFk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=vkQfgsQD; arc=none smtp.client-ip=209.85.167.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="u5WMWwiS"
-Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-dc64f63d768so10934471276.2
-        for <linux-kernel@vger.kernel.org>; Tue, 20 Feb 2024 23:08:01 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vkQfgsQD"
+Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-511976c126dso402590e87.1
+        for <linux-kernel@vger.kernel.org>; Tue, 20 Feb 2024 23:08:06 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1708499281; x=1709104081; darn=vger.kernel.org;
-        h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=DfVuTk7FcAUa184IhDAbJwuMC16l/TIzHOCMWidcT2s=;
-        b=u5WMWwiSuRnVlwYVjkghy8yD3+KyPndGBwJfXJ3oKw/BulP7ut1YfR1R9vuMafZ1V2
-         fGzEfiA49uhG7VmObQzrcbNRYV13emTfYeZ6SSqiqxtNG22tvRMAl5n5UK6gR6qSvFtg
-         Pq0kPTpxlRn4r4r7y/pV9Det5kO0rnCLFh8Yf7JHDxKI+Kwj7yxWWgOn/ent8eAN3l8Y
-         Cy6WZ5Fr6+JOShEM9A0G507i6PxF1PHmYKLBjZDbTNuTwgCk9fpbMcxZN9iMPAJJp0JW
-         y5CaPMzksKBcWYfZXzL8be9GlSwiESvNCzd28wVz9uUSc+nrIibcuBGlyclG6EVfYPo3
-         w3fQ==
+        d=google.com; s=20230601; t=1708499285; x=1709104085; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=L6zbD+r4iAQVkolpUdqaC5kdIDlOZs92K4PNPYeqx8Y=;
+        b=vkQfgsQDHrbxG0DiaoWAnw8FsfnbUdtZib000uWHg0wIlYT+HrgSStHuiYTFUcJX+e
+         WxuIkK2ISklm7coEPKp5c4WxJ1ItMjJcaNB8ViHy0TMQQou9LBHAhK8lNrXNP1UFDnmj
+         0PC0tcY6HTPeoetxu516Pf+mF4jHWA3jzFvgNzv3dSdg4L83oGnRoGj6PvPKG0wgqado
+         oXMgHUNtdrh61hAjN49nc9F36tiScy25yxpJYLLhwKySzAuU9+zoHH24k2aRZOjzq/n/
+         jgDtVQNmz3Cy8icJcJZdMLlt0wqpN9qNPWLCE0UozdxYIJUcxYOwIkkojnyKbpr0Qq0+
+         zRsg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708499281; x=1709104081;
-        h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=DfVuTk7FcAUa184IhDAbJwuMC16l/TIzHOCMWidcT2s=;
-        b=Y6qkiu+AGSg1Uk8u1aZ6encGMjkV6gYtaFArTMy7hegexDKjRg6YcbVbfDrZ4Y6xpJ
-         3NHXY7fTtHKMbnr3/ASVYLXvjzXCSpMVHG4EjGRVKFjsHF0+1gRTKr+osNupLuY+rgFF
-         AtHfG16tP8rZwNf5/buvEmeGaZEbA2OyhJ5c+IjHNY5coLgbpGu5C9rF6cJH5D03Ps4G
-         5nR75g5Yb+ldZs0SpxCpd0B0QkQzBpQhFs2yz7C4lLR5EtguCiQHCcr+sSDV3jWdJuwe
-         CMVdD/5rTPvA1/UP4sBaRhoK5X/VM15IkhXewUb1SG40w/Ni++LiBHUEkdXk2aSvvweW
-         wpVQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWlvbpQ7w44aoN1t8vx77My+wc2p/u4BmQRuaAxNd0kZWZA0XtKjPQxPy0CuZvJ3H515FxoUuMbnU+3FcB/bRH8Ah5xsH5FU7qgHiKK
-X-Gm-Message-State: AOJu0YyHHD1zxxtka8GaFmjI8/R5KvPMVRYOTz2JqvXxWpdoc17vA2yV
-	awOviGGtNOZtLS6pdBjD7ozy2CUWehk2Bm+qPCnZfQWUuanSUV7og9FHLENqsw529dkzZn27o9O
-	l5/VnCQ==
-X-Google-Smtp-Source: AGHT+IEjSgJYS5XU5/3VduLquncZCLuHXOsyv5NjgSTN6RCN2NQWWZVx/AxQIvEZPul2v2cXQ4FctOlKH6g7
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:3c02:f882:5876:b7ab])
- (user=irogers job=sendgmr) by 2002:a05:6902:98b:b0:dc6:ff2b:7e1b with SMTP id
- bv11-20020a056902098b00b00dc6ff2b7e1bmr5058563ybb.4.1708499281168; Tue, 20
- Feb 2024 23:08:01 -0800 (PST)
-Date: Tue, 20 Feb 2024 23:07:54 -0800
-In-Reply-To: <20240221070754.4163916-1-irogers@google.com>
-Message-Id: <20240221070754.4163916-3-irogers@google.com>
+        d=1e100.net; s=20230601; t=1708499285; x=1709104085;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=L6zbD+r4iAQVkolpUdqaC5kdIDlOZs92K4PNPYeqx8Y=;
+        b=KaCBIJPMdnpTdHLplxAnudOukmt7SVRbOFiRe8Uy/ON1aD64SNrQgsWt+fHWX1y372
+         AKdKW9qaOz7zd3L7N3MrAOz4zAjLDGlaYuKQomb9w0YoUaO5P4FfsHRDejPAVAHU/xfr
+         KIymzwLqnAVtF34cpLIErwrXI9NklTEQNbRM5hEUnaKxuhdVonxC0ODCIqIRUs+WuCKD
+         U1K2uukQrDLi9a1yxFnyp66eFYTsg3Iq2uwm9bK80zU9tTb/FW/yMQ6LCZL/bNbYHFMY
+         n3SspL/uYhZtQPaMOL8UDbQPkuN5a6q9tUxDdihLLEfTQQD0wqoKR8BAA3V7rGd0XAG2
+         qWRQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV8nxpI3SCQ4CpE+9dcK/G4vAf0mQ+p4aGL5i4Dq9/u4IcL0AQjTG9rZbuf/80H9Fa8QaN65nAwpBXeeU1LVFzQMaJFbUUldZWDxVgp
+X-Gm-Message-State: AOJu0YzjOh/n8BfccW/1t8u42qC54eVu19XEC/6TCPvI73vVe9W7srGM
+	b7eMeZ+JcuZ234cQ57/pBIdfIA1cQFtRybePaEbshHf7KdLpPDuIUFgHLPuuzzbqza7Sf0kLATm
+	H6+k/vws5g4yt9qL2hvMOJLNfib2DpDqCkqT8
+X-Google-Smtp-Source: AGHT+IHa365tMHI74PcJwpoL4by21xl2KdQYoT7uJGyPBKgsElto/rB7Qh2SvL3fkLhg7dgdD64D4s6+6hqom1eKg68=
+X-Received: by 2002:a05:6512:2107:b0:512:d6ca:71ae with SMTP id
+ q7-20020a056512210700b00512d6ca71aemr61918lfr.31.1708499284887; Tue, 20 Feb
+ 2024 23:08:04 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20240221070754.4163916-1-irogers@google.com>
-X-Mailer: git-send-email 2.44.0.rc1.240.g4c46232300-goog
-Subject: [PATCH v3 3/3] perf stat: Fix metric-only aggregation index
-From: Ian Rogers <irogers@google.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, Kajol Jain <kjain@linux.ibm.com>, 
-	John Garry <john.g.garry@oracle.com>, Kaige Ye <ye@kaige.org>, 
-	K Prateek Nayak <kprateek.nayak@amd.com>, linux-perf-users@vger.kernel.org, 
+MIME-Version: 1.0
+References: <20240220191114.3272126-1-dhavale@google.com> <6c2d5345-98bc-49b1-adc7-bcc349a0a6bb@linux.alibaba.com>
+In-Reply-To: <6c2d5345-98bc-49b1-adc7-bcc349a0a6bb@linux.alibaba.com>
+From: Sandeep Dhavale <dhavale@google.com>
+Date: Tue, 20 Feb 2024 23:07:52 -0800
+Message-ID: <CAB=BE-Se6nO_VTncA9CH7k65xRPtyxo=xSH__i_OhV8++LfEYQ@mail.gmail.com>
+Subject: Re: [PATCH v1] erofs: fix refcount on the metabuf used for inode lookup
+To: Gao Xiang <hsiangkao@linux.alibaba.com>
+Cc: Gao Xiang <xiang@kernel.org>, Chao Yu <chao@kernel.org>, Yue Hu <huyue2@coolpad.com>, 
+	Jeffle Xu <jefflexu@linux.alibaba.com>, quic_wenjieli@quicinc.com, 
+	stable@vger.kernel.org, kernel-team@android.com, linux-erofs@lists.ozlabs.org, 
 	linux-kernel@vger.kernel.org
-Cc: Stephane Eranian <eranian@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Aggregation index was being computed using the evsel's cpumap which
-may have a different (typically the same or fewer) entries.
+>
+> If it looks good to you, could you resend a formal patch? Thanks!
+>
+Hi Gao,
+This looks better and more readable. I will send a v2.
 
-Before:
-```
-$ perf stat --metric-only -A -M memory_bandwidth_total -a sleep 1
+Thanks,
+Sandeep.
 
- Performance counter stats for 'system wide':
-
-       MB/s  memory_bandwidth_total MB/s  memory_bandwidth_total MB/s  memory_bandwidth_total MB/s  memory_bandwidth_total MB/s  memory_bandwidth_total MB/s  memory_bandwidth_total
-CPU0                            12.8                           0.0                          12.9                          12.7                           0.0                          12.6
-CPU1
-
-       1.007806367 seconds time elapsed
-```
-
-After:
-```
-$ perf stat --metric-only -A -M memory_bandwidth_total -a sleep 1
-
- Performance counter stats for 'system wide':
-
-       MB/s  memory_bandwidth_total MB/s  memory_bandwidth_total MB/s  memory_bandwidth_total MB/s  memory_bandwidth_total MB/s  memory_bandwidth_total MB/s  memory_bandwidth_total
-CPU0                            15.4                           0.0                          15.3                          15.0                           0.0                          14.9
-CPU18                            0.0                           0.0                          13.5                           5.2                           0.0                          11.9
-
-       1.007858736 seconds time elapsed
-```
-
-Signed-off-by: Ian Rogers <irogers@google.com>                                  |
-Acked-by: Namhyung Kim <namhyung@kernel.org>
----
- tools/perf/util/stat-display.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
-
-diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
-index ae37395f90c0..bfc1d705f437 100644
---- a/tools/perf/util/stat-display.c
-+++ b/tools/perf/util/stat-display.c
-@@ -1137,11 +1137,16 @@ static void print_no_aggr_metric(struct perf_stat_config *config,
- 			u64 ena, run, val;
- 			double uval;
- 			struct perf_stat_evsel *ps = counter->stats;
--			int aggr_idx = perf_cpu_map__idx(evsel__cpus(counter), cpu);
-+			int aggr_idx = 0;
- 
--			if (aggr_idx < 0)
-+			if (!perf_cpu_map__has(evsel__cpus(counter), cpu))
- 				continue;
- 
-+			cpu_aggr_map__for_each_idx(aggr_idx, config->aggr_map) {
-+				if (config->aggr_map->map[aggr_idx].cpu.cpu == cpu.cpu)
-+					break;
-+			}
-+
- 			os->evsel = counter;
- 			os->id = aggr_cpu_id__cpu(cpu, /*data=*/NULL);
- 			if (first) {
--- 
-2.44.0.rc1.240.g4c46232300-goog
-
+> Thanks,
+> Gao Xiang
