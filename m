@@ -1,76 +1,76 @@
 Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13D247866C
-	for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 13:24:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B50277993E
+	for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 13:24:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708521857; cv=none; b=em9uwlN5j06xR0wBbNjfSje5MrmHL8lPS5ToKZFkckkBkjzQhbbG0h+q8TnibJIvSRO0cVZRYuFcSCQEFGm4VSZXF6GnIA8ohWpN41Naz/mGAJ7+OrACXsG/0xC2iWx4Yi+uluH6uN6W73qldsXCzXEElbUY54Dwaw8G8D+NEEI=
+	t=1708521858; cv=none; b=e+8M6iViEjptgM/IEL1qSnz6tOdipmCxdHa8V2y7HYDM48THdrN5Fc/qkjo9i7Q3SZ0/gNgIFnw7xvltrRyyTwQrQHzm3FP/vSvCt/x8Jk/0cY9+A3XcW0PgFsmmvkG62axZJlE7bjQnR7puO+N9pUTAPfFjReF6uDNci2qolW0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708521857; c=relaxed/simple;
-	bh=Ym7TFu6r6aw+U9CNds3HvZg6pH5a78LLvgHTOEOcQfs=;
+	s=arc-20240116; t=1708521858; c=relaxed/simple;
+	bh=0WQxlo/oz4Feqagd2vcBCjJkzYxrAeuDwhOkd6YNd38=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=CqrAkR09H9gQOBQGS3e+u09FBUBhV1J+aHYRsbpmeVesZkHO0c8aXf/JyaRz7YtKGf9YUcs7kYIR1cxY8IsGGmG8KkDDROq47e2RTRPDMgsrsHwANh10rt5A+pP1noPsmR0dpnC9UdikEzXFDLwQpmVLJ+klYmhjm9e/KRllapo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=w5Fx9Fz5; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=wikyw4A4; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=Oldx6DBU; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=HNlrwYsn; arc=none smtp.client-ip=195.135.223.131
+	 MIME-Version; b=AnD61iuNr22VcvFpl1FZeusUdVd5yQLczUC+jLBV5Phhgp/3yLw9dqc3GwzTL0TeN8QcFIZcdp6AENwvGlQqlM2NUEWk46SZwDU1PoYdIOkJeVYaDCmB5DlHCmfU/uemSiaFRP9xsxwModBlmPQ91lB5h9aFwGVn7+68B6iXXX0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=AChw+Y5+; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=twmwTotk; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=AChw+Y5+; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=twmwTotk; arc=none smtp.client-ip=195.135.223.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="w5Fx9Fz5";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="wikyw4A4";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="Oldx6DBU";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="HNlrwYsn"
-Received: from imap2.dmz-prg2.suse.org (imap2.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:98])
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="AChw+Y5+";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="twmwTotk";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="AChw+Y5+";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="twmwTotk"
+Received: from imap2.dmz-prg2.suse.org (imap2.dmz-prg2.suse.org [10.150.64.98])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id BAFE61FB61;
-	Wed, 21 Feb 2024 13:24:13 +0000 (UTC)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 0374E1FB66;
+	Wed, 21 Feb 2024 13:24:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1708521854; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	t=1708521855; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=zU7+H6imK6PdglzKKo++O8AYMoRco75nFqgEhuv3i/Y=;
-	b=w5Fx9Fz5qYRbrm7sF5DA/BeiBibRfI4JepUlrYc+xzdPzhB0BHL8mb3VWdQ0Ub/QwXu+IJ
-	SPe2/wHblk44TlusZdYDevbcGJy+k4V1/UHQDV/Qn3qmzw/++5QoQNvN6w982l32N8FLaV
-	hnhesFx7jmXt8uRXD/gd1v/zNiqzVoY=
+	bh=cyEZOfkKjRD1DB2JnX5AXn1kOpeHmL85HOa4YyZnu48=;
+	b=AChw+Y5+q9flrzGaK0Ji5r+52/LUbZcCJST0+voU9QvtsHczqNH23tRRBfxtNq7diYK+y5
+	Ha0TCU3Z1iQYpRI6Cn0bNDOunURbGgKd+ZJWhulF3JYW0t4Tm/0LEvjq1/11FwkKJX+WYH
+	apt0WQdao+PKAE0TTPzt/5mb1JFN3o0=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1708521854;
+	s=susede2_ed25519; t=1708521855;
 	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=zU7+H6imK6PdglzKKo++O8AYMoRco75nFqgEhuv3i/Y=;
-	b=wikyw4A4sNr+V/eA2NM9fo0ArKcCRREKSH+JmyCDqUacibWJ0xpJ3LARycW60zFzmEGvl5
-	Gd59FOqncoKYD8AA==
+	bh=cyEZOfkKjRD1DB2JnX5AXn1kOpeHmL85HOa4YyZnu48=;
+	b=twmwTotkQ90dfjjtD87xxE6w5wLX/CQk4ePhcfxZ16+TeaZSRGD2QVwaH7kXOH8FwFBNHF
+	gTNRWgtqoVMk1LBg==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1708521853; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	t=1708521855; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=zU7+H6imK6PdglzKKo++O8AYMoRco75nFqgEhuv3i/Y=;
-	b=Oldx6DBUt1bx2wzCuiBkGHXJ1WMBORMOA/Vq+yBMwicQthLQmi+ss4iqLb9oTfDqp9x9O6
-	lcYjV2nTVeC8jE5OvB62o+8z+y7XVC0Tb45Kg3AicJzLt7eggfsgdxExs/zcWmkuJgpBe3
-	Wf2lZHc/VvWr5OpWUF5r1O9UGxuuOcA=
+	bh=cyEZOfkKjRD1DB2JnX5AXn1kOpeHmL85HOa4YyZnu48=;
+	b=AChw+Y5+q9flrzGaK0Ji5r+52/LUbZcCJST0+voU9QvtsHczqNH23tRRBfxtNq7diYK+y5
+	Ha0TCU3Z1iQYpRI6Cn0bNDOunURbGgKd+ZJWhulF3JYW0t4Tm/0LEvjq1/11FwkKJX+WYH
+	apt0WQdao+PKAE0TTPzt/5mb1JFN3o0=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1708521853;
+	s=susede2_ed25519; t=1708521855;
 	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=zU7+H6imK6PdglzKKo++O8AYMoRco75nFqgEhuv3i/Y=;
-	b=HNlrwYsn0sBlrkqQLpdXSPXPq9uk48zyG3xZJyPqMU7It49GBfZpo0TpBdG83X+s+XJddZ
-	uYoTzx26bZxm41AA==
+	bh=cyEZOfkKjRD1DB2JnX5AXn1kOpeHmL85HOa4YyZnu48=;
+	b=twmwTotkQ90dfjjtD87xxE6w5wLX/CQk4ePhcfxZ16+TeaZSRGD2QVwaH7kXOH8FwFBNHF
+	gTNRWgtqoVMk1LBg==
 Received: from imap2.dmz-prg2.suse.org (localhost [127.0.0.1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by imap2.dmz-prg2.suse.org (Postfix) with ESMTPS id A589113A42;
-	Wed, 21 Feb 2024 13:24:13 +0000 (UTC)
+	by imap2.dmz-prg2.suse.org (Postfix) with ESMTPS id E526D13A25;
+	Wed, 21 Feb 2024 13:24:14 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([10.150.64.162])
 	by imap2.dmz-prg2.suse.org with ESMTPSA
-	id xjDoJn351WUXPQAAn2gu4w
-	(envelope-from <dwagner@suse.de>); Wed, 21 Feb 2024 13:24:13 +0000
+	id lY2xNX751WUdPQAAn2gu4w
+	(envelope-from <dwagner@suse.de>); Wed, 21 Feb 2024 13:24:14 +0000
 From: Daniel Wagner <dwagner@suse.de>
 To: James Smart <james.smart@broadcom.com>
 Cc: Keith Busch <kbusch@kernel.org>,
@@ -80,9 +80,9 @@ Cc: Keith Busch <kbusch@kernel.org>,
 	linux-nvme@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
 	Daniel Wagner <dwagner@suse.de>
-Subject: [PATCH v2 2/5] nvme-fc: do not retry when auth fails or connection is refused
-Date: Wed, 21 Feb 2024 14:24:01 +0100
-Message-ID: <20240221132404.6311-3-dwagner@suse.de>
+Subject: [PATCH v2 4/5] nvme-fc: reorder ctrl ref counting and cleanup code path
+Date: Wed, 21 Feb 2024 14:24:03 +0100
+Message-ID: <20240221132404.6311-5-dwagner@suse.de>
 X-Mailer: git-send-email 2.43.1
 In-Reply-To: <20240221132404.6311-1-dwagner@suse.de>
 References: <20240221132404.6311-1-dwagner@suse.de>
@@ -94,13 +94,10 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=Oldx6DBU;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=HNlrwYsn
-X-Spamd-Result: default: False [3.05 / 50.00];
+	none
+X-Spamd-Result: default: False [1.90 / 50.00];
 	 ARC_NA(0.00)[];
 	 RCVD_VIA_SMTP_AUTH(0.00)[];
-	 R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	 SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:98:from];
 	 FROM_HAS_DN(0.00)[];
 	 TO_DN_SOME(0.00)[];
 	 R_MISSING_CHARSET(2.50)[];
@@ -109,47 +106,296 @@ X-Spamd-Result: default: False [3.05 / 50.00];
 	 BROKEN_CONTENT_TYPE(1.50)[];
 	 RCVD_COUNT_THREE(0.00)[3];
 	 DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	 DKIM_TRACE(0.00)[suse.de:+];
-	 MX_GOOD(-0.01)[];
 	 RCPT_COUNT_SEVEN(0.00)[8];
 	 MID_CONTAINS_FROM(1.00)[];
-	 DBL_BLOCKED_OPENRESOLVER(0.00)[lst.de:email,suse.de:dkim,suse.de:email];
+	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email];
 	 FUZZY_BLOCKED(0.00)[rspamd.com];
 	 FROM_EQ_ENVFROM(0.00)[];
 	 MIME_TRACE(0.00)[0:+];
 	 RCVD_TLS_ALL(0.00)[];
-	 BAYES_HAM(-1.64)[92.74%]
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spam-Score: 3.05
-X-Rspamd-Queue-Id: BAFE61FB61
-X-Spam-Level: ***
+	 BAYES_HAM(-3.00)[100.00%]
+X-Spam-Level: *
+X-Spam-Score: 1.90
 X-Spam-Flag: NO
-X-Spamd-Bar: +++
 
-There is no point in retrying to connect if the authentication fails.
+The life time of the controller is managed by the upper layers.
 
-Connection refused is also issued from the authentication path, thus
-also do not retry.
+Thus just ref counting the controller when creating it and giving the
+ref back on the cleanup path. This is how the other transport are
+managed as well.
 
-Reviewed-by: Christoph Hellwig <hch@lst.de>
+In fact we don't really need the ref count for nvme_fc_ctrl at this
+point. Though, the FC transport is offloading the connect attempt to a
+workqueue and in the next patch we introduce a sync option for which the
+ref counter is necessary. So let's keep it around.
+
+We have also to reorder the cleanup code in nvme_fc_delete_ctrl and
+nvme_fc_free_ctrl so that we do not expose resources too long and run
+into use after free situations which are currently possible.
+
 Signed-off-by: Daniel Wagner <dwagner@suse.de>
 ---
- drivers/nvme/host/fc.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/nvme/host/fc.c | 101 +++++++++++++----------------------------
+ 1 file changed, 32 insertions(+), 69 deletions(-)
 
 diff --git a/drivers/nvme/host/fc.c b/drivers/nvme/host/fc.c
-index a5b29e9ad342..b81046c9f171 100644
+index ddbc5b21af5b..7627d10a5812 100644
 --- a/drivers/nvme/host/fc.c
 +++ b/drivers/nvme/host/fc.c
-@@ -3312,6 +3312,8 @@ nvme_fc_reconnect_or_delete(struct nvme_fc_ctrl *ctrl, int status)
- 			ctrl->cnum, status);
- 		if (status > 0 && (status & NVME_SC_DNR))
- 			recon = false;
-+		if (status == NVME_SC_AUTH_REQUIRED || status == -ECONNREFUSED)
-+			recon = false;
- 	} else if (time_after_eq(jiffies, rport->dev_loss_end))
- 		recon = false;
+@@ -229,6 +229,9 @@ static struct device *fc_udev_device;
  
+ static void nvme_fc_complete_rq(struct request *rq);
+ 
++static void nvme_fc_ctrl_put(struct nvme_fc_ctrl *);
++static int nvme_fc_ctrl_get(struct nvme_fc_ctrl *);
++
+ /* *********************** FC-NVME Port Management ************************ */
+ 
+ static void __nvme_fc_delete_hw_queue(struct nvme_fc_ctrl *,
+@@ -800,7 +803,7 @@ nvme_fc_ctrl_connectivity_loss(struct nvme_fc_ctrl *ctrl)
+ 			dev_warn(ctrl->ctrl.device,
+ 				"NVME-FC{%d}: Couldn't schedule reset.\n",
+ 				ctrl->cnum);
+-			nvme_delete_ctrl(&ctrl->ctrl);
++			nvme_fc_ctrl_put(ctrl);
+ 		}
+ 		break;
+ 
+@@ -868,7 +871,7 @@ nvme_fc_unregister_remoteport(struct nvme_fc_remote_port *portptr)
+ 			dev_warn(ctrl->ctrl.device,
+ 				"NVME-FC{%d}: controller connectivity lost.\n",
+ 				ctrl->cnum);
+-			nvme_delete_ctrl(&ctrl->ctrl);
++			nvme_fc_ctrl_put(ctrl);
+ 		} else
+ 			nvme_fc_ctrl_connectivity_loss(ctrl);
+ 	}
+@@ -1022,9 +1025,6 @@ fc_dma_unmap_sg(struct device *dev, struct scatterlist *sg, int nents,
+ 
+ /* *********************** FC-NVME LS Handling **************************** */
+ 
+-static void nvme_fc_ctrl_put(struct nvme_fc_ctrl *);
+-static int nvme_fc_ctrl_get(struct nvme_fc_ctrl *);
+-
+ static void nvme_fc_error_recovery(struct nvme_fc_ctrl *ctrl, char *errmsg);
+ 
+ static void
+@@ -1511,8 +1511,6 @@ nvme_fc_match_disconn_ls(struct nvme_fc_rport *rport,
+ 	spin_lock_irqsave(&rport->lock, flags);
+ 
+ 	list_for_each_entry(ctrl, &rport->ctrl_list, ctrl_list) {
+-		if (!nvme_fc_ctrl_get(ctrl))
+-			continue;
+ 		spin_lock(&ctrl->lock);
+ 		if (association_id == ctrl->association_id) {
+ 			oldls = ctrl->rcv_disconn;
+@@ -1520,10 +1518,6 @@ nvme_fc_match_disconn_ls(struct nvme_fc_rport *rport,
+ 			ret = ctrl;
+ 		}
+ 		spin_unlock(&ctrl->lock);
+-		if (ret)
+-			/* leave the ctrl get reference */
+-			break;
+-		nvme_fc_ctrl_put(ctrl);
+ 	}
+ 
+ 	spin_unlock_irqrestore(&rport->lock, flags);
+@@ -1602,9 +1596,6 @@ nvme_fc_ls_disconnect_assoc(struct nvmefc_ls_rcv_op *lsop)
+ 	/* fail the association */
+ 	nvme_fc_error_recovery(ctrl, "Disconnect Association LS received");
+ 
+-	/* release the reference taken by nvme_fc_match_disconn_ls() */
+-	nvme_fc_ctrl_put(ctrl);
+-
+ 	return false;
+ }
+ 
+@@ -2071,7 +2062,6 @@ nvme_fc_fcpio_done(struct nvmefc_fcp_req *req)
+ 		__nvme_fc_fcpop_chk_teardowns(ctrl, op, opstate);
+ 		atomic_set(&op->state, FCPOP_STATE_IDLE);
+ 		op->flags = FCOP_FLAGS_AEN;	/* clear other flags */
+-		nvme_fc_ctrl_put(ctrl);
+ 		goto check_error;
+ 	}
+ 
+@@ -2383,37 +2373,18 @@ nvme_fc_init_io_queues(struct nvme_fc_ctrl *ctrl)
+ }
+ 
+ static void
+-nvme_fc_ctrl_free(struct kref *ref)
++nvme_fc_ctrl_delete(struct kref *ref)
+ {
+ 	struct nvme_fc_ctrl *ctrl =
+ 		container_of(ref, struct nvme_fc_ctrl, ref);
+-	unsigned long flags;
+-
+-	if (ctrl->ctrl.tagset)
+-		nvme_remove_io_tag_set(&ctrl->ctrl);
+-
+-	/* remove from rport list */
+-	spin_lock_irqsave(&ctrl->rport->lock, flags);
+-	list_del(&ctrl->ctrl_list);
+-	spin_unlock_irqrestore(&ctrl->rport->lock, flags);
+-
+-	nvme_unquiesce_admin_queue(&ctrl->ctrl);
+-	nvme_remove_admin_tag_set(&ctrl->ctrl);
+ 
+-	kfree(ctrl->queues);
+-
+-	put_device(ctrl->dev);
+-	nvme_fc_rport_put(ctrl->rport);
+-
+-	ida_free(&nvme_fc_ctrl_cnt, ctrl->cnum);
+-	nvmf_ctrl_options_put(ctrl->ctrl.opts);
+-	kfree(ctrl);
++	nvme_delete_ctrl(&ctrl->ctrl);
+ }
+ 
+ static void
+ nvme_fc_ctrl_put(struct nvme_fc_ctrl *ctrl)
+ {
+-	kref_put(&ctrl->ref, nvme_fc_ctrl_free);
++	kref_put(&ctrl->ref, nvme_fc_ctrl_delete);
+ }
+ 
+ static int
+@@ -2431,9 +2402,20 @@ nvme_fc_free_ctrl(struct nvme_ctrl *nctrl)
+ {
+ 	struct nvme_fc_ctrl *ctrl = to_fc_ctrl(nctrl);
+ 
+-	WARN_ON(nctrl != &ctrl->ctrl);
+ 
+-	nvme_fc_ctrl_put(ctrl);
++	if (ctrl->ctrl.tagset)
++		nvme_remove_io_tag_set(&ctrl->ctrl);
++
++	nvme_unquiesce_admin_queue(&ctrl->ctrl);
++	nvme_remove_admin_tag_set(&ctrl->ctrl);
++
++	kfree(ctrl->queues);
++	put_device(ctrl->dev);
++	nvme_fc_rport_put(ctrl->rport);
++
++	ida_free(&nvme_fc_ctrl_cnt, ctrl->cnum);
++	nvmf_ctrl_options_put(ctrl->ctrl.opts);
++	kfree(ctrl);
+ }
+ 
+ /*
+@@ -2682,9 +2664,6 @@ nvme_fc_start_fcp_op(struct nvme_fc_ctrl *ctrl, struct nvme_fc_queue *queue,
+ 	if (ctrl->rport->remoteport.port_state != FC_OBJSTATE_ONLINE)
+ 		return BLK_STS_RESOURCE;
+ 
+-	if (!nvme_fc_ctrl_get(ctrl))
+-		return BLK_STS_IOERR;
+-
+ 	/* format the FC-NVME CMD IU and fcp_req */
+ 	cmdiu->connection_id = cpu_to_be64(queue->connection_id);
+ 	cmdiu->data_len = cpu_to_be32(data_len);
+@@ -2729,7 +2708,6 @@ nvme_fc_start_fcp_op(struct nvme_fc_ctrl *ctrl, struct nvme_fc_queue *queue,
+ 		ret = nvme_fc_map_data(ctrl, op->rq, op);
+ 		if (ret < 0) {
+ 			nvme_cleanup_cmd(op->rq);
+-			nvme_fc_ctrl_put(ctrl);
+ 			if (ret == -ENOMEM || ret == -EAGAIN)
+ 				return BLK_STS_RESOURCE;
+ 			return BLK_STS_IOERR;
+@@ -2770,8 +2748,6 @@ nvme_fc_start_fcp_op(struct nvme_fc_ctrl *ctrl, struct nvme_fc_queue *queue,
+ 			nvme_cleanup_cmd(op->rq);
+ 		}
+ 
+-		nvme_fc_ctrl_put(ctrl);
+-
+ 		if (ctrl->rport->remoteport.port_state == FC_OBJSTATE_ONLINE &&
+ 				ret != -EBUSY)
+ 			return BLK_STS_IOERR;
+@@ -2855,7 +2831,6 @@ nvme_fc_complete_rq(struct request *rq)
+ 
+ 	nvme_fc_unmap_data(ctrl, rq, op);
+ 	nvme_complete_rq(rq);
+-	nvme_fc_ctrl_put(ctrl);
+ }
+ 
+ static void nvme_fc_map_queues(struct blk_mq_tag_set *set)
+@@ -3284,9 +3259,16 @@ static void
+ nvme_fc_delete_ctrl(struct nvme_ctrl *nctrl)
+ {
+ 	struct nvme_fc_ctrl *ctrl = to_fc_ctrl(nctrl);
++	unsigned long flags;
+ 
+ 	cancel_work_sync(&ctrl->ioerr_work);
+ 	cancel_delayed_work_sync(&ctrl->connect_work);
++
++	/* remove from rport list */
++	spin_lock_irqsave(&ctrl->rport->lock, flags);
++	list_del(&ctrl->ctrl_list);
++	spin_unlock_irqrestore(&ctrl->rport->lock, flags);
++
+ 	/*
+ 	 * kill the association on the link side.  this will block
+ 	 * waiting for io to terminate
+@@ -3344,7 +3326,7 @@ nvme_fc_reconnect_or_delete(struct nvme_fc_ctrl *ctrl, int status)
+ 				ctrl->cnum, min_t(int, portptr->dev_loss_tmo,
+ 					(ctrl->ctrl.opts->max_reconnects *
+ 					 ctrl->ctrl.opts->reconnect_delay)));
+-		WARN_ON(nvme_delete_ctrl(&ctrl->ctrl));
++		nvme_fc_ctrl_put(ctrl);
+ 	}
+ }
+ 
+@@ -3582,25 +3564,7 @@ nvme_fc_init_ctrl(struct device *dev, struct nvmf_ctrl_options *opts,
+ 	return &ctrl->ctrl;
+ 
+ fail_ctrl:
+-	nvme_change_ctrl_state(&ctrl->ctrl, NVME_CTRL_DELETING);
+-	cancel_work_sync(&ctrl->ioerr_work);
+-	cancel_work_sync(&ctrl->ctrl.reset_work);
+-	cancel_delayed_work_sync(&ctrl->connect_work);
+-
+-	/* initiate nvme ctrl ref counting teardown */
+-	nvme_uninit_ctrl(&ctrl->ctrl);
+-
+-	/* Remove core ctrl ref. */
+-	nvme_put_ctrl(&ctrl->ctrl);
+-
+-	/* as we're past the point where we transition to the ref
+-	 * counting teardown path, if we return a bad pointer here,
+-	 * the calling routine, thinking it's prior to the
+-	 * transition, will do an rport put. Since the teardown
+-	 * path also does a rport put, we do an extra get here to
+-	 * so proper order/teardown happens.
+-	 */
+-	nvme_fc_rport_get(rport);
++	nvme_fc_ctrl_put(ctrl);
+ 
+ 	return ERR_PTR(-EIO);
+ 
+@@ -3614,6 +3578,7 @@ nvme_fc_init_ctrl(struct device *dev, struct nvmf_ctrl_options *opts,
+ out_free_ctrl:
+ 	kfree(ctrl);
+ out_fail:
++	nvme_fc_rport_put(rport);
+ 	/* exit via here doesn't follow ctlr ref points */
+ 	return ERR_PTR(ret);
+ }
+@@ -3724,8 +3689,6 @@ nvme_fc_create_ctrl(struct device *dev, struct nvmf_ctrl_options *opts)
+ 			spin_unlock_irqrestore(&nvme_fc_lock, flags);
+ 
+ 			ctrl = nvme_fc_init_ctrl(dev, opts, lport, rport);
+-			if (IS_ERR(ctrl))
+-				nvme_fc_rport_put(rport);
+ 			return ctrl;
+ 		}
+ 	}
+@@ -3950,7 +3913,7 @@ nvme_fc_delete_controllers(struct nvme_fc_rport *rport)
+ 		dev_warn(ctrl->ctrl.device,
+ 			"NVME-FC{%d}: transport unloading: deleting ctrl\n",
+ 			ctrl->cnum);
+-		nvme_delete_ctrl(&ctrl->ctrl);
++		nvme_fc_ctrl_put(ctrl);
+ 	}
+ 	spin_unlock(&rport->lock);
+ }
 -- 
 2.43.1
 
