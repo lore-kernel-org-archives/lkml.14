@@ -1,194 +1,108 @@
-Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
+Received: from mail-yw1-f174.google.com (mail-yw1-f174.google.com [209.85.128.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7536A44C87
-	for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 09:28:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5237445977
+	for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 09:28:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708507716; cv=none; b=JYV2wxi2A9UQIm0oTkNdfUulRZTeGFOJRDlmmgUluL7jE055qDhB1t3VPaI7rCCnOYFsAbP3hDqUAh6u45y3PwtQSIpX7E/oZ31HzSQID+k+j/yHxbqm8BV5DxJDxHqdDnw9qFMfjo68XkY4h4C9ij4MRZWw2ueGv5vsXSCu4eE=
+	t=1708507717; cv=none; b=HmJWcBuXwGyVM59xAxELDJLUmf2GvxpOWQ8dbJNJV0y2rnzX6TwJXd5M39gn6PSikT23l5h/XC06v6/apn1yRTcRQ9KyjlPkNh7WpqI9uwXY98GkPa1P/e7QF8sFbDT2MLtsL0ZvvK9LdnnpOsP0NR1XCylvjzLVip4BuI+HKjg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708507716; c=relaxed/simple;
-	bh=y3l6dLLVoW+zZGDnp8+WIzn6h/rf6TYI4bFoLk/AKw0=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=bYp2NIqhRZZFFlIDQ0qjdh5grTqXyR9Seba6KTDrlPMrVHLAWo3+Yf/0ecn1199YDa3XEX3R3d+5q/RLkvIItA4gHNO6SnPCOK3JfwnN6/WN7KcnMhIEjWU2ZTRHyKS2bt6LG2YspfDJEf1/h93xLldL8VFnpqWWCqLBkcqRRhk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--davidgow.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=WbBofezc; arc=none smtp.client-ip=209.85.219.202
+	s=arc-20240116; t=1708507717; c=relaxed/simple;
+	bh=Hq8KJ6FUW+dUn5EF4x4k+Yc0eSHWRUNZYxQmVAAMYJc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=mo/XZQTQHiYSRLWeOMAnHoBCudeE134z05VwCPJsr9NVDC2h77pJ9Ryi8RME4HBMaYDEeZaRRTsNMtI3eC5bWg0s0QC7FRzIJ883uKK/vRPIGn5E9JaeY61Rnr+bwvUdDvQIuGKXiSuplkzml9bdo5BXWymNonGFd4YUhLbQXEY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=CeCAWyFr; arc=none smtp.client-ip=209.85.128.174
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--davidgow.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WbBofezc"
-Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-dc6ade10cb8so13005254276.0
-        for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 01:28:33 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="CeCAWyFr"
+Received: by mail-yw1-f174.google.com with SMTP id 00721157ae682-60818d338bfso34852097b3.0
+        for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 01:28:36 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1708507712; x=1709112512; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=bJ5a/DjWOVsBkmci+JDRuU6kR6Brs0uJ/9gc+PKy6/o=;
-        b=WbBofezc/zbUoWWzsm77lShJjGHoXacAxiZ2p4FKNJMq33qgtckTErhjKeJ692KjE8
-         Df4IBMsG/nvUFXtymbwtwpNx2N4K8N6HXUcAGmvET02hQIFr7E2SuKbDtvUgTwg4BAI2
-         FRP+ChVGmdjOuNpVoTQ++qB03LrgfHplPymTB48M7ei5BJ6pBIZu7lmodVUZkZ31V7CI
-         8TG6FCFveAiGCZtO0Z2/I5G0Mbu+QybUPwbOGdJzi7twoQQO06o7n8q7hB2i+cQOKw1H
-         dnfPr/O+nJ9oJ9WXrT9nBKPVGKGtd0lnpKDMxn+oZYHYIT2tGfB/Fqa1wQHcU34kBYy8
-         PLEA==
+        d=google.com; s=20230601; t=1708507715; x=1709112515; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Hq8KJ6FUW+dUn5EF4x4k+Yc0eSHWRUNZYxQmVAAMYJc=;
+        b=CeCAWyFrEP23vabvzE9+4zzalLAR+p93QODZQ9HwjaqT451oHESJm3T3jyCJ3m5bOW
+         mrbi3cbXF8JCNgEXFceTnb8MinIWXVWUPnSSoQMvEp/1YWTew6so6vjUubC12nzj4BXR
+         3PWq1ulo7IBO3sTQ76GQeYG2gTJi2rmOuG1T3QLSJvmlErbBWEiJDc0foghpHrSDIFtu
+         qjtPRfjKA+2CeXyrN+cmNPJRNnJOr3F24d1oXQRHfdZotXTnX4V/MMQQyWROklIBB7Oz
+         Y4nRsvnAQD/dcvt6ac9OndehZLsxIEoxqDjMj25CAGxsQFRewZiJdYt6Pi1Vom7nHEDK
+         jpKQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708507712; x=1709112512;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=bJ5a/DjWOVsBkmci+JDRuU6kR6Brs0uJ/9gc+PKy6/o=;
-        b=jpWQPiEvg7lb7BI2dE1/81Hp/aebgvn5ZcI/Z9+0orgA5p+Gd14w971Ez3SFXgBFkH
-         OWg0HYjPGIkIwUxqTUUZ+EYUaMyZZjW0pv2vP5KkOpOJN3/K6uy3vOIP1W049mtqWbau
-         lRoBm+kvC4xErjDkdEmwndoLSfngo3b40eltdnhCQ3LUR8jaOGmyEnZsLG0wpy/4I6Q8
-         /3ji4Aj/jVHBKUsOoEvBtZ9rUcpGiV4xUSbbw1V/ulYe0xOzkTL8cCHap5N9DKS5anxx
-         aG6bLWjb57D7jC4WjPp6VghhVmJ5aMKvmb8ZDNykqJEG8PGkWAXDhfLxqtMQqxCobDTX
-         eFqg==
-X-Forwarded-Encrypted: i=1; AJvYcCVOHzTW0CwmmjQ1Qvo7U4BbUm077+K09zt2DsZ9jXoNZRUYF2rgSj5cEx4UgUINoEty/qlwfmzAWhWP3RoygOhTToJbfYLj0BxRd521
-X-Gm-Message-State: AOJu0YxQlp9/c0b0dVDBqigGdO0gJkJmnz6HpE+sJD/hsfHvCkuu9BDt
-	NsFdrYk8LUeC0UOxwEbK9eEX8oyLczRW8Ih5mOaMduv3CvvvpUJs+9D0t+esSgdJTg4Pk6ftxYE
-	8WtaAIPUxQA==
-X-Google-Smtp-Source: AGHT+IGGnV8a4VQV8ckgYhdSC+moSz25Q0LZNkggi3KHg0lKbDC7oV4HVzTEvYLgrd72xK+9aVEkald37xppwg==
-X-Received: from slicestar.c.googlers.com ([fda3:e722:ac3:cc00:4f:4b78:c0a8:20a1])
- (user=davidgow job=sendgmr) by 2002:a25:eb07:0:b0:dc6:b7c2:176e with SMTP id
- d7-20020a25eb07000000b00dc6b7c2176emr3756666ybs.4.1708507712541; Wed, 21 Feb
- 2024 01:28:32 -0800 (PST)
-Date: Wed, 21 Feb 2024 17:27:20 +0800
-In-Reply-To: <20240221092728.1281499-1-davidgow@google.com>
+        d=1e100.net; s=20230601; t=1708507715; x=1709112515;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Hq8KJ6FUW+dUn5EF4x4k+Yc0eSHWRUNZYxQmVAAMYJc=;
+        b=iMFRSpkmQ4hJNoO11ZtKa2rDbJ2xQRmUZhboBaVhiEc6N3LIOJy5XqaeCfKEgM8fau
+         YDYOr7jVATI49/i27Mf7R88fF75cg6KZ4nr7o0+3R6qSrKuwG1XVdPmU/dMbaJ4pR6xb
+         HmTFUEEAqY6jeFr1x1KKLa3vU7WdBG/l6VHVJXgpIoQ0Bs0iYGvP19ZCxsKjKrHlqMAd
+         5q2HPDOOzfvSpdV7TNd/W2aqmyE+DosXiupsqfr1EdraAZZCCgzqrbwCerMdpJHNDVh+
+         Y/5EgRY5KhF1R/PC40cb4Zj0lJ9rzZubT4L5EakK7aFBkgrMBvDlBpAfA12XV8JOSHZh
+         BMFg==
+X-Forwarded-Encrypted: i=1; AJvYcCUyW9c6splakWR8UPU+rNwBj1UuB/am3W1EmcvKqhfGBcwQrZNBhOoKJVVrrd9iYKhLffJus3LgjmWF6GzEzUy1qtZuBg+HWYXl8azN
+X-Gm-Message-State: AOJu0Yzrc57aG7UnYynWGOUlXF/HD0bGcbaIje/Q2/Mh5oBpe5ypu0RG
+	VgcCslQAsq3DwjFjw2ft0QWca3TT1vHysY7X2b4fS3WNA42RNMNnsD49GvntB0nzrq+DobPcZIi
+	lji28CpF2IymFFIwyXDqBG55gJZcTM1MS4jm8
+X-Google-Smtp-Source: AGHT+IFVBpH9fLue/cQ4cgz0WNF2n+3fm/CyQ+oI4lMHOKKC2JD3RQlkGlCDrGZ/wN8PXmrbUnhNrhpJUikMVBqoPdc=
+X-Received: by 2002:a0d:e8c7:0:b0:604:dd57:7845 with SMTP id
+ r190-20020a0de8c7000000b00604dd577845mr17964155ywe.2.1708507715007; Wed, 21
+ Feb 2024 01:28:35 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20240221092728.1281499-1-davidgow@google.com>
-X-Mailer: git-send-email 2.44.0.rc0.258.g7320e95886-goog
-Message-ID: <20240221092728.1281499-8-davidgow@google.com>
-Subject: [PATCH 7/9] drm: tests: Fix invalid printf format specifiers in KUnit tests
-From: David Gow <davidgow@google.com>
-To: Linus Torvalds <torvalds@linux-foundation.org>, Shuah Khan <skhan@linuxfoundation.org>, 
-	Guenter Roeck <linux@roeck-us.net>, Rae Moar <rmoar@google.com>, 
-	Matthew Auld <matthew.auld@intel.com>, 
-	Arunpravin Paneer Selvam <arunpravin.paneerselvam@amd.com>, 
-	"=?UTF-8?q?Christian=20K=C3=B6nig?=" <christian.koenig@amd.com>, Kees Cook <keescook@chromium.org>, 
-	"=?UTF-8?q?Ma=C3=ADra=20Canal?=" <mcanal@igalia.com>, Rodrigo Vivi <rodrigo.vivi@intel.com>, 
-	Matthew Brost <matthew.brost@intel.com>, Willem de Bruijn <willemb@google.com>, 
-	Florian Westphal <fw@strlen.de>, Cassio Neri <cassio.neri@gmail.com>, 
-	Javier Martinez Canillas <javierm@redhat.com>, Arthur Grillo <arthur.grillo@usp.br>
-Cc: David Gow <davidgow@google.com>, Brendan Higgins <brendan.higgins@linux.dev>, 
-	Daniel Latypov <dlatypov@google.com>, Stephen Boyd <sboyd@kernel.org>, David Airlie <airlied@gmail.com>, 
-	Maxime Ripard <mripard@kernel.org>, "David S . Miller" <davem@davemloft.net>, 
-	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
-	intel-xe@lists.freedesktop.org, linux-rtc@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com, 
-	linux-hardening@vger.kernel.org, netdev@vger.kernel.org
+MIME-Version: 1.0
+References: <20240208152808.3712149-1-howardyen@google.com>
+ <20240213055426.GA22451@lst.de> <CAJDAHvZGnzKPLaovRcq_Os1Fcixp2o1kY9GFV8VXztrmKahejQ@mail.gmail.com>
+ <20240220055241.GA7554@lst.de>
+In-Reply-To: <20240220055241.GA7554@lst.de>
+From: Howard Yen <howardyen@google.com>
+Date: Wed, 21 Feb 2024 17:27:58 +0800
+Message-ID: <CAJDAHvbOnAvW5f6oJUnuy2_5-vS7uJc13GQSNX_Nc25GJXSp-Q@mail.gmail.com>
+Subject: Re: [PATCH v3] dma-coherent: add support for multi coherent rmems per dev
+To: Christoph Hellwig <hch@lst.de>
+Cc: m.szyprowski@samsung.com, robin.murphy@arm.com, gregkh@linuxfoundation.org, 
+	andriy.shevchenko@linux.intel.com, rafael@kernel.org, broonie@kernel.org, 
+	james@equiv.tech, james.clark@arm.com, masahiroy@kernel.org, 
+	linux-kernel@vger.kernel.org, iommu@lists.linux.dev
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The drm_buddy_test's alloc_contiguous test used a u64 for the page size,
-which was then updated to be an 'unsigned long' to avoid 64-bit
-multiplication division helpers.
+On Tue, Feb 20, 2024 at 1:52=E2=80=AFPM Christoph Hellwig <hch@lst.de> wrot=
+e:
+>
+> On Mon, Feb 19, 2024 at 07:12:18PM +0800, Howard Yen wrote:
+> > I tried to upload the patch to support multiple coherent rmems per devi=
+ce
+> > because in some system, the primary memory space for the device might
+> > be limited, so that add multiple coherent rmems support per device to s=
+atisfy
+> > the scenario.
+>
+> I'm not sure what the means.
+>
+> If you have non-trivial patches you really need to explain why you're
+> doing in detail as you need to convince maintainers that it is useful.
 
-However, the variable is logged by some KUNIT_ASSERT_EQ_MSG() using the
-'%d' or '%llu' format specifiers, the former of which is always wrong,
-and the latter is no longer correct now that ps is no longer a u64. Fix
-these to all use '%lu'.
+Thanks for the response, let me explain more.
 
-Also, drm_mm_test calls KUNIT_FAIL() with an empty string as the
-message. gcc warns if a printf format string is empty (apparently), so
-give these some more detailed error messages, which should be more
-useful anyway.
+The reason why I tried to propose this patch is that in the system I'm
+working on, where the driver utilizes the coherent reserved memory in
+the subsystem for DMA, which has limited memory space as its primary
+usage. During the execution of the driver, there is a possibility of
+encountering memory depletion scenarios with the primary one.
 
-Fixes: a64056bb5a32 ("drm/tests/drm_buddy: add alloc_contiguous test")
-Fixes: fca7526b7d89 ("drm/tests/drm_buddy: fix build failure on 32-bit targets")
-Fixes: fc8d29e298cf ("drm: selftest: convert drm_mm selftest to KUnit")
-Signed-off-by: David Gow <davidgow@google.com>
----
- drivers/gpu/drm/tests/drm_buddy_test.c | 14 +++++++-------
- drivers/gpu/drm/tests/drm_mm_test.c    |  6 +++---
- 2 files changed, 10 insertions(+), 10 deletions(-)
+To address this issue, I tried to create a patch that enables the
+coherent reserved memory driver to support multiple coherent reserved
+memory regions per device. This modification aims to provide the
+driver with the ability to search for memory from a secondary region
+if the primary memory is exhausted, and so on.
 
-diff --git a/drivers/gpu/drm/tests/drm_buddy_test.c b/drivers/gpu/drm/tests/drm_buddy_test.c
-index 8a464f7f4c61..3dbfa3078449 100644
---- a/drivers/gpu/drm/tests/drm_buddy_test.c
-+++ b/drivers/gpu/drm/tests/drm_buddy_test.c
-@@ -55,30 +55,30 @@ static void drm_test_buddy_alloc_contiguous(struct kunit *test)
- 		KUNIT_ASSERT_FALSE_MSG(test,
- 				       drm_buddy_alloc_blocks(&mm, 0, mm_size,
- 							      ps, ps, list, 0),
--				       "buddy_alloc hit an error size=%d\n",
-+				       "buddy_alloc hit an error size=%lu\n",
- 				       ps);
- 	} while (++i < n_pages);
- 
- 	KUNIT_ASSERT_TRUE_MSG(test, drm_buddy_alloc_blocks(&mm, 0, mm_size,
- 							   3 * ps, ps, &allocated,
- 							   DRM_BUDDY_CONTIGUOUS_ALLOCATION),
--			       "buddy_alloc didn't error size=%d\n", 3 * ps);
-+			       "buddy_alloc didn't error size=%lu\n", 3 * ps);
- 
- 	drm_buddy_free_list(&mm, &middle);
- 	KUNIT_ASSERT_TRUE_MSG(test, drm_buddy_alloc_blocks(&mm, 0, mm_size,
- 							   3 * ps, ps, &allocated,
- 							   DRM_BUDDY_CONTIGUOUS_ALLOCATION),
--			       "buddy_alloc didn't error size=%llu\n", 3 * ps);
-+			       "buddy_alloc didn't error size=%lu\n", 3 * ps);
- 	KUNIT_ASSERT_TRUE_MSG(test, drm_buddy_alloc_blocks(&mm, 0, mm_size,
- 							   2 * ps, ps, &allocated,
- 							   DRM_BUDDY_CONTIGUOUS_ALLOCATION),
--			       "buddy_alloc didn't error size=%llu\n", 2 * ps);
-+			       "buddy_alloc didn't error size=%lu\n", 2 * ps);
- 
- 	drm_buddy_free_list(&mm, &right);
- 	KUNIT_ASSERT_TRUE_MSG(test, drm_buddy_alloc_blocks(&mm, 0, mm_size,
- 							   3 * ps, ps, &allocated,
- 							   DRM_BUDDY_CONTIGUOUS_ALLOCATION),
--			       "buddy_alloc didn't error size=%llu\n", 3 * ps);
-+			       "buddy_alloc didn't error size=%lu\n", 3 * ps);
- 	/*
- 	 * At this point we should have enough contiguous space for 2 blocks,
- 	 * however they are never buddies (since we freed middle and right) so
-@@ -87,13 +87,13 @@ static void drm_test_buddy_alloc_contiguous(struct kunit *test)
- 	KUNIT_ASSERT_FALSE_MSG(test, drm_buddy_alloc_blocks(&mm, 0, mm_size,
- 							    2 * ps, ps, &allocated,
- 							    DRM_BUDDY_CONTIGUOUS_ALLOCATION),
--			       "buddy_alloc hit an error size=%d\n", 2 * ps);
-+			       "buddy_alloc hit an error size=%lu\n", 2 * ps);
- 
- 	drm_buddy_free_list(&mm, &left);
- 	KUNIT_ASSERT_FALSE_MSG(test, drm_buddy_alloc_blocks(&mm, 0, mm_size,
- 							    3 * ps, ps, &allocated,
- 							    DRM_BUDDY_CONTIGUOUS_ALLOCATION),
--			       "buddy_alloc hit an error size=%d\n", 3 * ps);
-+			       "buddy_alloc hit an error size=%lu\n", 3 * ps);
- 
- 	total = 0;
- 	list_for_each_entry(block, &allocated, link)
-diff --git a/drivers/gpu/drm/tests/drm_mm_test.c b/drivers/gpu/drm/tests/drm_mm_test.c
-index 1eb0c304f960..f37c0d765865 100644
---- a/drivers/gpu/drm/tests/drm_mm_test.c
-+++ b/drivers/gpu/drm/tests/drm_mm_test.c
-@@ -157,7 +157,7 @@ static void drm_test_mm_init(struct kunit *test)
- 
- 	/* After creation, it should all be one massive hole */
- 	if (!assert_one_hole(test, &mm, 0, size)) {
--		KUNIT_FAIL(test, "");
-+		KUNIT_FAIL(test, "mm not one hole on creation");
- 		goto out;
- 	}
- 
-@@ -171,14 +171,14 @@ static void drm_test_mm_init(struct kunit *test)
- 
- 	/* After filling the range entirely, there should be no holes */
- 	if (!assert_no_holes(test, &mm)) {
--		KUNIT_FAIL(test, "");
-+		KUNIT_FAIL(test, "mm has holes when filled");
- 		goto out;
- 	}
- 
- 	/* And then after emptying it again, the massive hole should be back */
- 	drm_mm_remove_node(&tmp);
- 	if (!assert_one_hole(test, &mm, 0, size)) {
--		KUNIT_FAIL(test, "");
-+		KUNIT_FAIL(test, "mm does not have single hole after emptying");
- 		goto out;
- 	}
- 
--- 
-2.44.0.rc0.258.g7320e95886-goog
+--
+Regards,
 
+Howard
