@@ -1,100 +1,122 @@
-Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC5EF3B781
-	for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 09:04:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFB8E3C493
+	for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 09:06:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708506261; cv=none; b=uFYVNCA/bb5tyfoQsTRp0831SJKeQvMTVHnygvFLqiLsjdrepLhmqkZAppNdW/vSyxHWBSZ5GuJP3CyfQsniAjS4lkefjLqkpyJ4fmxkv5YWjfAwrR8LEbHwgzPHBAcgfBVKDxauiNY2g3lJbI7Yz08IFARyWqkSpwnicstdvyQ=
+	t=1708506376; cv=none; b=cVAmObVeCc8nxceKq/0kN2+PmKItfeQ7kKJGxHKiFv3tIx9K3V1P6PjOSZoDLKmor+AFf4WeXIXjO7o9d1IL5fll2uYN7ka6+atnxu7D7JB2jx3PCe5X3Zo5GJwk9tTlGkv4BuBi4wGUir5igV5bOD6k3v5LyDpjecWS4SxvEt4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708506261; c=relaxed/simple;
-	bh=Zdda7Z51JmZWl++mrYVxmWkJ9CzTUizlHDqG7DrA8Qo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=BObSEeTsBiziyTLK0OsjsfJhuCc+/Ab+mFncU5Zk1h0j09okPJDmmDdDslD2YNA2uoXn0D+0L2iY5MU6F7BMhxdcTj2RzsSnQMF+MRhlbyqmEaiQ5iSak9pK+JinEcBGLZZWEXQDI+bAiFCZkGgZrcJ7E+7OYddW3Pj9kmZGx5g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=O/SXI0pn; arc=none smtp.client-ip=209.85.221.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1708506376; c=relaxed/simple;
+	bh=0AtunAhm4yop3m4xvmzGd+hzZGncHjxpu0P4GmAnNxo=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=UZ4S318LGdcsmuDth14Bi82WxLcnjWUld8k2cP/OGtmMnne4GKtlgoOlHEEgsbqOhyebPX+o5RJQvKUGs6ux8KvYj5rn/lidVD6AqvGFdcTpUPfARHlrV6ZktX2lxSnAzpfy2eqlR4dE7YIde8jqVHQSDu0SuJ/Wetu+v/RpbP4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=KEmESPwo; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=GHH97aoc; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="O/SXI0pn"
-Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-3394b892691so3473076f8f.1
-        for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 01:04:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1708506258; x=1709111058; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=PiEdifBXlbnyWblY09aSfoICLBbwdqMUIhM217sZ8bg=;
-        b=O/SXI0pneaTLx2kJMf0Mhg2hufkizYbJvvLpwJRUN/LyCKbVnpj8raLayF8IbQswvr
-         DErmIchmPbmdWbKto8NnO7SGZbIEKz+HGCcy2Wff4KQOKTsnofYFEqIlo4FLhF7jQTmQ
-         Nx6s1xYEjNzRoF5DdJPvPaQMOX91kXqR4Dqvijua2EKEagSR+/2/0EoeXhWK2D6DZHZ6
-         rd7ijN0ODNufKdheea4gFNMVqmtImM3vUXCAPR/m0lVF734DtwcIMTHkUBomFPnAtnhE
-         tse0wcw1VZk2mhODLXorRsagqSFAcl2jvUsF2SK375a6qk7HRyJ4LRbBCiUrjhJFJmn+
-         BFNA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708506258; x=1709111058;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=PiEdifBXlbnyWblY09aSfoICLBbwdqMUIhM217sZ8bg=;
-        b=p264SZHlYd2P2wXFd9xha0LfTUqYHbIBrez9hX2j/NaUVsY4E6cTUrtxEj2W7XT/7b
-         bvrKj5z+dRVplGZ6Uevlc0pX5+37k2Tra8A9Ue7AwAq2ai51p8c+IrxfidLSzf3qzPbH
-         mt5nC4h99KDG1f41AZyTq8Ak9f47c/ld91qqRVnTYiUb5IIocOMAwWCR1iGQWfzyJstW
-         rawfMHLNmJ4KYlo5fjsFleRrr7dq2Df0RXSK1G80ZSMa6R5k1jfo0i/pDb00ZaUidCXd
-         CsaVm/4/jKMvhBy6Ztlxs2VK2cn2VSPqR3SgUVu/6qsBvvocV5Xo0xcMk0uL1VnwuLqQ
-         7hsg==
-X-Forwarded-Encrypted: i=1; AJvYcCUG4HE3db4gMywDfS1lsasnLYwQMtpwTMYycTR9myJz2nCyuVa0gxX8tWGYLlnmOsNt6sy4xuq5lIYtPBK/z7OTuukv871/S2v/IsGQ
-X-Gm-Message-State: AOJu0YydHa2gVy9UbV5zTIT/5ZdXJr+i6WxhiJD0tdY6kKJTXSk8T7U2
-	WL+TQa3GVT4wRuf2z1EbkyKAcipS83xU7zrhSrSRtmCgHnthj4+jfeUQ9t53FASudfNil8S4eYe
-	7
-X-Google-Smtp-Source: AGHT+IHUSRlWWbsveuuOuWZDPXOkupYSiALK9CZwYRJSGQcRVc0UBKqwNs5oJrOFSmZTjWE31EBP1w==
-X-Received: by 2002:a5d:5748:0:b0:33d:32f2:dcac with SMTP id q8-20020a5d5748000000b0033d32f2dcacmr9350526wrw.33.1708506257911;
-        Wed, 21 Feb 2024 01:04:17 -0800 (PST)
-Received: from [192.168.10.46] (146725694.box.freepro.com. [130.180.211.218])
-        by smtp.googlemail.com with ESMTPSA id n14-20020a5d420e000000b0033d282c7537sm13626523wrq.23.2024.02.21.01.04.17
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 21 Feb 2024 01:04:17 -0800 (PST)
-Message-ID: <4cbac15d-115b-437d-a622-f9aa40187ddd@linaro.org>
-Date: Wed, 21 Feb 2024 10:04:16 +0100
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="KEmESPwo";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="GHH97aoc"
+From: Anna-Maria Behnsen <anna-maria@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1708506367;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=vneXKeJPs1ClvnSuuOqDrAMvkymNvjYj3Z1H5l2g9Sg=;
+	b=KEmESPwodaFkrKmhUVstJaC78bDPtNz/TfDJM1wMDkyhH3OQr4WPHShzCaRQ2REOUVWJna
+	4uCF9pSWasqFawBs8UhAfbcDP22hl8t2rgR/kVY9g/Tvc7XsYAI/jA4atC/fI9fIhCQFTB
+	CUk0bZme5i6NAPiQIHlTLZhQ0PZNyDQWMAOpdKK4qNIrPV6ZaQUL5oXf/Ji8GN6yR1IJ/V
+	PxMWfVUlguiWWSTeXxyXzbTfsZHTgGa7mqh6uPKuxrG0OuxUtCARP1OKHXUIqg/XFdd73d
+	36AIENSxuwnRmkRzct9rXaHnTRn8WXF9S/oXGrnn79jAsaIsd5Ci0l7XSIjErQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1708506367;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=vneXKeJPs1ClvnSuuOqDrAMvkymNvjYj3Z1H5l2g9Sg=;
+	b=GHH97aocnaVxt5bPD7KsD/FW0E4YZPLwb1A62txKWJjEd5Riz/Ot57Y5J+vogyUreQL9cr
+	HKbTbxelpfjQmZBg==
+To: linux-kernel@vger.kernel.org
+Cc: Peter Zijlstra <peterz@infradead.org>,
+	John Stultz <jstultz@google.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Eric Dumazet <edumazet@google.com>,
+	"Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+	Arjan van de Ven <arjan@infradead.org>,
+	"Paul E . McKenney" <paulmck@kernel.org>,
+	Frederic Weisbecker <frederic@kernel.org>,
+	Rik van Riel <riel@surriel.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Sebastian Siewior <bigeasy@linutronix.de>,
+	Giovanni Gherdovich <ggherdovich@suse.cz>,
+	Lukasz Luba <lukasz.luba@arm.com>,
+	"Gautham R . Shenoy" <gautham.shenoy@amd.com>,
+	Srinivas Pandruvada <srinivas.pandruvada@intel.com>,
+	K Prateek Nayak <kprateek.nayak@amd.com>,
+	Christian Loehle <christian.loehle@arm.com>,
+	Anna-Maria Behnsen <anna-maria@linutronix.de>
+Subject: [PATCH v11 01/20] timers: Restructure get_next_timer_interrupt()
+Date: Wed, 21 Feb 2024 10:05:29 +0100
+Message-Id: <20240221090548.36600-2-anna-maria@linutronix.de>
+In-Reply-To: <20240221090548.36600-1-anna-maria@linutronix.de>
+References: <20240221090548.36600-1-anna-maria@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] clocksource: arm_global_timer: fix non-kernel-doc comment
-Content-Language: en-US
-To: Randy Dunlap <rdunlap@infradead.org>, linux-kernel@vger.kernel.org
-Cc: Patrice Chotard <patrice.chotard@foss.st.com>,
- linux-arm-kernel@lists.infradead.org, Thomas Gleixner <tglx@linutronix.de>
-References: <20240115053641.29129-1-rdunlap@infradead.org>
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-In-Reply-To: <20240115053641.29129-1-rdunlap@infradead.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-On 15/01/2024 06:36, Randy Dunlap wrote:
-> Use a common C comment "/*" instead of a kernel-doc marker "/**"
-> to prevent kernel-doc warnings:
-> 
-> arm_global_timer.c:92: warning: This comment starts with '/**', but isn't a kernel-doc comment. Refer Documentation/doc-guide/kernel-doc.rst
->   * To ensure that updates to comparator value register do not set the
-> arm_global_timer.c:92: warning: missing initial short description on line:
->   * To ensure that updates to comparator value register do not set the
-> 
-> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-> Cc: Patrice Chotard <patrice.chotard@foss.st.com>
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> ---
+get_next_timer_interrupt() contains two parts for the next timer interrupt
+calculation. Those two parts are separated by forwarding the base
+clock. But the second part does not depend on the forwarded base
+clock.
 
-Applied, thanks
+Therefore restructure get_next_timer_interrupt() to keep things together
+which belong together.
 
+No functional change.
+
+Signed-off-by: Anna-Maria Behnsen <anna-maria@linutronix.de>
+Reviewed-by: Frederic Weisbecker <frederic@kernel.org>
+---
+ kernel/time/timer.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/kernel/time/timer.c b/kernel/time/timer.c
+index 352b161113cd..5f21db4fa3ca 100644
+--- a/kernel/time/timer.c
++++ b/kernel/time/timer.c
+@@ -1937,12 +1937,6 @@ u64 get_next_timer_interrupt(unsigned long basej, u64 basem)
+ 	if (base->next_expiry_recalc)
+ 		next_expiry_recalc(base);
+ 
+-	/*
+-	 * We have a fresh next event. Check whether we can forward the
+-	 * base.
+-	 */
+-	__forward_timer_base(base, basej);
+-
+ 	if (base->timers_pending) {
+ 		nextevt = base->next_expiry;
+ 
+@@ -1960,6 +1954,12 @@ u64 get_next_timer_interrupt(unsigned long basej, u64 basem)
+ 		base->next_expiry = nextevt;
+ 	}
+ 
++	/*
++	 * We have a fresh next event. Check whether we can forward the
++	 * base.
++	 */
++	__forward_timer_base(base, basej);
++
+ 	/*
+ 	 * Base is idle if the next event is more than a tick away.
+ 	 *
 -- 
-<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+2.39.2
 
