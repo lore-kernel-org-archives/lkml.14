@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9709A7C6E9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BDC37BB1F
 	for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 14:06:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708524400; cv=none; b=DZWYQsSY4RNB3nArWROv7oJ4c66c090jZ77Dl0AMS8bgH68NknauAIbvDteuWVXX3JCc3PL8hZ5/ArLPzfpev4CVnJ1b+jSOlS/j/zFibGP8jeTK0a1HDAL2YZGIFHwlkBnoZGWXc9EJLChIjBr2aOElCQlkJk+uMT+EED9JXnQ=
+	t=1708524400; cv=none; b=eSw4kGbqugXsgHU2L+Wzt3T7XvstmDeZXc10O+3Bj/Twr+Yk7RR0Rc980EFABjPEC16y0dzYt+UoHEtQ0fmJVa4WRZxhaccDOEQsO9j4Hyg8jdBLnPKoU0EjLZ4T7Xo488Jxr10mr1OB5h6yvK2AF4fb0gs9T206FxOWpgshmi4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1708524400; c=relaxed/simple;
-	bh=8ZvfGh9uyjaSsAfOjwGr/knP7gfKA/kQ4IkMrV52pyQ=;
+	bh=DztiRHPHplzwTpy5XJLWUHrylul+p1viqSinmcRc8nA=;
 	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=CxCe0bkFlJSLUfqu1n7dnZkZAp9etZVjoHnK7y7zGrjB8XB2XHTjXJmnNl9Re5fTG1JkbIBVSG/IWhjWZmAqnOvFLjQjh06sPgcWS36lnWhTU/w74zRGkBS1GtlVag7pReiX3q1tVBNzmbx7zLpZDav3Pes4EuwYNChfmxpH4g8=
+	 Content-Type; b=RA7aUinkpiE5gB3nyjqGSJPMfSVshL95YvqWjc6MFaiyaDplBpBAGxTLrs1RQiL/EzymRekNxbSm98JSAW9HJRqE+ofP/9yI2VCEJCk0DZL3slIGNRKMnJ9SRu14q8s1YOJcnxXXyKV1g5KKNVbIQb1cWXG8HgmYY799esynVMk=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7330AC43390;
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 17147C433B1;
 	Wed, 21 Feb 2024 14:06:40 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.97)
 	(envelope-from <rostedt@goodmis.org>)
-	id 1rcnGu-00000002i8s-2iIu;
+	id 1rcnGu-00000002i7u-1ND7;
 	Wed, 21 Feb 2024 09:08:28 -0500
-Message-ID: <20240221140828.504715799@goodmis.org>
+Message-ID: <20240221140828.188781034@goodmis.org>
 User-Agent: quilt/0.67
-Date: Wed, 21 Feb 2024 09:08:00 -0500
+Date: Wed, 21 Feb 2024 09:07:58 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org
 Cc: Masami Hiramatsu <mhiramat@kernel.org>,
  Mark Rutland <mark.rutland@arm.com>,
  Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
  Andrew Morton <akpm@linux-foundation.org>,
- Tim Chen <tim.c.chen@linux.intel.com>,
- Vincent Donnefort <vdonnefort@google.com>,
- Sven Schnelle <svens@linux.ibm.com>,
- Mete Durlu <meted@linux.ibm.com>
-Subject: [for-next][PATCH 04/11] tracing: Move open coded processing of tgid_map into helper function
+ Linus Torvalds <torvalds@linux-foundation.org>,
+ Christian Brauner <brauner@kernel.org>,
+ Al Viro <viro@ZenIV.linux.org.uk>,
+ Ajay Kaher <ajay.kaher@broadcom.com>
+Subject: [for-next][PATCH 02/11] eventfs: Create eventfs_root_inode to store dentry
 References: <20240221140756.797572998@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -43,88 +43,187 @@ Content-Type: text/plain; charset=UTF-8
 
 From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 
-In preparation of moving the saved_cmdlines logic out of trace.c and into
-trace_sched_switch.c, replace the open coded manipulation of tgid_map in
-set_tracer_flag() into a helper function trace_alloc_tgid_map() so that it
-can be easily moved into trace_sched_switch.c without changing existing
-functions in trace.c.
+Only the root "events" directory stores a dentry. There's no reason to
+hold a dentry pointer for every eventfs_inode as it is never set except
+for the root "events" eventfs_inode.
 
-No functional changes.
+Create a eventfs_root_inode structure that holds the events_dir dentry.
+The "events" eventfs_inode *is* special, let it have its own descriptor.
 
-Link: https://lore.kernel.org/linux-trace-kernel/20240220140703.338116216@goodmis.org
+Link: https://lore.kernel.org/linux-trace-kernel/20240201161617.658992558@goodmis.org
 
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
 Cc: Masami Hiramatsu <mhiramat@kernel.org>
 Cc: Mark Rutland <mark.rutland@arm.com>
 Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Tim Chen <tim.c.chen@linux.intel.com>
-Cc: Vincent Donnefort <vdonnefort@google.com>
-Cc: Sven Schnelle <svens@linux.ibm.com>
-Cc: Mete Durlu <meted@linux.ibm.com>
+Cc: Christian Brauner <brauner@kernel.org>
+Cc: Al Viro <viro@ZenIV.linux.org.uk>
+Cc: Ajay Kaher <ajay.kaher@broadcom.com>
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- kernel/trace/trace.c | 38 +++++++++++++++++++++++---------------
- 1 file changed, 23 insertions(+), 15 deletions(-)
+ fs/tracefs/event_inode.c | 65 +++++++++++++++++++++++++++++++++-------
+ fs/tracefs/internal.h    |  2 --
+ 2 files changed, 55 insertions(+), 12 deletions(-)
 
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index 52faa30e64ed..06c593fc93d0 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -5432,10 +5432,31 @@ int trace_keep_overwrite(struct tracer *tracer, u32 mask, int set)
- 	return 0;
- }
+diff --git a/fs/tracefs/event_inode.c b/fs/tracefs/event_inode.c
+index 9d9c7dc3114b..dc067eeb6387 100644
+--- a/fs/tracefs/event_inode.c
++++ b/fs/tracefs/event_inode.c
+@@ -35,6 +35,17 @@ static DEFINE_MUTEX(eventfs_mutex);
+ /* Choose something "unique" ;-) */
+ #define EVENTFS_FILE_INODE_INO		0x12c4e37
  
--int set_tracer_flag(struct trace_array *tr, unsigned int mask, int enabled)
-+static int trace_alloc_tgid_map(void)
- {
- 	int *map;
- 
-+	if (tgid_map)
-+		return 0;
++struct eventfs_root_inode {
++	struct eventfs_inode		ei;
++	struct dentry			*events_dir;
++};
 +
-+	tgid_map_max = pid_max;
-+	map = kvcalloc(tgid_map_max + 1, sizeof(*tgid_map),
-+		       GFP_KERNEL);
-+	if (!map)
-+		return -ENOMEM;
-+
-+	/*
-+	 * Pairs with smp_load_acquire() in
-+	 * trace_find_tgid_ptr() to ensure that if it observes
-+	 * the tgid_map we just allocated then it also observes
-+	 * the corresponding tgid_map_max value.
-+	 */
-+	smp_store_release(&tgid_map, map);
-+	return 0;
++static struct eventfs_root_inode *get_root_inode(struct eventfs_inode *ei)
++{
++	WARN_ON_ONCE(!ei->is_events);
++	return container_of(ei, struct eventfs_root_inode, ei);
 +}
 +
-+int set_tracer_flag(struct trace_array *tr, unsigned int mask, int enabled)
-+{
- 	if ((mask == TRACE_ITER_RECORD_TGID) ||
- 	    (mask == TRACE_ITER_RECORD_CMD))
- 		lockdep_assert_held(&event_mutex);
-@@ -5458,20 +5479,7 @@ int set_tracer_flag(struct trace_array *tr, unsigned int mask, int enabled)
- 		trace_event_enable_cmd_record(enabled);
+ /* Just try to make something consistent and unique */
+ static int eventfs_dir_ino(struct eventfs_inode *ei)
+ {
+@@ -73,12 +84,18 @@ enum {
+ static void release_ei(struct kref *ref)
+ {
+ 	struct eventfs_inode *ei = container_of(ref, struct eventfs_inode, kref);
++	struct eventfs_root_inode *rei;
  
- 	if (mask == TRACE_ITER_RECORD_TGID) {
--		if (!tgid_map) {
--			tgid_map_max = pid_max;
--			map = kvcalloc(tgid_map_max + 1, sizeof(*tgid_map),
--				       GFP_KERNEL);
--
--			/*
--			 * Pairs with smp_load_acquire() in
--			 * trace_find_tgid_ptr() to ensure that if it observes
--			 * the tgid_map we just allocated then it also observes
--			 * the corresponding tgid_map_max value.
--			 */
--			smp_store_release(&tgid_map, map);
--		}
--		if (!tgid_map) {
-+		if (trace_alloc_tgid_map() < 0) {
- 			tr->trace_flags &= ~TRACE_ITER_RECORD_TGID;
- 			return -ENOMEM;
- 		}
+ 	WARN_ON_ONCE(!ei->is_freed);
+ 
+ 	kfree(ei->entry_attrs);
+ 	kfree_const(ei->name);
+-	kfree_rcu(ei, rcu);
++	if (ei->is_events) {
++		rei = get_root_inode(ei);
++		kfree_rcu(rei, ei.rcu);
++	} else {
++		kfree_rcu(ei, rcu);
++	}
+ }
+ 
+ static inline void put_ei(struct eventfs_inode *ei)
+@@ -408,19 +425,43 @@ static struct dentry *lookup_dir_entry(struct dentry *dentry,
+ 	return NULL;
+ }
+ 
++static inline struct eventfs_inode *init_ei(struct eventfs_inode *ei, const char *name)
++{
++	ei->name = kstrdup_const(name, GFP_KERNEL);
++	if (!ei->name)
++		return NULL;
++	kref_init(&ei->kref);
++	return ei;
++}
++
+ static inline struct eventfs_inode *alloc_ei(const char *name)
+ {
+ 	struct eventfs_inode *ei = kzalloc(sizeof(*ei), GFP_KERNEL);
++	struct eventfs_inode *result;
+ 
+ 	if (!ei)
+ 		return NULL;
+ 
+-	ei->name = kstrdup_const(name, GFP_KERNEL);
+-	if (!ei->name) {
++	result = init_ei(ei, name);
++	if (!result)
+ 		kfree(ei);
++
++	return result;
++}
++
++static inline struct eventfs_inode *alloc_root_ei(const char *name)
++{
++	struct eventfs_root_inode *rei = kzalloc(sizeof(*rei), GFP_KERNEL);
++	struct eventfs_inode *ei;
++
++	if (!rei)
+ 		return NULL;
+-	}
+-	kref_init(&ei->kref);
++
++	rei->ei.is_events = 1;
++	ei = init_ei(&rei->ei, name);
++	if (!ei)
++		kfree(rei);
++
+ 	return ei;
+ }
+ 
+@@ -710,6 +751,7 @@ struct eventfs_inode *eventfs_create_events_dir(const char *name, struct dentry
+ 						int size, void *data)
+ {
+ 	struct dentry *dentry = tracefs_start_creating(name, parent);
++	struct eventfs_root_inode *rei;
+ 	struct eventfs_inode *ei;
+ 	struct tracefs_inode *ti;
+ 	struct inode *inode;
+@@ -722,7 +764,7 @@ struct eventfs_inode *eventfs_create_events_dir(const char *name, struct dentry
+ 	if (IS_ERR(dentry))
+ 		return ERR_CAST(dentry);
+ 
+-	ei = alloc_ei(name);
++	ei = alloc_root_ei(name);
+ 	if (!ei)
+ 		goto fail;
+ 
+@@ -731,10 +773,11 @@ struct eventfs_inode *eventfs_create_events_dir(const char *name, struct dentry
+ 		goto fail;
+ 
+ 	// Note: we have a ref to the dentry from tracefs_start_creating()
+-	ei->events_dir = dentry;
++	rei = get_root_inode(ei);
++	rei->events_dir = dentry;
++
+ 	ei->entries = entries;
+ 	ei->nr_entries = size;
+-	ei->is_events = 1;
+ 	ei->data = data;
+ 
+ 	/* Save the ownership of this directory */
+@@ -845,13 +888,15 @@ void eventfs_remove_dir(struct eventfs_inode *ei)
+  */
+ void eventfs_remove_events_dir(struct eventfs_inode *ei)
+ {
++	struct eventfs_root_inode *rei;
+ 	struct dentry *dentry;
+ 
+-	dentry = ei->events_dir;
++	rei = get_root_inode(ei);
++	dentry = rei->events_dir;
+ 	if (!dentry)
+ 		return;
+ 
+-	ei->events_dir = NULL;
++	rei->events_dir = NULL;
+ 	eventfs_remove_dir(ei);
+ 
+ 	/*
+diff --git a/fs/tracefs/internal.h b/fs/tracefs/internal.h
+index beb3dcd0e434..15c26f9aaad4 100644
+--- a/fs/tracefs/internal.h
++++ b/fs/tracefs/internal.h
+@@ -36,7 +36,6 @@ struct eventfs_attr {
+  * @children:	link list into the child eventfs_inode
+  * @entries:	the array of entries representing the files in the directory
+  * @name:	the name of the directory to create
+- * @events_dir: the dentry of the events directory
+  * @entry_attrs: Saved mode and ownership of the @d_children
+  * @data:	The private data to pass to the callbacks
+  * @attr:	Saved mode and ownership of eventfs_inode itself
+@@ -54,7 +53,6 @@ struct eventfs_inode {
+ 	struct list_head		children;
+ 	const struct eventfs_entry	*entries;
+ 	const char			*name;
+-	struct dentry			*events_dir;
+ 	struct eventfs_attr		*entry_attrs;
+ 	void				*data;
+ 	struct eventfs_attr		attr;
 -- 
 2.43.0
 
