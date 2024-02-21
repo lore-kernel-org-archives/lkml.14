@@ -1,134 +1,454 @@
-Received: from APC01-SG2-obe.outbound.protection.outlook.com (mail-sgaapc01on2084.outbound.protection.outlook.com [40.107.215.84])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 453302B9CE;
-	Wed, 21 Feb 2024 03:01:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.215.84
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708484465; cv=fail; b=lfH+cz1dgSNG+FkPcHw0jwWgXKoHBPlYrJZHL+ZGESqUbAnjgL9xK3F3JWsoLZhmYDboN2KjiNVKnm3Bs5S/ZJs0neb65QjsoJn1EzvF1vAZyJbw9vP59evX/gF+QmlhKDLeZyY4DVRdlvgylgmVzq0fB6N/HGNrrgYefj8Hvfo=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708484465; c=relaxed/simple;
-	bh=C4s6zyipUh9s3Y7UMW9Uv+cFRpRArfixanADyfEpmm4=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=X5C/jt0+CeDmbbh5RdCf93eQd4dZRWW6BuxyZgULAs+7TSa+rqPKkguW/Gs6X8Qa4/ahOiqhs3HezOzqEToV0Zwh+RxppVlto6Lav6bQdbO11vHTyuD9B2QDI/TG/XUNMQ/G5EyRGSf4zn+TrAiJp/MpALm95SIQBQXhQSBPgf4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vivo.com; spf=pass smtp.mailfrom=vivo.com; dkim=pass (2048-bit key) header.d=vivo.com header.i=@vivo.com header.b=B9IoZpZS; arc=fail smtp.client-ip=40.107.215.84
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vivo.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=vivo.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45B872B9D5
+	for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 03:01:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1708484467; cv=none; b=bCChj3e8bCBE2TnmKxd+V6bN5T57ABW8Gnwz/3AmDypy34gCw/nfp4YtRy/EnnUH9wNZHmuXlRHdk6V2SACb+NV5RJ4ZTI8rG6TsooKJmi3ar5CXl7ss7JfU4VQvPwMM8aT3IJ3XZItYAHDdmAmOmippdQdrZLQuNhhAh3MNOkU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1708484467; c=relaxed/simple;
+	bh=4aSQqd3v8b8sxmF1wbx1k+O6G0isQcBWH8qkJ4BH9RU=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=vELu5mfUjJG9cZjA4ljlBezVVk9N0iXYxfIbhCVlVhrp/ZuDPxeNqHUIpc3/Si7nNKRXLY3Wvepvsmr0taRbfhF9n6zUfxSg+0Ohvb2Px6YCjZ4AzMtbAix3mYgmZv+lboJVo1NdXjXAlIY4rKlxb66vv+583ffd37gKK4AUdAQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=blDL4qZF; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=vivo.com header.i=@vivo.com header.b="B9IoZpZS"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=nN1CwohS8aPlL+Fu34uw/S36AOLWeGJMbX/1UZYHkLeoCA5g10rGy49WaLr/Y4a+T6tD67sHyC4JFC9zGaWRBOUn96hlTrioGtLW/kBue2BvOU+uMlYth5PVr/yJVgpKMozO5nbi8hf7koNg8Tm7RKW2LRya7nfd8xcUhtNiIBayMWGNG94VX8iC79KT/odcv7FZHo79ths5XixsWNXfeETAUapU9YcFCzohPjqSVJXyEgIgCZYbIMD5GwXwc/ODyOZhG6LxVX5BTB81NNhNkrsEReqUjUZ8Cxos3rc23uTha+gTVIyyMS3iRw4uzRYq/Te6vKkZsxWe33oTLhc8vQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=C4s6zyipUh9s3Y7UMW9Uv+cFRpRArfixanADyfEpmm4=;
- b=Ae1wRe2vPyJtcT2jgfg6+9eDSd7/LCgxYUDJ+STHfwkp2VXWQw+13yfcnXRbuCuvBD/a2Z4TgMZzIyfwvTJfdn2E16Tbg5dZHYuNmV33Cm03fOumfbmbZF5yuJ7HJUX10/XAyQeuzPMwyWlNPHK4lhuozn7pZ+RKJMoSDb1XqYJPtvWOic8RmCerDDHGdiwqSTiK/H8tc+GuM1Lihkkd4i+6q0snXl2qhAP/nxPS0s/P9XTdPURYghcsRSI/PhnmOmGMEXH6ZV0s1tXQZY9YXMQRqcVZQHYvp5X2D+spA4enTWRZ3ZbPp4TsZua+cXQfplydSjSrwyv8NZe9+D/R+g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=vivo.com; dmarc=pass action=none header.from=vivo.com;
- dkim=pass header.d=vivo.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vivo.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=C4s6zyipUh9s3Y7UMW9Uv+cFRpRArfixanADyfEpmm4=;
- b=B9IoZpZSAERyIs9JJIBKEOvt5qXOitLglvlLHSQB7sTQgyGgz5F5qBMNubRAF4JgB5NQFpkcG4EH4Ac5I+wlRRfVUjbjNDtxbi/65YXyVf2+R93MRbNbz3n7TniufdsCb7tjBVGxFSQRmCB24fasgNbOhAiDCSGOJB7Z0A6kGVV12SIi5zcxXEZFpG2ywPG1/yHcLVMhIVfvZz9FDpsWRg8xZXI52k3aUTgEMiWt7mbS0bwtI/9iXIjhvgdbcrsgXSdb6pFMdC/PkwL0CJaPTsxSlF8CtyyRqAAmalp4DT8pbsXg5rUzVjk1NTCer+gw7qhU8YtdBt6rmW1oLFukrw==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=vivo.com;
-Received: from TYZPR06MB4045.apcprd06.prod.outlook.com (2603:1096:400:21::8)
- by JH0PR06MB6850.apcprd06.prod.outlook.com (2603:1096:990:4d::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7292.34; Wed, 21 Feb
- 2024 03:00:58 +0000
-Received: from TYZPR06MB4045.apcprd06.prod.outlook.com
- ([fe80::8865:1c6c:513:4a68]) by TYZPR06MB4045.apcprd06.prod.outlook.com
- ([fe80::8865:1c6c:513:4a68%6]) with mapi id 15.20.7292.029; Wed, 21 Feb 2024
- 03:00:58 +0000
-Message-ID: <3d4f44ee-f533-446f-a9e6-7f58afc78d65@vivo.com>
-Date: Wed, 21 Feb 2024 11:00:53 +0800
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH -next v6 0/2] Make memory reclamation measurable
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: akpm@linux-foundation.org, mhiramat@kernel.org,
- mathieu.desnoyers@efficios.com, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, linux-mm@kvack.org,
- opensource.kernel@vivo.com
-References: <20240105013607.2868-1-cuibixuan@vivo.com>
- <fac8d079-100e-4b8d-9a35-db8219b28b51@vivo.com>
- <20240220212202.59ddc123@gandalf.local.home>
-From: Bixuan Cui <cuibixuan@vivo.com>
-In-Reply-To: <20240220212202.59ddc123@gandalf.local.home>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: SGBP274CA0010.SGPP274.PROD.OUTLOOK.COM (2603:1096:4:b0::22)
- To TYZPR06MB4045.apcprd06.prod.outlook.com (2603:1096:400:21::8)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="blDL4qZF"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1708484464; x=1740020464;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=4aSQqd3v8b8sxmF1wbx1k+O6G0isQcBWH8qkJ4BH9RU=;
+  b=blDL4qZFDeosQhxJpeKtm9KtODl24CcyKDFKVWcbcEMkxCCcByDcUF5S
+   iUWAvDvy5Ei6hlSUxLq2nKIa6MZMOLt2fOPA/o1l6W0bgbwy9YZvXPZpx
+   DKUUvmy7DHcuIr8IBRT2I+e+HoyIBohkw00IyO1IoZWZcWaCROOGrDrIr
+   60CHiGFOh/NVwtEOQAkPMSEW5uPgx/mef1BRsOcrNMg2QbirKzrtDzYCk
+   HPImpQCxSrPhKG5jtCzCaKpuuALAHjcgCiieNsAKTla/kBsrDJVMOdRQo
+   yrXMKCUlSUY8uPndOrfUCGp2g2smBxiVox/nZbsuZT/SoI1l1amBoDecC
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10990"; a="2495450"
+X-IronPort-AV: E=Sophos;i="6.06,174,1705392000"; 
+   d="scan'208";a="2495450"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Feb 2024 19:01:03 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.06,174,1705392000"; 
+   d="scan'208";a="9634218"
+Received: from lkp-server02.sh.intel.com (HELO 3c78fa4d504c) ([10.239.97.151])
+  by orviesa003.jf.intel.com with ESMTP; 20 Feb 2024 19:00:50 -0800
+Received: from kbuild by 3c78fa4d504c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1rccps-0004xa-0I;
+	Wed, 21 Feb 2024 03:00:15 +0000
+Date: Wed, 21 Feb 2024 10:59:09 +0800
+From: kernel test robot <lkp@intel.com>
+To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: oe-kbuild-all@lists.linux.dev,
+	"Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+	LKML <linux-kernel@vger.kernel.org>
+Subject: [gustavoars:testing/WFAMNAE-next20240215 1/1]
+ drivers/net/ethernet/netronome/nfp/nfd3/../crypto/fw.h:35:59: error:
+ duplicate member 'hdr'
+Message-ID: <202402211012.UFFWsyhQ-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: TYZPR06MB4045:EE_|JH0PR06MB6850:EE_
-X-MS-Office365-Filtering-Correlation-Id: fb9b5497-80c4-4d2f-f539-08dc3289540c
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	bwhVjs2HynftN6KgAKj+ZO6p+XcIAHlnlfSUaVWIPlCFI9TqfPwbzKW0vXHVZRpg9cuXEiq0sNuddzMpVFZgFxRuuwgSgHgar3FgzGYAQqnxsTqOLk8xD1s7RCeilM+SaCorov3igM6US2yFbPPfeqQBR9G6tjd2tR2mrZDBm9LowppnMOj9wq7l1MCN+VCmBK1dMom7iNfVJW2k9g7vWIzpapfa/mqtCfuMYzjvSMOh6hQOMnruXXv3lfHtRN65zyfBehkQCGreECBVnwQuLYGfWA37wa41k+cDsnJIvaGkI8V1Rto8A/Pw2ePlIfRgg3aZsOl9FkmOSunFVq0Yg3i5rApOFwL8vxLXvIUqzWUMGXetzMZvec9l0ruA6ci3XqI2eUMMNtDceZHE03cAsGlbryRdCI9hfLNDSxBpFZynCtJNy0vsYZgGRfRoMLdYaCs61hy3aGlXyE7g/1bPNsQZfGwvC0dqKjssdo09tygaAP1BVGX+FkXVhZfd5MKH07mCQIedW2Bo2hJPxSSF0ZeuOfuFziYoDyOxgbS4BfIGWpcZfigsYcQV1zH8qeiyLZ8/sohI1I1BtxnNsTdAqy/h3g5QSxeReCGR+MQ/oonwUUqenVX5NE66fSKsFDaD
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYZPR06MB4045.apcprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(38350700005);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?UTFTZkVxUzBaZW9yNzZqajVvVXk0RzlRT2crTE12WWs0WU83RUFQSE01SjA1?=
- =?utf-8?B?OFMyNzhIYkorTjJIckVGUkZXWU5zUmV4RHBrN0hPQ2dTSEVPcTl0TWJyUHlO?=
- =?utf-8?B?a2dTQlp2ZWVCeEwrUy96VFdlL08rSjQ1VHZMR1VnZzYrWXRNWndTTno4MEww?=
- =?utf-8?B?MEZ2ZE1SMkV0SkZvaTREcXRMVmZhK0paVG1FSCtjbHJ5M2xPNm9PVlQ4alM2?=
- =?utf-8?B?K0ZTWlZxZVNtVU5zbnlNS1FNUG5tTVU2bFA1ck9YVjh0Skg0NnAwUVI1aGlw?=
- =?utf-8?B?RGs2U1k2bkF1cVdUaStPYU9kOWxKaUJLbDhidXM3MnN4dGRtYWFRUGhLNk9G?=
- =?utf-8?B?c2tQUEFwNklEd1NhVU4yeGU2R3pCVmx4enJRakh3bXZnMzY2QUR6akhFdVd6?=
- =?utf-8?B?U0NQeW5sTjlwaG4yaEZiR0haUElhL1NBVHlncEdkLzJFRGw1MG9GODlMSWFi?=
- =?utf-8?B?U3NaN3BQZWgxUDVBcU1jckVrM0hUUG9WdmlXdExqNFRQeVh2Skd0ajIyYmFQ?=
- =?utf-8?B?UFFjWDM0SUgwV2tQS0h1Y2o4SzVETStTNXArZzN6OFlyUGJSTE16bkRnUkdw?=
- =?utf-8?B?WUpiVjRJbFh0elVTcCtLSU9COUNYL1pWZGhQVzltZjlPQVZPU3pzc2lMbUho?=
- =?utf-8?B?ZGhCYWQxSEFSKzQyS1hNTWtTcDlrWjFpcERGM251b2syUjh3VjRLSE9NYTBU?=
- =?utf-8?B?bzVaejJ0WWtJeUdTRzRJTkR2NzY3WS90QkROR0pLYVgrTjVKam1rR2hyL1VT?=
- =?utf-8?B?aGZZd0NsS1UzUk1yUXZBRzhCVGZZT2cxVzB0Qm5hODg1RUkwYmhNelQvcCtE?=
- =?utf-8?B?dzdYS1R5eit5bVdqMVNiTEtlVVJoL0pFM2N1VmUzVUxYcUZ0OFFHN0hUVXZO?=
- =?utf-8?B?THdKMFZ5QlU4NGZmenlHRmhnODkvc0Y2R1FVaE5BL2dybFJsc1Y0RFhqNm0v?=
- =?utf-8?B?M1gyZjc0L1NGVThhY1NpK2lRalQ2YWlpUlNyQnNCSmtBSzBpRzNxaytHV09l?=
- =?utf-8?B?WWFMK0lqVUhDWndTYko2N01IWFRyZlZZbFMxQ3VhbEZTRTBtMFdST0kxUWov?=
- =?utf-8?B?ZkU1NkNneTRaSnFlOUhlM1FtbFFISGVjaFVleU1HVU1nY1crT3AwUExMcmM2?=
- =?utf-8?B?YytBSU9Rc3o1Z3dYa09qSVhtcWwxay93dkl3UkNBU0QxRkZKZEErS2FUcm9z?=
- =?utf-8?B?QlZCdHZDVnBiOTBHcXFiSHRiL3hOUW9ZQUJGSW9yWCtJZkk3UDF2REcxZ3NR?=
- =?utf-8?B?Yzl2NG9lY3EwekJhV0R4N0tBQmJlMkpTR1d2b3ZwNCtYTlB1UkJuUWZBbDFV?=
- =?utf-8?B?cldUMEJYMG5hTkNkbVBEUXUrNWY3NE1NOTdaSkM4eFcrWU1YUDhSZDJkaGJN?=
- =?utf-8?B?Vm5HNmZETmx3d2E2WWZLUXZTMHZMak4ramVHUXBZL3FwYnhXelNtbkVSclVP?=
- =?utf-8?B?d2hyZElVRTZOYitLWGJNeU4yZWY5VTlnZlQ1Z1IxU3dhenZhWXpaQktuVDZq?=
- =?utf-8?B?bFp0bGJ6QkUvdjZVZnJZY3A4eFVaNFUzRlcrRkNXOENrRnhyWi91RGVubTZv?=
- =?utf-8?B?ZnFvME4wMTRVZm5QRWpxZGdUblV2RXYvVHd6a3hJZjR6Z2ZjVWd5ZnQ0eWZO?=
- =?utf-8?B?cU80Nk1UK29zYkxFVm8wTm1XOVdxUFB3YzRlV2c2REk5bzRVeFFEZEJGSDZ0?=
- =?utf-8?B?RUFiOHpGWTFMU1J5c3V4YkplY004Z0s4K1U4cWdKdVZNeUl4T0lGUC9yNkdJ?=
- =?utf-8?B?TENWazNTeTVoK21KSFdEcFpvTUhzVGFPYS9RS2NXekVYb2dNMXU3VVNOVGVR?=
- =?utf-8?B?STBzSzkvYjZPeXRkVCtYQ2RaNXMzMFRQSnlhbWRtLytHZmtTVm1STUV3cm0r?=
- =?utf-8?B?TWdUV2kxa0llbVZzcXlhQmQwZkpmNzgzYUZLd2YwSjhFRDNpa09vakhYWTZD?=
- =?utf-8?B?RWlQNG9MVTg1cnBjVFVueXVYVHNudUZYQmxiaVlBTnorRy9GNGpRdm5vNHor?=
- =?utf-8?B?L3Y3eTJZWDhTYVowR2hVWG4zSlBieWRhSlRuT3pQbG1JaDdmYVVPL2RWYkk4?=
- =?utf-8?B?WmJ6aEorbW9HYWdVb3BtWTg2Wm9EY3BEMGdkeUViSWNWdU0yZThHT3gvVTN3?=
- =?utf-8?Q?d/oYaU9I+Y+WC7+hS7k3on4wU?=
-X-OriginatorOrg: vivo.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: fb9b5497-80c4-4d2f-f539-08dc3289540c
-X-MS-Exchange-CrossTenant-AuthSource: TYZPR06MB4045.apcprd06.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Feb 2024 03:00:58.3782
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 923e42dc-48d5-4cbe-b582-1a797a6412ed
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: ubbp7UMzb40FKMBVub2tRN47f/KrGFc0TjxnSlWm9nvLXFiED4l3P8pRfu9rXGglUOgmTDbnH/L3PpM9xQtHqA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: JH0PR06MB6850
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/gustavoars/linux.git testing/WFAMNAE-next20240215
+head:   b50c399b249bcb0fdc709e812b4e87519937299d
+commit: 3fedbc527c5726b876207557fb133a5e558c1898 [1/1] treewide: Address -Wflexible-array-member-not-at-end warnings
+config: alpha-allyesconfig (https://download.01.org/0day-ci/archive/20240221/202402211012.UFFWsyhQ-lkp@intel.com/config)
+compiler: alpha-linux-gcc (GCC) 13.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240221/202402211012.UFFWsyhQ-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202402211012.UFFWsyhQ-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+   In file included from include/linux/stddef.h:5,
+                    from include/uapi/linux/posix_types.h:5,
+                    from include/uapi/linux/types.h:14,
+                    from include/linux/types.h:6,
+                    from include/linux/kcsan-checks.h:14,
+                    from include/asm-generic/barrier.h:17,
+                    from arch/alpha/include/asm/barrier.h:21,
+                    from arch/alpha/include/asm/rwonce.h:10,
+                    from include/linux/compiler.h:251,
+                    from include/linux/build_bug.h:5,
+                    from include/linux/container_of.h:5,
+                    from include/linux/list.h:5,
+                    from include/linux/timer.h:5,
+                    from include/linux/netdevice.h:24,
+                    from include/trace/events/xdp.h:8,
+                    from include/linux/bpf_trace.h:5,
+                    from drivers/net/ethernet/netronome/nfp/nfd3/dp.c:4:
+>> drivers/net/ethernet/netronome/nfp/nfd3/../crypto/fw.h:35:59: error: duplicate member 'hdr'
+      35 |         struct_group_tagged(nfp_crypto_req_add_front_hdr, hdr,
+         |                                                           ^~~
+   include/uapi/linux/stddef.h:29:46: note: in definition of macro '__struct_group'
+      29 |                 struct TAG { MEMBERS } ATTRS NAME; \
+         |                                              ^~~~
+   drivers/net/ethernet/netronome/nfp/nfd3/../crypto/fw.h:35:9: note: in expansion of macro 'struct_group_tagged'
+      35 |         struct_group_tagged(nfp_crypto_req_add_front_hdr, hdr,
+         |         ^~~~~~~~~~~~~~~~~~~
+   drivers/net/ethernet/netronome/nfp/nfd3/../crypto/fw.h:36:48: error: duplicate member 'hdr'
+      36 |                             struct nfp_ccm_hdr hdr;
+         |                                                ^~~
+   include/uapi/linux/stddef.h:29:30: note: in definition of macro '__struct_group'
+      29 |                 struct TAG { MEMBERS } ATTRS NAME; \
+         |                              ^~~~~~~
+   drivers/net/ethernet/netronome/nfp/nfd3/../crypto/fw.h:35:9: note: in expansion of macro 'struct_group_tagged'
+      35 |         struct_group_tagged(nfp_crypto_req_add_front_hdr, hdr,
+         |         ^~~~~~~~~~~~~~~~~~~
+>> drivers/net/ethernet/netronome/nfp/nfd3/../crypto/fw.h:37:36: error: duplicate member 'ep_id'
+      37 |                             __be32 ep_id;
+         |                                    ^~~~~
+   include/uapi/linux/stddef.h:29:30: note: in definition of macro '__struct_group'
+      29 |                 struct TAG { MEMBERS } ATTRS NAME; \
+         |                              ^~~~~~~
+   drivers/net/ethernet/netronome/nfp/nfd3/../crypto/fw.h:35:9: note: in expansion of macro 'struct_group_tagged'
+      35 |         struct_group_tagged(nfp_crypto_req_add_front_hdr, hdr,
+         |         ^~~~~~~~~~~~~~~~~~~
+>> drivers/net/ethernet/netronome/nfp/nfd3/../crypto/fw.h:38:32: error: duplicate member 'resv'
+      38 |                             u8 resv[3];
+         |                                ^~~~
+   include/uapi/linux/stddef.h:29:30: note: in definition of macro '__struct_group'
+      29 |                 struct TAG { MEMBERS } ATTRS NAME; \
+         |                              ^~~~~~~
+   drivers/net/ethernet/netronome/nfp/nfd3/../crypto/fw.h:35:9: note: in expansion of macro 'struct_group_tagged'
+      35 |         struct_group_tagged(nfp_crypto_req_add_front_hdr, hdr,
+         |         ^~~~~~~~~~~~~~~~~~~
+>> drivers/net/ethernet/netronome/nfp/nfd3/../crypto/fw.h:39:32: error: duplicate member 'opcode'
+      39 |                             u8 opcode;
+         |                                ^~~~~~
+   include/uapi/linux/stddef.h:29:30: note: in definition of macro '__struct_group'
+      29 |                 struct TAG { MEMBERS } ATTRS NAME; \
+         |                              ^~~~~~~
+   drivers/net/ethernet/netronome/nfp/nfd3/../crypto/fw.h:35:9: note: in expansion of macro 'struct_group_tagged'
+      35 |         struct_group_tagged(nfp_crypto_req_add_front_hdr, hdr,
+         |         ^~~~~~~~~~~~~~~~~~~
+>> drivers/net/ethernet/netronome/nfp/nfd3/../crypto/fw.h:40:32: error: duplicate member 'key_len'
+      40 |                             u8 key_len;
+         |                                ^~~~~~~
+   include/uapi/linux/stddef.h:29:30: note: in definition of macro '__struct_group'
+      29 |                 struct TAG { MEMBERS } ATTRS NAME; \
+         |                              ^~~~~~~
+   drivers/net/ethernet/netronome/nfp/nfd3/../crypto/fw.h:35:9: note: in expansion of macro 'struct_group_tagged'
+      35 |         struct_group_tagged(nfp_crypto_req_add_front_hdr, hdr,
+         |         ^~~~~~~~~~~~~~~~~~~
+>> drivers/net/ethernet/netronome/nfp/nfd3/../crypto/fw.h:41:36: error: duplicate member 'ipver_vlan'
+      41 |                             __be16 ipver_vlan __packed;
+         |                                    ^~~~~~~~~~
+   include/uapi/linux/stddef.h:29:30: note: in definition of macro '__struct_group'
+      29 |                 struct TAG { MEMBERS } ATTRS NAME; \
+         |                              ^~~~~~~
+   drivers/net/ethernet/netronome/nfp/nfd3/../crypto/fw.h:35:9: note: in expansion of macro 'struct_group_tagged'
+      35 |         struct_group_tagged(nfp_crypto_req_add_front_hdr, hdr,
+         |         ^~~~~~~~~~~~~~~~~~~
+>> drivers/net/ethernet/netronome/nfp/nfd3/../crypto/fw.h:42:32: error: duplicate member 'l4_proto'
+      42 |                             u8 l4_proto;
+         |                                ^~~~~~~~
+   include/uapi/linux/stddef.h:29:30: note: in definition of macro '__struct_group'
+      29 |                 struct TAG { MEMBERS } ATTRS NAME; \
+         |                              ^~~~~~~
+   drivers/net/ethernet/netronome/nfp/nfd3/../crypto/fw.h:35:9: note: in expansion of macro 'struct_group_tagged'
+      35 |         struct_group_tagged(nfp_crypto_req_add_front_hdr, hdr,
+         |         ^~~~~~~~~~~~~~~~~~~
+--
+   In file included from include/linux/stddef.h:5,
+                    from include/uapi/linux/posix_types.h:5,
+                    from include/uapi/linux/types.h:14,
+                    from include/linux/types.h:6,
+                    from include/linux/kcsan-checks.h:14,
+                    from include/asm-generic/barrier.h:17,
+                    from arch/alpha/include/asm/barrier.h:21,
+                    from arch/alpha/include/asm/rwonce.h:10,
+                    from include/linux/compiler.h:251,
+                    from include/linux/build_bug.h:5,
+                    from include/linux/container_of.h:5,
+                    from include/linux/list.h:5,
+                    from include/linux/timer.h:5,
+                    from include/linux/netdevice.h:24,
+                    from include/trace/events/xdp.h:8,
+                    from include/linux/bpf_trace.h:5,
+                    from drivers/net/ethernet/netronome/nfp/nfdk/dp.c:4:
+>> drivers/net/ethernet/netronome/nfp/nfdk/../crypto/fw.h:35:59: error: duplicate member 'hdr'
+      35 |         struct_group_tagged(nfp_crypto_req_add_front_hdr, hdr,
+         |                                                           ^~~
+   include/uapi/linux/stddef.h:29:46: note: in definition of macro '__struct_group'
+      29 |                 struct TAG { MEMBERS } ATTRS NAME; \
+         |                                              ^~~~
+   drivers/net/ethernet/netronome/nfp/nfdk/../crypto/fw.h:35:9: note: in expansion of macro 'struct_group_tagged'
+      35 |         struct_group_tagged(nfp_crypto_req_add_front_hdr, hdr,
+         |         ^~~~~~~~~~~~~~~~~~~
+   drivers/net/ethernet/netronome/nfp/nfdk/../crypto/fw.h:36:48: error: duplicate member 'hdr'
+      36 |                             struct nfp_ccm_hdr hdr;
+         |                                                ^~~
+   include/uapi/linux/stddef.h:29:30: note: in definition of macro '__struct_group'
+      29 |                 struct TAG { MEMBERS } ATTRS NAME; \
+         |                              ^~~~~~~
+   drivers/net/ethernet/netronome/nfp/nfdk/../crypto/fw.h:35:9: note: in expansion of macro 'struct_group_tagged'
+      35 |         struct_group_tagged(nfp_crypto_req_add_front_hdr, hdr,
+         |         ^~~~~~~~~~~~~~~~~~~
+>> drivers/net/ethernet/netronome/nfp/nfdk/../crypto/fw.h:37:36: error: duplicate member 'ep_id'
+      37 |                             __be32 ep_id;
+         |                                    ^~~~~
+   include/uapi/linux/stddef.h:29:30: note: in definition of macro '__struct_group'
+      29 |                 struct TAG { MEMBERS } ATTRS NAME; \
+         |                              ^~~~~~~
+   drivers/net/ethernet/netronome/nfp/nfdk/../crypto/fw.h:35:9: note: in expansion of macro 'struct_group_tagged'
+      35 |         struct_group_tagged(nfp_crypto_req_add_front_hdr, hdr,
+         |         ^~~~~~~~~~~~~~~~~~~
+>> drivers/net/ethernet/netronome/nfp/nfdk/../crypto/fw.h:38:32: error: duplicate member 'resv'
+      38 |                             u8 resv[3];
+         |                                ^~~~
+   include/uapi/linux/stddef.h:29:30: note: in definition of macro '__struct_group'
+      29 |                 struct TAG { MEMBERS } ATTRS NAME; \
+         |                              ^~~~~~~
+   drivers/net/ethernet/netronome/nfp/nfdk/../crypto/fw.h:35:9: note: in expansion of macro 'struct_group_tagged'
+      35 |         struct_group_tagged(nfp_crypto_req_add_front_hdr, hdr,
+         |         ^~~~~~~~~~~~~~~~~~~
+>> drivers/net/ethernet/netronome/nfp/nfdk/../crypto/fw.h:39:32: error: duplicate member 'opcode'
+      39 |                             u8 opcode;
+         |                                ^~~~~~
+   include/uapi/linux/stddef.h:29:30: note: in definition of macro '__struct_group'
+      29 |                 struct TAG { MEMBERS } ATTRS NAME; \
+         |                              ^~~~~~~
+   drivers/net/ethernet/netronome/nfp/nfdk/../crypto/fw.h:35:9: note: in expansion of macro 'struct_group_tagged'
+      35 |         struct_group_tagged(nfp_crypto_req_add_front_hdr, hdr,
+         |         ^~~~~~~~~~~~~~~~~~~
+>> drivers/net/ethernet/netronome/nfp/nfdk/../crypto/fw.h:40:32: error: duplicate member 'key_len'
+      40 |                             u8 key_len;
+         |                                ^~~~~~~
+   include/uapi/linux/stddef.h:29:30: note: in definition of macro '__struct_group'
+      29 |                 struct TAG { MEMBERS } ATTRS NAME; \
+         |                              ^~~~~~~
+   drivers/net/ethernet/netronome/nfp/nfdk/../crypto/fw.h:35:9: note: in expansion of macro 'struct_group_tagged'
+      35 |         struct_group_tagged(nfp_crypto_req_add_front_hdr, hdr,
+         |         ^~~~~~~~~~~~~~~~~~~
+>> drivers/net/ethernet/netronome/nfp/nfdk/../crypto/fw.h:41:36: error: duplicate member 'ipver_vlan'
+      41 |                             __be16 ipver_vlan __packed;
+         |                                    ^~~~~~~~~~
+   include/uapi/linux/stddef.h:29:30: note: in definition of macro '__struct_group'
+      29 |                 struct TAG { MEMBERS } ATTRS NAME; \
+         |                              ^~~~~~~
+   drivers/net/ethernet/netronome/nfp/nfdk/../crypto/fw.h:35:9: note: in expansion of macro 'struct_group_tagged'
+      35 |         struct_group_tagged(nfp_crypto_req_add_front_hdr, hdr,
+         |         ^~~~~~~~~~~~~~~~~~~
+>> drivers/net/ethernet/netronome/nfp/nfdk/../crypto/fw.h:42:32: error: duplicate member 'l4_proto'
+      42 |                             u8 l4_proto;
+         |                                ^~~~~~~~
+   include/uapi/linux/stddef.h:29:30: note: in definition of macro '__struct_group'
+      29 |                 struct TAG { MEMBERS } ATTRS NAME; \
+         |                              ^~~~~~~
+   drivers/net/ethernet/netronome/nfp/nfdk/../crypto/fw.h:35:9: note: in expansion of macro 'struct_group_tagged'
+      35 |         struct_group_tagged(nfp_crypto_req_add_front_hdr, hdr,
+         |         ^~~~~~~~~~~~~~~~~~~
+--
+   In file included from include/linux/stddef.h:5,
+                    from include/uapi/linux/posix_types.h:5,
+                    from include/uapi/linux/types.h:14,
+                    from include/linux/types.h:6,
+                    from include/linux/kcsan-checks.h:14,
+                    from include/asm-generic/barrier.h:17,
+                    from arch/alpha/include/asm/barrier.h:21,
+                    from arch/alpha/include/asm/rwonce.h:10,
+                    from include/linux/compiler.h:251,
+                    from include/linux/build_bug.h:5,
+                    from include/linux/bitfield.h:10,
+                    from drivers/net/ethernet/netronome/nfp/nfp_net_common.c:14:
+>> drivers/net/ethernet/netronome/nfp/crypto/fw.h:35:59: error: duplicate member 'hdr'
+      35 |         struct_group_tagged(nfp_crypto_req_add_front_hdr, hdr,
+         |                                                           ^~~
+   include/uapi/linux/stddef.h:29:46: note: in definition of macro '__struct_group'
+      29 |                 struct TAG { MEMBERS } ATTRS NAME; \
+         |                                              ^~~~
+   drivers/net/ethernet/netronome/nfp/crypto/fw.h:35:9: note: in expansion of macro 'struct_group_tagged'
+      35 |         struct_group_tagged(nfp_crypto_req_add_front_hdr, hdr,
+         |         ^~~~~~~~~~~~~~~~~~~
+   drivers/net/ethernet/netronome/nfp/crypto/fw.h:36:48: error: duplicate member 'hdr'
+      36 |                             struct nfp_ccm_hdr hdr;
+         |                                                ^~~
+   include/uapi/linux/stddef.h:29:30: note: in definition of macro '__struct_group'
+      29 |                 struct TAG { MEMBERS } ATTRS NAME; \
+         |                              ^~~~~~~
+   drivers/net/ethernet/netronome/nfp/crypto/fw.h:35:9: note: in expansion of macro 'struct_group_tagged'
+      35 |         struct_group_tagged(nfp_crypto_req_add_front_hdr, hdr,
+         |         ^~~~~~~~~~~~~~~~~~~
+>> drivers/net/ethernet/netronome/nfp/crypto/fw.h:37:36: error: duplicate member 'ep_id'
+      37 |                             __be32 ep_id;
+         |                                    ^~~~~
+   include/uapi/linux/stddef.h:29:30: note: in definition of macro '__struct_group'
+      29 |                 struct TAG { MEMBERS } ATTRS NAME; \
+         |                              ^~~~~~~
+   drivers/net/ethernet/netronome/nfp/crypto/fw.h:35:9: note: in expansion of macro 'struct_group_tagged'
+      35 |         struct_group_tagged(nfp_crypto_req_add_front_hdr, hdr,
+         |         ^~~~~~~~~~~~~~~~~~~
+>> drivers/net/ethernet/netronome/nfp/crypto/fw.h:38:32: error: duplicate member 'resv'
+      38 |                             u8 resv[3];
+         |                                ^~~~
+   include/uapi/linux/stddef.h:29:30: note: in definition of macro '__struct_group'
+      29 |                 struct TAG { MEMBERS } ATTRS NAME; \
+         |                              ^~~~~~~
+   drivers/net/ethernet/netronome/nfp/crypto/fw.h:35:9: note: in expansion of macro 'struct_group_tagged'
+      35 |         struct_group_tagged(nfp_crypto_req_add_front_hdr, hdr,
+         |         ^~~~~~~~~~~~~~~~~~~
+>> drivers/net/ethernet/netronome/nfp/crypto/fw.h:39:32: error: duplicate member 'opcode'
+      39 |                             u8 opcode;
+         |                                ^~~~~~
+   include/uapi/linux/stddef.h:29:30: note: in definition of macro '__struct_group'
+      29 |                 struct TAG { MEMBERS } ATTRS NAME; \
+         |                              ^~~~~~~
+   drivers/net/ethernet/netronome/nfp/crypto/fw.h:35:9: note: in expansion of macro 'struct_group_tagged'
+      35 |         struct_group_tagged(nfp_crypto_req_add_front_hdr, hdr,
+         |         ^~~~~~~~~~~~~~~~~~~
+>> drivers/net/ethernet/netronome/nfp/crypto/fw.h:40:32: error: duplicate member 'key_len'
+      40 |                             u8 key_len;
+         |                                ^~~~~~~
+   include/uapi/linux/stddef.h:29:30: note: in definition of macro '__struct_group'
+      29 |                 struct TAG { MEMBERS } ATTRS NAME; \
+         |                              ^~~~~~~
+   drivers/net/ethernet/netronome/nfp/crypto/fw.h:35:9: note: in expansion of macro 'struct_group_tagged'
+      35 |         struct_group_tagged(nfp_crypto_req_add_front_hdr, hdr,
+         |         ^~~~~~~~~~~~~~~~~~~
+>> drivers/net/ethernet/netronome/nfp/crypto/fw.h:41:36: error: duplicate member 'ipver_vlan'
+      41 |                             __be16 ipver_vlan __packed;
+         |                                    ^~~~~~~~~~
+   include/uapi/linux/stddef.h:29:30: note: in definition of macro '__struct_group'
+      29 |                 struct TAG { MEMBERS } ATTRS NAME; \
+         |                              ^~~~~~~
+   drivers/net/ethernet/netronome/nfp/crypto/fw.h:35:9: note: in expansion of macro 'struct_group_tagged'
+      35 |         struct_group_tagged(nfp_crypto_req_add_front_hdr, hdr,
+         |         ^~~~~~~~~~~~~~~~~~~
+>> drivers/net/ethernet/netronome/nfp/crypto/fw.h:42:32: error: duplicate member 'l4_proto'
+      42 |                             u8 l4_proto;
+         |                                ^~~~~~~~
+   include/uapi/linux/stddef.h:29:30: note: in definition of macro '__struct_group'
+      29 |                 struct TAG { MEMBERS } ATTRS NAME; \
+         |                              ^~~~~~~
+   drivers/net/ethernet/netronome/nfp/crypto/fw.h:35:9: note: in expansion of macro 'struct_group_tagged'
+      35 |         struct_group_tagged(nfp_crypto_req_add_front_hdr, hdr,
+         |         ^~~~~~~~~~~~~~~~~~~
+--
+   In file included from include/linux/stddef.h:5,
+                    from include/uapi/linux/posix_types.h:5,
+                    from include/uapi/linux/types.h:14,
+                    from include/linux/types.h:6,
+                    from include/linux/kcsan-checks.h:14,
+                    from include/asm-generic/barrier.h:17,
+                    from arch/alpha/include/asm/barrier.h:21,
+                    from arch/alpha/include/asm/rwonce.h:10,
+                    from include/linux/compiler.h:251,
+                    from include/linux/build_bug.h:5,
+                    from include/linux/bitfield.h:10,
+                    from drivers/net/ethernet/netronome/nfp/crypto/tls.c:4:
+>> drivers/net/ethernet/netronome/nfp/crypto/fw.h:35:59: error: duplicate member 'hdr'
+      35 |         struct_group_tagged(nfp_crypto_req_add_front_hdr, hdr,
+         |                                                           ^~~
+   include/uapi/linux/stddef.h:29:46: note: in definition of macro '__struct_group'
+      29 |                 struct TAG { MEMBERS } ATTRS NAME; \
+         |                                              ^~~~
+   drivers/net/ethernet/netronome/nfp/crypto/fw.h:35:9: note: in expansion of macro 'struct_group_tagged'
+      35 |         struct_group_tagged(nfp_crypto_req_add_front_hdr, hdr,
+         |         ^~~~~~~~~~~~~~~~~~~
+   drivers/net/ethernet/netronome/nfp/crypto/fw.h:36:48: error: duplicate member 'hdr'
+      36 |                             struct nfp_ccm_hdr hdr;
+         |                                                ^~~
+   include/uapi/linux/stddef.h:29:30: note: in definition of macro '__struct_group'
+      29 |                 struct TAG { MEMBERS } ATTRS NAME; \
+         |                              ^~~~~~~
+   drivers/net/ethernet/netronome/nfp/crypto/fw.h:35:9: note: in expansion of macro 'struct_group_tagged'
+      35 |         struct_group_tagged(nfp_crypto_req_add_front_hdr, hdr,
+         |         ^~~~~~~~~~~~~~~~~~~
+>> drivers/net/ethernet/netronome/nfp/crypto/fw.h:37:36: error: duplicate member 'ep_id'
+      37 |                             __be32 ep_id;
+         |                                    ^~~~~
+   include/uapi/linux/stddef.h:29:30: note: in definition of macro '__struct_group'
+      29 |                 struct TAG { MEMBERS } ATTRS NAME; \
+         |                              ^~~~~~~
+   drivers/net/ethernet/netronome/nfp/crypto/fw.h:35:9: note: in expansion of macro 'struct_group_tagged'
+      35 |         struct_group_tagged(nfp_crypto_req_add_front_hdr, hdr,
+         |         ^~~~~~~~~~~~~~~~~~~
+>> drivers/net/ethernet/netronome/nfp/crypto/fw.h:38:32: error: duplicate member 'resv'
+      38 |                             u8 resv[3];
+         |                                ^~~~
+   include/uapi/linux/stddef.h:29:30: note: in definition of macro '__struct_group'
+      29 |                 struct TAG { MEMBERS } ATTRS NAME; \
+         |                              ^~~~~~~
+   drivers/net/ethernet/netronome/nfp/crypto/fw.h:35:9: note: in expansion of macro 'struct_group_tagged'
+      35 |         struct_group_tagged(nfp_crypto_req_add_front_hdr, hdr,
+         |         ^~~~~~~~~~~~~~~~~~~
+>> drivers/net/ethernet/netronome/nfp/crypto/fw.h:39:32: error: duplicate member 'opcode'
+      39 |                             u8 opcode;
+         |                                ^~~~~~
+   include/uapi/linux/stddef.h:29:30: note: in definition of macro '__struct_group'
+      29 |                 struct TAG { MEMBERS } ATTRS NAME; \
+         |                              ^~~~~~~
+   drivers/net/ethernet/netronome/nfp/crypto/fw.h:35:9: note: in expansion of macro 'struct_group_tagged'
+      35 |         struct_group_tagged(nfp_crypto_req_add_front_hdr, hdr,
+         |         ^~~~~~~~~~~~~~~~~~~
+>> drivers/net/ethernet/netronome/nfp/crypto/fw.h:40:32: error: duplicate member 'key_len'
+      40 |                             u8 key_len;
+         |                                ^~~~~~~
+   include/uapi/linux/stddef.h:29:30: note: in definition of macro '__struct_group'
+      29 |                 struct TAG { MEMBERS } ATTRS NAME; \
+         |                              ^~~~~~~
+   drivers/net/ethernet/netronome/nfp/crypto/fw.h:35:9: note: in expansion of macro 'struct_group_tagged'
+      35 |         struct_group_tagged(nfp_crypto_req_add_front_hdr, hdr,
+         |         ^~~~~~~~~~~~~~~~~~~
+>> drivers/net/ethernet/netronome/nfp/crypto/fw.h:41:36: error: duplicate member 'ipver_vlan'
+      41 |                             __be16 ipver_vlan __packed;
+         |                                    ^~~~~~~~~~
+   include/uapi/linux/stddef.h:29:30: note: in definition of macro '__struct_group'
+      29 |                 struct TAG { MEMBERS } ATTRS NAME; \
+         |                              ^~~~~~~
+   drivers/net/ethernet/netronome/nfp/crypto/fw.h:35:9: note: in expansion of macro 'struct_group_tagged'
+      35 |         struct_group_tagged(nfp_crypto_req_add_front_hdr, hdr,
+         |         ^~~~~~~~~~~~~~~~~~~
+>> drivers/net/ethernet/netronome/nfp/crypto/fw.h:42:32: error: duplicate member 'l4_proto'
+      42 |                             u8 l4_proto;
+         |                                ^~~~~~~~
+   include/uapi/linux/stddef.h:29:30: note: in definition of macro '__struct_group'
+      29 |                 struct TAG { MEMBERS } ATTRS NAME; \
+         |                              ^~~~~~~
+   drivers/net/ethernet/netronome/nfp/crypto/fw.h:35:9: note: in expansion of macro 'struct_group_tagged'
+      35 |         struct_group_tagged(nfp_crypto_req_add_front_hdr, hdr,
+         |         ^~~~~~~~~~~~~~~~~~~
+   drivers/net/ethernet/netronome/nfp/crypto/tls.c: In function 'nfp_net_tls_set_ipv6':
+>> drivers/net/ethernet/netronome/nfp/crypto/tls.c:199:19: error: 'struct nfp_crypto_req_add_front_hdr' has no member named 'key_len'
+     199 |         req->front.key_len += sizeof(struct in6_addr) * 2;
+         |                   ^
+..
 
 
+vim +/hdr +35 drivers/net/ethernet/netronome/nfp/nfd3/../crypto/fw.h
 
-在 2024/2/21 10:22, Steven Rostedt 写道:
-> It's up to the memory management folks to decide on this. -- Steve
-Noted with thanks.
+    33	
+    34	struct nfp_crypto_req_add_front {
+  > 35		struct_group_tagged(nfp_crypto_req_add_front_hdr, hdr,
+  > 36				    struct nfp_ccm_hdr hdr;
+  > 37				    __be32 ep_id;
+  > 38				    u8 resv[3];
+  > 39				    u8 opcode;
+  > 40				    u8 key_len;
+  > 41				    __be16 ipver_vlan __packed;
+  > 42				    u8 l4_proto;
+    43	#define NFP_NET_TLS_NON_ADDR_KEY_LEN	8
+    44		);
+    45		u8 l3_addrs[];
+    46	};
+    47	
 
-Bixuan Cui
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
