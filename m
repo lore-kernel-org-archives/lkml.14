@@ -1,157 +1,163 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 867BA39FF4
-	for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 07:04:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B872039FF5
+	for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 07:06:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708499075; cv=none; b=lFEJleZXmBfF2XauBgEr48IXKh0vfUQ6zJwBgetA2G+E95Mitx8xa+q9pvAo2UQnv13X6LcBehgq1NFFgoP0e2qRK5B37Q2v55wv1HlJeYJB/9EuEDjVE47DdsaD0Da50qBUynyX8lAvxdTmw5KFA9egKZ/f0fxrM9CNwLm3iP0=
+	t=1708499175; cv=none; b=H5hm6711b8b5ZbDnnavJGGuDeGRcF2NYLYQENbbD+Yi96kivfwhlTxxPfcADtOOHdtqZ1HAaWeOJ71md3RSBrkiL9F8ZgSRfVboZ386ZQvTNW6xPTcAmzzvkQKoKl/ZlrHtp1BoRdLJav0F66jixFKQR79ZfP9YaraD0XoW4yxI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708499075; c=relaxed/simple;
-	bh=z8a6adMwHf0zm9CtOjQSKt10MSEpjf4VHNiwglQO3j8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=TAANv/r9n/Itc5hQ2a87B8IRwaI4FPf1fiibJaBG8sAkFQHDc0if0ho9RrmYdURoMp0tQvz9z/5n1bOv6/F99wrcOGriv+zqCMTZ/Kgd29HmIeZEcRE0nf+sTiiutNAnLrZqFn1+xsrdgD70KNODhCRpsXdTJm7g/GtHdEfiS9E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=njhbinh8; arc=none smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1708499175; c=relaxed/simple;
+	bh=ucw1oB/aDQazlCOmBtmTSnqnpwL1CdVmsF+2tTqZ0rY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=BergTVz5ZWSJBQccu/uerSEerzv5sPAvUqAGy4uAiyOG5dFsx1OottCGrrOCUnBltVUOmmZUaz5QDPcLjTtqrSs8h0Dinpdph40WQKPsGMaPPkePZ/tIpy7kFMqHVZdThK59O/K0IA7nzn8JxLELeUlvmQA1HtTg5HIjsohjcnc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=4KxbSolZ; arc=none smtp.client-ip=209.85.214.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="njhbinh8"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1708499073; x=1740035073;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=z8a6adMwHf0zm9CtOjQSKt10MSEpjf4VHNiwglQO3j8=;
-  b=njhbinh8bG2rLUq/2wkwLh7K7se8dBrha8I3IMOzALxT33SZflKuisPy
-   nAQhnnu/z7PVQ9JaA9bG6C4YcbJeyo4tmUoQQ02RYwSHLrao+gCISDgrk
-   ZbS7xinh8+2bFdLJcLYsONQFqMKfnXbOMnWEzcvnsiJaVrpjnQpM6/0se
-   4pFEjXtqp5fXI51CGuZHhhZlPF/eVMA1O0UmWOzmO0YL+OhCxkRsuLGnl
-   0FVQGlYYrHIY8u7/XJJbcOd1Q3+WrX3rnQlZWanOvMl58X8hdFdQSg/D4
-   V/TQ6IELsHVISM1YgUdL3fqBK4slu6QHMPw6x/uLNRffR5bKyP9vgfpXY
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10990"; a="2514553"
-X-IronPort-AV: E=Sophos;i="6.06,175,1705392000"; 
-   d="scan'208";a="2514553"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Feb 2024 23:04:33 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,175,1705392000"; 
-   d="scan'208";a="42519268"
-Received: from zhaohaif-mobl.ccr.corp.intel.com (HELO [10.255.29.32]) ([10.255.29.32])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Feb 2024 23:04:30 -0800
-Message-ID: <2049ec79-b081-4ae2-80d2-50899d461339@linux.intel.com>
-Date: Wed, 21 Feb 2024 15:04:11 +0800
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="4KxbSolZ"
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-1d5ce88b51cso114475ad.0
+        for <linux-kernel@vger.kernel.org>; Tue, 20 Feb 2024 23:06:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1708499173; x=1709103973; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=bnQ/n92FxcTsGaUbm/14SxL77HTAOChffs/GZeezlI0=;
+        b=4KxbSolZ0Wlls8vzYcEsTbS9dS7FCFJOICxchKUBb3CX8MIryLyqNElKzkguY3D7Hr
+         5yBIRCLKhRq/3VKB+feoZ50CeypwwbH+F+YB3GmubIhXvlEVf0ZMjhIAO8SFdUurFcE/
+         C3+fZBzcyM6MArZMhCAa530hXeNWnRsJfx1xTO63PcV2YJgCQ3KzlWVQPijQ9ZuFSEJT
+         Bnw3bA2uEtUfBbhPgGkPL6iFXNhYjbtlYHCtRFB0GglJHMe7PI293EYbNvfCf6IsP7fW
+         WP0CW21K0zzgeluDJYVxzg9LKO7UeNKIf4A3EARhPwm+4HPBMilJah10ISKI8pGcJ0Cx
+         gbjw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708499173; x=1709103973;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=bnQ/n92FxcTsGaUbm/14SxL77HTAOChffs/GZeezlI0=;
+        b=aa78kMlYSgP/eXoAkl4Kl1KQt36DIXW6vhk8pgymR7X8DxtFgKuXQ1ZRie4GOZjnRk
+         AZqdogoev8JaNB2SIecEGf3Ar5wI7vCRK6QCgAoS4upKafmso6BPL63x26MDbSWN/zYA
+         EcRZQMz6YP+r7wGiukDVbOpUSiYDSdb9zo/0pyoJ8P6eIG54kAy7pV69SQg0GOhZvrSe
+         uXED8lShXudRF8UvJtpfC+7SESyaze0Dk7ZBHtGLKp1Gwx0wMaWKWe4C2vVL3KK7ZrsV
+         9R9tAaAdhYFFhAtt6agQopTsrxF33lOWtoTc+UflY4y73Nng/SUMvUEcxj1R0Ze9HCCi
+         J5QA==
+X-Forwarded-Encrypted: i=1; AJvYcCWwwvm0mHXPg/M6Ar4EHmeeyo48HLjOFvLXqGGFVZqH/e7W2OrZJnDa7lfzFf7klZoqSZojP5NdDjQZpb3kxZFDzpOrujD5MH+rALrw
+X-Gm-Message-State: AOJu0YwvXG524sfAo27o1bYCaiAaBXkf174he98W3PAwGmzJP3nj/dvZ
+	jbJ84wKwJSTGDDwNryUXvoYEaccXe8Rj4NUdrVrR8B4qum/M9xygkP1/b2xfOWRDY9zgkvp19ZM
+	IKUGAx2ia64GREQ+oFfbI0DrcqEA6RzfEfDer
+X-Google-Smtp-Source: AGHT+IHFPPu+DxhW/aPfe190vFcQ4Hq7lMas2sRvqOn6GQiiqPZEqapARvFjGyGPHlzY9QX4x3T07OWnp+pQJp1oAyQ=
+X-Received: by 2002:a17:902:c703:b0:1d9:310c:73be with SMTP id
+ p3-20020a170902c70300b001d9310c73bemr109614plp.13.1708499172680; Tue, 20 Feb
+ 2024 23:06:12 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] iommu/vt-d: Use device rbtree in iopf reporting path
-To: Jason Gunthorpe <jgg@ziepe.ca>, Lu Baolu <baolu.lu@linux.intel.com>
-Cc: Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
- Robin Murphy <robin.murphy@arm.com>, Kevin Tian <kevin.tian@intel.com>,
- Huang Jiaqing <jiaqing.huang@intel.com>, iommu@lists.linux.dev,
- linux-kernel@vger.kernel.org
-References: <20240215072249.4465-1-baolu.lu@linux.intel.com>
- <20240215072249.4465-3-baolu.lu@linux.intel.com>
- <20240215175534.GD1299735@ziepe.ca>
-From: Ethan Zhao <haifeng.zhao@linux.intel.com>
-In-Reply-To: <20240215175534.GD1299735@ziepe.ca>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20240221064527.4157979-1-irogers@google.com> <20240221064527.4157979-3-irogers@google.com>
+In-Reply-To: <20240221064527.4157979-3-irogers@google.com>
+From: Ian Rogers <irogers@google.com>
+Date: Tue, 20 Feb 2024 23:05:59 -0800
+Message-ID: <CAP-5=fVoCtm5LoPhtuazZvVFDb74n5kZ+tmUM4XdP1D856kykg@mail.gmail.com>
+Subject: Re: [PATCH v3 3/3] perf stat: Fix metric-only aggregation index
+ 1;115;0c Aggregation index was being computed using the evsel's cpumap which
+ may have a different (typically the same or fewer) entries.
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, Kajol Jain <kjain@linux.ibm.com>, 
+	John Garry <john.g.garry@oracle.com>, Kaige Ye <ye@kaige.org>, 
+	K Prateek Nayak <kprateek.nayak@amd.com>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Cc: Stephane Eranian <eranian@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 2/16/2024 1:55 AM, Jason Gunthorpe wrote:
-> On Thu, Feb 15, 2024 at 03:22:49PM +0800, Lu Baolu wrote:
->> The existing IO page fault handler currently locates the PCI device by
->> calling pci_get_domain_bus_and_slot(). This function searches the list
->> of all PCI devices until the desired device is found. To improve lookup
->> efficiency, a helper function named device_rbtree_find() is introduced
->> to search for the device within the rbtree. Replace
->> pci_get_domain_bus_and_slot() in the IO page fault handling path.
->>
->> Co-developed-by: Huang Jiaqing <jiaqing.huang@intel.com>
->> Signed-off-by: Huang Jiaqing <jiaqing.huang@intel.com>
->> Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
->> ---
->>   drivers/iommu/intel/iommu.h |  1 +
->>   drivers/iommu/intel/iommu.c | 29 +++++++++++++++++++++++++++++
->>   drivers/iommu/intel/svm.c   | 14 ++++++--------
->>   3 files changed, 36 insertions(+), 8 deletions(-)
->>
->> diff --git a/drivers/iommu/intel/iommu.h b/drivers/iommu/intel/iommu.h
->> index 54eeaa8e35a9..f13c228924f8 100644
->> --- a/drivers/iommu/intel/iommu.h
->> +++ b/drivers/iommu/intel/iommu.h
->> @@ -1081,6 +1081,7 @@ void free_pgtable_page(void *vaddr);
->>   void iommu_flush_write_buffer(struct intel_iommu *iommu);
->>   struct iommu_domain *intel_nested_domain_alloc(struct iommu_domain *parent,
->>   					       const struct iommu_user_data *user_data);
->> +struct device *device_rbtree_find(struct intel_iommu *iommu, u16 rid);
->>   
->>   #ifdef CONFIG_INTEL_IOMMU_SVM
->>   void intel_svm_check(struct intel_iommu *iommu);
->> diff --git a/drivers/iommu/intel/iommu.c b/drivers/iommu/intel/iommu.c
->> index 09009d96e553..d92c680bcc96 100644
->> --- a/drivers/iommu/intel/iommu.c
->> +++ b/drivers/iommu/intel/iommu.c
->> @@ -120,6 +120,35 @@ static int device_rid_cmp(struct rb_node *lhs, const struct rb_node *rhs)
->>   	return device_rid_cmp_key(&key, rhs);
->>   }
->>   
->> +/*
->> + * Looks up an IOMMU-probed device using its source ID.
->> + *
->> + * If the device is found:
->> + *  - Increments its reference count.
->> + *  - Returns a pointer to the device.
->> + *  - The caller must call put_device() after using the pointer.
->> + *
->> + * If the device is not found, returns NULL.
->> + */
->> +struct device *device_rbtree_find(struct intel_iommu *iommu, u16 rid)
->> +{
->> +	struct device_domain_info *info;
->> +	struct device *dev = NULL;
->> +	struct rb_node *node;
->> +	unsigned long flags;
->> +
->> +	spin_lock_irqsave(&iommu->device_rbtree_lock, flags);
->> +	node = rb_find(&rid, &iommu->device_rbtree, device_rid_cmp_key);
->> +	if (node) {
->> +		info = rb_entry(node, struct device_domain_info, node);
->> +		dev = info->dev;
->> +		get_device(dev);
-> This get_device() is a bit troubling. It eventually calls into
-> iommu_report_device_fault() which does:
->
-> 	struct dev_iommu *param = dev->iommu;
-
-So far no protection to dev->iommu structure access in generic
-iommu layer between different threads, such as hot removal interrupt &
-iopf handling thread, so we should enhance that in generic iommu code ?
+Sorry, subject got messed up. Will resend.
 
 Thanks,
-Ethan
+Ian
 
+On Tue, Feb 20, 2024 at 10:45=E2=80=AFPM Ian Rogers <irogers@google.com> wr=
+ote:
 >
-> Which is going to explode if the iomm driver release has already
-> happened, which is a precondition to getting to a unref'd struct
-> device.
+> Before:
+> ```
+> $ perf stat --metric-only -A -M memory_bandwidth_total -a sleep 1
 >
-> The driver needs to do something to fence these events during it's
-> release function.
+>  Performance counter stats for 'system wide':
 >
-> If we are already doing that then I'd suggest to drop the get_device
-> and add a big fat comment explaining the special rules about lifetime
-> that are in effect here.
+>        MB/s  memory_bandwidth_total MB/s  memory_bandwidth_total MB/s  me=
+mory_bandwidth_total MB/s  memory_bandwidth_total MB/s  memory_bandwidth_to=
+tal MB/s  memory_bandwidth_total
+> CPU0                            12.8                           0.0       =
+                   12.9                          12.7                      =
+     0.0                          12.6
+> CPU1
 >
-> Otherwise you need to do that barrier rethink the way the locking
-> works..
+>        1.007806367 seconds time elapsed
+> ```
 >
-> Aside from that this looks like a great improvement to me
+> After:
+> ```
+> $ perf stat --metric-only -A -M memory_bandwidth_total -a sleep 1
 >
-> Thanks,
-> Jason
+>  Performance counter stats for 'system wide':
+>
+>        MB/s  memory_bandwidth_total MB/s  memory_bandwidth_total MB/s  me=
+mory_bandwidth_total MB/s  memory_bandwidth_total MB/s  memory_bandwidth_to=
+tal MB/s  memory_bandwidth_total
+> CPU0                            15.4                           0.0       =
+                   15.3                          15.0                      =
+     0.0                          14.9
+> CPU18                            0.0                           0.0       =
+                   13.5                           5.2                      =
+     0.0                          11.9
+>
+>        1.007858736 seconds time elapsed
+> ```
+>
+> Signed-off-by: Ian Rogers <irogers@google.com>                           =
+       |
+> Acked-by: Namhyung Kim <namhyung@kernel.org>
+> ---
+>  tools/perf/util/stat-display.c | 9 +++++++--
+>  1 file changed, 7 insertions(+), 2 deletions(-)
+>
+> diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-displa=
+y.c
+> index ae37395f90c0..bfc1d705f437 100644
+> --- a/tools/perf/util/stat-display.c
+> +++ b/tools/perf/util/stat-display.c
+> @@ -1137,11 +1137,16 @@ static void print_no_aggr_metric(struct perf_stat=
+_config *config,
+>                         u64 ena, run, val;
+>                         double uval;
+>                         struct perf_stat_evsel *ps =3D counter->stats;
+> -                       int aggr_idx =3D perf_cpu_map__idx(evsel__cpus(co=
+unter), cpu);
+> +                       int aggr_idx =3D 0;
+>
+> -                       if (aggr_idx < 0)
+> +                       if (!perf_cpu_map__has(evsel__cpus(counter), cpu)=
+)
+>                                 continue;
+>
+> +                       cpu_aggr_map__for_each_idx(aggr_idx, config->aggr=
+_map) {
+> +                               if (config->aggr_map->map[aggr_idx].cpu.c=
+pu =3D=3D cpu.cpu)
+> +                                       break;
+> +                       }
+> +
+>                         os->evsel =3D counter;
+>                         os->id =3D aggr_cpu_id__cpu(cpu, /*data=3D*/NULL)=
+;
+>                         if (first) {
+> --
+> 2.44.0.rc1.240.g4c46232300-goog
 >
