@@ -1,73 +1,99 @@
-Received: from cloudserver094114.home.pl (cloudserver094114.home.pl [79.96.170.134])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E42EA86AE2;
-	Wed, 21 Feb 2024 20:04:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.96.170.134
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFFA58664C
+	for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 20:10:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708545889; cv=none; b=hWuq6GAgk42sm8zGeI5W5PmOye8zKF1Ds6OXd9XLoTziJ2r6d+29oDZxbhNSzevLL1LMC5cPBBkrPh9U0iT8FRcbiSiDAH0My6GIlt82c3nrUM2lvrtLbkZNIUFP9oLhhFVEdcpbv3nSvpfon0DvdhSm79t6IDlHHoHxMsENvyU=
+	t=1708546213; cv=none; b=OWuN8N3PGacMzrikr4rtNRfVGPWiXYrdVDMXUpRTmobFInDhvz6OrVGCyuEChun9F6Y3VNkT2Al2rVsztg057ek2R97zVOV2mca68vjDi8p0GnPpb3FJGqoMMMK9R4xG6I6Yi3c9E8QIsfh8Q6qMtvvEgBhRLKQn9Bk7w52aE68=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708545889; c=relaxed/simple;
-	bh=h0QDIXkO328md1JVNs9+5Q4VMBdbDuIpCSY5aVTIxVg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=XntpockbxAMYZCTU5gozpp8if7LU3Yw/qjvFxqnhqDz9OTj7av0h6OJH7W2UvC6gZzLOZJ4bCWzjR8775Vm7F3L5zH9AnbNIVASRoHt17ZGn5orK/dgZCskeXXz1V+cjjQxN7SGGmHCuqrtMU42t9LRYCxCBTDXOt19GWUKxQKA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net; spf=pass smtp.mailfrom=rjwysocki.net; arc=none smtp.client-ip=79.96.170.134
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rjwysocki.net
-Received: from localhost (127.0.0.1) (HELO v370.home.net.pl)
- by /usr/run/smtp (/usr/run/postfix/private/idea_relay_lmtp) via UNIX with SMTP (IdeaSmtpServer 5.4.0)
- id 1608f778132f46bd; Wed, 21 Feb 2024 21:04:39 +0100
-Received: from kreacher.localnet (unknown [195.136.19.94])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by cloudserver094114.home.pl (Postfix) with ESMTPSA id 6CBAF66A243;
-	Wed, 21 Feb 2024 21:04:39 +0100 (CET)
-From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To: Linux ACPI <linux-acpi@vger.kernel.org>,
- Jonathan Cameron <jonathan.cameron@huawei.com>
-Cc: LKML <linux-kernel@vger.kernel.org>,
- Mika Westerberg <mika.westerberg@linux.intel.com>,
- "Rafael J. Wysocki" <rafael@kernel.org>,
- "Russell King (Oracle)" <linux@armlinux.org.uk>
-Subject:
- [PATCH v1 0/4] ACPI: scan: Check enabled _STA bit on Bus/Device Checks
-Date: Wed, 21 Feb 2024 20:59:45 +0100
-Message-ID: <4562925.LvFx2qVVIh@kreacher>
+	s=arc-20240116; t=1708546213; c=relaxed/simple;
+	bh=L3FkPxtj10AZibYyxWDOcjvE6vH4PmYfFbcKLrD08oQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=hHAGmBeF+3okjoAJiNF8nI4eJs5gPxRV9rstGxYsG30aotNztnH+ATfmb9tDHVrAJuV3NEuxkBebQ4m93tkq7LyxmzpLVF/LUoPRCT8PGiw9jQ+1lIWSOuD8EkTvh/XPpgLNerEiZxX4yKz/jgHwu1RShXhcKS7ZA7Buz15KTEk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EF62BC433C7;
+	Wed, 21 Feb 2024 20:10:09 +0000 (UTC)
+Date: Wed, 21 Feb 2024 15:11:57 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: "Paul E. McKenney" <paulmck@kernel.org>
+Cc: Ankur Arora <ankur.a.arora@oracle.com>, linux-kernel@vger.kernel.org,
+ tglx@linutronix.de, peterz@infradead.org, torvalds@linux-foundation.org,
+ akpm@linux-foundation.org, luto@kernel.org, bp@alien8.de,
+ dave.hansen@linux.intel.com, hpa@zytor.com, mingo@redhat.com,
+ juri.lelli@redhat.com, vincent.guittot@linaro.org, willy@infradead.org,
+ mgorman@suse.de, jpoimboe@kernel.org, mark.rutland@arm.com,
+ jgross@suse.com, andrew.cooper3@citrix.com, bristot@kernel.org,
+ mathieu.desnoyers@efficios.com, glaubitz@physik.fu-berlin.de,
+ anton.ivanov@cambridgegreys.com, mattst88@gmail.com,
+ krypton@ulrich-teichert.org, David.Laight@aculab.com, richard@nod.at,
+ jon.grimm@amd.com, bharata@amd.com, boris.ostrovsky@oracle.com,
+ konrad.wilk@oracle.com
+Subject: Re: [PATCH 00/30] PREEMPT_AUTO: support lazy rescheduling
+Message-ID: <20240221151157.042c3291@gandalf.local.home>
+In-Reply-To: <8f30ecd8-629b-414e-b6ea-b526b265b592@paulmck-laptop>
+References: <0d4a4eec-ce91-48da-91b6-1708a97edaeb@paulmck-laptop>
+	<871q9dmndg.fsf@oracle.com>
+	<9916c73f-510c-47a6-a9b4-ea6b438e82c0@paulmck-laptop>
+	<87le7lkzj6.fsf@oracle.com>
+	<4bc4ea06-e3e9-4d22-bacf-71cae0ba673d@paulmck-laptop>
+	<0be4df28-99be-41a3-9e24-2b7cfc740b4a@paulmck-laptop>
+	<87r0hbkafi.fsf@oracle.com>
+	<7db5c057-8bd4-4209-8484-3a0f9f3cd02d@paulmck-laptop>
+	<2b735ba4-8081-4ddb-9397-4fe83143d97f@paulmck-laptop>
+	<20240221131901.69c80c47@gandalf.local.home>
+	<8f30ecd8-629b-414e-b6ea-b526b265b592@paulmck-laptop>
+X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="UTF-8"
-X-CLIENT-IP: 195.136.19.94
-X-CLIENT-HOSTNAME: 195.136.19.94
-X-VADE-SPAMSTATE: clean
-X-VADE-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedvledrfedvgddufedvucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecujffqoffgrffnpdggtffipffknecuuegrihhlohhuthemucduhedtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevufffkfgggfgtsehtufertddttdejnecuhfhrohhmpedftfgrfhgrvghlucflrdcuhgihshhotghkihdfuceorhhjfiesrhhjfiihshhotghkihdrnhgvtheqnecuggftrfgrthhtvghrnhepgeffhfdujeelhfdtgeffkeetudfhtefhhfeiteethfekvefgvdfgfeeikeeigfehnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucfkphepudelhedrudefiedrudelrdelgeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeduleehrddufeeirdduledrleegpdhhvghlohepkhhrvggrtghhvghrrdhlohgtrghlnhgvthdpmhgrihhlfhhrohhmpedftfgrfhgrvghlucflrdcuhgihshhotghkihdfuceorhhjfiesrhhjfiihshhotghkihdrnhgvtheqpdhnsggprhgtphhtthhopeeipdhrtghpthhtoheplhhinhhugidqrggtphhisehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepjhhonhgrthhhrghnrdgtrghmvghrohhnsehhuhgrfigvihdrtghomhdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehmihhkrgdrfigvshhtvghrsggvrhhgsehlihhnuhigrdhinhhtvghlrdgtohhmpdhrtghpthhtoheprhgrfhgrvghlsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigsegrrhhmlhhinhhugidrohhrghdruhhk
-X-DCC--Metrics: v370.home.net.pl 1024; Body=6 Fuz1=6 Fuz2=6
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Hi,
+On Wed, 21 Feb 2024 11:41:47 -0800
+"Paul E. McKenney" <paulmck@kernel.org> wrote:
 
-This series adds _STA enabled bit checking for processors (in all cases)
-and for all devices in the Bus Check and Device Check notification handling
-paths.  It does so without any side-effects on non-processor devices, unlike
+> > I wonder if we can just see if the instruction pointer at preemption is at
+> > something that was allocated? That is, if it __is_kernel(addr) returns
+> > false, then we need to do more work. Of course that means modules will also
+> > trigger this. We could check __is_module_text() but that does a bit more
+> > work and may cause too much overhead. But who knows, if the module check is
+> > only done if the __is_kernel() check fails, maybe it's not that bad.  
+> 
+> I do like very much that idea, but it requires that we be able to identify
+> this instruction pointer perfectly, no matter what.  It might also require
+> that we be able to perfectly identify any IRQ return addresses as well,
+> for example, if the preemption was triggered within an interrupt handler.
+> And interrupts from softirq environments might require identifying an
+> additional level of IRQ return address.  The original IRQ might have
+> interrupted a trampoline, and then after transitioning into softirq,
+> another IRQ might also interrupt a trampoline, and this last IRQ handler
+> might have instigated a preemption.
 
-https://lore.kernel.org/linux-acpi/E1rVDmP-0027YJ-EW@rmk-PC.armlinux.org.uk/
+Note, softirqs still require a real interrupt to happen in order to preempt
+executing code. Otherwise it should never be running from a trampoline.
 
-The first patch fixes an issue with failing Device Check notifications
-without a valid reason.
+> 
+> Are there additional levels or mechanisms requiring identifying
+> return addresses?
 
-The next two patches together make Bus Check and Device Check notification
-handling take the enabled bit into account.
+Hmm, could we add to irq_enter_rcu()
 
-The last patch modifies the processor scan handler to check the enabled bit
-it its add callback.
+	__this_cpu_write(__rcu_ip, instruction_pointer(get_irq_regs()));
 
-I would appreciate testing this on a system where the enabled bit really
-matters.
+That is to save off were the ip was when it was interrupted.
 
-Thanks!
+Hmm, but it looks like the get_irq_regs() is set up outside of
+irq_enter_rcu() :-(
 
+I wonder how hard it would be to change all the architectures to pass in
+pt_regs to irq_enter_rcu()? All the places it is called, the regs should be
+available.
 
+Either way, it looks like it will be a bit of work around the trampoline or
+around RCU to get this efficiently done.
 
+-- Steve
