@@ -1,37 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94DFC80C03;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94E3481725;
 	Wed, 21 Feb 2024 16:41:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708533681; cv=none; b=pqZ9hXU0vdleQK5/aJPHU2fgki5UVCc6MAc787N9sV+OTCIbWa/N9RcFPOvNgT14w6FQO1X6ChxQT5ZJib2UPp5VKs1MqetOCFXNzKQ7ZXuxoiGpZUh81Qr8fCymCwo0OE+2ByEy8XiMmYhDebP/TkX70j+H7hRwEEZzgbwN6zw=
+	t=1708533681; cv=none; b=VD5LJd6HXUhmV9ZHBIV8YDA5ZiU/J2IootCzYCM9w8LDWshs3a+sL6shXSJHgJZDVgDE2pJxiew2ZvafAtzkj1EkbhnOd+U5VXzuezwOtI5yRD0ReqvSxiCAWGQTicERz0gBYMMAa4HTm9/MmCF2ahNhl2au0DhwyHvDGMQv9ug=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1708533681; c=relaxed/simple;
-	bh=0Cd+VCIeTdBn+L0SAfWXHlwel79wcGcBBMfeVDyDkyU=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=siM1l36Tm+9Nck6ym/wrsIHBDzuoQZuzQMj1kK33YZdcK049OGSNeMPO4cp/U56eB/SkeeUChV0CThZXFIuybje05+8EkwwnwZCX/9ysRt/y/zvrrMnWIUcJXwWXCY2fZ/f0+9YjOFH0S9NC5t7HcXe2fRo9Nch/LLUZ9Lmwc24=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gc4E77EP; arc=none smtp.client-ip=10.30.226.201
+	bh=OOdaJFALRHGXBd34rb0/0hr6HsgZMzjt0MMlzI7nbpo=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=Fis/XpWfBflFi799/JHh5Dj3gLjHSYhMQ/omFZzaLtkc9oIKbGnwsZw1unVxUKazekFXom8QszIZdFFnWFPi/QRUp3IxQGEdTjgz1ioolXPGxIAIUdRVB6NzHCZvZoOwi89Q5zuFEqpjvJDy03+TMvP0Jd5ATFOgMppTwWyLehA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JsXTxtav; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gc4E77EP"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 2BAFCC433F1;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JsXTxtav"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 5130FC433B2;
 	Wed, 21 Feb 2024 16:41:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1708533681;
-	bh=0Cd+VCIeTdBn+L0SAfWXHlwel79wcGcBBMfeVDyDkyU=;
-	h=From:Subject:Date:To:Cc:Reply-To:From;
-	b=gc4E77EP/syityRCO9eh+MI3qtQQI1ZyGO1F771h8mqI6pwtEZNhUjD1VZmGCztUi
-	 fCzsqMTC9a1WN9qyblVpSzuff6vKDECDE1ajZqxJA/0K+rJfu+XwaGfOQlXkM0HTpc
-	 H2FmjYNbeU6s4rxbiN3LrIrV5sE8fHH5GvnBf8FFUJUfB0lh1r86Lo7AvAiyxBWGP6
-	 r2oJIdH/vOz26yuH03oC+g9LbfAVCTUhuntatK34aD1mR3uNwMQ+t6vkyKlqksUsRM
-	 1HfZvlG3xloMBq+1ZtOf2TN0XVqwg/x99jQvJNr9tKRN3ctzq6EwPlFyDh9jBcOSqp
-	 oL35dR1Sjp7Hg==
+	bh=OOdaJFALRHGXBd34rb0/0hr6HsgZMzjt0MMlzI7nbpo=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+	b=JsXTxtavOh9YB96SwDJXT8tOmpqLYduSmJNt13ik1dPI3l9A5EmqfkwYIZJWCxvap
+	 pG98VlszgbX74x94eMnVvw0sbLWc3VanywNi1g7msfNQp6AZxlhN15GtG5GIhT36zU
+	 tR8OZx8SNQwTQ1/VvcgRP+K5SRgiZPwfGVlkmjsHCMDfc96hNqcItPskECoFNo6ZLF
+	 YT9DJkpCvlox8I2NiT22niQnaJqbVA7mGUOAT8PW3wevkExGzPIX4NTL/9K7StrDfo
+	 6FLit7HOj23+nthCvgVAsrzSrywkqSJ9WqODB3BwZFcewCNVVutObZtQ/JeFv3pWcX
+	 n37N+BUUzz2GQ==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13F91C48BEB;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A285C5478D;
 	Wed, 21 Feb 2024 16:41:21 +0000 (UTC)
 From: Yang Xiwen via B4 Relay <devnull+forbidden405.outlook.com@kernel.org>
-Subject: [PATCH v3 0/8] clk: hisilicon: add support for Hi3798MV200
-Date: Thu, 22 Feb 2024 00:41:03 +0800
-Message-Id: <20240222-clk-mv200-v3-0-f30795b50318@outlook.com>
+Date: Thu, 22 Feb 2024 00:41:06 +0800
+Subject: [PATCH v3 3/8] dt-bindings: clock: histb-clock: split into two
+ header files
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -40,10 +41,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAJ8n1mUC/22Myw6CMBBFf4XM2poykAKu/A/jooyDNDxKWmw0h
- H+3sMLE5bm55yzg2Rn2cEkWcByMN3aMkJ0SoFaPTxbmERlQYi4xVYL6TgwBpRREJWnOKsUsIf4
- nx415763bPXJr/GzdZ0+HdFv/VUIqpNBYaWKsWGXqal9zb213JjvA1gl4dIuji9GtixI551qpp
- vh113X9AjQVmxTgAAAA
+Message-Id: <20240222-clk-mv200-v3-3-f30795b50318@outlook.com>
+References: <20240222-clk-mv200-v3-0-f30795b50318@outlook.com>
+In-Reply-To: <20240222-clk-mv200-v3-0-f30795b50318@outlook.com>
 To: Michael Turquette <mturquette@baylibre.com>, 
  Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>, 
  Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
@@ -52,11 +52,11 @@ Cc: David Yang <mmyangfl@gmail.com>, linux-clk@vger.kernel.org,
  devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
  Yang Xiwen <forbidden405@outlook.com>
 X-Mailer: b4 0.12.4
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1708533664; l=2791;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1708533664; l=6614;
  i=forbidden405@outlook.com; s=20230724; h=from:subject:message-id;
- bh=0Cd+VCIeTdBn+L0SAfWXHlwel79wcGcBBMfeVDyDkyU=;
- b=GjURGN5urv/SOzVTLvxeenBm0J574z/T6mXEfzBgt9GMgy5QkFcgmgwWcHZ0pk5+lS1QPTjRY
- 6g2DfAVEib+Dmu7ccnTmqV1NQYq4fg76jdJq8XYIuppg8AGNU//mV1N
+ bh=Ab+yt1Z4j61f2SvCQw17xUNs7xtNwj+ryECKTVK1L6U=;
+ b=gIgeXOl2ii3cla43jE+nsjS1vg8Yj7E6SEh5D5qAsR6XVhsP9GDpyvjZxWWpkXm+HcNhmIEUK
+ WA6VcFDTRZNDoGjyaqy9tcFCmmFL0pCRxBHBbApKAE6h0UDgnvsi8Am
 X-Developer-Key: i=forbidden405@outlook.com; a=ed25519;
  pk=qOD5jhp891/Xzc+H/PZ8LWVSWE3O/XCQnAg+5vdU2IU=
 X-Endpoint-Received:
@@ -64,60 +64,201 @@ X-Endpoint-Received:
 X-Original-From: Yang Xiwen <forbidden405@outlook.com>
 Reply-To: <forbidden405@outlook.com>
 
-This SoC is similar to Hi3798CV200 with a few more clocks in CRG module.
+From: Yang Xiwen <forbidden405@outlook.com>
 
-Note this driver is still ongoing, many clocks are not registered in the
-driver now. Feedback is welcomed, especially from HiSilicon people.
+The CRG driver between different SoCs provides different clocks and
+resets. We should not provide a generic header file across all HiSTB
+SoCs, instead each CRG driver should provide its own.
+
+Split histb-clock.h into two files: hisilicon,hi3798cv200-crg.h and
+hisilicon,hi3798cv200-sysctrl.h. This header file is for Hi3798CV200
+only actually. For other HiSTB SoCs, some clock definitions are missing.
+
+Create a new histb-clock.h to include these two files for backward
+compatibility only. Deprecate this file as well.
 
 Signed-off-by: Yang Xiwen <forbidden405@outlook.com>
 ---
-Changes in v3:
-- remove RFC (Krzysztof Kozlowski)
-- rearrange patches so dt-binding comes before drivers (Krzysztof Kozlowski)
-- dt-bindings: Remove lots of properties
-- dt-bindings: stop merging all hisi-clock bindings, only convert hisi-crg.txt for now.
-- dt-bindings: remove hisilicon,hisi-sdmmc-dll subnode (Rob Herring, Krzysztof Kozlowski)
-- split histb-clock.h into two files, deprecate this header file
-- fix all users (hi3798cv200.dtsi and hi3798cv200 CRG driver)
-- hi3798mv200-crg: add a few missing clocks
-- Link to v2: https://lore.kernel.org/r/20240217-clk-mv200-v2-0-b782e4eb66f7@outlook.com
+ .../dt-bindings/clock/hisilicon,hi3798cv200-crg.h  | 62 ++++++++++++++++++
+ .../clock/hisilicon,hi3798cv200-sysctrl.h          | 17 +++++
+ include/dt-bindings/clock/histb-clock.h            | 73 +++-------------------
+ 3 files changed, 87 insertions(+), 65 deletions(-)
 
-Changes in v2:
-- s/dt-binding/dt-bindings in commit logs: (Krzysztof Kozlowski)
-- fix bot error by adding "hisilicon,hisi-sdmmc-dll" to syscon.yaml (Rob Herring)
-- hi3798mv200-crg: assign fixed rate parents to some gates
-- hi3798mv200-crg: s/ETH/FEMAC, add GMAC ctrl clock
-- Link to v1: https://lore.kernel.org/r/20240216-clk-mv200-v1-0-a29ace29e636@outlook.com
+diff --git a/include/dt-bindings/clock/hisilicon,hi3798cv200-crg.h b/include/dt-bindings/clock/hisilicon,hi3798cv200-crg.h
+new file mode 100644
+index 000000000000..7c8928192af6
+--- /dev/null
++++ b/include/dt-bindings/clock/hisilicon,hi3798cv200-crg.h
+@@ -0,0 +1,62 @@
++/* SPDX-License-Identifier: GPL-2.0-or-later */
++/*
++ * Copyright (c) 2016 HiSilicon Technologies Co., Ltd.
++ */
++
++#ifndef __DTS_HI3798CV200_CRG_H
++#define __DTS_HI3798CV200_CRG_H
++
++/* clocks provided by core CRG */
++#define HISTB_OSC_CLK			0
++#define HISTB_APB_CLK			1
++#define HISTB_AHB_CLK			2
++#define HISTB_UART1_CLK			3
++#define HISTB_UART2_CLK			4
++#define HISTB_UART3_CLK			5
++#define HISTB_I2C0_CLK			6
++#define HISTB_I2C1_CLK			7
++#define HISTB_I2C2_CLK			8
++#define HISTB_I2C3_CLK			9
++#define HISTB_I2C4_CLK			10
++#define HISTB_I2C5_CLK			11
++#define HISTB_SPI0_CLK			12
++#define HISTB_SPI1_CLK			13
++#define HISTB_SPI2_CLK			14
++#define HISTB_SCI_CLK			15
++#define HISTB_FMC_CLK			16
++#define HISTB_MMC_BIU_CLK		17
++#define HISTB_MMC_CIU_CLK		18
++#define HISTB_MMC_DRV_CLK		19
++#define HISTB_MMC_SAMPLE_CLK		20
++#define HISTB_SDIO0_BIU_CLK		21
++#define HISTB_SDIO0_CIU_CLK		22
++#define HISTB_SDIO0_DRV_CLK		23
++#define HISTB_SDIO0_SAMPLE_CLK		24
++#define HISTB_PCIE_AUX_CLK		25
++#define HISTB_PCIE_PIPE_CLK		26
++#define HISTB_PCIE_SYS_CLK		27
++#define HISTB_PCIE_BUS_CLK		28
++#define HISTB_ETH0_MAC_CLK		29
++#define HISTB_ETH0_MACIF_CLK		30
++#define HISTB_ETH1_MAC_CLK		31
++#define HISTB_ETH1_MACIF_CLK		32
++#define HISTB_COMBPHY1_CLK		33
++#define HISTB_USB2_BUS_CLK		34
++#define HISTB_USB2_PHY_CLK		35
++#define HISTB_USB2_UTMI_CLK		36
++#define HISTB_USB2_12M_CLK		37
++#define HISTB_USB2_48M_CLK		38
++#define HISTB_USB2_OTG_UTMI_CLK		39
++#define HISTB_USB2_PHY1_REF_CLK		40
++#define HISTB_USB2_PHY2_REF_CLK		41
++#define HISTB_COMBPHY0_CLK		42
++#define HISTB_USB3_BUS_CLK		43
++#define HISTB_USB3_UTMI_CLK		44
++#define HISTB_USB3_PIPE_CLK		45
++#define HISTB_USB3_SUSPEND_CLK		46
++#define HISTB_USB3_BUS_CLK1		47
++#define HISTB_USB3_UTMI_CLK1		48
++#define HISTB_USB3_PIPE_CLK1		49
++#define HISTB_USB3_SUSPEND_CLK1		50
++
++#endif	/* __DTS_HI3798CV200_CRG_H */
+diff --git a/include/dt-bindings/clock/hisilicon,hi3798cv200-sysctrl.h b/include/dt-bindings/clock/hisilicon,hi3798cv200-sysctrl.h
+new file mode 100644
+index 000000000000..ca07020e0f8c
+--- /dev/null
++++ b/include/dt-bindings/clock/hisilicon,hi3798cv200-sysctrl.h
+@@ -0,0 +1,17 @@
++/* SPDX-License-Identifier: GPL-2.0-or-later */
++/*
++ * Copyright (c) 2016 HiSilicon Technologies Co., Ltd.
++ */
++
++#ifndef __DTS_HI3798CV200_SYSCTRL_H
++#define __DTS_HI3798CV200_SYSCTRL_H
++
++/* clocks provided by mcu CRG */
++#define HISTB_MCE_CLK			1
++#define HISTB_IR_CLK			2
++#define HISTB_TIMER01_CLK		3
++#define HISTB_LEDC_CLK			4
++#define HISTB_UART0_CLK			5
++#define HISTB_LSADC_CLK			6
++
++#endif	/* __DTS_HI3798CV200_SYSCTRL_H */
+diff --git a/include/dt-bindings/clock/histb-clock.h b/include/dt-bindings/clock/histb-clock.h
+index e64e5770ada6..56b39eb99d2c 100644
+--- a/include/dt-bindings/clock/histb-clock.h
++++ b/include/dt-bindings/clock/histb-clock.h
+@@ -1,70 +1,13 @@
+ /* SPDX-License-Identifier: GPL-2.0-or-later */
+ /*
+- * Copyright (c) 2016 HiSilicon Technologies Co., Ltd.
++ * DEPRECATED
++ *
++ * Each CRG driver should have its own clock number definitions header file.
++ * This file is only reserved for backward compatibility for Hi3798CV200
+  */
+ 
+-#ifndef __DTS_HISTB_CLOCK_H
+-#define __DTS_HISTB_CLOCK_H
++#warning "This header file is deprecated, include hisilicon,hi3798cv200-crg.h \
++and hisilicon,hi3798cv200-sysctrl.h directly instead"
+ 
+-/* clocks provided by core CRG */
+-#define HISTB_OSC_CLK			0
+-#define HISTB_APB_CLK			1
+-#define HISTB_AHB_CLK			2
+-#define HISTB_UART1_CLK			3
+-#define HISTB_UART2_CLK			4
+-#define HISTB_UART3_CLK			5
+-#define HISTB_I2C0_CLK			6
+-#define HISTB_I2C1_CLK			7
+-#define HISTB_I2C2_CLK			8
+-#define HISTB_I2C3_CLK			9
+-#define HISTB_I2C4_CLK			10
+-#define HISTB_I2C5_CLK			11
+-#define HISTB_SPI0_CLK			12
+-#define HISTB_SPI1_CLK			13
+-#define HISTB_SPI2_CLK			14
+-#define HISTB_SCI_CLK			15
+-#define HISTB_FMC_CLK			16
+-#define HISTB_MMC_BIU_CLK		17
+-#define HISTB_MMC_CIU_CLK		18
+-#define HISTB_MMC_DRV_CLK		19
+-#define HISTB_MMC_SAMPLE_CLK		20
+-#define HISTB_SDIO0_BIU_CLK		21
+-#define HISTB_SDIO0_CIU_CLK		22
+-#define HISTB_SDIO0_DRV_CLK		23
+-#define HISTB_SDIO0_SAMPLE_CLK		24
+-#define HISTB_PCIE_AUX_CLK		25
+-#define HISTB_PCIE_PIPE_CLK		26
+-#define HISTB_PCIE_SYS_CLK		27
+-#define HISTB_PCIE_BUS_CLK		28
+-#define HISTB_ETH0_MAC_CLK		29
+-#define HISTB_ETH0_MACIF_CLK		30
+-#define HISTB_ETH1_MAC_CLK		31
+-#define HISTB_ETH1_MACIF_CLK		32
+-#define HISTB_COMBPHY1_CLK		33
+-#define HISTB_USB2_BUS_CLK		34
+-#define HISTB_USB2_PHY_CLK		35
+-#define HISTB_USB2_UTMI_CLK		36
+-#define HISTB_USB2_12M_CLK		37
+-#define HISTB_USB2_48M_CLK		38
+-#define HISTB_USB2_OTG_UTMI_CLK		39
+-#define HISTB_USB2_PHY1_REF_CLK		40
+-#define HISTB_USB2_PHY2_REF_CLK		41
+-#define HISTB_COMBPHY0_CLK		42
+-#define HISTB_USB3_BUS_CLK		43
+-#define HISTB_USB3_UTMI_CLK		44
+-#define HISTB_USB3_PIPE_CLK		45
+-#define HISTB_USB3_SUSPEND_CLK		46
+-#define HISTB_USB3_BUS_CLK1		47
+-#define HISTB_USB3_UTMI_CLK1		48
+-#define HISTB_USB3_PIPE_CLK1		49
+-#define HISTB_USB3_SUSPEND_CLK1		50
+-
+-/* clocks provided by mcu CRG */
+-#define HISTB_MCE_CLK			1
+-#define HISTB_IR_CLK			2
+-#define HISTB_TIMER01_CLK		3
+-#define HISTB_LEDC_CLK			4
+-#define HISTB_UART0_CLK			5
+-#define HISTB_LSADC_CLK			6
+-
+-#endif	/* __DTS_HISTB_CLOCK_H */
++#include "hisilicon,hi3798cv200-crg.h"
++#include "hisilicon,hi3798cv200-sysctrl.h"
 
----
-Yang Xiwen (8):
-      dt-bindings: clock: convert hisi-crg.txt to YAML
-      ARM: dts: hisilicon: add missing compatibles to CRG node
-      dt-bindings: clock: histb-clock: split into two header files
-      arm64: dts: hisilicon: fix include path
-      clk: hisilicon: fix include path for crg-hi3798cv200
-      dt-bindings: clock: hisilicon,clock-reset-controller: add Hi3798MV200 SoC
-      dt-bindings: clock: hisilicon: add clock definitions for Hi3798MV200
-      clk: hisilicon: add CRG driver for Hi3798MV200 SoC
-
- .../bindings/clock/hisilicon,hisi-crg.yaml         |  71 ++++
- arch/arm/boot/dts/hisilicon/hi3519.dtsi            |   2 +-
- arch/arm64/boot/dts/hisilicon/hi3798cv200.dtsi     |   3 +-
- drivers/clk/hisilicon/Kconfig                      |   8 +
- drivers/clk/hisilicon/Makefile                     |   1 +
- drivers/clk/hisilicon/crg-hi3798cv200.c            |   3 +-
- drivers/clk/hisilicon/crg-hi3798mv200.c            | 462 +++++++++++++++++++++
- .../dt-bindings/clock/hisilicon,hi3798cv200-crg.h  |  62 +++
- .../clock/hisilicon,hi3798cv200-sysctrl.h          |  17 +
- .../dt-bindings/clock/hisilicon,hi3798mv200-crg.h  | 150 +++++++
- .../clock/hisilicon,hi3798mv200-sysctrl.h          |  21 +
- include/dt-bindings/clock/histb-clock.h            |  73 +---
- 12 files changed, 805 insertions(+), 68 deletions(-)
----
-base-commit: 8d3dea210042f54b952b481838c1e7dfc4ec751d
-change-id: 20240216-clk-mv200-cc8cae396ee0
-
-Best regards,
 -- 
-Yang Xiwen <forbidden405@outlook.com>
+2.43.0
 
