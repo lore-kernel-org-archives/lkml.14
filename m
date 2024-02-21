@@ -1,56 +1,70 @@
-Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20D5A3B793;
-	Wed, 21 Feb 2024 08:51:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1149E3C6AC;
+	Wed, 21 Feb 2024 08:55:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708505504; cv=none; b=Ul2kZSw0edmbRtFpGVNwaXgTGD0td83a+wIbXSW1KM3ZAAM9Er1Q/Y/qKwT2TisnpBjbC5+eYMuBnZW+VcfX0WYsZGASDGAJRg9K9tqvdXEqpbfF0yZtUNh9XKbgxq2kb0h5cnO69AjmCJ2PMRq2SruLiGQQdT4PW4hOCg00dCk=
+	t=1708505759; cv=none; b=i8zkhNh/HPbUS2Uknl6ChaNkmqPDp4VVF08derbcVZhR6Cn0rcU3FfB8hEDEAon2Vpr2UF1aW7PuogGpvizNoFp+3CKFAl/Dwx4qKZokBrFbv2LZA9cGMuzsq0GwHSRpDUbAICjBO87V2bHLiYjFBXDKCEkkUtE1tq+9bNxjY7c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708505504; c=relaxed/simple;
-	bh=U2xKP1+FG6hj5j28nPiVq6aHy746t6BeNF5UKoKkyV8=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=dtggKT19aFmdAkU2EjX7avjsNWpdLy9Mw2xIQzAAy0ZJpErLjMx/3+Z6SunwVibIWFRDVSb2gyJPwDWUg9MYophUavRlr3d82zTuodpdGnpV2PlM1axjVVcNHk9zfkrqR7ugDI3eo889s0wliyWcbZy+9ZJwfVB+HxSukqqzGeE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=RAIbUh6v; arc=none smtp.client-ip=217.70.183.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1708505759; c=relaxed/simple;
+	bh=4IJYkhebf/F5ri1CLsJ5vB3R5jmFJ8lLNIShqjZVjTo=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=pWEdmdYLiIWA6bRznhDgj8a5ysuuhc1jhHYs9T1snZXojiCZGml6Ka8Zs1roRsmYYERcfRZ6NMQkilZdEa7W7MQBkJaHg4IpCrzR5ubJLMkmPDFprjz2QyMvOQWE7NQSvA4UZOPibMJOX/UiE2lQ8CRIWmJnGTM6QMbBEsT+m90=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mY13FSri; arc=none smtp.client-ip=209.85.167.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="RAIbUh6v"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 27C72FF80B;
-	Wed, 21 Feb 2024 08:51:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1708505499;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ewzG+Or2vfRP7XY3UgnYiV6tCm6wiDunEr+A5LjqZBQ=;
-	b=RAIbUh6vKDDmDDi8DhhbecTdObckBkSaotTDLNFMSD82+GpZQdPnFTyNUG+9KoWw2eerM/
-	/KzfjFYFy8tJWWuB07pnVGxNJ+s7e+5WemC2q958COberQ25Lbhhl908SPRWIMHpI2GRJ8
-	IqHX/pUtpRBLIVh54jA5WgWfBa4BGHCnhA2bBv42Mx+85G98nHILJQqlxSvSxzlndZVKNX
-	cIAErcPer/aV9iFka3EthukZq8c+/WRF7QmAT3LvE7fCSl08mXL3I4nn/lUEjjEFBjZqDh
-	Wg9rAYmFU+VleC4c0cRVHniAv+vguQ2qrYH1Djvive0dYkFjWQWZ1nnkcX9z8g==
-Date: Wed, 21 Feb 2024 09:51:37 +0100
-From: Herve Codina <herve.codina@bootlin.com>
-To: Saravana Kannan <saravanak@google.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki"
- <rafael@kernel.org>, Rob Herring <robh+dt@kernel.org>, Frank Rowand
- <frowand.list@gmail.com>, Shawn Guo <shawnguo@kernel.org>, Wolfram Sang
- <wsa@kernel.org>, Mark Brown <broonie@kernel.org>, Geert Uytterhoeven
- <geert+renesas@glider.be>, Rob Herring <robh@kernel.org>,
- linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Luca Ceresoli
- <luca.ceresoli@bootlin.com>, Thomas Petazzoni
- <thomas.petazzoni@bootlin.com>, stable@vger.kernel.org, Android Kernel Team
- <kernel-team@android.com>
-Subject: Re: [PATCH 2/2] of: property: fw_devlink: Fix links to supplier
- when created from phandles
-Message-ID: <20240221095137.616d2aaa@bootlin.com>
-In-Reply-To: <CAGETcx_xkVJn1NvCmztAv13N-7ZGqZ+KfkFg-Xn__skEBiYtHw@mail.gmail.com>
-References: <20240220111044.133776-1-herve.codina@bootlin.com>
-	<20240220111044.133776-3-herve.codina@bootlin.com>
-	<CAGETcx_xkVJn1NvCmztAv13N-7ZGqZ+KfkFg-Xn__skEBiYtHw@mail.gmail.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.2.0 (GTK 3.24.38; x86_64-redhat-linux-gnu)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mY13FSri"
+Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-512b42b6697so3694133e87.1;
+        Wed, 21 Feb 2024 00:55:57 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1708505756; x=1709110556; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=lWgzr9qm2ixV3STt2Qq+/qGSNGS+7XQCw88w5N997QU=;
+        b=mY13FSrijrMtwrg4Jr8VeFuD6pJpHHreWpFhu+w2d/QNAgCBb59o3MqFPsKxT/fuTM
+         Pps13HjvelKSjfXhnxQYchvrDd3TLkHW0pHmaZop4Ht8s8PgLhq7+gqGihgxenxthLsv
+         zeaf6ZM/LzGqmwf3KCB8quHd2cVe1DuDLwIqo+0b6EqncW11TRT6bqfypVFlmzH+0uQu
+         fpXY3T9kE+xPkIAPP2AP8PkFNMmmZ2hHkZKhyDDBtt+ytPshCw0h1kC4Xq1vk9wU03HW
+         7tShIwNGljKxlGZS9qU/vBjCCTm9MOyXvXeb4uZujd0Ep1+BRjPuS8pV4dnxMihdUKdG
+         XNTQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708505756; x=1709110556;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=lWgzr9qm2ixV3STt2Qq+/qGSNGS+7XQCw88w5N997QU=;
+        b=edJvkQ0ZT7bla9J4nylyWpxq9AG3YE5Il87y2mDijK8tTYEQcEyY180UsHf9CNPYji
+         9Rdwb2tPEHqDLP1cgheUGjDCZGFuj99QVcV82q1Qxpc5ZkLWeDpTKAR7YiC+SH68EzOF
+         jdgS/Rx/DBVB9LDOZdXAPxhRFiGLMQKTOnsHjF6wQrD4qCf2mXsSjt+XMZztbKM9JnkH
+         IPIU6TwlZ9u8VPWd7gM6NDWSRYcVl0I3etXOg+DYfJjZGhFUtan1xXr6tBiVw+0cC/f6
+         5rGbQu/TjLecNn2+my0eK1JKV6SGe+cLJxjn7AF4A3JvkA0piNVbEZGSzY2DEGAHcxT+
+         FLTQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWwYkU0zCaQOTa1R1ZHB8QTVPyKSAoCmsZxJlnXWJaf1DelM3jCK2yrbqbybyWYDNDQnuWHGZXWj8XYZBuXVSsogNO/3X+wHGD0ZlwK
+X-Gm-Message-State: AOJu0YwfHNAyz6YOjaNJ5TJX0wyXwpDdYn/WqeTlAj3kMzQJbHevYOWR
+	cjE5GFttM3XoqjS/3QmkqDkQGcyHtmkJiOOSW20gG27/fvs7LHCy
+X-Google-Smtp-Source: AGHT+IEsgZ5ECXJwsdJ2M1bEqD60lRnejSLvsJzQJfvw5APeIUFuGL5UdWpxBrtnmYuAEfEJSWsKHg==
+X-Received: by 2002:ac2:593b:0:b0:512:b366:6c42 with SMTP id v27-20020ac2593b000000b00512b3666c42mr5168372lfi.32.1708505755809;
+        Wed, 21 Feb 2024 00:55:55 -0800 (PST)
+Received: from localhost.lan (031011218106.poznan.vectranet.pl. [31.11.218.106])
+        by smtp.gmail.com with ESMTPSA id p13-20020ac246cd000000b00511570772f1sm1578415lfo.303.2024.02.21.00.55.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 21 Feb 2024 00:55:55 -0800 (PST)
+From: =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5@gmail.com>
+To: Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>
+Cc: devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	=?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal@milecki.pl>
+Subject: [PATCH] arm64: dts: mediatek: mt7981: add watchdog & WiFi controllers
+Date: Wed, 21 Feb 2024 09:55:47 +0100
+Message-Id: <20240221085547.27840-1-zajec5@gmail.com>
+X-Mailer: git-send-email 2.35.3
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -59,150 +73,74 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-GND-Sasl: herve.codina@bootlin.com
 
-Hi Saravana,
+From: Rafał Miłecki <rafal@milecki.pl>
 
-On Tue, 20 Feb 2024 18:40:40 -0800
-Saravana Kannan <saravanak@google.com> wrote:
+MT7981 (Filogic 820) is a low cost version of MT7986 (Filogic 830) with
+the same watchdog controller. It also comes with on-SoC 802.11ax
+wireless.
 
-> On Tue, Feb 20, 2024 at 3:10 AM Herve Codina <herve.codina@bootlin.com> wrote:
-> >
-> > Since commit 1a50d9403fb9 ("treewide: Fix probing of devices in DT
-> > overlays"), when using device-tree overlays, the FWNODE_FLAG_NOT_DEVICE
-> > is set on each overlay nodes. This flag is cleared when a struct device
-> > is actually created for the DT node.
-> > Also, when a device is created, the device DT node is parsed for known
-> > phandle and devlinks consumer/supplier links are created between the
-> > device (consumer) and the devices referenced by phandles (suppliers).
-> > As these supplier device can have a struct device not already created,
-> > the FWNODE_FLAG_NOT_DEVICE can be set for suppliers and leads the
-> > devlink supplier point to the device's parent instead of the device
-> > itself.
-> >
-> > Avoid this situation clearing the supplier FWNODE_FLAG_NOT_DEVICE just
-> > before the devlink creation if a device is supposed to be created and
-> > handled later in the process.
-> >
-> > Fixes: 1a50d9403fb9 ("treewide: Fix probing of devices in DT overlays")
-> > Cc: <stable@vger.kernel.org>
-> > Signed-off-by: Herve Codina <herve.codina@bootlin.com>
-> > ---
-> >  drivers/of/property.c | 16 +++++++++++++++-
-> >  1 file changed, 15 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/of/property.c b/drivers/of/property.c
-> > index 641a40cf5cf3..ff5cac477dbe 100644
-> > --- a/drivers/of/property.c
-> > +++ b/drivers/of/property.c
-> > @@ -1097,6 +1097,7 @@ static void of_link_to_phandle(struct device_node *con_np,
-> >                               struct device_node *sup_np)
-> >  {
-> >         struct device_node *tmp_np = of_node_get(sup_np);
-> > +       struct fwnode_handle *sup_fwnode;
-> >
-> >         /* Check that sup_np and its ancestors are available. */
-> >         while (tmp_np) {
-> > @@ -1113,7 +1114,20 @@ static void of_link_to_phandle(struct device_node *con_np,
-> >                 tmp_np = of_get_next_parent(tmp_np);
-> >         }
-> >
-> > -       fwnode_link_add(of_fwnode_handle(con_np), of_fwnode_handle(sup_np));
-> > +       /*
-> > +        * In case of overlays, the fwnode are added with FWNODE_FLAG_NOT_DEVICE
-> > +        * flag set. A node can have a phandle that references an other node
-> > +        * added by the overlay.
-> > +        * Clear the supplier's FWNODE_FLAG_NOT_DEVICE so that fw_devlink links
-> > +        * to this supplier instead of linking to its parent.
-> > +        */
-> > +       sup_fwnode = of_fwnode_handle(sup_np);
-> > +       if (sup_fwnode->flags & FWNODE_FLAG_NOT_DEVICE) {
-> > +               if (of_property_present(sup_np, "compatible") &&
-> > +                   of_device_is_available(sup_np))
-> > +                       sup_fwnode->flags &= ~FWNODE_FLAG_NOT_DEVICE;
-> > +       }
-> > +       fwnode_link_add(of_fwnode_handle(con_np), sup_fwnode);  
-> 
-> Nack.
-> 
-> of_link_to_phandle() doesn't care about any of the fwnode flags. It
-> just creates links between the consumer and supplier nodes. Don't add
-> more intelligence into it please. Also, "compatible" doesn't really
-> guarantee device creation and you can have devices created out of
-> nodes with no compatible property. I finally managed to get away from
-> looking for the "compatible" property. So, let's not add back a
-> dependency on that property please.
-> 
-> Can you please give a real example where you are hitting this? I have
-> some thoughts on solutions, but I want to understand the issue fully
-> before I make suggestions.
-> 
+Signed-off-by: Rafał Miłecki <rafal@milecki.pl>
+---
+ arch/arm64/boot/dts/mediatek/mt7981b.dtsi | 26 ++++++++++++++++++++++-
+ 1 file changed, 25 insertions(+), 1 deletion(-)
 
-I detected the issue with this overlay:
---- 8< ---
-&{/}
-{
-	reg_dock_sys_3v3: regulator-dock-sys-3v3 {
-		compatible = "regulator-fixed";
-		regulator-name = "DOCK_SYS_3V3";
-		regulator-min-microvolt = <3300000>;
-		regulator-max-microvolt = <3300000>;
-		gpios = <&tca6424_dock_1 5 GPIO_ACTIVE_HIGH>; // DOCK_SYS3V3_EN
-		enable-active-high;
-		regulator-always-on;
-	};
-};
+diff --git a/arch/arm64/boot/dts/mediatek/mt7981b.dtsi b/arch/arm64/boot/dts/mediatek/mt7981b.dtsi
+index 2f89b18bab17..0dc49c47dfc2 100644
+--- a/arch/arm64/boot/dts/mediatek/mt7981b.dtsi
++++ b/arch/arm64/boot/dts/mediatek/mt7981b.dtsi
+@@ -2,6 +2,7 @@
+ 
+ #include <dt-bindings/clock/mediatek,mt7981-clk.h>
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
++#include <dt-bindings/reset/mt7986-resets.h>
+ 
+ / {
+ 	compatible = "mediatek,mt7981b";
+@@ -62,12 +63,19 @@ infracfg: clock-controller@10001000 {
+ 			#clock-cells = <1>;
+ 		};
+ 
+-		clock-controller@1001b000 {
++		topckgen: clock-controller@1001b000 {
+ 			compatible = "mediatek,mt7981-topckgen", "syscon";
+ 			reg = <0 0x1001b000 0 0x1000>;
+ 			#clock-cells = <1>;
+ 		};
+ 
++		watchdog: watchdog@1001c000 {
++			compatible = "mediatek,mt7986-wdt";
++			reg = <0 0x1001c000 0 0x1000>;
++			interrupts = <GIC_SPI 110 IRQ_TYPE_LEVEL_HIGH>;
++			#reset-cells = <1>;
++		};
++
+ 		clock-controller@1001e000 {
+ 			compatible = "mediatek,mt7981-apmixedsys";
+ 			reg = <0 0x1001e000 0 0x1000>;
+@@ -142,6 +150,22 @@ clock-controller@15000000 {
+ 			#clock-cells = <1>;
+ 			#reset-cells = <1>;
+ 		};
++
++		wifi@18000000 {
++			compatible = "mediatek,mt7981-wmac";
++			reg = <0 0x18000000 0 0x1000000>,
++			      <0 0x10003000 0 0x1000>,
++			      <0 0x11d10000 0 0x1000>;
++			interrupts = <GIC_SPI 213 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 214 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 215 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 216 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&topckgen CLK_TOP_NETSYS_MCU_SEL>,
++				 <&topckgen CLK_TOP_AP2CNN_HOST_SEL>;
++			clock-names = "mcu", "ap2conn";
++			resets = <&watchdog MT7986_TOPRGU_CONSYS_SW_RST>;
++			reset-names = "consys";
++		};
+ 	};
+ 
+ 	timer {
+-- 
+2.35.3
 
-&i2c5 {
-	tca6424_dock_1: gpio@22 {
-		compatible = "ti,tca6424";
-		reg = <0x22>;
-		gpio-controller;
-		#gpio-cells = <2>;
-		interrupt-parent = <&gpio4>;
-		interrupts = <1 IRQ_TYPE_EDGE_FALLING>;
-		interrupt-controller;
-		#interrupt-cells = <2>;
-		vcc-supply = <&reg_dock_ctrl_3v3>;
-	};
-};
---- 8< ---
-
-The regulator uses a gpio.
-The supplier for the regulator was not the gpio chip (gpio@22) but the i2c bus.
-
-I first tried to clear always the flag in of_link_to_phandle() without any check
-to a "compatible" string and in that case, I broke pinctrl.
-
-All devices were waiting for the pinctrl they used (child of pinctrl device
-node) even if the pinctrl driver was bound to the device.
-
-For pinctrl, the DT structure looks like the following:
---- 8< ---
-{
-	...
-	pinctrl@1234 {
-		reg = <1234>;
-		compatible = "vendor,chip";
-
-		pinctrl_some_device: grp {
-			fsl,pins = < ... >;
-		};
-	};
-
-	some_device@4567 {
-		compablile = "foo,bar";
-		reg = <4567>;
-		pinctrl-names = "default";
-		pinctrl-0 = <&pinctrl_some_device>;
-		...
-	};
-};
---- 8< ---
-		
-In that case the link related to pinctrl for some_device needs to be to the
-'pinctrl_some_device' node parent (i.e. the pinctrl@1234 node).
-
-
-Best regards,
-Hervé
