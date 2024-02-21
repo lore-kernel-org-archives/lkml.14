@@ -1,83 +1,93 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCEAC374D9;
-	Wed, 21 Feb 2024 14:35:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDBC41E4AF;
+	Wed, 21 Feb 2024 14:36:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708526157; cv=none; b=sbr4xJ+9cjX31lpNEpMdfsC08C55RUGL+N9QqKo9zcOjBacFWCj3IszsfqAqQdatU47aAIeWQVRc6wyKOZnNlOLb4qbFw3QxFhMlG4AcHX8tovjqSyOmQ05Dxfv4wY+WGNMX58WJ4f53Kjv1kUPfemGf8bYP4Pvh4v9hagU0v1A=
+	t=1708526202; cv=none; b=HtrMxRkrBqjgZCeoGOQg2Ib19OsdCDSaCbOwvQ/o8lSK7WMBCTRWLuwRvzGyWyVqZqvKvjBkhjD+6HBsbz2yKJ+afVUQ5YtYk/Eon+GY6F0f4ip2qm+YLhOm9v9QVY1+uQUXYVcD1I02BHYWiSgbd1GpIhbW8oAUQ5298mLIpUI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708526157; c=relaxed/simple;
-	bh=ShFnbQF1akJrSoIdhg9IFlVYTjo2i764A1JBYc+1bTM=;
+	s=arc-20240116; t=1708526202; c=relaxed/simple;
+	bh=qymbLOvSqp3zbYXm3A5nPTmLA9AeUS9MX95POI2/9Qo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IN8a1buz2d1f1Ow2Qgqv8wgOyBBspnLeWOhpPpCM6RtEyW/IoFAd9aiFH+l8N+9QHwuO+8Wp3SjpZGiHOlPSwITkFRihecWbBp98zk74E52SwRRJaBfGxOI8hStl25Dio5V49Yn1Lsa/0oE3LJUxVgIOoFD1noa5J2IG4agrJG0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=r6GOK5y2; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=D8dNh9EOlNvxTgdd7jiOox0yOcXhdYGuDuS9L/NnntJI+RpJ8u6KbfuiToe5fMt/zwv5QG8IVImE/VYh1SV7MEYYZprybmpclPZnr6aCPz/XaIsvjIpAXz/oHImlrj5KzGfWLgkRFmMg5Dv23BGhoBgeo7g3a/OtXVczduUrYPs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EnaKv/hV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="r6GOK5y2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 74E5EC433F1;
-	Wed, 21 Feb 2024 14:35:56 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EnaKv/hV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4FE92C433F1;
+	Wed, 21 Feb 2024 14:36:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708526156;
-	bh=ShFnbQF1akJrSoIdhg9IFlVYTjo2i764A1JBYc+1bTM=;
+	s=k20201202; t=1708526202;
+	bh=qymbLOvSqp3zbYXm3A5nPTmLA9AeUS9MX95POI2/9Qo=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=r6GOK5y2/l1WkN2Yi0eobTYHLcErBYdf0tHzPo836AA/e99dd3UrPnzplfdNqzPc8
-	 Yr6gm+iT+xl97/dgOw+/zPKObB5cZQ7KL3/x1y9C0n/93KTRJYEZJX1s+grPhZuKHd
-	 PEJ6sMzSpeiF+0izEuqHqT3V9GOEr5tjIbjDx+FI3Zc8XM00O0HDMH75GqjEQMrcfX
-	 rbcF5qBiI0fvd04wstbb2/YWEFzKLdhpqPEmJvxyR5hUA3Ei8yu8nD3o+oAVtPqRfk
-	 zsWtD9tzlL1pb/WDKUP5H5M3Tq/99dSU9mnAjeCWWmIIkmrkwma3W860d+aZ5y1wzt
-	 HOK5kLg9N/NGw==
-Date: Wed, 21 Feb 2024 09:35:54 -0500
-From: Sasha Levin <sashal@kernel.org>
-To: Paolo Bonzini <pbonzini@redhat.com>
-Cc: cve@kernel.org, linux-cve-announce@vger.kernel.org,
+	b=EnaKv/hVzf/EMifF/czM+KXQ1HuU0M890L6xiokixoMqPExzkG1F5h560IEudKtlP
+	 cnoiuJ9kIZ5P6bO9J5vNa2EhGsKlkMV2yr2krsYSlFdRthEgMVpZEdGltQT97i9Y7Q
+	 EkUHh89SY2Gz25UGOlFbcOOtD0tvmY+U77GcaHSORjHlmJHjQgVbWwX5m8DjOj2KJb
+	 UmuWMzb6yVCaZjv1LsJj1Geq1/MQcF+91LcIcwizcZ/Tb83DzyYjtDw8XmY8TRZLHV
+	 8akLQddRz+yxUdxYr5E50JGZkdStjIQQZ5TxqsvONHPpnHRfuB7UQICPiNQXT9eFkV
+	 kxkYT7+AvY2gQ==
+Date: Wed, 21 Feb 2024 07:36:40 -0700
+From: Rob Herring <robh@kernel.org>
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: =?iso-8859-1?Q?K=F6ry?= Maincent <kory.maincent@bootlin.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Russ Weight <russ.weight@linux.dev>,
 	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Jiri Kosina <jkosina@suse.cz>, linux-kernel@vger.kernel.org
-Subject: Re: CVE-2023-52437: Revert "md/raid5: Wait for MD_SB_CHANGE_PENDING
- in raid5d"
-Message-ID: <ZdYKSkqRckOc5aRO@sashalap>
-References: <2024022009-subsoil-halt-4b28@gregkh>
- <7ae646b3-28e4-4344-a7a4-730a0d6e3f38@redhat.com>
- <CABgObfYDcFPRNpGtsY=UbstXbqVCMcxy3LPS_xJ65aFcByC=Nw@mail.gmail.com>
- <ZdXt09vL4GJy6PbP@sashalap>
- <0e8675e0-165d-4cf7-9755-666278868ab8@redhat.com>
- <ZdX2LcAWR6wyvYC5@sashalap>
- <bec7c1db-c13e-4b00-a968-4ae69539d7ac@redhat.com>
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Oleksij Rempel <o.rempel@pengutronix.de>,
+	Mark Brown <broonie@kernel.org>,
+	Frank Rowand <frowand.list@gmail.com>, Andrew Lunn <andrew@lunn.ch>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Russell King <linux@armlinux.org.uk>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org, devicetree@vger.kernel.org,
+	Dent Project <dentproject@linuxfoundation.org>
+Subject: Re: [PATCH net-next v4 05/17] net: pse-pd: Introduce PSE types
+ enumeration
+Message-ID: <20240221143640.GA2779189-robh@kernel.org>
+References: <20240215-feature_poe-v4-0-35bb4c23266c@bootlin.com>
+ <20240215-feature_poe-v4-5-35bb4c23266c@bootlin.com>
+ <20240215105846.6dd48886@kernel.org>
+ <20240216104211.2c11d1cc@kmaincent-XPS-13-7390>
+ <20240216173638.4bb12af2@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <bec7c1db-c13e-4b00-a968-4ae69539d7ac@redhat.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240216173638.4bb12af2@kernel.org>
 
-On Wed, Feb 21, 2024 at 02:15:12PM +0100, Paolo Bonzini wrote:
->>On 2/21/24 14:10, Sasha Levin wrote:
->>>On Wed, Feb 21, 2024 at 01:58:04PM +0100, Paolo Bonzini wrote:
->>>>On 2/21/24 13:34, Sasha Levin wrote:
->>>>>[snip]
->
->This conversation needs to be public.
+On Fri, Feb 16, 2024 at 05:36:38PM -0800, Jakub Kicinski wrote:
+> On Fri, 16 Feb 2024 10:42:11 +0100 Köry Maincent wrote:
+> > > On Thu, 15 Feb 2024 17:02:46 +0100 Kory Maincent wrote:  
+> > > > Introduce an enumeration to define PSE types (C33 or PoDL),
+> > > > utilizing a bitfield for potential future support of both types.
+> > > > Include 'pse_get_types' helper for external access to PSE type info.    
+> > > 
+> > > I haven't read the series, just noticed this breaks the build:
+> > > 
+> > > error: ../include/uapi/linux/pse.h: missing "WITH Linux-syscall-note" for
+> > > SPDX-License-Identifier  
+> > 
+> > By curiosity how do you get that error? 
+> > Is it with C=1? I didn't faced it with W=1.
+> > C=1 is broken for several architecture like arm64, indeed I forgot to run it.
+> 
+> Not 100% sure, TBH, I suspect it's somehow enabled by allmodconfig.
+> I don't think it's a C=1 thing because our clang build doesn't do C=1
+> and it also hit it.
 
-I've cc'ed lkml.
+Probably from scripts/spdxcheck.py? IIRC, it has some dependencies which 
+have to be installed to enable it.
 
->Please send your original answer as a reply to the message with 
->"[resend]" in the subject, which has LKML in the Cc list, and we'll 
->take it from there.  I'm sorry about the confusion, but I didn't 
->expect linux-cve-announce to be moderator-only, as that is a deviation 
->from the common practice of vger.kernel.org.
-
-You'll find that the convention for *-announce mailing list is that
-they, as the name suggests, are used only for announces and are
-moderated.
-
-So for example, linux-kernel@ is the lkml we all know and love, while
-linux-kernel-announce@ is an announcement-only mailing list used to
-announce releases.
-
-But thank you for pointing out this "deviation".
-
--- 
-Thanks,
-Sasha
+Rob
