@@ -1,143 +1,186 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A27401841;
-	Wed, 21 Feb 2024 00:41:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC98F17D2
+	for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 00:42:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708476063; cv=none; b=B4NEf2+9TurdoIC06MC0oOLiXY3WKcA3s7jC121e0XaK5fUO2AJHqjuh0HpVVUov4cX0J1PrGw8/FHk/YamuIhQWlh3K1xAK9s/AX8bf9CqwjZqkMndQdqHc6Qt2VE/fRJK101dR7HHeXHrOmjz+UQO3i//RSwOHGU3jcZA4ym0=
+	t=1708476131; cv=none; b=NOKm+LmaYhIm2bRc43zkdO2B87sWs6vqxoXiUYVZnVRU8sQ2No4SFtIy6IKLvMdW1gxHAgQMY7HJgYBD6RTVlzmRlqMrAfDXglQ0GN255pp+j1hJaSb3Z7vqtFkQgPANM38EEFS9REqItebjPM4iz+Aszm6PgQ0HXYGSHkAJJDg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708476063; c=relaxed/simple;
-	bh=kWIAPvMn057OFGEtOjgI4lHWt5h003rFHFlQMrNSEvw=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=KDwxi3GQYQKVCwwDCI8S3xVolCGJbMebQ9DZ+2M5BFzPh11sV26HzppXKKRIG5M/R00BHt+Son3IyyhGbBljInwoIyrewDYk5v5Vp4fywa4XtKktPTR5TkZBAnRnkaig1owHEYvYJG2GMIWMak4CTR7uEgFDxYqNrwUfy26Rm5A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=r/IcATy7; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1708476131; c=relaxed/simple;
+	bh=RPiXUr+f3J0v/l1Zh9RKyxVKvEkJRigulgQGGDqXTFI=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=C0kXkU9lvzmMpNCM5EOpL+m2vmYRv7z9yf6baQNfaKc8OzBagXM1pk9VK7oNeVMahXY3kKKNikeFxsLya4svd9BKxeImW5PdVwo27yjrfgFPCi7wlkRfnykmY02jk7RzH/1RgpE+Czvej+xHp4V8zyYdx4olWbauZaHchAQoz/k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VynMfyH2; arc=none smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="r/IcATy7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AA7B8C433F1;
-	Wed, 21 Feb 2024 00:41:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708476063;
-	bh=kWIAPvMn057OFGEtOjgI4lHWt5h003rFHFlQMrNSEvw=;
-	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
-	b=r/IcATy7RunSAZdZHzWO4lQq/f4hhuBaOqN0St7yn1UYon9E+TxIHsEpV5kI6Il8T
-	 kZCt5pI1N485NzkhJLoogwM9L/BO7nFSCAEYAdt32Xb17MyMcAxHYG5z0kTK2bHP5F
-	 vVZ26PWJYgiA9iq33RtcVAG7OeqdhE764mlp3vrvA7czJEBOxMRZgBkDCA9yUuF7tG
-	 /WjkOtcwBLp8YGiBgC1ZFsM7aKzkdanZrAdEt3jZ8wKazwT1gcsRdDRWSXYGcHJL9L
-	 q/iszWDfVZHNgvYDGpBHORDOckinHvd7vafo2EyXu5d4VlUbFL53UCrt74TDSSqBVA
-	 OXMjKv3GlDP2A==
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VynMfyH2"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1708476130; x=1740012130;
+  h=date:from:to:cc:subject:message-id;
+  bh=RPiXUr+f3J0v/l1Zh9RKyxVKvEkJRigulgQGGDqXTFI=;
+  b=VynMfyH2mKkc3jBmxrWqKQE2CFs7kv2M10WrrfYl2r3oszP7U/4O4CGy
+   twwNUmJzG9aquocPglMDf+/gLVY7ebpzIuHUg9k693k9LkbIYL2guva2z
+   qM9tU825ufMvQpyBzzaaq+gLoVWLXIOzOMWbQDyP8RYh5E/LEzb453plI
+   1sKTYBICUX3ViWMJM5V3N52RxwCetaO9gz8zV+YAFUX4sAqA6X3feTj7W
+   NKmHkimIM+PpoxXrYjFTfdQe9yAqVz2ULtVKffZSv24EM10SQysLtGkWv
+   n3Un07ZorEu3AifYSYl92YqeSFyXM+qDbRxL0HpCOaN0VzXgLO6tYxoR5
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10990"; a="2499643"
+X-IronPort-AV: E=Sophos;i="6.06,174,1705392000"; 
+   d="scan'208";a="2499643"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Feb 2024 16:42:09 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.06,174,1705392000"; 
+   d="scan'208";a="5108237"
+Received: from lkp-server02.sh.intel.com (HELO 3c78fa4d504c) ([10.239.97.151])
+  by fmviesa008.fm.intel.com with ESMTP; 20 Feb 2024 16:41:54 -0800
+Received: from kbuild by 3c78fa4d504c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1rcaf8-0004ti-31;
+	Wed, 21 Feb 2024 00:40:57 +0000
+Date: Wed, 21 Feb 2024 08:39:35 +0800
+From: kernel test robot <lkp@intel.com>
+To: "x86-ml" <x86@kernel.org>
+Cc: linux-kernel@vger.kernel.org
+Subject: [tip:x86/core] BUILD SUCCESS
+ b388e57d4628eb22782bdad4cd5b83ca87a1b7c9
+Message-ID: <202402210832.S8GhOhJO-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Wed, 21 Feb 2024 00:40:58 +0000
-Message-Id: <CZAC7U3W7L5A.1JST8CWN3PNND@seitikki>
-Cc: "Ross Philipson" <ross.philipson@oracle.com>, "Kanth Ghatraju"
- <kanth.ghatraju@oracle.com>, "Peter Huewe" <peterhuewe@gmx.de>
-Subject: Re: [PATCH 1/3] tpm: protect against locality counter underflow
-From: "Jarkko Sakkinen" <jarkko@kernel.org>
-To: "Lino Sanfilippo" <LinoSanfilippo@gmx.de>, "Lino Sanfilippo"
- <l.sanfilippo@kunbus.com>, "Alexander Steffen"
- <Alexander.Steffen@infineon.com>, "Daniel P. Smith"
- <dpsmith@apertussolutions.com>, "Jason Gunthorpe" <jgg@ziepe.ca>, "Sasha
- Levin" <sashal@kernel.org>, <linux-integrity@vger.kernel.org>,
- <linux-kernel@vger.kernel.org>
-X-Mailer: aerc 0.15.2
-References: <20240131170824.6183-1-dpsmith@apertussolutions.com>
- <20240131170824.6183-2-dpsmith@apertussolutions.com>
- <CYU3CFW08DAA.29DJY7SJYPJJZ@suppilovahvero>
- <2ba9a96e-f93b-48e2-9ca0-48318af7f9b1@kunbus.com>
- <ae3fecc4-7b76-4607-8749-045e17941923@infineon.com>
- <91f600ef-867b-4523-89be-1c0ba34f8a4c@kunbus.com>
- <CZA9ADCGOTQT.LB5XHZZVTWVH@seitikki>
- <0d482ce6-4318-4e42-ac12-be2a26ef3548@gmx.de>
-In-Reply-To: <0d482ce6-4318-4e42-ac12-be2a26ef3548@gmx.de>
 
-On Tue Feb 20, 2024 at 11:19 PM UTC, Lino Sanfilippo wrote:
->
->
-> On 20.02.24 23:23, Jarkko Sakkinen wrote:
-> > On Tue Feb 20, 2024 at 8:54 PM UTC, Lino Sanfilippo wrote:
-> >> Hi,
-> >>
-> >> On 20.02.24 19:42, Alexander Steffen wrote:
-> >>> ATTENTION: This e-mail is from an external sender. Please check attac=
-hments and links before opening e.g. with mouseover.
-> >>>
-> >>>
-> >>> On 02.02.2024 04:08, Lino Sanfilippo wrote:
-> >>>> On 01.02.24 23:21, Jarkko Sakkinen wrote:
-> >>>>
-> >>>>>
-> >>>>> On Wed Jan 31, 2024 at 7:08 PM EET, Daniel P. Smith wrote:
-> >>>>>> Commit 933bfc5ad213 introduced the use of a locality counter to co=
-ntrol when a
-> >>>>>> locality request is allowed to be sent to the TPM. In the commit, =
-the counter
-> >>>>>> is indiscriminately decremented. Thus creating a situation for an =
-integer
-> >>>>>> underflow of the counter.
-> >>>>>
-> >>>>> What is the sequence of events that leads to this triggering the
-> >>>>> underflow? This information should be represent in the commit messa=
-ge.
-> >>>>>
-> >>>>
-> >>>> AFAIU this is:
-> >>>>
-> >>>> 1. We start with a locality_counter of 0 and then we call tpm_tis_re=
-quest_locality()
-> >>>> for the first time, but since a locality is (unexpectedly) already a=
-ctive
-> >>>> check_locality() and consequently __tpm_tis_request_locality() retur=
-n "true".
-> >>>
-> >>> check_locality() returns true, but __tpm_tis_request_locality() retur=
-ns
-> >>> the requested locality. Currently, this is always 0, so the check for
-> >>> !ret will always correctly indicate success and increment the
-> >>> locality_count.
-> >>>
-> >>
-> >> Will the TPM TIS CORE ever (have to) request another locality than 0? =
-Maybe the best would
-> >> be to hardcode TPM_ACCESS(0) and get rid of all the locality parameter=
-s that are
-> >> passed from one function to another.
-> >
-> > Usually, or at least use cases I'm aware of, localities are per
-> > component. E.g. Intel TXT has one and Linux has another.
-> >
-> > There's been some proposals in the past here for hypervisor specific
-> > locality here at LKML they didn't lead to anything.
-> >
-> > If you are suggesting of removing "int l" parameter altogether, I
-> > do support that idea.
-> >
->
-> Yes, removing the "l" parameter is what I meant. I can prepare a patch fo=
-r
-> the removal.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86/core
+branch HEAD: b388e57d4628eb22782bdad4cd5b83ca87a1b7c9  x86/vdso: Fix rethunk patching for vdso-image-{32,64}.o
 
-This change BTW does not need to be supported by any bug per se as
-removing useless code is always welcome.
+elapsed time: 727m
 
-If we wanted ever use let's say separate locality for hypervisor,
-we would want to design such feature from ground up. I don't think
-this will happen tho since localities are sort of trend that died
-with TPM 1.2... It had only authorization value and locality brought
-some additional granularity to it.
+configs tested: 113
+configs skipped: 135
 
-As for this patch set I also don't think kernel should care about
-localities beyond 2 or at least not ever try relinquish them.
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-I.e. it should at most relinquish localities 0-2. The only action
-taken for 3-4 should really be perhaps rollbacking the driver init
-and report to klog that these localities have been left open by
-the platform.
+tested configs:
+alpha                             allnoconfig   gcc  
+alpha                               defconfig   gcc  
+arc                              allmodconfig   gcc  
+arc                               allnoconfig   gcc  
+arc                              allyesconfig   gcc  
+arc                                 defconfig   gcc  
+arm                              allmodconfig   gcc  
+arm                              allyesconfig   gcc  
+arm                           h3600_defconfig   gcc  
+arm                       spear13xx_defconfig   gcc  
+arm64                             allnoconfig   gcc  
+arm64                               defconfig   gcc  
+csky                             allmodconfig   gcc  
+csky                              allnoconfig   gcc  
+csky                             allyesconfig   gcc  
+csky                                defconfig   gcc  
+hexagon                          allmodconfig   clang
+hexagon                          allyesconfig   clang
+i386                             allmodconfig   gcc  
+i386                              allnoconfig   gcc  
+i386                             allyesconfig   gcc  
+i386         buildonly-randconfig-001-20240221   gcc  
+i386         buildonly-randconfig-002-20240221   clang
+i386         buildonly-randconfig-003-20240221   gcc  
+i386         buildonly-randconfig-004-20240221   gcc  
+i386         buildonly-randconfig-005-20240221   gcc  
+i386         buildonly-randconfig-006-20240221   gcc  
+i386                                defconfig   clang
+i386                  randconfig-001-20240221   gcc  
+i386                  randconfig-002-20240221   clang
+i386                  randconfig-003-20240221   clang
+i386                  randconfig-004-20240221   gcc  
+i386                  randconfig-005-20240221   gcc  
+i386                  randconfig-006-20240221   clang
+i386                  randconfig-011-20240221   gcc  
+i386                  randconfig-012-20240221   clang
+i386                  randconfig-013-20240221   gcc  
+i386                  randconfig-014-20240221   clang
+i386                  randconfig-015-20240221   gcc  
+i386                  randconfig-016-20240221   clang
+loongarch                        allmodconfig   gcc  
+loongarch                         allnoconfig   gcc  
+loongarch                           defconfig   gcc  
+m68k                             allmodconfig   gcc  
+m68k                              allnoconfig   gcc  
+m68k                             allyesconfig   gcc  
+m68k                                defconfig   gcc  
+microblaze                       alldefconfig   gcc  
+microblaze                       allmodconfig   gcc  
+microblaze                        allnoconfig   gcc  
+microblaze                       allyesconfig   gcc  
+microblaze                          defconfig   gcc  
+mips                              allnoconfig   gcc  
+mips                             allyesconfig   gcc  
+mips                 decstation_r4k_defconfig   gcc  
+nios2                            allmodconfig   gcc  
+nios2                             allnoconfig   gcc  
+nios2                            allyesconfig   gcc  
+nios2                               defconfig   gcc  
+openrisc                          allnoconfig   gcc  
+openrisc                            defconfig   gcc  
+openrisc                    or1ksim_defconfig   gcc  
+parisc                            allnoconfig   gcc  
+parisc                              defconfig   gcc  
+parisc64                            defconfig   gcc  
+powerpc                           allnoconfig   gcc  
+powerpc                         wii_defconfig   gcc  
+riscv                             allnoconfig   gcc  
+riscv                               defconfig   clang
+s390                              allnoconfig   clang
+s390                             allyesconfig   gcc  
+s390                                defconfig   clang
+sh                               allmodconfig   gcc  
+sh                                allnoconfig   gcc  
+sh                               allyesconfig   gcc  
+sh                                  defconfig   gcc  
+sh                        dreamcast_defconfig   gcc  
+sh                          sdk7786_defconfig   gcc  
+sh                        sh7763rdp_defconfig   gcc  
+sparc                            allmodconfig   gcc  
+sparc                             allnoconfig   gcc  
+sparc                               defconfig   gcc  
+sparc64                          allmodconfig   gcc  
+sparc64                          allyesconfig   gcc  
+sparc64                             defconfig   gcc  
+um                               allmodconfig   clang
+um                                allnoconfig   clang
+um                                  defconfig   clang
+um                           x86_64_defconfig   clang
+x86_64                            allnoconfig   clang
+x86_64                           allyesconfig   clang
+x86_64       buildonly-randconfig-002-20240221   gcc  
+x86_64       buildonly-randconfig-003-20240221   gcc  
+x86_64                              defconfig   gcc  
+x86_64                randconfig-001-20240221   gcc  
+x86_64                randconfig-002-20240221   gcc  
+x86_64                randconfig-003-20240221   gcc  
+x86_64                randconfig-004-20240221   gcc  
+x86_64                randconfig-005-20240221   gcc  
+x86_64                randconfig-006-20240221   gcc  
+x86_64                randconfig-012-20240221   gcc  
+x86_64                randconfig-014-20240221   gcc  
+x86_64                randconfig-015-20240221   gcc  
+x86_64                randconfig-016-20240221   gcc  
+x86_64                randconfig-071-20240221   gcc  
+x86_64                randconfig-072-20240221   gcc  
+x86_64                randconfig-073-20240221   gcc  
+x86_64                randconfig-074-20240221   gcc  
+x86_64                randconfig-076-20240221   gcc  
+x86_64                          rhel-8.3-func   gcc  
+x86_64                          rhel-8.3-rust   clang
+x86_64                               rhel-8.3   gcc  
+xtensa                            allnoconfig   gcc  
 
-BR, Jarkko
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
