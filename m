@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95A761292F2;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BD851292FF;
 	Wed, 21 Feb 2024 21:25:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708550706; cv=none; b=OUhjUqUp9GAagDE/p+8QTS7s6gMyuGFOZT58Kp08OSIDhHok3xTJPp07e0nedtkrVzyCp6V7Fh5U1P9Ekq8CaD7XetOwP2knhK3aVundWbkH/KRGrF4JvnjmEs7KwRbW+FtGa+qwQN0lKS7GgRi+wGMDM48l+HWKYfVenduRtOI=
+	t=1708550706; cv=none; b=E3HFdt8o9s0cxvn/tY9H5AjLk0foBJB39WHHBnVIkgItBL4aMFO4gxsC0v7gOF0XUJrQp0Fq9fSxX6VWjBzPPlxYaP3QEwRfYsO6JJvL/llPPTQyw+tu1/jNHGX33ZDYAKrcMOPDJuAozHwjuD/Fncl4PQxI6ZZKQmDey3jJn+0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1708550706; c=relaxed/simple;
-	bh=MjPDmuGYxTwVV3XD9s9x96VSdlRd13Fx8UY16afoWLI=;
+	bh=lEHQXdLzM8XZmLEljh/ycw/4aa43YTvfIWETR64S7L4=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=dHBnN2FQAk/IZKQ+qavkZvjRz2BAu24srcaL3wQqWxH5JT0sxHYWSrkndUr/TFV9BK4d83pUBHACMm6VNHLi36D1l7oLePl+Uo8UrgvM4IvEs0Y5QeYjxTjCJbr47vlXPiBCke8XZl3kjBTE3yX1poXeih9vfVbyFRMkGAyNUEo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G+32nzQs; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=Mq6PcSOuxWw2NQO20b2/ULW/n/9jdn0BsA82pLQdmuYptzVcDf8RMeBfOK65tR3jUeHL1SRHHCaLIfIj8WZ9IH7zFRL7Fv7qBhnMFdwzo3lLXXhOj6SsXIYdnffy1ZxsjXfCSeKowAxC6Hb8LPjbbGcDjAyVJYWzj+ookU6xsZY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UC2BZrnh; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G+32nzQs"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 4790EC43390;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UC2BZrnh"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 662C0C32784;
 	Wed, 21 Feb 2024 21:25:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1708550706;
-	bh=MjPDmuGYxTwVV3XD9s9x96VSdlRd13Fx8UY16afoWLI=;
+	bh=lEHQXdLzM8XZmLEljh/ycw/4aa43YTvfIWETR64S7L4=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=G+32nzQsv2yA6coHTy2HUa1t9RBiDR2AasBhQofnI4QyW/IVAwvXXtib5syKL9VI1
-	 XYeuJazXkEnUDWxhHFfB30px/QQ4SZ/lM2CQjtlruAVC7gHMI5V339a0r19mU3WKr7
-	 pxQFGREc7DUro23NFpTz4WpsaaqIhWsbSeSqXDix962HqnmSMg38nn8fZcH+cp4GpR
-	 y8cRFE8J63EdITcOIkUI6OFpmlgs0znPBuyzPWB2OFW4RKCYY32zWkqnziQ+o0/LDA
-	 mFAYc2ntRvNmb8wPKZXXv+G9IziYus6/LQ1MFu9rb5vtZr1bAxNPAGvKYyTt3yocWG
-	 RUyg3VTXWCdwA==
+	b=UC2BZrnh4lZXsjpnjx7aANMXeCVkZvoQtXOjOZOT8xxnq7bJsb0arNGCdzXPhB79M
+	 CRZgleKWNdeC+ZerEGDq2Q9NZr4JJau/CRBGKV0m/lNO/MgnJPlkC236U8Q1VUvwcE
+	 gekbp89+TKBF2TDd5vAbzCjWkLtYJE9MTac2VPDPKxvptO0t/JWF6u9r3k/XUCz/zU
+	 y9barmElKlj5vGlpuHAjm00yLb/7UoUvR3J0vRzDdrfJgiIw1WSmfltoAdvPvep33w
+	 BV2cIqgqZD2xLGRoYHm1KMpuySNQNViUrDL/TlyKPSYs655oBmI+NgnQJSxLLPR5/1
+	 65LN77kcX4EuA==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36F87C5478B;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51D3BC54793;
 	Wed, 21 Feb 2024 21:25:06 +0000 (UTC)
 From: "Seth Forshee (DigitalOcean)" <sforshee@kernel.org>
-Date: Wed, 21 Feb 2024 15:24:39 -0600
-Subject: [PATCH v2 08/25] xattr: add is_fscaps_xattr() helper
+Date: Wed, 21 Feb 2024 15:24:41 -0600
+Subject: [PATCH v2 10/25] xattr: use is_fscaps_xattr()
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -40,7 +40,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240221-idmap-fscap-refactor-v2-8-3039364623bd@kernel.org>
+Message-Id: <20240221-idmap-fscap-refactor-v2-10-3039364623bd@kernel.org>
 References: <20240221-idmap-fscap-refactor-v2-0-3039364623bd@kernel.org>
 In-Reply-To: <20240221-idmap-fscap-refactor-v2-0-3039364623bd@kernel.org>
 To: Christian Brauner <brauner@kernel.org>, 
@@ -61,46 +61,39 @@ Cc: linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
  selinux@vger.kernel.org, linux-integrity@vger.kernel.org, 
  linux-doc@vger.kernel.org, linux-unionfs@vger.kernel.org
 X-Mailer: b4 0.12.4
-X-Developer-Signature: v=1; a=openpgp-sha256; l=898; i=sforshee@kernel.org;
- h=from:subject:message-id; bh=MjPDmuGYxTwVV3XD9s9x96VSdlRd13Fx8UY16afoWLI=; 
- =?utf-8?q?b=3DowEBbQGS/pANAwAKAVMDma7l9DHJAcsmYgBl1mofpeDW0VRFpT+qzsFdS/fHW?=
- =?utf-8?q?j5IKuhck4JZotJG_3ni+RRWJATMEAAEKAB0WIQSQnt+rKAvnETy4Hc9TA5mu5fQxy?=
- =?utf-8?q?QUCZdZqHwAKCRBTA5mu5fQxyRAAB/_9E0ZBYKot+MRKSR27p0Kv0vDG4b1T8VUYNX?=
- =?utf-8?q?dxn7GTVrucCBGVtpVtqSyN8mJcxmFFj6dgjcjWE/8Fq_5ZjeTdXL+YyPRBKcf0KBr?=
- =?utf-8?q?bLryipvjsqSujzheGkbqC8maXAS3ScS4R+vuzpQuiMRBhwd432RWhFkRu_ALGbz9F?=
- =?utf-8?q?zAX6BGGK/+JaabY7XD/jynxRjg5i8POSN19q0OJlsOqUpYJrmjTusaT4lCzgC+6ix?=
- =?utf-8?q?XcwFzw_+z6fBZXxwGNAJ/G0yohMDqfv4/nS298M7iKZhieHyKr5Hz/dZ+rOFIiwoG?=
- =?utf-8?q?WzyRw8ccnmGTkNSWT3Dq?= Yxtsflp7R+yVNxyPqIPgRpugwoXtdA
+X-Developer-Signature: v=1; a=openpgp-sha256; l=597; i=sforshee@kernel.org;
+ h=from:subject:message-id; bh=lEHQXdLzM8XZmLEljh/ycw/4aa43YTvfIWETR64S7L4=; 
+ =?utf-8?q?b=3DowEBbQGS/pANAwAKAVMDma7l9DHJAcsmYgBl1mohq2XZVoBy8FgqIjMltMFNu?=
+ =?utf-8?q?zAWaj/Pn1Cc2fiJ_PO+HZrOJATMEAAEKAB0WIQSQnt+rKAvnETy4Hc9TA5mu5fQxy?=
+ =?utf-8?q?QUCZdZqIQAKCRBTA5mu5fQxyQ77B/_9KzJ+i0X5eDYLpwTJQmYMCRqYN6k0Iuk1pw?=
+ =?utf-8?q?bpwXjF9ph8I+iLw/R/XYDD3yf025kbMHTCQC+Z0TYiw_Wh64DvoVlVS+FkNp+7sCJ?=
+ =?utf-8?q?ETr3Lmx3gEs2vJNh+zIRRm9awNuEhnAezPVeOC9vXAOEB4vxQMJwWjjNG_apBxkgO?=
+ =?utf-8?q?4CvmpusSXAZOJhK6Uo5XqCiEgjcl0DXRtnMbTph6y2KmqFVanvM1qba2HEXNFpL87?=
+ =?utf-8?q?fAwpST_UDykJ5pSN8a964iteXDvWw/PLqFS33BKI9sLHcykFsgV4nTYUWM+hpTJJV?=
+ =?utf-8?q?1rOFRiE2YRaSB35mPMvF?= 52ifUub/2VOnPAqvb376YvVerDPSZW
 X-Developer-Key: i=sforshee@kernel.org; a=openpgp;
  fpr=2ABCA7498D83E1D32D51D3B5AB4800A62DB9F73A
 X-Endpoint-Received:
  by B4 Relay for sforshee@kernel.org/default with auth_id=103
 
-Add a helper to determine if an xattr time is XATTR_NAME_CAPS instead of
-open-coding a string comparision.
-
-Suggested-by: Amir Goldstein <amir73il@gmail.com>
 Signed-off-by: Seth Forshee (DigitalOcean) <sforshee@kernel.org>
 ---
- include/linux/xattr.h | 5 +++++
- 1 file changed, 5 insertions(+)
+ fs/xattr.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/include/linux/xattr.h b/include/linux/xattr.h
-index d20051865800..cbacfb4d74fa 100644
---- a/include/linux/xattr.h
-+++ b/include/linux/xattr.h
-@@ -28,6 +28,11 @@ static inline bool is_posix_acl_xattr(const char *name)
- 	       (strcmp(name, XATTR_NAME_POSIX_ACL_DEFAULT) == 0);
- }
+diff --git a/fs/xattr.c b/fs/xattr.c
+index 09d927603433..06290e4ebc03 100644
+--- a/fs/xattr.c
++++ b/fs/xattr.c
+@@ -310,7 +310,7 @@ vfs_setxattr(struct mnt_idmap *idmap, struct dentry *dentry,
+ 	const void  *orig_value = value;
+ 	int error;
  
-+static inline bool is_fscaps_xattr(const char *name)
-+{
-+	return strcmp(name, XATTR_NAME_CAPS) == 0;
-+}
-+
- /*
-  * struct xattr_handler: When @name is set, match attributes with exactly that
-  * name.  When @prefix is set instead, match attributes with that prefix and
+-	if (size && strcmp(name, XATTR_NAME_CAPS) == 0) {
++	if (size && is_fscaps_xattr(name)) {
+ 		error = cap_convert_nscap(idmap, dentry, &value, size);
+ 		if (error < 0)
+ 			return error;
 
 -- 
 2.43.0
