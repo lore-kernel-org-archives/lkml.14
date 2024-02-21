@@ -1,37 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3628B12D76A;
-	Wed, 21 Feb 2024 21:25:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEBFF12B176;
+	Wed, 21 Feb 2024 21:25:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708550707; cv=none; b=fYBu4JDuTHzs7IVZa9hmYI/sybpJSLPG1hgkWgsUB1dw/XqqR4YiNDlIyhdrpG7Ndz61wEY/Y0AIdl+ZaOvoefkGOt2CZqtzRVqgCYxYwGKeYHDwDBjSS6k2dtJJKcGP4Q4b+R6pLZD/KVfQVqjbLkQLZ9oQ9a3lG/eNQnQS41w=
+	t=1708550707; cv=none; b=nvK7NW0t3P35Ozc+byRM6qG0k1I5fm0Mx+SAORJbtZu31DwFeafs+K0A3k5hf3825pWO0QKtLMuwGqP/EU+sLopTb7FncyGKPcSdNUDhdB/KC5KKA1ygK7Wf7lh0Wx3uSQFPFzS8NuybOHRChlGlcFB38LLSSMIJsjJglr1BZC0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1708550707; c=relaxed/simple;
-	bh=+wh5MLx6qw22a4Y5hCQZNo83AwcQ+EWK6GdCRZ0V+nQ=;
+	bh=CJx4jVGIRqQ1qdmTj2y9zLMKH38BdGpPQGSp5yBCQqY=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=KRIZAaYoNEo2S9kCPhZWLMj0yXE75go2vwP28dMuNv+ElH4/9QI5x34+I7AqRDSHrJykGpLhDCJvslEOja4Kwtq8OGfCyVGSwS3fY3UuU13w72ArLrvPTMi6KlNaisGmaKYiyTJBhFzXC77EbFOMJJkFn+uUCDLyNoYonszVDp4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AK2yECFZ; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=RsSjfPSZE4aHzTEE1oVRx7CuTu3dE7UH05dTc66Nh9j45hHpH8G3mnn3MC0dnM1hDJnxQhgR0IsJcCDjD2vVyAGXoUZK/zbVpptTfPypISd4uoVcayc5zsIu8xRSJ+DdI4QGc2wUWoEPgYrZktaZD8ZaX122lO8gwihHQJ1NUJM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ScFEMz6F; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AK2yECFZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 0B327C341C0;
-	Wed, 21 Feb 2024 21:25:07 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ScFEMz6F"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id CB04AC32795;
+	Wed, 21 Feb 2024 21:25:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708550707;
-	bh=+wh5MLx6qw22a4Y5hCQZNo83AwcQ+EWK6GdCRZ0V+nQ=;
+	s=k20201202; t=1708550706;
+	bh=CJx4jVGIRqQ1qdmTj2y9zLMKH38BdGpPQGSp5yBCQqY=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=AK2yECFZ23ei6Bxl7F8aU4RQFm0YNyCmD5DcPDYqym9xF7gaxYzUJ2X5OzxtyZ0Hw
-	 jPUD9OW85WtWmTmE6K2tld1wGbO2HH6O5MD688xPMXAjBVi4ya8mKxsVHOo779FDGV
-	 lRw2fvbhrPwugd44qEaOW8vEtMXx58eIHpkKUSZOaTRPoc58KcCScAZVwfupFGcWlX
-	 nkizFJHHKDqDwA4QMrPvtj0C1d55a4KCB/ohfrVyv7j5lzaDxLUoDXeFAtXCNDtgeN
-	 Nq7ynBMpMFENnCjJi7IdAuahdWZMWMT2NqQLBvoemxpz+mdl2HFCa007AGoS6/7zSY
-	 ziChLdNXv1sOQ==
+	b=ScFEMz6FlokZomeuAvsLqnXQTflRHEh6BIQBe96Ib9pULn8Wj4+DpC7Xfs8aTexs7
+	 qTiVdQUGtX+RU3zggTNkWmIrVpcMUO6N+cwr43fGo9nWV/a5PLS4ItLlRmU9FbrqIB
+	 5Fqw36ofvD0sLbq9fFeIkUSaRu2bFetOjiQk+SpXaVH/bo3+jCjulvqWK0vKRULblx
+	 2LRZiCwub+3/tki2vXE72U2ySzZt7yQa0Fh+FnnVf6+9pIJpgArXMkOTlvYnR1Yx2p
+	 pMyEmo3Yf/KuwhCrM2ulibMDJ6mZDj1XgQCNFQHu4B3b7bRKxg/Rx4wNmsitGS/MvI
+	 AzKnC3SypEVcw==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECE24C54791;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7938C48BEB;
 	Wed, 21 Feb 2024 21:25:06 +0000 (UTC)
 From: "Seth Forshee (DigitalOcean)" <sforshee@kernel.org>
-Date: Wed, 21 Feb 2024 15:24:49 -0600
-Subject: [PATCH v2 18/25] fs: add vfs_set_fscaps()
+Date: Wed, 21 Feb 2024 15:24:46 -0600
+Subject: [PATCH v2 15/25] security: call evm fscaps hooks from generic
+ security hooks
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -40,7 +41,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240221-idmap-fscap-refactor-v2-18-3039364623bd@kernel.org>
+Message-Id: <20240221-idmap-fscap-refactor-v2-15-3039364623bd@kernel.org>
 References: <20240221-idmap-fscap-refactor-v2-0-3039364623bd@kernel.org>
 In-Reply-To: <20240221-idmap-fscap-refactor-v2-0-3039364623bd@kernel.org>
 To: Christian Brauner <brauner@kernel.org>, 
@@ -61,133 +62,70 @@ Cc: linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
  selinux@vger.kernel.org, linux-integrity@vger.kernel.org, 
  linux-doc@vger.kernel.org, linux-unionfs@vger.kernel.org
 X-Mailer: b4 0.12.4
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3582; i=sforshee@kernel.org;
- h=from:subject:message-id; bh=+wh5MLx6qw22a4Y5hCQZNo83AwcQ+EWK6GdCRZ0V+nQ=; 
- =?utf-8?q?b=3DowEBbQGS/pANAwAKAVMDma7l9DHJAcsmYgBl1mooRK6GQBMSPSNeq9TIC5Eyp?=
- =?utf-8?q?s87cR1e+jRyO5IO_L9tbqdiJATMEAAEKAB0WIQSQnt+rKAvnETy4Hc9TA5mu5fQxy?=
- =?utf-8?q?QUCZdZqKAAKCRBTA5mu5fQxybD1B/_9c/EK+CWeOAxlDfTdwJDnyY4A/3nNMB6EGt?=
- =?utf-8?q?r5LZ4F2yneQa64m4QIo+ZrLzxwRuKvGPtIkZCsgv3Wb_6VqtJ33/oxBPXedXR/8tZ?=
- =?utf-8?q?F8LC3tHmVHZfMcJiWkgNH1vM/2hjC3leSEQ3Srb60sYUy2gPEfXPlhWpe_h/pci4h?=
- =?utf-8?q?nVsUsdxdKrZxVZVwxFBuorxCAFi/1o0mLPD9pAPePer6DS5+YEVd3E+OgW7bBhAyD?=
- =?utf-8?q?biQacI_Rs7+v+o8JqU+YEueRgm1Wmn00s+iF4/Rr+LY78hTjMrqWSXqxGiaZhctJh?=
- =?utf-8?q?fft1eTDgbM1jEEsoYH6B?= N1daNdaH5CVnSWpjKxBb1/q+bBht8s
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1658; i=sforshee@kernel.org;
+ h=from:subject:message-id; bh=CJx4jVGIRqQ1qdmTj2y9zLMKH38BdGpPQGSp5yBCQqY=; 
+ =?utf-8?q?b=3DowEBbQGS/pANAwAKAVMDma7l9DHJAcsmYgBl1molI6sVtDD31t+ZdHf1WoPke?=
+ =?utf-8?q?0imykwNoYOzlcEa_MLxxYsqJATMEAAEKAB0WIQSQnt+rKAvnETy4Hc9TA5mu5fQxy?=
+ =?utf-8?q?QUCZdZqJQAKCRBTA5mu5fQxyUmKB/_sG1SON2b9GiN9agwuQ8lNxw2IHmhmbxgz33?=
+ =?utf-8?q?hhQ2tViUIItDAJSIkNy5i0HyqiJgPzP/w1VR+NSBYZ3_rze6gn/V7wNsI6T4BHcLg?=
+ =?utf-8?q?Xfr/PP7enV45rcBxOGWDoeBgrvhVY2RIIRwv0+5nKw+ZUUoxMJyIXsguH_AQe19vJ?=
+ =?utf-8?q?zujrIFbKdZ5VySsugJ5uN9keqsl3z8Qth5BpJ4cml1+ab/U3rPxAwFa/t2OH6DxBK?=
+ =?utf-8?q?RvYF0c_GVb+YvhlZ+LDNcy1vbiuUqcuEeEatxNwdefLfn1dBPKNGW6/nY86XhjMB6?=
+ =?utf-8?q?6KBqJqPp/VEC20A/hPcB?= ne6Sf/61X39xbpD+uZnRFwaVm9Ag8L
 X-Developer-Key: i=sforshee@kernel.org; a=openpgp;
  fpr=2ABCA7498D83E1D32D51D3B5AB4800A62DB9F73A
 X-Endpoint-Received:
  by B4 Relay for sforshee@kernel.org/default with auth_id=103
 
-Provide a type-safe interface for setting filesystem capabilities and a
-generic implementation suitable for most filesystems.
-
 Signed-off-by: Seth Forshee (DigitalOcean) <sforshee@kernel.org>
 ---
- fs/xattr.c         | 79 ++++++++++++++++++++++++++++++++++++++++++++++++++++++
- include/linux/fs.h |  2 ++
- 2 files changed, 81 insertions(+)
+ security/security.c | 15 +++++++++++++--
+ 1 file changed, 13 insertions(+), 2 deletions(-)
 
-diff --git a/fs/xattr.c b/fs/xattr.c
-index 10d1b1f78fc2..96de43928a51 100644
---- a/fs/xattr.c
-+++ b/fs/xattr.c
-@@ -245,6 +245,85 @@ int vfs_get_fscaps(struct mnt_idmap *idmap, struct dentry *dentry,
+diff --git a/security/security.c b/security/security.c
+index 0d210da9862c..f515d8430318 100644
+--- a/security/security.c
++++ b/security/security.c
+@@ -2365,9 +2365,14 @@ int security_inode_remove_acl(struct mnt_idmap *idmap,
+ int security_inode_set_fscaps(struct mnt_idmap *idmap, struct dentry *dentry,
+ 			      const struct vfs_caps *caps, int flags)
+ {
++	int ret;
++
+ 	if (unlikely(IS_PRIVATE(d_backing_inode(dentry))))
+ 		return 0;
+-	return call_int_hook(inode_set_fscaps, 0, idmap, dentry, caps, flags);
++	ret = call_int_hook(inode_set_fscaps, 0, idmap, dentry, caps, flags);
++	if (ret)
++		return ret;
++	return evm_inode_set_fscaps(idmap, dentry, caps, flags);
  }
- EXPORT_SYMBOL(vfs_get_fscaps);
- 
-+static int generic_set_fscaps(struct mnt_idmap *idmap, struct dentry *dentry,
-+			      const struct vfs_caps *caps, int setxattr_flags)
-+{
-+	struct inode *inode = d_inode(dentry);
-+	struct vfs_ns_cap_data nscaps;
-+	int size;
-+
-+	size = vfs_caps_to_xattr(idmap, i_user_ns(inode), caps,
-+				 &nscaps, sizeof(nscaps));
-+	if (size < 0)
-+		return size;
-+
-+	return __vfs_setxattr_noperm(idmap, dentry, XATTR_NAME_CAPS,
-+				     &nscaps, size, setxattr_flags);
-+}
-+
-+/**
-+ * vfs_set_fscaps - set filesystem capabilities
-+ * @idmap: idmap of the mount the inode was found from
-+ * @dentry: the dentry on which to set filesystem capabilities
-+ * @caps: the filesystem capabilities to be written
-+ * @setxattr_flags: setxattr flags to use when writing the capabilities xattr
-+ *
-+ * This function writes the supplied filesystem capabilities to the dentry.
-+ *
-+ * Return: 0 on success, a negative errno on error.
-+ */
-+int vfs_set_fscaps(struct mnt_idmap *idmap, struct dentry *dentry,
-+		   const struct vfs_caps *caps, int setxattr_flags)
-+{
-+	struct inode *inode = d_inode(dentry);
-+	struct inode *delegated_inode = NULL;
-+	int error;
-+
-+retry_deleg:
-+	inode_lock(inode);
-+
-+	error = xattr_permission(idmap, inode, XATTR_NAME_CAPS, MAY_WRITE);
-+	if (error)
-+		goto out_inode_unlock;
-+	error = security_inode_set_fscaps(idmap, dentry, caps, setxattr_flags);
-+	if (error)
-+		goto out_inode_unlock;
-+
-+	error = try_break_deleg(inode, &delegated_inode);
-+	if (error)
-+		goto out_inode_unlock;
-+
-+	if (inode->i_opflags & IOP_XATTR) {
-+		if (inode->i_op->set_fscaps)
-+			error = inode->i_op->set_fscaps(idmap, dentry, caps,
-+							setxattr_flags);
-+		else
-+			error = generic_set_fscaps(idmap, dentry, caps,
-+						   setxattr_flags);
-+		if (!error) {
-+			fsnotify_xattr(dentry);
-+			security_inode_post_set_fscaps(idmap, dentry, caps,
-+						       setxattr_flags);
-+		}
-+	} else if (unlikely(is_bad_inode(inode))) {
-+		error = -EIO;
-+	} else {
-+		error = -EOPNOTSUPP;
-+	}
-+
-+out_inode_unlock:
-+	inode_unlock(inode);
-+
-+	if (delegated_inode) {
-+		error = break_deleg_wait(&delegated_inode);
-+		if (!error)
-+			goto retry_deleg;
-+	}
-+
-+	return error;
-+}
-+EXPORT_SYMBOL(vfs_set_fscaps);
-+
- int
- __vfs_setxattr(struct mnt_idmap *idmap, struct dentry *dentry,
- 	       struct inode *inode, const char *name, const void *value,
-diff --git a/include/linux/fs.h b/include/linux/fs.h
-index d7cd2467e1ea..4f5d7ed44644 100644
---- a/include/linux/fs.h
-+++ b/include/linux/fs.h
-@@ -2120,6 +2120,8 @@ extern int vfs_get_fscaps_nosec(struct mnt_idmap *idmap, struct dentry *dentry,
- 				struct vfs_caps *caps);
- extern int vfs_get_fscaps(struct mnt_idmap *idmap, struct dentry *dentry,
- 			  struct vfs_caps *caps);
-+extern int vfs_set_fscaps(struct mnt_idmap *idmap, struct dentry *dentry,
-+			  const struct vfs_caps *caps, int setxattr_flags);
  
  /**
-  * enum freeze_holder - holder of the freeze
+@@ -2387,6 +2392,7 @@ void security_inode_post_set_fscaps(struct mnt_idmap *idmap,
+ 	if (unlikely(IS_PRIVATE(d_backing_inode(dentry))))
+ 		return;
+ 	call_void_hook(inode_post_set_fscaps, idmap, dentry, caps, flags);
++	evm_inode_post_set_fscaps(idmap, dentry, caps, flags);
+ }
+ 
+ /**
+@@ -2415,9 +2421,14 @@ int security_inode_get_fscaps(struct mnt_idmap *idmap, struct dentry *dentry)
+  */
+ int security_inode_remove_fscaps(struct mnt_idmap *idmap, struct dentry *dentry)
+ {
++	int ret;
++
+ 	if (unlikely(IS_PRIVATE(d_backing_inode(dentry))))
+ 		return 0;
+-	return call_int_hook(inode_remove_fscaps, 0, idmap, dentry);
++	ret = call_int_hook(inode_remove_fscaps, 0, idmap, dentry);
++	if (ret)
++		return ret;
++	return evm_inode_remove_fscaps(dentry);
+ }
+ 
+ /**
 
 -- 
 2.43.0
