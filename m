@@ -1,99 +1,76 @@
-Received: from serv108.segi.ulg.ac.be (serv108.segi.ulg.ac.be [139.165.32.111])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D346B199AD;
-	Thu, 22 Feb 2024 23:34:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=139.165.32.111
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2ADF61B7E8;
+	Thu, 22 Feb 2024 23:35:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708644843; cv=none; b=GbN/prKGaPLbaaWHMX+ahCys4EISIzKbd70D6I+UWftli4HaLRTB2A4BIOcvV4vv3ON1xudG7mL3/ADhVhJA+ZXVvUv2g8FVxKTpXe/fKhtH/8GSLwJ4LSMCjiuoC7hW6AVF1QXTrZ3r2ryQFoK1oDFak4l+xogIOzNoGpMa93M=
+	t=1708644915; cv=none; b=ES9VVngT3NeYTPE0IPvHsP+7/6QaQpGOEC6jzWeFfFy2T5l+zcnQ9gCOE62cLBnvZirNdGn+1QR2Z16fm9Q3n93We6vvJpNneVTMlkj52C06hFwV9Hnixqv6sgQg9F+ACL7BrGq3TEy5OX0DWaeeeCQ8L0mW39wFjabMuRly/Hg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708644843; c=relaxed/simple;
-	bh=lYSbqhb9aelgiyV2bHdQgyY0ObK/yrK8TqQKdtUu/qM=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=HxtJPEylCP1mgX76MZ2SmBWepEXQFDZycJ+9ElZ2rsJxnLuEkxgNkfmce81HRG/WFjgLgihNx0BjZDie2KNvq3FoumoQj+VRVMsdqBElLcW1Txfm5TLmPa39tf/m6e3OPOVSxe/tpMX3ENACUixfGyWSuAia3RAhvNDPnLEi1og=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uliege.be; spf=pass smtp.mailfrom=uliege.be; dkim=pass (2048-bit key) header.d=uliege.be header.i=@uliege.be header.b=IjRtkDRW; arc=none smtp.client-ip=139.165.32.111
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uliege.be
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uliege.be
+	s=arc-20240116; t=1708644915; c=relaxed/simple;
+	bh=bWHQ4veqHNgZLLV3PvODabroMs7Y6VE4DKsDteiIziM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=i033M+8eCpv6LE8E/hq264Nqnq5QOwMw9XMaGXxrPGMp9EOlPp50lVaxGeorCA3LyaVCL/Ks5mn8uTU82TJiLZvpglGjd6gm5nZQ9SZvoT6N0NiYA1VrwUC1b7ctdUKviH2PNhISDDSic42OiSlRP7PqBC8DQ7xZqzNOKj0TVCw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ShIIAFFh; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=uliege.be header.i=@uliege.be header.b="IjRtkDRW"
-Received: from ubuntu.home (125.179-65-87.adsl-dyn.isp.belgacom.be [87.65.179.125])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by serv108.segi.ulg.ac.be (Postfix) with ESMTPSA id D2883200C97D;
-	Fri, 23 Feb 2024 00:33:56 +0100 (CET)
-DKIM-Filter: OpenDKIM Filter v2.11.0 serv108.segi.ulg.ac.be D2883200C97D
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uliege.be;
-	s=ulg20190529; t=1708644837;
-	bh=LcVhwtN+UqJjMSh3FfAL9zHi7+WPp9yvrVRqAgObzSs=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=IjRtkDRWdbBNd+C7rjucPifnfstJjCMjeNQLZIkHnJYurMlyxUTtftZqsCsgVI7Fr
-	 +0TH0V6d99wRsq5A2lq5bIV61NTIHMPE+BNukEbl6MO5gkbZVOEVVVx/H+oTBj7p69
-	 3NdG/vPug+95Hf8jbsz0MSde/jtkDxgNQQHv/DbjpLo7CwEANHbEbw6KIywkQSHAql
-	 Jt9XPNg+qG0SzC4jo9EzP0Q2ObopGWaUYv+v+zyuEPfdoaSm5ZHFy/ODCcKSazkzEq
-	 /5TEhIDDTj+5GiTqo8IE9NW+7W0nhNWhf48pjEOIu6aSWd5OlCF+fc5N51Z/nSUQEx
-	 bT7ekACTzq2Sg==
-From: Justin Iurman <justin.iurman@uliege.be>
-To: netdev@vger.kernel.org
-Cc: davem@davemloft.net,
-	dsahern@kernel.org,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	linux-kernel@vger.kernel.org,
-	justin.iurman@uliege.be
-Subject: [PATCH net-next v3 1/3] uapi: ioam6: API for netlink multicast events
-Date: Fri, 23 Feb 2024 00:33:35 +0100
-Message-Id: <20240222233337.5342-2-justin.iurman@uliege.be>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240222233337.5342-1-justin.iurman@uliege.be>
-References: <20240222233337.5342-1-justin.iurman@uliege.be>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ShIIAFFh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 53FC2C433F1;
+	Thu, 22 Feb 2024 23:35:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1708644915;
+	bh=bWHQ4veqHNgZLLV3PvODabroMs7Y6VE4DKsDteiIziM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ShIIAFFh+3T39gD8YC924PmfNQhM4tY30CnPeKJD92aKONmy7ruQf14KyQV4Vi58z
+	 98ew1Qzt6FURyURo0IEctanKtVpKrj4d2xLJeMTmxpehOXWxyqkJUqvngxel0SHp6Y
+	 /ef2mpYckwgmZnK18aNoNTS+Sw6SrzTiHjheh33q2jKlLs1NoJMgj+TP3eE2MifRRO
+	 JqduNINSGm0TwIuB+1wqsvDQaa5wMXZYpUhRKKRj4movMj+Qwj6kUOhC28em4OAD/t
+	 Mf3NVXxjYlqelfCgIrvSWu5VhTpLalqaSn0O9G5fM+iQMPDYpHLa6Xvitp6mtbuQei
+	 XetYvnDI08DDA==
+Date: Thu, 22 Feb 2024 16:35:10 -0700
+From: Rob Herring <robh@kernel.org>
+To: Jan Kiszka <jan.kiszka@siemens.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, "Andrew F. Davis" <afd@ti.com>,
+	Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+	linux-pci@vger.kernel.org,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Kishon Vijay Abraham I <kishon@ti.com>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	devicetree <devicetree@vger.kernel.org>, Nishanth Menon <nm@ti.com>,
+	"Lopes Ivo, Diogo Miguel (T CED IFD-PT)" <diogo.ivo@siemens.com>
+Subject: Re: [PATCH v2] dt-bindings: PCI: ti,am65: Fix remaining binding
+ warnings
+Message-ID: <170864491030.3808693.7969720495759139872.robh@kernel.org>
+References: <8032b018-c870-403a-9dd9-63440de1da07@siemens.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <8032b018-c870-403a-9dd9-63440de1da07@siemens.com>
 
-Add new api to support ioam6 events for generic netlink multicast. A
-first "trace" event is added to the list of ioam6 events, which will
-represent an IOAM Pre-allocated (or Incremental) Trace Option-Type. It
-provides another solution to share IOAM data with user space.
 
-Signed-off-by: Justin Iurman <justin.iurman@uliege.be>
----
- include/uapi/linux/ioam6_genl.h | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
+On Thu, 15 Feb 2024 13:55:56 +0100, Jan Kiszka wrote:
+> From: Jan Kiszka <jan.kiszka@siemens.com>
+> 
+> This adds the missing num-viewport, phys and phy-name properties to the
+> schema. Based on driver code, num-viewport is required for the root
+> complex, phys are optional. Their number corresponds to the number of
+> lanes. The AM65x supports up to 2 lanes.
+> 
+> Signed-off-by: Jan Kiszka <jan.kiszka@siemens.com>
+> 
+> ---
+> Changes in v2:
+>  - limit phy-names to pcie-phy[0-1]
+>  - fix schema-checking of example
+> ---
+>  .../bindings/pci/ti,am65-pci-host.yaml        | 20 +++++++++++++++++++
+>  1 file changed, 20 insertions(+)
+> 
 
-diff --git a/include/uapi/linux/ioam6_genl.h b/include/uapi/linux/ioam6_genl.h
-index ca4b22833754..1733fbc51fb5 100644
---- a/include/uapi/linux/ioam6_genl.h
-+++ b/include/uapi/linux/ioam6_genl.h
-@@ -49,4 +49,24 @@ enum {
- 
- #define IOAM6_CMD_MAX (__IOAM6_CMD_MAX - 1)
- 
-+#define IOAM6_GENL_EV_GRP_NAME "ioam6_events"
-+
-+enum ioam6_event_type {
-+	IOAM6_EVENT_UNSPEC,
-+	IOAM6_EVENT_TRACE,
-+};
-+
-+enum ioam6_event_attr {
-+	IOAM6_EVENT_ATTR_UNSPEC,
-+
-+	IOAM6_EVENT_ATTR_TRACE_NAMESPACE,	/* u16 */
-+	IOAM6_EVENT_ATTR_TRACE_NODELEN,		/* u8 */
-+	IOAM6_EVENT_ATTR_TRACE_TYPE,		/* u32 */
-+	IOAM6_EVENT_ATTR_TRACE_DATA,		/* Binary */
-+
-+	__IOAM6_EVENT_ATTR_MAX
-+};
-+
-+#define IOAM6_EVENT_ATTR_MAX (__IOAM6_EVENT_ATTR_MAX - 1)
-+
- #endif /* _UAPI_LINUX_IOAM6_GENL_H */
--- 
-2.34.1
+Reviewed-by: Rob Herring <robh@kernel.org>
 
