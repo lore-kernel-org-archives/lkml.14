@@ -1,112 +1,112 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F039673F3E;
-	Thu, 22 Feb 2024 21:36:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF3251E496
+	for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 21:37:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708637811; cv=none; b=XStuyTDT+FZ99zp+DzuY1dacxzRXbapdJs/2vys1b2FJaEKmS8KFDC8vppwZH6xc5AUlKfLwfApgwgxUSjlLV9iKnKD6L4Jy0NH0Ri8nA2OKtuaRTMpj+acQ8qYjrDZHQqrXVL/s0UtEQAZrjxjY9UfgoBIDiwTnp71lM5ckJ9I=
+	t=1708637848; cv=none; b=fWaS1oXobsPXKRE/OEEjEu4h/77l2zqCBwR2XvZ4FgKH/xOQkQm71WGHKMf3PYpCUZlhpvVtiNO1/38joIVpm7MOWxrDrEx12G12XbeAZDw3lMVEpFHiR06kc8d2L04XonSITYR41cEvugPn89Bb/dNnylthan7xUlY79PtMSmU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708637811; c=relaxed/simple;
-	bh=7Y6kSVXo2Eky32ArH5WC+Ufp3s4jShIcENQr6DbnLLk=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=XdYQe86oc6IWPivbUMy3stJkMBlQ3QIlhQbUq0Gi6FH1svcpy8anme6Cxg9JBqv4JG0eaGoEkbKzdKDTlyYwLpINMhOgqVgH9XpsSM3SXFs8Er6/MXE4I6XBLoZhdLuT0ShcwwTVj2GsDaRtHU5n0oaV1GJYWo7M7K+Z990l2CM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=mHY/ep6f; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=6v3VMHzF; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1708637848; c=relaxed/simple;
+	bh=CRQLcQZZCyWq7iQgWSpsPFZZBjaRvd9wTMW8gMdChFo=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=QUfD5KovQFvH3PejwEafzW4oFGE/ArpsAjqNXWPMDyscJYcYlG5cn8tPHRr7wYXsnhCRvN8gnQPuxZJsW8F1DEnHztGhBYPKX3AmGkXHHYSCmnJNmy+EbEL7nNHSw5R+PDQilr9HnXWoCN/hcdkF76GwDrWeyt3wnsee4pStuBM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=BrkfhrKM; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="mHY/ep6f";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="6v3VMHzF"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1708637808;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BrkfhrKM"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1708637845;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=ysPo6JrAY4nGWCiZuUlITPDn7XnJnDVfKZs7jRkBAW4=;
-	b=mHY/ep6f/6+Zhj4+fZRHJ34d2lfiHP1EuInqjDkWFDCaiz/e8s95zPGbT8M0Ad++Dzyjmb
-	oVY+D2yqHO9WQbM0zwWCA5C3UGCs+gQ3z590Ucxghlf4Dlr41VPiQF9YgQYZMLeUawEiAa
-	Rnc0moqmMGO4SebkjihxwYdCTGbaE8vxFP+Vadvxo7Yltc9LG8tDTKxbNnV9fYjvOpOKXA
-	IVzZemMDik58mgm0f4adOVww1qNlUCp6hVusO9YpY3wPgYHU/R6LCbNdfHNpPLOSKZiLCu
-	6a7wcJJnpMSyhcj5Qeg9peFN2J/35vITOcTokZCnmz0jPiz2SksBNd0ahFfwWg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1708637808;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ysPo6JrAY4nGWCiZuUlITPDn7XnJnDVfKZs7jRkBAW4=;
-	b=6v3VMHzFcbvBoIrwVbn04/STMyA/qaJsgeXvHkOW1vMOCTZyQDFr2zoK8GtfRgUV7KtM1v
-	sGwpCMRcO4QbnbAQ==
-To: Yu Chien Peter Lin <peterlin@andestech.com>, acme@kernel.org,
- adrian.hunter@intel.com, ajones@ventanamicro.com,
- alexander.shishkin@linux.intel.com, andre.przywara@arm.com,
- anup@brainfault.org, aou@eecs.berkeley.edu, atishp@atishpatra.org,
- conor+dt@kernel.org, conor.dooley@microchip.com, conor@kernel.org,
- devicetree@vger.kernel.org, evan@rivosinc.com, geert+renesas@glider.be,
- guoren@kernel.org, heiko@sntech.de, irogers@google.com,
- jernej.skrabec@gmail.com, jolsa@kernel.org, jszhang@kernel.org,
- krzysztof.kozlowski+dt@linaro.org, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
- linux-renesas-soc@vger.kernel.org, linux-riscv@lists.infradead.org,
- linux-sunxi@lists.linux.dev, locus84@andestech.com, magnus.damm@gmail.com,
- mark.rutland@arm.com, mingo@redhat.com, n.shubin@yadro.com,
- namhyung@kernel.org, palmer@dabbelt.com, paul.walmsley@sifive.com,
- peterlin@andestech.com, peterz@infradead.org,
- prabhakar.mahadev-lad.rj@bp.renesas.com, rdunlap@infradead.org,
- robh+dt@kernel.org, samuel@sholland.org, sunilvl@ventanamicro.com,
- tim609@andestech.com, uwu@icenowy.me, wens@csie.org, will@kernel.org,
- inochiama@outlook.com, unicorn_wang@outlook.com, wefu@redhat.com
-Cc: Randolph <randolph@andestech.com>
-Subject: Re: [PATCH v9 03/10] irqchip/riscv-intc: Introduce Andes hart-level
- interrupt controller
-In-Reply-To: <20240222083946.3977135-4-peterlin@andestech.com>
-References: <20240222083946.3977135-1-peterlin@andestech.com>
- <20240222083946.3977135-4-peterlin@andestech.com>
-Date: Thu, 22 Feb 2024 22:36:47 +0100
-Message-ID: <87o7c8dvv4.ffs@tglx>
+	bh=d7l+9clzjVKQA+xkkzwU5JxUEh+E5T8G22Hnvhg7ds4=;
+	b=BrkfhrKMhfgYXKEfPneO+ntVZPhTAGCYUwPN7Kk/4snlsIXshROTUwRunP5/48hDeoHQYQ
+	4NMJaQS8/w0pAlF4npu5Bkk5K9ML6QX3yyfqa7IfnxlRZ0hEZId7uT6hS24jFp1+v9R2+y
+	e+ig1zxZQHFtiZFuXwzaW2DmoXSldvs=
+Received: from mail-io1-f70.google.com (mail-io1-f70.google.com
+ [209.85.166.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-670-flzu64GWNcqPZs5Jca1Tzg-1; Thu, 22 Feb 2024 16:37:24 -0500
+X-MC-Unique: flzu64GWNcqPZs5Jca1Tzg-1
+Received: by mail-io1-f70.google.com with SMTP id ca18e2360f4ac-7c76a65a4aaso22502239f.0
+        for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 13:37:24 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708637843; x=1709242643;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=d7l+9clzjVKQA+xkkzwU5JxUEh+E5T8G22Hnvhg7ds4=;
+        b=uL4C44nTdD5kHivdMC5fxd1hORdrKbpbUaVGor0BeVP0Gj9SaqokzAh1NPfPTWYSf3
+         CS8Wu++CJFEwRs9y/9DVg3VJJpyXdDNpBvGplzcLjneVyDXgObjcilkA9dEhAn4m7DrA
+         FIitqGeNpvI4YclxPEzAqo3zggMB9klewOdOPRjm3DCCi3gg7CuI5eJnyKJwRPUk/kSA
+         8sbYu+RsuXCHX498NycAfwpv8WRDYqcnwBLIfuI07Bhu0dv1mzPBdl0TD5Wzp1oNGHqu
+         7dK/FA01C66f1l90HEd8Kf2aRyUNawCFnKaX/Td2C8c6sagEjRO6fmnIW6Hjmvvextra
+         w9dA==
+X-Forwarded-Encrypted: i=1; AJvYcCXSG73492Pb6xTYOVhEuGRGATvWmdPam2lZMXlX1GUgr+ErPVsWptKNgHUu6HG7Iq78hxczczTkfxRTfiyluMDbXZ4ZuTc+VYxGohaC
+X-Gm-Message-State: AOJu0YysEpNw0NvpDnYpZkkpnJ6lLSt0MUcovAfBSldqNR8fFMtS8Nva
+	AEIYQqgT1UdrXKql8SBqRsuNT6QUE3qb968T0DygQv4+4R4x/iplXiquf3zUo1k6RRosi0HnrWq
+	MFECHIYqf6hQGN3ytZPg4v4OEYHb4G6QvdlQRCJoI0omI23fP5lYRnvICWfBopg==
+X-Received: by 2002:a6b:e00e:0:b0:7c0:3d0f:b7cf with SMTP id z14-20020a6be00e000000b007c03d0fb7cfmr2831139iog.8.1708637843593;
+        Thu, 22 Feb 2024 13:37:23 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IF/m5G6udUIqgOLIq2GJ6IMPYm7AvkII6Jm6SmNbDfsGtL4njJ2KwbwX+3lenHBYb+iEfCSAA==
+X-Received: by 2002:a6b:e00e:0:b0:7c0:3d0f:b7cf with SMTP id z14-20020a6be00e000000b007c03d0fb7cfmr2831128iog.8.1708637843367;
+        Thu, 22 Feb 2024 13:37:23 -0800 (PST)
+Received: from redhat.com ([38.15.36.11])
+        by smtp.gmail.com with ESMTPSA id l14-20020a056638220e00b004743021012asm2117827jas.2.2024.02.22.13.37.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 22 Feb 2024 13:37:22 -0800 (PST)
+Date: Thu, 22 Feb 2024 14:37:17 -0700
+From: Alex Williamson <alex.williamson@redhat.com>
+To: Kunwu Chan <chentao@kylinos.cn>
+Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] vfio: Use WARN_ON for low-probability allocation
+ failure issue in vfio_pci_bus_notifier
+Message-ID: <20240222143717.5e6bd5d8.alex.williamson@redhat.com>
+In-Reply-To: <20240115063434.20278-1-chentao@kylinos.cn>
+References: <20240115063434.20278-1-chentao@kylinos.cn>
+X-Mailer: Claws Mail 4.2.0 (GTK 3.24.41; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Thu, Feb 22 2024 at 16:39, Yu Chien Peter Lin wrote:
-> Add support for the Andes hart-level interrupt controller. This
-> controller provides interrupt mask/unmask functions to access the
-> custom register (SLIE) where the non-standard S-mode local interrupt
-> enable bits are located. The base of custom interrupt number is set
-> to 256.
->
-> To share the riscv_intc_domain_map() with the generic RISC-V INTC and
-> ACPI, add a chip parameter to riscv_intc_init_common(), so it can be
-> passed to the irq_domain_set_info() as a private data.
->
-> Andes hart-level interrupt controller requires the "andestech,cpu-intc"
-> compatible string to be present in interrupt-controller of cpu node to
-> enable the use of custom local interrupt source.
-> e.g.,
->
->   cpu0: cpu@0 {
->       compatible = "andestech,ax45mp", "riscv";
->       ...
->       cpu0-intc: interrupt-controller {
->           #interrupt-cells = <0x01>;
->           compatible = "andestech,cpu-intc", "riscv,cpu-intc";
->           interrupt-controller;
->       };
->   };
->
-> Signed-off-by: Yu Chien Peter Lin <peterlin@andestech.com>
-> Reviewed-by: Randolph <randolph@andestech.com>
-> Reviewed-by: Anup Patel <anup@brainfault.org>
+On Mon, 15 Jan 2024 14:34:34 +0800
+Kunwu Chan <chentao@kylinos.cn> wrote:
 
-Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
+> kasprintf() returns a pointer to dynamically allocated memory
+> which can be NULL upon failure.
+> 
+> This is a blocking notifier callback, so errno isn't a proper return
+> value. Use WARN_ON to small allocation failures.
+> 
+> Signed-off-by: Kunwu Chan <chentao@kylinos.cn>
+> ---
+> v2: Use WARN_ON instead of return errno
+> ---
+>  drivers/vfio/pci/vfio_pci_core.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/vfio/pci/vfio_pci_core.c b/drivers/vfio/pci/vfio_pci_core.c
+> index 1cbc990d42e0..61aa19666050 100644
+> --- a/drivers/vfio/pci/vfio_pci_core.c
+> +++ b/drivers/vfio/pci/vfio_pci_core.c
+> @@ -2047,6 +2047,7 @@ static int vfio_pci_bus_notifier(struct notifier_block *nb,
+>  			 pci_name(pdev));
+>  		pdev->driver_override = kasprintf(GFP_KERNEL, "%s",
+>  						  vdev->vdev.ops->name);
+> +		WARN_ON(!pdev->driver_override);
+>  	} else if (action == BUS_NOTIFY_BOUND_DRIVER &&
+>  		   pdev->is_virtfn && physfn == vdev->pdev) {
+>  		struct pci_driver *drv = pci_dev_driver(pdev);
 
-Palmer, feel free to take this through the riscv tree. I have no other
-changes pending against that driver.
+Applied to vfio next branch for v6.9.  Thanks,
 
-Thanks,
+Alex
 
-        tglx
