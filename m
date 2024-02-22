@@ -1,74 +1,182 @@
-Received: from out30-101.freemail.mail.aliyun.com (out30-101.freemail.mail.aliyun.com [115.124.30.101])
+Received: from out-172.mta1.migadu.com (out-172.mta1.migadu.com [95.215.58.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AF9517583;
-	Thu, 22 Feb 2024 08:36:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA03B7489
+	for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 08:37:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708590985; cv=none; b=UnvW8r0ao0m3hwlsl3FNSbGNIrlzJq3ogdewHlQI5CvumSwR94wTGrzVC9cgTd4MYrSUJ6MihyghLvNCwsZ4AJ+olxieZ1UV1dOsK/rGelOoW8hsG6Fb6k3DFKbeVAME3BQnH5B9HrCY4FJXZWpC0Lk103xJNH0uB1mld2ZbdWk=
+	t=1708591079; cv=none; b=izlHJZb72fd2VogwoCzcSbtzZFXmwllw+otaflZ4/9OoEonNOigIjfdsO2BBfwxIkyRAkdrJ4ysdI28KQizO6C3xUlMcNvd+7neASysNxcGN9Lf9/q2BQoMv2xkqXFwo4z5VWgzItRzFZJ1SsCKNhAkWOL47GxbeQfx0ISH6hqw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708590985; c=relaxed/simple;
-	bh=35o1s17GEgTofroVACV50mopTUDx11285gHuW9ReeHc=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=N5zcJ/xOkKHkOy6hLLhlnsd4v22Z8XRQoX45rcuG9U5D0GwR7uRxmzlFxpkh5IEervnNSx/QIuRipXDXOVm52sSs1c1MVz91kUSRri2Iqa+hZQYUsV56JC2sd+WAVnI/UMx4/9Bw+KdX/ZfzdA1IS0ZqJvbXWv0v1cIEcbRm5uA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=aRcOHS/r; arc=none smtp.client-ip=115.124.30.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1708591079; c=relaxed/simple;
+	bh=7YOqReXSrg+D9p04iIoWnVOSNboFsdzKRwZEZRJ2ibY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=GM6SkeV8azuPmboSk9tjoRh1B+WAznLEGJahfyZ+euSdfWjTO28hYzvH6YQPdYJFdu6xnC/e84LlT5cnRmvol2w7GmtiIObx3Oew//H7prC2ZS4Ukjv+n9r5E7GScnXLU0yingnzQok2teTYOA3RY/H6XVPh4QRBWSxSdvZXn8s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Br3Ux179; arc=none smtp.client-ip=95.215.58.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="aRcOHS/r"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1708590977; h=From:To:Subject:Date:Message-Id:MIME-Version;
-	bh=X9yz07D9w8yMy5Y7IPBs0+pEkB7vyXUOF8tVyxWbAGg=;
-	b=aRcOHS/ryawRguaMzeoX1EZy6J9O3pMn81rVoRha0GmUmsTPwQ+YNjoH8aKraWjiWdTrtPFy2PYbscwsuzQK+JNwqFua3yQhfPaP5KGKaGo8ky4Gz5KkfyHYAl8SPBWppQGJaSrpjRKwAg8XUDJOOVc2mic1fIFnVgK5dHVwiKg=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R561e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046049;MF=jiapeng.chong@linux.alibaba.com;NM=1;PH=DS;RN=7;SR=0;TI=SMTPD_---0W10YCEV_1708590966;
-Received: from localhost(mailfrom:jiapeng.chong@linux.alibaba.com fp:SMTPD_---0W10YCEV_1708590966)
-          by smtp.aliyun-inc.com;
-          Thu, 22 Feb 2024 16:36:16 +0800
-From: Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
-To: viro@zeniv.linux.org.uk
-Cc: brauner@kernel.org,
-	jack@suse.cz,
-	linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Jiapeng Chong <jiapeng.chong@linux.alibaba.com>,
-	Abaci Robot <abaci@linux.alibaba.com>
-Subject: [PATCH] pidfd: make pidfs_dentry_operations static
-Date: Thu, 22 Feb 2024 16:36:04 +0800
-Message-Id: <20240222083604.11280-1-jiapeng.chong@linux.alibaba.com>
-X-Mailer: git-send-email 2.20.1.7.g153144c
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Br3Ux179"
+Message-ID: <d3be7a90-b186-a8fb-678c-f06ef950d942@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1708591073;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=rqsis7qCIfa4wD4HgfeAJauNuQNyODgqCcBJ3xvV6ng=;
+	b=Br3Ux1791TakLd/z0p8E0Sf3d879NhVS0/I2uu+Fr8Ug5ZcT7ArqgrZPO1tMWC9nc7MQrz
+	QljCIBIDbjCjyfoG+VBKHilsyGPazDapzS/gGbeeBZicHGWs4/PopowhRJsTKIxsNpHrUK
+	wdc0V8CqMc3YAfbymN3cGKtAv4nKzsw=
+Date: Thu, 22 Feb 2024 16:37:44 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Subject: Re: [PATCH v2] mm/mmap: return early if it can't merge in vma_merge()
+Content-Language: en-US
+To: Lorenzo Stoakes <lstoakes@gmail.com>
+Cc: "Liam R. Howlett" <Liam.Howlett@oracle.com>, akpm@linux-foundation.org,
+ vbabka@suse.cz, linux-mm@kvack.org, linux-kernel@vger.kernel.org
+References: <20240221091453.1785076-1-yajun.deng@linux.dev>
+ <20240221153827.wkmjnnwsf6lyxatc@revolver>
+ <f3847dd7-5564-4d7e-951e-1a9d8f55fb78@lucifer.local>
+ <082fed0a-8489-37d1-f990-067976260659@linux.dev>
+ <b4232b44-083a-42d4-a245-7eb4382f7329@lucifer.local>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Yajun Deng <yajun.deng@linux.dev>
+In-Reply-To: <b4232b44-083a-42d4-a245-7eb4382f7329@lucifer.local>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-The pidfs_dentry_operations are not used outside the file pidfs.c, so the
-modification is defined as static.
 
-fs/pidfs.c:175:32: warning: symbol 'pidfs_dentry_operations' was not declared. Should it be static?
+On 2024/2/22 16:31, Lorenzo Stoakes wrote:
+> On Thu, Feb 22, 2024 at 03:47:04PM +0800, Yajun Deng wrote:
+>> On 2024/2/22 04:41, Lorenzo Stoakes wrote:
+>>> On Wed, Feb 21, 2024 at 10:38:27AM -0500, Liam R. Howlett wrote:
+>>>> * Yajun Deng <yajun.deng@linux.dev> [240221 04:15]:
+>>>>> In most cases, the range of the area is valid. But in do_mprotect_pkey(),
+>>>>> the minimum value of end and vma->vm_end is passed to mprotect_fixup().
+>>>>> This will lead to the end is less than the end of prev.
+>>>>>
+>>>>> In this case, the curr will be NULL, but the next will be equal to the
+>>>>> prev. So it will attempt to merge before, the vm_pgoff check will cause
+>>>>> this case to fail.
+>>>>>
+>>>>> To avoid the process described above and reduce unnecessary operations.
+>>>>> Add a check to immediately return NULL if the end is less than the end of
+>>>>> prev.
+>>>> If it's only one caller, could we stop that caller instead of checking
+>>>> an almost never case for all callers?  Would this better fit in
+>>>> vma_modify()?  Although that's not just for this caller at this point.
+>>>> Maybe there isn't a good place?
+>>> I definitely agree with Liam that this should not be in vma_merge(), as
+>>> it's not going to be relevant to _most_ callers.
+>>>
+>>> I am not sure vma_modify() is much better, this would be the only early
+>>> exit check in that function and makes what is very simple and
+>>> straightforward now more confusing.
+>>
+>> There are two paths that will cause this case. One is in mprotect_fixup(),
+>> the other is in
+>>
+>> madvise_update_vma().
+>>
+>>
+>> One way is to separate out the split_vma() from vma_modify(). And create a
+>> new helper function.
+> Absolutely not. I wrote the vma_modify() patch series explicitly to expose
+> _less_ not more.
+>
+>> We can call it directly at source, but we need to do this in both paths.
+>> It's more complicated.
+>>
+>>
+>> The other way is to add a check in vma_modify(). Like the following:
+> As I said above, I really don't think this is a good idea, you're just
+> special casing one non-merge case but not any others + adding an
+> unnecessary branch.
+>
+>> diff --git a/mm/mmap.c b/mm/mmap.c
+>> index 0fccd23f056e..f93f1d3939f2 100644
+>> --- a/mm/mmap.c
+>> +++ b/mm/mmap.c
+>> @@ -2431,11 +2431,15 @@ struct vm_area_struct *vma_modify(struct
+>> vma_iterator *vmi,
+>>          pgoff_t pgoff = vma->vm_pgoff + ((start - vma->vm_start) >>
+>> PAGE_SHIFT);
+>>          struct vm_area_struct *merged;
+>>
+>> +       if (prev && end < prev->vm_end)
+>> +               goto cannot_merge;
+>> +
+>>          merged = vma_merge(vmi, prev, vma, start, end, vm_flags,
+>>                             pgoff, policy, uffd_ctx, anon_name);
+>>          if (merged)
+>>                  return merged;
+>>
+>> +cannot_merge:
+>>          if (vma->vm_start < start) {
+>>                  int err = split_vma(vmi, vma, start, 1);
+>>
+>>
+>>> And I think this is the crux of it - it's confusing that we special case
+>>> this one particular non-merge scenario, but no others (all of which we then
+>>> deem ok to be caught by the usual rules).
+>>>
+>>> I think it's simpler (and more efficient) to just keep things the way they
+>>> are.
+>>>
+>>>> Or are there other reasons this may happen and is better done in this
+>>>> function?
+>>>>
+>>>> Often, this is called the "punch a hole" scenario; where an operation
+>>>> creates two entries from the old data and either leaves an empty space
+>>>> or fills the space with a new VMA.
+>>>>
+>>>>> Signed-off-by: Yajun Deng <yajun.deng@linux.dev>
+>>>>> ---
+>>>>> v2: remove the case label.
+>>>>> v1: https://lore.kernel.org/all/20240218085028.3294332-1-yajun.deng@linux.dev/
+>>>>> ---
+>>>>>    mm/mmap.c | 3 +++
+>>>>>    1 file changed, 3 insertions(+)
+>>>>>
+>>>>> diff --git a/mm/mmap.c b/mm/mmap.c
+>>>>> index 0fccd23f056e..7668854d2246 100644
+>>>>> --- a/mm/mmap.c
+>>>>> +++ b/mm/mmap.c
+>>>>> @@ -890,6 +890,9 @@ static struct vm_area_struct
+>>>>>    	if (vm_flags & VM_SPECIAL)
+>>>>>    		return NULL;
+>>>>>
+>>>>> +	if (prev && end < prev->vm_end)
+>>>>> +		return NULL;
+>>>>> +
+>>>>>    	/* Does the input range span an existing VMA? (cases 5 - 8) */
+>>>>>    	curr = find_vma_intersection(mm, prev ? prev->vm_end : 0, end);
+>>>>>
+>>>>> --
+>>>>> 2.25.1
+>>>>>
+>>> So overall I don't think this check makes much sense anywhere.
+>>>
+>>> I think a better solution would be to prevent it happening _at source_ if
+>>> you can find a logical way of doing so.
+>>>
+>>> I do plan to do some cleanup passes over this stuff once again so maybe I
+>>> can figure something out that better handles non-merge scenarios.
+>>>
+>>> This is a great find though overall even if a patch doesn't make sense
+>>> Yajun, thanks for this, it's really made me think about this case (+ others
+>>> like it) :)
+> I guess maybe again I've not been clear enough on this, so unless
+> compelling reasoning can otherwise be provided, I feel this check should
+> not be added _anywhere_.
 
-Reported-by: Abaci Robot <abaci@linux.alibaba.com>
-Closes: https://bugzilla.openanolis.cn/show_bug.cgi?id=8284
-Signed-off-by: Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
----
- fs/pidfs.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/pidfs.c b/fs/pidfs.c
-index c33501c9cd8b..85e9617f0aee 100644
---- a/fs/pidfs.c
-+++ b/fs/pidfs.c
-@@ -172,7 +172,7 @@ static void pidfdfs_prune_dentry(struct dentry *dentry)
- 	}
- }
- 
--const struct dentry_operations pidfs_dentry_operations = {
-+static const struct dentry_operations pidfs_dentry_operations = {
- 	.d_delete	= always_delete_dentry,
- 	.d_dname	= pidfs_dname,
- 	.d_prune	= pidfdfs_prune_dentry,
--- 
-2.20.1.7.g153144c
+Okay, I got it. Thank you!
 
+> Therefore, NACK.
