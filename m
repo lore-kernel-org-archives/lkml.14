@@ -1,126 +1,137 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06BC636B15;
-	Thu, 22 Feb 2024 14:37:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 104B51468FB;
+	Thu, 22 Feb 2024 14:37:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708612647; cv=none; b=ej++9jh0zxX9ceRVJpV5yFbnGP+/1lX5HvSRTMmrReFbM6UYDwgmEHO2/7+IqBDyZayPdGXoLHnZu/8BC9DbowQGd+hMATYonf57M+BroRyTF17EfJHEU52n9uNXp1dNbRT3dQz5aB+S11dW9rt65lL0NzRqEbBMX/IFomiFavo=
+	t=1708612673; cv=none; b=ewZBZToy/DBjBYgrjeE7uBDYvL6qhAyRu+mgTBnFvtcTPLMjlAh4n+/xS/01ap2hYkMMqasG6X73VgQV8b0CNbm7pFbsrtj56KAC5N6HLCvuZ46CMJ8NK0JGxwtUGrLn7uux8emDZB07M3/I8R95QkXRQeKl0gHyheZ9qc+MNaI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708612647; c=relaxed/simple;
-	bh=nA+GwPV8So810YxlOsuziJpf9lYOI6OtcvWyEM/PeAI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=dwl84NuN6+a3w6GZejHcII+GsAoU9oOdvgMBKDs7jT9DGvJohcn4zsPQ+TzpSG82kkA94ogOneg3AvrVrRP+Z8BNIgF6c8PJ+9dV38ZlwPWB2f/qnl7yHC2HNYFZfjNwFp+lQQ32C9SowifGd0abIZHDEF+fwrCHO3rK/DAq/Zk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Of0qbvK6; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1708612673; c=relaxed/simple;
+	bh=+RTs0tvxM24Ryz5bljNL759ffo+2YNoUxuxyTBXYaGI=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=oOMTiUWnWetrkXsE+ikcfmGW6coIfXLS6spASaGYZ2NtphKPRf6QKouuRLHZYPn4XoY3RERfTZscBSKLExz0v0dZUtyN4wecSpmTKwf+IrK7fM1fE/g7WX5dKE/9HDbjx4Cz/fyehP3PDFe60clPd65/nBn0hWEn2JYdwG8iMLs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=Dryfcnzx; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Of0qbvK6"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1708612647; x=1740148647;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=nA+GwPV8So810YxlOsuziJpf9lYOI6OtcvWyEM/PeAI=;
-  b=Of0qbvK6jpIl1T63Paf5joZ8kWBW4UsFOERUsSYZUJaQl6z12GbD9AYQ
-   sRg3IgbHzlFzGiyFjrlP70f+N9A3DF6wh34Rl9QLWfz6NX+IQrQSdHd/k
-   OpKyj6aWOeS/DRIBKbT6hRmRWqfy8v/sCRYIOJOadktvXn0plnfVcOv4e
-   nNqbTKkrlUE4u/enBAIJWP+epjmydDfUAIbc9eOqRumk7DCk3+riMpWxs
-   1xNDWUNhCzUiS/PJO2L8uTQ0yaChryk/PeDXtTLeAwJP+zyEGbeLVcTFw
-   VaNRAY3VjMsYL25cudYJbaIsjs+ASFlJTbDtDqOu0x2A2xmFnxbFiazx6
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10991"; a="2961658"
-X-IronPort-AV: E=Sophos;i="6.06,179,1705392000"; 
-   d="scan'208";a="2961658"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Feb 2024 06:37:26 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,179,1705392000"; 
-   d="scan'208";a="5411770"
-Received: from binbinwu-mobl.ccr.corp.intel.com (HELO [10.93.18.46]) ([10.93.18.46])
-  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Feb 2024 06:37:22 -0800
-Message-ID: <a650200e-5fd9-4ae3-a1e0-d676e96b8490@linux.intel.com>
-Date: Thu, 22 Feb 2024 22:37:19 +0800
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Dryfcnzx"
+Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 41MEW0jB016154;
+	Thu, 22 Feb 2024 14:37:43 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : in-reply-to : references : mime-version :
+ content-transfer-encoding; s=pp1;
+ bh=fCcHbyEAzqbnRluYnPu4Vp7xopD1bdKUBz6WsH9/P5c=;
+ b=DryfcnzxQqO6fST2vJXWffH+dLtdVE3DyiNxVZ+lSKfheAfA66Qh3MGhWhxnEJ6liG5M
+ Kal8PO6Vy3TTFwEL41OudtB3eg/qv0+k5ebf+mLyF+xZhzlM28W2Q5aQ2TBHrjYswoit
+ fMiDbZHiuxVRvhM0C8db3r4w6zgumzJrZYRpe1cuQ7wX4+eXs36W1EtIW7oz90s+ZEi7
+ hIsi0/ZBR020fXFDfVNat37YzeW9INe2fFJOPKMpjl4DV9wULelvNhWra0/joGHaXE3l
+ 8BDSBE6+iGDjR6X436EWjqWi+VM3Jy7bDuQPK7Ca+vKQbj2aZlu0GoHfkQUgfQdZrS1h XA== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3we84588yy-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 22 Feb 2024 14:37:42 +0000
+Received: from m0360083.ppops.net (m0360083.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 41MEW8Il016564;
+	Thu, 22 Feb 2024 14:37:42 GMT
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3we84588x4-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 22 Feb 2024 14:37:42 +0000
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 41MBwRNr017261;
+	Thu, 22 Feb 2024 14:33:48 GMT
+Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3wb8mmpkht-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 22 Feb 2024 14:33:47 +0000
+Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
+	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 41MEXghf64946660
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 22 Feb 2024 14:33:44 GMT
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 361BA2004E;
+	Thu, 22 Feb 2024 14:33:42 +0000 (GMT)
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 237092004B;
+	Thu, 22 Feb 2024 14:33:42 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Thu, 22 Feb 2024 14:33:42 +0000 (GMT)
+Received: by tuxmaker.boeblingen.de.ibm.com (Postfix, from userid 55669)
+	id DC7BDE0365; Thu, 22 Feb 2024 15:33:41 +0100 (CET)
+From: Alexander Gordeev <agordeev@linux.ibm.com>
+To: Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>
+Cc: linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, Nicholas Piggin <npiggin@gmail.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
+        Frederic Weisbecker <frederic@kernel.org>
+Subject: [PATCH v2 RESEND 4/5] s390/irq,nmi: include <asm/vtime.h> header directly
+Date: Thu, 22 Feb 2024 15:33:40 +0100
+Message-Id: <98c78ea88bed855f06bd59ee44ab1ce6e1e7d52e.1708612016.git.agordeev@linux.ibm.com>
+X-Mailer: git-send-email 2.40.1
+In-Reply-To: <cover.1708612016.git.agordeev@linux.ibm.com>
+References: <cover.1708612016.git.agordeev@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v18 074/121] KVM: TDX: complete interrupts after tdexit
-To: isaku.yamahata@intel.com
-Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
- isaku.yamahata@gmail.com, Paolo Bonzini <pbonzini@redhat.com>,
- erdemaktas@google.com, Sean Christopherson <seanjc@google.com>,
- Sagi Shahar <sagis@google.com>, Kai Huang <kai.huang@intel.com>,
- chen.bo@intel.com, hang.yuan@intel.com, tina.zhang@intel.com
-References: <cover.1705965634.git.isaku.yamahata@intel.com>
- <379b4d2e8995f0f8b5e6635010b4fd12f4c2571f.1705965635.git.isaku.yamahata@intel.com>
-From: Binbin Wu <binbin.wu@linux.intel.com>
-In-Reply-To: <379b4d2e8995f0f8b5e6635010b4fd12f4c2571f.1705965635.git.isaku.yamahata@intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: 8qsYZ-Ab7jjxx4bNs03beryHUGUd7ZpR
+X-Proofpoint-ORIG-GUID: kPMs4W0l34uBOy6f3H2upLfVePIcG6JX
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-02-22_11,2024-02-22_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 bulkscore=0
+ priorityscore=1501 adultscore=0 mlxscore=0 spamscore=0 lowpriorityscore=0
+ impostorscore=0 suspectscore=0 mlxlogscore=677 malwarescore=0 phishscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2311290000
+ definitions=main-2402220116
 
+update_timer_sys() and update_timer_mcck() are inlines used for
+CPU time accounting from the interrupt and machine-check handlers.
+These routines are specific to s390 architecture, but included
+via <linux/vtime.h> header implicitly. Avoid the extra loop and
+include <asm/vtime.h> header directly.
 
+Acked-by: Heiko Carstens <hca@linux.ibm.com>
+Signed-off-by: Alexander Gordeev <agordeev@linux.ibm.com>
+---
+ arch/s390/kernel/irq.c | 1 +
+ arch/s390/kernel/nmi.c | 1 +
+ 2 files changed, 2 insertions(+)
 
-On 1/23/2024 7:53 AM, isaku.yamahata@intel.com wrote:
-> From: Isaku Yamahata <isaku.yamahata@intel.com>
->
-> This corresponds to VMX __vmx_complete_interrupts().  Because TDX
-> virtualize vAPIC, KVM only needs to care NMI injection.
-
-Nit: complete -> Complete in shortlog.
-
-Reviewed-by: Binbin Wu <binbin.wu@linux.intel.com>
-
->
-> Signed-off-by: Isaku Yamahata <isaku.yamahata@intel.com>
-> Reviewed-by: Paolo Bonzini <pbonzini@redhat.com>
-> ---
->   arch/x86/kvm/vmx/tdx.c | 10 ++++++++++
->   arch/x86/kvm/vmx/tdx.h |  2 ++
->   2 files changed, 12 insertions(+)
->
-> diff --git a/arch/x86/kvm/vmx/tdx.c b/arch/x86/kvm/vmx/tdx.c
-> index 71c6fc10e8c4..3b2ba9f974be 100644
-> --- a/arch/x86/kvm/vmx/tdx.c
-> +++ b/arch/x86/kvm/vmx/tdx.c
-> @@ -585,6 +585,14 @@ void tdx_vcpu_reset(struct kvm_vcpu *vcpu, bool init_event)
->   	 */
->   }
->   
-> +static void tdx_complete_interrupts(struct kvm_vcpu *vcpu)
-> +{
-> +	/* Avoid costly SEAMCALL if no nmi was injected */
-> +	if (vcpu->arch.nmi_injected)
-> +		vcpu->arch.nmi_injected = td_management_read8(to_tdx(vcpu),
-> +							      TD_VCPU_PEND_NMI);
-> +}
-> +
->   struct tdx_uret_msr {
->   	u32 msr;
->   	unsigned int slot;
-> @@ -713,6 +721,8 @@ fastpath_t tdx_vcpu_run(struct kvm_vcpu *vcpu)
->   	vcpu->arch.regs_avail &= ~VMX_REGS_LAZY_LOAD_SET;
->   	trace_kvm_exit(vcpu, KVM_ISA_VMX);
->   
-> +	tdx_complete_interrupts(vcpu);
-> +
->   	return EXIT_FASTPATH_NONE;
->   }
->   
-> diff --git a/arch/x86/kvm/vmx/tdx.h b/arch/x86/kvm/vmx/tdx.h
-> index 883eb05d207f..9082a2604ec6 100644
-> --- a/arch/x86/kvm/vmx/tdx.h
-> +++ b/arch/x86/kvm/vmx/tdx.h
-> @@ -201,6 +201,8 @@ TDX_BUILD_TDVPS_ACCESSORS(16, VMCS, vmcs);
->   TDX_BUILD_TDVPS_ACCESSORS(32, VMCS, vmcs);
->   TDX_BUILD_TDVPS_ACCESSORS(64, VMCS, vmcs);
->   
-> +TDX_BUILD_TDVPS_ACCESSORS(8, MANAGEMENT, management);
-> +
->   static __always_inline u64 td_tdcs_exec_read64(struct kvm_tdx *kvm_tdx, u32 field)
->   {
->   	struct tdx_module_args out;
+diff --git a/arch/s390/kernel/irq.c b/arch/s390/kernel/irq.c
+index 6f71b0ce1068..259496fe0ef9 100644
+--- a/arch/s390/kernel/irq.c
++++ b/arch/s390/kernel/irq.c
+@@ -29,6 +29,7 @@
+ #include <asm/hw_irq.h>
+ #include <asm/stacktrace.h>
+ #include <asm/softirq_stack.h>
++#include <asm/vtime.h>
+ #include "entry.h"
+ 
+ DEFINE_PER_CPU_SHARED_ALIGNED(struct irq_stat, irq_stat);
+diff --git a/arch/s390/kernel/nmi.c b/arch/s390/kernel/nmi.c
+index 9ad44c26d1a2..4422a27faace 100644
+--- a/arch/s390/kernel/nmi.c
++++ b/arch/s390/kernel/nmi.c
+@@ -32,6 +32,7 @@
+ #include <asm/asm-offsets.h>
+ #include <asm/pai.h>
+ #include <asm/vx-insn.h>
++#include <asm/vtime.h>
+ #include <asm/fpu/api.h>
+ 
+ struct mcck_struct {
+-- 
+2.40.1
 
