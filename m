@@ -1,218 +1,504 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 645CF11712;
-	Thu, 22 Feb 2024 01:37:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.18
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708565862; cv=fail; b=AtM1Ts5CeOMcoekPkuG76niHWp3G06oVuaFDNfN2OrwR2z1u2Srpr2As8lGU97AQZEt2WlP/7xUxTvKP2Lg5xX1vRYHtugcSqGlp6cXijduUjNdkgqB0OImWr7DFSPzemWd1pXt7gglTKeV+sqTSSV2miPRwzRSQDxqucjy5I5E=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708565862; c=relaxed/simple;
-	bh=ErK+4EawX/zr6zhyyK7UNgFjhdY7BzDuWbCs9c4ZRIU=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=suEFtz6qwHyG9PBCIhxFul61xefpfyJ13JBDkwIsiwcBdm1mTyTYCbPoGuC8VsssnbOzTyVclEW7GV7fofKeigL0fWh7v0gBzXaTDQaueKdY/dP3j2+B/JcOkLWlKk6iwMLVLBp0vkPyHhTfNozDbPmbPJ33iGldhJa9V0OQJkI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QRfpqNr6; arc=fail smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 999BC12E59
+	for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 01:38:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1708565926; cv=none; b=LfKPuzripMPrO2PY2S6kXy3X45U/sSkuMLQOEWOpqGOYvjlO6tLWTrqvDF1mRgc9I/1Ux7gCEDHrAIsWdoXH70l/Z+9Y68Unb2PyDZVYdVreCF2nPQDq73upN23TcPMBD2k7ZnjUBssLyADQbe/xQr4qObdvNl3N80YJ+naAHkA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1708565926; c=relaxed/simple;
+	bh=Q9Taq4EtKMKF6wAoyNCHEaLEyTPFmapgMqbFfb4vUcs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=APsZRnd3cMjEU4ovrWORSueonHSt6+mvFjhE2gp8YGHIJ9tbeLQFdg3B2+ToIk/Swq28QC8n0Fd0A/qDhfSmW2/zYP+lKr2YYo9Treqm7hy1aY1chKxvHsv371TYJ+P+3r8lRE7HbAK76hvbfHLYoHcteF7aifIYklsRs5y+v3M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=AvbJR1Q5; arc=none smtp.client-ip=209.85.214.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QRfpqNr6"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1708565860; x=1740101860;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=ErK+4EawX/zr6zhyyK7UNgFjhdY7BzDuWbCs9c4ZRIU=;
-  b=QRfpqNr6iPuxyjvaEBkqYEj5OiYsZwLI9VJkFivXZEBVnON1P+HX+tki
-   B1g5RpOm7osJ4EdUzqaj/LxQth11uQt9jJ9avWhvQIlOp8PbumJk/Tex0
-   q6t0nqc9LrbWC4MhVXQq5ri2FCG3IksSgSm9GLARBtEPMjmGmVzCE4O47
-   zx9Renl+5xah+wPE2bNXeM5ZtXCHhsEbvXZGNbx0mn0RxS78frn1rcFox
-   4iG99ZHIfDY1+Cx9Qw4H8k71zA7xECaYfX3m3fsRFP/mF2fc9W0LASaRY
-   hSqrPhV2FV9PB1wTn7kKCe14GtSeGgr78/BXxaOShLWKtTGf4i5DwvwS4
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10991"; a="2649389"
-X-IronPort-AV: E=Sophos;i="6.06,177,1705392000"; 
-   d="scan'208";a="2649389"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Feb 2024 17:35:24 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,177,1705392000"; 
-   d="scan'208";a="5219667"
-Received: from orsmsx601.amr.corp.intel.com ([10.22.229.14])
-  by fmviesa007.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 21 Feb 2024 17:35:24 -0800
-Received: from orsmsx611.amr.corp.intel.com (10.22.229.24) by
- ORSMSX601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Wed, 21 Feb 2024 17:35:23 -0800
-Received: from orsmsx612.amr.corp.intel.com (10.22.229.25) by
- ORSMSX611.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Wed, 21 Feb 2024 17:35:22 -0800
-Received: from ORSEDG602.ED.cps.intel.com (10.7.248.7) by
- orsmsx612.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35 via Frontend Transport; Wed, 21 Feb 2024 17:35:22 -0800
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (104.47.55.169)
- by edgegateway.intel.com (134.134.137.103) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Wed, 21 Feb 2024 17:35:22 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=k0YYKU3V/pJnBuYnJHVClN9qndXhG+8rWrpDaEzs0c3PdwEX1gmhMXqV8AILI8u2Wm9WPQEMvGxwlC/3rha+jig9pm1g1rhUKG/avlI4f/3VAG2BYiDgDnyvUX542kgu49CkBJYwh72GyScRHOOGtisDE2GPNU/YZwU7hbKZK4b5T3YVwW3uG/rhZf1Atw/mf4R7LqAsPnNB39h4knSMNzZMTBMRcg20KbmarKAkSThMB2i/rBIUtTEa8TVsd1rbZnw4MOleEMdxF6PxaO2x7Jw0j9vO4XxPBaNOikfpuLIUTZt6K6tHQoTtV8PSkRdrIu+7YNA4KgC/3q6oj4rKgA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=C8mwgF7TFa79BKgimT+yqv7ZS27nU10zdSbMY+F7MXA=;
- b=iiuToqaihaQNN2Q2QwU6UBS1RdalnDwxzAAtb/K3srg0n51S6VLzjffk2qXYTkEUUsd+dKZt0NAnFkINO06dfI32exMVmtaTnhJ1EqbEBKI6X0jvBOhSJ6dSWq1e5zJ+9/Y6X91JnUOVxE/ALYy/3Ue83I0vUTIybfhRTkEuwoWjykIVDlhmbeMylYcT3we+YQbEznZUZRTjNW1uego+S7lmrAKcBFrLFQ2kgrA8I1maPJlBFzbGjeS9+g5PtAuOiKRoM6I7FjIaxskHhcOTYgi7KI2DScE2N23lbxo1w5606t1tK1MA6lnrizeKy2igz5QC6LT+omZZLI34DAsyqQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from CY5PR11MB6392.namprd11.prod.outlook.com (2603:10b6:930:37::15)
- by IA0PR11MB7282.namprd11.prod.outlook.com (2603:10b6:208:43a::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7292.42; Thu, 22 Feb
- 2024 01:35:14 +0000
-Received: from CY5PR11MB6392.namprd11.prod.outlook.com
- ([fe80::b99c:f603:f176:aca]) by CY5PR11MB6392.namprd11.prod.outlook.com
- ([fe80::b99c:f603:f176:aca%5]) with mapi id 15.20.7316.018; Thu, 22 Feb 2024
- 01:35:14 +0000
-Date: Thu, 22 Feb 2024 09:28:19 +0800
-From: Yujie Liu <yujie.liu@intel.com>
-To: Shuah Khan <skhan@linuxfoundation.org>, Marcos Paulo de Souza
-	<mpdesouza@suse.com>
-CC: kernel test robot <lkp@intel.com>, Josh Poimboeuf <jpoimboe@kernel.org>,
-	Jiri Kosina <jikos@kernel.org>, Miroslav Benes <mbenes@suse.cz>, Petr Mladek
-	<pmladek@suse.com>, Joe Lawrence <joe.lawrence@redhat.com>,
-	<oe-kbuild-all@lists.linux.dev>, <linux-kselftest@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <live-patching@vger.kernel.org>
-Subject: Re: [PATCH 1/3] selftests: lib.mk: Do not process TEST_GEN_MODS_DIR
-Message-ID: <ZdajMy061zaqq8fP@yujie-X299>
-References: <d984977f-b7ad-44b9-82dd-27aeb2fad592@linuxfoundation.org>
- <20240221220404.11585-1-mpdesouza@suse.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20240221220404.11585-1-mpdesouza@suse.com>
-X-ClientProxiedBy: SI2PR01CA0018.apcprd01.prod.exchangelabs.com
- (2603:1096:4:191::7) To CY5PR11MB6392.namprd11.prod.outlook.com
- (2603:10b6:930:37::15)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="AvbJR1Q5"
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-1dbe7e51f91so43385ad.1
+        for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 17:38:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1708565924; x=1709170724; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=8Ecuhdx8vKpP5oyjYx58iW2nK4sfonA9XNeM3TeM774=;
+        b=AvbJR1Q5qHHRiUVNIJTDjbuzJsg6hm/dc0Hunbs2lvO+4w4XaHxh8D3ttzwXJRjgjo
+         hbcOh0h5/WLY7XkPveIbA/EuXATny+sL/jjIsMqlIy75imAESxCc/lQngkfhePAyjacO
+         6ZDWfwoG01LrpYpwXdaFTcyu+mxsjhMVOtT5OJRmg384S8ivNov2wz4HY7FOybJDcEfU
+         B4OhNXYRSJnZ8ss52rYfoL3T3DojVDU/SdyM+FDKue4zPKKPqfdES8jAh/kMnzxIxI8l
+         akDXevB2HG3qeHwaYenQ+Co6oWWO88li8j8jziIFWV4tXeEl5sqDXZi/KWUpa1YU1Ot7
+         aauA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708565924; x=1709170724;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=8Ecuhdx8vKpP5oyjYx58iW2nK4sfonA9XNeM3TeM774=;
+        b=F97UaJjf6XqivIz44lwIa/xIWmn5TB6NvdhLXCUG/AAcF9aNopMNhIzafrf3C8Emui
+         2vC+2eqdWVdQdDHE/S9WkruIqL599q/W26F7VRhExCpJg8bTd6M8+9E3Y/Ofn/Ak+nkq
+         3FU6jVIJg/Sk78Xo0do82C58o7oDbMi7IFMGaBabKbwpk6Syxqiz45dOGi6MtH2p46Sg
+         Ne5uISYoB4MT5mykyYzEK3t8RYZURn2h/xgRMf23G4XksdXO5gvgBhg/TWM44YAm87Cl
+         qOD5LfW9O/A61s/xfokywWJRGHboRiflsZqYKGTNYMAGzr/LM9QLn4/n+hNstgugoOJi
+         qVxA==
+X-Forwarded-Encrypted: i=1; AJvYcCXSrJ7aGyAU+W3U5UBvDlWcpYYnGEhsz7tg8INydD4SbjHSCzhLPPEMKZN2hVw/798cR0pGNtfxFME0x6q9jIpmhB6CJHd0qb6M8TgJ
+X-Gm-Message-State: AOJu0YwzM22e7K6A4gIaO27HLRv9CN5nX1Wn7xekVpzUUcvsUW2XS+mu
+	fSn2uPoyjdtFZEWKXxPZ5OqqDKPLSPuDWpWCmdz4pTIJIaxyBxius/bC6EQAunjcKVIvlWt9yUI
+	0cMiWu2IbLKy5IVUzZZeok8nI0XULp9HoR9QJ
+X-Google-Smtp-Source: AGHT+IHKmwQGkdy6B3Q+0VF6Ks8C/mbKfMnHjvENIeZblJbGXK2/boLb8GyOzETwOr8lcgtDPNiRkCjZq9u/Dij/lr4=
+X-Received: by 2002:a17:903:434f:b0:1db:8eaf:7652 with SMTP id
+ lo15-20020a170903434f00b001db8eaf7652mr351460plb.5.1708565923242; Wed, 21 Feb
+ 2024 17:38:43 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CY5PR11MB6392:EE_|IA0PR11MB7282:EE_
-X-MS-Office365-Filtering-Correlation-Id: 38248064-059f-4998-9dfd-08dc33468485
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: BfWLbLeWvXeJc59aUQckKaePEbaYw9Oe+dfFCkIvzqIAC5IXyLmhjXFivqCcY5xtwzx4qWKRUrpk019Mv3unnxrpPbgMWJsprReJH8SwR6QwFfn0xoEL9KdoVSgFz3ps8+QAFtXmowH0IPUqs9NpwoEtyJC5tCpzAvcWVt10L+myKgMhYezo/vg/Rlun6HFHqdVtjTTqmLY9Cl+cnSFDMxrOkBF5T8aKuhGy/LA0tS1EWtSZrtgnz/YpkJk4VHgoMSb2SBl1dzJPmfKq+NxiNiB53f9J0drfE0hBsnPIzW0LeMshaWKJkJ6xaVgfJehGlQVJ6iGdnJ6oGBn2GwOZMGObZ4FaXZ++QKTpSo11lgjUa7qzCBbeOep94ueKCq3teJsOGMG524rIUWxzSaFhVqt7c7pMHeRBDBwXZtQs4EaZYCr9WJZnIpSIZKdwms2DWMYgg+2PbgtRDOcM0qi43hVIBO9bATWWjUUJ4fPGcPuw+Ts3gD55rLaurXSxj/q5Vp6BeyTYQfX9Sa/8kpufbA==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY5PR11MB6392.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?1DV/KPYZe2eGA+HaK29XmoEs0c+8YZB7Nd4nvtTpebXvDvsuCQoR5rWSpb06?=
- =?us-ascii?Q?jJnaasSRPtmncyh5vOKQ1+P7R8ClRRu4ljqg2VAv8+TKU+gjtxsSXEgxT+mn?=
- =?us-ascii?Q?xKUU+2Xdv3kDwskv7T4NNlRe1gfl8gRwIaGgWR/Qet7RUYbDoq5xl+iMVgbq?=
- =?us-ascii?Q?n5Wfqbr7o7T7fa+F2AWtcysj0LEAFqqh4G+Cc1Bha9Doxlz5+baLyNssxzhs?=
- =?us-ascii?Q?nKtM8N/OpMHcOvBUYsZ/wZL9nCJ+z8RsMrrKlteXvd9edyKHqAbq+pFysrOq?=
- =?us-ascii?Q?xre3FeENb04aY0jspejUbz9XEJ9DPyrdKb2m6ie5HBhLM24fC45Sn95E40al?=
- =?us-ascii?Q?olhtg9aRV6RAVklkLFpn1DBUwKk0A2CYjSQDRbf0YG0ROQRHI1HvqBRfy1nt?=
- =?us-ascii?Q?rmRCXRdNVDnGGN05Pxd2q+mo2IjILZFOjwwza/dGsC9RtvbJ5BsbLPfbhrLm?=
- =?us-ascii?Q?ArrG59wNZXGBf5SSapABZENEbPoStsVmq3o0kmwMuXNNPJoaBnaWwdaC9GIs?=
- =?us-ascii?Q?aQwBkZsMM016TXmoc/mznslXatMFC3tADIe1qWRNhNgi4kRYODnZGKe0Gyrr?=
- =?us-ascii?Q?dgXqfaZajpWj0vb5aanQUZnSUrN02ybr9jhwoz659WNc833tS6PzJRlef6yl?=
- =?us-ascii?Q?uIiRMPnRsQiGDwu6wNp91fdZQgLX9SAoLLeuz7foUi49BZsnOZKBy/4GYgoq?=
- =?us-ascii?Q?KnUKHgbFULoPOubfmvlYksgMBnSgoyHGG/j0YPyaXPO/wtgYCku62J6hNseh?=
- =?us-ascii?Q?JnDzqWVLViQwI2nsmxT+76+wHdQopINDx/704VvNdUUbr9Dx4XjJvwkV9gv8?=
- =?us-ascii?Q?NFBLsu9QSQB/EE1wmIZOZbjAQaZh4MaPoSoCAy7k9F4ixziLZHYknyj8K203?=
- =?us-ascii?Q?DtDw9gApQ0ixhi4bq7+EM53APxqRZZEnYMu1QhABDKZfKtiHpQOs9/1tZ2gr?=
- =?us-ascii?Q?yjrSRYW/ca+YTZUDEZhyECD3cLfkGPMzRmYdedwkxTbd+j2Gccdt60mbdAlf?=
- =?us-ascii?Q?+kIOGlBNbd5rX/D08PT3jLUkRlFOU8BVLqFMgWhKss55Nnnqmx0zCSQfIPTO?=
- =?us-ascii?Q?QOro8z+u0Dn6r2t295Vv8KH0ms08ZN29AXENSOXltL/RujM3ub2VqYBLMfax?=
- =?us-ascii?Q?2A9h3WbKteiXAz1omvAjrzNKQDtNzRP/r1SqkapCOs6AJnCWjxIDuNnFvLqW?=
- =?us-ascii?Q?WBMyKowVIz4rD70dcCOmq3wwWCO2XKf/kOAQsE4pbjnEr40oUBV57WKCoano?=
- =?us-ascii?Q?Bhlm0IPnxJ3z27VLxP4yWH9ITX9ZmMqJ3Qzfw4Jzw42xeFNuTp2H25IjLFgn?=
- =?us-ascii?Q?r+5LJ4jdxgA8AxSYv/3AN/t6ne+2aKkO8VMQxwed4YhvgNqpoPqwCwYTnu7y?=
- =?us-ascii?Q?ox/0SNQSeOporSyp5jK/Ttn8Apq+bjwb/3rZWN6CVv6I0Trz/aL9Yzc81m+R?=
- =?us-ascii?Q?kMZ1nZDF1tNvqkYj7gn2UVwSdXKzndcKBnHfnGhOmdw2+9ketpbjh9H4YWLU?=
- =?us-ascii?Q?hGcIOV8sYvh3wxYcAVOfdDBn/yqBJwPR8eWCDPxqzVyPeb6USFm4ofkIxgO6?=
- =?us-ascii?Q?gcfS9V5C1sKeMA9aUwn6t8hzOCXVE2S165F8Al/J?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 38248064-059f-4998-9dfd-08dc33468485
-X-MS-Exchange-CrossTenant-AuthSource: CY5PR11MB6392.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Feb 2024 01:35:14.4926
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: KPv6qDgvG5h0+PB+lxjE46SWhs6XmUZp8odCa6OOpsE8utm2FohyhVIp5DaLzyEXGqWkYe7A2mcvqvV3wkj82Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR11MB7282
-X-OriginatorOrg: intel.com
+References: <20231019140325.3660923-1-peterlin@andestech.com>
+In-Reply-To: <20231019140325.3660923-1-peterlin@andestech.com>
+From: Ian Rogers <irogers@google.com>
+Date: Wed, 21 Feb 2024 17:38:30 -0800
+Message-ID: <CAP-5=fX4eu+E9d0fK90MW9V+qys354C0q4fdfw_TMPavzqR5sg@mail.gmail.com>
+Subject: Re: [PATCH v2 10/10] riscv: andes: Support symbolic FW and HW raw events
+To: Yu Chien Peter Lin <peterlin@andestech.com>
+Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org, 
+	mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org, 
+	namhyung@kernel.org, adrian.hunter@intel.com, paul.walmsley@sifive.com, 
+	palmer@dabbelt.com, aou@eecs.berkeley.edu, ycliang@andestech.com, 
+	dminus@andestech.com, n.shubin@yadro.com, locus84@andestech.com, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	linux-riscv@lists.infradead.org, prabhakar.mahadev-lad.rj@bp.renesas.com, 
+	tim609@andestech.com, dylan@andestech.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Feb 21, 2024 at 07:04:03PM -0300, Marcos Paulo de Souza wrote:
-> On Wed, 21 Feb 2024 14:12:00 -0700 Shuah Khan <skhan@linuxfoundation.org> wrote:
-> 
-> > On 2/21/24 05:26, Marcos Paulo de Souza wrote:
-> > > On Tue, 20 Feb 2024 17:19:54 -0700 Shuah Khan <skhan@linuxfoundation.org> wrote:
-> > > 
-> > >> On 2/19/24 06:53, Marcos Paulo de Souza wrote:
-> > >>> On Mon, 19 Feb 2024 09:15:15 -0300 Marcos Paulo de Souza <mpdesouza@suse.com> wrote:
-> > >>>
-> > >>>> On Mon, 19 Feb 2024 14:35:16 +0800 kernel test robot <lkp@intel.com> wrote:
-> > >>>>
-> > >>>>> Hi Marcos,
-> > >>>>>
-> > >>>>> kernel test robot noticed the following build errors:
-> > >>>>>
-> > >>>>> [auto build test ERROR on 345e8abe4c355bc24bab3f4a5634122e55be8665]
-> > >>>>>
-> > >>>>> url:    https://github.com/intel-lab-lkp/linux/commits/Marcos-Paulo-de-Souza/selftests-lib-mk-Do-not-process-TEST_GEN_MODS_DIR/20240216-021601
-> > >>>>> base:   345e8abe4c355bc24bab3f4a5634122e55be8665
-> > >>>>> patch link:    https://lore.kernel.org/r/20240215-lp-selftests-fixes-v1-1-89f4a6f5cddc%40suse.com
-> > >>>>> patch subject: [PATCH 1/3] selftests: lib.mk: Do not process TEST_GEN_MODS_DIR
-> > >>>>> compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
-> > >>>>> reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240219/202402191417.XULH88Ct-lkp@intel.com/reproduce)
-> > >>>>>
-> > >>>>> If you fix the issue in a separate patch/commit (i.e. not just a new version of
-> > >>>>> the same patch/commit), kindly add following tags
-> > >>>>> | Reported-by: kernel test robot <lkp@intel.com>
-> > >>>>> | Closes: https://lore.kernel.org/oe-kbuild-all/202402191417.XULH88Ct-lkp@intel.com/
-> > >>>>>
-> > >>>>> All errors (new ones prefixed by >>):
-> > >>>>>
-> > >>>>>>> make[3]: *** /lib/modules/5.9.0-2-amd64/build: No such file or directory.  Stop.
-> > >>>>
-> > >>>> We should ask the kernel test robot machine owners to install kernel-devel
-> > >>>> package in order to have this fixed.
-> > >>>
-> > >>> Or maybe ask them to change the reproducer to specify KDIR to the git tree,
-> > >>> instead of /lib/modules/?
-> > >>>
-> > >>
-> > >> This would be a regression to automated test rings. Do you have any other
-> > >> solutions?
-> > > 
-> > > I would say that we could skip the these tests if kernel-devel package is not
-> > > installed. Would it be acceptable? At least we would avoid such issues like this
-> > > in the future as well.
-> > > 
-> > 
-> > We have to check and skip build. Something we could do in the livepatch
-> > Makefile. Can you send patch for this - I will oull this in for next
-> > so we don't break test rings.
-> 
-> I added a new patch in the same patchset that would cover this, skipping the
-> build and test if kernel-devel is not installed. The patchset was sent earlier
-> today. Please check if the new patch fixes things on the build robot.
+On Thu, Oct 19, 2023 at 7:07=E2=80=AFAM Yu Chien Peter Lin
+<peterlin@andestech.com> wrote:
+>
+> From: Locus Wei-Han Chen <locus84@andestech.com>
+>
+> This patch adds the Andes AX45 JSON files in the perf tool,
+> allowing perf to be used with symbolic event names.
+>
+> Signed-off-by: Locus Wei-Han Chen <locus84@andestech.com>
+> Reviewed-by: Yu Chien Peter Lin <peterlin@andestech.com>
+> Reviewed-by: Charles Ci-Jyun Wu <dminus@andestech.com>
+> Reviewed-by: Leo Yu-Chi Liang <ycliang@andestech.com>
 
-Hi Shuah, Hi Marcos,
+Acked-by: Ian Rogers <irogers@google.com>
 
-Sorry for this wrong report. The files are organized in a different way
-in the bot and cause this issue. We have fixed the bot to explicitly
-set KDIR to the correct path before building the selftests. The patch
-[1] can also work well in bot's environment.
+Thanks,
+Ian
 
-[1] https://lore.kernel.org/all/20240221-lp-selftests-fixes-v2-2-a19be1e029a7@suse.com/
-
-Best Regards,
-Yujie
+> ---
+> Changes v1 -> v2:
+>   - No change
+> ---
+>  .../arch/riscv/andes/ax45/firmware.json       |  68 ++++++++++
+>  .../arch/riscv/andes/ax45/instructions.json   | 127 ++++++++++++++++++
+>  .../arch/riscv/andes/ax45/memory.json         |  57 ++++++++
+>  .../arch/riscv/andes/ax45/microarch.json      |  77 +++++++++++
+>  tools/perf/pmu-events/arch/riscv/mapfile.csv  |   1 +
+>  5 files changed, 330 insertions(+)
+>  create mode 100644 tools/perf/pmu-events/arch/riscv/andes/ax45/firmware.=
+json
+>  create mode 100644 tools/perf/pmu-events/arch/riscv/andes/ax45/instructi=
+ons.json
+>  create mode 100644 tools/perf/pmu-events/arch/riscv/andes/ax45/memory.js=
+on
+>  create mode 100644 tools/perf/pmu-events/arch/riscv/andes/ax45/microarch=
+.json
+>
+> diff --git a/tools/perf/pmu-events/arch/riscv/andes/ax45/firmware.json b/=
+tools/perf/pmu-events/arch/riscv/andes/ax45/firmware.json
+> new file mode 100644
+> index 000000000000..9b4a032186a7
+> --- /dev/null
+> +++ b/tools/perf/pmu-events/arch/riscv/andes/ax45/firmware.json
+> @@ -0,0 +1,68 @@
+> +[
+> +  {
+> +    "ArchStdEvent": "FW_MISALIGNED_LOAD"
+> +  },
+> +  {
+> +    "ArchStdEvent": "FW_MISALIGNED_STORE"
+> +  },
+> +  {
+> +    "ArchStdEvent": "FW_ACCESS_LOAD"
+> +  },
+> +  {
+> +    "ArchStdEvent": "FW_ACCESS_STORE"
+> +  },
+> +  {
+> +    "ArchStdEvent": "FW_ILLEGAL_INSN"
+> +  },
+> +  {
+> +    "ArchStdEvent": "FW_SET_TIMER"
+> +  },
+> +  {
+> +    "ArchStdEvent": "FW_IPI_SENT"
+> +  },
+> +  {
+> +    "ArchStdEvent": "FW_IPI_RECEIVED"
+> +  },
+> +  {
+> +    "ArchStdEvent": "FW_FENCE_I_SENT"
+> +  },
+> +  {
+> +    "ArchStdEvent": "FW_FENCE_I_RECEIVED"
+> +  },
+> +  {
+> +    "ArchStdEvent": "FW_SFENCE_VMA_SENT"
+> +  },
+> +  {
+> +    "ArchStdEvent": "FW_SFENCE_VMA_RECEIVED"
+> +  },
+> +  {
+> +    "ArchStdEvent": "FW_SFENCE_VMA_RECEIVED"
+> +  },
+> +  {
+> +    "ArchStdEvent": "FW_SFENCE_VMA_ASID_RECEIVED"
+> +  },
+> +  {
+> +    "ArchStdEvent": "FW_HFENCE_GVMA_SENT"
+> +  },
+> +  {
+> +    "ArchStdEvent": "FW_HFENCE_GVMA_RECEIVED"
+> +  },
+> +  {
+> +    "ArchStdEvent": "FW_HFENCE_GVMA_VMID_SENT"
+> +  },
+> +  {
+> +    "ArchStdEvent": "FW_HFENCE_GVMA_VMID_RECEIVED"
+> +  },
+> +  {
+> +    "ArchStdEvent": "FW_HFENCE_VVMA_SENT"
+> +  },
+> +  {
+> +    "ArchStdEvent": "FW_HFENCE_VVMA_RECEIVED"
+> +  },
+> +  {
+> +    "ArchStdEvent": "FW_HFENCE_VVMA_ASID_SENT"
+> +  },
+> +  {
+> +    "ArchStdEvent": "FW_HFENCE_VVMA_ASID_RECEIVED"
+> +  }
+> +]
+> diff --git a/tools/perf/pmu-events/arch/riscv/andes/ax45/instructions.jso=
+n b/tools/perf/pmu-events/arch/riscv/andes/ax45/instructions.json
+> new file mode 100644
+> index 000000000000..713a08c1a40f
+> --- /dev/null
+> +++ b/tools/perf/pmu-events/arch/riscv/andes/ax45/instructions.json
+> @@ -0,0 +1,127 @@
+> +[
+> +       {
+> +               "EventCode": "0x10",
+> +               "EventName": "cycle_count",
+> +               "BriefDescription": "Cycle count"
+> +       },
+> +       {
+> +               "EventCode": "0x20",
+> +               "EventName": "inst_count",
+> +               "BriefDescription": "Retired instruction count"
+> +       },
+> +       {
+> +               "EventCode": "0x30",
+> +               "EventName": "int_load_inst",
+> +               "BriefDescription": "Integer load instruction count"
+> +       },
+> +       {
+> +               "EventCode": "0x40",
+> +               "EventName": "int_store_inst",
+> +               "BriefDescription": "Integer store instruction count"
+> +       },
+> +       {
+> +               "EventCode": "0x50",
+> +               "EventName": "atomic_inst",
+> +               "BriefDescription": "Atomic instruction count"
+> +       },
+> +       {
+> +               "EventCode": "0x60",
+> +               "EventName": "sys_inst",
+> +               "BriefDescription": "System instruction count"
+> +       },
+> +       {
+> +               "EventCode": "0x70",
+> +               "EventName": "int_compute_inst",
+> +               "BriefDescription": "Integer computational instruction co=
+unt"
+> +       },
+> +       {
+> +               "EventCode": "0x80",
+> +               "EventName": "condition_br",
+> +               "BriefDescription": "Conditional branch instruction count=
+"
+> +       },
+> +       {
+> +               "EventCode": "0x90",
+> +               "EventName": "taken_condition_br",
+> +               "BriefDescription": "Taken conditional branch instruction=
+ count"
+> +       },
+> +       {
+> +               "EventCode": "0xA0",
+> +               "EventName": "jal_inst",
+> +               "BriefDescription": "JAL instruction count"
+> +       },
+> +       {
+> +               "EventCode": "0xB0",
+> +               "EventName": "jalr_inst",
+> +               "BriefDescription": "JALR instruction count"
+> +       },
+> +       {
+> +               "EventCode": "0xC0",
+> +               "EventName": "ret_inst",
+> +               "BriefDescription": "Return instruction count"
+> +       },
+> +       {
+> +               "EventCode": "0xD0",
+> +               "EventName": "control_trans_inst",
+> +               "BriefDescription": "Control transfer instruction count"
+> +       },
+> +       {
+> +               "EventCode": "0xE0",
+> +               "EventName": "ex9_inst",
+> +               "BriefDescription": "EXEC.IT instruction count"
+> +       },
+> +       {
+> +               "EventCode": "0xF0",
+> +               "EventName": "int_mul_inst",
+> +               "BriefDescription": "Integer multiplication instruction c=
+ount"
+> +       },
+> +       {
+> +               "EventCode": "0x100",
+> +               "EventName": "int_div_rem_inst",
+> +               "BriefDescription": "Integer division/remainder instructi=
+on count"
+> +       },
+> +       {
+> +               "EventCode": "0x110",
+> +               "EventName": "float_load_inst",
+> +               "BriefDescription": "Floating-point load instruction coun=
+t"
+> +       },
+> +       {
+> +               "EventCode": "0x120",
+> +               "EventName": "float_store_inst",
+> +               "BriefDescription": "Floating-point store instruction cou=
+nt"
+> +       },
+> +       {
+> +               "EventCode": "0x130",
+> +               "EventName": "float_add_sub_inst",
+> +               "BriefDescription": "Floating-point addition/subtraction =
+instruction count"
+> +       },
+> +       {
+> +               "EventCode": "0x140",
+> +               "EventName": "float_mul_inst",
+> +               "BriefDescription": "Floating-point multiplication instru=
+ction count"
+> +       },
+> +       {
+> +               "EventCode": "0x150",
+> +               "EventName": "float_fused_muladd_inst",
+> +               "BriefDescription": "Floating-point fused multiply-add in=
+struction count"
+> +       },
+> +       {
+> +               "EventCode": "0x160",
+> +               "EventName": "float_div_sqrt_inst",
+> +               "BriefDescription": "Floating-point division or square-ro=
+ot instruction count"
+> +       },
+> +       {
+> +               "EventCode": "0x170",
+> +               "EventName": "other_float_inst",
+> +               "BriefDescription": "Other floating-point instruction cou=
+nt"
+> +       },
+> +       {
+> +               "EventCode": "0x180",
+> +               "EventName": "int_mul_add_sub_inst",
+> +               "BriefDescription": "Integer multiplication and add/sub i=
+nstruction count"
+> +       },
+> +       {
+> +               "EventCode": "0x190",
+> +               "EventName": "retired_ops",
+> +               "BriefDescription": "Retired operation count"
+> +       }
+> +]
+> diff --git a/tools/perf/pmu-events/arch/riscv/andes/ax45/memory.json b/to=
+ols/perf/pmu-events/arch/riscv/andes/ax45/memory.json
+> new file mode 100644
+> index 000000000000..c7401b526c77
+> --- /dev/null
+> +++ b/tools/perf/pmu-events/arch/riscv/andes/ax45/memory.json
+> @@ -0,0 +1,57 @@
+> +[
+> +       {
+> +               "EventCode": "0x01",
+> +               "EventName": "ilm_access",
+> +               "BriefDescription": "ILM access"
+> +       },
+> +       {
+> +               "EventCode": "0x11",
+> +               "EventName": "dlm_access",
+> +               "BriefDescription": "DLM access"
+> +       },
+> +       {
+> +               "EventCode": "0x21",
+> +               "EventName": "icache_access",
+> +               "BriefDescription": "ICACHE access"
+> +       },
+> +       {
+> +               "EventCode": "0x31",
+> +               "EventName": "icache_miss",
+> +               "BriefDescription": "ICACHE miss"
+> +       },
+> +       {
+> +               "EventCode": "0x41",
+> +               "EventName": "dcache_access",
+> +               "BriefDescription": "DCACHE access"
+> +       },
+> +       {
+> +               "EventCode": "0x51",
+> +               "EventName": "dcache_miss",
+> +               "BriefDescription": "DCACHE miss"
+> +       },
+> +       {
+> +               "EventCode": "0x61",
+> +               "EventName": "dcache_load_access",
+> +               "BriefDescription": "DCACHE load access"
+> +       },
+> +       {
+> +               "EventCode": "0x71",
+> +               "EventName": "dcache_load_miss",
+> +               "BriefDescription": "DCACHE load miss"
+> +       },
+> +       {
+> +               "EventCode": "0x81",
+> +               "EventName": "dcache_store_access",
+> +               "BriefDescription": "DCACHE store access"
+> +       },
+> +       {
+> +               "EventCode": "0x91",
+> +               "EventName": "dcache_store_miss",
+> +               "BriefDescription": "DCACHE store miss"
+> +       },
+> +       {
+> +               "EventCode": "0xA1",
+> +               "EventName": "dcache_wb",
+> +               "BriefDescription": "DCACHE writeback"
+> +       }
+> +]
+> diff --git a/tools/perf/pmu-events/arch/riscv/andes/ax45/microarch.json b=
+/tools/perf/pmu-events/arch/riscv/andes/ax45/microarch.json
+> new file mode 100644
+> index 000000000000..a6d378cbaa74
+> --- /dev/null
+> +++ b/tools/perf/pmu-events/arch/riscv/andes/ax45/microarch.json
+> @@ -0,0 +1,77 @@
+> +[
+> +       {
+> +               "EventCode": "0xB1",
+> +               "EventName": "cycle_wait_icache_fill",
+> +               "BriefDescription": "Cycles waiting for ICACHE fill data"
+> +       },
+> +       {
+> +               "EventCode": "0xC1",
+> +               "EventName": "cycle_wait_dcache_fill",
+> +               "BriefDescription": "Cycles waiting for DCACHE fill data"
+> +       },
+> +       {
+> +               "EventCode": "0xD1",
+> +               "EventName": "uncached_ifetch_from_bus",
+> +               "BriefDescription": "Uncached ifetch data access from bus=
+"
+> +       },
+> +       {
+> +               "EventCode": "0xE1",
+> +               "EventName": "uncached_load_from_bus",
+> +               "BriefDescription": "Uncached load data access from bus"
+> +       },
+> +       {
+> +               "EventCode": "0xF1",
+> +               "EventName": "cycle_wait_uncached_ifetch",
+> +               "BriefDescription": "Cycles waiting for uncached ifetch d=
+ata from bus"
+> +       },
+> +       {
+> +               "EventCode": "0x101",
+> +               "EventName": "cycle_wait_uncached_load",
+> +               "BriefDescription": "Cycles waiting for uncached load dat=
+a from bus"
+> +       },
+> +       {
+> +               "EventCode": "0x111",
+> +               "EventName": "main_itlb_access",
+> +               "BriefDescription": "Main ITLB access"
+> +       },
+> +       {
+> +               "EventCode": "0x121",
+> +               "EventName": "main_itlb_miss",
+> +               "BriefDescription": "Main ITLB miss"
+> +       },
+> +       {
+> +               "EventCode": "0x131",
+> +               "EventName": "main_dtlb_access",
+> +               "BriefDescription": "Main DTLB access"
+> +       },
+> +       {
+> +               "EventCode": "0x141",
+> +               "EventName": "main_dtlb_miss",
+> +               "BriefDescription": "Main DTLB miss"
+> +       },
+> +       {
+> +               "EventCode": "0x151",
+> +               "EventName": "cycle_wait_itlb_fill",
+> +               "BriefDescription": "Cycles waiting for Main ITLB fill da=
+ta"
+> +       },
+> +       {
+> +               "EventCode": "0x161",
+> +               "EventName": "pipe_stall_cycle_dtlb_miss",
+> +               "BriefDescription": "Pipeline stall cycles caused by Main=
+ DTLB miss"
+> +       },
+> +       {
+> +               "EventCode": "0x02",
+> +               "EventName": "mispredict_condition_br",
+> +               "BriefDescription": "Misprediction of conditional branche=
+s"
+> +       },
+> +       {
+> +               "EventCode": "0x12",
+> +               "EventName": "mispredict_take_condition_br",
+> +               "BriefDescription": "Misprediction of taken conditional b=
+ranches"
+> +       },
+> +       {
+> +               "EventCode": "0x22",
+> +               "EventName": "mispredict_target_ret_inst",
+> +               "BriefDescription": "Misprediction of targets of Return i=
+nstructions"
+> +       }
+> +]
+> diff --git a/tools/perf/pmu-events/arch/riscv/mapfile.csv b/tools/perf/pm=
+u-events/arch/riscv/mapfile.csv
+> index c61b3d6ef616..5bf09af14c1b 100644
+> --- a/tools/perf/pmu-events/arch/riscv/mapfile.csv
+> +++ b/tools/perf/pmu-events/arch/riscv/mapfile.csv
+> @@ -15,3 +15,4 @@
+>  #
+>  #MVENDORID-MARCHID-MIMPID,Version,Filename,EventType
+>  0x489-0x8000000000000007-0x[[:xdigit:]]+,v1,sifive/u74,core
+> +0x31e-0x8000000000008a45-0x[[:xdigit:]]+,v1,andes/ax45,core
+> --
+> 2.34.1
+>
