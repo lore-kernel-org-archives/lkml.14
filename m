@@ -1,147 +1,126 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4685A47F64;
-	Thu, 22 Feb 2024 12:56:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27D725FBA5;
+	Thu, 22 Feb 2024 12:57:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708606572; cv=none; b=TUl7CUEt9BwvKFEYqlHCspVgUImro+Ql7KKm5jLPivhcE/QBGW4nQgeOZyXpPWxsWcRgDwAXw381CUOoMvd8Y728k6jMSswNlYmo5+VTiev3qYq5zVFH64oZfbxiQKrl9KsUesiOyL3Xuz3ceSok+MPsOa9ytyEKN5aji+TM7t0=
+	t=1708606635; cv=none; b=rKfducqcUFSQidYuxst6UVACUFmwUM7lFLci6uhsUKpaIxJ/mxM7PpxB/6uPqbplR67YgsRIIiEWS1+tUx5CEfgJRs5UfR195cwBBPqh7nHfBlIz8KpMqdLn44JwmAwgI9RTgqQwVXYeFQXwMXVMzus7WANfRXUKzT3pXOeeAF0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708606572; c=relaxed/simple;
-	bh=7dqHVymEpv+mbY9Ii99AQPmzVOgGT6bep74WvflVCio=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=c60sinTakyKydZPhYLbmeSrqqK+EStADd6oBOiK0BMnXr6Yj7pnAzAOQs+kwBD1SQ8Dt3idoVIUJyitW4NT37lXMWSwZ8ABvcy2gLtyxyagMmw74fGj/WWy6xviO35NU3EOcyZj2fGP65Et2XXFPxHR/4+cNoH2ci2z9nwGOwK0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=hicX5ReW; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1708606635; c=relaxed/simple;
+	bh=4N9VQX8XQjbKM+N/jKxzFbt+x+0lnhEwnlDnVtB0aHQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bVM+oWwvdfWP2P++IntuyiDJUCByYz3ut7GRQsuVVICnfcUbs18SEY1yhkyAFlTVO9/gf8l9W9dFwY0YS5lSIA1U7gLzQIZN6SYmJUPr1lbW2k7CcY0UmM8AyryINZWYGjT2p6DVLcMBK2DXMX4xPvEDPwOPvDdJ2hU0/6GrnyM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Qo4CXFzb; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="hicX5ReW"
-Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 41M1cGao002544;
-	Thu, 22 Feb 2024 12:55:56 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	from:to:cc:subject:date:message-id:mime-version:content-type; s=
-	qcppdkim1; bh=F0djyJzQX2boq62he0FY77tfcSeF1hlmz7vhqN4MXI8=; b=hi
-	cX5ReW/Wtbbl0RCaW7zmhbOWSWfcCYUzS2uyeit+CfyTYagLhSoI5dpbWZgLsyft
-	S/15vAvWsFnB+EV4bAROnOpfa2NdbCJzoAivOTohuNShB5mrz1k2unXHRho32bqd
-	c+C0Cwn/Ec2vPogIhW23JJkl5R7C+1nYK6YViS0yRBBapWCkHpiuvMmdKL+eSphF
-	68sWDc/j0mPawcjX4Oq4aqagiqJnxdaQxQyPyV57+Y/DkTvLLRiBFwRm9pDYljD7
-	ZJVKwCbrx03RZSZYIctC8rrQZ1XhgwopqWjvo+GjY9hwBrRAQUvxi3jPFh4InwdW
-	dpKuznfDkvBJjFTsFIMA==
-Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3wdvsehkac-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 22 Feb 2024 12:55:56 +0000 (GMT)
-Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 41MCtseU013656
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 22 Feb 2024 12:55:54 GMT
-Received: from hu-sarohasa-hyd.qualcomm.com (10.80.80.8) by
- nasanex01b.na.qualcomm.com (10.46.141.250) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Thu, 22 Feb 2024 04:55:45 -0800
-From: Sarosh Hasan <quic_sarohasa@quicinc.com>
-To: Vinod Koul <vkoul@kernel.org>, Bhupesh Sharma <bhupesh.sharma@linaro.org>,
-        Andy Gross <agross@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@linaro.org>,
-        "David S. Miller"
-	<davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>, Jakub Kicinski
-	<kuba@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski
-	<krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Alexandre Torgue <alexandre.torgue@foss.st.com>,
-        Jose Abreu
-	<joabreu@synopsys.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>, <netdev@vger.kernel.org>,
-        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        Prasad Sodagudi
-	<psodagud@quicinc.com>,
-        Andrew Halaney <ahalaney@redhat.com>, Rob Herring
-	<robh@kernel.org>
-CC: <kernel@quicinc.com>, Sneh Shah <quic_snehshah@quicinc.com>,
-        Suraj Jaiswal
-	<quic_jsuraj@quicinc.com>
-Subject: [PATCH net-next] net: stmmac: dwmac-qcom-ethqos: Update link clock rate only for RGMII
-Date: Thu, 22 Feb 2024 18:25:17 +0530
-Message-ID: <20240222125517.3356-1-quic_sarohasa@quicinc.com>
-X-Mailer: git-send-email 2.17.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Qo4CXFzb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AC981C433F1;
+	Thu, 22 Feb 2024 12:57:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1708606634;
+	bh=4N9VQX8XQjbKM+N/jKxzFbt+x+0lnhEwnlDnVtB0aHQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Qo4CXFzbVxSJYX0QdbZjgug39vxUiwHJyviufPnO0hwbBKfJ7JKFCF87QIJILu7iX
+	 eDIyjKzhPD8NtjDej/5zvsJk005Q4QYvuojR8Ypb6JWRSepVjeoOvluE+3YrRFu43+
+	 nfrLbzexZQ7icbj/FMAN6x8QQGZXpWaScGIc0Pd/+ZwJgc5jMyr04BGedeuTeNroEX
+	 k6UWLlT1h+Roq1yUXwk0g7m9uCOhdJHdo0C26OyMog0smempNAFYdvqZQapptNwLD2
+	 X+Q2bycRgG175EeY09Bll4gWHA5/N8MNVXIeCXUXreFkfJMhOHu3PERDvOR0gPcGtQ
+	 +VfDZ+L4inCdg==
+Date: Thu, 22 Feb 2024 12:57:08 +0000
+From: Will Deacon <will@kernel.org>
+To: Ji Sheng Teoh <jisheng.teoh@starfivetech.com>, palmer@dabbelt.com
+Cc: Jonathan Corbet <corbet@lwn.net>, Mark Rutland <mark.rutland@arm.com>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Ilkka Koskinen <ilkka@os.amperecomputing.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Ley Foon Tan <leyfoon.tan@starfivetech.com>,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH v6 0/4] StarFive's StarLink PMU Support
+Message-ID: <20240222125707.GA8589@willie-the-truck>
+References: <20240129095141.3262366-1-jisheng.teoh@starfivetech.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01b.na.qualcomm.com (10.46.141.250)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: 6qj-1LaJaYXMpzY-ZwzeqVmwy3LF1NrY
-X-Proofpoint-GUID: 6qj-1LaJaYXMpzY-ZwzeqVmwy3LF1NrY
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-02-22_10,2024-02-22_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0
- lowpriorityscore=0 suspectscore=0 mlxlogscore=998 adultscore=0
- malwarescore=0 phishscore=0 impostorscore=0 mlxscore=0 clxscore=1011
- priorityscore=1501 spamscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.19.0-2402120000 definitions=main-2402220103
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240129095141.3262366-1-jisheng.teoh@starfivetech.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 
-Updating link clock rate for different speeds is only needed when
-using RGMII, as that mode requires changing clock speed when the link
-speed changes. Let's restrict updating the link clock speed in
-ethqos_update_link_clk() to just RGMII. Other modes such as SGMII
-only need to enable the link clock (which is already done in probe).
+On Mon, Jan 29, 2024 at 05:51:37PM +0800, Ji Sheng Teoh wrote:
+> This patch series adds support for StarFive's Starlink Performance
+> Monitor Unit(PMU).
+> StarFive's StarLink PMU integrates one or more CPU cores with
+> a shared L3 memory system. The PMU supports overflow interrupt,
+> up to 16 programmable 64bit event counters, and an independent
+> 64bit cycle counter.
+> StarLink PMU is accessed via MMIO.
+> 
+> Example Perf stat output:
+> [root@user]# perf stat -a -e /starfive_starlink_pmu/cycles/ \
+>         -e /starfive_starlink_pmu/read_miss/ \
+>         -e /starfive_starlink_pmu/read_hit/ \
+>         -e /starfive_starlink_pmu/release_request/  \
+>         -e /starfive_starlink_pmu/write_hit/ \
+>         -e /starfive_starlink_pmu/write_miss/ \
+>         -e /starfive_starlink_pmu/write_request/ \
+>         -e /starfive_starlink_pmu/writeback/ \
+>         -e /starfive_starlink_pmu/read_request/ \
+>         -- openssl speed rsa2048
+> Doing 2048 bits private rsa's for 10s: 5 2048 bits private RSA's in
+> 2.84s
+> Doing 2048 bits public rsa's for 10s: 169 2048 bits public RSA's in
+> 2.42s
+> version: 3.0.11
+> built on: Tue Sep 19 13:02:31 2023 UTC
+> options: bn(64,64)
+> CPUINFO: N/A
+>                   sign    verify    sign/s verify/s
+> rsa 2048 bits 0.568000s 0.014320s      1.8     69.8
+> /////////
+>  Performance counter stats for 'system wide':
+> 
+>          649991998      starfive_starlink_pmu/cycles/
+>            1009690      starfive_starlink_pmu/read_miss/
+>            1079750      starfive_starlink_pmu/read_hit/
+>            2089405      starfive_starlink_pmu/release_request/
+>                129      starfive_starlink_pmu/write_hit/
+>                 70      starfive_starlink_pmu/write_miss/
+>                194      starfive_starlink_pmu/write_request/
+>             150080      starfive_starlink_pmu/writeback/
+>            2089423      starfive_starlink_pmu/read_request/
+> 
+>       27.062755678 seconds time elapsed
+> 
+> Ji Sheng Teoh (4):
+>   perf: starfive: Add StarLink PMU support
+>   dt-bindings: perf: starfive: Add JH8100 StarLink PMU
+>   docs: perf: Add description for StarFive's StarLink PMU
+>   MAINTAINERS: Add entry for StarFive StarLink PMU
+> 
+>  Documentation/admin-guide/perf/index.rst      |   1 +
+>  .../perf/starfive_starlink_pmu.rst            |  46 ++
+>  .../perf/starfive,jh8100-starlink-pmu.yaml    |  46 ++
+>  MAINTAINERS                                   |   7 +
+>  drivers/perf/Kconfig                          |   9 +
+>  drivers/perf/Makefile                         |   1 +
+>  drivers/perf/starfive_starlink_pmu.c          | 643 ++++++++++++++++++
+>  7 files changed, 753 insertions(+)
+>  create mode 100644 Documentation/admin-guide/perf/starfive_starlink_pmu.rst
+>  create mode 100644 Documentation/devicetree/bindings/perf/starfive,jh8100-starlink-pmu.yaml
+>  create mode 100644 drivers/perf/starfive_starlink_pmu.c
 
-Signed-off-by: Sarosh Hasan <quic_sarohasa@quicinc.com>
----
- .../stmicro/stmmac/dwmac-qcom-ethqos.c        | 26 ++++++++++---------
- 1 file changed, 14 insertions(+), 12 deletions(-)
+Palmer, are you ok with me taking this via the perf tree? I usually
+leave the Risc-V stuff for you, but this one doesn't touch the arch code
+at all.
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-qcom-ethqos.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-qcom-ethqos.c
-index 31631e3f89d0..9cd144fb3005 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac-qcom-ethqos.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-qcom-ethqos.c
-@@ -169,21 +169,23 @@ static void rgmii_dump(void *priv)
- static void
- ethqos_update_link_clk(struct qcom_ethqos *ethqos, unsigned int speed)
- {
--	switch (speed) {
--	case SPEED_1000:
--		ethqos->link_clk_rate =  RGMII_1000_NOM_CLK_FREQ;
--		break;
-+	if (phy_interface_mode_is_rgmii(ethqos->phy_mode)) {
-+		switch (speed) {
-+		case SPEED_1000:
-+			ethqos->link_clk_rate =  RGMII_1000_NOM_CLK_FREQ;
-+			break;
- 
--	case SPEED_100:
--		ethqos->link_clk_rate =  RGMII_ID_MODE_100_LOW_SVS_CLK_FREQ;
--		break;
-+		case SPEED_100:
-+			ethqos->link_clk_rate =  RGMII_ID_MODE_100_LOW_SVS_CLK_FREQ;
-+			break;
- 
--	case SPEED_10:
--		ethqos->link_clk_rate =  RGMII_ID_MODE_10_LOW_SVS_CLK_FREQ;
--		break;
--	}
-+		case SPEED_10:
-+			ethqos->link_clk_rate =  RGMII_ID_MODE_10_LOW_SVS_CLK_FREQ;
-+			break;
-+		}
- 
--	clk_set_rate(ethqos->link_clk, ethqos->link_clk_rate);
-+		clk_set_rate(ethqos->link_clk, ethqos->link_clk_rate);
-+	}
- }
- 
- static void ethqos_set_func_clk_en(struct qcom_ethqos *ethqos)
--- 
-2.17.1
+Cheers,
 
+Will
