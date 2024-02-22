@@ -1,262 +1,347 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94E7B73F1C;
-	Thu, 22 Feb 2024 18:15:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BB3971723;
+	Thu, 22 Feb 2024 18:14:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708625702; cv=none; b=uOr+oQhASNwiOMrgmrzc/XzTH3J3NDcHx1m1Si0EUO+IVR94I3QVAogChsP5XK6+zEAhKL9mzNl0dY2ac6a91sEuDLfCP5dqMlO0BpaDisZszrL5BJ7oxQ5ROlWJL6b8ypreAZj1MSPrdGxisQAFeFgtIynr2IeVrQlD6E1ZDNE=
+	t=1708625701; cv=none; b=fkwsYwRspO+qrztrsRVUcP79oTUfGwzVCCOfGyTK8rXT6hK2Ctt0FRpumJKOh+qADsYOU6dZz6/oiN1KK19AegSOvENThuYgF8uaX7ky7yQngdEPc0JL6x6BTaJNNN5+ii1Z4tXmoQWFi7QMes4IYhwQHIiHoWN77N/80vUOfRs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708625702; c=relaxed/simple;
-	bh=35dEQopjUt6A2W23PQkFev/rOQ1owYxpUGVppcAXPW8=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=S31slbDrtuqPvPwpnvS+8x5zD/CoWFVczkdZX1GT8+Y+mv6ltXr3U6CMxsa+xFABQgElK8ZTQHk3Mgrk2AOGNfAh3Tz2/jgU48mt/daN9jCRlnPwWhh5699TRYukFuKFC3pi6ycz/NT1QcchJhN5PiMzpIugl2HSkDgGbYBnKNo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=o3rLDusK; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1708625701; c=relaxed/simple;
+	bh=XZ3hPjbqhYGZGR7TR4kumiFW8lcRz2dIo4KkSn2iKxk=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=OgzM0QnHwLRyYg2AbCvP8pxdqPLJw1JWTO/lpW1UTQbW+iI+nOMm5lkQZQIR4Q9btmYOKIIq4wpP2wehYho0jBa3DUW3pdR71Zx3S37X4lfEow5lvzP07EfA3V1Rdrjuu9quRWnr6f1kUaDpYDFkhZ28tTJPrIKmiOwUbvnX3eM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cYXySXGO; arc=none smtp.client-ip=209.85.167.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="o3rLDusK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 179C3C433F1;
-	Thu, 22 Feb 2024 18:15:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708625702;
-	bh=35dEQopjUt6A2W23PQkFev/rOQ1owYxpUGVppcAXPW8=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=o3rLDusK1Vw0bjrO7qrIF4iJhbGDg6FozAm37wlI3AQmiuDM+fhZG/H0OLsrCBKpf
-	 tZA618Fds6vgfNxYnNBDhULGM98xbvKCbsrEoiHHPH4Psu2/yuFiGyHfKGYW9l0+Xi
-	 pqnFHKUjnMpSXxjmJvoQH2VebiaDN14iL0B+WFogkGHkJakkD+6/r/w3UNok18r3fH
-	 UeFsZN6/NVvbJQmK85+UspdD4daU35QqqkxLOhi6EvVgW6xPTXi+KM0A1ysI0QOcyK
-	 XJfXQFHlOZkgW30Oh0xK6oUZIEAEedT8hknOjurXc/f37ynF3QnJx5HK0yvz9DTqiP
-	 4AL66vAYjgGlQ==
-From: Maxime Ripard <mripard@kernel.org>
-Date: Thu, 22 Feb 2024 19:13:58 +0100
-Subject: [PATCH v7 12/36] drm/tests: Add output formats tests
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cYXySXGO"
+Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-51197ca63f5so121401e87.1;
+        Thu, 22 Feb 2024 10:14:59 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1708625697; x=1709230497; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=6+6eluhzIXzdxVu9lwksRYlR6Z+Jeq9cMOHs7DzxPZ0=;
+        b=cYXySXGOUmoOYwx7UGq/Q1upbYBjfQXFyGSqJElBan1Kk5sMYALwyevmoafv5IqbNg
+         kG7CNPzpzkSeTooChsuY/Zr8uFJBXB9FZu+k+xbttg4fAwc8Iqq255QLYL/lp7WGLsf5
+         KAQadN1gmhNEKZhA39QwMp89zNWau8lbeO/vU+B4mdHaeZa0gVH5X/wP9XTZW6r9nED/
+         0PEPk29mQUeS6Ps6oWcJk110bbZ4fylkHjDrC0qANvfb8kHMuAmn4CQiTINgHDcge1KK
+         DOIbdooX+eW0mcg9V7aaJUghBhYkB22y3k4vzkB1lpdYONpOQkUTmKxZYIBqNpdOkfZG
+         DFew==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708625697; x=1709230497;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=6+6eluhzIXzdxVu9lwksRYlR6Z+Jeq9cMOHs7DzxPZ0=;
+        b=HMCiM1xXCfA8zrSPgVW1EltGTgIJPM4UNw1s3ywGu+UWjLfPmxLcl2QuhL0sq1dGSE
+         RN9uTtZKwkyLBElDL13fuaYgvEhTzhG7VVWFqU0iFrc/4lms2QH84fx8UpgcoAQrRAlN
+         aqlC6EHgfrVTj03woZNSxthN/JA8X1vG1f+761IWrnkMewA7n4eGIbZQZPyverJRr9EF
+         UoD1PFmSfSHgh4Mq4pCWyMMI3JUjGT2zgIfOAFHnaLstBt6QhThbFzM50gTrbOtFvsKX
+         TvyzHgtYP2rGFQuTHZMKWXKcVERfslPy2nnrx3VyIwnmK/LD/Qin/e/EGhDeoZPQYUs3
+         7uOw==
+X-Forwarded-Encrypted: i=1; AJvYcCXdLm8XQhjW+8J3Fw6NKQTsLHuGqAlURdmijpjKFdEiDIIozqcJLsdsUYawaNHDdFxMRkWwgxjE9kw3P81SLXyvbg6D4WxbQrMLbLUTzbNhpfiHTcZtgA1vZulIU2aKwA5sOMlu79YKcQ==
+X-Gm-Message-State: AOJu0Yxl+Sl/BkYmAnPBf0dJYxsu/jLIzeFhxlXh1jB67zhETtP5Yuva
+	DxFWrmj4kLqkSoQA+FQ+zdbm17rwQthnWFCt3IPiG2/pmgphbTWr
+X-Google-Smtp-Source: AGHT+IGViWdTRMiTTkc5ZBZ6Oe/2Vf9SZKO55IAHmMniONZyEa0q+s5UPxtDimTkeKhEFaUSr/qKnA==
+X-Received: by 2002:a05:6512:2190:b0:512:c508:b8c8 with SMTP id b16-20020a056512219000b00512c508b8c8mr5788854lft.4.1708625697367;
+        Thu, 22 Feb 2024 10:14:57 -0800 (PST)
+Received: from localhost ([178.176.56.174])
+        by smtp.gmail.com with ESMTPSA id g38-20020a0565123ba600b00511767de71bsm2134577lfv.291.2024.02.22.10.14.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 22 Feb 2024 10:14:56 -0800 (PST)
+From: Serge Semin <fancer.lancer@gmail.com>
+To: Michal Simek <michal.simek@amd.com>,
+	Alexander Stein <alexander.stein@ew.tq-group.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Tony Luck <tony.luck@intel.com>,
+	James Morse <james.morse@arm.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Robert Richter <rric@kernel.org>
+Cc: Serge Semin <fancer.lancer@gmail.com>,
+	Punnaiah Choudary Kalluri <punnaiah.choudary.kalluri@xilinx.com>,
+	Dinh Nguyen <dinguyen@kernel.org>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-edac@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v5 20/20] EDAC/synopsys: Convert to using BIT/GENMASK/FIELD_x macros
+Date: Thu, 22 Feb 2024 21:13:05 +0300
+Message-ID: <20240222181324.28242-21-fancer.lancer@gmail.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240222181324.28242-1-fancer.lancer@gmail.com>
+References: <20240222181324.28242-1-fancer.lancer@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240222-kms-hdmi-connector-state-v7-12-8f4af575fce2@kernel.org>
-References: <20240222-kms-hdmi-connector-state-v7-0-8f4af575fce2@kernel.org>
-In-Reply-To: <20240222-kms-hdmi-connector-state-v7-0-8f4af575fce2@kernel.org>
-To: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
- Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
- Daniel Vetter <daniel@ffwll.ch>, Jonathan Corbet <corbet@lwn.net>, 
- Sandy Huang <hjc@rock-chips.com>, 
- =?utf-8?q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, 
- Chen-Yu Tsai <wens@csie.org>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
- Samuel Holland <samuel@sholland.org>
-Cc: Hans Verkuil <hverkuil@xs4all.nl>, 
- Sebastian Wick <sebastian.wick@redhat.com>, 
- =?utf-8?q?Ville_Syrj=C3=A4l=C3=A4?= <ville.syrjala@linux.intel.com>, 
- dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org, 
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-media@vger.kernel.org, linux-rockchip@lists.infradead.org, 
- linux-sunxi@lists.linux.dev, Maxime Ripard <mripard@kernel.org>, 
- Dave Stevenson <dave.stevenson@raspberrypi.com>
-X-Mailer: b4 0.12.3
-X-Developer-Signature: v=1; a=openpgp-sha256; l=7105; i=mripard@kernel.org;
- h=from:subject:message-id; bh=35dEQopjUt6A2W23PQkFev/rOQ1owYxpUGVppcAXPW8=;
- b=owGbwMvMwCX2+D1vfrpE4FHG02pJDKnX+z7oCuXVxn849X/rxa/77958NnPOD/nqxveX/rdzT
- JhzlP/D7Y5SFgYxLgZZMUWWGGHzJXGnZr3uZOObBzOHlQlkCAMXpwBMxN6A4Q+HQc3NaV4KAbWT
- w5Vk1c73LdwVVnXsfX6T3oxXzj3FTGUM//NzLl42vJhwqpdTTsq1kHF/cxnbKhPtwu5LCpF8Iq/
- kGQE=
-X-Developer-Key: i=mripard@kernel.org; a=openpgp;
- fpr=BE5675C37E818C8B5764241C254BCFC56BF6CE8D
+Content-Transfer-Encoding: 8bit
 
-Now that we track the HDMI output format as part of the connector state,
-let's add a few tests to make sure it works as expected.
+Instead of using the very handy helpers denoted in the subject the driver
+has been created with the open-coded {mask,shift} statements. It makes the
+code bulky, prone to mistakes and much harder to read. Seeing there are
+many places in the driver implementing the CSR fields get/set pattern use
+the FIELD_GET()/FIELD_PREP() macros introduced in the kernel specifically
+for that case. In addition use the BIT() and GENMASK() macros to generate
+the CSR flags/masks. While at it unify the row, column, rank, bank and
+bank group macros names to be having a suffix similar to the
+snps_ecc_error_info structure fields name.
 
-Reviewed-by: Dave Stevenson <dave.stevenson@raspberrypi.com>
-Signed-off-by: Maxime Ripard <mripard@kernel.org>
+Signed-off-by: Serge Semin <fancer.lancer@gmail.com>
 ---
- .../gpu/drm/tests/drm_atomic_state_helper_test.c   | 32 +++++++
- drivers/gpu/drm/tests/drm_connector_test.c         | 99 +++++++++++++++++++++-
- 2 files changed, 130 insertions(+), 1 deletion(-)
+ drivers/edac/synopsys_edac.c | 137 +++++++++++++++++------------------
+ 1 file changed, 67 insertions(+), 70 deletions(-)
 
-diff --git a/drivers/gpu/drm/tests/drm_atomic_state_helper_test.c b/drivers/gpu/drm/tests/drm_atomic_state_helper_test.c
-index a129ea5f014c..1c3dd8a98fb0 100644
---- a/drivers/gpu/drm/tests/drm_atomic_state_helper_test.c
-+++ b/drivers/gpu/drm/tests/drm_atomic_state_helper_test.c
-@@ -347,6 +347,15 @@ static void drm_test_check_output_bpc_crtc_mode_not_changed(struct kunit *test)
- static struct kunit_case drm_atomic_helper_connector_hdmi_check_tests[] = {
- 	KUNIT_CASE(drm_test_check_output_bpc_crtc_mode_changed),
- 	KUNIT_CASE(drm_test_check_output_bpc_crtc_mode_not_changed),
-+	/*
-+	 * TODO: We should have tests to check that a change in the
-+	 * format triggers a CRTC mode change just like we do for the
-+	 * RGB Quantization and BPC.
-+	 *
-+	 * However, we don't have any way to control which format gets
-+	 * picked up aside from changing the BPC or mode which would
-+	 * already trigger a mode change.
-+	 */
- 	{ }
- };
+diff --git a/drivers/edac/synopsys_edac.c b/drivers/edac/synopsys_edac.c
+index c46cee035c0d..f181cd7b4447 100644
+--- a/drivers/edac/synopsys_edac.c
++++ b/drivers/edac/synopsys_edac.c
+@@ -6,6 +6,8 @@
+  * Copyright (C) 2012 - 2014 Xilinx, Inc.
+  */
  
-@@ -427,10 +436,33 @@ static void drm_test_check_bpc_12_value(struct kunit *test)
- 	KUNIT_EXPECT_EQ(test, conn_state->hdmi.output_bpc, 0);
++#include <linux/bitfield.h>
++#include <linux/bits.h>
+ #include <linux/edac.h>
+ #include <linux/module.h>
+ #include <linux/platform_device.h>
+@@ -89,33 +91,29 @@
+ #define ZYNQMP_DDR_QOS_IRQ_DB_OFST	0x2020C
+ 
+ /* DDR Master register definitions */
+-#define DDR_MSTR_DEV_CFG_MASK		0xC0000000
+-#define DDR_MSTR_DEV_CFG_SHIFT		30
++#define DDR_MSTR_DEV_CFG_MASK		GENMASK(31, 30)
+ #define DDR_MSTR_DEV_X4			0
+ #define DDR_MSTR_DEV_X8			1
+ #define DDR_MSTR_DEV_X16		2
+ #define DDR_MSTR_DEV_X32		3
+-#define DDR_MSTR_BUSWIDTH_MASK		0x3000
+-#define DDR_MSTR_BUSWIDTH_SHIFT		12
++#define DDR_MSTR_BUSWIDTH_MASK		GENMASK(13, 12)
+ #define DDR_MSTR_BUSWIDTH_16		2
+ #define DDR_MSTR_BUSWIDTH_32		1
+ #define DDR_MSTR_BUSWIDTH_64		0
+-#define DDR_MSTR_MEM_LPDDR4		0x20
+-#define DDR_MSTR_MEM_DDR4		0x10
+-#define DDR_MSTR_MEM_LPDDR3		0x8
+-#define DDR_MSTR_MEM_DDR2		0x4
+-#define DDR_MSTR_MEM_DDR3		0x1
++#define DDR_MSTR_MEM_LPDDR4		BIT(5)
++#define DDR_MSTR_MEM_DDR4		BIT(4)
++#define DDR_MSTR_MEM_LPDDR3		BIT(3)
++#define DDR_MSTR_MEM_DDR2		BIT(2)
++#define DDR_MSTR_MEM_DDR3		BIT(0)
+ 
+ /* ECC CFG0 register definitions */
+-#define ECC_CFG0_MODE_MASK		0x7
++#define ECC_CFG0_MODE_MASK		GENMASK(2, 0)
+ #define ECC_CFG0_MODE_SECDED		0x4
+ 
+ /* ECC status register definitions */
+-#define ECC_STAT_UECNT_MASK		0xF0000
+-#define ECC_STAT_UECNT_SHIFT		16
+-#define ECC_STAT_CECNT_MASK		0xF00
+-#define ECC_STAT_CECNT_SHIFT		8
+-#define ECC_STAT_BITNUM_MASK		0x7F
++#define ECC_STAT_UE_MASK		GENMASK(23, 16)
++#define ECC_STAT_CE_MASK		GENMASK(15, 8)
++#define ECC_STAT_BITNUM_MASK		GENMASK(6, 0)
+ 
+ /* ECC control/clear register definitions */
+ #define ECC_CTRL_CLR_CE_ERR		BIT(0)
+@@ -126,34 +124,26 @@
+ #define ECC_CTRL_EN_UE_IRQ		BIT(9)
+ 
+ /* ECC error count register definitions */
+-#define ECC_ERRCNT_UECNT_MASK		0xFFFF0000
+-#define ECC_ERRCNT_UECNT_SHIFT		16
+-#define ECC_ERRCNT_CECNT_MASK		0xFFFF
+-
+-/* ECC Corrected Error Register Mask and Shifts*/
+-#define ECC_CEADDR0_RW_MASK		0x3FFFF
+-#define ECC_CEADDR0_RNK_MASK		BIT(24)
+-#define ECC_CEADDR1_BNKGRP_MASK		0x3000000
+-#define ECC_CEADDR1_BNKNR_MASK		0x70000
+-#define ECC_CEADDR1_COL_MASK		0xFFF
+-#define ECC_CEADDR1_BNKGRP_SHIFT	24
+-#define ECC_CEADDR1_BNKNR_SHIFT		16
+-
+-/* ECC Poison register shifts */
+-#define ECC_POISON0_RANK_SHIFT		24
+-#define ECC_POISON0_RANK_MASK		BIT(24)
+-#define ECC_POISON0_COLUMN_SHIFT	0
+-#define ECC_POISON0_COLUMN_MASK		0xFFF
+-#define ECC_POISON1_BG_SHIFT		28
+-#define ECC_POISON1_BG_MASK		0x30000000
+-#define ECC_POISON1_BANKNR_SHIFT	24
+-#define ECC_POISON1_BANKNR_MASK		0x7000000
+-#define ECC_POISON1_ROW_SHIFT		0
+-#define ECC_POISON1_ROW_MASK		0x3FFFF
++#define ECC_ERRCNT_UECNT_MASK		GENMASK(31, 16)
++#define ECC_ERRCNT_CECNT_MASK		GENMASK(15, 0)
++
++/* ECC Corrected Error register definitions */
++#define ECC_CEADDR0_RANK_MASK		GENMASK(27, 24)
++#define ECC_CEADDR0_ROW_MASK		GENMASK(17, 0)
++#define ECC_CEADDR1_BANKGRP_MASK	GENMASK(25, 24)
++#define ECC_CEADDR1_BANK_MASK		GENMASK(23, 16)
++#define ECC_CEADDR1_COL_MASK		GENMASK(11, 0)
++
++/* ECC Poison register definitions */
++#define ECC_POISON0_RANK_MASK		GENMASK(27, 24)
++#define ECC_POISON0_COL_MASK		GENMASK(11, 0)
++#define ECC_POISON1_BANKGRP_MASK	GENMASK(29, 28)
++#define ECC_POISON1_BANK_MASK		GENMASK(26, 24)
++#define ECC_POISON1_ROW_MASK		GENMASK(17, 0)
+ 
+ /* DDRC ECC CE & UE poison mask */
+-#define ECC_CEPOISON_MASK		0x3
+-#define ECC_UEPOISON_MASK		0x1
++#define ECC_CEPOISON_MASK		GENMASK(1, 0)
++#define ECC_UEPOISON_MASK		BIT(0)
+ 
+ /* DDRC Device config shifts/masks */
+ #define DDR_MAX_ROW_SHIFT		18
+@@ -209,9 +199,9 @@
+ #define RANK_B0_BASE			6
+ 
+ /* ZynqMP DDR QOS Interrupt register definitions */
+-#define ZYNQMP_DDR_QOS_UE_MASK		0x4
+-#define ZYNQMP_DDR_QOS_CE_MASK		0x2
+-#define ZYNQMP_DDR_QOS_IRQ_MASK		0x6
++#define ZYNQMP_DDR_QOS_UE_MASK		BIT(2)
++#define ZYNQMP_DDR_QOS_CE_MASK		BIT(1)
++#define ZYNQMP_DDR_QOS_IRQ_MASK		(ZYNQMP_DDR_QOS_UE_MASK | ZYNQMP_DDR_QOS_CE_MASK)
+ 
+ /**
+  * struct snps_ecc_error_info - ECC error log information.
+@@ -303,38 +293,40 @@ static int snps_get_error_info(struct snps_edac_priv *priv)
+ 	if (!regval)
+ 		return 1;
+ 
+-	p->ceinfo.bitpos = (regval & ECC_STAT_BITNUM_MASK);
++	p->ceinfo.bitpos = FIELD_GET(ECC_STAT_BITNUM_MASK, regval);
+ 
+ 	regval = readl(base + ECC_ERRCNT_OFST);
+-	p->ce_cnt = regval & ECC_ERRCNT_CECNT_MASK;
+-	p->ue_cnt = (regval & ECC_ERRCNT_UECNT_MASK) >> ECC_ERRCNT_UECNT_SHIFT;
++	p->ce_cnt = FIELD_GET(ECC_ERRCNT_CECNT_MASK, regval);
++	p->ue_cnt = FIELD_GET(ECC_ERRCNT_UECNT_MASK, regval);
+ 	if (!p->ce_cnt)
+ 		goto ue_err;
+ 
+ 	regval = readl(base + ECC_CEADDR0_OFST);
+-	p->ceinfo.row = (regval & ECC_CEADDR0_RW_MASK);
++	p->ceinfo.row = FIELD_GET(ECC_CEADDR0_ROW_MASK, regval);
++
+ 	regval = readl(base + ECC_CEADDR1_OFST);
+-	p->ceinfo.bank = (regval & ECC_CEADDR1_BNKNR_MASK) >>
+-					ECC_CEADDR1_BNKNR_SHIFT;
+-	p->ceinfo.bankgrp = (regval & ECC_CEADDR1_BNKGRP_MASK) >>
+-					ECC_CEADDR1_BNKGRP_SHIFT;
+-	p->ceinfo.col = (regval & ECC_CEADDR1_COL_MASK);
++	p->ceinfo.bank = FIELD_GET(ECC_CEADDR1_BANK_MASK, regval);
++	p->ceinfo.bankgrp = FIELD_GET(ECC_CEADDR1_BANKGRP_MASK, regval);
++	p->ceinfo.col = FIELD_GET(ECC_CEADDR1_COL_MASK, regval);
++
+ 	p->ceinfo.data = readl(base + ECC_CSYND0_OFST);
++
+ 	edac_dbg(2, "ECCCSYN0: 0x%08X ECCCSYN1: 0x%08X ECCCSYN2: 0x%08X\n",
+ 		 readl(base + ECC_CSYND0_OFST), readl(base + ECC_CSYND1_OFST),
+ 		 readl(base + ECC_CSYND2_OFST));
++
+ ue_err:
+ 	if (!p->ue_cnt)
+ 		goto out;
+ 
+ 	regval = readl(base + ECC_UEADDR0_OFST);
+-	p->ueinfo.row = (regval & ECC_CEADDR0_RW_MASK);
++	p->ueinfo.row = FIELD_GET(ECC_CEADDR0_ROW_MASK, regval);
++
+ 	regval = readl(base + ECC_UEADDR1_OFST);
+-	p->ueinfo.bankgrp = (regval & ECC_CEADDR1_BNKGRP_MASK) >>
+-					ECC_CEADDR1_BNKGRP_SHIFT;
+-	p->ueinfo.bank = (regval & ECC_CEADDR1_BNKNR_MASK) >>
+-					ECC_CEADDR1_BNKNR_SHIFT;
+-	p->ueinfo.col = (regval & ECC_CEADDR1_COL_MASK);
++	p->ueinfo.bankgrp = FIELD_GET(ECC_CEADDR1_BANKGRP_MASK, regval);
++	p->ueinfo.bank = FIELD_GET(ECC_CEADDR1_BANK_MASK, regval);
++	p->ueinfo.col = FIELD_GET(ECC_CEADDR1_COL_MASK, regval);
++
+ 	p->ueinfo.data = readl(base + ECC_UESYND0_OFST);
+ out:
+ 	spin_lock_irqsave(&priv->reglock, flags);
+@@ -483,7 +475,7 @@ static enum dev_type snps_get_dtype(const void __iomem *base)
+ 	if (!(regval & DDR_MSTR_MEM_DDR4))
+ 		return DEV_UNKNOWN;
+ 
+-	regval = (regval & DDR_MSTR_DEV_CFG_MASK) >> DDR_MSTR_DEV_CFG_SHIFT;
++	regval = FIELD_GET(DDR_MSTR_DEV_CFG_MASK, regval);
+ 	switch (regval) {
+ 	case DDR_MSTR_DEV_X4:
+ 		return DEV_X4;
+@@ -510,7 +502,8 @@ static bool snps_get_ecc_state(void __iomem *base)
+ {
+ 	u32 regval;
+ 
+-	regval = readl(base + ECC_CFG0_OFST) & ECC_CFG0_MODE_MASK;
++	regval = readl(base + ECC_CFG0_OFST);
++	regval = FIELD_GET(ECC_CFG0_MODE_MASK, regval);
+ 
+ 	return (regval == ECC_CFG0_MODE_SECDED);
+ }
+@@ -697,13 +690,13 @@ static void snps_data_poison_setup(struct snps_edac_priv *priv)
+ 	if (priv->rank_shift[0])
+ 		rank = (hif_addr >> priv->rank_shift[0]) & BIT(0);
+ 
+-	regval = (rank << ECC_POISON0_RANK_SHIFT) & ECC_POISON0_RANK_MASK;
+-	regval |= (col << ECC_POISON0_COLUMN_SHIFT) & ECC_POISON0_COLUMN_MASK;
++	regval = FIELD_PREP(ECC_POISON0_RANK_MASK, rank) |
++		 FIELD_PREP(ECC_POISON0_COL_MASK, col);
+ 	writel(regval, priv->baseaddr + ECC_POISON0_OFST);
+ 
+-	regval = (bankgrp << ECC_POISON1_BG_SHIFT) & ECC_POISON1_BG_MASK;
+-	regval |= (bank << ECC_POISON1_BANKNR_SHIFT) & ECC_POISON1_BANKNR_MASK;
+-	regval |= (row << ECC_POISON1_ROW_SHIFT) & ECC_POISON1_ROW_MASK;
++	regval = FIELD_PREP(ECC_POISON1_BANKGRP_MASK, bankgrp) |
++		 FIELD_PREP(ECC_POISON1_BANK_MASK, bank) |
++		 FIELD_PREP(ECC_POISON1_ROW_MASK, row);
+ 	writel(regval, priv->baseaddr + ECC_POISON1_OFST);
  }
  
-+/*
-+ * Test that the value of the output format property out of reset is set
-+ * to RGB, even if the driver supports more than that.
-+ */
-+static void drm_test_check_format_value(struct kunit *test)
-+{
-+	struct drm_atomic_helper_connector_hdmi_priv *priv;
-+	struct drm_connector_state *conn_state;
-+	struct drm_connector *conn;
+@@ -742,10 +735,14 @@ static ssize_t inject_data_poison_show(struct device *dev,
+ {
+ 	struct mem_ctl_info *mci = to_mci(dev);
+ 	struct snps_edac_priv *priv = mci->pvt_info;
++	const char *errstr;
++	u32 regval;
 +
-+	priv = drm_atomic_helper_connector_hdmi_init(test,
-+						     BIT(HDMI_COLORSPACE_RGB) |
-+						     BIT(HDMI_COLORSPACE_YUV422) |
-+						     BIT(HDMI_COLORSPACE_YUV444),
-+						     8);
-+	KUNIT_ASSERT_NOT_NULL(test, priv);
-+
-+	conn = &priv->connector;
-+	conn_state = conn->state;
-+	KUNIT_EXPECT_EQ(test, conn_state->hdmi.output_format, HDMI_COLORSPACE_RGB);
-+}
-+
- static struct kunit_case drm_atomic_helper_connector_hdmi_reset_tests[] = {
- 	KUNIT_CASE(drm_test_check_bpc_8_value),
- 	KUNIT_CASE(drm_test_check_bpc_10_value),
- 	KUNIT_CASE(drm_test_check_bpc_12_value),
-+	KUNIT_CASE(drm_test_check_format_value),
- 	{ }
- };
++	regval = readl(priv->baseaddr + ECC_CFG1_OFST);
++	errstr = FIELD_GET(ECC_CEPOISON_MASK, regval) == ECC_CEPOISON_MASK ?
++		 "Correctable Error" : "UnCorrectable Error";
  
-diff --git a/drivers/gpu/drm/tests/drm_connector_test.c b/drivers/gpu/drm/tests/drm_connector_test.c
-index a9a57cb23235..5bff67fbed87 100644
---- a/drivers/gpu/drm/tests/drm_connector_test.c
-+++ b/drivers/gpu/drm/tests/drm_connector_test.c
-@@ -348,6 +348,42 @@ static void drm_test_connector_hdmi_init_bpc_12(struct kunit *test)
- 	KUNIT_EXPECT_NOT_NULL(test, drm_mode_obj_find_prop_id(&connector->base, prop->base.id));
+-	return sprintf(data, "Data Poisoning: %s\n\r",
+-			(((readl(priv->baseaddr + ECC_CFG1_OFST)) & 0x3) == 0x3)
+-			? ("Correctable Error") : ("UnCorrectable Error"));
++	return sprintf(data, "Data Poisoning: %s\n\r", errstr);
  }
  
-+/*
-+ * Test that the registration of an HDMI connector with no supported
-+ * format fails.
-+ */
-+static void drm_test_connector_hdmi_init_formats_empty(struct kunit *test)
-+{
-+	struct drm_connector_init_priv *priv = test->priv;
-+	int ret;
-+
-+	ret = drmm_connector_hdmi_init(&priv->drm, &priv->connector,
-+				       &dummy_funcs,
-+				       DRM_MODE_CONNECTOR_HDMIA,
-+				       &priv->ddc,
-+				       0,
-+				       8);
-+	KUNIT_EXPECT_LT(test, ret, 0);
-+}
-+
-+/*
-+ * Test that the registration of an HDMI connector not listing RGB as a
-+ * supported format fails.
-+ */
-+static void drm_test_connector_hdmi_init_formats_no_rgb(struct kunit *test)
-+{
-+	struct drm_connector_init_priv *priv = test->priv;
-+	int ret;
-+
-+	ret = drmm_connector_hdmi_init(&priv->drm, &priv->connector,
-+				       &dummy_funcs,
-+				       DRM_MODE_CONNECTOR_HDMIA,
-+				       &priv->ddc,
-+				       BIT(HDMI_COLORSPACE_YUV422),
-+				       8);
-+	KUNIT_EXPECT_LT(test, ret, 0);
-+}
-+
- /*
-  * Test that the registration of an HDMI connector with an HDMI
-  * connector type succeeds.
-@@ -433,6 +469,8 @@ static struct kunit_case drmm_connector_hdmi_init_tests[] = {
- 	KUNIT_CASE(drm_test_connector_hdmi_init_bpc_12),
- 	KUNIT_CASE(drm_test_connector_hdmi_init_bpc_invalid),
- 	KUNIT_CASE(drm_test_connector_hdmi_init_bpc_null),
-+	KUNIT_CASE(drm_test_connector_hdmi_init_formats_empty),
-+	KUNIT_CASE(drm_test_connector_hdmi_init_formats_no_rgb),
- 	KUNIT_CASE(drm_test_connector_hdmi_init_null_ddc),
- 	KUNIT_CASE_PARAM(drm_test_connector_hdmi_init_type_valid,
- 			 drm_connector_hdmi_init_type_valid_gen_params),
-@@ -510,10 +548,69 @@ static struct kunit_suite drm_get_tv_mode_from_name_test_suite = {
- 	.test_cases = drm_get_tv_mode_from_name_tests,
- };
+ static ssize_t inject_data_poison_store(struct device *dev,
+@@ -852,7 +849,7 @@ static void snps_setup_column_address_map(struct snps_edac_priv *priv, u32 *addr
+ 	int index;
  
-+struct drm_hdmi_connector_get_output_format_name_test {
-+	unsigned int kind;
-+	const char *expected_name;
-+};
-+
-+#define OUTPUT_FORMAT_TEST(_kind, _name)	\
-+	{					\
-+		.kind = _kind,			\
-+		.expected_name = _name,		\
-+	}
-+
-+static void drm_test_drm_hdmi_connector_get_output_format_name(struct kunit *test)
-+{
-+	const struct drm_hdmi_connector_get_output_format_name_test *params =
-+		test->param_value;
-+
-+	KUNIT_EXPECT_STREQ(test,
-+			   drm_hdmi_connector_get_output_format_name(params->kind),
-+			   params->expected_name);
-+}
-+
-+static const
-+struct drm_hdmi_connector_get_output_format_name_test
-+drm_hdmi_connector_get_output_format_name_valid_tests[] = {
-+	OUTPUT_FORMAT_TEST(HDMI_COLORSPACE_RGB, "RGB"),
-+	OUTPUT_FORMAT_TEST(HDMI_COLORSPACE_YUV420, "YUV 4:2:0"),
-+	OUTPUT_FORMAT_TEST(HDMI_COLORSPACE_YUV422, "YUV 4:2:2"),
-+	OUTPUT_FORMAT_TEST(HDMI_COLORSPACE_YUV444, "YUV 4:4:4"),
-+};
-+
-+static void
-+drm_hdmi_connector_get_output_format_name_valid_desc(const struct drm_hdmi_connector_get_output_format_name_test *t,
-+						     char *desc)
-+{
-+	sprintf(desc, "%s", t->expected_name);
-+}
-+
-+KUNIT_ARRAY_PARAM(drm_hdmi_connector_get_output_format_name_valid,
-+		  drm_hdmi_connector_get_output_format_name_valid_tests,
-+		  drm_hdmi_connector_get_output_format_name_valid_desc);
-+
-+static void drm_test_drm_hdmi_connector_get_output_format_name_invalid(struct kunit *test)
-+{
-+	KUNIT_EXPECT_NULL(test, drm_hdmi_connector_get_output_format_name(4));
-+};
-+
-+static struct kunit_case drm_hdmi_connector_get_output_format_name_tests[] = {
-+	KUNIT_CASE_PARAM(drm_test_drm_hdmi_connector_get_output_format_name,
-+			 drm_hdmi_connector_get_output_format_name_valid_gen_params),
-+	KUNIT_CASE(drm_test_drm_hdmi_connector_get_output_format_name_invalid),
-+	{ }
-+};
-+
-+static struct kunit_suite drm_hdmi_connector_get_output_format_name_test_suite = {
-+	.name = "drm_hdmi_connector_get_output_format_name",
-+	.test_cases = drm_hdmi_connector_get_output_format_name_tests,
-+};
-+
- kunit_test_suites(
- 	&drmm_connector_hdmi_init_test_suite,
- 	&drmm_connector_init_test_suite,
--	&drm_get_tv_mode_from_name_test_suite
-+	&drm_get_tv_mode_from_name_test_suite,
-+	&drm_hdmi_connector_get_output_format_name_test_suite
- );
+ 	memtype = readl(priv->baseaddr + DDR_MSTR_OFST);
+-	width = (memtype & DDR_MSTR_BUSWIDTH_MASK) >> DDR_MSTR_BUSWIDTH_SHIFT;
++	width = FIELD_GET(DDR_MSTR_BUSWIDTH_MASK, memtype);
  
- MODULE_AUTHOR("Maxime Ripard <maxime@cerno.tech>");
-
+ 	priv->col_shift[0] = 0;
+ 	priv->col_shift[1] = 1;
 -- 
-2.43.2
+2.43.0
 
