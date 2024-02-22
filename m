@@ -1,113 +1,116 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F11C71736
-	for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 19:09:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E12A14B806;
+	Thu, 22 Feb 2024 19:11:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708628982; cv=none; b=AvZyld4cFUThvShKyu3Z+35C8EMLgfwRUG3NhopO1PwPoEyWYsa9iTyCr9vsDvgSUcsa81Elvmhb30YyP3cgd2CxRiMhzhiQn5yB9KPqRv5Z6SSYDxqdvbBkuiKEdMQKtOwia2b3b2Q8eYdg7i3Zd/degUvgCsFMRBoxQwsjI3M=
+	t=1708629073; cv=none; b=qzYhGGzXT5I/lkRWhQMYhSedYZ2Ea5qfY2F5+F+aAl3Cxo0SOuNQbatURdB7a8MG4blKLD249YBDT6V4ybMVkfYuBFvd0qaEw/jqtxxtKz/f3mjE+Ayen+xNjJXVzEbnPudL9jTO5YwXLBNGhYTB5Bk+C0ejRkYRqyB6fym2n0U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708628982; c=relaxed/simple;
-	bh=nIS2Vbt7rQAe49eVU0bw0f9o5zWBRT8Sgqdd/vBQ8Bo=;
+	s=arc-20240116; t=1708629073; c=relaxed/simple;
+	bh=8nrfNIHr+Eb25TRq75f4NF1/J8WEqatyymrtaLx6QLM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VoxkoSfA6r3TqC2iEeBlagbTu0dy/wsY/LIoZDsB2cFMUj4sAx4EKkU4ceV/nnobZrf5ffoP21VydqRMn1G5v+5amqAwbHGlK5JDfJhQD2Eh93ZyFKpx2ZmEobivAW+lBJ9lhspCxewU9i7SCFyLbGD/nyJO5B9Ntjwy1BHA54c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=dVNYFStX; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=TRxvJ5DGdITMNMNUMtFn8ihph7M0ZtPjbfI6UreXfh86kIFgVJN9ozmbVwt/ZK3tLnln9AWaJlIMgqH48SzjBHdB+9a8tbdU34/1zsaaS/tc+yTgaooq/+cPRMIPtn5S/hGclEOSGASGuCmR2H1tm0mcUqvGKtlhUvxvy+4ZUx4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qtyLjiQP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dVNYFStX"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1708628979;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=NOIRP45lMGptwf1yH+rHDdW28P46s2WyXukLgbrFpzQ=;
-	b=dVNYFStX0oskcq8f7ABT2sTN7qxt/+tq3zRbTNyRJyhpJ61xBNA6om7AatKz2BkG3GrQP/
-	wkGmV/hR3ABSzIN2RzpW1HIJRZysCHJPQvxK8JGk5bO6gGguqNkSiqGgrcAzd2/MqBI2N4
-	995NKDwxCKVQy+rSuKuv7kP3zOE7jCQ=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-531-GZaW2W6aPJWbUqzbDInRrg-1; Thu,
- 22 Feb 2024 14:07:11 -0500
-X-MC-Unique: GZaW2W6aPJWbUqzbDInRrg-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.rdu2.redhat.com [10.11.54.6])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 682D33816440;
-	Thu, 22 Feb 2024 19:07:09 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.32])
-	by smtp.corp.redhat.com (Postfix) with SMTP id D7C4B2166AEE;
-	Thu, 22 Feb 2024 19:07:06 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Thu, 22 Feb 2024 20:05:50 +0100 (CET)
-Date: Thu, 22 Feb 2024 20:05:47 +0100
-From: Oleg Nesterov <oleg@redhat.com>
-To: wenyang.linux@foxmail.com
-Cc: Christian Brauner <brauner@kernel.org>,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qtyLjiQP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F0452C433C7;
+	Thu, 22 Feb 2024 19:11:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1708629073;
+	bh=8nrfNIHr+Eb25TRq75f4NF1/J8WEqatyymrtaLx6QLM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=qtyLjiQPSFvaJ9M7rV182imqkcwMJbcYO+r+dMGBtOYxSYpBaVnRvNZ11XJBROR9e
+	 sFol8k1v+wYlFvUyUBro/7AQx2+kDhj5NNqwRD48ht2iA7YBv6eSnjKNmaHOBzNY49
+	 rCeBnV+yiSRZ9mKiMtIIEvMu8x1IIfnswGl/xXqSXqac+W3bzu7M/y7q2JSc3d+Esh
+	 ud72RE65wIOLdDAYaE/5y0Ovalrhl4By/n4OFtjms2QwzNoKpCgzpJBTr/WkDAs+28
+	 qka5RHZp4Vb35lhxNepvftYRS6jQtzsIH6LXS5xsnjOXHpO0swqcwz1+VYW/6fI51S
+	 2PJtnLCwdBOSQ==
+Date: Thu, 22 Feb 2024 19:11:04 +0000
+From: Mark Brown <broonie@kernel.org>
+To: Thiago Jung Bauermann <thiago.bauermann@linaro.org>
+Cc: Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
 	Andrew Morton <akpm@linux-foundation.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Mike Christie <michael.christie@oracle.com>,
-	Dmitry Vyukov <dvyukov@google.com>,
-	Vincent Whitchurch <vincent.whitchurch@axis.com>,
-	Ard Biesheuvel <ardb@kernel.org>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] kernel/signal.c: explicitly initialize si_code and
- use ksig->info uniformly
-Message-ID: <20240222190546.GA5993@redhat.com>
-References: <tencent_195B55A5521705954D5EA4873327F8E53D0A@qq.com>
+	Marc Zyngier <maz@kernel.org>,
+	Oliver Upton <oliver.upton@linux.dev>,
+	James Morse <james.morse@arm.com>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Arnd Bergmann <arnd@arndb.de>, Oleg Nesterov <oleg@redhat.com>,
+	Eric Biederman <ebiederm@xmission.com>,
+	Kees Cook <keescook@chromium.org>, Shuah Khan <shuah@kernel.org>,
+	"Rick P. Edgecombe" <rick.p.edgecombe@intel.com>,
+	Deepak Gupta <debug@rivosinc.com>, Ard Biesheuvel <ardb@kernel.org>,
+	Szabolcs Nagy <Szabolcs.Nagy@arm.com>,
+	"H.J. Lu" <hjl.tools@gmail.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Florian Weimer <fweimer@redhat.com>,
+	Christian Brauner <brauner@kernel.org>,
+	linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org,
+	kvmarm@lists.linux.dev, linux-fsdevel@vger.kernel.org,
+	linux-arch@vger.kernel.org, linux-mm@kvack.org,
+	linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-riscv@lists.infradead.org
+Subject: Re: [PATCH v8 33/38] kselftest/arm64: Add a GCS test program built
+ with the system libc
+Message-ID: <9b899b4e-7410-4c3b-967b-7794dac742e4@sirena.org.uk>
+References: <20240203-arm64-gcs-v8-0-c9fec77673ef@kernel.org>
+ <20240203-arm64-gcs-v8-33-c9fec77673ef@kernel.org>
+ <87sf1n7uea.fsf@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="ZHq996jFPNViQlH3"
+Content-Disposition: inline
+In-Reply-To: <87sf1n7uea.fsf@linaro.org>
+X-Cookie: I have accepted Provolone into my life!
+
+
+--ZHq996jFPNViQlH3
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <tencent_195B55A5521705954D5EA4873327F8E53D0A@qq.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.6
 
-On 02/23, wenyang.linux@foxmail.com wrote:
->
-> From: Wen Yang <wenyang.linux@foxmail.com>
->
-> By explicitly initializing ksig->info.si_code and uniformly using ksig->info,
-> get_signal() function could be slightly optimized, as folowes:
+On Mon, Feb 19, 2024 at 11:15:57PM -0300, Thiago Jung Bauermann wrote:
 
-I don't understand. Why do you think it will be optimized? in what sense?
+> The only issue as can be seen above is that the can_call_function test
+> is failing. The child is getting a GCS Segmentation fault when returning
+> from fork().
 
-> 	clear_siginfo(&ksig->info);
-> 	ksig->info.si_signo = signr = SIGKILL;          --> missed si_code
+> I tried debugging it with GDB, but I don't see what's wrong since the
+> address in LR matches the first entry in GCSPR. Here is the
+> debug session:
 
-because we do not need to set .si_code in this case?
+I believe based on prior discussions that you're running this using
+shrinkwrap - can you confirm exactly how please, including things like
+which firmware configuration you're using?  I'm using current git with
 
-> 	sigdelset(&current->pending.signal, SIGKILL);
-> 	trace_signal_deliver(SIGKILL, SEND_SIG_NOINFO,  --> unnecessary SEND_SIG_NOINFO
+  shrinkwrap run \
+        --rtvar KERNEL=arch/arm64/boot/Image \
+        --rtvar ROOTFS=${ROOTFS} \
+        --rtvar CMDLINE="${CMDLINE}" \
+        --overlay=arch/v9.4.yaml ns-edk2.yaml
 
-Why do you think the usage of SEND_SIG_NOINFO is "unnecessary" or bad?
-To me this looks good.
+and a locally built yocto and everything seems perfectly happy.
 
-> @@ -2732,8 +2732,9 @@ bool get_signal(struct ksignal *ksig)
->  		     signal->group_exec_task) {
->  			clear_siginfo(&ksig->info);
->  			ksig->info.si_signo = signr = SIGKILL;
-> +			ksig->info.si_code = SI_USER;
->  			sigdelset(&current->pending.signal, SIGKILL);
-> -			trace_signal_deliver(SIGKILL, SEND_SIG_NOINFO,
-> +			trace_signal_deliver(SIGKILL, &ksig->info,
+--ZHq996jFPNViQlH3
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Well. to me this look like the minor but unnecessary pessimization.
+-----BEGIN PGP SIGNATURE-----
 
-AFAICS, we do not need to initialize .si_code. The usage if ksig->info
-instead of ksig->info means that TP_STORE_SIGINFO() will actually read
-the memory.
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmXXnEcACgkQJNaLcl1U
+h9A9hgf+IJIWILnaAT0TG0s4fwHDFwBgAEwmbr/85IsiE58YLlQn3tHAkAETsExB
+EtAk73IgOoaGfvFDcKF9Zq3PjE2iQ3r+Lh1A6/nyUdQBcMaZSES4ioXx5cwwjqFX
+m6lWkAiAzHxqFN++5z9gfq4lT3HjZQ3TFVE8y4Ij6vmmOeTIINFEGovAi330xkEZ
+prLXALb7+ONnUB3jG7VDY7Gx7HF+jt2Qd9gAz1KNNrBCEJT2fImUVEI1P/15iww7
+Xxm2Udbwd52h580B1x1sa7tMEFRi34tvmKx+2HHSgGFQ/a10LFpE4VnsW1vHUzGn
+2k8W5X8LkpXaHbgoXUGBMqDMFlKkWw==
+=owiX
+-----END PGP SIGNATURE-----
 
-Sorry, I don't understand the point at all :/
-
-and it seems that we can simply kill clear_siginfo(), but this is
-another story.
-
-Oleg.
-
+--ZHq996jFPNViQlH3--
