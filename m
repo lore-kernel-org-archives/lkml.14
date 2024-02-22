@@ -1,201 +1,165 @@
-Received: from fllv0016.ext.ti.com (fllv0016.ext.ti.com [198.47.19.142])
+Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE9B856471;
-	Thu, 22 Feb 2024 11:33:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.142
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32AEB405D4;
+	Thu, 22 Feb 2024 11:36:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708601639; cv=none; b=UlJALKChW7b+AR1pM+qNepFcS9/vPdNUZMVB8wgb9tzJrJEgFn/m6JrP5zYOi0fxb7b0IytBfpk3Ohl4SRbWG8aOiflbcziQd1tajIbk5nosZDiUFbc+5O6peYhVQ1jrIZUdly53OUoiA4tdTfhC9O4IsCV09ToVJS1hYxeQHC4=
+	t=1708601787; cv=none; b=b9ROeWdo0Dz5NEp+mjS1xwFHL1RYGQJ2zmSZeo1hNsex3zxQ8kHnaiM2avdVico07ax9E6bbOMM+hu9PPjp9pIzIkyBbCZ5JbXMj57AtEAbKXdArV1YI+ur75iYJIGtlYGjw4Wgwor00BFy1BXCcXy80iSdphhV+/GUcOj/0Bwk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708601639; c=relaxed/simple;
-	bh=/GtmPjLiq5+SagkrfDQAkAZP5XRkWs7T9sGKIVhkkz4=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
-	 In-Reply-To:To:CC; b=Qo7sSWTGa5/6ESs+jIpER050MymYdiU0sBVLo2xfbUCRFMmPRS66NHAmHFXa+iYqgM3xtQDehEc71wiuGMBLDHTL7fNHSk52n4M0qmlU/QheDQruuenx70rZHPhaMmPEE7yEv87N1xN9FY0mlJbzkwcdorL9UfrZLObthY7/4WM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=WtlcC9am; arc=none smtp.client-ip=198.47.19.142
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1708601787; c=relaxed/simple;
+	bh=Nq5AC/M/SyoGFJBpxXGvnqX2nW9FIGfWcanhZYMjTio=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=hYIXuPYjEw7YdlAxODYWfcy/oi/q/7SAeHy29r0u4di4L38e2uMIZkEHToK+J0fd9WP/yg2m7yyJEJ9d8tUaBjHrw1GkKNmMoQRNtLCeXPHFrH3IJ45mov8ddBa6QjHeFiTufvIeIy3coRhShLwhlR+AuWNqYnX0/c5AtoQahHk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=hVPCwmQS; arc=none smtp.client-ip=217.70.183.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="WtlcC9am"
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-	by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 41MBXk50027853;
-	Thu, 22 Feb 2024 05:33:46 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1708601626;
-	bh=Vlbz21goACtx1c8zMXtgD7uoZ9QnG6VdgKVSgHpupv8=;
-	h=From:Date:Subject:References:In-Reply-To:To:CC;
-	b=WtlcC9amfGGCuR1WryWRG8vcT8UQA4iOk70DW9csiMHCyI5cwdZ/Rp7cLPJfN43+i
-	 owusU6Vw+I15sXQC5Mc2JEq+sWU42S/88MxS+rJzLeN0ai/BMQuxfwGpXzVMf86Iyj
-	 yheibmUbAhRe6TyZq+du3OSEEuWi8I0CmmjPP5ps=
-Received: from DLEE112.ent.ti.com (dlee112.ent.ti.com [157.170.170.23])
-	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 41MBXkVR014493
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Thu, 22 Feb 2024 05:33:46 -0600
-Received: from DLEE113.ent.ti.com (157.170.170.24) by DLEE112.ent.ti.com
- (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 22
- Feb 2024 05:33:46 -0600
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE113.ent.ti.com
- (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Thu, 22 Feb 2024 05:33:46 -0600
-Received: from localhost (jluthra.dhcp.ti.com [172.24.227.217])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 41MBXi5B091622;
-	Thu, 22 Feb 2024 05:33:45 -0600
-From: Jai Luthra <j-luthra@ti.com>
-Date: Thu, 22 Feb 2024 17:01:37 +0530
-Subject: [PATCH RFC 21/21] media: ti: j721e-csi2rx: Submit all available
- buffers
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="hVPCwmQS"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id EF9471C0003;
+	Thu, 22 Feb 2024 11:36:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1708601776;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=maOFycEoHJZpXjV4st8F3wfV32IoWjfu72XKDbdjfwo=;
+	b=hVPCwmQSoeoUKbWUs1Ur9iVK0qZEx/otlw7f6S/vyZcezk6GhfjjgCPYREND+Z0VzugqP2
+	rn2BMSz4GgdJ5WOkp+bCNP8sYEpwjP+kfBdY7KCTcvzXMrw7IXetqpZJOaDVtZw97oH3mu
+	ZAKscrCcb7PpkbbMRRnZQS/HMTdU7gNvjdbOuusrumIaUn1lkqLnT1eE8iza+8MkM0ZP+v
+	4T3F9mewzRPWMQ1g0UqcZ1wB9Y7ieo/Nb43z6VddHRfkGiDQR29wvTS8Qcpzz6xHqCODTt
+	cHFwVUGXGQVCTpWzX6oZQrHG8Gs1xBsLxT76XlZma2JiaHwv6b9Ry/4kdrhcUg==
+Date: Thu, 22 Feb 2024 12:36:15 +0100
+From: Herve Codina <herve.codina@bootlin.com>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Kent Gibson <warthog618@gmail.com>, Linus Walleij
+ <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Luca Ceresoli <luca.ceresoli@bootlin.com>,
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Saravana Kannan
+ <saravanak@google.com>
+Subject: Re: [PATCH 2/2] gpiolib: cdev: release IRQs when the gpio chip
+ device is removed
+Message-ID: <20240222123615.2cbada98@bootlin.com>
+In-Reply-To: <CAMRc=MdCm4UXMkzvG17Vd=6ajE+feihgYc66qUNTTKXhN0--dA@mail.gmail.com>
+References: <20240220111019.133697-1-herve.codina@bootlin.com>
+	<20240220111019.133697-3-herve.codina@bootlin.com>
+	<20240220142959.GA244726@rigel>
+	<20240222005744.GA3603@rigel>
+	<20240222010530.GA11949@rigel>
+	<CAMRc=MdCm4UXMkzvG17Vd=6ajE+feihgYc66qUNTTKXhN0--dA@mail.gmail.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.2.0 (GTK 3.24.38; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-ID: <20240222-multistream-v1-21-1837ed916eeb@ti.com>
-References: <20240222-multistream-v1-0-1837ed916eeb@ti.com>
-In-Reply-To: <20240222-multistream-v1-0-1837ed916eeb@ti.com>
-To: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
-        Mauro Carvalho Chehab
-	<mchehab@kernel.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Hans
- Verkuil <hverkuil-cisco@xs4all.nl>,
-        Vaishnav Achath <vaishnav.a@ti.com>,
-        Maxime Ripard <mripard@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof
- Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley
-	<conor+dt@kernel.org>
-CC: <linux-media@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, Vignesh Raghavendra <vigneshr@ti.com>,
-        Aradhya
- Bhatia <a-bhatia1@ti.com>, Devarsh Thakkar <devarsht@ti.com>,
-        Changhuang
- Liang <changhuang.liang@starfivetech.com>,
-        Jack Zhu
-	<jack.zhu@starfivetech.com>,
-        Julien Massot <julien.massot@collabora.com>,
-        Jayshri Pawar <jpawar@cadence.com>, Jai Luthra <j-luthra@ti.com>
-X-Mailer: b4 0.12.4
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3577; i=j-luthra@ti.com;
- h=from:subject:message-id; bh=/GtmPjLiq5+SagkrfDQAkAZP5XRkWs7T9sGKIVhkkz4=;
- b=owEBbQKS/ZANAwAIAUPekfkkmnFFAcsmYgBl1zDuro/ycwjO5PCLQrJiQETtI9R/Rz8V16qhH
- NGhUvuH9NSJAjMEAAEIAB0WIQRN4NgY5dV16NRar8VD3pH5JJpxRQUCZdcw7gAKCRBD3pH5JJpx
- RcEsEACXdlnzSwdPg09vRskjpB2V19aq2bTmJA5wMNKnsdqtyZms6Bks+K2NFIVccg7T1/kzOsW
- 21J9BXbvl9kotNHmiC9Dym6GGPX8PwSeER9ta/k67oEp+jcLqNYx013SDvmirXcBYKYrDjOb+ZK
- PyW8Aey4CRxqsLVo84BfWikCJuU6HNIE2puO47t+iTEm106GAwZLJpPDLJZjUfHd5FmEtJmwf07
- GxK7+RFUfzaOkwgbNmg7qYMuL+UkMEBqONYDlMSopQhewlpGij1rsIVGsW5vLCcW1Dojq4WiPJj
- oItB+ePyFD9u5TGgSQM4oFeKZyDR5txG2VSuVbEkMlBWW6c/UVSIaNZppxUfDusr2DaOwYkpeJp
- LdfnNLEY75vdjHWlStzsNncC7n2ndrX3uHAs92XKsV8o7aXsfrHxOpl/xC/DbaPTVPVPMqt3Oce
- bTgrBXsX0fwr+um1f15uqHeXlGeDbEEtfBptF0zYPGutkfVdgDc1VcA5VP3NCHIVd7XCAIDinUT
- sNZWmtKUL5gU2x1/2bfEP7/C41y05IfuKLnqaTs4oTrkvp4QI7E1dA1+XZJiBo31NlTnxOuqKf+
- 1s0zeZJK7Mk5e9BZ4FbNOSASxr64396RCo+TiU7XyvcpM2NKQ79DAybYUEbEzsIEDqPSXEY39rh
- +8lm46CyNyVOlnA==
-X-Developer-Key: i=j-luthra@ti.com; a=openpgp;
- fpr=4DE0D818E5D575E8D45AAFC543DE91F9249A7145
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-GND-Sasl: herve.codina@bootlin.com
 
-We already make sure to submit all available buffers to DMA in each DMA
-completion callback.
+Hi Bartosz,
 
-Move that logic in a separate function, and use it during stream start
-as well, as most application queue all their buffers before stream on.
+On Thu, 22 Feb 2024 00:31:08 -0800
+Bartosz Golaszewski <brgl@bgdev.pl> wrote:
 
-Signed-off-by: Jai Luthra <j-luthra@ti.com>
----
- .../media/platform/ti/j721e-csi2rx/j721e-csi2rx.c  | 43 ++++++++++++----------
- 1 file changed, 24 insertions(+), 19 deletions(-)
+> On Thu, 22 Feb 2024 02:05:30 +0100, Kent Gibson <warthog618@gmail.com> said:
+> > On Thu, Feb 22, 2024 at 08:57:44AM +0800, Kent Gibson wrote:  
+> >> On Tue, Feb 20, 2024 at 10:29:59PM +0800, Kent Gibson wrote:  
+> >> > On Tue, Feb 20, 2024 at 12:10:18PM +0100, Herve Codina wrote:  
+> >>
+> >> ...
+> >>  
+> >> > >  }
+> >> > >
+> >> > > +static int linereq_unregistered_notify(struct notifier_block *nb,
+> >> > > +				       unsigned long action, void *data)
+> >> > > +{
+> >> > > +	struct linereq *lr = container_of(nb, struct linereq,
+> >> > > +					  device_unregistered_nb);
+> >> > > +	int i;
+> >> > > +
+> >> > > +	for (i = 0; i < lr->num_lines; i++) {
+> >> > > +		if (lr->lines[i].desc)
+> >> > > +			edge_detector_stop(&lr->lines[i]);
+> >> > > +	}
+> >> > > +  
+> >> >
+> >> > Firstly, the re-ordering in the previous patch creates a race,
+> >> > as the NULLing of the gdev->chip serves to numb the cdev ioctls, so
+> >> > there is now a window between the notifier being called and that numbing,
+> >> > during which userspace may call linereq_set_config() and re-request
+> >> > the irq.
+> >> >
+> >> > There is also a race here with linereq_set_config().  That can be prevented
+> >> > by holding the lr->config_mutex - assuming the notifier is not being called
+> >> > from atomic context.
+> >> >  
+> >>
+> >> It occurs to me that the fixed reordering in patch 1 would place
+> >> the notifier call AFTER the NULLing of the ioctls, so there will no longer
+> >> be any chance of a race with linereq_set_config() - so holding the
+> >> config_mutex semaphore is not necessary.
+> >>  
+> >
+> > NULLing -> numbing
+> >
+> > The gdev->chip is NULLed, so the ioctls are numbed.
+> > And I need to let the coffee soak in before sending.
+> >  
+> >> In which case this patch is fine - it is only patch 1 that requires
+> >> updating.
+> >>
+> >> Cheers,
+> >> Kent.  
+> >  
+> 
+> The fix for the user-space issue may be more-or-less correct but the problem is
+> deeper and this won't fix it for in-kernel users.
+> 
+> Herve: please consider the following DT snippet:
+> 
+> 	gpio0 {
+> 		compatible = "foo";
+> 
+> 		gpio-controller;
+> 		#gpio-cells = <2>;
+> 		interrupt-controller;
+> 		#interrupt-cells = <1>;
+> 		ngpios = <8>;
+> 	};
+> 
+> 	consumer {
+> 		compatible = "bar";
+> 
+> 		interrupts-extended = <&gpio0 0>;
+> 	};
+> 
+> If you unbind the "gpio0" device after the consumer requested the interrupt,
+> you'll get the same splat. And device links will not help you here (on that
+> note: Saravana: is there anything we could do about it? Have you even
+> considered making the irqchip subsystem use the driver model in any way? Is it
+> even feasible?).
+> 
+> I would prefer this to be fixed at a lower lever than the GPIOLIB character
+> device.
 
-diff --git a/drivers/media/platform/ti/j721e-csi2rx/j721e-csi2rx.c b/drivers/media/platform/ti/j721e-csi2rx/j721e-csi2rx.c
-index 0b9e0852da9f..a682db099e6c 100644
---- a/drivers/media/platform/ti/j721e-csi2rx/j721e-csi2rx.c
-+++ b/drivers/media/platform/ti/j721e-csi2rx/j721e-csi2rx.c
-@@ -666,6 +666,27 @@ static int ti_csi2rx_drain_dma(struct ti_csi2rx_ctx *ctx)
- 	return ret;
- }
- 
-+static int ti_csi2rx_dma_submit_pending(struct ti_csi2rx_ctx *ctx)
-+{
-+	struct ti_csi2rx_dma *dma = &ctx->dma;
-+	struct ti_csi2rx_buffer *buf;
-+	int ret = 0;
-+
-+	/* If there are more buffers to process then start their transfer. */
-+	while (!list_empty(&dma->queue)) {
-+		buf = list_entry(dma->queue.next, struct ti_csi2rx_buffer, list);
-+		ret = ti_csi2rx_start_dma(ctx, buf);
-+		if (ret) {
-+			dev_err(ctx->csi->dev,
-+				"Failed to queue the next buffer for DMA\n");
-+			vb2_buffer_done(&buf->vb.vb2_buf, VB2_BUF_STATE_ERROR);
-+			break;
-+		}
-+		list_move_tail(&buf->list, &dma->submitted);
-+	}
-+	return ret;
-+}
-+
- static void ti_csi2rx_dma_callback(void *param)
- {
- 	struct ti_csi2rx_buffer *buf = param;
-@@ -686,18 +707,7 @@ static void ti_csi2rx_dma_callback(void *param)
- 	vb2_buffer_done(&buf->vb.vb2_buf, VB2_BUF_STATE_DONE);
- 	list_del(&buf->list);
- 
--	/* If there are more buffers to process then start their transfer. */
--	while (!list_empty(&dma->queue)) {
--		buf = list_entry(dma->queue.next, struct ti_csi2rx_buffer, list);
--
--		if (ti_csi2rx_start_dma(ctx, buf)) {
--			dev_err(ctx->csi->dev,
--				"Failed to queue the next buffer for DMA\n");
--			vb2_buffer_done(&buf->vb.vb2_buf, VB2_BUF_STATE_ERROR);
--		} else {
--			list_move_tail(&buf->list, &dma->submitted);
--		}
--	}
-+	ti_csi2rx_dma_submit_pending(ctx);
- 
- 	if (list_empty(&dma->submitted))
- 		dma->state = TI_CSI2RX_DMA_IDLE;
-@@ -906,7 +916,6 @@ static int ti_csi2rx_start_streaming(struct vb2_queue *vq, unsigned int count)
- 	struct ti_csi2rx_ctx *ctx = vb2_get_drv_priv(vq);
- 	struct ti_csi2rx_dev *csi = ctx->csi;
- 	struct ti_csi2rx_dma *dma = &ctx->dma;
--	struct ti_csi2rx_buffer *buf;
- 	struct v4l2_subdev_krouting *routing;
- 	struct v4l2_subdev_route *route = NULL;
- 	struct media_pad *remote_pad;
-@@ -972,16 +981,13 @@ static int ti_csi2rx_start_streaming(struct vb2_queue *vq, unsigned int count)
- 	ctx->sequence = 0;
- 
- 	spin_lock_irqsave(&dma->lock, flags);
--	buf = list_entry(dma->queue.next, struct ti_csi2rx_buffer, list);
- 
--	ret = ti_csi2rx_start_dma(ctx, buf);
-+	ret = ti_csi2rx_dma_submit_pending(ctx);
- 	if (ret) {
--		dev_err(csi->dev, "Failed to start DMA: %d\n", ret);
- 		spin_unlock_irqrestore(&dma->lock, flags);
--		goto err_pipeline;
-+		goto err_dma;
- 	}
- 
--	list_move_tail(&buf->list, &dma->submitted);
- 	dma->state = TI_CSI2RX_DMA_ACTIVE;
- 	spin_unlock_irqrestore(&dma->lock, flags);
- 
-@@ -995,7 +1001,6 @@ static int ti_csi2rx_start_streaming(struct vb2_queue *vq, unsigned int count)
- 
- err_dma:
- 	ti_csi2rx_stop_dma(ctx);
--err_pipeline:
- 	video_device_pipeline_stop(&ctx->vdev);
- 	writel(0, csi->shim + SHIM_CNTL);
- 	writel(0, csi->shim + SHIM_DMACNTX(ctx->idx));
+I think this use case is covered.
+When the consumer device related to the consumer DT node is added, a
+consumer/supplier relationship is created:
+parse_interrupts() parses the 'interrups-extended' property
+  https://elixir.bootlin.com/linux/v6.8-rc1/source/drivers/of/property.c#L1316
+and so, of_link_to_phandle() creates the consumer/supplier link.
+  https://elixir.bootlin.com/linux/v6.8-rc1/source/drivers/of/property.c#L1316
 
--- 
-2.43.0
+We that link present, if the supplier is removed, the consumer is removed
+before.
+The consumer should release the interrupt during its remove process (i.e
+explicit in its .remove() or explicit because of a devm_*() call).
 
+At least, it is my understanding.
+
+Best regards,
+Hervé
