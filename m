@@ -1,245 +1,202 @@
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2048.outbound.protection.outlook.com [40.107.93.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com [209.85.216.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 730C314B832
-	for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 20:20:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.48
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708633237; cv=fail; b=b9GMvqZ2MntetdsHu15qqGKclhqbgPc+mL0qKFp0OWN+vz3f5FZIfXbDJXG+3QIZAl0WS3BmnLMKU6QFnoukUEE3ARxZuLpiBTRHw3twGENZDwzYmU86gsHlafBj3vi9zr1qIz8I216Ag+bzj3B6PhAcAYvYXD6P9sY8hmruE8Q=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708633237; c=relaxed/simple;
-	bh=Ae6O1nqAimJF9PfT5AuhFoRieDIKUGu7zfIwYys8Mh8=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=L0ps80hgtsZaAZ1R4VGM93+O7P5cxiQ1AfgOFGYr41oo65tHZ6fdzVS1deSHUfRZp2ytFng9HJSMpqArjzHPOQa50gaycqSY1at8FiMJcWLSh8Q+QVGpG80yHo89I+16DCy/DCKHW8t4txGfqz5MNxoigijiLiBKwBPjcEulLdI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=eVZqomII; arc=fail smtp.client-ip=40.107.93.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35C1D14B815
+	for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 20:22:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.48
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1708633373; cv=none; b=ufdCZijtvWxts2xcU0N0NqnLm89APtSy9wpDjthc8D/nNFzHC40MRwmtAvf2EqxU8dTKFwIdlR8NwGSOWqVXG1bLbu5KND0mku5LCe1em5ETgJhKR903BS9sOC8/8HGYjoMeXJ1yxx9uxCjkTum4tck/puxEPudv/2xJ4C90WB8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1708633373; c=relaxed/simple;
+	bh=MhysHirwrzZgOmT/JmKn7W+RQzCr8QuKyzQeL5Lz9o0=;
+	h=Date:Subject:In-Reply-To:CC:From:To:Message-ID:Mime-Version:
+	 Content-Type; b=tcP/LrXnUZhO9tHGRbRKO7yLN9oDqK/siaJ0Z/nE+ZXelnUOFnMu2VTe27bMgXE9qjPVpOnNJdteH05evLveLClddkLvV4/Z/oBm8d3HBj3iyxr6UojtJxRWpDsAvg5Pt1FbUnD+IuWy2Lji5J+Qmp5u+yVimkcRDbEFQHSNOS4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dabbelt.com; spf=pass smtp.mailfrom=dabbelt.com; dkim=pass (2048-bit key) header.d=dabbelt-com.20230601.gappssmtp.com header.i=@dabbelt-com.20230601.gappssmtp.com header.b=l7QyR5HW; arc=none smtp.client-ip=209.85.216.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dabbelt.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dabbelt.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="eVZqomII"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=cW9IdcNiRfEcHdw6inEhNaKat3/1o2CKqmwBjcYc47xmpa8uEuY9kv4NBeAWeGbYMCIl0NMJl9YGT4X+3nXJAU4e/B+IEH35UgwI92ofjuuTT7fRty46GPfO8dmSlqH3pz6ZFbxd36GrQ97oILlbhgMDxBisONPzyCkF/UigaQpcgktlYLil4yvGQgoZ6D4ZTJ5h9D9qlbDAyGzMKIZlrjN7mQpWuMbQ0PLPom6E16+zU8bpAniYaT1clhZ4/iH4XNMDcLz00yOHUbnBkiibGX+c3qKyCUa/uQbVw75+x37fd0+7AJ0HVwUi4IW3ihd7JRtErYbNlYvmVnz8RvYylA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=hVQU1LIOm1fxzKDJDtVLUcibm0Ta//YRJnk1ryCWCpo=;
- b=nepG+yayk1j5xavjwvH2GTigBp3EzaLyA49N4a33UeYseiwpA4SFznGSEPl7S8V/LkTzIoUiXwoFDy3oz1w/IyfGNTAOFV/WBkgnWTygkoMh7ZooVmhCPQcWQHfAFZeCqb+nTUfAh7rVfDB6A4n6YbcMZROJsP7MKYiA8ggu2R74zW1GUbz0Th0E8Cm+3jmOonCGS1AoCC2z7v4BB8YBmAIOShFXev+BE3evBPt4xP8i3V4u5PvJSDiggMMBnjBYF99/7pN4LBO1l/qqkn2kVqNF0b0WPwb/T5TotXsi5q6VYVx3Caz/NyXFzowwDZ95QLvyqf63l2pWY4Ii0rkUDQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=google.com smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=hVQU1LIOm1fxzKDJDtVLUcibm0Ta//YRJnk1ryCWCpo=;
- b=eVZqomIIGyCPrDo/ZjwrCpMCrbrNyHBgL1pF5k8CsjHnx8OSTd2AoU1a5zvn66O2w2bLDb5vyJmaWyvR+ooob1oLJn5D8cvB/HxNdovUbdfwQs/+T7dLxt5dYkRFqjg2XD2pawydpklg87UtO+n8WaUM4su3aKbrRlYa6W9OG9Y=
-Received: from BN9PR03CA0187.namprd03.prod.outlook.com (2603:10b6:408:f9::12)
- by MW5PR12MB5652.namprd12.prod.outlook.com (2603:10b6:303:1a0::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7316.24; Thu, 22 Feb
- 2024 20:20:30 +0000
-Received: from BN3PEPF0000B06C.namprd21.prod.outlook.com
- (2603:10b6:408:f9:cafe::7f) by BN9PR03CA0187.outlook.office365.com
- (2603:10b6:408:f9::12) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7292.43 via Frontend
- Transport; Thu, 22 Feb 2024 20:20:29 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- BN3PEPF0000B06C.mail.protection.outlook.com (10.167.243.71) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.7339.0 via Frontend Transport; Thu, 22 Feb 2024 20:20:29 +0000
-Received: from localhost (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Thu, 22 Feb
- 2024 14:20:29 -0600
-Date: Thu, 22 Feb 2024 14:20:15 -0600
-From: Michael Roth <michael.roth@amd.com>
-To: Kevin Loughlin <kevinloughlin@google.com>
-CC: Alexander Shishkin <alexander.shishkin@linux.intel.com>, Ard Biesheuvel
-	<ardb@kernel.org>, Baoquan He <bhe@redhat.com>, Borislav Petkov
-	<bp@alien8.de>, Brijesh Singh <brijesh.singh@amd.com>, Dave Hansen
-	<dave.hansen@linux.intel.com>, Dionna Glaze <dionnaglaze@google.com>,
-	"H.Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>, Josh
- Poimboeuf <jpoimboe@kernel.org>, Kai Huang <kai.huang@intel.com>, Peter
- Zijlstra <peterz@infradead.org>, Ross Lagerwall <ross.lagerwall@citrix.com>,
-	"Thomas Gleixner" <tglx@linutronix.de>, Tom Lendacky
-	<thomas.lendacky@amd.com>, "Yuntao Wang" <ytcoode@gmail.com>,
-	<linux-kernel@vger.kernel.org>, <x86@kernel.org>, Adam Dunlap
-	<acdunlap@google.com>, Peter Gonda <pgonda@google.com>, Jacob Xu
-	<jacobhxu@google.com>, Sidharth Telang <sidtelang@google.com>, Conrad Grobler
-	<grobler@google.com>, Andri Saar <andrisaar@google.com>
-Subject: Re: [PATCH] x86/kernel: Validate ROM before DMI scanning when
- SEV-SNP is active
-Message-ID: <20240222202015.33zx7t2zgaev7jos@amd.com>
-References: <20240213040747.1745939-1-kevinloughlin@google.com>
- <170785457569.2934648.10119965441921727215@amd.com>
- <CAGdbjmJAE5Uo5LA=hkMFwp+LdnNxxKgSwgkpdWZ69kwS-tLkFw@mail.gmail.com>
- <20240216225019.upcxwd6vkxv5dp4n@amd.com>
- <CAGdbjmK9WoOQSbKUvcTdLJDW-RB=qe2tHFDZ-MeD266xZOxh7w@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=dabbelt-com.20230601.gappssmtp.com header.i=@dabbelt-com.20230601.gappssmtp.com header.b="l7QyR5HW"
+Received: by mail-pj1-f48.google.com with SMTP id 98e67ed59e1d1-299b818d63aso182843a91.0
+        for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 12:22:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=dabbelt-com.20230601.gappssmtp.com; s=20230601; t=1708633370; x=1709238170; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:to:from:cc
+         :in-reply-to:subject:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=mpShOmtkkj9GEApYdcwx7cn/mMGxpGuhSoDbV1XUNXc=;
+        b=l7QyR5HWjp/Sx7yDSFmwCrFtkop7xMvxUckydkfpyTdxk6adsvQoFfX3RDQy7fP5Wz
+         kd2C4tDS6Ufsc6VhViLFPJSIJuseGZPy8qbC3YfYVacbgnZcYTf4pIzTo7yRXlf5B3Px
+         Ej7y9YB6xT5hJQX5FnhEKrtT3xAkm/WDGSht0N1+6Jgyy7uAvHDbSH5wdwcg+06Tpb3M
+         cQlXnFzzFy6ijIxoelWoRSpiOc5XSVMNVeWiw/YZjDK8ykg2SK4Wv1tjAdeQ3tSCj+u3
+         f2zAm+3IThbEKJmD3bSGxsOvJjl3R86+apf7dPZGKpIo4SuiZeYbKBn9/XvLQLLmuJHS
+         6qeA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708633370; x=1709238170;
+        h=content-transfer-encoding:mime-version:message-id:to:from:cc
+         :in-reply-to:subject:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=mpShOmtkkj9GEApYdcwx7cn/mMGxpGuhSoDbV1XUNXc=;
+        b=KwzBIeKPioR0eY3gN8xbDRJcMjfgvDcIj8D/L3e5w2gV+ahmdTT5gem2iFyfEOTWCN
+         LZyHKOnTPjhtH0PLok7CjqTn54I/kgztbZ1YxA1v6CvIGjcgmXEG18VkwKm45ug5+kGN
+         VBzLi834vEDytX8N5DDQB0WnkjM7z4ixQTAo+sDn8FVK6h73Tms/lfVM2me62v/2a9PX
+         ZG21LETJwhZtIRaQlN9o8zcNSdI3GnFUlq8c35REFZmjMGTMdcWADX4R9rpXX0iYFxVo
+         CrLHj9nEP/x6ZW5ro+0MsnkKqnflKPrpu5F3tf2X5Eaq9PlyYujtUoJBoZOVFNJD2hnu
+         IwOw==
+X-Forwarded-Encrypted: i=1; AJvYcCXptcL0Jk0B+LuZaVZSKWIM9z4LDmKMT9ztMrgMtMpJ2OQAHa9X+mMDdjJjMdZ9kVtZ9D0pW4QA36PfFKdn8wqUZqUna2iRrIyS1LHq
+X-Gm-Message-State: AOJu0YwVwQiO/bvUR8tjAATxST7ogrb9uwi4zV8mE/7EI6Tur82LeB0r
+	PYJF3lrGkBN/OmWatDjS610YXoLiNohUhNvG6JD+IO4Pt88tD5L0rzqXG2yasso=
+X-Google-Smtp-Source: AGHT+IHqzp5vBlh891WfzJCO4hseA3vx6/FnlCk5TJbweZ6XQhH5Ogc5C8SekyxUIOEcqD7DZP99Dg==
+X-Received: by 2002:a17:90a:d3d0:b0:298:b25d:127c with SMTP id d16-20020a17090ad3d000b00298b25d127cmr5033001pjw.23.1708633370408;
+        Thu, 22 Feb 2024 12:22:50 -0800 (PST)
+Received: from localhost ([50.213.54.97])
+        by smtp.gmail.com with ESMTPSA id ta4-20020a17090b4ec400b00298b3e058fcsm4424899pjb.57.2024.02.22.12.22.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 22 Feb 2024 12:22:49 -0800 (PST)
+Date: Thu, 22 Feb 2024 12:22:49 -0800 (PST)
+X-Google-Original-Date: Thu, 22 Feb 2024 12:21:05 PST (-0800)
+Subject:     Re: [PATCH v2] riscv: add CALLER_ADDRx support
+In-Reply-To: <20240202015102.26251-1-zong.li@sifive.com>
+CC: Paul Walmsley <paul.walmsley@sifive.com>, alex@ghiti.fr,
+  Conor Dooley <conor.dooley@microchip.com>, aou@eecs.berkeley.edu, linux-riscv@lists.infradead.org,
+  linux-kernel@vger.kernel.org, zong.li@sifive.com
+From: Palmer Dabbelt <palmer@dabbelt.com>
+To: zong.li@sifive.com
+Message-ID: <mhng-ce04b525-e138-44ba-874f-97b0f6d5e2e7@palmer-ri-x1c9a>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Disposition: inline
+Mime-Version: 1.0 (MHng)
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAGdbjmK9WoOQSbKUvcTdLJDW-RB=qe2tHFDZ-MeD266xZOxh7w@mail.gmail.com>
-X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN3PEPF0000B06C:EE_|MW5PR12MB5652:EE_
-X-MS-Office365-Filtering-Correlation-Id: 58e291e5-a73a-41c1-98f4-08dc33e3b6d2
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	0zUPc5RBkUST5at6XqE/LipsQZWKruzwC0eANpseWFzmGAN6hLW8Qca5xeBIxVzBf9OXz1LA3NB2n7grAKM2SvE3qpM0nIVFU8E4KIcZDLPYv8qNoxILPCALOhV3PToRW2LHoTGuRuNx7TB6fVjbf56ZFSHTdjrZeQnqTa8baIHCaUxYIDxH6UOxnvMwAsVyTpFx+6Z9lFgZnyqP93AotDYxCUrzzY5oODYo/99UMeuoM1BFTL3jTu66ackA424kGfpGYh0KaOvSMAwtyLrldxNriOrzbofQpxda7bS/WIcbvYiIHGQmZ9tGQNCRDDFIjJEOKJ0WbIHfi3CD2OjbukWq+keFeQEod8R4MoMtR58WRXG7PF4zfrFXa5qy468gVaxFuZr/XmSeAmyGK4DZ0Q0Sm3evOT5YzutcCSRrSLUsJyCrl4EPJDKb4ioVOu6LYuM9Ui0CbiF0tUAn2ZNk7HJVDImP0eX86d2Zl9NCRCfcA4i11VCu8F+FXn/lFh1kL/nrPlaDglaVyT+3nVrC06pakvQ4/pRrH9bZAHThCXZI6aFNgI18eaS20YI/whq7ZHp8PyWOM/j3RuPwUcf/+I7Y9T8VpwFEhsVnd82gwPzvPBOfzjKiXr0WStwZLmcjfamzn1jTQNYWKiOz/KbE/Q==
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(36860700004)(46966006)(40470700004);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Feb 2024 20:20:29.6365
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 58e291e5-a73a-41c1-98f4-08dc33e3b6d2
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	BN3PEPF0000B06C.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW5PR12MB5652
 
-On Wed, Feb 21, 2024 at 02:50:00PM -0800, Kevin Loughlin wrote:
-> On Fri, Feb 16, 2024 at 2:50 PM Michael Roth <michael.roth@amd.com> wrote:
-> >
-> > On Tue, Feb 13, 2024 at 03:10:46PM -0800, Kevin Loughlin wrote:
-> > > On Tue, Feb 13, 2024 at 12:03 PM Michael Roth <michael.roth@amd.com> wrote:
-> > > >
-> > > > Quoting Kevin Loughlin (2024-02-12 22:07:46)
-> > > > > SEV-SNP requires encrypted memory to be validated before access. The
-> > > > > kernel is responsible for validating the ROM memory range because the
-> > > > > range is not part of the e820 table and therefore not pre-validated by
-> > > > > the BIOS.
-> > > > >
-> > > > > While the current SEV-SNP code attempts to validate the ROM range in
-> > > > > probe_roms(), this does not suffice for all existing use cases. In
-> > > > > particular, if EFI_CONFIG_TABLES are not enabled and
-> > > > > CONFIG_DMI_SCAN_MACHINE_NON_EFI_FALLBACK is set, the kernel will
-> > > > > attempt to access the memory at SMBIOS_ENTRY_POINT_SCAN_START (which
-> > > > > falls in the ROM range) prior to validation. The specific problematic
-> > > > > call chain occurs during dmi_setup() -> dmi_scan_machine() and results
-> > > > > in a crash during boot if SEV-SNP is enabled under these conditions.
-> > > >
-> > > > AFAIK, QEMU doesn't actually include any legacy ROMs as part of the initial
-> > > > encrypted guest image, and I'm not aware of any VMM implementations that
-> > > > do this either.
-> > >
-> > > I'm using a VMM implementation that uses (non-EFI) Oak stage0 firmware [0].
-> > >
-> > > [0] https://github.com/project-oak/oak/tree/main/stage0_bin
-> > >
-> > > > If dmi_setup() similarly scans these ranges, it seems likely the same
-> > > > issue would be present: the validated/private regions would only contain
-> > > > ciphertext rather than the expected ROM data. Does that agree with the
-> > > > behavior you are seeing?
-> > > >
-> > > > If so, maybe instead probe_roms should just be skipped in the case of SNP?
-> > >
-> > > If probe_roms() is skipped, SEV-SNP guest boot also currently crashes;
-> > > I just quickly tried that (though admittedly haven't looked into why).
-> >
-> > default_find_smp_config() will also call smp_scan_config() on
-> > 0xF0000-0x10000, so that might be the additional issue you're hitting.
-> > If I skip that for in addition to probe_roms, then boot works for me.
-> 
-> Yeah, smp_scan_config() was the culprit. Thanks.
-> 
-> > It seems the currently handling has a bug that has been in place since the
-> > original SEV guest code was added. If you dump the data that probe_roms()
-> > sees while it is scanning for instances of ROMSIGNATURE (0xaa55) in the
-> > region, you'll see that it is random data that changes on every boot.
-> > The root issue is that this region does not contain encrypted data, and
-> > is only being accessed that way because the early page table has the
-> > encryption bit set for this range.
-> >
-> > The effects are subtle: if the code ever sees a pair of bytes that look
-> > like ROMSIGNATURE, it will reserve that memory so it can be accessed
-> > later, generally just 0xc0000-0xc7fff. In extremely rare cases where the
-> > ciphertext's data has a checksum that happens to match the contents, it
-> > will use a random byte, multiple it by 512, and reserve up to 64k for
-> > this bogus ROM region.
-> >
-> > For SNP this resulted in a more obvious failure: a #VC exception because
-> > the supposedly encrypted memory was in fact not encrypted, and thus not
-> > PVALIDATED. Unfortunately the fix you linked to involved maintaining the
-> > broken SEV behavior rather than fixing this mismatch.
-> >
-> > >
-> > > > And perhaps dmi_setup() should similarly skip the legacy ROM ranges for
-> > > > the kernel configs in question?
-> > >
-> > > Given (a) non-EFI firmware is supported in other SME/SEV boot code
-> > > patches [2], (b) this patch does not seem to introduce significant
-> > > complexity (it just moves [1] to earlier in the boot process to
-> > > additionally handle the non-EFI case), and (c) skipping
-> > > probe_roms()+dmi_setup() doesn't work without additional changes, I'm
-> > > currently still inclined to simply validate the legacy ROM ranges
-> > > early enough to prevent this issue (as is already done when using EFI
-> > > firmware).
-> >
-> > The 2 options I see are:
-> >
-> >   a) Skipping accesses to these regions for SEV. It is vaguely possible
-> >      some implementation out there actually did measure/load the ROM as
-> >      part of the initial guest image for SEV, but for SNP this would
-> >      have been impossible since it would have lead to the guest crashing
-> >      when snp_prep_roms() was called, since RMPUPDATE on the host only
-> >      rescinds the validated bit if there is a change to the RMP entry.
-> >      If it was already assigned/private/validated then the guest code
-> >      would detected that PVALIDATE resulted in no changes, and so it
-> >      would have failed with PVALIDATE_FAIL_NOUPDATE. So if you want to
-> >      be super sure you don't break legacy SEV implementations then you
-> >      could limit the change to SNP guests where it's essentially
-> >      guaranteed these regions are not being utilized in any functional
-> >      way.
-> 
-> Based on your explanation, I agree that (at a minimum) it makes sense
-> to rectify the behavior for SEV-SNP guests.
-> 
-> On that note, as you describe here, I skipped the 3 ROM region scans
-> on platforms with CC_ATTR_GUEST_SEV_SNP (and deleted the call to
-> snp_prep_memory()) and successfully booted. I can send that as v2.
+On Thu, 01 Feb 2024 17:51:02 PST (-0800), zong.li@sifive.com wrote:
+> CALLER_ADDRx returns caller's address at specified level, they are used
+> for several tracers. These macros eventually use
+> __builtin_return_address(n) to get the caller's address if arch doesn't
+> define their own implementation.
+>
+> In RISC-V, __builtin_return_address(n) only works when n == 0, we need
+> to walk the stack frame to get the caller's address at specified level.
+>
+> data.level started from 'level + 3' due to the call flow of getting
+> caller's address in RISC-V implementation. If we don't have additional
+> three iteration, the level is corresponding to follows:
+>
+> callsite -> return_address -> arch_stack_walk -> walk_stackframe
+> |           |                 |                  |
+> level 3     level 2           level 1            level 0
+>
+> Fixes: 10626c32e382 ("riscv/ftrace: Add basic support")
 
-Sounds good. Please add me to the Cc, happy to test/review.
+You've got a spurious newline here.  I've got this queued up for 
+testing with that cleaned up, it should show up on fixes soon (assuming 
+it passes the tests and such).
 
-> 
-> Note that I have *not* tried skipping the scans for all SEV guest
-> variants (CC_ATTR_GUEST_MEM_ENCRYPT) since those boots appear to be
-> functioning without the change (and there is a risk of breaking the
-> sorts of implementations that you described); also note that
-> clang-built SEV-SNP guests still require [0] and [1] to function.
-> 
-> [0] https://lore.kernel.org/all/20240206223620.1833276-1-acdunlap@google.com/
-> [1] https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?id=1c811d403afd73f04bde82b83b24c754011bd0e8
-> 
-> >   b) Modifying the early page table setup by early_make_pgtable() to
-> >      clear the encrypted bit for 0xC0000-0x100000 legacy region. The
-> >      challenge there is everything is PMD-mapped at that stage of boot
-> >      and there's no infrastructure for splitting page tables to handle
-> >      non-2MB-aligned/sized regions.
-> 
-> If ever needed/desired, a slight variant of this second option might
-> also be providing a temporary unencrypted mapping on the fly during
-> the few times the regions are scanned during early boot, similar to
-> how __sme_early_map_unmap_mem() is already used for sme_map_bootdata()
-> in head64.c. I haven't tried it, but I just wanted to note it down in
-> case it becomes relevant.
-
-True, that might be another option to consider if needed.
-
--Mike
+>
+> Reviewed-by: Alexandre Ghiti <alexghiti@rivosinc.com>
+> Signed-off-by: Zong Li <zong.li@sifive.com>
+> ---
+>
+> Changed in v2:
+> - Rebase to v6.8-rc2
+> - Add noinline attribute for return_address()
+> - Add a fixes tag
+>
+>  arch/riscv/include/asm/ftrace.h    |  5 ++++
+>  arch/riscv/kernel/Makefile         |  2 ++
+>  arch/riscv/kernel/return_address.c | 48 ++++++++++++++++++++++++++++++
+>  3 files changed, 55 insertions(+)
+>  create mode 100644 arch/riscv/kernel/return_address.c
+>
+> diff --git a/arch/riscv/include/asm/ftrace.h b/arch/riscv/include/asm/ftrace.h
+> index 329172122952..15055f9df4da 100644
+> --- a/arch/riscv/include/asm/ftrace.h
+> +++ b/arch/riscv/include/asm/ftrace.h
+> @@ -25,6 +25,11 @@
+>
+>  #define ARCH_SUPPORTS_FTRACE_OPS 1
+>  #ifndef __ASSEMBLY__
+> +
+> +extern void *return_address(unsigned int level);
+> +
+> +#define ftrace_return_address(n) return_address(n)
+> +
+>  void MCOUNT_NAME(void);
+>  static inline unsigned long ftrace_call_adjust(unsigned long addr)
+>  {
+> diff --git a/arch/riscv/kernel/Makefile b/arch/riscv/kernel/Makefile
+> index f71910718053..604d6bf7e476 100644
+> --- a/arch/riscv/kernel/Makefile
+> +++ b/arch/riscv/kernel/Makefile
+> @@ -7,6 +7,7 @@ ifdef CONFIG_FTRACE
+>  CFLAGS_REMOVE_ftrace.o	= $(CC_FLAGS_FTRACE)
+>  CFLAGS_REMOVE_patch.o	= $(CC_FLAGS_FTRACE)
+>  CFLAGS_REMOVE_sbi.o	= $(CC_FLAGS_FTRACE)
+> +CFLAGS_REMOVE_return_address.o	= $(CC_FLAGS_FTRACE)
+>  endif
+>  CFLAGS_syscall_table.o	+= $(call cc-option,-Wno-override-init,)
+>  CFLAGS_compat_syscall_table.o += $(call cc-option,-Wno-override-init,)
+> @@ -46,6 +47,7 @@ obj-y	+= irq.o
+>  obj-y	+= process.o
+>  obj-y	+= ptrace.o
+>  obj-y	+= reset.o
+> +obj-y	+= return_address.o
+>  obj-y	+= setup.o
+>  obj-y	+= signal.o
+>  obj-y	+= syscall_table.o
+> diff --git a/arch/riscv/kernel/return_address.c b/arch/riscv/kernel/return_address.c
+> new file mode 100644
+> index 000000000000..c8115ec8fb30
+> --- /dev/null
+> +++ b/arch/riscv/kernel/return_address.c
+> @@ -0,0 +1,48 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * This code come from arch/arm64/kernel/return_address.c
+> + *
+> + * Copyright (C) 2023 SiFive.
+> + */
+> +
+> +#include <linux/export.h>
+> +#include <linux/kprobes.h>
+> +#include <linux/stacktrace.h>
+> +
+> +struct return_address_data {
+> +	unsigned int level;
+> +	void *addr;
+> +};
+> +
+> +static bool save_return_addr(void *d, unsigned long pc)
+> +{
+> +	struct return_address_data *data = d;
+> +
+> +	if (!data->level) {
+> +		data->addr = (void *)pc;
+> +		return false;
+> +	}
+> +
+> +	--data->level;
+> +
+> +	return true;
+> +}
+> +NOKPROBE_SYMBOL(save_return_addr);
+> +
+> +noinline void *return_address(unsigned int level)
+> +{
+> +	struct return_address_data data;
+> +
+> +	data.level = level + 3;
+> +	data.addr = NULL;
+> +
+> +	arch_stack_walk(save_return_addr, &data, current, NULL);
+> +
+> +	if (!data.level)
+> +		return data.addr;
+> +	else
+> +		return NULL;
+> +
+> +}
+> +EXPORT_SYMBOL_GPL(return_address);
+> +NOKPROBE_SYMBOL(return_address);
