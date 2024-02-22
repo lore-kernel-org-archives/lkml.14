@@ -1,51 +1,60 @@
-Received: from outgoing.mit.edu (outgoing-auth-1.mit.edu [18.9.28.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73BD31509A7
-	for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 15:55:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=18.9.28.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93F42154C15
+	for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 15:55:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708617322; cv=none; b=oDlgQZgbAF3063v8nzZFJPFMynz1uvD+yn5uXQnzl3b1EjTQgD1IGXxn5JDAyFwhrsco4BN9FFQEXnjOrJMgMl3O6ZbLgqaG+Jf6O92clR1d0nOGuJSCmsBYNJA3XTQcBAYWl9IWJYeeSapE/srMeox4GzqY8cQDkSXKB+rHXOk=
+	t=1708617324; cv=none; b=ozDsg4cov27XxapeGWX6q+39rPXfIKxGqtOZ5gQtY7brYELsJsv0br9aypDpvV0evCY4/VBuEKx5ISEcgqcedpTVWq2Qn4j+dK1KWijSsfcg3VaczSJvKxYoae0mjoMMXErku/Oa4hRVLVxxd+R9Hq4csc2pj/h6VIDDLnGtpNY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708617322; c=relaxed/simple;
-	bh=/sAuWoxygbHnz3bPYEk5pc98OZZN/efFuyFbLWL+ycI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=qD0l46TtKQRxacNAre6eEnwPLgiufPzgzMq8vje1vU8Ts1ZLgFwo52cjDOo8jYdHDv4sPQZNt6lPiICaGaEk9u6olj5+amjJr0YsQhy9lzWP1p1Gpv+deoPRpSie52Dq79Vse6TmRD4iWM0oXCzuxAOzrjvQjGF3ox6C7GBhhvU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mit.edu; spf=pass smtp.mailfrom=mit.edu; dkim=pass (2048-bit key) header.d=mit.edu header.i=@mit.edu header.b=PxY2RfhA; arc=none smtp.client-ip=18.9.28.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mit.edu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mit.edu
+	s=arc-20240116; t=1708617324; c=relaxed/simple;
+	bh=juqBTEKPT37KdVrE5NS/VLPd1q4zL9O2Ncx/5a0Zm7s=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=JM8JcrtUU72aMOEGvPKhZ//0QU8aIc9sro0R12aWvlH8YUfvsfIStWz33TzS6MEJijK/qzdu+Af340LorFiq3NRdSNssIopSGWUA+wtXNiD3PdmD9eOAd0rMffLzd9xBPkmcSQFEeJrzhZD5+vxhD2EXGJ4h9z1XGWj/aB10WFw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=bVzLKgME; arc=none smtp.client-ip=209.85.208.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mit.edu header.i=@mit.edu header.b="PxY2RfhA"
-Received: from cwcc.thunk.org (pool-173-48-102-198.bstnma.fios.verizon.net [173.48.102.198])
-	(authenticated bits=0)
-        (User authenticated as tytso@ATHENA.MIT.EDU)
-	by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 41MFseXX030787
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 22 Feb 2024 10:54:41 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mit.edu; s=outgoing;
-	t=1708617283; bh=Tw39zUJjdOXe0uc8tGlhBxpYxPbuviy9TTm3QaYl5P4=;
-	h=From:Subject:Date:Message-ID:MIME-Version:Content-Type;
-	b=PxY2RfhAxGuhzUwdu0P3DJ6S97aV0dSUEXsmJ7GlKiVF21cUmtEwPyWvz2y4hnDiG
-	 bvOh4O2+YQbraST+paOtrw4GDht926QQ04i/OgeT/7vHJmluJdsbtCoX/9A9Z90r68
-	 yMTcQHjRL1QIOktmobcK3rClwOy7DSgH+tuxthOmmwmvg9+jdWdj1AZegYAXSXSIO9
-	 SGGTdo1+4kOOQqwnpb3FLCa2HOE9T/7excuepn4mBEs7EKLkDNCqsyMuY1Y5awNqmy
-	 PU+PJhS4Xfuu+l+qFD89in/j+aPydLrT3K4cRCFdI65MEZC1cUvl+8V4RIXzTO3H9R
-	 wJzKafkwl/ayQ==
-Received: by cwcc.thunk.org (Postfix, from userid 15806)
-	id 3887415C1414; Thu, 22 Feb 2024 10:54:40 -0500 (EST)
-From: "Theodore Ts'o" <tytso@mit.edu>
-To: linux-ext4@vger.kernel.org, Baokun Li <libaokun1@huawei.com>
-Cc: "Theodore Ts'o" <tytso@mit.edu>, adilger.kernel@dilger.ca, jack@suse.cz,
-        ritesh.list@gmail.com, ojaswin@linux.ibm.com,
-        linux-kernel@vger.kernel.org, yi.zhang@huawei.com,
-        yangerkun@huawei.com, chengzhihao1@huawei.com, yukuai3@huawei.com,
-        stable@kernel.org
-Subject: Re: [PATCH v2] ext4: correct best extent lstart adjustment logic
-Date: Thu, 22 Feb 2024 10:54:31 -0500
-Message-ID: <170861726753.823885.11358303915766853695.b4-ty@mit.edu>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240201141845.1879253-1-libaokun1@huawei.com>
-References: <20240201141845.1879253-1-libaokun1@huawei.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bVzLKgME"
+Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-565468bec51so1051722a12.1
+        for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 07:55:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1708617321; x=1709222121; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=XMinW4dJsDafnRq5GEE/p/11l4kkoSDLdjvo8D26CuM=;
+        b=bVzLKgMEP1zJmCaBRqwnoKYyFD8lBsJSrOb3K1J9vtdzKwdiF/pz/9G1HbNFbxxrQn
+         5i3cdI2cxvKUG2SjCv2AEFLwfHiLXh7cjnZ3HQhlU8cYkfkRn45xPWM8ouV9j1hKTvxj
+         VZh277Kz4a1a14qc0Gm38kz6sUnFDGGU2TCWhkJzyZgIK7SAddwmSEIipRPz0xnD0cZ9
+         mKbZX3vFghZznbIpZcx8dPbpYxQSaJoLj6/jzkgKxViJ67X25XTDr6qRllidT8SDKbXh
+         vuH96JTUcl8xWUJB+xL7xmGhcwqyMMFEYy3cUiwqTlkNVwW4lvBTahKNXHZ4ko82FtIS
+         JnRg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708617321; x=1709222121;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=XMinW4dJsDafnRq5GEE/p/11l4kkoSDLdjvo8D26CuM=;
+        b=iXXN94xLODSKfeIEwJT/lDYVYPNApm1iHBCjGD/i5s1kKuJt2koAmYYlUGVJfwiHqu
+         2iNNCyx1krFzHitBi4Ah5I4WUal8C3xN89UB39HOslMeuU1309bG/yD73KmGdfooTtdX
+         sbWLDiuu4kqrVhOx3c5Ibq7a/HKifzTkjVfjjpNPT97BtuJk/BP3ATQGV+U8EgW6O27t
+         UcKGUBwRXxvBSp4g4s+vpqaQnZe+2zQ+bmkmTtf9qsNWZqySCdtHeu20t97HnULGTglS
+         I9y0sjeayMOq2Vp4FzgfMPZp2E5rxBzSPGL16h6I4c898hqjpyn62LMM9yUKHfIjdCMx
+         C9PA==
+X-Forwarded-Encrypted: i=1; AJvYcCVFwzzaIH7pAc9Ie9Ixnt49q46OoRPLAO4fy0fnw8ZeZwTIa5kKzUn5wWl9e9/RpXA11pPFndkjRt+5v29DBzGKeRUEjfap1W1BFHPh
+X-Gm-Message-State: AOJu0Yxl7U86b1cg/2iL7MsmyupTJFAo5cx/0tLpbvowgae06LPAfq8k
+	5WNoVtm3A9yhTZ4RQ6ruC5rii27zUJVioUzp7hI5LRtTTnKSo+N+G2/qvczfOrI=
+X-Google-Smtp-Source: AGHT+IEuzPA3K/ZazkFQtxH9mWz+hr8FA93pKgsIx7V2K8w6Js0xonvb0OCNabHBJGhBQINfXiiDkA==
+X-Received: by 2002:aa7:c894:0:b0:565:42a4:82ff with SMTP id p20-20020aa7c894000000b0056542a482ffmr1647181eds.0.1708617320831;
+        Thu, 22 Feb 2024 07:55:20 -0800 (PST)
+Received: from [127.0.1.1] ([188.24.162.93])
+        by smtp.gmail.com with ESMTPSA id v7-20020aa7dbc7000000b00564e489ce9asm1924247edt.12.2024.02.22.07.55.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 22 Feb 2024 07:55:20 -0800 (PST)
+From: Abel Vesa <abel.vesa@linaro.org>
+Subject: [PATCH v2 0/3] drm/msm/dp: Rework the eDP/DP modes and add support
+ for X1E80100
+Date: Thu, 22 Feb 2024 17:55:05 +0200
+Message-Id: <20240222-x1e80100-display-refactor-connector-v2-0-bd4197dfceab@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -53,26 +62,84 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAFlu12UC/42NTQqDMBCFryKzbspM/MF21XsUF+k41QFJSlJEE
+ e/e6Am6e9/j8b0NkkSVBPdigyizJg0+g70UwKPzgxjtM4NFW5Klm1lIWiRE02v6TG41Ud6OvyE
+ aDt7LmYS4aeqqZSclZNMnb3Q5X55d5lFTnq3n6UxHe/grtJb+8s9k0LQNo5C8+lr4Mal3MVxDH
+ KDb9/0H4oWfNtcAAAA=
+To: Rob Clark <robdclark@gmail.com>, 
+ Abhinav Kumar <quic_abhinavk@quicinc.com>, 
+ Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, Sean Paul <sean@poorly.run>, 
+ Marijn Suijten <marijn.suijten@somainline.org>, 
+ David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+ Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Kuogee Hsieh <quic_khsieh@quicinc.com>, 
+ Bjorn Andersson <andersson@kernel.org>, 
+ Konrad Dybcio <konrad.dybcio@linaro.org>, 
+ Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, 
+ Johan Hovold <johan@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, 
+ freedreno@lists.freedesktop.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Abel Vesa <abel.vesa@linaro.org>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1842; i=abel.vesa@linaro.org;
+ h=from:subject:message-id; bh=juqBTEKPT37KdVrE5NS/VLPd1q4zL9O2Ncx/5a0Zm7s=;
+ b=owEBbQKS/ZANAwAKARtfRMkAlRVWAcsmYgBl125e/3jKv8cpJxPBa5OyNhYESc9csBvD30KPX
+ LeQwemNzTOJAjMEAAEKAB0WIQRO8+4RTnqPKsqn0bgbX0TJAJUVVgUCZdduXgAKCRAbX0TJAJUV
+ VgrkD/4qMcYnUDnFjZ0IzRmXQx3RcQfnNwEw/8a2Eo/xjIx1UbNjdBRmCRQFARmuOc+twM0A7fw
+ PpHVq42snH6xCtvedA45PvCOxiGWeBXpCv02OhD+xGJsPR506up+y5XUzEubE9Fq6jgo/6kj7Sk
+ OtvBZEk+L1K21WnLnta6ui3mOAn68tcYDjmuNNhu30U6PQcdb+EVdFeuYvtNBuvpLjU1OjE+LwH
+ jpJv5E6Z1brDToNJidHikj5pdSRobkxe1SK3HpMXJhNYX5mlB/7oB0ZDGUod0IhE78veoy2+lZg
+ XrxmZjra22Lto2k+6LWh8RoJcFvMOcA6dM3sd6gAlvy8/MFQzQUOPskcHdQm5AG2m0iFs6LWQsm
+ fSRbHhTqQvQDzc2LeuGVzZL1NK/3mnFNPTdoVRYbwBN+hQgoifkgBXu8oozR765hF8aQwGfPe6c
+ 7f9Tu9DFBUwHBLE4531pwGhMKCLRO6OhSZVJCVAnlgpJ+YBC4T1kCJTjg3CxsR3Rxu6My2OxLZY
+ olz3BzRZ6WO+yKSpm/G/sHGjKb5WnyEUbwLSW+rCgkaHQeHfQCcWfwtSGA48C1sVQ566YpeC2jE
+ lEKuSf3OQCJblgu/M5EF5gXOXBA9KmHawJgckjAbz8140w+obveO/eNH4YqivZJ/gjf5uGIHbmC
+ 5FLKPqLKEtWX8+g==
+X-Developer-Key: i=abel.vesa@linaro.org; a=openpgp;
+ fpr=6AFF162D57F4223A8770EF5AF7BF214136F41FAE
 
+Since this new platform supports both DP and eDP, it's the perfect time
+to drop the dual compatible (eDP and DP) and figure out a different way
+to specify the mode. After some off-list discussion, one suggested way
+was to add a 'is-edp' property to the controller node and call
+phy_set_mode to let the PHY know which mode it should configure itself.
 
-On Thu, 01 Feb 2024 22:18:45 +0800, Baokun Li wrote:
-> When yangerkun review commit 93cdf49f6eca ("ext4: Fix best extent lstart
-> adjustment logic in ext4_mb_new_inode_pa()"), it was found that the best
-> extent did not completely cover the original request after adjusting the
-> best extent lstart in ext4_mb_new_inode_pa() as follows:
-> 
->   original request: 2/10(8)
->   normalized request: 0/64(64)
->   best extent: 0/9(9)
-> 
-> [...]
+The PHY counterpart patchset is here:
+https://lore.kernel.org/all/20240220-x1e80100-phy-edp-compatible-refactor-v5-0-e8658adf5461@linaro.org/
 
-Applied, thanks!
+Signed-off-by: Abel Vesa <abel.vesa@linaro.org>
+---
+Changes in v2:
+- Added Dmitry's R-b tag to both driver patches
+- Dropped the if statement around assigning the is_edp in
+  dp_display_probe, and fixed said assignment by using the connector
+  type from match data instead.
+- Moved the qcom,x1e80100-dp compatible where it belongs
+- Re-worded the bindings commit message to follow Bjorn's suggestion
+- Dropped the RFC tag as the approach doesn't seem to be questioned
+  anymore 
+- Link to v1: https://lore.kernel.org/r/20240221-x1e80100-display-refactor-connector-v1-0-86c0e1ebd5ec@linaro.org
 
-[1/1] ext4: correct best extent lstart adjustment logic
-      commit: 4fbf8bc733d14bceb16dda46a3f5e19c6a9621c5
+---
+Abel Vesa (3):
+      dt-bindings: display: msm: dp-controller: document X1E80100 compatible
+      drm/msm/dp: Add support for setting the eDP mode from devicetree
+      drm/msm/dp: Add support for the X1E80100
+
+ .../bindings/display/msm/dp-controller.yaml        |  6 +++++
+ drivers/gpu/drm/msm/dp/dp_ctrl.c                   | 11 +++++++++
+ drivers/gpu/drm/msm/dp/dp_ctrl.h                   |  1 +
+ drivers/gpu/drm/msm/dp/dp_display.c                | 26 +++++++++++++++++++---
+ 4 files changed, 41 insertions(+), 3 deletions(-)
+---
+base-commit: 4893c639cc3659cefaa675bf1e59f4e7571afb5c
+change-id: 20231219-x1e80100-display-refactor-connector-e1c66548cae3
 
 Best regards,
 -- 
-Theodore Ts'o <tytso@mit.edu>
+Abel Vesa <abel.vesa@linaro.org>
+
