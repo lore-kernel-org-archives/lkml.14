@@ -1,161 +1,164 @@
-Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
+Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E7FD149013
-	for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 14:19:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4609D14601D
+	for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 14:19:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708611603; cv=none; b=ZzC+deHdwRm9NfL/fXNML6oEoif2kyqHc9tIMIpprsHqT2EKL5YFCjOnqCWvGcEOAQ6GzZ7ygr82HihXbQf6NqIzQucrLkD8R7oz8JRJ2QXzEkDjqlCNPMjSmCq5wyMeFPC22G3KCHh1JiAc2QRNuWKUvs5I8uILPmygDTI2eR4=
+	t=1708611609; cv=none; b=GUNWIFIDgmsgTQqAY/YDDfnq21f5COG+SQae0CyBOUanm38fXxa/R1plI5e7UXQxJ7+7DtZ45OWfu9WgVzFgJb3Zevv6i53UMkPCNwFwaFMf6oy3h42qV30GvEFK37yPU+Fjb+T4RnU5DZ4HQDw2XZ+UdcR37hL1niGYUrBiTWw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708611603; c=relaxed/simple;
-	bh=60Gndqbrtnm97w5mQMEh5gPv5N7WyZvnHD90ty6nNt0=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=eoqkv7xXXJKDgnuIBga8nwlyoNa3gtfPTlg/dIrBHvISMgql2qIfGErwFWeSeJTs4aoLzLhh4BiPQGzyXx2Ao9Ca+DkbymGbSyTfp/xBsV5bmvETGzp+BfWJFfZUCKai2obDbHzuqB/NgPQ5u9mY7+YdUL63MmdvaTHkkG+UFb4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=czOpi+Ik; arc=none smtp.client-ip=209.85.218.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1708611609; c=relaxed/simple;
+	bh=hgvHyDNtcFfA7wm1fnzygEy3YAS+iyHk6quAlKBcaPo=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=fE5Po6c0unqfhtqq4JVXobMYwsmIk8UeunRVBYNly1o0mBujN2ZgcU6b6qNe1AtTMdCyGKYKa5+7oQzTgv8/JhqmmJr1jTSjFWeppOOKe674VbWnaN0QXWdM+dGrf4tZxre8DxcTORkgbXry2dz/yRXnX9lAAMnZSG+FjQl24c0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=grsecurity.net; spf=pass smtp.mailfrom=opensrcsec.com; dkim=pass (2048-bit key) header.d=grsecurity.net header.i=@grsecurity.net header.b=H3i5VQ7c; arc=none smtp.client-ip=209.85.208.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=grsecurity.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=opensrcsec.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="czOpi+Ik"
-Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-a3e7ce7dac9so589459666b.1
-        for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 06:19:44 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=grsecurity.net header.i=@grsecurity.net header.b="H3i5VQ7c"
+Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-563bb51c36eso8905922a12.2
+        for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 06:19:54 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1708611581; x=1709216381; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=JksX+IKDkNdqLCYYO3e0buRv7x2Xlo7FHMMyk9/Vsso=;
-        b=czOpi+Ikx42/Lw4CmCnbe25bjO5AKf/yXeB0kmaaNmUesrFJIIsPJhk65UTUZWOuP0
-         LH90qh0P2ZLpIEF6OQEuXnMtUQMWXmbyeCpHCZooHTo75No0bvBHCSLa8lIowFIthiRm
-         XzCciT/he6K1MAsD/X3X6UYyTBK+G3InJifto2qK4Tmq+jySF1/WqZKkz9hf2MlBQAG1
-         S2Yq858BulBz+ZvJ32ukwzyheQBBcWsf5Q4MwGyahTltRGHk726htY2Ogfpld9sv2CUM
-         GXftfrey2jXPvK96i5f+5Dhe3NwkLxQEVn9g9biGG25dJe2JW4vvPPSkFa/O+UlkHAxP
-         1fvw==
+        d=grsecurity.net; s=grsec; t=1708611591; x=1709216391; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:references:cc:to
+         :from:content-language:subject:user-agent:mime-version:date
+         :message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=D9ZsCd5gwniB13QgO5xKCrLUVsoz37jW5XwSBWuDQII=;
+        b=H3i5VQ7cky73mLLRFfl/pCIohTG32zDgsappbydcXepujLBkq3boDP2Un6ixG8cZID
+         EFarQJyx6JXbmOJqEW0StzV1umeDECObY1l6wfN9SYOhwGiDXdLCAastISoeHer4CrIX
+         hpl9hSMLmSLZ7FajuiE5GH1fmOJw54vZgt5b4gRoBuYsA5L1UhBhzRdEdJCmSVAoLIcD
+         gKp0zzoPwzPY2feYyqpwtAzc8E83YTVFbX6e9JrJ3LIQ6/yKqHkzzVA8iDbEo9xF7WS0
+         G+2CWj8J6SNV348u14vcPfuQ4sIgWuhCpUs7BiwGYYyU6ExkMm6fd9wDFFDR8UgpzG9s
+         KYew==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708611581; x=1709216381;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=JksX+IKDkNdqLCYYO3e0buRv7x2Xlo7FHMMyk9/Vsso=;
-        b=wsd+MNrtqMncXD9pZw40+shOPd8vJ5Fk+hrX26wUaaLdjt+N2WyGqUTJcAgtCGkXDp
-         vQlZ1h387VtHPxTd5dZXDlD8+n6cS8fgAgvwLIkweN0F/94Jpl5lxj7y4WgpRpGXVksH
-         TI47mH2emjklwvcvMNwzFe0Lhtyh2NcIWZKWrL+rFCPfugCa7/cf567cKWhvnmbsgRv3
-         +7Nu3eEBTkXwkL/HsOOliUmo4F2ZMgO90NwaB20HyTx6NTAhcBigSd3inebDyDbfAOup
-         7TohnxOZEHd3RaKiYPSc3O1btbh/Z8iUDlPTg8RjDerNo8zdCE8sbF9lPW4XeYa4HuKW
-         Ezng==
-X-Forwarded-Encrypted: i=1; AJvYcCW/P2IWoy2+NMqYA230+VtPbFpKD3Zz54zZplSl3QM2aHnSBudlRqTwTmxz91+tXQLyzNL1c8sZUr5NQlB+NWTdCmdoeupZGDgpjT/q
-X-Gm-Message-State: AOJu0YwJerAclCy1kMqZ6QH4ny4I9C7okvMHoHyYyZ1CZsHldV9yKdhJ
-	vI31WRFrEZ4qh4xC+WoxZNNXWFvhEFSmQxdU8iL6sfdq2VQvC/nBDtSOK/vWt+A=
-X-Google-Smtp-Source: AGHT+IFLLQ5n4tIoJzrhuucSsLFTGKUUA0NBZdJjqAYabV3MFAvlNZ03Dg3u5ipj/+vSoYqNRjR8Ng==
-X-Received: by 2002:a17:906:2c0c:b0:a3e:4704:d57 with SMTP id e12-20020a1709062c0c00b00a3e47040d57mr12658592ejh.14.1708611581639;
-        Thu, 22 Feb 2024 06:19:41 -0800 (PST)
-Received: from [127.0.1.1] ([188.24.162.93])
-        by smtp.gmail.com with ESMTPSA id lj7-20020a170907188700b00a3daf530fd8sm5992588ejc.210.2024.02.22.06.19.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 22 Feb 2024 06:19:41 -0800 (PST)
-From: Abel Vesa <abel.vesa@linaro.org>
-Date: Thu, 22 Feb 2024 16:19:20 +0200
-Subject: [PATCH v3 2/4] arm64: dts: qcom: x1e80100: Add dedicated pmic dtsi
+        d=1e100.net; s=20230601; t=1708611591; x=1709216391;
+        h=content-transfer-encoding:in-reply-to:autocrypt:references:cc:to
+         :from:content-language:subject:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=D9ZsCd5gwniB13QgO5xKCrLUVsoz37jW5XwSBWuDQII=;
+        b=e8o5OVknllJGdzbjtg2rol7l+EgC9Hwmb7x6iHSHFp3LMH7C/3m8/PjQCv0yFwntoE
+         nHxygmALBgVthLgkrIHHKqbUa0MJmEh6Gpp10ourmTSYtcZ7GX1MzwO2nvAGSnkQLT1I
+         Y1ROP107lKAaqHZ1mnl0k2tKDw7c84rsmYt7hDspXUJdTo00mj7Zs6yW06xd2stc124y
+         lNg5Zt7M3NVwmzr3Tnoi1+4+Amz8+9M/PiMza3jl/hAd0+qY8zsHybjRNyYLb6G/Ak87
+         a57rFUB5OXXFe/Z+NmYFQrf6xq4WWQVb7ozZ5sDkZNCVMLhsnqefnOb2+A+XIVs3J4mC
+         VkSQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUgkVN9HDj7R2sYVYrfwYW3//GKrSpO0DhzvQxK074AhWU2vRu6Z+3q5LFhUIrajEbiWzueuRonoYCBGIC++67vOzOEjrbQ/tua7K8d
+X-Gm-Message-State: AOJu0Yz6xSgQ7leg5+HagawrfDHeYJu7l5Bo9bYEH34PaI2JSfFyDFDR
+	Wk1G9FX1buK03rqdNfopKW56a+l8m1bo8i4eDO0nQ7M1/9QCGVs5cRn58N75mf8=
+X-Google-Smtp-Source: AGHT+IGJwLCwDRi+Rf9GH5xhctQVuZy097Gmswzd8q5GKmkEOFqqGzZwPgVJEtCQThuPADekKTIKqA==
+X-Received: by 2002:aa7:d697:0:b0:564:56ce:5570 with SMTP id d23-20020aa7d697000000b0056456ce5570mr7774154edr.33.1708611591234;
+        Thu, 22 Feb 2024 06:19:51 -0800 (PST)
+Received: from ?IPV6:2003:f6:af11:5800:c74a:c0a4:38db:c23e? (p200300f6af115800c74ac0a438dbc23e.dip0.t-ipconnect.de. [2003:f6:af11:5800:c74a:c0a4:38db:c23e])
+        by smtp.gmail.com with ESMTPSA id k24-20020a056402341800b00563dc4f2e02sm5405792edc.95.2024.02.22.06.19.50
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 22 Feb 2024 06:19:50 -0800 (PST)
+Message-ID: <61786e1d-35dc-4cf1-a152-fba363c94520@grsecurity.net>
+Date: Thu, 22 Feb 2024 15:19:49 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] Input: synaptics-rmi4 - fix use after free (more
+ completely) -- but not fully ;)
+Content-Language: en-US, de-DE
+From: Mathias Krause <minipli@grsecurity.net>
+To: Dan Carpenter <dan.carpenter@linaro.org>,
+ Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+ Torsten Hilbrich <torsten.hilbrich@secunet.com>,
+ Nick Dyer <nick@shmanahar.org>
+Cc: Jiapeng Chong <jiapeng.chong@linux.alibaba.com>,
+ linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Brad Spengler <spender@grsecurity.net>, Sasha Levin <sashal@kernel.org>
+References: <e77756aa-c0f1-44a8-bcd6-a46fe954b195@moroto.mountain>
+ <49c935cf-4bf5-456f-8bc0-d6dbf0f8cf0f@grsecurity.net>
+Autocrypt: addr=minipli@grsecurity.net; keydata=
+ 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
+ RzDVkdgPJkL/NFTKZHo5foFXNi89kA==
+In-Reply-To: <49c935cf-4bf5-456f-8bc0-d6dbf0f8cf0f@grsecurity.net>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240222-x1e80100-dts-smb2360-v3-2-85a691d4f68a@linaro.org>
-References: <20240222-x1e80100-dts-smb2360-v3-0-85a691d4f68a@linaro.org>
-In-Reply-To: <20240222-x1e80100-dts-smb2360-v3-0-85a691d4f68a@linaro.org>
-To: Andy Gross <agross@kernel.org>, Bjorn Andersson <andersson@kernel.org>, 
- Konrad Dybcio <konrad.dybcio@linaro.org>, Rob Herring <robh+dt@kernel.org>, 
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
- Conor Dooley <conor+dt@kernel.org>, Rob Herring <robh@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Abel Vesa <abel.vesa@linaro.org>
-X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1670; i=abel.vesa@linaro.org;
- h=from:subject:message-id; bh=60Gndqbrtnm97w5mQMEh5gPv5N7WyZvnHD90ty6nNt0=;
- b=owEBbQKS/ZANAwAKARtfRMkAlRVWAcsmYgBl11f2syHXvemFtyFo2//Ya4E/ACXEE8kK9R9Yz
- 53foJ2KrlKJAjMEAAEKAB0WIQRO8+4RTnqPKsqn0bgbX0TJAJUVVgUCZddX9gAKCRAbX0TJAJUV
- VtuZD/0WoKB+XjbLzbFxnvxrczAteezkLutisD5tF4Bz8NBWhxgN+KTeqz1eUD3uKpVmHZ6n2tP
- e1+HYJgstZU7xZngIXm1eOp5PVclimHRyfBS5ZSg5U3ztTJERPp65XQTjTnmkdGdZV+bUb3CfJw
- 41cq2JvyS2yW1JU2SXjwndsqq68Om6uMRCNfgAAqeXkuB827WI+n1YQzWg3faSjQ6qM7bhG6Qet
- NGdppqNJ3VmWDUKE+P4iZG9xK3hucTjj+gtzGiVLNhwkl/eSCYgckEkAAKiEt925aMMHFGJ9QWi
- LxUe0U7mV6CNlZM5iPe7ilGhoLEMuu66hnaW1HJ7fMLkXprquJ9EuolJz1fKr+gsIdaMOhnyQ/T
- VV9GfveVnk1SopDbkvsZ5cwB43gbykRtcfZUJ0u44cIzH6983OHRZcLpFITkHwx56mNj1deGVRM
- uAQTfVYDstNmq2lbAU0wJVGiGZ/7i69c0frmWGJGfVHCujanOCgn7OMZ3E7Uka/PyQS7uSTUId1
- ef9elfOwjupFZwawekvBpZrQdboayt7MiosUO6sW7fOZb4FbPG7NJqKzO2l988ZNG+OpCrBKRzL
- GaRR1secLlNM5NBZen1VEMW2PHH7pICOMP8Fd8Fd2NWo90THQYUldQv1uJj3qTkpISdxaMb930b
- vuqbC9LKmDn3bvQ==
-X-Developer-Key: i=abel.vesa@linaro.org; a=openpgp;
- fpr=6AFF162D57F4223A8770EF5AF7BF214136F41FAE
 
-Add dedicated file for x1e80100 PMICs, add the all 3 smb2360 PMIC nodes
-with the eUSB2 repeater nodes.
+On 22.02.24 15:08, Mathias Krause wrote:
+>>
+>> The bug is that we must not call device_del() until after calling
+>> irq_dispose_mapping().
+> 
+> Unfortunately, this is only half the truth. We investigated this further
+> and there's another bug that got introduced in commit 24d28e4f1271
+> ("Input: synaptics-rmi4 - convert irq distribution to irq_domain"). The
+> IRQ domain has a UAF issue as well. I'll send the patch soon -- wanted
+> to do so this week, but, again, more urgent matters interrupted this.
 
-Signed-off-by: Abel Vesa <abel.vesa@linaro.org>
----
- arch/arm64/boot/dts/qcom/x1e80100-pmics.dtsi | 51 ++++++++++++++++++++++++++++
- 1 file changed, 51 insertions(+)
+Unfortunately, I send that Email too fast. Looking at the backtrace
+again, it's just the other bug that needs fixing (a UAF in
+rmi_driver_remove()). Will sent a patch really soon now!
 
-diff --git a/arch/arm64/boot/dts/qcom/x1e80100-pmics.dtsi b/arch/arm64/boot/dts/qcom/x1e80100-pmics.dtsi
-new file mode 100644
-index 000000000000..04301f772fbd
---- /dev/null
-+++ b/arch/arm64/boot/dts/qcom/x1e80100-pmics.dtsi
-@@ -0,0 +1,51 @@
-+// SPDX-License-Identifier: BSD-3-Clause
-+/*
-+ * Copyright (c) 2024, Linaro Limited
-+ */
-+
-+#include <dt-bindings/interrupt-controller/irq.h>
-+#include <dt-bindings/spmi/spmi.h>
-+
-+/ {
-+};
-+
-+&spmi_bus1 {
-+	smb2360_0: pmic@7 {
-+		compatible = "qcom,smb2360", "qcom,spmi-pmic";
-+		reg = <0x7 SPMI_USID>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		smb2360_0_eusb2_repeater: phy@fd00 {
-+			compatible = "qcom,smb2360-eusb2-repeater";
-+			reg = <0xfd00>;
-+			#phy-cells = <0>;
-+		};
-+	};
-+
-+	smb2360_1: pmic@a {
-+		compatible = "qcom,smb2360", "qcom,spmi-pmic";
-+		reg = <0xa SPMI_USID>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		smb2360_1_eusb2_repeater: phy@fd00 {
-+			compatible = "qcom,smb2360-eusb2-repeater";
-+			reg = <0xfd00>;
-+			#phy-cells = <0>;
-+		};
-+	};
-+
-+	smb2360_2: pmic@b {
-+		compatible = "qcom,smb2360", "qcom,spmi-pmic";
-+		reg = <0xb SPMI_USID>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		smb2360_2_eusb2_repeater: phy@fd00 {
-+			compatible = "qcom,smb2360-eusb2-repeater";
-+			reg = <0xfd00>;
-+			#phy-cells = <0>;
-+		};
-+	};
-+};
+> 
+>>
+>> Fixes: 24d28e4f1271 ("Input: synaptics-rmi4 - convert irq distribution to irq_domain")
+>> Reported-by: Torsten Hilbrich <torsten.hilbrich@secunet.com>
+>> Closes: https://lore.kernel.org/all/1932038e-2776-04ac-5fcd-b15bb3cd088d@secunet.com/
+>> Closes: https://bugzilla.kernel.org/show_bug.cgi?id=215604
+>> Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
+>> ---
+>>  drivers/input/rmi4/rmi_bus.c | 5 ++---
+>>  1 file changed, 2 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/drivers/input/rmi4/rmi_bus.c b/drivers/input/rmi4/rmi_bus.c
+>> index 1b45b1d3077d..02acc81b9d3e 100644
+>> --- a/drivers/input/rmi4/rmi_bus.c
+>> +++ b/drivers/input/rmi4/rmi_bus.c
+>> @@ -275,12 +275,11 @@ void rmi_unregister_function(struct rmi_function *fn)
+>>  	rmi_dbg(RMI_DEBUG_CORE, &fn->dev, "Unregistering F%02X.\n",
+>>  			fn->fd.function_number);
+>>  
+>> -	device_del(&fn->dev);
+>> -	of_node_put(fn->dev.of_node);
+>> -
+>>  	for (i = 0; i < fn->num_of_irqs; i++)
+>>  		irq_dispose_mapping(fn->irq[i]);
+>>  
+>> +	device_del(&fn->dev);
+>> +	of_node_put(fn->dev.of_node);
+>>  	put_device(&fn->dev);
+>>  }
+>>  
+> 
+> Acked-by: Mathias Krause <minipli@grsecurity.net>
 
--- 
-2.34.1
-
+So, forget about that one, sorry.
