@@ -1,59 +1,119 @@
-Received: from out-187.mta0.migadu.com (out-187.mta0.migadu.com [91.218.175.187])
+Received: from inva021.nxp.com (inva021.nxp.com [92.121.34.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B9BEF9D3
-	for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 06:37:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.187
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C804917981;
+	Thu, 22 Feb 2024 06:38:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=92.121.34.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708583856; cv=none; b=XkJE8HMrRCQNmkcLtfnzsa/nNrBLQDFaHo5Xt7M0XlE8Y7WkkyTWLDbHfTRe1xcC1+RNejTOgo2iE7miqpiGXnjA9+Gu+5YqIeRdI78UkR3ls1Uf8ob91EDigPBn80yOSMdHSlH5K6nefRL4NMixBzG9vmpC7+sGN7G+hPIwH5o=
+	t=1708583885; cv=none; b=JFVwZjKBEHRNH30LndHeOGiMTVukBqu5WZEsto3L29v75RO+CsFouW+CFmvgI8qWoUx7yEnyn5P/4+hNRYD7XK5TmolZtkv7E0K7AfYDzTvhUT8UEFERBtKAABG/ZGXUqjg+S94d/UixG5VjB1bFG6lAo2hQwFpsRqwQRQBSKgE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708583856; c=relaxed/simple;
-	bh=H1T1rtiL3ukjs2Pa9U+gg05nNixcKqbl4iEhlh2rPkU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AJZJF8fOJkjXmrBJC3RAsguXCfbR640OgFNHHLP8kInnuskLyEKOEYr8Z2qJD6AkvdFY5esrT6ubyP0w6IjwX8jWYO90ge6DG1HikQDQl/Xghf4OJ2dQcJ162HUm5E3TXhVLemhclHS+FHwkf3SA4aa+JGCkyUe1yUOqcTGt0IQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=SGuqGhHB; arc=none smtp.client-ip=91.218.175.187
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="SGuqGhHB"
-Date: Thu, 22 Feb 2024 01:37:28 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1708583852;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=H1T1rtiL3ukjs2Pa9U+gg05nNixcKqbl4iEhlh2rPkU=;
-	b=SGuqGhHBVEewyFRscZjjuIqkOmsvfP6p4PRh5FdTERZIXS0sEJdCCRX3dLbslmmXi2cAMG
-	EtM2SfUYTVyTA91RtFRZ1i/05hpmqwZTF0sRzSnDaiPSJ2AK1ERQ+Et8fk5UFHUXRw7XQX
-	rWDks/nT2FPEbOuLcjLF3Wh11KZn4SA=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Kent Overstreet <kent.overstreet@linux.dev>
-To: Dan Carpenter <dan.carpenter@linaro.org>
-Cc: "Colin King (gmail)" <colin.i.king@gmail.com>, 
-	Brian Foster <bfoster@redhat.com>, linux-bcachefs@vger.kernel.org, kernel-janitors@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH][next] bcachefs: remove redundant assignment to variable
- ret
-Message-ID: <v2ug5zf4cukb4ttcglhqkvc6jalmp22sn4533gcrea2ekpepdo@qdqou5453ykb>
-References: <20240221115203.3413554-1-colin.i.king@gmail.com>
- <3qaoftjgf7p2ugutl524b3yin7pqpjrkftjx3frunhduf3so66@tjhcdoq6unk3>
- <cfa4cd82-67e9-4483-9c35-a425859f4a21@gmail.com>
- <27hacgxfzyeatjx27nb4k5rb5cajt5yw4c2papfr4h64urb7qx@teo2ha6msqnl>
- <bc2cef70-6adf-48cb-814c-a1087939ec17@moroto.mountain>
+	s=arc-20240116; t=1708583885; c=relaxed/simple;
+	bh=OcVV1einNzUPldfyyWwLLlbDtP3dTcDDAic0h4gOn70=;
+	h=From:To:Subject:Date:Message-Id; b=Ho4RCSloeEM6yM92dJ8fydEBxsDEpwR7K/JPJRWx01v5Xa70CbxeFhlz/DnytfwWwbBx4iS/MsR36mfT4lCj6Qxqj9a6y8FPMs6l+6qoif7XgKIA9H37WojjlfZJHwb7FPbsLbznlvLVcr5RETE0njdhNAQJk6ys0OByyEYQw14=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; arc=none smtp.client-ip=92.121.34.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+	by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 996C4202368;
+	Thu, 22 Feb 2024 07:32:21 +0100 (CET)
+Received: from aprdc01srsp001v.ap-rdc01.nxp.com (aprdc01srsp001v.ap-rdc01.nxp.com [165.114.16.16])
+	by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 6173820050F;
+	Thu, 22 Feb 2024 07:32:21 +0100 (CET)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+	by aprdc01srsp001v.ap-rdc01.nxp.com (Postfix) with ESMTP id B11591820F59;
+	Thu, 22 Feb 2024 14:32:19 +0800 (+08)
+From: Shengjiu Wang <shengjiu.wang@nxp.com>
+To: robh+dt@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org,
+	conor+dt@kernel.org,
+	shawnguo@kernel.org,
+	s.hauer@pengutronix.de,
+	kernel@pengutronix.de,
+	festevam@gmail.com,
+	linux-imx@nxp.com,
+	devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	shengjiu.wang@gmail.com
+Subject: [PATCH] arm64: dts: imx8mm-evk: Add spdif sound card support
+Date: Thu, 22 Feb 2024 14:17:13 +0800
+Message-Id: <1708582633-6969-1-git-send-email-shengjiu.wang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <bc2cef70-6adf-48cb-814c-a1087939ec17@moroto.mountain>
-X-Migadu-Flow: FLOW_OUT
 
-On Thu, Feb 22, 2024 at 08:24:58AM +0300, Dan Carpenter wrote:
-> To be honest, the point of explaining how to run Smatch was really to
-> let you know that you're now on your own.
+Add spdif sound card support, configure the pinmux.
 
-Ok that's fine - in that case, I just need to ask you to stop bugging me
-to get me to explain smatch bugs to you.
+This sound card supports recording and playing sound
+through spdif interface.
+
+Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+---
+ arch/arm64/boot/dts/freescale/imx8mm-evk.dtsi | 33 +++++++++++++++++++
+ 1 file changed, 33 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/freescale/imx8mm-evk.dtsi b/arch/arm64/boot/dts/freescale/imx8mm-evk.dtsi
+index 9b39458f3fa5..bd5b365867fd 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mm-evk.dtsi
++++ b/arch/arm64/boot/dts/freescale/imx8mm-evk.dtsi
+@@ -165,6 +165,14 @@ cpu {
+ 			};
+ 		};
+ 	};
++
++	sound-spdif {
++		compatible = "fsl,imx-audio-spdif";
++		model = "imx-spdif";
++		spdif-controller = <&spdif1>;
++		spdif-out;
++		spdif-in;
++	};
+ };
+ 
+ &A53_0 {
+@@ -533,6 +541,24 @@ &snvs_pwrkey {
+ 	status = "okay";
+ };
+ 
++&spdif1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_spdif1>;
++	assigned-clocks = <&clk IMX8MM_CLK_SPDIF1>;
++	assigned-clock-parents = <&clk IMX8MM_AUDIO_PLL1_OUT>;
++	assigned-clock-rates = <24576000>;
++	clocks = <&clk IMX8MM_CLK_AUDIO_AHB>, <&clk IMX8MM_CLK_24M>,
++		 <&clk IMX8MM_CLK_SPDIF1>, <&clk IMX8MM_CLK_DUMMY>,
++		 <&clk IMX8MM_CLK_DUMMY>, <&clk IMX8MM_CLK_DUMMY>,
++		 <&clk IMX8MM_CLK_AUDIO_AHB>, <&clk IMX8MM_CLK_DUMMY>,
++		 <&clk IMX8MM_CLK_DUMMY>, <&clk IMX8MM_CLK_DUMMY>,
++		 <&clk IMX8MM_AUDIO_PLL1_OUT>, <&clk IMX8MM_AUDIO_PLL2_OUT>;
++	clock-names = "core", "rxtx0", "rxtx1", "rxtx2", "rxtx3",
++		      "rxtx4", "rxtx5", "rxtx6", "rxtx7", "spba",
++		      "pll8k", "pll11k";
++	status = "okay";
++};
++
+ &uart2 { /* console */
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_uart2>;
+@@ -702,6 +728,13 @@ MX8MM_IOMUXC_SAI3_TXD_SAI3_TX_DATA0     0xd6
+ 		>;
+ 	};
+ 
++	pinctrl_spdif1: spdif1grp {
++		fsl,pins = <
++			MX8MM_IOMUXC_SPDIF_TX_SPDIF1_OUT	0xd6
++			MX8MM_IOMUXC_SPDIF_RX_SPDIF1_IN		0xd6
++		>;
++	};
++
+ 	pinctrl_typec1: typec1grp {
+ 		fsl,pins = <
+ 			MX8MM_IOMUXC_SD1_STROBE_GPIO2_IO11	0x159
+-- 
+2.34.1
+
