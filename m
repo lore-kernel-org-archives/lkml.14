@@ -1,240 +1,68 @@
-Received: from mail-ua1-f54.google.com (mail-ua1-f54.google.com [209.85.222.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8603D46435
-	for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 12:27:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F5B460BAB;
+	Thu, 22 Feb 2024 12:29:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708604872; cv=none; b=O/nDqOR3cgqHOY/cqG4YTGbgAikVv1JcaxdVEM4NJWqd3wdmsM//ooUuTCEMAdIOyGR5Ucdo5Gr+fvDl4YeMmG5Xhdfu2WvcJH3CRLV6a4SKLKfqNouijrLLU0n11a7kZL4TNhZRk4A/RYEa6034wt3i6WAlvd4ZogU0FIktSmw=
+	t=1708604999; cv=none; b=hcghllMH2mkrsGMV9qpSA3biPIRG/deh1FBjBpqNwGucuqHcJg12w3Ujr1gT1srfj2hgG/t9ggTSM/GbDQIsLlJUMLtsYArYSIokfwwxTj2Vi5dtsvRsov/zk2PkrHI7zZO05GbopZM6ctEIunWUiPX6Q5f9ZgOFtHP8NNExVEo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708604872; c=relaxed/simple;
-	bh=wSHsjtGyIG8Oy03Ay1/8wBYOX3m/TamMnf+lgB3hfcQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=rdHV/fTKFsUjynKF/EKZfNj9v+YqbepCVYdi7gCHnH3MEh/cDXclkQy+lZ1GIQobn2cltnHhDe5O6zTFaDRVkF/pm066VeUv/CF6NCMHrQgOWeJ+TSy9TgijaOCGrjjvh8VRtcLBotHekpNmq6P88dBYgF4OoSOyiGaia81F4bQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=2eHmZLCC; arc=none smtp.client-ip=209.85.222.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	s=arc-20240116; t=1708604999; c=relaxed/simple;
+	bh=HJIZQiDobf5GxOwMaLIptvld+RatnI/3K+JbnfdVwzc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VqVuG4cJ4z7GYN+NvQ22Sy6w55cHAW9ffsXskBIMV56yovV6mi0jh0sE2E+TVI1tKpnR/7+/3ba8PJGkjOc3VtO+CQ8faXf9zLUztFXjIv763dS/kfkDks7HJ9hSUFNKJbrQ/XWnPk7+mWKEGeZWcZBtQMiI7SiCLx41Ae5kZI0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lnvJ6qYY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="2eHmZLCC"
-Received: by mail-ua1-f54.google.com with SMTP id a1e0cc1a2514c-7d2940ad0e1so4959704241.1
-        for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 04:27:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1708604869; x=1709209669; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=87z6zq0uGbrgFYkt6YA8mx0pzsMb/ayOMfEcY0+aFV8=;
-        b=2eHmZLCC9NwBA2UI5DGC/Jym4gQdwpEaB5dYGg8BPMMcWhUag3yJ3LSPgIglBODGNj
-         laSYuL9M50I3fQqKy/BcYy47MEVvy3cess5Mxj7FT5D3JD1yFF0gn3grXrPklA1UvB9U
-         uXepih9fGlDcxDC4iZpDtdhIjBvo7P6APwamwvC4ADjSipEHq2p+q9/cVXrgYjNrdUbP
-         xWXmzTGJ8evLKWkV9psjTd4sDs5ujxHAUQ0PRtGihxttBlvBP6VHOLY0Luxi0yIOCKUM
-         sgy4vPS7GBZStZBLdL+KJwQj/JYcnH7ZKAP8Vw+2CY93nFdd7epamkepxOlFfaqdpD/P
-         1g0A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708604869; x=1709209669;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=87z6zq0uGbrgFYkt6YA8mx0pzsMb/ayOMfEcY0+aFV8=;
-        b=igdW9KoLqn/ki68q8vKZNi7fQMBcJF39jT3qqNX2GoupVP0uh2/WZOxw/lIlMjcIUN
-         w6ROYmA2Ac+9sQ7D5M6czhFjSTCwYW/hLp+/5swQzc0vIl//ec7uYs6eh8WMkP+WVUz4
-         4krfLdU4HSWh427uOZFpaUlDh2edhXtRo8fY8O19mk6SFKAvTZFutfD1SujQ8EH+pz8p
-         A1+MvTLUzZdwt6pl8mTdVbNYwv3nNOoG0S8AG2obZ+uBwkJA9dA6TREeTpAOrPa+xmgF
-         XVjHm4stxkpZNvqmM0O3o5JHKYcM+JdHLxBzDhuMOt0duJHraX7i18aCMk7PNuwvBkDM
-         jSJA==
-X-Forwarded-Encrypted: i=1; AJvYcCXw4N4byEoou3+FSdzsXPIkVUjWP5O2kUMcNn3MT+MzMWiQ02QVQIhXLxF3jWJXefOkVlpXPUg9KfcoAJB8F9we+aa9Hx12W9QRnxEI
-X-Gm-Message-State: AOJu0YzUTLvM/ceI87EaF2KBlY1SWRo+CiL8YE0ehKNppcjrKzO+wQJJ
-	3+ShCVACHgr4Ck3fi77spUJS5EwHglalUVPpmjUXFquHF3TbesUV2yjPas4lNpbuLupUhS+4pbT
-	qumUldOfkXgPhv2omOgSntVuoTdm3U2ufG74DNA==
-X-Google-Smtp-Source: AGHT+IEX89w8BA5MRuF+hYzsldrzWJL7R30+wWpJcrmQgBmAJsacwJX7Ls13cXFgRWb101UOeMKn5UqfoaZY6qWXHKw=
-X-Received: by 2002:a05:6102:c50:b0:471:bde0:4050 with SMTP id
- y16-20020a0561020c5000b00471bde04050mr1095401vss.8.1708604869551; Thu, 22 Feb
- 2024 04:27:49 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lnvJ6qYY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8DD46C433C7;
+	Thu, 22 Feb 2024 12:29:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1708604998;
+	bh=HJIZQiDobf5GxOwMaLIptvld+RatnI/3K+JbnfdVwzc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=lnvJ6qYYOLeVoKfveH91sfsUv4Aqc9QDaj//vVCMo6S2qg+13cO4nIVAJsnwMjs4+
+	 nbqdnsa7BCVoTajiZZsxYQ26uIcl+4mwmtqrHQeZVuTUIbiexKM7ustMujn/SRqDYc
+	 JzQISeDOcRGwtjjNFJWujyf+afGySG/Uh5vBqq70Oz+5yXJ8F0pAzGKKaLt3Hd/ACb
+	 xnm7msWQ+AGdtAEE6xTVknCVpO2t5eB40vQGXWfYrqVzhf39nDi3SeH0QU6w4Tq0R7
+	 LksmBG7Uj4J5ea5d3NXlakAdln8KNbMXlGndzfWAV5RLP7d8sOSEEYfm17Qg1+KSDL
+	 lD4kAPJP4cYkg==
+Date: Thu, 22 Feb 2024 07:29:58 -0500
+From: Sasha Levin <sashal@kernel.org>
+To: Mark Brown <broonie@kernel.org>
+Cc: linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	srinivas.kandagatla@linaro.org, bgoswami@quicinc.com,
+	lgirdwood@gmail.com, perex@perex.cz, tiwai@suse.com,
+	alsa-devel@alsa-project.org, linux-sound@vger.kernel.org
+Subject: Re: [PATCH AUTOSEL 6.7 07/44] ASoC: codecs: wcd934x: drop unneeded
+ regulator include
+Message-ID: <Zdc-RtG4-FXYIkxk@sashalap>
+References: <20240207212142.1399-1-sashal@kernel.org>
+ <20240207212142.1399-7-sashal@kernel.org>
+ <ZcS9EmcM1rtsNYy0@finisterre.sirena.org.uk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240216203215.40870-1-brgl@bgdev.pl> <CAA8EJppt4-L1RyDeG=1SbbzkTDhLkGcmAbZQeY0S6wGnBbFbvw@mail.gmail.com>
- <e4cddd9f-9d76-43b7-9091-413f923d27f2@linaro.org> <CAA8EJpp6+2w65o2Bfcr44tE_ircMoON6hvGgyWfvFuh3HamoSQ@mail.gmail.com>
- <4d2a6f16-bb48-4d4e-b8fd-7e4b14563ffa@linaro.org> <CAA8EJpq=iyOfYzNATRbpqfBaYSdJV1Ao5t2ewLK+wY+vEaFYAQ@mail.gmail.com>
- <CAMRc=Mfnpusf+mb-CB5S8_p7QwVW6owekC5KcQF0qrR=iOQ=oA@mail.gmail.com>
- <CAA8EJppY7VTrDz3-FMZh2qHoU+JSGUjCVEi5x=OZgNVxQLm3eQ@mail.gmail.com>
- <b9a31374-8ea9-407e-9ec3-008a95e2b18b@linaro.org> <CAA8EJppWY8c-pF75WaMadWtEuaAyCc5A1VLEq=JmB2Ngzk-zyw@mail.gmail.com>
- <CAMRc=Md6SoXukoGb4bW-CSYgjpO4RL+0Uu3tYrZzgSgVtFH6Sw@mail.gmail.com> <CAA8EJprUM6=ZqTwWLB8rW8WRDqwncafa-szSsTvPQCOOSXUn_w@mail.gmail.com>
-In-Reply-To: <CAA8EJprUM6=ZqTwWLB8rW8WRDqwncafa-szSsTvPQCOOSXUn_w@mail.gmail.com>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Thu, 22 Feb 2024 13:27:38 +0100
-Message-ID: <CAMRc=Metemd=24t0RJw-O9Z0-cg4mESouOfvMVLs_rJDCwRBPQ@mail.gmail.com>
-Subject: Re: [PATCH v5 00/18] power: sequencing: implement the subsystem and
- add first users
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc: neil.armstrong@linaro.org, Marcel Holtmann <marcel@holtmann.org>, 
-	Luiz Augusto von Dentz <luiz.dentz@gmail.com>, "David S . Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Kalle Valo <kvalo@kernel.org>, 
-	Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konrad.dybcio@linaro.org>, 
-	Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Saravana Kannan <saravanak@google.com>, 
-	Geert Uytterhoeven <geert+renesas@glider.be>, Arnd Bergmann <arnd@arndb.de>, 
-	Marek Szyprowski <m.szyprowski@samsung.com>, Alex Elder <elder@linaro.org>, 
-	Srini Kandagatla <srinivas.kandagatla@linaro.org>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Abel Vesa <abel.vesa@linaro.org>, 
-	Manivannan Sadhasivam <mani@kernel.org>, Lukas Wunner <lukas@wunner.de>, linux-bluetooth@vger.kernel.org, 
-	netdev@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org, 
-	linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-pci@vger.kernel.org, linux-pm@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <ZcS9EmcM1rtsNYy0@finisterre.sirena.org.uk>
 
-On Thu, Feb 22, 2024 at 12:27=E2=80=AFPM Dmitry Baryshkov
-<dmitry.baryshkov@linaro.org> wrote:
+On Thu, Feb 08, 2024 at 11:37:54AM +0000, Mark Brown wrote:
+>On Wed, Feb 07, 2024 at 04:20:34PM -0500, Sasha Levin wrote:
+>> From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+>>
+>> [ Upstream commit 35314e39dabcfb256832654ad0e856a9fba744bd ]
+>>
+>> Driver does not use any regulator code, so drop redundant include of
+>> regulator/consumer.h header.
 >
-> On Thu, 22 Feb 2024 at 13:00, Bartosz Golaszewski <brgl@bgdev.pl> wrote:
-> >
-> > On Mon, Feb 19, 2024 at 11:21=E2=80=AFPM Dmitry Baryshkov
-> > <dmitry.baryshkov@linaro.org> wrote:
-> > >
-> > > On Mon, 19 Feb 2024 at 19:18, <neil.armstrong@linaro.org> wrote:
-> > > >
-> > > > On 19/02/2024 13:33, Dmitry Baryshkov wrote:
-> > > > > On Mon, 19 Feb 2024 at 14:23, Bartosz Golaszewski <brgl@bgdev.pl>=
- wrote:
-> > > > >>
-> > > > >> On Mon, Feb 19, 2024 at 11:26=E2=80=AFAM Dmitry Baryshkov
-> > > > >> <dmitry.baryshkov@linaro.org> wrote:
-> > > > >>>
-> > > > >>
-> > > > >> [snip]
-> > > > >>
-> > > > >>>>>>>>
-> > > > >>>>>>>> For WCN7850 we hide the existence of the PMU as modeling i=
-t is simply not
-> > > > >>>>>>>> necessary. The BT and WLAN devices on the device-tree are =
-represented as
-> > > > >>>>>>>> consuming the inputs (relevant to the functionality of eac=
-h) of the PMU
-> > > > >>>>>>>> directly.
-> > > > >>>>>>>
-> > > > >>>>>>> We are describing the hardware. From the hardware point of =
-view, there
-> > > > >>>>>>> is a PMU. I think at some point we would really like to des=
-cribe all
-> > > > >>>>>>> Qualcomm/Atheros WiFI+BT units using this PMU approach, inc=
-luding the
-> > > > >>>>>>> older ath10k units present on RB3 (WCN3990) and db820c (QCA=
-6174).
-> > > > >>>>>>
-> > > > >>>>>> While I agree with older WiFi+BT units, I don't think it's n=
-eeded for
-> > > > >>>>>> WCN7850 since BT+WiFi are now designed to be fully independe=
-nt and PMU is
-> > > > >>>>>> transparent.
-> > > > >>>>>
-> > > > >>>>> I don't see any significant difference between WCN6750/WCN685=
-5 and
-> > > > >>>>> WCN7850 from the PMU / power up point of view. Could you plea=
-se point
-> > > > >>>>> me to the difference?
-> > > > >>>>>
-> > > > >>>>
-> > > > >>>> The WCN7850 datasheet clearly states there's not contraint on =
-the WLAN_EN
-> > > > >>>> and BT_EN ordering and the only requirement is to have all inp=
-ut regulators
-> > > > >>>> up before pulling up WLAN_EN and/or BT_EN.
-> > > > >>>>
-> > > > >>>> This makes the PMU transparent and BT and WLAN can be describe=
-d as independent.
-> > > > >>>
-> > > > >>>  From the hardware perspective, there is a PMU. It has several =
-LDOs. So
-> > > > >>> the device tree should have the same style as the previous
-> > > > >>> generations.
-> > > > >>>
-> > > > >>
-> > > > >> My thinking was this: yes, there is a PMU but describing it has =
-no
-> > > > >> benefit (unlike QCA6x90). If we do describe, then we'll end up h=
-aving
-> > > > >> to use pwrseq here despite it not being needed because now we wo=
-n't be
-> > > > >> able to just get regulators from WLAN/BT drivers directly.
-> > > > >>
-> > > > >> So I also vote for keeping it this way. Let's go into the packag=
-e
-> > > > >> detail only if it's required.
-> > > > >
-> > > > > The WiFi / BT parts are not powered up by the board regulators. T=
-hey
-> > > > > are powered up by the PSU. So we are not describing it in the acc=
-urate
-> > > > > way.
-> > > >
-> > > > I disagree, the WCN7850 can also be used as a discrete PCIe M.2 car=
-d, and in
-> > > > this situation the PCIe part is powered with the M.2 slot and the B=
-T side
-> > > > is powered separately as we currently do it now.
-> > >
-> > > QCA6390 can also be used as a discrete M.2 card.
-> > >
-> > > > So yes there's a PMU, but it's not an always visible hardware part,=
- from the
-> > > > SoC PoV, only the separate PCIe and BT subsystems are visible/contr=
-ollable/powerable.
-> > >
-> > > From the hardware point:
-> > > - There is a PMU
-> > > - The PMU is connected to the board supplies
-> > > - Both WiFi and BT parts are connected to the PMU
-> > > - The BT_EN / WLAN_EN pins are not connected to the PMU
-> > >
-> > > So, not representing the PMU in the device tree is a simplification.
-> > >
-> >
-> > What about the existing WLAN and BT users of similar packages? We
-> > would have to deprecate a lot of existing bindings. I don't think it's
-> > worth it.
->
-> We have bindings that are not reflecting the hardware. So yes, we
-> should gradually update them once the powerseq is merged.
->
-> > The WCN7850 is already described in bindings as consuming what is PMUs
-> > inputs and not its outputs.
->
-> So do WCN6855 and QCA6391 BlueTooth parts.
->
+>This doesn't seem like an obvious stable candidate...
 
-That is not true for the latter, this series is adding regulators for it.
+Dropped, thanks!
 
-Bart
-
-> >
-> > Bart
-> >
-> > > >
-> > > > Neil
-> > > >
-> > > > >
-> > > > > Moreover, I think we definitely want to move BT driver to use onl=
-y the
-> > > > > pwrseq power up method. Doing it in the other way results in the =
-code
-> > > > > duplication and possible issues because of the regulator / pwrseq
-> > > > > taking different code paths.
-> > >
-> > > --
-> > > With best wishes
-> > > Dmitry
->
->
->
-> --
-> With best wishes
-> Dmitry
+-- 
+Thanks,
+Sasha
