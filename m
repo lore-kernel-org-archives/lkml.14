@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8970979FE;
-	Thu, 22 Feb 2024 05:44:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DCB579FE;
+	Thu, 22 Feb 2024 05:46:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708580694; cv=none; b=hmvV6N5is+T1XFjBc4+tQQulpcW2oBYwcrjFse7PFOeOJJOYCeEZqKXPp9WEk/MTtdWSqsQjTQ8RZ4Hb1EIkLOi6eJ9dxpdKzBF0wwDT4+j9KJLuyRkVMaqugBSkBPYaeuaXkLJUpzyyAz9MAyKg2dZiMTUfyigoin/dKsATkAI=
+	t=1708580761; cv=none; b=C5Nx3gPCB4JeNHfth1wvhjZRrJw0+PIx7km23/t7kkC4greAs5qbRLOeR7a9K45wzaHzgZsbmu1NXxNFZCtuGZjdZ9SA+cKsEuNbDl53AGppgQjgOr4NIqdnrV80nGzMM1sSyHX45eENI6sjAamg2NWpPq/14Vq2Ju96UqrBr+0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708580694; c=relaxed/simple;
-	bh=Qy+DmTKK2ZiLmNsZrUpidDqv4dRIGVyvMhM3tcYze4E=;
+	s=arc-20240116; t=1708580761; c=relaxed/simple;
+	bh=s9nvj9SyHoAAY73LfKUC1O7tFQKS5lnB4BZJjMG2fkk=;
 	h=Message-ID:Content-Type:MIME-Version:In-Reply-To:References:
-	 Subject:From:Cc:To:Date; b=PcADU6k5pCycmAhzXsnWbnLD4HcbFQT2hghi0zqiRITiQP8q8/Dj0t1sA9IZGl0Jt1als/Jia0+U+QSmOg3GhV6gVBMzOVMKZMP8o4w9E0aQXos5ReG+enV5/WWPWANL0hIX/s9PrI8LPQy06YWVvs6sh3tHJXT6vVKKHPzCgyA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ABKgzx6g; arc=none smtp.client-ip=10.30.226.201
+	 Subject:From:Cc:To:Date; b=QUCvX+rD93KcNAyzUiof31LA8Js0HuLRo3BzozEUdFS8Qk2PoWmKe6RUdWPqrIdKga8bFVU/g6XFOpz6qRtKzPIue+270Jo35m79DWngU3alUvk+nAqH25LubNLRephTtd6uhXtvjozvSJMQHJ6XLOsMqxeOOiDXI988pR81eYE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PCRbQQ4/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ABKgzx6g"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DEDDAC433F1;
-	Thu, 22 Feb 2024 05:44:53 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PCRbQQ4/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6F8E4C433C7;
+	Thu, 22 Feb 2024 05:46:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708580694;
-	bh=Qy+DmTKK2ZiLmNsZrUpidDqv4dRIGVyvMhM3tcYze4E=;
+	s=k20201202; t=1708580760;
+	bh=s9nvj9SyHoAAY73LfKUC1O7tFQKS5lnB4BZJjMG2fkk=;
 	h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-	b=ABKgzx6gvVPREkUfTzE1+S8GdAXDdGG+UKBXRRivW3o5w9x8NTd7xcagRBo/ENwn6
-	 vA6OBgnQx7iwFk7I+3QW3WZgY7liB5qGIQo9AwwrhqzKkMbiXdieDKnuTNcLW7me8L
-	 XHjOEiiaAtHWc+eUymCzPxXYF5j0aiOcDP72zjDgQfbNTLyK5+XXobxYUHRDKD6+Yg
-	 lHYsLoenypVJMbYkfP9xwOSDOPDVUKbIhRYyXN2el7sVE8v1k1GhR+ZkrJ+R6pMLFi
-	 /ZGjHSW7+UAjB3mJr33FK0IHtwUZU6MTvQVuWpHxgLa9lAU3/MNSi5yzUv/GZp5fVs
-	 PRI79+DnMjtAA==
-Message-ID: <02eee0653b0f3c944fa605fe4786d2cc.sboyd@kernel.org>
+	b=PCRbQQ4/29bwjeByMu/+Ru2yq0E1ed+OAQ9mesWlkjLmV6An/+ru2j6qUxzGh/I5K
+	 SJ5HaRa28o7R6STEWU2LuymHOgniRPb/DuTEb28eSOqF8wKFlkvr2TMOfYCUeuQdDr
+	 crxG5OAtmCjfCPwxee9KRZDYeJ2jzRnYVDFZnY6tsqRgzHlMl3qzP5UKkRZ7bmTwH6
+	 iaNBHKzxSAu7pwS/AO5/kLnoDqf9l+NHr0pMDqAe5rsfJSaSbw/Yz6pN+KDCQ0JINi
+	 tOAvpyW6ucNKykprmrjGexChOgf4LJwBK3SvUl6doE41dpVWuf4UpIvV7QWYlFbPbA
+	 TLXHRRd2URdvQ==
+Message-ID: <1427dc71e34e178374f1afee3085c4c6.sboyd@kernel.org>
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -35,23 +35,19 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20240214183006.3403207-8-cristian.marussi@arm.com>
-References: <20240214183006.3403207-1-cristian.marussi@arm.com> <20240214183006.3403207-8-cristian.marussi@arm.com>
-Subject: Re: [PATCH 7/7] clk: scmi: Support get/set duty_cycle operations
+In-Reply-To: <20240215220759.976998-2-eajames@linux.ibm.com>
+References: <20240215220759.976998-1-eajames@linux.ibm.com> <20240215220759.976998-2-eajames@linux.ibm.com>
+Subject: Re: [PATCH 01/33] dt-bindings: clock: ast2600: Add FSI clock
 From: Stephen Boyd <sboyd@kernel.org>
-Cc: sudeep.holla@arm.com, james.quinlan@broadcom.com, f.fainelli@gmail.com, vincent.guittot@linaro.org, peng.fan@oss.nxp.com, michal.simek@amd.com, quic_sibis@quicinc.com, quic_nkela@quicinc.com, souvik.chakravarty@arm.com, Cristian Marussi <cristian.marussi@arm.com>, Michael Turquette <mturquette@baylibre.com>, linux-clk@vger.kernel.org
-To: Cristian Marussi <cristian.marussi@arm.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Date: Wed, 21 Feb 2024 21:44:51 -0800
+Cc: linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, andi.shyti@kernel.org, eajames@linux.ibm.com, alistair@popple.id.au, joel@jms.id.au, jk@ozlabs.org, mturquette@baylibre.com, robh@kernel.org, krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org
+To: Eddie James <eajames@linux.ibm.com>, linux-fsi@lists.ozlabs.org
+Date: Wed, 21 Feb 2024 21:45:58 -0800
 User-Agent: alot/0.10
 
-Quoting Cristian Marussi (2024-02-14 10:30:06)
-> Provide the CLK framework callbacks related to get/set clock duty cycle if
-> the relared SCMI clock supports OEM extended configurations.
+Quoting Eddie James (2024-02-15 14:07:27)
+> Add a definition for the FSI clock.
 >=20
-> CC: Michael Turquette <mturquette@baylibre.com>
-> CC: Stephen Boyd <sboyd@kernel.org>
-> CC: linux-clk@vger.kernel.org
-> Signed-off-by: Cristian Marussi <cristian.marussi@arm.com>
+> Signed-off-by: Eddie James <eajames@linux.ibm.com>
 > ---
 
-Acked-by: Stephen Boyd <sboyd@kernel.org>
+Applied to clk-next
