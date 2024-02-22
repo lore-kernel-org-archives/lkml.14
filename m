@@ -1,31 +1,31 @@
 Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 536D0F9F5;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5374817583;
 	Thu, 22 Feb 2024 07:08:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708585706; cv=none; b=fjZTRvBB8LlcwDm66+9VdNLmApsWzQG0YEyNRUWOzWk8ggkq1NmSrIku/W+6oZEMYty/rOMP+e9dD0meAqdiKeaxPTuh9WtCTfj0Pcj5+3D8av3VG0wLKcVUCr4t2cq8JUCQNHPbVoAR30y1xsyvdI132kLX6fSqX/GqfKD5t7w=
+	t=1708585706; cv=none; b=NlXNkEVWOuJmH8FOiwQVkHwEoxM9/huggCaHG8tUcB/e9snrkrJX1q7Q6Sr/12LsaFxeSpBrksHwPQeuggw0GAEjSsEDKufgBi9sUSPZUEtVfirKhU0NVe5ArhIMPtqthKhR6hoGUZPIiaROkkUbGNTJ0Ap4etLUyukvv86NSwM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1708585706; c=relaxed/simple;
-	bh=2soR7KajXwzwQXCP9lWkLt0XwWeWSvqlG2ruurCjAJo=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=nGOoIq9muiBkijVdgstX125wHrdOk/uv9hjd9r6dY09qjAYdRf/ACB003yUW7VojJDrv0jmweCtkrvwm7pYsjR0i4YtG1S5X1ecgnTnuY8ARByYSQFoB0Oz/oWL3pm3XBpHMWd3fPCJKFS2ilQSJoChbDGPivJRbqlLF//OWgAI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=aGbX+ctM; arc=none smtp.client-ip=159.69.126.157
+	bh=cR/IG5pmCHIdq4ymlgJjzjZH7hGnhfCNGmfTaQlgx2Q=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=LrXFVmmcHsc9epTYneRAQM/4gXneZ6s38VyL1kDKL8C7/6KvuAjZ/i9FxSxM5pPYHSls9heZDB3ZeQcpah9w62h3rZjZ5S3Zn7V7NGuM8OH7P93fng2f5QKd244HLw+sE1+4lEGI1Y/EcjUMtKuyMv3viNc8/tRXgnXRe5F167Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=sI2FXOL4; arc=none smtp.client-ip=159.69.126.157
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=weissschuh.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="aGbX+ctM"
+	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="sI2FXOL4"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
 	s=mail; t=1708585697;
-	bh=2soR7KajXwzwQXCP9lWkLt0XwWeWSvqlG2ruurCjAJo=;
-	h=From:Subject:Date:To:Cc:From;
-	b=aGbX+ctM3SscFwnv50+cjuwS33sKTxPhZ88xRVQddaA0CGyfHDABEBpfR4yqRGf1K
-	 R1O6oxDmHkYbCIL3naj6c0w248pQB1dFBICKe8r+oY8uxW66m4DcP9bjDx0W1vPnU+
-	 /DS9izTjG9IhRc4M9HLWBw9w6sP60rAsUshWggRs=
+	bh=cR/IG5pmCHIdq4ymlgJjzjZH7hGnhfCNGmfTaQlgx2Q=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=sI2FXOL4hfum+t+KTRgchDnOI8GtyZ+U2OlwsKV+xRYJbFv7ZXz4VosAWZQpGkL6y
+	 pMr9HTuWloFx/WLC/nWwYV57tcifWRfUl/ZljHF3zTYfgGEAwZpkFU7ZAjkkUjIduK
+	 8zzs7J1mQvHCBvcLnPQLVjyDSwOMvdh32FtJTiwk=
 From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
-Subject: [PATCH 0/4] sysctl: move sysctl type to ctl_table_header
-Date: Thu, 22 Feb 2024 08:07:35 +0100
-Message-Id: <20240222-sysctl-empty-dir-v1-0-45ba9a6352e8@weissschuh.net>
+Date: Thu, 22 Feb 2024 08:07:37 +0100
+Subject: [PATCH 2/4] sysctl: move sysctl type to ctl_table_header
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -34,53 +34,116 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-B4-Tracking: v=1; b=H4sIALjy1mUC/x3MSwqAMAwA0atI1gZMBQteRVyoTTXgj0bEUry7x
- eVbzCRQDsIKbZEg8C0qx55BZQHTMuwzo7hsMJWpyVCDGnW6VuTtvCI6CWjJ2aYmb0fPkLMzsJf
- nX3b9+35pYEbOYgAAAA==
+Message-Id: <20240222-sysctl-empty-dir-v1-2-45ba9a6352e8@weissschuh.net>
+References: <20240222-sysctl-empty-dir-v1-0-45ba9a6352e8@weissschuh.net>
+In-Reply-To: <20240222-sysctl-empty-dir-v1-0-45ba9a6352e8@weissschuh.net>
 To: "Eric W. Biederman" <ebiederm@xmission.com>, 
  Luis Chamberlain <mcgrof@kernel.org>, Kees Cook <keescook@chromium.org>, 
  Joel Granados <j.granados@samsung.com>
 Cc: linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
  =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
 X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1708585698; l=1139;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1708585698; l=3419;
  i=linux@weissschuh.net; s=20221212; h=from:subject:message-id;
- bh=2soR7KajXwzwQXCP9lWkLt0XwWeWSvqlG2ruurCjAJo=;
- b=2A7jBJ3P2WImICv/ZMsnClbTGNvpvDRm9MPeySlCwEKssa8drCitOYc9THSuSI6hKWAifDCSU
- N3mgsO2Q8rkCn+Awh74jLIZi0/ocv08/Cjbgpa2kEtFEgB1z6pCcD7U
+ bh=cR/IG5pmCHIdq4ymlgJjzjZH7hGnhfCNGmfTaQlgx2Q=;
+ b=mXTAh1XCV3sH20hmYe/pluA998xG0eK+HatacPk2BM4CJfLqM772dOjRU172Oi9MS6/nsEYW9
+ LnrVAjlwabKDyoAi0cWgrqrclnCoeEKm2sif+4xpz3CYvNATXoBnFnl
 X-Developer-Key: i=linux@weissschuh.net; a=ed25519;
  pk=KcycQgFPX2wGR5azS7RhpBqedglOZVgRPfdFSPB1LNw=
 
-Praparation series to enable constification of struct ctl_table further
-down the line.
-No functional changes are intended.
+As static initialization of the is not possible anymore move it into
+init_header() where all the other header fields are also initialized.
 
-These changes have been split out and reworked from my original
-const sysctl patchset [0].
-I'm resubmitting the patchset in smaller chunks for easier review.
-Each split-out series is meant to be useful on its own.
+Reduce memory consumption as there are less instances of
+ctl_table_header than ctl_table.
 
-Changes since the original series:
-* Explicit initializartion of header->type in init_header()
-* Some additional cleanups
+Removing this mutable member also opens the way to constify static
+instances of ctl_table.
 
-[0] https://lore.kernel.org/lkml/20231204-const-sysctl-v2-0-7a5060b11447@weissschuh.net/
-
+Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
 ---
-Thomas Weißschuh (4):
-      sysctl: drop sysctl_is_perm_empty_ctl_table
-      sysctl: move sysctl type to ctl_table_header
-      sysctl: drop now unnecessary out-of-bounds check
-      sysctl: remove unnecessary sentinel element
-
- fs/proc/proc_sysctl.c  | 19 ++++++++-----------
+ fs/proc/proc_sysctl.c  | 10 ++++++----
  include/linux/sysctl.h | 22 +++++++++++-----------
- 2 files changed, 19 insertions(+), 22 deletions(-)
----
-base-commit: b401b621758e46812da61fa58a67c3fd8d91de0d
-change-id: 20231216-sysctl-empty-dir-71d7631f7bfe
+ 2 files changed, 17 insertions(+), 15 deletions(-)
 
-Best regards,
+diff --git a/fs/proc/proc_sysctl.c b/fs/proc/proc_sysctl.c
+index 2f4d4329d83d..fde7a2f773f0 100644
+--- a/fs/proc/proc_sysctl.c
++++ b/fs/proc/proc_sysctl.c
+@@ -31,7 +31,7 @@ static const struct inode_operations proc_sys_dir_operations;
+ 
+ /* Support for permanently empty directories */
+ static struct ctl_table sysctl_mount_point[] = {
+-	{.type = SYSCTL_TABLE_TYPE_PERMANENTLY_EMPTY }
++	{ }
+ };
+ 
+ /**
+@@ -49,11 +49,11 @@ struct ctl_table_header *register_sysctl_mount_point(const char *path)
+ EXPORT_SYMBOL(register_sysctl_mount_point);
+ 
+ #define sysctl_is_perm_empty_ctl_header(hptr)		\
+-	(hptr->ctl_table[0].type == SYSCTL_TABLE_TYPE_PERMANENTLY_EMPTY)
++	(hptr->type == SYSCTL_TABLE_TYPE_PERMANENTLY_EMPTY)
+ #define sysctl_set_perm_empty_ctl_header(hptr)		\
+-	(hptr->ctl_table[0].type = SYSCTL_TABLE_TYPE_PERMANENTLY_EMPTY)
++	(hptr->type = SYSCTL_TABLE_TYPE_PERMANENTLY_EMPTY)
+ #define sysctl_clear_perm_empty_ctl_header(hptr)	\
+-	(hptr->ctl_table[0].type = SYSCTL_TABLE_TYPE_DEFAULT)
++	(hptr->type = SYSCTL_TABLE_TYPE_DEFAULT)
+ 
+ void proc_sys_poll_notify(struct ctl_table_poll *poll)
+ {
+@@ -208,6 +208,8 @@ static void init_header(struct ctl_table_header *head,
+ 			node++;
+ 		}
+ 	}
++	if (table == sysctl_mount_point)
++		sysctl_set_perm_empty_ctl_header(head);
+ }
+ 
+ static void erase_header(struct ctl_table_header *head)
+diff --git a/include/linux/sysctl.h b/include/linux/sysctl.h
+index ee7d33b89e9e..c87f73c06cb9 100644
+--- a/include/linux/sysctl.h
++++ b/include/linux/sysctl.h
+@@ -137,17 +137,6 @@ struct ctl_table {
+ 	void *data;
+ 	int maxlen;
+ 	umode_t mode;
+-	/**
+-	 * enum type - Enumeration to differentiate between ctl target types
+-	 * @SYSCTL_TABLE_TYPE_DEFAULT: ctl target with no special considerations
+-	 * @SYSCTL_TABLE_TYPE_PERMANENTLY_EMPTY: Used to identify a permanently
+-	 *                                       empty directory target to serve
+-	 *                                       as mount point.
+-	 */
+-	enum {
+-		SYSCTL_TABLE_TYPE_DEFAULT,
+-		SYSCTL_TABLE_TYPE_PERMANENTLY_EMPTY
+-	} type;
+ 	proc_handler *proc_handler;	/* Callback for text formatting */
+ 	struct ctl_table_poll *poll;
+ 	void *extra1;
+@@ -188,6 +177,17 @@ struct ctl_table_header {
+ 	struct ctl_dir *parent;
+ 	struct ctl_node *node;
+ 	struct hlist_head inodes; /* head for proc_inode->sysctl_inodes */
++	/**
++	 * enum type - Enumeration to differentiate between ctl target types
++	 * @SYSCTL_TABLE_TYPE_DEFAULT: ctl target with no special considerations
++	 * @SYSCTL_TABLE_TYPE_PERMANENTLY_EMPTY: Used to identify a permanently
++	 *                                       empty directory target to serve
++	 *                                       as mount point.
++	 */
++	enum {
++		SYSCTL_TABLE_TYPE_DEFAULT,
++		SYSCTL_TABLE_TYPE_PERMANENTLY_EMPTY,
++	} type;
+ };
+ 
+ struct ctl_dir {
+
 -- 
-Thomas Weißschuh <linux@weissschuh.net>
+2.43.2
 
