@@ -1,228 +1,160 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF79517998;
-	Thu, 22 Feb 2024 08:31:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.7
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708590686; cv=fail; b=Zzoaxc3XJFwBjqU8yTS5qK/odJiPPobFGwYpkej2Ur47y2UzFrw7sLz/R7nqknnTMUUg8GPVmkSq10LqDdXJCJupWihMkTwzr4w56PGwakAG02lnPAePYLck6aJl1OkD2ecBXaPXzIRrl8TPDzjWKVbVK1nMHxyyXvng6Z5eaSM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708590686; c=relaxed/simple;
-	bh=mPM2SM5oJfPC1/ANNkLQZdS3VsuZEx6b5N/Rs0uJ4sY=;
-	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=F9aW+ypcUeyZk24ta9QGpyIev/Lytu2AgR+llYwaPCw4rXtwhR3KnyJc30Pj/ZyWhfatell6eeA1jp0NV5ZMst+MRY3En6ZIfw6k3FVKVKsB8Rll57U7KWz6Klwhlb+I6e/q1ncU5SELTX+ivtgBeiAG2Ax2tMDB+9lPwviBNsk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HrTJfst7; arc=fail smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86183225CE;
+	Thu, 22 Feb 2024 08:32:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1708590732; cv=none; b=JxFiUDQLEGumF+6H06RQvmcY7j8E7UveswHVTl8l2m+7z/sP3HUxD7aBYOdxyMjgstTeLt+nHl4XKHBdWbQCFiC5L1BSge8ivtWx1yNegROzeWxMH6m1X49T7Y/UIOYe9D4QfPYXU8ihYa4hxdSvOhwZ2JmS32bm1MhASUsU7WI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1708590732; c=relaxed/simple;
+	bh=N7a5IF82ize/+pzYCn6kEa3/rgM3v7OL3ujPEwZlvg8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=TS4JR5XnlnfYVu2lGISdz4fa58gfBQ6VVmO0ZxSlwoQ8XnA9XlwlwUxoQDVXxniRrCbC0h4jtDZo6YybSEYfNKZptXk6hhJwqkbyv67LARQfbKMpkA8OyE6efC0KFaVRkErv7uU0nUs/QhQt13KLDXwX58PyoI/XpAHQsAIgxGI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=F8dz2Yh8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HrTJfst7"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1708590684; x=1740126684;
-  h=message-id:date:subject:to:cc:references:from:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=mPM2SM5oJfPC1/ANNkLQZdS3VsuZEx6b5N/Rs0uJ4sY=;
-  b=HrTJfst7GPMIoGdNGmn0OKL573sGVO+0eDX5YFnxOrGcLuWii6RKlKo/
-   RilbbSXMDbr7m2Keoz2/i5zpmllh2DRqf5J3kRnALjSTqHvmN4kidEHzg
-   FjwhQ/Al/0SW/3gIxfrBdq8jl82AF3ju+K+D+ir4Q8isOBF+AiGh563Yd
-   WUZ1heDPHeVa2Nfv9RlivALO5MWANZLsZJ8JHfq6/NN8D12WGWYBaESFE
-   qgIs6Wc4BFbYPBRxvt3iICV8bD09pIhujN8ku5SIixlRlgSXh4tyD0xtS
-   SlNrl/GvYmBiDNvUwCSG5TXQedZyb7WJak+sUxePYJ6dImJAQUnXdI5aW
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10991"; a="28243244"
-X-IronPort-AV: E=Sophos;i="6.06,177,1705392000"; 
-   d="scan'208";a="28243244"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Feb 2024 00:31:07 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,177,1705392000"; 
-   d="scan'208";a="5620969"
-Received: from fmsmsx602.amr.corp.intel.com ([10.18.126.82])
-  by fmviesa006.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 22 Feb 2024 00:31:07 -0800
-Received: from fmsmsx611.amr.corp.intel.com (10.18.126.91) by
- fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Thu, 22 Feb 2024 00:31:05 -0800
-Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
- fmsmsx611.amr.corp.intel.com (10.18.126.91) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Thu, 22 Feb 2024 00:31:05 -0800
-Received: from FMSEDG603.ED.cps.intel.com (10.1.192.133) by
- fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35 via Frontend Transport; Thu, 22 Feb 2024 00:31:05 -0800
-Received: from NAM04-MW2-obe.outbound.protection.outlook.com (104.47.73.168)
- by edgegateway.intel.com (192.55.55.68) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Thu, 22 Feb 2024 00:31:04 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=K2aeCz96NKkorIThA4I8ucUxzxUUc98/rdPMve10jWF4W9es7jRLG8NWrGMI+MKTSRNsynZ3bK+WYbwwf0EPpZxMXarCZwQIOjV5HruFlrq2seHBL2gq3bACg/r4vzmRv0vUuMFAJscvCZpU2O8dZm0T30WkybFFFMumS/UCXnbgymZ8Io5tA5OEO2eHFBj3tIidvSU6JanNi8NHEANm+z0IwJGZaSEqUyB0ywaxoU8LGC1tZ6krh0DIMPXX7WGd1Vp7M5YVp5TwsHNrKKk2GjQIu/d4EKQ2gBBeMhbtenyQjwZjzmLRiU3Tle7gHAwvPaKXE6qBohW8rxhOUxtgOg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=4hMdbUuFDROBZcjp0Ct9WeDRjQJnZqDR58xekG83mbw=;
- b=bnDOKBmm58uAmAUObFNhD2DuErSnCfhSiJ4+dB87LjN/XocPAQ3fo8/R/0IPgXXo3QaLnogRwlYDAkw5ZDfuq/bOVeom9QQL3spp0Goed2IfRkbSUphVZK/HzbRby+8DLgOChR7cakgmqeiwcUEhfu319Gne+ucA6bh90j4RCgxtTDr+TBld+WZmfmFtlRyDmay9kYaopj0ze5AdMeYF1JrfW2E2G1EqwEh+c0g0DEpFKXOXHbv7qMTo6IeUGFjpv8T0FeVJm3yL6zTuc6WqSOMe7NpcbxqKfCWgQ47zE4FutXaY1jWioREmNAA2pVTANiigivMJ0+kKbJvrwsSMEQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from SN7PR11MB7540.namprd11.prod.outlook.com (2603:10b6:806:340::7)
- by MW6PR11MB8391.namprd11.prod.outlook.com (2603:10b6:303:243::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7316.22; Thu, 22 Feb
- 2024 08:31:03 +0000
-Received: from SN7PR11MB7540.namprd11.prod.outlook.com
- ([fe80::8b51:c6ae:f8e0:8ada]) by SN7PR11MB7540.namprd11.prod.outlook.com
- ([fe80::8b51:c6ae:f8e0:8ada%7]) with mapi id 15.20.7292.036; Thu, 22 Feb 2024
- 08:31:02 +0000
-Message-ID: <d6b9ccff-3aba-4508-b83e-4bc3bc859e96@intel.com>
-Date: Thu, 22 Feb 2024 16:34:10 +0800
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH rc 3/8] iommu/vt-d: Add missing iotlb flush for parent
- domain
-Content-Language: en-US
-To: Jason Gunthorpe <jgg@nvidia.com>
-CC: <joro@8bytes.org>, <kevin.tian@intel.com>, <baolu.lu@linux.intel.com>,
-	<alex.williamson@redhat.com>, <robin.murphy@arm.com>,
-	<eric.auger@redhat.com>, <nicolinc@nvidia.com>, <kvm@vger.kernel.org>,
-	<chao.p.peng@linux.intel.com>, <yi.y.sun@linux.intel.com>,
-	<iommu@lists.linux.dev>, <linux-kernel@vger.kernel.org>,
-	<linux-kselftest@vger.kernel.org>, <zhenzhong.duan@intel.com>,
-	<joao.m.martins@oracle.com>
-References: <20240208082307.15759-1-yi.l.liu@intel.com>
- <20240208082307.15759-4-yi.l.liu@intel.com>
- <20240221151923.GU13330@nvidia.com>
-From: Yi Liu <yi.l.liu@intel.com>
-In-Reply-To: <20240221151923.GU13330@nvidia.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SI2PR06CA0009.apcprd06.prod.outlook.com
- (2603:1096:4:186::17) To SN7PR11MB7540.namprd11.prod.outlook.com
- (2603:10b6:806:340::7)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="F8dz2Yh8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C776AC433C7;
+	Thu, 22 Feb 2024 08:32:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1708590732;
+	bh=N7a5IF82ize/+pzYCn6kEa3/rgM3v7OL3ujPEwZlvg8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=F8dz2Yh8UDjroLtHv0F9r3QcElMUbyQi+Y1f9K48WIJjH0DM7VWXyWr6NBgBE4kVx
+	 yUv8+iKVg02/jHN029nS3NsIwpi2qGin7BZuGxBsF6BT/P9WiTCQW7niaAuWJkf9hN
+	 r5g2DsWl7+53idn3FLJ4xMx1dd+uqZIC5boLQTRmoyRWkiTf9yTDC87IKLuo0BIyH5
+	 2wFn/ljKYkZhjV65XsYnRRmNhGJst7R6znw64oeB/qiBWhgjPSECUicSYSn1GZPKoa
+	 MHyDfYFyoeQt3LUENvnhPx8y04eXRsKWlxqkmiHD7V0a9jfF8pfjtf1qncVr4eMhpW
+	 2EBRboHk9q+ow==
+Date: Thu, 22 Feb 2024 09:32:09 +0100
+From: Maxime Ripard <mripard@kernel.org>
+To: Biju Das <biju.das.jz@bp.renesas.com>
+Cc: Stephen Rothwell <sfr@canb.auug.org.au>, 
+	Daniel Vetter <daniel.vetter@ffwll.ch>, Intel Graphics <intel-gfx@lists.freedesktop.org>, 
+	DRI <dri-devel@lists.freedesktop.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
+	Linux Next Mailing List <linux-next@vger.kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: linux-next: build failure after merge of the drm-misc tree
+Message-ID: <4hdbpzyab7djy7gxsn6qjhgmr3qczstfgwhefgar4nuxohajdq@5hn6m3b4m64n>
+References: <20240222124610.383e1ce3@canb.auug.org.au>
+ <TYCPR01MB11269B83A59650E230F4DD97F86562@TYCPR01MB11269.jpnprd01.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SN7PR11MB7540:EE_|MW6PR11MB8391:EE_
-X-MS-Office365-Filtering-Correlation-Id: c350a0e5-cd95-415a-ea55-08dc33809acf
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: JSCUX1eSwdnb4eBw5PpvqwOql5Ww1+zaNvilJO+bXRldMdo00R5S0yb+B8ulhHSEj4KSZbbYDGfd6iqroQUK5McJTfzLE4RUxSTPI6cuzF2ZSQv4rY6a6ZqCXg8oVNvraLHNspdo+o/dUDNLDn+xTJ2RNM0/q7OhDYKB/2S+EbVei1Eo/KS0pPQUPDVHknfoEoZLhmQ/jZCfwUoEDGQHYqc/NtFjbLtqZkqk5j0U+4tfnE+Tc4gowH/FfBuzwDa1DEIAuYFtHXcvln2Mkp12L7AqW8aCAaHdq9vSp3Bl4vucubF63yDcJgFTaJj6dxRz45dNw+AsW6GtxnYTkZBo8KhPmykiZXnqcSDeNQ+omaaZgIabcFh4C0/j4XT9nSImVs64S5PGy73WSuC66zqQMgilTIhwaa6PXhOVdxHY8Qw42v/4MQmV31V7BTB5pknLqFPug48uuRzBvgAeP4dEa/qakOLKaqIJhUONAE5GkCARc1o4yrgiJ/nh1zenAh2USl1th4cSIIBVaqDrDAUQnODAb4yyjJem9SCnPwf37LQ=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN7PR11MB7540.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?QldNRFI0Z25WNVVuV1pseUpQVnVtNG5ra3o2eE9yV2FMcG9tTEg3MExjMHFS?=
- =?utf-8?B?T1d6ejlZOU9veTh5Z1hjdFJDd1NvOElxbVgxTWJCaTVydnBrOTR5UjdKTVlR?=
- =?utf-8?B?YkFtUkJiS205Z2xDZitJOUZVZXdyMDRESjJFY0s1d1VFMlU4QjF6WW9FOUp6?=
- =?utf-8?B?bjlpcG9NWitKSDU3cGdRZzNuTEFlTEd4djg3UG52blJZZVpxRTdhWkdNMjVZ?=
- =?utf-8?B?bWdJcFFIUWpqcmdYcVcrVk9KZXlQaXhYdU1wSXZaR2IzV2tmSGtsNXJWTnlz?=
- =?utf-8?B?aS9ab0UxR216Q3dtdmhVaHo5c3doUXgxeEU1ZnoxRTVtSmU4YzVDRG5WTmla?=
- =?utf-8?B?aUtKcUx0SHNtWWJ5Y1VBcEtDcVhld2RMZmJkZUZ2RktwRWZjTGJoV1l1dzNF?=
- =?utf-8?B?cVpZYTFBZWtFaE1sZU9uc2xMdHJMdExKYXpZSVY3TUdEdjNWOVk2R1BPSTBL?=
- =?utf-8?B?UUZaZWVVTW9RdTVSYmlEbDl1YndiTG04ZEFwZWEzRGliRTAreENmN2g3Z2cy?=
- =?utf-8?B?SWd0LzRqcjhJRE96YWp5a3o5VXkwR3pIUnZBSUpWR1pOMjFyZkFkdmZrNXlK?=
- =?utf-8?B?Vzh4QXBCemczcThwbE9zcjRlbHUzT3UrdkJyUXlPNWhuTE1DektzcFdlR1h6?=
- =?utf-8?B?SDVoUThoWFRkeFRUMFJ4dGZHMW5rYkt5eTdROGtUWWcxVTVITlhpbmFaY3ht?=
- =?utf-8?B?WFlBZCtIUit2WDBuRDlSRHRSeVZmczRaaDFXc2VlazRUNzViaUo4TkQwcmp5?=
- =?utf-8?B?ZnBwb08vNFdWOVpEYTRLM3pGdnIrU1BDNHBGSVN4MkgwRWVwUjNld0gyWjB1?=
- =?utf-8?B?RnQ0Mkt4QTZlS1QwR3F1MGJUMDdvVitWUlVxSUI0N2hpZkhZQ2V1M1lCbmU3?=
- =?utf-8?B?L0QyVElEUmdBM2FNNjBwditMZzBidml3VUZNOHdqYS9mZTROcUh3ZDMvNUlM?=
- =?utf-8?B?eE5uQ0NMNjNzRGhaeWduUi9oajdmRDM4bnZDNEp2N2c2cDlwa0VXRVpoNGJ6?=
- =?utf-8?B?THlsRmhsSVhRQzBuQngwYWgvaWg4czBiUno1WHA5STAyUXhrRmtVcW5zSmYw?=
- =?utf-8?B?Q3VDN2lGbVZtRlNsb0d2WFJuNmh6cG5Nd21jUVhDWktxTW1UeG1CK2Zha0Fy?=
- =?utf-8?B?b0VkSnQvQlZ4T0lCR0greGhCSEhWb0JvdkN6YTVRczY4SjNDTkp1QjcxSzE4?=
- =?utf-8?B?djBzOGI5NUo3K3BWbWIwSFdlcng5S0VRaDVWalJiZ0t2MDU4KzFUQUpMWEQ4?=
- =?utf-8?B?cUw2RU1BM0NFUEV0d3NoZTRyU3ZXemJZQ2ZDYURHRFA2N0QxQ1o2SFhBd2ov?=
- =?utf-8?B?OG5PbndUWGJ3SU40anZ6eFNkNmVIM2liVmtSOWl3UkppVHZNRTI1RGlwUHBI?=
- =?utf-8?B?dkJOTGtrZ0FTOUlqcTJXS2NTakltMU9IZUY5R1BSbFNWUUExZXFrdEgwbGdR?=
- =?utf-8?B?WURhZmtXamd1R3VoWTZkUGljbm83MlZydTYxeUFnNWNWeHpjV3hhczJyNmJV?=
- =?utf-8?B?enVWcFdZT2FVaGkwNFVOdzlHNC9iZWtIOXFRL1N1VGo4aXpUYW5FY2dPR296?=
- =?utf-8?B?cHpDZUV5STk5bTUvQWx6L2NHWEdEdmZPNjZ4UlRXYncwMTUyUjZVTVJINDdG?=
- =?utf-8?B?MmRScysrcG1XTXVoVzNDaHpVc2ZoWHU1UGl6WWl6ZkJYZnZ6N0V0QXVVSUtx?=
- =?utf-8?B?dGF5d2NXZWc3ejdJOEw4ZXUvZzcxK2lsRnpOZmhuMnRUMzM4dUZGdnR0RDJ0?=
- =?utf-8?B?NEFjMmVEVW5FOHZwUnJTOU1WOVo3TmpyVm5yZ1Q2ejhKb01wYlZzOVkzZDl4?=
- =?utf-8?B?VHVUUkJhRlZPUG9tZ21TQ1UzSUovZTFEd1RObmRjUWVBNjUrKzdRaHcyN0Iw?=
- =?utf-8?B?V1huTzQzNW9sTHZEdXQ0YjVDSVpLRU9zdTNXTlMybUFSMnUwNHp6b0g3R3J1?=
- =?utf-8?B?OTlHeHc2cGoxdUJIM09uVXVXYkJlYmRJU3ZFYXhKSkRDRi9oTXpSaTA1OVBT?=
- =?utf-8?B?V3RxVmxqQ3d0bWYrd0ZCV2szU3B4bHV5QzArKzJRNXhqOWJwaXUrdUlGWElx?=
- =?utf-8?B?ZllJY2VwSy94OGFGSzk3cENDNGNuUUFSZmF4Z2ZQRktGOGVWMjk2L2YwcUlV?=
- =?utf-8?Q?vOUya1dA4IxB7YT3KJpm5IKl5?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: c350a0e5-cd95-415a-ea55-08dc33809acf
-X-MS-Exchange-CrossTenant-AuthSource: SN7PR11MB7540.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Feb 2024 08:31:02.8941
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: quXv/iDF7xWnTiqsvTCgHbUG3MWWc041nrubvajIF/MxMC0IbcchfUt3r0BbcRHgfrhWOWOZTIc0khObx2aeqA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW6PR11MB8391
-X-OriginatorOrg: intel.com
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="27unys4ydult4g2a"
+Content-Disposition: inline
+In-Reply-To: <TYCPR01MB11269B83A59650E230F4DD97F86562@TYCPR01MB11269.jpnprd01.prod.outlook.com>
 
-On 2024/2/21 23:19, Jason Gunthorpe wrote:
-> On Thu, Feb 08, 2024 at 12:23:02AM -0800, Yi Liu wrote:
->> If a domain is used as the parent in nested translation its mappings might
->> be cached using DID of the nested domain. But the existing code ignores
->> this fact to only invalidate the iotlb entries tagged by the domain's own
->> DID.
-> 
->> Loop the s1_domains list, if any, to invalidate all iotlb entries related
->> to the target s2 address range. According to VT-d spec there is no need for
->> software to explicitly flush the affected s1 cache. It's implicitly done by
->> HW when s2 cache is invalidated.
-> 
-> I had to look this up to understand what it means.. The HW caches
-> per-DID and if you invalidate the DID's S2 then the HW flushes the S1
-> as well within that DID only.
 
-yes.
+--27unys4ydult4g2a
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> 
-> It doesn't mean that the S2 is globally shared across all the nesting
-> translations (like ARM does), and you still have to iterate over every
-> nesting DID.
-> 
-> In light of that this design seems to have gone a bit off..
-> 
-> A domain should have a list of places that need invalidation,
-> specifically a list of DIDs and ATCs that need an invalidation to be
-> issued.
-> 
-> Instead we now somehow have 4 different lists in the domain the
-> invalidation code iterates over?
-> 
-> So I would think this:
-> 
-> struct dmar_domain {
-> 	struct xarray iommu_array;	/* Attached IOMMU array */
-> 	struct list_head devices;	/* all devices' list */
-> 	struct list_head dev_pasids;	/* all attached pasids */
-> 	struct list_head s1_domains;
-> 
-> Would make sense to be collapsed into one logical list of attached
-> devices:
-> 
-> struct intel_iommu_domain_attachment {
->     unsigned int did;
->     ioasid_t pasid;
->     struct device_domain_info *info;
->     list_head item;
-> };
-> 
-> When you attach a S1/S2 nest you allocate two of the above structs and
-> one is linked on the S1 and one is linked on the S2..
+Hi Biju,
 
-yes, this shall work. ATC flushing should be fine. But there can be a
-drawback when flushing DIDs. VT-d side, if there are multiple devices
-behind the same iommu unit, just need one DID flushing is enough. But
-after the above change, the number of DID flushing would increase per
-the number of devices. Although no functional issue, but it submits
-duplicated invalidation.
+On Thu, Feb 22, 2024 at 08:14:14AM +0000, Biju Das wrote:
+> > -----Original Message-----
+> > From: Stephen Rothwell <sfr@canb.auug.org.au>
+> > Sent: Thursday, February 22, 2024 1:46 AM
+> > Subject: linux-next: build failure after merge of the drm-misc tree
+> >=20
+> > Hi all,
+> >=20
+> > After merging the drm-misc tree, today's linux-next build (x86_64
+> > allmodconfig) failed like this:
+> >=20
+> > drivers/gpu/drm/renesas/rz-du/rzg2l_du_vsp.c:47:6: error: redefinition =
+of
+> > 'rzg2l_du_vsp_enable'
+> >    47 | void rzg2l_du_vsp_enable(struct rzg2l_du_crtc *crtc)
+> >       |      ^~~~~~~~~~~~~~~~~~~
+> > In file included from drivers/gpu/drm/renesas/rz-du/rzg2l_du_drv.h:18,
+> >                  from drivers/gpu/drm/renesas/rz-du/rzg2l_du_vsp.c:30:
+> > drivers/gpu/drm/renesas/rz-du/rzg2l_du_vsp.h:72:20: note: previous
+> > definition of 'rzg2l_du_vsp_enable' with type 'void(struct rzg2l_du_crtc
+> > *)'
+> >    72 | static inline void rzg2l_du_vsp_enable(struct rzg2l_du_crtc *cr=
+tc)
+> > { };
+> >       |                    ^~~~~~~~~~~~~~~~~~~
+> > drivers/gpu/drm/renesas/rz-du/rzg2l_du_vsp.c:61:6: error: redefinition =
+of
+> > 'rzg2l_du_vsp_disable'
+> >    61 | void rzg2l_du_vsp_disable(struct rzg2l_du_crtc *crtc)
+> >       |      ^~~~~~~~~~~~~~~~~~~~
+> > drivers/gpu/drm/renesas/rz-du/rzg2l_du_vsp.h:73:20: note: previous
+> > definition of 'rzg2l_du_vsp_disable' with type 'void(struct rzg2l_du_cr=
+tc
+> > *)'
+> >    73 | static inline void rzg2l_du_vsp_disable(struct rzg2l_du_crtc
+> > *crtc) { };
+> >       |                    ^~~~~~~~~~~~~~~~~~~~
+> > drivers/gpu/drm/renesas/rz-du/rzg2l_du_vsp.c:66:6: error: redefinition =
+of
+> > 'rzg2l_du_vsp_atomic_flush'
+> >    66 | void rzg2l_du_vsp_atomic_flush(struct rzg2l_du_crtc *crtc)
+> >       |      ^~~~~~~~~~~~~~~~~~~~~~~~~
+> > drivers/gpu/drm/renesas/rz-du/rzg2l_du_vsp.h:74:20: note: previous
+> > definition of 'rzg2l_du_vsp_atomic_flush' with type 'void(struct
+> > rzg2l_du_crtc *)'
+> >    74 | static inline void rzg2l_du_vsp_atomic_flush(struct rzg2l_du_cr=
+tc
+> > *crtc) { };
+> >       |                    ^~~~~~~~~~~~~~~~~~~~~~~~~
+> > drivers/gpu/drm/renesas/rz-du/rzg2l_du_vsp.c:76:19: error: redefinition=
+ of
+> > 'rzg2l_du_vsp_get_drm_plane'
+> >    76 | struct drm_plane *rzg2l_du_vsp_get_drm_plane(struct rzg2l_du_cr=
+tc
+> > *crtc,
+> >       |                   ^~~~~~~~~~~~~~~~~~~~~~~~~~
+> > drivers/gpu/drm/renesas/rz-du/rzg2l_du_vsp.h:75:33: note: previous
+> > definition of 'rzg2l_du_vsp_get_drm_plane' with type 'struct drm_plane
+> > *(struct rzg2l_du_crtc *, unsigned int)'
+> >    75 | static inline struct drm_plane *rzg2l_du_vsp_get_drm_plane(stru=
+ct
+> > rzg2l_du_crtc *crtc,
+> >       |                                 ^~~~~~~~~~~~~~~~~~~~~~~~~~
+> > drivers/gpu/drm/renesas/rz-du/rzg2l_du_vsp.c:302:5: error: redefinition=
+ of
+> > 'rzg2l_du_vsp_init'
+> >   302 | int rzg2l_du_vsp_init(struct rzg2l_du_vsp *vsp, struct device_n=
+ode
+> > *np,
+> >       |     ^~~~~~~~~~~~~~~~~
+> > drivers/gpu/drm/renesas/rz-du/rzg2l_du_vsp.h:66:19: note: previous
+> > definition of 'rzg2l_du_vsp_init' with type 'int(struct rzg2l_du_vsp *,
+> > struct device_node *, unsigned int)'
+> >    66 | static inline int rzg2l_du_vsp_init(struct rzg2l_du_vsp *vsp,
+> > struct device_node *np,
+> >       |                   ^~~~~~~~~~~~~~~~~
+> >=20
+> > Caused by commit
+> >=20
+> >   768e9e61b3b9 ("drm: renesas: Add RZ/G2L DU Support")
+> >=20
+> > I have used the drm-misc tree from next-20240221 for today.
+>=20
+> I will send an incremental patch to fix this build error with x86 on drm-=
+next.
 
--- 
-Regards,
-Yi Liu
+Any chance you can do it today? We need to send the drm-misc-next PR.
+
+Maxime
+
+--27unys4ydult4g2a
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCZdcGiAAKCRDj7w1vZxhR
+xeWEAQDsnNF+oM0G4cjC34BmXGz+r23Jn7SE6VAbXNQULFhk2QD9FOJWgAdMVDMF
+iQ8KOfo32ZmEWCJgyT0sNdl2ytAtVwI=
+=zRxw
+-----END PGP SIGNATURE-----
+
+--27unys4ydult4g2a--
