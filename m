@@ -1,104 +1,111 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f174.google.com (mail-yw1-f174.google.com [209.85.128.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC642376ED;
-	Thu, 22 Feb 2024 09:10:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 753AC17BA5
+	for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 09:12:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708593047; cv=none; b=ieixCSBVpzzLJXJCVnA3NGCx/fxe7u/3J3TKym92pTfZWkg72ENAarhsQlN+A3AIP7LElPopQFAqDEEXkC3Mp6DSE8CXg6zifMFgaG4KHM36vBUdtK/swqGRR1xehtj/iGZUT1N2BC2SJsfyOeHfCegn0gn5ewrqYrMeolZx+fI=
+	t=1708593135; cv=none; b=tyZK0tCanA7SzHjnxz7H6icV4pytCkSHUZ3z3a5ng7WU8RITZTm8tzfyxwZXvcOMLiK37dHBjOGR+SNb3q5T3EwYf63KshLpR2APTta2uJLpXxLC99HPUew3f7OGJs5eg3OYO2tURl6HlBt/vJoAL+anNaUjuhJh+4opOY+xDFE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708593047; c=relaxed/simple;
-	bh=7wttezoz+r/aHCzYQdvjMewRzciTsCi285NrSpusK4E=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=oW+EsNslPE2Je4tAVlvnPd6oQcTccOlWHw5rkYIzjugVZaUIFVrZlDDvZEBy7nYGVj8ezPc+Eu+Ifeao4Xk0mK4Fkcvay2lablB7D+FWB/K9i8kICKF2yOmgXo0MRLYoEEU5xPJkpQq1uhKsjkbJhWARVAQQt4GIMGhsU6Ck1bU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 36592C433F1;
-	Thu, 22 Feb 2024 09:10:45 +0000 (UTC)
-From: Huacai Chen <chenhuacai@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: loongarch@lists.linux.dev,
-	Guo Ren <guoren@kernel.org>,
-	Xuerui Wang <kernel@xen0n.name>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	linux-kernel@vger.kernel.org,
-	loongson-kernel@lists.loongnix.cn,
-	Huacai Chen <chenhuacai@loongson.cn>
-Subject: [PATCH] LoongArch: Disable IRQ before init_fn() for nonboot CPUs
-Date: Thu, 22 Feb 2024 17:10:08 +0800
-Message-ID: <20240222091008.162191-1-chenhuacai@loongson.cn>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1708593135; c=relaxed/simple;
+	bh=z9T05dNkM1r6NxsCZngQ+Qju6WkQcnD11AhPfxXCcnI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=gE6pcV+SbU4iEck0F4cRh60J6p0IjyMKxJCvk1BVY4FtosKo0UHmOP4thO2AP/iEt68vJXyeXTQOOVqTHJNOcqvST303DpWAlA36q4tHiuuCj+LLwhAmooUJ3+BnjV1Jzf3bHkyviUqH3p35Zingv4ev8e08fTrH356AUskNpdM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=URAfW3qE; arc=none smtp.client-ip=209.85.128.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="URAfW3qE"
+Received: by mail-yw1-f174.google.com with SMTP id 00721157ae682-60884277a6dso16389367b3.1
+        for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 01:12:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1708593133; x=1709197933; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=YKZOJI94hns0qguJ0N4+oB2V4yWPo7fIc3jkf6/qeWI=;
+        b=URAfW3qEv8ZwCFepu3H5pKPWg+9NWYpbe0s3OR3Ml5aL7x1tk8cBM2XM/GilDH2DX7
+         s0EOuUZpX1EDIvhHqZzBbPxg9RocmvedOeJCcTB15AWPg04VoOolleSddfrbcHrBZZpp
+         NCwTDkl2P97t8XTvj4uSslEqLP8GCzaOTZ5IrTRwarjMmz0KD1g3t1L4gsBZMuEFwE3G
+         tP7OFxsrI6yOz7mHSCdEgs2FsHShq/b+z02VOcKTT6fD2To1/v1UOWjnRTKLOu4LZ4ML
+         yuFHmJG6FMiQFRX4u+jfiRqrCHURKNfemrhAjoPHgdS5MTdGNXMo+sbyEQS/hOol5YDu
+         d5hg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708593133; x=1709197933;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=YKZOJI94hns0qguJ0N4+oB2V4yWPo7fIc3jkf6/qeWI=;
+        b=TvB4k0Muouv+fCkAUNZBHM8v9ILuoBabeCtDLdAwdoio+DTYdrb1+j6cm8uLP2ljZi
+         uhFWvTYTCc3VX+NkQIdodEdEKseq89vxot3Qqy1ChaeG9VWJdf9LFtLm74wwm4n3I0oS
+         dNOBw6AB7/biCdRPFR6m10wMklibp/iN4wxJxN/hTQZ7P6nVQJqZ78XeCuueWx2kEbE2
+         +tR1+BMNP3zzCf1P4XM4w9noDP3B95fT4Y9F9qb2t5kTbYJkKLZfVTYMGMA/p1QZAdMY
+         x1k1MOEh5oeEjU3SKU1NqCY4A1nB5xw6KxxP0DhSS4UmsY9I8ep9shAXo2hNKKB50BPM
+         G3fA==
+X-Forwarded-Encrypted: i=1; AJvYcCWhlBFFXFcOJPsDNqldWyiiW0pQ4A6pINZQN66FoxUFfXJQ+gzKIl/cjHd1xfKpmXkVT+J4Kgx0FSdNbjYHzVd8Fn+A2ncyxiTRxffo
+X-Gm-Message-State: AOJu0YyKflM18/wrVvaeWbs/JEHwjmYXrLSzjGcI+4CozGIf0RrdUml5
+	SMGQ/Ms+iHiG01/AdqqV1Jas8MPPTZa/9t6truJuMDAQB3It58cTprlix+pJfj7MOL8+y9umUXT
+	FB8zi3GhNLBeA5uL0KswEngWzia7dT2kAO96g/Yer
+X-Google-Smtp-Source: AGHT+IGZiyqVnGzeLuwRRcGJ0RsP/nv30kjzkOKbWuJEbCEc2gzNhlwSqQreoayCLtVYURajcgaVCsgUGjjhMnTdOp4=
+X-Received: by 2002:a81:9945:0:b0:607:d9fb:5144 with SMTP id
+ q66-20020a819945000000b00607d9fb5144mr18703425ywg.13.1708593131796; Thu, 22
+ Feb 2024 01:12:11 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240129054551.57728-1-ioworker0@gmail.com> <CAK1f24keWtJNVv37r2vNsqnmMLRMvF-F76WR5RD_Y-BbAgEaYQ@mail.gmail.com>
+ <CAK1f24nk19eciysFqvTd=rqpiKePhstDWEEQ_mvT89WCDNrWNQ@mail.gmail.com> <84fc211a-075d-44c7-a4c3-698931b6dc7c@redhat.com>
+In-Reply-To: <84fc211a-075d-44c7-a4c3-698931b6dc7c@redhat.com>
+From: Lance Yang <ioworker0@gmail.com>
+Date: Thu, 22 Feb 2024 17:12:00 +0800
+Message-ID: <CAK1f24kL_XHsOJ-m30t17bSBnV9wpam33Hmcpf7baT87Yt5FrA@mail.gmail.com>
+Subject: Re: [PATCH 1/1] mm/khugepaged: bypassing unnecessary scans with
+ MMF_DISABLE_THP check
+To: David Hildenbrand <david@redhat.com>
+Cc: akpm@linux-foundation.org, mhocko@suse.com, zokeefe@google.com, 
+	songmuchun@bytedance.com, shy828301@gmail.com, peterx@redhat.com, 
+	minchan@kernel.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Disable IRQ before init_fn() for nonboot CPUs when hotplug, in order to
-silence such warnings (and also avoid potential errors due to unexpected
-interrupts):
+Thanks, David!
 
-WARNING: CPU: 1 PID: 0 at kernel/rcu/tree.c:4503 rcu_cpu_starting+0x214/0x280
-CPU: 1 PID: 0 Comm: swapper/1 Not tainted 6.6.17+ #1198
-pc 90000000048e3334 ra 90000000047bd56c tp 900000010039c000 sp 900000010039fdd0
-a0 0000000000000001 a1 0000000000000006 a2 900000000802c040 a3 0000000000000000
-a4 0000000000000001 a5 0000000000000004 a6 0000000000000000 a7 90000000048e3f4c
-t0 0000000000000001 t1 9000000005c70968 t2 0000000004000000 t3 000000000005e56e
-t4 00000000000002e4 t5 0000000000001000 t6 ffffffff80000000 t7 0000000000040000
-t8 9000000007931638 u0 0000000000000006 s9 0000000000000004 s0 0000000000000001
-s1 9000000006356ac0 s2 9000000007244000 s3 0000000000000001 s4 0000000000000001
-s5 900000000636f000 s6 7fffffffffffffff s7 9000000002123940 s8 9000000001ca55f8
-   ra: 90000000047bd56c tlb_init+0x24c/0x528
-  ERA: 90000000048e3334 rcu_cpu_starting+0x214/0x280
- CRMD: 000000b0 (PLV0 -IE -DA +PG DACF=CC DACM=CC -WE)
- PRMD: 00000000 (PPLV0 -PIE -PWE)
- EUEN: 00000000 (-FPE -SXE -ASXE -BTE)
- ECFG: 00071000 (LIE=12 VS=7)
-ESTAT: 000c0000 [BRK] (IS= ECode=12 EsubCode=0)
- PRID: 0014c010 (Loongson-64bit, Loongson-3A5000)
-CPU: 1 PID: 0 Comm: swapper/1 Not tainted 6.6.17+ #1198
-Stack : 0000000000000000 9000000006375000 9000000005b61878 900000010039c000
-        900000010039fa30 0000000000000000 900000010039fa38 900000000619a140
-        9000000006456888 9000000006456880 900000010039f950 0000000000000001
-        0000000000000001 cb0cb028ec7e52e1 0000000002b90000 9000000100348700
-        0000000000000000 0000000000000001 ffffffff916d12f1 0000000000000003
-        0000000000040000 9000000007930370 0000000002b90000 0000000000000004
-        9000000006366000 900000000619a140 0000000000000000 0000000000000004
-        0000000000000000 0000000000000009 ffffffffffc681f2 9000000002123940
-        9000000001ca55f8 9000000006366000 90000000047a4828 00007ffff057ded8
-        00000000000000b0 0000000000000000 0000000000000000 0000000000071000
-        ...
-Call Trace:
-[<90000000047a4828>] show_stack+0x48/0x1a0
-[<9000000005b61874>] dump_stack_lvl+0x84/0xcc
-[<90000000047f60ac>] __warn+0x8c/0x1e0
-[<9000000005b0ab34>] report_bug+0x1b4/0x280
-[<9000000005b63110>] do_bp+0x2d0/0x480
-[<90000000047a2e20>] handle_bp+0x120/0x1c0
-[<90000000048e3334>] rcu_cpu_starting+0x214/0x280
-[<90000000047bd568>] tlb_init+0x248/0x528
-[<90000000047a4c44>] per_cpu_trap_init+0x124/0x160
-[<90000000047a19f4>] cpu_probe+0x494/0xa00
-[<90000000047b551c>] start_secondary+0x3c/0xc0
-[<9000000005b66134>] smpboot_entry+0x50/0x58
-
-Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
----
- arch/loongarch/kernel/smp.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/arch/loongarch/kernel/smp.c b/arch/loongarch/kernel/smp.c
-index 20a355478c6c..9b07dd5b60bb 100644
---- a/arch/loongarch/kernel/smp.c
-+++ b/arch/loongarch/kernel/smp.c
-@@ -334,6 +334,7 @@ void __noreturn arch_cpu_idle_dead(void)
- 		addr = iocsr_read64(LOONGARCH_IOCSR_MBUF0);
- 	} while (addr == 0);
- 
-+	local_irq_disable();
- 	init_fn = (void *)TO_CACHE(addr);
- 	iocsr_write32(0xffffffff, LOONGARCH_IOCSR_IPI_CLEAR);
- 
--- 
-2.43.0
-
+On Thu, Feb 22, 2024 at 4:51=E2=80=AFPM David Hildenbrand <david@redhat.com=
+> wrote:
+>
+> On 22.02.24 08:51, Lance Yang wrote:
+> > Hey,
+> >
+> > On an Intel Core i5 CPU, the time taken by
+> > khugepaged to scan the address space of
+> > the process, which has been set with the
+> > MMF_DISABLE_THP flag after being added
+> > to the mm_slots list, is as follows (shorter is better):
+> >
+> > VMA Count |   Old   |   New   |  Change
+> > ---------------------------------------
+> >      50     |   23us  |    9us  |  -60.9%
+> >     100     |   32us  |    9us  |  -71.9%
+> >     200     |   44us  |    9us  |  -79.5%
+> >     400     |   75us  |    9us  |  -88.0%
+> >     800     |   98us  |    9us  |  -90.8%
+> >
+> > IIUC, once the count of VMAs for the process
+> > exceeds page_to_scan, khugepaged needs to
+> > wait for scan_sleep_millisecs ms before scanning
+> > the next process. IMO, unnecessary scans could
+> > actually be skipped with a very inexpensive
+> > mm->flags check in this case.
+>
+> FWIW
+>
+> Acked-by: David Hildenbrand <david@redhat.com>
+>
+> --
+> Cheers,
+>
+> David / dhildenb
+>
