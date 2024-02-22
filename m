@@ -1,36 +1,45 @@
-Received: from mail-sh.amlogic.com (mail-sh.amlogic.com [58.32.228.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from dggsgout12.his.huawei.com (unknown [45.249.212.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 758871863E;
-	Thu, 22 Feb 2024 08:02:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=58.32.228.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6741817BA5;
+	Thu, 22 Feb 2024 08:03:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708588954; cv=none; b=OQAMmzdCP3OMmVjRJGtaJ30Q+cO8dR0gDNvciePeBU0Wg0EROfncvr0+rA09f6COvv/5kBKLL+0XHx/aZ9tuF4h6xPGbQO37MoBIOoOwEToEvzRyB0rqdJvx669LuFNNBo9e526yFpObj7h8H3t8TBh+rjC3iQ3V96ryY3Or0TM=
+	t=1708589035; cv=none; b=drRtQtx6Tx3YQYjG+ApcdQUouHS2pz+HhBmOstaGqWGlvml6IOotImGanmhfGZ2OpNB1qjxU96STSkRamT1akWAksiR0SgIK31VBk4TsNFUZ3YEQbMg0jlxTdr+FXci9am/MrMnRfIxkzYDHzI0EIwqJbDPEABF4NQd2sWmq9xY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708588954; c=relaxed/simple;
-	bh=0i4fJdV4oWd0UtPBLzel1D30DZMFT1rhF4jCxciFWeA=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=hG8cOXlqnRNd77kyIKqiUbK8o8dP5fQBocCeG3dvIp7V/Z5bee8Mr0o07RTrzNSIte9arxI7RRVAfS0lYD6wjYX6CxTlG6glRrXXAsWLISgoycN0s9LN5V8c9plALcUGnw0oxvtrN7IpgcPnx28QDDRkh1tTZXKlBu8Zq6WcbJU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=amlogic.com; spf=pass smtp.mailfrom=amlogic.com; arc=none smtp.client-ip=58.32.228.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=amlogic.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amlogic.com
-Received: from rd02-sz.amlogic.software (10.28.11.83) by mail-sh.amlogic.com
- (10.18.11.5) with Microsoft SMTP Server id 15.1.2507.6; Thu, 22 Feb 2024
- 15:47:18 +0800
-From: Huqiang Qin <huqiang.qin@amlogic.com>
-To: <tglx@linutronix.de>, <robh+dt@kernel.org>,
-	<krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
-	<neil.armstrong@linaro.org>, <khilman@baylibre.com>, <jbrunet@baylibre.com>,
-	<martin.blumenstingl@googlemail.com>, <hkallweit1@gmail.com>
-CC: <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-amlogic@lists.infradead.org>,
-	Huqiang Qin <huqiang.qin@amlogic.com>
-Subject: [RESEND PATCH 3/3] arm64: dts: Add gpio_intc node for Amlogic-T7 SoCs
-Date: Thu, 22 Feb 2024 15:46:39 +0800
-Message-ID: <20240222074640.1866284-4-huqiang.qin@amlogic.com>
-X-Mailer: git-send-email 2.42.0
-In-Reply-To: <20240222074640.1866284-1-huqiang.qin@amlogic.com>
-References: <20240222074640.1866284-1-huqiang.qin@amlogic.com>
+	s=arc-20240116; t=1708589035; c=relaxed/simple;
+	bh=7kVlrLuEO2gutpZPXDh7f0UW3JTtGoXwSbJoDBPqEpI=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=IfRmd7nCKV9vHGANrEm5Vowy2lA/P5FD57FPBACSV+4PeOznh+Z9sJ3IpOPo2exHXZokrD3ua2ag/y5DSYtPjdWq6+bFjjU0sUSnVQ8qj4THPyeVrFB9mfXi/oCrT6m77FT915ZDohsAF2/ahkA7/TG+DDjgNz6l6hhzAT7ZmNY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.216])
+	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4TgQdB2pnKz4f3l7J;
+	Thu, 22 Feb 2024 16:03:42 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.112])
+	by mail.maildlp.com (Postfix) with ESMTP id 6802E1A1051;
+	Thu, 22 Feb 2024 16:03:47 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.175.104.67])
+	by APP1 (Coremail) with SMTP id cCh0CgBXKBHc_9ZlnaUhEw--.37287S8;
+	Thu, 22 Feb 2024 16:03:47 +0800 (CST)
+From: Yu Kuai <yukuai1@huaweicloud.com>
+To: paul.e.luse@linux.intel.com,
+	song@kernel.org,
+	neilb@suse.com,
+	shli@fb.com
+Cc: linux-raid@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	yukuai3@huawei.com,
+	yukuai1@huaweicloud.com,
+	yi.zhang@huawei.com,
+	yangerkun@huawei.com
+Subject: [PATCH md-6.9 04/10] md/raid1-10: add a helper raid1_check_read_range()
+Date: Thu, 22 Feb 2024 15:58:00 +0800
+Message-Id: <20240222075806.1816400-5-yukuai1@huaweicloud.com>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240222075806.1816400-1-yukuai1@huaweicloud.com>
+References: <20240222075806.1816400-1-yukuai1@huaweicloud.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -38,37 +47,96 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+X-CM-TRANSID:cCh0CgBXKBHc_9ZlnaUhEw--.37287S8
+X-Coremail-Antispam: 1UD129KBjvJXoW7AFy8Zw15tr4rJr43Jw47urg_yoW8KryDpr
+	4Yya43tr1UK3y3W3W3uF1xCw1FyayfWFW8GrWfX3WDWry5Ga9akFykJryjgFyDWry3Xw12
+	qa1jvrWxua47CaDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUPY14x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_JF0E3s1l82xGYI
+	kIc2x26xkF7I0E14v26ryj6s0DM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2
+	z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F
+	4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq
+	3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7
+	IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4U
+	M4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628vn2
+	kIc2xKxwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E
+	14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIx
+	kGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAF
+	wI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r
+	4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUQSdkU
+	UUUU=
+X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 
-Add GPIO interrupt controller device.
+From: Yu Kuai <yukuai3@huawei.com>
 
-Signed-off-by: Huqiang Qin <huqiang.qin@amlogic.com>
-Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
+The checking and handler of bad blocks appear many timers during
+read_balance() in raid1 and raid10. This helper will be used in later
+patches to simplify read_balance() a lot.
+
+Co-developed-by: Paul Luse <paul.e.luse@linux.intel.com>
+Signed-off-by: Paul Luse <paul.e.luse@linux.intel.com>
+Signed-off-by: Yu Kuai <yukuai3@huawei.com>
 ---
- arch/arm64/boot/dts/amlogic/amlogic-t7.dtsi | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ drivers/md/raid1-10.c | 49 +++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 49 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/amlogic/amlogic-t7.dtsi b/arch/arm64/boot/dts/amlogic/amlogic-t7.dtsi
-index ad1cac42e9d8..5248bdf824ea 100644
---- a/arch/arm64/boot/dts/amlogic/amlogic-t7.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/amlogic-t7.dtsi
-@@ -171,6 +171,16 @@ gpio: bank@4000 {
- 				};
- 			};
+diff --git a/drivers/md/raid1-10.c b/drivers/md/raid1-10.c
+index 512746551f36..9bc0f0022a6c 100644
+--- a/drivers/md/raid1-10.c
++++ b/drivers/md/raid1-10.c
+@@ -227,3 +227,52 @@ static inline bool exceed_read_errors(struct mddev *mddev, struct md_rdev *rdev)
  
-+			gpio_intc: interrupt-controller@4080 {
-+				compatible = "amlogic,t7-gpio-intc",
-+					     "amlogic,meson-gpio-intc";
-+				reg = <0x0 0x4080 0x0 0x20>;
-+				interrupt-controller;
-+				#interrupt-cells = <2>;
-+				amlogic,channel-interrupts =
-+					<10 11 12 13 14 15 16 17 18 19 20 21>;
-+			};
+ 	return false;
+ }
 +
- 			uart_a: serial@78000 {
- 				compatible = "amlogic,t7-uart", "amlogic,meson-s4-uart";
- 				reg = <0x0 0x78000 0x0 0x18>;
++/**
++ * raid1_check_read_range() - check a given read range for bad blocks,
++ * available read length is returned;
++ * @rdev: the rdev to read;
++ * @this_sector: read position;
++ * @len: read length;
++ *
++ * helper function for read_balance()
++ *
++ * 1) If there are no bad blocks in the range, @len is returned;
++ * 2) If the range are all bad blocks, 0 is returned;
++ * 3) If there are partial bad blocks:
++ *  - If the bad block range starts after @this_sector, the length of first
++ *  good region is returned;
++ *  - If the bad block range starts before @this_sector, 0 is returned and
++ *  the @len is updated to the offset into the region before we get to the
++ *  good blocks;
++ */
++static inline int raid1_check_read_range(struct md_rdev *rdev,
++					 sector_t this_sector, int *len)
++{
++	sector_t first_bad;
++	int bad_sectors;
++
++	/* no bad block overlap */
++	if (!is_badblock(rdev, this_sector, *len, &first_bad, &bad_sectors))
++		return *len;
++
++	/*
++	 * bad block range starts offset into our range so we can return the
++	 * number of sectors before the bad blocks start.
++	 */
++	if (first_bad > this_sector)
++		return first_bad - this_sector;
++
++	/* read range is fully consumed by bad blocks. */
++	if (this_sector + *len <= first_bad + bad_sectors)
++		return 0;
++
++	/*
++	 * final case, bad block range starts before or at the start of our
++	 * range but does not cover our entire range so we still return 0 but
++	 * update the length with the number of sectors before we get to the
++	 * good ones.
++	 */
++	*len = first_bad + bad_sectors - this_sector;
++	return 0;
++}
 -- 
-2.42.0
+2.39.2
 
