@@ -1,138 +1,58 @@
-Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4ED681426C;
-	Thu, 22 Feb 2024 05:33:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BAD16FBE;
+	Thu, 22 Feb 2024 05:36:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708580039; cv=none; b=uGzXe54B2+GKtpsLdI4zOasHA19/SzQb+SAofDF82IrJrQxMw6uXDFQ8EKhRVyrHn5NqVJTUA4bS2C/Gae0N9h5+NRRxMQ4SCKDbxoBcl22ptSl0V2B1j+1AvYbSJjmyiIhKnOBaMuV4TcUaFD6HXgju5Oa+z4WbHOusCyOD3YQ=
+	t=1708580175; cv=none; b=mIagZEdbz5Oa5qS4YZl7gs7/Uo3+Us1y3CxZs0c0v+mW9C6yzkCOzjr8fLuU+zfz4nKFAx073Ev4JNUfhYOSdhVB47upHljWA71DvQXK+fv/Bc4NypRfD9uYzwD86PaJUN9sgyfcKrloLj5uyhkqGmfww6g382NWujDuo09fNqc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708580039; c=relaxed/simple;
-	bh=x4hgtd5pbbZYAzpAWR0r/AY6F3nD8p1DTgVilbfppwc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=V5HT9DkST3+PEoJR0tDrCdc2CQzCOhHRjDKQJnIjcpia1lwiL6IarkqAgRhaKm46wiypEssi6utsoJNKWYoIyGDcdBHSE0OwQRppUSAZ7IvAm2+aWds0kDFjR+W1756UGo6sJMW7ORtzVeIGtmlWJkh27/TVZpHolW+VMundPU0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Qe2O986R; arc=none smtp.client-ip=209.85.167.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1708580175; c=relaxed/simple;
+	bh=ZKuX5+xYAEWUs36SnlYmDzgNCCJN5ePNHibRbrCTwas=;
+	h=Message-ID:Content-Type:MIME-Version:In-Reply-To:References:
+	 Subject:From:Cc:To:Date; b=Ai5BID6OWMG+WAiPjWf9B87ca3nlsPjDcXNd2Tq70KoInW9qTbKBTdUns2fkb0qCqSB6IjGYH3XIvMeZQ+1Rls5q4OQg0gPczZ3VoVFPKm8w6++aQK8J4IA3x5zM8Q9TbnTtSv0tHBsO+HhAkkvT7P+OTICzXHZwVp3tZ01lpA0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jHs3P6oU; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Qe2O986R"
-Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-512bb2ed1f7so5097975e87.3;
-        Wed, 21 Feb 2024 21:33:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1708580035; x=1709184835; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references
-         :mail-followup-to:message-id:subject:cc:to:from:date:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=DUAN6efcT0bwm6zf+7k6iWx7A/6BQJaaPLnjpw2xGcs=;
-        b=Qe2O986RNMCXCW4KKPXKoyNay5XRfTfliYMP+2unyHirYFhofOKA15hJefdJhIdFw4
-         qS5A1KIsV2JpfAYMDhz4J5FFEiK/0tY039NGPFVP66c7NrgEi/rSFMk5nuj0Js13HUZh
-         fYg2qHwbJOPm+1xm7Js0pzdN5AG2w09p/eLA/6e/8RRlUhVGq7NCmzGtS+vSSH35gZZu
-         s5o39VIOC+YxZAnijypqivkopFhjgVkCYbaJnPRY/pbC8LMp6OrSWGu7mMB45eLOe1yq
-         DOId88Ldc9jcPj/cPAYU0pPgEZUtwfAhhWAkw9xy3tPHegSs34JoRNuBLpkI2KGeSUlr
-         rEGg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708580035; x=1709184835;
-        h=in-reply-to:content-disposition:mime-version:references
-         :mail-followup-to:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=DUAN6efcT0bwm6zf+7k6iWx7A/6BQJaaPLnjpw2xGcs=;
-        b=n+ZZ7XtFfhM8oS8RH0KAyLa6GLOM4cZPBQJeojXViidmexP+15sU1w4W5A9taCmmp2
-         IpFvssGnOYfY0G9B0LhNoRrEMKDXA1Kjao0phPdeoJpS10/t8B78mFhc7Rlbh8Qa7KJT
-         UaPQ6zkmeTQvvni4pqGIjJEZhCN2d9v4TQadJBJ35SHBtu/zsxaxeQjgnRHekweyzVEb
-         XrpZzIwsl1zZLdPTGAas7O2d3J15QE/oCfOY2I0Rk2Q4CwUuLkHTbXlLRswhB2LNv7yR
-         7N0Tulrxr6oNul+QU6XurQ+VPUgcyfM+VOz9UGg6VX5QliaLAO7kMA+O83mpcgIszINC
-         fTcQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVvFxopj5jQyixmFWnW9ubKCP8IHLHuHa9JhpHxRw9Bkt1QL6AnaazZd1JoKBNA+vvQGP0GiZPtUbbI1onByjwYLPmNkR1PPjm7/rQOlP2q6z+Zmrr6TsWb8XPAGFgLAckvdWHfM0SFm/JPzXJZxEFnC7dCgrl5oyqLxvDX4p7qKv7dXuZR
-X-Gm-Message-State: AOJu0YzLNbJ9DE01NSqJGptp42vvv28DfCiFs726fjzRhReNbSBXkm8/
-	ZAp2Yyj6OSSUFkHOqyM+gcTUju36db1QInnJf0tdBKY7F87sDv2Q
-X-Google-Smtp-Source: AGHT+IFAXad3MqAXAgm35rjWrM8EHE/Gg+VKpRXvoL3j2ufoDYOCIJOoDXKaT3LricmVtYLIiDqDAg==
-X-Received: by 2002:ac2:4244:0:b0:512:b066:be25 with SMTP id m4-20020ac24244000000b00512b066be25mr7435726lfl.37.1708580035130;
-        Wed, 21 Feb 2024 21:33:55 -0800 (PST)
-Received: from localhost ([2a05:3580:f312:6c02:29d4:49b1:c3dc:494c])
-        by smtp.gmail.com with ESMTPSA id k24-20020a192d18000000b00512ab0bb96dsm1746745lfj.57.2024.02.21.21.33.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 21 Feb 2024 21:33:54 -0800 (PST)
-Date: Thu, 22 Feb 2024 08:33:54 +0300
-From: Andrey Skvortsov <andrej.skvortzov@gmail.com>
-To: Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: Alain Volmat <alain.volmat@foss.st.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>, linux-media@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	=?utf-8?Q?Ond=C5=99ej?= Jirman <megi@xff.cz>,
-	Pavel Machek <pavel@ucw.cz>,
-	Arnaud Ferraris <arnaud.ferraris@collabora.com>
-Subject: Re: [PATCH 1/2] dt-bindings: media: i2c: add galaxycore,gc2145 DVP
- bus support
-Message-ID: <ZdbcwrQG1etZkb3j@skv.local>
-Mail-Followup-To: Andrey Skvortsov <andrej.skvortzov@gmail.com>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Alain Volmat <alain.volmat@foss.st.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>, linux-media@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	=?utf-8?Q?Ond=C5=99ej?= Jirman <megi@xff.cz>,
-	Pavel Machek <pavel@ucw.cz>,
-	Arnaud Ferraris <arnaud.ferraris@collabora.com>
-References: <20240217220308.594883-1-andrej.skvortzov@gmail.com>
- <20240217220308.594883-2-andrej.skvortzov@gmail.com>
- <ZdSC_xulFQ84TtLT@kekkonen.localdomain>
- <ZdSDXQg2UDPvvSh6@kekkonen.localdomain>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jHs3P6oU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1724EC433F1;
+	Thu, 22 Feb 2024 05:36:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1708580175;
+	bh=ZKuX5+xYAEWUs36SnlYmDzgNCCJN5ePNHibRbrCTwas=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+	b=jHs3P6oUk+p4XiiM7mMECNwtjM1DSz1rASSdYy3vsJKO7hDlvDtxjn7o10qCELTsc
+	 wAAKzn7KWLtvBDvJ5rSW8+CCwlWdJYO1o8X6rkiRWUxh8MsWd55i4zKhQHnZTHXQrF
+	 WxtRPDsZnpUlNbbDiFnqUb7TxzLI9FSydAzyNBKDnmy/SlimfIWSBF6RboO9wuei5P
+	 dVKPMhwFkxR3C9zrhvMqp1yPpVlaF7pUZv815lnLgx3C1aN6zlrpnAtkj6PjgAQ873
+	 TJjFHZW1N4am6Ly0bOSEW7ePGV6C8nDJsNbPIs11SnanFXsIwPbppWpZ3FHu6Ghh6b
+	 wYHVHCRxR3UsQ==
+Message-ID: <f2e3fa8683ccb3880fd1852598f0f3df.sboyd@kernel.org>
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <ZdSDXQg2UDPvvSh6@kekkonen.localdomain>
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20240216140132.2108665-1-colin.i.king@gmail.com>
+References: <20240216140132.2108665-1-colin.i.king@gmail.com>
+Subject: Re: [PATCH][next] clk: cdce925: Remove redundant assignment to variable 'rate'
+From: Stephen Boyd <sboyd@kernel.org>
+Cc: kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Colin Ian King <colin.i.king@gmail.com>, Michael Turquette <mturquette@baylibre.com>, linux-clk@vger.kernel.org
+Date: Wed, 21 Feb 2024 21:36:12 -0800
+User-Agent: alot/0.10
 
-Hi Sakari,
+Quoting Colin Ian King (2024-02-16 06:01:32)
+> The variable 'rate' being assigned a value that is never read, the
+> assignment is redundant and can be removed.
+>=20
+> Cleans up clang scan build warning:
+> drivers/clk/clk-cdce925.c:104:3: warning: Value stored to 'rate' is
+> never read [deadcode.DeadStores]
+>=20
+> Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
+> ---
 
-On 24-02-20 10:47, Sakari Ailus wrote:
-> On Tue, Feb 20, 2024 at 10:46:23AM +0000, Sakari Ailus wrote:
-> > Hi Andrey,
-> > 
-> > Thanks for the patchset.
-> > 
-> > On Sun, Feb 18, 2024 at 01:03:07AM +0300, Andrey Skvortsov wrote:
-> > > Don't require link-frequencies like it's done for ov5640, that
-> > > supports both CSI-2 and DVP. And v4l2_fwnode_endpoint_alloc_parse
-> > > ignores link-frequencies property for DVP endpoint. It's used only for
-> > > CSI-2 endpoints
-> > > 
-> > > Signed-off-by: Andrey Skvortsov <andrej.skvortzov@gmail.com>
-> > > ---
-> > >  .../bindings/media/i2c/galaxycore,gc2145.yaml | 33 +++++++++++++++++--
-> > >  1 file changed, 30 insertions(+), 3 deletions(-)
-> > > 
-> > > diff --git a/Documentation/devicetree/bindings/media/i2c/galaxycore,gc2145.yaml b/Documentation/devicetree/bindings/media/i2c/galaxycore,gc2145.yaml
-> > > index 1726ecca4c77..fb376b9d0f2a 100644
-> > > --- a/Documentation/devicetree/bindings/media/i2c/galaxycore,gc2145.yaml
-> > > +++ b/Documentation/devicetree/bindings/media/i2c/galaxycore,gc2145.yaml
-> > > @@ -61,9 +61,6 @@ properties:
-> > >          properties:
-> > >            link-frequencies: true
-> > >  
-> > > -        required:
-> > > -          - link-frequencies
-> > 
-> > That seems like a bad idea to me.
-> > 
-> > While for parallel interface it may not be often important, for CSI-2 it
-> > should stay.
-> 
-> You're also missing the bus-type property which should default to CSI-2
-> D-PHY.
-
-I'll add this type and make link-frequencies required based on that
-for CSI-2 bus.
-
--- 
-Best regards,
-Andrey Skvortsov
+Applied to clk-next
