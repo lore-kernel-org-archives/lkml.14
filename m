@@ -1,188 +1,85 @@
-Received: from mail-oi1-f176.google.com (mail-oi1-f176.google.com [209.85.167.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12F4041740
-	for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 09:42:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86EDF37152;
+	Thu, 22 Feb 2024 09:42:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.255
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708594923; cv=none; b=lsBsH5AG/Ro7n5NYx7omv50xvGxsQDD/VSH32y6w7huQsJnTLWc6JtKXqSJvrEgh7s8d3MVhuGiKw6xqdmMpRk5nTdYTkj5tl+JHLji+buNskOquOeXHKpXXjCUY4YI+u83VCsp7vGP2P39HbhUyZ7rzC3WYVpow2SI+mPBntWk=
+	t=1708594930; cv=none; b=ivmb15ob6BD6qEs1C6XuoMisCSEH1U4dWfQ0Ev4ulwqeF00u8PGoBIjNFjU3V6p/VHEWgPJ1ofNpNsUGyb9X0YXm4z55C7fsjjy034hx22SVCXI5OKiznsIQJ7ndzoL1GwDRD3p1ZZ1ZD6cayQazn7S28SVJl1RcYmvSSl+tz+A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708594923; c=relaxed/simple;
-	bh=Jq677SKEM38g+jVBPgtBStA3mG/f0yhqJeCpfC43444=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=nevaDFtacOwI1A1HbSHFTAMx1xXj0GakB/0ZxWOXblZ0Tq8ryAK9bOv/RAVEXNW49PZCRXRncUIaD8ObPr4hgi5ylArD0ziRbO7CjgYUIVtXz1QAnWE2kWiEJhFhW1nVCKiQiQl1nYow/bx4sDm5+b1r+YnCYD4Sm0pL7zQMkv4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=NFcAwanV; arc=none smtp.client-ip=209.85.167.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="NFcAwanV"
-Received: by mail-oi1-f176.google.com with SMTP id 5614622812f47-3bbc649c275so886710b6e.0
-        for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 01:42:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ventanamicro.com; s=google; t=1708594921; x=1709199721; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=jp730QJfPl3UdF1ypk+MZODRkE+rBOU76pBYGEsA07M=;
-        b=NFcAwanVdKMVs3nU5BCxVeQJXw6m+Vxul+lah+Ogbie/SNPcCxrlRr5n2idMh/ET6z
-         cSg4MlR3jkAmwcuhZKQXgT14PhPgW/brCSFJpVaUBZJjN+szIDXJLxtb6Su8QTPFJaq6
-         g0nfMU+1YSYooc7Q9Jy0OT5fj7AnGyjCb0HrCG5mf2ZQpS1UqOSnAr6733PFQwr1FaY2
-         56cp5LyTqzfAw7ei5vcdqe0p5UJaEmvlkV3xsNB96XDWHPC5EeGrzwkg6FEwM/Fpgs4u
-         jyuCC01XWd6np050FM5pYNDj2hBUqnk2bgJH0+KZinKzD7ppWzDiL4SGtYZHj1xMabDd
-         6sPQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708594921; x=1709199721;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=jp730QJfPl3UdF1ypk+MZODRkE+rBOU76pBYGEsA07M=;
-        b=s+1yhPYKJmNnEZOgULhXN+X5KZmdqBnTTRl6ZSdS7Me4V+uq+wrtS/k5+vyA/ADf4N
-         qCaXOZt0nYjHIn0yiyxSN/7ZAM0jFHTLGoGLK+l2mZXGfpeVUkw4TyZFd4Fls4YYhxBf
-         oBav85rrTE9h1T7x4XdjjNQsEM7oPjytyjhewmWD0lGmu+IEGNVy0p8nDrdY2UhltCZq
-         EZ2pcJ0i0xHzAqqjMBjUMKC1fqVX5HGG6xUPDrdMUxVoOSiHMK4miC9sYA0vEIYkY1qf
-         zWilj9ypqGSq/kFyFoy/MYBrnlXKAT/TzHtq6VJURdhrdhrdVPSRK5PYpiT5atAL1kA4
-         NAfg==
-X-Forwarded-Encrypted: i=1; AJvYcCU8uROCgRrdczu4iNUrrXyCHyR4yBcmosBHX8iUTC1K5VHTG/srTz1rDTAtpshtyTDEQtfMVDlxXIdyVFaYYWpFW/D/mg33liHcJRpm
-X-Gm-Message-State: AOJu0Yzb2xncLoEU+vXNM7u4UB305bxQ3a9HKGtskfAoTpOjg7CRbi/R
-	2oVtkXYAY6KvPQXvQ2xjgxGj5S2xybXmPesJBZc6/54teQG9zpOWZq3Lp9hMv7Y=
-X-Google-Smtp-Source: AGHT+IFami/eHbrAuwdif34EK9jrr/gIrhjNiuyviyiZpgrNHVm6xVJTUyG+0a808idQ56fvM4bgXA==
-X-Received: by 2002:a05:6808:308a:b0:3c1:782e:b8e1 with SMTP id bl10-20020a056808308a00b003c1782eb8e1mr1966233oib.39.1708594920963;
-        Thu, 22 Feb 2024 01:42:00 -0800 (PST)
-Received: from anup-ubuntu-vm.localdomain ([103.97.165.210])
-        by smtp.gmail.com with ESMTPSA id n15-20020a05680803af00b003c17c2b8d09sm130699oie.31.2024.02.22.01.41.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 22 Feb 2024 01:42:00 -0800 (PST)
-From: Anup Patel <apatel@ventanamicro.com>
-To: Palmer Dabbelt <palmer@dabbelt.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Frank Rowand <frowand.list@gmail.com>,
-	Conor Dooley <conor+dt@kernel.org>
-Cc: Marc Zyngier <maz@kernel.org>,
-	=?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn@kernel.org>,
-	Atish Patra <atishp@atishpatra.org>,
-	Andrew Jones <ajones@ventanamicro.com>,
-	Sunil V L <sunilvl@ventanamicro.com>,
-	Saravana Kannan <saravanak@google.com>,
-	Anup Patel <anup@brainfault.org>,
-	linux-riscv@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	Anup Patel <apatel@ventanamicro.com>
-Subject: [PATCH v14 13/18] irqchip/riscv-imsic: Add device MSI domain support for PCI devices
-Date: Thu, 22 Feb 2024 15:10:01 +0530
-Message-Id: <20240222094006.1030709-14-apatel@ventanamicro.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240222094006.1030709-1-apatel@ventanamicro.com>
-References: <20240222094006.1030709-1-apatel@ventanamicro.com>
+	s=arc-20240116; t=1708594930; c=relaxed/simple;
+	bh=nB7akApCyMJjlIrdgWz8NAIOpjWP2HJ57h/ete1dFZU=;
+	h=CC:Subject:To:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=KF88ZjMZl8v0L7HKCKxwh/fCSSRkq7HJbDGUxYdeib3ekUUDBU/SjdNhNQJhAi4cLzRMMbxTq7PykMpAZT+ukU9JVTQhSZ3RNX6CSdX/I9jf8+kWgjEC/zlvhusdyZVY7CgFMWlPh49IxrRcvzUj1Ab0Gw6FhcAk1f1nGpk1mh4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.255
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.174])
+	by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4TgSmf4LZVz1Q8C7;
+	Thu, 22 Feb 2024 17:40:18 +0800 (CST)
+Received: from canpemm500009.china.huawei.com (unknown [7.192.105.203])
+	by mail.maildlp.com (Postfix) with ESMTPS id 44C791404F2;
+	Thu, 22 Feb 2024 17:41:59 +0800 (CST)
+Received: from [10.67.121.177] (10.67.121.177) by
+ canpemm500009.china.huawei.com (7.192.105.203) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Thu, 22 Feb 2024 17:41:58 +0800
+CC: <yangyicong@hisilicon.com>, <gregkh@linuxfoundation.org>,
+	<tony@atomide.com>, <linux-kernel@vger.kernel.org>,
+	<linux-serial@vger.kernel.org>, <john.ogness@linutronix.de>,
+	<tglx@linutronix.de>, <linuxarm@huawei.com>, <prime.zeng@hisilicon.com>,
+	<jonathan.cameron@huawei.com>, <fanghao11@huawei.com>
+Subject: Re: [PATCH v3] serial: port: Don't suspend if the port is still busy
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Jiri Slaby
+	<jirislaby@kernel.org>
+References: <20240208075216.48915-1-yangyicong@huawei.com>
+ <beb599e2-ebc5-4b26-82c3-908830effd5a@kernel.org>
+ <ZcUOp60BX8njHQ4Q@smile.fi.intel.com>
+From: Yicong Yang <yangyicong@huawei.com>
+Message-ID: <d6384122-08da-03f4-ba9f-caa893ca10fb@huawei.com>
+Date: Thu, 22 Feb 2024 17:41:58 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.5.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <ZcUOp60BX8njHQ4Q@smile.fi.intel.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
+ canpemm500009.china.huawei.com (7.192.105.203)
 
-The Linux PCI framework supports per-device MSI domains for PCI devices
-so extend the IMSIC driver to allow PCI per-device MSI domains.
+On 2024/2/9 1:25, Andy Shevchenko wrote:
+> On Thu, Feb 08, 2024 at 09:27:57AM +0100, Jiri Slaby wrote:
+>> On 08. 02. 24, 8:52, Yicong Yang wrote:
+> 
+> ...
+> 
+>>>   static int __serial_port_busy(struct uart_port *port)
+>>>   {
+>>> -	return !uart_tx_stopped(port) &&
+>>> -		uart_circ_chars_pending(&port->state->xmit);
+>>> +	if (uart_tx_stopped(port))
+>>> +		return 0;
+>>> +
+>>> +	if (uart_circ_chars_pending(&port->state->xmit))
+>>> +		return -EBUSY;
+>>
+>> Why do you do this change at all? If anything, __serial_port_busy() should
+>> be made to return a bool and not to return an error. Look how it is named --
+>> returning EBUSY is sort of unexpected in my eyes. And if this needed to be
+>> done, it should have been in a separate patch anyway.
+> 
+> I proposed that with a renaming, so it won't look as boolean.
+> And I also implied (sorry if it was unclear) that this has to be
+> done separately, so we are on the same page about this.
+> 
 
-Signed-off-by: Anup Patel <apatel@ventanamicro.com>
----
- drivers/irqchip/Kconfig                    |  7 +++++
- drivers/irqchip/irq-riscv-imsic-platform.c | 35 ++++++++++++++++++++--
- 2 files changed, 40 insertions(+), 2 deletions(-)
+Seems I misunderstand the comment from Andy. Will drop this change which should be
+a separate one besides the fix. Will respin a v4 which only narrow the lock region
+based on v2 (per Andy).
 
-diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
-index 85f86e31c996..2fc0cb32341a 100644
---- a/drivers/irqchip/Kconfig
-+++ b/drivers/irqchip/Kconfig
-@@ -553,6 +553,13 @@ config RISCV_IMSIC
- 	select GENERIC_IRQ_MATRIX_ALLOCATOR
- 	select GENERIC_MSI_IRQ
- 
-+config RISCV_IMSIC_PCI
-+	bool
-+	depends on RISCV_IMSIC
-+	depends on PCI
-+	depends on PCI_MSI
-+	default RISCV_IMSIC
-+
- config EXYNOS_IRQ_COMBINER
- 	bool "Samsung Exynos IRQ combiner support" if COMPILE_TEST
- 	depends on (ARCH_EXYNOS && ARM) || COMPILE_TEST
-diff --git a/drivers/irqchip/irq-riscv-imsic-platform.c b/drivers/irqchip/irq-riscv-imsic-platform.c
-index e2344fc08dca..90ddcdd0bba5 100644
---- a/drivers/irqchip/irq-riscv-imsic-platform.c
-+++ b/drivers/irqchip/irq-riscv-imsic-platform.c
-@@ -14,6 +14,7 @@
- #include <linux/irqdomain.h>
- #include <linux/module.h>
- #include <linux/msi.h>
-+#include <linux/pci.h>
- #include <linux/platform_device.h>
- #include <linux/spinlock.h>
- #include <linux/smp.h>
-@@ -208,6 +209,28 @@ static const struct irq_domain_ops imsic_base_domain_ops = {
- #endif
- };
- 
-+#ifdef CONFIG_RISCV_IMSIC_PCI
-+
-+static void imsic_pci_mask_irq(struct irq_data *d)
-+{
-+	pci_msi_mask_irq(d);
-+	irq_chip_mask_parent(d);
-+}
-+
-+static void imsic_pci_unmask_irq(struct irq_data *d)
-+{
-+	irq_chip_unmask_parent(d);
-+	pci_msi_unmask_irq(d);
-+}
-+
-+#define MATCH_PCI_MSI		BIT(DOMAIN_BUS_PCI_MSI)
-+
-+#else
-+
-+#define MATCH_PCI_MSI		0
-+
-+#endif
-+
- static bool imsic_init_dev_msi_info(struct device *dev,
- 				    struct irq_domain *domain,
- 				    struct irq_domain *real_parent,
-@@ -231,6 +254,13 @@ static bool imsic_init_dev_msi_info(struct device *dev,
- 
- 	/* Is the target supported? */
- 	switch (info->bus_token) {
-+#ifdef CONFIG_RISCV_IMSIC_PCI
-+	case DOMAIN_BUS_PCI_DEVICE_MSI:
-+	case DOMAIN_BUS_PCI_DEVICE_MSIX:
-+		info->chip->irq_mask = imsic_pci_mask_irq;
-+		info->chip->irq_unmask = imsic_pci_unmask_irq;
-+		break;
-+#endif
- 	case DOMAIN_BUS_DEVICE_MSI:
- 		/*
- 		 * Per-device MSI should never have any MSI feature bits
-@@ -270,11 +300,12 @@ static bool imsic_init_dev_msi_info(struct device *dev,
- #define MATCH_PLATFORM_MSI		BIT(DOMAIN_BUS_PLATFORM_MSI)
- 
- static const struct msi_parent_ops imsic_msi_parent_ops = {
--	.supported_flags	= MSI_GENERIC_FLAGS_MASK,
-+	.supported_flags	= MSI_GENERIC_FLAGS_MASK |
-+				  MSI_FLAG_PCI_MSIX,
- 	.required_flags		= MSI_FLAG_USE_DEF_DOM_OPS |
- 				  MSI_FLAG_USE_DEF_CHIP_OPS,
- 	.bus_select_token	= DOMAIN_BUS_NEXUS,
--	.bus_select_mask	= MATCH_PLATFORM_MSI,
-+	.bus_select_mask	= MATCH_PCI_MSI | MATCH_PLATFORM_MSI,
- 	.init_dev_msi_info	= imsic_init_dev_msi_info,
- };
- 
--- 
-2.34.1
-
+Thanks.
