@@ -1,244 +1,99 @@
-Received: from mail-ua1-f43.google.com (mail-ua1-f43.google.com [209.85.222.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bee.tesarici.cz (bee.tesarici.cz [77.93.223.253])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF1365B5A3
-	for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 12:24:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5420960879;
+	Thu, 22 Feb 2024 12:24:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=77.93.223.253
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708604650; cv=none; b=kqopi087RFmexoKNX5rd5yP0sJzAOHCbLsSJJUKLXPihaYKHUCeZLR6s3s/A3XFeSmUO1gS5PvFE8SRsN4KdGqM9eS8rTsQEypmQjnuordXW6yVxEqVcrlmcSn8fjXGomhUuxjclWmqfwY5ZB8ltzRekSS/V/AK9JjrG8h/iyT8=
+	t=1708604659; cv=none; b=ePxy7uIi7iQ7cKyMmGQWM+24c96c9ThS1XvFG1/6J0HKVUbl4BbSiVNiIILHhWcidGIsL6IH0q+fxKAldb+oJsuBwsYLYPEzsUt34Fg+bTNQwj1xmRk4N6k3duHVkVoO1sKaW20HbVz1WD+DwJDGE7rb3RyyBp0779PnHrXYvvM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708604650; c=relaxed/simple;
-	bh=eTJPvbYPNCJ1j99etIO+DAPNHeXEiTFSEoTP8+HZolg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=swoUcnsk7BlCp3HMVLxc/mxDX/M/aeVcr5gB3cLu1JZgGfcjtiB5s3YtH7kyc0pP8VbhH9N/+mqniMn8Wpe/eLJZtF8fKCUrZ4BplXFamvbWB7801Ab0I7QHvXXRibvTEUx7zwnc4/owhH55a2JgmWAiZCkQqC5G8CPl93bi8mY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Y/BZ5Cwk; arc=none smtp.client-ip=209.85.222.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1708604659; c=relaxed/simple;
+	bh=SzkRLezEcoWqN5XMk5IQjv+zaBzCE6hGL4TlzpzvRx8=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Jqq4cIuBMIuT1LY29CoWzB3VSng2OipdaLLoCvlXV8qIzVgBNRA2k5Lgof1pOLUBq76zDChdPRGjhccMqpSs9+oR2ddBlDgRRDYkBadcrUKBX4GX62+JfzcS0sLS69GVzlW7niJSEdXI0tB4zbCa0ugK/s73jZOLCJYZwcwAs6U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tesarici.cz; spf=pass smtp.mailfrom=tesarici.cz; dkim=pass (2048-bit key) header.d=tesarici.cz header.i=@tesarici.cz header.b=EUAlNGrf; arc=none smtp.client-ip=77.93.223.253
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tesarici.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tesarici.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Y/BZ5Cwk"
-Received: by mail-ua1-f43.google.com with SMTP id a1e0cc1a2514c-7ce55932330so3143586241.0
-        for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 04:24:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1708604647; x=1709209447; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=HZ26GtWBMfOOBIvjFBZJGybRXjVBZXEvkGayYiWiTAQ=;
-        b=Y/BZ5CwkxDcBYZf69BsLA1J3cnewlbUBgnFrgO5xGtHJ4QiTWSsjldnZwXUqda0h9k
-         Q+c1sfL7J0bmNxzHQvwWB2pUuBGHChjsSQRNWG6L9Xp9n/xqpmoWYHExuK6CKKP6ci1a
-         eVfaiOG9U07AZubBAWAIk8GjKMwB8M1vjMgf8sUCo9mZ9Rh0E4PT21CiTsEhmxXbTg9V
-         opsbdUOjILealh9WgornA/MScTUvsP8R+E9QYkXKpjVQXs4I6vygLteUV+eJVDiu/Ma4
-         73xl77f1we2X0kLximypGz4m+exZ/Mcdhl7gMdMH4zWh4Jr0HOediFyIvJKuzmR1B1ep
-         Bu+g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708604647; x=1709209447;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=HZ26GtWBMfOOBIvjFBZJGybRXjVBZXEvkGayYiWiTAQ=;
-        b=uc4tfAPCchA+hVn0SU7HDrGaA53a6peu6+KOrDMFHuMHyjk+eP+DPWKw2lkScItrl6
-         L+JvMtI20KWI6VMZJfiZ/Tqy4UpcQRgOoFI4GKRztfeISkRBf/q/hJnUGVQO2xMsb4Ru
-         OagEHlrL1qltTUC/AupVuWjdXtP11F0UNM6br7eyt2DzQi4A71c6VgfcsPUwExtgUUeW
-         3qg9+Q8ZudCNJQ1DjkXddz4tKlvWSLKbgOWZsmGZQNsTWew+7xkQbqWpSyyGeUvREP5s
-         5BrCrrv3qX31dtV/+5grDYjRFHKKdHmbEqmNrBFVHQZpje1NmKeECx367YcxWUQZ430o
-         5SoQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWfSCkpYXqCFHbIRNU1kGgpKB5UDfrHZMFk6CW1q/C7jNbpIWX/5X+Ab5phl4KIwZhcTSkvqr9VqA/lDvflU3UgodvkoQ2Aju+O7cgX
-X-Gm-Message-State: AOJu0Yw518XcVYSswbx5QSuF13yCjaKMZQa5g5LXRgdM4/bpP9ieCSXG
-	mwC/dnDYA1zQXhZyWkde9iXJ5gbbltIF87ZFxO7rpOD7rjNBAtm2O70LUeuQPvEYS0roYHnuHrG
-	otoZCBfauHo3CwQv68FlpKfw9yu/VRVCwxUGzfg==
-X-Google-Smtp-Source: AGHT+IGpKrpOvwOxLRAab+hHWX6jt4YmgvO9hwgLsO6jhE5ITDJ6DMLf1QOoMOIwPHreuGQeg4TtpVei3wFC1l1YL9s=
-X-Received: by 2002:a67:e28d:0:b0:470:4be4:41ba with SMTP id
- g13-20020a67e28d000000b004704be441bamr9143357vsf.1.1708604646800; Thu, 22 Feb
- 2024 04:24:06 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=tesarici.cz header.i=@tesarici.cz header.b="EUAlNGrf"
+Received: from meshulam.tesarici.cz (dynamic-2a00-1028-83b8-1e7a-4427-cc85-6706-c595.ipv6.o2.cz [IPv6:2a00:1028:83b8:1e7a:4427:cc85:6706:c595])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by bee.tesarici.cz (Postfix) with ESMTPSA id 49C831B3C16;
+	Thu, 22 Feb 2024 13:24:12 +0100 (CET)
+Authentication-Results: mail.tesarici.cz; dmarc=fail (p=quarantine dis=none) header.from=tesarici.cz
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tesarici.cz; s=mail;
+	t=1708604653; bh=SzkRLezEcoWqN5XMk5IQjv+zaBzCE6hGL4TlzpzvRx8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=EUAlNGrf23R8w4oEXhdN8ZTdwZg1H7M4/emZPySrk6K9Tl0SxhgdNcc+GVXJzkF3K
+	 jhjEkvp7rH7EDvKJP8N1WoE10a3c92Pf6/xWI/KNQXgf4YwqDhpDsD2Sz7vm2z7Lxu
+	 QrFdVlvJFDd25mDM+o2lNSY2HQW6+zwnWeoZrkjI/dzsAj1ADwvpfvp+aYsPDhk7+s
+	 +uJNHsQG4WSVKSkZg/cEwEkmeqqHv63GsosLISth1I21E6qnsVSxAZUr46A8h1ti5w
+	 8xB2a1phVtvV+YvhVd8sMVHnIsWVImqVlHlq4wr1kEZ6CyLBGnCxeEbIFEyPI2fo5P
+	 PuGFeTj8+894w==
+Date: Thu, 22 Feb 2024 13:24:10 +0100
+From: Petr =?UTF-8?B?VGVzYcWZw61r?= <petr@tesarici.cz>
+To: Michal Hocko <mhocko@suse.com>
+Cc: Suren Baghdasaryan <surenb@google.com>, akpm@linux-foundation.org,
+ kent.overstreet@linux.dev, vbabka@suse.cz, hannes@cmpxchg.org,
+ roman.gushchin@linux.dev, mgorman@suse.de, dave@stgolabs.net,
+ willy@infradead.org, liam.howlett@oracle.com,
+ penguin-kernel@i-love.sakura.ne.jp, corbet@lwn.net, void@manifault.com,
+ peterz@infradead.org, juri.lelli@redhat.com, catalin.marinas@arm.com,
+ will@kernel.org, arnd@arndb.de, tglx@linutronix.de, mingo@redhat.com,
+ dave.hansen@linux.intel.com, x86@kernel.org, peterx@redhat.com,
+ david@redhat.com, axboe@kernel.dk, mcgrof@kernel.org, masahiroy@kernel.org,
+ nathan@kernel.org, dennis@kernel.org, tj@kernel.org, muchun.song@linux.dev,
+ rppt@kernel.org, paulmck@kernel.org, pasha.tatashin@soleen.com,
+ yosryahmed@google.com, yuzhao@google.com, dhowells@redhat.com,
+ hughd@google.com, andreyknvl@gmail.com, keescook@chromium.org,
+ ndesaulniers@google.com, vvvvvv@google.com, gregkh@linuxfoundation.org,
+ ebiggers@google.com, ytcoode@gmail.com, vincent.guittot@linaro.org,
+ dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
+ bristot@redhat.com, vschneid@redhat.com, cl@linux.com, penberg@kernel.org,
+ iamjoonsoo.kim@lge.com, 42.hyeyoo@gmail.com, glider@google.com,
+ elver@google.com, dvyukov@google.com, shakeelb@google.com,
+ songmuchun@bytedance.com, jbaron@akamai.com, rientjes@google.com,
+ minchan@google.com, kaleshsingh@google.com, kernel-team@android.com,
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ iommu@lists.linux.dev, linux-arch@vger.kernel.org,
+ linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+ linux-modules@vger.kernel.org, kasan-dev@googlegroups.com,
+ cgroups@vger.kernel.org
+Subject: Re: [PATCH v4 06/36] mm: enumerate all gfp flags
+Message-ID: <20240222132410.6e1a2599@meshulam.tesarici.cz>
+In-Reply-To: <Zdc6LUWnPOBRmtZH@tiehlicka>
+References: <20240221194052.927623-1-surenb@google.com>
+	<20240221194052.927623-7-surenb@google.com>
+	<Zdc6LUWnPOBRmtZH@tiehlicka>
+X-Mailer: Claws Mail 4.2.0 (GTK 3.24.39; x86_64-suse-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240221125953.770767246@linuxfoundation.org>
-In-Reply-To: <20240221125953.770767246@linuxfoundation.org>
-From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Thu, 22 Feb 2024 17:53:55 +0530
-Message-ID: <CA+G9fYsBV=HULT6J=fRWZF_M66YuCaEE5HVu4n6edC_9pyGWjA@mail.gmail.com>
-Subject: Re: [PATCH 6.6 000/338] 6.6.18-rc2 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: stable@vger.kernel.org, patches@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org, 
-	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org, 
-	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de, 
-	jonathanh@nvidia.com, f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, 
-	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org, allen.lkml@gmail.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, 21 Feb 2024 at 18:31, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> This is the start of the stable review cycle for the 6.6.18 release.
-> There are 338 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Fri, 23 Feb 2024 12:59:02 +0000.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-=
-6.6.18-rc2.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-6.6.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
+On Thu, 22 Feb 2024 13:12:29 +0100
+Michal Hocko <mhocko@suse.com> wrote:
 
+> On Wed 21-02-24 11:40:19, Suren Baghdasaryan wrote:
+> > Introduce GFP bits enumeration to let compiler track the number of used
+> > bits (which depends on the config options) instead of hardcoding them.
+> > That simplifies __GFP_BITS_SHIFT calculation.
+> >=20
+> > Suggested-by: Petr Tesa=C5=99=C3=ADk <petr@tesarici.cz>
+> > Signed-off-by: Suren Baghdasaryan <surenb@google.com>
+> > Reviewed-by: Kees Cook <keescook@chromium.org> =20
+>=20
+> I thought I have responded to this patch but obviously not the case.
+> I like this change. Makes sense even without the rest of the series.
+> Acked-by: Michal Hocko <mhocko@suse.com>
 
-Results from Linaro=E2=80=99s test farm.
-No regressions on arm64, arm, x86_64, and i386.
+Thank you, Michal. I also hope it can be merged without waiting for the
+rest of the series.
 
-Tested-by: Linux Kernel Functional Testing <lkft@linaro.org>
-
-## Build
-* kernel: 6.6.18-rc2
-* git: https://gitlab.com/Linaro/lkft/mirrors/stable/linux-stable-rc
-* git branch: linux-6.6.y
-* git commit: 6f4f386cf24e138f1005832aca27572eac5d2099
-* git describe: v6.6.16-465-g6f4f386cf24e
-* test details:
-https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.6.y/build/v6.6.1=
-6-465-g6f4f386cf24e
-
-## Test Regressions (compared to v6.6.16)
-
-## Metric Regressions (compared to v6.6.16)
-
-## Test Fixes (compared to v6.6.16)
-
-## Metric Fixes (compared to v6.6.16)
-
-## Test result summary
-total: 212665, pass: 184895, fail: 2487, skip: 25066, xfail: 217
-
-## Build Summary
-* arc: 5 total, 5 passed, 0 failed
-* arm: 147 total, 146 passed, 1 failed
-* arm64: 53 total, 51 passed, 2 failed
-* i386: 43 total, 42 passed, 1 failed
-* mips: 26 total, 26 passed, 0 failed
-* parisc: 4 total, 4 passed, 0 failed
-* powerpc: 36 total, 34 passed, 2 failed
-* riscv: 18 total, 18 passed, 0 failed
-* s390: 13 total, 13 passed, 0 failed
-* sh: 10 total, 10 passed, 0 failed
-* sparc: 8 total, 8 passed, 0 failed
-* x86_64: 48 total, 46 passed, 2 failed
-
-## Test suites summary
-* boot
-* kselftest-android
-* kselftest-arm64
-* kselftest-breakpoints
-* kselftest-capabilities
-* kselftest-cgroup
-* kselftest-clone3
-* kselftest-core
-* kselftest-cpu-hotplug
-* kselftest-cpufreq
-* kselftest-drivers-dma-buf
-* kselftest-efivarfs
-* kselftest-exec
-* kselftest-filesystems
-* kselftest-filesystems-binderfs
-* kselftest-filesystems-epoll
-* kselftest-firmware
-* kselftest-fpu
-* kselftest-ftrace
-* kselftest-futex
-* kselftest-gpio
-* kselftest-intel_pstate
-* kselftest-ipc
-* kselftest-ir
-* kselftest-kcmp
-* kselftest-kexec
-* kselftest-kvm
-* kselftest-lib
-* kselftest-membarrier
-* kselftest-memfd
-* kselftest-memory-hotplug
-* kselftest-mincore
-* kselftest-mm
-* kselftest-mount
-* kselftest-mqueue
-* kselftest-net
-* kselftest-net-forwarding
-* kselftest-net-mptcp
-* kselftest-netfilter
-* kselftest-nsfs
-* kselftest-openat2
-* kselftest-pid_namespace
-* kselftest-pidfd
-* kselftest-proc
-* kselftest-pstore
-* kselftest-ptrace
-* kselftest-rseq
-* kselftest-rtc
-* kselftest-seccomp
-* kselftest-sigaltstack
-* kselftest-size
-* kselftest-splice
-* kselftest-static_keys
-* kselftest-sync
-* kselftest-sysctl
-* kselftest-tc-testing
-* kselftest-timens
-* kselftest-timers
-* kselftest-tmpfs
-* kselftest-tpm2
-* kselftest-user
-* kselftest-user_events
-* kselftest-vDSO
-* kselftest-watchdog
-* kselftest-x86
-* kselftest-zram
-* kunit
-* kvm-unit-tests
-* libgpiod
-* libhugetlbfs
-* log-parser-boot
-* log-parser-test
-* ltp-cap_bounds
-* ltp-commands
-* ltp-containers
-* ltp-controllers
-* ltp-cpuhotplug
-* ltp-crypto
-* ltp-cve
-* ltp-dio
-* ltp-fcntl-locktests
-* ltp-filecaps
-* ltp-fs
-* ltp-fs_bind
-* ltp-fs_perms_simple
-* ltp-hugetlb
-* ltp-io
-* ltp-ipc
-* ltp-ma[
-* ltp-math
-* ltp-mm
-* ltp-nptl
-* ltp-pty
-* ltp-sched
-* ltp-securebits
-* ltp-smoke
-* ltp-smoketest
-* ltp-syscalls
-* ltp-tracing
-* perf
-* rcutorture
-
---
-Linaro LKFT
-https://lkft.linaro.org
+Petr T
