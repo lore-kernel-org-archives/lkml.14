@@ -1,91 +1,159 @@
-Received: from mail-yb1-f170.google.com (mail-yb1-f170.google.com [209.85.219.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1146660B86
-	for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 12:08:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.170
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DD9F45789F;
+	Thu, 22 Feb 2024 12:11:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708603690; cv=none; b=KMX5qG0qUnEeYCL7oFFIezfsZQW7o6dd+PPWUTiFQ//TeBAc+WF6lwRSxAQE/YbEp/NNDuprc35zXYLClDZRaCiBVwLtW/1oeOEgXEKONJAtmqjcIrkO85fcs6Ha0AaAwYZ9djH5VayvV86XKaeuK+Ob4U941zDBRPRjkhfeIHM=
+	t=1708603883; cv=none; b=UBfZ70c3fTv4jXo1OFshU5QowB3EHxlQenKK3IYQeKX7gxAdp8jZNxBonN652ySVFYqGGfySsvvvcE91CvOmJ6rteXv8i4U8odlpoPY5hRg5URot96SW6dgAl7jiTFpp2uphqP1rxpqE7Yul3PfU833I4MNDHi7lDX7vDhsiksE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708603690; c=relaxed/simple;
-	bh=6FG964kR+hhFtk+3weS36r/Bo7dX22EMfGbaKLILCDA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=cfrNY1K7JyyfqjEBk5qzm3h65DkueYdq4B7u9FhcgnF33b9kCrxOJESOgWmEK7E/IlBIOTLaGPOnw3ytIN5ON/1S+rvPp6vBX5D2tuKhCWe8s76ZW+NrlTOBVSY7BL6mNdP9XVwayjEgLjg9yH4oaz2Mvx8JuF36OJemGBOnh4k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Y8gY5qaD; arc=none smtp.client-ip=209.85.219.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Y8gY5qaD"
-Received: by mail-yb1-f170.google.com with SMTP id 3f1490d57ef6-dcbef31a9dbso5254794276.1
-        for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 04:08:08 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1708603688; x=1709208488; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=6FG964kR+hhFtk+3weS36r/Bo7dX22EMfGbaKLILCDA=;
-        b=Y8gY5qaD+ii0GUY5qH1s0Cjo8nD3CuuWrzuSnReDuDFOIEMRmQPDtb+eHRTiwp7i7u
-         3IOdmMUfhHtL3sRufAMFF4b/yJj8bYs3UGGvexc0ELx1TO/mIylgO9sL47hfHsKJsR+w
-         aKx910AWtWt9RiMhY/NJYBurySzQbGCHpsPhxL7FrWucYcYfD5SKCZea3Id8yTtmn2U1
-         HFKKXhav2q4A2DIjkFGCeJt6lrwXnhM9jZvyKwTWYKRWciNGYCGIae7cWDG4aGdAUzbF
-         yOn/oO1vgurR0IlYXvhHJsqDda+Idib5v7Di/GVPX8aIF5WQ//UyCxXIPnacOSRJmUPL
-         EgIw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708603688; x=1709208488;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=6FG964kR+hhFtk+3weS36r/Bo7dX22EMfGbaKLILCDA=;
-        b=dj8NujIIflJTjAsSZnn+3LVGhSMXpN0SEhfbgCAm4NaAWxCUyFmBPbRzXKafqzjI4F
-         WYtmlbvmDeC/QVaY9qc0ey7R8AXaikQKyfhjVlD6PCiD+Mi0nRyVpXckKeSr2ExkW2T6
-         l3LkqRmpayt6ly7mGleP/CQM+9ub6X7fzNIRzOq0r+k2YAP6Nx2vhNUrrpF/TkBY2pyF
-         EVeOnWxDMJ1piugUvGZVKbeIjrKiyZ8H4sO+hjWrHNrL3TPOpIA9U7uvwBpiQCXKyHaS
-         /NqcNuApMGHQXXMtCkHspwJTfdckjRgWHTOizn28Lya7uDBHKNMOrJvzSFwxINxTmci8
-         ke+A==
-X-Forwarded-Encrypted: i=1; AJvYcCWQmZkzFO2tcZ6wkTrMhJgoA7n5yZpugBq5ONaqDr9d8Yiso+kFCBrKnjBwQGv5Ho25thq+Gj9n/sA1EP54PoUyDriLawV/UFd3jB1i
-X-Gm-Message-State: AOJu0YwFRc+mCuZ2qUH7tNVnnTGrtqyAsdU5WPcYy9KZQ3ddbtdabg1S
-	N9ZBwQuOJ+pTNxucy3VXy1VcId0jFdeJid7xF0Gh04WbpcLKsltlyQWHC7Bvvb0D1lGb2KL+mRY
-	rUBcLblocmlJdSQ+tF5SdkT2vqY9kKMbAl5pL8w==
-X-Google-Smtp-Source: AGHT+IEU4HN8gv1ygZj/+BrXjCf5uYMfTAT4T4O39OAQLi70KFgwNppvWRgM6E87AYUyqulhyKpRGLhEkDoZB0+igXQ=
-X-Received: by 2002:a25:bed0:0:b0:dcd:2f2d:7a04 with SMTP id
- k16-20020a25bed0000000b00dcd2f2d7a04mr2028569ybm.10.1708603688074; Thu, 22
- Feb 2024 04:08:08 -0800 (PST)
+	s=arc-20240116; t=1708603883; c=relaxed/simple;
+	bh=mCi8+XxhULFtYlGGHGY0wqqU3zZCjmarzxh4FL+3HgE=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=sNbUYbY+l0slrhVdwUcUQhuH8ZVMUFwYw++V61Gjmofx0FEWgOM/ZAWccYkN6YannptX1u6DLxKM6LJOxCmi0uvctNRBDPPjPC/u8Dwl4QJth61gP/nezfsiWMO2tIVwr6SuVmV3dE8v1yx0LZlFiw2cyWObq9pAM91Q3RniG+M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.20.42.173])
+	by gateway (Coremail) with SMTP id _____8AxuujlOddlMjUQAA--.22305S3;
+	Thu, 22 Feb 2024 20:11:17 +0800 (CST)
+Received: from [10.20.42.173] (unknown [10.20.42.173])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8BxVMziOddlQcs+AA--.36218S3;
+	Thu, 22 Feb 2024 20:11:16 +0800 (CST)
+Subject: Re: [PATCH for-6.8 v4 3/3] LoongArch: KVM: Streamline
+ kvm_check_cpucfg and improve comments
+To: WANG Xuerui <kernel@xen0n.name>, Paolo Bonzini <pbonzini@redhat.com>,
+ Huacai Chen <chenhuacai@kernel.org>
+Cc: Tianrui Zhao <zhaotianrui@loongson.cn>, kvm@vger.kernel.org,
+ loongarch@lists.linux.dev, linux-kernel@vger.kernel.org,
+ WANG Xuerui <git@xen0n.name>
+References: <20240222105109.2042732-1-kernel@xen0n.name>
+ <20240222105109.2042732-4-kernel@xen0n.name>
+From: maobibo <maobibo@loongson.cn>
+Message-ID: <719c1a92-6ddc-f73a-0609-aa5d40dbee8a@loongson.cn>
+Date: Thu, 22 Feb 2024 20:11:20 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240121203009.9257-1-ansuelsmth@gmail.com> <65d62b60.050a0220.c7b96.614e@mx.google.com>
-In-Reply-To: <65d62b60.050a0220.c7b96.614e@mx.google.com>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Thu, 22 Feb 2024 13:07:56 +0100
-Message-ID: <CACRpkdYZSr0Kif+q-DBZi7v7qZ=_tedONEP-OPhOHg4yHmwkhg@mail.gmail.com>
-Subject: Re: [PATCH v2 0/2] ARM: decompressor: support AUTO_ZRELADDR and
- appended DTB
-To: Christian Marangi <ansuelsmth@gmail.com>
-Cc: Russell King <linux@armlinux.org.uk>, Arnd Bergmann <arnd@arndb.de>, 
-	Andrew Morton <akpm@linux-foundation.org>, Geert Uytterhoeven <geert+renesas@glider.be>, 
-	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>, Thomas Gleixner <tglx@linutronix.de>, 
-	Jonathan Corbet <corbet@lwn.net>, Marc Zyngier <maz@kernel.org>, "Mike Rapoport (IBM)" <rppt@kernel.org>, 
-	Eric DeVolder <eric.devolder@oracle.com>, Nathan Chancellor <nathan@kernel.org>, 
-	Kees Cook <keescook@chromium.org>, 
-	"Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>, linux-arm-kernel@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, Bjorn Andersson <andersson@kernel.org>, 
-	Konrad Dybcio <konrad.dybcio@somainline.org>, John Crispin <john@phrozen.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20240222105109.2042732-4-kernel@xen0n.name>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8BxVMziOddlQcs+AA--.36218S3
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBj93XoWxXFWfWFW5uFW7urWkWFWfZwc_yoW5ZF4DpF
+	y3WwsxX3y5KryxJws29w1kXr45Ar4kGFnrXFZ5A3sYvw47ArnrGr40ya9av347C393AF1U
+	WF4DWay3CayDAagCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUvab4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
+	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
+	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1q6rW5McIj6I8E87Iv
+	67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07
+	AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02
+	F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GF
+	ylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVW8JVW5JwCI42IY6xIIjxv20xvEc7Cj
+	xVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26F
+	4j6r4UJwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxU
+	cCD7UUUUU
 
-On Wed, Feb 21, 2024 at 5:57=E2=80=AFPM Christian Marangi <ansuelsmth@gmail=
-.com> wrote:
 
-> Any news for this?
 
-Can you please put the patches into Russell's patch tracker so he can
-apply them?
-https://www.arm.linux.org.uk/developer/patches/
+On 2024/2/22 下午6:51, WANG Xuerui wrote:
+> From: WANG Xuerui <git@xen0n.name>
+> 
+> All the checks currently done in kvm_check_cpucfg can be realized with
+> early returns, so just do that to avoid extra cognitive burden related
+> to the return value handling.
+> 
+> While at it, clean up comments of _kvm_get_cpucfg_mask and
+> kvm_check_cpucfg, by removing comments that are merely restatement of
+> the code nearby, and paraphrasing the rest so they read more natural
+> for English speakers (that likely are not familiar with the actual
+> Chinese-influenced grammar).
+> 
+> No functional changes intended.
+> 
+> Signed-off-by: WANG Xuerui <git@xen0n.name>
+> ---
+>   arch/loongarch/kvm/vcpu.c | 42 +++++++++++++++++++--------------------
+>   1 file changed, 20 insertions(+), 22 deletions(-)
+> 
+> diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
+> index 9f63bbaf19c1..128b89d00ced 100644
+> --- a/arch/loongarch/kvm/vcpu.c
+> +++ b/arch/loongarch/kvm/vcpu.c
+> @@ -305,20 +305,16 @@ static int _kvm_get_cpucfg_mask(int id, u64 *v)
+>   
+>   	switch (id) {
+>   	case 2:
+> -		/* Return CPUCFG2 features which have been supported by KVM */
+> +		/* CPUCFG2 features unconditionally supported by KVM */
+>   		*v = CPUCFG2_FP     | CPUCFG2_FPSP  | CPUCFG2_FPDP     |
+>   		     CPUCFG2_FPVERS | CPUCFG2_LLFTP | CPUCFG2_LLFTPREV |
+>   		     CPUCFG2_LAM;
+>   		/*
+> -		 * If LSX is supported by CPU, it is also supported by KVM,
+> -		 * as we implement it.
+> +		 * For the ISA extensions listed below, if one is supported
+> +		 * by the host, then it is also supported by KVM.
+>   		 */
+>   		if (cpu_has_lsx)
+>   			*v |= CPUCFG2_LSX;
+> -		/*
+> -		 * if LASX is supported by CPU, it is also supported by KVM,
+> -		 * as we implement it.
+> -		 */
+>   		if (cpu_has_lasx)
+>   			*v |= CPUCFG2_LASX;
+>   
+> @@ -349,24 +345,26 @@ static int kvm_check_cpucfg(int id, u64 val)
+>   
+>   	switch (id) {
+>   	case 2:
+> -		/* CPUCFG2 features checking */
+>   		if (!(val & CPUCFG2_LLFTP))
+> -			/* The LLFTP must be set, as guest must has a constant timer */
+> -			ret = -EINVAL;
+> -		else if ((val & CPUCFG2_FP) && (!(val & CPUCFG2_FPSP) || !(val & CPUCFG2_FPDP)))
+> -			/* Single and double float point must both be set when enable FP */
+> -			ret = -EINVAL;
+> -		else if ((val & CPUCFG2_LSX) && !(val & CPUCFG2_FP))
+> -			/* FP should be set when enable LSX */
+> -			ret = -EINVAL;
+> -		else if ((val & CPUCFG2_LASX) && !(val & CPUCFG2_LSX))
+> -			/* LSX, FP should be set when enable LASX, and FP has been checked before. */
+> -			ret = -EINVAL;
+> -		break;
+> +			/* Guests must have a constant timer */
+> +			return -EINVAL;
+> +		if ((val & CPUCFG2_FP) && (!(val & CPUCFG2_FPSP) || !(val & CPUCFG2_FPDP)))
+> +			/* Single and double float point must both be set when FP is enabled */
+> +			return -EINVAL;
+> +		if ((val & CPUCFG2_LSX) && !(val & CPUCFG2_FP))
+> +			/* LSX architecturally implies FP but val does not satisfy that */
+> +			return -EINVAL;
+> +		if ((val & CPUCFG2_LASX) && !(val & CPUCFG2_LSX))
+> +			/* LASX architecturally implies LSX and FP but val does not satisfy that */
+> +			return -EINVAL;
+> +		return 0;
+>   	default:
+> -		break;
+> +		/*
+> +		 * Values for the other CPUCFG IDs are not being further validated
+> +		 * besides the mask check above.
+> +		 */
+> +		return 0;
+>   	}
+> -	return ret;
+>   }
+>   
+>   static int kvm_get_one_reg(struct kvm_vcpu *vcpu,
+> 
+Reviewed-by: Bibo Mao <maobibo@loongson.cn>
 
-If you run into any problems, ping me on IRC and I'll help out.
-
-Yours,
-Linus Walleij
