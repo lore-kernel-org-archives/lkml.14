@@ -1,187 +1,222 @@
-Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com [209.85.208.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B800015DBC7;
-	Thu, 22 Feb 2024 18:14:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C77EE15E5D0;
+	Thu, 22 Feb 2024 18:14:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708625687; cv=none; b=uFgmBLLJLbNsE62WrN0CTPtWXyNHf6aPIBDxVxlBiAbIc9sFZtCWHCS4eTPc+bDj+M39mCtYDl2RUtC7EKgEtVsV9fgoX/W1L85QcVOrHIHCCEy1q+MkYvWmR9Lj7M1KNPA8Syu22Wd6dfZ+J3404I+K20rYK1cZh65tRi9Dr0Y=
+	t=1708625688; cv=none; b=lskR57LtLHufl8A/CYXt5v2IzxysP8VZdZ8gB4gcJ3skZTQqLt9fEDZp3ZNGsteUW9Fk73a2oqMl7KxArF25GSLIEm/YfT1wUGKcJewxoFVpjFI87Yx/kwb5La4oQRMMyZMsDrjkssvAuGGQyvtNcslYD1psMQv1NHijSLolTMc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708625687; c=relaxed/simple;
-	bh=2VBnWtOUYOYZx3D0CXbbsv1cQZySxF7anmw1+oL7qNg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Caq5YU+ggAgWlDFjMx94GtiuwRGoUVINUqNqrigBYTV6VXCDv29bkL71ihb5H6PXbSF5Pl4J2WtgL7qsgJwcfH/5ZjzlLdTOWEa3lvKZy5cZH83Nukk8+6VRN8/5MbWBY67DJPoFat2IqWC/0btOKScaX1gpIdWum1hnstoDUKE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JFLqxQq3; arc=none smtp.client-ip=209.85.208.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1708625688; c=relaxed/simple;
+	bh=aMMsGSd3iTeiTa5R3x1EcUbWFB61oRzNzaAaKePtu+0=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=tiF8UfFvCWp/xsSzGTyqpX8/Zpbk/StW8EKUHlJ2qJ3H3c7m/vIK3ga+pTsTXPcG/W0DridFWpteTAnpHY6F6EInCs4msJHtI6Z9jPew0CM3j1y+5cmrcYyByN6TWU/oeKf31fcl+mUcOpOYkIkHhaW/oz9P4jsyZfq2AWJFEtk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZsBjIOY/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JFLqxQq3"
-Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-2d220ad10b3so807861fa.1;
-        Thu, 22 Feb 2024 10:14:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1708625684; x=1709230484; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=+o0t5l+gbhBR5sr353Zx4OwnR+/NtUKsRVbiL7FnCuk=;
-        b=JFLqxQq30iEscqR3gTzmDzKFdzYz8ayDFgzsDxEMxWTp946rEgYPjFDHvDr+YfU+cG
-         ZnILvtQqOdV5HvfNITdNqdpPEA+oIfAXkEx6ulbDqdsqLwg/o8O2vHGcsn1C30JpnDhC
-         paa264cO5YaHNVvySZnRC7jCHnkgNwNSUHzvIPugYrn12f/u6+jmcti8eqUWJ7+8oKIr
-         HAijBBsoRtWKIcCpxYD4Rc34Lq+UP4OE/EpCvyZr4qkwK0nguhxwXr/uESAsjBSExmy1
-         iYWDVyCrUa7rNZLcvjFElQBhbC6ctMH9XtL3jy4pX03nMx/7bmnQxR644VrUjte37MjQ
-         oHEA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708625684; x=1709230484;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=+o0t5l+gbhBR5sr353Zx4OwnR+/NtUKsRVbiL7FnCuk=;
-        b=hRaXoKYTuLrRLIqcqzyWCUhFSps1741Q46u2VxE/cHkKNMEHf3pOG6YFf0Vm8gxB9O
-         n4zALjM1/kvwZ83gdufwL1hyJvskQeo0P8ySfYv//HAh0HjRSIyO/c0ybq9AQXokxXrM
-         0Uz3nxgzSPLzy3cwXEm9pC4cd2UZ45XaH6icZ7fEPFlsDx/n67jDKwyTlcZzmWC7GmOV
-         21hXiYWAOSa0++/IZsxBaL5QIPjOVjPF3ufnI8nDNRCagU6/MNotbzTPkr8XyVTioy4K
-         4aIPZ2YvuK55hW5GYInR+FfM4JjOCVJbdDhfQbFdIz0c1AsRdcFmgiyiv2ONMDbFUGAp
-         trPQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUKK+MYIyAPT34qeFicmmGJ59mA3+dtQprDYlTodqcm4HmyJvdg8YGrCXQec5DPGLYxtAj+ggygiPFDFPPITsh90cD2K44uqNE1Z+usRGpFeAPGJ22Osy27pNVHbkDCh1qidovXUq8Y9w==
-X-Gm-Message-State: AOJu0Yz7WiaGgE9h+ed/sYyUa1XrxsXO+atjrFHPmj5YuWQxqOHKHdyK
-	ifTfiuVhdPXW3p0qjn4/UDDihmdME6wilDgQtCi8PZzZNhEgW/jP
-X-Google-Smtp-Source: AGHT+IHujCBUf3uP+SOmn6mxJZA8UNgrf2Op4NXH3LML5XVClyL6ZZ2opxWdtVcY7NGtBDIbf+PxtA==
-X-Received: by 2002:a2e:8256:0:b0:2d2:5169:27f3 with SMTP id j22-20020a2e8256000000b002d2516927f3mr4079549ljh.34.1708625683925;
-        Thu, 22 Feb 2024 10:14:43 -0800 (PST)
-Received: from localhost ([178.176.56.174])
-        by smtp.gmail.com with ESMTPSA id a16-20020a05651c211000b002d26782e8d9sm65176ljq.55.2024.02.22.10.14.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 22 Feb 2024 10:14:43 -0800 (PST)
-From: Serge Semin <fancer.lancer@gmail.com>
-To: Michal Simek <michal.simek@amd.com>,
-	Alexander Stein <alexander.stein@ew.tq-group.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Tony Luck <tony.luck@intel.com>,
-	James Morse <james.morse@arm.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Robert Richter <rric@kernel.org>
-Cc: Serge Semin <fancer.lancer@gmail.com>,
-	Punnaiah Choudary Kalluri <punnaiah.choudary.kalluri@xilinx.com>,
-	Dinh Nguyen <dinguyen@kernel.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-edac@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v5 13/20] EDAC/mc: Init DIMM labels in MC registration method
-Date: Thu, 22 Feb 2024 21:12:58 +0300
-Message-ID: <20240222181324.28242-14-fancer.lancer@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240222181324.28242-1-fancer.lancer@gmail.com>
-References: <20240222181324.28242-1-fancer.lancer@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZsBjIOY/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EBE5AC43399;
+	Thu, 22 Feb 2024 18:14:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1708625688;
+	bh=aMMsGSd3iTeiTa5R3x1EcUbWFB61oRzNzaAaKePtu+0=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=ZsBjIOY/uJP7kxAZQ6u7lhEhsV0Xt6R0OdKFwHcru2XK0hGXZxupuxo2jmRd9rHMb
+	 5KzeNNmy0pX/XWKuPQkvqa90l7bu3xUruGKqWRMKDmrArG736LXsw/TSFI0q0hN/8D
+	 iNoLNA9X2P7f9K5CvAchb8T+kxUoWoND9tBuUN8zHui17Sc6uhKYeWUbeeSGWn/JsX
+	 qZNHnx/1hxCoRMKowH8VbvZfQyEVVHKy0FPm7zktJYKgmZVqMMMEADP0pWzsq8cvBB
+	 sfD0q+fbNlaAMxr2+hEQz+ItZvhhv070Y2Z1QwshkFpYWOvt9de9kKKegFRlYPJrxk
+	 qhtgYOZ52yDLw==
+From: Maxime Ripard <mripard@kernel.org>
+Date: Thu, 22 Feb 2024 19:13:53 +0100
+Subject: [PATCH v7 07/36] drm/tests: connector: Add tests for
+ drmm_connector_hdmi_init
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240222-kms-hdmi-connector-state-v7-7-8f4af575fce2@kernel.org>
+References: <20240222-kms-hdmi-connector-state-v7-0-8f4af575fce2@kernel.org>
+In-Reply-To: <20240222-kms-hdmi-connector-state-v7-0-8f4af575fce2@kernel.org>
+To: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
+ Daniel Vetter <daniel@ffwll.ch>, Jonathan Corbet <corbet@lwn.net>, 
+ Sandy Huang <hjc@rock-chips.com>, 
+ =?utf-8?q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, 
+ Chen-Yu Tsai <wens@csie.org>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
+ Samuel Holland <samuel@sholland.org>
+Cc: Hans Verkuil <hverkuil@xs4all.nl>, 
+ Sebastian Wick <sebastian.wick@redhat.com>, 
+ =?utf-8?q?Ville_Syrj=C3=A4l=C3=A4?= <ville.syrjala@linux.intel.com>, 
+ dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org, 
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-media@vger.kernel.org, linux-rockchip@lists.infradead.org, 
+ linux-sunxi@lists.linux.dev, Maxime Ripard <mripard@kernel.org>, 
+ Dave Stevenson <dave.stevenson@raspberrypi.com>
+X-Mailer: b4 0.12.3
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4892; i=mripard@kernel.org;
+ h=from:subject:message-id; bh=aMMsGSd3iTeiTa5R3x1EcUbWFB61oRzNzaAaKePtu+0=;
+ b=owGbwMvMwCX2+D1vfrpE4FHG02pJDKnX+97GSvXVP1eaYbtU+85vvdV15+3aToe+Of9I6MLyL
+ y/slFN4OkpZGMS4GGTFFFlihM2XxJ2a9bqTjW8ezBxWJpAhDFycAjCRU8IM/4umBEf4RChuLeRm
+ WyMceeLJlCuWQToLN3IKcn4v93+mlM/w36NsaqZYWZ7+IvY3bYLLH7THlpwsVT9wv9GFV8/kxpo
+ 8PgA=
+X-Developer-Key: i=mripard@kernel.org; a=openpgp;
+ fpr=BE5675C37E818C8B5764241C254BCFC56BF6CE8D
 
-Move the DIMM labels initialization to the memory controller registration
-method as a preparation before adding the generic procedure to allocate an
-unique MC index. It's required because the DIMM labels contain the MC
-index as the "mc%u" part of the string, which in case of the
-auto-generated index isn't available at the moment of the MCI/csrow/dimms
-descriptor allocation.
+We just introduced a new initialization function for our connectors, so
+let's build a kunit test suite for it as well.
 
-Signed-off-by: Serge Semin <fancer.lancer@gmail.com>
+Reviewed-by: Dave Stevenson <dave.stevenson@raspberrypi.com>
+Signed-off-by: Maxime Ripard <mripard@kernel.org>
 ---
- drivers/edac/edac_mc.c | 48 +++++++++++++++++++++++++++---------------
- 1 file changed, 31 insertions(+), 17 deletions(-)
+ drivers/gpu/drm/tests/drm_connector_test.c | 123 +++++++++++++++++++++++++++++
+ 1 file changed, 123 insertions(+)
 
-diff --git a/drivers/edac/edac_mc.c b/drivers/edac/edac_mc.c
-index d6eed727b0cd..c0b36349999f 100644
---- a/drivers/edac/edac_mc.c
-+++ b/drivers/edac/edac_mc.c
-@@ -257,7 +257,6 @@ static int edac_mc_alloc_dimms(struct mem_ctl_info *mci)
- 	unsigned int pos[EDAC_MAX_LAYERS];
- 	unsigned int row, chn, idx;
- 	int layer;
--	void *p;
+diff --git a/drivers/gpu/drm/tests/drm_connector_test.c b/drivers/gpu/drm/tests/drm_connector_test.c
+index a268847be8d1..8f070cacab3b 100644
+--- a/drivers/gpu/drm/tests/drm_connector_test.c
++++ b/drivers/gpu/drm/tests/drm_connector_test.c
+@@ -172,6 +172,128 @@ static struct kunit_suite drmm_connector_init_test_suite = {
+ 	.test_cases = drmm_connector_init_tests,
+ };
  
- 	/*
- 	 * Allocate and fill the dimm structs
-@@ -272,7 +271,6 @@ static int edac_mc_alloc_dimms(struct mem_ctl_info *mci)
- 	for (idx = 0; idx < mci->tot_dimms; idx++) {
- 		struct dimm_info *dimm;
- 		struct rank_info *chan;
--		int n, len;
- 
- 		chan = mci->csrows[row]->channels[chn];
- 
-@@ -283,22 +281,9 @@ static int edac_mc_alloc_dimms(struct mem_ctl_info *mci)
- 		dimm->mci = mci;
- 		dimm->idx = idx;
- 
--		/*
--		 * Copy DIMM location and initialize it.
--		 */
--		len = sizeof(dimm->label);
--		p = dimm->label;
--		n = scnprintf(p, len, "mc#%u", mci->mc_idx);
--		p += n;
--		len -= n;
--		for (layer = 0; layer < mci->n_layers; layer++) {
--			n = scnprintf(p, len, "%s#%u",
--				      edac_layer_name[mci->layers[layer].type],
--				      pos[layer]);
--			p += n;
--			len -= n;
-+		/* Copy DIMM location */
-+		for (layer = 0; layer < mci->n_layers; layer++)
- 			dimm->location[layer] = pos[layer];
--		}
- 
- 		/* Link it to the csrows old API data */
- 		chan->dimm = dimm;
-@@ -511,6 +496,33 @@ void edac_mc_reset_delay_period(unsigned long value)
- 
- 
- 
-+/**
-+ * edac_mc_init_labels() - Initialize DIMM labels
-+ *
-+ * @mci: pointer to the mci structure which DIMM labels need to be initialized
-+ *
-+ * .. note::
-+ *	locking model: must be called with the mem_ctls_mutex lock held
++/*
++ * Test that the registration of a bog standard connector works as
++ * expected and doesn't report any error.
 + */
-+static void edac_mc_init_labels(struct mem_ctl_info *mci)
++static void drm_test_connector_hdmi_init_valid(struct kunit *test)
 +{
-+	int n, len, layer;
-+	unsigned int idx;
-+	char *p;
++	struct drm_connector_init_priv *priv = test->priv;
++	int ret;
 +
-+	for (idx = 0; idx < mci->tot_dimms; idx++) {
-+		len = sizeof(mci->dimms[idx]->label);
-+		p = mci->dimms[idx]->label;
-+
-+		n = scnprintf(p, len, "mc#%u", mci->mc_idx);
-+		for (layer = 0; layer < mci->n_layers; layer++) {
-+			n += scnprintf(p + n, len - n, "%s#%u",
-+				      edac_layer_name[mci->layers[layer].type],
-+				      mci->dimms[idx]->location[layer]);
-+		}
-+	}
++	ret = drmm_connector_hdmi_init(&priv->drm, &priv->connector,
++				       &dummy_funcs,
++				       DRM_MODE_CONNECTOR_HDMIA,
++				       &priv->ddc);
++	KUNIT_EXPECT_EQ(test, ret, 0);
 +}
 +
- /* Return 0 on success, 1 on failure.
-  * Before calling this function, caller must
-  * assign a unique value to mci->mc_idx.
-@@ -638,6 +650,8 @@ int edac_mc_add_mc_with_groups(struct mem_ctl_info *mci,
- 		goto fail0;
- 	}
- 
-+	edac_mc_init_labels(mci);
++/*
++ * Test that the registration of a connector without a DDC adapter
++ * doesn't report any error.
++ */
++static void drm_test_connector_hdmi_init_null_ddc(struct kunit *test)
++{
++	struct drm_connector_init_priv *priv = test->priv;
++	int ret;
 +
- 	if (add_mc_to_global_list(mci))
- 		goto fail0;
++	ret = drmm_connector_hdmi_init(&priv->drm, &priv->connector,
++				       &dummy_funcs,
++				       DRM_MODE_CONNECTOR_HDMIA,
++				       NULL);
++	KUNIT_EXPECT_EQ(test, ret, 0);
++}
++
++/*
++ * Test that the registration of an HDMI connector with an HDMI
++ * connector type succeeds.
++ */
++static void drm_test_connector_hdmi_init_type_valid(struct kunit *test)
++{
++	struct drm_connector_init_priv *priv = test->priv;
++	unsigned int connector_type = *(unsigned int *)test->param_value;
++	int ret;
++
++	ret = drmm_connector_hdmi_init(&priv->drm, &priv->connector,
++				       &dummy_funcs,
++				       connector_type,
++				       &priv->ddc);
++	KUNIT_EXPECT_EQ(test, ret, 0);
++}
++
++static const unsigned int drm_connector_hdmi_init_type_valid_tests[] = {
++	DRM_MODE_CONNECTOR_HDMIA,
++	DRM_MODE_CONNECTOR_HDMIB,
++};
++
++static void drm_connector_hdmi_init_type_desc(const unsigned int *type, char *desc)
++{
++	sprintf(desc, "%s", drm_get_connector_type_name(*type));
++}
++
++KUNIT_ARRAY_PARAM(drm_connector_hdmi_init_type_valid,
++		  drm_connector_hdmi_init_type_valid_tests,
++		  drm_connector_hdmi_init_type_desc);
++
++/*
++ * Test that the registration of an HDMI connector with an !HDMI
++ * connector type fails.
++ */
++static void drm_test_connector_hdmi_init_type_invalid(struct kunit *test)
++{
++	struct drm_connector_init_priv *priv = test->priv;
++	unsigned int connector_type = *(unsigned int *)test->param_value;
++	int ret;
++
++	ret = drmm_connector_hdmi_init(&priv->drm, &priv->connector,
++				       &dummy_funcs,
++				       connector_type,
++				       &priv->ddc);
++	KUNIT_EXPECT_LT(test, ret, 0);
++}
++
++static const unsigned int drm_connector_hdmi_init_type_invalid_tests[] = {
++	DRM_MODE_CONNECTOR_Unknown,
++	DRM_MODE_CONNECTOR_VGA,
++	DRM_MODE_CONNECTOR_DVII,
++	DRM_MODE_CONNECTOR_DVID,
++	DRM_MODE_CONNECTOR_DVIA,
++	DRM_MODE_CONNECTOR_Composite,
++	DRM_MODE_CONNECTOR_SVIDEO,
++	DRM_MODE_CONNECTOR_LVDS,
++	DRM_MODE_CONNECTOR_Component,
++	DRM_MODE_CONNECTOR_9PinDIN,
++	DRM_MODE_CONNECTOR_DisplayPort,
++	DRM_MODE_CONNECTOR_TV,
++	DRM_MODE_CONNECTOR_eDP,
++	DRM_MODE_CONNECTOR_VIRTUAL,
++	DRM_MODE_CONNECTOR_DSI,
++	DRM_MODE_CONNECTOR_DPI,
++	DRM_MODE_CONNECTOR_WRITEBACK,
++	DRM_MODE_CONNECTOR_SPI,
++	DRM_MODE_CONNECTOR_USB,
++};
++
++KUNIT_ARRAY_PARAM(drm_connector_hdmi_init_type_invalid,
++		  drm_connector_hdmi_init_type_invalid_tests,
++		  drm_connector_hdmi_init_type_desc);
++
++static struct kunit_case drmm_connector_hdmi_init_tests[] = {
++	KUNIT_CASE(drm_test_connector_hdmi_init_valid),
++	KUNIT_CASE(drm_test_connector_hdmi_init_null_ddc),
++	KUNIT_CASE_PARAM(drm_test_connector_hdmi_init_type_valid,
++			 drm_connector_hdmi_init_type_valid_gen_params),
++	KUNIT_CASE_PARAM(drm_test_connector_hdmi_init_type_invalid,
++			 drm_connector_hdmi_init_type_invalid_gen_params),
++	{ }
++};
++
++static struct kunit_suite drmm_connector_hdmi_init_test_suite = {
++	.name = "drmm_connector_hdmi_init",
++	.init = drm_test_connector_init,
++	.test_cases = drmm_connector_hdmi_init_tests,
++};
++
+ struct drm_get_tv_mode_from_name_test {
+ 	const char *name;
+ 	enum drm_connector_tv_mode expected_mode;
+@@ -236,6 +358,7 @@ static struct kunit_suite drm_get_tv_mode_from_name_test_suite = {
+ };
  
+ kunit_test_suites(
++	&drmm_connector_hdmi_init_test_suite,
+ 	&drmm_connector_init_test_suite,
+ 	&drm_get_tv_mode_from_name_test_suite
+ );
+
 -- 
-2.43.0
+2.43.2
 
