@@ -1,127 +1,87 @@
-Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E6AB3715F
-	for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 09:19:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C210374FC
+	for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 09:19:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708593596; cv=none; b=PQhVx7UigWE2MMmzkkbnA5dtebk5GICLnWfqjlopQdexK7mFOqmF1b2VcxCxOqwsrBdZ7SmUesOHKW/KKEucGLeBnv7y1unm2XVr/TEJNzsef1ggCs1VO8xM7lYuUS4lV5VY0gRTN7kPK0fWnaAjPNq8ZoEqDzH8NW3GkPw8vhM=
+	t=1708593604; cv=none; b=AURlbk1DMJE+xqMzJhCdLe1CQE7DrLf3G4yCafDl8XSsGU64vwElWqGFKqLAXDE46s70mV+/vLFx39UyzTVLFRnV/WJMJ72CX4+ed7oZ3Ce6PXYLkxjfZvOqnh/bETIX7RwTGHKmaRN/fylncXfrkfCNo1fAyv6ja6UL+lh0Zik=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708593596; c=relaxed/simple;
-	bh=GeTk6TXrOBLprCtJy7fDOvTsG+cuRB3ZWlSbi+XrxUM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=EUyF1AIKOs6YJEoLTljGBo/zMT44rjc8e/1uDUgLeY1CrXe++TsWO8QtZt6HQsvjEFnCc3AldfwqJqBfB5XqQPHiXQDLrZmsest6Yx0ugg5GGe8icCLu/kfI2fMgCf1fZSllgksVQlupmTPhyA8WJG9MnEdw7hte5Ue09WyZ/WU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=KqizlL8m; arc=none smtp.client-ip=209.85.218.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KqizlL8m"
-Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-a2f22bfb4e6so957749666b.0
-        for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 01:19:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1708593591; x=1709198391; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=PmCv2CfcyvQ6sw1yTT6r/W//XC5XTP1YOZCBBSo1OxU=;
-        b=KqizlL8m1G+awDnjbE1Thc5OQ02fg+qgbZsGG880drIK/gAvy8Y/Xb9mwGgUpsBWzI
-         +8YG2W0+X8B6vkm3UEuGT+3nmbW127UxVi+1sm98oLxbaIoNKteVERYYWbLF9iXhWMdW
-         KV/CjqmeJJP9pFHFrRWxcsMCIKAbtuvIN83Y9qb/RYIO/TqM90FpEk11THkZ3FfYDzIl
-         +x+jz1vyu+Q+Jt1a9Pb9kgL4P+LfdbLBwKuSgE9oryjZCusOUDqC1aQLnMMUQcOuIlV2
-         YtL8J8hl/iuX0zdaWrLPP9gasd+7OXhRfYyKQ02iipdJpCgMhbj5hMNZF8aK5fLbS+sc
-         Bmbw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708593591; x=1709198391;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=PmCv2CfcyvQ6sw1yTT6r/W//XC5XTP1YOZCBBSo1OxU=;
-        b=hlG5kE66clKP8Yq6vlLyz5fOJBrMLaihGfMDyGdFt9x14tTnFMd9dcRsVQrMKQ+c6G
-         QS30Ln92+yIjvuyvq67mieeTBkQrPuDDp1tEh0bDTjau5t+64XtU0so7VbCSlUkth6NV
-         eSO78RcC+oD+jiMWv8w22r43YHYkZKy77E0rxu19GscnfXhNg2reHojPde3X2SzUVYpl
-         Nw/1cpYAq+EHN4Ol33hJcgYbUUrTxh6hRdLkXWRo0efbELjbiRlfBBc15OxFXg/9NdPU
-         IplJ2Fm6VJgiDJ6OUsMjAL2QthCr7w6byPe4XX0kek6SgKohmx1I68ZY2xyTqZghOwhn
-         6UlQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVP3owQu9hoDEPk/fc40pWjhuE+5hunbQIk7yi5u3KrvLsk3beWzutC8ohTs9YDfXEJIWmApHROwHa1SiZGKA9L/zIwu430fdRmDG5q
-X-Gm-Message-State: AOJu0YwiiJZcLhu0Xqsnch6/oc/p5g5U/jNJ+E5QzZx2hAxxGswTSWqE
-	IcVQ6bnCiAYgHpRe8SKjUbB2t+Q1nBNch8GzDqrcXDCv0WPAm6SYu2QyVQMr5+k=
-X-Google-Smtp-Source: AGHT+IElQJs14kGBEH2/dau4pudlpNgnogD+EQS8guSJOGGw5Csg+0mpBBjRV5MfGLpTwt/CHIV6QQ==
-X-Received: by 2002:a17:906:2b88:b0:a3e:34b2:a2fc with SMTP id m8-20020a1709062b8800b00a3e34b2a2fcmr8564380ejg.1.1708593590715;
-        Thu, 22 Feb 2024 01:19:50 -0800 (PST)
-Received: from [192.168.2.107] ([79.115.63.202])
-        by smtp.gmail.com with ESMTPSA id q10-20020a17090609aa00b00a3f6466ba85sm852819eje.35.2024.02.22.01.19.49
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 22 Feb 2024 01:19:50 -0800 (PST)
-Message-ID: <f7c45e7b-993c-444b-8710-042da7512bbf@linaro.org>
-Date: Thu, 22 Feb 2024 09:19:48 +0000
+	s=arc-20240116; t=1708593604; c=relaxed/simple;
+	bh=ANkNqwXsmtPuOzbLx+H6ZXxfhGnqPbfCnaTERUYV3WA=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Hj7m9GoF6l5TiiIO6gmqqQiD2a1XbM+/lJCAqZOurQ8wJjBTeHCrwgc/PWKznFvBco4UndY6z3OCfz40JLIT7F+P9FzHr7FFDOyqaD9ieVYjH1oHf1ZNbFfQSVHLiF3a52vqHjorcNa48haHvBMSoRuOuImSK+o5VoGbzwowUCM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
+X-UUID: 7c6705b100a440f8867d2993efaf481b-20240222
+X-CID-O-RULE: Release_Ham
+X-CID-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.35,REQID:96dc2a91-b9c3-43bb-80a7-42cdec47de1a,IP:25,
+	URL:0,TC:0,Content:0,EDM:-25,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,AC
+	TION:release,TS:-15
+X-CID-INFO: VERSION:1.1.35,REQID:96dc2a91-b9c3-43bb-80a7-42cdec47de1a,IP:25,UR
+	L:0,TC:0,Content:0,EDM:-25,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACTI
+	ON:release,TS:-15
+X-CID-META: VersionHash:5d391d7,CLOUDID:7fe9968f-e2c0-40b0-a8fe-7c7e47299109,B
+	ulkID:2402221719539PY4MH4A,BulkQuantity:0,Recheck:0,SF:24|17|19|44|66|102,
+	TC:nil,Content:0,EDM:1,IP:-2,URL:0,File:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,
+	OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0
+X-CID-BVR: 0,NGT
+X-CID-BAS: 0,NGT,0,_
+X-CID-FACTOR: TF_CID_SPAM_FSD,TF_CID_SPAM_FSI,TF_CID_SPAM_SNR,TF_CID_SPAM_FAS
+X-UUID: 7c6705b100a440f8867d2993efaf481b-20240222
+X-User: gehao@kylinos.cn
+Received: from localhost.localdomain [(116.128.244.171)] by mailgw
+	(envelope-from <gehao@kylinos.cn>)
+	(Generic MTA)
+	with ESMTP id 2074393446; Thu, 22 Feb 2024 17:19:50 +0800
+From: Hao Ge <gehao@kylinos.cn>
+To: akpm@linux-foundation.org
+Cc: linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	gehao618@163.com,
+	Hao Ge <gehao@kylinos.cn>
+Subject: [PATCH] mm/page_alloc: Make check_new_page return bool
+Date: Thu, 22 Feb 2024 17:19:32 +0800
+Message-Id: <20240222091932.54799-1-gehao@kylinos.cn>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] mtd: spi-nor: Add support for BoHong bh25q128as
-Content-Language: en-US
-To: Christian Marangi <ansuelsmth@gmail.com>,
- Pratyush Yadav <pratyush@kernel.org>, Michael Walle <mwalle@kernel.org>,
- Miquel Raynal <miquel.raynal@bootlin.com>,
- Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>,
- linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org
-Cc: David Bauer <mail@david-bauer.net>
-References: <20240220200325.19089-1-ansuelsmth@gmail.com>
-From: Tudor Ambarus <tudor.ambarus@linaro.org>
-In-Reply-To: <20240220200325.19089-1-ansuelsmth@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
+Make check_new_page return bool like check_new_pages
 
+Signed-off-by: Hao Ge <gehao@kylinos.cn>
+---
+ mm/page_alloc.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-On 2/20/24 20:03, Christian Marangi wrote:
-> From: David Bauer <mail@david-bauer.net>
-> 
-> Add MTD support for the BoHong bh25q128as SPI NOR chip.
-> The chip has 16MB of total capacity, divided into a total of 256
-> sectors, each 64KB sized. The chip also supports 4KB sectors.
-> Additionally, it supports dual and quad read modes.
-> 
-> Datasheet is public and can be found at the referenced link.
-> 
-> Functionality was verified on an Tenbay WR1800K / MTK MT7621 board.
-> 
-> Link: https://www.e-interlink.com.tw/userUpload/files/BH25Q128AS_v1_0.pdf
-> Signed-off-by: David Bauer <mail@david-bauer.net>
-> [ reworked to new flash_info format ]
-> Signed-off-by: Christian Marangi <ansuelsmth@gmail.com>
-> ---
-> Read/write/erase test are done by flashing and installing an OpenWrt
-> image on the spi and by using overlayfs on it confirming correct
-> read/write.
-> 
-> root@OpenWrt:/tmp/tmp2# cat /sys/bus/spi/devices/spi0.0/spi-nor/partname 
-> bh25q128as
-> root@OpenWrt:/tmp/tmp2# cat /sys/bus/spi/devices/spi0.0/spi-nor/jedec_id 
-> 684018
-> root@OpenWrt:/tmp/tmp2# cat /sys/bus/spi/devices/spi0.0/spi-nor/manufacturer 
-> bohong
-> 
-> root@OpenWrt:/# xxd -p /sys/bus/spi/devices/spi0.0/spi-nor/sfdp
-> 53464450000101ff00000109300000ff68000103600000ffffffffffffff
-> ffffffffffffffffffffffffffffffffffffe520f1ffffffff0744eb086b
-> 083b42bbeeffffffffff00ffffff44eb0c200f5210d800ffffffffffffff
-> ffffffffffff003600279ef97764fcebffff
-> 
+diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+index 150d4f23b010..c7a0bc546d2c 100644
+--- a/mm/page_alloc.c
++++ b/mm/page_alloc.c
+@@ -1422,14 +1422,14 @@ static void check_new_page_bad(struct page *page)
+ /*
+  * This page is about to be returned from the page allocator
+  */
+-static int check_new_page(struct page *page)
++static bool check_new_page(struct page *page)
+ {
+ 	if (likely(page_expected_state(page,
+ 				PAGE_FLAGS_CHECK_AT_PREP|__PG_HWPOISON)))
+-		return 0;
++		return false;
+ 
+ 	check_new_page_bad(page);
+-	return 1;
++	return true;
+ }
+ 
+ static inline bool check_new_pages(struct page *page, unsigned int order)
+-- 
+2.25.1
 
-Hey, Christian,
-
-Seems that the flash defines the SFDP tables, thus it's likely you won't
-need a flash entry at all, and instead rely on the generic SFDP driver
-to parse the flash settings from SFDP and initialize the flash based on
-that.
-
-Have you tried testing the flash without adding a dedicated entry for
-it? Just specifying the jedec,spi-nor compatible in dt will do the
-trick. As you do now, but without this patch :).
-
-Cheers,
-ta
