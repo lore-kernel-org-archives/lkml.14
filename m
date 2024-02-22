@@ -1,184 +1,141 @@
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f173.google.com (mail-oi1-f173.google.com [209.85.167.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13EBB11C82;
-	Thu, 22 Feb 2024 02:56:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4153211C82
+	for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 02:56:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708570586; cv=none; b=H5eK+12rWZ3Qmn1iw17XSP+969gxkr/ZipMN+SDjd7bjCUChIRXUsWJ2tfpsLc1xLn5MPQZAw0UKE34+xrWzMAaT94uJCOQR9UVRv3siz5DHFmDsD6n8puCzWH1vyC5SKqaHxEQZxmK0B9JBm4Ow/O3lbX40IZmOQQdxAJNUhpI=
+	t=1708570606; cv=none; b=fDQn8w4Cce2CVZ/WCNSpzfvxARecJoQPWrYf1VxJVYoCfadA28Q9uTqQZQ8Ax8hDP7mtvSLtSEh5ggPNjxTy92Nxkh2DoeaXKdxBdfHjEaGWe7zbehFx23fXXl08Ik+n0h33nybsucN1d2ttebv1jWUg6X4VBxL8JASu75b9TIQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708570586; c=relaxed/simple;
-	bh=owZ8qqgeTtYrNFwZVsLbpW5ktf+EvacwmKJTqWLTSME=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=E/K9By7QUHTFunyxGmCg9vGl2TQDO47Mu2OzDmLOgzoDZ3rOai3snTJbXXU9w70b9Jw3w5AZgfJE+BZ6GJWiRoyXF/pfOZH6bHV8hWZQsoydVVC/HrJiMrjVfja1BlbktScBta2EbnGm2bnNhdDI73+kr4teFxzyxtlYHdWozkI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.48])
-	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4TgHm92VknzvVwW;
-	Thu, 22 Feb 2024 10:54:17 +0800 (CST)
-Received: from dggpemd100002.china.huawei.com (unknown [7.185.36.164])
-	by mail.maildlp.com (Postfix) with ESMTPS id 7BA5418005D;
-	Thu, 22 Feb 2024 10:56:20 +0800 (CST)
-Received: from huawei.com (10.67.174.33) by dggpemd100002.china.huawei.com
- (7.185.36.164) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.2.1258.28; Thu, 22 Feb
- 2024 10:56:20 +0800
-From: "GONG, Ruiqi" <gongruiqi1@huawei.com>
-To: <linux-kernel@vger.kernel.org>, <stable@vger.kernel.org>, Johannes Weiner
-	<hannes@cmpxchg.org>, Michal Hocko <mhocko@kernel.org>, Roman Gushchin
-	<roman.gushchin@linux.dev>, Shakeel Butt <shakeelb@google.com>, Muchun Song
-	<muchun.song@linux.dev>
-CC: <cgroups@vger.kernel.org>, <linux-mm@kvack.org>, Wang Weiyang
-	<wangweiyang2@huawei.com>, Xiu Jianfeng <xiujianfeng@huawei.com>
-Subject: [PATCH v2 stable] memcg: add refcnt for pcpu stock to avoid UAF problem in drain_all_stock()
-Date: Thu, 22 Feb 2024 11:02:37 +0800
-Message-ID: <20240222030237.82486-1-gongruiqi1@huawei.com>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1708570606; c=relaxed/simple;
+	bh=cjbzk4J6RBFDSQitJ9tD7JhJ/5XIpVvg1mXNgJPsdS8=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=dWA3gWrvStj9DbaMo3dYf/ENH1DgRCRrXE6UL7kCxXfmzNDOFTpf6KtwNkeoL/FhjOw+EPlmn/NiylLfQ64raA1BMynxUl48NVvUdzncUByOiUJl1Zwd0xqzw0uoEtCyZoUl65yAF4tmviRZrtseV260mRsBcxMx5fqYnM/AlQE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=veJjUlJF; arc=none smtp.client-ip=209.85.167.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="veJjUlJF"
+Received: by mail-oi1-f173.google.com with SMTP id 5614622812f47-3c132695f1bso5596663b6e.2
+        for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 18:56:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1708570603; x=1709175403; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=uN1z+8L41UbmtRlLvYsYRzP1jZi643QHg8Pfax3eEzg=;
+        b=veJjUlJFVAJyM47toJAKsTrzMnVCJzgBwV4WAhHQC7TySiOglwkWMSrGE3Vs+JeEwE
+         iuQ04rLFUi2XUMarX6/UQCoJqHcwI+uakqz2XG+rGkUMnZPrqY+6+4IaTDNjEVSqwhiy
+         EJrwukPwE5T0wvEifYD/CNn1Xn5TFgORiwtTLiWk/MKOwkU+kcGFVMkaS6qeZ6u+TuNR
+         4DfeTJpWlLpiuJ9azsC6Frpf1SM4J+bZFsGKx7pb/F6YlROjM+wHb3AsPK00f7DSCjDA
+         PzetmJsOYl7FhUswPwFarUPju6oaMEkiAXbIAe+lAR9oVx4o6FS1cHUqcyPnLRJIYU/B
+         bz1A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708570603; x=1709175403;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=uN1z+8L41UbmtRlLvYsYRzP1jZi643QHg8Pfax3eEzg=;
+        b=n4kqD2/Dgu+o2aErwlW8ZfgAsqgVKcO5XvV1bRZqLJupdLJAMKkpMKoDLr8f9EaaMK
+         faOyF94Tue5MFb4ONGyg67V6nnVdiyEG6nP/y9M9qTHkW6dK4wEF4hzJtkuyyzjhPcFH
+         X3Sg9Oyt/wO6qjkDMucJ/CeSHw2AqIyeO/klYCE2mJuB54bGnqBLKANZzgUYA2kUkwzt
+         vkS8kp9ubrPYUVMlyDEPsEOQEGOapmktXn2Ms50PnMwaGtvVR5+tBbWt+pFUPWAqleiH
+         zCk52o6Tr4Kes26wCBaXotZYp6yqTI3WWT+xH8n4dPyVi/0bvxqt7NAHamYy4bb62Qb3
+         knwQ==
+X-Gm-Message-State: AOJu0YyVGhh7gPIyvSdf0K+Px4tckH8IrStOQFkgOGAy+jCxf3g+REsQ
+	0mVN4N3mRSMSsej/EjLA7jeFQ49bj6hFxVsUamlQ43atpdmsQ5LjxAVSSCPAzBk=
+X-Google-Smtp-Source: AGHT+IEhMe8BvYwTDszeyAvwGN45JNsdUUaq9iWz1FcmMo2hc1xvpUL9o23e5bNyEjBUWo6RZt3ddQ==
+X-Received: by 2002:a05:6808:1205:b0:3bf:e15d:a6b5 with SMTP id a5-20020a056808120500b003bfe15da6b5mr27542614oil.13.1708570603425;
+        Wed, 21 Feb 2024 18:56:43 -0800 (PST)
+Received: from charlie.ba.rivosinc.com ([64.71.180.162])
+        by smtp.gmail.com with ESMTPSA id k12-20020a170902f28c00b001dba98889a3sm8797521plc.71.2024.02.21.18.56.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 21 Feb 2024 18:56:42 -0800 (PST)
+From: Charlie Jenkins <charlie@rivosinc.com>
+Subject: [PATCH v9 0/2] lib: checksum: Fix issues with checksum tests
+Date: Wed, 21 Feb 2024 18:55:48 -0800
+Message-Id: <20240221-fix_sparse_errors_checksum_tests-v9-0-bff4d73ab9d1@rivosinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
- dggpemd100002.china.huawei.com (7.185.36.164)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIALS31mUC/5XRy2rEIBQG4FcZXNdiPN7SVd+jlODlpCNlkkHT0
+ DLk3Wtm01BcOMtf8Ps9xxvJmCJm8nK6kYRrzHGeSuifTsSf7fSBNIaSCWdcsK7r6Ri/h3y1KeO
+ AKc0pD/6M/jN/XYYF85IpV84oByJoI0hhrgnLnXvF23vJ55iXOf3cG9duP30AXzvaUR4gjEYFU
+ ypeU1znHCf/7OcL2f2VH0wODSanjDpgyimPOlhZMeFRE4qJI3qvx17wXldMcTRFgyn2d3ruTOB
+ gQfqKKQ8msAZTFlMEY5kF0CixYqo/kzPdYKrd9Nb2qgzOpKuY+mB2vMHU++wugDOjElqoimmOZ
+ ss+TTGh/DpDpUH28M/ctu0XL340QB8DAAA=
+To: Guenter Roeck <linux@roeck-us.net>, 
+ David Laight <David.Laight@aculab.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
+ Andrew Morton <akpm@linux-foundation.org>, Helge Deller <deller@gmx.de>, 
+ "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>, 
+ Parisc List <linux-parisc@vger.kernel.org>, 
+ Al Viro <viro@zeniv.linux.org.uk>
+Cc: linux-kernel@vger.kernel.org, Charlie Jenkins <charlie@rivosinc.com>, 
+ kernel test robot <lkp@intel.com>
+X-Mailer: b4 0.12.3
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1708570602; l=2263;
+ i=charlie@rivosinc.com; s=20231120; h=from:subject:message-id;
+ bh=cjbzk4J6RBFDSQitJ9tD7JhJ/5XIpVvg1mXNgJPsdS8=;
+ b=Uf8xN3VqZLdNSas1slUX+L2YIbZvveVjojsmX2060OGD0y8b8HZjfOfNilvWrpPLcZI8+wL/k
+ 0ghrhw454+6Cx5V+BbMiHRsR1icwdKuMpf2zOacsihg8bNCzfZ6TJFW
+X-Developer-Key: i=charlie@rivosinc.com; a=ed25519;
+ pk=t4RSWpMV1q5lf/NWIeR9z58bcje60/dbtxxmoSfBEcs=
 
-commit 1a3e1f40962c445b997151a542314f3c6097f8c3 upstream.
+The ip_fast_csum and csum_ipv6_magic tests did not work on all
+architectures due to differences in endianness and misaligned access
+support. Fix those issues by changing endianness of data and aligning
+the data.
 
-NOTE: This is a partial backport since we only need the refcnt between
-memcg and stock to fix the problem stated below, and in this way
-multiple versions use the same code and align with each other.
+Signed-off-by: Charlie Jenkins <charlie@rivosinc.com>
+---
+Changes in v9:
+- Revert back to v7, the changes to v8 were not needed
+- Link to v8: https://lore.kernel.org/r/20240214-fix_sparse_errors_checksum_tests-v8-0-36b60e673593@rivosinc.com
+
+Changes in v8:
+- Change ipv6_magic test case to use memcpy to avoid misalignment
+- Add Guenter's tested-by to patch 1 but not patch 2 since the later has
+  changed
+- Link to v7: https://lore.kernel.org/r/20240212-fix_sparse_errors_checksum_tests-v7-0-bbd3b8f64746@rivosinc.com
+
+Changes in v7:
+- Incorporate feedback for test_csum_ipv6_magic from Guenter and Al
+- Link to v6: https://lore.kernel.org/r/20240207-fix_sparse_errors_checksum_tests-v6-0-4caa9629705b@rivosinc.com
+
+Changes in v6:
+- Fix for big endian (Guenter)
+- Link to v5: https://lore.kernel.org/r/20240130-fix_sparse_errors_checksum_tests-v5-0-4d8a0a337e5e@rivosinc.com
+
+Changes in v5:
+- Add Guenter's tested-by
+- CC Andrew Morton
+- Link to v4: https://lore.kernel.org/r/20240124-fix_sparse_errors_checksum_tests-v4-0-bc2b8d23a35c@rivosinc.com
+
+Changes in v4:
+- Pad test values with zeroes (David)
+- Link to v3: https://lore.kernel.org/r/20240123-fix_sparse_errors_checksum_tests-v3-0-efecc7f94297@rivosinc.com
+
+Changes in v3:
+- Don't read memory out of bounds
+- Link to v2: https://lore.kernel.org/r/20240123-fix_sparse_errors_checksum_tests-v2-0-b306b6ce7da5@rivosinc.com
+
+Changes in v2:
+- Add additional patch to fix alignment issues
+- Link to v1: https://lore.kernel.org/r/20240119-fix_sparse_errors_checksum_tests-v1-1-2d3df86d8d78@rivosinc.com
 
 ---
+Charlie Jenkins (2):
+      lib: checksum: Fix type casting in checksum kunits
+      lib: checksum: Use aligned accesses for ip_fast_csum and csum_ipv6_magic tests
 
-There was a kernel panic happened on an in-house environment running
-3.10, and the same problem was reproduced on 4.19:
-
-general protection fault: 0000 [#1] SMP PTI
-CPU: 1 PID: 2085 Comm: bash Kdump: loaded Tainted: G             L    4.19.90+ #7
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.15.0-0-g2dd4b9b3f840-prebuilt.qemu.org 04/01/2014
-RIP: 0010 drain_all_stock+0xad/0x140
-Code: 00 00 4d 85 ff 74 2c 45 85 c9 74 27 4d 39 fc 74 42 41 80 bc 24 28 04 00 00 00 74 17 49 8b 04 24 49 8b 17 48 8b 88 90 02 00 00 <48> 39 8a 90 02 00 00 74 02 eb 86 48 63 88 3c 01 00 00 39 8a 3c 01
-RSP: 0018:ffffa7efc5813d70 EFLAGS: 00010202
-RAX: ffff8cb185548800 RBX: ffff8cb89f420160 RCX: ffff8cb1867b6000
-RDX: babababababababa RSI: 0000000000000001 RDI: 0000000000231876
-RBP: 0000000000000000 R08: 0000000000000415 R09: 0000000000000002
-R10: 0000000000000000 R11: 0000000000000001 R12: ffff8cb186f89040
-R13: 0000000000020160 R14: 0000000000000001 R15: ffff8cb186b27040
-FS:  00007f4a308d3740(0000) GS:ffff8cb89f440000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007ffe4d634a68 CR3: 000000010b022000 CR4: 00000000000006e0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- mem_cgroup_force_empty_write+0x31/0xb0
- cgroup_file_write+0x60/0x140
- ? __check_object_size+0x136/0x147
- kernfs_fop_write+0x10e/0x190
- __vfs_write+0x37/0x1b0
- ? selinux_file_permission+0xe8/0x130
- ? security_file_permission+0x2e/0xb0
- vfs_write+0xb6/0x1a0
- ksys_write+0x57/0xd0
- do_syscall_64+0x63/0x250
- ? async_page_fault+0x8/0x30
- entry_SYSCALL_64_after_hwframe+0x5c/0xc1
-Modules linked in: ...
-
-It is found that in case of stock->nr_pages == 0, the memcg on
-stock->cached could be freed due to its refcnt decreased to 0, which
-made stock->cached become a dangling pointer. It could cause a UAF
-problem in drain_all_stock() in the following concurrent scenario. Note
-that drain_all_stock() doesn't disable irq but only preemption.
-
-CPU1                             CPU2
-==============================================================================
-stock->cached = memcgA (freed)
-                                 drain_all_stock(memcgB)
-                                  rcu_read_lock()
-                                  memcg = CPU1's stock->cached (memcgA)
-                                  (interrupted)
-refill_stock(memcgC)
- drain_stock(memcgA)
- stock->cached = memcgC
- stock->nr_pages += xxx (> 0)
-                                  stock->nr_pages > 0
-                                  mem_cgroup_is_descendant(memcgA, memcgB) [UAF]
-                                  rcu_read_unlock()
-
-This problem is, unintentionally, fixed at 5.9, where commit
-1a3e1f40962c ("mm: memcontrol: decouple reference counting from page
-accounting") adds memcg refcnt for stock. Therefore affected LTS
-versions include 4.19 and 5.4.
-
-For 4.19, memcg's css offline process doesn't call drain_all_stock(). so
-it's easier for the released memcg to be left on the stock. For 5.4,
-although mem_cgroup_css_offline() does call drain_all_stock(), but the
-flushing could be skipped when stock->nr_pages happens to be 0, and
-besides the async draining could be delayed and take place after the UAF
-problem has happened.
-
-Fix this problem by adding (and decreasing) memcg's refcnt when memcg is
-put onto (and removed from) stock, just like how commit 1a3e1f40962c
-("mm: memcontrol: decouple reference counting from page accounting")
-does. After all, "being on the stock" is a kind of reference with
-regards to memcg. As such, it's guaranteed that a css on stock would not
-be freed.
-
-It's good to mention that refill_stock() is executed in an irq-disabled
-context, so the drain_stock() patched with css_put() would not actually
-free memcgA until the end of refill_stock(), since css_put() is an RCU
-free and it's still in grace period. For CPU2, the access to CPU1's
-stock->cached is protected by rcu_read_lock(), so in this case it gets
-either NULL from stock->cached or a memcgA that is still good.
-
-Cc: stable@vger.kernel.org      # 4.19 5.4
-Fixes: cdec2e4265df ("memcg: coalesce charging via percpu storage")
-Signed-off-by: GONG, Ruiqi <gongruiqi1@huawei.com>
-Acked-by: Michal Hocko <mhocko@suse.com>
+ lib/checksum_kunit.c | 396 ++++++++++++++++++---------------------------------
+ 1 file changed, 136 insertions(+), 260 deletions(-)
 ---
-
-v2:
-- Add a statement of this patch being a partial backport
-- Add a paragraph to mention the grace period in refill_stock()
-
-
- mm/memcontrol.c | 6 ++++++
- 1 file changed, 6 insertions(+)
-
-diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-index 5a366cf79821..8c04296df1c7 100644
---- a/mm/memcontrol.c
-+++ b/mm/memcontrol.c
-@@ -2015,6 +2015,9 @@ static void drain_stock(struct memcg_stock_pcp *stock)
- {
- 	struct mem_cgroup *old = stock->cached;
- 
-+	if (!old)
-+		return;
-+
- 	if (stock->nr_pages) {
- 		page_counter_uncharge(&old->memory, stock->nr_pages);
- 		if (do_memsw_account())
-@@ -2022,6 +2025,8 @@ static void drain_stock(struct memcg_stock_pcp *stock)
- 		css_put_many(&old->css, stock->nr_pages);
- 		stock->nr_pages = 0;
- 	}
-+
-+	css_put(&old->css);
- 	stock->cached = NULL;
- }
- 
-@@ -2057,6 +2062,7 @@ static void refill_stock(struct mem_cgroup *memcg, unsigned int nr_pages)
- 	stock = this_cpu_ptr(&memcg_stock);
- 	if (stock->cached != memcg) { /* reset if necessary */
- 		drain_stock(stock);
-+		css_get(&memcg->css);
- 		stock->cached = memcg;
- 	}
- 	stock->nr_pages += nr_pages;
+base-commit: 6613476e225e090cc9aad49be7fa504e290dd33d
+change-id: 20240119-fix_sparse_errors_checksum_tests-26b86b34d784
 -- 
-2.25.1
+- Charlie
 
