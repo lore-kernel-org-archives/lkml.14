@@ -1,109 +1,130 @@
-Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D62B3F9ED;
-	Thu, 22 Feb 2024 13:22:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.248
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFF9712FF74;
+	Thu, 22 Feb 2024 13:23:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708608165; cv=none; b=oAaYvkCH/Z3vWK6OOmJ0Q34wIGsQoujYHb72mW1PdltXRM2YStsAwBn4WpClR5Ei2Y4zKvDWmXF7qafnEBGhPteNUHNIFejy2W2MZfrP3bG5/txCQhWzkrhxGQdYSsOOTQj63Kv4wVLnHZ83Y6+9AZGZhhYIS7zeu+HvupCLY/A=
+	t=1708608183; cv=none; b=Nwl1Ejh1B5ZivsPScwLCuf7xxAlVAQcA+s42OcB3N2AZR/1QJMy1ddi6sQsKQ1SHVWrv0wfLM18bVK5mORtUtZrvxiLBtanMSLTKkfShBL6CbDvFMFfgocRQenXDPNmtD7rGWS0kbXu3W+6PPYKnQ2xYYtKFFovsj7p7Dpc1NEc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708608165; c=relaxed/simple;
-	bh=eBYXIyM7l7L2CPD4PZhB6FUIsDNqhBJx3bdqZp3tWg4=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=XOfzg/6ZDn9CakRQJXFcdYk8RJGp7yXqVNJU0rstMNJ1CnMI/4R1y/1/hV6xgSP8ZYw553YcxBMpQSzAxzKhl5u2oOsLlMlu9imDNiJwkfili5W4vXJhcL6VBzwh2pk4to+NBI4aPJj11/1sMv7PvUAkoSxR4A8g/XGwPgggkI8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=bNzOX7jY; arc=none smtp.client-ip=198.47.23.248
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1708608183; c=relaxed/simple;
+	bh=QwJXV1RkcSLVuEf5+mwh8xc/Wk/KLMXNQAhGRjILcLE=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=iphpEmq0ggzkCB6dz0OvjCsoL5Hjdx/3lz5R0zUK8G94ViLlkeyTMws990bXpbXGFO6k1/CwtDwrI2DNd9FreMAJAQisMXCvZAUfnmHcofMN2RYRp2WXvrhQy2n5mqk3IdcLDdQtzMceupziH1F3L/Xuc/eyNq0/eYtVWiYMHyY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=xJ/aRi9G; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=vZiRjwR+; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="bNzOX7jY"
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-	by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 41MDMZLD046755;
-	Thu, 22 Feb 2024 07:22:35 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1708608155;
-	bh=XgfpVgHH1tgrJ5dLNBy/JKfod6zFSg3RNVRg+hVXmEo=;
-	h=From:To:CC:Subject:Date:In-Reply-To:References;
-	b=bNzOX7jYKJtuRVFz4CF/+dZ0IteuFbYrcHXSawakmYBK5KAOSW9P74YH6x/yww1wI
-	 sDqR83VRj2V70Q71oDfAxcViSlNMAt8KeyE+AXzLn4hPZjCXnUAGCtldhwrmAnEhFh
-	 OMi+MVtsTI2Mb8ZonCeJEVs7wPMZxB0/W2gud56M=
-Received: from DLEE102.ent.ti.com (dlee102.ent.ti.com [157.170.170.32])
-	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 41MDMZmX120727
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Thu, 22 Feb 2024 07:22:35 -0600
-Received: from DLEE104.ent.ti.com (157.170.170.34) by DLEE102.ent.ti.com
- (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 22
- Feb 2024 07:22:35 -0600
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE104.ent.ti.com
- (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Thu, 22 Feb 2024 07:22:35 -0600
-Received: from uda0132425.dhcp.ti.com (uda0132425.dhcp.ti.com [172.24.227.94])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 41MDMVWF008883;
-	Thu, 22 Feb 2024 07:22:32 -0600
-From: Vignesh Raghavendra <vigneshr@ti.com>
-To: <nm@ti.com>, <kristo@kernel.org>, <robh@kernel.org>,
-        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
-        Vaishnav Achath
-	<vaishnav.a@ti.com>
-CC: Vignesh Raghavendra <vigneshr@ti.com>,
-        <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <u-kumar1@ti.com>,
-        <s-vadapalli@ti.com>
-Subject: Re: [PATCH v2 0/2] Add OSPI and Ethernet support on J722S EVM
-Date: Thu, 22 Feb 2024 18:52:28 +0530
-Message-ID: <170860805562.1966114.3015232602049266823.b4-ty@ti.com>
-X-Mailer: git-send-email 2.43.2
-In-Reply-To: <20240219090435.934383-1-vaishnav.a@ti.com>
-References: <20240219090435.934383-1-vaishnav.a@ti.com>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="xJ/aRi9G";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="vZiRjwR+"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1708608179;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=vf5dvD6c9m5aF5XZpNNQqDW+xIF8f6dZ9wpf3QuuKjg=;
+	b=xJ/aRi9Gob5dP6fvvpiv3zn7PZE9HFQr94NPdSMrY4AzE6pDg8n0L+2vR0M28Mo6inozlm
+	XtuNX5M3axqYfryju9DgSEnvEXVE8HbWSCW/X4tdKvRzb6QEYoP8uqntJOm2OYc4HfJHtu
+	xjt+aZhGw9XUSr9MHEphDXnvi+KLMBg7e+0iJUrQYVR2aOcGTuzr2WEcsU/7L8er0u1dzu
+	/sHlTd81mVhPurNKGTm+yhiGi9F6qwX0XoJWzrrIsFRuAMb9Ij67/wYRJFJn10aOGH+kNc
+	bybA7AJsephj7eHNyHWkHzGKRePVN8g7nRDE99IYCUJACRsns9er6rQ62nK7Bg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1708608179;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=vf5dvD6c9m5aF5XZpNNQqDW+xIF8f6dZ9wpf3QuuKjg=;
+	b=vZiRjwR+O+KEUdSoAq9a5bC4DugVLuX4J9+mRlpoGBM0/Mb5+vfuYr4/7HNl5mbun2GsY7
+	N0SXEJdk6CjzaIDw==
+To: Bitao Hu <yaoma@linux.alibaba.com>, dianders@chromium.org,
+ akpm@linux-foundation.org, liusong@linux.alibaba.com, pmladek@suse.com,
+ kernelfans@gmail.com, deller@gmx.de, npiggin@gmail.com,
+ tsbogend@alpha.franken.de, James.Bottomley@HansenPartnership.com,
+ jan.kiszka@siemens.com
+Cc: linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
+ linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+ yaoma@linux.alibaba.com
+Subject: Re: [PATCHv9 2/3] irq: use a struct for the kstat_irqs in the
+ interrupt descriptor
+In-Reply-To: <20240222093420.13956-3-yaoma@linux.alibaba.com>
+References: <20240222093420.13956-1-yaoma@linux.alibaba.com>
+ <20240222093420.13956-3-yaoma@linux.alibaba.com>
+Date: Thu, 22 Feb 2024 14:22:59 +0100
+Message-ID: <87jzmwfxak.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain
 
-Hi Vaishnav Achath,
+On Thu, Feb 22 2024 at 17:34, Bitao Hu wrote:
 
-On Mon, 19 Feb 2024 14:34:33 +0530, Vaishnav Achath wrote:
-> This series adds support for Ethernet and OSPI NOR flash on J722S EVM.
-> 
-> V1: https://lore.kernel.org/all/20240216135533.904130-1-vaishnav.a@ti.com/
-> 
-> Changelog:
-> V1->V2:
->   * Update comments indicating PAD numbers.
-> 
-> [...]
+First of all the subsystem prefix is 'genirq:'. 'git log kernel/irq/'
+gives you a pretty good hint. It's documented....
 
-I have applied the following to branch ti-k3-dts-next on [1].
-Thank you!
+Secondly the subject line does not match what this patch is about. It's
+not about using a struct, it's about providing a snapshot mechanism, no?
 
-[1/2] arm64: dts: ti: k3-j722s-evm: Enable CPSW3G RGMII1
-      commit: 9aa197b64df4c382763f032a31b35cad92cbce17
-[2/2] arm64: dts: ti: k3-j722s-evm: Enable OSPI NOR support
-      commit: 2e53b9c05a1589577565625fdb45cf918b54eb39
+> The current implementation uses an int for the kstat_irqs in the
+> interrupt descriptor.
+>
+> However, we need to know the number of interrupts which happened
+> since softlockup detection took a snapshot in order to analyze
+> the problem caused by an interrupt storm.
+>
+> Replacing an int with a struct and providing sensible interfaces
+> for the watchdog code can keep it self contained to the interrupt
+> core code.
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent up the chain during
-the next merge window (or sooner if it is a relevant bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
+So something like this makes a useful change log for this:
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
+ Subject: genirq: Provide a snapshot mechanism for interrupt statistics
 
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
+ The soft lockup detector lacks a mechanism to identify interrupt storms
+ as root cause of a lockup. To enable this the detector needs a
+ mechanism to snapshot the interrupt count statistics on a CPU when the
+ detector observes a potential lockup scenario and compare that against
+ the interrupt count when it warns about the lockup later on. The number
+ of interrupts in that period give a hint whether the lockup might be
+ caused by an interrupt storm.
 
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
+ Instead of having extra storage in the lockup detector and accessing
+ the internals of the interrupt descriptor directly, convert the per CPU
+ irq_desc::kstat_irq member to a data structure which contains the
+ counter plus a snapshot member and provide interfaces to take a
+ snapshot of all interrupts on the current CPU and to retrieve the delta
+ of a specific interrupt later on.
 
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/ti/linux.git
---
-Vignesh
+Hmm?
 
+> Signed-off-by: Bitao Hu <yaoma@linux.alibaba.com>
+
+Interesting. You fully authored the patch?
+
+That's not how it works. You cannot take work from others and claim that
+it is yours. The minimal courtesy is to add a 'Originally-by:' tag.
+
+> diff --git a/kernel/irq/proc.c b/kernel/irq/proc.c
+> index 623b8136e9af..3ad40cf30c66 100644
+> --- a/kernel/irq/proc.c
+> +++ b/kernel/irq/proc.c
+> @@ -488,18 +488,15 @@ int show_interrupts(struct seq_file *p, void *v)
+>  	if (!desc || irq_settings_is_hidden(desc))
+>  		goto outsparse;
+>  
+> -	if (desc->kstat_irqs) {
+> -		for_each_online_cpu(j)
+> -			any_count |= data_race(*per_cpu_ptr(desc->kstat_irqs, j));
+> -	}
+> +	if (desc->kstat_irqs)
+> +		any_count = data_race(desc->tot_count);
+
+This is an unrelated change and needs to be split out into a separate
+patch with a proper changelog which explains why this is equivalent.
+  
+Thanks,
+
+        tglx
