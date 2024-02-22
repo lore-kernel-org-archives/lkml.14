@@ -1,114 +1,212 @@
-Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A61F515AADC;
-	Thu, 22 Feb 2024 18:14:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 325A415B0FD;
+	Thu, 22 Feb 2024 18:14:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708625677; cv=none; b=hsPplpYOEX0/Nn3HDxkrlp46/bDqfQOiyN79Z5M9qtpwLeuzlrRtfmEWcawKO91zsbq8fX/Rj/1aS+7VMen7oXkiaYehDS0Dm4+CBBpr7yeWw7iqRE7Usnuoo9CPSFF137aU5VzyK6K4E4IFksUSf8hIKZw+vgWUqp5csFCFlF8=
+	t=1708625677; cv=none; b=CTVMfC2nkrOud3wl8npvs0Jh1OYq62VKTFBd3JPS6KtUvsWFI2Wm6Ke9dV1rsLjFKBSxFY+7+RuiERoU4bMED9X+bXNHIigsv5goJoIGdOf4eczCd2tpf2St/bTL3w8/2EEiKDT6UYkECvnVbv2Ct6biQqRTM1RmMnXzV7D8P6k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1708625677; c=relaxed/simple;
-	bh=hehS0w6hO7FJGuyL37cinIR04O81xbUbwcQ8/IF9q30=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=skcxczrLe1GFwMPA+dZtXEg+UWTOFjZiTOjGU/T6X6e09Be5GM7PHWwNLrtJSUml141WA8wnSeLuiuHHqoU5LGUFv/IV8kBR6UqRvvksGQWUqly9XA+Ex/jwztEzU+mf3klayBhAH3vrR9CsIc1ZVSR9XV3gFAcgtvFkPw0K/90=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ip/RahWO; arc=none smtp.client-ip=209.85.167.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	bh=1ZewVq1VdElOMix4yzkeT47wHJmNn7LzalSFh1GQZY4=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=Mzo+gYDDi5QdmNDvIn/A0VllpshgS07bxEZmbkKbNtb34qenVypIacUa4VHQDaLjXnkRCbOR/rMwpB+uq0PKIHGVipS9Ogs1pZWvesauq8OTRUtHgN3QHZYuh3hRZzM9sKzRUIWiPL+3mg6CsfVOW3mzYXFRHkNDacW+f2qicKk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SrhdV9+h; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ip/RahWO"
-Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-512cba0f953so83801e87.2;
-        Thu, 22 Feb 2024 10:14:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1708625674; x=1709230474; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=bBJgQUpt9QPAedIUl/F1sU9yR+N7bF2zoeqIhscgJyQ=;
-        b=ip/RahWOByIQSo5VQwepSsBNIq1JyStsxebrp2ZB1QlN+AXLfINa5vFudlI8PHn7Gp
-         gv/pY7fWo3V+vwP+rakFxeNAN3ZRHuLX1vjz+kv53f+FdF6+gQquYQhrXZd/3CkZiKWN
-         pKax6BV3f7qGhldr+viKfJoqUHHEMOBDXESsG3UqrcMCTy5yxoH5a10Iu0W+WUcUxes7
-         a0ER1ueNdDwtO42Z7w/9QNuTAXXEIrM/gyiXXn4+qyTMUqkU+H3776HcS92rSbTla/7J
-         /Qe9tAyR4WljrCcUV4xubHX5E2O4vlX00Nq/HZ98fUg8x5EG0yheMQfNHH4nkIYr1R6w
-         nmlQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708625674; x=1709230474;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=bBJgQUpt9QPAedIUl/F1sU9yR+N7bF2zoeqIhscgJyQ=;
-        b=xCWl7U2aqGAchC1vmwAuHbdfbC8QFYulNdsBPc6jLwOMtKkisDmF75ocJc1rVqVP91
-         TnWJgWPmahubW+j87fjuz/XuLgARxDdrzAD3BRTE2QZ3q/1+YnzBUyEVs8yarrKbReX0
-         shL7QvSPGi4lNyrTgceoz2jT65reQ6slmTYzRRz4nCQny/kwC39Zu8KuHdHgtIUmotbv
-         oY2K564LjSJrIrU/BzaOEaPVz5493QKVya2J88XDyWCINF0ZhF1pOl8y3k+v8QAl9G/3
-         1bXZxITNszeIC6ypWJw+gCX57CfsYtUqdfvJF8lMa1ACt9HYa/b4FFbImJRzmMPahvyG
-         SHKA==
-X-Forwarded-Encrypted: i=1; AJvYcCXTlrFT9QCZ0grR+fqLx6K6bRyAclaHp4irSZPSLK7iuJ552jStrsl6IQcr/DUmpZpgAAiP7tRYmyAs2JvDVNFRD0N3y+o5vbCyextwFmv4c2upI2h6Fm4dOM8ntGFIObgXavipLmKzZg==
-X-Gm-Message-State: AOJu0YyU2+l5pc1sE66bslRFFk7/V85w2bev5UeHpm+A4g3HXOo44Yc9
-	ugmB5j5jPT7HZ8dWFRcBDqD7Lw9zuWaDtxo8HeWCtxdWgSWgIOuA
-X-Google-Smtp-Source: AGHT+IHKAOKhAnBFoPeZwONNUJ2X2BwTf+yE6S14EUUfcztnzHrErdARP1//97DTkUotDbqufLNMLg==
-X-Received: by 2002:a05:6512:3ba2:b0:512:a2c7:e44c with SMTP id g34-20020a0565123ba200b00512a2c7e44cmr12225023lfv.20.1708625673758;
-        Thu, 22 Feb 2024 10:14:33 -0800 (PST)
-Received: from localhost ([178.176.56.174])
-        by smtp.gmail.com with ESMTPSA id q25-20020ac246f9000000b00512b0462438sm1744919lfo.116.2024.02.22.10.14.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 22 Feb 2024 10:14:32 -0800 (PST)
-From: Serge Semin <fancer.lancer@gmail.com>
-To: Michal Simek <michal.simek@amd.com>,
-	Alexander Stein <alexander.stein@ew.tq-group.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Tony Luck <tony.luck@intel.com>,
-	James Morse <james.morse@arm.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Robert Richter <rric@kernel.org>
-Cc: Serge Semin <fancer.lancer@gmail.com>,
-	Punnaiah Choudary Kalluri <punnaiah.choudary.kalluri@xilinx.com>,
-	Dinh Nguyen <dinguyen@kernel.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-edac@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v5 07/20] EDAC/synopsys: Use platform device devm ioremap method
-Date: Thu, 22 Feb 2024 21:12:52 +0300
-Message-ID: <20240222181324.28242-8-fancer.lancer@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240222181324.28242-1-fancer.lancer@gmail.com>
-References: <20240222181324.28242-1-fancer.lancer@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SrhdV9+h"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 19E8EC433F1;
+	Thu, 22 Feb 2024 18:14:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1708625676;
+	bh=1ZewVq1VdElOMix4yzkeT47wHJmNn7LzalSFh1GQZY4=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=SrhdV9+hCdPfPtwYyUU3l3UAAq1WLmeEROhir6gx7OZCW57ekMjOBbAWo7CddLsH8
+	 Eate8zXjRdUeiGJN+Bw3e4IPd8blvmkoj4AfBK/RDjsHEof+VgmcgIjOLP9R5Tqhrd
+	 RLcUDbF9ZyppCR4JLtaEByZPy8N9JwzamGPDDHIfwSZdFfFeyYItotbqAXZlYEX+w/
+	 Qdy/8/Sg0jcS4vywSVbemRmTKUMNVNIdDRldoFDvN3eJLD66ENbbiSxV9cXNivG/B6
+	 cOCQiHDSUWCHpdcyhl7T+o/bF/ce6njxHsbMDImDHl34Q3pouA7gFdS3St9SNlMJWh
+	 G1puVZd4YnR2A==
+From: Maxime Ripard <mripard@kernel.org>
+Date: Thu, 22 Feb 2024 19:13:49 +0100
+Subject: [PATCH v7 03/36] drm/tests: Add helper to create mock plane
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240222-kms-hdmi-connector-state-v7-3-8f4af575fce2@kernel.org>
+References: <20240222-kms-hdmi-connector-state-v7-0-8f4af575fce2@kernel.org>
+In-Reply-To: <20240222-kms-hdmi-connector-state-v7-0-8f4af575fce2@kernel.org>
+To: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
+ Daniel Vetter <daniel@ffwll.ch>, Jonathan Corbet <corbet@lwn.net>, 
+ Sandy Huang <hjc@rock-chips.com>, 
+ =?utf-8?q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, 
+ Chen-Yu Tsai <wens@csie.org>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
+ Samuel Holland <samuel@sholland.org>
+Cc: Hans Verkuil <hverkuil@xs4all.nl>, 
+ Sebastian Wick <sebastian.wick@redhat.com>, 
+ =?utf-8?q?Ville_Syrj=C3=A4l=C3=A4?= <ville.syrjala@linux.intel.com>, 
+ dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org, 
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-media@vger.kernel.org, linux-rockchip@lists.infradead.org, 
+ linux-sunxi@lists.linux.dev, Maxime Ripard <mripard@kernel.org>
+X-Mailer: b4 0.12.3
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4849; i=mripard@kernel.org;
+ h=from:subject:message-id; bh=1ZewVq1VdElOMix4yzkeT47wHJmNn7LzalSFh1GQZY4=;
+ b=owGbwMvMwCX2+D1vfrpE4FHG02pJDKnX+17p6G/lCz0rHHfk5FpdgRMGu30O/a7g+y14M0Osw
+ uGurGRqRykLgxgXg6yYIkuMsPmSuFOzXney8c2DmcPKBDKEgYtTACay6A7DXwF57o3CmhM7kv+y
+ WvHyx1xexVdyT2pN4fHvoUumeLdVyDMyTFjxm+FBdDvbjb3P2GS9pt5kvzVT5ebBP8+7fpgIWs2
+ 9yAkA
+X-Developer-Key: i=mripard@kernel.org; a=openpgp;
+ fpr=BE5675C37E818C8B5764241C254BCFC56BF6CE8D
 
-DW DDRs CSRs resource descriptor is used by the devm_ioremap_resource()
-function invocation only in the driver probe method. Thus convert the
-platform_get_resource() and devm_ioremap_resource() couple to just a
-single devm_platform_ioremap_resource() method call.
+We're going to need a full-blown, functional, KMS device to test more
+components of the atomic modesetting infrastructure.
 
-Signed-off-by: Serge Semin <fancer.lancer@gmail.com>
+Let's add a new helper to create a dumb, mocked, primary plane. By
+default, it will create a linear XRGB8888 plane, using the default
+helpers.
+
+Signed-off-by: Maxime Ripard <mripard@kernel.org>
 ---
- drivers/edac/synopsys_edac.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ drivers/gpu/drm/tests/drm_kunit_helpers.c | 85 +++++++++++++++++++++++++++++++
+ include/drm/drm_kunit_helpers.h           | 11 ++++
+ 2 files changed, 96 insertions(+)
 
-diff --git a/drivers/edac/synopsys_edac.c b/drivers/edac/synopsys_edac.c
-index 9f79f14e57b2..6976ef84e952 100644
---- a/drivers/edac/synopsys_edac.c
-+++ b/drivers/edac/synopsys_edac.c
-@@ -1334,11 +1334,9 @@ static int mc_probe(struct platform_device *pdev)
- 	struct synps_edac_priv *priv;
- 	struct mem_ctl_info *mci;
- 	void __iomem *baseaddr;
--	struct resource *res;
- 	int rc;
+diff --git a/drivers/gpu/drm/tests/drm_kunit_helpers.c b/drivers/gpu/drm/tests/drm_kunit_helpers.c
+index 4fb11b938bc1..32dc8354641a 100644
+--- a/drivers/gpu/drm/tests/drm_kunit_helpers.c
++++ b/drivers/gpu/drm/tests/drm_kunit_helpers.c
+@@ -3,6 +3,7 @@
+ #include <drm/drm_atomic.h>
+ #include <drm/drm_atomic_helper.h>
+ #include <drm/drm_drv.h>
++#include <drm/drm_fourcc.h>
+ #include <drm/drm_kunit_helpers.h>
+ #include <drm/drm_managed.h>
  
--	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	baseaddr = devm_ioremap_resource(&pdev->dev, res);
-+	baseaddr = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(baseaddr))
- 		return PTR_ERR(baseaddr);
+@@ -164,5 +165,89 @@ drm_kunit_helper_atomic_state_alloc(struct kunit *test,
+ }
+ EXPORT_SYMBOL_GPL(drm_kunit_helper_atomic_state_alloc);
  
++static const uint32_t default_plane_formats[] = {
++	DRM_FORMAT_XRGB8888,
++};
++
++static const uint64_t default_plane_modifiers[] = {
++	DRM_FORMAT_MOD_LINEAR,
++	DRM_FORMAT_MOD_INVALID
++};
++
++static const struct drm_plane_helper_funcs default_plane_helper_funcs = {
++};
++
++static const struct drm_plane_funcs default_plane_funcs = {
++	.atomic_destroy_state	= drm_atomic_helper_plane_destroy_state,
++	.atomic_duplicate_state	= drm_atomic_helper_plane_duplicate_state,
++	.reset			= drm_atomic_helper_plane_reset,
++};
++
++/**
++ * drm_kunit_helper_create_primary_plane - Creates a mock primary plane for a KUnit test
++ * @test: The test context object
++ * @drm: The device to alloc the plane for
++ * @funcs: Callbacks for the new plane. Optional.
++ * @helper_funcs: Helpers callbacks for the new plane. Optional.
++ * @formats: array of supported formats (DRM_FORMAT\_\*). Optional.
++ * @num_formats: number of elements in @formats
++ * @modifiers: array of struct drm_format modifiers terminated by
++ *             DRM_FORMAT_MOD_INVALID. Optional.
++ *
++ * This allocates and initializes a mock struct &drm_plane meant to be
++ * part of a mock device for a KUnit test.
++ *
++ * Resources will be cleaned up automatically.
++ *
++ * @funcs will default to the default helpers implementations.
++ * @helper_funcs will default to an empty implementation. @formats will
++ * default to XRGB8888 only. @modifiers will default to a linear
++ * modifier only.
++ *
++ * Returns:
++ * A pointer to the new plane, or an ERR_PTR() otherwise.
++ */
++struct drm_plane *
++drm_kunit_helper_create_primary_plane(struct kunit *test,
++				      struct drm_device *drm,
++				      const struct drm_plane_funcs *funcs,
++				      const struct drm_plane_helper_funcs *helper_funcs,
++				      const uint32_t *formats,
++				      unsigned int num_formats,
++				      const uint64_t *modifiers)
++{
++	struct drm_plane *plane;
++
++	if (!funcs)
++		funcs = &default_plane_funcs;
++
++	if (!helper_funcs)
++		helper_funcs = &default_plane_helper_funcs;
++
++	if (!formats || !num_formats) {
++		formats = default_plane_formats;
++		num_formats = ARRAY_SIZE(default_plane_formats);
++	}
++
++	if (!modifiers)
++		modifiers = default_plane_modifiers;
++
++	plane = __drmm_universal_plane_alloc(drm,
++					     sizeof(struct drm_plane), 0,
++					     0,
++					     funcs,
++					     formats,
++					     num_formats,
++					     default_plane_modifiers,
++					     DRM_PLANE_TYPE_PRIMARY,
++					     NULL);
++	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, plane);
++
++	drm_plane_helper_add(plane, helper_funcs);
++
++	return plane;
++}
++EXPORT_SYMBOL_GPL(drm_kunit_helper_create_primary_plane);
++
+ MODULE_AUTHOR("Maxime Ripard <maxime@cerno.tech>");
+ MODULE_LICENSE("GPL");
+diff --git a/include/drm/drm_kunit_helpers.h b/include/drm/drm_kunit_helpers.h
+index 3ae19892229d..38667d624aa8 100644
+--- a/include/drm/drm_kunit_helpers.h
++++ b/include/drm/drm_kunit_helpers.h
+@@ -10,6 +10,8 @@
+ #include <kunit/test.h>
+ 
+ struct drm_device;
++struct drm_plane_funcs;
++struct drm_plane_helper_funcs;
+ struct kunit;
+ 
+ struct device *drm_kunit_helper_alloc_device(struct kunit *test);
+@@ -99,4 +101,13 @@ drm_kunit_helper_atomic_state_alloc(struct kunit *test,
+ 				    struct drm_device *drm,
+ 				    struct drm_modeset_acquire_ctx *ctx);
+ 
++struct drm_plane *
++drm_kunit_helper_create_primary_plane(struct kunit *test,
++				      struct drm_device *drm,
++				      const struct drm_plane_funcs *funcs,
++				      const struct drm_plane_helper_funcs *helper_funcs,
++				      const uint32_t *formats,
++				      unsigned int num_formats,
++				      const uint64_t *modifiers);
++
+ #endif // DRM_KUNIT_HELPERS_H_
+
 -- 
-2.43.0
+2.43.2
 
