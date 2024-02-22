@@ -1,154 +1,273 @@
-Received: from frasgout11.his.huawei.com (frasgout11.his.huawei.com [14.137.139.23])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F00B95FB81;
-	Thu, 22 Feb 2024 13:13:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=14.137.139.23
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 377C65FB81;
+	Thu, 22 Feb 2024 13:13:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708607612; cv=none; b=Ho7dRXDb4fnYmlTnl3ea2c3IzVI6N37U4PSIDgqojMXNugnAtGlSglYyDI5W/NJuRSUfzglYZF1ZubzkBysrxdwekbAwvmXflnjAPwJcgAzDriCYmiB+UN/oaShLuBHhM0yRe4cB8My7NGEMxkQ0v4v05saM/ZL6LTnFpUbOO1c=
+	t=1708607617; cv=none; b=Y71z5NWtSn3YBJjyLJHxCKg/zu8Sx8F1137rhpi3h6ICyUC5MmNDmyUoHEPCXQhoSpUjkCoTpP2mZsEjNQBeTkMIwfSHkFZvibA9vMEP2bmoiS6B67UmCk/oXwP7M6CIsDmd8lSDselINC184qt/2Q1trkELCfRZSC120oWVrhE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708607612; c=relaxed/simple;
-	bh=huKReSSGrI37xYZpUhp+rCn29BeIKsVmRo9XmUqOkr4=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=C5a07tI2L/AhtQKmtwQB7VvNUl5Fv8486If+gMl9J4MuhmaPfX/VIqMrJPbvpQcncTh1ZrulK0YbEJaYG8N5cbm7DNLbCH/DFgEe0PEQmhhDAcojL40zRepoj1FBrGDQuWRIOvpNhAKQpQdslOZq09MbQMgroHvOCfw8e7ei1xA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=14.137.139.23
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.18.186.51])
-	by frasgout11.his.huawei.com (SkyGuard) with ESMTP id 4TgY8d49w9z9xGhZ;
-	Thu, 22 Feb 2024 20:57:53 +0800 (CST)
-Received: from mail02.huawei.com (unknown [7.182.16.47])
-	by mail.maildlp.com (Postfix) with ESMTP id 21C07140A0D;
-	Thu, 22 Feb 2024 21:13:14 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.45.157.235])
-	by APP1 (Coremail) with SMTP id LxC2BwDXzhdSSNdlhi4AAw--.34998S2;
-	Thu, 22 Feb 2024 14:13:12 +0100 (CET)
-From: Petr Tesarik <petrtesarik@huaweicloud.com>
-To: Dave Hansen <dave.hansen@intel.com>
-Cc: =?UTF-8?B?UGV0ciBUZXNhxZnDrWs=?= <petr@tesarici.cz>,
-	Petr Tesarik <petrtesarik@huaweicloud.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Andy Lutomirski <luto@kernel.org>,
-	Oleg Nesterov <oleg@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Xin Li <xin3.li@intel.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Rick Edgecombe <rick.p.edgecombe@intel.com>,
-	Kees Cook <keescook@chromium.org>,
-	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
-	Pengfei Xu <pengfei.xu@intel.com>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Ze Gao <zegao2021@gmail.com>,
-	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-	Kai Huang <kai.huang@intel.com>,
-	David Woodhouse <dwmw@amazon.co.uk>,
-	Brian Gerst <brgerst@gmail.com>,
-	Jason Gunthorpe <jgg@ziepe.ca>,
-	Joerg Roedel <jroedel@suse.de>,
-	"Mike Rapoport (IBM)" <rppt@kernel.org>,
-	Tina Zhang <tina.zhang@intel.com>,
-	Jacob Pan <jacob.jun.pan@linux.intel.com>,
-	"open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-	open list <linux-kernel@vger.kernel.org>,
-	Roberto Sassu <roberto.sassu@huaweicloud.com>,
-	John Johansen <john.johansen@canonical.com>,
-	Paul Moore <paul@paul-moore.com>,
-	James Morris <jmorris@namei.org>,
-	"Serge E. Hallyn" <serge@hallyn.com>,
-	apparmor@lists.ubuntu.com,
-	linux-security-module@vger.kernel.org,
-	Petr Tesarik <petr.tesarik1@huawei-partners.com>
-Subject: [RFC 0/5] PoC: convert AppArmor parser to SandBox Mode
-Date: Thu, 22 Feb 2024 14:12:25 +0100
-Message-Id: <20240222131230.635-1-petrtesarik@huaweicloud.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <fb4a40c7-af9a-406a-95ab-406595f3ffe5@intel.com>
-References: <fb4a40c7-af9a-406a-95ab-406595f3ffe5@intel.com>
+	s=arc-20240116; t=1708607617; c=relaxed/simple;
+	bh=MbENokeI9PUY9gmhafxiQFG9i+/znCgTXAZEO2pR1D0=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=Qhiy6cblCNdKrjrvpMJV3cgsmVq5VdEFAswOmlH3N0/43ZqDpgq2lomYJn9Bck9BbguKezkQ4ZWyvIXtt3MT11ihG3saDTvvrCF94oCUs/imAGk8HwR8jhwIg5FLXMs6djx9AEEJDyOWsLw2QsmrYB9FbUI2zUsS7awQfUIpQ8U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ku47Uswl; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ku47Uswl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 21CADC433F1;
+	Thu, 22 Feb 2024 13:13:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1708607616;
+	bh=MbENokeI9PUY9gmhafxiQFG9i+/znCgTXAZEO2pR1D0=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=ku47UswlrQW3XlqS3h0ikrchgU3HJschH2qvnH733wa9ZGvYzpW8Q6piRfczQ90/3
+	 yIJ3IOyK9Co5eO+n3SftKdMEWWzIWpxZ/m5S6SDN5roVVAErAf7qd6gV8QpB1iYsPI
+	 xpnRecMXxPxsk4rxnA1CbJdhHaybbAFT24gYhVlySCa9IBnAuE8EZh7ZDlrGLlmgrM
+	 ERtcRNXsZZn0hjBeH4JNUg5uRzvbtfJYRw2LsaKZdgz5jbMdbJfK3znlaF5tu8ERLM
+	 jwbMsxSm2//EDqnEUnx1JI55oxVE7zQacNyVrZK6JA7kaY+pnVyMgVBN43EO8iP7fC
+	 cbxAFhXGqyRsQ==
+From: =?utf-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@kernel.org>
+To: Anup Patel <apatel@ventanamicro.com>, Palmer Dabbelt
+ <palmer@dabbelt.com>, Paul Walmsley <paul.walmsley@sifive.com>, Thomas
+ Gleixner <tglx@linutronix.de>, Rob Herring <robh+dt@kernel.org>, Krzysztof
+ Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Frank Rowand
+ <frowand.list@gmail.com>, Conor Dooley <conor+dt@kernel.org>
+Cc: Anup Patel <apatel@ventanamicro.com>, devicetree@vger.kernel.org,
+ Saravana Kannan <saravanak@google.com>, Marc Zyngier <maz@kernel.org>,
+ Anup Patel <anup@brainfault.org>, linux-kernel@vger.kernel.org, Atish
+ Patra <atishp@atishpatra.org>, linux-riscv@lists.infradead.org,
+ linux-arm-kernel@lists.infradead.org, Andrew Jones
+ <ajones@ventanamicro.com>
+Subject: Re: [PATCH v14 11/18] irqchip: Add RISC-V incoming MSI controller
+ early driver
+In-Reply-To: <20240222094006.1030709-12-apatel@ventanamicro.com>
+References: <20240222094006.1030709-1-apatel@ventanamicro.com>
+ <20240222094006.1030709-12-apatel@ventanamicro.com>
+Date: Thu, 22 Feb 2024 14:13:33 +0100
+Message-ID: <87r0h4tzeq.fsf@all.your.base.are.belong.to.us>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:LxC2BwDXzhdSSNdlhi4AAw--.34998S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7Kw1DWF4UuF4kuFWkWF43GFg_yoW8tw1UpF
-	n3ta15GF4kJF92yws3AF1F93yFqw4rCw13GFsrKw1Yy3WYqa18XryS9r43uay5ur98Ka43
-	tF4avF1jg3WUJa7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUv214x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26r1j6r1xM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
-	6F4UM28EF7xvwVC2z280aVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4UJV
-	WxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
-	2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
-	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2
-	Y2ka0xkIwI1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4
-	xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26rWY6r4U
-	JwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x
-	0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_WFyUJVCq3wCI42IY6I8E87Iv67AK
-	xVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4UJVWxJrUvcSsGvfC2KfnxnUUI43ZEXa
-	7VUbJ73DUUUUU==
-X-CM-SenderInfo: hshw23xhvd2x3n6k3tpzhluzxrxghudrp/
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-From: Petr Tesarik <petr.tesarik1@huawei-partners.com>
+Anup Patel <apatel@ventanamicro.com> writes:
 
-[ For people newly added to Cc, this RFC is a reply to subsystem
-  maintainers who asked for a real-world demonstration of how
-  SandBox Mode could be used in practice. SandBox Mode itself
-  was proposed in these two series (generic and x86):
+> diff --git a/drivers/irqchip/irq-riscv-imsic-state.c b/drivers/irqchip/ir=
+q-riscv-imsic-state.c
+> new file mode 100644
+> index 000000000000..0c19ffb9ca3e
+> --- /dev/null
+> +++ b/drivers/irqchip/irq-riscv-imsic-state.c
+> @@ -0,0 +1,870 @@
 
-* https://lore.kernel.org/lkml/20240214113516.2307-1-petrtesarik@huaweicloud.com/T/
-* https://lore.kernel.org/lkml/20240214113035.2117-1-petrtesarik@huaweicloud.com/T/
-]
+[...]
 
-This patch series provides an example of running existing kernel code in
-a sandbox. It also adds some fixes and infrastructure to the base series.
-If you only want to see how the conversion itself might look like, skip
-straight to patch 5/5.
+> +static void __imsic_local_sync(struct imsic_local_priv *lpriv)
+> +{
+> +	struct imsic_local_config *mlocal;
+> +	struct imsic_vector *vec, *mvec;
+> +	int i;
+> +
+> +	lockdep_assert_held(&lpriv->lock);
+> +
+> +	/* This pairs with the barrier in __imsic_remote_sync(). */
+> +	smp_mb();
 
-Patches 1 and 2 amend the base patch series. Patches 3 and 4 are ported
-from my earlier proof of concept and adapted to work without adding too
-much other code. I am sending a complete WIP patch series so you can
-actually build and run the code.
+I'm trying to figure out why this barrier is needed? All the updates are
+done behind the spinlocks. If there're some ordering constraints that
+I'm missing, please document them.
 
-Disclaimer: This code is not ready for submission. It is incomplete and
-may contain bugs. It is provided here for the sole purpose of demonstrating
-how existing kernel code would be modified to run in a sandbox.
+> +
+> +	for_each_set_bit(i, lpriv->dirty_bitmap, imsic->global.nr_ids + 1) {
+> +		if (!i || i =3D=3D IMSIC_IPI_ID)
+> +			goto skip;
+> +		vec =3D &lpriv->vectors[i];
+> +
+> +		if (READ_ONCE(vec->enable))
+> +			__imsic_id_set_enable(i);
+> +		else
+> +			__imsic_id_clear_enable(i);
+> +
+> +		/*
+> +		 * If the ID was being moved to a new ID on some other CPU
+> +		 * then we can get a MSI during the movement so check the
+> +		 * ID pending bit and re-trigger the new ID on other CPU
+> +		 * using MMIO write.
+> +		 */
+> +		mvec =3D READ_ONCE(vec->move);
+> +		WRITE_ONCE(vec->move, NULL);
 
-PATCH 1/5 is a bug fix discovered after sending patch series v1.
-PATCH 2/5 allows to map a buffer into the sandbox at its kernel address.
-PATCH 3/5 is required to intercept calls to pre-selected kernel functions.
-PATCH 4/5 implements dynamic allocation in sandbox mode.
-PATCH 5/5 demonstrates how to convert existing kernel code to use SBM.
+mvec =3D xchg(&vec->move, NULL) ?
 
-Petr Tesarik (5):
-  sbm: x86: fix SBM error entry path
-  sbm: enhance buffer mapping API
-  sbm: x86: infrastructure to fix up sandbox faults
-  sbm: fix up calls to dynamic memory allocators
-  apparmor: parse profiles in sandbox mode
+> +		if (mvec && mvec !=3D vec) {
+> +			if (__imsic_id_read_clear_pending(i)) {
+> +				mlocal =3D per_cpu_ptr(imsic->global.local, mvec->cpu);
+> +				writel_relaxed(mvec->local_id, mlocal->msi_va);
+> +			}
+> +
+> +			imsic_vector_free(&lpriv->vectors[i]);
+> +		}
+> +
+> +skip:
+> +		bitmap_clear(lpriv->dirty_bitmap, i, 1);
+> +	}
+> +}
+> +
+> +void imsic_local_sync_all(void)
+> +{
+> +	struct imsic_local_priv *lpriv =3D this_cpu_ptr(imsic->lpriv);
+> +	unsigned long flags;
+> +
+> +	raw_spin_lock_irqsave(&lpriv->lock, flags);
+> +	bitmap_fill(lpriv->dirty_bitmap, imsic->global.nr_ids + 1);
+> +	__imsic_local_sync(lpriv);
+> +	raw_spin_unlock_irqrestore(&lpriv->lock, flags);
+> +}
+> +
+> +void imsic_local_delivery(bool enable)
+> +{
+> +	if (enable) {
+> +		imsic_csr_write(IMSIC_EITHRESHOLD, IMSIC_ENABLE_EITHRESHOLD);
+> +		imsic_csr_write(IMSIC_EIDELIVERY, IMSIC_ENABLE_EIDELIVERY);
+> +		return;
+> +	}
+> +
+> +	imsic_csr_write(IMSIC_EIDELIVERY, IMSIC_DISABLE_EIDELIVERY);
+> +	imsic_csr_write(IMSIC_EITHRESHOLD, IMSIC_DISABLE_EITHRESHOLD);
+> +}
+> +
+> +#ifdef CONFIG_SMP
+> +static void imsic_local_timer_callback(struct timer_list *timer)
+> +{
+> +	struct imsic_local_priv *lpriv =3D this_cpu_ptr(imsic->lpriv);
+> +	unsigned long flags;
+> +
+> +	raw_spin_lock_irqsave(&lpriv->lock, flags);
+> +	__imsic_local_sync(lpriv);
+> +	raw_spin_unlock_irqrestore(&lpriv->lock, flags);
+> +}
+> +
+> +static void __imsic_remote_sync(struct imsic_local_priv *lpriv, unsigned=
+ int cpu)
+> +{
+> +	lockdep_assert_held(&lpriv->lock);
+> +
+> +	/*
+> +	 * Ensure that changes to vector enable, vector move and
+> +	 * dirty bitmap are visible to the target CPU.
 
- arch/x86/entry/entry_64.S     |  10 ++-
- arch/x86/kernel/sbm/call_64.S |  20 +++++
- arch/x86/kernel/sbm/core.c    | 161 +++++++++++++++++++++++++++++++++-
- arch/x86/kernel/vmlinux.lds.S |   9 ++
- include/linux/sbm.h           |  77 ++++++++++++++++
- kernel/sbm.c                  |  34 +++++++
- mm/slab_common.c              |   3 +-
- mm/slub.c                     |  17 ++--
- mm/vmalloc.c                  |  11 +--
- security/apparmor/crypto.c    |   7 +-
- security/apparmor/policy.c    |  29 ++++--
- security/apparmor/secid.c     |   3 +-
- 12 files changed, 352 insertions(+), 29 deletions(-)
+...which case the spinlock(s) are enough, no?
 
--- 
-2.34.1
+> +	 *
+> +	 * This pairs with the barrier in __imsic_local_sync().
+> +	 */
+> +	smp_mb();
+> +
+> +	/*
+> +	 * We schedule a timer on the target CPU if the target CPU is not
+> +	 * same as the current CPU. An offline CPU will unconditionally
+> +	 * synchronize IDs through imsic_starting_cpu() when the
+> +	 * CPU is brought up.
+> +	 */
+> +	if (cpu_online(cpu)) {
+> +		if (cpu =3D=3D smp_processor_id()) {
+> +			__imsic_local_sync(lpriv);
+> +			return;
+> +		}
 
+Maybe move this if-clause out from the cpu_online(), and only have
+something like
+  if (cpu_online(cpu) && !timer_pending(&lpriv->timer)) { ... }
+inside the CONFIG_SMP guard...
+
+> +
+> +		if (!timer_pending(&lpriv->timer)) {
+> +			lpriv->timer.expires =3D jiffies + 1;
+> +			add_timer_on(&lpriv->timer, cpu);
+> +		}
+> +	}
+> +}
+> +#else
+> +static void __imsic_remote_sync(struct imsic_local_priv *lpriv, unsigned=
+ int cpu)
+> +{
+> +	lockdep_assert_held(&lpriv->lock);
+> +	__imsic_local_sync(lpriv);
+> +}
+> +#endif
+
+...where we can get rid of this special !SMP all together for this
+function.
+
+> +
+> +void imsic_vector_mask(struct imsic_vector *vec)
+> +{
+> +	struct imsic_local_priv *lpriv;
+> +
+> +	lpriv =3D per_cpu_ptr(imsic->lpriv, vec->cpu);
+> +	if (WARN_ON_ONCE(&lpriv->vectors[vec->local_id] !=3D vec))
+> +		return;
+> +
+> +	/*
+> +	 * This function is called through Linux irq subsystem with
+> +	 * irqs disabled so no need to save/restore irq flags.
+> +	 */
+> +
+> +	raw_spin_lock(&lpriv->lock);
+> +
+> +	vec->enable =3D false;
+
+Should have WRITE_ONCE to make the checkers happy.
+
+> +	bitmap_set(lpriv->dirty_bitmap, vec->local_id, 1);
+> +	__imsic_remote_sync(lpriv, vec->cpu);
+> +
+> +	raw_spin_unlock(&lpriv->lock);
+> +}
+> +
+> +void imsic_vector_unmask(struct imsic_vector *vec)
+> +{
+> +	struct imsic_local_priv *lpriv;
+> +
+> +	lpriv =3D per_cpu_ptr(imsic->lpriv, vec->cpu);
+> +	if (WARN_ON_ONCE(&lpriv->vectors[vec->local_id] !=3D vec))
+> +		return;
+> +
+> +	/*
+> +	 * This function is called through Linux irq subsystem with
+> +	 * irqs disabled so no need to save/restore irq flags.
+> +	 */
+> +
+> +	raw_spin_lock(&lpriv->lock);
+> +
+> +	vec->enable =3D true;
+
+Dito.
+
+> +	bitmap_set(lpriv->dirty_bitmap, vec->local_id, 1);
+> +	__imsic_remote_sync(lpriv, vec->cpu);
+> +
+> +	raw_spin_unlock(&lpriv->lock);
+> +}
+> +
+> +static bool imsic_vector_move_update(struct imsic_local_priv *lpriv, str=
+uct imsic_vector *vec,
+> +				     bool new_enable, struct imsic_vector *new_move)
+> +{
+> +	unsigned long flags;
+> +	bool enabled;
+> +
+> +	raw_spin_lock_irqsave(&lpriv->lock, flags);
+> +
+> +	/* Update enable and move details */
+> +	enabled =3D READ_ONCE(vec->enable);
+> +	WRITE_ONCE(vec->enable, new_enable);
+
+Again, xchg() would be easier to read.
+
+
+Bj=C3=B6rn
