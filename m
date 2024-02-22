@@ -1,66 +1,67 @@
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C29D47774
-	for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 11:51:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 603D94C60B
+	for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 11:51:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708602670; cv=none; b=meVl2YocZ+AGnHhg2VzJ5dwmrGvKWg/fXvxmpSV+088Kx2Hi+q/8FVRv9738AF9IuIoW5DmU2c0I2i5dR8XZEsqBSDlTTgmwZ3cWBizEWOESnPfEs37e1aOdBFkIz1R14oO4DvJtTkktz3ufCGPTez54Iu4OD3bdaaUdcdUkswQ=
+	t=1708602673; cv=none; b=NFccgsGyvyIp1FAJPJE3QZXWCshRpr1gMz3drSNEh3pyHYvy8AyjctYTra0NO/v2O6ynedpxvwbQ6jGHf/byqUEZN9OjlFtPahvZ+xrpwezMil2ugUSljQAZIkTpBJCyQ+ZnfNGOQT3WjmsTE32X1GRW7I2bZV0sEKADQTQVY5c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708602670; c=relaxed/simple;
-	bh=q8kKn6ZoIx/6RjLM+3qIn9pYs3Fc/OtpL0DtI2Q7y9Y=;
+	s=arc-20240116; t=1708602673; c=relaxed/simple;
+	bh=YID5EHIsC8yhor+I6AoFup3aQLQc9ccnLMMd80bhUqs=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=kh44g4dpeC6ny2khfvW3p9g54DJW/NuCpcaeeC4t2iG7wcGv3T4UHNflcNkdjCi5acqxEtpd8x8oWCncXnASr4eyc94YWh8lVxwWv2uN+pSXA4zQY/JBw9JLWaB/cxqQIEjASJFpqH4FGv3hQmssoEvgu1Txh+rrK67etpkA4ZY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ionos.com; spf=pass smtp.mailfrom=ionos.com; dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b=g0eIL8rQ; arc=none smtp.client-ip=209.85.128.50
+	 MIME-Version; b=RgxVXHeo18KPryRbJ9SsQAMRDIECZdbPDkEOUxzLuOUSNW/PuKjhM7VXY9Luhr7azzaB5ASMFhKFgbbvYaaCAmuCPT2Z05Nd6GJhOh4jEr3+IUduCoQctEaiuVuOjMFwDRFu+nrfrbs3eNt8qCyut/zK/dMYaUopEgF5scvApDc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ionos.com; spf=pass smtp.mailfrom=ionos.com; dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b=M4tb2t7I; arc=none smtp.client-ip=209.85.221.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ionos.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ionos.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b="g0eIL8rQ"
-Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-4128d15a4e4so1586095e9.3
-        for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 03:51:08 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b="M4tb2t7I"
+Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-33d9c3f36c2so128455f8f.2
+        for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 03:51:10 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ionos.com; s=google; t=1708602667; x=1709207467; darn=vger.kernel.org;
+        d=ionos.com; s=google; t=1708602669; x=1709207469; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=TYSYlSdUn/dXTjpoW2eB+NQW7lqG+bTDZOpmc2h8jwc=;
-        b=g0eIL8rQ2fH0h/GmuUP3dWN5UpXI1266O9mRsn0dXTc6dELpx0UcW5e2PrJ6t2aUKL
-         muVEnyfQpnbF+/9whRcVjKbqO8kQebv7o1tS1YTYa8L8MqPb9tS8Snw5/bFgQ8dIHmjI
-         U4KfdJsn3S+/nyYcrl0MF7sZykYllQrIBlLrRop2BIEvw7iBiMnSh9JrFyynvTe5nFgk
-         RCTWSCEMcvXUXDutjMoaoQL5J/Ai0OUCCGjiyEyq1ywaShnOnPamyi02tM7ltpHyRUMG
-         JJHQid6Sj/4Uzrg4Q6NWZCsXTLQmap0gOs3fiP6ncOqg95hjFmp0KXqg+qrJ2qylAF54
-         yBSQ==
+        bh=kxFeZ/0ASaJvoJHkw5FuQa0hU1Ih3iAyraY4h2cFePg=;
+        b=M4tb2t7Icr6vscFWaupRbi4WvvLYyiNzureWIuzKd/QSU2HbWoGg+GXDZ0B4MrCTdx
+         cjTM18zeNRFnzaEy93H9l6hCZrTBk13ULnI/KEba/wOWU/sGXTVlsmqSO4qJh29rRxbL
+         aLPyYRHzHSdqQPD7amHpniUA2M/W8xdDEX6bwCc+2xMXMNPkjlQ5KiNNO8YLGivw5Vju
+         /xcQx1HefC/uqqIjGtuiaazSPcfvJqABsyYU90/4jtihza33fba5Y0IrANwAJWqlNpOB
+         ZGtblZ7gllObeWfXh62v/ZCihiyzWNhd9QYkttOmG4f3/GdKirEiFf1NZuJH5sukC/NZ
+         97ZA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708602667; x=1709207467;
+        d=1e100.net; s=20230601; t=1708602669; x=1709207469;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=TYSYlSdUn/dXTjpoW2eB+NQW7lqG+bTDZOpmc2h8jwc=;
-        b=Opf25ie2KRFVnvi/tZBocsmW1zRPr43QzzLaSGG1m9FhBlbQIiznMhXJNkIwU6ftSs
-         49x1ZftDH1l7zm5bbgXzkQy6L2EM3aiW7Rk8PanxrKF1HMAN2fBoIBDt5klhRPQLQedS
-         eu2bnNK/AX1aRIjwdigslsyfLUOIV//UD+liqn8ASgw7dHVZUsSp/zR4u3X3aS7qY5UA
-         l08f6+yH9aLUU7xd3EJv8m7ihtzCeXWNMMya9wvPdN3s3QG6QbNFAdRg9MNjmBSnEu+L
-         nN8wmFZrXnNKUIvGrnun/dZn6bthJxa5hqjZuXW1htNzU/IYYwswSJEom3JdqWidQRgK
-         mMxw==
-X-Forwarded-Encrypted: i=1; AJvYcCV6b3dbTCxqcW4G5I3GgLhlhleRWtnsxQxJM+zsoZdP3u20R9KDB2qzTWOC3gDNn1KFkFfUjKfDfkrJlWLYqV1ahfX91o21yEPOX4Jq
-X-Gm-Message-State: AOJu0Yxg4IrwBVRNkvqKvE7XDAzqeJiyRnV0c+B8/AZLcrKKupX0WiTC
-	dt4hMVQraJzDYxIyuHhzhRjP9n929iVkeBm8UkadM6AU0NHuV9oDjGQWPCKipBM=
-X-Google-Smtp-Source: AGHT+IFW5wFv4Nr2vL4lmZv1xSYSknW8VzR0FHgUnlq32KXpNWXRidmFH8ltDuIb+OCkhQa5lrc0ng==
-X-Received: by 2002:a05:600c:3c8a:b0:411:9508:e237 with SMTP id bg10-20020a05600c3c8a00b004119508e237mr17669840wmb.19.1708602666816;
-        Thu, 22 Feb 2024 03:51:06 -0800 (PST)
+        bh=kxFeZ/0ASaJvoJHkw5FuQa0hU1Ih3iAyraY4h2cFePg=;
+        b=F+2Ovq31Pe8UJ0TQzXRJf31jkJ8xw5NLHu24bNB/fz3wzloiBXayaD5zkuhqEuVghy
+         epIG6OdgSbcfT+bESBSFtnO22OYj6xQvL/Q8pJdxU6Url0gHjV80lcZA8w3GmupF+7er
+         3y4NMGX1zC8tSlONqlfHxhe/RSfBIqign/10JHOswfOAOCYOGJnZ8stIq3t+AlBnNfM7
+         CZTHWMiHcUxGXP8+mXQb1hnhv+XgcVAuNSqiShxCSjaooTKd0X/pH15Q37bui9/qX95t
+         KRBIGDicTUaa+be4c9nVG3PRIZtHHrO9LOCti1Q71ifDVeAIQsx/KVbzFQcrIQmOoq1e
+         lUeQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWmPv0+dD7T2takYokrYVdEpv23Dcm9HAQWdFUxA139RvNBr7xAKCMBoN6o59U18z/LKmAY0GcwSikc8rY6Jf+ItLxvTewcfg/L+e9y
+X-Gm-Message-State: AOJu0YygCJjOzkduGrk5yyB3E5SLH89EQJDe/Ayj+EGdtivJmWHXbN0F
+	5dYDiBoR5jeuZo8mhZuRY8M0vUvzxLGAgYhC188yiLWD+Fio+2YEN5qCTQyXwrcq11I2Le4eKuC
+	w
+X-Google-Smtp-Source: AGHT+IEa3C8f7cLy6OU3uEmSmSXgcYIgG0huCWrowteGjGdDCOAsaf2p99NOehd9GQ5cTyTmBUBHRg==
+X-Received: by 2002:a05:6000:1787:b0:33d:56a0:88e3 with SMTP id e7-20020a056000178700b0033d56a088e3mr8736928wrg.65.1708602669683;
+        Thu, 22 Feb 2024 03:51:09 -0800 (PST)
 Received: from raven.intern.cm-ag (p200300dc6f010900023064fffe740809.dip0.t-ipconnect.de. [2003:dc:6f01:900:230:64ff:fe74:809])
-        by smtp.gmail.com with ESMTPSA id co18-20020a0560000a1200b0033d4c3b0beesm15044920wrb.19.2024.02.22.03.51.05
+        by smtp.gmail.com with ESMTPSA id co18-20020a0560000a1200b0033d4c3b0beesm15044920wrb.19.2024.02.22.03.51.08
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 22 Feb 2024 03:51:06 -0800 (PST)
+        Thu, 22 Feb 2024 03:51:09 -0800 (PST)
 From: Max Kellermann <max.kellermann@ionos.com>
 To: akpm@linux-foundation.org,
 	linux-mm@kvack.org,
 	linux-kernel@vger.kernel.org
 Cc: willy@infradead.org,
 	Max Kellermann <max.kellermann@ionos.com>
-Subject: [PATCH v2 05/14] linux/mm.h: move page_address() and others to mm/page_address.h
-Date: Thu, 22 Feb 2024 12:50:46 +0100
-Message-Id: <20240222115055.1172877-6-max.kellermann@ionos.com>
+Subject: [PATCH v2 08/14] linux/mm.h: move devmap-related declarations to mm/devmap_managed.h
+Date: Thu, 22 Feb 2024 12:50:49 +0100
+Message-Id: <20240222115055.1172877-9-max.kellermann@ionos.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20240222115055.1172877-1-max.kellermann@ionos.com>
 References: <20240222115055.1172877-1-max.kellermann@ionos.com>
@@ -74,196 +75,95 @@ Content-Transfer-Encoding: 8bit
 
 Prepare to reduce dependencies on linux/mm.h.
 
-page_address() is used by the following popular headers:
-
-- linux/bio.h
-- linux/bvec.h
-- linux/highmem.h
-- linux/scatterlist.h
-- linux/skbuff.h
-
-Moving it to a separate lean header will allow us to avoid the
-dependency on linux/mm.h.
+put_devmap_managed_page() is called by put_page().  Moving it to a
+separate header allows us to move put_page() to a separate lean header
+as well.
 
 Signed-off-by: Max Kellermann <max.kellermann@ionos.com>
 ---
- include/linux/mm.h              | 56 +-------------------------
- include/linux/mm/page_address.h | 71 +++++++++++++++++++++++++++++++++
- 2 files changed, 72 insertions(+), 55 deletions(-)
- create mode 100644 include/linux/mm/page_address.h
+ include/linux/mm.h                | 24 --------------------
+ include/linux/mm/devmap_managed.h | 37 +++++++++++++++++++++++++++++++
+ 2 files changed, 37 insertions(+), 24 deletions(-)
+ create mode 100644 include/linux/mm/devmap_managed.h
 
 diff --git a/include/linux/mm.h b/include/linux/mm.h
-index 7c3d2bd69818..57c091e7579e 100644
+index 7d83d6d64f30..7a302da7de24 100644
 --- a/include/linux/mm.h
 +++ b/include/linux/mm.h
-@@ -2,7 +2,7 @@
- #ifndef _LINUX_MM_H
- #define _LINUX_MM_H
- 
--#include <linux/mm/page_kasan_tag.h>
-+#include <linux/mm/page_address.h>
- #include <linux/mm/page_section.h>
- #include <linux/errno.h>
- #include <linux/mmdebug.h>
-@@ -103,10 +103,6 @@ extern int mmap_rnd_compat_bits __read_mostly;
- #define __pa_symbol(x)  __pa(RELOC_HIDE((unsigned long)(x), 0))
- #endif
- 
--#ifndef page_to_virt
--#define page_to_virt(x)	__va(PFN_PHYS(page_to_pfn(x)))
--#endif
--
- #ifndef lm_alias
- #define lm_alias(x)	__va(__pa_symbol(x))
- #endif
-@@ -210,14 +206,6 @@ int overcommit_kbytes_handler(struct ctl_table *, int, void *, size_t *,
- int overcommit_policy_handler(struct ctl_table *, int, void *, size_t *,
- 		loff_t *);
- 
--#if defined(CONFIG_SPARSEMEM) && !defined(CONFIG_SPARSEMEM_VMEMMAP)
--#define nth_page(page,n) pfn_to_page(page_to_pfn((page)) + (n))
--#define folio_page_idx(folio, p)	(page_to_pfn(p) - folio_pfn(folio))
--#else
--#define nth_page(page,n) ((page) + (n))
--#define folio_page_idx(folio, p)	((p) - &(folio)->page)
--#endif
--
- /* to align the pointer to the (next) page boundary */
- #define PAGE_ALIGN(addr) ALIGN(addr, PAGE_SIZE)
- 
-@@ -2122,44 +2110,6 @@ static inline int arch_make_folio_accessible(struct folio *folio)
+@@ -1350,30 +1350,6 @@ vm_fault_t finish_fault(struct vm_fault *vmf);
+  *   back into memory.
   */
- #include <linux/vmstat.h>
  
--static __always_inline void *lowmem_page_address(const struct page *page)
+-#if defined(CONFIG_ZONE_DEVICE) && defined(CONFIG_FS_DAX)
+-DECLARE_STATIC_KEY_FALSE(devmap_managed_key);
+-
+-bool __put_devmap_managed_page_refs(struct page *page, int refs);
+-static inline bool put_devmap_managed_page_refs(struct page *page, int refs)
 -{
--	return page_to_virt(page);
+-	if (!static_branch_unlikely(&devmap_managed_key))
+-		return false;
+-	if (!is_zone_device_page(page))
+-		return false;
+-	return __put_devmap_managed_page_refs(page, refs);
+-}
+-#else /* CONFIG_ZONE_DEVICE && CONFIG_FS_DAX */
+-static inline bool put_devmap_managed_page_refs(struct page *page, int refs)
+-{
+-	return false;
+-}
+-#endif /* CONFIG_ZONE_DEVICE && CONFIG_FS_DAX */
+-
+-static inline bool put_devmap_managed_page(struct page *page)
+-{
+-	return put_devmap_managed_page_refs(page, 1);
 -}
 -
--#if defined(CONFIG_HIGHMEM) && !defined(WANT_PAGE_VIRTUAL)
--#define HASHED_PAGE_VIRTUAL
--#endif
--
--#if defined(WANT_PAGE_VIRTUAL)
--static inline void *page_address(const struct page *page)
--{
--	return page->virtual;
--}
--static inline void set_page_address(struct page *page, void *address)
--{
--	page->virtual = address;
--}
--#define page_address_init()  do { } while(0)
--#endif
--
--#if defined(HASHED_PAGE_VIRTUAL)
--void *page_address(const struct page *page);
--void set_page_address(struct page *page, void *virtual);
--void page_address_init(void);
--#endif
--
--#if !defined(HASHED_PAGE_VIRTUAL) && !defined(WANT_PAGE_VIRTUAL)
--#define page_address(page) lowmem_page_address(page)
--#define set_page_address(page, address)  do { } while(0)
--#define page_address_init()  do { } while(0)
--#endif
--
--static inline void *folio_address(const struct folio *folio)
--{
--	return page_address(&folio->page);
--}
--
- extern pgoff_t __page_file_index(struct page *page);
- 
- /*
-@@ -2222,10 +2172,6 @@ static inline void clear_page_pfmemalloc(struct page *page)
-  */
- extern void pagefault_out_of_memory(void);
- 
--#define offset_in_page(p)	((unsigned long)(p) & ~PAGE_MASK)
--#define offset_in_thp(page, p)	((unsigned long)(p) & (thp_size(page) - 1))
--#define offset_in_folio(folio, p) ((unsigned long)(p) & (folio_size(folio) - 1))
--
- /*
-  * Parameter block passed down to zap_pte_range in exceptional cases.
-  */
-diff --git a/include/linux/mm/page_address.h b/include/linux/mm/page_address.h
+ /* 127: arbitrary random number, small enough to assemble well */
+ #define folio_ref_zero_or_close_to_overflow(folio) \
+ 	((unsigned int) folio_ref_count(folio) + 127u <= 127u)
+diff --git a/include/linux/mm/devmap_managed.h b/include/linux/mm/devmap_managed.h
 new file mode 100644
-index 000000000000..e1aaacc5003f
+index 000000000000..0773529d80b2
 --- /dev/null
-+++ b/include/linux/mm/page_address.h
-@@ -0,0 +1,71 @@
++++ b/include/linux/mm/devmap_managed.h
+@@ -0,0 +1,37 @@
 +/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef _LINUX_MM_PAGE_ADDRESS_H
-+#define _LINUX_MM_PAGE_ADDRESS_H
++#ifndef _LINUX_MM_DEVMAP_MANAGED_H
++#define _LINUX_MM_DEVMAP_MANAGED_H
 +
-+#include <linux/mm_types.h> // for struct page
-+#include <linux/mm/page_kasan_tag.h> // needed by the page_to_virt() macro on some architectures (e.g. arm64)
-+#include <asm/page.h> // for PAGE_MASK, page_to_virt()
++#include <linux/types.h> // for bool
 +
-+#if defined(CONFIG_FLATMEM)
-+#include <linux/mmzone.h> // for memmap (used by __pfn_to_page())
-+#elif defined(CONFIG_SPARSEMEM_VMEMMAP)
-+#include <asm/pgtable.h> // for vmemmap (used by __pfn_to_page())
-+#elif defined(CONFIG_SPARSEMEM)
-+#include <linux/mm/page_section.h> // for page_to_section() (used by __page_to_pfn())
-+#endif
++struct page;
 +
-+#ifndef page_to_virt
-+#define page_to_virt(x)	__va(PFN_PHYS(page_to_pfn(x)))
-+#endif
++#if defined(CONFIG_ZONE_DEVICE) && defined(CONFIG_FS_DAX)
 +
-+#if defined(CONFIG_SPARSEMEM) && !defined(CONFIG_SPARSEMEM_VMEMMAP)
-+#define nth_page(page,n) pfn_to_page(page_to_pfn((page)) + (n))
-+#define folio_page_idx(folio, p)	(page_to_pfn(p) - folio_pfn(folio))
-+#else
-+#define nth_page(page,n) ((page) + (n))
-+#define folio_page_idx(folio, p)	((p) - &(folio)->page)
-+#endif
++#include <linux/jump_label.h> // for DECLARE_STATIC_KEY_FALSE(), static_branch_unlikely()
++#include <linux/mmzone.h> // is_zone_device_page()
 +
-+static __always_inline void *lowmem_page_address(const struct page *page)
++DECLARE_STATIC_KEY_FALSE(devmap_managed_key);
++
++bool __put_devmap_managed_page_refs(struct page *page, int refs);
++static inline bool put_devmap_managed_page_refs(struct page *page, int refs)
 +{
-+	return page_to_virt(page);
++	if (!static_branch_unlikely(&devmap_managed_key))
++		return false;
++	if (!is_zone_device_page(page))
++		return false;
++	return __put_devmap_managed_page_refs(page, refs);
++}
++#else /* CONFIG_ZONE_DEVICE && CONFIG_FS_DAX */
++static inline bool put_devmap_managed_page_refs(struct page *page, int refs)
++{
++	return false;
++}
++#endif /* CONFIG_ZONE_DEVICE && CONFIG_FS_DAX */
++
++static inline bool put_devmap_managed_page(struct page *page)
++{
++	return put_devmap_managed_page_refs(page, 1);
 +}
 +
-+#if defined(CONFIG_HIGHMEM) && !defined(WANT_PAGE_VIRTUAL)
-+#define HASHED_PAGE_VIRTUAL
-+#endif
-+
-+#if defined(WANT_PAGE_VIRTUAL)
-+static inline void *page_address(const struct page *page)
-+{
-+	return page->virtual;
-+}
-+static inline void set_page_address(struct page *page, void *address)
-+{
-+	page->virtual = address;
-+}
-+#define page_address_init()  do { } while(0)
-+#endif
-+
-+#if defined(HASHED_PAGE_VIRTUAL)
-+void *page_address(const struct page *page);
-+void set_page_address(struct page *page, void *virtual);
-+void page_address_init(void);
-+#endif
-+
-+#if !defined(HASHED_PAGE_VIRTUAL) && !defined(WANT_PAGE_VIRTUAL)
-+#define page_address(page) lowmem_page_address(page)
-+#define set_page_address(page, address)  do { } while(0)
-+#define page_address_init()  do { } while(0)
-+#endif
-+
-+static inline void *folio_address(const struct folio *folio)
-+{
-+	return page_address(&folio->page);
-+}
-+
-+#define offset_in_page(p)	((unsigned long)(p) & ~PAGE_MASK)
-+#define offset_in_thp(page, p)	((unsigned long)(p) & (thp_size(page) - 1))
-+#define offset_in_folio(folio, p) ((unsigned long)(p) & (folio_size(folio) - 1))
-+
-+#endif /* _LINUX_MM_PAGE_ADDRESS_H */
++#endif /* _LINUX_MM_DEVMAP_MANAGED_H */
 -- 
 2.39.2
 
