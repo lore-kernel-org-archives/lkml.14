@@ -1,168 +1,86 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEC991474C2;
-	Thu, 22 Feb 2024 15:10:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64BDB149005;
+	Thu, 22 Feb 2024 15:11:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708614645; cv=none; b=S9lyq2AsUCx3a5ri+CJ2zmTJ7oLH0VSHTMvPdQoYb18HQHOtApfXNDpcIL0aUCTFQqtO1i2aURNopt39mrQZxxuJIJRBoLsLjiSAp10mzyBjdErQxM9nSAl0yrHewHOR/N8M//TbL6PU14yd8gtTWidz3tmD6/PRLxSdsY/gWrk=
+	t=1708614668; cv=none; b=mkupuWPuek6P2Avw7SO5R6kSthRd0gtMTqOmIKEHWp2Fy10vX+sza+3vDeu2V4d9jwP8MRQByGDRMGLWPuAYTcGD300tkb733qPgojRDoeEm/8c+953Mw7tv/6Jz0/6ygT2eWsM37acToJLhSfvaCCOwQVzOFG6eW/B2INAy0so=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708614645; c=relaxed/simple;
-	bh=7Wt2UToczihewYYVHGzb+LT1rEJylSZasxhmqlYMo1I=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=aOh6awgEUoYbK1NFLerBRgKHheLiV6tmZXjjWj7s902MP16up6lplhlFzteENJDtOpS+UAjnhSPSAuguUt+KPJGmx7zWDe502lgXvZTq8nl/A88u5Uq/SoGIzyul9opIr5VqQliijwyUC3G+POhxONiltYxq4vKlSHDs7v0CN7o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=iwxjdq+w; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1708614668; c=relaxed/simple;
+	bh=N4DqxkrUO+39GL6l6n4cDeOPvtBE1QaBpCHDr4rRhKE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DWpXAAibRz2krhzyaE6XDhr1/lerxY8LGmAe7QoyuK9q2BSy2yrluh8JSkLBG3tSR26Wm3vLywu1NHyua3DkcrlFwQWG3tpHfHeI43lmLUX6x88rKyguu96D85RYA0jes5Hlv7bmgndueGe/el3Xe5Cntz3jLTI3UZTpPGWPcKE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=PlwPp4qs; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="iwxjdq+w"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1708614641;
-	bh=7Wt2UToczihewYYVHGzb+LT1rEJylSZasxhmqlYMo1I=;
-	h=From:To:Cc:Subject:Date:From;
-	b=iwxjdq+wHLTj6JK+b7v8AhdO4O5LyEMvW0za0cYyocNPBC5fRic+lY0wYF4z4DS2o
-	 2PJoXhVMb4E0PQv7278fFRoZTT/c7328+mibPhzuD8lNyWtn8LoBOHbPPtCHcIqzJ5
-	 rvpmq9ik7KqasSlvVgt9pkvvk+YNBF4T/d4D9YHdEKNTxGnzG1jCdbEGlJQe01mxdx
-	 gGtil0Pnyeq1ZoxFHZOgOcJF7rx0i+34320X4AWKpNic2WC+os9FYsFPOuYY5m1zYI
-	 va5t9ygDE+wU/oQ14wiXohGVxDc54jmTgAeyzD+xmKuroaviNl8QTK4p1AzSwlb+zg
-	 vKsVqS1hB/OCw==
-Received: from localhost.localdomain (cola.collaboradmins.com [195.201.22.229])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: laura.nao)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id C5CF637820D4;
-	Thu, 22 Feb 2024 15:10:40 +0000 (UTC)
-From: Laura Nao <laura.nao@collabora.com>
-To: ojeda@kernel.org,
-	alex.gaynor@gmail.com,
-	wedsonaf@gmail.com,
-	shuah@kernel.org
-Cc: usama.anjum@collabora.com,
-	a.hindborg@samsung.com,
-	aliceryhl@google.com,
-	benno.lossin@proton.me,
-	bjorn3_gh@protonmail.com,
-	boqun.feng@gmail.com,
-	gary@garyguo.net,
-	kernel@collabora.com,
-	laura.nao@collabora.com,
-	linux-kernel@vger.kernel.org,
-	linux-kselftest@vger.kernel.org,
-	rust-for-linux@vger.kernel.org,
-	Sergio Gonzalez Collado <sergio.collado@gmail.com>
-Subject: [PATCH v2] kselftest: Add basic test for probing the rust sample modules
-Date: Thu, 22 Feb 2024 16:10:09 +0100
-Message-Id: <20240222151009.461264-1-laura.nao@collabora.com>
-X-Mailer: git-send-email 2.30.2
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="PlwPp4qs"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=wMH/YxCjPZ+y9HsN5oGyh1S5l+4RS/ggKj3jV/RYk0o=; b=PlwPp4qsKfFwbW6SZDrR5NPnMQ
+	bR7XdWqPB+3yentT0+DlCP3iWQUbcAbX468on34w/o/3vMxOcbjXYYQWet4npgIE2qKzq8kE44oHM
+	JT5IhGFCO0YIF5P7A3+uL6bdTE3C3jSwdtnPLreSxTDspO8QL54S9WVu7na1/VEbCscc=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1rdAj7-008S6N-L3; Thu, 22 Feb 2024 16:11:09 +0100
+Date: Thu, 22 Feb 2024 16:11:09 +0100
+From: Andrew Lunn <andrew@lunn.ch>
+To: Simon Horman <horms@kernel.org>
+Cc: "David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Ariel Elior <aelior@marvell.com>,
+	Manish Chopra <manishc@marvell.com>,
+	Jesse Brandeburg <jesse.brandeburg@intel.com>,
+	Tony Nguyen <anthony.l.nguyen@intel.com>, linux-usb@vger.kernel.org,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+	intel-wired-lan@lists.osuosl.org
+Subject: Re: [PATCH net-next v4 3/9] net: qlogic: qede: Use linkmode helpers
+ for EEE
+Message-ID: <68088998-4486-4930-90a4-96a32f08c490@lunn.ch>
+References: <20240218-keee-u32-cleanup-v4-0-71f13b7c3e60@lunn.ch>
+ <20240218-keee-u32-cleanup-v4-3-71f13b7c3e60@lunn.ch>
+ <20240220124405.GB40273@kernel.org>
+ <a52361ef-66ab-41bd-b245-ccd26fcbd957@lunn.ch>
+ <20240221102851.GA352018@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240221102851.GA352018@kernel.org>
 
-Add new basic kselftest that checks if the available rust sample modules
-can be added and removed correctly.
+On Wed, Feb 21, 2024 at 10:28:51AM +0000, Simon Horman wrote:
+> On Tue, Feb 20, 2024 at 03:45:28PM +0100, Andrew Lunn wrote:
+> > > > +	unsupp = linkmode_andnot(tmp, edata->advertised, supported);
+> > > 
+> > > nit: Given the types involved, I might have written this as:
+> > > 
+> > > 	unsupp = !!linkmode_andnot(tmp, edata->advertised, supported);
+> > 
+> > linkmode_andnot() calls bitmap_andnot():
+> > 
+> > static inline bool bitmap_andnot(unsigned long *dst, const unsigned long *src1,
+> > 			const unsigned long *src2, unsigned int nbits)
+> > 
+> > It already returns a bool, so there is no need to force an int to bool
+> > conversion using !!.
+> 
+> Good point, sorry for missing that.
 
-Signed-off-by: Laura Nao <laura.nao@collabora.com>
-Reviewed-by: Sergio Gonzalez Collado <sergio.collado@gmail.com>
-Reviewed-by: Muhammad Usama Anjum <usama.anjum@collabora.com>
----
-Changes in v2:
-- Added missing SPDX line
-- Edited test_probe_samples.sh script to use the common KTAP helpers file
----
- MAINTAINERS                                   |  1 +
- tools/testing/selftests/Makefile              |  1 +
- tools/testing/selftests/rust/Makefile         |  4 ++
- .../selftests/rust/test_probe_samples.sh      | 42 +++++++++++++++++++
- 4 files changed, 48 insertions(+)
- create mode 100644 tools/testing/selftests/rust/Makefile
- create mode 100755 tools/testing/selftests/rust/test_probe_samples.sh
+> I assume there is a reason that the return type of
+> linkmode_andnot is not bool.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index c1a18af3593a..5f62904c80bd 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -19207,6 +19207,7 @@ F:	Documentation/rust/
- F:	rust/
- F:	samples/rust/
- F:	scripts/*rust*
-+F:	tools/testing/selftests/rust/
- K:	\b(?i:rust)\b
- 
- RXRPC SOCKETS (AF_RXRPC)
-diff --git a/tools/testing/selftests/Makefile b/tools/testing/selftests/Makefile
-index f7255969b695..e1504833654d 100644
---- a/tools/testing/selftests/Makefile
-+++ b/tools/testing/selftests/Makefile
-@@ -80,6 +80,7 @@ TARGETS += riscv
- TARGETS += rlimits
- TARGETS += rseq
- TARGETS += rtc
-+TARGETS += rust
- TARGETS += seccomp
- TARGETS += sgx
- TARGETS += sigaltstack
-diff --git a/tools/testing/selftests/rust/Makefile b/tools/testing/selftests/rust/Makefile
-new file mode 100644
-index 000000000000..fce1584d3bc0
---- /dev/null
-+++ b/tools/testing/selftests/rust/Makefile
-@@ -0,0 +1,4 @@
-+# SPDX-License-Identifier: GPL-2.0
-+TEST_PROGS += test_probe_samples.sh
-+
-+include ../lib.mk
-diff --git a/tools/testing/selftests/rust/test_probe_samples.sh b/tools/testing/selftests/rust/test_probe_samples.sh
-new file mode 100755
-index 000000000000..6fcc2cd83d89
---- /dev/null
-+++ b/tools/testing/selftests/rust/test_probe_samples.sh
-@@ -0,0 +1,42 @@
-+#!/bin/bash
-+# SPDX-License-Identifier: GPL-2.0
-+#
-+# Copyright (c) 2023 Collabora Ltd
-+#
-+# This script tests whether the rust sample modules can
-+# be added and removed correctly.
-+#
-+
-+DIR="$(dirname "$(readlink -f "$0")")"
-+
-+source "${DIR}"/../kselftest/ktap_helpers.sh
-+
-+rust_sample_modules=("rust_minimal" "rust_print")
-+
-+KSFT_PASS=0
-+KSFT_FAIL=1
-+KSFT_SKIP=4
-+
-+ret="${KSFT_PASS}"
-+
-+ktap_print_header
-+
-+ktap_set_plan "${#rust_sample_modules[@]}"
-+
-+for sample in "${rust_sample_modules[@]}"; do
-+    if ! /sbin/modprobe -n -q "$sample"; then
-+        ktap_test_skip "module $sample is not found in /lib/modules/$(uname -r)"
-+        continue
-+    fi
-+
-+    if /sbin/modprobe -q "$sample"; then
-+        /sbin/modprobe -q -r "$sample"
-+        ktap_test_pass "$sample"
-+    else
-+        ret="${KSFT_FAIL}"
-+        ktap_test_fail "$sample"
-+    fi
-+done
-+
-+ktap_print_totals
-+exit "${ret}"
--- 
-2.30.2
+Either i got it wrong when i added the wrapper, or bitmap_andnot() has
+changed since then?
 
+It probably can be changed to a bool.
+
+	Andrew
