@@ -1,117 +1,114 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4C871534F8;
-	Thu, 22 Feb 2024 15:41:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DA501534F7
+	for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 15:41:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708616495; cv=none; b=dnbE0XTukdQMKwQ2SSKuZQvlXuCM1HHgJxjd7URlII+HfikkXXouBeGYlaWybazL4TI79QGRLjPocW72Su337xQi6FlTh5NBmzABiDB+TvExAZ5a02IBlU97Y+RZyyzQmisSXBvz24MSIs6kymsHiFwqw6q/uqqiDTIEPvdTakI=
+	t=1708616497; cv=none; b=NhNwdvi9jEbCzAInrCYxpYYAsu3dA3DNmFAHA/g/zOz55/6fcDI9RAJ5Fvsls0OUl8c0QZgtUvmQyqTnk+LLwktPLCG+ulIqf5l33q0IhdSCcFr55ogpTXO7gQQNDYHAFuFgrAnUEBJxC0hy02L2hle/Zo6QZqSITNNzFQ640ig=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708616495; c=relaxed/simple;
-	bh=RuWY1cv8Dhz18Wxup/ZL/5dm4lWX9+YTDfCxalcnNUo=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Elcb0XDhVdJKPCtyf8OH2MWHrGJnPgnKbF8cW/UpWWtwwwNl03R9ieCqRVzhzLYkAE5I7DLHTVffCc/PHfh9KYqA6sDZTZQu+ZDvwGFtzysATsUkPK8MRbV+hWNpkVVUNo6uTWV/Zv7XDHQvSlz2VnuYKN+qTVWg1TycCU34sXs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tiBlVyOC; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1708616497; c=relaxed/simple;
+	bh=t2Y541NBTF20XK3dcuTaD4MfPwHo6wDUA3Kzlm90WZE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hp5ItQ0FHD1fGGIj4kPN3dry4TDKt82ckDkiRG7qeTvxbUx4qBvfVqhlO9rm9bLd9kXZa+vLRK92kchkvMPlMyDpDXFqulS4/w1kaNML9qcTH2RJnESPgSwQP6SLGnAZ20Q0tfvjBeUWKAbHpcWWZuhvxrL9Aij0KSu4GX/Nz7U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=crVvQVJW; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tiBlVyOC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C5700C43394;
-	Thu, 22 Feb 2024 15:41:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708616495;
-	bh=RuWY1cv8Dhz18Wxup/ZL/5dm4lWX9+YTDfCxalcnNUo=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=tiBlVyOCYtJPgJOPH/yQz3yHhsu5izAVu0rXFmi6w6IQTdn8PtsC8zim0x2V6KkLn
-	 gFG1gOFuwAKXl+Rp3793LnwLN268Tqmd38WhnUKQL0CrQN59BgC49LbtWhMxfYs87B
-	 TAYruJfJ/809V40bGe6y4NHi/Cf8AwxlYazgBLacAuyNQDdUjXyRF22XftDqeekqjV
-	 e02JE4zBp0nyDnjUCLKau6xDlPHsswTho8YevEGNB5ABJy/T7UO8Fib5hKNBMidEha
-	 SWDtS3AHAMQfcThlt1R1u6kw9JwECb30RwkQkRwT0EfAFBVTOR1yv3cOoKHKRX5kdU
-	 pmzIdAqmVsXiw==
-From: Chun-Kuang Hu <chunkuang.hu@kernel.org>
-To: Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Moudy Ho <moudy.ho@mediatek.com>,
-	"Jason-JH . Lin" <jason-jh.lin@mediatek.com>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org,
-	dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	linux-media@vger.kernel.org
-Cc: Chun-Kuang Hu <chunkuang.hu@kernel.org>
-Subject: [PATCH v2 02/12] soc: mediatek: cmdq: Add parameter shift_pa to cmdq_pkt_jump()
-Date: Thu, 22 Feb 2024 15:41:10 +0000
-Message-Id: <20240222154120.16959-3-chunkuang.hu@kernel.org>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240222154120.16959-1-chunkuang.hu@kernel.org>
-References: <20240222154120.16959-1-chunkuang.hu@kernel.org>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="crVvQVJW"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1708616494;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=6ohgWeecE5sLvAbR1ati6o7mII8imwpShQzkYvL5vVU=;
+	b=crVvQVJWUGcpe1JgVC0EWZHnRHjpTR4dbXeRghxifHmbyY1NQMSvtepavK/FjBTNjVjHU2
+	4bwWwqLKc2LaxBmx8nmFHOAwb9pYDBou1KBabRJ7pwT4CjLY/hAXwKt1rPgQw8Gmal/iET
+	bAt3MmemMomzzdDFalOigVBLjNtTXDk=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-543-LyQuHO84Oiu55SD-XBk7DQ-1; Thu, 22 Feb 2024 10:41:32 -0500
+X-MC-Unique: LyQuHO84Oiu55SD-XBk7DQ-1
+Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-410422e8cd1so34003655e9.3
+        for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 07:41:32 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708616491; x=1709221291;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=6ohgWeecE5sLvAbR1ati6o7mII8imwpShQzkYvL5vVU=;
+        b=R0bHTJDlYXxC2WYI1cYw13vCd6RxsOnwXXnvgh3jTcbDLlZz2dAo/fEZLL7ZMo4BNW
+         iG762+pl7IA2pUrUW6epZJtZLBqP70YSaSxyJwuyTUfsjmFEq/GdfcKAe4SI8nPPN5yq
+         RZlAtVLyi4cWQcfiGH5rTj+dRR0pX97RguiTmXTNetRaP8ZfUvTtPfdv1/rQ3dQxqhGg
+         5LlEz5nzFq6l//yiSKn+S2Fgaw3pE/Ngx+wnQ6TojoD8JexfiLETzLK0Jy3IT+rYmbni
+         4O6ALcrfmxn0MVG1odelmFnPznZwp0uk6ZAEzOM+0CultYt/16kfywOl8PhTi5fs0Ti2
+         V8Hw==
+X-Forwarded-Encrypted: i=1; AJvYcCW4XarXqeYQ/Q9Wp6AsHspH1zLgv7UHuqTnAUYQpy2BkbA4ldZi1lc+QSqmHOEnbiXrF0yczBx9ENooUwAnAzk/XdFRz9hatIncLSTP
+X-Gm-Message-State: AOJu0YykXCqOupIME6zTkS9ISBQQrhcGGgbM8rigTxbXcDV9iEGz0khw
+	cqVoQd9uWHDbgeTB9tVZOxry3ClHTvLyBfgV9zXNb0T40knsqonZK92f9cfCS91/m5RNDhvEbOb
+	CYrWbTZenKoM5tvvIHFGAuKBbxKN7dH+d9c2XQxoOBZhBTkyb6ZsrSTI6sX5aog==
+X-Received: by 2002:a05:600c:4f82:b0:411:e6fd:4ad with SMTP id n2-20020a05600c4f8200b00411e6fd04admr17000829wmq.5.1708616491547;
+        Thu, 22 Feb 2024 07:41:31 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IHtqkR0KaYBzcVyqpjgYX963S7RxaFGa+tK0UVfi315EcYLlqk4dk7ACCc6QXbmqO7Qpvbbag==
+X-Received: by 2002:a05:600c:4f82:b0:411:e6fd:4ad with SMTP id n2-20020a05600c4f8200b00411e6fd04admr17000815wmq.5.1708616491215;
+        Thu, 22 Feb 2024 07:41:31 -0800 (PST)
+Received: from redhat.com ([2a06:c701:73fa:1600:1669:f0ad:816d:4f7])
+        by smtp.gmail.com with ESMTPSA id y17-20020a05600c365100b004126101915esm6463325wmq.4.2024.02.22.07.41.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 22 Feb 2024 07:41:30 -0800 (PST)
+Date: Thu, 22 Feb 2024 10:41:27 -0500
+From: "Michael S. Tsirkin" <mst@redhat.com>
+To: Lei Yang <leiyang@redhat.com>
+Cc: syzbot <syzbot+6f3c38e8a6a0297caa5a@syzkaller.appspotmail.com>,
+	jasowang@redhat.com, linux-kernel@vger.kernel.org,
+	linux-next@vger.kernel.org, sfr@canb.auug.org.au,
+	syzkaller-bugs@googlegroups.com, virtualization@lists.linux.dev,
+	xuanzhuo@linux.alibaba.com,
+	Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org
+Subject: Re: [syzbot] [virtualization?] linux-next boot error: WARNING:
+ refcount bug in __free_pages_ok
+Message-ID: <20240222103932-mutt-send-email-mst@kernel.org>
+References: <000000000000d305050611b50d09@google.com>
+ <20240219022853-mutt-send-email-mst@kernel.org>
+ <CAPpAL=y+-YrDUsKYVBig4dc-7+Cg1Lk_VWXPOKeL=s2Fitf3mA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAPpAL=y+-YrDUsKYVBig4dc-7+Cg1Lk_VWXPOKeL=s2Fitf3mA@mail.gmail.com>
 
-In original design, cmdq_pkt_jump() call cmdq_get_shift_pa() every
-time to get shift_pa. But the shift_pa is constant value for each
-SoC, so client driver just need to call cmdq_get_shift_pa() once
-and pass shift_pa to cmdq_pkt_jump() to prevent frequent function
-call.
+On Thu, Feb 22, 2024 at 11:06:55AM +0800, Lei Yang wrote:
+> Hi All
+> 
+> I hit a similar issue when doing a regression testing from my side.
+> For the error messages please help review the attachment.
+> 
+> The latest commit:
+> commit c02197fc9076e7d991c8f6adc11759c5ba52ddc6 (HEAD -> master,
+> origin/master, origin/HEAD)
+> Merge: f2667e0c3240 0846dd77c834
+> Author: Linus Torvalds <torvalds@linux-foundation.org>
+> Date:   Sat Feb 17 16:59:31 2024 -0800
+> 
+>     Merge tag 'powerpc-6.8-3' of
+> git://git.kernel.org/pub/scm/linux/kernel/git/powerpc/linux
+> 
+>     Pull powerpc fixes from Michael Ellerman:
+>      "This is a bit of a big batch for rc4, but just due to holiday hangover
+>       and because I didn't send any fixes last week due to a late revert
+>       request. I think next week should be back to normal.
+> 
+> Regards
+> Lei
 
-Signed-off-by: Chun-Kuang Hu <chunkuang.hu@kernel.org>
----
- drivers/soc/mediatek/mtk-cmdq-helper.c | 5 ++---
- include/linux/soc/mediatek/mtk-cmdq.h  | 6 ++++--
- 2 files changed, 6 insertions(+), 5 deletions(-)
+It all looks like a generic bug dealing with some refcounting
+in the allocator.  So, a chance of a bisect there?
 
-diff --git a/drivers/soc/mediatek/mtk-cmdq-helper.c b/drivers/soc/mediatek/mtk-cmdq-helper.c
-index 0b2e5690dacf..3380e56dd69b 100644
---- a/drivers/soc/mediatek/mtk-cmdq-helper.c
-+++ b/drivers/soc/mediatek/mtk-cmdq-helper.c
-@@ -393,14 +393,13 @@ int cmdq_pkt_assign(struct cmdq_pkt *pkt, u16 reg_idx, u32 value)
- }
- EXPORT_SYMBOL(cmdq_pkt_assign);
- 
--int cmdq_pkt_jump(struct cmdq_pkt *pkt, dma_addr_t addr)
-+int cmdq_pkt_jump(struct cmdq_pkt *pkt, dma_addr_t addr, u8 shift_pa)
- {
- 	struct cmdq_instruction inst = {};
- 
- 	inst.op = CMDQ_CODE_JUMP;
- 	inst.offset = CMDQ_JUMP_ABSOLUTE;
--	inst.value = addr >>
--		cmdq_get_shift_pa(((struct cmdq_client *)pkt->cl)->chan);
-+	inst.value = addr >> shift_pa;
- 	return cmdq_pkt_append_command(pkt, inst);
- }
- EXPORT_SYMBOL(cmdq_pkt_jump);
-diff --git a/include/linux/soc/mediatek/mtk-cmdq.h b/include/linux/soc/mediatek/mtk-cmdq.h
-index 649955d2cf5c..72adfd867cd9 100644
---- a/include/linux/soc/mediatek/mtk-cmdq.h
-+++ b/include/linux/soc/mediatek/mtk-cmdq.h
-@@ -253,10 +253,12 @@ int cmdq_pkt_assign(struct cmdq_pkt *pkt, u16 reg_idx, u32 value);
-  *		     a physical address which should contains more instruction.
-  * @pkt:        the CMDQ packet
-  * @addr:       physical address of target instruction buffer
-+ * @shift_pa:	shift bits of physical address in CMDQ instruction. This value
-+ *		is got by cmdq_get_shift_pa().
-  *
-  * Return: 0 for success; else the error code is returned
-  */
--int cmdq_pkt_jump(struct cmdq_pkt *pkt, dma_addr_t addr);
-+int cmdq_pkt_jump(struct cmdq_pkt *pkt, dma_addr_t addr, u8 shift_pa);
- 
- /**
-  * cmdq_pkt_finalize() - Append EOC and jump command to pkt.
-@@ -374,7 +376,7 @@ static inline int cmdq_pkt_assign(struct cmdq_pkt *pkt, u16 reg_idx, u32 value)
- 	return -EINVAL;
- }
- 
--static inline int cmdq_pkt_jump(struct cmdq_pkt *pkt, dma_addr_t addr)
-+static inline int cmdq_pkt_jump(struct cmdq_pkt *pkt, dma_addr_t addr, u8 shift_pa)
- {
- 	return -EINVAL;
- }
 -- 
-2.34.1
+MST
 
