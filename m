@@ -1,94 +1,68 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E612917BD9
-	for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 08:04:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A8F718048
+	for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 08:05:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708589097; cv=none; b=JjWg/eIzSO5IC1tviXmvKx/y2Bcv1WR4H71FsD9iJNbLoj/fo10V3E3qrmU2U667mUe0ZqQPLNkQkAxbBY8nRSs15mkuEauBqPmLjfbSDrA1BGfDoxUZxDuIZ6gv4hwV/mGJKRqjLbStTphHil5G0amNiJ7wbNxIVopJ07UmwN8=
+	t=1708589120; cv=none; b=DnKa8BlFnHJF+J5mLI3azjMbbh9Qi9OFmrp7Sd/6ijBvMulIWJYZlAmVIV1p+p4mmWPoAqvNgATC3M26ZoNPinpPzzwnsoJFeequ+PzDAq/8GYXHBRY4gr2e2OBu9NA7JGmHfitFC77EPl1r6O1/jFwP+VA4IXPCQwyjeSmxCZk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708589097; c=relaxed/simple;
-	bh=xv7ZGBVTVz5CYCrEU7gRF98qLi999UCjY6IunUI60oc=;
+	s=arc-20240116; t=1708589120; c=relaxed/simple;
+	bh=H8y0VExe0EqJh5jKeAVExv4Qf/vyHTye4Sn8c50i+0I=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iZPFpTkx6j0kGd4jQS5+Ra3s9gWVC+W7y4eu5Z6vn2mbOuS3HGa1uUMyz2+t254XlO3cLsc0BwUMLrL1hPa0GF116RTlULxab8LWz9nT5PqrduQgwE/xiWO7vnYL5xKa1aSFs6NMIgKyUUVGv8H4OSAIDOjjU+TD1I1sNNqQLXI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=fxxz19jE; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=SIB7++H0sFTNgXsdPW0YCpoQwu/cn2oT7U69Mt1gkXrHHz6PC3nIzveROW2cI2gTM4uGFwmDKmbfrFyy9lbaRNroNEJfObvsodxf9vBlXyL4R2g3cre+RGPm6uEY0+0VDCLfSC/wdNs//c/AvEgtwoD0BoNdHCmhyyM0iRf/rCk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nZrzN+Gn; arc=none smtp.client-ip=209.85.210.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fxxz19jE"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1708589094;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=2Qz0IA0kUehz+OG0swe7slV1s58KjzFRhgWAnSqUkqI=;
-	b=fxxz19jESmDTBE6Ttcpn4CluMCZmCDheD1gdMQcQzbyCS7U8umZ4dea9kAzxwJ1VM7PWpZ
-	AUKgAegVR7lq1rJ/jqpNurTKJyPyNPUY/Ge57mZt4257swRszsZPi94axgGr6CHs68rmAR
-	lm//rBceeo18txFywinYPPS9IHSDi4g=
-Received: from mail-ot1-f70.google.com (mail-ot1-f70.google.com
- [209.85.210.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-427-PBdCM1ZqOkupOalYoJOCuQ-1; Thu, 22 Feb 2024 03:04:53 -0500
-X-MC-Unique: PBdCM1ZqOkupOalYoJOCuQ-1
-Received: by mail-ot1-f70.google.com with SMTP id 46e09a7af769-6e46611af43so635794a34.0
-        for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 00:04:53 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nZrzN+Gn"
+Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-6e4841ce028so1700246b3a.0
+        for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 00:05:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1708589119; x=1709193919; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:sender
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=7lXsgNHchdaAuraQyZst9y8PMmO/uD31+mOeALRf8Rk=;
+        b=nZrzN+Gn1gxEeYdDQVJ+zCVTYEGOv7521wc82MEOGOey+Loc0QVnmezv84vyGyPvoK
+         3hGSH251GxOIJheKphZC11u5U85CYq2oc6Jbe9yerKV7AxkwKp7hQ3UixD0avWIe7Fvj
+         4Wpeox/pLWEl/gCAh6uSxVK+DwsLNlQiQfB8VZZ2+GFTZbRnr0tRilict0vR5MQP2EuT
+         8/hz3sU4Hy5buAoqCDvQxvnq9+i7aXktBaxrODEyW81qntmLSeje0jDtlapQXo2yEs2G
+         dxSF7FICuVrncfrGCVnSOiZh126nqoeT5EwFhpO3byeB/flIscJMQQXIUBKX82p+/e/y
+         qxxg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708589092; x=1709193892;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=2Qz0IA0kUehz+OG0swe7slV1s58KjzFRhgWAnSqUkqI=;
-        b=wx0a4CDKx0xU5gxw/guAKE6jaeApqOvJ3P5dISVSPtnuHCGAiGG2MMN7G6wziFG8GM
-         Cv2OlrNfLwpr1di4F+l4rW9C9rgt5JU/mMEy6R4wy/afzvY08/s0O2D87/TjvuWh/QwI
-         Jw/FnRnhkbdvw7GxD6bHwsdKc4X2jsDHo4QpnzJLYiy8gy26wKL0ITy8IXstlnkIlg9Z
-         Dg/L6sTk0cNG0mtHdVuxNkfluVmwiaNWx5LBDWLKl7u0fMjjhTeIk/JwjQaY7HDOWp4t
-         Hj+bWwlGt2w0W4IrU8vVIw4xePanZDWxZvI+nY3asiQ9MZqRwe2jz5heb4+V38uqdA/Q
-         r9Bg==
-X-Forwarded-Encrypted: i=1; AJvYcCX8e5/A7N/yg/wGdXi5yo8DbTbXgOrn8LkUHBTKjNh94TT/QuOenI/HrOhqCg9W2UM29jIFs84liEj+zEdW6uJpeq1HL+GiW+0gGAtk
-X-Gm-Message-State: AOJu0YxSMjbGwg7gr8dZsaqQm7WHPKrL2Ic7LDmDlJbpMjbJrqJ6Kb/p
-	94n318O3Hih1e7Dt8IfApsJdLIhS/dTgsJdDDtsWIurZ3SAnPlxq+0a1iXiXOyFYDjeq81nTNbn
-	Uc6uoPCSafhss8nfhC+dWepdbqWm3OU8hu3dwgeA248G72ZnnK/ATJcv4TQy+3w==
-X-Received: by 2002:a05:6359:4113:b0:176:6149:5558 with SMTP id kh19-20020a056359411300b0017661495558mr16051641rwc.1.1708589092290;
-        Thu, 22 Feb 2024 00:04:52 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IFZ/pl9m1WfSqai2cvVXv5Lf1ZKvJ4xKR9ln5/WSKPeld/1kI04FNn1XDkCL6gJC29eFxMWrw==
-X-Received: by 2002:a05:6359:4113:b0:176:6149:5558 with SMTP id kh19-20020a056359411300b0017661495558mr16051606rwc.1.1708589091922;
-        Thu, 22 Feb 2024 00:04:51 -0800 (PST)
-Received: from x1n ([43.228.180.230])
-        by smtp.gmail.com with ESMTPSA id a21-20020a056a0011d500b006e0d1e6036bsm10300214pfu.129.2024.02.22.00.04.45
+        d=1e100.net; s=20230601; t=1708589119; x=1709193919;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:sender
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=7lXsgNHchdaAuraQyZst9y8PMmO/uD31+mOeALRf8Rk=;
+        b=WWHySdLJZ/tI4FcZYM/aIU6FczLSkLB2jPZxhx/VRVFUaZ2lFnCzk0Uzs1GVEQloyL
+         ec5PnkIJRgGGbUv1Al2dSDG2UmtH1ZLfXpSW2V5LUnAtKbmIX3lfy+5F2X+Gwhuqewmt
+         LvSVurSSsjm+MZu3QUfdkkzwrxwqtYno++439z5Vs5yXPsQHDmq6hYRzBYDFUaxPLMI7
+         mJo6dP67CMsMibCEu62AeuC8EiwggvLHPXlxGLWykgUBH6U1ZYoaanL7vUUqwvo3J3yy
+         /88yasp8RgpztUSZAdSo9yts1qJooyDUMr+h9EKHsDSW8aOO9VXj99+UhGjXZO7gEiM2
+         l1wg==
+X-Forwarded-Encrypted: i=1; AJvYcCWxbgQAgagfzFFLjeTCz9yP6HQf9ZyUCxD759DSdYFNM4e7PRpz9perb+IrT8xGND/8aIX4qxRFtIf4gNfHVWtM+u0XUEBee/dQei2n
+X-Gm-Message-State: AOJu0Ywvgq98xRNbZAz/JRSyd5+seHvaIZ0bZwkS07H5wpSg3bmt2tNY
+	VL6SP5J4wOmCi+4/1bFt1glhQZTWHt9LOM6eNl93l9XReoa1WhOw
+X-Google-Smtp-Source: AGHT+IFufpAdF4l+oCHHmNXrTCPl+6CIG54cDQXsyvWLrpNClK2zMw8WO/5HH+Cph1tpxz20mEaQ8w==
+X-Received: by 2002:a62:bd02:0:b0:6e4:bb45:4ac8 with SMTP id a2-20020a62bd02000000b006e4bb454ac8mr2905656pff.26.1708589118621;
+        Thu, 22 Feb 2024 00:05:18 -0800 (PST)
+Received: from localhost (dhcp-141-239-158-86.hawaiiantel.net. [141.239.158.86])
+        by smtp.gmail.com with ESMTPSA id y14-20020a62f24e000000b006e25d4085b4sm9897082pfl.27.2024.02.22.00.05.17
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 22 Feb 2024 00:04:51 -0800 (PST)
-Date: Thu, 22 Feb 2024 16:04:38 +0800
-From: Peter Xu <peterx@redhat.com>
-To: Jason Gunthorpe <jgg@nvidia.com>
-Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-	James Houghton <jthoughton@google.com>,
-	David Hildenbrand <david@redhat.com>,
-	"Kirill A . Shutemov" <kirill@shutemov.name>,
-	Yang Shi <shy828301@gmail.com>, linux-riscv@lists.infradead.org,
-	Andrew Morton <akpm@linux-foundation.org>,
-	"Aneesh Kumar K . V" <aneesh.kumar@kernel.org>,
-	Rik van Riel <riel@surriel.com>,
-	Andrea Arcangeli <aarcange@redhat.com>,
-	Axel Rasmussen <axelrasmussen@google.com>,
-	Mike Rapoport <rppt@kernel.org>, John Hubbard <jhubbard@nvidia.com>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Andrew Jones <andrew.jones@linux.dev>,
-	linuxppc-dev@lists.ozlabs.org,
-	Mike Kravetz <mike.kravetz@oracle.com>,
-	Muchun Song <muchun.song@linux.dev>,
-	linux-arm-kernel@lists.infradead.org,
-	Christoph Hellwig <hch@infradead.org>,
-	Lorenzo Stoakes <lstoakes@gmail.com>,
-	Matthew Wilcox <willy@infradead.org>
-Subject: Re: [PATCH v2 03/13] mm: Provide generic pmd_thp_or_huge()
-Message-ID: <ZdcAFpRijQdaYV2A@x1n>
-References: <20240103091423.400294-1-peterx@redhat.com>
- <20240103091423.400294-4-peterx@redhat.com>
- <20240115175551.GP734935@nvidia.com>
- <ZdXEYfs_xhS_9gRo@x1n>
- <20240221125753.GQ13330@nvidia.com>
+        Thu, 22 Feb 2024 00:05:18 -0800 (PST)
+Sender: Tejun Heo <htejun@gmail.com>
+Date: Wed, 21 Feb 2024 22:05:16 -1000
+From: Tejun Heo <tj@kernel.org>
+To: Lai Jiangshan <jiangshanlai@gmail.com>
+Cc: torvalds@linux-foundation.org, linux-kernel@vger.kernel.org,
+	allen.lkml@gmail.com, kernel-team@meta.com
+Subject: Re: [PATCH 1/7] workqueue: Preserve OFFQ bits in cancel[_sync] paths
+Message-ID: <ZdcAPKtxgw2ZUVFn@slm.duckdns.org>
+References: <20240221174333.700197-1-tj@kernel.org>
+ <20240221174333.700197-2-tj@kernel.org>
+ <CAJhGHyBgjMWtob2VRWhxCRyNuUVMzSEQufza5TRn7Cw-hBaQ3Q@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -97,103 +71,36 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20240221125753.GQ13330@nvidia.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAJhGHyBgjMWtob2VRWhxCRyNuUVMzSEQufza5TRn7Cw-hBaQ3Q@mail.gmail.com>
 
-On Wed, Feb 21, 2024 at 08:57:53AM -0400, Jason Gunthorpe wrote:
-> On Wed, Feb 21, 2024 at 05:37:37PM +0800, Peter Xu wrote:
-> > On Mon, Jan 15, 2024 at 01:55:51PM -0400, Jason Gunthorpe wrote:
-> > > On Wed, Jan 03, 2024 at 05:14:13PM +0800, peterx@redhat.com wrote:
-> > > > From: Peter Xu <peterx@redhat.com>
-> > > > 
-> > > > ARM defines pmd_thp_or_huge(), detecting either a THP or a huge PMD.  It
-> > > > can be a helpful helper if we want to merge more THP and hugetlb code
-> > > > paths.  Make it a generic default implementation, only exist when
-> > > > CONFIG_MMU.  Arch can overwrite it by defining its own version.
-> > > > 
-> > > > For example, ARM's pgtable-2level.h defines it to always return false.
-> > > > 
-> > > > Keep the macro declared with all config, it should be optimized to a false
-> > > > anyway if !THP && !HUGETLB.
-> > > > 
-> > > > Signed-off-by: Peter Xu <peterx@redhat.com>
-> > > > ---
-> > > >  include/linux/pgtable.h | 4 ++++
-> > > >  mm/gup.c                | 3 +--
-> > > >  2 files changed, 5 insertions(+), 2 deletions(-)
-> > > > 
-> > > > diff --git a/include/linux/pgtable.h b/include/linux/pgtable.h
-> > > > index 466cf477551a..2b42e95a4e3a 100644
-> > > > --- a/include/linux/pgtable.h
-> > > > +++ b/include/linux/pgtable.h
-> > > > @@ -1362,6 +1362,10 @@ static inline int pmd_write(pmd_t pmd)
-> > > >  #endif /* pmd_write */
-> > > >  #endif /* CONFIG_TRANSPARENT_HUGEPAGE */
-> > > >  
-> > > > +#ifndef pmd_thp_or_huge
-> > > > +#define pmd_thp_or_huge(pmd)	(pmd_huge(pmd) || pmd_trans_huge(pmd))
-> > > > +#endif
-> > > 
-> > > Why not just use pmd_leaf() ?
-> > > 
-> > > This GUP case seems to me exactly like what pmd_leaf() should really
-> > > do and be used for..
-> > 
-> > I think I mostly agree with you, and these APIs are indeed confusing.  IMHO
-> > the challenge is about the risk of breaking others on small changes in the
-> > details where evil resides.
+On Thu, Feb 22, 2024 at 12:35:31PM +0800, Lai Jiangshan wrote:
+> Hello,
 > 
-> These APIs are super confusing, which is why I brought it up.. Adding
-> even more subtly different variations is not helping.
+> On Thu, Feb 22, 2024 at 1:43 AM Tejun Heo <tj@kernel.org> wrote:
 > 
-> I think pmd_leaf means the entry is present and refers to a physical
-> page not another radix level.
+> >
+> >  /* Convenience constants - of type 'unsigned long', not 'enum'! */
+> >  #define WORK_OFFQ_CANCELING    (1ul << WORK_OFFQ_CANCELING_BIT)
+> > +#define WORK_OFFQ_FLAG_MASK    (((1ul << WORK_OFFQ_FLAG_BITS) - 1) << WORK_OFFQ_FLAG_SHIFT)
 > 
-> > > eg x86 does:
-> > > 
-> > > #define pmd_leaf	pmd_large
-> > > static inline int pmd_large(pmd_t pte)
-> > > 	return pmd_flags(pte) & _PAGE_PSE;
-> > > 
-> > > static inline int pmd_trans_huge(pmd_t pmd)
-> > > 	return (pmd_val(pmd) & (_PAGE_PSE|_PAGE_DEVMAP)) == _PAGE_PSE;
-> > > 
-> > > int pmd_huge(pmd_t pmd)
-> > >         return !pmd_none(pmd) &&
-> > >                 (pmd_val(pmd) & (_PAGE_PRESENT|_PAGE_PSE)) != _PAGE_PRESENT;
-> > 
-> > For example, here I don't think it's strictly pmd_leaf()? As pmd_huge()
-> > will return true if PRESENT=0 && PSE=0 (as long as none pte ruled out
-> > first), while pmd_leaf() will return false; I think that came from
-> > cbef8478bee5. 
-> 
-> Yikes, but do you even want to handle non-present entries in GUP
-> world? Isn't everything gated by !present in the first place?
+> It can use GENMASK.
 
-I am as confused indeed.
+So, that'd be
 
-> 
-> > Besides that, there're also other cases where it's not clear of such direct
-> > replacement, not until further investigated.  E.g., arm-3level has:
-> > 
-> > #define pmd_leaf(pmd)		pmd_sect(pmd)
-> > #define pmd_sect(pmd)		((pmd_val(pmd) & PMD_TYPE_MASK) == \
-> > 						 PMD_TYPE_SECT)
-> > #define PMD_TYPE_SECT		(_AT(pmdval_t, 1) << 0)
-> > 
-> > While pmd_huge() there relies on PMD_TABLE_BIT ()
-> 
-> I looked at tht, it looked OK.. 
-> 
-> #define PMD_TYPE_MASK               (_AT(pmdval_t, 3) << 0)
-> #define PMD_TABLE_BIT               (_AT(pmdval_t, 1) << 1)
-> 
-> It is the same stuff, just a little confusingly written
+ GENMASK(WORK_OFFQ_FLAG_SHIFT + WORK_OFFQ_FLAG_BITS - 1, WORK_OFFQ_FLAG_SHIFT)
 
-True, my eyes decided to skip all the shifts. :-( Ok then, let me see
-whether I can give it a stab on the pXd_huge() mess.
+I'm not quite sure that's an improvement. It's longer and more indirect -
+the open coded one says "BITS number of 1's shifted by SHIFT", which is
+shorter and easier to comprehend.
 
-Thanks,
+Another thing is that none of the other masks fits GENMASK either. The only
+other candidate is WORK_STRUCT_PWQ_MASK but the number of bits in that mask
+depends on the size of ulong, so it can't use GENMASK.
+
+I don't think using GENMASK would be an improvement here.
+
+Thanks.
 
 -- 
-Peter Xu
-
+tejun
