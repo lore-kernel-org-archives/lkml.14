@@ -1,36 +1,37 @@
 Received: from serv108.segi.ulg.ac.be (serv108.segi.ulg.ac.be [139.165.32.111])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D33B418629;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D340C19452;
 	Thu, 22 Feb 2024 23:34:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=139.165.32.111
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708644842; cv=none; b=IeCWXaGsf2zY3JW3ZQsmlcIsY4/R8j3F4ac2ZM2WtZrlW8hQUJO70mR0rRxRIqscqEK2lWrWFqHESJEK2U977WH6gbmWiaPFv4RRZxvJ9rwiInERRMsHp+VRcmrP1TC908RuoXh1dEbLEDuIkmcOnk47vkARWZCxs+gWF2AVGcA=
+	t=1708644842; cv=none; b=FSgtrYWbpfcXDw0wxdnJKsyra3RX02c2NimRmByOYPU0Spe3mJKXY+ftY4enfzA5VNywTVFRBP4g+fjSQDzD6aNnm7D0bpsq8zkBoD/8v0mexiLz0p5DG0pCMqqGv+GM0y+50XLRfELqEMPGIT709V92xvNcxrFmom2LAMhZ9eA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1708644842; c=relaxed/simple;
-	bh=tMAlTZsOvCYKytNUvHoLZfMzudRoJG0IpAzJt9bpixo=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=krkQYAPqVUuAqNizun49qKtmNncdOhybu5wdHLoLa2Je+F8D9rToCRZXs8NG3a1Pc1bVuxBLrbkSQ/xJUImawrsLpQMsVZXg28LY5xe6BYILIgzKvPLxp4YGur228EiA7DvwZAqjfvQQ5sKCUY1KkGfkst8jr1R8T1chKtl0X38=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uliege.be; spf=pass smtp.mailfrom=uliege.be; dkim=pass (2048-bit key) header.d=uliege.be header.i=@uliege.be header.b=bFMHxLQ6; arc=none smtp.client-ip=139.165.32.111
+	bh=w7q0OZpmbQ4iJGkY22z3KyxTMX1Cmy0aLTK8x/4EEWI=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=qosvjrD1K05Do/pDmGfpVzBb3NC8o2NHjpASN4k3eaqMD+zxL59TgnHHNS2zn3m9Unt0B8q1jA3KaASeC6zharuYKj/4rhK1G1ZpSw0q4/mke5OtTsm0g4JyghHAVD+oesyvx2v+TGmM1OZrQX7hT5FaVlIcJg8+4kwJZ1VwEY8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uliege.be; spf=pass smtp.mailfrom=uliege.be; dkim=pass (2048-bit key) header.d=uliege.be header.i=@uliege.be header.b=eqCd71v0; arc=none smtp.client-ip=139.165.32.111
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uliege.be
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uliege.be
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=uliege.be header.i=@uliege.be header.b="bFMHxLQ6"
+	dkim=pass (2048-bit key) header.d=uliege.be header.i=@uliege.be header.b="eqCd71v0"
 Received: from ubuntu.home (125.179-65-87.adsl-dyn.isp.belgacom.be [87.65.179.125])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by serv108.segi.ulg.ac.be (Postfix) with ESMTPSA id 8A238200C97A;
-	Fri, 23 Feb 2024 00:33:56 +0100 (CET)
-DKIM-Filter: OpenDKIM Filter v2.11.0 serv108.segi.ulg.ac.be 8A238200C97A
+	by serv108.segi.ulg.ac.be (Postfix) with ESMTPSA id 6F251200C980;
+	Fri, 23 Feb 2024 00:33:57 +0100 (CET)
+DKIM-Filter: OpenDKIM Filter v2.11.0 serv108.segi.ulg.ac.be 6F251200C980
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uliege.be;
-	s=ulg20190529; t=1708644836;
-	bh=zi0Ftown2eOssqg2MrxzR4GuTOt3TjpmtA5CJpt0Kew=;
-	h=From:To:Cc:Subject:Date:From;
-	b=bFMHxLQ6Q+uvm85eTBexoAlhuCB9sZkrmBAFxqCivT2Vzhmt2rAL4vM9ZIyFrj4h9
-	 1rPsC3B9UJ3XgWJ9TavZUDvfcJdGonG8Wu6if2LN7X2nw63rCbUbM9P+2J4GWP7xX5
-	 9/v2D6pXirYjJprWGomJp3TnhW3jjVRSqgDsYjThqd+73HkQz64wOwzeLNRZTSZ1id
-	 yXzhNmReBKv6jCzedT7UsZvR9P7OaTrtUxJFnnpwaS0GA7cZiU9tcfHAWF9rfSRHS2
-	 RMQB8ZZ5gabUsXzUxr+7H40Dt7uUqN8AG2xYYwlRBsPhlmykHEvqDn//Ym3ndt8SaC
-	 PFaPmWnwU2faA==
+	s=ulg20190529; t=1708644837;
+	bh=ohnw1X5t6/nbcUS24rw3MYJUUJQ4h7ERcV3d3m5S1+E=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=eqCd71v0KKdVOC8riTFHBvRMBv6tbxQC3WUvppjDctj38oInNzBC66qEQDmXf5P0m
+	 x3UlcU5n7jNmY/djLkBOFA4hfgiQkXkPKKLuMl6u+Vde+KpBbtSMsZzu3it8O++kx9
+	 O9ofuM4pjQBQbuts3gcUELwiBVyWCB4mEp4Bn0Ojo4fkeqdx+pSXnJ6R6Se8qeJrA+
+	 Is3QnAQSVIl+4IjIGQnBjcDQ7fv9JpV6/WxAzYW8iLRLBS5884BqSxr5jRij0I286q
+	 NG8iIqCEdStXTZG5OyBd0gBzeegzWkZEOSmCxmtAfVXT7mMX+jC2kerwQG5CuNmBtl
+	 CjKufj49V8JnQ==
 From: Justin Iurman <justin.iurman@uliege.be>
 To: netdev@vger.kernel.org
 Cc: davem@davemloft.net,
@@ -40,10 +41,12 @@ Cc: davem@davemloft.net,
 	pabeni@redhat.com,
 	linux-kernel@vger.kernel.org,
 	justin.iurman@uliege.be
-Subject: [PATCH net-next v3 0/3] ioam6: netlink multicast event
-Date: Fri, 23 Feb 2024 00:33:34 +0100
-Message-Id: <20240222233337.5342-1-justin.iurman@uliege.be>
+Subject: [PATCH net-next v3 3/3] net: exthdrs: ioam6: send trace event
+Date: Fri, 23 Feb 2024 00:33:37 +0100
+Message-Id: <20240222233337.5342-4-justin.iurman@uliege.be>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240222233337.5342-1-justin.iurman@uliege.be>
+References: <20240222233337.5342-1-justin.iurman@uliege.be>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,33 +55,41 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-v3:
- - patchset was mistakenly superseded due to same cover title used for
-   iproute2-next equivalent patch -> resend (renamed)
-v2:
- - fix warnings
+If we're processing an IOAM Pre-allocated Trace Option-Type (the only
+one supported currently), and if we're the destination, then send the
+trace as an ioam6 event to the multicast group. This way, user space
+apps will be able to collect IOAM data (for a trace, it only makes sense
+to send events if we're the destination).
 
-Add generic netlink multicast event support to ioam6 as another solution
-to share IOAM data with user space. The other one being via IPv6 raw
-sockets combined with ancillary data. This patchset focuses on the IOAM
-Pre-allocated Trace (the only Option-Type currently supported), and so
-on IOAM "trace" events. See an example of a consumer here [1].
+Signed-off-by: Justin Iurman <justin.iurman@uliege.be>
+---
+ net/ipv6/exthdrs.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-  [1] https://github.com/Advanced-Observability/ioam-agent-python/blob/netlink_event/ioam-agent.py
-
-Justin Iurman (3):
-  uapi: ioam6: API for netlink multicast events
-  net: ioam6: multicast event
-  net: exthdrs: ioam6: send trace event
-
- include/net/ioam6.h             |  4 +++
- include/uapi/linux/ioam6_genl.h | 20 +++++++++++
- net/ipv6/exthdrs.c              |  6 ++++
- net/ipv6/ioam6.c                | 64 +++++++++++++++++++++++++++++++++
- 4 files changed, 94 insertions(+)
-
-
-base-commit: a6e0cb150c514efba4aaba4069927de43d80bb59
+diff --git a/net/ipv6/exthdrs.c b/net/ipv6/exthdrs.c
+index 4952ae792450..b26dcf4d0239 100644
+--- a/net/ipv6/exthdrs.c
++++ b/net/ipv6/exthdrs.c
+@@ -50,6 +50,7 @@
+ #endif
+ #include <net/rpl.h>
+ #include <linux/ioam6.h>
++#include <linux/ioam6_genl.h>
+ #include <net/ioam6.h>
+ #include <net/dst_metadata.h>
+ 
+@@ -944,6 +945,11 @@ static bool ipv6_hop_ioam(struct sk_buff *skb, int optoff)
+ 			ip6_route_input(skb);
+ 
+ 		ioam6_fill_trace_data(skb, ns, trace, true);
++
++		if (skb_dst(skb)->dev->flags & IFF_LOOPBACK)
++			ioam6_event(IOAM6_EVENT_TRACE, dev_net(skb->dev),
++				    GFP_ATOMIC, (void *)trace,
++				    hdr->opt_len - 2);
+ 		break;
+ 	default:
+ 		break;
 -- 
 2.34.1
 
