@@ -1,106 +1,88 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC7B98F45
-	for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 01:16:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BCC511C82;
+	Thu, 22 Feb 2024 01:20:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708564589; cv=none; b=jHfyNI8XoYqxRk6bRqfq95PgB4QMlYaQ42xWz2f85XNnNpKFxaJaDgS5dMShDQ2cpKCkZpU/M6x1oHSTugc99YZNzOJBKXURSCTKHXnDDs+BfBfrBtHbfkkLIrP+lbMEaFcEm7J7/BRp2bIgZF50qgG0ANWujqi2bPARYr3WRZk=
+	t=1708564829; cv=none; b=lvo9wWpflVP3s/yW8pTX7HmQbNOl9rJ5vBcbaDJiH4OaY4FF4ppV4s5XeAM38a7R/Z2ji4UjFW2l1J2i00x30rJZ1JUouyRkeIosdiBqmXwrxVKXLggBZh9vUeYvPdtK46jRJXWNC7rinQ8heiOQjaQvOBrDpRGoN829wWQhQTw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708564589; c=relaxed/simple;
-	bh=5PcQB9L/FhYvOc8Hm0xI1evh+ow1XK07hQOhd9zsYEw=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=O5BeDLJOubWdn57XbdBwc2n9B9ZjaxxYibsvS2X/WF2DYL/sr5LH6jmLhuWgbr/rxXmN5CWRWDq3a/PoA9aUKxNVyfGr2Qn0ajFebtnzXooTO+hugEhdRY/WNr9oz7sxDyi10lDYHMjZrXBarlVH4Z1BEgrAFlF7rCANPByFkgM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CE06CC433F1;
-	Thu, 22 Feb 2024 01:16:27 +0000 (UTC)
-Date: Wed, 21 Feb 2024 20:18:16 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Subject: [GIT PULL] tracing: Add ring buffer sub-buffer size check
-Message-ID: <20240221201816.0d1e7829@gandalf.local.home>
-X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1708564829; c=relaxed/simple;
+	bh=oJice3h7lKvI03uvkbTvPLODbANJ+MXKqJ7PhH71xK0=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=ecePToxaxm0HLrESNVTQ0F/CmYz+21Kc+M6scV22olEdbIIMwt1JoaZe2L35Jcew98WNWHErJgSp5a/cu/dgG5G9cD9F/xwwcbtZ5vIJ+sWzP6O55C/tZw910fWPFO69gzo3PVwNnoFAYODpY4pxlFu1RJS62PJhDDlouRmRXQU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AGWWEz00; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AGWWEz00"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id BC10EC433C7;
+	Thu, 22 Feb 2024 01:20:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1708564828;
+	bh=oJice3h7lKvI03uvkbTvPLODbANJ+MXKqJ7PhH71xK0=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=AGWWEz00aMhBewq+Bt7qKL9JI3DE9/lP2Goc95JrMkbweIgFPx5BHTF1uUe2BS8Sc
+	 cTDhIONgFOy2Gkci+gUXoATQ9Y9Vql9ZvVbrE+4gIUBeiWoqjYtUurDUeTQD8MdthA
+	 9ABP9mFou6EZaVKG/ue95rGG736mxc2ybaMCQvfx/km91NwBIlrAAP6ddRJJGYOqpT
+	 /xMZPnAo1+1LDbwuU1BKFuG6ks6udlgmneBEaYsoM/zGoH3nkIv4jDOJuSGVUeV8On
+	 I+lqeFSCMhFLyBUP4/ukzl/YIhdSjvRp/T5rPRJuebdZWo5wd3bUM4wZt+gI6B3RkA
+	 MHWxnpgphMwug==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 93739D84BCA;
+	Thu, 22 Feb 2024 01:20:28 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net v3] net: sparx5: Add spinlock for frame transmission from
+ CPU
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <170856482859.21333.7578746670670805119.git-patchwork-notify@kernel.org>
+Date: Thu, 22 Feb 2024 01:20:28 +0000
+References: <20240219080043.1561014-1-horatiu.vultur@microchip.com>
+In-Reply-To: <20240219080043.1561014-1-horatiu.vultur@microchip.com>
+To: Horatiu Vultur <horatiu.vultur@microchip.com>
+Cc: davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+ pabeni@redhat.com, lars.povlsen@microchip.com, Steen.Hegelund@microchip.com,
+ daniel.machon@microchip.com, UNGLinuxDriver@microchip.com,
+ rmk+kernel@armlinux.org.uk, u.kleine-koenig@pengutronix.de,
+ yuehaibing@huawei.com, vladimir.oltean@nxp.com,
+ bjarni.jonasson@microchip.com, netdev@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+
+Hello:
+
+This patch was applied to netdev/net.git (main)
+by Jakub Kicinski <kuba@kernel.org>:
+
+On Mon, 19 Feb 2024 09:00:43 +0100 you wrote:
+> Both registers used when doing manual injection or fdma injection are
+> shared between all the net devices of the switch. It was noticed that
+> when having two process which each of them trying to inject frames on
+> different ethernet ports, that the HW started to behave strange, by
+> sending out more frames then expected. When doing fdma injection it is
+> required to set the frame in the DCB and then make sure that the next
+> pointer of the last DCB is invalid. But because there is no locks for
+> this, then easily this pointer between the DCB can be broken and then it
+> would create a loop of DCBs. And that means that the HW will
+> continuously transmit these frames in a loop. Until the SW will break
+> this loop.
+> Therefore to fix this issue, add a spin lock for when accessing the
+> registers for manual or fdma injection.
+> 
+> [...]
+
+Here is the summary with links:
+  - [net,v3] net: sparx5: Add spinlock for frame transmission from CPU
+    https://git.kernel.org/netdev/net/c/603ead96582d
+
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
 
 
-
-Linus,
-
-Tracing fix for v6.8:
-
-- While working on the ring buffer I noticed that the counter used
-  for knowing where the end of the data is on a sub-buffer was not
-  a full "int" but just 20 bits. It was masked out to 0xfffff.
-  With the new code that allows the user to change the size of the
-  sub-buffer, it is theoretically possible to ask for a size
-  bigger than 2^20. If that happens, unexpected results may
-  occur as there's no code checking if the counter overflowed the
-  20 bits of the write mask. There are other checks to make sure
-  events fit in the sub-buffer, but if the sub-buffer itself is
-  too big, that is not checked.
-
-  Add a check in the resize of the sub-buffer to make sure that it
-  never goes beyond the size of the counter that holds how much
-  data is on it.
-
-
-Please pull the latest trace-v6.8-rc5 tree, which can be found at:
-
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace.git
-trace-v6.8-rc5
-
-Tag SHA1: 2ff328f136698ef4a0b8660ed372017d338f9435
-Head SHA1: e78fb4eac817308027da88d02e5d0213462a7562
-
-
-Steven Rostedt (Google) (1):
-      ring-buffer: Do not let subbuf be bigger than write mask
-
-----
- kernel/trace/ring_buffer.c | 4 ++++
- 1 file changed, 4 insertions(+)
----------------------------
-commit e78fb4eac817308027da88d02e5d0213462a7562
-Author: Steven Rostedt (Google) <rostedt@goodmis.org>
-Date:   Tue Feb 20 09:51:12 2024 -0500
-
-    ring-buffer: Do not let subbuf be bigger than write mask
-    
-    The data on the subbuffer is measured by a write variable that also
-    contains status flags. The counter is just 20 bits in length. If the
-    subbuffer is bigger than then counter, it will fail.
-    
-    Make sure that the subbuffer can not be set to greater than the counter
-    that keeps track of the data on the subbuffer.
-    
-    Link: https://lore.kernel.org/linux-trace-kernel/20240220095112.77e9cb81@gandalf.local.home
-    
-    Cc: Masami Hiramatsu <mhiramat@kernel.org>
-    Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-    Fixes: 2808e31ec12e5 ("ring-buffer: Add interface for configuring trace sub buffer size")
-    Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-
-diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-index fd4bfe3ecf01..0699027b4f4c 100644
---- a/kernel/trace/ring_buffer.c
-+++ b/kernel/trace/ring_buffer.c
-@@ -5877,6 +5877,10 @@ int ring_buffer_subbuf_order_set(struct trace_buffer *buffer, int order)
- 	if (psize <= BUF_PAGE_HDR_SIZE)
- 		return -EINVAL;
- 
-+	/* Size of a subbuf cannot be greater than the write counter */
-+	if (psize > RB_WRITE_MASK + 1)
-+		return -EINVAL;
-+
- 	old_order = buffer->subbuf_order;
- 	old_size = buffer->subbuf_size;
- 
