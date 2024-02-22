@@ -1,67 +1,66 @@
-Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7A0741C64
-	for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 11:51:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 897B846521
+	for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 11:51:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708602668; cv=none; b=PXVEyjXnqhzWLCMwRUpWXI5fri+LDrynNhnljxS1Sye/o93LZcYyIJDfkU0N3TJqJwUb46N98POSwlUnTpQp0JNdLVGmsuZKAWfy9ECI8YRDcTOCETmBxB0fpQGpPJXLtQt2tk7LolEVBxvNogSFqhPBzc9AzVad9vsY8Rt4as4=
+	t=1708602669; cv=none; b=khz4quS/B3zH6a39If/Duka06KLW5p/+Ah4+FvogKU0K2JtYfgTwBI4oh+RkoL7oaax6SPiS7hu+nPNcIR5MHAifMjN/cscnnqrCitTO5Eiv2+AmVidCN5akq6XMHnSNRG0O8TNOro4sKAXeRtfBxMZvDeoGyKmmQ0QN+Dj+u1I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708602668; c=relaxed/simple;
-	bh=7E++P3NE3gX/uG8sJhez163L//hFb7dWE0h0h4Q6OTA=;
+	s=arc-20240116; t=1708602669; c=relaxed/simple;
+	bh=LuiNKwot/c2cGXu1azbocNtVe8hBsdaf1P55KumReSA=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=tcY4/5dCUpTKnMCXWokVxct5vgjYYEh6iu55Q+75pt51QRWnA6ty7dADHc1mdtF+XsaXfKXN3WAGHqlzbrU0CiE2k33NbMeBTRJSLWjFzYej2HAatxk7QSlVaYA1G8FjMdfRx64o21IbHHQyPJ5G7Hny624qTQEVKmNkUObITNE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ionos.com; spf=pass smtp.mailfrom=ionos.com; dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b=Rt81lnVz; arc=none smtp.client-ip=209.85.221.42
+	 MIME-Version; b=l9r2+qe5ge69XV8GeMNOnh7Q5mT8qVagwCBBPfSUunQvPybnCRQzn7V0Aj2tA7Iq5UmVPh4CocRFcARPAE3kp10xYn2ziQgDF9XbxpnoLcEH9cx2C/iUaweVQTh1wYx1VCq1UVWP0e3EiZ4JG14fTZK9XK0DeWvcz7ufDbP6K0s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ionos.com; spf=pass smtp.mailfrom=ionos.com; dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b=QfFKhXnj; arc=none smtp.client-ip=209.85.221.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ionos.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ionos.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b="Rt81lnVz"
-Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-3394b892691so434512f8f.1
-        for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 03:51:05 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b="QfFKhXnj"
+Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-33d9c3f36c2so128418f8f.2
+        for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 03:51:07 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ionos.com; s=google; t=1708602664; x=1709207464; darn=vger.kernel.org;
+        d=ionos.com; s=google; t=1708602666; x=1709207466; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=BL1pmIo7s1MX4N9LU8kIbt0i/wU5mZK2rTJkOzRk4Zc=;
-        b=Rt81lnVzkwe7EDCA6zC/ONS8lDJJpxCT2WZq0l30xixTiOsGtYJttDV0TJCnG9pS6u
-         WPq6YFR6VYGRlR5zao+ZT+CU3xwUFuWufowP23EYujpRN1el2fvdK2cL4iVUAlGG8I4i
-         vxjyWWAk6KvbbD82fd06O5Sc3mdsJEG58XA5zEVoWecW4CEPhdTifBxt9SGuH9+xgiJz
-         naYE0zyXtfBGb4cQLNkU3zjSiuFrYioY1iIYDLDyBvy6pH0AiNiBZnxo3JWI9iUFobhZ
-         4WHZIMyp3jUMQldOHyNeTfT9GVbuiiPh/RMT86CIEgpXMIwrxmKb4VCk862d0p58IAeA
-         swGw==
+        bh=bU66tnpYofC3HczPR5LqCx53IAlSBOajb8Iggei03v8=;
+        b=QfFKhXnjAq30/tZfPhsxMENYDZlQaRwHWLbQv5/IfE/Rgos158IFhti1m5CcTxGBio
+         o/v0JUAHvRhA7FKPHcTkZ2iD4NiGmfmGCOoOcbvA1ZTEEvMGt3QvT/1X/uf5Ml0vdMkT
+         7q+T2vdgQ4xA5JlUaWHukRe/hn/P45qy+C/F/nzO1LTY3RbdHgU+Kk3Hlzi79d7jC8st
+         TeLCRKkfgTfz9pblVE2XqxXPfQkwMxYA9utemdHLniTGvr7+lIci7bmklxu5SKdqGlfS
+         BhcbCEzsOMQ6IuNLIlcGmG5hGQExEV+ANqKr6og3TXnSsPXS/o5cpZ2K0w+w9dmNjbE5
+         gDmA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708602664; x=1709207464;
+        d=1e100.net; s=20230601; t=1708602666; x=1709207466;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=BL1pmIo7s1MX4N9LU8kIbt0i/wU5mZK2rTJkOzRk4Zc=;
-        b=ZhaHro8n4JUeQcyzFdIgaJ5yyodmnPGUd7wdleucNZQhw49B1FHxFBRpk4hNE0vDUL
-         BkhLQFvqeayGYepXXrx62PFR+Fo0j41AltK9PaAscmnekPLgLmjFQBuE9T+IutVI0em+
-         CS7nEVsB0Z1XIuom6CBm6w1kJ3Umi0R4TqUvvLuL78tH+QSkMGDaZl7ucxrNXyG/z9Tb
-         1/8onZLoYXgygXrTgzHtJCQQaOgOi9JxAijiNlEkg0VzCuvFZZMFH+lNx1/ywLO979Uj
-         6l4nMFSRkK6iJsDps/YtqxJ3LUIxVSudbE4zsoOkaUNLFzOaCvTuPpLHZpTQn4C3h1D+
-         TBQw==
-X-Forwarded-Encrypted: i=1; AJvYcCWfDrWVQjZlS6+k7MXt+JzckrLou2BqshpTxOB+9f8d5KUyGJm9tNkD8XMq5ZekNEfttDlcfb1UMXiDjeRRxa0TG6dmyHEAQXRNs/JC
-X-Gm-Message-State: AOJu0Yxu9O1BrzszElQhxqSITMib5qzFBRW/dUb3BsVynOqI0/sStUz8
-	O1e6/uLwoYGxBPhmDMZJBopbq3dzGsfPG3sBnhel9VA7yiGCpsgbgo+H0z5KCsmvt1zloM2eDYt
-	P
-X-Google-Smtp-Source: AGHT+IEdqTZyHvawG3jnqE6QFiaRjzUOCgYFXRkgDA6AoYo7c6Ret0m4HwidPTuLwONlXP4untfCBA==
-X-Received: by 2002:a5d:404c:0:b0:33d:64a3:9bc6 with SMTP id w12-20020a5d404c000000b0033d64a39bc6mr2229571wrp.4.1708602664281;
-        Thu, 22 Feb 2024 03:51:04 -0800 (PST)
+        bh=bU66tnpYofC3HczPR5LqCx53IAlSBOajb8Iggei03v8=;
+        b=JrY4XR33aKzOjhl0erEtpy2mZBefsn7oBhylAF5f5SbGGkzPYh81AumUtfTbIDAUZi
+         RgJw0NW1wuTnood/SI8A74ZHQxLaU3Aeiav/5NUTIy5KNuxiimsUd6tICyDDT5SPYHPu
+         Eqnm/ejQm81yiutY8o4NyvMKGSNKRKnwxbo3j2p297uB/hZ7N3FEcuR1LFJM0gvfamea
+         E/nB3zz6Fw2C8iBmBtv16A8JiaBGMZbargdgGyk2S4FXbbo8ubjyd0BEBuvEw6fzdJEe
+         RTH4hHtDlkMNs52htAgq2F3nH1U/UE7hpDFRb8NIFVu9BqE2TbjUQKV2M4QELbku9Y3R
+         rpbQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUuxfy0gYSsSTSM4PEArvy0jcSHtidFF12pUcmw/0UTdamHjuZPiSEEg9XKOb8avnNqGhwfC9GrxU23BKrcE1tzghNWGs2Cv7Q4hcfU
+X-Gm-Message-State: AOJu0YxJ+qQO8kKZRLQGGGkFTBop/uw3u3CaNh+AjG+qN6iFObdPIAmH
+	UY3SjZmEN/HPPHMiLiHl2fuB4AvB9qTbW/i0YDVBef6bLyKzTaUm0YgcTChLqfY=
+X-Google-Smtp-Source: AGHT+IHWgvt0/sZsRq4iRTjhX0psvS+eVhVBMHB4PSfSQw/t1/qrWtQi6HShkpncAQZpTNIObD2jGg==
+X-Received: by 2002:a05:6000:12c5:b0:33d:40f0:b0de with SMTP id l5-20020a05600012c500b0033d40f0b0demr7809643wrx.6.1708602665810;
+        Thu, 22 Feb 2024 03:51:05 -0800 (PST)
 Received: from raven.intern.cm-ag (p200300dc6f010900023064fffe740809.dip0.t-ipconnect.de. [2003:dc:6f01:900:230:64ff:fe74:809])
-        by smtp.gmail.com with ESMTPSA id co18-20020a0560000a1200b0033d4c3b0beesm15044920wrb.19.2024.02.22.03.51.03
+        by smtp.gmail.com with ESMTPSA id co18-20020a0560000a1200b0033d4c3b0beesm15044920wrb.19.2024.02.22.03.51.05
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 22 Feb 2024 03:51:03 -0800 (PST)
+        Thu, 22 Feb 2024 03:51:05 -0800 (PST)
 From: Max Kellermann <max.kellermann@ionos.com>
 To: akpm@linux-foundation.org,
 	linux-mm@kvack.org,
 	linux-kernel@vger.kernel.org
 Cc: willy@infradead.org,
 	Max Kellermann <max.kellermann@ionos.com>
-Subject: [PATCH v2 02/14] include/drm/drm_gem.h: add poll_table_struct forward declaration
-Date: Thu, 22 Feb 2024 12:50:43 +0100
-Message-Id: <20240222115055.1172877-3-max.kellermann@ionos.com>
+Subject: [PATCH v2 04/14] linux/mm.h: move section functions to mm/page_section.h
+Date: Thu, 22 Feb 2024 12:50:45 +0100
+Message-Id: <20240222115055.1172877-5-max.kellermann@ionos.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20240222115055.1172877-1-max.kellermann@ionos.com>
 References: <20240222115055.1172877-1-max.kellermann@ionos.com>
@@ -71,41 +70,99 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-After eliminating includes of linux/mm.h, the following build failure
-occurred:
+Prepare to reduce dependencies on linux/mm.h.
 
- ./include/drm/drm_file.h:443:45: warning: ‘struct poll_table_struct’ declared inside parameter list will not be visible outside of this definition or declaration
-   443 | __poll_t drm_poll(struct file *filp, struct poll_table_struct *wait);
-       |                                             ^~~~~~~~~~~~~~~~~
- In file included from drivers/gpu/drm/imagination/pvr_gem.h:12,
-                  from drivers/gpu/drm/imagination/pvr_fw.h:9:
- ./include/drm/drm_gem.h:447:27: error: initialization of ‘__poll_t (*)(struct file *, struct poll_table_struct *)’ {aka ‘unsigned int (*)(struct file *, struct poll_table_struct *)’} from incompatible pointer type ‘__poll_t (*)(struct file *, struct poll_table_struct *)’ {aka ‘unsigned int (*)(struct file *, struct poll_table_struct *)’} [-Werror=incompatible-pointer-types]
-   447 |         .poll           = drm_poll,\
-       |                           ^~~~~~~~
+page_to_section() is used by __page_to_pfn() (but
+asm-generic/memory_model.h does not include linux/mm.h).  Thus, in
+order to be able to use anything that calls page_to_pfn(), linux/mm.h
+needs to be included.
 
-The compiler is confused, and that can be fixed easily by
-forward-declaring the struct expicitly.
+This would prevent us from moving page_address() to a separate header,
+because it calls lowmem_page_address() which in turn calls
+page_to_virt() and then page_to_pfn().  To prepare for this move, we
+move page_to_section() out of linux/mm.h into a separate lean header.
 
 Signed-off-by: Max Kellermann <max.kellermann@ionos.com>
 ---
- include/drm/drm_file.h | 1 +
- 1 file changed, 1 insertion(+)
+ include/linux/mm.h              | 18 +-----------------
+ include/linux/mm/page_section.h | 23 +++++++++++++++++++++++
+ 2 files changed, 24 insertions(+), 17 deletions(-)
+ create mode 100644 include/linux/mm/page_section.h
 
-diff --git a/include/drm/drm_file.h b/include/drm/drm_file.h
-index ab230d3af138..f24ade9f766f 100644
---- a/include/drm/drm_file.h
-+++ b/include/drm/drm_file.h
-@@ -44,6 +44,7 @@ struct drm_device;
- struct drm_printer;
- struct device;
- struct file;
-+struct poll_table_struct;
+diff --git a/include/linux/mm.h b/include/linux/mm.h
+index c8d909cc1353..7c3d2bd69818 100644
+--- a/include/linux/mm.h
++++ b/include/linux/mm.h
+@@ -3,6 +3,7 @@
+ #define _LINUX_MM_H
  
+ #include <linux/mm/page_kasan_tag.h>
++#include <linux/mm/page_section.h>
+ #include <linux/errno.h>
+ #include <linux/mmdebug.h>
+ #include <linux/gfp.h>
+@@ -1627,10 +1628,6 @@ static inline bool is_nommu_shared_mapping(vm_flags_t flags)
+ }
+ #endif
+ 
+-#if defined(CONFIG_SPARSEMEM) && !defined(CONFIG_SPARSEMEM_VMEMMAP)
+-#define SECTION_IN_PAGE_FLAGS
+-#endif
+-
  /*
-  * FIXME: Not sure we want to have drm_minor here in the end, but to avoid
+  * The identification function is mainly used by the buddy allocator for
+  * determining if two pages could be buddies. We are not really identifying
+@@ -1830,19 +1827,6 @@ static inline pg_data_t *folio_pgdat(const struct folio *folio)
+ 	return page_pgdat(&folio->page);
+ }
+ 
+-#ifdef SECTION_IN_PAGE_FLAGS
+-static inline void set_page_section(struct page *page, unsigned long section)
+-{
+-	page->flags &= ~(SECTIONS_MASK << SECTIONS_PGSHIFT);
+-	page->flags |= (section & SECTIONS_MASK) << SECTIONS_PGSHIFT;
+-}
+-
+-static inline unsigned long page_to_section(const struct page *page)
+-{
+-	return (page->flags >> SECTIONS_PGSHIFT) & SECTIONS_MASK;
+-}
+-#endif
+-
+ /**
+  * folio_pfn - Return the Page Frame Number of a folio.
+  * @folio: The folio.
+diff --git a/include/linux/mm/page_section.h b/include/linux/mm/page_section.h
+new file mode 100644
+index 000000000000..e4558c2691b8
+--- /dev/null
++++ b/include/linux/mm/page_section.h
+@@ -0,0 +1,23 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef _LINUX_MM_PAGE_SECTION_H
++#define _LINUX_MM_PAGE_SECTION_H
++
++#include <linux/mm_types.h> // for struct page
++#include <linux/mmzone.h> // for SECTIONS_*
++
++#if defined(CONFIG_SPARSEMEM) && !defined(CONFIG_SPARSEMEM_VMEMMAP)
++#define SECTION_IN_PAGE_FLAGS
++
++static inline void set_page_section(struct page *page, unsigned long section)
++{
++	page->flags &= ~(SECTIONS_MASK << SECTIONS_PGSHIFT);
++	page->flags |= (section & SECTIONS_MASK) << SECTIONS_PGSHIFT;
++}
++
++static inline unsigned long page_to_section(const struct page *page)
++{
++	return (page->flags >> SECTIONS_PGSHIFT) & SECTIONS_MASK;
++}
++#endif
++
++#endif /* _LINUX_MM_PAGE_SECTION_H */
 -- 
 2.39.2
 
