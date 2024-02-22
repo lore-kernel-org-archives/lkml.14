@@ -1,118 +1,127 @@
-Received: from wfout8-smtp.messagingengine.com (wfout8-smtp.messagingengine.com [64.147.123.151])
+Received: from out162-62-63-194.mail.qq.com (out162-62-63-194.mail.qq.com [162.62.63.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D82F14F9F6
-	for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 16:05:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.151
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F5D115098A
+	for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 16:05:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.63.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708617909; cv=none; b=MHU8XCA4v7ToyRLo8uq6aV7gnXNIZB/TxFQ8HgmBhhrYuKmjh2deUMQd27KS7HYNCHcO4EJtTsnpSzxMIue+PgGxROaAE9pi41/yrUXE3jiCmEHtdf6JrLG9ILsvfNtqLimPxZBJNoO0Zn4CmrzsMWWkE20dXTvIzv3novksFI4=
+	t=1708617917; cv=none; b=KOE6taDZWH9Bs5A+LylBPvONBbWj+51frCwD3Z4pQ5uAXCrT7qlmTEM+cM/uhH7y19qZT4Nklpd+2wz1pmNnpUDbc81tC5cRmSa3N+BxfML7WrJfl/5910FkZ9AvFx/1Qk4kQQ0+tDpNlxTZwAqpLskAmuLJOYLwf7ut07EuLtI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708617909; c=relaxed/simple;
-	bh=RfsuVSe8GNXs7XyLML0In0jzB6G/EuStSNIt2i71n8k=;
-	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
-	 Subject:Content-Type; b=DRirv6cxScBV6OCaAn7M7THshR2xGFxAr4KAKeUlZodI7FjtSmrbtp+V3evpDDXBOvp1UUGivLxxHHiKGKk1g8f6nuCn/Na2uhYqbpgDDjt6Y+PvB/HjsHchBG8leVM5LmTJkSWAnzqI+6vHaL5hak/5qaiyKmgHKPTiJ5saFeY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=LI1ER78W; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=W/q0WRYE; arc=none smtp.client-ip=64.147.123.151
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1708617917; c=relaxed/simple;
+	bh=ae7acFbeFbOsSBOJq7Wm0wlb7xN42xulyX2kNqEdUOo=;
+	h=Message-ID:From:To:Cc:Subject:Date:MIME-Version; b=lBS0DJk/SXnOQdnxV8LMt90hy/l5/sgfkYa8WsN/jKsyDg5JakymrmeknuHdw5ib1CS3u4tHoVGKw8KHUtuq8MvT+vuvYpTtHjTnZS+yncTGmErQY3B+Ft2eY8sQDsEBOqbIqyVbT2SRcxx1v1t/LimfkR3OLiap5JQ4ruXAeDg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com; spf=pass smtp.mailfrom=foxmail.com; dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b=C2pw+fnC; arc=none smtp.client-ip=162.62.63.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foxmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="LI1ER78W";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="W/q0WRYE"
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-	by mailfout.west.internal (Postfix) with ESMTP id 78F3E1C00097;
-	Thu, 22 Feb 2024 11:05:05 -0500 (EST)
-Received: from imap51 ([10.202.2.101])
-  by compute5.internal (MEProxy); Thu, 22 Feb 2024 11:05:06 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm3; t=1708617905; x=1708704305; bh=oyltdXXGcd
-	hvG+yd7mXvuWv0EVxRlvMya8h/82uW5s4=; b=LI1ER78Wvd+MF7uqYk0caF5CAW
-	HrnTX8Cm1F1MZNX04bxsASqKE2GWgF1D12os5fuqsqWCBoNKkmOxm600KKD6Y+iJ
-	r7KKM1ozrCTG48qMkuWSE7Efc1xfM/ajKt2RCWLEQP2m/4+VE+0an0KmoDuqsS5C
-	qxkO27Tk9xrF7ppOizFXYO+Hk11hIAHLRAs6KQXkOMzaIXdiN1B7va+tNdlqOBOR
-	Eew+1x3jgOlBFffDxgaJ7x8RE13NjrktOh2P71yIMQ1bsUh55bWb3oOgj+t5md8e
-	iQYXoaMGKjMirW5xz8OgPwWjR9Rte5EaT5dUB+aWW4sgo3SLPV7tGi9FU9KA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm1; t=1708617905; x=1708704305; bh=oyltdXXGcdhvG+yd7mXvuWv0EVxR
-	lvMya8h/82uW5s4=; b=W/q0WRYEugit6zPUKthF4WQ5Ow0hrWEIB463EH6VtX22
-	FjAE1WxmIKJroWz9Ty/SFibLOx7NSLEa8WTTPcNiC7rdl+W5xM6R59qraP/o5wgT
-	aSsaFM1yy7Epa38mJq0CeVkDi5M5QA32rK69Zf2/CF4T4j1pvk0//a7gQrmXXQVD
-	skm34d1P1wgRYnaxl0q7totZyLqtHfIh+QS7IIJX+vX0mBE4l0dq+OZtngN/V6UZ
-	4y0IX3aKnjjs0hAPGhjpzrmvigRrdCppd6ad49CnUXX0Hf+fgs9dfJ7JuwDyhO4h
-	zvOhYSIQNv1BqOwmTFTlxWIK576CdpKtTnOqD3EWVg==
-X-ME-Sender: <xms:r3DXZUASbnYtssaDujRnEbqSELH_zmRau5VzhNGXapJlkdml7FnjEg>
-    <xme:r3DXZWhhOeyuGmAoOsEKqAlzr_rl0zqwaY6U7rXSemzNWeoTXmrXnHiISQ6e7eTfd
-    VrVDuPXb_EHOtvmyPE>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrfeeggdekfecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefofgggkfgjfhffhffvvefutgesthdtredtreertdenucfhrhhomhepfdetrhhn
-    ugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrghtth
-    gvrhhnpeffheeugeetiefhgeethfejgfdtuefggeejleehjeeutefhfeeggefhkedtkeet
-    ffenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrrh
-    hnugesrghrnhgusgdruggv
-X-ME-Proxy: <xmx:r3DXZXlBMhWU8w-DwlvYmzGdJloOSM_FW78CwyeDT561wiEa6QsrEA>
-    <xmx:r3DXZawCqLtuqQhHptYfAZqgCAl7dIi_wBXWLXK4MSkGHeIUpUXgEA>
-    <xmx:r3DXZZRvw7Od1q-HYNJhksQT8vcrX9IfmWLvuqYOOQD5mJReSAv2fA>
-    <xmx:sXDXZfBzEuLPcOeoul3NFB7ZNim_jUmaTRNIhzs-ohMhnbqVgF53WxXSe2g>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id 728F5B6008D; Thu, 22 Feb 2024 11:05:03 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.11.0-alpha0-153-g7e3bb84806-fm-20240215.007-g7e3bb848
+	dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b="C2pw+fnC"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foxmail.com;
+	s=s201512; t=1708617904;
+	bh=zZh0WkZk+9GyZffXATDDdHfCvt2/6IAILrMFkC15vkQ=;
+	h=From:To:Cc:Subject:Date;
+	b=C2pw+fnCMVx8xK7NaPwqIQvCS5H+DCeMsCVWLdIfq1pUbLfSwHgqhN9aCTE1BwmUF
+	 KjW7TwYEwmy4zckquuYDk8Gb3MOwsNzYb6yrHo0ZIIzyBZMb7R+pMUp4T/8SFy1uer
+	 1DfMbu3vC8ujcyPKSrY++iTomni9wYJvUJm6oCX4=
+Received: from localhost.localdomain ([2409:8a60:2a61:ef40:7404:388f:486a:7747])
+	by newxmesmtplogicsvrszb9-1.qq.com (NewEsmtp) with SMTP
+	id 1408404F; Fri, 23 Feb 2024 00:05:00 +0800
+X-QQ-mid: xmsmtpt1708617900tg2p8wddx
+Message-ID: <tencent_195B55A5521705954D5EA4873327F8E53D0A@qq.com>
+X-QQ-XMAILINFO: OKkKo7I1HxIeh1aHFKTXeWUiHFboQXSuYm5LrX/xH4fLMw9Q+j0Ri7J8xBBS81
+	 cdb2yPrpXqYl8cgzWpPku3vaZxed8meca1uKKX8GclfTeXPJFW3nyaCO0lkSmNmV2r7VUB2H7aMa
+	 8yaZW1rrGfAgPzgFhN2B+VI847J6ffgNaMtIPiDhUIYNWDBk83ENZkGm7jMWDiedWQNAz/n074Af
+	 5TC69wlb1vjsBb6yQeHFmOT6JStU8f7GaM62JlMX/vQnXJwLkqInfHYXXPwZhq3SdhfuqBYKz0j9
+	 lGcs3R5qGsRB/+SgmMqy9T6++d/ZTfx9NSiKEGFwMa1uBkVnbCKzHo5y8SJItwHgJWbjwQ5XD1lM
+	 H/WD7qFtP4tm3l5kM1qKIxLKYJl9wUtqi90Ql6v76XZ1k3e4ndHI9LGTi/3IHgWmp1+GWAvBVAqD
+	 iEmLmbds/ScTO6QqtOvu6yrCswhBzxuOZaRRTL27Y2MA58lS34CDAW8uEl/UI5Tatq2BByOcFXXE
+	 Q4kHLIARxKJaMea1I65iLVzC39kNzGJ8p7dZrgXKcpn+/yKPgopSb+tiukSKyx/KnFx9tCnxJjt3
+	 QMjlOOjSMlaTEQ8r5ryc9DkyiYFw7DGOVliMm21pAkfIk99VnfgqGvibTYLvZ7WO5iITi04127lY
+	 ywL/M7qMS2SWASILuM87q2liLUNh29qi+YokL4w4PxiRx/M9tKn+IXnLx86D/Z3iLslyGqFyzeLC
+	 s5OR7Wbjk71WGttqOSUYlFf13x5H2kXug8+ExfDFUyy/ODUGPAbs++43vSRrbItdC+SUnpHNbJqC
+	 TkimoG32NdmYQ/uhns87Te2MCn5JieOjyC/y2+RjTRBwBcLrf68PqAnAe0PhGcXx9+bDAcagNfFc
+	 onKhXrlNiRQOKrEfgLYTdZS2z7MJ4Lu2ZhaBSQD5/bo1SyZl4+NjXGUdkxN9kHX9ejSuaeGXABrf
+	 NJh87dILEQvfUXEMjYJsbmGVwXSm8nNms7kqt1QJ4ukiVndKvaatqqZfbVEn29bF0Fxk6tYToORU
+	 qGRjLhS8IKVu9tB2lRqgp0tcz6rOXCieF9v97M09bBg/TzssZERY1gQ4FHg0bNFOWD9y3sgQ==
+X-QQ-XMRINFO: MPJ6Tf5t3I/ycC2BItcBVIA=
+From: wenyang.linux@foxmail.com
+To: Christian Brauner <brauner@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Oleg Nesterov <oleg@redhat.com>
+Cc: Wen Yang <wenyang.linux@foxmail.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Mike Christie <michael.christie@oracle.com>,
+	Dmitry Vyukov <dvyukov@google.com>,
+	Vincent Whitchurch <vincent.whitchurch@axis.com>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 2/2] kernel/signal.c: explicitly initialize si_code and use ksig->info uniformly
+Date: Fri, 23 Feb 2024 00:04:57 +0800
+X-OQ-MSGID: <20240222160457.350657-1-wenyang.linux@foxmail.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <58297ee9-4f33-4b3b-bd00-b44e86965892@app.fastmail.com>
-In-Reply-To: <4e9396ca-460b-49ca-818e-73f0a8997b15@huawei.com>
-References: <20240220081527.23408-1-liuyuntao12@huawei.com>
- <1342759e-b967-4ec4-98d5-48146f81f695@app.fastmail.com>
- <38c09a4b-69cc-4dc5-8a68-e5f5597613ac@huawei.com>
- <30b01c65-12f2-4ee0-81d5-c7a2da2c36b4@app.fastmail.com>
- <4e9396ca-460b-49ca-818e-73f0a8997b15@huawei.com>
-Date: Thu, 22 Feb 2024 17:04:43 +0100
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Yuntao Liu" <liuyuntao12@huawei.com>,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc: "Russell King" <linux@armlinux.org.uk>, "Andrew Davis" <afd@ti.com>,
- "Andrew Morton" <akpm@linux-foundation.org>,
- "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
- "Geert Uytterhoeven" <geert+renesas@glider.be>,
- "Jonathan Corbet" <corbet@lwn.net>, "Mike Rapoport" <rppt@kernel.org>,
- "Eric DeVolder" <eric.devolder@oracle.com>, "Rob Herring" <robh@kernel.org>,
- "Thomas Gleixner" <tglx@linutronix.de>,
- "Linus Walleij" <linus.walleij@linaro.org>
-Subject: Re: [PATCH -next] arm32: enable HAVE_LD_DEAD_CODE_DATA_ELIMINATION
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 
-On Thu, Feb 22, 2024, at 12:24, liuyuntao (F) wrote:
->
-> The position of the caret has been moved below the right brace
-> of { KEEP(*(.vectors.bhb.loop8)) }, indicating that lld is treating
-> the entire `KEEP(*(.vectors))` as a file name. This could potentially be 
-> a bug in lld. Perhaps we can temporarily
-> enable the DCE option only when option LD_IS_LLD is disabled,
-> like risc-v:
->
-> `select HAVE_LD_DEAD_CODE_DATA_ELIMINATION if !LD_IS_LLD`.
+From: Wen Yang <wenyang.linux@foxmail.com>
 
-I would really like to see this working with lld if at all
-possible, as it allows the combination of gc-sections with
-lto and CONFIG_TRIM_UNUSED_KSYMS.
+By explicitly initializing ksig->info.si_code and uniformly using ksig->info,
+get_signal() function could be slightly optimized, as folowes:
 
-I experimented with lld myself now and I did get a booting
-kernel even without the the KEEP() on the vectors. I also
-see that this is the only use of OVERLAY in the kernel, so
-I hope that we can find a way to make it work with existing
-lld after all, either without the KEEP or without the OVERLAY.
+	clear_siginfo(&ksig->info);
+	ksig->info.si_signo = signr = SIGKILL;          --> missed si_code
+	sigdelset(&current->pending.signal, SIGKILL);
+	trace_signal_deliver(SIGKILL, SEND_SIG_NOINFO,  --> unnecessary SEND_SIG_NOINFO
+ 			&sighand->action[SIGKILL - 1]);
+			recalc_sigpending();
+	goto fatal;
+...
 
-Did you see any problems without the KEEP() on the vectors?
+        fatal:
+...
+                  if (sig_kernel_coredump(signr)) {
+...
+                          do_coredump(&ksig->info);    --> contains si_code
+                }
 
-     Arnd
+No functional change intended.
+
+Signed-off-by: Wen Yang <wenyang.linux@foxmail.com>
+Cc: Oleg Nesterov <oleg@redhat.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Christian Brauner <brauner@kernel.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc: Luis Chamberlain <mcgrof@kernel.org>
+Cc: Mike Christie <michael.christie@oracle.com>
+Cc: Dmitry Vyukov <dvyukov@google.com>
+Cc: Vincent Whitchurch <vincent.whitchurch@axis.com>
+Cc: Ard Biesheuvel <ardb@kernel.org>
+Cc: linux-kernel@vger.kernel.org
+---
+ kernel/signal.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/kernel/signal.c b/kernel/signal.c
+index 9b40109f0c56..8cab55bbec2f 100644
+--- a/kernel/signal.c
++++ b/kernel/signal.c
+@@ -2732,8 +2732,9 @@ bool get_signal(struct ksignal *ksig)
+ 		     signal->group_exec_task) {
+ 			clear_siginfo(&ksig->info);
+ 			ksig->info.si_signo = signr = SIGKILL;
++			ksig->info.si_code = SI_USER;
+ 			sigdelset(&current->pending.signal, SIGKILL);
+-			trace_signal_deliver(SIGKILL, SEND_SIG_NOINFO,
++			trace_signal_deliver(SIGKILL, &ksig->info,
+ 				&sighand->action[SIGKILL - 1]);
+ 			recalc_sigpending();
+ 			goto fatal;
+-- 
+2.25.1
+
