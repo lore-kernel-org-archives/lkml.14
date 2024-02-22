@@ -1,128 +1,118 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27F75158D75;
-	Thu, 22 Feb 2024 15:42:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D9B814AD14;
+	Thu, 22 Feb 2024 15:47:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708616528; cv=none; b=LcCdg7vCAhoDTtVTOrrGXeOmfrKb5mW9NxkPduOpM77lQ2SAhZkPULqrftYGtdFT/IyOEFvtk++5okIvvp9wWPky4+A0i4TCxMqQNO85u6ZN+w/vBg0QQ5cvBcqSvK0rKT/npR2P8Ii19W5BJJMMJSOY9iiH1PWryyXfgLYGFs4=
+	t=1708616861; cv=none; b=a9rhL8LSm5j8mAm7k4ZYreSbv47m2F4R5l0DCZxdQBjFWlpRUQzVoZMuF/tWPfY+Wn5HMEnmcR+vOtz/DtdU/CU6S52iJ129/VVzPcZcUC+AOjJHLe9mMGY/R38Sj0rf+VphknIzWpYwdr3+Np81pVDDrovmgFLjACQAycZkIKI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708616528; c=relaxed/simple;
-	bh=KO0UKLqm+OddAhcTdqHcm9JrDeUZKFWO1dn/YTdiCjg=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=C4aMGogdeu0NBcPIWZQNXN0H8O8nrOVhi3f50urY8ctefsar20vuJt8V5joPJNGdRiVayVq37YIJzSA80gljYrC3/kXePrzNZjifLAwSimyh2uB8OE0U9uJZr6Hcj65Xs+IH6PMSrtz0NG/2eyWV5jaACfvfnM9csfhpdILzUcg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ULvRevFm; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1708616861; c=relaxed/simple;
+	bh=ZEQ3TuXtQ1HZkjiFkZjRQexbw/7ACSFzMu3l/emJLw8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Sr8RvvqbcLCSYDRFAYDA0ePsHh6rTYrGFLFKqIocNrr3twlITyjk8c+VFiHhNbw9B7nf8acz7bBUjNhlpB0KLf3tMZuKzWp+rHOIEx4BEeVp3q4sIlZ8dsY+3cVfrZ+F5JdrR0n8nK/vb9c1pz6ZebK15u3wQ/gZmIEFEv0w938=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=omK6Fsoe; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ULvRevFm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 307CBC433F1;
-	Thu, 22 Feb 2024 15:42:05 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="omK6Fsoe"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C6015C433F1;
+	Thu, 22 Feb 2024 15:47:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708616528;
-	bh=KO0UKLqm+OddAhcTdqHcm9JrDeUZKFWO1dn/YTdiCjg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ULvRevFmAJDU77CXRU8vM7MQqLlnOOa+4MS6HSmJUK1Dv3q5StBZqUarVmP1cNx/s
-	 NPOPZz6LnWNa5c4SE/6hHkp7Ph+8W10fK7lSZoAad6b6MsKKFoWxNxxunTGmNHN7MJ
-	 1e15LcfeelpJqpw5z6ME5jy9sUOsDeNj/r2x+YuH3bL7pehvhKcB/s6Ct8J7L+AQ7h
-	 7REHqiFQB5M/nnabCq1Ef5H733QyWF27OeHuZE3GuudfYe2NVK1JW1GOVjArfOQRBs
-	 tRY0ceNI+8LI/Bsg3op9OFroEYzKfSiwGTvtVBhG1nd/XN6D4Bou9doj+WPlj+XK3z
-	 jD+HeaPMqs6CQ==
-From: Chun-Kuang Hu <chunkuang.hu@kernel.org>
-To: Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Moudy Ho <moudy.ho@mediatek.com>,
-	"Jason-JH . Lin" <jason-jh.lin@mediatek.com>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org,
-	dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	linux-media@vger.kernel.org
-Cc: Chun-Kuang Hu <chunkuang.hu@kernel.org>
-Subject: [PATCH v2 12/12] soc: mediatek: cmdq: Remove cmdq_pkt_finalize() helper function
-Date: Thu, 22 Feb 2024 15:41:20 +0000
-Message-Id: <20240222154120.16959-13-chunkuang.hu@kernel.org>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240222154120.16959-1-chunkuang.hu@kernel.org>
-References: <20240222154120.16959-1-chunkuang.hu@kernel.org>
+	s=k20201202; t=1708616860;
+	bh=ZEQ3TuXtQ1HZkjiFkZjRQexbw/7ACSFzMu3l/emJLw8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=omK6FsoeI1CmcgHU2vWay4w7nXK5X5mgurfwE4sCPsXzV9xD+Lp4QAQ0l3QK+/pxQ
+	 yAQ6eLf2uMyhLXrzIYkQ9L0gpvbDeHB1T9K5uUTygvHOx7y4/iTUAsCGXts4mTq2bS
+	 3ZRZVBE9nRGheoUYiNLPMFIfZJCpZH/hEOmoUz5CjMlU72RmUqGyNyO/vKa3OD0zJ/
+	 3BQpJ4XsBfBdidPZ3DS/NnVQrOaoyEbCbwFOZViSd6Zi4M1SzKhRM/x/z89vqW+9Tj
+	 s3A2tT4ChwWY7yU6ewZipVDWRytyaGLQK1lTBP/BBKJaN0lugY6I+0j0gDzBJ1RuzG
+	 L/hq2ck9YkSBw==
+Date: Thu, 22 Feb 2024 15:47:34 +0000
+From: Mark Brown <broonie@kernel.org>
+To: Seven Lee <wtli@nuvoton.com>
+Cc: lgirdwood@gmail.com, alsa-devel@alsa-project.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	robh+dt@kernel.org, conor+dt@kernel.org, YHCHuang@nuvoton.com,
+	KCHSU0@nuvoton.com, CTLIN0@nuvoton.com, SJLIN0@nuvoton.com,
+	scott6986@gmail.com, supercraig0719@gmail.com, dardar923@gmail.com
+Subject: Re: [PATCH v2 2/2] ASoC: nau8325: new driver
+Message-ID: <6ffb4165-95e0-4ccd-868f-8ecda56b4079@sirena.org.uk>
+References: <20240222083825.190854-1-wtli@nuvoton.com>
+ <20240222083825.190854-3-wtli@nuvoton.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="e7yScaGYIov+nAEz"
+Content-Disposition: inline
+In-Reply-To: <20240222083825.190854-3-wtli@nuvoton.com>
+X-Cookie: I have accepted Provolone into my life!
 
-In order to have fine-grained control, use cmdq_pkt_eoc() and
-cmdq_pkt_jump_rel() to replace cmdq_pkt_finalize().
 
-Signed-off-by: Chun-Kuang Hu <chunkuang.hu@kernel.org>
----
- drivers/soc/mediatek/mtk-cmdq-helper.c | 22 ----------------------
- include/linux/soc/mediatek/mtk-cmdq.h  | 13 -------------
- 2 files changed, 35 deletions(-)
+--e7yScaGYIov+nAEz
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-diff --git a/drivers/soc/mediatek/mtk-cmdq-helper.c b/drivers/soc/mediatek/mtk-cmdq-helper.c
-index 1a1f1b260a06..d8fe98338bf2 100644
---- a/drivers/soc/mediatek/mtk-cmdq-helper.c
-+++ b/drivers/soc/mediatek/mtk-cmdq-helper.c
-@@ -414,26 +414,4 @@ int cmdq_pkt_eoc(struct cmdq_pkt *pkt)
- }
- EXPORT_SYMBOL(cmdq_pkt_eoc);
- 
--int cmdq_pkt_finalize(struct cmdq_pkt *pkt)
--{
--	struct cmdq_instruction inst = { {0} };
--	int err;
--
--	/* insert EOC and generate IRQ for each command iteration */
--	inst.op = CMDQ_CODE_EOC;
--	inst.value = CMDQ_EOC_IRQ_EN;
--	err = cmdq_pkt_append_command(pkt, inst);
--	if (err < 0)
--		return err;
--
--	/* JUMP to end */
--	inst.op = CMDQ_CODE_JUMP;
--	inst.value = CMDQ_JUMP_PASS >>
--		cmdq_get_shift_pa(((struct cmdq_client *)pkt->cl)->chan);
--	err = cmdq_pkt_append_command(pkt, inst);
--
--	return err;
--}
--EXPORT_SYMBOL(cmdq_pkt_finalize);
--
- MODULE_LICENSE("GPL v2");
-diff --git a/include/linux/soc/mediatek/mtk-cmdq.h b/include/linux/soc/mediatek/mtk-cmdq.h
-index d9d0ee5ecb7a..6bdb9c0d6a29 100644
---- a/include/linux/soc/mediatek/mtk-cmdq.h
-+++ b/include/linux/soc/mediatek/mtk-cmdq.h
-@@ -291,14 +291,6 @@ int cmdq_pkt_jump_rel(struct cmdq_pkt *pkt, s32 offset, u8 shift_pa);
-  */
- int cmdq_pkt_eoc(struct cmdq_pkt *pkt);
- 
--/**
-- * cmdq_pkt_finalize() - Append EOC and jump command to pkt.
-- * @pkt:	the CMDQ packet
-- *
-- * Return: 0 for success; else the error code is returned
-- */
--int cmdq_pkt_finalize(struct cmdq_pkt *pkt);
--
- #else /* IS_ENABLED(CONFIG_MTK_CMDQ) */
- 
- static inline int cmdq_dev_get_client_reg(struct device *dev,
-@@ -409,11 +401,6 @@ static inline int cmdq_pkt_eoc(struct cmdq_pkt *pkt)
- 	return -EINVAL;
- }
- 
--static inline int cmdq_pkt_finalize(struct cmdq_pkt *pkt)
--{
--	return -EINVAL;
--}
--
- #endif /* IS_ENABLED(CONFIG_MTK_CMDQ) */
- 
- #endif	/* __MTK_CMDQ_H__ */
--- 
-2.34.1
+On Thu, Feb 22, 2024 at 04:38:25PM +0800, Seven Lee wrote:
 
+A few very minor things below but basically this looks good.
+
+> +static int nau8325_clksrc_choose(struct nau8325 *nau8325,
+> +				 const struct nau8325_srate_attr **srate_table,
+> +				 int *n1_sel, int *mult_sel, int *n2_sel)
+> +{
+
+> +proc_done:
+> +	dev_err(nau8325->dev, "nau8325->fs=%d,range=0x%x, %s, (n1,mu,n2,dmu):(%d,%d,%d), MCLK_SRC=%uHz (%d)",
+> +		nau8325->fs, (*srate_table)->range,
+> +		(*srate_table)->max ? "MAX" : "MIN",
+> +		*n1_sel == CLK_PROC_BYPASS ?
+> +		CLK_PROC_BYPASS : mclk_n1_div[*n1_sel].param,
+> +		*mult_sel == CLK_PROC_BYPASS ?
+> +		CLK_PROC_BYPASS : 1 << mclk_n3_mult[*mult_sel].param,
+> +		1 << mclk_n2_div[*n2_sel].param,
+> +		(*srate_table)->mclk_src[ratio],
+> +		(*srate_table)->mclk_src[ratio] / nau8325->fs);
+
+This should be a dev_dbg(), dev_err() will be very noisy in normal
+operation.
+
+> +static int nau8325_set_fmt(struct snd_soc_dai *dai, unsigned int fmt)
+> +{
+> +	struct snd_soc_component *component = dai->component;
+> +	struct nau8325 *nau8325 = snd_soc_component_get_drvdata(component);
+> +	unsigned int ctrl1_val = 0;
+> +
+> +	switch (fmt & SND_SOC_DAIFMT_MASTER_MASK) {
+> +	case SND_SOC_DAIFMT_CBS_CFS:
+> +		break;
+
+Please use the modern _CBC_CFC defines.
+
+> +	ret = regmap_read(nau8325->regmap, NAU8325_R02_DEVICE_ID, &value);
+> +	if (ret) {
+> +		dev_err(dev, "Failed to read device id (%d)", ret);
+> +		goto err;
+> +	}
+
+Probably a good idea to check that the device ID is what we expected
+too.
+
+--e7yScaGYIov+nAEz
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmXXbJYACgkQJNaLcl1U
+h9B1UQf/bbkyPq72hB16DeF5r7ZEpD8pxmWbH7Z+fKteU+6U295SCSHqnxBE+KX2
+taIj/NfQ5964S9buK72KAeaiwI4o7d6duiqXCiy2vlLIBe4X+RBG4Ch+5E7SUdAu
+ovjwmHLvfyJPCqcflNpxDQ35sVOrph6kFTi7UywOiY0X3oWAnIMuQK/wnGq2rfgB
+tSKpUJU9AhGUog03Fg8D4kK+5SuQ5Wb6kfUfrYbDLrrxSxQeAWlgLuTJ84RDZ5gq
+QAoLemPwWspvf8wLK71i22ETnllb87XHFzCuRv9ZXlqckJOjHSFHBHNcBGIAjXqb
+2cMhEzQZj137Wwu6n+Dc8NE5g9hO4Q==
+=9vMY
+-----END PGP SIGNATURE-----
+
+--e7yScaGYIov+nAEz--
