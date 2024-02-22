@@ -1,117 +1,129 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-188.mta1.migadu.com (out-188.mta1.migadu.com [95.215.58.188])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A3C715099F;
-	Thu, 22 Feb 2024 17:06:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A06D148FF2
+	for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 17:08:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708621604; cv=none; b=kswNrQDrVARku7F8IK9dDiqbiristj14HmZihWpgrYn4PcO5FoM2fYxg8qihpzYw6mLFV9PafF+jUoEbyQGxsItbg1j95tilD3brUBiYLfHq1r6EHwwXW98v1gSvmX41N5lcTi4krVo3vrt7CQBgDq+IZ1CwmQV2K378igfsfEQ=
+	t=1708621687; cv=none; b=E8NVNm7/A8JHZpe4QRj6BFmR4Gra948uFgjVJn08k/NlJAeiWSYe3xhw651lBdHaidDJez8stgxev9ZIghC4Ca1DSAtH1BQBgwzvKEGo9V8js5M+Om+r7JX5I/HNyL8AIQnjPX/kcB/URs9OLf2ZuCErgIhn1VH6XA5+92Qj8l4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708621604; c=relaxed/simple;
-	bh=kE8TIXCP4omiH8Tb48QLZ4vtCQlIIcYaY2PACwfRHLU=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=PXA93MwD/OdzL+FQOQgzWsH6W7CUa0KVCL6dkosrFMrtcALwmOscIayTgaSUL9i4jbbFTSRBUx1GCeO+9MDVX2VAQ68qHtDrZQ7XUMR+x7jdgR/9eYp1SQimodLGt31HTOv7Rq5GBoAFJqbIIX5G8YL5WLXYUf9z0AF4+3IciJ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qMv3dQYD; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1708621687; c=relaxed/simple;
+	bh=bjbBKm61sS3OCiUiTraEzgDb0fORpdkoRq5LcJPn/Iw=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=t+Bl6Y4zA8+UCxexDvG+tigRuxwApVOm5YJdvc7IEigVjzci6d2J6gmvbWOdNyUirS0un/8reGTf3BHItZwJeXyAnPLRnS0njnAmhFNzm9ECw9JXZeSFE8LwIM/dUXOOqmsJXEYViUkegVAgsRYAztBtI8hAvIWEJnURN1UCuxI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=v2hlfZd2; arc=none smtp.client-ip=95.215.58.188
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qMv3dQYD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5688BC433C7;
-	Thu, 22 Feb 2024 17:06:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708621603;
-	bh=kE8TIXCP4omiH8Tb48QLZ4vtCQlIIcYaY2PACwfRHLU=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=qMv3dQYDhbkA55iCtTxciIgE1L7pMg9o9uWTVAV+VOYkCajdj9ypNeK3dAMJjedon
-	 Yfm16dXgjEDaJvw7MKL3T1NUQJuoykxKJy3QBBvO7KjZn6mhHuhTJGHvovxIKU2zrR
-	 zDIG+iHYedR7cXvE6GdAAvt5KB235VxZ/Plmw5wAIXTGdCIAdrxI/gYIsiztfOlUMO
-	 sRy4h/QB7EziUrqeYVH8Xhch+hYzriJXTd6xGKvdtvOfJu8/ojjSIEqc2no6ipAGbJ
-	 +fGCcGAK0vbTCM29gk3bUyqBGrb/tWnTENLA+Bk37mXCqwO4TnK5iKODRwQgZELV7b
-	 cavlvjo3SyKpg==
-Date: Thu, 22 Feb 2024 11:06:41 -0600
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Vidya Sagar <vidyas@nvidia.com>
-Cc: bhelgaas@google.com, rafael@kernel.org, lenb@kernel.org,
-	will@kernel.org, lpieralisi@kernel.org, kw@linux.com,
-	robh@kernel.org, frowand.list@gmail.com, linux-pci@vger.kernel.org,
-	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-	treding@nvidia.com, jonathanh@nvidia.com, kthota@nvidia.com,
-	mmaddireddy@nvidia.com, sagar.tv@gmail.com
-Subject: Re: [PATCH V3] PCI: Add support for preserving boot configuration
-Message-ID: <20240222170641.GA15593@bhelgaas>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="v2hlfZd2"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1708621681;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=O7tlgS7MkdA1L6vxpIiDfXudireah7BPJ6Dyc7UeOKw=;
+	b=v2hlfZd2C3xXw8cSD+mG/AWXt4cPww48KC+Yl2NE0ShrDnG7iKAcyA4P/30m+d3Wy1N4l7
+	1OvH3paUYLfUVPW1dT1KiweB4c9jOB3an6HIr+xD2LtIOzS1yXTReMa6UyBxkDxS4UOLMN
+	Cnu4tKGVlc5mx/+HeM4pLas0mCEkWwg=
+From: Sean Anderson <sean.anderson@linux.dev>
+To: "David S . Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	netdev@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org,
+	Claudiu Manoil <claudiu.manoil@nxp.com>,
+	Vladimir Oltean <vladimir.oltean@nxp.com>,
+	linuxppc-dev@lists.ozlabs.org,
+	Steffen Trumtrar <s.trumtrar@pengutronix.de>,
+	linux-kernel@vger.kernel.org,
+	Camelia Groza <camelia.groza@nxp.com>,
+	Roy Pledge <roy.pledge@nxp.com>,
+	Scott Wood <oss@buserror.net>,
+	Li Yang <leoyang.li@nxp.com>,
+	Sean Anderson <sean.anderson@linux.dev>,
+	stable@vger.kernel.org
+Subject: [RESEND2 PATCH net v4 1/2] soc: fsl: qbman: Always disable interrupts when taking cgr_lock
+Date: Thu, 22 Feb 2024 12:07:48 -0500
+Message-Id: <20240222170749.2607485-1-sean.anderson@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240222124110.2681455-1-vidyas@nvidia.com>
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On Thu, Feb 22, 2024 at 06:11:10PM +0530, Vidya Sagar wrote:
-> Add support for preserving the boot configuration done by the
-> platform firmware per host bridge basis, based on the presence of
-> 'linux,pci-probe-only' property in the respective PCIe host bridge
-> device-tree node. It also unifies the ACPI and DT based boot flows
-> in this regard.
+smp_call_function_single disables IRQs when executing the callback. To
+prevent deadlocks, we must disable IRQs when taking cgr_lock elsewhere.
+This is already done by qman_update_cgr and qman_delete_cgr; fix the
+other lockers.
 
-> +/**
-> + * of_pci_bridge_check_probe_only - Return true if the boot configuration
-> + *                                  needs to be preserved
+Fixes: 96f413f47677 ("soc/fsl/qbman: fix issue in qman_delete_cgr_safe()")
+CC: stable@vger.kernel.org
+Signed-off-by: Sean Anderson <sean.anderson@linux.dev>
+Reviewed-by: Camelia Groza <camelia.groza@nxp.com>
+Tested-by: Vladimir Oltean <vladimir.oltean@nxp.com>
+---
+Resent from a non-mangling email.
 
-I don't like the "check_probe_only" name because it's a boolean
-function but the name doesn't tell me what a true/false return value
-means.  Something like "preserve_resources" would be better.  If you
-want "probe_only", even removing the "check" would help.
+(no changes since v3)
 
-> + * @node: Device tree node with the domain information.
-> + *
-> + * This function looks for "linux,pci-probe-only" property for a given
-> + * PCIe controller's node and returns true if found. Having this property
-> + * for a PCIe controller ensures that the kernel doesn't re-enumerate and
-> + * reconfigure the BAR resources that are already done by the platform firmware.
+Changes in v3:
+- Change blamed commit to something more appropriate
 
-This is generic PCI, not PCIe-specific (also in commit log and comment
-below).
+Changes in v2:
+- Fix one additional call to spin_unlock
 
-I think "enumeration" specifically refers to discovering what devices
-are present, and the kernel always does that, so drop that part.
-Reconfiguring BARs and bridge windows is what we want to prevent.
+ drivers/soc/fsl/qbman/qman.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-> + * NOTE: The scope of "linux,pci-probe-only" defined within a PCIe bridge device
-> + *       is limited to the hierarchy under that particular bridge device. whereas
-> + *       the scope of "linux,pci-probe-only" defined within chosen node is
-> + *       system wide.
-> + *
-> + * Return: true if the property exists false otherwise.
-> + */
+diff --git a/drivers/soc/fsl/qbman/qman.c b/drivers/soc/fsl/qbman/qman.c
+index 739e4eee6b75..1bf1f1ea67f0 100644
+--- a/drivers/soc/fsl/qbman/qman.c
++++ b/drivers/soc/fsl/qbman/qman.c
+@@ -1456,11 +1456,11 @@ static void qm_congestion_task(struct work_struct *work)
+ 	union qm_mc_result *mcr;
+ 	struct qman_cgr *cgr;
+ 
+-	spin_lock(&p->cgr_lock);
++	spin_lock_irq(&p->cgr_lock);
+ 	qm_mc_start(&p->p);
+ 	qm_mc_commit(&p->p, QM_MCC_VERB_QUERYCONGESTION);
+ 	if (!qm_mc_result_timeout(&p->p, &mcr)) {
+-		spin_unlock(&p->cgr_lock);
++		spin_unlock_irq(&p->cgr_lock);
+ 		dev_crit(p->config->dev, "QUERYCONGESTION timeout\n");
+ 		qman_p_irqsource_add(p, QM_PIRQ_CSCI);
+ 		return;
+@@ -1476,7 +1476,7 @@ static void qm_congestion_task(struct work_struct *work)
+ 	list_for_each_entry(cgr, &p->cgr_cbs, node)
+ 		if (cgr->cb && qman_cgrs_get(&c, cgr->cgrid))
+ 			cgr->cb(p, cgr, qman_cgrs_get(&rr, cgr->cgrid));
+-	spin_unlock(&p->cgr_lock);
++	spin_unlock_irq(&p->cgr_lock);
+ 	qman_p_irqsource_add(p, QM_PIRQ_CSCI);
+ }
+ 
+@@ -2440,7 +2440,7 @@ int qman_create_cgr(struct qman_cgr *cgr, u32 flags,
+ 	preempt_enable();
+ 
+ 	cgr->chan = p->config->channel;
+-	spin_lock(&p->cgr_lock);
++	spin_lock_irq(&p->cgr_lock);
+ 
+ 	if (opts) {
+ 		struct qm_mcc_initcgr local_opts = *opts;
+@@ -2477,7 +2477,7 @@ int qman_create_cgr(struct qman_cgr *cgr, u32 flags,
+ 	    qman_cgrs_get(&p->cgrs[1], cgr->cgrid))
+ 		cgr->cb(p, cgr, 1);
+ out:
+-	spin_unlock(&p->cgr_lock);
++	spin_unlock_irq(&p->cgr_lock);
+ 	put_affine_portal();
+ 	return ret;
+ }
+-- 
+2.35.1.1320.gc452695387.dirty
 
-> +bool of_pci_bridge_check_probe_only(struct device_node *node)
-> +{
-> +	return of_property_read_bool(node, "linux,pci-probe-only");
-> +}
-> +EXPORT_SYMBOL_GPL(of_pci_bridge_check_probe_only);
-
-Why does this need to be exported for modules and exposed via
-include/linux/pci.h?
-
-> +static void pci_check_config_preserve(struct pci_host_bridge *host_bridge)
-> +{
-> +	if (&host_bridge->dev) {
-
-Checking &host_bridge->dev doesn't seem like the right way to
-determine whether this is an ACPI host bridge.
-
-> +		union acpi_object *obj;
-> +
-> +		/*
-> +		 * Evaluate the "PCI Boot Configuration" _DSM Function.  If it
-> +		 * exists and returns 0, we must preserve any PCI resource
-> +		 * assignments made by firmware for this host bridge.
-> +		 */
-> +		obj = acpi_evaluate_dsm(ACPI_HANDLE(&host_bridge->dev), &pci_acpi_dsm_guid, 1,
-> +					DSM_PCI_PRESERVE_BOOT_CONFIG, NULL);
-> +		if (obj && obj->type == ACPI_TYPE_INTEGER && obj->integer.value == 0)
-> +			host_bridge->preserve_config = 1;
-> +		ACPI_FREE(obj);
-> +	}
