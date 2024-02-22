@@ -1,116 +1,161 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 524E4179A1
-	for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 08:12:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 950A821109
+	for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 08:13:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708589590; cv=none; b=MsiYQ/MB7LeBRSVUuNFn58s/AufHZfMY7/sId3v095aDEwPY8SxsU6xJUJjp244ZKa1mNXmJjMIwza2Ox15uRyACmqOADFKqspQGSJY+Ep0GCwhFwej/uKIFakE4w9cB/JvVvattnOCJoWeu6Lbc1sM129DCZCYEe6igaFGfuWM=
+	t=1708589605; cv=none; b=WrwxgaKpLgwl76Q7YOe2rXs7dMXfihXWXlt28wBF6zPNs9Rdau0RVMsB7/rJ0l1rMHLcCZzo6qf9bxokixcmdQohb49tof02F7CErb+IuKxrp8Jyrcg2U2gcWuVlpQ20da8iESQ4UDC4GwEAA2qZGNZmNDCOhDw5RoRssC81Pak=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708589590; c=relaxed/simple;
-	bh=h9kgBQNw1Wr0BxDFXwRL5apSgNSUo0OVqXELAEBrD4s=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Sp0KTE7a5kkK1eYFHNvCkq5Pl0fOJAPvgfAn7eMe9QMm0+71yj8SJqTCFCy3qiUR3IBEjFErw4CaBhyMoAqKCST2ElawCXu2BPfgTNKWKTzabUi5nnn3n04tM3n/UByMwNdEwzQhWWf5EASlhT7PuK9inlP95afsjk1gVxFn+S0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com; spf=pass smtp.mailfrom=sifive.com; dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b=jSGLSRSY; arc=none smtp.client-ip=209.85.214.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sifive.com
+	s=arc-20240116; t=1708589605; c=relaxed/simple;
+	bh=NPT3PWmW4zgM++6hb6uAZw1T7a8vx5sGqAALjqa3r2w=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=vAmAth6vJEFuGJLpxUbf3zcLjsknEt6gmAuu5R4We2Y/WUDFasxOggSJgxjmMsaxDVKdufQ3l71P010dCjF4icRytf8crpFkWrpgMDipTIoi0sKKpBzSSRsq18mg8hLofk/dhNKdil6jLYhLDiXzmcEePgLQd0W8ifGw6e2afvc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=UoJSDJHF; arc=none smtp.client-ip=209.85.218.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="jSGLSRSY"
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-1d944e8f367so60487045ad.0
-        for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 00:12:55 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UoJSDJHF"
+Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-a3f4464c48dso174595666b.3
+        for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 00:13:07 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google; t=1708589574; x=1709194374; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=OzNGUpNoXsKa0F+bV/ekx8aAYd7ltTcTmTe5buoxy74=;
-        b=jSGLSRSYMtq/I7wf3V4GDaTRmW43zUf4D7Cx2YsYtVoPj5alOTbDjWdA77qXxjQsuX
-         SpAX66uUuIa2MiwBFxqQfywI1PZEZIu+iy3l0kgTnTU6j8jHtTa1JpoL3IFVaLor5cEy
-         SR8INtdM3dkxGBN/pkVVOEOczUZoKELOHD0SVngj3X1O7hZe/g2FB9wFAYzK8QWQybTr
-         OqUj4/qQgnldOntl8Im2ZYJsvn5UKNKG4vZ7jWw4AdGDhpARWayia99vWLZkH0NGxuiy
-         SH2Z5o6Md0wb6YPC84WDQHfcDB9zcSo0NWj027XjVv1HwDgPz+FKUh+UIPq7/Afos7Ad
-         kZuQ==
+        d=linaro.org; s=google; t=1708589583; x=1709194383; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=tyk4T9TEQQ5JCsQPipNXRMcoozCsfh8H/KvBrA5AA4w=;
+        b=UoJSDJHFmPonj/stF2IQQsRdCjtNc80S+bQyYJmvOU1Os/ml6mEXtJfyGtswn2izlY
+         QxizdKY1WSsWoYEKa/zC2wFOd47Hl03nGjodvCy5g5xu0tp171zzTU7kpAAL2jc3e0AS
+         qQYzYoGrpcY+la+vXSMHkn0du4l7TCKnwmvAQJJSD1wHchuqFGQSawJ7IQiwqVHQlPkm
+         fDi7lqDgISyLVuvJau3kkFcOx2Qhq+N5vUNzNu0k/JcFqesTyMNeZNCZm/t8OMx6ytK8
+         StYCE5T26xVZUQ933SJteGOS9vH61O41uPacBI9ppqaerE914ZEkmrmsONPwMUkQ5dBo
+         MUOQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708589574; x=1709194374;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=OzNGUpNoXsKa0F+bV/ekx8aAYd7ltTcTmTe5buoxy74=;
-        b=lFLy89PS8oyl3nQVXHkceXKHQ8dJYQP7cAHNBujoWXTTz+vtUIvLcDfeX9SzYxquEq
-         /0edur8rfgzGhBQMQo4/QSMEN5nhZk6FYOIcsBh6WuRVwB/oV+WXaHkvzyIVxdujHxCB
-         3BRROksewIc4ZNAb73W/7uvDATCTAa1yeu+hqS7vMUKRfDLIuBzbTubnVFNxbwA8J/AK
-         4pCwKDEsfeR8bner3X7bQ0O08C1IPF27PvGiNQ0J48lT9H+0z7ktuIMw8J8AY6LTUBDU
-         gw2y8A5fQfIZbeq6fQ8CA73Cmu/gaEds1le/6kW0xM7fELHG3J9bXrC7L6I72uIvr+Zo
-         MHXQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUXcdct+F/Ex5CCOCYuZ11lMexyDfoYE4G22B5wOn8dtaOIGgBByI6pBVNA31UnTmilEGFpCr7F+eWSMmK9xnJwXCFKOUpUGWHB0UI3
-X-Gm-Message-State: AOJu0YzJLclAplJLig/kb0uPX3QzIDUwCIKwK9LJgIGBPZlTFglHCm60
-	Q10ZmQgOV1IKYFYVjFbg2cw32zA3h6RYHVgySPBW1Rs69t1hxoMj75N5s/V1e1I=
-X-Google-Smtp-Source: AGHT+IEz666lsZSApoJrluiCUnkDERHUYNU92etsFfiWP0DNhuFqgQPyMZWzIbTM8mytE5tfogyXLA==
-X-Received: by 2002:a17:903:22c6:b0:1db:d42f:fde9 with SMTP id y6-20020a17090322c600b001dbd42ffde9mr16038641plg.41.1708589574353;
-        Thu, 22 Feb 2024 00:12:54 -0800 (PST)
-Received: from hsinchu15.internal.sifive.com (59-124-168-89.hinet-ip.hinet.net. [59.124.168.89])
-        by smtp.gmail.com with ESMTPSA id lf8-20020a170902fb4800b001db5ea825b2sm9412796plb.123.2024.02.22.00.12.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 22 Feb 2024 00:12:53 -0800 (PST)
-From: Nylon Chen <nylon.chen@sifive.com>
-To: linux-riscv@lists.infradead.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-pwm@vger.kernel.org,
-	conor@kernel.org,
-	robh+dt@kernel.org,
-	krzysztof.kozlowski+dt@linaro.org,
-	palmer@dabbelt.com,
-	paul.walmsley@sifive.com,
-	aou@eecs.berkeley.edu,
-	thierry.reding@gmail.com,
-	u.kleine-koenig@pengutronix.de
-Cc: vincent.chen@sifive.com,
-	zong.li@sifive.com,
-	nylon.chen@sifive.com,
-	nylon7717@gmail.com
-Subject: [PATCH v9 3/3] pwm: sifive: Fix the error in the idempotent test within the pwm_apply_state_debug function
-Date: Thu, 22 Feb 2024 16:12:31 +0800
-Message-ID: <20240222081231.213406-4-nylon.chen@sifive.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240222081231.213406-1-nylon.chen@sifive.com>
-References: <20240222081231.213406-1-nylon.chen@sifive.com>
+        d=1e100.net; s=20230601; t=1708589583; x=1709194383;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=tyk4T9TEQQ5JCsQPipNXRMcoozCsfh8H/KvBrA5AA4w=;
+        b=v6M21TpQJcqqZxznvKVRVp7c91WXq1LUdnMRUYyRiJY5KwUOxW/Asxc64PynNvAG4Z
+         7tPrbb5bdW0oWJU5IA8b7jVRL3C+Vhyd+YcawGxpnnQa1bdzl0zKH+6rhs17Sw4BdYUy
+         VIRWfqG2GEVuj4g7mGgg3JxJvHjkTQCIVHIDUTAdyivr+8YNLR/jql1GXbjssrY+GvYW
+         XQ6V1dTsVklBZbEb5EmNJ6tnWNix0lQr8Luoy3CqwbufcsjmoCz44DVsXc2wtL69+Noc
+         YZj9yiTS0j8L0LJRfyM+oR8DCn4uaW/5LAZ+9xOCwi04uJiIqpzQVuXCKXxLo2U7o6AQ
+         nu1A==
+X-Forwarded-Encrypted: i=1; AJvYcCXdFHuFzPHCONr4/IFXPP/UhD5Cvs4uctqi8Q5odov+m47x8M0gNdea7R+YgB+SDHYoMSCPMXenQAuSoh+lX+/vRTEVs9qaOWRiZ+Xi
+X-Gm-Message-State: AOJu0Yx6f9QA95cDSC80WXJFTa7nNEBmtwcnR1UpDXbfcBml6W5CYG65
+	k5ALFeSLp3WlbPN2NM596O6aAriWVEyru6grFizfWDBHwzzzYKylN8375gRrfMc=
+X-Google-Smtp-Source: AGHT+IE7h9IG5FIFdz3wdDPelpfZgYLAu2HWcBxgqx1uOiDdqh6RLg7kAgabuJC7rQSpFc1G3w9lZw==
+X-Received: by 2002:a17:906:1698:b0:a3f:86ca:ed2f with SMTP id s24-20020a170906169800b00a3f86caed2fmr705637ejd.49.1708589583095;
+        Thu, 22 Feb 2024 00:13:03 -0800 (PST)
+Received: from [192.168.1.20] ([178.197.222.116])
+        by smtp.gmail.com with ESMTPSA id m12-20020a170906160c00b00a3d0a094574sm5683084ejd.66.2024.02.22.00.13.01
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 22 Feb 2024 00:13:02 -0800 (PST)
+Message-ID: <40925c33-0b1d-4eb7-8f83-85efb6aeae4d@linaro.org>
+Date: Thu, 22 Feb 2024 09:13:00 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] dt-bindings: arm: aspeed: add ASUS X4TF board
+Content-Language: en-US
+To: =?UTF-8?B?S2VsbHkgSHVuZyjmtKrlmInojokp?= <Kelly_Hung@asus.com>,
+ Andrew Jeffery <andrew@codeconstruct.com.au>,
+ Kelly Hung <ppighouse@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>
+Cc: "krzysztof.kozlowski+dt@linaro.org" <krzysztof.kozlowski+dt@linaro.org>,
+ "conor+dt@kernel.org" <conor+dt@kernel.org>, "joel@jms.id.au"
+ <joel@jms.id.au>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+ "linux-arm-kernel@lists.infradead.org"
+ <linux-arm-kernel@lists.infradead.org>,
+ "linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "openbmc@lists.ozlabs.org" <openbmc@lists.ozlabs.org>,
+ =?UTF-8?B?QWxsZW5ZWSBIc3Uo6Kix5bm85bKzKQ==?= <AllenYY_Hsu@asus.com>
+References: <20240222032504.1147489-1-Kelly_Hung@asus.com>
+ <20240222032504.1147489-2-Kelly_Hung@asus.com>
+ <2ab9b3924dbe07039e934d4580ab7dd397a31728.camel@codeconstruct.com.au>
+ <TYZPR04MB6596F2EBAF65F7F53809C2259D562@TYZPR04MB6596.apcprd04.prod.outlook.com>
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <TYZPR04MB6596F2EBAF65F7F53809C2259D562@TYZPR04MB6596.apcprd04.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Round the result to the nearest whole number. This ensures that
-real_period is always a reasonable integer that is not lower than the
-actual value.
+On 22/02/2024 08:32, Kelly Hung(洪嘉莉) wrote:
+> External email : Ensure your email is secure before opening links and attachments.
 
-e.g.
-$ echo 110 > /sys/devices/platform/led-controller-1/leds/d12/brightness
-$ .apply is not idempotent (ena=1 pol=0 1739692/4032985) -> (ena=1 pol=0 1739630/4032985)
+Please send proper patchsets. Patchset includes all necessary patches:
+First binding then DTS.
 
-Co-developed-by: Zong Li <zong.li@sifive.com>
-Signed-off-by: Zong Li <zong.li@sifive.com>
-Signed-off-by: Nylon Chen <nylon.chen@sifive.com>
----
- drivers/pwm/pwm-sifive.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Version your patches and provide changelog under ---.
 
-diff --git a/drivers/pwm/pwm-sifive.c b/drivers/pwm/pwm-sifive.c
-index a586cfe4191b..bebcbebacccd 100644
---- a/drivers/pwm/pwm-sifive.c
-+++ b/drivers/pwm/pwm-sifive.c
-@@ -101,7 +101,7 @@ static void pwm_sifive_update_clock(struct pwm_sifive_ddata *ddata,
- 
- 	/* As scale <= 15 the shift operation cannot overflow. */
- 	num = (unsigned long long)NSEC_PER_SEC << (PWM_SIFIVE_CMPWIDTH + scale);
--	ddata->real_period = div64_ul(num, rate);
-+	ddata->real_period = DIV_ROUND_UP_ULL(num, rate);
- 	dev_dbg(ddata->chip.dev,
- 		"New real_period = %u ns\n", ddata->real_period);
- }
--- 
-2.43.0
+> 
+> Document the new compatibles used on ASUS X4TF.
+> 
+> Signed-off-by: Kelly Hung <Kelly_Hung@asus.com>
+
+...
+
+> 
+> Andrew
+> 
+> <p></p>
+> ===================================================================================================================================
+> This email and any attachments to it contain confidential information and are intended solely for the use of the individual to whom it is addressed. If you are not the 
+
+Sorry, we cannot work with confidential information.
+
+
+If you do not understand why, please also see:
+https://www.youtube.com/live/fMeH7wqOwXA?si=GY7igfbda6vnjXlJ&t=835
+
+Best regards,
+Krzysztof
 
