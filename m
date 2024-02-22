@@ -1,83 +1,102 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06A69137923;
-	Thu, 22 Feb 2024 18:29:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0A8513BAE2
+	for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 18:29:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708626548; cv=none; b=fI7/oXZJsE/3h0hGBRnNX/dUu0kD4t2j5bcz/TJ9VLsPgbr1bl8+fu+7igKcMwQ9vcVyxjrZ4nEb7b3fXzmN2hOew5LgmOKbPwcjhz47YmesdDqkWCGZiOorCo4lsSwHvxfN1coTeqpq3l/BH8w/6/zNIityso+/9GHvtmFqDfU=
+	t=1708626555; cv=none; b=qyEDC3aEAtvZ5nptMtTfCFbRqvg2ID52buvMSM7PbdxKOBaXD1J/Rx67Oy8p0FfXhgg+3WFUDD2d4ndd7UKWB+dTShVun/u7KcAfdolUuPACk0HFp+RZfqvaVSxtM5VHHRKnwpgod7B5lIAd3u9Rg+sa2IYY6GnoNgCEZ2gn1zE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708626548; c=relaxed/simple;
-	bh=pBekZ+WsAj+6n/8strTHjSgCBwuZw+ZZ7K+e+nZzKYY=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=F8tI2NmIuiDAoXlden6hm+wB5PkTGq7UiZ79tObuFZ8raj0vUcOvcFgLmHXMBIkhRssFZclIz+unGCHowEKQVEaKVfh+wzDOjhqwsv6WGNHpRL011IPevvg34x1y5fyHtn+RXiTNVUDMOyo9IXHn4+puA3nuGeN1jc0o2IYeit0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B8E11C433F1;
-	Thu, 22 Feb 2024 18:29:06 +0000 (UTC)
-Date: Thu, 22 Feb 2024 13:30:57 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>
-Cc: dri-devel@lists.freedesktop.org, intel-xe@lists.freedesktop.org,
- intel-gfx@lists.freedesktop.org, "Ville =?UTF-8?B?U3lyasOkbMOk?="
- <ville.syrjala@linux.intel.com>, Daniel Vetter <daniel@ffwll.ch>, David
- Airlie <airlied@gmail.com>
-Subject: [PATCH] drm/i915: Add missing ; to __assign_str() macros in
- tracepoint code
-Message-ID: <20240222133057.2af72a19@gandalf.local.home>
-X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1708626555; c=relaxed/simple;
+	bh=eLoDaQ5497vWFnwGoufOSzIwFNqonoZsFTnjZb28mwc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Q3wMShyJZuZrVkJ54YuWWIeN3OyGo5Q9+jJruQqBS9Psm2uVcB3bEm4jTGtvnnw0755FkciAc5ttiW0GoGQzkGZ/Fo/8PwPe7YHCrGtBUK6FrSeVZQIdtnClgQ+MUZu+m6PieXiCncXHZj+9QbESSABbYh98tNFrGwj5nGNPgR0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=eXh++oq4; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eXh++oq4"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1708626552;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Vr8Yn1Cpu8PQZblyo7wqABSOEVcJb2+/02KvtI4t3EE=;
+	b=eXh++oq4/Te0G6UJlSqbhECU4UC+OF7NTb+CQiYmwMTjlPR0+Rm28RF3szhiJ/H/JfLWa5
+	awH3lc9/bYWL1/clR3GGSLM50KRC+L1vsAs+dzzTcACXzHcsKZa/IZNIsOhUW/TTJvc9W5
+	0Vt6+s5jBWxEUPQb3G87d7sC6WhvPzQ=
+Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
+ by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-472-GzxCAY4_N0yjQ7_gGkJu6Q-1; Thu,
+ 22 Feb 2024 13:29:09 -0500
+X-MC-Unique: GzxCAY4_N0yjQ7_gGkJu6Q-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.rdu2.redhat.com [10.11.54.4])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 29FE828EA6F8;
+	Thu, 22 Feb 2024 18:29:09 +0000 (UTC)
+Received: from tpad.localdomain (unknown [10.96.133.3])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id E5355200B436;
+	Thu, 22 Feb 2024 18:29:08 +0000 (UTC)
+Received: by tpad.localdomain (Postfix, from userid 1000)
+	id 2D740400E4EBE; Thu, 22 Feb 2024 14:52:11 -0300 (-03)
+Date: Thu, 22 Feb 2024 14:52:11 -0300
+From: Marcelo Tosatti <mtosatti@redhat.com>
+To: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Jakub Kicinski <kuba@kernel.org>,
+	Eric Dumazet <edumazet@google.com>,
+	Frederic Weisbecker <frederic@kernel.org>,
+	Valentin Schneider <vschneid@redhat.com>
+Subject: Re: [PATCH] net/core/dev.c: enable timestamp static key if CPU
+ isolation is configured
+Message-ID: <ZdeJyxiTSKtkpHMO@tpad>
+References: <ZdSAWAwUxc5R46NH@tpad>
+ <65d7640c7983b_2bd671294c3@willemb.c.googlers.com.notmuch>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <65d7640c7983b_2bd671294c3@willemb.c.googlers.com.notmuch>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.4
 
-From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+On Thu, Feb 22, 2024 at 10:11:08AM -0500, Willem de Bruijn wrote:
+> Marcelo Tosatti wrote:
+> > For systems that use CPU isolation (via nohz_full), creating or destroying
+> > a socket with  timestamping (SOF_TIMESTAMPING_OPT_TX_SWHW) might cause a
+> > static key to be enabled/disabled. This in turn causes undesired 
+> > IPIs to isolated CPUs.
+> 
+> This refers to SOF_TIMESTAMPING_RX_SOFTWARE, not SOF_TIMESTAMPING_OPT_TX_SWHW.
+> See also sock_set_timestamping.
 
-I'm working on improving the __assign_str() and __string() macros to be
-more efficient, and removed some unneeded semicolons. This triggered a bug
-in the build as some of the __assign_str() macros in intel_display_trace
-was missing a terminating semicolon.
+Willem,
 
-Fixes: 2ceea5d88048b ("drm/i915: Print plane name in fbc tracepoints")
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
- drivers/gpu/drm/i915/display/intel_display_trace.h | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+This test program does trigger the static key change:
 
-diff --git a/drivers/gpu/drm/i915/display/intel_display_trace.h b/drivers/gpu/drm/i915/display/intel_display_trace.h
-index 99bdb833591c..7862e7cefe02 100644
---- a/drivers/gpu/drm/i915/display/intel_display_trace.h
-+++ b/drivers/gpu/drm/i915/display/intel_display_trace.h
-@@ -411,7 +411,7 @@ TRACE_EVENT(intel_fbc_activate,
- 			   struct intel_crtc *crtc = intel_crtc_for_pipe(to_i915(plane->base.dev),
- 									 plane->pipe);
- 			   __assign_str(dev, __dev_name_kms(plane));
--			   __assign_str(name, plane->base.name)
-+			   __assign_str(name, plane->base.name);
- 			   __entry->pipe = crtc->pipe;
- 			   __entry->frame = intel_crtc_get_vblank_counter(crtc);
- 			   __entry->scanline = intel_get_crtc_scanline(crtc);
-@@ -438,7 +438,7 @@ TRACE_EVENT(intel_fbc_deactivate,
- 			   struct intel_crtc *crtc = intel_crtc_for_pipe(to_i915(plane->base.dev),
- 									 plane->pipe);
- 			   __assign_str(dev, __dev_name_kms(plane));
--			   __assign_str(name, plane->base.name)
-+			   __assign_str(name, plane->base.name);
- 			   __entry->pipe = crtc->pipe;
- 			   __entry->frame = intel_crtc_get_vblank_counter(crtc);
- 			   __entry->scanline = intel_get_crtc_scanline(crtc);
-@@ -465,7 +465,7 @@ TRACE_EVENT(intel_fbc_nuke,
- 			   struct intel_crtc *crtc = intel_crtc_for_pipe(to_i915(plane->base.dev),
- 									 plane->pipe);
- 			   __assign_str(dev, __dev_name_kms(plane));
--			   __assign_str(name, plane->base.name)
-+			   __assign_str(name, plane->base.name);
- 			   __entry->pipe = crtc->pipe;
- 			   __entry->frame = intel_crtc_get_vblank_counter(crtc);
- 			   __entry->scanline = intel_get_crtc_scanline(crtc);
--- 
-2.43.0
+int main (void)
+{
+        int option = SOF_TIMESTAMPING_OPT_TX_SWHW;
+        int sock_fd;
+        int ret;
+        int pid_fd;
+        pid_t pid;
+        char buf[50];
+
+...
+
+        /* set the timestamping option
+         * this is to trigger the IPIs that notify all cpus of the change
+         */
+        if (setsockopt(sock_fd, SOL_SOCKET, SO_TIMESTAMP, &option, sizeof (option)) < 0) {
+                printf("Could not enable timestamping option %x", (unsigned int)option);
+                close(sock_fd);
+                return 0;
+        }
+...
 
