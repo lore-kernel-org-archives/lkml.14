@@ -1,420 +1,152 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3FCA1EB3A;
-	Thu, 22 Feb 2024 18:31:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C1C1125CE;
+	Thu, 22 Feb 2024 18:32:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708626676; cv=none; b=NXhCotJOl9Bpp82iYQ229hE+2ONyhQy8h8hwhc19UkKTQRV+UEjp21tE0ltEcLDtAX1N6VgQpsFb9Xb49b3ckBTPHeuOK704Blsnd9zmZ3rWy13c/qSrzw0nXpX0NQv5JKewXEwLVflJIyPdAA31Vc3TMIwlw1jufgMG25BvH1g=
+	t=1708626762; cv=none; b=Lwj0vHwHpfBIdvF7JWEMksHidHrUstBqVeTvdaUOgqLO3S69L1fc4wxk6kaTnvUJiwgT00PZUIC3mgm8IzvR1VwNGV2glvE5u8goW+ZUqs7VELsprf0XkJQir+dm3NUxzkruvAnx6y4Gw8T8QnNckIgFebx9klBudqlPUTAnW7Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708626676; c=relaxed/simple;
-	bh=zSwQ+29IemVAKsJR/QppCLHoxlyDpZ3/5G5UcwkHZ9I=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=S5EERpoXSnu6WH/0t/5cILyXA9LWnqIUW3sCK/kZQqStzJ7iDK3v6QmWUfiJN6VFdjkJd/+Vhx3wSmwqrD+fo2/3/kv7qx6jygK0azaVo7tI1TxzBNhZ5Nb74i2PHtUVNbQNSNIK3IpTHIqWS09H2OS0f+YnxoSG4QeWyGEl5IY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=E5mJCdFR; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1708626762; c=relaxed/simple;
+	bh=Dq/WJWzvf8wQHOTJLFRXt3BmVpE2zcnhDDsvnsZo7Q8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=kMuP35tu6biXrIPJFX70PUHfZBkmxPEtkTQsZ+HP6g86h71cdcaOjo2VvEcD8mXAZjVWhPX0pY7Kf194dqNAtOn75nNWvY/1+nGSV5mpOM2WGD9icEKC0aeYEtKvtuc5oG3L0j1zfZygxsh3NYaeFu7GudhExOVxPH0bKgtSANc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=SbhntPsG; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="E5mJCdFR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 217C8C433F1;
-	Thu, 22 Feb 2024 18:31:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708626675;
-	bh=zSwQ+29IemVAKsJR/QppCLHoxlyDpZ3/5G5UcwkHZ9I=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=E5mJCdFRarCvwy2IdOpt8oKhCoNcJU6+NxrAr098IA9x0H1YS/hyHxGAJdfAUzVGl
-	 lWAZjQy9ortegc+W3weeRlrky15kfRe/B9oks65Pld3RIHeWTeywjg24LpRHvC3nVh
-	 eBvV1quVZX0Aq3tes6jTO3Nw6ztMXdEtIjhPd0pWAiiht2jOMc1bl4fmihOveKQhbT
-	 NNTIKf/YD+VQswufCEHRC9RDUfQE1xc2nbz92py0VSYeQsPhnYzDEb6yQtdE1xbMSi
-	 aU/xVu+7FJhfTW4zUobEv13BOM+k7j8gc3v2sg/jSujXtaFJkPHb2VX5Qi58cV6FQd
-	 XIA5nvee7DJ0A==
-Date: Thu, 22 Feb 2024 12:30:48 -0600
-From: Rob Herring <robh@kernel.org>
-To: Frank Li <Frank.Li@nxp.com>
-Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	"open list:PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS" <linux-pci@vger.kernel.org>,
-	"open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>,
-	open list <linux-kernel@vger.kernel.org>, imx@lists.linux.dev
-Subject: Re: [PATCH v3 1/1] dt-bindings: pci: layerscape-pci: Convert to yaml
- format
-Message-ID: <20240222183048.GA3652979-robh@kernel.org>
-References: <20240214194145.2669744-1-Frank.Li@nxp.com>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="SbhntPsG"
+Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 41MHXd4w011379;
+	Thu, 22 Feb 2024 18:32:25 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	message-id:date:mime-version:subject:to:cc:references:from
+	:in-reply-to:content-type:content-transfer-encoding; s=
+	qcppdkim1; bh=uBZVc2KAKMD3VrRODtzocPOslJ8eEF/cruNuWqPmlKI=; b=Sb
+	hntPsGuukpcjKB4zPplj4GOzJxfsYhuBytggceShdDIlmcH+JehD+Wz2F1sBHE6W
+	HkP4GuOrWmP/YSw0gLjTmlXhnaPAmbSS53WQu/Kexo4YcGWZx8yO8iG77hbZ6WVz
+	RopOwTy6MDoZZOEi9CCKFjyc8uBDKOvQlF4b1XlhlmZNLcn3zlWVz1rVeoI6ZdKy
+	Nus270Dkg6U/9FrRXVnHREQJ5yWXr54tpegIELdhS2V5mj4MtvtVMJ8mA6KER+ny
+	nqtroOgX7O9Qt0A9HTSKs7M9jqI+1oQaik9zwEXvL8BPNqls9L8dBQ6ayngwz+DW
+	+yw4RuTJpuMnPpB8SvDQ==
+Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3weasbr9eg-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 22 Feb 2024 18:32:25 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 41MIWOTJ011497
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 22 Feb 2024 18:32:24 GMT
+Received: from [10.71.109.81] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Thu, 22 Feb
+ 2024 10:32:23 -0800
+Message-ID: <4de8626d-7dc6-42af-85ea-60e6670aef72@quicinc.com>
+Date: Thu, 22 Feb 2024 10:32:06 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240214194145.2669744-1-Frank.Li@nxp.com>
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.0
+Subject: Re: [PATCH 3/9] arm64: dts: qcom: sc7280: Enable MDP turbo mode
+To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+        Konrad Dybcio
+	<konrad.dybcio@linaro.org>
+CC: Bjorn Andersson <quic_bjorande@quicinc.com>,
+        Douglas Anderson
+	<dianders@chromium.org>,
+        Rob Clark <robdclark@gmail.com>, Sean Paul
+	<sean@poorly.run>,
+        Marijn Suijten <marijn.suijten@somainline.org>,
+        "David
+ Airlie" <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+        <cros-qcom-dts-watchers@chromium.org>,
+        Bjorn Andersson
+	<andersson@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski
+	<krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <dri-devel@lists.freedesktop.org>, <freedreno@lists.freedesktop.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
+References: <20240221-rb3gen2-dp-connector-v1-0-dc0964ef7d96@quicinc.com>
+ <20240221-rb3gen2-dp-connector-v1-3-dc0964ef7d96@quicinc.com>
+ <CAA8EJpo=9vhM+5YzaFxUoYRuEWQyrMS8wLNPSF3K=bN5JwWyDw@mail.gmail.com>
+ <8313a7c3-3ace-4dee-ad27-8f51a06cd58c@linaro.org>
+ <CAA8EJpqFj5nf8d_=Uoup7qg+nQrxqQU-DHbL3uSP138m9AcXLw@mail.gmail.com>
+ <8fcb5816-2d59-4e27-ba68-8e0ed6e7d839@linaro.org>
+ <CAA8EJporaUuddHHqpyYHiYSu=toHmrDxSHf9msZUJoym4Nz72g@mail.gmail.com>
+Content-Language: en-US
+From: Abhinav Kumar <quic_abhinavk@quicinc.com>
+In-Reply-To: <CAA8EJporaUuddHHqpyYHiYSu=toHmrDxSHf9msZUJoym4Nz72g@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: g1j4Hzm46QuFIDBMWdiTeBtPETXWT6ay
+X-Proofpoint-GUID: g1j4Hzm46QuFIDBMWdiTeBtPETXWT6ay
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-02-22_14,2024-02-22_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 suspectscore=0
+ mlxlogscore=999 impostorscore=0 bulkscore=0 phishscore=0 spamscore=0
+ clxscore=1011 lowpriorityscore=0 malwarescore=0 adultscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2402120000 definitions=main-2402220144
 
-On Wed, Feb 14, 2024 at 02:41:44PM -0500, Frank Li wrote:
-> Convert the layerscape-pci PCIe binding document to yaml format.
+
+
+On 2/22/2024 1:46 AM, Dmitry Baryshkov wrote:
+> On Thu, 22 Feb 2024 at 11:28, Konrad Dybcio <konrad.dybcio@linaro.org> wrote:
+>>
+>>
+>>
+>> On 2/22/24 10:04, Dmitry Baryshkov wrote:
+>>> On Thu, 22 Feb 2024 at 10:56, Konrad Dybcio <konrad.dybcio@linaro.org> wrote:
+>>>>
+>>>>
+>>>>
+>>>> On 2/22/24 00:41, Dmitry Baryshkov wrote:
+>>>>> On Thu, 22 Feb 2024 at 01:19, Bjorn Andersson <quic_bjorande@quicinc.com> wrote:
+>>>>>>
+>>>>>> The max frequency listed in the DPU opp-table is 506MHz, this is not
+>>>>>> sufficient to drive a 4k@60 display, resulting in constant underrun.
+>>>>>>
+>>>>>> Add the missing MDP_CLK turbo frequency of 608MHz to the opp-table to
+>>>>>> fix this.
+>>>>>
+>>>>> I think we might want to keep this disabled for ChromeOS devices. Doug?
+>>>>
+>>>> ChromeOS devices don't get a special SoC
+>>>
+>>> But they have the sc7280-chrome-common.dtsi, which might contain a
+>>> corresponding /delete-node/ .
+>>
+>> What does that change? The clock rates are bound to the
+>> SoC and the effective values are limited by link-frequencies
+>> or the panel driver.
 > 
-> Additionally, changes for the layerscape-pci endpoint part:
-> - Add interrupt name 'pme' restriction for fsl,ls1028a-pcie-ep,
-> fsl,ls1046a-pcie-ep, and fsl,ls1088a-pcie-ep.
-> - Add register name restrictions: 'reg' and 'addr_space'. 'addr_space' is
-> required by snps,dw-pcie-ep.
-> - Add an example.
+> Preventing the DPU from overheating? Or spending too much power?
 > 
-> Changes for the layerscape-pci root complex part:
-> - Add required property: 'reg-names', "#address-cells", "#size-cells",
-> 'device_type', 'bus-range', 'ranges', "#interrupt-cells",
-> 'interrupt-map-mask' and 'interrupt-map'.
-> - Interrupt-names requirement split to each compatible string.
-> - Add register name restrictions: 'reg' and 'config'. 'config' is required
-> by snps,dw-pcie.
-> 
-> Signed-off-by: Frank Li <Frank.Li@nxp.com>
-> ---
-> 
-> Notes:
->     There are log discuss at v1. If I missed something, let me know.
->     
->     Change from v2 to v3
->     - update commit message, show change compare txt file
->     - add failback compatible fsl,ls-pcie-ep.
->     - add commit message about 'addr_space' and 'config'.
->     
->     Change from v1 to v2
->     - remove '|-'
->     - dma-coherent: true
->     - add interrupts and interrupt-names at before Allof
->     - remove ref to snps,pcie*.yaml, some reg-names are not aligned with in
->     drivers
->     - Add an example for pcie-ep
-> 
->  .../bindings/pci/fsl,layerscape-pcie-ep.yaml  | 110 +++++++++++
->  .../bindings/pci/fsl,layerscape-pcie.yaml     | 182 ++++++++++++++++++
->  .../bindings/pci/layerscape-pci.txt           |  79 --------
->  3 files changed, 292 insertions(+), 79 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/pci/fsl,layerscape-pcie-ep.yaml
->  create mode 100644 Documentation/devicetree/bindings/pci/fsl,layerscape-pcie.yaml
->  delete mode 100644 Documentation/devicetree/bindings/pci/layerscape-pci.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/pci/fsl,layerscape-pcie-ep.yaml b/Documentation/devicetree/bindings/pci/fsl,layerscape-pcie-ep.yaml
-> new file mode 100644
-> index 0000000000000..b384a0b2fe22e
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pci/fsl,layerscape-pcie-ep.yaml
-> @@ -0,0 +1,110 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/pci/fsl,layerscape-pcie-ep.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Freescale Layerscape PCIe Endpoint(EP) controller
-> +
-> +maintainers:
-> +  - Frank Li <Frank.Li@nxp.com>
-> +
-> +description:
-> +  This PCIe EP controller is based on the Synopsys DesignWare PCIe IP.
 
-Where's the reference to the DWC schema?
+Running DPU clock in turbo is a requirement to support 4k@60 otherwise 
+the pixel rate that high cannot be supported.
 
-> +
-> +  This controller derives its clocks from the Reset Configuration Word (RCW)
-> +  which is used to describe the PLL settings at the time of chip-reset.
-> +
-> +  Also as per the available Reference Manuals, there is no specific 'version'
-> +  register available in the Freescale PCIe controller register set,
-> +  which can allow determining the underlying DesignWare PCIe controller version
-> +  information.
-> +
-> +properties:
-> +  compatible:
-> +    items:
-> +      - enum:
-> +          - fsl,ls2088a-pcie-ep
-> +          - fsl,ls1088a-pcie-ep
-> +          - fsl,ls1046a-pcie-ep
-> +          - fsl,ls1028a-pcie-ep
-> +          - fsl,lx2160ar2-pcie-ep
-> +      - const: fsl,ls-pcie-ep
-> +
-> +  reg:
-> +    maxItems: 2
-> +
-> +  reg-names:
-> +    items:
-> +      - const: regs
-> +      - const: addr_space
-> +
-> +  fsl,pcie-scfg:
-> +    $ref: /schemas/types.yaml#/definitions/phandle
-> +    description: A phandle to the SCFG device node. The second entry is the
-> +      physical PCIe controller index starting from '0'. This is used to get
-> +      SCFG PEXN registers.
-> +
-> +  big-endian:
-> +    $ref: /schemas/types.yaml#/definitions/flag
-> +    description: If the PEX_LUT and PF register block is in big-endian, specify
-> +      this property.
-> +
-> +  dma-coherent: true
-> +
-> +  interrupts:
-> +    minItems: 1
-> +    maxItems: 2
-> +
-> +  interrupt-names:
-> +    minItems: 1
-> +    maxItems: 2
-> +    oneOf:
-> +      - anyOf:
-> +          - const: pme
-> +          - const: aer
-> +      - const: intr
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +  - interrupt-names
-> +
-> +allOf:
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          enum:
-> +            - fsl,ls1028a-pcie-ep
-> +            - fsl,ls1046a-pcie-ep
-> +            - fsl,ls1088a-pcie-ep
-> +    then:
-> +      properties:
-> +        interrupt-names:
-> +          items:
-> +            - const: pme
-> +
-> +unevaluatedProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +
-> +    soc {
-> +      #address-cells = <2>;
-> +      #size-cells = <2>;
-> +
-> +      pcie_ep1: pcie-ep@3400000 {
-> +        compatible = "fsl,ls1028a-pcie-ep", "fsl,ls-pcie-ep";
-> +        reg = <0x00 0x03400000 0x0 0x00100000
-> +              0x80 0x00000000 0x8 0x00000000>;
-> +        reg-names = "regs", "addr_space";
-> +        interrupts = <GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH>; /* PME interrupt */
-> +        interrupt-names = "pme";
+sc7280 chrome devices already limit to HBR2
 
-> +        num-ib-windows = <6>;
-> +        num-ob-windows = <8>;
+https://lore.kernel.org/all/20230329233416.27152-1-quic_abhinavk@quicinc.com/
 
-Not documented and deprecated.
+So the DPU will not vote more than nominal.
 
-> +        status = "disabled";
+And like others wrote, limiting SOC frequencies is not the way and we 
+should filter out required frequencies using link-frequencies.
 
-Examples should be enabled.
+Hence fwiw, I am fine with this change.
 
-> +      };
-> +    };
-> +...
-> diff --git a/Documentation/devicetree/bindings/pci/fsl,layerscape-pcie.yaml b/Documentation/devicetree/bindings/pci/fsl,layerscape-pcie.yaml
-> new file mode 100644
-> index 0000000000000..988929729580a
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pci/fsl,layerscape-pcie.yaml
-> @@ -0,0 +1,182 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/pci/fsl,layerscape-pcie.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Freescale Layerscape PCIe Root Complex(RC) controller
-> +
-> +maintainers:
-> +  - Frank Li <Frank.Li@nxp.com>
-> +
-> +description:
-> +  This PCIe RC controller is based on the Synopsys DesignWare PCIe IP
-> +
-> +  This controller derives its clocks from the Reset Configuration Word (RCW)
-> +  which is used to describe the PLL settings at the time of chip-reset.
-> +
-> +  Also as per the available Reference Manuals, there is no specific 'version'
-> +  register available in the Freescale PCIe controller register set,
-> +  which can allow determining the underlying DesignWare PCIe controller version
-> +  information.
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - fsl,ls1021a-pcie
-> +      - fsl,ls2080a-pcie
-> +      - fsl,ls2085a-pcie
-> +      - fsl,ls2088a-pcie
-> +      - fsl,ls1088a-pcie
-> +      - fsl,ls1046a-pcie
-> +      - fsl,ls1043a-pcie
-> +      - fsl,ls1012a-pcie
-> +      - fsl,ls1028a-pcie
-> +      - fsl,lx2160a-pcie
-> +
-> +  reg:
-> +    maxItems: 2
-> +
-> +  reg-names:
-> +    items:
-> +      - const: regs
-> +      - const: config
-> +
-> +  fsl,pcie-scfg:
-> +    $ref: /schemas/types.yaml#/definitions/phandle
-> +    description: A phandle to the SCFG device node. The second entry is the
-> +      physical PCIe controller index starting from '0'. This is used to get
-> +      SCFG PEXN registers.
-> +
-> +  big-endian:
-> +    $ref: /schemas/types.yaml#/definitions/flag
-> +    description: If the PEX_LUT and PF register block is in big-endian, specify
-> +      this property.
-> +
-> +  dma-coherent: true
-> +
-> +  msi-parent: true
-> +
-> +  iommu-map: true
-> +
-> +  interrupts:
-> +    minItems: 1
-> +    maxItems: 3
-> +
-> +  interrupt-names:
-> +    minItems: 1
-> +    maxItems: 3
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - reg-names
-> +  - "#address-cells"
-> +  - "#size-cells"
-> +  - device_type
-> +  - bus-range
 
-This should never be required unless you have some restriction in the 
-h/w. DWC generally doesn't.
+Reviewed-by: Abhinav Kumar <quic_abhinavk@quicinc.com>
 
-> +  - ranges
-> +  - interrupts
-> +  - interrupt-names
-> +  - "#interrupt-cells"
-> +  - interrupt-map-mask
-> +  - interrupt-map
-
-The common PCI and DWC schemas already make most of these required, so 
-you don't need to here.
-
-> +
-> +allOf:
-> +  - $ref: /schemas/pci/pci-bus.yaml#
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          enum:
-> +            - fsl,lx2160a-pcie
-> +    then:
-> +      properties:
-> +        interrupts:
-> +          maxItems: 2
-> +        interrupt-names:
-> +          items:
-> +            - const: pme
-> +            - const: aer
-> +            - const: intr
-> +
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          enum:
-> +            - fsl,ls1028a-pcie
-> +            - fsl,ls1046a-pcie
-> +            - fsl,ls1043a-pcie
-> +            - fsl,ls1012a-pcie
-> +    then:
-> +      properties:
-> +        interrupts:
-> +          maxItems: 2
-> +        interrupt-names:
-> +          items:
-> +            - const: pme
-> +            - const: aer
-> +
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          enum:
-> +            - fsl,ls2080a-pcie
-> +            - fsl,ls2085a-pcie
-> +            - fsl,ls2088a-pcie
-> +            - fsl,ls1021a-pcie
-> +    then:
-> +      properties:
-> +        interrupts:
-> +          maxItems: 1
-> +        interrupt-names:
-> +          items:
-> +            - const: intr
-> +
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          enum:
-> +            - fsl,ls1088a-pcie
-> +    then:
-> +      properties:
-> +        interrupts:
-> +          maxItems: 1
-> +        interrupt-names:
-> +          items:
-> +            - const: aer
-> +
-> +unevaluatedProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +
-> +    soc {
-> +      #address-cells = <2>;
-> +      #size-cells = <2>;
-> +
-> +      pcie@3400000 {
-> +        compatible = "fsl,ls1088a-pcie";
-> +        reg = <0x00 0x03400000 0x0 0x00100000>, /* controller registers */
-> +            <0x20 0x00000000 0x0 0x00002000>; /* configuration space */
-> +        reg-names = "regs", "config";
-> +        interrupts = <0 108 IRQ_TYPE_LEVEL_HIGH>; /* aer interrupt */
-> +        interrupt-names = "aer";
-> +        #address-cells = <3>;
-> +        #size-cells = <2>;
-> +        dma-coherent;
-> +        device_type = "pci";
-> +        bus-range = <0x0 0xff>;
-> +        ranges = <0x81000000 0x0 0x00000000 0x20 0x00010000 0x0 0x00010000   /* downstream I/O */
-> +                 0x82000000 0x0 0x40000000 0x20 0x40000000 0x0 0x40000000>; /* non-prefetchable memory */
-> +        msi-parent = <&its>;
-> +        #interrupt-cells = <1>;
-> +        interrupt-map-mask = <0 0 0 7>;
-> +        interrupt-map = <0000 0 0 1 &gic 0 0 0 109 IRQ_TYPE_LEVEL_HIGH>,
-> +                        <0000 0 0 2 &gic 0 0 0 110 IRQ_TYPE_LEVEL_HIGH>,
-> +                        <0000 0 0 3 &gic 0 0 0 111 IRQ_TYPE_LEVEL_HIGH>,
-> +                        <0000 0 0 4 &gic 0 0 0 112 IRQ_TYPE_LEVEL_HIGH>;
-> +        iommu-map = <0 &smmu 0 1>; /* Fixed-up by bootloader */
-> +      };
-> +    };
-> +...
