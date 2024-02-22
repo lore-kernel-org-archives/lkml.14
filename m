@@ -1,66 +1,66 @@
-Received: from mail-yb1-f174.google.com (mail-yb1-f174.google.com [209.85.219.174])
+Received: from mail-yb1-f181.google.com (mail-yb1-f181.google.com [209.85.219.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4115312D211
-	for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 21:10:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AB0373F38
+	for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 21:11:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708636236; cv=none; b=E9svDVPtCKrwC3TC8W4ODIN+9e0YIj7gfuWULlEbBKhQQL4vuKUzxmY3JqkrxPQy6CIt1ldYe6knERuc0bj5ewQYGoslNVIXDMA3Bj8SSSHDLXa2YP119gPvYngcqce0xObCyPcyEEGmn0MKSvV5U5UuF/jhtIALG9UHuH3JLNo=
+	t=1708636262; cv=none; b=LU3bJC0ITNu9UPnF6mAa4UIkPdHH/cP+yPi14lqWBdeDRoEX8XXudqJz7LH3IESMHUeKXSUJWEqaukrxKhOWybikNYKYpPRmHHW+Apz6cLQj/8JIVg0XrWoU9zPImv8EA7ZTJl8hbguQLw4fUDXRpO/FUKzZon+HP4QI+A0KEQg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708636236; c=relaxed/simple;
-	bh=Y7aa4EPdQeDb/k5BX8LnNG73kjPd5qiN00vjE6nM2RQ=;
+	s=arc-20240116; t=1708636262; c=relaxed/simple;
+	bh=Vo93ylUz9WSkVl0RJYZwmOg31LIkpT6PvHkpqP7mgm0=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=DAlquIQKkXX0bqkOELXNQDg9Bs2KvNb9mXkcgXsneiWVQ2P9RaBZBztf6Pz2FbpRY7MwyJ2MGPJwqmz4NvmRpUVpp4CFGoLiz+J4gy5Vzrutkz6NFEGMltKMhHzWw5nrukdDt5Mtk8V9CYc+2KUc+FlUk54YR6ocCSYfjulBJkQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Pep7f0Zl; arc=none smtp.client-ip=209.85.219.174
+	 To:Cc:Content-Type; b=Fb88XwlqEXEOCTrDwy1Yy0DdZUJU0wXgujeRoZlpnO94745PQrAJ+UjX6bRURWU9c0EmZsUsGgI1Uu2om5EAoci3qI/w79ytGhXjkFMp0z5/U2QjWCB+l9k+7kQBTfGpet4GbS2+D5+ATRvvX8OmDNS2uDLIDkOVWaAoHon2uBI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=hUhSj7t5; arc=none smtp.client-ip=209.85.219.181
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Pep7f0Zl"
-Received: by mail-yb1-f174.google.com with SMTP id 3f1490d57ef6-db4364ecd6aso160453276.2
-        for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 13:10:24 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hUhSj7t5"
+Received: by mail-yb1-f181.google.com with SMTP id 3f1490d57ef6-dcc7cdb3a98so154327276.2
+        for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 13:11:00 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1708636222; x=1709241022; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1708636259; x=1709241059; darn=vger.kernel.org;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=KISjjhinzIu3kIcQRpPQsw9fHAQrHUvQiIbfDFbxHeA=;
-        b=Pep7f0ZlR80pDJXadhbCse5Qn0egw+++lgbATNgSL6evXNjeaqMctvxpkr3t0JbVDX
-         XddISI1lj6IxtqS3Wl09G5HLRhbiFsDWAIEJ/xbiaZ2dfnu/ZfB9vjXZKmGgI909rZM6
-         m+AyAXcZo8cxDeyKJd6LUJzs08XAMwlUG5gBjaE+jLhycUxGYs7n1+PnXsoGZMm2itGh
-         4sOg+hm2ew7n9q8FKnhV3LzbKszZe0ZnJgxlebUO17I8qGDYT3dZF7pbNteialiFkXpS
-         Oy166qxxbyrTz8d0APfzThbM7y3l8EHCSaNUnFjPsGkzb8qSM8AGIFuPppwyeDZCWSSR
-         uZIg==
+        bh=pkCYglSSRXX0GiB1gOdgF7fLOHHbF1/C5DnjQjUjWpM=;
+        b=hUhSj7t5GEy68Dkhx7NKg7BT6h2bh/Mx72wr66bVOLgEIOCLYdIkzsf2Eiz/0DD2DF
+         00oAnmGOutU4MqBCT4rybu+tdZ5ZJZXI6NUkm1b5tZRRSAEnrVJaT3j0JbaBzoHMxyKu
+         J4UacgGRjO/u/tD0fXeUL07Su3nxS4onSxqAY+HG/CTnCPyAo9lxZ5jT8x72oUkQ5wGo
+         EIXSUepO7zh/t9n2QULfE/2gSeDkxmWabZTo/udBD67CFKYYsqi0sOdVwMDSFEPcnt0N
+         HxoFQHKjP3mPXQXr/NuM7KMWSiCO4IAW4dylPhgxGP2N7opFQyBJu5DJZrXme78mena+
+         7MjA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708636222; x=1709241022;
+        d=1e100.net; s=20230601; t=1708636259; x=1709241059;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=KISjjhinzIu3kIcQRpPQsw9fHAQrHUvQiIbfDFbxHeA=;
-        b=M3EjDtC2Q4o5qHoxtpkVRYw1h13kcO6M6Jabq351sIaTCucJafFOcrS9qKnbLfxyOd
-         vhCkyUOsKj/9LyD6pj6xSusQW/9sCgQWRKYxbDTFuIV8jH3d+kOP4wZ5qVrNvqfUgs0j
-         BYoE2bju3YQjjRzUowdB5SxRlQ2RPm09E7cjBTwlJfoM3ywL/ytyorKjuvdYXOrH3CX5
-         oJFnX2J+rt43HdXfTT9qBQowQOE8N+CDdUHYKYWEHme7B8ImmsnZEAR17QgIyWsSMcHe
-         sKdi9mje3hE13EOIbZiIA8i8OoLtOPlM8Dt6mYBfbczkjOLU09xZTGCE0CEH06KtEbrA
-         fDmw==
-X-Forwarded-Encrypted: i=1; AJvYcCVespHwuulGNSfgi7pTGok+/ZsemC9Pj7UJQi8S2MI/J+dGivgHBhYGfpo8txhyjnKd+VUgyihXOjeEIlHRBXXcbhQvK7XOjPPlNJhG
-X-Gm-Message-State: AOJu0YyUr6LKhjseyQlCJ1jU6RLVawpyuoMFmN91HiQMxK3JP36i/WRz
-	eAGD7A9INeMM4DVxNLFV69FAzEJdeqiGpQQ04ipTWFCvo53lM49Y+l6IUPCbOc45xt74fgWJX5w
-	j36X3h4Ddbu9ff0W4nEFFiAbLvqVmqTn6QHJk2g==
-X-Google-Smtp-Source: AGHT+IEBy/FkALInxvThzqnKOPLYZgoL5uV+k6buUGcPqG2FwQZGtnq6q8rWdEVgVmBapKjqMXBdOJ9HXitiHUCL6FU=
-X-Received: by 2002:a25:888f:0:b0:dcc:aa1f:af3c with SMTP id
- d15-20020a25888f000000b00dccaa1faf3cmr366027ybl.40.1708636222326; Thu, 22 Feb
- 2024 13:10:22 -0800 (PST)
+        bh=pkCYglSSRXX0GiB1gOdgF7fLOHHbF1/C5DnjQjUjWpM=;
+        b=FyeCwoYsZfrMhyhG8p0didg9SYFcv3jPCUH6sCPBtwz3PG7Ln1F7hW5YMgxFJ5Onii
+         E6EMGXHWtcPZm9myor2KTN+Du57uvTN3N5eXpiebnD2qNQjpAvItgi14Gvhy7HQZvm10
+         8FYh2exa1yuSE+DAhBN1iTdysJO6egezsk0F6JjhVPgEULEDdMP7S0bZ11kxVRAR3ddk
+         9653kGgI8LIt7uCW9uM3ijhXBorV+TN5gGNQ8fhuRCeeHlwNovESSy+4BPJVh2rfDwjz
+         XUHB9YN0CImRPFIUcdPjQrn7+Q3cSz/tw33QOiPVzZC9ffUfLp1UFEAGFSaZYgjeFiu9
+         lGsA==
+X-Forwarded-Encrypted: i=1; AJvYcCX5ZTPMttkFDhUVoCNqdAt0zE69HrKdBw5Hvf8Pp8kWhhUA4UWyBuauntJFpJA56k3V8n49cPgXP4IY39ByRB2g1sUxwB4iIz4zRZYx
+X-Gm-Message-State: AOJu0YyBNK/YtTJlaLYly4O5AZ4CLjgCLHgS6l9HmNn5BVyjiX1z4jGH
+	uEuUoxxxWVLPjAptPSAhLatY60U4kjoRe14jFmogWhSwE3fUF8mWncfHWdFLi6UUh+eG9M3qDDV
+	r3GpjlmKLNw5BFJY0/xpzN5ImN5f43wVPMt7dUg==
+X-Google-Smtp-Source: AGHT+IHwJkpERffkN3VWKbN/6atXOQ33nEsq/sgXRDlWA2N8ix01nl3hWBFMaZvbIXKA9vuRKkf9w2wT34E6I2Z7bFE=
+X-Received: by 2002:a5b:2ce:0:b0:dc6:c367:f0e4 with SMTP id
+ h14-20020a5b02ce000000b00dc6c367f0e4mr343701ybp.52.1708636259455; Thu, 22 Feb
+ 2024 13:10:59 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240217150228.5788-1-johan+linaro@kernel.org> <20240217150228.5788-4-johan+linaro@kernel.org>
-In-Reply-To: <20240217150228.5788-4-johan+linaro@kernel.org>
+References: <20240217150228.5788-1-johan+linaro@kernel.org> <20240217150228.5788-5-johan+linaro@kernel.org>
+In-Reply-To: <20240217150228.5788-5-johan+linaro@kernel.org>
 From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Date: Thu, 22 Feb 2024 23:10:11 +0200
-Message-ID: <CAA8EJpoPaknqPUEg8p37Nh1MV62Cr8fH+MxE-1b+T-8h3BmO9Q@mail.gmail.com>
-Subject: Re: [PATCH 3/6] soc: qcom: pmic_glink_altmode: fix drm bridge use-after-free
+Date: Thu, 22 Feb 2024 23:10:48 +0200
+Message-ID: <CAA8EJppsaMD91AOnFx8J8fHzZj_dCrOeM-HQfNukwCsrw7UYXA@mail.gmail.com>
+Subject: Re: [PATCH 4/6] soc: qcom: pmic_glink: Fix boot when QRTR=m
 To: Johan Hovold <johan+linaro@kernel.org>
 Cc: Bjorn Andersson <andersson@kernel.org>, Andrzej Hajda <andrzej.hajda@intel.com>, 
 	Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, 
@@ -73,71 +73,37 @@ Cc: Bjorn Andersson <andersson@kernel.org>, Andrzej Hajda <andrzej.hajda@intel.c
 	Abhinav Kumar <quic_abhinavk@quicinc.com>, Kuogee Hsieh <quic_khsieh@quicinc.com>, 
 	freedreno@lists.freedesktop.org, dri-devel@lists.freedesktop.org, 
 	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
-	linux-phy@lists.infradead.org, stable@vger.kernel.org
+	linux-phy@lists.infradead.org, Rob Clark <robdclark@chromium.org>, 
+	stable@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
 On Sat, 17 Feb 2024 at 17:03, Johan Hovold <johan+linaro@kernel.org> wrote:
 >
-> A recent DRM series purporting to simplify support for "transparent
-> bridges" and handling of probe deferrals ironically exposed a
-> use-after-free issue on pmic_glink_altmode probe deferral.
+> From: Rob Clark <robdclark@chromium.org>
 >
-> This has manifested itself as the display subsystem occasionally failing
-> to initialise and NULL-pointer dereferences during boot of machines like
-> the Lenovo ThinkPad X13s.
+> We need to bail out before adding/removing devices if we are going to
+> -EPROBE_DEFER. Otherwise boot can get stuck in a probe deferral loop due
+> to a long-standing issue in driver core (see fbc35b45f9f6 ("Add
+> documentation on meaning of -EPROBE_DEFER")).
 >
-> Specifically, the dp-hpd bridge is currently registered before all
-> resources have been acquired which means that it can also be
-> deregistered on probe deferrals.
+> Deregistering the altmode child device can potentially also trigger bugs
+> in the DRM bridge implementation, which does not expect bridges to go
+> away.
 >
-> In the meantime there is a race window where the new aux bridge driver
-> (or PHY driver previously) may have looked up the dp-hpd bridge and
-> stored a (non-reference-counted) pointer to the bridge which is about to
-> be deallocated.
->
-> When the display controller is later initialised, this triggers a
-> use-after-free when attaching the bridges:
->
->         dp -> aux -> dp-hpd (freed)
->
-> which may, for example, result in the freed bridge failing to attach:
->
->         [drm:drm_bridge_attach [drm]] *ERROR* failed to attach bridge /soc@0/phy@88eb000 to encoder TMDS-31: -16
->
-> or a NULL-pointer dereference:
->
->         Unable to handle kernel NULL pointer dereference at virtual address 0000000000000000
->         ...
->         Call trace:
->           drm_bridge_attach+0x70/0x1a8 [drm]
->           drm_aux_bridge_attach+0x24/0x38 [aux_bridge]
->           drm_bridge_attach+0x80/0x1a8 [drm]
->           dp_bridge_init+0xa8/0x15c [msm]
->           msm_dp_modeset_init+0x28/0xc4 [msm]
->
-> The DRM bridge implementation is clearly fragile and implicitly built on
-> the assumption that bridges may never go away. In this case, the fix is
-> to move the bridge registration in the pmic_glink_altmode driver to
-> after all resources have been looked up.
->
-> Incidentally, with the new dp-hpd bridge implementation, which registers
-> child devices, this is also a requirement due to a long-standing issue
-> in driver core that can otherwise lead to a probe deferral loop (see
-> fbc35b45f9f6 ("Add documentation on meaning of -EPROBE_DEFER")).
->
-> Fixes: 080b4e24852b ("soc: qcom: pmic_glink: Introduce altmode support")
-> Fixes: 2bcca96abfbf ("soc: qcom: pmic-glink: switch to DRM_AUX_HPD_BRIDGE")
+> Suggested-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+> Signed-off-by: Rob Clark <robdclark@chromium.org>
+> Link: https://lore.kernel.org/r/20231213210644.8702-1-robdclark@gmail.com
+> [ johan: rebase on 6.8-rc4, amend commit message and mention DRM ]
+> Fixes: 58ef4ece1e41 ("soc: qcom: pmic_glink: Introduce base PMIC GLINK driver")
 > Cc: stable@vger.kernel.org      # 6.3
 > Cc: Bjorn Andersson <andersson@kernel.org>
-> Cc: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 > Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
 > ---
->  drivers/soc/qcom/pmic_glink_altmode.c | 16 +++++++++++++---
->  1 file changed, 13 insertions(+), 3 deletions(-)
+>  drivers/soc/qcom/pmic_glink.c | 21 +++++++++++----------
+>  1 file changed, 11 insertions(+), 10 deletions(-)
 >
 
 Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-
 
 -- 
 With best wishes
