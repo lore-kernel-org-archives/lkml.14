@@ -1,97 +1,119 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2ACC515957D;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EB4A158D9C;
 	Thu, 22 Feb 2024 18:14:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708625671; cv=none; b=hSFiFrP7TCblD6x4f6rD5Ju8ZXKtZmzdB7K0AKTPsWMaFCtteLVdSMczn6s5iiVzHDaQodxEW/xQk6/Fey+UGLNdJ83qt3iBy2JVSYv9Pibu3ruf5uwTbV+Ym2V0DgfH1qA5BQoEv/iArp+BYQx4kH77nTRVYFYVk9nrcl704Rs=
+	t=1708625671; cv=none; b=SFp4e7P0HCr8p/Mftevv16lJ8Q/zf89CPl/TN+d8zyCRUn0x5dOuV5ZLrKDRNBydZvDUhAWBXX6eQ5Kwxd6dqbg7JbwrplFe9w2azMswpQ6JxxfD/AiTeI/fEICC5eEHwwG1FR29IOx0d4HQVCes9gJvnsncWQFLKp0KvmQl/uA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1708625671; c=relaxed/simple;
-	bh=kHekB7+ds8HZQmTIIDcT/8myymC9mYLsud01YExrJOg=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=kT51Pu4wmSwkiZThDmk/AsOdqES+RYOGlNG3VBhRRmD01RPqjZ8tw+fP4ueGDXaLaD3YidfZFci4q7Osq83d/5oF66wPxyhJKnU2BMBdSXpVN8NDwzi8qh2Sg5UW7sLS2iEySLB8dElWfUv4oAjO9DTBRYHsTQV+Ekkw2yn0OX4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=g3zBTaDI; arc=none smtp.client-ip=10.30.226.201
+	bh=dfE8/fN+nDw0npX+fEVeYJzEd30RZQVbS+TjqYr8HB4=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=DjT79kx7guLWPWoMecFam7Bf8SqVJQD3hzNj5xMBdNiTcbwT7FlqMpTU/l1CMEOWtd+ShoPvh3qfqtP//r4Q8dMPs6fxWpaR3PYqOHLpJt1x/9ot1P2/UU4RqVcu91oS+kTti8eBPTd/JvDO4hXLZFPJLDL1dxV/q5rAyQbJfIk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hXHfdYv+; arc=none smtp.client-ip=209.85.208.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="g3zBTaDI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6C23AC433C7;
-	Thu, 22 Feb 2024 18:14:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708625670;
-	bh=kHekB7+ds8HZQmTIIDcT/8myymC9mYLsud01YExrJOg=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=g3zBTaDItjm2XsKVKjxzwnBiuzy4wNXnVf4UYigdnUHlIBqP105EyAoYw1osMwpJM
-	 aMnUJvo0HCmK4cFpqouGt7Y8kLbOsY+EGzHu4rJO1W69bpA3nVT7ZPJkW8p/2DmLEP
-	 I6uBgaVc+ZJ3RwKSHbHsp3LLzfj1dyhWKUphOwiMb+//cxELWiEKcQ/n44G14DmEKb
-	 8fyx883D8W1OmsOof61Lda6qUjkPeQf2KnnvgI+LX2E0WcZLCc4RhaRu1uqsRBwiEn
-	 iSsaRJjCa7Bv2QUUN1U5erKp4Ara5IzUddvlwcvwior7wpnawQYD5kN0+oaQIwnPSi
-	 MDoICaAnAGe+g==
-From: Maxime Ripard <mripard@kernel.org>
-Date: Thu, 22 Feb 2024 19:13:47 +0100
-Subject: [PATCH v7 01/36] drm/tests: helpers: Include missing drm_drv
- header
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hXHfdYv+"
+Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-2d23d301452so1068901fa.1;
+        Thu, 22 Feb 2024 10:14:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1708625668; x=1709230468; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=e3HjL25KMxGa56gkLYon0vOuoqvhZeVF+dp0oSQkrO0=;
+        b=hXHfdYv+aJkVGblsQVERsYlh/Y12RJh5lSo8xtTFKqaryDvmoREn1ZPtGZzFYaBQOA
+         aeEmQI21vC1tm1tVBji9ISbRGGwibj9mFGld1pniffv1dWZBCj1GFoOz6Up8QAUURlbq
+         p8scr1jq/hQWsE7DAXmmsXssjhV157/45NWfH1fzbxusk/XaRe+EmkwKlxzajAnxFezW
+         LM+/VHPK2GmkeDl6v2Cm/3F/9popi+h15Oeh1aeJp/pE+sJqs8sh4oNHPG9NV63ejMpf
+         URQeMqRbx5qUNUJ5LiSpvFZtNkqiw3xxr9yX+qnpRnfnv5IiyhMOVwDFXxeOhhObuyOy
+         MvNw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708625668; x=1709230468;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=e3HjL25KMxGa56gkLYon0vOuoqvhZeVF+dp0oSQkrO0=;
+        b=Qtouci7NBvSnMz0446qWUUHdeIQjtKTDnyBjZHcPwJVi8eZ3xewMExjYoCMJZGS1nR
+         mgCRLd04PLoCIgZyVE8BaRhmHKYumJeLJ7+t7xa2sGbHLTOpeTcvGGLXSwQKwqP2lE2G
+         VWfZ+8yz1qc/a+ax/OJBLyabTnZbQul1b5Sf2YXI+/hTugJpMsv15Yi/ULJBuwVL/JCm
+         Y4qJ3Fmrgwglm1VzUXs9Syjz3qptNKalAj6hgFlMIlfELxqqyjiC8oMPFwiTlp4bhOPs
+         gVgyZS+d8a+P5vWs/Di1PM3Fu+fs1EX3hv28b6IwCweXBdwfmSIYycKAIYrI8FsScywH
+         6/zQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWwoQf4yeXWbd6Nb1RprZjobO9u0pK2PXp/vf+cY8jo9sJafM7DxzgaOdmtpTVb3jUTL0xCCIrS/HxbtVMQ9RT4tyweH8kBaac/MJCGckvy+9KdWmHdvlTeBlwVqAcyVXo3Bi5i7IdHAQ==
+X-Gm-Message-State: AOJu0YxpVV+iqfNWZklhYMc1r6lKxTXg7CK41lCI9pPV8+7x1M+B56z7
+	GM/freh/vdYqOCY9XU68/pd8wboSKnT4T0oKlDIeaIZ53wKv0j84
+X-Google-Smtp-Source: AGHT+IHxkZX3auLTPAfGj/5QgChR12wrYdWdu9SKHx0EmevS1A3wDKwZARalLbPB/ZrSULuvY5aXew==
+X-Received: by 2002:a2e:b169:0:b0:2d2:643b:df06 with SMTP id a9-20020a2eb169000000b002d2643bdf06mr1365251ljm.2.1708625668311;
+        Thu, 22 Feb 2024 10:14:28 -0800 (PST)
+Received: from localhost ([178.176.56.174])
+        by smtp.gmail.com with ESMTPSA id j26-20020a2e801a000000b002d10d093c4csm2381337ljg.111.2024.02.22.10.14.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 22 Feb 2024 10:14:27 -0800 (PST)
+From: Serge Semin <fancer.lancer@gmail.com>
+To: Michal Simek <michal.simek@amd.com>,
+	Alexander Stein <alexander.stein@ew.tq-group.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Tony Luck <tony.luck@intel.com>,
+	James Morse <james.morse@arm.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Robert Richter <rric@kernel.org>,
+	Manish Narani <manish.narani@xilinx.com>
+Cc: Serge Semin <fancer.lancer@gmail.com>,
+	Punnaiah Choudary Kalluri <punnaiah.choudary.kalluri@xilinx.com>,
+	Dinh Nguyen <dinguyen@kernel.org>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-edac@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Borislav Petkov <bp@suse.de>
+Subject: [PATCH v5 04/20] EDAC/synopsys: Drop erroneous ADDRMAP4.addrmap_col_b10 parse
+Date: Thu, 22 Feb 2024 21:12:49 +0300
+Message-ID: <20240222181324.28242-5-fancer.lancer@gmail.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240222181324.28242-1-fancer.lancer@gmail.com>
+References: <20240222181324.28242-1-fancer.lancer@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240222-kms-hdmi-connector-state-v7-1-8f4af575fce2@kernel.org>
-References: <20240222-kms-hdmi-connector-state-v7-0-8f4af575fce2@kernel.org>
-In-Reply-To: <20240222-kms-hdmi-connector-state-v7-0-8f4af575fce2@kernel.org>
-To: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
- Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
- Daniel Vetter <daniel@ffwll.ch>, Jonathan Corbet <corbet@lwn.net>, 
- Sandy Huang <hjc@rock-chips.com>, 
- =?utf-8?q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, 
- Chen-Yu Tsai <wens@csie.org>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
- Samuel Holland <samuel@sholland.org>
-Cc: Hans Verkuil <hverkuil@xs4all.nl>, 
- Sebastian Wick <sebastian.wick@redhat.com>, 
- =?utf-8?q?Ville_Syrj=C3=A4l=C3=A4?= <ville.syrjala@linux.intel.com>, 
- dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org, 
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-media@vger.kernel.org, linux-rockchip@lists.infradead.org, 
- linux-sunxi@lists.linux.dev, Maxime Ripard <mripard@kernel.org>
-X-Mailer: b4 0.12.3
-X-Developer-Signature: v=1; a=openpgp-sha256; l=857; i=mripard@kernel.org;
- h=from:subject:message-id; bh=kHekB7+ds8HZQmTIIDcT/8myymC9mYLsud01YExrJOg=;
- b=owGbwMvMwCX2+D1vfrpE4FHG02pJDKnX+14+OPGD65yaVsrXhVmJuUeYFHZas6m/kLWwjn/uM
- e2Q+QW2jlIWBjEuBlkxRZYYYfMlcadmve5k45sHM4eVCWQIAxenAEzE6Cojw8dX7G+ZpRLPTvky
- 72jM/sy/Xqt2bxLjSFZ5zHvgq6fpOROGf3bOQpurI/9sPsWz6HlQz6qaOm62E3fYiyTfejJ9UOr
- 2YQAA
-X-Developer-Key: i=mripard@kernel.org; a=openpgp;
- fpr=BE5675C37E818C8B5764241C254BCFC56BF6CE8D
+Content-Transfer-Encoding: 8bit
 
-We have a few functions declared in our kunit helpers header, some of
-them dereferencing the struct drm_driver.
+Currently the ADDRMAP4.addrmap_col_b10 field gets to be parsed in case of
+the LPDDR3 memory and Quarter DQ bus width mode. It's wrong since that
+field is marked as unused for that mode in all the available DW uMCTL2
+DDRC releases (up to IP-core v3.91a). Most likely the field parsing was
+added by mistake as a result of the copy-paste from the Half DQ bus width
+mode part of the same function. Even though the field is supposed to be
+always set to the UNUSED value (0x1F) drop parsing it anyway so to
+simplify the setup_column_address_map() method a tiny bit.
 
-However, we don't include the drm_drv.h header file defining that
-structure, leading to compilation errors if we don't include both
-headers.
-
-Fixes: d98780310719 ("drm/tests: helpers: Allow to pass a custom drm_driver")
-Signed-off-by: Maxime Ripard <mripard@kernel.org>
+Fixes: 1a81361f75d8 ("EDAC, synopsys: Add Error Injection support for ZynqMP DDR controller")
+Signed-off-by: Serge Semin <fancer.lancer@gmail.com>
 ---
- include/drm/drm_kunit_helpers.h | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/edac/synopsys_edac.c | 4 ----
+ 1 file changed, 4 deletions(-)
 
-diff --git a/include/drm/drm_kunit_helpers.h b/include/drm/drm_kunit_helpers.h
-index ba483c87f0e7..3ae19892229d 100644
---- a/include/drm/drm_kunit_helpers.h
-+++ b/include/drm/drm_kunit_helpers.h
-@@ -3,6 +3,8 @@
- #ifndef DRM_KUNIT_HELPERS_H_
- #define DRM_KUNIT_HELPERS_H_
- 
-+#include <drm/drm_drv.h>
-+
- #include <linux/device.h>
- 
- #include <kunit/test.h>
-
+diff --git a/drivers/edac/synopsys_edac.c b/drivers/edac/synopsys_edac.c
+index 7c57c43b4d31..bd6e52db68bc 100644
+--- a/drivers/edac/synopsys_edac.c
++++ b/drivers/edac/synopsys_edac.c
+@@ -1236,10 +1236,6 @@ static void setup_column_address_map(struct synps_edac_priv *priv, u32 *addrmap)
+ 				COL_MAX_VAL_MASK) == COL_MAX_VAL_MASK) ? 0 :
+ 				(((addrmap[3] >> 24) & COL_MAX_VAL_MASK) +
+ 				 COL_B9_BASE);
+-			priv->col_shift[13] = ((addrmap[4] &
+-				COL_MAX_VAL_MASK) == COL_MAX_VAL_MASK) ? 0 :
+-				((addrmap[4] & COL_MAX_VAL_MASK) +
+-				 COL_B10_BASE);
+ 		} else {
+ 			priv->col_shift[11] = (((addrmap[3] >> 16) &
+ 				COL_MAX_VAL_MASK) == COL_MAX_VAL_MASK) ? 0 :
 -- 
-2.43.2
+2.43.0
 
