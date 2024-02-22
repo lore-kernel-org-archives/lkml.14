@@ -1,87 +1,107 @@
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f182.google.com (mail-yw1-f182.google.com [209.85.128.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C210374FC
-	for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 09:19:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA50536B04;
+	Thu, 22 Feb 2024 09:20:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708593604; cv=none; b=AURlbk1DMJE+xqMzJhCdLe1CQE7DrLf3G4yCafDl8XSsGU64vwElWqGFKqLAXDE46s70mV+/vLFx39UyzTVLFRnV/WJMJ72CX4+ed7oZ3Ce6PXYLkxjfZvOqnh/bETIX7RwTGHKmaRN/fylncXfrkfCNo1fAyv6ja6UL+lh0Zik=
+	t=1708593638; cv=none; b=UosVDz0ucGRIuIAM1uqOveXB+tOQvK8CqKhOgRS8ze0fFmMCkZxysXBFnqTUyBbVT42rA+If6ur+4c+uTlSMhUvKuMJglh0Jn2CcOMJ8epz//xW9gjYStU1GgPK03FdksnaKWqlY1KgKoRyOiCDYCYMY15rApQRPY8PdGAChKg4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708593604; c=relaxed/simple;
-	bh=ANkNqwXsmtPuOzbLx+H6ZXxfhGnqPbfCnaTERUYV3WA=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Hj7m9GoF6l5TiiIO6gmqqQiD2a1XbM+/lJCAqZOurQ8wJjBTeHCrwgc/PWKznFvBco4UndY6z3OCfz40JLIT7F+P9FzHr7FFDOyqaD9ieVYjH1oHf1ZNbFfQSVHLiF3a52vqHjorcNa48haHvBMSoRuOuImSK+o5VoGbzwowUCM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: 7c6705b100a440f8867d2993efaf481b-20240222
-X-CID-O-RULE: Release_Ham
-X-CID-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.35,REQID:96dc2a91-b9c3-43bb-80a7-42cdec47de1a,IP:25,
-	URL:0,TC:0,Content:0,EDM:-25,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,AC
-	TION:release,TS:-15
-X-CID-INFO: VERSION:1.1.35,REQID:96dc2a91-b9c3-43bb-80a7-42cdec47de1a,IP:25,UR
-	L:0,TC:0,Content:0,EDM:-25,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACTI
-	ON:release,TS:-15
-X-CID-META: VersionHash:5d391d7,CLOUDID:7fe9968f-e2c0-40b0-a8fe-7c7e47299109,B
-	ulkID:2402221719539PY4MH4A,BulkQuantity:0,Recheck:0,SF:24|17|19|44|66|102,
-	TC:nil,Content:0,EDM:1,IP:-2,URL:0,File:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,
-	OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0
-X-CID-BVR: 0,NGT
-X-CID-BAS: 0,NGT,0,_
-X-CID-FACTOR: TF_CID_SPAM_FSD,TF_CID_SPAM_FSI,TF_CID_SPAM_SNR,TF_CID_SPAM_FAS
-X-UUID: 7c6705b100a440f8867d2993efaf481b-20240222
-X-User: gehao@kylinos.cn
-Received: from localhost.localdomain [(116.128.244.171)] by mailgw
-	(envelope-from <gehao@kylinos.cn>)
-	(Generic MTA)
-	with ESMTP id 2074393446; Thu, 22 Feb 2024 17:19:50 +0800
-From: Hao Ge <gehao@kylinos.cn>
-To: akpm@linux-foundation.org
-Cc: linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	gehao618@163.com,
-	Hao Ge <gehao@kylinos.cn>
-Subject: [PATCH] mm/page_alloc: Make check_new_page return bool
-Date: Thu, 22 Feb 2024 17:19:32 +0800
-Message-Id: <20240222091932.54799-1-gehao@kylinos.cn>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1708593638; c=relaxed/simple;
+	bh=IMQw77ccF4g2DANOObaMDODO48zmcN77rc7eCX8aoQc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=EEb8zLmR1x6+DhkywaBrTByoOM18HFkmouakhParHdiKA5H33Ma334DS0W9QFxwB7qN+XMS1k2dq8LH4xiLc9wEUj6ETZdVHyldwaSbvzSjlJhRYLidAmme5B3Wzf0ayaDjKPMxPl3msllHqeNQxNFOzsYOuGN5iBNzAcL2IdhE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-yw1-f182.google.com with SMTP id 00721157ae682-608a1deb6d4so1626067b3.0;
+        Thu, 22 Feb 2024 01:20:36 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708593635; x=1709198435;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=O3B7i94vDchiq91cc9YFdV+tSxnmxn5ulFc88M4Jfpc=;
+        b=HHN+QFeLlaWa/lvmdea7YqJk1upRCwYGOVBQYnZD/4OGa6Lx5PaHNApMsaW2iXGX7z
+         uFn1zppWWXU7X5l6GzhaapHG5h8R8xct7KUoAAGdVnH970iIEQMCUU5bXMcytCzD5a+f
+         Ey1wVFJg1tcOnM9iwRrnKblSRBYmANl17GHhJ5p76dL0FjeaZ5aRoQOTBYsr0gmD3rr4
+         4lPYveKAqddaiogiMma1Bko41WyDB+7TkgX3fYi/KVBemGVU3QSDozXAQJtdNBX3j5E4
+         ivbZdoTokIhS7XBXZRUdCR+SE4PA5fdmVR6qkxFZjNXm6u1jSjzzkFEiCDZo3882dTvV
+         OWSA==
+X-Forwarded-Encrypted: i=1; AJvYcCWpvLYIxRKixGjBslMP21WIAtaQ3RWhzibi/EE0D62kIKYn3oU+udJdnOrqpPBCFfZm6eeDFKWvo2Em5Oxg1O0FzMbLfoPDEuFoW6G16oHScvNc+49xFQ/BnPZaluJx5F1/zN7q0nLq
+X-Gm-Message-State: AOJu0YxmPX+WyUyAvpU8P2RrNqMbsr3dPIx1t/0d14Orbk3USBmxEpsx
+	jy1+vc45QZaFvR4oscwMWt55+woa5t7+FXzfoJqYpsMr89FBwUA1QOXdr6N0+TE=
+X-Google-Smtp-Source: AGHT+IH/uUJzII/+d/aL7TBg2PGOfhwznjQclPlTvce4hFi2s3uMnNzT5PjU1NqBQ/UYFvzkxq7c2g==
+X-Received: by 2002:a81:9945:0:b0:608:bcc:3a1e with SMTP id q66-20020a819945000000b006080bcc3a1emr14717734ywg.19.1708593635655;
+        Thu, 22 Feb 2024 01:20:35 -0800 (PST)
+Received: from mail-yb1-f173.google.com (mail-yb1-f173.google.com. [209.85.219.173])
+        by smtp.gmail.com with ESMTPSA id o184-20020a8173c1000000b0060410ee94a7sm2943215ywc.143.2024.02.22.01.20.35
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 22 Feb 2024 01:20:35 -0800 (PST)
+Received: by mail-yb1-f173.google.com with SMTP id 3f1490d57ef6-dcc73148611so8621686276.3;
+        Thu, 22 Feb 2024 01:20:35 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCVZHpJCmZzQJpXQtKjMgBJKtY13DKMhBWMRhOFbZFmIW2RIZH3bP85hucSZ/z2fLcoPkYNYxmvfbI/eEeK+w+3Fxv0zY5w2tqkKhRIbJ4fDDGW5SOpf9nTiFldAhN6fxHeGJjNzWqX1
+X-Received: by 2002:a05:6902:310:b0:dc7:483d:5903 with SMTP id
+ b16-20020a056902031000b00dc7483d5903mr1918977ybs.17.1708593635269; Thu, 22
+ Feb 2024 01:20:35 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240221-fix-sh-mmcif-v2-0-5e521eb25ae4@linaro.org> <20240221-fix-sh-mmcif-v2-2-5e521eb25ae4@linaro.org>
+In-Reply-To: <20240221-fix-sh-mmcif-v2-2-5e521eb25ae4@linaro.org>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Thu, 22 Feb 2024 10:20:22 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdW=PogDu8RAKvBw6wY280zg53-aNypdmBQDgbanOXQFSA@mail.gmail.com>
+Message-ID: <CAMuHMdW=PogDu8RAKvBw6wY280zg53-aNypdmBQDgbanOXQFSA@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] mmc: sh_mmcif: Advance sg_miter before reading blocks
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Ulf Hansson <ulf.hansson@linaro.org>, linux-mmc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Make check_new_page return bool like check_new_pages
+On Wed, Feb 21, 2024 at 10:23=E2=80=AFPM Linus Walleij <linus.walleij@linar=
+o.org> wrote:
+> The introduction of sg_miter was a bit sloppy as it didn't
+> exactly mimic the semantics of the old code on multiblock reads
+> and writes: these like you to:
+>
+> - Advance to the first sglist entry *before* starting to read
+>   any blocks from the card.
+>
+> - Advance and check availability of the next entry *right after*
+>   processing one block.
+>
+> Not checking if we have more sglist entries right after
+> reading a block will lead to this not being checked until we
+> return to the callback to read out more blocks, i.e. until the
+> next interrupt arrives. Since the last block is the last one
+> (no more data will arrive) there will not be a next interrupt,
+> and we will be waiting forever resulting in a timeout for
+> command 18 when reading multiple blocks.
+>
+> The same bug was fixed also in the writing of multiple blocks.
+>
+> Reported-by: Geert Uytterhoeven <geert@linux-m68k.org>
+> Fixes: 27b57277d9ba ("mmc: sh_mmcif: Use sg_miter for PIO")
+> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 
-Signed-off-by: Hao Ge <gehao@kylinos.cn>
----
- mm/page_alloc.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+Thanks, eMMC works again (tested on APE6EVM and KZM9-GT-Dual).
+Tested-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-index 150d4f23b010..c7a0bc546d2c 100644
---- a/mm/page_alloc.c
-+++ b/mm/page_alloc.c
-@@ -1422,14 +1422,14 @@ static void check_new_page_bad(struct page *page)
- /*
-  * This page is about to be returned from the page allocator
-  */
--static int check_new_page(struct page *page)
-+static bool check_new_page(struct page *page)
- {
- 	if (likely(page_expected_state(page,
- 				PAGE_FLAGS_CHECK_AT_PREP|__PG_HWPOISON)))
--		return 0;
-+		return false;
- 
- 	check_new_page_bad(page);
--	return 1;
-+	return true;
- }
- 
- static inline bool check_new_pages(struct page *page, unsigned int order)
--- 
-2.25.1
+Gr{oetje,eeting}s,
 
+                        Geert
+
+--=20
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
+
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
