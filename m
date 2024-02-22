@@ -1,117 +1,141 @@
-Received: from mail-vk1-f171.google.com (mail-vk1-f171.google.com [209.85.221.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-185.mta0.migadu.com (out-185.mta0.migadu.com [91.218.175.185])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E34341760
-	for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 11:53:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5062346558
+	for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 11:53:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.185
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708602802; cv=none; b=CBmmbnB7nPu6gUR0n9r4OKpQATZTHXZQKcUalD2wt+0khKZ+qUu1vhQXFM42GyxGPfvSV5R9T8UiBjPhakZ+iLOTrgOsGw+OuXOLzy4aH3ZD27iNPknhLLj0+ZgruPNpsoy97D18w0iIeTQX1E9m1QbtQn92SkNI99FPEtEUD90=
+	t=1708602831; cv=none; b=B66ft8ErgDaj77Ac9oGkvg/iKW7Qdd4s7xFwg/EkrC+hqOGDKftl4ZJeea2V4ea3YY5YXGi2Hgy2RtkHoKPzMsubswZcmaikCVrhmuvtt1XQKCcwXqaaZAz1UsIDYXnPH7WUPU1wcAGxZJWl87jzEtmNKKRUHDSfFGxt3YMXNN0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708602802; c=relaxed/simple;
-	bh=DqtCVXd3K6o8XwOjhMFp+W2TlXwJY9ec3AL5OMYc8p8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=nHJsXnRoIfkCGUTztoUdaI0ibqBlUvqLb6okqni2TGKbDOoodAbRtzsrDeiKUc6+9GwTpm7729Jc1B+0X2pwZhlRwNUzaoDlehyv6WBTxPSKdlrbyCM6wMebEX1tRobwqR75JAQYaDyRJyfvfKrA1WxJ8eTi2dDgpIpW7ziaFtY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=PWd/6cen; arc=none smtp.client-ip=209.85.221.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1708602831; c=relaxed/simple;
+	bh=/GZnl1bApZlEPKB/0OjNOdfWl1yXpoyVVjwgwuxpGQ4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=M+hXVyx+tW3Q0JFZGrtaLXhwzGpje3jfje3pkeuhUtDvMlO5SerWynHYl9INBUZfxLUtkFivyZx3uOUp+Fo9733pnpLX6yknCBlregXygz53bCoYo2LFAI9NVKS9KBRAwT/oFEFAHKH1mDw4eEc9kDRuiK0WA4Pa4EMyB2p6I/M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=drqElOnw; arc=none smtp.client-ip=91.218.175.185
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PWd/6cen"
-Received: by mail-vk1-f171.google.com with SMTP id 71dfb90a1353d-4c78b074fe0so523430e0c.3
-        for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 03:53:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1708602799; x=1709207599; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=8U6oZWtdBlqxrlpBkHzojkkfHCgCtDDcP83kB8UZ02g=;
-        b=PWd/6cen62NDE973eKHBGeOKMRkJdhZybl/HlkTxtdWu+9d9i6gU0p4E1uOJcl18Cr
-         XrqBtTyHNCxXcaFZf2uwGpo73aZoLsqXKYSoi7p0cf3KLKw5dG48RMC9b0jbVfDjuQLa
-         Ifbt2uFD2WbqMnR9IGAJjsXsQwgEuPL3I7Xr5gMMBsG5scHl5z0VQ8EvuGfsGRkHvP7t
-         Rjb853HNrGBxx84bMd1nh2wNe7koTS90y14Y3RRopnlPqSxObuvUWnOOsYRszlIUQ1JD
-         n1kowBKRHwfdv3kDE1pOwh7o9Y1qMgL8TqYsl1IpTb6O4a6IdJU8I3PeBkdztqW/tDt+
-         aBHQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708602799; x=1709207599;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=8U6oZWtdBlqxrlpBkHzojkkfHCgCtDDcP83kB8UZ02g=;
-        b=hniu/CSODTShhrAHTPXdh92hE8BQw6onkfmxODkf6TIDNp6kZKORt4DGC4xJlN6iEq
-         LdCW4kJNEwpIUaaxlw7Jza9HFgFsDT8sk2Hnb2NkMCsW/+PyN71C3YSbTwX9RgbMultp
-         6eTQSoiis3wabckrFFnJlWC/lZRKhqpRpad71U/ZzUEVVwIeaFK4hPur5pCKuaCwyeQB
-         G8io1TRyWWjmEhMJGyxZ03+Ra2syDfBv6cuZ/HfiMunM8ycLlXycP4LvLY10irGe9pr8
-         //kVDg3A7dNrB57BCFD2K0UN3lQ8aOjNPIDmouug6tVgwp4Rb5l5EZhfQqNExaN7QLu+
-         b2HQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV6KFFycP/pN2vW7t9tOiQpihLDWSpofFEcKEzmNinM+5kayXEqIV3vVnSMW8sZ5pxFN7RTXVjudBU5Pz7xMkTODg4uBljLD36bIf1Q
-X-Gm-Message-State: AOJu0YyMqntmVMFCG1wLVrGHWnRUQejSKh1Js0WJssnBSYh9li9vtpNP
-	K+vHTyRUr4lyIm/lPWhJqqC0wKcoyTw+gZQlneeWXcJTaGa/2hVxtLRMmN3S7/QP/wyAUhOAmEC
-	6FRfeBayAVVTYU63x5ymzr5cdLrjiAVCu/hGDjw==
-X-Google-Smtp-Source: AGHT+IGP3nsKeDdSkq6Krv45GcMwiPqqieAaRTPq1e3wSY46XuEvaAAzEwmjT1pNKM+4zywJhjwm6P2I+8S3jTvvYtk=
-X-Received: by 2002:a1f:c742:0:b0:4cd:20ea:35aa with SMTP id
- x63-20020a1fc742000000b004cd20ea35aamr9444912vkf.8.1708602799232; Thu, 22 Feb
- 2024 03:53:19 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="drqElOnw"
+Date: Thu, 22 Feb 2024 06:53:44 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1708602827;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=1oV0lp1K4Ub7tESvDeFqVDjAAwFBAw9Dokd5x1fT4D0=;
+	b=drqElOnwL3FwHj1AMzKxLETAoI5EamXZIjhfyV0ps8yqhsMnbw8hmnguls1XP3MXWFfwmP
+	Hs/PZOSzbbZtnYkLWR4clg1W6XFaNomccWlPYLiIDu4gIbcbGQ+lA8+YclNzl4JrC9QnZU
+	QPvkzbsPkVgeL1M06zYMpKhmhk8JnHg=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Kent Overstreet <kent.overstreet@linux.dev>
+To: James Bottomley <James.Bottomley@hansenpartnership.com>
+Cc: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	lsf-pc@lists.linux-foundation.org, Christian Brauner <christian@brauner.io>, 
+	=?utf-8?B?U3TDqXBoYW5l?= Graber <stgraber@stgraber.org>
+Subject: Re: [LSF TOPIC] beyond uidmapping, & towards a better security model
+Message-ID: <lgsh46klnmhaqsgzguoces452gbuzpzpg6jqr3cndblhpq34ez@jm2kobculj2p>
+References: <tixdzlcmitz2kvyamswcpnydeypunkify5aifsmfihpecvat7d@pmgcepiilpi6>
+ <141b4c7ecda2a8c064586d064b8d1476d8de3617.camel@HansenPartnership.com>
+ <qlmv2hjwzgnkmtvjpyn6zdnnmja3a35tx4nh6ldl23tkzh5reb@r3dseusgs3x6>
+ <bfbb1e9b521811b234f4f603c2616a9840da9ece.camel@HansenPartnership.com>
+ <4ub23tni5bwxthqzsn2uvfs5hwr6gd3oitbckd5xwxdbgci4lj@xddn3dh6y23x>
+ <c0d77327b15e84df19a019300347063a0b74e1a5.camel@HansenPartnership.com>
+ <giojfztuhxc5ilv24htcyhlerc6otajpa32cjtze4gghevg2jr@vwykmx7526ae>
+ <67a0b68946d39928502ce2d3e3ad834aa8d73d02.camel@HansenPartnership.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240221125954.917878865@linuxfoundation.org>
-In-Reply-To: <20240221125954.917878865@linuxfoundation.org>
-From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Thu, 22 Feb 2024 17:23:07 +0530
-Message-ID: <CA+G9fYvyOG+U1z351dafUXuZMoF1rgpGsvTHTFECB==2VZVPpQ@mail.gmail.com>
-Subject: Re: [PATCH 5.10 000/379] 5.10.210-rc1 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: stable@vger.kernel.org, patches@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org, 
-	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org, 
-	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de, 
-	jonathanh@nvidia.com, f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, 
-	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org, allen.lkml@gmail.com, 
-	Beyond <Wang.Beyond@amd.com>, =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
-	Alex Deucher <alexander.deucher@amd.com>, Sasha Levin <sashal@kernel.org>, 
-	Felix Kuehling <Felix.Kuehling@amd.com>, 
-	Srinivasan Shanmugam <srinivasan.shanmugam@amd.com>, 
-	Mario Limonciello <mario.limonciello@amd.com>, Arnd Bergmann <arnd@arndb.de>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <67a0b68946d39928502ce2d3e3ad834aa8d73d02.camel@HansenPartnership.com>
+X-Migadu-Flow: FLOW_OUT
 
-On Wed, 21 Feb 2024 at 19:25, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> This is the start of the stable review cycle for the 5.10.210 release.
-> There are 379 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Fri, 23 Feb 2024 12:59:02 +0000.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.10.210-rc1.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.10.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
+On Thu, Feb 22, 2024 at 09:45:32AM +0100, James Bottomley wrote:
+> On Wed, 2024-02-21 at 22:37 -0500, Kent Overstreet wrote:
+> > On Thu, Feb 22, 2024 at 01:33:14AM +0100, James Bottomley wrote:
+> > > On Wed, 2024-02-21 at 18:01 -0500, Kent Overstreet wrote:
+> > > > Strings are just arrays of integers, and anyways this stuff would
+> > > > be within helpers.
+> > > 
+> > > Length limits and comparisons are the problem
+> > 
+> > We'd be using qstrs for this, not c strings, so they really are
+> > equivalent to arrays for this purpose.
+> > 
+> > > 
+> > > > 
+> > > > But what you're not seeing is the beauty and simplicity of
+> > > > killing
+> > > > the mapping layer.
+> > > 
+> > > Well, that's the problem: you don't for certain use cases.  That's
+> > > what I've been trying to explain.  For the fully unprivileged use
+> > > case, sure, it all works (as does the upper 32 bits proposal or the
+> > > integer array ... equally well.
+> > > 
+> > > Once you're representing to the userns contained entity they have a
+> > > privileged admin that can write to the fsimage as an apparently
+> > > privileged user then the problems begin.
+> > 
+> > In what sense?
+> > 
+> > If they're in a userns and all their mounts are username mapped,
+> > that's completely fine from a userns POV; they can put a suid root
+> > binary into the fs image but when they mount that suid root will be
+> > suid to the root user of their userns.
+> 
+> if userns root can alter a suid root binary that's bind mounted from
+> the root namespace then that's a security violation because a user in
+> the root ns could use the altered binary to do a privilege escalation
+> attack.
 
-The i386 allmodconfig builds failed on stable-rc 5.15, 5.10 and 5.4.
+That's a completely different situation; now you're talking about suid
+root, where root is _outside_ the userns, and if you're playing tricks
+to make something from a user from outside the ns that is not
+representable in the ns visible in that ns, and now you're making that
+something suid, of course you're going to have trouble defining self
+consistent behaviour.
 
-Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+So I'm not sure what point you were trying to make, but it does
+illustrate some key points.
 
-ERROR: modpost: "__udivdi3" [drivers/gpu/drm/amd/amdgpu/amdgpu.ko] undefined!
-make[2]: *** [/builds/linux/scripts/Makefile.modpost:133:
-modules-only.symvers] Error 1
+Any time you're creating a system where different agents can have
+different but overlapping views of the world, you're going to have some
+really fun corner cases and it's going to be hard to reason about.
 
-Steps to reproduce:
- tuxmake --runtime podman --target-arch i386 --toolchain gcc-12
---kconfig allmodconfig
+(if you buy me a really nice scotch somitem I'll tell you about fsck for
+a snapshotting filesystem, where for performance reasons fsck has to
+process keys from all snapshots simultaneously).
 
-Links:
- - https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-5.15.y/build/v5.15.148-477-gae70058cf980/testrun/22797307/suite/build/test/gcc-12-allmodconfig/log
- - https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-5.10.y/build/v5.10.209-380-gd2880f0e0d6f/testrun/22797354/suite/build/test/gcc-12-allmodconfig/details/
+So such things are best avoided, if we can. For another example, see if
+you know anyone who's had to track down what's keeping a mount alive,
+then the something was a systemd service running in a private namespace.
 
---
-Linaro LKFT
-https://lkft.linaro.org
+Systems where we can recursively enumerate the world are much nicer to
+work with.
+
+Now, back to user namespaces: they shouldn't exist.
+
+And they wouldn't exist, if usernames had started out as a recursive
+structure instead of a flat namespace. But since they started out as a
+flat namespace, and only _later_ we realized they actually needed to be
+a tree structure - but we have to preserve for compatibility the _view_
+of the world as a flat namespace! - that's why we have user namespaces.
+
+And you get all sorts of super weird corner cases like you just
+described.
+
+So let's take a step back from all that, and instead of reasoning from
+"what weird corner cases from our current system do we have to support"
+- instead, just seem what we can do with a cleaner model and get that
+properly specified. A good model helps you make sense of the world even
+in crazy situations.
+
+With that in mind, back to your bind mount thing: if you chroot(), and
+you try to access a symlink that points outside the chroot, what
+happens?
