@@ -1,120 +1,124 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46D52134CFC
-	for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 14:04:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E7791468FA;
+	Thu, 22 Feb 2024 14:04:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708610678; cv=none; b=ACX7E5S769tXsCKKueHUyPv0A0GwkuX+WzUnx2N75SYkCfMhB1xaSGzu2LJJOR//2m+OU33yC+hjUdtTPv1pRsNS8y/bMex4WnVJi/zsZHDxHzNWvh3X8J9uEjPPu8VWL3gGybuF65UGQ20Dfaj/EiDYxUbydzvY+P42O8wO/lM=
+	t=1708610683; cv=none; b=kNDPFcZHzW7zvdiGnWZtT0qNrO4gf2WcZ06z75KpZAqihFWH4qLeEeZxh/Xii1k2vBDgEuKuhhcJ4FoGtJWtcFgCT3/dSqeGeMoa6HX2FHI5jXJ5Jp9iKD/2P3NMtDDkwJYAFuDhXD2bRc5MAI2wxYZvMBt7WNizMtAVWibrd9Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708610678; c=relaxed/simple;
-	bh=E75gomph1S/AxYryUcEMcOovIP7yR0F0aFziV9Jmk+c=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pCzN1L8blyzkY/2iy9YH+8Wk8G5soHdo2E9mHvPNgEEvRh6IaI8u38XUZVouBbBvOQNzZUyOSVs8UiBhEZuL9wvM3JB7LqOxtw6JL0Lf5jukIE72YwZTGGicm+mwRiA0Eu2aozAqLkJ8FFZMhAMppU06p65o8M2w1docvnyY+8I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UI2dxVYn; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1708610683; c=relaxed/simple;
+	bh=1D90OTPu4zbi0aXCq6zV1eVFGZJcyQxAFGiZtTpgXYs=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=h5/x/6+YZGkaD+tjdZqKn/I72RxB0k3fjN8tbejAuGtP7NnWB5Yt5mOtGNeNZe3f5BsE/AD52OpdA8wOC8SvB5GmzQGuq177ZpgPOPZdTFkB8FLiSG9rtTPaKo8UIY4C0l4utPfgNHKbEP8VjN5AOMRRxWTTTX9zG4Tua2jlQHE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TySaKi8K; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UI2dxVYn"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1708610677; x=1740146677;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=E75gomph1S/AxYryUcEMcOovIP7yR0F0aFziV9Jmk+c=;
-  b=UI2dxVYnk4gaIKmiL5ioesUckdHm3EbegcuLjCOSJAOMCUB3Qo+L4Inc
-   V/+CSWlWRaZC9RUEhc9revGXd9v7kWBRZaUEiMfTntsv9cXAzbQUTbqwA
-   kDGYcYmkS+DPIeLc2d8KWaI7h3JDGm3B63PubYSYpMZtESwq3QjLvhaqd
-   wUvb9zzRGJGvrP4ztWvlEc+DnRghw2/X0w+ffEY3rLWV8LSW6dCfJ7HAO
-   qzVRRcMHRq/7PC54dE+fzJ4ix109o/gvzPIohWZNcvCQBGUrPPbWvZTZL
-   HMc/IhF0DvPKfrmiI/8WAKDwY94vB6Vfy/NBlw4ETPCK54qZmkQqUifJu
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10991"; a="6613715"
-X-IronPort-AV: E=Sophos;i="6.06,177,1705392000"; 
-   d="scan'208";a="6613715"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Feb 2024 06:04:23 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10991"; a="936853749"
-X-IronPort-AV: E=Sophos;i="6.06,177,1705392000"; 
-   d="scan'208";a="936853749"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga001.fm.intel.com with ESMTP; 22 Feb 2024 06:04:18 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1000)
-	id 353C1458; Thu, 22 Feb 2024 16:04:17 +0200 (EET)
-Date: Thu, 22 Feb 2024 16:04:17 +0200
-From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-To: Baoquan He <bhe@redhat.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
-	Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	"Rafael J. Wysocki" <rafael@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, 
-	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>, Elena Reshetova <elena.reshetova@intel.com>, 
-	Jun Nakajima <jun.nakajima@intel.com>, Rick Edgecombe <rick.p.edgecombe@intel.com>, 
-	Tom Lendacky <thomas.lendacky@amd.com>, "Kalra, Ashish" <ashish.kalra@amd.com>, 
-	Sean Christopherson <seanjc@google.com>, "Huang, Kai" <kai.huang@intel.com>, kexec@lists.infradead.org, 
-	linux-coco@lists.linux.dev, linux-kernel@vger.kernel.org
-Subject: Re: [PATCHv7 07/16] x86/mm: Return correct level from
- lookup_address() if pte is none
-Message-ID: <k33hshbceai3tb7qe6id6kx3iqf7kjhlyvdijvmuf6knv32krs@kwo3m7dkn5sm>
-References: <20240212104448.2589568-1-kirill.shutemov@linux.intel.com>
- <20240212104448.2589568-8-kirill.shutemov@linux.intel.com>
- <ZdLjQCaxhOnR+GzX@MiWiFi-R3L-srv>
- <zhbhgq27kjrhkdgbxomjykjez2i4hckguvmxyptvfvoftue5ca@zowl5qbl6psl>
- <ZdR+JzfHjES3zytp@MiWiFi-R3L-srv>
- <ic4v3q4muffjq2jhlkk3k4lg5xxvjwlw22hctzubl5573euzu2@er3m7ztog2a6>
- <ZdVh6efExdt687YY@MiWiFi-R3L-srv>
- <p34d7e5r3gkcj2xl5jycyldvpkmcllmhzioaqcmseeugl3eq73@plk43dd4luzu>
- <ZdcplT8Xb5eevu/9@MiWiFi-R3L-srv>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TySaKi8K"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 55D5EC433F1;
+	Thu, 22 Feb 2024 14:04:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1708610682;
+	bh=1D90OTPu4zbi0aXCq6zV1eVFGZJcyQxAFGiZtTpgXYs=;
+	h=From:To:Cc:Subject:Date:From;
+	b=TySaKi8Kg28e8vkLld/dJCh4yGaJgQVGxFP4nqUT+y7Zb9s63P4GIyQD/epU9A35u
+	 FV7tzwLO0xRmcZ5j3PVgxp+Dm08eGrWwwL861ER+W8RjPhD66rH9sQRtS6J3hXqEjH
+	 V3zYjMqzpOq7qe+Z0SCL/DwlNTEVveIZaAqe0aFQEmLck5y8tw+8mS7GdYHztT7xu6
+	 LbXmezJ/S+kmUzJ9DLQROvG10ujGBh5SHasl2sa48EbsQCjZbooUA7Maxh0jEdDUhP
+	 U09TeCKWsVablS1xDY6f6dRFfQDFPtrJGcMT1lyF7g+HukuWvw540pQ53Yw66CO72O
+	 iuXd0IqFTDHpw==
+From: Christian Brauner <brauner@kernel.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Christian Brauner <brauner@kernel.org>,
+	linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [GIT PULL] vfs fixes
+Date: Thu, 22 Feb 2024 15:03:24 +0100
+Message-ID: <20240222-vfs-fixes-90812d8f4995@brauner>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZdcplT8Xb5eevu/9@MiWiFi-R3L-srv>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2746; i=brauner@kernel.org; h=from:subject:message-id; bh=1D90OTPu4zbi0aXCq6zV1eVFGZJcyQxAFGiZtTpgXYs=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMaReD8mNrY28LOPLa3dge91vu/STNyecELUvqPb9Xfbjn 1rARsnUjlIWBjEuBlkxRRaHdpNwueU8FZuNMjVg5rAygQxh4OIUgIlo6DIyvNisovBbffHLd7ZH 958+mp2UKhP0I/v8R3HmXcwLb2yM0GT4p5HnryZTqMBdI3wp6Uvhr9Yn06snxRyJ0PwonB6tOlm MBwA=
+X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
+Content-Transfer-Encoding: 8bit
 
-On Thu, Feb 22, 2024 at 07:01:41PM +0800, Baoquan He wrote:
-> On 02/21/24 at 04:15pm, Kirill A. Shutemov wrote:
-> > On Wed, Feb 21, 2024 at 10:37:29AM +0800, Baoquan He wrote:
-> > > > diff --git a/arch/x86/mm/pat/set_memory.c b/arch/x86/mm/pat/set_memory.c
-> > > > index 3612e3167147..425ff6e192e6 100644
-> > > > --- a/arch/x86/mm/pat/set_memory.c
-> > > > +++ b/arch/x86/mm/pat/set_memory.c
-> > > > @@ -657,7 +657,8 @@ static inline pgprot_t verify_rwx(pgprot_t old, pgprot_t new, unsigned long star
-> > > >  
-> > > >  /*
-> > > >   * Lookup the page table entry for a virtual address in a specific pgd.
-> > > > - * Return a pointer to the entry and the level of the mapping.
-> > > > + * Return a pointer to the entry and the level of the mapping (or NULL if
-> > > > + * the entry is none) and level of the entry.
-> > >                        ^ this right parenthesis may need be moved to the end.
-> > > 
-> > > 
-> > > =======
-> > >  * Return a pointer to the entry and the level of the mapping (or NULL if
-> > >  * the entry is none and level of the entry).
-> > > =======
-> > 
-> > Emm.. I like my variant more. We return level regardless if the entry none
-> > or not. I don't see a reason to repeat it twice.
-> 
-> 
->  * Lookup the page table entry for a virtual address in a specific pgd.
->  * Return a pointer to the entry and the level of the mapping (or NULL if
->  * the entry is none) and level of the entry.
-> 
-> Hmm, I am confused. Why do we need to stress the level of the mapping
-> and level of the entry? Wondering what is the difference. I must miss
-> something.
+Hey Linus,
 
-My bad. This is way I meant to write:
+/* Summary */
+This contains a few fixes:
 
- * Lookup the page table entry for a virtual address in a specific pgd.
- * Return a pointer to the entry (or NULL if the entry does not exist) and
- * the level of the entry.
+* Fix a memory leak in cachefiles.
+* Restrict aio cancellations to I/O submitted through the aio interfaces as
+  this is otherwise causing issues for I/O submitted via io_uring.
+* Increase buffer for afs volume status to avoid overflow.
+* Fix a missing zero-length check in unbuffered writes in the netfs library.
+  If generic_write_checks() returns zero make netfs_unbuffered_write_iter()
+  return right away.
+* Prevent a leak in i_dio_count caused by netfs_begin_read() operaing pas
+  i_size. It will return early and leave i_dio_count incremented.
+* Account for ipv4 addresses as well ass ipv6 addresses when processing
+  incoming callbacks in afs.
 
--- 
-  Kiryl Shutsemau / Kirill A. Shutemov
+/* Testing */
+clang: Debian clang version 16.0.6 (19)
+gcc: (Debian 13.2.0-7) 13.2.0
+
+All patches are based on v6.8-rc2 and have been sitting in linux-next.
+No build failures or warnings were observed.
+
+/* Conflicts */
+At the time of creating this PR no merge conflicts were reported from
+linux-next and no merge conflicts showed up doing a test-merge with
+current mainline.
+
+The following changes since commit 41bccc98fb7931d63d03f326a746ac4d429c1dd3:
+
+  Linux 6.8-rc2 (2024-01-28 17:01:12 -0800)
+
+are available in the Git repository at:
+
+  git@gitolite.kernel.org:pub/scm/linux/kernel/git/vfs/vfs tags/vfs-6.8-rc6.fixes
+
+for you to fetch changes up to b820de741ae48ccf50dd95e297889c286ff4f760:
+
+  fs/aio: Restrict kiocb_set_cancel_fn() to I/O submitted via libaio (2024-02-21 16:31:49 +0100)
+
+Please consider pulling these changes from the signed vfs-6.8-rc6.fixes tag.
+
+Thanks!
+Christian
+
+----------------------------------------------------------------
+vfs-6.8-rc6.fixes
+
+----------------------------------------------------------------
+Baokun Li (1):
+      cachefiles: fix memory leak in cachefiles_add_cache()
+
+Bart Van Assche (1):
+      fs/aio: Restrict kiocb_set_cancel_fn() to I/O submitted via libaio
+
+Daniil Dulov (1):
+      afs: Increase buffer size in afs_update_volume_status()
+
+David Howells (1):
+      netfs: Fix missing zero-length check in unbuffered write
+
+Marc Dionne (2):
+      netfs: Fix i_dio_count leak on DIO read past i_size
+      afs: Fix ignored callbacks over ipv4
+
+ fs/afs/internal.h         |  6 ++----
+ fs/afs/main.c             |  3 +--
+ fs/afs/server.c           | 14 +++++---------
+ fs/afs/volume.c           |  4 ++--
+ fs/aio.c                  |  9 ++++++++-
+ fs/cachefiles/cache.c     |  2 ++
+ fs/cachefiles/daemon.c    |  1 +
+ fs/netfs/buffered_write.c |  3 +++
+ fs/netfs/direct_write.c   |  5 ++++-
+ fs/netfs/io.c             |  2 ++
+ include/linux/fs.h        |  2 ++
+ 11 files changed, 32 insertions(+), 19 deletions(-)
