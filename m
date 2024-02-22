@@ -1,224 +1,140 @@
-Received: from out-178.mta0.migadu.com (out-178.mta0.migadu.com [91.218.175.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1257537711
-	for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 08:56:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18EC43717A
+	for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 08:56:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708592223; cv=none; b=Iv+/S0SWL1TWB/laVlgBel4bxDQUIa8D0QBdw7sk+arnGejsF0eoXBNKqhVUQ7fhBTP2xHClFbQ1rJCXqNDUUq1AjZusbe1WCH9l70jn4WfWXbEBPQnzjfr9STNlgMcjJ97kXBnBt1e2FwmxvhBNs+Ege/jMbX7FL8VgeNdU+aU=
+	t=1708592225; cv=none; b=FUP5YvjVtonQu5hdRpXNlz45Oxyae5jh9vHzYKo0a4PON08GVaXtNNLokm3Nb4lfY1yAowH8AA4XWBXVss1qb/KAfjVV2KhJidj7elBTeQ1MHNezTp6LnPDiZMhqj2X/X0AavXMM/rmRRBH9B9VCGgeKEfAJfvJ5sh8iNibeIcc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708592223; c=relaxed/simple;
-	bh=FBWRtuth2Yv1KKihVJvAJQ16++bjnhnjyDxJvHloM/A=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=trvBnu7rQc6h8GqBHwbEzdGc8myLlH3+rzB7r0NnsCEXMWWoch7hozJfF8g+aIu2NfpcYQlRIzOI1EG+UBZoaN3s84qRmdxKkBdzY/ltDy54oPPPs56MTUc+Wz8VYK0bRvgkNNZoxg1jKSwjTu0AL9ymSUPksbkWRVPYH8fokzw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=ZxnEK7kM; arc=none smtp.client-ip=91.218.175.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1708592225; c=relaxed/simple;
+	bh=NpZ5tS6d21LqwPxzPJUK1xMCadzZOd38Mc0CFu903+M=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=haiSfbRMpDWaah5iFQKJ5hC3lomFtF/veipq3zYuzK8gZK2PEynx8oy1BdW3sfjzu8C7fhkfHZa3NALtaMvNiEarqUTVe7wV1cchj2hdlH3KcwywFtSxaX/kKw9F5CC6x3gtnCiWxKXfVqHQsDmmLnLpG+vLG+p47KzJO7ZNk3g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KkqNP/ZU; arc=none smtp.client-ip=209.85.214.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="ZxnEK7kM"
-Message-ID: <d9b4624a-214d-2f49-3883-4d62f60a9de4@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1708592203;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=HWKE7NjmOpKnuDYaoiaD8eNu+PXdRJkjU2KqUazNjX4=;
-	b=ZxnEK7kMOyA0KZojbYbbD/Hvztl9lAOb0OdyMRodQ7touYDwg/xTNGT2fz47ZbQ83a+EWh
-	+o/X+mEhgHxE/5SMqys6BzJ8dcLgd+GdReUts7FyyTrrnqET88L9ajD2W+zVZAqJ+HSfqM
-	nbcpq/DyPu45neplCrBloTwLS8Em+vc=
-Date: Thu, 22 Feb 2024 16:56:35 +0800
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KkqNP/ZU"
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-1d953fa3286so52536285ad.2
+        for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 00:56:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1708592214; x=1709197014; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=1xPrSdUrQ9nYY/JtS+3HexNV6OHve9zWpSolr82c610=;
+        b=KkqNP/ZU6xIsgZN4vwyosUDKJ8ZbHABDVsn8jtvFXP9rCG84zzGjQ2dOyuSk2qCRnh
+         Z5Hj2VC/N8IF0Cg9hD7ldLljJDX0QDMba3Rm8gycxk3APXd25L0LLMrl66ORlHA2YzPJ
+         SzqTQPfB+N04KPG4J7vhB93IqWJ8RzblENo9D4DI02yMrABC+axBvQVFGis/spbSl0W3
+         o0dWrOSp/h9++a5rQgUKnU+FiWxUl0RS3uFw3xIxz0P9Ddm2sUNCJ+1lqS/HFHiLnpMj
+         2s7PE2aT7lWOY4zvgb15zDVvqe8Hsx/xa5J0G4w2dvOakanP/bJWZ0Hjy7DqkLgPW8wu
+         aN7A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708592214; x=1709197014;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=1xPrSdUrQ9nYY/JtS+3HexNV6OHve9zWpSolr82c610=;
+        b=O6CLXnaxr2TaipHNhUerjox9Sin29jH0p7D1idmLXMMfdnA5cb3qZnHromlVcZZ+qL
+         67Tbkl7Csog9BPnGp8nR/O0paTbNzykzPXmhkbl/7pKLaC8xW52Cn3MDfoQA7QhN6wTr
+         SjpfToyJTi2dGvH5slEA5t+6GI3Ocv5PgqvVhOSqfP2nhKVPlHha3Srd8rSc3Gi0AxBL
+         Yhj1nlRyrRPMc9To8IPUMsZCMohuyWxuoHkMopyfpoen3GtKy5hGSvSnIllT4atZN7w4
+         5adS8GTJsSUpQZP3fWtEeAZsHLXEd0WxUFJ2BPBZkbH+rIQVY77PEYQBzYuF2e82kYw5
+         5Taw==
+X-Forwarded-Encrypted: i=1; AJvYcCU5eOGlcoJsiZeEXjv0tXCC9/+OML1ikGQXVBABABTV5YsQdkjIKb+iD20c+AL4+nfyEUhTTOsYBxVmBDt2uPjoBrPAL2d/fBWtUBIB
+X-Gm-Message-State: AOJu0YyX737cBwl6nXMUrRF+E23c2slG27XeaC7IMqmXKdTXyovEuXwq
+	F1yyHcpABfh2tozNRArpXhVTWqLslF8dKYdnJQO+sDkKFL+26BuH13ITCPHEjRU=
+X-Google-Smtp-Source: AGHT+IEU38lZwMj6d9B6lZw3xBJm4KOg072bF1Iu+hvCRiykTeZnQzL49PJ/+vfG0QISNRUPQFTtnw==
+X-Received: by 2002:a17:902:6502:b0:1db:65a3:e17f with SMTP id b2-20020a170902650200b001db65a3e17fmr17978911plk.6.1708592214180;
+        Thu, 22 Feb 2024 00:56:54 -0800 (PST)
+Received: from localhost (dhcp-141-239-158-86.hawaiiantel.net. [141.239.158.86])
+        by smtp.gmail.com with ESMTPSA id k23-20020a170902761700b001db8f7501b1sm3948710pll.2.2024.02.22.00.56.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 22 Feb 2024 00:56:53 -0800 (PST)
+Sender: Tejun Heo <htejun@gmail.com>
+Date: Wed, 21 Feb 2024 22:56:52 -1000
+From: Tejun Heo <tj@kernel.org>
+To: Lai Jiangshan <jiangshanlai@gmail.com>
+Cc: torvalds@linux-foundation.org, linux-kernel@vger.kernel.org,
+	allen.lkml@gmail.com, kernel-team@meta.com,
+	Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCHSET v2 wq/6.10] workqueue: Implement disable/enable_work()
+Message-ID: <ZdcMVA_IDptAPsrW@slm.duckdns.org>
+References: <20240221174333.700197-1-tj@kernel.org>
+ <CAJhGHyCJS7Pb_5dwTQtcZ25yOVzxFULJEYT4o3id_3xdj32EYA@mail.gmail.com>
+ <CAJhGHyB-i-1S3ToYYKtri0Zz1ERikctGQHSjr=tbkD-WXHJe8g@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH] mm/mmap: convert all mas except mas_detach to vma
- iterator
-Content-Language: en-US
-To: "Liam R. Howlett" <Liam.Howlett@Oracle.com>, akpm@linux-foundation.org,
- vbabka@suse.cz, lstoakes@gmail.com, surenb@google.com, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org
-References: <20240218023155.2684469-1-yajun.deng@linux.dev>
- <9f76ce23-67b1-ccbe-a722-1db0e8f0a408@linux.dev>
- <20240220180603.dhnthx2nk5455opm@revolver>
- <0ff93990-b8b6-89ce-0174-4023599059e7@linux.dev>
- <20240221143103.bkhewpq2wirsoyqw@revolver>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Yajun Deng <yajun.deng@linux.dev>
-In-Reply-To: <20240221143103.bkhewpq2wirsoyqw@revolver>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAJhGHyB-i-1S3ToYYKtri0Zz1ERikctGQHSjr=tbkD-WXHJe8g@mail.gmail.com>
 
+Hello,
 
-On 2024/2/21 22:31, Liam R. Howlett wrote:
-> * Yajun Deng <yajun.deng@linux.dev> [240220 22:26]:
->> On 2024/2/21 02:06, Liam R. Howlett wrote:
->>> * Yajun Deng <yajun.deng@linux.dev> [240218 21:30]:
->>>> Cc:  Vlastimil, Lorenzo,Suren
->>>>
->>>> On 2024/2/18 10:31, Yajun Deng wrote:
->>>>> There are two types of iterators mas and vmi in the current code. If the
->>>>> maple tree comes from the mm struct, we can use vma iterator. Avoid using
->>>>> mas directly.
->>> Thanks for looking at this.
->>>
->>> I had left the maple state exposed in the mmap.c file because it does a
->>> number of operations that no one else does, so the new functions will be
->>> called a very limited number of times (as low as once).
->>>
->>> I think this is a worth while change since this may be needed in the
->>> future for dealing with more specialised uses of the tree.  It also
->>> removes the 0/ULONG_MAX limits from certain calls, and the vma iterator
->>> names help explain things.
->>>
->>> I don't know why you treat the low/high search differently than the
->>> mas_reset() and mas_*_range(). In any case, the comment is inaccurate
->>> when mas_ functions are called with &vmi.mas in places.
->>>
->>>
->> Because the mas_reset() and mas_*_range() only covert mas to vmi. It's
->> simple.
->>
->> But the low/high also covert max to max - 1. It's a little more complex.
-> Ah, so the code doesn't match the comment, since the code will still use
-> mas directly in this version.  This was, perhaps, the largest issue with
-> the patch.  Having a good patch log is very important as people rely on
-> it during reviews, but more importantly when tracking down an issue
-> later on.
->
-> I like the idea of removing as many mas uses as feasible, but we will
-> still have a few that must be passed through, so please change the
-> wording.
->
+On Thu, Feb 22, 2024 at 12:59:17PM +0800, Lai Jiangshan wrote:
+> I think it would be better if the tasklet developers were CCed in this patchset.
 
-Okay.
+Sure.
 
->>>>> Leave the mt_detach tree keep using mas, as it doesn't come from the mm
->>>>> struct.
->>> Well, it's still VMAs from the mm struct.  I agree that we should not
->>> change this for now.
->>>
->>>>> Convert all mas except mas_detach to vma iterator. And introduce
->>>>> vma_iter_area_{lowest, highest} helper functions for use vma interator.
->>> Do you mean mas functions?  You do pass the maple state through to other
->>> areas.  ie: free_pgtables().
->>
->> Yes.
-> ...
->>>>>     retry:
->>>>> -	if (mas_empty_area_rev(&mas, low_limit, high_limit - 1, length))
->>>>> +	if (vma_iter_area_highest(&vmi, low_limit, high_limit, length))
->>>>>     		return -ENOMEM;
->>>>> -	gap = mas.last + 1 - info->length;
->>>>> +	gap = vma_iter_end(&vmi) - info->length;
->>>>>     	gap -= (gap - info->align_offset) & info->align_mask;
->>>>> -	gap_end = mas.last;
->>>>> -	tmp = mas_next(&mas, ULONG_MAX);
->>>>> +	gap_end = vma_iter_end(&vmi);
->>> vma_iter_end will return vmi->mas.last + 1, is what you have here
->>> correct?
->>>
->> Yes, the following changes 'if (vm_start_gap(tmp) <= gap_end)' to 'if
->> (vm_start_gap(tmp) < gap_end)'.
->>
->>>>> +	tmp = vma_next(&vmi);
->>>>>     	if (tmp && (tmp->vm_flags & VM_STARTGAP_FLAGS)) { /* Avoid prev check if possible */
->>>>> -		if (vm_start_gap(tmp) <= gap_end) {
->>>>> +		if (vm_start_gap(tmp) < gap_end) {
-> Thanks.  This works and the variable isn't used again.
->
-> ...
->>>>> @@ -1959,11 +1958,12 @@ static int expand_upwards(struct vm_area_struct *vma, unsigned long address)
->>>>>     	struct vm_area_struct *next;
->>>>>     	unsigned long gap_addr;
->>>>>     	int error = 0;
->>>>> -	MA_STATE(mas, &mm->mm_mt, vma->vm_start, address);
->>>>> +	VMA_ITERATOR(vmi, mm, 0);
->>>>>     	if (!(vma->vm_flags & VM_GROWSUP))
->>>>>     		return -EFAULT;
->>>>> +	vma_iter_config(&vmi, vma->vm_start, address);
->>> This is confusing.  I think you are doing this so that the vma iterator
->>> is set up the same as the maple state, and not what is logically
->>> necessary?
->>
->> Yes, VMA_ITERATOR can only pass one address.
->>
->>>>>     	/* Guard against exceeding limits of the address space. */
->>>>>     	address &= PAGE_MASK;
->>>>>     	if (address >= (TASK_SIZE & PAGE_MASK))
->>>>> @@ -1985,15 +1985,15 @@ static int expand_upwards(struct vm_area_struct *vma, unsigned long address)
->>>>>     	}
->>>>>     	if (next)
->>>>> -		mas_prev_range(&mas, address);
->>>>> +		mas_prev_range(&vmi.mas, address);
->>> This isn't really hiding the maple state.
->>
->> Okay,  I will create a new helper function for this in the mm/internal.h.
->>
->>>
->>>>> -	__mas_set_range(&mas, vma->vm_start, address - 1);
->>>>> -	if (mas_preallocate(&mas, vma, GFP_KERNEL))
->>>>> +	vma_iter_config(&vmi, vma->vm_start, address);
->>> The above maple state changes is to get the maple state to point to the
->>> correct area for the preallocation call below.  This seems unnecessary
->>> to me.
->>>
->>> We really should just set it up correctly.  Unfortunately, with the VMA
->>> iterator, that's not really possible on initialization.
->>>
->>> What we can do is use the vma->vm_start for the initialization, then use
->>> vma_iter_config() here.  That will not reset any state - but that's fine
->>> because the preallocation is the first call that actually uses it
->>> anyways.
->>>
->>> So we can initialize with vma->vm_start, don't call vma_iter_config
->>> until here, and also drop the if (next) part.
->>>
->>> This is possible here because it's not optimised like the
->>> expand_upwards() case, which uses the state to check prev and avoids an
->>> extra walk.
->>>
->>> Please make sure to test with the ltp tests on the stack combining, etc
->>> on a platform that expands down.
+> Intended API conversions, along with their rationale and any possible
+> changes to semantics, can be included in the cover letter too.
+> 
+> > - tasklet_setup/init()          -> INIT_WORK()
+> > - tasklet_schedule()            -> queue_work(system_bh_wq, ...)
+> > - tasklet_hi_schedule()         -> queue_work(system_bh_highpri_wq, ...)
+> > - tasklet_disable_nosync()      -> disable_work()
+> > - tasklet_disable[_in_atomic]() -> disable_work_sync()
+> > - tasklet_enable()              -> enable_work() + queue_work()
+> > - tasklet_kill()                -> cancel_work_sync()
+> >
+> > Note that unlike tasklet_enable(), enable_work() doesn't queue the work item
+> > automatically according to whether the work item was queued while disabled.
+> > While the caller can track this separately, unconditionally scheduling the
+> > work item after enable_work() returns %true should work for most users.
+> 
+> unconditionally re-scheduling the work item isn't correct to me which might
+> queue a work unexpectedly.
+> 
+> tasklet_enable() should be changed to return true if and only if when
+> the disable count reached 0 and the disabling (action and status)
+> have prevented a queuing request.
+> 
+> To record whether the disabling prevented a queuing request, an extra bit
+> in the work->data has to be employed for it.
 
+So, I'm not sold on this argument for two reasons.
 
-It seems something wrong about this description. This change is in 
-expand_upwards(), but not in
+1. cancel_work() and friends have always indicated whether the work item was
+   queued at the time of cancel and ignored whether someone tried to queue
+   the work item while cancelation was in progress. While it is important to
+   make transition from tasklet reasonably easy, it's a lot more important
+   to keep the interface consistent with the rest of workqueue.
 
-expand_downwards(). So we should test it on a platform that expands up. 
-And drop the if (next) part
+   Possible confusions in transitioning from tasklet are temporary. If we
+   introduce workqueue interfaces which aren't congruent with the rest of
+   workqueue, those confusiongs are going to last a lot longer.
 
-is unnecessary. Did I get that right?
+2. Work items don't count how many times they're queued. The only thing they
+   guarantee is that they will get executed at least once after the latest
+   queueing, which means that the users usually have to have some type of
+   state tracking - whether that's a queue of operations to perform or some
+   flags tracking what needs to be done.
 
->>
->> Okay, I will test it.
-> Testing this can be tricky.  Thanks for looking at it.
->
-> ...
->>>>>     	mmap_write_lock(mm);
->>>>>     	mt_clear_in_rcu(&mm->mm_mt);
->>>>> -	mas_set(&mas, vma->vm_end);
->>>>> -	free_pgtables(&tlb, &mas, vma, FIRST_USER_ADDRESS,
->>>>> +	vma_iter_set(&vmi, vma->vm_end);
->>>>> +	free_pgtables(&tlb, &vmi.mas, vma, FIRST_USER_ADDRESS,
->>>>>     		      USER_PGTABLES_CEILING, true);
->>> I guess the page tables still deal with the maple state directly then.
->>
->> Yes.
-> That's okay, we can leave that for another time.  I believe Peng
-> complicated the internals of free_pgtables() with his forking
-> optimisation so care will need to be taken and should probably be done
-> in another patch, another time.  In fact, hiding xa_is_zero() within the
-> vma iterator is going to be a really good thing to do, if performance
-> doesn't suffer.
->
-> Just don't state we are removing the use of maple state in the change
-> log - since we do pass it through sometimes.
->
-> ...
->
-> Thanks again,
-> Liam
+   It's possible to write and there likely are examples of code that depends
+   on work item never executing spuriously. However, tasklets are usually
+   used in the fashion of irq handlers and they almost always have something
+   else tracking what needs to be done. I spot checked a dozen tasklet users
+   and couldn't find anyone who doesn't. While unlikely, if there are usages
+   like that, it isn't all that difficult to update them so that they don't
+   break. Again, possibly a bit of conversion pain but it shouldn't be too
+   much and we'd be better off this way in the long term.
+
+Thanks.
+
+-- 
+tejun
