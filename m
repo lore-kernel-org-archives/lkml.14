@@ -1,126 +1,160 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52D001B59E
-	for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 10:25:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E3193C481;
+	Thu, 22 Feb 2024 10:26:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708597537; cv=none; b=DrKsL4vNu4lghwv23Bo6EP9hB2k12sF6VO0WnI+q6UbCzsuc1ivyjltD2aHn2eGr9rfJjMZwWN68PBLyhO1ZXZepWUwAXGOIRLc07ACSnQQXApZM//G8RI0QC6UPa5ZdngJ/OJyEW66bLUljb48UXTVuwKv5UKILHE+zFk10JIo=
+	t=1708597566; cv=none; b=mDgJFf9t9QJXo2MYwew5grWbe8S/MJXcF7irBRVCDIOLLHW3m9TI0QoDoG+1E98VSheC9orbv4UPJwRMStfles/Q+aYGNhHTmzDFOavABtQmzQ0rAdXSjpmW6tunF62ZZGIHJ6B4arRWF254bEDAYECfVPj9hVzEd0YU0YSQKyM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708597537; c=relaxed/simple;
-	bh=jHPeddCOy8adCP656HMcnAP37nqYydpbombti7EBDIk=;
+	s=arc-20240116; t=1708597566; c=relaxed/simple;
+	bh=C5DPs1TcjLjs6ZDKjoVkY+BUT+jRjaN7GiNU8pWZYA8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YISJuYC5hm0gTWgsigG01DCnk6zy/XRLCb4123G742OLz6IySwX1pmu9rdyik5oxW58nNrBecPV1SwBPCP9WxXMke42gizuAFhdqgRTo1zTGMxoiiTqrdepZ15oJINlmm9omGMr2h8kwH4UC5VVDsPtd0RZQT2bdkojV3ScFcnI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nxAkwHqU; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=jj+mcBhM6Lg4XlTnBIdFMRsNJDjrJiTJGNICH39NQjifw6oiLKMvD//0wf2KHZYGYaMkUC2BsD6ebhd0vhCAUeHu1vxK0hCrpkWQ7O+iBGKOz9b+ij2urgFW5SFUjpKBiQUspbsq/CSP3uDuwIBuWTzTem3j/V0gflUOe8Sjcrs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Kxttw6OI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nxAkwHqU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 37246C433C7;
-	Thu, 22 Feb 2024 10:25:36 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Kxttw6OI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6C466C433F1;
+	Thu, 22 Feb 2024 10:26:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708597536;
-	bh=jHPeddCOy8adCP656HMcnAP37nqYydpbombti7EBDIk=;
+	s=k20201202; t=1708597566;
+	bh=C5DPs1TcjLjs6ZDKjoVkY+BUT+jRjaN7GiNU8pWZYA8=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=nxAkwHqU+R+Kp6rbn5CUCbGP6KAw1DjTcTxtaEGUXshLGYsnxzYvRJ9raS11UKufV
-	 LJeZYGip/mcbOQBGnMmmLszgLwN6zLy/BhWmOgaW4vRduPFuAGU8lgpw40+e/SPQ0s
-	 XHoWM22Oy17zerDDigG2kllnkUz+Vfdo8u41faAsxj4ZT6c1/TjShru6VePy26dlTx
-	 gI5w6DdixYP/wByiCIQui3ByA/HpIb3FOG4hczQl2Vu9mMP2DNaxagsLknTpWwzE28
-	 i8RUwJYV1jYvQAhOsizY5MDDs92BATZQirZMQ3q+gMBQZax5BVZTEH0cLelg5fJjpy
-	 k3SNC5tzy4GVA==
-Date: Thu, 22 Feb 2024 11:25:33 +0100
-From: Frederic Weisbecker <frederic@kernel.org>
-To: Anna-Maria Behnsen <anna-maria@linutronix.de>
-Cc: linux-kernel@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
-	John Stultz <jstultz@google.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Eric Dumazet <edumazet@google.com>,
-	"Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-	Arjan van de Ven <arjan@infradead.org>,
-	"Paul E . McKenney" <paulmck@kernel.org>,
-	Rik van Riel <riel@surriel.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Sebastian Siewior <bigeasy@linutronix.de>,
-	Giovanni Gherdovich <ggherdovich@suse.cz>,
-	Lukasz Luba <lukasz.luba@arm.com>,
-	"Gautham R . Shenoy" <gautham.shenoy@amd.com>,
-	Srinivas Pandruvada <srinivas.pandruvada@intel.com>,
-	K Prateek Nayak <kprateek.nayak@amd.com>,
-	Christian Loehle <christian.loehle@arm.com>
-Subject: Re: [PATCH v11 18/20] timers: Implement the hierarchical pull model
-Message-ID: <ZdchHZCcE/LkxBYt@lothringen>
-References: <20240221090548.36600-1-anna-maria@linutronix.de>
- <20240221090548.36600-19-anna-maria@linutronix.de>
- <ZdZ87whmpul8xIBI@pavilion.home>
- <87jzmwnc9y.fsf@somnus>
+	b=Kxttw6OIm01Rb9mT8fkBwjc3CFksX9rBo3NfSD0JjTxVvmXKbzkVXMXnUHdRLcg0C
+	 +C6uGjnlieQizZfaY6+hyS0UfsuQssNpvGUcDdPKTkaTr54xN/BA8iCfXP4VGwLqvK
+	 dl/edARIVtGsLb011Jg4+PPYrrGn+m5ntYqVRs1Ta2adzPiBZI5vMLuFQxAJrfuX+5
+	 5tq9nUYKJap7Y3PM7rnJOVG5GXkYCB+28YMHAbt2IuxYXuT4PLNEV69qaMtpTV7uDf
+	 u3QDCcJjm2h3sPGv0mVwXdbdYmgQG5D8PhsWciunNQg9GPUcTXfzbGPdpidBC79z6X
+	 al629d1dgQlJw==
+Date: Thu, 22 Feb 2024 11:26:03 +0100
+From: Maxime Ripard <mripard@kernel.org>
+To: Frank Oltmanns <frank@oltmanns.dev>
+Cc: Michael Turquette <mturquette@baylibre.com>, 
+	Stephen Boyd <sboyd@kernel.org>, Chen-Yu Tsai <wens@csie.org>, 
+	Jernej Skrabec <jernej.skrabec@gmail.com>, Samuel Holland <samuel@sholland.org>, 
+	Guido =?utf-8?Q?G=C3=BCnther?= <agx@sigxcpu.org>, Purism Kernel Team <kernel@puri.sm>, Ondrej Jirman <megi@xff.cz>, 
+	Neil Armstrong <neil.armstrong@linaro.org>, Jessica Zhang <quic_jesszhan@quicinc.com>, 
+	Sam Ravnborg <sam@ravnborg.org>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
+	Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, linux-clk@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH v2 3/6] clk: sunxi-ng: nkm: Support minimum and maximum
+ rate
+Message-ID: <3kbqdgbfn2nioch3gvofvj7pzx7f5gkuwx77u5nkgxao6qo654@3nvjifkrxcjb>
+References: <20240205-pinephone-pll-fixes-v2-0-96a46a2d8c9b@oltmanns.dev>
+ <20240205-pinephone-pll-fixes-v2-3-96a46a2d8c9b@oltmanns.dev>
+ <exb2lvjcozak5fayrgyenrd3ntii4jfxgvqork4klyz5pky2aq@dj2zyw5su6pv>
+ <874je6b2g4.fsf@oltmanns.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="5tmnnujq4ct6ko4m"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <87jzmwnc9y.fsf@somnus>
+In-Reply-To: <874je6b2g4.fsf@oltmanns.dev>
 
-On Thu, Feb 22, 2024 at 09:17:29AM +0100, Anna-Maria Behnsen wrote:
-> Frederic Weisbecker <frederic@kernel.org> writes:
-> 
-> > Le Wed, Feb 21, 2024 at 10:05:46AM +0100, Anna-Maria Behnsen a écrit :
-> >> Placing timers at enqueue time on a target CPU based on dubious heuristics
-> >> does not make any sense:
-> >> 
-> >>  1) Most timer wheel timers are canceled or rearmed before they expire.
-> >> 
-> >>  2) The heuristics to predict which CPU will be busy when the timer expires
-> >>     are wrong by definition.
-> >> 
-> >> So placing the timers at enqueue wastes precious cycles.
-> >> 
-> >> The proper solution to this problem is to always queue the timers on the
-> >> local CPU and allow the non pinned timers to be pulled onto a busy CPU at
-> >> expiry time.
-> >> 
-> >> Therefore split the timer storage into local pinned and global timers:
-> >> Local pinned timers are always expired on the CPU on which they have been
-> >> queued. Global timers can be expired on any CPU.
-> >> 
-> >> As long as a CPU is busy it expires both local and global timers. When a
-> >> CPU goes idle it arms for the first expiring local timer. If the first
-> >> expiring pinned (local) timer is before the first expiring movable timer,
-> >> then no action is required because the CPU will wake up before the first
-> >> movable timer expires. If the first expiring movable timer is before the
-> >> first expiring pinned (local) timer, then this timer is queued into an idle
-> >> timerqueue and eventually expired by another active CPU.
-> >> 
-> >> To avoid global locking the timerqueues are implemented as a hierarchy. The
-> >> lowest level of the hierarchy holds the CPUs. The CPUs are associated to
-> >> groups of 8, which are separated per node. If more than one CPU group
-> >> exist, then a second level in the hierarchy collects the groups. Depending
-> >> on the size of the system more than 2 levels are required. Each group has a
-> >> "migrator" which checks the timerqueue during the tick for remote expirable
-> >> timers.
-> >> 
-> >> If the last CPU in a group goes idle it reports the first expiring event in
-> >> the group up to the next group(s) in the hierarchy. If the last CPU goes
-> >> idle it arms its timer for the first system wide expiring timer to ensure
-> >> that no timer event is missed.
-> >> 
-> >> Signed-off-by: Anna-Maria Behnsen <anna-maria@linutronix.de>
-> >
-> > Reviewed-by: Frederic Weisbecker <frederic@kernel.org>
-> >
-> > Though I must confess I only had a shallow look at group creation (init_group,
-> > get_group, connect_child_parent, setup_groups, add_cpu, and tmigr_init). But for
-> > the rest, I'm running out of bad scenarios. Time for the rest of the world to
-> > find them!
-> >
-> > Thanks for the hard work!
-> 
-> Thank you for your support!
-> 
-> Did you saw the v11a for this patch? It is only a cleanup - it removes
-> an unused variable. Just asking, because Review was for plain v11 patch.
 
-Yep, I reviewed the 11a one, with the "leftmost" variable off.
+--5tmnnujq4ct6ko4m
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Thanks.
+Hi,
+
+On Sun, Feb 18, 2024 at 09:29:15AM +0100, Frank Oltmanns wrote:
+> Hi Maxime,
+>=20
+> On 2024-02-08 at 13:16:27 +0100, Maxime Ripard <mripard@kernel.org> wrote:
+> > [[PGP Signed Part:Undecided]]
+> > On Mon, Feb 05, 2024 at 04:22:26PM +0100, Frank Oltmanns wrote:
+> >> According to the Allwinner User Manual, the Allwinner A64 requires
+> >> PLL-MIPI to run at 500MHz-1.4GHz. Add support for that to ccu_nkm.
+> >>
+> >> Signed-off-by: Frank Oltmanns <frank@oltmanns.dev>
+> >> ---
+> >>  drivers/clk/sunxi-ng/ccu_nkm.c | 13 +++++++++++++
+> >>  drivers/clk/sunxi-ng/ccu_nkm.h |  2 ++
+> >>  2 files changed, 15 insertions(+)
+> >>
+> >> diff --git a/drivers/clk/sunxi-ng/ccu_nkm.c b/drivers/clk/sunxi-ng/ccu=
+_nkm.c
+> >> index 1168d894d636..7d135908d6e0 100644
+> >> --- a/drivers/clk/sunxi-ng/ccu_nkm.c
+> >> +++ b/drivers/clk/sunxi-ng/ccu_nkm.c
+> >> @@ -181,6 +181,12 @@ static unsigned long ccu_nkm_round_rate(struct cc=
+u_mux_internal *mux,
+> >>  	if (nkm->common.features & CCU_FEATURE_FIXED_POSTDIV)
+> >>  		rate *=3D nkm->fixed_post_div;
+> >>
+> >> +	if (nkm->min_rate && rate < nkm->min_rate)
+> >> +		rate =3D nkm->min_rate;
+> >> +
+> >> +	if (nkm->max_rate && rate > nkm->max_rate)
+> >> +		rate =3D nkm->max_rate;
+> >> +
+> >
+> > This is provided by the clock range already. If you call
+> > clk_hw_set_rate_range, it should work just fine.
+>=20
+> I have to admit, that I don't know that much about sunxi-ng or the CCF
+> and therefore humbly request some guidance.
+>=20
+> I've looked at other examples of clk_hw_set_rate_range() usage and it
+> seems there is not a lot of adoption for this functionality even though
+> it was already introduced mid-2015. This makes me wonder, why that is.
+
+There's no reason, really. I would expect a big part of it to be "if it
+works don't fix it" :)
+
+> Anyhow, it seems in all examples I found, clk_hw_set_rate_range() is
+> called immediately after registering the clk_hw. So, in the case of
+> sunxi-ng, we'd need to do that in sunxi_ccu_probe, which is a common
+> function for all sunxi-ng clock types. Correct?
+
+Yup.
+
+> If so, surely, you don't want me to introduce clock type specific code
+> to a common function, so I assume you want min_rate and max_rate to
+> become members of struct ccu_common. Correct?
+
+Yes, that would be reasonable indeed.
+
+> If so, since there already are some clock types in sunxi-ng that support
+> having a minimum and maximum rate, these clocks should be refactored
+> eventually. Correct?
+
+I guess. I don't consider it to be a pre-requisite to your patch though.
+
+> Finally, in sunxi-ng there is a feature of having a fixed_post_div (see,
+> e.g., the first to lines of the diff above). It seems to me that CCF
+> cannot know about these post_divs, so we'd also need to transfer the
+> fixed_post_div to ccu_common and use that when calling
+> clk_hw_set_rate_range. Correct?
+
+Not really, no. The fixed post divider is an additional divider that
+needs to be considered for the clock rate.
+
+See the A64's periph0 PLL for example. Its fixed post divider is 2, and
+its rate is 24MHz * N * K / 2. The rate should be bounded by its minimal
+and maximal rate taking the post divider into account. The CCF doesn't
+have to know about it.
+
+Maxime
+
+--5tmnnujq4ct6ko4m
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCZdchOgAKCRDj7w1vZxhR
+xeYcAQD8kfuph/bvW3AkRtRhUQiaaX8I5NZXLMQKI8xcnhEbcAD+Ld8/FcBSyHu3
+/mny/ZO6Y0sXVbHPtYWYHq9nH0sHGA8=
+=noRe
+-----END PGP SIGNATURE-----
+
+--5tmnnujq4ct6ko4m--
