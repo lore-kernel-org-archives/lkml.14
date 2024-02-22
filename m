@@ -1,70 +1,75 @@
-Received: from mail-il1-f199.google.com (mail-il1-f199.google.com [209.85.166.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5EBD28EF
-	for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 03:41:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1F1B14296
+	for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 03:41:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708573266; cv=none; b=CYSLqziDz70cJXKtzVTXLbmV+6oBDs2VtDkZLk5fTnGCXqmrv0O67E2X8pPhErPZw8UzpU7nqbZIiag34ZRQOUze/nVs64V/4PAcbgGcCQzsrKSpAjzebnOsrsCzGYXkcjwIX+cyzM2pDQvOL9Yj5DgMrxe+FG0Gw6ZuKtalvno=
+	t=1708573312; cv=none; b=sd3Vz+euREv8RgY1hPH8GfjHfNXoGrbZ8D0x6vDJCBd7nnw6PEK0ZiQrPx8eXng+w1B8Kt1BwiQvVhUTZvxkTe9MIxGC904QNxdehSYoKmgSIpJI/TiVYyZSGNhI/8HMD3L+CFiOlVZFMqKipM4JqCE94owIh3Vbp5ak6kNP5J0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708573266; c=relaxed/simple;
-	bh=aoUmwboxcQssiTsohUlnKaa6wq/qekuPRi030rCJNCw=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=uNZWDRq/nSEhuYQvQNshM+VG1cGgRDZxU3jgTHhiJznNKb/mr7EuhF5dDsIyXOKWVVMDKZpgjNoGH82ZJJwbhZx+ryH5a3KrATDTjwiRLF0mOk7O8Iq88UfwBIp61xEQ9sTxZUfXnp57mULx9Atbm+rn3TiCeYPLZEwpES+ce8k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f199.google.com with SMTP id e9e14a558f8ab-36541324e57so26561545ab.1
-        for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 19:41:04 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708573264; x=1709178064;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=pAzFF/W+Tz54pu8G8JB7QVdFqeLOi+89YAZw0zJOldg=;
-        b=k6GfG6BqNbPN8ELJa1Or7LdjnC9G253f4QYffVPXEMR88XD1jAPfJWYrFGsNVa+MsX
-         AFOdVGtOAYuEdDwIHZwz5YUQyvO1EJ4+N9oHh//ZT99ku7+3UaTxJrB8pUJCJIt7ngAc
-         bsRYzo6go318kSpIr0u3g3Hszbh327qlc/e1YmkwJJlOQx5K0iL2f9GE9/DkJ/ZKm/XQ
-         tccxBML8m3xjO2k/jLxkZ/JqZ2ZJmoQEOZFzTmgwBKRLFwCoMf3ssppWBgwLFAKy9LDO
-         W9Tsg9orFxirBXd/k5Is+PWc4XxIbL5KJIXeYOfl7SgkoRDbniFntZxYcgOTRRAnomL+
-         MemA==
-X-Gm-Message-State: AOJu0YxgFSIY3dNsPauWSKmlL4mT/zdBgqBVTQZ15vsV7HCRfVaSDdQU
-	jz2YB4AriXHpRpnx/lVy/6JDhEmdtXkoJZhNWqvVlhAZqMhIwLd/Db14C9D0clnZv/IVXdqYpH4
-	Xx/A5jxHQtwEDYO7L90Utd9vDPN0u7HwjGn4Y+M6mNQjOa/Gxqu211lUW8w==
-X-Google-Smtp-Source: AGHT+IFXQ0s2KhqVzZuuwD75OfnZVmpMGvXQF2DYLFJL6XnQqXRM8VEKnB2D+v+Wn3OuiFANbjvmJUL4c1yuzLDU3lB4vG8i+u1E
+	s=arc-20240116; t=1708573312; c=relaxed/simple;
+	bh=1ulRBrYzQdOmihVOfbwMuFBbUbV59yc+rUQ7cABoEHs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=H5jk0OSWxTykrxUskM8lqQHjFYwjolmMwCvXElXBJkxuwOPlbBpveUGiYhVehAwSWlh+133OMIsoTFbaXVVYgDYVkP3K02jCYJO0hrEFCKMN4T5tdzGcFvW6ZCsJjxzN0Azki+8HM5dy90D9offd8b0FKruetlQFb1QyJ2Vedt8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=RmuIeskV; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="RmuIeskV"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=e9Kb7+9juqy5FhJMaaMa784eYLFmC0FDrVU0K/noLKM=; b=RmuIeskVf1E2Kxz6/IxeCqW04N
+	CrbDilGBItIwOekuLDghEjj2hDdun5rXc3L4bAfOV99PtDvb67Mf1ba7arpix6VXSnbs00G6mssY5
+	nlD564ezWwhpmki+hHXLXeBn54a2r/lbeEQH/3+s7amcsl4nSNK6LSDKLDC5M8Zdh0itiqeQ7nG5D
+	x8HgU2+kJhxsR9SNjgXwWwkEiJFy2ugsGThnhoDc7OjyDsLMZDF2/V+mFLt/yQl08do2cPbXKpJ7D
+	+4Zqr/hAW8DYfRg6rUvXFK9Mx/nfM2T0ObcCtOIFnrH1RRtnaT97Zeo2AScvocj+WF4jPFTjQ93rR
+	qxEMcOsw==;
+Received: from willy by casper.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1rczy0-00000002UCI-2zDG;
+	Thu, 22 Feb 2024 03:41:48 +0000
+Date: Thu, 22 Feb 2024 03:41:48 +0000
+From: Matthew Wilcox <willy@infradead.org>
+To: "Vishal Moola (Oracle)" <vishal.moola@gmail.com>
+Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+	akpm@linux-foundation.org, muchun.song@linux.dev
+Subject: Re: [PATCH v2 3/5] hugetlb: Pass struct vm_fault through to
+ hugetlb_handle_userfault()
+Message-ID: <ZdbCfLo85Gi_a7OI@casper.infradead.org>
+References: <20240221234732.187629-1-vishal.moola@gmail.com>
+ <20240221234732.187629-4-vishal.moola@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:2143:b0:365:1780:2ca9 with SMTP id
- d3-20020a056e02214300b0036517802ca9mr1105869ilv.5.1708573264058; Wed, 21 Feb
- 2024 19:41:04 -0800 (PST)
-Date: Wed, 21 Feb 2024 19:41:04 -0800
-In-Reply-To: <20240222031539.2038610-1-lizhi.xu@windriver.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000007a22870611f036b5@google.com>
-Subject: Re: [syzbot] [net?] WARNING in mpls_gso_segment
-From: syzbot <syzbot+99d15fcdb0132a1e1a82@syzkaller.appspotmail.com>
-To: linux-kernel@vger.kernel.org, lizhi.xu@windriver.com, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240221234732.187629-4-vishal.moola@gmail.com>
 
-Hello,
+On Wed, Feb 21, 2024 at 03:47:30PM -0800, Vishal Moola (Oracle) wrote:
+> Now that hugetlb_fault() has a struct vm_fault, have
+> hugetlb_handle_userfault() use it instead of creating one of its own.
+> 
+> This lets us reduce the number of arguments passed to
+> hugetlb_handle_userfault() from 7 to 3, cleaning up the code and stack.
+> 
+> Signed-off-by: Vishal Moola (Oracle) <vishal.moola@gmail.com>
+> ---
+>  mm/hugetlb.c | 38 +++++++++-----------------------------
+>  1 file changed, 9 insertions(+), 29 deletions(-)
 
-syzbot has tested the proposed patch and the reproducer did not trigger any issue:
+I love the look of this ...
 
-Reported-and-tested-by: syzbot+99d15fcdb0132a1e1a82@syzkaller.appspotmail.com
+> @@ -6116,7 +6098,8 @@ static vm_fault_t hugetlb_no_page(struct mm_struct *mm,
+>  			struct vm_area_struct *vma,
+>  			struct address_space *mapping, pgoff_t idx,
+>  			unsigned long address, pte_t *ptep,
+> -			pte_t old_pte, unsigned int flags)
+> +			pte_t old_pte, unsigned int flags,
+> +			struct vm_fault *vmf)
 
-Tested on:
+Should we remove vma, address, idx and flags?
 
-commit:         6d5c3656 PPPoL2TP: Add more code snippets
-git tree:       https://git.kernel.org/pub/scm/linux/kernel/git/netdev/net-next.git main
-console output: https://syzkaller.appspot.com/x/log.txt?x=1234b4f8180000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=970c7b6c80a096da
-dashboard link: https://syzkaller.appspot.com/bug?extid=99d15fcdb0132a1e1a82
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=11727f68180000
-
-Note: testing is done by a robot and is best-effort only.
