@@ -1,472 +1,145 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28E4814A08E;
-	Thu, 22 Feb 2024 14:58:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C96A1487E8
+	for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 15:02:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708613936; cv=none; b=OuNK8su1+iCnC0xrcGF4PE4fdS9TneA0zXuFWC5ScZFasT+4VZfswB+0NR+tgbvENMUalsyDlgfiK24kg5jn/e1Q2zRAbIflKp5+nVtDRlYqHYKZNiBcYm8If+0muSoNwYQvUhkFW2h/1yeDJE304OMhP3XzWClT9ZfcxQGKrFw=
+	t=1708614134; cv=none; b=NcNw5MjdBSj6gMhRgvCHwxZXeCBHNIKsmV0lyZc5mZMbdZ3F+18VLo/h+eFp7p48zymuVVcRKwCZqQCuQoZMUCzllCCCyn0uD3FQmQ+WE0wc4kffel4Xxt7Onli1EYRp7tZLedW/8YZq78DsB7UPVIGRv3U99DctI5gERXvBcaE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708613936; c=relaxed/simple;
-	bh=Z8WJfnfkr1TQrwC6yhBgJ/u6pMBgF8k+OzRE3qZWuCY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=kiccKPhmMf71s1+5SKYBKDhUK2qRd1Pg7wjmfXzgDp04UpFJwIk6q/MYW3ZPsVQbPCT/C/g4RGVvYmoXzpLZkib/z3yHuukaAIVUPT2WinVfESUXFOaDLO6jS/erK2Aw85DHwMqomkUv1jAgGiojY5HKmWSOEldw/vQO+8Y3RjU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=t9NoAKC8; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1708614134; c=relaxed/simple;
+	bh=nymCDgbDOMJ7K3x2JCLTWaFXMLWbPDSu/WpI3QxgRlI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=OJTudpGe7jeLhEl6Bkfo7QsXnmza60eMKW5WuPHEaP4WiuC8/yIEGi5chWfGxNCXxlqYAz5L5/3oMAw7oIoRimgUtMZau5XITnjLynkB3JSSYCMlwJ3PkYpQQk3X2JVUEIxU0jA4YkaC4bp4yNZTAvIbQ4in8Cb+INFP0MzxE1M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=EflkAGu2; arc=none smtp.client-ip=209.85.167.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="t9NoAKC8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EA270C433A6;
-	Thu, 22 Feb 2024 14:58:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708613935;
-	bh=Z8WJfnfkr1TQrwC6yhBgJ/u6pMBgF8k+OzRE3qZWuCY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=t9NoAKC8Vfx6RorHuMf0CWvfFOftnz+deOHPW1/9ECSRuLelTJLX2+RbpSGTA9coJ
-	 vZPFuQFr24eqcwzMSexKN3cRFGDqy6ls375KVr+UEui1aN006FsDHEfkbzHFOeKnJa
-	 SYuD2YuIwF27abngJz3ghjPKkxuiPcbzC/qCA8P915XtGEdZN1U7cDJglABsCGa6pm
-	 4IJklWHXluNwUs58XJ3boZs0AliopsPDAeqIedXZ8/SPAP+U2bUqeSyt6i4JQQhK/h
-	 ecOxCO7wefrckmMiHsuF7F+bGE2SA2CDmW7x1ykSIBaLrhE/xDKPu9mJwwBgnxKzH1
-	 G92UrlOBO3tmw==
-From: =?UTF-8?q?Marek=20Beh=C3=BAn?= <kabel@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	Hans de Goede <hdegoede@redhat.com>,
-	Matti Vaittinen <mazziesaccount@gmail.com>
-Cc: =?UTF-8?q?Marek=20Beh=C3=BAn?= <kabel@kernel.org>,
-	=?UTF-8?q?Horia=20Geant=C4=83?= <horia.geanta@nxp.com>,
-	Pankaj Gupta <pankaj.gupta@nxp.com>,
-	Gaurav Jain <gaurav.jain@nxp.com>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	"David S. Miller" <davem@davemloft.net>,
-	Davidlohr Bueso <dave@stgolabs.net>,
-	Jonathan Cameron <jonathan.cameron@huawei.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Bamvor Jian Zhang <bamv2005@gmail.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Douglas Anderson <dianders@chromium.org>,
-	Andrzej Hajda <andrzej.hajda@intel.com>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Robert Foss <rfoss@kernel.org>,
-	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-	Jonas Karlman <jonas@kwiboo.se>,
-	Jernej Skrabec <jernej.skrabec@gmail.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>,
-	Daniel Vetter <daniel@ffwll.ch>,
-	James Seo <james@equiv.tech>,
-	Jean Delvare <jdelvare@suse.com>,
-	Guenter Roeck <linux@roeck-us.net>,
-	linux-crypto@vger.kernel.org,
-	linux-cxl@vger.kernel.org,
-	linux-gpio@vger.kernel.org,
-	dri-devel@lists.freedesktop.org,
-	linux-hwmon@vger.kernel.org
-Subject: [PATCH 2/2] devm-helpers: Add resource managed version of debugfs directory create function
-Date: Thu, 22 Feb 2024 15:58:38 +0100
-Message-ID: <20240222145838.12916-2-kabel@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240222145838.12916-1-kabel@kernel.org>
-References: <20240222145838.12916-1-kabel@kernel.org>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="EflkAGu2"
+Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-512b29f82d1so6832083e87.1
+        for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 07:02:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1708614131; x=1709218931; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=YLlSV92cI567WfYdedKzejgdrpXnnWHfkGYvCc5WFGM=;
+        b=EflkAGu2XNmyPK9g/qgvPerS39eM1ciE6BBp+YwMniyS95AZx0Lz1RT0gVazlVj1hZ
+         Puf9/IMCLqRRPh2aSHhizPTv4SwVGAOMJzZkOj4c7vgpKJ2hlV8yYCzf1eRgPJrwHyRt
+         q/y9yL8UVlSc0ylz9xoWwI1TOefN9Cct+MP2bCC7rbFp9nE97vwNkhYDZv3xefpXTRgU
+         o/1ZZFjdP68UX8l6xRsytrlNSOICItTucnWe4kR4t/ANFVgerVd3uXCchG8VGduGhAIX
+         bVx/5PJU3Qrtq95hvqfwuVlMhg5L8hMcMuXZXKUCMPy1811SXM5nWxXYgYJ/LGfp3ZRr
+         LO/g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708614131; x=1709218931;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=YLlSV92cI567WfYdedKzejgdrpXnnWHfkGYvCc5WFGM=;
+        b=HJGdOJXqcC6paZ2AfBHXprjUwIL/cE6yLEwFm8Z6kkZmyVIEfQ7HQbBus0HNjXSCKz
+         YiV7N33HcSSf6fktJDMHIbUuPsP6asyiBpYANPLK78dG4M1Nms5KYJ1EoBnN4Iu6+mhB
+         yO2T8nGSPiaOaJ4mFjL0OhvaFFFeYv0h/7HM2vx6KG5uSH0SscddTm5RpwYV5+sXBArs
+         AkxEBFO384GUfITv8ATz93UjLvPvJ1Rztef+4Z+5/IMp1W2iVc1vI1Nj/vzKh6YalEP0
+         qryLeqtDsQAtccEvjzBq+g4qKXgKy2YZu6rpUn3KeZNEpIDk8k0PR/+0LehNKOdHUAla
+         O6Jg==
+X-Forwarded-Encrypted: i=1; AJvYcCW1BgLYklHJagjnqV1JeX123f1Pv8ab9RGmOxlbai1e6VtbN/xi3/yCUri4YuLzD4tnD1RaHUT94GF1FhS2QCueE7kpuIO8z3gCipbZ
+X-Gm-Message-State: AOJu0YyUcYfNiX9HrhoEb3JjJIZBCWYK+d4kFnWUQysX1V2/IlEr4Nbv
+	puxEy0Emiel91ETLJIwrXAHYnSiUA8L1E3n9qai9O8OwrKkLuKzdlTTVsYYqNN4=
+X-Google-Smtp-Source: AGHT+IEko0pzXJUo+tw2VY6brlKK7dhkvGgbT2YX8UpajJRv9Burn/lWCNq1qiTmslaqJE2itfsEPA==
+X-Received: by 2002:a19:7003:0:b0:512:abeb:96f3 with SMTP id h3-20020a197003000000b00512abeb96f3mr8320423lfc.39.1708614130701;
+        Thu, 22 Feb 2024 07:02:10 -0800 (PST)
+Received: from [192.168.1.20] ([178.197.222.116])
+        by smtp.gmail.com with ESMTPSA id q14-20020a056402248e00b0056518035195sm1066296eda.69.2024.02.22.07.02.08
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 22 Feb 2024 07:02:10 -0800 (PST)
+Message-ID: <40a97700-15b8-4fb0-8636-d8de18e2d8a5@linaro.org>
+Date: Thu, 22 Feb 2024 16:02:07 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 7/8] ASoC: dt-bindings: xmos,xvf3500: add XMOS XVF3500
+ voice processor
+Content-Language: en-US
+To: Javier Carrasco <javier.carrasco@wolfvision.net>,
+ Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
+ Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>, Matthias Kaehlcke <mka@chromium.org>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Helen Koike <helen.koike@collabora.com>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Russell King <linux@armlinux.org.uk>
+Cc: linux-sound@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+ dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org
+References: <20240220-onboard_xvf3500-v4-0-dc1617cc5dd4@wolfvision.net>
+ <20240220-onboard_xvf3500-v4-7-dc1617cc5dd4@wolfvision.net>
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <20240220-onboard_xvf3500-v4-7-dc1617cc5dd4@wolfvision.net>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-A few drivers register a devm action to remove a debugfs directory,
-implementing a one-liner function that calls debufs_remove_recursive().
-Help drivers avoid this repeated implementations by adding managed
-version of debugfs directory create function.
+On 20/02/2024 15:05, Javier Carrasco wrote:
+> The XMOS XVF3500 VocalFusion Voice Processor[1] is a low-latency, 32-bit
+> multicore controller for voice processing.
+> 
+> Add new bindings to define the device properties.
+> 
+> [1] https://www.xmos.com/xvf3500/
 
-Use the new function devm_debugfs_create_dir() in the following
-drivers:
-  drivers/crypto/caam/ctrl.c
-  drivers/gpu/drm/bridge/ti-sn65dsi86.c
-  drivers/hwmon/hp-wmi-sensors.c
-  drivers/hwmon/mr75203.c
-  drivers/hwmon/pmbus/pmbus_core.c
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-Also use the action function devm_debugfs_dir_recursive_drop() in
-drivers
-  drivers/cxl/mem.c
-  drivers/gpio/gpio-mockup.c
-
-Signed-off-by: Marek Behún <kabel@kernel.org>
----
- drivers/crypto/caam/ctrl.c            | 16 +++------
- drivers/cxl/mem.c                     |  9 ++---
- drivers/gpio/gpio-mockup.c            | 11 ++----
- drivers/gpu/drm/bridge/ti-sn65dsi86.c | 13 ++------
- drivers/hwmon/hp-wmi-sensors.c        | 15 ++-------
- drivers/hwmon/mr75203.c               | 15 +++------
- drivers/hwmon/pmbus/pmbus_core.c      | 16 +++------
- include/linux/devm-helpers.h          | 48 +++++++++++++++++++++++++++
- 8 files changed, 72 insertions(+), 71 deletions(-)
-
-diff --git a/drivers/crypto/caam/ctrl.c b/drivers/crypto/caam/ctrl.c
-index bdf367f3f679..ea3ed9a17f1a 100644
---- a/drivers/crypto/caam/ctrl.c
-+++ b/drivers/crypto/caam/ctrl.c
-@@ -7,6 +7,7 @@
-  */
- 
- #include <linux/device.h>
-+#include <linux/devm-helpers.h>
- #include <linux/of_address.h>
- #include <linux/of_irq.h>
- #include <linux/platform_device.h>
-@@ -604,11 +605,6 @@ static int init_clocks(struct device *dev, const struct caam_imx_data *data)
- 	return devm_add_action_or_reset(dev, disable_clocks, ctrlpriv);
- }
- 
--static void caam_remove_debugfs(void *root)
--{
--	debugfs_remove_recursive(root);
--}
--
- #ifdef CONFIG_FSL_MC_BUS
- static bool check_version(struct fsl_mc_version *mc_version, u32 major,
- 			  u32 minor, u32 revision)
-@@ -1058,13 +1054,9 @@ static int caam_probe(struct platform_device *pdev)
- 	ctrlpriv->era = caam_get_era(perfmon);
- 	ctrlpriv->domain = iommu_get_domain_for_dev(dev);
- 
--	dfs_root = debugfs_create_dir(dev_name(dev), NULL);
--	if (IS_ENABLED(CONFIG_DEBUG_FS)) {
--		ret = devm_add_action_or_reset(dev, caam_remove_debugfs,
--					       dfs_root);
--		if (ret)
--			return ret;
--	}
-+	dfs_root = devm_debugfs_create_dir(dev, dev_name(dev), NULL);
-+	if (IS_ERR(dfs_root))
-+		return PTR_ERR(dfs_root);
- 
- 	caam_debugfs_init(ctrlpriv, perfmon, dfs_root);
- 
-diff --git a/drivers/cxl/mem.c b/drivers/cxl/mem.c
-index c5c9d8e0d88d..4b38514887a4 100644
---- a/drivers/cxl/mem.c
-+++ b/drivers/cxl/mem.c
-@@ -2,6 +2,7 @@
- /* Copyright(c) 2022 Intel Corporation. All rights reserved. */
- #include <linux/debugfs.h>
- #include <linux/device.h>
-+#include <linux/devm-helpers.h>
- #include <linux/module.h>
- #include <linux/pci.h>
- 
-@@ -30,11 +31,6 @@ static void enable_suspend(void *data)
- 	cxl_mem_active_dec();
- }
- 
--static void remove_debugfs(void *dentry)
--{
--	debugfs_remove_recursive(dentry);
--}
--
- static int cxl_mem_dpa_show(struct seq_file *file, void *data)
- {
- 	struct device *dev = file->private;
-@@ -138,7 +134,8 @@ static int cxl_mem_probe(struct device *dev)
- 		debugfs_create_file("clear_poison", 0200, dentry, cxlmd,
- 				    &cxl_poison_clear_fops);
- 
--	rc = devm_add_action_or_reset(dev, remove_debugfs, dentry);
-+	rc = devm_add_action_or_reset(dev, devm_debugfs_dir_recursive_drop,
-+				      dentry);
- 	if (rc)
- 		return rc;
- 
-diff --git a/drivers/gpio/gpio-mockup.c b/drivers/gpio/gpio-mockup.c
-index 455eecf6380e..adbe0fe09490 100644
---- a/drivers/gpio/gpio-mockup.c
-+++ b/drivers/gpio/gpio-mockup.c
-@@ -12,6 +12,7 @@
- #include <linux/cleanup.h>
- #include <linux/debugfs.h>
- #include <linux/device.h>
-+#include <linux/devm-helpers.h>
- #include <linux/gpio/driver.h>
- #include <linux/interrupt.h>
- #include <linux/irq.h>
-@@ -390,13 +391,6 @@ static void gpio_mockup_debugfs_setup(struct device *dev,
- 	}
- }
- 
--static void gpio_mockup_debugfs_cleanup(void *data)
--{
--	struct gpio_mockup_chip *chip = data;
--
--	debugfs_remove_recursive(chip->dbg_dir);
--}
--
- static void gpio_mockup_dispose_mappings(void *data)
- {
- 	struct gpio_mockup_chip *chip = data;
-@@ -480,7 +474,8 @@ static int gpio_mockup_probe(struct platform_device *pdev)
- 
- 	gpio_mockup_debugfs_setup(dev, chip);
- 
--	return devm_add_action_or_reset(dev, gpio_mockup_debugfs_cleanup, chip);
-+	return devm_add_action_or_reset(dev, devm_debugfs_dir_recursive_drop,
-+					chip->dbg_dir);
- }
- 
- static const struct of_device_id gpio_mockup_of_match[] = {
-diff --git a/drivers/gpu/drm/bridge/ti-sn65dsi86.c b/drivers/gpu/drm/bridge/ti-sn65dsi86.c
-index 62cc3893dca5..ad0ed2459394 100644
---- a/drivers/gpu/drm/bridge/ti-sn65dsi86.c
-+++ b/drivers/gpu/drm/bridge/ti-sn65dsi86.c
-@@ -10,6 +10,7 @@
- #include <linux/bits.h>
- #include <linux/clk.h>
- #include <linux/debugfs.h>
-+#include <linux/devm-helpers.h>
- #include <linux/gpio/consumer.h>
- #include <linux/gpio/driver.h>
- #include <linux/i2c.h>
-@@ -427,18 +428,12 @@ static int status_show(struct seq_file *s, void *data)
- 
- DEFINE_SHOW_ATTRIBUTE(status);
- 
--static void ti_sn65dsi86_debugfs_remove(void *data)
--{
--	debugfs_remove_recursive(data);
--}
--
- static void ti_sn65dsi86_debugfs_init(struct ti_sn65dsi86 *pdata)
- {
- 	struct device *dev = pdata->dev;
- 	struct dentry *debugfs;
--	int ret;
- 
--	debugfs = debugfs_create_dir(dev_name(dev), NULL);
-+	debugfs = devm_debugfs_create_dir(dev, dev_name(dev), NULL);
- 
- 	/*
- 	 * We might get an error back if debugfs wasn't enabled in the kernel
-@@ -447,10 +442,6 @@ static void ti_sn65dsi86_debugfs_init(struct ti_sn65dsi86 *pdata)
- 	if (IS_ERR_OR_NULL(debugfs))
- 		return;
- 
--	ret = devm_add_action_or_reset(dev, ti_sn65dsi86_debugfs_remove, debugfs);
--	if (ret)
--		return;
--
- 	debugfs_create_file("status", 0600, debugfs, pdata, &status_fops);
- }
- 
-diff --git a/drivers/hwmon/hp-wmi-sensors.c b/drivers/hwmon/hp-wmi-sensors.c
-index b5325d0e72b9..2a7c33763ce8 100644
---- a/drivers/hwmon/hp-wmi-sensors.c
-+++ b/drivers/hwmon/hp-wmi-sensors.c
-@@ -23,6 +23,7 @@
- 
- #include <linux/acpi.h>
- #include <linux/debugfs.h>
-+#include <linux/devm-helpers.h>
- #include <linux/hwmon.h>
- #include <linux/jiffies.h>
- #include <linux/mutex.h>
-@@ -1304,12 +1305,6 @@ static int current_reading_show(struct seq_file *seqf, void *ignored)
- }
- DEFINE_SHOW_ATTRIBUTE(current_reading);
- 
--/* hp_wmi_devm_debugfs_remove - devm callback for debugfs cleanup */
--static void hp_wmi_devm_debugfs_remove(void *res)
--{
--	debugfs_remove_recursive(res);
--}
--
- /* hp_wmi_debugfs_init - create and populate debugfs directory tree */
- static void hp_wmi_debugfs_init(struct device *dev, struct hp_wmi_info *info,
- 				struct hp_wmi_platform_events *pevents,
-@@ -1320,21 +1315,15 @@ static void hp_wmi_debugfs_init(struct device *dev, struct hp_wmi_info *info,
- 	struct dentry *debugfs;
- 	struct dentry *entries;
- 	struct dentry *dir;
--	int err;
- 	u8 i;
- 
- 	/* dev_name() gives a not-very-friendly GUID for WMI devices. */
- 	scnprintf(buf, sizeof(buf), "hp-wmi-sensors-%u", dev->id);
- 
--	debugfs = debugfs_create_dir(buf, NULL);
-+	debugfs = devm_debugfs_create_dir(dev, buf, NULL);
- 	if (IS_ERR(debugfs))
- 		return;
- 
--	err = devm_add_action_or_reset(dev, hp_wmi_devm_debugfs_remove,
--				       debugfs);
--	if (err)
--		return;
--
- 	entries = debugfs_create_dir("sensor", debugfs);
- 
- 	for (i = 0; i < icount; i++, info++) {
-diff --git a/drivers/hwmon/mr75203.c b/drivers/hwmon/mr75203.c
-index 50a8b9c3f94d..50f348fca108 100644
---- a/drivers/hwmon/mr75203.c
-+++ b/drivers/hwmon/mr75203.c
-@@ -10,6 +10,7 @@
- #include <linux/bits.h>
- #include <linux/clk.h>
- #include <linux/debugfs.h>
-+#include <linux/devm-helpers.h>
- #include <linux/hwmon.h>
- #include <linux/kstrtox.h>
- #include <linux/module.h>
-@@ -216,17 +217,11 @@ static const struct file_operations pvt_ts_coeff_j_fops = {
- 	.llseek = default_llseek,
- };
- 
--static void devm_pvt_ts_dbgfs_remove(void *data)
--{
--	struct pvt_device *pvt = (struct pvt_device *)data;
--
--	debugfs_remove_recursive(pvt->dbgfs_dir);
--	pvt->dbgfs_dir = NULL;
--}
--
- static int pvt_ts_dbgfs_create(struct pvt_device *pvt, struct device *dev)
- {
--	pvt->dbgfs_dir = debugfs_create_dir(dev_name(dev), NULL);
-+	pvt->dbgfs_dir = devm_debugfs_create_dir(dev, dev_name(dev), NULL);
-+	if (IS_ERR(pvt->dbgfs_dir))
-+		return PTR_ERR(pvt->dbgfs_dir);
- 
- 	debugfs_create_u32("ts_coeff_h", 0644, pvt->dbgfs_dir,
- 			   &pvt->ts_coeff.h);
-@@ -237,7 +232,7 @@ static int pvt_ts_dbgfs_create(struct pvt_device *pvt, struct device *dev)
- 	debugfs_create_file("ts_coeff_j", 0644, pvt->dbgfs_dir, pvt,
- 			    &pvt_ts_coeff_j_fops);
- 
--	return devm_add_action_or_reset(dev, devm_pvt_ts_dbgfs_remove, pvt);
-+	return 0;
- }
- 
- static umode_t pvt_is_visible(const void *data, enum hwmon_sensor_types type,
-diff --git a/drivers/hwmon/pmbus/pmbus_core.c b/drivers/hwmon/pmbus/pmbus_core.c
-index 1363d9f89181..e0f956a21125 100644
---- a/drivers/hwmon/pmbus/pmbus_core.c
-+++ b/drivers/hwmon/pmbus/pmbus_core.c
-@@ -7,6 +7,7 @@
-  */
- 
- #include <linux/debugfs.h>
-+#include <linux/devm-helpers.h>
- #include <linux/kernel.h>
- #include <linux/math64.h>
- #include <linux/module.h>
-@@ -3336,13 +3337,6 @@ static const struct file_operations pmbus_debugfs_ops_mfr = {
- 	.open = simple_open,
- };
- 
--static void pmbus_remove_debugfs(void *data)
--{
--	struct dentry *entry = data;
--
--	debugfs_remove_recursive(entry);
--}
--
- static int pmbus_init_debugfs(struct i2c_client *client,
- 			      struct pmbus_data *data)
- {
-@@ -3357,8 +3351,9 @@ static int pmbus_init_debugfs(struct i2c_client *client,
- 	 * Create the debugfs directory for this device. Use the hwmon device
- 	 * name to avoid conflicts (hwmon numbers are globally unique).
- 	 */
--	data->debugfs = debugfs_create_dir(dev_name(data->hwmon_dev),
--					   pmbus_debugfs_dir);
-+	data->debugfs = devm_debugfs_create_dir(data->dev,
-+						dev_name(data->hwmon_dev),
-+						pmbus_debugfs_dir);
- 	if (IS_ERR_OR_NULL(data->debugfs)) {
- 		data->debugfs = NULL;
- 		return -ENODEV;
-@@ -3542,8 +3537,7 @@ static int pmbus_init_debugfs(struct i2c_client *client,
- 		}
- 	}
- 
--	return devm_add_action_or_reset(data->dev,
--					pmbus_remove_debugfs, data->debugfs);
-+	return 0;
- }
- #else
- static int pmbus_init_debugfs(struct i2c_client *client,
-diff --git a/include/linux/devm-helpers.h b/include/linux/devm-helpers.h
-index 70640fb96117..39d743175ec4 100644
---- a/include/linux/devm-helpers.h
-+++ b/include/linux/devm-helpers.h
-@@ -23,6 +23,7 @@
-  * already ran.
-  */
- 
-+#include <linux/debugfs.h>
- #include <linux/device.h>
- #include <linux/kconfig.h>
- #include <linux/mutex.h>
-@@ -108,4 +109,51 @@ static inline int devm_mutex_init(struct device *dev, struct mutex *lock)
- 		return 0;
- }
- 
-+static inline void devm_debugfs_dir_recursive_drop(void *res)
-+{
-+	debugfs_remove_recursive(res);
-+}
-+
-+/**
-+ * devm_debugfs_create_dir - Resource managed debugfs directory creation
-+ * @dev:	Device which lifetime the directory is bound to
-+ * @name:	a pointer to a string containing the name of the directory to
-+ *		create
-+ * @parent:	a pointer to the parent dentry for this file.  This should be a
-+ *		directory dentry if set.  If this parameter is NULL, then the
-+ *		directory will be created in the root of the debugfs filesystem.
-+ *
-+ * Create a debugfs directory which is automatically recursively removed when
-+ * the driver is detached. A few drivers create debugfs directories which they
-+ * want removed before driver is detached.
-+ * devm_debugfs_create_dir() can be used to omit the explicit
-+ * debugfs_remove_recursive() call when driver is detached.
-+ */
-+static inline struct dentry *
-+devm_debugfs_create_dir(struct device *dev, const char *name,
-+			struct dentry *parent)
-+{
-+	struct dentry *dentry;
-+
-+	dentry = debugfs_create_dir(name, parent);
-+	if (IS_ERR(dentry))
-+		return dentry;
-+
-+	/*
-+	 * debugfs_remove_recursive() is an empty function if CONFIG_DEBUG_FS is
-+	 * disabled. No need to register an action in that case.
-+	 */
-+	if (IS_ENABLED(CONFIG_DEBUG_FS)) {
-+		int err;
-+
-+		err = devm_add_action_or_reset(dev,
-+					       devm_debugfs_dir_recursive_drop,
-+					       dentry);
-+		if (err < 0)
-+			return ERR_PTR(err);
-+	}
-+
-+	return dentry;
-+}
-+
- #endif
--- 
-2.43.0
+Best regards,
+Krzysztof
 
