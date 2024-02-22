@@ -1,100 +1,127 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-0016f401.pphosted.com (mx0b-0016f401.pphosted.com [67.231.156.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C46C073F20;
-	Thu, 22 Feb 2024 22:11:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F14FD73F20;
+	Thu, 22 Feb 2024 22:12:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.156.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708639915; cv=none; b=M4Vi89pxeT8CKgOv0hHnndMUpzByY2r70O0Ir0sNfHE5klAYt1Nm03ilK9G06HBA1osWeS+6aOf9T7+j9uHmhGAqa+CMn9vTAdPE4r2uHKh3NFlptXQz3rltp+Gk4wH2EizPa0To1w/jiOLHuETuCFCCPjb3sRSxdV8vD+t3QY4=
+	t=1708639938; cv=none; b=V2oCFtMb9QbHBEFKekuTGIgldCMj8AjJQSv2vArGrhZluE3y6sh0zyUR0NH6/q+3aNFWnBKkk8DeAmTjwNk+tMRKqb/CTpg+/dPfXr0p8GvfYDnc/InB2FaZTOTrMhfCgM6HTACgBHUoNpJ/vg0/jJ7JckRIP590tU2pAf74w7o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708639915; c=relaxed/simple;
-	bh=p+8uhwqkWinqy5UVg9deOCr1wsUGH7ZlNzrnMxbpJCk=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=HbFrHna5KoxRWNvRIxCaYRqoFi4ZIFfm52b8lShWOGOXjtsTCxy3DOiphSdTa1oUb5BXmbWH8E9o7GxTktscmB2xsGwzrpFH17B6jdVX6QsE2gbV9HrR7IU4MNjl6sSeQnBSEZkHW0EYQ9KbpquPSZ7lRC41szybgvn6QmjN5OY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8F909C433F1;
-	Thu, 22 Feb 2024 22:11:54 +0000 (UTC)
-Date: Thu, 22 Feb 2024 17:13:45 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Beau Belgrave <beaub@linux.microsoft.com>
-Cc: mhiramat@kernel.org, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, mathieu.desnoyers@efficios.com
-Subject: Re: [PATCH v4 2/4] tracing/user_events: Introduce multi-format
- events
-Message-ID: <20240222171345.25b1a289@gandalf.local.home>
-In-Reply-To: <20240222001807.1463-3-beaub@linux.microsoft.com>
-References: <20240222001807.1463-1-beaub@linux.microsoft.com>
-	<20240222001807.1463-3-beaub@linux.microsoft.com>
-X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1708639938; c=relaxed/simple;
+	bh=OEjaR8q/hH/zJzrJq00dzosvg9sB+rc7P5n3BrRx+nE=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=oxWmN8hKLAG6O2QSbdxJR9xILmEUYExD+A1QHdxFcpSP23osuPPGN8/eK1d4MEGkyczAN1gnYN1+RmKzicIgTyEyIiPDLrA2GgAYgMGxqBZgecMESXov2350zmbCAVV3p9jArzVA2P/HD1shf1BmcZd/nxvaV8I34iNircw3aBI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com; spf=none smtp.helo=mx0b-0016f401.pphosted.com; dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b=c9kPgATR; arc=none smtp.client-ip=67.231.156.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.helo=mx0b-0016f401.pphosted.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="c9kPgATR"
+Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
+	by mx0b-0016f401.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 41ML8Xtm001858;
+	Thu, 22 Feb 2024 14:12:14 -0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=
+	from:to:cc:subject:date:message-id:mime-version
+	:content-transfer-encoding:content-type; s=pfpt0220; bh=y6gHklRy
+	6mgfq/+kDFgxdQdIm96X6dvMx3GA+sAwVL0=; b=c9kPgATRBaAkorffM3JBrXZu
+	JiSZ77CYf1mkHC4JSlijR3S6i+cXxCFkUFUfLhpo4jjsn3zFJVwIx7XM+wIc9b8j
+	RyEnFYtReEnCSEHMOUtzs7h2pzbah9gUED2AAo5DiqiQjubzgP6AvU/IVJFMTtzU
+	eKTbCyNsSozfA5VK+KbdwTlGl+ZyNVXHO96NbSsxNND1jnuFEc9F3WCoPEEkW31d
+	39vG/d8EIBBkmrI+reGw8c/j1cotViJTiMOH7Fj86F50Nfcrx9tYi2lWoAJ4lIrB
+	8sDkkzLW1kW5MJHCGaPsP+AO7w0DLpIqBZ8/VWwfW+Lrtdg6jA6rOcEw5I4EuQ==
+Received: from dc5-exch01.marvell.com ([199.233.59.181])
+	by mx0b-0016f401.pphosted.com (PPS) with ESMTPS id 3wedwxg5qs-2
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+	Thu, 22 Feb 2024 14:12:14 -0800 (PST)
+Received: from DC5-EXCH01.marvell.com (10.69.176.38) by DC5-EXCH01.marvell.com
+ (10.69.176.38) with Microsoft SMTP Server (TLS) id 15.0.1497.48; Thu, 22 Feb
+ 2024 14:12:12 -0800
+Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH01.marvell.com
+ (10.69.176.38) with Microsoft SMTP Server id 15.0.1497.48 via Frontend
+ Transport; Thu, 22 Feb 2024 14:12:12 -0800
+Received: from dc3lp-swdev041.marvell.com (dc3lp-swdev041.marvell.com [10.6.60.191])
+	by maili.marvell.com (Postfix) with ESMTP id 5752E3F7210;
+	Thu, 22 Feb 2024 12:09:39 -0800 (PST)
+From: Elad Nachman <enachman@marvell.com>
+To: <ulf.hansson@linaro.org>, <adrian.hunter@intel.com>,
+        <linux-mmc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC: <enachman@marvell.com>, <stable@vger.kernel.org>
+Subject: [PATCH v3 1/2] mmc: xenon: fix PHY init clock stability
+Date: Thu, 22 Feb 2024 22:09:30 +0200
+Message-ID: <20240222200930.1277665-1-enachman@marvell.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Proofpoint-GUID: JdPCkikJJ_yuG4mu4kOEIp3h1iOolA97
+X-Proofpoint-ORIG-GUID: JdPCkikJJ_yuG4mu4kOEIp3h1iOolA97
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-02-22_15,2024-02-22_01,2023-05-22_02
 
-On Thu, 22 Feb 2024 00:18:05 +0000
-Beau Belgrave <beaub@linux.microsoft.com> wrote:
+From: Elad Nachman <enachman@marvell.com>
 
-> Currently user_events supports 1 event with the same name and must have
-> the exact same format when referenced by multiple programs. This opens
-> an opportunity for malicous or poorly thought through programs to
+Each time SD/mmc phy is initialized, at times, in some of
+the attempts, phy fails to completes its initialization
+which results into timeout error. Per the HW spec, it is
+a pre-requisite to ensure a stable SD clock before a phy
+initialization is attempted.
 
-  malicious? ;-)
+Fixes: 06c8b667ff5b ("mmc: sdhci-xenon: Add support to PHYs of Marvell Xenon SDHC")
+Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Elad Nachman <enachman@marvell.com>
+---
+ drivers/mmc/host/sdhci-xenon-phy.c | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
 
--- Steve
+diff --git a/drivers/mmc/host/sdhci-xenon-phy.c b/drivers/mmc/host/sdhci-xenon-phy.c
+index 8cf3a375de65..c3096230a969 100644
+--- a/drivers/mmc/host/sdhci-xenon-phy.c
++++ b/drivers/mmc/host/sdhci-xenon-phy.c
+@@ -11,6 +11,7 @@
+ #include <linux/slab.h>
+ #include <linux/delay.h>
+ #include <linux/ktime.h>
++#include <linux/iopoll.h>
+ #include <linux/of_address.h>
+ 
+ #include "sdhci-pltfm.h"
+@@ -216,6 +217,19 @@ static int xenon_alloc_emmc_phy(struct sdhci_host *host)
+ 	return 0;
+ }
+ 
++static int xenon_check_stability_internal_clk(struct sdhci_host *host)
++{
++	u32 reg;
++	int err;
++
++	err = read_poll_timeout(sdhci_readw, reg, reg & SDHCI_CLOCK_INT_STABLE,
++				1100, 20000, false, host, SDHCI_CLOCK_CONTROL);
++	if (err)
++		dev_err(mmc_dev(host->mmc), "phy_init: Internal clock never stabilized.\n");
++
++	return err;
++}
++
+ /*
+  * eMMC 5.0/5.1 PHY init/re-init.
+  * eMMC PHY init should be executed after:
+@@ -232,6 +246,11 @@ static int xenon_emmc_phy_init(struct sdhci_host *host)
+ 	struct xenon_priv *priv = sdhci_pltfm_priv(pltfm_host);
+ 	struct xenon_emmc_phy_regs *phy_regs = priv->emmc_phy_regs;
+ 
++	int ret = xenon_check_stability_internal_clk(host);
++
++	if (ret)
++		return ret;
++
+ 	reg = sdhci_readl(host, phy_regs->timing_adj);
+ 	reg |= XENON_PHY_INITIALIZAION;
+ 	sdhci_writel(host, reg, phy_regs->timing_adj);
+-- 
+2.25.1
 
-> create events that others use with different formats. Another scenario
-> is user programs wishing to use the same event name but add more fields
-> later when the software updates. Various versions of a program may be
-> running side-by-side, which is prevented by the current single format
-> requirement.
-> 
-> Add a new register flag (USER_EVENT_REG_MULTI_FORMAT) which indicates
-> the user program wishes to use the same user_event name, but may have
-> several different formats of the event. When this flag is used, create
-> the underlying tracepoint backing the user_event with a unique name
-> per-version of the format. It's important that existing ABI users do
-> not get this logic automatically, even if one of the multi format
-> events matches the format. This ensures existing programs that create
-> events and assume the tracepoint name will match exactly continue to
-> work as expected. Add logic to only check multi-format events with
-> other multi-format events and single-format events to only check
-> single-format events during find.
-> 
-> Change system name of the multi-format event tracepoint to ensure that
-> multi-format events are isolated completely from single-format events.
-> This prevents single-format names from conflicting with multi-format
-> events if they end with the same suffix as the multi-format events.
-> 
-> Add a register_name (reg_name) to the user_event struct which allows for
-> split naming of events. We now have the name that was used to register
-> within user_events as well as the unique name for the tracepoint. Upon
-> registering events ensure matches based on first the reg_name, followed
-> by the fields and format of the event. This allows for multiple events
-> with the same registered name to have different formats. The underlying
-> tracepoint will have a unique name in the format of {reg_name}.{unique_id}.
-> 
-> For example, if both "test u32 value" and "test u64 value" are used with
-> the USER_EVENT_REG_MULTI_FORMAT the system would have 2 unique
-> tracepoints. The dynamic_events file would then show the following:
->   u:test u64 count
->   u:test u32 count
-> 
-> The actual tracepoint names look like this:
->   test.0
->   test.1
-> 
-> Both would be under the new user_events_multi system name to prevent the
-> older ABI from being used to squat on multi-formatted events and block
-> their use.
-> 
-> Deleting events via "!u:test u64 count" would only delete the first
-> tracepoint that matched that format. When the delete ABI is used all
-> events with the same name will be attempted to be deleted. If
-> per-version deletion is required, user programs should either not use
-> persistent events or delete them via dynamic_events.
-> 
-> Signed-off-by: Beau Belgrave <beaub@linux.microsoft.com>
