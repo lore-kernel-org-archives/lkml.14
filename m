@@ -1,151 +1,79 @@
-Received: from bmailout2.hostsharing.net (bmailout2.hostsharing.net [83.223.78.240])
+Received: from outgoing.mit.edu (outgoing-auth-1.mit.edu [18.9.28.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3A03150998;
-	Thu, 22 Feb 2024 15:54:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.78.240
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 715D9150983
+	for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 15:54:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=18.9.28.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708617300; cv=none; b=UzpS+5BWOFXbq+j/oIP0UfVomSeadJr4VAuIZiNwIXk8jVPAfLTIcAvinqteid9QllUBx/DZS0hYXMLLh4OuTOul1f+yjsMCkPMF/JHHN/8BLNtL0xtk/SLCXPHbiCI14mH/iLuglkr5NJtrZDWNJjSxhX+3Yft1idL7ZORTZ+k=
+	t=1708617301; cv=none; b=b/VRZFbj9vUWN8DETWE5iyoMkAIrn+sZ0xW6MjhEkKfm2xB7hULONSE9bEOXMu2u08G5YhCD16KYY/OM7idZqMcEpU4QLWKx7XSBEkjajtoZMeZcJ9OWrFwmFO2e3dSMg5OiCHppBGj2DjSoAkj/B29zhQcmYcJUUONs2Xa8UMw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708617300; c=relaxed/simple;
-	bh=gluI6aLWg3nMLpFfEKPO6lsypiaxhhT0+Fr929aqaTI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QRD3UOv3GxFG6uaHx8jho49sGmYVIv3HegFEYntOT9Ao1zetfQsZjdB9kfUAefFNl+2+Nt0OrP7ziIs18xP+YNweY40MKVXrKuvfhrXdSbd5zFlatVBr5Ew6/BvLgyT0i39mDRCm3VTLOx4MrT9L4H/FADI9Yyp2YiSAKgT1emM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.78.240
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
-Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
-	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
-	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
-	by bmailout2.hostsharing.net (Postfix) with ESMTPS id 097AD2800B1CD;
-	Thu, 22 Feb 2024 16:45:30 +0100 (CET)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-	id ECB1B53E15B; Thu, 22 Feb 2024 16:45:29 +0100 (CET)
-Date: Thu, 22 Feb 2024 16:45:29 +0100
-From: Lukas Wunner <lukas@wunner.de>
-To: James Bottomley <James.Bottomley@HansenPartnership.com>
-Cc: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
-	"Xing, Cedric" <cedric.xing@intel.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Dan Middleton <dan.middleton@linux.intel.com>,
-	Samuel Ortiz <sameo@rivosinc.com>, Qinkun Bao <qinkun@google.com>,
-	"Yao, Jiewen" <jiewen.yao@intel.com>,
-	Dionna Amalie Glaze <dionnaglaze@google.com>, biao.lu@intel.com,
-	linux-coco@lists.linux.dev, linux-integrity@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: Re: [RFC PATCH v2 0/4] tsm: Runtime measurement registers ABI
-Message-ID: <20240222154529.GA9465@wunner.de>
-References: <a255bc36-2438-41b7-b304-bcf7a6628bef@linux.intel.com>
- <42e14f74d3819c95fdb97cd2e9b2829dcb1b1563.camel@HansenPartnership.com>
- <1557f98a-3d52-4a02-992b-4401c7c85dd7@linux.intel.com>
- <85b7a4a679eada1d17b311bf004c2d9e18ab5cd3.camel@HansenPartnership.com>
- <b8140cc8-a56b-40f6-a593-7be49db14c77@intel.com>
- <fe1722c3618a8216cb53b8fd3f1b7cbb6fdff5a0.camel@HansenPartnership.com>
- <65c2e4aa54a0_d4122947f@dwillia2-mobl3.amr.corp.intel.com.notmuch>
- <22088ed3-51a4-415f-932c-db84c92a2812@intel.com>
- <527da630-4952-4b1d-80c0-5a87997ff9fd@linux.intel.com>
- <332775d7218843d6cc168c963d76e6841eab5d5b.camel@HansenPartnership.com>
+	s=arc-20240116; t=1708617301; c=relaxed/simple;
+	bh=JfkoAz50awV0qbSc4V8fA6NAcDNFyoem9HJGiEOJz1I=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=pj/kswTnylJ4xnTNcSXyE8csxt3idYyARly/p66aTN3FfTiXhyx5yTWglBXTQyPnPtyTFJAjsdDD+d+ekb1tcq2EQ2Iz4xbMyNn1fi9TDFhpiNdWShC6eKXlPLR45l4U6RkRDoEpGFNqcdtpiNwBoZlEN9dr5nmscSnAb33kJhg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mit.edu; spf=pass smtp.mailfrom=mit.edu; dkim=pass (2048-bit key) header.d=mit.edu header.i=@mit.edu header.b=MNaqjWLp; arc=none smtp.client-ip=18.9.28.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mit.edu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mit.edu
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=mit.edu header.i=@mit.edu header.b="MNaqjWLp"
+Received: from cwcc.thunk.org (pool-173-48-102-198.bstnma.fios.verizon.net [173.48.102.198])
+	(authenticated bits=0)
+        (User authenticated as tytso@ATHENA.MIT.EDU)
+	by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 41MFsgVA030847
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 22 Feb 2024 10:54:43 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mit.edu; s=outgoing;
+	t=1708617284; bh=va26ubDfjVqf3AasDsVt7PlhmdIYT6yVBEJCl7RCZ30=;
+	h=From:Subject:Date:Message-ID:MIME-Version:Content-Type;
+	b=MNaqjWLpudSxaj/AaFOC0P7YTx4DaEB9lUWtJ3bsQpzmFPpTc8hk5Ls1gHY3ECQK8
+	 rRwsrKFot3+in98amj+uWbVshXUHdDJemZztPzallI9sPZRRYvmC/TZYMuCwkgUj1E
+	 segZ5B/e0HUAprShlmxk0U8aGUHPKEDCwcnpSSPqfP0BN7Qc+EpOT5joJ+2bHLMbCJ
+	 21jhUKZsQtMdecOkhy/PIIATYkDYxc7kRA9LUG/riPsSDlYD+V0Z3zdpGcmQJGwcuW
+	 BT6iXzAXBLv1Krn1gFR/ieEF353VA1+SupSoa0/+Emto3+Aztn9tjGm3/PJ7IV/yfD
+	 60Ye/VLMWg5MA==
+Received: by cwcc.thunk.org (Postfix, from userid 15806)
+	id 40DD215C1489; Thu, 22 Feb 2024 10:54:40 -0500 (EST)
+From: "Theodore Ts'o" <tytso@mit.edu>
+To: adilger.kernel@dilger.ca, linux-ext4@vger.kernel.org,
+        Ye Bin <yebin10@huawei.com>
+Cc: "Theodore Ts'o" <tytso@mit.edu>, linux-kernel@vger.kernel.org,
+        jack@suse.cz
+Subject: Re: [PATCH] ext4: forbid commit inconsistent quota data when errors=remount-ro
+Date: Thu, 22 Feb 2024 10:54:35 -0500
+Message-ID: <170861726752.823885.428276685390671750.b4-ty@mit.edu>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240119062908.3598806-1-yebin10@huawei.com>
+References: <20240119062908.3598806-1-yebin10@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <332775d7218843d6cc168c963d76e6841eab5d5b.camel@HansenPartnership.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-Hi James,
 
-On Wed, Feb 07, 2024 at 04:46:36PM -0500, James Bottomley wrote:
-> Just to correct this: IMA uses its own log format, but I think this was
-> a mistake long ago and the new log should use TCG2 format so all the
-> tools know how to parse it.
+On Fri, 19 Jan 2024 14:29:08 +0800, Ye Bin wrote:
+> There's issue as follows When do IO fault injection test:
+> Quota error (device dm-3): find_block_dqentry: Quota for id 101 referenced but not present
+> Quota error (device dm-3): qtree_read_dquot: Can't read quota structure for id 101
+> Quota error (device dm-3): do_check_range: Getting block 2021161007 out of range 1-186
+> Quota error (device dm-3): qtree_read_dquot: Can't read quota structure for id 661
+> 
+> Now, ext4_write_dquot()/ext4_acquire_dquot()/ext4_release_dquot() may commit
+> inconsistent quota data even if process failed. This may lead to filesystem
+> corruption.
+> To ensure filesystem consistent when errors=remount-ro there is need to call
+> ext4_handle_error() to abort journal.
+> 
+> [...]
 
-At last year's Plumbers BoF on PCI device authentication & encryption,
-you requested that the kernel exposes proof of SPDM signature validation
-so that user space can verify after the fact that the kernel did
-everything correctly.
+Applied, thanks!
 
-Your above comment seems to indicate that you prefer TCG2 CEL as the
-format to expose the information, however the format seems ill-suited
-for the purpose:
+[1/1] ext4: forbid commit inconsistent quota data when errors=remount-ro
+      commit: d8b945fa475f13d787df00c26a6dc45a3e2e1d1d
 
-Per TCG PFP v1.06r52 sec 3.3.7, an SPDM CHALLENGE event merely logs
-the nonce used.  That's not sufficient to verify the signature:
-The signature is computed over a hash of the concatenation of all
-the messages exchanged with the device:
-
-* GET_VERSION request + VERSION response
-* GET_CAPABILITIES request + CAPABILITIES response
-* NEGOTIATE_ALGORITHMS request + ALGORITHMS response
-* GET_DIGESTS request + DIGESTS response
-* GET_CERTIFICATE request + CERTIFICATE response (can be multiple)
-* CHALLENGE request + CHALLENGE_AUTH response
-
-The content of those SPDM messages is not necessarily static:
-E.g. the SPDM requester (the kernel) presents all supported algorithms
-and the SPDM responder (the device) selects one of them.
-
-If only the nonce is saved in the log, the verifier in user space would
-need to know exactly which algorithms were supported by the SPDM requester
-at the time the request was sent (could since have changed through a
-kernel update).  It also needs to know exactly which algorithm the
-SPDM responder picked.
-
-Armed with the knowledge which algorithm bits were set, the verifier
-would have to reconstruct the messages that were exchanged between
-SPDM requester and responder so that it can calculate the hash over
-their concatenation and verify the signature.
-
-The algorithm selection is but one example of bits that can vary between
-different requesters/responders and between different points in time.
-The SPDM protocol allows a great deal of flexibility/agility here.
-
-The nonces sent by requester and responder are not the only bits that are
-variable, is what I'm trying to say.  Storing the nonces in the log is
-sufficient to prove their freshness, but it is not sufficient to prove
-correct validation of the signature.
-
-I'd have to store the full concatenation of all exchanged SPDM messages
-in the log to facilitate that.  Personally I have no problem doing so,
-but it won't be possible with the CEL format as currently specified by TCG.
-
-So on the one hand I'd like to fulfil your Plumbers request to expose
-proof of correct signature validation and on the other hand you're
-requesting CEL format which is insufficient to fulfil the request.
-I don't really know how to reconcile that.
-
-I do see value in exposing the full concatenation of all exchanged
-SPDM messages:  It would allow piping that into wireshark or tshark
-to decode the messages into human-readable form, which might be useful
-for debugging SPDM communication with the device.
-
-In fact, an SPDM dissector for wireshark already exists, though it's
-not up-to-date (last change 3 years ago) and probably needs a cleanup
-before it can be upstreamed:  https://github.com/jyao1/wireshark-spdm/
-
-I'm considering adding a custom sysfs interface which exposes the last,
-say, 64 SPDM events of each device, comprising:
-
-* type of event (CHALLENGE or GET_MEASUREMENTS)
-* timestamp
-* all exchanged messages
-* hash of all exchanged messages
-* hash algorithm used
-* signature received from device
-* certificate chain used for signature validation
-
-The memory consumption for all that data would be significant and the
-format wouldn't be TCG2 CEL, but it would fulfil your request to provide
-proof of signature verification.
-
-Thoughts?
-
-Thanks,
-
-Lukas
+Best regards,
+-- 
+Theodore Ts'o <tytso@mit.edu>
