@@ -1,108 +1,164 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EB5615351C;
-	Thu, 22 Feb 2024 16:28:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70FED1474BA;
+	Thu, 22 Feb 2024 16:29:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708619314; cv=none; b=F6kW/epvrbl+wzdjIGp5WHy9w8qSdTUCRUyj91ewgjDRUsf8RctEYaEtEyPp2+ZJRzYONywHmYix4EZCGoMYgv8okO5hyuAUUjTf8CnF34qZrkX3Rxuu2X3NtB4pMk1WeyO3JNMMtaK8cbIOJL0js1G4FFvqCz/hz/9FWgddsm0=
+	t=1708619388; cv=none; b=FcvF/eRZzHfu8STjg9C4+RBJLfPdZ6IpKh5bNYMmoeHtQahnRI0JE3wBD7B3Az9bLU5Yh3nlFkHeVy/XXpbBdlGXTYfl04HZ29uKc/Tg9nkisNB5OuUJMNdqWai5Qd/eDEmAFi0ZHG7afJZiYVC8yZLb5bhKIBvWCBhaTZggx8o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708619314; c=relaxed/simple;
-	bh=itZJtWvnlDX8BTYjQebFHP4oWvzdRahIFdPuDTsEIwE=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=lNhA0Qf2hqnAvlBN5uotvromCupVStjt8tBZRr7YP7GIl+2HLhQFKcDKuRvthuahfypDoin09qd0iafpiRHBrXfI0jtFeGT4HDzB7H5RMwaEu7YEI1nB4sI1P3Lz2gTmrKE8jtYdhIfl2hub2XhSak3h6dwi9QWmCxQbz2X8zag=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cBgI+8Ck; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1708619388; c=relaxed/simple;
+	bh=XDPa4zEJuUAt2gJOYf0ufxuZ/t7zjS1SdbdV9RQRBKE=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=eEQ3zKDj98+eL0oVJQIgUW4v3a6lv46+7TjKFUNHuXW4Ei1LOr8v+pZ4m/vGqDNnJeyC8z4D3H+K9xIId+XNQ33o2tW0WoPCG5Air7SqE7bfNXzTorzgWlvsHEaqu+EnLstLje6Nc/sq2kTg45BuwyHa9amihLk2oSrRIb6qOy0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=ojW/Q3wB; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cBgI+8Ck"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9382AC433B2;
-	Thu, 22 Feb 2024 16:28:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708619313;
-	bh=itZJtWvnlDX8BTYjQebFHP4oWvzdRahIFdPuDTsEIwE=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=cBgI+8Ckp17p3a8II2dv5FbR0WpnSaEmgaNRFhim9Tr/ReIHOaExdlfVNL+4Zw3pJ
-	 W5NTxrT3RkIQQHPU2JNIISiLtlpp7nJGN06cg4i8PESZgn70gaJdGzwRC5omcjK8eH
-	 9jqyOIKOgah9JOp4r+OmWhzL/AZ1uJJVjNbP/MzL1QS4+o0+ph+PK/BYV5txoyLXcW
-	 R4PFxg9C7TsVleHzEkexV7w4ieUaGS/jeRMjauWUTIdaO1LF95QrVz8uaSCTXUe296
-	 zDIJq4eD+CLCoc1dXIp6cbep5sJoSuEEXpJBMh2dr/xLfkNSJIQKT1kEv5eioaVCWN
-	 rsMGp31hI1qXA==
-Received: from 82-132-212-42.dab.02.net ([82.132.212.42] helo=wait-a-minute.misterjones.org)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <maz@kernel.org>)
-	id 1rdBvy-005njW-UK;
-	Thu, 22 Feb 2024 16:28:31 +0000
-Date: Thu, 22 Feb 2024 16:28:27 +0000
-Message-ID: <87edd4a2fo.wl-maz@kernel.org>
-From: Marc Zyngier <maz@kernel.org>
-To: Aishwarya TCV <aishwarya.tcv@arm.com>
-Cc: Anup Patel <apatel@ventanamicro.com>,	Palmer Dabbelt
- <palmer@dabbelt.com>,	Paul Walmsley <paul.walmsley@sifive.com>,	Thomas
- Gleixner <tglx@linutronix.de>,	Rob Herring <robh+dt@kernel.org>,	Krzysztof
- Kozlowski <krzysztof.kozlowski+dt@linaro.org>,	Frank Rowand
- <frowand.list@gmail.com>,	Conor Dooley <conor+dt@kernel.org>,
-	=?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@kernel.org>,	Atish Patra
- <atishp@atishpatra.org>,	Andrew Jones <ajones@ventanamicro.com>,	Sunil V L
- <sunilvl@ventanamicro.com>,	Saravana Kannan <saravanak@google.com>,	Anup
- Patel <anup@brainfault.org>,	linux-riscv@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org,	linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org,	Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v12 02/25] genirq/irqdomain: Remove the param count restriction from select()
-In-Reply-To: <e42b76a9-fc5f-4ab7-96a2-629261a9c983@arm.com>
-References: <20240127161753.114685-1-apatel@ventanamicro.com>
-	<20240127161753.114685-3-apatel@ventanamicro.com>
-	<e42b76a9-fc5f-4ab7-96a2-629261a9c983@arm.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/28.2
- (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="ojW/Q3wB"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1708619384;
+	bh=XDPa4zEJuUAt2gJOYf0ufxuZ/t7zjS1SdbdV9RQRBKE=;
+	h=From:To:Cc:Subject:Date:From;
+	b=ojW/Q3wBZe+6AcTn4kNEFGzh4qGJp2fuVg0gVnJ+IlLotYBuHjvjLp4Cyjjr1JYX1
+	 FIrFhOAeHTwuync8gLKW7pCiD79kishmeAKpWKUzLITp1DR1du6FhNrgWp433OQRbt
+	 bshAIZiTvix2xDJE/3N62w4jvLuzcOCMOEWHa7xrrUdHMgo6S/34fkt6LoH1uarZon
+	 TiAT5pT2o/UI5hOp+N//O2NwdZ6Tw2NScPSRpg/anSeTE9lLqQEHRiyXcvMRbU+qyD
+	 JZEO1Puq3gnohoMpSoZO5lvooRHHPaNfe5E0COJCqrMnFKQc/wFIhp7dGlSDAGn/2y
+	 FeWsJCdH26/wQ==
+Received: from localhost.localdomain (cola.collaboradmins.com [195.201.22.229])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: laura.nao)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 21A9937820D7;
+	Thu, 22 Feb 2024 16:29:43 +0000 (UTC)
+From: Laura Nao <laura.nao@collabora.com>
+To: ojeda@kernel.org,
+	alex.gaynor@gmail.com,
+	wedsonaf@gmail.com,
+	shuah@kernel.org
+Cc: usama.anjum@collabora.com,
+	a.hindborg@samsung.com,
+	aliceryhl@google.com,
+	benno.lossin@proton.me,
+	bjorn3_gh@protonmail.com,
+	boqun.feng@gmail.com,
+	gary@garyguo.net,
+	kernel@collabora.com,
+	laura.nao@collabora.com,
+	linux-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org,
+	rust-for-linux@vger.kernel.org,
+	kernel@valentinobst.de,
+	Sergio Gonzalez Collado <sergio.collado@gmail.com>
+Subject: [PATCH v3] kselftest: Add basic test for probing the rust sample modules
+Date: Thu, 22 Feb 2024 17:29:13 +0100
+Message-Id: <20240222162913.498197-1-laura.nao@collabora.com>
+X-Mailer: git-send-email 2.30.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 82.132.212.42
-X-SA-Exim-Rcpt-To: aishwarya.tcv@arm.com, apatel@ventanamicro.com, palmer@dabbelt.com, paul.walmsley@sifive.com, tglx@linutronix.de, robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org, frowand.list@gmail.com, conor+dt@kernel.org, bjorn@kernel.org, atishp@atishpatra.org, ajones@ventanamicro.com, sunilvl@ventanamicro.com, saravanak@google.com, anup@brainfault.org, linux-riscv@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, broonie@kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Thu, 22 Feb 2024 13:01:32 +0000,
-Aishwarya TCV <aishwarya.tcv@arm.com> wrote:
-> 
-> 
-> 
-> On 27/01/2024 16:17, Anup Patel wrote:
-> > From: Thomas Gleixner <tglx@linutronix.de>
-> > 
-> > Now that the GIC-v3 callback can handle invocation with a fwspec parameter
-> > count of 0 lift the restriction in the core code and invoke select()
-> > unconditionally when the domain provides it.
-> > 
-> > Preparatory change for per device MSI domains.
-> > 
-> > Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-> > Signed-off-by: Anup Patel <apatel@ventanamicro.com>
-> > ---
-> 
-> Hi Thomas/Anup
-> 
-> Currently when booting the kernel against next-master(next-20240222)
-> with Arm64 on Qualcomm boards RB5/DB845C, the kernel is resulting in
-> boot failures for our CI. I can send the full logs if required. Most
-> other boards seem to be fine.
-> 
-> A bisect (full log below) identified this patch as introducing the
-> failure. Bisected it on the tag "next-20240220" at repo
-> "https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git".
-> 
-> This works fine on Linux v6.8-rc5
+Add new basic kselftest that checks if the available rust sample modules
+can be added and removed correctly.
 
-Can you please try [1]?
+Signed-off-by: Laura Nao <laura.nao@collabora.com>
+Reviewed-by: Sergio Gonzalez Collado <sergio.collado@gmail.com>
+Reviewed-by: Muhammad Usama Anjum <usama.anjum@collabora.com>
+---
+Changes in v3:
+- Removed useless KSFT_PASS, KSFT_FAIL, KSFT_SKIP constants
+- Used ktap_finished to print the results summary and handle the return code
+Changes in v2:
+- Added missing SPDX line
+- Edited test_probe_samples.sh script to use the common KTAP helpers file
+---
+ MAINTAINERS                                   |  1 +
+ tools/testing/selftests/Makefile              |  1 +
+ tools/testing/selftests/rust/Makefile         |  4 +++
+ .../selftests/rust/test_probe_samples.sh      | 34 +++++++++++++++++++
+ 4 files changed, 40 insertions(+)
+ create mode 100644 tools/testing/selftests/rust/Makefile
+ create mode 100755 tools/testing/selftests/rust/test_probe_samples.sh
 
-	M.
-
-[1] https://lore.kernel.org/linux-kernel/20240220114731.1898534-1-maz@kernel.org
-
+diff --git a/MAINTAINERS b/MAINTAINERS
+index c1a18af3593a..5f62904c80bd 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -19207,6 +19207,7 @@ F:	Documentation/rust/
+ F:	rust/
+ F:	samples/rust/
+ F:	scripts/*rust*
++F:	tools/testing/selftests/rust/
+ K:	\b(?i:rust)\b
+ 
+ RXRPC SOCKETS (AF_RXRPC)
+diff --git a/tools/testing/selftests/Makefile b/tools/testing/selftests/Makefile
+index f7255969b695..e1504833654d 100644
+--- a/tools/testing/selftests/Makefile
++++ b/tools/testing/selftests/Makefile
+@@ -80,6 +80,7 @@ TARGETS += riscv
+ TARGETS += rlimits
+ TARGETS += rseq
+ TARGETS += rtc
++TARGETS += rust
+ TARGETS += seccomp
+ TARGETS += sgx
+ TARGETS += sigaltstack
+diff --git a/tools/testing/selftests/rust/Makefile b/tools/testing/selftests/rust/Makefile
+new file mode 100644
+index 000000000000..fce1584d3bc0
+--- /dev/null
++++ b/tools/testing/selftests/rust/Makefile
+@@ -0,0 +1,4 @@
++# SPDX-License-Identifier: GPL-2.0
++TEST_PROGS += test_probe_samples.sh
++
++include ../lib.mk
+diff --git a/tools/testing/selftests/rust/test_probe_samples.sh b/tools/testing/selftests/rust/test_probe_samples.sh
+new file mode 100755
+index 000000000000..389d180f14a5
+--- /dev/null
++++ b/tools/testing/selftests/rust/test_probe_samples.sh
+@@ -0,0 +1,34 @@
++#!/bin/bash
++# SPDX-License-Identifier: GPL-2.0
++#
++# Copyright (c) 2023 Collabora Ltd
++#
++# This script tests whether the rust sample modules can
++# be added and removed correctly.
++#
++
++DIR="$(dirname "$(readlink -f "$0")")"
++
++source "${DIR}"/../kselftest/ktap_helpers.sh
++
++rust_sample_modules=("rust_minimal" "rust_print")
++
++ktap_print_header
++
++ktap_set_plan "${#rust_sample_modules[@]}"
++
++for sample in "${rust_sample_modules[@]}"; do
++    if ! /sbin/modprobe -n -q "$sample"; then
++        ktap_test_skip "module $sample is not found in /lib/modules/$(uname -r)"
++        continue
++    fi
++
++    if /sbin/modprobe -q "$sample"; then
++        /sbin/modprobe -q -r "$sample"
++        ktap_test_pass "$sample"
++    else
++        ktap_test_fail "$sample"
++    fi
++done
++
++ktap_finished
 -- 
-Without deviation from the norm, progress is not possible.
+2.30.2
+
