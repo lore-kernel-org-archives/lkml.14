@@ -1,87 +1,177 @@
-Received: from bg5.exmail.qq.com (bg5.exmail.qq.com [43.155.80.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ua1-f54.google.com (mail-ua1-f54.google.com [209.85.222.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50E831799E
-	for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 09:30:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=43.155.80.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0078917BA5
+	for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 09:31:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708594206; cv=none; b=qX595mlQUg16VWWQjhBd417n8rAoUewv9WCgFGlkA/PYxfzBICj0+cQQ0u6G95DBQtqvGqMBnhaI4tGCJsWpomlEaJhER4fPOvqHPGEcz/a87YgxTfCjFDWYy1fxBdtaeT3BLBMUHsksBoXCfxe11+rDcYuLMTglRytoslBghiU=
+	t=1708594264; cv=none; b=ckVm5efb5Q3ZuFEaANtAYhq05ITikF0ygCpmLhpWRJSI3jcmRYoxKCZ7/6Lq+vKuXksMeZN7nwJZq2FT1SbsQeRuhFA42UbeF49ONP8lp2lqmS2plSQrtOlqjdThIZXEtiZugZC/cbwR1FT2sWmIsCF0lpEpfRDH60FstHY/GKk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708594206; c=relaxed/simple;
-	bh=ATirct5j7/UgsL9VN4sLML1TugObK0awfmxeDDWVl90=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VejhjYjFrjdCUKNFUWz8TrSac7oyJvOppqUP2A79FYz0vJ1+0Db5q4wLAKRR4n7Y9CeyuZirjTBAOPmiiAmZObeSSWaV6HPjpFCR1njGhu8Gw0TbORO4/NXHj1M2++ZWfYUbocpXFP4uatotHCzzLJsROpke5BS15ipZocrXt7A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shingroup.cn; spf=pass smtp.mailfrom=shingroup.cn; arc=none smtp.client-ip=43.155.80.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shingroup.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shingroup.cn
-X-QQ-mid: bizesmtp76t1708594089t42g9cme
-X-QQ-Originating-IP: uZaBuuerpbJedRsEZ9jUaaSGJG/JYymkPiqjq0p+6Lg=
-Received: from localhost ( [112.22.30.30])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Thu, 22 Feb 2024 17:28:07 +0800 (CST)
-X-QQ-SSF: 01400000000000505000000A0000000
-X-QQ-FEAT: 3M0okmaRx3gdSYb9a+Tphtc3Dda53QAmBlIcXrph1tt42jwojHxNbzZD7xKxg
-	g+uQRHeIjFmHCcdPMzARVUbEXsQpx/v6H3ZGKT58h98y81+rzCeRiWIvtfXWJARYv6qFWxc
-	EbNRwuFQBe/Gkkw+4rPdb6HRI2d6F2gZMgBI0GTvr7O2Uz+7qtrRZBzTfOmaSVeqMcGm+pN
-	1wqtwslDeayVEPpufm0KPdSinxM5r9kgFLsLYiiRXO2zpjyJi/YkRyIp/AFqJy9volIEgoJ
-	Ds0bqpwoZe7ELFfIcx0vNB46VWlD1JvBAmTSUiV5eE9pVVwtLXlwwddOs0aFXOATOtDuo35
-	Pwme0gg98J2Z/YquPZjSGr5M8JgGNmRz9uW9ogqZXlVcl+VN9edy9vyVHKqEg==
-X-QQ-GoodBg: 2
-X-BIZMAIL-ID: 11809283143458204403
-Date: Thu, 22 Feb 2024 17:27:57 +0800
-From: Dawei Li <dawei.li@shingroup.cn>
-To: catalin.marinas@arm.com, will@kernel.org
-Cc: mark.rutland@arm.com, mcgrof@kernel.org, jpoimboe@kernel.org,
-	j.granados@samsung.com, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org, set_pte_at@outlook.com
-Subject: Re: [PATCH] arm64: remove unneeded BUILD_BUG_ON assertion
-Message-ID: <A12F96370D84BE9F+ZdcTnYkBf/5n/DlT@centos8>
-References: <20240202040211.3118918-1-dawei.li@shingroup.cn>
+	s=arc-20240116; t=1708594264; c=relaxed/simple;
+	bh=9G7lJI5IDfPGdHdX5zwaUalzO36IGTyW3HIIjqi8i+0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=kesNvvao6BrEylzUX6v7dgN21S3uGNPfDHOB4xgaCwHbPyh2VgGT13c/uFQKUfFpN0d7G2E95Enw53WKFt3NqXzfIhzs1/ju5HfTXTP7GnaWnDs2FfrDUoyINgbLCRQZZuAIDbd/OQE/F/n+ujtA99IrQa/A44Xiba5HzNhsoro=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=cQBRoG4b; arc=none smtp.client-ip=209.85.222.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="cQBRoG4b"
+Received: by mail-ua1-f54.google.com with SMTP id a1e0cc1a2514c-7d2e15193bbso937626241.0
+        for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 01:31:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1708594262; x=1709199062; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=1PlLc1PUqmILNE+p63A9C2ACu1wPfn85XBn9cLMW2dc=;
+        b=cQBRoG4bGLayXfOr6c3rKrq0Ij6RKteZz7k17PbBqllkdNQGt/nLH3NBjl3slJFjAi
+         VWVJMFatJU+P2ABnjV2tRrWrH/pRfEw4OujNdScLsLsEatxeZq7oQzxkQGABqXyIzFVH
+         TzAch8GwIA33OqFT90ge5iv6mtSLZPHysGMzB3DHAby4j1arRIuVuha6uo0xPM+wWqIc
+         xR/YgwvYN289dZ9TrgUpj4jXwBIUxfswk6vLOPQq+PdHuZ4O0vi6o+YHnlbFwYhnJngx
+         Che7PnR+uCELte/pbPtdY65PRUlwmXenCW5SmMketLs1sYqE2pkZO8mNZaDfTFvvpPZk
+         JKFg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708594262; x=1709199062;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=1PlLc1PUqmILNE+p63A9C2ACu1wPfn85XBn9cLMW2dc=;
+        b=h7hKvSLuInbu2U9SKktO505iseJlJa6zFLKaTSnR1Pq8qDwTac26GS25lf43o81W4Q
+         YL9V19T/MHnyXtow9SvQyqQwoe9naUc2mPx7Gl53laQ88AP7g4SIwkd5oD8kRybN5Zb/
+         3Huku49MkyFZvu/OEeqD1nvRLWZOha+kQK+9M+d1FvchEPXNnZpWyJqs1KslMv0lirc8
+         fLHVmFujyYWIfQKlEDOjFRWMDcNjb6UerYdz7UiGHqAMLmG2neGvMY0H7ItjiaUPwSwD
+         CLnXDaOs2YN3Gsf6CTfBcRGlSWYAgwgaHRQn8BddbDLGQFaMfjJTtROCwazfT3eMgRbH
+         0+nw==
+X-Forwarded-Encrypted: i=1; AJvYcCUieHuajjaW/CsQK23Xrh31CNjTXApFj7tgm1KTlZ3QPwxSLRW6uDAt1OFQKob9EXB8+7wmSRqgr7e68ulbsURbiVQztDRyH2KWcYwz
+X-Gm-Message-State: AOJu0YwUAm3gYybOYfQJGLTSCkI8NW/iDxRsX0Mx+us86JN9hMwS1h0S
+	2+97XnZEr774m/dZNzSVu6nroIdfNJx2/mmW7HBzOnhbAGj3Kqs/ym+54NqhQcH2UnNX2O7rmS5
+	jdycnO6wV+bw2y/8bcIWI5VThZWaOOOpo4EplwA==
+X-Google-Smtp-Source: AGHT+IEToLxGWX/9/V3sCdh/JRMTTDjiprSrSqjpvWgISAjno61KBiZrERpbtPCIbor9/5i13hG+MwHnX47Z9DOnSow=
+X-Received: by 2002:a67:fc58:0:b0:470:4e67:3b38 with SMTP id
+ p24-20020a67fc58000000b004704e673b38mr13429459vsq.14.1708594262009; Thu, 22
+ Feb 2024 01:31:02 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240202040211.3118918-1-dawei.li@shingroup.cn>
-X-QQ-SENDSIZE: 520
-Feedback-ID: bizesmtp:shingroup.cn:qybglogicsvrgz:qybglogicsvrgz5a-1
+References: <20240221015920.676063-1-swboyd@chromium.org>
+In-Reply-To: <20240221015920.676063-1-swboyd@chromium.org>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Thu, 22 Feb 2024 10:30:51 +0100
+Message-ID: <CAMRc=Md5BZxS-sCZO9oK9y02kf-Rh04DpaM8-cXk6KoJiDzmWw@mail.gmail.com>
+Subject: Re: [PATCH] gpiolib: Pass consumer device through to core in devm_fwnode_gpiod_get_index()
+To: Stephen Boyd <swboyd@chromium.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>, linux-kernel@vger.kernel.org, 
+	patches@lists.linux.dev, linux-gpio@vger.kernel.org, 
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi,
-
-On Fri, Feb 02, 2024 at 12:02:11PM +0800, Dawei Li wrote:
-> Since commit c02433dd6de3 ("arm64: split thread_info from task stack"),
-> CONFIG_THREAD_INFO_IN_TASK is enabled unconditionally for arm64. So
-> remove this always-true assertion from arch_dup_task_struct.
-> 
-> Signed-off-by: Dawei Li <dawei.li@shingroup.cn>
-
-Just a gentle remainder:).
-
-Thanks,
-
-    Dawei
-
+On Wed, Feb 21, 2024 at 2:59=E2=80=AFAM Stephen Boyd <swboyd@chromium.org> =
+wrote:
+>
+> This devm API takes a consumer device as an argument to setup the devm
+> action, but throws it away when calling further into gpiolib. This leads
+> to odd debug messages like this:
+>
+>  (NULL device *): using DT '/gpio-keys/switch-pen-insert' for '(null)' GP=
+IO lookup
+>
+> Let's pass the consumer device down, by directly calling what
+> fwnode_gpiod_get_index() calls but pass the device used for devm. This
+> changes the message to look like this instead:
+>
+>  gpio-keys gpio-keys: using DT '/gpio-keys/switch-pen-insert' for '(null)=
+' GPIO lookup
+>
+> Note that callers of fwnode_gpiod_get_index() will still see the NULL
+> device pointer debug message, but there's not much we can do about that
+> because the API doesn't take a struct device.
+>
+> Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+> Fixes: 8eb1f71e7acc ("gpiolib: consolidate GPIO lookups")
+> Signed-off-by: Stephen Boyd <swboyd@chromium.org>
 > ---
->  arch/arm64/kernel/process.c | 3 ---
->  1 file changed, 3 deletions(-)
-> 
-> diff --git a/arch/arm64/kernel/process.c b/arch/arm64/kernel/process.c
-> index 7387b68c745b..4ae31b7af6c3 100644
-> --- a/arch/arm64/kernel/process.c
-> +++ b/arch/arm64/kernel/process.c
-> @@ -290,9 +290,6 @@ int arch_dup_task_struct(struct task_struct *dst, struct task_struct *src)
->  		fpsimd_preserve_current_state();
->  	*dst = *src;
->  
-> -	/* We rely on the above assignment to initialize dst's thread_flags: */
-> -	BUILD_BUG_ON(!IS_ENABLED(CONFIG_THREAD_INFO_IN_TASK));
-> -
->  	/*
->  	 * Detach src's sve_state (if any) from dst so that it does not
->  	 * get erroneously used or freed prematurely.  dst's copies
-> -- 
-> 2.27.0
-> 
+>  drivers/gpio/gpiolib-devres.c |  2 +-
+>  drivers/gpio/gpiolib.c        | 14 +++++++-------
+>  drivers/gpio/gpiolib.h        |  8 ++++++++
+>  3 files changed, 16 insertions(+), 8 deletions(-)
+>
+> diff --git a/drivers/gpio/gpiolib-devres.c b/drivers/gpio/gpiolib-devres.=
+c
+> index fe9ce6b19f15..4987e62dcb3d 100644
+> --- a/drivers/gpio/gpiolib-devres.c
+> +++ b/drivers/gpio/gpiolib-devres.c
+> @@ -158,7 +158,7 @@ struct gpio_desc *devm_fwnode_gpiod_get_index(struct =
+device *dev,
+>         if (!dr)
+>                 return ERR_PTR(-ENOMEM);
+>
+> -       desc =3D fwnode_gpiod_get_index(fwnode, con_id, index, flags, lab=
+el);
+> +       desc =3D gpiod_find_and_request(dev, fwnode, con_id, index, flags=
+, label, false);
+>         if (IS_ERR(desc)) {
+>                 devres_free(dr);
+>                 return desc;
+> diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+> index 44c8f5743a24..c6667a887ecb 100644
+> --- a/drivers/gpio/gpiolib.c
+> +++ b/drivers/gpio/gpiolib.c
+> @@ -4133,13 +4133,13 @@ static struct gpio_desc *gpiod_find_by_fwnode(str=
+uct fwnode_handle *fwnode,
+>         return desc;
+>  }
+>
+> -static struct gpio_desc *gpiod_find_and_request(struct device *consumer,
+> -                                               struct fwnode_handle *fwn=
+ode,
+> -                                               const char *con_id,
+> -                                               unsigned int idx,
+> -                                               enum gpiod_flags flags,
+> -                                               const char *label,
+> -                                               bool platform_lookup_allo=
+wed)
+> +struct gpio_desc *gpiod_find_and_request(struct device *consumer,
+> +                                        struct fwnode_handle *fwnode,
+> +                                        const char *con_id,
+> +                                        unsigned int idx,
+> +                                        enum gpiod_flags flags,
+> +                                        const char *label,
+> +                                        bool platform_lookup_allowed)
+>  {
+>         unsigned long lookupflags =3D GPIO_LOOKUP_FLAGS_DEFAULT;
+>         struct gpio_desc *desc;
+> diff --git a/drivers/gpio/gpiolib.h b/drivers/gpio/gpiolib.h
+> index a4a2520b5f31..c6e5fb9aa212 100644
+> --- a/drivers/gpio/gpiolib.h
+> +++ b/drivers/gpio/gpiolib.h
+> @@ -202,6 +202,14 @@ static inline int gpiod_request_user(struct gpio_des=
+c *desc, const char *label)
+>         return ret;
+>  }
+>
+> +struct gpio_desc *gpiod_find_and_request(struct device *consumer,
+> +                                        struct fwnode_handle *fwnode,
+> +                                        const char *con_id,
+> +                                        unsigned int idx,
+> +                                        enum gpiod_flags flags,
+> +                                        const char *label,
+> +                                        bool platform_lookup_allowed);
+> +
+>  int gpiod_configure_flags(struct gpio_desc *desc, const char *con_id,
+>                 unsigned long lflags, enum gpiod_flags dflags);
+>  int gpio_set_debounce_timeout(struct gpio_desc *desc, unsigned int debou=
+nce);
+>
+> base-commit: 6613476e225e090cc9aad49be7fa504e290dd33d
+> --
+> https://chromeos.dev
+>
+
+This doesn't apply on top of the for-next branch of the GPIO tree,
+please rebase and resend.
+
+Bart
