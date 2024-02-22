@@ -1,58 +1,41 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from out30-101.freemail.mail.aliyun.com (out30-101.freemail.mail.aliyun.com [115.124.30.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8CA5101C2;
-	Thu, 22 Feb 2024 08:35:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AF9517583;
+	Thu, 22 Feb 2024 08:36:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708590959; cv=none; b=a3tvo04Bml8UGYXZ547TCw3H/ZPjkonjcOJYyxbTwDyIfzLYrXZhD0oItZ2Pm481GdPH967Uzyzhf7aMBSr/EIH/g0tjKylA6pGFl0byXG8MasN1FUa5FCLUye2L1sfEZzeOSFR66moJb2G380iNvA1cgsdF1W5wtqCMLH3FfQ4=
+	t=1708590985; cv=none; b=UnvW8r0ao0m3hwlsl3FNSbGNIrlzJq3ogdewHlQI5CvumSwR94wTGrzVC9cgTd4MYrSUJ6MihyghLvNCwsZ4AJ+olxieZ1UV1dOsK/rGelOoW8hsG6Fb6k3DFKbeVAME3BQnH5B9HrCY4FJXZWpC0Lk103xJNH0uB1mld2ZbdWk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708590959; c=relaxed/simple;
-	bh=zDaKnyithl6OHzhgLveEH/2y+xN3MZ7oYAM+dHUYzMc=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=DDLfp0x2ZMkAvTWTw8pgu/gwEKbKGWXJN5iXSiGqFGTphLdJl0FPK0MaVk6nM4ZyE66KTw1upuKyG4jyPbipNhqVFjvL4zuWOhiWJbsvZcoUUhJ9rJ2NX4Sj8pNjLuUgkYoBSeVntUR81lwzXBGceuJwq99BWGNj5WAKx9tXFGs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=TAZkXbiB; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1708590985; c=relaxed/simple;
+	bh=35o1s17GEgTofroVACV50mopTUDx11285gHuW9ReeHc=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=N5zcJ/xOkKHkOy6hLLhlnsd4v22Z8XRQoX45rcuG9U5D0GwR7uRxmzlFxpkh5IEervnNSx/QIuRipXDXOVm52sSs1c1MVz91kUSRri2Iqa+hZQYUsV56JC2sd+WAVnI/UMx4/9Bw+KdX/ZfzdA1IS0ZqJvbXWv0v1cIEcbRm5uA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=aRcOHS/r; arc=none smtp.client-ip=115.124.30.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="TAZkXbiB"
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 41M1TFdI030580;
-	Thu, 22 Feb 2024 08:35:51 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	from:to:cc:subject:date:message-id:mime-version
-	:content-transfer-encoding:content-type; s=qcppdkim1; bh=RyvY7D5
-	kwxmNjfCTlpzX6mhKqRWYnDZna4huJoRzCkY=; b=TAZkXbiB18MmAzvUCqAY5Mn
-	8Y7sOZ+MOoxDL2ZjLEPUZQhjOS2HmLrxrYBBAkXizxeeqQCVOcICuVLikCQROOTp
-	tPvhVNZNV2PdEqZ0AjroEXc+qFEsyu4sAgHRy3Fah4d1kV1vrUeXAw2kofE0FjyN
-	kHnZwUr4o8hkp9qPZWe8IagO0g6Gw/Arlgr8DBSZ4pYRypZTNsDb4FNEbORkiMng
-	agOVcgW/pERenJsNGFT8mVQw32EyJhYFQk3omoFxX/1VgC76wGjW5l7y49/XZx3h
-	IK1o63aO6ZdjHPTwRVpfa30HxFXKB1hDDoLI5+amnK30QuR0g8p4DxA8IcpF42w=
-	=
-Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3wdsk4s7hd-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 22 Feb 2024 08:35:50 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 41M8Zn4O011157
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 22 Feb 2024 08:35:49 GMT
-Received: from hu-kshivnan-hyd.qualcomm.com (10.80.80.8) by
- nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Thu, 22 Feb 2024 00:35:43 -0800
-From: Shivnandan Kumar <quic_kshivnan@quicinc.com>
-To: "Rafael J . Wysocki" <rafael@kernel.org>,
-        Viresh Kumar
-	<viresh.kumar@linaro.org>
-CC: <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <kernel@quicinc.com>, <quic_pkondeti@quicinc.com>,
-        <quic_namajain@quicinc.com>, <stable@vger.kernel.org>,
-        Shivnandan Kumar
-	<quic_kshivnan@quicinc.com>
-Subject: [PATCH] cpufreq: Limit resolving a frequency to policy min/max
-Date: Thu, 22 Feb 2024 14:05:15 +0530
-Message-ID: <20240222083515.1065025-1-quic_kshivnan@quicinc.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="aRcOHS/r"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1708590977; h=From:To:Subject:Date:Message-Id:MIME-Version;
+	bh=X9yz07D9w8yMy5Y7IPBs0+pEkB7vyXUOF8tVyxWbAGg=;
+	b=aRcOHS/ryawRguaMzeoX1EZy6J9O3pMn81rVoRha0GmUmsTPwQ+YNjoH8aKraWjiWdTrtPFy2PYbscwsuzQK+JNwqFua3yQhfPaP5KGKaGo8ky4Gz5KkfyHYAl8SPBWppQGJaSrpjRKwAg8XUDJOOVc2mic1fIFnVgK5dHVwiKg=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R561e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046049;MF=jiapeng.chong@linux.alibaba.com;NM=1;PH=DS;RN=7;SR=0;TI=SMTPD_---0W10YCEV_1708590966;
+Received: from localhost(mailfrom:jiapeng.chong@linux.alibaba.com fp:SMTPD_---0W10YCEV_1708590966)
+          by smtp.aliyun-inc.com;
+          Thu, 22 Feb 2024 16:36:16 +0800
+From: Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
+To: viro@zeniv.linux.org.uk
+Cc: brauner@kernel.org,
+	jack@suse.cz,
+	linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Jiapeng Chong <jiapeng.chong@linux.alibaba.com>,
+	Abaci Robot <abaci@linux.alibaba.com>
+Subject: [PATCH] pidfd: make pidfs_dentry_operations static
+Date: Thu, 22 Feb 2024 16:36:04 +0800
+Message-Id: <20240222083604.11280-1-jiapeng.chong@linux.alibaba.com>
+X-Mailer: git-send-email 2.20.1.7.g153144c
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -60,70 +43,32 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: c_Pn0TXMvAFxGOdkq490IRMQQALF-utb
-X-Proofpoint-GUID: c_Pn0TXMvAFxGOdkq490IRMQQALF-utb
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-02-22_06,2024-02-22_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 adultscore=0
- impostorscore=0 clxscore=1011 bulkscore=0 phishscore=0 mlxscore=0
- lowpriorityscore=0 spamscore=0 malwarescore=0 suspectscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2402120000 definitions=main-2402220067
 
-Resolving a frequency to an efficient one should not transgress policy->max
-(which can be set for thermal reason) and policy->min. Currently there is
-possibility where scaling_cur_freq can exceed scaling_max_freq when
-scaling_max_freq is inefficient frequency. Add additional check to ensure
-that resolving a frequency will respect policy->min/max.
+The pidfs_dentry_operations are not used outside the file pidfs.c, so the
+modification is defined as static.
 
-Fixes: 1f39fa0dccff ("cpufreq: Introducing CPUFREQ_RELATION_E")
-Signed-off-by: Shivnandan Kumar <quic_kshivnan@quicinc.com>
+fs/pidfs.c:175:32: warning: symbol 'pidfs_dentry_operations' was not declared. Should it be static?
+
+Reported-by: Abaci Robot <abaci@linux.alibaba.com>
+Closes: https://bugzilla.openanolis.cn/show_bug.cgi?id=8284
+Signed-off-by: Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
 ---
- include/linux/cpufreq.h | 18 +++++++++++++++++-
- 1 file changed, 17 insertions(+), 1 deletion(-)
+ fs/pidfs.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/include/linux/cpufreq.h b/include/linux/cpufreq.h
-index afda5f24d3dd..42d98b576a36 100644
---- a/include/linux/cpufreq.h
-+++ b/include/linux/cpufreq.h
-@@ -1021,6 +1021,19 @@ static inline int cpufreq_table_find_index_c(struct cpufreq_policy *policy,
- 						   efficiencies);
+diff --git a/fs/pidfs.c b/fs/pidfs.c
+index c33501c9cd8b..85e9617f0aee 100644
+--- a/fs/pidfs.c
++++ b/fs/pidfs.c
+@@ -172,7 +172,7 @@ static void pidfdfs_prune_dentry(struct dentry *dentry)
+ 	}
  }
  
-+static inline bool cpufreq_table_index_is_in_limits(struct cpufreq_policy *policy,
-+						    int idx)
-+{
-+	unsigned int freq;
-+
-+	if (idx < 0)
-+		return false;
-+
-+	freq = policy->freq_table[idx].frequency;
-+
-+	return (freq == clamp_val(freq, policy->min, policy->max));
-+}
-+
- static inline int cpufreq_frequency_table_target(struct cpufreq_policy *policy,
- 						 unsigned int target_freq,
- 						 unsigned int relation)
-@@ -1054,7 +1067,10 @@ static inline int cpufreq_frequency_table_target(struct cpufreq_policy *policy,
- 		return 0;
- 	}
- 
--	if (idx < 0 && efficiencies) {
-+	/*
-+	 * Limit frequency index to honor policy->min/max
-+	 */
-+	if (!cpufreq_table_index_is_in_limits(policy, idx) && efficiencies) {
- 		efficiencies = false;
- 		goto retry;
- 	}
+-const struct dentry_operations pidfs_dentry_operations = {
++static const struct dentry_operations pidfs_dentry_operations = {
+ 	.d_delete	= always_delete_dentry,
+ 	.d_dname	= pidfs_dname,
+ 	.d_prune	= pidfdfs_prune_dentry,
 -- 
-2.25.1
+2.20.1.7.g153144c
 
