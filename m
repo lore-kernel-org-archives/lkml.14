@@ -1,64 +1,64 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 827A018657;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EDCB14F9FE;
 	Thu, 22 Feb 2024 17:11:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708621872; cv=none; b=a9/OUIuUCw3rn6OqG9+Nvlgl6s9jpT0iVb0FPnRkKROmlaMTpUwgVPzm32SJMAAUxfIzeK54hYWcv/CDX5UxgENhTMClLy47I3kLnyNnteaYusAHAQS6E3KVDQpCccOpsMMJ4AwesBF3ysajBT3l9YbfX20i2cQUmhUYCp9nH9k=
+	t=1708621872; cv=none; b=MJrnukQAQ/RyOJ+LbcBMvNsJPHMLUU+wb+xt1LR8fRpTgQguSoltT6npz+wXvXFllrX+xwVc/s+/6GhdUFNZX050GmtQCHxg+jdcvZrUonuxDruYeU9Im6KkKCkrvjf+Yl0B7rCbzpd+yy+lCPUQoRQtcPyYSGfy4xO3awvs+p4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1708621872; c=relaxed/simple;
-	bh=MM1JJIPhpSFC52meHfm3jKUwwDEzuYxplUwdvanFmRE=;
+	bh=DAzeBEEdLR73MwKO48c6XGeOzopBZZgL8Uss3l1DIUU=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=tBLhGpptlCBxkLF6pvYeAkjI24qkPctcU9Q32zqcLtjPMiVUzTvhJdQ+C60WkKS72u+Ut3hADvNI4I5tnYA2NttelHv1wFidICG69/88YTTIzu3GaX/5ynjtussXofgrDSgrokZBizZVe5DLbGD3nMkAUUNQG5hkrBTYOWciywg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=MwShxTs1; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Mo6zLQVV; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=QImWllbCtFReqnYiVtrqYrXPOGWP0Vm7Lyd/Cl+BLit+GxMUe3hio8cLHSGLSq3C1lFQL92LTDlWPHfHlMT9dPlq/U93VvOQfFjMhNiDKgSfaao3/l3jA+VA0NDWsmEYVsV/u95ptcvlO6YzoVN7rd6sZ3hpTrl/0PrPPnDNdWY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Ax4Em7tM; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ptIvDQnD; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="MwShxTs1";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Mo6zLQVV"
-Date: Thu, 22 Feb 2024 17:11:07 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Ax4Em7tM";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ptIvDQnD"
+Date: Thu, 22 Feb 2024 17:11:08 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1708621868;
+	s=2020; t=1708621869;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=n3ebpby9F9c9txMOY2uW4k2z/FPljp4f41sJjxGz3Ww=;
-	b=MwShxTs1EjJtIx0OkmLYwhazAQyfiq3M1mWUcnUCYQXRlAnMVGSY3et2Z+XVFBnuF+OCIe
-	1Zp0vHvZEkUKd8KcFB/gvKS8CNzj3wh66tgVMuNGXg33P2MAPrQrPZHilwsvbwGkv78/Yr
-	hJnIjDZzvu7Bg3pdSt3zKm9yMiMd4EhojvmIg2o2MZLLtw5q/AHJLv2uenue9BOuhAFNbP
-	vFRYOIq1LY0SC9QoJA/Qh7jaBuwXaak4omi56mMLM0cZR5mczqq38i+VjpgH7iPL/2yg1D
-	GqVjSee8qQzrYK+8hqezteIEtQmqLTBhXkBZRJz9IXMao932QzGb4XwawjuYSw==
+	bh=aCmJTymzCZ/OO0k5JdKI4CkPlY0ex1wcioQq1JYlB6Y=;
+	b=Ax4Em7tMDupStZU8m04Ip9fTdlf6iQCUhR6fxtZRXwD0LRCvQmO+LgXcPHPDMIQeZ6zWAr
+	/KFMc1J/wLwwVi9CowVTTonW5UixM7/20az5htwm9KlaJce0EWiIqXP/HbaqOynzoD5YO7
+	XwoeU9+oE8EJJ0vrS7McA+YhYqCLm5P0jwlskRuCfuG/Y7CWIuPR45bgUaPsZWNsOUHrlN
+	kIv5HXKpEWu+d4hpzcj0L9MkGNomgOuCcLAxjEI+spUExxN/E6ZMX31/oFCw+KpfQ8R+Ar
+	ZHx1nG1fv316wLH8sRNo0j81qb4szIPGQPA3shW7kmvJjWlJ8gChSrHsxOY0kg==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1708621868;
+	s=2020e; t=1708621869;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=n3ebpby9F9c9txMOY2uW4k2z/FPljp4f41sJjxGz3Ww=;
-	b=Mo6zLQVVN+nX247/QVEzg3ye1PsoHpU+O4rVgX3cBHdEpIhj4MOW5UH0cLWI7+RI/FZcAq
-	9MG8WymLjZmpPJBg==
+	bh=aCmJTymzCZ/OO0k5JdKI4CkPlY0ex1wcioQq1JYlB6Y=;
+	b=ptIvDQnD6H1Pil5uZ5qjqLNzgXpiJT9iuy/4hxoDw7TIDAn3E73F1MyrJf0OvRsf0/UkHA
+	i3FJNmNZxcccQFAw==
 From: "tip-bot2 for Huqiang Qin" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject: [tip: irq/core] arm64: dts: Add gpio_intc node for Amlogic-T7 SoCs
+Subject: [tip: irq/core] irqchip/meson-gpio: Add support for Amlogic-T7 SoCs
 Cc: Huqiang Qin <huqiang.qin@amlogic.com>,
  Thomas Gleixner <tglx@linutronix.de>,
  Neil Armstrong <neil.armstrong@linaro.org>, x86@kernel.org,
  linux-kernel@vger.kernel.org, maz@kernel.org
-In-Reply-To: <20240222074640.1866284-4-huqiang.qin@amlogic.com>
-References: <20240222074640.1866284-4-huqiang.qin@amlogic.com>
+In-Reply-To: <20240222074640.1866284-3-huqiang.qin@amlogic.com>
+References: <20240222074640.1866284-3-huqiang.qin@amlogic.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <170862186740.398.15170945026800873163.tip-bot2@tip-bot2>
+Message-ID: <170862186822.398.7810719484570780829.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -68,44 +68,61 @@ Content-Transfer-Encoding: 7bit
 
 The following commit has been merged into the irq/core branch of tip:
 
-Commit-ID:     3f734564a03df595c671316314b65a465d333f4a
-Gitweb:        https://git.kernel.org/tip/3f734564a03df595c671316314b65a465d333f4a
+Commit-ID:     e281bfa6f759b667357454c1d3d283f7a52871da
+Gitweb:        https://git.kernel.org/tip/e281bfa6f759b667357454c1d3d283f7a52871da
 Author:        Huqiang Qin <huqiang.qin@amlogic.com>
-AuthorDate:    Thu, 22 Feb 2024 15:46:39 +08:00
+AuthorDate:    Thu, 22 Feb 2024 15:46:38 +08:00
 Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Thu, 22 Feb 2024 18:04:43 +01:00
+CommitterDate: Thu, 22 Feb 2024 18:04:42 +01:00
 
-arm64: dts: Add gpio_intc node for Amlogic-T7 SoCs
+irqchip/meson-gpio: Add support for Amlogic-T7 SoCs
 
-Add GPIO interrupt controller device.
+The Amlogic-T7 SoCs support 12 GPIO IRQ lines compared with previous
+serial chips and have something different, details are as below.
+
+IRQ Number:
+- 156      1 pin  on bank TESTN
+- 155:148  8 pins on bank H
+- 147:129 19 pins on bank Y
+- 128:115 14 pins on bank M
+- 114:91  24 pins on bank T
+- 90:77   14 pins on bank Z
+- 76:70    7 pins on bank E
+- 69:57   13 pins on bank D
+- 56:40   17 pins on bank W
+- 39:20   20 pins on bank X
+- 19:13    7 pins on bank C
+- 12:0    13 pins on bank B
 
 Signed-off-by: Huqiang Qin <huqiang.qin@amlogic.com>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
-Link: https://lore.kernel.org/r/20240222074640.1866284-4-huqiang.qin@amlogic.com
+Link: https://lore.kernel.org/r/20240222074640.1866284-3-huqiang.qin@amlogic.com
 
 ---
- arch/arm64/boot/dts/amlogic/amlogic-t7.dtsi | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ drivers/irqchip/irq-meson-gpio.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/amlogic/amlogic-t7.dtsi b/arch/arm64/boot/dts/amlogic/amlogic-t7.dtsi
-index a03c766..2bfe2c4 100644
---- a/arch/arm64/boot/dts/amlogic/amlogic-t7.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/amlogic-t7.dtsi
-@@ -171,6 +171,16 @@
- 				};
- 			};
+diff --git a/drivers/irqchip/irq-meson-gpio.c b/drivers/irqchip/irq-meson-gpio.c
+index f88df39..9a17919 100644
+--- a/drivers/irqchip/irq-meson-gpio.c
++++ b/drivers/irqchip/irq-meson-gpio.c
+@@ -154,6 +154,10 @@ static const struct meson_gpio_irq_params c3_params = {
+ 	INIT_MESON_S4_COMMON_DATA(55)
+ };
  
-+			gpio_intc: interrupt-controller@4080 {
-+				compatible = "amlogic,t7-gpio-intc",
-+					     "amlogic,meson-gpio-intc";
-+				reg = <0x0 0x4080 0x0 0x20>;
-+				interrupt-controller;
-+				#interrupt-cells = <2>;
-+				amlogic,channel-interrupts =
-+					<10 11 12 13 14 15 16 17 18 19 20 21>;
-+			};
++static const struct meson_gpio_irq_params t7_params = {
++	INIT_MESON_S4_COMMON_DATA(157)
++};
 +
- 			uart_a: serial@78000 {
- 				compatible = "amlogic,t7-uart", "amlogic,meson-s4-uart";
- 				reg = <0x0 0x78000 0x0 0x18>;
+ static const struct of_device_id meson_irq_gpio_matches[] __maybe_unused = {
+ 	{ .compatible = "amlogic,meson8-gpio-intc", .data = &meson8_params },
+ 	{ .compatible = "amlogic,meson8b-gpio-intc", .data = &meson8b_params },
+@@ -165,6 +169,7 @@ static const struct of_device_id meson_irq_gpio_matches[] __maybe_unused = {
+ 	{ .compatible = "amlogic,meson-a1-gpio-intc", .data = &a1_params },
+ 	{ .compatible = "amlogic,meson-s4-gpio-intc", .data = &s4_params },
+ 	{ .compatible = "amlogic,c3-gpio-intc", .data = &c3_params },
++	{ .compatible = "amlogic,t7-gpio-intc", .data = &t7_params },
+ 	{ }
+ };
+ 
