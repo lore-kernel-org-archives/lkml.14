@@ -1,127 +1,107 @@
-Received: from mx0b-0016f401.pphosted.com (mx0a-0016f401.pphosted.com [67.231.148.174])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E22414B832;
-	Thu, 22 Feb 2024 20:32:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.148.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBDB610A05
+	for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 20:33:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708633933; cv=none; b=Jd7uywvZMey/3RwM59TqIr4rGTw4wEdxxGAznmt3hlRagOWavzoWJz3AqmgS9qiEC8PVosy7jaSCRVL8Tijr8bOu2eQcoCeUDiotiT3C/gxOHIWOs1jF5N4n+rvUcRQmYrRVFRUOfD1OP/Obcurv1huilD5aiEX+Iza26qWKZIs=
+	t=1708634018; cv=none; b=nBlO505P1g7i+IZN+YI0cAlvcoAsejOktTicMv9NYKg6uijZ0TLUM5hpHEGgWuEVRBh3+p5jxGj7nD3Jv+cN2O2D4IUdG+WeEXCeW4uwGu1HzPJLN+07diFEgAuyzOWIs24z5S2MgZhGUoP5HjThWpD1TKp8dyhehpoMWae0/hI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708633933; c=relaxed/simple;
-	bh=OEjaR8q/hH/zJzrJq00dzosvg9sB+rc7P5n3BrRx+nE=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=oIRhFWoF41PUqXxay3aKUXP9jkkWF2l/efPLXjnYekXoNObBe2ry5Gl5tZXCTDw6X8dAOKGj3NqcKxI+lLi/xh0k2qDfAmu09YvMeQzgUd0cGtD8fGbHP7XEz0Idsshu3yhWLkvaQvmV8x+KawUN79hbT7ZJoCPF0imp8Wu9MOo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com; spf=none smtp.helo=mx0b-0016f401.pphosted.com; dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b=HF+7ZUtK; arc=none smtp.client-ip=67.231.148.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.helo=mx0b-0016f401.pphosted.com
+	s=arc-20240116; t=1708634018; c=relaxed/simple;
+	bh=4Ps0iR9+3QGUlPjbNsHsXZLbNqooArLyZSC9K1TD72A=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=XL13Eth2I6ayUneENXlW8Vd+o/Z/RIr88CSOZtZHqXTeBInZNwvJWmd9T3+aEJrk8XbwLZse/qpbperL0fHS6KHKj+Ig+ELeamBa96OmTlCU2TflDWj6us/O/Cd7+inOR+qEp3pCh4sPQD/aVdx3+jOI6bnPciALghRcZtI4ncg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=SR77vt2e; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=EDOWpG9/; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="HF+7ZUtK"
-Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
-	by mx0a-0016f401.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 41MK2gHO021857;
-	Thu, 22 Feb 2024 12:32:10 -0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=
-	from:to:cc:subject:date:message-id:mime-version
-	:content-transfer-encoding:content-type; s=pfpt0220; bh=y6gHklRy
-	6mgfq/+kDFgxdQdIm96X6dvMx3GA+sAwVL0=; b=HF+7ZUtKWvSxLkooNf2EBlfT
-	NROoRQYyNGdKVVsf5rcihgLluq4TJc665/AEa+xMQhmXGefMhNvGn7QMPf5qn7Q0
-	ZECbKqCbjOzSnfonDu8MzU40Efb/KINg9vWCePjF2F8QoYoYtuCastUnO1ae7Z0T
-	sfy3QrN8z145GReJsAbBOR0n5QnXerQSOX1Ihd9nOw3yq64/5lGRyX+gykIFyR/5
-	XdOQ5t9YdBOU7dD4c2J1J6XuKeHSzvZPi2putvz3e6HFVitdWLhXj7PcEYkDd/RV
-	5zCBgRSk+aZymMqE0HJ2MrZc790FNCe3a/LtvgSuwjvqtvQHzzXIwwLOK1pdbA==
-Received: from dc5-exch01.marvell.com ([199.233.59.181])
-	by mx0a-0016f401.pphosted.com (PPS) with ESMTPS id 3we3dwau65-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-	Thu, 22 Feb 2024 12:32:10 -0800 (PST)
-Received: from DC5-EXCH02.marvell.com (10.69.176.39) by DC5-EXCH01.marvell.com
- (10.69.176.38) with Microsoft SMTP Server (TLS) id 15.0.1497.48; Thu, 22 Feb
- 2024 12:32:08 -0800
-Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH02.marvell.com
- (10.69.176.39) with Microsoft SMTP Server id 15.0.1497.48 via Frontend
- Transport; Thu, 22 Feb 2024 12:32:08 -0800
-Received: from dc3lp-swdev041.marvell.com (dc3lp-swdev041.marvell.com [10.6.60.191])
-	by maili.marvell.com (Postfix) with ESMTP id F0E443F7167;
-	Thu, 22 Feb 2024 12:07:20 -0800 (PST)
-From: Elad Nachman <enachman@marvell.com>
-To: <huziji@marvell.com>, <ulf.hansson@linaro.org>, <adrian.hunter@intel.com>,
-        <linux-mmc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC: <enachman@marvell.com>, <stable@vger.kernel.org>
-Subject: [PATCH v3 1/2] mmc: xenon: fix PHY init clock stability
-Date: Thu, 22 Feb 2024 22:07:11 +0200
-Message-ID: <20240222200712.1274919-2-enachman@marvell.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="SR77vt2e";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="EDOWpG9/"
+From: John Ogness <jogness@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1708634009;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=DniZuGJeiAYZMjYY1WgxfhTrSfX4CCM88FQCLYeTz9I=;
+	b=SR77vt2eU/+wJ3ZBnhkR3OsQSE82MJEMnAhkdRz2jX2KfBaYv6vQIz5pt+rD4tQwrF8AZz
+	P6E0+yEHPARD14V7eNz+ewwjfNlEbyhmMlovUClYyXNwUbnZWosMblEElc5ZIkU4T29W6O
+	HJdDC0lTJxLF3M73ZmT80TXaBYQCMOgdmql37SkI/d6Xj9x7am7McP+d7GjrtABbe4WDkP
+	BFAi0cA/KFsHyoCQWIq9w070WZphgnalCfHKR6+JeNXpHHFwxfSGETP53GgE/TOOFwiq5d
+	hZBeVyIhwVaA4caBIw+lFU5v7GDlyr+JFF1ND7A8NBNm+byMnxis13RVu0LAvw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1708634009;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=DniZuGJeiAYZMjYY1WgxfhTrSfX4CCM88FQCLYeTz9I=;
+	b=EDOWpG9/yLz7uA8dVZP7edFdoK8sGABu4QxTWZsQCjuY8Wn4Ws8hzWWStuTwRU+cwKaDbn
+	7X0R+bb2tqBzC5CA==
+To: John Stultz <jstultz@google.com>, Thomas Gleixner <tglx@linutronix.de>
+Cc: LKML <linux-kernel@vger.kernel.org>, Frederic Weisbecker
+ <frederic@kernel.org>, Steven Rostedt <rostedt@goodmis.org>,
+ kernel-team@android.com
+Subject: Re: [RFC][PATCH] hrtimer: Use printk_deferred_once for
+ hrtimer_interrupt message
+In-Reply-To: <CANDhNCoHqX9fo5e=K7_74YSmV8-T2tE-Obu+phhqy+n2bqc4QQ@mail.gmail.com>
+References: <20240222051253.1361002-1-jstultz@google.com>
+ <8734tkfrzz.ffs@tglx>
+ <CANDhNCoHqX9fo5e=K7_74YSmV8-T2tE-Obu+phhqy+n2bqc4QQ@mail.gmail.com>
+Date: Thu, 22 Feb 2024 21:39:04 +0106
+Message-ID: <87wmqwz1bz.fsf@jogness.linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Proofpoint-GUID: 9uFZkJciaEAtuSdtVM4mZlXdp_mAVaEV
-X-Proofpoint-ORIG-GUID: 9uFZkJciaEAtuSdtVM4mZlXdp_mAVaEV
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-02-22_15,2024-02-22_01,2023-05-22_02
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-From: Elad Nachman <enachman@marvell.com>
+On 2024-02-22, John Stultz <jstultz@google.com> wrote:
+> On Thu, Feb 22, 2024 at 7:17=E2=80=AFAM Thomas Gleixner <tglx@linutronix.=
+de> wrote:
+>> On Wed, Feb 21 2024 at 21:12, John Stultz wrote:
+>> > With qemu, I constantly see lockdep warnings after the
+>> > hrimter_interrupt message is printed:
+>> >
+>> > [   43.434557] hrtimer: interrupt took 6517564 ns
+>> > [   43.435000]
+>> > [   43.435000] =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+>> > [   43.435000] [ BUG: Invalid wait context ]
+>>
+>> Do you have PROVE_RAW_LOCK_NESTING enabled?
+>
+> Yes, I do. Let me know if there's anything else you'd like me to try.
 
-Each time SD/mmc phy is initialized, at times, in some of
-the attempts, phy fails to completes its initialization
-which results into timeout error. Per the HW spec, it is
-a pre-requisite to ensure a stable SD clock before a phy
-initialization is attempted.
+This option is to "ensure that the lock nesting rules for PREEMPT_RT
+enabled kernels are not violated."
 
-Fixes: 06c8b667ff5b ("mmc: sdhci-xenon: Add support to PHYs of Marvell Xenon SDHC")
-Acked-by: Adrian Hunter <adrian.hunter@intel.com>
-Cc: stable@vger.kernel.org
-Signed-off-by: Elad Nachman <enachman@marvell.com>
----
- drivers/mmc/host/sdhci-xenon-phy.c | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
+Since you are not running a PREEMPT_RT enabled kernel, these warnings
+are irrelevant for _your_ kernel.
 
-diff --git a/drivers/mmc/host/sdhci-xenon-phy.c b/drivers/mmc/host/sdhci-xenon-phy.c
-index 8cf3a375de65..c3096230a969 100644
---- a/drivers/mmc/host/sdhci-xenon-phy.c
-+++ b/drivers/mmc/host/sdhci-xenon-phy.c
-@@ -11,6 +11,7 @@
- #include <linux/slab.h>
- #include <linux/delay.h>
- #include <linux/ktime.h>
-+#include <linux/iopoll.h>
- #include <linux/of_address.h>
- 
- #include "sdhci-pltfm.h"
-@@ -216,6 +217,19 @@ static int xenon_alloc_emmc_phy(struct sdhci_host *host)
- 	return 0;
- }
- 
-+static int xenon_check_stability_internal_clk(struct sdhci_host *host)
-+{
-+	u32 reg;
-+	int err;
-+
-+	err = read_poll_timeout(sdhci_readw, reg, reg & SDHCI_CLOCK_INT_STABLE,
-+				1100, 20000, false, host, SDHCI_CLOCK_CONTROL);
-+	if (err)
-+		dev_err(mmc_dev(host->mmc), "phy_init: Internal clock never stabilized.\n");
-+
-+	return err;
-+}
-+
- /*
-  * eMMC 5.0/5.1 PHY init/re-init.
-  * eMMC PHY init should be executed after:
-@@ -232,6 +246,11 @@ static int xenon_emmc_phy_init(struct sdhci_host *host)
- 	struct xenon_priv *priv = sdhci_pltfm_priv(pltfm_host);
- 	struct xenon_emmc_phy_regs *phy_regs = priv->emmc_phy_regs;
- 
-+	int ret = xenon_check_stability_internal_clk(host);
-+
-+	if (ret)
-+		return ret;
-+
- 	reg = sdhci_readl(host, phy_regs->timing_adj);
- 	reg |= XENON_PHY_INITIALIZAION;
- 	sdhci_writel(host, reg, phy_regs->timing_adj);
--- 
-2.25.1
+>> > I thought the new printk work was going to resolve this, but
+>> > apparently not
 
+Yes, it will, but it is not all mainline yet. The full printk rework is
+only available as part of the PREEMPT_RT patch series [0]. With that
+series applied, it makes more sense to enable PROVE_RAW_LOCK_NESTING
+because the series should resolve all known lock nesting problems with
+PREEMPT_RT. (And indeed, the warning you are reporting does not occur
+there.)
+
+If you really want to test lock nesting for PREEMPT_RT, I recommend
+applying the PREEMPT_RT series and keeping PROVE_RAW_LOCK_NESTING
+enabled. Otherwise, if you do not want to apply the PREEMPT_RT series, I
+recommend disabling PROVE_RAW_LOCK_NESTING.
+
+Note that you can apply the PREEMPT_RT series and still choose the
+!PREEMPT_RT preemption model for your kernel.
+
+John Ogness
+
+[0] https://git.kernel.org/pub/scm/linux/kernel/git/rt/linux-rt-devel.git/l=
+og/?h=3Dlinux-6.8.y-rt-rebase
