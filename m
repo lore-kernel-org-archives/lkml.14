@@ -1,114 +1,102 @@
-Received: from mx2.zhaoxin.com (mx2.zhaoxin.com [203.110.167.99])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43C025788B
-	for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 12:06:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.110.167.99
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F7415915B;
+	Thu, 22 Feb 2024 12:07:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708603620; cv=none; b=CXAgacouQbVxNOhqHZwAkZtMN5DyU98K6a375+HE0KQaAoDwfrm9XtO8pQjlJ4YMB2Ce2Iy/0fUVgTsRIEdhqTrFNyNfHvZ/GGBAvGWkrHqeVas9UZt2Hw38Iz2ovf4QQ9B5kmUmvQtBS+uNsPEuCcy/98GaC1v7rjg6IBfcVMw=
+	t=1708603637; cv=none; b=Pg99BBJQyBT7Bd2cVtCRgQjYgTqgJQYmmIcn6tY30SQRWLUodDxkodTbzONiRdZwmjPLDoT5wO0A5eI0ztz4GY9oSt3R08OnLl7hzHzg21jwvSS1BBlU6pi1CFp7dtmfK/JG8uTpv3K66pTzj1AmFkeHbRog8Bwu50DjT2EBOJI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708603620; c=relaxed/simple;
-	bh=Xo7w5lVDrESHPh5uB2qKdL/YvecJ2Z78km/I9VxVRE4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=nbEeXmkrt7iy9iCep1FNKuvGPYtGFX2lrYjbybNrPGDEC61kPujdWA7Bznq+So7qiD5uYsZ5+9q95fEqckyTFynXBZZ/PMFJnAsDbOCbKaL0yuipRuxTwNNVoNG8vZ0ta1MlH1niqsShXdgLf36WRvVsWzs+b1Co3lkKbdaS4jw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zhaoxin.com; spf=pass smtp.mailfrom=zhaoxin.com; arc=none smtp.client-ip=203.110.167.99
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zhaoxin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zhaoxin.com
-X-ASG-Debug-ID: 1708603609-1eb14e0c7e461f0001-xx1T2L
-Received: from ZXSHMBX3.zhaoxin.com (ZXSHMBX3.zhaoxin.com [10.28.252.165]) by mx2.zhaoxin.com with ESMTP id Xw3wrZUAYdcf8tPN (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NO); Thu, 22 Feb 2024 20:06:49 +0800 (CST)
-X-Barracuda-Envelope-From: WeitaoWang-oc@zhaoxin.com
-X-Barracuda-RBL-Trusted-Forwarder: 10.28.252.165
-Received: from zxbjmbx1.zhaoxin.com (10.29.252.163) by ZXSHMBX3.zhaoxin.com
- (10.28.252.165) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Thu, 22 Feb
- 2024 20:06:49 +0800
-Received: from [10.29.8.21] (10.29.8.21) by zxbjmbx1.zhaoxin.com
- (10.29.252.163) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Thu, 22 Feb
- 2024 20:06:45 +0800
-X-Barracuda-RBL-Trusted-Forwarder: 10.28.252.165
-Message-ID: <41daf1a9-590a-e220-84a3-648eb895272b@zhaoxin.com>
-X-Barracuda-RBL-Trusted-Forwarder: 10.29.8.21
-Date: Fri, 23 Feb 2024 04:06:23 +0800
+	s=arc-20240116; t=1708603637; c=relaxed/simple;
+	bh=ISipd+RvHeb8FAy3tub2FjR36pI88FRyLXT4pFOGt/8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ZZHkIJmz9Yk4di1jfK4T5pFSbHoqwLsWnXVluFwqhNMqggcFJKUNqLImZ8XhQ+jdJ+tk3HfxXt8u635pI4xb681/6BgtqqlZdetaS0Q484hWdtMVgpKEjCgkCkyOmUJXn/uqyWgtAfVnmdg7rHvrNlSKnjwHdmUJslL3sNxN7xM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=g4xbulGG; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="g4xbulGG"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1708603635; x=1740139635;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=ISipd+RvHeb8FAy3tub2FjR36pI88FRyLXT4pFOGt/8=;
+  b=g4xbulGGE7kpX0lqCku8/LqruPaawEwQMxh4Lf76H4EJTzEgGFXdzJoJ
+   JvN0rgrOsO4gg4Wuz1cTRwcHTJujda00JEWj6Yrxs4V7k4MPxpK3L9z2e
+   +wcXlFM2+z8MzpikckPkvHMw/4gKU7XSpdJxdoHx1eWPYtgC1q2je/ChV
+   6xtxhwxR5qqVzTvjgLy/LG+JE1OybNFEu1G6+arBNATjfViv+3lvJ2L/G
+   Hffkl/S5wqjkPiClXt2c62wkqssjyI2LJk9KeEloXgQZzyJhu7jSjDJg1
+   cv/p6msBF6VG5u64WAoIQlIJEIGSOoOuXfhov9nfWz25Q92JwnHo0SSWz
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10991"; a="6643098"
+X-IronPort-AV: E=Sophos;i="6.06,177,1705392000"; 
+   d="scan'208";a="6643098"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Feb 2024 04:07:15 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.06,177,1705392000"; 
+   d="scan'208";a="10050370"
+Received: from ksulimow-mobl1.ger.corp.intel.com (HELO wieczorr-mobl1.intel.com) ([10.213.23.120])
+  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Feb 2024 04:07:12 -0800
+From: Maciej Wieczor-Retman <maciej.wieczor-retman@intel.com>
+To: reinette.chatre@intel.com,
+	shuah@kernel.org,
+	fenghua.yu@intel.com
+Cc: linux-kselftest@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	ilpo.jarvinen@linux.intel.com
+Subject: [PATCH v3 0/3] selftests/resctrl: Simplify test cleanup functions
+Date: Thu, 22 Feb 2024 13:06:57 +0100
+Message-ID: <cover.1708599491.git.maciej.wieczor-retman@intel.com>
+X-Mailer: git-send-email 2.43.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.11.0
-Subject: Re: [PATCH] USB:UAS:return ENODEV when submit urbs fail with device
- not attached.
-Content-Language: en-US
-X-ASG-Orig-Subj: Re: [PATCH] USB:UAS:return ENODEV when submit urbs fail with device
- not attached.
-To: Oliver Neukum <oneukum@suse.com>, <stern@rowland.harvard.edu>,
-	<gregkh@linuxfoundation.org>, <linux-usb@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-scsi@vger.kernel.org>,
-	<usb-storage@lists.one-eyed-alien.net>
-CC: <WeitaoWang@zhaoxin.com>
-References: <20240222165441.6148-1-WeitaoWang-oc@zhaoxin.com>
- <3ff16f34-07a9-4b7e-b51d-b7220f08d88d@suse.com>
-From: "WeitaoWang-oc@zhaoxin.com" <WeitaoWang-oc@zhaoxin.com>
-In-Reply-To: <3ff16f34-07a9-4b7e-b51d-b7220f08d88d@suse.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: ZXSHCAS1.zhaoxin.com (10.28.252.161) To
- zxbjmbx1.zhaoxin.com (10.29.252.163)
-X-Barracuda-Connect: ZXSHMBX3.zhaoxin.com[10.28.252.165]
-X-Barracuda-Start-Time: 1708603609
-X-Barracuda-Encrypted: ECDHE-RSA-AES128-GCM-SHA256
-X-Barracuda-URL: https://10.28.252.36:4443/cgi-mod/mark.cgi
-X-Virus-Scanned: by bsmtpd at zhaoxin.com
-X-Barracuda-Scan-Msg-Size: 1923
-X-Barracuda-BRTS-Status: 1
-X-Barracuda-Bayes: INNOCENT GLOBAL 0.0000 1.0000 -2.0210
-X-Barracuda-Spam-Score: 1.09
-X-Barracuda-Spam-Status: No, SCORE=1.09 using global scores of TAG_LEVEL=1000.0 QUARANTINE_LEVEL=1000.0 KILL_LEVEL=9.0 tests=DATE_IN_FUTURE_06_12, DATE_IN_FUTURE_06_12_2
-X-Barracuda-Spam-Report: Code version 3.2, rules version 3.2.3.121174
-	Rule breakdown below
-	 pts rule name              description
-	---- ---------------------- --------------------------------------------------
-	0.01 DATE_IN_FUTURE_06_12   Date: is 6 to 12 hours after Received: date
-	3.10 DATE_IN_FUTURE_06_12_2 DATE_IN_FUTURE_06_12_2
+Content-Transfer-Encoding: 8bit
 
-On 2024/2/22 17:47, Oliver Neukum wrote:
-> 
+Cleaning up after tests is implemented separately for individual tests
+and called at the end of each test execution. Since these functions are
+very similar and a more generalized test framework was introduced a
+function pointer in the resctrl_test struct can be used to reduce the
+amount of function calls.
 
-> On 22.02.24 17:54, Weitao Wang wrote:
->> In the scenario of entering hibernation with udisk in the system, if the
->> udisk was gone or resume fail in the thaw phase of hibernation. Its state
->> will be set to NOTATTACHED. However, usb_hub_wq was already freezed and
->> can't not handle disconnect event. Then, sync cache SCSI command will be
->> sent to this udisk on the poweroff phase of hibernation, that will cause
-> 
-> Wait, this seems like a contradiction. Are we in thaw or are we powering off?
+These functions are also all called in the ctrl-c handler because the
+handler isn't aware which test is currently running. Since the handler
+is implemented with a sigaction no function parameters can be passed
+there but information about what test is currently running can be passed
+with a global variable.
 
-This fail appear in poweroff phase of hibernation.
+Changelog v3:
+- Make current_test static.
+- Add callback NULL check to the ctrl-c handler.
 
->> uas_submit_urbs to be called to submit URB to sense/data/cmd pipe. Then,
->> usb_submit_urb return value -ENODEV when device was set to NOTATTACHED
->> state. However, uas_submit_urbs always return "SCSI_MLQUEUE_DEVICE_BUSY"
->> regardless of the reason for submission failure.That will lead the SCSI
->> layer go into an ugly loop and system fail to go into hibernation.
-> 
-> The thing is that the SCSI documentation explicitly tells us to return
-> either SCSI_MLQUEUE_DEVICE_BUSY or SCSI_MLQUEUE_HOST_BUSY. Now, it makes
-> sense to tell the SCSI laer that a device or host is gone for good,
-> if we know that. But we cannot just introduce new error returns on our own.
-> 
-> This needs to be addressed. That means that the SCSI layer or at the
-> very least the documentation needs to be fixed. Frankly, this is not strictly
-> speaking a UAS issue. Any thing hotunpluggable should have this issue.
-> 
+Changelog v2:
+- Make current_test a const pointer limited in scope to resctrl_val
+  file.
+- Remove tests_cleanup from resctrl.h.
+- Cleanup 'goto out' path and labels in individual test functions.
 
-Maybe, my description was not accurate enough, here not add new return
-value to scsi layer,it just add a case to tell device is gone in the uas
-driver internal and the ENODEV error code not return to scsi layer.
-Here just notify SCSI layer of device loss through flag DID_NO_CONNECT.
-This is also hope to fix this issue in the uas driver internal.
+Older versions of this series:
+[v1] https://lore.kernel.org/all/cover.1708434017.git.maciej.wieczor-retman@intel.com/
+[v2] https://lore.kernel.org/all/cover.1708596015.git.maciej.wieczor-retman@intel.com/
 
-Thanks and best regards,
-weitao
+Maciej Wieczor-Retman (3):
+  selftests/resctrl: Add cleanup function to test framework
+  selftests/resctrl: Simplify cleanup in ctrl-c handler
+  selftests/resctrl: Move cleanups out of individual tests
+
+ tools/testing/selftests/resctrl/cat_test.c      |  8 +++-----
+ tools/testing/selftests/resctrl/cmt_test.c      |  4 ++--
+ tools/testing/selftests/resctrl/mba_test.c      |  8 +++-----
+ tools/testing/selftests/resctrl/mbm_test.c      |  8 +++-----
+ tools/testing/selftests/resctrl/resctrl.h       |  9 +++------
+ tools/testing/selftests/resctrl/resctrl_tests.c | 16 +++++-----------
+ tools/testing/selftests/resctrl/resctrl_val.c   |  7 +++++--
+ 7 files changed, 24 insertions(+), 36 deletions(-)
+
+-- 
+2.43.2
 
