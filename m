@@ -1,174 +1,271 @@
-Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FCB715B99E;
-	Thu, 22 Feb 2024 18:14:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2417215D5AF;
+	Thu, 22 Feb 2024 18:14:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708625682; cv=none; b=asOP4m5vGQ6yhofOgPks3QTBQpJRAPh37EpvOhgh7JkcuSATvyOzvJ/Zvu6j+cgoMPSXaXtJeOgyna76WC3qepPrazXQ3RskBUyAoRxHfi7dPAsrDs1947iSuPI8MROEwlkaUzqi6m5bFoPCwIb7IQ3q0wlKMW461Fhi1p0w2zA=
+	t=1708625683; cv=none; b=R19ila7JUIkbhot9ASj+ma8iTOhgDU8FV8wXeVq8N+ffAgeJ+qViwl+rFegdTdYzEnEM1pYuA2gkdDYBXMVIBF7SLvNtVzroHDhs//mVvtwV2FKBvEYfqCwOXKFZ3mgL8dQL9nZK3KC702NG1oXjVpU9An2aNZUCyGzI1DNGwRY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708625682; c=relaxed/simple;
-	bh=NnnqUwFC1hDxEU1wgg2AtxwRiDr/uK0iWNRJB8yXi8U=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=FTacqDvbnQH7jEqqDaFMmV+1efQTWudlHH1944iVOpUhHihW3XzLtamFUaV35UocG3W1QKjBJvDHfgoY6bIlV+aidLwUFWWwBJZ4RCJWR6IVo/1Vt/Z4irNO3byJMvuuumiMZon84E07mZIwlBf8e4Ci/B7Vicy7PfuIGLzADnU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Gwt6aXEY; arc=none smtp.client-ip=209.85.167.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1708625683; c=relaxed/simple;
+	bh=CpWPwPjnSG0Utx4KGltVz+v8L6+sya4K3NyhwxON/7g=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=tnxWs4CF4BbCJ1+IfKpFS0bH1NFNGw17gc/OfEnNvnSW2ImLbdjzYamNUjtWajCB8/k93YuzBZBpXFOTxhAqfK1uGo35BF9GsD9Mr130TnNtLscBNEfRWEVhkPxCFnZL9QnOE2KG3/p0ihw60Wm5RRE/Yl8xM8bR3WepM+TFD0k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jfIZQKjx; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Gwt6aXEY"
-Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-512a85806fcso63121e87.2;
-        Thu, 22 Feb 2024 10:14:40 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1708625679; x=1709230479; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Tv0ab2lgE4guOpRcHEiI1iTXuRh4uBNVZdl4mwlt2wg=;
-        b=Gwt6aXEYyG2fcrk9PnegPAXYcgo1XugNd9tW55/m/sgXIMr9amsZlEoJxayzcurURw
-         X0OkIR5ieGi2yZX/UzHAzNpiryKk5zF+E5SMPhCIDCpYvKb3lMD4Zl1Pf+Hd1FW5+NZE
-         gcUiKa7tKfvLEwkAb9+or5wfgtc+j7nV77+Ernf/fby459AwbXPMspMvE1aC1oga0mzr
-         kFo/LOMw7TZubCK4DPnb3XbRZbyisqa360fCbIK/TBJKuSP7AhI4aTxhgzwwYX4XdR8t
-         Z2kh+qZFHPyogYn4JLBRxxIapwmY8u8CQyVHL1Efts/qiDqnhK0OYUWtFV6u39l65ato
-         wy6w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708625679; x=1709230479;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Tv0ab2lgE4guOpRcHEiI1iTXuRh4uBNVZdl4mwlt2wg=;
-        b=fal1cqRkgSkhVXzJC9RTuhpMQteZLGzGgRvxCsoDm3ofjXrZZig/ftJv3818ghpW/F
-         743jjFr1YphukFldiucFDlY16e1HebZUHrc8Z9CmBiyblor3WAPrbDJeP06IuK/QR19P
-         rLtLJizAT/t9hv62IaAg2k2YzpONSF27uCIuYunJoSupheTXw8PRJED5IzPwqCfh+2+/
-         qEbYHFX6kuH+3tJ6pFtl9lSXKlXumqq5boXch/P1XeY8XfJpvyFt4LezaPXnuBkwHk5k
-         +vTtXeppAHJKiV19T3tdVxjAdfTRK7TDHTVpG/j9rg/N4Xip0bAq6OERWfqX4LupDx0C
-         ybJw==
-X-Forwarded-Encrypted: i=1; AJvYcCUzejzu9V+o/9kSNzAYtRp69IodxrZJI0NhVJqBH2baHCPceVUkSek5s5bPdnx8UQ/STcIe6oENMWC5zhIfLjPRBo+J+XaYYb5aB1EOk1ZphwCBMLIllYzyqllakIsaAr7wvrz6IqjX+g==
-X-Gm-Message-State: AOJu0YzNdO+MtzmDVctlj2AXVLYi3FwUjUjLbdsoHDmvETwBfr7Gx2uj
-	KV5QpMfU5QIk7dJU2xGS0AZ+RMfz1pdSYzJZ68tUudK7ceHm89xy
-X-Google-Smtp-Source: AGHT+IHA+WyWxnQ+pOSdLU4Imqh9orDNdwYCUlK6uxFXLm/wiayy7DJwE0Kc0gDTLDO3NPom4pMyow==
-X-Received: by 2002:a05:6512:1244:b0:512:bf7e:ca25 with SMTP id fb4-20020a056512124400b00512bf7eca25mr7610267lfb.20.1708625678696;
-        Thu, 22 Feb 2024 10:14:38 -0800 (PST)
-Received: from localhost ([178.176.56.174])
-        by smtp.gmail.com with ESMTPSA id o5-20020ac24c45000000b00512e50c09acsm1089lfk.48.2024.02.22.10.14.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 22 Feb 2024 10:14:38 -0800 (PST)
-From: Serge Semin <fancer.lancer@gmail.com>
-To: Michal Simek <michal.simek@amd.com>,
-	Alexander Stein <alexander.stein@ew.tq-group.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Tony Luck <tony.luck@intel.com>,
-	James Morse <james.morse@arm.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Robert Richter <rric@kernel.org>
-Cc: Serge Semin <fancer.lancer@gmail.com>,
-	Punnaiah Choudary Kalluri <punnaiah.choudary.kalluri@xilinx.com>,
-	Dinh Nguyen <dinguyen@kernel.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-edac@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v5 10/20] EDAC/synopsys: Drop struct ecc_error_info.blknr field
-Date: Thu, 22 Feb 2024 21:12:55 +0300
-Message-ID: <20240222181324.28242-11-fancer.lancer@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240222181324.28242-1-fancer.lancer@gmail.com>
-References: <20240222181324.28242-1-fancer.lancer@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jfIZQKjx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3786FC43399;
+	Thu, 22 Feb 2024 18:14:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1708625682;
+	bh=CpWPwPjnSG0Utx4KGltVz+v8L6+sya4K3NyhwxON/7g=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=jfIZQKjxM+/Wb0t5zKKKALeXw/nhaRsVzBRU6GZk8FyDmQaShLaE6WtdGTg2RAoaW
+	 d/Cs1GCNAsrMTzbk+rsivGwPHkHU/tZYoCmqSYuGqGObO2TFm7hYtDVfeFtu2avs2h
+	 wyBG274/LogrYE6wFA+SdpvLSWhPWpYieAKIXvKE5V/eXEzHQX/YEE9sRC+Qekz5jR
+	 X2olI5f/QaOGaxFgqcSwtSw4YvJ6kxR2yEMlCLx308/KnVMI3E6MsLKG1TWZDNWpIU
+	 ej6WPth/zz/X2SZyp2I0JWf3tIKolg93mD+4oucb6v858BUqYZ9fG+Lsp+n/6j4LcA
+	 ImfzNNuh9cnAQ==
+From: Maxime Ripard <mripard@kernel.org>
+Date: Thu, 22 Feb 2024 19:13:51 +0100
+Subject: [PATCH v7 05/36] drm/tests: connector: Add tests for
+ drmm_connector_init
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240222-kms-hdmi-connector-state-v7-5-8f4af575fce2@kernel.org>
+References: <20240222-kms-hdmi-connector-state-v7-0-8f4af575fce2@kernel.org>
+In-Reply-To: <20240222-kms-hdmi-connector-state-v7-0-8f4af575fce2@kernel.org>
+To: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
+ Daniel Vetter <daniel@ffwll.ch>, Jonathan Corbet <corbet@lwn.net>, 
+ Sandy Huang <hjc@rock-chips.com>, 
+ =?utf-8?q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, 
+ Chen-Yu Tsai <wens@csie.org>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
+ Samuel Holland <samuel@sholland.org>
+Cc: Hans Verkuil <hverkuil@xs4all.nl>, 
+ Sebastian Wick <sebastian.wick@redhat.com>, 
+ =?utf-8?q?Ville_Syrj=C3=A4l=C3=A4?= <ville.syrjala@linux.intel.com>, 
+ dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org, 
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-media@vger.kernel.org, linux-rockchip@lists.infradead.org, 
+ linux-sunxi@lists.linux.dev, Maxime Ripard <mripard@kernel.org>
+X-Mailer: b4 0.12.3
+X-Developer-Signature: v=1; a=openpgp-sha256; l=5901; i=mripard@kernel.org;
+ h=from:subject:message-id; bh=CpWPwPjnSG0Utx4KGltVz+v8L6+sya4K3NyhwxON/7g=;
+ b=owGbwMvMwCX2+D1vfrpE4FHG02pJDKnX+97YfJyb9Pnqp/ivArO2POGYBZSwZ3jcGb9tX/paa
+ 7/Xfz93lLIwiHExyIopssQImy+JOzXrdScb3zyYOaxMIEMYuDgFYCLKGxgZHq5vX97Zs0oy/aGb
+ e9/hNTtr7s5qcSi22ev6PFgl+nOrE8M/DfFEs9ktK9mXLnuYFT9P9Hh+7FbZi3GenYITb9RvCap
+ nAwA=
+X-Developer-Key: i=mripard@kernel.org; a=openpgp;
+ fpr=BE5675C37E818C8B5764241C254BCFC56BF6CE8D
 
-Even though the ECC(C|U)ADDR1 CSR description indeed says it's a "Block
-number" in the DW uMCTL2 DDRC IP-core databooks, the corresponding
-register field is named as ECC(C|U)ADDR1.ecc_(un)corr_col (which means ECC
-(un)corrected column) and in the rest of the document it's referred as the
-SDRAM address column. Thus use the already available ecc_error_info.col
-field to read the column number to and drop the questionable
-ecc_error_info.blknr field for good.
+drmm_connector_init is the preferred function to initialize a
+drm_connector structure. Let's add a bunch of unit tests for it.
 
-Signed-off-by: Serge Semin <fancer.lancer@gmail.com>
+Signed-off-by: Maxime Ripard <mripard@kernel.org>
 ---
- drivers/edac/synopsys_edac.c | 21 +++++++++------------
- 1 file changed, 9 insertions(+), 12 deletions(-)
+ drivers/gpu/drm/tests/drm_connector_test.c | 170 ++++++++++++++++++++++++++++-
+ 1 file changed, 169 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/edac/synopsys_edac.c b/drivers/edac/synopsys_edac.c
-index 21b0d791cb8b..6ca119459bd3 100644
---- a/drivers/edac/synopsys_edac.c
-+++ b/drivers/edac/synopsys_edac.c
-@@ -173,7 +173,7 @@
- #define ECC_CEADDR0_RNK_MASK		BIT(24)
- #define ECC_CEADDR1_BNKGRP_MASK		0x3000000
- #define ECC_CEADDR1_BNKNR_MASK		0x70000
--#define ECC_CEADDR1_BLKNR_MASK		0xFFF
-+#define ECC_CEADDR1_COL_MASK		0xFFF
- #define ECC_CEADDR1_BNKGRP_SHIFT	24
- #define ECC_CEADDR1_BNKNR_SHIFT		16
- 
-@@ -271,7 +271,6 @@
-  * @bitpos:	Bit position.
-  * @data:	Data causing the error.
-  * @bankgrpnr:	Bank group number.
-- * @blknr:	Block number.
+diff --git a/drivers/gpu/drm/tests/drm_connector_test.c b/drivers/gpu/drm/tests/drm_connector_test.c
+index c66aa2dc8d9d..a268847be8d1 100644
+--- a/drivers/gpu/drm/tests/drm_connector_test.c
++++ b/drivers/gpu/drm/tests/drm_connector_test.c
+@@ -3,10 +3,175 @@
+  * Kunit test for drm_modes functions
   */
- struct ecc_error_info {
- 	u32 row;
-@@ -280,7 +279,6 @@ struct ecc_error_info {
- 	u32 bitpos;
- 	u32 data;
- 	u32 bankgrpnr;
--	u32 blknr;
+ 
++#include <linux/i2c.h>
++
++#include <drm/drm_atomic_state_helper.h>
+ #include <drm/drm_connector.h>
++#include <drm/drm_drv.h>
++#include <drm/drm_kunit_helpers.h>
+ 
+ #include <kunit/test.h>
+ 
++struct drm_connector_init_priv {
++	struct drm_device drm;
++	struct drm_connector connector;
++	struct i2c_adapter ddc;
++};
++
++static const struct drm_connector_funcs dummy_funcs = {
++	.atomic_destroy_state	= drm_atomic_helper_connector_destroy_state,
++	.atomic_duplicate_state	= drm_atomic_helper_connector_duplicate_state,
++	.reset			= drm_atomic_helper_connector_reset,
++};
++
++static int dummy_ddc_xfer(struct i2c_adapter *adapter,
++			  struct i2c_msg *msgs, int num)
++{
++	return num;
++}
++
++static u32 dummy_ddc_func(struct i2c_adapter *adapter)
++{
++	return I2C_FUNC_I2C | I2C_FUNC_SMBUS_EMUL;
++}
++
++static const struct i2c_algorithm dummy_ddc_algorithm = {
++	.master_xfer = dummy_ddc_xfer,
++	.functionality = dummy_ddc_func,
++};
++
++static void i2c_del_adapter_wrapper(void *ptr)
++{
++	struct i2c_adapter *adap = ptr;
++
++	i2c_del_adapter(adap);
++}
++
++static int drm_test_connector_init(struct kunit *test)
++{
++	struct drm_connector_init_priv *priv;
++	struct device *dev;
++	int ret;
++
++	dev = drm_kunit_helper_alloc_device(test);
++	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, dev);
++
++	priv = drm_kunit_helper_alloc_drm_device(test, dev,
++						 struct drm_connector_init_priv, drm,
++						 DRIVER_MODESET | DRIVER_ATOMIC);
++	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, priv);
++
++	strscpy(priv->ddc.name, "dummy-connector-ddc", sizeof(priv->ddc.name));
++	priv->ddc.owner = THIS_MODULE;
++	priv->ddc.algo = &dummy_ddc_algorithm;
++	priv->ddc.dev.parent = dev;
++
++	ret = i2c_add_adapter(&priv->ddc);
++	KUNIT_ASSERT_EQ(test, ret, 0);
++
++	ret = kunit_add_action_or_reset(test, i2c_del_adapter_wrapper, &priv->ddc);
++	KUNIT_ASSERT_EQ(test, ret, 0);
++
++	test->priv = priv;
++	return 0;
++}
++
++/*
++ * Test that the registration of a bog standard connector works as
++ * expected and doesn't report any error.
++ */
++static void drm_test_drmm_connector_init(struct kunit *test)
++{
++	struct drm_connector_init_priv *priv = test->priv;
++	int ret;
++
++	ret = drmm_connector_init(&priv->drm, &priv->connector,
++				  &dummy_funcs,
++				  DRM_MODE_CONNECTOR_HDMIA,
++				  &priv->ddc);
++	KUNIT_EXPECT_EQ(test, ret, 0);
++}
++
++/*
++ * Test that the registration of a connector without a DDC adapter
++ * doesn't report any error.
++ */
++static void drm_test_drmm_connector_init_null_ddc(struct kunit *test)
++{
++	struct drm_connector_init_priv *priv = test->priv;
++	int ret;
++
++	ret = drmm_connector_init(&priv->drm, &priv->connector,
++				  &dummy_funcs,
++				  DRM_MODE_CONNECTOR_HDMIA,
++				  NULL);
++	KUNIT_EXPECT_EQ(test, ret, 0);
++}
++
++/*
++ * Test that the registration of a connector succeeds for all possible
++ * connector types.
++ */
++static void drm_test_drmm_connector_init_type_valid(struct kunit *test)
++{
++       struct drm_connector_init_priv *priv = test->priv;
++       unsigned int connector_type = *(unsigned int *)test->param_value;
++       int ret;
++
++       ret = drmm_connector_init(&priv->drm, &priv->connector,
++				 &dummy_funcs,
++				 connector_type,
++				 &priv->ddc);
++       KUNIT_EXPECT_EQ(test, ret, 0);
++}
++
++static const unsigned int drm_connector_init_type_valid_tests[] = {
++	DRM_MODE_CONNECTOR_Unknown,
++	DRM_MODE_CONNECTOR_VGA,
++	DRM_MODE_CONNECTOR_DVII,
++	DRM_MODE_CONNECTOR_DVID,
++	DRM_MODE_CONNECTOR_DVIA,
++	DRM_MODE_CONNECTOR_Composite,
++	DRM_MODE_CONNECTOR_SVIDEO,
++	DRM_MODE_CONNECTOR_LVDS,
++	DRM_MODE_CONNECTOR_Component,
++	DRM_MODE_CONNECTOR_9PinDIN,
++	DRM_MODE_CONNECTOR_DisplayPort,
++	DRM_MODE_CONNECTOR_HDMIA,
++	DRM_MODE_CONNECTOR_HDMIB,
++	DRM_MODE_CONNECTOR_TV,
++	DRM_MODE_CONNECTOR_eDP,
++	DRM_MODE_CONNECTOR_VIRTUAL,
++	DRM_MODE_CONNECTOR_DSI,
++	DRM_MODE_CONNECTOR_DPI,
++	DRM_MODE_CONNECTOR_WRITEBACK,
++	DRM_MODE_CONNECTOR_SPI,
++	DRM_MODE_CONNECTOR_USB,
++};
++
++static void drm_connector_init_type_desc(const unsigned int *type, char *desc)
++{
++	sprintf(desc, "%s", drm_get_connector_type_name(*type));
++}
++
++KUNIT_ARRAY_PARAM(drm_connector_init_type_valid,
++		  drm_connector_init_type_valid_tests,
++		  drm_connector_init_type_desc);
++
++static struct kunit_case drmm_connector_init_tests[] = {
++	KUNIT_CASE(drm_test_drmm_connector_init),
++	KUNIT_CASE(drm_test_drmm_connector_init_null_ddc),
++	KUNIT_CASE_PARAM(drm_test_drmm_connector_init_type_valid,
++			 drm_connector_init_type_valid_gen_params),
++	{ }
++};
++
++static struct kunit_suite drmm_connector_init_test_suite = {
++	.name = "drmm_connector_init",
++	.init = drm_test_connector_init,
++	.test_cases = drmm_connector_init_tests,
++};
++
+ struct drm_get_tv_mode_from_name_test {
+ 	const char *name;
+ 	enum drm_connector_tv_mode expected_mode;
+@@ -70,7 +235,10 @@ static struct kunit_suite drm_get_tv_mode_from_name_test_suite = {
+ 	.test_cases = drm_get_tv_mode_from_name_tests,
  };
  
- /**
-@@ -433,7 +431,7 @@ static int zynqmp_get_error_info(struct synps_edac_priv *priv)
- 					ECC_CEADDR1_BNKNR_SHIFT;
- 	p->ceinfo.bankgrpnr = (regval &	ECC_CEADDR1_BNKGRP_MASK) >>
- 					ECC_CEADDR1_BNKGRP_SHIFT;
--	p->ceinfo.blknr = (regval & ECC_CEADDR1_BLKNR_MASK);
-+	p->ceinfo.col = (regval & ECC_CEADDR1_COL_MASK);
- 	p->ceinfo.data = readl(base + ECC_CSYND0_OFST);
- 	edac_dbg(2, "ECCCSYN0: 0x%08X ECCCSYN1: 0x%08X ECCCSYN2: 0x%08X\n",
- 		 readl(base + ECC_CSYND0_OFST), readl(base + ECC_CSYND1_OFST),
-@@ -449,7 +447,7 @@ static int zynqmp_get_error_info(struct synps_edac_priv *priv)
- 					ECC_CEADDR1_BNKGRP_SHIFT;
- 	p->ueinfo.bank = (regval & ECC_CEADDR1_BNKNR_MASK) >>
- 					ECC_CEADDR1_BNKNR_SHIFT;
--	p->ueinfo.blknr = (regval & ECC_CEADDR1_BLKNR_MASK);
-+	p->ueinfo.col = (regval & ECC_CEADDR1_COL_MASK);
- 	p->ueinfo.data = readl(base + ECC_UESYND0_OFST);
- out:
- 	spin_lock_irqsave(&priv->reglock, flags);
-@@ -480,10 +478,9 @@ static void handle_error(struct mem_ctl_info *mci, struct synps_ecc_status *p)
- 		pinf = &p->ceinfo;
- 		if (priv->p_data->quirks & DDR_ECC_INTR_SUPPORT) {
- 			snprintf(priv->message, SYNPS_EDAC_MSG_SIZE,
--				 "DDR ECC error type:%s Row %d Bank %d BankGroup Number %d Block Number %d Bit Position: %d Data: 0x%08x",
--				 "CE", pinf->row, pinf->bank,
--				 pinf->bankgrpnr, pinf->blknr,
--				 pinf->bitpos, pinf->data);
-+				 "DDR ECC error type:%s Row %d Col %d Bank %d BankGroup Number %d Bit Position: %d Data: 0x%08x",
-+				 "CE", pinf->row, pinf->col, pinf->bank,
-+				 pinf->bankgrpnr, pinf->bitpos, pinf->data);
- 		} else {
- 			snprintf(priv->message, SYNPS_EDAC_MSG_SIZE,
- 				 "DDR ECC error type:%s Row %d Bank %d Col %d Bit Position: %d Data: 0x%08x",
-@@ -500,9 +497,9 @@ static void handle_error(struct mem_ctl_info *mci, struct synps_ecc_status *p)
- 		pinf = &p->ueinfo;
- 		if (priv->p_data->quirks & DDR_ECC_INTR_SUPPORT) {
- 			snprintf(priv->message, SYNPS_EDAC_MSG_SIZE,
--				 "DDR ECC error type :%s Row %d Bank %d BankGroup Number %d Block Number %d",
--				 "UE", pinf->row, pinf->bank,
--				 pinf->bankgrpnr, pinf->blknr);
-+				 "DDR ECC error type :%s Row %d Col %d Bank %d BankGroup Number %d",
-+				 "UE", pinf->row, pinf->col, pinf->bank,
-+				 pinf->bankgrpnr);
- 		} else {
- 			snprintf(priv->message, SYNPS_EDAC_MSG_SIZE,
- 				 "DDR ECC error type :%s Row %d Bank %d Col %d ",
+-kunit_test_suite(drm_get_tv_mode_from_name_test_suite);
++kunit_test_suites(
++	&drmm_connector_init_test_suite,
++	&drm_get_tv_mode_from_name_test_suite
++);
+ 
+ MODULE_AUTHOR("Maxime Ripard <maxime@cerno.tech>");
+ MODULE_LICENSE("GPL");
+
 -- 
-2.43.0
+2.43.2
 
