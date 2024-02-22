@@ -1,136 +1,107 @@
-Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54BE612D1F8;
-	Thu, 22 Feb 2024 22:00:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A11CC12D211
+	for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 22:00:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708639215; cv=none; b=TYvUfwTEfXRXHLC5KCKGiY90sUVWmOJ+uzuoWIDAMznf9r9VFaa/X9aTklomwxbY8MnUPVgHiMBL6qJ9SuGK/XJFC5v9NmiRhUfnL69EeQuCBVpcimMb02LnsEcIv94IrzdShQrm7KOlOwR/ZpCwwIsyn0fUK79i8pg3j4P08tQ=
+	t=1708639258; cv=none; b=JFhQDEbk+3djfDjgz1OE5YUsnKS7/pXWpcXOfkJQJoIauEcaIuhnhRAUpR6esvW7VgLcq3re1/kgV5OvBEMnJywsEKINHbUCYpxiFWT60u/hn8uQRRPS+vRZ8rTqZJZ1Jzla9fqIscuRsjUmKqiD3vNZPRMoRT8YdNmIzSnB+qQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708639215; c=relaxed/simple;
-	bh=pxdI0YOnWrToH/6X5U1/eKzH7bdwsSPGxAIQid8eQTw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=IPYe2BJCxEOwXtif38svIoF51bVM/hlYidiZEZeHn0vfKuzfIF5Al7Xr++OIejsqfm0NKAOhd1um/fww0lkXUrZkio+HZzzeX7Wzr0ZlbYT+iD8OVcCyhyqLJWwVMHAvCiGwQO7WeZq/n8HxXw4nTao6kw0VMLwGeozp+r9md7c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EIaUSC+Y; arc=none smtp.client-ip=209.85.167.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1708639258; c=relaxed/simple;
+	bh=/0jZgqFV3QHFwXdwQjyOlzwZPiSes7vDjViaGzmwhVo=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=bHbtuTniiE4v+Lxd7jKghpLdRM+AdpyRWU5XWGUuM9TXPzeocRWJy69KDoy+pUjCit3/covmT1aKhbvG77FvuJNGUB5PA/mqDoOPpPN6M9+pI8BeBY1Cu85xx5/X5+euJxAGvRIUQ1G9GfSs2e+H65KkOekAkzSQuXCNdOMLrfk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=XQlrXfAN; arc=none smtp.client-ip=209.85.214.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EIaUSC+Y"
-Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-512cca90f38so317708e87.2;
-        Thu, 22 Feb 2024 14:00:13 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="XQlrXfAN"
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-1dbd32cff0bso2801675ad.0
+        for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 14:00:55 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1708639211; x=1709244011; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
+        d=chromium.org; s=google; t=1708639255; x=1709244055; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=pxdI0YOnWrToH/6X5U1/eKzH7bdwsSPGxAIQid8eQTw=;
-        b=EIaUSC+Ykd6+JfoUxfmcy9/IlOZDm4iZWGqxgFykB552Mon+K/VwXxqPLq84MBDFfg
-         XUBzUUIg+sSsoySoXLaNsaDDD4UPDk7t3VIM9mNxgfDcTsa2mJfnUSgNfRyyxmgOWANv
-         NAgMa+NXAl+ENFqIBTNz+4IvRcG4PoGOpocR0lnHSGdGY9Dr63FkfeNmIttHXnWWMvS2
-         M06dvDO0/jln8VB/Zv1BdFvdlihYtKgmCTXEDHYoDq7XeNmJIcTyWt9ayYf1X4kFqGrl
-         F6QRz8xU9WUm/HQBc4pcOuzH2NqrJGM+73F8jjgMRqArg8oRQJMSalRkW0rvBo9Z5Zpi
-         i0/A==
+        bh=l7U2tjc40/BAOXSRwNIhZS6QrofSS9z/mAZ0ltWiA80=;
+        b=XQlrXfANKAFX/0R+ZH81Am2eORBegGANg5R5hlUcFpf02tdb51GlueMksGS7WQ/0au
+         yZGLlxYczA/be0Ly0T0hiO/uRUzhaty0KEeXTwxwf820+EMccDPev4ZuDYBoFKiwOmS5
+         ntdwRZ8AxjsYoz2HpNdGzEkFseseMQ/ZpKuq0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708639211; x=1709244011;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1708639255; x=1709244055;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=pxdI0YOnWrToH/6X5U1/eKzH7bdwsSPGxAIQid8eQTw=;
-        b=uH/hoboIFYiCbPIZJHblYUE/VFSQi1ZJpTuMg95yTIkhoLBC9jKJfqEnlOApjicSod
-         4UTxpw6w8lAY9Z9LLHhaHRr50E96VoCtIrCpKbF3G5n+1ZbAyp+C2jyMQCMsNUcjHMol
-         gqSS2GFoTsXS4ggkRrkCbeyOMz5M60iOHvNDoFl8mvj0xIeeavogIzXtWbJtAbXHWkSx
-         GY0ksuiabM9x9hporXDb51T//cZyTWRvrKodGRq8BlTceOL6VV8P9dqiB+fWNH3UtPTs
-         XreCi9gvBkkhu0IqXIH6gHEOQUTC1mdzUT5VqjzliNtn3rK5ePzO2Lhp6olh4Z1rHAaQ
-         raNA==
-X-Forwarded-Encrypted: i=1; AJvYcCUXyaC9TEN5V7IqCv1xrQF7T8rVdTVH4izU5KIojnVpC3WpjvN0VmcQjZB6VaXYsr8r/byeZXf4AncdDGt3cwvpUzf0goot3fXJV8LNrscosi+gvaNx9c0m3aeP8pcj18s4f4etDAI5Nw==
-X-Gm-Message-State: AOJu0YxfTypeIxycONWsUGaBbRmP82by02nselWsQbwmw4Rktw8xcXIS
-	Cv8JW5IGccDiSCZU10gMQj3Tp5+ci6XxJHhcbArHrY/xmN2O3C0iCDQgTcFaockj0O51XTrIqJo
-	uvS/FO9FT9lhdE2hUIWu5ydG/xVQ=
-X-Google-Smtp-Source: AGHT+IHDEfNZY6VfeL6BGoqTieLAb3vHjYt71QfMqckuTJ8bdGmvXJpn3vetoNVYLA+pqybI0CIWVGhFox5IFc51E10=
-X-Received: by 2002:a05:6512:1308:b0:512:b915:606a with SMTP id
- x8-20020a056512130800b00512b915606amr312553lfu.12.1708639211180; Thu, 22 Feb
- 2024 14:00:11 -0800 (PST)
+        bh=l7U2tjc40/BAOXSRwNIhZS6QrofSS9z/mAZ0ltWiA80=;
+        b=qV+O9DMJQ4bJ83vLWg5N6hFMUJcN+Z1XXOcsVkDXP9by5SHVuVc2cVjMMwX1k3PYZa
+         cjaGccL7YTG6n0jgv7gbmtxmiVDLBfZejaHi01fKMiZgelDOPZK2MWNaoIX2eRtOf4hq
+         Za+BJE1uMN6+m5WadY42tBwjyy5f94XtYP0OqWEHsI/PwUCmRxpOad0O3+K53dlkueYq
+         OzvILYB0AX0tvYYcChJtOZmamHXIT8esN7JdaIKEm3iWXU7YxM7gtInkiOcJzhSVpA0r
+         dJAHxFat6tcW1zaIOZSRgFzffq5O7iJL8Kmhs0TyEyuCrsN+U5QJFZXVmIKFAxuSE8Ue
+         WP5Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUIlqh/tLSeCaEuwblop9oM+HUAyKzvAPjy/2EqxFZaeK1ERGStqTHju+R3aR9A4wxQUpiJ/dN+E+62wFjcsacgmBf3tK7OsA/Lp5oO
+X-Gm-Message-State: AOJu0YyS/bTFRMHrsmnk4vmp+B6eA3swvnYrvjrNzjolqXWW2+F/6u+h
+	TxBN/SC3ZYwO+bdGdE2+qa36nGl5N6/4n/wekeOTDG0S5Rl4dKRZf+02NuIrrw==
+X-Google-Smtp-Source: AGHT+IFthqR+g2dBw/UAHrs4z25heuFjZDGEvpiSvMlZdt+AxyMd9KMXGew95W1Id88zqK02C5oX0g==
+X-Received: by 2002:a17:903:2291:b0:1db:fd4e:329f with SMTP id b17-20020a170903229100b001dbfd4e329fmr158789plh.15.1708639254752;
+        Thu, 22 Feb 2024 14:00:54 -0800 (PST)
+Received: from www.outflux.net ([198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id c6-20020a170902c1c600b001d717e644e2sm10357386plc.247.2024.02.22.14.00.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 22 Feb 2024 14:00:54 -0800 (PST)
+From: Kees Cook <keescook@chromium.org>
+To: Tycho Andersen <tycho@tycho.pizza>
+Cc: Kees Cook <keescook@chromium.org>,
+	"Tobin C . Harding" <me@tobin.cc>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Guixiong Wei <guixiongwei@gmail.com>,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH v2 1/4] MAINTAINERS: Update LEAKING_ADDRESSES details
+Date: Thu, 22 Feb 2024 14:00:48 -0800
+Message-Id: <20240222220053.1475824-1-keescook@chromium.org>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240222215755.it.764-kees@kernel.org>
+References: <20240222215755.it.764-kees@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <1f598a72-dd9f-4c6c-af7f-29751f84bd23@alliedtelesis.co.nz>
- <Zde966nsJ76QOuzm@surfacebook.localdomain> <f5e74774-226a-4678-a6f9-b4f17250ad91@alliedtelesis.co.nz>
-In-Reply-To: <f5e74774-226a-4678-a6f9-b4f17250ad91@alliedtelesis.co.nz>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Thu, 22 Feb 2024 23:59:34 +0200
-Message-ID: <CAHp75Vfq3Pc+Eo3Z5mhORZwwuKF+Y7_47dTO8qARcfba4nmj2w@mail.gmail.com>
-Subject: Re: Linux support for a 7 segment LED display
-To: Chris Packham <Chris.Packham@alliedtelesis.co.nz>, 
-	Geert Uytterhoeven <geert@linux-m68k.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
-Cc: Pavel Machek <pavel@ucw.cz>, "lee@kernel.org" <lee@kernel.org>, 
-	"linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-Developer-Signature: v=1; a=openpgp-sha256; l=962; i=keescook@chromium.org; h=from:subject; bh=/0jZgqFV3QHFwXdwQjyOlzwZPiSes7vDjViaGzmwhVo=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBl18QSYDlmaz4o8wEpSBDere7LZ8YHox0i+LD6P fFT/CbFwrGJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZdfEEgAKCRCJcvTf3G3A Ju6MEACz0ztHen9/0jUIZ4S7P1C/KaEPNBQFSTxxU4ebUBIeSf9lR+aMLQgkRqYPHkNhKUwMyAe 0kfKRj+c2d3kl6WLlwolO6hDU8L2KJgSTIH9YUvw6C4dZm9qjGPBbP+nS+KNwjmZaP7mbr5olEz OeZlrWDukYeZGGfH0Z8HnfKZy90SSYZFpr/NN4278Hf23OnzxJcQhdIhzHkpOhyNzvB/NwSTf2w FeufXgd72gxmzIL9Ezf3sxn5HL0FbSNqrgoJ20bXnawW/jKSSZGQTCtOkm/raGNNycdBYLxG5eb 03FGXYdPXmw6KgOkEnilYPbjPRlKODOP5kSfmcHZycfRGD5sXzauQ1leB5cVRfzZINZdBMixOVz G2XO5A1+2WUxc3lP4vr/WynIHOpXwAww7lWeRQMQ7iBuxCLp3A1QDoOoR6j0bB1OHQw+VEUJ3fX QFXW5jWdlTX8hxYc/gs7munqdYDOguFquGU/Xn05okUzK4XheQ4CjO8LbMD8np9L54W7LPOEI45 o0EkGDwQwdazQn8HJPJ6rsGhnV/rY2TRIykGjLSA30uVhsEFRhXaF6vD5TDGBTMWZT57Cm7F2kl eH3d0gUmCcTu99DiFdfztZH1+hODUAEbwhtmk7EZsV/sKv8N+suvdM1C6vwnkLq6xAuJcclwBJ4 Sb5oeiSWhU8Z5sg==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 
-On Thu, Feb 22, 2024 at 11:53=E2=80=AFPM Chris Packham
-<Chris.Packham@alliedtelesis.co.nz> wrote:
-> On 23/02/24 10:34, andy.shevchenko@gmail.com wrote:
-> > Sun, Feb 11, 2024 at 08:46:12PM +0000, Chris Packham kirjoitti:
-> >> Hi Blinkenlight enthusiasts,
-> >>
-> >> I'm looking for something that I figured must exists but maybe it's so
-> >> niche that no-one has bothered to upstream a driver for it.
-> >>
-> >> I have a requirement to support a 7-segment LED display[1] (one that c=
-an
-> >> display a single digit from 0-9). Hardware wise it's just a bunch of
-> >> individual GPIOs connected to each segment (plus an extra one for a
-> >> dot). I can't see anything obvious in drivers/leds but maybe I'm looki=
-ng
-> >> in the wrong place. Or maybe it's the kind of thing on PC hardware tha=
-t
-> >> is just driven by the BIOS without the operating system knowing about =
-it.
-> >>
-> >> Is there an existing in-kernel driver for such a thing?
-> > No, and can't be. Here is just a mapping table and other drivers that u=
-se
-> > 7-segment LED displays to be connected to.
-> >
-> > What you need is something else, i.e. special case of leds-gpio (which =
-should
-> > be somewhere else) that does something like this. To me it sounds like =
-a
-> > mixture between line-display.h (from auxdisplay) and gpio-aggregator.
-> >
-> > How many digits do you want to connect? How are they going to be connec=
-ted
-> > (static display, or dynamic when you need to refresh in certain periods=
- of
-> > time)? Depending on the answer it might take one or another approach.
->
-> It sounds like a auxdisplay driver might be the way to go. My hardware
-> happens to have a single 7seg block but there's no reason the driver
-> needs to be restricted to that. At some point it obviously becomes
-> better to fit something like the ht16k33 to offload the character
-> display but for one or 2 digits a PCA953x plus the LED block would do
-> just fine.
+Tobin hasn't been involved lately, and I can step up to be a reviewer
+with Tycho. I'll carry changes via the hardening tree.
 
-I have hc595 (SPI GPIO) connected to a single digit 7-segment LED.
-Since it can be also serialized, line display APIs seem plausible to
-fit. What we need is a proxy between the two. And I think
-gpio-aggregator is the best for that. It needs an additional
-compatible string and the registration for line display (overall
-something like 50 LoCs). We can even call that hardware compatible as
-line-display-gpio (or so).
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+Cc: Tycho Andersen <tycho@tycho.pizza>
+Cc: Tobin C. Harding <me@tobin.cc>
+---
+ MAINTAINERS | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Cc: Geert and Krzysztof (for the comments on the idea above).
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 216d02a3fed5..cd651c4df019 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -12154,11 +12154,11 @@ F:	Documentation/scsi/53c700.rst
+ F:	drivers/scsi/53c700*
+ 
+ LEAKING_ADDRESSES
+-M:	Tobin C. Harding <me@tobin.cc>
+ M:	Tycho Andersen <tycho@tycho.pizza>
++R:	Kees Cook <keescook@chromium.org>
+ L:	linux-hardening@vger.kernel.org
+ S:	Maintained
+-T:	git git://git.kernel.org/pub/scm/linux/kernel/git/tobin/leaks.git
++T:	git git://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git for-next/hardening
+ F:	scripts/leaking_addresses.pl
+ 
+ LED SUBSYSTEM
+-- 
+2.34.1
 
-> The information we want to display is mostly static (basically a numeric
-> unit identifier) but there are cases where we may want to alternate
-> between this and "F" to indicate some fault condition.
-
-
---=20
-With Best Regards,
-Andy Shevchenko
