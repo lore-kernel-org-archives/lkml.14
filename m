@@ -1,52 +1,62 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from out203-205-221-231.mail.qq.com (out203-205-221-231.mail.qq.com [203.205.221.231])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EE6F153514
-	for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 16:09:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74B57151CC5
+	for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 16:10:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.231
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708618191; cv=none; b=eOEzPCurOF/dlko++LwYeVyPV8R/Us7TQ6k0HiDMw0rel4I+T+AzbLq/CyQ9R2FFXGiJUn9cc9wotnMfWYQ8SwUv73BRUEuYx8jt0CFG/cIKJnfasMg+m0cct08Q9Wnh/Yth/YpKHENUSY9vfxK2eb95SAfzaTBCrcZfyiW1XcU=
+	t=1708618204; cv=none; b=UIzJtW1nKXHmUGBi18QxXP0DMAiBmQer2ziGTQGBOlQNMPUYL8UeULJZNuWyxhngTxY2e8QU+U+idQ5EElxC+TO4GYERAjjqAmt0F4c5ezSgWxG8j0UUesmYiP7FcvJAIgIV+j0zMwhLiTsPTdCfiUWFEx3f3uIz3rgAkTZviWA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708618191; c=relaxed/simple;
-	bh=UkOdVM5iQvkkHtQecrvn4Z1rTT8INH507Llo2gl78QQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=L1nGTtghT0Oyt29wwTdAq3q9a28Rr7+c1RrmfZzpfATozw97mGn/sxUZbmKfLNkJuGI+U3vlC4YomlnLeL3TxSFML8BjJKD+Rd2Q9HttA8fG0CBI63+etIiszzb1qOTjuhfwe8ie1npqF/B7zinTvCaDtebfiC4Ez1a7mHsGO0U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=dRAxo2uc; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1708618204; c=relaxed/simple;
+	bh=VAARJbyByjfYUowrYEBvOr5VJx+E5jEyLas79aJZyFg=;
+	h=Message-ID:From:To:Cc:Subject:Date:MIME-Version; b=C17Q3nYcCW0mmmk78pFzC2IivKdkx3+psPGUX7UaSM4ssqj9Yohc6fJWmjtj1STyVfpfpGWSc7rYC9w9btWwydrXWbabvojjC9kE+H3yhuDx6OkPzSyaEC0QeABq3QR+ZHgfGXn4KYKj1YCaViO1jgaqsQzvRUNj1TWjrq4GmEk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com; spf=pass smtp.mailfrom=foxmail.com; dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b=owEkeYMT; arc=none smtp.client-ip=203.205.221.231
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foxmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dRAxo2uc"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1708618188;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=WUdidtCwvNxI4MXqkhDzpFFrMP8MQ9qo1Vo++/exepg=;
-	b=dRAxo2uc2kUDp6uBsefCcdJMLrW8W7KrNaNPINsAaBLYKQAuEhX0mC/209eY/jJSTFGzi8
-	pUj4TBrhER6N3YpSanfrBtjQUFLxsQn207WVAMt30qwHGtM0bi4/Mg0j9aonoSQRVq1vQb
-	/B6wzzCG2/YW/sKG35sm+I/9MF8HkBQ=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-496-vCeQ0Lt5OvuE7nUtaq2fKg-1; Thu, 22 Feb 2024 11:09:46 -0500
-X-MC-Unique: vCeQ0Lt5OvuE7nUtaq2fKg-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 24F4B10726A2;
-	Thu, 22 Feb 2024 16:09:46 +0000 (UTC)
-Received: from t14s.fritz.box (unknown [10.39.194.96])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 895472864;
-	Thu, 22 Feb 2024 16:09:44 +0000 (UTC)
-From: David Hildenbrand <david@redhat.com>
-To: linux-kernel@vger.kernel.org
-Cc: linux-mm@kvack.org,
-	David Hildenbrand <david@redhat.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Matthew Wilcox <willy@infradead.org>
-Subject: [PATCH v1] mm: remove total_mapcount()
-Date: Thu, 22 Feb 2024 17:09:43 +0100
-Message-ID: <20240222160943.622386-1-david@redhat.com>
+	dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b="owEkeYMT"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foxmail.com;
+	s=s201512; t=1708617892;
+	bh=vjLg0TSWsTe0chZQ3fuBODGo/vzvbbkVGlo25W/YgL8=;
+	h=From:To:Cc:Subject:Date;
+	b=owEkeYMTlWA81AQ2Ov455FK/7iNjh3ILUq4B2dPH3HRoJf5LdJFLczkRRS9en/olx
+	 V1l7rmOQSm6MKe0huQbmJFv8QQHSMcA8++jfp36OfWTsEqdQS+OXdtiLQe2/31pKhO
+	 G+8RayQWbZZMYPPcvwptgNogfcWQKFmVbo2OLluM=
+Received: from localhost.localdomain ([2409:8a60:2a61:ef40:7404:388f:486a:7747])
+	by newxmesmtplogicsvrszb6-0.qq.com (NewEsmtp) with SMTP
+	id 131B565A; Fri, 23 Feb 2024 00:04:49 +0800
+X-QQ-mid: xmsmtpt1708617889t56zrz7dp
+Message-ID: <tencent_09CF49556CD442411A93D0E92ACC2B7E5D08@qq.com>
+X-QQ-XMAILINFO: N3l5ASPewLWqAyF+hdEE/ByG4KGYO1CseUekNA69wAbtfaBeXNyKtLVasEGJN0
+	 qy5g6p+FH26qGZHzdo5XnP3/bUsbmc58txge5SphCJ26cjze7bnVUrByy4eJR5rgyzSzvik+cE0R
+	 4UI/nRWfdm2BWRYnAXhsL2CCqinhEhb4xncEer2svyeORTGqGmA+D2166CPlOUXLzZJUmb0dV0dB
+	 qgK+Wi0J96/O87KfTXWQbsD+3VhgM5op5IC0OhOQKqnxnRA365Get8+jhfAy3RwGHeqNy+AujpPd
+	 UvlrOwMEI+4EZptVbMSGzYVId4eSbIeiKXs2RcIZ+aW/0/Ab6Yix26995i3vAupqWHK7/HuyRie+
+	 Rk4FyU2tzulEGqvkirg1gg0q67zZNwfM9kjSv14aRjYwhpvYV9lDqlW60fd0MY6no6ycN7FDdXFw
+	 iB5alA1vjHsyzi6LKg/dA6gntzudQor3HJIkJE7cc2Wz+Pch3E5QiOdy9fAL50/QGvfwG9noUno4
+	 DuOcrEpOjLB+iO5VgztrLhHFz3cMwKVb0zpOqWBiPu7LpXbiLbAYvHUWz98mfwW2U9q13UF9vCHn
+	 xZhPdILxKseZii8O/t4Q41giT/Do9ovZ5/Z5qUY7SKFh+irRKixdgFgRY/CbQrEVLOf6lYr2izBi
+	 5V8wvDJne3tm1TCAkxuwAmMw3bYyLZCbHrHtp9ZV8q3LftPSS6xL90iB4qtOunfsN/XGdILhRE+J
+	 cS1KZyFahPVYdlJuJ85EPHm1NQVoPFuINvvTgmW2g/s6zoOzBG4+UYWJOpE3/T1CgaLsMfJ8RWRJ
+	 CRGWZeffGXY0mVJQrSvlhCInZzWTNZNCFh5tuIz6e25nUGaeLHkN7s2ynMK1B8q+VxRbZ/cOcnMR
+	 +vsEAa2AO7mFsh3Z8OJFdk1hUTCc61U5kRptZQAEmPUNkVqRiI3GvmQ+0l0dZCM+G3/VVhTCZn5k
+	 HOT2XyLd40dhOECKspO3Dj6vm0acJNMdOPsROolAQrrh/3HFwaDPFW9itmdjjPAAUzb2KE1qXAvH
+	 GsRdQZLJu9LNn0pw1Obm1E9iC6V/uxH+1Frwj7yRMcuCjbTVYz
+X-QQ-XMRINFO: OWPUhxQsoeAVDbp3OJHYyFg=
+From: wenyang.linux@foxmail.com
+To: Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Ingo Molnar <mingo@kernel.org>
+Cc: Wen Yang <wenyang.linux@foxmail.com>,
+	Oleg Nesterov <oleg@redhat.com>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Mel Gorman <mgorman@techsingularity.net>,
+	Peter Zijlstra <peterz@infradead.org>,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 1/2] exit: add a tracepoint for profiling a task that is starting to exit
+Date: Fri, 23 Feb 2024 00:04:34 +0800
+X-OQ-MSGID: <20240222160434.350595-1-wenyang.linux@foxmail.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -54,140 +64,85 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.1
 
-mm/memfd.c is that last remaining user of total_mapcount().  Let's
-convert memfd_tag_pins() and memfd_wait_for_pins() to use folios
-instead of pages, so we can remove total_mapcount() for good.
+From: Wen Yang <wenyang.linux@foxmail.com>
 
-We always get a head page, so we can just naturally interpret is as a folio
-(similar to other code).
+Currently coredump_task_exit() takes some time to wait for the generation
+of the dump file. But if the user-space wants to receive a notification
+as soon as possible it maybe inconvenient.
 
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Matthew Wilcox (Oracle) <willy@infradead.org>
-Signed-off-by: David Hildenbrand <david@redhat.com>
+Commit 2d4bcf886e42 ("exit: Remove profile_task_exit & profile_munmap")
+simplified the code, but also removed profile_task_exit(), which may
+prevent third-party kernel modules from detecting process exits timely.
+
+Add the new trace_sched_profile_task_exit() this way a user-space monitor
+could detect the exits and potentially make some preparations in advance.
+
+Signed-off-by: Wen Yang <wenyang.linux@foxmail.com>
+Cc: Oleg Nesterov <oleg@redhat.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: Ingo Molnar <mingo@kernel.org>
+Cc: Mel Gorman <mgorman@techsingularity.net>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: linux-kernel@vger.kernel.org
 ---
+ include/trace/events/sched.h | 28 ++++++++++++++++++++++++++++
+ kernel/exit.c                |  1 +
+ 2 files changed, 29 insertions(+)
 
-Did a quick test with write-sealing a memfd backed by THP. Seems to work
-as it used to.
-
----
- include/linux/mm.h |  9 +--------
- mm/memfd.c         | 34 ++++++++++++++++++----------------
- 2 files changed, 19 insertions(+), 24 deletions(-)
-
-diff --git a/include/linux/mm.h b/include/linux/mm.h
-index 6f4825d82965..49e22a2f6ccc 100644
---- a/include/linux/mm.h
-+++ b/include/linux/mm.h
-@@ -1183,7 +1183,7 @@ static inline int is_vmalloc_or_module_addr(const void *x)
-  * How many times the entire folio is mapped as a single unit (eg by a
-  * PMD or PUD entry).  This is probably not what you want, except for
-  * debugging purposes - it does not include PTE-mapped sub-pages; look
-- * at folio_mapcount() or page_mapcount() or total_mapcount() instead.
-+ * at folio_mapcount() or page_mapcount() instead.
-  */
- static inline int folio_entire_mapcount(struct folio *folio)
- {
-@@ -1243,13 +1243,6 @@ static inline int folio_mapcount(struct folio *folio)
- 	return folio_total_mapcount(folio);
- }
+diff --git a/include/trace/events/sched.h b/include/trace/events/sched.h
+index dbb01b4b7451..750b2f0bdf69 100644
+--- a/include/trace/events/sched.h
++++ b/include/trace/events/sched.h
+@@ -341,6 +341,34 @@ DEFINE_EVENT(sched_process_template, sched_wait_task,
+ 	TP_PROTO(struct task_struct *p),
+ 	TP_ARGS(p));
  
--static inline int total_mapcount(struct page *page)
--{
--	if (likely(!PageCompound(page)))
--		return atomic_read(&page->_mapcount) + 1;
--	return folio_total_mapcount(page_folio(page));
--}
--
- static inline bool folio_large_is_mapped(struct folio *folio)
- {
- 	/*
-diff --git a/mm/memfd.c b/mm/memfd.c
-index d3a1ba4208c9..0a6c1a6ee03b 100644
---- a/mm/memfd.c
-+++ b/mm/memfd.c
-@@ -31,24 +31,25 @@
- 
- static void memfd_tag_pins(struct xa_state *xas)
- {
--	struct page *page;
-+	struct folio *folio;
- 	int latency = 0;
- 	int cache_count;
- 
- 	lru_add_drain();
- 
- 	xas_lock_irq(xas);
--	xas_for_each(xas, page, ULONG_MAX) {
-+	xas_for_each(xas, folio, ULONG_MAX) {
- 		cache_count = 1;
--		if (!xa_is_value(page) &&
--		    PageTransHuge(page) && !PageHuge(page))
-+		if (IS_ENABLED(CONFIG_TRANSPARENT_HUGEPAGE) &&
-+		    !xa_is_value(folio) && folio_test_large(folio) &&
-+		    !folio_test_hugetlb(folio))
- 			cache_count = HPAGE_PMD_NR;
- 
--		if (!xa_is_value(page) &&
--		    page_count(page) - total_mapcount(page) != cache_count)
-+		if (!xa_is_value(folio) && cache_count !=
-+		    folio_ref_count(folio) - folio_mapcount(folio))
- 			xas_set_mark(xas, MEMFD_TAG_PINNED);
- 		if (cache_count != 1)
--			xas_set(xas, page->index + cache_count);
-+			xas_set(xas, folio->index + cache_count);
- 
- 		latency += cache_count;
- 		if (latency < XA_CHECK_SCHED)
-@@ -66,16 +67,16 @@ static void memfd_tag_pins(struct xa_state *xas)
++/*
++ * Tracepoint for profiling a task that is starting to exit:
++ */
++TRACE_EVENT(sched_profile_task_exit,
++
++	TP_PROTO(struct task_struct *task, long code),
++
++	TP_ARGS(task, code),
++
++	TP_STRUCT__entry(
++		__array(	char,	comm,	TASK_COMM_LEN	)
++		__field(	pid_t,	pid			)
++		__field(	int,	prio			)
++		__field(	long,	code			)
++	),
++
++	TP_fast_assign(
++		memcpy(__entry->comm, task->comm, TASK_COMM_LEN);
++		__entry->pid		= task->pid;
++		__entry->prio		= task->prio;
++		__entry->code		= code;
++	),
++
++	TP_printk("comm=%s pid=%d prio=%d exit_code=0x%lx",
++		  __entry->comm, __entry->pid, __entry->prio,
++		  __entry->code)
++);
++
  /*
-  * Setting SEAL_WRITE requires us to verify there's no pending writer. However,
-  * via get_user_pages(), drivers might have some pending I/O without any active
-- * user-space mappings (eg., direct-IO, AIO). Therefore, we look at all pages
-+ * user-space mappings (eg., direct-IO, AIO). Therefore, we look at all folios
-  * and see whether it has an elevated ref-count. If so, we tag them and wait for
-  * them to be dropped.
-  * The caller must guarantee that no new user will acquire writable references
-- * to those pages to avoid races.
-+ * to those folios to avoid races.
+  * Tracepoint for a waiting task:
   */
- static int memfd_wait_for_pins(struct address_space *mapping)
- {
- 	XA_STATE(xas, &mapping->i_pages, 0);
--	struct page *page;
-+	struct folio *folio;
- 	int error, scan;
+diff --git a/kernel/exit.c b/kernel/exit.c
+index 493647fd7c07..f675f879a1b2 100644
+--- a/kernel/exit.c
++++ b/kernel/exit.c
+@@ -826,6 +826,7 @@ void __noreturn do_exit(long code)
  
- 	memfd_tag_pins(&xas);
-@@ -95,20 +96,21 @@ static int memfd_wait_for_pins(struct address_space *mapping)
+ 	WARN_ON(tsk->plug);
  
- 		xas_set(&xas, 0);
- 		xas_lock_irq(&xas);
--		xas_for_each_marked(&xas, page, ULONG_MAX, MEMFD_TAG_PINNED) {
-+		xas_for_each_marked(&xas, folio, ULONG_MAX, MEMFD_TAG_PINNED) {
- 			bool clear = true;
++	trace_sched_profile_task_exit(tsk, code);
+ 	kcov_task_exit(tsk);
+ 	kmsan_task_exit(tsk);
  
- 			cache_count = 1;
--			if (!xa_is_value(page) &&
--			    PageTransHuge(page) && !PageHuge(page))
-+			if (IS_ENABLED(CONFIG_TRANSPARENT_HUGEPAGE) &&
-+			    !xa_is_value(folio) && folio_test_large(folio) &&
-+			    !folio_test_hugetlb(folio))
- 				cache_count = HPAGE_PMD_NR;
- 
--			if (!xa_is_value(page) && cache_count !=
--			    page_count(page) - total_mapcount(page)) {
-+			if (!xa_is_value(folio) && cache_count !=
-+			    folio_ref_count(folio) - folio_mapcount(folio)) {
- 				/*
- 				 * On the last scan, we clean up all those tags
- 				 * we inserted; but make a note that we still
--				 * found pages pinned.
-+				 * found folios pinned.
- 				 */
- 				if (scan == LAST_SCAN)
- 					error = -EBUSY;
 -- 
-2.43.2
+2.25.1
 
