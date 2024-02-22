@@ -1,241 +1,77 @@
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18C9C1B59E;
-	Thu, 22 Feb 2024 09:08:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.153.233
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA37C28374;
+	Thu, 22 Feb 2024 09:08:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708592904; cv=none; b=NnCM6Whm1AnCt/n4Ym1Y7MtgaEqV37QbrQtROloRJ6YCCRbT+/6qFydwjgLHMhrI88m0+BUlBcPYHycDSJxDejBoBnEq/pVRIhYuzv+hzdFayvuhyh9OMAtmUIW0Ftc8CwTR81MMv8HWRkex95+cSCNeHpg4k6Gk/Rxt/16/Dug=
+	t=1708592938; cv=none; b=dAx+x6TeKfLSg5M/xi0+Hg9y8OMVLRBkW5YjMtMbMiHM9MJeFjK2XsqIcaYFKIx+Nasaw5UOVmYWCPKUYbaTqTrWNHYFuJHfnpdIpwbz+JhTFAZMS+7EIjsVeBmQLXxIxE+kKdzV+0M3Opv+JjU4EXkikIlBCWV/T6J4zOcCoEs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708592904; c=relaxed/simple;
-	bh=ewoE1dRNlbq6NU7A+zCssf7+EhfKtW4/Gc8uLF0C87A=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=eAmq55X4KJXXNfZtQ9a9PPvy73dTNFbOI5kSnlup+NYfETUzMK0Lol5QlDHx65lKYXqTzvWBgZqUKGLDdtngLPb8yYmO4OSgzx+xdqxtAG60uGZmkicUDW0yeZJEGfo+f+vHVc2aNjWb6pqB2f9GNdzbOKQ2CLK5TkhjX108tyg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=wOAzUAZ0; arc=none smtp.client-ip=68.232.153.233
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=microchip.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="wOAzUAZ0"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1708592903; x=1740128903;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=ewoE1dRNlbq6NU7A+zCssf7+EhfKtW4/Gc8uLF0C87A=;
-  b=wOAzUAZ0c0+DD+1lqhCWbXd76+3ZBTA4lz/K+uWLtFM/SpKfx4tZv0Dh
-   lL9oPL7TtrD9Lw5/MRSCN+GGBNh7dSYIKfNlLlfUEDZ7jj6h1JJ45VZr1
-   ff+1/7zO6/FEvU5ilnI9Ti6E6SkQ+Pgef3VhJlqU+vRV2ndFHAuJZfv1F
-   BPKLrHsqhaF+5efh+FGqCmziaNmYggwdfBmT6WaX9QWggYUgDbEAcFaxz
-   +rs4aNqyIZa5ZykzE7zpCPt/C/BJsdFBeCALu4wjh4YhBU0ZwMi6y9tot
-   f3mVcUs6yW/khyI+3D00DMD/ANZ08KGyZgrA1o9hkGkdzzPmIPTlikND7
-   g==;
-X-CSE-ConnectionGUID: BC0EOOY3TzydnWlDlVq2TA==
-X-CSE-MsgGUID: Ny/QWI5tTQGgbNHRUYjuLA==
-X-IronPort-AV: E=Sophos;i="6.06,177,1705388400"; 
-   d="scan'208";a="16647203"
-X-Amp-Result: SKIPPED(no attachment in message)
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa3.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 22 Feb 2024 02:08:15 -0700
-Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Thu, 22 Feb 2024 02:08:12 -0700
-Received: from che-lt-i70843lx.microchip.com (10.10.85.11) by
- chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server id
- 15.1.2507.35 via Frontend Transport; Thu, 22 Feb 2024 02:08:08 -0700
-From: Dharma Balasubiramani <dharma.b@microchip.com>
-To: <robh@kernel.org>, <tglx@linutronix.de>,
-	<krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
-	<Nicolas.Ferre@microchip.com>, <alexandre.belloni@bootlin.com>,
-	<claudiu.beznea@tuxon.dev>, <linux-kernel@vger.kernel.org>,
-	<devicetree@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>
-CC: Dharma Balasubiramani <dharma.b@microchip.com>, Conor Dooley
-	<conor.dooley@microchip.com>
-Subject: [PATCH v4] dt-bindings: interrupt-controller: Convert Atmel AIC to json-schema
-Date: Thu, 22 Feb 2024 14:37:38 +0530
-Message-ID: <20240222090738.41628-1-dharma.b@microchip.com>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1708592938; c=relaxed/simple;
+	bh=THqwlQyNkUJ73BiKbiScBMvS2NWzpmFqOLtTdzDigyY=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=hM5hXscZwJwLtcOhLovWQJ5FJNOmJEw1kEmv/2dE+lLMRtdbrVxhdXcFbMkyIrpWa6PBffmUndKlJ9PqX7HisJPkkNqZ0gWRycDPEqZycYgvYDQM7BBtvp4RR/f37Jdqxtw8n+iOR/vkd2/i8GLCDQKLuKHOw9ssOHD1Iil2LdU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.235])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4TgS4C13mBz4f3lgQ;
+	Thu, 22 Feb 2024 17:08:43 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.112])
+	by mail.maildlp.com (Postfix) with ESMTP id 4C56F1A0232;
+	Thu, 22 Feb 2024 17:08:50 +0800 (CST)
+Received: from [10.174.176.73] (unknown [10.174.176.73])
+	by APP1 (Coremail) with SMTP id cCh0CgAX6REhD9dlhGAmEw--.45988S3;
+	Thu, 22 Feb 2024 17:08:50 +0800 (CST)
+Subject: Re: [PATCH md-6.9 00/10] md/raid1: refactor read_balance() and some
+ minor fix
+To: Paul Menzel <pmenzel@molgen.mpg.de>, Kuai Yu <yukuai1@huaweicloud.com>,
+ Paul E Luse <paul.e.luse@linux.intel.com>
+Cc: song@kernel.org, neilb@suse.com, shli@fb.com, linux-raid@vger.kernel.org,
+ linux-kernel@vger.kernel.org, yi.zhang@huawei.com, yangerkun@huawei.com,
+ "yukuai (C)" <yukuai3@huawei.com>
+References: <20240222075806.1816400-1-yukuai1@huaweicloud.com>
+ <34b04a5f-7ef8-4e00-b1c6-c4e692281499@molgen.mpg.de>
+From: Yu Kuai <yukuai1@huaweicloud.com>
+Message-ID: <0f2a89e7-fa2c-fe83-bcb7-cfc449c5a721@huaweicloud.com>
+Date: Thu, 22 Feb 2024 17:08:48 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+In-Reply-To: <34b04a5f-7ef8-4e00-b1c6-c4e692281499@molgen.mpg.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+X-CM-TRANSID:cCh0CgAX6REhD9dlhGAmEw--.45988S3
+X-Coremail-Antispam: 1UD129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
+	VFW2AGmfu7bjvjm3AaLaJ3UjIYCTnIWjp_UUUYk7AC8VAFwI0_Gr0_Xr1l1xkIjI8I6I8E
+	6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28Cjx
+	kF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVWDJVCq3wA2z4x0Y4vE2Ix0cI8I
+	cVCY1x0267AKxVWxJr0_GcWl84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2js
+	IEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE
+	5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v26r1j6r4UMcvjeV
+	CFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxG
+	xcIEc7CjxVA2Y2ka0xkIwI1lc7I2V7IY0VAS07AlzVAYIcxG8wCF04k20xvY0x0EwIxGrw
+	CFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE
+	14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2
+	IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxK
+	x2IYs7xG6rWUJVWrZr1UMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7CjxV
+	AFwI0_Gr1j6F4UJbIYCTnIWIevJa73UjIFyTuYvjfUF9a9DUUUU
+X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 
-Convert the Atmel AIC binding document to DT schema format using
-json-schema.
+Hi,
 
-Signed-off-by: Dharma Balasubiramani <dharma.b@microchip.com>
-Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
----
-Changelog
-v3 -> v4
-- Move the allOf after "atmel,external-irqs" as it handles its restriction.
-v2 -> v3
-- Add constraints to the "atmel,external-irqs" property.
-- Move 'reg' before 'interrupt-controller' in the example.
-v1 -> v2
-- Drop the '|' as there is no formatting to preserve.
-- Remove unnecessary marketing statement from description.
-- Drop the description for interrupts and reg, it's obvious.
-- Put reg after compatible.
-- Drop comment in example.
-- Drop the example of device that is wired to an AIC as it's(dma) binding is
-  not yet available.
----
- .../interrupt-controller/atmel,aic.txt        | 43 ---------
- .../interrupt-controller/atmel,aic.yaml       | 89 +++++++++++++++++++
- 2 files changed, 89 insertions(+), 43 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/interrupt-controller/atmel,aic.txt
- create mode 100644 Documentation/devicetree/bindings/interrupt-controller/atmel,aic.yaml
+在 2024/02/22 16:40, Paul Menzel 写道:
+> Is there a change in performance with the current patch set? Is radi1 
+> well enough covered by the test suite?
 
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/atmel,aic.txt b/Documentation/devicetree/bindings/interrupt-controller/atmel,aic.txt
-deleted file mode 100644
-index 7079d44bf3ba..000000000000
---- a/Documentation/devicetree/bindings/interrupt-controller/atmel,aic.txt
-+++ /dev/null
-@@ -1,43 +0,0 @@
--* Advanced Interrupt Controller (AIC)
--
--Required properties:
--- compatible: Should be:
--    - "atmel,<chip>-aic" where  <chip> can be "at91rm9200", "sama5d2",
--      "sama5d3" or "sama5d4"
--    - "microchip,<chip>-aic" where <chip> can be "sam9x60"
--
--- interrupt-controller: Identifies the node as an interrupt controller.
--- #interrupt-cells: The number of cells to define the interrupts. It should be 3.
--  The first cell is the IRQ number (aka "Peripheral IDentifier" on datasheet).
--  The second cell is used to specify flags:
--    bits[3:0] trigger type and level flags:
--      1 = low-to-high edge triggered.
--      2 = high-to-low edge triggered.
--      4 = active high level-sensitive.
--      8 = active low level-sensitive.
--      Valid combinations are 1, 2, 3, 4, 8.
--      Default flag for internal sources should be set to 4 (active high).
--  The third cell is used to specify the irq priority from 0 (lowest) to 7
--  (highest).
--- reg: Should contain AIC registers location and length
--- atmel,external-irqs: u32 array of external irqs.
--
--Examples:
--	/*
--	 * AIC
--	 */
--	aic: interrupt-controller@fffff000 {
--		compatible = "atmel,at91rm9200-aic";
--		interrupt-controller;
--		#interrupt-cells = <3>;
--		reg = <0xfffff000 0x200>;
--	};
--
--	/*
--	 * An interrupt generating device that is wired to an AIC.
--	 */
--	dma: dma-controller@ffffec00 {
--		compatible = "atmel,at91sam9g45-dma";
--		reg = <0xffffec00 0x200>;
--		interrupts = <21 4 5>;
--	};
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/atmel,aic.yaml b/Documentation/devicetree/bindings/interrupt-controller/atmel,aic.yaml
-new file mode 100644
-index 000000000000..d4658fe3867c
---- /dev/null
-+++ b/Documentation/devicetree/bindings/interrupt-controller/atmel,aic.yaml
-@@ -0,0 +1,89 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/interrupt-controller/atmel,aic.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Advanced Interrupt Controller (AIC)
-+
-+maintainers:
-+  - Nicolas Ferre <nicolas.ferre@microchip.com>
-+  - Dharma balasubiramani <dharma.b@microchip.com>
-+
-+description:
-+  The Advanced Interrupt Controller (AIC) is an 8-level priority, individually
-+  maskable, vectored interrupt controller providing handling of up to one
-+  hundred and twenty-eight interrupt sources.
-+
-+properties:
-+  compatible:
-+    enum:
-+      - atmel,at91rm9200-aic
-+      - atmel,sama5d2-aic
-+      - atmel,sama5d3-aic
-+      - atmel,sama5d4-aic
-+      - microchip,sam9x60-aic
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupt-controller: true
-+
-+  "#interrupt-cells":
-+    const: 3
-+    description: |
-+      The 1st cell is the IRQ number (Peripheral IDentifier on datasheet).
-+      The 2nd cell specifies flags:
-+        bits[3:0] trigger type and level flags:
-+          1 = low-to-high edge triggered.
-+          2 = high-to-low edge triggered.
-+          4 = active high level-sensitive.
-+          8 = active low level-sensitive.
-+        Valid combinations: 1, 2, 3, 4, 8.
-+        Default for internal sources: 4 (active high).
-+      The 3rd cell specifies irq priority from 0 (lowest) to 7 (highest).
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  atmel,external-irqs:
-+    $ref: /schemas/types.yaml#/definitions/uint32-array
-+    description: u32 array of external irqs.
-+
-+allOf:
-+  - $ref: /schemas/interrupt-controller.yaml#
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            const: atmel,at91rm9200-aic
-+    then:
-+      properties:
-+        atmel,external-irqs:
-+          minItems: 1
-+          maxItems: 7
-+    else:
-+      properties:
-+        atmel,external-irqs:
-+          minItems: 1
-+          maxItems: 1
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupt-controller
-+  - "#interrupt-cells"
-+  - atmel,external-irqs
-+
-+unevaluatedProperties: false
-+
-+examples:
-+  - |
-+    interrupt-controller@fffff000 {
-+      compatible = "atmel,at91rm9200-aic";
-+      reg = <0xfffff000 0x200>;
-+      interrupt-controller;
-+      #interrupt-cells = <3>;
-+      atmel,external-irqs = <31>;
-+    };
-+...
+Yes, there are no performance degradation, and mdadm tests passed. And
+Paul Luse also ran fio mixed workload w/data integrity and it passes.
 
-base-commit: 4f5e5092fdbf5cec6bedc19fbe69cce4f5f08372
--- 
-2.25.1
+Thanks,
+Kuai
 
