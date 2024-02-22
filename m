@@ -1,147 +1,126 @@
-Received: from SHSQR01.spreadtrum.com (unknown [222.66.158.135])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ua1-f47.google.com (mail-ua1-f47.google.com [209.85.222.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BD64376FA;
-	Thu, 22 Feb 2024 09:22:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=222.66.158.135
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CA0D39AE1
+	for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 09:23:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708593780; cv=none; b=UpXqGiQ+p7rQMLvGwJFT4aalbBqj2vhsmSFKCfUrwFIXZfJMEOQ5VEVFfTTZvJkZ3qmYLoSLThsX++e699Dc5jPd1gD/aj9ApIMIy2oL5GjKsgZf8yFzOcfyPu2qBwIE4EtZsXgj/WbEiXy/6AVGPTAvCWbLPvcRJy0FHhXz6ms=
+	t=1708593784; cv=none; b=ZxKOOhJl3Evc/h4pJ5mSp8ZYVxJyzv+oK4AnPUJqGbt0YM4Sc9O+4VwtELE9+fXxQj02KekfhLRXZ7V7VMJQg5jEKBbetkqdGF9Uzqxemy7sBsIPlssx1r7C1K9dWiFmJ8PBx/AV4FpIAawkZaFOHi7j1IDdZmYsEaTrVKVd++M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708593780; c=relaxed/simple;
-	bh=Y9MCsGargnZMdYbvCa0RXPzvIXitJU5Yea7omJUm5oc=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Oz9IU/6AG92nfJdjC59l/b9VIZ2eZKKmCe+0OunesMfdjVCAhbnH7c2QJXg/PIad61OZLsliJj+gjeZ1x+KAfWArWpPb+XQwV0PiQWCaU65i74UY7wdr8Z2S9hGUxNplezvN8yhG01980GrlaaAb6M6R///vrd0L/Ub3iy9aEgk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=unisoc.com; spf=pass smtp.mailfrom=unisoc.com; arc=none smtp.client-ip=222.66.158.135
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=unisoc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=unisoc.com
-Received: from dlp.unisoc.com ([10.29.3.86])
-	by SHSQR01.spreadtrum.com with ESMTP id 41M9MOXf042231;
-	Thu, 22 Feb 2024 17:22:24 +0800 (+08)
-	(envelope-from zhaoyang.huang@unisoc.com)
-Received: from SHDLP.spreadtrum.com (bjmbx01.spreadtrum.com [10.0.64.7])
-	by dlp.unisoc.com (SkyGuard) with ESMTPS id 4TgSMH4w5yz2KL7sp;
-	Thu, 22 Feb 2024 17:21:47 +0800 (CST)
-Received: from bj03382pcu01.spreadtrum.com (10.0.73.40) by
- BJMBX01.spreadtrum.com (10.0.64.7) with Microsoft SMTP Server (TLS) id
- 15.0.1497.23; Thu, 22 Feb 2024 17:22:22 +0800
-From: "zhaoyang.huang" <zhaoyang.huang@unisoc.com>
-To: Vincent Guittot <vincent.guittot@linaro.org>,
-        Jens Axboe
-	<axboe@kernel.dk>, <linux-block@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        Zhaoyang Huang <huangzhaoyang@gmail.com>, <steve.kang@unisoc.com>
-Subject: [PATCHv2 1/2] sched: introduce helper function to calculate distribution over sched class
-Date: Thu, 22 Feb 2024 17:22:19 +0800
-Message-ID: <20240222092220.642294-1-zhaoyang.huang@unisoc.com>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1708593784; c=relaxed/simple;
+	bh=/tDPneuMgzTuY2K3OXDEpnOGw+5YStE/jBmbrb9oImM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=dtmEPBf3W4MOzC4UKYnZgGxUqehnyeXr4pDYku3gx1O89cxqvtcR5zGF7fQ4v8DaRdTvPxlVoK0VWHd26fRxGB67x1U5dI8yuUwAPIl6+YwTJfHrV4F1XXV+1I02JpJHtYNs3VgN8DeaM1zVYXFMbiCtrIG0TluY4vAe+hXicoY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=IzH1QElB; arc=none smtp.client-ip=209.85.222.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="IzH1QElB"
+Received: by mail-ua1-f47.google.com with SMTP id a1e0cc1a2514c-7d2e1a0337bso3987690241.3
+        for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 01:23:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1708593781; x=1709198581; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=PRvybTIn6s9bKBT4LwtVbJu6PGSSM9veYTX1phbPcgI=;
+        b=IzH1QElBUekrUFyJ+6N4K+w3N8BWTvMkMMsAh5UJC/zmjehcTsJTZwFmcZS/J0BuLx
+         P0VuXGgvAGFl02tDKH9nKviiqcPScZYK9w1/NalTTW8l9cczXFbTtrKdqD/GWLRkwd5B
+         evZhbsRMAKbxonq+9IRNXzCYpFDcVQSw8gfW3aDfDe0s7Bay8V9VymCFKXfevhHT6yyu
+         AOQtHTmN6ZKmBl5OdqmQO/DTIUHEAMHdSNpMvjJ3xzcwpw2dzSfpF+5joCRy6mDPQ/8P
+         pJkSWByFaNRwn1pCkJi+pxXIySx9Rte5LbuaMuH0N09K3QLmWAYhRHsCBsbinsQ67j27
+         bYoA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708593781; x=1709198581;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=PRvybTIn6s9bKBT4LwtVbJu6PGSSM9veYTX1phbPcgI=;
+        b=rg0cEK6m7+ujmDoMhGCO+iLgXI/mbiHcSiiFiHmoESzEE2IGLySYdlj0/YD3s+vuHy
+         e0FjZ/5VwKkUYpGky0FANjMMFPDWeKrP4MXXjFcWi8GnMwOi/77sSHCgP+SbUTMTJqao
+         xE22TdT84OR5nPNZ5ZvWSVGzSIs8gCw9nOHjjwR3iCUaLoi+vcOqdnkL4Ek11R2KMYiJ
+         8pQf/lsUV6/y5jjfjyBwqqiT326f7kx5d0SHVBrn2bjk+48fRzlEYPVRYg0h2lv9SQfV
+         t4dzqGgprDvQxPdovkqzdR0WGnu5N13XqqtYl7nQFcJlA9up3TmFjGDDizlijYQxSnI6
+         5IOw==
+X-Forwarded-Encrypted: i=1; AJvYcCWR5EwLrepjZgexJT8LTFrPx6zFgMqF+JfwMHtJUdKWEKLIB8krCQ9UUAhCL93HpsUbNNQ0ZaVpFG4SA8Hv1pnVEUbUNlOF5yZDkJU7
+X-Gm-Message-State: AOJu0Yw/58STjeQSgEObhTTFvHKrgvo5cCq5WuX7khZZwYRUtqaKfPCt
+	phHgHMrTvtqkpAi0aozbXqp9Df001qhNbPz+TeCcsaXuaJgD0mYi/tGND6z7aCHKmdy3OSBS1Ia
+	kxgbDrUTqcXIstddeppoWlQHhBBiu6MepGQYisQ==
+X-Google-Smtp-Source: AGHT+IE7l9v3T8HR1qDkBbHnqiBR7hU5VAldnjvx7qUsE3wswYkR7sU9TWZWgrMsSrKpcb4F7U9NnKwVd53zre/w3u4=
+X-Received: by 2002:a1f:6681:0:b0:4c9:907e:30bc with SMTP id
+ a123-20020a1f6681000000b004c9907e30bcmr10268617vkc.2.1708593781184; Thu, 22
+ Feb 2024 01:23:01 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SHCAS03.spreadtrum.com (10.0.1.207) To
- BJMBX01.spreadtrum.com (10.0.64.7)
-X-MAIL:SHSQR01.spreadtrum.com 41M9MOXf042231
+References: <20240216203215.40870-1-brgl@bgdev.pl> <20240216203215.40870-15-brgl@bgdev.pl>
+ <d5d603dc-ec66-4e21-aa41-3b25557f1fb7@sirena.org.uk> <CAMRc=MeUjKPS3ANE6=7WZ3kbbGAdyE8HeXFN=75Jp-pVyBaWrQ@mail.gmail.com>
+ <ea08a286-ff53-4d58-ae41-38cca151508c@sirena.org.uk> <17bbd9ae-0282-430e-947b-e6fb08c53af7@linaro.org>
+ <53f0956f-ee64-4bd6-b44f-cbebafd42e46@sirena.org.uk>
+In-Reply-To: <53f0956f-ee64-4bd6-b44f-cbebafd42e46@sirena.org.uk>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Thu, 22 Feb 2024 10:22:50 +0100
+Message-ID: <CAMRc=MedCX_TGGawMhr39oXtJPF4pOQF=Jh2z4uXkOxwhfJWRw@mail.gmail.com>
+Subject: Re: [PATCH v5 14/18] PCI/pwrctl: add a power control driver for WCN7850
+To: Mark Brown <broonie@kernel.org>
+Cc: Konrad Dybcio <konrad.dybcio@linaro.org>, Marcel Holtmann <marcel@holtmann.org>, 
+	Luiz Augusto von Dentz <luiz.dentz@gmail.com>, "David S . Miller" <davem@davemloft.net>, 
+	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Kalle Valo <kvalo@kernel.org>, 
+	Bjorn Andersson <andersson@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, 
+	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Saravana Kannan <saravanak@google.com>, 
+	Geert Uytterhoeven <geert+renesas@glider.be>, Arnd Bergmann <arnd@arndb.de>, 
+	Neil Armstrong <neil.armstrong@linaro.org>, Marek Szyprowski <m.szyprowski@samsung.com>, 
+	Alex Elder <elder@linaro.org>, Srini Kandagatla <srinivas.kandagatla@linaro.org>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Abel Vesa <abel.vesa@linaro.org>, 
+	Manivannan Sadhasivam <mani@kernel.org>, Lukas Wunner <lukas@wunner.de>, 
+	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, linux-bluetooth@vger.kernel.org, 
+	netdev@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org, 
+	linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-pci@vger.kernel.org, linux-pm@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Zhaoyang Huang <zhaoyang.huang@unisoc.com>
+On Wed, Feb 21, 2024 at 12:44=E2=80=AFAM Mark Brown <broonie@kernel.org> wr=
+ote:
+>
+> On Tue, Feb 20, 2024 at 10:21:04PM +0100, Konrad Dybcio wrote:
+> > On 20.02.2024 13:47, Mark Brown wrote:
+>
+> > > Are you *sure* this actually happens (and that the regulators don't
+> > > figure it out by themselves), especially given that the consumers are
+> > > just specifying the load once rather than varying it dynamically at
+> > > runtime which is supposed to be the use case for this API?  This API =
+is
+> > > intended to be used dynamically, if the regulator always needs to be =
+in
+> > > a particular mode just configure that statically.
+>
+> > *AFAIU*
+>
+> > The regulators aggregate the requested current (there may be
+> > multiple consumers) and then it's decided if it's high enough
+> > to jump into HPM.
+>
+> Yes, that's the theory - I just question if it actually does something
+> useful in practice.  Between regulators getting more and more able to
+> figure out mode switching autonomously based on load monitoring and them
+> getting more efficient it's become very unclear if this actually
+> accomplishes anything, the only usage is the Qualcomm stuff and that's
+> all really unsophisticated and has an air of something that's being
+> cut'n'pasted forwards rather than delivering practical results.  There
+> is some value at ultra low loads, but that's more for suspend modes than
+> for actual use.
 
-As RT, DL, IRQ time could be deemed as lost time of CFS's task, some
-timing value want to know the distribution of how these spread
-approximately by using utilization account value (nivcsw is not enough
-sometimes). This commit would like to introduce a helper function to
-achieve this goal.
+Removing it would be out of scope for this series and I don't really
+want to introduce any undefined behavior when doing a big development
+like that. I'll think about it separately.
 
-eg.
-Effective part of A = Total_time * cpu_util_cfs / cpu_util
-
-Timing value A
-(should be a process last for several TICKs or statistics of a repeadted
-process)
-
-Timing start
-|
-|
-preempted by RT, DL or IRQ
-|\
-| This period time is nonvoluntary CPU give up, need to know how long
-|/
-sched in again
-|
-|
-|
-Timing end
-
-Signed-off-by: Zhaoyang Huang <zhaoyang.huang@unisoc.com>
----
-change of v2: using two parameter to pass se_prop and rq_prop out
----
----
- include/linux/sched.h |  3 +++
- kernel/sched/core.c   | 35 +++++++++++++++++++++++++++++++++++
- 2 files changed, 38 insertions(+)
-
-diff --git a/include/linux/sched.h b/include/linux/sched.h
-index 77f01ac385f7..d6d5914fad10 100644
---- a/include/linux/sched.h
-+++ b/include/linux/sched.h
-@@ -2318,6 +2318,9 @@ static inline bool owner_on_cpu(struct task_struct *owner)
- 
- /* Returns effective CPU energy utilization, as seen by the scheduler */
- unsigned long sched_cpu_util(int cpu);
-+/* Returns task's and cfs_rq's proportion among whole core */
-+unsigned long cfs_prop_by_util(struct task_struct *tsk, unsigned long *se_prop,
-+			unsigned long *rq_prop);
- #endif /* CONFIG_SMP */
- 
- #ifdef CONFIG_RSEQ
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 802551e0009b..b8c29dff5d37 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -7494,6 +7494,41 @@ unsigned long sched_cpu_util(int cpu)
- {
- 	return effective_cpu_util(cpu, cpu_util_cfs(cpu), ENERGY_UTIL, NULL);
- }
-+
-+/*
-+ * Calculate the approximate proportion of timing value consumed by the specified
-+ * tsk and all cfs tasks of this core.
-+ * The user must be aware of this is done by avg_util which is tracked by
-+ * the geometric series of decaying the load by y^32 = 0.5 (unit is 1ms).
-+ * That is, only the period last for at least several TICKs or the statistics
-+ * of repeated timing value are suitable for this helper function.
-+ * This function is actually derived from effective_cpu_util but without
-+ * limiting the util to the core's capacity.
-+ * se_prop and rq_prop is valid only when return value is 1
-+ */
-+unsigned long cfs_prop_by_util(struct task_struct *tsk, unsigned long *se_prop,
-+			unsigned long *rq_prop)
-+{
-+	unsigned int cpu = task_cpu(tsk);
-+	struct sched_entity *se = &tsk->se;
-+	struct rq *rq = cpu_rq(cpu);
-+	unsigned long util, irq, max;
-+
-+	if (tsk->sched_class != &fair_sched_class)
-+		return 0;
-+
-+	max = arch_scale_cpu_capacity(cpu);
-+	irq = cpu_util_irq(rq);
-+
-+	util = cpu_util_rt(rq) + cpu_util_cfs(cpu) + cpu_util_dl(rq);
-+	util = scale_irq_capacity(util, irq, max);
-+	util += irq;
-+
-+	*se_prop = se->avg.util_avg * 100 / util;
-+	*rq_prop = cpu_util_cfs(cpu) * 100 / util;
-+	return 1;
-+}
-+
- #endif /* CONFIG_SMP */
- 
- /**
--- 
-2.25.1
-
+Bart
