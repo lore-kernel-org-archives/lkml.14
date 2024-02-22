@@ -1,64 +1,68 @@
-Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
+Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C1B214B826
-	for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 19:06:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55F5D14B836
+	for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 19:06:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708628790; cv=none; b=ZpzNttRv0XlkCIhsD5nZ2cSnrka9krGyu8uZtSHvuXs8PtM72IFjMaEWy5bq18+ZRGzvBZmoBmobMKStqGslk67b210xrRAKLgKKeZf2e/C8bNXjUSLOnzebMKghwZ7TpmTl7CPE8XCnLweMaeBblx7KGfPXo4DHqZJ3y5P2jVk=
+	t=1708628794; cv=none; b=LSTDC1y1l9c3aILccoZVPjzkIofHN5WV8LjtPIqMVEj/sAPKkPPB4sWUeUFx8afdJpNwhy7ybd5436L3U0DuNaUzvJRXyry+4R7pex1QVhWZuGpkdwvQUNAY+i9zrvVHyO5nzNk5cmI/PVlBAPXHhFWGcDwaIfA9dMBrhBSj808=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708628790; c=relaxed/simple;
-	bh=odNY7brJIrKGXbB0NYiJ5L+h7CgQvY8SV9Jl9b0OOjY=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=XAsFj6ibnsBGaahMFFOpZk55jfiNNEF/OzFlnJwVdJjdsbbFc5pzlPwEOHc2WyoEUt6HNX6AozJrzY9EQFhKL+cr0hhmLrY57A43hbiPzrOZAcFXj12qd2NZnqD9Jt7t1m/5NZkFN9TYdjofHCW/Di4LyLj0sAyG5SwaTdCLWDg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=wZn7f9Ul; arc=none smtp.client-ip=209.85.128.201
+	s=arc-20240116; t=1708628794; c=relaxed/simple;
+	bh=Lpr6OXMdJrHRiK6NwVBpGyZp/lhKwMDMfWMCx4WLc3E=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=bebgajRtq6IX+Xm7VtQXrDZaMPsaPxsFVAJ8++PFw0iJDKF+gjM6IPlzSOK1QnHiPDZ9Rfkxa98U6GI4j9+RXaSaEYWIxPGnDwy2/KwCjEPdWGJFyADOUHeJZUp0liEcXRfyt8YYUeNfzE6J+ShkvmFcsOJGwY4DbMSXgezFJMM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=XSBf7+zj; arc=none smtp.client-ip=209.85.219.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="wZn7f9Ul"
-Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-608835a1febso1122397b3.2
-        for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 11:06:16 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XSBf7+zj"
+Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-dc6b267bf11so15829276.2
+        for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 11:06:22 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1708628775; x=1709233575; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:reply-to:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=gezQaNgBY+02TfMTErrgdnbl2WvP4PLw6JtipxuzYjc=;
-        b=wZn7f9Ulwa8lz+F9+JLUaDfFrwei/yIwTBvuUvoMq0d7YuJPdppEu9SwwJPVZI+Hhq
-         na4d9CdagPsmZjkuOkCgcBj1jGBrfKN5T6PlCXmc8Nz8+gB0jGaCVzBDydhgkWFwHaBp
-         qjeTmxyOtpfQ/XKXCFSXbmQH8KCjjQO8FGZZOfplVJIzOVOWpISJEnT3GBDpNS6bg6Fp
-         vfe/8sbKlyfhMHUi1nzQbXxhW4uFusdUFySsbgpibajamP3O0vqcIk2eCRN6DV91PJt0
-         OgmURNpREm6RujMWlWR354cLHCsXxPCB6Hx5UQqJtNX7QioyeJdBp6f7iEi9AdkFpPUW
-         x/GQ==
+        d=google.com; s=20230601; t=1708628780; x=1709233580; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:reply-to:from:to:cc:subject:date:message-id:reply-to;
+        bh=TYSivnN6sKEY4CZofc9WbYnjIg5hjEEjj41nwAaSQHo=;
+        b=XSBf7+zjqQSIdpqoyLdYZLXRBC8iVe9qqogTHUaBn57Ovayhzn94jJFmygn3Zcr4Ac
+         V81jFQbw9uesISW4op0RXFqQ5VdLV/HFSoQMgT2F9cyXbcgC41UpHUEuMTsrIOESuQ8y
+         tXXqOls0CCgznvtf0okfVtRp4miaFDLaNVNepblvY6Scs59lYYEy29yNVrwJF5fxGDpy
+         wU+9Wev99fJvjYZ1taG7kkLvXLU9vnb7mGQyFIJ/qr3VUX+KCGweZjS/Wz1vrtiYi95r
+         v0A5hzhGtLDUgKFWTwP6/5NKLqZrhp4TMNIpGvo+nihezpIBbEPgpDCLO+OELV9SDIlb
+         qPqw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708628775; x=1709233575;
-        h=cc:to:from:subject:message-id:mime-version:date:reply-to
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=gezQaNgBY+02TfMTErrgdnbl2WvP4PLw6JtipxuzYjc=;
-        b=kYGUt0w1MXobsdJn8MRfYpQ+X334rBRV/9/QbSufAhPBQXFgejJ1Inn4xFOU6kvadY
-         FV2+h3IzyB1MBwskxzMrAPHn7qIZ6aVoc9nXS7KVibE4axdWDrWi2HtGDoa7a9AwnbPz
-         w8aSrtSmxBzOMaJQsp88dgLJXR/iQ6/lIckHf83zPOauuPj8scfbqfvcmmPCC5khiTDT
-         Ig+ep0lZYqFT9XPmor0A/bQEAPf2uukmWs3v3Bn24NhV6AdlC0BivL4SFAwWoa25jiHw
-         3M2GOX3ZJpfqtmUdvvoDLr7T52AwasRxyxwp8jvKZmL8P1mJfJ8NRpLX0Cf7QCkumIOC
-         KpUg==
-X-Forwarded-Encrypted: i=1; AJvYcCXVhixsuPtALJx4K93ghFGcEY6nSLBGU5h0HpB3/My2mbZUZod3eIX461J+IO5CmZ4R3T/TsgZ10HGnayRwl1wpG2Y6Gzw/qpX+N2uR
-X-Gm-Message-State: AOJu0Yx+Hy6TtzPrg9a+JrrNuozgRqV7OZPC9qsSa/4M5hrFixEV0sGy
-	egEpXz1bhu5zHhZXaX7mDILEJgvYVZKzdWRASpAx6zWvLFd0mCicjP0KlgP81IuLcBa0TcTIOh9
-	ECQ==
-X-Google-Smtp-Source: AGHT+IGCEmm+bR6WbX74vZG4JukfcdEsqNN2Vrq+SSgVOGsL202tIGvg4gu4PSMs3fYUVbQ0dpd+lDjh9PA=
+        d=1e100.net; s=20230601; t=1708628780; x=1709233580;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:reply-to:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=TYSivnN6sKEY4CZofc9WbYnjIg5hjEEjj41nwAaSQHo=;
+        b=MofZg7Kj2DugWVZZCHN362zZfsD7WDdB75EJKvvR/TfMv5TsazdGjJrI6ibCuSW/Zk
+         Ncy33HM84xL116eeeG0ZAI5jIk8wM5CYBgAgX5vwkkcBgQuhQcOGN30GiBTeYzrpg3P8
+         NlZBB/jQSGsey1bsA9Sw+01gbRPdganBoVc4En9pnqKKVXhJMUj7Z1YD6648zTTS3l/H
+         VOhauR7+BigH6wmK47ycPSsXxP6+s8wI6t8qQaxO8SIseKkgGJd1XhDPiGONTnD6RJZQ
+         pl4mMYbBpvdEMM5SO2xy2/1TKscwHAWFbgu4SP8qjTRo9VWuEbwd1c2XaS3xWCmgdlO+
+         q19w==
+X-Forwarded-Encrypted: i=1; AJvYcCW7TzNVRPx8BT6ZoR8v+unbwMkc6i/eyH7MEO2qq7GlwVspycfg00PmpCsjtF7V4a+ut1pzSW1gFXZiDN4jlyfIzUK5794JYtPvDoir
+X-Gm-Message-State: AOJu0YyOw7UJjVn9S2eY3a24DOQ1uacHxiZBtkd5+/qoiNDgG4fop94y
+	ihlSPoLeL+vB4IV1iFatP1IYATqZHm9LxI3YY+Qgiohw2nY1Yjco43hvJ2lC9hp5NM0R7IVLo/K
+	NWw==
+X-Google-Smtp-Source: AGHT+IF9Ke/e46sWIPIrRAm77GXHG7bR55ds8AD8pgXpkvpOO/ZmmJioMfPOuwxYZiWeh9v80/lCewALitw=
 X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a0d:eb44:0:b0:608:4e77:9397 with SMTP id
- u65-20020a0deb44000000b006084e779397mr10627ywe.2.1708628774709; Thu, 22 Feb
- 2024 11:06:14 -0800 (PST)
+ (user=seanjc job=sendgmr) by 2002:a05:6902:18cc:b0:dc7:6f13:61d9 with SMTP id
+ ck12-20020a05690218cc00b00dc76f1361d9mr1123ybb.4.1708628780537; Thu, 22 Feb
+ 2024 11:06:20 -0800 (PST)
 Reply-To: Sean Christopherson <seanjc@google.com>
-Date: Thu, 22 Feb 2024 11:06:07 -0800
+Date: Thu, 22 Feb 2024 11:06:10 -0800
+In-Reply-To: <20240222190612.2942589-1-seanjc@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
+References: <20240222190612.2942589-1-seanjc@google.com>
 X-Mailer: git-send-email 2.44.0.rc0.258.g7320e95886-goog
-Message-ID: <20240222190612.2942589-1-seanjc@google.com>
-Subject: [PATCH 0/5] KVM: GUEST_MEMFD fixes/restrictions
+Message-ID: <20240222190612.2942589-4-seanjc@google.com>
+Subject: [PATCH 3/5] KVM: x86/mmu: Restrict KVM_SW_PROTECTED_VM to the TDP MMU
 From: Sean Christopherson <seanjc@google.com>
 To: Paolo Bonzini <pbonzini@redhat.com>, Sean Christopherson <seanjc@google.com>
 Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
@@ -67,28 +71,30 @@ Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
 	Chao Peng <chao.p.peng@linux.intel.com>
 Content-Type: text/plain; charset="UTF-8"
 
-A few minor-ish fixes related to GUEST_MEMFD that I am hoping to squeeze
-into 6.8 as the they affect KVM's ABI (especially patch 1).
+Advertise and support software-protected VMs if and only if the TDP MMU is
+enabled, i.e. disallow KVM_SW_PROTECTED_VM if TDP is enabled for KVM's
+legacy/shadow MMU.  TDP support for the shadow MMU is maintenance-only,
+e.g. support for TDX and SNP will also be restricted to the TDP MMU.
 
-Sean Christopherson (5):
-  KVM: Make KVM_MEM_GUEST_MEMFD mutually exclusive with KVM_MEM_READONLY
-  KVM: x86: Update KVM_SW_PROTECTED_VM docs to make it clear they're a
-    WIP
-  KVM: x86/mmu: Restrict KVM_SW_PROTECTED_VM to the TDP MMU
-  KVM: selftests: Create GUEST_MEMFD for relevant invalid flags
-    testcases
-  KVM: selftests: Add a testcase to verify GUEST_MEMFD and READONLY are
-    exclusive
+Fixes: 89ea60c2c7b5 ("KVM: x86: Add support for "protected VMs" that can utilize private memory")
+Signed-off-by: Sean Christopherson <seanjc@google.com>
+---
+ arch/x86/kvm/x86.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
- Documentation/virt/kvm/api.rst                       |  5 +++++
- arch/x86/kvm/Kconfig                                 |  7 ++++---
- arch/x86/kvm/x86.c                                   |  2 +-
- tools/testing/selftests/kvm/set_memory_region_test.c | 12 +++++++++++-
- virt/kvm/kvm_main.c                                  |  8 +++++++-
- 5 files changed, 28 insertions(+), 6 deletions(-)
-
-
-base-commit: 21dbc438dde69ff630b3264c54b94923ee9fcdcf
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index 86d88bc7a6d0..1e0cc1906232 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -4580,7 +4580,7 @@ static bool kvm_is_vm_type_supported(unsigned long type)
+ {
+ 	return type == KVM_X86_DEFAULT_VM ||
+ 	       (type == KVM_X86_SW_PROTECTED_VM &&
+-		IS_ENABLED(CONFIG_KVM_SW_PROTECTED_VM) && tdp_enabled);
++		IS_ENABLED(CONFIG_KVM_SW_PROTECTED_VM) && tdp_mmu_enabled);
+ }
+ 
+ int kvm_vm_ioctl_check_extension(struct kvm *kvm, long ext)
 -- 
 2.44.0.rc0.258.g7320e95886-goog
 
