@@ -1,115 +1,122 @@
-Received: from omta040.useast.a.cloudfilter.net (omta040.useast.a.cloudfilter.net [44.202.169.39])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ua1-f45.google.com (mail-ua1-f45.google.com [209.85.222.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11E4F17BC7
-	for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 23:13:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=44.202.169.39
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1173017BC7
+	for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 23:16:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708643605; cv=none; b=QcwwkgBdKqgsCkJh/P7CZzhRpWifJp84TX5ewugRYm9RSU7yAaFfPxJH5ONa3jbeW1TAgy1FgRvT+bjdHZKqvyZ1RdvZpu/b12AgCZsftBsOm2UMFEti5fuBi6Cl2vR9NZBxr34ExeAZ2asFTzb/9eqTYjmBvCP1xmTvMhLKs0w=
+	t=1708643773; cv=none; b=o6DXwJ2P99ByaDA8SDYMkcbHp65n6jaQ5+U9mkGIpFXUTIyF4fniXtXD3x0I1QAci6IQtwI0VD7fObzH8/otyrJ0OJpys8N4lctI0c+p8fnLCSMiYPmn9bW3I6/ZhasgS+0OF7e+VeUrAWElmq9hKUY5aGLgBD9awLMufN2HPwk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708643605; c=relaxed/simple;
-	bh=y/jZuHl6NUzjAai7o2bI+i7qcLC9Q25IhiVkgk6OeBI=;
-	h=Subject:To:Cc:References:In-Reply-To:From:Message-ID:Date:
-	 MIME-Version:Content-Type; b=PR5PRtsf73WkuuMSD33sAJhA2d/T2/9/+VGdjJKp3XgwVmqEvKC9ime72UpqxR9SQDdHBQWHrUXPP6/DoyQPe+BEaCHhTX1bELfcFJfqL1lslnRJ4vOcV++HQlVFnqxLG2GPy8KNMvPt+dtXzSVFy7VdHgDaeOPToHMnST3Ends=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=w6rz.net; spf=pass smtp.mailfrom=w6rz.net; dkim=pass (2048-bit key) header.d=w6rz.net header.i=@w6rz.net header.b=A13lClL4; arc=none smtp.client-ip=44.202.169.39
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=w6rz.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=w6rz.net
+	s=arc-20240116; t=1708643773; c=relaxed/simple;
+	bh=DZJ0uqU/+Xaa2u2HTrrUfow93KUsenowq6a4U63I5C0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=iiknDGp9e4ArN/uENDb1QEnwJZgNYoP9IQbPHLRyFxyYWKwHAN/C3sq2zJ6zwSS7UrkNzbSJ5cBltquBBSn85dXwgu+Wd/FzoNx+t5s3cqxYtQmpHDgD9G8GK5BFRk6qdsHF2/+3iACwZMNLr7rOikcpEGd3QyMlAkkr11Uk9GA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Fe+sIpGc; arc=none smtp.client-ip=209.85.222.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=w6rz.net header.i=@w6rz.net header.b="A13lClL4"
-Received: from eig-obgw-6009a.ext.cloudfilter.net ([10.0.30.184])
-	by cmsmtp with ESMTPS
-	id d4WyrWiScTHHudIFlrTGim; Thu, 22 Feb 2024 23:13:22 +0000
-Received: from box5620.bluehost.com ([162.241.219.59])
-	by cmsmtp with ESMTPS
-	id dIFlrQCTWRkHQdIFlrMA6f; Thu, 22 Feb 2024 23:13:21 +0000
-X-Authority-Analysis: v=2.4 cv=N8QvFX9B c=1 sm=1 tr=0 ts=65d7d511
- a=30941lsx5skRcbJ0JMGu9A==:117 a=30941lsx5skRcbJ0JMGu9A==:17
- a=IkcTkHD0fZMA:10 a=k7vzHIieQBIA:10 a=-Ou01B_BuAIA:10 a=VwQbUJbxAAAA:8
- a=HaFmDPmJAAAA:8 a=xVAsXjOY_3W_6nlrMEoA:9 a=QEXdDO2ut3YA:10
- a=AjGcO6oz07-iQ99wixmX:22 a=nmWuMzfKamIsx3l42hEX:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=w6rz.net;
-	s=default; h=Content-Transfer-Encoding:Content-Type:MIME-Version:Date:
-	Message-ID:From:In-Reply-To:References:Cc:To:Subject:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=f2oyKlKeSKZqmQ4ISDZxnOvntf0l5tdrQzymgi4iK2I=; b=A13lClL4mgogF3Bd2pjqqOJuMG
-	T4ug6gIcahZCqtXjlaMTuI5HSEKho5PLJjIdCLZPwem6IOtGpVZvPUFCc7//TxgKS7rBONtHh1ku/
-	ksrXp/Lr34+iGZq88bHNF8lxYnYRt6t0YF6SVh7EtPvRiJx++CIw/69beSaE7VJpaDi4hIyvtBoSW
-	RN9CY5crcMs4pzNeIG9jnuwh3G+ju08cdTWz6cL5rPrvwvI6zWSAUv7uRLliZAWgxSFmgfvoNy7gK
-	NGobUPmjkeEzD52359jTxDyJvJJwEwEhbsHbg/Rh4B16UOKPYjDJ+zzzjlXppwsEg8XR5jsMAwqxY
-	iYCRZnpg==;
-Received: from c-98-207-139-8.hsd1.ca.comcast.net ([98.207.139.8]:47430 helo=[10.0.1.47])
-	by box5620.bluehost.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.96.2)
-	(envelope-from <re@w6rz.net>)
-	id 1rdIFi-002kzD-33;
-	Thu, 22 Feb 2024 16:13:18 -0700
-Subject: Re: [PATCH 5.15 000/476] 5.15.149-rc1 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
-Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
- torvalds@linux-foundation.org, akpm@linux-foundation.org,
- linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
- lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
- f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
- rwarsow@gmx.de, conor@kernel.org, allen.lkml@gmail.com
-References: <20240221130007.738356493@linuxfoundation.org>
-In-Reply-To: <20240221130007.738356493@linuxfoundation.org>
-From: Ron Economos <re@w6rz.net>
-Message-ID: <7bae8767-51bb-3549-e859-b820b7b261e6@w6rz.net>
-Date: Thu, 22 Feb 2024 15:13:16 -0800
-User-Agent: Mozilla/5.0 (X11; Linux armv7l; rv:78.0) Gecko/20100101
- Thunderbird/78.14.0
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Fe+sIpGc"
+Received: by mail-ua1-f45.google.com with SMTP id a1e0cc1a2514c-7d2e21181c1so110920241.3
+        for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 15:16:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1708643771; x=1709248571; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=4JtTdXxCGCTnvQvSWv3Y1gG67yDkcySzLqqUm/qFAtw=;
+        b=Fe+sIpGcero6Yve7/xIcwKFQESnXmSRGzRTYy1hPH4ftiNyCLus6oF9JBErAFrbYrp
+         poTs3JR6M8rwTMhwRndB3CdBEdG/X9ziZ5awFa23LL+qzvTXcvNBrDj0NDTAOaKli4br
+         NcP8JvxS6bOZflyc6l/CHO1TiddKiFO4FUMKOLspwmn2XLsXJ0HlI6nq/McwXN/+EDLL
+         OeWi/1bLC6jGM5pyTm+aXwF2ahTog57BPns0vyjSxo7aKmgNjznbATvP92Y2KVfaL6X8
+         UCRF9or8F+zYY290288LBxaydJscZbEVm6pDkXZQolmOV5YJR+ylW2qOjhNWHXLPsXiV
+         LsLA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708643771; x=1709248571;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=4JtTdXxCGCTnvQvSWv3Y1gG67yDkcySzLqqUm/qFAtw=;
+        b=bNWZBPDyTjwPQdiO+p7lHQUS/PMQ/Tbg+s9R7VTNHzcKMOwMmOEr303x2i4LoeE9oF
+         WPtcwL/chDPunQBvi3xDi/ZL28Un1grqtNzrtMCrvXpFqNExKZQZ3bbb+8AanuZfe95r
+         fzMCNalrRgN5IHmfSo99r5rruLtDTESjIdJB23EzsMGE99IQw3F8KXH5hyYj2Sjh9OHR
+         gSVadqT52hrSdxwaDcTyR1Nuv+4KoskY7OzJ67zZnNtLbgh+FnS1145vlLgPX4hceCQM
+         IYUY72PmyZqeo0E1I6OQ0ifr6NmexsGhAEzuVjIsJuGC79qQH8klNZ9YfEy3z1afJN6X
+         X56Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWCg+fHEy38mfiX3B/XgtUfqjPmhlHsLaI9yzxLiDPncvnBmyp6UzIx7p9j3NysIq26xfIp9mRuvE+27PNR+qdAiYrk1WggPG6+aSHU
+X-Gm-Message-State: AOJu0YwYS3nO+SM2hZRlmwKsL5AUWfKyQ3aODoi+MkBRPXZ+NGE+A/Ab
+	lC0VF7P/GrP2RVVL0Mi8dODWj+TP5cqwqUf6tEq5cnU9KbIxWNaY6laOYcWe9bgKihqfSbIPgat
+	xHdwzsyBztCmKp7QfcKo8R/HlSqY=
+X-Google-Smtp-Source: AGHT+IET7SLCpXUutFO5wTAkeaY0stX0a7qnERj2kTvzSDmplXe26G+bcAoizsf7zicRW4KaVVWyD+L2cHQaJkIgIeU=
+X-Received: by 2002:a67:c992:0:b0:470:472a:89a1 with SMTP id
+ y18-20020a67c992000000b00470472a89a1mr384850vsk.30.1708643770735; Thu, 22 Feb
+ 2024 15:16:10 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - box5620.bluehost.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - w6rz.net
-X-BWhitelist: no
-X-Source-IP: 98.207.139.8
-X-Source-L: No
-X-Exim-ID: 1rdIFi-002kzD-33
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: c-98-207-139-8.hsd1.ca.comcast.net ([10.0.1.47]) [98.207.139.8]:47430
-X-Source-Auth: re@w6rz.net
-X-Email-Count: 4
-X-Org: HG=bhshared;ORG=bluehost;
-X-Source-Cap: d3NpeHJ6bmU7d3NpeHJ6bmU7Ym94NTYyMC5ibHVlaG9zdC5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfIL6Go8v7257qwI4wQukNhyi/GAi9hd9kvQXLI0irhHz6Vs3o7wG3A6fwjxM4HwZrPEX8DMiYqC+6jCZP8AQztjy8Z7kpgKNcfzZk4YojZlwA0l6NLpT
- 8rBkZ227lqRV3GfHpLbNZYAtrckPDwcP57vIFC2Bx+B26SlnqPMDrlf+c2v6KUHnAhO9hte9afqv361sAGl8z5d2WA/zjmAfTwU=
+References: <20240102184633.748113-1-urezki@gmail.com> <ZdcHXFMq0cwmVKfM@pc636>
+In-Reply-To: <ZdcHXFMq0cwmVKfM@pc636>
+From: Pedro Falcato <pedro.falcato@gmail.com>
+Date: Thu, 22 Feb 2024 23:15:59 +0000
+Message-ID: <CAKbZUD3+PJUoXee3MNvToy1zRnDoPoPqMjNAf5_87Uh-u2377w@mail.gmail.com>
+Subject: Re: [PATCH v3 00/11] Mitigate a vmap lock contention v3
+To: Uladzislau Rezki <urezki@gmail.com>
+Cc: Matthew Wilcox <willy@infradead.org>, Mel Gorman <mgorman@suse.de>, 
+	kirill.shutemov@linux.intel.com, Vishal Moola <vishal.moola@gmail.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, LKML <linux-kernel@vger.kernel.org>, 
+	Baoquan He <bhe@redhat.com>, Lorenzo Stoakes <lstoakes@gmail.com>, 
+	Christoph Hellwig <hch@infradead.org>, "Liam R . Howlett" <Liam.Howlett@oracle.com>, 
+	Dave Chinner <david@fromorbit.com>, "Paul E . McKenney" <paulmck@kernel.org>, 
+	Joel Fernandes <joel@joelfernandes.org>, Oleksiy Avramchenko <oleksiy.avramchenko@sony.com>, 
+	linux-mm@kvack.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 2/21/24 5:00 AM, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.15.149 release.
-> There are 476 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Fri, 23 Feb 2024 12:59:02 +0000.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.15.149-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.15.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
+Hi,
 
-Built and booted successfully on RISC-V RV64 (HiFive Unmatched).
+On Thu, Feb 22, 2024 at 8:35=E2=80=AFAM Uladzislau Rezki <urezki@gmail.com>=
+ wrote:
+>
+> Hello, Folk!
+>
+>[...]
+> pagetable_alloc - gets increased as soon as a higher pressure is applied =
+by
+> increasing number of workers. Running same number of jobs on a next run
+> does not increase it and stays on same level as on previous.
+>
+> /**
+>  * pagetable_alloc - Allocate pagetables
+>  * @gfp:    GFP flags
+>  * @order:  desired pagetable order
+>  *
+>  * pagetable_alloc allocates memory for page tables as well as a page tab=
+le
+>  * descriptor to describe that memory.
+>  *
+>  * Return: The ptdesc describing the allocated page tables.
+>  */
+> static inline struct ptdesc *pagetable_alloc(gfp_t gfp, unsigned int orde=
+r)
+> {
+>         struct page *page =3D alloc_pages(gfp | __GFP_COMP, order);
+>
+>         return page_ptdesc(page);
+> }
+>
+> Could you please comment on it? Or do you have any thought? Is it expecte=
+d?
+> Is a page-table ever shrink?
 
-Tested-by: Ron Economos <re@w6rz.net>
+It's my understanding that the vunmap_range helpers don't actively
+free page tables, they just clear PTEs. munmap does free them in
+mmap.c:free_pgtables, maybe something could be worked up for vmalloc
+too.
+I would not be surprised if the memory increase you're seeing is more
+or less correlated to the maximum vmalloc footprint throughout the
+whole test.
 
+--=20
+Pedro
