@@ -1,231 +1,149 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 426A415958B
-	for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 18:01:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2423118657;
+	Thu, 22 Feb 2024 18:03:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708624895; cv=none; b=Oxnvmq8ouDrOQBw9+SV/Q1NOCfZ5Tmng5cT5/bMCW6jyjWqv+x9/JJ5rE7Ylpryu28Tyw8hKsT/TuclcZ2M6OtuLzggq3Jew9Nz4jOyybnXF7ZJ9TfFXt5ukSLcswNWUSkJUHp2p2LYStDuqmM4h3uqLgnvxIypd7SMHJrZRwrA=
+	t=1708624993; cv=none; b=IzrXhhmDI+L9vqSnMHR87INl9r37q0sBKX3P8fY9RDWWPZGrW3MeU/0o4d8CXLJpBNd/9vGHu3ItCZDEeK5Q6/FVa6QfscxQV6ELXyhAlKYRYc3+FIGEuvVMaT5G3qycV7PkxwsSHDA9Z0TfreiNax55Zo2T6Pjp2GJZTiy1tTg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708624895; c=relaxed/simple;
-	bh=Hf2vdIK5wvMBM9HYCFSZ0pmzvQMdYEUhBS/WYoYYuCA=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=sc73alTuH6eQcfwXa4nwd9KQa7iKtkcjpu9Yf/unDxPrDwDkxXCGdIfqLAB+F9rQz9fbGyx1UlbVbLNYE/WauAgq+co1yUNzVBaZ9naKbOdCFFRPrgnhqoZVeQoG2lRjIPZC93MMf2OfpZdaUsi7veXCfdGA8vi1yKk/D6cUzng=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=NRaWZI8I; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1708624993; c=relaxed/simple;
+	bh=eWIgrng0fomPV+v6ms8u6IZCYZ5GywPfM/uBGfotOyI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=bcG9OPhom+G6NN+vP9A6BY4bB10E4jKncT4qU3lHcSO0/ZMMr4Z/idaBMX5wD82klVkOYq9iU9mlMQOoxFIili4KiGphZY99rcu9SvqmAquldoMw/cxRqWTwjBMQtyA3zPysQFceh/ROWfFyFqTFhQBL9R6F1vP9wAqqmwPDPeA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JyKBbDev; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="NRaWZI8I"
-Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 41MHXbYI011313;
-	Thu, 22 Feb 2024 18:01:14 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	from:to:cc:subject:date:message-id:in-reply-to:references
-	:mime-version:content-transfer-encoding:content-type; s=
-	qcppdkim1; bh=WWWmcwY3ouhT7+iupdFQYEQWZmvj5RtlPOV01FUCTXg=; b=NR
-	aWZI8ICRBjNsixcpcOAp9jVnrNq4b0M/KE+9TVCvECCy1L8sN7s7sY0JgZLJvTFn
-	QJ2UKh4S1mKcCgAdZCXLB2a0EIXeX2Y5lP9KiKyVC1W2uFUzmw94hEiurauLqm+9
-	2BaQAzKl5jn3vJK/p7XiZYKYtm0hePfchx8iw2IrLXYfsskB6Cue7IliJxWJ7o84
-	3I9L1jlBl1Hk8wc2wwBTZAOX4CCtT3qkoSj0syc+Bu3fehAr5M79J+XfA5MIEeDm
-	afHrrBTRnWs34y3cRqLj9pg6geSFkbv8YAXELP+l2r/yfn1UHqdgLQVzYRc0RJt+
-	JAAi7vNlzQsNBz1ZXNBg==
-Received: from nasanppmta01.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3weasbr40n-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 22 Feb 2024 18:01:14 +0000 (GMT)
-Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
-	by NASANPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 41MI1DtV028732
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 22 Feb 2024 18:01:13 GMT
-Received: from hu-mojha-hyd.qualcomm.com (10.80.80.8) by
- nasanex01c.na.qualcomm.com (10.45.79.139) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Thu, 22 Feb 2024 10:01:11 -0800
-From: Mukesh Ojha <quic_mojha@quicinc.com>
-To: <mcgrof@kernel.org>, <russ.weight@linux.dev>, <gregkh@linuxfoundation.org>,
-        <rafael@kernel.org>
-CC: <linux-kernel@vger.kernel.org>, Mukesh Ojha <quic_mojha@quicinc.com>
-Subject: [PATCH vRFC 7/8] firmware: remove prototype of fw_cache_piggyback_on_request()
-Date: Thu, 22 Feb 2024 23:30:32 +0530
-Message-ID: <20240222180033.23775-8-quic_mojha@quicinc.com>
-X-Mailer: git-send-email 2.43.0.254.ga26002b62827
-In-Reply-To: <20240222180033.23775-1-quic_mojha@quicinc.com>
-References: <20240222180033.23775-1-quic_mojha@quicinc.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JyKBbDev"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1708624991; x=1740160991;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=eWIgrng0fomPV+v6ms8u6IZCYZ5GywPfM/uBGfotOyI=;
+  b=JyKBbDev1Sd21eLt0tVADK+fBhzTmDtmf99xVkKeZNLCnlawo2B1uYoQ
+   ov1mH7wqLvoeivBEhtR+Kgrdyd/8o16hFRtjLWoOn8WC/oExpaQoq2vDv
+   L0hbl4RvubUYE5wdUfEQ1x/Uqm5Bm6EfT+xgI3eqCRmOzimtpGa5k7XXd
+   mh8+0aeGSkx/5Ht9oGHMsMz6DxUrbXWQq7fechcj+kX1x5fg+qSQtbdTa
+   C7556YEN6oUNvI0sFLj3AUR5fAGBUfzc8uXk9au0QeZkjmR7tNFxVnEVS
+   bRgksN1wNY+9fmhGq6bX8LOioln3asR/hPIhe+PYRQDEQZ10KNvxMKGhA
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10992"; a="3010774"
+X-IronPort-AV: E=Sophos;i="6.06,179,1705392000"; 
+   d="scan'208";a="3010774"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Feb 2024 10:03:08 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.06,179,1705392000"; 
+   d="scan'208";a="10188836"
+Received: from jwbates1-mobl.amr.corp.intel.com (HELO [10.209.48.22]) ([10.209.48.22])
+  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Feb 2024 10:03:05 -0800
+Message-ID: <5de7d665-7047-497b-94fb-76ec2af3c9e2@intel.com>
+Date: Thu, 22 Feb 2024 10:03:03 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC 4/5] sbm: fix up calls to dynamic memory allocators
+Content-Language: en-US
+To: =?UTF-8?B?UGV0ciBUZXNhxZnDrWs=?= <petr@tesarici.cz>
+Cc: Petr Tesarik <petrtesarik@huaweicloud.com>,
+ Jonathan Corbet <corbet@lwn.net>, Thomas Gleixner <tglx@linutronix.de>,
+ Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+ Dave Hansen <dave.hansen@linux.intel.com>,
+ "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+ "H. Peter Anvin" <hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>,
+ Oleg Nesterov <oleg@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
+ Xin Li <xin3.li@intel.com>, Arnd Bergmann <arnd@arndb.de>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Rick Edgecombe <rick.p.edgecombe@intel.com>,
+ Kees Cook <keescook@chromium.org>,
+ "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
+ Pengfei Xu <pengfei.xu@intel.com>, Josh Poimboeuf <jpoimboe@kernel.org>,
+ Ze Gao <zegao2021@gmail.com>,
+ "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+ Kai Huang <kai.huang@intel.com>, David Woodhouse <dwmw@amazon.co.uk>,
+ Brian Gerst <brgerst@gmail.com>, Jason Gunthorpe <jgg@ziepe.ca>,
+ Joerg Roedel <jroedel@suse.de>, "Mike Rapoport (IBM)" <rppt@kernel.org>,
+ Tina Zhang <tina.zhang@intel.com>, Jacob Pan
+ <jacob.jun.pan@linux.intel.com>,
+ "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+ open list <linux-kernel@vger.kernel.org>,
+ Roberto Sassu <roberto.sassu@huaweicloud.com>,
+ John Johansen <john.johansen@canonical.com>, Paul Moore
+ <paul@paul-moore.com>, James Morris <jmorris@namei.org>,
+ "Serge E. Hallyn" <serge@hallyn.com>, apparmor@lists.ubuntu.com,
+ linux-security-module@vger.kernel.org,
+ Petr Tesarik <petr.tesarik1@huawei-partners.com>
+References: <fb4a40c7-af9a-406a-95ab-406595f3ffe5@intel.com>
+ <20240222131230.635-1-petrtesarik@huaweicloud.com>
+ <20240222131230.635-5-petrtesarik@huaweicloud.com>
+ <f6135f2c-bc8f-41c3-9c6a-8346d685e4dc@intel.com>
+ <20240222185744.509e4958@meshulam.tesarici.cz>
+From: Dave Hansen <dave.hansen@intel.com>
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+In-Reply-To: <20240222185744.509e4958@meshulam.tesarici.cz>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01c.na.qualcomm.com (10.45.79.139)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: EvuIi56fq_i4yrGRxryZPC4ZPXQalN8N
-X-Proofpoint-GUID: EvuIi56fq_i4yrGRxryZPC4ZPXQalN8N
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-02-22_13,2024-02-22_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 suspectscore=0
- mlxlogscore=999 impostorscore=0 bulkscore=0 phishscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 malwarescore=0 adultscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2402120000 definitions=main-2402220140
 
-We should always try to avoid using prototype of a static
-function like fw_cache_piggyback_on_request() firmware
-main file. Move the relevant code in such a way that avoid
-the prototype usage.
+On 2/22/24 09:57, Petr Tesařík wrote:
+> * Hardware designers are adding (other) hardware security defenses to
+>   ring-0 that are not applied to ring-3.
+> 
+>   Could you give an example of these other security defenses, please?
 
-Signed-off-by: Mukesh Ojha <quic_mojha@quicinc.com>
----
- drivers/base/firmware_loader/main.c | 109 ++++++++++++++--------------
- 1 file changed, 54 insertions(+), 55 deletions(-)
+Here's one example:
 
-diff --git a/drivers/base/firmware_loader/main.c b/drivers/base/firmware_loader/main.c
-index 1d752965d311..91a45767a3a7 100644
---- a/drivers/base/firmware_loader/main.c
-+++ b/drivers/base/firmware_loader/main.c
-@@ -100,8 +100,6 @@ static inline int fw_state_wait(struct fw_priv *fw_priv)
- 	return __fw_state_wait_common(fw_priv, MAX_SCHEDULE_TIMEOUT);
- }
- 
--static void fw_cache_piggyback_on_request(struct fw_priv *fw_priv);
--
- static struct fw_priv *__allocate_fw_priv(const char *fw_name,
- 					  struct firmware_cache *fwc,
- 					  void *dbuf,
-@@ -672,7 +670,61 @@ static int fw_add_devm_name(struct device *dev, const char *name)
- 
- 	return 0;
- }
-+
-+static struct fw_cache_entry *alloc_fw_cache_entry(const char *name)
-+{
-+	struct fw_cache_entry *fce;
-+
-+	fce = kzalloc(sizeof(*fce), GFP_ATOMIC);
-+	if (!fce)
-+		goto exit;
-+
-+	fce->name = kstrdup_const(name, GFP_ATOMIC);
-+	if (!fce->name) {
-+		kfree(fce);
-+		fce = NULL;
-+		goto exit;
-+	}
-+exit:
-+	return fce;
-+}
-+
-+static int __fw_entry_found(const char *name)
-+{
-+	struct firmware_cache *fwc = &fw_cache;
-+	struct fw_cache_entry *fce;
-+
-+	list_for_each_entry(fce, &fwc->fw_names, list) {
-+		if (!strcmp(fce->name, name))
-+			return 1;
-+	}
-+	return 0;
-+}
-+
-+static void fw_cache_piggyback_on_request(struct fw_priv *fw_priv)
-+{
-+	const char *name = fw_priv->fw_name;
-+	struct firmware_cache *fwc = fw_priv->fwc;
-+	struct fw_cache_entry *fce;
-+
-+	spin_lock(&fwc->name_lock);
-+	if (__fw_entry_found(name))
-+		goto found;
-+
-+	fce = alloc_fw_cache_entry(name);
-+	if (fce) {
-+		list_add(&fce->list, &fwc->fw_names);
-+		kref_get(&fw_priv->ref);
-+		pr_debug("%s: fw: %s\n", __func__, name);
-+	}
-+found:
-+	spin_unlock(&fwc->name_lock);
-+}
-+
- #else
-+static void fw_cache_piggyback_on_request(struct fw_priv *fw_priv)
-+{
-+}
- static bool fw_cache_is_setup(struct device *dev, const char *name)
- {
- 	return false;
-@@ -1285,56 +1337,6 @@ static int uncache_firmware(const char *fw_name)
- 	return -EINVAL;
- }
- 
--static struct fw_cache_entry *alloc_fw_cache_entry(const char *name)
--{
--	struct fw_cache_entry *fce;
--
--	fce = kzalloc(sizeof(*fce), GFP_ATOMIC);
--	if (!fce)
--		goto exit;
--
--	fce->name = kstrdup_const(name, GFP_ATOMIC);
--	if (!fce->name) {
--		kfree(fce);
--		fce = NULL;
--		goto exit;
--	}
--exit:
--	return fce;
--}
--
--static int __fw_entry_found(const char *name)
--{
--	struct firmware_cache *fwc = &fw_cache;
--	struct fw_cache_entry *fce;
--
--	list_for_each_entry(fce, &fwc->fw_names, list) {
--		if (!strcmp(fce->name, name))
--			return 1;
--	}
--	return 0;
--}
--
--static void fw_cache_piggyback_on_request(struct fw_priv *fw_priv)
--{
--	const char *name = fw_priv->fw_name;
--	struct firmware_cache *fwc = fw_priv->fwc;
--	struct fw_cache_entry *fce;
--
--	spin_lock(&fwc->name_lock);
--	if (__fw_entry_found(name))
--		goto found;
--
--	fce = alloc_fw_cache_entry(name);
--	if (fce) {
--		list_add(&fce->list, &fwc->fw_names);
--		kref_get(&fw_priv->ref);
--		pr_debug("%s: fw: %s\n", __func__, name);
--	}
--found:
--	spin_unlock(&fwc->name_lock);
--}
--
- static void free_fw_cache_entry(struct fw_cache_entry *fce)
- {
- 	kfree_const(fce->name);
-@@ -1563,9 +1565,6 @@ static inline void unregister_fw_pm_ops(void)
- 	unregister_pm_notifier(&fw_cache.pm_notify);
- }
- #else
--static void fw_cache_piggyback_on_request(struct fw_priv *fw_priv)
--{
--}
- static inline int register_fw_pm_ops(void)
- {
- 	return 0;
--- 
-2.43.0.254.ga26002b62827
+> https://www.intel.com/content/www/us/en/developer/articles/technical/software-security-guidance/technical-documentation/data-dependent-prefetcher.html
 
+"DDP is neither trained by nor triggered by supervisor-mode accesses."
+
+But seriously, this is going to be my last message on this topic.  I
+appreciate your enthusiasm, but I don't see any viable way forward for
+this approach.
