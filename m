@@ -1,101 +1,101 @@
-Received: from 13.mo582.mail-out.ovh.net (13.mo582.mail-out.ovh.net [188.165.56.124])
+Received: from mailbox.box.xen0n.name (mail.xen0n.name [115.28.160.31])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CDC83C486
-	for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 09:45:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.165.56.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 787D83D99C;
+	Thu, 22 Feb 2024 09:45:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.28.160.31
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708595143; cv=none; b=gsqEWjzdypp8mWudwNd5dj2vvwqrg00c+yh3ZU4r5LaBf/LkszqfvfNc/5+zU+bUvNLFou9fXxadV40M4Iwg0jmIGwKWpDJiJkr86KgO9esA8qCXxWuh+QCTvDCwGCVTVb9shTouxd3rKT5P6NylWMNyyD2vcotkCvqWgo9ma2Q=
+	t=1708595161; cv=none; b=Oe0CG9L5UgvQiFhGqm9IrOZdkRjA6Rc6besU1uCFfUkiQM3LAsNlPAwFZ0hI8WLQBaUbSaQQsTsUH5sJXjrC7FMc69W6vnOOYz4MT7ofwIneDczjz8MNzFu0g1zWIGAhG9J0oCFq0jH8PljEk8c1X+JBzedNqo2zqd7jBMr9x70=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708595143; c=relaxed/simple;
-	bh=LPJlLHDkajqw80z9ma4e+vfl3sbURWj1jM2baBv2XzU=;
-	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
-	 Message-ID:Content-Type; b=deTePJkKYPeLLlQrJGdJ3rsaJm5oS513KMJU/729Nmq94dVB5RjcbLpqlTwri209t4SjEJWgxuy42LShcg8lfIh99BLKFxAMExeTu0daNEOiUfauy5uun/7AereJr/WTv/QOztzbTzr/gEP/lqhzgap6+hT0+9KV2PbW4ytLKUU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=milecki.pl; spf=pass smtp.mailfrom=milecki.pl; arc=none smtp.client-ip=188.165.56.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=milecki.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=milecki.pl
-Received: from director4.ghost.mail-out.ovh.net (unknown [10.109.140.39])
-	by mo582.mail-out.ovh.net (Postfix) with ESMTP id 4TgR8h1ygcz1Bcr
-	for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 08:27:32 +0000 (UTC)
-Received: from ghost-submission-6684bf9d7b-62nvk (unknown [10.110.168.159])
-	by director4.ghost.mail-out.ovh.net (Postfix) with ESMTPS id BBB0C1FEA0;
-	Thu, 22 Feb 2024 08:27:30 +0000 (UTC)
-Received: from milecki.pl ([37.59.142.108])
-	by ghost-submission-6684bf9d7b-62nvk with ESMTPSA
-	id DFvxKHIF12Uj8g8AoXgo/A
-	(envelope-from <rafal@milecki.pl>); Thu, 22 Feb 2024 08:27:30 +0000
-Authentication-Results:garm.ovh; auth=pass (GARM-108S00278859a77-0453-42f0-9082-a2d4777bd21b,
-                    A5D7B7EF969FCE09FFB803620F60B84AE0971723) smtp.auth=rafal@milecki.pl
-X-OVh-ClientIp:178.33.236.78
+	s=arc-20240116; t=1708595161; c=relaxed/simple;
+	bh=OATWuTBcSrRQnsAQcEJVtWvg5kuTMiuCytgedBHWqcI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=JoutQAYhJfQqs0yxR857Hmp2pjdJ6apy9hf1uYTudddwQG9Zm7DomUQz1OTMXHTAJpZYgb3neYA2ML2puKi7HRcagj5Nkveu/UNI2PfXO3Bn1BI5uJ4jMq3LAOPqhUTwhvUsIap4VAIqvxeCWvZtlntz5QwZ+tpoFPTC01WQTOg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=xen0n.name; spf=pass smtp.mailfrom=xen0n.name; dkim=pass (1024-bit key) header.d=xen0n.name header.i=@xen0n.name header.b=eHXbV8aG; arc=none smtp.client-ip=115.28.160.31
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=xen0n.name
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xen0n.name
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=xen0n.name header.i=@xen0n.name header.b="eHXbV8aG"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xen0n.name; s=mail;
+	t=1708595157; bh=OATWuTBcSrRQnsAQcEJVtWvg5kuTMiuCytgedBHWqcI=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=eHXbV8aGJB0ujrUWJGnfgMm6WOMvBvd3BoCoGQorjtnCQgvZNr5siYU8QCq8HHiYg
+	 nuJ2/PCENj+1bYr0jDK/3478D+blyJfmeAf43QnwnqUEVSAFZ3HYMyKuakuNXZWwlf
+	 vSCUFn/tH+H5+rkS5Oql+SFyKzP/h09m+MzM5Rsw=
+Received: from [IPV6:240e:688:100:1:5f9c:42f0:f9f2:a909] (unknown [IPv6:240e:688:100:1:5f9c:42f0:f9f2:a909])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
+	(No client certificate requested)
+	by mailbox.box.xen0n.name (Postfix) with ESMTPSA id 0376660094;
+	Thu, 22 Feb 2024 17:45:56 +0800 (CST)
+Message-ID: <4a12394a-8ebf-40b8-b0bc-65b5a66967cd@xen0n.name>
+Date: Thu, 22 Feb 2024 17:45:56 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Date: Thu, 22 Feb 2024 09:27:30 +0100
-From: =?UTF-8?Q?Rafa=C5=82_Mi=C5=82ecki?= <rafal@milecki.pl>
-To: William Zhang <william.zhang@broadcom.com>
-Cc: Linux MTD List <linux-mtd@lists.infradead.org>, Linux ARM List
- <linux-arm-kernel@lists.infradead.org>, Broadcom Kernel List
- <bcm-kernel-feedback-list@broadcom.com>, f.fainelli@gmail.com,
- kursad.oney@broadcom.com, joel.peshkin@broadcom.com,
- anand.gore@broadcom.com, dregan@mail.com, kamal.dasu@broadcom.com,
- tomer.yacoby@broadcom.com, dan.beygelman@broadcom.com, David Regan
- <dregan@broadcom.com>, devicetree@vger.kernel.org, Conor Dooley
- <conor+dt@kernel.org>, linux-kernel@vger.kernel.org, Krzysztof Kozlowski
- <krzysztof.kozlowski+dt@linaro.org>, Rob Herring <robh+dt@kernel.org>,
- Florian Fainelli <florian.fainelli@broadcom.com>
-Subject: Re: [PATCH v5 05/12] arm64: dts: broadcom: bcmbca: Add NAND
- controller node
-In-Reply-To: <20240207202257.271784-6-william.zhang@broadcom.com>
-References: <20240207202257.271784-1-william.zhang@broadcom.com>
- <20240207202257.271784-6-william.zhang@broadcom.com>
-Message-ID: <cd32d304d740e3c1875e449d459c805a@milecki.pl>
-X-Sender: rafal@milecki.pl
-X-Webmail-UserID: rafal@milecki.pl
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH for-6.8 v3 1/3] LoongArch: KVM: Fix input validation of
+ _kvm_get_cpucfg and kvm_check_cpucfg
+Content-Language: en-US
+To: maobibo <maobibo@loongson.cn>, Paolo Bonzini <pbonzini@redhat.com>,
+ Huacai Chen <chenhuacai@kernel.org>
+Cc: Tianrui Zhao <zhaotianrui@loongson.cn>, kvm@vger.kernel.org,
+ loongarch@lists.linux.dev, linux-kernel@vger.kernel.org,
+ WANG Xuerui <git@xen0n.name>
+References: <20240216085822.3032984-1-kernel@xen0n.name>
+ <20240216085822.3032984-2-kernel@xen0n.name>
+ <412ea29b-7a53-1f91-1cdb-5a256e74826b@loongson.cn>
+From: WANG Xuerui <kernel@xen0n.name>
+In-Reply-To: <412ea29b-7a53-1f91-1cdb-5a256e74826b@loongson.cn>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Ovh-Tracer-Id: 392939071277214476
-X-VR-SPAMSTATE: OK
-X-VR-SPAMSCORE: -100
-X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedvledrfeefgdduudekucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuqfggjfdpvefjgfevmfevgfenuceurghilhhouhhtmecuhedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepggffhffvvefujghfkfigihgtgfesthekjhdttddtjeenucfhrhhomheptfgrfhgrlhcuofhilhgvtghkihcuoehrrghfrghlsehmihhlvggtkhhirdhplheqnecuggftrfgrthhtvghrnhepjeejkeekgeejtdffffevffeivedtueeifeeuffegkeehkeeliedugfelfedutdeunecukfhppeduvdejrddtrddtrddupdefuddruddurddvudekrddutdeipddujeekrdeffedrvdefiedrjeekpdefjedrheelrddugedvrddutdeknecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepuddvjedrtddrtddruddpmhgrihhlfhhrohhmpehrrghfrghlsehmihhlvggtkhhirdhplhdpnhgspghrtghpthhtohepuddprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdpoffvtefjohhsthepmhhoheekvddpmhhouggvpehsmhhtphhouhht
 
-On 2024-02-07 21:22, William Zhang wrote:
-> diff --git a/arch/arm64/boot/dts/broadcom/bcmbca/bcm4908.dtsi
-> b/arch/arm64/boot/dts/broadcom/bcmbca/bcm4908.dtsi
-> index 2f124b027bbf..336016e334d9 100644
-> --- a/arch/arm64/boot/dts/broadcom/bcmbca/bcm4908.dtsi
-> +++ b/arch/arm64/boot/dts/broadcom/bcmbca/bcm4908.dtsi
-> @@ -589,7 +589,7 @@ hsspi: spi@1000 {
->  			status = "disabled";
->  		};
+Hi,
+
+On 2/17/24 11:03, maobibo wrote:
+> Hi Xuerui,
 > 
-> -		nand-controller@1800 {
-> +		nand_controller: nand-controller@1800 {
->  			#address-cells = <1>;
->  			#size-cells = <0>;
->  			compatible = "brcm,nand-bcm63138", "brcm,brcmnand-v7.1", 
-> "brcm,brcmnand";
-> @@ -597,7 +597,7 @@ nand-controller@1800 {
->  			reg-names = "nand", "nand-int-base";
->  			interrupts = <GIC_SPI 37 IRQ_TYPE_LEVEL_HIGH>;
->  			interrupt-names = "nand_ctlrdy";
-> -			status = "okay";
-> +			status = "disabled";
+> Good catch, and thank for your patch.
 > 
->  			nandcs: nand@0 {
->  				compatible = "brcm,nandcs";
+> On 2024/2/16 下午4:58, WANG Xuerui wrote:
+>> [snip]
+>> @@ -324,31 +319,33 @@ static int _kvm_get_cpucfg(int id, u64 *v)
+>>           if (cpu_has_lasx)
+>>               *v |= CPUCFG2_LASX;
+>> -        break;
+>> +        return 0;
+>> +    case 0 ... 1:
+>> +    case 3 ... KVM_MAX_CPUCFG_REGS - 1:
+>> +        /* no restrictions on other CPUCFG IDs' values */
+>> +        *v = U64_MAX;
+>> +        return 0;
+> how about something like this?
+>      default:
+>          /* no restrictions on other CPUCFG IDs' values */
+>          *v = U64_MAX;
+>          return 0;
 
-You disable NAND controller here breaking support for all dependant
-devices.
+I don't think this version correctly expresses the intent. Note that the 
+CPUCFG ID range check is squashed into the switch as well, so one switch 
+conveniently expresses the three intended cases at once:
 
-I see you fix it afterwards in PATCH 06/12 but it's still a poor way of
-handling such change and this issue can be hit e.g. during git bisect.
+* the special treatment of CPUCFG2,
+* all-allow rules for other in-range CPUCFG IDs, and
+* rejection for out-of-range IDs.
 
-Also: given that 99% of BCM4908 devices use NAND controller can we just
-save ourselves efforts and keep it enabled in .dtsi?
+Yet the suggestion here is conflating the latter two cases, with the 
+effect of allowing every ID that's not 2 to take any value (as expressed 
+by the U64_MAX mask), and *removing the range check* (because no return 
+path returns -EINVAL with this change).
+
+So I'd like to stick to the current version, but thanks anyway for your 
+kind review and suggestion.
 
 -- 
-Rafał Miłecki
+WANG "xen0n" Xuerui
+
+Linux/LoongArch mailing list: https://lore.kernel.org/loongarch/
+
