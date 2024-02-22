@@ -1,50 +1,80 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20E8812D20E
-	for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 22:05:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE8ED14B81E;
+	Thu, 22 Feb 2024 22:06:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708639555; cv=none; b=Kkrm4fl8yQbchfAOvkW9yGmZXkBIf6bveoUk+Y4lViBi99fxZ9bPtD8LI27aIFgzwHGEd0FJrPwjbW0SxuJUTEcs802eOO57MQE/mY2hhD0zIbypCjAaw9Tb+xdSrVOc4dYHc44q2YI39VD8ZQTPZgTr/26xFwfn3kFRCdiVb58=
+	t=1708639609; cv=none; b=nOdza6Om5F1IdHbMmHE4T6qLu6Ja9H6KZf9FnLm7pNt5PA3PPOe1oQfT57UFWQiCRvVjPFHiShQwclniEZo9lODGlE3GaMSPnyDpW0C/ES36QPigKx/3uIGXCZGwIo1hmiAY8fSvKLv/kBV64m3NISdCY4j5EpVRGeFWTgklNqo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708639555; c=relaxed/simple;
-	bh=JhRplTuUNMSmK348Jo4Y667OPS72zBZ8QHse7XhYbrA=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=QOzsuvskDt25nzCMQuTN9aGps/IfiDNt6xUtCx8pkdoDhHTH8U3A9bjwIxTdHK0OhhTYKqDZn/ZNGrt3E3Z8Z4PjUWMoDvLu/Y5kykHG7e4aMR66xzHz1Nw9+w1AeSmpx0vsHy90v7D/X15W/tWFIG4KfoJw8nFbu7Vvg5H9g4I=
+	s=arc-20240116; t=1708639609; c=relaxed/simple;
+	bh=CcqVXZKOZvvXSd+1YjEThyoYmIB+ItQXeZkjhL40xkw=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=geZrlWdRg8qjYtsfKZAlCMcC1W105hnyzrFhsAuKpAZyZYK73bWwOe2kYyEeSHCUgsaPfdPI3YZZ3utuVvO+GOZviIcaW4dyr93oxsdtyw7vFwW6nRkh38jN8C7ux0cu1N3z8QhycaFx1SUK7r8U2tdJo+PgiXezrlGFGYIXCbM=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 62FFAC433F1;
-	Thu, 22 Feb 2024 22:05:53 +0000 (UTC)
-From: Catalin Marinas <catalin.marinas@arm.com>
-To: Will Deacon <will@kernel.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [PATCH] arm64: gitignore: ignore relacheck
-Date: Thu, 22 Feb 2024 22:05:51 +0000
-Message-Id: <170863954734.1625463.11560852190517987488.b4-ty@arm.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240222210441.33142-1-brgl@bgdev.pl>
-References: <20240222210441.33142-1-brgl@bgdev.pl>
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 99E38C433F1;
+	Thu, 22 Feb 2024 22:06:48 +0000 (UTC)
+Date: Thu, 22 Feb 2024 17:08:39 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Beau Belgrave <beaub@linux.microsoft.com>
+Cc: mhiramat@kernel.org, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, mathieu.desnoyers@efficios.com
+Subject: Re: [PATCH v4 1/4] tracing/user_events: Prepare find/delete for
+ same name events
+Message-ID: <20240222170839.71c0b1bf@gandalf.local.home>
+In-Reply-To: <20240222001807.1463-2-beaub@linux.microsoft.com>
+References: <20240222001807.1463-1-beaub@linux.microsoft.com>
+	<20240222001807.1463-2-beaub@linux.microsoft.com>
+X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Thu, 22 Feb 2024 22:04:41 +0100, Bartosz Golaszewski wrote:
-> Add the generated executable for relacheck to the list of ignored files.
+On Thu, 22 Feb 2024 00:18:04 +0000
+Beau Belgrave <beaub@linux.microsoft.com> wrote:
+
+> The current code for finding and deleting events assumes that there will
+> never be cases when user_events are registered with the same name, but
+> different formats. Scenarios exist where programs want to use the same
+> name but have different formats. An example is multiple versions of a
+> program running side-by-side using the same event name, but with updated
+> formats in each version.
 > 
+> This change does not yet allow for multi-format events. If user_events
+> are registered with the same name but different arguments the programs
+> see the same return values as before. This change simply makes it
+> possible to easily accomodate for this.
+
+ accommodate? ;-)
+
 > 
+> Update find_user_event() to take in argument parameters and register
+> flags to accomodate future multi-format event scenarios. Have find
 
-Applied to arm64 (for-next/stage1-lpa2), thanks!
+  accommodate
 
-[1/1] arm64: gitignore: ignore relacheck
-      https://git.kernel.org/arm64/c/275826914925
+> validate argument matching and return error pointers to cover when
+> an existing event has the same name but different format. Update
+> callers to handle error pointer logic.
+> 
+> Move delete_user_event() to use hash walking directly now that
+> find_user_event() has changed. Delete all events found that match the
+> register name, stop if an error occurs and report back to the user.
+> 
+> Update user_fields_match() to cover list_empty() scenarios now that
+> find_user_event() uses it directly. This makes the logic consistent
+> accross several callsites.
 
--- 
-Catalin
+  across ?
 
+I'll update this.
+
+-- Steve
+
+> 
+> Signed-off-by: Beau Belgrave <beaub@linux.microsoft.com>
