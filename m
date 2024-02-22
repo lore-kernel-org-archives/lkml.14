@@ -1,101 +1,55 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 197B7137923
-	for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 18:29:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6FC0140377;
+	Thu, 22 Feb 2024 18:30:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708626555; cv=none; b=cEKVmv45NV7KVE+umKItjGjUzRrtLBZ3S73H7/tw0mqfWVjW6MFzOTepJtED4hsY5FVPqV1Blvd5YlWbIAVU3Nbh2L5hc5rjIo412HtRdTvz75uohsYpMlYqGj0xLb/jW5AXgITFXwxQZQCVE9fFchLEZiyYD0NW94GPrw5tbgs=
+	t=1708626603; cv=none; b=jSIAetVkdBnRU24eKKPpG9TzrismM2Fq/9ritCi7MIVnve9SKAl8ZpvUp500o/0TByj8MXC3t7HSJ3HWBCP6/cNOYUaTvrBx9dUMcV53cZh8+U/an01f6dBDBBXdaBZtuqSHb2Ff0ZDc4ED+33BzPVN6mzYbfWL7OLftje+9piU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708626555; c=relaxed/simple;
-	bh=/wOS2SUpgSsEw/ISAn+302Uf7UW8Yp6RwMhfod64tJ8=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=ROn4rbKTinJCqmwSu7S4LJrEDPUt32j98JTYTE4Fl2NTEDGQKIQNrvoSh+gaRHSbe6XNlk/cZlzhh6OkgzifJrnGZgH8TUEfOVsQFunlw4uh44mFQIhPAUs6CyJ24JEVR+ikCeF4NPEpOIfH/ckBrHvi9/P4yN5e3ebR9XI4dkM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=d1BfJQiR; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="d1BfJQiR"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1708626553;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type;
-	bh=bvj8T6fBipY3xpufjhC25WSBfuxca3GiHOALi4Tt8m0=;
-	b=d1BfJQiR7Lcgoyn3/Bde+LnP19d1wKn5+7LVzEpMWJPIVJ7N51GmiaLdmABQpi7fl/Erb5
-	+J9ou+dUUDNAflfXnwmZ8uiG2mvD9AXp0l671VLQzPgbp7zE352eE6OsDaVF0mBpDwum2J
-	jKyYnD4ryUmdM0yyVdOGHp4Ml3nTYCA=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-490-H1RAiGg0N6q0UzIEJeJIww-1; Thu, 22 Feb 2024 13:29:09 -0500
-X-MC-Unique: H1RAiGg0N6q0UzIEJeJIww-1
-Received: from smtp.corp.redhat.com (int-mx09.intmail.prod.int.rdu2.redhat.com [10.11.54.9])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 3A3A5106D039;
-	Thu, 22 Feb 2024 18:29:09 +0000 (UTC)
-Received: from tpad.localdomain (unknown [10.96.133.3])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 06861492BC8;
-	Thu, 22 Feb 2024 18:29:09 +0000 (UTC)
-Received: by tpad.localdomain (Postfix, from userid 1000)
-	id 762B5401344BE; Thu, 22 Feb 2024 15:27:41 -0300 (-03)
-Date: Thu, 22 Feb 2024 15:27:41 -0300
-From: Marcelo Tosatti <mtosatti@redhat.com>
-To: netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Jakub Kicinski <kuba@kernel.org>, Eric Dumazet <edumazet@google.com>,
-	Frederic Weisbecker <frederic@kernel.org>,
-	Valentin Schneider <vschneid@redhat.com>,
-	Paolo Abeni <pabeni@redhat.com>
-Subject: [PATCH net-next] net/core/dev.c: enable timestamp static key if CPU
- isolation is configured
-Message-ID: <ZdeSHbRa3rtHE+2E@tpad>
+	s=arc-20240116; t=1708626603; c=relaxed/simple;
+	bh=Npnj8evtP1IDJMxVpAu3m1ovc7BdIp5IIXBqQcwayR0=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ZurJ8YnUDgCZC5vIuVtGshWXynOYlJcKZ5t8Fh2s6cgVNAZJeIJUxhEG4p8LDEtbNVTCAK/ICQgC2wy7dltTcE6EKxjvS5CH97O3jiaaJjVw1wsW2hBS4EZgvl8VfVDvRAogjPC+QMMambvtrJrgKSrL0rwBx2o40I6sfPK03Lw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8F3EBC433F1;
+	Thu, 22 Feb 2024 18:30:02 +0000 (UTC)
+Date: Thu, 22 Feb 2024 13:31:53 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Chuck Lever <chuck.lever@oracle.com>
+Cc: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>, linux-nfs@vger.kernel.org, Jeff
+ Layton <jlayton@kernel.org>, Neil Brown <neilb@suse.de>, Olga Kornievskaia
+ <kolga@netapp.com>, Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey
+ <tom@talpey.com>
+Subject: Re: [PATCH] NFSD: Fix nfsd_clid_class use of __string_len() macro
+Message-ID: <20240222133153.39260aa9@gandalf.local.home>
+In-Reply-To: <ZdeRnhXLhlXN4AqE@manet.1015granger.net>
+References: <20240222122828.3d8d213c@gandalf.local.home>
+	<ZdeRnhXLhlXN4AqE@manet.1015granger.net>
+X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.9
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+
+On Thu, 22 Feb 2024 13:25:34 -0500
+Chuck Lever <chuck.lever@oracle.com> wrote:
 
 
-For systems that use CPU isolation (via nohz_full), creating or destroying
-a socket with  timestamping (SOF_TIMESTAMPING_OPT_TX_SWHW) might cause a
-static key to be enabled/disabled. This in turn causes undesired
-IPIs to isolated CPUs.
+> Do you want me to take this through the nfsd tree, or would you like
+> an Ack from me so you can handle it as part of your clean up? Just
+> in case:
+> 
+> Acked-by: Chuck Lever <chuck.lever@oracle.com>
+> 
 
-So enable the static key unconditionally, if CPU isolation is enabled,
-thus avoiding the IPIs.
+As my patches depend on this, I can take it with your ack.
 
-Signed-off-by: Marcelo Tosatti <mtosatti@redhat.com>
+Thanks!
 
-diff --git a/net/core/dev.c b/net/core/dev.c
-index c588808be77f..15a32f5900e6 100644
---- a/net/core/dev.c
-+++ b/net/core/dev.c
-@@ -155,6 +155,7 @@
- #include <net/netdev_rx_queue.h>
- #include <net/page_pool/types.h>
- #include <net/page_pool/helpers.h>
-+#include <linux/sched/isolation.h>
- 
- #include "dev.h"
- #include "net-sysfs.h"
-@@ -11851,3 +11852,14 @@ static int __init net_dev_init(void)
- }
- 
- subsys_initcall(net_dev_init);
-+
-+static int __init net_dev_late_init(void)
-+{
-+	/* avoid static key IPIs to isolated CPUs */
-+	if (housekeeping_enabled(HK_TYPE_MISC))
-+		net_enable_timestamp();
-+
-+	return 0;
-+}
-+
-+late_initcall(net_dev_late_init);
-
+-- Steve
