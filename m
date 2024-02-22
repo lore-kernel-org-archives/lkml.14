@@ -1,200 +1,125 @@
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+Received: from mail-oi1-f173.google.com (mail-oi1-f173.google.com [209.85.167.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4847E3B2B6
-	for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 09:40:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D5FD3BB3D
+	for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 09:40:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708594852; cv=none; b=P/h4Oybntx7YRu9pdnhBlpb1ID9haowQdjr+KPsSsYDVScDLHyOOeXiRXj7mKgb7hSfW/x9gT8COwPwG1KuI4n0F/nJBPoAnDAAKNWIFauzWpDBodlV4C4g9AhT2TWsXLiH+lNA6RehXDxLDvxRxaVHoAigDpXUdyTAZIwjVCJI=
+	t=1708594853; cv=none; b=VzXyojMVX+1QIEV2+vZC3rSM0LI/fk3HjyBSfquG6UaE5IEpI14fZeyjGv564A/o4XVYAzzSQykyRpjvwLZ38ZGS9Wcz8WEEDxA7ALQMkPQQHz10l23twim7ZOzzWyVI+ZE7935WQue2thMRNx/AHKfy9c3QxlGr5kG2Em9MfRI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708594852; c=relaxed/simple;
-	bh=U5A3cMOJuT9FC8OcV7iHHe6jSA8P8czbVBAGeCesJBQ=;
-	h=References:From:To:Cc:Subject:Date:In-reply-to:Message-ID:
-	 MIME-Version:Content-Type; b=ufCWYcSLWtlCvMjks8MUUAfd30mXgQKzyHwAOBgvrOGnPyW+Y/08Du9pb/kiDXfd3TllWIlBt/3oy4cyekCyoFBsMKPK1e1+2mTeRh23doBpXmp9FplTDNT9tUcbDt1Nkuv5NmZkV3wUPdSVp5WIQsE1I1Cy+fzcqkRyv2+nJZ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=B5zhm8MY; arc=none smtp.client-ip=209.85.221.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1708594853; c=relaxed/simple;
+	bh=4G67odiZOEE5i1ZAiyiSEHpAMTN6+HtBvz8ZjUgdki4=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=sfof5jfD0i0Al0XGFPONlW8+d/ekquDkyhBqmLNj74XxroKE8pXiK8gnSClsHD+CNKyVRVOZFiZ+03yK3gLc2GOMvl9Z16Dk5bygcyGmkCDAqA21JNY4rcJtJV+AKJJHvGi1PcB0Qgu7m45uHFDYVd1f6SqHR3oCNH/uarDlbfs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=mftllXqr; arc=none smtp.client-ip=209.85.167.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="B5zhm8MY"
-Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-33d2b354c72so3672824f8f.1
-        for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 01:40:47 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="mftllXqr"
+Received: by mail-oi1-f173.google.com with SMTP id 5614622812f47-3bb9d54575cso1036598b6e.2
+        for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 01:40:51 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1708594846; x=1709199646; darn=vger.kernel.org;
-        h=mime-version:message-id:in-reply-to:date:subject:cc:to:from
-         :user-agent:references:from:to:cc:subject:date:message-id:reply-to;
-        bh=eDfk374ak2aj4U9CiiV0QysDtfpirDyDxvL4BxqbaqM=;
-        b=B5zhm8MYoBAp/zYDtkOcy24LUVGREDYQrybwvlvBfOPOZZzQGP2pR2gDzfAHmdTzcI
-         nMyB/v6bx8Cq/7ET4TPotLa/QaEVwBB5YMgwv+szO65jVe89qtK19LHYmFA29THKsKFy
-         x8xCgLKemNErPKUtfP8EKASz1J6FU9lPrtanW2rfkQZpzohginanjwv1r7/3kx902a7L
-         yQJl/5mIIVAOsksfet48EpRopJBda/OkmORJExeuNRRAQn71GUolQkDs03EZ2oVGqnTN
-         +93gfQJ86e41+Aqb3wKLsIiZzK7zSfXYRR/g5eV/ExcO1ZJJH7P5gGHyPhtCjTcqMcKJ
-         2TlA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708594846; x=1709199646;
-        h=mime-version:message-id:in-reply-to:date:subject:cc:to:from
-         :user-agent:references:x-gm-message-state:from:to:cc:subject:date
+        d=ventanamicro.com; s=google; t=1708594850; x=1709199650; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=eDfk374ak2aj4U9CiiV0QysDtfpirDyDxvL4BxqbaqM=;
-        b=FpUXd4Lnp0HcK0bxxTpE5r0sdzylqsmHuKaNRlYz1n74TQ2F6FCrxw+xMw4Au3wrZS
-         LFh0yFxDq4iYA/iVAaP7dSgsdW8R3owvaWARhMhlTT13J+aCHZfrBgJC1jUsOl3TwBHj
-         AA8FUbl6He5rgEQ4d3nUGzHq5+L6eT4PthpZ2hJPnDPQjR7zIeMRyAK82Jf0vhJ+wooM
-         gCEeYwqx/jDWT8FvH29bcZmFBbLEt81ne9JbWI7w29gunB1SNsIq2BZkQLNjSFVKRmMm
-         nigUvMggihP5B+hC8b3OdO2S6m99kxjJaWtw/khh/gR2CLNRugbMV1YfUXDkmNIy047V
-         PW4w==
-X-Forwarded-Encrypted: i=1; AJvYcCX2gXb0GsObNxG663jWCHBuJ+0m4FvUljEx9Ip+caC7L2qtrCb7GE6l4zq0u0M2Y2eKwU08XblopE8/C0XaB9XD9mFh5vwI1fH1N1gx
-X-Gm-Message-State: AOJu0Yy0OsA2SRsEMb3sERhTdzlVhT9M2su6My/81OOmrzVX88PaKea6
-	xzrZmbmW/BCIwfZRUuRJo4Q8jU+Ze7rSJtlItpSLz2codXP3MFHt+QHl5GGSHOg=
-X-Google-Smtp-Source: AGHT+IG5rkzGOGgFCat5JaFS4ufYwwZ9KH5dC97ai2bBbn/Ybhk9OGrUNxlKouDoMUdjhRCttgQ9Lg==
-X-Received: by 2002:adf:fec7:0:b0:33d:6cc0:b884 with SMTP id q7-20020adffec7000000b0033d6cc0b884mr5221035wrs.10.1708594846378;
-        Thu, 22 Feb 2024 01:40:46 -0800 (PST)
-Received: from localhost ([2a01:e0a:3c5:5fb1:e0f9:f458:9920:7af9])
-        by smtp.gmail.com with ESMTPSA id bk30-20020a0560001d9e00b0033cddadde6esm20291902wrb.80.2024.02.22.01.40.45
+        bh=n8Ocksk32SLy+uqf+lOwT2Rti1KnrinKQe1UyB1vdGY=;
+        b=mftllXqrp2tqWaprTgexUSQKg2yEjthhw1FMW503Jxjy7FUapFKkKnC1kRKw4g67Co
+         ZVlKWAhYWbpSflBsAG9BRPmc0BjDy5CJbirK0gKlTIwL6ioJT5L0doH/Wcgg/ly7kn4L
+         R7euwVpi086Qf4IsPr8VZvYqz7LA69bHn2OHfaML9Xh0SFK9/T0ULEcCLW5A0PNymLGz
+         IFKKuh97HiKu0oyP0hd/CH2jRKp/jizKeWm0/aJ23NMESq4+Y5lLpcfRfTcpDqKFR6Wo
+         ifQLzAOxurethNxoMXbHRd6mui4R+soJB+CWegHflR8G3OFhtojqIvMwhnq2widkF4xA
+         m17A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708594850; x=1709199650;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=n8Ocksk32SLy+uqf+lOwT2Rti1KnrinKQe1UyB1vdGY=;
+        b=lIUo8DQCE4ov6cgzyFep2rSzJ8yMvq2ocRCx2FzW3PmDC9vmnW4p4CdwzVtDDq0DQS
+         6GxDJxuLXvkyB975LsnefEtMyBNRZGG1D9EX7Kl/OjJSNOAW3SgXEXF9aj4X/aY9SFeU
+         3J/laHVaMjExdNUHW1X0BtOgAADOrbtDTnu3ZUmrf4zJAAvfg7j1QkJeUFBAFLvOS6lu
+         3xfpt1JXzRVgJD11jQ/1RHse63OQEc8zCzPNyWwMKi6sgmS8ICEnKHRe5EQ2K23AfOgq
+         28PDtVmQiZ9wR8/sRNjSkx0Lu+lmZ5My6UFGnLON2sGWht814O1g7xn3mgBz1TNTOfY8
+         KoAA==
+X-Forwarded-Encrypted: i=1; AJvYcCUOg6J3Sj2iFvqT7WOuxLHNWlbzCeZPCXxTJPt4at55ISsulULAijv/ND3nVTa1JPgQ0ioy9lPpFvE6OY///QbojsOpQC47VToDnLFx
+X-Gm-Message-State: AOJu0Yzv5vn5Qxvo8f+UBefRnHtjEw4KFL3n0CDmUYVU+eXrB72SIRkw
+	CeQ/fRjS1mxBUkr+q50wopn920sEZ2Epc4ZyL3SBc9RRjAQmEzk0dqXpc3cB8zO7x3IxMXHVJZ0
+	DzYI=
+X-Google-Smtp-Source: AGHT+IH5OKcKJyZKoiJWHlEtV4ymh6yBEg2cp7+WIXAmpNd3ymvmgUIHcqDcQqaA486cA4C3qr2pMw==
+X-Received: by 2002:a05:6808:1306:b0:3c1:82ae:d61a with SMTP id y6-20020a056808130600b003c182aed61amr14216oiv.14.1708594850533;
+        Thu, 22 Feb 2024 01:40:50 -0800 (PST)
+Received: from anup-ubuntu-vm.localdomain ([103.97.165.210])
+        by smtp.gmail.com with ESMTPSA id n15-20020a05680803af00b003c17c2b8d09sm130699oie.31.2024.02.22.01.40.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 22 Feb 2024 01:40:45 -0800 (PST)
-References: <20240222082523.1812-1-greena88@gmail.com>
-User-agent: mu4e 1.10.8; emacs 29.1
-From: Jerome Brunet <jbrunet@baylibre.com>
-To: Adam Green <greena88@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Krzysztof Kozlowski
- <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>,
- Neil Armstrong <neil.armstrong@linaro.org>, Kevin Hilman
- <khilman@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, Martin
- Blumenstingl <martin.blumenstingl@googlemail.com>,
- devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] arm64: dts: meson-g12b-odroid-n2*: Add support for
- overclocking Hardkernel ODROID-N2 boards.
-Date: Thu, 22 Feb 2024 10:37:28 +0100
-In-reply-to: <20240222082523.1812-1-greena88@gmail.com>
-Message-ID: <1j8r3cet0i.fsf@starbuckisacylon.baylibre.com>
+        Thu, 22 Feb 2024 01:40:50 -0800 (PST)
+From: Anup Patel <apatel@ventanamicro.com>
+To: Palmer Dabbelt <palmer@dabbelt.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Frank Rowand <frowand.list@gmail.com>,
+	Conor Dooley <conor+dt@kernel.org>
+Cc: Marc Zyngier <maz@kernel.org>,
+	=?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn@kernel.org>,
+	Atish Patra <atishp@atishpatra.org>,
+	Andrew Jones <ajones@ventanamicro.com>,
+	Sunil V L <sunilvl@ventanamicro.com>,
+	Saravana Kannan <saravanak@google.com>,
+	Anup Patel <anup@brainfault.org>,
+	linux-riscv@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	Anup Patel <apatel@ventanamicro.com>
+Subject: [PATCH v14 04/18] irqchip/sifive-plic: Use riscv_get_intc_hwnode() to get parent fwnode
+Date: Thu, 22 Feb 2024 15:09:52 +0530
+Message-Id: <20240222094006.1030709-5-apatel@ventanamicro.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240222094006.1030709-1-apatel@ventanamicro.com>
+References: <20240222094006.1030709-1-apatel@ventanamicro.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 
+The RISC-V INTC irqdomain is always the parent irqdomain of SiFive PLIC
+so use riscv_get_intc_hwnode() to get the parent fwnode similar to other
+RISC-V drivers which use local interrupts.
 
-On Thu 22 Feb 2024 at 08:25, Adam Green <greena88@gmail.com> wrote:
+Signed-off-by: Anup Patel <apatel@ventanamicro.com>
+---
+ drivers/irqchip/irq-sifive-plic.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-> Hardkernel actively supports overclocking these boards in their own
-> documentation. (https://wiki.odroid.com/odroid-n2/hardware/overclocking)
->
-> This aligns the SoC opps with those in the board vendors bsp source.
-
-Patch title is too long - checkpatch.pl should have given a you warning
-for this.
-
-Not sure it is wise support overclocking directly in mainline, not by
-default at least. Maybe as an overlay ? even this I'm not too sure.
-
->
-> Signed-off-by: Adam Green <greena88@gmail.com>
-> ---
->  .../dts/amlogic/meson-g12b-odroid-n2-plus.dts | 25 +++++++++++++++++++
->  .../boot/dts/amlogic/meson-g12b-odroid-n2.dts | 17 +++++++++++++
->  .../dts/amlogic/meson-g12b-odroid-n2l.dts     | 25 +++++++++++++++++++
->  3 files changed, 67 insertions(+)
->
-> diff --git a/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2-plus.dts b/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2-plus.dts
-> index ce1198ad34e4..1731d542a00c 100644
-> --- a/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2-plus.dts
-> +++ b/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2-plus.dts
-> @@ -15,6 +15,31 @@ / {
->  	model = "Hardkernel ODROID-N2Plus";
->  };
->  
-> +&cpu_opp_table_0 {
-> +	opp-1908000000 {
-> +		opp-hz = /bits/ 64 <1908000000>;
-> +		opp-microvolt = <1030000>;
-> +	};
-> +	opp-2016000000 {
-> +		opp-hz = /bits/ 64 <2016000000>;
-> +		opp-microvolt = <1040000>;
-> +		turbo-mode;
-> +	};
-> +};
-> +
-> +&cpub_opp_table_1 {
-> +	opp-2304000000 {
-> +		opp-hz = /bits/ 64 <2304000000>;
-> +		opp-microvolt = <1030000>;
-> +		turbo-mode;
-> +	};
-> +	opp-2400000000 {
-> +		opp-hz = /bits/ 64 <2400000000>;
-> +		opp-microvolt = <1040000>;
-> +		turbo-mode;
-> +	};
-> +};
-> +
->  &vddcpu_a {
->  	regulator-min-microvolt = <680000>;
->  	regulator-max-microvolt = <1040000>;
-> diff --git a/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts b/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts
-> index a198a91259ec..0c71e8bc0124 100644
-> --- a/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts
-> +++ b/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts
-> @@ -13,3 +13,20 @@ / {
->  	compatible = "hardkernel,odroid-n2", "amlogic,s922x", "amlogic,g12b";
->  	model = "Hardkernel ODROID-N2";
->  };
-> +
-> +&cpu_opp_table_0 {
-> +	opp-1992000000 {
-> +		turbo-mode;
-> +	};
-> +};
-> +
-> +&cpub_opp_table_1 {
-> +	opp-1908000000 {
-> +		turbo-mode;
-> +	};
-> +	opp-2004000000 {
-> +		opp-hz = /bits/ 64 <2004000000>;
-> +		opp-microvolt = <1022000>;
-> +		turbo-mode;
-> +	};
-> +};
-> diff --git a/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2l.dts b/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2l.dts
-> index e26f3e3258e1..b16a69d0cad6 100644
-> --- a/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2l.dts
-> +++ b/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2l.dts
-> @@ -97,6 +97,31 @@ codec {
->  	};
->  };
->  
-> +&cpu_opp_table_0 {
-> +	opp-1908000000 {
-> +		opp-hz = /bits/ 64 <1908000000>;
-> +		opp-microvolt = <1030000>;
-> +	};
-> +	opp-2016000000 {
-> +		opp-hz = /bits/ 64 <2016000000>;
-> +		opp-microvolt = <1040000>;
-> +		turbo-mode;
-> +	};
-> +};
-> +
-> +&cpub_opp_table_1 {
-> +	opp-2304000000 {
-> +		opp-hz = /bits/ 64 <2304000000>;
-> +		opp-microvolt = <1030000>;
-> +		turbo-mode;
-> +	};
-> +	opp-2400000000 {
-> +		opp-hz = /bits/ 64 <2400000000>;
-> +		opp-microvolt = <1040000>;
-> +		turbo-mode;
-> +	};
-> +};
-> +
->  &eth_phy {
->  	status = "disabled";
->  };
-
-
+diff --git a/drivers/irqchip/irq-sifive-plic.c b/drivers/irqchip/irq-sifive-plic.c
+index 558ae63795d9..615498071b6e 100644
+--- a/drivers/irqchip/irq-sifive-plic.c
++++ b/drivers/irqchip/irq-sifive-plic.c
+@@ -422,6 +422,7 @@ static int plic_probe(struct platform_device *pdev)
+ 	struct device *dev = &pdev->dev;
+ 	unsigned long plic_quirks = 0;
+ 	struct plic_handler *handler;
++	struct irq_domain *domain;
+ 	struct plic_priv *priv;
+ 	bool cpuhp_setup;
+ 	unsigned int cpu;
+@@ -501,8 +502,9 @@ static int plic_probe(struct platform_device *pdev)
+ 		}
+ 
+ 		/* Find parent domain and register chained handler */
+-		if (!plic_parent_irq && irq_find_host(parent.np)) {
+-			plic_parent_irq = irq_of_parse_and_map(to_of_node(dev->fwnode), i);
++		domain = irq_find_matching_fwnode(riscv_get_intc_hwnode(), DOMAIN_BUS_ANY);
++		if (!plic_parent_irq && domain) {
++			plic_parent_irq = irq_create_mapping(domain, RV_IRQ_EXT);
+ 			if (plic_parent_irq)
+ 				irq_set_chained_handler(plic_parent_irq,
+ 							plic_handle_irq);
 -- 
-Jerome
+2.34.1
+
