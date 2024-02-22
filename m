@@ -1,49 +1,49 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9ECFC13BAE1;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BA2B13BAF2;
 	Thu, 22 Feb 2024 23:17:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708643830; cv=none; b=KCRQsMzGznSbXKzSHiLaHhbQNDAgNB3PJCHkcuWV4mDZUQDvGObDimsNhaTF/dKMkFYHj53HEchpHzWCXtVHfVQEiDPYb491TT6qJ6LWY81+NLLY9Nd28xHCoo8Cw7rXyTvjuRiw5QIR8LLYlxIHFcmyaU7pLU0vGcaRSVWzrDo=
+	t=1708643831; cv=none; b=j17v1ayCw7vWEHAmyzJSvxbogYmdKmQV66P0qKb2YfakiJ/3JD9ANr/7p4ikCyDgrLk/4jo5I6l1e4dSWC5JQ5p9smanEKulVVVeDMzi6zg11UcIJU8//45R5oJphWFFT8JbGK5igiXOsbQxSi5RpBorgtzglkCw4N+SriCA6sE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708643830; c=relaxed/simple;
-	bh=CDMvd7OLfgO/mBRQoSaY+UNedhf98h+Fb9zoMiBia6w=;
+	s=arc-20240116; t=1708643831; c=relaxed/simple;
+	bh=yiYkGcCnLlL27RWVyDjHKsRWJDI5Cj39FsMdry9HNCs=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
-	 In-Reply-To:To:CC; b=bEFxQT+P5km4HSARrFroxMNObP6CdPpUjHjk9rVgzxXjFqTvK7n57h+bPVohzc6Wvn1pV6Y4XzSquXHn4mLN/GFjKR1yLSRYZZdVc31/Sh5NAe8XU74ymzu16ec/X5JA2CKQrz828ZRhwKcqXf/VNHI4MUvO4ce25vyWG/ze6Ts=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=A7W7wqej; arc=none smtp.client-ip=205.220.168.131
+	 In-Reply-To:To:CC; b=fJczU1BF8V8ZU+ITrL1RGAmyItw0atTuDqym7qfwLrPoK2ewZylmbPyXR0gfz+iSzl2trRxc1LB4EDmBlp7hoOQKMMkF341BcFR1T8biR9CrFRuN57MW6UF351+2r1KZ6lWB8pyl7aUEtMfFPnj+i/0MbNhihsUqx3J98NxNx7g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=FjtDETKc; arc=none smtp.client-ip=205.220.180.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="A7W7wqej"
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 41MMgV2w013376;
-	Thu, 22 Feb 2024 23:16:44 GMT
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="FjtDETKc"
+Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 41MLcfsx010074;
+	Thu, 22 Feb 2024 23:16:48 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
 	from:date:subject:mime-version:content-type
 	:content-transfer-encoding:message-id:references:in-reply-to:to
-	:cc; s=qcppdkim1; bh=vo+GeAkZrIZtCLsV/xLZNLxXgjO/d+8dOj+GwHIQAtA
-	=; b=A7W7wqejQwx3z1l/oM1GMtburTD6EFddQKuBnKoGYLGt2+b9GKt7z5tgI+G
-	tQHISS7AKjdH4P9r6NEvYcAS1YEnqMEl4l7LBJGz+lBPWzDkqhGp7J00N/ASyFv7
-	giXzs6CtafrawcvfKE6jMLd5ioTl+Yzaz/N9ZHiNFn7ZA9JkxjWn4vXULo5frsSc
-	7Vy3gId/qgro/Z87uWkyIb9/gmkAT2Q+Fvi3uvaZvGzBlFUaA/T25boT/q52goHP
-	ub10yfU0ASdLHaWMCuQGHCwxf1FeVtHZ9WkKVYXBGi8CnWC/MwZ0Voeqme+oX/is
-	6YtjBUgtQxGqEuVVP3Dwrb9DtKA==
-Received: from nasanppmta02.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3wea7csc2y-1
+	:cc; s=qcppdkim1; bh=JCvR/F4e78SINAjN3meQYZzTInDObRjxvrSnXKpjai8
+	=; b=FjtDETKc/0YZ7h6GsKOoYFC95XN1GsWS2Ki6KfHY2R09+DyalIWE4XK7eaG
+	5aC38FRjcTiPbwP5lRGFYahhT06fipPKURtl9nqKSKb4VaCOijdCriHT0qVs5DUV
+	2HLU6KSWWB4Y998qRUphry2pqZOIFsB/fkEQWBnbD4LATnYjqzCEAbOesOD27S12
+	GxP2S/08Jc0e06MV/j7Xrzkbr2e0Ekrpf0n1SHupWlsxfshnwO1okTdANJ7jPPi5
+	rmkQ9HFUniWnK18W50p9Ax4jhJh5hsmazkDvDbziXOefss+7giMVTPZxh82UDa0D
+	BnuL1XOK4Ez8i2eLVSXgH7fi9GA==
+Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3we2kf9puv-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 22 Feb 2024 23:16:43 +0000 (GMT)
+	Thu, 22 Feb 2024 23:16:47 +0000 (GMT)
 Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 41MNGhwg027798
+	by NASANPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 41MNGksh025676
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 22 Feb 2024 23:16:43 GMT
+	Thu, 22 Feb 2024 23:16:46 GMT
 Received: from hu-eberman-lv.qualcomm.com (10.49.16.6) by
  nasanex01b.na.qualcomm.com (10.46.141.250) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Thu, 22 Feb 2024 15:16:42 -0800
+ 15.2.1118.40; Thu, 22 Feb 2024 15:16:46 -0800
 From: Elliot Berman <quic_eberman@quicinc.com>
-Date: Thu, 22 Feb 2024 15:16:51 -0800
-Subject: [PATCH v17 28/35] virt: gunyah: Enable demand paging
+Date: Thu, 22 Feb 2024 15:16:57 -0800
+Subject: [PATCH v17 34/35] virt: gunyah: Add ioeventfd
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,7 +52,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-ID: <20240222-gunyah-v17-28-1e9da6763d38@quicinc.com>
+Message-ID: <20240222-gunyah-v17-34-1e9da6763d38@quicinc.com>
 References: <20240222-gunyah-v17-0-1e9da6763d38@quicinc.com>
 In-Reply-To: <20240222-gunyah-v17-0-1e9da6763d38@quicinc.com>
 To: Alex Elder <elder@linaro.org>,
@@ -92,290 +92,265 @@ X-ClientProxiedBy: nalasex01c.na.qualcomm.com (10.47.97.35) To
  nasanex01b.na.qualcomm.com (10.46.141.250)
 X-QCInternal: smtphost
 X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: LcPB2YrX8aG6g6aI739ImLk5MugK1jGr
-X-Proofpoint-GUID: LcPB2YrX8aG6g6aI739ImLk5MugK1jGr
+X-Proofpoint-ORIG-GUID: bWGKXIzCtCgdXv3iBnUxn_P4tDEUuHGp
+X-Proofpoint-GUID: bWGKXIzCtCgdXv3iBnUxn_P4tDEUuHGp
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
  definitions=2024-02-22_15,2024-02-22_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015
- priorityscore=1501 mlxscore=0 suspectscore=0 adultscore=0 impostorscore=0
- malwarescore=0 phishscore=0 spamscore=0 bulkscore=0 lowpriorityscore=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 impostorscore=0
+ mlxscore=0 suspectscore=0 phishscore=0 clxscore=1015 malwarescore=0
+ lowpriorityscore=0 spamscore=0 bulkscore=0 priorityscore=1501
  mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.19.0-2402120000 definitions=main-2402220179
 
-Tell resource manager to enable demand paging and wire vCPU faults to
-provide the backing folio when a guestmemfd is bound to the faulting
-access.
+Allow userspace to attach an ioeventfd to an mmio address within the
+guest.  Userspace provides a description of the type of write to
+"subscribe" to and eventfd to trigger when that type of write is
+performed by the guest. This mechanism allows userspace to respond
+asynchronously to a guest manipulating a virtualized device and is
+similar to KVM's ioeventfd.
 
+Reviewed-by: Alex Elder <elder@linaro.org>
+Co-developed-by: Prakruthi Deepak Heragu <quic_pheragu@quicinc.com>
+Signed-off-by: Prakruthi Deepak Heragu <quic_pheragu@quicinc.com>
 Signed-off-by: Elliot Berman <quic_eberman@quicinc.com>
 ---
- drivers/virt/gunyah/guest_memfd.c | 94 +++++++++++++++++++++++++++++++++++++++
- drivers/virt/gunyah/gunyah_vcpu.c | 41 +++++++++++++----
- drivers/virt/gunyah/vm_mgr.c      | 29 ++++++++++++
- drivers/virt/gunyah/vm_mgr.h      |  3 ++
- 4 files changed, 159 insertions(+), 8 deletions(-)
+ drivers/virt/gunyah/Kconfig            |   9 +++
+ drivers/virt/gunyah/Makefile           |   1 +
+ drivers/virt/gunyah/gunyah_ioeventfd.c | 139 +++++++++++++++++++++++++++++++++
+ include/uapi/linux/gunyah.h            |  37 +++++++++
+ 4 files changed, 186 insertions(+)
 
-diff --git a/drivers/virt/gunyah/guest_memfd.c b/drivers/virt/gunyah/guest_memfd.c
-index 0c35ffa616d9c..797bc29a520bc 100644
---- a/drivers/virt/gunyah/guest_memfd.c
-+++ b/drivers/virt/gunyah/guest_memfd.c
-@@ -891,3 +891,97 @@ int gunyah_gmem_reclaim_parcel(struct gunyah_vm *ghvm,
+diff --git a/drivers/virt/gunyah/Kconfig b/drivers/virt/gunyah/Kconfig
+index 1685b75fb77a0..855d41a88b160 100644
+--- a/drivers/virt/gunyah/Kconfig
++++ b/drivers/virt/gunyah/Kconfig
+@@ -36,3 +36,12 @@ config GUNYAH_IRQFD
+ 	  on Gunyah virtual machine.
  
- 	return 0;
- }
+ 	  Say Y/M here if unsure and you want to support Gunyah VMMs.
 +
-+int gunyah_gmem_setup_demand_paging(struct gunyah_vm *ghvm)
++config GUNYAH_IOEVENTFD
++	tristate "Gunyah ioeventfd interface"
++	depends on GUNYAH
++	help
++	  Enable kernel support for creating ioeventfds which can alert userspace
++	  when a Gunyah virtual machine accesses a memory address.
++
++	  Say Y/M here if unsure and you want to support Gunyah VMMs.
+diff --git a/drivers/virt/gunyah/Makefile b/drivers/virt/gunyah/Makefile
+index b41b02792921c..2aec5989402b0 100644
+--- a/drivers/virt/gunyah/Makefile
++++ b/drivers/virt/gunyah/Makefile
+@@ -6,3 +6,4 @@ obj-$(CONFIG_GUNYAH) += gunyah.o gunyah_rsc_mgr.o gunyah_vcpu.o
+ obj-$(CONFIG_GUNYAH_PLATFORM_HOOKS) += gunyah_platform_hooks.o
+ obj-$(CONFIG_GUNYAH_QCOM_PLATFORM) += gunyah_qcom.o
+ obj-$(CONFIG_GUNYAH_IRQFD) += gunyah_irqfd.o
++obj-$(CONFIG_GUNYAH_IOEVENTFD) += gunyah_ioeventfd.o
+diff --git a/drivers/virt/gunyah/gunyah_ioeventfd.c b/drivers/virt/gunyah/gunyah_ioeventfd.c
+new file mode 100644
+index 0000000000000..894d303968c4c
+--- /dev/null
++++ b/drivers/virt/gunyah/gunyah_ioeventfd.c
+@@ -0,0 +1,139 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * Copyright (c) 2022-2024 Qualcomm Innovation Center, Inc. All rights reserved.
++ */
++
++#include <linux/eventfd.h>
++#include <linux/device/driver.h>
++#include <linux/file.h>
++#include <linux/fs.h>
++#include <linux/gunyah.h>
++#include <linux/module.h>
++#include <linux/printk.h>
++
++#include <uapi/linux/gunyah.h>
++
++struct gunyah_ioeventfd {
++	struct gunyah_vm_function_instance *f;
++	struct gunyah_vm_io_handler io_handler;
++
++	struct eventfd_ctx *ctx;
++};
++
++static int gunyah_write_ioeventfd(struct gunyah_vm_io_handler *io_dev, u64 addr,
++				  u32 len, u64 data)
 +{
-+	struct gunyah_rm_mem_entry *entries;
-+	struct gunyah_gmem_binding *b;
-+	unsigned long index = 0;
-+	u32 count = 0, i;
-+	int ret = 0;
++	struct gunyah_ioeventfd *iofd =
++		container_of(io_dev, struct gunyah_ioeventfd, io_handler);
 +
-+	down_read(&ghvm->bindings_lock);
-+	mt_for_each(&ghvm->bindings, b, index, ULONG_MAX)
-+		if (gunyah_guest_mem_is_lend(ghvm, b->flags))
-+			count++;
-+
-+	if (!count)
-+		goto out;
-+
-+	entries = kcalloc(count, sizeof(*entries), GFP_KERNEL);
-+	if (!entries) {
-+		ret = -ENOMEM;
-+		goto out;
-+	}
-+
-+	index = i = 0;
-+	mt_for_each(&ghvm->bindings, b, index, ULONG_MAX) {
-+		if (!gunyah_guest_mem_is_lend(ghvm, b->flags))
-+			continue;
-+		entries[i].phys_addr = cpu_to_le64(gunyah_gfn_to_gpa(b->gfn));
-+		entries[i].size = cpu_to_le64(b->nr << PAGE_SHIFT);
-+		if (++i == count)
-+			break;
-+	}
-+
-+	ret = gunyah_rm_vm_set_demand_paging(ghvm->rm, ghvm->vmid, i, entries);
-+	kfree(entries);
-+out:
-+	up_read(&ghvm->bindings_lock);
-+	return ret;
++	eventfd_signal(iofd->ctx);
++	return 0;
 +}
 +
-+int gunyah_gmem_demand_page(struct gunyah_vm *ghvm, u64 gpa, bool write)
++static struct gunyah_vm_io_handler_ops io_ops = {
++	.write = gunyah_write_ioeventfd,
++};
++
++static long gunyah_ioeventfd_bind(struct gunyah_vm_function_instance *f)
 +{
-+	unsigned long gfn = gunyah_gpa_to_gfn(gpa);
-+	struct gunyah_gmem_binding *b;
-+	struct folio *folio;
++	const struct gunyah_fn_ioeventfd_arg *args = f->argp;
++	struct gunyah_ioeventfd *iofd;
++	struct eventfd_ctx *ctx;
 +	int ret;
 +
-+	down_read(&ghvm->bindings_lock);
-+	b = mtree_load(&ghvm->bindings, gfn);
-+	if (!b) {
-+		ret = -ENOENT;
-+		goto unlock;
++	if (f->arg_size != sizeof(*args))
++		return -EINVAL;
++
++	/* All other flag bits are reserved for future use */
++	if (args->flags & ~GUNYAH_IOEVENTFD_FLAGS_DATAMATCH)
++		return -EINVAL;
++
++	/* must be natural-word sized, or 0 to ignore length */
++	switch (args->len) {
++	case 0:
++	case 1:
++	case 2:
++	case 4:
++	case 8:
++		break;
++	default:
++		return -EINVAL;
 +	}
 +
-+	if (write && !(b->flags & GUNYAH_MEM_ALLOW_WRITE)) {
-+		ret = -EPERM;
-+		goto unlock;
-+	}
++	/* check for range overflow */
++	if (overflows_type(args->addr + args->len, u64))
++		return -EINVAL;
 +
-+	folio = gunyah_gmem_get_folio(file_inode(b->file),
-+				      gunyah_gfn_to_off(b, gfn));
-+	if (!folio) {
++	/* ioeventfd with no length can't be combined with DATAMATCH */
++	if (!args->len && (args->flags & GUNYAH_IOEVENTFD_FLAGS_DATAMATCH))
++		return -EINVAL;
++
++	ctx = eventfd_ctx_fdget(args->fd);
++	if (IS_ERR(ctx))
++		return PTR_ERR(ctx);
++
++	iofd = kzalloc(sizeof(*iofd), GFP_KERNEL);
++	if (!iofd) {
 +		ret = -ENOMEM;
-+		pr_err_ratelimited("Failed to obtain memory for guest addr %016llx\n", gpa);
-+		goto unlock;
++		goto err_eventfd;
 +	}
 +
-+	/**
-+	 * the folio covers the requested guest address, but the folio may not
-+	 * start at the requested guest address. recompute the gfn based on the
-+	 * folio itself.
-+	 */
-+	gfn = gunyah_off_to_gfn(b, folio_index(folio));
++	f->data = iofd;
++	iofd->f = f;
 +
-+	filemap_invalidate_lock_shared(b->file->f_mapping);
-+	ret = gunyah_vm_provide_folio(ghvm, folio, gfn,
-+				      !gunyah_guest_mem_is_lend(ghvm, b->flags),
-+				      !!(b->flags & GUNYAH_MEM_ALLOW_WRITE));
-+	filemap_invalidate_unlock_shared(b->file->f_mapping);
-+	if (ret) {
-+		if (ret != -EAGAIN)
-+			pr_err_ratelimited(
-+				"Failed to provide folio for guest addr: %016llx: %d\n",
-+				gpa, ret);
-+		goto out;
++	iofd->ctx = ctx;
++
++	if (args->flags & GUNYAH_IOEVENTFD_FLAGS_DATAMATCH) {
++		iofd->io_handler.datamatch = true;
++		iofd->io_handler.len = args->len;
++		iofd->io_handler.data = args->datamatch;
 +	}
-+out:
-+	folio_unlock(folio);
-+	folio_put(folio);
-+unlock:
-+	up_read(&ghvm->bindings_lock);
-+	return ret;
-+}
-+EXPORT_SYMBOL_GPL(gunyah_gmem_demand_page);
-diff --git a/drivers/virt/gunyah/gunyah_vcpu.c b/drivers/virt/gunyah/gunyah_vcpu.c
-index 8192350f180b0..f8306620b1dd6 100644
---- a/drivers/virt/gunyah/gunyah_vcpu.c
-+++ b/drivers/virt/gunyah/gunyah_vcpu.c
-@@ -89,29 +89,44 @@ static irqreturn_t gunyah_vcpu_irq_handler(int irq, void *data)
- 	return IRQ_HANDLED;
- }
- 
--static void gunyah_handle_page_fault(
-+static bool gunyah_handle_page_fault(
- 	struct gunyah_vcpu *vcpu,
- 	const struct gunyah_hypercall_vcpu_run_resp *vcpu_run_resp)
- {
- 	u64 addr = vcpu_run_resp->state_data[0];
-+	bool write = !!vcpu_run_resp->state_data[1];
-+	int ret = 0;
++	iofd->io_handler.addr = args->addr;
++	iofd->io_handler.ops = &io_ops;
 +
-+	ret = gunyah_gmem_demand_page(vcpu->ghvm, addr, write);
-+	if (!ret || ret == -EAGAIN)
-+		return true;
- 
- 	vcpu->vcpu_run->page_fault.resume_action = GUNYAH_VCPU_RESUME_FAULT;
--	vcpu->vcpu_run->page_fault.attempt = 0;
-+	vcpu->vcpu_run->page_fault.attempt = ret;
- 	vcpu->vcpu_run->page_fault.phys_addr = addr;
- 	vcpu->vcpu_run->exit_reason = GUNYAH_VCPU_EXIT_PAGE_FAULT;
-+	return false;
- }
- 
--static void
--gunyah_handle_mmio(struct gunyah_vcpu *vcpu,
-+static bool
-+gunyah_handle_mmio(struct gunyah_vcpu *vcpu, unsigned long resume_data[3],
- 		   const struct gunyah_hypercall_vcpu_run_resp *vcpu_run_resp)
- {
- 	u64 addr = vcpu_run_resp->state_data[0],
- 	    len = vcpu_run_resp->state_data[1],
- 	    data = vcpu_run_resp->state_data[2];
-+	int ret;
- 
- 	if (WARN_ON(len > sizeof(u64)))
- 		len = sizeof(u64);
- 
-+	ret = gunyah_gmem_demand_page(vcpu->ghvm, addr,
-+				      vcpu->vcpu_run->mmio.is_write);
-+	if (!ret || ret == -EAGAIN) {
-+		resume_data[1] = GUNYAH_ADDRSPACE_VMMIO_ACTION_RETRY;
-+		return true;
-+	}
-+
- 	if (vcpu_run_resp->state == GUNYAH_VCPU_ADDRSPACE_VMMIO_READ) {
- 		vcpu->vcpu_run->mmio.is_write = 0;
- 		/* Record that we need to give vCPU user's supplied value next gunyah_vcpu_run() */
-@@ -128,11 +143,15 @@ gunyah_handle_mmio(struct gunyah_vcpu *vcpu,
- 	vcpu->mmio_addr = vcpu->vcpu_run->mmio.phys_addr = addr;
- 	vcpu->vcpu_run->mmio.len = len;
- 	vcpu->vcpu_run->exit_reason = GUNYAH_VCPU_EXIT_MMIO;
-+
-+	return false;
- }
- 
- static int gunyah_handle_mmio_resume(struct gunyah_vcpu *vcpu,
- 				     unsigned long resume_data[3])
- {
-+	bool write = vcpu->state == GUNYAH_VCPU_RUN_STATE_MMIO_WRITE;
-+
- 	switch (vcpu->vcpu_run->mmio.resume_action) {
- 	case GUNYAH_VCPU_RESUME_HANDLED:
- 		if (vcpu->state == GUNYAH_VCPU_RUN_STATE_MMIO_READ) {
-@@ -148,6 +167,8 @@ static int gunyah_handle_mmio_resume(struct gunyah_vcpu *vcpu,
- 		resume_data[1] = GUNYAH_ADDRSPACE_VMMIO_ACTION_FAULT;
- 		break;
- 	case GUNYAH_VCPU_RESUME_RETRY:
-+		/* userspace probably added a memory binding */
-+		gunyah_gmem_demand_page(vcpu->ghvm, vcpu->mmio_addr, write);
- 		resume_data[1] = GUNYAH_ADDRSPACE_VMMIO_ACTION_RETRY;
- 		break;
- 	default:
-@@ -310,11 +331,15 @@ static int gunyah_vcpu_run(struct gunyah_vcpu *vcpu)
- 				break;
- 			case GUNYAH_VCPU_ADDRSPACE_VMMIO_READ:
- 			case GUNYAH_VCPU_ADDRSPACE_VMMIO_WRITE:
--				gunyah_handle_mmio(vcpu, &vcpu_run_resp);
--				goto out;
-+				if (!gunyah_handle_mmio(vcpu, resume_data,
-+							&vcpu_run_resp))
-+					goto out;
-+				break;
- 			case GUNYAH_VCPU_ADDRSPACE_PAGE_FAULT:
--				gunyah_handle_page_fault(vcpu, &vcpu_run_resp);
--				goto out;
-+				if (!gunyah_handle_page_fault(vcpu,
-+							      &vcpu_run_resp))
-+					goto out;
-+				break;
- 			default:
- 				pr_warn_ratelimited(
- 					"Unknown vCPU state: %llx\n",
-diff --git a/drivers/virt/gunyah/vm_mgr.c b/drivers/virt/gunyah/vm_mgr.c
-index 198a99d78c44c..473740a1f97d0 100644
---- a/drivers/virt/gunyah/vm_mgr.c
-+++ b/drivers/virt/gunyah/vm_mgr.c
-@@ -474,6 +474,23 @@ static int gunyah_vm_start(struct gunyah_vm *ghvm)
- 		goto err;
- 	}
- 
-+	ret = gunyah_gmem_setup_demand_paging(ghvm);
-+	if (ret) {
-+		dev_warn(ghvm->parent,
-+			 "Failed to set up gmem demand paging: %d\n", ret);
-+		goto err;
-+	}
-+
-+	ret = gunyah_rm_vm_set_address_layout(
-+		ghvm->rm, ghvm->vmid, GUNYAH_RM_RANGE_ID_IMAGE,
-+		ghvm->dtb.parcel_start << PAGE_SHIFT,
-+		ghvm->dtb.parcel_pages << PAGE_SHIFT);
-+	if (ret) {
-+		dev_warn(ghvm->parent,
-+			 "Failed to set location of DTB mem parcel: %d\n", ret);
-+		goto err;
-+	}
-+
- 	ret = gunyah_rm_vm_init(ghvm->rm, ghvm->vmid);
- 	if (ret) {
- 		ghvm->vm_status = GUNYAH_RM_VM_STATUS_INIT_FAILED;
-@@ -501,8 +518,20 @@ static int gunyah_vm_start(struct gunyah_vm *ghvm)
- 		gunyah_vm_add_resource(ghvm, ghrsc);
- 	}
- 
-+	ret = gunyah_vm_parcel_to_paged(ghvm, &ghvm->dtb.parcel,
-+					ghvm->dtb.parcel_start,
-+					ghvm->dtb.parcel_pages);
++	ret = gunyah_vm_add_io_handler(f->ghvm, &iofd->io_handler);
 +	if (ret)
-+		goto err;
++		goto err_io_dev_add;
 +
- 	ret = gunyah_rm_vm_start(ghvm->rm, ghvm->vmid);
- 	if (ret) {
-+		/**
-+		 * need to rollback parcel_to_paged because RM is still
-+		 * tracking the parcel
-+		 */
-+		gunyah_vm_mm_erase_range(ghvm, ghvm->dtb.parcel_start,
-+					 ghvm->dtb.parcel_pages);
- 		dev_warn(ghvm->parent, "Failed to start VM: %d\n", ret);
- 		goto err;
- 	}
-diff --git a/drivers/virt/gunyah/vm_mgr.h b/drivers/virt/gunyah/vm_mgr.h
-index d8c299e5cf7cc..5eb14f30ba965 100644
---- a/drivers/virt/gunyah/vm_mgr.h
-+++ b/drivers/virt/gunyah/vm_mgr.h
-@@ -199,4 +199,7 @@ int gunyah_gmem_reclaim_parcel(struct gunyah_vm *ghvm,
- 			       struct gunyah_rm_mem_parcel *parcel, u64 gfn,
- 			       u64 nr);
++	return 0;
++
++err_io_dev_add:
++	kfree(iofd);
++err_eventfd:
++	eventfd_ctx_put(ctx);
++	return ret;
++}
++
++static void gunyah_ioevent_unbind(struct gunyah_vm_function_instance *f)
++{
++	struct gunyah_ioeventfd *iofd = f->data;
++
++	gunyah_vm_remove_io_handler(iofd->f->ghvm, &iofd->io_handler);
++	eventfd_ctx_put(iofd->ctx);
++	kfree(iofd);
++}
++
++static bool gunyah_ioevent_compare(const struct gunyah_vm_function_instance *f,
++				   const void *arg, size_t size)
++{
++	const struct gunyah_fn_ioeventfd_arg *instance = f->argp, *other = arg;
++
++	if (sizeof(*other) != size)
++		return false;
++
++	if (instance->addr != other->addr || instance->len != other->len ||
++	    instance->flags != other->flags)
++		return false;
++
++	if ((instance->flags & GUNYAH_IOEVENTFD_FLAGS_DATAMATCH) &&
++	    instance->datamatch != other->datamatch)
++		return false;
++
++	return true;
++}
++
++DECLARE_GUNYAH_VM_FUNCTION_INIT(ioeventfd, GUNYAH_FN_IOEVENTFD, 3,
++				gunyah_ioeventfd_bind, gunyah_ioevent_unbind,
++				gunyah_ioevent_compare);
++MODULE_DESCRIPTION("Gunyah ioeventfd VM Function");
++MODULE_LICENSE("GPL");
+diff --git a/include/uapi/linux/gunyah.h b/include/uapi/linux/gunyah.h
+index cb7b0bb9bef38..fd461e2fe8b58 100644
+--- a/include/uapi/linux/gunyah.h
++++ b/include/uapi/linux/gunyah.h
+@@ -65,10 +65,13 @@ struct gunyah_vm_dtb_config {
+  *              Return: file descriptor to manipulate the vcpu.
+  * @GUNYAH_FN_IRQFD: register eventfd to assert a Gunyah doorbell
+  *               &struct gunyah_fn_desc.arg is a pointer to &struct gunyah_fn_irqfd_arg
++ * @GUNYAH_FN_IOEVENTFD: register ioeventfd to trigger when VM faults on parameter
++ *                   &struct gunyah_fn_desc.arg is a pointer to &struct gunyah_fn_ioeventfd_arg
+  */
+ enum gunyah_fn_type {
+ 	GUNYAH_FN_VCPU = 1,
+ 	GUNYAH_FN_IRQFD,
++	GUNYAH_FN_IOEVENTFD,
+ };
  
-+int gunyah_gmem_setup_demand_paging(struct gunyah_vm *ghvm);
-+int gunyah_gmem_demand_page(struct gunyah_vm *ghvm, u64 gpa, bool write);
+ #define GUNYAH_FN_MAX_ARG_SIZE		256
+@@ -120,6 +123,40 @@ struct gunyah_fn_irqfd_arg {
+ 	__u32 padding;
+ };
+ 
++/**
++ * enum gunyah_ioeventfd_flags - flags for use in gunyah_fn_ioeventfd_arg
++ * @GUNYAH_IOEVENTFD_FLAGS_DATAMATCH: the event will be signaled only if the
++ *                                written value to the registered address is
++ *                                equal to &struct gunyah_fn_ioeventfd_arg.datamatch
++ */
++enum gunyah_ioeventfd_flags {
++	GUNYAH_IOEVENTFD_FLAGS_DATAMATCH	= 1UL << 0,
++};
 +
- #endif
++/**
++ * struct gunyah_fn_ioeventfd_arg - Arguments to create an ioeventfd function
++ * @datamatch: data used when GUNYAH_IOEVENTFD_DATAMATCH is set
++ * @addr: Address in guest memory
++ * @len: Length of access
++ * @fd: When ioeventfd is matched, this eventfd is written
++ * @flags: See &enum gunyah_ioeventfd_flags
++ * @padding: padding bytes
++ *
++ * Create this function with &GUNYAH_VM_ADD_FUNCTION using type &GUNYAH_FN_IOEVENTFD.
++ *
++ * Attaches an ioeventfd to a legal mmio address within the guest. A guest write
++ * in the registered address will signal the provided event instead of triggering
++ * an exit on the GUNYAH_VCPU_RUN ioctl.
++ */
++struct gunyah_fn_ioeventfd_arg {
++	__u64 datamatch;
++	__u64 addr;        /* legal mmio address */
++	__u32 len;         /* 1, 2, 4, or 8 bytes; or 0 to ignore length */
++	__s32 fd;
++	__u32 flags;
++	__u32 padding;
++};
++
+ /**
+  * struct gunyah_fn_desc - Arguments to create a VM function
+  * @type: Type of the function. See &enum gunyah_fn_type.
 
 -- 
 2.34.1
