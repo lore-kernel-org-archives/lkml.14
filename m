@@ -1,112 +1,181 @@
-Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D801815B971;
-	Thu, 22 Feb 2024 18:14:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3328615B992;
+	Thu, 22 Feb 2024 18:14:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708625680; cv=none; b=MoxpTHG66W+nmma0VWkIzN7wTZkPrbiylGcC3/IC2GW1RqDzUuPJ4gIPYrtty3FDjEFAbw20KljBZvYC0QtnIFxgGwfn9VKp3qOwyDj6o5XAiWaPvPlk8nk2bX4pIrUQmTGABxo8yEUGSicZVmvDRmydSp9y5FVnvdPBtuP+Y9w=
+	t=1708625680; cv=none; b=TXINuz4G4xp/cZrDtc8cEmZUwIg43MnOpU4fHhNStd5VYsDWqFXqeAHvC5Tia6cp3FzKAM8KZGs0NG5at4QVlo8uQbFWMVoN1xUtcnyMRRseqLEqXpFyaqVLqDfHS9/r41brm93ZAIsiL1D0JBysHmeWb78fxTy5zZVAxi+zGRk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1708625680; c=relaxed/simple;
-	bh=VQAh5ZV9wY5Ul9uQ7BUU57UTPtumS14kEbBWZKhZ10Y=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=cp/WNUNtjfeDEtfMijk+aLVwJBuMJv/0HURJF5WDQHPXvaQhvG2FEbL434MErhDFDX57InCH5fjvU3oJZnxms8bXJsejNAYhh6ClsPUHqI8O/0vyfXouFuUG27OjaEEVlj9p4T49hH1yiOe0h3x/AcmnO4iBpzEfAn499nDp5hg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iIbz+QgS; arc=none smtp.client-ip=209.85.167.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	bh=+carovPUcrljcpRVv3z7gkTq0nha5XSrXPMvLfHaNxg=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=sZTXZFgiVV/HYcEcrcvkp8caIodlTzMaqGNw0rNujxRH/r4eF4z4rTzin4nXnK99VJeGuHtQSbuNe9TJYNmkcPlG1Gg7ncoY5jNiUIn/wvgXwgLqulPo4ByAXt9eab+r9papuraCUWgMm4TpxwhwXETS4PMNBilRA474ySXFPu0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VTou2p8d; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iIbz+QgS"
-Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-5129e5b8cecso98167e87.3;
-        Thu, 22 Feb 2024 10:14:38 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1708625677; x=1709230477; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/KDD/bgajALRVWO+j8th9FkNjs1Uxn5aRXvljpgi1rg=;
-        b=iIbz+QgSSQ++rAYG1JPchJDVB0s6ppR4L+a/x5JMhsLoDqA1C6kiO5YfHWST8lMdyB
-         C8agKesKgqtxzRUXWZ67u7LxDjDPL/BQbBH+HYqLdjbyr3CeS17ekKV2TyXbKSyKFYvF
-         WBEKBRGvvVgXCidbdFAs47yqNTgVyZs2kRj9Gpmc2RECmNPzWOhmWrDB3BFyUiB8hvpg
-         9yVEDrR5Rkjpj+Hb/fpwkik71ob4ajadZ6Fs/QO/XQOGPoJT/ZMzaIVqYqovD3kU0L07
-         dWGPPp/bvY5iHk+quT7EbVOXf5eXDD3/zkl+6xrhP5GL0JkRVFJqJOKCNqbLgBdkpE75
-         BCCw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708625677; x=1709230477;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=/KDD/bgajALRVWO+j8th9FkNjs1Uxn5aRXvljpgi1rg=;
-        b=TDMVltf7IDpjTJ1/IMF/ZgpGuo8FaQXb6JAs3Pxs4CLDZAktXlAggQAQJlHPQpbmtb
-         IgS4chj6a8mZeWt7ntTl6gLuiNfBUaBZwns+JRUBqCzZtfPG4qwikUUkwNvVgNyMz4U/
-         zHC3/ERqb/8PwpIhFNEo0cPS+Yp0OFcTqC9v8vgqnjoQQIHBlIe8Xb76CmINy0iYTEPb
-         kgH+DQ5kJNBqoDziruE/tEvir7xcdmIH2gGeST40lIr5dXqa4mn7K+H+HfHUvFDZ6Ja4
-         2vwae5Zq+VJXdo4IQsNXHX9UwHtnDNDK+fo5meuwi7SlamsFt1nLqIHRaTP0WloNy+2b
-         3F1g==
-X-Forwarded-Encrypted: i=1; AJvYcCUCRUeojL91m34YbZGX8xiOqaGhqoIeIR+zV6+IDBdXqnP+GxiWi+LGKtEWJOO3lepFwsXyeHvDPafcRtF2NDLd80qUWfOlC1rfKT7XzLuQeafye1CtLDJzPqHHJUxParp20I9w3zd9fw==
-X-Gm-Message-State: AOJu0YyBnZg3K70pC93r6O4Uk5ZRu/Oixmj+PJMQ5gLT0HsnuYbBQevz
-	Jxt3amDkVIQ2sbXqpWAQgzYhcJy16Z/VKjGHiTKUVhxnpMXTjAA4
-X-Google-Smtp-Source: AGHT+IEqX3LxEhT5jkFdrvdQSh0VSFYxzZfMDjApSMdtK11qjBKsdW+5JPn+EfVyBINk1xssUQMbPQ==
-X-Received: by 2002:a05:6512:1327:b0:512:99a3:62eb with SMTP id x39-20020a056512132700b0051299a362ebmr13469414lfu.54.1708625676990;
-        Thu, 22 Feb 2024 10:14:36 -0800 (PST)
-Received: from localhost ([178.176.56.174])
-        by smtp.gmail.com with ESMTPSA id a10-20020ac25e6a000000b00512dd50af1dsm296800lfr.22.2024.02.22.10.14.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 22 Feb 2024 10:14:36 -0800 (PST)
-From: Serge Semin <fancer.lancer@gmail.com>
-To: Michal Simek <michal.simek@amd.com>,
-	Alexander Stein <alexander.stein@ew.tq-group.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Tony Luck <tony.luck@intel.com>,
-	James Morse <james.morse@arm.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Robert Richter <rric@kernel.org>
-Cc: Serge Semin <fancer.lancer@gmail.com>,
-	Punnaiah Choudary Kalluri <punnaiah.choudary.kalluri@xilinx.com>,
-	Dinh Nguyen <dinguyen@kernel.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-edac@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v5 09/20] EDAC/synopsys: Drop local to_mci() macro definition
-Date: Thu, 22 Feb 2024 21:12:54 +0300
-Message-ID: <20240222181324.28242-10-fancer.lancer@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240222181324.28242-1-fancer.lancer@gmail.com>
-References: <20240222181324.28242-1-fancer.lancer@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VTou2p8d"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5BDDCC433C7;
+	Thu, 22 Feb 2024 18:14:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1708625679;
+	bh=+carovPUcrljcpRVv3z7gkTq0nha5XSrXPMvLfHaNxg=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=VTou2p8d5pbdwCO+Z3GcUPUivBLpLhufXqW8+OuEelivIxPbghA+PYfDssNS9cQvW
+	 PzMNpHlt7W84SRvfR1YIr4O2j+HqmAPo0Xy/THcrFGkxc4QNIhVVzK+ULkmExuWVnN
+	 obPiBogyAuxx+aVMYoDnUETyR4nYjfrKXkC00K5qfvTLdsuAp9XkKRVs57Blyhm1op
+	 +fPF6SEw4ku8nyTrYEM3i562cf0WmT530YbXaneZbD8XEI4EzBTb253/RMOcVZus76
+	 N+XSHhummEb3AUf3ZgmWC6x1/9/QBgmkeMxFamaU+YuoIU+Wrue7QoWG6gcqf0l3Ys
+	 oUTXxM3hfiMAg==
+From: Maxime Ripard <mripard@kernel.org>
+Date: Thu, 22 Feb 2024 19:13:50 +0100
+Subject: [PATCH v7 04/36] drm/tests: Add helper to create mock crtc
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240222-kms-hdmi-connector-state-v7-4-8f4af575fce2@kernel.org>
+References: <20240222-kms-hdmi-connector-state-v7-0-8f4af575fce2@kernel.org>
+In-Reply-To: <20240222-kms-hdmi-connector-state-v7-0-8f4af575fce2@kernel.org>
+To: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
+ Daniel Vetter <daniel@ffwll.ch>, Jonathan Corbet <corbet@lwn.net>, 
+ Sandy Huang <hjc@rock-chips.com>, 
+ =?utf-8?q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, 
+ Chen-Yu Tsai <wens@csie.org>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
+ Samuel Holland <samuel@sholland.org>
+Cc: Hans Verkuil <hverkuil@xs4all.nl>, 
+ Sebastian Wick <sebastian.wick@redhat.com>, 
+ =?utf-8?q?Ville_Syrj=C3=A4l=C3=A4?= <ville.syrjala@linux.intel.com>, 
+ dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org, 
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-media@vger.kernel.org, linux-rockchip@lists.infradead.org, 
+ linux-sunxi@lists.linux.dev, Maxime Ripard <mripard@kernel.org>
+X-Mailer: b4 0.12.3
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3793; i=mripard@kernel.org;
+ h=from:subject:message-id; bh=+carovPUcrljcpRVv3z7gkTq0nha5XSrXPMvLfHaNxg=;
+ b=owGbwMvMwCX2+D1vfrpE4FHG02pJDKnX+16XHBar+OE7IWvpjKy0Y49FT84w9d/UVemtuWmGb
+ lbNOZHnHaUsDGJcDLJiiiwxwuZL4k7Net3JxjcPZg4rE8gQBi5OAZjI3zZGhgcLp77/cPPhwsA/
+ 5nWW8+c+jzRTm/1ljU73On4Xiw+Cp94yMmxf2JHh+i8td3ZH3d2HKjOSLVO1A0QbvZu0Oa50fTc
+ r5wAA
+X-Developer-Key: i=mripard@kernel.org; a=openpgp;
+ fpr=BE5675C37E818C8B5764241C254BCFC56BF6CE8D
 
-The to_mci() macro was added in commit 1a81361f75d8 ("EDAC, synopsys: Add
-Error Injection support for ZynqMP DDR controller") together with the
-errors injection debug feature. It turns out the absolutely the same
-macro-function has already been defined in the edac_mc.h (former
-edac_core.h) header file. No idea why it was needed to have a local
-version of the macro, but there is no point in it now. Drop the local
-macro-function definition for good.
+We're going to need a full-blown, functional, KMS device to test more
+components of the atomic modesetting infrastructure.
 
-Signed-off-by: Serge Semin <fancer.lancer@gmail.com>
+Let's add a new helper to create a dumb, mocked, CRTC. By default it
+will create a CRTC relying only on the default helpers, but drivers are
+free to deviate from that.
+
+Signed-off-by: Maxime Ripard <mripard@kernel.org>
 ---
- drivers/edac/synopsys_edac.c | 1 -
- 1 file changed, 1 deletion(-)
+ drivers/gpu/drm/tests/drm_kunit_helpers.c | 62 +++++++++++++++++++++++++++++++
+ include/drm/drm_kunit_helpers.h           | 10 +++++
+ 2 files changed, 72 insertions(+)
 
-diff --git a/drivers/edac/synopsys_edac.c b/drivers/edac/synopsys_edac.c
-index 5099246db90e..21b0d791cb8b 100644
---- a/drivers/edac/synopsys_edac.c
-+++ b/drivers/edac/synopsys_edac.c
-@@ -940,7 +940,6 @@ static const struct of_device_id synps_edac_match[] = {
- MODULE_DEVICE_TABLE(of, synps_edac_match);
+diff --git a/drivers/gpu/drm/tests/drm_kunit_helpers.c b/drivers/gpu/drm/tests/drm_kunit_helpers.c
+index 32dc8354641a..d5317d13d3fc 100644
+--- a/drivers/gpu/drm/tests/drm_kunit_helpers.c
++++ b/drivers/gpu/drm/tests/drm_kunit_helpers.c
+@@ -249,5 +249,67 @@ drm_kunit_helper_create_primary_plane(struct kunit *test,
+ }
+ EXPORT_SYMBOL_GPL(drm_kunit_helper_create_primary_plane);
  
- #ifdef CONFIG_EDAC_DEBUG
--#define to_mci(k) container_of(k, struct mem_ctl_info, dev)
++static const struct drm_crtc_helper_funcs default_crtc_helper_funcs = {
++};
++
++static const struct drm_crtc_funcs default_crtc_funcs = {
++	.atomic_destroy_state   = drm_atomic_helper_crtc_destroy_state,
++	.atomic_duplicate_state = drm_atomic_helper_crtc_duplicate_state,
++	.reset                  = drm_atomic_helper_crtc_reset,
++};
++
++/**
++ * drm_kunit_helper_create_crtc - Creates a mock CRTC for a KUnit test
++ * @test: The test context object
++ * @drm: The device to alloc the plane for
++ * @primary: Primary plane for CRTC
++ * @cursor: Cursor plane for CRTC. Optional.
++ * @funcs: Callbacks for the new plane. Optional.
++ * @helper_funcs: Helpers callbacks for the new plane. Optional.
++ *
++ * This allocates and initializes a mock struct &drm_crtc meant to be
++ * part of a mock device for a KUnit test.
++ *
++ * Resources will be cleaned up automatically.
++ *
++ * @funcs will default to the default helpers implementations.
++ * @helper_funcs will default to an empty implementation.
++ *
++ * Returns:
++ * A pointer to the new CRTC, or an ERR_PTR() otherwise.
++ */
++struct drm_crtc *
++drm_kunit_helper_create_crtc(struct kunit *test,
++			     struct drm_device *drm,
++			     struct drm_plane *primary,
++			     struct drm_plane *cursor,
++			     const struct drm_crtc_funcs *funcs,
++			     const struct drm_crtc_helper_funcs *helper_funcs)
++{
++	struct drm_crtc *crtc;
++	int ret;
++
++	if (!funcs)
++		funcs = &default_crtc_funcs;
++
++	if (!helper_funcs)
++		helper_funcs = &default_crtc_helper_funcs;
++
++	crtc = drmm_kzalloc(drm, sizeof(*crtc), GFP_KERNEL);
++	KUNIT_ASSERT_NOT_NULL(test, crtc);
++
++	ret = drmm_crtc_init_with_planes(drm, crtc,
++					 primary,
++					 cursor,
++					 funcs,
++					 NULL);
++	KUNIT_ASSERT_EQ(test, ret, 0);
++
++	drm_crtc_helper_add(crtc, helper_funcs);
++
++	return crtc;
++}
++EXPORT_SYMBOL_GPL(drm_kunit_helper_create_crtc);
++
+ MODULE_AUTHOR("Maxime Ripard <maxime@cerno.tech>");
+ MODULE_LICENSE("GPL");
+diff --git a/include/drm/drm_kunit_helpers.h b/include/drm/drm_kunit_helpers.h
+index 38667d624aa8..6e99627edf45 100644
+--- a/include/drm/drm_kunit_helpers.h
++++ b/include/drm/drm_kunit_helpers.h
+@@ -9,6 +9,8 @@
  
- /**
-  * ddr_poison_setup -	Update poison registers.
+ #include <kunit/test.h>
+ 
++struct drm_crtc_funcs;
++struct drm_crtc_helper_funcs;
+ struct drm_device;
+ struct drm_plane_funcs;
+ struct drm_plane_helper_funcs;
+@@ -110,4 +112,12 @@ drm_kunit_helper_create_primary_plane(struct kunit *test,
+ 				      unsigned int num_formats,
+ 				      const uint64_t *modifiers);
+ 
++struct drm_crtc *
++drm_kunit_helper_create_crtc(struct kunit *test,
++			     struct drm_device *drm,
++			     struct drm_plane *primary,
++			     struct drm_plane *cursor,
++			     const struct drm_crtc_funcs *funcs,
++			     const struct drm_crtc_helper_funcs *helper_funcs);
++
+ #endif // DRM_KUNIT_HELPERS_H_
+
 -- 
-2.43.0
+2.43.2
 
