@@ -1,147 +1,417 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1BC91474BF;
-	Thu, 22 Feb 2024 14:58:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F133C148FF9;
+	Thu, 22 Feb 2024 14:58:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708613926; cv=none; b=BHK1H79zU3h/t8ZKPGe30FuEnnMevkxhOe/1v0jBTI52Z0+sf5BfTj+FgwcZafJgj61ZS1HQ8VqFz01Ehx9f+jO2Xqiwn7NWZtzzWetctuoSJNUqd1ZmZU+eoN8eicDg0K0bjMBOreayYrkwNUak2Ar8NZ7yszKUFnO+1okw+DA=
+	t=1708613929; cv=none; b=V+dMaE8rt6ueA8WR9SM7gdHlu5tP4hXmODg+BlbQsd9GMyzIGJmmOeCrNo5Igia1BQic0xY5Tx/zQyf260hRO07Fvfe30iqWf7hxc+qyi0NueBpdvmM+Y3eMJY7iVuPuLOnJmBjxZdw8RqkY/x82Wd4nAMuCpUiKWWtZ1hqxFX8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708613926; c=relaxed/simple;
-	bh=sU70cMz1yfymjOqSB1LBgx6TJXTSzu9SGscJYJXAATw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Li2ieQXzRF6EGwbsdN6Me5CSJ7UNf83yRszFE7r/Dto4NCYEzOuC/xohawTmWIpXfRus7t9l46Wpj7apP8jPbabdjAj5HoMCm8NSViRf/Uge8zYgwEf5r/Ohic3cFKlWEShlQnieC3+gE8vZHPE9Wp+GbVGgBUBZjE1Vc9AtI8c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ALJmU1DO; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1708613929; c=relaxed/simple;
+	bh=95qPQ4pyLbqmGifCgN9f24/iMYMKuT0p0puI4cqB+hE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=fhDNjqGJml5k8Zbe9ZVjzLmDXtbcbFpjj4x9DMmp9FyVAsMQ37uB57HcCeggwEeMkpoWaQiPvoMtQuKTJUc4Spik8/YBjzh3G0KB+fJIcvmmJsqkILbACWDn5c6DGk5yGeiCLOK96UqPf1ehJPEQGWHHvKOUD5J7bH7gpF0AMtA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ln2qRtYf; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ALJmU1DO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8A9FCC433C7;
-	Thu, 22 Feb 2024 14:58:43 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ln2qRtYf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 32C29C433F1;
+	Thu, 22 Feb 2024 14:58:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708613925;
-	bh=sU70cMz1yfymjOqSB1LBgx6TJXTSzu9SGscJYJXAATw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ALJmU1DOFbaEnQAP2l/WnjDpdmPh9P9A8yzVVGUqxm/iULpw25DtYbnepbDpWljFZ
-	 nswvWaUHszQQImYnnozcHN9TXtv7vvg+8ZH0YLQUPKGE4c31fqInZgIvjvDrY5c+fc
-	 snVVhKsccDTX3G7XNGYsQI37fEDXcJOYXNW6h2rINqWe8xtxO+fiC+X37fKi39EoEN
-	 BUbAPzY25/QUo0NGzGDJOVr8cL1+DUyIBOogA6NswC6d5bmreGJfo9yzvbMKG8Zv4e
-	 JdAbvGJOV9nDODKeK8G74ENKRxKHXX3sTLFwezHpfTQ3jG0w81qMBb9EC2/lzhwcGS
-	 GHldtfp9zRtUQ==
-Date: Thu, 22 Feb 2024 15:58:39 +0100
-From: Niklas Cassel <cassel@kernel.org>
-To: Sasha Levin <sashal@kernel.org>
-Cc: linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-	Lennert Buytenhek <kernel@wantstofly.org>, dlemoal@kernel.org,
-	linux-ide@vger.kernel.org
-Subject: Re: [PATCH AUTOSEL 6.7 19/23] ahci: add 43-bit DMA address quirk for
- ASMedia ASM1061 controllers
-Message-ID: <ZddhH_NIP17azp6i@fedora>
-References: <20240202183926.540467-1-sashal@kernel.org>
- <20240202183926.540467-19-sashal@kernel.org>
+	s=k20201202; t=1708613928;
+	bh=95qPQ4pyLbqmGifCgN9f24/iMYMKuT0p0puI4cqB+hE=;
+	h=From:To:Cc:Subject:Date:From;
+	b=ln2qRtYfLfs0kXHxuqnP8up9ncd9l1czd3XZZFhRJT3/3ilzggShkUxwRJtuGES3D
+	 Gr11XHaa1rWV9lqiyVw1sfMyZTAsGG/TXkPx6mA7KPpcoJD5fdKHqzqP5VfwNAXhzc
+	 pTb380CNPZSStK9QDyjU7HRiWbr6LTgJdhwxExFBWgf+jmwMhRPecjVebW7HQB7TX/
+	 39OsGu3Pq404RCI3CGT+QXsLOzqe6zYg+vfPaECFpUucXFWG7dJwwWAL5cBRKZ87PI
+	 Nawf6R1xME9bUmX9K37c69v4uByPyuwlQ8Yla0UlxAuOHq+5SNJf7AonMmK+KOmdox
+	 OKGLFxo3nwNIg==
+From: =?UTF-8?q?Marek=20Beh=C3=BAn?= <kabel@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	Hans de Goede <hdegoede@redhat.com>,
+	Matti Vaittinen <mazziesaccount@gmail.com>
+Cc: =?UTF-8?q?Marek=20Beh=C3=BAn?= <kabel@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Lucas De Marchi <lucas.demarchi@intel.com>,
+	Oded Gabbay <ogabbay@kernel.org>,
+	=?UTF-8?q?Thomas=20Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>,
+	Daniel Vetter <daniel@ffwll.ch>,
+	Aleksandr Mezin <mezin.alexander@gmail.com>,
+	Jean Delvare <jdelvare@suse.com>,
+	Guenter Roeck <linux@roeck-us.net>,
+	Pavel Machek <pavel@ucw.cz>,
+	Lee Jones <lee@kernel.org>,
+	Sebastian Reichel <sre@kernel.org>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	linux-gpio@vger.kernel.org,
+	intel-xe@lists.freedesktop.org,
+	dri-devel@lists.freedesktop.org,
+	linux-hwmon@vger.kernel.org,
+	linux-leds@vger.kernel.org,
+	linux-pm@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org
+Subject: [PATCH 1/2] devm-helpers: Add resource managed version of mutex init
+Date: Thu, 22 Feb 2024 15:58:37 +0100
+Message-ID: <20240222145838.12916-1-kabel@kernel.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240202183926.540467-19-sashal@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Hello Sasha,
+A few drivers are doing resource-managed mutex initialization by
+implementing ad-hoc one-liner mutex dropping functions and using them
+with devm_add_action_or_reset(). Help drivers avoid these repeated
+one-liners by adding managed version of mutex initialization.
 
-On Fri, Feb 02, 2024 at 01:39:15PM -0500, Sasha Levin wrote:
-> From: Lennert Buytenhek <kernel@wantstofly.org>
-> 
-> [ Upstream commit 20730e9b277873deeb6637339edcba64468f3da3 ]
-> 
-> With one of the on-board ASM1061 AHCI controllers (1b21:0612) on an
-> ASUSTeK Pro WS WRX80E-SAGE SE WIFI mainboard, a controller hang was
-> observed that was immediately preceded by the following kernel
-> messages:
-> 
-> ahci 0000:28:00.0: Using 64-bit DMA addresses
-> ahci 0000:28:00.0: AMD-Vi: Event logged [IO_PAGE_FAULT domain=0x0035 address=0x7fffff00000 flags=0x0000]
-> ahci 0000:28:00.0: AMD-Vi: Event logged [IO_PAGE_FAULT domain=0x0035 address=0x7fffff00300 flags=0x0000]
-> ahci 0000:28:00.0: AMD-Vi: Event logged [IO_PAGE_FAULT domain=0x0035 address=0x7fffff00380 flags=0x0000]
-> ahci 0000:28:00.0: AMD-Vi: Event logged [IO_PAGE_FAULT domain=0x0035 address=0x7fffff00400 flags=0x0000]
-> ahci 0000:28:00.0: AMD-Vi: Event logged [IO_PAGE_FAULT domain=0x0035 address=0x7fffff00680 flags=0x0000]
-> ahci 0000:28:00.0: AMD-Vi: Event logged [IO_PAGE_FAULT domain=0x0035 address=0x7fffff00700 flags=0x0000]
-> 
-> The first message is produced by code in drivers/iommu/dma-iommu.c
-> which is accompanied by the following comment that seems to apply:
-> 
->         /*
->          * Try to use all the 32-bit PCI addresses first. The original SAC vs.
->          * DAC reasoning loses relevance with PCIe, but enough hardware and
->          * firmware bugs are still lurking out there that it's safest not to
->          * venture into the 64-bit space until necessary.
->          *
->          * If your device goes wrong after seeing the notice then likely either
->          * its driver is not setting DMA masks accurately, the hardware has
->          * some inherent bug in handling >32-bit addresses, or not all the
->          * expected address bits are wired up between the device and the IOMMU.
->          */
-> 
-> Asking the ASM1061 on a discrete PCIe card to DMA from I/O virtual
-> address 0xffffffff00000000 produces the following I/O page faults:
-> 
-> vfio-pci 0000:07:00.0: AMD-Vi: Event logged [IO_PAGE_FAULT domain=0x0021 address=0x7ff00000000 flags=0x0010]
-> vfio-pci 0000:07:00.0: AMD-Vi: Event logged [IO_PAGE_FAULT domain=0x0021 address=0x7ff00000500 flags=0x0010]
-> 
-> Note that the upper 21 bits of the logged DMA address are zero.  (When
-> asking a different PCIe device in the same PCIe slot to DMA to the
-> same I/O virtual address, we do see all the upper 32 bits of the DMA
-> address as 1, so this is not an issue with the chipset or IOMMU
-> configuration on the test system.)
-> 
-> Also, hacking libahci to always set the upper 21 bits of all DMA
-> addresses to 1 produces no discernible effect on the behavior of the
-> ASM1061, and mkfs/mount/scrub/etc work as without this hack.
-> 
-> This all strongly suggests that the ASM1061 has a 43 bit DMA address
-> limit, and this commit therefore adds a quirk to deal with this limit.
-> 
-> This issue probably applies to (some of) the other supported ASMedia
-> parts as well, but we limit it to the PCI IDs known to refer to
-> ASM1061 parts, as that's the only part we know for sure to be affected
-> by this issue at this point.
-> 
-> Link: https://lore.kernel.org/linux-ide/ZaZ2PIpEId-rl6jv@wantstofly.org/
-> Signed-off-by: Lennert Buytenhek <kernel@wantstofly.org>
-> [cassel: drop date from error messages in commit log]
-> Signed-off-by: Niklas Cassel <cassel@kernel.org>
-> Signed-off-by: Sasha Levin <sashal@kernel.org>
-> ---
+Use the new function devm_mutex_init() in the following drivers:
+  drivers/gpio/gpio-pisosr.c
+  drivers/gpio/gpio-sim.c
+  drivers/gpu/drm/xe/xe_hwmon.c
+  drivers/hwmon/nzxt-smart2.c
+  drivers/leds/leds-is31fl319x.c
+  drivers/power/supply/mt6370-charger.c
+  drivers/power/supply/rt9467-charger.c
 
-I still don't see this commit in stable/linux-6.7.y branch?
+Signed-off-by: Marek Behún <kabel@kernel.org>
+---
+ drivers/gpio/gpio-pisosr.c            |  9 ++-----
+ drivers/gpio/gpio-sim.c               | 12 ++--------
+ drivers/gpu/drm/xe/xe_hwmon.c         | 11 ++-------
+ drivers/hwmon/nzxt-smart2.c           |  9 ++-----
+ drivers/leds/leds-is31fl319x.c        |  9 ++-----
+ drivers/power/supply/mt6370-charger.c | 11 +--------
+ drivers/power/supply/rt9467-charger.c | 34 ++++-----------------------
+ include/linux/devm-helpers.h          | 32 +++++++++++++++++++++++++
+ 8 files changed, 47 insertions(+), 80 deletions(-)
 
-Nor in:
-https://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
+diff --git a/drivers/gpio/gpio-pisosr.c b/drivers/gpio/gpio-pisosr.c
+index e3013e778e15..dddbf37e855f 100644
+--- a/drivers/gpio/gpio-pisosr.c
++++ b/drivers/gpio/gpio-pisosr.c
+@@ -7,6 +7,7 @@
+ #include <linux/bitmap.h>
+ #include <linux/bitops.h>
+ #include <linux/delay.h>
++#include <linux/devm-helpers.h>
+ #include <linux/gpio/consumer.h>
+ #include <linux/gpio/driver.h>
+ #include <linux/module.h>
+@@ -116,11 +117,6 @@ static const struct gpio_chip template_chip = {
+ 	.can_sleep		= true,
+ };
+ 
+-static void pisosr_mutex_destroy(void *lock)
+-{
+-	mutex_destroy(lock);
+-}
+-
+ static int pisosr_gpio_probe(struct spi_device *spi)
+ {
+ 	struct device *dev = &spi->dev;
+@@ -147,8 +143,7 @@ static int pisosr_gpio_probe(struct spi_device *spi)
+ 		return dev_err_probe(dev, PTR_ERR(gpio->load_gpio),
+ 				     "Unable to allocate load GPIO\n");
+ 
+-	mutex_init(&gpio->lock);
+-	ret = devm_add_action_or_reset(dev, pisosr_mutex_destroy, &gpio->lock);
++	ret = devm_mutex_init(dev, &gpio->lock);
+ 	if (ret)
+ 		return ret;
+ 
+diff --git a/drivers/gpio/gpio-sim.c b/drivers/gpio/gpio-sim.c
+index c4106e37e6db..fcfcaa4efe70 100644
+--- a/drivers/gpio/gpio-sim.c
++++ b/drivers/gpio/gpio-sim.c
+@@ -12,6 +12,7 @@
+ #include <linux/completion.h>
+ #include <linux/configfs.h>
+ #include <linux/device.h>
++#include <linux/devm-helpers.h>
+ #include <linux/err.h>
+ #include <linux/gpio/consumer.h>
+ #include <linux/gpio/driver.h>
+@@ -307,13 +308,6 @@ static ssize_t gpio_sim_sysfs_pull_store(struct device *dev,
+ 	return len;
+ }
+ 
+-static void gpio_sim_mutex_destroy(void *data)
+-{
+-	struct mutex *lock = data;
+-
+-	mutex_destroy(lock);
+-}
+-
+ static void gpio_sim_put_device(void *data)
+ {
+ 	struct device *dev = data;
+@@ -457,9 +451,7 @@ static int gpio_sim_add_bank(struct fwnode_handle *swnode, struct device *dev)
+ 	if (ret)
+ 		return ret;
+ 
+-	mutex_init(&chip->lock);
+-	ret = devm_add_action_or_reset(dev, gpio_sim_mutex_destroy,
+-				       &chip->lock);
++	ret = devm_mutex_init(dev, &chip->lock);
+ 	if (ret)
+ 		return ret;
+ 
+diff --git a/drivers/gpu/drm/xe/xe_hwmon.c b/drivers/gpu/drm/xe/xe_hwmon.c
+index 174ed2185481..bb88ae1c196c 100644
+--- a/drivers/gpu/drm/xe/xe_hwmon.c
++++ b/drivers/gpu/drm/xe/xe_hwmon.c
+@@ -3,6 +3,7 @@
+  * Copyright © 2023 Intel Corporation
+  */
+ 
++#include <linux/devm-helpers.h>
+ #include <linux/hwmon-sysfs.h>
+ #include <linux/hwmon.h>
+ #include <linux/types.h>
+@@ -729,13 +730,6 @@ xe_hwmon_get_preregistration_info(struct xe_device *xe)
+ 		xe_hwmon_energy_get(hwmon, &energy);
+ }
+ 
+-static void xe_hwmon_mutex_destroy(void *arg)
+-{
+-	struct xe_hwmon *hwmon = arg;
+-
+-	mutex_destroy(&hwmon->hwmon_lock);
+-}
+-
+ void xe_hwmon_register(struct xe_device *xe)
+ {
+ 	struct device *dev = xe->drm.dev;
+@@ -751,8 +745,7 @@ void xe_hwmon_register(struct xe_device *xe)
+ 
+ 	xe->hwmon = hwmon;
+ 
+-	mutex_init(&hwmon->hwmon_lock);
+-	if (devm_add_action_or_reset(dev, xe_hwmon_mutex_destroy, hwmon))
++	if (devm_mutex_init(dev, &hwmon->hwmon_lock))
+ 		return;
+ 
+ 	/* primary GT to access device level properties */
+diff --git a/drivers/hwmon/nzxt-smart2.c b/drivers/hwmon/nzxt-smart2.c
+index 7aa586eb74be..00bc89607673 100644
+--- a/drivers/hwmon/nzxt-smart2.c
++++ b/drivers/hwmon/nzxt-smart2.c
+@@ -5,6 +5,7 @@
+  * Copyright (c) 2021 Aleksandr Mezin
+  */
+ 
++#include <linux/devm-helpers.h>
+ #include <linux/hid.h>
+ #include <linux/hwmon.h>
+ #include <linux/math.h>
+@@ -721,11 +722,6 @@ static int __maybe_unused nzxt_smart2_hid_reset_resume(struct hid_device *hdev)
+ 	return init_device(drvdata, drvdata->update_interval);
+ }
+ 
+-static void mutex_fini(void *lock)
+-{
+-	mutex_destroy(lock);
+-}
+-
+ static int nzxt_smart2_hid_probe(struct hid_device *hdev,
+ 				 const struct hid_device_id *id)
+ {
+@@ -741,8 +737,7 @@ static int nzxt_smart2_hid_probe(struct hid_device *hdev,
+ 
+ 	init_waitqueue_head(&drvdata->wq);
+ 
+-	mutex_init(&drvdata->mutex);
+-	ret = devm_add_action_or_reset(&hdev->dev, mutex_fini, &drvdata->mutex);
++	ret = devm_mutex_init(&hdev->dev, &drvdata->mutex);
+ 	if (ret)
+ 		return ret;
+ 
+diff --git a/drivers/leds/leds-is31fl319x.c b/drivers/leds/leds-is31fl319x.c
+index 66c65741202e..e9d7cf6a386c 100644
+--- a/drivers/leds/leds-is31fl319x.c
++++ b/drivers/leds/leds-is31fl319x.c
+@@ -8,6 +8,7 @@
+  * effect LEDs.
+  */
+ 
++#include <linux/devm-helpers.h>
+ #include <linux/err.h>
+ #include <linux/i2c.h>
+ #include <linux/leds.h>
+@@ -495,11 +496,6 @@ static inline int is31fl3196_db_to_gain(u32 dezibel)
+ 	return dezibel / IS31FL3196_AUDIO_GAIN_DB_STEP;
+ }
+ 
+-static void is31f1319x_mutex_destroy(void *lock)
+-{
+-	mutex_destroy(lock);
+-}
+-
+ static int is31fl319x_probe(struct i2c_client *client)
+ {
+ 	struct is31fl319x_chip *is31;
+@@ -515,8 +511,7 @@ static int is31fl319x_probe(struct i2c_client *client)
+ 	if (!is31)
+ 		return -ENOMEM;
+ 
+-	mutex_init(&is31->lock);
+-	err = devm_add_action_or_reset(dev, is31f1319x_mutex_destroy, &is31->lock);
++	err = devm_mutex_init(dev, &is31->lock);
+ 	if (err)
+ 		return err;
+ 
+diff --git a/drivers/power/supply/mt6370-charger.c b/drivers/power/supply/mt6370-charger.c
+index e24fce087d80..fa0517d0352d 100644
+--- a/drivers/power/supply/mt6370-charger.c
++++ b/drivers/power/supply/mt6370-charger.c
+@@ -766,13 +766,6 @@ static int mt6370_chg_init_psy(struct mt6370_priv *priv)
+ 	return PTR_ERR_OR_ZERO(priv->psy);
+ }
+ 
+-static void mt6370_chg_destroy_attach_lock(void *data)
+-{
+-	struct mutex *attach_lock = data;
+-
+-	mutex_destroy(attach_lock);
+-}
+-
+ static void mt6370_chg_destroy_wq(void *data)
+ {
+ 	struct workqueue_struct *wq = data;
+@@ -900,9 +893,7 @@ static int mt6370_chg_probe(struct platform_device *pdev)
+ 	if (ret)
+ 		return dev_err_probe(dev, ret, "Failed to init psy\n");
+ 
+-	mutex_init(&priv->attach_lock);
+-	ret = devm_add_action_or_reset(dev, mt6370_chg_destroy_attach_lock,
+-				       &priv->attach_lock);
++	ret = devm_mutex_init(dev, &priv->attach_lock);
+ 	if (ret)
+ 		return dev_err_probe(dev, ret, "Failed to init attach lock\n");
+ 
+diff --git a/drivers/power/supply/rt9467-charger.c b/drivers/power/supply/rt9467-charger.c
+index fdfdc83ab045..84f07c22077f 100644
+--- a/drivers/power/supply/rt9467-charger.c
++++ b/drivers/power/supply/rt9467-charger.c
+@@ -10,6 +10,7 @@
+ #include <linux/bitfield.h>
+ #include <linux/completion.h>
+ #include <linux/delay.h>
++#include <linux/devm-helpers.h>
+ #include <linux/gpio/consumer.h>
+ #include <linux/i2c.h>
+ #include <linux/interrupt.h>
+@@ -1149,27 +1150,6 @@ static int rt9467_reset_chip(struct rt9467_chg_data *data)
+ 	return regmap_field_write(data->rm_field[F_RST], 1);
+ }
+ 
+-static void rt9467_chg_destroy_adc_lock(void *data)
+-{
+-	struct mutex *adc_lock = data;
+-
+-	mutex_destroy(adc_lock);
+-}
+-
+-static void rt9467_chg_destroy_attach_lock(void *data)
+-{
+-	struct mutex *attach_lock = data;
+-
+-	mutex_destroy(attach_lock);
+-}
+-
+-static void rt9467_chg_destroy_ichg_ieoc_lock(void *data)
+-{
+-	struct mutex *ichg_ieoc_lock = data;
+-
+-	mutex_destroy(ichg_ieoc_lock);
+-}
+-
+ static void rt9467_chg_complete_aicl_done(void *data)
+ {
+ 	struct completion *aicl_done = data;
+@@ -1222,21 +1202,15 @@ static int rt9467_charger_probe(struct i2c_client *i2c)
+ 	if (ret)
+ 		return dev_err_probe(dev, ret, "Failed to add irq chip\n");
+ 
+-	mutex_init(&data->adc_lock);
+-	ret = devm_add_action_or_reset(dev, rt9467_chg_destroy_adc_lock,
+-				       &data->adc_lock);
++	ret = devm_mutex_init(dev, &data->adc_lock);
+ 	if (ret)
+ 		return dev_err_probe(dev, ret, "Failed to init ADC lock\n");
+ 
+-	mutex_init(&data->attach_lock);
+-	ret = devm_add_action_or_reset(dev, rt9467_chg_destroy_attach_lock,
+-				       &data->attach_lock);
++	ret = devm_mutex_init(dev, &data->attach_lock);
+ 	if (ret)
+ 		return dev_err_probe(dev, ret, "Failed to init attach lock\n");
+ 
+-	mutex_init(&data->ichg_ieoc_lock);
+-	ret = devm_add_action_or_reset(dev, rt9467_chg_destroy_ichg_ieoc_lock,
+-				       &data->ichg_ieoc_lock);
++	ret = devm_mutex_init(dev, &data->ichg_ieoc_lock);
+ 	if (ret)
+ 		return dev_err_probe(dev, ret, "Failed to init ICHG/IEOC lock\n");
+ 
+diff --git a/include/linux/devm-helpers.h b/include/linux/devm-helpers.h
+index 74891802200d..70640fb96117 100644
+--- a/include/linux/devm-helpers.h
++++ b/include/linux/devm-helpers.h
+@@ -24,6 +24,8 @@
+  */
+ 
+ #include <linux/device.h>
++#include <linux/kconfig.h>
++#include <linux/mutex.h>
+ #include <linux/workqueue.h>
+ 
+ static inline void devm_delayed_work_drop(void *res)
+@@ -76,4 +78,34 @@ static inline int devm_work_autocancel(struct device *dev,
+ 	return devm_add_action(dev, devm_work_drop, w);
+ }
+ 
++static inline void devm_mutex_drop(void *res)
++{
++	mutex_destroy(res);
++}
++
++/**
++ * devm_mutex_init - Resource managed mutex initialization
++ * @dev:	Device which lifetime mutex is bound to
++ * @lock:	Mutex to be initialized (and automatically destroyed)
++ *
++ * Initialize mutex which is automatically destroyed when driver is detached.
++ * A few drivers initialize mutexes which they want destroyed before driver is
++ * detached, for debugging purposes.
++ * devm_mutex_init() can be used to omit the explicit mutex_destroy() call when
++ * driver is detached.
++ */
++static inline int devm_mutex_init(struct device *dev, struct mutex *lock)
++{
++	mutex_init(lock);
++
++	/*
++	 * mutex_destroy() is an empty function if CONFIG_DEBUG_MUTEXES is
++	 * disabled. No need to allocate an action in that case.
++	 */
++	if (IS_ENABLED(CONFIG_DEBUG_MUTEXES))
++		return devm_add_action_or_reset(dev, devm_mutex_drop, lock);
++	else
++		return 0;
++}
++
+ #endif
+-- 
+2.43.0
 
-What am I missing?
-
-($subject had this patch marked as AUTOSEL, so I would have assumed that
-it should have been merged by now, since this was 20 days ago.)
-
-
-This patch in $subject is needed for another follow up patch which
-failed to be backported because $subject patch is not in stable/linux-6.7.y:
-https://lore.kernel.org/stable/2024021945-jockey-spending-9e68@gregkh/
-
-(The follup up patch had CC: stable tag, but the patch in $subject
-unfortunately forgot to add CC: stable tag.)
-
-Could you please help to get both:
-20730e9b2778 ("ahci: add 43-bit DMA address quirk for ASMedia ASM1061 controllers")
-and
-51af8f255bda ("ahci: Extend ASM1061 43-bit DMA address quirk to other ASM106x parts")
-
-backported to kernel 6.6 and 6.7.
-
-No need to backport to older kernels, as this problem was first exposed by:
-791c2b17fb40 ("iommu: Optimise PCI SAC address trick")
-which started to put devices into >4GB DMA address range.
-
-
-Kind regards,
-Niklas
