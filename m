@@ -1,312 +1,105 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EE0222099;
-	Thu, 22 Feb 2024 11:31:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C67D82BB1B
+	for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 11:32:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708601472; cv=none; b=emfVJPqLYPJP9lic2M3r7TcDPrX+uNY51+wmI6zlxEnaCqJsCgT7ssPcqdDAlf0ne9gfNlR9o0hdecFF4ol4LjeIM6uujHJaGLrhBo/mPSGUL4lUWvUoat3RTiDZOuqN74mFm4i1F3zsgh/EMePX6f+UtMqBSsasibLXJ2Qzuks=
+	t=1708601533; cv=none; b=QBmDKsQQHaUPf8mUwowspMG7RIxcXUGDHOP/NDYvry7nMVfFBUpOcQsRYfkiXdN/4ZIn3nSgPeJnOxj+f4llDSHaXjXg/hwMOxDSYcRUX25slQMC8yPdp2+QeARP/PNdJgYhjPyer2bjXbT8OUExmc7X9YMDQzNBeAIksGc4DFw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708601472; c=relaxed/simple;
-	bh=S5PpldvEfCWgMN5Vk/QEybamk2yANU02lkkVyahF9H8=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=V00gCegT7tY4Bu/7n41DMwm0DSJo098xagqMBnlfWLWr8UkyJyE6JWlF5pWMNYlJjGeKhNcQ1xXV7CL8a6Wu0P6J7Yxz6AVJSS0AnE6e1oee18HGsnsClagYa1v/CWXb4IXPRhHrXX0dYledwLvLy6iCNGTKcvI0wvgAE0vRqq0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=23gbb3FY; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=oQgyZtfU; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="23gbb3FY";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="oQgyZtfU"
-Date: Thu, 22 Feb 2024 11:31:07 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1708601468;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=gO8KPtxyUezMZfkFT2x7lO+VYm55SC6jTQTVdpKarbw=;
-	b=23gbb3FY2Okqnwa51OCLMp98oNM7XaJs+67IUDxGI6bf3O69G2Iu4h0AUSPg/HI7z5OkJU
-	Vp9/vkKa3E7prNauWU409vL+6uMptHXPTsOT82g3SzN+gqW8Sr/4a/QUSUm4Wo56vWPDGv
-	WiJaCjMksOkBx8B6FVUG2rM6+Ll03btdjnWrZSO54DLUZ7DogsaBoIwv5zClArPrhL5e/k
-	D84FVQ8KvZ0AdI621aHIijDShGOZG2ubkKH9+GVeh3FDTp06qAXiGnY0e8esVqM5Csvn3Z
-	G5ElVWKCegntt6GjffSZ6TtU/r4sr7DfFxl2JoW1vSqvFoS3P9kLsQbzyuY4ew==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1708601468;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=gO8KPtxyUezMZfkFT2x7lO+VYm55SC6jTQTVdpKarbw=;
-	b=oQgyZtfUY5PwFXMzbsxfGNbodNXTkiY+Gpj41D5g2n3VndHhP/2+Mb69eUAZQ5TjLCfT1A
-	fG8A4747UahgtbBg==
-From: "tip-bot2 for Nikolay Borisov" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/asm] x86/insn: Remove superfluous checks from instruction
- decoding routines
-Cc: Nikolay Borisov <nik.borisov@suse.com>, Ingo Molnar <mingo@kernel.org>,
- Josh Poimboeuf <jpoimboe@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
- x86@kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20240222111636.2214523-2-nik.borisov@suse.com>
-References: <20240222111636.2214523-2-nik.borisov@suse.com>
+	s=arc-20240116; t=1708601533; c=relaxed/simple;
+	bh=Ru97uhW4Mp0Hm1f4Ldn5NpBPEkuvDi/mpVqHh4WabRE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=MB3MpZ5ORUI1oAbc4Lxcl1hUtLrSenWDwFf5aEnfNTeGz/Fs8zNFt3XJbsjH5PuMmEKSuM7PzEu36hzNzX+DIdaavPpyCvKhHjgjT7uql+IA0q+MJ4fRNV5IDurOKZQrpc2Qfmd1tnhHUc/pFlobWNtpOqfGNKb/xjyFMF3ncW8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.105])
+	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4TgWCf6PgVzWv2H;
+	Thu, 22 Feb 2024 19:30:22 +0800 (CST)
+Received: from dggpemd100004.china.huawei.com (unknown [7.185.36.20])
+	by mail.maildlp.com (Postfix) with ESMTPS id CB500140153;
+	Thu, 22 Feb 2024 19:32:03 +0800 (CST)
+Received: from [10.67.109.211] (10.67.109.211) by
+ dggpemd100004.china.huawei.com (7.185.36.20) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.2.1258.28; Thu, 22 Feb 2024 19:32:03 +0800
+Message-ID: <1ae25437-b190-418d-a4e0-aa17d6de59bf@huawei.com>
+Date: Thu, 22 Feb 2024 19:32:03 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <170860146746.398.2924400958195588835.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH -next] arm32: enable HAVE_LD_DEAD_CODE_DATA_ELIMINATION
+Content-Language: en-US
+To: Arnd Bergmann <arnd@arndb.de>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-kernel@vger.kernel.org>
+CC: Russell King <linux@armlinux.org.uk>, Andrew Davis <afd@ti.com>, Andrew
+ Morton <akpm@linux-foundation.org>, "Kirill A. Shutemov"
+	<kirill.shutemov@linux.intel.com>, Geert Uytterhoeven
+	<geert+renesas@glider.be>, Jonathan Corbet <corbet@lwn.net>, Mike Rapoport
+	<rppt@kernel.org>, Eric DeVolder <eric.devolder@oracle.com>, Rob Herring
+	<robh@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Linus Walleij
+	<linus.walleij@linaro.org>
+References: <20240220081527.23408-1-liuyuntao12@huawei.com>
+ <1342759e-b967-4ec4-98d5-48146f81f695@app.fastmail.com>
+ <38c09a4b-69cc-4dc5-8a68-e5f5597613ac@huawei.com>
+ <30b01c65-12f2-4ee0-81d5-c7a2da2c36b4@app.fastmail.com>
+ <f5326293-b446-49e5-9cc0-78c9009af136@app.fastmail.com>
+From: "liuyuntao (F)" <liuyuntao12@huawei.com>
+In-Reply-To: <f5326293-b446-49e5-9cc0-78c9009af136@app.fastmail.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
+ dggpemd100004.china.huawei.com (7.185.36.20)
 
-The following commit has been merged into the x86/asm branch of tip:
 
-Commit-ID:     427e1646f1ef6c714a5bade30ca0302edc5d46a0
-Gitweb:        https://git.kernel.org/tip/427e1646f1ef6c714a5bade30ca0302edc5d46a0
-Author:        Nikolay Borisov <nik.borisov@suse.com>
-AuthorDate:    Thu, 22 Feb 2024 13:16:35 +02:00
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Thu, 22 Feb 2024 12:23:04 +01:00
 
-x86/insn: Remove superfluous checks from instruction decoding routines
+On 2024/2/22 17:52, Arnd Bergmann wrote:
+> On Wed, Feb 21, 2024, at 16:51, Arnd Bergmann wrote:
+>> I have given your patch some build testing with random
+>> configurations in my build setup and it seems to work
+>> fine with gcc/binutils, but unfortunately I came across
+>> a link failure using clang/lld:
+> 
+> I ran into another bug now, this time with CONFIG_XIP_KERNEL=y:
+> 
+> no __ex_table in file: vmlinux
+> Failed to sort kernel tables
+> make[4]: *** [scripts/Makefile.vmlinux:37: vmlinux] Error 1
+> 
+> Essentially you have to modify arch/arm/kernel/vmlinux-xip.lds.S
+> the same way as vmlinux.lds.S:
+>
+Thanks a lot. I didn't consider this situation. I will take your advice. 
+Thanks again.
 
-It's pointless checking if a particular part of an instruction is
-decoded before calling the routine responsible for decoding it as this
-check is duplicated in the routines itself. Streamline the code by
-removing the superfluous checks. No functional difference.
-
-Signed-off-by: Nikolay Borisov <nik.borisov@suse.com>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Cc: Josh Poimboeuf <jpoimboe@redhat.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Link: https://lore.kernel.org/r/20240222111636.2214523-2-nik.borisov@suse.com
----
- arch/x86/lib/insn.c       | 56 ++++++++++++++------------------------
- tools/arch/x86/lib/insn.c | 56 ++++++++++++++------------------------
- 2 files changed, 42 insertions(+), 70 deletions(-)
-
-diff --git a/arch/x86/lib/insn.c b/arch/x86/lib/insn.c
-index 55e371c..3946bdc 100644
---- a/arch/x86/lib/insn.c
-+++ b/arch/x86/lib/insn.c
-@@ -268,11 +268,9 @@ int insn_get_opcode(struct insn *insn)
- 	if (opcode->got)
- 		return 0;
- 
--	if (!insn->prefixes.got) {
--		ret = insn_get_prefixes(insn);
--		if (ret)
--			return ret;
--	}
-+	ret = insn_get_prefixes(insn);
-+	if (ret)
-+		return ret;
- 
- 	/* Get first opcode */
- 	op = get_next(insn_byte_t, insn);
-@@ -339,11 +337,9 @@ int insn_get_modrm(struct insn *insn)
- 	if (modrm->got)
- 		return 0;
- 
--	if (!insn->opcode.got) {
--		ret = insn_get_opcode(insn);
--		if (ret)
--			return ret;
--	}
-+	ret = insn_get_opcode(insn);
-+	if (ret)
-+		return ret;
- 
- 	if (inat_has_modrm(insn->attr)) {
- 		mod = get_next(insn_byte_t, insn);
-@@ -386,11 +382,9 @@ int insn_rip_relative(struct insn *insn)
- 	if (!insn->x86_64)
- 		return 0;
- 
--	if (!modrm->got) {
--		ret = insn_get_modrm(insn);
--		if (ret)
--			return 0;
--	}
-+	ret = insn_get_modrm(insn);
-+	if (ret)
-+		return 0;
- 	/*
- 	 * For rip-relative instructions, the mod field (top 2 bits)
- 	 * is zero and the r/m field (bottom 3 bits) is 0x5.
-@@ -417,11 +411,9 @@ int insn_get_sib(struct insn *insn)
- 	if (insn->sib.got)
- 		return 0;
- 
--	if (!insn->modrm.got) {
--		ret = insn_get_modrm(insn);
--		if (ret)
--			return ret;
--	}
-+	ret = insn_get_modrm(insn);
-+	if (ret)
-+		return ret;
- 
- 	if (insn->modrm.nbytes) {
- 		modrm = insn->modrm.bytes[0];
-@@ -460,11 +452,9 @@ int insn_get_displacement(struct insn *insn)
- 	if (insn->displacement.got)
- 		return 0;
- 
--	if (!insn->sib.got) {
--		ret = insn_get_sib(insn);
--		if (ret)
--			return ret;
--	}
-+	ret = insn_get_sib(insn);
-+	if (ret)
-+		return ret;
- 
- 	if (insn->modrm.nbytes) {
- 		/*
-@@ -628,11 +618,9 @@ int insn_get_immediate(struct insn *insn)
- 	if (insn->immediate.got)
- 		return 0;
- 
--	if (!insn->displacement.got) {
--		ret = insn_get_displacement(insn);
--		if (ret)
--			return ret;
--	}
-+	ret = insn_get_displacement(insn);
-+	if (ret)
-+		return ret;
- 
- 	if (inat_has_moffset(insn->attr)) {
- 		if (!__get_moffset(insn))
-@@ -703,11 +691,9 @@ int insn_get_length(struct insn *insn)
- 	if (insn->length)
- 		return 0;
- 
--	if (!insn->immediate.got) {
--		ret = insn_get_immediate(insn);
--		if (ret)
--			return ret;
--	}
-+	ret = insn_get_immediate(insn);
-+	if (ret)
-+		return ret;
- 
- 	insn->length = (unsigned char)((unsigned long)insn->next_byte
- 				     - (unsigned long)insn->kaddr);
-diff --git a/tools/arch/x86/lib/insn.c b/tools/arch/x86/lib/insn.c
-index 8fd63a0..5d81924 100644
---- a/tools/arch/x86/lib/insn.c
-+++ b/tools/arch/x86/lib/insn.c
-@@ -268,11 +268,9 @@ int insn_get_opcode(struct insn *insn)
- 	if (opcode->got)
- 		return 0;
- 
--	if (!insn->prefixes.got) {
--		ret = insn_get_prefixes(insn);
--		if (ret)
--			return ret;
--	}
-+	ret = insn_get_prefixes(insn);
-+	if (ret)
-+		return ret;
- 
- 	/* Get first opcode */
- 	op = get_next(insn_byte_t, insn);
-@@ -339,11 +337,9 @@ int insn_get_modrm(struct insn *insn)
- 	if (modrm->got)
- 		return 0;
- 
--	if (!insn->opcode.got) {
--		ret = insn_get_opcode(insn);
--		if (ret)
--			return ret;
--	}
-+	ret = insn_get_opcode(insn);
-+	if (ret)
-+		return ret;
- 
- 	if (inat_has_modrm(insn->attr)) {
- 		mod = get_next(insn_byte_t, insn);
-@@ -386,11 +382,9 @@ int insn_rip_relative(struct insn *insn)
- 	if (!insn->x86_64)
- 		return 0;
- 
--	if (!modrm->got) {
--		ret = insn_get_modrm(insn);
--		if (ret)
--			return 0;
--	}
-+	ret = insn_get_modrm(insn);
-+	if (ret)
-+		return 0;
- 	/*
- 	 * For rip-relative instructions, the mod field (top 2 bits)
- 	 * is zero and the r/m field (bottom 3 bits) is 0x5.
-@@ -417,11 +411,9 @@ int insn_get_sib(struct insn *insn)
- 	if (insn->sib.got)
- 		return 0;
- 
--	if (!insn->modrm.got) {
--		ret = insn_get_modrm(insn);
--		if (ret)
--			return ret;
--	}
-+	ret = insn_get_modrm(insn);
-+	if (ret)
-+		return ret;
- 
- 	if (insn->modrm.nbytes) {
- 		modrm = insn->modrm.bytes[0];
-@@ -460,11 +452,9 @@ int insn_get_displacement(struct insn *insn)
- 	if (insn->displacement.got)
- 		return 0;
- 
--	if (!insn->sib.got) {
--		ret = insn_get_sib(insn);
--		if (ret)
--			return ret;
--	}
-+	ret = insn_get_sib(insn);
-+	if (ret)
-+		return ret;
- 
- 	if (insn->modrm.nbytes) {
- 		/*
-@@ -628,11 +618,9 @@ int insn_get_immediate(struct insn *insn)
- 	if (insn->immediate.got)
- 		return 0;
- 
--	if (!insn->displacement.got) {
--		ret = insn_get_displacement(insn);
--		if (ret)
--			return ret;
--	}
-+	ret = insn_get_displacement(insn);
-+	if (ret)
-+		return ret;
- 
- 	if (inat_has_moffset(insn->attr)) {
- 		if (!__get_moffset(insn))
-@@ -703,11 +691,9 @@ int insn_get_length(struct insn *insn)
- 	if (insn->length)
- 		return 0;
- 
--	if (!insn->immediate.got) {
--		ret = insn_get_immediate(insn);
--		if (ret)
--			return ret;
--	}
-+	ret = insn_get_immediate(insn);
-+	if (ret)
-+		return ret;
- 
- 	insn->length = (unsigned char)((unsigned long)insn->next_byte
- 				     - (unsigned long)insn->kaddr);
+> --- a/arch/arm/kernel/vmlinux-xip.lds.S
+> +++ b/arch/arm/kernel/vmlinux-xip.lds.S
+> @@ -63,7 +63,7 @@ SECTIONS
+>          . = ALIGN(4);
+>          __ex_table : AT(ADDR(__ex_table) - LOAD_OFFSET) {
+>                  __start___ex_table = .;
+> -               ARM_MMU_KEEP(*(__ex_table))
+> +               ARM_MMU_KEEP(KEEP(*(__ex_table)))
+>                  __stop___ex_table = .;
+>          }
+>   
+> @@ -83,7 +83,7 @@ SECTIONS
+>          }
+>          .init.arch.info : {
+>                  __arch_info_begin = .;
+> -               *(.arch.info.init)
+> +               KEEP(*(.arch.info.init))
+>                  __arch_info_end = .;
+>          }
+>          .init.tagtable : {
+> 
+> 
+> The pv_table is not needed for XIP_KERNEL=y because that
+> requires not patching the kernel.
+> 
+>      Arnd
