@@ -1,54 +1,63 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F7415915B;
-	Thu, 22 Feb 2024 12:07:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57B823F9ED
+	for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 12:07:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708603637; cv=none; b=Pg99BBJQyBT7Bd2cVtCRgQjYgTqgJQYmmIcn6tY30SQRWLUodDxkodTbzONiRdZwmjPLDoT5wO0A5eI0ztz4GY9oSt3R08OnLl7hzHzg21jwvSS1BBlU6pi1CFp7dtmfK/JG8uTpv3K66pTzj1AmFkeHbRog8Bwu50DjT2EBOJI=
+	t=1708603667; cv=none; b=aDpzChtt+ipnGIKSumH28xfFoAY9wBiERs1XgA6NUk/0FoTLKXxASPSaNooaERJ0J7sl6iVxzkqSfZHoMbZ3TV2dohOvFgQvSBO2yVCQ/4Wz+a514WynSL/PXnTFGushF5SaBU95WzKhBqorb0+gfaVh2jG5LRnyGPuNOceVdOM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708603637; c=relaxed/simple;
-	bh=ISipd+RvHeb8FAy3tub2FjR36pI88FRyLXT4pFOGt/8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ZZHkIJmz9Yk4di1jfK4T5pFSbHoqwLsWnXVluFwqhNMqggcFJKUNqLImZ8XhQ+jdJ+tk3HfxXt8u635pI4xb681/6BgtqqlZdetaS0Q484hWdtMVgpKEjCgkCkyOmUJXn/uqyWgtAfVnmdg7rHvrNlSKnjwHdmUJslL3sNxN7xM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=g4xbulGG; arc=none smtp.client-ip=198.175.65.14
+	s=arc-20240116; t=1708603667; c=relaxed/simple;
+	bh=OyVyEzm6PAoZwqACVETHMIR8OveG5ztRrupRqvUuqXc=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=EhRs0ncOeGKofgQ/4erSe237xj21h+wF4dQfjsnq3HjyIngDhbOif9ELN42OIZ46LBXO85Ytxojp81at3XY0ygnwIXp1Pst21/BQOhGOjO9SUBp3pF8A3HuYAqsa5edvHOKtDHR7jx8a33/GI5We60eYfiG66hMjByJbdoWWs4c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fe2xFJoP; arc=none smtp.client-ip=198.175.65.16
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="g4xbulGG"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fe2xFJoP"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1708603635; x=1740139635;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=ISipd+RvHeb8FAy3tub2FjR36pI88FRyLXT4pFOGt/8=;
-  b=g4xbulGGE7kpX0lqCku8/LqruPaawEwQMxh4Lf76H4EJTzEgGFXdzJoJ
-   JvN0rgrOsO4gg4Wuz1cTRwcHTJujda00JEWj6Yrxs4V7k4MPxpK3L9z2e
-   +wcXlFM2+z8MzpikckPkvHMw/4gKU7XSpdJxdoHx1eWPYtgC1q2je/ChV
-   6xtxhwxR5qqVzTvjgLy/LG+JE1OybNFEu1G6+arBNATjfViv+3lvJ2L/G
-   Hffkl/S5wqjkPiClXt2c62wkqssjyI2LJk9KeEloXgQZzyJhu7jSjDJg1
-   cv/p6msBF6VG5u64WAoIQlIJEIGSOoOuXfhov9nfWz25Q92JwnHo0SSWz
+  t=1708603666; x=1740139666;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=OyVyEzm6PAoZwqACVETHMIR8OveG5ztRrupRqvUuqXc=;
+  b=fe2xFJoPE0Swie4uo3RzkcWmuWYyywmhtkao1Spr2HUmfzYgjgvrlig0
+   5n93jMpdexgM1wYGqz8UejAHDVFRFJMg/iQz1ZFolYk9oypY1hbuTPHLB
+   3C8RmO9cMALLdUTJCJJHKXxgh8hQGwA1ja2FCe85tdz8u4KZYJLcRdKq5
+   OUXQKD3N5YpOoC80mSFe26PX/B4fGu7JAKoxlj+0Rmv9YaD2rA7nhAPun
+   mDOYd93qDWsLXng8RCYSF5oBNb3dh8gzKsBTWsV7NfeFPpLQk47fLqfB/
+   0c55ezYfus09ZBz2AUMaeSClyszkr7nRX9SYK/65t0BIG/Gt537w9118+
    A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10991"; a="6643098"
+X-IronPort-AV: E=McAfee;i="6600,9927,10991"; a="2974025"
 X-IronPort-AV: E=Sophos;i="6.06,177,1705392000"; 
-   d="scan'208";a="6643098"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Feb 2024 04:07:15 -0800
+   d="scan'208";a="2974025"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Feb 2024 04:07:45 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.06,177,1705392000"; 
-   d="scan'208";a="10050370"
-Received: from ksulimow-mobl1.ger.corp.intel.com (HELO wieczorr-mobl1.intel.com) ([10.213.23.120])
-  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Feb 2024 04:07:12 -0800
-From: Maciej Wieczor-Retman <maciej.wieczor-retman@intel.com>
-To: reinette.chatre@intel.com,
-	shuah@kernel.org,
-	fenghua.yu@intel.com
-Cc: linux-kselftest@vger.kernel.org,
+   d="scan'208";a="5843178"
+Received: from linux-pnp-server-09.sh.intel.com ([10.239.176.190])
+  by orviesa006.jf.intel.com with ESMTP; 22 Feb 2024 04:07:42 -0800
+From: rulinhuang <rulin.huang@intel.com>
+To: akpm@linux-foundation.org,
+	urezki@gmail.com
+Cc: colin.king@intel.com,
+	hch@infradead.org,
 	linux-kernel@vger.kernel.org,
-	ilpo.jarvinen@linux.intel.com
-Subject: [PATCH v3 0/3] selftests/resctrl: Simplify test cleanup functions
-Date: Thu, 22 Feb 2024 13:06:57 +0100
-Message-ID: <cover.1708599491.git.maciej.wieczor-retman@intel.com>
-X-Mailer: git-send-email 2.43.2
+	linux-mm@kvack.org,
+	lstoakes@gmail.com,
+	rulin.huang@intel.com,
+	tianyou.li@intel.com,
+	tim.c.chen@intel.com,
+	wangyang.guo@intel.com,
+	zhiguo.zhou@intel.com
+Subject: Re: [PATCH v3] mm/vmalloc: lock contention optimization under multi-threading
+Date: Thu, 22 Feb 2024 07:10:45 -0500
+Message-ID: <20240222121045.216556-1-rulin.huang@intel.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <ZdW2HB-XdAJKph5s@pc636>
+References: <ZdW2HB-XdAJKph5s@pc636>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -57,46 +66,15 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Cleaning up after tests is implemented separately for individual tests
-and called at the end of each test execution. Since these functions are
-very similar and a more generalized test framework was introduced a
-function pointer in the resctrl_test struct can be used to reduce the
-amount of function calls.
-
-These functions are also all called in the ctrl-c handler because the
-handler isn't aware which test is currently running. Since the handler
-is implemented with a sigaction no function parameters can be passed
-there but information about what test is currently running can be passed
-with a global variable.
-
-Changelog v3:
-- Make current_test static.
-- Add callback NULL check to the ctrl-c handler.
-
-Changelog v2:
-- Make current_test a const pointer limited in scope to resctrl_val
-  file.
-- Remove tests_cleanup from resctrl.h.
-- Cleanup 'goto out' path and labels in individual test functions.
-
-Older versions of this series:
-[v1] https://lore.kernel.org/all/cover.1708434017.git.maciej.wieczor-retman@intel.com/
-[v2] https://lore.kernel.org/all/cover.1708596015.git.maciej.wieczor-retman@intel.com/
-
-Maciej Wieczor-Retman (3):
-  selftests/resctrl: Add cleanup function to test framework
-  selftests/resctrl: Simplify cleanup in ctrl-c handler
-  selftests/resctrl: Move cleanups out of individual tests
-
- tools/testing/selftests/resctrl/cat_test.c      |  8 +++-----
- tools/testing/selftests/resctrl/cmt_test.c      |  4 ++--
- tools/testing/selftests/resctrl/mba_test.c      |  8 +++-----
- tools/testing/selftests/resctrl/mbm_test.c      |  8 +++-----
- tools/testing/selftests/resctrl/resctrl.h       |  9 +++------
- tools/testing/selftests/resctrl/resctrl_tests.c | 16 +++++-----------
- tools/testing/selftests/resctrl/resctrl_val.c   |  7 +++++--
- 7 files changed, 24 insertions(+), 36 deletions(-)
-
--- 
-2.43.2
-
+Hi Uladzislau and Andrew, we have rebased it(Patch v4) on branch 
+mm-unstable and remeasured it. Could you kindly help confirm if 
+this is the right base to work on?
+Compared to the previous result at kernel v6.7 with a 5% performance 
+gain on intel icelake(160 vcpu), we only had a 0.6% with this commit 
+base. But we think our modification still has some significance. On 
+the one hand, this does reduce a critical section. On the other hand, 
+we have a 4% performance gain on intel sapphire rapids(224 vcpu), 
+which suggests more performance improvement would likely be achieved 
+when the core count of processors increases to hundreds or 
+even thousands.
+Thank you again for your comments.
