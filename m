@@ -1,168 +1,169 @@
-Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C92F012D218;
-	Thu, 22 Feb 2024 22:14:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9FD373F10
+	for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 22:14:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708640067; cv=none; b=tR8ZK1WUodXQNUxSarLh1KWRHM8IA5GeMByZHf2PQOV1BdZj0j8HLnQjOkP/BEQ9pjYW/zcHtzYmqQOLKVx6T1ch5uSGHWbxr5mkM2FhiTPbdOD8RhTYUK6G/xodfEwJISe9esGCRP7d4+t2dBP2dCsljs6M/JPAen/QwoK9iYI=
+	t=1708640076; cv=none; b=AVWxWewg9FdUMJCDQc1Im7z8XHFS21WmIl+/ozQFmM9WG0UImkYfKYLMUeOlL9eTK1+0zyJxXm5Uqp+Q2VEq6S2HwsBVIjRznd686To5W+BRoITLdKk3K0u+s4o7+l8xI/hkEhxhrUfwHRTyQB81HxeaaQSdViqVaebumDM8RF8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708640067; c=relaxed/simple;
-	bh=filPK0hW9sEluA5e/J32dWICU2fqEy2+asFrOlW3po4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Cz/JJSuC0zlplT02mAKKpDTY2yj4238MdV+4itrBdx58taQmR7SsNJ4fiDBY9yzoJVshaMlXJIH7tY/Bfsmgq/2fyNIxXbtxphHJQ8K4vroN5alhClwNadbzfrLMlzCiQ/6y5B576peeDJWTQKTG9jFNJ76Jyx/MYHk+71PfjfE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=N8WmRuVQ; arc=none smtp.client-ip=209.85.208.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1708640076; c=relaxed/simple;
+	bh=CCWvmYyAAfCjtNJbIiOfHLAVoscoYeZZ2nmAaa5xvjM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XTK7qb8ofAzY7STKbPkMlJ7H/oMQM0wG4OelgJQNvyvTznUc+0U8YuA+skp1VCclolxhXoofocMPj/kWOecHpwLrgzAAB8ZARS7PAH9M4QPUaTgwh3dpDXd1+ZtR9GozLbE+4W4zOB0dc5pQJdvsvjs+Nec3Iwldg/tdzbW5Lv0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=S+AOktY+; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=/wOuXm+Z; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=S+AOktY+; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=/wOuXm+Z; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N8WmRuVQ"
-Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-5649c25369aso145752a12.2;
-        Thu, 22 Feb 2024 14:14:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1708640064; x=1709244864; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=bS8XuNs9Y5my5ivjgr100IJoKR3ZSqRXyi3h5KnP/KI=;
-        b=N8WmRuVQKWKrI3KNBEbwNDINNdZSFVaLDbNmuhnfS0/THSUpSZ2II8W5MRbKo6d5WR
-         QgS8rFBKiy3QDiyOUbDW/HAXlb2Ogy7DRsnrFUc4RFitg5M+PhPESrrwrewoYJY7DeqA
-         jDNG00fjWnMnigONPHBWQ7hz1rwPAMXQ9S86uOzWId9wQvR+Fh81RByixldefhrCzdK4
-         aNo7YmJjexfkXIj3mGFytbRrfb/BKPzCqp8iNQMH7ysSpMse4U+dP6FmU2NuOhJ138hG
-         bTrVsND+VLlr+Siy/aGMAC70AcGsKGz2nCz2dPcW75DthaobqTYiaemp7hP2V5AXGMRD
-         2zLg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708640064; x=1709244864;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=bS8XuNs9Y5my5ivjgr100IJoKR3ZSqRXyi3h5KnP/KI=;
-        b=RIBZCBaqJDSdeO8FIMCfEIsUCmK9OjAazhWecBNmOhrW8nBkqlf1anE8d3A70ZrUvd
-         Vrly1lHocbPonUGpkzVC+RcDF8/cc6bhncZJa+HCFTf1bjURSGmZrzGvRvkacgRaa09u
-         h96U1p7gL7ky+039kBRP7QKwoDBOy/rDiO38Yw05l4Dt/8CHcNxTIVlGs2AZpkog6pkF
-         pYjf/nDvMMqmDec5nudxrB8IbRJbFiWPR5OnxLgS5BDDA0JkkXbFUJFwCqzdHHBW5+E3
-         aFB/GPVsJTBJ5wELtnzmEbwMod6eZV4xwQZxBb+yBUie7sBRTonO3wdic/O6nLwI5TO1
-         qfiA==
-X-Forwarded-Encrypted: i=1; AJvYcCXLHKKyXgLCJ7ED2UhtP24Wb9w3dNtRVJ2Y2tAPU1nc5PlvHvQO5wCP+mDawFZ1fOgh0y66m4DfnvonhFnwKIb3Y4xxZWNixS0JRiPWLAlN5bHe/GJgQRNMPQEdMf9MkRyVkbJVWRT/SA==
-X-Gm-Message-State: AOJu0YyQyQVdp2f+PtOyUxVykld4eS2QDcRTjqBB+WZyWyqAgP4UJTJU
-	vMHhgm+Nt9WomnBWd/xn9dn+n7rwQ+NSL2lwQ67w6wmvchMOD3Fdh881z5prmBsM9BDUoQ+4bBW
-	e+PUDVRZvU+qm4qxJkS8AwDD5+OI=
-X-Google-Smtp-Source: AGHT+IEk72eRjdWU6OGClnZibRF8XqeL8yZeZipoHY4DOTpTBKjtMNck5AsaCjWZ1Q0ZHavd9KwBnr4+AKV0MREnQmk=
-X-Received: by 2002:a17:906:e0c8:b0:a3c:f016:22a4 with SMTP id
- gl8-20020a170906e0c800b00a3cf01622a4mr75745ejb.37.1708640063865; Thu, 22 Feb
- 2024 14:14:23 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="S+AOktY+";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="/wOuXm+Z";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="S+AOktY+";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="/wOuXm+Z"
+Received: from imap2.dmz-prg2.suse.org (imap2.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:98])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 9A9AB1F799;
+	Thu, 22 Feb 2024 22:14:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1708640072; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=s3x1kXri66JyHJOjJiePnNdMjnDBmEbBOnkticzR0VQ=;
+	b=S+AOktY+cQNOIwM2Du5uSUZhxwzrPjB1rlMQoamhOh4z18lJYbtQXVkN3jzxUA+igqzIC5
+	vap7UwdO0tEiomvKHCuyIln14POsKalV86LWQZt5Ut7dJeOyBI9zOogE43ZRQSZaTz0b57
+	qvMZXY9Vw77O/EYQ+vXNettiumsvOcc=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1708640072;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=s3x1kXri66JyHJOjJiePnNdMjnDBmEbBOnkticzR0VQ=;
+	b=/wOuXm+ZPVGVBWhE923F8HxmuuKJeAvFCntErDyRom5JpHFxn75bYH+8LmpKz40lzjRcjZ
+	sE16Fb/Bx5OFAhAQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1708640072; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=s3x1kXri66JyHJOjJiePnNdMjnDBmEbBOnkticzR0VQ=;
+	b=S+AOktY+cQNOIwM2Du5uSUZhxwzrPjB1rlMQoamhOh4z18lJYbtQXVkN3jzxUA+igqzIC5
+	vap7UwdO0tEiomvKHCuyIln14POsKalV86LWQZt5Ut7dJeOyBI9zOogE43ZRQSZaTz0b57
+	qvMZXY9Vw77O/EYQ+vXNettiumsvOcc=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1708640072;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=s3x1kXri66JyHJOjJiePnNdMjnDBmEbBOnkticzR0VQ=;
+	b=/wOuXm+ZPVGVBWhE923F8HxmuuKJeAvFCntErDyRom5JpHFxn75bYH+8LmpKz40lzjRcjZ
+	sE16Fb/Bx5OFAhAQ==
+Received: from imap2.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap2.dmz-prg2.suse.org (Postfix) with ESMTPS id 1608113A6B;
+	Thu, 22 Feb 2024 22:14:32 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([10.150.64.162])
+	by imap2.dmz-prg2.suse.org with ESMTPSA
+	id liI/AkjH12XxQQAAn2gu4w
+	(envelope-from <osalvador@suse.de>); Thu, 22 Feb 2024 22:14:32 +0000
+Date: Thu, 22 Feb 2024 23:15:39 +0100
+From: Oscar Salvador <osalvador@suse.de>
+To: Baolin Wang <baolin.wang@linux.alibaba.com>
+Cc: akpm@linux-foundation.org, muchun.song@linux.dev, david@redhat.com,
+	linmiaohe@huawei.com, naoya.horiguchi@nec.com, mhocko@kernel.org,
+	linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH 2/3] mm: hugetlb: make the hugetlb migration strategy
+ consistent
+Message-ID: <ZdfHi142dvQuN7B-@localhost.localdomain>
+References: <cover.1708507022.git.baolin.wang@linux.alibaba.com>
+ <0514e5139b17ecf3cd9e09d86c93e586c56688dc.1708507022.git.baolin.wang@linux.alibaba.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <1f598a72-dd9f-4c6c-af7f-29751f84bd23@alliedtelesis.co.nz>
- <Zde966nsJ76QOuzm@surfacebook.localdomain> <f5e74774-226a-4678-a6f9-b4f17250ad91@alliedtelesis.co.nz>
- <CAHp75Vfq3Pc+Eo3Z5mhORZwwuKF+Y7_47dTO8qARcfba4nmj2w@mail.gmail.com> <9d00e1b1-120b-4c2b-89c5-0ac736bf6441@alliedtelesis.co.nz>
-In-Reply-To: <9d00e1b1-120b-4c2b-89c5-0ac736bf6441@alliedtelesis.co.nz>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Fri, 23 Feb 2024 00:13:47 +0200
-Message-ID: <CAHp75VdnXtVwrLrcGjnYMfNx7roBvQm9DMr6_ndjZeAbRDbs_Q@mail.gmail.com>
-Subject: Re: Linux support for a 7 segment LED display
-To: Chris Packham <Chris.Packham@alliedtelesis.co.nz>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Pavel Machek <pavel@ucw.cz>, 
-	"lee@kernel.org" <lee@kernel.org>, "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <0514e5139b17ecf3cd9e09d86c93e586c56688dc.1708507022.git.baolin.wang@linux.alibaba.com>
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=S+AOktY+;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b="/wOuXm+Z"
+X-Spamd-Result: default: False [-2.96 / 50.00];
+	 ARC_NA(0.00)[];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	 SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:98:from];
+	 FROM_HAS_DN(0.00)[];
+	 TO_DN_SOME(0.00)[];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 MIME_GOOD(-0.10)[text/plain];
+	 RCVD_COUNT_THREE(0.00)[3];
+	 DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	 DKIM_TRACE(0.00)[suse.de:+];
+	 MX_GOOD(-0.01)[];
+	 RCPT_COUNT_SEVEN(0.00)[9];
+	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 RCVD_TLS_ALL(0.00)[];
+	 BAYES_HAM(-2.65)[98.45%]
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Rspamd-Queue-Id: 9A9AB1F799
+X-Spam-Level: 
+X-Spam-Score: -2.96
+X-Spam-Flag: NO
 
-On Fri, Feb 23, 2024 at 12:08=E2=80=AFAM Chris Packham
-<Chris.Packham@alliedtelesis.co.nz> wrote:
-> On 23/02/24 10:59, Andy Shevchenko wrote:
-> > On Thu, Feb 22, 2024 at 11:53=E2=80=AFPM Chris Packham
-> > <Chris.Packham@alliedtelesis.co.nz> wrote:
-> >> On 23/02/24 10:34, andy.shevchenko@gmail.com wrote:
-> >>> Sun, Feb 11, 2024 at 08:46:12PM +0000, Chris Packham kirjoitti:
-> >>>> Hi Blinkenlight enthusiasts,
-> >>>>
-> >>>> I'm looking for something that I figured must exists but maybe it's =
-so
-> >>>> niche that no-one has bothered to upstream a driver for it.
-> >>>>
-> >>>> I have a requirement to support a 7-segment LED display[1] (one that=
- can
-> >>>> display a single digit from 0-9). Hardware wise it's just a bunch of
-> >>>> individual GPIOs connected to each segment (plus an extra one for a
-> >>>> dot). I can't see anything obvious in drivers/leds but maybe I'm loo=
-king
-> >>>> in the wrong place. Or maybe it's the kind of thing on PC hardware t=
-hat
-> >>>> is just driven by the BIOS without the operating system knowing abou=
-t it.
-> >>>>
-> >>>> Is there an existing in-kernel driver for such a thing?
-> >>> No, and can't be. Here is just a mapping table and other drivers that=
- use
-> >>> 7-segment LED displays to be connected to.
-> >>>
-> >>> What you need is something else, i.e. special case of leds-gpio (whic=
-h should
-> >>> be somewhere else) that does something like this. To me it sounds lik=
-e a
-> >>> mixture between line-display.h (from auxdisplay) and gpio-aggregator.
-> >>>
-> >>> How many digits do you want to connect? How are they going to be conn=
-ected
-> >>> (static display, or dynamic when you need to refresh in certain perio=
-ds of
-> >>> time)? Depending on the answer it might take one or another approach.
-> >> It sounds like a auxdisplay driver might be the way to go. My hardware
-> >> happens to have a single 7seg block but there's no reason the driver
-> >> needs to be restricted to that. At some point it obviously becomes
-> >> better to fit something like the ht16k33 to offload the character
-> >> display but for one or 2 digits a PCA953x plus the LED block would do
-> >> just fine.
-> > I have hc595 (SPI GPIO) connected to a single digit 7-segment LED.
-> > Since it can be also serialized, line display APIs seem plausible to
-> > fit. What we need is a proxy between the two. And I think
-> > gpio-aggregator is the best for that. It needs an additional
-> > compatible string and the registration for line display (overall
-> > something like 50 LoCs). We can even call that hardware compatible as
-> > line-display-gpio (or so).
-> >
-> > Cc: Geert and Krzysztof (for the comments on the idea above).
->
-> Would the gpio-aggregator be necessary?
+On Wed, Feb 21, 2024 at 05:27:54PM +0800, Baolin Wang wrote:
+> Based on the analysis of the various scenarios above, determine whether fallback is
+> permitted according to the migration reason in alloc_hugetlb_folio_nodemask().
 
-Probably not. we just need to consume GPIOs, no need to provide...
+Hi Baolin,
 
-> I was thinking something like
-> this in the devicetree
->
-> \{
->      led-7seg {
->          compatible =3D "kingbright,sa36";
->          seg-gpios =3D <&gpioN 0 GPIO_ACTIVE_HIGH>,
->              <&gpioN 1 GPIO_ACTIVE_HIGH>,
->              <&gpioN 2 GPIO_ACTIVE_HIGH>,
->              <&gpioN 3 GPIO_ACTIVE_HIGH>,
->              <&gpioN 4 GPIO_ACTIVE_HIGH>,
->              <&gpioN 5 GPIO_ACTIVE_HIGH>,
->              <&gpioN 6 GPIO_ACTIVE_HIGH>;
->      };
-> };
+The high level reasoning makes sense to me, taking a step back and
+thinking about all cases and possible outcomes makes sense to me.
 
-Right, but also with some additional properties, like
-- type of the indicator (7, 14, etc segments, for now we have only
-these two supported)
-- use-dot (+1 led per each digit)
-- characters (how many digits we have, so we need respective amount of GPIO=
-s)
+I plan to look closer, but I something that caught my eye:
 
-With this it's indeed belongs directly to auxdisplay as we have almost
-everything is done already there.
 
-> >> The information we want to display is mostly static (basically a numer=
-ic
-> >> unit identifier) but there are cases where we may want to alternate
-> >> between this and "F" to indicate some fault condition
+>  	}
+>  	spin_unlock_irq(&hugetlb_lock);
+>  
+> +	if (gfp_mask & __GFP_THISNODE)
+> +		goto alloc_new;
+> +
+> +	/*
+> +	 * Note: the memory offline, memory failure and migration syscalls can break
+> +	 * the per-node hugetlb pool. Other cases can not allocate new hugetlb on
+> +	 * other nodes.
+> +	 */
+> +	switch (reason) {
+> +	case MR_MEMORY_HOTPLUG:
+> +	case MR_MEMORY_FAILURE:
+> +	case MR_SYSCALL:
+> +	case MR_MEMPOLICY_MBIND:
+> +		allowed_fallback = true;
+> +		break;
+> +	default:
+> +		break;
+> +	}
+> +
+> +	if (!allowed_fallback)
+> +		gfp_mask |= __GFP_THISNODE;
 
---=20
-With Best Regards,
-Andy Shevchenko
+I think it would be better if instead of fiddling with gfp here,
+have htlb_alloc_mask() have a second argument with the MR_reason,
+do the switch there and enable GFP_THISNODE.
+Then alloc_hugetlb_folio_nodemask() would already get the right mask.
+
+I think that that might be more clear as it gets encapsulated in the
+function that directly gives us the gfp.
+
+Does that makes sense?
+
+
+-- 
+Oscar Salvador
+SUSE Labs
