@@ -1,213 +1,192 @@
-Received: from mail-vk1-f172.google.com (mail-vk1-f172.google.com [209.85.221.172])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1D713FE27
-	for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 11:00:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88432182D2;
+	Thu, 22 Feb 2024 11:01:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708599629; cv=none; b=HYrjyyw7DS1I0+Dv2j968oxEkYCCFzguMc3kyym8sWg+irCIHkkVqdoC4TGnJn9Vn0apdpdjhLVaU/l37h6dnnTA0uohcFXR14svar788hVKh2cOGBsy4KsJN/kUEwfwrrhuqZOfT9alSpwn2uz6gcoSmxNI8iDBcBMQNCO1Kws=
+	t=1708599709; cv=none; b=hKNXjB9ZVuyciq6fo71YNCVPxTE1w7tYgucbeXGyPCtlGq9/ZJj/jO8j6QBchhJCyYzpXQg5nRtyf6yGmU9jlR2TRerJjieOxwNQzXt/wXe0vx6xk/DSXJNcziFwXZ06O33c0/00kqebBjpHoJwbWOvyftVxcDCk2isZ9L5C9kc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708599629; c=relaxed/simple;
-	bh=4SUhFECzfgHvN70ojLHKQ96rAaBsv2JrpKaeoW6p6NU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=PYYs1cLk9ipV/7ywOtRtCIaen7nOK16Q+ZkcJaPI5XIP5GWJGe+RN1wBS/SIQI2ZYxNzdRBTJXh5nS/lxCrAKAacGBkfHk8J8buTaWYjqbz2RJNrjIsfgB5qRI0JaIdjiha2nlg25SZTkpT6b34fKofYflwHjURsi/9aNJt48u0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=VkMj3gfd; arc=none smtp.client-ip=209.85.221.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	s=arc-20240116; t=1708599709; c=relaxed/simple;
+	bh=uypqJ4fFQ77C+nUKIm+0Q6hsjDxZIHQh+EoFhOxiisU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=e1WlnazthpxsqdlzI07J8FeoprafxAsekiYDhvS6L5N+XnV+d+OHY2OV84YWhcYDwa7qRT4ZaTpsgPuY9zNQOY3nN7C58Iu+ZunqlgwIJw6IfnJDXhgf8G0bwdGJTSN1xLJH4yAnJIwDlgmm0L3Sh5R4CRZPLUkbS/z6atlpRDI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=TDUdQYpm; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=UHp0fn4H; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=TDUdQYpm; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=UHp0fn4H; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="VkMj3gfd"
-Received: by mail-vk1-f172.google.com with SMTP id 71dfb90a1353d-4cecffb850cso743895e0c.0
-        for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 03:00:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1708599625; x=1709204425; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/H/VIpoB4an+Mp36arHK/D3Ob8nW5Qqkhlyoj2/3jaw=;
-        b=VkMj3gfdcFnz42zo5KLDCMaRFv4b0U0/AkjZW3epTqbYbaaD/h/iHU2FIa7Mnr67md
-         RBQ/zLS3xiCJ7ptiCQHAbPPXT3IafWKRdsIVBZfOFupfDQikMwPe+HIUEEXz5hUCweSC
-         7iangEDzwS2C0DVrsWpOxQ1BXQquior9uqGpoJhTf3S8FWWEAW5lh1VLiQ7H6pfpAnta
-         zQF50G8AMFwP+rxRZrPI8PlG3ULBuAz6yR0FfurGccUNuZrxkzFdhihk0QxIZskLoEfQ
-         fpB8b5AMkjka5xduQ7XAaeUdfCGEyQNStzPei9FXlsjUhdP0N7qvAAPEsQ6hTOFCtr/v
-         3fqw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708599625; x=1709204425;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=/H/VIpoB4an+Mp36arHK/D3Ob8nW5Qqkhlyoj2/3jaw=;
-        b=SW1CSDDCzK+YHyMGT3eFAjq3X8SPevGQCRjFxWXxOnKIb0Tdq91pUQlra4d3FokkFx
-         0hOZ3r5a2wCPguIgErnQsejAwBx7du+HGELFKRkeXnhav77krTOEI0ClIbVkjhZ3utd1
-         roC8huWKyp3lxFX6gikPri2XzRJo2xnCn8fWSE9dY48nQIonxFKipMuToMXc1p/3ANj8
-         nbqf1FAqgwQapZtKCzxYTlNYksTRcAleZWfoWCcuYQcg6o4/0XFI5FYNT5BDE75ROq2n
-         lQMCexDGHYnLARnaqhorJvEEOYP3VpNca9usa00PGYvNoCN1QkwtBpvh4LvHhl8Afdn0
-         6brg==
-X-Forwarded-Encrypted: i=1; AJvYcCUevj6GBaDImOjZhRq5/TkRnaVp9JPwwjUI1GfJRuEINqGkJh6fjgbbZUYAROqgUmKtO2IS7e3NFGpphBEpOHcqmnaN5ys5WSO2d2NQ
-X-Gm-Message-State: AOJu0YzXvofR1iGJcCB1itetbtHaF79iilmJ5WERD1mlTRBEVhWvHjYX
-	wZJAItLkxU+/4GwUGiXjAtg+lqL44bIHAk+fDsCXjuB29RKT0L5I16sTRbgkZyi1M9sIfZ8/9pi
-	dp4pxhRoR5GPxyLYnrU9vrPO0wd6gaATstC4Gwg==
-X-Google-Smtp-Source: AGHT+IGc4k4afM7yOHcqPtsyx85w0wC4eDvcktSKZo2fOpRx3WfdsV144zf5agpJ1l8kNtCEpqQOOt7K2tgZtw6QOw8=
-X-Received: by 2002:a1f:4a45:0:b0:4c7:7760:8f12 with SMTP id
- x66-20020a1f4a45000000b004c777608f12mr12070252vka.2.1708599625549; Thu, 22
- Feb 2024 03:00:25 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="TDUdQYpm";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="UHp0fn4H";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="TDUdQYpm";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="UHp0fn4H"
+Received: from imap2.dmz-prg2.suse.org (imap2.dmz-prg2.suse.org [10.150.64.98])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 620301FB9A;
+	Thu, 22 Feb 2024 11:01:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1708599703; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=57n3UQkx8/XYTnaB10q60NOgFC3ggZDEpt6Gg1dxT1o=;
+	b=TDUdQYpmzi2LnpQDGxgFVneXvhJPUrBy1zz7J4cI/HqcRStOy37Njl5UytajVBojefqVEc
+	vMmWM9Vn3uy3A4chu1o0y2wI3hQ6IfUdGP97Ck6I+z8l4XxnlUg9IKBBkWD5NZe7KbaGpx
+	P+p4LHlYh2vMZF59LhfFMxSmYlqT2XI=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1708599703;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=57n3UQkx8/XYTnaB10q60NOgFC3ggZDEpt6Gg1dxT1o=;
+	b=UHp0fn4Hfcs/SmbunYu7BfAuZ3N2FGlDCmXctHYuAGXnvbApAxULRsNgAmWe48PGYFs3kl
+	L0nrxLNLlfFUuNDw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1708599703; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=57n3UQkx8/XYTnaB10q60NOgFC3ggZDEpt6Gg1dxT1o=;
+	b=TDUdQYpmzi2LnpQDGxgFVneXvhJPUrBy1zz7J4cI/HqcRStOy37Njl5UytajVBojefqVEc
+	vMmWM9Vn3uy3A4chu1o0y2wI3hQ6IfUdGP97Ck6I+z8l4XxnlUg9IKBBkWD5NZe7KbaGpx
+	P+p4LHlYh2vMZF59LhfFMxSmYlqT2XI=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1708599703;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=57n3UQkx8/XYTnaB10q60NOgFC3ggZDEpt6Gg1dxT1o=;
+	b=UHp0fn4Hfcs/SmbunYu7BfAuZ3N2FGlDCmXctHYuAGXnvbApAxULRsNgAmWe48PGYFs3kl
+	L0nrxLNLlfFUuNDw==
+Received: from imap2.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap2.dmz-prg2.suse.org (Postfix) with ESMTPS id 5573B13419;
+	Thu, 22 Feb 2024 11:01:43 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([10.150.64.162])
+	by imap2.dmz-prg2.suse.org with ESMTPSA
+	id 6IXYFJcp12XxNQAAn2gu4w
+	(envelope-from <jack@suse.cz>); Thu, 22 Feb 2024 11:01:43 +0000
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+	id E8EB4A0807; Thu, 22 Feb 2024 12:01:38 +0100 (CET)
+Date: Thu, 22 Feb 2024 12:01:38 +0100
+From: Jan Kara <jack@suse.cz>
+To: Kent Overstreet <kent.overstreet@linux.dev>
+Cc: Miklos Szeredi <miklos@szeredi.hu>, Josef Bacik <josef@toxicpanda.com>,
+	linux-kernel@vger.kernel.org, linux-bcachefs@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org, lsf-pc@lists.linux-foundation.org,
+	linux-btrfs@vger.kernel.org
+Subject: Re: [Lsf-pc] [LSF TOPIC] statx extensions for subvol/snapshot
+ filesystems & more
+Message-ID: <20240222110138.ckai4sxiin3a74ku@quack3>
+References: <2uvhm6gweyl7iyyp2xpfryvcu2g3padagaeqcbiavjyiis6prl@yjm725bizncq>
+ <CAJfpeguBzbhdcknLG4CjFr12_PdGo460FSRONzsYBKmT9uaSMA@mail.gmail.com>
+ <20240221210811.GA1161565@perftesting>
+ <CAJfpegucM5R_pi_EeDkg9yPNTj_esWYrFd6vG178_asram0=Ew@mail.gmail.com>
+ <w534uujga5pqcbhbc5wad7bdt5lchxu6gcmwvkg6tdnkhnkujs@wjqrhv5uqxyx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240216203215.40870-1-brgl@bgdev.pl> <CAA8EJppt4-L1RyDeG=1SbbzkTDhLkGcmAbZQeY0S6wGnBbFbvw@mail.gmail.com>
- <e4cddd9f-9d76-43b7-9091-413f923d27f2@linaro.org> <CAA8EJpp6+2w65o2Bfcr44tE_ircMoON6hvGgyWfvFuh3HamoSQ@mail.gmail.com>
- <4d2a6f16-bb48-4d4e-b8fd-7e4b14563ffa@linaro.org> <CAA8EJpq=iyOfYzNATRbpqfBaYSdJV1Ao5t2ewLK+wY+vEaFYAQ@mail.gmail.com>
- <CAMRc=Mfnpusf+mb-CB5S8_p7QwVW6owekC5KcQF0qrR=iOQ=oA@mail.gmail.com>
- <CAA8EJppY7VTrDz3-FMZh2qHoU+JSGUjCVEi5x=OZgNVxQLm3eQ@mail.gmail.com>
- <b9a31374-8ea9-407e-9ec3-008a95e2b18b@linaro.org> <CAA8EJppWY8c-pF75WaMadWtEuaAyCc5A1VLEq=JmB2Ngzk-zyw@mail.gmail.com>
-In-Reply-To: <CAA8EJppWY8c-pF75WaMadWtEuaAyCc5A1VLEq=JmB2Ngzk-zyw@mail.gmail.com>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Thu, 22 Feb 2024 12:00:14 +0100
-Message-ID: <CAMRc=Md6SoXukoGb4bW-CSYgjpO4RL+0Uu3tYrZzgSgVtFH6Sw@mail.gmail.com>
-Subject: Re: [PATCH v5 00/18] power: sequencing: implement the subsystem and
- add first users
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc: neil.armstrong@linaro.org, Marcel Holtmann <marcel@holtmann.org>, 
-	Luiz Augusto von Dentz <luiz.dentz@gmail.com>, "David S . Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Kalle Valo <kvalo@kernel.org>, 
-	Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konrad.dybcio@linaro.org>, 
-	Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Saravana Kannan <saravanak@google.com>, 
-	Geert Uytterhoeven <geert+renesas@glider.be>, Arnd Bergmann <arnd@arndb.de>, 
-	Marek Szyprowski <m.szyprowski@samsung.com>, Alex Elder <elder@linaro.org>, 
-	Srini Kandagatla <srinivas.kandagatla@linaro.org>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Abel Vesa <abel.vesa@linaro.org>, 
-	Manivannan Sadhasivam <mani@kernel.org>, Lukas Wunner <lukas@wunner.de>, linux-bluetooth@vger.kernel.org, 
-	netdev@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org, 
-	linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-pci@vger.kernel.org, linux-pm@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <w534uujga5pqcbhbc5wad7bdt5lchxu6gcmwvkg6tdnkhnkujs@wjqrhv5uqxyx>
+Authentication-Results: smtp-out2.suse.de;
+	none
+X-Spam-Level: 
+X-Spam-Score: -3.80
+X-Spamd-Result: default: False [-3.80 / 50.00];
+	 ARC_NA(0.00)[];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 FROM_HAS_DN(0.00)[];
+	 TO_DN_SOME(0.00)[];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 NEURAL_HAM_LONG(-1.00)[-1.000];
+	 MIME_GOOD(-0.10)[text/plain];
+	 RCVD_COUNT_THREE(0.00)[3];
+	 DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	 NEURAL_HAM_SHORT(-0.20)[-1.000];
+	 RCPT_COUNT_SEVEN(0.00)[8];
+	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 MID_RHS_NOT_FQDN(0.50)[];
+	 RCVD_TLS_ALL(0.00)[];
+	 BAYES_HAM(-3.00)[100.00%]
+X-Spam-Flag: NO
 
-On Mon, Feb 19, 2024 at 11:21=E2=80=AFPM Dmitry Baryshkov
-<dmitry.baryshkov@linaro.org> wrote:
->
-> On Mon, 19 Feb 2024 at 19:18, <neil.armstrong@linaro.org> wrote:
-> >
-> > On 19/02/2024 13:33, Dmitry Baryshkov wrote:
-> > > On Mon, 19 Feb 2024 at 14:23, Bartosz Golaszewski <brgl@bgdev.pl> wro=
-te:
-> > >>
-> > >> On Mon, Feb 19, 2024 at 11:26=E2=80=AFAM Dmitry Baryshkov
-> > >> <dmitry.baryshkov@linaro.org> wrote:
-> > >>>
-> > >>
-> > >> [snip]
-> > >>
-> > >>>>>>>>
-> > >>>>>>>> For WCN7850 we hide the existence of the PMU as modeling it is=
- simply not
-> > >>>>>>>> necessary. The BT and WLAN devices on the device-tree are repr=
-esented as
-> > >>>>>>>> consuming the inputs (relevant to the functionality of each) o=
-f the PMU
-> > >>>>>>>> directly.
-> > >>>>>>>
-> > >>>>>>> We are describing the hardware. From the hardware point of view=
-, there
-> > >>>>>>> is a PMU. I think at some point we would really like to describ=
-e all
-> > >>>>>>> Qualcomm/Atheros WiFI+BT units using this PMU approach, includi=
-ng the
-> > >>>>>>> older ath10k units present on RB3 (WCN3990) and db820c (QCA6174=
-).
-> > >>>>>>
-> > >>>>>> While I agree with older WiFi+BT units, I don't think it's neede=
-d for
-> > >>>>>> WCN7850 since BT+WiFi are now designed to be fully independent a=
-nd PMU is
-> > >>>>>> transparent.
-> > >>>>>
-> > >>>>> I don't see any significant difference between WCN6750/WCN6855 an=
-d
-> > >>>>> WCN7850 from the PMU / power up point of view. Could you please p=
-oint
-> > >>>>> me to the difference?
-> > >>>>>
-> > >>>>
-> > >>>> The WCN7850 datasheet clearly states there's not contraint on the =
-WLAN_EN
-> > >>>> and BT_EN ordering and the only requirement is to have all input r=
-egulators
-> > >>>> up before pulling up WLAN_EN and/or BT_EN.
-> > >>>>
-> > >>>> This makes the PMU transparent and BT and WLAN can be described as=
- independent.
-> > >>>
-> > >>>  From the hardware perspective, there is a PMU. It has several LDOs=
-. So
-> > >>> the device tree should have the same style as the previous
-> > >>> generations.
-> > >>>
-> > >>
-> > >> My thinking was this: yes, there is a PMU but describing it has no
-> > >> benefit (unlike QCA6x90). If we do describe, then we'll end up havin=
-g
-> > >> to use pwrseq here despite it not being needed because now we won't =
-be
-> > >> able to just get regulators from WLAN/BT drivers directly.
-> > >>
-> > >> So I also vote for keeping it this way. Let's go into the package
-> > >> detail only if it's required.
+On Thu 22-02-24 04:42:07, Kent Overstreet wrote:
+> On Thu, Feb 22, 2024 at 10:14:20AM +0100, Miklos Szeredi wrote:
+> > On Wed, 21 Feb 2024 at 22:08, Josef Bacik <josef@toxicpanda.com> wrote:
 > > >
-> > > The WiFi / BT parts are not powered up by the board regulators. They
-> > > are powered up by the PSU. So we are not describing it in the accurat=
-e
-> > > way.
-> >
-> > I disagree, the WCN7850 can also be used as a discrete PCIe M.2 card, a=
-nd in
-> > this situation the PCIe part is powered with the M.2 slot and the BT si=
-de
-> > is powered separately as we currently do it now.
->
-> QCA6390 can also be used as a discrete M.2 card.
->
-> > So yes there's a PMU, but it's not an always visible hardware part, fro=
-m the
-> > SoC PoV, only the separate PCIe and BT subsystems are visible/controlla=
-ble/powerable.
->
-> From the hardware point:
-> - There is a PMU
-> - The PMU is connected to the board supplies
-> - Both WiFi and BT parts are connected to the PMU
-> - The BT_EN / WLAN_EN pins are not connected to the PMU
->
-> So, not representing the PMU in the device tree is a simplification.
->
-
-What about the existing WLAN and BT users of similar packages? We
-would have to deprecate a lot of existing bindings. I don't think it's
-worth it.
-
-The WCN7850 is already described in bindings as consuming what is PMUs
-inputs and not its outputs.
-
-Bart
-
-> >
-> > Neil
-> >
+> > > On Wed, Feb 21, 2024 at 04:06:34PM +0100, Miklos Szeredi wrote:
+> > > > On Wed, 21 Feb 2024 at 01:51, Kent Overstreet <kent.overstreet@linux.dev> wrote:
+> > > > >
+> > > > > Recently we had a pretty long discussion on statx extensions, which
+> > > > > eventually got a bit offtopic but nevertheless hashed out all the major
+> > > > > issues.
+> > > > >
+> > > > > To summarize:
+> > > > >  - guaranteeing inode number uniqueness is becoming increasingly
+> > > > >    infeasible, we need a bit to tell userspace "inode number is not
+> > > > >    unique, use filehandle instead"
+> > > >
+> > > > This is a tough one.   POSIX says "The st_ino and st_dev fields taken
+> > > > together uniquely identify the file within the system."
+> > > >
 > > >
-> > > Moreover, I think we definitely want to move BT driver to use only th=
-e
-> > > pwrseq power up method. Doing it in the other way results in the code
-> > > duplication and possible issues because of the regulator / pwrseq
-> > > taking different code paths.
->
-> --
-> With best wishes
-> Dmitry
+> > > Which is what btrfs has done forever, and we've gotten yelled at forever for
+> > > doing it.  We have a compromise and a way forward, but it's not a widely held
+> > > view that changing st_dev to give uniqueness is an acceptable solution.  It may
+> > > have been for overlayfs because you guys are already doing something special,
+> > > but it's not an option that is afforded the rest of us.
+> > 
+> > Overlayfs tries hard not to use st_dev to give uniqueness and instead
+> > partitions the 64bit st_ino space within the same st_dev.  There are
+> > various fallback cases, some involve switching st_dev and some using
+> > non-persistent st_ino.
+> 
+> Yeah no, you can't crap multiple 64 bit inode number spaces into 64
+> bits: pigeonhole principle.
+> 
+> We need something better than "hacks".
+
+I agree we should have a better long-term plan than finding ways how to
+cram things into 64-bits inos. However I don't see a realistic short-term
+solution other than that.
+
+To explicit: Currently, tar and patch and very likely other less well-known
+tools are broken on bcachefs due to non-unique inode numbers. If you want
+ot fix them, either you find ways how bcachefs can cram things into 64-bit
+ino_t or you go and modify these tools (or prod maintainers or whatever) to
+not depend on ino_t for uniqueness. The application side of things isn't
+going to magically fix itself by us telling "bad luck, ino_t isn't unique
+anymore".
+
+> > What overlayfs does may or may not be applicable to btrfs/bcachefs,
+> > but that's not my point.  My point is that adding a flag to statx does
+> > not solve anything.   You can't just say that from now on btrfs
+> > doesn't have use unique st_ino/st_dev because we've just indicated
+> > that in statx and everything is fine.   That will trigger the
+> > no-regressions rule and then it's game over.  At least I would expect
+> > that to happen.
+> > 
+> > What we can do instead is introduce a new API that is better,
+> 
+> This isn't a serious proposal.
+
+I think for "unique inode identifier" we don't even have to come up with
+new APIs. The file handle + fsid pair is an established way to do this,
+fanotify successfully uses this as object identifier and Amir did quite
+some work for this to be usable for vast majority of filesystems (including
+virtual ones). The problem is with rewriting all these applications to use
+it. If statx flag telling whether inode numbers are unique helps with that,
+sure we can add it, but that seems like a trivial part of the problem.
+
+								Honza
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
