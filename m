@@ -1,112 +1,123 @@
-Received: from mail-yw1-f173.google.com (mail-yw1-f173.google.com [209.85.128.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx.msync.work (mx.msync.work [62.182.159.68])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA648364DB;
-	Thu, 22 Feb 2024 08:45:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C294F2BB0E
+	for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 08:46:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.182.159.68
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708591547; cv=none; b=em3t7780JfZ5x5Ut2J9fmOSD2ABrQ0bWNpatb7Njy5GlAv2pNE3QfZugkJ/3BEZyhhjcCxTZa+vIbe1ZUU/UOXc8gAIe1vQfY8u6xo051mKX28fgoCz1Sod8CJZBiX/7zVorxe5nxHM/w/F0/RaPkSpvivXqvfl4SFv2mS86+k8=
+	t=1708591623; cv=none; b=H41n/ZuEp72SmsuhE7UdREN/1ZJopHvTs7BSFt8A6aA47J9FP1UAK/afzTRGnzWocWRT52FQJ2gLuHsu7a7h7r95P3G7sQspZsg3uXuvE3VyV2mhj0lPADfO3/lka9KBLD4mQYW5mu+QqGzdZZ5+Py5KGnfNSgBNw6qTKltc9g4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708591547; c=relaxed/simple;
-	bh=G6pJusdxfo/StmdSDCJwZ13Ah6NJAoqBsCsfEVn7mZg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=DPtOcKqjUgtaoqqy+ExtTSE1tqX4QyDZYvtGNSlRwslxsYty4bU5E9M79h50bHK9QYdsVxGpLJ13g+EokbFX3RSO10MUZQ1mF/AgYUsf1d+GGMQdaG3Mgj6I7iOLr/3dREjKlD3jk6xo3+nMYXAtPiX90u/0/4EL6/mUMjDdixM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yw1-f173.google.com with SMTP id 00721157ae682-6083befe2a7so43018667b3.0;
-        Thu, 22 Feb 2024 00:45:45 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708591544; x=1709196344;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=D6Kahe0OhfDh8S9J/Rqow+4MQwXRJQIenHOLMamoIBc=;
-        b=FH2/Zk4X72f21hMjxaEH3E5vAX92m/R6jUQCGDDVWtumPUKvJrVS2UHx+k5g8gnDxz
-         1Hhklpus20hMat3DiGnni8P5GfrP3Ht2a/kjPZRu2JeVhSj1L3+ww9bh2FZcASfqBpD1
-         kzEstfIDz7jLU0//iS1jjnRgc0B9WroQ+alu9YvbmGwDJx/CbkTaDY234BXAGuh6ey+q
-         J0XjCuVYswHD9llSVADZq00MfCzFZNet8gtBPwCg9vhNmWM9TPQAo6PcrbeN1Rrg01Nq
-         kwEEfCLc0sGIqaHQIBaz7/2rtuMZbn7Iufx8EYAxHcT6ohj4+n6je6yersbpKXjMaj0x
-         FlOw==
-X-Forwarded-Encrypted: i=1; AJvYcCUH18r4xpDkw9jLE9LNQuL6+qHJeUu/wkXxGoOS1tAofCS+cLGCLKycTz4/lEeYn1hw/OYz7QZU3WXimJ0KutF7zZ2WzPaKrdpYwvPZ0mazFb2FnDyRvEXvAFaasahbLdddrJyC
-X-Gm-Message-State: AOJu0YxkYYwx33iK3X1DuPZOYnE0tvdwYIXob6oHQ+jXw9zE+ewkSSy/
-	Rhsbx0uzi++RM5+PrkYtQ/ueblXwmCv+cpAsgtiqE61Iq3ymt0e64QMsXvSzEwA=
-X-Google-Smtp-Source: AGHT+IGF+dRSvcMxBNNOg1ynn3soI72ikCxXwuc7lOaQdaZCyklUFkZ8gehNldEe5Wcn5VVPB51SEA==
-X-Received: by 2002:a81:7c55:0:b0:607:910c:9cb3 with SMTP id x82-20020a817c55000000b00607910c9cb3mr20192534ywc.36.1708591544246;
-        Thu, 22 Feb 2024 00:45:44 -0800 (PST)
-Received: from mail-yw1-f182.google.com (mail-yw1-f182.google.com. [209.85.128.182])
-        by smtp.gmail.com with ESMTPSA id t17-20020a81c251000000b006049de6fa26sm2890781ywg.57.2024.02.22.00.45.43
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 22 Feb 2024 00:45:43 -0800 (PST)
-Received: by mail-yw1-f182.google.com with SMTP id 00721157ae682-607f94d0b7cso67746937b3.3;
-        Thu, 22 Feb 2024 00:45:43 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCXnKcEAfDEGqalXSShjLs0WL/HpVAjYU+SMsytZi+IRFXd6manV+dhZv8SiNxZfxnQBQUwhWn5mtEAN1DtEz83voRQC0T+fWOXuY+Gf8WDhYjyPKml7IetzTKkRU5Tr/3asqhNh
-X-Received: by 2002:a81:6d8b:0:b0:608:7a3f:d0a4 with SMTP id
- i133-20020a816d8b000000b006087a3fd0a4mr4680838ywc.24.1708591543772; Thu, 22
- Feb 2024 00:45:43 -0800 (PST)
+	s=arc-20240116; t=1708591623; c=relaxed/simple;
+	bh=MOul7ErOlWpjXnFjZIeLDDx5Cyk2pRkzCt3A0Ne8lVM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=gFWRrST/4pt0HYNdr5Yk6sLW6m6vcUB+JsjETrxLBUH+/DaO/8CxOzlJeNuaT4ge/eC0nBJ6APatN6MXqZQ0vHVOBjA6gkelrqHBgHqh2qqB23nNGbNt06UAsOgp0RvINcaWAlhATc7OnOg1m5ppPH/yByX6zvyAYGj95YIGlAA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=lexina.in; spf=pass smtp.mailfrom=lexina.in; dkim=pass (2048-bit key) header.d=lexina.in header.i=@lexina.in header.b=t3k1AkUk; arc=none smtp.client-ip=62.182.159.68
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=lexina.in
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lexina.in
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=lexina.in header.i=@lexina.in header.b="t3k1AkUk"
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 1BEC21145D8;
+	Thu, 22 Feb 2024 08:46:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lexina.in; s=dkim;
+	t=1708591613; h=from:subject:date:message-id:to:cc:mime-version:content-type:
+	 content-transfer-encoding:content-language:in-reply-to:references:autocrypt;
+	bh=mkwao/Eo5HsXt33cPrj25cBHf9f0LM2OJqHCNPBQoQk=;
+	b=t3k1AkUk93ro0Ha1DPQNiZFeqgLomxTYKcAOxje6QiAdWw51Uzna9GrUk980vJL0c2IFHn
+	FvTKp1PMbJFrWNc3X2/jN1KTnOf237CShPYYyzddXxFIFyyQfogOIKtXkDzyNDek5cEe+v
+	V60hi+9OjpdAc1RB6wzkYra0g/xXbLjgrG4r/i3xczjo+pCywI4v91kS3sWnA9r0mRGwSG
+	28ePQQ3ajLTRE5zS7XIA+eFrBXMYOCzCh4oOSGvBY9f1uWfcUNKcXJy9T9vcKNgyJjTwdL
+	B3NJDQXn6VUdIS/me1HU6ebpIUsZJ/GFYakXXKNnRNKHU/47rn1roMOlruGRqQ==
+Message-ID: <16891eb5-ee2e-4b0d-a82d-517adf028474@lexina.in>
+Date: Thu, 22 Feb 2024 11:46:46 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240221-ps3-gelic-null-deref-v1-1-f4fe159c7cb0@kernel.org>
-In-Reply-To: <20240221-ps3-gelic-null-deref-v1-1-f4fe159c7cb0@kernel.org>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Thu, 22 Feb 2024 09:45:31 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdXSmf6cKxzzXBYC5Zrkj6QR+2EhB4346d3g-RNTS+W7AQ@mail.gmail.com>
-Message-ID: <CAMuHMdXSmf6cKxzzXBYC5Zrkj6QR+2EhB4346d3g-RNTS+W7AQ@mail.gmail.com>
-Subject: Re: [PATCH RFC net] ps3/gelic: Fix possible NULL pointer dereference
-To: Simon Horman <horms@kernel.org>
-Cc: Geoff Levand <geoff@infradead.org>, "David S. Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>, 
-	Christophe Leroy <christophe.leroy@csgroup.eu>, "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>, 
-	"Naveen N. Rao" <naveen.n.rao@linux.ibm.com>, Jeff Garzik <jeff@garzik.org>, 
-	Dan Carpenter <dan.carpenter@linaro.org>, netdev@vger.kernel.org, 
-	linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/3] soc: amlogic: meson-gx-socinfo-sm: Add Amlogic
+ secure-monitor SoC Information driver
+To: Neil Armstrong <neil.armstrong@linaro.org>,
+ Kevin Hilman <khilman@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>,
+ Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-amlogic@lists.infradead.org
+Cc: oe-kbuild-all@lists.linux.dev
+References: <20240221143654.544444-3-adeep@lexina.in>
+ <202402221322.ifGMGQa6-lkp@intel.com>
+Content-Language: en-US, ru-RU
+From: Viacheslav <adeep@lexina.in>
+Autocrypt: addr=adeep@lexina.in; keydata=
+ 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
+In-Reply-To: <202402221322.ifGMGQa6-lkp@intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Last-TLS-Session-Version: TLSv1.3
 
-Hi Simon,
+Hi!
 
-On Wed, Feb 21, 2024 at 5:57=E2=80=AFPM Simon Horman <horms@kernel.org> wro=
-te:
-> Fix possible NULL pointer dereference in gelic_card_release_tx_chain()
->
-> The cited commit introduced a netdev variable to
-> gelic_card_release_tx_chain() which is set unconditionally on each
-> iteration of a for loop.
->
-> It is set to the value of tx_chain->tail->skb->dev.  However, in some
-> cases it is assumed that tx_chain->tail->skb may be NULL. And if that
-> occurs, setting netdev will cause a NULl pointer dereference.
+Will be fixed in next version with new Kconfig dependencies:
 
-Thanks for your patch!
+     depends on (ARM64 && ARCH_MESON || COMPILE_TEST) && MESON_SM=y
+     default ARCH_MESON && MESON_SM
 
-> Given the age of this code I do wonder if this can occur in practice.
-> But to be on the safe side this patch assumes that it can and aims to
-> avoid the dereference in the case where tx_chain->tail->skb may be NULL.
-
-The compiler may also lazy-load netdev until it's actually used,
-avoiding the crash?
-
-> Fixes: 589866f9f1cb ("PS3: gelic: Add support for dual network interface"=
-)
-> Signed-off-by: Simon Horman <horms@kernel.org>
-
-Reviewed-by: Geert Uytterhoeven <geert@linux-m68k.org>
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
-
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
+22/02/2024 08.35, kernel test robot wrote:
+> Hi Viacheslav,
+> 
+> kernel test robot noticed the following build errors:
+> 
+> [auto build test ERROR on 9fc1ccccfd8d53dc7936fe6d633f2373fc9f62e8]
+> 
+> url:    https://github.com/intel-lab-lkp/linux/commits/Viacheslav-Bocharov/soc-amlogic-meson-gx-socinfo-move-common-code-to-header-file/20240221-224803
+> base:   9fc1ccccfd8d53dc7936fe6d633f2373fc9f62e8
+> patch link:    https://lore.kernel.org/r/20240221143654.544444-3-adeep%40lexina.in
+> patch subject: [PATCH v2 2/3] soc: amlogic: meson-gx-socinfo-sm: Add Amlogic secure-monitor SoC Information driver
+> config: arm64-randconfig-002-20240222 (https://download.01.org/0day-ci/archive/20240222/202402221322.ifGMGQa6-lkp@intel.com/config)
+> compiler: aarch64-linux-gcc (GCC) 13.2.0
+> reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240222/202402221322.ifGMGQa6-lkp@intel.com/reproduce)
+> 
+> If you fix the issue in a separate patch/commit (i.e. not just a new version of
+> the same patch/commit), kindly add following tags
+> | Reported-by: kernel test robot <lkp@intel.com>
+> | Closes: https://lore.kernel.org/oe-kbuild-all/202402221322.ifGMGQa6-lkp@intel.com/
+> 
+> All errors (new ones prefixed by >>):
+> 
+>     aarch64-linux-ld: Unexpected GOT/PLT entries detected!
+>     aarch64-linux-ld: Unexpected run-time procedure linkages detected!
+>     aarch64-linux-ld: drivers/soc/amlogic/meson-gx-socinfo-sm.o: in function `socinfo_get_chipid':
+>>> meson-gx-socinfo-sm.c:(.text+0xac): undefined reference to `meson_sm_call_read'
+>     aarch64-linux-ld: drivers/soc/amlogic/meson-gx-socinfo-sm.o: in function `meson_gx_socinfo_sm_probe':
+>>> meson-gx-socinfo-sm.c:(.text+0x438): undefined reference to `meson_sm_get'
+> 
