@@ -1,100 +1,114 @@
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBB7D1799F
-	for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 03:05:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A572D1799F
+	for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 03:06:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708571111; cv=none; b=lnWF/wPHyA21MbrJEY+sSsIDr3LMVswwABgdPwNp5l+ztiIvgAHe5AXOq3a65hgyQxug+sCWuCcn/aD6yzhuErz6I8YFK/JUJkS8VAWt+v5hLWMpb6ZM/EwElC62z0yVb0qMCVwstddsH10Dw5/m/gqpQm1B0p7BxIOF2hTO7O4=
+	t=1708571171; cv=none; b=H+XHhSiMkhWtw1BdMLkShRAwuyEENehyZgGMUfDMZtQh5zJ8q8UlvT7i8CaxctQXPoqxuPrQgalKMTQKWHMUoL4vvaQVqit7LGy/JmtGAX5I+63NN6XYwzxndAUXGbYf4egOGVHnPjE7vXgcEtQiG/e8hKjUZyuim/03OGWThyQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708571111; c=relaxed/simple;
-	bh=VMRkbLEjqUTkcPnLk3R6EX0JT8iU2w6INN6blLRwMh0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=YbiDrF4ODRLfPnuM90L0a3iL21QhUSJNkHw+my6/8IqyiQ8Upx4u7/+m5SQnWVV2RYWUPSqAdbM2ZgeXFYl13gpBa/lJ6WcvrQ4Cpt4oXNDVDiOVZ4Bg9oZlSnYFXMKkLGq1ABy2woznMHTH3GufDJWWpDHfouGMZFMQ6et3RNE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: dec48d24f8744cd390939199d634908f-20240222
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.35,REQID:2a7a28f5-87e9-4e39-82bc-737083c6beef,IP:10,
-	URL:0,TC:0,Content:0,EDM:0,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACTI
-	ON:release,TS:-5
-X-CID-INFO: VERSION:1.1.35,REQID:2a7a28f5-87e9-4e39-82bc-737083c6beef,IP:10,UR
-	L:0,TC:0,Content:0,EDM:0,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACTION
-	:release,TS:-5
-X-CID-META: VersionHash:5d391d7,CLOUDID:65d82b84-8d4f-477b-89d2-1e3bdbef96d1,B
-	ulkID:24022208111331ZIVHI4,BulkQuantity:5,Recheck:0,SF:64|66|24|17|19|44|1
-	02,TC:nil,Content:0,EDM:-3,IP:-2,URL:11|1,File:nil,Bulk:40,QS:nil,BEC:nil,
-	COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0
-X-CID-BVR: 0,NGT
-X-CID-BAS: 0,NGT,0,_
-X-CID-FACTOR: TF_CID_SPAM_FAS,TF_CID_SPAM_FSD,TF_CID_SPAM_FSI,TF_CID_SPAM_ULN,
-	TF_CID_SPAM_SNR
-X-UUID: dec48d24f8744cd390939199d634908f-20240222
-Received: from mail.kylinos.cn [(39.156.73.10)] by mailgw
-	(envelope-from <chentao@kylinos.cn>)
-	(Generic MTA)
-	with ESMTP id 204878516; Thu, 22 Feb 2024 11:04:57 +0800
-Received: from mail.kylinos.cn (localhost [127.0.0.1])
-	by mail.kylinos.cn (NSMail) with SMTP id A2911E000EBC;
-	Thu, 22 Feb 2024 11:04:57 +0800 (CST)
-X-ns-mid: postfix-65D6B9D9-567320297
-Received: from [172.20.15.254] (unknown [172.20.15.254])
-	by mail.kylinos.cn (NSMail) with ESMTPA id 72739E000EBC;
-	Thu, 22 Feb 2024 11:04:56 +0800 (CST)
-Message-ID: <0f51c6ba-a6c0-4fbf-9b00-21cea6d59ca9@kylinos.cn>
-Date: Thu, 22 Feb 2024 11:04:55 +0800
+	s=arc-20240116; t=1708571171; c=relaxed/simple;
+	bh=HEszjr9riqrF8sIkIpSH4NuJEBM42ahASmQDnRDEUcQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=XWsrA6GcNCPrNzDWwKz4y9jzoY1K9A4S3p3M37TTCTNpUJdO+AHn+boPvB4243fd/koGZJoPmYcMhb36ZU0i6KmISY4/59KD1di3mpRPYSOHAX13ag69JUMxdeHfTx0LRcKWiVIxwg5OgmenWj+7yot8N7CZ4UrQCr0HR1vlVo8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=smartx.com; spf=none smtp.mailfrom=smartx.com; dkim=pass (2048-bit key) header.d=smartx-com.20230601.gappssmtp.com header.i=@smartx-com.20230601.gappssmtp.com header.b=tI4er3YQ; arc=none smtp.client-ip=209.85.167.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=smartx.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=smartx.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=smartx-com.20230601.gappssmtp.com header.i=@smartx-com.20230601.gappssmtp.com header.b="tI4er3YQ"
+Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-512aafb3ca8so4579591e87.3
+        for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 19:06:09 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=smartx-com.20230601.gappssmtp.com; s=20230601; t=1708571168; x=1709175968; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=6GL2/sftRMsFbU6bQC3gRHQ7BmHWi2vLJ5w2sAuGFyA=;
+        b=tI4er3YQz2sSdpElO6NDHOez0LSsiB6aPssKxhpboqvaX4iXRQpo3JZmpxgpITJKcX
+         akk54uB28ovOQUtKYVgfmb3Oc9AGBXbGGlmAl9sikutP53Zo7/FQdCDjEKZucd2mQqeo
+         1p7dfzPW11/eN4x6gjqXMeCjv/0SJ+zSD7D8cwEmHJjf7smFJdvNCV81iR65KqEqlzqQ
+         znV2kZmu+hHtkB7GPeBMtVKh1ZO2/b9D8c16vTsEQLUyzg2TnkVOC1y524BAlMLhwfhk
+         TTVAmtrJbXvsuO1vc+GPvT1seSJAMWwpZEsA/KHod+e+TOhsJlqD/o7TazWbWwzhyMTv
+         aNbg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708571168; x=1709175968;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=6GL2/sftRMsFbU6bQC3gRHQ7BmHWi2vLJ5w2sAuGFyA=;
+        b=CJZVAIPnJsxXUgkElsRcPWPzwfu/p4RTF8fI9kyaRjjCsVQycVb+FiOV+83y6l+BST
+         WdBBXaG7p7/TjzDbfl3UHnFZwwzPjhvDk+/NFT+mwYRVvF9dr8aGUZRz4k0JqbWepKWL
+         kkFKWn4vIoXzzpo09QrY6l5kYlfXvqfqwRVfGXOXaArnosinYytBzrC3Io2iksuex7dr
+         O4fJF6BwvZ/0XEe5nZBl/3ApKxO1A4hlAT34iEw+lbbpU0MUrhZ3K9RLrSB0YZmqyetg
+         eQ7VoxP+tlC6Wjj9880sowC+pbnmCIL1A7+JxU79yluSeXuXigo08C35Ie9Xwia1FgbD
+         u35Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXz1FcCNdxKtwJ7720StgnvdhGkXLszT9xeZMbk2pNsZVmb1Xn+QqTUsJqgX86jCjFGqP38OLN8ad2uhseFOQ2PVAuwL0yHhI5Sauij
+X-Gm-Message-State: AOJu0YyGQU2VP7Rwm8LsB3tjpPW28oBtIq6YZjpHoBlpfHdnM0IXgRXi
+	xYEaUpLDsPRH2EFUiMbUIMnXj9/aZS79dZvsm2tkSHGC3D315YZyrPjexlyFjG+Zx1Ye+s4ngbf
+	Z5vF7sa6yzuU1a+lAb5q3ZjQYzQUFitxcrOo7Aw==
+X-Google-Smtp-Source: AGHT+IHz0DfQ7WdFHoTKTh9/wLbZNCERaKaIUmP7DD8KvxAVOcVA9iSxnJxQBzg99vO8r8oNniJubxT+p4NBkkZFDZg=
+X-Received: by 2002:a05:6512:ba1:b0:512:bda4:bf47 with SMTP id
+ b33-20020a0565120ba100b00512bda4bf47mr7020110lfv.4.1708571166733; Wed, 21 Feb
+ 2024 19:06:06 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] cred: Use KMEM_CACHE instead of kmem_cache_create
-To: Paul Moore <paul@paul-moore.com>
-Cc: axboe@kernel.dk, elena.reshetova@intel.com, linux-kernel@vger.kernel.org
-References: <20240130094037.76895-1-chentao@kylinos.cn>
- <CAHC9VhQG6XAm3R3wtgFrb0b0UHoxkSV2yziVAnUy2x7Ovun_pQ@mail.gmail.com>
- <CAHC9VhRLNHT0ar2YPkZBsyha_mh6Ggf6=V2gnbFkdo7ryXmHnQ@mail.gmail.com>
-Content-Language: en-US
-From: Kunwu Chan <chentao@kylinos.cn>
-In-Reply-To: <CAHC9VhRLNHT0ar2YPkZBsyha_mh6Ggf6=V2gnbFkdo7ryXmHnQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+References: <CAPKjjnrYvzH8hEk9boaBt-fETX3VD2cjjN-Z6iNgwZpHqYUjWw@mail.gmail.com>
+ <77a58302766cb6c8fac45682ede63569df80cd5d.camel@hammerspace.com>
+In-Reply-To: <77a58302766cb6c8fac45682ede63569df80cd5d.camel@hammerspace.com>
+From: Zhitao Li <zhitao.li@smartx.com>
+Date: Thu, 22 Feb 2024 11:05:53 +0800
+Message-ID: <CAPKjjnpvO_VUwgxEKu1JP8xNnt0hct6koTtOSxZ0bN1D_55JGg@mail.gmail.com>
+Subject: Re: PROBLEM: NFS client IO fails with ERESTARTSYS when another mount
+ point with the same export is unmounted with force [NFS] [SUNRPC]
+To: Trond Myklebust <trondmy@hammerspace.com>
+Cc: "chuck.lever@oracle.com" <chuck.lever@oracle.com>, "tom@talpey.com" <tom@talpey.com>, 
+	"anna@kernel.org" <anna@kernel.org>, "Dai.Ngo@oracle.com" <Dai.Ngo@oracle.com>, 
+	"jlayton@kernel.org" <jlayton@kernel.org>, "neilb@suse.de" <neilb@suse.de>, 
+	"kolga@netapp.com" <kolga@netapp.com>, "huangping@smartx.com" <huangping@smartx.com>, 
+	"linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Thanks for your reply.
-On 2024/2/22 08:10, Paul Moore wrote:
-> On Thu, Feb 15, 2024 at 10:54=E2=80=AFPM Paul Moore <paul@paul-moore.co=
-m> wrote:
->> On Tue, Jan 30, 2024 at 4:40=E2=80=AFAM Kunwu Chan <chentao@kylinos.cn=
-> wrote:
->>>
->>> commit 0a31bd5f2bbb ("KMEM_CACHE(): simplify slab cache creation")
->>> introduces a new macro.
->>> Use the new KMEM_CACHE() macro instead of direct kmem_cache_create
->>> to simplify the creation of SLAB caches.
->>>
->>> Signed-off-by: Kunwu Chan <chentao@kylinos.cn>
->>> ---
->>>   kernel/cred.c | 4 ++--
->>>   1 file changed, 2 insertions(+), 2 deletions(-)
->>
->> This seems reasonable to me, unless I see any objections I can pull
->> this via the LSM tree next week.
->=20
-> Actually, never mind, the original posting has some non-ASCII junk in
-> the patch and I'm not able to import it cleanly.
-Thanks for reply.
+Forced unmount is used in a casual way to some degree by our team. We
+will adjust the usage of forced unmount and multiple mount points for
+the same export.
 
-I checked the patch with the checkpatch.pl script and applied it to=20
-another machine to compile and found no issues.
-Seems ok to me, what should I do next to clean up that non-ASCII junk.
+As you said, all of the above is well known. Actually, this phenomenon
+is unexpected for us. Could you give some more information?  Are they
+issues? And if they are issues, is there any plan to fix them?
 
-And i use :perl -ne 'print if /[^[:ascii:]]/'=20
-0001-cred-Use-KMEM_CACHE-instead-of-kmem_cache_create.patch seems ok too.
->=20
---=20
-Thanks,
-   Kunwu
+Best regards,
+Zhitao Li, in SmartX.
 
+On Wed, Feb 21, 2024 at 9:48=E2=80=AFPM Trond Myklebust <trondmy@hammerspac=
+e.com> wrote:
+>
+> On Wed, 2024-02-21 at 16:20 +0800, Zhitao Li wrote:
+> > [You don't often get email from zhitao.li@smartx.com. Learn why this
+> > is important at https://aka.ms/LearnAboutSenderIdentification ]
+> >
+> > Hi, everyone,
+> >
+> > - Facts:
+> > I have a remote NFS export and I mount the same export on two
+> > different directories in my OS with the same options. There is an
+> > inflight IO under one mounted directory. And then I unmount another
+> > mounted directory with force. The inflight IO ends up with "Unknown
+> > error 512", which is ERESTARTSYS.
+> >
+>
+> All of the above is well known. That's because forced umount affects
+> the entire filesystem. Why are you using it here in the first place? It
+> is not intended for casual use.
+>
+> --
+> Trond Myklebust
+> Linux NFS client maintainer, Hammerspace
+> trond.myklebust@hammerspace.com
+>
+>
