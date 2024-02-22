@@ -1,111 +1,103 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6CF6256A
-	for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 22:55:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23BAB1B7E8
+	for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 22:55:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708642527; cv=none; b=GZPjdlVAQk3Y3mNjXqUP07CU0/3aCX7ocCGB7jc0fcKxMW44U64/IcrTTqI4TXqlTRhb2gL4IqLaM/e699dvLVdz6gNexUJIJgTTX1kbaHF71zDrSDua+TMLKvmr83JlwqURapdANZ41SgyhMAuGOLTe+h3sQnUp1EYhpqz5z2s=
+	t=1708642534; cv=none; b=fcz6qcmV/g/dgLVVObdfDhxEGOs0kLLLT0M4IzrfdbU/f5qb/BcC3v7RwrLAI/GlVNWBVz0RJzNY7M7iXR4EbOl1IhckjhUvaXKXTdOq4/XXG2XrKUiyCh7zMY3hZRLE+vkK3UNAXZ7H0S0dhyOoT9Lb4yFbpczaUIq8yDEfkF0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708642527; c=relaxed/simple;
-	bh=EPCcr1ZcPmoYlF6Aa/he5Fx0lw6N1qSblFP9FR4V1yw=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=oYsgczfnvz/XOqqVVbpJgGPxAF4BtC4xkvePr7Ma2ITYcoltXcQoPeMzw1VZrxWdbz8eWGM5NOCFH7zOWnllimq81des1giemSvzpSLP8K2LONxqd0zPSiyGaYOlzKUpTxiDmX25lXIaisf4QQ3OWJWUmHYhznPqLR/yayjme2I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D8976C433F1;
-	Thu, 22 Feb 2024 22:55:25 +0000 (UTC)
-Date: Thu, 22 Feb 2024 17:57:15 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: John Stultz <jstultz@google.com>
-Cc: LKML <linux-kernel@vger.kernel.org>, Ingo Molnar <mingo@redhat.com>,
- Peter Zijlstra <peterz@infradead.org>, Juri Lelli <juri.lelli@redhat.com>,
- Vincent Guittot <vincent.guittot@linaro.org>, Dietmar Eggemann
- <dietmar.eggemann@arm.com>, Ben Segall <bsegall@google.com>, Mel Gorman
- <mgorman@suse.de>, Daniel Bristot de Oliveira <bristot@redhat.com>,
- Valentin Schneider <vschneid@redhat.com>, kernel-team@android.com, Zimuzo
- Ezeozue <zezeozue@google.com>
-Subject: Re: [PATCH] [RFC] sched: Add trace_sched_waking() tracepoint to
- sched_ttwu_pending()
-Message-ID: <20240222175715.0593cb09@gandalf.local.home>
-In-Reply-To: <20240222204917.1719153-1-jstultz@google.com>
-References: <20240222204917.1719153-1-jstultz@google.com>
-X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1708642534; c=relaxed/simple;
+	bh=v30ix5UBN1fgNn1Yl2t1RwDrBFJ0VxBN5nvmOI21F6U=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Content-Type; b=sBFXcebDf+k1HEOT0l2aALP+7Rvp+2jrFDH6X60CeE3NITc+/ju69+tu5z6BG5QdBzZ6ii7IzOVXmrR737HWMlpbsRIyNqX3kwjN3HL9qnenn4KS4vYvfqndJ17zjwtuIHlfalRYhadCkdrrD5KGfH6kc+cpwatvNfGbiCPD1zM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=iVbh+rMW; arc=none smtp.client-ip=209.85.128.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="iVbh+rMW"
+Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-5ee22efe5eeso5101467b3.3
+        for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 14:55:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1708642532; x=1709247332; darn=vger.kernel.org;
+        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=vd/YICqtxLMDMc5n5d3K7q6H9URrpma0RkwQ+FIE2QY=;
+        b=iVbh+rMWQ7Jm42jZnvb6vlQywoLqYY97GROYBSQ4xVA7KARLuS6yPX8kTCcZhaZOSD
+         6P104Kjo6E78M21IH863nF0FiY2Z6tkoMspzgvqhuGE9AQDk0UJfLZcSj3CtY91klNdx
+         B9VjQ0iClYdZ4qoi9H2wPHcBeDFRg3Ohz8ZaPEJRI5yfiFxRZhIVUECpo319vm3pW0ew
+         zSxhGKzgxs0lS0B2queBlW3l/reYoIoTGrUubv0ZtprfV2EZWcq33yyoMG3IqYsOkDrJ
+         Y0xnp0i200mTCy+5e2Y3S5XWOKkjMLkDo9bH9Uf94FiJ3i/oD9gAmuyyyqc4eQ0LCf1o
+         yEyw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708642532; x=1709247332;
+        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=vd/YICqtxLMDMc5n5d3K7q6H9URrpma0RkwQ+FIE2QY=;
+        b=poe2izZ7ScMF2LRxezcdnIu9GY+TC1Rg72Sda3GtE2P91ljXXefg95Y9Vu6+a+aHiv
+         X5K40+iGF+bnzWa7DfwyoUBi6tjb9DRZlVtsXAmU4ArNPrGAMXeIaOrqk1LgPZ9ppZWU
+         6Hak2mGJUZ8lh3ae5B9yThisKxVwsbMh2FUISualcvWWGOpLTUmGSWbm/bzUIlL2q1SV
+         y3oK/B6ci47xFSqw7/DYOIbYSpGqnqH8tiRNqUrosrNefEaXX6vC2cXixiad7FAflcqH
+         AW+rUmYrif9s/Rqi5uQjCuSfsW53gy8aAQafUbVnkp81Vew9JAg4bFxyY28hBm5YNe42
+         w2TA==
+X-Forwarded-Encrypted: i=1; AJvYcCW3QVXTH8cfTPdHgVppNmcqv6sUTWlZDJI6HyAPBvy8wLeRQqiOfeHFWXd/OcfN1CAVADExDQhbgcrHFhKuEX9DuX7BCXzLmC/vJN/d
+X-Gm-Message-State: AOJu0YxP0GErvkBz4gOs8+oz9QynZSxuvDOTTz9sq6NNXjpD8tLt2FH1
+	f1Ws3yO8k9KQvuITF5/vZziOYid3mXd+3Lj70Daq1m8Q0UkTc6QBvC6jqX61qoMCRNQwC65RcoS
+	zOA==
+X-Google-Smtp-Source: AGHT+IH6zbDx9owFk0HWBGgG9KN5obudLpTf6CD+r6Pc0oEDuyl4v9GZAk2ErtxIMUz9+tCkdL7Tsne7vIE=
+X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
+ (user=seanjc job=sendgmr) by 2002:a81:9150:0:b0:608:a1ff:6c39 with SMTP id
+ i77-20020a819150000000b00608a1ff6c39mr130883ywg.2.1708642532143; Thu, 22 Feb
+ 2024 14:55:32 -0800 (PST)
+Date: Thu, 22 Feb 2024 14:55:30 -0800
+In-Reply-To: <ZdfNwhe2s0Mn2gB4@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0
+References: <20240203000917.376631-1-seanjc@google.com> <20240203000917.376631-11-seanjc@google.com>
+ <ZcKYRsNUAngWGy2a@google.com> <ZdfNwhe2s0Mn2gB4@google.com>
+Message-ID: <ZdfQ4jI8yT-bvbV4@google.com>
+Subject: Re: [PATCH v8 10/10] KVM: selftests: Add a basic SEV smoke test
+From: Sean Christopherson <seanjc@google.com>
+To: Paolo Bonzini <pbonzini@redhat.com>, Marc Zyngier <maz@kernel.org>, 
+	Oliver Upton <oliver.upton@linux.dev>, Anup Patel <anup@brainfault.org>, 
+	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	Albert Ou <aou@eecs.berkeley.edu>, Christian Borntraeger <borntraeger@linux.ibm.com>, 
+	Janosch Frank <frankja@linux.ibm.com>, Claudio Imbrenda <imbrenda@linux.ibm.com>, kvm@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, 
+	kvm-riscv@lists.infradead.org, linux-riscv@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, Vishal Annapurve <vannapurve@google.com>, 
+	Ackerley Tng <ackerleytng@google.com>, Andrew Jones <andrew.jones@linux.dev>, 
+	Tom Lendacky <thomas.lendacky@amd.com>, Michael Roth <michael.roth@amd.com>, 
+	Peter Gonda <pgonda@google.com>
+Content-Type: text/plain; charset="us-ascii"
 
-On Thu, 22 Feb 2024 12:49:03 -0800
-John Stultz <jstultz@google.com> wrote:
-
-> Zimuzo reported seeing occasional cases in perfetto traces where
-> tasks went from sleeping directly to trace_sched_wakeup()
-> without always seeing a trace_sched_waking().
+On Thu, Feb 22, 2024, Sean Christopherson wrote:
+> On Tue, Feb 06, 2024, Sean Christopherson wrote:
+> > On Fri, Feb 02, 2024, Sean Christopherson wrote:
+> > > +int main(int argc, char *argv[])
+> > > +{
+> > > +	TEST_REQUIRE(is_kvm_sev_supported());
+> > 
+> > This also needs
+> > 
+> > 	TEST_REQUIRE(kvm_cpu_has(X86_FEATURE_SEV));
+> > 
+> > to handle the case where the platform supports SEV, i.e. /dev/sev exists, but
+> > KVM doesn't support SEV, e.g. if TDP is disabled, if SEV was explicitly disabled
+> > via module param, etc.
 > 
-> Looking at the code, trace_sched_wakeup() is only called in
-> ttwu_do_wakeup()
-> 
-> The call paths that get you to ttwu_do_wakeup() are:
-> try_to_wake_up() -> ttwu_do_wakeup()
-> try_to_wake_up() -> ttwu_runnable() -> ttwu_do_wakeup()
-> try_to_wake_up() -> ttwu_queue() -> ttwu_do_activate() -> ttwu_do_wakeup()
-> sched_ttwu_pending() -> ttwu_do_activate() -> ttwu_do_wakeup()
-> 
-> where trace_sched_waking() is currently called only in
-> try_to_wake_up().
-> 
-> So this patch adds a trace_sched_waking() call to
-> sched_ttwu_pending(), so we see the same state machine
-> transitions.
-> 
-> With this change, the number of unexpected state transitions
-> in perfetto was greatly reduced.
-> 
-> This has been in my drafts for awhile, so I wanted to send
-> this out for thoughts/feedback.
+> Thinking more about this, I think we should simply delete is_kvm_sev_supported().
+> (a) it obviously doesn't query _KVM_ support, and (b) if KVM says SEV is supported,
+> then it darn well actually be supported.
 
-I just added at the same location as your trace event:
+Ugh, and selftests also need to handle the scenario where SEV is enabled, but all
+ASIDs are assigned to SEV-ES.  We could try to create a dummy VM and check for an
+-EBUSY return, but that is ugly and could result in missing KVM bugs due to tests
+being skipped instead of failing.
 
-   trace_printk("SCHED_WAKING %s:%d\n", p->comm, p->pid);
-
-And then ran: trace-cmd record -e 'sched_wak*'
-
-Where trace-cmd report gives:
-
-     kworker/0:1-10    [000] d..3.   190.212851: sched_waking:         comm=kworker/7:3 pid=114 prio=120 target_cpu=007
-          <idle>-0     [002] d.h2.   190.212856: bprint:               sched_ttwu_pending: SCHED_WAKING kworker/2:1:110
-          <idle>-0     [002] dNh2.   190.212861: sched_wakeup:         kworker/2:1:110 [120] CPU:002
-          <idle>-0     [001] d.h2.   190.212911: bprint:               sched_ttwu_pending: SCHED_WAKING kworker/1:1:85
-          <idle>-0     [003] d.h2.   190.212918: bprint:               sched_ttwu_pending: SCHED_WAKING kworker/3:1:77
-          <idle>-0     [001] dNh2.   190.212919: sched_wakeup:         kworker/1:1:85 [120] CPU:001
-          <idle>-0     [003] dNh2.   190.212927: sched_wakeup:         kworker/3:1:77 [120] CPU:003
-          <idle>-0     [004] d.h2.   190.212930: bprint:               sched_ttwu_pending: SCHED_WAKING kworker/4:1:115
-          <idle>-0     [004] dNh2.   190.212939: sched_wakeup:         kworker/4:1:115 [120] CPU:004
-          <idle>-0     [007] d.h2.   190.212943: bprint:               sched_ttwu_pending: SCHED_WAKING kworker/7:3:114
-          <idle>-0     [007] dNh2.   190.212952: sched_wakeup:         kworker/7:3:114 [120] CPU:007
-          <idle>-0     [001] d.h3.   190.511970: sched_waking:         comm=gmain pid=474 prio=120 target_cpu=001
-          <idle>-0     [001] dNh4.   190.511989: sched_wakeup:         gmain:474 [120] CPU:001
-          <idle>-0     [006] d.s3.   190.708715: sched_waking:         comm=kcompactd0 pid=70 prio=120 target_cpu=006
-          <idle>-0     [006] dNs4.   190.708726: sched_wakeup:         kcompactd0:70 [120] CPU:006
-          <idle>-0     [002] d.s4.   190.916737: sched_waking:         comm=kworker/2:1 pid=110 prio=120 target_cpu=002
-          <idle>-0     [002] dNs5.   190.916747: sched_wakeup:         kworker/2:1:110 [120] CPU:002
-          <idle>-0     [005] d.s4.   191.044665: sched_waking:         comm=kworker/5:0H pid=44 prio=100 target_cpu=005
-          <idle>-0     [005] dNs5.   191.044675: sched_wakeup:         kworker/5:0H:44 [100] CPU:005
-          <idle>-0     [006] d.s3.   191.212680: sched_waking:         comm=kcompactd0 pid=70 prio=120 target_cpu=006
-          <idle>-0     [006] dNs4.   191.212691: sched_wakeup:         kcompactd0:70 [120] CPU:006
-          <idle>-0     [001] d.s3.   191.556713: sched_waking:         comm=khugepaged pid=73 prio=139 target_cpu=001
-          <idle>-0     [001] dNs4.   191.556723: sched_wakeup:         khugepaged:73 [139] CPU:001
-          <idle>-0     [001] dNs4.   191.556728: sched_waking:         comm=kworker/1:1 pid=85 prio=120 target_cpu=001
-
-Where only sched_wakeup shows the trace_printk() output but other
-sched_waking events have a matching sched_wakeup event. I would say this is
-a bug.
-
-This will also cause some of my tooling to be incorrect too, as I normally
-just use "sched_waking" to find wake ups :-/
-
--- Steve
+That's a future problem though, because I think we'll need new KVM functionality
+to surface that information.
