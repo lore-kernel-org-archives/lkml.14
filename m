@@ -1,108 +1,90 @@
-Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A750F1468F2
-	for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 15:37:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E2BA14A093;
+	Thu, 22 Feb 2024 15:38:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708616243; cv=none; b=EzTMzcneef2M1iSvtYY6Mfaanx0AIyukiQWnjMhxdmR4poKO6UPqZRtcIZC8SbLERuNi8pfswL2TDmNW6TYWjIIFRUUBUyMUIUdImJOZT26WCDf+ITElhbSilDXCX1E39kWNSyMDmAsaUFPrTqhjO8aI3WVDA+4Tqhlfc8ib6yw=
+	t=1708616286; cv=none; b=rg7dGxbnIcYKFDHnEHiS67cAiSkIaGdhKy0vVOYR3os8540Y4+w0wFSnOluPaklgS3CKTZ3gXBX3KtZP3Z1EnSCyu+UfbqsFMYLnvyKC55SnbxUjmbA1q3IMqR7RrypEHBjfkWnmudJa7i1IHO0WBr7r9PTDC3YSOhX7Mt4AwLY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708616243; c=relaxed/simple;
-	bh=G6FdFkR1SinAjzKeeCmu/d6YLuca223FdRsHUFO3wPg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=NNDgLE30fFlNPYNJGUffwadIqVR2QVnMhFPlCMFD1keaALZRz2+laeOh6dqb2UNdp66kB6B0lH7QZTrnXwY+qX6QfyH6A7JUMVfsjwT0MlNWTtCnSZ2edOmY5l74LKdVB3/B9ni/bVSz+Ui56yxgqgepw393te9JVV9b9sib9lk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=EGK1Lq5k; arc=none smtp.client-ip=209.85.221.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1708616286; c=relaxed/simple;
+	bh=qu0fwWOeh/I6+oNa5FUXimTTggVsBjqh5xvuL/Jm3Rc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZPvJdIuxviy/Ith7ypJRGp0bzZFV/m9UecqAF/Qe7R1xvNmpyB+TxeJud1rUlKn/dIg0qDXsxB20KfZZb0xvQ8PlSfOIxaYDN3Ze6pMbxJOdNroVLlMl+MXAfWB9WtLlsT7ZVDw9ABt+CN7TYpHn1zFaWVzkyUVGlcL2V5/Cqqw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JHRXk4KX; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="EGK1Lq5k"
-Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-33d118a181fso4280610f8f.1
-        for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 07:37:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1708616240; x=1709221040; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=9ONFC+sKbmZgeU+8ec+H5IbujbZssYRsodi4WGWZ5Qg=;
-        b=EGK1Lq5kNsPIGPN2VD8CPDYa7lJTZ/B9GG+YaMAn5765RSOdyirTu4JfBiBIWCMRMI
-         33at6d1mPcjKifzZEdcq0yiELAN9QZiPUzHvvBG7ULc6BqxONmi+Xo7G+DPJVjh3MMk7
-         XkRWxemb4hU5Ivmvy3jD44Q4eqGrmk1sMiqqEs2gTIB0/bxNTg/XiyWqnyjO6Vt09PrF
-         NrkbkGGXnkZwHxFhXaXy3+CGjiJwxu/r0JKnlzhl4Cidcd8mYGjxmPPC6BhZBWlhjbR7
-         CX7896FYCxkzPyBSc3adPV5mW8r/d0/tjEJa8J6wBY/xIlJd54cROR31zk+KD2/FqC8a
-         eDRQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708616240; x=1709221040;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=9ONFC+sKbmZgeU+8ec+H5IbujbZssYRsodi4WGWZ5Qg=;
-        b=qUxOTOCnJONoD9VFbr1QvdXjU2fCyTgj4c9X5C8CGe7VvigETlILhwamV79HGTlKAC
-         tiTpzByFvgcMARF2uUanMIVpZAA2xYw1qTNdCDWqhMhS67FcceqzHjLV5q+axuIaS5BX
-         HblPGYYprzw8USejv66/K6kcL0W4muqAC27SyEvR1/iMkS9CKFyDbA/Aa2hLW9rGEGHc
-         x+mwCzc9qbw9Pv5nbR+OxL1IiZmIjLQgUBkPnVE1ICZZFtLocaTs01DcdUSKi6IvoeD9
-         m0tqZZbEI4m4fObIKPrPtKxmGJZYjxelYiVNXu9mf4Q+c4EMn0hZSsxfvFsSdQjt+9xf
-         ou/A==
-X-Forwarded-Encrypted: i=1; AJvYcCWiU3kx8y+pGy9LhMdcN4gMNX4v7RVzvCtKozxwVnxWHG1fKkk4bBO8gARCa3hW2HQHIZYeaG60koK/Mnxh6MpftaHUB2uWhQJpZYWZ
-X-Gm-Message-State: AOJu0YwuPm6A4puq11gZg1PZI7UUTzU/LX4RPE3sug8Ipyr7I1owIH1n
-	M+VChMWCJLz6g2LsRyd69dwrSNIVE6k13ADjPv9wOFB40BFKeyHhYcH6YyTGOFI=
-X-Google-Smtp-Source: AGHT+IHunUCMJsjJDlX8NcL9abpvM7ZuC/4JFzRgNazdiUVASL0PdNnWK/BRF4OjEz2bKtAMkbZBYg==
-X-Received: by 2002:adf:f9cb:0:b0:33d:269d:a80c with SMTP id w11-20020adff9cb000000b0033d269da80cmr12005438wrr.41.1708616240076;
-        Thu, 22 Feb 2024 07:37:20 -0800 (PST)
-Received: from [192.168.10.46] (146725694.box.freepro.com. [130.180.211.218])
-        by smtp.googlemail.com with ESMTPSA id ba24-20020a0560001c1800b0033d9ee09b7asm315655wrb.107.2024.02.22.07.37.18
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 22 Feb 2024 07:37:19 -0800 (PST)
-Message-ID: <986d5e42-f349-4069-b951-6c0ceb909dfe@linaro.org>
-Date: Thu, 22 Feb 2024 16:37:18 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JHRXk4KX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 018E9C433F1;
+	Thu, 22 Feb 2024 15:38:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1708616286;
+	bh=qu0fwWOeh/I6+oNa5FUXimTTggVsBjqh5xvuL/Jm3Rc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=JHRXk4KXwfOwKzU4gL5Z9zYoGPkNdMdD2jERLNEP24+s4Qvj36nxDojqPrvri5p7u
+	 IQ1kgoTttatl9OZdO/RmTNPNP8qW5Gqsmq6pp4IHEEhyxKB6FQSQjTmCy3sbhuj4oh
+	 iWzU6zrkqvjg+3p53nsnVdTWiXr4eke0AU/3o39SG02vzoCk64/DHKUKU2hcyDK1Nk
+	 Fp8bflMVrnJ//9AjPweq01bqfSB66Dj569+O0yt3ACuTrJmAKUiBBCXa6x3LAYEmIT
+	 kInLmnVGUY8IcwrLz1obiPXwxkzc3+HHyqplVk67LBJhgtS7Xof+wvobaAGKByMGFs
+	 y82eq/oIFWpgg==
+Date: Thu, 22 Feb 2024 09:38:04 -0600
+From: "Seth Forshee (DigitalOcean)" <sforshee@kernel.org>
+To: Christian Brauner <brauner@kernel.org>
+Cc: Serge Hallyn <serge@hallyn.com>, Paul Moore <paul@paul-moore.com>,
+	Eric Paris <eparis@redhat.com>, James Morris <jmorris@namei.org>,
+	Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>,
+	Stephen Smalley <stephen.smalley.work@gmail.com>,
+	Ondrej Mosnacek <omosnace@redhat.com>,
+	Casey Schaufler <casey@schaufler-ca.com>,
+	Mimi Zohar <zohar@linux.ibm.com>,
+	Roberto Sassu <roberto.sassu@huawei.com>,
+	Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
+	Eric Snowberg <eric.snowberg@oracle.com>,
+	"Matthew Wilcox (Oracle)" <willy@infradead.org>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Miklos Szeredi <miklos@szeredi.hu>,
+	Amir Goldstein <amir73il@gmail.com>, linux-kernel@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org,
+	linux-security-module@vger.kernel.org, audit@vger.kernel.org,
+	selinux@vger.kernel.org, linux-integrity@vger.kernel.org,
+	linux-doc@vger.kernel.org, linux-unionfs@vger.kernel.org
+Subject: Re: [PATCH v2 06/25] capability: provide helpers for converting
+ between xattrs and vfs_caps
+Message-ID: <ZddqXN51+8UaKVTC@do-x1extreme>
+References: <20240221-idmap-fscap-refactor-v2-0-3039364623bd@kernel.org>
+ <20240221-idmap-fscap-refactor-v2-6-3039364623bd@kernel.org>
+ <20240222-wieweit-eiskunstlauf-0dbab2007754@brauner>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 9/9] thermal: core: Eliminate writable trip points
- masks
-Content-Language: en-US
-To: "Rafael J. Wysocki" <rjw@rjwysocki.net>,
- Linux PM <linux-pm@vger.kernel.org>
-Cc: Lukasz Luba <lukasz.luba@arm.com>, LKML <linux-kernel@vger.kernel.org>,
- Stanislaw Gruszka <stanislaw.gruszka@linux.intel.com>,
- Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
- Zhang Rui <rui.zhang@intel.com>, netdev@vger.kernel.org,
- Ido Schimmel <idosch@nvidia.com>, Petr Machata <petrm@nvidia.com>,
- Miri Korenblit <miriam.rachel.korenblit@intel.com>,
- linux-wireless@vger.kernel.org, Shawn Guo <shawnguo@kernel.org>,
- Sascha Hauer <s.hauer@pengutronix.de>,
- Pengutronix Kernel Team <kernel@pengutronix.de>,
- Manaf Meethalavalappu Pallikunhi <quic_manafm@quicinc.com>
-References: <6017196.lOV4Wx5bFT@kreacher> <5913164.MhkbZ0Pkbq@kreacher>
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-In-Reply-To: <5913164.MhkbZ0Pkbq@kreacher>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240222-wieweit-eiskunstlauf-0dbab2007754@brauner>
 
-On 12/02/2024 19:42, Rafael J. Wysocki wrote:
-> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+On Thu, Feb 22, 2024 at 04:20:08PM +0100, Christian Brauner wrote:
+> > +	if ((magic_etc & VFS_CAP_REVISION_MASK) != VFS_CAP_REVISION_1) {
+> > +		vfs_caps->permitted.val += (u64)le32_to_cpu(caps->data[1].permitted) << 32;
+> > +		vfs_caps->inheritable.val += (u64)le32_to_cpu(caps->data[1].inheritable) << 32;
 > 
-> All of the thermal_zone_device_register_with_trips() callers pass zero
-> writable trip points masks to it, so drop the mask argument from that
-> function and update all of its callers accordingly.
+> That + makes this even more difficult to read. This should be rewritten.
+
+Do you meant that you would prefer |= to +=, or do you have something
+else in mind?
+
+Note though that this is code that I didn't change, just moved.
+Generally I tried to avoid changing code if it wasn't necessary for the
+aims of this series.
+
+> > +ssize_t vfs_caps_to_xattr(struct mnt_idmap *idmap,
+> > +			  struct user_namespace *dest_userns,
+> > +			  const struct vfs_caps *vfs_caps,
+> > +			  void *data, size_t size)
+> > +{
+> > +	struct vfs_ns_cap_data *caps = data;
+> > +	int ret;
 > 
-> This also removes the artificial trip points per zone limit of 32,
-> related to using writable trip points masks.
-> 
-> No intentional functional impact.
-> 
-> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> This should very likely be ssize_t ret.
 
-Reviewed-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-
-
--- 
-<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
-
+Indeed, I'll fix that.
