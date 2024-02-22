@@ -1,80 +1,82 @@
-Received: from 13.mo561.mail-out.ovh.net (13.mo561.mail-out.ovh.net [188.165.33.202])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97A36381B8
-	for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 10:03:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.165.33.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EAF538FB9;
+	Thu, 22 Feb 2024 10:03:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708596193; cv=none; b=ROM5u3KTU+9z1vBN7xPSrPoFI6ZGyf+UdXuZ1tBtIKB/RdjMxcVdmGzgyAirxIeiS4djrD/aLSfI25iW0w9rmM1tsI2avh1fuJ3/RkvDPA/jTvw4li47e88ZpBtCTI7Zdj0S1VzZmKlWA/Pk9xtf0bVdeGyyerdf1GA6nnw6Okg=
+	t=1708596212; cv=none; b=gLDYlF4AcYqhyIp2R7ZrOa3Evko6Edll514Sz0vIYpXU8dZEFdvnifI+MtlYTShDUQ2pBiX8SxJcag26w8wHcylwFEO38eJaXBA3A3BwyYg+YBmDTgBEKb6YXAC+AlECD1njGzUe7fYswWnh/FchBremZ1V1+i1+RmXWEgX9fY4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708596193; c=relaxed/simple;
-	bh=W+jnHVVB3ZRAg9EX2fNf/hRjYdScgr/CZdITpC+rZpA=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=r6zRHMZRTJyEYYgHbQV1I1yYz/rhtjxY8CHBT7g/rvujYgunMc8t/5ACFAGwIdUeJ7b5Qex86bcijUnAZUn4Qgomb9wOYr/zbfA8B4dimC5veAIwPn8MhX3klqNasggwRi6qpIq7MLhsIjK/WQURby+AyPzvm+PasSG6lBe3nH4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=etezian.org; arc=none smtp.client-ip=188.165.33.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=etezian.org
-Received: from director4.ghost.mail-out.ovh.net (unknown [10.109.148.126])
-	by mo561.mail-out.ovh.net (Postfix) with ESMTP id 4TgRbg6FHlz1GZ0
-	for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 08:47:27 +0000 (UTC)
-Received: from ghost-submission-6684bf9d7b-dnswc (unknown [10.111.174.115])
-	by director4.ghost.mail-out.ovh.net (Postfix) with ESMTPS id 922F11FD6F;
-	Thu, 22 Feb 2024 08:47:24 +0000 (UTC)
-Received: from etezian.org ([37.59.142.107])
-	by ghost-submission-6684bf9d7b-dnswc with ESMTPSA
-	id LdgvFRwK12VVngkAllgtww
-	(envelope-from <andi@etezian.org>); Thu, 22 Feb 2024 08:47:24 +0000
-Authentication-Results:garm.ovh; auth=pass (GARM-107S0017b51d39a-e42a-4bc8-afd5-71473328faab,
-                    D266FE3A7B9817F169603FF0F8C90E47FA3D240B) smtp.auth=andi@etezian.org
-X-OVh-ClientIp:89.217.109.169
-From: Andi Shyti <andi.shyti@kernel.org>
-To: linux-i2c@vger.kernel.org, 
- Wolfram Sang <wsa+renesas@sang-engineering.com>
-Cc: Corey Minyard <minyard@acm.org>, 
- Andrew Manley <andrew.manley@sealingtech.com>, 
- Oleksij Rempel <o.rempel@pengutronix.de>, 
- Pengutronix Kernel Team <kernel@pengutronix.de>, 
- Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, 
- Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, 
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20240221193013.14233-2-wsa+renesas@sang-engineering.com>
-References: <20240221193013.14233-2-wsa+renesas@sang-engineering.com>
-Subject: Re: [PATCH v3] i2c: imx: when being a target, mark the last read
- as processed
-Message-Id: <170859164340.336357.16059990973960196120.b4-ty@kernel.org>
-Date: Thu, 22 Feb 2024 09:47:23 +0100
+	s=arc-20240116; t=1708596212; c=relaxed/simple;
+	bh=0AggU31CGt9Ylb7dMMATQT5arx+9ift1Y5YR/y3R+MU=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=HVA2/o63OWHAkc/V253Ee6ziw6SMBdcVL9/FT3++ZLrU4V6XpfSw0M+g2TmCg4/unAqW7yRW53x+bFWykaUIsEWAK7MO+2Wt9FdERifXdyupyLPP4YKu+HIgOMgjJ4idxxF6CdcpEPOOLg+4xtr3XoIpUdjw5mwrTA/Uv+SkQno=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M6Fe4TK8; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M6Fe4TK8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1A975C433F1;
+	Thu, 22 Feb 2024 10:03:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1708596211;
+	bh=0AggU31CGt9Ylb7dMMATQT5arx+9ift1Y5YR/y3R+MU=;
+	h=From:To:Cc:Subject:Date:From;
+	b=M6Fe4TK8tyMXPrN5n3UA3CMidv/F0/zv9WlgWVDiLyjsRIvkZDgUECgErqur0N4/d
+	 BEpUb6hdqeYViHQjlHxqcFvFJFlQUOZKDI44b3/cKgAIZL1F/wooyjj9ABOEOu9p5Y
+	 1277HuwsBDyZrDwlOY77ie08vHxOXchwQ6pmHGZjWQzOfZ6947Rte+CCDWLgxHBQmS
+	 XtenB0iA0TJlpvSv5CKPxN/aYbDQhVfv4iYUKnENXlCLFwBwYO5mtI56klb44M0XhB
+	 SclZjstRT4iLXKZGNMIrScxEAacBniTrTWufVS32T1dd7aKO8kjYQKxFNb/IlmUxcF
+	 keHbag2tHwuZQ==
+From: Arnd Bergmann <arnd@kernel.org>
+To: Jesse Brandeburg <jesse.brandeburg@intel.com>,
+	Tony Nguyen <anthony.l.nguyen@intel.com>
+Cc: Arnd Bergmann <arnd@arndb.de>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Andrew Lunn <andrew@lunn.ch>,
+	intel-wired-lan@lists.osuosl.org,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] igc: fix LEDS_CLASS dependency
+Date: Thu, 22 Feb 2024 11:02:13 +0100
+Message-Id: <20240222100324.453272-1-arnd@kernel.org>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.12.4
-X-Ovh-Tracer-Id: 729301668120365699
-X-VR-SPAMSTATE: OK
-X-VR-SPAMSCORE: -100
-X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedvledrfeefgdduvdduucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuqfggjfdpvefjgfevmfevgfenuceurghilhhouhhtmecuhedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephffvvegjfhfukfffgggtgffosehtjeertdertdejnecuhfhrohhmpeetnhguihcuufhhhihtihcuoegrnhguihdrshhhhihtiheskhgvrhhnvghlrdhorhhgqeenucggtffrrghtthgvrhhnpeffteehudffvdfhudfgffdugfejjeduheehgeefgeeuhfeiuefghffgueffvdfgfeenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecukfhppeduvdejrddtrddtrddupdekledrvddujedruddtledrudeiledpfeejrdehledrudegvddruddtjeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeduvdejrddtrddtrddupdhmrghilhhfrhhomheprghnughisegvthgviihirghnrdhorhhgpdhnsggprhgtphhtthhopedupdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdfovfetjfhoshhtpehmohehiedupdhmohguvgepshhmthhpohhuth
+Content-Transfer-Encoding: 8bit
 
-Hi
+From: Arnd Bergmann <arnd@arndb.de>
 
-On Wed, 21 Feb 2024 20:27:13 +0100, Wolfram Sang wrote:
-> When being a target, NAK from the controller means that all bytes have
-> been transferred. So, the last byte needs also to be marked as
-> 'processed'. Otherwise index registers of backends may not increase.
-> 
-> 
+When IGC is built-in but LEDS_CLASS is a loadable module, there is
+a link failure:
 
-Applied to i2c/i2c-host-fixes on
+x86_64-linux-ld: drivers/net/ethernet/intel/igc/igc_leds.o: in function `igc_led_setup':
+igc_leds.c:(.text+0x75c): undefined reference to `devm_led_classdev_register_ext'
 
-git://git.kernel.org/pub/scm/linux/kernel/git/andi.shyti/linux.git
+Add another dependency that prevents this combination.
 
-Thank you,
-Andi
+Fixes: ea578703b03d ("igc: Add support for LEDs on i225/i226")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ drivers/net/ethernet/intel/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-Patches applied
-===============
-[1/1] i2c: imx: when being a target, mark the last read as processed
-      commit: cf8281b1aeab93a03c87033a741075c39ace80d4
+diff --git a/drivers/net/ethernet/intel/Kconfig b/drivers/net/ethernet/intel/Kconfig
+index af7fa6856707..6e7901e12699 100644
+--- a/drivers/net/ethernet/intel/Kconfig
++++ b/drivers/net/ethernet/intel/Kconfig
+@@ -372,6 +372,7 @@ config IGC
+ config IGC_LEDS
+ 	def_bool LEDS_TRIGGER_NETDEV
+ 	depends on IGC && LEDS_CLASS
++	depends on LEDS_CLASS=y || IGC=m
+ 	help
+ 	  Optional support for controlling the NIC LED's with the netdev
+ 	  LED trigger.
+-- 
+2.39.2
 
