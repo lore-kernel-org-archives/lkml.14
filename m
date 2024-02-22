@@ -1,93 +1,58 @@
-Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 210C06FCC
-	for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 05:15:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 042B379D0;
+	Thu, 22 Feb 2024 05:15:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708578952; cv=none; b=HN3H6TYDZnr+y7YnTX0SoPxzITYOgWup31OCgvT0PSog+K1QESdiuxzDH7EPkCsnUm7FwIDpRpw4sRHzWkTzknML1AqPLEtUt6Cf5zV8cEckebxjDZkbPpXujfN1yVR1mFrsXkvt+SPGezmd2Y+t/ojcnGsSfWTwsY3orxzSQZ0=
+	t=1708578954; cv=none; b=mDHOMDzhByNL+EdShCRFyXBl7WFlHUHto3B2TQ8v4nI2QKgvtYGW/QJQO9xUrJCgoq0Hgza+x2cTMi4B9PIIZwa2EbCR7U1AHnZltjOF+5ufYr9CJSF32K536frGD+8flv+rTtbB5Nx6nTo6a+wunQEYtJoUIA0+ikPIJiQ3b5o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708578952; c=relaxed/simple;
-	bh=/5pahtp3IV21Zkx7LwhzOaL8qhatST6yLhJWnBUWtrI=;
-	h=Date:Message-Id:Mime-Version:Subject:From:To:Cc:Content-Type; b=qNb/VTF+wZur5GzW4FHH+wyoAX6GZdaofPuANdDz5LsqsS71vbwRnTU7/bCW9YA6VveBxyWwhspkXBcy3CH4M1C3LKutDPLkhBgafw91xdjOyPl1ybykg9cSVg9XCWwRfIrcL/beTStjDLBFQSnzKh6ClKjeTVzbQ/ZwobjrTwo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--saravanak.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=daoNE5eK; arc=none smtp.client-ip=209.85.219.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--saravanak.bounces.google.com
+	s=arc-20240116; t=1708578954; c=relaxed/simple;
+	bh=dg6U0qZ25gCXqk858bopVDGf9rfG4vTej3zkDRCwC/A=;
+	h=Message-ID:Content-Type:MIME-Version:In-Reply-To:References:
+	 Subject:From:Cc:To:Date; b=ixRvkR/MbjBfR5hhEt9pd6R5H9jIASzWRmLJk1E5DS5n5PVv2oTe28fPIhUKbTPCZD0Bce/Ve1GK9JFXM5d+ZWonDutqg8vA6+38ciYJKG/E62yPRBJGPloZqhUceLStSyzYBvza7k5oS9sMNnlrPIuL7bBXWKftIg1MPKS2M5E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DGnnCNS3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="daoNE5eK"
-Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-dc6b26845cdso2143495276.3
-        for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 21:15:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1708578950; x=1709183750; darn=vger.kernel.org;
-        h=cc:to:from:subject:mime-version:message-id:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=/szi7MXaD7WqR7pua3W77cLv+YU355Nd7WimhF2bWNQ=;
-        b=daoNE5eKe1VpC/uzaTBgC5hb6/BoHP/DrwgQOcIjt+Tc3yzOa8vpPUmW3imBoF0gSQ
-         riFs66DPIKFDDiHlyRe1p3rfzKzAonIuitwavApvhDhZD6NjGYMWD88TmDg6wmTwux+U
-         N6B4YyWdDZUX4U2kCQQLK5j7w6I8PSAHYCtCN6f/Nm6Xr/T8QmZZSCf4gFKD3CQNLxuy
-         kSOQuSJucJbeKYiONQSdf/ZLEbPsNEZUXIvatg4tJHGNt+HZfEOts+f4tAvq66qRIDYR
-         vpjBg0/xBMLHXSPCvoo3NGgOcv33xsDM/O3nzi4cetk+X7hLLJfHTNOtwIs5V3EF6nx4
-         9ifQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708578950; x=1709183750;
-        h=cc:to:from:subject:mime-version:message-id:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=/szi7MXaD7WqR7pua3W77cLv+YU355Nd7WimhF2bWNQ=;
-        b=JOTSKGEzlyq4O+aeRg24o+woFIaAlIKF6YyyFKWTt8dk0IxnvpoebL8JckSenaUrDs
-         UO4ePJPs14iSpFhcR4sHLHTdxPYa77N4Go0pODSX87YQEcG1TJC6KyGmDOicaW1wGgHP
-         E7xbLTkJKlOQ4QIGAUvnHCU58Q4PuOhA5/pu68dG0GuiuJ0HY3JbAoyabwn+JLQlLoUH
-         t2y+H+OfGHSGC963PZB3hhXhw93rBMU7+gsuEJfqB5NGyxOApfN4xyvgUg91b8swvrBN
-         KdRIx6VJR97hmCGrtA+cH85+Z/nA8A5S65/ePZz5JWm1+iLsQzNNAyKelmSrmd8RRnTW
-         bbNg==
-X-Forwarded-Encrypted: i=1; AJvYcCXuHkEOXWJ3cO+cae38U9WAbz4qFp+qVgUzXMDN0rv+m8UUyXgV3gVYM/8i573GVFxxPYVQMP5rt7nu52g9AokasvtUfDNo5CtfCN/e
-X-Gm-Message-State: AOJu0YxmIj1bNqVvQvRQCONCy9Okm5LcqBh5vSotNado9sdXO4BCjd2a
-	RxD/AxEMhAknIghphNtFlq7r+qZIjG1U0yMC6GTFg5FC+k1Mhb4j/xiLs26LnSx71mGIjOE2rWr
-	GRAaDPy1/kGBbsA==
-X-Google-Smtp-Source: AGHT+IFI46TY+t86YHH4dK3IrYivpsBHYhG3Zk8JNTF8hrif3KucQdt8o3Xst902ElL9NDZWrH0gvnkppiGHzYE=
-X-Received: from saravanak.san.corp.google.com ([2620:15c:2d:3:451c:c6c5:1fb1:a2a1])
- (user=saravanak job=sendgmr) by 2002:a05:6902:150c:b0:dc6:e1ed:bd1a with SMTP
- id q12-20020a056902150c00b00dc6e1edbd1amr384095ybu.2.1708578950167; Wed, 21
- Feb 2024 21:15:50 -0800 (PST)
-Date: Wed, 21 Feb 2024 21:15:39 -0800
-Message-Id: <20240222051539.3001988-3-saravanak@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DGnnCNS3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 68856C43394;
+	Thu, 22 Feb 2024 05:15:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1708578953;
+	bh=dg6U0qZ25gCXqk858bopVDGf9rfG4vTej3zkDRCwC/A=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+	b=DGnnCNS3dCWCww6KW4/YC2drMrIeD2TAd1rimsesAR6Ob/19ZnT5ixKc1cQHB9Qy7
+	 fXH85WEUzIV0Woyp0FMnjbnrXK5wKj63Mq6Rxq0mlWpUROMCPN3WCCQiCKYIxoqbUh
+	 5mLDu9G0PP6yft/8+o536pVosutxWvUC88CGQRQ4D6skE0UAD+vW0qKdbdpS6rkWQw
+	 l9xPGaz9X9k/1p8DS46OFWiisASpSxyUClzoa9mD2zlVNgD7pxgrss6hr/R6Gd8g2+
+	 39u0PKD0dS736pGeiLrf4ltFc3rShrJ7J5zI78OY+z979LHsz+pIEx4tgUotW37jDo
+	 15BR+fssXPyow==
+Message-ID: <610d7c44517bfe3b218a6d057a08ac7a.sboyd@kernel.org>
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.44.0.rc0.258.g7320e95886-goog
-Subject: [PATCH 1/2] checkpatch: Don't check for 75 chars per line for
- create/delete mode lines
-From: Saravana Kannan <saravanak@google.com>
-To: Andy Whitcroft <apw@canonical.com>, Joe Perches <joe@perches.com>, 
-	Dwaipayan Ray <dwaipayanray1@gmail.com>, Lukas Bulwahn <lukas.bulwahn@gmail.com>
-Cc: Saravana Kannan <saravanak@google.com>, kernel-team@android.com, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20240220084046.23786-2-shradha.t@samsung.com>
+References: <20240220084046.23786-1-shradha.t@samsung.com> <CGME20240220084120epcas5p1e8980539667c3d9da20f49fc645d8f4c@epcas5p1.samsung.com> <20240220084046.23786-2-shradha.t@samsung.com>
+Subject: Re: [PATCH v6 1/2] clk: Provide managed helper to get and enable bulk clocks
+From: Stephen Boyd <sboyd@kernel.org>
+Cc: mturquette@baylibre.com, jingoohan1@gmail.com, lpieralisi@kernel.org, kw@linux.com, robh@kernel.org, bhelgaas@google.com, krzysztof.kozlowski@linaro.org, alim.akhtar@samsung.com, linux@armlinux.org.uk, m.szyprowski@samsung.com, manivannan.sadhasivam@linaro.org, pankaj.dubey@samsung.com, gost.dev@samsung.com, Shradha Todi <shradha.t@samsung.com>
+To: Shradha Todi <shradha.t@samsung.com>, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, linux-samsung-soc@vger.kernel.org
+Date: Wed, 21 Feb 2024 21:15:51 -0800
+User-Agent: alot/0.10
 
-Cover letters have a "create/delete mode <mode> <filename>" line for files
-added/deleted in the patch series. Ignore these lines when checking for the
-maximum 75 chars per line limit.
+Quoting Shradha Todi (2024-02-20 00:40:45)
+> Provide a managed devm_clk_bulk* wrapper to get and enable all
+> bulk clocks in order to simplify drivers that keeps all clocks
+> enabled for the time of driver operation.
+>=20
+> Suggested-by: Marek Szyprowski <m.szyprowski@samsung.com>
+> Reviewed-by: Alim Akhtar <alim.akhtar@samsung.com>
+> Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> Signed-off-by: Shradha Todi <shradha.t@samsung.com>
+> ---
 
-Signed-off-by: Saravana Kannan <saravanak@google.com>
----
- scripts/checkpatch.pl | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
-index 9c4c4a61bc83..f306634a938c 100755
---- a/scripts/checkpatch.pl
-+++ b/scripts/checkpatch.pl
-@@ -3271,6 +3271,8 @@ sub process {
- 					# filename then :
- 		      $line =~ /^\s*(?:Fixes:|$link_tags_search|$signature_tags)/i ||
- 					# A Fixes:, link or signature tag line
-+		      $line =~ /^\s*(?:delete|create) mode\s+[0-8]+\s+\S+\s*$/i ||
-+					# A "create/delete mode <mode> <filename>" line found in cover letters
- 		      $commit_log_possible_stack_dump)) {
- 			WARN("COMMIT_LOG_LONG_LINE",
- 			     "Prefer a maximum 75 chars per line (possible unwrapped commit description?)\n" . $herecurr);
--- 
-2.44.0.rc0.258.g7320e95886-goog
-
+Applied to clk-next
