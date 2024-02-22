@@ -1,157 +1,115 @@
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com [209.85.208.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01C163717C;
-	Thu, 22 Feb 2024 09:26:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F6F437167
+	for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 09:28:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708594003; cv=none; b=qVUyxXEGv8sx7kRliB/GlEKkWIU/NCmhNRYGc5dETY+rEssPkpamheDtEcw9G3p/ax4+GxchIoU7negdYej3fwj+xvlJirxPwK5tUN7GBDV6UP3h+MSI4McsH46HceC7R0Jy0ovtOdha1UZeZCeOrRQ74iY4NIWaSY1C2i80JQ8=
+	t=1708594105; cv=none; b=J8suWUB3ALW5txPQKNCD7cfDUaCc/pS4Fb7DdhGJqSC7i8XWj7GrcOOlleIKQEiOB4rpY2gUXNAJ2NYC/etj2yxLm+Y/nAhEwIrDaYa727hx8tIut1qHAPqiupQu3q3r3Z1M94WXZpyfIyMJnDdY855U27BBlVJlic0V7F7zi5I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708594003; c=relaxed/simple;
-	bh=kGPhBtLA7fOjhIpyW24MDCbxh7JdZBMP1iVR46NnC44=;
-	h=Subject:To:CC:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=FvriNrNcPEcppNvE1F7Ec3XWOe5z0jUTc7DWlQVQRzb/fYH8dy4N5f51NrweGFaPaR61cAK0NPaIGZvOI/eYKid+alYCHL6sFg3Fkxc8fO7UT8He0P0sntj85Mqg64N2HLYq54XUfmXsA9aq5Zyul6cZ9Fry/VHtzI+Swo2dKJU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.105])
-	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4TgSQx32sQzWv29;
-	Thu, 22 Feb 2024 17:24:57 +0800 (CST)
-Received: from kwepemm600009.china.huawei.com (unknown [7.193.23.164])
-	by mail.maildlp.com (Postfix) with ESMTPS id 39356140153;
-	Thu, 22 Feb 2024 17:26:38 +0800 (CST)
-Received: from [10.174.176.73] (10.174.176.73) by
- kwepemm600009.china.huawei.com (7.193.23.164) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Thu, 22 Feb 2024 17:26:37 +0800
-Subject: Re: [PATCH v2] block: fix deadlock between bd_link_disk_holder and
- partition scan
-To: <linan666@huaweicloud.com>, <axboe@kernel.dk>, <song@kernel.org>,
-	Christoph Hellwig <hch@lst.de>
-CC: <linux-raid@vger.kernel.org>, <linux-block@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <yi.zhang@huawei.com>, <houtao1@huawei.com>,
-	<yangerkun@huawei.com>
-References: <20240221090122.1281868-1-linan666@huaweicloud.com>
-From: Yu Kuai <yukuai3@huawei.com>
-Message-ID: <9b4c511b-5ab1-7ba2-8ccc-5538c4672eb4@huawei.com>
-Date: Thu, 22 Feb 2024 17:26:36 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+	s=arc-20240116; t=1708594105; c=relaxed/simple;
+	bh=/jB8xKzooqLDBQRRMv2U89IaFGgAJUReNNqxAOq8geE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=nCjG30OXQInu664Y2umqawRVaR26dCQtJ5h9VUDj7QObtpVUhjlQ+adf4NcpkOak/9Iuw3QIb/I3AkgPL5HmQxi0fIL0cMwzbrgY+uj4zLpsPkA8uDwOyCpzE/iIkcWKkhc0BNm5KRxT2NS3C+z7wacvQ8MqtNwONdimAvfwO4E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=YfHdWlla; arc=none smtp.client-ip=209.85.208.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YfHdWlla"
+Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-2d208be133bso84429471fa.2
+        for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 01:28:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1708594101; x=1709198901; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=afxYQISKwoDQxjr1GUcN5bUK+FSZJNALOlRyIMUtSrs=;
+        b=YfHdWllas8Q5Gqw44hP+07N694c5ACr/a8VUqBF2vdyha3m5q7eIhFt89vseHucg5X
+         6ifk5fSJFxNR4G3BLugT4lChpmiEJcwUNZi73iWnkrXVl0um1xjxpGuSpXrY2YHbzA+Y
+         /KYeDczdHewFwEAMULYep9U7GjhF8SFav+mIDu/gdzb8uedFwZ4iT+gwVcljSjMxJNvH
+         ImwEao35KcyBFuTBoJPeJHqRIa4FlUM1N57/pb9mtP+9Kfw8/lkqeHbJPA9YBuMQMeEd
+         uMdJoc5kudQSx1moDr0E7C/5Uwv1Zus4Dtzv1alZ9Gm58h7MUEt+q6uXaceDh04dFkOw
+         vkiA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708594101; x=1709198901;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=afxYQISKwoDQxjr1GUcN5bUK+FSZJNALOlRyIMUtSrs=;
+        b=DF8ocMRzdWXbqZ7VRBaxz/PrrxGkwOlkF97D0+Md6s8EAos7QTQgdFZU7sVTxC51sd
+         m7BDzuUthYgbUsMv3tOzDQgRCgb8att0A3cgsr9atzQD4Ckg4OA8+kSS9lSsSx957w/8
+         hM6VW/UXIezcNpr0X7B7aH0Z+E8u9/268Ccbn3VJoYLdveJUu69qfuzW7z/MxHLduSBy
+         wcCvQJ2ISSdrHewx3UhIJYEENBg5ij1unajEsUH7lSAz5huesQt3fo+uR0honGnM/Bzd
+         AsM03X8HU+gPWr+Td/HIKfBlijv+S8ILI6giiX8vLOkV9z2wQQ5SJmY+6pZ0G7tuCJq0
+         0p3Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXBKQIEy/cCm4IRtXNIvSfcCnxfenaXbJO6b26dzYkmd/KmNhauORYBglcyTTpQgxluHYtVGmO75WOUlKrzau3CUsl2AMbsOFzi9sXS
+X-Gm-Message-State: AOJu0Yy72jTR+UudNuf88AcoLN+5YRtA2i51yxjsD8tgNQ/vaXxTda7h
+	Vet4XHcPMugrfrZ7PK90zCdy8XLZVd05C3W8n1OXXbWT4BEcoAo8kmzxuDVZWG4=
+X-Google-Smtp-Source: AGHT+IFGHclsIGY09YVRHR/OaiuAmuqnwj+msdJgmr6dF0K5qvEVB4HdflgvI1iN1TebKlQSDUpGnQ==
+X-Received: by 2002:a2e:9dd1:0:b0:2d2:3a18:aa11 with SMTP id x17-20020a2e9dd1000000b002d23a18aa11mr7488948ljj.39.1708594101469;
+        Thu, 22 Feb 2024 01:28:21 -0800 (PST)
+Received: from [87.246.222.6] (netpanel-87-246-222-6.pol.akademiki.lublin.pl. [87.246.222.6])
+        by smtp.gmail.com with ESMTPSA id j5-20020a2e8505000000b002d2556a6e08sm590077lji.30.2024.02.22.01.28.19
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 22 Feb 2024 01:28:21 -0800 (PST)
+Message-ID: <8fcb5816-2d59-4e27-ba68-8e0ed6e7d839@linaro.org>
+Date: Thu, 22 Feb 2024 10:28:19 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20240221090122.1281868-1-linan666@huaweicloud.com>
-Content-Type: text/plain; charset="gbk"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
- kwepemm600009.china.huawei.com (7.193.23.164)
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 3/9] arm64: dts: qcom: sc7280: Enable MDP turbo mode
+Content-Language: en-US
+To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Cc: Bjorn Andersson <quic_bjorande@quicinc.com>,
+ Douglas Anderson <dianders@chromium.org>, Rob Clark <robdclark@gmail.com>,
+ Abhinav Kumar <quic_abhinavk@quicinc.com>, Sean Paul <sean@poorly.run>,
+ Marijn Suijten <marijn.suijten@somainline.org>,
+ David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+ cros-qcom-dts-watchers@chromium.org, Bjorn Andersson <andersson@kernel.org>,
+ Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>, linux-arm-msm@vger.kernel.org,
+ dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org,
+ linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+References: <20240221-rb3gen2-dp-connector-v1-0-dc0964ef7d96@quicinc.com>
+ <20240221-rb3gen2-dp-connector-v1-3-dc0964ef7d96@quicinc.com>
+ <CAA8EJpo=9vhM+5YzaFxUoYRuEWQyrMS8wLNPSF3K=bN5JwWyDw@mail.gmail.com>
+ <8313a7c3-3ace-4dee-ad27-8f51a06cd58c@linaro.org>
+ <CAA8EJpqFj5nf8d_=Uoup7qg+nQrxqQU-DHbL3uSP138m9AcXLw@mail.gmail.com>
+From: Konrad Dybcio <konrad.dybcio@linaro.org>
+In-Reply-To: <CAA8EJpqFj5nf8d_=Uoup7qg+nQrxqQU-DHbL3uSP138m9AcXLw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-+CC Christoph
 
-ÔÚ 2024/02/21 17:01, linan666@huaweicloud.com Ð´µÀ:
-> From: Li Nan <linan122@huawei.com>
-> 
-> 'open_mutex' of gendisk is used to protect open/close block devices. But
-> in bd_link_disk_holder(), it is used to protect the creation of symlink
-> between holding disk and slave bdev, which introduces some issues.
-> 
-> When bd_link_disk_holder() is called, the driver is usually in the process
-> of initialization/modification and may suspend submitting io. At this
-> time, any io hold 'open_mutex', such as scanning partitions, can cause
-> deadlocks. For example, in raid:
-> 
-> T1                              T2
-> bdev_open_by_dev
->   lock open_mutex [1]
->   ...
->    efi_partition
->    ...
->     md_submit_bio
-> 				md_ioctl mddev_syspend
-> 				  -> suspend all io
-> 				 md_add_new_disk
-> 				  bind_rdev_to_array
-> 				   bd_link_disk_holder
-> 				    try lock open_mutex [2]
->      md_handle_request
->       -> wait mddev_resume
-> 
-> T1 scan partition, T2 add a new device to raid. T1 waits for T2 to resume
-> mddev, but T2 waits for open_mutex held by T1. Deadlock occurs.
-> 
-> Fix it by introducing a local mutex 'blk_holder_mutex' to replace
-> 'open_mutex'.
-> 
-> Fixes: 1b0a2d950ee2 ("md: use new apis to suspend array for ioctls involed array reconfiguration")
-> Reported-by: mgperkow@gmail.com
-> Closes: https://bugzilla.kernel.org/show_bug.cgi?id=218459
-> Signed-off-by: Li Nan <linan122@huawei.com>
 
-Reviewed-by: Yu Kuai <yukuai3@huawei.com>
-> ---
-> v2: add a blk_ prefix to 'holder_mutex'.
+On 2/22/24 10:04, Dmitry Baryshkov wrote:
+> On Thu, 22 Feb 2024 at 10:56, Konrad Dybcio <konrad.dybcio@linaro.org> wrote:
+>>
+>>
+>>
+>> On 2/22/24 00:41, Dmitry Baryshkov wrote:
+>>> On Thu, 22 Feb 2024 at 01:19, Bjorn Andersson <quic_bjorande@quicinc.com> wrote:
+>>>>
+>>>> The max frequency listed in the DPU opp-table is 506MHz, this is not
+>>>> sufficient to drive a 4k@60 display, resulting in constant underrun.
+>>>>
+>>>> Add the missing MDP_CLK turbo frequency of 608MHz to the opp-table to
+>>>> fix this.
+>>>
+>>> I think we might want to keep this disabled for ChromeOS devices. Doug?
+>>
+>> ChromeOS devices don't get a special SoC
 > 
->   block/holder.c | 12 +++++++-----
->   1 file changed, 7 insertions(+), 5 deletions(-)
-> 
-> diff --git a/block/holder.c b/block/holder.c
-> index 37d18c13d958..791091a7eac2 100644
-> --- a/block/holder.c
-> +++ b/block/holder.c
-> @@ -8,6 +8,8 @@ struct bd_holder_disk {
->   	int			refcnt;
->   };
->   
-> +static DEFINE_MUTEX(blk_holder_mutex);
-> +
->   static struct bd_holder_disk *bd_find_holder_disk(struct block_device *bdev,
->   						  struct gendisk *disk)
->   {
-> @@ -80,7 +82,7 @@ int bd_link_disk_holder(struct block_device *bdev, struct gendisk *disk)
->   	kobject_get(bdev->bd_holder_dir);
->   	mutex_unlock(&bdev->bd_disk->open_mutex);
->   
-> -	mutex_lock(&disk->open_mutex);
-> +	mutex_lock(&blk_holder_mutex);
->   	WARN_ON_ONCE(!bdev->bd_holder);
->   
->   	holder = bd_find_holder_disk(bdev, disk);
-> @@ -108,7 +110,7 @@ int bd_link_disk_holder(struct block_device *bdev, struct gendisk *disk)
->   		goto out_del_symlink;
->   	list_add(&holder->list, &disk->slave_bdevs);
->   
-> -	mutex_unlock(&disk->open_mutex);
-> +	mutex_unlock(&blk_holder_mutex);
->   	return 0;
->   
->   out_del_symlink:
-> @@ -116,7 +118,7 @@ int bd_link_disk_holder(struct block_device *bdev, struct gendisk *disk)
->   out_free_holder:
->   	kfree(holder);
->   out_unlock:
-> -	mutex_unlock(&disk->open_mutex);
-> +	mutex_unlock(&blk_holder_mutex);
->   	if (ret)
->   		kobject_put(bdev->bd_holder_dir);
->   	return ret;
-> @@ -140,7 +142,7 @@ void bd_unlink_disk_holder(struct block_device *bdev, struct gendisk *disk)
->   	if (WARN_ON_ONCE(!disk->slave_dir))
->   		return;
->   
-> -	mutex_lock(&disk->open_mutex);
-> +	mutex_lock(&blk_holder_mutex);
->   	holder = bd_find_holder_disk(bdev, disk);
->   	if (!WARN_ON_ONCE(holder == NULL) && !--holder->refcnt) {
->   		del_symlink(disk->slave_dir, bdev_kobj(bdev));
-> @@ -149,6 +151,6 @@ void bd_unlink_disk_holder(struct block_device *bdev, struct gendisk *disk)
->   		list_del_init(&holder->list);
->   		kfree(holder);
->   	}
-> -	mutex_unlock(&disk->open_mutex);
-> +	mutex_unlock(&blk_holder_mutex);
->   }
->   EXPORT_SYMBOL_GPL(bd_unlink_disk_holder);
-> 
+> But they have the sc7280-chrome-common.dtsi, which might contain a
+> corresponding /delete-node/ .
+
+What does that change? The clock rates are bound to the
+SoC and the effective values are limited by link-frequencies
+or the panel driver.
+
+Konrad
