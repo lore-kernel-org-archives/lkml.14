@@ -1,75 +1,149 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f173.google.com (mail-qt1-f173.google.com [209.85.160.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1F1B14296
-	for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 03:41:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A10441757D
+	for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 03:41:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708573312; cv=none; b=sd3Vz+euREv8RgY1hPH8GfjHfNXoGrbZ8D0x6vDJCBd7nnw6PEK0ZiQrPx8eXng+w1B8Kt1BwiQvVhUTZvxkTe9MIxGC904QNxdehSYoKmgSIpJI/TiVYyZSGNhI/8HMD3L+CFiOlVZFMqKipM4JqCE94owIh3Vbp5ak6kNP5J0=
+	t=1708573316; cv=none; b=qXK7MwgD5O1sNfvpAiRWViR1eFZ55jurTW9BXtE9Ur90IWPreoRpo6KQvvJ8DDDsaQdmcufDaEbNHfPXjrJZJMhYKFSJ8RNqi66UtML4lyA9sATH6+GSgAov0vIWzQaIzXy2vOb+cNuY9r+cj4EKza1OT1awGlZoLl3qD3cPGYw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708573312; c=relaxed/simple;
-	bh=1ulRBrYzQdOmihVOfbwMuFBbUbV59yc+rUQ7cABoEHs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=H5jk0OSWxTykrxUskM8lqQHjFYwjolmMwCvXElXBJkxuwOPlbBpveUGiYhVehAwSWlh+133OMIsoTFbaXVVYgDYVkP3K02jCYJO0hrEFCKMN4T5tdzGcFvW6ZCsJjxzN0Azki+8HM5dy90D9offd8b0FKruetlQFb1QyJ2Vedt8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=RmuIeskV; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1708573316; c=relaxed/simple;
+	bh=CFleHBNrQpRDBWB+bPrY3lACjfd7SpfoVKRa4Rm7usE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=GbwHUu7OO6fx4SYr26gA1aP7NDXsHIrAC12SWPxFa+DsbMIWgW02XY6ic7S5vsLClyk2T+KgaR0rBeyqypoLQY2cs3oxjbhU847uatXHK3VRE6CNiL1z57MmGsBVImQeDdTtCthfnwti73Xb4o8qrpyRYQ30qkWTHQDnJcPmOy4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=RGsjpPZ8; arc=none smtp.client-ip=209.85.160.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="RmuIeskV"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=e9Kb7+9juqy5FhJMaaMa784eYLFmC0FDrVU0K/noLKM=; b=RmuIeskVf1E2Kxz6/IxeCqW04N
-	CrbDilGBItIwOekuLDghEjj2hDdun5rXc3L4bAfOV99PtDvb67Mf1ba7arpix6VXSnbs00G6mssY5
-	nlD564ezWwhpmki+hHXLXeBn54a2r/lbeEQH/3+s7amcsl4nSNK6LSDKLDC5M8Zdh0itiqeQ7nG5D
-	x8HgU2+kJhxsR9SNjgXwWwkEiJFy2ugsGThnhoDc7OjyDsLMZDF2/V+mFLt/yQl08do2cPbXKpJ7D
-	+4Zqr/hAW8DYfRg6rUvXFK9Mx/nfM2T0ObcCtOIFnrH1RRtnaT97Zeo2AScvocj+WF4jPFTjQ93rR
-	qxEMcOsw==;
-Received: from willy by casper.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rczy0-00000002UCI-2zDG;
-	Thu, 22 Feb 2024 03:41:48 +0000
-Date: Thu, 22 Feb 2024 03:41:48 +0000
-From: Matthew Wilcox <willy@infradead.org>
-To: "Vishal Moola (Oracle)" <vishal.moola@gmail.com>
-Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-	akpm@linux-foundation.org, muchun.song@linux.dev
-Subject: Re: [PATCH v2 3/5] hugetlb: Pass struct vm_fault through to
- hugetlb_handle_userfault()
-Message-ID: <ZdbCfLo85Gi_a7OI@casper.infradead.org>
-References: <20240221234732.187629-1-vishal.moola@gmail.com>
- <20240221234732.187629-4-vishal.moola@gmail.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RGsjpPZ8"
+Received: by mail-qt1-f173.google.com with SMTP id d75a77b69052e-42e2507c6e1so105361cf.1
+        for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 19:41:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1708573313; x=1709178113; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=tkWn2p2KoktTF74iyosyAqtgPvGQax193IdDSSf0wdk=;
+        b=RGsjpPZ8fpxN3eTzLGz1eZxxOFjwO+7HrSuwUmiE71lFb5IKrVyulevIhya7ZmALez
+         jy3xk7BjCpG+f4jVyAE+HC+lKJkomau5gSM9vbveLWZ1M7Z8R8BrVC8f8suFidwPwR5/
+         ykd3fNXw5Yd+rQxp0dcNmjgxxeeJN9oZP7cXrP9j3NJOoN2lN5H4yTsluwawdw9Rm+zJ
+         GXPa0qDPtDVGyDUO7x7R+Kt2qFQ0VE69V64RNtiHnyMgn29ob7gN9uBlqTAWzhe1GAue
+         6cMzqGkOVyEgBzIyC91gL8Fjl27zIXLb7mb4l+4dqYdDpT5qPYnoLy4dWw75H1bp9uV5
+         p+IQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708573313; x=1709178113;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=tkWn2p2KoktTF74iyosyAqtgPvGQax193IdDSSf0wdk=;
+        b=rPxG8asNufBehTtId7BTfMDfOvudUZd3m9x0uamLPaQFkx4UaXa6nyODR8szPFAavZ
+         Z0K587k0mD+F8Am0OtCnQGvOA3WCoievkkHky6E1w+XLyL8R7F+yyHujk5ck7K0xiZVI
+         ZNj6RY7WuanYxaj0RsVeSjaxggvyiRSwKQ2z/VEmPD95gLiyVkQPKjyCBoXNG2TV62Hk
+         8/EJqW5u08ayX/tJqQc+c/2fuXkGut+FgatLyztFifOfyjfsTJQu2sZgjsUJ8NMDDTB3
+         LTs8PR5S5ZInFP3HxapoikbFalPbfuk674QBwPyY5JQ3vV1dUOLV7+Qs3e4v17QJse3/
+         mE1Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVngzxJ8C6rUH3XchrKJEhj3+aLAusy4pceANERoKAJf6cRLWwNKvtwWTesupWzVhJdj9px0AtrMR/hJccbNrEnSfhBpBonxeH5GlsP
+X-Gm-Message-State: AOJu0YzhRcbYyTUh/n3udPJovWDXEYg3WlyOr4fQa/qqHSqvVbR8c0lG
+	WMw+i55rWNfsyKS5CDXUN9foTuA87Dn/020SLazWrrrotYV3YZY2HV9JdR90GMqdOn3Mq7XDPJS
+	sfDEEJ28akTVJWZW5Qha5hDTzhWcS/RjslJUq
+X-Google-Smtp-Source: AGHT+IGvjS/JsDjKLRtFXUpHvTnqcMileQ3GCikt+aLAGrSc25d+ufjOgPr0Fh2MCXQbYqWszHyGfO3vfuuMY/hfPQk=
+X-Received: by 2002:a05:622a:68c9:b0:42d:be0f:e30a with SMTP id
+ ic9-20020a05622a68c900b0042dbe0fe30amr384702qtb.23.1708573313369; Wed, 21 Feb
+ 2024 19:41:53 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240221234732.187629-4-vishal.moola@gmail.com>
+References: <20240221233026.2915061-1-saravanak@google.com>
+ <20240221233026.2915061-4-saravanak@google.com> <170856138383.540970.12743608676098316685.robh@kernel.org>
+In-Reply-To: <170856138383.540970.12743608676098316685.robh@kernel.org>
+From: Saravana Kannan <saravanak@google.com>
+Date: Wed, 21 Feb 2024 19:41:16 -0800
+Message-ID: <CAGETcx9v_NHhC4EwKDQ1UQMQQB=B2e1nQSqJZAwc7VwEWztp8g@mail.gmail.com>
+Subject: Re: [PATCH v3 3/4] dt-bindings: Add post-init-providers property
+To: Rob Herring <robh@kernel.org>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, linux-kernel@vger.kernel.org, 
+	Ard Biesheuvel <ardb@kernel.org>, Rob Herring <robh+dt@kernel.org>, 
+	Daniel Scally <djrscally@gmail.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
+	kernel-team@android.com, linux-efi@vger.kernel.org, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Len Brown <lenb@kernel.org>, devicetree@vger.kernel.org, 
+	Frank Rowand <frowand.list@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	linux-acpi@vger.kernel.org, Conor Dooley <conor+dt@kernel.org>, 
+	Sakari Ailus <sakari.ailus@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Feb 21, 2024 at 03:47:30PM -0800, Vishal Moola (Oracle) wrote:
-> Now that hugetlb_fault() has a struct vm_fault, have
-> hugetlb_handle_userfault() use it instead of creating one of its own.
-> 
-> This lets us reduce the number of arguments passed to
-> hugetlb_handle_userfault() from 7 to 3, cleaning up the code and stack.
-> 
-> Signed-off-by: Vishal Moola (Oracle) <vishal.moola@gmail.com>
-> ---
->  mm/hugetlb.c | 38 +++++++++-----------------------------
->  1 file changed, 9 insertions(+), 29 deletions(-)
+On Wed, Feb 21, 2024 at 4:23=E2=80=AFPM Rob Herring <robh@kernel.org> wrote=
+:
+>
+>
+> On Wed, 21 Feb 2024 15:30:23 -0800, Saravana Kannan wrote:
+> > The post-init-providers property can be used to break a dependency cycl=
+e by
+> > marking some provider(s) as a post device initialization provider(s). T=
+his
+> > allows an OS to do a better job at ordering initialization and
+> > suspend/resume of the devices in a dependency cycle.
+> >
+> > Signed-off-by: Saravana Kannan <saravanak@google.com>
+> > ---
+> >  .../bindings/post-init-providers.yaml         | 105 ++++++++++++++++++
+> >  MAINTAINERS                                   |  13 ++-
+> >  2 files changed, 112 insertions(+), 6 deletions(-)
+> >  create mode 100644 Documentation/devicetree/bindings/post-init-provide=
+rs.yaml
+> >
+>
+> My bot found errors running 'make DT_CHECKER_FLAGS=3D-m dt_binding_check'
+> on your patch (DT_CHECKER_FLAGS is new in v5.13):
+>
+> yamllint warnings/errors:
+>
+> dtschema/dtc warnings/errors:
+> Documentation/devicetree/bindings/post-init-providers.example.dtb: /examp=
+le-0/clock-controller@1000: failed to match any schema with compatible: ['v=
+endor,soc4-gcc', 'vendor,soc1-gcc']
+> Documentation/devicetree/bindings/post-init-providers.example.dtb: /examp=
+le-0/clock-controller@1000: failed to match any schema with compatible: ['v=
+endor,soc4-gcc', 'vendor,soc1-gcc']
+> Documentation/devicetree/bindings/post-init-providers.example.dtb: /examp=
+le-0/clock-controller@2000: failed to match any schema with compatible: ['v=
+endor,soc4-dispcc', 'vendor,soc1-dispcc']
+> Documentation/devicetree/bindings/post-init-providers.example.dtb: /examp=
+le-0/clock-controller@2000: failed to match any schema with compatible: ['v=
+endor,soc4-dispcc', 'vendor,soc1-dispcc']
 
-I love the look of this ...
+I'm assuming it's okay to ignore these warnings about made up
+compatible string names.
 
-> @@ -6116,7 +6098,8 @@ static vm_fault_t hugetlb_no_page(struct mm_struct *mm,
->  			struct vm_area_struct *vma,
->  			struct address_space *mapping, pgoff_t idx,
->  			unsigned long address, pte_t *ptep,
-> -			pte_t old_pte, unsigned int flags)
-> +			pte_t old_pte, unsigned int flags,
-> +			struct vm_fault *vmf)
+> doc reference errors (make refcheckdocs):
+> Warning: MAINTAINERS references a file that doesn't exist: Documentation/=
+devicetree/bindings/post-init-supplier.yaml
+> MAINTAINERS: Documentation/devicetree/bindings/post-init-supplier.yaml
 
-Should we remove vma, address, idx and flags?
+Will fix this and send out v4. Ignore the v3 series please.
 
+-Saravana
+
+>
+> See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/202402=
+21233026.2915061-4-saravanak@google.com
+>
+> The base for the series is generally the latest rc1. A different dependen=
+cy
+> should be noted in *this* patch.
+>
+> If you already ran 'make dt_binding_check' and didn't see the above
+> error(s), then make sure 'yamllint' is installed and dt-schema is up to
+> date:
+>
+> pip3 install dtschema --upgrade
+>
+> Please check and re-submit after running the above command yourself. Note
+> that DT_SCHEMA_FILES can be set to your schema file to speed up checking
+> your schema. However, it must be unset to test all examples with your sch=
+ema.
+>
