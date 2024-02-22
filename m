@@ -1,174 +1,87 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7E79156966;
-	Thu, 22 Feb 2024 15:41:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9867156976
+	for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 15:41:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708616511; cv=none; b=W7WYvRkYCalw2BlSROBhFS7YP8i82aNDwPLwQrXSGNAoTRsp36Rw7BpIiS3l5YX+YHehLm6kO4PwhKUbjVE6TJoCtEze6uuc9mOWck5Gs3R2MhAHkNpzldxD++HLykmSrBGFhaTZg9Fkgda/Isn/BLpRdpfK+skKKAWM/j6IyXQ=
+	t=1708616512; cv=none; b=j6Nn/73/iAr2IbTlvNqb22BVxqOeWz/+ghnvhXDOiMK6g0DfCaOsDB6NoRnTmK2gzSTuMmdoSsfAVO9ueg6Fw0efKsnRpslhvVp/7W4raYNdqR5AZR0EfFmI6ejz1MM3EJDeB4fiSMJ0QeSYoF6Qi5DBcSbwcbiMMOr2qqdqTeg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708616511; c=relaxed/simple;
-	bh=9avcaQo+g1SO3OnMBO0SW08LTKb5Q/Pc21HFm51gndM=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=GhskCZVaa56Zz74Q0RcvxuroO9dPbkEtMgL0r32kyY+JHGOtyqcKHoG/tWBfYSHTW5q+dI1zbzbC9saNBQTXG3ctf+lj3pH/zY4U4wR4KKG0TRNvna3/hElcjM/0030v9fBw+zqqy6S3n7ETCDVgs2mVBDE7xT/qclmXfB3N6yA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=I9h3a/Eg; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1708616512; c=relaxed/simple;
+	bh=nqgg4xZrpKp12QvERL+ahDDnpkHl69a5C+qcajcYEFw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=P5GL4RTtfC/JkFasDyC6Imf3x9ZKRjBXvPdmRuv13cAK2mBoMU0Hy9ffNBHsy1zfLO+5PsEXNZ0wv8szxf6dp/D+3hDr4OjxOobhCP1DmQnujH0RKlRmTJPQRCzDwk1yDxOzsG83W8CsJsmImsjNuMmnhjNLsgBjQP8lkMyJ3LE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Qk+5wVMZ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="I9h3a/Eg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 84D17C433A6;
-	Thu, 22 Feb 2024 15:41:48 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Qk+5wVMZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CC409C43390;
+	Thu, 22 Feb 2024 15:41:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708616511;
-	bh=9avcaQo+g1SO3OnMBO0SW08LTKb5Q/Pc21HFm51gndM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=I9h3a/EgFD0efBdf9svW4VSrGmDb6rsd2zPtk3U/b2zo/X5iMDU8AfEEL2k0d9tGW
-	 Yyh37Kn8PPwqqS7Aseq8cxgUFfX7wQtEJOLjs0B8MAiQ5LNayOfTCeWgdUndvS7IdT
-	 hvOR274o+TGEjGTKzdy/5EuYnO26HTEcMV1C0uvzAEZYinyEesdVnBtZ7LLclZeYSo
-	 apxaQmIxZvulopyzfm/b3aYiSP7p6hvXwVclkGiwOcwQIBS4O/c1ADziRgE4nD8cn0
-	 nU8xAHIhys2JpoCwhGzc7wEBdc41y3GgISPPlwxN+eqxQwzUV+qnowsbht3Uw3SX7U
-	 erKvjaBM/Ad0Q==
-From: Chun-Kuang Hu <chunkuang.hu@kernel.org>
-To: Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Moudy Ho <moudy.ho@mediatek.com>,
-	"Jason-JH . Lin" <jason-jh.lin@mediatek.com>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org,
-	dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	linux-media@vger.kernel.org
-Cc: Chun-Kuang Hu <chunkuang.hu@kernel.org>
-Subject: [PATCH v2 07/12] soc: mediatek: cmdq: Refine cmdq_pkt_create() and cmdq_pkt_destroy()
-Date: Thu, 22 Feb 2024 15:41:15 +0000
-Message-Id: <20240222154120.16959-8-chunkuang.hu@kernel.org>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240222154120.16959-1-chunkuang.hu@kernel.org>
-References: <20240222154120.16959-1-chunkuang.hu@kernel.org>
+	s=k20201202; t=1708616512;
+	bh=nqgg4xZrpKp12QvERL+ahDDnpkHl69a5C+qcajcYEFw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Qk+5wVMZwcgL9wZU/PM2XA8D4i5s/MQ8EsK+MdEP0+gUzahW9vw3zydeagdg4t2IO
+	 YcyGJAZpPQ9mMM4AlW5EfYuZEjoIu7wcU4zyfXIedmQXcq8u49tRGFb3Fq4SJ2ZSuz
+	 66qQK9SIRNCJqevPFxQUt84yUxi+k6aQe/Pmu9oRRX0WIFFotbeHGnBgM0KwgpGmx6
+	 OLlU1VoAYHsRPauGQevhHCQCe6io1q2FPZ8ypI1P2m2KOHJy5N8JH5mRIRCJGK7ybv
+	 QSvu39MYUPdBnj0/Ak3NgW3zQqfmJcLJcbZMEUgtGSMWveI6DShDKUyxc9hJvc3WSz
+	 HD6fuDr4fX6Xw==
+Date: Thu, 22 Feb 2024 15:41:47 +0000
+From: Will Deacon <will@kernel.org>
+To: Anna-Maria Behnsen <anna-maria@linutronix.de>
+Cc: linux-kernel@vger.kernel.org, Andy Lutomirski <luto@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Vincenzo Frascino <vincenzo.frascino@arm.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 05/10] arm64/vdso: Use generic union vdso_data_store
+Message-ID: <20240222154146.GA8949@willie-the-truck>
+References: <20240219153939.75719-1-anna-maria@linutronix.de>
+ <20240219153939.75719-6-anna-maria@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240219153939.75719-6-anna-maria@linutronix.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 
-cmdq_pkt_create() and cmdq_pkt_destroy() is not suitable for
-client drivers so each client driver has implement its own
-function. This refinement would pass struct cmdq_pkt pointer into
-cmdq_pkt_create(). In addition, client driver has the struct
-cmdq_client information, so it's not necessary to store this
-information in struct cmdq_pkt. After this refinement, client
-drivers could use these helper funciton instead of implementing
-its own version.
+On Mon, Feb 19, 2024 at 04:39:34PM +0100, Anna-Maria Behnsen wrote:
+> There is already a generic union definition for vdso_data_store in vdso
+> datapage header.
+> 
+> Use this definition to prevent code duplication.
+> 
+> Signed-off-by: Anna-Maria Behnsen <anna-maria@linutronix.de>
+> Cc: Catalin Marinas <catalin.marinas@arm.com>
+> Cc: Will Deacon <will@kernel.org>
+> Cc: linux-arm-kernel@lists.infradead.org
+> ---
+>  arch/arm64/kernel/vdso.c | 5 +----
+>  1 file changed, 1 insertion(+), 4 deletions(-)
+> 
+> diff --git a/arch/arm64/kernel/vdso.c b/arch/arm64/kernel/vdso.c
+> index 5562daf38a22..89b6e7840002 100644
+> --- a/arch/arm64/kernel/vdso.c
+> +++ b/arch/arm64/kernel/vdso.c
+> @@ -69,10 +69,7 @@ static struct vdso_abi_info vdso_info[] __ro_after_init = {
+>  /*
+>   * The vDSO data page.
+>   */
+> -static union {
+> -	struct vdso_data	data[CS_BASES];
+> -	u8			page[PAGE_SIZE];
+> -} vdso_data_store __page_aligned_data;
+> +static union vdso_data_store vdso_data_store __page_aligned_data;
+>  struct vdso_data *vdso_data = vdso_data_store.data;
+>  
+>  static int vdso_mremap(const struct vm_special_mapping *sm,
+> -- 
+> 2.39.2
 
-Signed-off-by: Chun-Kuang Hu <chunkuang.hu@kernel.org>
----
- drivers/soc/mediatek/mtk-cmdq-helper.c | 24 +++++++-----------------
- include/linux/soc/mediatek/mtk-cmdq.h  | 14 ++++++++------
- 2 files changed, 15 insertions(+), 23 deletions(-)
+Acked-by: Will Deacon <will@kernel.org>
 
-diff --git a/drivers/soc/mediatek/mtk-cmdq-helper.c b/drivers/soc/mediatek/mtk-cmdq-helper.c
-index bbe41302210a..1a1f1b260a06 100644
---- a/drivers/soc/mediatek/mtk-cmdq-helper.c
-+++ b/drivers/soc/mediatek/mtk-cmdq-helper.c
-@@ -106,22 +106,16 @@ void cmdq_mbox_destroy(struct cmdq_client *client)
- }
- EXPORT_SYMBOL(cmdq_mbox_destroy);
- 
--struct cmdq_pkt *cmdq_pkt_create(struct cmdq_client *client, size_t size)
-+int cmdq_pkt_create(struct cmdq_client *client, struct cmdq_pkt *pkt, size_t size)
- {
--	struct cmdq_pkt *pkt;
- 	struct device *dev;
- 	dma_addr_t dma_addr;
- 
--	pkt = kzalloc(sizeof(*pkt), GFP_KERNEL);
--	if (!pkt)
--		return ERR_PTR(-ENOMEM);
- 	pkt->va_base = kzalloc(size, GFP_KERNEL);
--	if (!pkt->va_base) {
--		kfree(pkt);
--		return ERR_PTR(-ENOMEM);
--	}
-+	if (!pkt->va_base)
-+		return -ENOMEM;
-+
- 	pkt->buf_size = size;
--	pkt->cl = (void *)client;
- 
- 	dev = client->chan->mbox->dev;
- 	dma_addr = dma_map_single(dev, pkt->va_base, pkt->buf_size,
-@@ -129,24 +123,20 @@ struct cmdq_pkt *cmdq_pkt_create(struct cmdq_client *client, size_t size)
- 	if (dma_mapping_error(dev, dma_addr)) {
- 		dev_err(dev, "dma map failed, size=%u\n", (u32)(u64)size);
- 		kfree(pkt->va_base);
--		kfree(pkt);
--		return ERR_PTR(-ENOMEM);
-+		return -ENOMEM;
- 	}
- 
- 	pkt->pa_base = dma_addr;
- 
--	return pkt;
-+	return 0;
- }
- EXPORT_SYMBOL(cmdq_pkt_create);
- 
--void cmdq_pkt_destroy(struct cmdq_pkt *pkt)
-+void cmdq_pkt_destroy(struct cmdq_client *client, struct cmdq_pkt *pkt)
- {
--	struct cmdq_client *client = (struct cmdq_client *)pkt->cl;
--
- 	dma_unmap_single(client->chan->mbox->dev, pkt->pa_base, pkt->buf_size,
- 			 DMA_TO_DEVICE);
- 	kfree(pkt->va_base);
--	kfree(pkt);
- }
- EXPORT_SYMBOL(cmdq_pkt_destroy);
- 
-diff --git a/include/linux/soc/mediatek/mtk-cmdq.h b/include/linux/soc/mediatek/mtk-cmdq.h
-index f82e789550ae..d9d0ee5ecb7a 100644
---- a/include/linux/soc/mediatek/mtk-cmdq.h
-+++ b/include/linux/soc/mediatek/mtk-cmdq.h
-@@ -62,17 +62,19 @@ void cmdq_mbox_destroy(struct cmdq_client *client);
- /**
-  * cmdq_pkt_create() - create a CMDQ packet
-  * @client:	the CMDQ mailbox client
-+ * @pkt:	the CMDQ packet
-  * @size:	required CMDQ buffer size
-  *
-- * Return: CMDQ packet pointer
-+ * Return: 0 for success; else the error code is returned
-  */
--struct cmdq_pkt *cmdq_pkt_create(struct cmdq_client *client, size_t size);
-+int cmdq_pkt_create(struct cmdq_client *client, struct cmdq_pkt *pkt, size_t size);
- 
- /**
-  * cmdq_pkt_destroy() - destroy the CMDQ packet
-+ * @client:	the CMDQ mailbox client
-  * @pkt:	the CMDQ packet
-  */
--void cmdq_pkt_destroy(struct cmdq_pkt *pkt);
-+void cmdq_pkt_destroy(struct cmdq_client *client, struct cmdq_pkt *pkt);
- 
- /**
-  * cmdq_pkt_write() - append write command to the CMDQ packet
-@@ -312,12 +314,12 @@ static inline struct cmdq_client *cmdq_mbox_create(struct device *dev, int index
- 
- static inline void cmdq_mbox_destroy(struct cmdq_client *client) { }
- 
--static inline  struct cmdq_pkt *cmdq_pkt_create(struct cmdq_client *client, size_t size)
-+static inline int cmdq_pkt_create(struct cmdq_client *client, struct cmdq_pkt *pkt, size_t size)
- {
--	return ERR_PTR(-EINVAL);
-+	return -EINVAL;
- }
- 
--static inline void cmdq_pkt_destroy(struct cmdq_pkt *pkt) { }
-+static inline void cmdq_pkt_destroy(struct cmdq_client *client, struct cmdq_pkt *pkt) { }
- 
- static inline int cmdq_pkt_write(struct cmdq_pkt *pkt, u8 subsys, u16 offset, u32 value)
- {
--- 
-2.34.1
-
+Will
