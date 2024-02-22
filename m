@@ -1,72 +1,64 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from Atcsqr.andestech.com (60-248-80-70.hinet-ip.hinet.net [60.248.80.70])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A2A0101EC;
-	Thu, 22 Feb 2024 03:47:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E24BD101EC;
+	Thu, 22 Feb 2024 03:49:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.248.80.70
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708573663; cv=none; b=I0ffA+7LPpL1bbUwxrpaZHD+oAh0SpqQ/nCtgd1N3iq6nswKWeZRqhgB8q7HaHmC2aOZJCJVOcIFjw3RaYW9HQ8iUxmipF1luCmaTzJeld+KKm+dDVSmpDcpi+Sy8dCepJZQ1Xim7Dstv/AcOD0ewrxBq2m2ni773MXh7wTz1M8=
+	t=1708573752; cv=none; b=eepB2x/HIv2oZqQ8InLRcoXLQFde8ZTCrBIOWvhBdS7r4DMq5Xs//3I9w+lELQqcTGZVP+JhNSEtCbfOxBLJwee1x/ujdJxLqNCTL5AHhOjSSuaSTTAiwjw0xbjUD3i4idPeM8oGqbZlmIQAZx+7iBfaB2A5rraY8JJ7mBJ49v4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708573663; c=relaxed/simple;
-	bh=jyJEJt0Gb7xRr2ZCKsJm0pArk9maOscFxfGHDjAtGP8=;
+	s=arc-20240116; t=1708573752; c=relaxed/simple;
+	bh=dwf0vhpo2jYUb2gwbg7vwjdYNHNEw2bP9BitRqQMy60=;
 	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=d/3swkDoK30ukHstiKk0S4sqbnKSmtiGx73H9uRkENqFqNYc9rbEmppRt8a9j5624tJgYFftZTX2B+dWyP9hAwpYwjV+KcvamJd2D3ZEPQovBiuynvC52x4Z20qKC+C4HSxUxNGl/9ew0T/YgfkhclLP/3IuZHhr9iv/OJpOO00=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=R9GPLgHw; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="R9GPLgHw"
-Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 41M2O8kb011995;
-	Thu, 22 Feb 2024 03:47:30 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	date:from:to:cc:subject:message-id:references:mime-version
-	:content-type:in-reply-to; s=qcppdkim1; bh=eDNTkxcHK8plyFVQIo0K3
-	Vc2/DHgtYP/CygcJBKgdl0=; b=R9GPLgHwLvriz1c4UtZl5rumczEcPCq8wLaoJ
-	uyQv2toYMG2h/Iq/splVfkr6NtVdQT3U5oiQoAr9Lc9SuiaFmlkjcJ8jfx+EaNYa
-	giq6hm8cTmfFYiUXGdMM7R5bEQSL9l9XAjjGCh15cbuC3ZyIIpqxd6YT6xroTXKA
-	wWcyaKB38lmaLZYBs8ti/e3Kh4FWjsKJL9njgjgSEcgKJHeAsHnqLoVWHyFjB4em
-	bXTxPGRapLuwiJmHViLgn2+KyulPKd9rzC2eTlJkb609AlBNvwlvKiGVAS2HDLPt
-	OFUx+vIWalt1a5gsK+ySugZ1NlJhlmmSajDQJXyAgpVpDLsdA==
-Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3wdpjn8yhu-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 22 Feb 2024 03:47:30 +0000 (GMT)
-Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
-	by NALASPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 41M3lTSe032716
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 22 Feb 2024 03:47:29 GMT
-Received: from hu-bjorande-lv.qualcomm.com (10.49.16.6) by
- nalasex01c.na.qualcomm.com (10.47.97.35) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Wed, 21 Feb 2024 19:47:28 -0800
-Date: Wed, 21 Feb 2024 19:47:27 -0800
-From: Bjorn Andersson <quic_bjorande@quicinc.com>
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-CC: Rob Clark <robdclark@gmail.com>,
-        Abhinav Kumar
-	<quic_abhinavk@quicinc.com>,
-        Sean Paul <sean@poorly.run>,
-        Marijn Suijten
-	<marijn.suijten@somainline.org>,
-        David Airlie <airlied@gmail.com>, "Daniel
- Vetter" <daniel@ffwll.ch>,
-        <cros-qcom-dts-watchers@chromium.org>,
-        "Bjorn
- Andersson" <andersson@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@linaro.org>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski
-	<krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <dri-devel@lists.freedesktop.org>, <freedreno@lists.freedesktop.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
-Subject: Re: [PATCH 1/9] drm/msm/dp: Add DP support to combo instance in
- SC7280
-Message-ID: <20240222034727.GG2936378@hu-bjorande-lv.qualcomm.com>
-References: <20240221-rb3gen2-dp-connector-v1-0-dc0964ef7d96@quicinc.com>
- <20240221-rb3gen2-dp-connector-v1-1-dc0964ef7d96@quicinc.com>
- <CAA8EJprXXjvanBU_HGv7X_dS3nyZ867AsvKj5+S3pnWcpsk1ug@mail.gmail.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=HL72BgZ846KYTPuEnQN2MqO1sh4PdmbXbHoUhTMQhCb1qd/UrkaL74ercZc//Si5OxBiVbLyRwsiLE5Z2sax6XmaGRsp9MQ7t/XYgzxb3i/A8H1sz7RTzSmNjFCwB3wn2PYkxTIYywvcv5viaiAAuy0/RnSHDI449gm+4HeYJv0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=andestech.com; spf=pass smtp.mailfrom=andestech.com; arc=none smtp.client-ip=60.248.80.70
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=andestech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=andestech.com
+Received: from Atcsqr.andestech.com (localhost [127.0.0.2] (may be forged))
+	by Atcsqr.andestech.com with ESMTP id 41M3PZkX080876;
+	Thu, 22 Feb 2024 11:25:35 +0800 (+08)
+	(envelope-from peterlin@andestech.com)
+Received: from mail.andestech.com (ATCPCS16.andestech.com [10.0.1.222])
+	by Atcsqr.andestech.com with ESMTP id 41M3N6Y8080329;
+	Thu, 22 Feb 2024 11:23:06 +0800 (+08)
+	(envelope-from peterlin@andestech.com)
+Received: from APC323 (10.0.12.98) by ATCPCS16.andestech.com (10.0.1.222) with
+ Microsoft SMTP Server id 14.3.498.0; Thu, 22 Feb 2024 11:23:03 +0800
+Date: Thu, 22 Feb 2024 11:23:00 +0800
+From: Yu-Chien Peter Lin <peterlin@andestech.com>
+To: Palmer Dabbelt <palmer@dabbelt.com>
+CC: <acme@kernel.org>, <adrian.hunter@intel.com>, <ajones@ventanamicro.com>,
+        <alexander.shishkin@linux.intel.com>, <andre.przywara@arm.com>,
+        <anup@brainfault.org>, <aou@eecs.berkeley.edu>,
+        <atishp@atishpatra.org>, <conor+dt@kernel.org>,
+        Conor Dooley <conor.dooley@microchip.com>,
+        "Conor
+ Dooley" <conor@kernel.org>, <devicetree@vger.kernel.org>,
+        Evan Green
+	<evan@rivosinc.com>, <geert+renesas@glider.be>,
+        <guoren@kernel.org>, "Heiko
+ Stuebner" <heiko@sntech.de>,
+        <irogers@google.com>, <jernej.skrabec@gmail.com>, <jolsa@kernel.org>,
+        <jszhang@kernel.org>, <krzysztof.kozlowski+dt@linaro.org>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        <linux-perf-users@vger.kernel.org>,
+        <linux-renesas-soc@vger.kernel.org>, <linux-riscv@lists.infradead.org>,
+        <linux-sunxi@lists.linux.dev>, <locus84@andestech.com>,
+        <magnus.damm@gmail.com>, Mark Rutland <mark.rutland@arm.com>,
+        <mingo@redhat.com>, <n.shubin@yadro.com>, <namhyung@kernel.org>,
+        "Paul
+ Walmsley" <paul.walmsley@sifive.com>, <peterz@infradead.org>,
+        <prabhakar.mahadev-lad.rj@bp.renesas.com>, <rdunlap@infradead.org>,
+        <robh+dt@kernel.org>, <samuel@sholland.org>,
+        Sunil V L
+	<sunilvl@ventanamicro.com>, <tglx@linutronix.de>,
+        <tim609@andestech.com>, <uwu@icenowy.me>, <wens@csie.org>,
+        Will Deacon <will@kernel.org>, <inochiama@outlook.com>,
+        <unicorn_wang@outlook.com>, <wefu@redhat.com>
+Subject: Re: [PATCH v8 00/10] Support Andes PMU extension
+Message-ID: <Zda-FE2FpyhbIJKd@APC323>
+References: <20240129092553.2058043-1-peterlin@andestech.com>
+ <mhng-b85cfae6-43ef-42ac-94b4-d0f4ce2d0940@palmer-ri-x1c9a>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -75,83 +67,81 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <CAA8EJprXXjvanBU_HGv7X_dS3nyZ867AsvKj5+S3pnWcpsk1ug@mail.gmail.com>
-X-ClientProxiedBy: nalasex01b.na.qualcomm.com (10.47.209.197) To
- nalasex01c.na.qualcomm.com (10.47.97.35)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: fpyEr63T8GuH8aGAsoLyFlBRtvJqLjDR
-X-Proofpoint-GUID: fpyEr63T8GuH8aGAsoLyFlBRtvJqLjDR
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-02-22_01,2024-02-21_02,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 suspectscore=0
- spamscore=0 priorityscore=1501 impostorscore=0 lowpriorityscore=0
- clxscore=1015 bulkscore=0 mlxlogscore=999 malwarescore=0 adultscore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2402120000 definitions=main-2402220027
+In-Reply-To: <mhng-b85cfae6-43ef-42ac-94b4-d0f4ce2d0940@palmer-ri-x1c9a>
+User-Agent: Mutt/2.2.12 (2023-09-09)
+X-DNSRBL: 
+X-SPAM-SOURCE-CHECK: pass
+X-MAIL:Atcsqr.andestech.com 41M3PZkX080876
 
-On Thu, Feb 22, 2024 at 01:38:45AM +0200, Dmitry Baryshkov wrote:
-> On Thu, 22 Feb 2024 at 01:19, Bjorn Andersson <quic_bjorande@quicinc.com> wrote:
-> >
-> > When upstreamed the SC7280 DP controllers where described as one being
-> > DP and one eDP, but they can infact both be DP or eDP.
-> >
-> > Extend the list of DP controllers to cover both instances, and rely on
-> > the newly introduced mechanism for selecting which mode they should
-> > operate in.
-> >
-> > Move qcom,sc7280-edp to a dedicated list, to ensure existing DeviceTree
-> > will continue to select eDP.
-> >
-> > Signed-off-by: Bjorn Andersson <quic_bjorande@quicinc.com>
-> > ---
-> >  drivers/gpu/drm/msm/dp/dp_display.c | 9 +++++++--
-> >  1 file changed, 7 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/drivers/gpu/drm/msm/dp/dp_display.c b/drivers/gpu/drm/msm/dp/dp_display.c
-> > index 7b8c695d521a..1792ba9f7259 100644
-> > --- a/drivers/gpu/drm/msm/dp/dp_display.c
-> > +++ b/drivers/gpu/drm/msm/dp/dp_display.c
-> > @@ -129,7 +129,12 @@ static const struct msm_dp_desc sc7180_dp_descs[] = {
-> >  };
-> >
-> >  static const struct msm_dp_desc sc7280_dp_descs[] = {
-> > -       { .io_start = 0x0ae90000, .id = MSM_DP_CONTROLLER_0, .connector_type = DRM_MODE_CONNECTOR_DisplayPort, .wide_bus_en = true },
-> > +       { .io_start = 0x0ae90000, .id = MSM_DP_CONTROLLER_0, .wide_bus_en = true },
-> > +       { .io_start = 0x0aea0000, .id = MSM_DP_CONTROLLER_1, .wide_bus_en = true },
-> 
-> I think we need to keep .connector_type here, don't we?
-> 
+Hi Palmer,
 
-No, Abel removes the need for that in his patches - and while that logic
-is slightly broken in the RFC I think it looks good.
+On Wed, Feb 21, 2024 at 12:58:31PM -0800, Palmer Dabbelt wrote:
+> On Mon, 29 Jan 2024 01:25:43 PST (-0800), peterlin@andestech.com wrote:
+> > Hi All,
+> > 
+> > This patch series introduces the Andes PMU extension, which serves the
+> > same purpose as Sscofpmf and Smcntrpmf. Its non-standard local interrupt
+> > is assigned to bit 18 in the custom S-mode local interrupt enable and
+> > pending registers (slie/slip), while the interrupt cause is (256 + 18).
+> > 
+> > Linux patches based on:
+> > - ed5b7cf ("riscv: errata: andes: Probe for IOCP only once in boot stage")
+> > It can be found on Andes Technology GitHub:
+> > - https://github.com/andestech/linux/commits/andes-pmu-support-v8
+> > 
+> > The PMU device tree node used on AX45MP:
+> > - https://github.com/riscv-software-src/opensbi/blob/master/docs/pmu_support.md#example-3
+> > 
+> > Locus Wei-Han Chen (1):
+> >   riscv: andes: Support specifying symbolic firmware and hardware raw
+> >     events
+> > 
+> > Yu Chien Peter Lin (9):
+> >   riscv: errata: Rename defines for Andes
+> >   irqchip/riscv-intc: Allow large non-standard interrupt number
+> >   irqchip/riscv-intc: Introduce Andes hart-level interrupt controller
+> >   dt-bindings: riscv: Add Andes interrupt controller compatible string
+> >   riscv: dts: renesas: r9a07g043f: Update compatible string to use Andes
+> >     INTC
+> >   perf: RISC-V: Eliminate redundant interrupt enable/disable operations
+> >   perf: RISC-V: Introduce Andes PMU to support perf event sampling
+> >   dt-bindings: riscv: Add Andes PMU extension description
+> >   riscv: dts: renesas: Add Andes PMU extension for r9a07g043f
+> > 
+> >  .../devicetree/bindings/riscv/cpus.yaml       |   6 +-
+> >  .../devicetree/bindings/riscv/extensions.yaml |   7 +
+> >  arch/riscv/boot/dts/renesas/r9a07g043f.dtsi   |   4 +-
+> >  arch/riscv/errata/andes/errata.c              |  10 +-
+> >  arch/riscv/include/asm/errata_list.h          |  13 +-
+> >  arch/riscv/include/asm/hwcap.h                |   1 +
+> >  arch/riscv/include/asm/vendorid_list.h        |   2 +-
+> >  arch/riscv/kernel/alternative.c               |   2 +-
+> >  arch/riscv/kernel/cpufeature.c                |   1 +
+> >  drivers/irqchip/irq-riscv-intc.c              |  88 ++++++++++--
+> >  drivers/perf/Kconfig                          |  14 ++
+> >  drivers/perf/riscv_pmu_sbi.c                  |  37 ++++-
+> >  include/linux/soc/andes/irq.h                 |  18 +++
+> >  .../arch/riscv/andes/ax45/firmware.json       |  68 ++++++++++
+> >  .../arch/riscv/andes/ax45/instructions.json   | 127 ++++++++++++++++++
+> >  .../arch/riscv/andes/ax45/memory.json         |  57 ++++++++
+> >  .../arch/riscv/andes/ax45/microarch.json      |  77 +++++++++++
+> >  tools/perf/pmu-events/arch/riscv/mapfile.csv  |   1 +
+> >  18 files changed, 494 insertions(+), 39 deletions(-)
+> >  create mode 100644 include/linux/soc/andes/irq.h
+> >  create mode 100644 tools/perf/pmu-events/arch/riscv/andes/ax45/firmware.json
+> >  create mode 100644 tools/perf/pmu-events/arch/riscv/andes/ax45/instructions.json
+> >  create mode 100644 tools/perf/pmu-events/arch/riscv/andes/ax45/memory.json
+> >  create mode 100644 tools/perf/pmu-events/arch/riscv/andes/ax45/microarch.json
+> 
+> Acked-by: Palmer Dabbelt <palmer@rivosinc.com>
+> 
+> in case someone wants to take this via another tree.  I'm also OK taking it
+> via the RISC-V tree, pending a resolution to Thomas' comments on patch 2.
+> For now I'm going to assume there's a v9 coming.
+
+Yes, I'm working on v9, please hold off taking the series, thanks.
 
 Regards,
-Bjorn
+Peter Lin
 
-> > +       {}
-> > +};
-> > +
-> > +static const struct msm_dp_desc sc7280_edp_descs[] = {
-> >         { .io_start = 0x0aea0000, .id = MSM_DP_CONTROLLER_1, .connector_type = DRM_MODE_CONNECTOR_eDP, .wide_bus_en = true },
-> >         {}
-> >  };
-> > @@ -182,7 +187,7 @@ static const struct msm_dp_desc x1e80100_dp_descs[] = {
-> >  static const struct of_device_id dp_dt_match[] = {
-> >         { .compatible = "qcom,sc7180-dp", .data = &sc7180_dp_descs },
-> >         { .compatible = "qcom,sc7280-dp", .data = &sc7280_dp_descs },
-> > -       { .compatible = "qcom,sc7280-edp", .data = &sc7280_dp_descs },
-> > +       { .compatible = "qcom,sc7280-edp", .data = &sc7280_edp_descs },
-> >         { .compatible = "qcom,sc8180x-dp", .data = &sc8180x_dp_descs },
-> >         { .compatible = "qcom,sc8180x-edp", .data = &sc8180x_dp_descs },
-> >         { .compatible = "qcom,sc8280xp-dp", .data = &sc8280xp_dp_descs },
-> >
-> > --
-> > 2.25.1
-> >
-> 
-> 
-> -- 
-> With best wishes
-> Dmitry
+> Thanks!
