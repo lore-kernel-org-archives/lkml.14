@@ -1,102 +1,101 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from 13.mo582.mail-out.ovh.net (13.mo582.mail-out.ovh.net [188.165.56.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9180739854;
-	Thu, 22 Feb 2024 09:44:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CDC83C486
+	for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 09:45:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.165.56.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708595084; cv=none; b=fiq3kEHMgYwsZAAbszYosNhrwhHn4kT7tnhbl5nnUZx5kcMQNU6//7AtPx8x2uX5hbNOJ43rdntiK5Yt1fsHkg0fsZmHpc6jMmyjmvTWB3PEQn1XLmigGe9BD9seeLUQMfxsLcQihJKxzF77MK6/a0RvyDuTcV2PUgrr/vDGK2A=
+	t=1708595143; cv=none; b=gsqEWjzdypp8mWudwNd5dj2vvwqrg00c+yh3ZU4r5LaBf/LkszqfvfNc/5+zU+bUvNLFou9fXxadV40M4Iwg0jmIGwKWpDJiJkr86KgO9esA8qCXxWuh+QCTvDCwGCVTVb9shTouxd3rKT5P6NylWMNyyD2vcotkCvqWgo9ma2Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708595084; c=relaxed/simple;
-	bh=AZb0GKWTjyQuJy4d01ujzb9cgMUxShN7fSsHS7F4YvU=;
-	h=Date:Content-Type:MIME-Version:From:To:Cc:In-Reply-To:References:
-	 Message-Id:Subject; b=nfIy2DrSXJARaQqS+8wpu35K/V/rqTnol2odOj7iBXmoR9JsOoIESW+6yACcd1Rqt3AM5Lo8lHWvvWWSAscoBQIosABC+EQ8OvnX0ljs2pIlV45oxVZ5Ve5hxQnqWizo6YsEafEvUKJJ/JVjz5zeGn4gcGmsZDq8dqKctfRJC5U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mq6ogYCl; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mq6ogYCl"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E78F5C433F1;
-	Thu, 22 Feb 2024 09:44:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708595084;
-	bh=AZb0GKWTjyQuJy4d01ujzb9cgMUxShN7fSsHS7F4YvU=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-	b=mq6ogYClJpPyCBivw+KiXP03j3AHNQyc/WKFJWpx0X+9+Nc7Wy9VFgTHToteLVyW0
-	 9stLolKoOtDMbXFjfk6b9yz4DYhIwxtKdyBA5pIF5m8+XQzl4FvDMp9sNFq9D1hgfP
-	 h4W0ZK/g0bys6rwMFCHoExcbTC2GagotPpR6paBLOUi9lf86G/lirnFmsGh4XzB6rF
-	 4H1tEYPtXKSqc19nrmNVXo3jSQixt1DJrLe9AJk89w96C2BjZGL0dZTGPHXvfY8Ytw
-	 FQbeIWjF4QEVQxcrTQ/poZ29/znbqlQrmy500yfAiCiK1ZR/flaqllVLjpdV5DPr93
-	 dyFNZJMojeVjw==
-Date: Thu, 22 Feb 2024 02:44:42 -0700
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	s=arc-20240116; t=1708595143; c=relaxed/simple;
+	bh=LPJlLHDkajqw80z9ma4e+vfl3sbURWj1jM2baBv2XzU=;
+	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
+	 Message-ID:Content-Type; b=deTePJkKYPeLLlQrJGdJ3rsaJm5oS513KMJU/729Nmq94dVB5RjcbLpqlTwri209t4SjEJWgxuy42LShcg8lfIh99BLKFxAMExeTu0daNEOiUfauy5uun/7AereJr/WTv/QOztzbTzr/gEP/lqhzgap6+hT0+9KV2PbW4ytLKUU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=milecki.pl; spf=pass smtp.mailfrom=milecki.pl; arc=none smtp.client-ip=188.165.56.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=milecki.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=milecki.pl
+Received: from director4.ghost.mail-out.ovh.net (unknown [10.109.140.39])
+	by mo582.mail-out.ovh.net (Postfix) with ESMTP id 4TgR8h1ygcz1Bcr
+	for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 08:27:32 +0000 (UTC)
+Received: from ghost-submission-6684bf9d7b-62nvk (unknown [10.110.168.159])
+	by director4.ghost.mail-out.ovh.net (Postfix) with ESMTPS id BBB0C1FEA0;
+	Thu, 22 Feb 2024 08:27:30 +0000 (UTC)
+Received: from milecki.pl ([37.59.142.108])
+	by ghost-submission-6684bf9d7b-62nvk with ESMTPSA
+	id DFvxKHIF12Uj8g8AoXgo/A
+	(envelope-from <rafal@milecki.pl>); Thu, 22 Feb 2024 08:27:30 +0000
+Authentication-Results:garm.ovh; auth=pass (GARM-108S00278859a77-0453-42f0-9082-a2d4777bd21b,
+                    A5D7B7EF969FCE09FFB803620F60B84AE0971723) smtp.auth=rafal@milecki.pl
+X-OVh-ClientIp:178.33.236.78
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Rob Herring <robh@kernel.org>
-To: Seven Lee <wtli@nuvoton.com>
-Cc: KCHSU0@nuvoton.com, devicetree@vger.kernel.org, SJLIN0@nuvoton.com, 
- YHCHuang@nuvoton.com, broonie@kernel.org, lgirdwood@gmail.com, 
- robh+dt@kernel.org, CTLIN0@nuvoton.com, supercraig0719@gmail.com, 
- conor+dt@kernel.org, linux-kernel@vger.kernel.org, scott6986@gmail.com, 
- dardar923@gmail.com, alsa-devel@alsa-project.org
-In-Reply-To: <20240222083825.190854-2-wtli@nuvoton.com>
-References: <20240222083825.190854-1-wtli@nuvoton.com>
- <20240222083825.190854-2-wtli@nuvoton.com>
-Message-Id: <170859508176.1881441.18147139867694471359.robh@kernel.org>
-Subject: Re: [PATCH v2 1/2] ASoC: dt-bindings: Added schema for
- "nuvoton,nau8325"
+Date: Thu, 22 Feb 2024 09:27:30 +0100
+From: =?UTF-8?Q?Rafa=C5=82_Mi=C5=82ecki?= <rafal@milecki.pl>
+To: William Zhang <william.zhang@broadcom.com>
+Cc: Linux MTD List <linux-mtd@lists.infradead.org>, Linux ARM List
+ <linux-arm-kernel@lists.infradead.org>, Broadcom Kernel List
+ <bcm-kernel-feedback-list@broadcom.com>, f.fainelli@gmail.com,
+ kursad.oney@broadcom.com, joel.peshkin@broadcom.com,
+ anand.gore@broadcom.com, dregan@mail.com, kamal.dasu@broadcom.com,
+ tomer.yacoby@broadcom.com, dan.beygelman@broadcom.com, David Regan
+ <dregan@broadcom.com>, devicetree@vger.kernel.org, Conor Dooley
+ <conor+dt@kernel.org>, linux-kernel@vger.kernel.org, Krzysztof Kozlowski
+ <krzysztof.kozlowski+dt@linaro.org>, Rob Herring <robh+dt@kernel.org>,
+ Florian Fainelli <florian.fainelli@broadcom.com>
+Subject: Re: [PATCH v5 05/12] arm64: dts: broadcom: bcmbca: Add NAND
+ controller node
+In-Reply-To: <20240207202257.271784-6-william.zhang@broadcom.com>
+References: <20240207202257.271784-1-william.zhang@broadcom.com>
+ <20240207202257.271784-6-william.zhang@broadcom.com>
+Message-ID: <cd32d304d740e3c1875e449d459c805a@milecki.pl>
+X-Sender: rafal@milecki.pl
+X-Webmail-UserID: rafal@milecki.pl
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
+X-Ovh-Tracer-Id: 392939071277214476
+X-VR-SPAMSTATE: OK
+X-VR-SPAMSCORE: -100
+X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedvledrfeefgdduudekucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuqfggjfdpvefjgfevmfevgfenuceurghilhhouhhtmecuhedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepggffhffvvefujghfkfigihgtgfesthekjhdttddtjeenucfhrhhomheptfgrfhgrlhcuofhilhgvtghkihcuoehrrghfrghlsehmihhlvggtkhhirdhplheqnecuggftrfgrthhtvghrnhepjeejkeekgeejtdffffevffeivedtueeifeeuffegkeehkeeliedugfelfedutdeunecukfhppeduvdejrddtrddtrddupdefuddruddurddvudekrddutdeipddujeekrdeffedrvdefiedrjeekpdefjedrheelrddugedvrddutdeknecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepuddvjedrtddrtddruddpmhgrihhlfhhrohhmpehrrghfrghlsehmihhlvggtkhhirdhplhdpnhgspghrtghpthhtohepuddprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdpoffvtefjohhsthepmhhoheekvddpmhhouggvpehsmhhtphhouhht
 
-
-On Thu, 22 Feb 2024 16:38:24 +0800, Seven Lee wrote:
-> Added a DT schema for describing nau8325 audio amplifiers.
+On 2024-02-07 21:22, William Zhang wrote:
+> diff --git a/arch/arm64/boot/dts/broadcom/bcmbca/bcm4908.dtsi
+> b/arch/arm64/boot/dts/broadcom/bcmbca/bcm4908.dtsi
+> index 2f124b027bbf..336016e334d9 100644
+> --- a/arch/arm64/boot/dts/broadcom/bcmbca/bcm4908.dtsi
+> +++ b/arch/arm64/boot/dts/broadcom/bcmbca/bcm4908.dtsi
+> @@ -589,7 +589,7 @@ hsspi: spi@1000 {
+>  			status = "disabled";
+>  		};
 > 
-> Signed-off-by: Seven Lee <wtli@nuvoton.com>
-> ---
->  .../bindings/sound/nuvoton,nau8325.yaml       | 82 +++++++++++++++++++
->  1 file changed, 82 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/sound/nuvoton,nau8325.yaml
+> -		nand-controller@1800 {
+> +		nand_controller: nand-controller@1800 {
+>  			#address-cells = <1>;
+>  			#size-cells = <0>;
+>  			compatible = "brcm,nand-bcm63138", "brcm,brcmnand-v7.1", 
+> "brcm,brcmnand";
+> @@ -597,7 +597,7 @@ nand-controller@1800 {
+>  			reg-names = "nand", "nand-int-base";
+>  			interrupts = <GIC_SPI 37 IRQ_TYPE_LEVEL_HIGH>;
+>  			interrupt-names = "nand_ctlrdy";
+> -			status = "okay";
+> +			status = "disabled";
 > 
+>  			nandcs: nand@0 {
+>  				compatible = "brcm,nandcs";
 
-My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
-on your patch (DT_CHECKER_FLAGS is new in v5.13):
+You disable NAND controller here breaking support for all dependant
+devices.
 
-yamllint warnings/errors:
+I see you fix it afterwards in PATCH 06/12 but it's still a poor way of
+handling such change and this issue can be hit e.g. during git bisect.
 
-dtschema/dtc warnings/errors:
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/sound/nuvoton,nau8325.yaml: properties:nuvoton,dac-vref:enum:0: 'VDDA' is not of type 'integer'
-	hint: An integer type must have integer constraints
-	from schema $id: http://devicetree.org/meta-schemas/types.yaml#
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/sound/nuvoton,nau8325.yaml: properties:nuvoton,dac-vref:enum:1: 'VDDA*1.5/1.8V' is not of type 'integer'
-	hint: An integer type must have integer constraints
-	from schema $id: http://devicetree.org/meta-schemas/types.yaml#
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/sound/nuvoton,nau8325.yaml: properties:nuvoton,dac-vref:enum:2: 'VDDA*1.6/1.8V' is not of type 'integer'
-	hint: An integer type must have integer constraints
-	from schema $id: http://devicetree.org/meta-schemas/types.yaml#
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/sound/nuvoton,nau8325.yaml: properties:nuvoton,dac-vref:enum:3: 'VDDA*1.7/1.8V' is not of type 'integer'
-	hint: An integer type must have integer constraints
-	from schema $id: http://devicetree.org/meta-schemas/types.yaml#
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/sound/nuvoton,nau8325.example.dtb: codec@21: nuvoton,dac-vref:0: [2] is not one of ['VDDA', 'VDDA*1.5/1.8V', 'VDDA*1.6/1.8V', 'VDDA*1.7/1.8V']
-	from schema $id: http://devicetree.org/schemas/sound/nuvoton,nau8325.yaml#
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/sound/nuvoton,nau8325.example.dtb: codec@21: Unevaluated properties are not allowed ('nuvoton,dac-vref' was unexpected)
-	from schema $id: http://devicetree.org/schemas/sound/nuvoton,nau8325.yaml#
+Also: given that 99% of BCM4908 devices use NAND controller can we just
+save ourselves efforts and keep it enabled in .dtsi?
 
-doc reference errors (make refcheckdocs):
-
-See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20240222083825.190854-2-wtli@nuvoton.com
-
-The base for the series is generally the latest rc1. A different dependency
-should be noted in *this* patch.
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
-
-pip3 install dtschema --upgrade
-
-Please check and re-submit after running the above command yourself. Note
-that DT_SCHEMA_FILES can be set to your schema file to speed up checking
-your schema. However, it must be unset to test all examples with your schema.
-
+-- 
+Rafał Miłecki
