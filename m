@@ -1,43 +1,45 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E9AA73F0C
-	for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 20:58:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7407673F25
+	for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 20:58:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708635486; cv=none; b=KEa/FKsdN6yoVxJpZrlY8Hgvp0fMWK7dtFpuzF2LSorxz+cg1OGFvZ56uJsUSIDOBtT5PZeX8u/aL5SEcUODZpQkfO9zzbF3PKwJr8b9UV4TrxfhPjzfU16cy4KP1wPFrafLIFAVnVMPeQ+pN+XpGig3NTr2DTOOkT8wdyM/4O4=
+	t=1708635488; cv=none; b=UZ0OZq01Hw6Gl4payZfRShcKGXa25WR49puaCLCrGLXFBp/moMWVMNUstJLCUBpvxE+M2QnnglDZu9DMsfI2tFEO6RTOzshmQkzOGcU4kaJZcs6rF8kuoc8hTF0f5M6Hi5pMrqkLv6pc1d0lYaPQVcnTyqMBSc221wNqCngwlAU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708635486; c=relaxed/simple;
-	bh=KO17FxZqGQUTkWpzYZMY3Yy4KQM5Bz9Xy9i+eEsb9uU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=TrjamSw3tibInCgiLoZJ77sINaqp2PK7yVVn56a/5M70v+jJ3bY2VPkZeEeZHfSyPrYDFrJlu2e+H6hogw2d9Zij5aRvo1er2FTecspHKuU99xA2ZSCgbUfN8GMPC+C4VKuEyB8Nc1giGl6jNojI5jjAEA/fYFIic+dG7JjKcyo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=GfpSA7iM; arc=none smtp.client-ip=170.10.133.124
+	s=arc-20240116; t=1708635488; c=relaxed/simple;
+	bh=8AOYIiYLdFhowt9vL8ZH3qzA0/HjkqpcByU2fn+xKt4=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=XdtX5zK+Q2LBizF+ES4kVLEGvnCyBI7cR2GGOHojcaB/6RXW8OpoKBheyhnTRpqXwJErFTvriSf/+cKkti8xP8OSWX0sSgQaPRE6efRXSPLalms0itzv80VoJy4u1kiBVeVQ3SQoJNu/AyTjb0pnUV1dXUvtMDv0aQIM9aeTaTQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Qtf83WGJ; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GfpSA7iM"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Qtf83WGJ"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1708635484;
+	s=mimecast20190719; t=1708635485;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=uQNCPPxOXSIi1YvPzBU8stcQQepKpFfnl3c3A7lEn1w=;
-	b=GfpSA7iMstK3TApu2JFY6mmuYZs9vWfU793d/EA5McPw0zmMJcW2Fs2feneAxPZK76u73N
-	Mvlp66MDTdweIfJnd6XDVQMjPYFDFcESoTruIgMXA4N2BJ26dRKmlSEj4Uvc6k65yKQSOV
-	fLAQti2wJR7750gzy1gfUPRvSimWizc=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-640-iPvArl2jNXObXjSmQJpj3Q-1; Thu, 22 Feb 2024 15:57:58 -0500
-X-MC-Unique: iPvArl2jNXObXjSmQJpj3Q-1
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=sEhg1fEN1oSGXEFibAbstnmrTa0iSbY2Or+wv+pBoNo=;
+	b=Qtf83WGJSCITK8iNqLZxnBpxh96/zEQsDC9SDht9qRuSMPgpCjqeFOCt3x6DWz53UzlaRK
+	/2Ch9sPtlbHnkwlAayyfPILZPs3zyyqy7o+ylF5ShzFnyFAEWsjj3nTJJ/jKFilMYxOFkY
+	y+9KxJ5QVJta/mu55dFPyv7nhTCSqj0=
+Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
+ by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-648-VLi1i6T_PcGzEAjbf4fkGg-1; Thu,
+ 22 Feb 2024 15:58:00 -0500
+X-MC-Unique: VLi1i6T_PcGzEAjbf4fkGg-1
 Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com [10.11.54.5])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 43454890F64;
-	Thu, 22 Feb 2024 20:57:58 +0000 (UTC)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id DED493806061;
+	Thu, 22 Feb 2024 20:57:59 +0000 (UTC)
 Received: from ibm-p8-16-fsp.mgmt.pnr.lab.eng.rdu2.redhat.com (unknown [10.22.8.53])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id EC3EB10802;
-	Thu, 22 Feb 2024 20:57:56 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 2F96310DD4;
+	Thu, 22 Feb 2024 20:57:59 +0000 (UTC)
 From: Luiz Capitulino <luizcap@redhat.com>
 To: ilpo.jarvinen@linux.intel.com,
 	shravankr@nvidia.com
@@ -46,9 +48,11 @@ Cc: davthompson@nvidia.com,
 	linux-kernel@vger.kernel.org,
 	platform-driver-x86@vger.kernel.org,
 	Luiz Capitulino <luizcap@redhat.com>
-Subject: [PATCH 0/2] platform/mellanox: mlxbf-pmc: Fix module loading
-Date: Thu, 22 Feb 2024 15:57:28 -0500
-Message-ID: <cover.1708635408.git.luizcap@redhat.com>
+Subject: [PATCH 2/2] platform/mellanox: mlxbf-pmc: Ignore unsupported performance blocks
+Date: Thu, 22 Feb 2024 15:57:30 -0500
+Message-ID: <f8e2e6210b43e825b69824b420c801cd513d401d.1708635408.git.luizcap@redhat.com>
+In-Reply-To: <cover.1708635408.git.luizcap@redhat.com>
+References: <cover.1708635408.git.luizcap@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -58,30 +62,81 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.5
 
-Hi,
+Currently, the driver has two behaviors to deal with new & unsupported
+performance blocks reported by the firmware:
 
-The mlxbf-pmc driver fails to load when the firmware reports a new but not
-yet implemented performance block. I can reproduce this today with a
-Bluefield-3 card and UEFI version 4.6.0-18-g7d063bb-BId13035, since this
-reports the new clock_measure performance block.
+ 1. For register and unknown block types, the driver will fail to load
+    with the following error message:
 
-This[1] patch from Shravan implements the clock_measure support and will
-solve the issue. But this series avoids the situation by ignoring and
-logging unsupported performance blocks.
+    [ 4510.956369] mlxbf-pmc: probe of MLNXBFD2:00 failed with error -22
 
-NOTE: This series is based on latest linux-next which contains new changes
-to mlxbf-pmc.
+ 2. For counter and crspace blocks, the driver will load and sysfs files
+    will be created but getting the contents of event_list or trying to
+    setup the counter will fail
 
-[1] https://lore.kernel.org/lkml/1c2f1b6da51523fe0f338f9ddce9e3903148f604.1707808180.git.shravankr@nvidia.com/
+Instead, let's ignore and log unsupported blocks. This means the driver
+will always load and unsupported blocks will never show up in sysfs.
 
-Luiz Capitulino (2):
-  platform/mellanox: mlxbf-pmc: mlxbf_pmc_event_list(): make size ptr
-    optional
-  platform/mellanox: mlxbf-pmc: Ignore unsupported performance blocks
+Signed-off-by: Luiz Capitulino <luizcap@redhat.com>
+---
+ drivers/platform/mellanox/mlxbf-pmc.c | 16 ++++++++++++++--
+ 1 file changed, 14 insertions(+), 2 deletions(-)
 
- drivers/platform/mellanox/mlxbf-pmc.c | 56 +++++++++++++++++----------
- 1 file changed, 36 insertions(+), 20 deletions(-)
-
+diff --git a/drivers/platform/mellanox/mlxbf-pmc.c b/drivers/platform/mellanox/mlxbf-pmc.c
+index b71636eb3db1..746567767e5b 100644
+--- a/drivers/platform/mellanox/mlxbf-pmc.c
++++ b/drivers/platform/mellanox/mlxbf-pmc.c
+@@ -1043,6 +1043,11 @@ static const struct mlxbf_pmc_events *mlxbf_pmc_event_list(const char *blk, size
+ 	return events;
+ }
+ 
++static bool mlxbf_pmc_event_supported(const char *blk)
++{
++	return !!mlxbf_pmc_event_list(blk, NULL);
++}
++
+ /* Get the event number given the name */
+ static int mlxbf_pmc_get_event_num(const char *blk, const char *evt)
+ {
+@@ -1761,6 +1766,9 @@ static int mlxbf_pmc_init_perftype_counter(struct device *dev, unsigned int blk_
+ 	struct mlxbf_pmc_attribute *attr;
+ 	unsigned int i = 0, j = 0;
+ 
++	if (!mlxbf_pmc_event_supported(pmc->block_name[blk_num]))
++		return -ENOENT;
++
+ 	/* "event_list" sysfs to list events supported by the block */
+ 	attr = &pmc->block[blk_num].attr_event_list;
+ 	attr->dev_attr.attr.mode = 0444;
+@@ -1840,7 +1848,7 @@ static int mlxbf_pmc_init_perftype_reg(struct device *dev, unsigned int blk_num)
+ 
+ 	events = mlxbf_pmc_event_list(pmc->block_name[blk_num], &count);
+ 	if (!events)
+-		return -EINVAL;
++		return -ENOENT;
+ 
+ 	pmc->block[blk_num].attr_event = devm_kcalloc(
+ 		dev, count, sizeof(struct mlxbf_pmc_attribute), GFP_KERNEL);
+@@ -1878,7 +1886,7 @@ static int mlxbf_pmc_create_groups(struct device *dev, unsigned int blk_num)
+ 	else if (pmc->block[blk_num].type == MLXBF_PMC_TYPE_REGISTER)
+ 		err = mlxbf_pmc_init_perftype_reg(dev, blk_num);
+ 	else
+-		err = -EINVAL;
++		err = -ENOENT;
+ 
+ 	if (err)
+ 		return err;
+@@ -1983,6 +1991,10 @@ static int mlxbf_pmc_map_counters(struct device *dev)
+ 			return -ENOMEM;
+ 
+ 		ret = mlxbf_pmc_create_groups(dev, i);
++		if (ret == -ENOENT) {
++			dev_warn(dev, "ignoring unsupported block: '%s'\n", pmc->block_name[i]);
++			continue;
++		}
+ 		if (ret)
+ 			return ret;
+ 	}
 -- 
 2.43.1
 
