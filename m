@@ -1,104 +1,87 @@
-Received: from vps.xff.cz (vps.xff.cz [195.181.215.36])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60A6A6E60E;
-	Thu, 22 Feb 2024 20:18:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.181.215.36
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4D056AFA9;
+	Thu, 22 Feb 2024 20:20:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708633091; cv=none; b=cnOIit0d+Sy28/7Jm0HzpMoBi6LVSaipuv5CSkDolXgNcmjpSGUnmm4f91NXonUcVhxGtrDbLCcChJFngAhS/bqAl4qrAPf2Ako22682yu8AF3t2L7x/GOvQ1+jx9kDyM+eI+z/+DjabVSkZLt7vJHXB7qJNZs/5haF8NvLyp18=
+	t=1708633231; cv=none; b=SJDVTKpPng8jj4scQwBbnC7vk8CXvIPWZ9oh/4rMFb+bsvBDHOpXN4EJuXp2HCSsNQxS8Ei7ISLa5pmdBI9zHzw8HjbQAmq98XPHayBWjzLr6U39Tpjoc9Zh9VudmnMR4Z/I4Vu3xec8sTdQ7ALzX0ZLbeJwfGqfVrcZ1RdJoVM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708633091; c=relaxed/simple;
-	bh=EiUKoJgFF8oMypTNd3c6JPLCRhgmvWHjSm7jz6q9M+s=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=n+KLQBFXomyExzbyZa8IjsuLbMQqdiCJUVzpOmTPldUkF+bKo6+a/sXH+LU5chY2qmtQ0saYVEoLXAlYNU23VCVdTeRU3m16CPco7VqJPqeASHTsoZwoVKeSnrmRkEfonzI3EHG9F6PUESsIWv6q1zcNohuoWTVTsvdyx4De4vI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=xff.cz; spf=pass smtp.mailfrom=xff.cz; dkim=pass (1024-bit key) header.d=xff.cz header.i=@xff.cz header.b=i1dtVq+j; arc=none smtp.client-ip=195.181.215.36
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=xff.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xff.cz
+	s=arc-20240116; t=1708633231; c=relaxed/simple;
+	bh=UtGmhrVXWOQgfINhBlApcwhf/spsw5YMmZhYCI+jEww=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=tHrLleSkezJwmEBQOym+ipyC9OW+48jhai0HW7yBs4ITOdOjp28WdF2vKUGySXVsJtuqWrERPl9GIOv3q6vHaGbFJ1vrb+MR0U2bePOYrNic8Z7VqWvmUK0uAr2jM13qFoGg706pLLUKIrdXPDvL/RbVI0GDm7pgtJ9UkPypxdc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=b5xqPH+j; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=xff.cz header.i=@xff.cz header.b="i1dtVq+j"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xff.cz; s=mail;
-	t=1708633080; bh=EiUKoJgFF8oMypTNd3c6JPLCRhgmvWHjSm7jz6q9M+s=;
-	h=Date:From:To:Cc:Subject:X-My-GPG-KeyId:References:From;
-	b=i1dtVq+jo6ykSMcJvbLZEq52v7fc+zMoNxFGgWEUcNmnMtOh9qZj6CG30t3bojQ+Q
-	 vi0DRONkalTi7/8SPOBqJMed+f8XTY9mJMSTXvfoOmpUvIdIRcVq1WvicVNvobfdNv
-	 yMm3SW4kiWVCUVCOgdnYl+yphmyUU5wyokGm/grw=
-Date: Thu, 22 Feb 2024 21:18:00 +0100
-From: =?utf-8?Q?Ond=C5=99ej?= Jirman <megi@xff.cz>
-To: Mark Brown <broonie@kernel.org>
-Cc: linux-kernel@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>, 
-	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
-	Arnaud Ferraris <arnaud.ferraris@collabora.com>, Chen-Yu Tsai <wens@csie.org>, 
-	Jernej Skrabec <jernej.skrabec@gmail.com>, Samuel Holland <samuel@sholland.org>, 
-	linux-sound@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-sunxi@lists.linux.dev
-Subject: Re: [PATCH 4/4] ASoC: sun8i-codec: Implement jack and accessory
- detection
-Message-ID: <vmi3fkm47wf7cbfakubbye4ce7ol5kjpg3edkrati2lhsl6qej@57uir6fjjzq2>
-Mail-Followup-To: =?utf-8?Q?Ond=C5=99ej?= Jirman <megi@xff.cz>, 
-	Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org, 
-	Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
-	Arnaud Ferraris <arnaud.ferraris@collabora.com>, Chen-Yu Tsai <wens@csie.org>, 
-	Jernej Skrabec <jernej.skrabec@gmail.com>, Samuel Holland <samuel@sholland.org>, 
-	linux-sound@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-sunxi@lists.linux.dev
-X-My-GPG-KeyId: EBFBDDE11FB918D44D1F56C1F9F0A873BE9777ED
- <https://xff.cz/key.txt>
-References: <20240222181851.3398254-1-megi@xff.cz>
- <20240222181851.3398254-5-megi@xff.cz>
- <0c351386-f1df-443f-a997-261f5c60c852@sirena.org.uk>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="b5xqPH+j"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 549CAC43394;
+	Thu, 22 Feb 2024 20:20:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1708633231;
+	bh=UtGmhrVXWOQgfINhBlApcwhf/spsw5YMmZhYCI+jEww=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=b5xqPH+jNwgz99/qOuiOdzr5cJrB+12a30C/knYO2wusyXuON2BpRDK6tqpWpsZiv
+	 lz/gvdJ1X/Ahd0nZn74UDJUQ+l0VKNZoNUcpHCBWEQ6CI6Qh2cx0O1SZkKpg8/lr2v
+	 GQSgsQJMBkgcBBEQjLlxddaSixgzV6ixmBj8CJxpd6/NmChd0eMPALkN+P5k1W7OMo
+	 75Qtkm+fRQGxuxgQGIIVbIfpsVoryXrO2WXIUMtyJh4vnkurMYQm1sQ4iWqwDybt6u
+	 PwWvesXOqcW+JWSu0VDeqxBUyEc3DG1Wi1eZqLdcPTouAPs188tPH3+fNn69emz1vb
+	 Cx92WtX27ptKQ==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 39A19D84BBF;
+	Thu, 22 Feb 2024 20:20:31 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <0c351386-f1df-443f-a997-261f5c60c852@sirena.org.uk>
+Subject: Re: [PATCH v8 0/4] RISC-V: Add MMC support for TH1520 boards
+From: patchwork-bot+linux-riscv@kernel.org
+Message-Id: 
+ <170863323122.27873.17493121539917977053.git-patchwork-notify@kernel.org>
+Date: Thu, 22 Feb 2024 20:20:31 +0000
+References: <20231206-th1520_mmc_dts-v8-0-69220e373e8f@baylibre.com>
+In-Reply-To: <20231206-th1520_mmc_dts-v8-0-69220e373e8f@baylibre.com>
+To: Drew Fustini <dfustini@baylibre.com>
+Cc: linux-riscv@lists.infradead.org, paul.walmsley@sifive.com,
+ palmer@dabbelt.com, aou@eecs.berkeley.edu, jszhang@kernel.org,
+ guoren@kernel.org, wefu@redhat.com, conor@kernel.org, robh+dt@kernel.org,
+ krzysztof.kozlowski+dt@linaro.org, jkridner@beagleboard.org,
+ robertcnelson@beagleboard.org, linux-kernel@vger.kernel.org,
+ devicetree@vger.kernel.org
 
-Hello Mark,
+Hello:
 
-On Thu, Feb 22, 2024 at 06:41:13PM +0000, Mark Brown wrote:
-> On Thu, Feb 22, 2024 at 07:18:47PM +0100, Ondřej Jirman wrote:
+This series was applied to riscv/linux.git (for-next)
+by Palmer Dabbelt <palmer@rivosinc.com>:
+
+On Wed, 06 Dec 2023 00:09:20 -0800 you wrote:
+> This series enables the MMC controller in the T-Head TH1520 SoC and
+> enables the eMMC and microSD on both the BeagleV Ahead and the Sipeed
+> LicheePi 4A.
 > 
-> > +static struct snd_soc_jack_pin sun8i_codec_jack_pins[] = {
-> > +	{
-> > +		.pin	= "Headphone Jack",
-> > +		.mask	= SND_JACK_HEADPHONE,
-> > +	},
-> > +	{
-> > +		.pin	= "Headset Microphone",
-> > +		.mask	= SND_JACK_MICROPHONE,
-> > +	},
-> > +};
-> > +
+> The drivers/mmc/host patches from v6 were applied by Ulf and are already
+> in the linux-next [1][2] as well as the bindings patch [3]. Thus v7 was
+> only a defconfig patch and three device tree patches. This v8 is a
+> followup to change the dwcmshc node names to match the documentation.
 > 
-> The jack being a headset jack is going to be system specific isn't it?
-> Some systems might have separate headphone and microphone jacks.  I'd
-> not expect to see any pin handling code at all in a CODEC driver, that
-> belongs in the machine driver.
+> [...]
 
-Yeah, the only reason this and the card reference seems to be here is to
-check whether jack detection should be enabled and in what capacity.
+Here is the summary with links:
+  - [v8,1/4] riscv: defconfig: Enable mmc and dma drivers for T-Head TH1520
+    https://git.kernel.org/riscv/c/45e0b0fd6dc5
+  - [v8,2/4] riscv: dts: thead: Add TH1520 mmc controllers and sdhci clock
+    (no matching commit)
+  - [v8,3/4] riscv: dts: thead: Enable BeagleV Ahead eMMC and microSD
+    (no matching commit)
+  - [v8,4/4] riscv: dts: thead: Enable LicheePi 4A eMMC and microSD
+    (no matching commit)
 
-Looks like there's some set_jack component callback for that. :)
-
-I'll look into that.
-
-kind regards,
-	o.
-
-> >  static int sun8i_codec_component_probe(struct snd_soc_component *component)
-> >  {
-> >  	struct snd_soc_dapm_context *dapm = snd_soc_component_get_dapm(component);
-> >  	struct sun8i_codec *scodec = snd_soc_component_get_drvdata(component);
-> >  	int ret;
-> >  
-> > +	scodec->card = component->card;
-> > +
-> 
-> The fact that you're needing to look at the card here should be a bit of
-> a warning sign there.
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
 
 
