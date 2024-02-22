@@ -1,146 +1,169 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7AEE36AE9;
-	Thu, 22 Feb 2024 13:47:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF34F5FB81
+	for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 13:48:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708609674; cv=none; b=LyLvomeID34jrcQQybtU8Hn5mBr6LbbRGm7rNqppQVPPAAPEdcCLgh3Lw9ZfjZLSKLD13/za+XhRCxJIvj7zLa9Hg5G3F893+0BCutuUBIAG8BoS5VGkVQIcfuYjWx1Vi7tMhcknN/rY/QJP2eKvyGa+v2orf7rvv8am7DibEik=
+	t=1708609725; cv=none; b=EsI3Cj2he8MZoA0wdzGwsOCbTeA0M0IvN2vi9NON5rM8n+CJ63lYQidisNkoOyLGUYcj0nnhrS8rHN6zos821k53xrEeDZKoUCTTHZv8J57XpbIaYD4XiqUcSHl6pLasWdz2/U4K/dwbR7vc3dQk68h32YTZw1OroaIlOugV1h8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708609674; c=relaxed/simple;
-	bh=xpTyLut7uzB3vkJ2gcm33YHNDw83yuMWLvrYsu1nfoU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=T1pSyJmaFYFnElo7nt94zncKiAlqX9sw+D3gSZdur+V9MWr4HIP7K1QUUrueNv7EYMp6yHuF2C1NJpzOxdBk1SuBRDfMaPBcvty7Y0n9J166VguMw3EezKnMBNZ7207vfFjoLFvoJKRNbg0I6uUYJYECt2HsM4csSPVyLa6EPkM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=U6N5STPX; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1708609725; c=relaxed/simple;
+	bh=Y6TgWPLINj7D8BQDnroVZ+T+LDIQasr9m7F1MIYp16M=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=an4dwLsIA39kf3tiBTWnWXd/KQWU4l9M9sDjskUSFWx+Yu3+Ux8HM2TUPyIBL26uTOtVR5Fezh33wBb3kUvtqkbLdXg/GGWNi1hEgslEZVhrcwU54R4nv1PhS/WcRqGwmKehSnN9ofv00hL+8oX0bkqXWPiIw4LxUEDPIyJ9PeA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=GeaMut06; arc=none smtp.client-ip=209.85.208.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="U6N5STPX"
-Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 41M666qZ013576;
-	Thu, 22 Feb 2024 13:47:42 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	qcppdkim1; bh=WWXqOKm9Rw4fMWd5UNR5Tj3My/z0kfVSuwv2vQRG2ck=; b=U6
-	N5STPXnAg89/ojevzmmhA3+3622S7WVyE16A5Ea4zOPBsH108lSPXRSHg9t02ts0
-	uYv24O8EKyEmEOvZpiQzmqfe42x2xF/HxNallovDoz/TwWE/g1HFkpY48aM90sMJ
-	xggYuSuIot4BWGbFtvzNjC0y2H23kLEpNa/TA09kmrne2lKllcwsRzFMnC0JNg06
-	GOtGI2FjL4P8srMdaJI4oVuhtDMs8P780JxmqtQ0+niMiAlvv9HlNBkkt1vk1yzR
-	mDoz9T7dbyp+wLURKYRTIbU8z6PGA3xCBRNPC7PwK8pTn4E4bTDoCZHuFdXFXlBQ
-	XdZx5Kk82krK9h/PmJXg==
-Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3wdpe6thku-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 22 Feb 2024 13:47:42 +0000 (GMT)
-Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 41MDlfug003432
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 22 Feb 2024 13:47:41 GMT
-Received: from [10.218.10.86] (10.80.80.8) by nasanex01b.na.qualcomm.com
- (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Thu, 22 Feb
- 2024 05:47:34 -0800
-Message-ID: <51ffdd0f-d3a1-7f19-2033-264baf71394e@quicinc.com>
-Date: Thu, 22 Feb 2024 19:16:26 +0530
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GeaMut06"
+Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-2d26227d508so6669551fa.2
+        for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 05:48:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1708609721; x=1709214521; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=pq7QWWU9M0E6N32mIV1CNOQHREQMEJTHwJ9hCgn89sY=;
+        b=GeaMut06EpulYKeYJGsgRzXEwy8m+UnEuuuVN6iqS+mRzO/0xc2a2Bd+g0ntcSKrAr
+         LK0dNww7n6tju7qUAACQFD35tV4tq5Z33TRLdu5FbaBPIaTvi5ZUvXj31pG9zqEpzquA
+         M2t8vWVqygvHLY0sWpx37RRzFDDTQcVi/pE77ZhQFGouYBx6mSKGj4zwSiMQofsI/glf
+         Dqog2cgVDnwa8F3EMqpct3WPt/HR+MesTfitn/2U3DJuoHSjW0p5osDZ6r+zg9XmmbFY
+         obyL22y/VarX7o2ko3RfPoaIeUcyTDdRZv9vW82gS29gyswxRLCZzTgYmIV0mqDp2DfU
+         8qEw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708609721; x=1709214521;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=pq7QWWU9M0E6N32mIV1CNOQHREQMEJTHwJ9hCgn89sY=;
+        b=NtMPGJMQDj3UPQqK2rmIl72ktONQ8vCCEllz8xjSfqTrz7MWI7e1YNiGrBBoqKj1F0
+         bsBY/Za2KbuNA+CjWMQn7Zc8WHzT1opR7077nOPRyZ5GJFueSaNoQ8OzyxInzrAk9RsH
+         Lv7IjDE8UMkojxew5O/fCSCajnh2c+TuUwENWdCyI+48SKuEpUNaMEusmEYBx9BBZHK8
+         P+hXtanGfZxqswGD81ssGCL21U5tckA+bkbAFD8d/EHNT+wAAAU2TmkBCsIIAffL5EJw
+         aQ3UMzSEnSeu7lKcWxJpf8uVndAtnjpoUg0gyHw70837QyTkmq4NSv7CrBtejfWAKZve
+         szFQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUdHWxb1EOEjUsBD3uDN+K7IDOZi0ilujVJzJ+sXLA2Y+apCaOsR3xSmHjkw6fudaW0hFGYrQFJ84mAfSThgAHYUK2evTL+Axlzvnuo
+X-Gm-Message-State: AOJu0Yzzd3gep42QR62H1NbQxIz+H5GjndCMp0dM/4YRVblty8CKWcG1
+	WI7EPkWlF7PsfcXF10gYdbMkaKxmRkE/wJ6a/9GlZTG7sHX2tfOaJ1krIDrmYUw=
+X-Google-Smtp-Source: AGHT+IGsHjVVspiuRlVX6nCp48zMZnkeVdxWm3TMOKdhpk1Hz1OmtL6b+b6z37yUMHEk31Lp4+av4Q==
+X-Received: by 2002:a2e:9256:0:b0:2d2:51c9:ef4e with SMTP id v22-20020a2e9256000000b002d251c9ef4emr3575102ljg.11.1708609720807;
+        Thu, 22 Feb 2024 05:48:40 -0800 (PST)
+Received: from [192.168.10.46] (146725694.box.freepro.com. [130.180.211.218])
+        by smtp.googlemail.com with ESMTPSA id r11-20020a05600c35cb00b004120537210esm6505491wmq.46.2024.02.22.05.48.39
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 22 Feb 2024 05:48:40 -0800 (PST)
+Message-ID: <cd710cd4-c723-48e0-80d2-72d9d95f9e0c@linaro.org>
+Date: Thu, 22 Feb 2024 14:48:39 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.12.0
-Subject: Re: [PATCH v1 1/3] dt-bindings: PCI: qcom: Add global irq support for
- SA8775p
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        Konrad Dybcio
-	<konrad.dybcio@linaro.org>,
-        root <root@hu-msarkar-hyd.qualcomm.com>, <andersson@kernel.org>,
-        <krzysztof.kozlowski+dt@linaro.org>, <jingoohan1@gmail.com>,
-        <gustavo.pimentel@synopsys.com>, <manivannan.sadhasivam@linaro.org>,
-        <conor+dt@kernel.org>, <quic_nitegupt@quicinc.com>
-CC: <quic_shazhuss@quicinc.com>, <quic_ramkri@quicinc.com>,
-        <quic_nayiluri@quicinc.com>, <quic_krichai@quicinc.com>,
-        <quic_vbadigan@quicinc.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
-        Rob Herring
-	<robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-        <linux-arm-msm@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20240221140405.28532-1-root@hu-msarkar-hyd.qualcomm.com>
- <20240221140405.28532-2-root@hu-msarkar-hyd.qualcomm.com>
- <08ca89da-d6a1-440c-8347-f2e31222bede@linaro.org>
- <a0677780-d013-44f7-94bf-ea7e23aab019@linaro.org>
- <88d8fea5-2b11-4d01-816c-dbe822ac8d19@linaro.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 8/9] thermal: of: Set THERMAL_TRIP_FLAG_RW_TEMP
+ directly
 Content-Language: en-US
-From: Mrinmay Sarkar <quic_msarkar@quicinc.com>
-In-Reply-To: <88d8fea5-2b11-4d01-816c-dbe822ac8d19@linaro.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01b.na.qualcomm.com (10.46.141.250)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: UxfVJvt56qmyIe1xNXBsqw84ytiah0AC
-X-Proofpoint-ORIG-GUID: UxfVJvt56qmyIe1xNXBsqw84ytiah0AC
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-02-22_11,2024-02-22_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 malwarescore=0
- adultscore=0 mlxlogscore=990 clxscore=1011 bulkscore=0 spamscore=0
- impostorscore=0 lowpriorityscore=0 phishscore=0 priorityscore=1501
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2402120000 definitions=main-2402220109
+To: "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+ Linux PM <linux-pm@vger.kernel.org>
+Cc: Lukasz Luba <lukasz.luba@arm.com>, LKML <linux-kernel@vger.kernel.org>,
+ Stanislaw Gruszka <stanislaw.gruszka@linux.intel.com>,
+ Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+ Zhang Rui <rui.zhang@intel.com>, netdev@vger.kernel.org,
+ Ido Schimmel <idosch@nvidia.com>, Petr Machata <petrm@nvidia.com>,
+ Miri Korenblit <miriam.rachel.korenblit@intel.com>,
+ linux-wireless@vger.kernel.org, Shawn Guo <shawnguo@kernel.org>,
+ Sascha Hauer <s.hauer@pengutronix.de>,
+ Pengutronix Kernel Team <kernel@pengutronix.de>,
+ Manaf Meethalavalappu Pallikunhi <quic_manafm@quicinc.com>
+References: <6017196.lOV4Wx5bFT@kreacher> <9235101.CDJkKcVGEf@kreacher>
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+In-Reply-To: <9235101.CDJkKcVGEf@kreacher>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
+On 12/02/2024 19:40, Rafael J. Wysocki wrote:
+> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> 
+> It is now possible to flag trip points with THERMAL_TRIP_FLAG_RW_TEMP
+> to allow their temperature to be set from user space via sysfs instead
+> of using a nonzero writable trips mask during thermal zone registration,
+> so make the OF thermal code do that.
+> 
+> No intentional functional impact.
+> 
+> Note that this change is requisite for dropping the mask argument from
+> thermal_zone_device_register_with_trips() going forward.
+> 
+> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> ---
+> 
+> v1 -> v2: Rename trip flag (Stanislaw).
+> 
+> ---
+>   drivers/thermal/thermal_of.c |    8 ++++----
+>   1 file changed, 4 insertions(+), 4 deletions(-)
+> 
+> Index: linux-pm/drivers/thermal/thermal_of.c
+> ===================================================================
+> --- linux-pm.orig/drivers/thermal/thermal_of.c
+> +++ linux-pm/drivers/thermal/thermal_of.c
+> @@ -117,6 +117,8 @@ static int thermal_of_populate_trip(stru
+>   		return ret;
+>   	}
+>   
+> +	trip->flags = THERMAL_TRIP_FLAG_RW_TEMP;
+> +
+>   	return 0;
+>   }
 
-On 2/21/2024 8:03 PM, Krzysztof Kozlowski wrote:
-> On 21/02/2024 15:31, Konrad Dybcio wrote:
->> On 21.02.2024 15:28, Krzysztof Kozlowski wrote:
->>> On 21/02/2024 15:04, root wrote:
->>>> From: Mrinmay Sarkar <quic_msarkar@quicinc.com>
->>>>
->>>> Add global interrupt support in dt-bindings for SA8775p RC platform.
->>> What is this global interrupt? Why wasn't it there before?
->>>
->>>> Signed-off-by: Mrinmay Sarkar <quic_msarkar@quicinc.com>
->>>> ---
->>>>   .../devicetree/bindings/pci/qcom,pcie.yaml    | 26 +++++++++++++++++--
->>>>   1 file changed, 24 insertions(+), 2 deletions(-)
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
->>>> index a93ab3b54066..d86fb63a2d2c 100644
->>>> --- a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
->>>> +++ b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
->>>> @@ -63,7 +63,7 @@ properties:
->>>>   
->>>>     interrupt-names:
->>>>       minItems: 1
->>>> -    maxItems: 8
->>>> +    maxItems: 9
->>>>   
->>>>     iommu-map:
->>>>       minItems: 1
->>>> @@ -873,8 +873,30 @@ allOf:
->>>>           compatible:
->>>>             contains:
->>>>               enum:
->>>> -              - qcom,pcie-msm8996
->>>>                 - qcom,pcie-sa8775p
->>>> +    then:
->>>> +      oneOf:
->>> No need, drop.
->> Moreover, I think this global irq should be present on all qc platforms
-> Heh, this will anyway conflict with my series:
-> https://lore.kernel.org/all/90a50ab4-a513-48af-b13a-bba082e49540@linaro.org/
->
-> https://lore.kernel.org/all/20240205-dt-bindings-pci-qcom-split-continued-v1-0-c333cab5eeea@linaro.org/
+Even if you are not at the origin of this default behavior. I'm 
+wondering if we should be more protective against changes from userspace 
+when the firmware is telling us to protect the silicon at a specific 
+temperature.
 
-Thanks for sharing the series. will make change top of your series on v2.
+What do you think if we set the THERMAL_TRIP_FLAG_RW_TEMP only if the 
+trip point is not bound to a cooling device?
 
-Thanks,
-Mrinmay
+So trip points without associated cooling device can be writable but 
+others can be considered as managed by the kernel and no modifiable.
 
-> Best regards,
-> Krzysztof
->
+(This comment does not put in question this patch BTW)
+
+> @@ -477,7 +479,7 @@ static struct thermal_zone_device *therm
+>   	struct device_node *np;
+>   	const char *action;
+>   	int delay, pdelay;
+> -	int ntrips, mask;
+> +	int ntrips;
+>   	int ret;
+>   
+>   	of_ops = kmemdup(ops, sizeof(*ops), GFP_KERNEL);
+> @@ -510,15 +512,13 @@ static struct thermal_zone_device *therm
+>   	of_ops->bind = thermal_of_bind;
+>   	of_ops->unbind = thermal_of_unbind;
+>   
+> -	mask = GENMASK_ULL((ntrips) - 1, 0);
+> -
+>   	ret = of_property_read_string(np, "critical-action", &action);
+>   	if (!ret)
+>   		if (!of_ops->critical && !strcasecmp(action, "reboot"))
+>   			of_ops->critical = thermal_zone_device_critical_reboot;
+>   
+>   	tz = thermal_zone_device_register_with_trips(np->name, trips, ntrips,
+> -						     mask, data, of_ops, &tzp,
+> +						     0, data, of_ops, &tzp,
+>   						     pdelay, delay);
+>   	if (IS_ERR(tz)) {
+>   		ret = PTR_ERR(tz);
+> 
+> 
+> 
+
+-- 
+<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
+
