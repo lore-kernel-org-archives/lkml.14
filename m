@@ -1,141 +1,198 @@
-Received: from szxga06-in.huawei.com (szxga06-in.huawei.com [45.249.212.32])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f177.google.com (mail-pg1-f177.google.com [209.85.215.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1384811CBC
-	for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 01:29:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.32
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55E8D11C82
+	for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 01:33:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708565395; cv=none; b=ibkHvPhaPgRJUGNIU7Qe0GJejae36mEXqVApRu+Mv8bsiQz02DOIURFzqSGqxDjzRMKKsLb6ZTLRDoWWYWHPdEZ6LLeQAb0pnthYW8fQhYLeeDE3jnNEEa0LqS0XK1Y7O9mdtNQfBI9l1cXhtmauUGD4FUMiVt6tH4kzn4MYWdg=
+	t=1708565584; cv=none; b=X5xW3kxQKsR3MHBISNC0EwSEZXjuHowZNIbvmgn2xHTsAHVcGBuPi5pUDAxFYkH50AdUpx3PlyEMeuTvkiaEYJjWJLSnWLftrfGwct0T0sWallbops8IsDbpiHsmdlWavC0KZFZu/xoMoEsJ00pkOaiUHYhZ2sicYzHrlGJXwas=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708565395; c=relaxed/simple;
-	bh=L3qrX2+qt3K6+KM3s1Jzxze/w9E061p29jo/sORkGhE=;
-	h=Subject:To:References:CC:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=jiJH6cKbJs8+17vE7GQVegya0KCIv02EIIiBIAENC0MzTNLzX/YlA+mFETVVKTE6glwWuD9Ego60nINqB30LJJmTjbdWRPunAaCXmuclgc+LdCTLV0nxnYH4Wtu8fZN79pVTscXwfPPxBC7FRjyg6wuSIm0NLcqs7gvyRok1IeU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.234])
-	by szxga06-in.huawei.com (SkyGuard) with ESMTP id 4TgFt36Yrfz1vtxX;
-	Thu, 22 Feb 2024 09:29:15 +0800 (CST)
-Received: from dggpeml500002.china.huawei.com (unknown [7.185.36.158])
-	by mail.maildlp.com (Postfix) with ESMTPS id 5B14C140259;
-	Thu, 22 Feb 2024 09:29:50 +0800 (CST)
-Received: from [10.67.120.218] (10.67.120.218) by
- dggpeml500002.china.huawei.com (7.185.36.158) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Thu, 22 Feb 2024 09:29:50 +0800
-Subject: Re: Re: [PATCH 4/7] drivers/perf: hisi_pcie: Check the target filter
- properly
-To: Jonathan Cameron <Jonathan.Cameron@Huawei.com>, Yicong Yang
-	<yangyicong@huawei.com>
-References: <20240204074527.47110-1-yangyicong@huawei.com>
- <20240204074527.47110-5-yangyicong@huawei.com>
- <20240208122902.0000768f@Huawei.com>
-CC: <will@kernel.org>, <mark.rutland@arm.com>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-	<yangyicong@hisilicon.com>, <linuxarm@huawei.com>,
-	<prime.zeng@hisilicon.com>, <fanghao11@huawei.com>
-From: hejunhao <hejunhao3@huawei.com>
-Message-ID: <181ca17c-a902-78e0-095f-5cc194dbc52e@huawei.com>
-Date: Thu, 22 Feb 2024 09:29:49 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.7.1
+	s=arc-20240116; t=1708565584; c=relaxed/simple;
+	bh=VyvKbdCBXwoTpc3NUw38Rj/m1VW8rKxO+v0fPJFet10=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=m3YG/goH3g4DfF4/hc7FC+17b1VfClrTdN48Q/rEzFjUua9iY64AY7IfZzbwvswdrb9KOFKHQB4cSMmF69Fb/FvSXwpGpGtEL7gexQWmbH2VizHMiLiKF62L9oKfJw6eHZnKsSnzLXHXKgDafNpWepDpX5zZWe6uvkMtly7gjKo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=M31wLw/L; arc=none smtp.client-ip=209.85.215.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="M31wLw/L"
+Received: by mail-pg1-f177.google.com with SMTP id 41be03b00d2f7-5ca29c131ebso892691a12.0
+        for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 17:33:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1708565581; x=1709170381; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=n1/PMiHWsYAN4wzFhndBXh4DI3dHrcZRXiJQjN9iXLY=;
+        b=M31wLw/LyRop/Bi6LxVgxe1UG5g7/LB/Lz2W0L4Mm/dut308tMAJrk3mlLp+Qve/zU
+         44XEiqRN7olmitHIDchTRuLANCLDBiI1411xp/MnNt/1de16eQeSRchtmJH7VY8rVlif
+         ERKaTjxACsJrgvtXdcIf/ODMD/E39ipdF4t5m8aZbC3CXrDb3fAt2sXjU/rihYFtT3yA
+         zxTSdS9DC1mP5P5xbxugAFi/ln00vAl1MGQHVaXtZux3AXgTursBm1XKQEPLduX4pY3V
+         Jq0oCw1IaWFwaaRkkSxlYlgBxpaQZdz2Ms3NSMid3Na7FWOVskUAgcI6qo9tqJzsgZiI
+         ZfKw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708565581; x=1709170381;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=n1/PMiHWsYAN4wzFhndBXh4DI3dHrcZRXiJQjN9iXLY=;
+        b=oHl1QIqz8n1WokCmlsMX5UdId+BuPQl+UuyO/Oa98yXrHA7iauFt2ZdLCvKSOXSPOj
+         /u9RIerXLKCRVd5B5+c+4Ga6zX597VJm9en78Y4khn7EcH25c0WqiO2PX/MPnrcTnNJf
+         KRYLobHm0zTx6dw2u2K+8sOs0IMbfefFl1TznqkvC0kjI77iwzPLXx0fd7IpzaSwyFxF
+         6cIS7nZvDX4oADgQzVhmgZDEmiilMFpr7DwcRNVDrBa2O6jw9iho5sA8sQzZmMNCvuj/
+         rbKkTNDQRjliMsFUVX8ZA55bzJyTsDBiRSLq6QexkFEVq9is0Rm0JcPIzyGsdQn8wkwW
+         euPA==
+X-Forwarded-Encrypted: i=1; AJvYcCXLBYmDgNL0vkK64GyBxKYJssm/mmdY94HfMeptN7VTE7bpOt5qEY+AoqHMj4Zi8Uqr37dCQL+Rs3o/HPOPRO8Mj3dnk/KM+o1MnLsM
+X-Gm-Message-State: AOJu0YzOqcvIlV3iCIGjX+KQL8cQ/XPVB2XaLdBIh+aTpDDDrwL2TYfu
+	D9YtUrM4qx/Ic+F8dmTpPn+wZMhDswqjFO2bwVMkHQQSGPGAWd2sUrkS/pTw8lY=
+X-Google-Smtp-Source: AGHT+IG0sRbKUEOwlZ17s8jdpcAQ2S3+xO2BqNa6Gjn/TJGMcrfmrjlgVTyqtDhwxmWPGy2rlyUFuw==
+X-Received: by 2002:a05:6a21:394c:b0:19e:4aa7:e6ab with SMTP id ac12-20020a056a21394c00b0019e4aa7e6abmr22177735pzc.47.1708565580594;
+        Wed, 21 Feb 2024 17:33:00 -0800 (PST)
+Received: from debug.ba.rivosinc.com ([64.71.180.162])
+        by smtp.gmail.com with ESMTPSA id lf8-20020a170902fb4800b001db5ea825b2sm8782350plb.123.2024.02.21.17.32.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 21 Feb 2024 17:32:59 -0800 (PST)
+Date: Wed, 21 Feb 2024 17:32:56 -0800
+From: Deepak Gupta <debug@rivosinc.com>
+To: David Hildenbrand <david@redhat.com>
+Cc: rick.p.edgecombe@intel.com, broonie@kernel.org, Szabolcs.Nagy@arm.com,
+	kito.cheng@sifive.com, keescook@chromium.org,
+	ajones@ventanamicro.com, paul.walmsley@sifive.com,
+	palmer@dabbelt.com, conor.dooley@microchip.com, cleger@rivosinc.com,
+	atishp@atishpatra.org, alex@ghiti.fr, bjorn@rivosinc.com,
+	alexghiti@rivosinc.com, corbet@lwn.net, aou@eecs.berkeley.edu,
+	oleg@redhat.com, akpm@linux-foundation.org, arnd@arndb.de,
+	ebiederm@xmission.com, shuah@kernel.org, brauner@kernel.org,
+	guoren@kernel.org, samitolvanen@google.com, evan@rivosinc.com,
+	xiao.w.wang@intel.com, apatel@ventanamicro.com,
+	mchitale@ventanamicro.com, waylingii@gmail.com,
+	greentime.hu@sifive.com, heiko@sntech.de, jszhang@kernel.org,
+	shikemeng@huaweicloud.com, charlie@rivosinc.com,
+	panqinglin2020@iscas.ac.cn, willy@infradead.org,
+	vincent.chen@sifive.com, andy.chiu@sifive.com, gerg@kernel.org,
+	jeeheng.sia@starfivetech.com, mason.huo@starfivetech.com,
+	ancientmodern4@gmail.com, mathis.salmen@matsal.de,
+	cuiyunhui@bytedance.com, bhe@redhat.com, ruscur@russell.cc,
+	bgray@linux.ibm.com, alx@kernel.org, baruch@tkos.co.il,
+	zhangqing@loongson.cn, catalin.marinas@arm.com, revest@chromium.org,
+	josh@joshtriplett.org, joey.gouly@arm.com, shr@devkernel.io,
+	omosnace@redhat.com, ojeda@kernel.org, jhubbard@nvidia.com,
+	linux-doc@vger.kernel.org, linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+	linux-arch@vger.kernel.org, linux-kselftest@vger.kernel.org
+Subject: Re: [RFC PATCH v1 09/28] mm: abstract shadow stack vma behind
+ `arch_is_shadow_stack`
+Message-ID: <ZdakSM7KcXGgOoU6@debug.ba.rivosinc.com>
+References: <20240125062739.1339782-1-debug@rivosinc.com>
+ <20240125062739.1339782-10-debug@rivosinc.com>
+ <2f34f6aa-99fa-4545-b706-a1d50864f9e9@redhat.com>
+ <ZbKVNm5ubV8yQtSE@debug.ba.rivosinc.com>
+ <45d5b98c-bad8-471d-a285-47f47c5b50bb@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20240208122902.0000768f@Huawei.com>
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
- dggpeml500002.china.huawei.com (7.185.36.158)
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <45d5b98c-bad8-471d-a285-47f47c5b50bb@redhat.com>
+
+On Tue, Feb 13, 2024 at 11:34:59AM +0100, David Hildenbrand wrote:
+>On 25.01.24 18:07, Deepak Gupta wrote:
+>>On Thu, Jan 25, 2024 at 09:18:07AM +0100, David Hildenbrand wrote:
+>>>On 25.01.24 07:21, debug@rivosinc.com wrote:
+>>>>From: Deepak Gupta <debug@rivosinc.com>
+>>>>
+>>>>x86 has used VM_SHADOW_STACK (alias to VM_HIGH_ARCH_5) to encode shadow
+>>>>stack VMA. VM_SHADOW_STACK is thus not possible on 32bit. Some arches may
+>>>>need a way to encode shadow stack on 32bit and 64bit both and they may
+>>>>encode this information differently in VMAs.
+>>>>
+>>>>This patch changes checks of VM_SHADOW_STACK flag in generic code to call
+>>>>to a function `arch_is_shadow_stack` which will return true if arch
+>>>>supports shadow stack and vma is shadow stack else stub returns false.
+>>>>
+>>>>There was a suggestion to name it as `vma_is_shadow_stack`. I preferred to
+>>>>keep `arch` prefix in there because it's each arch specific.
+>>>>
+>>>>Signed-off-by: Deepak Gupta <debug@rivosinc.com>
+>>>>---
+>>>>  include/linux/mm.h | 18 +++++++++++++++++-
+>>>>  mm/gup.c           |  5 +++--
+>>>>  mm/internal.h      |  2 +-
+>>>>  3 files changed, 21 insertions(+), 4 deletions(-)
+>>>>
+>>>>diff --git a/include/linux/mm.h b/include/linux/mm.h
+>>>>index dfe0e8118669..15c70fc677a3 100644
+>>>>--- a/include/linux/mm.h
+>>>>+++ b/include/linux/mm.h
+>>>>@@ -352,6 +352,10 @@ extern unsigned int kobjsize(const void *objp);
+>>>>   * for more details on the guard size.
+>>>>   */
+>>>>  # define VM_SHADOW_STACK	VM_HIGH_ARCH_5
+>>>>+static inline bool arch_is_shadow_stack(vm_flags_t vm_flags)
+>>>>+{
+>>>>+	return (vm_flags & VM_SHADOW_STACK);
+>>>>+}
+>>>>  #endif
+>>>>  #ifdef CONFIG_RISCV_USER_CFI
+>>>>@@ -362,10 +366,22 @@ extern unsigned int kobjsize(const void *objp);
+>>>>   * with VM_SHARED.
+>>>>   */
+>>>>  #define VM_SHADOW_STACK	VM_WRITE
+>>>>+
+>>>>+static inline bool arch_is_shadow_stack(vm_flags_t vm_flags)
+>>>>+{
+>>>>+	return ((vm_flags & (VM_WRITE | VM_READ | VM_EXEC)) == VM_WRITE);
+>>>>+}
+>>>>+
+>>>
+>>>Please no such hacks just to work around the 32bit vmflags limitation.
+>>
+>>As I said in another response. Noted.
+>>And if there're no takers for 32bit on riscv (which highly likely is the case)
+>>This will go away in next version of patchsets.
+>
+>Sorry for the (unusually for me) late reply. Simplifying to riscv64 
+>sounds great.
+>
+>Alternatively, maybe VM_SHADOW_STACK is not even required at all on 
+>riscv if we can teach all code to only stare at arch_is_shadow_stack() 
+>instead.
+
+Sorry for late reply.
+
+I think for risc-v this can be done, if done in following way
+
+static inline bool arch_is_shadow_stack(struct vm_flags_t vm_flags)
+{
+		return (vm_get_page_prot(vm_flags) == PAGE_SHADOWSTACK);
+}
+
+But doing above will require following
+
+- Inventing a new PROT_XXX type (let's call it PROT_SHADOWSTACK) that
+   is only exposed to kernel. PROT_SHADOWSTACK protection flag would allow
+   `do_mmap` to do right thing and setup appropriate protection perms.
+   We wouldn't want to expose this protection type to user mode (because
+   `map_shadow_stack` already exists for that).
+   Current patch series uses PROT_SHADOWSTACK because VM_SHADOW_STACK was
+   aliased to VM_WRITE.
+
+- As you said teach all the generic code as well to use arch_is_shadow_stack
+   which might become complicated (can't say for sure)
 
 
-On 2024/2/8 20:29, Jonathan Cameron wrote:
-> On Sun, 4 Feb 2024 15:45:24 +0800
-> Yicong Yang <yangyicong@huawei.com> wrote:
 >
->> From: Junhao He <hejunhao3@huawei.com>
->>
->> The PMU can monitor traffic of certain target Root Port or downstream
->> target Endpoint. User can specify the target filter by the "port" or
->> "bdf" option respectively. The PMU can only monitor the Root Port or
->> Endpoint on the same PCIe core so the value of "port" or "bdf" should
->> be valid and will be checked by the driver.
->>
->> Currently at least and only one of "port" and "bdf" option must be set.
->> If "port" filter is not set or is set explicitly to zero (default),
->> driver will regard the user specifies a "bdf" option since "port" option
->> is a bitmask of the target Root Ports and zero is not a valid
->> value.
->>
->> If user not explicitly set "port" or "bdf" filter, the driver uses "bdf"
->> default value (zero) to set target filter, but driver will skip the
->> check of bdf=0, although it's a valid value (meaning 0000:000:00.0).
->> Then the user just gets zero.
->>
->> Therefore, we need to check if both "port" and "bdf" are invalid, then
->> return failure and report warning.
->>
->> Testing:
->> before the patch:
->>                     0      hisi_pcie0_core1/rx_mrd_flux/
->>                     0      hisi_pcie0_core1/rx_mrd_flux,port=0/
->>                24,124      hisi_pcie0_core1/rx_mrd_flux,port=1/
->>                     0      hisi_pcie0_core1/rx_mrd_flux,bdf=0/
->>       <not supported>      hisi_pcie0_core1/rx_mrd_flux,bdf=1/
-> Nice to include an example that works for bdf
-> 			    hisi_pcie0_core1/rx_mrd_flux,bdf=1,port=0
-> or something like that?
+>... but, just using the same VM_SHADOW_STACK will it all much cleaner. 
+>Eventually, we can just stop playing arch-specific games with 
+>arch_is_shadow_stack and VM_SHADOW_STACK.
 
-Yes, I will do that.
-These combined parameter test cases have been validated.
+Yeah for now, looks like easier thing to do.
 
->> after the patch:
->>       <not supported>      hisi_pcie0_core1/rx_mrd_flux/
->>       <not supported>      hisi_pcie0_core1/rx_mrd_flux,port=0/
->>                24,153      hisi_pcie0_core1/rx_mrd_flux,port=1/
->>       <not supported>      hisi_pcie0_core1/rx_mrd_flux,bdf=0/
->>       <not supported>      hisi_pcie0_core1/rx_mrd_flux,bdf=1/
->>
->> Signed-off-by: Junhao He <hejunhao3@huawei.com>
->> Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
-> Clearly the current situation is wrong, but perhaps we can
-> have a more intuitive scheme (could be added as a follow up patch)
-> and have the driver figure out which port the bdf lies below?
 >
-> Maybe that's a job for userspace tooling rather than the driver, but
-> the driver already has verification code and it wouldn't be hard
-> to not just check the rp is ours, but also set the filter to specify
-> that rp, or maybe just set the mask to include them all?
+>-- 
+>Cheers,
 >
-> Jonathan
+>David / dhildenb
 >
->
->> ---
->>   drivers/perf/hisilicon/hisi_pcie_pmu.c | 8 ++++----
->>   1 file changed, 4 insertions(+), 4 deletions(-)
->>
->> diff --git a/drivers/perf/hisilicon/hisi_pcie_pmu.c b/drivers/perf/hisilicon/hisi_pcie_pmu.c
->> index 83be3390686c..b91f03c02c57 100644
->> --- a/drivers/perf/hisilicon/hisi_pcie_pmu.c
->> +++ b/drivers/perf/hisilicon/hisi_pcie_pmu.c
->> @@ -306,10 +306,10 @@ static bool hisi_pcie_pmu_valid_filter(struct perf_event *event,
->>   	if (hisi_pcie_get_trig_len(event) > HISI_PCIE_TRIG_MAX_VAL)
->>   		return false;
->>   
->> -	if (requester_id) {
->> -		if (!hisi_pcie_pmu_valid_requester_id(pcie_pmu, requester_id))
->> -			return false;
->> -	}
->> +	/* Need to explicitly set filter of "port" or "bdf" */
->> +	if (!hisi_pcie_get_port(event) &&
->> +	    !hisi_pcie_pmu_valid_requester_id(pcie_pmu, requester_id))
->> +		return false;
->>   
->>   	return true;
->>   }
->
-
