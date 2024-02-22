@@ -1,51 +1,51 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60E606E602
-	for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 18:39:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C8D571742
+	for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 18:39:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708627177; cv=none; b=ASX0WDKAg7yNFTAknFuPZKoIRCPUWLU5fBqOqwQZksOaUMpxMnZBfLTnJ4rPjNAusZeUoasFMOmQqTkuRztMabXHo54mP9lA+kQONXLMV4WF/jPorsshArlTsW8qcgqiYfBhFRtWlWd3kq+VInPwuGcebH+ajCQFMhKoXmOD1zA=
+	t=1708627180; cv=none; b=a0ZHfg7l9yosAEn/sQ+YqDMg1Q5ZFJOVwDyW31bS/FwFseoiQ7dctCW0miIkSSIVDumT+EoINHeGUdpPQrXWFaCwyjvzn9qfz5PAPcjO8hx/ejkb7xjPKimhjJCY6pStBhfzA1s/FaImuw6pejAMetz4FbLG41DB2kzgIDlAsgU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708627177; c=relaxed/simple;
-	bh=rsFsu/cEO8uggTXoV412vUNfouqZDj34S3bAyQtscUc=;
-	h=Subject:To:Cc:From:Date:References:In-Reply-To:Message-Id; b=jTY/9Or5H0HIYybA9OVQz6cdlvq0x0pZESwjEln83xSNwc3Pa1drn7PAyKMdfgd9KKfgj2qUP7Fef03RsooZUjqd/bBi2z/GXaBhd/MdvVYlJC2E67OidUsj1EaENaGmXhLvFOpvRizKXkkyFMhgXGZwvG4ZbJzpDZIAJ9DQQlo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ke59vf46; arc=none smtp.client-ip=198.175.65.16
+	s=arc-20240116; t=1708627180; c=relaxed/simple;
+	bh=LjZ3XkjG0M1tVloJWQZTp9CLqyaMld5LilwFQntGdmY=;
+	h=Subject:To:Cc:From:Date:References:In-Reply-To:Message-Id; b=TAGh8khGUqAdkSDjfVvQg8u6UlSuDLXszCMs0UGYGbAvT+icWPohvNiVP96XyWUXqFmIy/yw8ReozMx4hHcckc6QuOxiQdWJISmjgnWGRq9t4QDkVqx8xkWsT6gUWc15Tr6Y49GCWLJsJQr0zCs00V9nHYEizD1GM7W0t9+F5cQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=T6TUSdZ1; arc=none smtp.client-ip=198.175.65.16
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ke59vf46"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="T6TUSdZ1"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1708627177; x=1740163177;
+  t=1708627180; x=1740163180;
   h=subject:to:cc:from:date:references:in-reply-to:
    message-id;
-  bh=rsFsu/cEO8uggTXoV412vUNfouqZDj34S3bAyQtscUc=;
-  b=Ke59vf46hCB8/Y38lI5g097MW0ExmetfvzN+yayXeJDw+ExuaFCmtA+a
-   2CVic5l2rgqi1jjqEpQ/UXsJ1/QjDs9zMmpmLugFbPBoGLm6iMOoCUuGx
-   QNIdhD40uLuHiNutswp4JRz4xdxYDn8I2vEnEteiAMao1Z3cMx+dS+myA
-   qLzter1YHNvOMtPNNTPEKZgDedbv5rU1G1FMAiLXGA8VBI0Xoq0pMMw+F
-   cEbdByQdPgzNC2242FqU6lDPG9LxGWiDnoN0h1VoT3C5n5EltrjfufeeZ
-   lmEquCaAQQq63ar959dzgeu2dwr/H1HePyFWhv9QdQgJ91GK2Va93KqHr
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10992"; a="3031733"
+  bh=LjZ3XkjG0M1tVloJWQZTp9CLqyaMld5LilwFQntGdmY=;
+  b=T6TUSdZ1wxGN7ot4dagJvl6U5WnF4EB2IOsI0Y+dCQk0uCxECB/lleXi
+   eVjsNxuK44KaP1iNbHqIGrwjGZQA/B55sh/GWydY1fkyTMZgbsLHX/CZk
+   hWiOcOT/o/1JhvQC7j2yuFznOSKaiRzQGSm5OqCmvcRqc4GSjBnxLrb0d
+   aJ5tnRT//D4KPSv7eVz1GdwxtYBkE1WSs6ZVq0/x39oV4w7v/nUl7FTv8
+   U3Kr54EdI4vTI4f9Wzx6s5oDlIGfetLc/brZbcBgLfiKvLowGE4UNAonF
+   uBNC/qPNgdlCwx19v9Knsv7oLDXo9iZGF3SSi0hki8wlZ2JVUTBrdxqvy
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10992"; a="3031750"
 X-IronPort-AV: E=Sophos;i="6.06,179,1705392000"; 
-   d="scan'208";a="3031733"
+   d="scan'208";a="3031750"
 Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Feb 2024 10:39:37 -0800
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Feb 2024 10:39:39 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.06,179,1705392000"; 
-   d="scan'208";a="5975440"
+   d="scan'208";a="5975461"
 Received: from davehans-spike.ostc.intel.com (HELO localhost.localdomain) ([10.165.164.11])
-  by orviesa008.jf.intel.com with ESMTP; 22 Feb 2024 10:39:36 -0800
-Subject: [RFC][PATCH 07/34] x86/mm: Introduce virtual address space limit helper
+  by orviesa008.jf.intel.com with ESMTP; 22 Feb 2024 10:39:39 -0800
+Subject: [RFC][PATCH 09/34] x86/cpu: Introduce address configuration structure
 To: linux-kernel@vger.kernel.org
 Cc: kirill.shutemov@linux.intel.com,pbonzini@redhat.com,tglx@linutronix.de,x86@kernel.org,bp@alien8.de,Dave Hansen <dave.hansen@linux.intel.com>
 From: Dave Hansen <dave.hansen@linux.intel.com>
-Date: Thu, 22 Feb 2024 10:39:35 -0800
+Date: Thu, 22 Feb 2024 10:39:38 -0800
 References: <20240222183926.517AFCD2@davehans-spike.ostc.intel.com>
 In-Reply-To: <20240222183926.517AFCD2@davehans-spike.ostc.intel.com>
-Message-Id: <20240222183935.286751FF@davehans-spike.ostc.intel.com>
+Message-Id: <20240222183938.662DD27C@davehans-spike.ostc.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -55,101 +55,83 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 
 From: Dave Hansen <dave.hansen@linux.intel.com>
 
-This uses the same logic and approach which were used for the physical
-address limits with x86_phys_bits() and extends them to the virtual
-address space.
+Right now, 'boot_cpu_data' is established in a very ad hoc way.  Random
+bits of the initialization code write random things to it, either
+blowing away state or tweaking it as they see fit.  It's madness.
 
-Introduce a system-wide helper for users to query the size of the
-virtual address space: x86_virt_bits()
+Add some more structure to the process.
+
+Introduce an "address configuration" structure just for the boot CPU.
+This will be used to establish system-wide address space configuration.
+It is written while bringing up the boot CPU and then read *ONCE* to
+establish the configuration.
+
+Also introduce the first field: phys_addr_reduction_bits.  This field
+will be used by memory encryption hardware that reduces the actual
+usable address bits beneath what the hardware enumerates.
 
 Signed-off-by: Dave Hansen <dave.hansen@linux.intel.com>
 ---
 
- b/arch/x86/events/amd/brs.c        |    2 +-
- b/arch/x86/events/amd/lbr.c        |    2 +-
- b/arch/x86/events/intel/pt.c       |    4 ++--
- b/arch/x86/include/asm/processor.h |    5 +++++
- b/arch/x86/kernel/cpu/proc.c       |    2 +-
- b/arch/x86/mm/maccess.c            |    4 ++--
- 6 files changed, 12 insertions(+), 7 deletions(-)
+ b/arch/x86/include/asm/processor.h |   14 ++++++++++++++
+ b/arch/x86/kernel/cpu/common.c     |    3 +++
+ b/arch/x86/kernel/setup.c          |    2 ++
+ 3 files changed, 19 insertions(+)
 
-diff -puN arch/x86/events/amd/brs.c~x86_virt_bits-func arch/x86/events/amd/brs.c
---- a/arch/x86/events/amd/brs.c~x86_virt_bits-func	2024-02-22 10:08:51.528573793 -0800
-+++ b/arch/x86/events/amd/brs.c	2024-02-22 10:08:51.536574107 -0800
-@@ -285,7 +285,7 @@ void amd_brs_drain(void)
- 	struct perf_branch_entry *br = cpuc->lbr_entries;
- 	union amd_debug_extn_cfg cfg;
- 	u32 i, nr = 0, num, tos, start;
--	u32 shift = 64 - boot_cpu_data.x86_virt_bits;
-+	u32 shift = 64 - x86_virt_bits();
+diff -puN arch/x86/include/asm/processor.h~bsp-addr-info arch/x86/include/asm/processor.h
+--- a/arch/x86/include/asm/processor.h~bsp-addr-info	2024-02-22 10:08:52.824624673 -0800
++++ b/arch/x86/include/asm/processor.h	2024-02-22 10:08:52.828624830 -0800
+@@ -163,6 +163,19 @@ struct cpuinfo_x86 {
+ 	unsigned		initialized : 1;
+ } __randomize_layout;
  
- 	/*
- 	 * BRS event forced on PMC0,
-diff -puN arch/x86/events/amd/lbr.c~x86_virt_bits-func arch/x86/events/amd/lbr.c
---- a/arch/x86/events/amd/lbr.c~x86_virt_bits-func	2024-02-22 10:08:51.528573793 -0800
-+++ b/arch/x86/events/amd/lbr.c	2024-02-22 10:08:51.536574107 -0800
-@@ -89,7 +89,7 @@ static __always_inline u64 amd_pmu_lbr_g
- 
- static __always_inline u64 sign_ext_branch_ip(u64 ip)
- {
--	u32 shift = 64 - boot_cpu_data.x86_virt_bits;
-+	u32 shift = 64 - x86_virt_bits();
- 
- 	return (u64)(((s64)ip << shift) >> shift);
- }
-diff -puN arch/x86/events/intel/pt.c~x86_virt_bits-func arch/x86/events/intel/pt.c
---- a/arch/x86/events/intel/pt.c~x86_virt_bits-func	2024-02-22 10:08:51.528573793 -0800
-+++ b/arch/x86/events/intel/pt.c	2024-02-22 10:08:51.536574107 -0800
-@@ -1453,8 +1453,8 @@ static void pt_event_addr_filters_sync(s
- 			 * canonical addresses does not affect the result of the
- 			 * address filter.
- 			 */
--			msr_a = clamp_to_ge_canonical_addr(a, boot_cpu_data.x86_virt_bits);
--			msr_b = clamp_to_le_canonical_addr(b, boot_cpu_data.x86_virt_bits);
-+			msr_a = clamp_to_ge_canonical_addr(a, x86_virt_bits());
-+			msr_b = clamp_to_le_canonical_addr(b, x86_virt_bits());
- 			if (msr_b < msr_a)
- 				msr_a = msr_b = 0;
- 		}
-diff -puN arch/x86/include/asm/processor.h~x86_virt_bits-func arch/x86/include/asm/processor.h
---- a/arch/x86/include/asm/processor.h~x86_virt_bits-func	2024-02-22 10:08:51.532573950 -0800
-+++ b/arch/x86/include/asm/processor.h	2024-02-22 10:08:51.536574107 -0800
-@@ -772,4 +772,9 @@ static inline u8 x86_phys_bits(void)
- 	return boot_cpu_data.x86_phys_bits;
- }
- 
-+static inline u8 x86_virt_bits(void)
-+{
-+	return boot_cpu_data.x86_virt_bits;
-+}
++/*
++ * Must be written by the time ->c_bsp_init() completes.
++ * Consumed in get_cpu_address_sizes().
++ */
++struct x86_addr_config {
++	/*
++	 * How many bits of the expected or enumerated physical
++	 * address space are unavailable?  Typically set on
++	 * platforms that use memory encryption.
++	 */
++	u8 phys_addr_reduction_bits;
++};
 +
- #endif /* _ASM_X86_PROCESSOR_H */
-diff -puN arch/x86/kernel/cpu/proc.c~x86_virt_bits-func arch/x86/kernel/cpu/proc.c
---- a/arch/x86/kernel/cpu/proc.c~x86_virt_bits-func	2024-02-22 10:08:51.532573950 -0800
-+++ b/arch/x86/kernel/cpu/proc.c	2024-02-22 10:08:51.536574107 -0800
-@@ -133,7 +133,7 @@ static int show_cpuinfo(struct seq_file
- 	seq_printf(m, "clflush size\t: %u\n", c->x86_clflush_size);
- 	seq_printf(m, "cache_alignment\t: %d\n", c->x86_cache_alignment);
- 	seq_printf(m, "address sizes\t: %u bits physical, %u bits virtual\n",
--		   x86_phys_bits(), c->x86_virt_bits);
-+		   x86_phys_bits(), x86_virt_bits());
+ #define X86_VENDOR_INTEL	0
+ #define X86_VENDOR_CYRIX	1
+ #define X86_VENDOR_AMD		2
+@@ -182,6 +195,7 @@ struct cpuinfo_x86 {
+  */
+ extern struct cpuinfo_x86	boot_cpu_data;
+ extern struct cpuinfo_x86	new_cpu_data;
++extern struct x86_addr_config	bsp_addr_config;
  
- 	seq_puts(m, "power management:");
- 	for (i = 0; i < 32; i++) {
-diff -puN arch/x86/mm/maccess.c~x86_virt_bits-func arch/x86/mm/maccess.c
---- a/arch/x86/mm/maccess.c~x86_virt_bits-func	2024-02-22 10:08:51.536574107 -0800
-+++ b/arch/x86/mm/maccess.c	2024-02-22 10:08:51.536574107 -0800
-@@ -20,10 +20,10 @@ bool copy_from_kernel_nofault_allowed(co
- 	 * is initialized.  Needed for instruction decoding in early
- 	 * exception handlers.
- 	 */
--	if (!boot_cpu_data.x86_virt_bits)
-+	if (!x86_virt_bits())
- 		return true;
- 
--	return __is_canonical_address(vaddr, boot_cpu_data.x86_virt_bits);
-+	return __is_canonical_address(vaddr, x86_virt_bits());
+ extern __u32			cpu_caps_cleared[NCAPINTS + NBUGINTS];
+ extern __u32			cpu_caps_set[NCAPINTS + NBUGINTS];
+diff -puN arch/x86/kernel/cpu/common.c~bsp-addr-info arch/x86/kernel/cpu/common.c
+--- a/arch/x86/kernel/cpu/common.c~bsp-addr-info	2024-02-22 10:08:52.824624673 -0800
++++ b/arch/x86/kernel/cpu/common.c	2024-02-22 10:08:52.828624830 -0800
+@@ -1125,6 +1125,9 @@ void get_cpu_address_sizes(struct cpuinf
+ 	}
+ 	c->x86_cache_bits = c->x86_phys_bits;
+ 	c->x86_cache_alignment = x86_clflush_size();
++
++	/* Do this last to avoid affecting ->x86_cache_bits. */
++	c->x86_phys_bits -= bsp_addr_config.phys_addr_reduction_bits;
  }
+ 
+ static void identify_cpu_without_cpuid(struct cpuinfo_x86 *c)
+diff -puN arch/x86/kernel/setup.c~bsp-addr-info arch/x86/kernel/setup.c
+--- a/arch/x86/kernel/setup.c~bsp-addr-info	2024-02-22 10:08:52.824624673 -0800
++++ b/arch/x86/kernel/setup.c	2024-02-22 10:08:52.828624830 -0800
+@@ -131,6 +131,8 @@ struct ist_info ist_info;
+ struct cpuinfo_x86 boot_cpu_data __read_mostly;
+ EXPORT_SYMBOL(boot_cpu_data);
+ 
++struct x86_addr_config bsp_addr_config;
++
+ #if !defined(CONFIG_X86_PAE) || defined(CONFIG_X86_64)
+ __visible unsigned long mmu_cr4_features __ro_after_init;
  #else
- bool copy_from_kernel_nofault_allowed(const void *unsafe_src, size_t size)
 _
