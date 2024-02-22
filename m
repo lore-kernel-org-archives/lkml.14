@@ -1,99 +1,142 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f175.google.com (mail-yb1-f175.google.com [209.85.219.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EA3D73F14
-	for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 21:11:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14A966E5E3
+	for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 21:12:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708636312; cv=none; b=OnSmvt+h/GXBwbTgR+8XkcZTLv1D3wiUK0lLi+crU9t/GPF2RjJL0O+bzNOqxarEIdsMUz9xvJlprWYwkK5zgfF/cXbAgpfDPv0JtiRdgCfaUTUyjBLswZ4ivBXyD0GJbyl7aimU9dQqlRSYFzScEZALAMrm8G3z8uHl7Ah002g=
+	t=1708636353; cv=none; b=JG/TO8xfQh2brcmafO/Pq8X2t3V1YknKaep0VpuStVJ+5W/Ygb8dvdph0XSM+4VkbXRgwpS+IUU9m8BnTRaR0NrF1ijAtX6Hz25k7rb1ym7H7Bn4v2rB2q00/R6t7yRqikg+qCOD9XNKupSeYC76m6LTKSw4JDcNkYJhLke5K+w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708636312; c=relaxed/simple;
-	bh=cO5FbUIKoUo6Fi1BzfMozcCS1a1h9addtucmfkKRLD8=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=WpuPrq0qBYXTCog/OedxomdkQOuesR4QHXL6g5y1Z5RGP/6J+tHzDc01O2VxmVliyzpuoKHdx6PTY43TLZpkmS4ZKqoALASduZFEw9JHLhk9KFVyx0q2aJcNOklPtFE7ZRN/4H2kaDfXy99lyXkrRHPRiQ5uMgxkRB2zOfYyd9o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=uOCurYCA; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1708636353; c=relaxed/simple;
+	bh=lTdUa42NwYjJJpKBleL4FHR9ezbFYLTvE/pbZhVextI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=XHXFqTSHbbsgUVX2RegmWCXO4kWiummsTEtgFAP8nqpLLSk8h82M6lqLYRGlCrchIUpfwy4TNVUdEdgcpWmo1naivybBufNb8b54+JKXJUni1iScH9s95+XbhpOZVl6DnJPHIapWdyui4uN3LPT2lDGS3LV1X0EqvY3mcsMa+AY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=qMxFcXbY; arc=none smtp.client-ip=209.85.219.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="uOCurYCA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9CF91C433F1;
-	Thu, 22 Feb 2024 21:11:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-	s=korg; t=1708636312;
-	bh=cO5FbUIKoUo6Fi1BzfMozcCS1a1h9addtucmfkKRLD8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=uOCurYCA3JUZdI59VEhC1RuEHY1LYkqNKjw0wYTsLgfZ7airMIyJSlpmK0cG5wHs+
-	 AKTx147BNNmldjDLlOXpW6eXB9Np2nTLb5tPWYoY+yTOffZTM00LQg32AOeHBLi3q/
-	 3J2F7unRhZ9oGnhrSzODp+eOjGrHNOWTZR3KikYA=
-Date: Thu, 22 Feb 2024 13:11:51 -0800
-From: Andrew Morton <akpm@linux-foundation.org>
-To: Yang Shi <shy828301@gmail.com>
-Cc: Lance Yang <ioworker0@gmail.com>, mhocko@suse.com, zokeefe@google.com,
- david@redhat.com, songmuchun@bytedance.com, peterx@redhat.com,
- minchan@kernel.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/1] mm/khugepaged: bypassing unnecessary scans with
- MMF_DISABLE_THP check
-Message-Id: <20240222131151.4d24563d58240e76a3b535db@linux-foundation.org>
-In-Reply-To: <CAHbLzkoNFn6UE4Hn0gXTm2pLHD7pK4gYUe1zVh3247m30A5u2g@mail.gmail.com>
-References: <20240129054551.57728-1-ioworker0@gmail.com>
-	<CAK1f24keWtJNVv37r2vNsqnmMLRMvF-F76WR5RD_Y-BbAgEaYQ@mail.gmail.com>
-	<CAK1f24nk19eciysFqvTd=rqpiKePhstDWEEQ_mvT89WCDNrWNQ@mail.gmail.com>
-	<CAHbLzkoNFn6UE4Hn0gXTm2pLHD7pK4gYUe1zVh3247m30A5u2g@mail.gmail.com>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qMxFcXbY"
+Received: by mail-yb1-f175.google.com with SMTP id 3f1490d57ef6-dcd94fb9e4dso167400276.2
+        for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 13:12:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1708636350; x=1709241150; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=fenjTlVOLcRdKZFsqaTFAV94+jNqh66pMdN4WeCK6m8=;
+        b=qMxFcXbYiHN5obuw2sfrNhLiCCc6Vl50BSuLwGxNyd2AjOMoUGOeTGvwSXTOvXwfsV
+         10X16X9OWDGu1hEsDmGo1pvLN6Ah7X7yyoM/r9LmbsetnpdbYHoKQrsBE8MRVWXZ3Skc
+         Dh0yd6MhHe7wnoc3LhHb/J+GbVTOOaDsn57C+SVc4zD2eX3HrssMyAYnrKt+Zs2tDyRp
+         9Z4RlDVUiIRrvsUyLrdXyDW+8d4lpzOEuDettsmn6Mc95ud1/LFoZoS+lYsBQQTgQYeG
+         u5qc8Y/cdO6Ps/2ewDvx5KjByPnD/EpcaUEMcHCm4X727xDSjSJY/mCQgaZ725UHBhjX
+         /pYQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708636350; x=1709241150;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=fenjTlVOLcRdKZFsqaTFAV94+jNqh66pMdN4WeCK6m8=;
+        b=GpRTKdjLnUqI3dakN9br4ojY/Osnpu8T/ZG/VLppQaO6wTb0ZX+qXkNLFEw3XejHWz
+         YI37DKmmQeHXiQeO4DEMqgdoj909sZIum7R75tj8/h2qHpdR7ZdJAyiZOQwio7u2yLRL
+         bUM6wifTlqdMTZDD0S/bWxQL8AZZSAhgwTUwsKBlB6Q61SSRTNMKuwxU8lW/GCEV8Vlg
+         fpiAwoxgW1SJo1kByC+gReuHoyntckrR57QwTw8CXSkS/syMPQKHEtNYqds0UzXh4V9R
+         DwVDwh1Yf/yJxrB6f5eVYeQdpHGVtuS2to8Q28WvkVmVkfq8Frpp4mbeciIGkIHOg3Sw
+         IBQg==
+X-Forwarded-Encrypted: i=1; AJvYcCVy/o0X9d+5qQzeAtPKvAmj5ID78mmYSb9CjzyiMNo2WfiEWgwKTOtxXsAvo/m4F1mx0gWrDwJsqYJxeejgqvQepzgwQpvjxDs+IDO5
+X-Gm-Message-State: AOJu0YxOFqwMuUszmo0ShUpyFJamUqamuoT7MzfEF9TfaTxeFbQ7UcwE
+	VMDE/T4m6a7lzIX4n6ul7J5FUfKawAa0kh8RYJEV3RZO46KYbhzl2CzTIyF2MvBa4xFFIcK8rRU
+	CcWNLs6hbJLwo4rdxCqBryRx3DnwhjWAKqFeaBA==
+X-Google-Smtp-Source: AGHT+IFh2TAl89Hutu4vqCYOc5+0AJ9qQayg9ScjNq2n3H/zD5V2O2sGDJBBs2zipfHmjaQpRtAUdHsgH00u4T387Jo=
+X-Received: by 2002:a25:2747:0:b0:dcd:3338:a3c5 with SMTP id
+ n68-20020a252747000000b00dcd3338a3c5mr382880ybn.33.1708636349969; Thu, 22 Feb
+ 2024 13:12:29 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+References: <20240217150228.5788-1-johan+linaro@kernel.org> <20240217150228.5788-7-johan+linaro@kernel.org>
+In-Reply-To: <20240217150228.5788-7-johan+linaro@kernel.org>
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Date: Thu, 22 Feb 2024 23:12:18 +0200
+Message-ID: <CAA8EJppPg7b-DsPJ4W=2G-_rRq+xTux9kJ3oJhD2ws+FoJvkKQ@mail.gmail.com>
+Subject: Re: [PATCH 6/6] phy: qcom-qmp-combo: fix type-c switch registration
+To: Johan Hovold <johan+linaro@kernel.org>
+Cc: Bjorn Andersson <andersson@kernel.org>, Andrzej Hajda <andrzej.hajda@intel.com>, 
+	Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
+	Vinod Koul <vkoul@kernel.org>, Jonas Karlman <jonas@kwiboo.se>, 
+	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, 
+	Jernej Skrabec <jernej.skrabec@gmail.com>, Konrad Dybcio <konrad.dybcio@linaro.org>, 
+	Kishon Vijay Abraham I <kishon@kernel.org>, Rob Clark <robdclark@gmail.com>, 
+	Abhinav Kumar <quic_abhinavk@quicinc.com>, Kuogee Hsieh <quic_khsieh@quicinc.com>, 
+	freedreno@lists.freedesktop.org, dri-devel@lists.freedesktop.org, 
+	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
+	linux-phy@lists.infradead.org, stable@vger.kernel.org, 
+	Bjorn Andersson <quic_bjorande@quicinc.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On Thu, 22 Feb 2024 12:23:21 -0800 Yang Shi <shy828301@gmail.com> wrote:
+On Sat, 17 Feb 2024 at 17:03, Johan Hovold <johan+linaro@kernel.org> wrote:
+>
+> Due to a long-standing issue in driver core, drivers may not probe defer
+> after having registered child devices to avoid triggering a probe
+> deferral loop (see fbc35b45f9f6 ("Add documentation on meaning of
+> -EPROBE_DEFER")).
+>
+> Move registration of the typec switch to after looking up clocks and
+> other resources.
+>
+> Note that PHY creation can in theory also trigger a probe deferral when
+> a 'phy' supply is used. This does not seem to affect the QMP PHY driver
+> but the PHY subsystem should be reworked to address this (i.e. by
+> separating initialisation and registration of the PHY).
+>
+> Fixes: 2851117f8f42 ("phy: qcom-qmp-combo: Introduce orientation switching")
+> Cc: stable@vger.kernel.org      # 6.5
+> Cc: Bjorn Andersson <quic_bjorande@quicinc.com>
+> Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
+> ---
+>  drivers/phy/qualcomm/phy-qcom-qmp-combo.c | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
 
-> > VMA Count |   Old   |   New   |  Change
-> > ---------------------------------------
-> >     50     |   23us  |    9us  |  -60.9%
-> >    100     |   32us  |    9us  |  -71.9%
-> >    200     |   44us  |    9us  |  -79.5%
-> >    400     |   75us  |    9us  |  -88.0%
-> >    800     |   98us  |    9us  |  -90.8%
-> >
-> > IIUC, once the count of VMAs for the process
-> > exceeds page_to_scan, khugepaged needs to
-> > wait for scan_sleep_millisecs ms before scanning
-> > the next process. IMO, unnecessary scans could
-> > actually be skipped with a very inexpensive
-> > mm->flags check in this case.
-> 
-> Thanks for following up on this, can you please capture all the
-> information in the commit log?
+Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 
-I added it.
+Note to myself (or to anybody else, who has spare hands), we should
+probably implement the same changes for phy-qcom-qmp-usbc.c
 
---- a/txt/mm-khugepaged-bypassing-unnecessary-scans-with-mmf_disable_thp-check.txt
-+++ b/txt/mm-khugepaged-bypassing-unnecessary-scans-with-mmf_disable_thp-check.txt
-@@ -9,6 +9,24 @@ and the MMF_DISABLE_THP flag is set later, this scanning process
- becomes unnecessary for that mm and can be skipped to avoid redundant
- operations, especially in scenarios with a large address space.
- 
-+On an Intel Core i5 CPU, the time taken by khugepaged to scan the
-+address space of the process, which has been set with the
-+MMF_DISABLE_THP flag after being added to the mm_slots list, is as
-+follows (shorter is better):
-+
-+VMA Count |   Old   |   New   |  Change
-+---------------------------------------
-+    50    |   23us  |    9us  |  -60.9%
-+   100    |   32us  |    9us  |  -71.9%
-+   200    |   44us  |    9us  |  -79.5%
-+   400    |   75us  |    9us  |  -88.0%
-+   800    |   98us  |    9us  |  -90.8%
-+
-+Once the count of VMAs for the process exceeds page_to_scan, khugepaged
-+needs to wait for scan_sleep_millisecs ms before scanning the next
-+process.  IMO, unnecessary scans could actually be skipped with a very
-+inexpensive mm->flags check in this case.
-+
- This commit introduces a check before each scanning process to test the
- MMF_DISABLE_THP flag for the given mm; if the flag is set, the scanning
- process is bypassed, thereby improving the efficiency of khugepaged.
+>
+> diff --git a/drivers/phy/qualcomm/phy-qcom-qmp-combo.c b/drivers/phy/qualcomm/phy-qcom-qmp-combo.c
+> index e19d6a084f10..17c4ad7553a5 100644
+> --- a/drivers/phy/qualcomm/phy-qcom-qmp-combo.c
+> +++ b/drivers/phy/qualcomm/phy-qcom-qmp-combo.c
+> @@ -3562,10 +3562,6 @@ static int qmp_combo_probe(struct platform_device *pdev)
+>         if (ret)
+>                 return ret;
+>
+> -       ret = qmp_combo_typec_switch_register(qmp);
+> -       if (ret)
+> -               return ret;
+> -
+>         /* Check for legacy binding with child nodes. */
+>         usb_np = of_get_child_by_name(dev->of_node, "usb3-phy");
+>         if (usb_np) {
+> @@ -3585,6 +3581,10 @@ static int qmp_combo_probe(struct platform_device *pdev)
+>         if (ret)
+>                 goto err_node_put;
+>
+> +       ret = qmp_combo_typec_switch_register(qmp);
+> +       if (ret)
+> +               goto err_node_put;
+> +
+>         ret = drm_aux_bridge_register(dev);
+>         if (ret)
+>                 goto err_node_put;
+> --
+> 2.43.0
+>
 
+
+-- 
+With best wishes
+Dmitry
