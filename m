@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B79E12DD97;
-	Thu, 22 Feb 2024 12:43:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3227312DD8F;
+	Thu, 22 Feb 2024 12:43:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708605822; cv=none; b=oVuHFugnh5Ki06hWzkY3mXKWk8m2W/ulPdKBTvO74K1/tMi3H5w/1LS492Q7OtJ28VhdKVAMrbhL9N6747QXsOmPKIzROTGS63ZlirmJPitaaJtIXSyEmUg54ghmtAKOG3SrJKjlCaAUMUEeD4no4HpXzESoqY/vwS7oX4orxAM=
+	t=1708605822; cv=none; b=p7yRrEG0XJgzSRahCEfQICO1lM1ME+u+tnHJ/U1Bo/YqcsY+H3avl5FI/u2aqckpzC+YjQZTNwyEzRp4taeBektijE19H1Eziy8jaZCC7Mm+o5xBw3xYUmgqSF9joJPXbOoPbBxwL/CbV9YUwVbzl4VgKwZ8ULV943hl/j3HNrw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1708605822; c=relaxed/simple;
-	bh=q5PGMNCy5OeIZklkcuyegUf5HBFFBndhdfq9OggdzzY=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=bELwdUPeLS7A7STIphBulKKAuVwLQo9B2ffLg4AxBA4/cVkBjoC2v1e2onh0WjCZnIdyb77uFOalkHD4ghCUqdR3x1scAkOpIBJW6mVu79SiE10L/+RAPqvvVKAjI+NqFkRbvaS1YQ2Xqd4JqKL833t2IuN/Z0Qlad5xklVYwwo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lYGGSCmK; arc=none smtp.client-ip=10.30.226.201
+	bh=fxXyTnfaIEMd/Q22ZZODuf6RK5WPhFO+nFybeSW6WRM=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=i3zd80/b0pOkhalFbXFzIsdEVkFe+VoiHFBtlrn+cG77It6cetyP4EGX+NHOAYGTMnuJ1hLERvT96loGFbyD/7KSL+kcsKW5mxrKlTj9LuDlkyG3/zd5EGLt9Ea7LMOCkZxThsH+9GhEnzOH65JdIWiq7CQuAiL1Uk3xwZgOxac=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RpPnITRj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lYGGSCmK"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id E9C6EC433B2;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RpPnITRj"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id B4D9CC433F1;
 	Thu, 22 Feb 2024 12:43:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708605822;
-	bh=q5PGMNCy5OeIZklkcuyegUf5HBFFBndhdfq9OggdzzY=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=lYGGSCmK2w4N4FxdKWYSa97jl2O8GQ/vav0QIGTddqFmZfIpSRpTv5LomvUr3x9aX
-	 b5xy3Fjh+tBX1KXN1F9hayGCsPsMe4ygp7LL5ccyhYm3UXPiu2t+0ucTZhxl5G6WsQ
-	 x+53bPifYkHcEFXkBFTgtLKfbbfE88GXGFgL63WnuhuqjeMs23kP6KvzBJeJqHw0jB
-	 OUDKGNbj+/83993zsgiVm5Q1xnf7mra7BZJXPPJUtJBM5bZ9Gx0o58QfNRbjBqVg0G
-	 gqqkUOU0z5uvpJvdlHXxIBFniWBp9vT4fvrwoBMaXkYaznhyhAvvEeoELiC1sWdHAM
-	 cA3aFNm35+QtA==
+	s=k20201202; t=1708605821;
+	bh=fxXyTnfaIEMd/Q22ZZODuf6RK5WPhFO+nFybeSW6WRM=;
+	h=From:Subject:Date:To:Cc:Reply-To:From;
+	b=RpPnITRj9dSrbD/t1sjshLiCi+BTf2/+GLZKXBfbvIrcS9Dr+zgjeEG+Cxk3gckMj
+	 ywTBYOowk3LFLqYciEEVkEabePeA7LPzG0sdosaIFsrJmomlgIF0DVSnWpd/KS7gF9
+	 iLle01qR2CL/hJfutEOcIZC6iVaXm3l08f6EWUB5gvkX7peKxal/tMR6vCvmzJJ2G4
+	 Jtk0rV5EKkQY72Um+LhKXxA+UlbcWIATMEak7dDOpYhDFcD3bmQclAzOM/pSV/8lLZ
+	 QkWYiR6Cul67kLGmDJIHeVXJnszYP5wzwqY4//2O82yGy3f5OrGXWRYSwg4T3MfUb5
+	 san7A+127UYfw==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB96BC54788;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96A72C48BEB;
 	Thu, 22 Feb 2024 12:43:41 +0000 (UTC)
 From: Yang Xiwen via B4 Relay <devnull+forbidden405.outlook.com@kernel.org>
-Date: Thu, 22 Feb 2024 20:43:23 +0800
-Subject: [PATCH net-next v4 3/6] dt-bindings: net: remove outdated
- hisilicon-femac
+Subject: [PATCH net-next v4 0/6] net: hisi-femac: add support for
+ Hi3798MV200, remove unmaintained compatibles
+Date: Thu, 22 Feb 2024 20:43:20 +0800
+Message-Id: <20240222-net-v4-0-eea68f93f090@outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,9 +41,10 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240222-net-v4-3-eea68f93f090@outlook.com>
-References: <20240222-net-v4-0-eea68f93f090@outlook.com>
-In-Reply-To: <20240222-net-v4-0-eea68f93f090@outlook.com>
+X-B4-Tracking: v=1; b=H4sIAGhB12UC/23MTQ6CMBQE4KuYrq1pH/2hrryHcdGWhzRqawAJh
+ nB3K24kupzMfDORDtuAHdlvJtLiELqQYg5iuyG+sfGMNFQ5E2AgGHBFI/bUWGAlcu0Fq0le3lu
+ sw7i8HMl7EHHsySk3Tej61D6X+4Ev/epp4JRRZLYyGnxljTmkR39N6bLz6bY8DPBHQValcZVwm
+ inp4VcVXwrYRxVZOVWidFqiVnKt5nl+AcVufu0OAQAA
 To: Yisen Zhuang <yisen.zhuang@huawei.com>, 
  Salil Mehta <salil.mehta@huawei.com>, 
  "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
@@ -56,11 +57,11 @@ To: Yisen Zhuang <yisen.zhuang@huawei.com>,
 Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
  devicetree@vger.kernel.org, Yang Xiwen <forbidden405@outlook.com>
 X-Mailer: b4 0.12.4
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1708605802; l=2357;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1708605802; l=2180;
  i=forbidden405@outlook.com; s=20230724; h=from:subject:message-id;
- bh=8ICAnSLBv8dPhcTYWVHR0AJKAQbZebLk5c3PYvX8hqQ=;
- b=5TXGKPCxCKZJE9vi91I/BFRQmlRjtAazNf/GxA2ymReFPMiV583iXm+mMFxYGKFRgwZv77Ojd
- 4E43/yz6COxAjwaaOvCaSlyAWiPHpc6DlxMfpzXjIlv40JqSuHA3nOL
+ bh=fxXyTnfaIEMd/Q22ZZODuf6RK5WPhFO+nFybeSW6WRM=;
+ b=RrqJTz2jLMJ7U3KfrwKu0Jq2o8HGaCGAG8EpKR8IWL0Pa49wginkGhGWVa/kmqdHo7rVh6UL+
+ Vmh4RpB5yMYAYn2A2ihTYNchYzzuB7IkeaLm9W79IPzAVSTi/vrjnhx
 X-Developer-Key: i=forbidden405@outlook.com; a=ed25519;
  pk=qOD5jhp891/Xzc+H/PZ8LWVSWE3O/XCQnAg+5vdU2IU=
 X-Endpoint-Received:
@@ -68,65 +69,53 @@ X-Endpoint-Received:
 X-Original-From: Yang Xiwen <forbidden405@outlook.com>
 Reply-To: <forbidden405@outlook.com>
 
-From: Yang Xiwen <forbidden405@outlook.com>
-
-The user documented(Hi3516) is not found in current kernel anymore. And
-it seems this SoC has been EOL for a long time. While at it, Remove this
-binding entirely due to recent driver changes.
-
 Signed-off-by: Yang Xiwen <forbidden405@outlook.com>
 ---
- .../devicetree/bindings/net/hisilicon-femac.txt    | 41 ----------------------
- 1 file changed, 41 deletions(-)
+Changes in v4:
+- edit commit log to show why mdio bus clk is optional (Krzysztof Kozlowski)
+- add clk_bulk_disable_unprepare() during error path (Maxime Chevallier)
+- remove of_node_put() (Simon Horman)
+- remove histb-clock.h header in binding example as it's goign to be deprecated.
+- rearrange patches so binding comes before driver
+- Link to v3: https://lore.kernel.org/r/20240220-net-v3-0-b68e5b75e765@outlook.com
 
-diff --git a/Documentation/devicetree/bindings/net/hisilicon-femac.txt b/Documentation/devicetree/bindings/net/hisilicon-femac.txt
-deleted file mode 100644
-index 5f96976f3cea..000000000000
---- a/Documentation/devicetree/bindings/net/hisilicon-femac.txt
-+++ /dev/null
-@@ -1,41 +0,0 @@
--Hisilicon Fast Ethernet MAC controller
--
--Required properties:
--- compatible: should contain one of the following version strings:
--	* "hisilicon,hisi-femac-v1"
--	* "hisilicon,hisi-femac-v2"
--	and the soc string "hisilicon,hi3516cv300-femac".
--- reg: specifies base physical address(s) and size of the device registers.
--  The first region is the MAC core register base and size.
--  The second region is the global MAC control register.
--- interrupts: should contain the MAC interrupt.
--- clocks: A phandle to the MAC main clock.
--- resets: should contain the phandle to the MAC reset signal(required) and
--	the PHY reset signal(optional).
--- reset-names: should contain the reset signal name "mac"(required)
--	and "phy"(optional).
--- phy-mode: see ethernet.txt [1].
--- phy-handle: see ethernet.txt [1].
--- hisilicon,phy-reset-delays-us: triplet of delays if PHY reset signal given.
--	The 1st cell is reset pre-delay in micro seconds.
--	The 2nd cell is reset pulse in micro seconds.
--	The 3rd cell is reset post-delay in micro seconds.
--
--The MAC address will be determined using the optional properties
--defined in ethernet.txt[1].
--
--[1] Documentation/devicetree/bindings/net/ethernet.txt
--
--Example:
--	hisi_femac: ethernet@10090000 {
--		compatible = "hisilicon,hi3516cv300-femac","hisilicon,hisi-femac-v2";
--		reg = <0x10090000 0x1000>,<0x10091300 0x200>;
--		interrupts = <12>;
--		clocks = <&crg HI3518EV200_ETH_CLK>;
--		resets = <&crg 0xec 0>,<&crg 0xec 3>;
--		reset-names = "mac","phy";
--		mac-address = [00 00 00 00 00 00];
--		phy-mode = "mii";
--		phy-handle = <&phy0>;
--		hisilicon,phy-reset-delays-us = <10000 20000 20000>;
--	};
+Changes in v3:
+- rearrange patches to fix bot error. (Rob Herring)
+- rewrite commit logs (Andrew Lunn)
+- use clk_bulk_ APIs (Andrew Lunn)
+- fix uninitialization use of ret (assign to -ENODEV before goto) (Simon Horman)
+- Link to v2: https://lore.kernel.org/r/20240216-net-v2-0-89bd4b7065c2@outlook.com
 
+Changes in v2:
+- replace email.
+- hisi-femac: s/BUS/MACIF (Andrew Lunn)
+- hisi-femac: add "hisilicon,hisi-femac" compatible since the driver
+  seems generic enough for various SoCs
+- hisi-femac-mdio: convert binding to YAML (Krzysztof Kozlowski)
+- rewrite commit logs (Krzysztof Kozlowski)
+- Link to v1: https://lore.kernel.org/r/20240216-net-v1-0-e0ad972cda99@outlook.com
+
+---
+Yang Xiwen (6):
+      dt-bindings: net: hisilicon-femac-mdio: convert to YAML
+      net: mdio: hisi-femac: make clock optional
+      dt-bindings: net: remove outdated hisilicon-femac
+      dt-bindings: net: add hisilicon,hisi-femac
+      net: hisilicon: add support for hisi_femac core on Hi3798MV200
+      net: hisi_femac: remove unused compatible strings
+
+ .../bindings/net/hisilicon,hisi-femac-mdio.yaml    |  43 ++++++++
+ .../bindings/net/hisilicon,hisi-femac.yaml         | 116 +++++++++++++++++++++
+ .../bindings/net/hisilicon-femac-mdio.txt          |  22 ----
+ .../devicetree/bindings/net/hisilicon-femac.txt    |  41 --------
+ drivers/net/ethernet/hisilicon/hisi_femac.c        |  78 +++++++++++---
+ drivers/net/mdio/mdio-hisi-femac.c                 |   2 +-
+ 6 files changed, 221 insertions(+), 81 deletions(-)
+---
+base-commit: 8d3dea210042f54b952b481838c1e7dfc4ec751d
+change-id: 20240216-net-9a208e17c40f
+
+Best regards,
 -- 
-2.43.0
+Yang Xiwen <forbidden405@outlook.com>
 
