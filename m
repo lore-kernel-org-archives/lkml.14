@@ -1,128 +1,171 @@
-Received: from mail-yw1-f173.google.com (mail-yw1-f173.google.com [209.85.128.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B0C2156976
-	for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 17:32:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB3F2155A25;
+	Thu, 22 Feb 2024 17:35:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708623150; cv=none; b=QhC6oxs4o9oIBahHnMguhEvr7BXGNdQCwnpJPwy5lJQCHJ95JtQnNAan/OPG+6v1nzJjaGX1tTyPl7rve97OzbuSkTOkvJHZAQrkpjiwdXJX4bLgI637WBcbJHPnQ4dTkAgFDNQ1nM44NIPA7h6FJHNX0dtHy8OgQyjo/GlhOHU=
+	t=1708623308; cv=none; b=FrTUr0389ih9sfS1+/tUb/m+ZhcXvgILW8DlJOs0ho2APE3jpbfZyzwkoMzzFdYDF9/qxOxbs7/px7Q7CfwUmx3/Iedd/XT4SSQe6Arpg//sstZvAXiM1TLkDcTdTVYhP8+SZfJOeHWJmR/LdInwV5F6ypgYBL7qgY9An6g+qZE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708623150; c=relaxed/simple;
-	bh=XoXX/VGE3vTnIw/F8JWFhSua5GxofxdO60mrbzWRe4U=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=szDbIY+uG3HWEu3OpBQYzV4MEhy9P3yzrRfxzdHu1uaCcDUA200dLHAbKYG5eENi2TTL3NWOErE1ZwehAZxYaTm+hqJbLImzPzA/qOHMI7QhZ6E7HkgF1YbLIp7DiCNSSYqeeLv0sv5xNa9W9jyy1nFKUXnr6KXJ/nUaogghcjo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=kL2z3nZO; arc=none smtp.client-ip=209.85.128.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1708623308; c=relaxed/simple;
+	bh=Rm3KmX/20MyE/pBe5XIZLZ0qukDoVnPD2x9pciHFLFw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=AZUiOK4RTrehl+exHm3jikSX1el2G5LML16i9QDKcSFtfyHMulo8iTke7onDEllvup1mGl1KzB9K4Ms90BxBww80Hul4aL55NTdurvyVU9wz6boeMY90TteREWU0hywz/jBedyEc+DPwx2YZpuk0U7vkb3g8FiD1nY7g7hVzLf0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=srgcWdDm; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kL2z3nZO"
-Received: by mail-yw1-f173.google.com with SMTP id 00721157ae682-607d9c4fa90so84606857b3.2
-        for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 09:32:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1708623147; x=1709227947; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=uHYuztdiqcnoWxT8IYhA0vORd3mYh+h0ETbBCJU2hFs=;
-        b=kL2z3nZOztxBINmjthIYNqVOy3nfyv/QdwJy5XKPUavBawjUiJABSK0rke1Q7dk2OC
-         5xRwENisjn6J61ztzxE5N37C6bKsqFg6x8aDlDUVPBBKkReDoPj1gGjEtCqp+Pw5b43/
-         mTXqPi/lMZ7bZjrLhp0PJzTCjQ9i6809PRR8tRDlnGXPle8q3J2KUetLO69vjGGV60UZ
-         7UpZYS7/R3OFBD+x5eS5seyg30f7WQlTiT42qsJBbzIQgwDFe2BK4THRJqZI51PaUm6x
-         lA23xd5eLA6c0uVSdHs8ZWLptddS+pSNR9cBmfULeT9IlUdmIa9tXnO3q2vZaomGw3C1
-         lE5g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708623147; x=1709227947;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=uHYuztdiqcnoWxT8IYhA0vORd3mYh+h0ETbBCJU2hFs=;
-        b=Ch8PYp8D7P1KPXBZGsgJIVNu4YRQmslGmk16kHsIHE8Qywj1Nixh4kTTFkQKZTha45
-         sHMpiJbbkA3Wt1j08SlmAXi+RM+kzdQUrT0IMMGhpTTPqQq0F7iYDphYYB5191NFGO0F
-         IG/0PN8A6kaKltWTW/P/RU4/i/dXtJkpTPbwg5pocrKhUU9f4Tzzc0r3hEDrC+c8ZYu1
-         utgCI34NuC5EfePJM7tfYcpmpqB2Kzwyva443+exkYcD/FZwIywr7ZmEvnjO5JuTr3mx
-         tg2uWjDLwym1w3ewSGtFEHIo8xGu7v01DpH7qbT3nzrNCj4BrdPBpHXxpGDuMvDCLx+F
-         pTeQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV3uuHGNIVWUlTuj3n9FfAVDjNnmC60bDjNU+1g2O1vFcjSxUTM9J7tkI7SUuipxouzJu/VEmvDfqHw/MnQmXL0wb8CKkkEkvfz4oY+
-X-Gm-Message-State: AOJu0YyNBtIrtPiMd9dVHSzT5yUU1BZCDKZa2LqhaQgOMyRfIoeokXcB
-	pev6PhbC2h9ZR4MooIW0MEy8NfCJcE+ffbZ3Dt/57WjtQOt9cCcU8wWh7PGiE3WAAAmTDBXE3Kr
-	HZkjxWqiNMtr4nXZacz2bBsEj561E3H7iUYOX2A==
-X-Google-Smtp-Source: AGHT+IEChpsE7RSvYtvlDilze7tlEfcebE5fWeV9v6TUsqyy6KJBLB0hOKOdzrs9KYPLmaKn2wbmU4LNaaPxNFAv0eU=
-X-Received: by 2002:a81:6c0f:0:b0:608:7488:8691 with SMTP id
- h15-20020a816c0f000000b0060874888691mr6826857ywc.38.1708623147287; Thu, 22
- Feb 2024 09:32:27 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="srgcWdDm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8CBE3C433C7;
+	Thu, 22 Feb 2024 17:35:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1708623307;
+	bh=Rm3KmX/20MyE/pBe5XIZLZ0qukDoVnPD2x9pciHFLFw=;
+	h=Date:Subject:To:References:From:In-Reply-To:From;
+	b=srgcWdDmx1hgkOzRUfnrR0kcZAcKlleQ0mZra3FYOa3lYq6klC7Gqiw+5TqxV2c+6
+	 Wzcb22pw8FguskCFYzoajzxulhI9S9Ld4Dw7lr/knSUzSbwvp/9Z1LvS0jPZt0NmP8
+	 aLZZoe/a9iDcH6ZhoF67PhnexKWaVGgawt9nO2medZXLSeJNBjgjdGayjR96tyBUB2
+	 UgVmm5k0P53WMwhMtJ15+1T6mXyD9gQ07U+pxTmr6oH5q3xjW/hSnliJVGBSnNQpKU
+	 vXqp9h1UygOYV9Gw8lZSQjun3h7wfT8s+I5skovh+Sih2Rfl21tRqmydLz43dLoqrV
+	 uXYegx11fhmgA==
+Message-ID: <1161ecf9-9db7-42b5-a277-d92b2672dc89@kernel.org>
+Date: Thu, 22 Feb 2024 10:35:05 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240221-rb3gen2-dp-connector-v1-0-dc0964ef7d96@quicinc.com>
- <20240221-rb3gen2-dp-connector-v1-3-dc0964ef7d96@quicinc.com>
- <CAA8EJpo=9vhM+5YzaFxUoYRuEWQyrMS8wLNPSF3K=bN5JwWyDw@mail.gmail.com>
- <8313a7c3-3ace-4dee-ad27-8f51a06cd58c@linaro.org> <CAA8EJpqFj5nf8d_=Uoup7qg+nQrxqQU-DHbL3uSP138m9AcXLw@mail.gmail.com>
- <8fcb5816-2d59-4e27-ba68-8e0ed6e7d839@linaro.org> <CAA8EJporaUuddHHqpyYHiYSu=toHmrDxSHf9msZUJoym4Nz72g@mail.gmail.com>
- <20240222150423.GI2936378@hu-bjorande-lv.qualcomm.com>
-In-Reply-To: <20240222150423.GI2936378@hu-bjorande-lv.qualcomm.com>
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Date: Thu, 22 Feb 2024 19:32:15 +0200
-Message-ID: <CAA8EJpqd=1KV_dN8AURQDcFDDyO+YtbC59gM7ftt+HohGM93hg@mail.gmail.com>
-Subject: Re: [PATCH 3/9] arm64: dts: qcom: sc7280: Enable MDP turbo mode
-To: Bjorn Andersson <quic_bjorande@quicinc.com>
-Cc: Konrad Dybcio <konrad.dybcio@linaro.org>, Douglas Anderson <dianders@chromium.org>, 
-	Rob Clark <robdclark@gmail.com>, Abhinav Kumar <quic_abhinavk@quicinc.com>, 
-	Sean Paul <sean@poorly.run>, Marijn Suijten <marijn.suijten@somainline.org>, 
-	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, cros-qcom-dts-watchers@chromium.org, 
-	Bjorn Andersson <andersson@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, 
-	freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
-	devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next v1] net: ipv6: hop tlv ext hdr parsing
+Content-Language: en-US
+To: Richard Gobert <richardbgobert@gmail.com>, davem@davemloft.net,
+ edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <9b82bb29-9316-4dfd-8c56-f8a294713c16@gmail.com>
+From: David Ahern <dsahern@kernel.org>
+In-Reply-To: <9b82bb29-9316-4dfd-8c56-f8a294713c16@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, 22 Feb 2024 at 17:04, Bjorn Andersson <quic_bjorande@quicinc.com> wrote:
->
-> On Thu, Feb 22, 2024 at 11:46:26AM +0200, Dmitry Baryshkov wrote:
-> > On Thu, 22 Feb 2024 at 11:28, Konrad Dybcio <konrad.dybcio@linaro.org> wrote:
-> > >
-> > >
-> > >
-> > > On 2/22/24 10:04, Dmitry Baryshkov wrote:
-> > > > On Thu, 22 Feb 2024 at 10:56, Konrad Dybcio <konrad.dybcio@linaro.org> wrote:
-> > > >>
-> > > >>
-> > > >>
-> > > >> On 2/22/24 00:41, Dmitry Baryshkov wrote:
-> > > >>> On Thu, 22 Feb 2024 at 01:19, Bjorn Andersson <quic_bjorande@quicinc.com> wrote:
-> > > >>>>
-> > > >>>> The max frequency listed in the DPU opp-table is 506MHz, this is not
-> > > >>>> sufficient to drive a 4k@60 display, resulting in constant underrun.
-> > > >>>>
-> > > >>>> Add the missing MDP_CLK turbo frequency of 608MHz to the opp-table to
-> > > >>>> fix this.
-> > > >>>
-> > > >>> I think we might want to keep this disabled for ChromeOS devices. Doug?
-> > > >>
-> > > >> ChromeOS devices don't get a special SoC
-> > > >
-> > > > But they have the sc7280-chrome-common.dtsi, which might contain a
-> > > > corresponding /delete-node/ .
-> > >
-> > > What does that change? The clock rates are bound to the
-> > > SoC and the effective values are limited by link-frequencies
-> > > or the panel driver.
-> >
-> > Preventing the DPU from overheating? Or spending too much power?
-> >
->
-> Perhaps I'm misunderstanding the implementation then, are we always
-> running at the max opp? I thought the opp was selected based on the
-> current need for performance?
+On 2/21/24 3:03 AM, Richard Gobert wrote:
+> This patch introduces 'hop_tlv_hdr' and 'hop_calipso_hdr' structs, in
+> order to access fields in a readable way in "ip6_parse_tlv".
+> 
+> Signed-off-by: Richard Gobert <richardbgobert@gmail.com>
+> ---
+>  include/net/ipv6.h | 16 ++++++++++++++++
+>  net/ipv6/exthdrs.c | 30 +++++++++++++++++-------------
+>  2 files changed, 33 insertions(+), 13 deletions(-)
+> 
+> diff --git a/include/net/ipv6.h b/include/net/ipv6.h
+> index cf25ea21d770..61677946ed46 100644
+> --- a/include/net/ipv6.h
+> +++ b/include/net/ipv6.h
+> @@ -151,6 +151,22 @@ struct frag_hdr {
+>  	__be32	identification;
+>  };
+>  
+> +struct hop_tlv_hdr {
+> +	u8	tlv_type;
+> +	u8	tlv_len;
+> +};
+> +
+> +/* CALIPSO RFC 5570 */
+> +struct hop_calipso_hdr {
+> +	u8	tlv_type;
+> +	u8	tlv_len;
+> +	u32	domain_interpretation;
+> +	u8	cmpt_len;
+> +	u8	sens_lvl;
+> +	u16	checksum;
+> +	u64	cmpt_bitmap;
+> +} __packed;
+> +
+>  /*
+>   * Jumbo payload option, as described in RFC 2675 2.
+>   */
+> diff --git a/net/ipv6/exthdrs.c b/net/ipv6/exthdrs.c
+> index 4952ae792450..5db624299da4 100644
+> --- a/net/ipv6/exthdrs.c
+> +++ b/net/ipv6/exthdrs.c
+> @@ -114,7 +114,7 @@ static bool ip6_parse_tlv(bool hopbyhop,
+>  			  struct sk_buff *skb,
+>  			  int max_count)
+>  {
+> -	int len = (skb_transport_header(skb)[1] + 1) << 3;
+> +	int len = ipv6_optlen((struct ipv6_opt_hdr *)skb_transport_header(skb));
+>  	const unsigned char *nh = skb_network_header(skb);
+>  	int off = skb_network_header_len(skb);
+>  	bool disallow_unknowns = false;
+> @@ -890,15 +890,16 @@ static inline struct net *ipv6_skb_net(struct sk_buff *skb)
+>  
+>  static bool ipv6_hop_ra(struct sk_buff *skb, int optoff)
+>  {
+> -	const unsigned char *nh = skb_network_header(skb);
+> +	struct hop_tlv_hdr *tlv_hdr =
+> +		(struct hop_tlv_hdr *)(skb_network_header(skb) + optoff);
+>  
+> -	if (nh[optoff + 1] == 2) {
+> +	if (tlv_hdr->tlv_len == 2) {
+>  		IP6CB(skb)->flags |= IP6SKB_ROUTERALERT;
+> -		memcpy(&IP6CB(skb)->ra, nh + optoff + 2, sizeof(IP6CB(skb)->ra));
+> +		memcpy(&IP6CB(skb)->ra, tlv_hdr + 1, sizeof(IP6CB(skb)->ra));
+>  		return true;
+>  	}
+>  	net_dbg_ratelimited("ipv6_hop_ra: wrong RA length %d\n",
+> -			    nh[optoff + 1]);
+> +			    tlv_hdr->tlv_len);
+>  	kfree_skb_reason(skb, SKB_DROP_REASON_IP_INHDR);
+>  	return false;
+>  }
+> @@ -961,18 +962,20 @@ static bool ipv6_hop_ioam(struct sk_buff *skb, int optoff)
+>  
+>  static bool ipv6_hop_jumbo(struct sk_buff *skb, int optoff)
+>  {
+> -	const unsigned char *nh = skb_network_header(skb);
+> +	int tlv_off = offsetof(struct hop_jumbo_hdr, tlv_type);
+> +	struct hop_jumbo_hdr *jumbo_hdr = (struct hop_jumbo_hdr *)
+> +		(skb_network_header(skb) + optoff - tlv_off);
+>  	SKB_DR(reason);
+>  	u32 pkt_len;
+>  
+> -	if (nh[optoff + 1] != 4 || (optoff & 3) != 2) {
+> +	if (jumbo_hdr->tlv_len != 4 || (optoff & 3) != 2) {
+>  		net_dbg_ratelimited("ipv6_hop_jumbo: wrong jumbo opt length/alignment %d\n",
+> -				    nh[optoff+1]);
+> +				    jumbo_hdr->tlv_len);
+>  		SKB_DR_SET(reason, IP_INHDR);
+>  		goto drop;
+>  	}
+>  
+> -	pkt_len = ntohl(*(__be32 *)(nh + optoff + 2));
+> +	pkt_len = ntohl(jumbo_hdr->jumbo_payload_len);
+>  	if (pkt_len <= IPV6_MAXPLEN) {
+>  		icmpv6_param_prob_reason(skb, ICMPV6_HDR_FIELD, optoff + 2,
+>  					 SKB_DROP_REASON_IP_INHDR);
+> @@ -1004,15 +1007,16 @@ static bool ipv6_hop_jumbo(struct sk_buff *skb, int optoff)
+>  
+>  static bool ipv6_hop_calipso(struct sk_buff *skb, int optoff)
+>  {
+> -	const unsigned char *nh = skb_network_header(skb);
+> +	struct hop_calipso_hdr *calipso_hdr =
+> +		(struct hop_calipso_hdr *)(skb_network_header(skb) + optoff);
+>  
+> -	if (nh[optoff + 1] < 8)
+> +	if (calipso_hdr->tlv_len < 8)
+>  		goto drop;
+>  
+> -	if (nh[optoff + 6] * 4 + 8 > nh[optoff + 1])
+> +	if (calipso_hdr->cmpt_len * 4 + 8 > calipso_hdr->tlv_len)
+>  		goto drop;
+>  
+> -	if (!calipso_validate(skb, nh + optoff))
+> +	if (!calipso_validate(skb, (const unsigned char *)calipso_hdr))
+>  		goto drop;
+>  
+>  	return true;
 
-Yes. My concern was whether the Chrome people purposely skipped this
-top/turbo freq for any reason. In such a case, surprising them by
-adding it to all platforms might be not the best idea. I hope Doug can
-comment here.
+In addition to restoring the const that Denis commented, this really
+wants to be multiple patches in a set. Also, it would be best to have
+selftests as well that exercise the code paths.
 
 
--- 
-With best wishes
-Dmitry
