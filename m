@@ -1,100 +1,109 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A32239FC7
-	for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 15:04:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7672B1474C8
+	for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 15:04:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708614258; cv=none; b=a1ItxPsyijXVk13hU3eUWZCnos8/Mptyal2EHz/RXupiQ696aRgGflTJRX93EB0vDHCytpDYBYqrGPLVcwYQ86/ZJWFJPnEg4qP73XgpauJgesiWWUYrSw5tFmAh5U8rO79A6ZKK7uPCOcHFJ4iD+YuFs18zQoaL21WjWNB6G5s=
+	t=1708614288; cv=none; b=r1Eqj1VWOaXEJRiToDw5R0WS3rhJoQ6ie24h1jJ8rWhi9slZ1d7jdTWFdwG3B+BK2ODA5ozOwQxI4ot6wMmKcATCrqWuEqRQIj2lUhUyhuqGPTZTnPDZc78Z8h2g7/6nnuhfgBoyeHGvemH5yU1qUHv/8ARiO+jg74Jd0FAE9F8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708614258; c=relaxed/simple;
-	bh=FLnnfwOnjplXgzJeC+dzihkLf7mLPySqSS5uo2Y0V94=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uQaT0+w9lAJGY4suXFtjPv5mzynJUb+wtjtdGlvVud2nq3lFmIwH7pdNNt/hWJpidl/Y2UnacvyqzxWZUbeqXhiLmMoBogqOvn/kW1DlXmZGTsXm/PLaYfW11icS0SoeXNezE4NefFfH/YDbvKRUFBQnAvH6tMXyv3WKfl1hcGs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Q65FEpMA; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1708614288; c=relaxed/simple;
+	bh=QyQ8Hs/9cOFc3/EVyHCVJmCChnrYQ6OCQihzLDwqsoY=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=WWtP2UTXVkAhQFy8P3EeyQKabKgKFssdCLDhFX7NXa8/H9puxOMdOBad9ya1rhFWRQ34awBfo0h43tVYaiB/G8m4032wFkCDtqvA2rAeEjgcRAfDKiGTTqX/pTUmx1no1K7wo0Kcd/RzVtIRpS6AFEKp7JU6/kmwNBMb5MMk+Gw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=E1OCiMUn; arc=none smtp.client-ip=209.85.219.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Q65FEpMA"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1708614257; x=1740150257;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=FLnnfwOnjplXgzJeC+dzihkLf7mLPySqSS5uo2Y0V94=;
-  b=Q65FEpMAUxazkQqTBcJDZTNAaJFXFs+/v+TYo9YbqxsE0zROy9jy+jZI
-   f9Ay7JuXRhGtnbtIFknCfkiWjRlgKc5nCoZmbJBF2ofnB0vIiBk1Zj0nj
-   ZxGPcVvhtyXixSObQhI2Sg1Y6dhyGcvG3/7CZS/fiDyNRe6hpmaXR36FX
-   a4YPDqE9KfVTd3gsJYuoZf1pLfij+qfQgbTtVaza0Qi057eoHEpYyK038
-   yJ63p6DQKxQkqeso0nPxK+9Spiv80egmNkPbC9sCWwJd2ETBNX7IJSerT
-   CZUbX/Dr9zRTRzREUIAWU8v0r/mvEva6r6Zegp0GABMxozGi7NVM6parI
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10992"; a="2706672"
-X-IronPort-AV: E=Sophos;i="6.06,179,1705392000"; 
-   d="scan'208";a="2706672"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Feb 2024 07:04:16 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10992"; a="913539581"
-X-IronPort-AV: E=Sophos;i="6.06,179,1705392000"; 
-   d="scan'208";a="913539581"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Feb 2024 07:04:14 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.97)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1rdAcN-00000006etC-1HFZ;
-	Thu, 22 Feb 2024 17:04:11 +0200
-Date: Thu, 22 Feb 2024 17:04:10 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Yury Norov <yury.norov@gmail.com>
-Cc: Lucas De Marchi <lucas.demarchi@intel.com>,
-	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-	linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-	Jani Nikula <jani.nikula@linux.intel.com>,
-	intel-xe@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
-	Jani Nikula <jani.nikula@intel.com>
-Subject: Re: Re: [PATCH v3 1/3] bits: introduce fixed-type genmasks
-Message-ID: <Zddiav19kX8FGKY9@smile.fi.intel.com>
-References: <20240208074521.577076-1-lucas.demarchi@intel.com>
- <20240208074521.577076-2-lucas.demarchi@intel.com>
- <CAA8EJpprfrtOjNzT6TFhV1n6MXzLdTahanfxcRW4uVjeHaBduA@mail.gmail.com>
- <ZdZlVn9BI-0q1Xdn@smile.fi.intel.com>
- <btssirjumey2kcp5dyhe6m3embdwd5bswjz3c6swrhxfijfhld@lztxaptkegw6>
- <ZddfF7kb54o2c/QR@yury-ThinkPad>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="E1OCiMUn"
+Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-dc743cc50a6so11049665276.2
+        for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 07:04:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1708614286; x=1709219086; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=z/iYiJ+7TFli2f3JsUK+qy0WxM4Y33Yr3gEgMfzxYgQ=;
+        b=E1OCiMUnx5SanbackOg1n7qpTvJdusU/kwNPgBnuo1f8s5I+CA2U5dQJAadzwkCtWt
+         Q4c/tSsgQ3AMdzFej6qYn1u93pWF6nMJITXduAPlkU5+7+y4ABEEuKutqV4GsOh/pP5E
+         w0BqIoBcaoWuVfpfB+V7lgZ1kuRclYC7rM7KAiUOJ0YfqBibUQ3XFGzh694cQe55hKTS
+         nwI7kWjD4mZKvBNt86j9JFPoWkcsRdbiVsXNEoMQwWsznxwtXhlnEsk+GD8Y47hIIp05
+         hVzEu/1EBkzVYmreSxQYve8qQgmNvClQAVwJWgt6CGMyMYcqV7QnUNd1nO53bJIVpELB
+         OMhg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708614286; x=1709219086;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=z/iYiJ+7TFli2f3JsUK+qy0WxM4Y33Yr3gEgMfzxYgQ=;
+        b=cFTAA2lqkLFBEjH9CTurgD0F5i3GXeI3UNl/clzS0IDOxK0qHrdTkAHxRA+P65Ywf1
+         5gG9DCKTsvbqiay1dJzzej7ZPiAfpI9of7RjaNgnjQZuzQ3hZ0iIx0+TVwWY/wQEuggU
+         kE3e+b5nkm41k1D4HTvFR9kKPCc4Esqre1haycsAKRRII9gcVDNydsPa5BXpumx1ybvI
+         CESxnmddQOtHk83G1bNRqwg7W6x1oAUsnaVrPFiam3RBk3W+nfM2bIe0y6kVlW/BdD57
+         s1D209zqHUroEpoTlW9HdUmpPy5IvexWgNluXh5LbIxTKN9kh0TpLGOmDzRR6InT5UPU
+         FqNQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW0PsIg7uBHpyE0Mx3ilQeis2vz1G8z67kHrFafywf5guRMiAh3dne2DfEYIUQCrmfbywDIOu+maQgvzz6J6IWQ9UyLtnq+HRpMFU3L
+X-Gm-Message-State: AOJu0YzzEuOWUQzryFsVR/mTSddR1n8im1eXtSuuTlwGkT6B8U38n0iN
+	+naUUmrjg77GD1HvBHpjDPFSIU0HIxuNp9/OmA0DnOkMtny8U0I4F2rZAlyDcYJUP/OmzdmFdal
+	Y0Q==
+X-Google-Smtp-Source: AGHT+IHooslmJai+EOheQ0H5t3h6KvQduhgxHrEfBv/XJ327uTFnVL1/dQvOjGkq8HhKJXpBhl9cTVHMDrs=
+X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
+ (user=seanjc job=sendgmr) by 2002:a25:ce0b:0:b0:dc2:5456:d9ac with SMTP id
+ x11-20020a25ce0b000000b00dc25456d9acmr77928ybe.5.1708614286362; Thu, 22 Feb
+ 2024 07:04:46 -0800 (PST)
+Date: Thu, 22 Feb 2024 07:04:44 -0800
+In-Reply-To: <c8c37018-8681-458f-96b7-82bae88ebcd3@xen.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZddfF7kb54o2c/QR@yury-ThinkPad>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Mime-Version: 1.0
+References: <20240222100412.560961-1-arnd@kernel.org> <c8c37018-8681-458f-96b7-82bae88ebcd3@xen.org>
+Message-ID: <ZddijN0ShU23sdJw@google.com>
+Subject: Re: [PATCH] KVM: x86/xen: fix 32-bit pointer cast
+From: Sean Christopherson <seanjc@google.com>
+To: paul@xen.org
+Cc: Arnd Bergmann <arnd@kernel.org>, David Woodhouse <dwmw2@infradead.org>, 
+	Paolo Bonzini <pbonzini@redhat.com>, Arnd Bergmann <arnd@arndb.de>, 
+	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
+	"H. Peter Anvin" <hpa@zytor.com>, Jens Axboe <axboe@kernel.dk>, Jan Kara <jack@suse.cz>, 
+	Christian Brauner <brauner@kernel.org>, kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
 
-On Thu, Feb 22, 2024 at 06:49:59AM -0800, Yury Norov wrote:
-> On Wed, Feb 21, 2024 at 03:59:06PM -0600, Lucas De Marchi wrote:
+On Thu, Feb 22, 2024, Paul Durrant wrote:
+> On 22/02/2024 10:03, Arnd Bergmann wrote:
+> > From: Arnd Bergmann <arnd@arndb.de>
+> > 
+> > shared_info.hva is a 64-bit variable, so casting to a pointer causes
+> > a warning in 32-bit builds:
+> > 
+> > arch/x86/kvm/xen.c: In function 'kvm_xen_hvm_set_attr':
+> > arch/x86/kvm/xen.c:660:45: error: cast to pointer from integer of different size [-Werror=int-to-pointer-cast]
+> >    660 |                         void __user * hva = (void *)data->u.shared_info.hva;
+> > 
+> > Replace the cast with a u64_to_user_ptr() call that does the right thing.
+> 
+> Thanks Arnd. I'd just got a ping from kernel test robot for lack of __user
+> qualifier in the cast
+> (https://lore.kernel.org/oe-kbuild-all/202402221721.mhF8MNVh-lkp@intel.com/),
+> which this should also fix.
 
-...
+Ya, 'tis a good bot.  I squashed this in.   Paul/David, new hashes for the
+affected commits are below.
 
-> +#define __GENMASK(t, h, l) \
-> +	((~0 - (1 << (l)) + 1) & (~0 >> (BITS_PER_LONG - 1 - (h))))
+Thanks Arnd!
 
-What's wrong on using the UL/ULL() macros?
-
-Also it would be really good to avoid bifurcation of the implementations of
-__GENMASK() for both cases.
-
-...
-
-> -#define __GENMASK(h, l) \
-> -	(((~UL(0)) - (UL(1) << (l)) + 1) & \
-> -	 (~UL(0) >> (BITS_PER_LONG - 1 - (h))))
-
-This at bare minimum can be left untouched for asm case, no?
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+  KVM: x86/xen: allow shared_info to be mapped by fixed HVA
+  https://github.com/kvm-x86/linux/commit/b9220d32799a
+  KVM: x86/xen: allow vcpu_info to be mapped by fixed HVA
+  https://github.com/kvm-x86/linux/commit/3991f35805d0
+  KVM: selftests: map Xen's shared_info page using HVA rather than GFN
+  https://github.com/kvm-x86/linux/commit/9397b5334af1
+  KVM: selftests: re-map Xen's vcpu_info using HVA rather than GPA
+  https://github.com/kvm-x86/linux/commit/b4dfbfdc9538
+  KVM: x86/xen: advertize the KVM_XEN_HVM_CONFIG_SHARED_INFO_HVA capability
+  https://github.com/kvm-x86/linux/commit/615451d8cb3f
+  KVM: pfncache: check the need for invalidation under read lock first
+  https://github.com/kvm-x86/linux/commit/9fa336e343b2
+  KVM: x86/xen: allow vcpu_info content to be 'safely' copied
+  https://github.com/kvm-x86/linux/commit/003d914220c9
