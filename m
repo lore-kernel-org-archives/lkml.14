@@ -1,57 +1,57 @@
 Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85AC72575B
-	for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 19:06:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8853914B80F
+	for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 19:06:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708628793; cv=none; b=IQ7vuKymfPVrkZIpObS7yINzrjjdDnaEAByuNo/26nF0wnqTTvfC1+zE8qY/MwRrVSxoCaX9oeZipI6O5Mwz4fw0dLCfwt1Wd+yNxKAKAqzhfH8C74GyQlEBipDp/6JAiFRfEq5NK9n/EcfB1tYQBqKATX7em3kNnDhNN2gWXZU=
+	t=1708628796; cv=none; b=E/5f6mVPnKJiJXsQxXIpM8Ik0kzfv+tkypmCNIfmG+t9X/HEf6+p6BpdIjg6wxB4FY616CA0O+FJSXWPhd/xDYQkOkgklLz5ayqEud0tA1jH8TK+yujQzeDgcNkl9yRcGUMKnq4e4m/UvymNWh18itB49L+sx1FuCiNz8OE0NTY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708628793; c=relaxed/simple;
-	bh=nieUYnH4dj1j92uddbXN4kJMJyMCVisTdazPsZdBPn8=;
+	s=arc-20240116; t=1708628796; c=relaxed/simple;
+	bh=tb6swG7G3wi3Bnp9LY5vlQD3q2JN5LX1r2DEbuv3v04=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=VpzpsMllXL3mXuabaFSP6z5X26tZNcIbwBcf2Z/VdiOuSlqY8YCFhLdKl1g5wYiFmF3e99LonCBH1ZDsb4FvJnG+HOK5BDK1Xeyh+braEKsYdbRFUh6+cr4E+pXuuEeeXPsfyhP5E2T/MgezL7gyflr4IHsZp/Iv9JrRmB0pS6A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=K+Kfykx9; arc=none smtp.client-ip=209.85.128.202
+	 To:Cc:Content-Type; b=OF5DltgMDyENnqdIxgqP6q8wfgswKnIZZIGswR27sTdkgZkU/10vBZzZfk/5iEYH0M12XpLB4ZU3eaXfzC3B2aYeNMQ/Jhtfy2bSsbdHDdS2Vobild4KwB+LkW98oIsYrmdJ4Osirn0KR6J6DtKlmbvANPR2U6whohakgGc7kI0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=qOFvn+gC; arc=none smtp.client-ip=209.85.128.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="K+Kfykx9"
-Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-6085e433063so1143317b3.1
-        for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 11:06:18 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qOFvn+gC"
+Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-608b3251948so1121947b3.3
+        for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 11:06:25 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1708628777; x=1709233577; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1708628782; x=1709233582; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:from:to:cc:subject:date:message-id:reply-to;
-        bh=3ntMGhr684dTjFjW5K9N11e4M8SUGzq3A8ac/2w/QBo=;
-        b=K+Kfykx9Hq+ykAkYNd4G4I85Sjt9YcnQ4siJNsHr2te3tcKrZdZllffe8rBFSIkLGd
-         BDQ/C1Ay+W8/Tz91cWU6OofJ1tfDPEY5XDXXst0d/jsBYrT65Pnp5H+z4bYxI2aoaFD5
-         w7d8Dcz7zTbdxZMQs5bzoVTeLyRO0dqIlL1ZsKo86ueEB9bDD2E3QFR9mlte87HADtBt
-         aKzT1cX3xQN80xT53oxMNGPaDp2KDzNKfovzwIxbz9JKm1iNQfgK5GroprazRUXK2S8j
-         VqBeCRPvPa2jRrfFbvA7+bW1R8O8qSUF77rm24zvjQRIwodF8TFWc0vaBXMzLoARdZ5U
-         RNnA==
+        bh=7HiIqZU0XyHT/uY+W4Av8xeySFLdYEVlTDQAMpZzHAk=;
+        b=qOFvn+gCgVs5c7zcvBO86Q/trRj74+2+BepDqXj2zgB4OvFOSk5EMDS0OlFNOynVLY
+         cP9BSYBsueqjh8X+q7hUf+AT5WLlU9KtKRCB+wd/4m3L6XYsTs8n8vCjLesZnuyef2BW
+         VivgP4UtOk/Pz0BoEiFn8xecbpI7sydOb1FqsULlgEI36kuln9wD7dGqqmS09QVXteEh
+         X/QXo8iGK3rzO3tqGEfQsYWRyYAb7IeMYn5TDagw+R6YgjgmQeMgY3iT6RrnY3CUospJ
+         TCnGngq44ALF8XzTewAFhRJey8F6g4ABqeYkqb3sQAUuOFBS/1mZwBlZ/zGCEeXR/tox
+         rOYg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708628777; x=1709233577;
+        d=1e100.net; s=20230601; t=1708628782; x=1709233582;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=3ntMGhr684dTjFjW5K9N11e4M8SUGzq3A8ac/2w/QBo=;
-        b=Erp4FM6I2j25mWuWkQzsp5k/6K2JK7O6eYak+QXaiKI3fHTYI61LBp/7qwxL4DkG7U
-         W79sLXLSn5S/cBYJSwuzk5U22WubeurA1u4TvXMiKt2fRJMLconLeqv87agNZCfjxcH9
-         hZ3z13IaqLU9Y18G9bxkIwM36vfigTDxYplik5o61/snJ4iVT0LA2RZBa5yhROqlbtIT
-         m86qE2v+gsiXhuZwRHVhjH5u5VGUDUtuqbz35+/Uc788nL4j22I9keoAM+1tBQPH9QcO
-         y9SV0rm3P6USH/Yd3L07I27QfQrZQ4YF+znlRJ4sXKmTxmV/8bPYzIo9LjT3iS9wImGE
-         OAbQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWa+CsObYUvdhQ//WeBsWBOz5EbDx/2UiMTw2v/kvaEUrLryWpllGa4bNpJ3SX93z8Fov1ynyzujZ4pw0vFYK6wsrHFVFW9F61vi5e6
-X-Gm-Message-State: AOJu0Yy9r5KOego5Thopr5kt6qeJ6rmvTDINgdHqanwORF0W+OjjU/bE
-	p+Zg9qz1MjIRvE9r7vh2aqWPp13kYAzDP9YZkIfauARwTFpqFsDIC72RH17AgMKefHhmZtqLM2+
-	Ofw==
-X-Google-Smtp-Source: AGHT+IGJTwZNTDdlTJ5vrQNg9sqTJ09fKYXStOw2msJafDEAYLjbX78aWrh79pmG9gxDUQhCFn+wShlhb8g=
+        bh=7HiIqZU0XyHT/uY+W4Av8xeySFLdYEVlTDQAMpZzHAk=;
+        b=W8GWIXe60IVEC1CaNezImkbdNWPHyPW5KVTWQxseooFXGvOsfsNohgEpeCaWtJ9Vpj
+         kq8O4ORAcZZVVCTfq5pb831XxQ14kvHcVBqnG3WCbgch0L4IWXfi5tnvN5hsFBNR/ZtD
+         ffpkdYN7AuXt47ghD+p7qFYUlODhUWvfO7kGQjzIDwuG6QrYB5QAkJAQZ6aYHvN40G2j
+         vJrsKJc7tAt3CRjAmQYKtbEe97DcZbUuIVO+y2YNe7sXUYrXluw2mjHKNJ166FFKy33U
+         tNNL5CiEXXPpX0FA7llwnt6bqkg0RHjP4l950oq8GVNs/jm11eFX/MXNl4h0hvYAaTcN
+         xXbQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXdY3h5//rgqjFWEEy0U5CSJ70whHj+q7/+r/4Us13nqznzphcE7+THIbdHNZvQvlWF/JQM/8CiNxJX8tbwIl92nkDPc5ZMITAd3WrO
+X-Gm-Message-State: AOJu0YzKUzu11u8mtZpb/CsTvqRQ4cGi7Aln4tTBlrHqfs2q5PioMLXg
+	HE0xCcAR4FfGrqdrCzdVVezBIPI3jQf+IZavcaoTe5IGS+8mqrKgUS/4U91TJAnp0c1nRg/5rEf
+	Y7Q==
+X-Google-Smtp-Source: AGHT+IGtR+RoDfHwSTIhzXm2i1nKg0wVcYuExVcXUmqMqdjbWwp02581SwhVU/j3/8LtxuOjiirmIuc48vY=
 X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a25:160b:0:b0:dc7:7ce9:fb4d with SMTP id
- 11-20020a25160b000000b00dc77ce9fb4dmr5036ybw.12.1708628776828; Thu, 22 Feb
- 2024 11:06:16 -0800 (PST)
+ (user=seanjc job=sendgmr) by 2002:a05:6902:114a:b0:dc8:5e26:f4d7 with SMTP id
+ p10-20020a056902114a00b00dc85e26f4d7mr5931ybu.13.1708628782543; Thu, 22 Feb
+ 2024 11:06:22 -0800 (PST)
 Reply-To: Sean Christopherson <seanjc@google.com>
-Date: Thu, 22 Feb 2024 11:06:08 -0800
+Date: Thu, 22 Feb 2024 11:06:11 -0800
 In-Reply-To: <20240222190612.2942589-1-seanjc@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -61,8 +61,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20240222190612.2942589-1-seanjc@google.com>
 X-Mailer: git-send-email 2.44.0.rc0.258.g7320e95886-goog
-Message-ID: <20240222190612.2942589-2-seanjc@google.com>
-Subject: [PATCH 1/5] KVM: Make KVM_MEM_GUEST_MEMFD mutually exclusive with KVM_MEM_READONLY
+Message-ID: <20240222190612.2942589-5-seanjc@google.com>
+Subject: [PATCH 4/5] KVM: selftests: Create GUEST_MEMFD for relevant invalid
+ flags testcases
 From: Sean Christopherson <seanjc@google.com>
 To: Paolo Bonzini <pbonzini@redhat.com>, Sean Christopherson <seanjc@google.com>
 Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
@@ -71,45 +72,39 @@ Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
 	Chao Peng <chao.p.peng@linux.intel.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Disallow creating read-only memslots that support GUEST_MEMFD, as
-GUEST_MEMFD is fundamentally incompatible with KVM's semantics for
-read-only memslots.  Read-only memslots allow the userspace VMM to emulate
-option ROMs by filling the backing memory with readable, executable code
-and data, while triggering emulated MMIO on writes.  GUEST_MEMFD doesn't
-currently support writes from userspace and KVM doesn't support emulated
-MMIO on private accesses, i.e. the guest can only ever read zeros, and
-writes will always be treated as errors.
+Actually create a GUEST_MEMFD instance and pass it to KVM when doing
+negative tests for KVM_SET_USER_MEMORY_REGION2 + KVM_MEM_GUEST_MEMFD.
+Without a valid GUEST_MEMFD file descriptor, KVM_SET_USER_MEMORY_REGION2
+will always fail with -EINVAL, resulting in false passes for any and all
+tests of illegal combinations of KVM_MEM_GUEST_MEMFD and other flags.
 
-Cc: Fuad Tabba <tabba@google.com>
-Cc: Michael Roth <michael.roth@amd.com>
-Cc: Isaku Yamahata <isaku.yamahata@gmail.com>
-Cc: Yu Zhang <yu.c.zhang@linux.intel.com>
-Cc: Chao Peng <chao.p.peng@linux.intel.com>
-Fixes: a7800aa80ea4 ("KVM: Add KVM_CREATE_GUEST_MEMFD ioctl() for guest-specific backing memory")
+Fixes: 5d74316466f4 ("KVM: selftests: Add a memory region subtest to validate invalid flags")
 Signed-off-by: Sean Christopherson <seanjc@google.com>
 ---
- virt/kvm/kvm_main.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ tools/testing/selftests/kvm/set_memory_region_test.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-index eb0dfcd157f4..0f9f78f4f7cf 100644
---- a/virt/kvm/kvm_main.c
-+++ b/virt/kvm/kvm_main.c
-@@ -1617,7 +1617,13 @@ static int check_memory_region_flags(struct kvm *kvm,
- 		valid_flags &= ~KVM_MEM_LOG_DIRTY_PAGES;
+diff --git a/tools/testing/selftests/kvm/set_memory_region_test.c b/tools/testing/selftests/kvm/set_memory_region_test.c
+index 40337f566eeb..9df4b61116bc 100644
+--- a/tools/testing/selftests/kvm/set_memory_region_test.c
++++ b/tools/testing/selftests/kvm/set_memory_region_test.c
+@@ -367,11 +367,15 @@ static void test_invalid_memory_region_flags(void)
+ 	}
  
- #ifdef CONFIG_HAVE_KVM_READONLY_MEM
--	valid_flags |= KVM_MEM_READONLY;
-+	/*
-+	 * GUEST_MEMFD is incompatible with read-only memslots, as writes to
-+	 * read-only memslots have emulated MMIO, not page fault, semantics,
-+	 * and KVM doesn't allow emulated MMIO for private memory.
-+	 */
-+	if (!(mem->flags & KVM_MEM_GUEST_MEMFD))
-+		valid_flags |= KVM_MEM_READONLY;
- #endif
+ 	if (supported_flags & KVM_MEM_GUEST_MEMFD) {
++		int guest_memfd = vm_create_guest_memfd(vm, MEM_REGION_SIZE, 0);
++
+ 		r = __vm_set_user_memory_region2(vm, 0,
+ 						 KVM_MEM_LOG_DIRTY_PAGES | KVM_MEM_GUEST_MEMFD,
+-						 0, MEM_REGION_SIZE, NULL, 0, 0);
++						 0, MEM_REGION_SIZE, NULL, guest_memfd, 0);
+ 		TEST_ASSERT(r && errno == EINVAL,
+ 			    "KVM_SET_USER_MEMORY_REGION2 should have failed, dirty logging private memory is unsupported");
++
++		close(guest_memfd);
+ 	}
+ }
  
- 	if (mem->flags & ~valid_flags)
 -- 
 2.44.0.rc0.258.g7320e95886-goog
 
