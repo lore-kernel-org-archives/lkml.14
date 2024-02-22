@@ -1,118 +1,107 @@
-Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A07ED135405;
-	Thu, 22 Feb 2024 13:23:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.248
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DC1313172C;
+	Thu, 22 Feb 2024 13:23:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708608191; cv=none; b=opAeAQzO+AIxv2bIGy6nyHMN21+9IlJW1ty7BpyAKCKxJyyxwYtCHy9IFHwJQhWu1BvDFxDWXSj+9wxJzj6BwnkOC8nPOzKsGBHzFiJOqpW0s2kz1rEJc9btLccwyZ1LPDk/DJMoX3D6J04ZvIWmFDk0Z7guKtxqSSvbwNcJfDw=
+	t=1708608216; cv=none; b=YT9vJbIHvvQ0ZoOWSyhqLkZ3ao4gpLeYKFFtsfu5gLgylk7/j/d14XVlL6SdQqH1cNpOFgf6qyIGJbGbZbK0yfHsfhQmNpw55JHFirjX6J5UcYUI/r2Y1Llm5UroWnKVK7W9/ShUeHSU/xVurAbrJp5AFDuA7wOzOXuOGQf6WG4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708608191; c=relaxed/simple;
-	bh=eSbXUqFedQp3uxU8odFpdsy0/WXm8uAd03gbB8t0lCw=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ukrVQzJgA5LG2WzuiSpD9UE8jobql5xom6AuRL4db/Bo8W7hb/PbtIrMouPrnYX6KLmfVUA7jwlJTTyMuFTFUgz8+J9kaydi75iFCA+xB46ppZvXja1KqS46vaUhjQ+JYuvJ+/jDcOl4gkLhYyfl4R9j6U1PPcB4DHcsV/XiGXM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=NhvXyovi; arc=none smtp.client-ip=198.47.23.248
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1708608216; c=relaxed/simple;
+	bh=I2mpqktQUMpUVIwK9ivMrxcCg4Ivx2ALtVlPcDb4C1Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GCeFI7XXre2vfXBvFX9zni/cZ2iBqmRGxMxCdNJWAiFRQHbjx7lYCcNMufzDE5y7qitU91kDaulFPAfuLWUT5mZBTol7ZYcZp90CYImu2v54TqcVzJDHota9DRHpQLT0+SGCx6wSoZck0CukHGd8evczv9L4IVGP5npaWThYF7s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bhStrQ1g; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="NhvXyovi"
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-	by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 41MDN4cb046825;
-	Thu, 22 Feb 2024 07:23:04 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1708608184;
-	bh=CKdem2P6UyMctXabHybF1t5eSYfeMxcyIMqd3gX3ji0=;
-	h=From:To:CC:Subject:Date:In-Reply-To:References;
-	b=NhvXyovirvowl8rr71OGYD8Rc9rfCW4OwqVJXZe5uVv1iqYmrb0XoOn4cOlIbgIA9
-	 CGoUHtL1kg/mtMJu/06QIHyiSy6UQzv/ZRcne3rTu/jzM7YZCTYFvXjCNOBIr084Tj
-	 EpRqAupWAFL7gugoP634Rj5tEZMI45+Q9fptDnqg=
-Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
-	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 41MDN4KQ022141
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Thu, 22 Feb 2024 07:23:04 -0600
-Received: from DLEE103.ent.ti.com (157.170.170.33) by DLEE114.ent.ti.com
- (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 22
- Feb 2024 07:23:03 -0600
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE103.ent.ti.com
- (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Thu, 22 Feb 2024 07:23:03 -0600
-Received: from uda0132425.dhcp.ti.com (uda0132425.dhcp.ti.com [172.24.227.94])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 41MDMwBt009356;
-	Thu, 22 Feb 2024 07:22:59 -0600
-From: Vignesh Raghavendra <vigneshr@ti.com>
-To: Nishanth Menon <nm@ti.com>, Tero Kristo <kristo@kernel.org>,
-        Rob Herring
-	<robh+dt@kernel.org>,
-        Krzysztof Kozlowski
-	<krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>, Andrew Davis <afd@ti.com>,
-        Bryan Brattlof <bb@ti.com>, Dhruva Gole
-	<d-gole@ti.com>,
-        Jai Luthra <j-luthra@ti.com>
-CC: Vignesh Raghavendra <vigneshr@ti.com>,
-        <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, Vaishnav Achath <vaishnav.a@ti.com>,
-        Devarsh
- Thakkar <devarsht@ti.com>, Aradhya Bhatia <a-bhatia1@ti.com>
-Subject: Re: [PATCH v2 0/4] arm64: dts: ti: Enable camera for SK-AM62P
-Date: Thu, 22 Feb 2024 18:52:54 +0530
-Message-ID: <170860805564.1966114.7021966559574978180.b4-ty@ti.com>
-X-Mailer: git-send-email 2.43.2
-In-Reply-To: <20240220-am62p_csi-v2-0-3e71d9945571@ti.com>
-References: <20240220-am62p_csi-v2-0-3e71d9945571@ti.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bhStrQ1g"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1708608215; x=1740144215;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=I2mpqktQUMpUVIwK9ivMrxcCg4Ivx2ALtVlPcDb4C1Y=;
+  b=bhStrQ1gGb3GgSwAqMUYLyjwlfMMxucscGZpe3FxZfosx4SoK5e87Nqd
+   HuEhNzOEvBardwbLDckYh3jBprFP/+t//RpanIaQG+w4VxpKDXueQbgMD
+   OyBOmwBxDYU0nXiwngSYJifllu+E4F9k89fxuqCk1J0FInXc0JqMJiGMA
+   nMbt8Lbcr5OZB/TTsu7FF3etvkmfqOD9dg0SjgSV2mSrczvJ6r4cIrhg8
+   NzVbxDqd0q1usGOsUfiz4M3jCN7zeYqVdYtX0ozwll4UJOwmMSmK8wrK/
+   m8rGbHD2krRZqWyosIRCxiM4IfvtDqoPj6KOObwkOkCOYlJERFvFJS0d9
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10991"; a="25292086"
+X-IronPort-AV: E=Sophos;i="6.06,177,1705392000"; 
+   d="scan'208";a="25292086"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Feb 2024 05:23:34 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10991"; a="913523658"
+X-IronPort-AV: E=Sophos;i="6.06,177,1705392000"; 
+   d="scan'208";a="913523658"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Feb 2024 05:23:28 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.97)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1rd92q-00000006dXM-30Tv;
+	Thu, 22 Feb 2024 15:23:24 +0200
+Date: Thu, 22 Feb 2024 15:23:24 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Andrew Jeffery <andrew@codeconstruct.com.au>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org,
+	linux-serial@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-aspeed@lists.ozlabs.org, linux-rpi-kernel@lists.infradead.org,
+	linux-mips@vger.kernel.org, linux-tegra@vger.kernel.org,
+	Jiri Slaby <jirislaby@kernel.org>, Joel Stanley <joel@jms.id.au>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Al Cooper <alcooperx@gmail.com>,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Paul Cercueil <paul@crapouillou.net>,
+	Vladimir Zapolskiy <vz@mleia.com>,
+	Thierry Reding <thierry.reding@gmail.com>,
+	Jonathan Hunter <jonathanh@nvidia.com>,
+	Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Andi Shyti <andi.shyti@linux.intel.com>
+Subject: Re: [PATCH v1 10/14] serial: 8250_of: Switch to use
+ uart_read_port_properties()
+Message-ID: <ZddKzHplwOX7naLv@smile.fi.intel.com>
+References: <20240221183442.4124354-1-andriy.shevchenko@linux.intel.com>
+ <20240221183442.4124354-11-andriy.shevchenko@linux.intel.com>
+ <0a828f2c50de712940fb9a881702ac1678a35b7c.camel@codeconstruct.com.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <0a828f2c50de712940fb9a881702ac1678a35b7c.camel@codeconstruct.com.au>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-Hi Jai Luthra,
-
-On Tue, 20 Feb 2024 11:48:01 +0530, Jai Luthra wrote:
-> This series enables support for camera sensors using CSI-RX ports on
-> AM62P family of SoCs.
+On Thu, Feb 22, 2024 at 11:07:05AM +1030, Andrew Jeffery wrote:
+> On Wed, 2024-02-21 at 20:31 +0200, Andy Shevchenko wrote:
+> > Since we have now a common helper to read port properties
+> > use it instead of sparse home grown solution.
 > 
-> Particularly, it enables OV5640 and IMX219 sensors via the 22-pin FFC
-> CSI-RX connector on SK-AM62P [1] using the existing common overlays for
-> SK-AM62* family of boards.
+> I did some brief testing of the series for the Aspeed machines under
+> qemu, building them on top of v6.8-rc5:
 > 
-> [...]
+> export ARCH=arm
+> export CROSS_COMPILE=arm-linux-gnueabihf-
+> make aspeed_g5_defconfig
+> make -j$(nproc)
+> qemu-system-arm -M rainier-bmc -nographic -no-reboot -kernel arch/arm/boot/zImage -dtb arch/arm/boot/dts/aspeed/aspeed-bmc-ibm-rainier.dtb -initrd ...
+> 
+> I got an oops during boot, which bisected to this change:
 
-I have applied the following to branch ti-k3-dts-next on [1].
-Thank you!
+Thank you for prompt testing! I will look at it.
 
-[1/4] arm64: dts: ti: k3-am62p: Fix memory ranges for DMSS
-      commit: 90a67583171f213711de662fab9f8d24a2d291a9
-[2/4] arm64: dts: ti: k3-am62p: Add DMASS1 for CSI
-      commit: 091e2e05228fa3fd424b1d775b04fb4734d5275b
-[3/4] arm64: dts: ti: k3-am62p: Add nodes for CSI-RX
-      commit: a8787f4fd29a43c5351daf3059a6156ff089a441
-[4/4] arm64: dts: ti: Enable overlays for SK-AM62P
-      commit: 598139b8c7c56cc6fb30ef8b4cf34b53a7fa5d0f
+-- 
+With Best Regards,
+Andy Shevchenko
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent up the chain during
-the next merge window (or sooner if it is a relevant bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/ti/linux.git
---
-Vignesh
 
