@@ -1,77 +1,81 @@
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA37C28374;
-	Thu, 22 Feb 2024 09:08:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F78836B02;
+	Thu, 22 Feb 2024 09:09:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708592938; cv=none; b=dAx+x6TeKfLSg5M/xi0+Hg9y8OMVLRBkW5YjMtMbMiHM9MJeFjK2XsqIcaYFKIx+Nasaw5UOVmYWCPKUYbaTqTrWNHYFuJHfnpdIpwbz+JhTFAZMS+7EIjsVeBmQLXxIxE+kKdzV+0M3Opv+JjU4EXkikIlBCWV/T6J4zOcCoEs=
+	t=1708592970; cv=none; b=ng+/OAHP0ADV9IyLHs0aw7iWOhrZ8ibX0FXVdjf7W/SU8sy+wm+jR10OUNFe2CylIaeI4qZUfeQaXd/GUj34JwqieYAZfWzpasePvgbCaPe0RyN/W+fUlqif7LjEQBOMRURR3pBzxQhZgVS/qnaF7pBesMjSLyKD8ylmagjEkOs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708592938; c=relaxed/simple;
-	bh=THqwlQyNkUJ73BiKbiScBMvS2NWzpmFqOLtTdzDigyY=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=hM5hXscZwJwLtcOhLovWQJ5FJNOmJEw1kEmv/2dE+lLMRtdbrVxhdXcFbMkyIrpWa6PBffmUndKlJ9PqX7HisJPkkNqZ0gWRycDPEqZycYgvYDQM7BBtvp4RR/f37Jdqxtw8n+iOR/vkd2/i8GLCDQKLuKHOw9ssOHD1Iil2LdU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.235])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4TgS4C13mBz4f3lgQ;
-	Thu, 22 Feb 2024 17:08:43 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.112])
-	by mail.maildlp.com (Postfix) with ESMTP id 4C56F1A0232;
-	Thu, 22 Feb 2024 17:08:50 +0800 (CST)
-Received: from [10.174.176.73] (unknown [10.174.176.73])
-	by APP1 (Coremail) with SMTP id cCh0CgAX6REhD9dlhGAmEw--.45988S3;
-	Thu, 22 Feb 2024 17:08:50 +0800 (CST)
-Subject: Re: [PATCH md-6.9 00/10] md/raid1: refactor read_balance() and some
- minor fix
-To: Paul Menzel <pmenzel@molgen.mpg.de>, Kuai Yu <yukuai1@huaweicloud.com>,
- Paul E Luse <paul.e.luse@linux.intel.com>
-Cc: song@kernel.org, neilb@suse.com, shli@fb.com, linux-raid@vger.kernel.org,
- linux-kernel@vger.kernel.org, yi.zhang@huawei.com, yangerkun@huawei.com,
- "yukuai (C)" <yukuai3@huawei.com>
-References: <20240222075806.1816400-1-yukuai1@huaweicloud.com>
- <34b04a5f-7ef8-4e00-b1c6-c4e692281499@molgen.mpg.de>
-From: Yu Kuai <yukuai1@huaweicloud.com>
-Message-ID: <0f2a89e7-fa2c-fe83-bcb7-cfc449c5a721@huaweicloud.com>
-Date: Thu, 22 Feb 2024 17:08:48 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+	s=arc-20240116; t=1708592970; c=relaxed/simple;
+	bh=3Va0AQy8MDXlS2QxLxNPjM7H4iXSmpPj9TMQdWDWW3w=;
+	h=From:In-Reply-To:Content-Type:References:Date:Cc:To:MIME-Version:
+	 Message-ID:Subject; b=nB22FGNKyob59hjALjSpcIPeEt3B4HMcGenhYK7MjX/nWq/+zVXlplLYdjgX04CbjFebMfgriddKSRZc42oEy+9EW9sL+xx/2hz5gFceRF0vUzDfK3koUakkEt7Ds5My9pUipgCUYeEl0s+ZIrqwcJZjHd5Zql46x0UIjFwBt5w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+Received: from harlem.collaboradmins.com (harlem.collaboradmins.com [IPv6:2a01:4f8:1c0c:5936::1])
+	by madrid.collaboradmins.com (Postfix) with ESMTP id 068EC37820C7;
+	Thu, 22 Feb 2024 09:09:25 +0000 (UTC)
+From: "Shreeya Patel" <shreeya.patel@collabora.com>
+In-Reply-To: <20240221125954.917878865@linuxfoundation.org>
+Content-Type: text/plain; charset="utf-8"
+X-Forward: 127.0.0.1
+References: <20240221125954.917878865@linuxfoundation.org>
+Date: Thu, 22 Feb 2024 09:09:25 +0000
+Cc: stable@vger.kernel.org, patches@lists.linux.dev, linux-kernel@vger.kernel.org, torvalds@linux-foundation.org, akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com, f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org, allen.lkml@gmail.com, "Gustavo Padovan" <gustavo.padovan@collabora.com>, "kernelci-regressions mailing list" <kernelci-regressions@lists.collabora.co.uk>
+To: "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <34b04a5f-7ef8-4e00-b1c6-c4e692281499@molgen.mpg.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:cCh0CgAX6REhD9dlhGAmEw--.45988S3
-X-Coremail-Antispam: 1UD129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
-	VFW2AGmfu7bjvjm3AaLaJ3UjIYCTnIWjp_UUUYk7AC8VAFwI0_Gr0_Xr1l1xkIjI8I6I8E
-	6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28Cjx
-	kF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVWDJVCq3wA2z4x0Y4vE2Ix0cI8I
-	cVCY1x0267AKxVWxJr0_GcWl84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2js
-	IEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE
-	5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v26r1j6r4UMcvjeV
-	CFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxG
-	xcIEc7CjxVA2Y2ka0xkIwI1lc7I2V7IY0VAS07AlzVAYIcxG8wCF04k20xvY0x0EwIxGrw
-	CFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE
-	14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2
-	IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxK
-	x2IYs7xG6rWUJVWrZr1UMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7CjxV
-	AFwI0_Gr1j6F4UJbIYCTnIWIevJa73UjIFyTuYvjfUF9a9DUUUU
-X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
+Message-ID: <10aff2-65d70f80-1-48916200@130435435>
+Subject: =?utf-8?q?Re=3A?= [PATCH =?utf-8?q?5=2E10?= 000/379] 
+ =?utf-8?q?5=2E10=2E210-rc1?= review
+User-Agent: SOGoMail 5.9.1
+Content-Transfer-Encoding: quoted-printable
 
-Hi,
+On Wednesday, February 21, 2024 18:32 IST, Greg Kroah-Hartman <gregkh@l=
+inuxfoundation.org> wrote:
 
-在 2024/02/22 16:40, Paul Menzel 写道:
-> Is there a change in performance with the current patch set? Is radi1 
-> well enough covered by the test suite?
+> This is the start of the stable review cycle for the 5.10.210 release=
+.
+> There are 379 patches in this series, all will be posted as a respons=
+e
+> to this one.  If anyone has any issues with these being applied, plea=
+se
+> let me know.
+>=20
+> Responses should be made by Fri, 23 Feb 2024 12:59:02 +0000.
+> Anything received after that time might be too late.
+>=20
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.1=
+0.210-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc=
+.git linux-5.10.y
+> and the diffstat can be found below.
+>=20
 
-Yes, there are no performance degradation, and mdadm tests passed. And
-Paul Luse also ran fio mixed workload w/data integrity and it passes.
+KernelCI report for stable-rc/linux-5.10.y for this week.
+
+## stable-rc HEAD for linux-5.10.y:
+Date: 2024-02-21
+https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.=
+git/log/?h=3Dd2880f0e0d6f4221aa1ac48b8fb2b71168adff88
+
+## Build failures:
+No build failures seen for the stable-rc/linux-5.10.y commit head \o/
+
+## Boot failures:
+No **new** boot failures seen for the stable-rc/linux-5.10.y commit hea=
+d \o/
+
+Tested-by: kernelci.org bot <bot@kernelci.org>
 
 Thanks,
-Kuai
+Shreeya Patel
 
