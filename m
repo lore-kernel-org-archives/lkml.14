@@ -1,60 +1,60 @@
-Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
+Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF4AB148FE3
-	for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 14:19:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19F4D14A097
+	for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 14:19:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708611587; cv=none; b=GLs86S2gPXZiz9LEVF4Wm5m5UVGoz9TXYdp8w46P05q6YU8q7WuAbLp4yUB4gYAYdenmIHD/J7cWM9NIr8EVD4BZ27T21IozF0rXZ/6xIJk3vunZTwbpf7HTRwDj0HPe5mlkkhN6vWFGWYRsvcDQRU1yh35qKDOSb2ivDOcLmIQ=
+	t=1708611596; cv=none; b=nigDOijN/UeW5lIO8gBdzZzxHKty6gnkcBRu8ApPOEIPj+v7XmFq0jhsmFdUatOtL1SUET4iRZs99a+vaBXfvo+WPXEm/Mcb5zrDXjwa7SaOZY8lXSKPjKtM76CH48FZh2PSIzhGDbqIM2wU4+kJQseQBlTG4EaftGEtWVDCMK0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708611587; c=relaxed/simple;
-	bh=7zuRio/YC9dKxpTczQCi+EW95Tb0CgPeF+kjRH91dS0=;
+	s=arc-20240116; t=1708611596; c=relaxed/simple;
+	bh=8svlNz2AM3TX39zt1Mh5SAJo/Xa23Z1D0hrKnS+mZzw=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=VjewmMP7X7PJJ8cDKeua3wSQsyigmnlTHqZwt4OL/U6BZ7sYGD8pCVTgcr8tUb7I7dmxQJNbLwmfeJF0Z2snGOpKX4jRe2xLPhXjiV1ECc3wMdBEU2XfUQ8PDHgIQLnNY1sZgvwBIa/GW2HtV7kf3gbSlO2B9vLEW2+yjKljjkk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=FhH032qX; arc=none smtp.client-ip=209.85.218.51
+	 In-Reply-To:To:Cc; b=orANFbhSJ4myuzQtC/L9zcXMPjSlCo/QSPXMkHCGfBUS4ZupItF88j4tlM/qQwdb8MeLGVY1g/6BE8PB5lFCKELAOc7FPcEVHq25RV8XXKAY1N1S7/t3kFHU8kWpQLcBPWRyp5/1+pombkEBYP+c3Wpzp1G2apSIz8+ZsFNmW4A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=VfGhc2I1; arc=none smtp.client-ip=209.85.208.44
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FhH032qX"
-Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-a3f829cde6dso92987866b.0
-        for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 06:19:42 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VfGhc2I1"
+Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-564647bcdbfso2153573a12.2
+        for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 06:19:46 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1708611580; x=1709216380; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1708611583; x=1709216383; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=Em+oLMU0Ctbe0IGKzRk8PkwOLrG5qQYA4R+AhRZWikk=;
-        b=FhH032qXj2ujetvXEeWXKv3Joal+PqGSP64xs7+vN/u52gmDKebx7PW2Tdk0fea3AB
-         gf3Tyn/LNtgFYKPrf21aFHvRsQGVs4ckSqoLN/IdkloxWyOJ2XoG/3HNVaE/tO189r0c
-         5iVT2SY5qRaK0Yp7j3fDh2CgVAX1ktUoYztcOOZ9rGq1A+R1/k2tt6vfvI50EtNCEjE3
-         HhJOPFJhXscvvn9AgjZ6FLQQqW9GD+Pkm6kUMwdbucSy3pATJLGlboqp6OR0Xhl7FqVj
-         tr/qD1G+E4zNw361xEKibHOEx3001+IqHjbPhPEhKGzHBecciqrL3JKfsaLMxh08yEK8
-         H7+A==
+        bh=TNFJtzw1Au24uNAZlkPHp4RYVJ5vQGAsCG8vVXzlObA=;
+        b=VfGhc2I1hVTIjT9elOsyD7TI82M848XIuhgwJUdZ3ILk2XJeEpixwVoIC1nhPby226
+         nQ+Wv9T0wKxtfy8XhsZa8hfipRKwExCTk3B7poM/80jw34oPYXXHWLAPX9onT3SQVesM
+         NTMDUZbD+4zUDKx1zICDx3Z9ClZP1qOUk525TrUOW1y1tK2snMzhg3G/h91nJS0stpS/
+         0L+fORGPzDIo6qVGSnfa3YYWm9PfHUufG1Y3TPcbk4cVUJjPK/Yy8KdFj5BtnHClSBz0
+         /Rtj1oiTQ7yalyMYkfBdSnf3JLUuaYtaT2MUSst8+S8aXevmGmTki3EzFNPZTl21ACTQ
+         TORA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708611580; x=1709216380;
+        d=1e100.net; s=20230601; t=1708611583; x=1709216383;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Em+oLMU0Ctbe0IGKzRk8PkwOLrG5qQYA4R+AhRZWikk=;
-        b=JV6ZhnCRzR/BG2F/kmmcZe4FLzyqAZNkSpdNWciqThBSHDkod0MinKcxkNRxNm1aMs
-         eExWVANDOQZbtZ5k4GbNNVmYFbIzowiT8mjzGCQXm39w6MrYt0pdScqJglgHrvDiePzS
-         GEs5cMg6J/V7NugdAGmY4055EAZtjHU6b8ORZs4S2j2NaTn5AUsP22r6H1JUZetI94nV
-         LnFLKwUIdMFkzGB4kS+uRArldfHEymYe6JjOkYstFjlTlcFjdFi5HBVFw91Bwh8hWfCH
-         FDO3/LHLOQmEsM8rbGvMqDdvIULR4dAxkDbU8xarhbc8Zi+5qWwqiVOyXIiNteibY0H2
-         pvsA==
-X-Forwarded-Encrypted: i=1; AJvYcCXGQoXAkQA5fRoJ0ODzZyjENmW562LQnD7+Yoac9cTonOi7Xduhzzy4NsNFiJa6qgizcj6v7nmgXOfhviRgf40mgpxsQlhuwhBIFUgW
-X-Gm-Message-State: AOJu0YxqMNGJdquS8477xDssiuqo/b1Ua09S2b7v2qZohOJZ4kz1dzhk
-	MNZ6oD7C86T0WfHdxHdk5q0YD0YNI3pEuUJYX5BXaqe4J602TVA6b+CkidtF3vg=
-X-Google-Smtp-Source: AGHT+IEi7ObQmrjDV3EI7a2VmG6QF44ehmeUfAFUQfyZM9dnBA9t6Pllcxvx4VpsO6cVEZl6oXOTSA==
-X-Received: by 2002:a17:906:d8b4:b0:a3f:3acf:c58b with SMTP id qc20-20020a170906d8b400b00a3f3acfc58bmr3122657ejb.13.1708611580371;
-        Thu, 22 Feb 2024 06:19:40 -0800 (PST)
+        bh=TNFJtzw1Au24uNAZlkPHp4RYVJ5vQGAsCG8vVXzlObA=;
+        b=AlG6FQ+DCfAwN7LtHIF3IvxQhCVSDbS2BMwzEz9xRnhAVDkxgFO8riPiBs1+u1FJl2
+         e13LpAYspgSKfhT4Hd/b7D0mytG9ba+Nd2j+3T9bAbJ4BbvREGGTy+4qQ0CXRRAOj3Mb
+         KGwtrceZCNfyBUSbfPMl/naXig8V8TG34ae29wYannMjOfK84akSm3/LbugMOar/HwqG
+         Mx8Y6FZhdaEo5Cos3ur+d+uJFHCSImrCdfYP8J4SZUZJequD5ofnur42cxOSe3NHHbL7
+         sFjoFY5zxp1TgB+4Sy3SeiR/6h3god26oAlW+tQ8uvQXR/dQj5HpVHByv4brN9hwCew7
+         +psw==
+X-Forwarded-Encrypted: i=1; AJvYcCWZACx3TIWq/+5KZFcGM+pEvp2p4LfSFg5NrLS12h4jr8RSCf6JgrYMXGGUHB/72XLYlzsuOXOxCC+Pg18gdzp/IwGIuoM2mYGRqRqZ
+X-Gm-Message-State: AOJu0YyOVhOmD7DL/qNJBiuVqNtrtkMVRPrVntzBL32od6IJul22evnw
+	7BFLUD4jt7yjDAgFa3sjiGFMNdvwm9DkNM+S1XYrX2GZHryTCsJGI2ktgsrkmhI=
+X-Google-Smtp-Source: AGHT+IH6om1CxmwZGcQnWXy6bEIMyBXZcIWXNrdCLTXKQ0SXCd7CCKQlkBnOSpAafphpRQ/CzqYzVw==
+X-Received: by 2002:a17:906:aad1:b0:a3e:a3d6:eb6f with SMTP id kt17-20020a170906aad100b00a3ea3d6eb6fmr7506167ejb.48.1708611582822;
+        Thu, 22 Feb 2024 06:19:42 -0800 (PST)
 Received: from [127.0.1.1] ([188.24.162.93])
-        by smtp.gmail.com with ESMTPSA id lj7-20020a170907188700b00a3daf530fd8sm5992588ejc.210.2024.02.22.06.19.39
+        by smtp.gmail.com with ESMTPSA id lj7-20020a170907188700b00a3daf530fd8sm5992588ejc.210.2024.02.22.06.19.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 22 Feb 2024 06:19:39 -0800 (PST)
+        Thu, 22 Feb 2024 06:19:42 -0800 (PST)
 From: Abel Vesa <abel.vesa@linaro.org>
-Date: Thu, 22 Feb 2024 16:19:19 +0200
-Subject: [PATCH v3 1/4] arm64: dts: qcom: x1e80100: Add SPMI support
+Date: Thu, 22 Feb 2024 16:19:21 +0200
+Subject: [PATCH v3 3/4] arm64: dts: qcom: x1e80100-crd: Add repeater nodes
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -63,7 +63,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240222-x1e80100-dts-smb2360-v3-1-85a691d4f68a@linaro.org>
+Message-Id: <20240222-x1e80100-dts-smb2360-v3-3-85a691d4f68a@linaro.org>
 References: <20240222-x1e80100-dts-smb2360-v3-0-85a691d4f68a@linaro.org>
 In-Reply-To: <20240222-x1e80100-dts-smb2360-v3-0-85a691d4f68a@linaro.org>
 To: Andy Gross <agross@kernel.org>, Bjorn Andersson <andersson@kernel.org>, 
@@ -73,88 +73,94 @@ To: Andy Gross <agross@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
 Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
  linux-kernel@vger.kernel.org, Abel Vesa <abel.vesa@linaro.org>
 X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2043; i=abel.vesa@linaro.org;
- h=from:subject:message-id; bh=7zuRio/YC9dKxpTczQCi+EW95Tb0CgPeF+kjRH91dS0=;
- b=owEBbQKS/ZANAwAKARtfRMkAlRVWAcsmYgBl11f1SQcUEkIia+/V4BLdSK0l3uRkQRkIQ0I9e
- THTx/0FeX+JAjMEAAEKAB0WIQRO8+4RTnqPKsqn0bgbX0TJAJUVVgUCZddX9QAKCRAbX0TJAJUV
- VkyvEACXc9N9a4AaElTAUxALqmqZ/Vwqn/FwPDD9eLFDqa7XHTn1Ftejc3KDSOGFpTJw4KLzX4l
- lXGoHlAVfXeOIm/QhGSg4a50jZksgPVIN0blf2+o22aU49HIh3VeI787Tx1IzYS4jk+k+vmfEwD
- K6wM1DWrvHyys4rGTX02ntBkxvoDeJ+6rxfneijv/ATu+Rp6Pp6f5TzUJ3qVAw3Q/HckmwAdunX
- iJX4LhsD69DOE6qfPEEYSsVeNYXr8PIR3KYEJ+9TUtkybWEZwdOuacyHcfwH66REXVxIZDxvq6G
- Sl5CNYxefYwceFusEGQXkfPcs6P2zHKftPAGpF+JcCHbQZ7N0dafUzdbkvfhlezN5R40eLw491A
- 9SCasbRiPoqyvYgNP/lcPwTN8ZZZgeWN7ykOAMdaMNqSZ08NoiV5gD/KtXx0uQ4k4pjCb+r2Fnr
- bDd2hOed50oofWSDRP2GwwGNHY1ncHW9fJcaMaSmYeB+HYswEpsDCI37kCArC0M+IgKD0hr/GYh
- idIG92eCVcUoQ2+XI/U/XRyeTTB68IiM920ZDCi9Yx7nijWceiygT9tjT4428Oll6F7ZmpT9CQo
- fm0sZKsLfv+g+HNlyia0L/ktZNJH3AiQHJ2B6/wmzW6RSQcbslPsiqpGVjtB2q2Ith5FoNcKXh/
- yBr7icxNMhkRIEw==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1795; i=abel.vesa@linaro.org;
+ h=from:subject:message-id; bh=8svlNz2AM3TX39zt1Mh5SAJo/Xa23Z1D0hrKnS+mZzw=;
+ b=owEBbQKS/ZANAwAKARtfRMkAlRVWAcsmYgBl11f30GGaRLU6XUNmd7u6Wgq5dYwyzoH/42EN3
+ qutQPWK+bGJAjMEAAEKAB0WIQRO8+4RTnqPKsqn0bgbX0TJAJUVVgUCZddX9wAKCRAbX0TJAJUV
+ VpCyD/0fmjcldQqSmANrHDFImBG57tiHs8sO5I+eujxjkmeB6M7qcTc7bI4dl7zD/YKabril3uy
+ 17uy01kPnB+ogyqEntKqvujGip1OBvcuFz1/I+KypNBKIHL+ZrwFjSAKrmtzQ3wJ8MGe+9KBcLf
+ b3K0R9ObWdb4XF/7OHJsc7r0QmAtaxHEI4BtGfxFXDFkfuNYDmy/KndNfSc/mPa6z+U+GeXh05/
+ Bp8Ad6Y0//Ourne1/HJmsMLrcbKGQlQloQJ/98irhoMYkKR8qHvc/PX0kN8Oq94pOExsnwqYTJw
+ ZKXRjZUNUmDCoJfDyLfd5ao7uxa0GoTK5neo6eG5ehIzhvoYV+jfySyyzLmx3nogmllxNdkwSP/
+ lC+oMo7lHgvEryGf3Er0FlJGfbmnDeTeuoBH85G1R3OAJJyO8AQjMOMvq3ktM5jIzvpG8hwXxDo
+ PV5YeFSpygLyGvkHplOgo20kMxlWGSjjeELL1JAiLyHq/CRALeqX6rCD35mYgThkPfpcvLl9tCU
+ 1KexbF/7q88XPLORsWHUungd+/dYwz4eR68lyxVbcy6I8M+OB1sKY/o9bb9ci5yLh9evd+x8JRS
+ 1DWUpqeTyQEKiVwLM102juo2CzizPwPuzFl9v8s7+YBYHxpecElc66yqaDJxXmEs62c3elbFb+4
+ 9rAK1ECC2iGjqQw==
 X-Developer-Key: i=abel.vesa@linaro.org; a=openpgp;
  fpr=6AFF162D57F4223A8770EF5AF7BF214136F41FAE
 
-The X1E80100 platform implements the v7 SPMI arbiter, which means it
-implements two separate buses. The difference, when compared to existing
-platforms that also implement v7 SPMI arbiter, is that this is the first
-platform that actually has boards with secondary bus populated with some
-PMICs. This is why it needs to have 2 separate buses as child nodes of
-the arbiter.
+Include the PMIC dedicated file and add regulators to each one of
+those 3 eUSB2 repeaters. Tie up the repeaters to their corresponding
+USB HS PHY.
 
+Reviewed-by: Konrad Dybcio <konrad.dybcio@linaro.org>
 Signed-off-by: Abel Vesa <abel.vesa@linaro.org>
 ---
- arch/arm64/boot/dts/qcom/x1e80100.dtsi | 42 ++++++++++++++++++++++++++++++++++
- 1 file changed, 42 insertions(+)
+ arch/arm64/boot/dts/qcom/x1e80100-crd.dts | 22 ++++++++++++++++++++++
+ 1 file changed, 22 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/qcom/x1e80100.dtsi b/arch/arm64/boot/dts/qcom/x1e80100.dtsi
-index 8e517f76189e..1665bd1eaad6 100644
---- a/arch/arm64/boot/dts/qcom/x1e80100.dtsi
-+++ b/arch/arm64/boot/dts/qcom/x1e80100.dtsi
-@@ -4221,6 +4221,48 @@ aoss_qmp: power-management@c300000 {
- 			#clock-cells = <0>;
- 		};
+diff --git a/arch/arm64/boot/dts/qcom/x1e80100-crd.dts b/arch/arm64/boot/dts/qcom/x1e80100-crd.dts
+index 6a0a54532e5f..41078889969d 100644
+--- a/arch/arm64/boot/dts/qcom/x1e80100-crd.dts
++++ b/arch/arm64/boot/dts/qcom/x1e80100-crd.dts
+@@ -9,6 +9,7 @@
+ #include <dt-bindings/regulator/qcom,rpmh-regulator.h>
  
-+		spmi: arbiter@c400000 {
-+			compatible = "qcom,x1e80100-spmi-pmic-arb";
-+			reg = <0 0x0c400000 0 0x3000>,
-+			      <0 0x0c500000 0 0x400000>,
-+			      <0 0x0c440000 0 0x80000>;
-+			reg-names = "core", "chnls", "obsrvr";
-+
-+			qcom,ee = <0>;
-+			qcom,channel = <0>;
-+
-+			#address-cells = <2>;
-+			#size-cells = <2>;
-+			ranges;
-+
-+			spmi_bus0: spmi@c42d000 {
-+				reg = <0 0x0c42d000 0 0x4000>,
-+				      <0 0x0c4c0000 0 0x10000>;
-+				reg-names = "cnfg", "intr";
-+
-+				interrupt-names = "periph_irq";
-+				interrupts-extended = <&pdc 1 IRQ_TYPE_LEVEL_HIGH>;
-+				interrupt-controller;
-+				#interrupt-cells = <4>;
-+
-+				#address-cells = <2>;
-+				#size-cells = <0>;
-+			};
-+
-+			spmi_bus1: spmi@c432000 {
-+				reg = <0 0x0c432000 0 0x4000>,
-+				      <0 0x0c4d0000 0 0x10000>;
-+				reg-names = "cnfg", "intr";
-+
-+				interrupt-names = "periph_irq";
-+				interrupts-extended = <&pdc 3 IRQ_TYPE_LEVEL_HIGH>;
-+				interrupt-controller;
-+				#interrupt-cells = <4>;
-+
-+				#address-cells = <2>;
-+				#size-cells = <0>;
-+			};
-+		};
+ #include "x1e80100.dtsi"
++#include "x1e80100-pmics.dtsi"
  
- 		tlmm: pinctrl@f100000 {
- 			compatible = "qcom,x1e80100-tlmm";
+ / {
+ 	model = "Qualcomm Technologies, Inc. X1E80100 CRD";
+@@ -680,6 +681,21 @@ &remoteproc_cdsp {
+ 	status = "okay";
+ };
+ 
++&smb2360_0_eusb2_repeater {
++	vdd18-supply = <&vreg_l3d_1p8>;
++	vdd3-supply = <&vreg_l2b_3p0>;
++};
++
++&smb2360_1_eusb2_repeater {
++	vdd18-supply = <&vreg_l3d_1p8>;
++	vdd3-supply = <&vreg_l14b_3p0>;
++};
++
++&smb2360_2_eusb2_repeater {
++	vdd18-supply = <&vreg_l3d_1p8>;
++	vdd3-supply = <&vreg_l8b_3p0>;
++};
++
+ &swr0 {
+ 	status = "okay";
+ 
+@@ -817,6 +833,8 @@ &usb_1_ss0_hsphy {
+ 	vdd-supply = <&vreg_l2e_0p8>;
+ 	vdda12-supply = <&vreg_l3e_1p2>;
+ 
++	phys = <&smb2360_0_eusb2_repeater>;
++
+ 	status = "okay";
+ };
+ 
+@@ -837,6 +855,8 @@ &usb_1_ss1_hsphy {
+ 	vdd-supply = <&vreg_l2e_0p8>;
+ 	vdda12-supply = <&vreg_l3e_1p2>;
+ 
++	phys = <&smb2360_1_eusb2_repeater>;
++
+ 	status = "okay";
+ };
+ 
+@@ -857,6 +877,8 @@ &usb_1_ss2_hsphy {
+ 	vdd-supply = <&vreg_l2e_0p8>;
+ 	vdda12-supply = <&vreg_l3e_1p2>;
+ 
++	phys = <&smb2360_2_eusb2_repeater>;
++
+ 	status = "okay";
+ };
+ 
 
 -- 
 2.34.1
