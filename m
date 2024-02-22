@@ -1,187 +1,103 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78D6839AD7;
-	Thu, 22 Feb 2024 10:18:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0EC939FC7;
+	Thu, 22 Feb 2024 10:18:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708597092; cv=none; b=ONEi1IjX9718zDIxoiaLAHs+GCWp5bBqDrHWbE4evTAFeDsIZTnR+ULxvpW339LoVO84ZeP0ZSIkGCOcK91wm8MlGdhiGa4WbOE9y5imkBalOwSxktIzGbc7r/alksyesR+/4NR+jYF+TORyLmDg5Ve0SDZrjwhmJ5Nb8tyCcDs=
+	t=1708597118; cv=none; b=F4gj+ZXuwvsK3jJM8AHUgc+5uU0UGnMqL3NEXzdb4GBuJV2FqegKxk28ec5yNG5EPvm/zPHYaSEtmBRFM9clBG5KRWNVSztRwEhZfwDQdnyEirDPFwy89hq47vOETaoez+huxfDF523PfPb7l4JZMlPpGFD+toATBPyJQa5uQR4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708597092; c=relaxed/simple;
-	bh=oOR8jmKiR3Z0bG5p4Qjx/ANit+QiUMk7afIR/go4cYI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=E3NfhDR3wqy+bMAa/xUEW6aB9cT1Wu7BJFTTKcsLmbLgRjiG51YcT41+pMt2oN8XtfZyQmZybNC8DC0c0v8DDMmS82jPRd+xEkqlotOjfykauuswaeonSPjpYiURBtv3PFOl2PgeetLKKW1Bloggw6JHXWeC9VPUAZSFIZYsJxU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=ds1fvHgZ; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=h/ZLcfRp; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=ds1fvHgZ; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=h/ZLcfRp; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1708597118; c=relaxed/simple;
+	bh=af17vFA+XR0PLVSDztuSWa2TbDGEHKWUkQWkSMZboyo=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=COSfg19d5f56X22UHCEGz9vyYSgMLygy7cGHP8sv9b5awDEgKdQ3fmIj4y5SAr7TPtugSluyBpc8+SiH5Rn0uLjF5OrvP4LNf6xa30HPKl0AorrKRwvgKqR2sZaqSy3yUEjA40KZUBMygqlbDbNrXHIjJqiaS9LHXJrr/VqBMlo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=3qgITIen; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=TZ+jyXJp; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="ds1fvHgZ";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="h/ZLcfRp";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="ds1fvHgZ";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="h/ZLcfRp"
-Received: from imap2.dmz-prg2.suse.org (imap2.dmz-prg2.suse.org [10.150.64.98])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 7503D21EEF;
-	Thu, 22 Feb 2024 10:18:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1708597088; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="3qgITIen";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="TZ+jyXJp"
+From: Kurt Kanzenbach <kurt@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1708597115;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=WleimZ4dFaFbSJPgf7OWTIbGCgCw5AeIfnj/EQtUT3U=;
-	b=ds1fvHgZag8C/JWIoPDuux7+XMfr3fzhGd4Tm93+TxTNOGXBLRghOy3Fei1sIU5LEjTYlW
-	QE8uq1uQcA3CN/hVbcUvygM2eHQI8XnlHPBAFjxK/gVW1lwUEafj0zKWlJqF+K9qhrplOD
-	OcpLGQWOHeIySRjE2c6oHBpdnrYOKiw=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1708597088;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
+	bh=af17vFA+XR0PLVSDztuSWa2TbDGEHKWUkQWkSMZboyo=;
+	b=3qgITIenivVJDEfsgXlDnVaO8ihsP7cjE+l+89ikE3tZsXtzMFglAoQJ4XTCsjc3Bn+Ak3
+	I/8JSIqEkduAsTMgsUQDaaruPiTeA5V6xtlQ4d1XYecW01D8h8/QAqTFV13Cy0I25+yf0M
+	970TfJOdkHbzecg/VNYX8B/uC8skUg7ZlA/Mbf2fDKhOUyI3fdJCO58AqAPqk6+0gE5/0i
+	93Ju3DPLyN+j5y8TnC4xokeoJcTNULX/au6ZP0/yHD569EsxCi1QVWLpwzWn+BCe2akj7o
+	4Md8R2oyWVZXbg4LYDPNsjSGge9hAlJdAM3i4NVV8ynyta5HChClSOnegMZ5gg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1708597115;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=WleimZ4dFaFbSJPgf7OWTIbGCgCw5AeIfnj/EQtUT3U=;
-	b=h/ZLcfRpSeorW1P/7KYUJ5ANfoT578QQ7N9Qf/Jmb00wCorNPHjaou24ul5F5QgJrmi4aQ
-	DA96QfH1Xo1B0LAg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1708597088; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=WleimZ4dFaFbSJPgf7OWTIbGCgCw5AeIfnj/EQtUT3U=;
-	b=ds1fvHgZag8C/JWIoPDuux7+XMfr3fzhGd4Tm93+TxTNOGXBLRghOy3Fei1sIU5LEjTYlW
-	QE8uq1uQcA3CN/hVbcUvygM2eHQI8XnlHPBAFjxK/gVW1lwUEafj0zKWlJqF+K9qhrplOD
-	OcpLGQWOHeIySRjE2c6oHBpdnrYOKiw=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1708597088;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=WleimZ4dFaFbSJPgf7OWTIbGCgCw5AeIfnj/EQtUT3U=;
-	b=h/ZLcfRpSeorW1P/7KYUJ5ANfoT578QQ7N9Qf/Jmb00wCorNPHjaou24ul5F5QgJrmi4aQ
-	DA96QfH1Xo1B0LAg==
-Received: from imap2.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap2.dmz-prg2.suse.org (Postfix) with ESMTPS id 6964113A6B;
-	Thu, 22 Feb 2024 10:18:08 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([10.150.64.162])
-	by imap2.dmz-prg2.suse.org with ESMTPSA
-	id rSivGWAf12VHLAAAn2gu4w
-	(envelope-from <jack@suse.cz>); Thu, 22 Feb 2024 10:18:08 +0000
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-	id D7071A0807; Thu, 22 Feb 2024 11:18:07 +0100 (CET)
-Date: Thu, 22 Feb 2024 11:18:07 +0100
-From: Jan Kara <jack@suse.cz>
-To: michael.opdenacker@bootlin.com
-Cc: jack@suse.com, linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] ext2: mark as deprecated
-Message-ID: <20240222101807.omdurbkvbf5vmqaj@quack3>
-References: <20240222095001.137660-1-michael.opdenacker@bootlin.com>
+	bh=af17vFA+XR0PLVSDztuSWa2TbDGEHKWUkQWkSMZboyo=;
+	b=TZ+jyXJpIAX6ztCb0kRdlAbld1WAkSq07gQbwTdprN//TSEisBt28LHuNkZ4E5gbQUaYA+
+	GcIlL2DSCe3dZIBw==
+To: Arnd Bergmann <arnd@kernel.org>, Jesse Brandeburg
+ <jesse.brandeburg@intel.com>, Tony Nguyen <anthony.l.nguyen@intel.com>
+Cc: Arnd Bergmann <arnd@arndb.de>, "David S. Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>, Andrew Lunn <andrew@lunn.ch>,
+ intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] igc: fix LEDS_CLASS dependency
+In-Reply-To: <20240222100324.453272-1-arnd@kernel.org>
+References: <20240222100324.453272-1-arnd@kernel.org>
+Date: Thu, 22 Feb 2024 11:18:33 +0100
+Message-ID: <87y1bcajk6.fsf@kurt.kurt.home>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240222095001.137660-1-michael.opdenacker@bootlin.com>
-Authentication-Results: smtp-out1.suse.de;
-	none
-X-Spamd-Result: default: False [-2.60 / 50.00];
-	 ARC_NA(0.00)[];
-	 RCVD_VIA_SMTP_AUTH(0.00)[];
-	 FROM_HAS_DN(0.00)[];
-	 RCPT_COUNT_THREE(0.00)[4];
-	 TO_MATCH_ENVRCPT_ALL(0.00)[];
-	 MIME_GOOD(-0.10)[text/plain];
-	 TO_DN_NONE(0.00)[];
-	 RCVD_COUNT_THREE(0.00)[3];
-	 DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email,bootlin.com:email];
-	 FUZZY_BLOCKED(0.00)[rspamd.com];
-	 FROM_EQ_ENVFROM(0.00)[];
-	 MIME_TRACE(0.00)[0:+];
-	 MID_RHS_NOT_FQDN(0.50)[];
-	 RCVD_TLS_ALL(0.00)[];
-	 BAYES_HAM(-3.00)[100.00%]
-X-Spam-Level: 
-X-Spam-Flag: NO
-X-Spam-Score: -2.60
+Content-Type: multipart/signed; boundary="=-=-=";
+	micalg=pgp-sha512; protocol="application/pgp-signature"
 
-On Thu 22-02-24 10:50:01, michael.opdenacker@bootlin.com wrote:
-> From: Michael Opdenacker <michael.opdenacker@bootlin.com>
-> 
-> Add a DEPRECATED keyword to the kernel parameter description,
-> to warn users that this filesystem doesn't support dates beyond 2038.
-> 
-> Signed-off-by: Michael Opdenacker <michael.opdenacker@bootlin.com>
+--=-=-=
+Content-Type: text/plain
 
-Thanks! I've modified the help text to:
+On Thu Feb 22 2024, Arnd Bergmann wrote:
+> From: Arnd Bergmann <arnd@arndb.de>
+>
+> When IGC is built-in but LEDS_CLASS is a loadable module, there is
+> a link failure:
+>
+> x86_64-linux-ld: drivers/net/ethernet/intel/igc/igc_leds.o: in function `igc_led_setup':
+> igc_leds.c:(.text+0x75c): undefined reference to `devm_led_classdev_register_ext'
+>
+> Add another dependency that prevents this combination.
+>
+> Fixes: ea578703b03d ("igc: Add support for LEDs on i225/i226")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 
-          Ext2 is a standard Linux file system for hard disks.
+Ops, sorry. I tried to build all different combinations, but obviously
+failed. Thanks for fixing this.
 
-          This filesystem driver is deprecated because it does not properly
-          support inode time stamps beyond 03:14:07 UTC on 19 January 2038.
+Reviewed-by: Kurt Kanzenbach <kurt@linutronix.de>
 
-          Ext2 users are advised to use ext4 driver to access their filesystem.
-          The driver is fully compatible, supports filesystems without journal
-          or extents, and also supports larger time stamps if the filesystem
-          is created with at least 256 byte inodes.
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
 
-          This code is kept as a simple reference for filesystem developers.
+-----BEGIN PGP SIGNATURE-----
 
-          If unsure, say N.
-
-and added it to my tree.
-
-								Honza
-
-> ---
->  fs/ext2/Kconfig | 22 ++++++++++++++++++----
->  1 file changed, 18 insertions(+), 4 deletions(-)
-> 
-> diff --git a/fs/ext2/Kconfig b/fs/ext2/Kconfig
-> index 74d98965902e..49e4660ae436 100644
-> --- a/fs/ext2/Kconfig
-> +++ b/fs/ext2/Kconfig
-> @@ -1,16 +1,30 @@
->  # SPDX-License-Identifier: GPL-2.0-only
->  config EXT2_FS
-> -	tristate "Second extended fs support"
-> +	tristate "Second extended fs support (DEPRECATED)"
->  	select BUFFER_HEAD
->  	select FS_IOMAP
->  	select LEGACY_DIRECT_IO
->  	help
->  	  Ext2 is a standard Linux file system for hard disks.
->  
-> -	  To compile this file system support as a module, choose M here: the
-> -	  module will be called ext2.
-> +	  It is deprecated because even if the filesystem is created with
-> +	  256 byte inodes (mkfs.ext2 -I 256), the filesystem driver will stick
-> +	  to 32 bit dates. Because of this, this filesystem does not support
-> +	  dates beyond 03:14:07 UTC on 19 January 2038.
->  
-> -	  If unsure, say Y.
-> +	  Ext2 users are advised to migrate their partitions to ext4:
-> +
-> +	  $ tune2fs -O extents,uninit_bg,dir_index,has_journal /dev/sda1
-> +	  $ e2fsck -pf /dev/sda1
-> +
-> +	  Ext4 is also a working solution for very small partitions
-> +	  as it can be created without a journal:
-> +
-> +	  $ mkfs.ext4 -O ^has_journal /dev/sda1
-> +
-> +	  This code is kept as a simple reference for filesystem developers.
-> +
-> +	  If unsure, say N.
->  
->  config EXT2_FS_XATTR
->  	bool "Ext2 extended attributes"
-> -- 
-> 2.34.1
-> 
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+iQJHBAEBCgAxFiEEvLm/ssjDfdPf21mSwZPR8qpGc4IFAmXXH3kTHGt1cnRAbGlu
+dXRyb25peC5kZQAKCRDBk9HyqkZzgpgsD/wL4ALVODXchFjqCM3M42Q/Cc903SsI
+C1OkwJfeXL9PHV3NRF/st5Xb9C4ijdRlvOqKe9uoGFv2Hj0vV4cXMXqeOzgHIHLp
+Ka0GPGR2yYJF2l1rzXepkLVKAKkUP/UDq97rOtV8q5Z4dLcvxLOCx+HPnKV3Eo+Q
+eumqHTx9BUmgrXq0ji/Z9t2AqvUoYOgJpw7BO/mQpyUCm55rwYKwJ0FCuD+7Fjfv
+wTW3RhkKOSSCK3AAIXporCITQr07ZxYaNEnOfPPI/xYoNgCkBIvjovPq4ghTPWm1
+Rja3kmLUOmMG0nq2mvJeUzJSuaJWL6hnngk3FaJH9QbDN5fIBdTbGY9Mr5VmoCqO
+JRYcdPym5xI57ahcCtZXK9YFtUpO8FWCUAVW7pXYL+owkNtBmo2odVrhgW2fozAi
+EhO3X9/5AUOjBb9WonmnOe5o3pWWT3vO/ez3f5GaWuDZ74n6u34XIC9enlrI4Z4Z
+zixs1ElctrE8fll+TNraf8SQ7o3V71HTadXKgjB0tszDqn/a8Q2jxxLfP9rMTwP6
+UDUrpgbHBlw2SjbINMDOkRvTbEX1wgYc2Gw7z5svwGwkeyWHDy9lHz82NGaPafxF
+qlannbnjglAp6LO+A6iy8KQEkeSN/8fZpJr2rW4yjTW+WmDkHMPxbNHpLcNeth28
+g38yKoe48d7Ldw==
+=yN6/
+-----END PGP SIGNATURE-----
+--=-=-=--
