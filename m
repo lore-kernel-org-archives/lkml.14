@@ -1,183 +1,98 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57EF5137913;
-	Thu, 22 Feb 2024 21:12:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E284B73F0C;
+	Thu, 22 Feb 2024 21:13:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708636372; cv=none; b=GBjVo2Koy4ryOWRDg0KYOXwOZf8QZkWxlXnJwjBmcGbjqT07kWlMlwunT+uxnclKUqzCHoBzt7g9F7q+JWcp2ATLOQR+lp1VSjyzhC86DUDMPxY8PUbD+QjVTIS9MDuZ9OVT1TEdHQl8uvaBoy1pdmRHjNMsRObGtgxxxsYKzcc=
+	t=1708636420; cv=none; b=iMqVjRxu3sAk4VZpAItMugIauz48TnfC909Eiz9frdVKuidw27RAEj2ZECrNCDULbWVOoDa9zBqQU9mlBjRxrMcJO9FsP9JU0xxpcXnuibTDvqB16e8t18Gi7sMWNomQX53b+8qx500G7G+Z1V/gRzEwCXesErsewdzar5LRb+g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708636372; c=relaxed/simple;
-	bh=id3eDHQukH2Z3zNAGOCXwZENmZCc62HfeeRfUEVnlQM=;
-	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=kVR+H34oFjgbv/LyR7eZZbxpSamwlV0iseQrBXaqpWeRs4CTyb8GuK1cF2hVxK5PTKWPvv7Njmy4aJ7nxHFF0oXmMtsEeCwmjyuOo4NdFeaa+qjwRUI0d01LYFcES2D/Swwhl84OPyNHD3FJMLpWSgvH6iL8vTcj69goeOA/Cnw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F27A0C43399;
-	Thu, 22 Feb 2024 21:12:51 +0000 (UTC)
-Received: from rostedt by gandalf with local (Exim 4.97)
-	(envelope-from <rostedt@goodmis.org>)
-	id 1rdGOx-00000006hrr-12BD;
-	Thu, 22 Feb 2024 16:14:43 -0500
-Message-ID: <20240222211443.106216915@goodmis.org>
-User-Agent: quilt/0.67
-Date: Thu, 22 Feb 2024 16:14:19 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- =?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= <ville.syrjala@linux.intel.com>,
- Rodrigo Vivi <rodrigo.vivi@intel.com>,
- Chuck Lever <chuck.lever@oracle.com>
-Subject: [PATCH v2 4/4] tracing: Use EVENT_NULL_STR macro instead of open coding "(null)"
-References: <20240222211415.255659509@goodmis.org>
+	s=arc-20240116; t=1708636420; c=relaxed/simple;
+	bh=Li5hH27ilVbcU3qbz8ZCBO4YJFaeFf6V6/fGppbkPrg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ScqtsL61s8OczKnONTqj5VArUOq2ZrcrOcVT+tov/6q8Th+ZQHTyA+vIP6FITpCGgsBZQ6mtC3pjrzOHSOHz6sjHETU+FcLW1hJLZ0WHC7pWfGl5xkIVyublCTN2xKiJsRHWwb9gEmf/VYQ/+fINZXHbjd5CCtaQ4svhWVCorxo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cRb8hjAy; arc=none smtp.client-ip=209.85.208.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cRb8hjAy"
+Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-5655c7dd3b1so581402a12.0;
+        Thu, 22 Feb 2024 13:13:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1708636417; x=1709241217; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=/5e9mSee9zp+N/Xd7G2seNRIz/9lLuVdPxZW9PfymvM=;
+        b=cRb8hjAygHsH6O0qa1PBErzKEFAfipjZmeLvZUTTDUntIk8QEfWxcwpwDIHmGH881D
+         9OlfAYnNAGn7JnS2mRVZzAcX5UOQpqMMdf62ofZiEpCa+kzpCqIP8UY23AunvIkIHNYV
+         StnG1+JVqUm11rKMVReULMWT7MEaMLDOLQGZwrDTWkmbCP5wW9ch2vgygpjWwmvWH86U
+         Q+BQdcQ/XNeFsQWCDnBh9O+E4tqqVcZQXy/ImsrNy/j8t4XZAWXp6Mo2Vhe59U8QOJb2
+         s3XSiZTGTiOK6yN9qlIwPDw+72w0YG+W10EBkbiUfUntimhh6xhdvNL3LpBnn1FvRkDR
+         zMTg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708636417; x=1709241217;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=/5e9mSee9zp+N/Xd7G2seNRIz/9lLuVdPxZW9PfymvM=;
+        b=agLm+w1iln+Lo+ONwq/vTjgiUJ6eFMFUVW8d0/1sIs0n53BT7Z8ANWdypQ6xwOoUWa
+         HDWxSXexBvJVpx4iraR6Ao9ihJp6rloYtnkQc9e6TmoGu3Euub4mAuc5pwT977qvXR+1
+         tx7obOzQiBzu7DkQx/zf4XsD/oAEWft86f22AD0sKSAtkOJgXPfwsiaHLNnKOzYqLyzm
+         Fdb3vXtRkbuJFu2ly6ZQNCrOSjt8Rg/2rRTcgw/pnl5ZiJ/+TkDlyHwmg0+QkhL4HmCz
+         beP+Moezd7JMHwRToYj7POyXlngnpXsSXSyuyDCa2ZHFtSit3+t2YDRP0Z05Ji6+mAo+
+         KZfA==
+X-Forwarded-Encrypted: i=1; AJvYcCULjD1aP1zWzMckRURDpROWWZF/05ssYS5h/DXBl+IPwcbh6VvOwzFS2V4lUyN0Rq3uPSClboSybkM3n2OfNZdcrW8wG8qE4o8c9y4Q
+X-Gm-Message-State: AOJu0Yyn7RWBGtOHXeg+r7Tw0VlwproBql2I10eJvgdbdy8Y4EajYS9J
+	IX2wkd+3pSTYiZcKtH6ZCFv0M76NtcAGKSbgKUWy/w0begsBeZUg
+X-Google-Smtp-Source: AGHT+IG0jh84FYHk+aZL0x57TxmRZpwDqGQQiksxzRLN1vbtmHOFCvwJbrTfxHU99FJpkCDCLDaaDQ==
+X-Received: by 2002:a17:906:3b0b:b0:a3e:7f80:ecac with SMTP id g11-20020a1709063b0b00b00a3e7f80ecacmr3213548ejf.12.1708636416937;
+        Thu, 22 Feb 2024 13:13:36 -0800 (PST)
+Received: from localhost.localdomain (86-58-6-171.dynamic.telemach.net. [86.58.6.171])
+        by smtp.gmail.com with ESMTPSA id xh8-20020a170906da8800b00a3d8a76a92esm6341468ejb.175.2024.02.22.13.13.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 22 Feb 2024 13:13:36 -0800 (PST)
+From: Jernej Skrabec <jernej.skrabec@gmail.com>
+To: robh+dt@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org,
+	conor+dt@kernel.org,
+	wens@csie.org,
+	jernej.skrabec@gmail.com,
+	samuel@sholland.org,
+	andre.przywara@arm.com
+Cc: devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-sunxi@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] arm64: dts: allwinner: h616: Add Orange Pi Zero 2W to Makefile
+Date: Thu, 22 Feb 2024 22:13:26 +0100
+Message-ID: <20240222211326.114955-1-jernej.skrabec@gmail.com>
+X-Mailer: git-send-email 2.43.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+Orange Pi Zero 2W dts file is not included in Makefile. Fix this.
 
-The TRACE_EVENT macros has some dependency if a __string() field is NULL,
-where it will save "(null)" as the string. This string is also used by
-__assign_str(). It's better to create a single macro instead of having
-something that will not be caught by the compiler if there is an
-unfortunate typo.
-
-Suggested-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+Fixes: c505ee1eae18 ("arm64: dts: allwinner: h616: add Orange Pi Zero 2W support")
+Signed-off-by: Jernej Skrabec <jernej.skrabec@gmail.com>
 ---
- include/linux/trace_events.h                 |  3 +++
- include/trace/events/sunrpc.h                | 12 ++++++------
- include/trace/stages/stage5_get_offsets.h    |  4 ++--
- include/trace/stages/stage6_event_callback.h |  8 ++++----
- 4 files changed, 15 insertions(+), 12 deletions(-)
+ arch/arm64/boot/dts/allwinner/Makefile | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/include/linux/trace_events.h b/include/linux/trace_events.h
-index d68ff9b1247f..b9d88aced7e1 100644
---- a/include/linux/trace_events.h
-+++ b/include/linux/trace_events.h
-@@ -17,6 +17,9 @@ struct dentry;
- struct bpf_prog;
- union bpf_attr;
- 
-+/* Used for event string fields when they are NULL */
-+#define EVENT_NULL_STR		"(null)"
-+
- const char *trace_print_flags_seq(struct trace_seq *p, const char *delim,
- 				  unsigned long flags,
- 				  const struct trace_print_flags *flag_array);
-diff --git a/include/trace/events/sunrpc.h b/include/trace/events/sunrpc.h
-index cdd3a45e6003..ce6a85b82afa 100644
---- a/include/trace/events/sunrpc.h
-+++ b/include/trace/events/sunrpc.h
-@@ -1327,18 +1327,18 @@ TRACE_EVENT(xs_stream_read_data,
- 		__field(ssize_t, err)
- 		__field(size_t, total)
- 		__string(addr, xprt ? xprt->address_strings[RPC_DISPLAY_ADDR] :
--				"(null)")
-+				EVENT_NULL_STR)
- 		__string(port, xprt ? xprt->address_strings[RPC_DISPLAY_PORT] :
--				"(null)")
-+				EVENT_NULL_STR)
- 	),
- 
- 	TP_fast_assign(
- 		__entry->err = err;
- 		__entry->total = total;
- 		__assign_str(addr, xprt ?
--			xprt->address_strings[RPC_DISPLAY_ADDR] : "(null)");
-+			xprt->address_strings[RPC_DISPLAY_ADDR] : EVENT_NULL_STR);
- 		__assign_str(port, xprt ?
--			xprt->address_strings[RPC_DISPLAY_PORT] : "(null)");
-+			xprt->address_strings[RPC_DISPLAY_PORT] : EVENT_NULL_STR);
- 	),
- 
- 	TP_printk("peer=[%s]:%s err=%zd total=%zu", __get_str(addr),
-@@ -1783,7 +1783,7 @@ TRACE_EVENT(svc_process,
- 		__string(service, name)
- 		__string(procedure, svc_proc_name(rqst))
- 		__string(addr, rqst->rq_xprt ?
--			 rqst->rq_xprt->xpt_remotebuf : "(null)")
-+			 rqst->rq_xprt->xpt_remotebuf : EVENT_NULL_STR)
- 	),
- 
- 	TP_fast_assign(
-@@ -1793,7 +1793,7 @@ TRACE_EVENT(svc_process,
- 		__assign_str(service, name);
- 		__assign_str(procedure, svc_proc_name(rqst));
- 		__assign_str(addr, rqst->rq_xprt ?
--			     rqst->rq_xprt->xpt_remotebuf : "(null)");
-+			     rqst->rq_xprt->xpt_remotebuf : EVENT_NULL_STR);
- 	),
- 
- 	TP_printk("addr=%s xid=0x%08x service=%s vers=%u proc=%s",
-diff --git a/include/trace/stages/stage5_get_offsets.h b/include/trace/stages/stage5_get_offsets.h
-index 20b801ed3fd4..e6b96608f452 100644
---- a/include/trace/stages/stage5_get_offsets.h
-+++ b/include/trace/stages/stage5_get_offsets.h
-@@ -47,7 +47,7 @@
- 
- #undef __string
- #define __string(item, src) __dynamic_array(char, item,			\
--		    strlen((const char *)(src) ? : "(null)") + 1)	\
-+		    strlen((const char *)(src) ? : EVENT_NULL_STR) + 1)	\
- 	__data_offsets->item##_ptr_ = src;
- 
- #undef __string_len
-@@ -70,7 +70,7 @@
- 
- #undef __rel_string
- #define __rel_string(item, src) __rel_dynamic_array(char, item,		\
--		    strlen((const char *)(src) ? : "(null)") + 1)	\
-+		    strlen((const char *)(src) ? : EVENT_NULL_STR) + 1)	\
- 	__data_offsets->item##_ptr_ = src;
- 
- #undef __rel_string_len
-diff --git a/include/trace/stages/stage6_event_callback.h b/include/trace/stages/stage6_event_callback.h
-index 38732855eadb..2bfd49713b42 100644
---- a/include/trace/stages/stage6_event_callback.h
-+++ b/include/trace/stages/stage6_event_callback.h
-@@ -32,14 +32,14 @@
- 
- #undef __assign_str
- #define __assign_str(dst, src)						\
--	memcpy(__get_str(dst), __data_offsets.dst##_ptr_ ? : "(null)",	\
-+	memcpy(__get_str(dst), __data_offsets.dst##_ptr_ ? : EVENT_NULL_STR, \
- 	       __get_dynamic_array_len(dst))
- 
- #undef __assign_str_len
- #define __assign_str_len(dst, src, len)					\
- 	do {								\
- 		memcpy(__get_str(dst),					\
--		       __data_offsets.dst##_ptr_ ? : "(null)", len);	\
-+		       __data_offsets.dst##_ptr_ ? : EVENT_NULL_STR, len); \
- 		__get_str(dst)[len] = '\0';				\
- 	} while(0)
- 
-@@ -94,14 +94,14 @@
- 
- #undef __assign_rel_str
- #define __assign_rel_str(dst, src)					\
--	memcpy(__get_rel_str(dst), __data_offsets.dst##_ptr_ ? : "(null)", \
-+	memcpy(__get_rel_str(dst), __data_offsets.dst##_ptr_ ? : EVENT_NULL_STR, \
- 	       __get_rel_dynamic_array_len(dst))
- 
- #undef __assign_rel_str_len
- #define __assign_rel_str_len(dst, src, len)				\
- 	do {								\
- 		memcpy(__get_rel_str(dst),				\
--		       __data_offsets.dst##_ptr_ ? : "(null)", len);	\
-+		       __data_offsets.dst##_ptr_ ? : EVENT_NULL_STR, len); \
- 		__get_rel_str(dst)[len] = '\0';				\
- 	} while (0)
- 
+diff --git a/arch/arm64/boot/dts/allwinner/Makefile b/arch/arm64/boot/dts/allwinner/Makefile
+index 91d505b385de..1f1f8d865d0e 100644
+--- a/arch/arm64/boot/dts/allwinner/Makefile
++++ b/arch/arm64/boot/dts/allwinner/Makefile
+@@ -42,5 +42,6 @@ dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h616-bigtreetech-cb1-manta.dtb
+ dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h616-bigtreetech-pi.dtb
+ dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h616-orangepi-zero2.dtb
+ dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h616-x96-mate.dtb
++dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h618-orangepi-zero2w.dtb
+ dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h618-orangepi-zero3.dtb
+ dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h618-transpeed-8k618-t.dtb
 -- 
-2.43.0
-
+2.43.2
 
