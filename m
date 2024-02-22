@@ -1,103 +1,92 @@
-Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1999610A05;
-	Thu, 22 Feb 2024 21:01:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E172A10A05
+	for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 21:04:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708635678; cv=none; b=s2tNUVPkN/y8ZAuSjS/WzrtBvMflflj6j+zdSBS0UrHCf7tZ4iZp1aIQbF8UpNnciM4kgQPVrN9raHqtHSQcUDvxdPlN3b5XfVOcSv9BIRQXsp9vybf8f2UhLnBmZFsTI1RvCfYvsh7M9tI2T1CMu+N5PHJVLDIyKsLDFy/cLnU=
+	t=1708635896; cv=none; b=Y9NZjXjCcufen8gKtR/WSopab1ttwALrLSFDlDNdi2Dcw13CoK/eqnSLCCBf7CnjqzqVZqsyzdcpVYwLGfnLv64f9mnsFES1Igw5/AIP5rIhaQ2Vf+teNaH0fpoYMXNyAok44HMLVmA881hJ6K649L6lM7LS6sOcYYpagAWUIZc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708635678; c=relaxed/simple;
-	bh=0o7JcANzu77v1OOVxgTmP0KHe9QWfy1TFeyR4mBFW5c=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Content-Type; b=GaL2e1DLMxk6WTpC55jwzYR+ajfv5NDZYJgnKqUun2Lsk8U/dcJmLbvf75xoJ1GZQrDW/2liSRMaYns3UKrS9zim1evac+qoRwC0JeaG1wRY8C5CF77wLnunfeRjJtlcSH0QtvIGWhbiVXkvHlJvdmyBM/sDEOdprfw4/Lz33rA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IB7ZJ0Nu; arc=none smtp.client-ip=209.85.208.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1708635896; c=relaxed/simple;
+	bh=ran8Je2iMoBhGTmTE0156DaLQN4qGsGHL9nwmBGcRnk=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=rh/MbeqgiQCpiH0TOn2RgrJ222/Qz9fnha+WMFYUaaECEG61S1obSXDxLDHyLEVcCX5N/XYmU4aEAVSVA48zZuasggMWZCgwXtp3mPTykcKtM7kW+guOR7rrjjph4+9SdV4DFbK56IBYf0E/QgPGJLdW7ILxBzMBwkKV2xVAuoU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=kj3niGRs; arc=none smtp.client-ip=209.85.128.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IB7ZJ0Nu"
-Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-2d208be133bso3067401fa.2;
-        Thu, 22 Feb 2024 13:01:16 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="kj3niGRs"
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-4128cfb6b6fso1490275e9.0
+        for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 13:04:54 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1708635675; x=1709240475; darn=vger.kernel.org;
-        h=content-transfer-encoding:to:subject:from:mime-version:date
-         :message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=6oH+qo1R8KP/GaMF1B2QMIj0swdnvO6mC2aR2+NNiDk=;
-        b=IB7ZJ0NuvrZIwIP8UKOIvLXrt+7F9rVpWkAYCjV0ITIkUp/bSSA+ARAs3ARgrPhslY
-         AAQKv700DngM5EKUP97x/2HitgX6QRaPlLhd2KmGTM4IRvfcSlkbSNyDH9AueatxFkZ4
-         cf+lo6mfcYDrH5yEz4MUkGiDlrcHqRV12RopSy0898SPC3w3HULfNc4G2uYs6EKGxwF/
-         FqQVMft+sZvjmpvhiNgQ7x2OWm2W1JtapXKWZPAhgyg1XNQ+QG85fiSX1Okrg9/FCrkM
-         9NxhiZIrCvgDGRqcBdC4WulWuTbJEmEcR+nxb6Jru2LK4194O3QgLHPT5jKnSEr/+Rg9
-         Ui9Q==
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1708635893; x=1709240693; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=kOQLFsiqb5qCymG8P6e7uSuK+7t+6bDXL1THgZ9mI/w=;
+        b=kj3niGRspx0IkX4hEi5tacLhVBW/Um2QFD8raxBUe6RPhJPG4EVfyqXCC9fYlP/oQF
+         4kXS5E4Tffic91bZzDeavuuMYLgMIUBOtPVTVG6Y0/aqno6Gghock3YDqSYtM8lU36Ht
+         ETkTJQKOyrpM+8G2BlItvQJ2Sen8n3EY5JJtSe99+KaFp2nkKMRSKI6qskMj3AIoICRq
+         BKxRz75l9u80ULhVV1KurTMjMK9QkRXP9X7wHlO5+ROFj38pMDJCa53R7LscX3osYC4U
+         xx6Av9E/U9njf8OGumgr+6wb9u72g1FVYkpjuKnt71acRHV8pXyZVq9X/m6Jmk+KgAvX
+         CqAA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708635675; x=1709240475;
-        h=content-transfer-encoding:to:subject:from:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=1e100.net; s=20230601; t=1708635893; x=1709240693;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=6oH+qo1R8KP/GaMF1B2QMIj0swdnvO6mC2aR2+NNiDk=;
-        b=Aj1exefCfL1aI1wai5+6s19BxzgPjcFSmp/l+JoNNWw+XtfYXdg+2m8iGoi9PJSl7x
-         y2dM2gq1YKQmn2k2DBJTleIMnGoN6SwzuF8dsKLw1Qm+2/e3TGhOySBWERzLhaN6dFHA
-         a+FPVcO9Lrwg59LHBcOnYtL7ku/cdAdMeuQV+rDlECduhde/HzSUeklx90ZkgBRacza5
-         uZTGT1owSnzQ4JT5059jtH3j5tQf9vTu/DUy3wt7stB4R/og7Hr6YUMAq9eUUbRQlPpZ
-         Trd9VQpQOC7gjW5X+laIjB0RCuydTj2TuYVkV1rhsNU5d5Y51ZDo9ijSGRS5x2rrduFx
-         Jl3Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUkrU8UIC8tFBTpcn3z3/J7codUBaElK4q8ASf59nsJCRw0j3DvHc0dpfJR5P52zntgalNNQhWf2uAKfLWmE0YQ52CC1HBTM8rXEFDbS4trzILZt/LPg/HCup6DuuFu5v+6nxwxfp1d8sUtTTZxODdJ+bUaUXAE6AbX5u4ZnyuQslxYZ549
-X-Gm-Message-State: AOJu0YxothT+2V/fyNOMADbCmQ23Vc9IGd4oKpAoaumr1lgDlyHI32NW
-	iU7xhfsq/q32mVL41CehoMEQX0Vz98zOercsEFeC9B89ECWyATbI
-X-Google-Smtp-Source: AGHT+IHNG0dtgQPgn+V0ONyr9LkeNb/q/Q5pPRueOlg01yJfoaZB2X1nS/B081r9HZKUPzSzGiinQA==
-X-Received: by 2002:a2e:9cd2:0:b0:2d2:3b9e:dcff with SMTP id g18-20020a2e9cd2000000b002d23b9edcffmr92206ljj.46.1708635675054;
-        Thu, 22 Feb 2024 13:01:15 -0800 (PST)
-Received: from debian ([146.70.204.204])
-        by smtp.gmail.com with ESMTPSA id t11-20020adff60b000000b0033d01fe1f04sm198729wrp.55.2024.02.22.13.01.07
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 22 Feb 2024 13:01:14 -0800 (PST)
-Message-ID: <e1d22505-c5f8-4c02-a997-64248480338b@gmail.com>
-Date: Thu, 22 Feb 2024 22:00:42 +0100
+        bh=kOQLFsiqb5qCymG8P6e7uSuK+7t+6bDXL1THgZ9mI/w=;
+        b=Ieudb/qfWpAYdLjfi6UH0x+WYvv2YGY4UtNSrnIB26vB8iG35rYxauohKQuNb4Botd
+         MAP4z8dhzFQRdqVd8PUtani32keziut2nMa5XndL/Vc3KIPkAScGNbLFr13hR/7Y17Xq
+         UWFEbwFq/+q7SsAXfr2lxnTRut7sw2f1zrHcQLrf4GDX+7J2ja7eSGWnUEjeBrDs1DCv
+         4kPyZ9XbNVKRxEgD4qET4iN4iJTcMnTwyY51kX5oUKdxjfEZyK23GhbGpSGjRgHTAyGa
+         zx83Bens2c5NnWiPqC2TNs3O/k0+7txYv1PsJQY0wpRFaswFwl0dlDPYGDoZhhUQ8O90
+         R0+Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXToqtu/u/AhSaQYy9QZsOUnHeUrA1cA0Nj43zjVVbeMtT2ap7vfbxRpwybPKwXGlmOMPJMEEqBNdlun8OZSeZ0P1b8nW1N2eJ/ouzG
+X-Gm-Message-State: AOJu0YyRywgCUfv0nnMzwrMmebTm0yMuveyW4P/KGXKTAc8w7Dq+9AxI
+	M8w5KVzg3LsrxjOwiEIHbPIjzvhJAGSPcMNS2u5tEkv+3R2DU6ugqQ2KSQIsuTg=
+X-Google-Smtp-Source: AGHT+IGcEIy0aRkgnqgPKoNYu2q1ZmfqggYnA/rqAOy/ngPCFdYHUZXsRoDVfrh6yOEMsPHbIRNvYg==
+X-Received: by 2002:a05:600c:4f11:b0:412:681a:1eaa with SMTP id l17-20020a05600c4f1100b00412681a1eaamr7886492wmq.26.1708635893035;
+        Thu, 22 Feb 2024 13:04:53 -0800 (PST)
+Received: from brgl-uxlite.home ([2a01:cb1d:334:ac00:465e:5c78:c1d5:890b])
+        by smtp.gmail.com with ESMTPSA id jv15-20020a05600c570f00b004125f34fd7csm7328136wmb.31.2024.02.22.13.04.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 22 Feb 2024 13:04:52 -0800 (PST)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+To: Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: [PATCH] arm64: gitignore: ignore relacheck
+Date: Thu, 22 Feb 2024 22:04:41 +0100
+Message-Id: <20240222210441.33142-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.40.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Richard Gobert <richardbgobert@gmail.com>
-Subject: [PATCH net-next 0/3] net: gro: encapsulation bug fix and flush checks
- improvements
-To: davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
- pabeni@redhat.com, dsahern@kernel.org, shuah@kernel.org,
- liujian56@huawei.com, horms@kernel.org, aleksander.lobakin@intel.com,
- richardbgobert@gmail.com, linyunsheng@huawei.com, therbert@google.com,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-kselftest@vger.kernel.org
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-This series fixes a bug in the complete phase of UDP in GRO, in which
-socket lookup fails due to using network_header when parsing encapsulated
-packets. The fix is to keep track of both outer and inner offsets.
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-The last commit leverages the first commit to remove some state from
-napi_gro_cb, and stateful code in {ipv6,inet}_gro_receive which may be
-unnecessarily complicated due to encapsulation support in GRO.
+Add the generated executable for relacheck to the list of ignored files.
 
-In addition, udpgro_fwd selftest is adjusted to include the socket lookup
-case for vxlan. This selftest will test its supposed functionality once
-local bind support is merged (https://lore.kernel.org/netdev/df300a49-7811-4126-a56a-a77100c8841b@gmail.com/).
+Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+---
+ arch/arm64/kernel/pi/.gitignore | 3 +++
+ 1 file changed, 3 insertions(+)
+ create mode 100644 arch/arm64/kernel/pi/.gitignore
 
-Richard Gobert (3):
-  net: gro: set {inner_,}network_header in receive phase
-  selftests/net: add local address bind in vxlan selftest
-  net: gro: move L3 flush checks to tcp_gro_receive
-
- include/net/gro.h                         | 23 ++++---
- net/8021q/vlan_core.c                     |  3 +
- net/core/gro.c                            |  3 -
- net/ipv4/af_inet.c                        | 44 ++------------
- net/ipv4/tcp_offload.c                    | 73 ++++++++++++++++++-----
- net/ipv4/udp_offload.c                    |  2 +-
- net/ipv6/ip6_offload.c                    | 22 ++-----
- net/ipv6/tcpv6_offload.c                  |  2 +-
- net/ipv6/udp_offload.c                    |  2 +-
- tools/testing/selftests/net/udpgro_fwd.sh | 10 +++-
- 10 files changed, 97 insertions(+), 87 deletions(-)
-
+diff --git a/arch/arm64/kernel/pi/.gitignore b/arch/arm64/kernel/pi/.gitignore
+new file mode 100644
+index 000000000000..efb29b663e85
+--- /dev/null
++++ b/arch/arm64/kernel/pi/.gitignore
+@@ -0,0 +1,3 @@
++# SPDX-License-Identifier: GPL-2.0-only
++
++relacheck
 -- 
-2.36.1
+2.40.1
+
