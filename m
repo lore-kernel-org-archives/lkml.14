@@ -1,104 +1,65 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FBDC153BF3;
-	Thu, 22 Feb 2024 17:11:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B0CB14C5AB;
+	Thu, 22 Feb 2024 17:11:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708621872; cv=none; b=ZwuYWLufeoDbx9zHuOA81cp1ZDEQEz+EIIQlXT7AfIuVRsPuKtRfrFARpUqk0EyBvYN724/tZ/pGk/T8w6kMN+zJCfUTeilGSQpKfMCBNxfveHX7E0Xb6MNhwyOq3NVubhpyeGZZD42gpLGfy64KbfbFSdHqMyF4ud9P24rh+MI=
+	t=1708621893; cv=none; b=eUtb/PRgyzyujKbh7LxHQssre3FiPnmHvIdYxRhVqsDMrR7J6j7B9AEsboESDeHggrtAEUQ7v/wpdZxqpMsXibf/t6SCmTrDdJWHFG/Z8/y4+D+XqOxbR32IsqXb7Kt5WeWbwtlHxchtHZqMilbpapYCbmIg/gtHiNyLdvICf1E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708621872; c=relaxed/simple;
-	bh=fhfHpIMqaM4fbG/FR0K685Bu9Yn3xqdYqITsZ44AMnk=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=jwQ9oAblEJO0Gh5U3pJLkwk7PiqijoLlsTXWGofeIJ8SDUTl/IGMu6T+xSLs6Lygg1XdFa+eN1m/KWY+1bULxsT+hbd+M2xar46Wrio0kwf22m4ajLKpDA1UL/c8f903zd4XLTGZ00zsoLefJuFX7JPi2Isco7QhM+Q1OXMP4xE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=M4jtHvnB; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=3Q+QcESu; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1708621893; c=relaxed/simple;
+	bh=K0i9HFk6CFL2zhmvdOVUHC2QYPmcZLijnnv2ogVxSGU=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=g7K0/b3Tz54m/CA/k9aOLosnEDOsgpnwRRRkb4e1BYekWxVL+RvKll0qwlWMzV376mtvzZ3BdXgWlGemwSAXMx9SwAqeD/sjEJYtg9AtLP0pEacE5ikY+6rDlF7FQU+TNdYPHVQ/ts5steakxkc9oRj9EwG76V76tGelYWx1CTE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=XajQmD34; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="M4jtHvnB";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="3Q+QcESu"
-Date: Thu, 22 Feb 2024 17:11:08 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1708621869;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=n3l89YakFMzkkqtBwvxDaMLSMPwWErlyVtJW1ihuNxA=;
-	b=M4jtHvnBj4ofiBUZoxJJtY/ywqurJzaeVdOWPJy7I7zZ8GWENi3ULhbDC1dLi4k89NRDrw
-	pcqFTyWivV5tNRf3dWfCKYY1ItgoPECzqVKIlNRqzFP4F37vA9Q4cd0cDpl2yyfQeG3auJ
-	KbQFntU/xT/5m/YmRdKW+YSqf5hFAp0UDkGej1Bma62bBHgDMEUjm3M8vrJpCTbn1v/+JK
-	dnlBfWBLo2aPLiNsB20+7WRtgZSBfUjsYuulWnSh/FO6r1veQRS529qGABQdpc1TyO5QH1
-	vpChzsQ/0gJ2i2rPkS++ZXiGc7cDA1hzWzveXB1pOV2oUJOqK3LEyvCwy/jyAw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1708621869;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=n3l89YakFMzkkqtBwvxDaMLSMPwWErlyVtJW1ihuNxA=;
-	b=3Q+QcESuYALkzxomIy5YppKh5ITCusauRauQ7Ttx6VEAsv2yi8zaiOxHiwUOJLJUgz7wLq
-	Glbtcae63Cv7xGDw==
-From: "tip-bot2 for Huqiang Qin" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject: [tip: irq/core] dt-bindings: interrupt-controller: Add support for
- Amlogic-T7 SoCs
-Cc: Huqiang Qin <huqiang.qin@amlogic.com>,
- Thomas Gleixner <tglx@linutronix.de>,
- Conor Dooley <conor.dooley@microchip.com>, x86@kernel.org,
- linux-kernel@vger.kernel.org, maz@kernel.org
-In-Reply-To: <20240222074640.1866284-2-huqiang.qin@amlogic.com>
-References: <20240222074640.1866284-2-huqiang.qin@amlogic.com>
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="XajQmD34"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 55DE8C43390;
+	Thu, 22 Feb 2024 17:11:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+	s=korg; t=1708621892;
+	bh=K0i9HFk6CFL2zhmvdOVUHC2QYPmcZLijnnv2ogVxSGU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=XajQmD34iYclajNLoZXOYbRQ47eSPFcGaq3DzCrTm75rom0tlAoIp/66pt7zsCKuo
+	 G0Jf9nSUOxIfMRbpp1wuBhTwWsGGuSIUVpKCPO+Oe/7LJ2CiXBoi2pF5vHa5uX/9QE
+	 Vqp+R439ZIEJO20xyE+dntgxNdBNx+l5EHayAcWg=
+Date: Thu, 22 Feb 2024 09:11:31 -0800
+From: Andrew Morton <akpm@linux-foundation.org>
+To: Stephen Rothwell <sfr@canb.auug.org.au>
+Cc: Kees Cook <keescook@chromium.org>, Linux Kernel Mailing List
+ <linux-kernel@vger.kernel.org>, Linux Next Mailing List
+ <linux-next@vger.kernel.org>
+Subject: Re: linux-next: manual merge of the kspp tree with the mm tree
+Message-Id: <20240222091131.5a85973927496f49af32123a@linux-foundation.org>
+In-Reply-To: <20240222164112.20c5646e@canb.auug.org.au>
+References: <20240222164112.20c5646e@canb.auug.org.au>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Message-ID: <170862186891.398.17078043919272703898.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-The following commit has been merged into the irq/core branch of tip:
+On Thu, 22 Feb 2024 16:41:12 +1100 Stephen Rothwell <sfr@canb.auug.org.au> wrote:
 
-Commit-ID:     4a0705bb83d6edc7207e94d8d07ba5e5c27814b8
-Gitweb:        https://git.kernel.org/tip/4a0705bb83d6edc7207e94d8d07ba5e5c27814b8
-Author:        Huqiang Qin <huqiang.qin@amlogic.com>
-AuthorDate:    Thu, 22 Feb 2024 15:46:37 +08:00
-Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Thu, 22 Feb 2024 18:04:42 +01:00
+> Hi all,
+> 
+> Today's linux-next merge of the kspp tree got conflicts in:
+> 
+>   scripts/Makefile.lib
+>   scripts/Makefile.ubsan
+> 
+> between commit:
+> 
+>   1a75e5856b3b ("ubsan: reintroduce signed overflow sanitizer")
+> 
+> from the mm-unstable branch of the mm tree and commit:
+> 
+>   557f8c582a9b ("ubsan: Reintroduce signed overflow sanitizer")
+> 
+> from the kspp tree.
 
-dt-bindings: interrupt-controller: Add support for Amlogic-T7 SoCs
-
-Update dt-binding document for GPIO interrupt controller
-of Amlogic-T7 SoCs.
-
-Signed-off-by: Huqiang Qin <huqiang.qin@amlogic.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Acked-by: Conor Dooley <conor.dooley@microchip.com>
-Link: https://lore.kernel.org/r/20240222074640.1866284-2-huqiang.qin@amlogic.com
-
----
- Documentation/devicetree/bindings/interrupt-controller/amlogic,meson-gpio-intc.yaml | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/amlogic,meson-gpio-intc.yaml b/Documentation/devicetree/bindings/interrupt-controller/amlogic,meson-gpio-intc.yaml
-index 3d06db9..a937447 100644
---- a/Documentation/devicetree/bindings/interrupt-controller/amlogic,meson-gpio-intc.yaml
-+++ b/Documentation/devicetree/bindings/interrupt-controller/amlogic,meson-gpio-intc.yaml
-@@ -36,6 +36,7 @@ properties:
-               - amlogic,meson-a1-gpio-intc
-               - amlogic,meson-s4-gpio-intc
-               - amlogic,c3-gpio-intc
-+              - amlogic,t7-gpio-intc
-           - const: amlogic,meson-gpio-intc
- 
-   reg:
+Thanks, I'll drop the mm.git copy.
