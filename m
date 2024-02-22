@@ -1,204 +1,255 @@
-Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74E4C157E9E;
-	Thu, 22 Feb 2024 18:14:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CF001586E9;
+	Thu, 22 Feb 2024 18:14:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708625668; cv=none; b=giQqpQrNUmpjdXq2z9vGD30GV7kJRNpwMqu+yyMniPFe/0zORJYjvpN6RjBEdtA7ggr9B4VfBCUdhuW99fpoSVMb3R+NS0kcNMdnb7ChlDs3SH26KgRLljPp0N74wToLuYsKSqF3JKNRYgPQeGkJiCkydfxB8M17hcHWYEwu9p4=
+	t=1708625668; cv=none; b=uJe2sDfWBAf53c9vC2p8AKbZ2SWeyQYibWtSDw/CvchwZ0IxNSw0u7AsC62OJSfwtuWnh08U0Q10rBmxsCzta1//75DQtpmkBfpMum0ChNnF9X0mTkbX4fALrMoR9n94MtAbD2rRmZQR/T899b7fuF2+9JZkoxj3Q0aisxSGvic=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1708625668; c=relaxed/simple;
-	bh=YzCbWthFnZoVbBTFuXK4fwe/Z//BvPsDRf2GmSlj8Ag=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=oUBT2kiuxP3jRFbYL9dpw2xXX63KF0yZzi/R9bGzBTDe7HCGh7ntQH4X9O8zThazTp9uuXLclbwZZDyCTA+RV4TCPq2PuzG5NOeNyP/rthie2IzAMIaRSNpwyL3xOIK9hjPTpMcxQw0+h8raN7/Yzrs6A8n4QX9d3dkMhxFbYYM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VJRcBuLb; arc=none smtp.client-ip=209.85.167.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	bh=iCFqgIxxRImjDlsxVjdWeSBRugMxQMzgQkdwDnPL2HA=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=YkxjABK4WiFpgizceHXHGwe02e6tPwFZ7+4WbM0Ogel75wGWxiwJCizrBr6dxw0c2hrsHO7sNPse0Pr6HrST5CaVxo6F66FdSIitq2X2Rz3Drr2awn7GPcBUpZ1wogxH02jUd84XotWGr6AKWpadyz9umVUNPuC17BT9mo8Fk7o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PHRLaUE1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VJRcBuLb"
-Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-51294b40a52so82633e87.0;
-        Thu, 22 Feb 2024 10:14:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1708625664; x=1709230464; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=x4DYckUBnyYVrA7U82dE/dSUDjWpjIV6W2v0tQMwU8w=;
-        b=VJRcBuLbC1fm+9F1FAGEPr9128tyXq/dh9NxBT+YTw0JvLcwZ3r/Hcc9j63Rwts0Ku
-         P0xqv+lZsg2ub79sCS+UW53ImfknduVuZW9TdaRtLNexHaecrsvZtpt/jMvPSiZDzE/t
-         bneBOGF5OcxRGESzReYaW8qo7Uf6RtWEUbYbQtJuySrfVLLPzUK6d0DQ91DWfM/Z+wn+
-         4S8S+ipH0liAA94QlkQjtSAGEfWyVb6VLCuzFL3P+1fC7+Q65Al338C8krfgChieLqYr
-         EZLIV+0YjkqULqN+FXuQ8tHx1TBUHxrbza67+sj6r7LIYkciNqMCNOkWRX+1DvL8ijt+
-         TdRQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708625664; x=1709230464;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=x4DYckUBnyYVrA7U82dE/dSUDjWpjIV6W2v0tQMwU8w=;
-        b=sz+5S4KXiRkhrSKLgGBhjFBmgoBI08uVVbCyQoyPkUU+OXr3uuCRTR4SDpRqBlrYG4
-         yXNXEkXE3bDGjZ+LFzer1CMoAN6JPm22VZSi0S3TAMbgkehmY5TsR295dXuVmEtF0SZx
-         J0ugqlz4bwa9ZFX7ek53oCt4pVYMHtwM9K6rGd5XELADtq+kHtJgMfzwe2uBTRsbq2db
-         fwYwNt9dddCgCaZZQ9y4ngfxnNEXmB1ThF5I3lwBYTkjnI3dv8SxnOXxiB6kaAbBDBrN
-         0Q583QDeS+gi8NXEo5kQqwrNI1o2hGj6f57b4oaGX4jQz23Oq7TKmZUV0ef0G6iHfv8r
-         8+GA==
-X-Forwarded-Encrypted: i=1; AJvYcCWgAJOpfE4WrLnCDr0pqRI0gXdy8CUhfutQrbeIFR7EqUJ1MtrhEdrfNlDrTZIITDQrwawrvXafqKfC2mZ0tiGYSM6srv+4jjI43RZ/z5t0jQYDqfVwLdTfC4N56BYqmpSruVuskCXExg==
-X-Gm-Message-State: AOJu0YwXyF/b4C5gOT4vIc8It4M0urFy4MBEsGFaPscT3IIGxtsLDi09
-	Yo/tNsu5eBS18YvcSk/D9WUXC3rp9BQaPoPJz4USkvjr5qmQF4Vk
-X-Google-Smtp-Source: AGHT+IGJ/nsuVLRKc8FXj1WcjDvwWPQJBicyowF64SttTvyGSeLfyGnnezM8knKtZRAhXGeFbwZldw==
-X-Received: by 2002:ac2:4ac2:0:b0:512:cd90:221d with SMTP id m2-20020ac24ac2000000b00512cd90221dmr1228096lfp.33.1708625664597;
-        Thu, 22 Feb 2024 10:14:24 -0800 (PST)
-Received: from localhost ([178.176.56.174])
-        by smtp.gmail.com with ESMTPSA id m15-20020a19520f000000b00512c8ef474asm1042885lfb.270.2024.02.22.10.14.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 22 Feb 2024 10:14:24 -0800 (PST)
-From: Serge Semin <fancer.lancer@gmail.com>
-To: Michal Simek <michal.simek@amd.com>,
-	Alexander Stein <alexander.stein@ew.tq-group.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Tony Luck <tony.luck@intel.com>,
-	James Morse <james.morse@arm.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Robert Richter <rric@kernel.org>,
-	Manish Narani <manish.narani@xilinx.com>
-Cc: Serge Semin <fancer.lancer@gmail.com>,
-	Punnaiah Choudary Kalluri <punnaiah.choudary.kalluri@xilinx.com>,
-	Dinh Nguyen <dinguyen@kernel.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-edac@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Borislav Petkov <bp@suse.de>
-Subject: [PATCH v5 02/20] EDAC/synopsys: Fix generic device type detection procedure
-Date: Thu, 22 Feb 2024 21:12:47 +0300
-Message-ID: <20240222181324.28242-3-fancer.lancer@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240222181324.28242-1-fancer.lancer@gmail.com>
-References: <20240222181324.28242-1-fancer.lancer@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PHRLaUE1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4A420C43390;
+	Thu, 22 Feb 2024 18:14:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1708625667;
+	bh=iCFqgIxxRImjDlsxVjdWeSBRugMxQMzgQkdwDnPL2HA=;
+	h=From:Subject:Date:To:Cc:From;
+	b=PHRLaUE14Z/Q24wWaSLOhfMPg3UolThwsODM8EjLO0UvdYv5BvsEySyWxFoPdL/Qe
+	 NBJYBbfZOHfRw9nPKMYmRxUhCi9VoHeZDT11KLeLiPu9jSS3BYXfdA7FWspl2fNTxH
+	 x4uh9YMeBsQJeVarI3QnEUOydSJWrLkjtomPNr4PUtY24YALE2BfshEOwuDX/sFSjR
+	 xI1Ga8xqq5sUevkL03ZtA8D3MDqb6LirFPlo7NU7hMJgaZSh/kBGjIli/Cqs/ivskK
+	 uA1GZ+B8fvoIILrxdhe4lboy+cvfh+x+e3hwg/PJwwo2IlNwxCRkEcYOl3FcwrLkkD
+	 87vGqYCuZ2A+g==
+From: Maxime Ripard <mripard@kernel.org>
+Subject: [PATCH v7 00/36] drm/connector: Create HDMI Connector
+ infrastructure
+Date: Thu, 22 Feb 2024 19:13:46 +0100
+Message-Id: <20240222-kms-hdmi-connector-state-v7-0-8f4af575fce2@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIANuO12UC/43PTWrEMAwF4KsMXtdFlvzbVe9RusjYyoyZTgJxC
+ JQhd68otKEEQlfiId4n9FCNp8pNvZweauKltjoOEsLTSeVrN1xY1yJZISBBNFbf7k1fy73qPA4
+ D53mcdJu7mbU3PsTAPiQMSurX2mT5+S0vRsbbP5DFaNBgIzhbevLOvt54GvjjeZwu6l3UBTcpI
+ RxIKJIJibB0pZRQdhL9SgbIHEgkEmE8Q9+xpS7sJLtJBuOBZEXKwQMaFwk87yS3SQjhQHIieUe
+ RTSqe7P47/yNZuYYHkhept+dccgqJff9HWtf1C+Ghv90jAgAA
+To: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
+ Daniel Vetter <daniel@ffwll.ch>, Jonathan Corbet <corbet@lwn.net>, 
+ Sandy Huang <hjc@rock-chips.com>, 
+ =?utf-8?q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, 
+ Chen-Yu Tsai <wens@csie.org>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
+ Samuel Holland <samuel@sholland.org>
+Cc: Hans Verkuil <hverkuil@xs4all.nl>, 
+ Sebastian Wick <sebastian.wick@redhat.com>, 
+ =?utf-8?q?Ville_Syrj=C3=A4l=C3=A4?= <ville.syrjala@linux.intel.com>, 
+ dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org, 
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-media@vger.kernel.org, linux-rockchip@lists.infradead.org, 
+ linux-sunxi@lists.linux.dev, Maxime Ripard <mripard@kernel.org>, 
+ Dave Stevenson <dave.stevenson@raspberrypi.com>, 
+ Sui Jingfeng <sui.jingfeng@linux.dev>
+X-Mailer: b4 0.12.3
+X-Developer-Signature: v=1; a=openpgp-sha256; l=8782; i=mripard@kernel.org;
+ h=from:subject:message-id; bh=iCFqgIxxRImjDlsxVjdWeSBRugMxQMzgQkdwDnPL2HA=;
+ b=owGbwMvMwCX2+D1vfrpE4FHG02pJDKnX+15Ycnp7TPOxXvA0N/e+RVCvXRrPh/gfus7XymqaE
+ mr/h3Z2lLIwiHExyIopssQImy+JOzXrdScb3zyYOaxMIEMYuDgFYCJ/lRgZ3rmGeusyzVqz9Mb0
+ D2aPfrrJ9J5R5OJeV8ItsyVO5krDWkaGU40G+6RZ+U56FlitcJ8ZfunO3NImh7lGpZ+eWAtWzSz
+ iAAA=
+X-Developer-Key: i=mripard@kernel.org; a=openpgp;
+ fpr=BE5675C37E818C8B5764241C254BCFC56BF6CE8D
 
-First of all the enum dev_type constants describe the memory DRAM chips
-used at the stick, not the entire DQ-bus width (see the enumeration kdoc
-for details). So what is returned from the zynqmp_get_dtype() function and
-then specified to the dimm_info->dtype field is definitely incorrect.
-Secondly the DRAM chips type has nothing to do with the data bus width
-specified in the MSTR.data_bus_width CSR field. That CSR field just
-determines the part of the whole DQ-bus currently used to access the data
-from the all DRAM memory chips. So it doesn't indicate the individual
-chips type. Thirdly the DRAM chips type can be determined only in case of
-the DDR4 protocol by means of the MSTR.device_config field state (it is
-supposed to be set by the system firmware). Finally the DW uMCTL2 DDRC ECC
-capability doesn't depend on the memory chips type. Moreover it doesn't
-depend on the utilized data bus width in runtime either. The IP-core
-reference manual says in [1,2] that the ECC support can't be enabled
-during the IP-core synthesizes for the DRAM data bus widths other than 16,
-32 or 64.  At the same time the bus width mode (MSTR.data_bus_width)
-doesn't change the ECC feature availability. Thus it was wrong to
-determine the ECC state with respect to the DQ-bus width mode.
+Hi,
 
-Fix all of the mistakes described above in the zynqmp_get_dtype() and
-zynqmp_get_ecc_state() methods: specify actual DRAM chips data width only
-for the DDR4 protocol and return that it's UNKNOWN in the rest of the
-cases; determine ECC availability by the ECCCFG0.ecc_mode field state
-only (that field can't be modified anyway if the IP-core was synthesized
-with no ECC support).
+Here's a series that creates some extra infrastructure specifically
+targeted at HDMI controllers.
 
-[1] DesignWare® Cores Enhanced Universal DDR Memory Controller (uMCTL2)
-Databook, Version 3.91a, October 2020, p. 421.
-[2] DesignWare® Cores Enhanced Universal DDR Memory Controller (uMCTL2)
-Databook, Version 3.91a, October 2020, p. 633.
+The idea behind this series came from a recent discussion on IRC during
+which we discussed infoframes generation of i915 vs everything else.
 
-Fixes: b500b4a029d5 ("EDAC, synopsys: Add ECC support for ZynqMP DDR controller")
-Signed-off-by: Serge Semin <fancer.lancer@gmail.com>
+Infoframes generation code still requires some decent boilerplate, with
+each driver doing some variation of it.
+
+In parallel, while working on vc4, we ended up converting a lot of i915
+logic (mostly around format / bpc selection, and scrambler setup) to
+apply on top of a driver that relies only on helpers.
+
+While currently sitting in the vc4 driver, none of that logic actually
+relies on any driver or hardware-specific behaviour.
+
+The only missing piece to make it shareable are a bunch of extra
+variables stored in a state (current bpc, format, RGB range selection,
+etc.).
+
+The initial implementation was relying on some generic subclass of
+drm_connector to address HDMI connectors, with a bunch of helpers that
+will take care of all the "HDMI Spec" related code. Scrambler setup is
+missing at the moment but can easily be plugged in.
+
+The feedback was that creating a connector subclass like was done for
+writeback would prevent the adoption of those helpers since it couldn't
+be used in all situations (like when the connector driver can implement
+multiple output) and required more churn to cast between the
+drm_connector and its subclass. The decision was thus to provide a set
+of helper and to store the required variables in drm_connector and
+drm_connector_state. This what has been implemented now.
+
+Hans Verkuil also expressed interest in implementing a mechanism in v4l2
+to retrieve infoframes from HDMI receiver and implementing a tool to
+decode (and eventually check) infoframes. His current work on
+edid-decode to enable that based on that series can be found here:
+https://git.linuxtv.org/hverkuil/edid-decode.git/log/?h=hverkuil
+
+And some more context here:
+https://lore.kernel.org/dri-devel/50db7366-cd3d-4675-aaad-b857202234de@xs4all.nl/
+
+This series thus leverages the infoframe generation code to expose it
+through debugfs.
+
+I also used the occasion to unit-test everything but the infoframe
+generation, which can come later once I get a proper understanding of
+what the infoframe are supposed to look like. This required to add some
+extra kunit helpers and infrastructure to have multiple EDIDs and allow
+each test to run with a particular set of capabilities.
+
+This entire series has been tested on a Pi4, passes all its unittests
+(125 new tests), and has only been build-tested for sunxi and rockchip.
+
+Let me know what you think,
+Maxime
+
+Signed-off-by: Maxime Ripard <mripard@kernel.org>
+---
+Changes in v7:
+- Rebased on top of current next
+- Only consider the Broadcast RGB property if the output format is RGB,
+  and use a limited range otherwise
+- Document the fact that Broadcast RGB only applies if the output format
+  is RGB
+- Add some test to make sure we always get a limited range if we have a
+  YCbCr output format.
+- Link to v6: https://lore.kernel.org/r/20240212-kms-hdmi-connector-state-v6-0-f4bcdc979e6f@kernel.org
+
+Changes in v6:
+- Rebased on top of current next
+- Split the tests into separate patches
+- Improve the Broadcast RGB documentation
+- Link to v5: https://lore.kernel.org/r/20231207-kms-hdmi-connector-state-v5-0-6538e19d634d@kernel.org
+
+Changes in v5:
+- Dropped the connector init arg checking patch, and the related kunit
+  tests
+- Dropped HDMI Vendor infoframes in rockchip inno_hdmi
+- Fixed the build warnings
+- Link to v4: https://lore.kernel.org/r/20231128-kms-hdmi-connector-state-v4-0-c7602158306e@kernel.org
+
+Changes in v4:
+- Create unit tests for everything but infoframes
+- Fix a number of bugs identified by the unit tests
+- Rename DRM (Dynamic Range and Mastering) infoframe file to HDR_DRM
+- Drop RFC status
+- Link to v3: https://lore.kernel.org/r/20231031-kms-hdmi-connector-state-v3-0-328b0fae43a7@kernel.org
+
+Changes in v3:
+- Made sure the series work on the RaspberryPi4
+- Handle YUV420 in the char clock rate computation
+- Use the maximum bpc value the connector allows at reset
+- Expose the RGB Limited vs Full Range value in the connector state
+  instead of through a helper
+- Fix Broadcast RGB documentation
+- Add more debug logging
+- Small fixes here and there
+- Link to v2: https://lore.kernel.org/r/20230920-kms-hdmi-connector-state-v2-0-17932daddd7d@kernel.org
+
+Changes in v2:
+- Change from a subclass to a set of helpers for drm_connector and
+  drm_connector state
+- Don't assume that all drivers support RGB, YUV420 and YUV422 but make
+  them provide a bitfield instead.
+- Don't assume that all drivers support the Broadcast RGB property but
+  make them call the registration helper.
+- Document the Broacast RGB property
+- Convert the inno_hdmi and sun4i_hdmi driver.
+- Link to v1: https://lore.kernel.org/r/20230814-kms-hdmi-connector-state-v1-0-048054df3654@kernel.org
 
 ---
+Maxime Ripard (36):
+      drm/tests: helpers: Include missing drm_drv header
+      drm/tests: helpers: Add atomic helpers
+      drm/tests: Add helper to create mock plane
+      drm/tests: Add helper to create mock crtc
+      drm/tests: connector: Add tests for drmm_connector_init
+      drm/connector: Introduce an HDMI connector initialization function
+      drm/tests: connector: Add tests for drmm_connector_hdmi_init
+      drm/connector: hdmi: Create an HDMI sub-state
+      drm/connector: hdmi: Add output BPC to the connector state
+      drm/tests: Add output bpc tests
+      drm/connector: hdmi: Add support for output format
+      drm/tests: Add output formats tests
+      drm/connector: hdmi: Add HDMI compute clock helper
+      drm/tests: Add HDMI TDMS character rate tests
+      drm/connector: hdmi: Calculate TMDS character rate
+      drm/tests: Add TDMS character rate connector state tests
+      drm/connector: hdmi: Add custom hook to filter TMDS character rate
+      drm/tests: Add HDMI connector rate filter hook tests
+      drm/connector: hdmi: Compute bpc and format automatically
+      drm/tests: Add HDMI connector bpc and format tests
+      drm/connector: hdmi: Add Broadcast RGB property
+      drm/tests: Add tests for Broadcast RGB property
+      drm/connector: hdmi: Add RGB Quantization Range to the connector state
+      drm/tests: Add RGB Quantization tests
+      drm/connector: hdmi: Add Infoframes generation
+      drm/tests: Add infoframes test
+      drm/connector: hdmi: Create Infoframe DebugFS entries
+      drm/vc4: hdmi: Switch to HDMI connector
+      drm/vc4: tests: Remove vc4_dummy_plane structure
+      drm/vc4: tests: Convert to plane creation helper
+      drm/rockchip: inno_hdmi: Switch to HDMI connector
+      drm/sun4i: hdmi: Convert encoder to atomic
+      drm/sun4i: hdmi: Move mode_set into enable
+      drm/sun4i: hdmi: Switch to container_of_const
+      drm/sun4i: hdmi: Consolidate atomic_check and mode_valid
+      drm/sun4i: hdmi: Switch to HDMI connector
 
-Changelog v2:
-- Include "linux/bitfield.h" header file to get the FIELD_GET macro
-  definition. (@tbot)
+ Documentation/gpu/kms-properties.csv               |    1 -
+ drivers/gpu/drm/Kconfig                            |    1 +
+ drivers/gpu/drm/drm_atomic.c                       |   11 +
+ drivers/gpu/drm/drm_atomic_state_helper.c          |  667 +++++++
+ drivers/gpu/drm/drm_atomic_uapi.c                  |    4 +
+ drivers/gpu/drm/drm_connector.c                    |  268 +++
+ drivers/gpu/drm/drm_debugfs.c                      |  110 ++
+ drivers/gpu/drm/rockchip/inno_hdmi.c               |  123 +-
+ drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c             |  203 +-
+ drivers/gpu/drm/tests/Makefile                     |    1 +
+ .../gpu/drm/tests/drm_atomic_state_helper_test.c   | 1944 ++++++++++++++++++++
+ drivers/gpu/drm/tests/drm_connector_test.c         | 1227 +++++++++++-
+ drivers/gpu/drm/tests/drm_kunit_edid.h             |  482 +++++
+ drivers/gpu/drm/tests/drm_kunit_helpers.c          |  150 ++
+ drivers/gpu/drm/vc4/tests/vc4_mock.c               |    6 +-
+ drivers/gpu/drm/vc4/tests/vc4_mock.h               |    9 +-
+ drivers/gpu/drm/vc4/tests/vc4_mock_plane.c         |   44 +-
+ drivers/gpu/drm/vc4/vc4_hdmi.c                     |  638 +------
+ drivers/gpu/drm/vc4/vc4_hdmi.h                     |   44 +-
+ drivers/gpu/drm/vc4/vc4_hdmi_phy.c                 |    6 +-
+ include/drm/drm_atomic_state_helper.h              |   12 +
+ include/drm/drm_connector.h                        |  257 +++
+ include/drm/drm_kunit_helpers.h                    |   23 +
+ 23 files changed, 5414 insertions(+), 817 deletions(-)
 ---
- drivers/edac/synopsys_edac.c | 49 +++++++++++++++---------------------
- 1 file changed, 20 insertions(+), 29 deletions(-)
+base-commit: e31185ce00a96232308300008db193416ceb9769
+change-id: 20230814-kms-hdmi-connector-state-616787e67927
 
-diff --git a/drivers/edac/synopsys_edac.c b/drivers/edac/synopsys_edac.c
-index 0168b05e3ca1..455d2fcfd8c1 100644
---- a/drivers/edac/synopsys_edac.c
-+++ b/drivers/edac/synopsys_edac.c
-@@ -674,26 +674,25 @@ static enum dev_type zynq_get_dtype(const void __iomem *base)
-  */
- static enum dev_type zynqmp_get_dtype(const void __iomem *base)
- {
--	enum dev_type dt;
--	u32 width;
--
--	width = readl(base + CTRL_OFST);
--	width = (width & ECC_CTRL_BUSWIDTH_MASK) >> ECC_CTRL_BUSWIDTH_SHIFT;
--	switch (width) {
--	case DDRCTL_EWDTH_16:
--		dt = DEV_X2;
--		break;
--	case DDRCTL_EWDTH_32:
--		dt = DEV_X4;
--		break;
--	case DDRCTL_EWDTH_64:
--		dt = DEV_X8;
--		break;
--	default:
--		dt = DEV_UNKNOWN;
-+	u32 regval;
-+
-+	regval = readl(base + CTRL_OFST);
-+	if (!(regval & MEM_TYPE_DDR4))
-+		return DEV_UNKNOWN;
-+
-+	regval = (regval & DDRC_MSTR_CFG_MASK) >> DDRC_MSTR_CFG_SHIFT;
-+	switch (regval) {
-+	case DDRC_MSTR_CFG_X4_MASK:
-+		return DEV_X4;
-+	case DDRC_MSTR_CFG_X8_MASK:
-+		return DEV_X8;
-+	case DDRC_MSTR_CFG_X16_MASK:
-+		return DEV_X16;
-+	case DDRC_MSTR_CFG_X32_MASK:
-+		return DEV_X32;
- 	}
- 
--	return dt;
-+	return DEV_UNKNOWN;
- }
- 
- /**
-@@ -730,19 +729,11 @@ static bool zynq_get_ecc_state(void __iomem *base)
-  */
- static bool zynqmp_get_ecc_state(void __iomem *base)
- {
--	enum dev_type dt;
--	u32 ecctype;
-+	u32 regval;
- 
--	dt = zynqmp_get_dtype(base);
--	if (dt == DEV_UNKNOWN)
--		return false;
-+	regval = readl(base + ECC_CFG0_OFST) & SCRUB_MODE_MASK;
- 
--	ecctype = readl(base + ECC_CFG0_OFST) & SCRUB_MODE_MASK;
--	if ((ecctype == SCRUB_MODE_SECDED) &&
--	    ((dt == DEV_X2) || (dt == DEV_X4) || (dt == DEV_X8)))
--		return true;
--
--	return false;
-+	return (regval == SCRUB_MODE_SECDED);
- }
- 
- /**
+Best regards,
 -- 
-2.43.0
+Maxime Ripard <mripard@kernel.org>
 
