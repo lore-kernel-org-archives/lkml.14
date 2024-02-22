@@ -1,135 +1,101 @@
-Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEC1215959E;
-	Thu, 22 Feb 2024 18:14:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46A9915AAAA;
+	Thu, 22 Feb 2024 18:14:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708625673; cv=none; b=asCFZHCESruGdYSwV9//BgYvDCXG655Sk2eDC+bt5u0VnxWCrRjUn+j+AXBksfr5u1/KJxQb2Btd15G7z/0r7mSGUP9XPcm0Pj/Ub9c+NpP0OIrRWq7cUiyDrtTrjmh/0Pzpivn0IxomyCbUPJTh6rVkTtLHHtaWma6IxzZjgnU=
+	t=1708625674; cv=none; b=gVnzCdmi/8vKkA9DdZBtPfThwOUIlqgUi+iw8+lrgmVClZSUZN/Cvsy0uTCsRcJ/xxtF0tUO0fvY0Ve8/U+r9sI9f/0CZ42QvcFnvtytH+mnosetnBeeSJtEnlQuBQwWAx8mHY/isx0oAozfOUvv+tzr5MfMSqI7dUCkK4do+TE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708625673; c=relaxed/simple;
-	bh=oGXJR8OhoCabOTPanO1K+l2Sjh3ownabZ5/7tEogxag=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=dI/R3j/tVC79j51ti5T5V+vMEoibYXi1PO/XjzEhL15vdFLhPok1k4x3x/OWfQ1b2784r6011kg4ZmT4L5nH4dDvO1IwXJYZ3JWq4mxviRv2nLsiATcHXJ+AwJ4JxCOuGSSvK4uV+8utmJoCeTjGBeoKrzZkMztoh+RnFal+Pnk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ue0/3Pe+; arc=none smtp.client-ip=209.85.167.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1708625674; c=relaxed/simple;
+	bh=TPv8mjAc7k5WixCBRXHynM6H/AaB/bUbe1H5MJSrFTQ=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=b6qHN3zItMNj5J8LKUF/Cz6KMRCc5jUj7qLKst4l0Y9tRjkZIrZmDmls1MrbbqWqWqZ8dcu55CY9TonOXWji3WkdAdrONJDmUSL3D5CQOZEsOardBz4JcXlES5rOCdF3kQnKZMP0YcwQYndNXvy/H4mYNHoKDINY0+UGjoHZpCM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X+M5ANkB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ue0/3Pe+"
-Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-512b700c8ebso117215e87.0;
-        Thu, 22 Feb 2024 10:14:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1708625670; x=1709230470; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=WbPuoFHthQO7fGdQQUUYWZPA9hiREThQLMfvHVCy2ro=;
-        b=Ue0/3Pe+98cA6Dx8aXaNIy1267GfazE0vHHCY9ei5ADgtMhWGXUttPRDFJreOOcep/
-         jVWKh0Hgc4QgSLyT/Nx5Vd26iOhPhrV1xUOnigRkur67vXrKmhkX8BxdvDjvnPviLnvH
-         AD7apUbirr/QN80LsxgoH9ry/uMI87xDuyBLFhH8xYp7NBxmGWkX6tBqjbbDBAORgm9O
-         RmPQ/2SazPu+xBKZFgZ1GPVJHurljQegMSau0NP4/90oFSjTjo5kfyYivpsh2Id+RgXf
-         jNPcWGU4kex+zqgC2G7gNBTRJhpJe3RpMAiMAVxDMY1zHF0rkUn61nuJPRaSAkp1Kh8t
-         OdxQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708625670; x=1709230470;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=WbPuoFHthQO7fGdQQUUYWZPA9hiREThQLMfvHVCy2ro=;
-        b=GulIygj5WUKCmGVQq8hTV533J5L1ogafeXVXlkfLrPxVvfvhe9JHNCKi/4CHJf7bwz
-         2a+l1Usq9/e4nXsF/Gg6uvP1aXJxk7nlDNx7Im9rtZsa1vz2oUtSldWY9Bm5sqJ18vES
-         OfobTogfp1Kvq0JE/8r3OPeyWDIcYzSd0V+Q7dZ0+q4sfdGovloRVT/kj06ZiiYQAsAB
-         rec38Wl1rjIbK4JdBxZW5R2f5YOSpOxdqhzinOAYYqEBzcWWVnNoECKUs8Pr9quGW8l3
-         quY+NXkQt/4eYPcB0LNsl99AGDG4otVhwZM089SVUpBUK6P/XLOJDFtJZ087iwuYus5U
-         AfWg==
-X-Forwarded-Encrypted: i=1; AJvYcCXRgM7vyQaMi6GYcy4BgUTFFo7CHW9QVG2FK7JM2bzBZcbhHl0NVZz5V7i18alsV+l+I6RHR2Ha+ne3Eu3TpXX1LRJLMnSTxfj1QV2uX18zlBZNKRVjKe3s3ppSEgJn4/G7fgHgsZ6LYw==
-X-Gm-Message-State: AOJu0YwFOejWtaqBUBayIMVGGlB6lTqdoNmG7HUpGnnCf+QdcA1Fdke6
-	5twace8Fj2SW/AxzR+Rrls2ptPCyBaHf50z2GtCkKZbZYAkVZuGb
-X-Google-Smtp-Source: AGHT+IGub+R7lksw83N6+DHfltE4tBIGvnJJIwOUCUdGcZp49D75S0w8KHqmr2FCPWTC9/SRdqNmdg==
-X-Received: by 2002:a05:6512:31d6:b0:512:a9a4:d933 with SMTP id j22-20020a05651231d600b00512a9a4d933mr12295115lfe.69.1708625670043;
-        Thu, 22 Feb 2024 10:14:30 -0800 (PST)
-Received: from localhost ([178.176.56.174])
-        by smtp.gmail.com with ESMTPSA id t4-20020ac24c04000000b00512acc62388sm1837562lfq.237.2024.02.22.10.14.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 22 Feb 2024 10:14:29 -0800 (PST)
-From: Serge Semin <fancer.lancer@gmail.com>
-To: Michal Simek <michal.simek@amd.com>,
-	Alexander Stein <alexander.stein@ew.tq-group.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Tony Luck <tony.luck@intel.com>,
-	James Morse <james.morse@arm.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Robert Richter <rric@kernel.org>,
-	Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
-Cc: Serge Semin <fancer.lancer@gmail.com>,
-	Punnaiah Choudary Kalluri <punnaiah.choudary.kalluri@xilinx.com>,
-	Dinh Nguyen <dinguyen@kernel.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-edac@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Shubhrajyoti Datta <shubhrajyoti.datta@amd.com>,
-	Borislav Petkov <bp@suse.de>
-Subject: [PATCH v5 05/20] EDAC/synopsys: Fix reading errors count before ECC status
-Date: Thu, 22 Feb 2024 21:12:50 +0300
-Message-ID: <20240222181324.28242-6-fancer.lancer@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240222181324.28242-1-fancer.lancer@gmail.com>
-References: <20240222181324.28242-1-fancer.lancer@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X+M5ANkB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 63CADC43399;
+	Thu, 22 Feb 2024 18:14:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1708625673;
+	bh=TPv8mjAc7k5WixCBRXHynM6H/AaB/bUbe1H5MJSrFTQ=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=X+M5ANkB1G/XImwHDpav6Puqp1tOivphrSFKAYvmOdJchFlHyCPJYfTXMrxPNi+Wo
+	 Xi5p2qC9Q92a0AH97//XjY6qjSMO0pzcsMplhKKuHRAp1/CqdU62EflPbnWwI1NHpL
+	 iMgRNV2C3AoV7bcRuCBbhihhYOGTyP9b/j9oB/of4n8ncIufeKXgVJXY+fOJF67P7T
+	 SP3Ecy3Hpc1uA2/A7mPcdN+szfNbAFddDScakVfzxdnXN0yizutE9sfcQP5w1UuOfO
+	 y/MM1ie2l+ekMhxnRguIo1l6hd2rWld2YAFHsP5Yg2I5vyTn100oEuAB6E6Q3s5smY
+	 DT1CAmYDF8+JQ==
+From: Maxime Ripard <mripard@kernel.org>
+Date: Thu, 22 Feb 2024 19:13:48 +0100
+Subject: [PATCH v7 02/36] drm/tests: helpers: Add atomic helpers
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240222-kms-hdmi-connector-state-v7-2-8f4af575fce2@kernel.org>
+References: <20240222-kms-hdmi-connector-state-v7-0-8f4af575fce2@kernel.org>
+In-Reply-To: <20240222-kms-hdmi-connector-state-v7-0-8f4af575fce2@kernel.org>
+To: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
+ Daniel Vetter <daniel@ffwll.ch>, Jonathan Corbet <corbet@lwn.net>, 
+ Sandy Huang <hjc@rock-chips.com>, 
+ =?utf-8?q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, 
+ Chen-Yu Tsai <wens@csie.org>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
+ Samuel Holland <samuel@sholland.org>
+Cc: Hans Verkuil <hverkuil@xs4all.nl>, 
+ Sebastian Wick <sebastian.wick@redhat.com>, 
+ =?utf-8?q?Ville_Syrj=C3=A4l=C3=A4?= <ville.syrjala@linux.intel.com>, 
+ dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org, 
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-media@vger.kernel.org, linux-rockchip@lists.infradead.org, 
+ linux-sunxi@lists.linux.dev, Maxime Ripard <mripard@kernel.org>
+X-Mailer: b4 0.12.3
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1086; i=mripard@kernel.org;
+ h=from:subject:message-id; bh=TPv8mjAc7k5WixCBRXHynM6H/AaB/bUbe1H5MJSrFTQ=;
+ b=owGbwMvMwCX2+D1vfrpE4FHG02pJDKnX+17F6uVucBPQ2WjBInZLQdLzjvr37ZceBBx8Ei6y/
+ 9tibRnRjlIWBjEuBlkxRZYYYfMlcadmve5k45sHM4eVCWQIAxenAEzkpyAjw7GvS26/03vapBp3
+ bfr1pd/XHs1av5C7ZnvFwfhDn96/aFrIyPBO/Z2sBptBi2LkPzHmdT0fdRIXNsttmvNX64XIVPa
+ zbpwA
+X-Developer-Key: i=mripard@kernel.org; a=openpgp;
+ fpr=BE5675C37E818C8B5764241C254BCFC56BF6CE8D
 
-Aside with fixing the errors count CSR usage the commit e2932d1f6f05
-("EDAC/synopsys: Read the error count from the correct register") all of
-the sudden has also changed the order of the errors status check
-procedure. So now the errors handler method first reads the number of CE
-and UE and only then makes sure that any of these errors have actually
-happened. It doesn't make sense. Fix that by getting back the correct
-procedures order: first check the ECC status, then read the number of
-errors.
+The mock device we were creating was missing any of the driver-wide
+helpers. That was fine before since we weren't testing the atomic state
+path, but we're going to start, so let's use the default
+implementations.
 
-Fixes: e2932d1f6f05 ("EDAC/synopsys: Read the error count from the correct register")
-Signed-off-by: Serge Semin <fancer.lancer@gmail.com>
-Reviewed-by: Shubhrajyoti Datta <shubhrajyoti.datta@amd.com>
+Signed-off-by: Maxime Ripard <mripard@kernel.org>
 ---
- drivers/edac/synopsys_edac.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ drivers/gpu/drm/tests/drm_kunit_helpers.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/edac/synopsys_edac.c b/drivers/edac/synopsys_edac.c
-index bd6e52db68bc..fbaf3d9ad517 100644
---- a/drivers/edac/synopsys_edac.c
-+++ b/drivers/edac/synopsys_edac.c
-@@ -418,18 +418,18 @@ static int zynqmp_get_error_info(struct synps_edac_priv *priv)
- 	base = priv->baseaddr;
- 	p = &priv->stat;
+diff --git a/drivers/gpu/drm/tests/drm_kunit_helpers.c b/drivers/gpu/drm/tests/drm_kunit_helpers.c
+index ca4f8e4c5d5d..4fb11b938bc1 100644
+--- a/drivers/gpu/drm/tests/drm_kunit_helpers.c
++++ b/drivers/gpu/drm/tests/drm_kunit_helpers.c
+@@ -1,6 +1,7 @@
+ // SPDX-License-Identifier: GPL-2.0
  
--	regval = readl(base + ECC_ERRCNT_OFST);
--	p->ce_cnt = regval & ECC_ERRCNT_CECNT_MASK;
--	p->ue_cnt = (regval & ECC_ERRCNT_UECNT_MASK) >> ECC_ERRCNT_UECNT_SHIFT;
--	if (!p->ce_cnt)
--		goto ue_err;
--
- 	regval = readl(base + ECC_STAT_OFST);
- 	if (!regval)
- 		return 1;
+ #include <drm/drm_atomic.h>
++#include <drm/drm_atomic_helper.h>
+ #include <drm/drm_drv.h>
+ #include <drm/drm_kunit_helpers.h>
+ #include <drm/drm_managed.h>
+@@ -14,6 +15,8 @@
+ #define KUNIT_DEVICE_NAME	"drm-kunit-mock-device"
  
- 	p->ceinfo.bitpos = (regval & ECC_STAT_BITNUM_MASK);
+ static const struct drm_mode_config_funcs drm_mode_config_funcs = {
++	.atomic_check	= drm_atomic_helper_check,
++	.atomic_commit	= drm_atomic_helper_commit,
+ };
  
-+	regval = readl(base + ECC_ERRCNT_OFST);
-+	p->ce_cnt = regval & ECC_ERRCNT_CECNT_MASK;
-+	p->ue_cnt = (regval & ECC_ERRCNT_UECNT_MASK) >> ECC_ERRCNT_UECNT_SHIFT;
-+	if (!p->ce_cnt)
-+		goto ue_err;
-+
- 	regval = readl(base + ECC_CEADDR0_OFST);
- 	p->ceinfo.row = (regval & ECC_CEADDR0_RW_MASK);
- 	regval = readl(base + ECC_CEADDR1_OFST);
+ /**
+
 -- 
-2.43.0
+2.43.2
 
