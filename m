@@ -1,179 +1,142 @@
-Received: from whm50.louhi.net (whm50.louhi.net [77.240.19.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D52A374E0;
-	Thu, 22 Feb 2024 09:05:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=77.240.19.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A380D182D2;
+	Thu, 22 Feb 2024 09:05:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708592718; cv=none; b=RYFpyJ/QzRxZjjc9Sxc3bhGENxI23mf6lot7QLkJz6x3PdDwIPU6gcBuHzrcVKxdu8Mxp46bQ86mEXWGzjjwlF1ilzyiruUpQkzGXdwe/us54AvywrhUwfUV733XuSENgmlGFs3NvBU4Sz9tuW2/gwRutCXnCBpiEj6MpB8aph4=
+	t=1708592754; cv=none; b=t8elg1SLy2wHMw13rHcekoeXLDmtcFjRgDpOqamiAwGrH21AM7NjU9LPLtGYkcpavnb7CJMKtIaALA63kkbmlAmGQRWOezGR7WpfD1W71MQGsLhy6AD8vp91EAfVjcR8oEinCAFiIWFW9pPQorznaaOg0dAm3sCzRmW2o86JJfI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708592718; c=relaxed/simple;
-	bh=7I0wHg141R2PhpVmgnTxEnibZlxY8UYP5J5mp3RN6GU=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=QSgH2/xRZrRuoFWzuTjTBOc0Ki///2M14VwcWjjiJJvgJLviOSrqQisaXP9A553nmCZ7FPVG44qJ5/a8e5+LdDqsaUP3zZ3zG9vNJQVLDTfzJfnYv7+b6MNYdr244EBt8jQLbpMKG4rPHA2nKO679nJw9dst2U/n+w4EcaAany8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=haloniitty.fi; spf=pass smtp.mailfrom=haloniitty.fi; dkim=pass (2048-bit key) header.d=haloniitty.fi header.i=@haloniitty.fi header.b=VkeLeqdS; arc=none smtp.client-ip=77.240.19.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=haloniitty.fi
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=haloniitty.fi
+	s=arc-20240116; t=1708592754; c=relaxed/simple;
+	bh=+vn1ckrtx6RQRz3eYg5eAEtVg2EE5KZ8R/asI7H1qUU=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=bfTK3ZYQttsj2oAyvRkyKzXyRIKwUgP8qfRTrc5qZ2pX8qUC99vxaXOohJ8Y37SR2qqD4XUzBw13zP+opcoDzUCDhMGxLguYdLY2HOv8irE8RpfQ0+fKk6YcN6o6bwrQZKYcElufDV3vHtEkhvBzwgmWxMOeZ6XTF2WTugGRZJw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=bqwri99i; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=oHdJI6L1; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=bqwri99i; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=oHdJI6L1; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=haloniitty.fi header.i=@haloniitty.fi header.b="VkeLeqdS"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=haloniitty.fi; s=default; h=Content-Type:MIME-Version:References:
-	In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=jy4iJLCblvKkUzR0o5i8Eb7l5HB6H8VhmrwS78eie1Q=; b=VkeLeqdSQSUTs5SQ0vhDaAaUy7
-	pjf59Ta5KMN/UG9i/MCyHTX0Zr2sr09yupfv7FGrpg4xV9ny6TR8S6+idtFSsNUpSfwAiKLLrON1U
-	0gT5oLQKw25Wf68wVdAYjtNA6eBPzmQqbiJ+rS8xGjixf04mAgsKQ+4B7ViMh56jRCeQtUoJisUel
-	2oZ/wiP1Kx0SAslQhLb64DNPXIw2vTtXh8r8xaBEXfb1yVMES0BOHI4Q+CqwYiuu6Shmc/YcJHUxf
-	sz3IaQojbZYKaYnl+domwwbMWjkEs/FW6cBwtDldtkXlys+78eCZD7Rw23Da4jVOy2XM8Q+RPgxe7
-	zJXgFY6A==;
-Received: from [194.136.85.206] (port=46638 helo=eldfell)
-	by whm50.louhi.net with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96.2)
-	(envelope-from <pekka.paalanen@haloniitty.fi>)
-	id 1rd50q-0003aY-2X;
-	Thu, 22 Feb 2024 11:05:06 +0200
-Date: Thu, 22 Feb 2024 11:04:57 +0200
-From: Pekka Paalanen <pekka.paalanen@haloniitty.fi>
-To: Pavel Machek <pavel@ucw.cz>
-Cc: Werner Sembach <wse@tuxedocomputers.com>, Hans de Goede
- <hdegoede@redhat.com>, Lee Jones <lee@kernel.org>, jikos@kernel.org,
- linux-kernel@vger.kernel.org, Jelle van der Waa <jelle@vdwaa.nl>, Miguel
- Ojeda <miguel.ojeda.sandonis@gmail.com>, "dri-devel@lists.freedesktop.org"
- <dri-devel@lists.freedesktop.org>, linux-input@vger.kernel.org,
- ojeda@kernel.org, linux-leds@vger.kernel.org
-Subject: Re: Future handling of complex RGB devices on Linux v2
-Message-ID: <20240222110457.71618f27@eldfell>
-In-Reply-To: <ZdZ2kMASawJ9wdZj@duo.ucw.cz>
-References: <0cdb78b1-7763-4bb6-9582-d70577781e61@tuxedocomputers.com>
-	<7228f2c6-fbdd-4e19-b703-103b8535d77d@redhat.com>
-	<730bead8-6e1d-4d21-90d2-4ee73155887a@tuxedocomputers.com>
-	<952409e1-2f0e-4d7a-a7a9-3b78f2eafec7@redhat.com>
-	<9851a06d-956e-4b57-be63-e10ff1fce8b4@tuxedocomputers.com>
-	<1bc6d6f0-a13d-4148-80cb-9c13dec7ed32@redhat.com>
-	<b70b2ea8-abfd-4d41-b336-3e34e5bdb8c6@tuxedocomputers.com>
-	<477d30ee-247e-47e6-bc74-515fd87fdc13@redhat.com>
-	<e21a7d87-3059-4a51-af04-1062dac977d2@tuxedocomputers.com>
-	<247b5dcd-fda8-45a7-9896-eabc46568281@tuxedocomputers.com>
-	<ZdZ2kMASawJ9wdZj@duo.ucw.cz>
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; x86_64-pc-linux-gnu)
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="bqwri99i";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="oHdJI6L1";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="bqwri99i";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="oHdJI6L1"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id A14081F452;
+	Thu, 22 Feb 2024 09:05:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1708592750; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ttaLeBa6Qt+Edx6r7FQgoY9x3tYtNqF1wyVE0b0N7DE=;
+	b=bqwri99i1QH2wmnjSrvjlkJ5dHkkUE/dlBi64+ydWv6GhDzXZbkwryfDO+m1tWuh6OE8r6
+	un/SoOaGQBeFX0PXhDRVR+9ywkusq93xXTPDT/mdHQuaiGJ/KEHoAdWRddxeE9XImif/7y
+	+VRL/NgSLAhhyNbEz0eIHxLclPBeCxM=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1708592750;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ttaLeBa6Qt+Edx6r7FQgoY9x3tYtNqF1wyVE0b0N7DE=;
+	b=oHdJI6L1KVsC8yy2wNGf5T/J6pqSJe7T1aBZAJ2KsvrqX1TeZ+E4LJ4AC2XUNwkokc4tgL
+	AsDhlKJCgGp8aBCw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1708592750; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ttaLeBa6Qt+Edx6r7FQgoY9x3tYtNqF1wyVE0b0N7DE=;
+	b=bqwri99i1QH2wmnjSrvjlkJ5dHkkUE/dlBi64+ydWv6GhDzXZbkwryfDO+m1tWuh6OE8r6
+	un/SoOaGQBeFX0PXhDRVR+9ywkusq93xXTPDT/mdHQuaiGJ/KEHoAdWRddxeE9XImif/7y
+	+VRL/NgSLAhhyNbEz0eIHxLclPBeCxM=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1708592750;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ttaLeBa6Qt+Edx6r7FQgoY9x3tYtNqF1wyVE0b0N7DE=;
+	b=oHdJI6L1KVsC8yy2wNGf5T/J6pqSJe7T1aBZAJ2KsvrqX1TeZ+E4LJ4AC2XUNwkokc4tgL
+	AsDhlKJCgGp8aBCw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 6C17D13A8C;
+	Thu, 22 Feb 2024 09:05:50 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([10.150.64.162])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id h/N6GG4O12VBeQAAD6G6ig
+	(envelope-from <tiwai@suse.de>); Thu, 22 Feb 2024 09:05:50 +0000
+Date: Thu, 22 Feb 2024 10:05:50 +0100
+Message-ID: <87sf1k6f81.wl-tiwai@suse.de>
+From: Takashi Iwai <tiwai@suse.de>
+To: Colin Ian King <colin.i.king@gmail.com>
+Cc: Jaroslav Kysela <perex@perex.cz>,
+	Takashi Iwai <tiwai@suse.com>,
+	linux-sound@vger.kernel.org,
+	kernel-janitors@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH][next] ALSA: echoaudio: remove redundant assignment to variable clock
+In-Reply-To: <20240221113809.3410109-1-colin.i.king@gmail.com>
+References: <20240221113809.3410109-1-colin.i.king@gmail.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/_GjnoK4T7HWLn/wL/.Ih.Jd";
- protocol="application/pgp-signature"; micalg=pgp-sha256
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - whm50.louhi.net
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - haloniitty.fi
-X-Get-Message-Sender-Via: whm50.louhi.net: authenticated_id: pekka.paalanen@haloniitty.fi
-X-Authenticated-Sender: whm50.louhi.net: pekka.paalanen@haloniitty.fi
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=bqwri99i;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=oHdJI6L1
+X-Spamd-Result: default: False [0.40 / 50.00];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	 TO_DN_SOME(0.00)[];
+	 RCPT_COUNT_FIVE(0.00)[6];
+	 RCVD_COUNT_THREE(0.00)[3];
+	 DKIM_TRACE(0.00)[suse.de:+];
+	 MX_GOOD(-0.01)[];
+	 FREEMAIL_TO(0.00)[gmail.com];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 BAYES_HAM(-0.79)[84.62%];
+	 ARC_NA(0.00)[];
+	 R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	 FROM_HAS_DN(0.00)[];
+	 FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 TAGGED_RCPT(0.00)[];
+	 MIME_GOOD(-0.10)[text/plain];
+	 DWL_DNSWL_LOW(-1.00)[suse.de:dkim];
+	 DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	 MID_CONTAINS_FROM(1.00)[];
+	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 RCVD_TLS_ALL(0.00)[];
+	 SUSPICIOUS_RECIPS(1.50)[]
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spam-Score: 0.40
+X-Rspamd-Queue-Id: A14081F452
+X-Spam-Level: 
+X-Spam-Flag: NO
+X-Spamd-Bar: /
 
---Sig_/_GjnoK4T7HWLn/wL/.Ih.Jd
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+On Wed, 21 Feb 2024 12:38:09 +0100,
+Colin Ian King wrote:
+> 
+> The variable clock is being assigned a value that is never read,
+> it is being re-assigned a new value in every case in the following
+> switch statement. The assignment is redundant and can be removed.
+> 
+> Cleans up clang scan build warning:
+> sound/pci/echoaudio/echoaudio_3g.c:277:2: warning: Value stored
+> to 'clock' is never read [deadcode.DeadStores]
+> 
+> Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
 
-On Wed, 21 Feb 2024 23:17:52 +0100
-Pavel Machek <pavel@ucw.cz> wrote:
-
-> Hi!
->=20
-> > so after more feedback from the OpenRGB maintainers I came up with an e=
-ven
-> > more generic proposal:
-> > https://gitlab.com/CalcProgrammer1/OpenRGB/-/issues/3916#note_175307286=
-9 =20
->=20
-> > >evaluate-set-command ioctl taking:
-> > >{
-> > >=C2=A0=C2=A0=C2=A0 enum command=C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =
-=C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 /* one of supported_commands */
-> > >=C2=A0=C2=A0=C2=A0 union data
-> > >=C2=A0=C2=A0=C2=A0 {
-> > >=C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 char raw[3072],
-> > >=C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 {
-> > >=C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 <input struct=
- for command 0>
-> > >=C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 }, =20
->=20
-> Yeah, so ... this is not a interface. This is a backdoor to pass
-> arbitrary data. That's not going to fly.
->=20
-> For keyboards, we don't need complete new interface; we reasonable
-> extensions over existing display APIs -- keyboards are clearly 2D.
-
-I suppose they could be seen as *a* display, but if you are referring
-to DRM KMS UAPI, then no, I don't see that fitting at all:
-
-- the "pixel grid" is not orthogonal, it's not a rectangle, and it
-  might not be a grid at all
-
-- Timings and video modes? DRM KMS has always been somewhat awkward for
-  display devices that do not have an inherent scanout cycle and timings
-  totally depend on the amount of pixels updated at a time
-  (FB_DAMAGE_CLIPS), e.g. USB displays (not USB-C DP alt mode).
-  They do work, but they are very different from the usual hardware
-  involved with KMS, require special consideration in userspace, and
-  they still are actual displays while what we're talking about here
-  are not.
-
-- KMS has no concept of programmed autonomous animations, and likely
-  never will. They are not useful with actual displays.
-
-- Userspace will try to light up KMS outputs automatically and extend
-  the traditional desktop there. This was already a problem for
-  head-mounted displays (HMD) where it made no sense. That was worked
-  around with an in-kernel list of HMDs and some KMS property quirking.
-
-Modern KMS UAPI very much aims to be a generic UAPI that abstracts
-display devices. It already breaks down a little for things like USB
-displays and virtual machines (e.g. qemu, vmware, especially with
-remote viewers), which I find unfortunate. With HMDs the genericity
-breaks down in other ways, but I'd claim HMDs are a better fit still
-than full-featured VM virtual displays (cursor plane hijacking). With
-non-displays like keyboards the genericity would be completely lost, as
-they won't work at all the same way as displays. You cannot even show
-proper images there, only coarse light patterns *IF* you actually know
-the pixel layout. But the pixel layout is(?) hardware-specific which is
-the opposite of generic.
-
-While you could dress keyboard lights etc. up with DRM KMS UAPI, the
-userspace would have to be written from scratch for them, and you
-somehow need to make existing KMS userspace to never touch those
-devices. What's the point of using DRM KMS UAPI in the first place,
-then?
+Thanks, applied.
 
 
-Thanks,
-pq
-
---Sig_/_GjnoK4T7HWLn/wL/.Ih.Jd
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEJQjwWQChkWOYOIONI1/ltBGqqqcFAmXXDjkACgkQI1/ltBGq
-qqcWSg/+LfVHYtYAxb2OgFmYI0f3aKnMdoFZx4JA7AB95VfEyv+ok/lFhIWz8aIn
-B2zqfOxV1lPNFKOeBzh8oZRnQAzB4+oXSIEk61OI506esijcY0zpbzyg8qkUgpfr
-tVBeI7Ck0ypAHHGHb/3nnZfR556ZWs0CsMvDmHyBQvbBkPUykfB37+U6BmAVC2ry
-DL6jrMl0q09v9nLdNjQC9AkrO9lIMA8TME+XDUl1sLYpw+4DrAM+lnWUAyXFY5zk
-jMwv2G6BGNWpQTi1R3ImL5O8mdl+KXPcY36VHQwLUzXVmZOzYsfJJAjqvySIHNpG
-e4jC7EoJDCJdulHE/GcyXv+kt9AOGw6D2bSqmmosgk/g7F1gKJibN0hdy48HHV4+
-ipZuoM7djS/SBPc7A8KLvPIHfoJKfVfsjD6i4aSotEUHu8xyXsradMka9ouxNm5Z
-u0b5wE+Q7Csbmd8yLMHTqyE2e+ptdjScb85ra3sP8ZBXEQl/ZNurfQQIxjBrmgtc
-Zl/labXGRS8kdNQeba2rt3qzi/W81yebHR+yO/gwAgRJoFtzJj1rxHjPntF8pKQh
-cGrDLfc87GN9fvB9PL3KdGqKfvKzAmVmprxAdulqdZYvDblzy4fRekHn12xA7/vO
-Bc/LFP/jo+fZ02aeTZYSVHxQglUb/HkmPe+MldrSp7xA3ustudM=
-=rxLn
------END PGP SIGNATURE-----
-
---Sig_/_GjnoK4T7HWLn/wL/.Ih.Jd--
+Takashi
