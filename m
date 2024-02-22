@@ -1,50 +1,49 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1334146E63;
-	Thu, 22 Feb 2024 23:17:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9208A14039F;
+	Thu, 22 Feb 2024 23:17:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708643836; cv=none; b=VriGHydBQxa3ejBTAVI0ok6QkA+RlgyEeiaIRgxAbn1nMNh8vPvaE7XkGWkwzye67YU6b/mrTyBPw7OidMJ2msjn3Xbmxl8GC6QJiYI0qmgZq/q1RXOgBR6B8Jg/a5cmdrJPah7CCk9x9SYw4x7VVQ33L62EAkX9DWCxsF07hp4=
+	t=1708643832; cv=none; b=EQ21xrose4HjPsejmFwGVqbnFGEIem0GM9eEjeduA2EbD9+ShAP37lNwsOfw4E2mC59Bn2krvfyo+zUfEiaWp8GwmRYvWEG39peM3Hulq6EvEXtY2titber21VTy8rudzcnhAOX3tzms4Nj0KoD2T7HfaPoqj8SBeikkABemWGI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708643836; c=relaxed/simple;
-	bh=eKg4Wdfive8CFcZ832UFnPs5P57hVE5qhTLF0A8GLxA=;
+	s=arc-20240116; t=1708643832; c=relaxed/simple;
+	bh=w/D7r26XZ0yYCLrpalxmyA8FV0rkftK0ivNgur7CBWk=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
-	 In-Reply-To:To:CC; b=pIcEYbegg/i39j88svVogkKDoJIA0dxJJith0F3rS8cLHPJCnd3aLRJwWRQTV9VhTaEsKi59dzU/3+GyJQozdvfHqQ0Iop1ndBMhtKGPB8IpazkFWMXnF7lhDvSayGgNg6De+FibgKEMrZmVIMuwc31ozy8Q9vv/2LDyfzutLFE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=kbFHgLQB; arc=none smtp.client-ip=205.220.180.131
+	 In-Reply-To:To:CC; b=gDxVdk9zoE+tBUTzQMlBF8ZG8GRB74g/nzlZygOuRKQTrxFLY1Y9uzqOiEQw9l/6PTaxOkVPH1ThQdz+llj+77is4DtgwB27TcTWFmbtsZkqY28aR2yTttBneK1iX7MofOSBuzguRexBrjqXzkGLn5DdhdTGJVb9A4EdGYirgDE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=KBZZOdWE; arc=none smtp.client-ip=205.220.168.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="kbFHgLQB"
-Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 41MMwNpl021431;
-	Thu, 22 Feb 2024 23:16:46 GMT
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="KBZZOdWE"
+Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 41MMbD9R002908;
+	Thu, 22 Feb 2024 23:16:37 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
 	from:date:subject:mime-version:content-type
 	:content-transfer-encoding:message-id:references:in-reply-to:to
-	:cc; s=qcppdkim1; bh=2U+agiqukd/du23WJFcMxZ+WQ4YQxwoiMKt/aEM341M
-	=; b=kbFHgLQBLbR00Gsqxu5/yjnO6mhCKRGAewX3RDcewO62JsbY0epB9PFP4W/
-	7fBjJfkf6A/5wtJKdZXR5ANSNwdRcY+CKjie411TGFQnDg98zf5i0z8Nd49cJMQ0
-	hqcT0q/XTYzrBrc9+uqa456+LkslIxpvc2gU/AGequ5tqAQtjf7Ys5Qz6BMbcsJE
-	ertZKrdcYQXHej713oNFG3NJPLfZAUmFWZeL4mbwGQ2l1K8IdUcBT4BCExw2XXmO
-	MHTLw//Jmmt6vYoCRLyYVI7lDj0pZu++CANj0GG6Beq6jYQ73qwdiddRpIoIezMs
-	NXd6NxTzhQtvFWMSSTYwIA7TPnw==
-Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3wdw13afvx-1
+	:cc; s=qcppdkim1; bh=HSfYN4ASmajbR465rFcbd8dDlprgPpo+2HlUXq69zlQ
+	=; b=KBZZOdWEpYyIHHsdQVqr01IY7F8f8kShHAH6rwPxXFMleuTm65CON99rn5u
+	Vr62MR3hyz8ommojpHx/P8xTqWGT7Sm/UepRpOVpDbG0QEjqGYqkWjk340i1tBMz
+	fcxu35kcasBlTqRykW2QDzICNtERSN+IK4aXZE+7p2v6IzEk2ylzKTCp4UI9HB/I
+	cXmayPouDScih+1r4AhIPB9K0xpMvwBHvOhaBpvB6rz8+U/rTY8S1TSPpjNlmjsL
+	zGNJIsRGSb3TDoV/o5OBs23GzjFWWlAFEjvvUYIKfL+fWC9JiZtsHjHrVsISO9fG
+	CUi8G1FAxwpeYdxOeVUa1W9pmww==
+Received: from nasanppmta01.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3we1b0jxst-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 22 Feb 2024 23:16:45 +0000 (GMT)
+	Thu, 22 Feb 2024 23:16:37 +0000 (GMT)
 Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 41MNGiQ0025664
+	by NASANPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 41MNGanv016004
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 22 Feb 2024 23:16:44 GMT
+	Thu, 22 Feb 2024 23:16:36 GMT
 Received: from hu-eberman-lv.qualcomm.com (10.49.16.6) by
  nasanex01b.na.qualcomm.com (10.46.141.250) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Thu, 22 Feb 2024 15:16:43 -0800
+ 15.2.1118.40; Thu, 22 Feb 2024 15:16:35 -0800
 From: Elliot Berman <quic_eberman@quicinc.com>
-Date: Thu, 22 Feb 2024 15:16:53 -0800
-Subject: [PATCH v17 30/35] virt: gunyah: Allow userspace to initialize
- context of primary vCPU
+Date: Thu, 22 Feb 2024 15:16:39 -0800
+Subject: [PATCH v17 16/35] gunyah: Add hypercalls for demand paging
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -53,7 +52,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-ID: <20240222-gunyah-v17-30-1e9da6763d38@quicinc.com>
+Message-ID: <20240222-gunyah-v17-16-1e9da6763d38@quicinc.com>
 References: <20240222-gunyah-v17-0-1e9da6763d38@quicinc.com>
 In-Reply-To: <20240222-gunyah-v17-0-1e9da6763d38@quicinc.com>
 To: Alex Elder <elder@linaro.org>,
@@ -93,198 +92,234 @@ X-ClientProxiedBy: nalasex01c.na.qualcomm.com (10.47.97.35) To
  nasanex01b.na.qualcomm.com (10.46.141.250)
 X-QCInternal: smtphost
 X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: L2u3zRYMaWfX3RTcPIxtb-zkwxJM5pzM
-X-Proofpoint-GUID: L2u3zRYMaWfX3RTcPIxtb-zkwxJM5pzM
+X-Proofpoint-ORIG-GUID: zQIDYaV4Xlly6E59RQQafshiQ0DfVG7f
+X-Proofpoint-GUID: zQIDYaV4Xlly6E59RQQafshiQ0DfVG7f
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
  definitions=2024-02-22_15,2024-02-22_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999
- malwarescore=0 impostorscore=0 bulkscore=0 adultscore=0 mlxscore=0
- clxscore=1015 lowpriorityscore=0 spamscore=0 priorityscore=1501
- phishscore=0 suspectscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.19.0-2402120000 definitions=main-2402220179
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 mlxlogscore=527
+ mlxscore=0 adultscore=0 spamscore=0 lowpriorityscore=0 malwarescore=0
+ impostorscore=0 suspectscore=0 bulkscore=0 priorityscore=1501
+ clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2402120000 definitions=main-2402220179
 
-RM provides APIs to fill boot context the initial registers upon
-starting the vCPU. Most importantly, this allows userspace to set the
-initial PC for the primary vCPU when the VM starts to run.
+Three hypercalls are needed to support demand paging.
+In create page mappings for a virtual machine's address space, memory
+must be moved to a memory extent that is allowed to be mapped into that
+address space. Memory extents are Gunyah's implementation of access
+control. Once the memory is moved to the proper memory extent, the
+memory can be mapped into the VM's address space. Implement the
+bindings to perform those hypercalls.
 
 Signed-off-by: Elliot Berman <quic_eberman@quicinc.com>
 ---
- drivers/virt/gunyah/vm_mgr.c | 77 ++++++++++++++++++++++++++++++++++++++++++++
- drivers/virt/gunyah/vm_mgr.h |  2 ++
- include/uapi/linux/gunyah.h  | 23 +++++++++++++
- 3 files changed, 102 insertions(+)
+ arch/arm64/gunyah/gunyah_hypercall.c | 87 ++++++++++++++++++++++++++++++++++++
+ arch/arm64/include/asm/gunyah.h      | 21 +++++++++
+ include/linux/gunyah.h               | 56 +++++++++++++++++++++++
+ 3 files changed, 164 insertions(+)
 
-diff --git a/drivers/virt/gunyah/vm_mgr.c b/drivers/virt/gunyah/vm_mgr.c
-index 473740a1f97d0..a61a3f3ae92f1 100644
---- a/drivers/virt/gunyah/vm_mgr.c
-+++ b/drivers/virt/gunyah/vm_mgr.c
-@@ -402,6 +402,7 @@ static __must_check struct gunyah_vm *gunyah_vm_alloc(struct gunyah_rm *rm)
- 	mutex_init(&ghvm->resources_lock);
- 	INIT_LIST_HEAD(&ghvm->resources);
- 	INIT_LIST_HEAD(&ghvm->resource_tickets);
-+	xa_init(&ghvm->boot_context);
+diff --git a/arch/arm64/gunyah/gunyah_hypercall.c b/arch/arm64/gunyah/gunyah_hypercall.c
+index fee21df42c176..38403dc28c66f 100644
+--- a/arch/arm64/gunyah/gunyah_hypercall.c
++++ b/arch/arm64/gunyah/gunyah_hypercall.c
+@@ -39,6 +39,9 @@ EXPORT_SYMBOL_GPL(arch_is_gunyah_guest);
+ #define GUNYAH_HYPERCALL_HYP_IDENTIFY		GUNYAH_HYPERCALL(0x8000)
+ #define GUNYAH_HYPERCALL_MSGQ_SEND		GUNYAH_HYPERCALL(0x801B)
+ #define GUNYAH_HYPERCALL_MSGQ_RECV		GUNYAH_HYPERCALL(0x801C)
++#define GUNYAH_HYPERCALL_ADDRSPACE_MAP		GUNYAH_HYPERCALL(0x802B)
++#define GUNYAH_HYPERCALL_ADDRSPACE_UNMAP	GUNYAH_HYPERCALL(0x802C)
++#define GUNYAH_HYPERCALL_MEMEXTENT_DONATE	GUNYAH_HYPERCALL(0x8061)
+ #define GUNYAH_HYPERCALL_VCPU_RUN		GUNYAH_HYPERCALL(0x8065)
+ /* clang-format on */
  
- 	mt_init(&ghvm->mm);
- 	mt_init(&ghvm->bindings);
-@@ -427,6 +428,66 @@ static __must_check struct gunyah_vm *gunyah_vm_alloc(struct gunyah_rm *rm)
- 	return ghvm;
+@@ -114,6 +117,90 @@ enum gunyah_error gunyah_hypercall_msgq_recv(u64 capid, void *buff, size_t size,
  }
+ EXPORT_SYMBOL_GPL(gunyah_hypercall_msgq_recv);
  
-+static long gunyah_vm_set_boot_context(struct gunyah_vm *ghvm,
-+				       struct gunyah_vm_boot_context *boot_ctx)
++/**
++ * gunyah_hypercall_addrspace_map() - Add memory to an address space from a memory extent
++ * @capid: Address space capability ID
++ * @extent_capid: Memory extent capability ID
++ * @vbase: location in address space
++ * @extent_attrs: Attributes for the memory
++ * @flags: Flags for address space mapping
++ * @offset: Offset into memory extent (physical address of memory)
++ * @size: Size of memory to map; must be page-aligned
++ */
++enum gunyah_error gunyah_hypercall_addrspace_map(u64 capid, u64 extent_capid, u64 vbase,
++					u32 extent_attrs, u32 flags, u64 offset, u64 size)
 +{
-+	u8 reg_set, reg_index; /* to check values are reasonable */
-+	int ret;
++	struct arm_smccc_1_2_regs args = {
++		.a0 = GUNYAH_HYPERCALL_ADDRSPACE_MAP,
++		.a1 = capid,
++		.a2 = extent_capid,
++		.a3 = vbase,
++		.a4 = extent_attrs,
++		.a5 = flags,
++		.a6 = offset,
++		.a7 = size,
++		/* C language says this will be implictly zero. Gunyah requires 0, so be explicit */
++		.a8 = 0,
++	};
++	struct arm_smccc_1_2_regs res;
 +
-+	reg_set = (boot_ctx->reg >> GUNYAH_VM_BOOT_CONTEXT_REG_SHIFT) & 0xff;
-+	reg_index = boot_ctx->reg & 0xff;
++	arm_smccc_1_2_hvc(&args, &res);
 +
-+	switch (reg_set) {
-+	case REG_SET_X:
-+		if (reg_index > 31)
-+			return -EINVAL;
-+		break;
-+	case REG_SET_PC:
-+		if (reg_index)
-+			return -EINVAL;
-+		break;
-+	case REG_SET_SP:
-+		if (reg_index > 2)
-+			return -EINVAL;
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	ret = down_read_interruptible(&ghvm->status_lock);
-+	if (ret)
-+		return ret;
-+
-+	if (ghvm->vm_status != GUNYAH_RM_VM_STATUS_NO_STATE) {
-+		ret = -EINVAL;
-+		goto out;
-+	}
-+
-+	ret = xa_err(xa_store(&ghvm->boot_context, boot_ctx->reg,
-+			      (void *)boot_ctx->value, GFP_KERNEL));
-+out:
-+	up_read(&ghvm->status_lock);
-+	return ret;
++	return res.a0;
 +}
-+
-+static inline int gunyah_vm_fill_boot_context(struct gunyah_vm *ghvm)
-+{
-+	unsigned long reg_set, reg_index, id;
-+	void *entry;
-+	int ret;
-+
-+	xa_for_each(&ghvm->boot_context, id, entry) {
-+		reg_set = (id >> GUNYAH_VM_BOOT_CONTEXT_REG_SHIFT) & 0xff;
-+		reg_index = id & 0xff;
-+		ret = gunyah_rm_vm_set_boot_context(
-+			ghvm->rm, ghvm->vmid, reg_set, reg_index, (u64)entry);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	return 0;
-+}
-+
- static int gunyah_vm_start(struct gunyah_vm *ghvm)
- {
- 	struct gunyah_rm_hyp_resources *resources;
-@@ -499,6 +560,13 @@ static int gunyah_vm_start(struct gunyah_vm *ghvm)
- 	}
- 	ghvm->vm_status = GUNYAH_RM_VM_STATUS_READY;
- 
-+	ret = gunyah_vm_fill_boot_context(ghvm);
-+	if (ret) {
-+		dev_warn(ghvm->parent, "Failed to setup boot context: %d\n",
-+			 ret);
-+		goto err;
-+	}
-+
- 	ret = gunyah_rm_get_hyp_resources(ghvm->rm, ghvm->vmid, &resources);
- 	if (ret) {
- 		dev_warn(ghvm->parent,
-@@ -625,6 +693,14 @@ static long gunyah_vm_ioctl(struct file *filp, unsigned int cmd,
- 
- 		return gunyah_gmem_modify_mapping(ghvm, &args);
- 	}
-+	case GUNYAH_VM_SET_BOOT_CONTEXT: {
-+		struct gunyah_vm_boot_context boot_ctx;
-+
-+		if (copy_from_user(&boot_ctx, argp, sizeof(boot_ctx)))
-+			return -EFAULT;
-+
-+		return gunyah_vm_set_boot_context(ghvm, &boot_ctx);
-+	}
- 	default:
- 		r = -ENOTTY;
- 		break;
-@@ -716,6 +792,7 @@ static void _gunyah_vm_put(struct kref *kref)
- 				 "Failed to deallocate vmid: %d\n", ret);
- 	}
- 
-+	xa_destroy(&ghvm->boot_context);
- 	gunyah_rm_put(ghvm->rm);
- 	kfree(ghvm);
- }
-diff --git a/drivers/virt/gunyah/vm_mgr.h b/drivers/virt/gunyah/vm_mgr.h
-index 5eb14f30ba965..8cee93e551700 100644
---- a/drivers/virt/gunyah/vm_mgr.h
-+++ b/drivers/virt/gunyah/vm_mgr.h
-@@ -81,6 +81,7 @@ long gunyah_dev_vm_mgr_ioctl(struct gunyah_rm *rm, unsigned int cmd,
-  *                    folio; parcel_start is start of the folio)
-  * @dtb.parcel_pages: Number of pages lent for the memory parcel
-  * @dtb.parcel: Data for resource manager to lend the parcel
-+ * @boot_context: Requested initial boot context to set when launching the VM
-  *
-  * Members are grouped by hot path.
-  */
-@@ -115,6 +116,7 @@ struct gunyah_vm {
- 		u64 parcel_start, parcel_pages;
- 		struct gunyah_rm_mem_parcel parcel;
- 	} dtb;
-+	struct xarray boot_context;
- };
- 
- /**
-diff --git a/include/uapi/linux/gunyah.h b/include/uapi/linux/gunyah.h
-index a89d9bedf3e5d..574116f544722 100644
---- a/include/uapi/linux/gunyah.h
-+++ b/include/uapi/linux/gunyah.h
-@@ -142,6 +142,29 @@ struct gunyah_map_mem_args {
- 
- #define GUNYAH_VM_MAP_MEM _IOW(GUNYAH_IOCTL_TYPE, 0x9, struct gunyah_map_mem_args)
- 
-+enum gunyah_vm_boot_context_reg {
-+	REG_SET_X		= 0,
-+	REG_SET_PC		= 1,
-+	REG_SET_SP		= 2,
-+};
-+
-+#define GUNYAH_VM_BOOT_CONTEXT_REG_SHIFT	8
-+#define GUNYAH_VM_BOOT_CONTEXT_REG(reg, idx) (((reg & 0xff) << GUNYAH_VM_BOOT_CONTEXT_REG_SHIFT) |\
-+					      (idx & 0xff))
++EXPORT_SYMBOL_GPL(gunyah_hypercall_addrspace_map);
 +
 +/**
-+ * struct gunyah_vm_boot_context - Set an initial register for the VM
-+ * @reg: Register to set. See GUNYAH_VM_BOOT_CONTEXT_REG_* macros
-+ * @reserved: reserved for alignment
-+ * @value: value to fill in the register
++ * gunyah_hypercall_addrspace_unmap() - Remove memory from an address space
++ * @capid: Address space capability ID
++ * @extent_capid: Memory extent capability ID
++ * @vbase: location in address space
++ * @flags: Flags for address space mapping
++ * @offset: Offset into memory extent (physical address of memory)
++ * @size: Size of memory to map; must be page-aligned
 + */
-+struct gunyah_vm_boot_context {
-+	__u32 reg;
-+	__u32 reserved;
-+	__u64 value;
-+};
-+#define GUNYAH_VM_SET_BOOT_CONTEXT	_IOW(GUNYAH_IOCTL_TYPE, 0xa, struct gunyah_vm_boot_context)
++enum gunyah_error gunyah_hypercall_addrspace_unmap(u64 capid, u64 extent_capid, u64 vbase,
++					u32 flags, u64 offset, u64 size)
++{
++	struct arm_smccc_1_2_regs args = {
++		.a0 = GUNYAH_HYPERCALL_ADDRSPACE_UNMAP,
++		.a1 = capid,
++		.a2 = extent_capid,
++		.a3 = vbase,
++		.a4 = flags,
++		.a5 = offset,
++		.a6 = size,
++		/* C language says this will be implictly zero. Gunyah requires 0, so be explicit */
++		.a7 = 0,
++	};
++	struct arm_smccc_1_2_regs res;
 +
- /*
-  * ioctls for vCPU fds
-  */
++	arm_smccc_1_2_hvc(&args, &res);
++
++	return res.a0;
++}
++EXPORT_SYMBOL_GPL(gunyah_hypercall_addrspace_unmap);
++
++/**
++ * gunyah_hypercall_memextent_donate() - Donate memory from one memory extent to another
++ * @options: donate options
++ * @from_capid: Memory extent capability ID to donate from
++ * @to_capid: Memory extent capability ID to donate to
++ * @offset: Offset into memory extent (physical address of memory)
++ * @size: Size of memory to donate; must be page-aligned
++ */
++enum gunyah_error gunyah_hypercall_memextent_donate(u32 options, u64 from_capid, u64 to_capid,
++					    u64 offset, u64 size)
++{
++	struct arm_smccc_res res;
++
++	arm_smccc_1_1_hvc(GUNYAH_HYPERCALL_MEMEXTENT_DONATE, options, from_capid, to_capid,
++				offset, size, 0, &res);
++
++	return res.a0;
++}
++EXPORT_SYMBOL_GPL(gunyah_hypercall_memextent_donate);
++
+ /**
+  * gunyah_hypercall_vcpu_run() - Donate CPU time to a vcpu
+  * @capid: capability ID of the vCPU to run
+diff --git a/arch/arm64/include/asm/gunyah.h b/arch/arm64/include/asm/gunyah.h
+index 0cd3debe22b64..4adf24977fd18 100644
+--- a/arch/arm64/include/asm/gunyah.h
++++ b/arch/arm64/include/asm/gunyah.h
+@@ -33,4 +33,25 @@ static inline int arch_gunyah_fill_irq_fwspec_params(u32 virq,
+ 	return 0;
+ }
+ 
++enum arch_gunyah_memtype {
++	/* clang-format off */
++	GUNYAH_MEMTYPE_DEVICE_nGnRnE	= 0,
++	GUNYAH_DEVICE_nGnRE		= 1,
++	GUNYAH_DEVICE_nGRE		= 2,
++	GUNYAH_DEVICE_GRE		= 3,
++
++	GUNYAH_NORMAL_NC	= 0b0101,
++	GUNYAH_NORMAL_ONC_IWT	= 0b0110,
++	GUNYAH_NORMAL_ONC_IWB	= 0b0111,
++	GUNYAH_NORMAL_OWT_INC	= 0b1001,
++	GUNYAH_NORMAL_WT	= 0b1010,
++	GUNYAH_NORMAL_OWT_IWB	= 0b1011,
++	GUNYAH_NORMAL_OWB_INC	= 0b1101,
++	GUNYAH_NORMAL_OWB_IWT	= 0b1110,
++	GUNYAH_NORMAL_WB	= 0b1111,
++	/* clang-format on */
++};
++
++#define ARCH_GUNYAH_DEFAULT_MEMTYPE	GUNYAH_NORMAL_WB
++
+ #endif
+diff --git a/include/linux/gunyah.h b/include/linux/gunyah.h
+index 6c24544f38dc9..24c02c6827738 100644
+--- a/include/linux/gunyah.h
++++ b/include/linux/gunyah.h
+@@ -273,6 +273,62 @@ enum gunyah_error gunyah_hypercall_msgq_send(u64 capid, size_t size, void *buff,
+ enum gunyah_error gunyah_hypercall_msgq_recv(u64 capid, void *buff, size_t size,
+ 					     size_t *recv_size, bool *ready);
+ 
++#define GUNYAH_ADDRSPACE_SELF_CAP 0
++
++enum gunyah_pagetable_access {
++	/* clang-format off */
++	GUNYAH_PAGETABLE_ACCESS_NONE		= 0,
++	GUNYAH_PAGETABLE_ACCESS_X		= 1,
++	GUNYAH_PAGETABLE_ACCESS_W		= 2,
++	GUNYAH_PAGETABLE_ACCESS_R		= 4,
++	GUNYAH_PAGETABLE_ACCESS_RX		= 5,
++	GUNYAH_PAGETABLE_ACCESS_RW		= 6,
++	GUNYAH_PAGETABLE_ACCESS_RWX		= 7,
++	/* clang-format on */
++};
++
++/* clang-format off */
++#define GUNYAH_MEMEXTENT_MAPPING_USER_ACCESS		GENMASK_ULL(2, 0)
++#define GUNYAH_MEMEXTENT_MAPPING_KERNEL_ACCESS		GENMASK_ULL(6, 4)
++#define GUNYAH_MEMEXTENT_MAPPING_TYPE			GENMASK_ULL(23, 16)
++/* clang-format on */
++
++enum gunyah_memextent_donate_type {
++	/* clang-format off */
++	GUNYAH_MEMEXTENT_DONATE_TO_CHILD		= 0,
++	GUNYAH_MEMEXTENT_DONATE_TO_PARENT		= 1,
++	GUNYAH_MEMEXTENT_DONATE_TO_SIBLING		= 2,
++	GUNYAH_MEMEXTENT_DONATE_TO_PROTECTED		= 3,
++	GUNYAH_MEMEXTENT_DONATE_FROM_PROTECTED		= 4,
++	/* clang-format on */
++};
++
++enum gunyah_addrspace_map_flag_bits {
++	/* clang-format off */
++	GUNYAH_ADDRSPACE_MAP_FLAG_PARTIAL	= 0,
++	GUNYAH_ADDRSPACE_MAP_FLAG_PRIVATE	= 1,
++	GUNYAH_ADDRSPACE_MAP_FLAG_VMMIO		= 2,
++	GUNYAH_ADDRSPACE_MAP_FLAG_NOSYNC	= 31,
++	/* clang-format on */
++};
++
++enum gunyah_error gunyah_hypercall_addrspace_map(u64 capid, u64 extent_capid,
++						 u64 vbase, u32 extent_attrs,
++						 u32 flags, u64 offset,
++						 u64 size);
++enum gunyah_error gunyah_hypercall_addrspace_unmap(u64 capid, u64 extent_capid,
++						   u64 vbase, u32 flags,
++						   u64 offset, u64 size);
++
++/* clang-format off */
++#define GUNYAH_MEMEXTENT_OPTION_TYPE_MASK	GENMASK_ULL(7, 0)
++#define GUNYAH_MEMEXTENT_OPTION_NOSYNC		BIT(31)
++/* clang-format on */
++
++enum gunyah_error gunyah_hypercall_memextent_donate(u32 options, u64 from_capid,
++						    u64 to_capid, u64 offset,
++						    u64 size);
++
+ struct gunyah_hypercall_vcpu_run_resp {
+ 	union {
+ 		enum {
 
 -- 
 2.34.1
