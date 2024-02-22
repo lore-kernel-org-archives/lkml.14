@@ -1,59 +1,121 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f176.google.com (mail-qk1-f176.google.com [209.85.222.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3873073F21;
-	Thu, 22 Feb 2024 18:41:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7477C14B802;
+	Thu, 22 Feb 2024 18:42:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708627320; cv=none; b=RQuAuC7cV1TXDnIAlL6ghx95h2g9k5cIevuH3/SginzmmAhn5NYZOhDnGfXPFC3Rhb3K5uEUmY4GuNDVwoxtJc4aOvjoZpSk6Kls8wdE7YT6hFmYk6eAlP8jP5jE+vElTMU3v4IG7F4NvUVhrBgla5uWnB9OGG0EImbRdfiSEWg=
+	t=1708627339; cv=none; b=TwotOEz0Q3xjV2UgyW4WIWNF1oMf1+J+rLk8/e1b1fnh6FA4/G4C1VIBJF9V/AWc9SZCRTo6sVUT34qPrRxoWMeJ+rJ1LU2Av0Gi8Na77AyKMz0qH5akq4X39f+dlG1oXLbyz3xKPcop4E0vWSQ9H36yubN/tAjiTA2ybcHMGxc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708627320; c=relaxed/simple;
-	bh=hKALnhFJto5r+V30fxKC0f0D56pLx9xeU/sxkNovT80=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=UX4+qpSvrCxX3TjXFUBfDD92bh7+DpkhazUSR/vgbEz1tz/Y4Ce5w1HgbDBT5DGvSSFUK4YQO96FyxPwAMThBb2WxI1gCZURoIzQty7ilkxyhBFWVbcBxkr3Bc6HvvaktNBozmb+czGuc6Z/MinpV+DQ6wIGvXym5mPBCoZDebc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E6731C433C7;
-	Thu, 22 Feb 2024 18:41:58 +0000 (UTC)
-Date: Thu, 22 Feb 2024 13:43:49 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>
-Cc: dri-devel@lists.freedesktop.org, intel-xe@lists.freedesktop.org,
- intel-gfx@lists.freedesktop.org, "Ville =?UTF-8?B?U3lyasOkbMOk?="
- <ville.syrjala@linux.intel.com>, Daniel Vetter <daniel@ffwll.ch>, David
- Airlie <airlied@gmail.com>
-Subject: Re: [PATCH] drm/i915: Add missing ; to __assign_str() macros in
- tracepoint code
-Message-ID: <20240222134349.1e9a155d@gandalf.local.home>
-In-Reply-To: <20240222133057.2af72a19@gandalf.local.home>
-References: <20240222133057.2af72a19@gandalf.local.home>
-X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1708627339; c=relaxed/simple;
+	bh=X5DPbtUuo167CmhEQH4ZaCaXl2qW67O4l0eto/HRpMM=;
+	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
+	 Mime-Version:Content-Type; b=pa/8Dd5k+qS+H01vaK7R1txlCUiMxiSEaYqFdRdERbINr992dB4FgAHdjAUfNHh8T4vzEaXvSEGLI/LmPNftLm8oLBydwtZUugaykJW9NaaS4HPlZx1oOPFBCcr3Ozd8oXdrD0ZtFwYpxkWH6Cdjrh9I4wy8dZvnyVix8/Pjr90=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eVvoMzfD; arc=none smtp.client-ip=209.85.222.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eVvoMzfD"
+Received: by mail-qk1-f176.google.com with SMTP id af79cd13be357-787990149edso62710885a.3;
+        Thu, 22 Feb 2024 10:42:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1708627337; x=1709232137; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:subject:references
+         :in-reply-to:message-id:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=5JY57+eYxgeopbrNEfdOzDb+UHFYaRCQjxBHdb2jOZM=;
+        b=eVvoMzfD+7LYbL8H4o5jqWdYjHkAvtfxVTRCyg8rSdaixPYkxjkYIi5RyFvQ5NVUqB
+         WeHNzteCL9gPAXUDU8DHnXr6Z4uLRPY9Hgxxm6euEA8BBl6K9SW+jmjWIrTs2KSWAHeq
+         YSYWdAH/BaSKPGxq48Nx+G0la9ObPdrvGzGIVLUQtOP6ZHewOKFrNt0WgX4pJXiQkb+I
+         fDrZNJ7aRbSvbmup8HV0401V7WuEovgNmYrsw+xKOj8a6QIGdV7S80XWAAzzKJSwdKFj
+         1R6rKJK6atCK7+OHh0pQW2N3C3CXAFmdi+AgXYBBFJm7ctrZrP0bIPGYMFPt4D1sesmR
+         5EBg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708627337; x=1709232137;
+        h=content-transfer-encoding:mime-version:subject:references
+         :in-reply-to:message-id:cc:to:from:date:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=5JY57+eYxgeopbrNEfdOzDb+UHFYaRCQjxBHdb2jOZM=;
+        b=FfOs330LNQRUw3jj53TGORW6DAQbf0rR/NZ35Fa6VrFBu568/n17eKq6W0pf7hQIHR
+         Y4iKt2Q5haZbz0vUiQHE6B3hMUjeP//Q4SWzNLQfTSKE5E3cjyZFYktiPskOE7kme9aF
+         DKuo8/PFAY8fNsHCcatkJ63yn6nLxhLf+MkLkavEKvMPsgmYyf4fdO7moSQ5oUGxWjl9
+         8ezX6XnF57ImmJfh+SZZSBpH8NbojtgBYCq2cV8jPt6Gc4bTqnLmgtCUEaVLGLRKsOa7
+         WaDkg098GZeWRoA8g6cJnBB2Ccc+KmZsjO9JXf293XqLs8/0QAw7aec20ilenqIpilBX
+         I1Yw==
+X-Forwarded-Encrypted: i=1; AJvYcCXBBUDLOxE5IaMUJpf64UHMuFAYMHHfgoiIXhZRYtLi4fCeJzswTFtD7E6GiFDx3depjHAwGT5SPXCkNCfZ+JJmaWDWeBzEjpl5XFou
+X-Gm-Message-State: AOJu0YxPnajE1NY96zZ6wEZ+DHpJCDcBLHpvk+Bcyh5Uezf1Qo46s+H/
+	ccpfWb6NEIcGymV7eDrpmLGk4iHJ9N9/RHeyYQPs+T3Ey34XeEEOQR/QO3Nq
+X-Google-Smtp-Source: AGHT+IEei0q7Q4XqoOQZJBSxgNbHlzC2WpFyHXkKvYFhxKhCrg0y7NTK2ahXSWsHltPeKbWXsFrgAg==
+X-Received: by 2002:a05:620a:20d8:b0:787:34f6:a706 with SMTP id f24-20020a05620a20d800b0078734f6a706mr22687920qka.28.1708627337199;
+        Thu, 22 Feb 2024 10:42:17 -0800 (PST)
+Received: from localhost (56.148.86.34.bc.googleusercontent.com. [34.86.148.56])
+        by smtp.gmail.com with ESMTPSA id vv14-20020a05620a562e00b00787acc6a3c7sm126403qkn.65.2024.02.22.10.42.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 22 Feb 2024 10:42:16 -0800 (PST)
+Date: Thu, 22 Feb 2024 13:42:16 -0500
+From: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
+To: Marcelo Tosatti <mtosatti@redhat.com>, 
+ Willem de Bruijn <willemdebruijn.kernel@gmail.com>
+Cc: netdev@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, 
+ Jakub Kicinski <kuba@kernel.org>, 
+ Eric Dumazet <edumazet@google.com>, 
+ Frederic Weisbecker <frederic@kernel.org>, 
+ Valentin Schneider <vschneid@redhat.com>
+Message-ID: <65d795888e904_2c3076294d2@willemb.c.googlers.com.notmuch>
+In-Reply-To: <ZdeJyxiTSKtkpHMO@tpad>
+References: <ZdSAWAwUxc5R46NH@tpad>
+ <65d7640c7983b_2bd671294c3@willemb.c.googlers.com.notmuch>
+ <ZdeJyxiTSKtkpHMO@tpad>
+Subject: Re: [PATCH] net/core/dev.c: enable timestamp static key if CPU
+ isolation is configured
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Mime-Version: 1.0
+Content-Type: text/plain;
+ charset=utf-8
 Content-Transfer-Encoding: 7bit
 
-On Thu, 22 Feb 2024 13:30:57 -0500
-Steven Rostedt <rostedt@goodmis.org> wrote:
-
-> From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+Marcelo Tosatti wrote:
+> On Thu, Feb 22, 2024 at 10:11:08AM -0500, Willem de Bruijn wrote:
+> > Marcelo Tosatti wrote:
+> > > For systems that use CPU isolation (via nohz_full), creating or destroying
+> > > a socket with  timestamping (SOF_TIMESTAMPING_OPT_TX_SWHW) might cause a
+> > > static key to be enabled/disabled. This in turn causes undesired 
+> > > IPIs to isolated CPUs.
+> > 
+> > This refers to SOF_TIMESTAMPING_RX_SOFTWARE, not SOF_TIMESTAMPING_OPT_TX_SWHW.
+> > See also sock_set_timestamping.
 > 
-> I'm working on improving the __assign_str() and __string() macros to be
-> more efficient, and removed some unneeded semicolons. This triggered a bug
-> in the build as some of the __assign_str() macros in intel_display_trace
-> was missing a terminating semicolon.
+> Willem,
 > 
-> Fixes: 2ceea5d88048b ("drm/i915: Print plane name in fbc tracepoints")
-> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-> ---
+> This test program does trigger the static key change:
+> 
+> int main (void)
+> {
+>         int option = SOF_TIMESTAMPING_OPT_TX_SWHW;
+>         int sock_fd;
+>         int ret;
+>         int pid_fd;
+>         pid_t pid;
+>         char buf[50];
+> 
+> ...
+> 
+>         /* set the timestamping option
+>          * this is to trigger the IPIs that notify all cpus of the change
+>          */
+>         if (setsockopt(sock_fd, SOL_SOCKET, SO_TIMESTAMP, &option, sizeof (option)) < 0) {
+>                 printf("Could not enable timestamping option %x", (unsigned int)option);
+>                 close(sock_fd);
+>                 return 0;
+>         }
+> ...
+> 
 
-Note, I have patches that depend on this fix, so if one of the maintainers
-would like to just give me an "Acked-by", I'll take it through my tree. I
-doubt it will have any conflicts, unless you are planning on changing the
-given effected events.
+That is because you call SO_TIMESTAMP, which interprets option as a
+boolean. The SOF_ flags apply to setsockopt SO_TIMESTAMPING.
 
--- Steve
