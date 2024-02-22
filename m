@@ -1,102 +1,100 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56FF073F13;
-	Thu, 22 Feb 2024 22:09:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C46C073F20;
+	Thu, 22 Feb 2024 22:11:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708639758; cv=none; b=seOMFzM/zS2i9hpY9wkfcR5fbZ+DfvHWUnUN189jd5tT8O5Zn69jLHBHJjPcgjgexTxdGHxHnnDOh0CDKTr0CjGa97xNx8Sswefn4BG4mERiDi4eNxixCVqgdHLso+u3qL/m0Wx3K/+0KtIx0I/3LygsFNpLGgMSH3o0kk7lJUg=
+	t=1708639915; cv=none; b=M4Vi89pxeT8CKgOv0hHnndMUpzByY2r70O0Ir0sNfHE5klAYt1Nm03ilK9G06HBA1osWeS+6aOf9T7+j9uHmhGAqa+CMn9vTAdPE4r2uHKh3NFlptXQz3rltp+Gk4wH2EizPa0To1w/jiOLHuETuCFCCPjb3sRSxdV8vD+t3QY4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708639758; c=relaxed/simple;
-	bh=l1/ezjl9EYeaWVpvN0u8fT88/5VTm9AGnH7HjTwqtiA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bW6968JHGNxijWuiskLJRTvu6YW9vs8zhQbHmr6/bdA7wyKlalaPKsiG96m4Z0UzKpMiCtiYx38gxzifCB1UxuX+vR2NzIjsEmkheqSYcoKpbEmM2h/ngUbL2Nd3iMajroA7rpSEbL5JMLCGVVdp/8cophHUf8DOpmN7k+TU534=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FqTBSYdN; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FqTBSYdN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DA03CC433C7;
-	Thu, 22 Feb 2024 22:09:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708639757;
-	bh=l1/ezjl9EYeaWVpvN0u8fT88/5VTm9AGnH7HjTwqtiA=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-	b=FqTBSYdNMC4OQYqaJNjwK3wxZ25TIuDMcorlmS0nUEcfuuGpReshtX7RZ1r4iRuBM
-	 n2RpmlN0ygdXZrJ0AA6MmmHlz69lUbAtFIp7ro+Q4vB+Zh9sz7FZeNt5tBZ1ilUa9h
-	 zGgImhskFv1Xle+tJM5LYJvJL6RaThfi+fTkMdZ+TXo1pDCD2CES1hFfS5NlxtDvkU
-	 Aq3RrfI/hpRzt9fSfSzn/owXvjSZ2SnW9M9inNyFh3QFEroqPXWQQpw5yxjmg3EgJP
-	 fTHSyLUWWlB8hBuQBVe6Qz8GXTsDNJfq36eSel7hFteSHKh4sMPPV7uoZY31xEkbNE
-	 D+gBTCVY/0kfA==
-Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-	id 87292CE0738; Thu, 22 Feb 2024 14:09:17 -0800 (PST)
-Date: Thu, 22 Feb 2024 14:09:17 -0800
-From: "Paul E. McKenney" <paulmck@kernel.org>
-To: Frederic Weisbecker <frederic@kernel.org>
-Cc: Boqun Feng <boqun.feng@gmail.com>, linux-kernel@vger.kernel.org,
-	rcu@vger.kernel.org, Neeraj Upadhyay <Neeraj.Upadhyay@amd.com>
-Subject: Re: [PATCH v2 0/6] RCU tasks fixes for v6.9
-Message-ID: <cf84fb44-9620-40bc-a68d-051edf6823b8@paulmck-laptop>
-Reply-To: paulmck@kernel.org
-References: <20240217012745.3446231-1-boqun.feng@gmail.com>
- <Zdd7x4Rmy_-WDqfl@localhost.localdomain>
+	s=arc-20240116; t=1708639915; c=relaxed/simple;
+	bh=p+8uhwqkWinqy5UVg9deOCr1wsUGH7ZlNzrnMxbpJCk=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=HbFrHna5KoxRWNvRIxCaYRqoFi4ZIFfm52b8lShWOGOXjtsTCxy3DOiphSdTa1oUb5BXmbWH8E9o7GxTktscmB2xsGwzrpFH17B6jdVX6QsE2gbV9HrR7IU4MNjl6sSeQnBSEZkHW0EYQ9KbpquPSZ7lRC41szybgvn6QmjN5OY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8F909C433F1;
+	Thu, 22 Feb 2024 22:11:54 +0000 (UTC)
+Date: Thu, 22 Feb 2024 17:13:45 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Beau Belgrave <beaub@linux.microsoft.com>
+Cc: mhiramat@kernel.org, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, mathieu.desnoyers@efficios.com
+Subject: Re: [PATCH v4 2/4] tracing/user_events: Introduce multi-format
+ events
+Message-ID: <20240222171345.25b1a289@gandalf.local.home>
+In-Reply-To: <20240222001807.1463-3-beaub@linux.microsoft.com>
+References: <20240222001807.1463-1-beaub@linux.microsoft.com>
+	<20240222001807.1463-3-beaub@linux.microsoft.com>
+X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <Zdd7x4Rmy_-WDqfl@localhost.localdomain>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Thu, Feb 22, 2024 at 05:52:23PM +0100, Frederic Weisbecker wrote:
-> Le Fri, Feb 16, 2024 at 05:27:35PM -0800, Boqun Feng a écrit :
-> > Hi,
-> > 
-> > This series contains the fixes of RCU tasks for v6.9. You can also find
-> > the series at:
-> > 
-> > 	git://git.kernel.org/pub/scm/linux/kernel/git/boqun/linux.git rcu-tasks.2024.02.14a
-> > 
-> > Changes since v1:
-> > 
-> > *	Update with Paul's rework on "Eliminate deadlocks involving
-> > 	do_exit() and RCU task"
-> > 
-> > The detailed list of changes:
-> > 
-> > Paul E. McKenney (6):
-> >   rcu-tasks: Repair RCU Tasks Trace quiescence check
-> >   rcu-tasks: Add data to eliminate RCU-tasks/do_exit() deadlocks
-> >   rcu-tasks: Initialize data to eliminate RCU-tasks/do_exit() deadlocks
-> >   rcu-tasks: Maintain lists to eliminate RCU-tasks/do_exit() deadlocks
-> >   rcu-tasks: Eliminate deadlocks involving do_exit() and RCU tasks
+On Thu, 22 Feb 2024 00:18:05 +0000
+Beau Belgrave <beaub@linux.microsoft.com> wrote:
+
+> Currently user_events supports 1 event with the same name and must have
+> the exact same format when referenced by multiple programs. This opens
+> an opportunity for malicous or poorly thought through programs to
+
+  malicious? ;-)
+
+-- Steve
+
+> create events that others use with different formats. Another scenario
+> is user programs wishing to use the same event name but add more fields
+> later when the software updates. Various versions of a program may be
+> running side-by-side, which is prevented by the current single format
+> requirement.
 > 
-> Food for later thoughts and further improvements: would it make sense to
-> call exit_rcu_tasks_start() on fork() instead and rely solely on
-> each CPUs' rtp_exit_list instead of the tasklist?
-
-It might well.
-
-One big advantage of doing that is the ability to incrementally traverse
-the tasks.  But is there some good way of doing that to the full task
-lists?  If so, everyone could benefit.
-
-							Thanx, Paul
-
-> Thanks.
+> Add a new register flag (USER_EVENT_REG_MULTI_FORMAT) which indicates
+> the user program wishes to use the same user_event name, but may have
+> several different formats of the event. When this flag is used, create
+> the underlying tracepoint backing the user_event with a unique name
+> per-version of the format. It's important that existing ABI users do
+> not get this logic automatically, even if one of the multi format
+> events matches the format. This ensures existing programs that create
+> events and assume the tracepoint name will match exactly continue to
+> work as expected. Add logic to only check multi-format events with
+> other multi-format events and single-format events to only check
+> single-format events during find.
 > 
-> >   rcu-tasks: Maintain real-time response in rcu_tasks_postscan()
-> > 
-> >  include/linux/rcupdate.h |   4 +-
-> >  include/linux/sched.h    |   2 +
-> >  init/init_task.c         |   1 +
-> >  kernel/fork.c            |   1 +
-> >  kernel/rcu/tasks.h       | 110 ++++++++++++++++++++++++++++++---------
-> >  5 files changed, 90 insertions(+), 28 deletions(-)
-> > 
-> > -- 
-> > 2.43.0
-> > 
-> > 
+> Change system name of the multi-format event tracepoint to ensure that
+> multi-format events are isolated completely from single-format events.
+> This prevents single-format names from conflicting with multi-format
+> events if they end with the same suffix as the multi-format events.
 > 
+> Add a register_name (reg_name) to the user_event struct which allows for
+> split naming of events. We now have the name that was used to register
+> within user_events as well as the unique name for the tracepoint. Upon
+> registering events ensure matches based on first the reg_name, followed
+> by the fields and format of the event. This allows for multiple events
+> with the same registered name to have different formats. The underlying
+> tracepoint will have a unique name in the format of {reg_name}.{unique_id}.
+> 
+> For example, if both "test u32 value" and "test u64 value" are used with
+> the USER_EVENT_REG_MULTI_FORMAT the system would have 2 unique
+> tracepoints. The dynamic_events file would then show the following:
+>   u:test u64 count
+>   u:test u32 count
+> 
+> The actual tracepoint names look like this:
+>   test.0
+>   test.1
+> 
+> Both would be under the new user_events_multi system name to prevent the
+> older ABI from being used to squat on multi-formatted events and block
+> their use.
+> 
+> Deleting events via "!u:test u64 count" would only delete the first
+> tracepoint that matched that format. When the delete ABI is used all
+> events with the same name will be attempted to be deleted. If
+> per-version deletion is required, user programs should either not use
+> persistent events or delete them via dynamic_events.
+> 
+> Signed-off-by: Beau Belgrave <beaub@linux.microsoft.com>
