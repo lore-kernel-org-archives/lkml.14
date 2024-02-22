@@ -1,144 +1,104 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DDF5A1B59E;
-	Thu, 22 Feb 2024 10:22:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23D1239FDB
+	for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 10:25:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708597369; cv=none; b=qf1LPns7AVFETCtw6NoqK/HEZjLicpQhwzCHVWT+MNhtuBHCeawZ8wSb9cLIgytBvfXON8srpOrP68L2mQc1i+w/waNaNkcvifNkmemaXiQ1mlo0H4XHmzJddOC/+8D+hQJVqQXkIx52xZYhUhJhH+PlWk7XV+Db8L9ig2RhYd4=
+	t=1708597526; cv=none; b=e+MNu0JpfNcnB0X7YbNrVKCYE4FvvI1lQt40wzxzbOzgMAzau1n//6/edNXsPCwfOAGStIAZlwavqCuFdFqBUF03on9P85cLVJ2rR0sDVNlz1FFSXWBMY22X7RgEnttfL8K1Ga4CTqNYuKx3D1SWyWhbUxFU0TUs+AEvVb5vl+U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708597369; c=relaxed/simple;
-	bh=n03uyduofiuvh8m537h9JLAs0TXp+Va2r31oM8G0N1o=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=U8w7kHnYStJ9fjf5MdkPt/nRUcZ3P48tBqrPRtXpp5KCgrLhLfF+BvNawUhfrqMkMSZ6wws/rlEjiO6EhI6azRohVNJ5u+Mh1tesIzIDTG8Eg5vLaWq6eWw2prvDaSweH1rkUsgeKk7fx5lWQ8rNvjzzGl9858+s2g/7SNp3las=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.20.42.173])
-	by gateway (Coremail) with SMTP id _____8BxHOtvINdl0SoQAA--.31815S3;
-	Thu, 22 Feb 2024 18:22:39 +0800 (CST)
-Received: from [10.20.42.173] (unknown [10.20.42.173])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxfRNsINdl97U+AA--.92S3;
-	Thu, 22 Feb 2024 18:22:38 +0800 (CST)
-Subject: Re: [PATCH for-6.8 v3 1/3] LoongArch: KVM: Fix input validation of
- _kvm_get_cpucfg and kvm_check_cpucfg
-To: WANG Xuerui <kernel@xen0n.name>, Paolo Bonzini <pbonzini@redhat.com>,
- Huacai Chen <chenhuacai@kernel.org>
-Cc: Tianrui Zhao <zhaotianrui@loongson.cn>, kvm@vger.kernel.org,
- loongarch@lists.linux.dev, linux-kernel@vger.kernel.org,
- WANG Xuerui <git@xen0n.name>
-References: <20240216085822.3032984-1-kernel@xen0n.name>
- <20240216085822.3032984-2-kernel@xen0n.name>
- <412ea29b-7a53-1f91-1cdb-5a256e74826b@loongson.cn>
- <4a12394a-8ebf-40b8-b0bc-65b5a66967cd@xen0n.name>
-From: maobibo <maobibo@loongson.cn>
-Message-ID: <0c27477b-d144-37f3-d47c-956f9ba07723@loongson.cn>
-Date: Thu, 22 Feb 2024 18:22:42 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+	s=arc-20240116; t=1708597526; c=relaxed/simple;
+	bh=KJJPX0IkT/cG2OddkyPCOKcbTRd6TfGmDrRJ3DGkUeQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=aP3XfsSHXzLo1Vy7XfcIvLhW3dU7Y2QuPmDcNFmkTyiWccc6jaiiOfA/gUnWpOCA1b1hDz8WRKc4g8uM5d9EoSnC5cg+GvPZaCHr4xW4NpvFmaCVvNTwLafYERIeIeprjXoJoinnGKgWltHHNf6TfczsUJSwrYdpWVcckL2QeQw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=REdHaxQY; arc=none smtp.client-ip=209.85.128.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="REdHaxQY"
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-410e820a4feso3910905e9.1
+        for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 02:25:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1708597523; x=1709202323; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=fyffHNsivj82P1pv+S3iGiZ7yfsGQjKP2uvBVMCZ2j8=;
+        b=REdHaxQY9lXoNrVn4l5clBN2oyNzrEfyijfigs9ICLiRDUMkdCmxHA5RR41Lyw9eog
+         EKF7RnyRnudkIDZlRB+YLWVj+3O1x1TJXC7nCF8WU127Kppkqjrkq45/WKM9GCgij/mk
+         M11djPbgYPi/J4Zc6Q41FztyUSthNmRqGEWFofsZAkrc+wfq6Nq4urB8xQIo5xExTtP6
+         Wj55E+j8bQXzDwbgHACEBL1D8oI1vVPSBbqrYmUQHPubV/KgY4NBMOLpVsuj0OcVDLQ5
+         ICjUpoxdBv1QZpysb9mvvRr9lJWraEYoFQVTjAwL8beEg42x4ORxJW/ScDJ+9j5LfXy4
+         d32g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708597523; x=1709202323;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=fyffHNsivj82P1pv+S3iGiZ7yfsGQjKP2uvBVMCZ2j8=;
+        b=aDUVhHHk+yBAqTADOsom5IPhRjZOeT6cRuAR0jcx1oAyxB9tvZUHvrq89LS2uoNxz/
+         Iir2YdB1PcG0eaAZeaCCvflKAaRxKapylIcuRvTxQzAJ40hnl80Xi71w3L65FVnM7wjz
+         sls5l5hXK6zsSMZO2sU7BYlavsXQ75/Ri0fnfF6HxZl+UlP1We4eU21I/jFvb5BaS9WQ
+         Q6t2Uw/ECuHOvMQOyM3L/YNr66twLsTacZtg2D/wA3JluekP4kzrE8iGkwigwEnumXfG
+         KbgcP3c0/GXbx8gDKwCp4x9EfdXK5Fo8HRZvL5kYzocHRuwnH2k4kznd650h12RjyFRa
+         XTxQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVuIL0BQxwXsjTFLlONfEYSDlJB39gPoUcweM4yIeDTRJpUCJxreuwzMkKFAmW/NkzNkUk3/EJmN2NQrZpXcY/YAatK0h2PxGtfZOt2
+X-Gm-Message-State: AOJu0Yz29xhN7qVU2akbHPhUKfUJIBRwbKJHrcPmY94MLs1xMmtO3PXr
+	pwBSVTiJztSRFcgcy8a3bjyz6gwBy9KY9wNEHVDTuB+EQA3QoDboFy1B1a5sXzzIGp3bhenTOlu
+	I
+X-Google-Smtp-Source: AGHT+IGnQzoZ1jXAmvbq8+OELFRcBxY35KuYkhIW+1qhcSWumQpuDUVZoqDUj/84Va8hINnZJaiZ+Q==
+X-Received: by 2002:a5d:5383:0:b0:33d:63b6:defd with SMTP id d3-20020a5d5383000000b0033d63b6defdmr1935896wrv.31.1708597523364;
+        Thu, 22 Feb 2024 02:25:23 -0800 (PST)
+Received: from brgl-uxlite.home ([2a01:cb1d:334:ac00:465e:5c78:c1d5:890b])
+        by smtp.gmail.com with ESMTPSA id ay3-20020a5d6f03000000b0033d1b760125sm20632623wrb.92.2024.02.22.02.25.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 22 Feb 2024 02:25:22 -0800 (PST)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: [PATCH v2 2/2] gpio: sim: use for_each_hwgpio()
+Date: Thu, 22 Feb 2024 11:25:13 +0100
+Message-Id: <20240222102513.16975-2-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.40.1
+In-Reply-To: <20240222102513.16975-1-brgl@bgdev.pl>
+References: <20240222102513.16975-1-brgl@bgdev.pl>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <4a12394a-8ebf-40b8-b0bc-65b5a66967cd@xen0n.name>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8DxfRNsINdl97U+AA--.92S3
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBj93XoW7CF1xCFWrKw4DKF45Gry8WFX_yoW8tF48pr
-	WrKFWUuryjqw1xC34kKw1UJFyxAr4UGwsrJF1vqF1DCrW8Xry0gr4jqrnIgr13Jrs3AFy7
-	tF4UXFsI934DAFgCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUU9Sb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
-	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
-	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17McIj6I8E87Iv
-	67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07
-	AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km07C2
-	67AKxVWUXVWUAwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI
-	8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWU
-	CwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r
-	1xMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBI
-	daVFxhVjvjDU0xZFpf9x07j5WrAUUUUU=
 
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
+Display debugfs information about all simulated GPIOs, not only the
+requested ones.
 
-On 2024/2/22 下午5:45, WANG Xuerui wrote:
-> Hi,
-> 
-> On 2/17/24 11:03, maobibo wrote:
->> Hi Xuerui,
->>
->> Good catch, and thank for your patch.
->>
->> On 2024/2/16 下午4:58, WANG Xuerui wrote:
->>> [snip]
->>> @@ -324,31 +319,33 @@ static int _kvm_get_cpucfg(int id, u64 *v)
->>>           if (cpu_has_lasx)
->>>               *v |= CPUCFG2_LASX;
->>> -        break;
->>> +        return 0;
->>> +    case 0 ... 1:
->>> +    case 3 ... KVM_MAX_CPUCFG_REGS - 1:
->>> +        /* no restrictions on other CPUCFG IDs' values */
->>> +        *v = U64_MAX;
->>> +        return 0;
->> how about something like this?
->>      default:
->>          /* no restrictions on other CPUCFG IDs' values */
->>          *v = U64_MAX;
->>          return 0;
-> 
-> I don't think this version correctly expresses the intent. Note that the 
-> CPUCFG ID range check is squashed into the switch as well, so one switch 
-> conveniently expresses the three intended cases at once:
-> 
-> * the special treatment of CPUCFG2,
-+	case 0 ... 1:
-+	case 3 ... KVM_MAX_CPUCFG_REGS - 1:
-+		/* no restrictions on other CPUCFG IDs' values */
-+		*v = U64_MAX;
-+		return 0;
-cpucfg6 checking will be added for PMU support soon. So it will be
-         case 6:
-             do something check for cpucfg6
-             return mask;
-         case 0 ... 1:
-         case 3 ... 5:
-         case 7 ... KVM_MAX_CPUCFG_REGS - 1:
-       	    *v = U64_MAX;
-             return 0;
+Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+---
+ drivers/gpio/gpio-sim.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-If you think it is reasonable to add these separate "case" sentences, I 
-have no objection.
-> * all-allow rules for other in-range CPUCFG IDs, and
-> * rejection for out-of-range IDs.
-  static int kvm_check_cpucfg(int id, u64 val)
-  {
--	u64 mask;
--	int ret = 0;
--
--	if (id < 0 && id >= KVM_MAX_CPUCFG_REGS)
--		return -EINVAL;
-you can modify && with ||, like this:
-	if (id < 0 || id >= KVM_MAX_CPUCFG_REGS)
-		return -EINVAL;
-
-+	u64 mask = 0;
-+	int ret;
-
-Regards
-Bibo Mao
-> 
-> Yet the suggestion here is conflating the latter two cases, with the 
-> effect of allowing every ID that's not 2 to take any value (as expressed 
-> by the U64_MAX mask), and *removing the range check* (because no return 
-> path returns -EINVAL with this change).
-> 
-> So I'd like to stick to the current version, but thanks anyway for your 
-> kind review and suggestion.
-> 
+diff --git a/drivers/gpio/gpio-sim.c b/drivers/gpio/gpio-sim.c
+index c4106e37e6db..88fc3712811c 100644
+--- a/drivers/gpio/gpio-sim.c
++++ b/drivers/gpio/gpio-sim.c
+@@ -234,10 +234,10 @@ static void gpio_sim_dbg_show(struct seq_file *seq, struct gpio_chip *gc)
+ 
+ 	guard(mutex)(&chip->lock);
+ 
+-	for_each_requested_gpio(gc, i, label)
++	for_each_hwgpio(gc, i, label)
+ 		seq_printf(seq, " gpio-%-3d (%s) %s,%s\n",
+ 			   gc->base + i,
+-			   label,
++			   label ?: "<unused>",
+ 			   test_bit(i, chip->direction_map) ? "input" :
+ 				test_bit(i, chip->value_map) ? "output-high" :
+ 							       "output-low",
+-- 
+2.40.1
 
