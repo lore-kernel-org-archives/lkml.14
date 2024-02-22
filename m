@@ -1,191 +1,142 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2D8312D20E;
-	Thu, 22 Feb 2024 18:15:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708625705; cv=none; b=UvWIWSjTqWY9qaG/BJx8Vk8GJn1ORUF5nH8lC6ovezSR3XGsK+TTcuyi4HXx4qx3c12P4YrKNiwgMmvhAM8EDVzJPzaof0n9YSy0uXtYKlKi3/niMjiaqkE1X7ilR3PwYiVEy/ajptSTgtI5zeZyr+QXWeSEbwWrIFgImnWK/9I=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708625705; c=relaxed/simple;
-	bh=mh6yrZRFWWWgJBk2sU4bljECM9b4FtLl0mec212hJfc=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=G8p11/Z07rgWkW6QpdO93w/+xMrPn3X3OXFs7WkjZKZN3k7/YAQdIVoezzwpc7WD1J4qOO+d5DCCzUKBlKjvCSgfUnxXX3dWnhkDlCmSIzWRrl2mvU0n6pKDJNgJdmHqWCFRg2mKg2ByM+SqgQaDf7ZcBvzLuLRF+Myq7YMg+gI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LvyFNzgD; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LvyFNzgD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CB1C5C433F1;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8ED2812D1F5;
 	Thu, 22 Feb 2024 18:15:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708625705;
-	bh=mh6yrZRFWWWgJBk2sU4bljECM9b4FtLl0mec212hJfc=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=LvyFNzgDE13kd6VGv2xijkQwQX8ujAAe6vaMdo5zRRzb37jaxP24x0rtuGc4fW/le
-	 yzKkevujM1S5D+PNXpWFphGPuWe2uDAlkSgnuKmJNN5ZGxkT2kdzGf6cXzz2pxVDAA
-	 jSmPuHZH4mscj6tU85CATGgp5+qK2ARaHtqtySny7OIC1myGHWRpaGslQpyOvrBWTT
-	 aelzxobALmoBu+x2T2/oOMX9htJJOSPD9OMFFM3o9t684kneUov/mx1xepyM27U/bn
-	 4s9V5LvWaocHn91BEW2EX84o6UcgQk+95YJZlXWNaWDJosjRY+waKhVbtWadikJfN0
-	 ZIfEh0wT83Adw==
-From: Maxime Ripard <mripard@kernel.org>
-Date: Thu, 22 Feb 2024 19:13:59 +0100
-Subject: [PATCH v7 13/36] drm/connector: hdmi: Add HDMI compute clock
- helper
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.171
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1708625706; cv=none; b=Y2ir+lLyO0SOQ0cYnTEfAFu7/u3B0UF5AEKVu5P8cKL7/zugKrbOEqojCEnVLvnuk+iJDgKByD+38ZZ0Cq+ENzYymXjyZEYxTXOJPz1QlA7hhVFaied8obPklKbQEvgQKpMMkDReQupfI2kt7PN6VoJx0oS3U7mHNHxyqu9tGDc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1708625706; c=relaxed/simple;
+	bh=/YMcS8c2lFHAnLUYHGmV4xYNvSCKSN3WltAWr+gJyKg=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=bAkyPbuRMgUKnlZaUrQ5oIhbLANUynGFhSbuYH6XeCQx1AH+M+UDnRaqN5yfuNz4o65ASwsbfF7G4UFKRNC+MLByWgX0A8+9uki1err4X3VxFHne1ke/K4QltQY05WSkFBCO4SWKgEvZZ9AXxfSTjXZQ5LqTRUI3HIKe6Vet7zk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GtrrmsRL; arc=none smtp.client-ip=209.85.208.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GtrrmsRL"
+Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-2d21cdbc85bso1188251fa.2;
+        Thu, 22 Feb 2024 10:15:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1708625703; x=1709230503; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Oj2Zk+yOX3iTlO1YnU+dJlP9WROVQ6dXGrz5dId9J7c=;
+        b=GtrrmsRLao43J63QdVfoD1f3aUO9euOqv4AFpe+EYLpgIqARVlAeOGuabfJ+h2B2VQ
+         OnjFGQpJQhgKXY8NyPki4Gddlwa62fQuV0NunBDH3YHxUCtBX+Wd9Vv78PTqYq6GmZpL
+         +r+kntQYnNvMwiyClyfvCEGDu6M7W4Go0OjSj6XmSz0dOAMxm4dlESFVJT24+xC/AScF
+         9o6wpDebKhEGESO6sbEDKIOw297CYyGxxZOjIKa26MKAZKAIvu9q8GBeB4Ek0nD6Ga14
+         F3UegsletJny6NGC1jzcMpBDdCdqPNI3MFUfai/PFueFaGUBqXke5To/8Kfx/99azYoj
+         TkYg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708625703; x=1709230503;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Oj2Zk+yOX3iTlO1YnU+dJlP9WROVQ6dXGrz5dId9J7c=;
+        b=Bmch7vYCw88fOQjAbu565MD1cA5HpQtIQPs2zOSdDP7mjiwpYq8VvxZUR2EDTGB+Er
+         4SWhRAWkC3y5pPvwvo9s8Xq49djNE0ZAn8ksBNNefbfyPs5mAxIafwG6KDFcGnnU0xIE
+         ARLX8fWGSpROEvXRm7arofaIDMYvhCvN8xCs/Ex2Qy7gUpJCGF/xJn+/h1I3a5iOZ21x
+         PmRPMBoffuiSTvQsL77UpA6BypBzrOYmzAje34bT0ITSMtpfI+scvcUlvAVmSZ7mgyml
+         p89oHxT4hhlklKuQ7+fAipSSrFzkGCGGQ3uri5DoLvpX/ji5eDFs5Km/jGAfvHyd/FEd
+         u30A==
+X-Forwarded-Encrypted: i=1; AJvYcCW4fLVwvy4bbe2di3fMja1LlCdFOWiCQKJ5m7apED6aCWx9WLvTUOOFvMScRN70zkpCzdconBkR3a2G1qKvnRU2+JS2D0B8GW4GClQjRyjRqjLHjqb88nbS18/H/3AIyVZLjyLbruA97A==
+X-Gm-Message-State: AOJu0YzhnKCYyrpik4/7Nwr8lfXuKBrS5BebNblgUgx9Dq8wJ7VyoLSG
+	Y6uHVK2Y78zUVsTQHZ4hnAtny6U4zRQ82DvQuC99e44ZMCMDqLxjXGTHKPiGRa4=
+X-Google-Smtp-Source: AGHT+IFOFkHys1bH4WkLHPGQ3V9fUh1P0YVQPkq70kk/yd9g6H865FEq3BXbnYj7ckxtOrhkoU1gaQ==
+X-Received: by 2002:a05:6512:15a7:b0:512:a6cd:b37c with SMTP id bp39-20020a05651215a700b00512a6cdb37cmr11450521lfb.47.1708625681964;
+        Thu, 22 Feb 2024 10:14:41 -0800 (PST)
+Received: from localhost ([178.176.56.174])
+        by smtp.gmail.com with ESMTPSA id x7-20020ac25dc7000000b00512dbd9cf32sm348778lfq.54.2024.02.22.10.14.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 22 Feb 2024 10:14:41 -0800 (PST)
+From: Serge Semin <fancer.lancer@gmail.com>
+To: Michal Simek <michal.simek@amd.com>,
+	Alexander Stein <alexander.stein@ew.tq-group.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Tony Luck <tony.luck@intel.com>,
+	James Morse <james.morse@arm.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Robert Richter <rric@kernel.org>
+Cc: Serge Semin <fancer.lancer@gmail.com>,
+	Punnaiah Choudary Kalluri <punnaiah.choudary.kalluri@xilinx.com>,
+	Dinh Nguyen <dinguyen@kernel.org>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-edac@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v5 12/20] EDAC/synopsys: Drop redundant info from the error messages
+Date: Thu, 22 Feb 2024 21:12:57 +0300
+Message-ID: <20240222181324.28242-13-fancer.lancer@gmail.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240222181324.28242-1-fancer.lancer@gmail.com>
+References: <20240222181324.28242-1-fancer.lancer@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240222-kms-hdmi-connector-state-v7-13-8f4af575fce2@kernel.org>
-References: <20240222-kms-hdmi-connector-state-v7-0-8f4af575fce2@kernel.org>
-In-Reply-To: <20240222-kms-hdmi-connector-state-v7-0-8f4af575fce2@kernel.org>
-To: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
- Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
- Daniel Vetter <daniel@ffwll.ch>, Jonathan Corbet <corbet@lwn.net>, 
- Sandy Huang <hjc@rock-chips.com>, 
- =?utf-8?q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, 
- Chen-Yu Tsai <wens@csie.org>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
- Samuel Holland <samuel@sholland.org>
-Cc: Hans Verkuil <hverkuil@xs4all.nl>, 
- Sebastian Wick <sebastian.wick@redhat.com>, 
- =?utf-8?q?Ville_Syrj=C3=A4l=C3=A4?= <ville.syrjala@linux.intel.com>, 
- dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org, 
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-media@vger.kernel.org, linux-rockchip@lists.infradead.org, 
- linux-sunxi@lists.linux.dev, Maxime Ripard <mripard@kernel.org>, 
- Dave Stevenson <dave.stevenson@raspberrypi.com>
-X-Mailer: b4 0.12.3
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4017; i=mripard@kernel.org;
- h=from:subject:message-id; bh=mh6yrZRFWWWgJBk2sU4bljECM9b4FtLl0mec212hJfc=;
- b=owGbwMvMwCX2+D1vfrpE4FHG02pJDKnX+z7GcMXcWSeRGnorTf30af/4AzK3283C3II+vwxes
- eGy1JfPHaUsDGJcDLJiiiwxwuZL4k7Net3JxjcPZg4rE8gQBi5OAZjIh0cM/0w/lr0I/LNmouSr
- oPabZTXb3jf/Li67Yty1U6GIZ/sFB3tGhrly8oe4VDOPnuu8NXP6fy2Fz5/iDtnI7BTfvsH9qWm
- GNysA
-X-Developer-Key: i=mripard@kernel.org; a=openpgp;
- fpr=BE5675C37E818C8B5764241C254BCFC56BF6CE8D
+Content-Transfer-Encoding: 8bit
 
-A lot of HDMI drivers have some variation of the formula to calculate
-the TMDS character rate from a mode, but few of them actually take all
-parameters into account.
+Currently the custom error messages are needlessly long so the logged text
+gets to be printed in several lines in console. There is some
+duplicated/redundant information which can be freely removed from it: drop
+the message prefix "DDR ECC error type:%s" since the resultant text
+printed to the log by the edac_mc_printk() method will contain the error
+type and the memory controller id referring to the device detected the
+error anyway; with no harm to readability shorten out the phrase "Bit
+Position" to being just "Bit".
 
-Let's create a helper to provide that rate taking all parameters into
-account.
-
-Reviewed-by: Dave Stevenson <dave.stevenson@raspberrypi.com>
-Signed-off-by: Maxime Ripard <mripard@kernel.org>
+Signed-off-by: Serge Semin <fancer.lancer@gmail.com>
 ---
- drivers/gpu/drm/drm_connector.c | 71 +++++++++++++++++++++++++++++++++++++++++
- include/drm/drm_connector.h     |  5 +++
- 2 files changed, 76 insertions(+)
+ drivers/edac/synopsys_edac.c | 19 +++++++++----------
+ 1 file changed, 9 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/gpu/drm/drm_connector.c b/drivers/gpu/drm/drm_connector.c
-index b629c8e990f4..8cc1332f11c2 100644
---- a/drivers/gpu/drm/drm_connector.c
-+++ b/drivers/gpu/drm/drm_connector.c
-@@ -2897,6 +2897,77 @@ void drm_connector_update_privacy_screen(const struct drm_connector_state *conne
- }
- EXPORT_SYMBOL(drm_connector_update_privacy_screen);
+diff --git a/drivers/edac/synopsys_edac.c b/drivers/edac/synopsys_edac.c
+index b0ff831287f5..dfe1abe7c86c 100644
+--- a/drivers/edac/synopsys_edac.c
++++ b/drivers/edac/synopsys_edac.c
+@@ -478,13 +478,13 @@ static void handle_error(struct mem_ctl_info *mci, struct synps_ecc_status *p)
+ 		pinf = &p->ceinfo;
+ 		if (priv->p_data->quirks & DDR_ECC_INTR_SUPPORT) {
+ 			snprintf(priv->message, SYNPS_EDAC_MSG_SIZE,
+-				 "DDR ECC error type:%s Row %d Col %d Bank %d Bank Group %d Bit Position: %d Data: 0x%08x",
+-				 "CE", pinf->row, pinf->col, pinf->bank,
+-				 pinf->bankgrp, pinf->bitpos, pinf->data);
++				 "Row %d Col %d Bank %d Bank Group %d Bit %d Data 0x%08x",
++				 pinf->row, pinf->col, pinf->bank, pinf->bankgrp,
++				 pinf->bitpos, pinf->data);
+ 		} else {
+ 			snprintf(priv->message, SYNPS_EDAC_MSG_SIZE,
+-				 "DDR ECC error type:%s Row %d Bank %d Col %d Bit Position: %d Data: 0x%08x",
+-				 "CE", pinf->row, pinf->bank, pinf->col,
++				 "Row %d Bank %d Col %d Bit: %d Data: 0x%08x",
++				 pinf->row, pinf->bank, pinf->col,
+ 				 pinf->bitpos, pinf->data);
+ 		}
  
-+/**
-+ * drm_connector_hdmi_compute_mode_clock() - Computes the TMDS Character Rate
-+ * @mode: Display mode to compute the clock for
-+ * @bpc: Bits per character
-+ * @fmt: Output Pixel Format used
-+ *
-+ * Returns the TMDS Character Rate for a given mode, bpc count and output format.
-+ *
-+ * RETURNS:
-+ * The TMDS Character Rate, in Hertz, or 0 on error.
-+ */
-+unsigned long long
-+drm_connector_hdmi_compute_mode_clock(const struct drm_display_mode *mode,
-+				      unsigned int bpc,
-+				      enum hdmi_colorspace fmt)
-+{
-+	unsigned long long clock = mode->clock * 1000ULL;
-+	unsigned int vic = drm_match_cea_mode(mode);
-+
-+	/*
-+	 * CTA-861-G Spec, section 5.4 - Color Coding and Quantization
-+	 * mandates that VIC 1 always uses 8 bpc.
-+	 */
-+	if (vic == 1 && bpc != 8)
-+		return 0;
-+
-+	/*
-+	 * HDMI 2.0 Spec, section 7.1 - YCbCr 4:2:0 Pixel Encoding
-+	 * specifies that YUV420 encoding is only available for those
-+	 * VICs.
-+	 */
-+	if (fmt == HDMI_COLORSPACE_YUV420 &&
-+	    !(vic == 96 || vic == 97 || vic == 101 ||
-+	      vic == 102 || vic == 106 || vic == 107))
-+		return 0;
-+
-+	if (fmt == HDMI_COLORSPACE_YUV422) {
-+		/*
-+		 * HDMI 1.4b Spec, section 6.2.3 - Pixel Encoding Requirements
-+		 * specifies that YUV422 is 36-bit only.
-+		 */
-+		if (bpc != 12)
-+			return 0;
-+
-+		/*
-+		 * HDMI 1.0 Spec, section 6.5 - Pixel Encoding
-+		 * specifies that YUV422 requires two 12-bits components per
-+		 * pixel clock, which is equivalent in our calculation to three
-+		 * 8-bits components
-+		 */
-+		bpc = 8;
-+	}
-+
-+	/*
-+	 * HDMI 2.0 Spec, Section 7.1 - YCbCr 4:2:0 Pixel Encoding
-+	 * specifies that YUV420 encoding is carried at a TMDS Character Rate
-+	 * equal to half the pixel clock rate.
-+	 */
-+	if (fmt == HDMI_COLORSPACE_YUV420)
-+		clock = clock / 2;
-+
-+	if (mode->flags & DRM_MODE_FLAG_DBLCLK)
-+		clock = clock * 2;
-+
-+	clock = clock * bpc;
-+	do_div(clock, 8);
-+
-+	return clock;
-+}
-+EXPORT_SYMBOL(drm_connector_hdmi_compute_mode_clock);
-+
- int drm_connector_set_obj_prop(struct drm_mode_object *obj,
- 				    struct drm_property *property,
- 				    uint64_t value)
-diff --git a/include/drm/drm_connector.h b/include/drm/drm_connector.h
-index 29883e6f8e50..a859ad7ee04b 100644
---- a/include/drm/drm_connector.h
-+++ b/include/drm/drm_connector.h
-@@ -38,6 +38,7 @@ struct drm_connector_helper_funcs;
- struct drm_modeset_acquire_ctx;
- struct drm_device;
- struct drm_crtc;
-+struct drm_display_mode;
- struct drm_encoder;
- struct drm_panel;
- struct drm_property;
-@@ -2094,6 +2095,10 @@ void drm_connector_attach_privacy_screen_properties(struct drm_connector *conn);
- void drm_connector_attach_privacy_screen_provider(
- 	struct drm_connector *connector, struct drm_privacy_screen *priv);
- void drm_connector_update_privacy_screen(const struct drm_connector_state *connector_state);
-+unsigned long long
-+drm_connector_hdmi_compute_mode_clock(const struct drm_display_mode *mode,
-+				      unsigned int bpc,
-+				      enum hdmi_colorspace fmt);
+@@ -497,13 +497,12 @@ static void handle_error(struct mem_ctl_info *mci, struct synps_ecc_status *p)
+ 		pinf = &p->ueinfo;
+ 		if (priv->p_data->quirks & DDR_ECC_INTR_SUPPORT) {
+ 			snprintf(priv->message, SYNPS_EDAC_MSG_SIZE,
+-				 "DDR ECC error type :%s Row %d Col %d Bank %d Bank Group %d",
+-				 "UE", pinf->row, pinf->col, pinf->bank,
+-				 pinf->bankgrp);
++				 "Row %d Col %d Bank %d Bank Group %d",
++				 pinf->row, pinf->col, pinf->bank, pinf->bankgrp);
+ 		} else {
+ 			snprintf(priv->message, SYNPS_EDAC_MSG_SIZE,
+-				 "DDR ECC error type :%s Row %d Bank %d Col %d ",
+-				 "UE", pinf->row, pinf->bank, pinf->col);
++				 "Row %d Bank %d Col %d",
++				 pinf->row, pinf->bank, pinf->col);
+ 		}
  
- /**
-  * struct drm_tile_group - Tile group metadata
-
+ 		edac_mc_handle_error(HW_EVENT_ERR_UNCORRECTED, mci,
 -- 
-2.43.2
+2.43.0
 
