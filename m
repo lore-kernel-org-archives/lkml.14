@@ -1,126 +1,145 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from frasgout12.his.huawei.com (frasgout12.his.huawei.com [14.137.139.154])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89AC712FF95;
-	Thu, 22 Feb 2024 13:13:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6935E3C480;
+	Thu, 22 Feb 2024 13:13:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=14.137.139.154
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708607623; cv=none; b=YjHn3DqxCZ2xjQju6PqyiMM/zzYz1bZJi9ggTx+FLuyQN3gB85NCGOMR4yNbBiBkgSCWF29jn6c/ADB15iQ4SMkm180Dc5K2sYH+gM/Cn7cOUYhp1ddSiBPMR7qBGnyGRqB0o9NcpCso2/s/I/uS1B857N9TBv8JxChT8cg9yb8=
+	t=1708607632; cv=none; b=sthz6P0oPMb3Ox8TxSCGVwknBC9dvwAgDqwD8X2BPLH0mnx03DOm3aa/WPyRVxcQ57Obx7yCKQHPGM5mJHa/DQhD/4qmwCWUVupms29e3I/u/Z2NcBubCz3bual6EGiToFZoy1yzUaA51UPhw94NBlDyGkW2h3h73yx62FQhoC0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708607623; c=relaxed/simple;
-	bh=6OzfR5St32D1ssiPndCMGGUD7Z7DoQf2u0dqtnL026Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mY8bUIncS9L3Y7a1UxHytBU0PT8kQQRymiWAWp3gALPRMCHuUtlQh8FOEDx8zbtwco5EmvX3yjN8GqdH22IoBk91NsUvoYd0hQ0yLl5Qj5yc20lr19ofPZ/EmY0NNFCyS66dI3C9FNUqMZxQMoRnfx6F9wyGRQQ7GB3+Za6rPDw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OAeTY3fS; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OAeTY3fS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C1C78C433F1;
-	Thu, 22 Feb 2024 13:13:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708607623;
-	bh=6OzfR5St32D1ssiPndCMGGUD7Z7DoQf2u0dqtnL026Q=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=OAeTY3fS/OcZeu4gttXoRy4eOkX7GsE7tkpmuOObXKBrKxsP1cLy0sSdOOmEdJwLt
-	 bBio7Khp5uxXWBSTmNPmu+KWattjJtUwz9GaLqf83TJF6WQTwR+r6nyFnCGhTGB9e+
-	 D/eH69N/XwQmFyyswnQeF98uEnS/xoQ2YvUE+4HThieiyNzAubRL0qJ7175AizmlLw
-	 lpxjV3Ho5kv8TIhemS9HkrjVVWzuNu6ArvMTU8oLj6m+DKiOmRu74kgRiQGo8JSD0Y
-	 3fREI6cO1lkdXAA9av0+DeI0VMcvVbsz3ciIghVmjUynl5x6vlAlwnZsI6VVHppm7P
-	 N/Otv6CbOTTOw==
-Date: Thu, 22 Feb 2024 13:13:38 +0000
-From: Simon Horman <horms@kernel.org>
-To: Paolo Abeni <pabeni@redhat.com>
-Cc: netdev@vger.kernel.org, Matthieu Baerts <matttbe@kernel.org>,
-	Mat Martineau <martineau@kernel.org>,
-	Geliang Tang <geliang@kernel.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Shuah Khan <shuah@kernel.org>,
-	mptcp@lists.linux.dev, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net 2/2] selftests: mptcp: explicitly trigger the
- listener diag code-path
-Message-ID: <20240222131338.GA960874@kernel.org>
-References: <cover.1708515908.git.pabeni@redhat.com>
- <1116d80f808ea870f3f77fe927dbd6c622d062ae.1708515908.git.pabeni@redhat.com>
+	s=arc-20240116; t=1708607632; c=relaxed/simple;
+	bh=Uy376ED34WIMkkv3zbgADLtj7CtDO3E0JZj2bvWXW3w=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=isPsE3PZ2w97Ar1NegwL5khFBLFj0jgvE2M02ALhvGDa0qKvy4Al5qjHQtHVjjYPZ0z1Afwm3MyLqoUBLhwCbBGhe2WDmIVbhed2nGVX3Bcj9E2QrWPB44TSwaAxz3n9p8+och7uWP/kAaMYbOIDTcj0fugGXdIqzEmL4ZAN1R0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=14.137.139.154
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.18.186.29])
+	by frasgout12.his.huawei.com (SkyGuard) with ESMTP id 4TgY4Y3wljz9xww9;
+	Thu, 22 Feb 2024 20:54:21 +0800 (CST)
+Received: from mail02.huawei.com (unknown [7.182.16.47])
+	by mail.maildlp.com (Postfix) with ESMTP id 95B41140ED3;
+	Thu, 22 Feb 2024 21:13:32 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.45.157.235])
+	by APP1 (Coremail) with SMTP id LxC2BwDXzhdSSNdlhi4AAw--.34998S3;
+	Thu, 22 Feb 2024 14:13:31 +0100 (CET)
+From: Petr Tesarik <petrtesarik@huaweicloud.com>
+To: Dave Hansen <dave.hansen@intel.com>
+Cc: =?UTF-8?B?UGV0ciBUZXNhxZnDrWs=?= <petr@tesarici.cz>,
+	Petr Tesarik <petrtesarik@huaweicloud.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Andy Lutomirski <luto@kernel.org>,
+	Oleg Nesterov <oleg@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Xin Li <xin3.li@intel.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Rick Edgecombe <rick.p.edgecombe@intel.com>,
+	Kees Cook <keescook@chromium.org>,
+	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
+	Pengfei Xu <pengfei.xu@intel.com>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Ze Gao <zegao2021@gmail.com>,
+	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+	Kai Huang <kai.huang@intel.com>,
+	David Woodhouse <dwmw@amazon.co.uk>,
+	Brian Gerst <brgerst@gmail.com>,
+	Jason Gunthorpe <jgg@ziepe.ca>,
+	Joerg Roedel <jroedel@suse.de>,
+	"Mike Rapoport (IBM)" <rppt@kernel.org>,
+	Tina Zhang <tina.zhang@intel.com>,
+	Jacob Pan <jacob.jun.pan@linux.intel.com>,
+	"open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+	open list <linux-kernel@vger.kernel.org>,
+	Roberto Sassu <roberto.sassu@huaweicloud.com>,
+	John Johansen <john.johansen@canonical.com>,
+	Paul Moore <paul@paul-moore.com>,
+	James Morris <jmorris@namei.org>,
+	"Serge E. Hallyn" <serge@hallyn.com>,
+	apparmor@lists.ubuntu.com,
+	linux-security-module@vger.kernel.org,
+	Petr Tesarik <petr.tesarik1@huawei-partners.com>
+Subject: [RFC 1/5] sbm: x86: fix SBM error entry path
+Date: Thu, 22 Feb 2024 14:12:26 +0100
+Message-Id: <20240222131230.635-2-petrtesarik@huaweicloud.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240222131230.635-1-petrtesarik@huaweicloud.com>
+References: <fb4a40c7-af9a-406a-95ab-406595f3ffe5@intel.com>
+ <20240222131230.635-1-petrtesarik@huaweicloud.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1116d80f808ea870f3f77fe927dbd6c622d062ae.1708515908.git.pabeni@redhat.com>
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:LxC2BwDXzhdSSNdlhi4AAw--.34998S3
+X-Coremail-Antispam: 1UD129KBjvJXoW7Kw1DWF1rJw4kJFW3Kr45ZFb_yoW8Gry5pF
+	nrC3Z7JF40vrySyw1fG3W8ZFZ8ua90gF45CFn7Kw1ft3W5t34UGr10k397W34furykGa4r
+	XF1YvF1jy3WUAaDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUPF14x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_Jr4l82xGYIkIc2
+	x26xkF7I0E14v26ryj6s0DM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0
+	Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UM2
+	8EF7xvwVC2z280aVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4UJVWxJr1l
+	e2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI
+	8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwAC
+	jcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2Y2ka0x
+	kIwI1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AK
+	xVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26rWY6r4UJwCIc4
+	0Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AK
+	xVWxJVW8Jr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r
+	4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJbIYCTnIWIevJa73UjIFyTuYvjfUOR6z
+	UUUUU
+X-CM-SenderInfo: hshw23xhvd2x3n6k3tpzhluzxrxghudrp/
 
-On Wed, Feb 22, 2024 at 12:46:59PM +0100, Paolo Abeni wrote:
->l The mptcp diag interface already experienced a few locking bugs
-> that lockdep and appropriate coverage have detected in advance.
-> 
-> Let's add a test-case triggering the relevant code path, to prevent
-> similar issues in the future.
-> 
-> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
-> ---
->  tools/testing/selftests/net/mptcp/diag.sh | 30 +++++++++++++++++++++++
->  1 file changed, 30 insertions(+)
-> 
-> diff --git a/tools/testing/selftests/net/mptcp/diag.sh b/tools/testing/selftests/net/mptcp/diag.sh
-> index 60a7009ce1b5..3ab584b38566 100755
-> --- a/tools/testing/selftests/net/mptcp/diag.sh
-> +++ b/tools/testing/selftests/net/mptcp/diag.sh
-> @@ -81,6 +81,21 @@ chk_msk_nr()
->  	__chk_msk_nr "grep -c token:" "$@"
->  }
->  
-> +chk_listener_nr()
-> +{
-> +	local expected=$1
-> +	local msg="$2"
-> +
-> +	if [ $expected -gt 0 ] && \
-> +	   ! mptcp_lib_kallsyms_has "mptcp_diag_dump_listeners"; then
-> +		printf "%-50s%s\n" "$msg - mptcp" "[ skip ]"
-> +		mptcp_lib_result_skip "many listener sockets"
-> +	else
-> +		__chk_nr "ss -inmlHMON $ns | wc -l" "$expected" "$msg - mptcp"
-> +	fi
-> +	__chk_nr "ss -inmlHtON $ns | wc -l" "$expected" "$msg - subflows"
-> +}
-> +
->  wait_msk_nr()
->  {
->  	local condition="grep -c token:"
-> @@ -279,5 +294,20 @@ flush_pids
->  chk_msk_inuse 0 "many->0"
->  chk_msk_cestab 0 "many->0"
->  
-> +chk_listener_nr 0 "no listener sockets"
-> +NR_SERVERS=100
-> +for I in $(seq 1 $NR_SERVERS); do
-> +	ip netns exec $ns ./mptcp_connect -p $((I + 20001)) -l 0.0.0.0 2>&1 >/dev/null &
-> +	mptcp_lib_wait_local_port_listen $ns $((I + 20001))
-> +done
-> +
-> +chk_listener_nr $NR_SERVERS "many listener sockets"
-> +
-> +# gracefull termination
+From: Petr Tesarik <petr.tesarik1@huawei-partners.com>
 
-nit, as you plan to re-spin anyway: graceful
+Normal interrupt entry from SBM should be generally treated as entry from
+kernel mode (no swapgs, no speculation mitigations), but since there is a
+CPL change, the interrupt handler runs on the trampoline stack, which may
+get reused if the current task is re-scheduled.
 
-> +for I in $(seq 1 $NR_SERVERS); do
-> +	echo a | ip netns exec $ns ./mptcp_connect -p $((I + 20001)) 127.0.0.1 2>&1 >/dev/null
+Make sure to switch to the SBM exception stack.
 
-I'm not sure of the validity of this but shellcheck complains that:
+Signed-off-by: Petr Tesarik <petr.tesarik1@huawei-partners.com>
+---
+ arch/x86/entry/entry_64.S | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
-  SC2069 (warning): To redirect stdout+stderr, 2>&1 must be last (or use '{ cmd > file; } 2>&1' to clarify).
+diff --git a/arch/x86/entry/entry_64.S b/arch/x86/entry/entry_64.S
+index 4ba3eea38102..96830591302d 100644
+--- a/arch/x86/entry/entry_64.S
++++ b/arch/x86/entry/entry_64.S
+@@ -1062,14 +1062,20 @@ SYM_CODE_START(error_entry)
+ 	/*
+ 	 * If sandbox mode was active, adjust the saved CS,
+ 	 * unconditionally switch to kernel CR3 and continue
+-	 * as if the interrupt was from kernel space.
++	 * as if the interrupt was from kernel space, but
++	 * switch away from the trampoline stack.
+ 	 */
+ 	movq	x86_sbm_state + SBM_kernel_cr3, %rcx
+ 	jrcxz	.Lerror_swapgs
+ 
+ 	andb	$~3, CS+8(%rsp)
+ 	movq	%rcx, %cr3
+-	jmp	.Lerror_entry_done_lfence
++
++	FENCE_SWAPGS_KERNEL_ENTRY
++	CALL_DEPTH_ACCOUNT
++	leaq	8(%rsp), %rdi
++	/* Put us onto the SBM exception stack. */
++	jmp	sync_regs
+ #endif
+ 
+ .Lerror_swapgs:
+-- 
+2.34.1
 
-Also for the same constriction slightly earlier in this patch.
-
-> +done
-> +flush_pids
-> +
->  mptcp_lib_result_print_all_tap
->  exit $ret
-> -- 
-> 2.43.0
-> 
-> 
