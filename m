@@ -1,105 +1,126 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f43.google.com (mail-oo1-f43.google.com [209.85.161.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75CB573F3F
-	for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 21:13:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F06E7175C;
+	Thu, 22 Feb 2024 21:15:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708636422; cv=none; b=d2ghvFaCfElr8vWzHkXkYOzZb9kUaOz/hkRzViV4F6Vsj13rV7O4Evyt+bK8ke9C6HIi2D0HtLs/x+Oka8KJaeOetRS/RlFz9vFV8AUqBk6g5CuajKzMJHqUb+yGZCBNPfGDUvR9MjgFFEJF2OoRpBGRdlGDVKm0SDo79Z7L/tc=
+	t=1708636510; cv=none; b=nKstjg93St2+7Xsv2y7BSUpyfMITMSGQ9PbenLev1q7d8ZTq7BH3ms+KvmqV0sxxZukMbB4urMPwChZkph26nLogl/DHcY0ujnO+vfMhhtA6r0cE3URPTpREyLeWKRca6G8sWeOlou/lrW/Wi84F9DtmtbEFHP4EX5Ksl+NpWDA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708636422; c=relaxed/simple;
-	bh=5moig4njCgnDf7igi1Vp9KBukK6uFIF2+DWnHa9UyB8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=d2MHsMMOiof0Zc9dLo6FkFnX1R72JUnuqeOUeLl5MSoPrN1VVmNwvwCz82cZMsu/QTwG+xXkMp2BbzZ0vHwMHzbCxiBiJWrk+HYBfQrf1Ddf8JV7UOroJBl779toFKQn0PD180WjTuL/HkF0mgR2Y64d+uWgRfWGMepoMy7hJaI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <mfe@pengutronix.de>)
-	id 1rdGNr-0001r8-7F; Thu, 22 Feb 2024 22:13:35 +0100
-Received: from [2a0a:edc0:2:b01:1d::c5] (helo=pty.whiteo.stw.pengutronix.de)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <mfe@pengutronix.de>)
-	id 1rdGNq-002Irv-5S; Thu, 22 Feb 2024 22:13:34 +0100
-Received: from mfe by pty.whiteo.stw.pengutronix.de with local (Exim 4.96)
-	(envelope-from <mfe@pengutronix.de>)
-	id 1rdGNq-002sSL-0E;
-	Thu, 22 Feb 2024 22:13:34 +0100
-Date: Thu, 22 Feb 2024 22:13:34 +0100
-From: Marco Felsch <m.felsch@pengutronix.de>
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: devicetree@vger.kernel.org, conor+dt@kernel.org,
-	heikki.krogerus@linux.intel.com, kernel@pengutronix.de,
-	gregkh@linuxfoundation.org, linux-usb@vger.kernel.org,
-	linux-kernel@vger.kernel.org, robh+dt@kernel.org,
-	krzysztof.kozlowski+dt@linaro.org, linux@roeck-us.net,
-	jun.li@nxp.com
-Subject: Re: [PATCH v2 1/4] dt-bindings: usb: typec-tcpci: add tcpci fallback
- binding
-Message-ID: <20240222211334.xvgwe33dsj7digrt@pengutronix.de>
-References: <20240215212852.1202339-1-m.felsch@pengutronix.de>
- <20240215212852.1202339-2-m.felsch@pengutronix.de>
- <4e464a7a-6a38-461a-b03e-442cc43d1719@linaro.org>
- <20240222202357.2etmuoy6i6qr6bnq@pengutronix.de>
+	s=arc-20240116; t=1708636510; c=relaxed/simple;
+	bh=+xIXD/2/oxIWEfrv3yIZldxrY3+fcQ19267trFYIMr4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=fSxlO7yfhkXsCliFNGRf98wPSTrG0abs6KBl3l2L5izNFAx+i2Xewm23tfLGQ+tRkliKW6QNgPylIUaLCm81ZKI+NieRTeJog57diZy6wS9eEVbRjmMV2gVXzZXJJ/pv3tWTq2nKZaNlYIWSKq9lqxqdW5oeBmjM3g7nhajg+8Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.161.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-oo1-f43.google.com with SMTP id 006d021491bc7-5a0333a9779so60416eaf.0;
+        Thu, 22 Feb 2024 13:15:07 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708636507; x=1709241307;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Iwu0gmTsePp7o8N8/VmTdIjFEQ9vkLhfKTZRszY+BUE=;
+        b=GttHAknGqTKvtkURUsZyruSxKVE5PoQlhPJPShnNjeeivOPmk4XxL8k2jcjToC7bQH
+         mzL13sW1Ap9Lg69pQSymZ2ebVgvtI7Nq1H+8uVJD+VFc7lzropw269YHPoEljlnY1cw1
+         j5xAFq0cHn6jU/nW6dvBOIaOBHb2PlFr7hmQXOlMCsY7Z8glV5+wCX2GG8loCHGSoy/T
+         604D4Y/D6uJvW+Nj7FhL8MFJqqA93rI1CG3Vkmb/DqtEQY38PwHFlBi8Tyfy9WaMv+Ht
+         TchpwTDQnTEOo9BZNPmJoSvqcW/3h9au8p0wxM5C5wyKV/IEEDCXVyT9EpjsDh730q8n
+         QsUQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVSByyRWh9lHV8oM5Od9bOc8b4g43UVeDnX0XuC/0sVR/c/WasVInPWXZWks2OFSVBlYxUzlEjkfNo8KmgtrB/dmaXGrRWY+h2HDCDYVzPi4ciMuLcZfvSJanVuilQWbpoA9XPJZpx5
+X-Gm-Message-State: AOJu0YwsXMm0JLVqMUM4Z8RfC0Lqag/LqZB2h2eKkRlNjgr7ZzkGNyFG
+	Y3Ic8iEqkoRvnNeut8S9UJcYXV4FpD0ncEjb4B1E1PAKchq/QYPUTN0SuRO57SG0suVrnzZSDFF
+	zyjWDRpow9srSgFr+IA1QCZSXk1E=
+X-Google-Smtp-Source: AGHT+IFBhFMeTig5AOkgadvukvOfwWjQ8r353Lb0HZrWECBBPfGC+Dj9rZuEDuEVrBus6h6V0upsu6tQaky4nxbghaA=
+X-Received: by 2002:a4a:e757:0:b0:5a0:3c8a:4940 with SMTP id
+ n23-20020a4ae757000000b005a03c8a4940mr162016oov.1.1708636507038; Thu, 22 Feb
+ 2024 13:15:07 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240222202357.2etmuoy6i6qr6bnq@pengutronix.de>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: mfe@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+References: <170863444851.1479840.10249410842428140526.stgit@dwillia2-xfh.jf.intel.com>
+ <170863445442.1479840.1818801787239831650.stgit@dwillia2-xfh.jf.intel.com>
+In-Reply-To: <170863445442.1479840.1818801787239831650.stgit@dwillia2-xfh.jf.intel.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Thu, 22 Feb 2024 22:14:55 +0100
+Message-ID: <CAJZ5v0hmD+7iSKKexpUccvMUtjNpd9fHo3vRrshD_s=rb5Vq_w@mail.gmail.com>
+Subject: Re: [PATCH 1/3] sysfs: Fix crash on empty group attributes array
+To: Dan Williams <dan.j.williams@intel.com>
+Cc: gregkh@linuxfoundation.org, 
+	Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>, 
+	Marc Herbert <marc.herbert@intel.com>, "Rafael J. Wysocki" <rafael@kernel.org>, linux-kernel@vger.kernel.org, 
+	linux-pci@vger.kernel.org, linux-coco@lists.linux.dev, 
+	alsa-devel@alsa-project.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 24-02-22, Marco Felsch wrote:
-> On 24-02-22, Krzysztof Kozlowski wrote:
-> > On 15/02/2024 22:28, Marco Felsch wrote:
-> > > The NXP PTN5110 [1] is an TCPCI [2] compatible chip, so add the fallback
-> > > binding.
-> > > 
-> > > [1] https://www.nxp.com/docs/en/data-sheet/PTN5110.pdf
-> > > [2] https://www.usb.org/sites/default/files/documents/usb-port_controller_specification_rev2.0_v1.0_0.pdf
-> > > 
-> > > Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
-> > > ---
-> > > v2:
-> > > - rephrase commit message
-> > > 
-> > >  Documentation/devicetree/bindings/usb/nxp,ptn5110.yaml | 4 +++-
-> > >  1 file changed, 3 insertions(+), 1 deletion(-)
-> > > 
-> > > diff --git a/Documentation/devicetree/bindings/usb/nxp,ptn5110.yaml b/Documentation/devicetree/bindings/usb/nxp,ptn5110.yaml
-> > > index eaedb4cc6b6c..7bd7bbbac9e0 100644
-> > > --- a/Documentation/devicetree/bindings/usb/nxp,ptn5110.yaml
-> > > +++ b/Documentation/devicetree/bindings/usb/nxp,ptn5110.yaml
-> > > @@ -11,7 +11,9 @@ maintainers:
-> > >  
-> > >  properties:
-> > >    compatible:
-> > > -    const: nxp,ptn5110
-> > > +    enum:
-> > > +      - nxp,ptn5110
-> > > +      - tcpci
-> > 
-> > That's not a fallback, but enum. Fallback is "items" and then you could
-> 
-> Damn, you're right. Sorry.
-> 
-> > also send a follow-up patchset (separate, so Greg won't take it) fixing
-> > DTS (if not, let me know, so I will fix it).
-> 
-> Sry. but I don't get this. Why do I need to send a follow-up? Greg did
-> not apply anything, at least I didn't received an e-mail, that this
-> patchset was picked.
+On Thu, Feb 22, 2024 at 9:40=E2=80=AFPM Dan Williams <dan.j.williams@intel.=
+com> wrote:
+>
+> It turns out that arch/x86/events/intel/core.c makes use of "empty"
+> attributes.
+>
+>         static struct attribute *empty_attrs;
+>
+>         __init int intel_pmu_init(void)
+>         {
+>                 struct attribute **extra_skl_attr =3D &empty_attrs;
+>                 struct attribute **extra_attr =3D &empty_attrs;
+>                 struct attribute **td_attr    =3D &empty_attrs;
+>                 struct attribute **mem_attr   =3D &empty_attrs;
+>                 struct attribute **tsx_attr   =3D &empty_attrs;
+>                 ...
+>
+> That breaks the assumption __first_visible() that expects that if
+> grp->attrs is set then grp->attrs[0] must also be set and results in
+> backtraces like:
+>
+>     BUG: kernel NULL pointer dereference, address: 00rnel mode
+>     #PF: error_code(0x0000) - not-present ] PREEMPT SMP NOPTI
+>     CPU: 1 PID: 1 Comm: swapper/IP: 0010:exra_is_visible+0x14/0x20
+>      ? exc_page_fault+0x68/0x190
+>      internal_create_groups+0x42/0xa0
+>      pmu_dev_alloc+0xc0/0xe0
+>      perf_event_sysfs_init+0x580000000000 ]---
+>     RIP: 0010:exra_is_visible+0x14/0
+>
+> Check for non-empty attributes array before calling is_visible().
+>
+> Reported-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+> Closes: https://github.com/thesofproject/linux/pull/4799#issuecomment-195=
+8537212
+> Fixes: 70317fd24b41 ("sysfs: Introduce a mechanism to hide static attribu=
+te_groups")
 
-Got it now and made it this way.
+This is not in the mainline, so linux-next I suppose?
 
-Regards,
-  Marco
+> Cc: Marc Herbert <marc.herbert@intel.com>
+> Cc: "Rafael J. Wysocki" <rafael@kernel.org>
+> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+> ---
+>  fs/sysfs/group.c |    4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/fs/sysfs/group.c b/fs/sysfs/group.c
+> index ccb275cdabcb..8c63ba3cfc47 100644
+> --- a/fs/sysfs/group.c
+> +++ b/fs/sysfs/group.c
+> @@ -33,10 +33,10 @@ static void remove_files(struct kernfs_node *parent,
+>
+>  static umode_t __first_visible(const struct attribute_group *grp, struct=
+ kobject *kobj)
+>  {
+> -       if (grp->attrs && grp->is_visible)
+> +       if (grp->attrs && grp->attrs[0] && grp->is_visible)
+>                 return grp->is_visible(kobj, grp->attrs[0], 0);
+>
+> -       if (grp->bin_attrs && grp->is_bin_visible)
+> +       if (grp->bin_attrs && grp->bin_attrs[0] && grp->is_bin_visible)
+>                 return grp->is_bin_visible(kobj, grp->bin_attrs[0], 0);
+>
+>         return 0;
+>
