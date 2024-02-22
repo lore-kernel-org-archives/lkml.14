@@ -1,46 +1,46 @@
 Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8670818059;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43FD418032;
 	Thu, 22 Feb 2024 23:08:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708643298; cv=none; b=UANWh0B9F9yeGk/3/UKePqbIkp2bDjwBMj3s2p9pFEKYUICoqQ19xayPdO6SWLZmoZx22U8FAePrkd5puDxJQI5XycbCdHWrmDjbebNgehx/dIKUt+rgF1o+2fdpXJjmCZEoIwqaItsfLF/oIEy/pDkoF9NK9iMm0wJAyiEVGY4=
+	t=1708643297; cv=none; b=P488RPzy8JHPjInZanhKmj86lTCFGl97vXqofnABFhBkSbuGWZHan3UXeERgVKdNZ6pjSeRelQ29gE+Fh0hqwMeStMyFtVNxefydYua8r3M6HUhqHI96ih8c1YgSmttTtjsDpnWruQMhVUaLP789z9LOuW7QAsmgKNdDqScj2xM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708643298; c=relaxed/simple;
-	bh=WV7is+GZWotLOyr/LJfdqKxKuPjO3bhLxlur0mKeBeU=;
+	s=arc-20240116; t=1708643297; c=relaxed/simple;
+	bh=tbhcdGsZz5J6Il/GyIV16cS31UxNQYHsB+cWiVE748w=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=lQq0+03W5xV4kqWjCSJIsPbhg4/TPGHsM+rtF92tE4e97497kjf0tohJ11IPr79evMcFHxAH1nIMmXr49BbyWSseEhuNAN3DIVnaYucSEhuycYzScoDU5EtVxhxwI6gdmOUfKuaUJSbwfTl52NXVdLGPuz3EGZDgU8O5B/7sVbk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=PiPDXQiK; arc=none smtp.client-ip=205.220.180.131
+	 MIME-Version:Content-Type; b=MGgL/f/Z56me6r68Fr24rS3lU3Rf8PvkrlpDLUk28eOVAk2c3fld7lQeYvwNrfyN4mVI1mpEgQKlCemwO/3BJ6zyfeKbn4TbElWc/iVCBTcjhJogHDDGx3i+VyoMidFy1h2pNSf7Ym3BNUxaNYN7zknmWmvUdf0d1hEzqYo7Q20=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=kD4CPY5V; arc=none smtp.client-ip=205.220.180.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="PiPDXQiK"
-Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 41MN6CoO009088;
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="kD4CPY5V"
+Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 41MLmjL7004888;
 	Thu, 22 Feb 2024 23:08:12 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
 	from:to:cc:subject:date:message-id:in-reply-to:references
 	:mime-version:content-transfer-encoding:content-type; s=
-	qcppdkim1; bh=XkoTJEI1H9WS/l6Sp9i9Pr6+5+Uqu6NrC2M+bSJ0ppE=; b=Pi
-	PDXQiKuPVVL526K2VkjiLlt+j6r+Pw9K+9ztVG9DOJ3352Bmp6l85nG4LU5Ln1q5
-	z/2xfkbAThK+zuWeYeVxBvFxhV7x56acV61jLhJuft+CZQsrwgId985mkr+QNSVU
-	opipVSW1V5ICNPmrP836KU+EyX2jy6KaNBXbG9RGfI+6maNt2j7xHxJklKMTtquT
-	Re7Zlkv97SVLrdg2vsbRQSvOq4TXQ3m0A8KeqK306ezu7Hu2TvrD+oeWaisWYMLN
-	O3rUJq/YHtnLj7Ng3HeFgQ+8BAqiBpsT/YMKmlaXiZcyAboWDU1CSVfOIUc+x9b6
-	p7HKaLxFoXOhd8fZTv5A==
-Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3we3231gjh-1
+	qcppdkim1; bh=5lGZ9UC1ti19oSeik0qc9lHl96T+ATYFavZCW5VOyN0=; b=kD
+	4CPY5VU3lNw+MwS9YPQVNB0u+ftYSgImFgprwoTylGdAyf+lVELnEDfqZKwRyoD0
+	IhAYT0auIw6JhBa/NLF04EGo2gNeaaS2PERmiiRRGU1WoVkPaWHZvBPiscgEKyg1
+	9jNIqnU5Z3krAQYR/A8cutjv1m8pCkjGdLjlzvHFe6f4+eCqYoJUjnouk7+U9iiO
+	Zw9CSFT2T3zLl3v9Ywj+zGek9SaAWaVR4xwRkoe63eIH37QomO5j53eBxosO+EAa
+	aO1dBmp+chL6Rd+iK4fyV4pjQ5vRxqhFFj2oUUKP9x8mh/aoeKsP2+lSMbmrAT9R
+	Bw2wuOsgDpuDXUoXSRCA==
+Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3weedkr50a-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 22 Feb 2024 23:08:12 +0000 (GMT)
+	Thu, 22 Feb 2024 23:08:11 +0000 (GMT)
 Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
-	by NALASPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 41MN8BOe014137
+	by NALASPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 41MN8A81029081
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 22 Feb 2024 23:08:11 GMT
+	Thu, 22 Feb 2024 23:08:10 GMT
 Received: from hu-uchalich-lv.qualcomm.com (10.49.16.6) by
  nalasex01c.na.qualcomm.com (10.47.97.35) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Thu, 22 Feb 2024 15:08:08 -0800
+ 15.2.1118.40; Thu, 22 Feb 2024 15:08:07 -0800
 From: Unnathi Chalicheemala <quic_uchalich@quicinc.com>
 To: Bjorn Andersson <andersson@kernel.org>,
         Konrad Dybcio
@@ -52,12 +52,12 @@ To: Bjorn Andersson <andersson@kernel.org>,
 	<conor+dt@kernel.org>
 CC: <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>, <kernel@quicinc.com>
-Subject: [PATCH v3 5/5] arm64: dts: qcom: sm8650: Add mapping to llcc Broadcast_AND region
-Date: Thu, 22 Feb 2024 15:07:57 -0800
-Message-ID: <36fed182281d560050b5d4432aebbd8ff7387934.1708629933.git.quic_uchalich@quicinc.com>
+Subject: [PATCH v3 1/5] dt-bindings: arm: msm: Add llcc Broadcast_AND register
+Date: Thu, 22 Feb 2024 15:07:53 -0800
+Message-ID: <93143410af20807c8451539db7fca7cddf31e7b4.1708551850.git.quic_uchalich@quicinc.com>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <cover.1708629933.git.quic_uchalich@quicinc.com>
-References: <cover.1708629933.git.quic_uchalich@quicinc.com>
+In-Reply-To: <cover.1708551850.git.quic_uchalich@quicinc.com>
+References: <cover.1708551850.git.quic_uchalich@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -70,45 +70,84 @@ X-ClientProxiedBy: nalasex01b.na.qualcomm.com (10.47.209.197) To
  nalasex01c.na.qualcomm.com (10.47.97.35)
 X-QCInternal: smtphost
 X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: nzTreteax4TBr0_D2hI8lbzbSn3Wp10F
-X-Proofpoint-GUID: nzTreteax4TBr0_D2hI8lbzbSn3Wp10F
+X-Proofpoint-ORIG-GUID: abl6BYCRES1JKyIXGg87GIDzRTL5w7-p
+X-Proofpoint-GUID: abl6BYCRES1JKyIXGg87GIDzRTL5w7-p
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
  definitions=2024-02-22_15,2024-02-22_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 bulkscore=0
- impostorscore=0 priorityscore=1501 mlxscore=0 lowpriorityscore=0
- clxscore=1015 suspectscore=0 malwarescore=0 mlxlogscore=609 adultscore=0
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2402120000 definitions=main-2402220178
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
+ malwarescore=0 clxscore=1015 lowpriorityscore=0 mlxlogscore=999
+ phishscore=0 suspectscore=0 spamscore=0 adultscore=0 mlxscore=0
+ bulkscore=0 priorityscore=1501 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.19.0-2402120000 definitions=main-2402220178
 
-Mapping Broadcast_AND region for LLCC in SM8650.
+The LLCC block in SM8450, SM8550 and SM8650 have a new register
+space for Broadcast_AND region. This is used to check that all
+channels have bit set to "1", mainly in SCID activation/deactivation.
+
+Previously we were mapping only the Broadcast_OR region assuming
+there was only one broadcast register region. Now we also map
+Broadcast_AND region.
 
 Signed-off-by: Unnathi Chalicheemala <quic_uchalich@quicinc.com>
 ---
- arch/arm64/boot/dts/qcom/sm8650.dtsi | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ .../devicetree/bindings/cache/qcom,llcc.yaml  | 27 ++++++++++++++++++-
+ 1 file changed, 26 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/qcom/sm8650.dtsi b/arch/arm64/boot/dts/qcom/sm8650.dtsi
-index 2df77123a8c7..daa5738b955e 100644
---- a/arch/arm64/boot/dts/qcom/sm8650.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sm8650.dtsi
-@@ -4735,12 +4735,14 @@ system-cache-controller@25000000 {
- 			      <0 0x25400000 0 0x200000>,
- 			      <0 0x25200000 0 0x200000>,
- 			      <0 0x25600000 0 0x200000>,
--			      <0 0x25800000 0 0x200000>;
-+			      <0 0x25800000 0 0x200000>,
-+			      <0 0x25a00000 0 0x200000>;
- 			reg-names = "llcc0_base",
- 				    "llcc1_base",
- 				    "llcc2_base",
- 				    "llcc3_base",
--				    "llcc_broadcast_base";
-+				    "llcc_broadcast_base",
-+				    "llcc_broadcast_and_base";
+diff --git a/Documentation/devicetree/bindings/cache/qcom,llcc.yaml b/Documentation/devicetree/bindings/cache/qcom,llcc.yaml
+index 07ccbda4a0ab..a6237028957f 100644
+--- a/Documentation/devicetree/bindings/cache/qcom,llcc.yaml
++++ b/Documentation/devicetree/bindings/cache/qcom,llcc.yaml
+@@ -141,8 +141,31 @@ allOf:
+               - qcom,sm8150-llcc
+               - qcom,sm8250-llcc
+               - qcom,sm8350-llcc
++    then:
++      properties:
++        reg:
++          items:
++            - description: LLCC0 base register region
++            - description: LLCC1 base register region
++            - description: LLCC2 base register region
++            - description: LLCC3 base register region
++            - description: LLCC broadcast base register region
++        reg-names:
++          items:
++            - const: llcc0_base
++            - const: llcc1_base
++            - const: llcc2_base
++            - const: llcc3_base
++            - const: llcc_broadcast_base
++
++  - if:
++      properties:
++        compatible:
++          contains:
++            enum:
+               - qcom,sm8450-llcc
+               - qcom,sm8550-llcc
++              - qcom,sm8650-llcc
+     then:
+       properties:
+         reg:
+@@ -151,7 +174,8 @@ allOf:
+             - description: LLCC1 base register region
+             - description: LLCC2 base register region
+             - description: LLCC3 base register region
+-            - description: LLCC broadcast base register region
++            - description: LLCC broadcast OR register region
++            - description: LLCC broadcast AND register region
+         reg-names:
+           items:
+             - const: llcc0_base
+@@ -159,6 +183,7 @@ allOf:
+             - const: llcc2_base
+             - const: llcc3_base
+             - const: llcc_broadcast_base
++            - const: llcc_broadcast_and_base
  
- 			interrupts = <GIC_SPI 266 IRQ_TYPE_LEVEL_HIGH>;
- 		};
+ additionalProperties: false
+ 
 -- 
 2.25.1
 
