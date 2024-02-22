@@ -1,229 +1,103 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3A2E3A1B9;
-	Thu, 22 Feb 2024 10:05:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 192F439875;
+	Thu, 22 Feb 2024 10:06:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708596334; cv=none; b=B3IUxHcEuRFE2KtX4rcjUBeCKwidBOKIAgwuRCESLlImZ9P/BjODSl3m3aoN378nzecNJQow8uoUhqfPPwC3YpwsaGoHgefNGvbwtUFOIjrZU1Gcuhy+8/tk97MBu9zhVAsz5gULzhdYBRDlzZjNiPl/6brB1TRrSWpzrUcdMiY=
+	t=1708596371; cv=none; b=L1iV842SbOxXXx5NL5CmPOcMcNNFT5x61kUkwGAL9S9S3dZ8JUwL5AuFGBEpMk5gcfAz1hxBw31D5gSC2s269izQa4Rn0tR5z+IIpfCVH2SDumWa/ISkoATj5WuGyIjKSf0+KBLDzLcUGQRAASDuEkhpk/JpFYg4MWEwlJ3sWZg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708596334; c=relaxed/simple;
-	bh=HgyUJIc15qW7raXPSPT2a89MGSMGgVE+WXE4DuWEu1g=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=NKbOx21Schd/5fAN7LnCsp17ySyz93et8zUXaK08R0+cZ4u4GxppVdHtN9qDzS/3g13NhizWlgxMyxNZNRLPIN+nqFY5Lm/gH4mbaEqWfNKmNdAzIVc8eWhA9seeGJn7zpj5AXtzz2/gnfSUlieDw4XAa7S2/B+TnAUUlxzuKaw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Lf5YfxJi; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Lf5YfxJi"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1708596327; x=1740132327;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=HgyUJIc15qW7raXPSPT2a89MGSMGgVE+WXE4DuWEu1g=;
-  b=Lf5YfxJicl5Hz7fj71HBuhYPVfro2F0x+gZYyoYHan6UMON4KEB8hE3T
-   LhNLRhPlWCkeYDu9QC3obD5pF9R1L016igji3mEvhIxHUElLlIX6Em5Oy
-   yzoG3buaH6TibJh1yuR4ht3PClJUo8FCgfaThSOb5ezY60e88RSPqt8el
-   AR9NZ+CPCkwcd45IcPUigoDeiVpo/8QQCEdaN7pjYL4QxOIizMEAVGQWn
-   czJUAIIECpuFLs9UrZyJOFKvzXAdG1KywuI3a1ihUEAaJYoGUi/mkZOeA
-   i57jSv/QvI9rqnL0uPBOte2MeQzBQsFn/HTrHlhj1+iRq103Vmxtv5t8+
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10991"; a="2920736"
-X-IronPort-AV: E=Sophos;i="6.06,177,1705392000"; 
-   d="scan'208";a="2920736"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Feb 2024 02:05:21 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,177,1705392000"; 
-   d="scan'208";a="5754014"
-Received: from ksulimow-mobl1.ger.corp.intel.com (HELO wieczorr-mobl1.intel.com) ([10.213.23.120])
-  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Feb 2024 02:05:18 -0800
-From: Maciej Wieczor-Retman <maciej.wieczor-retman@intel.com>
-To: Fenghua Yu <fenghua.yu@intel.com>,
-	Reinette Chatre <reinette.chatre@intel.com>,
-	Shuah Khan <shuah@kernel.org>
-Cc: ilpo.jarvinen@linux.intel.com,
-	linux-kernel@vger.kernel.org,
-	linux-kselftest@vger.kernel.org
-Subject: [PATCH v2 3/3] selftests/resctrl: Move cleanups out of individual tests
-Date: Thu, 22 Feb 2024 11:04:30 +0100
-Message-ID: <edcd3fee8bcd2b55f07c98468cb8cf633927e23f.1708596015.git.maciej.wieczor-retman@intel.com>
-X-Mailer: git-send-email 2.43.2
-In-Reply-To: <cover.1708596015.git.maciej.wieczor-retman@intel.com>
-References: <cover.1708596015.git.maciej.wieczor-retman@intel.com>
+	s=arc-20240116; t=1708596371; c=relaxed/simple;
+	bh=72HRlj4wNG+uTgP9OOegzPNQJN5da4Rz0slrIrJJ5N8=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=rGcMIkptk50PkqAQmH+wFhkLJm4hT9BQI4T9GBB0r9sa0K4OhLE9LyNuzg4PzUCQ4zHlYYmVH3OyXSFk16/6aXh+R/xROZ3US0OFVhpQhOM7/IYnJeLyiRnqLB6F82910QkbX0yzXjFCZTWwOq+Gb/4OjBABNIUrnP5fPKZ+mC4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.20.42.173])
+	by gateway (Coremail) with SMTP id _____8BxnuuKHNdlNSkQAA--.41380S3;
+	Thu, 22 Feb 2024 18:06:02 +0800 (CST)
+Received: from [10.20.42.173] (unknown [10.20.42.173])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Cxf8+HHNdlC7I+AA--.31618S3;
+	Thu, 22 Feb 2024 18:06:01 +0800 (CST)
+Subject: Re: [PATCH v4 0/6] LoongArch: Add pv ipi support on LoongArch VM
+To: WANG Xuerui <kernel@xen0n.name>, Huacai Chen <chenhuacai@kernel.org>,
+ Tianrui Zhao <zhaotianrui@loongson.cn>, Juergen Gross <jgross@suse.com>,
+ Paolo Bonzini <pbonzini@redhat.com>
+Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org,
+ virtualization@lists.linux.dev, kvm@vger.kernel.org
+References: <20240201031950.3225626-1-maobibo@loongson.cn>
+ <0f4d83e2-bff9-49d9-8066-9f194ce96306@xen0n.name>
+ <447f4279-aea9-4f35-b87e-a3fc8c6c20ac@xen0n.name>
+ <4a6e25ec-cdb6-887a-2c64-3df12d30c89a@loongson.cn>
+ <7867d9c8-22fb-4bfc-92dc-c782d29c56f9@xen0n.name>
+From: maobibo <maobibo@loongson.cn>
+Message-ID: <542a8f4e-cec3-92d0-1cdd-43d112eec605@loongson.cn>
+Date: Thu, 22 Feb 2024 18:06:05 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+In-Reply-To: <7867d9c8-22fb-4bfc-92dc-c782d29c56f9@xen0n.name>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8Cxf8+HHNdlC7I+AA--.31618S3
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBj93XoW7urW5JFykZw15AFy3GrWUKFX_yoW8WFy3pF
+	WS9a4UKF4vyry0y392kw40gryYyr4xJr1SqrnYkryqk3y5XryavrsFqr9YgF9xu34fJw1Y
+	q3yUtayxXFWUZacCm3ZEXasCq-sJn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUB2b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
+	xVW8Jr0_Cr1UM2kKe7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07
+	AIYIkI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
+	XVWUAwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI4
+	8JMxk0xIA0c2IEe2xFo4CEbIxvr21l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_
+	Jr0_Gr1l4IxYO2xFxVAFwI0_Jrv_JF1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8Gjc
+	xK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0
+	cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8V
+	AvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6xkF7I0E
+	14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxU2MKZDUUUU
 
-Every test calls its cleanup function at the end of it's test function.
-After the cleanup function pointer is added to the test framework this
-can be simplified to executing the callback function at the end of the
-generic test running function.
 
-Make test cleanup functions static and call them from the end of
-run_single_test() from the resctrl_test's cleanup function pointer.
 
-Signed-off-by: Maciej Wieczor-Retman <maciej.wieczor-retman@intel.com>
----
-Changelog v2:
-- Change most goto out paths into return ret. (Ilpo)
+On 2024/2/22 下午5:34, WANG Xuerui wrote:
+> On 2/17/24 11:15, maobibo wrote:
+>> On 2024/2/15 下午6:25, WANG Xuerui wrote:
+>>> On 2/15/24 18:11, WANG Xuerui wrote:
+>>>> Sorry for the late reply (and Happy Chinese New Year), and thanks 
+>>>> for providing microbenchmark numbers! But it seems the more 
+>>>> comprehensive CoreMark results were omitted (that's also absent in 
+>>>> v3)? While the 
+>>>
+>>> Of course the benchmark suite should be UnixBench instead of 
+>>> CoreMark. Lesson: don't multi-task code reviews, especially not after 
+>>> consuming beer -- a cup of coffee won't fully cancel the influence. ;-)
+>>>
+>> Where is rule about benchmark choices like UnixBench/Coremark for ipi 
+>> improvement?
+> 
+> Sorry for the late reply. The rules are mostly unwritten, but in general 
+> you can think of the preference of benchmark suites as a matter of 
+> "effectiveness" -- the closer it's to some real workload in the wild, 
+> the better. Micro-benchmarks is okay for illustrating the points, but 
+> without demonstrating the impact on realistic workloads, a change could 
+> be "useless" in practice or even decrease various performance metrics 
+> (be that throughput or latency or anything that matters in the certain 
+> case), but get accepted without notice.
+yes, micro-benchmark cannot represent the real world, however it does 
+not mean that UnixBench/Coremark should be run. You need to point out 
+what is the negative effective from code, or what is the possible real 
+scenario which may benefit. And points out the reasonable benchmark 
+sensitive for IPIs rather than blindly saying UnixBench/Coremark.
 
- tools/testing/selftests/resctrl/cat_test.c      | 7 ++-----
- tools/testing/selftests/resctrl/cmt_test.c      | 3 +--
- tools/testing/selftests/resctrl/mba_test.c      | 7 ++-----
- tools/testing/selftests/resctrl/mbm_test.c      | 7 ++-----
- tools/testing/selftests/resctrl/resctrl.h       | 4 ----
- tools/testing/selftests/resctrl/resctrl_tests.c | 2 ++
- 6 files changed, 9 insertions(+), 21 deletions(-)
+Regards
+Bibo Mao
 
-diff --git a/tools/testing/selftests/resctrl/cat_test.c b/tools/testing/selftests/resctrl/cat_test.c
-index 2d2f69d3e5b7..1d1efed6164e 100644
---- a/tools/testing/selftests/resctrl/cat_test.c
-+++ b/tools/testing/selftests/resctrl/cat_test.c
-@@ -128,7 +128,7 @@ static int check_results(struct resctrl_val_param *param, const char *cache_type
- 	return fail;
- }
- 
--void cat_test_cleanup(void)
-+static void cat_test_cleanup(void)
- {
- 	remove(RESULT_FILE_NAME);
- }
-@@ -284,13 +284,10 @@ static int cat_run_test(const struct resctrl_test *test, const struct user_param
- 
- 	ret = cat_test(test, uparams, &param, span, start_mask);
- 	if (ret)
--		goto out;
-+		return ret;
- 
- 	ret = check_results(&param, test->resource,
- 			    cache_total_size, full_cache_mask, start_mask);
--out:
--	cat_test_cleanup();
--
- 	return ret;
- }
- 
-diff --git a/tools/testing/selftests/resctrl/cmt_test.c b/tools/testing/selftests/resctrl/cmt_test.c
-index 32ddee87e43d..c477f3c9635f 100644
---- a/tools/testing/selftests/resctrl/cmt_test.c
-+++ b/tools/testing/selftests/resctrl/cmt_test.c
-@@ -91,7 +91,7 @@ static int check_results(struct resctrl_val_param *param, size_t span, int no_of
- 				 MAX_DIFF, MAX_DIFF_PERCENT, runs - 1, true);
- }
- 
--void cmt_test_cleanup(void)
-+static void cmt_test_cleanup(void)
- {
- 	remove(RESULT_FILE_NAME);
- }
-@@ -161,7 +161,6 @@ static int cmt_run_test(const struct resctrl_test *test, const struct user_param
- 		ksft_print_msg("Intel CMT may be inaccurate when Sub-NUMA Clustering is enabled. Check BIOS configuration.\n");
- 
- out:
--	cmt_test_cleanup();
- 	free(span_str);
- 
- 	return ret;
-diff --git a/tools/testing/selftests/resctrl/mba_test.c b/tools/testing/selftests/resctrl/mba_test.c
-index 7cc4067ce930..a2f81d900900 100644
---- a/tools/testing/selftests/resctrl/mba_test.c
-+++ b/tools/testing/selftests/resctrl/mba_test.c
-@@ -137,7 +137,7 @@ static int check_results(void)
- 	return show_mba_info(bw_imc, bw_resc);
- }
- 
--void mba_test_cleanup(void)
-+static void mba_test_cleanup(void)
- {
- 	remove(RESULT_FILE_NAME);
- }
-@@ -158,13 +158,10 @@ static int mba_run_test(const struct resctrl_test *test, const struct user_param
- 
- 	ret = resctrl_val(test, uparams, uparams->benchmark_cmd, &param);
- 	if (ret)
--		goto out;
-+		return ret;
- 
- 	ret = check_results();
- 
--out:
--	mba_test_cleanup();
--
- 	return ret;
- }
- 
-diff --git a/tools/testing/selftests/resctrl/mbm_test.c b/tools/testing/selftests/resctrl/mbm_test.c
-index 071e2d3808a7..6589154c102e 100644
---- a/tools/testing/selftests/resctrl/mbm_test.c
-+++ b/tools/testing/selftests/resctrl/mbm_test.c
-@@ -105,7 +105,7 @@ static int mbm_setup(const struct resctrl_test *test,
- 	return ret;
- }
- 
--void mbm_test_cleanup(void)
-+static void mbm_test_cleanup(void)
- {
- 	remove(RESULT_FILE_NAME);
- }
-@@ -126,15 +126,12 @@ static int mbm_run_test(const struct resctrl_test *test, const struct user_param
- 
- 	ret = resctrl_val(test, uparams, uparams->benchmark_cmd, &param);
- 	if (ret)
--		goto out;
-+		return ret;
- 
- 	ret = check_results(DEFAULT_SPAN);
- 	if (ret && (get_vendor() == ARCH_INTEL))
- 		ksft_print_msg("Intel MBM may be inaccurate when Sub-NUMA Clustering is enabled. Check BIOS configuration.\n");
- 
--out:
--	mbm_test_cleanup();
--
- 	return ret;
- }
- 
-diff --git a/tools/testing/selftests/resctrl/resctrl.h b/tools/testing/selftests/resctrl/resctrl.h
-index 826783b29c9d..428ce9174384 100644
---- a/tools/testing/selftests/resctrl/resctrl.h
-+++ b/tools/testing/selftests/resctrl/resctrl.h
-@@ -153,8 +153,6 @@ int resctrl_val(const struct resctrl_test *test,
- 		const struct user_params *uparams,
- 		const char * const *benchmark_cmd,
- 		struct resctrl_val_param *param);
--void mbm_test_cleanup(void);
--void mba_test_cleanup(void);
- unsigned long create_bit_mask(unsigned int start, unsigned int len);
- unsigned int count_contiguous_bits(unsigned long val, unsigned int *start);
- int get_full_cbm(const char *cache_type, unsigned long *mask);
-@@ -163,9 +161,7 @@ int get_cache_size(int cpu_no, const char *cache_type, unsigned long *cache_size
- void ctrlc_handler(int signum, siginfo_t *info, void *ptr);
- int signal_handler_register(const struct resctrl_test *test);
- void signal_handler_unregister(void);
--void cat_test_cleanup(void);
- unsigned int count_bits(unsigned long n);
--void cmt_test_cleanup(void);
- 
- void perf_event_attr_initialize(struct perf_event_attr *pea, __u64 config);
- void perf_event_initialize_read_format(struct perf_event_read *pe_read);
-diff --git a/tools/testing/selftests/resctrl/resctrl_tests.c b/tools/testing/selftests/resctrl/resctrl_tests.c
-index 161f5365b4f0..bae08d1221ec 100644
---- a/tools/testing/selftests/resctrl/resctrl_tests.c
-+++ b/tools/testing/selftests/resctrl/resctrl_tests.c
-@@ -134,6 +134,8 @@ static void run_single_test(const struct resctrl_test *test, const struct user_p
- 	}
- 
- 	ret = test->run_test(test, uparams);
-+	if (test->cleanup)
-+		test->cleanup();
- 	ksft_test_result(!ret, "%s: test\n", test->name);
- 
- cleanup:
--- 
-2.43.2
+> 
 
