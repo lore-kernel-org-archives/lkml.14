@@ -1,65 +1,64 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B359A155A32;
-	Thu, 22 Feb 2024 17:12:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C7E3157E66;
+	Thu, 22 Feb 2024 17:12:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708621933; cv=none; b=OYr0wSem3TeItu1isEEPD+hPgherItvThJMYvKqcbO7DFosMepnBy+5urbqj/th+mqN94yXErFUZSC/A5dEBYqn+B7+BGWqm17nh0pCxWO6uRkEo3htZwbKNRrT5L73yXy+B4GVYb96TJmFLA0E8QNA1EWbqLgw6CPK8NbTCWJ0=
+	t=1708621936; cv=none; b=SgC264zp9mh9CbL5+xOfvXSRkLO6Zi8/iUdO9ByRSR1eazbhDj8BS5gGfuaihu06whL2zIzfzYSTbreNYeuQw5v8D5yZSim3IonbDfoaXzRN9P3LmMCF75Us2lFAXesNv/kvRPdpHOgtDDxqmFK4QnbYgLpN5ey6Elciy/caEUA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708621933; c=relaxed/simple;
-	bh=piPX2TiU+hsBcDA22veVpBQIp2dKCQ6kgAdw0E+s320=;
+	s=arc-20240116; t=1708621936; c=relaxed/simple;
+	bh=ywyKU2i+iIGKnVYxExQHGgbYNFBNoBGEoymVEtbF69E=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=oIYOjlWp1kp/0ToxaUz43EiTgRAEykCRfFk8/uKAId/ee3pRbkglrnNafnasZ6BNXYxA4xsGtW5bC1rqsAs13X2sCz54A8MUCmvBZ3YpcyNneBpBie8Hd07fUpzUNTgaKN2Z/YPJ5Zq2Hdd3duszKdIPpNj+H6pqDSvz8i2+pDY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=qlFsd8VF; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=LT8I6Uv+; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=dlviTPZVornhswU3UAfpa667v5dLqCe2maby+Fi9Zdydt8szAe+zu/2QnCbT6wsdeD3ahK5coHrWk+V5+/qmGK9QvRkaPY0+h078VI6BnQBImptxjSJiPivxeaHJD6sqmP01SrOM9DgYCIQdxSigMJjM7wUxOQFwjcSvKJ8dhtA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=R+6jPuIe; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=L+egk84S; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="qlFsd8VF";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="LT8I6Uv+"
-Date: Thu, 22 Feb 2024 17:12:09 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="R+6jPuIe";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="L+egk84S"
+Date: Thu, 22 Feb 2024 17:12:11 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1708621930;
+	s=2020; t=1708621932;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=C86y66yt7NrqOinlYS+H9YKCwnT6eT7a+seZKWiNUts=;
-	b=qlFsd8VFBsluXLneSY4SdCB9afjhwn/kzVxJV6qXlIcpMoZLDHevpeYE299fN9epWSE+46
-	3MbYz0xIyTumZo92enyoX0Iyb344/cfuR4F5n/5InHSkuR469EQVv/3RHVwhGxBaPQtsT+
-	0+0Aej0d6BzAG6czmlOUUbO/87nP8xWV1ji7Rfj3vFEezXyY0qqlKKy6ZirafC94ROWF/N
-	lHxdHYxkMtk4uus+nmmQS/xS622LJQqe35w4vQXoRjMOmdeuPEbVXakV1OoZKTc46K2hmP
-	e/w5hPjeg+dm6YKqtX91mEElIMwD+KFl+FYUXU0m1x1qkpqRQu46jg4uOrle5g==
+	bh=gxu6BvrUkKydEe7CgoO8F5VBZOS7beatE9R6vgMaZZg=;
+	b=R+6jPuIe2QUokAGPZIKVMvGz6XVQeDd9EpDNW11l7hJelaHiwps3yNRUrym8cFShpAt0P2
+	ERCFgdE0NCsV2+VxmPbyRYJ1W8mIqJpmGTk1qkCyxRMUAB2PlDY+ckM6+Y3cDFTqb2GEYu
+	aOopgRAKvDVJ8usqR/7pSx77nkAm/elY4yGgL9xmVKT9+isOl+SUvPNahGiyqXe6We2WfY
+	HCFFzMgZ/ucryK0XOedaBaVRscNIUuYlA1dAxZZn44i35c8PSvfMP6mmuQv0pYcNmrkIiE
+	1FJj2LChrj+X3eGwBnD5aOuV9JN8grI/Hpr3fQ3fDH8GmI1iGgAAEaQx7GAVqA==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1708621930;
+	s=2020e; t=1708621932;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=C86y66yt7NrqOinlYS+H9YKCwnT6eT7a+seZKWiNUts=;
-	b=LT8I6Uv+aJ3MkRWk5YKdN9FMccAeI3djfW6z8zcENCkcjq9b7cuNb6kJr5QIjMnC/AuDd9
-	sq9W/vlHKajS5dBQ==
+	bh=gxu6BvrUkKydEe7CgoO8F5VBZOS7beatE9R6vgMaZZg=;
+	b=L+egk84S5Xai24ptoWB2pC38UwwLlzT31Rpo70tyofCId+MQgTEDO7utqiWYMfF6ZiAP09
+	tHELDETPI5l9mpAQ==
 From: "tip-bot2 for Anna-Maria Behnsen" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject: [tip: timers/core] timers: Add get next timer interrupt functionality
- for remote CPUs
+Subject: [tip: timers/core] timers: Split next timer interrupt logic
 Cc: "Anna-Maria Behnsen" <anna-maria@linutronix.de>,
  Thomas Gleixner <tglx@linutronix.de>,
  Frederic Weisbecker <frederic@kernel.org>, x86@kernel.org,
  linux-kernel@vger.kernel.org
-In-Reply-To: <20240221090548.36600-14-anna-maria@linutronix.de>
-References: <20240221090548.36600-14-anna-maria@linutronix.de>
+In-Reply-To: <20240221090548.36600-10-anna-maria@linutronix.de>
+References: <20240221090548.36600-10-anna-maria@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <170862192926.398.11570971415900571858.tip-bot2@tip-bot2>
+Message-ID: <170862193196.398.1092617001269334520.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -69,178 +68,88 @@ Content-Transfer-Encoding: 7bit
 
 The following commit has been merged into the timers/core branch of tip:
 
-Commit-ID:     f73d9257ff3c2f415e8c342a91b7f5acfc3ce512
-Gitweb:        https://git.kernel.org/tip/f73d9257ff3c2f415e8c342a91b7f5acfc3ce512
+Commit-ID:     9f6a3c602c235c3cccbe673fb7e1cca30ca4be0d
+Gitweb:        https://git.kernel.org/tip/9f6a3c602c235c3cccbe673fb7e1cca30ca4be0d
 Author:        Anna-Maria Behnsen <anna-maria@linutronix.de>
-AuthorDate:    Wed, 21 Feb 2024 10:05:41 +01:00
+AuthorDate:    Wed, 21 Feb 2024 10:05:37 +01:00
 Committer:     Thomas Gleixner <tglx@linutronix.de>
 CommitterDate: Thu, 22 Feb 2024 17:52:31 +01:00
 
-timers: Add get next timer interrupt functionality for remote CPUs
+timers: Split next timer interrupt logic
 
-To prepare for the conversion of the NOHZ timer placement to a pull at
-expiry time model it's required to have functionality available getting the
-next timer interrupt on a remote CPU.
+Split the logic for getting next timer interrupt (no matter of recalculated
+or already stored in base->next_expiry) into a separate function named
+next_timer_interrupt(). Make it available to local call sites only.
 
-Locking of the timer bases and getting the information for the next timer
-interrupt functionality is split into separate functions. This is required
-to be compliant with lock ordering when the new model is in place.
+No functional change.
 
 Signed-off-by: Anna-Maria Behnsen <anna-maria@linutronix.de>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 Reviewed-by: Frederic Weisbecker <frederic@kernel.org>
-Link: https://lore.kernel.org/r/20240221090548.36600-14-anna-maria@linutronix.de
+Link: https://lore.kernel.org/r/20240221090548.36600-10-anna-maria@linutronix.de
 
 ---
- kernel/time/tick-internal.h | 10 ++++-
- kernel/time/timer.c         | 95 ++++++++++++++++++++++++++++++++++--
- 2 files changed, 100 insertions(+), 5 deletions(-)
+ kernel/time/timer.c | 32 +++++++++++++++++++-------------
+ 1 file changed, 19 insertions(+), 13 deletions(-)
 
-diff --git a/kernel/time/tick-internal.h b/kernel/time/tick-internal.h
-index 47df30b..8b0c28e 100644
---- a/kernel/time/tick-internal.h
-+++ b/kernel/time/tick-internal.h
-@@ -8,6 +8,11 @@
- #include "timekeeping.h"
- #include "tick-sched.h"
- 
-+struct timer_events {
-+	u64	local;
-+	u64	global;
-+};
-+
- #ifdef CONFIG_GENERIC_CLOCKEVENTS
- 
- # define TICK_DO_TIMER_NONE	-1
-@@ -154,6 +159,11 @@ extern unsigned long tick_nohz_active;
- extern void timers_update_nohz(void);
- # ifdef CONFIG_SMP
- extern struct static_key_false timers_migration_enabled;
-+extern void fetch_next_timer_interrupt_remote(unsigned long basej, u64 basem,
-+					      struct timer_events *tevt,
-+					      unsigned int cpu);
-+extern void timer_lock_remote_bases(unsigned int cpu);
-+extern void timer_unlock_remote_bases(unsigned int cpu);
- # endif
- #else /* CONFIG_NO_HZ_COMMON */
- static inline void timers_update_nohz(void) { }
 diff --git a/kernel/time/timer.c b/kernel/time/timer.c
-index b10e97c..bc074c0 100644
+index 9c8443d..748f4b7 100644
 --- a/kernel/time/timer.c
 +++ b/kernel/time/timer.c
-@@ -266,11 +266,6 @@ struct timer_base {
- 
- static DEFINE_PER_CPU(struct timer_base, timer_bases[NR_BASES]);
- 
--struct timer_events {
--	u64	local;
--	u64	global;
--};
--
- #ifdef CONFIG_NO_HZ_COMMON
- 
- static DEFINE_STATIC_KEY_FALSE(timers_nohz_active);
-@@ -2058,6 +2053,21 @@ static unsigned long fetch_next_timer_interrupt(unsigned long basej, u64 basem,
- 		if (time_before(nextevt, basej))
- 			nextevt = basej;
- 		tevt->local = basem + (u64)(nextevt - basej) * TICK_NSEC;
-+
-+		/*
-+		 * This is required for the remote check only but it doesn't
-+		 * hurt, when it is done for both call sites:
-+		 *
-+		 * * The remote callers will only take care of the global timers
-+		 *   as local timers will be handled by CPU itself. When not
-+		 *   updating tevt->global with the already missed first global
-+		 *   timer, it is possible that it will be missed completely.
-+		 *
-+		 * * The local callers will ignore the tevt->global anyway, when
-+		 *   nextevt is max. one tick away.
-+		 */
-+		if (!local_first)
-+			tevt->global = tevt->local;
- 		return nextevt;
- 	}
- 
-@@ -2076,6 +2086,81 @@ static unsigned long fetch_next_timer_interrupt(unsigned long basej, u64 basem,
- 	return nextevt;
+@@ -1996,12 +1996,29 @@ static u64 cmp_next_hrtimer_event(u64 basem, u64 expires)
+ 	return DIV_ROUND_UP_ULL(nextevt, TICK_NSEC) * TICK_NSEC;
  }
  
-+# ifdef CONFIG_SMP
-+/**
-+ * fetch_next_timer_interrupt_remote() - Store next timers into @tevt
-+ * @basej:	base time jiffies
-+ * @basem:	base time clock monotonic
-+ * @tevt:	Pointer to the storage for the expiry values
-+ * @cpu:	Remote CPU
-+ *
-+ * Stores the next pending local and global timer expiry values in the
-+ * struct pointed to by @tevt. If a queue is empty the corresponding
-+ * field is set to KTIME_MAX. If local event expires before global
-+ * event, global event is set to KTIME_MAX as well.
-+ *
-+ * Caller needs to make sure timer base locks are held (use
-+ * timer_lock_remote_bases() for this purpose).
-+ */
-+void fetch_next_timer_interrupt_remote(unsigned long basej, u64 basem,
-+				       struct timer_events *tevt,
-+				       unsigned int cpu)
++static unsigned long next_timer_interrupt(struct timer_base *base,
++					  unsigned long basej)
 +{
-+	struct timer_base *base_local, *base_global;
++	if (base->next_expiry_recalc)
++		next_expiry_recalc(base);
 +
-+	/* Preset local / global events */
-+	tevt->local = tevt->global = KTIME_MAX;
++	/*
++	 * Move next_expiry for the empty base into the future to prevent an
++	 * unnecessary raise of the timer softirq when the next_expiry value
++	 * will be reached even if there is no timer pending.
++	 */
++	if (!base->timers_pending)
++		base->next_expiry = basej + NEXT_TIMER_MAX_DELTA;
 +
-+	base_local = per_cpu_ptr(&timer_bases[BASE_LOCAL], cpu);
-+	base_global = per_cpu_ptr(&timer_bases[BASE_GLOBAL], cpu);
-+
-+	lockdep_assert_held(&base_local->lock);
-+	lockdep_assert_held(&base_global->lock);
-+
-+	fetch_next_timer_interrupt(basej, basem, base_local, base_global, tevt);
++	return base->next_expiry;
 +}
-+
-+/**
-+ * timer_unlock_remote_bases - unlock timer bases of cpu
-+ * @cpu:	Remote CPU
-+ *
-+ * Unlocks the remote timer bases.
-+ */
-+void timer_unlock_remote_bases(unsigned int cpu)
-+	__releases(timer_bases[BASE_LOCAL]->lock)
-+	__releases(timer_bases[BASE_GLOBAL]->lock)
-+{
-+	struct timer_base *base_local, *base_global;
-+
-+	base_local = per_cpu_ptr(&timer_bases[BASE_LOCAL], cpu);
-+	base_global = per_cpu_ptr(&timer_bases[BASE_GLOBAL], cpu);
-+
-+	raw_spin_unlock(&base_global->lock);
-+	raw_spin_unlock(&base_local->lock);
-+}
-+
-+/**
-+ * timer_lock_remote_bases - lock timer bases of cpu
-+ * @cpu:	Remote CPU
-+ *
-+ * Locks the remote timer bases.
-+ */
-+void timer_lock_remote_bases(unsigned int cpu)
-+	__acquires(timer_bases[BASE_LOCAL]->lock)
-+	__acquires(timer_bases[BASE_GLOBAL]->lock)
-+{
-+	struct timer_base *base_local, *base_global;
-+
-+	base_local = per_cpu_ptr(&timer_bases[BASE_LOCAL], cpu);
-+	base_global = per_cpu_ptr(&timer_bases[BASE_GLOBAL], cpu);
-+
-+	lockdep_assert_irqs_disabled();
-+
-+	raw_spin_lock(&base_local->lock);
-+	raw_spin_lock_nested(&base_global->lock, SINGLE_DEPTH_NESTING);
-+}
-+# endif /* CONFIG_SMP */
 +
  static inline u64 __get_next_timer_interrupt(unsigned long basej, u64 basem,
  					     bool *idle)
  {
+ 	struct timer_base *base = this_cpu_ptr(&timer_bases[BASE_STD]);
+-	unsigned long nextevt = basej + NEXT_TIMER_MAX_DELTA;
+ 	u64 expires = KTIME_MAX;
++	unsigned long nextevt;
+ 
+ 	/*
+ 	 * Pretend that there is no timer pending if the cpu is offline.
+@@ -2014,24 +2031,13 @@ static inline u64 __get_next_timer_interrupt(unsigned long basej, u64 basem,
+ 	}
+ 
+ 	raw_spin_lock(&base->lock);
+-	if (base->next_expiry_recalc)
+-		next_expiry_recalc(base);
++	nextevt = next_timer_interrupt(base, basej);
+ 
+ 	if (base->timers_pending) {
+-		nextevt = base->next_expiry;
+-
+ 		/* If we missed a tick already, force 0 delta */
+ 		if (time_before(nextevt, basej))
+ 			nextevt = basej;
+ 		expires = basem + (u64)(nextevt - basej) * TICK_NSEC;
+-	} else {
+-		/*
+-		 * Move next_expiry for the empty base into the future to
+-		 * prevent a unnecessary raise of the timer softirq when the
+-		 * next_expiry value will be reached even if there is no timer
+-		 * pending.
+-		 */
+-		base->next_expiry = nextevt;
+ 	}
+ 
+ 	/*
