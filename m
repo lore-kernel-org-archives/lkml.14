@@ -1,130 +1,80 @@
-Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from 13.mo561.mail-out.ovh.net (13.mo561.mail-out.ovh.net [188.165.33.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB2A7383AE
-	for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 10:02:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97A36381B8
+	for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 10:03:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.165.33.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708596175; cv=none; b=iyGKv+Pe7yMK3Pt7luueXdhWu7hYRyYD9mb7l2Cn49tfJrKvtI/noUvMmmVp/pg/MyILGuCas6c1qSy5SMgXQ4I5t92YwHURp8V8XRUEGYnnbshkPcmONLTc0WTWiCPg2fzrsq/3o+HXEykg/jY7dqFdEU+JZYeN8sDMb8PBxy4=
+	t=1708596193; cv=none; b=ROM5u3KTU+9z1vBN7xPSrPoFI6ZGyf+UdXuZ1tBtIKB/RdjMxcVdmGzgyAirxIeiS4djrD/aLSfI25iW0w9rmM1tsI2avh1fuJ3/RkvDPA/jTvw4li47e88ZpBtCTI7Zdj0S1VzZmKlWA/Pk9xtf0bVdeGyyerdf1GA6nnw6Okg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708596175; c=relaxed/simple;
-	bh=RInimDCVRpdNH3bzFeS80PPJB9+hFPpPtbWeDnPW95A=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=C63m6eqHBD561jk69h5k/WYJS21AsNe0CPR7uwV0QR10+A1SBJZ1wsagAIsLuIb7MTbSQ2b9e7RQFnKLIvRQrZFCqbrFsBtdGzCM2V8hSsSZCdTiNO+BD8IZzPdcfupRVu2eXb7vnE3fs8C+/faE8YMN/gATRJweURcwsYR1fRg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=emhN0/bF; arc=none smtp.client-ip=209.85.167.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="emhN0/bF"
-Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-5129e5b8cecso7016515e87.3
-        for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 02:02:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1708596172; x=1709200972; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=ZmFzE5KLUhVYgCITZetTHO3yyNj9Jv9D+xMMJe9LX/c=;
-        b=emhN0/bFqvoUTl6IZLG4yf85zi4MhShO+/WVWJJkKlqmRtRa7spx/3Awk6r4sGqxM7
-         318LQijm1Dt/jyyzH3obolCJ64lKT2JXTCL9VXHIGZe+7B0g0Am/XguI2MPWhU80YLc6
-         ZYC9XHuBIN5QrYAZSfgRucQxfDm/gY3izv/CJ8NKKpHNFIyTLBiQPNjDkTKmphM/HkgI
-         PHRK0O4BX04DefcjKlV6TJ8JkC1gdT4YNvs1pRIawTwWfaaIg0z66SM7+q03hzWjCarS
-         bMSL/CAEvTtP4saJC+Vy7GlhdoQ7Xxm2iDhE87Pp9WN9uJH32+Oy4Sw2ihMmeWRB+Nki
-         CHvg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708596172; x=1709200972;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZmFzE5KLUhVYgCITZetTHO3yyNj9Jv9D+xMMJe9LX/c=;
-        b=oBVtlNPEj+Cw72b7BmHXDqlKalbwm80NoO1NPEous6R9jNnB0YjnczPrFZP1Y2XWM1
-         SuCcq1egHXEjkLY5Vr2BvKFzKaqGshTRWe+Hxr3zC+gDhyooLs/FvKV7KkxH8CDsm59r
-         RgUhZqg5kfrTa0nOzmY8WJUe4sOt7/c2bcSQxut6IB2evzwS2RLsjoTBctRT7Mqm5Kg1
-         jTA8hXYEEAB4r0CJ7SQvus1sA503nRwxoB4JVuojbHMrxqhAoVLHg7HrZAhmNf6G/0eb
-         L8Zy42NO7yh3TliskFL0IWZgRohvsSAinloWcKkVWjTn3kW2A6rdJNRNi3RN0fB0FL1P
-         cW7w==
-X-Forwarded-Encrypted: i=1; AJvYcCVlJovwrxjCMXUS9p7k2CLFYTo92NfY/4dOmKzhpjuU3fMILLaRde7IBTzs6MwiqsnXNJFuPAnw3WS/62VuMWAP+VuZHZwC8J2hoF9x
-X-Gm-Message-State: AOJu0YxtOeairMy+ODB514m2mrOe5DKDNP7UYW6b+ifoAA31coRt1IHD
-	eoEeQUP7Siwp9bOzxzh2FiMcPo5OPeyJqfjT/3bE764km4WDXQuyQ1mUdxOkCgU=
-X-Google-Smtp-Source: AGHT+IGWstWv/PpAhG69C508up9GLKHmunJIqiqA/u3mSeeTLIT3kteM6OrJT0F+RBHSuMWr0yMEUA==
-X-Received: by 2002:ac2:592c:0:b0:512:b00f:a55e with SMTP id v12-20020ac2592c000000b00512b00fa55emr7040685lfi.13.1708596171837;
-        Thu, 22 Feb 2024 02:02:51 -0800 (PST)
-Received: from [87.246.222.6] (netpanel-87-246-222-6.pol.akademiki.lublin.pl. [87.246.222.6])
-        by smtp.gmail.com with ESMTPSA id c4-20020a056512074400b00512ab928706sm1730595lfs.167.2024.02.22.02.02.49
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 22 Feb 2024 02:02:51 -0800 (PST)
-Message-ID: <f36c69d9-24a8-473b-872c-fa0fb722db65@linaro.org>
-Date: Thu, 22 Feb 2024 11:02:47 +0100
+	s=arc-20240116; t=1708596193; c=relaxed/simple;
+	bh=W+jnHVVB3ZRAg9EX2fNf/hRjYdScgr/CZdITpC+rZpA=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=r6zRHMZRTJyEYYgHbQV1I1yYz/rhtjxY8CHBT7g/rvujYgunMc8t/5ACFAGwIdUeJ7b5Qex86bcijUnAZUn4Qgomb9wOYr/zbfA8B4dimC5veAIwPn8MhX3klqNasggwRi6qpIq7MLhsIjK/WQURby+AyPzvm+PasSG6lBe3nH4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=etezian.org; arc=none smtp.client-ip=188.165.33.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=etezian.org
+Received: from director4.ghost.mail-out.ovh.net (unknown [10.109.148.126])
+	by mo561.mail-out.ovh.net (Postfix) with ESMTP id 4TgRbg6FHlz1GZ0
+	for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 08:47:27 +0000 (UTC)
+Received: from ghost-submission-6684bf9d7b-dnswc (unknown [10.111.174.115])
+	by director4.ghost.mail-out.ovh.net (Postfix) with ESMTPS id 922F11FD6F;
+	Thu, 22 Feb 2024 08:47:24 +0000 (UTC)
+Received: from etezian.org ([37.59.142.107])
+	by ghost-submission-6684bf9d7b-dnswc with ESMTPSA
+	id LdgvFRwK12VVngkAllgtww
+	(envelope-from <andi@etezian.org>); Thu, 22 Feb 2024 08:47:24 +0000
+Authentication-Results:garm.ovh; auth=pass (GARM-107S0017b51d39a-e42a-4bc8-afd5-71473328faab,
+                    D266FE3A7B9817F169603FF0F8C90E47FA3D240B) smtp.auth=andi@etezian.org
+X-OVh-ClientIp:89.217.109.169
+From: Andi Shyti <andi.shyti@kernel.org>
+To: linux-i2c@vger.kernel.org, 
+ Wolfram Sang <wsa+renesas@sang-engineering.com>
+Cc: Corey Minyard <minyard@acm.org>, 
+ Andrew Manley <andrew.manley@sealingtech.com>, 
+ Oleksij Rempel <o.rempel@pengutronix.de>, 
+ Pengutronix Kernel Team <kernel@pengutronix.de>, 
+ Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, 
+ Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, 
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20240221193013.14233-2-wsa+renesas@sang-engineering.com>
+References: <20240221193013.14233-2-wsa+renesas@sang-engineering.com>
+Subject: Re: [PATCH v3] i2c: imx: when being a target, mark the last read
+ as processed
+Message-Id: <170859164340.336357.16059990973960196120.b4-ty@kernel.org>
+Date: Thu, 22 Feb 2024 09:47:23 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/9] arm64: dts: qcom: sc7280: Enable MDP turbo mode
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc: Bjorn Andersson <quic_bjorande@quicinc.com>,
- Douglas Anderson <dianders@chromium.org>, Rob Clark <robdclark@gmail.com>,
- Abhinav Kumar <quic_abhinavk@quicinc.com>, Sean Paul <sean@poorly.run>,
- Marijn Suijten <marijn.suijten@somainline.org>,
- David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
- cros-qcom-dts-watchers@chromium.org, Bjorn Andersson <andersson@kernel.org>,
- Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>, linux-arm-msm@vger.kernel.org,
- dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org,
- linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-References: <20240221-rb3gen2-dp-connector-v1-0-dc0964ef7d96@quicinc.com>
- <20240221-rb3gen2-dp-connector-v1-3-dc0964ef7d96@quicinc.com>
- <CAA8EJpo=9vhM+5YzaFxUoYRuEWQyrMS8wLNPSF3K=bN5JwWyDw@mail.gmail.com>
- <8313a7c3-3ace-4dee-ad27-8f51a06cd58c@linaro.org>
- <CAA8EJpqFj5nf8d_=Uoup7qg+nQrxqQU-DHbL3uSP138m9AcXLw@mail.gmail.com>
- <8fcb5816-2d59-4e27-ba68-8e0ed6e7d839@linaro.org>
- <CAA8EJporaUuddHHqpyYHiYSu=toHmrDxSHf9msZUJoym4Nz72g@mail.gmail.com>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@linaro.org>
-In-Reply-To: <CAA8EJporaUuddHHqpyYHiYSu=toHmrDxSHf9msZUJoym4Nz72g@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.12.4
+X-Ovh-Tracer-Id: 729301668120365699
+X-VR-SPAMSTATE: OK
+X-VR-SPAMSCORE: -100
+X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedvledrfeefgdduvdduucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuqfggjfdpvefjgfevmfevgfenuceurghilhhouhhtmecuhedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephffvvegjfhfukfffgggtgffosehtjeertdertdejnecuhfhrohhmpeetnhguihcuufhhhihtihcuoegrnhguihdrshhhhihtiheskhgvrhhnvghlrdhorhhgqeenucggtffrrghtthgvrhhnpeffteehudffvdfhudfgffdugfejjeduheehgeefgeeuhfeiuefghffgueffvdfgfeenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecukfhppeduvdejrddtrddtrddupdekledrvddujedruddtledrudeiledpfeejrdehledrudegvddruddtjeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeduvdejrddtrddtrddupdhmrghilhhfrhhomheprghnughisegvthgviihirghnrdhorhhgpdhnsggprhgtphhtthhopedupdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdfovfetjfhoshhtpehmohehiedupdhmohguvgepshhmthhpohhuth
 
+Hi
 
-
-On 2/22/24 10:46, Dmitry Baryshkov wrote:
-> On Thu, 22 Feb 2024 at 11:28, Konrad Dybcio <konrad.dybcio@linaro.org> wrote:
->>
->>
->>
->> On 2/22/24 10:04, Dmitry Baryshkov wrote:
->>> On Thu, 22 Feb 2024 at 10:56, Konrad Dybcio <konrad.dybcio@linaro.org> wrote:
->>>>
->>>>
->>>>
->>>> On 2/22/24 00:41, Dmitry Baryshkov wrote:
->>>>> On Thu, 22 Feb 2024 at 01:19, Bjorn Andersson <quic_bjorande@quicinc.com> wrote:
->>>>>>
->>>>>> The max frequency listed in the DPU opp-table is 506MHz, this is not
->>>>>> sufficient to drive a 4k@60 display, resulting in constant underrun.
->>>>>>
->>>>>> Add the missing MDP_CLK turbo frequency of 608MHz to the opp-table to
->>>>>> fix this.
->>>>>
->>>>> I think we might want to keep this disabled for ChromeOS devices. Doug?
->>>>
->>>> ChromeOS devices don't get a special SoC
->>>
->>> But they have the sc7280-chrome-common.dtsi, which might contain a
->>> corresponding /delete-node/ .
->>
->> What does that change? The clock rates are bound to the
->> SoC and the effective values are limited by link-frequencies
->> or the panel driver.
+On Wed, 21 Feb 2024 20:27:13 +0100, Wolfram Sang wrote:
+> When being a target, NAK from the controller means that all bytes have
+> been transferred. So, the last byte needs also to be marked as
+> 'processed'. Otherwise index registers of backends may not increase.
 > 
-> Preventing the DPU from overheating? 
+> 
 
-?????????????
+Applied to i2c/i2c-host-fixes on
 
-> Or spending too much power?
+git://git.kernel.org/pub/scm/linux/kernel/git/andi.shyti/linux.git
 
-Would it not concern non-Chrome SC7280s too, then?
+Thank you,
+Andi
 
-Konrad
+Patches applied
+===============
+[1/1] i2c: imx: when being a target, mark the last read as processed
+      commit: cf8281b1aeab93a03c87033a741075c39ace80d4
+
