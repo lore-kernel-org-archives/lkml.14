@@ -1,49 +1,49 @@
 Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 264D221109;
-	Thu, 22 Feb 2024 23:17:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 252071BDC2;
+	Thu, 22 Feb 2024 23:17:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708643825; cv=none; b=bdNNR5wRwScXMp2w8zySaSOOXOCXFu9L4WRdHxfQAatpIW/cpYA6zoMGJiQHtB6AH+D7KQDnqUVODYNO+88APVStKVExz8O4rhl4h8KLkSW08s2LWd6C6lTW+23AMU+ZpR4D39UROCs1GyHxYFDcCTTPDWot/w4aPrXb+nOka3Q=
+	t=1708643824; cv=none; b=kgzDLP79RQBPVfTf3IVlLJhB1EtWijfXfNgnd4ckkrvyCKQyNE6VBWrAbW+hJtuS3DUoQAolx4gFOC2DD/8xq/OJz46rs3clsd4cyzekHjkCBhLNpVrR3MSsswcBGSyWqZ7uT1lWhW1SwU/MY8JZ/Jyi/RqAwp8KifUuV5ydRRc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708643825; c=relaxed/simple;
-	bh=C9b7fayv7Srk0zvHXjTemoxdWXxe715PnkD7sakkYNI=;
+	s=arc-20240116; t=1708643824; c=relaxed/simple;
+	bh=IHKP60JXo3LHWCwQNGSJlUk4GDs98j+Gnt3ldgje6IA=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
-	 In-Reply-To:To:CC; b=fd67FlZiE/Lfr9pNfs8Fpyc1PYAXn/tQ4J1Mq+GbxjkGO2g3NAceLe7sLbXQA+q5m8DoUDjRlLboV1TQWsGjO6jtNc0A0IrtcmfKXvTS5I+GmhgSt9tbyxTkxvtbwNh03x6S8g89zQhilo80QzBivdT7BdeagMypqugWLwdCKgc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=RI92E9jl; arc=none smtp.client-ip=205.220.180.131
+	 In-Reply-To:To:CC; b=IkueVgRRVVEc0kzqLfwisdUD7ZTQWiTeI9rTPeS/QwseU2ot+mJkckrCXJso6HarOrM2I8QnHp7I3laA3HnzP81SS4NEG+5PGFB0wgiy0ev8FZxW0P29Dw5aYYgd9/q+396tMUHtOZFG2toX1NdnablpBSbpYEvFm0Ct49aCJtQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=ZYa5PvTE; arc=none smtp.client-ip=205.220.180.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="RI92E9jl"
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="ZYa5PvTE"
 Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 41MMKnxf028355;
-	Thu, 22 Feb 2024 23:16:41 GMT
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 41MLRZBE019938;
+	Thu, 22 Feb 2024 23:16:36 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
 	from:date:subject:mime-version:content-type
 	:content-transfer-encoding:message-id:references:in-reply-to:to
-	:cc; s=qcppdkim1; bh=kvX19e3Ohm/qQMw9kxBOF0A0UYzethrCUoEi5ksVirQ
-	=; b=RI92E9jl2/w+OzOVO3FrLfK8jMkQVPUF9Cit68C2J7jg1LeJ2H89NsrjRiP
-	MHcZJ1v2JHusYbRrz37b4RTD0jxawMde88McQlS/yWqCDFZUBCfS1I6WpO+m50C9
-	sfpNL+sDe/l7BgnohpYUlqJyRs4Oz4jdNZeDnpw9P3L8Kau5c2Oie/h5k2xCPLSS
-	urMek2HPwSTCYOvuNBZIoUa4JRkbOyIjGxyW82oAVkwkUwXQpleVbIxM+SXASOJ+
-	Ldpqsx5DPgbbutFpEgKhbxU4zvyJuqpx4qeiJ3aEX0wpBFL3iBJ36qoDKUiZ9EEV
-	bsbXaLOLiXmj6mFbJVT3YPao2sw==
+	:cc; s=qcppdkim1; bh=hjkuOMml2lLPxrsAbD1E2lRJVtx0etVrUgoraJTr6dw
+	=; b=ZYa5PvTEjk/l4HzHk7E2mk3n7dwMldK1ZBClQiCLQha8iKxY/fy1X7EgERN
+	rLrNbC0Fax8GD4vjgZzgb2Hg/z1DWrdDyodhHekM24xpG3O2U96N8tdtfAa015qf
+	W+GyyWur7Z8/CyMnTYUD+9XMULOgkxvgWAZWOoM757//wat/3zZQvJiaYMwx7Kl8
+	NCQCAVlvfHBN+SqrRymFZrC+NTwQ89eTHqH7RRd6cDlRd6s1n560Dldfmfw4W0X5
+	WmUka47BVpaohG0XLu7+Z8Nn904IYwoRpsvucrqYlF9sg+plKEgk0oEKfDHgyJIN
+	SkMi4cewIEmRIDUW5Fy26zvjjmg==
 Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3we97tgf8g-1
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3we97tgf8b-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 22 Feb 2024 23:16:40 +0000 (GMT)
+	Thu, 22 Feb 2024 23:16:35 +0000 (GMT)
 Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 41MNGd27017508
+	by NASANPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 41MNGYdX017469
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 22 Feb 2024 23:16:39 GMT
+	Thu, 22 Feb 2024 23:16:34 GMT
 Received: from hu-eberman-lv.qualcomm.com (10.49.16.6) by
  nasanex01b.na.qualcomm.com (10.46.141.250) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Thu, 22 Feb 2024 15:16:39 -0800
+ 15.2.1118.40; Thu, 22 Feb 2024 15:16:34 -0800
 From: Elliot Berman <quic_eberman@quicinc.com>
-Date: Thu, 22 Feb 2024 15:16:45 -0800
-Subject: [PATCH v17 22/35] virt: gunyah: Add Qualcomm Gunyah platform ops
+Date: Thu, 22 Feb 2024 15:16:36 -0800
+Subject: [PATCH v17 13/35] gunyah: vm_mgr: Add framework for VM Functions
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,7 +52,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-ID: <20240222-gunyah-v17-22-1e9da6763d38@quicinc.com>
+Message-ID: <20240222-gunyah-v17-13-1e9da6763d38@quicinc.com>
 References: <20240222-gunyah-v17-0-1e9da6763d38@quicinc.com>
 In-Reply-To: <20240222-gunyah-v17-0-1e9da6763d38@quicinc.com>
 To: Alex Elder <elder@linaro.org>,
@@ -92,8 +92,8 @@ X-ClientProxiedBy: nalasex01c.na.qualcomm.com (10.47.97.35) To
  nasanex01b.na.qualcomm.com (10.46.141.250)
 X-QCInternal: smtphost
 X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: UtvzZzBYuHQ2yLUa5GJ10kDpUDECSUak
-X-Proofpoint-ORIG-GUID: UtvzZzBYuHQ2yLUa5GJ10kDpUDECSUak
+X-Proofpoint-GUID: G4o5lshGena-Ci4TAmTqxq_ZScpiMa0Z
+X-Proofpoint-ORIG-GUID: G4o5lshGena-Ci4TAmTqxq_ZScpiMa0Z
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
  definitions=2024-02-22_15,2024-02-22_01,2023-05-22_02
@@ -103,287 +103,462 @@ X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscor
  impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.19.0-2402120000 definitions=main-2402220179
 
-Qualcomm platforms have a firmware entity which performs access control
-to physical pages. Dynamically started Gunyah virtual machines use the
-QCOM_SCM_RM_MANAGED_VMID for access. Linux thus needs to assign access
-to the memory used by guest VMs. Gunyah doesn't do this operation for us
-since it is the current VM (typically VMID_HLOS) delegating the access
-and not Gunyah itself. Use the Gunyah platform ops to achieve this so
-that only Qualcomm platforms attempt to make the needed SCM calls.
+Introduce a framework for Gunyah userspace to install VM functions. VM
+functions are optional interfaces to the virtual machine. vCPUs,
+ioeventfs, and irqfds are examples of such VM functions and are
+implemented in subsequent patches.
 
-Reviewed-by: Alex Elder <elder@linaro.org>
-Co-developed-by: Prakruthi Deepak Heragu <quic_pheragu@quicinc.com>
-Signed-off-by: Prakruthi Deepak Heragu <quic_pheragu@quicinc.com>
+A generic framework is implemented instead of individual ioctls to
+create vCPUs, irqfds, etc., in order to simplify the VM manager core
+implementation and allow dynamic loading of VM function modules.
+
 Signed-off-by: Elliot Berman <quic_eberman@quicinc.com>
 ---
- drivers/virt/gunyah/Kconfig       |  13 +++
- drivers/virt/gunyah/Makefile      |   1 +
- drivers/virt/gunyah/gunyah_qcom.c | 220 ++++++++++++++++++++++++++++++++++++++
- 3 files changed, 234 insertions(+)
+ drivers/virt/gunyah/vm_mgr.c | 207 ++++++++++++++++++++++++++++++++++++++++++-
+ drivers/virt/gunyah/vm_mgr.h |  10 +++
+ include/linux/gunyah.h       |  86 +++++++++++++++++-
+ include/uapi/linux/gunyah.h  |  18 ++++
+ 4 files changed, 317 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/virt/gunyah/Kconfig b/drivers/virt/gunyah/Kconfig
-index 23ba523d25dc8..fe2823dc48bac 100644
---- a/drivers/virt/gunyah/Kconfig
-+++ b/drivers/virt/gunyah/Kconfig
-@@ -4,6 +4,7 @@ config GUNYAH
- 	tristate "Gunyah Virtualization drivers"
- 	depends on ARM64
- 	select GUNYAH_PLATFORM_HOOKS
-+	imply GUNYAH_QCOM_PLATFORM if ARCH_QCOM
- 	help
- 	  The Gunyah drivers are the helper interfaces that run in a guest VM
- 	  such as basic inter-VM IPC and signaling mechanisms, and higher level
-@@ -14,3 +15,15 @@ config GUNYAH
+diff --git a/drivers/virt/gunyah/vm_mgr.c b/drivers/virt/gunyah/vm_mgr.c
+index 2cde4d501204a..a619dd10972a5 100644
+--- a/drivers/virt/gunyah/vm_mgr.c
++++ b/drivers/virt/gunyah/vm_mgr.c
+@@ -6,15 +6,175 @@
+ #define pr_fmt(fmt) "gunyah_vm_mgr: " fmt
  
- config GUNYAH_PLATFORM_HOOKS
- 	tristate
-+
-+config GUNYAH_QCOM_PLATFORM
-+	tristate "Support for Gunyah on Qualcomm platforms"
-+	depends on GUNYAH
-+	select GUNYAH_PLATFORM_HOOKS
-+	select QCOM_SCM
-+	help
-+	  Enable support for interacting with Gunyah on Qualcomm
-+	  platforms. Interaction with Qualcomm firmware requires
-+	  extra platform-specific support.
-+
-+	  Say Y/M here to use Gunyah on Qualcomm platforms.
-diff --git a/drivers/virt/gunyah/Makefile b/drivers/virt/gunyah/Makefile
-index ffcde0e0ccfa9..a6c6f29b887a6 100644
---- a/drivers/virt/gunyah/Makefile
-+++ b/drivers/virt/gunyah/Makefile
-@@ -4,3 +4,4 @@ gunyah_rsc_mgr-y += rsc_mgr.o rsc_mgr_rpc.o vm_mgr.o vm_mgr_mem.o
+ #include <linux/anon_inodes.h>
++#include <linux/compat.h>
+ #include <linux/file.h>
+ #include <linux/miscdevice.h>
+ #include <linux/module.h>
++#include <linux/xarray.h>
  
- obj-$(CONFIG_GUNYAH) += gunyah.o gunyah_rsc_mgr.o gunyah_vcpu.o
- obj-$(CONFIG_GUNYAH_PLATFORM_HOOKS) += gunyah_platform_hooks.o
-+obj-$(CONFIG_GUNYAH_QCOM_PLATFORM) += gunyah_qcom.o
-diff --git a/drivers/virt/gunyah/gunyah_qcom.c b/drivers/virt/gunyah/gunyah_qcom.c
-new file mode 100644
-index 0000000000000..f2342d51a0184
---- /dev/null
-+++ b/drivers/virt/gunyah/gunyah_qcom.c
-@@ -0,0 +1,220 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Copyright (c) 2023-2024 Qualcomm Innovation Center, Inc. All rights reserved.
-+ */
+ #include <uapi/linux/gunyah.h>
+ 
+ #include "rsc_mgr.h"
+ #include "vm_mgr.h"
+ 
++static DEFINE_XARRAY(gunyah_vm_functions);
 +
-+#include <linux/arm-smccc.h>
-+#include <linux/gunyah.h>
-+#include <linux/mm.h>
-+#include <linux/module.h>
-+#include <linux/firmware/qcom/qcom_scm.h>
-+#include <linux/types.h>
-+#include <linux/uuid.h>
-+
-+#define QCOM_SCM_RM_MANAGED_VMID 0x3A
-+#define QCOM_SCM_MAX_MANAGED_VMID 0x3F
-+
-+static int
-+qcom_scm_gunyah_rm_pre_mem_share(struct gunyah_rm *rm,
-+				 struct gunyah_rm_mem_parcel *mem_parcel)
++static void gunyah_vm_put_function(struct gunyah_vm_function *fn)
 +{
-+	struct qcom_scm_vmperm *new_perms __free(kfree) = NULL;
-+	u64 src, src_cpy;
-+	int ret = 0, i, n;
-+	u16 vmid;
++	module_put(fn->mod);
++}
 +
-+	new_perms = kcalloc(mem_parcel->n_acl_entries, sizeof(*new_perms),
-+			    GFP_KERNEL);
-+	if (!new_perms)
++static struct gunyah_vm_function *gunyah_vm_get_function(u32 type)
++{
++	struct gunyah_vm_function *fn;
++
++	fn = xa_load(&gunyah_vm_functions, type);
++	if (!fn) {
++		request_module("ghfunc:%d", type);
++
++		fn = xa_load(&gunyah_vm_functions, type);
++	}
++
++	if (!fn || !try_module_get(fn->mod))
++		fn = ERR_PTR(-ENOENT);
++
++	return fn;
++}
++
++static void
++gunyah_vm_remove_function_instance(struct gunyah_vm_function_instance *inst)
++	__must_hold(&inst->ghvm->fn_lock)
++{
++	inst->fn->unbind(inst);
++	list_del(&inst->vm_list);
++	gunyah_vm_put_function(inst->fn);
++	kfree(inst->argp);
++	kfree(inst);
++}
++
++static void gunyah_vm_remove_functions(struct gunyah_vm *ghvm)
++{
++	struct gunyah_vm_function_instance *inst, *iiter;
++
++	mutex_lock(&ghvm->fn_lock);
++	list_for_each_entry_safe(inst, iiter, &ghvm->functions, vm_list) {
++		gunyah_vm_remove_function_instance(inst);
++	}
++	mutex_unlock(&ghvm->fn_lock);
++}
++
++static long gunyah_vm_add_function_instance(struct gunyah_vm *ghvm,
++					    struct gunyah_fn_desc *f)
++{
++	struct gunyah_vm_function_instance *inst;
++	void __user *argp;
++	long r = 0;
++
++	if (f->arg_size > GUNYAH_FN_MAX_ARG_SIZE) {
++		dev_err_ratelimited(ghvm->parent, "%s: arg_size > %d\n",
++				    __func__, GUNYAH_FN_MAX_ARG_SIZE);
++		return -EINVAL;
++	}
++
++	inst = kzalloc(sizeof(*inst), GFP_KERNEL);
++	if (!inst)
 +		return -ENOMEM;
 +
-+	for (n = 0; n < mem_parcel->n_acl_entries; n++) {
-+		vmid = le16_to_cpu(mem_parcel->acl_entries[n].vmid);
-+		if (vmid <= QCOM_SCM_MAX_MANAGED_VMID)
-+			new_perms[n].vmid = vmid;
-+		else
-+			new_perms[n].vmid = QCOM_SCM_RM_MANAGED_VMID;
-+		if (mem_parcel->acl_entries[n].perms & GUNYAH_RM_ACL_X)
-+			new_perms[n].perm |= QCOM_SCM_PERM_EXEC;
-+		if (mem_parcel->acl_entries[n].perms & GUNYAH_RM_ACL_W)
-+			new_perms[n].perm |= QCOM_SCM_PERM_WRITE;
-+		if (mem_parcel->acl_entries[n].perms & GUNYAH_RM_ACL_R)
-+			new_perms[n].perm |= QCOM_SCM_PERM_READ;
++	inst->arg_size = f->arg_size;
++	if (inst->arg_size) {
++		inst->argp = kzalloc(inst->arg_size, GFP_KERNEL);
++		if (!inst->argp) {
++			r = -ENOMEM;
++			goto free;
++		}
++
++		argp = u64_to_user_ptr(f->arg);
++		if (copy_from_user(inst->argp, argp, f->arg_size)) {
++			r = -EFAULT;
++			goto free_arg;
++		}
 +	}
 +
-+	src = BIT_ULL(QCOM_SCM_VMID_HLOS);
-+
-+	for (i = 0; i < mem_parcel->n_mem_entries; i++) {
-+		src_cpy = src;
-+		ret = qcom_scm_assign_mem(
-+			le64_to_cpu(mem_parcel->mem_entries[i].phys_addr),
-+			le64_to_cpu(mem_parcel->mem_entries[i].size), &src_cpy,
-+			new_perms, mem_parcel->n_acl_entries);
-+		if (ret)
-+			break;
++	inst->fn = gunyah_vm_get_function(f->type);
++	if (IS_ERR(inst->fn)) {
++		r = PTR_ERR(inst->fn);
++		goto free_arg;
 +	}
 +
-+	/* Did it work ok? */
-+	if (!ret)
-+		return 0;
++	inst->ghvm = ghvm;
++	inst->rm = ghvm->rm;
 +
-+	src = 0;
-+	for (n = 0; n < mem_parcel->n_acl_entries; n++) {
-+		vmid = le16_to_cpu(mem_parcel->acl_entries[n].vmid);
-+		if (vmid <= QCOM_SCM_MAX_MANAGED_VMID)
-+			src |= BIT_ULL(vmid);
-+		else
-+			src |= BIT_ULL(QCOM_SCM_RM_MANAGED_VMID);
++	mutex_lock(&ghvm->fn_lock);
++	r = inst->fn->bind(inst);
++	if (r < 0) {
++		mutex_unlock(&ghvm->fn_lock);
++		gunyah_vm_put_function(inst->fn);
++		goto free_arg;
 +	}
 +
-+	new_perms[0].vmid = QCOM_SCM_VMID_HLOS;
-+	new_perms[0].perm = QCOM_SCM_PERM_EXEC | QCOM_SCM_PERM_WRITE |
-+			    QCOM_SCM_PERM_READ;
++	list_add(&inst->vm_list, &ghvm->functions);
++	mutex_unlock(&ghvm->fn_lock);
 +
-+	for (i--; i >= 0; i--) {
-+		src_cpy = src;
-+		WARN_ON_ONCE(qcom_scm_assign_mem(
-+			le64_to_cpu(mem_parcel->mem_entries[i].phys_addr),
-+			le64_to_cpu(mem_parcel->mem_entries[i].size), &src_cpy,
-+			new_perms, 1));
-+	}
-+
-+	return ret;
++	return r;
++free_arg:
++	kfree(inst->argp);
++free:
++	kfree(inst);
++	return r;
 +}
 +
-+static int
-+qcom_scm_gunyah_rm_post_mem_reclaim(struct gunyah_rm *rm,
-+				    struct gunyah_rm_mem_parcel *mem_parcel)
++static long gunyah_vm_rm_function_instance(struct gunyah_vm *ghvm,
++					   struct gunyah_fn_desc *f)
 +{
-+	struct qcom_scm_vmperm new_perms;
-+	u64 src = 0, src_cpy;
-+	int ret = 0, i, n;
-+	u16 vmid;
++	struct gunyah_vm_function_instance *inst, *iter;
++	void __user *user_argp;
++	void *argp __free(kfree) = NULL;
++	long r = 0;
 +
-+	new_perms.vmid = QCOM_SCM_VMID_HLOS;
-+	new_perms.perm = QCOM_SCM_PERM_EXEC | QCOM_SCM_PERM_WRITE |
-+			 QCOM_SCM_PERM_READ;
++	if (f->arg_size) {
++		argp = kzalloc(f->arg_size, GFP_KERNEL);
++		if (!argp)
++			return -ENOMEM;
 +
-+	for (n = 0; n < mem_parcel->n_acl_entries; n++) {
-+		vmid = le16_to_cpu(mem_parcel->acl_entries[n].vmid);
-+		if (vmid <= QCOM_SCM_MAX_MANAGED_VMID)
-+			src |= (1ull << vmid);
-+		else
-+			src |= (1ull << QCOM_SCM_RM_MANAGED_VMID);
++		user_argp = u64_to_user_ptr(f->arg);
++		if (copy_from_user(argp, user_argp, f->arg_size))
++			return -EFAULT;
 +	}
 +
-+	for (i = 0; i < mem_parcel->n_mem_entries; i++) {
-+		src_cpy = src;
-+		ret = qcom_scm_assign_mem(
-+			le64_to_cpu(mem_parcel->mem_entries[i].phys_addr),
-+			le64_to_cpu(mem_parcel->mem_entries[i].size), &src_cpy,
-+			&new_perms, 1);
-+		WARN_ON_ONCE(ret);
++	r = mutex_lock_interruptible(&ghvm->fn_lock);
++	if (r)
++		return r;
++
++	r = -ENOENT;
++	list_for_each_entry_safe(inst, iter, &ghvm->functions, vm_list) {
++		if (inst->fn->type == f->type &&
++		    inst->fn->compare(inst, argp, f->arg_size)) {
++			gunyah_vm_remove_function_instance(inst);
++			r = 0;
++		}
 +	}
 +
-+	return ret;
++	mutex_unlock(&ghvm->fn_lock);
++	return r;
 +}
 +
-+static int
-+qcom_scm_gunyah_rm_pre_demand_page(struct gunyah_rm *rm, u16 vmid,
-+				   enum gunyah_pagetable_access access,
-+				   struct folio *folio)
++int gunyah_vm_function_register(struct gunyah_vm_function *fn)
 +{
-+	struct qcom_scm_vmperm new_perms[2];
-+	unsigned int n = 1;
-+	u64 src;
++	if (!fn->bind || !fn->unbind)
++		return -EINVAL;
 +
-+	new_perms[0].vmid = QCOM_SCM_RM_MANAGED_VMID;
-+	new_perms[0].perm = QCOM_SCM_PERM_EXEC | QCOM_SCM_PERM_WRITE |
-+			    QCOM_SCM_PERM_READ;
-+	if (access != GUNYAH_PAGETABLE_ACCESS_X &&
-+	    access != GUNYAH_PAGETABLE_ACCESS_RX &&
-+	    access != GUNYAH_PAGETABLE_ACCESS_RWX) {
-+		new_perms[1].vmid = QCOM_SCM_VMID_HLOS;
-+		new_perms[1].perm = QCOM_SCM_PERM_EXEC | QCOM_SCM_PERM_WRITE |
-+				    QCOM_SCM_PERM_READ;
-+		n++;
-+	}
-+
-+	src = BIT_ULL(QCOM_SCM_VMID_HLOS);
-+
-+	return qcom_scm_assign_mem(__pfn_to_phys(folio_pfn(folio)),
-+				   folio_size(folio), &src, new_perms, n);
++	return xa_err(xa_store(&gunyah_vm_functions, fn->type, fn, GFP_KERNEL));
 +}
++EXPORT_SYMBOL_GPL(gunyah_vm_function_register);
 +
-+static int
-+qcom_scm_gunyah_rm_release_demand_page(struct gunyah_rm *rm, u16 vmid,
-+				       enum gunyah_pagetable_access access,
-+				       struct folio *folio)
++void gunyah_vm_function_unregister(struct gunyah_vm_function *fn)
 +{
-+	struct qcom_scm_vmperm new_perms;
-+	u64 src;
++	/* Expecting unregister to only come when unloading a module */
++	WARN_ON(fn->mod && module_refcount(fn->mod));
++	xa_erase(&gunyah_vm_functions, fn->type);
++}
++EXPORT_SYMBOL_GPL(gunyah_vm_function_unregister);
 +
-+	new_perms.vmid = QCOM_SCM_VMID_HLOS;
-+	new_perms.perm = QCOM_SCM_PERM_EXEC | QCOM_SCM_PERM_WRITE |
-+			 QCOM_SCM_PERM_READ;
+ int gunyah_vm_add_resource_ticket(struct gunyah_vm *ghvm,
+ 				  struct gunyah_vm_resource_ticket *ticket)
+ {
+@@ -198,7 +358,11 @@ static __must_check struct gunyah_vm *gunyah_vm_alloc(struct gunyah_rm *rm)
+ 
+ 	init_rwsem(&ghvm->status_lock);
+ 	init_waitqueue_head(&ghvm->vm_status_wait);
++	kref_init(&ghvm->kref);
+ 	ghvm->vm_status = GUNYAH_RM_VM_STATUS_NO_STATE;
 +
-+	src = BIT_ULL(QCOM_SCM_RM_MANAGED_VMID);
++	INIT_LIST_HEAD(&ghvm->functions);
++	mutex_init(&ghvm->fn_lock);
+ 	mutex_init(&ghvm->resources_lock);
+ 	INIT_LIST_HEAD(&ghvm->resources);
+ 	INIT_LIST_HEAD(&ghvm->resource_tickets);
+@@ -311,6 +475,7 @@ static long gunyah_vm_ioctl(struct file *filp, unsigned int cmd,
+ 			    unsigned long arg)
+ {
+ 	struct gunyah_vm *ghvm = filp->private_data;
++	void __user *argp = (void __user *)arg;
+ 	long r;
+ 
+ 	switch (cmd) {
+@@ -318,6 +483,24 @@ static long gunyah_vm_ioctl(struct file *filp, unsigned int cmd,
+ 		r = gunyah_vm_ensure_started(ghvm);
+ 		break;
+ 	}
++	case GUNYAH_VM_ADD_FUNCTION: {
++		struct gunyah_fn_desc f;
 +
-+	if (access != GUNYAH_PAGETABLE_ACCESS_X &&
-+	    access != GUNYAH_PAGETABLE_ACCESS_RX &&
-+	    access != GUNYAH_PAGETABLE_ACCESS_RWX)
-+		src |= BIT_ULL(QCOM_SCM_VMID_HLOS);
++		if (copy_from_user(&f, argp, sizeof(f)))
++			return -EFAULT;
 +
-+	return qcom_scm_assign_mem(__pfn_to_phys(folio_pfn(folio)),
-+				   folio_size(folio), &src, &new_perms, 1);
++		r = gunyah_vm_add_function_instance(ghvm, &f);
++		break;
++	}
++	case GUNYAH_VM_REMOVE_FUNCTION: {
++		struct gunyah_fn_desc f;
++
++		if (copy_from_user(&f, argp, sizeof(f)))
++			return -EFAULT;
++
++		r = gunyah_vm_rm_function_instance(ghvm, &f);
++		break;
++	}
+ 	default:
+ 		r = -ENOTTY;
+ 		break;
+@@ -326,9 +509,15 @@ static long gunyah_vm_ioctl(struct file *filp, unsigned int cmd,
+ 	return r;
+ }
+ 
+-static int gunyah_vm_release(struct inode *inode, struct file *filp)
++int __must_check gunyah_vm_get(struct gunyah_vm *ghvm)
+ {
+-	struct gunyah_vm *ghvm = filp->private_data;
++	return kref_get_unless_zero(&ghvm->kref);
++}
++EXPORT_SYMBOL_GPL(gunyah_vm_get);
++
++static void _gunyah_vm_put(struct kref *kref)
++{
++	struct gunyah_vm *ghvm = container_of(kref, struct gunyah_vm, kref);
+ 	int ret;
+ 
+ 	/**
+@@ -338,6 +527,7 @@ static int gunyah_vm_release(struct inode *inode, struct file *filp)
+ 	if (ghvm->vm_status == GUNYAH_RM_VM_STATUS_RUNNING)
+ 		gunyah_vm_stop(ghvm);
+ 
++	gunyah_vm_remove_functions(ghvm);
+ 	gunyah_vm_clean_resources(ghvm);
+ 
+ 	if (ghvm->vm_status == GUNYAH_RM_VM_STATUS_EXITED ||
+@@ -364,6 +554,19 @@ static int gunyah_vm_release(struct inode *inode, struct file *filp)
+ 
+ 	gunyah_rm_put(ghvm->rm);
+ 	kfree(ghvm);
 +}
 +
-+static struct gunyah_rm_platform_ops qcom_scm_gunyah_rm_platform_ops = {
-+	.pre_mem_share = qcom_scm_gunyah_rm_pre_mem_share,
-+	.post_mem_reclaim = qcom_scm_gunyah_rm_post_mem_reclaim,
-+	.pre_demand_page = qcom_scm_gunyah_rm_pre_demand_page,
-+	.release_demand_page = qcom_scm_gunyah_rm_release_demand_page,
++void gunyah_vm_put(struct gunyah_vm *ghvm)
++{
++	kref_put(&ghvm->kref, _gunyah_vm_put);
++}
++EXPORT_SYMBOL_GPL(gunyah_vm_put);
++
++static int gunyah_vm_release(struct inode *inode, struct file *filp)
++{
++	struct gunyah_vm *ghvm = filp->private_data;
++
++	gunyah_vm_put(ghvm);
+ 	return 0;
+ }
+ 
+diff --git a/drivers/virt/gunyah/vm_mgr.h b/drivers/virt/gunyah/vm_mgr.h
+index 0d291f7228859..190a95ee8da64 100644
+--- a/drivers/virt/gunyah/vm_mgr.h
++++ b/drivers/virt/gunyah/vm_mgr.h
+@@ -7,6 +7,8 @@
+ #define _GUNYAH_VM_MGR_PRIV_H
+ 
+ #include <linux/device.h>
++#include <linux/kref.h>
++#include <linux/mutex.h>
+ #include <linux/rwsem.h>
+ #include <linux/wait.h>
+ 
+@@ -26,6 +28,10 @@ long gunyah_dev_vm_mgr_ioctl(struct gunyah_rm *rm, unsigned int cmd,
+  * @vm_status: Current state of the VM, as last reported by RM
+  * @vm_status_wait: Wait queue for status @vm_status changes
+  * @status_lock: Serializing state transitions
++ * @kref: Reference counter for VM functions
++ * @fn_lock: Serialization addition of functions
++ * @functions: List of &struct gunyah_vm_function_instance that have been
++ *             created by user for this VM.
+  * @resource_lock: Serializing addition of resources and resource tickets
+  * @resources: List of &struct gunyah_resource that are associated with this VM
+  * @resource_tickets: List of &struct gunyah_vm_resource_ticket
+@@ -42,6 +48,10 @@ struct gunyah_vm {
+ 	enum gunyah_rm_vm_status vm_status;
+ 	wait_queue_head_t vm_status_wait;
+ 	struct rw_semaphore status_lock;
++
++	struct kref kref;
++	struct mutex fn_lock;
++	struct list_head functions;
+ 	struct mutex resources_lock;
+ 	struct list_head resources;
+ 	struct list_head resource_tickets;
+diff --git a/include/linux/gunyah.h b/include/linux/gunyah.h
+index 0017691002607..18ecebf41a3ff 100644
+--- a/include/linux/gunyah.h
++++ b/include/linux/gunyah.h
+@@ -11,8 +11,92 @@
+ #include <linux/interrupt.h>
+ #include <linux/limits.h>
+ #include <linux/list.h>
++#include <linux/mod_devicetable.h>
+ #include <linux/types.h>
+ 
++#include <uapi/linux/gunyah.h>
++
++struct gunyah_vm;
++
++int __must_check gunyah_vm_get(struct gunyah_vm *ghvm);
++void gunyah_vm_put(struct gunyah_vm *ghvm);
++
++struct gunyah_vm_function_instance;
++/**
++ * struct gunyah_vm_function - Represents a function type
++ * @type: value from &enum gunyah_fn_type
++ * @name: friendly name for debug purposes
++ * @mod: owner of the function type
++ * @bind: Called when a new function of this type has been allocated.
++ * @unbind: Called when the function instance is being destroyed.
++ * @compare: Compare function instance @f's argument to the provided arg.
++ *           Return true if they are equivalent. Used on GUNYAH_VM_REMOVE_FUNCTION.
++ */
++struct gunyah_vm_function {
++	u32 type;
++	const char *name;
++	struct module *mod;
++	long (*bind)(struct gunyah_vm_function_instance *f);
++	void (*unbind)(struct gunyah_vm_function_instance *f);
++	bool (*compare)(const struct gunyah_vm_function_instance *f,
++			const void *arg, size_t size);
 +};
 +
-+/* {19bd54bd-0b37-571b-946f-609b54539de6} */
-+static const uuid_t QCOM_EXT_UUID = UUID_INIT(0x19bd54bd, 0x0b37, 0x571b, 0x94,
-+					      0x6f, 0x60, 0x9b, 0x54, 0x53,
-+					      0x9d, 0xe6);
++/**
++ * struct gunyah_vm_function_instance - Represents one function instance
++ * @arg_size: size of user argument
++ * @argp: pointer to user argument
++ * @ghvm: Pointer to VM instance
++ * @rm: Pointer to resource manager for the VM instance
++ * @fn: The ops for the function
++ * @data: Private data for function
++ * @vm_list: for gunyah_vm's functions list
++ */
++struct gunyah_vm_function_instance {
++	size_t arg_size;
++	void *argp;
++	struct gunyah_vm *ghvm;
++	struct gunyah_rm *rm;
++	struct gunyah_vm_function *fn;
++	void *data;
++	struct list_head vm_list;
++};
 +
-+#define GUNYAH_QCOM_EXT_CALL_UUID_ID                              \
-+	ARM_SMCCC_CALL_VAL(ARM_SMCCC_FAST_CALL, ARM_SMCCC_SMC_32, \
-+			   ARM_SMCCC_OWNER_VENDOR_HYP, 0x3f01)
++int gunyah_vm_function_register(struct gunyah_vm_function *f);
++void gunyah_vm_function_unregister(struct gunyah_vm_function *f);
 +
-+static bool gunyah_has_qcom_extensions(void)
-+{
-+	struct arm_smccc_res res;
-+	uuid_t uuid;
-+	u32 *up;
++/* Since the function identifiers were setup in a uapi header as an
++ * enum and we do no want to change that, the user must supply the expanded
++ * constant as well and the compiler checks they are the same.
++ * See also MODULE_ALIAS_RDMA_NETLINK.
++ */
++#define MODULE_ALIAS_GUNYAH_VM_FUNCTION(_type, _idx)        \
++	static inline void __maybe_unused __chk##_idx(void) \
++	{                                                   \
++		BUILD_BUG_ON(_type != _idx);                \
++	}                                                   \
++	MODULE_ALIAS("ghfunc:" __stringify(_idx))
 +
-+	arm_smccc_1_1_smc(GUNYAH_QCOM_EXT_CALL_UUID_ID, &res);
++#define DECLARE_GUNYAH_VM_FUNCTION(_name, _type, _bind, _unbind, _compare) \
++	static struct gunyah_vm_function _name = {                         \
++		.type = _type,                                             \
++		.name = __stringify(_name),                                \
++		.mod = THIS_MODULE,                                        \
++		.bind = _bind,                                             \
++		.unbind = _unbind,                                         \
++		.compare = _compare,                                       \
++	}
 +
-+	up = (u32 *)&uuid.b[0];
-+	up[0] = lower_32_bits(res.a0);
-+	up[1] = lower_32_bits(res.a1);
-+	up[2] = lower_32_bits(res.a2);
-+	up[3] = lower_32_bits(res.a3);
++#define module_gunyah_vm_function(__gf)                  \
++	module_driver(__gf, gunyah_vm_function_register, \
++		      gunyah_vm_function_unregister)
 +
-+	return uuid_equal(&uuid, &QCOM_EXT_UUID);
-+}
++#define DECLARE_GUNYAH_VM_FUNCTION_INIT(_name, _type, _idx, _bind, _unbind, \
++					_compare)                           \
++	DECLARE_GUNYAH_VM_FUNCTION(_name, _type, _bind, _unbind, _compare); \
++	module_gunyah_vm_function(_name);                                   \
++	MODULE_ALIAS_GUNYAH_VM_FUNCTION(_type, _idx)
 +
-+static int __init qcom_gunyah_platform_hooks_register(void)
-+{
-+	if (!gunyah_has_qcom_extensions())
-+		return -ENODEV;
+ /* Matches resource manager's resource types for VM_GET_HYP_RESOURCES RPC */
+ enum gunyah_resource_type {
+ 	/* clang-format off */
+@@ -35,8 +119,6 @@ struct gunyah_resource {
+ 	u32 rm_label;
+ };
+ 
+-struct gunyah_vm;
+-
+ /**
+  * struct gunyah_vm_resource_ticket - Represents a ticket to reserve access to VM resource(s)
+  * @vm_list: for @gunyah_vm->resource_tickets
+diff --git a/include/uapi/linux/gunyah.h b/include/uapi/linux/gunyah.h
+index 31e7f79a6c398..1b7cb5fde70a2 100644
+--- a/include/uapi/linux/gunyah.h
++++ b/include/uapi/linux/gunyah.h
+@@ -25,4 +25,22 @@
+  */
+ #define GUNYAH_VM_START		_IO(GUNYAH_IOCTL_TYPE, 0x3)
+ 
++#define GUNYAH_FN_MAX_ARG_SIZE		256
 +
-+	pr_info("Enabling Gunyah hooks for Qualcomm platforms.\n");
++/**
++ * struct gunyah_fn_desc - Arguments to create a VM function
++ * @type: Type of the function. See &enum gunyah_fn_type.
++ * @arg_size: Size of argument to pass to the function. arg_size <= GUNYAH_FN_MAX_ARG_SIZE
++ * @arg: Pointer to argument given to the function. See &enum gunyah_fn_type for expected
++ *       arguments for a function type.
++ */
++struct gunyah_fn_desc {
++	__u32 type;
++	__u32 arg_size;
++	__u64 arg;
++};
 +
-+	return gunyah_rm_register_platform_ops(
-+		&qcom_scm_gunyah_rm_platform_ops);
-+}
++#define GUNYAH_VM_ADD_FUNCTION	_IOW(GUNYAH_IOCTL_TYPE, 0x4, struct gunyah_fn_desc)
++#define GUNYAH_VM_REMOVE_FUNCTION	_IOW(GUNYAH_IOCTL_TYPE, 0x7, struct gunyah_fn_desc)
 +
-+static void __exit qcom_gunyah_platform_hooks_unregister(void)
-+{
-+	gunyah_rm_unregister_platform_ops(&qcom_scm_gunyah_rm_platform_ops);
-+}
-+
-+module_init(qcom_gunyah_platform_hooks_register);
-+module_exit(qcom_gunyah_platform_hooks_unregister);
-+MODULE_DESCRIPTION("Qualcomm Technologies, Inc. Platform Hooks for Gunyah");
-+MODULE_LICENSE("GPL");
+ #endif
 
 -- 
 2.34.1
