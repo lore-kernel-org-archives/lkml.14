@@ -1,32 +1,32 @@
-Received: from out-186.mta0.migadu.com (out-186.mta0.migadu.com [91.218.175.186])
+Received: from out-170.mta0.migadu.com (out-170.mta0.migadu.com [91.218.175.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C32D14A08D
-	for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 14:04:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.186
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1D9914691D
+	for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 14:05:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708610701; cv=none; b=nYubhOsTKrxfl+hltQo8yVCbbdjUlYecC5CW7odlg5neyCt86uf942BSKgSAB8NoZq+ht5YlMEUweb8sEQX46Mc/qaXrAl5s+raQRX99JYdO3RUFDvL8Wf//f9JkV1juvEJ90a/K7t17XnrdefbB+68NRFRqA3gF6KNBSFtjjbU=
+	t=1708610704; cv=none; b=MUmDAnjJIzS9gCr+IdbGtoE2mu1pcxAxlvnPgaRdkxfatUrfIR0ya3/n2AXwDnz9ojDgeY/crV3BKuH4sXHgJc0snouJSU/mpAUlp6lLeu3lslH5sfHj4fJ/VNEAwPoZ9Cf+8HMj1N2fqx+Cx9ZYWCblJDqSdYKmZY4MbdDfa4g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708610701; c=relaxed/simple;
-	bh=pKjNCBtJRKlytDtOYpIKfNyflGK1XMd1FZLmFDtWJWQ=;
+	s=arc-20240116; t=1708610704; c=relaxed/simple;
+	bh=tQai8VYTD5u9kmna2i0v3NDlggEePdlk6wRlzITeLz4=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=QPoo8aZI4PLaCnGPrm1+GsPIsvZUI6wj3jVVdKRIKFGwJ8FBaqf9oPDrw2hYzW7SjVKVtUAvA5s2UsES3a5xbehosQc6r145hCtvCROlswi24SLDEUtEzYahTgytNXqRkBExbIYipmd6xliRs2C924wvkE405/NnE8mOiCBIviw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=p1Ko7q4H; arc=none smtp.client-ip=91.218.175.186
+	 MIME-Version; b=QU38ab7YDD8SNlGQvhTp+iagjGHdS1muUUjfHjXxfIHPvemrFFJKk4VQLAR3ENbrsKjrM2hHs6hXace8b0eB8XUjwFUjTEAxBspVm0ZTzMf8uT3FufhanKsbn9WYF63VXtxo/4vNO2z3GSWKPOWL70oObWnWPOwhOpYiAbdJPvQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=EWql7fnc; arc=none smtp.client-ip=91.218.175.170
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="p1Ko7q4H"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="EWql7fnc"
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1708610697;
+	t=1708610701;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=MgzBTPzPKbW03C1p+bf5b2VOJPKCTieqosPALSU6d3A=;
-	b=p1Ko7q4HwLZ8IRyvsRmFPEObb08w0kLTfT8Eo/yUShmw9X8SanRExrBoYN4E8QizQ7JtJr
-	y6CDhqCmusgjbGbPQnWZj7zwS/EdtoiwysOQK8U4EQ2jhWPEDI0N15nmbWXhOwCYYBftee
-	20rXO2q25jdViRTYxjq4nVcOPEYzQBk=
+	bh=P5dkM7DuGNd3n4uTkQacavwzunNC39kM4edC7ugWujE=;
+	b=EWql7fncR1Nj1MIpD5GRXCTp3WENf4dEY69tv+jJU3JilH4N5PjL/V0Pe5FGwckjEP/Uyc
+	TMSelN5Z8oMXIJ4mqBgNDiz4LmUYpAOxzwz8N/sBA/f6cjS1ksHyDB50z50WXk6Wjh9xGP
+	vTIbBboABNWUcFmQwXUyWrABeLtlfvs=
 From: Gang Li <gang.li@linux.dev>
 To: Andrew Morton <akpm@linux-foundation.org>
 Cc: David Hildenbrand <david@redhat.com>,
@@ -42,9 +42,9 @@ Cc: David Hildenbrand <david@redhat.com>,
 	linux-kernel@vger.kernel.org,
 	ligang.bdlg@bytedance.com,
 	Gang Li <gang.li@linux.dev>
-Subject: [PATCH v6 4/8] padata: dispatch works on different nodes
-Date: Thu, 22 Feb 2024 22:04:17 +0800
-Message-Id: <20240222140422.393911-5-gang.li@linux.dev>
+Subject: [PATCH v6 5/8] padata: downgrade padata_do_multithreaded to serial execution for non-SMP
+Date: Thu, 22 Feb 2024 22:04:18 +0800
+Message-Id: <20240222140422.393911-6-gang.li@linux.dev>
 In-Reply-To: <20240222140422.393911-1-gang.li@linux.dev>
 References: <20240222140422.393911-1-gang.li@linux.dev>
 Precedence: bulk
@@ -56,87 +56,57 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Migadu-Flow: FLOW_OUT
 
-When a group of tasks that access different nodes are scheduled on the
-same node, they may encounter bandwidth bottlenecks and access latency.
+hugetlb parallelization depends on PADATA, and PADATA depends on SMP.
 
-Thus, numa_aware flag is introduced here, allowing tasks to be
-distributed across different nodes to fully utilize the advantage of
-multi-node systems.
+PADATA consists of two distinct functionality: One part is
+padata_do_multithreaded which disregards order and simply divides
+tasks into several groups for parallel execution. Hugetlb
+init parallelization depends on padata_do_multithreaded.
+
+The other part is composed of a set of APIs that, while handling data in
+an out-of-order parallel manner, can eventually return the data with
+ordered sequence. Currently Only `crypto/pcrypt.c` use them.
+
+All users of PADATA of non-SMP case currently only use
+padata_do_multithreaded. It is easy to implement a serial one in
+include/linux/padata.h. And it is not necessary to implement another
+functionality unless the only user of crypto/pcrypt.c does not depend on
+SMP in the future.
 
 Signed-off-by: Gang Li <ligang.bdlg@bytedance.com>
-Tested-by: David Rientjes <rientjes@google.com>
-Reviewed-by: Muchun Song <muchun.song@linux.dev>
-Reviewed-by: Tim Chen <tim.c.chen@linux.intel.com>
+Tested-by: Paul E. McKenney <paulmck@kernel.org>
 ---
- include/linux/padata.h |  2 ++
- kernel/padata.c        | 14 ++++++++++++--
- mm/mm_init.c           |  1 +
- 3 files changed, 15 insertions(+), 2 deletions(-)
+ include/linux/padata.h | 12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
 
 diff --git a/include/linux/padata.h b/include/linux/padata.h
-index 495b16b6b4d72..8f418711351bc 100644
+index 8f418711351bc..0146daf344306 100644
 --- a/include/linux/padata.h
 +++ b/include/linux/padata.h
-@@ -137,6 +137,7 @@ struct padata_shell {
-  *             appropriate for one worker thread to do at once.
-  * @max_threads: Max threads to use for the job, actual number may be less
-  *               depending on task size and minimum chunk size.
-+ * @numa_aware: Distribute jobs to different nodes with CPU in a round robin fashion.
-  */
- struct padata_mt_job {
- 	void (*thread_fn)(unsigned long start, unsigned long end, void *arg);
-@@ -146,6 +147,7 @@ struct padata_mt_job {
- 	unsigned long		align;
- 	unsigned long		min_chunk;
- 	int			max_threads;
-+	bool			numa_aware;
- };
+@@ -180,10 +180,6 @@ struct padata_instance {
  
- /**
-diff --git a/kernel/padata.c b/kernel/padata.c
-index 179fb1518070c..e3f639ff16707 100644
---- a/kernel/padata.c
-+++ b/kernel/padata.c
-@@ -485,7 +485,8 @@ void __init padata_do_multithreaded(struct padata_mt_job *job)
- 	struct padata_work my_work, *pw;
- 	struct padata_mt_job_state ps;
- 	LIST_HEAD(works);
--	int nworks;
-+	int nworks, nid;
-+	static atomic_t last_used_nid __initdata;
- 
- 	if (job->size == 0)
- 		return;
-@@ -517,7 +518,16 @@ void __init padata_do_multithreaded(struct padata_mt_job *job)
- 	ps.chunk_size = roundup(ps.chunk_size, job->align);
- 
- 	list_for_each_entry(pw, &works, pw_list)
--		queue_work(system_unbound_wq, &pw->pw_work);
-+		if (job->numa_aware) {
-+			int old_node = atomic_read(&last_used_nid);
+ #ifdef CONFIG_PADATA
+ extern void __init padata_init(void);
+-#else
+-static inline void __init padata_init(void) {}
+-#endif
+-
+ extern struct padata_instance *padata_alloc(const char *name);
+ extern void padata_free(struct padata_instance *pinst);
+ extern struct padata_shell *padata_alloc_shell(struct padata_instance *pinst);
+@@ -194,4 +190,12 @@ extern void padata_do_serial(struct padata_priv *padata);
+ extern void __init padata_do_multithreaded(struct padata_mt_job *job);
+ extern int padata_set_cpumask(struct padata_instance *pinst, int cpumask_type,
+ 			      cpumask_var_t cpumask);
++#else
++static inline void __init padata_init(void) {}
++static inline void __init padata_do_multithreaded(struct padata_mt_job *job)
++{
++	job->thread_fn(job->start, job->start + job->size, job->fn_arg);
++}
++#endif
 +
-+			do {
-+				nid = next_node_in(old_node, node_states[N_CPU]);
-+			} while (!atomic_try_cmpxchg(&last_used_nid, &old_node, nid));
-+			queue_work_node(nid, system_unbound_wq, &pw->pw_work);
-+		} else {
-+			queue_work(system_unbound_wq, &pw->pw_work);
-+		}
- 
- 	/* Use the current thread, which saves starting a workqueue worker. */
- 	padata_work_init(&my_work, padata_mt_helper, &ps, PADATA_WORK_ONSTACK);
-diff --git a/mm/mm_init.c b/mm/mm_init.c
-index 2c19f5515e36c..549e76af8f82a 100644
---- a/mm/mm_init.c
-+++ b/mm/mm_init.c
-@@ -2231,6 +2231,7 @@ static int __init deferred_init_memmap(void *data)
- 			.align       = PAGES_PER_SECTION,
- 			.min_chunk   = PAGES_PER_SECTION,
- 			.max_threads = max_threads,
-+			.numa_aware  = false,
- 		};
- 
- 		padata_do_multithreaded(&job);
+ #endif
 -- 
 2.20.1
 
