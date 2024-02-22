@@ -1,162 +1,133 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3E531B59A;
-	Thu, 22 Feb 2024 20:56:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9132371739;
+	Thu, 22 Feb 2024 20:57:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708635397; cv=none; b=Y35avILvVKQZV1ScsyTj/oLRzBxITVBo1lvzccyST9YQz+P0AIV+q1btLIl9DhPfopMGbcpCvGv6bCrhtW+e5IIXE9M3iHN1gKdvBAowCimqth0h9WqvPXbRlvqOArVWnhGpxOscEvT+QUYFwM/cJdBUrgbijDO5LfAb4SxEbic=
+	t=1708635426; cv=none; b=lg7sVW2Ntsx9pCkPEEA89w9yrp67QlHkzRrfX5d532UORdx8Fa9D/RH+Npb5FcOljNQrn7zUZHA+rrzrmrbVTEQiLP4Jx2AqM2BCBv8H0IMutAc3CEIuSKomtni44xhJoZConhmYheqbUwopL7xytVvzm+fkNaEH4yiTzGsKrLQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708635397; c=relaxed/simple;
-	bh=sCttGzEdOK4egxBE3FWWdZH3y2xnyCFiswncLgXt6Rg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UAZttES2/IsJBMRIIgsDElLlGaPhbY0EO4iaiXt8x/v/sR1jcnnGoEB/QLNvOo9/bEWR0OwZ8zDQhO7nKl8CVv76A0/a4BGTg+0civ+x4aubFyaSnRWAb3KyH5xiQNj9EtZJi8SinLxf+/3+1koKW0QH/2aHUu2zaabXEO4pNbI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=N8bfosCG; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1708635426; c=relaxed/simple;
+	bh=ZXL/20AOlmDgfRX36Nzj4Pff74rf6CTLJF/MqrlGbAc=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=azjXMUXH+lzE5RNmJVr2Ux7N2c0WEbf2VU6gjhfaRo8Bgnic1lRBQkvtJX1FsTOPHbM1qSjr3ki32v79sxC5/2eOyxhPAMgxyHHJy20qZ6Hvexjz32+SJnKHLJ9DUBTq6RMV5APOrYcGpDr1Mpn0wcZ2/YgKHcg43T8Z/EWpTy0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=g+TVcWsU; arc=none smtp.client-ip=209.85.208.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="N8bfosCG"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1708635395; x=1740171395;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=sCttGzEdOK4egxBE3FWWdZH3y2xnyCFiswncLgXt6Rg=;
-  b=N8bfosCGk0L2ma29fRmEt1qxN9bnEs8Ek5rKCqE4Z6N4am9a1znKVNhG
-   mSH0Gn6U40Pvny4x8DxLeLo4zS+nyfBBi79Td2pUvoTJ3wKfXPnubYhYg
-   HQnwTEiZwIqWzsD6tV6E3HFdFnIpb6kPhXUBA0bVohSAQYqYZO0SECFrl
-   ZadsT6xewg94aViKLoBxRkGwsFu0hNsEHH0ztmM0vV62uUOfPD9o9NSK7
-   SoaDd2SsYRkIf6FVs7IW+JY+M4gGzMxd5ywe4wXIVB10pA6tuwLZmR8w+
-   i2bNzdG7z5L1APxg9Qya+638oTwSfr1lH6uZnQSZT98vgVIhrGZWMzYCP
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10992"; a="2759041"
-X-IronPort-AV: E=Sophos;i="6.06,179,1705392000"; 
-   d="scan'208";a="2759041"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Feb 2024 12:56:29 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10992"; a="827603218"
-X-IronPort-AV: E=Sophos;i="6.06,179,1705392000"; 
-   d="scan'208";a="827603218"
-Received: from lkp-server02.sh.intel.com (HELO 3c78fa4d504c) ([10.239.97.151])
-  by orsmga001.jf.intel.com with ESMTP; 22 Feb 2024 12:56:24 -0800
-Received: from kbuild by 3c78fa4d504c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rdG7B-0006hW-1B;
-	Thu, 22 Feb 2024 20:56:21 +0000
-Date: Fri, 23 Feb 2024 04:55:26 +0800
-From: kernel test robot <lkp@intel.com>
-To: Joe Damato <jdamato@fastly.com>, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	Joe Damato <jdamato@fastly.com>, Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Jesper Dangaard Brouer <hawk@kernel.org>,
-	Stanislav Fomichev <sdf@google.com>,
-	Amritha Nambiar <amritha.nambiar@intel.com>,
-	Larysa Zaremba <larysa.zaremba@intel.com>,
-	Lorenzo Bianconi <lorenzo@kernel.org>,
-	Tariq Toukan <tariqt@nvidia.com>,
-	Sridhar Samudrala <sridhar.samudrala@intel.com>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Maciej Fijalkowski <maciej.fijalkowski@intel.com>
-Subject: Re: [PATCH net-next 1/2] netdev-genl: Add ifname for queue and NAPI
- APIs
-Message-ID: <202402230429.g2qC2zMK-lkp@intel.com>
-References: <1708531057-67392-2-git-send-email-jdamato@fastly.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g+TVcWsU"
+Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-5654621d62dso66090a12.3;
+        Thu, 22 Feb 2024 12:57:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1708635423; x=1709240223; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=k2R6exNFMuMyEP9Zs0TU701ZxYwzvvvAfOU9DIEkDzQ=;
+        b=g+TVcWsUvU38GqV+gwUEtUKoG8zXXRYmpcGGGQrpgtrCCKt9m98Xs2BAPMHqpfOWzH
+         kGLQz468V9PM7ArAM9VovH8T0WZ8X9WPp7ERPhWv6/NKQAyd/JK0EoAhgPsrFKHfCfDg
+         l5+CGWxkFgmNqX6sXF5lcnXFeTgXkOWhIvZKrAzBRmjEj7Qr8EtIbD9gS1pkyUqpv/rb
+         ibU9mTVLZ4en/MpcZydsXod7BYckyd3JlMRIxL21AjiHRXE73n4tE05Gab+VE7Hsmynp
+         mlrsH2O2RIQRmHx7jsBcK0bOtQ38Fv27toXMffpmHjnBrFucxYMAVDL0KcKkv9pOg0n3
+         NUUA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708635423; x=1709240223;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=k2R6exNFMuMyEP9Zs0TU701ZxYwzvvvAfOU9DIEkDzQ=;
+        b=jK9zorFkU730j0vSeb27YkIZRV484ootI7yw006nuVIfSyzo9seCNyBheZRI8jHWL3
+         txhJI/QZHf+LLgE1aJ91wc/qVylydn5rXwLbipja7vVJwhp6tAA5djaotKkxyS5B5ouo
+         mOABJv61zi1UKSt6RoFD59zqJV/4l9/m//8Uv6kUbEDk9JAy75TsVlM1mWzZ7yRVNVne
+         U7Hl8tpqQD2cEJPXjnm5PpkoPQ3Pa225stXhswp8s8MMtPZ3MTJv2t/JBwkmQEHqqom3
+         STOQEB4al3F2pawt5+k2saG6D/PFORZzn+TTBfpCKAaXA8MU/4WIKrj/p14u1mFuNWCN
+         8z2Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXYRC1oXWkfQE2IGu9dcE3kfWSGp9eAUfvyijQ5M7ovpPvhEl2ilGwn8PI5LJL3Z7bkb1m9184Kb8VDQxLawsisgZ046Yen83RYIQKIKZZoa15MWCF46cWvXt/TgdekvVO+6S/ap3s=
+X-Gm-Message-State: AOJu0YxsYlAYssUVDc7IUxxK8u3pfSjglqtUl0zYGXQq0kYUPvhxOKlU
+	igbfYq3irZL2SN8kD20voe8eYQlpnF4aJ3HI1lM1KoAXuk9OfcOeCG7+rAML42g=
+X-Google-Smtp-Source: AGHT+IE/qvrg3YIq3JMhwgKa7j4LV2SY69KS3EGu1YYakjYgPPsfh2dUaKoCvH0+xzFJkFJVYOeQJA==
+X-Received: by 2002:a50:cd58:0:b0:563:e5e0:85e1 with SMTP id d24-20020a50cd58000000b00563e5e085e1mr16447362edj.25.1708635422647;
+        Thu, 22 Feb 2024 12:57:02 -0800 (PST)
+Received: from jernej-laptop.localnet (86-58-6-171.dynamic.telemach.net. [86.58.6.171])
+        by smtp.gmail.com with ESMTPSA id r21-20020a50d695000000b00563f3ee5003sm6120860edi.91.2024.02.22.12.57.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 22 Feb 2024 12:57:02 -0800 (PST)
+From: Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@gmail.com>
+To: linux-kernel@vger.kernel.org, Aren Moynihan <aren@peacevolution.org>
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+ Jean-Jacques Hiblot <jjhiblot@traphandler.com>, Chen-Yu Tsai <wens@csie.org>,
+ Ondrej Jirman <megi@xff.cz>, linux-sunxi@lists.linux.dev,
+ Lee Jones <lee@kernel.org>, Pavel Machek <pavel@ucw.cz>,
+ linux-arm-kernel@lists.infradead.org, linux-leds@vger.kernel.org,
+ Conor Dooley <conor+dt@kernel.org>, Miles Alan <m@milesalan.com>,
+ Samuel Holland <samuel@sholland.org>, Aren Moynihan <aren@peacevolution.org>
+Subject:
+ Re: [PATCH v2 4/4] arm64: dts: sun50i-a64-pinephone: change led type to
+ status
+Date: Thu, 22 Feb 2024 21:57:00 +0100
+Message-ID: <2792937.BEx9A2HvPv@jernej-laptop>
+In-Reply-To: <20240206185400.596979-4-aren@peacevolution.org>
+References:
+ <20240206185400.596979-1-aren@peacevolution.org>
+ <20240206185400.596979-4-aren@peacevolution.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1708531057-67392-2-git-send-email-jdamato@fastly.com>
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 
-Hi Joe,
+Dne torek, 06. februar 2024 ob 19:13:20 CET je Aren Moynihan napisal(a):
+> The status function is described in the documentation as being a rgb led
+> used for system notifications on phones[1][2]. This is exactly what this
+> led is used for on the PinePhone, so using status is probably more
+> accurate than indicator.
+> 
+> 1: Documentation/leds/well-known-leds.txt
+> 2: include/dt-bindings/leds/common.h
+> 
+> Signed-off-by: Aren Moynihan <aren@peacevolution.org>
 
-kernel test robot noticed the following build warnings:
+Sorry for late review.
 
-[auto build test WARNING on net-next/main]
+Please update subject in patches 2-3. Instead of "sun50i-a64-pinephone:"
+use "allwinner: pinephone:" (check commit history of sun50i-a64-pinephone.dtsi).
+Also rgb -> RGB, led -> LED. Last, please reword commit message to exclude
+links and just say DT bindings documentation.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Joe-Damato/netdev-genl-Add-ifname-for-queue-and-NAPI-APIs/20240222-000134
-base:   net-next/main
-patch link:    https://lore.kernel.org/r/1708531057-67392-2-git-send-email-jdamato%40fastly.com
-patch subject: [PATCH net-next 1/2] netdev-genl: Add ifname for queue and NAPI APIs
-config: powerpc-acadia_defconfig (https://download.01.org/0day-ci/archive/20240223/202402230429.g2qC2zMK-lkp@intel.com/config)
-compiler: clang version 19.0.0git (https://github.com/llvm/llvm-project edd4aee4dd9b5b98b2576a6f783e4086173d902a)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240223/202402230429.g2qC2zMK-lkp@intel.com/reproduce)
+Note that I'll merge patches 2-3 once patch 1 is merged.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202402230429.g2qC2zMK-lkp@intel.com/
+Best regards,
+Jernej
 
-All warnings (new ones prefixed by >>):
+> ---
+> I can't find any documentation describing the indicator function, so
+> it's definitely less specific than status, but besides that I'm not sure
+> how it compares. Please ignore this patch if it's not useful.
+> 
+> (no changes since v1)
+> 
+>  arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone.dtsi | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone.dtsi
+> index e53e0d4579a7..6d327266e6cc 100644
+> --- a/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone.dtsi
+> +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone.dtsi
+> @@ -61,7 +61,7 @@ led2: led-2 {
+>  	multi-led {
+>  		compatible = "leds-group-multicolor";
+>  		color = <LED_COLOR_ID_RGB>;
+> -		function = LED_FUNCTION_INDICATOR;
+> +		function = LED_FUNCTION_STATUS;
+>  		leds = <&led0>, <&led1>, <&led2>;
+>  	};
+>  
+> 
 
->> net/core/netdev-genl.c:388:14: warning: variable 'ifname' is uninitialized when used here [-Wuninitialized]
-     388 |         nla_strscpy(ifname, info->attrs[NETDEV_A_QUEUE_IFNAME], IFNAMSIZ);
-         |                     ^~~~~~
-   net/core/netdev-genl.c:376:14: note: initialize the variable 'ifname' to silence this warning
-     376 |         char *ifname;
-         |                     ^
-         |                      = NULL
-   1 warning generated.
 
 
-vim +/ifname +388 net/core/netdev-genl.c
 
-   370	
-   371	int netdev_nl_queue_get_doit(struct sk_buff *skb, struct genl_info *info)
-   372	{
-   373		u32 q_id, q_type, ifindex;
-   374		struct net_device *netdev;
-   375		struct sk_buff *rsp;
-   376		char *ifname;
-   377		int err;
-   378	
-   379		if (GENL_REQ_ATTR_CHECK(info, NETDEV_A_QUEUE_ID) ||
-   380		    GENL_REQ_ATTR_CHECK(info, NETDEV_A_QUEUE_TYPE) ||
-   381		    GENL_REQ_ATTR_CHECK(info, NETDEV_A_QUEUE_IFINDEX) ||
-   382		    GENL_REQ_ATTR_CHECK(info, NETDEV_A_QUEUE_IFNAME))
-   383			return -EINVAL;
-   384	
-   385		q_id = nla_get_u32(info->attrs[NETDEV_A_QUEUE_ID]);
-   386		q_type = nla_get_u32(info->attrs[NETDEV_A_QUEUE_TYPE]);
-   387		ifindex = nla_get_u32(info->attrs[NETDEV_A_QUEUE_IFINDEX]);
- > 388		nla_strscpy(ifname, info->attrs[NETDEV_A_QUEUE_IFNAME], IFNAMSIZ);
-   389	
-   390		rsp = genlmsg_new(GENLMSG_DEFAULT_SIZE, GFP_KERNEL);
-   391		if (!rsp)
-   392			return -ENOMEM;
-   393	
-   394		rtnl_lock();
-   395	
-   396		netdev = __dev_get_by_index(genl_info_net(info), ifindex);
-   397	
-   398		if (strcmp(netdev->name, ifname)) {
-   399			err = -ENODEV;
-   400		} else {
-   401			if (netdev)
-   402				err = netdev_nl_queue_fill(rsp, netdev, q_id, q_type, info);
-   403			else
-   404				err = -ENODEV;
-   405		}
-   406	
-   407		rtnl_unlock();
-   408	
-   409		if (err)
-   410			goto err_free_msg;
-   411	
-   412		return genlmsg_reply(rsp, info);
-   413	
-   414	err_free_msg:
-   415		nlmsg_free(rsp);
-   416		return err;
-   417	}
-   418	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
