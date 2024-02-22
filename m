@@ -1,174 +1,190 @@
-Received: from invmail4.hynix.com (exvmail4.hynix.com [166.125.252.92])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8CCF91F618
-	for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 07:08:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708585723; cv=none; b=EfiO3zt5un29o105J4ny6XD+hn4R6v7tmrfxHsUHx5BLE/Xdrmq5lJKyJOFa7b1Jhgw26cC4QrXdyw7aylqfut4v7k5Ale0HHZcLUZS4IwzYy91EHrJywo5Y+kYGqBsqb119861VoRqmB0tH2cbrubv9M21jErffD9/Jxl0mipk=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708585723; c=relaxed/simple;
-	bh=nciQXSJniZVIAdsOgOcV7UZkgpBz2ypX5hACg/XuepU=;
-	h=From:To:Cc:Subject:Date:Message-Id; b=AQCxrqB5RzsXp9GQkBbGj0+MR1Ud9S7JH23rPoDYmZ5f5MtXOxUDUgJJKExcHNQmjuC0dzbnpzwAwqzEhSSKhFcDYm6bhJ9UUJKRvo+2VRSPOOM/cIwO0q1jYWZJzYAWnGazIp87sojuF1aJZPdOJJ/Mc5bDDxYTvzSr5y7dAhg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
-X-AuditID: a67dfc5b-d6dff70000001748-7a-65d6f2eb9aed
-From: Byungchul Park <byungchul@sk.com>
-To: akpm@linux-foundation.org
-Cc: linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org,
-	kernel_team@skhynix.com,
-	yuzhao@google.com,
-	ying.huang@intel.com
-Subject: [PATCH v2] mm, vmscan: don't turn on cache_trim_mode at high scan priorities
-Date: Thu, 22 Feb 2024 16:08:17 +0900
-Message-Id: <20240222070817.70515-1-byungchul@sk.com>
-X-Mailer: git-send-email 2.17.1
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrDJMWRmVeSWpSXmKPExsXC9ZZnke7rT9dSDZ5eVrSYs34Nm8XlXXPY
-	LO6t+c9qcXLWZBaLdxO+sDqweizYVOqxeM9LJo9Nnyaxe5yY8ZvF4/MmuQDWKC6blNSczLLU
-	In27BK6Mxw+fMhW0KlW8O5nYwPhKqouRk0NCwETi45oHzDD2jEnX2UBsNgF1iRs3foLFRQRk
-	Jab+Pc8CYjML1Eks//cRLC4sECpx58JDsHoWAVWJZ807GUFsXgFTifV7NrBDzJSXWL3hAFA9
-	F5B9klXi954/UMskJQ6uuMEygZF7ASPDKkahzLyy3MTMHBO9jMq8zAq95PzcTYzAMFhW+yd6
-	B+OnC8GHGAU4GJV4eB8wXksVYk0sK67MPcQowcGsJMLLUn4lVYg3JbGyKrUoP76oNCe1+BCj
-	NAeLkjiv0bfyFCGB9MSS1OzU1ILUIpgsEwenVANj99OpF53X7rTdb3rwiln+l/LoVjnn0xOU
-	RMOKZVVrJaPmlWc+Suax5FT6lNqzMoav8aFLT8uMfPkNR7+XXdgSO/ebvZ6Z+ay0WSKr5l62
-	4txg4tNyYYuUcdQPsVUb+2/Wrzo9scew6sPXkhMbp57S4BA3u1w2p/HTrSc33BSrPt4JLPU8
-	/e2/EktxRqKhFnNRcSIAQgW+v/8BAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrMJMWRmVeSWpSXmKPExsXC5WfdrPv607VUg++PpSzmrF/DZnF47klW
-	i8u75rBZ3Fvzn9Xi5KzJLBbvJnxhdWDzWLCp1GPxnpdMHps+TWL3ODHjN4vH4hcfmDw+b5IL
-	YIvisklJzcksSy3St0vgynj88ClTQatSxbuTiQ2Mr6S6GDk5JARMJGZMus4GYrMJqEvcuPGT
-	GcQWEZCVmPr3PAuIzSxQJ7H830ewuLBAqMSdCw/B6lkEVCWeNe9kBLF5BUwl1u/ZwA4xU15i
-	9YYDzBMYORYwMqxiFMnMK8tNzMwx1SvOzqjMy6zQS87P3cQI9Oqy2j8TdzB+uex+iFGAg1GJ
-	h/cB47VUIdbEsuLK3EOMEhzMSiK8LOVXUoV4UxIrq1KL8uOLSnNSiw8xSnOwKInzeoWnJggJ
-	pCeWpGanphakFsFkmTg4pRoYV6pGfGiUVfBN+mjAn56+bbVale4N+0eP6rJ2uB/8a5m08vql
-	eQWhC3d9ftPheibamev4388GT7fy2bnYuiz2nvz3d7SxeVrq3tNNUS+1Nt8wfrzlza2sG/Id
-	d1+nuZ+WreWflVIdP+upfqHk2a+LM45fvKLncemASojMLlFeBf853vf17mZeVWIpzkg01GIu
-	Kk4EAHTWec7mAQAA
-X-CFilter-Loop: Reflected
+Received: from EUR05-DB8-obe.outbound.protection.outlook.com (mail-db8eur05on2131.outbound.protection.outlook.com [40.107.20.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CE58F9D8;
+	Thu, 22 Feb 2024 07:10:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.20.131
+ARC-Seal:i=3; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1708585838; cv=fail; b=lL8yDvtRbv3iExJs0Req9J0PoueMS+6fltNTqfPQ87h6xZW9yIhWwrnIkMZL1cDiovRqYocD/gkMQlxlhNbcTL5zaDvvDZP2cncewSYrOQDfPMzpT2d3kirEHvCznFV+K+C0vzRbJlYpIUjrngc6diUGp4+lhIuoNhI1Yu4MYXk=
+ARC-Message-Signature:i=3; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1708585838; c=relaxed/simple;
+	bh=iOraMhF52f18WnZK2bX+hIKqdWN8Sz4C8vw6ckoz964=;
+	h=Message-ID:Date:From:Subject:To:CC:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=L+vnCAJARedlAIlUuEy4W8FVAMOIkoOEy4noLUyNMX63nMXik3/BwpqvtIiCGtIpPpsofnb6gTOQdw+JOBa5/sBY1I4mP1rdoGc08yEdgbQgHvX+oTrHFFlR+0wOswvjG5n6oNCjdx23zl+pP7H21KyNGb4DfomlQ7SiSz9rXjg=
+ARC-Authentication-Results:i=3; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=topic.nl; spf=pass smtp.mailfrom=topic.nl; dkim=pass (2048-bit key) header.d=topic.nl header.i=@topic.nl header.b=PhxnvUIn; dkim=fail (2048-bit key) header.d=topic.nl header.i=@topic.nl header.b=prgZW/Qc reason="signature verification failed"; arc=fail smtp.client-ip=40.107.20.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=topic.nl
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=topic.nl
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=topic.nl header.i=@topic.nl header.b="PhxnvUIn";
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=topic.nl header.i=@topic.nl header.b="prgZW/Qc"
+ARC-Seal: i=2; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=fail;
+ b=iuTCAI9F0o8zrHWv6zW7REK18xtJDMjlZPt08WEHUyWKJprS2LDzcxBL0Bin1cg/JxNHF32FK3muBT9hx+5GGmx1YwzbVsArrI1zH0+z+cVPAjLV9omom+rYIrLMmbkYRxEu5REJsRJiq8AV/59IUnM9DeDy/7O2ZqX4Bj8XLwPxKpfMAeQebvQZUuAvh7LkKHdkJOlMMd4gBa+0gGYavEkBbQA7+9rV53g7n9uvPw2k9spc5ozKKm8Si7QbSHOdMc0QWvbIDnWeDJ7nt4IAxAgXhqjRPdTLtxILd40dJR6mE4QKAS6CJtS8xwE5imBGhr6nPR3Cj/kAXuKZbWPqMw==
+ARC-Message-Signature: i=2; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=6t65O5H4sI/xl2sldwo+Hpp9T00o2YBn8KAi6Og+nkI=;
+ b=jJiUVUncI8qVEr3MOWV4YvZfn9fX393Gd2wU8Yv3UFLbYaIHx8grww7NOGFpnGGmRS8KFzojne8Cyfb2HinN3lKWvQ6HASI/CW+oNRnq8ehS3G6S53f/gLhb1V2l1y+azC/F34ekDzytD7H05i3+P2XpVjkxRCdyynfrb+XYJ3sMxLBSaKu36Ic5h4H2SD6ldkKP3fDQPouUZQKOr6eJ7hv9tAMfklwhzlerl8k9e7rEtMLMmimRh9y6aWaivZF6NvnhJtCwwKkvRY/126gsQ3FMhl05Lffd1ljpn2Cg8IZv9I7feQ9aDKxW04RO06WRb8ZiE3B5GEcx9OdZRp6F0A==
+ARC-Authentication-Results: i=2; mx.microsoft.com 1; spf=pass (sender ip is
+ 20.93.157.195) smtp.rcpttodomain=linaro.org smtp.mailfrom=topic.nl;
+ dmarc=pass (p=none sp=none pct=100) action=none header.from=topic.nl;
+ dkim=fail (signature did not verify) header.d=topic.nl; arc=fail (47)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=topic.nl; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=6t65O5H4sI/xl2sldwo+Hpp9T00o2YBn8KAi6Og+nkI=;
+ b=PhxnvUIn9hMKPq8XqgF2uu43I196cjxwKLx6LjVRMNTOouT1no4eyA3HvGllntSnvnkSoUq8vPgDAwguEodY+wXKgF2WB6r/iBiAu8GquNXL6osi7rH6VufOQPjRNBTQhjPflEsNVpl4MwYMlJNGKzw4nVVc/5Gnzls5IttwQg7mV+4qr7WguL0ziQs+Hm/xw6qLNGppujCDBV1lRwweFG8zUrS1zaZVaWivK2/+1NYNpdiFGhKRZNOt0tPazOwQnAK/Cn7MZRCFrCETWjWYlu8YT5MMsVIPoUBJYHVZDKjrjgQJ7rD45u4iejJh4r0Wbf5ddJV4qFykPYpWYwVR8A==
+Received: from AM0PR04CA0136.eurprd04.prod.outlook.com (2603:10a6:208:55::41)
+ by DBAPR04MB7207.eurprd04.prod.outlook.com (2603:10a6:10:1b2::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7292.39; Thu, 22 Feb
+ 2024 07:10:32 +0000
+Received: from AMS0EPF00000191.eurprd05.prod.outlook.com
+ (2603:10a6:208:55:cafe::a6) by AM0PR04CA0136.outlook.office365.com
+ (2603:10a6:208:55::41) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7292.43 via Frontend
+ Transport; Thu, 22 Feb 2024 07:10:32 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 20.93.157.195)
+ smtp.mailfrom=topic.nl; dkim=fail (signature did not verify)
+ header.d=topic.nl;dmarc=pass action=none header.from=topic.nl;
+Received-SPF: Pass (protection.outlook.com: domain of topic.nl designates
+ 20.93.157.195 as permitted sender) receiver=protection.outlook.com;
+ client-ip=20.93.157.195; helo=westeu11-emailsignatures-cloud.codetwo.com;
+ pr=C
+Received: from westeu11-emailsignatures-cloud.codetwo.com (20.93.157.195) by
+ AMS0EPF00000191.mail.protection.outlook.com (10.167.16.216) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.7292.25 via Frontend Transport; Thu, 22 Feb 2024 07:10:32 +0000
+Received: from EUR03-DBA-obe.outbound.protection.outlook.com (104.47.51.168) by westeu11-emailsignatures-cloud.codetwo.com with CodeTwo SMTP Server (TLS12) via SMTP; Thu, 22 Feb 2024 07:10:31 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=l6bzNTlu8R979bQnbIIWIcC+33m10WUKb8mAjRwGuHYjekyGA8mqu19cMfGZlHvI6zs+PI9pLUMN+TxdOkmhFdlO8Sea/Z37dgNCeDaJ0UMWe1xvTI3Nec/ec94KjwfgEiuyKPvD8sCWvPaWgLYFN9BjOYMIF1aFB/jkYfGO1rMJ4Tp7yVIte1dnGOy4jvNfU6ADuKIHREjI2+j1tt3dc8SgMBmfoqsQRpCGKw5NJwjlahE9Ncsdt0i85qNGMSnCelKWS4fax8H0UFu7YoQObJNDKGqWpx66MKF0O67MGMJh5qBe+zJWIjhttn7d8Xk/NFJTzoRR3ABvvruacEPDuw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=s8ej8XF2e4+mBoG/UKQGflfU6U4LBjZAvVaU2L+xU9I=;
+ b=k8pNHpgy8ra0J9f3+1+def380KdORPahlblqLodxC2B0314oduV3Jl1YOa39srkFUAIvBdcAxJXLzRW5yWaIXtOvo5ZPjQPbjhUzlJboJ0OmOLWNYhjOTyfB0pZ7LJIltn4TWbCwXJQVjfsXkpnMvpmi5fiUIy6OiiALcA2e1ilwnXY3f7hT9Sr39jHgZwzKjqc60vVYS2p1oifgPjo3d1gEMvK1VWQo267DkEeDHhGGxOaArjOAbJVmozJXBRtsr1T1+KYK21qgGLR0BewelYA1lDpIz35MgUHIMJjdQvnmBPLZs58QVm7orEiU+1nr2MgGsikd61zj8v0qe8kEww==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=topic.nl; dmarc=pass action=none header.from=topic.nl;
+ dkim=pass header.d=topic.nl; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=topic.nl; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=s8ej8XF2e4+mBoG/UKQGflfU6U4LBjZAvVaU2L+xU9I=;
+ b=prgZW/QckanGgHi05mLAD9ylZzUTI75S7DoZPbTqytTnclpFARmE8RrONcGHKC15fUd5JottzM8eebLl3AFVd5Bghzw83rkU17JEaDV59TkcvVLz5uludw0+qIMclfDz1xkqdodbqrCdoU2ZCl1E/lZB/W00GYJsB1OzoZr7wFNtmDIdvh4kq+TgjafaP9kVVyKgcz2MxxnwXNC+NaM87T3uU+mr+vtCzsG2w34OI8rErVT+VgXOZXzD0b9tStV/cRQKqSpg4L0Xhy1l6VO2ULkZblD0ytQMY32i3u48CiAIeQpHHk0leHTL9R+4oFD75eVIepwbp0c8szJBrAKdjg==
+Authentication-Results-Original: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=topic.nl;
+Received: from AS8PR04MB8644.eurprd04.prod.outlook.com (2603:10a6:20b:42b::12)
+ by AS5PR04MB9730.eurprd04.prod.outlook.com (2603:10a6:20b:677::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7292.39; Thu, 22 Feb
+ 2024 07:10:27 +0000
+Received: from AS8PR04MB8644.eurprd04.prod.outlook.com
+ ([fe80::651a:dedd:945a:d1dd]) by AS8PR04MB8644.eurprd04.prod.outlook.com
+ ([fe80::651a:dedd:945a:d1dd%6]) with mapi id 15.20.7292.027; Thu, 22 Feb 2024
+ 07:10:27 +0000
+Message-ID: <e315c126-619c-48a1-a5d8-001e5ed01930@topic.nl>
+Date: Thu, 22 Feb 2024 08:10:25 +0100
+User-Agent: Mozilla Thunderbird
+From: Mike Looijmans <mike.looijmans@topic.nl>
+Subject: Re: [PATCH 1/2] iio: adc: ti-ads1298: Fix error code in probe()
+To: Dan Carpenter <dan.carpenter@linaro.org>
+CC: Jonathan Cameron <jic23@kernel.org>, Lars-Peter Clausen
+ <lars@metafoo.de>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+ linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+ kernel-janitors@vger.kernel.org
+References: <5f393a87-ca8b-4e68-a6f4-a79f75a91ccb@moroto.mountain>
+Content-Language: en-US, nl
+Organization: Topic
+In-Reply-To: <5f393a87-ca8b-4e68-a6f4-a79f75a91ccb@moroto.mountain>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: quoted-printable
+X-ClientProxiedBy: AM4PR07CA0032.eurprd07.prod.outlook.com
+ (2603:10a6:205:1::45) To AS8PR04MB8644.eurprd04.prod.outlook.com
+ (2603:10a6:20b:42b::12)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+X-MS-TrafficTypeDiagnostic:
+	AS8PR04MB8644:EE_|AS5PR04MB9730:EE_|AMS0EPF00000191:EE_|DBAPR04MB7207:EE_
+X-MS-Office365-Filtering-Correlation-Id: bfaa3389-ab48-43e3-2dcb-08dc33755bbe
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam-Untrusted: BCL:0;
+X-Microsoft-Antispam-Message-Info-Original:
+ orI2Dh0n4q2VGdtEeX8ARYiPS+OjRd+hUqWbodbRjONVYsgs20K1FppZUtC9F6g3Sma4X7Cf1Mvs/28Os/NzHHAQWWngHM0R5BuzFU1gpzr3T91AE/8LbaTgG/NY8jqusmafVXDipZXi8BuXlKmiKwSCturY9iR+wBTwIV4jjrk9EqGqg6HobJ1X2sFKMRci1RuIR2SFyHFAdSra37RQhc8qtPQUW6ZMbsNJAecGnDG4ieOY5OatIyILn1nI0BuQd72gd6SqguxuMfjCf2qdyiD+j8MUFg4FKfijETvhCFhdsh3INr2WbBSVNWDGtocKjgacD17GoCnMIV1a7oCiDqyxmHi9xQvPDUU/ANHDnOedZZLnMUKYqg6/ciZgeVkY8UYbLtakjVYeUYAo88of3Mku7zo1kQ0caFCPAC2C5QkCPjst4ee4iIMttQHoBHqQX7kfIZ5ewEDcGTLm9w00TUysWvLpt1rY9ZwD0x6HNSfa223dtbipMHbqu4PXpeoI3BPaBeC7GfhrCcSE26vyPeVpaFncmzIU3/W7qJC6fgmFTm92ci0HMUOe3Ktx+haSrQHv385JYcok968Xq6ZCtTkJaTAwxWGzAKV7BsbzHQI=
+X-Forefront-Antispam-Report-Untrusted:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AS8PR04MB8644.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(38350700005);DIR:OUT;SFP:1102;
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS5PR04MB9730
+X-CodeTwo-MessageID: a37575f4-1e39-407a-9179-1a443c50a3df.20240222071031@westeu11-emailsignatures-cloud.codetwo.com
+X-CodeTwoProcessed: true
+X-EOPAttributedMessage: 0
+X-MS-Exchange-Transport-CrossTenantHeadersStripped:
+ AMS0EPF00000191.eurprd05.prod.outlook.com
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id-Prvs:
+	ed3ac3e0-f193-44ce-fa81-08dc33755887
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	GEjA+rAuyTWxI2buB5BeFXAtqPswoOkSyfqXQvSbBBOvstcQ/WiY7j8dMFgOqPWZM2Epooh8JaBYZCVQl7WuTMknfd3Tnr6EMtSuNNarRj/kOKyprIi4qru2bM5M3NJ3z+cMfMWn5ylt9Ps5XBJTuHVjGP5A9p6m1NYHXLaG537G8Xs7HMXHXCZ1nXEdBq+pV6+hzt/hQDX8T9qaCFtYgez3qAJMPQDP7Lf9IkF3fe6YpcTsrHqK6UDYU7coxArcWhTe+sC9+EA1yaCU0WdKS7g43rd+lsRU+AfYq9pPUXQic6uyU6+R06IOzbtGczOPqk0sW1qrGbOmh1XT28zgDXFlu7pAzshbvePwj5eTGQd2L89NCEKo6KxDyYqW/Ff3u36PNoSTM4aMsHE8caUZGnGd1ws6QJ2m8rEvqMFGp88lN+zUFYEhGNFhdUOzY12+Y9cUXcPe+df4UWOAdixPlu2p6r523YjcyTSBQx2/a3KUeKZzOkTh5/Lgm4RZRwgfRAZp540SW/t6lJbMovdbVI3rDgEWGFt2DTVRRv9C8WONXcas3TyTgsIop4tV+yR+3ZsCQYX93AcNnnrWFOSl0I9bBgHTKLkjJ22zdaOnusN7Lqjh+sdOxg6pT/sQ5mnQLt30lyHr23lf7j0LLIT5/Q==
+X-Forefront-Antispam-Report:
+	CIP:20.93.157.195;CTRY:NL;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:westeu11-emailsignatures-cloud.codetwo.com;PTR:westeu11-emailsignatures-cloud.codetwo.com;CAT:NONE;SFS:(13230031)(36860700004)(46966006);DIR:OUT;SFP:1102;
+X-OriginatorOrg: topic.nl
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Feb 2024 07:10:32.2679
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: bfaa3389-ab48-43e3-2dcb-08dc33755bbe
+X-MS-Exchange-CrossTenant-Id: 449607a5-3517-482d-8d16-41dd868cbda3
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=449607a5-3517-482d-8d16-41dd868cbda3;Ip=[20.93.157.195];Helo=[westeu11-emailsignatures-cloud.codetwo.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	AMS0EPF00000191.eurprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DBAPR04MB7207
 
-Changes from v1:
-	1. Add a comment describing why this change is necessary in code
-	   and rewrite the commit message with how to reproduce and what
-	   the result is using vmstat. (feedbacked by Andrew Morton and
-	   Yu Zhao)
-	2. Change the condition to avoid cache_trim_mode from
-	   'sc->priority != 1' to 'sc->priority > 1' to reflect cases
-	   where the priority goes to zero all the way. (feedbacked by
-	   Yu Zhao)
+Good catch on both patches.
 
---->8---
-From 07e0baab368160e50b6ca35d95745168aa60e217 Mon Sep 17 00:00:00 2001
-From: Byungchul Park <byungchul@sk.com>
-Date: Thu, 22 Feb 2024 14:50:17 +0900
-Subject: [PATCH v2] mm, vmscan: don't turn on cache_trim_mode at high scan priorities
+If so desired, you have my
 
-With cache_trim_mode on, reclaim logic doesn't bother reclaiming anon
-pages.  However, it should be more careful to turn on the mode because
-it's going to prevent anon pages from being reclaimed even if there are
-a huge number of anon pages that are cold and should be reclaimed.  Even
-worse, that can lead kswapd_failures to reach MAX_RECLAIM_RETRIES and
-stopping kswapd until direct reclaim eventually works to resume kswapd.
-So this is more like a bug fix than a performance improvement.
+Acked-by: Mike Looijmans <mike.looijmans@topic.nl>
 
-The problematic behavior can be reproduced by:
 
-   CONFIG_NUMA_BALANCING enabled
-   sysctl_numa_balancing_mode set to NUMA_BALANCING_MEMORY_TIERING
 
-   numa node0 (8GB local memory, 16 CPUs)
-   numa node1 (8GB slow tier memory, no CPUs)
+On 22-02-2024 07:14, Dan Carpenter wrote:
+> There is a copy and paste bug here, it should be "reg_vref" instead of
+> "reg_avdd".  The "priv->reg_avdd" variable is zero so it ends up
+> returning success.
+>
+> Fixes: 00ef7708fa60 ("iio: adc: ti-ads1298: Add driver")
+> Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
+> ---
+>   drivers/iio/adc/ti-ads1298.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/iio/adc/ti-ads1298.c b/drivers/iio/adc/ti-ads1298.c
+> index ed895a30beed..67637f1abdc7 100644
+> --- a/drivers/iio/adc/ti-ads1298.c
+> +++ b/drivers/iio/adc/ti-ads1298.c
+> @@ -657,7 +657,7 @@ static int ads1298_probe(struct spi_device *spi)
+>   	priv->reg_vref =3D devm_regulator_get_optional(dev, "vref");
+>   	if (IS_ERR(priv->reg_vref)) {
+>   		if (PTR_ERR(priv->reg_vref) !=3D -ENODEV)
+> -			return dev_err_probe(dev, PTR_ERR(priv->reg_avdd),
+> +			return dev_err_probe(dev, PTR_ERR(priv->reg_vref),
+>   					     "Failed to get vref regulator\n");
+>  =20
+>   		priv->reg_vref =3D NULL;
 
-   Sequence:
 
-   1) echo 3 > /proc/sys/vm/drop_caches
-   2) To emulate the system with full of cold memory in local DRAM, run
-      the following dummy program and never touch the region:
+--=20
+Mike Looijmans
+System Expert
 
-         mmap(0, 8 * 1024 * 1024 * 1024, PROT_READ | PROT_WRITE,
-	      MAP_ANONYMOUS | MAP_PRIVATE | MAP_POPULATE, -1, 0);
+TOPIC Embedded Products B.V.
+Materiaalweg 4, 5681 RJ Best
+The Netherlands
 
-   3) Run any memory intensive work e.g. XSBench.
-   4) Check if numa balancing is working e.i. promotion/demotion.
-   5) Iterate 1) ~ 4) until kswapd stops.
+T: +31 (0) 499 33 69 69
+E: mike.looijmans@topic.nl
+W: www.topic.nl
 
-With this, you could eventually see that promotion/demotion are not
-working because kswapd has stopped due to ->kswapd_failures >=
-MAX_RECLAIM_RETRIES.
 
-Interesting vmstat delta's differences between before and after are like:
-
-   -nr_inactive_anon 321935
-   -nr_active_anon 1780700
-   -nr_inactive_file 30425
-   -nr_active_file 14961
-   -pgpromote_success 356
-   -pgpromote_candidate 21953245
-   -pgactivate 1844523
-   -pgdeactivate 50634
-   -pgfault 31100294
-   -pgdemote_kswapd 30856
-   -pgscan_kswapd 1861981
-   -pgscan_anon 1822930
-   -pgscan_file 39051
-   -pgsteal_anon 386
-   -pgsteal_file 30470
-   -pageoutrun 30
-   -numa_hint_faults 27418279
-   -numa_pages_migrated 356
-
-   +nr_inactive_anon 1662306
-   +nr_active_anon 440303
-   +nr_inactive_file 27669
-   +nr_active_file 1654
-   +pgpromote_success 1314102
-   +pgpromote_candidate 1892525
-   +pgactivate 3284457
-   +pgdeactivate 1527504
-   +pgfault 6847775
-   +pgdemote_kswapd 2142047
-   +pgscan_kswapd 7496588
-   +pgscan_anon 7462488
-   +pgscan_file 34100
-   +pgsteal_anon 2115661
-   +pgsteal_file 26386
-   +pageoutrun 378
-   +numa_hint_faults 3220891
-   +numa_pages_migrated 1314102
-
-   where -: before this patch, +: after this patch
-
-Signed-off-by: Byungchul Park <byungchul@sk.com>
----
- mm/vmscan.c | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
-
-diff --git a/mm/vmscan.c b/mm/vmscan.c
-index bba207f41b14..6eda59fce5ee 100644
---- a/mm/vmscan.c
-+++ b/mm/vmscan.c
-@@ -2266,9 +2266,17 @@ static void prepare_scan_control(pg_data_t *pgdat, struct scan_control *sc)
- 	 * If we have plenty of inactive file pages that aren't
- 	 * thrashing, try to reclaim those first before touching
- 	 * anonymous pages.
-+	 *
-+	 * However, the condition 'sc->cache_trim_mode == 1' all through
-+	 * the scan priorties might lead reclaim failure. If it keeps
-+	 * MAX_RECLAIM_RETRIES times, then kswapd would get stopped even
-+	 * if there are still plenty anon pages to reclaim, which is not
-+	 * desirable. So do not use cache_trim_mode when reclaim is not
-+	 * smooth e.i. high scan priority.
- 	 */
- 	file = lruvec_page_state(target_lruvec, NR_INACTIVE_FILE);
--	if (file >> sc->priority && !(sc->may_deactivate & DEACTIVATE_FILE))
-+	if (sc->priority > 1 && file >> sc->priority &&
-+	    !(sc->may_deactivate & DEACTIVATE_FILE))
- 		sc->cache_trim_mode = 1;
- 	else
- 		sc->cache_trim_mode = 0;
--- 
-2.17.1
 
