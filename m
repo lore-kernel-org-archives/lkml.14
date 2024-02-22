@@ -1,285 +1,174 @@
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2102.outbound.protection.outlook.com [40.107.237.102])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F674149013
-	for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 15:19:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708615169; cv=none; b=lvHe0brx8bJZ4GVWujwkIEKBO7PfL+5hJO6prdH2ARg9tC9P6CpWGdUZ8cWoH7tvlIhaMecM14l/fVgGUqAr8bh99GGmuYq37++IdMUTiyktAOYnm6x5MQTyX/DUPwMURwu9w3/VbJ+e/2aS3C/rnc4r02vmXh7lmeaObIQhWGU=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708615169; c=relaxed/simple;
-	bh=BJue+4GJSqk5WpSNMGudyhvHONZNOvQkW6x7cgxI604=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tVX7QZRsV4uHqVWC11ESJmn+cNI3ahWNURGK71KsfxJUMPA062blPjUw2gghotzag3Oy8ndGF+VofFqK7AgduNDIfy/la5ZsJDuJC3WcA7kxj+zz5mCnNQcvHXpcJ2gtYnQaUC2lsGrA9u+h9tcIn1nzOgwYAUAknBx0P1Xzs/Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=4EW4q3Mu; arc=none smtp.client-ip=209.85.128.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 138FB1474AC;
+	Thu, 22 Feb 2024 15:20:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.102
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1708615216; cv=fail; b=I8BjaNZY5pwz1s0jBuR8Gb2d+PS0hBvyYUkQD0te2V+1SslAApz21IakOyBs2+aEZlS7Tm+M5vv/j3IDqWKwTAN716bsNSEk9/dZCHJv7IqpP2bGHxoFJIZtVu8iKWJ1zj1e7vT3BLWpPGi71En95/pzl+MsQ1TJ/RQDqBaKpFU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1708615216; c=relaxed/simple;
+	bh=2JiwPU5lMEC4g6FVBtQQZwC/yDCpGHFsM8xwX1sYdxY=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=XVbZfrBZZ4qMqw3ZmD3iFZYL4j+fU3WvwOThIde2ZzsraEVSqcz8JqSpOpKRIa5PiYlYlg9wPepqHX90QZCovPlczJCeh83mWRGVOL6lH7Dd4+0SPtEjpl6UzWiZt/QOY+sTpjnMO/NeWEJZYjaaKz0nrSW0P9pFHn4n1q8Pj0k=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hammerspace.com; spf=pass smtp.mailfrom=hammerspace.com; dkim=pass (1024-bit key) header.d=hammerspace.com header.i=@hammerspace.com header.b=Y8eeQb//; arc=fail smtp.client-ip=40.107.237.102
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hammerspace.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hammerspace.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="4EW4q3Mu"
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-410acf9e776so59615e9.1
-        for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 07:19:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1708615166; x=1709219966; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=wylv6vXEtUdi6Bcb5avU2yV6NCNR7pjMD098XS01Joc=;
-        b=4EW4q3MuW6jyN8l4x2yEFENulQyFedMbW9aBLkdDhdbDNfiye84MsmUBtBKG1Wjg/X
-         5xhvkB1aw6Q8xzSRXDpKLYKTBChx3XgfqZTEoAVaVQa4u6+jM/9P7Ts7eEUVtGBNCp68
-         +C+KHYd1hFrV6nv9gLsD99HjK62l9B2hb3wSnsytKC7O5ORDLn8579B5XP1fngED09EM
-         XOEZ+4O51XBNCjH8rWPD5j6UXpngYvxn5OQRqAAxQtu4QIoNe4OeUEBmGEqVN7MwFEhA
-         gcsqIbOCbZ+aq3nXvYkjOy2vA2v2w+14sNcPN9+PE57Ji/ZW4L4IQSqzjxO7OIAEGRYW
-         STfg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708615166; x=1709219966;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=wylv6vXEtUdi6Bcb5avU2yV6NCNR7pjMD098XS01Joc=;
-        b=kE7YV0UUT0pnTyOfovBRYtcN+m4smsmpn1hz4IuTJofFq5AmqKB0XT/qGjfsdA1Hnb
-         5sJy+xj3T8hRUR6uly9Tm3n9+G5bi6kx5q3pA80dtyV5qJwOc5thufa1mitXOHK1E27r
-         dWQSSOClTEZJoAjlKUBvHKo1jUuXeVPBW1qI+Y6QGlygmpJfS9nGMUU0r0/cmSDe5oH0
-         o3p+NunBF4xkWoceG+b2etqeGgFozvX3L+PFtzuJBVzOo49QCNlUlAeq3cAAnfoUo2SX
-         uZej1Ypk30gQI3sFzeCHVDhJTHHt1k9wgtGgI5om0uJY0GBNy0/3Ae+GZ2+A2DxdP3xW
-         KH9A==
-X-Forwarded-Encrypted: i=1; AJvYcCXM5PLL1vbgQOAkjh7ZO6VZyFpeRVyQkHx4BQvjn+4NONRBqazZw4FbyWSkN5Wg0fefRzf04uscitXhq7hz/CHUBw/uRw8h2DYn4MML
-X-Gm-Message-State: AOJu0Yz4XSZOf3hoeoPCqbsJLS6pglosxD544Ct7mMGjkRPlymCyNTKp
-	3OJur7kJPV8y3AzyryJ+ApCD5V8Mo07OBf1wbx0Y/emVgyI9u3HQFelroF57BA==
-X-Google-Smtp-Source: AGHT+IFAAaTEm3lXZegn3XxVb3u12ViYu3B/HVTEqaxNxbW8lSDpmbQNkCKoWLXbfgIjLhjZ5xHhGw==
-X-Received: by 2002:a05:600c:a017:b0:412:5616:d3d with SMTP id jg23-20020a05600ca01700b0041256160d3dmr385275wmb.7.1708615165506;
-        Thu, 22 Feb 2024 07:19:25 -0800 (PST)
-Received: from google.com (161.126.77.34.bc.googleusercontent.com. [34.77.126.161])
-        by smtp.gmail.com with ESMTPSA id q4-20020adfab04000000b0033cf637eea2sm20823457wrc.29.2024.02.22.07.19.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 22 Feb 2024 07:19:24 -0800 (PST)
-Date: Thu, 22 Feb 2024 15:19:23 +0000
-From: Sebastian Ene <sebastianene@google.com>
-To: catalin.marinas@arm.com, gshan@redhat.com, james.morse@arm.com,
-	mark.rutland@arm.com, maz@kernel.org, oliver.upton@linux.dev,
-	rananta@google.com, ricarkol@google.com, ryan.roberts@arm.com,
-	shahuang@redhat.com, suzuki.poulose@arm.com, will@kernel.org,
-	yuzenghui@huawei.com
-Cc: kvmarm@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org, kernel-team@android.com,
-	vdonnefort@google.com
-Subject: Re: [PATCH v6 5/6] KVM: arm64: Initialize the ptdump parser with
- stage-2 attributes
-Message-ID: <Zddl-_Em-pFteJXW@google.com>
-References: <20240220151035.327199-1-sebastianene@google.com>
- <20240220151035.327199-6-sebastianene@google.com>
+	dkim=pass (1024-bit key) header.d=hammerspace.com header.i=@hammerspace.com header.b="Y8eeQb//"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=dFsD7bWOhaB/4LP7aksSdRlsZLy0p3KmrwXqXWdrwCxMuUgfzHMRl1LLqmqHI76AMNdmKlrzAaBJy4UejclFo+j3V1K+el1ghbCHTlVcCf4wfZhc39aBRAVVyV1dlP1clNRBivHk631YVlhyTXFj5XzdUkOwGOyfD97YLplMCUFp/UNrmMOjHcCve6PPq+RlarxsvZ3SjsCqkBbFYH2ChUDOZDK/Tjb7EaXezgDZmOIfESIJoMqr7G3Ixzi6fuAHA7U7WPCS1FdTM3C58xJpeNL7mdm0lXOu7HFyLU2njvlSBJTD3XuyWKRZR9NpQkbGeUEIIqwzDYdcFPwi0ThmSg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=2JiwPU5lMEC4g6FVBtQQZwC/yDCpGHFsM8xwX1sYdxY=;
+ b=aKn07JQ1bVGxtubOLkIFh6u2GMs11LdCr5uwwoHzkPpXOLN7OrzfT9x5Qsdp6iEoXnfD/+HbOE52gPcBg+vZDsYWhwBnt3tSgdcIF8FUmGUuK0e3tYtHqWN/DB9aSHutecJQ/jCmvQA057LEM26xWnoPTbsHSM6ZgJnAvHUegfvDbQCnJIoeFjFzeuiWFw3XAWMVteE3ptcIYauezIXm1VCh2rBBuATIA90r9xPPvonS9APBk2uErnPq/gEGaXa/+ttThx5PuhIcJy9sPIAYtnPtw0xaNiN+lmXiDu8+Yt5GXa6dYWXu2zhfZVSRw5xTH0mlxwgzFevjLyffnGs1eA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=hammerspace.com; dmarc=pass action=none
+ header.from=hammerspace.com; dkim=pass header.d=hammerspace.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=2JiwPU5lMEC4g6FVBtQQZwC/yDCpGHFsM8xwX1sYdxY=;
+ b=Y8eeQb//p3sLI4nCuB5/3snIMAb7iGxL8QkWAIbLiWmQigCrTe0EVWjeCDtb6gTBS2+Yk0m01TMXPz2geXpfGncFEcShR5O66TD5SsdFb3WBAwa0F+LImGEhCkz2v2ycuhvzzerD+AMfsGNchQVhO5M+HAtX2cIelR7WryS/K/I=
+Received: from CH0PR13MB5084.namprd13.prod.outlook.com (2603:10b6:610:111::7)
+ by DS7PR13MB4672.namprd13.prod.outlook.com (2603:10b6:5:297::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7316.24; Thu, 22 Feb
+ 2024 15:20:10 +0000
+Received: from CH0PR13MB5084.namprd13.prod.outlook.com
+ ([fe80::b349:9f81:ad39:865c]) by CH0PR13MB5084.namprd13.prod.outlook.com
+ ([fe80::b349:9f81:ad39:865c%4]) with mapi id 15.20.7316.018; Thu, 22 Feb 2024
+ 15:20:10 +0000
+From: Trond Myklebust <trondmy@hammerspace.com>
+To: "chuck.lever@oracle.com" <chuck.lever@oracle.com>, "zhitao.li@smartx.com"
+	<zhitao.li@smartx.com>, "kolga@netapp.com" <kolga@netapp.com>,
+	"anna@kernel.org" <anna@kernel.org>, "tom@talpey.com" <tom@talpey.com>,
+	"jlayton@kernel.org" <jlayton@kernel.org>, "neilb@suse.de" <neilb@suse.de>,
+	"Dai.Ngo@oracle.com" <Dai.Ngo@oracle.com>
+CC: "huangping@smartx.com" <huangping@smartx.com>, "linux-nfs@vger.kernel.org"
+	<linux-nfs@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>
+Subject: Re: PROBLEM: NFS client IO fails with ERESTARTSYS when another mount
+ point with the same export is unmounted with force [NFS] [SUNRPC]
+Thread-Topic: PROBLEM: NFS client IO fails with ERESTARTSYS when another mount
+ point with the same export is unmounted with force [NFS] [SUNRPC]
+Thread-Index: AQHaZJ7Q0fUwEoXw10Oowo706qnhILEU0AGAgAFkuACAAEdGAA==
+Date: Thu, 22 Feb 2024 15:20:09 +0000
+Message-ID: <16d8c8e88490ee92750b26f2c438e1329dea0061.camel@hammerspace.com>
+References:
+ <CAPKjjnrYvzH8hEk9boaBt-fETX3VD2cjjN-Z6iNgwZpHqYUjWw@mail.gmail.com>
+	 <77a58302766cb6c8fac45682ede63569df80cd5d.camel@hammerspace.com>
+	 <1179779e2f74e3e5cb2be30cf89e6362aaab706d.camel@kernel.org>
+In-Reply-To: <1179779e2f74e3e5cb2be30cf89e6362aaab706d.camel@kernel.org>
+Accept-Language: en-US, en-GB
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=hammerspace.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: CH0PR13MB5084:EE_|DS7PR13MB4672:EE_
+x-ms-office365-filtering-correlation-id: 1634e068-6f03-43ad-b5b4-08dc33b9c229
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info:
+ Pb8YN7CxgKOBgtYoLIy4bCXXj5JdQXqgStTLoejOKWYh1GvUeCIcgNZ+SMcbPcCKHHc4LcoV2EPvbgcuPOeIQuFI1qQRjFoFcmD4Vk5Z2UGJ0NInRfSh9C9z0aJOot9eIvvDZkprkN/Lozilllzyukb2cBc4fO/ftGbdsI5LpSVG9XoCVwzdcgxkV5szG4ZRF5Su7YbZtYW13DmdwAEXJyVuOB+SRT7LFXJFYH9O2OHen5JihT4JIuv//3ne/EA57hC3CTaBVuKXTmbZQAB2ALIFipoHGuE/wG1kj6Nk5Tsa8dXgZIBMz+4DUIzW/H4vLONApbxSM8g/kM6EsSPR7zC1V61JpNOP8/MTPD9D0rBkZLhG0KCd5R5lGcu1bpeEungGoqwYWK0tF8KTVqFY27qVParlc2pjQc6ii0J0pQer/KO+h9ZofcO8OnNx2TzuyROq6cZlSLqtbEF1OQmgOuXWAC4ggSNVR5q3g0zkmUXWrG0mG/LUtLHBslNQNBXdJBhVxbRELKumXaUkWovb9dMZp96JWBtBTS3gPsTMzbnKaAJ4+4oIo3/9bSbrNCbSdcOSyi/vV7byBQURrNZnGEKxBpn14iUsEfHiQJj74zLhZJyRTenOLW7g9XHi8sNI
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH0PR13MB5084.namprd13.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(230473577357003)(230273577357003)(38070700009);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?utf-8?B?YWxyOEVaQ1pYQWNUTHVJc0hhakVqNjFZbjcxc0ZiQ0xHcTdNQzZOZGhiL1N3?=
+ =?utf-8?B?K1RsZERYY0RFWXg0enpMeWExUmtMbHh1S01HeVhsQnoyUjFJY2hoblZQYllj?=
+ =?utf-8?B?cnRxUkt5Y08yN3UrVGFVNG53bFhML3ljMHYzNEFoMG8wOTZkZmpWSUhiVGRI?=
+ =?utf-8?B?MlZmL3VGdElWc1BKMWpqRmNkYnUvK2xsQ3NJajRUNlV0UFU3REFZdEdCbHJ1?=
+ =?utf-8?B?dmsvQUNWM2gwak84MUI0L09HZVFpZm5UbHppZXBHUjVXVENzV01DazhrcDRt?=
+ =?utf-8?B?TDNrRFpYSDYyZ3pnellOTDVXc0NBSGdaZlpkZ2puTkU3aE9XRTdZd0h4OW50?=
+ =?utf-8?B?NXJkOXBFQzhTNmcyczFOY0JpOEptL3RqMFJrOEF2SjV1M1Nob3lTaGhYK3la?=
+ =?utf-8?B?Vi80VGJVS3hZTi9GWHdQYUpqWWQzY3RYRUMyRlpNVEVHMXU1MGREWDlOdmU4?=
+ =?utf-8?B?Z0JuRnVwRER3N0NEQU4rRU5RYzNzWllWaWpxUWtjYkJwVXpXMnh5cC8yYzdH?=
+ =?utf-8?B?RnlqeW9hNGtqZ3phNmpBalZoK0dOcmRRK2NBNXB6Znk3Tk9pRTFGUXQzbWow?=
+ =?utf-8?B?MDVPVVZWUzFISlJWYVdHRzloeDl0em53ZGl5clUxZG5iV1pNWnpzRmh4cDVU?=
+ =?utf-8?B?R1oyczhvbjBTTFNMWVRxdk1pSU9sTHc1ZGhrYnZtN1RXZk1TNStzYjJpWjFo?=
+ =?utf-8?B?ekdJTCtPYWRYRm0xUW5GOXRJMlU3d3l3ejErTnd0MjRxQTBsZ3lFSXAxK3lP?=
+ =?utf-8?B?ZUEyVGJCdHpXbTh2b3FKSW4vZi9qSDZWUjZYYVAzR2VZbUFQRXA2Ym4wMjJD?=
+ =?utf-8?B?UlpZa2dVNE9PcUc5RTRJZVBtM3ZzL1RkSTV1MmJPZnR1bjF0a283emRqVFI5?=
+ =?utf-8?B?YVY3NXRVQy8wRnh3ZmxyM2IvS0JpUytmS3RCejNzcFY4NkhxYktLYW1tWmFh?=
+ =?utf-8?B?amdWb1psa09Kei9xVlEvYjEzcGNTaVZvR3hoOXRLRHlzWW1XNEJGMEluR2RH?=
+ =?utf-8?B?RDNCUFZEWFhOOXdvU3dqVFNNSldOWkx6bjM5SU50VldaWW9NelRyMTVVdUd4?=
+ =?utf-8?B?b09Qb1JIM2ttRjhQL05POHRIZGhmQU92eHN6T3FSRG40c05hT1pxQWZMWmR3?=
+ =?utf-8?B?UGlpRXFKRmJVRFp3QWQ0NmhVNzRpY3RvTTdmWC9SVDhyNVFPZ3l6ZmwxdzRU?=
+ =?utf-8?B?VjQzNkpDdnA3MFhQUzN4QUJlOHZVYXNnV0Z2dEJNdytuR1c4UjBYTXEyb04v?=
+ =?utf-8?B?Mk5FYmxtUW1VNEM5cnVhUG0yWmRLQWFCQlJ5QjVuaDlsTGVIOHZpbmVaMXZZ?=
+ =?utf-8?B?V1JEOFJzcVMwekVlbjRnYjBsZFRyRkRST3JINHNETHJ2bDlkbXZ2UUc0bHFK?=
+ =?utf-8?B?c0hzNUJaWHVIZ0Z6NXgvMDE2WG1tKzdwUUVURXdlVkx5dk9qa1E0MWYxL0lD?=
+ =?utf-8?B?U3hSRlI5ZWxpaDJNSWk0OWtkUThiTlk5R0pMOWFpcFFPQ01wV3ExbjVLa1RR?=
+ =?utf-8?B?SFNjWlNEN3F6Z09HblMzbFlNeDR5UzQzalBPdTNETjBlODZMMSt0aTExODkz?=
+ =?utf-8?B?eS9BbXZYRTR0QUpJT3FRSWdsODRTN2haR2crek9UbXFZS3V3T0ErcW1UOGpG?=
+ =?utf-8?B?Z3JoeXRGVkhhN2pjNXlCdFdQYkFIb3UzZFBGcDNzKzFUNkNsTHhVN0VjM1o5?=
+ =?utf-8?B?Z3RMbTZVUG8xbWVvcXlTcGNSb0wzMlc5OVdHK2Z5eGRzUW5meVh0Vm54K0Vh?=
+ =?utf-8?B?cmVzVldGaDQxcys3aHBpWXdRcWxJaTZSbDJnZGd1bTArOVVCVkREZkxyWTlt?=
+ =?utf-8?B?MzVMazhCdjFROW43ZE9CT0x6Wld2OWw5K3poTVFYZVVVTVhleTFEMjN3MFBC?=
+ =?utf-8?B?ZUdhZmx1V3hIYzRiNEppbDJsSHBKNmdIclRGakZLcHdxeXhzRUROWjFKUHda?=
+ =?utf-8?B?aTA1bjJCY0hVc1ZCNmZWQytNMmFBVDJDK3ZKRDhVK2RZNEE1THpWdll6V0Ru?=
+ =?utf-8?B?aE81NDR5VDB0cUgydkI0ZERyTE9ybjJRYVNHRUJmRmQxQ0s4TkFoaEVDTXVu?=
+ =?utf-8?B?SVpNWUVSTUZ5VTQxWW15aHZkTDFmVmtBWTc1eTlZQ1dZeEdFNHN1aTV1M1Q3?=
+ =?utf-8?B?UnptRDlEeVl3M0U4WHVWRy8wcUpYZEd2MmkrTEZSOHlQVWVTMzZINDZQRmFS?=
+ =?utf-8?B?SE55NTVjOVZFT1pnaW9FNXUvaWlhMUVwTVZoYW9INWtKcHdTVkc0QnF1QW5B?=
+ =?utf-8?B?dk1aL0VXOWd6R2tCY1daZXRrZktRPT0=?=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <1936BCB4115DE045BCD8944AE6516189@namprd13.prod.outlook.com>
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240220151035.327199-6-sebastianene@google.com>
+X-OriginatorOrg: hammerspace.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: CH0PR13MB5084.namprd13.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1634e068-6f03-43ad-b5b4-08dc33b9c229
+X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Feb 2024 15:20:09.9197
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: ER4a/q/pxdIV1Qg5HKf2yDxzFB0ixhLaT3ySN2DMHuG3vURZCgbXixsxvQTCz7DFq6FQ0Ko5SlPapEAZkE2DNw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR13MB4672
 
-On Tue, Feb 20, 2024 at 03:10:34PM +0000, Sebastian Ene wrote:
-> Define a set of attributes used by the ptdump parser to display the
-> properties of a guest memory region covered by a pagetable descriptor.
-> Build a description of the pagetable levels and initialize the parser
-> with this configuration.
-> 
-> Signed-off-by: Sebastian Ene <sebastianene@google.com>
-> ---
->  arch/arm64/kvm/ptdump.c | 146 ++++++++++++++++++++++++++++++++++++++--
->  1 file changed, 139 insertions(+), 7 deletions(-)
-> 
-> diff --git a/arch/arm64/kvm/ptdump.c b/arch/arm64/kvm/ptdump.c
-> index 9b04c24bb9be..2c4e0c122d23 100644
-> --- a/arch/arm64/kvm/ptdump.c
-> +++ b/arch/arm64/kvm/ptdump.c
-> @@ -14,6 +14,61 @@
->  #include <kvm_ptdump.h>
->  
->  
-> +#define MARKERS_LEN		(2)
-> +#define KVM_PGTABLE_LEVELS	(KVM_PGTABLE_LAST_LEVEL + 1)
-> +
-> +struct kvm_ptdump_guest_state {
-> +	struct kvm		*kvm;
-> +	struct pg_state		parser_state;
-> +	struct addr_marker	ipa_marker[MARKERS_LEN];
-> +	struct pg_level		level[KVM_PGTABLE_LEVELS];
-> +	struct ptdump_range	range[MARKERS_LEN];
-> +};
-> +
-> +static const struct prot_bits stage2_pte_bits[] = {
-> +	{
-> +		.mask	= PTE_VALID,
-> +		.val	= PTE_VALID,
-> +		.set	= " ",
-> +		.clear	= "F",
-> +	}, {
-> +		.mask	= KVM_PTE_LEAF_ATTR_HI_S2_XN | PTE_VALID,
-> +		.val	= KVM_PTE_LEAF_ATTR_HI_S2_XN | PTE_VALID,
-> +		.set	= "XN",
-> +		.clear	= "  ",
-> +	}, {
-> +		.mask	= KVM_PTE_LEAF_ATTR_LO_S2_S2AP_R | PTE_VALID,
-> +		.val	= KVM_PTE_LEAF_ATTR_LO_S2_S2AP_R | PTE_VALID,
-> +		.set	= "R",
-> +		.clear	= " ",
-> +	}, {
-> +		.mask	= KVM_PTE_LEAF_ATTR_LO_S2_S2AP_W | PTE_VALID,
-> +		.val	= KVM_PTE_LEAF_ATTR_LO_S2_S2AP_W | PTE_VALID,
-> +		.set	= "W",
-> +		.clear	= " ",
-> +	}, {
-> +		.mask	= KVM_PTE_LEAF_ATTR_LO_S2_AF | PTE_VALID,
-> +		.val	= KVM_PTE_LEAF_ATTR_LO_S2_AF | PTE_VALID,
-> +		.set	= "AF",
-> +		.clear	= "  ",
-> +	}, {
-> +		.mask	= PTE_NG,
-> +		.val	= PTE_NG,
-> +		.set	= "FnXS",
-> +		.clear	= "  ",
-> +	}, {
-> +		.mask	= PTE_CONT | PTE_VALID,
-> +		.val	= PTE_CONT | PTE_VALID,
-> +		.set	= "CON",
-> +		.clear	= "   ",
-> +	}, {
-> +		.mask	= PTE_TABLE_BIT,
-> +		.val	= PTE_TABLE_BIT,
-> +		.set	= "   ",
-> +		.clear	= "BLK",
-> +	},
-> +};
-> +
->  static int kvm_ptdump_visitor(const struct kvm_pgtable_visit_ctx *ctx,
->  			      enum kvm_pgtable_walk_flags visit)
->  {
-> @@ -37,15 +92,78 @@ static int kvm_ptdump_show_common(struct seq_file *m,
->  	return kvm_pgtable_walk(pgtable, 0, BIT(pgtable->ia_bits), &walker);
->  }
->  
-> +static int kvm_ptdump_build_levels(struct pg_level *level, u32 start_lvl)
-> +{
-> +	static const char * const level_names[] = {"PGD", "PUD", "PMD", "PTE"};
-> +	u32 i = 0;
-> +	u64 mask = 0;
-> +
-> +	if (start_lvl > 2) {
-> +		pr_err("invalid start_lvl %u\n", start_lvl);
-> +		return -EINVAL;
-> +	}
-> +
-> +	for (i = 0; i < ARRAY_SIZE(stage2_pte_bits); i++)
-> +		mask |= stage2_pte_bits[i].mask;
-> +
-> +	for (i = start_lvl; i <= KVM_PGTABLE_LAST_LEVEL; i++) {
-> +		level[i].name	= level_names[i];
-> +		level[i].num	= ARRAY_SIZE(stage2_pte_bits);
-> +		level[i].bits	= stage2_pte_bits;
-> +		level[i].mask	= mask;
-> +	}
-> +
-> +	if (start_lvl > 0)
-> +		level[start_lvl].name = level_names[0];
-> +
-> +	return 0;
-> +}
-> +
-> +static struct kvm_ptdump_guest_state
-> +*kvm_ptdump_parser_init(struct kvm *kvm)
-> +{
-> +	struct kvm_ptdump_guest_state *st;
-> +	struct kvm_s2_mmu *mmu = &kvm->arch.mmu;
-> +	struct kvm_pgtable *pgtable = mmu->pgt;
-> +	int ret;
-> +
-> +	st = kzalloc(sizeof(struct kvm_ptdump_guest_state), GFP_KERNEL_ACCOUNT);
-> +	if (!st)
-> +		return NULL;
-> +
-> +	ret = kvm_ptdump_build_levels(&st->level[0], pgtable->start_level);
-> +	if (ret)
-> +		goto free_with_state;
-> +
-> +	st->ipa_marker[0].name		= "Guest IPA";
-> +	st->ipa_marker[1].start_address = BIT(pgtable->ia_bits);
-> +	st->range[0].end		= BIT(pgtable->ia_bits);
-> +
-> +	st->kvm				= kvm;
-> +	st->parser_state = (struct pg_state) {
-> +		.marker		= &st->ipa_marker[0],
-> +		.level		= -1,
-> +		.pg_level	= &st->level[0],
-> +		.ptdump.range	= &st->range[0],
-> +	};
-> +
-> +	return st;
-> +free_with_state:
-> +	kfree(st);
-> +	return NULL;
-> +}
-> +
->  static int kvm_ptdump_guest_show(struct seq_file *m, void *)
->  {
-> -	struct kvm *kvm = m->private;
-> +	struct kvm_ptdump_guest_state *st = m->private;
-> +	struct kvm *kvm = st->kvm;
->  	struct kvm_s2_mmu *mmu = &kvm->arch.mmu;
-> -	struct pg_state parser_state = {0};
->  	int ret;
->  
-> +	st->parser_state.seq = m;
-> +
->  	write_lock(&kvm->mmu_lock);
-> -	ret = kvm_ptdump_show_common(m, mmu->pgt, &parser_state);
-> +	ret = kvm_ptdump_show_common(m, mmu->pgt, &st->parser_state);
->  	write_unlock(&kvm->mmu_lock);
->  
->  	return ret;
-> @@ -54,22 +172,36 @@ static int kvm_ptdump_guest_show(struct seq_file *m, void *)
->  static int kvm_ptdump_guest_open(struct inode *m, struct file *file)
->  {
->  	struct kvm *kvm = m->i_private;
-> +	struct kvm_ptdump_guest_state *st;
->  	int ret;
->  
-> -	if (!kvm_get_kvm_safe(kvm))
-> -		return -ENOENT;
-
-FIXME: Keep kvm_get_kvm_safe before invoking kvm_ptdump_parser_init to
-avoid UAF if kvm gets destroyed.
-
-> +	st = kvm_ptdump_parser_init(kvm);
-> +	if (!st)
-> +		return -ENOMEM;
->  
-> -	ret = single_open(file, kvm_ptdump_guest_show, m->i_private);
-> +	if (!kvm_get_kvm_safe(kvm)) {
-> +		ret = -ENOENT;
-> +		goto free_with_state;
-> +	}
-> +
-> +	ret = single_open(file, kvm_ptdump_guest_show, st);
->  	if (ret < 0)
-> -		kvm_put_kvm(kvm);
-> +		goto free_with_kvm_ref;
->  
->  	return ret;
-> +free_with_kvm_ref:
-> +	kvm_put_kvm(kvm);
-> +free_with_state:
-> +	kfree(st);
-> +	return ret;
->  }
->  
->  static int kvm_ptdump_guest_close(struct inode *m, struct file *file)
->  {
->  	struct kvm *kvm = m->i_private;
-> +	void *st = ((struct seq_file *)file->private_data)->private;
->  
-> +	kfree(st);
->  	kvm_put_kvm(kvm);
->  	return single_release(m, file);
->  }
-> -- 
-> 2.44.0.rc0.258.g7320e95886-goog
-> 
+T24gVGh1LCAyMDI0LTAyLTIyIGF0IDA2OjA1IC0wNTAwLCBKZWZmIExheXRvbiB3cm90ZToNCj4g
+T24gV2VkLCAyMDI0LTAyLTIxIGF0IDEzOjQ4ICswMDAwLCBUcm9uZCBNeWtsZWJ1c3Qgd3JvdGU6
+DQo+ID4gT24gV2VkLCAyMDI0LTAyLTIxIGF0IDE2OjIwICswODAwLCBaaGl0YW8gTGkgd3JvdGU6
+DQo+ID4gPiBbWW91IGRvbid0IG9mdGVuIGdldCBlbWFpbCBmcm9tIHpoaXRhby5saUBzbWFydHgu
+Y29tLiBMZWFybiB3aHkNCj4gPiA+IHRoaXMNCj4gPiA+IGlzIGltcG9ydGFudCBhdCBodHRwczov
+L2FrYS5tcy9MZWFybkFib3V0U2VuZGVySWRlbnRpZmljYXRpb27CoF0NCj4gPiA+IA0KPiA+ID4g
+SGksIGV2ZXJ5b25lLA0KPiA+ID4gDQo+ID4gPiAtIEZhY3RzOg0KPiA+ID4gSSBoYXZlIGEgcmVt
+b3RlIE5GUyBleHBvcnQgYW5kIEkgbW91bnQgdGhlIHNhbWUgZXhwb3J0IG9uIHR3bw0KPiA+ID4g
+ZGlmZmVyZW50IGRpcmVjdG9yaWVzIGluIG15IE9TIHdpdGggdGhlIHNhbWUgb3B0aW9ucy4gVGhl
+cmUgaXMgYW4NCj4gPiA+IGluZmxpZ2h0IElPIHVuZGVyIG9uZSBtb3VudGVkIGRpcmVjdG9yeS4g
+QW5kIHRoZW4gSSB1bm1vdW50DQo+ID4gPiBhbm90aGVyDQo+ID4gPiBtb3VudGVkIGRpcmVjdG9y
+eSB3aXRoIGZvcmNlLiBUaGUgaW5mbGlnaHQgSU8gZW5kcyB1cCB3aXRoDQo+ID4gPiAiVW5rbm93
+bg0KPiA+ID4gZXJyb3IgNTEyIiwgd2hpY2ggaXMgRVJFU1RBUlRTWVMuDQo+ID4gPiANCj4gPiAN
+Cj4gPiBBbGwgb2YgdGhlIGFib3ZlIGlzIHdlbGwga25vd24uIFRoYXQncyBiZWNhdXNlIGZvcmNl
+ZCB1bW91bnQNCj4gPiBhZmZlY3RzDQo+ID4gdGhlIGVudGlyZSBmaWxlc3lzdGVtLiBXaHkgYXJl
+IHlvdSB1c2luZyBpdCBoZXJlIGluIHRoZSBmaXJzdA0KPiA+IHBsYWNlPyBJdA0KPiA+IGlzIG5v
+dCBpbnRlbmRlZCBmb3IgY2FzdWFsIHVzZS4NCj4gPiANCj4gDQo+IFdoaWxlIEkgYWdyZWUgVHJv
+bmQncyBhYm92ZSBzdGF0ZW1lbnQsIHRoZSBrZXJuZWwgaXMgbm90IHN1cHBvc2VkIHRvDQo+IGxl
+YWsgZXJyb3IgY29kZXMgdGhhdCBoaWdoIGludG8gdXNlcmxhbmQuIEFyZSB5b3Ugc2VlaW5nIEVS
+RVNUQVJUU1lTDQo+IGJlaW5nIHJldHVybmVkIHRvIHN5c3RlbSBjYWxscz8gSWYgc28sIHdoaWNo
+IG9uZXM/DQoNClRoZSBwb2ludCBvZiBmb3JjZWQgdW1vdW50IGlzIHRvIGtpbGwgYWxsIFJQQyBj
+YWxscyBhc3NvY2lhdGVkIHdpdGggdGhlDQpmaWxlc3lzdGVtIGluIG9yZGVyIHRvIHVuYmxvY2sg
+dGhlIHVtb3VudC4gQmFzaWNhbGx5LCBpdCB0cmlnZ2VycyB0aGlzDQpjb2RlIGJlZm9yZSB0aGUg
+dW5tb3VudCBzdGFydHM6DQoNCnZvaWQgbmZzX3Vtb3VudF9iZWdpbihzdHJ1Y3Qgc3VwZXJfYmxv
+Y2sgKnNiKQ0Kew0KICAgICAgICBzdHJ1Y3QgbmZzX3NlcnZlciAqc2VydmVyOw0KICAgICAgICBz
+dHJ1Y3QgcnBjX2NsbnQgKnJwYzsNCg0KICAgICAgICBzZXJ2ZXIgPSBORlNfU0Ioc2IpOw0KICAg
+ICAgICAvKiAtRUlPIGFsbCBwZW5kaW5nIEkvTyAqLw0KICAgICAgICBycGMgPSBzZXJ2ZXItPmNs
+aWVudF9hY2w7DQogICAgICAgIGlmICghSVNfRVJSKHJwYykpDQogICAgICAgICAgICAgICAgcnBj
+X2tpbGxhbGxfdGFza3MocnBjKTsNCiAgICAgICAgcnBjID0gc2VydmVyLT5jbGllbnQ7DQogICAg
+ICAgIGlmICghSVNfRVJSKHJwYykpDQogICAgICAgICAgICAgICAgcnBjX2tpbGxhbGxfdGFza3Mo
+cnBjKTsNCn0NCg0KU28geWVzLCB0aGF0IGRvZXMgc2lnbmFsIGFsbCB0aGUgd2F5IHVwIHRvIHRo
+ZSBhcHBsaWNhdGlvbiBsZXZlbCwgYW5kDQppdCBpcyB2ZXJ5IG11Y2ggaW50ZW5kZWQgdG8gZG8g
+c28uDQotLSANClRyb25kIE15a2xlYnVzdA0KTGludXggTkZTIGNsaWVudCBtYWludGFpbmVyLCBI
+YW1tZXJzcGFjZQ0KdHJvbmQubXlrbGVidXN0QGhhbW1lcnNwYWNlLmNvbQ0KDQoNCg==
