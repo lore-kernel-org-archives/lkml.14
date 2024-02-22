@@ -1,63 +1,63 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7CF56AF86;
-	Thu, 22 Feb 2024 19:51:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C097454914;
+	Thu, 22 Feb 2024 19:53:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708631485; cv=none; b=k+slqZwNzaTjDet3a+uPR4aiDI/8+WBz8rZe7y/MFalpcezCYJQTAUmipWVhcX1zmQw1TGV7ecZZS1x1M+Jhcwsy9c/iOep5lPSDeeoYr+ExOEuuG2buW4DWXAmeSLSu3EPqCHldaUM6S9x3tsFjP/3/5ySwX3ZUgwov7vTria8=
+	t=1708631603; cv=none; b=tsaCOp1YR5rU2dzACFs4pnRlUx9R3YXzl1XJ80y4qFMCNXXDfStEZ8l+Kk5Gsw5AGm7jRGYU/LUc3Ca4Nb34WN6S2Uz6lFex8Rob4h0nlxZbdAS7bcoP8fbatMQ2VwYd4paEThC4W3BGmr6LMhLZRoUCrYTQxiWL3kNHGPZYqkY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708631485; c=relaxed/simple;
-	bh=SzwwYFuLR6ZQog8lwwldYZZygr7tXCbPVaY0n40RI1E=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=dEjlhOZmIVqdOwSRmr/dFOFe4tU5edLcejhxjsbIfEO+cf6T18HVOgH0gFaxlY/uNz+tWS9nY1ypqjlkIenBquKXJ8bLd7DSXTA/LgvTd5nHbpIkAeXrZvnXhAM5/5Uk60Ntmgl0SMMDiKKexVeGJvunUclxrddoa4OHAZ8Q/E8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OjQ+j8cr; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1708631603; c=relaxed/simple;
+	bh=qDXBB0ij/If0VYG0ekjLIrDHl3WNvkiffFUNpfTYhQA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=t3ADtESAq4LHXxPGydQvDBeyjArrw8RgGCEsKUiFCc+Vt8UusuiI6oTvq8wh9FtkdndVU98tPRQlVvELec9k1DNQuoCY9u6fzdyrvTMlPWhbdK/oJCqmk/Fk9OFUYVcXKwGQtOqe3iIv+ovXvvrAIjYA1DQ7neiojxvzreqoc+U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OQ+B4zYs; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OjQ+j8cr"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 4B05AC433F1;
-	Thu, 22 Feb 2024 19:51:25 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OQ+B4zYs"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 61EF5C433C7;
+	Thu, 22 Feb 2024 19:53:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708631485;
-	bh=SzwwYFuLR6ZQog8lwwldYZZygr7tXCbPVaY0n40RI1E=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=OjQ+j8crwhbOIvhblfbJZZYCvT1V29VU84N/6cVuw1eWP1qawTlnAzkeeLIOYTa3Y
-	 ZXrrcGcN9RC/u69FizSgz5NFLnmpsCvdIMJK+HFzGgjlisOsupMXdXSzDgV+UzzEcz
-	 QPKY6LXgUXoiewaivCyUEpD4WbHGlA2j3PfH5egDyckA+VUdLUXecyXoMp7zrPrdPn
-	 4eCFQfwBhKdaiOfT/0iRwYP/2JyRzgGQ08GDNMTk2KIYh+cnnInkkfneVJasQJW06b
-	 kGIGwgttZHFQgVYjB5M4q7NC4ovUNFfoggQATK5V4eg079+v9ueptCkqduBXr6X/RG
-	 nCuTAjVtuWx6Q==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 372F7C04E32;
-	Thu, 22 Feb 2024 19:51:25 +0000 (UTC)
-Subject: Re: [GIT PULL] clk fixes for v6.8-rc5
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <20240222064521.2538149-1-sboyd@kernel.org>
-References: <20240222064521.2538149-1-sboyd@kernel.org>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20240222064521.2538149-1-sboyd@kernel.org>
-X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/linux/kernel/git/clk/linux.git tags/clk-fixes-for-linus
-X-PR-Tracked-Commit-Id: cc976dbc492c2bf67d8225845b609ea72e292128
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 88953761b94df7dc9bfc46591a8975401689b057
-Message-Id: <170863148520.11658.7094787355205911363.pr-tracker-bot@kernel.org>
-Date: Thu, 22 Feb 2024 19:51:25 +0000
-To: Stephen Boyd <sboyd@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, Michael Turquette <mturquette@baylibre.com>, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
+	s=k20201202; t=1708631603;
+	bh=qDXBB0ij/If0VYG0ekjLIrDHl3WNvkiffFUNpfTYhQA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=OQ+B4zYsFdcQTnlXnTJzTjKwxMjTba6V/pdA3mNW1UJZVdLboIrHrIPeDgwfolNk9
+	 W1+ChLdKC24pmYgf+HiJg8Xnfg4hU0nlhCNCh5arvgmTJHpX215MLOVsnHcpjRHnEH
+	 NddVjpNG3zF1puwZUIkKmTt6S8Jbgkof0hguop3mw70KYGMY5iZ0yToi4v2HPV2ABu
+	 zmU9/vjsIoHjwnxNBfwQQWdGCRdjYd+psb6feGRjKLEtVpQhd1FJKRW+FgWMSfH+3j
+	 ZddQM84ZCxc5ZUUZX0DRoYQwNl9kmOLJjTelH2h3BBen3pJdbQDVwDoFqECtOxQnMb
+	 cqMXsTgiPjauQ==
+Date: Thu, 22 Feb 2024 13:53:21 -0600
+From: Rob Herring <robh@kernel.org>
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	devicetree@vger.kernel.org, Jean Delvare <jdelvare@suse.com>,
+	linux-kernel@vger.kernel.org, Conor Dooley <conor+dt@kernel.org>,
+	Krzysztof Kozlowski <krzk@kernel.org>, linux-hwmon@vger.kernel.org,
+	Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH 2/2] dt-bindings: hwmon: ti,ina2xx: use common hwmon
+ schema
+Message-ID: <170863160056.3749405.5990160563545861721.robh@kernel.org>
+References: <20240216-dt-bindings-hwmon-common-v1-0-3c2c24ff1260@linaro.org>
+ <20240216-dt-bindings-hwmon-common-v1-2-3c2c24ff1260@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240216-dt-bindings-hwmon-common-v1-2-3c2c24ff1260@linaro.org>
 
-The pull request you sent on Wed, 21 Feb 2024 22:45:21 -0800:
 
-> https://git.kernel.org/pub/scm/linux/kernel/git/clk/linux.git tags/clk-fixes-for-linus
+On Fri, 16 Feb 2024 08:55:47 +0100, Krzysztof Kozlowski wrote:
+> Reference common hwmon schema which brings the "label" property.
+> 
+> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> ---
+>  Documentation/devicetree/bindings/hwmon/ti,ina2xx.yaml | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
+> 
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/88953761b94df7dc9bfc46591a8975401689b057
+Acked-by: Rob Herring <robh@kernel.org>
 
-Thank you!
-
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
