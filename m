@@ -1,67 +1,66 @@
-Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 603D94C60B
-	for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 11:51:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A58B347F6C
+	for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 11:51:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708602673; cv=none; b=NFccgsGyvyIp1FAJPJE3QZXWCshRpr1gMz3drSNEh3pyHYvy8AyjctYTra0NO/v2O6ynedpxvwbQ6jGHf/byqUEZN9OjlFtPahvZ+xrpwezMil2ugUSljQAZIkTpBJCyQ+ZnfNGOQT3WjmsTE32X1GRW7I2bZV0sEKADQTQVY5c=
+	t=1708602672; cv=none; b=F+wq7+Mi7glQkMDOsTyHq5dhn6tiw7ov86dbrU+eyJH7npsNe7AacSIVxjQyG/HEAZElUjWmHETnUvAUglycxCRwZg/uFxtsPTvBpDmhcoasVcI2DndyVu6FxHoPm0Eodkl/bYJ8fSlvkN9cOsgTK5dFakYtBvJCUcJFpNI7p5k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708602673; c=relaxed/simple;
-	bh=YID5EHIsC8yhor+I6AoFup3aQLQc9ccnLMMd80bhUqs=;
+	s=arc-20240116; t=1708602672; c=relaxed/simple;
+	bh=N8Ly4oEy5piq03Mm8FrpU9io5s7b24dCbY2FPMutdCg=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=RgxVXHeo18KPryRbJ9SsQAMRDIECZdbPDkEOUxzLuOUSNW/PuKjhM7VXY9Luhr7azzaB5ASMFhKFgbbvYaaCAmuCPT2Z05Nd6GJhOh4jEr3+IUduCoQctEaiuVuOjMFwDRFu+nrfrbs3eNt8qCyut/zK/dMYaUopEgF5scvApDc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ionos.com; spf=pass smtp.mailfrom=ionos.com; dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b=M4tb2t7I; arc=none smtp.client-ip=209.85.221.52
+	 MIME-Version; b=DNqDOuQYwieu8B1tcu8WoVOuf4HoDqPb+n2g5q/d02LrdiBfYSjfO3EvpHzcB6H8IIwMD5U5nJd/0hM47uU8WNDjCpDjMeLt6jdT9GTKO5rAgpDKkTOKkDS+G+fim18pLMQOVFYdHoj0up7d3su7TFT4JmaK1cKQ5XkNixfbLVo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ionos.com; spf=pass smtp.mailfrom=ionos.com; dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b=OpSb1LuY; arc=none smtp.client-ip=209.85.221.43
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ionos.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ionos.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b="M4tb2t7I"
-Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-33d9c3f36c2so128455f8f.2
-        for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 03:51:10 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b="OpSb1LuY"
+Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-33d36736d4eso3480074f8f.1
+        for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 03:51:09 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ionos.com; s=google; t=1708602669; x=1709207469; darn=vger.kernel.org;
+        d=ionos.com; s=google; t=1708602668; x=1709207468; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=kxFeZ/0ASaJvoJHkw5FuQa0hU1Ih3iAyraY4h2cFePg=;
-        b=M4tb2t7Icr6vscFWaupRbi4WvvLYyiNzureWIuzKd/QSU2HbWoGg+GXDZ0B4MrCTdx
-         cjTM18zeNRFnzaEy93H9l6hCZrTBk13ULnI/KEba/wOWU/sGXTVlsmqSO4qJh29rRxbL
-         aLPyYRHzHSdqQPD7amHpniUA2M/W8xdDEX6bwCc+2xMXMNPkjlQ5KiNNO8YLGivw5Vju
-         /xcQx1HefC/uqqIjGtuiaazSPcfvJqABsyYU90/4jtihza33fba5Y0IrANwAJWqlNpOB
-         ZGtblZ7gllObeWfXh62v/ZCihiyzWNhd9QYkttOmG4f3/GdKirEiFf1NZuJH5sukC/NZ
-         97ZA==
+        bh=zrzkS3Jr9rDGJgnZMZCc9dS49bV9O/AFecbIWIE3ZsM=;
+        b=OpSb1LuYX/E2V3o/GDNfqnmgD6DcYEEF4WcPmPmDmGPUKqdrlmTQ87YBx05oal1q6K
+         7V7ExPJNWRFXT6L/k1rZ0if09Df3VNHHgoTde3GFWYijRoSEVGK9jMfU6GzrB222O1wZ
+         +Lax6oZ5khapzeaQA7dKmTOdAJHNS4y/l/0Met+JW/eRAA2DLPon2OBJodg8RYb52Fwd
+         N5eh1VHgSFJHb6CJ2PSJKnOw2AXlfgMpAMa9Gk/xDv6CpYoHD5U7HvGNkpvhIS2qFfp9
+         0Hhp0OsL8xeznoa/CvpqO/WJUuhe8OnavVzzTskmh1zDoVnAWy/9bwm7EXB4BmPf6qJk
+         OWLg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708602669; x=1709207469;
+        d=1e100.net; s=20230601; t=1708602668; x=1709207468;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=kxFeZ/0ASaJvoJHkw5FuQa0hU1Ih3iAyraY4h2cFePg=;
-        b=F+2Ovq31Pe8UJ0TQzXRJf31jkJ8xw5NLHu24bNB/fz3wzloiBXayaD5zkuhqEuVghy
-         epIG6OdgSbcfT+bESBSFtnO22OYj6xQvL/Q8pJdxU6Url0gHjV80lcZA8w3GmupF+7er
-         3y4NMGX1zC8tSlONqlfHxhe/RSfBIqign/10JHOswfOAOCYOGJnZ8stIq3t+AlBnNfM7
-         CZTHWMiHcUxGXP8+mXQb1hnhv+XgcVAuNSqiShxCSjaooTKd0X/pH15Q37bui9/qX95t
-         KRBIGDicTUaa+be4c9nVG3PRIZtHHrO9LOCti1Q71ifDVeAIQsx/KVbzFQcrIQmOoq1e
-         lUeQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWmPv0+dD7T2takYokrYVdEpv23Dcm9HAQWdFUxA139RvNBr7xAKCMBoN6o59U18z/LKmAY0GcwSikc8rY6Jf+ItLxvTewcfg/L+e9y
-X-Gm-Message-State: AOJu0YygCJjOzkduGrk5yyB3E5SLH89EQJDe/Ayj+EGdtivJmWHXbN0F
-	5dYDiBoR5jeuZo8mhZuRY8M0vUvzxLGAgYhC188yiLWD+Fio+2YEN5qCTQyXwrcq11I2Le4eKuC
-	w
-X-Google-Smtp-Source: AGHT+IEa3C8f7cLy6OU3uEmSmSXgcYIgG0huCWrowteGjGdDCOAsaf2p99NOehd9GQ5cTyTmBUBHRg==
-X-Received: by 2002:a05:6000:1787:b0:33d:56a0:88e3 with SMTP id e7-20020a056000178700b0033d56a088e3mr8736928wrg.65.1708602669683;
-        Thu, 22 Feb 2024 03:51:09 -0800 (PST)
+        bh=zrzkS3Jr9rDGJgnZMZCc9dS49bV9O/AFecbIWIE3ZsM=;
+        b=PTXDiuhqoe5nns21h2Vcc7yZHZuljsQVAsub8sLnWRirhQOii0Ejq2peeHljFGuC+S
+         dRALDIuNaw1YaM3+IefNRkn37OOYDlDipL+3DT4Rn5CdQ6FwNmuD7XaqG+UikH1AehEL
+         psxI9rb6oUKrM8BissnqI3tbapPL/P8racy86WXIR1/uW99eFmh5fIFaTK24uY6bwM/Z
+         nkB7irggCgNhJol6gxEANyWdEyGIHxbZEECjkbEgFCcEScxPXI6qPx0OWq/p2UC7RrIc
+         jPsrUFW9iA5a7hjj8+8xYuL6lhU6YUQNnbiL8rU00ugqMmyu3o5wuIWcJQiBVskhVq2W
+         VRng==
+X-Forwarded-Encrypted: i=1; AJvYcCUkCfT3rTyPo7Ol8Fd9bfCbJb+0LE86ubN6DQ9iXWnk5WeqEE4rxlM+Bsqsl6O4soG+DP1pPpDnj5TrTWGEEGONq0EjxNXhUKQLIQol
+X-Gm-Message-State: AOJu0YyFX/nu2PEnNetStCMkt34azAwqJ1wpwqvI6788DUG8gGwEeJz/
+	8hyexBgzqqtU0XpIak2IoAIHuQMoTx0CLtjuV7I8oVHmqFKaR7SsatjmnZwxoCg=
+X-Google-Smtp-Source: AGHT+IEf30oKm3SvDXvZCjTXb955DQvutxWXp0IjhfwewVF9FwEP1ddQHLarxc6WQx8FTmkpa5t7tA==
+X-Received: by 2002:a5d:54c4:0:b0:33d:887c:fe04 with SMTP id x4-20020a5d54c4000000b0033d887cfe04mr1569315wrv.19.1708602667899;
+        Thu, 22 Feb 2024 03:51:07 -0800 (PST)
 Received: from raven.intern.cm-ag (p200300dc6f010900023064fffe740809.dip0.t-ipconnect.de. [2003:dc:6f01:900:230:64ff:fe74:809])
-        by smtp.gmail.com with ESMTPSA id co18-20020a0560000a1200b0033d4c3b0beesm15044920wrb.19.2024.02.22.03.51.08
+        by smtp.gmail.com with ESMTPSA id co18-20020a0560000a1200b0033d4c3b0beesm15044920wrb.19.2024.02.22.03.51.06
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 22 Feb 2024 03:51:09 -0800 (PST)
+        Thu, 22 Feb 2024 03:51:07 -0800 (PST)
 From: Max Kellermann <max.kellermann@ionos.com>
 To: akpm@linux-foundation.org,
 	linux-mm@kvack.org,
 	linux-kernel@vger.kernel.org
 Cc: willy@infradead.org,
 	Max Kellermann <max.kellermann@ionos.com>
-Subject: [PATCH v2 08/14] linux/mm.h: move devmap-related declarations to mm/devmap_managed.h
-Date: Thu, 22 Feb 2024 12:50:49 +0100
-Message-Id: <20240222115055.1172877-9-max.kellermann@ionos.com>
+Subject: [PATCH v2 06/14] linux/mm.h: move folio_size(), ... to mm/folio_size.h
+Date: Thu, 22 Feb 2024 12:50:47 +0100
+Message-Id: <20240222115055.1172877-7-max.kellermann@ionos.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20240222115055.1172877-1-max.kellermann@ionos.com>
 References: <20240222115055.1172877-1-max.kellermann@ionos.com>
@@ -75,95 +74,359 @@ Content-Transfer-Encoding: 8bit
 
 Prepare to reduce dependencies on linux/mm.h.
 
-put_devmap_managed_page() is called by put_page().  Moving it to a
-separate header allows us to move put_page() to a separate lean header
-as well.
+folio_size()/page_size() are used by the following popular headers:
+
+- linux/highmem.h
+- linux/iov_iter.h
+- linux/pagemap.h
+
+Moving them to a separate lean header will allow us to avoid the
+dependency on linux/mm.h.  Additionally, it allows us to move
+folio_next() to a separate header, because it needs folio_nr_pages()
+which is also moved to folio_size.h.
 
 Signed-off-by: Max Kellermann <max.kellermann@ionos.com>
 ---
- include/linux/mm.h                | 24 --------------------
- include/linux/mm/devmap_managed.h | 37 +++++++++++++++++++++++++++++++
- 2 files changed, 37 insertions(+), 24 deletions(-)
- create mode 100644 include/linux/mm/devmap_managed.h
+ include/linux/mm.h            | 140 +------------------------------
+ include/linux/mm/folio_size.h | 150 ++++++++++++++++++++++++++++++++++
+ 2 files changed, 151 insertions(+), 139 deletions(-)
+ create mode 100644 include/linux/mm/folio_size.h
 
 diff --git a/include/linux/mm.h b/include/linux/mm.h
-index 7d83d6d64f30..7a302da7de24 100644
+index 57c091e7579e..9dea6477b4ac 100644
 --- a/include/linux/mm.h
 +++ b/include/linux/mm.h
-@@ -1350,30 +1350,6 @@ vm_fault_t finish_fault(struct vm_fault *vmf);
-  *   back into memory.
-  */
+@@ -2,6 +2,7 @@
+ #ifndef _LINUX_MM_H
+ #define _LINUX_MM_H
  
--#if defined(CONFIG_ZONE_DEVICE) && defined(CONFIG_FS_DAX)
--DECLARE_STATIC_KEY_FALSE(devmap_managed_key);
--
--bool __put_devmap_managed_page_refs(struct page *page, int refs);
--static inline bool put_devmap_managed_page_refs(struct page *page, int refs)
++#include <linux/mm/folio_size.h>
+ #include <linux/mm/page_address.h>
+ #include <linux/mm/page_section.h>
+ #include <linux/errno.h>
+@@ -1054,38 +1055,6 @@ int vma_is_stack_for_current(struct vm_area_struct *vma);
+ struct mmu_gather;
+ struct inode;
+ 
+-/*
+- * compound_order() can be called without holding a reference, which means
+- * that niceties like page_folio() don't work.  These callers should be
+- * prepared to handle wild return values.  For example, PG_head may be
+- * set before the order is initialised, or this may be a tail page.
+- * See compaction.c for some good examples.
+- */
+-static inline unsigned int compound_order(struct page *page)
 -{
--	if (!static_branch_unlikely(&devmap_managed_key))
--		return false;
--	if (!is_zone_device_page(page))
--		return false;
--	return __put_devmap_managed_page_refs(page, refs);
--}
--#else /* CONFIG_ZONE_DEVICE && CONFIG_FS_DAX */
--static inline bool put_devmap_managed_page_refs(struct page *page, int refs)
--{
--	return false;
--}
--#endif /* CONFIG_ZONE_DEVICE && CONFIG_FS_DAX */
+-	struct folio *folio = (struct folio *)page;
 -
--static inline bool put_devmap_managed_page(struct page *page)
--{
--	return put_devmap_managed_page_refs(page, 1);
+-	if (!test_bit(PG_head, &folio->flags))
+-		return 0;
+-	return folio->_flags_1 & 0xff;
 -}
 -
- /* 127: arbitrary random number, small enough to assemble well */
- #define folio_ref_zero_or_close_to_overflow(folio) \
- 	((unsigned int) folio_ref_count(folio) + 127u <= 127u)
-diff --git a/include/linux/mm/devmap_managed.h b/include/linux/mm/devmap_managed.h
+-/**
+- * folio_order - The allocation order of a folio.
+- * @folio: The folio.
+- *
+- * A folio is composed of 2^order pages.  See get_order() for the definition
+- * of order.
+- *
+- * Return: The order of the folio.
+- */
+-static inline unsigned int folio_order(struct folio *folio)
+-{
+-	if (!folio_test_large(folio))
+-		return 0;
+-	return folio->_flags_1 & 0xff;
+-}
+-
+ #include <linux/huge_mm.h>
+ 
+ /*
+@@ -1299,39 +1268,6 @@ unsigned long nr_free_buffer_pages(void);
+ 
+ void destroy_large_folio(struct folio *folio);
+ 
+-/* Returns the number of bytes in this potentially compound page. */
+-static inline unsigned long page_size(struct page *page)
+-{
+-	return PAGE_SIZE << compound_order(page);
+-}
+-
+-/* Returns the number of bits needed for the number of bytes in a page */
+-static inline unsigned int page_shift(struct page *page)
+-{
+-	return PAGE_SHIFT + compound_order(page);
+-}
+-
+-/**
+- * thp_order - Order of a transparent huge page.
+- * @page: Head page of a transparent huge page.
+- */
+-static inline unsigned int thp_order(struct page *page)
+-{
+-	VM_BUG_ON_PGFLAGS(PageTail(page), page);
+-	return compound_order(page);
+-}
+-
+-/**
+- * thp_size - Size of a transparent huge page.
+- * @page: Head page of a transparent huge page.
+- *
+- * Return: Number of bytes in this page.
+- */
+-static inline unsigned long thp_size(struct page *page)
+-{
+-	return PAGE_SIZE << thp_order(page);
+-}
+-
+ #ifdef CONFIG_MMU
+ /*
+  * Do pte_mkwrite, but only if the vma says VM_WRITE.  We do this when
+@@ -1971,50 +1907,6 @@ static inline void set_page_links(struct page *page, enum zone_type zone,
+ #endif
+ }
+ 
+-/**
+- * folio_nr_pages - The number of pages in the folio.
+- * @folio: The folio.
+- *
+- * Return: A positive power of two.
+- */
+-static inline long folio_nr_pages(struct folio *folio)
+-{
+-	if (!folio_test_large(folio))
+-		return 1;
+-#ifdef CONFIG_64BIT
+-	return folio->_folio_nr_pages;
+-#else
+-	return 1L << (folio->_flags_1 & 0xff);
+-#endif
+-}
+-
+-/*
+- * compound_nr() returns the number of pages in this potentially compound
+- * page.  compound_nr() can be called on a tail page, and is defined to
+- * return 1 in that case.
+- */
+-static inline unsigned long compound_nr(struct page *page)
+-{
+-	struct folio *folio = (struct folio *)page;
+-
+-	if (!test_bit(PG_head, &folio->flags))
+-		return 1;
+-#ifdef CONFIG_64BIT
+-	return folio->_folio_nr_pages;
+-#else
+-	return 1L << (folio->_flags_1 & 0xff);
+-#endif
+-}
+-
+-/**
+- * thp_nr_pages - The number of regular pages in this huge page.
+- * @page: The head page of a huge page.
+- */
+-static inline int thp_nr_pages(struct page *page)
+-{
+-	return folio_nr_pages((struct folio *)page);
+-}
+-
+ /**
+  * folio_next - Move to the next physical folio.
+  * @folio: The folio we're currently operating on.
+@@ -2034,36 +1926,6 @@ static inline struct folio *folio_next(struct folio *folio)
+ 	return (struct folio *)folio_page(folio, folio_nr_pages(folio));
+ }
+ 
+-/**
+- * folio_shift - The size of the memory described by this folio.
+- * @folio: The folio.
+- *
+- * A folio represents a number of bytes which is a power-of-two in size.
+- * This function tells you which power-of-two the folio is.  See also
+- * folio_size() and folio_order().
+- *
+- * Context: The caller should have a reference on the folio to prevent
+- * it from being split.  It is not necessary for the folio to be locked.
+- * Return: The base-2 logarithm of the size of this folio.
+- */
+-static inline unsigned int folio_shift(struct folio *folio)
+-{
+-	return PAGE_SHIFT + folio_order(folio);
+-}
+-
+-/**
+- * folio_size - The number of bytes in a folio.
+- * @folio: The folio.
+- *
+- * Context: The caller should have a reference on the folio to prevent
+- * it from being split.  It is not necessary for the folio to be locked.
+- * Return: The number of bytes in this folio.
+- */
+-static inline size_t folio_size(struct folio *folio)
+-{
+-	return PAGE_SIZE << folio_order(folio);
+-}
+-
+ /**
+  * folio_estimated_sharers - Estimate the number of sharers of a folio.
+  * @folio: The folio.
+diff --git a/include/linux/mm/folio_size.h b/include/linux/mm/folio_size.h
 new file mode 100644
-index 000000000000..0773529d80b2
+index 000000000000..dd8af39ef572
 --- /dev/null
-+++ b/include/linux/mm/devmap_managed.h
-@@ -0,0 +1,37 @@
++++ b/include/linux/mm/folio_size.h
+@@ -0,0 +1,150 @@
 +/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef _LINUX_MM_DEVMAP_MANAGED_H
-+#define _LINUX_MM_DEVMAP_MANAGED_H
++#ifndef _LINUX_MM_FOLIO_SIZE_H
++#define _LINUX_MM_FOLIO_SIZE_H
 +
-+#include <linux/types.h> // for bool
++#include <linux/bitops.h> // for test_bit()
++#include <linux/mmdebug.h> // for VM_BUG_ON_PGFLAGS()
++#include <linux/mm_types.h> // for struct page
++#include <linux/page-flags.h> // for folio_test_large()
++#include <asm/page.h> // for PAGE_SIZE, PAGE_SHIFT
 +
-+struct page;
-+
-+#if defined(CONFIG_ZONE_DEVICE) && defined(CONFIG_FS_DAX)
-+
-+#include <linux/jump_label.h> // for DECLARE_STATIC_KEY_FALSE(), static_branch_unlikely()
-+#include <linux/mmzone.h> // is_zone_device_page()
-+
-+DECLARE_STATIC_KEY_FALSE(devmap_managed_key);
-+
-+bool __put_devmap_managed_page_refs(struct page *page, int refs);
-+static inline bool put_devmap_managed_page_refs(struct page *page, int refs)
++/*
++ * compound_order() can be called without holding a reference, which means
++ * that niceties like page_folio() don't work.  These callers should be
++ * prepared to handle wild return values.  For example, PG_head may be
++ * set before the order is initialised, or this may be a tail page.
++ * See compaction.c for some good examples.
++ */
++static inline unsigned int compound_order(struct page *page)
 +{
-+	if (!static_branch_unlikely(&devmap_managed_key))
-+		return false;
-+	if (!is_zone_device_page(page))
-+		return false;
-+	return __put_devmap_managed_page_refs(page, refs);
-+}
-+#else /* CONFIG_ZONE_DEVICE && CONFIG_FS_DAX */
-+static inline bool put_devmap_managed_page_refs(struct page *page, int refs)
-+{
-+	return false;
-+}
-+#endif /* CONFIG_ZONE_DEVICE && CONFIG_FS_DAX */
++	struct folio *folio = (struct folio *)page;
 +
-+static inline bool put_devmap_managed_page(struct page *page)
-+{
-+	return put_devmap_managed_page_refs(page, 1);
++	if (!test_bit(PG_head, &folio->flags))
++		return 0;
++	return folio->_flags_1 & 0xff;
 +}
 +
-+#endif /* _LINUX_MM_DEVMAP_MANAGED_H */
++/**
++ * folio_order - The allocation order of a folio.
++ * @folio: The folio.
++ *
++ * A folio is composed of 2^order pages.  See get_order() for the definition
++ * of order.
++ *
++ * Return: The order of the folio.
++ */
++static inline unsigned int folio_order(struct folio *folio)
++{
++	if (!folio_test_large(folio))
++		return 0;
++	return folio->_flags_1 & 0xff;
++}
++
++/* Returns the number of bytes in this potentially compound page. */
++static inline unsigned long page_size(struct page *page)
++{
++	return PAGE_SIZE << compound_order(page);
++}
++
++/* Returns the number of bits needed for the number of bytes in a page */
++static inline unsigned int page_shift(struct page *page)
++{
++	return PAGE_SHIFT + compound_order(page);
++}
++
++/**
++ * thp_order - Order of a transparent huge page.
++ * @page: Head page of a transparent huge page.
++ */
++static inline unsigned int thp_order(struct page *page)
++{
++	VM_BUG_ON_PGFLAGS(PageTail(page), page);
++	return compound_order(page);
++}
++
++/**
++ * thp_size - Size of a transparent huge page.
++ * @page: Head page of a transparent huge page.
++ *
++ * Return: Number of bytes in this page.
++ */
++static inline unsigned long thp_size(struct page *page)
++{
++	return PAGE_SIZE << thp_order(page);
++}
++
++/**
++ * folio_nr_pages - The number of pages in the folio.
++ * @folio: The folio.
++ *
++ * Return: A positive power of two.
++ */
++static inline long folio_nr_pages(struct folio *folio)
++{
++	if (!folio_test_large(folio))
++		return 1;
++#ifdef CONFIG_64BIT
++	return folio->_folio_nr_pages;
++#else
++	return 1L << (folio->_flags_1 & 0xff);
++#endif
++}
++
++/*
++ * compound_nr() returns the number of pages in this potentially compound
++ * page.  compound_nr() can be called on a tail page, and is defined to
++ * return 1 in that case.
++ */
++static inline unsigned long compound_nr(struct page *page)
++{
++	struct folio *folio = (struct folio *)page;
++
++	if (!test_bit(PG_head, &folio->flags))
++		return 1;
++#ifdef CONFIG_64BIT
++	return folio->_folio_nr_pages;
++#else
++	return 1L << (folio->_flags_1 & 0xff);
++#endif
++}
++
++/**
++ * thp_nr_pages - The number of regular pages in this huge page.
++ * @page: The head page of a huge page.
++ */
++static inline int thp_nr_pages(struct page *page)
++{
++	return folio_nr_pages((struct folio *)page);
++}
++
++/**
++ * folio_shift - The size of the memory described by this folio.
++ * @folio: The folio.
++ *
++ * A folio represents a number of bytes which is a power-of-two in size.
++ * This function tells you which power-of-two the folio is.  See also
++ * folio_size() and folio_order().
++ *
++ * Context: The caller should have a reference on the folio to prevent
++ * it from being split.  It is not necessary for the folio to be locked.
++ * Return: The base-2 logarithm of the size of this folio.
++ */
++static inline unsigned int folio_shift(struct folio *folio)
++{
++	return PAGE_SHIFT + folio_order(folio);
++}
++
++/**
++ * folio_size - The number of bytes in a folio.
++ * @folio: The folio.
++ *
++ * Context: The caller should have a reference on the folio to prevent
++ * it from being split.  It is not necessary for the folio to be locked.
++ * Return: The number of bytes in this folio.
++ */
++static inline size_t folio_size(struct folio *folio)
++{
++	return PAGE_SIZE << folio_order(folio);
++}
++
++#endif /* _LINUX_MM_FOLIO_SIZE_H_H */
 -- 
 2.39.2
 
