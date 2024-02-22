@@ -1,121 +1,104 @@
-Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from jabberwock.ucw.cz (jabberwock.ucw.cz [46.255.230.98])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BC661E874;
-	Thu, 22 Feb 2024 17:52:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07B30154BE3;
+	Thu, 22 Feb 2024 17:52:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.255.230.98
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708624337; cv=none; b=IySoHROcvxzc11a2n5Q6cfxa7MDI3lW11Ab6KVs1a9JzGSntpOwkjfz/+1JbqBbNqBg86Jqd6YN086CxGAgDYURzlwHKRXtckP+hpKVO0XZhNpP9Iaa6zT7lTPynhFzDb3B1XI6eBgISBDA7rSvD9VtfrSYUKq7tMBNIhFw8Q94=
+	t=1708624365; cv=none; b=eIBUQEdbWxs7dOpR/pjMxc2r7Wx6j4sbiPDnCioybjB9u+DuTbKiteKi1RiQgYQs79LeBpT8nkjrzVsLsdb1kPu8jdT5iX+1wO3uWTtsUmLuJrkXx9lUv3RFHqUkkJ5ZF2u8d5yRIgCMs1Ie0eFVPer9Faac25KCGLdMei0f3/k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708624337; c=relaxed/simple;
-	bh=eL+9k62j+T2wkNoUbruSw/UNEvQBMY50/oKAF9aTu/Q=;
+	s=arc-20240116; t=1708624365; c=relaxed/simple;
+	bh=NaTf6aZ2x1S1ath2Dexnlx72zrc073aoKOZ2c8EsLK0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=C3ILVv5luo0tF9zLTniXHnLtQB1R5nogwM7uvS/riF4aaTae2ynee/O5unirbfjXVi2fBsNXI0l5DXRGBVjY7+J7sbKy7fdqOv0UqfuwesKgxZ4oU4S29gIeTHKnJzwES2HKh6KunoekxHxRLI9kvfC16XImhE4Bla/ha5QyjKk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VZne/zSD; arc=none smtp.client-ip=209.85.210.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=OM0sTT/xU99ahJjerlcyJTjzjCklEANK6QsspCEw0a6i9euuvRzH7WG9MQDfBcIN1+/F+fETI6ypTYSTT/bMApQgET/gNmYgdzweMorzZKTARYO+49IDaLrwKHHL7yvKZ67m9myCX295YAcSaRLJZU+RT5Eg3ZkZcCIbfPXP5D8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ucw.cz; spf=pass smtp.mailfrom=ucw.cz; dkim=pass (1024-bit key) header.d=ucw.cz header.i=@ucw.cz header.b=ZzVGYOK7; arc=none smtp.client-ip=46.255.230.98
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ucw.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ucw.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VZne/zSD"
-Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-6e46dcd8feaso2901346b3a.2;
-        Thu, 22 Feb 2024 09:52:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1708624335; x=1709229135; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=2NeG/jlTUOS1kChoLvPJgLP36dfUNN+QX4mIOKkKMtk=;
-        b=VZne/zSDFtEcqfHVKGmM1nK2YmIyZ+ui6cNVx2x/TcqhpCtqRRYCyNfyrO0Yr3PByy
-         SOMN7Cvai2C/ZyrpgJ9Lz0ShzQLc48jBscfYOlOmUDktO2Qz5o3+y50mkpPfpsp6fBas
-         ZQHlbDxiz9QyAO9jN/nA5QzLY6Q7vzMpPcrIGhS0PatwyacDoxumuZ5j/j/Nl4/9ScyG
-         GTKXy0GYkbEY2cq6DsIyeHosZlPXY36L8+VyttO2htETCRGc7efIYEmdra8aEgfKiGuo
-         ewzYo3H2a8MciFpCT48kNLr46lv43n1+/0Y69yNcSfJceYJgeymarbClnj1Htryb9vsk
-         BAxg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708624335; x=1709229135;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=2NeG/jlTUOS1kChoLvPJgLP36dfUNN+QX4mIOKkKMtk=;
-        b=WEehP6fGrrhWuY6U3u2fSNe5MIq7t46EK4UjetPnhwv4loD+m7c3HIAbQdE+qitbPW
-         hpEPygkEd9D1n9+qHtPrdzsaE6RQhI3FyH5yCiTnt6Th9U2W+XHtETznVQRHIiLba0qm
-         sUqbiOh3W+AEy5y4XZf1cDVIFfZq51H5xzL+AYaeIQRO9HY68uce0Kcyjd0x2bp1CKYe
-         JepxI16BsGjjxAkhnlQ+eGVGpX+nEDG4lRI5jJv1KW1oHtAJU3Qm8aI3aIoKMtBIy7A/
-         Sfa8zIRWP6HPXRMEXdOV9paBP67rNIAnYEwERbE2g6PZLl2zLZWB1aHNvJbQElB9tpM7
-         6BDg==
-X-Forwarded-Encrypted: i=1; AJvYcCUoxSMXa8kKYFWI7CQ1JNvSA+HohIXLwx/yL9d4PfjXMAmlFPDhZqXa+u5769DAnzjk4+G0+NB4GV1GPLDk5ziax79jFcxUh+z+WKJmYHLoBtiEWH2fmxp1CQMrWXGLbckqYT8ylgy2
-X-Gm-Message-State: AOJu0YxKMtFFmuDeHgAmiUphuqwsLTC4SWz2oc1Sq/qxczQ0CXllnswp
-	z3xYjaDw+ZRumP/dT4KiQGiZXy1n/jhZ1gVXV7bYWLax7XYosnBY
-X-Google-Smtp-Source: AGHT+IEY4KZulJpk2BVOktl2enNQhFaSyfHvehOYpg7X+/+CP81iSn/wB/3tA9sNRFGmP5Jybgfpvg==
-X-Received: by 2002:a62:cec5:0:b0:6e4:6484:1a36 with SMTP id y188-20020a62cec5000000b006e464841a36mr12436119pfg.21.1708624334599;
-        Thu, 22 Feb 2024 09:52:14 -0800 (PST)
-Received: from localhost (dhcp-141-239-158-86.hawaiiantel.net. [141.239.158.86])
-        by smtp.gmail.com with ESMTPSA id w2-20020a62c702000000b006e089bb3619sm11708740pfg.112.2024.02.22.09.52.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 22 Feb 2024 09:52:14 -0800 (PST)
-Sender: Tejun Heo <htejun@gmail.com>
-Date: Thu, 22 Feb 2024 07:52:13 -1000
-From: Tejun Heo <tj@kernel.org>
-To: Xuewen Yan <xuewen.yan@unisoc.com>
-Cc: corbet@lwn.net, jiangshanlai@gmail.com, paulmck@kernel.org,
-	rdunlap@infradead.org, peterz@infradead.org, yanjiewtw@gmail.com,
-	ke.wang@unisoc.com, di.shen@unisoc.com, xuewen.yan94@gmail.com,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] workqueue: Control intensive warning threshold
- through cmdline
-Message-ID: <ZdeJzZfPkpOKSH5c@slm.duckdns.org>
-References: <20240222072808.5363-1-xuewen.yan@unisoc.com>
+	dkim=pass (1024-bit key) header.d=ucw.cz header.i=@ucw.cz header.b="ZzVGYOK7"
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+	id 4D55D1C0080; Thu, 22 Feb 2024 18:52:41 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ucw.cz; s=gen1;
+	t=1708624361;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=rgaZB3SZMoEm9PLi7mMzZRU1B6wqFrPod6EkwKRjRo4=;
+	b=ZzVGYOK7E/NNZ7Y0k17U6riqoM67HDxzV6hUt95CBUqilcDuL8/LIdy0M3gvhhO2kGe8Bl
+	YT/zJJ0l9B2K87MNHPT2zkbavTw5pVb71w4Ri5CX3CUYflVZZzDgXIrNfoe6zFeqCLVqNo
+	w7wZNZ9nYdDmnQmv3llexMrpOtxwMSw=
+Date: Thu, 22 Feb 2024 18:52:40 +0100
+From: Pavel Machek <pavel@ucw.cz>
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: Gregor Riepl <onitake@gmail.com>,
+	Werner Sembach <wse@tuxedocomputers.com>,
+	Lee Jones <lee@kernel.org>, jikos@kernel.org,
+	linux-kernel@vger.kernel.org, Jelle van der Waa <jelle@vdwaa.nl>,
+	Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+	"dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+	linux-input@vger.kernel.org, ojeda@kernel.org,
+	linux-leds@vger.kernel.org
+Subject: Re: Future handling of complex RGB devices on Linux v2
+Message-ID: <ZdeJ6OV6iXTLSfzt@duo.ucw.cz>
+References: <9851a06d-956e-4b57-be63-e10ff1fce8b4@tuxedocomputers.com>
+ <1bc6d6f0-a13d-4148-80cb-9c13dec7ed32@redhat.com>
+ <b70b2ea8-abfd-4d41-b336-3e34e5bdb8c6@tuxedocomputers.com>
+ <477d30ee-247e-47e6-bc74-515fd87fdc13@redhat.com>
+ <e21a7d87-3059-4a51-af04-1062dac977d2@tuxedocomputers.com>
+ <247b5dcd-fda8-45a7-9896-eabc46568281@tuxedocomputers.com>
+ <ZdZ2kMASawJ9wdZj@duo.ucw.cz>
+ <b6d79727-ae94-44b1-aa88-069416435c14@redhat.com>
+ <a21f6c49-2c05-4496-965c-a7524ed38634@gmail.com>
+ <825129ea-d389-4c6c-8a23-39f05572e4b4@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="cyyKuWjF0GZgvTwP"
+Content-Disposition: inline
+In-Reply-To: <825129ea-d389-4c6c-8a23-39f05572e4b4@redhat.com>
+
+
+--cyyKuWjF0GZgvTwP
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240222072808.5363-1-xuewen.yan@unisoc.com>
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Feb 22, 2024 at 03:28:08PM +0800, Xuewen Yan wrote:
-> When CONFIG_WQ_CPU_INTENSIVE_REPORT is set, the kernel will report
-> the work functions which violate the intensive_threshold_us repeatedly.
-> And now, only when the violate times exceed 4 and is a power of 2,
-> the kernel warning could be triggered.
-> 
-> However, sometimes, even if a long work execution time occurs only once,
-> it may cause other work to be delayed for a long time. This may also
-> cause some problems sometimes.
-> 
-> In order to freely control the threshold of warninging, a boot argument
-> is added so that the user can control the warning threshold to be printed.
-> At the same time, keep the exponential backoff to prevent reporting too much.
-> 
-> By default, the warning threshold is 4.
-> 
-> Signed-off-by: Xuewen Yan <xuewen.yan@unisoc.com>
+Hi!
 
-Applied to wq/for-6.9 with the following edit:
+> For all these reasons the display analogy really is a bit fit for these k=
+eyboards
+> we tried to come up with a universal coordinate system for these at the b=
+eginning
+> of the thread and we failed ...
 
-> +	workqueue.cpu_intensive_warning_thresh=<uint>
-> +			If CONFIG_WQ_CPU_INTENSIVE_REPORT is set, the kernel
-> +			will report the work functions which violate the
-> +			intensive_threshold_us repeatedly. In order to prevent
-> +			the kernel log from being printed too frequently,
-> +			control the frequency and the threshold.
-> +
-> +			By Default, the threshold is 4 times, and the warning
-> +			is limited by powers of 2. On the other hand, 0 will
-> +			disable the warning.
+I quite liked the coordinate system proposal. I can propose this:
 
-I changed this to:
+Vendor maps the keyboard lights to a grid. That would be something
+16x8 for thinkpad X220. Then we provide functionality to query "is a
+working pixel there" and "what kind of key is at this pixel" -- I
+guess we can use input keycodes for that. Multiple pixels can map to
+one keycode.
 
-			If CONFIG_WQ_CPU_INTENSIVE_REPORT is set, the kernel
-			will report the work functions which violate the
-			intensive_threshold_us repeatedly. In order to prevent
-			spurious warnings, start printing only after a work
-			function has violated this threshold number of times.
+(And then we make best effort to map normal keyboards into similar
+grids).
 
-			The default is 4 times. 0 disables the warning.
+Best regards,
+								Pavel
+--=20
+People of Russia, stop Putin before his war on Ukraine escalates.
 
-Thanks.
+--cyyKuWjF0GZgvTwP
+Content-Type: application/pgp-signature; name="signature.asc"
 
--- 
-tejun
+-----BEGIN PGP SIGNATURE-----
+
+iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCZdeJ6AAKCRAw5/Bqldv6
+8swPAJ0eTXg7THv3YqztC+ECLpHU9tSEOQCghojVjFEBaej133t9yKUV1+jTrdE=
+=g5GA
+-----END PGP SIGNATURE-----
+
+--cyyKuWjF0GZgvTwP--
