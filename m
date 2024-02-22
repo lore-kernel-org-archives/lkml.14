@@ -1,222 +1,335 @@
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
+Received: from dggsgout11.his.huawei.com (unknown [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CE7C182D2;
-	Thu, 22 Feb 2024 09:00:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=68.232.154.123
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708592417; cv=fail; b=JfrafBLijerpWrNfoPWPmQ2AwotrbQu8m1N7XiFNAgty++BX5LB15gYDjOmm0OKH7pP5uYo9hsOfAUIR4u2ziTU8n1CJP3l2GTKvQM9nVM+wGA32L4qBMNZtA1nL5Zqhnu++Vgmll0IZrm3OPLBRu4htM7CFUSbJJIjAhulzSi4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708592417; c=relaxed/simple;
-	bh=oPOojqwxGfrh4JaotqSISs3NqDyQRk3Qk5jS0FwNjQo=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=liIJcsawEBdEI5EpwIUgnwqAu6PjxF0PG6RTFll0xZ58egH0aNDrncQSHlCiZAm4X+EPtIILV+2obNIOWNIeNriyXJZw8EehzS31XzrHK15nrcnLI0L9DFnyXTogt5m69CJcsUH1o4X+cSnj6I9tQGie2/bckbqcKRnsUirwb7g=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=wS3PW9Xl; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=qbZpFu+o; arc=fail smtp.client-ip=68.232.154.123
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=microchip.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="wS3PW9Xl";
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="qbZpFu+o"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1708592414; x=1740128414;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-id:content-transfer-encoding:
-   mime-version;
-  bh=oPOojqwxGfrh4JaotqSISs3NqDyQRk3Qk5jS0FwNjQo=;
-  b=wS3PW9XlnWp0LwBDpXymUTJZ/3nPshRO+ptxNdO1ZrKyj7o4ZKwyKpbA
-   d6iToO1yeZvHBgSA44nqFky6P5YomW2PGsfkdIBvhozc7HjBLySojBAHH
-   +msaaqE8VVX+8/g8bklBqgoesoNfas2/Hi0BGzGMKu+xokjZ0oWu96hrC
-   Uk2fXmAjQmGzC4dhSzLUO8EIaPQ8WdJBJkdhe/a+CJ8nPUlALYLts4wQ5
-   P1U8Jh0jrl8ft7xaU0YdUj3hap/u4LJTSTbdzFLxSQ/HoLlFs8RL+3gFn
-   ccNgiJntaliJpun/8PQUouLF7NRcq1Zn4au4pdLuGxJBhXB7ZmHIXkiiP
-   Q==;
-X-CSE-ConnectionGUID: WQFa/OZsSpi2YH7CWy0HHQ==
-X-CSE-MsgGUID: MNmR9WRDRsy0isEsIEw3lQ==
-X-IronPort-AV: E=Sophos;i="6.06,177,1705388400"; 
-   d="scan'208";a="183919684"
-X-Amp-Result: SKIPPED(no attachment in message)
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa6.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 22 Feb 2024 02:00:05 -0700
-Received: from chn-vm-ex02.mchp-main.com (10.10.87.72) by
- chn-vm-ex02.mchp-main.com (10.10.87.72) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Thu, 22 Feb 2024 01:59:32 -0700
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (10.10.215.250)
- by email.microchip.com (10.10.87.72) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35 via Frontend Transport; Thu, 22 Feb 2024 01:59:32 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=eLaJzB0wzoqzfM74TSMFjiBejefPfGigLwzJmJOo07yMpyx6+WRpX0sjGKQdf15ymj6eVDXdz+bUHcolA85chvk+kBYRq+6eGYoYTW8pMdLrZR9AUXD2RnbvQnXWK/TALL8ZpK+GHV6qoB/IUNDa0/Ki2sD1z8QImyfInXG8CIdXFQlqSrPS/knL4A8ekbioB6FOzQ9jN27QBEc8W+S5w9JdYBkCpn+6HiJcYpAdSpGa2MNVgPNn5Qyi7qmcHZsDYBOJviIr0B3LmIktARk4ikxVB3d6DobDEfEKlQKhxNYCkyqBE7T+5QY1RstVHS8bFtsnp7o399Z9uFmiJ1YTWw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=oPOojqwxGfrh4JaotqSISs3NqDyQRk3Qk5jS0FwNjQo=;
- b=ZS5szEE80fvp1g+pbo7MozSO9huHKQ4Bqn/cniabEfK24SPC/gLLU3cx/Sk6khfPj48l6ybYQMIyMaWlAVWXhOIhlw2R3f289GQDVBodI8AnWxsgBMhlqqLVWUyN0mPpFtSAwUGaTQGgSmLT5dnRLAyEiQnUSeMJKEDtHsQ5JFixPAu2knneCEM5+tZGe3r4lINXxRY92MUt+YTkypxG76Ccpl3jCwFmCrmfJ0sJlVZvtyjpsUHWQ5VtEGo6iwTo/XOvDbLmzdGI87mSe0IpMlpPHxjH+yz8pr25FDXAjp2uRSldrjimvl3XzKiDxoq7zXUUcqvIYjEqNqAj4NuzHQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microchip.com; dmarc=pass action=none
- header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microchip.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=oPOojqwxGfrh4JaotqSISs3NqDyQRk3Qk5jS0FwNjQo=;
- b=qbZpFu+oSMdmC4ruTsHd+CZIqsq34zLvn3p/jrYn/PUckXE853vnXt0edltAih5dNulskRSItkFO+BWGIRSJ1KWWIWvAJq/TU2WhMH4eReeYhitZpO/uZb25XZDIyhZ+tl9L/iBtTlW/fcLhwE9yw22uDOQfds13q5jI+fMi0fbTNfx7/H9dePCZeQuxgIZCLoIKHnFPfAoUkbjZYJaRP+HYwNkV1mjYxnTUS1HLgaGZm3WbdVMGRVbSVQKY6/vq4WWHQDNyAs+1M1Iy2KiNH6fxULj4u2JcA6SsXLuMhR85UY2DHe9fW7G9NskiDQhqkxIYlfqkqHKcu45tBtx/2g==
-Received: from PH7PR11MB6451.namprd11.prod.outlook.com (2603:10b6:510:1f4::16)
- by SJ2PR11MB8566.namprd11.prod.outlook.com (2603:10b6:a03:56e::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7316.21; Thu, 22 Feb
- 2024 08:59:28 +0000
-Received: from PH7PR11MB6451.namprd11.prod.outlook.com
- ([fe80::80b9:80a3:e88a:57ee]) by PH7PR11MB6451.namprd11.prod.outlook.com
- ([fe80::80b9:80a3:e88a:57ee%3]) with mapi id 15.20.7270.036; Thu, 22 Feb 2024
- 08:59:28 +0000
-From: <Dharma.B@microchip.com>
-To: <conor@kernel.org>
-CC: <robh@kernel.org>, <tglx@linutronix.de>,
-	<krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
-	<Nicolas.Ferre@microchip.com>, <alexandre.belloni@bootlin.com>,
-	<claudiu.beznea@tuxon.dev>, <linux-kernel@vger.kernel.org>,
-	<devicetree@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-	<Conor.Dooley@microchip.com>
-Subject: Re: [PATCH v3] dt-bindings: interrupt-controller: Convert Atmel AIC
- to json-schema
-Thread-Topic: [PATCH v3] dt-bindings: interrupt-controller: Convert Atmel AIC
- to json-schema
-Thread-Index: AQHaZUKaRz7vhpmmVUKPKDUtfUx3wLEWD3SAgAAA54A=
-Date: Thu, 22 Feb 2024 08:59:28 +0000
-Message-ID: <01916920-5ad3-4f6b-a53d-649dccec6999@microchip.com>
-References: <20240222035158.195265-1-dharma.b@microchip.com>
- <20240222-stiffly-squeeze-b4ec2b49a4fe@spud>
-In-Reply-To: <20240222-stiffly-squeeze-b4ec2b49a4fe@spud>
-Accept-Language: en-GB, en-US
-Content-Language: en-GB
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=microchip.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: PH7PR11MB6451:EE_|SJ2PR11MB8566:EE_
-x-ms-office365-filtering-correlation-id: 594d33fe-1ece-41d1-c2a1-08dc338493bd
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: VpX6b1HAMzBfscjRYOb+66JjoXmoJiNn7I8a8hQHX+FbyYTFR47HJifW3F+CJ4QO9/S03wtQMm2L+fTkFyQWrVNhGm4/xBc1IyCeFp3RPGPiUEzXqlAi/Vo7fTz65X8kSRd2O35vquNi6m/Nb92ip6x9mbQ0oA9Z9js9dO1BC75kxh8lV+gFHgrM3dapXKPoPzIZMelRGGi+vyM4NjBPtKgBBnhel1FLOjElhxMo2W09lKXfPGsvsqhmh8jmMvVqIevX/UOtbHorTRjd1zPVK8VQRcM8Vr2YVj/hVN3ENrzC7r6GL7hy8+XsoLIA3i07fqXP6FcM4ibfvi9EnHYFV0UkmA15pi80QVRrYPedJL2q+oBA6jUv6zOd/LeePAx0+9dSudfiIH2YvPpF7MJWz8vllf14+yJsxciGucS3rBlrDF3Lyl+fpJyDOQUwzTwc6+8Ui8mxoDsQLHaKBm8R5qbJHCjTEkLTgHAGVCLo+ClNzRYLxKD6KNZ4mUVnrXBi38yJgL342XNZGyplEKHhwPcGIVV+oDBEUCr2ci7tezNViYujfFuE+8GxJsRrjByWtsI/7/+JrAf5Du6pCFEXRMeGvdc3neCIDbUhMlSdG5A=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR11MB6451.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(230273577357003)(38070700009);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?R2hYZm9HVFFoZEFDaU9UcllXNXdjTFplVklkVzRxcXNBQmxpVlNZNkZnQVRD?=
- =?utf-8?B?V2MrQldiR0xjNzRpd2tlS1VicitUMjZnWWJRdlZnNjh2cFVYdjVub0tCUEdL?=
- =?utf-8?B?bHArQlZienlhRHdqTnBzdFN3N1RaR1ZPSzJQakhPVFAxTGUydnpKeTNyZUx4?=
- =?utf-8?B?T1VtQ0tQTEhHcHdkMm5PNFAwQmVkTWtmTXA3MCs4NDVYMUxyVnIrSlZFamRw?=
- =?utf-8?B?VlJLMTM3K1d5ZUg0L25qQ0lwNXVwNVU5VW5odW54V2lXY0lrRkNLL1ovb3R6?=
- =?utf-8?B?WWdvNzNHRm00dmN6cmJoZnZOb29hOCtlc0h1eTVMUnV0MXA4THBISytNZzRV?=
- =?utf-8?B?eUpwSmdNeTY4dWNtTWRMcUZNcnVnUWwyc3NxK2U3cmVsM3B4a01FRXIzL3dN?=
- =?utf-8?B?bFlTa2gvckQ4YnZXRmdRRGRmaFFYbFk1dCtyTy9USjdsUTdMNjR3SWhYbzBl?=
- =?utf-8?B?MWFjaXcraHJKR0RSWXU4bnlWaXg2TWtNZWo1YmU1Tlh4eENLNmFuTzhHZGhz?=
- =?utf-8?B?WmlLQ3RUNE5LWElLNzBuMkNDT2VPUWp3aFJ6V1JucVErWExVZzduZEdFcXRP?=
- =?utf-8?B?dVJibm5rdFJaYWNsSkNmZEFEa1I4VlpZbC9hanV2QXJVaGdPYVJveW1SWHhu?=
- =?utf-8?B?VXpmKy9TdzVIZDkzZXNNOTVTdTFYK0ZmUlVLSFg0K1RDNGtiOE9oWTVYam1i?=
- =?utf-8?B?OFBUNXlXU0FKWkE3TzdXYmlZRG9jNS9lNldkbWVhZWhZeU5rZHJ3Y2s3cVlT?=
- =?utf-8?B?RGJTQ0M3MjVwUkVnOXNmanJncHJDY09MSm9JcUlYRitObVQvYVdYZ0R6eGU0?=
- =?utf-8?B?VFpGbHpSQStEL2N4ZmhnQTZZdEt6QVowekdnZ1dqQmdXeEMyM0c5WGQ0bjJi?=
- =?utf-8?B?ck5WVG5NTHVLNFAvcVdJRmRrVTVMbHg4WmRJZGI0SDRJcTJXdVFpMFhQYndk?=
- =?utf-8?B?NHZOL0tINzJMeHdocmJ4TmFQbUdqVmxXcjFqMU5LeElrSWZZUzFDbmtTRFNS?=
- =?utf-8?B?TVpndk96cDB3REVVdG5wWUlrLzJ2eTVzQjY1Ulk0S2JKNHVlVis0eDJNWk1U?=
- =?utf-8?B?emhMTTFwVmNremhLT1ZWOTN5RkxLblJGeWhXNG16MWtPSFl3Z2V4bjJJV2xk?=
- =?utf-8?B?MnJMVjQ0WFNDWWhjOWpYKzlwdU1pTFR1WExFQ3QxcFBRemgzUHpXanZTSEFQ?=
- =?utf-8?B?WVZTM0hTNWY0T0JTbWdCQ0xOU0NsWXZvdFZaTGlJUnoyVDc3ZWlkQTlsZGsz?=
- =?utf-8?B?S2dsWFRaWCtRa0M4ZXVIK2JzYU1ocUNKWjQ0c3Q3aTQ4TzBqcnFFeHdVOG41?=
- =?utf-8?B?SkNnSVV4cUVEbDhpek9PRDN2RzFPWmNPZlM0dldkSG54QkRTUGlqUlJYMVNq?=
- =?utf-8?B?TExQTGJiMEhuaXR4dTRGa3dGdjBOb1o0NlF4QmQ2UVN5TDBrb3pab0thSkpI?=
- =?utf-8?B?cTRLTGNDbEVCQ2FKUjhrbHF3eHIxRFgxdFhkMVBHK2ZOVDVPM0ZKb3V2ekZX?=
- =?utf-8?B?Nk5jT05JNTZ3emYrRmtCb1EwT1ZzMTgwQ09CVG8zeUhWMGpCRTgrVVl0NVk5?=
- =?utf-8?B?d0pCMU0yNzhYOEZKTmkxUVU4ajZrakNlcTdWQ3NPbTZiSkZYUXhJVGtZYmlG?=
- =?utf-8?B?UFBJUHlXOHlEZE9HZXY2aFRXR2xZZE5wUWFydnJiR0J1Q3p3eHhFcXI2cGw5?=
- =?utf-8?B?OXkzeDBZSGNNdlNObm1jYkZITWM3WmhsaDJ2ZTczYlRrSU1zYjF2cVBkL1l3?=
- =?utf-8?B?V3h0cFh5TStMa2NMNklUV3lDNFAzUGxZWE9xTEREOUU5emFOYXltVmVXMFJY?=
- =?utf-8?B?Z0p2a0VRQi9PYWtKdThXbFZGbmN2YU82OHNNWUd2TWtVRGJhcGRwWWRYZGlP?=
- =?utf-8?B?L3grQVMxT295THJLYnk3RDJ5YUd4Z1NRY0FxK1RQSndJTG1PZDRWeFRmZzI0?=
- =?utf-8?B?NE1yWk1Cc0ZITU5wem1vMTN2c0pEOVpYUFFtY3NVYUxWV3dTU01MRDgwdHhq?=
- =?utf-8?B?MUNmaVYwZmYzYXJNaXdzN3BrNU5uMWo3SktpcVlPd0s1ZVRtYlVnQnk5azk0?=
- =?utf-8?B?c214cDVOZEdHL2VMTWNheTliSXlDRnliN1hGbTZPVDhOalE3N3NBYjJkTlF6?=
- =?utf-8?Q?ERShl0PWxWNAZyTcpphXeea1Q?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <6EDCC0E2FA5BB548B9DAD647B4E8D203@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: base64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19BE4182D2;
+	Thu, 22 Feb 2024 09:01:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1708592467; cv=none; b=bTFIJm4VrQ4BHp3ZKkDCqh3qS5FfkLhItQXnTcMUYyJaSb6lgdtJmAVGn6fWIYelJOuubmX3eSBaQglKz4hgXweFu8JfKONcqkUmD5m3XY0vZ1CwaR1L/mf/TsTzcOyjoJjSSGqx4pguK2iNgRPkfgSauS27wKk4kDgSHuNN/jQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1708592467; c=relaxed/simple;
+	bh=KyubLYNFzSLl58y8LFsl0Np1AnIrG/Sr0PuDZi0OwIs=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=FBplmz3u7sgO6g5newD8jyJ3N7JAnO/oQRpSrPnNt1mtvYgZH26Ib6U/PCjeDf0zORJ67/XTV+5KE/uHjgKp4vCw4vKaRs78JZdjjlzIzH0/J9DBA8GViOqJBD8JYGyCgZ8TtXUorFfmApFnIi6glzHrdKfwK320GffL8Aah5to=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.216])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4TgRv91gJJz4f3nK3;
+	Thu, 22 Feb 2024 17:00:53 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.112])
+	by mail.maildlp.com (Postfix) with ESMTP id 613281A0C7A;
+	Thu, 22 Feb 2024 17:01:00 +0800 (CST)
+Received: from [10.174.176.73] (unknown [10.174.176.73])
+	by APP1 (Coremail) with SMTP id cCh0CgBHGBFJDddl4s4lEw--.35370S3;
+	Thu, 22 Feb 2024 17:00:59 +0800 (CST)
+Subject: Re: [PATCH v5 00/14] dm-raid/md/raid: fix v6.7 regressions
+To: Benjamin Marzinski <bmarzins@redhat.com>, Song Liu <song@kernel.org>
+Cc: Yu Kuai <yukuai1@huaweicloud.com>, mpatocka@redhat.com,
+ heinzm@redhat.com, xni@redhat.com, blazej.kucman@linux.intel.com,
+ agk@redhat.com, snitzer@kernel.org, dm-devel@lists.linux.dev,
+ jbrassow@f14.redhat.com, neilb@suse.de, shli@fb.com, akpm@osdl.org,
+ linux-kernel@vger.kernel.org, linux-raid@vger.kernel.org,
+ yi.zhang@huawei.com, yangerkun@huawei.com, "yukuai (C)" <yukuai3@huawei.com>
+References: <20240201092559.910982-1-yukuai1@huaweicloud.com>
+ <CAPhsuW7u1UKHCDOBDhD7DzOVtkGemDz_QnJ4DUq_kSN-Q3G66Q@mail.gmail.com>
+ <Zc72uQln4bXothru@bmarzins-01.fast.eng.rdu2.dc.redhat.com>
+From: Yu Kuai <yukuai1@huaweicloud.com>
+Message-ID: <0083c330-1d3f-43b0-1d11-caf09d7c27c8@huaweicloud.com>
+Date: Thu, 22 Feb 2024 17:00:56 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: PH7PR11MB6451.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 594d33fe-1ece-41d1-c2a1-08dc338493bd
-X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Feb 2024 08:59:28.6775
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: PZVqIJJfOEQIx4iG9s4ebXJ5o4m/4MKn3h9qmZdWdW5LDrJ6ihAqwtxTmB5ZCG30yS1n2yM/4Bgzu4OmpLCzJw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR11MB8566
+In-Reply-To: <Zc72uQln4bXothru@bmarzins-01.fast.eng.rdu2.dc.redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:cCh0CgBHGBFJDddl4s4lEw--.35370S3
+X-Coremail-Antispam: 1UD129KBjvJXoW3Jw1xCr4fWw4kWF1UCr1UAwb_yoWfWw45pa
+	9rta4SyrWUtrWagwnrAayDua4Ygrn7trZFyrWfJ34fZ3ZIyrn5CF4UXryrXFn8CFyrur17
+	t3WDtFyUuF1IqFDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUU9I14x267AKxVW5JVWrJwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
+	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
+	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
+	2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
+	W8JwACjcxG0xvEwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2Y2ka
+	0xkIwI1lc7I2V7IY0VAS07AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7x
+	kEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E
+	67AF67kF1VAFwI0_GFv_WrylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCw
+	CI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6rWUJVWr
+	Zr1UMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJb
+	IYCTnIWIevJa73UjIFyTuYvjfUOmhFUUUUU
+X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 
-T24gMjIvMDIvMjQgMjoyNiBwbSwgQ29ub3IgRG9vbGV5IHdyb3RlOg0KPj4gZGlmZiAtLWdpdCBh
-L0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9pbnRlcnJ1cHQtY29udHJvbGxlci9h
-dG1lbCxhaWMueWFtbCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9pbnRlcnJ1
-cHQtY29udHJvbGxlci9hdG1lbCxhaWMueWFtbA0KPj4gbmV3IGZpbGUgbW9kZSAxMDA2NDQNCj4+
-IGluZGV4IDAwMDAwMDAwMDAwMC4uMGQ1MWJkNzhiZjJiDQo+PiAtLS0gL2Rldi9udWxsDQo+PiAr
-KysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvaW50ZXJydXB0LWNvbnRyb2xs
-ZXIvYXRtZWwsYWljLnlhbWwNCj4+IEBAIC0wLDAgKzEsODkgQEANCj4+ICsjIFNQRFgtTGljZW5z
-ZS1JZGVudGlmaWVyOiAoR1BMLTIuMCBPUiBCU0QtMi1DbGF1c2UpDQo+PiArJVlBTUwgMS4yDQo+
-PiArLS0tDQo+PiArJGlkOmh0dHA6Ly9kZXZpY2V0cmVlLm9yZy9zY2hlbWFzL2ludGVycnVwdC1j
-b250cm9sbGVyL2F0bWVsLGFpYy55YW1sIw0KPj4gKyRzY2hlbWE6aHR0cDovL2RldmljZXRyZWUu
-b3JnL21ldGEtc2NoZW1hcy9jb3JlLnlhbWwjDQo+PiArDQo+PiArdGl0bGU6IEFkdmFuY2VkIElu
-dGVycnVwdCBDb250cm9sbGVyIChBSUMpDQo+PiArDQo+PiArbWFpbnRhaW5lcnM6DQo+PiArICAt
-IE5pY29sYXMgRmVycmU8bmljb2xhcy5mZXJyZUBtaWNyb2NoaXAuY29tPg0KPj4gKyAgLSBEaGFy
-bWEgYmFsYXN1YmlyYW1hbmk8ZGhhcm1hLmJAbWljcm9jaGlwLmNvbT4NCj4+ICsNCj4+ICtkZXNj
-cmlwdGlvbjoNCj4+ICsgIFRoZSBBZHZhbmNlZCBJbnRlcnJ1cHQgQ29udHJvbGxlciAoQUlDKSBp
-cyBhbiA4LWxldmVsIHByaW9yaXR5LCBpbmRpdmlkdWFsbHkNCj4+ICsgIG1hc2thYmxlLCB2ZWN0
-b3JlZCBpbnRlcnJ1cHQgY29udHJvbGxlciBwcm92aWRpbmcgaGFuZGxpbmcgb2YgdXAgdG8gb25l
-DQo+PiArICBodW5kcmVkIGFuZCB0d2VudHktZWlnaHQgaW50ZXJydXB0IHNvdXJjZXMuDQo+PiAr
-DQo+PiArYWxsT2Y6DQo+PiArICAtICRyZWY6IC9zY2hlbWFzL2ludGVycnVwdC1jb250cm9sbGVy
-LnlhbWwjDQo+PiArICAtIGlmOg0KPj4gKyAgICAgIHByb3BlcnRpZXM6DQo+PiArICAgICAgICBj
-b21wYXRpYmxlOg0KPj4gKyAgICAgICAgICBjb250YWluczoNCj4+ICsgICAgICAgICAgICBjb25z
-dDogYXRtZWwsYXQ5MXJtOTIwMC1haWMNCj4+ICsgICAgdGhlbjoNCj4+ICsgICAgICBwcm9wZXJ0
-aWVzOg0KPj4gKyAgICAgICAgYXRtZWwsZXh0ZXJuYWwtaXJxczoNCj4+ICsgICAgICAgICAgbWlu
-SXRlbXM6IDENCj4+ICsgICAgICAgICAgbWF4SXRlbXM6IDcNCj4+ICsgICAgZWxzZToNCj4+ICsg
-ICAgICBwcm9wZXJ0aWVzOg0KPj4gKyAgICAgICAgYXRtZWwsZXh0ZXJuYWwtaXJxczoNCj4+ICsg
-ICAgICAgICAgbWluSXRlbXM6IDENCj4+ICsgICAgICAgICAgbWF4SXRlbXM6IDENCj4gV2hlbiB0
-aGVyZSdzIHByb3BlcnR5IHJlc3RyaWN0aW9ucyBiZWluZyBhcHBsaWVkLCBtb3ZlIHRoZSBhbGxv
-ZiBkb3duDQo+IHRvLi4uDQo+IA0KPj4gKw0KPj4gK3Byb3BlcnRpZXM6DQo+PiArICBjb21wYXRp
-YmxlOg0KPj4gKyAgICBlbnVtOg0KPj4gKyAgICAgIC0gYXRtZWwsYXQ5MXJtOTIwMC1haWMNCj4+
-ICsgICAgICAtIGF0bWVsLHNhbWE1ZDItYWljDQo+PiArICAgICAgLSBhdG1lbCxzYW1hNWQzLWFp
-Yw0KPj4gKyAgICAgIC0gYXRtZWwsc2FtYTVkNC1haWMNCj4+ICsgICAgICAtIG1pY3JvY2hpcCxz
-YW05eDYwLWFpYw0KPj4gKw0KPj4gKyAgcmVnOg0KPj4gKyAgICBtYXhJdGVtczogMQ0KPj4gKw0K
-Pj4gKyAgaW50ZXJydXB0LWNvbnRyb2xsZXI6IHRydWUNCj4+ICsNCj4+ICsgICIjaW50ZXJydXB0
-LWNlbGxzIjoNCj4+ICsgICAgY29uc3Q6IDMNCj4+ICsgICAgZGVzY3JpcHRpb246IHwNCj4+ICsg
-ICAgICBUaGUgMXN0IGNlbGwgaXMgdGhlIElSUSBudW1iZXIgKFBlcmlwaGVyYWwgSURlbnRpZmll
-ciBvbiBkYXRhc2hlZXQpLg0KPj4gKyAgICAgIFRoZSAybmQgY2VsbCBzcGVjaWZpZXMgZmxhZ3M6
-DQo+PiArICAgICAgICBiaXRzWzM6MF0gdHJpZ2dlciB0eXBlIGFuZCBsZXZlbCBmbGFnczoNCj4+
-ICsgICAgICAgICAgMSA9IGxvdy10by1oaWdoIGVkZ2UgdHJpZ2dlcmVkLg0KPj4gKyAgICAgICAg
-ICAyID0gaGlnaC10by1sb3cgZWRnZSB0cmlnZ2VyZWQuDQo+PiArICAgICAgICAgIDQgPSBhY3Rp
-dmUgaGlnaCBsZXZlbC1zZW5zaXRpdmUuDQo+PiArICAgICAgICAgIDggPSBhY3RpdmUgbG93IGxl
-dmVsLXNlbnNpdGl2ZS4NCj4+ICsgICAgICAgIFZhbGlkIGNvbWJpbmF0aW9uczogMSwgMiwgMywg
-NCwgOC4NCj4+ICsgICAgICAgIERlZmF1bHQgZm9yIGludGVybmFsIHNvdXJjZXM6IDQgKGFjdGl2
-ZSBoaWdoKS4NCj4+ICsgICAgICBUaGUgM3JkIGNlbGwgc3BlY2lmaWVzIGlycSBwcmlvcml0eSBm
-cm9tIDAgKGxvd2VzdCkgdG8gNyAoaGlnaGVzdCkuDQo+PiArDQo+PiArICBpbnRlcnJ1cHRzOg0K
-Pj4gKyAgICBtYXhJdGVtczogMQ0KPj4gKw0KPj4gKyAgYXRtZWwsZXh0ZXJuYWwtaXJxczoNCj4+
-ICsgICAgJHJlZjogL3NjaGVtYXMvdHlwZXMueWFtbCMvZGVmaW5pdGlvbnMvdWludDMyLWFycmF5
-DQo+PiArICAgIGRlc2NyaXB0aW9uOiB1MzIgYXJyYXkgb2YgZXh0ZXJuYWwgaXJxcy4NCj4gLi4u
-aGVyZS4gQm90aCB3b3JrLCBidXQgc2VlaW5nIHRoZSByZXN0cmljdGlvbnMgYmVmb3JlIHlvdSBz
-ZWUgYW55IG9mDQo+IHRoZSBwcm9wZXJ0aWVzIGlzIG5vdCB0aGUgbW9zdCB1bmRlcnN0YW5kYWJs
-ZS4NCg0KVW5kZXJzdG9vZCwgSSB3aWxsIG1vdmUgaXQgaGVyZS4NCg0KPiANCj4gQ2hlZXJzLA0K
-PiBDb25vci4NCj4gDQo+PiArcmVxdWlyZWQ6DQo+PiArICAtIGNvbXBhdGlibGUNCj4+ICsgIC0g
-cmVnDQo+PiArICAtIGludGVycnVwdC1jb250cm9sbGVyDQo+PiArICAtICIjaW50ZXJydXB0LWNl
-bGxzIg0KPj4gKyAgLSBhdG1lbCxleHRlcm5hbC1pcnFzDQo+PiArDQo+PiArdW5ldmFsdWF0ZWRQ
-cm9wZXJ0aWVzOiBmYWxzZQ0KPj4gKw0KPj4gK2V4YW1wbGVzOg0KPj4gKyAgLSB8DQo+PiArICAg
-IGludGVycnVwdC1jb250cm9sbGVyQGZmZmZmMDAwIHsNCj4+ICsgICAgICBjb21wYXRpYmxlID0g
-ImF0bWVsLGF0OTFybTkyMDAtYWljIjsNCj4+ICsgICAgICByZWcgPSA8MHhmZmZmZjAwMCAweDIw
-MD47DQo+PiArICAgICAgaW50ZXJydXB0LWNvbnRyb2xsZXI7DQo+PiArICAgICAgI2ludGVycnVw
-dC1jZWxscyA9IDwzPjsNCj4+ICsgICAgICBhdG1lbCxleHRlcm5hbC1pcnFzID0gPDMxPjsNCj4+
-ICsgICAgfTsNCj4+ICsuLi4NCj4+DQo+PiBiYXNlLWNvbW1pdDogNGY1ZTUwOTJmZGJmNWNlYzZi
-ZWRjMTlmYmU2OWNjZTRmNWYwODM3Mg0KPj4gLS0gDQo+PiAyLjI1LjENCg0KLS0gDQpXaXRoIEJl
-c3QgUmVnYXJkcywNCkRoYXJtYSBCLg0KDQo=
+Hi,
+
+在 2024/02/16 13:46, Benjamin Marzinski 写道:
+> On Thu, Feb 15, 2024 at 02:24:34PM -0800, Song Liu wrote:
+>> On Thu, Feb 1, 2024 at 1:30 AM Yu Kuai <yukuai1@huaweicloud.com> wrote:
+>>>
+>> [...]
+>>>
+>>> [1] https://lore.kernel.org/all/CALTww29QO5kzmN6Vd+jT=-8W5F52tJjHKSgrfUc1Z1ZAeRKHHA@mail.gmail.com/
+>>>
+>>> Yu Kuai (14):
+>>>    md: don't ignore suspended array in md_check_recovery()
+>>>    md: don't ignore read-only array in md_check_recovery()
+>>>    md: make sure md_do_sync() will set MD_RECOVERY_DONE
+>>>    md: don't register sync_thread for reshape directly
+>>>    md: don't suspend the array for interrupted reshape
+>>>    md: fix missing release of 'active_io' for flush
+>>
+>> Applied 1/14-5/14 to md-6.8 branch (6/14 was applied earlier).
+>>
+>> Thanks,
+>> Song
+> 
+> I'm still seeing new failures that I can't reproduce in the 6.6 kernel,
+> specifically:
+> 
+> lvconvert-raid-reshape-stripes-load-reload.sh
+> lvconvert-repair-raid.sh
+> 
+> with lvconvert-raid-reshape-stripes-load-reload.sh Patch 12/14
+> ("md/raid456: fix a deadlock for dm-raid456 while io concurrent with
+> reshape") is changing a hang to a corruption. The issues is that we
+> can't simply fail IO that crosses the reshape position. I assume that
+> the correct thing to do is have dm-raid reissue it after the suspend,
+> when the reshape can make progress again. Perhaps something like this,
+> only less naive (although this patch does make the test pass for me).
+> Heinz, any thoughts on this? Otherwise, I'll look into this a little
+> more and post a RFC patch.
+> 
+> =========================================================
+> diff --git a/drivers/md/dm-raid.c b/drivers/md/dm-raid.c
+> index ed8c28952b14..ff481d494b04 100644
+> --- a/drivers/md/dm-raid.c
+> +++ b/drivers/md/dm-raid.c
+> @@ -3345,6 +3345,14 @@ static int raid_map(struct dm_target *ti, struct bio *bio)
+>   	return DM_MAPIO_SUBMITTED;
+>   }
+>   
+> +static int raid_end_io(struct dm_target *ti, struct bio *bio,
+> +		       blk_status_t *error)
+> +{
+> +	if (*error != BLK_STS_IOERR || !dm_noflush_suspending(ti))
+> +		return DM_ENDIO_DONE;
+> +	return DM_ENDIO_REQUEUE;
+> +}
+
+I love this idea, however, there could be other reasonable case to
+return BLK_STS_IOERR, and we probably shouldn't requeue in this case.
+
+Are we agree with the idea to let dm-raid reissue the IO after the
+suspend? If so, we can let raid_map return DM_MAPIO_REQUEUE directly in
+this special case.
+
+Benjamin, can you test the following patch on the top of this set? I
+verified in my VM for 20+ times that the test pass for me.
+
+Thanks,
+Kuai
+
+diff --git a/drivers/md/dm-raid.c b/drivers/md/dm-raid.c
+index ed8c28952b14..bd37ec94663e 100644
+--- a/drivers/md/dm-raid.c
++++ b/drivers/md/dm-raid.c
+@@ -3340,7 +3340,8 @@ static int raid_map(struct dm_target *ti, struct 
+bio *bio)
+         if (unlikely(bio_end_sector(bio) > mddev->array_sectors))
+                 return DM_MAPIO_REQUEUE;
+
+-       md_handle_request(mddev, bio);
++       if (unlikely(!md_handle_request(mddev, bio)))
++               return DM_MAPIO_REQUEUE;
+
+         return DM_MAPIO_SUBMITTED;
+  }
+diff --git a/drivers/md/md.c b/drivers/md/md.c
+index a8db84c200fe..59411d20cbfd 100644
+--- a/drivers/md/md.c
++++ b/drivers/md/md.c
+@@ -366,7 +366,7 @@ static bool is_suspended(struct mddev *mddev, struct 
+bio *bio)
+         return true;
+  }
+
+-void md_handle_request(struct mddev *mddev, struct bio *bio)
++bool md_handle_request(struct mddev *mddev, struct bio *bio)
+  {
+  check_suspended:
+         if (is_suspended(mddev, bio)) {
+@@ -374,7 +374,7 @@ void md_handle_request(struct mddev *mddev, struct 
+bio *bio)
+                 /* Bail out if REQ_NOWAIT is set for the bio */
+                 if (bio->bi_opf & REQ_NOWAIT) {
+                         bio_wouldblock_error(bio);
+-                       return;
++                       return true;
+                 }
+                 for (;;) {
+                         prepare_to_wait(&mddev->sb_wait, &__wait,
+@@ -390,10 +390,14 @@ void md_handle_request(struct mddev *mddev, struct 
+bio *bio)
+
+         if (!mddev->pers->make_request(mddev, bio)) {
+                 percpu_ref_put(&mddev->active_io);
++               if (!mddev->gendisk && mddev->pers->prepare_suspend &&
++                   mddev->reshape_position != MaxSector)
++                       return false;
+                 goto check_suspended;
+         }
+
+         percpu_ref_put(&mddev->active_io);
++       return true;
+  }
+  EXPORT_SYMBOL(md_handle_request);
+
+@@ -8765,6 +8769,23 @@ void md_account_bio(struct mddev *mddev, struct 
+bio **bio)
+  }
+  EXPORT_SYMBOL_GPL(md_account_bio);
+
++void md_free_cloned_bio(struct bio *bio)
++{
++       struct md_io_clone *md_io_clone = bio->bi_private;
++       struct bio *orig_bio = md_io_clone->orig_bio;
++       struct mddev *mddev = md_io_clone->mddev;
++
++       if (bio->bi_status && !orig_bio->bi_status)
++               orig_bio->bi_status = bio->bi_status;
++
++       if (md_io_clone->start_time)
++               bio_end_io_acct(orig_bio, md_io_clone->start_time);
++
++       bio_put(bio);
++       percpu_ref_put(&mddev->active_io);
++}
++EXPORT_SYMBOL_GPL(md_free_cloned_bio);
++
+  /* md_allow_write(mddev)
+   * Calling this ensures that the array is marked 'active' so that writes
+   * may proceed without blocking.  It is important to call this before
+diff --git a/drivers/md/md.h b/drivers/md/md.h
+index 8e81f9e2fb20..08db2954006e 100644
+--- a/drivers/md/md.h
++++ b/drivers/md/md.h
+@@ -763,6 +763,7 @@ extern void md_finish_reshape(struct mddev *mddev);
+  void md_submit_discard_bio(struct mddev *mddev, struct md_rdev *rdev,
+                         struct bio *bio, sector_t start, sector_t size);
+  void md_account_bio(struct mddev *mddev, struct bio **bio);
++void md_free_cloned_bio(struct bio *bio);
+
+  extern bool __must_check md_flush_request(struct mddev *mddev, struct 
+bio *bio);
+  extern void md_super_write(struct mddev *mddev, struct md_rdev *rdev,
+@@ -791,7 +792,7 @@ extern void md_stop_writes(struct mddev *mddev);
+  extern int md_rdev_init(struct md_rdev *rdev);
+  extern void md_rdev_clear(struct md_rdev *rdev);
+
+-extern void md_handle_request(struct mddev *mddev, struct bio *bio);
++extern bool md_handle_request(struct mddev *mddev, struct bio *bio);
+  extern int mddev_suspend(struct mddev *mddev, bool interruptible);
+  extern void mddev_resume(struct mddev *mddev);
+  extern void md_idle_sync_thread(struct mddev *mddev);
+diff --git a/drivers/md/raid5.c b/drivers/md/raid5.c
+index 812d7ec64da5..9a6a1d9eed3d 100644
+--- a/drivers/md/raid5.c
++++ b/drivers/md/raid5.c
+@@ -760,6 +760,7 @@ enum stripe_result {
+         STRIPE_RETRY,
+         STRIPE_SCHEDULE_AND_RETRY,
+         STRIPE_FAIL,
++       STRIPE_WAIT_RESHAPE,
+  };
+
+  struct stripe_request_ctx {
+@@ -6036,9 +6037,9 @@ static enum stripe_result 
+make_stripe_request(struct mddev *mddev,
+  out:
+         if (ret == STRIPE_SCHEDULE_AND_RETRY && !mddev->gendisk &&
+             reshape_disabled(mddev)) {
+-               bi->bi_status = BLK_STS_IOERR;
+-               ret = STRIPE_FAIL;
+-               pr_err("dm-raid456: io failed across reshape position 
+while reshape can't make progress");
++               bi->bi_status = BLK_STS_RESOURCE;
++               ret = STRIPE_WAIT_RESHAPE;
++               pr_err_ratelimited("dm-raid456: io across reshape 
+position while reshape can't make progress");
+         }
+         return ret;
+  }
+@@ -6161,7 +6162,7 @@ static bool raid5_make_request(struct mddev 
+*mddev, struct bio * bi)
+         while (1) {
+                 res = make_stripe_request(mddev, conf, &ctx, 
+logical_sector,
+                                           bi);
+-               if (res == STRIPE_FAIL)
++               if (res == STRIPE_FAIL ||res == STRIPE_WAIT_RESHAPE)
+                         break;
+
+                 if (res == STRIPE_RETRY)
+@@ -6199,8 +6200,13 @@ static bool raid5_make_request(struct mddev 
+*mddev, struct bio * bi)
+
+         if (rw == WRITE)
+                 md_write_end(mddev);
+-       bio_endio(bi);
+-       return true;
++       if (res == STRIPE_WAIT_RESHAPE) {
++               md_free_cloned_bio(bi);
++               return false;
++       } else {
++               bio_endio(bi);
++               return true;
++       }
+  }
+
+> +
+>   /* Return sync state string for @state */
+>   enum sync_state { st_frozen, st_reshape, st_resync, st_check, st_repair, st_recover, st_idle };
+>   static const char *sync_str(enum sync_state state)
+> @@ -4100,6 +4108,7 @@ static struct target_type raid_target = {
+>   	.ctr = raid_ctr,
+>   	.dtr = raid_dtr,
+>   	.map = raid_map,
+> +	.end_io = raid_end_io,
+>   	.status = raid_status,
+>   	.message = raid_message,
+>   	.iterate_devices = raid_iterate_devices,
+> =========================================================
+>>
+>>
+>>>    md: export helpers to stop sync_thread
+>>>    md: export helper md_is_rdwr()
+>>>    dm-raid: really frozen sync_thread during suspend
+>>>    md/dm-raid: don't call md_reap_sync_thread() directly
+>>>    dm-raid: add a new helper prepare_suspend() in md_personality
+>>>    md/raid456: fix a deadlock for dm-raid456 while io concurrent with
+>>>      reshape
+>>>    dm-raid: fix lockdep waring in "pers->hot_add_disk"
+>>>    dm-raid: remove mddev_suspend/resume()
+>>>
+>>>   drivers/md/dm-raid.c |  78 +++++++++++++++++++--------
+>>>   drivers/md/md.c      | 126 +++++++++++++++++++++++++++++--------------
+>>>   drivers/md/md.h      |  16 ++++++
+>>>   drivers/md/raid10.c  |  16 +-----
+>>>   drivers/md/raid5.c   |  61 +++++++++++----------
+>>>   5 files changed, 192 insertions(+), 105 deletions(-)
+>>>
+>>> --
+>>> 2.39.2
+>>>
+>>>
+> 
+> .
+> 
+
