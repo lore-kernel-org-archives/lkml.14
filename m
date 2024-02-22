@@ -1,113 +1,135 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCCC1130E32;
-	Thu, 22 Feb 2024 16:26:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E6BD1509B5;
+	Thu, 22 Feb 2024 16:26:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708619197; cv=none; b=og5/H4hsutgl1ZoJ2ShV4reqhScAeKrxuBzZSNQpfbcuI17lsqGFfClr/wwGE1qacPoUz/2mxM469TvJyl1AmbG0X1l43H8MsCwwmme6Ex/JaowaxpIhbLjbMRikyCSX68qGux5ca4TT2JgIIl/UEPB6D6oz+ODjs1zaB2RR1Ow=
+	t=1708619205; cv=none; b=nd74QlfFj3pE2VOPzGWSBt26blx1FZ8qd+Tmx7c79HrNvS5PK9tLVoPZAAraMgqGdKCvbDI5MTZkTUfuOkfbt6IFNWTH6lL/0zl7U69C2FOXUjCE1etF3pbT0X6Rbah4ZVZOaHd5qGlfEmJCFWQAnN4y8I5RnTHI8iR/qt28DKM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708619197; c=relaxed/simple;
-	bh=rVeMAZ7c6DaGuMXw0XF4xBKuLLV2gnSN2mixhtkvwIM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BsGCwjoeRKsjERL6VYs2Et2YQfV43Bo4l1DWIpDpy2saP9ybvA9GzKzeQHA4ggRb7lz3dphIiMhfIBnijo+bzm5cuV6gyU38ciWRne+GaWbJKWdE1W+ogufd19QRtbc8HXk1PfpzYhmo2wz/f84c19hFrwy3VHqSk5re846MJ70=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=imrqg2cr; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1708619205; c=relaxed/simple;
+	bh=Sg+7uBjGXjQ1pdFX/E/hnLOflmTEI1B/auJ2nJ5yZc0=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=sOf8XR0EmEIvNeNP1lGbQhB9Dj3+RwrkHStbAu1vev3yomZudj5JRc+Z6c5Nfh3Gmm1yXpq4OJRAvZInoCeTkgLgT+EQOtK5FwZTkrTBxS34ofB2RMlTkPq9wMHxpOrqPWi7v32kKwdsqBBXf6GgBnFyzEt5C1bGANNbrrKYDUw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WLO5vQhX; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="imrqg2cr"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1708619195; x=1740155195;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=rVeMAZ7c6DaGuMXw0XF4xBKuLLV2gnSN2mixhtkvwIM=;
-  b=imrqg2cr7zi1GDxoNCQGmq045BG4DaKlNTxxfphIyNdFWkWgrtal8iJ3
-   74hQ+VlJ1IbsU7CKMqTakqviqZemLYXralX5n+AO2FG+2aPkTVE1kv2cs
-   ug2FLjmbme9O3TZowASm+rjiJwOgktz0surovfH4AO3EOx8S9SC6LQhFf
-   CPfUrWozKJrHTOa51g/DiXsXHEr+N3A8cO/T5Hy3+7AoFGCi7z+sBgYQT
-   5TdFpofPjl5/ZM+TFbA27e828ubWIEW3jtWFqhMxMKzqGqKcB+rhC1oQi
-   JKJtb4rpHN23dT/SMRkV6ACMXe7420+gEMVe503cGCCdvHFs6K/wpuSRV
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10992"; a="20406864"
-X-IronPort-AV: E=Sophos;i="6.06,179,1705392000"; 
-   d="scan'208";a="20406864"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Feb 2024 08:26:29 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,179,1705392000"; 
-   d="scan'208";a="5857653"
-Received: from lkp-server02.sh.intel.com (HELO 3c78fa4d504c) ([10.239.97.151])
-  by orviesa007.jf.intel.com with ESMTP; 22 Feb 2024 08:26:22 -0800
-Received: from kbuild by 3c78fa4d504c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rdBtn-0006U6-33;
-	Thu, 22 Feb 2024 16:26:16 +0000
-Date: Fri, 23 Feb 2024 00:25:23 +0800
-From: kernel test robot <lkp@intel.com>
-To: Thomas Zimmermann <tzimmermann@suse.de>, arnd@arndb.de,
-	javierm@redhat.com, deller@gmx.de, suijingfeng@loongson.cn
-Cc: oe-kbuild-all@lists.linux.dev, linux-arch@vger.kernel.org,
-	dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
-	sparclinux@vger.kernel.org, linux-sh@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org, linux-parisc@vger.kernel.org,
-	linux-mips@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
-	loongarch@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
-	linux-snps-arc@lists.infradead.org, linux-kernel@vger.kernel.org,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	Vineet Gupta <vgupta@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	Geert Uytterhoeven <geert@linux-m68k.org>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Yoshinori Sato <ysato@users.sourceforge.jp>,
-	Rich Felker <dalias@libc.org>
-Subject: Re: [PATCH 3/3] arch: Rename fbdev header and source files
-Message-ID: <202402230023.xa2jjwui-lkp@intel.com>
-References: <20240221161431.8245-4-tzimmermann@suse.de>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WLO5vQhX"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id C2867C433F1;
+	Thu, 22 Feb 2024 16:26:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1708619204;
+	bh=Sg+7uBjGXjQ1pdFX/E/hnLOflmTEI1B/auJ2nJ5yZc0=;
+	h=From:Date:Subject:To:Cc:Reply-To:From;
+	b=WLO5vQhXIjUKiQW8MTNAerCcpBsPpFOzeIdgsi8kk7cuLH0455SdSy2LdfaS8pz+z
+	 szQinCZUxI5/ERaAYyqew38pmwKsmbUFRx1B1AUpebU9Jd/IPBOelz00AjHfKTcSDE
+	 5cVg2krcsICfsyr9EjXNaPf5JZvHkb9R7BDVz+ZjnAnkHqsuavU3//GOC6+mMk6H1B
+	 8/2MmVRZ5oWWc59NVvtCDEhMCQDpBMRVotzu5xsc9CopupQialp/GadulIhhOgt0bn
+	 Yv8FV9pQ/lY/UWTXj7xM16MwdJT0uGWV++70IiQpvuK8cGxVdlelRvj0aQlAr4TiJk
+	 cNL7YxC/U3URg==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A36E4C54791;
+	Thu, 22 Feb 2024 16:26:44 +0000 (UTC)
+From:
+ Mathys-Gasnier via B4 Relay <devnull+mathys35.gasnier.gmail.com@kernel.org>
+Date: Thu, 22 Feb 2024 17:26:44 +0100
+Subject: [PATCH v3] rust: locks: Add `get_mut` method to `Lock`
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240221161431.8245-4-tzimmermann@suse.de>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240222-rust-locks-get-mut-v3-1-d38a6f4bde3d@gmail.com>
+X-B4-Tracking: v=1; b=H4sIAMN112UC/23NQQ6CMBCF4auQrh3TGUqqrryHcQFDgUagpgWiI
+ dzdghsWLP+XzDezCMZbE8QtmYU3kw3W9THSUyK4yfvagC1jC5KkJOIF/BgGaB2/AtRmgG4cgBV
+ JTSix1LmIh29vKvvZ0MczdmPD4Px3+zHhuv45ktcjbkJAYJNmWHFaGqXvdZfb9syuEys30Y5AO
+ iQoEhlzmSqmQstiTyzL8gNvQQPR9wAAAA==
+To: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+ Wedson Almeida Filho <wedsonaf@gmail.com>, 
+ Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+ =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+ Benno Lossin <benno.lossin@proton.me>, 
+ Andreas Hindborg <a.hindborg@samsung.com>, 
+ Alice Ryhl <aliceryhl@google.com>
+Cc: rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Mathys-Gasnier <mathys35.gasnier@gmail.com>
+X-Mailer: b4 0.12.4
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1708619203; l=2400;
+ i=mathys35.gasnier@gmail.com; s=20240118; h=from:subject:message-id;
+ bh=ky/U3Y/MfgLzPcLAna8JPEAOaEfDevCIfhcVRsmkGug=;
+ b=+QNhsp6z7HFvXcgU9rqBsgzmYXhbx8BMMQKZVVl3iF27daLZJUjw+acCHkIHotOIKO9yiW8qw
+ t1cr1passtyA4d6GfP0rDl+TbeGP4C0ecOarsbaGF95e1sfZ2j6smYK
+X-Developer-Key: i=mathys35.gasnier@gmail.com; a=ed25519;
+ pk=C5tqKAA3Ua7li5s3a+q2aDelT2j98/yjGg2nEVGArXE=
+X-Endpoint-Received:
+ by B4 Relay for mathys35.gasnier@gmail.com/20240118 with auth_id=129
+X-Original-From: Mathys-Gasnier <mathys35.gasnier@gmail.com>
+Reply-To: <mathys35.gasnier@gmail.com>
 
-Hi Thomas,
+From: Mathys-Gasnier <mathys35.gasnier@gmail.com>
 
-kernel test robot noticed the following build errors:
+Having a mutable reference guarantees that no other threads have
+access to the lock, so we can take advantage of that to grant callers
+access to the protected data without the the cost of acquiring and
+releasing the locks. Since the lifetime of the data is tied to the
+mutable reference, the borrow checker guarantees that the usage is safe.
 
-[auto build test ERROR on tip/x86/core]
-[also build test ERROR on deller-parisc/for-next arnd-asm-generic/master linus/master v6.8-rc5 next-20240221]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+Signed-off-by: Mathys-Gasnier <mathys35.gasnier@gmail.com>
+---
+Changes in v3:
+- Changing the function to take a `Pin<&mut self>` instead of a `&mut self`
+- Removed reviewed-by's since big changes were made. Please take another
+  look.
+- Link to v2: https://lore.kernel.org/r/20240212-rust-locks-get-mut-v2-1-5ccd34c2b70b@gmail.com
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Thomas-Zimmermann/arch-Select-fbdev-helpers-with-CONFIG_VIDEO/20240222-001622
-base:   tip/x86/core
-patch link:    https://lore.kernel.org/r/20240221161431.8245-4-tzimmermann%40suse.de
-patch subject: [PATCH 3/3] arch: Rename fbdev header and source files
-config: um-randconfig-r052-20240222 (https://download.01.org/0day-ci/archive/20240223/202402230023.xa2jjwui-lkp@intel.com/config)
-compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240223/202402230023.xa2jjwui-lkp@intel.com/reproduce)
+Changes in v2:
+- Improved doc comment. 
+- Link to v1: https://lore.kernel.org/r/20240209-rust-locks-get-mut-v1-1-ce351fc3de47@gmail.com
+---
+ rust/kernel/sync/lock.rs | 16 +++++++++++++++-
+ 1 file changed, 15 insertions(+), 1 deletion(-)
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202402230023.xa2jjwui-lkp@intel.com/
+diff --git a/rust/kernel/sync/lock.rs b/rust/kernel/sync/lock.rs
+index f12a684bc957..0c8faf36d654 100644
+--- a/rust/kernel/sync/lock.rs
++++ b/rust/kernel/sync/lock.rs
+@@ -7,7 +7,11 @@
+ 
+ use super::LockClassKey;
+ use crate::{bindings, init::PinInit, pin_init, str::CStr, types::Opaque, types::ScopeGuard};
+-use core::{cell::UnsafeCell, marker::PhantomData, marker::PhantomPinned};
++use core::{
++    cell::UnsafeCell,
++    marker::{PhantomData, PhantomPinned},
++    pin::Pin,
++};
+ use macros::pin_data;
+ 
+ pub mod mutex;
+@@ -121,6 +125,16 @@ pub fn lock(&self) -> Guard<'_, T, B> {
+         // SAFETY: The lock was just acquired.
+         unsafe { Guard::new(self, state) }
+     }
++
++    /// Gets the data contained in the lock
++    /// Having a mutable reference to the lock guarantees that no other threads have access to the lock.
++    /// Making it safe to get a mutable reference to the lock content.
++    pub fn get_mut(self: Pin<&mut Self>) -> &mut T {
++        // SAFETY: Since the data is not pinned (No structural pinning for data).
++        // It is safe to get a mutable reference to the data and we never move the state.
++        let lock = unsafe { self.get_unchecked_mut() };
++        lock.data.get_mut()
++    }
+ }
+ 
+ /// A lock guard.
 
-All errors (new ones prefixed by >>):
+---
+base-commit: 711cbfc717650532624ca9f56fbaf191bed56e67
+change-id: 20240118-rust-locks-get-mut-c42072101d7a
 
-   /usr/bin/ld: drivers/video/fbdev/core/fb_io_fops.o: in function `fb_io_mmap':
->> fb_io_fops.c:(.text+0x591): undefined reference to `pgprot_framebuffer'
-   collect2: error: ld returned 1 exit status
-
+Best regards,
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Mathys-Gasnier <mathys35.gasnier@gmail.com>
+
