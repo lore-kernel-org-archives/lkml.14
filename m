@@ -1,49 +1,49 @@
 Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 883CA225CD;
-	Thu, 22 Feb 2024 23:17:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D46AE137938;
+	Thu, 22 Feb 2024 23:17:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708643828; cv=none; b=Dm5GYTykRUuuVNstCQtuYhSA6nGm8S/iOOLCfNqN85ubTkyEtaJEOS1O81Oa3WfgrSrFE2hSQCcPnLhdiQWRYF77GuO4Bj7qktakiFZ415vx0vN+5jbtQmwZisH8HQesWpN6RBZF2xI3/vZ3jz6yFzAjxgK/GM0wa7nH4mSMvwE=
+	t=1708643830; cv=none; b=XuT5iR3g6ngDRpNLHLe3JsR0IvCN0F1JAa9UYPsn0sK9b+jJPbrg2FVuRk0hp5mpha74S0NR/HxCGcrMmTCdKZ5D5E2RiK+ZoOb430i+sPK355r6NP1GrHBu/20kdSVBLqfeiuWI0AcXuH6935qulX1WYmWPl6ThFNIPz32mjHw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708643828; c=relaxed/simple;
-	bh=3Ku50MPcHlW8bklRwtagHbw4kVw1F2tXarLTrTmq/MQ=;
+	s=arc-20240116; t=1708643830; c=relaxed/simple;
+	bh=wqcFf5tGf65Rykb5i/CI/IkG99/aSu0nMjKt5dgScTg=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
-	 In-Reply-To:To:CC; b=ObB75ZYbcJxLjdAME+WfevIOLZ9hhjWo9x9loJ/D2rv/zz+wsEREXIcbwlnLGRZa9MxK4AUb2d0gXP7qnsaTmh+LJOw1yheHXvqZn+BsES5g8rjoyCXDJ8eeBkx8uQA20J+cEfLaKvv+rUtHGy28r2X8zYZC0uXbkpJQmib0gKI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=OK1PaOz+; arc=none smtp.client-ip=205.220.180.131
+	 In-Reply-To:To:CC; b=Hux/fjyU2xrcLub9BmrUb+rYG2S+vrRaec71Ybs99Eo8N0BY3kavyBUOKvnzc74GZifkfyr500Mrj9QdVJCNcmGNwQ/dNtAbtuigjzlarFrg/CrtWjp1pJXWAzrNJAW6dnmyHgNeWKmhi/tG90K1lOa6BeDYmpf2mDWOTmy+H0g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=IDTBGxDV; arc=none smtp.client-ip=205.220.180.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="OK1PaOz+"
-Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 41MLfvRH024356;
-	Thu, 22 Feb 2024 23:16:41 GMT
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="IDTBGxDV"
+Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 41MLfuAN024795;
+	Thu, 22 Feb 2024 23:16:47 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
 	from:date:subject:mime-version:content-type
 	:content-transfer-encoding:message-id:references:in-reply-to:to
-	:cc; s=qcppdkim1; bh=8v1GY1FYViwr1gDiWHVBc+SJTGgDxddStunlcMOAt7k
-	=; b=OK1PaOz+MYOt1PRQxr21Xpe1Yw0XL18uDDdIztRL7PEuhE3JQ6rNW4ykj/c
-	TFUu4rzEt/UooddD9ZoWY/uReznTMNCQ9FfW3CVVcXiwHEqgXPZe01gKyevWGrRH
-	75FD3ICt6slF1RYvDh7Pk+EtBthpUJzXhrOvXqpejpi1bJiJa1OUrcWV9XUv1/uF
-	8mgM3AFhCOuXgzvwi9WSxQ3Z8mZj9Bv2LzMRpJnc60NkZPoyYTuCICfdzHNfM5Ve
-	ar89z0RMjn9napJp36X5ULJ40hxBRzpBpxoTVC29GK7FiVbkaqEROK74OvcLoMLg
-	TLMb7126bakdJar8ZKaTT9RI7WA==
-Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3weedkr5f1-1
+	:cc; s=qcppdkim1; bh=qh+jPnXSbiXkdzqCKqtelkO/e60PKZzxBC0LGQzikQc
+	=; b=IDTBGxDVMlOnY9TRPjx4tn4PXf17/qS4NpZe+wOYSSQw3iNSpU6nagDoQtU
+	lOfNy+ctynbmIER1vf6k7eVjaJ5TZ527gZzso64lNSuy1MbsTXzYWLJ4AJppev60
+	1JoxGYk6Z/xgM2ufdsF+tKvtlpk8va6rog29gvVVHWYvABhKJRfAUQkqGKK8LIZe
+	qXKe6Cq/jx2vnY0oWB3g/2DH4RZR4nS4Bhs1WAqFyKSuWrVMJd2Mh5Ano6euMOIL
+	wyQBJ38QGUjEn+gipIe2o1MH/SO/A4MjcJ+nx2KgpIIEnZbZXICRiEPu+ZMhq/eV
+	d5eY2NgnIM/UorcVShQACEI3cVQ==
+Received: from nasanppmta02.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3we4dq17sy-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 22 Feb 2024 23:16:41 +0000 (GMT)
+	Thu, 22 Feb 2024 23:16:47 +0000 (GMT)
 Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 41MNGeOL017516
+	by NASANPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 41MNGklC028227
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 22 Feb 2024 23:16:40 GMT
+	Thu, 22 Feb 2024 23:16:46 GMT
 Received: from hu-eberman-lv.qualcomm.com (10.49.16.6) by
  nasanex01b.na.qualcomm.com (10.46.141.250) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Thu, 22 Feb 2024 15:16:39 -0800
+ 15.2.1118.40; Thu, 22 Feb 2024 15:16:45 -0800
 From: Elliot Berman <quic_eberman@quicinc.com>
-Date: Thu, 22 Feb 2024 15:16:46 -0800
-Subject: [PATCH v17 23/35] virt: gunyah: Implement guestmemfd
+Date: Thu, 22 Feb 2024 15:16:56 -0800
+Subject: [PATCH v17 33/35] virt: gunyah: Add IO handlers
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,7 +52,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-ID: <20240222-gunyah-v17-23-1e9da6763d38@quicinc.com>
+Message-ID: <20240222-gunyah-v17-33-1e9da6763d38@quicinc.com>
 References: <20240222-gunyah-v17-0-1e9da6763d38@quicinc.com>
 In-Reply-To: <20240222-gunyah-v17-0-1e9da6763d38@quicinc.com>
 To: Alex Elder <elder@linaro.org>,
@@ -92,395 +92,261 @@ X-ClientProxiedBy: nalasex01c.na.qualcomm.com (10.47.97.35) To
  nasanex01b.na.qualcomm.com (10.46.141.250)
 X-QCInternal: smtphost
 X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: O6Ak6C4_gppeo900tdBS_Z0_5i7JFG4I
-X-Proofpoint-GUID: O6Ak6C4_gppeo900tdBS_Z0_5i7JFG4I
+X-Proofpoint-GUID: _RzcJvsLBoQGikWouASJqOQmU4qKmExK
+X-Proofpoint-ORIG-GUID: _RzcJvsLBoQGikWouASJqOQmU4qKmExK
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
  definitions=2024-02-22_15,2024-02-22_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
- malwarescore=0 clxscore=1015 lowpriorityscore=0 mlxlogscore=999
- phishscore=0 suspectscore=0 spamscore=0 adultscore=0 mlxscore=0
- bulkscore=0 priorityscore=1501 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.19.0-2402120000 definitions=main-2402220178
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 suspectscore=0
+ malwarescore=0 impostorscore=0 priorityscore=1501 lowpriorityscore=0
+ spamscore=0 adultscore=0 mlxlogscore=999 clxscore=1015 bulkscore=0
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2402120000 definitions=main-2402220179
 
-Memory provided to Gunyah virtual machines are provided by a
-Gunyah guestmemfd. Because memory provided to virtual machines may be
-unmapped at stage-2 from the host (i.e. in the hypervisor's page tables
-for the host), special care needs to be taken to ensure that the kernel
-doesn't have a page mapped when it is lent to the guest. Without this
-tracking, a kernel panic could be induced  by userspace tricking the
-kernel into accessing guest-private memory.
+Add framework for VM functions to handle stage-2 write faults from Gunyah
+guest virtual machines. IO handlers have a range of addresses which they
+apply to. Optionally, they may apply to only when the value written
+matches the IO handler's value.
 
-Introduce the basic guestmemfd ops and ioctl. Userspace should be able
-to access the memory unless it is provided to the guest virtual machine:
-this is necessary to allow userspace to preload binaries such as the
-kernel Image prior to running the VM. Subsequent commits will wire up
-providing the memory to the guest.
-
+Reviewed-by: Alex Elder <elder@linaro.org>
+Co-developed-by: Prakruthi Deepak Heragu <quic_pheragu@quicinc.com>
+Signed-off-by: Prakruthi Deepak Heragu <quic_pheragu@quicinc.com>
 Signed-off-by: Elliot Berman <quic_eberman@quicinc.com>
 ---
- drivers/virt/gunyah/Makefile      |   2 +-
- drivers/virt/gunyah/guest_memfd.c | 276 ++++++++++++++++++++++++++++++++++++++
- drivers/virt/gunyah/vm_mgr.c      |   9 ++
- drivers/virt/gunyah/vm_mgr.h      |   2 +
- include/uapi/linux/gunyah.h       |  19 +++
- 5 files changed, 307 insertions(+), 1 deletion(-)
+ drivers/virt/gunyah/gunyah_vcpu.c |   4 ++
+ drivers/virt/gunyah/vm_mgr.c      | 115 ++++++++++++++++++++++++++++++++++++++
+ drivers/virt/gunyah/vm_mgr.h      |   8 +++
+ include/linux/gunyah.h            |  29 ++++++++++
+ 4 files changed, 156 insertions(+)
 
-diff --git a/drivers/virt/gunyah/Makefile b/drivers/virt/gunyah/Makefile
-index a6c6f29b887a6..c4505fce177dd 100644
---- a/drivers/virt/gunyah/Makefile
-+++ b/drivers/virt/gunyah/Makefile
-@@ -1,6 +1,6 @@
- # SPDX-License-Identifier: GPL-2.0
- 
--gunyah_rsc_mgr-y += rsc_mgr.o rsc_mgr_rpc.o vm_mgr.o vm_mgr_mem.o
-+gunyah_rsc_mgr-y += rsc_mgr.o rsc_mgr_rpc.o vm_mgr.o vm_mgr_mem.o guest_memfd.o
- 
- obj-$(CONFIG_GUNYAH) += gunyah.o gunyah_rsc_mgr.o gunyah_vcpu.o
- obj-$(CONFIG_GUNYAH_PLATFORM_HOOKS) += gunyah_platform_hooks.o
-diff --git a/drivers/virt/gunyah/guest_memfd.c b/drivers/virt/gunyah/guest_memfd.c
-new file mode 100644
-index 0000000000000..19c72aa1d0e5e
---- /dev/null
-+++ b/drivers/virt/gunyah/guest_memfd.c
-@@ -0,0 +1,276 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Copyright (c) 2023-2024 Qualcomm Innovation Center, Inc. All rights reserved.
-+ */
-+
-+#define pr_fmt(fmt) "gunyah_guest_mem: " fmt
-+
-+#include <linux/anon_inodes.h>
-+#include <linux/types.h>
-+#include <linux/falloc.h>
-+#include <linux/file.h>
-+#include <linux/migrate.h>
-+#include <linux/pagemap.h>
-+
-+#include <uapi/linux/gunyah.h>
-+
-+#include "vm_mgr.h"
-+
-+static struct folio *gunyah_gmem_get_huge_folio(struct inode *inode,
-+						pgoff_t index)
-+{
-+#ifdef CONFIG_TRANSPARENT_HUGEPAGE
-+	unsigned long huge_index = round_down(index, HPAGE_PMD_NR);
-+	unsigned long flags = (unsigned long)inode->i_private;
-+	struct address_space *mapping = inode->i_mapping;
-+	gfp_t gfp = mapping_gfp_mask(mapping);
-+	struct folio *folio;
-+
-+	if (!(flags & GHMF_ALLOW_HUGEPAGE))
-+		return NULL;
-+
-+	if (filemap_range_has_page(mapping, huge_index << PAGE_SHIFT,
-+				   (huge_index + HPAGE_PMD_NR - 1)
-+					   << PAGE_SHIFT))
-+		return NULL;
-+
-+	folio = filemap_alloc_folio(gfp, HPAGE_PMD_ORDER);
-+	if (!folio)
-+		return NULL;
-+
-+	if (filemap_add_folio(mapping, folio, huge_index, gfp)) {
-+		folio_put(folio);
-+		return NULL;
-+	}
-+
-+	return folio;
-+#else
-+	return NULL;
-+#endif
-+}
-+
-+static struct folio *gunyah_gmem_get_folio(struct inode *inode, pgoff_t index)
-+{
-+	struct folio *folio;
-+
-+	folio = gunyah_gmem_get_huge_folio(inode, index);
-+	if (!folio) {
-+		folio = filemap_grab_folio(inode->i_mapping, index);
-+		if (IS_ERR_OR_NULL(folio))
-+			return NULL;
-+	}
-+
-+	/*
-+	 * Use the up-to-date flag to track whether or not the memory has been
-+	 * zeroed before being handed off to the guest.  There is no backing
-+	 * storage for the memory, so the folio will remain up-to-date until
-+	 * it's removed.
-+	 */
-+	if (!folio_test_uptodate(folio)) {
-+		unsigned long nr_pages = folio_nr_pages(folio);
-+		unsigned long i;
-+
-+		for (i = 0; i < nr_pages; i++)
-+			clear_highpage(folio_page(folio, i));
-+
-+		folio_mark_uptodate(folio);
-+	}
-+
-+	/*
-+	 * Ignore accessed, referenced, and dirty flags.  The memory is
-+	 * unevictable and there is no storage to write back to.
-+	 */
-+	return folio;
-+}
-+
-+static vm_fault_t gunyah_gmem_host_fault(struct vm_fault *vmf)
-+{
-+	struct folio *folio;
-+
-+	folio = gunyah_gmem_get_folio(file_inode(vmf->vma->vm_file),
-+				      vmf->pgoff);
-+	if (!folio)
-+		return VM_FAULT_SIGBUS;
-+
-+	vmf->page = folio_file_page(folio, vmf->pgoff);
-+
-+	return VM_FAULT_LOCKED;
-+}
-+
-+static const struct vm_operations_struct gunyah_gmem_vm_ops = {
-+	.fault = gunyah_gmem_host_fault,
-+};
-+
-+static int gunyah_gmem_mmap(struct file *file, struct vm_area_struct *vma)
-+{
-+	file_accessed(file);
-+	vma->vm_ops = &gunyah_gmem_vm_ops;
-+	return 0;
-+}
-+
-+/**
-+ * gunyah_gmem_punch_hole() - try to reclaim a range of pages
-+ * @inode: guest memfd inode
-+ * @offset: Offset into memfd to start reclaim
-+ * @len: length to reclaim
-+ *
-+ * Will try to unmap from virtual machines any folios covered by
-+ * [offset, offset+len]. If unmapped, then tries to free those folios
-+ *
-+ * Returns - error code if any folio in the range couldn't be freed.
-+ */
-+static long gunyah_gmem_punch_hole(struct inode *inode, loff_t offset,
-+				   loff_t len)
-+{
-+	truncate_inode_pages_range(inode->i_mapping, offset, offset + len - 1);
-+
-+	return 0;
-+}
-+
-+static long gunyah_gmem_allocate(struct inode *inode, loff_t offset, loff_t len)
-+{
-+	struct address_space *mapping = inode->i_mapping;
-+	pgoff_t start, index, end;
-+	int r;
-+
-+	/* Dedicated guest is immutable by default. */
-+	if (offset + len > i_size_read(inode))
-+		return -EINVAL;
-+
-+	filemap_invalidate_lock_shared(mapping);
-+
-+	start = offset >> PAGE_SHIFT;
-+	end = (offset + len) >> PAGE_SHIFT;
-+
-+	r = 0;
-+	for (index = start; index < end;) {
-+		struct folio *folio;
-+
-+		if (signal_pending(current)) {
-+			r = -EINTR;
-+			break;
+diff --git a/drivers/virt/gunyah/gunyah_vcpu.c b/drivers/virt/gunyah/gunyah_vcpu.c
+index f8306620b1dd6..ef78503fe586d 100644
+--- a/drivers/virt/gunyah/gunyah_vcpu.c
++++ b/drivers/virt/gunyah/gunyah_vcpu.c
+@@ -133,6 +133,10 @@ gunyah_handle_mmio(struct gunyah_vcpu *vcpu, unsigned long resume_data[3],
+ 		vcpu->state = GUNYAH_VCPU_RUN_STATE_MMIO_READ;
+ 		vcpu->mmio_read_len = len;
+ 	} else { /* GUNYAH_VCPU_ADDRSPACE_VMMIO_WRITE */
++		if (!gunyah_vm_mmio_write(vcpu->ghvm, addr, len, data)) {
++			resume_data[0] = GUNYAH_ADDRSPACE_VMMIO_ACTION_EMULATE;
++			return true;
 +		}
-+
-+		folio = gunyah_gmem_get_folio(inode, index);
-+		if (!folio) {
-+			r = -ENOMEM;
-+			break;
-+		}
-+
-+		index = folio_next_index(folio);
-+
-+		folio_unlock(folio);
-+		folio_put(folio);
-+
-+		/* 64-bit only, wrapping the index should be impossible. */
-+		if (WARN_ON_ONCE(!index))
-+			break;
-+
-+		cond_resched();
-+	}
-+
-+	filemap_invalidate_unlock_shared(mapping);
-+
-+	return r;
-+}
-+
-+static long gunyah_gmem_fallocate(struct file *file, int mode, loff_t offset,
-+				  loff_t len)
-+{
-+	long ret;
-+
-+	if (!(mode & FALLOC_FL_KEEP_SIZE))
-+		return -EOPNOTSUPP;
-+
-+	if (mode & ~(FALLOC_FL_KEEP_SIZE | FALLOC_FL_PUNCH_HOLE |
-+		     FALLOC_FL_ZERO_RANGE))
-+		return -EOPNOTSUPP;
-+
-+	if (!PAGE_ALIGNED(offset) || !PAGE_ALIGNED(len))
-+		return -EINVAL;
-+
-+	if (mode & FALLOC_FL_PUNCH_HOLE)
-+		ret = gunyah_gmem_punch_hole(file_inode(file), offset, len);
-+	else
-+		ret = gunyah_gmem_allocate(file_inode(file), offset, len);
-+
-+	if (!ret)
-+		file_modified(file);
-+	return ret;
-+}
-+
-+static int gunyah_gmem_release(struct inode *inode, struct file *file)
-+{
-+	return 0;
-+}
-+
-+static const struct file_operations gunyah_gmem_fops = {
-+	.owner = THIS_MODULE,
-+	.llseek = generic_file_llseek,
-+	.mmap = gunyah_gmem_mmap,
-+	.open = generic_file_open,
-+	.fallocate = gunyah_gmem_fallocate,
-+	.release = gunyah_gmem_release,
-+};
-+
-+static const struct address_space_operations gunyah_gmem_aops = {
-+	.dirty_folio = noop_dirty_folio,
-+	.migrate_folio = migrate_folio,
-+	.error_remove_folio = generic_error_remove_folio,
-+};
-+
-+int gunyah_guest_mem_create(struct gunyah_create_mem_args *args)
-+{
-+	const char *anon_name = "[gh-gmem]";
-+	unsigned long fd_flags = 0;
-+	struct inode *inode;
-+	struct file *file;
-+	int fd, err;
-+
-+	if (!PAGE_ALIGNED(args->size))
-+		return -EINVAL;
-+
-+	if (args->flags & ~(GHMF_CLOEXEC | GHMF_ALLOW_HUGEPAGE))
-+		return -EINVAL;
-+
-+	if (args->flags & GHMF_CLOEXEC)
-+		fd_flags |= O_CLOEXEC;
-+
-+	fd = get_unused_fd_flags(fd_flags);
-+	if (fd < 0)
-+		return fd;
-+
-+	/*
-+	 * Use the so called "secure" variant, which creates a unique inode
-+	 * instead of reusing a single inode.  Each guest_memfd instance needs
-+	 * its own inode to track the size, flags, etc.
-+	 */
-+	file = anon_inode_create_getfile(anon_name, &gunyah_gmem_fops, NULL,
-+					 O_RDWR, NULL);
-+	if (IS_ERR(file)) {
-+		err = PTR_ERR(file);
-+		goto err_fd;
-+	}
-+
-+	file->f_flags |= O_LARGEFILE;
-+
-+	inode = file->f_inode;
-+	WARN_ON(file->f_mapping != inode->i_mapping);
-+
-+	inode->i_private = (void *)(unsigned long)args->flags;
-+	inode->i_mapping->a_ops = &gunyah_gmem_aops;
-+	inode->i_mode |= S_IFREG;
-+	inode->i_size = args->size;
-+	mapping_set_gfp_mask(inode->i_mapping, GFP_HIGHUSER);
-+	mapping_set_large_folios(inode->i_mapping);
-+	mapping_set_unmovable(inode->i_mapping);
-+	/* Unmovable mappings are supposed to be marked unevictable as well. */
-+	WARN_ON_ONCE(!mapping_unevictable(inode->i_mapping));
-+
-+	fd_install(fd, file);
-+	return fd;
-+
-+err_fd:
-+	put_unused_fd(fd);
-+	return err;
-+}
+ 		vcpu->vcpu_run->mmio.is_write = 1;
+ 		memcpy(vcpu->vcpu_run->mmio.data, &data, len);
+ 		vcpu->state = GUNYAH_VCPU_RUN_STATE_MMIO_WRITE;
 diff --git a/drivers/virt/gunyah/vm_mgr.c b/drivers/virt/gunyah/vm_mgr.c
-index 64967a8b72885..238a7a4da554b 100644
+index a61a3f3ae92f1..2434be5dffe08 100644
 --- a/drivers/virt/gunyah/vm_mgr.c
 +++ b/drivers/virt/gunyah/vm_mgr.c
-@@ -696,6 +696,15 @@ long gunyah_dev_vm_mgr_ioctl(struct gunyah_rm *rm, unsigned int cmd,
- 	switch (cmd) {
- 	case GUNYAH_CREATE_VM:
- 		return gunyah_dev_ioctl_create_vm(rm, arg);
-+	case GUNYAH_CREATE_GUEST_MEM: {
-+		struct gunyah_create_mem_args args;
+@@ -302,6 +302,118 @@ static void gunyah_vm_clean_resources(struct gunyah_vm *ghvm)
+ 	mutex_unlock(&ghvm->resources_lock);
+ }
+ 
++static int _gunyah_vm_io_handler_compare(const struct rb_node *node,
++					 const struct rb_node *parent)
++{
++	struct gunyah_vm_io_handler *n =
++		container_of(node, struct gunyah_vm_io_handler, node);
++	struct gunyah_vm_io_handler *p =
++		container_of(parent, struct gunyah_vm_io_handler, node);
 +
-+		if (copy_from_user(&args, (const void __user *)arg,
-+				   sizeof(args)))
-+			return -EFAULT;
++	if (n->addr < p->addr)
++		return -1;
++	if (n->addr > p->addr)
++		return 1;
++	if ((n->len && !p->len) || (!n->len && p->len))
++		return 0;
++	if (n->len < p->len)
++		return -1;
++	if (n->len > p->len)
++		return 1;
++	/* one of the io handlers doesn't have datamatch and the other does.
++	 * For purposes of comparison, that makes them identical since the
++	 * one that doesn't have datamatch will cover the same handler that
++	 * does.
++	 */
++	if (n->datamatch != p->datamatch)
++		return 0;
++	if (n->data < p->data)
++		return -1;
++	if (n->data > p->data)
++		return 1;
++	return 0;
++}
 +
-+		return gunyah_guest_mem_create(&args);
++static int gunyah_vm_io_handler_compare(struct rb_node *node,
++					const struct rb_node *parent)
++{
++	return _gunyah_vm_io_handler_compare(node, parent);
++}
++
++static int gunyah_vm_io_handler_find(const void *key,
++				     const struct rb_node *node)
++{
++	const struct gunyah_vm_io_handler *k = key;
++
++	return _gunyah_vm_io_handler_compare(&k->node, node);
++}
++
++static struct gunyah_vm_io_handler *
++gunyah_vm_mgr_find_io_hdlr(struct gunyah_vm *ghvm, u64 addr, u64 len, u64 data)
++{
++	struct gunyah_vm_io_handler key = {
++		.addr = addr,
++		.len = len,
++		.datamatch = true,
++		.data = data,
++	};
++	struct rb_node *node;
++
++	node = rb_find(&key, &ghvm->mmio_handler_root,
++		       gunyah_vm_io_handler_find);
++	if (!node)
++		return NULL;
++
++	return container_of(node, struct gunyah_vm_io_handler, node);
++}
++
++int gunyah_vm_mmio_write(struct gunyah_vm *ghvm, u64 addr, u32 len, u64 data)
++{
++	struct gunyah_vm_io_handler *io_hdlr = NULL;
++	int ret;
++
++	down_read(&ghvm->mmio_handler_lock);
++	io_hdlr = gunyah_vm_mgr_find_io_hdlr(ghvm, addr, len, data);
++	if (!io_hdlr || !io_hdlr->ops || !io_hdlr->ops->write) {
++		ret = -ENOENT;
++		goto out;
 +	}
- 	default:
- 		return -ENOTTY;
- 	}
++
++	ret = io_hdlr->ops->write(io_hdlr, addr, len, data);
++
++out:
++	up_read(&ghvm->mmio_handler_lock);
++	return ret;
++}
++EXPORT_SYMBOL_GPL(gunyah_vm_mmio_write);
++
++int gunyah_vm_add_io_handler(struct gunyah_vm *ghvm,
++			     struct gunyah_vm_io_handler *io_hdlr)
++{
++	struct rb_node *found;
++
++	if (io_hdlr->datamatch &&
++	    (!io_hdlr->len || io_hdlr->len > sizeof(io_hdlr->data)))
++		return -EINVAL;
++
++	down_write(&ghvm->mmio_handler_lock);
++	found = rb_find_add(&io_hdlr->node, &ghvm->mmio_handler_root,
++			    gunyah_vm_io_handler_compare);
++	up_write(&ghvm->mmio_handler_lock);
++
++	return found ? -EEXIST : 0;
++}
++EXPORT_SYMBOL_GPL(gunyah_vm_add_io_handler);
++
++void gunyah_vm_remove_io_handler(struct gunyah_vm *ghvm,
++				 struct gunyah_vm_io_handler *io_hdlr)
++{
++	down_write(&ghvm->mmio_handler_lock);
++	rb_erase(&io_hdlr->node, &ghvm->mmio_handler_root);
++	up_write(&ghvm->mmio_handler_lock);
++}
++EXPORT_SYMBOL_GPL(gunyah_vm_remove_io_handler);
++
+ static int gunyah_vm_rm_notification_status(struct gunyah_vm *ghvm, void *data)
+ {
+ 	struct gunyah_rm_vm_status_payload *payload = data;
+@@ -404,6 +516,9 @@ static __must_check struct gunyah_vm *gunyah_vm_alloc(struct gunyah_rm *rm)
+ 	INIT_LIST_HEAD(&ghvm->resource_tickets);
+ 	xa_init(&ghvm->boot_context);
+ 
++	init_rwsem(&ghvm->mmio_handler_lock);
++	ghvm->mmio_handler_root = RB_ROOT;
++
+ 	mt_init(&ghvm->mm);
+ 	mt_init(&ghvm->bindings);
+ 	init_rwsem(&ghvm->bindings_lock);
 diff --git a/drivers/virt/gunyah/vm_mgr.h b/drivers/virt/gunyah/vm_mgr.h
-index a6a4efa4138b7..7ac0dd066991b 100644
+index 8cee93e551700..daddb1d0cb70b 100644
 --- a/drivers/virt/gunyah/vm_mgr.h
 +++ b/drivers/virt/gunyah/vm_mgr.h
-@@ -171,4 +171,6 @@ int gunyah_vm_provide_folio(struct gunyah_vm *ghvm, struct folio *folio,
- int gunyah_vm_reclaim_folio(struct gunyah_vm *ghvm, u64 gfn, struct folio *folio);
- int gunyah_vm_reclaim_range(struct gunyah_vm *ghvm, u64 gfn, u64 nr);
+@@ -11,6 +11,7 @@
+ #include <linux/maple_tree.h>
+ #include <linux/mutex.h>
+ #include <linux/pagemap.h>
++#include <linux/rbtree.h>
+ #include <linux/rwsem.h>
+ #include <linux/set_memory.h>
+ #include <linux/wait.h>
+@@ -58,6 +59,9 @@ long gunyah_dev_vm_mgr_ioctl(struct gunyah_rm *rm, unsigned int cmd,
+  * @guest_shared_extent_ticket: Resource ticket to the capability for
+  *                              the memory extent that represents
+  *                              memory shared with the guest.
++ * @mmio_handler_root: RB tree of MMIO handlers.
++ *                     Entries are &struct gunyah_vm_io_handler
++ * @mmio_handler_lock: Serialization of traversing @mmio_handler_root
+  * @rm: Pointer to the resource manager struct to make RM calls
+  * @parent: For logging
+  * @nb: Notifier block for RM notifications
+@@ -93,6 +97,8 @@ struct gunyah_vm {
+ 	struct gunyah_vm_resource_ticket addrspace_ticket,
+ 		host_private_extent_ticket, host_shared_extent_ticket,
+ 		guest_private_extent_ticket, guest_shared_extent_ticket;
++	struct rb_root mmio_handler_root;
++	struct rw_semaphore mmio_handler_lock;
  
-+int gunyah_guest_mem_create(struct gunyah_create_mem_args *args);
-+
- #endif
-diff --git a/include/uapi/linux/gunyah.h b/include/uapi/linux/gunyah.h
-index 46f7d3aa61d05..c5f506350364d 100644
---- a/include/uapi/linux/gunyah.h
-+++ b/include/uapi/linux/gunyah.h
-@@ -20,6 +20,25 @@
-  */
- #define GUNYAH_CREATE_VM _IO(GUNYAH_IOCTL_TYPE, 0x0) /* Returns a Gunyah VM fd */
+ 	struct gunyah_rm *rm;
  
-+enum gunyah_mem_flags {
-+	GHMF_CLOEXEC = (1UL << 0),
-+	GHMF_ALLOW_HUGEPAGE = (1UL << 1),
-+};
+@@ -119,6 +125,8 @@ struct gunyah_vm {
+ 	struct xarray boot_context;
+ };
+ 
++int gunyah_vm_mmio_write(struct gunyah_vm *ghvm, u64 addr, u32 len, u64 data);
 +
-+/**
-+ * struct gunyah_create_mem_args - Description of guest memory to create
-+ * @flags: See GHMF_*.
+ /**
+  * folio_mmapped() - Returns true if the folio is mapped into any vma
+  * @folio: Folio to test
+diff --git a/include/linux/gunyah.h b/include/linux/gunyah.h
+index a9d58150de696..dbd5b0251b491 100644
+--- a/include/linux/gunyah.h
++++ b/include/linux/gunyah.h
+@@ -155,6 +155,35 @@ int gunyah_vm_add_resource_ticket(struct gunyah_vm *ghvm,
+ void gunyah_vm_remove_resource_ticket(struct gunyah_vm *ghvm,
+ 				      struct gunyah_vm_resource_ticket *ticket);
+ 
++/*
++ * gunyah_vm_io_handler contains the info about an io device and its associated
++ * addr and the ops associated with the io device.
 + */
-+struct gunyah_create_mem_args {
-+	__u64 flags;
-+	__u64 size;
-+	__u64 reserved[6];
++struct gunyah_vm_io_handler {
++	struct rb_node node;
++	u64 addr;
++
++	bool datamatch;
++	u8 len;
++	u64 data;
++	struct gunyah_vm_io_handler_ops *ops;
 +};
 +
-+#define GUNYAH_CREATE_GUEST_MEM      \
-+	_IOW(GUNYAH_IOCTL_TYPE, 0x8, \
-+	     struct gunyah_create_mem_args) /* Returns a Gunyah memory fd */
++/*
++ * gunyah_vm_io_handler_ops contains function pointers associated with an iodevice.
++ */
++struct gunyah_vm_io_handler_ops {
++	int (*read)(struct gunyah_vm_io_handler *io_dev, u64 addr, u32 len,
++		    u64 data);
++	int (*write)(struct gunyah_vm_io_handler *io_dev, u64 addr, u32 len,
++		     u64 data);
++};
 +
- /*
-  * ioctls for gunyah-vm fds (returned by GUNYAH_CREATE_VM)
-  */
++int gunyah_vm_add_io_handler(struct gunyah_vm *ghvm,
++			     struct gunyah_vm_io_handler *io_dev);
++void gunyah_vm_remove_io_handler(struct gunyah_vm *ghvm,
++				 struct gunyah_vm_io_handler *io_dev);
++
+ #define GUNYAH_RM_ACL_X BIT(0)
+ #define GUNYAH_RM_ACL_W BIT(1)
+ #define GUNYAH_RM_ACL_R BIT(2)
 
 -- 
 2.34.1
