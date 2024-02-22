@@ -1,352 +1,194 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E41D21864A;
-	Thu, 22 Feb 2024 23:17:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708643822; cv=none; b=nasp6M4fk0HNlEK7pTIsujArcL2zrsGDFB3mqk4hDvM5ty3kZzNegBAlmK2gZAm5P0K0fyxZHFlmw0ZclaOGnP3A5SsXE/0nmy1IkKckyDnKM9eSNggp61vCOzpvno2wmg6h+WjagpRwTKQYpCnr9Mvc2KzBrsXf2PQPRZi4FB4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708643822; c=relaxed/simple;
-	bh=kZLNOeOQ8cyypDHvnRAYU5cpknSgj65yTR79TeO4b3s=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
-	 In-Reply-To:To:CC; b=nlGWmmjwVLuWuHgVShEB+4oWAn2wZNhDFWfRSnmxsJwnFWLsb0DHeP0rZRaK9viLL+U776Sl7FyCnPsBgL5OTDWY+ih2CcBAXtykbjrXPEX631omyNAOsPCd50j6a8Dvax/9aOlIV6zO9C5uNlXcjueyK+gwfR/puNSVebxOniU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=pEK+4GzJ; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D81F9224C2;
+	Thu, 22 Feb 2024 23:17:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.8
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1708643826; cv=fail; b=hrgSFbIcRqziUxwW9rXHrps1HUnHX0xp/kYwOXLpzZDfaLTqHP5hwLmVfcRd+0rMW5bUHJFboROxkanzzqfrVCfyLzxmljsW6FhtgZRw0rlnopQHZCZ9bmtwRPU/YdLaRYCocicrRrR0+u+QZRPx3636JO/vp/U+iZbG9LfcTaQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1708643826; c=relaxed/simple;
+	bh=9iECg1qsHpFzbui8o6WdYxU/SM9BQnKlbxtVVwhP1Ro=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=LmgYDgmtHnm0CfupTBGCqiKgs7qC4rXghVlXkzcHSMQemHyt5x5eIGE7bqIaAueWjHmak5q5jJfRaE0e3RRS9crgH5JnBxLClXtMY1/w9j/GuZAE5D20K70V6vKSt9l8Ntba3UbEAKc1bn3BbniSpuLYPuWNyMStitArsHOGPBg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ADDb2kAd; arc=fail smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="pEK+4GzJ"
-Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 41MMsXqN014811;
-	Thu, 22 Feb 2024 23:16:29 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	from:date:subject:mime-version:content-type
-	:content-transfer-encoding:message-id:references:in-reply-to:to
-	:cc; s=qcppdkim1; bh=v5Cp82ySxfsN2PrtsAgumsLlaAyDJCQKtLBCPd8HpWo
-	=; b=pEK+4GzJjBQCK1sErKzRh7OLQuAogVY+p6WN4Km6+u75gRxEx9UJM4qNrLk
-	5/8AqGxnHg7SSj9OdW7OtHLMoN6rESW8+Z89ZGEwySnq5Qv5FSTIBfEYnLD0zekY
-	t7Au7W153WR1tasbqCYD7mt8YJj9ugVT8nD13JWj2DKzGiLsqDFTXKDV23q9slCO
-	fpIvOZEHVH2jd0ISgHEkO+d7SE719bZImnmg6UNeUZmCJY954DGCfloL8Vgd/pe9
-	ApoPCT5tCImClxpisa6El0tXqHpQPQ+epAaW8xz/sSZIcWQJnt3UUSwMitHW/QrX
-	YITsFwLPbBZFCfUp+u92W9PJJ8g==
-Received: from nasanppmta02.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3wdw13afve-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 22 Feb 2024 23:16:29 +0000 (GMT)
-Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 41MNGROA027655
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 22 Feb 2024 23:16:28 GMT
-Received: from hu-eberman-lv.qualcomm.com (10.49.16.6) by
- nasanex01b.na.qualcomm.com (10.46.141.250) with Microsoft SMTP Server
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ADDb2kAd"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1708643824; x=1740179824;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=9iECg1qsHpFzbui8o6WdYxU/SM9BQnKlbxtVVwhP1Ro=;
+  b=ADDb2kAdPSp7ocoAk1X/ab0gPFEKrFslX70gwcpG2El1A8m2sRPXA5QP
+   t+h5AsrXcnaIbI3zqo8qVakLdL/q0dvA96LKCN5J9W1lwqM7xDxn8OMR2
+   s45sCeDDzo/mAnLS1+tXcaPw3L765sp3kIdlfSeXR05GPuiWLffXgq/cr
+   ahsL5xp/3HkszjZ9j2TBir2pa8JqDrnQRy3O/HRJlpWJRL+QZM648Z/2J
+   CNaZYvpdfy+/kSzkcw5YiGtlVORm29tkQG/nUDksm5ZijUcfxNBGIrPUX
+   Efm0cPKx9sRP6rbRg+Tgiw9ZBcX4rJWkfoeHc8mlw3RgPZlcfzjCpes9s
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10992"; a="20461638"
+X-IronPort-AV: E=Sophos;i="6.06,179,1705392000"; 
+   d="scan'208";a="20461638"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Feb 2024 15:15:26 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.06,179,1705392000"; 
+   d="scan'208";a="5609982"
+Received: from orsmsx602.amr.corp.intel.com ([10.22.229.15])
+  by fmviesa009.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 22 Feb 2024 15:15:25 -0800
+Received: from orsmsx611.amr.corp.intel.com (10.22.229.24) by
+ ORSMSX602.amr.corp.intel.com (10.22.229.15) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Thu, 22 Feb 2024 15:15:24 -0800
+Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX611.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Thu, 22 Feb 2024 15:15:24 -0800
+Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
+ orsmsx610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35 via Frontend Transport; Thu, 22 Feb 2024 15:15:24 -0800
+Received: from NAM04-BN8-obe.outbound.protection.outlook.com (104.47.74.41) by
+ edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Thu, 22 Feb 2024 15:16:27 -0800
-From: Elliot Berman <quic_eberman@quicinc.com>
-Date: Thu, 22 Feb 2024 15:16:24 -0800
-Subject: [PATCH v17 01/35] docs: gunyah: Introduce Gunyah Hypervisor
+ 15.1.2507.35; Thu, 22 Feb 2024 15:15:23 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ea/WIcQXvWubd01yYQrMNW89APQl698tP823D5uRDQFitTGq00A2bAzmwKakP77n6OsDwZaBhBat0QKkHfN3+ZAs8OQNTTPwEeasYjTWWmGPTwwEeYLAAF0CArfCTn7qEkU6KG9zQBbnaA7ZCMObP/TqV0ebA7Jz2xWimy6l0rqeIUebNFljjkzdgYH4EszyS9161PRWEB+dJ0YaF1n3zpMBoBPAFySSu7cQh1nLCWuVJy6ccWFFhe6TCaN1/S1E8wMacQvb6zP11cYMi+Xk0+RtsPmRTCJnSNNdgqx71u3mVPAvCiM2yTjyFCobQOa4toDrGAJrlV5HIgTa5hhaeg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=TtQT9+51SPZJKbiW1KIz1YG1E0sUL+/T2so164BgXXc=;
+ b=muDKGCwT4kI/fuc6dD+RD09l+FvwGBOt5XqebNRfoMwDN5tgqlLGY3DIzlx4JGCBlEYTS2hmXU/gAH2QixkE/Ck4otjd6ydBv7HoIzIJfAPwm2KGc3GXBomMtyJz5lm7UscfY40jam7yzd8KK3Qad9j7lk9Ws2C4mKrjdEfGEhmfrzngSUYtHvnZDDSp9nBPjp/rrtIgY9L3Q8/weW5dBIuhMFlJ6IZdwrCS1YyL541nUmucjxz7sapxDFGAuOeJMFQh/gHO4/zBxDT6yK1QNhX6amQ+IaKW7+pVOljmZI1jhlv5BQG0q4VbteSkAMCP3XydynCIMIfC9Xd8w2tNQA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
+ by SJ0PR11MB6717.namprd11.prod.outlook.com (2603:10b6:a03:44f::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7292.39; Thu, 22 Feb
+ 2024 23:15:20 +0000
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::da43:97f6:814c:4dc]) by PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::da43:97f6:814c:4dc%7]) with mapi id 15.20.7316.018; Thu, 22 Feb 2024
+ 23:15:20 +0000
+Date: Thu, 22 Feb 2024 15:15:17 -0800
+From: Dan Williams <dan.j.williams@intel.com>
+To: Dan Williams <dan.j.williams@intel.com>, <gregkh@linuxfoundation.org>
+CC: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>, Marc Herbert
+	<marc.herbert@intel.com>, "Rafael J. Wysocki" <rafael@kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+	<linux-coco@lists.linux.dev>, <alsa-devel@alsa-project.org>
+Subject: RE: [PATCH 1/3] sysfs: Fix crash on empty group attributes array
+Message-ID: <65d7d5858bb74_ca001294af@dwillia2-xfh.jf.intel.com.notmuch>
+References: <170863444851.1479840.10249410842428140526.stgit@dwillia2-xfh.jf.intel.com>
+ <170863445442.1479840.1818801787239831650.stgit@dwillia2-xfh.jf.intel.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <170863445442.1479840.1818801787239831650.stgit@dwillia2-xfh.jf.intel.com>
+X-ClientProxiedBy: MW4PR04CA0207.namprd04.prod.outlook.com
+ (2603:10b6:303:86::32) To PH8PR11MB8107.namprd11.prod.outlook.com
+ (2603:10b6:510:256::6)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-ID: <20240222-gunyah-v17-1-1e9da6763d38@quicinc.com>
-References: <20240222-gunyah-v17-0-1e9da6763d38@quicinc.com>
-In-Reply-To: <20240222-gunyah-v17-0-1e9da6763d38@quicinc.com>
-To: Alex Elder <elder@linaro.org>,
-        Srinivas Kandagatla
-	<srinivas.kandagatla@linaro.org>,
-        Murali Nalajal <quic_mnalajal@quicinc.com>,
-        Trilok Soni <quic_tsoni@quicinc.com>,
-        Srivatsa Vaddagiri
-	<quic_svaddagi@quicinc.com>,
-        Carl van Schaik <quic_cvanscha@quicinc.com>,
-        Philip Derrin <quic_pderrin@quicinc.com>,
-        Prakruthi Deepak Heragu
-	<quic_pheragu@quicinc.com>,
-        Jonathan Corbet <corbet@lwn.net>, Rob Herring
-	<robh+dt@kernel.org>,
-        Krzysztof Kozlowski
-	<krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@linaro.org>,
-        Bjorn Andersson
-	<andersson@kernel.org>,
-        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-        "Fuad
- Tabba" <tabba@google.com>,
-        Sean Christopherson <seanjc@google.com>,
-        "Andrew
- Morton" <akpm@linux-foundation.org>
-CC: <linux-arm-msm@vger.kernel.org>, <linux-doc@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-mm@kvack.org>,
-        Elliot Berman
-	<quic_eberman@quicinc.com>
-X-Mailer: b4 0.12.4
-X-ClientProxiedBy: nalasex01c.na.qualcomm.com (10.47.97.35) To
- nasanex01b.na.qualcomm.com (10.46.141.250)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: BmKGDWF2HL3902ISFPTZtRcFZK3Q9KrT
-X-Proofpoint-GUID: BmKGDWF2HL3902ISFPTZtRcFZK3Q9KrT
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-02-22_15,2024-02-22_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999
- malwarescore=0 impostorscore=0 bulkscore=0 adultscore=0 mlxscore=0
- clxscore=1015 lowpriorityscore=0 spamscore=0 priorityscore=1501
- phishscore=0 suspectscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.19.0-2402120000 definitions=main-2402220179
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|SJ0PR11MB6717:EE_
+X-MS-Office365-Filtering-Correlation-Id: 3ed41a4e-3ac2-4737-ea4b-08dc33fc2355
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: Kd7gX8N7+mbDAET/hesFWz93QZ9wnvSX2HI+9bcjMvmnCSI2HIk1mKv6WAsQb0+IiJDgEALSgRICNdLRj4DyU5ZggSnw/Wwq8bV12r8OahF2VBN0BCkBsxyzEUCW5o3EocsjO9GjYQl9FYSMCwfL5IbyfMpKjlAwmvlMQtkCcx68Gv6m8denGU1yIZLVGH9UHgsm99KH1KSRGve6qd9+dkGcxzofJWiEtU964sDvn0DQXs3jwyDASAWBj7f/v5IoPMI8/tM88CWo54Im874KxDEvz6xIXqBke36Sldr3DQk3wzhe2T0p30gqooMdbVxP/AARRH6syoj8wqekVkgV9uf6aeRdZibIqy7uyJT7bHK80eLuAGRJ6Xw4fC1aLJv1hgonOuB9EwkYPTvFqGDSN6VGdUBiezxXtzHmyf4dtay5TJJ2xVn/NGN8ggckEKKmueYhWXhEepH4HfwIbxFh9LEG1Rilrg/UwE/vrwPufHlLfi4CbK1uNGmCUcNIF+pONXdPYMZs3D2c4MCKLBxJvA==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?LOB0e6JHw3pmrhEW8ZuoBlJJklnROxwYjxOyp/Squ/qH0v+0cxHGO0ZZB+wV?=
+ =?us-ascii?Q?t56s4vRjrBjRQxC+rbhsWd8Z1JOwqm+2Nd2MFvP/jxMwIBYm0oN3fKicicPh?=
+ =?us-ascii?Q?jACFkS8Km7HCfq6czRvtssoAxerLJVV3iJaZY2izYsusxTb+luD6FXW+AW0v?=
+ =?us-ascii?Q?cnrlUI5KpuPAG3m46eNewLlk3VJUdE973Ous4N3HJUTvxqQp46Vt8zLTIbDp?=
+ =?us-ascii?Q?AXDEndDv3eizfZk7xrRBD8HUUDM/pnc/wdKdChd+yyzD36tzzTt3xPHLsT5b?=
+ =?us-ascii?Q?tvJq9T1pv8+dtbgQbQO1etTrT6XbLDMvZ9mjCqLfvO/tmCDtXe+VQVGUq22B?=
+ =?us-ascii?Q?v0ri7Q+nyrCkDq1LUxxNVkqBmvJOFxJF0UPhEcg6vT1UW7Vv0o7vPwEgUuAK?=
+ =?us-ascii?Q?okx3cZqLfMpCg8QJmxpNhcxX6ISCnLbnFa6bqGFnfedk+zdk20ud8ULlhmHr?=
+ =?us-ascii?Q?aump8guUr7JMNtyvJ0y9HGrXyMOVgpgV7q5KiyYm1uLhrX8UQPUwRQiLo7Mo?=
+ =?us-ascii?Q?QxI+wD5MVDWxB/BewNKwH5F+uDVnH7vxw1aYSoBBdadhjiBeYoIrVrNgJecZ?=
+ =?us-ascii?Q?B0PG2N+GLUGpUU+ZcbK4/36ueLXFz96qtHw+bxup+mm5rnN0c3TpaJbRR4Zz?=
+ =?us-ascii?Q?1kyuS0+W66eKESyr+6VSo+DimdwzZQkpmr8uGUsbanUhlEl42l+kiCbw7Bd9?=
+ =?us-ascii?Q?RjX+Dyxoo8iWRxCOIUsjatacXKx4CEXxWyP6+oXOI1W2PUrhLJkkahYeoAP4?=
+ =?us-ascii?Q?WmLLIu4kwJZrRFIBcMtK71XxW0xFFOaZ24tKzADVUytipuKBXhkMJwTGg84E?=
+ =?us-ascii?Q?Kh5zN5N5J4TdOtUw6z9J+8ib5PVYQ85h+aOCTlv+eYhFXg7N7SjFAjpONuQv?=
+ =?us-ascii?Q?LIx6wBtpmANsAkZ32w5WIkWnvPwMs8qcsU86ylT2dgJEtu1nsgdJABvKTKs+?=
+ =?us-ascii?Q?4zvXLdGTjJhSDhLbYdZ8IArPx9g8t3OFO1n8rDSexcLf7jk9VcmuPX0/vjhV?=
+ =?us-ascii?Q?RDRUhYF8CUCXSaz3GRtMV7AgptI7MzR725WKQY0wMGGzNC6xU8ffhWB8F53o?=
+ =?us-ascii?Q?rx+e8K/lMp5snzQ3AvuRDgOLfddr+9uZ+o2s2/QX8b2nfQakbFr8bGMb9tgq?=
+ =?us-ascii?Q?UPow7xx6mJOaS8ld/PYhnh/q1ZKoS4FTzXMXHo+M3tXGw7AuE/zL57GKW9Hq?=
+ =?us-ascii?Q?D5mhbyn0XLMF0oTMPQ1tW02Az+Qb0r4nmv5zYw0wUDzIcH7I8SQBVs8mE7u1?=
+ =?us-ascii?Q?VnKSIMj09Ih6baQcWyVR+NDusYyzwiQaF6ag1LT8bGag6sSAR8rRVq+MunoE?=
+ =?us-ascii?Q?LtsZkopuNEn1dIGnOKmTXmiex/NaODkD7KEQ5G+WC6zHg7YNo+HKe18Bic07?=
+ =?us-ascii?Q?CjxNl/c2W3dsoiUMNoyu0iygk+k28fywM9rOUAx/q6Yek35UMM75aFiKNTBm?=
+ =?us-ascii?Q?AsjJxwLH3eGoVg5hr1JoYEKW02f7ahAGj2LYj1rbafcw0Ioq8Y7CbOhyv8Xf?=
+ =?us-ascii?Q?ig+zWHLSK2/7EvQ2d4hQQJd5bQw20VoAOu9Tjij1vzUSqx18As07T6rCVmba?=
+ =?us-ascii?Q?ZrSQbWLn9m/+zKBvAdMPINsqYBZXp2qtrfeq17q/x/zByW+kiacXsBuH2AJJ?=
+ =?us-ascii?Q?ug=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3ed41a4e-3ac2-4737-ea4b-08dc33fc2355
+X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Feb 2024 23:15:19.9029
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Eib7vnjiESYCgZJM3WKRa+Q2VaMVRRT1SFNyObentWpagRbV5SOq2HFvynba2PO+MdhwW9vW2hZMuegvDIQDjEZdTAifCO795kBBOjdjp28=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR11MB6717
+X-OriginatorOrg: intel.com
 
-Gunyah is an open-source Type-1 hypervisor developed by Qualcomm. It
-does not depend on any lower-privileged OS/kernel code for its core
-functionality. This increases its security and can support a smaller
-trusted computing based when compared to Type-2 hypervisors.
+Dan Williams wrote:
+> It turns out that arch/x86/events/intel/core.c makes use of "empty"
+> attributes.
+> 
+> 	static struct attribute *empty_attrs;
+> 
+> 	__init int intel_pmu_init(void)
+> 	{
+> 	        struct attribute **extra_skl_attr = &empty_attrs;
+> 	        struct attribute **extra_attr = &empty_attrs;
+> 	        struct attribute **td_attr    = &empty_attrs;
+> 	        struct attribute **mem_attr   = &empty_attrs;
+> 	        struct attribute **tsx_attr   = &empty_attrs;
+> 		...
+> 
+> That breaks the assumption __first_visible() that expects that if
+> grp->attrs is set then grp->attrs[0] must also be set and results in
+> backtraces like:
+> 
+>     BUG: kernel NULL pointer dereference, address: 00rnel mode
+>     #PF: error_code(0x0000) - not-present ] PREEMPT SMP NOPTI
+>     CPU: 1 PID: 1 Comm: swapper/IP: 0010:exra_is_visible+0x14/0x20
+>      ? exc_page_fault+0x68/0x190
+>      internal_create_groups+0x42/0xa0
+>      pmu_dev_alloc+0xc0/0xe0
+>      perf_event_sysfs_init+0x580000000000 ]---
+>     RIP: 0010:exra_is_visible+0x14/0
+> 
+> Check for non-empty attributes array before calling is_visible().
+> 
+> Reported-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+> Closes: https://github.com/thesofproject/linux/pull/4799#issuecomment-1958537212
+> Fixes: 70317fd24b41 ("sysfs: Introduce a mechanism to hide static attribute_groups")
+> Cc: Marc Herbert <marc.herbert@intel.com>
 
-Add documentation describing the Gunyah hypervisor and the main
-components of the Gunyah hypervisor which are of interest to Linux
-virtualization development.
+Ok, this one is now
 
-Signed-off-by: Elliot Berman <quic_eberman@quicinc.com>
----
- Documentation/virt/gunyah/index.rst         | 135 ++++++++++++++++++++++++++++
- Documentation/virt/gunyah/message-queue.rst |  68 ++++++++++++++
- Documentation/virt/index.rst                |   1 +
- 3 files changed, 204 insertions(+)
+Tested-by: Marc Herbert <marc.herbert@intel.com>
 
-diff --git a/Documentation/virt/gunyah/index.rst b/Documentation/virt/gunyah/index.rst
-new file mode 100644
-index 0000000000000..fba2c7a11d0f8
---- /dev/null
-+++ b/Documentation/virt/gunyah/index.rst
-@@ -0,0 +1,135 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+=================
-+Gunyah Hypervisor
-+=================
-+
-+.. toctree::
-+   :maxdepth: 1
-+
-+   message-queue
-+
-+Gunyah is a Type-1 hypervisor which is independent of any OS kernel, and runs in
-+a more privileged CPU level (EL2 on Aarch64). It does not depend on a less
-+privileged operating system for its core functionality. This increases its
-+security and can support a much smaller trusted computing base than a Type-2
-+hypervisor.
-+
-+Gunyah is an open source hypervisor. The source repository is available at
-+https://github.com/quic/gunyah-hypervisor.
-+
-+Gunyah provides these following features.
-+
-+- Scheduling:
-+
-+  A scheduler for virtual CPUs (vCPUs) on physical CPUs enables time-sharing
-+  of the CPUs. Gunyah supports two models of scheduling which can coexist on
-+  a running system:
-+
-+    1. Hypervisor vCPU scheduling in which Gunyah hypervisor schedules vCPUS on
-+       its own. The default is a real-time priority with round-robin scheduler.
-+    2. "Proxy" scheduling in which an owner-VM can donate the remainder of its
-+       own vCPU's time slice to an owned-VM's vCPU via a hypercall.
-+
-+- Memory Management:
-+
-+  APIs handling memory, abstracted as objects, limiting direct use of physical
-+  addresses. Memory ownership and usage tracking of all memory under its control.
-+  Memory partitioning between VMs is a fundamental security feature.
-+
-+- Interrupt Virtualization:
-+
-+  Interrupt ownership is tracked and interrupt delivery is directly to the
-+  assigned VM. Gunyah makes use of hardware interrupt virtualization where
-+  possible.
-+
-+- Inter-VM Communication:
-+
-+  There are several different mechanisms provided for communicating between VMs.
-+
-+    1. Message queues
-+    2. Doorbells
-+    3. Virtio MMIO transport
-+    4. Shared memory
-+
-+- Virtual platform:
-+
-+  Architectural devices such as interrupt controllers and CPU timers are
-+  directly provided by the hypervisor as well as core virtual platform devices
-+  and system APIs such as ARM PSCI.
-+
-+- Device Virtualization:
-+
-+  Para-virtualization of devices is supported using inter-VM communication and
-+  virtio transport support. Select stage 2 faults by virtual machines that use
-+  proxy-scheduled vCPUs can be handled directly by Linux to provide Type-2
-+  hypervisor style on-demand paging and/or device emulation.
-+
-+Architectures supported
-+=======================
-+AArch64 with a GICv3 or GICv4.1
-+
-+Resources and Capabilities
-+==========================
-+
-+Services/resources provided by the Gunyah hypervisor are accessible to a
-+virtual machine through capabilities. A capability is an access control
-+token granting the holder a set of permissions to operate on a specific
-+hypervisor object (conceptually similar to a file-descriptor).
-+For example, inter-VM communication using Gunyah doorbells and message queues
-+is performed using hypercalls taking Capability ID arguments for the required
-+IPC objects. These resources are described in Linux as a struct gunyah_resource.
-+
-+Unlike UNIX file descriptors, there is no path-based or similar lookup of
-+an object to create a new Capability, meaning simpler security analysis.
-+Creation of a new Capability requires the holding of a set of privileged
-+Capabilities which are typically never given out by the Resource Manager (RM).
-+
-+Gunyah itself provides no APIs for Capability ID discovery. Enumeration of
-+Capability IDs is provided by RM as a higher level service to VMs.
-+
-+Resource Manager
-+================
-+
-+The Gunyah Resource Manager (RM) is a privileged application VM supporting the
-+Gunyah Hypervisor. It provides policy enforcement aspects of the virtualization
-+system. The resource manager can be treated as an extension of the Hypervisor
-+but is separated to its own partition to ensure that the hypervisor layer itself
-+remains small and secure and to maintain a separation of policy and mechanism in
-+the platform. The resource manager runs at arm64 NS-EL1, similar to other
-+virtual machines.
-+
-+Communication with the resource manager from other virtual machines happens as
-+described in message-queue.rst. Details about the specific messages can be found
-+in drivers/virt/gunyah/rsc_mgr.c
-+
-+::
-+
-+  +-------+   +--------+   +--------+
-+  |  RM   |   |  VM_A  |   |  VM_B  |
-+  +-.-.-.-+   +---.----+   +---.----+
-+    | |           |            |
-+  +-.-.-----------.------------.----+
-+  | | \==========/             |    |
-+  |  \========================/     |
-+  |            Gunyah               |
-+  +---------------------------------+
-+
-+The source for the resource manager is available at
-+https://github.com/quic/gunyah-resource-manager.
-+
-+The resource manager provides the following features:
-+
-+- VM lifecycle management: allocating a VM, starting VMs, destruction of VMs
-+- VM access control policy, including memory sharing and lending
-+- Interrupt routing configuration
-+- Forwarding of system-level events (e.g. VM shutdown) to owner VM
-+- Resource (capability) discovery
-+
-+A VM requires boot configuration to establish communication with the resource
-+manager. This is provided to VMs via a 'hypervisor' device tree node which is
-+overlaid to the VMs DT by the RM. This node lets guests know they are running
-+as a Gunyah guest VM, how to communicate with resource manager, and basic
-+description and capabilities of this VM. See
-+Documentation/devicetree/bindings/firmware/gunyah-hypervisor.yaml for a
-+description of this node.
-diff --git a/Documentation/virt/gunyah/message-queue.rst b/Documentation/virt/gunyah/message-queue.rst
-new file mode 100644
-index 0000000000000..96864708f442e
---- /dev/null
-+++ b/Documentation/virt/gunyah/message-queue.rst
-@@ -0,0 +1,68 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+Message Queues
-+==============
-+Message queue is a simple low-capacity IPC channel between two virtual machines.
-+It is intended for sending small control and configuration messages. Each
-+message queue is unidirectional and buffered in the hypervisor. A full-duplex
-+IPC channel requires a pair of queues.
-+
-+The size of the queue and the maximum size of the message that can be passed is
-+fixed at creation of the message queue. Resource manager is presently the only
-+use case for message queues, and creates messages queues between itself and VMs
-+with a fixed maximum message size of 240 bytes. Longer messages require a
-+further protocol on top of the message queue messages themselves. For instance,
-+communication with the resource manager adds a header field for sending longer
-+messages which are split into smaller fragments.
-+
-+The diagram below shows how message queue works. A typical configuration
-+involves 2 message queues. Message queue 1 allows VM_A to send messages to VM_B.
-+Message queue 2 allows VM_B to send messages to VM_A.
-+
-+1. VM_A sends a message of up to 240 bytes in length. It makes a hypercall
-+   with the message to request the hypervisor to add the message to
-+   message queue 1's queue. The hypervisor copies memory into the internal
-+   message queue buffer; the memory doesn't need to be shared between
-+   VM_A and VM_B.
-+
-+2. Gunyah raises the corresponding interrupt for VM_B (Rx vIRQ) when any of
-+   these happens:
-+
-+   a. gunyah_msgq_send() has PUSH flag. This is a typical case when the message
-+      queue is being used to implement an RPC-like interface.
-+   b. Explicitly with gunyah_msgq_push hypercall from VM_A.
-+   c. Message queue has reached a threshold depth. Typically, this threshold
-+      depth is the size of the queue (in other words: when queue is full, Rx
-+      vIRQ is raised).
-+
-+3. VM_B calls gunyah_msgq_recv() and Gunyah copies message to requested buffer.
-+
-+4. Gunyah raises the corresponding interrupt for VM_A (Tx vIRQ) when the message
-+   queue falls below a watermark depth. Typically, this is when the queue is
-+   drained. Note the watermark depth and the threshold depth for the Rx vIRQ are
-+   independent values. Coincidentally, this signal is conceptually similar to
-+   Clear-to-Send.
-+
-+For VM_B to send a message to VM_A, the process is identical, except that
-+hypercalls reference message queue 2's capability ID. The IRQ will be different
-+for the second message queue.
-+
-+::
-+
-+      +-------------------+         +-----------------+         +-------------------+
-+      |        VM_A       |         |Gunyah hypervisor|         |        VM_B       |
-+      |                   |         |                 |         |                   |
-+      |                   |         |                 |         |                   |
-+      |                   |   Tx    |                 |         |                   |
-+      |                   |-------->|                 | Rx vIRQ |                   |
-+      |gunyah_msgq_send() | Tx vIRQ |Message queue 1  |-------->|gunyah_msgq_recv() |
-+      |                   |<------- |                 |         |                   |
-+      |                   |         |                 |         |                   |
-+      |                   |         |                 |         |                   |
-+      |                   |         |                 |   Tx    |                   |
-+      |                   | Rx vIRQ |                 |<--------|                   |
-+      |gunyah_msgq_recv() |<--------|Message queue 2  | Tx vIRQ |gunyah_msgq_send() |
-+      |                   |         |                 |-------->|                   |
-+      |                   |         |                 |         |                   |
-+      |                   |         |                 |         |                   |
-+      +-------------------+         +-----------------+         +---------------+
-diff --git a/Documentation/virt/index.rst b/Documentation/virt/index.rst
-index 7fb55ae08598d..15869ee059b35 100644
---- a/Documentation/virt/index.rst
-+++ b/Documentation/virt/index.rst
-@@ -16,6 +16,7 @@ Virtualization Support
-    coco/sev-guest
-    coco/tdx-guest
-    hyperv/index
-+   gunyah/index
- 
- .. only:: html and subproject
- 
+...per:
 
--- 
-2.34.1
+https://github.com/thesofproject/linux/pull/4799#issuecomment-1960469389
 
+Thanks for all the help Marc!
