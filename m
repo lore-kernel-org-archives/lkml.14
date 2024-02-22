@@ -1,164 +1,187 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com [209.85.208.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 690AD15DBA8;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B800015DBC7;
 	Thu, 22 Feb 2024 18:14:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708625686; cv=none; b=Ip+u2LxmKwaQnTqNtUhZ+qfERfEWX2TuX3YS+utCIT1VGNOARbxrBIAvK+/BJOm7xD7wNQcAMz6ycaXHC1XE2weWHQUCkH1aOwVsYWAiRIJgIC5mXDSeXj3f7G71bmOz/Frrt+wRnpwVNNRIb+p68HVuLtKFtKO0rCo+0B02N/0=
+	t=1708625687; cv=none; b=uFgmBLLJLbNsE62WrN0CTPtWXyNHf6aPIBDxVxlBiAbIc9sFZtCWHCS4eTPc+bDj+M39mCtYDl2RUtC7EKgEtVsV9fgoX/W1L85QcVOrHIHCCEy1q+MkYvWmR9Lj7M1KNPA8Syu22Wd6dfZ+J3404I+K20rYK1cZh65tRi9Dr0Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708625686; c=relaxed/simple;
-	bh=EOzt+ac2VEJaQqn9R1VvC99pxlRc+ECtg0akisOt/iA=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=a7Ubeu8N9sTo7kOp02x7vF+1exnd85d3jaGxV8wYlBpsiKWh4iYe2OcrjqolTWp5E+8QmiBFlDGaOqIl/4tdJW3AciYZfQVtQ9tOo4iwN90uF2O68bvb2iB86tx+RwXNHHkatfTgqqYEnRXveQVP81dukG8UB/oAFt1k34Og6Wg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jg4vLAoD; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1708625687; c=relaxed/simple;
+	bh=2VBnWtOUYOYZx3D0CXbbsv1cQZySxF7anmw1+oL7qNg=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=Caq5YU+ggAgWlDFjMx94GtiuwRGoUVINUqNqrigBYTV6VXCDv29bkL71ihb5H6PXbSF5Pl4J2WtgL7qsgJwcfH/5ZjzlLdTOWEa3lvKZy5cZH83Nukk8+6VRN8/5MbWBY67DJPoFat2IqWC/0btOKScaX1gpIdWum1hnstoDUKE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JFLqxQq3; arc=none smtp.client-ip=209.85.208.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jg4vLAoD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 372AEC43394;
-	Thu, 22 Feb 2024 18:14:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708625685;
-	bh=EOzt+ac2VEJaQqn9R1VvC99pxlRc+ECtg0akisOt/iA=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=jg4vLAoD48Wz7hB8s5/0/Sss0B/uk45kUvfboV7jl/D62+lk0azLcJ6zaSfB7HVL9
-	 gqLKSYCj3xaNLzkzZ21bqX6Xqcpp59qHjbnNRbqXe4ruwVOwle/daMjCZDjg37bkP4
-	 KDMCgcjQq8BTujHwJ+fCYK2aLz8myVFAtMMVF550zCCIoopvo16D289iZyTl8+T+0G
-	 xIZ1y42lsKQV1cXJ89+W3eI/Xy6I234EcSTCyM7Yn+itgcJICg3cxD8/JKWTJC07LD
-	 PCh44uOgr45RxCtWbs6hKSA6yUaafMBrjHpCEIU+Of13lisEOPcMe4olA2RINelJPZ
-	 SWq0rnNHXQOsw==
-From: Maxime Ripard <mripard@kernel.org>
-Date: Thu, 22 Feb 2024 19:13:52 +0100
-Subject: [PATCH v7 06/36] drm/connector: Introduce an HDMI connector
- initialization function
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JFLqxQq3"
+Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-2d220ad10b3so807861fa.1;
+        Thu, 22 Feb 2024 10:14:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1708625684; x=1709230484; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=+o0t5l+gbhBR5sr353Zx4OwnR+/NtUKsRVbiL7FnCuk=;
+        b=JFLqxQq30iEscqR3gTzmDzKFdzYz8ayDFgzsDxEMxWTp946rEgYPjFDHvDr+YfU+cG
+         ZnILvtQqOdV5HvfNITdNqdpPEA+oIfAXkEx6ulbDqdsqLwg/o8O2vHGcsn1C30JpnDhC
+         paa264cO5YaHNVvySZnRC7jCHnkgNwNSUHzvIPugYrn12f/u6+jmcti8eqUWJ7+8oKIr
+         HAijBBsoRtWKIcCpxYD4Rc34Lq+UP4OE/EpCvyZr4qkwK0nguhxwXr/uESAsjBSExmy1
+         iYWDVyCrUa7rNZLcvjFElQBhbC6ctMH9XtL3jy4pX03nMx/7bmnQxR644VrUjte37MjQ
+         oHEA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708625684; x=1709230484;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=+o0t5l+gbhBR5sr353Zx4OwnR+/NtUKsRVbiL7FnCuk=;
+        b=hRaXoKYTuLrRLIqcqzyWCUhFSps1741Q46u2VxE/cHkKNMEHf3pOG6YFf0Vm8gxB9O
+         n4zALjM1/kvwZ83gdufwL1hyJvskQeo0P8ySfYv//HAh0HjRSIyO/c0ybq9AQXokxXrM
+         0Uz3nxgzSPLzy3cwXEm9pC4cd2UZ45XaH6icZ7fEPFlsDx/n67jDKwyTlcZzmWC7GmOV
+         21hXiYWAOSa0++/IZsxBaL5QIPjOVjPF3ufnI8nDNRCagU6/MNotbzTPkr8XyVTioy4K
+         4aIPZ2YvuK55hW5GYInR+FfM4JjOCVJbdDhfQbFdIz0c1AsRdcFmgiyiv2ONMDbFUGAp
+         trPQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUKK+MYIyAPT34qeFicmmGJ59mA3+dtQprDYlTodqcm4HmyJvdg8YGrCXQec5DPGLYxtAj+ggygiPFDFPPITsh90cD2K44uqNE1Z+usRGpFeAPGJ22Osy27pNVHbkDCh1qidovXUq8Y9w==
+X-Gm-Message-State: AOJu0Yz7WiaGgE9h+ed/sYyUa1XrxsXO+atjrFHPmj5YuWQxqOHKHdyK
+	ifTfiuVhdPXW3p0qjn4/UDDihmdME6wilDgQtCi8PZzZNhEgW/jP
+X-Google-Smtp-Source: AGHT+IHujCBUf3uP+SOmn6mxJZA8UNgrf2Op4NXH3LML5XVClyL6ZZ2opxWdtVcY7NGtBDIbf+PxtA==
+X-Received: by 2002:a2e:8256:0:b0:2d2:5169:27f3 with SMTP id j22-20020a2e8256000000b002d2516927f3mr4079549ljh.34.1708625683925;
+        Thu, 22 Feb 2024 10:14:43 -0800 (PST)
+Received: from localhost ([178.176.56.174])
+        by smtp.gmail.com with ESMTPSA id a16-20020a05651c211000b002d26782e8d9sm65176ljq.55.2024.02.22.10.14.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 22 Feb 2024 10:14:43 -0800 (PST)
+From: Serge Semin <fancer.lancer@gmail.com>
+To: Michal Simek <michal.simek@amd.com>,
+	Alexander Stein <alexander.stein@ew.tq-group.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Tony Luck <tony.luck@intel.com>,
+	James Morse <james.morse@arm.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Robert Richter <rric@kernel.org>
+Cc: Serge Semin <fancer.lancer@gmail.com>,
+	Punnaiah Choudary Kalluri <punnaiah.choudary.kalluri@xilinx.com>,
+	Dinh Nguyen <dinguyen@kernel.org>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-edac@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v5 13/20] EDAC/mc: Init DIMM labels in MC registration method
+Date: Thu, 22 Feb 2024 21:12:58 +0300
+Message-ID: <20240222181324.28242-14-fancer.lancer@gmail.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240222181324.28242-1-fancer.lancer@gmail.com>
+References: <20240222181324.28242-1-fancer.lancer@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240222-kms-hdmi-connector-state-v7-6-8f4af575fce2@kernel.org>
-References: <20240222-kms-hdmi-connector-state-v7-0-8f4af575fce2@kernel.org>
-In-Reply-To: <20240222-kms-hdmi-connector-state-v7-0-8f4af575fce2@kernel.org>
-To: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
- Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
- Daniel Vetter <daniel@ffwll.ch>, Jonathan Corbet <corbet@lwn.net>, 
- Sandy Huang <hjc@rock-chips.com>, 
- =?utf-8?q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, 
- Chen-Yu Tsai <wens@csie.org>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
- Samuel Holland <samuel@sholland.org>
-Cc: Hans Verkuil <hverkuil@xs4all.nl>, 
- Sebastian Wick <sebastian.wick@redhat.com>, 
- =?utf-8?q?Ville_Syrj=C3=A4l=C3=A4?= <ville.syrjala@linux.intel.com>, 
- dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org, 
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-media@vger.kernel.org, linux-rockchip@lists.infradead.org, 
- linux-sunxi@lists.linux.dev, Maxime Ripard <mripard@kernel.org>, 
- Dave Stevenson <dave.stevenson@raspberrypi.com>
-X-Mailer: b4 0.12.3
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3492; i=mripard@kernel.org;
- h=from:subject:message-id; bh=EOzt+ac2VEJaQqn9R1VvC99pxlRc+ECtg0akisOt/iA=;
- b=owGbwMvMwCX2+D1vfrpE4FHG02pJDKnX+96szVkkWKki//xdjn9O5bUD/tP7svViHpnrWOT07
- kzo2mLcUcrCIMbFICumyBIjbL4k7tSs151sfPNg5rAygQxh4OIUgImkGDIynIyVjJGWcA8TvXl+
- h0PHnCfnVa7t/vJ/w/eNn5z/L55nvZGRYc6d2L0vfOXX7Sp40rTwteRtoXm3Vc8FXPzLOPn4hsY
- pqawA
-X-Developer-Key: i=mripard@kernel.org; a=openpgp;
- fpr=BE5675C37E818C8B5764241C254BCFC56BF6CE8D
+Content-Transfer-Encoding: 8bit
 
-A lot of the various HDMI drivers duplicate some logic that depends on
-the HDMI spec itself and not really a particular hardware
-implementation.
+Move the DIMM labels initialization to the memory controller registration
+method as a preparation before adding the generic procedure to allocate an
+unique MC index. It's required because the DIMM labels contain the MC
+index as the "mc%u" part of the string, which in case of the
+auto-generated index isn't available at the moment of the MCI/csrow/dimms
+descriptor allocation.
 
-Output BPC or format selection, infoframe generation are good examples
-of such areas.
-
-This creates a lot of boilerplate, with a lot of variations, which makes
-it hard for userspace to rely on, and makes it difficult to get it right
-for drivers.
-
-In the next patches, we'll add a lot of infrastructure around the
-drm_connector and drm_connector_state structures, which will allow to
-abstract away the duplicated logic. This infrastructure comes with a few
-requirements though, and thus we need a new initialization function.
-
-Hopefully, this will make drivers simpler to handle, and their behaviour
-more consistent.
-
-Reviewed-by: Dave Stevenson <dave.stevenson@raspberrypi.com>
-Signed-off-by: Maxime Ripard <mripard@kernel.org>
+Signed-off-by: Serge Semin <fancer.lancer@gmail.com>
 ---
- drivers/gpu/drm/drm_connector.c | 39 +++++++++++++++++++++++++++++++++++++++
- include/drm/drm_connector.h     |  5 +++++
- 2 files changed, 44 insertions(+)
+ drivers/edac/edac_mc.c | 48 +++++++++++++++++++++++++++---------------
+ 1 file changed, 31 insertions(+), 17 deletions(-)
 
-diff --git a/drivers/gpu/drm/drm_connector.c b/drivers/gpu/drm/drm_connector.c
-index b0516505f7ae..d9961cce8245 100644
---- a/drivers/gpu/drm/drm_connector.c
-+++ b/drivers/gpu/drm/drm_connector.c
-@@ -452,6 +452,45 @@ int drmm_connector_init(struct drm_device *dev,
- }
- EXPORT_SYMBOL(drmm_connector_init);
+diff --git a/drivers/edac/edac_mc.c b/drivers/edac/edac_mc.c
+index d6eed727b0cd..c0b36349999f 100644
+--- a/drivers/edac/edac_mc.c
++++ b/drivers/edac/edac_mc.c
+@@ -257,7 +257,6 @@ static int edac_mc_alloc_dimms(struct mem_ctl_info *mci)
+ 	unsigned int pos[EDAC_MAX_LAYERS];
+ 	unsigned int row, chn, idx;
+ 	int layer;
+-	void *p;
+ 
+ 	/*
+ 	 * Allocate and fill the dimm structs
+@@ -272,7 +271,6 @@ static int edac_mc_alloc_dimms(struct mem_ctl_info *mci)
+ 	for (idx = 0; idx < mci->tot_dimms; idx++) {
+ 		struct dimm_info *dimm;
+ 		struct rank_info *chan;
+-		int n, len;
+ 
+ 		chan = mci->csrows[row]->channels[chn];
+ 
+@@ -283,22 +281,9 @@ static int edac_mc_alloc_dimms(struct mem_ctl_info *mci)
+ 		dimm->mci = mci;
+ 		dimm->idx = idx;
+ 
+-		/*
+-		 * Copy DIMM location and initialize it.
+-		 */
+-		len = sizeof(dimm->label);
+-		p = dimm->label;
+-		n = scnprintf(p, len, "mc#%u", mci->mc_idx);
+-		p += n;
+-		len -= n;
+-		for (layer = 0; layer < mci->n_layers; layer++) {
+-			n = scnprintf(p, len, "%s#%u",
+-				      edac_layer_name[mci->layers[layer].type],
+-				      pos[layer]);
+-			p += n;
+-			len -= n;
++		/* Copy DIMM location */
++		for (layer = 0; layer < mci->n_layers; layer++)
+ 			dimm->location[layer] = pos[layer];
+-		}
+ 
+ 		/* Link it to the csrows old API data */
+ 		chan->dimm = dimm;
+@@ -511,6 +496,33 @@ void edac_mc_reset_delay_period(unsigned long value)
+ 
+ 
  
 +/**
-+ * drmm_connector_hdmi_init - Init a preallocated HDMI connector
-+ * @dev: DRM device
-+ * @connector: A pointer to the HDMI connector to init
-+ * @funcs: callbacks for this connector
-+ * @connector_type: user visible type of the connector
-+ * @ddc: optional pointer to the associated ddc adapter
++ * edac_mc_init_labels() - Initialize DIMM labels
 + *
-+ * Initialises a preallocated HDMI connector. Connectors can be
-+ * subclassed as part of driver connector objects.
++ * @mci: pointer to the mci structure which DIMM labels need to be initialized
 + *
-+ * Cleanup is automatically handled with a call to
-+ * drm_connector_cleanup() in a DRM-managed action.
-+ *
-+ * The connector structure should be allocated with drmm_kzalloc().
-+ *
-+ * Returns:
-+ * Zero on success, error code on failure.
++ * .. note::
++ *	locking model: must be called with the mem_ctls_mutex lock held
 + */
-+int drmm_connector_hdmi_init(struct drm_device *dev,
-+			     struct drm_connector *connector,
-+			     const struct drm_connector_funcs *funcs,
-+			     int connector_type,
-+			     struct i2c_adapter *ddc)
++static void edac_mc_init_labels(struct mem_ctl_info *mci)
 +{
-+	int ret;
++	int n, len, layer;
++	unsigned int idx;
++	char *p;
 +
-+	if (!(connector_type == DRM_MODE_CONNECTOR_HDMIA ||
-+	      connector_type == DRM_MODE_CONNECTOR_HDMIB))
-+		return -EINVAL;
++	for (idx = 0; idx < mci->tot_dimms; idx++) {
++		len = sizeof(mci->dimms[idx]->label);
++		p = mci->dimms[idx]->label;
 +
-+	ret = drmm_connector_init(dev, connector, funcs, connector_type, ddc);
-+	if (ret)
-+		return ret;
-+
-+	return 0;
++		n = scnprintf(p, len, "mc#%u", mci->mc_idx);
++		for (layer = 0; layer < mci->n_layers; layer++) {
++			n += scnprintf(p + n, len - n, "%s#%u",
++				      edac_layer_name[mci->layers[layer].type],
++				      mci->dimms[idx]->location[layer]);
++		}
++	}
 +}
-+EXPORT_SYMBOL(drmm_connector_hdmi_init);
 +
- /**
-  * drm_connector_attach_edid_property - attach edid property.
-  * @connector: the connector
-diff --git a/include/drm/drm_connector.h b/include/drm/drm_connector.h
-index fe88d7fc6b8f..4491c4c2fb6e 100644
---- a/include/drm/drm_connector.h
-+++ b/include/drm/drm_connector.h
-@@ -1904,6 +1904,11 @@ int drmm_connector_init(struct drm_device *dev,
- 			const struct drm_connector_funcs *funcs,
- 			int connector_type,
- 			struct i2c_adapter *ddc);
-+int drmm_connector_hdmi_init(struct drm_device *dev,
-+			     struct drm_connector *connector,
-+			     const struct drm_connector_funcs *funcs,
-+			     int connector_type,
-+			     struct i2c_adapter *ddc);
- void drm_connector_attach_edid_property(struct drm_connector *connector);
- int drm_connector_register(struct drm_connector *connector);
- void drm_connector_unregister(struct drm_connector *connector);
-
+ /* Return 0 on success, 1 on failure.
+  * Before calling this function, caller must
+  * assign a unique value to mci->mc_idx.
+@@ -638,6 +650,8 @@ int edac_mc_add_mc_with_groups(struct mem_ctl_info *mci,
+ 		goto fail0;
+ 	}
+ 
++	edac_mc_init_labels(mci);
++
+ 	if (add_mc_to_global_list(mci))
+ 		goto fail0;
+ 
 -- 
-2.43.2
+2.43.0
 
