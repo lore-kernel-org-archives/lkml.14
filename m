@@ -1,35 +1,67 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2044.outbound.protection.outlook.com [40.107.244.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 517E6225AD;
-	Thu, 22 Feb 2024 08:30:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708590628; cv=none; b=HYJ4YFnQ1d73bOyQ2tH64odRc6ptiNUzy/YpkCL28DFwYEpPyrxu4i3mn9wTX3Rkg+JVbQIrXggEvfs5Q8lW8JaPADVFjHomGT8IW4S9+sdh4N+SKrsGCtQmxXYdXKFxOBKsSg272it2x0n4ekCyCkNVf4UrJWAD4D4PHMvz/9s=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2300024211;
+	Thu, 22 Feb 2024 08:30:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.244.44
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1708590628; cv=fail; b=RD4wKNyLAXU3k+SOUhbhr9c8oaT5bY1nsVG2gK4XebToh/5zuJjXB5ycwFg8JKfuXvOlJz4/v1F8uMNqE7xqAFL262ltHH1QTRX6wY5w7uz90SqBpfdy1apv8006bx5JEe1IUlbc1CIEn8ubZTJi5Nlfb7gM1YtWIINGxQLD7FI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1708590628; c=relaxed/simple;
-	bh=nJh4fDgd8eOjnDa4i8G2RcE2n2BJ9Lac/yijA46fRo8=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=eGUWYem6Wh2OK24azTxWDLv8VSPIDH6degvu1aO0xa0I44oyxjUgwqVvwgOiI3K4/jfymOUGz6knCnWhbY0ge84zZ6Rn3g1yRPl9AtV54+f3W42vxYtdkMBVh7AZ+Btn7ym+v1Osn5UlSocrIN4U7QXmyq4iC6hVg2VTwecOH0c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=j4I30x4y; arc=none smtp.client-ip=10.30.226.201
+	bh=worhjI5lpsVYsGaaT9Pz/26UBmS23q+Q39jKXKfrCNM=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=ct3Iu+roYX/vvilxPOWJa3MUBhu93GVEkDR74Ik1UVML7YGM3sEVjsyZfuIW3ITFSXFlw9BDLTXfCrQ2EpesaTuu6Vtp7CFkB4cpYnWbkG6Y4zay+/Z72aRQu8xfHkhIXQos38hB767Wpb/z32jY1q6D3cxT6EEB9wjFzHgqNIU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=fFr4A/Jj; arc=fail smtp.client-ip=40.107.244.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="j4I30x4y"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id BF35FC43390;
-	Thu, 22 Feb 2024 08:30:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708590627;
-	bh=nJh4fDgd8eOjnDa4i8G2RcE2n2BJ9Lac/yijA46fRo8=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=j4I30x4yNy9cm90i2f807uP3vaF8cK5xAODr5BwKSURTR24UA75wa3xBqYPWQg6Xq
-	 v+yTl9M7C5HE4ZGZI+dl/Ev1XtRNPv3wnk3bgaJMI67oJTHnGsO2aBZ9EFkig8mai9
-	 2VChAStHmphTF6oOP+s4jqBnZRMShnOvLsn4544tmv7MGt9+NYsNOv1m1xd2Oyfev2
-	 bySl1mUMxTNbn0cZYi7Ku+p3wN7GFu6e9ZlTmeAthhv62ktcOXyh2ZIPIXkRSL7ulN
-	 BdVLtoJAkBZxWPfsgBGwyGxY47LOoEKH3a7NS1r7PhHfJ4hs6jCGBi2F8UKwdrIqxE
-	 F1P6L9/4R2m3w==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 9EC70C00446;
-	Thu, 22 Feb 2024 08:30:27 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="fFr4A/Jj"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=AQPlpK7iEUkvOHtu+AYCOW7+hwXMFs1C7pxuVe5fNWqQnnfIeaFCsm1Bf1uRYbPrajvDskZ9PQOmLR9k1fZIpk/D2aep71rIwsKqBcmcB0OcxFMYmlrlpKtjb1qPbgTY4/CFvvS33wiTLxd9y5atvf7b8X156XHL5imVRrhy0SPdT+iDQeYcHwm0n/lfIXDHHsqESXURRkhulYyiI2bCQqgYg5aaROPi0Xdwmw6LbojfsOYVwBtJYKf8DpCBTG+hpM8Py7RizzWB4Nc2kBKbx7Pd4ju4kAm30DeJ15QfW9J6R5X3cAwTG8lvttOjOMzAvViLosC6GAU0ePPUgkXSTw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=NwTnlJSdT3NuMUL6WQgNIS9T7kle4T0c7j8VJNnb0OA=;
+ b=hxua96sdvSzrHIavsVCXsKTcBJeHo/4QQT9JkpmeuqwBwamToAyEHuMuQ2DnII7+oUsCV9gkSx5asNO0CBEEgj/u4njiGQqmoKlKJOGc5wVNtEGeVhhzSizvVzj8JpJS3K1qIiZT8SAQ/4VFhKka4YMuRo4OXIuwvwhrPEN6virq0W1bFxSzT7opn58R2p81HuRPukpZ4ZBFnjfe3b5sYSUKZaiS6j8GCXqfmbpGrfsFIcXMt8JzpkZdeMOUE/HiXNjEwM3TKbRxdsGzgYdJhUAMNquDY0xtUDYxexM+yEnNfIRMJ9as5pXjXmoHheyqED+DTZAKFVeb6BX+jastiA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=NwTnlJSdT3NuMUL6WQgNIS9T7kle4T0c7j8VJNnb0OA=;
+ b=fFr4A/JjTG4e7Htc2DtdI+7M8vzW88tcADPuNq0XBPALwovfEVAJbVCpebgfKhgpMe48IAHSTUBAInx8kplMVDCiagLjUbt2Kjj0XTyukIjdadUFiKoi5T2RXPEQR8NpbcsJhItV0HJv+EYa7gN5x3zkFJ9km07D0pVVYn7Jk9o=
+Received: from DS7PR03CA0194.namprd03.prod.outlook.com (2603:10b6:5:3b6::19)
+ by BL1PR12MB5160.namprd12.prod.outlook.com (2603:10b6:208:311::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7316.20; Thu, 22 Feb
+ 2024 08:30:25 +0000
+Received: from DS1PEPF0001709C.namprd05.prod.outlook.com
+ (2603:10b6:5:3b6:cafe::d6) by DS7PR03CA0194.outlook.office365.com
+ (2603:10b6:5:3b6::19) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7292.43 via Frontend
+ Transport; Thu, 22 Feb 2024 08:30:25 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ DS1PEPF0001709C.mail.protection.outlook.com (10.167.18.106) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.7292.25 via Frontend Transport; Thu, 22 Feb 2024 08:30:25 +0000
+Received: from jatayu.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Thu, 22 Feb
+ 2024 02:30:23 -0600
+From: Basavaraj Natikar <Basavaraj.Natikar@amd.com>
+To: <vkoul@kernel.org>, <dmaengine@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>
+CC: Basavaraj Natikar <Basavaraj.Natikar@amd.com>
+Subject: [PATCH] MAINTAINERS: change in AMD ptdma maintainer
+Date: Thu, 22 Feb 2024 14:00:04 +0530
+Message-ID: <20240222083004.1907070-1-Basavaraj.Natikar@amd.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -37,45 +69,53 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCHv2 1/2] phonet: take correct lock to peek at the RX queue
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <170859062764.3566.8197659339596370605.git-patchwork-notify@kernel.org>
-Date: Thu, 22 Feb 2024 08:30:27 +0000
-References: <20240218081214.4806-1-remi@remlab.net>
-In-Reply-To: <20240218081214.4806-1-remi@remlab.net>
-To: =?utf-8?q?R=C3=A9mi_Denis-Courmont_=3Cremi=40remlab=2Enet=3E?=@ci.codeaurora.org
-Cc: courmisch@gmail.com, davem@davemloft.net, edumazet@google.com,
- kuba@kernel.org, pabeni@redhat.com, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org
+Content-Type: text/plain
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS1PEPF0001709C:EE_|BL1PR12MB5160:EE_
+X-MS-Office365-Filtering-Correlation-Id: 7d70a8aa-5648-4b16-14ec-08dc3380849a
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	ComnwHHvuRRIPCKo+Bm3rGQSkKcdj243N9Y5u6rpLsb5tDMlO8z8tNruYDxJ61aZ/ABomu//Y0PiFt/9AOW7+//xujqYdBVAy3SJDUxSu18thYAwN1ZYZbuUkZGZgj1CKgvF4D3z7vyeYKYQQ+RZvj40fWl54u2BO08MAT/zAtzO+k/p43RQwysqhFOKOGUu9n7nqwP57ii2sOUMKzzrgdwm+xq1O8Qd37Rr2FtCIsuB/x/XH1uafuX2HspfTlEosZJgSy1+pebNFmhOLZIllKbHYavhcVQzo1i0hbMgeBz3csMtsubSLpU1ArOqqQ5gcvt4fWG2CJfZlf912mTvma+Z6J9ySpOSUwq48kA+p1QNXIggDkdBLE2wEJcav8/09ntJ2P/CqD9DSKAXiYsgL/q9Q5Oq+r/pRfTAPiIPhvbxiUYffE75dPR+UJfXQaFYpntPFt3cF3Cjw1xNzt5SqEnAaBItbsvDy44oUrJZG5q7s7o7shKr5jxTkTFy06hXVEIuB5+Hx55LPoyHqb8mInsnWLYOAbRy3FzBfKxCMnMYqT2zwwqBTYehD1IaMsiIJDuIwRk5eGze9k7/dz5Zk2w+x5U6VQwGXLbwoKKi9l6G3EaPhVaAOdBGk4fAuoAMUsXvWBawOwFrHAgFvKJY1w==
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(36860700004)(46966006)(40470700004);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Feb 2024 08:30:25.2507
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7d70a8aa-5648-4b16-14ec-08dc3380849a
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	DS1PEPF0001709C.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL1PR12MB5160
 
-Hello:
+As 'Sanjay R Mehta' stepped down from the role of ptdma maintainer, I
+request to be added as the new maintainer of AMD PTDMA.
 
-This series was applied to netdev/net.git (main)
-by Paolo Abeni <pabeni@redhat.com>:
+Signed-off-by: Basavaraj Natikar <Basavaraj.Natikar@amd.com>
+---
+ MAINTAINERS | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-On Sun, 18 Feb 2024 10:12:13 +0200 you wrote:
-> From: Rémi Denis-Courmont <courmisch@gmail.com>
-> 
-> The receive queue is protected by its embedded spin-lock, not the
-> socket lock, so we need the former lock here (and only that one).
-> 
-> Fixes: 107d0d9b8d9a ("Phonet: Phonet datagram transport protocol")
-> Reported-by: Luosili <rootlab@huawei.com>
-> Signed-off-by: Rémi Denis-Courmont <courmisch@gmail.com>
-> Reviewed-by: Eric Dumazet <edumazet@google.com>
-> 
-> [...]
-
-Here is the summary with links:
-  - [PATCHv2,1/2] phonet: take correct lock to peek at the RX queue
-    https://git.kernel.org/netdev/net/c/3b2d9bc4d4ac
-  - [PATCHv2,2/2] phonet/pep: fix racy skb_queue_empty() use
-    https://git.kernel.org/netdev/net/c/7d2a894d7f48
-
-You are awesome, thank you!
+diff --git a/MAINTAINERS b/MAINTAINERS
+index e2c6187a3ac8..becd09410b8c 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -1034,7 +1034,7 @@ F:	include/linux/amd-pstate.h
+ F:	tools/power/x86/amd_pstate_tracer/amd_pstate_trace.py
+ 
+ AMD PTDMA DRIVER
+-M:	Sanjay R Mehta <sanju.mehta@amd.com>
++M:	Basavaraj Natikar <Basavaraj.Natikar@amd.com>
+ L:	dmaengine@vger.kernel.org
+ S:	Maintained
+ F:	drivers/dma/ptdma/
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
+2.25.1
 
