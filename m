@@ -1,56 +1,171 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CF6C02C697
-	for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 09:07:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B9121B59E
+	for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 09:07:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708592855; cv=none; b=MVFQBZEyGw9H+2tsucCk33ZQVso/TTle0gw9/YLnCgrnilOyEseMcVBLSxzXzGVsbukszitoQJI5rZpEYzbGCk04a3tMWA+QL1UH8cCM59YKVo2yKsd4kv9BPYfG5quYL4i8V8U0VqRmB1a5CBH2ytD6ZLmrrY4KvlIpFsaBQZU=
+	t=1708592876; cv=none; b=VmeSbtb0gxLV8/zWnSaW/t6SFZasTayMP5a2bu5e0lpiduu7IaiyIVte3WAZkVsw5cOKQTfMWtlBJMpLVE0TUTlSbBrvGvDdjggJ2vyxQ88I/diq4zGaAn2T+V7HFF1NrFmwXQMdDxAi/2ZwVZAG4qmdtdl10N3mZjjFthVldE8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708592855; c=relaxed/simple;
-	bh=5gufoEXyuTQ0t2SdFGZ+EeRLxUs671wvuIYjn7qp568=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=kFSEIP73gFI3I6VOhhB1b7NfJptVawD5H4ku85PI2YiIko5XMW5mU+HlI9cmXuNUs/BuQJTEbC8lujf2i+gXJ+Gubw2FmKkPdgyFB9yPyQamTRF6qDDrGITGwHwiGG5AV0i0X3AYZHSjRU9AzmleHMmMPoRyzG7l4fSWUOzWYoE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6231F1007;
-	Thu, 22 Feb 2024 01:08:10 -0800 (PST)
-Received: from usa.arm.com (e103737-lin.cambridge.arm.com [10.1.197.49])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 218553F766;
-	Thu, 22 Feb 2024 01:07:31 -0800 (PST)
-From: Sudeep Holla <sudeep.holla@arm.com>
-To: Cristian Marussi <cristian.marussi@arm.com>,
-	"Ricardo B. Marliere" <ricardo@marliere.net>
-Cc: Sudeep Holla <sudeep.holla@arm.com>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH 0/2] firmware: struct bus_type cleanup
-Date: Thu, 22 Feb 2024 09:07:24 +0000
-Message-ID: <170859038392.107308.7406544122897669269.b4-ty@arm.com>
-X-Mailer: git-send-email 2.43.2
-In-Reply-To: <20240211-bus_cleanup-firmware2-v1-0-1851c92c7be7@marliere.net>
-References: <20240211-bus_cleanup-firmware2-v1-0-1851c92c7be7@marliere.net>
+	s=arc-20240116; t=1708592876; c=relaxed/simple;
+	bh=w2YVtj14mJYN/DBHiYMlFojoVgEZJr4yEw2ozYCtueQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=d+pdWLUy2CMEdx8iqpaVUHeTpYcmz5FXrNZZls04Vf/4+/2falR8LrqL0NHG1Ww5LnIMoO2nIzI64/80g87/EjAv7nWNnM2dp4zmLRwLkUkjR9gqV5kLQRrNK+sDnLFLpusil331ifg6Ig/1LxmxI0RveK+DqKRRS5YhPEmt1pA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=fKa4zg18; arc=none smtp.client-ip=209.85.208.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fKa4zg18"
+Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-5643eccad0bso7435350a12.1
+        for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 01:07:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1708592873; x=1709197673; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=vP/n41qKMmnFZWvtAa6bIMuGiBG2lj2PP2oWwVowhdo=;
+        b=fKa4zg18lcr2QWdjIu7JSOWnYzeQBNGo2oOeO519iwPP2jgUBKizimUQmmEqtSoZN5
+         nBzeEvLoPVLrwv1U5RKP8buZiX3DdmEk3+9Cv/Qchp5s5EsAsfv5XGDDT9Hcc4o/D5Bi
+         DjTFd1SfLwvB7vf4lUygmbdXqJkpoDN0zSMhCnAVuAn1+titStAztZYpxyi6/h7FrSm9
+         xoVrBhLMwUPdv+j93Ki5k6NLHXvU1IBM/QqBs9hBVbPInQq7lZ4EPNMKEAWSXf6ocU/h
+         hCxein8rC4UAjfl47EuNMBfz7NP02yEXJ+mRSJ/QyGvGGgBHeOZA5um8FnhJqItAkilk
+         96/g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708592873; x=1709197673;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=vP/n41qKMmnFZWvtAa6bIMuGiBG2lj2PP2oWwVowhdo=;
+        b=bzgNODNtsywQuWt2vSNok2Ua5GzY/MX5ieBQl6D3HsuXVQ914WX3v7LdY/a+nrjT8E
+         JOBHnNIPcUp04wrdHF+UC5waeLbHiuuNGmGrQF+P0LsQGesVPRAlmVGrG/pKw8MbY3It
+         uQRjHRi+u6furSd1vV6kxmgYiw02JPEQpKMP46l4BqHGSKttrkU6rKrJd1qHfR0Ckc0w
+         mnxApJf52TV/e/h9GVFl76FgIMqDR4jw1UxjOnfwXn0tlDK1KZoMSrKqP4NvOJ6f2G2J
+         Y5FQ9AQ2tW89bhqnF+/yEL2wPxeRMq5ocs25jsqNyPcXmSB38xbeWEeFqeizkND1bHwd
+         51Rg==
+X-Forwarded-Encrypted: i=1; AJvYcCVxivv/St2Lwa+JYHUcMRECsM8EhH8VXBJIB7/nYUzp/Xi+fO+fv927H6RH41X3hRG6orQdctGorDTsQ6lTR7U32PK8vITG/Uy1ZBfK
+X-Gm-Message-State: AOJu0YyEweFNojt438PfaX76fnj8rUnrF94HLFxbshrFteHu4ei00Dkx
+	EBZTyARcU/iCPiJ029ApK4U3rGbI4ec0WZeOXGJRnyZtqIBaMKIyr+0nNqyp4E47wLVoQ1ke9Pg
+	VVFY=
+X-Google-Smtp-Source: AGHT+IGzgmqpsGNjtZpPJAeFzfPQKVvdO33iEfZtGi2PLjQut65szGL8kXE+6IyzFgpbReJ/VQNWIg==
+X-Received: by 2002:a05:6402:643:b0:564:65c5:f048 with SMTP id u3-20020a056402064300b0056465c5f048mr8534936edx.28.1708592873602;
+        Thu, 22 Feb 2024 01:07:53 -0800 (PST)
+Received: from [192.168.1.20] ([178.197.222.116])
+        by smtp.gmail.com with ESMTPSA id b2-20020aa7dc02000000b00564cb5a3c7esm2195241edu.81.2024.02.22.01.07.51
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 22 Feb 2024 01:07:52 -0800 (PST)
+Message-ID: <a643d615-e56b-481e-9a15-e0c578de3eb0@linaro.org>
+Date: Thu, 22 Feb 2024 10:07:50 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 3/4] dt-bindings: Add post-init-providers property
+Content-Language: en-US
+To: Saravana Kannan <saravanak@google.com>, Rob Herring <robh@kernel.org>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+ linux-kernel@vger.kernel.org, Ard Biesheuvel <ardb@kernel.org>,
+ Rob Herring <robh+dt@kernel.org>, Daniel Scally <djrscally@gmail.com>,
+ Heikki Krogerus <heikki.krogerus@linux.intel.com>, kernel-team@android.com,
+ linux-efi@vger.kernel.org,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>,
+ devicetree@vger.kernel.org, Frank Rowand <frowand.list@gmail.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-acpi@vger.kernel.org,
+ Conor Dooley <conor+dt@kernel.org>,
+ Sakari Ailus <sakari.ailus@linux.intel.com>
+References: <20240221233026.2915061-1-saravanak@google.com>
+ <20240221233026.2915061-4-saravanak@google.com>
+ <170856138383.540970.12743608676098316685.robh@kernel.org>
+ <CAGETcx9v_NHhC4EwKDQ1UQMQQB=B2e1nQSqJZAwc7VwEWztp8g@mail.gmail.com>
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <CAGETcx9v_NHhC4EwKDQ1UQMQQB=B2e1nQSqJZAwc7VwEWztp8g@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-On Sun, 11 Feb 2024 12:51:28 -0300, Ricardo B. Marliere wrote:
-> This series is part of an effort to cleanup the users of the driver
-> core, as can be seen in many recent patches authored by Greg across the
-> tree (e.g. [1]).
+On 22/02/2024 04:41, Saravana Kannan wrote:
+> On Wed, Feb 21, 2024 at 4:23 PM Rob Herring <robh@kernel.org> wrote:
+>>
+>>
+>> On Wed, 21 Feb 2024 15:30:23 -0800, Saravana Kannan wrote:
+>>> The post-init-providers property can be used to break a dependency cycle by
+>>> marking some provider(s) as a post device initialization provider(s). This
+>>> allows an OS to do a better job at ordering initialization and
+>>> suspend/resume of the devices in a dependency cycle.
+>>>
+>>> Signed-off-by: Saravana Kannan <saravanak@google.com>
+>>> ---
+>>>  .../bindings/post-init-providers.yaml         | 105 ++++++++++++++++++
+>>>  MAINTAINERS                                   |  13 ++-
+>>>  2 files changed, 112 insertions(+), 6 deletions(-)
+>>>  create mode 100644 Documentation/devicetree/bindings/post-init-providers.yaml
+>>>
+>>
+>> My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
+>> on your patch (DT_CHECKER_FLAGS is new in v5.13):
+>>
+>> yamllint warnings/errors:
+>>
+>> dtschema/dtc warnings/errors:
+>> Documentation/devicetree/bindings/post-init-providers.example.dtb: /example-0/clock-controller@1000: failed to match any schema with compatible: ['vendor,soc4-gcc', 'vendor,soc1-gcc']
+>> Documentation/devicetree/bindings/post-init-providers.example.dtb: /example-0/clock-controller@1000: failed to match any schema with compatible: ['vendor,soc4-gcc', 'vendor,soc1-gcc']
+>> Documentation/devicetree/bindings/post-init-providers.example.dtb: /example-0/clock-controller@2000: failed to match any schema with compatible: ['vendor,soc4-dispcc', 'vendor,soc1-dispcc']
+>> Documentation/devicetree/bindings/post-init-providers.example.dtb: /example-0/clock-controller@2000: failed to match any schema with compatible: ['vendor,soc4-dispcc', 'vendor,soc1-dispcc']
 > 
+> I'm assuming it's okay to ignore these warnings about made up
+> compatible string names.
 
-Applied to sudeep.holla/linux (for-next/scmi/updates), thanks!
+No, unfortunately not. I think you need to come with a real example or
+just drop compatibles.
 
-[2/2] firmware: arm_scmi: make scmi_bus_type const
-      https://git.kernel.org/sudeep.holla/c/961745b2c42e
---
-Regards,
-Sudeep
+BTW, I still don't see any users of this binding.
+
+Best regards,
+Krzysztof
 
