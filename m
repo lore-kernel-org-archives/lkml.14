@@ -1,71 +1,101 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f182.google.com (mail-yw1-f182.google.com [209.85.128.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F177364C1;
-	Thu, 22 Feb 2024 09:04:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8F9A36AE9
+	for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 09:04:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708592663; cv=none; b=I2XN88FT4pnTHx6d+/9VsqiPY7C7vWumlpmG64udQqlBJYGVk7apgSw9XUDq1C9XaeznYaGzpj00E3bKspNJ62IfryV87kQ8gODXxTvmx6OKyMDWpagBeY5a8fs9cdrzTGFQP3AIbMXwwG4lgD9vZSRoquhA/1ZHm2ModLGANH8=
+	t=1708592685; cv=none; b=IoRajnbqStwmzHoOYpmyPNfmk26J0QBqn+efvNlmPWMdR9Pw3II+ay06u2v/wyI7TeeL293Ggh5FObSW82t4RLYZwV1mq0QWgAolaUMgQ4+mIFn/h3ZonkrSMlmsTY2H5HR3aS9HEjrpuMGBVb7eEj6fs8pvI5bjm8tPEVbRgIM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708592663; c=relaxed/simple;
-	bh=rktYPar//0iKWagVEAXjEGawgr778Hk9WkEJv630Kt4=;
-	h=Message-ID:Date:MIME-Version:From:To:Cc:Subject:Content-Type; b=KeCusXfsB9jQhECTAUj/aCtSfG4SAHJzCB0gHFNJYk3vZ/x9e5OS0eOOGZOO1RdrnfwzHZAgf7y6UDy/fIdvtMhclad+Myniuqza7vd9qlmbuMVf3kPHBu6f5p5LXIpudj9s0LvXZqf+isxV+u2VUheIyTZgRaRHMC8f60NhSKk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=P32lxeo1; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1708592685; c=relaxed/simple;
+	bh=wLueoCVw90PVM/vBmomzRcuwM0Q1+H3Jq2XKptthl8I=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=rewXoBWuPGy398o2493OY+LqL6Jjqhv4gkQgjaTY2qHvXEqvmCrbdx7A5UdjdTQeo0u4jChFSXzrupo4PHEmdT7zQHhTOg7CTpwqHboUjDwGqKbOGefwn2WLdeHrZitGWSdgiG/GnjIsaXB5kQScZmGV9AsoyxQ+A16PPE2gn8Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=aurpqPyx; arc=none smtp.client-ip=209.85.128.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="P32lxeo1"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:Subject
-	:Cc:To:From:MIME-Version:Date:Message-ID:From:Sender:Reply-To:Subject:Date:
-	Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:In-Reply-To:References;
-	bh=rktYPar//0iKWagVEAXjEGawgr778Hk9WkEJv630Kt4=; t=1708592661; x=1709024661;
-	 b=P32lxeo1KpkOrUEXXNY/fDtAP/8JtPVBQxsWBE6xQ3Rk8wLIvW975T+wcs1DGQXEWJ+G1445Zh
-	xKw5ljafi8mRB/YQ0+Nus8B2E56Uk6a7lyqsxjUXducRw2c5Yz1U5U09D+Oc4oEMwfyrAI2IHV0GC
-	MvjvxTgEhYBhiyuWmAwrlW04Q4eSnuWHnvi9cHCk2YHSnIeuld+KecGGXX13Tk0iJmywe9j/dmcDB
-	eiGKsb9ffUbiCBAaeYKx3n3qmtIP9Xf+Qyn5lNrGWatyKQUQo3HdmjALElBQ+r/JMbE7nDXNwBJYM
-	WbP5+id8cMvcoY6NV2jhyVPamhSathNiZTliw==;
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1rd504-0006qf-AA; Thu, 22 Feb 2024 10:04:16 +0100
-Message-ID: <b743d91f-5e7d-4701-b515-5c2a84ebd291@leemhuis.info>
-Date: Thu, 22 Feb 2024 10:04:15 +0100
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="aurpqPyx"
+Received: by mail-yw1-f182.google.com with SMTP id 00721157ae682-60821136c5aso33295437b3.1
+        for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 01:04:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1708592683; x=1709197483; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=/TPJbWbUkPAf8/OgjM4Bs/DBnfD95CuyEz8cKBKIieU=;
+        b=aurpqPyxaLJPK6Qjr4H96kJ53s/xlo+1DQBlMpXj8tN0i1fsj+Qfe7F8KZPp4dUWnM
+         K/2OvvanZtXvoKKB+YqTU8JPeKYFB6MkquN8KLhmUg1iOJPfuIvXipEoPxWfKneRKFG8
+         70bPOWD36221/VdGO4nCW0qmTrLDUGitpc2RQWGxDzFLZbJM6YDIkdbkdDhXj4zqiiZE
+         AF8Et4JYk/LHTiWUDzBFk1Pw/qW1M/q/gSIPGl8lChlfrFbRF1qR0ygSV7nyj/XPsHt/
+         JKSF70mDGGRO+rQKO69Sg3htMgTmDe2qqy06HUP4ILrTaX8Nymsw6dD4FbOYr6NJN+gV
+         xCnA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708592683; x=1709197483;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=/TPJbWbUkPAf8/OgjM4Bs/DBnfD95CuyEz8cKBKIieU=;
+        b=C5dAWRytTjmu9pZybBA202vp1gEXPfQhAHfPkoukNjZYcryz2XzAkpMSSUFpz9a14I
+         Lor1QWgzUgtKi5G72f+NBkrtTLUtD+YOXkOvh4O9G61AvNj2WpsrW8foH7F2dMrFTkUy
+         sgn6yZlbbMYOZw/zW84hrhwIsAwDnZWhx8AqnE1F3l3c+hGKYKb3hsdJq+Iyjt+gOUdG
+         YxsF33wl/mjqndd+U3vWPTdMaZ6WMriahsrCwmjSBmLYCUQ6Gk8MUZUmpX/UJ4XAC7Kf
+         quvCgerA9XyMBHZOum3x5ns4NpWVhnR+u8MZfxvjAbRPJcKBtlHp3icTZKlH01nrrzp9
+         J8iw==
+X-Forwarded-Encrypted: i=1; AJvYcCVre4y1nV4ASC0tt6ZdqoDm21c4h8bsF4fvC5E12+2UmNjBrJaj8qR9HZX8s4+Ho3/V1yqoiqBaJeni26yRfKyNjtETvGXnXaEdJ+nw
+X-Gm-Message-State: AOJu0YytDOGuieBoZGCXbIP92l+74VXFWO/oOVOUYS2D5H/Hi+rt/rSt
+	Z//IEvYpyT0uwKabyIl9PmNYyX/CgWq/7CMZCME6xYf3bD7CzoW0/wxFuPasE8xAw4i0jTkxyWA
+	zcw/lfh21vyY3Yn0Iin7NG51zbxnw0zvhsaHnfw==
+X-Google-Smtp-Source: AGHT+IGh4PQ6sJzEBbpokmVQdqBTIm/+xR9L/veKiiKuOpm6XOQARzpp3TR3D/xAbTVR/A369Z/Zv2cdKDbeepxT0hk=
+X-Received: by 2002:a81:a193:0:b0:608:3797:5ac8 with SMTP id
+ y141-20020a81a193000000b0060837975ac8mr11133955ywg.32.1708592682743; Thu, 22
+ Feb 2024 01:04:42 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Content-Language: en-US, de-DE
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: "stable@vger.kernel.org" <stable@vger.kernel.org>,
- Sasha Levin <sashal@kernel.org>,
- Mario Limonciello <mario.limonciello@amd.com>,
- Linux kernel regressions list <regressions@lists.linux.dev>,
- LKML <linux-kernel@vger.kernel.org>
-Subject: Please pick up 3a9626c816db90 ("drm/amd: Stop evicting resources on
- APUs in suspend") for linux-6.7.y
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1708592661;94c7bcfc;
-X-HE-SMSGID: 1rd504-0006qf-AA
+References: <20240221-rb3gen2-dp-connector-v1-0-dc0964ef7d96@quicinc.com>
+ <20240221-rb3gen2-dp-connector-v1-3-dc0964ef7d96@quicinc.com>
+ <CAA8EJpo=9vhM+5YzaFxUoYRuEWQyrMS8wLNPSF3K=bN5JwWyDw@mail.gmail.com> <8313a7c3-3ace-4dee-ad27-8f51a06cd58c@linaro.org>
+In-Reply-To: <8313a7c3-3ace-4dee-ad27-8f51a06cd58c@linaro.org>
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Date: Thu, 22 Feb 2024 11:04:31 +0200
+Message-ID: <CAA8EJpqFj5nf8d_=Uoup7qg+nQrxqQU-DHbL3uSP138m9AcXLw@mail.gmail.com>
+Subject: Re: [PATCH 3/9] arm64: dts: qcom: sc7280: Enable MDP turbo mode
+To: Konrad Dybcio <konrad.dybcio@linaro.org>
+Cc: Bjorn Andersson <quic_bjorande@quicinc.com>, Douglas Anderson <dianders@chromium.org>, 
+	Rob Clark <robdclark@gmail.com>, Abhinav Kumar <quic_abhinavk@quicinc.com>, 
+	Sean Paul <sean@poorly.run>, Marijn Suijten <marijn.suijten@somainline.org>, 
+	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, cros-qcom-dts-watchers@chromium.org, 
+	Bjorn Andersson <andersson@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, 
+	freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
+	devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Hi Greg! Could you please pick up 3a9626c816db90 ("drm/amd: Stop
-evicting resources on APUs in suspend") for the earliest convenient
-linux-6.7.y release? It together with another commit (91636168531909
-("Revert "drm/amd: flush any delayed gfxoff on suspend entry"")) that is
-also queued for 6.7.6 fixes suspend problems that apparently bother
-quite a few people:
-https://gitlab.freedesktop.org/drm/amd/-/issues/3132
+On Thu, 22 Feb 2024 at 10:56, Konrad Dybcio <konrad.dybcio@linaro.org> wrote:
+>
+>
+>
+> On 2/22/24 00:41, Dmitry Baryshkov wrote:
+> > On Thu, 22 Feb 2024 at 01:19, Bjorn Andersson <quic_bjorande@quicinc.com> wrote:
+> >>
+> >> The max frequency listed in the DPU opp-table is 506MHz, this is not
+> >> sufficient to drive a 4k@60 display, resulting in constant underrun.
+> >>
+> >> Add the missing MDP_CLK turbo frequency of 608MHz to the opp-table to
+> >> fix this.
+> >
+> > I think we might want to keep this disabled for ChromeOS devices. Doug?
+>
+> ChromeOS devices don't get a special SoC
 
-Both come from the same series (note, patch 3 of that series was deferred):
-https://lore.kernel.org/all/20240208055256.130917-1-mario.limonciello@amd.com/
+But they have the sc7280-chrome-common.dtsi, which might contain a
+corresponding /delete-node/ .
 
-Mario, who authored 3a9626c816db90, forgot to add a stable tag and ask
-me to send this mail:
-https://gitlab.freedesktop.org/drm/amd/-/issues/3132#note_2292543
 
-Ciao, Thorsten
+-- 
+With best wishes
+Dmitry
