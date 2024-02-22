@@ -1,148 +1,487 @@
-Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
+Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7D7E54915
-	for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 18:14:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17F27548ED;
+	Thu, 22 Feb 2024 18:14:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708625697; cv=none; b=bmBzU5u0BhTg3aguiEhCJpbjHwesr8UKkcxy/Qt00wfG6Rp7x2JtrEvjh/5Z2B9Q/2A5eBr+rIsRWxBITv521g5WH5JFW5ETkZEJH2QevyfWonntZWygjLOhpZ9oY+DBT2abjgoJ16DSJIrIFoj4vW2VbC1SmXcKK+o298lxNss=
+	t=1708625696; cv=none; b=e0B9fU2+hepS0OLmTSDtq7bo/20jfDj7gVYLO+ezOEg3OKnGeqZbuUbEeHT14Mvxkl+27YQoHpAKnpsLokFogu3m+tnuFmMAnsC4JUJ6w7+7obMtTqiZ40ExJHWAcwEEBYvXAeCW/5cWIR2S/vE+5rPx2NlrNrcVfbNl9l3Rxvw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708625697; c=relaxed/simple;
-	bh=BqZmvU8BOwVdELmPtCCfeCYk2qCbe5qFERDgheb+Ylk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fhFFfXRG9Ybi5lnlZnCyES+aYpkLwsrn+1P9+Tuhys4C9vsHOFyHlwN8v8SiMd/o1ExlnNSCnAxba9GAfCDSe3FgcbZIRoQFqWZ5+W0LDwAs/0leU/mBrU9s2h5OX5TdcdDlbjho0B91bK2N/Q0RP9EjOVSZ4JMY+6HzSjdh910=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=AP2Euznr; arc=none smtp.client-ip=209.85.167.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1708625696; c=relaxed/simple;
+	bh=Tp8bNQTKZvXyUuRv2VzAkrzXbt8xfHFlNuVT1cFXNuQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=r7k0XPCCMVDDc2RC24ExUFg/f+oSIKjUMd+tCcRxGnKHVFdCHkwOsJnHgiSoSZ62gaYj/ZF2ty4xx3Y7RVKczzLeBSBaqENmho8Ao4W821Ls+MSyrrasrmfrNQHdMxFcAQE4QhePtcD+iKjmV/NEThoAWh0Vhyaf8NRG3FkGfgM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZPeod5jO; arc=none smtp.client-ip=209.85.167.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="AP2Euznr"
-Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-512e4f53dbfso46832e87.3
-        for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 10:14:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1708625694; x=1709230494; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=mjNKbxM5Nnm2fZkUdL6IsffYJIQllY2Z5FDP4HC+nww=;
-        b=AP2EuznrDPVY4pOdeR+TjYTo/M714kjm9I3QEO7OfZ5/dTHZthRpE/ApXlxP6y2pYE
-         z1VU4hTW2vNN8FwQxsbYnf5NHsWjPAr22ImMvKOSeNEc0F6RPR0MbqE955B9W9N5T7jB
-         0qSX8m0zPheQ0niLr4wOb8Tlr7d48XR8FNV+Z0DLBzOzhy6BmrlYSkA2g5ZEM5TkHyfq
-         WKf6J+ul0GVn9BtrDqNf5PneDuqfKjTuWhlNjvW9QcxzgJSGVupQjSq1bnHY7w85krqu
-         f0PnTh3AG8VnUtcEVPCAhfzi4umWfwYXrus+MjZOq6oDntIt/zXTEYF+TD4AaMxVDgZ+
-         BJtg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708625694; x=1709230494;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=mjNKbxM5Nnm2fZkUdL6IsffYJIQllY2Z5FDP4HC+nww=;
-        b=D5mFHoQRrGDKlP7f4MMA4y2rBCC0t6n97Cx3s9nHp2syPwHACSm7Iv4NAhjZlWzwfw
-         5g99/zVLpA1UReYQYwn3Hd7/G1Hkvd3c6XwO5+5BhNpjVP9JcorivoDMyOYKiM6vBhFa
-         dy43oZXnbhGqdEcTr4cWO3VmlJSFbsIism81VpXrlnLZaGkGC8Gf+jBsvvA+ErDKBuuV
-         NRkvP51WgKV8C7PDSsEQY85TrmD7m+aB55hqo80stmGQRbqm8i0S0qawODE0ETxEbqlW
-         JafIJopSt2wLYWstXzMfZECG7i6hf6IDA3810I/iVFogLUH0+ruJwqAK78IdW5K/bMQg
-         F+6w==
-X-Forwarded-Encrypted: i=1; AJvYcCXRf2H4CWkFwlDEdP7aWTYyiwtQ4aWqa3yBHkLM1GWS5MqVFRlubGbFZXE0hGbVyhdH6aClShc+KQ9YFUL2dOdLrORVI5+v2mfrDfwA
-X-Gm-Message-State: AOJu0YzotgjxQVUUH3goYKoylLXu4NaZmNeGz9Ko2LtUymwGHu3L26iC
-	tt+/JwcpohHfDuoVb3BIxZt55ZcwzfUz7G2B0pj2OMrMbNDiKPPtEJfZfko4RK8=
-X-Google-Smtp-Source: AGHT+IFuXihglQKgVnvg96ctoMsff1iPiMAAbtCvPq0dIjo9Sm7rlM5jxqQvbEkVfsrcMjVIxh4fww==
-X-Received: by 2002:ac2:5dcc:0:b0:512:b420:1a92 with SMTP id x12-20020ac25dcc000000b00512b4201a92mr7465144lfq.63.1708625694014;
-        Thu, 22 Feb 2024 10:14:54 -0800 (PST)
-Received: from [192.168.1.20] ([178.197.222.116])
-        by smtp.gmail.com with ESMTPSA id ps7-20020a170906bf4700b00a3f1cb81dcesm2266058ejb.116.2024.02.22.10.14.52
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZPeod5jO"
+Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-512cba0f953so84199e87.2;
         Thu, 22 Feb 2024 10:14:53 -0800 (PST)
-Message-ID: <e053448f-2b58-408a-af22-d7b464c52781@linaro.org>
-Date: Thu, 22 Feb 2024 19:14:51 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1708625692; x=1709230492; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Fl1k5+lYKw5HlM2KYot8vM467N06m05HgUvKEyN6tJ8=;
+        b=ZPeod5jOabEoQFYSykgwmH0WDgsPI1V+mQQIEVYiHuu8cXzP0+b1tLCv36Gs/TDPM3
+         QsK5KV+t1PnKCq1ekBwPFo3xoAim3v3i1uUqRxfZKdRaIX8Fp4Y3YA6iqjku0MKGmtHW
+         ycHNTunGXV02uJHt7eSubJ2pxiEzZoJOz19PhPyqP0elZ6fCRT+Zse6IKR46Irg5QYjb
+         CFRK1QhMwEYV0UX12p5Z+u/VltDBlB62B7vDc0asbNglZhZbzCwbHGLBCSgcN4r6o/ih
+         XXKUFFo46ogN75qz0+aqkWCHLs29Ok4fCcjoJ2NK8vXZechqq4mwc8PDrJuQSN+dhXdR
+         wu3w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708625692; x=1709230492;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Fl1k5+lYKw5HlM2KYot8vM467N06m05HgUvKEyN6tJ8=;
+        b=wQxjnGm15h00gh2iV6ggjYDGhiXMygK6CkFyOfDU63zfcqja1cmXeTBu0PZxaH82py
+         0BLW5A2tx5I2Wu5TvrbV9XCcknZ3Bl1DHw9HbsR0EZeOBz0BI8o0Q2q+Fa4jJ5XAvj8j
+         o/k4K7qTBMUPh7RA5k+gR3WY6nHHCTwf42Iymk/WiFTtGSgc4qZRvcKdUkuB/JGUA6Jy
+         e7d5qL6lYG9oBpDLK8eRh9y/tAHwd4CbTLdPm9lr2QgdIwly2V5GUkmR723Q/6k5Iaou
+         blbFK9BxS4mYjnUX6ET4dy9zTYUuzEes6gcHkpLaWIKExiLJ2HekWun2lfgtWvmQcA2X
+         zXMw==
+X-Forwarded-Encrypted: i=1; AJvYcCVJs+atnzoDLWBRfxvzIFkgQQuk/CqXKXrqB+OIOMCEGlpbODeJXzu4IZG8PZ8/QeyYjUDGLd0r/CfmsiP91FBEioGzg/NfmYtb7V0UJGgfPpaqbFzRT3+VQ9q+lKEjAjs0lGadeNuaZg==
+X-Gm-Message-State: AOJu0YwCEoKmaXlQ5bE3QBTfbFYPchI4A+l/BXH731t1BLwwDUt+v01v
+	gkJlqK2+YWCRQ3H595ibD7/1eqy47sB+dnEpQi0k6bs2pkY2CE8Q
+X-Google-Smtp-Source: AGHT+IFoL/XCZ2Ks7+fgcMasDWSs9e7/s1j3RQC/zsHVDmpXyqG5t29RRkx/5c0GJbUyvUd9eAkJnw==
+X-Received: by 2002:ac2:5f72:0:b0:512:b051:7b06 with SMTP id c18-20020ac25f72000000b00512b0517b06mr8468525lfc.31.1708625692016;
+        Thu, 22 Feb 2024 10:14:52 -0800 (PST)
+Received: from localhost ([178.176.56.174])
+        by smtp.gmail.com with ESMTPSA id u14-20020ac248ae000000b005115430488bsm2148044lfg.243.2024.02.22.10.14.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 22 Feb 2024 10:14:51 -0800 (PST)
+From: Serge Semin <fancer.lancer@gmail.com>
+To: Michal Simek <michal.simek@amd.com>,
+	Alexander Stein <alexander.stein@ew.tq-group.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Tony Luck <tony.luck@intel.com>,
+	James Morse <james.morse@arm.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Robert Richter <rric@kernel.org>
+Cc: Serge Semin <fancer.lancer@gmail.com>,
+	Punnaiah Choudary Kalluri <punnaiah.choudary.kalluri@xilinx.com>,
+	Dinh Nguyen <dinguyen@kernel.org>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-edac@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v5 17/20] EDAC/synopsys: Drop unused platform-specific setup API
+Date: Thu, 22 Feb 2024 21:13:02 +0300
+Message-ID: <20240222181324.28242-18-fancer.lancer@gmail.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240222181324.28242-1-fancer.lancer@gmail.com>
+References: <20240222181324.28242-1-fancer.lancer@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next v4 1/6] dt-bindings: net: hisilicon-femac-mdio:
- convert to YAML
-Content-Language: en-US
-To: forbidden405@outlook.com, Yisen Zhuang <yisen.zhuang@huawei.com>,
- Salil Mehta <salil.mehta@huawei.com>, "David S. Miller"
- <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
- Heiner Kallweit <hkallweit1@gmail.com>, Russell King <linux@armlinux.org.uk>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- devicetree@vger.kernel.org
-References: <20240222-net-v4-0-eea68f93f090@outlook.com>
- <20240222-net-v4-1-eea68f93f090@outlook.com>
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
- 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
- D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <20240222-net-v4-1-eea68f93f090@outlook.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 22/02/2024 13:43, Yang Xiwen via B4 Relay wrote:
-> From: Yang Xiwen <forbidden405@outlook.com>
-> 
-> For some FEMAC cores, MDIO bus is integrated to the MAC controller. So
-> We don't have a dedicated MDIO bus clock.
+The driver now works with the Synopsys DW uMCTL2 DDRC IP-core-based
+devices only (Xilinx Zynq A05 DDRC support has been moved to the separate
+driver). All the currently available IP-core revisions have got almost the
+same ECC and main part of the DDR-config CSRs map. Thus there is no point
+in supporting the no longer used internal abstraction layer like the
+callbacks responsible for getting the ECC errors info, memory and device
+types, ECC state. All of that data can be retrieved in the same way from
+all the Synopys DW uMCTL2 DDR controller versions. Similarly there is no
+longer need in the DDR_ECC_INTR_SUPPORT and DDR_ECC_DATA_POISON_SUPPORT
+quirk flags since DW uMCTL2 always supports IRQs and data poisoning (as
+long as the ECC is supported). Drop that infrastructure for good then.
 
-Hm, this means you miss compatibles for these different cores.
+While at it move the module device table to being defined at the bottom of
+the file, above the platform driver descriptor definition.
 
-> 
-> Also due to the PHY reset procedure, it's required to manage all clocks
-> and resets in the MAC controller driver. MAC controller clock can not be
-> shared with MDIO bus node in dts.
-> 
-> Mark the clock optional to resolve this problem.
+Signed-off-by: Serge Semin <fancer.lancer@gmail.com>
 
-I don't understand how making clock optional solves this problem. Clock
-is still there. Whether driver handles it, does not affect the binding.
+---
 
-Best regards,
-Krzysztof
+Changelog v2:
+- Drop the no longer used "priv" pointer from the mc_init() function.
+  (@tbot)
+---
+ drivers/edac/synopsys_edac.c | 192 ++++++++++-------------------------
+ 1 file changed, 51 insertions(+), 141 deletions(-)
+
+diff --git a/drivers/edac/synopsys_edac.c b/drivers/edac/synopsys_edac.c
+index 6ea1eaaa7d6f..1cd02859e2b9 100644
+--- a/drivers/edac/synopsys_edac.c
++++ b/drivers/edac/synopsys_edac.c
+@@ -30,9 +30,7 @@
+ #define SYNPS_EDAC_MOD_VER		"1"
+ 
+ /* DDR ECC Quirks */
+-#define DDR_ECC_INTR_SUPPORT		BIT(0)
+-#define DDR_ECC_DATA_POISON_SUPPORT	BIT(1)
+-#define SYNPS_ZYNQMP_IRQ_REGS		BIT(2)
++#define SYNPS_ZYNQMP_IRQ_REGS		BIT(0)
+ 
+ /* Synopsys DDR memory controller registers that are relevant to ECC */
+ 
+@@ -280,28 +278,20 @@ struct synps_edac_priv {
+ };
+ 
+ /**
+- * struct synps_platform_data -  synps platform data structure.
+- * @get_error_info:	Get EDAC error info.
+- * @get_mtype:		Get mtype.
+- * @get_dtype:		Get dtype.
+- * @get_ecc_state:	Get ECC state.
+- * @quirks:		To differentiate IPs.
++ * struct synps_platform_data - Synopsys uMCTL2 DDRC platform data.
++ * @quirks:	IP-core specific quirks.
+  */
+ struct synps_platform_data {
+-	int (*get_error_info)(struct synps_edac_priv *priv);
+-	enum mem_type (*get_mtype)(const void __iomem *base);
+-	enum dev_type (*get_dtype)(const void __iomem *base);
+-	bool (*get_ecc_state)(void __iomem *base);
+-	int quirks;
++	u32 quirks;
+ };
+ 
+ /**
+- * zynqmp_get_error_info - Get the current ECC error info.
++ * synps_get_error_info - Get the current ECC error info.
+  * @priv:	DDR memory controller private instance data.
+  *
+  * Return: one if there is no error otherwise returns zero.
+  */
+-static int zynqmp_get_error_info(struct synps_edac_priv *priv)
++static int synps_get_error_info(struct synps_edac_priv *priv)
+ {
+ 	struct synps_ecc_status *p;
+ 	u32 regval, clearval;
+@@ -375,17 +365,11 @@ static void handle_error(struct mem_ctl_info *mci, struct synps_ecc_status *p)
+ 
+ 	if (p->ce_cnt) {
+ 		pinf = &p->ceinfo;
+-		if (priv->p_data->quirks & DDR_ECC_INTR_SUPPORT) {
+-			snprintf(priv->message, SYNPS_EDAC_MSG_SIZE,
+-				 "Row %d Col %d Bank %d Bank Group %d Bit %d Data 0x%08x",
+-				 pinf->row, pinf->col, pinf->bank, pinf->bankgrp,
+-				 pinf->bitpos, pinf->data);
+-		} else {
+-			snprintf(priv->message, SYNPS_EDAC_MSG_SIZE,
+-				 "Row %d Bank %d Col %d Bit: %d Data: 0x%08x",
+-				 pinf->row, pinf->bank, pinf->col,
+-				 pinf->bitpos, pinf->data);
+-		}
++
++		snprintf(priv->message, SYNPS_EDAC_MSG_SIZE,
++			 "Row %d Col %d Bank %d Bank Group %d Bit %d Data 0x%08x",
++			 pinf->row, pinf->col, pinf->bank, pinf->bankgrp,
++			 pinf->bitpos, pinf->data);
+ 
+ 		edac_mc_handle_error(HW_EVENT_ERR_CORRECTED, mci,
+ 				     p->ce_cnt, 0, 0, 0, 0, 0, -1,
+@@ -394,15 +378,10 @@ static void handle_error(struct mem_ctl_info *mci, struct synps_ecc_status *p)
+ 
+ 	if (p->ue_cnt) {
+ 		pinf = &p->ueinfo;
+-		if (priv->p_data->quirks & DDR_ECC_INTR_SUPPORT) {
+-			snprintf(priv->message, SYNPS_EDAC_MSG_SIZE,
+-				 "Row %d Col %d Bank %d Bank Group %d",
+-				 pinf->row, pinf->col, pinf->bank, pinf->bankgrp);
+-		} else {
+-			snprintf(priv->message, SYNPS_EDAC_MSG_SIZE,
+-				 "Row %d Bank %d Col %d",
+-				 pinf->row, pinf->bank, pinf->col);
+-		}
++
++		snprintf(priv->message, SYNPS_EDAC_MSG_SIZE,
++			 "Row %d Col %d Bank %d Bank Group %d",
++			 pinf->row, pinf->col, pinf->bank, pinf->bankgrp);
+ 
+ 		edac_mc_handle_error(HW_EVENT_ERR_UNCORRECTED, mci,
+ 				     p->ue_cnt, 0, 0, 0, 0, 0, -1,
+@@ -464,13 +443,11 @@ static void disable_intr(struct synps_edac_priv *priv)
+  */
+ static irqreturn_t intr_handler(int irq, void *dev_id)
+ {
+-	const struct synps_platform_data *p_data;
+ 	struct mem_ctl_info *mci = dev_id;
+ 	struct synps_edac_priv *priv;
+ 	int status, regval;
+ 
+ 	priv = mci->pvt_info;
+-	p_data = priv->p_data;
+ 
+ 	if (priv->p_data->quirks & SYNPS_ZYNQMP_IRQ_REGS) {
+ 		regval = readl(priv->baseaddr + DDR_QOS_IRQ_STAT_OFST);
+@@ -479,7 +456,7 @@ static irqreturn_t intr_handler(int irq, void *dev_id)
+ 			return IRQ_NONE;
+ 	}
+ 
+-	status = p_data->get_error_info(priv);
++	status = synps_get_error_info(priv);
+ 	if (status)
+ 		return IRQ_NONE;
+ 
+@@ -492,29 +469,7 @@ static irqreturn_t intr_handler(int irq, void *dev_id)
+ }
+ 
+ /**
+- * check_errors - Check controller for ECC errors.
+- * @mci:	EDAC memory controller instance.
+- *
+- * Check and post ECC errors. Called by the polling thread.
+- */
+-static void check_errors(struct mem_ctl_info *mci)
+-{
+-	const struct synps_platform_data *p_data;
+-	struct synps_edac_priv *priv;
+-	int status;
+-
+-	priv = mci->pvt_info;
+-	p_data = priv->p_data;
+-
+-	status = p_data->get_error_info(priv);
+-	if (status)
+-		return;
+-
+-	handle_error(mci, &priv->stat);
+-}
+-
+-/**
+- * zynqmp_get_dtype - Return the controller memory width.
++ * synps_get_dtype - Return the controller memory width.
+  * @base:	DDR memory controller base address.
+  *
+  * Get the EDAC device type width appropriate for the current controller
+@@ -522,7 +477,7 @@ static void check_errors(struct mem_ctl_info *mci)
+  *
+  * Return: a device type width enumeration.
+  */
+-static enum dev_type zynqmp_get_dtype(const void __iomem *base)
++static enum dev_type synps_get_dtype(const void __iomem *base)
+ {
+ 	u32 regval;
+ 
+@@ -546,14 +501,14 @@ static enum dev_type zynqmp_get_dtype(const void __iomem *base)
+ }
+ 
+ /**
+- * zynqmp_get_ecc_state - Return the controller ECC enable/disable status.
++ * synps_get_ecc_state - Return the controller ECC enable/disable status.
+  * @base:	DDR memory controller base address.
+  *
+  * Get the ECC enable/disable status for the controller.
+  *
+  * Return: a ECC status boolean i.e true/false - enabled/disabled.
+  */
+-static bool zynqmp_get_ecc_state(void __iomem *base)
++static bool synps_get_ecc_state(void __iomem *base)
+ {
+ 	u32 regval;
+ 
+@@ -577,7 +532,7 @@ static u32 get_memsize(void)
+ }
+ 
+ /**
+- * zynqmp_get_mtype - Returns controller memory type.
++ * synps_get_mtype - Returns controller memory type.
+  * @base:	Synopsys ECC status structure.
+  *
+  * Get the EDAC memory type appropriate for the current controller
+@@ -585,7 +540,7 @@ static u32 get_memsize(void)
+  *
+  * Return: a memory type enumeration.
+  */
+-static enum mem_type zynqmp_get_mtype(const void __iomem *base)
++static enum mem_type synps_get_mtype(const void __iomem *base)
+ {
+ 	enum mem_type mt;
+ 	u32 memtype;
+@@ -614,14 +569,11 @@ static enum mem_type zynqmp_get_mtype(const void __iomem *base)
+ static void init_csrows(struct mem_ctl_info *mci)
+ {
+ 	struct synps_edac_priv *priv = mci->pvt_info;
+-	const struct synps_platform_data *p_data;
+ 	struct csrow_info *csi;
+ 	struct dimm_info *dimm;
+ 	u32 size, row;
+ 	int j;
+ 
+-	p_data = priv->p_data;
+-
+ 	for (row = 0; row < mci->nr_csrows; row++) {
+ 		csi = mci->csrows[row];
+ 		size = get_memsize();
+@@ -629,10 +581,10 @@ static void init_csrows(struct mem_ctl_info *mci)
+ 		for (j = 0; j < csi->nr_channels; j++) {
+ 			dimm		= csi->channels[j]->dimm;
+ 			dimm->edac_mode	= EDAC_SECDED;
+-			dimm->mtype	= p_data->get_mtype(priv->baseaddr);
++			dimm->mtype	= synps_get_mtype(priv->baseaddr);
+ 			dimm->nr_pages	= (size >> PAGE_SHIFT) / csi->nr_channels;
+ 			dimm->grain	= SYNPS_EDAC_ERR_GRAIN;
+-			dimm->dtype	= p_data->get_dtype(priv->baseaddr);
++			dimm->dtype	= synps_get_dtype(priv->baseaddr);
+ 		}
+ 	}
+ }
+@@ -648,10 +600,7 @@ static void init_csrows(struct mem_ctl_info *mci)
+  */
+ static void mc_init(struct mem_ctl_info *mci, struct platform_device *pdev)
+ {
+-	struct synps_edac_priv *priv;
+-
+ 	mci->pdev = &pdev->dev;
+-	priv = mci->pvt_info;
+ 	platform_set_drvdata(pdev, mci);
+ 
+ 	/* Initialize controller capabilities and configuration */
+@@ -665,12 +614,7 @@ static void mc_init(struct mem_ctl_info *mci, struct platform_device *pdev)
+ 	mci->dev_name = SYNPS_EDAC_MOD_STRING;
+ 	mci->mod_name = SYNPS_EDAC_MOD_VER;
+ 
+-	if (priv->p_data->quirks & DDR_ECC_INTR_SUPPORT) {
+-		edac_op_state = EDAC_OPSTATE_INT;
+-	} else {
+-		edac_op_state = EDAC_OPSTATE_POLL;
+-		mci->edac_check = check_errors;
+-	}
++	edac_op_state = EDAC_OPSTATE_INT;
+ 
+ 	mci->ctl_page_to_phys = NULL;
+ 
+@@ -702,47 +646,6 @@ static int setup_irq(struct mem_ctl_info *mci,
+ 	return 0;
+ }
+ 
+-static const struct synps_platform_data zynqmp_edac_def = {
+-	.get_error_info	= zynqmp_get_error_info,
+-	.get_mtype	= zynqmp_get_mtype,
+-	.get_dtype	= zynqmp_get_dtype,
+-	.get_ecc_state	= zynqmp_get_ecc_state,
+-	.quirks         = (DDR_ECC_INTR_SUPPORT | SYNPS_ZYNQMP_IRQ_REGS
+-#ifdef CONFIG_EDAC_DEBUG
+-			  | DDR_ECC_DATA_POISON_SUPPORT
+-#endif
+-			  ),
+-};
+-
+-static const struct synps_platform_data synopsys_edac_def = {
+-	.get_error_info	= zynqmp_get_error_info,
+-	.get_mtype	= zynqmp_get_mtype,
+-	.get_dtype	= zynqmp_get_dtype,
+-	.get_ecc_state	= zynqmp_get_ecc_state,
+-	.quirks         = (DDR_ECC_INTR_SUPPORT
+-#ifdef CONFIG_EDAC_DEBUG
+-			  | DDR_ECC_DATA_POISON_SUPPORT
+-#endif
+-			  ),
+-};
+-
+-
+-static const struct of_device_id synps_edac_match[] = {
+-	{
+-		.compatible = "xlnx,zynqmp-ddrc-2.40a",
+-		.data = (void *)&zynqmp_edac_def
+-	},
+-	{
+-		.compatible = "snps,ddrc-3.80a",
+-		.data = (void *)&synopsys_edac_def
+-	},
+-	{
+-		/* end of table */
+-	}
+-};
+-
+-MODULE_DEVICE_TABLE(of, synps_edac_match);
+-
+ #ifdef CONFIG_EDAC_DEBUG
+ 
+ /**
+@@ -1133,7 +1036,7 @@ static int mc_probe(struct platform_device *pdev)
+ 	if (!p_data)
+ 		return -ENODEV;
+ 
+-	if (!p_data->get_ecc_state(baseaddr)) {
++	if (!synps_get_ecc_state(baseaddr)) {
+ 		edac_printk(KERN_INFO, EDAC_MC, "ECC not enabled\n");
+ 		return -ENXIO;
+ 	}
+@@ -1160,11 +1063,9 @@ static int mc_probe(struct platform_device *pdev)
+ 
+ 	mc_init(mci, pdev);
+ 
+-	if (priv->p_data->quirks & DDR_ECC_INTR_SUPPORT) {
+-		rc = setup_irq(mci, pdev);
+-		if (rc)
+-			goto free_edac_mc;
+-	}
++	rc = setup_irq(mci, pdev);
++	if (rc)
++		goto free_edac_mc;
+ 
+ 	rc = edac_mc_add_mc(mci);
+ 	if (rc) {
+@@ -1174,17 +1075,13 @@ static int mc_probe(struct platform_device *pdev)
+ 	}
+ 
+ #ifdef CONFIG_EDAC_DEBUG
+-	if (priv->p_data->quirks & DDR_ECC_DATA_POISON_SUPPORT) {
+-		rc = edac_create_sysfs_attributes(mci);
+-		if (rc) {
+-			edac_printk(KERN_ERR, EDAC_MC,
+-					"Failed to create sysfs entries\n");
+-			goto free_edac_mc;
+-		}
++	rc = edac_create_sysfs_attributes(mci);
++	if (rc) {
++		edac_printk(KERN_ERR, EDAC_MC, "Failed to create sysfs entries\n");
++		goto free_edac_mc;
+ 	}
+ 
+-	if (priv->p_data->quirks & DDR_ECC_INTR_SUPPORT)
+-		setup_address_map(priv);
++	setup_address_map(priv);
+ #endif
+ 
+ 	return rc;
+@@ -1206,18 +1103,31 @@ static void mc_remove(struct platform_device *pdev)
+ 	struct mem_ctl_info *mci = platform_get_drvdata(pdev);
+ 	struct synps_edac_priv *priv = mci->pvt_info;
+ 
+-	if (priv->p_data->quirks & DDR_ECC_INTR_SUPPORT)
+-		disable_intr(priv);
++	disable_intr(priv);
+ 
+ #ifdef CONFIG_EDAC_DEBUG
+-	if (priv->p_data->quirks & DDR_ECC_DATA_POISON_SUPPORT)
+-		edac_remove_sysfs_attributes(mci);
++	edac_remove_sysfs_attributes(mci);
+ #endif
+ 
+ 	edac_mc_del_mc(&pdev->dev);
+ 	edac_mc_free(mci);
+ }
+ 
++static const struct synps_platform_data zynqmp_edac_def = {
++	.quirks = SYNPS_ZYNQMP_IRQ_REGS,
++};
++
++static const struct synps_platform_data synopsys_edac_def = {
++	.quirks = 0,
++};
++
++static const struct of_device_id synps_edac_match[] = {
++	{ .compatible = "xlnx,zynqmp-ddrc-2.40a", .data = &zynqmp_edac_def },
++	{ .compatible = "snps,ddrc-3.80a", .data = &synopsys_edac_def },
++	{ }
++};
++MODULE_DEVICE_TABLE(of, synps_edac_match);
++
+ static struct platform_driver synps_edac_mc_driver = {
+ 	.driver = {
+ 		   .name = "synopsys-edac",
+-- 
+2.43.0
 
