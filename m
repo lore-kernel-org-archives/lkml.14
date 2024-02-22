@@ -1,75 +1,113 @@
-Received: from mail-oo1-f48.google.com (mail-oo1-f48.google.com [209.85.161.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3DAE2575B;
-	Thu, 22 Feb 2024 19:09:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F11C71736
+	for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 19:09:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708628978; cv=none; b=EiAFsjMTjmH5dAN/pJq4hJrspHOfZWdnXYEMf+h5dEHq6zmz0KLaCIdYkObhQaJJcq9ay4QT+vLYGY8rBitzcK5sOINawwMPx/bjDIVrPeFi1f9xLyHyZ/2tv9eGUDotq7fOZTi2Ao1EoicfintQGx1dFCheGGALUDtSh792KEA=
+	t=1708628982; cv=none; b=AvZyld4cFUThvShKyu3Z+35C8EMLgfwRUG3NhopO1PwPoEyWYsa9iTyCr9vsDvgSUcsa81Elvmhb30YyP3cgd2CxRiMhzhiQn5yB9KPqRv5Z6SSYDxqdvbBkuiKEdMQKtOwia2b3b2Q8eYdg7i3Zd/degUvgCsFMRBoxQwsjI3M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708628978; c=relaxed/simple;
-	bh=mI57a/fFX3uiYjIsw96ouRhYjWUvg53pK3eC7aGFRcg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=s7KEzDbGNB2Uu9xdChu8v8LD3K0lXSM0A3WgDwNH17UjXoVwdRV2NaID9md+iIfNZtprZvl4wfaNeyVJM5kcuaHYt0nrPOSGWlAr2ZeJZF37uWzyNQZtFSTZmAdu8waIWCdiu4M4O19cXrE2NwQKkWubz+Mh9+Y6nOTR5prEpZ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.161.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-oo1-f48.google.com with SMTP id 006d021491bc7-59f9045d18dso14793eaf.0;
-        Thu, 22 Feb 2024 11:09:36 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708628976; x=1709233776;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=mI57a/fFX3uiYjIsw96ouRhYjWUvg53pK3eC7aGFRcg=;
-        b=Yu8cqUnOH8S0eKYiO25FkdhUE62rBjCey3P7ZKuJL8nguRT8IlpC+mP9HWEvruK62p
-         oLNbcG5QcvOlFyVNGd2IqTcBcQI5/KSJdfuwTvHu0/k1Pgna7VfkqctkGac9It8QyIlh
-         hAjEnGJ3tWOOM7rMupm6yBCrQJflXhpp4iPiLEib6D6kRhUU0JM/32CRNCLzAmAFFs5k
-         on4VTQMY9h61c379v4wZAYoChvUc/L1W3kPK3uDHZPhPLkJvwlqXWuKwFrqDVEQixAbn
-         /XsExkyGF6QeXl6YHFSZlOV9eIYGPu2LATN2PEuce+V9EAOTmC9SgTPjYSrQY41fPjz2
-         TZqw==
-X-Forwarded-Encrypted: i=1; AJvYcCVuAvg7A0ybsNkgFO7qdH109PQyM1Nsp0gpJJJK4wWnbg/tAhwykmZplZSostlHuH9WDaoa8qQIudVg+y1Ja4l8i+DGgEOFzTcCE0yeD0MpsymtOgFw9JH6xeV4faO/qwnaplPF0BIgj06l6magRabEDm/lv483bEP9VMkzbtmP9A99oYMgkj8=
-X-Gm-Message-State: AOJu0YzYppUEhoR8pd+VGtOzZ3gMSD4sIoOLT4MkCm12lJ2hpK/BRR6f
-	MboJ3RyNwxrJ1eGrm0QCWckyZ/0cYyImoPKPyVmDbZxVm1z8q6xlKG+ni8rBb3fYHH3gI8mQsJ1
-	+vxI1XRzDMlc9O8xj7iEYdgqLqeo=
-X-Google-Smtp-Source: AGHT+IETFoK7T6C1tnmiR90r6kea/Z2OWg9BazXFmeAErs0t530tnUL62eTa+Y7FdI3dCEbLLbKs2EKUr5DCNNZAP5I=
-X-Received: by 2002:a05:6820:305:b0:5a0:1c1e:a8c2 with SMTP id
- l5-20020a056820030500b005a01c1ea8c2mr4929393ooe.0.1708628975933; Thu, 22 Feb
- 2024 11:09:35 -0800 (PST)
+	s=arc-20240116; t=1708628982; c=relaxed/simple;
+	bh=nIS2Vbt7rQAe49eVU0bw0f9o5zWBRT8Sgqdd/vBQ8Bo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VoxkoSfA6r3TqC2iEeBlagbTu0dy/wsY/LIoZDsB2cFMUj4sAx4EKkU4ceV/nnobZrf5ffoP21VydqRMn1G5v+5amqAwbHGlK5JDfJhQD2Eh93ZyFKpx2ZmEobivAW+lBJ9lhspCxewU9i7SCFyLbGD/nyJO5B9Ntjwy1BHA54c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=dVNYFStX; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dVNYFStX"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1708628979;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=NOIRP45lMGptwf1yH+rHDdW28P46s2WyXukLgbrFpzQ=;
+	b=dVNYFStX0oskcq8f7ABT2sTN7qxt/+tq3zRbTNyRJyhpJ61xBNA6om7AatKz2BkG3GrQP/
+	wkGmV/hR3ABSzIN2RzpW1HIJRZysCHJPQvxK8JGk5bO6gGguqNkSiqGgrcAzd2/MqBI2N4
+	995NKDwxCKVQy+rSuKuv7kP3zOE7jCQ=
+Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
+ by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-531-GZaW2W6aPJWbUqzbDInRrg-1; Thu,
+ 22 Feb 2024 14:07:11 -0500
+X-MC-Unique: GZaW2W6aPJWbUqzbDInRrg-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.rdu2.redhat.com [10.11.54.6])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 682D33816440;
+	Thu, 22 Feb 2024 19:07:09 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.32])
+	by smtp.corp.redhat.com (Postfix) with SMTP id D7C4B2166AEE;
+	Thu, 22 Feb 2024 19:07:06 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Thu, 22 Feb 2024 20:05:50 +0100 (CET)
+Date: Thu, 22 Feb 2024 20:05:47 +0100
+From: Oleg Nesterov <oleg@redhat.com>
+To: wenyang.linux@foxmail.com
+Cc: Christian Brauner <brauner@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Mike Christie <michael.christie@oracle.com>,
+	Dmitry Vyukov <dvyukov@google.com>,
+	Vincent Whitchurch <vincent.whitchurch@axis.com>,
+	Ard Biesheuvel <ardb@kernel.org>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] kernel/signal.c: explicitly initialize si_code and
+ use ksig->info uniformly
+Message-ID: <20240222190546.GA5993@redhat.com>
+References: <tencent_195B55A5521705954D5EA4873327F8E53D0A@qq.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <be49c794567f3bd00ae16e91b54fe8cfe6cb4999.1708245599.git.christophe.leroy@csgroup.eu>
- <202402180106.25E08136F5@keescook>
-In-Reply-To: <202402180106.25E08136F5@keescook>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Thu, 22 Feb 2024 20:09:24 +0100
-Message-ID: <CAJZ5v0jbPvP6TfF9QS5szaW3bfGw6M=kzOFjTDAOjKHBiWNdrg@mail.gmail.com>
-Subject: Re: [PATCH] PM: hibernate: Don't ignore return from set_memory_ro()
-To: Kees Cook <keescook@chromium.org>, Christophe Leroy <christophe.leroy@csgroup.eu>
-Cc: Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>, linux-pm@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, 
-	"linux-hardening @ vger . kernel . org" <linux-hardening@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <tencent_195B55A5521705954D5EA4873327F8E53D0A@qq.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.6
 
-On Sun, Feb 18, 2024 at 10:07=E2=80=AFAM Kees Cook <keescook@chromium.org> =
-wrote:
+On 02/23, wenyang.linux@foxmail.com wrote:
 >
-> On Sun, Feb 18, 2024 at 09:40:58AM +0100, Christophe Leroy wrote:
-> > set_memory_ro() and set_memory_rw() can fail, leaving memory
-> > unprotected.
-> >
-> > Take the returned value into account and abort in case of
-> > failure.
-> >
-> > Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
+> From: Wen Yang <wenyang.linux@foxmail.com>
 >
-> More set_memory* consumers! :) Error paths look good to me.
->
-> Reviewed-by: Kees Cook <keescook@chromium.org>
+> By explicitly initializing ksig->info.si_code and uniformly using ksig->info,
+> get_signal() function could be slightly optimized, as folowes:
 
-Applied as 6.9 material, thanks!
+I don't understand. Why do you think it will be optimized? in what sense?
+
+> 	clear_siginfo(&ksig->info);
+> 	ksig->info.si_signo = signr = SIGKILL;          --> missed si_code
+
+because we do not need to set .si_code in this case?
+
+> 	sigdelset(&current->pending.signal, SIGKILL);
+> 	trace_signal_deliver(SIGKILL, SEND_SIG_NOINFO,  --> unnecessary SEND_SIG_NOINFO
+
+Why do you think the usage of SEND_SIG_NOINFO is "unnecessary" or bad?
+To me this looks good.
+
+> @@ -2732,8 +2732,9 @@ bool get_signal(struct ksignal *ksig)
+>  		     signal->group_exec_task) {
+>  			clear_siginfo(&ksig->info);
+>  			ksig->info.si_signo = signr = SIGKILL;
+> +			ksig->info.si_code = SI_USER;
+>  			sigdelset(&current->pending.signal, SIGKILL);
+> -			trace_signal_deliver(SIGKILL, SEND_SIG_NOINFO,
+> +			trace_signal_deliver(SIGKILL, &ksig->info,
+
+Well. to me this look like the minor but unnecessary pessimization.
+
+AFAICS, we do not need to initialize .si_code. The usage if ksig->info
+instead of ksig->info means that TP_STORE_SIGINFO() will actually read
+the memory.
+
+Sorry, I don't understand the point at all :/
+
+and it seems that we can simply kill clear_siginfo(), but this is
+another story.
+
+Oleg.
+
