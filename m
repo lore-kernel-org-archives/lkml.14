@@ -1,93 +1,197 @@
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45ADE150986;
-	Thu, 22 Feb 2024 16:04:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 313A114E2EC;
+	Thu, 22 Feb 2024 16:04:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708617865; cv=none; b=KyBxulLpAXt5Mqx9WQN1vl7j8YJyapLWm36ZDCTiPAIc9ERFaQ5H29bAyzZIjoyww4hVVl8h81rKokLIyR84OL4YG7PKiqSjiIx0f8kkLtqCHidXWQO/PWVDGfE2jFGkks8Hr6tpeLIRUFli21JQbMytqDw4chKobXhUbRRfgPA=
+	t=1708617870; cv=none; b=Zok+GCm3uaD8OZysqS/ap4oWnC90lfTfb6/cREECAYddZM/HuOAZ3E213tTLwe6vTjwfl+73ngcwisRliS6WtAoyqeOS7bbmXykrFOg++UT97YTHjvvsIHXt2otYJBo4v600PtfbNzlWxLDisuSaV3oNlHsjM+SpI8NXAfVgVpw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708617865; c=relaxed/simple;
-	bh=JVBLLr+iZprmUmwCC+R0KK2nXOwL2BBt8Mfr8ABnv2g=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=KtHqGdHAe9/+qFFCrCWXhpxsXyZmLOrhdWmQy2/GLje44Jo59yVHMtxxndnxJm0e21v2+T96T4IY2TRCi/XSow5hvzJClX5hr+W2Bz0Exyap/G32/84CxfmxqpnIioUZQbqtyF3jQvhzk5VQU+KFPSBMwNb+uXN5iwtjs4Fghgc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=c/ISuEyS; arc=none smtp.client-ip=209.85.128.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+	s=arc-20240116; t=1708617870; c=relaxed/simple;
+	bh=P42TGDqNMaruT+fPW7RuapqiiWQ3asGq5OrEFjudad4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=F9vPnMMwIusoGSzsSqjAjRFrFg4fYc6EWlsiVNrFZEfe9ynHsaZ4piMW4Y6t1/XkgSko4FX46sSD22Ex5GZEGruiTBo1pNhPMh3jwTEAEpyagRn75vbXvmRPURye6TmULqeak7pFf1gMOVsDd9IcW0jTuPWg5G7Wj+sD3enqdWE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Tzv2zbgY; arc=none smtp.client-ip=209.85.210.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c/ISuEyS"
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-41279203064so11996485e9.1;
-        Thu, 22 Feb 2024 08:04:22 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Tzv2zbgY"
+Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-6e46e07ff07so2975166b3a.3;
+        Thu, 22 Feb 2024 08:04:29 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1708617861; x=1709222661; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=JVBLLr+iZprmUmwCC+R0KK2nXOwL2BBt8Mfr8ABnv2g=;
-        b=c/ISuEySjzZoXx3vE4Fdtk4MEdz4pgt9Q49BMWQTITPe23PuMDhoYEeDqbhmijM3+L
-         xkgv5waOYJQ1Ms5cx/y4YkxlxIwBwjJIg1Sd2j8oTtKyLQT4pjw3hU8kmL03RTQNbnST
-         1VUvOgyWGDWdaF/PgTkgbNVKWmkhy/yufZCqQsObhw3e5OPMuKRmg/TGeTpLGebNC8td
-         1vOxf8+2RNyj2TnxVe/h0xiRang1ev4I+h+BlfEsmZPfB9tZ0aSG8OwuJNBJPf/x8keh
-         eMkZwlNiJaUXgwQFmFQ9sauFdLWrG9QwrRDdaFMB3wpfl+Si2N4/nBi3N8sU31k+h4mU
-         Tn8w==
+        d=gmail.com; s=20230601; t=1708617868; x=1709222668; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=a2wZuvLUzB5Xua90WdGXe0WBeqHgCvMlx7+R6zIRuFc=;
+        b=Tzv2zbgYycGTwH/UQmxdCV/cYwsYj0dkMCUqK+wH4FUeCdSt2w0bNomEZYNkDiLTkl
+         muNszid5SGf8OxpesRJRtojPX54kC+soQJqK9C0CyxWBhMJ25UI3oDgDWjj+XuTDkBJ9
+         EcmUDzMZCd7VtVExufioUmL5bKeodgj+knBRDzwbLa5cy3GNZnv35+tAtDoFtDbdBOvv
+         myQSFmCUG5wGHnly0Tp5FUPFvXwjsFAkg64LomBcDjb1PsJna4/qUXfxm1mYD8imCi8w
+         WNy+TUVcdv1PpF5Yrq/RDrTf/GivsqwB3e4WL4QSUcXON5Fk/41porGkTbEJ5VovTsQL
+         /dFA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708617861; x=1709222661;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1708617868; x=1709222668;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=JVBLLr+iZprmUmwCC+R0KK2nXOwL2BBt8Mfr8ABnv2g=;
-        b=CcEQoG6s5i+k55EVRT97RfxQyXdKdkTOGWq5l+C1/zapyspwiPgL5cYXsTTMPUkWnW
-         nRGROMJiYv3B9Dszd4vC3aMxWL3OC+tqL1DhO+xtrnKIJvHMd+7LDeSAXzXMCEuFU/Lj
-         yZLxqAgXJz73kHfmtsLGHZvRQegcfpA2eU52zecqX0Xmxy8dpWNIPxQKiQUNkNcd1vgp
-         KbD/kZEz/wYHjdXbaPSe6LSoDqFsk3UhyIqvA5lGLbdZu8m/mKVJVUvdqeSA34y00PRx
-         8fAtm8oEmgtHY9EFOUsLWnhBYaUIxyn82Kg2bMz/rBelmzjjf43h4GZkAIHIkwQeC4zU
-         dAMQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW7/NRctY4VmS+6N9uomRDczrdABAB0deQ3Smo87/JR4A95jtYrZtkyR354DMOyFLK8RLGIauTL5VJtbf1yQAw8bCUmxSe43Zc8QibRDPBDLmST6CckRvc87WX1nZlnKXrxsT2/I8yub2Pe0p+07dL0U2f3T1kcJliB
-X-Gm-Message-State: AOJu0YyngMiM81Ca06m0IUPsLybWsiIoSXOUbI0tZd6hG15w2yULLIv9
-	qKJMCQe0ODrQOE5dMu/lcvki7hQUBxkrN0jnffgC5Jzek7UBE7SIm8Hqh/C2FgL0h4cNY+s4K0W
-	cFVuOUeWdyKHWfeChd0Qs9cUHC1c=
-X-Google-Smtp-Source: AGHT+IGB2NfIFYABbvqpx+xGpqV1zazBTchiC+Rsgsxx7Uav42ncBZx3rYUdxZGSjR+FGf5b0qDXtAOwJep8kJ5sQgk=
-X-Received: by 2002:a5d:64e5:0:b0:33d:5e4d:51c0 with SMTP id
- g5-20020a5d64e5000000b0033d5e4d51c0mr8963375wri.25.1708617861318; Thu, 22 Feb
- 2024 08:04:21 -0800 (PST)
+        bh=a2wZuvLUzB5Xua90WdGXe0WBeqHgCvMlx7+R6zIRuFc=;
+        b=AgtUEE4QeS5EldvZpi50LT6QQ33KTZxLo9kTXTOMxab16XvW8oHCUDLTg0kSH4+j49
+         RSIJf2gEcBa9Gy45gcER9tYbVV3i20NF+q/cPudbtlXGEnVVYOJU4OX61uRZj10sIftC
+         BuwTKS7QHHBYtfpj/MniHglIaoDcpkYt3zXTBPWLxtiUhLpKJQF6YL5kO/PEepm94dzp
+         0CHb6NmmJOkxayFtyYKtcAxK2ky/qFOyHXISmZ6qWeLIrFFh6wkVTLWLuAuohhybKcWj
+         TXgrC2RcGh1F5I1lKTYzdsePhmt8L0i7AYOuMIh4X3V1DkcJxcQmHWEyrnfKP1F2MVqr
+         tjfA==
+X-Forwarded-Encrypted: i=1; AJvYcCUzwlXsINqCgZlzsO7p9gd3KEljS0K9IPnfyeeN4cSOljQVdnGUeecf91EqnYeZO9upiCewbHAo+AcEROC7mPObPG36/iUolDZT1u4ZrA8HphRCvOi+6/xg1xZ0W8Rg6REt6DT0ASTn2etrqG0vgqDhX5UWLvJMvGK8CZCKNPRMUx5qYJ2KgA==
+X-Gm-Message-State: AOJu0YwwHQAh54ZJYnRs8i0q3nXFwgF/7Cku12uPKc6poHJphsDtZgHA
+	zQ8o/Up4Xrjubawk3kJS03qtjB10AzYglE1H+cFqol+zvh1G4agp
+X-Google-Smtp-Source: AGHT+IFBJklfrmfWsNk9Zx3owdvhwzqUMmVPAwpM0bP01dIqsN8oHERt6/Te9gpGsniCrhGBngqMqQ==
+X-Received: by 2002:a05:6a00:b54:b0:6e4:8ea9:5e5c with SMTP id p20-20020a056a000b5400b006e48ea95e5cmr6634801pfo.27.1708617868390;
+        Thu, 22 Feb 2024 08:04:28 -0800 (PST)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id lo20-20020a056a003d1400b006e4c4b7e6f5sm2199600pfb.208.2024.02.22.08.04.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 22 Feb 2024 08:04:28 -0800 (PST)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Date: Thu, 22 Feb 2024 08:04:27 -0800
+From: Guenter Roeck <linux@roeck-us.net>
+To: Charlie Jenkins <charlie@rivosinc.com>
+Cc: "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
+	Helge Deller <deller@gmx.de>, Arnd Bergmann <arnd@arndb.de>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	linux-parisc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arch@vger.kernel.org
+Subject: Re: [PATCH 2/4] parisc: checksum: Use generic implementations
+Message-ID: <e7bb76ae-285d-4840-ba58-c3fc5c5af6ec@roeck-us.net>
+References: <20240221-parisc_use_generic_checksum-v1-0-ad34d895fd1b@rivosinc.com>
+ <20240221-parisc_use_generic_checksum-v1-2-ad34d895fd1b@rivosinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <87r0jwquhv.ffs@tglx> <c4c422ac-d017-9944-7d03-76ad416b19a4@igalia.com>
-In-Reply-To: <c4c422ac-d017-9944-7d03-76ad416b19a4@igalia.com>
-From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date: Thu, 22 Feb 2024 08:04:09 -0800
-Message-ID: <CAADnVQ+9vTBj9GgxotLF0_oV7cNFRebmcq_DNUm+cRJHQXCz1Q@mail.gmail.com>
-Subject: Re: [syzbot] [mm?] BUG: unable to handle kernel paging request in copy_from_kernel_nofault
-To: "Guilherme G. Piccoli" <gpiccoli@igalia.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, "x86@kernel.org" <x86@kernel.org>, Jann Horn <jannh@google.com>, 
-	Daniel Borkmann <daniel@iogearbox.net>, Alexei Starovoitov <ast@kernel.org>, 
-	Peter Zijlstra <peterz@infradead.org>, Borislav Petkov <bp@alien8.de>, 
-	John Fastabend <john.fastabend@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, 
-	bpf <bpf@vger.kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, 
-	"H. Peter Anvin" <hpa@zytor.com>, "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>, 
-	linux-kernel <linux-kernel@vger.kernel.org>, linux-mm <linux-mm@kvack.org>, 
-	"luto@kernel.org" <luto@kernel.org>, Ingo Molnar <mingo@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240221-parisc_use_generic_checksum-v1-2-ad34d895fd1b@rivosinc.com>
 
-On Thu, Feb 22, 2024 at 6:30=E2=80=AFAM Guilherme G. Piccoli
-<gpiccoli@igalia.com> wrote:
->
-> Hi Thomas et.al,
->
-> I've been testing some syzkaller reports and found 2 other bugs that are
-> fixed by this patch (see other report at [0]).
->
-> So, is there anything we could do in order to get it properly submitted
-> / merged? Lemme know if I can help in anything, I could submit it myself
-> if you prefer, keeping you as author and adding the tested tags.
-> BTW, feel free to add:
->
-> Tested-by: Guilherme G. Piccoli <gpiccoli@igalia.com>
+On Wed, Feb 21, 2024 at 06:37:12PM -0800, Charlie Jenkins wrote:
+> The generic implementations of the checksum functions
+> csum_tcpudp_nofold, csum_fold, and ip_compute_csum are either identical
+> or perform better than the parisc ones, so use the generic
+> implementations instead.
+> 
+> In order to use the generic implementations of checksum functions,
+> do_csum can no longer be static.
+> 
+> Signed-off-by: Charlie Jenkins <charlie@rivosinc.com>
 
-The fix is bpf and net trees and probably will be sent to Linus today
-as part of net PR.
+Tested-by: Guenter Roeck <linux@roeck-us.net>
+
+> ---
+>  arch/parisc/Kconfig                |  3 +++
+>  arch/parisc/include/asm/checksum.h | 42 ++++++++------------------------------
+>  arch/parisc/lib/checksum.c         |  2 +-
+>  3 files changed, 13 insertions(+), 34 deletions(-)
+> 
+> diff --git a/arch/parisc/Kconfig b/arch/parisc/Kconfig
+> index d14ccc948a29..1638deb23287 100644
+> --- a/arch/parisc/Kconfig
+> +++ b/arch/parisc/Kconfig
+> @@ -122,6 +122,9 @@ config GENERIC_BUG
+>  config GENERIC_BUG_RELATIVE_POINTERS
+>  	bool
+>  
+> +config GENERIC_CSUM
+> +	def_bool y
+> +
+>  config GENERIC_HWEIGHT
+>  	bool
+>  	default y
+> diff --git a/arch/parisc/include/asm/checksum.h b/arch/parisc/include/asm/checksum.h
+> index 3c43baca7b39..c7847a08ef7c 100644
+> --- a/arch/parisc/include/asm/checksum.h
+> +++ b/arch/parisc/include/asm/checksum.h
+> @@ -17,6 +17,7 @@
+>   * it's best to have buff aligned on a 32-bit boundary
+>   */
+>  extern __wsum csum_partial(const void *, int, __wsum);
+> +#define csum_partial csum_partial
+>  
+>  /*
+>   *	Optimized for IP headers, which always checksum on 4 octet boundaries.
+> @@ -57,20 +58,8 @@ static inline __sum16 ip_fast_csum(const void *iph, unsigned int ihl)
+>  	return (__force __sum16)sum;
+>  }
+>  
+> -/*
+> - *	Fold a partial checksum
+> - */
+> -static inline __sum16 csum_fold(__wsum csum)
+> -{
+> -	u32 sum = (__force u32)csum;
+> -	/* add the swapped two 16-bit halves of sum,
+> -	   a possible carry from adding the two 16-bit halves,
+> -	   will carry from the lower half into the upper half,
+> -	   giving us the correct sum in the upper half. */
+> -	sum += (sum << 16) + (sum >> 16);
+> -	return (__force __sum16)(~sum >> 16);
+> -}
+> - 
+> +#define ip_fast_csum ip_fast_csum
+> +
+>  static inline __wsum csum_tcpudp_nofold(__be32 saddr, __be32 daddr,
+>  					__u32 len, __u8 proto,
+>  					__wsum sum)
+> @@ -85,28 +74,15 @@ static inline __wsum csum_tcpudp_nofold(__be32 saddr, __be32 daddr,
+>  	return sum;
+>  }
+>  
+> -/*
+> - * computes the checksum of the TCP/UDP pseudo-header
+> - * returns a 16-bit checksum, already complemented
+> - */
+> -static inline __sum16 csum_tcpudp_magic(__be32 saddr, __be32 daddr,
+> -					__u32 len, __u8 proto,
+> -					__wsum sum)
+> -{
+> -	return csum_fold(csum_tcpudp_nofold(saddr,daddr,len,proto,sum));
+> -}
+> -
+> -/*
+> - * this routine is used for miscellaneous IP-like checksums, mainly
+> - * in icmp.c
+> - */
+> -static inline __sum16 ip_compute_csum(const void *buf, int len)
+> -{
+> -	 return csum_fold (csum_partial(buf, len, 0));
+> -}
+> +#define csum_tcpudp_nofold csum_tcpudp_nofold
+>  
+> +extern unsigned int do_csum(const unsigned char *buff, int len);
+> +#define do_csum do_csum
+>  
+>  #define _HAVE_ARCH_IPV6_CSUM
+> +
+> +#include <asm-generic/checksum.h>
+> +
+>  static __inline__ __sum16 csum_ipv6_magic(const struct in6_addr *saddr,
+>  					  const struct in6_addr *daddr,
+>  					  __u32 len, __u8 proto,
+> diff --git a/arch/parisc/lib/checksum.c b/arch/parisc/lib/checksum.c
+> index 4818f3db84a5..05f5ca4b2f96 100644
+> --- a/arch/parisc/lib/checksum.c
+> +++ b/arch/parisc/lib/checksum.c
+> @@ -34,7 +34,7 @@ static inline unsigned short from32to16(unsigned int x)
+>  	return (unsigned short)x;
+>  }
+>  
+> -static inline unsigned int do_csum(const unsigned char * buff, int len)
+> +unsigned int do_csum(const unsigned char *buff, int len)
+>  {
+>  	int odd, count;
+>  	unsigned int result = 0;
+> 
+> -- 
+> 2.34.1
+> 
