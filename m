@@ -1,149 +1,104 @@
-Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
+Received: from mail-qv1-f42.google.com (mail-qv1-f42.google.com [209.85.219.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0276C12E1F7
-	for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 13:01:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B644412DD93
+	for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 13:02:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708606913; cv=none; b=VSHug/eW/g9ZCee+X83wr7zxQg0QNo542L6Av0o6ztSAtF9pCsZVSVNeqODwpzpYtq8i+n2Us8jOLJlEylu7APdLOqnpuVzgd8RhiewiKIuyhMf41rqmfKJK8OdD1ANOH/FQrbMd88r05mlh2Y8hWgGrmbCXWXszH1/jAUR7dfM=
+	t=1708606968; cv=none; b=sJQQWoGHbZMHmgzMo4Kj3SjzVg8VEFZvvbdyTyyjtoE5CPU9T7NUgTFM3nMSG7AUVqR6PgNm34JIYv8slinl6XlNuhk425bSghBKGHfnO0AYaxZEdIeegZf7bGdvqOvVHHkDAU3kviVZOmoqL9gWIiY1IFNpic01+PKuHmGJb+E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708606913; c=relaxed/simple;
-	bh=9zC3a/lUBBoHG92n62uz1igUDeqMpK/0eJHMsRGQvwY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=JvMGjegd3hx1aCcKYvwdxbm4eVIPNjtudSPTFbcQccEzsFq9I7GnLdSvMRkdlNFjJP7pSXB2ANJTMZ0jAHZTfX5NtWM+tyaUaugcNCrYfzMzkyq+l+SkhyF+A+q7HGdckI5Ot3zxIvRYy16+sYEjoz613lebho87L0Y2yAi4L94=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=mF8b9PpX; arc=none smtp.client-ip=209.85.167.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1708606968; c=relaxed/simple;
+	bh=mLihlxLtwpBjewJipEa6FRB39ptkzFSdsuzkpNHKxJI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dtAlj4TO+5mXL0Y69KxqZcMgLo4n9Pa483sb5v8/FUiUaAanPE+Jq9Hh4EagIe1AEpPpX2GZmrScG6ZD7kQK83MPbLnDtlYO3Su82rfxo0KsP9v5DQKhrMGfpzFO9i3lRKLLvf95TU179nNXs1pnKF/AI4qRImscueQ9KFGn3dc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=kG6nU4Z7; arc=none smtp.client-ip=209.85.219.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mF8b9PpX"
-Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-512e01b3da3so480374e87.3
-        for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 05:01:51 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="kG6nU4Z7"
+Received: by mail-qv1-f42.google.com with SMTP id 6a1803df08f44-68fb803a4c8so3458216d6.1
+        for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 05:02:43 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1708606910; x=1709211710; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=m7Z26rH0nxtWAPBPvE/KxZ0NHjlwRm5O/7QOSN2/Ky0=;
-        b=mF8b9PpXDpthGYHQOPyBJgfTwj/UQtTrU1m0/EVniS7hxHKaKMMd9yw1W2eLqJoA6e
-         lTnhz0ZRyZVpjgUvKZ4N6a7BGC8Nz/vUP70MyR8KRkuceXY+cFe4DreBnws6hU5Jhy3C
-         QISH21uoUuRdR0bmZVQU5ogw9bwI3UtU/oYZvs5JtnT86jKNcnTRZpRF3XswhONGofq9
-         ZXXVZtsRvmFKWzPkZx+1/+a69Pqr2rdxtQxDrqJ5fsH2FBvW9FrDixqMlHEG+BQ1nd/B
-         LR0tLFnCDUESdUD3Tx+Wpy1gdOBwPmNbGd1bZE/XqreNyGAqQgroxBIMzoLmfVlmDiAu
-         AgFQ==
+        d=ziepe.ca; s=google; t=1708606962; x=1709211762; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=5AaVii71/VY2wZ+q8F0jNvSLMQ/WesHh9hxpdt+FDPE=;
+        b=kG6nU4Z7+Q6FCz463hLsA756uwb15cy542whL12gyDB4rgN8f7anLjDdi0ntm7SzK2
+         r3dNrCWKpP6gRFDjSxaLeg7sx4x9EgLzKV44m/Wt7KIsjfHTWHFiseYP4FJwgTcaxyGZ
+         ojwQiCz8i8FW4fzcczIPtm//dbX3YhF9aG1DdNrYtQZ2TtPx57SVauEdvwoGxygS+SLT
+         AmZWVQPDM+lNNB2g+0dkBqGNv4CCegMayaSA6Nul2jc7KJrLoQaHHOFfgYDfDtfXIhvQ
+         DK+3sak3puL+6TN1AnOhnBC8JoQLVPgGESNhhm6Dmwta2W699g/kBYDnnN8mqbIkPuhf
+         gKQw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708606910; x=1709211710;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
+        d=1e100.net; s=20230601; t=1708606962; x=1709211762;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=m7Z26rH0nxtWAPBPvE/KxZ0NHjlwRm5O/7QOSN2/Ky0=;
-        b=C7BF3Ij2mw8NINOmXeUduQpYjAdY1nENwNLJvZYxzL41fKHbGHz0dgnQHW4lScwZPP
-         IFiy7G6AyLz4/ADheJDONl08JF7ad1iJjPztpSkqfMP4swEQ4Fj3Ykbpf+sUqf5eFBdQ
-         G5N/YSIksl+co0wv17v1SNz8f8JzAoeap+abTQ3qrcEAIqAC9Vx69WGWBQ7Iu09mv/IY
-         axWOC1C01ryFenk/WQUBLbwyxSZ+FluxkjSLU+zO61CTWWfomj3+XkeeXPMnYX8T80Lg
-         LRo20wOtSKvd3m+rvedErzLgSO19kakE9CjL46jIBs+eCRaTKy+uaCCW2/+hR0fqRmek
-         sY3A==
-X-Forwarded-Encrypted: i=1; AJvYcCVWdjg1kX1oLyD35MOoPbJuW/1hG75NqoJv/ePdXg/5yFk/3lKZFeSPXUSWL/PWTCMeYkTrjAu3PVQ4LAZgXAGsCJfVxbucUx1b4Lc2
-X-Gm-Message-State: AOJu0YzECfVTUJkfQ8piLPo0Qnck2jogztVxUuMEGVJAI6ba787eCOIK
-	Q7SQzJWnGsw5nX/SfxG1oii6DZOyfdKMRlxkNXMc/jSfCIiE2yvIH9uvOKsXFNA=
-X-Google-Smtp-Source: AGHT+IGkf5An0FRhTN8uAcXotjLH9vOh29NQ0tafltetUlELSWRNWwvu9X3GqAFXb4b17ycZtwCaOQ==
-X-Received: by 2002:a05:6512:3a88:b0:512:ba3a:5368 with SMTP id q8-20020a0565123a8800b00512ba3a5368mr9141098lfu.48.1708606910048;
-        Thu, 22 Feb 2024 05:01:50 -0800 (PST)
-Received: from [172.30.204.125] (UNUSED.212-182-62-129.lubman.net.pl. [212.182.62.129])
-        by smtp.gmail.com with ESMTPSA id o6-20020ac24e86000000b0051186931619sm2055814lfr.146.2024.02.22.05.01.46
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 22 Feb 2024 05:01:49 -0800 (PST)
-Message-ID: <54b8c58a-6288-4ae6-9ed7-aa7b212e63da@linaro.org>
-Date: Thu, 22 Feb 2024 14:01:44 +0100
+        bh=5AaVii71/VY2wZ+q8F0jNvSLMQ/WesHh9hxpdt+FDPE=;
+        b=YpvpeeKeKwas2Xtd2dv83sbrv6qdCmhrdGnYP4oVThPCif8qAIq8vqZqzaKvYt6CPV
+         fQL3MsYi4bms0BrEICI1nyiSrcorFD8HjyubPw+vNQ0ZtcDX9EaoFr9b6EDa47e+gzP6
+         J0Mo8VHZJwY/FRdtpYc13C/w4aU1DOYzbJvYIK34AnrR7IVNO7T01/kHh+BX1OlAPabo
+         D9t7mboeT/6LomiJub/9Qnc6wsX940fhhHZ77NXK34zIK/+8QCtdVlK2bB2a9E32BfRC
+         iqAwAHj/IJ+dDYn8l+IjPeC4bbKib4gh8bQbno0TfBF9WNBiHD0R+fgMk44bUU/0rZXL
+         etaA==
+X-Forwarded-Encrypted: i=1; AJvYcCUEd7swVG7Srg0LcmyXNYrZ4De/stkDuKTB/b/DqT+nwvf3sw5OF0VJ76Jv7FyIKfaMDsq4PZQlJ+ZbdWV/Ro6W2ErhWQjLZsOO88vu
+X-Gm-Message-State: AOJu0YzRo9NkkAsGe5mRBrikofYD3TZ1MP/EiOWUStvUmMItJK69iDYC
+	Y1t3Ckoh/jFVhj118iy3g1IMwkWarWSzX9NyyIDiVNBo0II52yIg76E5IsH0QiY=
+X-Google-Smtp-Source: AGHT+IGAK7E+kzRE8+YA/j2lb1I8Y61tiNcJdozr2Qvcpk6aaDKEVgEQPQJ+SEeGp2gh8IK9zaw/sg==
+X-Received: by 2002:a0c:da82:0:b0:68f:2c72:a76a with SMTP id z2-20020a0cda82000000b0068f2c72a76amr22568368qvj.3.1708606962586;
+        Thu, 22 Feb 2024 05:02:42 -0800 (PST)
+Received: from ziepe.ca (hlfxns017vw-142-68-80-239.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.80.239])
+        by smtp.gmail.com with ESMTPSA id qm18-20020a056214569200b0068c88a31f1bsm1309293qvb.89.2024.02.22.05.02.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 22 Feb 2024 05:02:42 -0800 (PST)
+Received: from jgg by wakko with local (Exim 4.95)
+	(envelope-from <jgg@ziepe.ca>)
+	id 1rd8im-00G85D-DJ;
+	Thu, 22 Feb 2024 09:02:40 -0400
+Date: Thu, 22 Feb 2024 09:02:40 -0400
+From: Jason Gunthorpe <jgg@ziepe.ca>
+To: Muhammad Usama Anjum <usama.anjum@collabora.com>
+Cc: Kevin Tian <kevin.tian@intel.com>, Shuah Khan <shuah@kernel.org>,
+	Yi Liu <yi.l.liu@intel.com>, Nicolin Chen <nicolinc@nvidia.com>,
+	kernel@collabora.com, iommu@lists.linux.dev,
+	linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] selftests/iommu: fix the config fragment
+Message-ID: <20240222130240.GA3220539@ziepe.ca>
+References: <20240222074934.71380-1-usama.anjum@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next] net: stmmac: dwmac-qcom-ethqos: Update link
- clock rate only for RGMII
-Content-Language: en-US
-To: Sarosh Hasan <quic_sarohasa@quicinc.com>, Vinod Koul <vkoul@kernel.org>,
- Bhupesh Sharma <bhupesh.sharma@linaro.org>, Andy Gross <agross@kernel.org>,
- Bjorn Andersson <andersson@kernel.org>, "David S. Miller"
- <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>,
- Alexandre Torgue <alexandre.torgue@foss.st.com>,
- Jose Abreu <joabreu@synopsys.com>,
- Maxime Coquelin <mcoquelin.stm32@gmail.com>, netdev@vger.kernel.org,
- linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
- Prasad Sodagudi <psodagud@quicinc.com>, Andrew Halaney
- <ahalaney@redhat.com>, Rob Herring <robh@kernel.org>
-Cc: kernel@quicinc.com, Sneh Shah <quic_snehshah@quicinc.com>,
- Suraj Jaiswal <quic_jsuraj@quicinc.com>
-References: <20240222125517.3356-1-quic_sarohasa@quicinc.com>
-From: Konrad Dybcio <konrad.dybcio@linaro.org>
-In-Reply-To: <20240222125517.3356-1-quic_sarohasa@quicinc.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240222074934.71380-1-usama.anjum@collabora.com>
 
-
-
-On 2/22/24 13:55, Sarosh Hasan wrote:
-> Updating link clock rate for different speeds is only needed when
-> using RGMII, as that mode requires changing clock speed when the link
-> speed changes. Let's restrict updating the link clock speed in
-> ethqos_update_link_clk() to just RGMII. Other modes such as SGMII
-> only need to enable the link clock (which is already done in probe).
+On Thu, Feb 22, 2024 at 12:49:33PM +0500, Muhammad Usama Anjum wrote:
+> The config fragment doesn't follow the correct format to enable those
+> config options which make the config options getting missed while
+> merging with other configs.
 > 
-> Signed-off-by: Sarosh Hasan <quic_sarohasa@quicinc.com>
+> ➜ merge_config.sh -m .config tools/testing/selftests/iommu/config
+> Using .config as base
+> Merging tools/testing/selftests/iommu/config
+> ➜ make olddefconfig
+> .config:5295:warning: unexpected data: CONFIG_IOMMUFD
+> .config:5296:warning: unexpected data: CONFIG_IOMMUFD_TEST
+> 
+> While at it, add CONFIG_FAULT_INJECTION as well which is needed for
+> CONFIG_IOMMUFD_TEST. If CONFIG_FAULT_INJECTION isn't present in base
+> config (such as x86 defconfig), CONFIG_IOMMUFD_TEST doesn't get enabled.
+> 
+> Fixes: 57f0988706fe ("iommufd: Add a selftest")
+> Signed-off-by: Muhammad Usama Anjum <usama.anjum@collabora.com>
 > ---
->   .../stmicro/stmmac/dwmac-qcom-ethqos.c        | 26 ++++++++++---------
->   1 file changed, 14 insertions(+), 12 deletions(-)
-> 
-> diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-qcom-ethqos.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-qcom-ethqos.c
-> index 31631e3f89d0..9cd144fb3005 100644
-> --- a/drivers/net/ethernet/stmicro/stmmac/dwmac-qcom-ethqos.c
-> +++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-qcom-ethqos.c
-> @@ -169,21 +169,23 @@ static void rgmii_dump(void *priv)
->   static void
->   ethqos_update_link_clk(struct qcom_ethqos *ethqos, unsigned int speed)
->   {
-> -	switch (speed) {
-> -	case SPEED_1000:
-> -		ethqos->link_clk_rate =  RGMII_1000_NOM_CLK_FREQ;
-> -		break;
-> +	if (phy_interface_mode_is_rgmii(ethqos->phy_mode)) {
-> +		switch (speed) {
-> +		case SPEED_1000:
-> +			ethqos->link_clk_rate =  RGMII_1000_NOM_CLK_FREQ;
-> +			break;
->   
-> -	case SPEED_100:
-> -		ethqos->link_clk_rate =  RGMII_ID_MODE_100_LOW_SVS_CLK_FREQ;
-> -		break;
-> +		case SPEED_100:
-> +			ethqos->link_clk_rate =  RGMII_ID_MODE_100_LOW_SVS_CLK_FREQ;
-> +			break;
->   
-> -	case SPEED_10:
-> -		ethqos->link_clk_rate =  RGMII_ID_MODE_10_LOW_SVS_CLK_FREQ;
-> -		break;
-> -	}
-> +		case SPEED_10:
-> +			ethqos->link_clk_rate =  RGMII_ID_MODE_10_LOW_SVS_CLK_FREQ;
-> +			break;
-> +		}
->   
-> -	clk_set_rate(ethqos->link_clk, ethqos->link_clk_rate);
-> +		clk_set_rate(ethqos->link_clk, ethqos->link_clk_rate);
-> +	}
->   }
+>  tools/testing/selftests/iommu/config | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
 
-if (!phy_interface_mode_is_rgmii(ethqos->phy_mode))
-	return 0;
+Appled, thanks
 
-[leave the rest unchanged]
-
-?
-
-Konrad
+Jason
