@@ -1,137 +1,102 @@
-Received: from gate2.alliedtelesis.co.nz (gate2.alliedtelesis.co.nz [202.36.163.20])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52DD714B81E
-	for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 22:08:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.36.163.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56FF073F13;
+	Thu, 22 Feb 2024 22:09:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708639720; cv=none; b=i2vo22TGxZCb/Z4FjRdjEF0NRq+wVOWWeEC6Dgy11nSW7eszmMFM7YZT8c5GpEOeYOgTgUwQF09Tz2O9xuEFRKY8Qo+J/HKTRzkoFcBdmg8vjyP50oE3u+gMCQINARdSJ1NEKYIlcEznDf68YeWQa23D0Xbr2d8znk+xreV2g5M=
+	t=1708639758; cv=none; b=seOMFzM/zS2i9hpY9wkfcR5fbZ+DfvHWUnUN189jd5tT8O5Zn69jLHBHJjPcgjgexTxdGHxHnnDOh0CDKTr0CjGa97xNx8Sswefn4BG4mERiDi4eNxixCVqgdHLso+u3qL/m0Wx3K/+0KtIx0I/3LygsFNpLGgMSH3o0kk7lJUg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708639720; c=relaxed/simple;
-	bh=Tx8RCMPEpa9lmNVucWuuXOs8ydZRP2sri7PPKIHVxuY=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=CnsFHKTFjq45eBw0dms3lelJ/zm9gabaUWRf/Cgl8UF5X4h2zeIfPlQIwc+lh6rLFNmGHXeiX3hhL67V0EvblFPgx0usPqWGyJ7FruPtobcYzf5lSchkm3q3HLRtdxK8ouRwkyXBEI4hDJXg2XDnfleJ5nS9RoP8g8lVdnZtkbs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=alliedtelesis.co.nz; spf=pass smtp.mailfrom=alliedtelesis.co.nz; dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b=Oxo74ydO; arc=none smtp.client-ip=202.36.163.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=alliedtelesis.co.nz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alliedtelesis.co.nz
+	s=arc-20240116; t=1708639758; c=relaxed/simple;
+	bh=l1/ezjl9EYeaWVpvN0u8fT88/5VTm9AGnH7HjTwqtiA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bW6968JHGNxijWuiskLJRTvu6YW9vs8zhQbHmr6/bdA7wyKlalaPKsiG96m4Z0UzKpMiCtiYx38gxzifCB1UxuX+vR2NzIjsEmkheqSYcoKpbEmM2h/ngUbL2Nd3iMajroA7rpSEbL5JMLCGVVdp/8cophHUf8DOpmN7k+TU534=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FqTBSYdN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="Oxo74ydO"
-Received: from svr-chch-seg1.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 242AF2C05EA;
-	Fri, 23 Feb 2024 11:08:36 +1300 (NZDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
-	s=mail181024; t=1708639716;
-	bh=Tx8RCMPEpa9lmNVucWuuXOs8ydZRP2sri7PPKIHVxuY=;
-	h=From:To:CC:Subject:Date:References:In-Reply-To:From;
-	b=Oxo74ydOfgc3tycmKaw0+TxQwJ0kqT/tjyJrbqbqGMx1TybuWCyrwt7eJddsITWx7
-	 kvodz7ILxVcwUCuBPXG3TSW+6p0v49PIJL4Fr4+zkbo4zYeTrjYb39VVlwCS4DGwF2
-	 iyG+HAs6jMmRBOCGGP37o9JQR2GCsg/hjY0kDPEuqkSvKQ8HcpCV4KTAjuESRkKK00
-	 ATG+gGZ6Vj3cue5eSf6hjIGaevarsPh1CWuLtxKDXY5vVRUReaZ3ZoHAMPGFVIGbA6
-	 9a0mN+j4tPcJwm753wTrVwetK08UNxGEvoRzR0PT//M674S3aRTlZS2kSadtF46Qo3
-	 2akTb+rDNJQ0w==
-Received: from svr-chch-ex2.atlnz.lc (Not Verified[2001:df5:b000:bc8::76]) by svr-chch-seg1.atlnz.lc with Trustwave SEG (v8,2,6,11305)
-	id <B65d7c5e40000>; Fri, 23 Feb 2024 11:08:36 +1300
-Received: from svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8::77) by
- svr-chch-ex2.atlnz.lc (2001:df5:b000:bc8::76) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.2.1118.40; Fri, 23 Feb 2024 11:08:35 +1300
-Received: from svr-chch-ex2.atlnz.lc (2001:df5:b000:bc8::76) by
- svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8:409d:36f5:8899:92e8) with Microsoft
- SMTP Server (TLS) id 15.0.1497.48; Fri, 23 Feb 2024 11:08:35 +1300
-Received: from svr-chch-ex2.atlnz.lc ([fe80::a9eb:c9b7:8b52:9567]) by
- svr-chch-ex2.atlnz.lc ([fe80::a9eb:c9b7:8b52:9567%15]) with mapi id
- 15.02.1118.040; Fri, 23 Feb 2024 11:08:35 +1300
-From: Chris Packham <Chris.Packham@alliedtelesis.co.nz>
-To: Andy Shevchenko <andy.shevchenko@gmail.com>, Geert Uytterhoeven
-	<geert@linux-m68k.org>, Krzysztof Kozlowski
-	<krzysztof.kozlowski+dt@linaro.org>
-CC: Pavel Machek <pavel@ucw.cz>, "lee@kernel.org" <lee@kernel.org>,
-	"linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: Linux support for a 7 segment LED display
-Thread-Topic: Linux support for a 7 segment LED display
-Thread-Index: AQHaXStZfYl8Vw6dm0yz1EAjpP4fVbEWGZeAgAAFVoCAAAGlAIAAAoWA
-Date: Thu, 22 Feb 2024 22:08:35 +0000
-Message-ID: <9d00e1b1-120b-4c2b-89c5-0ac736bf6441@alliedtelesis.co.nz>
-References: <1f598a72-dd9f-4c6c-af7f-29751f84bd23@alliedtelesis.co.nz>
- <Zde966nsJ76QOuzm@surfacebook.localdomain>
- <f5e74774-226a-4678-a6f9-b4f17250ad91@alliedtelesis.co.nz>
- <CAHp75Vfq3Pc+Eo3Z5mhORZwwuKF+Y7_47dTO8qARcfba4nmj2w@mail.gmail.com>
-In-Reply-To: <CAHp75Vfq3Pc+Eo3Z5mhORZwwuKF+Y7_47dTO8qARcfba4nmj2w@mail.gmail.com>
-Accept-Language: en-NZ, en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <3C48A7FB9DB3C444A0FF566E32D76E71@atlnz.lc>
-Content-Transfer-Encoding: base64
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FqTBSYdN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DA03CC433C7;
+	Thu, 22 Feb 2024 22:09:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1708639757;
+	bh=l1/ezjl9EYeaWVpvN0u8fT88/5VTm9AGnH7HjTwqtiA=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+	b=FqTBSYdNMC4OQYqaJNjwK3wxZ25TIuDMcorlmS0nUEcfuuGpReshtX7RZ1r4iRuBM
+	 n2RpmlN0ygdXZrJ0AA6MmmHlz69lUbAtFIp7ro+Q4vB+Zh9sz7FZeNt5tBZ1ilUa9h
+	 zGgImhskFv1Xle+tJM5LYJvJL6RaThfi+fTkMdZ+TXo1pDCD2CES1hFfS5NlxtDvkU
+	 Aq3RrfI/hpRzt9fSfSzn/owXvjSZ2SnW9M9inNyFh3QFEroqPXWQQpw5yxjmg3EgJP
+	 fTHSyLUWWlB8hBuQBVe6Qz8GXTsDNJfq36eSel7hFteSHKh4sMPPV7uoZY31xEkbNE
+	 D+gBTCVY/0kfA==
+Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
+	id 87292CE0738; Thu, 22 Feb 2024 14:09:17 -0800 (PST)
+Date: Thu, 22 Feb 2024 14:09:17 -0800
+From: "Paul E. McKenney" <paulmck@kernel.org>
+To: Frederic Weisbecker <frederic@kernel.org>
+Cc: Boqun Feng <boqun.feng@gmail.com>, linux-kernel@vger.kernel.org,
+	rcu@vger.kernel.org, Neeraj Upadhyay <Neeraj.Upadhyay@amd.com>
+Subject: Re: [PATCH v2 0/6] RCU tasks fixes for v6.9
+Message-ID: <cf84fb44-9620-40bc-a68d-051edf6823b8@paulmck-laptop>
+Reply-To: paulmck@kernel.org
+References: <20240217012745.3446231-1-boqun.feng@gmail.com>
+ <Zdd7x4Rmy_-WDqfl@localhost.localdomain>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-SEG-SpamProfiler-Analysis: v=2.4 cv=BKkQr0QG c=1 sm=1 tr=0 ts=65d7c5e4 a=Xf/6aR1Nyvzi7BryhOrcLQ==:117 a=xqWC_Br6kY4A:10 a=75chYTbOgJ0A:10 a=IkcTkHD0fZMA:10 a=k7vzHIieQBIA:10 a=pGLkceISAAAA:8 a=BwnNMnuW0JF0vIrjb1gA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10 a=t7wjxaoyUiyY0pDiBwSR:22
-X-SEG-SpamProfiler-Score: 0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <Zdd7x4Rmy_-WDqfl@localhost.localdomain>
 
-DQpPbiAyMy8wMi8yNCAxMDo1OSwgQW5keSBTaGV2Y2hlbmtvIHdyb3RlOg0KPiBPbiBUaHUsIEZl
-YiAyMiwgMjAyNCBhdCAxMTo1M+KAr1BNIENocmlzIFBhY2toYW0NCj4gPENocmlzLlBhY2toYW1A
-YWxsaWVkdGVsZXNpcy5jby5uej4gd3JvdGU6DQo+PiBPbiAyMy8wMi8yNCAxMDozNCwgYW5keS5z
-aGV2Y2hlbmtvQGdtYWlsLmNvbSB3cm90ZToNCj4+PiBTdW4sIEZlYiAxMSwgMjAyNCBhdCAwODo0
-NjoxMlBNICswMDAwLCBDaHJpcyBQYWNraGFtIGtpcmpvaXR0aToNCj4+Pj4gSGkgQmxpbmtlbmxp
-Z2h0IGVudGh1c2lhc3RzLA0KPj4+Pg0KPj4+PiBJJ20gbG9va2luZyBmb3Igc29tZXRoaW5nIHRo
-YXQgSSBmaWd1cmVkIG11c3QgZXhpc3RzIGJ1dCBtYXliZSBpdCdzIHNvDQo+Pj4+IG5pY2hlIHRo
-YXQgbm8tb25lIGhhcyBib3RoZXJlZCB0byB1cHN0cmVhbSBhIGRyaXZlciBmb3IgaXQuDQo+Pj4+
-DQo+Pj4+IEkgaGF2ZSBhIHJlcXVpcmVtZW50IHRvIHN1cHBvcnQgYSA3LXNlZ21lbnQgTEVEIGRp
-c3BsYXlbMV0gKG9uZSB0aGF0IGNhbg0KPj4+PiBkaXNwbGF5IGEgc2luZ2xlIGRpZ2l0IGZyb20g
-MC05KS4gSGFyZHdhcmUgd2lzZSBpdCdzIGp1c3QgYSBidW5jaCBvZg0KPj4+PiBpbmRpdmlkdWFs
-IEdQSU9zIGNvbm5lY3RlZCB0byBlYWNoIHNlZ21lbnQgKHBsdXMgYW4gZXh0cmEgb25lIGZvciBh
-DQo+Pj4+IGRvdCkuIEkgY2FuJ3Qgc2VlIGFueXRoaW5nIG9idmlvdXMgaW4gZHJpdmVycy9sZWRz
-IGJ1dCBtYXliZSBJJ20gbG9va2luZw0KPj4+PiBpbiB0aGUgd3JvbmcgcGxhY2UuIE9yIG1heWJl
-IGl0J3MgdGhlIGtpbmQgb2YgdGhpbmcgb24gUEMgaGFyZHdhcmUgdGhhdA0KPj4+PiBpcyBqdXN0
-IGRyaXZlbiBieSB0aGUgQklPUyB3aXRob3V0IHRoZSBvcGVyYXRpbmcgc3lzdGVtIGtub3dpbmcg
-YWJvdXQgaXQuDQo+Pj4+DQo+Pj4+IElzIHRoZXJlIGFuIGV4aXN0aW5nIGluLWtlcm5lbCBkcml2
-ZXIgZm9yIHN1Y2ggYSB0aGluZz8NCj4+PiBObywgYW5kIGNhbid0IGJlLiBIZXJlIGlzIGp1c3Qg
-YSBtYXBwaW5nIHRhYmxlIGFuZCBvdGhlciBkcml2ZXJzIHRoYXQgdXNlDQo+Pj4gNy1zZWdtZW50
-IExFRCBkaXNwbGF5cyB0byBiZSBjb25uZWN0ZWQgdG8uDQo+Pj4NCj4+PiBXaGF0IHlvdSBuZWVk
-IGlzIHNvbWV0aGluZyBlbHNlLCBpLmUuIHNwZWNpYWwgY2FzZSBvZiBsZWRzLWdwaW8gKHdoaWNo
-IHNob3VsZA0KPj4+IGJlIHNvbWV3aGVyZSBlbHNlKSB0aGF0IGRvZXMgc29tZXRoaW5nIGxpa2Ug
-dGhpcy4gVG8gbWUgaXQgc291bmRzIGxpa2UgYQ0KPj4+IG1peHR1cmUgYmV0d2VlbiBsaW5lLWRp
-c3BsYXkuaCAoZnJvbSBhdXhkaXNwbGF5KSBhbmQgZ3Bpby1hZ2dyZWdhdG9yLg0KPj4+DQo+Pj4g
-SG93IG1hbnkgZGlnaXRzIGRvIHlvdSB3YW50IHRvIGNvbm5lY3Q/IEhvdyBhcmUgdGhleSBnb2lu
-ZyB0byBiZSBjb25uZWN0ZWQNCj4+PiAoc3RhdGljIGRpc3BsYXksIG9yIGR5bmFtaWMgd2hlbiB5
-b3UgbmVlZCB0byByZWZyZXNoIGluIGNlcnRhaW4gcGVyaW9kcyBvZg0KPj4+IHRpbWUpPyBEZXBl
-bmRpbmcgb24gdGhlIGFuc3dlciBpdCBtaWdodCB0YWtlIG9uZSBvciBhbm90aGVyIGFwcHJvYWNo
-Lg0KPj4gSXQgc291bmRzIGxpa2UgYSBhdXhkaXNwbGF5IGRyaXZlciBtaWdodCBiZSB0aGUgd2F5
-IHRvIGdvLiBNeSBoYXJkd2FyZQ0KPj4gaGFwcGVucyB0byBoYXZlIGEgc2luZ2xlIDdzZWcgYmxv
-Y2sgYnV0IHRoZXJlJ3Mgbm8gcmVhc29uIHRoZSBkcml2ZXINCj4+IG5lZWRzIHRvIGJlIHJlc3Ry
-aWN0ZWQgdG8gdGhhdC4gQXQgc29tZSBwb2ludCBpdCBvYnZpb3VzbHkgYmVjb21lcw0KPj4gYmV0
-dGVyIHRvIGZpdCBzb21ldGhpbmcgbGlrZSB0aGUgaHQxNmszMyB0byBvZmZsb2FkIHRoZSBjaGFy
-YWN0ZXINCj4+IGRpc3BsYXkgYnV0IGZvciBvbmUgb3IgMiBkaWdpdHMgYSBQQ0E5NTN4IHBsdXMg
-dGhlIExFRCBibG9jayB3b3VsZCBkbw0KPj4ganVzdCBmaW5lLg0KPiBJIGhhdmUgaGM1OTUgKFNQ
-SSBHUElPKSBjb25uZWN0ZWQgdG8gYSBzaW5nbGUgZGlnaXQgNy1zZWdtZW50IExFRC4NCj4gU2lu
-Y2UgaXQgY2FuIGJlIGFsc28gc2VyaWFsaXplZCwgbGluZSBkaXNwbGF5IEFQSXMgc2VlbSBwbGF1
-c2libGUgdG8NCj4gZml0LiBXaGF0IHdlIG5lZWQgaXMgYSBwcm94eSBiZXR3ZWVuIHRoZSB0d28u
-IEFuZCBJIHRoaW5rDQo+IGdwaW8tYWdncmVnYXRvciBpcyB0aGUgYmVzdCBmb3IgdGhhdC4gSXQg
-bmVlZHMgYW4gYWRkaXRpb25hbA0KPiBjb21wYXRpYmxlIHN0cmluZyBhbmQgdGhlIHJlZ2lzdHJh
-dGlvbiBmb3IgbGluZSBkaXNwbGF5IChvdmVyYWxsDQo+IHNvbWV0aGluZyBsaWtlIDUwIExvQ3Mp
-LiBXZSBjYW4gZXZlbiBjYWxsIHRoYXQgaGFyZHdhcmUgY29tcGF0aWJsZSBhcw0KPiBsaW5lLWRp
-c3BsYXktZ3BpbyAob3Igc28pLg0KPg0KPiBDYzogR2VlcnQgYW5kIEtyenlzenRvZiAoZm9yIHRo
-ZSBjb21tZW50cyBvbiB0aGUgaWRlYSBhYm92ZSkuDQoNCldvdWxkIHRoZSBncGlvLWFnZ3JlZ2F0
-b3IgYmUgbmVjZXNzYXJ5PyBJIHdhcyB0aGlua2luZyBzb21ldGhpbmcgbGlrZSANCnRoaXMgaW4g
-dGhlIGRldmljZXRyZWUNCg0KXHsNCiDCoMKgwqAgbGVkLTdzZWcgew0KIMKgwqDCoCDCoMKgwqAg
-Y29tcGF0aWJsZSA9ICJraW5nYnJpZ2h0LHNhMzYiOw0KIMKgwqDCoMKgwqDCoMKgIHNlZy1ncGlv
-cyA9IDwmZ3Bpb04gMCBHUElPX0FDVElWRV9ISUdIPiwNCiDCoMKgwqAgwqDCoMKgIMKgwqDCoCA8
-JmdwaW9OIDEgR1BJT19BQ1RJVkVfSElHSD4sDQogwqDCoMKgIMKgwqDCoCDCoMKgwqAgPCZncGlv
-TiAyIEdQSU9fQUNUSVZFX0hJR0g+LA0KIMKgwqDCoCDCoMKgwqAgwqDCoMKgIDwmZ3Bpb04gMyBH
-UElPX0FDVElWRV9ISUdIPiwNCiDCoMKgwqAgwqDCoMKgIMKgwqDCoCA8JmdwaW9OIDQgR1BJT19B
-Q1RJVkVfSElHSD4sDQogwqDCoMKgIMKgwqDCoCDCoMKgwqAgPCZncGlvTiA1IEdQSU9fQUNUSVZF
-X0hJR0g+LA0KIMKgwqDCoCDCoMKgwqAgwqDCoMKgIDwmZ3Bpb04gNiBHUElPX0FDVElWRV9ISUdI
-PjsNCiDCoMKgwqAgfTsNCn07DQoNCj4NCj4+IFRoZSBpbmZvcm1hdGlvbiB3ZSB3YW50IHRvIGRp
-c3BsYXkgaXMgbW9zdGx5IHN0YXRpYyAoYmFzaWNhbGx5IGEgbnVtZXJpYw0KPj4gdW5pdCBpZGVu
-dGlmaWVyKSBidXQgdGhlcmUgYXJlIGNhc2VzIHdoZXJlIHdlIG1heSB3YW50IHRvIGFsdGVybmF0
-ZQ0KPj4gYmV0d2VlbiB0aGlzIGFuZCAiRiIgdG8gaW5kaWNhdGUgc29tZSBmYXVsdCBjb25kaXRp
-b24uDQo+
+On Thu, Feb 22, 2024 at 05:52:23PM +0100, Frederic Weisbecker wrote:
+> Le Fri, Feb 16, 2024 at 05:27:35PM -0800, Boqun Feng a écrit :
+> > Hi,
+> > 
+> > This series contains the fixes of RCU tasks for v6.9. You can also find
+> > the series at:
+> > 
+> > 	git://git.kernel.org/pub/scm/linux/kernel/git/boqun/linux.git rcu-tasks.2024.02.14a
+> > 
+> > Changes since v1:
+> > 
+> > *	Update with Paul's rework on "Eliminate deadlocks involving
+> > 	do_exit() and RCU task"
+> > 
+> > The detailed list of changes:
+> > 
+> > Paul E. McKenney (6):
+> >   rcu-tasks: Repair RCU Tasks Trace quiescence check
+> >   rcu-tasks: Add data to eliminate RCU-tasks/do_exit() deadlocks
+> >   rcu-tasks: Initialize data to eliminate RCU-tasks/do_exit() deadlocks
+> >   rcu-tasks: Maintain lists to eliminate RCU-tasks/do_exit() deadlocks
+> >   rcu-tasks: Eliminate deadlocks involving do_exit() and RCU tasks
+> 
+> Food for later thoughts and further improvements: would it make sense to
+> call exit_rcu_tasks_start() on fork() instead and rely solely on
+> each CPUs' rtp_exit_list instead of the tasklist?
+
+It might well.
+
+One big advantage of doing that is the ability to incrementally traverse
+the tasks.  But is there some good way of doing that to the full task
+lists?  If so, everyone could benefit.
+
+							Thanx, Paul
+
+> Thanks.
+> 
+> >   rcu-tasks: Maintain real-time response in rcu_tasks_postscan()
+> > 
+> >  include/linux/rcupdate.h |   4 +-
+> >  include/linux/sched.h    |   2 +
+> >  init/init_task.c         |   1 +
+> >  kernel/fork.c            |   1 +
+> >  kernel/rcu/tasks.h       | 110 ++++++++++++++++++++++++++++++---------
+> >  5 files changed, 90 insertions(+), 28 deletions(-)
+> > 
+> > -- 
+> > 2.43.0
+> > 
+> > 
+> 
