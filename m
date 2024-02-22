@@ -1,119 +1,146 @@
-Received: from inva021.nxp.com (inva021.nxp.com [92.121.34.21])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f50.google.com (mail-pj1-f50.google.com [209.85.216.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C804917981;
-	Thu, 22 Feb 2024 06:38:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=92.121.34.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2FA77469;
+	Thu, 22 Feb 2024 06:42:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708583885; cv=none; b=JFVwZjKBEHRNH30LndHeOGiMTVukBqu5WZEsto3L29v75RO+CsFouW+CFmvgI8qWoUx7yEnyn5P/4+hNRYD7XK5TmolZtkv7E0K7AfYDzTvhUT8UEFERBtKAABG/ZGXUqjg+S94d/UixG5VjB1bFG6lAo2hQwFpsRqwQRQBSKgE=
+	t=1708584122; cv=none; b=AdzckGnBk/d1zlt5hEkwTCecmXQ8aaY356ejBHJ1JavXVYVh0gZtgs9BAYd3PWFSI6ntzMX728StRxAFmxougfXWq2dPdFgqpPfKmnlqFEgCR6KbJXd9/rka44oNsHt87R/OOk9Md7SY4DjOPIS3EqV00aF7GQiBeNmU0aAtjSE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708583885; c=relaxed/simple;
-	bh=OcVV1einNzUPldfyyWwLLlbDtP3dTcDDAic0h4gOn70=;
-	h=From:To:Subject:Date:Message-Id; b=Ho4RCSloeEM6yM92dJ8fydEBxsDEpwR7K/JPJRWx01v5Xa70CbxeFhlz/DnytfwWwbBx4iS/MsR36mfT4lCj6Qxqj9a6y8FPMs6l+6qoif7XgKIA9H37WojjlfZJHwb7FPbsLbznlvLVcr5RETE0njdhNAQJk6ys0OByyEYQw14=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; arc=none smtp.client-ip=92.121.34.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-	by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 996C4202368;
-	Thu, 22 Feb 2024 07:32:21 +0100 (CET)
-Received: from aprdc01srsp001v.ap-rdc01.nxp.com (aprdc01srsp001v.ap-rdc01.nxp.com [165.114.16.16])
-	by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 6173820050F;
-	Thu, 22 Feb 2024 07:32:21 +0100 (CET)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-	by aprdc01srsp001v.ap-rdc01.nxp.com (Postfix) with ESMTP id B11591820F59;
-	Thu, 22 Feb 2024 14:32:19 +0800 (+08)
-From: Shengjiu Wang <shengjiu.wang@nxp.com>
-To: robh+dt@kernel.org,
-	krzysztof.kozlowski+dt@linaro.org,
-	conor+dt@kernel.org,
-	shawnguo@kernel.org,
-	s.hauer@pengutronix.de,
-	kernel@pengutronix.de,
-	festevam@gmail.com,
-	linux-imx@nxp.com,
-	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	shengjiu.wang@gmail.com
-Subject: [PATCH] arm64: dts: imx8mm-evk: Add spdif sound card support
-Date: Thu, 22 Feb 2024 14:17:13 +0800
-Message-Id: <1708582633-6969-1-git-send-email-shengjiu.wang@nxp.com>
-X-Mailer: git-send-email 2.7.4
-X-Virus-Scanned: ClamAV using ClamSMTP
+	s=arc-20240116; t=1708584122; c=relaxed/simple;
+	bh=J17X2fBxQ1cxsLJfPGVRLC571YnOIdb1/QJy66FmZRc=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=i2RSPVObxZfo6D52PrHWxIObT+VOI/IwMtcFDhHw+CNdaSjgPVdLkervyWZeuyVzLiMS/qVatr3ZesvCU7hF2KWf8qS2l9kFpf9DhRoga2ON2Psjn+k9GuvvoK1xQ8k8nDBvgYVFxrMJWLUVgFDxQs0GHwAxiUVEzvE1miJbLaE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PFGxZum4; arc=none smtp.client-ip=209.85.216.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PFGxZum4"
+Received: by mail-pj1-f50.google.com with SMTP id 98e67ed59e1d1-299e4b352cdso1816715a91.0;
+        Wed, 21 Feb 2024 22:42:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1708584120; x=1709188920; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=J17X2fBxQ1cxsLJfPGVRLC571YnOIdb1/QJy66FmZRc=;
+        b=PFGxZum4XgxU8gIk6wkbnOSSgEjatcl2/lyGve22z7ts6IyEd/mqP+qEsmhV2P4NeE
+         CCCcXkCltc8KdX/5cyPLZbV7RkAz69gcYy/78QsvXWPQVB7mHweyAdGZ7n8kRIj4x6Z0
+         4F6CC7eNNRMTiyDKNErDCdqoFnmTrKAzkwqPmznwMjVgCKFFXYJzS7uWY9/Xevhlj8Tf
+         SWPkKUv3aF4O/BX1FzwDb0LJ4OTI2fZPRawoBjPVVupdfKLV9PbKx6JfZ6VYu+V1eqma
+         uzQjYTF6TPRnmeNvKfm9zqVYcv0VDbFyX9P35HszfvFMNfNqFTQ5aZKQUNATjxUETsyg
+         fcig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708584120; x=1709188920;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=J17X2fBxQ1cxsLJfPGVRLC571YnOIdb1/QJy66FmZRc=;
+        b=ZeLZPHtJnFCCi1iXZsCBhFk5SMJ1G7QWgoy9vW29VN5QcUBV7ze4tqJoPcvydlLFWk
+         rvo/H2cnp4uBVgRcmjJoarMQSPKAjyLk/g3riOVMQhOFQBtxnYPtHtRQaOezvsi1saaJ
+         5kFibiBdeAy1HBPNa/COakl1wqoziLb0pWsWCKNsbLHNh8sU7OqTQ7W0bXIP6ArDBHa7
+         6LTXYOxIVIU3aCUGDMn0vS9PI+6ar7QtJMnTdkLyim2fSTz+xZxSjFo98I8W3D53GD3h
+         1UpHVuEje2Vft+8JKp053O7VrDzbRCQDHx5/g/5arfgwd3Tn0+bYba+l6MZvg/oWEd89
+         hZbw==
+X-Forwarded-Encrypted: i=1; AJvYcCXwv+I40K6l6EEU7jEOxysrhZMcuRqDcR/or9lKUlPN9ucZ86qUWqERMatvuhccfC9qyriSVkuviFynEGv4r+uCumF9Nw2dri19sp6T4QXgSCZtubsh
+X-Gm-Message-State: AOJu0YyuVnNWww3fK91ELznLlTf4d9jY/THZ/6QaqNRsHLKDqbhtCz/f
+	T0s3oEms/3L+NgTpVtu17OlxuukjmQBHIIOmul7jko7w0+hxikhh
+X-Google-Smtp-Source: AGHT+IFNdst8YpA7UlBoxrtkXY44+qmfRxyM/UNjZ+zqbHALDY2Qvssh+kpwN8fcAzukd4cx6Nqc7A==
+X-Received: by 2002:a17:90a:bd09:b0:299:281:e1b2 with SMTP id y9-20020a17090abd0900b002990281e1b2mr16365685pjr.30.1708584119879;
+        Wed, 21 Feb 2024 22:41:59 -0800 (PST)
+Received: from archie.me ([103.124.138.155])
+        by smtp.gmail.com with ESMTPSA id bx12-20020a17090af48c00b0029a4089fbf0sm919060pjb.16.2024.02.21.22.41.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 21 Feb 2024 22:41:59 -0800 (PST)
+Received: by archie.me (Postfix, from userid 1000)
+	id 4AE3D1830534E; Thu, 22 Feb 2024 13:41:57 +0700 (WIB)
+Date: Thu, 22 Feb 2024 13:41:57 +0700
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+To: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	Linux Security Module Subsystem <linux-security-module@vger.kernel.org>
+Cc: Kees Cook <keescook@chromium.org>,
+	Andy Lutomirski <luto@amacapital.net>,
+	Will Drewry <wad@chromium.org>,
+	=?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>,
+	Theodore Ts'o <tytso@mit.edu>,
+	Alan Stern <stern@rowland.harvard.edu>,
+	Ali Polatel <alip@chesswob.org>
+Subject: TOCTOU-free exec(), chdir(), open() with O_PATH sandbox emulation
+ support?
+Message-ID: <ZdbstX5p4M_-RjXC@archie.me>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="MO7InTU0UHS36JK5"
+Content-Disposition: inline
 
-Add spdif sound card support, configure the pinmux.
 
-This sound card supports recording and playing sound
-through spdif interface.
+--MO7InTU0UHS36JK5
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
----
- arch/arm64/boot/dts/freescale/imx8mm-evk.dtsi | 33 +++++++++++++++++++
- 1 file changed, 33 insertions(+)
+Hi,
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8mm-evk.dtsi b/arch/arm64/boot/dts/freescale/imx8mm-evk.dtsi
-index 9b39458f3fa5..bd5b365867fd 100644
---- a/arch/arm64/boot/dts/freescale/imx8mm-evk.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8mm-evk.dtsi
-@@ -165,6 +165,14 @@ cpu {
- 			};
- 		};
- 	};
-+
-+	sound-spdif {
-+		compatible = "fsl,imx-audio-spdif";
-+		model = "imx-spdif";
-+		spdif-controller = <&spdif1>;
-+		spdif-out;
-+		spdif-in;
-+	};
- };
- 
- &A53_0 {
-@@ -533,6 +541,24 @@ &snvs_pwrkey {
- 	status = "okay";
- };
- 
-+&spdif1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_spdif1>;
-+	assigned-clocks = <&clk IMX8MM_CLK_SPDIF1>;
-+	assigned-clock-parents = <&clk IMX8MM_AUDIO_PLL1_OUT>;
-+	assigned-clock-rates = <24576000>;
-+	clocks = <&clk IMX8MM_CLK_AUDIO_AHB>, <&clk IMX8MM_CLK_24M>,
-+		 <&clk IMX8MM_CLK_SPDIF1>, <&clk IMX8MM_CLK_DUMMY>,
-+		 <&clk IMX8MM_CLK_DUMMY>, <&clk IMX8MM_CLK_DUMMY>,
-+		 <&clk IMX8MM_CLK_AUDIO_AHB>, <&clk IMX8MM_CLK_DUMMY>,
-+		 <&clk IMX8MM_CLK_DUMMY>, <&clk IMX8MM_CLK_DUMMY>,
-+		 <&clk IMX8MM_AUDIO_PLL1_OUT>, <&clk IMX8MM_AUDIO_PLL2_OUT>;
-+	clock-names = "core", "rxtx0", "rxtx1", "rxtx2", "rxtx3",
-+		      "rxtx4", "rxtx5", "rxtx6", "rxtx7", "spba",
-+		      "pll8k", "pll11k";
-+	status = "okay";
-+};
-+
- &uart2 { /* console */
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_uart2>;
-@@ -702,6 +728,13 @@ MX8MM_IOMUXC_SAI3_TXD_SAI3_TX_DATA0     0xd6
- 		>;
- 	};
- 
-+	pinctrl_spdif1: spdif1grp {
-+		fsl,pins = <
-+			MX8MM_IOMUXC_SPDIF_TX_SPDIF1_OUT	0xd6
-+			MX8MM_IOMUXC_SPDIF_RX_SPDIF1_IN		0xd6
-+		>;
-+	};
-+
- 	pinctrl_typec1: typec1grp {
- 		fsl,pins = <
- 			MX8MM_IOMUXC_SD1_STROBE_GPIO2_IO11	0x159
--- 
-2.34.1
+Ali Polatel <alip@chesswob.org> opened feature request bug on Bugzilla
+regarding TOCTOU-free sandbox emulation support [1]. He wrote:
 
+> Thanks to the addition of seccomp_addfd, now it is possible to emulate a =
+vast number of system calls to achieve a TOCTOU-free sandbox in userspace. =
+There're however three exceptions to this:
+> 1. exec family calls cannot be emulated so a sandbox disallowing exec cal=
+ls has no choice but to continue the exec call in sandbox process allowing =
+TOCTOU.
+> 2. chdir family calls cannot be emulated so a sandbox disallowing chdir c=
+alls to hide paths has no choice but to continue the chdir call in sandbox =
+process allowing TOCTOU.
+> 3. open calls with the O_PATH flag cannot be emulated (addfd returns EBAD=
+F on o_path fds) again a sandbox disallowing open calls with O_PATH flag to=
+ hide paths has no choice but to continue the open call in sandbox process =
+allowing TOCTOU.
+>=20
+> It'd be awesome for the kernel to provide TOCTOU-free ways to sandbox the=
+se three cases.
+>=20
+> For a bit of context, I am the author of syd, a seccomp and landlock base=
+d application sandbox with support for namespaces, you can read here about =
+why this feature request is relevant and more: http://man.exherbolinux.org/=
+syd.7.html
+>=20
+> To quote the relevant bit from the manual page:
+>> BUGS
+>>=20
+>> In the operation of syd, certain system calls are not fully emulated due=
+ to seccomp(2) limitations, resulting in the sandbox process continuing the=
+se calls directly. These include execve(2), execveat(2) for execution, chdi=
+r(2), fchdir(2) for directory changes, and open(2) operations with O_PATH f=
+lag. Consequently, this behavior exposes vulnerabilities to time-of-check t=
+o time-of-use attacks, allowing for the circumvention of Exec Sandboxing to=
+ execute denylisted paths, the bypass of Stat Sandboxing for unauthorized d=
+irectory access without disclosing directory contents (owing to getdents(2)=
+ call emulation), and the detection of hidden files without revealing file =
+metadata, as stat(2) calls are emulated.
+
+Is the feature request viable/realistic?
+
+Thanks.
+
+[1]: https://bugzilla.kernel.org/show_bug.cgi?id=3D218501
+
+--=20
+An old man doll... just what I always wanted! - Clara
+
+--MO7InTU0UHS36JK5
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZdbstAAKCRD2uYlJVVFO
+o6t8AQD79KsszDwGub+XNmsGyw95WsE0YmAkVahpYrYhSOwgFQEAqPBzxT+wpYN+
+0UuCHIC627WdHRuS7KLGWSiFT5IG/Qs=
+=lS1J
+-----END PGP SIGNATURE-----
+
+--MO7InTU0UHS36JK5--
