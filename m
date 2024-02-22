@@ -1,393 +1,174 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+Received: from APC01-SG2-obe.outbound.protection.outlook.com (mail-sgaapc01olkn2019.outbound.protection.outlook.com [40.92.53.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29399156990;
-	Thu, 22 Feb 2024 18:12:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76EF62BB01;
+	Thu, 22 Feb 2024 18:13:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.53.19
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708625536; cv=fail; b=HvqPyRunlmxtmWMAdx0Nxj4O9noNuk6ulcZ9CksnH+yCuUlsbxehjRs2aFMwY1QEWpQ44Wdg1gsKtZ2ijLVDKe0a63Em044nNC3EnTV7Swqob2cAv6/gIWORosUNnr9OsIATBLfGxbcrLTRlkkI2A5B/DgzHYvf73A8s7rGjUds=
+	t=1708625597; cv=fail; b=LPMX/GIe2ZvLib2AAQIB84NTcckCbykY4vG3x5JapaN7rF8bB41oeNGNEAFQZpUDT5PSKaENw32hBmFKeP5aiXZiT8omN0wUlR16uR8EsTM0siABvSnh/YHmYmjSiAL/dwYRpd9nL7KIeMdT8Sp/zkkHp/Y9x1wL9sPkcUT3DLc=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708625536; c=relaxed/simple;
-	bh=iMurjRDwKL2khcJXIv6Hu6VAyUDtt8ajcPCQ/EA99fc=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=c2S7H8p5wz6lFmkxhzRQZF+eRuIEHOy34e89WfmtDE8M0h9V7b16nnrWT2qC17yLtJhuxpnj/UI7SrGQKkepMQh7/EWT8SWAhN13IFVg6o1wDvLY+0ZlU0A6KkBkwVQa8SKvBGX4qAMbKFxQeq7ceMKm66b97oST+099fItiQDc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SOS15x3/; arc=fail smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1708625597; c=relaxed/simple;
+	bh=fcGqX4Jbf11oniWlnVaEswwZqffOTlGajS/NT29IekQ=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=DN4W+yF5GREMlq49UYHzcJ4nVD5ZoDFy+D2QPykMLQwaaEDpCmNHaoHOL5ryI5E37v9QRncXOKjo55rPkkb/OZudhqOHAn1awtpMwqQdvA5MZA5yk1AsbqtfPRskygwe8WQbYk340xWhuQnGimLT1eBzwhQ3SVBvwGgyPKHzYcc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=T5MTSX79; arc=fail smtp.client-ip=40.92.53.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SOS15x3/"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1708625535; x=1740161535;
-  h=date:from:to:cc:subject:message-id:references:
-   content-transfer-encoding:in-reply-to:mime-version;
-  bh=iMurjRDwKL2khcJXIv6Hu6VAyUDtt8ajcPCQ/EA99fc=;
-  b=SOS15x3/P73c5szZEmkPyF4O0UGO4htApcCX7w/IqHsdzOZmAnXSt+ZD
-   zj66xopoh67G8pIswlzg8aHM4ZxYYogzy27ECklsrDyhUgJZ3O+cCKc+k
-   3vXfHwzt3fX36IO1Lz0sqxEMnda/XdqxmfISPrTyh5/+OUp9Da7yymC8i
-   xSs3FhvXZWtLi6p8oSQo3CzkQZhs91yapNkgu3ltNsTEgS4jtwfVJCHEw
-   dwRV5UeNBAnsqiqMI0X12f3/sE/vo7zd+wTAAxb7VU8e1lzr2ZmaIqNtl
-   /W03+vm6VgLM4aSrso2m3hRcPYPSaloR4dnQXaZLJZebQ1mjNh8Tg/YAH
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10992"; a="2755237"
-X-IronPort-AV: E=Sophos;i="6.06,179,1705392000"; 
-   d="scan'208";a="2755237"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Feb 2024 10:11:43 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,179,1705392000"; 
-   d="scan'208";a="5968699"
-Received: from fmsmsx602.amr.corp.intel.com ([10.18.126.82])
-  by orviesa008.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 22 Feb 2024 10:11:41 -0800
-Received: from fmsmsx612.amr.corp.intel.com (10.18.126.92) by
- fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Thu, 22 Feb 2024 10:11:41 -0800
-Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
- fmsmsx612.amr.corp.intel.com (10.18.126.92) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Thu, 22 Feb 2024 10:11:40 -0800
-Received: from fmsedg601.ED.cps.intel.com (10.1.192.135) by
- fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35 via Frontend Transport; Thu, 22 Feb 2024 10:11:40 -0800
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (104.47.55.168)
- by edgegateway.intel.com (192.55.55.70) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Thu, 22 Feb 2024 10:11:40 -0800
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="T5MTSX79"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=HtPCKIVpqs5QtN9tmk6CMgo6o9jPe+XaJ4o/w4IVRBhVewgpWl8JKVjVY6+bJjYiC0xA4YGvkOxmcM1QuErgX6lCrvgYUum1UHAJ675Ye3A20jGJ3hS109aEEbtk3RZHQ+88U4US+NQ82ThR/CTa/8yazuO3m6jyXksJr0qcRc0WKIp3KAhl33DLbDo0K4A0lUoTPx3jlGLze8Zbw1uuGzg9ccdTQrJv1OGatz4Tr7KrhYxpy+hiIkF0QQ8PvgOgd18n6KuOU1+TB7cS8RRO/z2qmXwba3ZKJxhge+yKRIfeZ1iD5SsPCsz3l4bNB76yolJWzq2El7d3Hv7inTT9xw==
+ b=FAJwOSU731uOkzi9z6VwiTMNSvAQrt0WohiI4XecT6Ez42hZ9webnOIdm7i/PO+HU5p0KsAyjqfy3XHedciHj6o8pV6MJwgRm74/ZZiODvC0viEfNDUhAHuUYbTecdtpzrZWd7S8niohlLwC8ciy0IcpPK4sQMzH7txsBCz+dLdgrKrGYUaxWy1qyLTnQp9/RokEr06GlPKRXjGZqMtZmO4cTDMumr7Ie8hvSfXzFWZ1vDVgLAmL/3CITevvjhXkCrlJ5xw043WmQPAjjMMnGmf5+S0XaT4ZNKJLV/SHNeRud7OdtM0OVPqZJrpTrtZ3t8+7VLDlnn/kdQqO455rBw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=0y0o/7PpYe7LT++swsBHOLYRlS8dTSN1qhxhBYTobD8=;
- b=lB/FiswbECyvvTYqBmgWwGUAZNwPhu1bgo1t2Lg2LloKtBT+Knv4w2q61C201ty/qJcHddnuHVXnvUvC8O73IIhT3BQiKZ4C+ukeJ6UXkIWDP1DSn0qf5vujbtQDhTYUW8OoBwQM0+CSPRVTqzTwxEB0Pmx8CKiW/vasCRuu8ErwcNcuR4jHF1JBnXO6wNdJ29EWxqIBvdWQP5rojphbHlIvk7OiKLnhjczAuKBWAn13io3sltGH0avoW6m5z/UIUit1C+z8sjooFfeHtBXlmC3DSaib5wTJV+17UKCTRzduD7+kPEqQ2lhzOZWY42TkfADeO3iiFw09WU9QlKdeyA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
- by CH3PR11MB8188.namprd11.prod.outlook.com (2603:10b6:610:15e::16) with
+ bh=0oCTLsCGjOCeh15fwg47l/IQp3fKwmj950GliVWFJ4I=;
+ b=lK0Ahpyf5OTVbl+H3p/Pd6IYN/VqA3z163whFQwQa30vG9peOopr5IV0G58vxCqgKUM9lsQ50kp3ugOx0seIPfDtgSsvddYxmuVWPMuNZsI8sowKC7IlW5oJOIQ/ZDLRQ0rY8o29BK+vifiLxNi/zASFUYprLFl8nqHC6qm8l2TqSXz0q30wpuNvWjeGEg6HOEG7CatpIhI8NRds1Gu1p7iyQD73uMx6sWM/9XVtUE2UIC/ASqe6N2IzuAP2dMkNwpzc0BeBgcyt+8lzA6ad5plxGeKhUGieoBBq2IMHmFXKbjkUDd64bkHFZRJuA8z0QQyNHww6jX334gOX6J44Ww==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=0oCTLsCGjOCeh15fwg47l/IQp3fKwmj950GliVWFJ4I=;
+ b=T5MTSX79IDU4fV5Upghms/wI0+X84KHwPtaE7x1+q41F3QiGsjYOt76O3VrEARocNC35aV5cnT+rjoi3qPK60m58MD+1wV05Jm1PtG1M1IqlPwIIHdke5X0q5hgKYvBiez4CtYA3Ol3lLWbpQtr8fF/j1A52ISHfP000BVi4g0ffsYGckBH9W12an+eKClV4mx1IffJclERD8Kw7ez0XywCfl9M5/roF6aYw0rz7ZwwK0Cdm3NwiG3K2zGZtrTjZDFCA0KWuDdOb62ufQvA6bDu0LS9C2X2j0whlEWI6L5iWkiqprWNpT09j260c41wSn8IX1jM1d1VCFj8cWXiaiA==
+Received: from SEZPR06MB6959.apcprd06.prod.outlook.com (2603:1096:101:1ed::14)
+ by SEZPR06MB5522.apcprd06.prod.outlook.com (2603:1096:101:a6::14) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7339.10; Thu, 22 Feb
- 2024 18:11:37 +0000
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::da43:97f6:814c:4dc]) by PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::da43:97f6:814c:4dc%7]) with mapi id 15.20.7316.018; Thu, 22 Feb 2024
- 18:11:37 +0000
-Date: Thu, 22 Feb 2024 10:11:33 -0800
-From: Dan Williams <dan.j.williams@intel.com>
-To: Dave Jiang <dave.jiang@intel.com>, Marek =?iso-8859-1?Q?Beh=FAn?=
-	<kabel@kernel.org>, <linux-kernel@vger.kernel.org>, Hans de Goede
-	<hdegoede@redhat.com>, Matti Vaittinen <mazziesaccount@gmail.com>
-CC: Horia =?utf-8?Q?Geant=C4=83?= <horia.geanta@nxp.com>, Pankaj Gupta
-	<pankaj.gupta@nxp.com>, Gaurav Jain <gaurav.jain@nxp.com>, Herbert Xu
-	<herbert@gondor.apana.org.au>, "David S. Miller" <davem@davemloft.net>,
-	Davidlohr Bueso <dave@stgolabs.net>, Jonathan Cameron
-	<jonathan.cameron@huawei.com>, Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, Dan
- Williams <dan.j.williams@intel.com>, Bamvor Jian Zhang <bamv2005@gmail.com>,
-	Linus Walleij <linus.walleij@linaro.org>, "Bartosz Golaszewski"
-	<brgl@bgdev.pl>, Douglas Anderson <dianders@chromium.org>, Andrzej Hajda
-	<andrzej.hajda@intel.com>, Neil Armstrong <neil.armstrong@linaro.org>, Robert
- Foss <rfoss@kernel.org>, "Laurent Pinchart"
-	<Laurent.pinchart@ideasonboard.com>, Jonas Karlman <jonas@kwiboo.se>, Jernej
- Skrabec <jernej.skrabec@gmail.com>, "Maarten Lankhorst"
-	<maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
-	Daniel Vetter <daniel@ffwll.ch>, James Seo <james@equiv.tech>, Jean Delvare
-	<jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>,
-	<linux-crypto@vger.kernel.org>, <linux-cxl@vger.kernel.org>,
-	<linux-gpio@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
-	<linux-hwmon@vger.kernel.org>
-Subject: Re: [PATCH 2/2] devm-helpers: Add resource managed version of
- debugfs directory create function
-Message-ID: <65d78e55844c1_1ee312946a@dwillia2-mobl3.amr.corp.intel.com.notmuch>
-References: <20240222145838.12916-1-kabel@kernel.org>
- <20240222145838.12916-2-kabel@kernel.org>
- <23c50406-7ebd-4cc3-a978-1b8a5fc71ff0@intel.com>
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <23c50406-7ebd-4cc3-a978-1b8a5fc71ff0@intel.com>
-X-ClientProxiedBy: MW2PR2101CA0029.namprd21.prod.outlook.com
- (2603:10b6:302:1::42) To PH8PR11MB8107.namprd11.prod.outlook.com
- (2603:10b6:510:256::6)
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7292.38; Thu, 22 Feb
+ 2024 18:13:11 +0000
+Received: from SEZPR06MB6959.apcprd06.prod.outlook.com
+ ([fe80::53da:a8a:83cb:b9ad]) by SEZPR06MB6959.apcprd06.prod.outlook.com
+ ([fe80::53da:a8a:83cb:b9ad%4]) with mapi id 15.20.7316.023; Thu, 22 Feb 2024
+ 18:13:10 +0000
+Message-ID:
+ <SEZPR06MB6959274FCF19F70B45589F4196562@SEZPR06MB6959.apcprd06.prod.outlook.com>
+Date: Fri, 23 Feb 2024 02:13:06 +0800
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 2/8] ARM: dts: hisilicon: add missing compatibles to
+ CRG node
+Content-Language: en-US
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+ Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
+ <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>
+Cc: David Yang <mmyangfl@gmail.com>, linux-clk@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20240222-clk-mv200-v3-0-f30795b50318@outlook.com>
+ <20240222-clk-mv200-v3-2-f30795b50318@outlook.com>
+ <2085057c-0000-4e0d-a633-c84e939313d6@linaro.org>
+From: Yang Xiwen <forbidden405@outlook.com>
+In-Reply-To: <2085057c-0000-4e0d-a633-c84e939313d6@linaro.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-TMN:
+ [oa1urRsIqkKn5yTD+cBO9bfA6lS7LfTELJNhfQv0716b760DEVytd8qFvXY8U3QvpWgfhY4QYxs=]
+X-ClientProxiedBy: TYCP286CA0240.JPNP286.PROD.OUTLOOK.COM
+ (2603:1096:400:3c7::16) To SEZPR06MB6959.apcprd06.prod.outlook.com
+ (2603:1096:101:1ed::14)
+X-Microsoft-Original-Message-ID:
+ <febc4acf-d3a3-43ac-bbf7-1e9e3a3d0556@outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|CH3PR11MB8188:EE_
-X-MS-Office365-Filtering-Correlation-Id: 29bf8a99-970b-4042-3288-08dc33d1b5e1
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
+X-MS-TrafficTypeDiagnostic: SEZPR06MB6959:EE_|SEZPR06MB5522:EE_
+X-MS-Office365-Filtering-Correlation-Id: bccdb437-fa7f-4926-5780-08dc33d1ed59
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: ftz9W3VPdH+jpRS9vYTBUNXGQKNDLOv8KkdeRN1WOuDkX0N7giUXLPVKTKy32AEYRRUlNQ6iklEvsMT/3UUUlAUk2bAMjU395u93+nL1gPK2FBYybxYlc033VH8I7bfcg3T981A3THMaCWj+N4CZeidmlX1l2ohJO+dzIWH+89/luG5HneLxPCRzWf65vTFi+xlMMm6bzpXkh49Q28mB1ffR4BvQ6aITcpeHX3v5msYXv5NV9weq0UWdbeHL2ySFbCYHlglszfm6FJ+TontpUweZ0M+DQGccg2L9rYGd9LIdnQdfrd+apwMmZN/XyWarxV2JJd60CcNDY6jcrDzW8GApB6u9IqjBOi3vd0dLD+7LhbGBddoQcgUfvz86IIx8k/ZCrF4WZonNtO/L0ev5VQjkqL0fUHKsqXDLzcR6IX9nrjMzIGSICwedP5kXktHdbs9MeJqzl8cFeYMWP6NwQ4y13K0ntelWaCVZ2wn+CjY21bnoucujyYVfiwxMzgDqjFtAZMlh5jTd0F7CtANpvtmB8XoOteB9TCXTsCPPir8=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam-Message-Info:
+	ErXUK3137rczeUQKvT3RS84YOWgjc/uEaBiFrkRPvs+kjpYJRpHbDRfxDDSIZy+P1RBDbbTqSxjmX4xRZwozmfK9lXWmgi/OlgGjFkpf65Pd//8I81pPFK7ZaetAiGgWQWq8dja0K9pE1upXhreAvuFM7NBd5taScIfC4qoll5/UKRHnn6hyKVJzaU7rqUCdMwwaDyfOSIh7FPrYYl/8dB+Zosn6qTgoKBqkAhjW/Ab+SKhlcGEeCbiLo7ki35AX+BkwKHsudOSEASOuyToUPIRHm88+hTn7XY0v7IvPZHYjDBU67ACz0ZxACVgIdY5S3s02CmaLouEHeIsltGgT4Ud/HvOxGcDEbimKScP402TR5WXNbDhBiUQ/lJAQlpVWDuG7qEimKUxxwp23B/52aSPaDU7HBSnA45j//2o9gmxdUq96ShM7Q2jM7q75iUChrRfZDmYWbEpjG4kKgraCdbuedHRB0mRkwgjDqF4t7HX8sG+ULDKnN5TuHrKb3Yg59ydihyUPkbCiPDCBOAa6c9wG2UI5nmjDHv9IW7FjydpnjwIvX5Lv4DzG3xlqnSrp
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?iso-8859-1?Q?93818D7gR779UFcAWPmU8kf8/J6D1tPvNyBwSFNgRrvF+rzeSsNfplb+5V?=
- =?iso-8859-1?Q?js8Qai8ixLXQfd4p13d4Lgzlx8h+bVtqbi1AFYHxxJTwp7F1tymUB8FdaC?=
- =?iso-8859-1?Q?jyRO9x9NhpbCD+neRhbwlRFfpkgMA8vsT1pyKpsSRo6zhbBw2XeD/T+6PX?=
- =?iso-8859-1?Q?8bxcJ+wPRNmcHqGh1R75QHkpm0LQDsb3Y84pb4LeSVQ04uU+UqcfJ8FME+?=
- =?iso-8859-1?Q?RnuBhXkwSklFIdt0+SJtzjSTdFbSpPVLu8tZCQyUrUM8rIcBOf+l2GABCy?=
- =?iso-8859-1?Q?PAcDSrlBWsvUGh9RslEyQNRrIpUo4nuD46dzwW3RhVLIvbgrgsQ++d9qqq?=
- =?iso-8859-1?Q?VjCVz0Yj2Qig/fnl7mSaqtpHwydzTI6fBWNljNhMUgRnclgdXLVvbHYdrO?=
- =?iso-8859-1?Q?6DNSswdOL+u8D/6YVpCc1PUPjAnu8s4dQm+D2PTAGT+QE7U8OOaeMBWuyg?=
- =?iso-8859-1?Q?DImfC+ZTZQOuh0L/XTL2+lq9bbz3c7IGJWghzTc4JYZevfxvU8O7I//m0J?=
- =?iso-8859-1?Q?H68UkovCcbVoolfcEfN4ONrk0bMfu/igg9guBwNwEjsjKVJxSXgjd3+xue?=
- =?iso-8859-1?Q?0kwLRCwtHp2tfGjuJNFCIOKdOyTeUzBcOE4jcvXaX1UxPPBniyWz/rjCdS?=
- =?iso-8859-1?Q?VehhrcLVB9vZntKhaHKIWBEeBMPfNGV1sWaplRHz2cFFjnrhEB70r1d4BY?=
- =?iso-8859-1?Q?fjSY6GVpdJnuuyNdTpW70VkzXe0ISxYMGhXDNtSKlpK3YSmMIHS1gZ+In1?=
- =?iso-8859-1?Q?LMVNHTwZ8iu/8IHixBlCN+qdxnXzSuES3yImcSgWkL5ZvY8uSuKLK4Bd48?=
- =?iso-8859-1?Q?g1Y9+6Mi0he2JA9aivDaP7dusrDL4EEiznPy7E3tb4XIXeLFHMilSe0aIZ?=
- =?iso-8859-1?Q?gh0tW3gVBSNTNa2dtH4B3jprynoCHOt2lugQkxr633x5769a1EkKafrDiB?=
- =?iso-8859-1?Q?LjEAV4kIaBI7R0M96VUdhMMQlnzWXc0xjwcRcSgYVqOyfZQdw4Tz1gfP8i?=
- =?iso-8859-1?Q?Xam06F5g9YEGMEj4OeglAnY+UqVnnIQzqIav8GV6bzblQpqAG11kJ0a1E4?=
- =?iso-8859-1?Q?t8wZy0XExf+zUyt2wDsLUyIMfJkcNO1GZSt2ISkPcXzLIXICKBYnQnpuyB?=
- =?iso-8859-1?Q?qvboioiqotiRS6MrVjeOBJNmJBUqwMCyWmB7qbGb1kllIe8+krlq0DfxFJ?=
- =?iso-8859-1?Q?X3OglJ+4W1aEPI7rWzrIIKxfdFZage4mZn+g3YZ0K/4BCywrJJiAyV/mk2?=
- =?iso-8859-1?Q?nwmL1sCn5+4/C3d52sPHW/nYM6f0n7O5DIoCspqPzY2vyTqPAdFsGGYVTs?=
- =?iso-8859-1?Q?j3pGBGDj3kgu44Lmyp+QaAMmoFxkbl7gw1cqD36PtVvkZxUA1UXAXeJcAk?=
- =?iso-8859-1?Q?s8hXrArPPG9bRCA4RPDUbtNZnkisS6KeSmVi+mADxcLgQwmnabsDMqvIYK?=
- =?iso-8859-1?Q?juuGGAA+pdjqBoQnFtKT5dsh0/dKZi8kPWCz7+awH89XODzmILqlo9B0yK?=
- =?iso-8859-1?Q?vEqy8HQRIJ07XvEnhN4KeVn5BxPUF6MJlDfIl96jMs8ubHbfXoDByItftL?=
- =?iso-8859-1?Q?Z0DzRw/EfFt5UvbM+eAMEbzeCFf/zvD+DZ0CLXKuf07cdtdXv0ZvYBil8z?=
- =?iso-8859-1?Q?XTzLiv3WkqvjH5Pvhwo3jpY4Rz5JSo/ZDmzh4IDTC7kDMxnQfteSv2wg?=
- =?iso-8859-1?Q?=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 29bf8a99-970b-4042-3288-08dc33d1b5e1
-X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?TmRTd3R4Nkt2Ujd0eHdyOEc5bEwyV3RBeWF0RXN3alhGaDRBSE55Q3NMcHM2?=
+ =?utf-8?B?bmJQUkVLR3dRRXlXRUN4c0E0YzVKMnFSSXV3UTZ4dzdjRmdpbk5Ma3U3eGJV?=
+ =?utf-8?B?OVE4dVBjNjRlSHhDME5OMWdoYzRURFUwbzdYckxtb0pWZDltOXlOQS9idFcr?=
+ =?utf-8?B?djNzY1lISW03TG5NYVo1UUF6SjF6dFJmNnZvNHArU1VibGFBZHg0S3J3MDZx?=
+ =?utf-8?B?NnJKeFlML3lPZXg2VjIvL2gzeVp1czJzRkdmZWIzOElRQjZpVzZMcVZRQWZM?=
+ =?utf-8?B?amdHekprM2JwbDhmUGZVSms3VkNNZ2NqSVB4ZmxjNDJZaDd0aHRwLy9oMFla?=
+ =?utf-8?B?elV6OW9ZWmxac3h0eXNRSFFiNkdTSGJ3OG0xSnc5UHpySm51VXBDcE5NK1VK?=
+ =?utf-8?B?R25ZdjRIT3gvVU9UVkYxS2ppQ3ZvMUlLeDQ5QVFScWJOUFVOaVp1d0dQQkhN?=
+ =?utf-8?B?NzBIZjhFRVR4VnJ5RTRuaEgyeEVjbEhBS2Q0WUNpOHpFajdBU1FHUWd0MTlE?=
+ =?utf-8?B?UWFXWkRhaFRuZnRLa1llcC80TzFxdnJ6RmVNNFc1eVcxdWt1eTc2QjNrS05t?=
+ =?utf-8?B?bVZFUXBlY2ZQTlEwV3J0SUZERjJIQU9CMWtUZ09EOEI1Si9LeEFqSlpOdFli?=
+ =?utf-8?B?b0pwS0xHaEJtZG1yVFNsU2pERVVoeXowVm16QzMyQVNNSmlUUmFQZ3RsSWQ3?=
+ =?utf-8?B?Zm9BZnVNUzVsdVZlbjVjUi96bE5kOEkvSXFHMEtHOTJmTkMraTNHNkV0ZTJJ?=
+ =?utf-8?B?TmVaYk16MTVzTmVvTHN0emxULzRJZUFmU0I4RXNEUGZmaHo2cXhYS21IMHFz?=
+ =?utf-8?B?SnMrVDM3L2tXY1g4MGNNdjM1bzd1aUJDeU5LVWJNYXlINS9CZFFSbVpzMVhy?=
+ =?utf-8?B?ZDNIN3J6VlJtVmh1ZmR3dFBOdURpQUs0cUVpWkNWOUErNHIvd096QTY3WFZw?=
+ =?utf-8?B?ai9ZZXlKbUpSNzFqVDhpOVEwYnExYWlhUUJwVEJEVWZzblRRQ0lnbk5MeUww?=
+ =?utf-8?B?aVNpSExyMHNnb0dJR2hIZ0ZPaUdUaWlYRVpxNnVyMHJGV0xvU0VFTWRhMDBW?=
+ =?utf-8?B?RU9ORjJqajU0eG5CNkR2TjNiWkNMQmkwc2dHVEUxY29MeGsyT0pOeEdSdFBt?=
+ =?utf-8?B?Wk14QzNOS0p3MUJRZE9kcSsrVmI1REJQSDEydDZQZXJmanFwZWpLSzdrU0JF?=
+ =?utf-8?B?Smh2RlVGa0hVVElvR3M0Y3FHUW0yZ1BKbzFaSWk0N1lmRXhJSzV3QmtJMmRS?=
+ =?utf-8?B?aFZBMVIvbWVna0lJTFRqbnAzTXBvVldYcDd2azFHcDZNL0xhaHBvclYrMHor?=
+ =?utf-8?B?TU1zRFd2djZqMW95ZDhFOVo3K2duem5yOEk0QXJlYnkwdXI1bnBWYVJ2UXhm?=
+ =?utf-8?B?SmhPMkJwcjQyajRURHVsR25kdHdXOG93cFdoWTVmWnlnRzRqc3hmblFoRXVT?=
+ =?utf-8?B?UzBhRTQwdzRjZUxub0Z2OVBycTNmb1hFc1FQMXRudkY3c0tqUXRacis1QkpN?=
+ =?utf-8?B?SCswYjJnL3dyYkVXR3ZYYjEvaENaVGpKdGt5TFo5bFBZUWxEeldiL1NOY0Zr?=
+ =?utf-8?B?Z3RoZzUzbmlLaGptTnpzcmVmZG1rQkhaQXhNSkp6aFk5VStHMUZzWTBiV1J4?=
+ =?utf-8?B?cEZic1Y0cHNESUlTZysxZkxJQmZJZHRFMXVpRVRrM3pnSVlHc3NIaG11OVQx?=
+ =?utf-8?B?bUVrNldYVWc3Z0FHa3NUOXRyMkpOU0lqa2EvOWxaRTIvNWdCYWNQakpISW8w?=
+ =?utf-8?Q?Np0S2vOIf5RKShclDYqn1wXeK9VKmmLKwYvUjkv?=
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: bccdb437-fa7f-4926-5780-08dc33d1ed59
+X-MS-Exchange-CrossTenant-AuthSource: SEZPR06MB6959.apcprd06.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Feb 2024 18:11:37.4514
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Feb 2024 18:13:10.4883
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: /72adJoSE/fPVL0inLRWeoKDqg2MC3viqjD+5PsHOcrRQuYumCONmsY9XxnTv2d5IHKkdPtpf0a3eVjea1gjTOZ66pVb0n6+2XnJC+5Mm1A=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR11MB8188
-X-OriginatorOrg: intel.com
+X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
+	00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SEZPR06MB5522
 
-Dave Jiang wrote:
-> 
-> 
-> On 2/22/24 7:58 AM, Marek Behún wrote:
-> > A few drivers register a devm action to remove a debugfs directory,
-> > implementing a one-liner function that calls debufs_remove_recursive().
-> > Help drivers avoid this repeated implementations by adding managed
-> > version of debugfs directory create function.
-> > 
-> > Use the new function devm_debugfs_create_dir() in the following
-> > drivers:
-> >   drivers/crypto/caam/ctrl.c
-> >   drivers/gpu/drm/bridge/ti-sn65dsi86.c
-> >   drivers/hwmon/hp-wmi-sensors.c
-> >   drivers/hwmon/mr75203.c
-> >   drivers/hwmon/pmbus/pmbus_core.c
-> > 
-> > Also use the action function devm_debugfs_dir_recursive_drop() in
-> > drivers
-> >   drivers/cxl/mem.c
-> >   drivers/gpio/gpio-mockup.c
-> > 
-> > Signed-off-by: Marek Behún <kabel@kernel.org>
-> > ---
-> >  drivers/crypto/caam/ctrl.c            | 16 +++------
-> >  drivers/cxl/mem.c                     |  9 ++---
-> >  drivers/gpio/gpio-mockup.c            | 11 ++----
-> >  drivers/gpu/drm/bridge/ti-sn65dsi86.c | 13 ++------
-> >  drivers/hwmon/hp-wmi-sensors.c        | 15 ++-------
-> >  drivers/hwmon/mr75203.c               | 15 +++------
-> >  drivers/hwmon/pmbus/pmbus_core.c      | 16 +++------
-> >  include/linux/devm-helpers.h          | 48 +++++++++++++++++++++++++++
-> >  8 files changed, 72 insertions(+), 71 deletions(-)
-> > 
-> > diff --git a/drivers/crypto/caam/ctrl.c b/drivers/crypto/caam/ctrl.c
-> > index bdf367f3f679..ea3ed9a17f1a 100644
-> > --- a/drivers/crypto/caam/ctrl.c
-> > +++ b/drivers/crypto/caam/ctrl.c
-> > @@ -7,6 +7,7 @@
-> >   */
-> >  
-> >  #include <linux/device.h>
-> > +#include <linux/devm-helpers.h>
-> >  #include <linux/of_address.h>
-> >  #include <linux/of_irq.h>
-> >  #include <linux/platform_device.h>
-> > @@ -604,11 +605,6 @@ static int init_clocks(struct device *dev, const struct caam_imx_data *data)
-> >  	return devm_add_action_or_reset(dev, disable_clocks, ctrlpriv);
-> >  }
-> >  
-> > -static void caam_remove_debugfs(void *root)
-> > -{
-> > -	debugfs_remove_recursive(root);
-> > -}
-> > -
-> >  #ifdef CONFIG_FSL_MC_BUS
-> >  static bool check_version(struct fsl_mc_version *mc_version, u32 major,
-> >  			  u32 minor, u32 revision)
-> > @@ -1058,13 +1054,9 @@ static int caam_probe(struct platform_device *pdev)
-> >  	ctrlpriv->era = caam_get_era(perfmon);
-> >  	ctrlpriv->domain = iommu_get_domain_for_dev(dev);
-> >  
-> > -	dfs_root = debugfs_create_dir(dev_name(dev), NULL);
-> > -	if (IS_ENABLED(CONFIG_DEBUG_FS)) {
-> > -		ret = devm_add_action_or_reset(dev, caam_remove_debugfs,
-> > -					       dfs_root);
-> > -		if (ret)
-> > -			return ret;
-> > -	}
-> > +	dfs_root = devm_debugfs_create_dir(dev, dev_name(dev), NULL);
-> > +	if (IS_ERR(dfs_root))
-> > +		return PTR_ERR(dfs_root);
-> >  
-> >  	caam_debugfs_init(ctrlpriv, perfmon, dfs_root);
-> >  
-> > diff --git a/drivers/cxl/mem.c b/drivers/cxl/mem.c
-> > index c5c9d8e0d88d..4b38514887a4 100644
-> > --- a/drivers/cxl/mem.c
-> > +++ b/drivers/cxl/mem.c
-> > @@ -2,6 +2,7 @@
-> >  /* Copyright(c) 2022 Intel Corporation. All rights reserved. */
-> >  #include <linux/debugfs.h>
-> >  #include <linux/device.h>
-> > +#include <linux/devm-helpers.h>
-> >  #include <linux/module.h>
-> >  #include <linux/pci.h>
-> >  
-> > @@ -30,11 +31,6 @@ static void enable_suspend(void *data)
-> >  	cxl_mem_active_dec();
-> >  }
-> >  
-> > -static void remove_debugfs(void *dentry)
-> > -{
-> > -	debugfs_remove_recursive(dentry);
-> > -}
-> > -
-> >  static int cxl_mem_dpa_show(struct seq_file *file, void *data)
-> >  {
-> >  	struct device *dev = file->private;
-> > @@ -138,7 +134,8 @@ static int cxl_mem_probe(struct device *dev)
-> >  		debugfs_create_file("clear_poison", 0200, dentry, cxlmd,
-> >  				    &cxl_poison_clear_fops);
-> >  
-> > -	rc = devm_add_action_or_reset(dev, remove_debugfs, dentry);
-> > +	rc = devm_add_action_or_reset(dev, devm_debugfs_dir_recursive_drop,
-> > +				      dentry);
-> 
-> This is probably the better fix for cxl:
-> 
-> diff --git a/drivers/cxl/core/core.h b/drivers/cxl/core/core.h
-> index 3b64fb1b9ed0..3258427af032 100644
-> --- a/drivers/cxl/core/core.h
-> +++ b/drivers/cxl/core/core.h
-> @@ -57,7 +57,6 @@ int cxl_send_cmd(struct cxl_memdev *cxlmd, struct cxl_send_command __user *s);
->  void __iomem *devm_cxl_iomap_block(struct device *dev, resource_size_t addr,
->  				   resource_size_t length);
->  
-> -struct dentry *cxl_debugfs_create_dir(const char *dir);
->  int cxl_dpa_set_mode(struct cxl_endpoint_decoder *cxled,
->  		     enum cxl_decoder_mode mode);
->  int cxl_dpa_alloc(struct cxl_endpoint_decoder *cxled, unsigned long long size);
-> diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
-> index 27166a411705..5c2db4791b8b 100644
-> --- a/drivers/cxl/core/mbox.c
-> +++ b/drivers/cxl/core/mbox.c
-> @@ -1402,7 +1402,7 @@ void __init cxl_mbox_init(void)
->  {
->  	struct dentry *mbox_debugfs;
->  
-> -	mbox_debugfs = cxl_debugfs_create_dir("mbox");
-> +	mbox_debugfs = debugfs_create_dir("mbox", NULL);
->  	debugfs_create_bool("raw_allow_all", 0600, mbox_debugfs,
->  			    &cxl_raw_allow_all);
->  }
-> diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
-> index e59d9d37aa65..82c6a1c6aff4 100644
-> --- a/drivers/cxl/core/port.c
-> +++ b/drivers/cxl/core/port.c
-> @@ -10,6 +10,7 @@
->  #include <linux/slab.h>
->  #include <linux/idr.h>
->  #include <linux/node.h>
-> +#include <linux/devm-helpers.h>
->  #include <cxlmem.h>
->  #include <cxlpci.h>
->  #include <cxl.h>
-> @@ -2207,13 +2208,7 @@ struct bus_type cxl_bus_type = {
->  };
->  EXPORT_SYMBOL_NS_GPL(cxl_bus_type, CXL);
->  
-> -static struct dentry *cxl_debugfs;
-> -
-> -struct dentry *cxl_debugfs_create_dir(const char *dir)
-> -{
-> -	return debugfs_create_dir(dir, cxl_debugfs);
-> -}
-> -EXPORT_SYMBOL_NS_GPL(cxl_debugfs_create_dir, CXL);
-> +struct dentry *cxl_debugfs;
->  
->  static __init int cxl_core_init(void)
->  {
-> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-> index b6017c0c57b4..ca8399b24955 100644
-> --- a/drivers/cxl/cxl.h
-> +++ b/drivers/cxl/cxl.h
-> @@ -880,6 +880,8 @@ void cxl_switch_parse_cdat(struct cxl_port *port);
->  int cxl_endpoint_get_perf_coordinates(struct cxl_port *port,
->  				      struct access_coordinate *coord);
->  
-> +extern struct dentry *cxl_debugfs;
-> +
->  /*
->   * Unit test builds overrides this to __weak, find the 'strong' version
->   * of these symbols in tools/testing/cxl/.
-> diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
-> index 5303d6942b88..b6f13ba87927 100644
-> --- a/drivers/cxl/cxlmem.h
-> +++ b/drivers/cxl/cxlmem.h
-> @@ -859,6 +859,5 @@ struct cxl_hdm {
->  };
->  
->  struct seq_file;
-> -struct dentry *cxl_debugfs_create_dir(const char *dir);
->  void cxl_dpa_debug(struct seq_file *file, struct cxl_dev_state *cxlds);
->  #endif /* __CXL_MEM_H__ */
-> diff --git a/drivers/cxl/mem.c b/drivers/cxl/mem.c
-> index c5c9d8e0d88d..494abe7a54c5 100644
-> --- a/drivers/cxl/mem.c
-> +++ b/drivers/cxl/mem.c
-> @@ -4,6 +4,7 @@
->  #include <linux/device.h>
->  #include <linux/module.h>
->  #include <linux/pci.h>
-> +#include <linux/devm-helpers.h>
->  
->  #include "cxlmem.h"
->  #include "cxlpci.h"
-> @@ -30,11 +31,6 @@ static void enable_suspend(void *data)
->  	cxl_mem_active_dec();
->  }
->  
-> -static void remove_debugfs(void *dentry)
-> -{
-> -	debugfs_remove_recursive(dentry);
-> -}
-> -
->  static int cxl_mem_dpa_show(struct seq_file *file, void *data)
->  {
->  	struct device *dev = file->private;
-> @@ -128,7 +124,10 @@ static int cxl_mem_probe(struct device *dev)
->  	if (work_pending(&cxlmd->detach_work))
->  		return -EBUSY;
->  
-> -	dentry = cxl_debugfs_create_dir(dev_name(dev));
-> +	dentry = devm_debugfs_create_dir(dev, dev_name(dev), NULL);
-> +	if (IS_ERR(dentry))
-> +		return PTR_ERR(dentry);
-> +
+On 2/23/2024 2:08 AM, Krzysztof Kozlowski wrote:
+> On 21/02/2024 17:41, Yang Xiwen via B4 Relay wrote:
+>> From: Yang Xiwen <forbidden405@outlook.com>
+>>
+>> Add "syscon" and "simple-mfd" compatibles to CRG node due to recent
+>> binding changes.
+> Why? You claimed you added them in the bindings because DTS has them. In
+> DTS you claim reason is: binding has them.
+>
+> That's confusing.
 
-No that loses the "cxl" prefix.
+
+Because the old txt based binding claimed there should not be a "syscon" 
+and "simple-mfd".
+
+
+But it exists in hi3798cv200.dtsi. And i think it does no harm to be 
+there. So should i do it in two commits?
+
+
+>
+>> Signed-off-by: Yang Xiwen <forbidden405@outlook.com>
+>> ---
+>>   arch/arm/boot/dts/hisilicon/hi3519.dtsi | 2 +-
+>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/arch/arm/boot/dts/hisilicon/hi3519.dtsi b/arch/arm/boot/dts/hisilicon/hi3519.dtsi
+>> index a42b71cdc5d7..da46e01b8fdc 100644
+>> --- a/arch/arm/boot/dts/hisilicon/hi3519.dtsi
+>> +++ b/arch/arm/boot/dts/hisilicon/hi3519.dtsi
+>> @@ -35,7 +35,7 @@ clk_3m: clk_3m {
+>>   	};
+>>   
+>>   	crg: clock-reset-controller@12010000 {
+>> -		compatible = "hisilicon,hi3519-crg";
+>> +		compatible = "hisilicon,hi3519-crg", "syscon", "simple-mfd";
+> Why? This does not make much sense. No children here, no usage as syscon.
+>
+>
+>
+> Best regards,
+> Krzysztof
+>
+
+-- 
+Regards,
+Yang Xiwen
+
