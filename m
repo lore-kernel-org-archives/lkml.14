@@ -1,132 +1,107 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from fgw21-7.mail.saunalahti.fi (fgw21-7.mail.saunalahti.fi [62.142.5.82])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA44813BAC8
-	for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 21:37:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAA5F73F13
+	for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 21:40:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.142.5.82
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708637855; cv=none; b=OoOSD+szXZAKHewRne7G49ri2drVBcV8SLznhl/E/azaqzDHUmKoDj0KB2W1zr+sVo62ExXdlD9Uxyl2SL/wh+U7P6a9RMUreTNgNwPOhhWoeCPWjwDqGtn3MAkSSq7VdyWLLfstXGCfO7ItPsMZu98WA+GVR+8ObBxbexc7F5I=
+	t=1708638038; cv=none; b=k2zd0DrX8/c7tQm0wv1Vdz3DtyeWPOcbRiBlYKfj0xQIiqjcXetRV/xyT1anxRc4RnNy02EeaMK2MuzWLmLob7u/96EnBu/6vgekTvCIearteMmRkiWJfMJ2tiVKMgTmMIzkTgJiorZGfnb3uiSxNtsd2Hi3VqxQVV+gAybT+94=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708637855; c=relaxed/simple;
-	bh=eTl3BaSXL1EOcleF8Llz7TJCP6iZbj2tst9XjTceF1k=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=QjkGYIhLGeO5Xr0jwxAh6T9bo8dJl86839qqE+ZdkcHrWV8qPCFuL0RJ633KCvXjLQd1S2WdO0ugA98AB1IAkS2cVmsWpv/W8PnVJy429GRgtkv9yHt5HkHiHy7EkECSekDO/iBRh0eXafQSKudB2i5ObEIoXqFBVgUtPcl1raY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=DchUr+ws; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DchUr+ws"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1708637852;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=YtxCaMm2553SkupuI9XJeFwENX6MIeYRxtADotfCGT4=;
-	b=DchUr+ws7T1euXx7Dly/bs4sFyxfsm14leurL3SjjYPO0luTyJ2ZvAqlNFdi+1v83AXFrp
-	Gn//u+7sZOCKpnmiTXB/PyItjzveasfgfgowoJvquhSZ6qVhu5uf7ukUo1UNn7y9oRCHdN
-	dSXC/gw0znGImhWHimuzIIEobBVPSDI=
-Received: from mail-io1-f69.google.com (mail-io1-f69.google.com
- [209.85.166.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-83-_Ov9caJoNZGK6h5npaDTjQ-1; Thu, 22 Feb 2024 16:37:30 -0500
-X-MC-Unique: _Ov9caJoNZGK6h5npaDTjQ-1
-Received: by mail-io1-f69.google.com with SMTP id ca18e2360f4ac-7c7857e6d5dso13523839f.1
-        for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 13:37:30 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708637849; x=1709242649;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=YtxCaMm2553SkupuI9XJeFwENX6MIeYRxtADotfCGT4=;
-        b=rXiKHyxRhPb8J4NpaBvUtF0BifB7ftWWjBiabyWVg4dpsKIW7HNU9PPAyLlo2z///m
-         I80pX1pl32Eh55eqBx/bukLYNmMjbgmYM8uhXt/DiSfzDqM8AR+XQxTqu5UzT1/bBk4L
-         JKTtpCegL2d1Lzy8GOrre3l6rJNmIWjwpmg6QxbjhJh3Uhd0Cas0uGF4k/4mPXxqCcXk
-         /vS+zGr8RUNFVRcTaVLanoO4QLJ+ncsY13Nm94glqxmefpW5boJJ/oCWlQUFj1FkRhFF
-         t9XyyscPTZns1S0RnqEEZZS9j3torlP+C5UAcp4zS7x6bb2u8bipYCbaw9fw9dOwVgBZ
-         D+Xw==
-X-Forwarded-Encrypted: i=1; AJvYcCWmahnYVzJC20rUMBkwHrPLKfbYiZjCrs6TgJlT37xbY3GOHOL14r7dFad9iqkWJgEIhwCBy/iRul5jVN7ex6vm3OyW4KOoTkp60b9B
-X-Gm-Message-State: AOJu0Yz6rrXm7VBTE9IAo4UBDL6mwkE+NHPSn0WMM6ZaXxtKUxnGqyao
-	DZfBaPJ6xDfbkTEilxBU1zpzvgCRN24yIXJx06zo+dvH+Vg60rnnfuDi8df6x/nNZIqMSybiUOu
-	JwDgYsR2SWhQ19cdz/0Ub3YyqpUJruaOeDgpIAhRf1pJAL4LnxUHcAv4F0TuO+XkTAi/btA==
-X-Received: by 2002:a5e:8a09:0:b0:7c7:4e71:7911 with SMTP id d9-20020a5e8a09000000b007c74e717911mr154283iok.18.1708637849417;
-        Thu, 22 Feb 2024 13:37:29 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IGgU0x5ieHj4hzgNeb/0+6xmyweUr+A42rwzQGt3bwPjQRz1SfIuiuqgZPCPDmibh8XqUJ1XQ==
-X-Received: by 2002:a5e:8a09:0:b0:7c7:4e71:7911 with SMTP id d9-20020a5e8a09000000b007c74e717911mr154269iok.18.1708637849173;
-        Thu, 22 Feb 2024 13:37:29 -0800 (PST)
-Received: from redhat.com ([38.15.36.11])
-        by smtp.gmail.com with ESMTPSA id l14-20020a056638220e00b004743021012asm2117827jas.2.2024.02.22.13.37.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 22 Feb 2024 13:37:27 -0800 (PST)
-Date: Thu, 22 Feb 2024 14:37:05 -0700
-From: Alex Williamson <alex.williamson@redhat.com>
-To: "Ricardo B. Marliere" <ricardo@marliere.net>
-Cc: Kirti Wankhede <kwankhede@nvidia.com>, kvm@vger.kernel.org,
- linux-kernel@vger.kernel.org, Greg Kroah-Hartman
- <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH] vfio: mdev: make mdev_bus_type const
-Message-ID: <20240222143705.6cede313.alex.williamson@redhat.com>
-In-Reply-To: <20240208-bus_cleanup-vfio-v1-1-ed5da3019949@marliere.net>
-References: <20240208-bus_cleanup-vfio-v1-1-ed5da3019949@marliere.net>
-X-Mailer: Claws Mail 4.2.0 (GTK 3.24.41; x86_64-redhat-linux-gnu)
+	s=arc-20240116; t=1708638038; c=relaxed/simple;
+	bh=FskGyQM0hnrRbCG067LMBsXVFuEu0IODjENfPSTN1Xc=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tVj1cmjAy+pTJa8Vuc/KSvn4KQTzz1MmXxtMooF7EKLoHvyQs+2tWY8k8++kIqASHN1MIVgLsTleVP6MqFiGUhPpf7j7hSwYGPGPfSqkXbOWkXX4QDT2yfByD5eGLiR7UMAXBchIkREtlzcS8/DrNQib8n5OZvrkaGKb1YREcm8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=fail smtp.mailfrom=gmail.com; arc=none smtp.client-ip=62.142.5.82
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=gmail.com
+Received: from localhost (88-113-26-217.elisa-laajakaista.fi [88.113.26.217])
+	by fgw21.mail.saunalahti.fi (Halon) with ESMTP
+	id fe9fe7f5-d1ca-11ee-abf4-005056bdd08f;
+	Thu, 22 Feb 2024 23:40:28 +0200 (EET)
+From: andy.shevchenko@gmail.com
+Date: Thu, 22 Feb 2024 23:40:27 +0200
+To: Xing Tong Wu <xingtong_wu@163.com>
+Cc: lee@kernel.org, Pavel Machek <pavel@ucw.cz>,
+	Hans de Goede <hdegoede@redhat.com>, linux-leds@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Gerd Haeussler <gerd.haeussler.ext@siemens.com>,
+	Xing Tong Wu <xingtong.wu@siemens.com>,
+	Tobias Schaffner <tobias.schaffner@siemens.com>,
+	Henning Schild <henning@hennsch.de>
+Subject: Re: [RESEND PATCH v2 1/1] leds: simatic-ipc-leds-gpio: add support
+ for module BX-59A
+Message-ID: <Zde_S6X8OdEDyxDy@surfacebook.localdomain>
+References: <20240208120901.GL689448@google.com>
+ <20240218062806.3932-1-xingtong_wu@163.com>
+ <20240218062806.3932-2-xingtong_wu@163.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240218062806.3932-2-xingtong_wu@163.com>
 
-On Thu, 08 Feb 2024 17:02:04 -0300
-"Ricardo B. Marliere" <ricardo@marliere.net> wrote:
+Sun, Feb 18, 2024 at 02:28:06PM +0800, Xing Tong Wu kirjoitti:
+> From: Xing Tong Wu <xingtong.wu@siemens.com>
+> 
+> This is used for the Siemens Simatic IPC BX-59A, which has its LEDs
+> connected to GPIOs provided by the Nuvoton NCT6126D
 
-> Now that the driver core can properly handle constant struct bus_type,
-> move the mdev_bus_type variable to be a constant structure as well,
-> placing it into read-only memory which can not be modified at runtime.
-> 
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Suggested-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Signed-off-by: Ricardo B. Marliere <ricardo@marliere.net>
-> ---
->  drivers/vfio/mdev/mdev_driver.c  | 2 +-
->  drivers/vfio/mdev/mdev_private.h | 2 +-
->  2 files changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/vfio/mdev/mdev_driver.c b/drivers/vfio/mdev/mdev_driver.c
-> index 7825d83a55f8..b98322966b3e 100644
-> --- a/drivers/vfio/mdev/mdev_driver.c
-> +++ b/drivers/vfio/mdev/mdev_driver.c
-> @@ -40,7 +40,7 @@ static int mdev_match(struct device *dev, struct device_driver *drv)
->  	return 0;
+MIssing period at the end of the sentence.
+
+...
+
+>  static int simatic_ipc_leds_gpio_f7188x_probe(struct platform_device *pdev)
+>  {
+> +	const struct simatic_ipc_platform *plat = pdev->dev.platform_data;
+
+dev_get_platdata()
+
+> +	struct simatic_ipc_led_tables *led_tables;
+> +
+> +	led_tables = devm_kzalloc(&pdev->dev, sizeof(*led_tables), GFP_KERNEL);
+> +	if (!led_tables)
+> +		return -ENOMEM;
+> +
+> +	switch (plat->devmode) {
+> +	case SIMATIC_IPC_DEVICE_227G:
+> +		led_tables->led_lookup_table = &simatic_ipc_led_gpio_table_227g;
+> +		led_tables->led_lookup_table_extra = &simatic_ipc_led_gpio_table_extra_227g;
+> +		break;
+> +	case SIMATIC_IPC_DEVICE_BX_59A:
+> +		led_tables->led_lookup_table = &simatic_ipc_led_gpio_table_bx_59a;
+> +		break;
+> +	default:
+> +		return -ENODEV;
+> +	}
+> +
+> +	dev_set_drvdata(&pdev->dev, led_tables);
+
+platform_set_drvdata()
+
+> +	return simatic_ipc_leds_gpio_probe(pdev, led_tables->led_lookup_table,
+> +					   led_tables->led_lookup_table_extra);
 >  }
->  
-> -struct bus_type mdev_bus_type = {
-> +const struct bus_type mdev_bus_type = {
->  	.name		= "mdev",
->  	.probe		= mdev_probe,
->  	.remove		= mdev_remove,
-> diff --git a/drivers/vfio/mdev/mdev_private.h b/drivers/vfio/mdev/mdev_private.h
-> index af457b27f607..63a1316b08b7 100644
-> --- a/drivers/vfio/mdev/mdev_private.h
-> +++ b/drivers/vfio/mdev/mdev_private.h
-> @@ -13,7 +13,7 @@
->  int  mdev_bus_register(void);
->  void mdev_bus_unregister(void);
->  
-> -extern struct bus_type mdev_bus_type;
-> +extern const struct bus_type mdev_bus_type;
->  extern const struct attribute_group *mdev_device_groups[];
->  
->  #define to_mdev_type_attr(_attr)	\
-> 
-> ---
-> base-commit: 78f70c02bdbccb5e9b0b0c728185d4aeb7044ace
-> change-id: 20240208-bus_cleanup-vfio-75a6180b5efe
-> 
-> Best regards,
 
-Applied to vfio next branch for v6.9.  Thanks,
+...
 
-Alex
+>  static void simatic_ipc_leds_gpio_f7188x_remove(struct platform_device *pdev)
+>  {
+> +	struct simatic_ipc_led_tables *led_tables;
+
+> +	led_tables = dev_get_drvdata(&pdev->dev);
+
+platform_get_drvdata()
+
+> +	simatic_ipc_leds_gpio_remove(pdev, led_tables->led_lookup_table,
+> +				     led_tables->led_lookup_table_extra);
+>  }
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
 
