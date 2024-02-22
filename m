@@ -1,295 +1,202 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D1C912EBC0;
-	Thu, 22 Feb 2024 12:43:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0D8112E1C6;
+	Thu, 22 Feb 2024 12:44:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708605822; cv=none; b=G4nMAzoXO8zQGhg+uWa2v8PIzhlFi3JPBsxC3MeHMCnh8/QT0HbdAgkSC3Jqu4yRKCqPsp78s7telx/k7r8uyV0/FPJc+qjOmBn2zYUYxAE6ecFcK/oK4KRfFeIvqp4UhENjdso8wLFk4j22jXTz+tL+OnshLmFIjHNhyVl0ZlQ=
+	t=1708605880; cv=none; b=kFAg+yKIFxtKC4//3HOptN0AKAnpNfAIMHXYcC3ETx0JtYJa41Z3QmBJ7ov1Ar8BIqUCiefeX1slUvtgqUTRJ7I/MduUo4FLXEbzNDD8nOitR2DMpZRdRbFK+vtA7ECqlwNwIs47CtKVtuF+prafEk3fbgqliCUosWsoTJzoxE4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708605822; c=relaxed/simple;
-	bh=GBaheOhdznjtGRKp6u9ZnNvUhBZp5GtwDt/jdqgbVr4=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=nfMqg+4eO0H72LnTLg2ZrY7I6eSJLhPmuGKezY4pen27CZDDN+8H/zOXolbqnxTbRGkJ/f1Yp88t2aK3fAtD4vPMxxvHQ8mw+6xmwnJPojTWg9MuZEZ6F3TLgig/w8QpmEXW4gxPPuS/8TEHDH1g6NUxpBZB5AcGSVoBVJDuhvU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VjI0ffNX; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1708605880; c=relaxed/simple;
+	bh=+mU2vYg3WiT6sgf4cTz+Iy31ncP+Ob7ckS0bqFuVFgU=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=F+L+wbfLjOmOVctx8sGlZ5P25Vh6KIeOmBniEk/mih/s8C76EcbP5nS3FsRl2Ls7H/veg2KexKrX8mYLyuYv564SUY8z6ACibkLyhu0sDB2UHveutoHHDSPGe5KlmMhYuJCyXTsJyZZGrkPaxWHA/ChbDbM8DYD3ScaBBuTA8zw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fpyDlNHV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VjI0ffNX"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 02B90C43141;
-	Thu, 22 Feb 2024 12:43:42 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fpyDlNHV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B2B23C433F1;
+	Thu, 22 Feb 2024 12:44:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708605822;
-	bh=GBaheOhdznjtGRKp6u9ZnNvUhBZp5GtwDt/jdqgbVr4=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=VjI0ffNXQxse6B5ys3SS6NpPPP9Os+d3MsLKoYwdfqpN6kS4NC4J3gQ5iegdVR/fh
-	 GSqaIkk4VelmuApnz7Z/xZWLoU7GXtuTxNWuYKMLz+kQfwU4F6xrdMUn/6RpuupB1U
-	 KXJvWDEFP/budn2076so8dxh+BlSdVKR4Hdjpx8JYZqx3PEQ8fSW2hyNM8SXy/wKbz
-	 3dZ2uSXmYbDnrzPkF0j/zfPnzgBAnPb5VqN1TehvJ1At/BOqoXDw02K0TJEUnLanao
-	 p7Xv8GGmdNuU1tOHDv3VCaidVZK33ocU2G2+pSTpTrJBrlJ7z5II0/1FvMx7/WabNX
-	 chvHJLS3kKeSA==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6366C48BF8;
-	Thu, 22 Feb 2024 12:43:41 +0000 (UTC)
-From: Yang Xiwen via B4 Relay <devnull+forbidden405.outlook.com@kernel.org>
-Date: Thu, 22 Feb 2024 20:43:25 +0800
-Subject: [PATCH net-next v4 5/6] net: hisilicon: add support for hisi_femac
- core on Hi3798MV200
+	s=k20201202; t=1708605880;
+	bh=+mU2vYg3WiT6sgf4cTz+Iy31ncP+Ob7ckS0bqFuVFgU=;
+	h=From:To:Cc:Subject:Date:From;
+	b=fpyDlNHVHB4v6WjOS1p5drq0Lj/Y8HOhDGXeNqipZNhjpB/7RBGeNHOxir32klExN
+	 /h1zqP1PqKXpji1/s6DOAgcLzUYk2AXmXySqCYFjEjHCqNzlbSXn+4+hU5VWaobApr
+	 BM2kYIdbWaikt5Qt3iryigVIjqHB+j2Xtt6J969SMs2ENMqQ0X8lDCo00qWvfPw6cV
+	 sSo0N5NfU7c0VWT2TZDn/y5fUtBnY040d1lOjJfx7XEtaMtqoZdZ6NqOGcMPPyPsVz
+	 V0+k/a+xjNUhWuFuCldRutAh8xp1oXEGfro46EdFwEm/y5S43us+MdgAyfay0PZvWb
+	 xTN/txg+w6yyA==
+From: Arnd Bergmann <arnd@kernel.org>
+To: Anil Gurumurthy <anil.gurumurthy@qlogic.com>,
+	Sudarsana Kalluru <sudarsana.kalluru@qlogic.com>,
+	"Martin K. Petersen" <martin.petersen@oracle.com>
+Cc: Arnd Bergmann <arnd@arndb.de>,
+	Kees Cook <keescook@chromium.org>,
+	"James E.J. Bottomley" <jejb@linux.ibm.com>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nick Desaulniers <ndesaulniers@google.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>,
+	Bart Van Assche <bvanassche@acm.org>,
+	Azeem Shaikh <azeemshaikh38@gmail.com>,
+	James Bottomley <JBottomley@Parallels.com>,
+	Krishna Gudipati <kgudipat@brocade.com>,
+	linux-scsi@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	llvm@lists.linux.dev
+Subject: [PATCH 1/2] [v2] scsi: bfa: fix function pointer type mismatch for hcb_qe->cbfn
+Date: Thu, 22 Feb 2024 13:44:06 +0100
+Message-Id: <20240222124433.2046570-1-arnd@kernel.org>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240222-net-v4-5-eea68f93f090@outlook.com>
-References: <20240222-net-v4-0-eea68f93f090@outlook.com>
-In-Reply-To: <20240222-net-v4-0-eea68f93f090@outlook.com>
-To: Yisen Zhuang <yisen.zhuang@huawei.com>, 
- Salil Mehta <salil.mehta@huawei.com>, 
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
- Rob Herring <robh+dt@kernel.org>, 
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
- Conor Dooley <conor+dt@kernel.org>, Andrew Lunn <andrew@lunn.ch>, 
- Heiner Kallweit <hkallweit1@gmail.com>, 
- Russell King <linux@armlinux.org.uk>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
- devicetree@vger.kernel.org, Yang Xiwen <forbidden405@outlook.com>
-X-Mailer: b4 0.12.4
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1708605802; l=7210;
- i=forbidden405@outlook.com; s=20230724; h=from:subject:message-id;
- bh=/txku2bb14pGE8xgSS0aeGHZMyxLoNFPUgd/T9v5WGE=;
- b=VFa7gyMfDcxQO+jhkyA0pP3gSCsFbZqGhi6gqpkmIrVxzIwKm3lo/MuQnYMODdt0zsfDVQtS/
- OzOwmvr5bMgCYK2dMmcfQGL46PtIikSJLbViTL4qyNw2uqsxWYXayAS
-X-Developer-Key: i=forbidden405@outlook.com; a=ed25519;
- pk=qOD5jhp891/Xzc+H/PZ8LWVSWE3O/XCQnAg+5vdU2IU=
-X-Endpoint-Received:
- by B4 Relay for forbidden405@outlook.com/20230724 with auth_id=67
-X-Original-From: Yang Xiwen <forbidden405@outlook.com>
-Reply-To: <forbidden405@outlook.com>
+Content-Transfer-Encoding: 8bit
 
-From: Yang Xiwen <forbidden405@outlook.com>
+From: Arnd Bergmann <arnd@arndb.de>
 
-Register the sub MDIO bus if it is found. Also implement the internal
-PHY reset procedure as needed.
+Some callback functions used here take a boolean argument, others
+take a status argument. This breaks KCFI type checking, so clang
+now warns about the function pointer cast:
 
-Note it's unable to put the MDIO bus node outside of MAC controller
-(i.e. at the same level in the parent bus node). Because we need to
-control all clocks and resets in FEMAC driver due to the phy reset
-procedure. So the clocks can't be assigned to MDIO bus device, which is
-an essential resource for the MDIO bus to work.
+drivers/scsi/bfa/bfad_bsg.c:2138:29: error: cast from 'void (*)(void *, enum bfa_status)' to 'bfa_cb_cbfn_t' (aka 'void (*)(void *, enum bfa_boolean)') converts to incompatible function type [-Werror,-Wcast-function-type-strict]
 
-No backward compatibility is maintained since the only existing
-user(Hi3516DV300) has not received any updates from HiSilicon for about
-8 years already. And till today, no mainline dts for this SoC is found.
-It seems unlikely that there are still existing mainline Hi3516DV300
-users. The effort to maintain the old binding seems gain a little.
+Assuming the code is actually correct here and the callers always match
+the argument types of the callee, rework this to replace the explicit
+cast with a union of the two pointer types. This does not change the
+behavior of the code, so if something is actually broken here, a larger
+rework may be necessary.
 
-Signed-off-by: Yang Xiwen <forbidden405@outlook.com>
+Fixes: 37ea0558b87ab ("[SCSI] bfa: Added support to collect and reset fcport stats")
+Fixes: 3ec4f2c8bff25 ("[SCSI] bfa: Added support to configure QOS and collect stats.")
+Reviewed-by: Kees Cook <keescook@chromium.org>
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- drivers/net/ethernet/hisilicon/hisi_femac.c | 74 +++++++++++++++++++++++------
- 1 file changed, 60 insertions(+), 14 deletions(-)
+v2: no changes, just rending after I noticed I forgot to follow up
+after https://lore.kernel.org/all/336f2156-220f-47ff-be97-5a2a9c475372@app.fastmail.com/
+---
+ drivers/scsi/bfa/bfa.h      |  9 ++++++++-
+ drivers/scsi/bfa/bfa_core.c |  4 +---
+ drivers/scsi/bfa/bfa_ioc.h  |  8 ++++++--
+ drivers/scsi/bfa/bfad_bsg.c | 11 ++++-------
+ 4 files changed, 19 insertions(+), 13 deletions(-)
 
-diff --git a/drivers/net/ethernet/hisilicon/hisi_femac.c b/drivers/net/ethernet/hisilicon/hisi_femac.c
-index 2406263c9dd3..eab91e011d11 100644
---- a/drivers/net/ethernet/hisilicon/hisi_femac.c
-+++ b/drivers/net/ethernet/hisilicon/hisi_femac.c
-@@ -10,8 +10,10 @@
- #include <linux/etherdevice.h>
- #include <linux/interrupt.h>
- #include <linux/module.h>
-+#include <linux/of.h>
- #include <linux/of_mdio.h>
- #include <linux/of_net.h>
-+#include <linux/of_platform.h>
- #include <linux/platform_device.h>
- #include <linux/reset.h>
+diff --git a/drivers/scsi/bfa/bfa.h b/drivers/scsi/bfa/bfa.h
+index 7bd2ba1ad4d1..f30fe324e6ec 100644
+--- a/drivers/scsi/bfa/bfa.h
++++ b/drivers/scsi/bfa/bfa.h
+@@ -20,7 +20,6 @@
+ struct bfa_s;
  
-@@ -97,6 +99,13 @@ enum phy_reset_delays {
- 	DELAYS_NUM,
+ typedef void (*bfa_isr_func_t) (struct bfa_s *bfa, struct bfi_msg_s *m);
+-typedef void (*bfa_cb_cbfn_status_t) (void *cbarg, bfa_status_t status);
+ 
+ /*
+  * Interrupt message handlers
+@@ -437,4 +436,12 @@ struct bfa_cb_pending_q_s {
+ 	(__qe)->data = (__data);				\
+ } while (0)
+ 
++#define bfa_pending_q_init_status(__qe, __cbfn, __cbarg, __data) do {	\
++	bfa_q_qe_init(&((__qe)->hcb_qe.qe));			\
++	(__qe)->hcb_qe.cbfn_status = (__cbfn);			\
++	(__qe)->hcb_qe.cbarg = (__cbarg);			\
++	(__qe)->hcb_qe.pre_rmv = BFA_TRUE;			\
++	(__qe)->data = (__data);				\
++} while (0)
++
+ #endif /* __BFA_H__ */
+diff --git a/drivers/scsi/bfa/bfa_core.c b/drivers/scsi/bfa/bfa_core.c
+index 6846ca8f7313..3438d0b8ba06 100644
+--- a/drivers/scsi/bfa/bfa_core.c
++++ b/drivers/scsi/bfa/bfa_core.c
+@@ -1907,15 +1907,13 @@ bfa_comp_process(struct bfa_s *bfa, struct list_head *comp_q)
+ 	struct list_head		*qe;
+ 	struct list_head		*qen;
+ 	struct bfa_cb_qe_s	*hcb_qe;
+-	bfa_cb_cbfn_status_t	cbfn;
+ 
+ 	list_for_each_safe(qe, qen, comp_q) {
+ 		hcb_qe = (struct bfa_cb_qe_s *) qe;
+ 		if (hcb_qe->pre_rmv) {
+ 			/* qe is invalid after return, dequeue before cbfn() */
+ 			list_del(qe);
+-			cbfn = (bfa_cb_cbfn_status_t)(hcb_qe->cbfn);
+-			cbfn(hcb_qe->cbarg, hcb_qe->fw_status);
++			hcb_qe->cbfn_status(hcb_qe->cbarg, hcb_qe->fw_status);
+ 		} else
+ 			hcb_qe->cbfn(hcb_qe->cbarg, BFA_TRUE);
+ 	}
+diff --git a/drivers/scsi/bfa/bfa_ioc.h b/drivers/scsi/bfa/bfa_ioc.h
+index 933a1c3890ff..5e568d6d7b26 100644
+--- a/drivers/scsi/bfa/bfa_ioc.h
++++ b/drivers/scsi/bfa/bfa_ioc.h
+@@ -361,14 +361,18 @@ struct bfa_reqq_wait_s {
+ 	void	*cbarg;
  };
  
-+enum clk_type {
-+	CLK_MAC,
-+	CLK_MACIF,
-+	CLK_PHY,
-+	CLK_NUM,
-+};
-+
- struct hisi_femac_queue {
- 	struct sk_buff **skb;
- 	dma_addr_t *dma_phys;
-@@ -108,7 +117,7 @@ struct hisi_femac_queue {
- struct hisi_femac_priv {
- 	void __iomem *port_base;
- 	void __iomem *glb_base;
--	struct clk *clk;
-+	struct clk_bulk_data *clks;
- 	struct reset_control *mac_rst;
- 	struct reset_control *phy_rst;
- 	u32 phy_reset_delays[DELAYS_NUM];
-@@ -116,6 +125,7 @@ struct hisi_femac_priv {
+-typedef void	(*bfa_cb_cbfn_t) (void *cbarg, bfa_boolean_t complete);
++typedef void (*bfa_cb_cbfn_t) (void *cbarg, bfa_boolean_t complete);
++typedef void (*bfa_cb_cbfn_status_t) (void *cbarg, bfa_status_t status);
  
- 	struct device *dev;
- 	struct net_device *ndev;
-+	struct platform_device *mdio_pdev;
+ /*
+  * Generic BFA callback element.
+  */
+ struct bfa_cb_qe_s {
+ 	struct list_head	qe;
+-	bfa_cb_cbfn_t	cbfn;
++	union {
++		bfa_cb_cbfn_status_t	cbfn_status;
++		bfa_cb_cbfn_t		cbfn;
++	};
+ 	bfa_boolean_t	once;
+ 	bfa_boolean_t	pre_rmv;	/* set for stack based qe(s) */
+ 	bfa_status_t	fw_status;	/* to access fw status in comp proc */
+diff --git a/drivers/scsi/bfa/bfad_bsg.c b/drivers/scsi/bfa/bfad_bsg.c
+index d4ceca2d435e..54bd11e6d593 100644
+--- a/drivers/scsi/bfa/bfad_bsg.c
++++ b/drivers/scsi/bfa/bfad_bsg.c
+@@ -2135,8 +2135,7 @@ bfad_iocmd_fcport_get_stats(struct bfad_s *bfad, void *cmd)
+ 	struct bfa_cb_pending_q_s cb_qe;
  
- 	struct hisi_femac_queue txq;
- 	struct hisi_femac_queue rxq;
-@@ -693,6 +703,7 @@ static const struct net_device_ops hisi_femac_netdev_ops = {
- static void hisi_femac_core_reset(struct hisi_femac_priv *priv)
- {
- 	reset_control_assert(priv->mac_rst);
-+	usleep_range(200, 300);
- 	reset_control_deassert(priv->mac_rst);
- }
+ 	init_completion(&fcomp.comp);
+-	bfa_pending_q_init(&cb_qe, (bfa_cb_cbfn_t)bfad_hcb_comp,
+-			   &fcomp, &iocmd->stats);
++	bfa_pending_q_init_status(&cb_qe, bfad_hcb_comp, &fcomp, &iocmd->stats);
+ 	spin_lock_irqsave(&bfad->bfad_lock, flags);
+ 	iocmd->status = bfa_fcport_get_stats(&bfad->bfa, &cb_qe);
+ 	spin_unlock_irqrestore(&bfad->bfad_lock, flags);
+@@ -2159,7 +2158,7 @@ bfad_iocmd_fcport_reset_stats(struct bfad_s *bfad, void *cmd)
+ 	struct bfa_cb_pending_q_s cb_qe;
  
-@@ -712,6 +723,10 @@ static void hisi_femac_sleep_us(u32 time_us)
+ 	init_completion(&fcomp.comp);
+-	bfa_pending_q_init(&cb_qe, (bfa_cb_cbfn_t)bfad_hcb_comp, &fcomp, NULL);
++	bfa_pending_q_init_status(&cb_qe, bfad_hcb_comp, &fcomp, NULL);
  
- static void hisi_femac_phy_reset(struct hisi_femac_priv *priv)
- {
-+	/* MAC clock must be disabled before PHY reset
-+	 */
-+	clk_disable(priv->clks[CLK_MAC].clk);
-+	clk_disable(priv->clks[CLK_MACIF].clk);
- 	/* To make sure PHY hardware reset success,
- 	 * we must keep PHY in deassert state first and
- 	 * then complete the hardware reset operation
-@@ -727,6 +742,9 @@ static void hisi_femac_phy_reset(struct hisi_femac_priv *priv)
- 	reset_control_deassert(priv->phy_rst);
- 	/* delay some time to ensure later MDIO access */
- 	hisi_femac_sleep_us(priv->phy_reset_delays[POST_DELAY]);
-+
-+	clk_enable(priv->clks[CLK_MAC].clk);
-+	clk_enable(priv->clks[CLK_MACIF].clk);
- }
+ 	spin_lock_irqsave(&bfad->bfad_lock, flags);
+ 	iocmd->status = bfa_fcport_clear_stats(&bfad->bfa, &cb_qe);
+@@ -2443,8 +2442,7 @@ bfad_iocmd_qos_get_stats(struct bfad_s *bfad, void *cmd)
+ 	struct bfa_fcport_s *fcport = BFA_FCPORT_MOD(&bfad->bfa);
  
- static void hisi_femac_port_init(struct hisi_femac_priv *priv)
-@@ -768,11 +786,12 @@ static void hisi_femac_port_init(struct hisi_femac_priv *priv)
- static int hisi_femac_drv_probe(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
--	struct device_node *node = dev->of_node;
-+	struct device_node *node = dev->of_node, *mdio_np;
- 	struct net_device *ndev;
- 	struct hisi_femac_priv *priv;
- 	struct phy_device *phy;
- 	int ret;
-+	bool mdio_registered = false;
+ 	init_completion(&fcomp.comp);
+-	bfa_pending_q_init(&cb_qe, (bfa_cb_cbfn_t)bfad_hcb_comp,
+-			   &fcomp, &iocmd->stats);
++	bfa_pending_q_init_status(&cb_qe, bfad_hcb_comp, &fcomp, &iocmd->stats);
  
- 	ndev = alloc_etherdev(sizeof(*priv));
- 	if (!ndev)
-@@ -797,17 +816,16 @@ static int hisi_femac_drv_probe(struct platform_device *pdev)
- 		goto out_free_netdev;
- 	}
+ 	spin_lock_irqsave(&bfad->bfad_lock, flags);
+ 	WARN_ON(!bfa_ioc_get_fcmode(&bfad->bfa.ioc));
+@@ -2474,8 +2472,7 @@ bfad_iocmd_qos_reset_stats(struct bfad_s *bfad, void *cmd)
+ 	struct bfa_fcport_s *fcport = BFA_FCPORT_MOD(&bfad->bfa);
  
--	priv->clk = devm_clk_get(&pdev->dev, NULL);
--	if (IS_ERR(priv->clk)) {
--		dev_err(dev, "failed to get clk\n");
--		ret = -ENODEV;
-+	ret = devm_clk_bulk_get_all(&pdev->dev, &priv->clks);
-+	if (ret < 0 || ret != CLK_NUM) {
-+		dev_err(dev, "failed to get clk bulk: %d\n", ret);
- 		goto out_free_netdev;
- 	}
+ 	init_completion(&fcomp.comp);
+-	bfa_pending_q_init(&cb_qe, (bfa_cb_cbfn_t)bfad_hcb_comp,
+-			   &fcomp, NULL);
++	bfa_pending_q_init_status(&cb_qe, bfad_hcb_comp, &fcomp, NULL);
  
--	ret = clk_prepare_enable(priv->clk);
-+	ret = clk_bulk_prepare_enable(CLK_NUM, priv->clks);
- 	if (ret) {
--		dev_err(dev, "failed to enable clk %d\n", ret);
--		goto out_free_netdev;
-+		dev_err(dev, "failed to enable clk bulk: %d\n", ret);
-+		goto out_disable_clk;
- 	}
- 
- 	priv->mac_rst = devm_reset_control_get(dev, "mac");
-@@ -830,11 +848,29 @@ static int hisi_femac_drv_probe(struct platform_device *pdev)
- 		hisi_femac_phy_reset(priv);
- 	}
- 
-+	// Register the optional MDIO bus
-+	for_each_available_child_of_node(node, mdio_np) {
-+		if (of_node_name_prefix(mdio_np, "mdio")) {
-+			priv->mdio_pdev = of_platform_device_create(mdio_np, NULL, dev);
-+			of_node_put(mdio_np);
-+			if (!priv->mdio_pdev) {
-+				dev_err(dev, "failed to register MDIO bus device\n");
-+				ret = -ENODEV;
-+				goto out_disable_clk;
-+			}
-+			mdio_registered = true;
-+			break;
-+		}
-+	}
-+
-+	if (!mdio_registered)
-+		dev_warn(dev, "MDIO subnode not found. This is usually a bug.\n");
-+
- 	phy = of_phy_get_and_connect(ndev, node, hisi_femac_adjust_link);
- 	if (!phy) {
- 		dev_err(dev, "connect to PHY failed!\n");
- 		ret = -ENODEV;
--		goto out_disable_clk;
-+		goto out_unregister_mdio_bus;
- 	}
- 
- 	phy_attached_print(phy, "phy_id=0x%.8lx, phy_mode=%s\n",
-@@ -885,8 +921,10 @@ static int hisi_femac_drv_probe(struct platform_device *pdev)
- out_disconnect_phy:
- 	netif_napi_del(&priv->napi);
- 	phy_disconnect(phy);
-+out_unregister_mdio_bus:
-+	platform_device_unregister(priv->mdio_pdev);
- out_disable_clk:
--	clk_disable_unprepare(priv->clk);
-+	clk_bulk_disable_unprepare(CLK_NUM, priv->clks);
- out_free_netdev:
- 	free_netdev(ndev);
- 
-@@ -902,7 +940,8 @@ static void hisi_femac_drv_remove(struct platform_device *pdev)
- 	unregister_netdev(ndev);
- 
- 	phy_disconnect(ndev->phydev);
--	clk_disable_unprepare(priv->clk);
-+	platform_device_unregister(priv->mdio_pdev);
-+	clk_bulk_disable_unprepare(CLK_NUM, priv->clks);
- 	free_netdev(ndev);
- }
- 
-@@ -919,7 +958,7 @@ static int hisi_femac_drv_suspend(struct platform_device *pdev,
- 		netif_device_detach(ndev);
- 	}
- 
--	clk_disable_unprepare(priv->clk);
-+	clk_bulk_disable_unprepare(CLK_NUM, priv->clks);
- 
- 	return 0;
- }
-@@ -928,8 +967,14 @@ static int hisi_femac_drv_resume(struct platform_device *pdev)
- {
- 	struct net_device *ndev = platform_get_drvdata(pdev);
- 	struct hisi_femac_priv *priv = netdev_priv(ndev);
-+	int ret;
-+
-+	ret = clk_bulk_prepare_enable(CLK_NUM, priv->clks);
-+	if (ret) {
-+		dev_err(&pdev->dev, "failed to enable clk bulk: %d\n", ret);
-+		return ret;
-+	}
- 
--	clk_prepare_enable(priv->clk);
- 	if (priv->phy_rst)
- 		hisi_femac_phy_reset(priv);
- 
-@@ -948,6 +993,7 @@ static const struct of_device_id hisi_femac_match[] = {
- 	{.compatible = "hisilicon,hisi-femac-v1",},
- 	{.compatible = "hisilicon,hisi-femac-v2",},
- 	{.compatible = "hisilicon,hi3516cv300-femac",},
-+	{.compatible = "hisilicon,hi3798mv200-femac",},
- 	{},
- };
- 
-
+ 	spin_lock_irqsave(&bfad->bfad_lock, flags);
+ 	WARN_ON(!bfa_ioc_get_fcmode(&bfad->bfa.ioc));
 -- 
-2.43.0
+2.39.2
 
