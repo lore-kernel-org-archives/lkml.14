@@ -1,205 +1,110 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3CB114F97B
-	for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 18:40:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2125A38FB2;
+	Thu, 22 Feb 2024 18:41:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708627213; cv=none; b=Wj0vHpaWRvqGw7Ea9YUS3Tq+62xe44MZjKsBv3rMSzMi102/jPC4cjCLVLs6hwPmxvgssCeSM1sum1+n5yNsCm/IZMwAXFZD6cb9yr/BX9A4PoCxtM6jyghwMdYvq3LAbUI7Mu6ck0WW7zJMW0Uct/7LEULAW/0FYeDQW+/qTvI=
+	t=1708627279; cv=none; b=NYdCxObBH8stsClgFE4HybdxEguSUFBQrMkeEJXIxeTHX2xsPG/8P/uqOEPXwgkHceoa1jht/FyBHvfsjxpdQUk/xxoqiwmcIiLMlduCPyL1SQ8+dqICmsbDFBc7i5t+UD1bO36gJXknsSN7KFeT+70LvGgd00rZWFivytOfE7U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708627213; c=relaxed/simple;
-	bh=ffiyNtjtFtp2uyQu201PfaCVjvxQzBbaXVP6y2cCQAo=;
-	h=Subject:To:Cc:From:Date:References:In-Reply-To:Message-Id; b=mJAjWKXH2GhppBxmVELbpa9aXkm3vS845llsBYfDj2ByjA2b3Neqro573JBLqUuqAA1+H4SUZODzDbIQSem2r+xX27zH0xkOIBQhrNWD0qjZnfblaGbRPlxkOQOPz1Iz/n5xiJFIpVKJQmtOQWo24M2ek5s64BGD7FbGkOHrDW0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AaisjB1w; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1708627279; c=relaxed/simple;
+	bh=6XJwHfKFPsJnbMTE3OuN1fl0JMH2yKdGnKVLUGPt9vE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=T0tYy2xm1bix7f3ZWQhfJgnpsj3UsPav4f2/Y7UX59QycVHaYDkbHCY6Um2zp3qtSfi2uJfckmWcp+Hga4MzsFvoNtx9eZzDwFw+F1LCM2aNLLjZmMRGWXSifr1T+jPjkYCuZvIyWu0dGLK1V1D0Qg0rA2fHKQT/OpIyXzKQu3M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tpLMDOqe; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AaisjB1w"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1708627210; x=1740163210;
-  h=subject:to:cc:from:date:references:in-reply-to:
-   message-id;
-  bh=ffiyNtjtFtp2uyQu201PfaCVjvxQzBbaXVP6y2cCQAo=;
-  b=AaisjB1w+v+5IydgIMQL0TaNCEQIOpvxlTEZNGipJ4g3WmEv7bnntKAx
-   gHMKXeN4DiAL7FtUuQAw76FDkHn7Gkqmxez7AuvdHmGGX/VxpjS6uol+c
-   72L5t1HAbX8hZLcNrGj4CeAPJIQN5t+iecjVd191DRYFGIxvNBaH39pnY
-   upaIwJ+bzcZMpjs2J5amY4FUxa2bnXmnsBAEW6X9+UA4GV9F3haBxunV/
-   kSDsFR1gt6910xQjU3DbS9oKpHBxXZ1p67wMaxy1cD3hhD2kYxmCycn+G
-   17fg3PJCw104THcNG8z2Lfu7GKzJCSkUS4PcGjRaLpbFKZMkQV3WhwJau
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10992"; a="13584600"
-X-IronPort-AV: E=Sophos;i="6.06,179,1705392000"; 
-   d="scan'208";a="13584600"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Feb 2024 10:40:08 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,179,1705392000"; 
-   d="scan'208";a="10265286"
-Received: from davehans-spike.ostc.intel.com (HELO localhost.localdomain) ([10.165.164.11])
-  by orviesa004.jf.intel.com with ESMTP; 22 Feb 2024 10:40:09 -0800
-Subject: [RFC][PATCH 32/34] x86/cpu/amd: Move memory encryption detection
-To: linux-kernel@vger.kernel.org
-Cc: kirill.shutemov@linux.intel.com,pbonzini@redhat.com,tglx@linutronix.de,x86@kernel.org,bp@alien8.de,Dave Hansen <dave.hansen@linux.intel.com>
-From: Dave Hansen <dave.hansen@linux.intel.com>
-Date: Thu, 22 Feb 2024 10:40:08 -0800
-References: <20240222183926.517AFCD2@davehans-spike.ostc.intel.com>
-In-Reply-To: <20240222183926.517AFCD2@davehans-spike.ostc.intel.com>
-Message-Id: <20240222184008.9A33B01E@davehans-spike.ostc.intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tpLMDOqe"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 51715C433F1;
+	Thu, 22 Feb 2024 18:41:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1708627278;
+	bh=6XJwHfKFPsJnbMTE3OuN1fl0JMH2yKdGnKVLUGPt9vE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=tpLMDOqeEdmNC58Uv1I0ZhWdqg93g0Biw/4KKz68M0nSQgul88Y4P6czVnngiS5FF
+	 j9jZA7G/RqafCsvXvlBIScTzdIVWq5n+Lt04dv+Wsh003JHHr8KxaKVQOLlE7RkMdU
+	 sd4MUtnv0dwcYo92qgcUL5W762Yv3kr5sQAWMycB92ouqq4R6R7BvBiucG0kmSPhXW
+	 k1/bwLXSvgnDZptz9XdDH0OcBdZwaxsMyHSXDxJ8LzJXwwZajs2uopS0FJbXyEabgy
+	 4OmPDv0lhyrRv+GeQO+3D7JWvcmxYVra554kvo9pD38WIEZsSO5C1mJxBrdRL3K3rr
+	 cI+RUxYTJBTXg==
+Date: Thu, 22 Feb 2024 18:41:13 +0000
+From: Mark Brown <broonie@kernel.org>
+To: =?utf-8?Q?Ond=C5=99ej?= Jirman <megi@xff.cz>
+Cc: linux-kernel@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>,
+	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+	Arnaud Ferraris <arnaud.ferraris@collabora.com>,
+	Chen-Yu Tsai <wens@csie.org>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	Samuel Holland <samuel@sholland.org>, linux-sound@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev
+Subject: Re: [PATCH 4/4] ASoC: sun8i-codec: Implement jack and accessory
+ detection
+Message-ID: <0c351386-f1df-443f-a997-261f5c60c852@sirena.org.uk>
+References: <20240222181851.3398254-1-megi@xff.cz>
+ <20240222181851.3398254-5-megi@xff.cz>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="nDVapEvA1lBavuoE"
+Content-Disposition: inline
+In-Reply-To: <20240222181851.3398254-5-megi@xff.cz>
+X-Cookie: I have accepted Provolone into my life!
 
 
-From: Dave Hansen <dave.hansen@linux.intel.com>
+--nDVapEvA1lBavuoE
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Right now the AMD memory encryption detection code is run on every CPU
-despite it operating on 'bsp_addr_config' and doing setup_clear_cpu_cap()
-which only affects 'boot_cpu_data'.
+On Thu, Feb 22, 2024 at 07:18:47PM +0100, Ond=C5=99ej Jirman wrote:
 
-Move it to bsp_init_amd() where it belongs and change its name to match.
+> +static struct snd_soc_jack_pin sun8i_codec_jack_pins[] =3D {
+> +	{
+> +		.pin	=3D "Headphone Jack",
+> +		.mask	=3D SND_JACK_HEADPHONE,
+> +	},
+> +	{
+> +		.pin	=3D "Headset Microphone",
+> +		.mask	=3D SND_JACK_MICROPHONE,
+> +	},
+> +};
+> +
 
-Signed-off-by: Dave Hansen <dave.hansen@linux.intel.com>
----
+The jack being a headset jack is going to be system specific isn't it?
+Some systems might have separate headphone and microphone jacks.  I'd
+not expect to see any pin handling code at all in a CODEC driver, that
+belongs in the machine driver.
 
- b/arch/x86/kernel/cpu/amd.c |  110 ++++++++++++++++++++++----------------------
- 1 file changed, 55 insertions(+), 55 deletions(-)
+>  static int sun8i_codec_component_probe(struct snd_soc_component *compone=
+nt)
+>  {
+>  	struct snd_soc_dapm_context *dapm =3D snd_soc_component_get_dapm(compon=
+ent);
+>  	struct sun8i_codec *scodec =3D snd_soc_component_get_drvdata(component);
+>  	int ret;
+> =20
+> +	scodec->card =3D component->card;
+> +
 
-diff -puN arch/x86/kernel/cpu/amd.c~early_init_amd-__init arch/x86/kernel/cpu/amd.c
---- a/arch/x86/kernel/cpu/amd.c~early_init_amd-__init	2024-02-22 10:09:04.201071279 -0800
-+++ b/arch/x86/kernel/cpu/amd.c	2024-02-22 10:09:04.201071279 -0800
-@@ -468,8 +468,62 @@ static void early_init_amd_mc(struct cpu
- #endif
- }
- 
--static void bsp_init_amd(struct cpuinfo_x86 *c)
-+static void bsp_detect_mem_encrypt(struct cpuinfo_x86 *c)
- {
-+	u64 msr;
-+
-+	/*
-+	 * BIOS support is required for SME and SEV.
-+	 *   For SME: If BIOS has enabled SME then adjust x86_phys_bits by
-+	 *	      the SME physical address space reduction value.
-+	 *	      If BIOS has not enabled SME then don't advertise the
-+	 *	      SME feature (set in scattered.c).
-+	 *	      If the kernel has not enabled SME via any means then
-+	 *	      don't advertise the SME feature.
-+	 *   For SEV: If BIOS has not enabled SEV then don't advertise the
-+	 *            SEV and SEV_ES feature (set in scattered.c).
-+	 *
-+	 *   In all cases, since support for SME and SEV requires long mode,
-+	 *   don't advertise the feature under CONFIG_X86_32.
-+	 */
-+	if (cpu_has(c, X86_FEATURE_SME) || cpu_has(c, X86_FEATURE_SEV)) {
-+		/* Check if memory encryption is enabled */
-+		rdmsrl(MSR_AMD64_SYSCFG, msr);
-+		if (!(msr & MSR_AMD64_SYSCFG_MEM_ENCRYPT))
-+			goto clear_all;
-+
-+		/*
-+		 * Always adjust physical address bits. Even though this
-+		 * will be a value above 32-bits this is still done for
-+		 * CONFIG_X86_32 so that accurate values are reported.
-+		 */
-+		bsp_addr_config.phys_addr_reduction_bits =
-+			(cpuid_ebx(0x8000001f) >> 6) & 0x3f;
-+
-+		if (IS_ENABLED(CONFIG_X86_32))
-+			goto clear_all;
-+
-+		if (!sme_me_mask)
-+			setup_clear_cpu_cap(X86_FEATURE_SME);
-+
-+		rdmsrl(MSR_K7_HWCR, msr);
-+		if (!(msr & MSR_K7_HWCR_SMMLOCK))
-+			goto clear_sev;
-+
-+		return;
-+
-+clear_all:
-+		setup_clear_cpu_cap(X86_FEATURE_SME);
-+clear_sev:
-+		setup_clear_cpu_cap(X86_FEATURE_SEV);
-+		setup_clear_cpu_cap(X86_FEATURE_SEV_ES);
-+	}
-+}
-+
-+static void __init bsp_init_amd(struct cpuinfo_x86 *c)
-+{
-+	bsp_detect_mem_encrypt(c);
-+
- 	if (cpu_has(c, X86_FEATURE_CONSTANT_TSC)) {
- 
- 		if (c->x86 > 0x10 ||
-@@ -593,58 +647,6 @@ warn:
- 	WARN_ONCE(1, "Family 0x%x, model: 0x%x??\n", c->x86, c->x86_model);
- }
- 
--static void early_detect_mem_encrypt(struct cpuinfo_x86 *c)
--{
--	u64 msr;
--
--	/*
--	 * BIOS support is required for SME and SEV.
--	 *   For SME: If BIOS has enabled SME then adjust x86_phys_bits by
--	 *	      the SME physical address space reduction value.
--	 *	      If BIOS has not enabled SME then don't advertise the
--	 *	      SME feature (set in scattered.c).
--	 *	      If the kernel has not enabled SME via any means then
--	 *	      don't advertise the SME feature.
--	 *   For SEV: If BIOS has not enabled SEV then don't advertise the
--	 *            SEV and SEV_ES feature (set in scattered.c).
--	 *
--	 *   In all cases, since support for SME and SEV requires long mode,
--	 *   don't advertise the feature under CONFIG_X86_32.
--	 */
--	if (cpu_has(c, X86_FEATURE_SME) || cpu_has(c, X86_FEATURE_SEV)) {
--		/* Check if memory encryption is enabled */
--		rdmsrl(MSR_AMD64_SYSCFG, msr);
--		if (!(msr & MSR_AMD64_SYSCFG_MEM_ENCRYPT))
--			goto clear_all;
--
--		/*
--		 * Always adjust physical address bits. Even though this
--		 * will be a value above 32-bits this is still done for
--		 * CONFIG_X86_32 so that accurate values are reported.
--		 */
--		bsp_addr_config.phys_addr_reduction_bits =
--			(cpuid_ebx(0x8000001f) >> 6) & 0x3f;
--
--		if (IS_ENABLED(CONFIG_X86_32))
--			goto clear_all;
--
--		if (!sme_me_mask)
--			setup_clear_cpu_cap(X86_FEATURE_SME);
--
--		rdmsrl(MSR_K7_HWCR, msr);
--		if (!(msr & MSR_K7_HWCR_SMMLOCK))
--			goto clear_sev;
--
--		return;
--
--clear_all:
--		setup_clear_cpu_cap(X86_FEATURE_SME);
--clear_sev:
--		setup_clear_cpu_cap(X86_FEATURE_SEV);
--		setup_clear_cpu_cap(X86_FEATURE_SEV_ES);
--	}
--}
--
- static void early_init_amd(struct cpuinfo_x86 *c)
- {
- 	u64 value;
-@@ -715,8 +717,6 @@ static void early_init_amd(struct cpuinf
- 	if (c->x86 == 0x16 && c->x86_model <= 0xf)
- 		msr_set_bit(MSR_AMD64_LS_CFG, 15);
- 
--	early_detect_mem_encrypt(c);
--
- 	/* Re-enable TopologyExtensions if switched off by BIOS */
- 	if (c->x86 == 0x15 &&
- 	    (c->x86_model >= 0x10 && c->x86_model <= 0x6f) &&
-_
+The fact that you're needing to look at the card here should be a bit of
+a warning sign there.
+
+--nDVapEvA1lBavuoE
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmXXlUgACgkQJNaLcl1U
+h9CKKgf/aoS85uaApPM+Hu5AKwDdPhzqPWfBz5tHxcaPCNpEosJgwvW7FkDEJJIs
+7ODH56RBKAhTrzbyUAgg6PIgeOilZSXWzgUi5BkIqsSUJxW7jZJKa1Xk4XusRnOw
+3bMp1wVMh1QlUVIV+0podvqlsDjEvC08l6Rq5hIRf7ZRxztdnsE9a774ZwTFyk2g
+UZeFv6KT7PegfqSNtyIrt9s/ghKpPAoCffRPkNTIc8+ZbGeBReomWijInFrK82gb
+rVHPuJdb5oXz/lH8Zj0LrFjEH511k6OxPwxGwwylruXbDyND/ur+YAhphUxrkTwO
+YIdwQVpj84jPawxlailo/ViT+V7i+A==
+=fWYW
+-----END PGP SIGNATURE-----
+
+--nDVapEvA1lBavuoE--
