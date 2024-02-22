@@ -1,49 +1,50 @@
 Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C9C213BADE;
-	Thu, 22 Feb 2024 23:17:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F8AC137918;
+	Thu, 22 Feb 2024 23:17:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708643830; cv=none; b=mLyOfxkXqe1gjIsHCTCQjsg7mCbzTPtnqpVvLRho402iSApG9q/GkQ+F8Geh4LIzi7TjbYm8czKwvu1KUN+m/lIGmSgrJJr2SQCf0sDmbRJ1TE/GCqd+i5rM4+yz9m2ozamyjurz4eP9Hi4DtICYRncBjMRriHKlOc7BtHB+fpY=
+	t=1708643828; cv=none; b=IgsPUeYTIycl+ibYJMwo6sN6mOBJDRIlIN3dbGp33eZzlfBxXHWFJbVdTk8w3KFAQtC2uWS+orWc0M/PlWLXlrcNrBg/M9/rBFaJ9DxYRgUL+ultBVNepqK/ul5hBE4PwrqZJcOQiNyWE3/Frh9QsEemXIciZ8gjgGU++n7FbUY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708643830; c=relaxed/simple;
-	bh=9Alalk7LXfV/SaxnGokCnM4bydl53hwoFnS2Yh52xcQ=;
+	s=arc-20240116; t=1708643828; c=relaxed/simple;
+	bh=Kv+rHtJfkmNXSA77cTn1OVoKnvCue27I/RnZAD++GyA=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
-	 In-Reply-To:To:CC; b=Rpk+F4nWXsWP/UuuQaTcdsyg/FrrLBJFKxZdeknbDudZ0xhSU4i3jZ2mAwxZhVjZskbPznBHK4rQvRxOvwf/W4+C2TSP4MmQrm+v1lwrHliPQxaesuhuUmOzdy43GNSKBk81bUSJssoXPsjRW82ANtkNDYbEFmJ4IuATLAE74zI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=U+sTJqFd; arc=none smtp.client-ip=205.220.180.131
+	 In-Reply-To:To:CC; b=b4LzeXpza69SQ2svGTYjBAjEa5xXGp+AzC7t0drk6ZhcsybJ85yribMX4vdtyz64EdJb0HbcIhoT0XdybUh/cfYtqOyuPfb5BlURZht9fQK2YxEG5t6IOdtDwUhQ+LPUOxSBjpStnewwyEgeUBx5T0+cf0yBA+QFBzVwTIEQ0m4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=bqtVg4cA; arc=none smtp.client-ip=205.220.180.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="U+sTJqFd"
-Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 41MN1qgD012101;
-	Thu, 22 Feb 2024 23:16:45 GMT
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="bqtVg4cA"
+Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 41MMv6BT013527;
+	Thu, 22 Feb 2024 23:16:43 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
 	from:date:subject:mime-version:content-type
 	:content-transfer-encoding:message-id:references:in-reply-to:to
-	:cc; s=qcppdkim1; bh=UTw6fdMTFcjfZ33gKj3XSf3I7tXoLgizXBMgo1kqPAM
-	=; b=U+sTJqFdPtYFI9+8gqCMOwjh27gzGPcH+qsSLx4MufdlHO9LkEf7qf7ovPi
-	ihfRPS7yIKvuWsNlm79oYxdt5QESg0SMMV3yXcwYzo7h7ZcMU8w4biOvwyEWvKB4
-	CI2ZJ4GFhKZdQh8y9CD8oNJ0J0Wqqz1k4MYuV98SNyirx3GS+qVM05+9uLuWcM3w
-	GflnMQrs5QyhHqppmshSKwJ2L2hMU4aabmMgWIZRozWCydZu1UuoopYXnqcD6DlG
-	wd/TAz4240tRmK7d9h4d8s/KjIf3MnP3+KjW6Pjag3OKgpn7/8nvxejhmakPxOk0
-	CSXDQOcslaPX//MjSUXoF0G2RiA==
-Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3we97tgf8n-1
+	:cc; s=qcppdkim1; bh=qW7+D6aUt163gja6+AuWxPZ9BT7wrXk9X0wveYo7AB8
+	=; b=bqtVg4cAMWkrBY9cQ8RCBnFA05Meino7ntJnPD+DlJPOBNVgKp6WI9cQucw
+	B/eaWexCT0CQvw7b/wGnKI8bFW07CARJTtqDHj6O8d9S4yxK7F3ihFxbnHPjjshc
+	DpUnFjntxLj9xssnEFX5J14ME+pN12QAahU29A+upnNizsQy0kyyE7/WY+C/2nAa
+	OnPm1YX5l/EdeSL+ZOxOgtuusT8zMD1nE+HT0AqVJdQgy1CAiHvb9hYbFYZ3zPj4
+	Gqpi2fPXL9IcbTRfww1hibj/Bzx6NWMRA6kv1FdUK7IbvbHk0ZxML7JifRHVGn7m
+	0GZ6Fijrm0YkdEB4PXM8bGlGvdw==
+Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3we4dq17ss-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 22 Feb 2024 23:16:44 +0000 (GMT)
+	Thu, 22 Feb 2024 23:16:42 +0000 (GMT)
 Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 41MNGhSG017967
+	by NASANPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 41MNGfBM025633
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 22 Feb 2024 23:16:43 GMT
+	Thu, 22 Feb 2024 23:16:41 GMT
 Received: from hu-eberman-lv.qualcomm.com (10.49.16.6) by
  nasanex01b.na.qualcomm.com (10.46.141.250) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Thu, 22 Feb 2024 15:16:43 -0800
+ 15.2.1118.40; Thu, 22 Feb 2024 15:16:40 -0800
 From: Elliot Berman <quic_eberman@quicinc.com>
-Date: Thu, 22 Feb 2024 15:16:52 -0800
-Subject: [PATCH v17 29/35] gunyah: rsc_mgr: Add RPC to set VM boot context
+Date: Thu, 22 Feb 2024 15:16:48 -0800
+Subject: [PATCH v17 25/35] virt: gunyah: guestmem: Initialize RM mem
+ parcels from guestmem
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,7 +53,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-ID: <20240222-gunyah-v17-29-1e9da6763d38@quicinc.com>
+Message-ID: <20240222-gunyah-v17-25-1e9da6763d38@quicinc.com>
 References: <20240222-gunyah-v17-0-1e9da6763d38@quicinc.com>
 In-Reply-To: <20240222-gunyah-v17-0-1e9da6763d38@quicinc.com>
 To: Alex Elder <elder@linaro.org>,
@@ -92,97 +93,260 @@ X-ClientProxiedBy: nalasex01c.na.qualcomm.com (10.47.97.35) To
  nasanex01b.na.qualcomm.com (10.46.141.250)
 X-QCInternal: smtphost
 X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: LYAEtq1tGFHE7mfHB6YGiz_72K1Y_peD
-X-Proofpoint-ORIG-GUID: LYAEtq1tGFHE7mfHB6YGiz_72K1Y_peD
+X-Proofpoint-GUID: vR1aZuf4fzB2Ai69DQJ86JT63-NanqyJ
+X-Proofpoint-ORIG-GUID: vR1aZuf4fzB2Ai69DQJ86JT63-NanqyJ
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
  definitions=2024-02-22_15,2024-02-22_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 spamscore=0
- bulkscore=0 priorityscore=1501 malwarescore=0 adultscore=0 phishscore=0
- lowpriorityscore=0 mlxscore=0 suspectscore=0 mlxlogscore=999
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 suspectscore=0
+ malwarescore=0 impostorscore=0 priorityscore=1501 lowpriorityscore=0
+ spamscore=0 adultscore=0 mlxlogscore=999 clxscore=1015 bulkscore=0
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.19.0-2402120000 definitions=main-2402220179
 
-The initial context of a the primary vCPU can be initialized by
-performing RM RPC calls.
+Gunyah Resource Manager sets up a virtual machine based on a device
+tree which lives in guest memory. Resource manager requires this memory
+to be provided as a memory parcel for it to read and manipulate.
+Implement a function to construct a memory parcel from a guestmem
+binding.
 
 Signed-off-by: Elliot Berman <quic_eberman@quicinc.com>
 ---
- drivers/virt/gunyah/rsc_mgr.h     |  2 ++
- drivers/virt/gunyah/rsc_mgr_rpc.c | 33 +++++++++++++++++++++++++++++++++
- 2 files changed, 35 insertions(+)
+ drivers/virt/gunyah/guest_memfd.c | 207 ++++++++++++++++++++++++++++++++++++++
+ drivers/virt/gunyah/vm_mgr.h      |   6 ++
+ 2 files changed, 213 insertions(+)
 
-diff --git a/drivers/virt/gunyah/rsc_mgr.h b/drivers/virt/gunyah/rsc_mgr.h
-index 99c2db18579ca..2acaf8dff365e 100644
---- a/drivers/virt/gunyah/rsc_mgr.h
-+++ b/drivers/virt/gunyah/rsc_mgr.h
-@@ -84,6 +84,8 @@ int gunyah_rm_vm_configure(struct gunyah_rm *rm, u16 vmid,
- 			   u32 mem_handle, u64 image_offset, u64 image_size,
- 			   u64 dtb_offset, u64 dtb_size);
- int gunyah_rm_vm_init(struct gunyah_rm *rm, u16 vmid);
-+int gunyah_rm_vm_set_boot_context(struct gunyah_rm *rm, u16 vmid, u8 reg_set,
-+				  u8 reg_index, u64 value);
- 
- struct gunyah_rm_hyp_resource {
- 	u8 type;
-diff --git a/drivers/virt/gunyah/rsc_mgr_rpc.c b/drivers/virt/gunyah/rsc_mgr_rpc.c
-index dfffcf02ddaea..eabf8659eb8f9 100644
---- a/drivers/virt/gunyah/rsc_mgr_rpc.c
-+++ b/drivers/virt/gunyah/rsc_mgr_rpc.c
-@@ -24,6 +24,7 @@
- #define GUNYAH_RM_RPC_VM_INIT			0x5600000B
- #define GUNYAH_RM_RPC_VM_GET_HYP_RESOURCES	0x56000020
- #define GUNYAH_RM_RPC_VM_GET_VMID		0x56000024
-+#define GUNYAH_RM_RPC_VM_SET_BOOT_CONTEXT	0x56000031
- #define GUNYAH_RM_RPC_VM_SET_DEMAND_PAGING	0x56000033
- #define GUNYAH_RM_RPC_VM_SET_ADDRESS_LAYOUT	0x56000034
- /* clang-format on */
-@@ -105,6 +106,15 @@ struct gunyah_rm_vm_config_image_req {
- 	__le64 dtb_size;
- } __packed;
- 
-+/* Call: VM_SET_BOOT_CONTEXT */
-+struct gunyah_rm_vm_set_boot_context_req {
-+	__le16 vmid;
-+	u8 reg_set;
-+	u8 reg_index;
-+	__le32 _padding;
-+	__le64 value;
-+} __packed;
-+
- /* Call: VM_SET_DEMAND_PAGING */
- struct gunyah_rm_vm_set_demand_paging_req {
- 	__le16 vmid;
-@@ -447,6 +457,29 @@ int gunyah_rm_vm_init(struct gunyah_rm *rm, u16 vmid)
+diff --git a/drivers/virt/gunyah/guest_memfd.c b/drivers/virt/gunyah/guest_memfd.c
+index d6be8bf67d996..0c35ffa616d9c 100644
+--- a/drivers/virt/gunyah/guest_memfd.c
++++ b/drivers/virt/gunyah/guest_memfd.c
+@@ -684,3 +684,210 @@ int gunyah_gmem_modify_mapping(struct gunyah_vm *ghvm,
+ 		fput(file);
+ 	return ret;
  }
- ALLOW_ERROR_INJECTION(gunyah_rm_vm_init, ERRNO);
- 
-+/**
-+ * gunyah_rm_vm_set_boot_context() - set the initial boot context of the primary vCPU
-+ * @rm: Handle to a Gunyah resource manager
-+ * @vmid: VM identifier
-+ * @reg_set: See &enum gunyah_vm_boot_context_reg
-+ * @reg_index: Which register to set; must be 0 for REG_SET_PC
-+ * @value: Value to set in the register
-+ */
-+int gunyah_rm_vm_set_boot_context(struct gunyah_rm *rm, u16 vmid, u8 reg_set,
-+				  u8 reg_index, u64 value)
++
++int gunyah_gmem_share_parcel(struct gunyah_vm *ghvm, struct gunyah_rm_mem_parcel *parcel,
++			     u64 *gfn, u64 *nr)
 +{
-+	struct gunyah_rm_vm_set_boot_context_req req_payload = {
-+		.vmid = cpu_to_le16(vmid),
-+		.reg_set = reg_set,
-+		.reg_index = reg_index,
-+		.value = cpu_to_le64(value),
-+	};
++	struct folio *folio, *prev_folio;
++	unsigned long nr_entries, i, j, start, end;
++	struct gunyah_gmem_binding *b;
++	bool lend;
++	int ret;
 +
-+	return gunyah_rm_call(rm, GUNYAH_RM_RPC_VM_SET_BOOT_CONTEXT,
-+			      &req_payload, sizeof(req_payload), NULL, NULL);
++	parcel->mem_handle = GUNYAH_MEM_HANDLE_INVAL;
++
++	if (!*nr)
++		return -EINVAL;
++
++	down_read(&ghvm->bindings_lock);
++	b = mtree_load(&ghvm->bindings, *gfn);
++	if (!b || *gfn > b->gfn + b->nr || *gfn < b->gfn) {
++		ret = -ENOENT;
++		goto unlock;
++	}
++
++	/**
++	 * Generally, indices can be based on gfn, guest_memfd offset, or
++	 * offset into binding. start and end are based on offset into binding.
++	 */
++	start = *gfn - b->gfn;
++
++	if (start + *nr > b->nr) {
++		ret = -ENOENT;
++		goto unlock;
++	}
++
++	end = start + *nr;
++	lend = gunyah_guest_mem_is_lend(ghvm, b->flags);
++
++	/**
++	 * First, calculate the number of physically discontiguous regions
++	 * the parcel covers. Each memory entry corresponds to one folio.
++	 * In future, each memory entry could correspond to contiguous
++	 * folios that are also adjacent in guest_memfd, but parcels
++	 * are only being used for small amounts of memory for now, so
++	 * this optimization is premature.
++	 */
++	nr_entries = 0;
++	prev_folio = NULL;
++	for (i = start + b->i_off; i < end + b->i_off;) {
++		folio = gunyah_gmem_get_folio(file_inode(b->file), i); /* A */
++		if (!folio) {
++			ret = -ENOMEM;
++			goto out;
++		}
++
++		if (lend) {
++			/* don't lend a folio that is mapped by host */
++			if (!gunyah_folio_lend_safe(folio)) {
++				folio_unlock(folio);
++				folio_put(folio);
++				ret = -EPERM;
++				goto out;
++			}
++			folio_set_private(folio);
++		}
++
++		nr_entries++;
++		i = folio_index(folio) + folio_nr_pages(folio);
++	}
++	end = i - b->i_off;
++
++	parcel->mem_entries =
++		kcalloc(nr_entries, sizeof(*parcel->mem_entries), GFP_KERNEL);
++	if (!parcel->mem_entries) {
++		ret = -ENOMEM;
++		goto out;
++	}
++
++	/**
++	 * Walk through all the folios again, now filling the mem_entries array.
++	 */
++	j = 0;
++	prev_folio = NULL;
++	for (i = start + b->i_off; i < end + b->i_off; j++) {
++		folio = filemap_get_folio(file_inode(b->file)->i_mapping, i); /* B */
++		if (WARN_ON(IS_ERR(folio))) {
++			ret = PTR_ERR(folio);
++			i = end + b->i_off;
++			goto out;
++		}
++
++		parcel->mem_entries[j].size = cpu_to_le64(folio_size(folio));
++		parcel->mem_entries[j].phys_addr = cpu_to_le64(PFN_PHYS(folio_pfn(folio)));
++		i = folio_index(folio) + folio_nr_pages(folio);
++		folio_put(folio); /* B */
++	}
++	BUG_ON(j != nr_entries);
++	parcel->n_mem_entries = nr_entries;
++
++	if (lend)
++		parcel->n_acl_entries = 1;
++
++	parcel->acl_entries = kcalloc(parcel->n_acl_entries,
++				      sizeof(*parcel->acl_entries), GFP_KERNEL);
++	if (!parcel->n_acl_entries) {
++		ret = -ENOMEM;
++		goto free_entries;
++	}
++
++	parcel->acl_entries[0].vmid = cpu_to_le16(ghvm->vmid);
++	if (b->flags & GUNYAH_MEM_ALLOW_READ)
++		parcel->acl_entries[0].perms |= GUNYAH_RM_ACL_R;
++	if (b->flags & GUNYAH_MEM_ALLOW_WRITE)
++		parcel->acl_entries[0].perms |= GUNYAH_RM_ACL_W;
++	if (b->flags & GUNYAH_MEM_ALLOW_EXEC)
++		parcel->acl_entries[0].perms |= GUNYAH_RM_ACL_X;
++
++	if (!lend) {
++		u16 host_vmid;
++
++		ret = gunyah_rm_get_vmid(ghvm->rm, &host_vmid);
++		if (ret)
++			goto free_acl;
++
++		parcel->acl_entries[1].vmid = cpu_to_le16(host_vmid);
++		parcel->acl_entries[1].perms = GUNYAH_RM_ACL_R | GUNYAH_RM_ACL_W | GUNYAH_RM_ACL_X;
++	}
++
++	parcel->mem_handle = GUNYAH_MEM_HANDLE_INVAL;
++	folio = filemap_get_folio(file_inode(b->file)->i_mapping, start); /* C */
++	*gfn = folio_index(folio) - b->i_off + b->gfn;
++	*nr = end - (folio_index(folio) - b->i_off);
++	folio_put(folio); /* C */
++
++	ret = gunyah_rm_mem_share(ghvm->rm, parcel);
++	goto out;
++free_acl:
++	kfree(parcel->acl_entries);
++	parcel->acl_entries = NULL;
++free_entries:
++	kfree(parcel->mem_entries);
++	parcel->mem_entries = NULL;
++	parcel->n_mem_entries = 0;
++out:
++	/* unlock the folios */
++	for (j = start + b->i_off; j < i;) {
++		folio = filemap_get_folio(file_inode(b->file)->i_mapping, j); /* D */
++		if (WARN_ON(IS_ERR(folio)))
++			continue;
++		j = folio_index(folio) + folio_nr_pages(folio);
++		folio_unlock(folio); /* A */
++		if (ret) {
++			if (folio_test_private(folio)) {
++				gunyah_folio_host_reclaim(folio);
++				folio_clear_private(folio);
++			}
++			folio_put(folio); /* A */
++		}
++		folio_put(folio); /* D */
++		/* matching folio_put for A is done at
++		 * (1) gunyah_gmem_reclaim_parcel or
++		 * (2) after gunyah_gmem_parcel_to_paged, gunyah_vm_reclaim_folio
++		 */
++	}
++unlock:
++	up_read(&ghvm->bindings_lock);
++	return ret;
 +}
-+ALLOW_ERROR_INJECTION(gunyah_rm_vm_set_boot_context, ERRNO);
 +
- /**
-  * gunyah_rm_get_hyp_resources() - Retrieve hypervisor resources (capabilities) associated with a VM
-  * @rm: Handle to a Gunyah resource manager
++int gunyah_gmem_reclaim_parcel(struct gunyah_vm *ghvm,
++			       struct gunyah_rm_mem_parcel *parcel, u64 gfn,
++			       u64 nr)
++{
++	struct gunyah_rm_mem_entry *entry;
++	struct folio *folio;
++	pgoff_t i;
++	int ret;
++
++	if (parcel->mem_handle != GUNYAH_MEM_HANDLE_INVAL) {
++		ret = gunyah_rm_mem_reclaim(ghvm->rm, parcel);
++		if (ret) {
++			dev_err(ghvm->parent, "Failed to reclaim parcel: %d\n",
++				ret);
++			/* We can't reclaim the pages -- hold onto the pages
++			 * forever because we don't know what state the memory
++			 * is in
++			 */
++			return ret;
++		}
++		parcel->mem_handle = GUNYAH_MEM_HANDLE_INVAL;
++
++		for (i = 0; i < parcel->n_mem_entries; i++) {
++			entry = &parcel->mem_entries[i];
++
++			folio = pfn_folio(PHYS_PFN(le64_to_cpu(entry->phys_addr)));
++
++			if (folio_test_private(folio))
++				gunyah_folio_host_reclaim(folio);
++
++			folio_clear_private(folio);
++			folio_put(folio); /* A */
++		}
++
++		kfree(parcel->mem_entries);
++		kfree(parcel->acl_entries);
++	}
++
++	return 0;
++}
+diff --git a/drivers/virt/gunyah/vm_mgr.h b/drivers/virt/gunyah/vm_mgr.h
+index d9f101fc52632..b6bc66f018b09 100644
+--- a/drivers/virt/gunyah/vm_mgr.h
++++ b/drivers/virt/gunyah/vm_mgr.h
+@@ -181,5 +181,11 @@ int gunyah_gmem_modify_mapping(struct gunyah_vm *ghvm,
+ 			       struct gunyah_map_mem_args *args);
+ struct gunyah_gmem_binding;
+ void gunyah_gmem_remove_binding(struct gunyah_gmem_binding *binding);
++int gunyah_gmem_share_parcel(struct gunyah_vm *ghvm,
++			     struct gunyah_rm_mem_parcel *parcel, u64 *gfn,
++			     u64 *nr);
++int gunyah_gmem_reclaim_parcel(struct gunyah_vm *ghvm,
++			       struct gunyah_rm_mem_parcel *parcel, u64 gfn,
++			       u64 nr);
+ 
+ #endif
 
 -- 
 2.34.1
