@@ -1,106 +1,154 @@
-Received: from relay.hostedemail.com (smtprelay0013.hostedemail.com [216.40.44.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f177.google.com (mail-qk1-f177.google.com [209.85.222.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 061F812E49;
-	Thu, 22 Feb 2024 01:05:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C0108F45
+	for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 01:06:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708563944; cv=none; b=GI5At/X6pjMZHC7Iw+ICeOUS07CV9pbKhJllmGrSV2Hljp3uAhtN7ZMJ5+KReYgWsbhZKdYoKBmdZJ1QFwX2dnGl+1kaXRtZB6dT4DtIDv2brpqYqxxjYmYASBXMrp+EK5Bd+d7yyIa6bDsAGia9P3lsmdUHaBHRxhEAUbMZkkQ=
+	t=1708564017; cv=none; b=KWn7Yd8i0z9JMMvfX/2gDn929KYySmFQMgrX0awkghpw/DR4+JlHr5lQNhS3QrfiD9HrbqG5Iy8OgPlcywCrd4kdbTXOFUcsRb7XkG4/1Ba62tIpAlqt7KFTlbrMlYzsiOzn9nQHy24MKy5J9HT+LGoir4w84AfzSNgxlGBIs34=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708563944; c=relaxed/simple;
-	bh=FsJU68LcNxW7h4DF/UR5XSZahK63i7JaNo9cTyHunOc=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=De3FxXe8O5Leh0LMqIk9oz3t2S6S3ZgPptW1XpbruiVaXOWTh9jDz9zwmTv3kFK/aTueHff5xLgg30PuRv3lfTI9+1qtpSeLB4N33V6Rc4JwnSXzYQpGiKoijnGk11SLgg3zAZiTGEwasJFHplGmyBUQ4sjXny6eLiGKMrDdISQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=perches.com; spf=pass smtp.mailfrom=perches.com; arc=none smtp.client-ip=216.40.44.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=perches.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=perches.com
-Received: from omf11.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay10.hostedemail.com (Postfix) with ESMTP id 400B7C0C28;
-	Thu, 22 Feb 2024 01:05:35 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: joe@perches.com) by omf11.hostedemail.com (Postfix) with ESMTPA id AA0B12002C;
-	Thu, 22 Feb 2024 01:05:31 +0000 (UTC)
-Message-ID: <bccc704fc78b362bbc57a79eb240219f5ec1548e.camel@perches.com>
-Subject: Re: [PATCH v2] checkpatch: add check for snprintf to scnprintf
-From: Joe Perches <joe@perches.com>
-To: Justin Stitt <justinstitt@google.com>, Andy Whitcroft
- <apw@canonical.com>,  Dwaipayan Ray <dwaipayanray1@gmail.com>, Lukas
- Bulwahn <lukas.bulwahn@gmail.com>
-Cc: linux-kernel@vger.kernel.org, Lee Jones <lee@kernel.org>, 
- linux-hardening@vger.kernel.org, Kees Cook <keescook@chromium.org>, Finn
- Thain <fthain@linux-m68k.org>
-Date: Wed, 21 Feb 2024 17:05:30 -0800
-In-Reply-To: <20240221-snprintf-checkpatch-v2-1-9baeb59dae30@google.com>
-References: <20240221-snprintf-checkpatch-v2-1-9baeb59dae30@google.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.48.4 (3.48.4-1.fc38) 
+	s=arc-20240116; t=1708564017; c=relaxed/simple;
+	bh=Gvr78U7hYEaPZ6Fw/xNXoET2lyRuzDhOlH1UDF1/VvA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=bM+XHgUiu0eEUkokzRLDeHJXhc8UYbFZapMe0dfrEZmYzIf15uKJS3ksEUTgBHmKkX2/95WuzsyYH4IadyPYriqAskvBVAW88CuTu4NS2fr5EFLHqYuXBUVi0zBszgdZlEsetDSrSgsLnO2LDmtPRGGyXa87kabn+bMicBunhCc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=I+xdCPg0; arc=none smtp.client-ip=209.85.222.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="I+xdCPg0"
+Received: by mail-qk1-f177.google.com with SMTP id af79cd13be357-781753f52afso419033285a.2
+        for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 17:06:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1708564014; x=1709168814; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=po77JXYuDK3AKWrYAL7OCKeGjP7qQRekYB5EzyekFyU=;
+        b=I+xdCPg0AcRdIZ6INW5BUqwQ6F9OEOr45l2uREuIdmwtgO9LuoXoTOxFtaFxONhWat
+         Gobdx1nd5dCAOSD3TZXaDRFnb6vMHjAZZe2blrBuroEiF1cw8SfFRN8RjRzx288d0Jxa
+         hMSLbvxyhYfGlnwezQlieFeMana0+gMDLFmUI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708564014; x=1709168814;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=po77JXYuDK3AKWrYAL7OCKeGjP7qQRekYB5EzyekFyU=;
+        b=bmsNtZApeDYRAIftwFSJmaRwTpX2J/59JWPT6hBgEYnsMVYLQlawgQm6+guhnwFoFO
+         dAgrCcRzw77pmGs2gPjx9ljAp0mE8vixbYSO6tAa57nmvNDfIIqtby00zqnH8O3OulU9
+         KCXP3XnMlXw/NqXErNrNkc3UUnhetHDkE4KuPEx1McFKmSg71asggp/qgALRAUEpIjTQ
+         He/o1MvWDhFJVIl9kCEPJC/zydpX9RRrl9Oify3pV2gBoHASt0W+KJEDhPXLInlnMDoF
+         oI1LKa93QqAYWnYGU6VCCLLck/d02NbBF2Qts6bxIUIpvBy9Qw20KjDlwIpfJJQlJ062
+         0xRQ==
+X-Gm-Message-State: AOJu0YxbQ0CuXadCwwNSr0NXx469uPvuJhSdzKl2wZryMZApM8AxgYxD
+	WtBohkt/hQGxDtDAr1hnIgQgymAWF/djqxKjIc+FvT77ZGWbyRqUozIlUQc8O/O40CLCZFsVAFE
+	=
+X-Google-Smtp-Source: AGHT+IEp7Fn0i4KJjuMnYv+dMkHmf+oY47g69f2lZyjT0/QpWePXbGK3ufigwAivUZ7J5jtwbH3koA==
+X-Received: by 2002:a05:620a:167c:b0:787:1fb5:7e61 with SMTP id d28-20020a05620a167c00b007871fb57e61mr21927202qko.46.1708564014394;
+        Wed, 21 Feb 2024 17:06:54 -0800 (PST)
+Received: from kramasub2.cros.corp.google.com ([100.107.108.189])
+        by smtp.gmail.com with ESMTPSA id h1-20020a05620a21c100b0078597896394sm4789415qka.51.2024.02.21.17.06.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 21 Feb 2024 17:06:53 -0800 (PST)
+From: Karthikeyan Ramasubramanian <kramasub@chromium.org>
+To: LKML <linux-kernel@vger.kernel.org>
+Cc: Karthikeyan Ramasubramanian <kramasub@chromium.org>,
+	stable@vger.kernel.org,
+	Jani Nikula <jani.nikula@intel.com>,
+	=?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= <ville.syrjala@linux.intel.com>,
+	Daniel Vetter <daniel@ffwll.ch>,
+	David Airlie <airlied@gmail.com>,
+	Jani Nikula <jani.nikula@linux.intel.com>,
+	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+	Rodrigo Vivi <rodrigo.vivi@intel.com>,
+	Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>,
+	dri-devel@lists.freedesktop.org,
+	intel-gfx@lists.freedesktop.org,
+	intel-xe@lists.freedesktop.org
+Subject: [PATCH v2] drivers/i915/intel_bios: Fix parsing backlight BDB data
+Date: Wed, 21 Feb 2024 18:06:24 -0700
+Message-ID: <20240221180622.v2.1.I0690aa3e96a83a43b3fc33f50395d334b2981826@changeid>
+X-Mailer: git-send-email 2.44.0.rc0.258.g7320e95886-goog
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Rspamd-Queue-Id: AA0B12002C
-X-Rspamd-Server: rspamout02
-X-Stat-Signature: cyucsypd3qhnw59f9ezfa9557qf9fsux
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-Session-ID: U2FsdGVkX1/0uf+Q0wPPk+E8Q442h+fw1PySOnfqySI=
-X-HE-Tag: 1708563931-486686
-X-HE-Meta: U2FsdGVkX18di8ZY8Lx3J5yZpNPSNulE1qFL0I57DOQ/eaeZywd5jWcZRnNYgG9paRrRvpE8dgeSdevTISn2cf5OLsschxZqnxdaV1U5bNYMB3HbohNNP5DYTyH/PCP14IZjr+ZnLIkcEeros7ZlNQRMMqz4Ni7+YyLmDTb0JAFt3G9VePngpbF4XmwmG9sh/6SyPr8V6K9g2CDvS5wCUfX3QM1aG5Sy5CpwLE/PqbIfkPajWImacyXWI/iqxo5uv0vHoGTbjA3Yxs1mFm2ZeUCYNDIg8ZjVri0JAGKtNHgh2k87u6OTNysp4pnrxxTnFgYssMhs6MUiHAv81+a8lpqWmNmVDE6SHhaczHD1CMIkD+TYjS9Tvifnq0tmLhABz9CAq/DpfO0DUcwLyio6P2DOZkvwIz3/+8iJBFJGhF2nKDWH/YNEfEVEj6Lw9H/awthTWL3Qe14EoJjIDXsp/1y6fHCrG7WPSjezpj4e8tI=
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Wed, 2024-02-21 at 22:11 +0000, Justin Stitt wrote:
-> I am going to quote Lee Jones who has been doing some snprintf ->
-> scnprintf refactorings:
->=20
-> "There is a general misunderstanding amongst engineers that
-> {v}snprintf() returns the length of the data *actually* encoded into the
-> destination array.  However, as per the C99 standard {v}snprintf()
-> really returns the length of the data that *would have been* written if
-> there were enough space for it.  This misunderstanding has led to
-> buffer-overruns in the past.  It's generally considered safer to use the
-> {v}scnprintf() variants in their place (or even sprintf() in simple
-> cases).  So let's do that."
->=20
-> To help prevent new instances of snprintf() from popping up, let's add a
-> check to checkpatch.pl.
->=20
-> Suggested-by: Finn Thain <fthain@linux-m68k.org>
-> Signed-off-by: Justin Stitt <justinstitt@google.com>
-> ---
-> Changes in v2:
-> - Had a vim moment and deleted a character before sending the patch.
-> - Replaced the character :)
-> - Link to v1: https://lore.kernel.org/r/20240221-snprintf-checkpatch-v1-1=
--3ac5025b5961@google.com
-> ---
-> From a discussion here [1].
->=20
-> [1]: https://lore.kernel.org/all/0f9c95f9-2c14-eee6-7faf-635880edcea4@lin=
-ux-m68k.org/
+Starting BDB version 239, hdr_dpcd_refresh_timeout is introduced to
+backlight BDB data. Commit 700034566d68 ("drm/i915/bios: Define more BDB
+contents") updated the backlight BDB data accordingly. This broke the
+parsing of backlight BDB data in VBT for versions 236 - 238 (both
+inclusive) and hence the backlight controls are not responding on units
+with the concerned BDB version.
 
-> diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
-[]
-> @@ -7012,6 +7012,12 @@ sub process {
->  			     "Prefer strscpy, strscpy_pad, or __nonstring over strncpy - see:=
- https://github.com/KSPP/linux/issues/90\n" . $herecurr);
->  		}
-> =20
-> +# snprintf uses that should likely be {v}scnprintf
-> +		if ($line =3D~ /\bsnprintf\s*\(\s*/) {
-> +				WARN("SNPRINTF",
-> +				     "Prefer scnprintf over snprintf\n" . $herecurr);
+backlight_control information has been present in backlight BDB data
+from at least BDB version 191 onwards, if not before. Hence this patch
+extracts the backlight_control information for BDB version 191 or newer.
+Tested on Chromebooks using Jasperlake SoC (reports bdb->version = 236).
+Tested on Chromebooks using Raptorlake SoC (reports bdb->version = 251).
 
-There really should be some sort of reference link here
-similar to the one above this.
+Fixes: 700034566d68 ("drm/i915/bios: Define more BDB contents")
+Cc: stable@vger.kernel.org
+Cc: Jani Nikula <jani.nikula@intel.com>
+Cc: Ville Syrjälä <ville.syrjala@linux.intel.com>
+Signed-off-by: Karthikeyan Ramasubramanian <kramasub@chromium.org>
+---
 
-Also, I rather doubt _all_ of these should be changed just
-for churn's sake.
+Changes in v2:
+- removed checking the block size of the backlight BDB data
 
-Maybe add a test for some return value use like
+ drivers/gpu/drm/i915/display/intel_bios.c     | 19 ++++---------------
+ drivers/gpu/drm/i915/display/intel_vbt_defs.h |  5 -----
+ 2 files changed, 4 insertions(+), 20 deletions(-)
 
-		if (defined($stat) &&
-		    $stat =3D~ /$Lval\s*=3D\s*snprintf\s*\(/) {
-			etc...
-
-Maybe offer to --fix it too.
+diff --git a/drivers/gpu/drm/i915/display/intel_bios.c b/drivers/gpu/drm/i915/display/intel_bios.c
+index aa169b0055e97..8c1eb05fe77d2 100644
+--- a/drivers/gpu/drm/i915/display/intel_bios.c
++++ b/drivers/gpu/drm/i915/display/intel_bios.c
+@@ -1042,22 +1042,11 @@ parse_lfp_backlight(struct drm_i915_private *i915,
+ 	panel->vbt.backlight.type = INTEL_BACKLIGHT_DISPLAY_DDI;
+ 	panel->vbt.backlight.controller = 0;
+ 	if (i915->display.vbt.version >= 191) {
+-		size_t exp_size;
++		const struct lfp_backlight_control_method *method;
+ 
+-		if (i915->display.vbt.version >= 236)
+-			exp_size = sizeof(struct bdb_lfp_backlight_data);
+-		else if (i915->display.vbt.version >= 234)
+-			exp_size = EXP_BDB_LFP_BL_DATA_SIZE_REV_234;
+-		else
+-			exp_size = EXP_BDB_LFP_BL_DATA_SIZE_REV_191;
+-
+-		if (get_blocksize(backlight_data) >= exp_size) {
+-			const struct lfp_backlight_control_method *method;
+-
+-			method = &backlight_data->backlight_control[panel_type];
+-			panel->vbt.backlight.type = method->type;
+-			panel->vbt.backlight.controller = method->controller;
+-		}
++		method = &backlight_data->backlight_control[panel_type];
++		panel->vbt.backlight.type = method->type;
++		panel->vbt.backlight.controller = method->controller;
+ 	}
+ 
+ 	panel->vbt.backlight.pwm_freq_hz = entry->pwm_freq_hz;
+diff --git a/drivers/gpu/drm/i915/display/intel_vbt_defs.h b/drivers/gpu/drm/i915/display/intel_vbt_defs.h
+index a9f44abfc9fc2..b50cd0dcabda9 100644
+--- a/drivers/gpu/drm/i915/display/intel_vbt_defs.h
++++ b/drivers/gpu/drm/i915/display/intel_vbt_defs.h
+@@ -897,11 +897,6 @@ struct lfp_brightness_level {
+ 	u16 reserved;
+ } __packed;
+ 
+-#define EXP_BDB_LFP_BL_DATA_SIZE_REV_191 \
+-	offsetof(struct bdb_lfp_backlight_data, brightness_level)
+-#define EXP_BDB_LFP_BL_DATA_SIZE_REV_234 \
+-	offsetof(struct bdb_lfp_backlight_data, brightness_precision_bits)
+-
+ struct bdb_lfp_backlight_data {
+ 	u8 entry_size;
+ 	struct lfp_backlight_data_entry data[16];
+-- 
+2.44.0.rc0.258.g7320e95886-goog
 
