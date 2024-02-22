@@ -1,100 +1,121 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46609168BD
-	for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 05:36:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB7BD8C11
+	for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 05:40:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708580227; cv=none; b=lakNiDiHAmxp1xem02ytxZi+6d3IHfGlePqjXm0QIFm+Deb+FdHXCBnAWYUtv95mjqdDqJjirkAQ4/kcKFhm2dXi3fmIzmgulRSY2GuD801caI6+dmBZI6UOoJXSXqf9OrkqBG33b4TI/QS+i/MMQL32k+4g1+Y4E0A+X95u1eg=
+	t=1708580407; cv=none; b=rGPftGY48WURXWWC2e3jyoTemwi4T2BSMmsakeOgCfICl12Rssqt3Kju0r6ZYt1fKQMK3tEZemAj2Su9+kSuNw/cJD93rzA2Ei3NPH+gonU9ZNGZ+vMEQumC5C4+xdaMsKwfSwgGhQtTzIJt5Uj9Y02YJ6RwOCcEE2yj36vBiMY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708580227; c=relaxed/simple;
-	bh=QeI2uBjQcu057UUOzLotCkKnUelckhJN0RTsfRbGdyE=;
+	s=arc-20240116; t=1708580407; c=relaxed/simple;
+	bh=yQg5gh5MmRiYiePzpcNDaEGQQlXwpQVZ5S9UlbGqOKk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aUhlxp0DEAcYVB2Ryt7E3GSTUoB8BRzuUO+YUgb2WKTad/3n9/VPoCqLX7eQ4mwvnM4Q5Z1EPBuq1XdK0BoBSytEWhr33vUjujEuaO/2XDkE39+XsTsFVkJnMPY04fCDKeBIQwaTUm/r0aXTMFnsJJurxA8/YUNbRBiFV4vMSdo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=C2FudPtp; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=c+ng9vepjYd/0Gda7hahoIhX924zRoZ6QmSXgVtdFvM4hkapFTCFXzmV+w+ivf7Li4WsvurJPQP8uuxGI5jWdYOac5zK3qbA6lQxE1KWVuVQJFPETqd5n+/eyG4VJRrzNeLeuI6q7O1UovTRS75Fmzwsk1mhgf+ipmDhuvhLFxo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=yA3a6G4Y; arc=none smtp.client-ip=209.85.214.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="C2FudPtp"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1708580210; x=1740116210;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=QeI2uBjQcu057UUOzLotCkKnUelckhJN0RTsfRbGdyE=;
-  b=C2FudPtpG2etn2TqPBtGjbA75FybwVEgUkWIohuDnFsfmgbzvJlKMVWl
-   4CkbDAoA1n6uAMJ3ov6ncbjpUt3HpFFtGFN1EIn6BVdCj/3G0rlszS9bN
-   pw+nxcorYxDB1dUe5KqcZAfsPMj51OaH6i9Rfhopgc4GzRHpr2aWO5Me5
-   TY+A/+dR9tSk8vDHob9BjebjZlKU0koNe+sMS4AndP0TqmXlxhUjsCZ2p
-   VELqCYalWUeJpAvaU/nuSMos4WTJGIOKsdz06/p7CeLA7fsH6T4LwRSK8
-   G9NmeRhePycwy7P5PTEG8mQkXA4q53yhUX+TM/sTs8Gdku6nSxcOw9Jle
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10991"; a="13406324"
-X-IronPort-AV: E=Sophos;i="6.06,177,1705392000"; 
-   d="scan'208";a="13406324"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Feb 2024 21:36:44 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,177,1705392000"; 
-   d="scan'208";a="9975667"
-Received: from lkp-server02.sh.intel.com (HELO 3c78fa4d504c) ([10.239.97.151])
-  by fmviesa003.fm.intel.com with ESMTP; 21 Feb 2024 21:36:42 -0800
-Received: from kbuild by 3c78fa4d504c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rd1l9-00061A-2w;
-	Thu, 22 Feb 2024 05:36:39 +0000
-Date: Thu, 22 Feb 2024 13:35:56 +0800
-From: kernel test robot <lkp@intel.com>
-To: Viacheslav Bocharov <adeep@lexina.in>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Kevin Hilman <khilman@baylibre.com>,
-	Jerome Brunet <jbrunet@baylibre.com>,
-	Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-amlogic@lists.infradead.org
-Cc: oe-kbuild-all@lists.linux.dev
-Subject: Re: [PATCH v2 2/3] soc: amlogic: meson-gx-socinfo-sm: Add Amlogic
- secure-monitor SoC Information driver
-Message-ID: <202402221322.ifGMGQa6-lkp@intel.com>
-References: <20240221143654.544444-3-adeep@lexina.in>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yA3a6G4Y"
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-1dc49afb495so3347595ad.2
+        for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 21:40:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1708580405; x=1709185205; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=3Y9cstFcLJ3tBNiN3xZNH0htetDh7AF1BjirZ0v0JP4=;
+        b=yA3a6G4YY3W2ec4pZWFbuAw3o8YsO/DpZ2v/bxDBVZXjb6RSSNLWbRjCuTBWSjjxEM
+         NyvHIpg3xvN1xo+e+aK7q6SvTF5gmP+L3n9C9rK9DTl7RiGPhjecrrI7cOaaHt8ovH+u
+         yPk7P4y5E/ka7uJVrXEv6qbPkytJrSy0syBAT7GvC8p5AqgVtfVdopE9xAcae3DeY3WB
+         TOZt0F3khXRZZnQTqCZyZnre/ku4PmO2gMhG4oHu3ITmO9tOHYhAJ6ZTYrrB+AO0/QKn
+         RnVYum/M8Bqh/dhKJF17oH6GkQm/lKR2J+IgntYQiwuTQGzzkgP3JDMT6/ZacTRN6tDu
+         YPZg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708580405; x=1709185205;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=3Y9cstFcLJ3tBNiN3xZNH0htetDh7AF1BjirZ0v0JP4=;
+        b=bnfosHN8l2c6OqZIGugZEchDjr+aJFTzyb5aXjiLLAfJAaSyexrMeW0yl9mTTDNZz7
+         8AlBYomm5EeajbwTjVZ6uTJF7irbuO/B0BEcKFKldk9FOB9DzOU/YoYTEAYT2u3ntd1Q
+         WQUa1H5PcwpTWMzWUIdUgxSQKjBV1D2TEQ/+5wlSSRkpZX/AAIYeB7koFJ1GNa/UBeiP
+         TsLzz4aGtErpOzmKFzimMRqnJC2EvY8jltJUJTQp10cvXJH4WqOeXGYqCkpouY6LUXQC
+         vJkLg6wCHsJKzOK/6XDJHOqV/br4TYAokK1YyQhjdjCDyl7Rv1ZyQw8lfm5YeHzUomwz
+         ldRA==
+X-Forwarded-Encrypted: i=1; AJvYcCVrOgma/Bgk9uZoauUX9xAbufhbhypha2ZNv0RjeSGrWE8Z/xhRBR4zb8ak0ozVJ6xakkCj7yXcjEpshz+9YLyGnAyNmCFF3sL+gg4j
+X-Gm-Message-State: AOJu0YxXrRgFijnsnejJhdtTwCuhC7wSEt62ewA/iSqHSIc0pJjptXYx
+	nFuXxDmR8hxhLSOdt+7otrNv8v1dH6dN6YwCEzcxFOK8n8dleUgS5zcSBRWpYw==
+X-Google-Smtp-Source: AGHT+IFn4K4spZaFAlnGs4H1E3Uij1heQB4mMHjFctMYMEn7odiUXiBji21giUzbHQ3n3f4SslXQMg==
+X-Received: by 2002:a17:902:c402:b0:1db:28bd:2949 with SMTP id k2-20020a170902c40200b001db28bd2949mr28591618plk.0.1708580405108;
+        Wed, 21 Feb 2024 21:40:05 -0800 (PST)
+Received: from thinkpad ([117.193.212.166])
+        by smtp.gmail.com with ESMTPSA id lf5-20020a170902fb4500b001db43f3629dsm9043678plb.140.2024.02.21.21.40.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 21 Feb 2024 21:40:04 -0800 (PST)
+Date: Thu, 22 Feb 2024 11:09:58 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Konrad Dybcio <konrad.dybcio@linaro.org>
+Cc: Bjorn Andersson <andersson@kernel.org>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	cros-qcom-dts-watchers@chromium.org, linux-arm-msm@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 09/21] arm64: dts: qcom: sc8280xp: Add PCIe bridge node
+Message-ID: <20240222053958.GF3374@thinkpad>
+References: <20240221-pcie-qcom-bridge-dts-v1-0-6c6df0f9450d@linaro.org>
+ <20240221-pcie-qcom-bridge-dts-v1-9-6c6df0f9450d@linaro.org>
+ <9d6c617a-bc3a-47c4-a988-b41b804d8cfe@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20240221143654.544444-3-adeep@lexina.in>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <9d6c617a-bc3a-47c4-a988-b41b804d8cfe@linaro.org>
 
-Hi Viacheslav,
+On Wed, Feb 21, 2024 at 01:39:01PM +0100, Konrad Dybcio wrote:
+> On 21.02.2024 04:41, Manivannan Sadhasivam wrote:
+> > On Qcom SoCs, the PCIe host bridge is connected to a single PCIe bridge
+> > for each controller instance. Hence, add a node to represent the bridge.
+> > 
+> > While at it, let's remove the bridge properties from board dts as they are
+> > now redundant.
+> > 
+> > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > ---
+> >  .../dts/qcom/sc8280xp-lenovo-thinkpad-x13s.dts     |  8 -----
+> >  arch/arm64/boot/dts/qcom/sc8280xp.dtsi             | 40 ++++++++++++++++++++++
+> >  2 files changed, 40 insertions(+), 8 deletions(-)
+> > 
+> > diff --git a/arch/arm64/boot/dts/qcom/sc8280xp-lenovo-thinkpad-x13s.dts b/arch/arm64/boot/dts/qcom/sc8280xp-lenovo-thinkpad-x13s.dts
+> > index def3976bd5bb..f0a0115e08fa 100644
+> > --- a/arch/arm64/boot/dts/qcom/sc8280xp-lenovo-thinkpad-x13s.dts
+> > +++ b/arch/arm64/boot/dts/qcom/sc8280xp-lenovo-thinkpad-x13s.dts
+> > @@ -733,14 +733,6 @@ &pcie4 {
+> >  	status = "okay";
+> >  
+> >  	pcie@0 {
+> > -		device_type = "pci";
+> > -		reg = <0x0 0x0 0x0 0x0 0x0>;
+> > -		#address-cells = <3>;
+> > -		#size-cells = <2>;
+> > -		ranges;
+> > -
+> > -		bus-range = <0x01 0xff>;
+> > -
+> >  		wifi@0 {
+> 
+> This doesn't seem right, pleas use a label
+> 
 
-kernel test robot noticed the following build errors:
+Why? A node label is useful if we want to reference it at the root level in
+board dts, but here it is not.
 
-[auto build test ERROR on 9fc1ccccfd8d53dc7936fe6d633f2373fc9f62e8]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Viacheslav-Bocharov/soc-amlogic-meson-gx-socinfo-move-common-code-to-header-file/20240221-224803
-base:   9fc1ccccfd8d53dc7936fe6d633f2373fc9f62e8
-patch link:    https://lore.kernel.org/r/20240221143654.544444-3-adeep%40lexina.in
-patch subject: [PATCH v2 2/3] soc: amlogic: meson-gx-socinfo-sm: Add Amlogic secure-monitor SoC Information driver
-config: arm64-randconfig-002-20240222 (https://download.01.org/0day-ci/archive/20240222/202402221322.ifGMGQa6-lkp@intel.com/config)
-compiler: aarch64-linux-gcc (GCC) 13.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240222/202402221322.ifGMGQa6-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202402221322.ifGMGQa6-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
-   aarch64-linux-ld: Unexpected GOT/PLT entries detected!
-   aarch64-linux-ld: Unexpected run-time procedure linkages detected!
-   aarch64-linux-ld: drivers/soc/amlogic/meson-gx-socinfo-sm.o: in function `socinfo_get_chipid':
->> meson-gx-socinfo-sm.c:(.text+0xac): undefined reference to `meson_sm_call_read'
-   aarch64-linux-ld: drivers/soc/amlogic/meson-gx-socinfo-sm.o: in function `meson_gx_socinfo_sm_probe':
->> meson-gx-socinfo-sm.c:(.text+0x438): undefined reference to `meson_sm_get'
+- Mani
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+மணிவண்ணன் சதாசிவம்
