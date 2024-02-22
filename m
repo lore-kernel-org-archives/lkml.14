@@ -1,87 +1,98 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEC3114B80D;
-	Thu, 22 Feb 2024 18:46:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D17CA6E5E1
+	for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 18:47:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708627618; cv=none; b=vBI6qywTitGE1lQHpl4F14V5I/6rZYMgkWe2SXdV/4hNZR8AZIrTuCs4tOd+LcVHrCXD7im+Jjq51cXDVpHnKjdRtQuAcbKxg8bCBZoaQdVlrNxjTKvTUULQIU/GsLohzdWQsCn9jcUqoHRd4eIgHR2y1K+b/hQqqbO6RKguF5c=
+	t=1708627627; cv=none; b=PHRq0T2KZVAw0MmjIAuh5UoMd8f+p19J53aC9Y06mUhybPInPs5aYEoQmUUyvVNq7kAy/3ZHrNlYOmkGw3jdJwjEZeD9q4QvQ/qxn0bmXwXZTTEsCOro9/ihcpLlNcOH90Gvr9ARyx2H09JKrN6q6oxlclZ9sDMSFwgrdF3JZU0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708627618; c=relaxed/simple;
-	bh=feIATsbqV4hw//7gEgLmpkWOiU51YdIAqVTSU+1CWss=;
+	s=arc-20240116; t=1708627627; c=relaxed/simple;
+	bh=NwoZ/s/YB6zInacwyEad3YhKFkgtInk+ILfXRdyVvto=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ct64Bk+hvrB99IRPqLxhL0ddmJ+ieb1jt9wIRgmT5GVD1sHKoonASoX4lks2BCEPPlUpZVf39wwt1WeQFcKY+4ArfXa+DOTHsF+FI85NTcgi/jVRxTP/qpcZvA8ST8/9dW/eu7jo/rflFMM1GUCxWC38wGl+hV0pxHZUKTebc0A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ONjU6pu9; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=lDIHlzLh2k0COtwKvozwR7MhfLC9AXjOtSzT2YXvdppYcnj6yD4YuLxA3cEZPAQSy6s4M2OhvW5EiMM/4cuknc+2lgxPs6zFV6bwo4idcOplwKhqz+uJfD/eT65n0zrC9SAAc0ijBDmkGYou9BHMIhQxi6FsxqmjxLBSL26D3dc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=jZnn94kL; arc=none smtp.client-ip=209.85.210.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ONjU6pu9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D1A89C433C7;
-	Thu, 22 Feb 2024 18:46:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708627618;
-	bh=feIATsbqV4hw//7gEgLmpkWOiU51YdIAqVTSU+1CWss=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ONjU6pu9PQFbua/6XAPI7F0Z22TV+gQqfg1mm1nbggvGcU16zjpSo4y5hExoFmSuh
-	 yH3Sj8H8gMY4w3+7PI0j1G4Gr0ofkZZUKepsizr1C6SGvQWCoz7KQtn1wcL8+kTd1W
-	 nOWsMf5fDpjvzXsb08ZjEbGYmSMVlS/H8NRzfNXMl/ww9OoNJ9J5qYEMz7mFAH3DtL
-	 vROiJ6JQz4AG6gW0OIOX8J1MD+BCzqKcyILFmxMh8R1FTiFzAeuVHIX6bUN4lB1vDI
-	 EYbLfGZr8oMUEZU+epEOi1Bc4APnUXzrHVRCdwiqmxQD9fHOEkZcVOxQnZP6QYazYr
-	 YEiAmuVRj+81A==
-Date: Thu, 22 Feb 2024 18:46:53 +0000
-From: Mark Brown <broonie@kernel.org>
-To: =?utf-8?Q?Ond=C5=99ej?= Jirman <megi@xff.cz>
-Cc: linux-kernel@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>,
-	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
-	Chen-Yu Tsai <wens@csie.org>,
-	Jernej Skrabec <jernej.skrabec@gmail.com>,
-	Samuel Holland <samuel@sholland.org>,
-	Arnaud Ferraris <arnaud.ferraris@collabora.com>,
-	linux-sound@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-sunxi@lists.linux.dev
-Subject: Re: [PATCH 0/4] Add support for jack detection to codec present in
- A64 SoC
-Message-ID: <e9f22300-d303-4ca2-84ca-47f7130a0dc1@sirena.org.uk>
-References: <20240222181851.3398254-1-megi@xff.cz>
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="jZnn94kL"
+Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-6e4560664b5so1934528b3a.1
+        for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 10:47:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1708627625; x=1709232425; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=W4vpO/kuwhEAbu5lyhpp3cdM+wCLzEUK+hlVl6YVNB0=;
+        b=jZnn94kLXyYka+9eXc6AizHVEys8TFY2OiJFG7PIg2WwOoOPGz/WnjIUBC7K1XuDyA
+         N9WXbD4i43+FAb+UXraPUYghcAZtBZ9c/hsS++vfJPdXD4DWX6Tn2LFckfPHMQVQ39OA
+         b5jXaD5DSRAvbP8DPkBMeXcy0mMxLq472fvQY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708627625; x=1709232425;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=W4vpO/kuwhEAbu5lyhpp3cdM+wCLzEUK+hlVl6YVNB0=;
+        b=ep6i6jhEKD9Kmg77Lbs7HcpDg8FQvwrCrXv3Wjf/JADWyE6EMI7BtoppXzCvYpf47o
+         zFIIcP9kysQ1PuI+6/pMXc86xB3FZdEKYuVi8lDX1dS0dxwKF8htmUIWUEqDpTzk0f8f
+         Bg/9LERqhPQ9dVSDbzMswEeWtPlrRFbTS+OZ3fbFk602wsWZoomKxoTfaBvgLyWRd/we
+         Zb5h+jotNJFM1zUxSkSz+eH3XqxHNLNarI4dGnogzSlsnnMfycknfwsPvXQWT0mfVZ0Z
+         90Dcs6nW0hhM23dSDeMoOyu8LcM3GrizDz47noJTzVn+4soOhYqgN14JKfhidrtAeOcb
+         gD2g==
+X-Forwarded-Encrypted: i=1; AJvYcCUQmM6Sir6ZIaRA/+GJm2czbTXqJgInFqFORAEM8Kr2VdnfTwWf7V/nXE71n9L+EgxVoifAcPo7G+VYSISnuW2c8mDolPW3l7QmsVPk
+X-Gm-Message-State: AOJu0YxiY4IP9ywdIO8sMvTsRCBEo++rLTjKEmk1ZdasTrdcjlOOkCub
+	SpYMWYo9sNZOpJ2mvbU4+EoQpfr/9VqNWcresBGBMjUGkwjStacDl2UI+JDP9A==
+X-Google-Smtp-Source: AGHT+IHgy3WwdGAsnQPmK2m2JDsitnCNDlW/VOsDIP4yBtdVhbhIse0VsuYogkkxJuuqsoNLgdNNGw==
+X-Received: by 2002:a05:6a00:6c95:b0:6e4:6a3f:f065 with SMTP id jc21-20020a056a006c9500b006e46a3ff065mr12647864pfb.10.1708627625231;
+        Thu, 22 Feb 2024 10:47:05 -0800 (PST)
+Received: from www.outflux.net ([198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id s12-20020aa7828c000000b006e0651ec05csm11280323pfm.43.2024.02.22.10.47.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 22 Feb 2024 10:47:04 -0800 (PST)
+Date: Thu, 22 Feb 2024 10:47:04 -0800
+From: Kees Cook <keescook@chromium.org>
+To: Daniel Borkmann <daniel@iogearbox.net>
+Cc: Mark Rutland <mark.rutland@arm.com>,
+	"Gustavo A . R . Silva" <gustavoars@kernel.org>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>,
+	Yonghong Song <yhs@fb.com>,
+	John Fastabend <john.fastabend@gmail.com>,
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>,
+	Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
+	Mykola Lysenko <mykolal@fb.com>, Shuah Khan <shuah@kernel.org>,
+	Haowen Bai <baihaowen@meizu.com>, bpf@vger.kernel.org,
+	linux-kselftest@vger.kernel.org,
+	Yonghong Song <yonghong.song@linux.dev>,
+	Jonathan Corbet <corbet@lwn.net>,
+	"David S. Miller" <davem@davemloft.net>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Jesper Dangaard Brouer <hawk@kernel.org>,
+	Joanne Koong <joannelkoong@gmail.com>,
+	Yafang Shao <laoar.shao@gmail.com>, Kui-Feng Lee <kuifeng@meta.com>,
+	Anton Protopopov <aspsk@isovalent.com>,
+	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+	netdev@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v6] bpf: Replace bpf_lpm_trie_key 0-length array with
+ flexible array
+Message-ID: <202402221046.020C94D@keescook>
+References: <20240222155612.it.533-kees@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="8lkflKrUIKRf2OBT"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240222181851.3398254-1-megi@xff.cz>
-X-Cookie: I have accepted Provolone into my life!
+In-Reply-To: <20240222155612.it.533-kees@kernel.org>
 
+On Thu, Feb 22, 2024 at 07:56:15AM -0800, Kees Cook wrote:
+> Replace deprecated 0-length array in struct bpf_lpm_trie_key with
+> flexible array. Found with GCC 13:
 
---8lkflKrUIKRf2OBT
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Yay! This finally passes all of CI:
+https://patchwork.kernel.org/project/netdevbpf/patch/20240222155612.it.533-kees@kernel.org/
 
-On Thu, Feb 22, 2024 at 07:18:43PM +0100, Ond=C5=99ej Jirman wrote:
-> From: Ondrej Jirman <megi@xff.cz>
->=20
-> This series adds support for jack detection to this codec. I used
-> and tested this on Pinephone. It works quite nicely. I tested it
-> against Android headset mic button resistor specification.
-
-I'd expect to see this implementing a set_jack() operation in the CODEC
-driver and then using that from the machine driver.
-
---8lkflKrUIKRf2OBT
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmXXlpwACgkQJNaLcl1U
-h9Aifwf+I6B9/2gaBswUYDsv/V0TVHsb8CWTIaY1B3OQjSroKXN4oz/6Ez03o/B4
-pczqcwuHnhnPPgXrVzEmPYATJNWuZRxmxiqOPLLTq861s0vIhcduis6FwPQ579Xh
-CWpYoBFfGfdkQ6r5gU6kE5EF94w279M06ygBWb6yzMS902D68ds1u8GXe0blMXjd
-6kjaZF0mgiVrdSdj5+FFE7fUzMCRufBVyRqOYNnzG2wOHXr9VbdiUBbs99O8qz1v
-VB3UvBuw5mQpL7q7AYsu+bynrGhEP1UJO8onyk43BMOHK52QxpzRRDSbJe8mQF7n
-SKw4CzM2hZryreo8PhChH/dl24oj0A==
-=dtME
------END PGP SIGNATURE-----
-
---8lkflKrUIKRf2OBT--
+-- 
+Kees Cook
