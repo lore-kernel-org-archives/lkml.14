@@ -1,68 +1,70 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f178.google.com (mail-yb1-f178.google.com [209.85.219.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D71914F9CF;
-	Thu, 22 Feb 2024 15:47:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B04B14D45C
+	for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 15:48:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708616865; cv=none; b=QFl+DAcOKcG+/qVYIR6VTlP5NVrjva0tivBaezTv6oUdEvlPc/mTY3OIJT6vb0bhCEqrvSczV/5uVLHh4nKTPKp4IAxRaFr/dD1y3la/nErqkE6qbKLmbw8N5cBE8G/raxYlf9SGVnAGYNRtIxZo+DRFfjinXlBn6i+Fwffx6Do=
+	t=1708616886; cv=none; b=PtRFZrtCv/cRVTq3trBL0CRAvUNiVKJkm2nHATXNUNZJZ7hTNB9wJ/y4z56rmRSMmxsYuaUcY61SEdcZKH60xXqtsruSk7aLBpb1t0pKFvyOtfrzyBEJOUFBCkCKCkaPX7Uph8ipqfF8Y8uHuW0PWMgG7WHfMz+VvoR8+nzkaHA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708616865; c=relaxed/simple;
-	bh=qNO63zIkGbx+1iQfTUn4yfr86/RWZAYZ7RtIlx0aB0A=;
+	s=arc-20240116; t=1708616886; c=relaxed/simple;
+	bh=/URg4PQnQQuQavo2tWzU6iVHhXxnRjfAkpj2MvvU244=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XRpkuqOc8puvUYzPW4ImP1PNT0vpEMb2yPQtF4my47NmHWANJAAA3b0HlJUO+waWJwIZ2uc1i/c4CFBlooAE0rJTPu4alDJCPYhqzVltDHQ0PzvFRMOFbkde11xifZxGitUPY6IeFuDx9pnHHyXznxFCqjAGg0GTO0zCUgB70CI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=I5F/XIpi; arc=none smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=XIvISMy3yojNr8HlmF1rwCtVcNnwIkSTtf5m0/XLdiRsf44UoT2oPOf5FFekSqggvvJ+qycLhW/jLDbheT2ulk7fUvSJEaNXfVq61Gvp2X8bm6TS1A3aNfYEW/qYrWQ3mIHhnWa6YkKPG7EDqYLAhlb1rMEfMBthLJIOhj47khU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toxicpanda.com; spf=none smtp.mailfrom=toxicpanda.com; dkim=pass (2048-bit key) header.d=toxicpanda-com.20230601.gappssmtp.com header.i=@toxicpanda-com.20230601.gappssmtp.com header.b=RIEywIvv; arc=none smtp.client-ip=209.85.219.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toxicpanda.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=toxicpanda.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="I5F/XIpi"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1708616863; x=1740152863;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=qNO63zIkGbx+1iQfTUn4yfr86/RWZAYZ7RtIlx0aB0A=;
-  b=I5F/XIpiFZaWge5uEF4T6e5YwleZuX3hmtUyiMnn35h+h+WMCrdg704h
-   b0tj9IFNEiQ4Ab0eqIQI3CZTomamEuyqGzrXb52/244S4KufmRA6YwfCm
-   LQ++olQqQMh5XSUd/jYJDHztUBa0h4I97UBBhQVjdPx8pevzplKlx1CNX
-   x1wZpagItgybI8NCxC2tgGdktw9REDGcwbVFFcpv/1CEpI3EU23XY4RDc
-   a5LNhhIxwgMy8zJGNpoyNVDascT0aQZ/+aMB9A9AznyafRNCmY5CqJE8q
-   zWf0oxQyLDceMj9xAAzgIY6BenYVpUFYegsVnVkINeFH5h7jeKzt2O+Lw
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10992"; a="2986570"
-X-IronPort-AV: E=Sophos;i="6.06,179,1705392000"; 
-   d="scan'208";a="2986570"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Feb 2024 07:47:42 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10992"; a="913545306"
-X-IronPort-AV: E=Sophos;i="6.06,179,1705392000"; 
-   d="scan'208";a="913545306"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Feb 2024 07:47:38 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.97)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1rdBIN-00000006fSw-0zPE;
-	Thu, 22 Feb 2024 17:47:35 +0200
-Date: Thu, 22 Feb 2024 17:47:34 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Herve Codina <herve.codina@bootlin.com>
-Cc: Vadim Fedorenko <vadim.fedorenko@linux.dev>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Yury Norov <yury.norov@gmail.com>,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org, Andrew Lunn <andrew@lunn.ch>,
-	Mark Brown <broonie@kernel.org>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v4 4/5] net: wan: fsl_qmc_hdlc: Add runtime timeslots
- changes support
-Message-ID: <Zddslpw398MJ49SS@smile.fi.intel.com>
-References: <20240222142219.441767-1-herve.codina@bootlin.com>
- <20240222142219.441767-5-herve.codina@bootlin.com>
+	dkim=pass (2048-bit key) header.d=toxicpanda-com.20230601.gappssmtp.com header.i=@toxicpanda-com.20230601.gappssmtp.com header.b="RIEywIvv"
+Received: by mail-yb1-f178.google.com with SMTP id 3f1490d57ef6-dcc86086c9fso2227172276.3
+        for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 07:48:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=toxicpanda-com.20230601.gappssmtp.com; s=20230601; t=1708616884; x=1709221684; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=QIa8oVIZuT7lP1k8X8l2WJQdq609coU/Nz2aGnBWwe4=;
+        b=RIEywIvvscu1E8xViuV4ZuAJOikoT2p1+xmOQaCMPZpoQ5BUx/TnMjs2uOiFXVRR5t
+         Phh57Z4wdTLREqHqs61NjoO3Iknt5R4e49VX887QUDXR/WQfNIjffCEOLEp+hzX2JfSQ
+         7mYiEamFKSWVW4qKy756x+ZdsL850EDSFBQ6aT2vDN0O6LWiu1D1IsEHpKgwq/EUuk+w
+         fy1d5afa6gPYlpjt/rxtXtUmLRtfYb4zRb0KJR/wAf/ZwfTJ3VurlPCdyt1ySZZwf7Ey
+         MW3R+XNomF88wZDCrC9WcSAzOoWZSHsPQfwAC2w8ZgWdrfCdK4VZeLpiBusKI1ZhDuIb
+         BdSQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708616884; x=1709221684;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=QIa8oVIZuT7lP1k8X8l2WJQdq609coU/Nz2aGnBWwe4=;
+        b=gauiw+YZmn5lKgrSCHtQgk9IwYwT4H3JrYwzYY7hssoVOTxBLlZGj1R8BbCnfz6mRK
+         tafG6p8Szk3xU8kss0GpfKgN5t5eYBReDvxFcG9yISlZPgAuyFjLBbex7bhkPPjnnByn
+         oGZ5b0ucWqgkAD1Cr4te/EX+8kqEZLNY7CN09tQTWysGVPLw8itqTkK6E1Bh32cspOi4
+         rx4Q/5M8RWtzZxAcTJaO90knbIZYjctPdygAmcH6Tqpu/LJmpiE+almaoyAosQT1KbIC
+         K1utFb3oAkmuur5OUh0jE4TfYLxpdhE+PlN2C/V6EO4mEvYneq6QZilr+wGZTllvBSfw
+         c2WA==
+X-Forwarded-Encrypted: i=1; AJvYcCU6S89EclNcuMnYph0FyRaMYhxFLvNbU3SsHgHlKBRu8iNpYk+q5wHx8Y6I+zWBDf0lbcpb5bK1OkBYNW6ZiubQNaFE/Z2bCFYi8/9T
+X-Gm-Message-State: AOJu0YxQGSERh1uHYkmKE7VTTHtCAEzDleSSnqHldu0b7eG4UbHYE9y0
+	pGlgs4ypAcDkrRlt7dyYLJd6ty84d5SisTvOXcasFjlwFp9IqTkV/aVZqKE68XU=
+X-Google-Smtp-Source: AGHT+IHeRNYTHAQHlTw6FyZDjFXRERNo4oRgHEr44ZmqBtCgNvJrfmcbtG60abBs4SP3t2oerm+vSw==
+X-Received: by 2002:a25:8b85:0:b0:dcd:2f2d:7a05 with SMTP id j5-20020a258b85000000b00dcd2f2d7a05mr2616558ybl.35.1708616884094;
+        Thu, 22 Feb 2024 07:48:04 -0800 (PST)
+Received: from localhost (076-182-020-124.res.spectrum.com. [76.182.20.124])
+        by smtp.gmail.com with ESMTPSA id w131-20020a253089000000b00dc25d5f4c75sm2942698ybw.10.2024.02.22.07.48.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 22 Feb 2024 07:48:03 -0800 (PST)
+Date: Thu, 22 Feb 2024 10:48:02 -0500
+From: Josef Bacik <josef@toxicpanda.com>
+To: Miklos Szeredi <miklos@szeredi.hu>
+Cc: Kent Overstreet <kent.overstreet@linux.dev>,
+	linux-bcachefs@vger.kernel.org, linux-btrfs@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+	lsf-pc@lists.linux-foundation.org
+Subject: Re: [LSF TOPIC] statx extensions for subvol/snapshot filesystems &
+ more
+Message-ID: <20240222154802.GA1219527@perftesting>
+References: <2uvhm6gweyl7iyyp2xpfryvcu2g3padagaeqcbiavjyiis6prl@yjm725bizncq>
+ <CAJfpeguBzbhdcknLG4CjFr12_PdGo460FSRONzsYBKmT9uaSMA@mail.gmail.com>
+ <20240221210811.GA1161565@perftesting>
+ <CAJfpegucM5R_pi_EeDkg9yPNTj_esWYrFd6vG178_asram0=Ew@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -71,79 +73,60 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240222142219.441767-5-herve.codina@bootlin.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <CAJfpegucM5R_pi_EeDkg9yPNTj_esWYrFd6vG178_asram0=Ew@mail.gmail.com>
 
-On Thu, Feb 22, 2024 at 03:22:17PM +0100, Herve Codina wrote:
-> QMC channels support runtime timeslots changes but nothing is done at
-> the QMC HDLC driver to handle these changes.
+On Thu, Feb 22, 2024 at 10:14:20AM +0100, Miklos Szeredi wrote:
+> On Wed, 21 Feb 2024 at 22:08, Josef Bacik <josef@toxicpanda.com> wrote:
+> >
+> > On Wed, Feb 21, 2024 at 04:06:34PM +0100, Miklos Szeredi wrote:
+> > > On Wed, 21 Feb 2024 at 01:51, Kent Overstreet <kent.overstreet@linux.dev> wrote:
+> > > >
+> > > > Recently we had a pretty long discussion on statx extensions, which
+> > > > eventually got a bit offtopic but nevertheless hashed out all the major
+> > > > issues.
+> > > >
+> > > > To summarize:
+> > > >  - guaranteeing inode number uniqueness is becoming increasingly
+> > > >    infeasible, we need a bit to tell userspace "inode number is not
+> > > >    unique, use filehandle instead"
+> > >
+> > > This is a tough one.   POSIX says "The st_ino and st_dev fields taken
+> > > together uniquely identify the file within the system."
+> > >
+> >
+> > Which is what btrfs has done forever, and we've gotten yelled at forever for
+> > doing it.  We have a compromise and a way forward, but it's not a widely held
+> > view that changing st_dev to give uniqueness is an acceptable solution.  It may
+> > have been for overlayfs because you guys are already doing something special,
+> > but it's not an option that is afforded the rest of us.
 > 
-> Use existing IFACE ioctl in order to configure the timeslots to use.
+> Overlayfs tries hard not to use st_dev to give uniqueness and instead
+> partitions the 64bit st_ino space within the same st_dev.  There are
+> various fallback cases, some involve switching st_dev and some using
+> non-persistent st_ino.
+> 
+> What overlayfs does may or may not be applicable to btrfs/bcachefs,
+> but that's not my point.  My point is that adding a flag to statx does
+> not solve anything.   You can't just say that from now on btrfs
+> doesn't have use unique st_ino/st_dev because we've just indicated
+> that in statx and everything is fine.   That will trigger the
+> no-regressions rule and then it's game over.  At least I would expect
+> that to happen.
 
-...
+Right, nobody is arguing that.  Our plan is to
 
-> +static int qmc_hdlc_xlate_slot_map(struct qmc_hdlc *qmc_hdlc,
-> +				   u32 slot_map, struct qmc_chan_ts_info *ts_info)
-> +{
-> +	DECLARE_BITMAP(ts_mask_avail, 64);
-> +	DECLARE_BITMAP(ts_mask, 64);
-> +	DECLARE_BITMAP(map, 64);
+1) Introduce some sort of statx mechanism to expose this information.
+2) Introduce an incompat fs feature flag to give unique inode numbers for people
+   that want them, and there stop doing the st_dev thing we currently do.
+3) Continue doing the st_dev thing we currently do for the non-feature flag
+   case.
+4) Wait 50 years and then maybe stop doing the st_dev thing once people have
+   adopted whatever statx flag has been introduced.  God willing I will have
+   been hit by a bus well before then.
 
-Perhaps more 1:1 naming?
+Nobody is arguing about reverting existing behavior, we're stuck with it.
 
-	DECLARE_BITMAP(rx_ts_mask_avail, 64);
-	DECLARE_BITMAP(tx_ts_mask, 64);
-	DECLARE_BITMAP(slot_map, 64);
+We're trying to define how we'd like it to look going forward, and start working
+towards that.  Thanks,
 
-> +	/* Tx and Rx available masks must be identical */
-> +	if (ts_info->rx_ts_mask_avail != ts_info->tx_ts_mask_avail) {
-> +		dev_err(qmc_hdlc->dev, "tx and rx available timeslots mismatch (0x%llx, 0x%llx)\n",
-> +			ts_info->rx_ts_mask_avail, ts_info->tx_ts_mask_avail);
-> +		return -EINVAL;
-> +	}
-> +
-> +	bitmap_from_u64(ts_mask_avail, ts_info->rx_ts_mask_avail);
-> +	bitmap_from_u64(map, slot_map);
-> +	bitmap_scatter(ts_mask, map, ts_mask_avail, 64);
-> +
-> +	if (bitmap_weight(ts_mask, 64) != bitmap_weight(map, 64)) {
-> +		dev_err(qmc_hdlc->dev, "Cannot translate timeslots %*pb -> (%*pb, %*pb)\n",
-> +			64, map, 64, ts_mask_avail, 64, ts_mask);
-
-
-You can save a bit of code and stack:
-
-		dev_err(qmc_hdlc->dev, "Cannot translate timeslots %64pb -> (%64pb, %64pb)\n",
-			slot_map, rx_ts_mask_avail, tx_ts_mask);
-
-> +		return -EINVAL;
-> +	}
-> +
-> +	bitmap_to_arr64(&ts_info->tx_ts_mask, ts_mask, 64);
-> +	ts_info->rx_ts_mask = ts_info->tx_ts_mask;
-> +	return 0;
-> +}
-
-...
-
-> +static int qmc_hdlc_xlate_ts_info(struct qmc_hdlc *qmc_hdlc,
-> +				  const struct qmc_chan_ts_info *ts_info, u32 *slot_map)
-
-Similar comments apply as per above function.
-
-...
-
-> +	ret = qmc_chan_get_ts_info(qmc_hdlc->qmc_chan, &ts_info);
-> +	if (ret) {
-> +		dev_err(qmc_hdlc->dev, "get QMC channel ts info failed %d\n", ret);
-> +		return ret;
-
-		return dev_err_probe(...);
-
-> +	}
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Josef
