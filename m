@@ -1,388 +1,166 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+Received: from EUR01-HE1-obe.outbound.protection.outlook.com (mail-he1eur01on2078.outbound.protection.outlook.com [40.107.13.78])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C09879EA
-	for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 07:12:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708585932; cv=none; b=CF7FDGS7ruBYcT5H4eei38woRVLSdSTn/ljxkuNydPDO59ziC6yOkqH8m94G+GMKnKGylIFYwFR8N6eqKnntAFByvMkftaYD48+RV15OxGCMgKTqUAA/zMOQWR7EISedLH19xkt6ch+zF5O/bv9JmRMtZNLJ7cfZCA385lqPdq0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708585932; c=relaxed/simple;
-	bh=hAfXNy4sb7G8TJrzhOnBQmLGKQF74NZNJB0HnSgbT8o=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=ABmlW7BkJB2SIhLOjXkb9ucfPrQTLq9SWAIcBgAOYMwVKkfkots0uW+kFJBoz1NK8E3GxRKy3+1gn2tQpjuMLEaCuktj3I9sgSRGWHWixMNIYnWG0vuEIf1wfOqoT4BqEddQxMxVV31O1obIg5TwNhfuPhpWZj6DkOndzl45Rqs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Nupqupw0; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FFC3748F;
+	Thu, 22 Feb 2024 07:16:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.13.78
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1708586187; cv=fail; b=MjHPCKLmU/U8zWKaQABEnU4y9+gTjluA+5aa1cRFpiwJOZH0fp3xxfH8iTrdLv0RGaGpZtM44WjBIEpa/J12YQWGMEPz3hWjBaFGz8bwa+HFW87fjUroZBXrTrtjYRPKN+FkVMHlw6jpOlCd316Ie6AEkXM/Uld937Z0+uqk6Ww=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1708586187; c=relaxed/simple;
+	bh=kHI1xJcOy6sXKqLp3vEwZwdPZiZ7T1R7yRRqLJXu18c=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=eStRmykkC4As4FAA4Ba7IlMqxv8uKt2COOJdrQVA5sCiNrXejWpUUdF86TmISUVcsTAc7ZoNTG3VT/sFTJkT62RZusKORgG8k4Pk683ozyI0czE2nlvR1zrifT5iy/I1jABScDyJZg334Wpz7zRJq9nDsyav4AscXBAGrlxkdVI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=siemens.com; spf=pass smtp.mailfrom=siemens.com; dkim=pass (2048-bit key) header.d=siemens.com header.i=@siemens.com header.b=ssrbw1bR; arc=fail smtp.client-ip=40.107.13.78
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=siemens.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=siemens.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Nupqupw0"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1708585930; x=1740121930;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version;
-  bh=hAfXNy4sb7G8TJrzhOnBQmLGKQF74NZNJB0HnSgbT8o=;
-  b=Nupqupw0sWOINYLgwNVLPEzrV0iYqO4rqVWYwa5qJmmuPLIKIh+pQZX0
-   AlUcdq1fOJJFzcN6nIWwlNhijdIu/KSTCBuof3YwxDaDNxfOAzwA/nwNC
-   pTke1a/GZNgZLsA3fc2q8ByAiKTSESMVL7a9asAKQWfkqoI26OHIt65e8
-   uJczxJ0eygD0h/eMahtuXtglEYzqVWOetkB2wtzxuZqoqrL5fnt3WS7HS
-   syafw5FgizQGSmMhlUe37GKTQ7Z9OnCM4kpvteoxA6wDWt4xRt9Gbg9g2
-   CaCsbYVVjuBkaa5kOVAswuOod0xKGXToz0O4rxT6YxRYPoBSw+HCFBvN4
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10991"; a="2708653"
-X-IronPort-AV: E=Sophos;i="6.06,177,1705392000"; 
-   d="scan'208";a="2708653"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Feb 2024 23:12:09 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,177,1705392000"; 
-   d="scan'208";a="28553917"
-Received: from yhuang6-desk2.sh.intel.com (HELO yhuang6-desk2.ccr.corp.intel.com) ([10.238.208.55])
-  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Feb 2024 23:12:06 -0800
-From: "Huang, Ying" <ying.huang@intel.com>
-To: Gregory Price <gourry.memverge@gmail.com>
-Cc: linux-mm@kvack.org,  linux-kernel@vger.kernel.org,  hannes@cmpxchg.org,
-  dan.j.williams@intel.com,  dave.jiang@intel.com,  Gregory Price
- <gregory.price@memverge.com>
-Subject: Re: [RFC 1/1] mm/mempolicy: introduce system default interleave
- weights
-In-Reply-To: <20240220202529.2365-2-gregory.price@memverge.com> (Gregory
-	Price's message of "Tue, 20 Feb 2024 15:25:29 -0500")
-References: <20240220202529.2365-1-gregory.price@memverge.com>
-	<20240220202529.2365-2-gregory.price@memverge.com>
-Date: Thu, 22 Feb 2024 15:10:11 +0800
-Message-ID: <87wmqxht4c.fsf@yhuang6-desk2.ccr.corp.intel.com>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	dkim=pass (2048-bit key) header.d=siemens.com header.i=@siemens.com header.b="ssrbw1bR"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=DNiIy/xhhxyAmX8ny57tgDIFEN+yxbKS5W1Boq/skSc4WMYnpf/u+4mbZ1XheGdCy7yujtd6bFtX8ElnENPn1lRg1nIcA7ZJoAtzMzTamUy6/ZgSXy1gMLXxFAwhqpXysfttul8xYRbMRIGoiQsxX+Y8Jg8BlZIUVTXiJXkEswRLRVi/fegT1nbdTSAJ+hrFfCdpu3HziflS1Q9nMAG4DTNtD5oVHcTtzitOqVfKasWGL6EkEaM4G/FphccH6QSfulbU7Rp1prGi5yklNUMRyuGJ9wwJcNIMEsJwe1/H16YW2cWw2AbukTQfYsafopcbFBFH8zv+Xjr2KnUrictd2A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=kHI1xJcOy6sXKqLp3vEwZwdPZiZ7T1R7yRRqLJXu18c=;
+ b=jDgp1Bnxt8uVBxtDXcQdeTjgmTJYdONbDRjqWmpG1UnElhqviKJFCnUNL4yufhzytGfY9trWvozQnelQQPipXfLp2baTC9XTJ+5Qjrntd+eqJ9dAUWGnSWqulvZroPQdj2APK+nvRkW6aZiTiFl8BrT0k4pk+RLjSoElTX3/XmPW04ITJPxcFBANLlK1eN/kMk8qP/IUx4UD6mR8gj/qSyv00PZuSnmc0L5548a37j5ZsYFwPiaUI1Bj5WQshXraoG3CgP/lLpxo2qSWPufq76/eceBg60bkmbkvwl7xda/qcA9n5atdAuqX/2EG5K4v2BbqgKSWd7WpIeYZXYY/pA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=siemens.com; dmarc=pass action=none header.from=siemens.com;
+ dkim=pass header.d=siemens.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=siemens.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=kHI1xJcOy6sXKqLp3vEwZwdPZiZ7T1R7yRRqLJXu18c=;
+ b=ssrbw1bRQCeWHspdGv0+IzkZUhOcn0l+JTYoe/EbBjIO/lvKoaBWwMNdAHQZYJP4/NfqvcJzRPLLdFlU4txjjZLfNniOwVqr3JvaLKqrK5v2rJ/TsPbkVHT8mZmZLEJ5BqnqLbIjX5FZyUHyFDYr9H/lQdb7T5RGjHC3emctiVSjw8XfmAVGKfVXsOGRT55SxwacluG9MORxzIgMot3JQm5Iqm5aND2Qt9oIZ1X6Q7LWFUM8Fd4oWPWnEFD2cdb6S0urX98UK6COgpcrgFAdZtnfD1eJpcFNT2OGr544ndxglLgQ/SEQ2i6LTkTACfCbHaozCRmlxnBt2gLcqtP27w==
+Received: from AS8PR10MB6867.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:20b:5b6::22)
+ by AS4PR10MB5718.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:20b:4f4::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7292.31; Thu, 22 Feb
+ 2024 07:16:20 +0000
+Received: from AS8PR10MB6867.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::89d3:24a6:587e:51f]) by AS8PR10MB6867.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::89d3:24a6:587e:51f%4]) with mapi id 15.20.7292.036; Thu, 22 Feb 2024
+ 07:16:20 +0000
+From: "Sverdlin, Alexander" <alexander.sverdlin@siemens.com>
+To: "andrew@lunn.ch" <andrew@lunn.ch>
+CC: "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "sre@kernel.org"
+	<sre@kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH RFC] power: reset: restart-poweroff: convert to module
+Thread-Topic: [PATCH RFC] power: reset: restart-poweroff: convert to module
+Thread-Index: AQHaZO3fdSvNdjfmzUuXjfeFOMKscbEVV64AgACchoA=
+Date: Thu, 22 Feb 2024 07:16:20 +0000
+Message-ID: <35e30e3260f6669b28dcdde6ea58f480eac3db91.camel@siemens.com>
+References: <20240221174610.3560775-1-alexander.sverdlin@siemens.com>
+	 <6964c19f-6ffb-4d9a-bc02-ffaf52aa23b5@lunn.ch>
+In-Reply-To: <6964c19f-6ffb-4d9a-bc02-ffaf52aa23b5@lunn.ch>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=siemens.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: AS8PR10MB6867:EE_|AS4PR10MB5718:EE_
+x-ms-office365-filtering-correlation-id: 30624b71-6a18-47a1-28a4-08dc33762b33
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info:
+ UDfaq2h0Mc7WrSuB3wWdKSxZko09vf+KMRo2vamgLeybaffmON6VLz5KSG+O5kmHwfKV8T5IOc3hGVu6rQYxvjM6IXdlavB/UJF/cTDvrce9w13vtAblCpyQVhQLZiuwEJ41qtFYShnPHgmGYsCFag1qXIgeI8EjiSrQkAPFu751HRUX1G7n1aEfPXanX+78vfdXlw10zAHurVnfIMjb+4/8pxnfM1ritpKezmO+zqn8bURGeqTZFrRDlGpcSlf29wexOVxYp8XlgRayefMp6I4FG6Rej5OE2S3fO7HmrtAC1d7GoGTZegIsAMQNy3Pil9L705AnjjFhaVez4yIVo7vAOjtTM3vYclUE+zlLEgmsCOL1y5XPWobYDChXhi+z0Zv6sJmQN8pibHU7yXM/Dn8LznodXmDCQuneiNmZPw2tpAz6DnCGaoNjvqBk7bhvzvWziYVlkMKaq7w1U8S4cqY85vfnjBqQr6rZyMnL9zS3oGguHVfpsfinBVWsoGcdfeQhaZ/qjBWBz9g049gGJM771xYb/MGUH9ZeYijWc+KKLiyk5dHtf96dWs8dfvBUweRhFudEujlbv037wy3zLkS0C7UohxFgc2m7XTENGWQ=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AS8PR10MB6867.EURPRD10.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230031)(38070700009);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?utf-8?B?SWh3TDlvb1pPMW9OSkdEM21wWWhNUytqK2pxQzNwSmErZkZ1bC9hdXgrTElH?=
+ =?utf-8?B?UEZrSUgxZmdxN1RCaXJqcU0wQUEvN2gyU1Q5VmkwMWhPZkYxaUpXUUZvSUIy?=
+ =?utf-8?B?QmoxTXQxNkVnTGdZL0xBektoL3NwaFZVUW5UM2c5QnI4M3g4RHVKVTBiMWNp?=
+ =?utf-8?B?cTVzbFpFbll1UnBnNjUvWTRmaVdPSjBlQ2RFei94ZmtPdTBrN0FTVGg5NGV5?=
+ =?utf-8?B?eUFWRCsxRGR3aExRY1ZabjNWTGdVL05qS0NaNjJ0RkhQemF0VDNBVjVTNzFW?=
+ =?utf-8?B?QmxUcUpCTkREblp6REtCb010a1FRN3B2M3FyRnlZTUdPVU9mR0dJNm9WMWc4?=
+ =?utf-8?B?U3ppTHQ4STVtUU55ZWtONWV0RTdHblprRERKK1BpemE5V05SRFlVcUNwaVNZ?=
+ =?utf-8?B?L3JTMkpmYW9BZjAyeHNPWU1yTTBMRUhLZWt5SUlWczQxOG9uaHRadnBUVUd5?=
+ =?utf-8?B?ZW9lak9KNEgrclM5ZENaSHlBcW1sSUplaDlPbjk0TnBVc1RZWFhRZDZlT0ZT?=
+ =?utf-8?B?L2lWdklXZUFFVjdnZk1uM2FyNVluM2FVdUZGaEZydk8ydEIrQUZSVmkzZ1lV?=
+ =?utf-8?B?Rk5WUE8zcGtVN3VLeEdIMmYwZmU3eEh6dDQ3ajNYaUV2bU0xdTNGcXhFNFJa?=
+ =?utf-8?B?cHJZYWsvRXk0TVhkSThOZDZ0Y3RhUytpVlZ0NFdZWkF2M05BYnVKNFFRVE1k?=
+ =?utf-8?B?ZXRXRzg3c2RaTHl1VTZESjBRbTk2bVI5Z2RESmtJdHFybk5tc0U5T0EyVmpG?=
+ =?utf-8?B?YlE3ZWlhRldIRm5TQlV4TTd5c283SXRQVWxpZnIvaGM5TEp2TDhIT1BmUkl5?=
+ =?utf-8?B?REl2MkdQOHBXY09vMEFZdWJFeURrM084bmt0V1lHejF4WXJwM0QrZ3pEcy9R?=
+ =?utf-8?B?QWFHNEJUN29IK2gvQ2FYQU1MR3U4TExxRUtqYWtVZ2JZaXJ5eDlrVzNEVVN5?=
+ =?utf-8?B?VmVtUThISlVoZForZnJML0FVQktNQVhCZTNxdllCVEY0RHJTVnlrL3ZWY0FZ?=
+ =?utf-8?B?ZFQycXpFaUp2L3pZZnZPMTBwRmVJdWVsVUh6L2tEYkxiejBDWWJuaEZwc1J2?=
+ =?utf-8?B?eXlBZG01anZJUjAvL21lSFZFL3pFdW5lN0lBeVJrR3JqVjNoWGRhVUVvYVZ0?=
+ =?utf-8?B?dkNIbzk1emtRTDhiRGJJRFBjZ0kwKytUTmhZOUY1QnREU1RwME1VTlZKZDlo?=
+ =?utf-8?B?blpzdnNTNjF5cGRwbGFDa0ZXNUJmZVN1emZzaGVBbldTZ1N5VVRRaGl1V2sz?=
+ =?utf-8?B?TC8rSnp5VElMeTQyK0hlRWVacDhzZHluOUplSGZJZkNmaWVvUmJIaVhNVTdI?=
+ =?utf-8?B?MEtESytGTkNCWWpzT1A5Qm91M2o4NHRIb2pTbWZJOU95anoxeFNZQXpTSjJv?=
+ =?utf-8?B?K1NBTG1BMytURkE0dStEVGVJWmt4VkZ2blpVMHdIVkgwd0NTTDRiMkltZGpN?=
+ =?utf-8?B?OUJtbmhFbks4RCt3OTZyVVNsTmNoSnZPSkV0U253M0lGK1hUWEtzbVpoY3cx?=
+ =?utf-8?B?aUlvWnRRVkdCVzI1SUZEVFpqUUZnVU42VE4zMlNpaFRTa1N2WjRaL1NZQVBR?=
+ =?utf-8?B?N0wraXJOZ0RPOTJZQ215Tk5wb1pZdDZFRyt6U3FuVThQRDdTNkY5dS9lcGFz?=
+ =?utf-8?B?MENQeWEveDNkT0x1WFkzQUVoQjJnQ1pnZlRtM3lEQWtiK2NPaGhNZEVhWmFv?=
+ =?utf-8?B?VFJJc1FvQ2NtczNIaGRFQkUrSUhDQUdidllyd1U5bHRLVzhnWkoxQnVlVEsv?=
+ =?utf-8?B?WXZrODNHZHRnQ1Flek9rS0o3bFRMNmhsWEFqU0NmVnRWQlg0ZnByU3Bib1Bm?=
+ =?utf-8?B?MzQ5NTdzRmN2NEdvUmRDN3EyN1JYa0diVUZBT2FYWXJCcW1EK1JQU1V0Vm1z?=
+ =?utf-8?B?OCtqc2EyajFDbjI2ZmxBRG9ZOEZoMjl0N0RzcHArU2tvT2dwS0pzVlZBNEJJ?=
+ =?utf-8?B?MVNBNnFObExoMXYwSlZ4c0RyYm5tdm1WOHBLSHhpRkFwRlkxZU9HMXc4c3Nr?=
+ =?utf-8?B?OEt1cXFZQ0xyakswWUt5RjJCYjRUV1VuTW9GM3k2YVh2UnIrWlp2a3BUREdR?=
+ =?utf-8?B?REk2ZTkwSWZjMnlYb3pxYlJxTllHdTNCS1FkWGN2REw4V0pqeU55V0w1US9X?=
+ =?utf-8?B?ZDFtRkZTRWtrUjVNeDUySEZyOXBLYXVJTmUvaUVGZWhZRk1qR2pZVUp6cXMr?=
+ =?utf-8?Q?5vD1utDZff0gO27rFo6t3O0=3D?=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <09DC6181FFFCC94EBC90FC024C6376BC@EURPRD10.PROD.OUTLOOK.COM>
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=ascii
+X-OriginatorOrg: siemens.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: AS8PR10MB6867.EURPRD10.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-Network-Message-Id: 30624b71-6a18-47a1-28a4-08dc33762b33
+X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Feb 2024 07:16:20.3141
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 38ae3bcd-9579-4fd4-adda-b42e1495d55a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: pjZ5ace5ohv8isIByyrlXHktgp9zyhoQtKnph3eM9kQ4RdokyQADBKvrN9h5MEMPXYOMxlKKfQOW0DJwFFtR0pwJz8rqslId4ozU6MejZhQ=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS4PR10MB5718
 
-Hi, Gregory,
-
-Thanks a lot for working on this!
-
-Gregory Price <gourry.memverge@gmail.com> writes:
-
-> Startup and hotplug code may register HMAT data for memory
-> devices. Utilize this data to generate reasonable default
-> weighted interleave values.
->
-> Introduce `mempolicy_set_node_perf()`. A function which can
-> be invoked from node and CXL code to have mempolicy rebalance
-> the system default interleave weights.
->
-> mempolicy_set_node_perf() cache's each node's bandwidth (in
-> this patch: min(read_bw, write_bw)), and recalculates the weight
-> associated with each node.  After weights are calculated, we use
-> gcd() to reduce these weights to the smallest amount possible in
-> and effort to more aggressively interleave on smaller intervals.
->
-> For example, a 1-socket system with a CXL memory expander which
-> exposes 224GB/s and 64GB/s of bandwidth respectively will end
-> up with a weight array of [7,2].
->
-> The downside of this approach is that some distributes may
-> experience large default values if they happen to a bandwidth
-> distribution that includes an unfortunate prime number, or if
-> any two values are co-prime.
->
-> Signed-off-by: Gregory Price <gregory.price@memverge.com>
-> ---
->  drivers/acpi/numa/hmat.c  |   1 +
->  drivers/base/node.c       |   7 +++
->  include/linux/mempolicy.h |   4 ++
->  mm/mempolicy.c            | 129 ++++++++++++++++++++++++++++++--------
->  4 files changed, 116 insertions(+), 25 deletions(-)
->
-> diff --git a/drivers/acpi/numa/hmat.c b/drivers/acpi/numa/hmat.c
-> index d6b85f0f6082..7935d387e001 100644
-> --- a/drivers/acpi/numa/hmat.c
-> +++ b/drivers/acpi/numa/hmat.c
-> @@ -20,6 +20,7 @@
->  #include <linux/list_sort.h>
->  #include <linux/memregion.h>
->  #include <linux/memory.h>
-> +#include <linux/mempolicy.h>
->  #include <linux/mutex.h>
->  #include <linux/node.h>
->  #include <linux/sysfs.h>
-> diff --git a/drivers/base/node.c b/drivers/base/node.c
-> index 1c05640461dd..30458df504b4 100644
-> --- a/drivers/base/node.c
-> +++ b/drivers/base/node.c
-> @@ -7,6 +7,7 @@
->  #include <linux/init.h>
->  #include <linux/mm.h>
->  #include <linux/memory.h>
-> +#include <linux/mempolicy.h>
->  #include <linux/vmstat.h>
->  #include <linux/notifier.h>
->  #include <linux/node.h>
-> @@ -214,6 +215,12 @@ void node_set_perf_attrs(unsigned int nid, struct access_coordinate *coord,
->  			break;
->  		}
->  	}
-> +
-> +	/* When setting CPU access coordinates, update mempolicy */
-> +	if (access == ACCESS_COORDINATE_CPU) {
-> +		if (mempolicy_set_node_perf(nid, coord))
-> +			pr_info("failed to set node%d mempolicy attrs\n", nid);
-> +	}
->  }
->  
->  /**
-> diff --git a/include/linux/mempolicy.h b/include/linux/mempolicy.h
-> index 931b118336f4..d564e9e893ea 100644
-> --- a/include/linux/mempolicy.h
-> +++ b/include/linux/mempolicy.h
-> @@ -11,6 +11,7 @@
->  #include <linux/slab.h>
->  #include <linux/rbtree.h>
->  #include <linux/spinlock.h>
-> +#include <linux/node.h>
->  #include <linux/nodemask.h>
->  #include <linux/pagemap.h>
->  #include <uapi/linux/mempolicy.h>
-> @@ -177,6 +178,9 @@ static inline bool mpol_is_preferred_many(struct mempolicy *pol)
->  
->  extern bool apply_policy_zone(struct mempolicy *policy, enum zone_type zone);
->  
-> +extern int mempolicy_set_node_perf(unsigned int node,
-> +				   struct access_coordinate *coords);
-> +
->  #else
->  
->  struct mempolicy {};
-> diff --git a/mm/mempolicy.c b/mm/mempolicy.c
-> index ba0b2b81bd08..0a82aa51e497 100644
-> --- a/mm/mempolicy.c
-> +++ b/mm/mempolicy.c
-> @@ -109,6 +109,7 @@
->  #include <linux/mmu_notifier.h>
->  #include <linux/printk.h>
->  #include <linux/swapops.h>
-> +#include <linux/gcd.h>
->  
->  #include <asm/tlbflush.h>
->  #include <asm/tlb.h>
-> @@ -139,31 +140,114 @@ static struct mempolicy default_policy = {
->  static struct mempolicy preferred_node_policy[MAX_NUMNODES];
->  
->  /*
-> - * iw_table is the sysfs-set interleave weight table, a value of 0 denotes
-> - * system-default value should be used. A NULL iw_table also denotes that
-> - * system-default values should be used. Until the system-default table
-> - * is implemented, the system-default is always 1.
-> + * The interleave weight tables denote what weights should be used with
-> + * the weighted interleave policy.  There are two tables:
-> + *    - iw_table : the sysfs-set interleave weight table
-> + *    - default_iw_table : the system default interleave weight table.
->   *
-> - * iw_table is RCU protected
-> + * If the iw_table is NULL, default_iw_table values are used.
-> + * If both tables are NULL, a minimum weight of 1 is always used.
-> + * A value of 0 in the iw_table means the system default value will be used.
-> + *
-> + * iw_table, and default_iw_table are RCU protected
-> + * node_bw_table is protected by default_iwt_lock
-> + *
-> + * system startup and hotplug code may register node performance information
-> + * via mempolicy_set_node_attributes()
->   */
-> +static unsigned long *node_bw_table;
-> +static u8 __rcu *default_iw_table;
-> +static DEFINE_MUTEX(default_iwt_lock);
-> +
->  static u8 __rcu *iw_table;
->  static DEFINE_MUTEX(iw_table_lock);
->  
->  static u8 get_il_weight(int node)
->  {
-> -	u8 *table;
-> +	u8 *table, *default_table;
->  	u8 weight;
->  
->  	rcu_read_lock();
->  	table = rcu_dereference(iw_table);
-> -	/* if no iw_table, use system default */
-> -	weight = table ? table[node] : 1;
-> -	/* if value in iw_table is 0, use system default */
-> -	weight = weight ? weight : 1;
-> +	default_table = rcu_dereference(default_iw_table);
-> +	/* if no table pointers or value is 0, use system default or 1 */
-> +	weight = table ? table[node] : 0;
-> +	weight = weight ? weight : (default_table ? default_table[node] : 1);
->  	rcu_read_unlock();
->  	return weight;
->  }
->  
-> +int mempolicy_set_node_perf(unsigned int node, struct access_coordinate *coords)
-> +{
-> +	unsigned long *old_bw, *new_bw;
-> +	unsigned long gcd_val;
-> +	u8 *old_iw, *new_iw;
-> +	uint64_t ttl_bw = 0;
-> +	int i;
-> +
-> +	new_bw = kcalloc(nr_node_ids, sizeof(unsigned long), GFP_KERNEL);
-> +	if (!new_bw)
-> +		return -ENOMEM;
-
-We only use "node_bw_table" in this function with "default_iwt_lock"
-held.  So, we don't need to copy-on-write?  Just change in place?
-
-> +	new_iw = kzalloc(nr_node_ids, GFP_KERNEL);
-> +	if (!new_iw) {
-> +		kfree(new_bw);
-> +		return -ENOMEM;
-> +	}
-> +
-> +	mutex_lock(&default_iwt_lock);
-> +	old_bw = node_bw_table;
-> +	old_iw = rcu_dereference_protected(default_iw_table,
-> +					   lockdep_is_held(&default_iwt_lock));
-> +
-> +	if (old_bw)
-> +		memcpy(new_bw, old_bw, nr_node_ids*sizeof(unsigned long));
-> +	new_bw[node] = min(coords->read_bandwidth, coords->write_bandwidth);
-
-We need to compress two bandwidth data into one.  The possible choice
-could be,
-
-- min(coords->read_bandwidth, coords->write_bandwidth), that is, your code
-
-- coords->read_bandwidth + coords->write_bandwidth
-
-I don't know which one is better.  Do you have some use cases to help to
-determine which one is better?
-> +
-> +	/* New recalculate the bandwidth distribution given the new info */
-> +	for (i = 0; i < nr_node_ids; i++)
-> +		ttl_bw += new_bw[i];
-> +
-> +	/* If node is not set or has < 1% of total bw, use minimum value of 1 */
-> +	for (i = 0; i < nr_node_ids; i++) {
-> +		if (new_bw[i])
-> +			new_iw[i] = max((100 * new_bw[i] / ttl_bw), 1);
-> +		else
-> +			new_iw[i] = 1;
-
-If we lacks performance data for some node, it will use "1" as default
-weight.  It doesn't look like the best solution for me.  How about use
-the average available bandwidth to calculate the default weight?  Or use
-memory bandwidth of node 0 if performance data is missing?
-
-> +	}
-> +	/*
-> +	 * Now attempt to aggressively reduce the interleave weights by GCD
-> +	 * We want smaller interleave intervals to have a better distribution
-> +	 * of memory, even on smaller memory regions. If weights are divisible
-> +	 * by each other, we can do some quick math to aggresively squash them.
-> +	 */
-> +reduce:
-> +	gcd_val = new_iw[i];
-
-"i" will be "nr_node_ids" in the first loop.  Right?
-
-> +	for (i = 0; i < nr_node_ids; i++) {
-> +		/* Skip nodes that haven't been set */
-> +		if (!new_bw[i])
-> +			continue;
-> +		gcd_val = gcd(gcd_val, new_iw[i]);
-> +		if (gcd_val == 1)
-> +			goto leave;
-> +	}
-> +	for (i = 0; i < nr_node_ids; i++) {
-> +		if (!new_bw[i])
-> +			continue;
-> +		new_iw[i] /= gcd_val;
-> +	}
-> +	/* repeat until we get a gcd of 1 */
-> +	goto reduce;
-> +leave:
-> +	node_bw_table = new_bw;
-> +	rcu_assign_pointer(default_iw_table, new_iw);
-> +	mutex_unlock(&default_iwt_lock);
-> +	synchronize_rcu();
-> +	kfree(old_bw);
-> +	kfree(old_iw);
-> +	return 0;
-> +}
-> +
->  /**
->   * numa_nearest_node - Find nearest node by state
->   * @node: Node id to start the search
-> @@ -1983,7 +2067,7 @@ static unsigned int weighted_interleave_nid(struct mempolicy *pol, pgoff_t ilx)
->  {
->  	nodemask_t nodemask;
->  	unsigned int target, nr_nodes;
-> -	u8 *table;
-> +	u8 *table, *default_table;
->  	unsigned int weight_total = 0;
->  	u8 weight;
->  	int nid;
-> @@ -1994,11 +2078,13 @@ static unsigned int weighted_interleave_nid(struct mempolicy *pol, pgoff_t ilx)
->  
->  	rcu_read_lock();
->  	table = rcu_dereference(iw_table);
-> +	default_table = rcu_dereference(default_iw_table);
->  	/* calculate the total weight */
->  	for_each_node_mask(nid, nodemask) {
->  		/* detect system default usage */
-> -		weight = table ? table[nid] : 1;
-> -		weight = weight ? weight : 1;
-> +		weight = table ? table[nid] : 0;
-> +		weight = weight ? weight :
-> +				  (default_table ? default_table[nid] : 1);
-
-This becomes long.  I think that we should define a help function for this.
-
->  		weight_total += weight;
->  	}
->  
-> @@ -2007,8 +2093,9 @@ static unsigned int weighted_interleave_nid(struct mempolicy *pol, pgoff_t ilx)
->  	nid = first_node(nodemask);
->  	while (target) {
->  		/* detect system default usage */
-> -		weight = table ? table[nid] : 1;
-> -		weight = weight ? weight : 1;
-> +		weight = table ? table[nid] : 0;
-> +		weight = weight ? weight :
-> +				  (default_table ? default_table[nid] : 1);
->  		if (target < weight)
->  			break;
->  		target -= weight;
-> @@ -2391,7 +2478,7 @@ static unsigned long alloc_pages_bulk_array_weighted_interleave(gfp_t gfp,
->  	unsigned long nr_allocated = 0;
->  	unsigned long rounds;
->  	unsigned long node_pages, delta;
-> -	u8 *table, *weights, weight;
-> +	u8 *weights, weight;
->  	unsigned int weight_total = 0;
->  	unsigned long rem_pages = nr_pages;
->  	nodemask_t nodes;
-> @@ -2440,16 +2527,8 @@ static unsigned long alloc_pages_bulk_array_weighted_interleave(gfp_t gfp,
->  	if (!weights)
->  		return total_allocated;
->  
-> -	rcu_read_lock();
-> -	table = rcu_dereference(iw_table);
-> -	if (table)
-> -		memcpy(weights, table, nr_node_ids);
-> -	rcu_read_unlock();
-> -
-> -	/* calculate total, detect system default usage */
->  	for_each_node_mask(node, nodes) {
-> -		if (!weights[node])
-> -			weights[node] = 1;
-> +		weights[node] = get_il_weight(node);
->  		weight_total += weights[node];
->  	}
-
---
-Best Regards,
-Huang, Ying
+T24gV2VkLCAyMDI0LTAyLTIxIGF0IDIyOjU2ICswMTAwLCBBbmRyZXcgTHVubiB3cm90ZToNCj4g
+PiBAQCAtNDcsMTUgKzQ1LDggQEAgc3RhdGljIGNvbnN0IHN0cnVjdCBvZl9kZXZpY2VfaWQgb2Zf
+cmVzdGFydF9wb3dlcm9mZl9tYXRjaFtdID0gew0KPiA+IMKgIH07DQo+ID4gwqAgTU9EVUxFX0RF
+VklDRV9UQUJMRShvZiwgb2ZfcmVzdGFydF9wb3dlcm9mZl9tYXRjaCk7DQo+ID4gwqAgDQo+ID4g
+LXN0YXRpYyBzdHJ1Y3QgcGxhdGZvcm1fZHJpdmVyIHJlc3RhcnRfcG93ZXJvZmZfZHJpdmVyID0g
+ew0KPiA+IC3CoMKgwqDCoMKgwqDCoC5wcm9iZSA9IHJlc3RhcnRfcG93ZXJvZmZfcHJvYmUsDQo+
+ID4gLcKgwqDCoMKgwqDCoMKgLnJlbW92ZSA9IHJlc3RhcnRfcG93ZXJvZmZfcmVtb3ZlLA0KPiA+
+IC3CoMKgwqDCoMKgwqDCoC5kcml2ZXIgPSB7DQo+ID4gLcKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoC5uYW1lID0gInBvd2Vyb2ZmLXJlc3RhcnQiLA0KPiA+IC3CoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqAub2ZfbWF0Y2hfdGFibGUgPSBvZl9yZXN0YXJ0X3Bvd2Vyb2ZmX21hdGNo
+LA0KPiA+IC3CoMKgwqDCoMKgwqDCoH0sDQo+ID4gLX07DQo+IA0KPiBvZl9yZXN0YXJ0X3Bvd2Vy
+b2ZmX21hdGNoIG5vdyBzZWVtcyB0byBiZSBkaXNjb25uZWN0ZWQgZnJvbSB0aGUNCj4gZHJpdmVy
+Lg0KPiANCj4ga2lya3dvb2QtbGlua3N0YXRpb24uZHRzaTrCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgY29tcGF0aWJsZSA9ICJyZXN0YXJ0LXBvd2Vyb2ZmIjsNCj4ga2lya3dvb2QtbHN4bC5k
+dHNpOsKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgY29tcGF0aWJsZSA9ICJyZXN0YXJ0LXBvd2Vy
+b2ZmIjsNCj4gb3Jpb241eC1saW5rc3RhdGlvbi5kdHNpOsKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoGNvbXBhdGlibGUgPSAicmVzdGFydC1wb3dlcm9mZiI7DQo+IG9yaW9uNXgtbHN3c2ds
+LmR0czrCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoGNvbXBhdGlibGUgPSAicmVzdGFydC1wb3dl
+cm9mZiI7DQo+IA0KPiBIb3cgZG8gdGhlc2UgZGV2aWNlcyBnZXQgdGhpcyBkcml2ZXIgbG9hZGVk
+Pw0KPiANCj4gVGhpcyBhcHBlYXJzIHRvIGJlIGFub3RoZXIgcmVhc29uIHRvIE5BQ0sgaXQuDQoN
+ClRoYXQncyB3aHkgTU9EVUxFX0RFVklDRV9UQUJMRSgpIHdhcyBwcmVzZXJ2ZWQgZm9yIGJhY2t3
+YXJkcyBjb21wYXRpYmlsaXR5LA0KYmVjYXVzZSAqbG9hZGluZyogaGFwcGVucyB2aWEgTU9EVUxF
+X0RFVklDRV9UQUJMRSgpLiBCdXQgSSBkaWRuJ3QgcmVhbGl6ZQ0KaXQgd2FzIG5ldmVyIGJ1aWxk
+YWJsZSBhcyBtb2R1bGUgYXMgU2ViYXN0aWFuIHBvaW50ZWQgb3V0LCBiZWNhdXNlIG9mDQptYWNo
+aW5lX3Jlc3RhcnQoKS4NCg0KRm9yIHlvdXIgdXNlIGNhc2UgaXQgd291bGQgY29udGludWUgdG8g
+d29yayBhcyBiZWZvcmUgSSBiZWxpZXZlLCBqdXN0DQp0aGUgY2FsbGJhY2sgd291bGQgYmUgaW5z
+dGFsbGVkIGJlY2F1c2Ugb2YgdGhlIGZhY3QgdGhlIGNvZGUNCndhcyBjb21waWxlZC1pbiwgbm90
+IGJlY2F1c2UgdGhlcmUgd2FzIGEgZmFrZSBwbGF0Zm9ybSBkZXZpY2UuDQoNCkkgYWxzbyBkaWRu
+J3QgdW5kZXJzdGFuZCB3aGF0IGlzIHNvIHNwZWNpYWwgYWJvdXQgYm9vdGxvYWRlciBzdXBwb3J0
+DQpmb3IgdGhpcyBmdW5jdGlvbmFsaXR5IGlmIG5vIGRhdGEgaXMgcGFzc2VkIHRvIHRoZSBib290
+bG9hZGVyLg0KQWZ0ZXIgQVJNLXNwZWNpZmljcyB3YXMgcmVtb3ZlZCBmcm9tIHRoZSBjb2RlIHF1
+aXRlIHNvbWUgdGltZSBhZ28NCmFueSBwbGF0Zm9ybSBjb3VsZCByZS11c2UgdGhlIGNvZGUgZm9y
+IHRoZSBkZXBsb3ltZW50cyB3aGljaCBtZWFudA0KdG8gYmUgImFsd2F5cyBvbiIuDQoNCkJ1dCBJ
+ZiB0aGUgcmVzaXN0YW5jZSBpcyBzbyBzZXJpb3VzLCBzbyBiZSBpdC4NCg0KLS0gDQpBbGV4YW5k
+ZXIgU3ZlcmRsaW4NClNpZW1lbnMgQUcNCnd3dy5zaWVtZW5zLmNvbQ0K
