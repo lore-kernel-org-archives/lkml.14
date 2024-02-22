@@ -1,72 +1,83 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF3251E496
-	for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 21:37:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03503137919
+	for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 21:37:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708637848; cv=none; b=fWaS1oXobsPXKRE/OEEjEu4h/77l2zqCBwR2XvZ4FgKH/xOQkQm71WGHKMf3PYpCUZlhpvVtiNO1/38joIVpm7MOWxrDrEx12G12XbeAZDw3lMVEpFHiR06kc8d2L04XonSITYR41cEvugPn89Bb/dNnylthan7xUlY79PtMSmU=
+	t=1708637852; cv=none; b=RWVd9IHObioNwec/ron5HsafGvwnCAHDiGlhJFL4HiFNB89HO7dSM1SMY86ErZziMrN6a9ZhzG94rU5ceHRh+CYckVW/vOc2DilYucORZibYQmOFqJqtfIv+endVWWXSzqSJ5PFbxKLbsbMyUsGADQyOT0biFvh8VYdLTxsAfPg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708637848; c=relaxed/simple;
-	bh=CRQLcQZZCyWq7iQgWSpsPFZZBjaRvd9wTMW8gMdChFo=;
+	s=arc-20240116; t=1708637852; c=relaxed/simple;
+	bh=xWwioHVDwbHTc+OI3/Gswfk0tD97TSSGQGhCXErhCwU=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=QUfD5KovQFvH3PejwEafzW4oFGE/ArpsAjqNXWPMDyscJYcYlG5cn8tPHRr7wYXsnhCRvN8gnQPuxZJsW8F1DEnHztGhBYPKX3AmGkXHHYSCmnJNmy+EbEL7nNHSw5R+PDQilr9HnXWoCN/hcdkF76GwDrWeyt3wnsee4pStuBM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=BrkfhrKM; arc=none smtp.client-ip=170.10.133.124
+	 MIME-Version:Content-Type; b=FY0iNriILtemFSuKi9ZEJ96Nr0atM3r5Mmp6FKHKPXD3Iufcn7r1Biq3piBvoQjJSdjousYP8Rxa4/sHc8fN9DabbgsG1lRtdVccsNmuq0cP4KEaw5zWVTH1Si1Sy187AcGoCTMIlHZq9VxX8vdTm8EBYem4hZBNe3BGoylSSNI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Ayti1kB9; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BrkfhrKM"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Ayti1kB9"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1708637845;
+	s=mimecast20190719; t=1708637849;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=d7l+9clzjVKQA+xkkzwU5JxUEh+E5T8G22Hnvhg7ds4=;
-	b=BrkfhrKMhfgYXKEfPneO+ntVZPhTAGCYUwPN7Kk/4snlsIXshROTUwRunP5/48hDeoHQYQ
-	4NMJaQS8/w0pAlF4npu5Bkk5K9ML6QX3yyfqa7IfnxlRZ0hEZId7uT6hS24jFp1+v9R2+y
-	e+ig1zxZQHFtiZFuXwzaW2DmoXSldvs=
-Received: from mail-io1-f70.google.com (mail-io1-f70.google.com
- [209.85.166.70]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=Vy/IsHmgfibIskC9o5GhvChyYxHecmg+0M1j8k6YQRw=;
+	b=Ayti1kB9pbOwIg8QuoXQco8Y5iz3416A2xpvUYvV29jVO4Og1XnzIcB552+pZFIzAeLW3x
+	XKep682VlPn/H4LK2sO6GqCWKTbMdhWeb6KvugqNsTOEvAM9TPgi45ky63ghcf00f/1JHA
+	seMzrNOufJ5MsbuQFRD8XA7TQ+0rAkM=
+Received: from mail-io1-f72.google.com (mail-io1-f72.google.com
+ [209.85.166.72]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-670-flzu64GWNcqPZs5Jca1Tzg-1; Thu, 22 Feb 2024 16:37:24 -0500
-X-MC-Unique: flzu64GWNcqPZs5Jca1Tzg-1
-Received: by mail-io1-f70.google.com with SMTP id ca18e2360f4ac-7c76a65a4aaso22502239f.0
-        for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 13:37:24 -0800 (PST)
+ us-mta-373-HlqR08ZqNHeN3tO8oQBJaw-1; Thu, 22 Feb 2024 16:37:26 -0500
+X-MC-Unique: HlqR08ZqNHeN3tO8oQBJaw-1
+Received: by mail-io1-f72.google.com with SMTP id ca18e2360f4ac-7c00a1374ecso14227739f.1
+        for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 13:37:26 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708637843; x=1709242643;
+        d=1e100.net; s=20230601; t=1708637845; x=1709242645;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=d7l+9clzjVKQA+xkkzwU5JxUEh+E5T8G22Hnvhg7ds4=;
-        b=uL4C44nTdD5kHivdMC5fxd1hORdrKbpbUaVGor0BeVP0Gj9SaqokzAh1NPfPTWYSf3
-         CS8Wu++CJFEwRs9y/9DVg3VJJpyXdDNpBvGplzcLjneVyDXgObjcilkA9dEhAn4m7DrA
-         FIitqGeNpvI4YclxPEzAqo3zggMB9klewOdOPRjm3DCCi3gg7CuI5eJnyKJwRPUk/kSA
-         8sbYu+RsuXCHX498NycAfwpv8WRDYqcnwBLIfuI07Bhu0dv1mzPBdl0TD5Wzp1oNGHqu
-         7dK/FA01C66f1l90HEd8Kf2aRyUNawCFnKaX/Td2C8c6sagEjRO6fmnIW6Hjmvvextra
-         w9dA==
-X-Forwarded-Encrypted: i=1; AJvYcCXSG73492Pb6xTYOVhEuGRGATvWmdPam2lZMXlX1GUgr+ErPVsWptKNgHUu6HG7Iq78hxczczTkfxRTfiyluMDbXZ4ZuTc+VYxGohaC
-X-Gm-Message-State: AOJu0YysEpNw0NvpDnYpZkkpnJ6lLSt0MUcovAfBSldqNR8fFMtS8Nva
-	AEIYQqgT1UdrXKql8SBqRsuNT6QUE3qb968T0DygQv4+4R4x/iplXiquf3zUo1k6RRosi0HnrWq
-	MFECHIYqf6hQGN3ytZPg4v4OEYHb4G6QvdlQRCJoI0omI23fP5lYRnvICWfBopg==
-X-Received: by 2002:a6b:e00e:0:b0:7c0:3d0f:b7cf with SMTP id z14-20020a6be00e000000b007c03d0fb7cfmr2831139iog.8.1708637843593;
-        Thu, 22 Feb 2024 13:37:23 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IF/m5G6udUIqgOLIq2GJ6IMPYm7AvkII6Jm6SmNbDfsGtL4njJ2KwbwX+3lenHBYb+iEfCSAA==
-X-Received: by 2002:a6b:e00e:0:b0:7c0:3d0f:b7cf with SMTP id z14-20020a6be00e000000b007c03d0fb7cfmr2831128iog.8.1708637843367;
-        Thu, 22 Feb 2024 13:37:23 -0800 (PST)
+        bh=Vy/IsHmgfibIskC9o5GhvChyYxHecmg+0M1j8k6YQRw=;
+        b=mQB0xAR8cRRaxC9YIKZ21bzgcXJwyjPZfAdJK9/WcmUKw1ymiozzDYhdTxr90z3EfG
+         xPlzk+v65s0Ouipy84NO0fhW2iHbWG8kP0o3RCC1BtVXVsaRHdHdB6BA9aFpfsJQOutd
+         AfAchspm7aI/1O8sUfc6Atuwo0ZVGCsXR0IhW5klprR6hQ3MXKU8Y8J3tWeL6X2FU7hA
+         Hee9GWDNcBcd8FZPF9YGUDk4OK8CeGbCPYY1QE9ZtTFK0jriPZe+D+rb3Tu64w6wLCjM
+         RFb0TQfkkI1fDmOqa4rb98+WvTltm50Zdm/HXJINw1PhXsJwRIzMI3WZsHzFGhM8VEtp
+         AZ9Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXo/spCNmDeXSWmyRaZqMQUD9YAlL0OzK2YarwPC+sayNRa9aG0+SlCTPVLOn9A3pcZQ/RzDDxjBoiE5ML0iZ9V6H2GT+KZpnGgIMsn
+X-Gm-Message-State: AOJu0YwiwXlnCCaydDC+oWLNKFB5ncwpvZy7ZHKb9Hq8KOTxVGhrHWtf
+	V9VHwP5/I625m+nQWx8xKvqcutsfxexo0VIsSHCCaZAmEL3utyqwec0Bt/WierBWb8DfrGy7ImS
+	0UcT8FnA2XHp/axrGdVnsOpfK3NP0cDLlXOg6Di30XKps4YjXA0HNjeYaKfySFQ==
+X-Received: by 2002:a92:7302:0:b0:365:27e7:4b60 with SMTP id o2-20020a927302000000b0036527e74b60mr171082ilc.21.1708637845463;
+        Thu, 22 Feb 2024 13:37:25 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IHPX34jII0Yt6uqFCb9WcJyWIRWElIzoQhb5wUnjuZKOZrMpbgJAwbijtoG8hqMcca1YN8LBQ==
+X-Received: by 2002:a92:7302:0:b0:365:27e7:4b60 with SMTP id o2-20020a927302000000b0036527e74b60mr171066ilc.21.1708637845159;
+        Thu, 22 Feb 2024 13:37:25 -0800 (PST)
 Received: from redhat.com ([38.15.36.11])
-        by smtp.gmail.com with ESMTPSA id l14-20020a056638220e00b004743021012asm2117827jas.2.2024.02.22.13.37.22
+        by smtp.gmail.com with ESMTPSA id l14-20020a056638220e00b004743021012asm2117827jas.2.2024.02.22.13.37.24
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 22 Feb 2024 13:37:22 -0800 (PST)
-Date: Thu, 22 Feb 2024 14:37:17 -0700
+        Thu, 22 Feb 2024 13:37:24 -0800 (PST)
+Date: Thu, 22 Feb 2024 14:36:54 -0700
 From: Alex Williamson <alex.williamson@redhat.com>
-To: Kunwu Chan <chentao@kylinos.cn>
-Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] vfio: Use WARN_ON for low-probability allocation
- failure issue in vfio_pci_bus_notifier
-Message-ID: <20240222143717.5e6bd5d8.alex.williamson@redhat.com>
-In-Reply-To: <20240115063434.20278-1-chentao@kylinos.cn>
-References: <20240115063434.20278-1-chentao@kylinos.cn>
+To: <ankita@nvidia.com>
+Cc: <jgg@nvidia.com>, <yishaih@nvidia.com>,
+ <shameerali.kolothum.thodi@huawei.com>, <kevin.tian@intel.com>,
+ <mst@redhat.com>, <eric.auger@redhat.com>, <jgg@ziepe.ca>,
+ <oleksandr@natalenko.name>, <clg@redhat.com>,
+ <satyanarayana.k.v.p@intel.com>, <brett.creeley@amd.com>,
+ <horms@kernel.org>, <shannon.nelson@amd.com>, <rrameshbabu@nvidia.com>,
+ <zhiw@nvidia.com>, <aniketa@nvidia.com>, <cjia@nvidia.com>,
+ <kwankhede@nvidia.com>, <targupta@nvidia.com>, <vsethi@nvidia.com>,
+ <acurrid@nvidia.com>, <apopple@nvidia.com>, <jhubbard@nvidia.com>,
+ <danw@nvidia.com>, <anuaggarwal@nvidia.com>, <mochs@nvidia.com>,
+ <kvm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+ <virtualization@lists.linux-foundation.org>
+Subject: Re: [PATCH v19 0/3] vfio/nvgrace-gpu: Add vfio pci variant module
+ for grace hopper
+Message-ID: <20240222143654.0ed77f85.alex.williamson@redhat.com>
+In-Reply-To: <20240220115055.23546-1-ankita@nvidia.com>
+References: <20240220115055.23546-1-ankita@nvidia.com>
 X-Mailer: Claws Mail 4.2.0 (GTK 3.24.41; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -77,34 +88,137 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Mon, 15 Jan 2024 14:34:34 +0800
-Kunwu Chan <chentao@kylinos.cn> wrote:
+On Tue, 20 Feb 2024 17:20:52 +0530
+<ankita@nvidia.com> wrote:
 
-> kasprintf() returns a pointer to dynamically allocated memory
-> which can be NULL upon failure.
+> From: Ankit Agrawal <ankita@nvidia.com>
 > 
-> This is a blocking notifier callback, so errno isn't a proper return
-> value. Use WARN_ON to small allocation failures.
+> NVIDIA's upcoming Grace Hopper Superchip provides a PCI-like device
+> for the on-chip GPU that is the logical OS representation of the
+> internal proprietary chip-to-chip cache coherent interconnect.
 > 
-> Signed-off-by: Kunwu Chan <chentao@kylinos.cn>
+> The device is peculiar compared to a real PCI device in that whilst
+> there is a real 64b PCI BAR1 (comprising region 2 & region 3) on the
+> device, it is not used to access device memory once the faster
+> chip-to-chip interconnect is initialized (occurs at the time of host
+> system boot). The device memory is accessed instead using the
+> chip-to-chip interconnect that is exposed as a contiguous physically
+> addressable region on the host. Since the device memory is cache
+> coherent with the CPU, it can be mmaped into the user VMA with a
+> cacheable mapping and used like a regular RAM. The device memory is
+> not added to the host kernel, but mapped directly as this reduces
+> memory wastage due to struct pages.
+> 
+> There is also a requirement of a minimum reserved 1G uncached region
+> (termed as resmem) to support the Multi-Instance GPU (MIG) feature [1].
+> This is to work around a HW defect. Based on [2], the requisite properties
+> (uncached, unaligned access) can be achieved through a VM mapping (S1)
+> of NORMAL_NC and host (S2) mapping with MemAttr[2:0]=0b101. To provide
+> a different non-cached property to the reserved 1G region, it needs to
+> be carved out from the device memory and mapped as a separate region
+> in Qemu VMA with pgprot_writecombine(). pgprot_writecombine() sets
+> the Qemu VMA page properties (pgprot) as NORMAL_NC.
+> 
+> Provide a VFIO PCI variant driver that adapts the unique device memory
+> representation into a more standard PCI representation facing userspace.
+> 
+> The variant driver exposes these two regions - the non-cached reserved
+> (resmem) and the cached rest of the device memory (termed as usemem) as
+> separate VFIO 64b BAR regions. This is divergent from the baremetal
+> approach, where the device memory is exposed as a device memory region.
+> The decision for a different approach was taken in view of the fact that
+> it would necessiate additional code in Qemu to discover and insert those
+> regions in the VM IPA, along with the additional VM ACPI DSDT changes to
+> communiate the device memory region IPA to the VM workloads. Moreover,
+> this behavior would have to be added to a variety of emulators (beyond
+> top of tree Qemu) out there desiring grace hopper support.
+> 
+> Since the device implements 64-bit BAR0, the VFIO PCI variant driver
+> maps the uncached carved out region to the next available PCI BAR (i.e.
+> comprising of region 2 and 3). The cached device memory aperture is
+> assigned BAR region 4 and 5. Qemu will then naturally generate a PCI
+> device in the VM with the uncached aperture reported as BAR2 region,
+> the cacheable as BAR4. The variant driver provides emulation for these
+> fake BARs' PCI config space offset registers.
+> 
+> The hardware ensures that the system does not crash when the memory
+> is accessed with the memory enable turned off. It synthesis ~0 reads
+> and dropped writes on such access. So there is no need to support the
+> disablement/enablement of BAR through PCI_COMMAND config space register.
+> 
+> The memory layout on the host looks like the following:
+>                devmem (memlength)
+> |--------------------------------------------------|
+> |-------------cached------------------------|--NC--|
+> |                                           |
+> usemem.memphys                              resmem.memphys
+> 
+> PCI BARs need to be aligned to the power-of-2, but the actual memory on the
+> device may not. A read or write access to the physical address from the
+> last device PFN up to the next power-of-2 aligned physical address
+> results in reading ~0 and dropped writes. Note that the GPU device
+> driver [6] is capable of knowing the exact device memory size through
+> separate means. The device memory size is primarily kept in the system
+> ACPI tables for use by the VFIO PCI variant module.
+> 
+> Note that the usemem memory is added by the VM Nvidia device driver [5]
+> to the VM kernel as memblocks. Hence make the usable memory size memblock
+> (MEMBLK_SIZE) aligned. This is a hardwired ABI value between the GPU FW and
+> VFIO driver. The VM device driver make use of the same value for its
+> calculation to determine USEMEM size.
+> 
+> Currently there is no provision in KVM for a S2 mapping with
+> MemAttr[2:0]=0b101, but there is an ongoing effort to provide the same [3].
+> As previously mentioned, resmem is mapped pgprot_writecombine(), that
+> sets the Qemu VMA page properties (pgprot) as NORMAL_NC. Using the
+> proposed changes in [3] and [4], KVM marks the region with
+> MemAttr[2:0]=0b101 in S2.
+> 
+> If the device memory properties are not present, the driver registers the
+> vfio-pci-core function pointers. Since there are no ACPI memory properties
+> generated for the VM, the variant driver inside the VM will only use
+> the vfio-pci-core ops and hence try to map the BARs as non cached. This
+> is not a problem as the CPUs have FWB enabled which blocks the VM
+> mapping's ability to override the cacheability set by the host mapping.
+> 
+> This goes along with a qemu series [6] to provides the necessary
+> implementation of the Grace Hopper Superchip firmware specification so
+> that the guest operating system can see the correct ACPI modeling for
+> the coherent GPU device. Verified with the CUDA workload in the VM.
+> 
+> [1] https://www.nvidia.com/en-in/technologies/multi-instance-gpu/
+> [2] section D8.5.5 of https://developer.arm.com/documentation/ddi0487/latest/
+> [3] https://lore.kernel.org/all/20240211174705.31992-1-ankita@nvidia.com/
+> [4] https://lore.kernel.org/all/20230907181459.18145-2-ankita@nvidia.com/
+> [5] https://github.com/NVIDIA/open-gpu-kernel-modules
+> [6] https://lore.kernel.org/all/20231203060245.31593-1-ankita@nvidia.com/
+> 
+> Applied over v6.8-rc5.
+> 
+> Signed-off-by: Aniket Agashe <aniketa@nvidia.com>
+> Signed-off-by: Ankit Agrawal <ankita@nvidia.com>
 > ---
-> v2: Use WARN_ON instead of return errno
-> ---
->  drivers/vfio/pci/vfio_pci_core.c | 1 +
->  1 file changed, 1 insertion(+)
+[snip]
+> Ankit Agrawal (3):
+>   vfio/pci: rename and export do_io_rw()
+>   vfio/pci: rename and export range_intersect_range
+>   vfio/nvgrace-gpu: Add vfio pci variant module for grace hopper
 > 
-> diff --git a/drivers/vfio/pci/vfio_pci_core.c b/drivers/vfio/pci/vfio_pci_core.c
-> index 1cbc990d42e0..61aa19666050 100644
-> --- a/drivers/vfio/pci/vfio_pci_core.c
-> +++ b/drivers/vfio/pci/vfio_pci_core.c
-> @@ -2047,6 +2047,7 @@ static int vfio_pci_bus_notifier(struct notifier_block *nb,
->  			 pci_name(pdev));
->  		pdev->driver_override = kasprintf(GFP_KERNEL, "%s",
->  						  vdev->vdev.ops->name);
-> +		WARN_ON(!pdev->driver_override);
->  	} else if (action == BUS_NOTIFY_BOUND_DRIVER &&
->  		   pdev->is_virtfn && physfn == vdev->pdev) {
->  		struct pci_driver *drv = pci_dev_driver(pdev);
+>  MAINTAINERS                           |  16 +-
+>  drivers/vfio/pci/Kconfig              |   2 +
+>  drivers/vfio/pci/Makefile             |   2 +
+>  drivers/vfio/pci/nvgrace-gpu/Kconfig  |  10 +
+>  drivers/vfio/pci/nvgrace-gpu/Makefile |   3 +
+>  drivers/vfio/pci/nvgrace-gpu/main.c   | 879 ++++++++++++++++++++++++++
+>  drivers/vfio/pci/vfio_pci_config.c    |  42 ++
+>  drivers/vfio/pci/vfio_pci_rdwr.c      |  16 +-
+>  drivers/vfio/pci/virtio/main.c        |  72 +--
+>  include/linux/vfio_pci_core.h         |  10 +-
+>  10 files changed, 993 insertions(+), 59 deletions(-)
+>  create mode 100644 drivers/vfio/pci/nvgrace-gpu/Kconfig
+>  create mode 100644 drivers/vfio/pci/nvgrace-gpu/Makefile
+>  create mode 100644 drivers/vfio/pci/nvgrace-gpu/main.c
+> 
 
 Applied to vfio next branch for v6.9.  Thanks,
 
