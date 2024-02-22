@@ -1,177 +1,117 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4667A12E40;
-	Thu, 22 Feb 2024 23:03:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55D9F18032;
+	Thu, 22 Feb 2024 23:06:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708643026; cv=none; b=uSklAvkr+78u6424Ocg0GoQJbhxB5FARYkpSHM7T+CL9x4u9OCSQrDCcqzV5RRZYY48hlz9iHVSPswDO5PJusPB1MHggWF6tEIbn47Fp9WXoAD/5Q8naxaL+WFSC+64Z/UbFMbWUWpMBlII6ZLAzso7rpGcJ6+mSaz3f6MBPNJM=
+	t=1708643170; cv=none; b=manzboi7WtAwP4cBPcRS5AQVnZ78hpTsscJNj/IfLukSyZAQNBS26P/2XwDXjrH7/6TX5qFUXc0COKSVj4HHFhzkmYoktXKDDHREdX3n/9bZHqntyI3R7o6fb2yB+/87lBhOj8pwyPw1rB14VLc7n430KyweS6dh3QaOJFh2AO8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708643026; c=relaxed/simple;
-	bh=65ctlHPFx8HGBnJ8HHkM9o0DAjuwNkJMkaldzDFz6as=;
-	h=Date:From:To:Subject:Cc:MIME-Version:Message-ID:Content-Type; b=CGvgGGYa6lCLRNjxoYw1tL4ng9SzimNkd/whY3A91sY0144U5nRro3W1cGPA45Vtf2PPvh7693ZejA0ROCa/GPbiAiZjmmwFq1O49KVEv7f23vYGdjQMqf8h0ROItFyBli/9h+ZEhyUhMQwOwtjt/i2AT7hryx83kU0M2NvMk8E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=UGhp8xO6; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Z2Ritci3; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1708643170; c=relaxed/simple;
+	bh=hYrpPsLRcrNhzOLOLhn2V6Z7Ec9eAWm7xV/uL9PKg4k=;
+	h=Date:From:To:Cc:Subject:Message-Id:Mime-Version:Content-Type; b=rFLUtkKIoZJ3U2xyPLZtyImdYRAn1giljtACnduFmmD+Kqo/2+tWLogbWKiUKAY1u3Bzcijhrca5mwL/x9Xz4YLZKT5XM/YsrGEQo0bVmvHigwCQZueQpv6qcPvWBQWwX3cbyfB4CvDoZOW2JOQRl7x9XI7PG3Qy6z6WMJ1AZnA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=UI0A8Wt+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="UGhp8xO6";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Z2Ritci3"
-Date: Thu, 22 Feb 2024 23:03:41 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1708643022;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
-	bh=O7SorYCwmf0domtChWfkJadL/FzGPFi6yHpZIU9XWg8=;
-	b=UGhp8xO6rUUr5SZmNhrQr9c7VWMS9WkDSGQS7xu66gb3I6lrwArB/unYEbEUVj+MOUwCTj
-	owy3xjbLrI0bcDTmFctMj3re8g2hznzBNXyvEf3jUypn8sc4vkSP39Lppgj/3NUcr+TFtA
-	dmdM6SwtU7WF4gdQdtXkMRCGNrvS3i71Fj7IBEm9oS2p9t7fYVkjRKqEy77y67n4j12SBw
-	L8iUTrmlixYo22v4qA3mkmJR9mVInJJq2xq1C4PfiA9q6ieOIW+gIQdYl9Ey2Vvhv52bMf
-	wMkGXpr02u1FQUKV8hbipjgDrI6/1cOSGpcQT18qRtMIuFOLBTWKQfMXiK7zMA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1708643022;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
-	bh=O7SorYCwmf0domtChWfkJadL/FzGPFi6yHpZIU9XWg8=;
-	b=Z2Ritci3bXsI1GSHwmfUX3YG1uRh5oGQhxM5KHiFyCbNhA3Ww7OH6tgfZ+ig6BBkzJgvlL
-	VFIpZu3rTUF96hBw==
-From: "tip-bot2 for Kai Huang" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/tdx] x86/asm: Remove the __iomem annotation of
- movdir64b()'s dst argument
-Cc: kernel test robot <lkp@intel.com>, Kai Huang <kai.huang@intel.com>,
- Dave Hansen <dave.hansen@linux.intel.com>, Dave Jiang <dave.jiang@intel.com>,
- "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
- Yuan Yao <yuan.yao@intel.com>, x86@kernel.org, linux-kernel@vger.kernel.org
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="UI0A8Wt+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 870C1C433F1;
+	Thu, 22 Feb 2024 23:06:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+	s=korg; t=1708643169;
+	bh=hYrpPsLRcrNhzOLOLhn2V6Z7Ec9eAWm7xV/uL9PKg4k=;
+	h=Date:From:To:Cc:Subject:From;
+	b=UI0A8Wt+vdtYj5x/lR7GPqNZ7hObkZgqPUCpbEOu943jvyiTpexpjItEwXKqcqo9H
+	 r2I6y4+edA3q+8RWW8OJJK1jMkYYrfxYOTfIwCCCxZnJP769dArAy7Q81Zdx14AzZs
+	 miym5YJ781HBJuhO2DgNJuL41ywJzH63swZGbMjY=
+Date: Thu, 22 Feb 2024 15:06:09 -0800
+From: Andrew Morton <akpm@linux-foundation.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: linux-mm@kvack.org, mm-commits@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Subject: [GIT PULL] hotfixes for 6.8-rc6
+Message-Id: <20240222150609.61c32cf2ababec81509bf5fc@linux-foundation.org>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Message-ID: <170864302149.398.6585871274599667665.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-The following commit has been merged into the x86/tdx branch of tip:
 
-Commit-ID:     5bdd181821b2c65b074cfad07d7c7d5d3cfe20bf
-Gitweb:        https://git.kernel.org/tip/5bdd181821b2c65b074cfad07d7c7d5d3cfe20bf
-Author:        Kai Huang <kai.huang@intel.com>
-AuthorDate:    Fri, 26 Jan 2024 15:38:52 +13:00
-Committer:     Dave Hansen <dave.hansen@linux.intel.com>
-CommitterDate: Thu, 22 Feb 2024 14:52:09 -08:00
+Linus, please merge this batch of MM (and one non-MM) hotfixes, thanks.
 
-x86/asm: Remove the __iomem annotation of movdir64b()'s dst argument
 
-Commit e56d28df2f66 ("x86/virt/tdx: Configure global KeyID on all
-packages") causes a sparse warning:
+The following changes since commit b401b621758e46812da61fa58a67c3fd8d91de0d:
 
-  arch/x86/virt/vmx/tdx/tdx.c:683:27: warning: incorrect type in argument 1 (different address spaces)
-  arch/x86/virt/vmx/tdx/tdx.c:683:27:    expected void [noderef] __iomem *dst
-  arch/x86/virt/vmx/tdx/tdx.c:683:27:    got void *
+  Linux 6.8-rc5 (2024-02-18 12:56:25 -0800)
 
-The reason is TDX must use the MOVDIR64B instruction to convert TDX
-private memory (which is normal RAM but not MMIO) back to normal.  The
-TDX code uses existing movdir64b() helper to do that, but the first
-argument @dst of movdir64b() is annotated with __iomem.
+are available in the Git repository at:
 
-When movdir64b() was firstly introduced in commit 0888e1030d3e
-("x86/asm: Carve out a generic movdir64b() helper for general usage"),
-it didn't have the __iomem annotation.  But this commit also introduced
-the same "incorrect type" sparse warning because the iosubmit_cmds512(),
-which was the solo caller of movdir64b(), has the __iomem annotation.
+  git://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm tags/mm-hotfixes-stable-2024-02-22-15-02
 
-This was later fixed by commit 6ae58d871319 ("x86/asm: Annotate
-movdir64b()'s dst argument with __iomem").  That fix was reasonable
-because until TDX code the movdir64b() was only used to move data to
-MMIO location, as described by the commit message:
+for you to fetch changes up to 2597c9947b0174fcc71bdd7ab6cb49c2b4291e95:
 
-  ... The current usages send a 64-bytes command descriptor to an MMIO
-  location (portal) on a device for consumption. When future usages for
-  the MOVDIR64B instruction warrant a separate variant of a memory to
-  memory operation, the argument annotation can be revisited.
+  kasan: guard release_free_meta() shadow access with kasan_arch_is_ready() (2024-02-20 14:20:50 -0800)
 
-Now TDX code uses MOVDIR64B to move data to normal memory so it's time
-to revisit.
+----------------------------------------------------------------
+14 hotfixes.  10 are cc:stable and the remainder address post-6.7 issues
+or aren't considered appropriate for backporting.
 
-The SDM says the destination of MOVDIR64B is "memory location specified
-in a general register", thus it's more reasonable that movdir64b() does
-not have the __iomem annotation on the @dst.
+----------------------------------------------------------------
+Anshuman Khandual (1):
+      mm/memblock: add MEMBLOCK_RSRV_NOINIT into flagname[] array
 
-Remove the __iomem annotation from the @dst argument of movdir64b() to
-fix the sparse warning in TDX code.  Similar to memset_io(), introduce a
-new movdir64b_io() to cover the case where the destination is an MMIO
-location, and change the solo caller iosubmit_cmds512() to use the new
-movdir64b_io().
+Benjamin Gray (1):
+      kasan: guard release_free_meta() shadow access with kasan_arch_is_ready()
 
-In movdir64b_io() explicitly use __force in the type casting otherwise
-there will be below sparse warning:
+Chengming Zhou (1):
+      mm/zswap: invalidate duplicate entry when !zswap_enabled
 
-  warning: cast removes address space '__iomem' of expression
+Guenter Roeck (1):
+      lib/Kconfig.debug: TEST_IOV_ITER depends on MMU
 
-[ dhansen: normal changelog tweaks ]
+Johannes Weiner (1):
+      mm: memcontrol: clarify swapaccount=0 deprecation warning
 
-Closes: https://lore.kernel.org/oe-kbuild-all/202312311924.tGjsBIQD-lkp@intel.com/
-Fixes: e56d28df2f66 ("x86/virt/tdx: Configure global KeyID on all packages")
-Reported-by: kernel test robot <lkp@intel.com>
-Signed-off-by: Kai Huang <kai.huang@intel.com>
-Signed-off-by: Dave Hansen <dave.hansen@linux.intel.com>
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-Reviewed-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-Reviewed-by: Yuan Yao <yuan.yao@intel.com>
-Link: https://lore.kernel.org/all/20240126023852.11065-1-kai.huang%40intel.com
----
- arch/x86/include/asm/io.h            |  2 +-
- arch/x86/include/asm/special_insns.h |  9 +++++++--
- 2 files changed, 8 insertions(+), 3 deletions(-)
+Kairui Song (1):
+      mm/swap: fix race when skipping swapcache
 
-diff --git a/arch/x86/include/asm/io.h b/arch/x86/include/asm/io.h
-index 3814a92..294cd2a 100644
---- a/arch/x86/include/asm/io.h
-+++ b/arch/x86/include/asm/io.h
-@@ -379,7 +379,7 @@ static inline void iosubmit_cmds512(void __iomem *dst, const void *src,
- 	const u8 *end = from + count * 64;
- 
- 	while (from < end) {
--		movdir64b(dst, from);
-+		movdir64b_io(dst, from);
- 		from += 64;
- 	}
- }
-diff --git a/arch/x86/include/asm/special_insns.h b/arch/x86/include/asm/special_insns.h
-index 48f8dd4..09a5461 100644
---- a/arch/x86/include/asm/special_insns.h
-+++ b/arch/x86/include/asm/special_insns.h
-@@ -224,10 +224,10 @@ static inline void serialize(void)
- }
- 
- /* The dst parameter must be 64-bytes aligned */
--static inline void movdir64b(void __iomem *dst, const void *src)
-+static inline void movdir64b(void *dst, const void *src)
- {
- 	const struct { char _[64]; } *__src = src;
--	struct { char _[64]; } __iomem *__dst = dst;
-+	struct { char _[64]; } *__dst = dst;
- 
- 	/*
- 	 * MOVDIR64B %(rdx), rax.
-@@ -245,6 +245,11 @@ static inline void movdir64b(void __iomem *dst, const void *src)
- 		     :  "m" (*__src), "a" (__dst), "d" (__src));
- }
- 
-+static inline void movdir64b_io(void __iomem *dst, const void *src)
-+{
-+	movdir64b((void __force *)dst, src);
-+}
-+
- /**
-  * enqcmds - Enqueue a command in supervisor (CPL0) mode
-  * @dst: destination, in MMIO space (must be 512-bit aligned)
+Nhat Pham (1):
+      mm/swap_state: update zswap LRU's protection range with the folio locked
+
+SeongJae Park (4):
+      mm/damon/core: check apply interval in damon_do_apply_schemes()
+      mm/damon/sysfs-schemes: handle schemes sysfs dir removal before commit_schemes_quota_goals
+      mm/damon/reclaim: fix quota stauts loss due to online tunings
+      mm/damon/lru_sort: fix quota status loss due to online tunings
+
+Shakeel Butt (1):
+      MAINTAINERS: mailmap: update Shakeel's email address
+
+Terry Tritton (1):
+      selftests/mm: uffd-unit-test check if huge page size is 0
+
+Yosry Ahmed (1):
+      mm: zswap: fix missing folio cleanup in writeback race path
+
+ .mailmap                                     |  1 +
+ MAINTAINERS                                  |  2 +-
+ include/linux/swap.h                         |  5 ++++
+ lib/Kconfig.debug                            |  1 +
+ mm/damon/core.c                              | 15 +++++++---
+ mm/damon/lru_sort.c                          | 43 +++++++++++++++++++++++-----
+ mm/damon/reclaim.c                           | 18 +++++++++++-
+ mm/damon/sysfs-schemes.c                     |  4 +++
+ mm/kasan/generic.c                           |  3 ++
+ mm/memblock.c                                |  1 +
+ mm/memcontrol.c                              | 10 +++++--
+ mm/memory.c                                  | 20 +++++++++++++
+ mm/swap.h                                    |  5 ++++
+ mm/swap_state.c                              | 10 ++++---
+ mm/swapfile.c                                | 13 +++++++++
+ mm/zswap.c                                   | 15 ++++++----
+ tools/testing/selftests/mm/uffd-unit-tests.c |  6 ++++
+ 17 files changed, 147 insertions(+), 25 deletions(-)
+
