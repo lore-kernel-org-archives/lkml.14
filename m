@@ -1,164 +1,164 @@
-Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A58115CD77;
-	Thu, 22 Feb 2024 18:14:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 690AD15DBA8;
+	Thu, 22 Feb 2024 18:14:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708625683; cv=none; b=mF/HPC0cZ5AeISElinUCCe5JT/ncMD5P+svDlnreCb0JSNppXvJafKvAb95uKAswh/VxBiLVtLi3JjS1Jdun2tYZZKsh0UO+u3JNR9I08dNtQHTihRWSfobXy16ls2BcJVSiHA8LGee7fcZ6empNzjkr1Btq4aCRJMgMONnosRE=
+	t=1708625686; cv=none; b=Ip+u2LxmKwaQnTqNtUhZ+qfERfEWX2TuX3YS+utCIT1VGNOARbxrBIAvK+/BJOm7xD7wNQcAMz6ycaXHC1XE2weWHQUCkH1aOwVsYWAiRIJgIC5mXDSeXj3f7G71bmOz/Frrt+wRnpwVNNRIb+p68HVuLtKFtKO0rCo+0B02N/0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708625683; c=relaxed/simple;
-	bh=lWOXT7NA1+p6N2d2CSA2dMeAJHOs07TN1uQkinNb1a8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=eWTQxLl52k1vjtTo4DtyrfrMUzdFn7RbcZN907IySisokK8NOtc86AATBmqH30qdQAbJBPvaF3LXEzb5n1eIJGGiXvZcdCtualsok2Mnzn8nN3PcoggJzDUuAR28P2YH4r971CEJBgCGllrpWljxo8TfNl5a+4ZVywr/Q9GdfgQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IQXOyUwX; arc=none smtp.client-ip=209.85.167.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1708625686; c=relaxed/simple;
+	bh=EOzt+ac2VEJaQqn9R1VvC99pxlRc+ECtg0akisOt/iA=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=a7Ubeu8N9sTo7kOp02x7vF+1exnd85d3jaGxV8wYlBpsiKWh4iYe2OcrjqolTWp5E+8QmiBFlDGaOqIl/4tdJW3AciYZfQVtQ9tOo4iwN90uF2O68bvb2iB86tx+RwXNHHkatfTgqqYEnRXveQVP81dukG8UB/oAFt1k34Og6Wg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jg4vLAoD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IQXOyUwX"
-Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-512bc0e8ce1so111992e87.0;
-        Thu, 22 Feb 2024 10:14:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1708625680; x=1709230480; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=pzoe6r6O1SQZpxBPwnEmbzP/LY9Wg9dUZAFh860tCdU=;
-        b=IQXOyUwXfw5P+5bwa/pVdJCW5sWDjEw2//iOdYMfQofGh6f8XkE6bpbVtkeenDuoVf
-         SNM/SXKmezVHGja+1xbDpKnZ5A8rbTgPIHXa+7PmS8SXj7QTcVkYpPdYXNU/mSqp0G9P
-         t/WnOh0j6fb0YmHUelwzjKyAlZe4j1FfijFJktR0M1ffg9iEOHHb27RZ3MfehGX4QEm4
-         DL31aBn73/mLBGkdeQySs4tj616JPeMJXxAPPbKLLtk0ILBTm9dKcVZtHV9v76goV2ip
-         5rYGeruLZ7kS3tfFvywBlXqj1EzNcibLDcYCfAlEWOZgpxWH4+f5imIDX3EO66xjOGLi
-         QbNQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708625680; x=1709230480;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=pzoe6r6O1SQZpxBPwnEmbzP/LY9Wg9dUZAFh860tCdU=;
-        b=xGXrvsTo4wbYvWXZXjOkze0M+DYUIu+RJvY06Q8Dfi8uQLc5tLqj9mVvwFz9nOneJ8
-         6iXlTYp8xq/ii4enhpXvhgNVLU6XwYw1k2Rvx8plDHPPL3adc6BWQVz3tjIHytBWWweO
-         a4koTBj4Gspm/q1fHpWmp0TUM7GtGYsPIEavc9Apc+/SHlJlIOCKV2RlbLeu0dpfstF3
-         eBfXvhY91P5VYWMHIVj14UJ4o08FOdnQlKFIsJjdkBYykvrlELRgHMVrd0DgaNZrhI/E
-         L9nzEqfoRIi7HouApfqt/+bugPKNYLuYc0NdgdhZM2N0tUlNyPjZVMIW7zbx/xRus9ww
-         LxLQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXyfmqc7Z0Fdqju43sqevCPPZ7yf2Pv3dpA3k3NTjDZvJ5AUWDnnQCYPrH/+86CNO8JcHhWjgV6MlTzn9ms91RFtXnnuGxc3roTrOH2H53BlARo2FrVo44xcJJF/ptsIbmeRDbTUvvUWQ==
-X-Gm-Message-State: AOJu0YzJRyXmC6WFpk/z/imVuUKkFd1n4myvEhn8OIH6+j9iNxtWlbB8
-	b2XVHt6GPzt88nendmOEY+YiV2+QLnHkKb0H/wkFOcd9n7eAKArv
-X-Google-Smtp-Source: AGHT+IGcYWp+ryzNnOE+1eySElC1nrZpk/ByoTpbeCgHQM0hU5MtdJZ4f5r0RBCPz3VjbsW6XtHv6A==
-X-Received: by 2002:a05:6512:1384:b0:512:cb9f:a25b with SMTP id fc4-20020a056512138400b00512cb9fa25bmr6050995lfb.28.1708625680264;
-        Thu, 22 Feb 2024 10:14:40 -0800 (PST)
-Received: from localhost ([178.176.56.174])
-        by smtp.gmail.com with ESMTPSA id y10-20020ac255aa000000b00512c531ffe4sm1081849lfg.180.2024.02.22.10.14.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 22 Feb 2024 10:14:39 -0800 (PST)
-From: Serge Semin <fancer.lancer@gmail.com>
-To: Michal Simek <michal.simek@amd.com>,
-	Alexander Stein <alexander.stein@ew.tq-group.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Tony Luck <tony.luck@intel.com>,
-	James Morse <james.morse@arm.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Robert Richter <rric@kernel.org>
-Cc: Serge Semin <fancer.lancer@gmail.com>,
-	Punnaiah Choudary Kalluri <punnaiah.choudary.kalluri@xilinx.com>,
-	Dinh Nguyen <dinguyen@kernel.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-edac@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v5 11/20] EDAC/synopsys: Shorten out struct ecc_error_info.bankgrpnr field name
-Date: Thu, 22 Feb 2024 21:12:56 +0300
-Message-ID: <20240222181324.28242-12-fancer.lancer@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240222181324.28242-1-fancer.lancer@gmail.com>
-References: <20240222181324.28242-1-fancer.lancer@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jg4vLAoD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 372AEC43394;
+	Thu, 22 Feb 2024 18:14:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1708625685;
+	bh=EOzt+ac2VEJaQqn9R1VvC99pxlRc+ECtg0akisOt/iA=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=jg4vLAoD48Wz7hB8s5/0/Sss0B/uk45kUvfboV7jl/D62+lk0azLcJ6zaSfB7HVL9
+	 gqLKSYCj3xaNLzkzZ21bqX6Xqcpp59qHjbnNRbqXe4ruwVOwle/daMjCZDjg37bkP4
+	 KDMCgcjQq8BTujHwJ+fCYK2aLz8myVFAtMMVF550zCCIoopvo16D289iZyTl8+T+0G
+	 xIZ1y42lsKQV1cXJ89+W3eI/Xy6I234EcSTCyM7Yn+itgcJICg3cxD8/JKWTJC07LD
+	 PCh44uOgr45RxCtWbs6hKSA6yUaafMBrjHpCEIU+Of13lisEOPcMe4olA2RINelJPZ
+	 SWq0rnNHXQOsw==
+From: Maxime Ripard <mripard@kernel.org>
+Date: Thu, 22 Feb 2024 19:13:52 +0100
+Subject: [PATCH v7 06/36] drm/connector: Introduce an HDMI connector
+ initialization function
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240222-kms-hdmi-connector-state-v7-6-8f4af575fce2@kernel.org>
+References: <20240222-kms-hdmi-connector-state-v7-0-8f4af575fce2@kernel.org>
+In-Reply-To: <20240222-kms-hdmi-connector-state-v7-0-8f4af575fce2@kernel.org>
+To: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
+ Daniel Vetter <daniel@ffwll.ch>, Jonathan Corbet <corbet@lwn.net>, 
+ Sandy Huang <hjc@rock-chips.com>, 
+ =?utf-8?q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, 
+ Chen-Yu Tsai <wens@csie.org>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
+ Samuel Holland <samuel@sholland.org>
+Cc: Hans Verkuil <hverkuil@xs4all.nl>, 
+ Sebastian Wick <sebastian.wick@redhat.com>, 
+ =?utf-8?q?Ville_Syrj=C3=A4l=C3=A4?= <ville.syrjala@linux.intel.com>, 
+ dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org, 
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-media@vger.kernel.org, linux-rockchip@lists.infradead.org, 
+ linux-sunxi@lists.linux.dev, Maxime Ripard <mripard@kernel.org>, 
+ Dave Stevenson <dave.stevenson@raspberrypi.com>
+X-Mailer: b4 0.12.3
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3492; i=mripard@kernel.org;
+ h=from:subject:message-id; bh=EOzt+ac2VEJaQqn9R1VvC99pxlRc+ECtg0akisOt/iA=;
+ b=owGbwMvMwCX2+D1vfrpE4FHG02pJDKnX+96szVkkWKki//xdjn9O5bUD/tP7svViHpnrWOT07
+ kzo2mLcUcrCIMbFICumyBIjbL4k7tSs151sfPNg5rAygQxh4OIUgImkGDIynIyVjJGWcA8TvXl+
+ h0PHnCfnVa7t/vJ/w/eNn5z/L55nvZGRYc6d2L0vfOXX7Sp40rTwteRtoXm3Vc8FXPzLOPn4hsY
+ pqawA
+X-Developer-Key: i=mripard@kernel.org; a=openpgp;
+ fpr=BE5675C37E818C8B5764241C254BCFC56BF6CE8D
 
-None of the ecc_error_info structure fields have "nr" suffix even though
-each of them do represent some number (row number, column number, bank
-number). Drop the suffix from the bankgrpnr field name for the sake of
-unification then. Similarly drop the word "Number" from the CE/UE error
-messages too since it doesn't give any helpful info there.
+A lot of the various HDMI drivers duplicate some logic that depends on
+the HDMI spec itself and not really a particular hardware
+implementation.
 
-Signed-off-by: Serge Semin <fancer.lancer@gmail.com>
+Output BPC or format selection, infoframe generation are good examples
+of such areas.
+
+This creates a lot of boilerplate, with a lot of variations, which makes
+it hard for userspace to rely on, and makes it difficult to get it right
+for drivers.
+
+In the next patches, we'll add a lot of infrastructure around the
+drm_connector and drm_connector_state structures, which will allow to
+abstract away the duplicated logic. This infrastructure comes with a few
+requirements though, and thus we need a new initialization function.
+
+Hopefully, this will make drivers simpler to handle, and their behaviour
+more consistent.
+
+Reviewed-by: Dave Stevenson <dave.stevenson@raspberrypi.com>
+Signed-off-by: Maxime Ripard <mripard@kernel.org>
 ---
- drivers/edac/synopsys_edac.c | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
+ drivers/gpu/drm/drm_connector.c | 39 +++++++++++++++++++++++++++++++++++++++
+ include/drm/drm_connector.h     |  5 +++++
+ 2 files changed, 44 insertions(+)
 
-diff --git a/drivers/edac/synopsys_edac.c b/drivers/edac/synopsys_edac.c
-index 6ca119459bd3..b0ff831287f5 100644
---- a/drivers/edac/synopsys_edac.c
-+++ b/drivers/edac/synopsys_edac.c
-@@ -268,17 +268,17 @@
-  * @row:	Row number.
-  * @col:	Column number.
-  * @bank:	Bank number.
-+ * @bankgrp:	Bank group number.
-  * @bitpos:	Bit position.
-  * @data:	Data causing the error.
-- * @bankgrpnr:	Bank group number.
-  */
- struct ecc_error_info {
- 	u32 row;
- 	u32 col;
- 	u32 bank;
-+	u32 bankgrp;
- 	u32 bitpos;
- 	u32 data;
--	u32 bankgrpnr;
- };
+diff --git a/drivers/gpu/drm/drm_connector.c b/drivers/gpu/drm/drm_connector.c
+index b0516505f7ae..d9961cce8245 100644
+--- a/drivers/gpu/drm/drm_connector.c
++++ b/drivers/gpu/drm/drm_connector.c
+@@ -452,6 +452,45 @@ int drmm_connector_init(struct drm_device *dev,
+ }
+ EXPORT_SYMBOL(drmm_connector_init);
  
++/**
++ * drmm_connector_hdmi_init - Init a preallocated HDMI connector
++ * @dev: DRM device
++ * @connector: A pointer to the HDMI connector to init
++ * @funcs: callbacks for this connector
++ * @connector_type: user visible type of the connector
++ * @ddc: optional pointer to the associated ddc adapter
++ *
++ * Initialises a preallocated HDMI connector. Connectors can be
++ * subclassed as part of driver connector objects.
++ *
++ * Cleanup is automatically handled with a call to
++ * drm_connector_cleanup() in a DRM-managed action.
++ *
++ * The connector structure should be allocated with drmm_kzalloc().
++ *
++ * Returns:
++ * Zero on success, error code on failure.
++ */
++int drmm_connector_hdmi_init(struct drm_device *dev,
++			     struct drm_connector *connector,
++			     const struct drm_connector_funcs *funcs,
++			     int connector_type,
++			     struct i2c_adapter *ddc)
++{
++	int ret;
++
++	if (!(connector_type == DRM_MODE_CONNECTOR_HDMIA ||
++	      connector_type == DRM_MODE_CONNECTOR_HDMIB))
++		return -EINVAL;
++
++	ret = drmm_connector_init(dev, connector, funcs, connector_type, ddc);
++	if (ret)
++		return ret;
++
++	return 0;
++}
++EXPORT_SYMBOL(drmm_connector_hdmi_init);
++
  /**
-@@ -429,7 +429,7 @@ static int zynqmp_get_error_info(struct synps_edac_priv *priv)
- 	regval = readl(base + ECC_CEADDR1_OFST);
- 	p->ceinfo.bank = (regval & ECC_CEADDR1_BNKNR_MASK) >>
- 					ECC_CEADDR1_BNKNR_SHIFT;
--	p->ceinfo.bankgrpnr = (regval &	ECC_CEADDR1_BNKGRP_MASK) >>
-+	p->ceinfo.bankgrp = (regval & ECC_CEADDR1_BNKGRP_MASK) >>
- 					ECC_CEADDR1_BNKGRP_SHIFT;
- 	p->ceinfo.col = (regval & ECC_CEADDR1_COL_MASK);
- 	p->ceinfo.data = readl(base + ECC_CSYND0_OFST);
-@@ -443,7 +443,7 @@ static int zynqmp_get_error_info(struct synps_edac_priv *priv)
- 	regval = readl(base + ECC_UEADDR0_OFST);
- 	p->ueinfo.row = (regval & ECC_CEADDR0_RW_MASK);
- 	regval = readl(base + ECC_UEADDR1_OFST);
--	p->ueinfo.bankgrpnr = (regval & ECC_CEADDR1_BNKGRP_MASK) >>
-+	p->ueinfo.bankgrp = (regval & ECC_CEADDR1_BNKGRP_MASK) >>
- 					ECC_CEADDR1_BNKGRP_SHIFT;
- 	p->ueinfo.bank = (regval & ECC_CEADDR1_BNKNR_MASK) >>
- 					ECC_CEADDR1_BNKNR_SHIFT;
-@@ -478,9 +478,9 @@ static void handle_error(struct mem_ctl_info *mci, struct synps_ecc_status *p)
- 		pinf = &p->ceinfo;
- 		if (priv->p_data->quirks & DDR_ECC_INTR_SUPPORT) {
- 			snprintf(priv->message, SYNPS_EDAC_MSG_SIZE,
--				 "DDR ECC error type:%s Row %d Col %d Bank %d BankGroup Number %d Bit Position: %d Data: 0x%08x",
-+				 "DDR ECC error type:%s Row %d Col %d Bank %d Bank Group %d Bit Position: %d Data: 0x%08x",
- 				 "CE", pinf->row, pinf->col, pinf->bank,
--				 pinf->bankgrpnr, pinf->bitpos, pinf->data);
-+				 pinf->bankgrp, pinf->bitpos, pinf->data);
- 		} else {
- 			snprintf(priv->message, SYNPS_EDAC_MSG_SIZE,
- 				 "DDR ECC error type:%s Row %d Bank %d Col %d Bit Position: %d Data: 0x%08x",
-@@ -497,9 +497,9 @@ static void handle_error(struct mem_ctl_info *mci, struct synps_ecc_status *p)
- 		pinf = &p->ueinfo;
- 		if (priv->p_data->quirks & DDR_ECC_INTR_SUPPORT) {
- 			snprintf(priv->message, SYNPS_EDAC_MSG_SIZE,
--				 "DDR ECC error type :%s Row %d Col %d Bank %d BankGroup Number %d",
-+				 "DDR ECC error type :%s Row %d Col %d Bank %d Bank Group %d",
- 				 "UE", pinf->row, pinf->col, pinf->bank,
--				 pinf->bankgrpnr);
-+				 pinf->bankgrp);
- 		} else {
- 			snprintf(priv->message, SYNPS_EDAC_MSG_SIZE,
- 				 "DDR ECC error type :%s Row %d Bank %d Col %d ",
+  * drm_connector_attach_edid_property - attach edid property.
+  * @connector: the connector
+diff --git a/include/drm/drm_connector.h b/include/drm/drm_connector.h
+index fe88d7fc6b8f..4491c4c2fb6e 100644
+--- a/include/drm/drm_connector.h
++++ b/include/drm/drm_connector.h
+@@ -1904,6 +1904,11 @@ int drmm_connector_init(struct drm_device *dev,
+ 			const struct drm_connector_funcs *funcs,
+ 			int connector_type,
+ 			struct i2c_adapter *ddc);
++int drmm_connector_hdmi_init(struct drm_device *dev,
++			     struct drm_connector *connector,
++			     const struct drm_connector_funcs *funcs,
++			     int connector_type,
++			     struct i2c_adapter *ddc);
+ void drm_connector_attach_edid_property(struct drm_connector *connector);
+ int drm_connector_register(struct drm_connector *connector);
+ void drm_connector_unregister(struct drm_connector *connector);
+
 -- 
-2.43.0
+2.43.2
 
