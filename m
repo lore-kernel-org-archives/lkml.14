@@ -1,222 +1,112 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2886B73F06
-	for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 18:50:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8843512D1FB;
+	Thu, 22 Feb 2024 18:51:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708627851; cv=none; b=LLyq0SQW6S/c6O81mtpQtITQPeRS9geiwGtmd06DDE1YQg33p2FeeHSUa1t50bTb8RHh9pnGWG4AAF5xijTWHZ6jgZiLQmyWnWY2eXCPDoDwzepwf/1gkAZmfTvXDqfyTI/GFLK0o83K7WgvczsN47lLOL+0IkO/FKUjE1XShlw=
+	t=1708627866; cv=none; b=RX0qEcM1XA4PD5iRTCrjKVVvzRYi3wJ2dCZ+JV7Dg7btBGVKwaZF4uoK68rSeC8qUQ4B8BI3yMkdWyB1jfokuPVxq/RKsVRzMImupNzvMerFnMZwIrNJlF87UpJVz2mudObXenCCN+nHy1Xle86QjYU4Xlt5xZyVhrto84Lny7A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708627851; c=relaxed/simple;
-	bh=uCkraOe2EGA6pQ5TAhfFMh2s+xsRPE+IEAImTNgThHo=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=FDf1WO4mHr4/H7wZtOg4WEKE0M813fyocllfRplAodfda6gr7ADoF28u0KQzbGUvxncEBW+54jis7OPjZeGaIhkRpnRItQcWRKDz8Cttq4mWgvFDotSkHiJe/rekcr7SMZOTAMzsXGV8vu1E8E15CcnWX0bcg3zeVa2WAbcjb+Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=m0jCwowe; arc=none smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="m0jCwowe"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1708627850; x=1740163850;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=uCkraOe2EGA6pQ5TAhfFMh2s+xsRPE+IEAImTNgThHo=;
-  b=m0jCwoweRFTcHa+OvDmQ72BHOhlxQHwgkAMFpxbcOLhzfD6W3fBAg4Ei
-   AS2vz6MInXcT+ED6KWsXOZg/S2QmRoPiQcwlisXG89kQGb+cvGhCX/juT
-   nID/Pt/xHo1TgkMptCz5hpjjPwAS/7G56dZJJg7j/DNWXIFQBAiSnvyHe
-   q6zh6/7l4/teOXm5QIJ8WnXC9VYsqkAU7GJdbxG2K80AEaJL3jaGY8Hw1
-   c8iY5BqtFROmr2B2B1Bx/cJI/y8TzQz3ew8O6POtlSaeEs/998knca78b
-   nncpZBKxxTS+Bb7fmI4BijGd9QaJz6TeHPQY87N8w8J/KyzMc6cRPIONa
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10992"; a="3020567"
-X-IronPort-AV: E=Sophos;i="6.06,179,1705392000"; 
-   d="scan'208";a="3020567"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Feb 2024 10:50:46 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10992"; a="936889175"
-X-IronPort-AV: E=Sophos;i="6.06,179,1705392000"; 
-   d="scan'208";a="936889175"
-Received: from agluck-desk3.sc.intel.com ([172.25.222.74])
-  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Feb 2024 10:50:45 -0800
-From: Tony Luck <tony.luck@intel.com>
-To: "Chatre, Reinette" <reinette.chatre@intel.com>,
-	Borislav Petkov <bp@alien8.de>,
-	James Morse <james.morse@arm.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>,
-	x86@kernel.org,
-	linux-kernel@vger.kernel.org,
-	"Yu, Fenghua" <fenghua.yu@intel.com>,
-	Ingo Molnar <mingo@redhat.com>,
-	H Peter Anvin <hpa@zytor.com>,
-	Babu Moger <Babu.Moger@amd.com>,
-	shameerali.kolothum.thodi@huawei.com,
-	D Scott Phillips OS <scott@os.amperecomputing.com>,
-	carl@os.amperecomputing.com,
-	lcherian@marvell.com,
-	bobo.shaobowang@huawei.com,
-	tan.shaopeng@fujitsu.com,
-	baolin.wang@linux.alibaba.com,
-	Jamie Iles <quic_jiles@quicinc.com>,
-	Xin Hao <xhao@linux.alibaba.com>,
-	peternewman@google.com,
-	dfustini@baylibre.com,
-	amitsinght@marvell.com,
-	David Hildenbrand <david@redhat.com>,
-	Tony Luck <tony.luck@intel.com>
-Subject: [PATCH v3 2/2] x86/resctrl: Simply call convention for MSR update functions
-Date: Thu, 22 Feb 2024 10:50:39 -0800
-Message-ID: <20240222185039.72201-3-tony.luck@intel.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240222185039.72201-1-tony.luck@intel.com>
-References: <ZdZPht8hY4J9uIOz@agluck-desk3>
- <20240222185039.72201-1-tony.luck@intel.com>
+	s=arc-20240116; t=1708627866; c=relaxed/simple;
+	bh=uF8n5frPiummjo0/NnhXvolUhAv0sKOfCyhG9BGm5qg=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=t6eF6+kYRfrXZtdqwM/VZk86Jcc6TwFT7BvKFSW9snXyhdnjcUigcWUWvSGM0iL3X1Mu/oXLLFg2rTKeuPT+0lMQ6V1w9ulE88WuI3FuYqah4bbEuA7FPAfkJ35dl2aaGzw3vY+O9Pk6S80+E7WHsrCOaadKENODm5RHjYwt8xg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Tghvv6sT0z6K8pZ;
+	Fri, 23 Feb 2024 02:47:23 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
+	by mail.maildlp.com (Postfix) with ESMTPS id CAE851412EB;
+	Fri, 23 Feb 2024 02:51:01 +0800 (CST)
+Received: from localhost (10.195.247.94) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Thu, 22 Feb
+ 2024 18:51:01 +0000
+Date: Thu, 22 Feb 2024 18:50:59 +0000
+From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+CC: Linux ACPI <linux-acpi@vger.kernel.org>, LKML
+	<linux-kernel@vger.kernel.org>, Mika Westerberg
+	<mika.westerberg@linux.intel.com>, "Rafael J. Wysocki" <rafael@kernel.org>,
+	"Russell King (Oracle)" <linux@armlinux.org.uk>
+Subject: Re: [PATCH v1 1/4] ACPI: scan: Fix device check notification
+ handling
+Message-ID: <20240222185059.00005f40@Huawei.com>
+In-Reply-To: <4886572.GXAFRqVoOG@kreacher>
+References: <4562925.LvFx2qVVIh@kreacher>
+	<4886572.GXAFRqVoOG@kreacher>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml100005.china.huawei.com (7.191.160.25) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
 
-The per-resource MSR update functions cat_wrmsr(), mba_wrmsr_intel(),
-and mba_wrmsr_amd() all take three arguments:
+On Wed, 21 Feb 2024 21:01:02 +0100
+"Rafael J. Wysocki" <rjw@rjwysocki.net> wrote:
 
-  (struct rdt_domain *d, struct msr_param *m, struct rdt_resource *r)
+> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> 
+> It is generally invalid to fail a Device Check notification if the scan
+> handler has not been attached to the given device after a bus rescan,
+> because there may be valid reasons for the scan handler to refuse
+> attaching to the device (for example, the device is not ready).
+> 
+> For this reason, modify acpi_scan_device_check() to return 0 in that
+> case without printing a warning.
+> 
+> While at it, reduce the log level of the "already enumerated" message
+> in the same function, because it is only interesting when debugging
+> notification handling
+> 
+> Fixes: 443fc8202272 ("ACPI / hotplug: Rework generic code to handle suprise removals")
+> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-But struct msr_param has always contained the rdt_resource, and now
-contains the rdt_domain too.
+Seems reasonable to me.  Not sure it fixes any bugs anyone has seen
+in the wild though. I'd not give it a fixes tag without such a
+known case, but your subsystem so fair enough!
 
-Change to just pass struct msr_param as a single parameter. Clean
-up formatting and fix some firtree parameter ordering.
+Thanks for resolving how to handle the processor case.
 
-No functional change.
-
-Suggested-by: Reinette Chatre <reinette.chatre@intel.com>
-Signed-off-by: Tony Luck <tony.luck@intel.com>
----
- arch/x86/kernel/cpu/resctrl/internal.h    |  3 +-
- arch/x86/kernel/cpu/resctrl/core.c        | 39 +++++++++--------------
- arch/x86/kernel/cpu/resctrl/ctrlmondata.c |  2 +-
- 3 files changed, 17 insertions(+), 27 deletions(-)
-
-diff --git a/arch/x86/kernel/cpu/resctrl/internal.h b/arch/x86/kernel/cpu/resctrl/internal.h
-index c30d7697b431..2f21358b9621 100644
---- a/arch/x86/kernel/cpu/resctrl/internal.h
-+++ b/arch/x86/kernel/cpu/resctrl/internal.h
-@@ -443,8 +443,7 @@ struct rdt_hw_resource {
- 	struct rdt_resource	r_resctrl;
- 	u32			num_closid;
- 	unsigned int		msr_base;
--	void (*msr_update)	(struct rdt_domain *d, struct msr_param *m,
--				 struct rdt_resource *r);
-+	void			(*msr_update)(struct msr_param *m);
- 	unsigned int		mon_scale;
- 	unsigned int		mbm_width;
- 	unsigned int		mbm_cfg_mask;
-diff --git a/arch/x86/kernel/cpu/resctrl/core.c b/arch/x86/kernel/cpu/resctrl/core.c
-index 8d378fc7a50b..7751eea19fd2 100644
---- a/arch/x86/kernel/cpu/resctrl/core.c
-+++ b/arch/x86/kernel/cpu/resctrl/core.c
-@@ -56,14 +56,9 @@ int max_name_width, max_data_width;
-  */
- bool rdt_alloc_capable;
- 
--static void
--mba_wrmsr_intel(struct rdt_domain *d, struct msr_param *m,
--		struct rdt_resource *r);
--static void
--cat_wrmsr(struct rdt_domain *d, struct msr_param *m, struct rdt_resource *r);
--static void
--mba_wrmsr_amd(struct rdt_domain *d, struct msr_param *m,
--	      struct rdt_resource *r);
-+static void mba_wrmsr_intel(struct msr_param *m);
-+static void cat_wrmsr(struct msr_param *m);
-+static void mba_wrmsr_amd(struct msr_param *m);
- 
- #define domain_init(id) LIST_HEAD_INIT(rdt_resources_all[id].r_resctrl.domains)
- 
-@@ -309,12 +304,11 @@ static void rdt_get_cdp_l2_config(void)
- 	rdt_get_cdp_config(RDT_RESOURCE_L2);
- }
- 
--static void
--mba_wrmsr_amd(struct rdt_domain *d, struct msr_param *m, struct rdt_resource *r)
-+static void mba_wrmsr_amd(struct msr_param *m)
- {
-+	struct rdt_hw_resource *hw_res = resctrl_to_arch_res(m->res);
-+	struct rdt_hw_domain *hw_dom = resctrl_to_arch_dom(m->dom);
- 	unsigned int i;
--	struct rdt_hw_domain *hw_dom = resctrl_to_arch_dom(d);
--	struct rdt_hw_resource *hw_res = resctrl_to_arch_res(r);
- 
- 	for (i = m->low; i < m->high; i++)
- 		wrmsrl(hw_res->msr_base + i, hw_dom->ctrl_val[i]);
-@@ -334,25 +328,22 @@ static u32 delay_bw_map(unsigned long bw, struct rdt_resource *r)
- 	return r->default_ctrl;
- }
- 
--static void
--mba_wrmsr_intel(struct rdt_domain *d, struct msr_param *m,
--		struct rdt_resource *r)
-+static void mba_wrmsr_intel(struct msr_param *m)
- {
-+	struct rdt_hw_resource *hw_res = resctrl_to_arch_res(m->res);
-+	struct rdt_hw_domain *hw_dom = resctrl_to_arch_dom(m->dom);
- 	unsigned int i;
--	struct rdt_hw_domain *hw_dom = resctrl_to_arch_dom(d);
--	struct rdt_hw_resource *hw_res = resctrl_to_arch_res(r);
- 
- 	/*  Write the delay values for mba. */
- 	for (i = m->low; i < m->high; i++)
--		wrmsrl(hw_res->msr_base + i, delay_bw_map(hw_dom->ctrl_val[i], r));
-+		wrmsrl(hw_res->msr_base + i, delay_bw_map(hw_dom->ctrl_val[i], m->res));
- }
- 
--static void
--cat_wrmsr(struct rdt_domain *d, struct msr_param *m, struct rdt_resource *r)
-+static void cat_wrmsr(struct msr_param *m)
- {
-+	struct rdt_hw_resource *hw_res = resctrl_to_arch_res(m->res);
-+	struct rdt_hw_domain *hw_dom = resctrl_to_arch_dom(m->dom);
- 	unsigned int i;
--	struct rdt_hw_domain *hw_dom = resctrl_to_arch_dom(d);
--	struct rdt_hw_resource *hw_res = resctrl_to_arch_res(r);
- 
- 	for (i = m->low; i < m->high; i++)
- 		wrmsrl(hw_res->msr_base + i, hw_dom->ctrl_val[i]);
-@@ -384,7 +375,7 @@ void rdt_ctrl_update(void *arg)
- 	struct msr_param *m = arg;
- 
- 	hw_res = resctrl_to_arch_res(m->res);
--	hw_res->msr_update(m->dom, m, m->res);
-+	hw_res->msr_update(m);
- }
- 
- /*
-@@ -461,7 +452,7 @@ static int domain_setup_ctrlval(struct rdt_resource *r, struct rdt_domain *d)
- 	m.dom = d;
- 	m.low = 0;
- 	m.high = hw_res->num_closid;
--	hw_res->msr_update(d, &m, r);
-+	hw_res->msr_update(&m);
- 	return 0;
- }
- 
-diff --git a/arch/x86/kernel/cpu/resctrl/ctrlmondata.c b/arch/x86/kernel/cpu/resctrl/ctrlmondata.c
-index a3a0fd80daa8..7471f6b747b6 100644
---- a/arch/x86/kernel/cpu/resctrl/ctrlmondata.c
-+++ b/arch/x86/kernel/cpu/resctrl/ctrlmondata.c
-@@ -289,7 +289,7 @@ int resctrl_arch_update_one(struct rdt_resource *r, struct rdt_domain *d,
- 	msr_param.dom = d;
- 	msr_param.low = idx;
- 	msr_param.high = idx + 1;
--	hw_res->msr_update(d, &msr_param, r);
-+	hw_res->msr_update(&msr_param);
- 
- 	return 0;
- }
--- 
-2.43.0
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> ---
+>  drivers/acpi/scan.c |    8 ++------
+>  1 file changed, 2 insertions(+), 6 deletions(-)
+> 
+> Index: linux-pm/drivers/acpi/scan.c
+> ===================================================================
+> --- linux-pm.orig/drivers/acpi/scan.c
+> +++ linux-pm/drivers/acpi/scan.c
+> @@ -314,18 +314,14 @@ static int acpi_scan_device_check(struct
+>  		 * again).
+>  		 */
+>  		if (adev->handler) {
+> -			dev_warn(&adev->dev, "Already enumerated\n");
+> -			return -EALREADY;
+> +			dev_dbg(&adev->dev, "Already enumerated\n");
+> +			return 0;
+>  		}
+>  		error = acpi_bus_scan(adev->handle);
+>  		if (error) {
+>  			dev_warn(&adev->dev, "Namespace scan failure\n");
+>  			return error;
+>  		}
+> -		if (!adev->handler) {
+> -			dev_warn(&adev->dev, "Enumeration failure\n");
+> -			error = -ENODEV;
+> -		}
+>  	} else {
+>  		error = acpi_scan_device_not_enumerated(adev);
+>  	}
+> 
+> 
+> 
 
