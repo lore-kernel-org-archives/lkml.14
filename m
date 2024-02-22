@@ -1,117 +1,110 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55D9F18032;
-	Thu, 22 Feb 2024 23:06:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 438C617BD3;
+	Thu, 22 Feb 2024 23:08:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708643170; cv=none; b=manzboi7WtAwP4cBPcRS5AQVnZ78hpTsscJNj/IfLukSyZAQNBS26P/2XwDXjrH7/6TX5qFUXc0COKSVj4HHFhzkmYoktXKDDHREdX3n/9bZHqntyI3R7o6fb2yB+/87lBhOj8pwyPw1rB14VLc7n430KyweS6dh3QaOJFh2AO8=
+	t=1708643297; cv=none; b=dQ6P/kEhy/rRnTidXJKherMVkziM5AhT49wrxlMRk2VMNd56r3zTJukxmj2SzD9WQnrrwVGVQLljvaxBix1dUiiD2BieK8PYUlgrt9CMTkpbnNjWIcT4XN0s1dELnGobD8rFZJpyFAF+FYa48mb9xHwlvR6a9p7Aci7uzE+ZpD4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708643170; c=relaxed/simple;
-	bh=hYrpPsLRcrNhzOLOLhn2V6Z7Ec9eAWm7xV/uL9PKg4k=;
-	h=Date:From:To:Cc:Subject:Message-Id:Mime-Version:Content-Type; b=rFLUtkKIoZJ3U2xyPLZtyImdYRAn1giljtACnduFmmD+Kqo/2+tWLogbWKiUKAY1u3Bzcijhrca5mwL/x9Xz4YLZKT5XM/YsrGEQo0bVmvHigwCQZueQpv6qcPvWBQWwX3cbyfB4CvDoZOW2JOQRl7x9XI7PG3Qy6z6WMJ1AZnA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=UI0A8Wt+; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1708643297; c=relaxed/simple;
+	bh=9Xn9HY2ZMUXFU2z8kP3lVZnvT0TyWycwArAs9PhAWuA=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=NxtZ3NkwUfDsmern0HNHtiv+LF68zGvOmsRPdA7yt47Zur5x/IuiGveZk0Ca84mu3/H3Q1gICO2aO7tOrY8w5ezZXYHhPo32jPIaJrVC55gKvK6C22Hql9y8mTbjd/p0WEyYzlWVXSsRN2wHstKqDOc+EaYzHbBZrOt7Ph7j+Bs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=bJ4EgVG0; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="UI0A8Wt+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 870C1C433F1;
-	Thu, 22 Feb 2024 23:06:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-	s=korg; t=1708643169;
-	bh=hYrpPsLRcrNhzOLOLhn2V6Z7Ec9eAWm7xV/uL9PKg4k=;
-	h=Date:From:To:Cc:Subject:From;
-	b=UI0A8Wt+vdtYj5x/lR7GPqNZ7hObkZgqPUCpbEOu943jvyiTpexpjItEwXKqcqo9H
-	 r2I6y4+edA3q+8RWW8OJJK1jMkYYrfxYOTfIwCCCxZnJP769dArAy7Q81Zdx14AzZs
-	 miym5YJ781HBJuhO2DgNJuL41ywJzH63swZGbMjY=
-Date: Thu, 22 Feb 2024 15:06:09 -0800
-From: Andrew Morton <akpm@linux-foundation.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: linux-mm@kvack.org, mm-commits@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Subject: [GIT PULL] hotfixes for 6.8-rc6
-Message-Id: <20240222150609.61c32cf2ababec81509bf5fc@linux-foundation.org>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="bJ4EgVG0"
+Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 41MBgb8G012091;
+	Thu, 22 Feb 2024 23:08:12 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	from:to:cc:subject:date:message-id:in-reply-to:references
+	:mime-version:content-transfer-encoding:content-type; s=
+	qcppdkim1; bh=tfk2oZMBY1QjYgBmALjMym7en0dKS68Xzwz2ZK1Y7io=; b=bJ
+	4EgVG0+BjSjiwooXygrxWo08/umyd4TA7kGRLoraoFrVTu5vD81+PZ6W+nuDcylY
+	L0zvYLn0oZs7znxGtjQZ2fbNPcUK3EBWodOl6BckrkmPKL8CCtGQZPFuOUgQk7Fz
+	l9nsgRutqtjxqL5pMwo+bd1kPgBS3zwa7UTnQRbjrhbS+V54yxk3UOdcYFA8xUFJ
+	pukcrr3AlCe+DAeTulcTaKslx75OLdKcKgGanjnA027ckYZR5PK0587IE7FkQjVQ
+	qrbNJ8mRO7BfWj730izCUxvIzfcisK/uuRgqUYTFbVVu7ysgw6GGsKkHm5REqCbs
+	OUg37UEuiJso+QOdgJng==
+Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3wdvwwbhqw-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 22 Feb 2024 23:08:11 +0000 (GMT)
+Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
+	by NALASPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 41MN8A82029081
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 22 Feb 2024 23:08:10 GMT
+Received: from hu-uchalich-lv.qualcomm.com (10.49.16.6) by
+ nalasex01c.na.qualcomm.com (10.47.97.35) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.40; Thu, 22 Feb 2024 15:08:07 -0800
+From: Unnathi Chalicheemala <quic_uchalich@quicinc.com>
+To: Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio
+	<konrad.dybcio@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        "Krzysztof
+ Kozlowski" <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley
+	<conor+dt@kernel.org>
+CC: <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <kernel@quicinc.com>
+Subject: [PATCH v3 3/5] arm64: dts: qcom: sm8450: Add mapping to llcc Broadcast_AND region
+Date: Thu, 22 Feb 2024 15:07:55 -0800
+Message-ID: <8b626c328bfb3ae297a228a6821471c4fcc2ec70.1708551850.git.quic_uchalich@quicinc.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <cover.1708551850.git.quic_uchalich@quicinc.com>
+References: <cover.1708551850.git.quic_uchalich@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: nalasex01b.na.qualcomm.com (10.47.209.197) To
+ nalasex01c.na.qualcomm.com (10.47.97.35)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: vfA18B79-LNLTJ77B5ewDPf2rntPZouV
+X-Proofpoint-GUID: vfA18B79-LNLTJ77B5ewDPf2rntPZouV
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-02-22_15,2024-02-22_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0 mlxscore=0
+ spamscore=0 impostorscore=0 mlxlogscore=618 clxscore=1015 phishscore=0
+ adultscore=0 suspectscore=0 priorityscore=1501 malwarescore=0 bulkscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2402120000
+ definitions=main-2402220178
 
+Mapping Broadcast_AND region for LLCC in SM8450.
 
-Linus, please merge this batch of MM (and one non-MM) hotfixes, thanks.
+Signed-off-by: Unnathi Chalicheemala <quic_uchalich@quicinc.com>
+---
+ arch/arm64/boot/dts/qcom/sm8450.dtsi | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-
-The following changes since commit b401b621758e46812da61fa58a67c3fd8d91de0d:
-
-  Linux 6.8-rc5 (2024-02-18 12:56:25 -0800)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm tags/mm-hotfixes-stable-2024-02-22-15-02
-
-for you to fetch changes up to 2597c9947b0174fcc71bdd7ab6cb49c2b4291e95:
-
-  kasan: guard release_free_meta() shadow access with kasan_arch_is_ready() (2024-02-20 14:20:50 -0800)
-
-----------------------------------------------------------------
-14 hotfixes.  10 are cc:stable and the remainder address post-6.7 issues
-or aren't considered appropriate for backporting.
-
-----------------------------------------------------------------
-Anshuman Khandual (1):
-      mm/memblock: add MEMBLOCK_RSRV_NOINIT into flagname[] array
-
-Benjamin Gray (1):
-      kasan: guard release_free_meta() shadow access with kasan_arch_is_ready()
-
-Chengming Zhou (1):
-      mm/zswap: invalidate duplicate entry when !zswap_enabled
-
-Guenter Roeck (1):
-      lib/Kconfig.debug: TEST_IOV_ITER depends on MMU
-
-Johannes Weiner (1):
-      mm: memcontrol: clarify swapaccount=0 deprecation warning
-
-Kairui Song (1):
-      mm/swap: fix race when skipping swapcache
-
-Nhat Pham (1):
-      mm/swap_state: update zswap LRU's protection range with the folio locked
-
-SeongJae Park (4):
-      mm/damon/core: check apply interval in damon_do_apply_schemes()
-      mm/damon/sysfs-schemes: handle schemes sysfs dir removal before commit_schemes_quota_goals
-      mm/damon/reclaim: fix quota stauts loss due to online tunings
-      mm/damon/lru_sort: fix quota status loss due to online tunings
-
-Shakeel Butt (1):
-      MAINTAINERS: mailmap: update Shakeel's email address
-
-Terry Tritton (1):
-      selftests/mm: uffd-unit-test check if huge page size is 0
-
-Yosry Ahmed (1):
-      mm: zswap: fix missing folio cleanup in writeback race path
-
- .mailmap                                     |  1 +
- MAINTAINERS                                  |  2 +-
- include/linux/swap.h                         |  5 ++++
- lib/Kconfig.debug                            |  1 +
- mm/damon/core.c                              | 15 +++++++---
- mm/damon/lru_sort.c                          | 43 +++++++++++++++++++++++-----
- mm/damon/reclaim.c                           | 18 +++++++++++-
- mm/damon/sysfs-schemes.c                     |  4 +++
- mm/kasan/generic.c                           |  3 ++
- mm/memblock.c                                |  1 +
- mm/memcontrol.c                              | 10 +++++--
- mm/memory.c                                  | 20 +++++++++++++
- mm/swap.h                                    |  5 ++++
- mm/swap_state.c                              | 10 ++++---
- mm/swapfile.c                                | 13 +++++++++
- mm/zswap.c                                   | 15 ++++++----
- tools/testing/selftests/mm/uffd-unit-tests.c |  6 ++++
- 17 files changed, 147 insertions(+), 25 deletions(-)
+diff --git a/arch/arm64/boot/dts/qcom/sm8450.dtsi b/arch/arm64/boot/dts/qcom/sm8450.dtsi
+index 01e4dfc4babd..d2d6fae55e2a 100644
+--- a/arch/arm64/boot/dts/qcom/sm8450.dtsi
++++ b/arch/arm64/boot/dts/qcom/sm8450.dtsi
+@@ -4306,9 +4306,10 @@ system-cache-controller@19200000 {
+ 			compatible = "qcom,sm8450-llcc";
+ 			reg = <0 0x19200000 0 0x80000>, <0 0x19600000 0 0x80000>,
+ 			      <0 0x19300000 0 0x80000>, <0 0x19700000 0 0x80000>,
+-			      <0 0x19a00000 0 0x80000>;
++			      <0 0x19a00000 0 0x80000>, <0 0x19c00000 0 0x80000>;
+ 			reg-names = "llcc0_base", "llcc1_base", "llcc2_base",
+-				    "llcc3_base", "llcc_broadcast_base";
++				    "llcc3_base", "llcc_broadcast_base",
++				    "llcc_broadcast_and_base";
+ 			interrupts = <GIC_SPI 266 IRQ_TYPE_LEVEL_HIGH>;
+ 		};
+ 
+-- 
+2.25.1
 
