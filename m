@@ -1,159 +1,111 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFE6117BBE;
-	Thu, 22 Feb 2024 22:46:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6CF6256A
+	for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 22:55:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708642015; cv=none; b=nM5p0q1R6NyeNjsPXF62h9xdAwkziMVpmqz7V24KMW4RlbGYsPQ19Tf2E43qSjBDYQ3+esvvSxOHgccnkHhUqDPu5/YNoF4xnbiFLOOWpS8vtLvaN6MTbg3iqCnd46xGJc6C4E4hmfD5jAKSxh9B4Z+JKw2ceH+3SiaRcTECZKA=
+	t=1708642527; cv=none; b=GZPjdlVAQk3Y3mNjXqUP07CU0/3aCX7ocCGB7jc0fcKxMW44U64/IcrTTqI4TXqlTRhb2gL4IqLaM/e699dvLVdz6gNexUJIJgTTX1kbaHF71zDrSDua+TMLKvmr83JlwqURapdANZ41SgyhMAuGOLTe+h3sQnUp1EYhpqz5z2s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708642015; c=relaxed/simple;
-	bh=jxUAoPY4buWx8x3wTgrDsWe+Yni+xI8fxg2cmerm4/k=;
-	h=Date:From:To:Subject:Cc:MIME-Version:Message-ID:Content-Type; b=mgYrTiGtPHl5e5GnSvdkFbY/hUYSvTarvOjj/L6sSTydnhna6ms5UfRthsx2Rgnx+vebFcvEJXMeiuhHnjTAa2wSLNn9sAU9//CnnatAtF5vpqS1pER6luO1Lqj7sUsLVq3Iw0d7kIH4pBXN7CiSeIs9HVKg14VWCrjUoHEkS4E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=KH9Q4mCu; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ZXXEV2bc; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="KH9Q4mCu";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ZXXEV2bc"
-Date: Thu, 22 Feb 2024 22:46:49 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1708642010;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
-	bh=GIBmASRFKgbqXpLppJ9htzyrvj+vvzswJFnQGxDsbGY=;
-	b=KH9Q4mCuFermHP4Z4c537BOQTpK9vFl2fdFsyBp2oTztj6Kuf1/3Rzaflpt4FRKzuObOkR
-	5sfrxzOb3F+kyJKI5cn4kqTrHtE9UTxHbT+4YMu0z+6oTC28Ki1LTwhGpTcRbSHeXs3bDn
-	ImovSkdSD66ebPTSQInUFi41Z7BxBiNbJv7i1GQeevle5w72YPULlSdd3/MTSAWwVXTpGN
-	DPYD7YeALFDoVS15R3TESLz63Fa2ziNguI4QsjJ8eep89mksnbkzO+Dg0mxNZzxM2CHyzn
-	33rKOi3iNMxyWVUkgrGcoboKAyzBxfmfod/Qm4Vdyc8vsP7bFna/akLAEYxp6w==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1708642010;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
-	bh=GIBmASRFKgbqXpLppJ9htzyrvj+vvzswJFnQGxDsbGY=;
-	b=ZXXEV2bc4BvzWw/hyGduraFCbm2uUjhFTFfWSDIx2VwRgoNNiXa1hXnJde1scSBXVuPmDP
-	49juRYCEpnmvSKCQ==
-From: "tip-bot2 for Rick Edgecombe" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/mm] x86/mm/cpa: Warn for set_memory_XXcrypted() VMM fails
-Cc: "Michael Kelley (LINUX)" <mikelley@microsoft.com>,
- Rick Edgecombe <rick.p.edgecombe@intel.com>,
- Dave Hansen <dave.hansen@linux.intel.com>,
- Tom Lendacky <thomas.lendacky@amd.com>,
- Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
- "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>, x86@kernel.org,
- linux-kernel@vger.kernel.org
+	s=arc-20240116; t=1708642527; c=relaxed/simple;
+	bh=EPCcr1ZcPmoYlF6Aa/he5Fx0lw6N1qSblFP9FR4V1yw=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=oYsgczfnvz/XOqqVVbpJgGPxAF4BtC4xkvePr7Ma2ITYcoltXcQoPeMzw1VZrxWdbz8eWGM5NOCFH7zOWnllimq81des1giemSvzpSLP8K2LONxqd0zPSiyGaYOlzKUpTxiDmX25lXIaisf4QQ3OWJWUmHYhznPqLR/yayjme2I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D8976C433F1;
+	Thu, 22 Feb 2024 22:55:25 +0000 (UTC)
+Date: Thu, 22 Feb 2024 17:57:15 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: John Stultz <jstultz@google.com>
+Cc: LKML <linux-kernel@vger.kernel.org>, Ingo Molnar <mingo@redhat.com>,
+ Peter Zijlstra <peterz@infradead.org>, Juri Lelli <juri.lelli@redhat.com>,
+ Vincent Guittot <vincent.guittot@linaro.org>, Dietmar Eggemann
+ <dietmar.eggemann@arm.com>, Ben Segall <bsegall@google.com>, Mel Gorman
+ <mgorman@suse.de>, Daniel Bristot de Oliveira <bristot@redhat.com>,
+ Valentin Schneider <vschneid@redhat.com>, kernel-team@android.com, Zimuzo
+ Ezeozue <zezeozue@google.com>
+Subject: Re: [PATCH] [RFC] sched: Add trace_sched_waking() tracepoint to
+ sched_ttwu_pending()
+Message-ID: <20240222175715.0593cb09@gandalf.local.home>
+In-Reply-To: <20240222204917.1719153-1-jstultz@google.com>
+References: <20240222204917.1719153-1-jstultz@google.com>
+X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <170864200980.398.6769219282784108170.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-The following commit has been merged into the x86/mm branch of tip:
+On Thu, 22 Feb 2024 12:49:03 -0800
+John Stultz <jstultz@google.com> wrote:
 
-Commit-ID:     82ace185017fbbe48342bf7d8a9fd795f9c711cd
-Gitweb:        https://git.kernel.org/tip/82ace185017fbbe48342bf7d8a9fd795f9c711cd
-Author:        Rick Edgecombe <rick.p.edgecombe@intel.com>
-AuthorDate:    Mon, 22 Jan 2024 10:40:03 -08:00
-Committer:     Dave Hansen <dave.hansen@linux.intel.com>
-CommitterDate: Thu, 22 Feb 2024 14:25:41 -08:00
+> Zimuzo reported seeing occasional cases in perfetto traces where
+> tasks went from sleeping directly to trace_sched_wakeup()
+> without always seeing a trace_sched_waking().
+> 
+> Looking at the code, trace_sched_wakeup() is only called in
+> ttwu_do_wakeup()
+> 
+> The call paths that get you to ttwu_do_wakeup() are:
+> try_to_wake_up() -> ttwu_do_wakeup()
+> try_to_wake_up() -> ttwu_runnable() -> ttwu_do_wakeup()
+> try_to_wake_up() -> ttwu_queue() -> ttwu_do_activate() -> ttwu_do_wakeup()
+> sched_ttwu_pending() -> ttwu_do_activate() -> ttwu_do_wakeup()
+> 
+> where trace_sched_waking() is currently called only in
+> try_to_wake_up().
+> 
+> So this patch adds a trace_sched_waking() call to
+> sched_ttwu_pending(), so we see the same state machine
+> transitions.
+> 
+> With this change, the number of unexpected state transitions
+> in perfetto was greatly reduced.
+> 
+> This has been in my drafts for awhile, so I wanted to send
+> this out for thoughts/feedback.
 
-x86/mm/cpa: Warn for set_memory_XXcrypted() VMM fails
+I just added at the same location as your trace event:
 
-On TDX it is possible for the untrusted host to cause
-set_memory_encrypted() or set_memory_decrypted() to fail such that an
-error is returned and the resulting memory is shared. Callers need to take
-care to handle these errors to avoid returning decrypted (shared) memory to
-the page allocator, which could lead to functional or security issues.
-In terms of security, the problematic case is guest PTEs mapping the
-shared alias GFNs, since the VMM has control of the shared mapping in the
-EPT/NPT.
+   trace_printk("SCHED_WAKING %s:%d\n", p->comm, p->pid);
 
-Such conversion errors may herald future system instability, but are
-temporarily survivable with proper handling in the caller. The kernel
-traditionally makes every effort to keep running, but it is expected that
-some coco guests may prefer to play it safe security-wise, and panic in
-this case. To accommodate both cases, warn when the arch breakouts for
-converting memory at the VMM layer return an error to CPA. Security focused
-users can rely on panic_on_warn to defend against bugs in the callers. Some
-VMMs are not known to behave in the troublesome way, so users that would
-like to terminate on any unusual behavior by the VMM around this will be
-covered as well.
+And then ran: trace-cmd record -e 'sched_wak*'
 
-Since the arch breakouts host the logic for handling coco implementation
-specific errors, an error returned from them means that the set_memory()
-call is out of options for handling the error internally. Make this the
-condition to warn about.
+Where trace-cmd report gives:
 
-It is possible that very rarely these functions could fail due to guest
-memory pressure (in the case of failing to allocate a huge page when
-splitting a page table). Don't warn in this case because it is a lot less
-likely to indicate an attack by the host and it is not clear which
-set_memory() calls should get the same treatment. That corner should be
-addressed by future work that considers the more general problem and not
-just papers over a single set_memory() variant.
+     kworker/0:1-10    [000] d..3.   190.212851: sched_waking:         comm=kworker/7:3 pid=114 prio=120 target_cpu=007
+          <idle>-0     [002] d.h2.   190.212856: bprint:               sched_ttwu_pending: SCHED_WAKING kworker/2:1:110
+          <idle>-0     [002] dNh2.   190.212861: sched_wakeup:         kworker/2:1:110 [120] CPU:002
+          <idle>-0     [001] d.h2.   190.212911: bprint:               sched_ttwu_pending: SCHED_WAKING kworker/1:1:85
+          <idle>-0     [003] d.h2.   190.212918: bprint:               sched_ttwu_pending: SCHED_WAKING kworker/3:1:77
+          <idle>-0     [001] dNh2.   190.212919: sched_wakeup:         kworker/1:1:85 [120] CPU:001
+          <idle>-0     [003] dNh2.   190.212927: sched_wakeup:         kworker/3:1:77 [120] CPU:003
+          <idle>-0     [004] d.h2.   190.212930: bprint:               sched_ttwu_pending: SCHED_WAKING kworker/4:1:115
+          <idle>-0     [004] dNh2.   190.212939: sched_wakeup:         kworker/4:1:115 [120] CPU:004
+          <idle>-0     [007] d.h2.   190.212943: bprint:               sched_ttwu_pending: SCHED_WAKING kworker/7:3:114
+          <idle>-0     [007] dNh2.   190.212952: sched_wakeup:         kworker/7:3:114 [120] CPU:007
+          <idle>-0     [001] d.h3.   190.511970: sched_waking:         comm=gmain pid=474 prio=120 target_cpu=001
+          <idle>-0     [001] dNh4.   190.511989: sched_wakeup:         gmain:474 [120] CPU:001
+          <idle>-0     [006] d.s3.   190.708715: sched_waking:         comm=kcompactd0 pid=70 prio=120 target_cpu=006
+          <idle>-0     [006] dNs4.   190.708726: sched_wakeup:         kcompactd0:70 [120] CPU:006
+          <idle>-0     [002] d.s4.   190.916737: sched_waking:         comm=kworker/2:1 pid=110 prio=120 target_cpu=002
+          <idle>-0     [002] dNs5.   190.916747: sched_wakeup:         kworker/2:1:110 [120] CPU:002
+          <idle>-0     [005] d.s4.   191.044665: sched_waking:         comm=kworker/5:0H pid=44 prio=100 target_cpu=005
+          <idle>-0     [005] dNs5.   191.044675: sched_wakeup:         kworker/5:0H:44 [100] CPU:005
+          <idle>-0     [006] d.s3.   191.212680: sched_waking:         comm=kcompactd0 pid=70 prio=120 target_cpu=006
+          <idle>-0     [006] dNs4.   191.212691: sched_wakeup:         kcompactd0:70 [120] CPU:006
+          <idle>-0     [001] d.s3.   191.556713: sched_waking:         comm=khugepaged pid=73 prio=139 target_cpu=001
+          <idle>-0     [001] dNs4.   191.556723: sched_wakeup:         khugepaged:73 [139] CPU:001
+          <idle>-0     [001] dNs4.   191.556728: sched_waking:         comm=kworker/1:1 pid=85 prio=120 target_cpu=001
 
-Suggested-by: Michael Kelley (LINUX) <mikelley@microsoft.com>
-Signed-off-by: Rick Edgecombe <rick.p.edgecombe@intel.com>
-Signed-off-by: Dave Hansen <dave.hansen@linux.intel.com>
-Reviewed-by: Tom Lendacky <thomas.lendacky@amd.com>
-Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-Reviewed-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-Reviewed-by: Michael Kelley <mikelley@microsoft.com>
-Link: https://lore.kernel.org/all/20240122184003.129104-1-rick.p.edgecombe%40intel.com
----
- arch/x86/mm/pat/set_memory.c | 19 +++++++++++++------
- 1 file changed, 13 insertions(+), 6 deletions(-)
+Where only sched_wakeup shows the trace_printk() output but other
+sched_waking events have a matching sched_wakeup event. I would say this is
+a bug.
 
-diff --git a/arch/x86/mm/pat/set_memory.c b/arch/x86/mm/pat/set_memory.c
-index e9b448d..47af381 100644
---- a/arch/x86/mm/pat/set_memory.c
-+++ b/arch/x86/mm/pat/set_memory.c
-@@ -2153,7 +2153,7 @@ static int __set_memory_enc_pgtable(unsigned long addr, int numpages, bool enc)
- 
- 	/* Notify hypervisor that we are about to set/clr encryption attribute. */
- 	if (!x86_platform.guest.enc_status_change_prepare(addr, numpages, enc))
--		return -EIO;
-+		goto vmm_fail;
- 
- 	ret = __change_page_attr_set_clr(&cpa, 1);
- 
-@@ -2166,13 +2166,20 @@ static int __set_memory_enc_pgtable(unsigned long addr, int numpages, bool enc)
- 	 */
- 	cpa_flush(&cpa, 0);
- 
-+	if (ret)
-+		return ret;
-+
- 	/* Notify hypervisor that we have successfully set/clr encryption attribute. */
--	if (!ret) {
--		if (!x86_platform.guest.enc_status_change_finish(addr, numpages, enc))
--			ret = -EIO;
--	}
-+	if (!x86_platform.guest.enc_status_change_finish(addr, numpages, enc))
-+		goto vmm_fail;
- 
--	return ret;
-+	return 0;
-+
-+vmm_fail:
-+	WARN_ONCE(1, "CPA VMM failure to convert memory (addr=%p, numpages=%d) to %s.\n",
-+		  (void *)addr, numpages, enc ? "private" : "shared");
-+
-+	return -EIO;
- }
- 
- static int __set_memory_enc_dec(unsigned long addr, int numpages, bool enc)
+This will also cause some of my tooling to be incorrect too, as I normally
+just use "sched_waking" to find wake ups :-/
+
+-- Steve
