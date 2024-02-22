@@ -1,147 +1,263 @@
-Received: from Atcsqr.andestech.com (60-248-80-70.hinet-ip.hinet.net [60.248.80.70])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f54.google.com (mail-io1-f54.google.com [209.85.166.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E24BD101EC;
-	Thu, 22 Feb 2024 03:49:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.248.80.70
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9373E111B2;
+	Thu, 22 Feb 2024 03:50:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708573752; cv=none; b=eepB2x/HIv2oZqQ8InLRcoXLQFde8ZTCrBIOWvhBdS7r4DMq5Xs//3I9w+lELQqcTGZVP+JhNSEtCbfOxBLJwee1x/ujdJxLqNCTL5AHhOjSSuaSTTAiwjw0xbjUD3i4idPeM8oGqbZlmIQAZx+7iBfaB2A5rraY8JJ7mBJ49v4=
+	t=1708573857; cv=none; b=I4NXzV+WKt3bAuko4G7SjMa0ATEBp1cYyHTYY/MlwV8u/TGR4No5CFfr55IuIHo2OyQMj8KwJYoAsZkqBUchEImUdMNvyNbAEUuBm9ZILv3jPO9durOWJ+e0kn3L0+/Sb7YyfdUs2lPCw05u2QYIKff6cwcReQmOPsORWHr2XxA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708573752; c=relaxed/simple;
-	bh=dwf0vhpo2jYUb2gwbg7vwjdYNHNEw2bP9BitRqQMy60=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HL72BgZ846KYTPuEnQN2MqO1sh4PdmbXbHoUhTMQhCb1qd/UrkaL74ercZc//Si5OxBiVbLyRwsiLE5Z2sax6XmaGRsp9MQ7t/XYgzxb3i/A8H1sz7RTzSmNjFCwB3wn2PYkxTIYywvcv5viaiAAuy0/RnSHDI449gm+4HeYJv0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=andestech.com; spf=pass smtp.mailfrom=andestech.com; arc=none smtp.client-ip=60.248.80.70
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=andestech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=andestech.com
-Received: from Atcsqr.andestech.com (localhost [127.0.0.2] (may be forged))
-	by Atcsqr.andestech.com with ESMTP id 41M3PZkX080876;
-	Thu, 22 Feb 2024 11:25:35 +0800 (+08)
-	(envelope-from peterlin@andestech.com)
-Received: from mail.andestech.com (ATCPCS16.andestech.com [10.0.1.222])
-	by Atcsqr.andestech.com with ESMTP id 41M3N6Y8080329;
-	Thu, 22 Feb 2024 11:23:06 +0800 (+08)
-	(envelope-from peterlin@andestech.com)
-Received: from APC323 (10.0.12.98) by ATCPCS16.andestech.com (10.0.1.222) with
- Microsoft SMTP Server id 14.3.498.0; Thu, 22 Feb 2024 11:23:03 +0800
-Date: Thu, 22 Feb 2024 11:23:00 +0800
-From: Yu-Chien Peter Lin <peterlin@andestech.com>
-To: Palmer Dabbelt <palmer@dabbelt.com>
-CC: <acme@kernel.org>, <adrian.hunter@intel.com>, <ajones@ventanamicro.com>,
-        <alexander.shishkin@linux.intel.com>, <andre.przywara@arm.com>,
-        <anup@brainfault.org>, <aou@eecs.berkeley.edu>,
-        <atishp@atishpatra.org>, <conor+dt@kernel.org>,
-        Conor Dooley <conor.dooley@microchip.com>,
-        "Conor
- Dooley" <conor@kernel.org>, <devicetree@vger.kernel.org>,
-        Evan Green
-	<evan@rivosinc.com>, <geert+renesas@glider.be>,
-        <guoren@kernel.org>, "Heiko
- Stuebner" <heiko@sntech.de>,
-        <irogers@google.com>, <jernej.skrabec@gmail.com>, <jolsa@kernel.org>,
-        <jszhang@kernel.org>, <krzysztof.kozlowski+dt@linaro.org>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        <linux-perf-users@vger.kernel.org>,
-        <linux-renesas-soc@vger.kernel.org>, <linux-riscv@lists.infradead.org>,
-        <linux-sunxi@lists.linux.dev>, <locus84@andestech.com>,
-        <magnus.damm@gmail.com>, Mark Rutland <mark.rutland@arm.com>,
-        <mingo@redhat.com>, <n.shubin@yadro.com>, <namhyung@kernel.org>,
-        "Paul
- Walmsley" <paul.walmsley@sifive.com>, <peterz@infradead.org>,
-        <prabhakar.mahadev-lad.rj@bp.renesas.com>, <rdunlap@infradead.org>,
-        <robh+dt@kernel.org>, <samuel@sholland.org>,
-        Sunil V L
-	<sunilvl@ventanamicro.com>, <tglx@linutronix.de>,
-        <tim609@andestech.com>, <uwu@icenowy.me>, <wens@csie.org>,
-        Will Deacon <will@kernel.org>, <inochiama@outlook.com>,
-        <unicorn_wang@outlook.com>, <wefu@redhat.com>
-Subject: Re: [PATCH v8 00/10] Support Andes PMU extension
-Message-ID: <Zda-FE2FpyhbIJKd@APC323>
-References: <20240129092553.2058043-1-peterlin@andestech.com>
- <mhng-b85cfae6-43ef-42ac-94b4-d0f4ce2d0940@palmer-ri-x1c9a>
+	s=arc-20240116; t=1708573857; c=relaxed/simple;
+	bh=J3j8PZZdp5i0Gd+0rx6IZWHUtQPKYoQur7jAPifN9go=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=aMkaX5RaDbTnAhfaLgSlBHyX7edoreggJtFyQZhogs/W9jgWGrEkhYvh/3lY5j82MKEvbg+TUklDIpXCKieyHAvIky9uo/vZIz+Q9hbaj19WtdIOrHzH6Pv7nSuomBiGNDykFK2uN/spa1eXI9Gr4sak3sNdfHPBgaghiAEdTKA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=f8K79ujf; arc=none smtp.client-ip=209.85.166.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f8K79ujf"
+Received: by mail-io1-f54.google.com with SMTP id ca18e2360f4ac-7c72294e3d1so284571339f.1;
+        Wed, 21 Feb 2024 19:50:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1708573855; x=1709178655; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=y/Q0YGTOKcdouf/IIlA2xOaiZYdgb6GG89hveRTd/5g=;
+        b=f8K79ujf/hbdxRtSaN4HrY35pZYF8BBwW7zY4yzNK6HfT+rlN2O6BE024uL1u/c96Z
+         iwEJvuwtUjyQ8cLbUHVf31+3rTf1K54H2LnZN4iAuI41GG2GZ+U11D4fkCWApCFM+acB
+         +3ysARRj6I+1b6t1Eye8dKTjLAZHRAMsIOUe1QrDVfLJ+VfwTWbDswVDdkMeWHiig3qw
+         abpqw+RQlYt5eKeGUGXYI9P0TUcVa78L4bR3nDizeBbJE9kzyu7oV4O3WCmybstKLQNR
+         1S/gWbrsthiQEswDnOnQzlDtwmZjKM1gZ+EM1GKjIqPxIok+vj1gIxv4S0wNdg27dFhR
+         GFBw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708573855; x=1709178655;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=y/Q0YGTOKcdouf/IIlA2xOaiZYdgb6GG89hveRTd/5g=;
+        b=Aj2CeEIoKi3HGXnevSxBW7dsQZizdoGY62iDn+lmumGhlqY5SI2CRqsksg5T3d4vi2
+         YJ6yO43g8TRzsad4innFPrcJcL9KYgmXaoh5t6LPB3TOVUvgHfgJjLAsC5/utg8uDxzq
+         LGt9y7+BMrP4hPpUN9y17V5+dTl6OPDherwUhhI/bPLnPMXfXnEc7We6wlMF0V+p+GUm
+         ZJw+AQyUuGrC91/FkXOqzS5mzYRYnEKdwTkbBJ7veTCaA4dWrTa2J56hSighmMDYQZjd
+         vNssLtl0IPzR3dIXnOsedmctko5H2D+d/35BWJjisReZo2MCy8wtmaXbluyxhnKGpH6t
+         EFrw==
+X-Forwarded-Encrypted: i=1; AJvYcCWc8zKhPL+AFvd4QprZe83YBK8/hEtB/qT2TRHAlwLVZWvNQpb4F/r1JbnDFYJsSZu0pUjxhu5KU63ORVmslPui12tI5wGnwAOlz0/LwjggGLvxrry5e0yq2ctN/vHYbeV7Bl2WA6TLUac=
+X-Gm-Message-State: AOJu0YwuWaYqyMnDxO1c1RAExOVftfJo3FZR2FfLUrWuQdXwLdsrJuZG
+	zP5zoNyrtUdZx2/glvslqdxVtAGDi3S6XgYXguwYDKKL54iEXa7uJWDpoDV90SkqEkH7YF59biu
+	UdztA0y6YW6EYwVL7+586x+tyuTw=
+X-Google-Smtp-Source: AGHT+IGObMpA8I/bjIFzhd2/BOrRWHNb8S+mrmq/qw5er4vLZtC3xDXgfTc2XDOuXSracqAay+Hkeu1DOzd3Ewhetl0=
+X-Received: by 2002:a05:6e02:1d95:b0:365:1305:fac5 with SMTP id
+ h21-20020a056e021d9500b003651305fac5mr19489792ila.0.1708573854696; Wed, 21
+ Feb 2024 19:50:54 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <mhng-b85cfae6-43ef-42ac-94b4-d0f4ce2d0940@palmer-ri-x1c9a>
-User-Agent: Mutt/2.2.12 (2023-09-09)
-X-DNSRBL: 
-X-SPAM-SOURCE-CHECK: pass
-X-MAIL:Atcsqr.andestech.com 41M3PZkX080876
+References: <1705581128-4604-1-git-send-email-shengjiu.wang@nxp.com>
+ <1705581128-4604-9-git-send-email-shengjiu.wang@nxp.com> <20240217101926.3f1d2452@coco.lan>
+ <CAA+D8APD+zL0xYkf6FxPNfM3Y3O8+PhT7WEXO7XCLAmBjoMmUA@mail.gmail.com>
+ <20240219135618.5c557e66@coco.lan> <e98a23c6-a35d-422b-be8a-1179392215c1@xs4all.nl>
+In-Reply-To: <e98a23c6-a35d-422b-be8a-1179392215c1@xs4all.nl>
+From: Shengjiu Wang <shengjiu.wang@gmail.com>
+Date: Thu, 22 Feb 2024 11:50:43 +0800
+Message-ID: <CAA+D8AN1KEjmb7f5dzMn1EV=UB5QqA4q__y2mTOW8-CH_7gchQ@mail.gmail.com>
+Subject: Re: [PATCH v12 08/15] media: uapi: Define audio sample format fourcc type
+To: Hans Verkuil <hverkuil@xs4all.nl>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, Shengjiu Wang <shengjiu.wang@nxp.com>, sakari.ailus@iki.fi, 
+	tfiga@chromium.org, m.szyprowski@samsung.com, linux-media@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Xiubo.Lee@gmail.com, festevam@gmail.com, 
+	nicoleotsuka@gmail.com, lgirdwood@gmail.com, broonie@kernel.org, 
+	perex@perex.cz, tiwai@suse.com, alsa-devel@alsa-project.org, 
+	linuxppc-dev@lists.ozlabs.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Palmer,
+On Wed, Feb 21, 2024 at 7:10=E2=80=AFPM Hans Verkuil <hverkuil@xs4all.nl> w=
+rote:
+>
+> On 19/02/2024 13:56, Mauro Carvalho Chehab wrote:
+> > Em Mon, 19 Feb 2024 12:05:02 +0800
+> > Shengjiu Wang <shengjiu.wang@gmail.com> escreveu:
+> >
+> >> Hi Mauro
+> >>
+> >> On Sat, Feb 17, 2024 at 5:19=E2=80=AFPM Mauro Carvalho Chehab
+> >> <mchehab@kernel.org> wrote:
+> >>>
+> >>> Em Thu, 18 Jan 2024 20:32:01 +0800
+> >>> Shengjiu Wang <shengjiu.wang@nxp.com> escreveu:
+> >>>
+> >>>> The audio sample format definition is from alsa,
+> >>>> the header file is include/uapi/sound/asound.h, but
+> >>>> don't include this header file directly, because in
+> >>>> user space, there is another copy in alsa-lib.
+> >>>> There will be conflict in userspace for include
+> >>>> videodev2.h & asound.h and asoundlib.h
+> >>>>
+> >>>> Here still use the fourcc format.
+> >>>>
+> >>>> Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+> >>>> ---
+> >>>>  .../userspace-api/media/v4l/pixfmt-audio.rst  | 87 ++++++++++++++++=
++++
+> >>>>  .../userspace-api/media/v4l/pixfmt.rst        |  1 +
+> >>>>  drivers/media/v4l2-core/v4l2-ioctl.c          | 13 +++
+> >>>>  include/uapi/linux/videodev2.h                | 23 +++++
+> >>>>  4 files changed, 124 insertions(+)
+> >>>>  create mode 100644 Documentation/userspace-api/media/v4l/pixfmt-aud=
+io.rst
+> >>>>
+> >>>> diff --git a/Documentation/userspace-api/media/v4l/pixfmt-audio.rst =
+b/Documentation/userspace-api/media/v4l/pixfmt-audio.rst
+> >>>> new file mode 100644
+> >>>> index 000000000000..04b4a7fbd8f4
+> >>>> --- /dev/null
+> >>>> +++ b/Documentation/userspace-api/media/v4l/pixfmt-audio.rst
+> >>>> @@ -0,0 +1,87 @@
+> >>>> +.. SPDX-License-Identifier: GFDL-1.1-no-invariants-or-later
+> >>>> +
+> >>>> +.. _pixfmt-audio:
+> >>>> +
+> >>>> +*************
+> >>>> +Audio Formats
+> >>>> +*************
+> >>>> +
+> >>>> +These formats are used for :ref:`audiomem2mem` interface only.
+> >>>> +
+> >>>> +.. tabularcolumns:: |p{5.8cm}|p{1.2cm}|p{10.3cm}|
+> >>>> +
+> >>>> +.. cssclass:: longtable
+> >>>> +
+> >>>> +.. flat-table:: Audio Format
+> >>>> +    :header-rows:  1
+> >>>> +    :stub-columns: 0
+> >>>> +    :widths:       3 1 4
+> >>>> +
+> >>>> +    * - Identifier
+> >>>> +      - Code
+> >>>> +      - Details
+> >>>> +    * .. _V4L2-AUDIO-FMT-S8:
+> >>>> +
+> >>>> +      - ``V4L2_AUDIO_FMT_S8``
+> >>>> +      - 'S8'
+> >>>> +      - Corresponds to SNDRV_PCM_FORMAT_S8 in ALSA
+> >>>> +    * .. _V4L2-AUDIO-FMT-S16-LE:
+> >>>
+> >>> Hmm... why can't we just use SNDRV_*_FORMAT_*? Those are already part=
+ of
+> >>> an uAPI header. No need to add any abstraction here and/or redefine
+> >>> what is there already at include/uapi/sound/asound.h.
+> >>>
+> >> Actually I try to avoid including the include/uapi/sound/asound.h.
+> >> Because in user space, there is another copy in alsa-lib (asoundlib.h)=
+.
+> >> There will be conflict in userspace when including videodev2.h and
+> >> asoundlib.h.
+> >
+> > Well, alsasoundlib.h seems to be using the same definitions:
+> >       https://github.com/michaelwu/alsa-lib/blob/master/include/pcm.h
+> >
+> > So, I can't see what would be the actual issue, as both userspace libra=
+ry
+> > and ALSA internal headers use the same magic numbers.
+> >
+> > You can still do things like:
+> >
+> >       #ifdef __KERNEL__
+> >       #  include <sound/asound.h>
+> >       #else
+> >       #  include <asoundlib.h>
+> >       #endif
+> >
+> > To avoid such kind of conflicts, if you need to have it included on
+> > some header file. Yet, I can't see why you would need that.
+> >
+> > IMO, at uAPI headers, you just need to declare the uAPI audiofmt field
+> > to be either __u32 or __u64, pointing it to where this value comes from
+> > (on both userspace and Kernelspace. E. g.:
+> >
+> > /**
+> >  * struct v4l2_audio_format - audio data format definition
+> >  * @audioformat:
+> >  *    an integer number matching the fields inside
+> >  *    enum snd_pcm_format_t (e. g. `SNDRV_PCM_FORMAT_*`), as defined
+> >  *    in include/uapi/sound/asound.h and
+> >  *      https://www.alsa-project.org/alsa-doc/alsa-lib/group___p_c_m.ht=
+ml#gaa14b7f26877a812acbb39811364177f8.
+> >  * @channels:         channel numbers
+> >  * @buffersize:               maximum size in bytes required for data
+> >  */
+> > struct v4l2_audio_format {
+> >       __u32                           audioformat;
+> >       __u32                           channels;
+> >       __u32                           buffersize;
+> > } __attribute__ ((packed));
+> >
+> > Then, at documentation you just need to point to where the
+> > possible values for SNDRV_PCM_FORMAT_ are defined. No need to
+> > document them one by one.
+> >
+> > With such definition, you'll only need to include sound/asound.h
+> > within the kAPI scope.
+> >
+> >>
+> >> And in the V4l framework, the fourcc type is commonly used in other
+> >> cases (video, radio, touch, meta....), to avoid changing common code
+> >> a lot, so I think using fourcc definition for audio may be simpler.
+> >
+> > Those are real video streams (or a video-related streams, in the case
+> > of metadata) where fourcc is widely used. There, it makes sense.
+> > However, ALSA format definitions are already being used for a long time=
+.
+> > There's no sense on trying to reinvent it - or having an abstract layer
+> > to convert from/to fourcc <=3D=3D> enum snd_pcm_format_t. Just use what=
+ is
+> > there already.
+>
+> The problem is that within V4L2 we use fourcc consistently to describe a
+> format, including in VIDIOC_ENUM_FMT. And the expectation is that the fou=
+rcc
+> can be printed to a human readable string (there is even a printk format =
+for
+> that these days).
+>
+> But the pcm values are all small integers (and can even be 0!), and
+> printing the fourcc will give garbage. It doesn't work well at all
+> with the V4L2 API. But by having a straightforward conversion between the
+> pcm identifier and a fourcc it was really easy to deal with this.
+>
+> There might even be applications today that call VIDIOC_ENUM_FMT to see
+> what is supported and fail if it is not a proper fourcc is returned.
+>
+> It will certainly report nonsense in v4l_print_fmtdesc() (v4l2-ioctl.c).
+>
+> One of the early versions of this patch series did precisely what you req=
+uest,
+> but it just doesn't work well within the V4L2 uAPI.
+>
 
-On Wed, Feb 21, 2024 at 12:58:31PM -0800, Palmer Dabbelt wrote:
-> On Mon, 29 Jan 2024 01:25:43 PST (-0800), peterlin@andestech.com wrote:
-> > Hi All,
-> > 
-> > This patch series introduces the Andes PMU extension, which serves the
-> > same purpose as Sscofpmf and Smcntrpmf. Its non-standard local interrupt
-> > is assigned to bit 18 in the custom S-mode local interrupt enable and
-> > pending registers (slie/slip), while the interrupt cause is (256 + 18).
-> > 
-> > Linux patches based on:
-> > - ed5b7cf ("riscv: errata: andes: Probe for IOCP only once in boot stage")
-> > It can be found on Andes Technology GitHub:
-> > - https://github.com/andestech/linux/commits/andes-pmu-support-v8
-> > 
-> > The PMU device tree node used on AX45MP:
-> > - https://github.com/riscv-software-src/opensbi/blob/master/docs/pmu_support.md#example-3
-> > 
-> > Locus Wei-Han Chen (1):
-> >   riscv: andes: Support specifying symbolic firmware and hardware raw
-> >     events
-> > 
-> > Yu Chien Peter Lin (9):
-> >   riscv: errata: Rename defines for Andes
-> >   irqchip/riscv-intc: Allow large non-standard interrupt number
-> >   irqchip/riscv-intc: Introduce Andes hart-level interrupt controller
-> >   dt-bindings: riscv: Add Andes interrupt controller compatible string
-> >   riscv: dts: renesas: r9a07g043f: Update compatible string to use Andes
-> >     INTC
-> >   perf: RISC-V: Eliminate redundant interrupt enable/disable operations
-> >   perf: RISC-V: Introduce Andes PMU to support perf event sampling
-> >   dt-bindings: riscv: Add Andes PMU extension description
-> >   riscv: dts: renesas: Add Andes PMU extension for r9a07g043f
-> > 
-> >  .../devicetree/bindings/riscv/cpus.yaml       |   6 +-
-> >  .../devicetree/bindings/riscv/extensions.yaml |   7 +
-> >  arch/riscv/boot/dts/renesas/r9a07g043f.dtsi   |   4 +-
-> >  arch/riscv/errata/andes/errata.c              |  10 +-
-> >  arch/riscv/include/asm/errata_list.h          |  13 +-
-> >  arch/riscv/include/asm/hwcap.h                |   1 +
-> >  arch/riscv/include/asm/vendorid_list.h        |   2 +-
-> >  arch/riscv/kernel/alternative.c               |   2 +-
-> >  arch/riscv/kernel/cpufeature.c                |   1 +
-> >  drivers/irqchip/irq-riscv-intc.c              |  88 ++++++++++--
-> >  drivers/perf/Kconfig                          |  14 ++
-> >  drivers/perf/riscv_pmu_sbi.c                  |  37 ++++-
-> >  include/linux/soc/andes/irq.h                 |  18 +++
-> >  .../arch/riscv/andes/ax45/firmware.json       |  68 ++++++++++
-> >  .../arch/riscv/andes/ax45/instructions.json   | 127 ++++++++++++++++++
-> >  .../arch/riscv/andes/ax45/memory.json         |  57 ++++++++
-> >  .../arch/riscv/andes/ax45/microarch.json      |  77 +++++++++++
-> >  tools/perf/pmu-events/arch/riscv/mapfile.csv  |   1 +
-> >  18 files changed, 494 insertions(+), 39 deletions(-)
-> >  create mode 100644 include/linux/soc/andes/irq.h
-> >  create mode 100644 tools/perf/pmu-events/arch/riscv/andes/ax45/firmware.json
-> >  create mode 100644 tools/perf/pmu-events/arch/riscv/andes/ax45/instructions.json
-> >  create mode 100644 tools/perf/pmu-events/arch/riscv/andes/ax45/memory.json
-> >  create mode 100644 tools/perf/pmu-events/arch/riscv/andes/ax45/microarch.json
-> 
-> Acked-by: Palmer Dabbelt <palmer@rivosinc.com>
-> 
-> in case someone wants to take this via another tree.  I'm also OK taking it
-> via the RISC-V tree, pending a resolution to Thomas' comments on patch 2.
-> For now I'm going to assume there's a v9 coming.
+Thanks all.
 
-Yes, I'm working on v9, please hold off taking the series, thanks.
+So can I reach the conclusion below?
+1. Keep using the fourcc definition for v4l2_audio_format.audioformat.
+2. Keep the name V4L2_BUF_TYPE_AUDIO_CAPTURE and
+    V4L2_BUF_TYPE_AUDIO_OUTPUT.
+3. Fix Documentation/userspace-api/media/v4l/dev-audio-mem2mem.rst
+    to change 'pixelformat' to 'audioformat'.
+4. Update Documentation/userspace-api/media/v4l/ext-ctrls-audio-m2m.rst
+    to add more description for clock drift.
 
-Regards,
-Peter Lin
+Best Regards
+Shengjiu Wang
 
-> Thanks!
+> Regards,
+>
+>         Hans
+>
+> >
+> > Thanks,
+> > Mauro
+>
