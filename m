@@ -1,125 +1,104 @@
-Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com [209.85.208.181])
+Received: from mail-oo1-f49.google.com (mail-oo1-f49.google.com [209.85.161.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 970C5DF41
-	for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 06:00:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA10212E40
+	for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 06:00:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708581612; cv=none; b=D30Fq/eezsnOcUiLPT3x3jWAjrR6OeIOoLIUwSeJY73oJ9Ig3UQgABl/hmOCTIdhJxLnauq35flCBtCTB5E/QQzFDUL6LyKeCkuNehKIJKjm84w72xsdUkRDD0miz3xSdWGksOkU/yuwGHdCKO3VDhgccX/G5ZeB19fY2AyLFhQ=
+	t=1708581631; cv=none; b=DUWWrLLBfBBmqAW6Z4OzsOsV1gxvzofhm8jgyuTIJugzQtg+Z5MOeEPd84b3RfR8lNoDePTBrEpfdayrITUuOUl0roH7R7cQKS8Wcgt/ts/7I2PQ2lsxLnc5IhwmkyWjdcJ6iR1Fn6e0I3AQTmXUo5s61oclYDL+guddovotTBo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708581612; c=relaxed/simple;
-	bh=jfydpiinpYlW5lz/CxxcHMi0x0ZILrRNe4+Fx00kgU8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=p8GeUicNvZg07IIxJp8fPBuVtMUzgbdDTziYBsEMacPlZeub0R7Qq4yRU+2+NlkyV/+nsdeE45yOge8pKsZHobdK3YICpt4X7Eydrya0vwiMfUVKBcsvCaD4IsaGlCiRewHq2wpM3qbiyZCOfoX11VKJ9nrrlK0wSJCYwjm2s+M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=A9MeDhRk; arc=none smtp.client-ip=209.85.208.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1708581631; c=relaxed/simple;
+	bh=Z6JWzmSCwaZHB5bsIRXZgQfwSxV1nVZgUwh6w3gH1tY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NEoeftulY6WBvQi/sfCBzc1F+Hz9PNm8MW2rXr7R37nlWl/qoqjjjpMzbwSrnlYcbs5kS5BO4FH22S+GWaG47TzJHQ5qXkammYWiBE5ZiZYuopmP2dVMD0O6E0mTc72XHlwOEjdIY4juuVq3QMiNGWT4TcFYKd82mNnMmd1d/tQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fefqBz7B; arc=none smtp.client-ip=209.85.161.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="A9MeDhRk"
-Received: by mail-lj1-f181.google.com with SMTP id 38308e7fff4ca-2d0cd9871b3so5159431fa.1
-        for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 22:00:10 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fefqBz7B"
+Received: by mail-oo1-f49.google.com with SMTP id 006d021491bc7-5a020f5a4c5so369409eaf.1
+        for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 22:00:29 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1708581608; x=1709186408; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=CrfADjbK9wBe+Anypf28Boz5+FV1y2DabiZpnaLd2+Y=;
-        b=A9MeDhRku5ZkKM47HuBJ+VeyTI472K4HeybnEk+91J6W1BYcSb/bdUzBRZmVOAYqgj
-         uRbzlBnhbkue15IP0mHqJ+tiQkr2wMhoWKy7A4+NRbG8ZCruIofvwr5FmBoDJVheuh9A
-         sAhulTktch+b/I2GnDRpthJrOt5oy3CkA6UOY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708581608; x=1709186408;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=gmail.com; s=20230601; t=1708581629; x=1709186429; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=CrfADjbK9wBe+Anypf28Boz5+FV1y2DabiZpnaLd2+Y=;
-        b=fRYqR1lCfGSbQgdKSMceUU3gdjTJEOewy/UUa9IgzoOhTXboB6HJ1E9+74VJPimwMM
-         sJERx96Z6HDT/u1zb9h/KKXDWLbhcOcAObZ48u3xwnI/N2Mnvc72TgZMpq2iy6hBgvtf
-         n8rI6Vplwhs+VvyDd++qxP1yLKvVajIcBHv4lwv668XJi+VFDjCUnqwZN6dubNCzMzmF
-         MEtGeUVrC3XFemDVYr05pFn124VlnyFGPxTnaPjMiY/AEmlkC0DuLqOJZ969GsEyLDlb
-         yklvdQdH80TalAOQjh5nJBT3cKZIHY9g6gecZXswqiXMV85/pJma/fVlGGxZpZ3n1IBF
-         S6Vg==
-X-Forwarded-Encrypted: i=1; AJvYcCV34L0GW/Qd96qRZ3BLr4Ns8LK+Z/rzhYv3FB1qr6srPg/HtPNlJEIIRoUdIqHPBFEU5QpCuiMdVFP/bmiHM/TKs+HDxgiNvXjFSns4
-X-Gm-Message-State: AOJu0YyWEtdd3szW2u5OXlOeesmJ7ia8T19b0qzhBctBSIMsVcHSodfQ
-	PUNpzDsVinkmZNHYPHobHYrtvqL3aH4sCzW1TLNRF6hFA/6eZSz2J50OCWVzjxCrMRlFoJfilW+
-	wXeg=
-X-Google-Smtp-Source: AGHT+IFgR4p5opIBKCPYhSfBb9KEZ+VP+gCEwjXSgvlvC7U5paUi9Qp109s4D4mjr/erPWKC0TVRhg==
-X-Received: by 2002:a2e:3203:0:b0:2d2:2eb7:b484 with SMTP id y3-20020a2e3203000000b002d22eb7b484mr550739ljy.22.1708581608610;
-        Wed, 21 Feb 2024 22:00:08 -0800 (PST)
-Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com. [209.85.208.171])
-        by smtp.gmail.com with ESMTPSA id x22-20020a2e8396000000b002d0f3c58e60sm2107707ljg.117.2024.02.21.22.00.08
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 21 Feb 2024 22:00:08 -0800 (PST)
-Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-2d0bc402c8eso4972401fa.1
-        for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 22:00:08 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCUT5jyIwSzWeYqi5u1oZOMOrHhFrdWQaIf5rcSYszO0ntEM+8phScHZb5XZ/AMPNBgtEvHs5cxo5yl1D1Hke8hhPuGYZn31gb2V852F
-X-Received: by 2002:a17:906:f0c4:b0:a3e:719b:c049 with SMTP id
- dk4-20020a170906f0c400b00a3e719bc049mr1321213ejb.28.1708581587292; Wed, 21
- Feb 2024 21:59:47 -0800 (PST)
+        bh=eQGciLXDluTPnn2IY30P6HSoPGBON7YrfV7nbQOPdy4=;
+        b=fefqBz7B0IodNjOicbgr0rM0sLKrW2iNbBsUN3h2gMhAzRie982hlBVvZ1wOxhrkPF
+         vO6FXcBKUGeReSx7NebNOl0aYHsw/7OajyxhaSO73iGaydH0Q3Z/u+UCc6TRiEh0pGvq
+         7I70QtEBlMCChQXjTQG6TfmLWoagWtRI3jDkaLTyuTukL2TNcmxtCjY06d6zDOtYK6b9
+         eQidjCxfIF//beo4wcw5jRcx59A8GQCbFhdLyK988+gBnjZHEH/TYdaIKcEpMM0NVG2p
+         unQ96y5kmKMqsxHJVCzvJT04PYPlbuhUGNtEIVpMZXDF+gGS0VXb7rg/7wokLEv4JgoV
+         BNpA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708581629; x=1709186429;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=eQGciLXDluTPnn2IY30P6HSoPGBON7YrfV7nbQOPdy4=;
+        b=VJPsWXkr65KKSCf10qU8hg7DWDlz9s0FoGTF+nFwA+uryvVNAN6BQ2IzC7yXIH74+1
+         b2rDddNsfDDf+YM9dTZfDE6vXs7NAb8FFlDTL6i+5A/4XUKb9qca8Vq9uMUvb6azM0P4
+         kfnZsoL+Suy8o+fwU2gDsWhI2+d/PANDY6VtLyg1gB4qFbXd+byOaPsQUuEdFdJcoPco
+         aI3tA1sJX3xORSiU7cm6LDJKW8rk2KqjJZ73xlOA+rJwzD4fwRZyBBPg014f2/cVWHgH
+         j9mGQQS7XB6dAF8iYGluXnJxtRbHCfySXqbeGy9c2FrOJNdI1obLBrO6rS5ai1QPh8HT
+         pLaQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVnVpU5jTI0desu62pW+EtQTFrgAvI5Q/83UCXYSx4/opc64eZkdwqQ4kQNSMHwa8uIux0LM6Azotk2S+fKddJDxJi7rz4fh/k8qMbT
+X-Gm-Message-State: AOJu0YwVFt0sK3dWmaCZh2mrQF3/cjGHPU1N5XcRK60h5SzduNYSML2G
+	PwzVUm/kIeMGHWnbomD1bI4jFu3lFL2sOgCn39ZbS1kWpBsyYi7a
+X-Google-Smtp-Source: AGHT+IHY9AhAeH1xjk0qipC9ROn3oMDVZWqWtwxgiYhtBRFzqv5aLia2626AZ9H4t9S8YK+RDEv+QA==
+X-Received: by 2002:a05:6358:710:b0:17b:5dd1:a38d with SMTP id e16-20020a056358071000b0017b5dd1a38dmr3400924rwj.1.1708581628629;
+        Wed, 21 Feb 2024 22:00:28 -0800 (PST)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id fa3-20020a056a002d0300b006e4c0ce85b2sm1486748pfb.181.2024.02.21.22.00.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 21 Feb 2024 22:00:27 -0800 (PST)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Date: Wed, 21 Feb 2024 22:00:26 -0800
+From: Guenter Roeck <linux@roeck-us.net>
+To: Alexey Dobriyan <adobriyan@gmail.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>,
+	Peter Zijlstra <peterz@infradead.org>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] cpu: mark cpu_possible_mask as __ro_after_init
+Message-ID: <a1fafb71-cbd9-4d0b-8c3c-2b69be97db3e@roeck-us.net>
+References: <41cd78af-92a3-4f23-8c7a-4316a04a66d8@p183>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240221092728.1281499-1-davidgow@google.com> <20240221092728.1281499-9-davidgow@google.com>
- <anz6qjyb2oqkz6wdy4ehnlpoujy4rz2itohpglgfqzadtonxtj@ljakgnqmfxxh>
-In-Reply-To: <anz6qjyb2oqkz6wdy4ehnlpoujy4rz2itohpglgfqzadtonxtj@ljakgnqmfxxh>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Wed, 21 Feb 2024 21:59:30 -0800
-X-Gmail-Original-Message-ID: <CAHk-=wgafXXX17eKx9wH_uHg=UgvXkngxGhPcZwhpj7Uz=_0Pw@mail.gmail.com>
-Message-ID: <CAHk-=wgafXXX17eKx9wH_uHg=UgvXkngxGhPcZwhpj7Uz=_0Pw@mail.gmail.com>
-Subject: Re: [PATCH 8/9] drm/xe/tests: Fix printf format specifiers in
- xe_migrate test
-To: Lucas De Marchi <lucas.demarchi@intel.com>
-Cc: David Gow <davidgow@google.com>, Shuah Khan <skhan@linuxfoundation.org>, 
-	Guenter Roeck <linux@roeck-us.net>, Rae Moar <rmoar@google.com>, 
-	Matthew Auld <matthew.auld@intel.com>, 
-	Arunpravin Paneer Selvam <arunpravin.paneerselvam@amd.com>, 
-	=?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
-	Kees Cook <keescook@chromium.org>, =?UTF-8?B?TWHDrXJhIENhbmFs?= <mcanal@igalia.com>, 
-	Rodrigo Vivi <rodrigo.vivi@intel.com>, Matthew Brost <matthew.brost@intel.com>, 
-	Willem de Bruijn <willemb@google.com>, Florian Westphal <fw@strlen.de>, Cassio Neri <cassio.neri@gmail.com>, 
-	Javier Martinez Canillas <javierm@redhat.com>, Arthur Grillo <arthur.grillo@usp.br>, 
-	Brendan Higgins <brendan.higgins@linux.dev>, Daniel Latypov <dlatypov@google.com>, 
-	Stephen Boyd <sboyd@kernel.org>, David Airlie <airlied@gmail.com>, Maxime Ripard <mripard@kernel.org>, 
-	"David S . Miller" <davem@davemloft.net>, dri-devel@lists.freedesktop.org, 
-	linux-kernel@vger.kernel.org, intel-xe@lists.freedesktop.org, 
-	linux-rtc@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	kunit-dev@googlegroups.com, linux-hardening@vger.kernel.org, 
-	netdev@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <41cd78af-92a3-4f23-8c7a-4316a04a66d8@p183>
 
-On Wed, 21 Feb 2024 at 21:05, Lucas De Marchi <lucas.demarchi@intel.com> wrote:
->
-> this has a potential to cause conflicts with upcoming work, so I think
-> it's better to apply this through drm-xe-next. Let me know if you agree.
+On Mon, Feb 05, 2024 at 01:01:19PM +0300, Alexey Dobriyan wrote:
+> cpu_possible_mask is by definition "cpus which could be hotplugged
+> without reboot" -- property which is fixed after kernel enumerates
+> motheboard capabilities and hardware configuration.
+> 
+> Signed-off-by: Alexey Dobriyan <adobriyan@gmail.com>
+> ---
+> 
+>  kernel/cpu.c |    4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> --- a/kernel/cpu.c
+> +++ b/kernel/cpu.c
+> @@ -3107,10 +3107,10 @@ const DECLARE_BITMAP(cpu_all_bits, NR_CPUS) = CPU_BITS_ALL;
+>  EXPORT_SYMBOL(cpu_all_bits);
+>  
+>  #ifdef CONFIG_INIT_ALL_POSSIBLE
+> -struct cpumask __cpu_possible_mask __read_mostly
+> +struct cpumask __cpu_possible_mask __ro_after_init;
+>  	= {CPU_BITS_ALL};
 
-I disagree. Violently.
+I guess you didn't compile test this code.
 
-For this to be fixed, we need to have the printf format checking enabled.
+Guenter
 
-And we can't enable it until all the problems have been fixed.
-
-Which means that we should *not* have to wait for [N] different trees
-to fix their issues separately.
-
-This should get fixed in the Kunit tree, so that the Kunit tree can
-just send a pull request to me to enable format checking for the KUnit
-tests, together with all the fixes.  Trying to spread those fixes out
-to different git branches will only result in pain and pointless
-dependencies between different trees.
-
-Honestly, the reason I noticed the problem in the first place was that
-the drm tree had a separate bug, that had been apparently noted in
-linux-next, and *despite* that it made it into a pull request to me
-and caused new build failures in rc5.
-
-So as things are, I am not IN THE LEAST interested in some kind of
-"let us fix this in the drm tree separately" garbage.  We're not
-making things worse by trying to fix this in different trees.
-
-We're fixing this in the Kunit tree, and I do not want to get *more*
-problems from the drm side. I've had enough.
-
-               Linus
+>  #else
+> -struct cpumask __cpu_possible_mask __read_mostly;
+> +struct cpumask __cpu_possible_mask __ro_after_init;
+>  #endif
+>  EXPORT_SYMBOL(__cpu_possible_mask);
+>  
