@@ -1,148 +1,155 @@
-Received: from out203-205-221-231.mail.qq.com (out203-205-221-231.mail.qq.com [203.205.221.231])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74B57151CC5
-	for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 16:10:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.231
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1810155A59;
+	Thu, 22 Feb 2024 16:11:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708618204; cv=none; b=UIzJtW1nKXHmUGBi18QxXP0DMAiBmQer2ziGTQGBOlQNMPUYL8UeULJZNuWyxhngTxY2e8QU+U+idQ5EElxC+TO4GYERAjjqAmt0F4c5ezSgWxG8j0UUesmYiP7FcvJAIgIV+j0zMwhLiTsPTdCfiUWFEx3f3uIz3rgAkTZviWA=
+	t=1708618304; cv=none; b=Nwy9tQvROQrg/Rz5RyIlhjsgjQ0HpphZX3t9P3m+nqlkx6ErwLSrfMh2fJcikPM4vqXY7uMJbnz3RT0SokTqy0fF5CWE1eVM0tqnh+VJYMX7Iryo21dwQW0sxjZcahntO1donotYSs+/YdywyiirqWaSoTF06f9qNM5017YQreE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708618204; c=relaxed/simple;
-	bh=VAARJbyByjfYUowrYEBvOr5VJx+E5jEyLas79aJZyFg=;
-	h=Message-ID:From:To:Cc:Subject:Date:MIME-Version; b=C17Q3nYcCW0mmmk78pFzC2IivKdkx3+psPGUX7UaSM4ssqj9Yohc6fJWmjtj1STyVfpfpGWSc7rYC9w9btWwydrXWbabvojjC9kE+H3yhuDx6OkPzSyaEC0QeABq3QR+ZHgfGXn4KYKj1YCaViO1jgaqsQzvRUNj1TWjrq4GmEk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com; spf=pass smtp.mailfrom=foxmail.com; dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b=owEkeYMT; arc=none smtp.client-ip=203.205.221.231
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foxmail.com
+	s=arc-20240116; t=1708618304; c=relaxed/simple;
+	bh=ODWAXk37uneRRqTuBv4cWoCMKia5zti02gXxeRYGzfg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=e+87svp4TfjG9q112yCx1fXSpjJ6DM1yO3Cj4XTRPbvWfwf5vj1uuk2ErRrToXgf1J2HMiT7y6N7f07f94HDqEVMwgOuTx6DoR1/e4oWdcPuflSB9hKKrPsFod6KEY7dPDROjA1mr45XrvOAP2rKL+hHN0fYvlHTN5nj+AtjRok=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Wcgi/ear; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b="owEkeYMT"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foxmail.com;
-	s=s201512; t=1708617892;
-	bh=vjLg0TSWsTe0chZQ3fuBODGo/vzvbbkVGlo25W/YgL8=;
-	h=From:To:Cc:Subject:Date;
-	b=owEkeYMTlWA81AQ2Ov455FK/7iNjh3ILUq4B2dPH3HRoJf5LdJFLczkRRS9en/olx
-	 V1l7rmOQSm6MKe0huQbmJFv8QQHSMcA8++jfp36OfWTsEqdQS+OXdtiLQe2/31pKhO
-	 G+8RayQWbZZMYPPcvwptgNogfcWQKFmVbo2OLluM=
-Received: from localhost.localdomain ([2409:8a60:2a61:ef40:7404:388f:486a:7747])
-	by newxmesmtplogicsvrszb6-0.qq.com (NewEsmtp) with SMTP
-	id 131B565A; Fri, 23 Feb 2024 00:04:49 +0800
-X-QQ-mid: xmsmtpt1708617889t56zrz7dp
-Message-ID: <tencent_09CF49556CD442411A93D0E92ACC2B7E5D08@qq.com>
-X-QQ-XMAILINFO: N3l5ASPewLWqAyF+hdEE/ByG4KGYO1CseUekNA69wAbtfaBeXNyKtLVasEGJN0
-	 qy5g6p+FH26qGZHzdo5XnP3/bUsbmc58txge5SphCJ26cjze7bnVUrByy4eJR5rgyzSzvik+cE0R
-	 4UI/nRWfdm2BWRYnAXhsL2CCqinhEhb4xncEer2svyeORTGqGmA+D2166CPlOUXLzZJUmb0dV0dB
-	 qgK+Wi0J96/O87KfTXWQbsD+3VhgM5op5IC0OhOQKqnxnRA365Get8+jhfAy3RwGHeqNy+AujpPd
-	 UvlrOwMEI+4EZptVbMSGzYVId4eSbIeiKXs2RcIZ+aW/0/Ab6Yix26995i3vAupqWHK7/HuyRie+
-	 Rk4FyU2tzulEGqvkirg1gg0q67zZNwfM9kjSv14aRjYwhpvYV9lDqlW60fd0MY6no6ycN7FDdXFw
-	 iB5alA1vjHsyzi6LKg/dA6gntzudQor3HJIkJE7cc2Wz+Pch3E5QiOdy9fAL50/QGvfwG9noUno4
-	 DuOcrEpOjLB+iO5VgztrLhHFz3cMwKVb0zpOqWBiPu7LpXbiLbAYvHUWz98mfwW2U9q13UF9vCHn
-	 xZhPdILxKseZii8O/t4Q41giT/Do9ovZ5/Z5qUY7SKFh+irRKixdgFgRY/CbQrEVLOf6lYr2izBi
-	 5V8wvDJne3tm1TCAkxuwAmMw3bYyLZCbHrHtp9ZV8q3LftPSS6xL90iB4qtOunfsN/XGdILhRE+J
-	 cS1KZyFahPVYdlJuJ85EPHm1NQVoPFuINvvTgmW2g/s6zoOzBG4+UYWJOpE3/T1CgaLsMfJ8RWRJ
-	 CRGWZeffGXY0mVJQrSvlhCInZzWTNZNCFh5tuIz6e25nUGaeLHkN7s2ynMK1B8q+VxRbZ/cOcnMR
-	 +vsEAa2AO7mFsh3Z8OJFdk1hUTCc61U5kRptZQAEmPUNkVqRiI3GvmQ+0l0dZCM+G3/VVhTCZn5k
-	 HOT2XyLd40dhOECKspO3Dj6vm0acJNMdOPsROolAQrrh/3HFwaDPFW9itmdjjPAAUzb2KE1qXAvH
-	 GsRdQZLJu9LNn0pw1Obm1E9iC6V/uxH+1Frwj7yRMcuCjbTVYz
-X-QQ-XMRINFO: OWPUhxQsoeAVDbp3OJHYyFg=
-From: wenyang.linux@foxmail.com
-To: Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Ingo Molnar <mingo@kernel.org>
-Cc: Wen Yang <wenyang.linux@foxmail.com>,
-	Oleg Nesterov <oleg@redhat.com>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Mel Gorman <mgorman@techsingularity.net>,
-	Peter Zijlstra <peterz@infradead.org>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 1/2] exit: add a tracepoint for profiling a task that is starting to exit
-Date: Fri, 23 Feb 2024 00:04:34 +0800
-X-OQ-MSGID: <20240222160434.350595-1-wenyang.linux@foxmail.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Wcgi/ear"
+Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 41ME0Uw0004898;
+	Thu, 22 Feb 2024 16:11:31 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	message-id:date:mime-version:subject:to:cc:references:from
+	:in-reply-to:content-type:content-transfer-encoding; s=
+	qcppdkim1; bh=VkGlsO5Mrfm3ug1ikkXZ4Ko+065GQMTl3KKTloxaHRI=; b=Wc
+	gi/ear9ii7PqqSdoUkOjrnztKdKVFRyHlKKtvpDEkavoLTOtgN5L5Toc45h2Dg03
+	cySRywimZGBcub6CmgYXa/CgTDYN/Hm95MQbTSIWLjX5uigTPIKyz+4UGWig1dyK
+	qFKtqBcYu0C6HI/bahlTIIVGdMM5AC1Rj5mSlXZtFdVA9dVTH187pcC8nNYG+hh4
+	/C4DGzUXK9hR717dUEp58GuAETcwSWd6En21QTaVO1QaqUmowNqGruhNdOHeuo+X
+	3gQbClyKk1YOIHPZQNKn53l7U1Vsdx6KsU966EE8FOm5rKTeqQlQboZcD21RcoRS
+	ZPevnel8sDaTpHTgYkcg==
+Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3wdwmd1yt8-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 22 Feb 2024 16:11:31 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 41MGBUNA018720
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 22 Feb 2024 16:11:30 GMT
+Received: from [10.216.18.198] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Thu, 22 Feb
+ 2024 08:11:24 -0800
+Message-ID: <407ea19a-17a2-471b-80e9-1c35dbc21bb4@quicinc.com>
+Date: Thu, 22 Feb 2024 21:41:20 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 6/9] arm64: dts: qcom: qcs6490-rb3gen2: Enable USB role
+ switching
+To: Bjorn Andersson <quic_bjorande@quicinc.com>,
+        Rob Clark
+	<robdclark@gmail.com>,
+        Abhinav Kumar <quic_abhinavk@quicinc.com>,
+        "Dmitry
+ Baryshkov" <dmitry.baryshkov@linaro.org>,
+        Sean Paul <sean@poorly.run>,
+        "Marijn Suijten" <marijn.suijten@somainline.org>,
+        David Airlie
+	<airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+        <cros-qcom-dts-watchers@chromium.org>,
+        "Bjorn Andersson"
+	<andersson@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@linaro.org>,
+        Rob Herring
+	<robh@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>
+CC: <linux-arm-msm@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
+        <freedreno@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>
+References: <20240221-rb3gen2-dp-connector-v1-0-dc0964ef7d96@quicinc.com>
+ <20240221-rb3gen2-dp-connector-v1-6-dc0964ef7d96@quicinc.com>
+Content-Language: en-US
+From: Krishna Kurapati PSSNV <quic_kriskura@quicinc.com>
+In-Reply-To: <20240221-rb3gen2-dp-connector-v1-6-dc0964ef7d96@quicinc.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: Vdf4OS8I7J8VXnlr-FvlAMW764c5s7EW
+X-Proofpoint-ORIG-GUID: Vdf4OS8I7J8VXnlr-FvlAMW764c5s7EW
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-02-22_12,2024-02-22_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ impostorscore=0 mlxlogscore=999 suspectscore=0 malwarescore=0 spamscore=0
+ bulkscore=0 priorityscore=1501 phishscore=0 mlxscore=0 clxscore=1011
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2402120000 definitions=main-2402220127
 
-From: Wen Yang <wenyang.linux@foxmail.com>
 
-Currently coredump_task_exit() takes some time to wait for the generation
-of the dump file. But if the user-space wants to receive a notification
-as soon as possible it maybe inconvenient.
 
-Commit 2d4bcf886e42 ("exit: Remove profile_task_exit & profile_munmap")
-simplified the code, but also removed profile_task_exit(), which may
-prevent third-party kernel modules from detecting process exits timely.
+On 2/22/2024 4:49 AM, Bjorn Andersson wrote:
+> With the ADSP remoteproc loaded pmic_glink can be introduced and wired
+> up to provide role and orientation switching signals.
+> 
+> Signed-off-by: Bjorn Andersson <quic_bjorande@quicinc.com>
+> ---
+>   arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts | 48 +++++++++++++++++++++++++++-
+>   1 file changed, 47 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts b/arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts
+> index ab498494caea..079bf43b14cc 100644
+> --- a/arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts
+> +++ b/arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts
+> @@ -121,6 +121,41 @@ debug_vm_mem: debug-vm@d0600000 {
+>   		};
+>   	};
+>   
+> +	pmic-glink {
+> +		compatible = "qcom,qcm6490-pmic-glink", "qcom,pmic-glink";
+> +
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		connector@0 {
+> +			compatible = "usb-c-connector";
+> +			reg = <0>;
+> +			power-role = "dual";
+> +			data-role = "dual";
+> +
+> +			ports {
+> +				#address-cells = <1>;
+> +				#size-cells = <0>;
+> +
+> +				port@0 {
+> +					reg = <0>;
+> +
+> +					pmic_glink_hs_in: endpoint {
+> +						remote-endpoint = <&usb_1_dwc3_hs>;
+> +					};
+> +				};
+> +
+> +				port@1 {
+> +					reg = <1>;
+> +
+> +					pmic_glink_ss_in: endpoint {
+> +						remote-endpoint = <&usb_1_dwc3_ss>;
+> +					};
+> +				};
 
-Add the new trace_sched_profile_task_exit() this way a user-space monitor
-could detect the exits and potentially make some preparations in advance.
+For the role switching part:
+Tested-By: Krishna Kurapati PSSNV <quic_kriskura@quicinc.com>
 
-Signed-off-by: Wen Yang <wenyang.linux@foxmail.com>
-Cc: Oleg Nesterov <oleg@redhat.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: Ingo Molnar <mingo@kernel.org>
-Cc: Mel Gorman <mgorman@techsingularity.net>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: linux-kernel@vger.kernel.org
----
- include/trace/events/sched.h | 28 ++++++++++++++++++++++++++++
- kernel/exit.c                |  1 +
- 2 files changed, 29 insertions(+)
+Regards,
+Krishna,
 
-diff --git a/include/trace/events/sched.h b/include/trace/events/sched.h
-index dbb01b4b7451..750b2f0bdf69 100644
---- a/include/trace/events/sched.h
-+++ b/include/trace/events/sched.h
-@@ -341,6 +341,34 @@ DEFINE_EVENT(sched_process_template, sched_wait_task,
- 	TP_PROTO(struct task_struct *p),
- 	TP_ARGS(p));
- 
-+/*
-+ * Tracepoint for profiling a task that is starting to exit:
-+ */
-+TRACE_EVENT(sched_profile_task_exit,
-+
-+	TP_PROTO(struct task_struct *task, long code),
-+
-+	TP_ARGS(task, code),
-+
-+	TP_STRUCT__entry(
-+		__array(	char,	comm,	TASK_COMM_LEN	)
-+		__field(	pid_t,	pid			)
-+		__field(	int,	prio			)
-+		__field(	long,	code			)
-+	),
-+
-+	TP_fast_assign(
-+		memcpy(__entry->comm, task->comm, TASK_COMM_LEN);
-+		__entry->pid		= task->pid;
-+		__entry->prio		= task->prio;
-+		__entry->code		= code;
-+	),
-+
-+	TP_printk("comm=%s pid=%d prio=%d exit_code=0x%lx",
-+		  __entry->comm, __entry->pid, __entry->prio,
-+		  __entry->code)
-+);
-+
- /*
-  * Tracepoint for a waiting task:
-  */
-diff --git a/kernel/exit.c b/kernel/exit.c
-index 493647fd7c07..f675f879a1b2 100644
---- a/kernel/exit.c
-+++ b/kernel/exit.c
-@@ -826,6 +826,7 @@ void __noreturn do_exit(long code)
- 
- 	WARN_ON(tsk->plug);
- 
-+	trace_sched_profile_task_exit(tsk, code);
- 	kcov_task_exit(tsk);
- 	kmsan_task_exit(tsk);
- 
--- 
-2.25.1
 
