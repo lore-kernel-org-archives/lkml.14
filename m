@@ -1,137 +1,85 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 261F336AE9
-	for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 09:09:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95B7228374;
+	Thu, 22 Feb 2024 09:10:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708593001; cv=none; b=Pm7ko4Nc5NsLVMq1R8LuEOLJFv+lGNFCRk3uHOhHdbDVRe+YSjmW5ThdzlFbCdCNR55ZyyDdpSUjaYeHb3Z/69ZJRxWA3cjyWFg7Pl6/Bqrm/ErCaDsWhZdTgtyUfdnp/f5azIp24PMYAeS2SdnpETcsyehVPdbTep20WVJ2Ouw=
+	t=1708593026; cv=none; b=i5tb44B1zDunTh7e7c5I6w1Kf0xtN6DrEXirMeVgpvvttr+E2OIk92PdqA66HyB+934VpGzjOBYaDM+NuY/k0znTeqDvw6HeBTewSSoYYUhYwZhgog5S2N8cakYalv1X8nj2EVPBcSiAjkS1iOgCwaW0zC5zzPj7mgV6nxpKfug=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708593001; c=relaxed/simple;
-	bh=S9f68HyI+Zr46UH5DB8yRbHjWXcwpz7SlL2wIFedeI4=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=g+5YuPO3puQWpZZrejO9Ga7kA7JABmUvVApPL3jECTnww1+ipTuWgisxt41vhHUyNhw+ytihdZXrUokufQBZCNMbV2Os+kNSA8wC7VgozZgaOqStBscuXypBQPLz1GoopW4dvMDo8MtuYTDGEtRIol1rQjcPOdQnxGzlSG/kGXM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=dMXnu6sl; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1708593026; c=relaxed/simple;
+	bh=XqjirAAqRkGAyHgjU9BU+2mKaUfO1pvSnNkUGIRCfXI=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=ZnCq/JJCbAvo4o8QoEzVGNcXJ5C2yzGi3CMqK64fzeGaB45AgJhnWid1NeMWZy8ngeT9w1Kq61laQYFg1Gtbe6VYr3GDGIkuZMWMy1Ji8SPcyUBEJcHFRGkJXzQnqGxcPk9wucvyX5rP5+zYHO+gWtchbBRdneWF1xrH5kOFrHM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mUfCR60g; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dMXnu6sl"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1708592999;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=5z2LjmcVYTTtMHfSdE+4c74yPQ1zKXSnEQ+04Bz2RkY=;
-	b=dMXnu6slRuOdcDqNnQDdWSXFsB64fbl4rRTPjo+n+znh24mwjAAM15hVfPXau3Z+tS9Lvj
-	foUZVgbwHQ83vdYn07Vhhyii+fIs1RnJshX7mouRa5Z9cAfBZ60gppkcPsTB6Op0GQZ1ku
-	TFegnjFkKceQuoSq7ZC1IjZKOEZ4fT4=
-Received: from mail-lf1-f70.google.com (mail-lf1-f70.google.com
- [209.85.167.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-653-O6bkTPXSOO2yFX2frwmNZQ-1; Thu, 22 Feb 2024 04:09:57 -0500
-X-MC-Unique: O6bkTPXSOO2yFX2frwmNZQ-1
-Received: by mail-lf1-f70.google.com with SMTP id 2adb3069b0e04-512d6483799so1139037e87.1
-        for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 01:09:57 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708592996; x=1709197796;
-        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=5z2LjmcVYTTtMHfSdE+4c74yPQ1zKXSnEQ+04Bz2RkY=;
-        b=WPOi99IFYKUIA7xwTrHZgWtggv1a6iKaLmlXJ6KLezEImpJ3C1GLcu14fI52jUlZ6P
-         yMtv8d4OSXjzyOMmtPriTDzF2kL4AJdljqN1QoLi6dWxcnlQaohTSmvoVmY0tvTP+0VY
-         Fc55kdQ/xWUyYz2ZuNS4dEZ8Ez0APhtzln1+hhVbExszoeXMN0gylMeFIZrihFfdB1No
-         GUWEsv59IEfuKQcFmHqSrBDjSTTm8T5DNjnLyHLQACkiqTgM8OsrwedK5DPoUMrg1ViO
-         Ui27me4HWMKFGwIJlKpjDnKICGR2qihAlqMKsoMg07T/Z0+v2SwuxbOSwj/qdJ0h7e9m
-         RbuQ==
-X-Gm-Message-State: AOJu0YxYeOkOJvO3yzYKiTQ+kdECaXjjGgXslP0h0Wr522O+MFsyUcPz
-	WGZBHMlcw1rrpsjtItm23WNxXM9tgWS08fpCkePyqV2Ufr/nIyVxErty2YyGkTn/2WhA/1wEIDt
-	BdigAXzHjMfYkI/m9VTq/FSql4jkhRFPuR8lDgGuCVh/R3bMxd8cfrbr06uxEXA==
-X-Received: by 2002:a05:6512:34cc:b0:512:d643:8ce0 with SMTP id w12-20020a05651234cc00b00512d6438ce0mr2265903lfr.3.1708592996080;
-        Thu, 22 Feb 2024 01:09:56 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IHUfQ8/pcELa6/T5KDQWDZsKcrbNfqYNrm0L3u4xqUXs43U22KoHb268lI/Y9EyTKszcVyvVA==
-X-Received: by 2002:a05:6512:34cc:b0:512:d643:8ce0 with SMTP id w12-20020a05651234cc00b00512d6438ce0mr2265896lfr.3.1708592995763;
-        Thu, 22 Feb 2024 01:09:55 -0800 (PST)
-Received: from localhost (205.pool92-176-231.dynamic.orange.es. [92.176.231.205])
-        by smtp.gmail.com with ESMTPSA id t18-20020a05600c451200b0040fd1629443sm21435438wmo.18.2024.02.22.01.09.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 22 Feb 2024 01:09:55 -0800 (PST)
-From: Javier Martinez Canillas <javierm@redhat.com>
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, Maxime Ripard
- <mripard@redhat.com>
-Cc: linux-kernel@vger.kernel.org, Enric Balletbo i Serra
- <eballetbo@redhat.com>, Erico Nunes <nunes.erico@gmail.com>, Brian Masney
- <bmasney@redhat.com>, Arnd Bergmann <arnd@arndb.de>, Bjorn Andersson
- <quic_bjorande@quicinc.com>, Catalin Marinas <catalin.marinas@arm.com>,
- Geert Uytterhoeven <geert+renesas@glider.be>, Konrad Dybcio
- <konrad.dybcio@linaro.org>, Marek Szyprowski <m.szyprowski@samsung.com>,
- Neil Armstrong <neil.armstrong@linaro.org>, Will Deacon <will@kernel.org>,
- linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v2] arm64: defconfig: Enable zram, xfs and loading
- compressed FW support
-In-Reply-To: <bd071521-7f7b-41e8-8786-ad2eeb58b03e@linaro.org>
-References: <20240221141350.3740488-1-javierm@redhat.com>
- <1f28256c-e436-4add-aa67-2cfb2248b220@linaro.org>
- <6scz7iti3tzzrd4ph3gnuc2pvkcbtuuicgfgujh3pa3c34kdkt@bhfa4xbxeu7t>
- <cb8bf006-57df-494e-80f3-947582ec71f1@linaro.org>
- <fy3wffb2jwv4veo3golfn5olri77clxywbuwuokese7sbobixd@mird5k66cl2w>
- <9083c414-62f2-4bff-93ee-13f8ff60eb34@linaro.org>
- <874je1ipb4.fsf@minerva.mail-host-address-is-not-set>
- <bd071521-7f7b-41e8-8786-ad2eeb58b03e@linaro.org>
-Date: Thu, 22 Feb 2024 10:09:54 +0100
-Message-ID: <87r0h47tlp.fsf@minerva.mail-host-address-is-not-set>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mUfCR60g"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 19E49C433F1;
+	Thu, 22 Feb 2024 09:10:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1708593026;
+	bh=XqjirAAqRkGAyHgjU9BU+2mKaUfO1pvSnNkUGIRCfXI=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=mUfCR60g1fjFodjDb/iHz9rCYICuAvhxFnjYkdljtYroUdK4de69yR2YcDAy5xQDB
+	 CGhFMJaSJZD/w7UuoHlAXvjYMdZR0p/wSVm0m+ywjXsJLp3aFzt9qd/xXOSdIeD2eK
+	 tFuSYydta/GtWJvfRF5YEF7XGDtXiu7Q2gzG+Yw6/fqnIIF6k6NZvYRtjvZ+r883jO
+	 wItkoPOXltwM+uajoquFIJJ6U4jO0eBHX0nIgoUHvOlfaHD6fu8NPzh9Jqv7tq+NOY
+	 NbFipN0ilcBl6Dwb982/bHX4hc4Hb7iQSZNqokZs8S9vXkKaeOzaRrWU76ULjIIxg2
+	 6fO7I4S+Gy6aw==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 00094D84BBB;
+	Thu, 22 Feb 2024 09:10:25 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net] net: phy: realtek: Fix rtl8211f_config_init() for
+ RTL8211F(D)(I)-VD-CG PHY
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <170859302599.11577.10322371469324921304.git-patchwork-notify@kernel.org>
+Date: Thu, 22 Feb 2024 09:10:25 +0000
+References: <20240220070007.968762-1-s-vadapalli@ti.com>
+In-Reply-To: <20240220070007.968762-1-s-vadapalli@ti.com>
+To: Siddharth Vadapalli <s-vadapalli@ti.com>
+Cc: andrew@lunn.ch, hkallweit1@gmail.com, linux@armlinux.org.uk,
+ davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+ xiaoning.wang@nxp.com, wei.fang@nxp.com, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ srk@ti.com
 
-Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org> writes:
+Hello:
 
-> On 21/02/2024 20:34, Javier Martinez Canillas wrote:
+This patch was applied to netdev/net.git (main)
+by Paolo Abeni <pabeni@redhat.com>:
 
-[...]
+On Tue, 20 Feb 2024 12:30:07 +0530 you wrote:
+> Commit bb726b753f75 ("net: phy: realtek: add support for
+> RTL8211F(D)(I)-VD-CG") extended support of the driver from the existing
+> support for RTL8211F(D)(I)-CG PHY to the newer RTL8211F(D)(I)-VD-CG PHY.
+> 
+> While that commit indicated that the RTL8211F_PHYCR2 register is not
+> supported by the "VD-CG" PHY model and therefore updated the corresponding
+> section in rtl8211f_config_init() to be invoked conditionally, the call to
+> "genphy_soft_reset()" was left as-is, when it should have also been invoked
+> conditionally. This is because the call to "genphy_soft_reset()" was first
+> introduced by the commit 0a4355c2b7f8 ("net: phy: realtek: add dt property
+> to disable CLKOUT clock") since the RTL8211F guide indicates that a PHY
+> reset should be issued after setting bits in the PHYCR2 register.
+> 
+> [...]
 
->>>
->>> Any explanation what ZRAM is necessary for Fedora to boot.
->>>
->> 
->> I mentioned already in another email, Fedora is enabling the systemd
->> zram-generator and not having a /dev/zram0 slows down the boot to the
->> point of being unusable. One could disable that service but then is yet
->
-> That one sentence would be enough for me.
->
+Here is the summary with links:
+  - [net] net: phy: realtek: Fix rtl8211f_config_init() for RTL8211F(D)(I)-VD-CG PHY
+    https://git.kernel.org/netdev/net/c/3489182b11d3
 
-I'll add that then to the commit message when proposing a config fragment.
-
-[...]
-
->> 
->> So that means that for aarch64, some filesystems have more precedence over
->> others? It's OK to have ext4 or btrfs but no xfs? Honestly it seems quite
->> arbitrary and subjective for me.
->
-> Yes, subjective, but to be honest: I would drop Btrfs. I was thinking
-
-Fair. If the agreegment is to minimize defconfig (which AFAIU is your
-point), then I'm on board with it. We can start splitting in separate
-fragments, people can then mix and match for their specific use cases.
-
-> about it, but since Arnd agrees on XFS I won't fight that battle.
->
-
-Yeah, it was a strange hill for me to die on and is true that fragments
-seems to be the best compromise, as Maxime said before in this thread.
-
-By the way, I want to apologize for my harsh/rude comments yesterday. I
-wasn't in the best mood and I got too emotional...
-
+You are awesome, thank you!
 -- 
-Best regards,
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
 
-Javier Martinez Canillas
-Core Platforms
-Red Hat
 
