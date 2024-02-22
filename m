@@ -1,1053 +1,388 @@
-Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com [209.85.208.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47F971649BF;
-	Thu, 22 Feb 2024 18:14:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35ABA71735;
+	Thu, 22 Feb 2024 18:14:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708625695; cv=none; b=OOlolRs025SA6VQAVFrp25mv+Qf1+eOhE9SQUZoONweJAgMJFoqewRhgkv7jdHNhvY4NStmh6iB7dwIr8LWCse9wuALavhztBiQJq6k9k6okP0mH1Tm20f/WIGGMVnCgejCmHvwyPoD1aTM1wzQiO/QO1wtEhzqM47MX1w/XIQ4=
+	t=1708625700; cv=none; b=ph2/Ck+AqvU4UO8zrO5rdG8CnVpb9MHLiyL0wtCT/QN22v0hF+jgW0D29B8l7Whd0c2+/8YRooP95RronHtSel2e0bDQveNiyVuk87uDKufUp2GY5F8Ry2C3Ecii/KF1Bem/JwifyxP/DMWwh5yklod5gJPcnng1vEhjj+3W+G0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708625695; c=relaxed/simple;
-	bh=2g9t/K6MJyoP04JMyjoN/T196jRJo1W+K2cG4NlAxzE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=VY2bWqXuKMTV5nXDHxFC/SoluPePlJDetpRtNXNkCoZnysbG+d3nQaE0vrSc8gmaXemPfA4YwMvJaqNu41p9QIknwQXB1PrSRtYPqxRcmi6krPMwdQJCFXG32v+T0SVQpomQPNFYKWc4fVw3T0e4DmEiZFjgCFKwHDp2qDn1mNk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WDUYg7ta; arc=none smtp.client-ip=209.85.208.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1708625700; c=relaxed/simple;
+	bh=sJk+iLTFxQ+htecxrkrYH5cdVnbGhOy+H6wNvmnfl9g=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=g2wrmbRELgULD1neWoj63O8l2lSLyvEE6W+3DbaN9plvhW2AKU3PMHd3U8xfit6OBKwnJymW4lLeQsANA3owwOPG490NURHdKxXxMthE+HYNKr/rKffECZMtZ9fL5SW+lYC9FseFHlfNDI+6BxZ0KzPeK1js7FvjfJJOCDlOh4g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MRAyjeka; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WDUYg7ta"
-Received: by mail-lj1-f181.google.com with SMTP id 38308e7fff4ca-2d21cdbc85bso1185111fa.2;
-        Thu, 22 Feb 2024 10:14:51 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1708625690; x=1709230490; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=zdDgER3I/FBUh4v2IZo5kVqc0y5a5FgLioTBOyGmBsw=;
-        b=WDUYg7ta4hzzxHq/YLZ6gnp9NlY3Jqr/Y/l4Fzlvv2bHJEeORRmU6PixxaZVTqoMPF
-         QGYat0WUX1Y8RY8iLrFAOmXFAZq1rP/g7c/pV4QmBWz7k/GuRiFwBUQGdddJaEG5yi6I
-         USagLcMzKxZHKK/4BeBF3Ii65fbIC+Y/xbH4QmlCb8ELW8bI6HCqT4i224ATiFKredX2
-         8Pzi3VNellSeVnRkt2C823f8vAZ5Z8VHyXvy0uPsUGOdLXMIIBGE9kBodzBhQ/9NLTT6
-         TB4HEkq6+RjyowAU2rBeh1a49KQeUqjm2Twx91+Bm6SVPFHKCdrP8CiJANKUeDnJKNQY
-         OCVA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708625690; x=1709230490;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=zdDgER3I/FBUh4v2IZo5kVqc0y5a5FgLioTBOyGmBsw=;
-        b=Cr+KLvViqi2PSN+AdrTtP8yonxD5t0bRZtL+ArycTgercrB1SQejKDXQ+/9HBS/X+x
-         Nsd6cDY/pCEXbT7X/V7eki+z05cv9qiy4o6ZFDHmQ4KrcnAhRIuBiDa9zeGazHzdJ9RB
-         MsneaWa5FyuPBH96JwzlMNXM9+3BUXxMwWi3057QSdguwkhn8qc9MOsoZ5jGRoY1v7i7
-         2g8fS53JjaMnSG243TnbfDiy7ltWgwNXvYFcw5G7+jcDethQyYLC9FvdQBcq+hNQAJh1
-         K8AR2pxYAN+SzSuMRsn5//14s7BIy+1bHYbZDUnJDTi7/w5ResUALbjM74s/zILbSqh1
-         7A8A==
-X-Forwarded-Encrypted: i=1; AJvYcCVwxy/rFSvybZh53TyK+/IePegccPV6icQZDutIG5qp2fiy0aO6WvvWCEXAOj+zFhpXI5o5PfjDc6NrpvUhzoslTmMutwbbfcdTEcL34nANgj2UgjceCvJXNsVSJfvjU2Vpuq2nmYWsBA==
-X-Gm-Message-State: AOJu0Yw/syUWYv9U6cIt0bbasxHaqCIIcrToL+ZZ0tfuCsYJNp+Kv+v6
-	U8Tam/usS/p40fA/VuzPmqhRdR+obYBuq3ChNrXrie6Rgavkgdzv
-X-Google-Smtp-Source: AGHT+IGsX/zIDEFsJKLLkyNvQrmhZsnlQAJbqwhUiiFzPWDqhIC+rib/r/pPcRtu7WVXI9Uoz5vKBA==
-X-Received: by 2002:ac2:5e6f:0:b0:512:b297:286f with SMTP id a15-20020ac25e6f000000b00512b297286fmr7624463lfr.52.1708625690268;
-        Thu, 22 Feb 2024 10:14:50 -0800 (PST)
-Received: from localhost ([178.176.56.174])
-        by smtp.gmail.com with ESMTPSA id br21-20020a056512401500b00512da707c90sm406390lfb.43.2024.02.22.10.14.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 22 Feb 2024 10:14:49 -0800 (PST)
-From: Serge Semin <fancer.lancer@gmail.com>
-To: Michal Simek <michal.simek@amd.com>,
-	Alexander Stein <alexander.stein@ew.tq-group.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Tony Luck <tony.luck@intel.com>,
-	James Morse <james.morse@arm.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Robert Richter <rric@kernel.org>
-Cc: Serge Semin <fancer.lancer@gmail.com>,
-	Punnaiah Choudary Kalluri <punnaiah.choudary.kalluri@xilinx.com>,
-	Dinh Nguyen <dinguyen@kernel.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-edac@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v5 16/20] EDAC/synopsys: Detach Zynq A05 DDRC support to separate driver
-Date: Thu, 22 Feb 2024 21:13:01 +0300
-Message-ID: <20240222181324.28242-17-fancer.lancer@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240222181324.28242-1-fancer.lancer@gmail.com>
-References: <20240222181324.28242-1-fancer.lancer@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MRAyjeka"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 50DD6C433F1;
+	Thu, 22 Feb 2024 18:14:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1708625699;
+	bh=sJk+iLTFxQ+htecxrkrYH5cdVnbGhOy+H6wNvmnfl9g=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=MRAyjekaJWnFCibf/8lRly5LpNhCrqCamCfqZSAGKYI0Fu+I2GihG8D4ZYAs9MJ1X
+	 5YeDwUpW0fX43VfhyZFqZ+9Xe5sOAd+C7jOya4XsJh/qT4nn4LykNMZpotrV5Xjcoq
+	 Ap5ndFigpz9SxZyEiJfMXfjyS6XRKMIIp/RaZV3vXltWLJerB4LsrdEYTsngZNpVWM
+	 rnAQko12J8/ZECxscZ/ZBqNCbMTOh0h4zsL8sYwnY5E5TyOEPF73hV6SPB044NNGwX
+	 FwFhM34EuR8twNSZ7q328BDA5eMnlI3QN8r2MvNpypCZbnclmLLmKtKK/hruukmJxM
+	 DQQxlWGwrTiow==
+From: Maxime Ripard <mripard@kernel.org>
+Date: Thu, 22 Feb 2024 19:13:57 +0100
+Subject: [PATCH v7 11/36] drm/connector: hdmi: Add support for output
+ format
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240222-kms-hdmi-connector-state-v7-11-8f4af575fce2@kernel.org>
+References: <20240222-kms-hdmi-connector-state-v7-0-8f4af575fce2@kernel.org>
+In-Reply-To: <20240222-kms-hdmi-connector-state-v7-0-8f4af575fce2@kernel.org>
+To: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
+ Daniel Vetter <daniel@ffwll.ch>, Jonathan Corbet <corbet@lwn.net>, 
+ Sandy Huang <hjc@rock-chips.com>, 
+ =?utf-8?q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, 
+ Chen-Yu Tsai <wens@csie.org>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
+ Samuel Holland <samuel@sholland.org>
+Cc: Hans Verkuil <hverkuil@xs4all.nl>, 
+ Sebastian Wick <sebastian.wick@redhat.com>, 
+ =?utf-8?q?Ville_Syrj=C3=A4l=C3=A4?= <ville.syrjala@linux.intel.com>, 
+ dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org, 
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-media@vger.kernel.org, linux-rockchip@lists.infradead.org, 
+ linux-sunxi@lists.linux.dev, Maxime Ripard <mripard@kernel.org>, 
+ Dave Stevenson <dave.stevenson@raspberrypi.com>
+X-Mailer: b4 0.12.3
+X-Developer-Signature: v=1; a=openpgp-sha256; l=11786; i=mripard@kernel.org;
+ h=from:subject:message-id; bh=sJk+iLTFxQ+htecxrkrYH5cdVnbGhOy+H6wNvmnfl9g=;
+ b=owGbwMvMwCX2+D1vfrpE4FHG02pJDKnX+z64mfDFZnPPio2ROMUvlcqa9d4rfWGF5xfXbw1Pb
+ wpU3nvdUcrCIMbFICumyBIjbL4k7tSs151sfPNg5rAygQxh4OIUgIk4vWZkeGxxo/PWUdH5Th+1
+ rv9Zt25P0Trr/7sTYs8kNZu/S1r57hDD/8THzeuSLymksj29J2wyY+7201s3WvV9f8d6K6VQ/8h
+ WLlYA
+X-Developer-Key: i=mripard@kernel.org; a=openpgp;
+ fpr=BE5675C37E818C8B5764241C254BCFC56BF6CE8D
 
-The synopsys_edac.c driver currently supports three memory-controllers:
-1. Synopsys DW uMCTL2 DDRC v3.80 (with the ZynqMP-specific params).
-2. Xilinx ZynqMP DDRC Synopsys DW uMCTL2 DDRC v2.40.
-3. Xilinx Zynq A05 DDR controller.
-If the first two devices are based on the Synopsys DW uMCTL2 IP-cores
-(ZynqMP MC is based on the DW uMCTL2 v2.40) the later device has
-absolutely nothing in common with the Synopsys DW uMCTL2 DDR controllers:
-the CSRs map is absolutely different; it doesn't support IRQs unlike
-the Synopsys memory controllers. Having the driver to support so different
-devices caused implementing an additional level of abstraction, which will
-be a great deal of obstacle in about to be added comprehensive set of the
-Synopsys DDR-controller features (DW uCMTL2 IP-core parameters
-auto-detection, common SDRAM<->phys address translation, multi-ranked
-memory, ECC scrubber, individual IRQs, DFI alert_n IRQ, and so on).
-Moreover the original reason of having these devices support living in a
-single driver hasn't been introduced for all these years: the
-synopsys_edac.c driver currently supports only a single memory controller
-detected on the system.
+Just like BPC, we'll add support for automatic selection of the output
+format for HDMI connectors.
 
-So in order to make the Synopsys driver ready for the new features added
-move the Xilinx Zynq A05 DDRC support into a separate driver: detach the
-Zynq-specific callbacks, init/probe/remove methods and move them into the
-new zynq_edac.c driver. The resultant driver will mostly look similar to
-the code submitted in the initial commit ae9b56e3996d ("EDAC, synps: Add
-EDAC support for zynq ddr ecc controller") except a few fixes added
-afterwards.
+Let's add the needed defaults and fields for now.
 
-Note several Zynq-specific macros have been used in the DW uMCTL2
-DDRC-specific functions. These macros just for a mere coincident have
-values suitable for the DW uMCTL2 code but their names either partly or
-fully unrelated with the Synopsys memory controllers. Since these macros
-are now moved to another driver introduce a new Synopsys-specific ones and
-fix the places where the macros have been improperly utilized.
-
-Signed-off-by: Serge Semin <fancer.lancer@gmail.com>
-
+Reviewed-by: Dave Stevenson <dave.stevenson@raspberrypi.com>
+Signed-off-by: Maxime Ripard <mripard@kernel.org>
 ---
+ drivers/gpu/drm/drm_atomic.c                       |  2 ++
+ drivers/gpu/drm/drm_atomic_state_helper.c          |  3 ++-
+ drivers/gpu/drm/drm_connector.c                    | 31 ++++++++++++++++++++++
+ .../gpu/drm/tests/drm_atomic_state_helper_test.c   | 22 +++++++++++----
+ drivers/gpu/drm/tests/drm_connector_test.c         |  9 +++++++
+ include/drm/drm_connector.h                        | 20 ++++++++++++++
+ 6 files changed, 81 insertions(+), 6 deletions(-)
 
-Changelog v3:
-- Drop the no longer used "priv" pointer from the zynq_mc_init() function.
-  (@tbot)
-
-Changelog v5:
-- Rename handle_error and check_errors to zynq_handle_error and
-  zynq_check_errors in the kdoc comments (@tbot)
----
- MAINTAINERS                  |   1 +
- drivers/edac/Kconfig         |   9 +-
- drivers/edac/Makefile        |   1 +
- drivers/edac/synopsys_edac.c | 239 ++---------------
- drivers/edac/zynq_edac.c     | 501 +++++++++++++++++++++++++++++++++++
- 5 files changed, 531 insertions(+), 220 deletions(-)
- create mode 100644 drivers/edac/zynq_edac.c
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 960512bec428..baca1e55cf49 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -3020,6 +3020,7 @@ F:	arch/arm/mach-zynq/
- F:	drivers/clocksource/timer-cadence-ttc.c
- F:	drivers/cpuidle/cpuidle-zynq.c
- F:	drivers/edac/synopsys_edac.c
-+F:	drivers/edac/zynq_edac.c
- F:	drivers/i2c/busses/i2c-cadence.c
- F:	drivers/i2c/busses/i2c-xiic.c
- F:	drivers/mmc/host/sdhci-of-arasan.c
-diff --git a/drivers/edac/Kconfig b/drivers/edac/Kconfig
-index 5a7f3fabee22..6e411376d2bb 100644
---- a/drivers/edac/Kconfig
-+++ b/drivers/edac/Kconfig
-@@ -487,7 +487,7 @@ config EDAC_ARMADA_XP
+diff --git a/drivers/gpu/drm/drm_atomic.c b/drivers/gpu/drm/drm_atomic.c
+index 4e11cfb4518b..8730137baa86 100644
+--- a/drivers/gpu/drm/drm_atomic.c
++++ b/drivers/gpu/drm/drm_atomic.c
+@@ -1146,6 +1146,8 @@ static void drm_atomic_connector_print_state(struct drm_printer *p,
+ 	if (connector->connector_type == DRM_MODE_CONNECTOR_HDMIA ||
+ 	    connector->connector_type == DRM_MODE_CONNECTOR_HDMIB) {
+ 		drm_printf(p, "\toutput_bpc=%u\n", state->hdmi.output_bpc);
++		drm_printf(p, "\toutput_format=%s\n",
++			   drm_hdmi_connector_get_output_format_name(state->hdmi.output_format));
+ 	}
  
- config EDAC_SYNOPSYS
- 	tristate "Synopsys DDR Memory Controller"
--	depends on ARCH_ZYNQ || ARCH_ZYNQMP || ARCH_INTEL_SOCFPGA || ARCH_MXC
-+	depends on ARCH_ZYNQMP || ARCH_INTEL_SOCFPGA || ARCH_MXC
- 	help
- 	  Support for error detection and correction on the Synopsys DDR
- 	  memory controller.
-@@ -542,6 +542,13 @@ config EDAC_DMC520
- 	  Support for error detection and correction on the
- 	  SoCs with ARM DMC-520 DRAM controller.
+ 	if (connector->connector_type == DRM_MODE_CONNECTOR_WRITEBACK)
+diff --git a/drivers/gpu/drm/drm_atomic_state_helper.c b/drivers/gpu/drm/drm_atomic_state_helper.c
+index 460454904fe3..ae99765c45de 100644
+--- a/drivers/gpu/drm/drm_atomic_state_helper.c
++++ b/drivers/gpu/drm/drm_atomic_state_helper.c
+@@ -660,7 +660,8 @@ int drm_atomic_helper_connector_hdmi_check(struct drm_connector *connector,
+ 	struct drm_connector_state *new_state =
+ 		drm_atomic_get_new_connector_state(state, connector);
  
-+config EDAC_ZYNQ
-+	tristate "Xilinx Zynq A05 DDR Memory Controller"
-+	depends on ARCH_ZYNQ || COMPILE_TEST
-+	help
-+	  Support for error detection and correction on the Xilinx Zynq A05
-+	  DDR memory controller.
+-	if (old_state->hdmi.output_bpc != new_state->hdmi.output_bpc) {
++	if (old_state->hdmi.output_bpc != new_state->hdmi.output_bpc ||
++	    old_state->hdmi.output_format != new_state->hdmi.output_format) {
+ 		struct drm_crtc *crtc = new_state->crtc;
+ 		struct drm_crtc_state *crtc_state;
+ 
+diff --git a/drivers/gpu/drm/drm_connector.c b/drivers/gpu/drm/drm_connector.c
+index da51a2bcb978..b629c8e990f4 100644
+--- a/drivers/gpu/drm/drm_connector.c
++++ b/drivers/gpu/drm/drm_connector.c
+@@ -459,6 +459,7 @@ EXPORT_SYMBOL(drmm_connector_init);
+  * @funcs: callbacks for this connector
+  * @connector_type: user visible type of the connector
+  * @ddc: optional pointer to the associated ddc adapter
++ * @supported_formats: Bitmask of @hdmi_colorspace listing supported output formats
+  * @max_bpc: Maximum bits per char the HDMI connector supports
+  *
+  * Initialises a preallocated HDMI connector. Connectors can be
+@@ -477,6 +478,7 @@ int drmm_connector_hdmi_init(struct drm_device *dev,
+ 			     const struct drm_connector_funcs *funcs,
+ 			     int connector_type,
+ 			     struct i2c_adapter *ddc,
++			     unsigned long supported_formats,
+ 			     unsigned int max_bpc)
+ {
+ 	int ret;
+@@ -485,6 +487,9 @@ int drmm_connector_hdmi_init(struct drm_device *dev,
+ 	      connector_type == DRM_MODE_CONNECTOR_HDMIB))
+ 		return -EINVAL;
+ 
++	if (!supported_formats || !(supported_formats & BIT(HDMI_COLORSPACE_RGB)))
++		return -EINVAL;
 +
- config EDAC_ZYNQMP
- 	tristate "Xilinx ZynqMP OCM Controller"
- 	depends on ARCH_ZYNQMP || COMPILE_TEST
-diff --git a/drivers/edac/Makefile b/drivers/edac/Makefile
-index 9c09893695b7..2829036f8468 100644
---- a/drivers/edac/Makefile
-+++ b/drivers/edac/Makefile
-@@ -85,5 +85,6 @@ obj-$(CONFIG_EDAC_ASPEED)		+= aspeed_edac.o
- obj-$(CONFIG_EDAC_BLUEFIELD)		+= bluefield_edac.o
- obj-$(CONFIG_EDAC_DMC520)		+= dmc520_edac.o
- obj-$(CONFIG_EDAC_NPCM)			+= npcm_edac.o
-+obj-$(CONFIG_EDAC_ZYNQ)			+= zynq_edac.o
- obj-$(CONFIG_EDAC_ZYNQMP)		+= zynqmp_edac.o
- obj-$(CONFIG_EDAC_VERSAL)		+= versal_edac.o
-diff --git a/drivers/edac/synopsys_edac.c b/drivers/edac/synopsys_edac.c
-index dfe1abe7c86c..6ea1eaaa7d6f 100644
---- a/drivers/edac/synopsys_edac.c
-+++ b/drivers/edac/synopsys_edac.c
-@@ -29,68 +29,16 @@
- #define SYNPS_EDAC_MOD_STRING		"synps_edac"
- #define SYNPS_EDAC_MOD_VER		"1"
+ 	if (!(max_bpc == 8 || max_bpc == 10 || max_bpc == 12))
+ 		return -EINVAL;
  
--/* Synopsys DDR memory controller registers that are relevant to ECC */
--#define CTRL_OFST			0x0
--#define T_ZQ_OFST			0xA4
--
--/* ECC control register */
--#define ECC_CTRL_OFST			0xC4
--/* ECC log register */
--#define CE_LOG_OFST			0xC8
--/* ECC address register */
--#define CE_ADDR_OFST			0xCC
--/* ECC data[31:0] register */
--#define CE_DATA_31_0_OFST		0xD0
--
--/* Uncorrectable error info registers */
--#define UE_LOG_OFST			0xDC
--#define UE_ADDR_OFST			0xE0
--#define UE_DATA_31_0_OFST		0xE4
--
--#define STAT_OFST			0xF0
--#define SCRUB_OFST			0xF4
--
--/* Control register bit field definitions */
--#define CTRL_BW_MASK			0xC
--#define CTRL_BW_SHIFT			2
--
--#define DDRCTL_WDTH_16			1
--#define DDRCTL_WDTH_32			0
--
--/* ZQ register bit field definitions */
--#define T_ZQ_DDRMODE_MASK		0x2
--
--/* ECC control register bit field definitions */
--#define ECC_CTRL_CLR_CE_ERR		0x2
--#define ECC_CTRL_CLR_UE_ERR		0x1
--
--/* ECC correctable/uncorrectable error log register definitions */
--#define LOG_VALID			0x1
--#define CE_LOG_BITPOS_MASK		0xFE
--#define CE_LOG_BITPOS_SHIFT		1
--
--/* ECC correctable/uncorrectable error address register definitions */
--#define ADDR_COL_MASK			0xFFF
--#define ADDR_ROW_MASK			0xFFFF000
--#define ADDR_ROW_SHIFT			12
--#define ADDR_BANK_MASK			0x70000000
--#define ADDR_BANK_SHIFT			28
--
--/* ECC statistic register definitions */
--#define STAT_UECNT_MASK			0xFF
--#define STAT_CECNT_MASK			0xFF00
--#define STAT_CECNT_SHIFT		8
--
--/* ECC scrub register definitions */
--#define SCRUB_MODE_MASK			0x7
--#define SCRUB_MODE_SECDED		0x4
--
- /* DDR ECC Quirks */
- #define DDR_ECC_INTR_SUPPORT		BIT(0)
- #define DDR_ECC_DATA_POISON_SUPPORT	BIT(1)
- #define SYNPS_ZYNQMP_IRQ_REGS		BIT(2)
+@@ -492,6 +497,8 @@ int drmm_connector_hdmi_init(struct drm_device *dev,
+ 	if (ret)
+ 		return ret;
  
--/* ZynqMP Enhanced DDR memory controller registers that are relevant to ECC */
-+/* Synopsys DDR memory controller registers that are relevant to ECC */
++	connector->hdmi.supported_formats = supported_formats;
 +
-+/* DDRC Master 0 Register */
-+#define DDR_MSTR_OFST			0x0
+ 	/*
+ 	 * drm_connector_attach_max_bpc_property() requires the
+ 	 * connector to have a state.
+@@ -1201,6 +1208,30 @@ static const u32 dp_colorspaces =
+ 	BIT(DRM_MODE_COLORIMETRY_BT2020_CYCC) |
+ 	BIT(DRM_MODE_COLORIMETRY_BT2020_YCC);
+ 
++static const char * const output_format_str[] = {
++	[HDMI_COLORSPACE_RGB]		= "RGB",
++	[HDMI_COLORSPACE_YUV420]	= "YUV 4:2:0",
++	[HDMI_COLORSPACE_YUV422]	= "YUV 4:2:2",
++	[HDMI_COLORSPACE_YUV444]	= "YUV 4:4:4",
++};
 +
- /* ECC Configuration Registers */
- #define ECC_CFG0_OFST			0x70
- #define ECC_CFG1_OFST			0x74
-@@ -134,16 +82,22 @@
- #define ECC_ADDRMAP0_OFFSET		0x200
- 
- /* Control register bitfield definitions */
--#define ECC_CTRL_BUSWIDTH_MASK		0x3000
--#define ECC_CTRL_BUSWIDTH_SHIFT		12
-+#define ECC_CTRL_CLR_CE_ERR		BIT(0)
-+#define ECC_CTRL_CLR_UE_ERR		BIT(1)
- #define ECC_CTRL_CLR_CE_ERRCNT		BIT(2)
- #define ECC_CTRL_CLR_UE_ERRCNT		BIT(3)
- 
- /* DDR Control Register width definitions  */
-+#define DDR_MSTR_BUSWIDTH_MASK		0x3000
-+#define DDR_MSTR_BUSWIDTH_SHIFT		12
- #define DDRCTL_EWDTH_16			2
- #define DDRCTL_EWDTH_32			1
- #define DDRCTL_EWDTH_64			0
- 
-+/* ECC CFG0 register definitions */
-+#define ECC_CFG0_MODE_MASK		0x7
-+#define ECC_CFG0_MODE_SECDED		0x4
++/*
++ * drm_hdmi_connector_get_output_format_name() - Return a string for HDMI connector output format
++ * @fmt: Output format to compute name of
++ *
++ * Returns: the name of the output format, or NULL if the type is not
++ * valid.
++ */
++const char *
++drm_hdmi_connector_get_output_format_name(enum hdmi_colorspace fmt)
++{
++	if (fmt >= ARRAY_SIZE(output_format_str))
++		return NULL;
 +
- /* ECC status register definitions */
- #define ECC_STAT_UECNT_MASK		0xF0000
- #define ECC_STAT_UECNT_SHIFT		16
-@@ -341,61 +295,6 @@ struct synps_platform_data {
- 	int quirks;
++	return output_format_str[fmt];
++}
++EXPORT_SYMBOL(drm_hdmi_connector_get_output_format_name);
++
+ /**
+  * DOC: standard connector properties
+  *
+diff --git a/drivers/gpu/drm/tests/drm_atomic_state_helper_test.c b/drivers/gpu/drm/tests/drm_atomic_state_helper_test.c
+index 5d1a1dbff433..a129ea5f014c 100644
+--- a/drivers/gpu/drm/tests/drm_atomic_state_helper_test.c
++++ b/drivers/gpu/drm/tests/drm_atomic_state_helper_test.c
+@@ -147,6 +147,7 @@ static const struct drm_connector_funcs dummy_connector_funcs = {
+ static
+ struct drm_atomic_helper_connector_hdmi_priv *
+ drm_atomic_helper_connector_hdmi_init(struct kunit *test,
++				      unsigned int formats,
+ 				      unsigned int max_bpc)
+ {
+ 	struct drm_atomic_helper_connector_hdmi_priv *priv;
+@@ -190,6 +191,7 @@ drm_atomic_helper_connector_hdmi_init(struct kunit *test,
+ 				       &dummy_connector_funcs,
+ 				       DRM_MODE_CONNECTOR_HDMIA,
+ 				       NULL,
++				       formats,
+ 				       max_bpc);
+ 	KUNIT_ASSERT_EQ(test, ret, 0);
+ 
+@@ -225,7 +227,9 @@ static void drm_test_check_output_bpc_crtc_mode_changed(struct kunit *test)
+ 	struct drm_crtc *crtc;
+ 	int ret;
+ 
+-	priv = drm_atomic_helper_connector_hdmi_init(test, 10);
++	priv = drm_atomic_helper_connector_hdmi_init(test,
++						     BIT(HDMI_COLORSPACE_RGB),
++						     10);
+ 	KUNIT_ASSERT_NOT_NULL(test, priv);
+ 
+ 	ctx = drm_kunit_helper_acquire_ctx_alloc(test);
+@@ -292,7 +296,9 @@ static void drm_test_check_output_bpc_crtc_mode_not_changed(struct kunit *test)
+ 	struct drm_crtc *crtc;
+ 	int ret;
+ 
+-	priv = drm_atomic_helper_connector_hdmi_init(test, 10);
++	priv = drm_atomic_helper_connector_hdmi_init(test,
++						     BIT(HDMI_COLORSPACE_RGB),
++						     10);
+ 	KUNIT_ASSERT_NOT_NULL(test, priv);
+ 
+ 	ctx = drm_kunit_helper_acquire_ctx_alloc(test);
+@@ -361,7 +367,9 @@ static void drm_test_check_bpc_8_value(struct kunit *test)
+ 	struct drm_connector_state *conn_state;
+ 	struct drm_connector *conn;
+ 
+-	priv = drm_atomic_helper_connector_hdmi_init(test, 8);
++	priv = drm_atomic_helper_connector_hdmi_init(test,
++						     BIT(HDMI_COLORSPACE_RGB),
++						     8);
+ 	KUNIT_ASSERT_NOT_NULL(test, priv);
+ 
+ 	conn = &priv->connector;
+@@ -383,7 +391,9 @@ static void drm_test_check_bpc_10_value(struct kunit *test)
+ 	struct drm_connector_state *conn_state;
+ 	struct drm_connector *conn;
+ 
+-	priv = drm_atomic_helper_connector_hdmi_init(test, 10);
++	priv = drm_atomic_helper_connector_hdmi_init(test,
++						     BIT(HDMI_COLORSPACE_RGB),
++						     10);
+ 	KUNIT_ASSERT_NOT_NULL(test, priv);
+ 
+ 	conn = &priv->connector;
+@@ -405,7 +415,9 @@ static void drm_test_check_bpc_12_value(struct kunit *test)
+ 	struct drm_connector_state *conn_state;
+ 	struct drm_connector *conn;
+ 
+-	priv = drm_atomic_helper_connector_hdmi_init(test, 12);
++	priv = drm_atomic_helper_connector_hdmi_init(test,
++						     BIT(HDMI_COLORSPACE_RGB),
++						     12);
+ 	KUNIT_ASSERT_NOT_NULL(test, priv);
+ 
+ 	conn = &priv->connector;
+diff --git a/drivers/gpu/drm/tests/drm_connector_test.c b/drivers/gpu/drm/tests/drm_connector_test.c
+index 20da290abff3..a9a57cb23235 100644
+--- a/drivers/gpu/drm/tests/drm_connector_test.c
++++ b/drivers/gpu/drm/tests/drm_connector_test.c
+@@ -187,6 +187,7 @@ static void drm_test_connector_hdmi_init_valid(struct kunit *test)
+ 				       &dummy_funcs,
+ 				       DRM_MODE_CONNECTOR_HDMIA,
+ 				       &priv->ddc,
++				       BIT(HDMI_COLORSPACE_RGB),
+ 				       8);
+ 	KUNIT_EXPECT_EQ(test, ret, 0);
+ }
+@@ -204,6 +205,7 @@ static void drm_test_connector_hdmi_init_null_ddc(struct kunit *test)
+ 				       &dummy_funcs,
+ 				       DRM_MODE_CONNECTOR_HDMIA,
+ 				       NULL,
++				       BIT(HDMI_COLORSPACE_RGB),
+ 				       8);
+ 	KUNIT_EXPECT_EQ(test, ret, 0);
+ }
+@@ -221,6 +223,7 @@ static void drm_test_connector_hdmi_init_bpc_invalid(struct kunit *test)
+ 				       &dummy_funcs,
+ 				       DRM_MODE_CONNECTOR_HDMIA,
+ 				       &priv->ddc,
++				       BIT(HDMI_COLORSPACE_RGB),
+ 				       9);
+ 	KUNIT_EXPECT_LT(test, ret, 0);
+ }
+@@ -238,6 +241,7 @@ static void drm_test_connector_hdmi_init_bpc_null(struct kunit *test)
+ 				       &dummy_funcs,
+ 				       DRM_MODE_CONNECTOR_HDMIA,
+ 				       &priv->ddc,
++				       BIT(HDMI_COLORSPACE_RGB),
+ 				       0);
+ 	KUNIT_EXPECT_LT(test, ret, 0);
+ }
+@@ -259,6 +263,7 @@ static void drm_test_connector_hdmi_init_bpc_8(struct kunit *test)
+ 				       &dummy_funcs,
+ 				       DRM_MODE_CONNECTOR_HDMIA,
+ 				       &priv->ddc,
++				       BIT(HDMI_COLORSPACE_RGB),
+ 				       8);
+ 	KUNIT_EXPECT_EQ(test, ret, 0);
+ 
+@@ -292,6 +297,7 @@ static void drm_test_connector_hdmi_init_bpc_10(struct kunit *test)
+ 				       &dummy_funcs,
+ 				       DRM_MODE_CONNECTOR_HDMIA,
+ 				       &priv->ddc,
++				       BIT(HDMI_COLORSPACE_RGB),
+ 				       10);
+ 	KUNIT_EXPECT_EQ(test, ret, 0);
+ 
+@@ -325,6 +331,7 @@ static void drm_test_connector_hdmi_init_bpc_12(struct kunit *test)
+ 				       &dummy_funcs,
+ 				       DRM_MODE_CONNECTOR_HDMIA,
+ 				       &priv->ddc,
++				       BIT(HDMI_COLORSPACE_RGB),
+ 				       12);
+ 	KUNIT_EXPECT_EQ(test, ret, 0);
+ 
+@@ -355,6 +362,7 @@ static void drm_test_connector_hdmi_init_type_valid(struct kunit *test)
+ 				       &dummy_funcs,
+ 				       connector_type,
+ 				       &priv->ddc,
++				       BIT(HDMI_COLORSPACE_RGB),
+ 				       8);
+ 	KUNIT_EXPECT_EQ(test, ret, 0);
+ }
+@@ -387,6 +395,7 @@ static void drm_test_connector_hdmi_init_type_invalid(struct kunit *test)
+ 				       &dummy_funcs,
+ 				       connector_type,
+ 				       &priv->ddc,
++				       BIT(HDMI_COLORSPACE_RGB),
+ 				       8);
+ 	KUNIT_EXPECT_LT(test, ret, 0);
+ }
+diff --git a/include/drm/drm_connector.h b/include/drm/drm_connector.h
+index d4d2ae15bc1e..29883e6f8e50 100644
+--- a/include/drm/drm_connector.h
++++ b/include/drm/drm_connector.h
+@@ -368,6 +368,9 @@ enum drm_panel_orientation {
+ 	DRM_MODE_PANEL_ORIENTATION_RIGHT_UP,
  };
  
--/**
-- * zynq_get_error_info - Get the current ECC error info.
-- * @priv:	DDR memory controller private instance data.
-- *
-- * Return: one if there is no error, otherwise zero.
-- */
--static int zynq_get_error_info(struct synps_edac_priv *priv)
--{
--	struct synps_ecc_status *p;
--	u32 regval, clearval = 0;
--	void __iomem *base;
--
--	base = priv->baseaddr;
--	p = &priv->stat;
--
--	regval = readl(base + STAT_OFST);
--	if (!regval)
--		return 1;
--
--	p->ce_cnt = (regval & STAT_CECNT_MASK) >> STAT_CECNT_SHIFT;
--	p->ue_cnt = regval & STAT_UECNT_MASK;
--
--	regval = readl(base + CE_LOG_OFST);
--	if (!(p->ce_cnt && (regval & LOG_VALID)))
--		goto ue_err;
--
--	p->ceinfo.bitpos = (regval & CE_LOG_BITPOS_MASK) >> CE_LOG_BITPOS_SHIFT;
--	regval = readl(base + CE_ADDR_OFST);
--	p->ceinfo.row = (regval & ADDR_ROW_MASK) >> ADDR_ROW_SHIFT;
--	p->ceinfo.col = regval & ADDR_COL_MASK;
--	p->ceinfo.bank = (regval & ADDR_BANK_MASK) >> ADDR_BANK_SHIFT;
--	p->ceinfo.data = readl(base + CE_DATA_31_0_OFST);
--	edac_dbg(3, "CE bit position: %d data: %d\n", p->ceinfo.bitpos,
--		 p->ceinfo.data);
--	clearval = ECC_CTRL_CLR_CE_ERR;
--
--ue_err:
--	regval = readl(base + UE_LOG_OFST);
--	if (!(p->ue_cnt && (regval & LOG_VALID)))
--		goto out;
--
--	regval = readl(base + UE_ADDR_OFST);
--	p->ueinfo.row = (regval & ADDR_ROW_MASK) >> ADDR_ROW_SHIFT;
--	p->ueinfo.col = regval & ADDR_COL_MASK;
--	p->ueinfo.bank = (regval & ADDR_BANK_MASK) >> ADDR_BANK_SHIFT;
--	p->ueinfo.data = readl(base + UE_DATA_31_0_OFST);
--	clearval |= ECC_CTRL_CLR_UE_ERR;
--
--out:
--	writel(clearval, base + ECC_CTRL_OFST);
--	writel(0x0, base + ECC_CTRL_OFST);
--
--	return 0;
--}
--
++const char *
++drm_hdmi_connector_get_output_format_name(enum hdmi_colorspace fmt);
++
  /**
-  * zynqmp_get_error_info - Get the current ECC error info.
-  * @priv:	DDR memory controller private instance data.
-@@ -614,37 +513,6 @@ static void check_errors(struct mem_ctl_info *mci)
- 	handle_error(mci, &priv->stat);
- }
+  * struct drm_monitor_range_info - Panel's Monitor range in EDID for
+  * &drm_display_info
+@@ -1041,6 +1044,11 @@ struct drm_connector_state {
+ 		 * @output_bpc: Bits per color channel to output.
+ 		 */
+ 		unsigned int output_bpc;
++
++		/**
++		 * @output_format: Pixel format to output in.
++		 */
++		enum hdmi_colorspace output_format;
+ 	} hdmi;
+ };
  
--/**
-- * zynq_get_dtype - Return the controller memory width.
-- * @base:	DDR memory controller base address.
-- *
-- * Get the EDAC device type width appropriate for the current controller
-- * configuration.
-- *
-- * Return: a device type width enumeration.
-- */
--static enum dev_type zynq_get_dtype(const void __iomem *base)
--{
--	enum dev_type dt;
--	u32 width;
--
--	width = readl(base + CTRL_OFST);
--	width = (width & CTRL_BW_MASK) >> CTRL_BW_SHIFT;
--
--	switch (width) {
--	case DDRCTL_WDTH_16:
--		dt = DEV_X2;
--		break;
--	case DDRCTL_WDTH_32:
--		dt = DEV_X4;
--		break;
--	default:
--		dt = DEV_UNKNOWN;
--	}
--
--	return dt;
--}
--
- /**
-  * zynqmp_get_dtype - Return the controller memory width.
-  * @base:	DDR memory controller base address.
-@@ -658,7 +526,7 @@ static enum dev_type zynqmp_get_dtype(const void __iomem *base)
- {
- 	u32 regval;
+@@ -1902,6 +1910,17 @@ struct drm_connector {
  
--	regval = readl(base + CTRL_OFST);
-+	regval = readl(base + DDR_MSTR_OFST);
- 	if (!(regval & MEM_TYPE_DDR4))
- 		return DEV_UNKNOWN;
- 
-@@ -677,30 +545,6 @@ static enum dev_type zynqmp_get_dtype(const void __iomem *base)
- 	return DEV_UNKNOWN;
- }
- 
--/**
-- * zynq_get_ecc_state - Return the controller ECC enable/disable status.
-- * @base:	DDR memory controller base address.
-- *
-- * Get the ECC enable/disable status of the controller.
-- *
-- * Return: true if enabled, otherwise false.
-- */
--static bool zynq_get_ecc_state(void __iomem *base)
--{
--	enum dev_type dt;
--	u32 ecctype;
--
--	dt = zynq_get_dtype(base);
--	if (dt == DEV_UNKNOWN)
--		return false;
--
--	ecctype = readl(base + SCRUB_OFST) & SCRUB_MODE_MASK;
--	if ((ecctype == SCRUB_MODE_SECDED) && (dt == DEV_X2))
--		return true;
--
--	return false;
--}
--
- /**
-  * zynqmp_get_ecc_state - Return the controller ECC enable/disable status.
-  * @base:	DDR memory controller base address.
-@@ -713,9 +557,9 @@ static bool zynqmp_get_ecc_state(void __iomem *base)
- {
- 	u32 regval;
- 
--	regval = readl(base + ECC_CFG0_OFST) & SCRUB_MODE_MASK;
-+	regval = readl(base + ECC_CFG0_OFST) & ECC_CFG0_MODE_MASK;
- 
--	return (regval == SCRUB_MODE_SECDED);
-+	return (regval == ECC_CFG0_MODE_SECDED);
- }
- 
- /**
-@@ -732,30 +576,6 @@ static u32 get_memsize(void)
- 	return inf.totalram * inf.mem_unit;
- }
- 
--/**
-- * zynq_get_mtype - Return the controller memory type.
-- * @base:	Synopsys ECC status structure.
-- *
-- * Get the EDAC memory type appropriate for the current controller
-- * configuration.
-- *
-- * Return: a memory type enumeration.
-- */
--static enum mem_type zynq_get_mtype(const void __iomem *base)
--{
--	enum mem_type mt;
--	u32 memtype;
--
--	memtype = readl(base + T_ZQ_OFST);
--
--	if (memtype & T_ZQ_DDRMODE_MASK)
--		mt = MEM_DDR3;
--	else
--		mt = MEM_DDR2;
--
--	return mt;
--}
--
- /**
-  * zynqmp_get_mtype - Returns controller memory type.
-  * @base:	Synopsys ECC status structure.
-@@ -770,7 +590,7 @@ static enum mem_type zynqmp_get_mtype(const void __iomem *base)
- 	enum mem_type mt;
- 	u32 memtype;
- 
--	memtype = readl(base + CTRL_OFST);
-+	memtype = readl(base + DDR_MSTR_OFST);
- 
- 	if ((memtype & MEM_TYPE_DDR3) || (memtype & MEM_TYPE_LPDDR3))
- 		mt = MEM_DDR3;
-@@ -882,14 +702,6 @@ static int setup_irq(struct mem_ctl_info *mci,
- 	return 0;
- }
- 
--static const struct synps_platform_data zynq_edac_def = {
--	.get_error_info	= zynq_get_error_info,
--	.get_mtype	= zynq_get_mtype,
--	.get_dtype	= zynq_get_dtype,
--	.get_ecc_state	= zynq_get_ecc_state,
--	.quirks		= 0,
--};
--
- static const struct synps_platform_data zynqmp_edac_def = {
- 	.get_error_info	= zynqmp_get_error_info,
- 	.get_mtype	= zynqmp_get_mtype,
-@@ -916,10 +728,6 @@ static const struct synps_platform_data synopsys_edac_def = {
- 
- 
- static const struct of_device_id synps_edac_match[] = {
--	{
--		.compatible = "xlnx,zynq-ddrc-a05",
--		.data = (void *)&zynq_edac_def
--	},
- 	{
- 		.compatible = "xlnx,zynqmp-ddrc-2.40a",
- 		.data = (void *)&zynqmp_edac_def
-@@ -1141,8 +949,8 @@ static void setup_column_address_map(struct synps_edac_priv *priv, u32 *addrmap)
- 	u32 width, memtype;
- 	int index;
- 
--	memtype = readl(priv->baseaddr + CTRL_OFST);
--	width = (memtype & ECC_CTRL_BUSWIDTH_MASK) >> ECC_CTRL_BUSWIDTH_SHIFT;
-+	memtype = readl(priv->baseaddr + DDR_MSTR_OFST);
-+	width = (memtype & DDR_MSTR_BUSWIDTH_MASK) >> DDR_MSTR_BUSWIDTH_SHIFT;
- 
- 	priv->col_shift[0] = 0;
- 	priv->col_shift[1] = 1;
-@@ -1337,7 +1145,7 @@ static int mc_probe(struct platform_device *pdev)
- 	layers[1].size = SYNPS_EDAC_NR_CHANS;
- 	layers[1].is_virt_csrow = false;
- 
--	mci = edac_mc_alloc(0, ARRAY_SIZE(layers), layers,
-+	mci = edac_mc_alloc(EDAC_AUTO_MC_NUM, ARRAY_SIZE(layers), layers,
- 			    sizeof(struct synps_edac_priv));
- 	if (!mci) {
- 		edac_printk(KERN_ERR, EDAC_MC,
-@@ -1379,13 +1187,6 @@ static int mc_probe(struct platform_device *pdev)
- 		setup_address_map(priv);
- #endif
- 
--	/*
--	 * Start capturing the correctable and uncorrectable errors. A write of
--	 * 0 starts the counters.
--	 */
--	if (!(priv->p_data->quirks & DDR_ECC_INTR_SUPPORT))
--		writel(0x0, baseaddr + ECC_CTRL_OFST);
--
- 	return rc;
- 
- free_edac_mc:
-diff --git a/drivers/edac/zynq_edac.c b/drivers/edac/zynq_edac.c
-new file mode 100644
-index 000000000000..be26934a9c20
---- /dev/null
-+++ b/drivers/edac/zynq_edac.c
-@@ -0,0 +1,501 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Zynq DDR ECC Driver
-+ * This driver is based on ppc4xx_edac.c drivers
-+ *
-+ * Copyright (C) 2012 - 2014 Xilinx, Inc.
-+ */
-+
-+#include <linux/edac.h>
-+#include <linux/interrupt.h>
-+#include <linux/mm.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/of_device.h>
-+#include <linux/platform_device.h>
-+
-+#include "edac_module.h"
-+
-+/* Number of cs_rows needed per memory controller */
-+#define ZYNQ_EDAC_NR_CSROWS		1
-+
-+/* Number of channels per memory controller */
-+#define ZYNQ_EDAC_NR_CHANS		1
-+
-+/* Granularity of reported error in bytes */
-+#define ZYNQ_EDAC_ERR_GRAIN		1
-+
-+#define ZYNQ_EDAC_MSG_SIZE		256
-+
-+#define ZYNQ_EDAC_MOD_STRING		"zynq_edac"
-+#define ZYNQ_EDAC_MOD_VER		"1"
-+
-+/* Zynq DDR memory controller ECC registers */
-+#define ZYNQ_CTRL_OFST			0x0
-+#define ZYNQ_T_ZQ_OFST			0xA4
-+
-+/* ECC control register */
-+#define ZYNQ_ECC_CTRL_OFST		0xC4
-+/* ECC log register */
-+#define ZYNQ_CE_LOG_OFST		0xC8
-+/* ECC address register */
-+#define ZYNQ_CE_ADDR_OFST		0xCC
-+/* ECC data[31:0] register */
-+#define ZYNQ_CE_DATA_31_0_OFST		0xD0
-+
-+/* Uncorrectable error info registers */
-+#define ZYNQ_UE_LOG_OFST		0xDC
-+#define ZYNQ_UE_ADDR_OFST		0xE0
-+#define ZYNQ_UE_DATA_31_0_OFST		0xE4
-+
-+#define ZYNQ_STAT_OFST			0xF0
-+#define ZYNQ_SCRUB_OFST			0xF4
-+
-+/* Control register bit field definitions */
-+#define ZYNQ_CTRL_BW_MASK		0xC
-+#define ZYNQ_CTRL_BW_SHIFT		2
-+
-+#define ZYNQ_DDRCTL_WDTH_16		1
-+#define ZYNQ_DDRCTL_WDTH_32		0
-+
-+/* ZQ register bit field definitions */
-+#define ZYNQ_T_ZQ_DDRMODE_MASK		0x2
-+
-+/* ECC control register bit field definitions */
-+#define ZYNQ_ECC_CTRL_CLR_CE_ERR	0x2
-+#define ZYNQ_ECC_CTRL_CLR_UE_ERR	0x1
-+
-+/* ECC correctable/uncorrectable error log register definitions */
-+#define ZYNQ_LOG_VALID			0x1
-+#define ZYNQ_CE_LOG_BITPOS_MASK		0xFE
-+#define ZYNQ_CE_LOG_BITPOS_SHIFT	1
-+
-+/* ECC correctable/uncorrectable error address register definitions */
-+#define ZYNQ_ADDR_COL_MASK		0xFFF
-+#define ZYNQ_ADDR_ROW_MASK		0xFFFF000
-+#define ZYNQ_ADDR_ROW_SHIFT		12
-+#define ZYNQ_ADDR_BANK_MASK		0x70000000
-+#define ZYNQ_ADDR_BANK_SHIFT		28
-+
-+/* ECC statistic register definitions */
-+#define ZYNQ_STAT_UECNT_MASK		0xFF
-+#define ZYNQ_STAT_CECNT_MASK		0xFF00
-+#define ZYNQ_STAT_CECNT_SHIFT		8
-+
-+/* ECC scrub register definitions */
-+#define ZYNQ_SCRUB_MODE_MASK		0x7
-+#define ZYNQ_SCRUB_MODE_SECDED		0x4
-+
-+/**
-+ * struct zynq_ecc_error_info - ECC error log information.
-+ * @row:	Row number.
-+ * @col:	Column number.
-+ * @bank:	Bank number.
-+ * @bitpos:	Bit position.
-+ * @data:	Data causing the error.
-+ */
-+struct zynq_ecc_error_info {
-+	u32 row;
-+	u32 col;
-+	u32 bank;
-+	u32 bitpos;
-+	u32 data;
-+};
-+
-+/**
-+ * struct zynq_ecc_status - ECC status information to report.
-+ * @ce_cnt:	Correctable error count.
-+ * @ue_cnt:	Uncorrectable error count.
-+ * @ceinfo:	Correctable error log information.
-+ * @ueinfo:	Uncorrectable error log information.
-+ */
-+struct zynq_ecc_status {
-+	u32 ce_cnt;
-+	u32 ue_cnt;
-+	struct zynq_ecc_error_info ceinfo;
-+	struct zynq_ecc_error_info ueinfo;
-+};
-+
-+/**
-+ * struct zynq_edac_priv - DDR memory controller private instance data.
-+ * @baseaddr:	Base address of the DDR controller.
-+ * @message:	Buffer for framing the event specific info.
-+ * @stat:	ECC status information.
-+ */
-+struct zynq_edac_priv {
-+	void __iomem *baseaddr;
-+	char message[ZYNQ_EDAC_MSG_SIZE];
-+	struct zynq_ecc_status stat;
-+};
-+
-+/**
-+ * zynq_get_error_info - Get the current ECC error info.
-+ * @priv:	DDR memory controller private instance data.
-+ *
-+ * Return: one if there is no error, otherwise zero.
-+ */
-+static int zynq_get_error_info(struct zynq_edac_priv *priv)
-+{
-+	struct zynq_ecc_status *p;
-+	u32 regval, clearval = 0;
-+	void __iomem *base;
-+
-+	base = priv->baseaddr;
-+	p = &priv->stat;
-+
-+	regval = readl(base + ZYNQ_STAT_OFST);
-+	if (!regval)
-+		return 1;
-+
-+	p->ce_cnt = (regval & ZYNQ_STAT_CECNT_MASK) >> ZYNQ_STAT_CECNT_SHIFT;
-+	p->ue_cnt = regval & ZYNQ_STAT_UECNT_MASK;
-+
-+	regval = readl(base + ZYNQ_CE_LOG_OFST);
-+	if (!(p->ce_cnt && (regval & ZYNQ_LOG_VALID)))
-+		goto ue_err;
-+
-+	p->ceinfo.bitpos = (regval & ZYNQ_CE_LOG_BITPOS_MASK) >> ZYNQ_CE_LOG_BITPOS_SHIFT;
-+	regval = readl(base + ZYNQ_CE_ADDR_OFST);
-+	p->ceinfo.row = (regval & ZYNQ_ADDR_ROW_MASK) >> ZYNQ_ADDR_ROW_SHIFT;
-+	p->ceinfo.col = regval & ZYNQ_ADDR_COL_MASK;
-+	p->ceinfo.bank = (regval & ZYNQ_ADDR_BANK_MASK) >> ZYNQ_ADDR_BANK_SHIFT;
-+	p->ceinfo.data = readl(base + ZYNQ_CE_DATA_31_0_OFST);
-+	edac_dbg(3, "CE bit position: %d data: %d\n", p->ceinfo.bitpos,
-+		 p->ceinfo.data);
-+	clearval = ZYNQ_ECC_CTRL_CLR_CE_ERR;
-+
-+ue_err:
-+	regval = readl(base + ZYNQ_UE_LOG_OFST);
-+	if (!(p->ue_cnt && (regval & ZYNQ_LOG_VALID)))
-+		goto out;
-+
-+	regval = readl(base + ZYNQ_UE_ADDR_OFST);
-+	p->ueinfo.row = (regval & ZYNQ_ADDR_ROW_MASK) >> ZYNQ_ADDR_ROW_SHIFT;
-+	p->ueinfo.col = regval & ZYNQ_ADDR_COL_MASK;
-+	p->ueinfo.bank = (regval & ZYNQ_ADDR_BANK_MASK) >> ZYNQ_ADDR_BANK_SHIFT;
-+	p->ueinfo.data = readl(base + ZYNQ_UE_DATA_31_0_OFST);
-+	clearval |= ZYNQ_ECC_CTRL_CLR_UE_ERR;
-+
-+out:
-+	writel(clearval, base + ZYNQ_ECC_CTRL_OFST);
-+	writel(0x0, base + ZYNQ_ECC_CTRL_OFST);
-+
-+	return 0;
-+}
-+
-+/**
-+ * zynq_handle_error - Handle Correctable and Uncorrectable errors.
-+ * @mci:	EDAC memory controller instance.
-+ * @p:		Zynq ECC status structure.
-+ *
-+ * Handles ECC correctable and uncorrectable errors.
-+ */
-+static void zynq_handle_error(struct mem_ctl_info *mci, struct zynq_ecc_status *p)
-+{
-+	struct zynq_edac_priv *priv = mci->pvt_info;
-+	struct zynq_ecc_error_info *pinf;
-+
-+	if (p->ce_cnt) {
-+		pinf = &p->ceinfo;
-+
-+		snprintf(priv->message, ZYNQ_EDAC_MSG_SIZE,
-+			 "Row %d Bank %d Col %d Bit %d Data 0x%08x",
-+			 pinf->row, pinf->bank, pinf->col,
-+			 pinf->bitpos, pinf->data);
-+
-+		edac_mc_handle_error(HW_EVENT_ERR_CORRECTED, mci,
-+				     p->ce_cnt, 0, 0, 0, 0, 0, -1,
-+				     priv->message, "");
-+	}
-+
-+	if (p->ue_cnt) {
-+		pinf = &p->ueinfo;
-+
-+		snprintf(priv->message, ZYNQ_EDAC_MSG_SIZE,
-+			 "Row %d Bank %d Col %d",
-+			 pinf->row, pinf->bank, pinf->col);
-+
-+		edac_mc_handle_error(HW_EVENT_ERR_UNCORRECTED, mci,
-+				     p->ue_cnt, 0, 0, 0, 0, 0, -1,
-+				     priv->message, "");
-+	}
-+
-+	memset(p, 0, sizeof(*p));
-+}
-+
-+/**
-+ * zynq_check_errors - Check controller for ECC errors.
-+ * @mci:	EDAC memory controller instance.
-+ *
-+ * Check and post ECC errors. Called by the polling thread.
-+ */
-+static void zynq_check_errors(struct mem_ctl_info *mci)
-+{
-+	struct zynq_edac_priv *priv = mci->pvt_info;
-+	int status;
-+
-+	status = zynq_get_error_info(priv);
-+	if (status)
-+		return;
-+
-+	zynq_handle_error(mci, &priv->stat);
-+}
-+
-+/**
-+ * zynq_get_dtype - Return the controller memory width.
-+ * @base:	DDR memory controller base address.
-+ *
-+ * Get the EDAC device type width appropriate for the current controller
-+ * configuration.
-+ *
-+ * Return: a device type width enumeration.
-+ */
-+static enum dev_type zynq_get_dtype(const void __iomem *base)
-+{
-+	enum dev_type dt;
-+	u32 width;
-+
-+	width = readl(base + ZYNQ_CTRL_OFST);
-+	width = (width & ZYNQ_CTRL_BW_MASK) >> ZYNQ_CTRL_BW_SHIFT;
-+
-+	switch (width) {
-+	case ZYNQ_DDRCTL_WDTH_16:
-+		dt = DEV_X2;
-+		break;
-+	case ZYNQ_DDRCTL_WDTH_32:
-+		dt = DEV_X4;
-+		break;
-+	default:
-+		dt = DEV_UNKNOWN;
-+	}
-+
-+	return dt;
-+}
-+
-+/**
-+ * zynq_get_ecc_state - Return the controller ECC enable/disable status.
-+ * @base:	DDR memory controller base address.
-+ *
-+ * Get the ECC enable/disable status of the controller.
-+ *
-+ * Return: true if enabled, otherwise false.
-+ */
-+static bool zynq_get_ecc_state(void __iomem *base)
-+{
-+	enum dev_type dt;
-+	u32 ecctype;
-+
-+	dt = zynq_get_dtype(base);
-+	if (dt == DEV_UNKNOWN)
-+		return false;
-+
-+	ecctype = readl(base + ZYNQ_SCRUB_OFST) & ZYNQ_SCRUB_MODE_MASK;
-+	if ((ecctype == ZYNQ_SCRUB_MODE_SECDED) && (dt == DEV_X2))
-+		return true;
-+
-+	return false;
-+}
-+
-+/**
-+ * zynq_get_memsize - Read the size of the attached memory device.
-+ *
-+ * Return: the memory size in bytes.
-+ */
-+static u32 zynq_get_memsize(void)
-+{
-+	struct sysinfo inf;
-+
-+	si_meminfo(&inf);
-+
-+	return inf.totalram * inf.mem_unit;
-+}
-+
-+/**
-+ * zynq_get_mtype - Return the controller memory type.
-+ * @base:	Zynq ECC status structure.
-+ *
-+ * Get the EDAC memory type appropriate for the current controller
-+ * configuration.
-+ *
-+ * Return: a memory type enumeration.
-+ */
-+static enum mem_type zynq_get_mtype(const void __iomem *base)
-+{
-+	enum mem_type mt;
-+	u32 memtype;
-+
-+	memtype = readl(base + ZYNQ_T_ZQ_OFST);
-+
-+	if (memtype & ZYNQ_T_ZQ_DDRMODE_MASK)
-+		mt = MEM_DDR3;
-+	else
-+		mt = MEM_DDR2;
-+
-+	return mt;
-+}
-+
-+/**
-+ * zynq_init_csrows - Initialize the csrow data.
-+ * @mci:	EDAC memory controller instance.
-+ *
-+ * Initialize the chip select rows associated with the EDAC memory
-+ * controller instance.
-+ */
-+static void zynq_init_csrows(struct mem_ctl_info *mci)
-+{
-+	struct zynq_edac_priv *priv = mci->pvt_info;
-+	struct csrow_info *csi;
-+	struct dimm_info *dimm;
-+	u32 size, row;
-+	int j;
-+
-+	for (row = 0; row < mci->nr_csrows; row++) {
-+		csi = mci->csrows[row];
-+		size = zynq_get_memsize();
-+
-+		for (j = 0; j < csi->nr_channels; j++) {
-+			dimm		= csi->channels[j]->dimm;
-+			dimm->edac_mode	= EDAC_SECDED;
-+			dimm->mtype	= zynq_get_mtype(priv->baseaddr);
-+			dimm->nr_pages	= (size >> PAGE_SHIFT) / csi->nr_channels;
-+			dimm->grain	= ZYNQ_EDAC_ERR_GRAIN;
-+			dimm->dtype	= zynq_get_dtype(priv->baseaddr);
-+		}
-+	}
-+}
-+
-+/**
-+ * zynq_mc_init - Initialize one driver instance.
-+ * @mci:	EDAC memory controller instance.
-+ * @pdev:	platform device.
-+ *
-+ * Perform initialization of the EDAC memory controller instance and
-+ * related driver-private data associated with the memory controller the
-+ * instance is bound to.
-+ */
-+static void zynq_mc_init(struct mem_ctl_info *mci, struct platform_device *pdev)
-+{
-+	mci->pdev = &pdev->dev;
-+	platform_set_drvdata(pdev, mci);
-+
-+	/* Initialize controller capabilities and configuration */
-+	mci->mtype_cap = MEM_FLAG_DDR3 | MEM_FLAG_DDR2;
-+	mci->edac_ctl_cap = EDAC_FLAG_NONE | EDAC_FLAG_SECDED;
-+	mci->scrub_cap = SCRUB_FLAG_HW_SRC;
-+	mci->scrub_mode = SCRUB_NONE;
-+
-+	mci->edac_cap = EDAC_FLAG_SECDED;
-+	mci->ctl_name = "zynq_ddr_controller";
-+	mci->dev_name = ZYNQ_EDAC_MOD_STRING;
-+	mci->mod_name = ZYNQ_EDAC_MOD_VER;
-+
-+	edac_op_state = EDAC_OPSTATE_POLL;
-+	mci->edac_check = zynq_check_errors;
-+
-+	mci->ctl_page_to_phys = NULL;
-+
-+	zynq_init_csrows(mci);
-+}
-+
-+/**
-+ * zynq_mc_probe - Check controller and bind driver.
-+ * @pdev:	platform device.
-+ *
-+ * Probe a specific controller instance for binding with the driver.
-+ *
-+ * Return: 0 if the controller instance was successfully bound to the
-+ * driver; otherwise, < 0 on error.
-+ */
-+static int zynq_mc_probe(struct platform_device *pdev)
-+{
-+	struct edac_mc_layer layers[2];
-+	struct zynq_edac_priv *priv;
-+	struct mem_ctl_info *mci;
-+	void __iomem *baseaddr;
-+	int rc;
-+
-+	baseaddr = devm_platform_ioremap_resource(pdev, 0);
-+	if (IS_ERR(baseaddr))
-+		return PTR_ERR(baseaddr);
-+
-+	if (!zynq_get_ecc_state(baseaddr)) {
-+		edac_printk(KERN_INFO, EDAC_MC, "ECC not enabled\n");
-+		return -ENXIO;
-+	}
-+
-+	layers[0].type = EDAC_MC_LAYER_CHIP_SELECT;
-+	layers[0].size = ZYNQ_EDAC_NR_CSROWS;
-+	layers[0].is_virt_csrow = true;
-+	layers[1].type = EDAC_MC_LAYER_CHANNEL;
-+	layers[1].size = ZYNQ_EDAC_NR_CHANS;
-+	layers[1].is_virt_csrow = false;
-+
-+	mci = edac_mc_alloc(EDAC_AUTO_MC_NUM, ARRAY_SIZE(layers), layers,
-+			    sizeof(struct zynq_edac_priv));
-+	if (!mci) {
-+		edac_printk(KERN_ERR, EDAC_MC,
-+			    "Failed memory allocation for mc instance\n");
-+		return -ENOMEM;
-+	}
-+
-+	priv = mci->pvt_info;
-+	priv->baseaddr = baseaddr;
-+
-+	zynq_mc_init(mci, pdev);
-+
-+	rc = edac_mc_add_mc(mci);
-+	if (rc) {
-+		edac_printk(KERN_ERR, EDAC_MC,
-+			    "Failed to register with EDAC core\n");
-+		goto free_edac_mc;
-+	}
-+
-+	/*
-+	 * Start capturing the correctable and uncorrectable errors. A write of
-+	 * 0 starts the counters.
+ 	/** @hdr_sink_metadata: HDR Metadata Information read from sink */
+ 	struct hdr_sink_metadata hdr_sink_metadata;
++
++	/**
++	 * @hdmi: HDMI-related variable and properties.
 +	 */
-+	writel(0x0, baseaddr + ZYNQ_ECC_CTRL_OFST);
-+
-+	return 0;
-+
-+free_edac_mc:
-+	edac_mc_free(mci);
-+
-+	return rc;
-+}
-+
-+/**
-+ * zynq_mc_remove - Unbind driver from controller.
-+ * @pdev:	Platform device.
-+ *
-+ * Return: Unconditionally 0
-+ */
-+static int zynq_mc_remove(struct platform_device *pdev)
-+{
-+	struct mem_ctl_info *mci = platform_get_drvdata(pdev);
-+
-+	edac_mc_del_mc(&pdev->dev);
-+	edac_mc_free(mci);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id zynq_edac_match[] = {
-+	{ .compatible = "xlnx,zynq-ddrc-a05" },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(of, zynq_edac_match);
-+
-+static struct platform_driver zynq_edac_mc_driver = {
-+	.driver = {
-+		   .name = "zynq-edac",
-+		   .of_match_table = zynq_edac_match,
-+		   },
-+	.probe = zynq_mc_probe,
-+	.remove = zynq_mc_remove,
-+};
-+module_platform_driver(zynq_edac_mc_driver);
-+
-+MODULE_AUTHOR("Xilinx Inc");
-+MODULE_DESCRIPTION("Zynq DDR ECC driver");
-+MODULE_LICENSE("GPL v2");
++	struct {
++		/**
++		 * @supported_formats: Bitmask of @hdmi_colorspace
++		 * supported by the controller.
++		 */
++		unsigned long supported_formats;
++	} hdmi;
+ };
+ 
+ #define obj_to_connector(x) container_of(x, struct drm_connector, base)
+@@ -1925,6 +1944,7 @@ int drmm_connector_hdmi_init(struct drm_device *dev,
+ 			     const struct drm_connector_funcs *funcs,
+ 			     int connector_type,
+ 			     struct i2c_adapter *ddc,
++			     unsigned long supported_formats,
+ 			     unsigned int max_bpc);
+ void drm_connector_attach_edid_property(struct drm_connector *connector);
+ int drm_connector_register(struct drm_connector *connector);
+
 -- 
-2.43.0
+2.43.2
 
