@@ -1,58 +1,71 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEE6D137C29;
-	Thu, 22 Feb 2024 14:02:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46D52134CFC
+	for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 14:04:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708610543; cv=none; b=OlgeQhHtOArxf6MgasqfaSalVKuoQJmeVw9+xFHyXuCoPhhQyszWJcEhPVHtz0wKkD3M8HEg1yJmxlIixeWP/jB8kJuxTP1cziQd/2IeUO6TsU6qXmL/ReX6kRYjWIRGP+ZSBxJb6hf51L7h2zTVIGblFco4dpCKLjR+KN5m6kk=
+	t=1708610678; cv=none; b=ACX7E5S769tXsCKKueHUyPv0A0GwkuX+WzUnx2N75SYkCfMhB1xaSGzu2LJJOR//2m+OU33yC+hjUdtTPv1pRsNS8y/bMex4WnVJi/zsZHDxHzNWvh3X8J9uEjPPu8VWL3gGybuF65UGQ20Dfaj/EiDYxUbydzvY+P42O8wO/lM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708610543; c=relaxed/simple;
-	bh=0Ca7pcaxdTC94QZGuqXAmtVUf+PPMCRljrZfstySUqs=;
+	s=arc-20240116; t=1708610678; c=relaxed/simple;
+	bh=E75gomph1S/AxYryUcEMcOovIP7yR0F0aFziV9Jmk+c=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=a7E9F3c3keu+bWbIo3dN47QxnFZ5/kdRi8sm/ONy2PP9hXgyIZFN8lCv/BupZjoF0M2jJ/J4UVvMPhyBVijvRtUCdlfFiIke35JWcA038SrzQYLyQswTxZf1DUyohRcGgY2e/fLDJzVniIS3p2bn+1KPiH3KdlptV5G8uNZy+5U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=fail smtp.mailfrom=kernel.org; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=kernel.org
-X-IronPort-AV: E=McAfee;i="6600,9927,10991"; a="6613447"
+	 Content-Type:Content-Disposition:In-Reply-To; b=pCzN1L8blyzkY/2iy9YH+8Wk8G5soHdo2E9mHvPNgEEvRh6IaI8u38XUZVouBbBvOQNzZUyOSVs8UiBhEZuL9wvM3JB7LqOxtw6JL0Lf5jukIE72YwZTGGicm+mwRiA0Eu2aozAqLkJ8FFZMhAMppU06p65o8M2w1docvnyY+8I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UI2dxVYn; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UI2dxVYn"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1708610677; x=1740146677;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=E75gomph1S/AxYryUcEMcOovIP7yR0F0aFziV9Jmk+c=;
+  b=UI2dxVYnk4gaIKmiL5ioesUckdHm3EbegcuLjCOSJAOMCUB3Qo+L4Inc
+   V/+CSWlWRaZC9RUEhc9revGXd9v7kWBRZaUEiMfTntsv9cXAzbQUTbqwA
+   kDGYcYmkS+DPIeLc2d8KWaI7h3JDGm3B63PubYSYpMZtESwq3QjLvhaqd
+   wUvb9zzRGJGvrP4ztWvlEc+DnRghw2/X0w+ffEY3rLWV8LSW6dCfJ7HAO
+   qzVRRcMHRq/7PC54dE+fzJ4ix109o/gvzPIohWZNcvCQBGUrPPbWvZTZL
+   HMc/IhF0DvPKfrmiI/8WAKDwY94vB6Vfy/NBlw4ETPCK54qZmkQqUifJu
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10991"; a="6613715"
 X-IronPort-AV: E=Sophos;i="6.06,177,1705392000"; 
-   d="scan'208";a="6613447"
+   d="scan'208";a="6613715"
 Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Feb 2024 06:02:21 -0800
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Feb 2024 06:04:23 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10991"; a="936853609"
+X-IronPort-AV: E=McAfee;i="6600,9927,10991"; a="936853749"
 X-IronPort-AV: E=Sophos;i="6.06,177,1705392000"; 
-   d="scan'208";a="936853609"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmsmga001.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Feb 2024 06:02:15 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.97)
-	(envelope-from <andy@kernel.org>)
-	id 1rd9eN-00000006e1a-1QX8;
-	Thu, 22 Feb 2024 16:02:11 +0200
-Date: Thu, 22 Feb 2024 16:02:10 +0200
-From: Andy Shevchenko <andy@kernel.org>
-To: Dumitru Ceclan <mitrutzceclan@gmail.com>
-Cc: linus.walleij@linaro.org, brgl@bgdev.pl, linux-gpio@vger.kernel.org,
-	Lars-Peter Clausen <lars@metafoo.de>,
-	Jonathan Cameron <jic23@kernel.org>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Michael Walle <michael@walle.cc>, Arnd Bergmann <arnd@arndb.de>,
-	ChiaEn Wu <chiaen_wu@richtek.com>,
-	Niklas Schnelle <schnelle@linux.ibm.com>,
-	Leonard =?iso-8859-1?Q?G=F6hrs?= <l.goehrs@pengutronix.de>,
-	Mike Looijmans <mike.looijmans@topic.nl>,
-	Haibo Chen <haibo.chen@nxp.com>,
-	Hugo Villeneuve <hvilleneuve@dimonoff.com>,
-	David Lechner <dlechner@baylibre.com>,
-	Ceclan Dumitru <dumitru.ceclan@analog.com>,
-	linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Nuno Sa <nuno.sa@analog.com>
-Subject: Re: [PATCH v14 3/3] iio: adc: ad7173: add AD7173 driver
-Message-ID: <ZddT4mmxf3W55ea8@smile.fi.intel.com>
-References: <20240222110817.29670-1-mitrutzceclan@gmail.com>
- <20240222110817.29670-3-mitrutzceclan@gmail.com>
+   d="scan'208";a="936853749"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmsmga001.fm.intel.com with ESMTP; 22 Feb 2024 06:04:18 -0800
+Received: by black.fi.intel.com (Postfix, from userid 1000)
+	id 353C1458; Thu, 22 Feb 2024 16:04:17 +0200 (EET)
+Date: Thu, 22 Feb 2024 16:04:17 +0200
+From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+To: Baoquan He <bhe@redhat.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
+	Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
+	"Rafael J. Wysocki" <rafael@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, 
+	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>, Elena Reshetova <elena.reshetova@intel.com>, 
+	Jun Nakajima <jun.nakajima@intel.com>, Rick Edgecombe <rick.p.edgecombe@intel.com>, 
+	Tom Lendacky <thomas.lendacky@amd.com>, "Kalra, Ashish" <ashish.kalra@amd.com>, 
+	Sean Christopherson <seanjc@google.com>, "Huang, Kai" <kai.huang@intel.com>, kexec@lists.infradead.org, 
+	linux-coco@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: Re: [PATCHv7 07/16] x86/mm: Return correct level from
+ lookup_address() if pte is none
+Message-ID: <k33hshbceai3tb7qe6id6kx3iqf7kjhlyvdijvmuf6knv32krs@kwo3m7dkn5sm>
+References: <20240212104448.2589568-1-kirill.shutemov@linux.intel.com>
+ <20240212104448.2589568-8-kirill.shutemov@linux.intel.com>
+ <ZdLjQCaxhOnR+GzX@MiWiFi-R3L-srv>
+ <zhbhgq27kjrhkdgbxomjykjez2i4hckguvmxyptvfvoftue5ca@zowl5qbl6psl>
+ <ZdR+JzfHjES3zytp@MiWiFi-R3L-srv>
+ <ic4v3q4muffjq2jhlkk3k4lg5xxvjwlw22hctzubl5573euzu2@er3m7ztog2a6>
+ <ZdVh6efExdt687YY@MiWiFi-R3L-srv>
+ <p34d7e5r3gkcj2xl5jycyldvpkmcllmhzioaqcmseeugl3eq73@plk43dd4luzu>
+ <ZdcplT8Xb5eevu/9@MiWiFi-R3L-srv>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -61,75 +74,47 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240222110817.29670-3-mitrutzceclan@gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <ZdcplT8Xb5eevu/9@MiWiFi-R3L-srv>
 
-On Thu, Feb 22, 2024 at 01:07:43PM +0200, Dumitru Ceclan wrote:
-> The AD7173 family offer a complete integrated Sigma-Delta ADC solution
-> which can be used in high precision, low noise single channel
-> applications or higher speed multiplexed applications. The Sigma-Delta
-> ADC is intended primarily for measurement of signals close to DC but also
-> delivers outstanding performance with input bandwidths out to ~10kHz.
+On Thu, Feb 22, 2024 at 07:01:41PM +0800, Baoquan He wrote:
+> On 02/21/24 at 04:15pm, Kirill A. Shutemov wrote:
+> > On Wed, Feb 21, 2024 at 10:37:29AM +0800, Baoquan He wrote:
+> > > > diff --git a/arch/x86/mm/pat/set_memory.c b/arch/x86/mm/pat/set_memory.c
+> > > > index 3612e3167147..425ff6e192e6 100644
+> > > > --- a/arch/x86/mm/pat/set_memory.c
+> > > > +++ b/arch/x86/mm/pat/set_memory.c
+> > > > @@ -657,7 +657,8 @@ static inline pgprot_t verify_rwx(pgprot_t old, pgprot_t new, unsigned long star
+> > > >  
+> > > >  /*
+> > > >   * Lookup the page table entry for a virtual address in a specific pgd.
+> > > > - * Return a pointer to the entry and the level of the mapping.
+> > > > + * Return a pointer to the entry and the level of the mapping (or NULL if
+> > > > + * the entry is none) and level of the entry.
+> > >                        ^ this right parenthesis may need be moved to the end.
+> > > 
+> > > 
+> > > =======
+> > >  * Return a pointer to the entry and the level of the mapping (or NULL if
+> > >  * the entry is none and level of the entry).
+> > > =======
+> > 
+> > Emm.. I like my variant more. We return level regardless if the entry none
+> > or not. I don't see a reason to repeat it twice.
+> 
+> 
+>  * Lookup the page table entry for a virtual address in a specific pgd.
+>  * Return a pointer to the entry and the level of the mapping (or NULL if
+>  * the entry is none) and level of the entry.
+> 
+> Hmm, I am confused. Why do we need to stress the level of the mapping
+> and level of the entry? Wondering what is the difference. I must miss
+> something.
 
-A couple more comments which Jonathan might address when applying,
-up to him.
+My bad. This is way I meant to write:
 
-...
-
-With
-
-	struct device *dev = &st->sd.spi->dev;
-
-the below will be neater.
-
-
-> +	struct ad7173_state *st = iio_priv(indio_dev);
-> +	u8 buf[AD7173_RESET_LENGTH];
-> +	unsigned int id;
-> +	int ret;
-
-...
-
-> +	if (id != st->info->id)
-> +		dev_warn(&st->sd.spi->dev,
-> +			 "Unexpected device id: 0x%04X, expected: 0x%04X\n",
-> +			 id, st->info->id);
-
-(like here)
-
-...
-
-> +	st->config_usage_counter = 0;
-> +	st->config_cnts = devm_kcalloc(&st->sd.spi->dev, st->info->num_configs,
-> +				       sizeof(u64), GFP_KERNEL);
-
-sizeof(*st->config_cnts) ?
-
-(or here)
-
-> +	if (!st->config_cnts)
-> +		return -ENOMEM;
-
-...
-
-> +	ret = fwnode_property_match_property_string(dev_fwnode(dev),
-
-
-device_property_match_property_string()
-
-> +						    "clock-names",
-> +						    ad7173_clk_sel,
-> +						    ARRAY_SIZE(ad7173_clk_sel));
-
-...
-
-> +	if (num_channels == 0)
-> +		return dev_err_probe(dev, -EINVAL, "No channels specified\n");
-
--ENODATA?
+ * Lookup the page table entry for a virtual address in a specific pgd.
+ * Return a pointer to the entry (or NULL if the entry does not exist) and
+ * the level of the entry.
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
-
+  Kiryl Shutsemau / Kirill A. Shutemov
