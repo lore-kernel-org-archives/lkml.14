@@ -1,25 +1,26 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0ACEC6E5EC;
-	Thu, 22 Feb 2024 19:50:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BFDD6E5F0;
+	Thu, 22 Feb 2024 19:50:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708631415; cv=none; b=X2AFL0Ne0B91/qwn+v4KCKnLBIVNlbOQ2mPexNGIGXSC1FmrGenMupbmbLhLhAl+UB4uaYDPE63GUC5sgCf00o/doHiDkL9vn/h4yki46UwzFe5AjZZdu7U1NoKG5mvKw0GQb2InD1++5K6ADrxg7j9M9hz3WYEAwoSwm5JFsjo=
+	t=1708631415; cv=none; b=BXZemLbkIiEN9uFhw3/qhECgVgshDzpmiE/I7y3rzWjpiHy83uwAdDh4ZGwLWf3jK/Zk0TB37CuoPqbxdJzlbDqmo50eq3yPee7qakDqcdt62NtPzYrfg2jN7heLPD6AVPszU1Zyvx/nYp/v2x8bP8Eax41squd28KVvtbl4IPE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1708631415; c=relaxed/simple;
-	bh=9xM0zDSZnj/WQCIfmV1M1iafWnZdArwmz7MnQziBy8w=;
-	h=Message-ID:Date:From:To:Cc:Subject; b=uVoutYr2WmIdEUkIi2eG8myLt5QnBcpgMEYyd/0T2Hy9qIZOiqYFsdiLq8sibwZ9yLv6P6e3eh96yVU9VJhJ0Heb2sZMQgJa+q8tJB56qd9SZQKThyTdiQXpN56+Zqt50XpW08adrPMol5V5tAFt4DeCiN0VuYDcdm0DGPWCZZM=
+	bh=DN/mPR/MulUxISIwqdVAZ+Dv5KqrCmA0c9BnouZcZQI=;
+	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
+	 Content-Type; b=dGvxEd5cYFtv2BFOwEFoR9yDBy/5fGm398a7fM8I2K6Pzq4m4B95xu7YGK50FNZ8hjymplp6hDG0Q0L3AwxK1w9+41Ind2x7Af0O0QVdt9y3hMxjKDVtsxwe4jqYZeklbvKl62wHU6jQTLiqQIiHBJ+XdeqkEdwAHszy/6XsAdk=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AEA95C433C7;
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E1BFAC433A6;
 	Thu, 22 Feb 2024 19:50:14 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.97)
 	(envelope-from <rostedt@goodmis.org>)
-	id 1rdF6z-00000006fXj-32Nl;
-	Thu, 22 Feb 2024 14:52:05 -0500
-Message-ID: <20240222195111.139824528@goodmis.org>
+	id 1rdF70-00000006fYj-0CcN;
+	Thu, 22 Feb 2024 14:52:06 -0500
+Message-ID: <20240222195205.909016488@goodmis.org>
 User-Agent: quilt/0.67
-Date: Thu, 22 Feb 2024 14:51:11 -0500
+Date: Thu, 22 Feb 2024 14:51:13 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org,
  linux-trace-kernel@vger.kernel.org
@@ -30,13 +31,17 @@ Cc: Masami Hiramatsu <mhiramat@kernel.org>,
  =?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= <ville.syrjala@linux.intel.com>,
  Rodrigo Vivi <rodrigo.vivi@intel.com>,
  Chuck Lever <chuck.lever@oracle.com>
-Subject: [PATCH 0/2] tracing: Optimize __string()/__assign_str() processing
+Subject: [PATCH 2/2] tracing: Do not calculate strlen() twice for __string() fields
+References: <20240222195111.139824528@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 
+From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 
 The TRACE_EVENT() macro handles dynamic strings by having:
 
@@ -52,25 +57,51 @@ The TRACE_EVENT() macro handles dynamic strings by having:
 
 There's even some code that may call a function helper to find the
 s->string value. The problem with the above is that the work to get the
-s->string is done twice. Once at the __string() and again in the
+length of s->string is done twice. Once at the __string() and again in the
 __assign_str().
 
-The length of the string is calculated via a strlen(), not once, but
-twice (using strcpy). The length is actually already recorded in the data
-location from __string() and here's no reason to call strcpy() in
-__assign_str() as the length is already known.
+The length of the string is calculated via a strlen(), not once, but twice
+(via strcpy() in __assign_str()). Once during the __string() macro and again
+in __assign_str(). But the length is actually already recorded in the data
+location and there's no reason to call strlen() again.
 
-The __string() macro uses dynamic_array() which has a helper structure that
-is created holding the offsets and length of the string fields. Instead of
-finding the string twice, just save it off in another field in that helper
-structure, and have __assign_str() use that instead.
+Just use the saved length that was saved in the __string() code for the
+__assign_str() code.
 
-Steven Rostedt (Google) (2):
-      tracing: Rework __assign_str() and __string() to not duplicate getting the string
-      tracing: Do not calculate strlen() twice for __string() fields
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+ include/trace/stages/stage6_event_callback.h | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
-----
- include/trace/stages/stage2_data_offsets.h   |  4 ++--
- include/trace/stages/stage5_get_offsets.h    | 15 ++++++++++-----
- include/trace/stages/stage6_event_callback.h | 14 ++++++++++----
- 3 files changed, 22 insertions(+), 11 deletions(-)
+diff --git a/include/trace/stages/stage6_event_callback.h b/include/trace/stages/stage6_event_callback.h
+index e09e3d019dcc..d389725937e9 100644
+--- a/include/trace/stages/stage6_event_callback.h
++++ b/include/trace/stages/stage6_event_callback.h
+@@ -32,8 +32,9 @@
+ 
+ #undef __assign_str
+ #define __assign_str(dst, src)						\
+-	strcpy(__get_str(dst), __data_offsets.dst##_ptr_ ?		\
+-	       __data_offsets.dst##_ptr_ : "(null)")
++	memcpy(__get_str(dst), __data_offsets.dst##_ptr_ ?		\
++	       __data_offsets.dst##_ptr_ : "(null)",			\
++	       __get_dynamic_array_len(dst))
+ 
+ #undef __assign_str_len
+ #define __assign_str_len(dst, src, len)					\
+@@ -94,8 +95,9 @@
+ 
+ #undef __assign_rel_str
+ #define __assign_rel_str(dst, src)					\
+-	strcpy(__get_rel_str(dst), __data_offsets.dst##_ptr_ ?		\
+-	       __data_offsets.dst##_ptr_ : "(null)")
++	memcpy(__get_rel_str(dst), __data_offsets.dst##_ptr_ ?		\
++	       __data_offsets.dst##_ptr_ : "(null)",			\
++	       __get_rel_dynamic_array_len(dst))
+ 
+ #undef __assign_rel_str_len
+ #define __assign_rel_str_len(dst, src, len)				\
+-- 
+2.43.0
+
+
