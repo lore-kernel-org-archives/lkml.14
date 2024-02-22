@@ -1,132 +1,131 @@
-Received: from out5-smtp.messagingengine.com (out5-smtp.messagingengine.com [66.111.4.29])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f182.google.com (mail-yw1-f182.google.com [209.85.128.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 804A117981;
-	Thu, 22 Feb 2024 07:42:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=66.111.4.29
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9A46D533
+	for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 07:43:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708587743; cv=none; b=sR+IRUiTjMuHWBxd9OvKPchcwDF6xh3Xmm5/HK9Fo6GB4K5dCLC5ocHnC6/xmLORQ/MHhz1PiGYgDLuj5rYjluAIoEIyT5gghNQzKLYn9HkSt2nZokGH3YuhWyfzrP4lnhSUbgWrIWs/+9TivCvdRC5mVMj746KALnu+8ROWst4=
+	t=1708587814; cv=none; b=dCM3PwC2jWKY/ky15EKIvVPS17dBRTCTAJfebvBs4XgHAsoW/fn67FxEkLIExOXZAclNAaR6br6pSjQuza8BPmVVMYd6Rhocw8QRdnPUFx2/xHay/TvD7/92/N6r21hz1g3fdzohjWTGIqo3c7d60RAhfGxcedCheeaXtbS23mc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708587743; c=relaxed/simple;
-	bh=Xguh7gJE8+/xCqN+YxKpw03ScTFDH4OCm0WbfXtcxvQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mBkjNoa9HVzwxKuzgXt1v7DCN8RYwGiXs6+taOjG4u4C9EJ1IWhk/nGTP6oz8RKVwhZ4chk9iRYVU6fkdj5eeMS5QAOkalrhBXR6IepT2vkGB2J9WroKKWQB1uEmy5gJiDctROTvkFPieav8NWo4ucE/7s/DmiO9/iKGFscAIVI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kroah.com; spf=pass smtp.mailfrom=kroah.com; dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b=YKOOmbR6; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=Zn2sSetz; arc=none smtp.client-ip=66.111.4.29
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kroah.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kroah.com
+	s=arc-20240116; t=1708587814; c=relaxed/simple;
+	bh=J+Of/Gb6IOHr6IVoZzbj9HFtwypj+rnvHcCQgqMqG70=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=G5hymsDoEnt8B25bIlNxFF6tcxttCOZjzmGsudPzU0zGtTT14qCqK8e/ZMRh1htgkuqfGS45ZsD5C99D8h3gTsUZkTcdsuE8svrI+wTtTa2gpJraSN057i+hM6NmUct1Bh22bGfeoJZxzU5xGac8NaeBZPfkmpg+81TE4jRLq48=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cqmMrrn5; arc=none smtp.client-ip=209.85.128.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="YKOOmbR6";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Zn2sSetz"
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
-	by mailout.nyi.internal (Postfix) with ESMTP id 68FD45C0095;
-	Thu, 22 Feb 2024 02:42:20 -0500 (EST)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute6.internal (MEProxy); Thu, 22 Feb 2024 02:42:20 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=cc
-	:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm1; t=1708587740; x=1708674140; bh=i+RFLxxDEQ
-	TI7kHrG6pXNkuGHMjzU1LQympDsEkg4RI=; b=YKOOmbR62D4yF/y+ASvulONKI/
-	1OyBTtcriqd8yWvEGkMIvIpfaA++UP7UzCabe2YkZznwqn/Iq1jXkL1AhHz6kDM3
-	/mh90m5gIiHi7M81+tNA+jTALHcMuNMrgjX/ZuGzjqgxBJfGMxFXc8Q03tvpwPAW
-	LkEcxpcnrP54DrcrYoni6aaDPTLOs/n2i1MY+L+FATXQkejO0oCPgMnotKJh7w9/
-	8cn5IdhO9lrV99LNTGWg37+zC2elMPixPUC1OSqNCSoqORsIYPsJF3KF/cxMft4h
-	Qm+MCkA+VdfvKhCAyHlCyySbqIJarxKy/YKFZGBTmbneO3fqrYCojljCFxng==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm1; t=1708587740; x=1708674140; bh=i+RFLxxDEQTI7kHrG6pXNkuGHMjz
-	U1LQympDsEkg4RI=; b=Zn2sSetzcecT2wpg7QdFds4f2YfaobJy7edDGCTPSLzl
-	bhgreq1P8lgLNIWAUOWzQOA4ncp+wDWOPpeHd1WK10alIC82kbOatOMDdcwMidDd
-	elbFppqjLPSmd4jbL4ZW1uVzaZoQ0B+EYBHf7FysXXJG49Jlw+tHS8WAn3/3x9HX
-	33Sab9WuHY4KVlesj820rMDigUZSYtgRPZW7WnCz1ztSMKK3NpxOGS7rno+Lna/5
-	UG++qS+lUmj0OfWjnlV2Eyc8kCtmT9ATNikmBodXsHrrOrbjI+LBgCEtKvxcxS41
-	5dFcJUbrmz62PDUOkhNLRNW5cN+hnlRjHaCDZt62QQ==
-X-ME-Sender: <xms:2_rWZZM3qbWW3fpYmYPCRN9ZgS85ETFeiOx_ORu8RmAibCu94VeU5A>
-    <xme:2_rWZb_XdF7y9tP0jT4yCy1ZG-LINyp-sdeoRVMK1g50e4Sk0JUFyC9hyz4W2_qVx
-    EJCUuo1MKgWIA>
-X-ME-Received: <xmr:2_rWZYTOCa-iQXoz0B8k3AfCjThkS96Fx77-8CnXXPX7mGPim1gXIZ83jSkKTk8ryqxnLkfegOz0VwHhX5CU7LVsdsl1DPnMWA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrfeefgddutdelucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvfevuffkfhggtggujgesthdtredttddtvdenucfhrhhomhepifhrvghg
-    ucfmjfcuoehgrhgvgheskhhrohgrhhdrtghomheqnecuggftrfgrthhtvghrnhepheegvd
-    evvdeljeeugfdtudduhfekledtiefhveejkeejuefhtdeufefhgfehkeetnecuvehluhhs
-    thgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepghhrvghgsehkrhhorg
-    hhrdgtohhm
-X-ME-Proxy: <xmx:2_rWZVvySnU60PdNpA1pIWF_NF169pR4AbbHfdCpbXNgZQrXgL9p0g>
-    <xmx:2_rWZRe3ztjaK32MhI26_N374AC_aKAt6Cny0YXCpzK-szCRYFafWA>
-    <xmx:2_rWZR07nUSrqg4sFItiyWpSVVjze6ScSGcGovmMlFYPtHDuCPhpOw>
-    <xmx:3PrWZU91pIFOnfkJ3UfXie44-PzOSp2IhSsYJe5-nDITW2dqyUBa5g>
-Feedback-ID: i787e41f1:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
- 22 Feb 2024 02:42:19 -0500 (EST)
-Date: Thu, 22 Feb 2024 08:42:17 +0100
-From: Greg KH <greg@kroah.com>
-To: Stephen Rothwell <sfr@canb.auug.org.au>
-Cc: Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>,
-	Danila Tikhonov <danila@jiaxyga.com>,
-	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Linux Next Mailing List <linux-next@vger.kernel.org>
-Subject: Re: linux-next: manual merge of the usb tree with the regulator tree
-Message-ID: <2024022212-uninjured-hunter-88d5@gregkh>
-References: <20240222153826.3f7eba10@canb.auug.org.au>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cqmMrrn5"
+Received: by mail-yw1-f182.google.com with SMTP id 00721157ae682-6079d44b02bso55352937b3.3
+        for <linux-kernel@vger.kernel.org>; Wed, 21 Feb 2024 23:43:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1708587811; x=1709192611; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=9sqllwmMdInDIe20Q1qFJaLb0vW0NHDiyKJEVgWyWzI=;
+        b=cqmMrrn50ujNZoy2VafOOqlFHPR/q6IflHRC4AKl+v9TmpaK11FN54RN3FobChmxf6
+         92wEq6KSFQiqrig2DHCShoN4WDKQmf7S4QU0BJHHGzDITiqGFPOTtRIHkMCPTT/836HH
+         oqiWzbnb+7ED42gmVtXAMy0VNUiJ2OAUwAKNsCWs11qJuhZkhWEgYTlBNqHjUKJ2Pm3C
+         LjOOsMf9NSD4W4GlGh5DLs8t4CMgVovB2FEj1G8luY5do90x5GX6K7ydc7a2mRDq+CCO
+         anAAon2ZKslZZ+fSdJnI2UPHaOXZq9EL2oODMd9aMjuRSXnefz11yvRYVKRunXQh2F69
+         Cw6A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708587811; x=1709192611;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=9sqllwmMdInDIe20Q1qFJaLb0vW0NHDiyKJEVgWyWzI=;
+        b=qbFjgtu0m+FZ+O/Q5snfZwgtioD8wgwlZQVRxcVS47YHXDnr9Huq9vvuQ0xB0SDJB9
+         BRU5nJ+JTM0pj9WCKMmCVfrQI2PS6AJNcZUUqfGnEJsDsEFI/wh2iSir4ynWW1xUktdX
+         i9NhcN8Pu/UDP9V28OKl+sjfWx+KHGCvGQJlMrROyQSSFfAQDh+DFZpKkopKeXRhMdO6
+         2z52FHfGPIuUtnrZHP204+9BwZTLfg2dB+FyRjRISs47FOlIfR2izvWn3/+kRpQVt1KG
+         13X4JFBNp8xg04k9a8/EKwVsp13mcFAKo47Ul3XaIo/CF5DrDPFAo0NsroPkH2uoIWwX
+         1Yrg==
+X-Forwarded-Encrypted: i=1; AJvYcCVXYx/Mb4ojTPke7ZjEIGqMXgWAj1TywtIU1mXg1SpqTkmz6EggouJHWwrfONKNASFApuQpQE0jJSKw5IpB8AZgScUQHtcuiQWa20Hj
+X-Gm-Message-State: AOJu0Yx8zKiYYs4fvHnGJ4KfESi4jCqZYNxmJqEVVXtTbNL1qen/LLN+
+	sPLFnlmsxDGRx1h2e+Z2a1nefxPm6/kWHJfXl4lH2P5aSrm08tCZj8114yka19L1uSvvDrQLsn0
+	VQcr53avWCCKCMqlywwxDjSr+Av0=
+X-Google-Smtp-Source: AGHT+IEB0Sxyp4bTrLUSmzOTVsMvWTpbFwxuWDCni7OCfr7nYgHwikgibD0wz2CAwJQN6UvT6AdsIy9nKQ7TBPgR95o=
+X-Received: by 2002:a0d:df45:0:b0:607:925a:3bfe with SMTP id
+ i66-20020a0ddf45000000b00607925a3bfemr275058ywe.24.1708587811596; Wed, 21 Feb
+ 2024 23:43:31 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240222153826.3f7eba10@canb.auug.org.au>
+References: <20240129054551.57728-1-ioworker0@gmail.com> <CAK1f24keWtJNVv37r2vNsqnmMLRMvF-F76WR5RD_Y-BbAgEaYQ@mail.gmail.com>
+ <20240221141158.8217ff2caf4f86c11a430058@linux-foundation.org>
+In-Reply-To: <20240221141158.8217ff2caf4f86c11a430058@linux-foundation.org>
+From: Lance Yang <ioworker0@gmail.com>
+Date: Thu, 22 Feb 2024 15:43:20 +0800
+Message-ID: <CAK1f24=D1e=tKCjMMG1cr3bT4mow2ZinOOsYmwkv8oD2LHQbBw@mail.gmail.com>
+Subject: Re: [PATCH 1/1] mm/khugepaged: bypassing unnecessary scans with
+ MMF_DISABLE_THP check
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: mhocko@suse.com, zokeefe@google.com, david@redhat.com, 
+	songmuchun@bytedance.com, shy828301@gmail.com, peterx@redhat.com, 
+	minchan@kernel.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Feb 22, 2024 at 03:38:26PM +1100, Stephen Rothwell wrote:
-> Hi all,
-> 
-> Today's linux-next merge of the usb tree got a conflict in:
-> 
->   Documentation/devicetree/bindings/regulator/qcom,usb-vbus-regulator.yaml
-> 
-> between commits:
-> 
->   ec29a4d9b7c7 ("dt-bindings: regulator: qcom,usb-vbus-regulator: Add PM6150 compatible")
->   b9262cc1b988 ("regulator: dt-bindings: qcom,usb-vbus-regulator: add support for PM4125")
-> 
-> from the regulator tree and commit:
-> 
->   ef6035d2f1f4 ("dt-bindings: regulator: qcom,usb-vbus-regulator: add support for PMI632")
-> 
-> from the usb tree.
-> 
-> I fixed it up (see below) and can carry the fix as necessary. This
-> is now fixed as far as linux-next is concerned, but any non trivial
-> conflicts should be mentioned to your upstream maintainer when your tree
-> is submitted for merging.  You may also want to consider cooperating
-> with the maintainer of the conflicting tree to minimise any particularly
-> complex conflicts.
-> 
-> -- 
-> Cheers,
-> Stephen Rothwell
-> 
-> diff --cc Documentation/devicetree/bindings/regulator/qcom,usb-vbus-regulator.yaml
-> index 8afb40c67af3,66dcd5ce03e6..000000000000
-> --- a/Documentation/devicetree/bindings/regulator/qcom,usb-vbus-regulator.yaml
-> +++ b/Documentation/devicetree/bindings/regulator/qcom,usb-vbus-regulator.yaml
-> @@@ -24,8 -24,7 +24,9 @@@ properties
->             - qcom,pm8150b-vbus-reg
->         - items:
->             - enum:
->  +              - qcom,pm4125-vbus-reg
->  +              - qcom,pm6150-vbus-reg
-> +               - qcom,pmi632-vbus-reg
->             - const: qcom,pm8150b-vbus-reg
->   
->     reg:
+Hey Andrew,
 
+Thanks for taking time to review!
 
-Looks good, thanks!
+I appreciate your suggestion and will be
+supplementing with test results shortly.
+
+Best,
+Lance
+
+On Thu, Feb 22, 2024 at 6:12=E2=80=AFAM Andrew Morton <akpm@linux-foundatio=
+n.org> wrote:
+>
+> On Wed, 31 Jan 2024 17:30:11 +0800 Lance Yang <ioworker0@gmail.com> wrote=
+:
+>
+> > Updating the change log.
+> >
+> > khugepaged scans the entire address space in the
+> > background for each given mm, looking for
+> > opportunities to merge sequences of basic pages
+> > into huge pages. However, when an mm is inserted
+> > to the mm_slots list, and the MMF_DISABLE_THP
+> > flag is set later, this scanning process becomes
+> > unnecessary for that mm and can be skipped to
+> > avoid redundant operations, especially in scenarios
+> > with a large address space.
+> >
+> > This commit introduces a check before each scanning
+> > process to test the MMF_DISABLE_THP flag for the
+> > given mm; if the flag is set, the scanning process is
+> > bypassed, thereby improving the efficiency of khugepaged.
+> >
+> > This optimization is not a correctness issue but rather an
+> > enhancement to save expensive checks on each VMA
+> > when userspace cannot prctl itself before spawning
+> > into the new process.
+> >
+> > On some servers within our company, we deploy a
+> > daemon responsible for monitoring and updating local
+> > applications. Some applications prefer not to use THP,
+> > so the daemon calls prctl to disable THP before fork/exec.
+> > Conversely, for other applications, the daemon calls prctl
+> > to enable THP before fork/exec.
+> >
+> > Ideally, the daemon should invoke prctl after the fork,
+> > but its current implementation follows the described
+> > approach. In the Go standard library, there is no direct
+> > encapsulation of the fork system call; instead, fork and
+> > execve are combined into one through syscall.ForkExec.
+>
+> I pasted the above into the v1 patch's changelog.
+>
+> However I'm not seeing a good level of reviewer enthusiasm.  Pertially
+> because of the lack of quantitative testing results.  Is is possible to
+> generate such results, to give people an overall feel of the
+> desirability of this change?
+>
