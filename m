@@ -1,45 +1,50 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EAF538FB9;
-	Thu, 22 Feb 2024 10:03:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7962638DD9;
+	Thu, 22 Feb 2024 10:04:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708596212; cv=none; b=gLDYlF4AcYqhyIp2R7ZrOa3Evko6Edll514Sz0vIYpXU8dZEFdvnifI+MtlYTShDUQ2pBiX8SxJcag26w8wHcylwFEO38eJaXBA3A3BwyYg+YBmDTgBEKb6YXAC+AlECD1njGzUe7fYswWnh/FchBremZ1V1+i1+RmXWEgX9fY4=
+	t=1708596259; cv=none; b=NzLnU9bC6t+ZWS2R1HXLT+2ZcYDDcBUntiirKGteE8hD9Vl/JMV5jEYUYdv+RwGHXcr0bIy66fVre85ZoQJF9u6gmi7u3X/DDFa+pHtwbiynoL/dveICUk8DP5/BAzdUCDrqr5hs1J6ztlmUQ4TRmulZakmY7PqHxUe0IPsJp8w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708596212; c=relaxed/simple;
-	bh=0AggU31CGt9Ylb7dMMATQT5arx+9ift1Y5YR/y3R+MU=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=HVA2/o63OWHAkc/V253Ee6ziw6SMBdcVL9/FT3++ZLrU4V6XpfSw0M+g2TmCg4/unAqW7yRW53x+bFWykaUIsEWAK7MO+2Wt9FdERifXdyupyLPP4YKu+HIgOMgjJ4idxxF6CdcpEPOOLg+4xtr3XoIpUdjw5mwrTA/Uv+SkQno=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M6Fe4TK8; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1708596259; c=relaxed/simple;
+	bh=DY+laaDGWADlgjZ4aCk/y2nEJQIg6zplT0mKVagO2gE=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=lS97D8ngWiBiXsGfHeO6IpXaPe+VmfzfMEeRtPlpgE87wFV0nVeKwCaH/GObn768VtBqBZVRpEtxEDCtkImY5RXatwv27940GDJD+bhzXfqUMueADzR/I88wtYUzShfX488tLwaFG/AdjAy1QldRtDQ0CSwXTEuP2A/tAXyU1po=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BLFBAFuS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M6Fe4TK8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1A975C433F1;
-	Thu, 22 Feb 2024 10:03:28 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BLFBAFuS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9CB37C433F1;
+	Thu, 22 Feb 2024 10:04:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708596211;
-	bh=0AggU31CGt9Ylb7dMMATQT5arx+9ift1Y5YR/y3R+MU=;
+	s=k20201202; t=1708596259;
+	bh=DY+laaDGWADlgjZ4aCk/y2nEJQIg6zplT0mKVagO2gE=;
 	h=From:To:Cc:Subject:Date:From;
-	b=M6Fe4TK8tyMXPrN5n3UA3CMidv/F0/zv9WlgWVDiLyjsRIvkZDgUECgErqur0N4/d
-	 BEpUb6hdqeYViHQjlHxqcFvFJFlQUOZKDI44b3/cKgAIZL1F/wooyjj9ABOEOu9p5Y
-	 1277HuwsBDyZrDwlOY77ie08vHxOXchwQ6pmHGZjWQzOfZ6947Rte+CCDWLgxHBQmS
-	 XtenB0iA0TJlpvSv5CKPxN/aYbDQhVfv4iYUKnENXlCLFwBwYO5mtI56klb44M0XhB
-	 SclZjstRT4iLXKZGNMIrScxEAacBniTrTWufVS32T1dd7aKO8kjYQKxFNb/IlmUxcF
-	 keHbag2tHwuZQ==
+	b=BLFBAFuS1IqZtsu4OkQIujYD8nRbeCwV9jGbdUmQMen0qak0DD7GCeTMy/o92a6jR
+	 QeG2H/KO+xVYKuqf9XuyYY1IjgvMDAhzJgMIngXNJ8H9CwJHcN+nuee/C55+kXemL2
+	 VFxAPStbgXsHPBhbovrhsre+27Ku68taiwDZQ70gNT4NEfHnqYSd93mlIvsHeaHlBW
+	 HreItCp7zMUEGA5rJK6Lj6QSpohfJk77GuHoDmC2XtmdB1t2AeZNdonBBnx9NbcmHt
+	 V2ywIcxpAVu3ABiTXPPA9lDMZPnTmZHcXz3EhZpGx+nwz16SuhEUjhaEkGu6I4CtiK
+	 kC/MGvB3U6UQQ==
 From: Arnd Bergmann <arnd@kernel.org>
-To: Jesse Brandeburg <jesse.brandeburg@intel.com>,
-	Tony Nguyen <anthony.l.nguyen@intel.com>
+To: David Woodhouse <dwmw2@infradead.org>,
+	Paul Durrant <paul@xen.org>,
+	Sean Christopherson <seanjc@google.com>,
+	Paolo Bonzini <pbonzini@redhat.com>
 Cc: Arnd Bergmann <arnd@arndb.de>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Andrew Lunn <andrew@lunn.ch>,
-	intel-wired-lan@lists.osuosl.org,
-	netdev@vger.kernel.org,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Jens Axboe <axboe@kernel.dk>,
+	Jan Kara <jack@suse.cz>,
+	Christian Brauner <brauner@kernel.org>,
+	kvm@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH] igc: fix LEDS_CLASS dependency
-Date: Thu, 22 Feb 2024 11:02:13 +0100
-Message-Id: <20240222100324.453272-1-arnd@kernel.org>
+Subject: [PATCH] KVM: x86/xen: fix 32-bit pointer cast
+Date: Thu, 22 Feb 2024 11:03:58 +0100
+Message-Id: <20240222100412.560961-1-arnd@kernel.org>
 X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -51,32 +56,34 @@ Content-Transfer-Encoding: 8bit
 
 From: Arnd Bergmann <arnd@arndb.de>
 
-When IGC is built-in but LEDS_CLASS is a loadable module, there is
-a link failure:
+shared_info.hva is a 64-bit variable, so casting to a pointer causes
+a warning in 32-bit builds:
 
-x86_64-linux-ld: drivers/net/ethernet/intel/igc/igc_leds.o: in function `igc_led_setup':
-igc_leds.c:(.text+0x75c): undefined reference to `devm_led_classdev_register_ext'
+arch/x86/kvm/xen.c: In function 'kvm_xen_hvm_set_attr':
+arch/x86/kvm/xen.c:660:45: error: cast to pointer from integer of different size [-Werror=int-to-pointer-cast]
+  660 |                         void __user * hva = (void *)data->u.shared_info.hva;
 
-Add another dependency that prevents this combination.
+Replace the cast with a u64_to_user_ptr() call that does the right thing.
 
-Fixes: ea578703b03d ("igc: Add support for LEDs on i225/i226")
+Fixes: 01a871852b11 ("KVM: x86/xen: allow shared_info to be mapped by fixed HVA")
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- drivers/net/ethernet/intel/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+ arch/x86/kvm/xen.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/intel/Kconfig b/drivers/net/ethernet/intel/Kconfig
-index af7fa6856707..6e7901e12699 100644
---- a/drivers/net/ethernet/intel/Kconfig
-+++ b/drivers/net/ethernet/intel/Kconfig
-@@ -372,6 +372,7 @@ config IGC
- config IGC_LEDS
- 	def_bool LEDS_TRIGGER_NETDEV
- 	depends on IGC && LEDS_CLASS
-+	depends on LEDS_CLASS=y || IGC=m
- 	help
- 	  Optional support for controlling the NIC LED's with the netdev
- 	  LED trigger.
+diff --git a/arch/x86/kvm/xen.c b/arch/x86/kvm/xen.c
+index 01c0fd138d2f..8a04e0ae9245 100644
+--- a/arch/x86/kvm/xen.c
++++ b/arch/x86/kvm/xen.c
+@@ -657,7 +657,7 @@ int kvm_xen_hvm_set_attr(struct kvm *kvm, struct kvm_xen_hvm_attr *data)
+ 						     gfn_to_gpa(gfn), PAGE_SIZE);
+ 			}
+ 		} else {
+-			void __user * hva = (void *)data->u.shared_info.hva;
++			void __user * hva = u64_to_user_ptr(data->u.shared_info.hva);
+ 
+ 			if (!PAGE_ALIGNED(hva) || !access_ok(hva, PAGE_SIZE)) {
+ 				r = -EINVAL;
 -- 
 2.39.2
 
