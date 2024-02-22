@@ -1,154 +1,349 @@
-Received: from smtpout149.security-mail.net (smtpout149.security-mail.net [85.31.212.149])
+Received: from out3-smtp.messagingengine.com (out3-smtp.messagingengine.com [66.111.4.27])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E27043D396
-	for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 10:05:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=85.31.212.149
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708596314; cv=fail; b=rwkRYJZ3h1sQ492p6M5ejCjDweAH4OwvMYw21eQNrtL9mTfLUVePkGIseiOTd7yeHnWOj07+zWNqH6qCGVYB4KuiTgWV1sLNdxNJz2HvGdSTPfYs3tZ/HBhbGajbOktFV8oR6swZ/Og6Nua+X53Ef+FL1Hz8giz95u3eT+xzVXI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708596314; c=relaxed/simple;
-	bh=7s12crFQF1jr+kFZE4OzeLY1WgH2i4yuxgdLqXENnes=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=m+HxxP+QCs9WXRNBq0HgjRUMu7PBY6z3Z3NEK2QJwlrHX6EyreaFr4TJKCGY8S9US/teOHFJAAZylh4ktwpibrwKn0TBliYBtPcDbMGRI0gVDBpEMrGJ+jO4gnzBUE+41dhgNPcT36RR3HcdklFE9+jm8rFH9S9pFJPFWZYdH6Q=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=kalrayinc.com; spf=pass smtp.mailfrom=kalrayinc.com; dkim=pass (1024-bit key) header.d=kalrayinc.com header.i=@kalrayinc.com header.b=HkeexRJv; dkim=fail (2048-bit key) header.d=kalrayinc.com header.i=@kalrayinc.com header.b=a7IfFn/N reason="signature verification failed"; arc=fail smtp.client-ip=85.31.212.149
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=kalrayinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kalrayinc.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAAB93BB35;
+	Thu, 22 Feb 2024 10:04:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=66.111.4.27
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1708596310; cv=none; b=YBMAe7aHqbhFLGRITs92IEy3jWx3z3mksfPUTVmGpkeTRqe7b8b1iTUi2cXxT7K+iAzjB4qQoef9HoCgpZtWPTV96wMCzXVhumEgeKlRlsLCyeJaBZAu2qTD9S+nb1pZFftTe7kdNBCmq0zoHmzDE+diip7QRXUOtIU3ewFezrI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1708596310; c=relaxed/simple;
+	bh=G4AOmBRKxS/WTqphDG8YVVDSIDuD3NBfSq2KaoveCrc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=dbwG0J+16L1EwQDAMYakte00iyuM6d66gIJv3U0duKy1mN/xZjbTa1tRbhw5qnTuLUi2gu9IwVqoSW2qZrGtgQLDXbTC0nUlFM/H/QH3jU+f9G8sBhNUKQlT3Ryk5v61a+nEpCg4GYn11aZLC/tS6IhAXw9kKa/vL1+xwrpwVZE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=beims.me; spf=pass smtp.mailfrom=beims.me; dkim=pass (2048-bit key) header.d=beims.me header.i=@beims.me header.b=YscK8jwQ; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=YlbyjpYY; arc=none smtp.client-ip=66.111.4.27
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=beims.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=beims.me
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=kalrayinc.com header.i=@kalrayinc.com header.b="HkeexRJv";
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=kalrayinc.com header.i=@kalrayinc.com header.b="a7IfFn/N"
-Received: from localhost (fx409.security-mail.net [127.0.0.1])
-	by fx409.security-mail.net (Postfix) with ESMTP id 0A6AB349CAC
-	for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 11:01:31 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kalrayinc.com;
-	s=sec-sig-email; t=1708596091;
-	bh=7s12crFQF1jr+kFZE4OzeLY1WgH2i4yuxgdLqXENnes=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=HkeexRJvHCXE8KpTfTaCkVxM1r8arQlvkIy86UWWKgCUycm2ffMRWUKFI3XBc4O1j
-	 2083rGwSu6MZzqbmqsi3WQvFFD7hEDgGDSckLwhoG6YT5TCE9WVeWGzXU5y4aEvHYH
-	 lydf5HbzkXdR3IRSLx1JewHZf2KMTRSaYuMgt+Ss=
-Received: from fx409 (fx409.security-mail.net [127.0.0.1]) by
- fx409.security-mail.net (Postfix) with ESMTP id D0A84349C92; Thu, 22 Feb
- 2024 11:01:30 +0100 (CET)
-Received: from FRA01-PR2-obe.outbound.protection.outlook.com
- (mail-pr2fra01on0101.outbound.protection.outlook.com [104.47.24.101]) by
- fx409.security-mail.net (Postfix) with ESMTPS id 64F7C349CCB; Thu, 22 Feb
- 2024 11:01:27 +0100 (CET)
-Received: from MRZP264MB1896.FRAP264.PROD.OUTLOOK.COM (2603:10a6:501:16::6)
- by PR0P264MB2025.FRAP264.PROD.OUTLOOK.COM (2603:10a6:102:16c::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7316.24; Thu, 22 Feb
- 2024 10:01:26 +0000
-Received: from MRZP264MB1896.FRAP264.PROD.OUTLOOK.COM
- ([fe80::224f:f37a:bdfb:4374]) by MRZP264MB1896.FRAP264.PROD.OUTLOOK.COM
- ([fe80::224f:f37a:bdfb:4374%4]) with mapi id 15.20.7316.023; Thu, 22 Feb
- 2024 10:01:26 +0000
-X-Virus-Scanned: E-securemail
-Secumail-id: <2a6e.65d71b77.5710e.0>
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=VJmyhEMEZ01srXucmMmoSJYxNFFt9mVp2SWf4K0iPhYFtPIlfi341NApShoDqtVDnXZr0AvH4mOL/ASD4lijMOL2IGafiI6JlA799G/Zxc0zVgTogyVSGhCLqHoqGKif6qN87NZeo+/vl7ky8VemtB+6U8CBnG+vb3+WLJ35LOa7cTX27A1gEBxdWtjDTsczLloz+j0s+P3reUdxJPydrmrN2rNdmalp6A6pk6RfxT6l/RxNjimkNlJV8kpCgenl326oAe3dkqwJkZymgt2troNHuREFNMfMZe221rbvyOcTGPl27RoMxkAlflJuls4HmKF35te+XTFoMQWSwShS8Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
- d=microsoft.com; s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=192FFxbe7Lzoht8qt6lDO/K8b2gMpd050Al+bpxRipk=;
- b=bFHy9Q/5+BWf5GxamlcXcHee62zG1lAe9+ZwjzqGL2rRJ3sk3SXWBBhR68KbFy3j4A/rAwpNNwUoGdH4yGkUmI5C6I0zXU7od9XMlXSpB4tDACRdy3Nh/K5GgS8T4x5XlLDyoZaymgSWbL40TTOZ9A2u7wt8uYC/uhIhBtV/MCU9iCkS3cHGJVFthwEBFauyHFahJxUAhxsrLb1xgRx7P/6pTulKkiiOW/x8+axG40S6gEj8ryu5a8BovFHRUaxHb2ca39LtU7HTMYjMyfCHSIMkeUmyBRUWnMXwYVBaJLnRH1VA4g6+jtMGJUtnl3wKFba6qk0BzgnHIoSnPL0uzA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=kalrayinc.com; dmarc=pass action=none
- header.from=kalrayinc.com; dkim=pass header.d=kalrayinc.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kalrayinc.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=192FFxbe7Lzoht8qt6lDO/K8b2gMpd050Al+bpxRipk=;
- b=a7IfFn/NouH8n2nN1engiJ+rBJQipSlTOXqM4lfd8arXw/9IzFJ6WCQ+/w56hCI6xdrw7QG9U9cAdcq4nCmjzupjie/Tx8pcqqjqZDmxIh8DmbbODAHknjDTFK/k2kFcAoSF9P2bZR35zfknyBq2n80THBouH3pZmUqAaBp8YG9v0JM0RbRHe2K9y9K7E1CW51K47xI7zqwiYq0TfcSMOcCUb3A5O8lB8Z0vHDbe9JLf8zQBdTT3sYGuReC9HOZtSNc1TVwa3WsoV+hr2/O1fJjAoAhz2ddzBZeDZ+mt4D0TXZnYEWL3T1LTw/RX2x2KGuvIfYjPLmyosfSWdXzBsg==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=kalrayinc.com;
-Message-ID: <20c84ea4-cebc-82ba-827d-34c956e9faf6@kalrayinc.com>
-Date: Thu, 22 Feb 2024 11:01:23 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-Subject: Re: [PATCH 6.1 000/206] 6.1.79-rc2 review
-Content-Language: en-us
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
-Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
- torvalds@linux-foundation.org, akpm@linux-foundation.org,
- linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
- lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
- f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
- rwarsow@gmx.de, conor@kernel.org, allen.lkml@gmail.com
-References: <20240221130223.073542172@linuxfoundation.org>
-From: Yann Sionneau <ysionneau@kalrayinc.com>
-In-Reply-To: <20240221130223.073542172@linuxfoundation.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: AM0PR04CA0133.eurprd04.prod.outlook.com
- (2603:10a6:208:55::38) To MRZP264MB1896.FRAP264.PROD.OUTLOOK.COM
- (2603:10a6:501:16::6)
+	dkim=pass (2048-bit key) header.d=beims.me header.i=@beims.me header.b="YscK8jwQ";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="YlbyjpYY"
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
+	by mailout.nyi.internal (Postfix) with ESMTP id 2D1555C0096;
+	Thu, 22 Feb 2024 05:04:51 -0500 (EST)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute6.internal (MEProxy); Thu, 22 Feb 2024 05:04:51 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=beims.me; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm3; t=1708596291;
+	 x=1708682691; bh=a6Bu4H5OwhICFP+Cg3GexMiu885sGO/mY8lKauWqlL0=; b=
+	YscK8jwQWgPI5Nal57A19elHqnKbAKJT4GaSVeYndzt+9PfaaHwRNjRfW3719eSb
+	CgyXsuMCXbkkPVoLIbgmerbi7uXcvUAXirJGMRS2X57+FSJKD1vK/QkO6Cncf2z8
+	+vUw1ZZtU6ALSknxAJFd/2ciBNpQld2IaGVRV3c5lbrqluNnUZFbkL9dtKwAEyLs
+	Pe6DBAyQyF2XQJ8VKK8CD19+YZaaUNqeKQ68VCxysoSRfsg15XTuhVVKsc2m7TM1
+	OQ9/IjLalydqUr1gJQjtV8pN1wZg8tRMphxCsfTvxRQ+KB/DQruwj2dQpDosYWOV
+	5LdgEm+fkh3Opmubpz9PoQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1708596291; x=
+	1708682691; bh=a6Bu4H5OwhICFP+Cg3GexMiu885sGO/mY8lKauWqlL0=; b=Y
+	lbyjpYYnMWsgH1sZ1tmC5DDw2FT1l/x+uAdk8gZG6cFUKOzSh396BUMOC2kkr5Rl
+	SrzjLTwxUFaMEXiJ/F/MGcwKyfRv0VjNpEUV75x09L64yGxNuq2IZIdnvLDVDns1
+	hN9XeUxn/iLcNuiKXBKqMixUl/SuGaZqSTP8CzktZaujpklXASbxtEKIZcp9CDKc
+	c9YzEiBFjNmYg9pHBT+dBFCtbltC5DGyQNKoejPHPeD3xSPwAllaESCDJkDSKdjv
+	CAFRAvcvJMLJV7GRsLNarLU/+fDkFO3uHVCH5z7Q71Vs6PWVLdN/UuHkmMft1jJD
+	Nz4sKVP5rADVcofIhKx5w==
+X-ME-Sender: <xms:QhzXZQ_URyVK4W4w9miyHEstehRVfSHZ1Ql27c11lxKCqxcemVeysg>
+    <xme:QhzXZYvg5C9apt8Kihfp1baU9PrRZAwUFVyNbfTl6mdAszQRw8JRcNjA62ZxVkXYP
+    uyHydcPI3cJ-9O4i2E>
+X-ME-Received: <xmr:QhzXZWDVtId1JJEZ-jC4Dg1pznF_B01qqxxhyesLrAFqXfrUJhWzlnoeT7zntN45lSk>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrfeeggddutdcutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenog
+    fuuhhsphgvtghtffhomhgrihhnucdlgeelmdenucfjughrpefkffggfgfuvfevfhfhjggt
+    gfesthejredttddvjeenucfhrhhomheptfgrfhgrvghluceuvghimhhsuceorhgrfhgrvg
+    hlsegsvghimhhsrdhmvgeqnecuggftrfgrthhtvghrnhepffeuveegueffvdegffekveel
+    tdejteeiheefuddugfffiedtffevveetfeekvdfgnecuffhomhgrihhnpehgohhoghhlvg
+    drtghomhdpthhorhgruggvgidrtghomhenucevlhhushhtvghrufhiiigvpedtnecurfgr
+    rhgrmhepmhgrihhlfhhrohhmpehrrghfrggvlhessggvihhmshdrmhgv
+X-ME-Proxy: <xmx:QhzXZQeGFnnqPKGI3LtQlaauXIIbTSrDIwYxGJy_NfyU4Ls7aylwJg>
+    <xmx:QhzXZVMfuafITJ963naaLarwswaXHeI5zjJnXbKMvq7KN9qd89UQdw>
+    <xmx:QhzXZamEYRfTpmOKS0FHahfDRjMLESEEEuLN3kSxaJCfngRlYyzjqg>
+    <xmx:QxzXZY3IVE1YddtwSN_cHbVMQ2BMIsN5X7qFA8x7YYEIAiuBumEyPw>
+Feedback-ID: idc214666:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
+ 22 Feb 2024 05:04:49 -0500 (EST)
+Message-ID: <c6c1f096-ffe1-4ecd-885c-d50934380752@beims.me>
+Date: Thu, 22 Feb 2024 07:04:46 -0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MRZP264MB1896:EE_|PR0P264MB2025:EE_
-X-MS-Office365-Filtering-Correlation-Id: da60f5b1-2ea6-4b3f-e22c-08dc338d3b28
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: fj9V9JZbIIkTfR2FJk7qTzFihzRzQ0l7b2j827dYH5URHT0O6eYl+fMotsoxbfM13v1DLmpxcK+QX+KEOvfiF/6ra18rGwf+6xrPWqAMn9FcQVw6SceVRbhCI2TBWV3muikEU3EbWBGxzano3b/Qrun9JOUe69R+JOqrofkajyLr/KbQHqJyQ42cQqRGANwWTfg884+vo8dsvmC4eTsjWcrm4I2R4wMaP0BtJdEOzsG+pcy89BWnCB5J5izce5JQ8U0EkqWBjxqm/rHyPqoYmpoVWFP8Kv8k32/r3o6jqiUDOcRCb1fJT1rXFvHXiRYbane0Oj0lZm2C5Mxt/qBeQIkYi8ZyXdzdZUtlMdlqXhfPE5AI4uFGBD54H1Jg/llXW4nsAMeRFSrtLqm/2FtU1199TV1aE0o/Fzn8/vPUvipEKqcRW0pewIyezyXuK8HimnqwUCViJTwzQGadvg1yEbc9dD8FXuALu7+NZUmaHtcBMP9jRncEgQaBHEdDqYyGEfARizCuw+OCBN0IMqE3MA==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MRZP264MB1896.FRAP264.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230031);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: twJu8MGUkEOl6KBnU3E/2J/ua5ONcHrTRb1W6GV6IQy9YZQAAAcWf8GizeTgHmvR1md4dJVaqv7VKpQKSD9g8vCQ5vrPE32/pcgnDTcLsvhrysT+CmtsipaElPrgArQBVO/MbanrBDprxmBOSsjeq+iO9vk8wQ8zG+LlujDMTQabJAbSMBHu11ys+ZgzigE8dMn30/oJykJRdv7d9FUQOiFJMLu84aG+lK+A3d2HQ282M1R4Q11nDFGoDlc+cT4HBox1IB+tB3SEalk7ztr8Le9nbL/nFVRgVpOpgFmr/j1dxQhwj77xdxU4zfiZ/6m9bh/5PeCfR6K4sHV5iw1k13EnxfgY/FMLQ/fn97hRIn4VKzLFWPRPWQrK92TnJ4I0WCH3VgyeWe1qIdhFsghanR/Vxfk17FAjPZ/ogX7KOjAsNxHGmRBPyg48t55KlTubd4raIImcABnbN3Q7z/ga7N7y6cYTjP89LSPXx+Cm+J7SZ5hJp3FE03DLqAmxVVxrAWJsEP273UbDj/yYGNuDRcv2IlR2evQmKxsQK6LZ78cq7qyg62htxUVvRSBOiYe6wuvV1amcFmYWacM2yf44jIoVS7gh5+89ubzpVXUvQYtf+vdqypMLcnBKEFuaJgzvpZMarFjmGFxs2g15nVu/hNek/vSYMDJfbxycesIumNxOg6kuWwbameMMbspgR0jFYzOMJh16wsUp4HEFe/64SzZs9WVC2qRDvZiaNpKPiXtoh7oyTTOSFN5XGe4sGUZkmvnoZWXE68eaY3ALrMcJiRIxYF2Aud6QlWegTD7bCzEXpW+bFgqgN9Q0ewHNtqPGnp2QoCg02dHVMpel6yJ/364eGjtcApHFVOs5zTk/D+o8B6YD2X0MCbg3FZJJGHE0ZA3oHqC8QphjthnSXcd4cKNVDbpM7amJOezpLKLbrWXQeZCCLC0XBQnDlVJe75nT
- Q9b3eg+38s1JFYFjRtvlcczFZCmypj/4ZgCO/VJAxi6YVVa2YkaeSHer6ow012B8iviITPTDPlxe1mmK3iEY765RMB7YGlFWZJOgRRE7e2mYfIP49WSkEQ2F+Bu0l5EPrwlHWNGp0itGG0Bhnuu09MuqTHCRgiGNHl+dWtxrbNO7ZGaYwSE8YVWvYwSCmVbsQm+5sj2Uv/XF+RIQeIZFE7OahLlCWK9A5wmhhgjMI1Ygi0Y5s3YhYo+ETtRyUHunFP5QjNTIyVB71lsGgBlnp5z5OGu26NFju5sDdVLVwUv08/YA0sSrRgtq83K3MLAfkcHJDNJ2kJhipUJE9diK3a56774j9+CeWTB302hSTRZBkZe7rg1WC6yCWsVTffcF6c+PeRUB9JtpYLTxw/+SN3XkmTvWqTngCx/7xq4mruo2reF0rY6eNHJAC9Auw+nZ0vgFPkoijuS/k1qgIISO8W2L8p7p3C5+KnriGLn/ZlFJlr8Nagvbw1l/OL76KFPXz1hoUqWP7QxgQSIkyVPDdIJx8uSOn/inU2VuHhKUXXXvzujlstfMdeP2MRuoCz7jRXI6W6c0xAHqlyGExsg39r0DZcZVj/t3EbGbldyEFbKhOHrNYmGM5XUS1J6SM0tOxUqcCchbbuG9IRG9ARMbwQ==
-X-OriginatorOrg: kalrayinc.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: da60f5b1-2ea6-4b3f-e22c-08dc338d3b28
-X-MS-Exchange-CrossTenant-AuthSource: MRZP264MB1896.FRAP264.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Feb 2024 10:01:25.9150
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 8931925d-7620-4a64-b7fe-20afd86363d3
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 43y0gLKxWGJTdD5hYYDr7C7B59dWtyJTMdV70egz2XgiinJwNOJDlQb7kY8Sj2ZKmhOnCHTHVUckV0K9X2NrOw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PR0P264MB2025
-X-ALTERMIMEV2_out: done
+User-Agent: Mozilla Thunderbird
+Subject: Re: [EXT] Re: [PATCH v8 0/2] wifi: mwifiex: add code to support host
+ mlme
+Content-Language: pt-BR
+To: David Lin <yu-hao.lin@nxp.com>, Francesco Dolcini <francesco@dolcini.it>
+Cc: "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "briannorris@chromium.org" <briannorris@chromium.org>,
+ "kvalo@kernel.org" <kvalo@kernel.org>, Pete Hsieh <tsung-hsien.hsieh@nxp.com>
+References: <20231222032123.1036277-1-yu-hao.lin@nxp.com>
+ <97bb3869-3b82-4b64-87cd-9b63d4516649@beims.me>
+ <PA4PR04MB96389A5DDB41DFF80CBB4738D17D2@PA4PR04MB9638.eurprd04.prod.outlook.com>
+ <48364f66-99b4-40ca-b4b2-4adf1071960f@beims.me>
+ <ZcSB3_16C6JTgBJB@gaggiata.pivistrello.it>
+ <PA4PR04MB96381141AFBE8E61B8DD94F9D14D2@PA4PR04MB9638.eurprd04.prod.outlook.com>
+ <b77af968-ec6f-44df-a544-4ea2a5ad3ff2@beims.me>
+ <PA4PR04MB963849A7E04ADEE5DE92002DD14C2@PA4PR04MB9638.eurprd04.prod.outlook.com>
+ <PA4PR04MB963887774FBAF4E2E022C552D14C2@PA4PR04MB9638.eurprd04.prod.outlook.com>
+ <3d1c45bd-fb89-4a4c-8f53-b1775f6c9a3e@beims.me>
+ <PA4PR04MB9638007CEECACA73A6F13BCED1562@PA4PR04MB9638.eurprd04.prod.outlook.com>
+From: Rafael Beims <rafael@beims.me>
+In-Reply-To: <PA4PR04MB9638007CEECACA73A6F13BCED1562@PA4PR04MB9638.eurprd04.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hi Greg,
-
-On 2/21/24 14:03, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 6.1.79 release.
-> There are 206 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+On 22/02/2024 05:01, David Lin wrote:
+>> From: Rafael Beims <rafael@beims.me>
+>> Sent: Friday, February 16, 2024 6:11 PM
+>> To: David Lin <yu-hao.lin@nxp.com>; Francesco Dolcini <francesco@dolcini.it>
+>> Cc: linux-wireless@vger.kernel.org; linux-kernel@vger.kernel.org;
+>> briannorris@chromium.org; kvalo@kernel.org; Pete Hsieh
+>> <tsung-hsien.hsieh@nxp.com>
+>> Subject: Re: [EXT] Re: [PATCH v8 0/2] wifi: mwifiex: add code to support host
+>> mlme
+>>
+>> Caution: This is an external email. Please take care when clicking links or
+>> opening attachments. When in doubt, report the message using the 'Report
+>> this email' button
+>>
+>>
+>> On 15/02/2024 22:48, David Lin wrote:
+>>>> From: David Lin
+>>>> Sent: Friday, February 16, 2024 9:41 AM
+>>>> To: Rafael Beims <rafael@beims.me>; Francesco Dolcini
+>>>> <francesco@dolcini.it>
+>>>> Cc: linux-wireless@vger.kernel.org; linux-kernel@vger.kernel.org;
+>>>> briannorris@chromium.org; kvalo@kernel.org; Pete Hsieh
+>>>> <tsung-hsien.hsieh@nxp.com>
+>>>> Subject: RE: [EXT] Re: [PATCH v8 0/2] wifi: mwifiex: add code to
+>>>> support host mlme
+>>>>
+>>>>> From: Rafael Beims <rafael@beims.me>
+>>>>> Sent: Thursday, February 15, 2024 8:11 PM
+>>>>> To: David Lin <yu-hao.lin@nxp.com>; Francesco Dolcini
+>>>>> <francesco@dolcini.it>
+>>>>> Cc: linux-wireless@vger.kernel.org; linux-kernel@vger.kernel.org;
+>>>>> briannorris@chromium.org; kvalo@kernel.org; Pete Hsieh
+>>>>> <tsung-hsien.hsieh@nxp.com>
+>>>>> Subject: Re: [EXT] Re: [PATCH v8 0/2] wifi: mwifiex: add code to
+>>>>> support host mlme
+>>>>>
+>>>>> Caution: This is an external email. Please take care when clicking
+>>>>> links or opening attachments. When in doubt, report the message
+>>>>> using the 'Report this email' button
+>>>>>
+>>>>>
+>>>>> On 14/02/2024 23:07, David Lin wrote:
+>>>>>>> From: Francesco Dolcini <francesco@dolcini.it>
+>>>>>>> Sent: Thursday, February 8, 2024 3:25 PM
+>>>>>>> To: Rafael Beims <rafael@beims.me>
+>>>>>>> Cc: David Lin <yu-hao.lin@nxp.com>;
+>>>>>>> linux-wireless@vger.kernel.org; linux-kernel@vger.kernel.org;
+>>>>>>> briannorris@chromium.org; kvalo@kernel.org; francesco@dolcini.it;
+>>>>>>> Pete Hsieh <tsung-hsien.hsieh@nxp.com>
+>>>>>>> Subject: Re: [EXT] Re: [PATCH v8 0/2] wifi: mwifiex: add code to
+>>>>>>> support host mlme
+>>>>>>>
+>>>>>>> Caution: This is an external email. Please take care when clicking
+>>>>>>> links or opening attachments. When in doubt, report the message
+>>>>>>> using the 'Report this email' button
+>>>>>>>
+>>>>>>>
+>>>>>>> On Wed, Feb 07, 2024 at 06:30:03PM -0300, Rafael Beims wrote:
+>>>>>>>> On 30/01/2024 04:19, David Lin wrote:
+>>>>>>>>>> From: Rafael Beims <rafael@beims.me> On 22/12/2023 00:21,
+>> David
+>>>>>>>>>> Lin wrote:
+>>>>>>>>>>> This series add host based MLME support to the mwifiex driver,
+>>>>>>>>>>> this enables WPA3 support in both client and AP mode.
+>>>>>>>>>>> To enable WPA3, a firmware with corresponding V2 Key API
+>>>>>>>>>>> support is required.
+>>>>>>>>>>> The feature is currently only enabled on NXP IW416 (SD8978),
+>>>>>>>>>>> and it was internally validated by the NXP QA team. Other NXP
+>>>>>>>>>>> Wi-Fi chips supported in current mwifiex are not affected by
+>>>>>>>>>>> this
+>>>> change.
+>>>>>>> ...
+>>>>>>>
+>>>>>>>>>>> David Lin (2):
+>>>>>>>>>>>        wifi: mwifiex: add host mlme for client mode
+>>>>>>>>>>>        wifi: mwifiex: add host mlme for AP mode
+>>>>>>> ...
+>>>>>>>
+>>>>>>>>>> I applied the two commits of this series on top of v6.7 but
+>>>>>>>>>> unfortunately the AP is failing to start with the patches. I
+>>>>>>>>>> get this output from "hostapd -d" (running on a Verdin AM62 with
+>> IW416):
+>>>>>>>>>> nl80211: kernel reports: Match already configured
+>>>>>>>>>> nl80211: Register frame command failed (type=176): ret=-114
+>>>>>>>>>> (Operation already in progress)
+>>>>>>>>>> nl80211: Register frame match - hexdump(len=0): [NULL]
+>>>>>>>>>>
+>>>>>>>>>> If I run the same hostapd on v6.7 without the patches, the AP
+>>>>>>>>>> is started with no issues.
+>>>>>>>>>>
+>>>>>>>>>> Is there anything else that should be done in order to test this?
+>>>>>>>>>>
+>>>>>>>>>>
+>>>>>>>>> I applied patch v8 (mbox from patch work) to Linux stable
+>>>>>>>>> repository (tag
+>>>>>>> v6.7.2).
+>>>>>>>>> Both client and AP mode can work with and without WPA3.
+>>>>>>>>>
+>>>>>>>> I went back and executed the tests again. I re-applied the pach
+>>>>>>>> on top of tag v6.7.2 to make sure we're seeing exactly the same thing.
+>>>>>>>>
+>>>>>>>> At first, the behavior I was seeing was exactly the same I
+>>>>>>>> reported
+>>>> before.
+>>>>>>>> Upon starting hostapd with our basic example configuration, it
+>>>>>>>> would fail to start the AP with the error:
+>>>>>>>>
+>>>>>>>> nl80211: kernel reports: Match already configured
+>>>>>>>> nl80211: Could not configure driver mode
+>>>>>>>>
+>>>>>>>> After some investigation of what could cause this error, I found
+>>>>>>>> out that it was connman that was interfering with this somehow.
+>>>>>>>> After killing the connman service, the AP would start correctly.
+>>>>>>>>
+>>>>>>>> I want to point out that this behavior is different from the
+>>>>>>>> unpatched driver. With that one we don't need to kill connman in
+>>>>>>>> order to start the AP with hostapd.
+>>>>>>> Any idea what's going on in this regard? Is such a change in
+>>>>>>> behavior
+>>>>> expected?
+>>>>>>> Francesco
+>>>>>> When I tried to test v6.7.2+ (with patch v8) on NB + SDIO IW416, it
+>>>>>> needs to
+>>>>> issue "sudo systemctl stop NetworkManager" in order to test AP mode.
+>>>>>
+>>>>> The issue I reported is that the kernel with the patch is behaving
+>>>>> differently when compared to the kernel without the patch. I kept
+>>>>> all the test conditions the same, just replacing the kernel. It
+>>>>> seems that you can reproduce this on your end using NetworkManager.
+>>>>>
+>>>>> This is a change in behavior on userspace that's not currently explained.
+>>>>>
+>>>>>> For i.MX + SDIO IW416, it needs to install following two files for
+>>>>>> client and
+>>>>> AP mode to "/lib/systemd/network" for systemd-networkd:
+>>>>>> <<Client mode: 80-wifi-station.network>>
+>>>>>>
+>>>>>> [Match]
+>>>>>> Type=wlan
+>>>>>> WLANInterfaceType=station
+>>>>>>
+>>>>>> [Network]
+>>>>>> DHCP=yes
+>>>>>>
+>>>>>> <<AP mode: 80-wifi-ap.network>>
+>>>>>>
+>>>>>> [Match]
+>>>>>> Type=wlan
+>>>>>> WLANInterfaceType=ap
+>>>>>>
+>>>>>> [Network]
+>>>>>> Address=192.168.100.1/24
+>>>>>> DHCPServer=yes
+>>>>>>
+>>>>>> [DHCPServer]
+>>>>>> PoolOffset=100
+>>>>>> PoolSize=20
+>>>>>>
+>>>>>> I think this is not related to driver.
+>>>>>>
+>>>>>> David
+>>>>> I didn't really understand what systemd-networkd has to do with
+>>>>> anything being discussed here. We could use it to create an AP, but
+>>>>> that's not the test I did. In my case I used hostapd directly.
+>>>>>
+>>>>>
+>>>>> Rafael
+>>>> I think the difference between previous driver is host mlme.
+>>>> Systemd-networkd is only for address assignment, so it won't affect
+>>>> the test of AP mode. However, Ubuntu Network Manager will affect AP
+>>>> mode test, so it needs to stop it before running hostapd.
+>>>>
+>>>> David
+>>> I found
+>> https://groups.go/
+>> ogle.com%2Fg%2Fbeagleboard%2Fc%2F3Um2Xqa2MHU&data=05%7C02%7Cy
+>> u-hao.lin%40nxp.com%7C4c74f7c309e243eb6c0c08dc2ed78b4c%7C686ea1d3
+>> bc2b4c6fa92cd99c5c301635%7C0%7C0%7C638436750492293425%7CUnknow
+>> n%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haW
+>> wiLCJXVCI6Mn0%3D%7C0%7C%7C%7C&sdata=99eQWmm39kbo63JKNFbiljFQz
+>> o%2Bz7ki%2FSsllw%2FdonbE%3D&reserved=0 to setup commman with
+>> hostapd. Can you give me your setting for commman? Thanks.
+>>> David
+>>>
+>> Just to make it clear, we are *not* setting up the AP with connman. On our
+>> reference images we have a simple service that starts hostapd directly. We also
+>> have connman running by default and it's responsible for setting up the other
+>> interfaces (ethernet, wifi client).
+>>
+>> In this setup, we previously were able to just start the hostapd service and the
+>> AP would start working. Now with the patch, connman seems to be doing
+>> something with the interface that causes the AP to fail starting.
+>>
+>> For reference, this is the simple AP service we start:
+>>
+>> [Unit]
+>> Description=Hostapd IEEE 802.11 AP, IEEE 802.1X/WPA/WPA2/EAP/RADIUS
+>> Authenticator Requires=enable-wifi.service
+>>
+>> [Service]
+>> Type=forking
+>> PIDFile=/run/hostapd.pid
+>> ExecStart=/usr/sbin/hostapd /etc/hostapd-tdx-demo-img.conf -P
+>> /run/hostapd.pid -B
+>>
+>>
+>> [Install]
+>> WantedBy=multi-user.target
+>>
+>>
+>> If you want to replicate this behavior on your side, probably just building
+>> connman with yocto and adding it to your image is enough. After enabling
+>> connman to start at boot time, you can try to start hostapd manually.
+>>
+>>
+>> Regards,
+>>
+>> Rafael
+>>
+> 1. Without host mlme, management packet filter of AP mode is the same as client mode. Authentication/Association packets are handled by firmware and once if station is connected, firmware will send station connection event to driver. So you can still start wpa_supplicant and hostapd on uap0 at same time. However, this is not correct setting and usage.
 >
-> Responses should be made by Fri, 23 Feb 2024 13:01:46 +0000.
-> Anything received after that time might be too late.
+> 2. With host mlme, management packet filter of AP mode is not the same as client mode. Authentication/Association packets are sent to hostapd, so cfg80211 won't allow wpa_supplicant and hostapd run on uap0 at same time (different management packet filter).
 >
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.1.79-rc2.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.1.y
-> and the diffstat can be found below.
+> I think no matter with or without patch v8, setting of connman for uap0 should not be client mode. Setting of connman for uap0 should be ap mode or bypass to control it as client mode.
 >
-> thanks,
-
-I tested 6.1.79-rc2 (64fdfe5f1a1d) on Kalray kvx arch (not upstream yet) : I had to patch `arch/kvx/include/asm/jump_label.h` to get it to compile because of the "asm goto" changes but apart from that everything looks good!
-
-It ran on real hw (k200, k200lp and k300 boards), on qemu as well as on our internal instruction set simulator (ISS).
-
-Tests were run on several interfaces/drivers (usb, qsfp ethernet, eMMC, PCIe endpoint+RC, SPI, remoteproc, uart, iommu). LTP and uClibc-ng testsuites are also run without any regression.
-
-Everything looks fine to us.
-
-Tested-by: Yann Sionneau<ysionneau@kalrayinc.com>
-
-Thanks a lot!
-
--- 
-
-Yann
-
+> The behavior of patch v8 is correct and it can avoid user to run wpa_supplicant and hostapd on AP wireless interface at same time. There is no side effect of patch v8 for this behavior.
+>
+> I also found document from Toradex about how to run connman for AP mode:
+>
+> https://developer.toradex.com/linux-bsp/application-development/networking-connectivity/how-to-setup-wi-fi-access-point-mode-linux/
+>
+> Please check section 8:
+>
+> Enable and start hostapd service:
+> First, make sure to blacklist the uap0 interface on connmanctl by adding it to NetworkInterfaceBlacklist at connman/main.conf.
+>
+> I think to block uap0 from connman is correct way to run hostapd on uap0.
+>
+> David
+>
+That explains the difference in behavior, thank you!
 
 
+Tested-by: <rafael.beims@toradex.com> #Verdin AM62 IW416 SD
 
+
+Rafael
 
