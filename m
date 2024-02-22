@@ -1,132 +1,120 @@
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2089.outbound.protection.outlook.com [40.107.223.89])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D2023F8E4;
-	Thu, 22 Feb 2024 10:27:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.89
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708597631; cv=fail; b=ehXExt4LvIve+R7z82AiDYaSc/vHCTVQkwIHjiPStFXnw8bk5I5pQP3FagwuuqW8lqVF0/nRnNvsuUoRviId8o8ICFfzR4WDTxCzB+JBWIRZg4glufN3OP6k1PnGroqmzVNRn2oLCQVgOFF9zsAPQUZwlIcWqLZOzyidRZW+SPU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708597631; c=relaxed/simple;
-	bh=YnMenzqefzuxxId75BosZ+Y2+RNDdJ30hMbo4rrkhm0=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=MDOvZoM7VYtflC0R5Y5/Vh7JtQDjDirgi3zg+mRTD2Nt7FqX1+xncmF7x1WpyZFqoqLENuUOS9AQNGcFDz+nvi/5sR2xMQWocRx1yS40gAgMx6vRrQmM/kFVcTQqyPXdrMUPM48FO7H+5Yi7rnc4WNc0ClEeqYP8fnuHBtzxTew=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=dcEBvBSr; arc=fail smtp.client-ip=40.107.223.89
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA9473F8E0
+	for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 10:27:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1708597636; cv=none; b=gwcAmkgRb7pLkdAaONXbB1c3b514qTpdGTZpDMVVQ69g2uraeETxFuDgCOajkU4ilp2IjkidlVBbh9k2g6LsDkfzohn6kfEAz347JVplnHYwLTW9OugffQkNxabsu957YhZdVeSMd4MZOQgusOHz/GTMnf77jdazTq+hHaIVPAA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1708597636; c=relaxed/simple;
+	bh=AuqW1p0Dy4zpNfbaCup5tl6BSsuquCZ6fqdQhLH0cyI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=nU4J5tZqLrtmHp+Df+RhEkXqQbJ6QFBdUa9QkqcD3yaHgAY4x1ipYRz3zvJygH1TjI9UwjBW0grgkvSSOrmHtfWvtUdDWZiccPFkcTS6wXGUsz89TAfg6t3JVY9Crs6lK2NYRqSlREJP2WnTqY01ssWDSmE6ep+aOQYJVrktAS0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=w/Ki3FuM; arc=none smtp.client-ip=209.85.221.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="dcEBvBSr"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=PMM+Mf4RZszctFOxV4qE/wgdYzt7KzybTMzGyzjmLPoc24USF2rUiuvvAOlCQF6q6I/K9E8S9Zx7zXnMAFQyT8GDPlEeyyrEaYSt17NS6e1SNbPdjsDsr/BQ+y9Hip3qztSCbYB2Iz8tYk9BN3Y7zS/GLDcAQfCOu1JtjBF9P6VzzpgfODDXvR5jMhBJFp5GXyyI51Mf/T2/fY/DoRwuuIGBo4RYHA6LLJ17gKfzjhDLe/QNVJic7zilvNIl2U90o+q9diyE/GeMD9miO4dWJlj01PksF4MuXJaMN9fWjInqG0k5TQnOmIb2STIM6G7ygnRQOq6uA2lqVAEezfuvuQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Iulyjs4a5ElTK+A9JbU6m+7CgVNUq5//HYRwrzYABbw=;
- b=W5ZmRVi801K6DTuAmnYJny7QX+kj85XNHT+Hpkig6kHe0oTvAdlc4idiHoY2NJDzp1gzDY/uCgEDnwp0hdaMmh3hjRQzwZF+QzzqmMunJqD2E1C/5ZWFiRjc94n052JAcxygdWsqnqmM8J0kG1Va0Rmrj0h4JMLMo8q7QEP8SSVNQGunYxUhFR2LHieatgobEt/duPQFocgr3c/ax28hApsHJX3J5HGsyXuFp+82viPToMD47O7gxX/o0GMNLWNR9LV8LCcvHy69WPeTjXqCj9Fr6Xup89xUhpwZiX7xc+uK2JU39gQu2GW9j15j8QeIRKXoGqaOtAMFGXGbycdY5Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Iulyjs4a5ElTK+A9JbU6m+7CgVNUq5//HYRwrzYABbw=;
- b=dcEBvBSrUnkbIZddR4YU9t86og/uCr2mYN1KzoivHKB5Zh2iuoUIUvApjHniovCiZin6BlfMBCpRkUz9ac3FG0G+w20T6q1KmWmiwrugEpaKlBAeDx23omcUznIrMQCFOrzE9YnGi4HwH/iA0VvnaR8tpp6Kq1W5BngWHaNj/e0=
-Received: from MW4P222CA0002.NAMP222.PROD.OUTLOOK.COM (2603:10b6:303:114::7)
- by CH2PR12MB4118.namprd12.prod.outlook.com (2603:10b6:610:a4::23) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7316.24; Thu, 22 Feb
- 2024 10:27:06 +0000
-Received: from MWH0EPF000971E4.namprd02.prod.outlook.com
- (2603:10b6:303:114:cafe::95) by MW4P222CA0002.outlook.office365.com
- (2603:10b6:303:114::7) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7292.43 via Frontend
- Transport; Thu, 22 Feb 2024 10:27:06 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB03.amd.com; pr=C
-Received: from SATLEXMB03.amd.com (165.204.84.17) by
- MWH0EPF000971E4.mail.protection.outlook.com (10.167.243.72) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.7292.25 via Frontend Transport; Thu, 22 Feb 2024 10:27:05 +0000
-Received: from SATLEXMB08.amd.com (10.181.40.132) by SATLEXMB03.amd.com
- (10.181.40.144) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Thu, 22 Feb
- 2024 04:27:05 -0600
-Received: from SATLEXMB03.amd.com (10.181.40.144) by SATLEXMB08.amd.com
- (10.181.40.132) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Thu, 22 Feb
- 2024 02:27:04 -0800
-Received: from vijendar-X570-GAMING-X.amd.com (10.180.168.240) by
- SATLEXMB03.amd.com (10.181.40.144) with Microsoft SMTP Server id 15.1.2507.35
- via Frontend Transport; Thu, 22 Feb 2024 04:27:01 -0600
-From: Vijendar Mukunda <Vijendar.Mukunda@amd.com>
-To: <broonie@kernel.org>
-CC: <alsa-devel@alsa-project.org>, <Mario.Limonciello@amd.com>,
-	<venkataprasad.potturu@amd.com>, <Basavaraj.Hiregoudar@amd.com>,
-	<Sunil-kumar.Dommati@amd.com>, <syed.sabakareem@amd.com>,
-	<lgirdwood@gmail.com>, <perex@perex.cz>, <tiwai@suse.com>,
-	<linux-kernel@vger.kernel.org>, <linux-sound@vger.kernel.org>,
-	<arnd@arndb.de>, Vijendar Mukunda <Vijendar.Mukunda@amd.com>
-Subject: [PATCH 2/2] ASoC: amd: ps: modify ACP register end address macro
-Date: Thu, 22 Feb 2024 15:56:56 +0530
-Message-ID: <20240222102656.631144-2-Vijendar.Mukunda@amd.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240222102656.631144-1-Vijendar.Mukunda@amd.com>
-References: <20240222102656.631144-1-Vijendar.Mukunda@amd.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="w/Ki3FuM"
+Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-33d6bd39470so781469f8f.3
+        for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 02:27:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1708597631; x=1709202431; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=d925I0YAHDj2GZWLKYoS1jiCNk6oVmkUOHEhEtnAKiU=;
+        b=w/Ki3FuMg/jZmgp7/r0B/daomaPDoXojmfhJ6B6Htgi1CHYvf9PrpvzrcvOuvOZxOo
+         Af0CGmptWLfPm/JeUmqM29sQ+NJJi2RDZYlZ/+GjoMzF7U6OqR/SVt5ND/+ZHn80NWv0
+         RHkeh5y/GdVUgzho0t+HfGCspN2+XrN+LUvZ7QPCI5TUsVECRu4BD6o92BD2DosUvnS9
+         9kbt/XEyB2SMJSNxPOyqCGNSgMzo8V47w6x5ZvognLIVyz7v3jj/3yiUOy6pOuSlrDCu
+         XW2Xv5jWHGG2nE8SenJY5fhs6APDd7rha1yJ50dFN4aQZ33UBmDK0vexQ1dpwFQ3jPDL
+         2GHw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708597631; x=1709202431;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=d925I0YAHDj2GZWLKYoS1jiCNk6oVmkUOHEhEtnAKiU=;
+        b=r6LZ92E1Iw5oWyLlzn071oEB15JYSXQikFxEmN7adEodd1SfIpuZg5d2EE9xJX5SgP
+         SH/CNUtxEo1/O/YmSnWKKN6k6AwLVFOfeB5wSi2Mxd5o8ye1tnVcJHiLj//SFtNYlzyy
+         cE8jgzh7GANljuWOuP9hrk2PQjQqvFUWJWaqrdorz8znM25kjY6zJ2eDiBGYskVUiqwG
+         8kliMyXLTwWpHcn2gx/O8SroHNX1S+8lWcbd5RXb9DJWNnkOKyG1YbXHWLCN8UL9VBQn
+         UGwVt7TDEr+By8yXMavFrEbMj8ZdA3G9+bI+kfjwsAHIfAUrrs6/Vgxhpjpfj2ObNQx8
+         9w8Q==
+X-Gm-Message-State: AOJu0YzFyJ5Wg08QSpBCD38jA7SZHqBy56MCDCItiDeFFx8qRbtByrKJ
+	Z+E8pPhiPJcXhQ0CJLinwhyz2IfQh6dFhP1teZRTnjGw+L6oaYyBOlT0ujaugHY=
+X-Google-Smtp-Source: AGHT+IGuMDYCGGT6GDkqpL1mi1SjjFpTIg6mRvkJHWOw9iNdj4ceP+aZ6XGL6+dTOSdBtUA9rOkHUQ==
+X-Received: by 2002:a5d:5487:0:b0:33d:3ee3:cc0a with SMTP id h7-20020a5d5487000000b0033d3ee3cc0amr7845937wrv.0.1708597631025;
+        Thu, 22 Feb 2024 02:27:11 -0800 (PST)
+Received: from [192.168.10.46] (146725694.box.freepro.com. [130.180.211.218])
+        by smtp.googlemail.com with ESMTPSA id bx9-20020a5d5b09000000b0033d202abf01sm5124036wrb.28.2024.02.22.02.27.10
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 22 Feb 2024 02:27:10 -0800 (PST)
+Message-ID: <79b872a5-4a46-47f8-9b13-010bccb5a80b@linaro.org>
+Date: Thu, 22 Feb 2024 11:27:09 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/6] thermal: core: Store zone trips table in struct
+ thermal_zone_device
+Content-Language: en-US
+To: "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+ Linux PM <linux-pm@vger.kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+ Linux ACPI <linux-acpi@vger.kernel.org>, Lukasz Luba <lukasz.luba@arm.com>,
+ Zhang Rui <rui.zhang@intel.com>,
+ Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+ Stanislaw Gruszka <stanislaw.gruszka@linux.intel.com>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>,
+ Pengutronix Kernel Team <kernel@pengutronix.de>,
+ Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>
+References: <4551531.LvFx2qVVIh@kreacher> <1883976.tdWV9SEqCh@kreacher>
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+In-Reply-To: <1883976.tdWV9SEqCh@kreacher>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MWH0EPF000971E4:EE_|CH2PR12MB4118:EE_
-X-MS-Office365-Filtering-Correlation-Id: b069cecf-dab7-493f-282c-08dc3390d166
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	E6mC5UiFfrJazwuneFLR+Gte6h2aCNtfBzhtqSmLLN0k2s5wlHFww0bA4XkfrvaAINzrVnJTe+oyDeLDB5zZl2V0vVupHAfa/K56NXEVXVLp8PyDCMf5ovvxvoA1lD4aqe6nWjUxPH8hGvMTGqB56STJRGVBGWMi+MYTU9/qRjOvfK6sMbAcQGNqzFsYZnEQ3d49xGiBFcr2Q4S4vY6qjnDN4EaoxHqXY/2+fROh6upidwwCJyE9SgsYWGSrYAWxRtpAV4yULK8s1sQWu/q52OzZIRfJNlJB/3wUFAlhEjTrP+OFjqTYUe44yiQ5TgCfdfYB8P84+KUH9tX+xJ8v73T3dxuonRiNDp28v+NKHsBo2iWylWueE3CFaXcbt+XY4hTVtJnB8KRL4wB5MSFy6T0bVRoVK+QPAszsIhMgi4pWD9QlJe1Ge8kcDAfLtIf7HJnOBu/rVXSzds2yiNoUVZFtAOA3OBtGHQmbAlg6GdLbNNbyzDF8RA40Awn5mFjUyXoyW4OmlFQ601bMAaSMirQE2prL/rZlFq9KnpuAa2ddqhrahEQStyyNk7qUaNAlry5b/ZwuRKIXLLfQUHS8CUlVNcTlv3PpbIkydsW/GGXu5qdb3qfH7Lw9BvlPuF/UrFHy8M+DOi55+abQx1jgA6oyMfccK4d6UVXLgH1wPRw=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB03.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(36860700004)(46966006)(40470700004);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Feb 2024 10:27:05.9801
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: b069cecf-dab7-493f-282c-08dc3390d166
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB03.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	MWH0EPF000971E4.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR12MB4118
 
-Modify ACP63_REG_END macro to access all ACP registers.
+On 14/02/2024 13:28, Rafael J. Wysocki wrote:
+> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> 
+> The current code expects thermal zone creators to pass a pointer to a
+> writable trips table to thermal_zone_device_register_with_trips() and
+> that trips table is then used by the thermal core going forward.
+> 
+> Consequently, the callers of thermal_zone_device_register_with_trips()
+> are required to hold on to the trips table passed to it until the given
+> thermal zone is unregistered, at which point the trips table can be
+> freed, but at the same time they are not expected to access that table
+> directly.  This is both error prone and confusing.
+> 
+> To address it, turn the trips table pointer in struct thermal_zone_device
+> into a flex array (counted by its num_trips field), allocate it during
+> thermal zone device allocation and copy the contents of the trips table
+> supplied by the zone creator (which can be const now) into it, which
+> will allow the callers of thermal_zone_device_register_with_trips() to
+> drop their trip tables right after the zone registration.
+> 
+> This requires the imx thermal driver to be adjusted to store the new
+> temperature in its internal trips table in imx_set_trip_temp(), because
+> it will be separate from the core's trips table now and it has to be
+> explicitly kept in sync with the latter.
+> 
+> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> Reviewed-by: Stanislaw Gruszka <stanislaw.gruszka@linux.intel.com>
 
-Signed-off-by: Vijendar Mukunda <Vijendar.Mukunda@amd.com>
----
- sound/soc/amd/ps/acp63.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Reviewed-by: Daniel Lezcano <daniel.lezcano@linaro.org>
 
-diff --git a/sound/soc/amd/ps/acp63.h b/sound/soc/amd/ps/acp63.h
-index 65433184d03e..39208305dd6c 100644
---- a/sound/soc/amd/ps/acp63.h
-+++ b/sound/soc/amd/ps/acp63.h
-@@ -10,7 +10,7 @@
- 
- #define ACP_DEVICE_ID 0x15E2
- #define ACP63_REG_START		0x1240000
--#define ACP63_REG_END		0x1250200
-+#define ACP63_REG_END		0x125C000
- 
- #define ACP_SOFT_RESET_SOFTRESET_AUDDONE_MASK	0x00010001
- #define ACP_PGFSM_CNTL_POWER_ON_MASK	1
+
 -- 
-2.34.1
+<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
 
