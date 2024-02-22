@@ -1,97 +1,110 @@
-Received: from mail-vk1-f181.google.com (mail-vk1-f181.google.com [209.85.221.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8E106E60C;
-	Thu, 22 Feb 2024 20:28:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C81054903
+	for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 20:29:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708633683; cv=none; b=j70QSYPbuHLN1bujdmKAbaNqc7Dk+D8s7a0eqqMvwlxz0Bq+2znnn+JioHVZAc4WMJFcyBjstCCVJQHzPwXrGTomylziLMZVq1jhITbBPijWiR0o/gHU4M79tLm5eSeQleLmIq6RaSB3RxfsP1gwNWGcrtCQN2L3J704dxrNgz0=
+	t=1708633764; cv=none; b=hkwzrCVZv/lpKPZIWX1B+sjSrBuQguha8Bksqb9g7UFyHzEDyf0QrSwz0VXRVMndygh0+BK6Dcrc13LOAYHvXXc0MADoCIi7DrQj9hF6YS5fYf+YkkR1CCWgU9sH0aV84+Cl+EqnnDN6Qd6mBnNewegIkaxvBSX196vwX0P0NMg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708633683; c=relaxed/simple;
-	bh=Q0oE6TAKOeGg7TRSoz97WttfP+sVDr0TwCb22dSeOhs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=JSMgMhajN8G4eDdyx1vBa/H/gd42iIo51cZPMV7ce/zF5iPtTjaHfkeJ+kMzJyVC7bR0Wk2HY5/5OlJcCjIjg73YvjovaS45rK+UF/F7JV1TqkkyWvojzBnQujMx4v041r3wnKbEAyN7BgEDdxjpZ9YutO+CzoUsfaBDwXogiqU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JaC7jyTb; arc=none smtp.client-ip=209.85.221.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1708633764; c=relaxed/simple;
+	bh=EIRl5JmeNnsCCCvrzAJOkSjYNmO/xKRIFAlKwErah0Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=m4xe2vV2XEgSSPzZ30ydqcL9twCJUlKhlT/XZzIrWPxj5lmTSZKmOqcdOK4pIQyBsPKluEeOwb5vm1g6bPL5yG/bY7Y7ZnEgXnuNJvyrCy92wh/b6ONXcGrbXQeBzk0PVNB9G0GKlRldHJW6gurN9vBcIQqPOK/QV3sZcAUjq/A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=GnNp+y7l; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JaC7jyTb"
-Received: by mail-vk1-f181.google.com with SMTP id 71dfb90a1353d-4cb26623d0aso54442e0c.1;
-        Thu, 22 Feb 2024 12:28:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1708633681; x=1709238481; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=XUGFYzBsTBnCe9D+1RLKs/AQxHEx3a1SbCVCaYcyXs0=;
-        b=JaC7jyTbkxbGRw18RqYzdTa8epsq/vGcM13z3SK1oc6CausX/huu+jsytd+QZAoiOm
-         xzSSeEw1tw90WK6+gOV5FOQbolf44eta1g03r51du92H3uYWKP3k6GyWbQt3oJMSq9C5
-         bmV27NnxQTT4RRo7EweAF6ueuv2GkeYaeLZTpMP+6xqosgQMtjV6NmdLVP2owQX+DjYi
-         o5al7RqTyltfcoISKP0wFaVClsElH69JSUdkG5KH7b4wtYvm1eQts9KZLQki/FhuzH5q
-         sU/G87VFmqf7Ivt1Z7N8AyqUvRCxdHZ7BMiiS1nmwgUxfmViiV0dbGdxaLiADLSBTPz3
-         Q6lw==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GnNp+y7l"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1708633761;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=g9U/SuU7EoZOYs84Oq+NGNW63wWSqGFV+44C2eP5B4o=;
+	b=GnNp+y7lj4fd3KSHBNXjRXfvxWZpSAun8XEqx+eF+sThOLU74VNzJq0Sc6z93c3hMKNkMb
+	q/Ib3fWMAE79AAIoHFoHm+L2298umJz3f1dVUPaAe17A4EWyf+UHaYB8p2pu9ZADKuWzVw
+	WUctRIWIYT2sV9jlJLxsg/MKxwjAblM=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-48-iyyrkQUbOh2tq3JT8S6XPQ-1; Thu, 22 Feb 2024 15:29:20 -0500
+X-MC-Unique: iyyrkQUbOh2tq3JT8S6XPQ-1
+Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-33d308b0c76so599225f8f.0
+        for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 12:29:19 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708633681; x=1709238481;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=XUGFYzBsTBnCe9D+1RLKs/AQxHEx3a1SbCVCaYcyXs0=;
-        b=aT4/blQIY+0H/7i0NwPFkexKgOa/ZYTuqQUqPiI6/IpxFyP6F0UDf7SBPCPP+FV9js
-         Y812NHNwERzvuKwhCMd8NwVxlorB//U3mrJlDbcLyVJcPO3Edl3aOYH9w8djdvS/IluA
-         QeHMa6sPJYi+97qlnTbY7qqYKxePXshRFDH4tm2gej4H4rwJLYsylOhM2zYeVjrvCWBY
-         SZStxtGnRwMQ/sAunnJnwz+RD0/S977ESe2O2WK0kvn++BcdUnEv0ZCecw+ibIK3VUkr
-         MI9WOuZQw+5mxQCEMzkAnJnfBzVWlX1Zj3jQNB9XTJtVDJPbLlKtV6/fVqyd4shRFeaM
-         9rag==
-X-Forwarded-Encrypted: i=1; AJvYcCVyLr9r8yfzbWKBrWdC0GmYYSQN2PEavdSxpzAaUTqt6lZHPINTcRLd2fQE/ue9RumWbXXrUzZMvgp8yLefxAqpa3kBOSjuj4fr2vEl
-X-Gm-Message-State: AOJu0YwaPiVanbJzONWhgKbOZuT8KDk+NDPYUaA/YKQjq/bmhWS0d/p9
-	LacC6dBrmnfk8oNxdMXJVIvEw00AgSKp2Et/usR8dznAWljgs3pIWegCKgZMg/B3hsUX6pA10Ds
-	5gSQ5MrOXiBnZHFF/2bR5eMLXjxs=
-X-Google-Smtp-Source: AGHT+IGzcm51XqB/4oshCKEPTQnf9f7vbtkjyf06veyI/L/glAwnKLL6O3gAs2pu8wsxMkcreIHmxBcsoK+j6SvxbLs=
-X-Received: by 2002:a1f:da81:0:b0:4c9:98f8:83d7 with SMTP id
- r123-20020a1fda81000000b004c998f883d7mr188242vkg.0.1708633680846; Thu, 22 Feb
- 2024 12:28:00 -0800 (PST)
+        d=1e100.net; s=20230601; t=1708633759; x=1709238559;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=g9U/SuU7EoZOYs84Oq+NGNW63wWSqGFV+44C2eP5B4o=;
+        b=g7xYPbNNtUNaaj4qoJAZYO/t3lij6aVg59/ZI6+4uYn6w4DrHTHGJHWXHZqVtYapiU
+         FmIF4e0cBCLULxA8Uf+lhWz8dNWfCaEfOkf7fxGqXBYuEHUw7O38vBWvQjj1aJm7N8ct
+         LLiRx9hm2kKetSqPz6fVFWPIF6cpEZU80wroNSWzrvolJRtF8YBiLowQD88VTSPrEd8V
+         rp9YZnPBBbTalOsIz6Gk47bemlhM1XoYquyBmTooXd4ozAwBjv12iVARGovB0XVbDJuG
+         Q4I5VKSN8+MLm938SRlEDrLW+8r0ErpiXZyUUXeG4yir51+ULXSUKvcO9Br0jSTcds6k
+         b7Iw==
+X-Forwarded-Encrypted: i=1; AJvYcCW6pl1oKfhPjiN6091Vn/cBtBZKgwZ1a+1xbKoKOVmDLmkYarkIE4ylexl3wXq0L+8r/ldI/m4hQsxNJY5X4uk8qbDQfbFRpQQc5g8v
+X-Gm-Message-State: AOJu0YwhG1BFo7wcRwfibTSWVqfznwNbir43W8c+OFIHNDT6giJavYbV
+	k1NIRb7bxvFDQ6BQu233eYnSoiU+306K9NUCIMXriu4AqLxpfp0EcVNwZ2xpUX07eqh4Y4iKF4x
+	49QFeum4gV3Iby8CuJKv28Ctw4OdNOoNUibvIspLgH6XnAO4eBSNKWSKTUF/S7A==
+X-Received: by 2002:a5d:490b:0:b0:33d:513a:9248 with SMTP id x11-20020a5d490b000000b0033d513a9248mr3036120wrq.15.1708633758954;
+        Thu, 22 Feb 2024 12:29:18 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IFmu72LYTYj8EKBymqMoqhVGv0sg4c6wtoeXMyJjoPERBEKhLX3cOJNp9rtBUbNB6tc0W/0bg==
+X-Received: by 2002:a5d:490b:0:b0:33d:513a:9248 with SMTP id x11-20020a5d490b000000b0033d513a9248mr3036108wrq.15.1708633758639;
+        Thu, 22 Feb 2024 12:29:18 -0800 (PST)
+Received: from redhat.com ([172.93.237.99])
+        by smtp.gmail.com with ESMTPSA id h15-20020a05600004cf00b0033b1c321070sm142852wri.31.2024.02.22.12.29.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 22 Feb 2024 12:29:18 -0800 (PST)
+Date: Thu, 22 Feb 2024 15:29:10 -0500
+From: "Michael S. Tsirkin" <mst@redhat.com>
+To: Christoph Hellwig <hch@infradead.org>
+Cc: Maxime Coquelin <maxime.coquelin@redhat.com>, jasowang@redhat.com,
+	xuanzhuo@linux.alibaba.com, xieyongji@bytedance.com,
+	axboe@kernel.dk, gregkh@linuxfoundation.org, brauner@kernel.org,
+	lstoakes@gmail.com, virtualization@lists.linux.dev,
+	linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+	david.marchand@redhat.com
+Subject: Re: [PATCH] vduse: implement DMA sync callbacks
+Message-ID: <20240222152541-mutt-send-email-mst@kernel.org>
+References: <20240219170606.587290-1-maxime.coquelin@redhat.com>
+ <ZdRqcIRmDD-70ap3@infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240221130007.738356493@linuxfoundation.org>
-In-Reply-To: <20240221130007.738356493@linuxfoundation.org>
-From: Allen <allen.lkml@gmail.com>
-Date: Thu, 22 Feb 2024 12:27:49 -0800
-Message-ID: <CAOMdWSKKpAV_q7q+mbRo=DQm9KJp_73-Q9-Vpgz9bVv+TDCEUA@mail.gmail.com>
-Subject: Re: [PATCH 5.15 000/476] 5.15.149-rc1 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: stable@vger.kernel.org, patches@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org, 
-	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org, 
-	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de, 
-	jonathanh@nvidia.com, f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, 
-	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZdRqcIRmDD-70ap3@infradead.org>
 
-> This is the start of the stable review cycle for the 5.15.149 release.
-> There are 476 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Fri, 23 Feb 2024 12:59:02 +0000.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.15.149-rc1.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.15.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
->
+On Tue, Feb 20, 2024 at 01:01:36AM -0800, Christoph Hellwig wrote:
+> On Mon, Feb 19, 2024 at 06:06:06PM +0100, Maxime Coquelin wrote:
+> > Since commit 295525e29a5b ("virtio_net: merge dma
+> > operations when filling mergeable buffers"), VDUSE device
+> > require support for DMA's .sync_single_for_cpu() operation
+> > as the memory is non-coherent between the device and CPU
+> > because of the use of a bounce buffer.
+> > 
+> > This patch implements both .sync_single_for_cpu() and
+> > sync_single_for_device() callbacks, and also skip bounce
+> > buffer copies during DMA map and unmap operations if the
+> > DMA_ATTR_SKIP_CPU_SYNC attribute is set to avoid extra
+> > copies of the same buffer.
+> 
+> vduse really needs to get out of implementing fake DMA operations for
+> something that is not DMA.
 
-Compiled and booted on my x86_64 and ARM64 test systems. No errors or
-regressions.
+In a sense ... but on the other hand, the "fake DMA" metaphor seems to
+work surprisingly well, like in this instance - internal bounce buffer
+looks a bit like non-coherent DMA.  A way to make this all prettier
+would I guess be to actually wrap all of DMA with virtio wrappers which
+would all go if () dma_... else vduse_...; or something to this end.  A
+lot of work for sure, and is it really worth it? if the only crazy
+driver is vduse I'd maybe rather keep the crazy hacks local there ...
 
-Tested-by: Allen Pais <apais@linux.microsoft.com>
+-- 
+MST
 
-Thanks.
