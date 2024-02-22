@@ -1,188 +1,118 @@
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2052.outbound.protection.outlook.com [40.107.223.52])
+Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F27E712FF74;
-	Thu, 22 Feb 2024 13:23:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.52
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708608189; cv=fail; b=tCdSNXXO+LZ3vYBG5wpUcebqM583OL0BMQzrsx4FlPQxmhBZfgXXvwMmuLvRCyKZJra2x3QGydfSgml4yqvG5q9vJ4EBHUUm70x2SAG4gUjrZ4ZZoh8eJLnBWlBxpBdfH0Xx3yHORpmQ3XzUWEy+iFrzr9HGo+pBKawk7Lsjudg=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708608189; c=relaxed/simple;
-	bh=uqfIxxOQX3ruqIQZKSpFgLxugu4SWiaJsVcKUhIkrfE=;
-	h=Date:From:To:Cc:Subject:Message-ID:Content-Type:
-	 Content-Disposition:MIME-Version; b=NtYSZiO2l8Ed0l1FmUFoxl2ezREnI3nyIoR47dFTktnbj7agskEHwwH8BLes8PK01Ur9DQX7g2OQVHGx3KTzEfwvAUIhcpBAAhmK9BRkYIXdMFu0Hoi82p7e2wU/dXQKjXcMMm0iShpYGV+KcLw3ezI4xpS3Vc4/Ydg/oqME+Us=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=rIw1srAG; arc=fail smtp.client-ip=40.107.223.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A07ED135405;
+	Thu, 22 Feb 2024 13:23:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.248
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1708608191; cv=none; b=opAeAQzO+AIxv2bIGy6nyHMN21+9IlJW1ty7BpyAKCKxJyyxwYtCHy9IFHwJQhWu1BvDFxDWXSj+9wxJzj6BwnkOC8nPOzKsGBHzFiJOqpW0s2kz1rEJc9btLccwyZ1LPDk/DJMoX3D6J04ZvIWmFDk0Z7guKtxqSSvbwNcJfDw=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1708608191; c=relaxed/simple;
+	bh=eSbXUqFedQp3uxU8odFpdsy0/WXm8uAd03gbB8t0lCw=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ukrVQzJgA5LG2WzuiSpD9UE8jobql5xom6AuRL4db/Bo8W7hb/PbtIrMouPrnYX6KLmfVUA7jwlJTTyMuFTFUgz8+J9kaydi75iFCA+xB46ppZvXja1KqS46vaUhjQ+JYuvJ+/jDcOl4gkLhYyfl4R9j6U1PPcB4DHcsV/XiGXM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=NhvXyovi; arc=none smtp.client-ip=198.47.23.248
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="rIw1srAG"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ZreBr/brMPsomW78HOf0usOJ5v+Fcxa8g4XCUQ5axQd+EH1/bXfm6zyG1KDWOvVVZ6bSoFcJ7Ncu+9DmPXTxAJZGSJWUUO1ZBd0ahQgBrHI1FZsiPHknZ4iZFtH3TKjQS1pm9mgFUGDWJGk9ewF+A+sXBKN8yBj0J3qoACVMjO+RNLoEEKAlpaXhkcObqy+aNuqJX0o8VVPmyvjxkttOS0IkWIErZmxxFM4HnLNbBIxZ8Bl0WtgJuOSIg3Xupqm7XYs9ruWueWhA72UxjDT826PlvREqEXhGty3uFa8lPRmR166vWz4oZdooLBH5Zp8ASFDf+gmySFl+vdWz1rQ73Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=3BXGIUYTYdcizYd/yXbOLHtAv73O5Nqa2dmKunxJIwY=;
- b=MOVgliJzPkMj43iEXdRreaEcSOqW+B5OSn1x7wbUyNShxlubd2TOeCYJRVJdMZ5uNdPpJ/mKqbWCHNUpQYb+NauqaZUBgAxL8ZI6vSF9EPlSRFOXDsnZWZiiSyCwuZOmYtKiamAzvubshbaiNSn4eyM4YvpuIbmM6vpL6AbvIkdItyfSd70A7W4WKKY01+rFxd5vsPawi8QeVCPA/M0IzaynfmC412w7zLF66/XlfV6zL3jBPznRVuRZDAg+0XJE9zijfnu1bdfdoAs5XO/08B0LKMPWdEEJXlA3u5QgD7WATM95/fd6QqydHMEgqeOlyvmz2/jtVAKMpsUpd3TNZw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=3BXGIUYTYdcizYd/yXbOLHtAv73O5Nqa2dmKunxJIwY=;
- b=rIw1srAGvs7blOtlP142P5HF66X30zjIbjHPxctdHMg867cg/S/MTyca8oCQbZZ7tx+2sls/CbuJvgSi5NFj9Q/2j257AoFokUn8ISuHlsiTq5mhA6n/KnBdQM0RpzIl9C0PP4/gnQHqx6LRi3+d01KdP7OQ3jFJKNhDrquN2Lvt1/o54+sq2p3jTxqOSPN5laEpgFvYRuyWFmKM92M4AIO3YuTTNfWo831UHGEpfMzxE5w0F7jadxHKbkZPbkhCQwRZiYvUazOEcfmrJ7FzlM58uwmTpwOh8AZKFoq6wPsLlcQjL/4geGqnrCrIiZ20vOnm9pD5bRhIE5Q7FrtbQw==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from LV2PR12MB5869.namprd12.prod.outlook.com (2603:10b6:408:176::16)
- by LV2PR12MB5750.namprd12.prod.outlook.com (2603:10b6:408:17e::6) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7316.20; Thu, 22 Feb
- 2024 13:23:05 +0000
-Received: from LV2PR12MB5869.namprd12.prod.outlook.com
- ([fe80::96dd:1160:6472:9873]) by LV2PR12MB5869.namprd12.prod.outlook.com
- ([fe80::96dd:1160:6472:9873%6]) with mapi id 15.20.7316.023; Thu, 22 Feb 2024
- 13:23:05 +0000
-Date: Thu, 22 Feb 2024 09:23:04 -0400
-From: Jason Gunthorpe <jgg@nvidia.com>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: iommu@lists.linux.dev, kvm@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Kevin Tian <kevin.tian@intel.com>
-Subject: [GIT PULL] Please pull IOMMUFD subsystem changes
-Message-ID: <20240222132304.GA3882153@nvidia.com>
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="ckfeWuDiNqjgRFbE"
-Content-Disposition: inline
-X-ClientProxiedBy: BL1PR13CA0191.namprd13.prod.outlook.com
- (2603:10b6:208:2be::16) To LV2PR12MB5869.namprd12.prod.outlook.com
- (2603:10b6:408:176::16)
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="NhvXyovi"
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+	by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 41MDN4cb046825;
+	Thu, 22 Feb 2024 07:23:04 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1708608184;
+	bh=CKdem2P6UyMctXabHybF1t5eSYfeMxcyIMqd3gX3ji0=;
+	h=From:To:CC:Subject:Date:In-Reply-To:References;
+	b=NhvXyovirvowl8rr71OGYD8Rc9rfCW4OwqVJXZe5uVv1iqYmrb0XoOn4cOlIbgIA9
+	 CGoUHtL1kg/mtMJu/06QIHyiSy6UQzv/ZRcne3rTu/jzM7YZCTYFvXjCNOBIr084Tj
+	 EpRqAupWAFL7gugoP634Rj5tEZMI45+Q9fptDnqg=
+Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
+	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 41MDN4KQ022141
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Thu, 22 Feb 2024 07:23:04 -0600
+Received: from DLEE103.ent.ti.com (157.170.170.33) by DLEE114.ent.ti.com
+ (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 22
+ Feb 2024 07:23:03 -0600
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE103.ent.ti.com
+ (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Thu, 22 Feb 2024 07:23:03 -0600
+Received: from uda0132425.dhcp.ti.com (uda0132425.dhcp.ti.com [172.24.227.94])
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 41MDMwBt009356;
+	Thu, 22 Feb 2024 07:22:59 -0600
+From: Vignesh Raghavendra <vigneshr@ti.com>
+To: Nishanth Menon <nm@ti.com>, Tero Kristo <kristo@kernel.org>,
+        Rob Herring
+	<robh+dt@kernel.org>,
+        Krzysztof Kozlowski
+	<krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>, Andrew Davis <afd@ti.com>,
+        Bryan Brattlof <bb@ti.com>, Dhruva Gole
+	<d-gole@ti.com>,
+        Jai Luthra <j-luthra@ti.com>
+CC: Vignesh Raghavendra <vigneshr@ti.com>,
+        <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Vaishnav Achath <vaishnav.a@ti.com>,
+        Devarsh
+ Thakkar <devarsht@ti.com>, Aradhya Bhatia <a-bhatia1@ti.com>
+Subject: Re: [PATCH v2 0/4] arm64: dts: ti: Enable camera for SK-AM62P
+Date: Thu, 22 Feb 2024 18:52:54 +0530
+Message-ID: <170860805564.1966114.7021966559574978180.b4-ty@ti.com>
+X-Mailer: git-send-email 2.43.2
+In-Reply-To: <20240220-am62p_csi-v2-0-3e71d9945571@ti.com>
+References: <20240220-am62p_csi-v2-0-3e71d9945571@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: LV2PR12MB5869:EE_|LV2PR12MB5750:EE_
-X-MS-Office365-Filtering-Correlation-Id: d7e6105e-57cd-4c98-527d-08dc33a96766
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	8UAHjCDStbC1885Ph0NNgM7vuJbl9SgRQqrHnfzP4hAPUH4d2cP8Ebn3NaSkWATgB9Zosd3eBU+Ch7xI6Y836Hjd8I5TRLw69ZGUinBEEx94DBTOxwY7XLm0cV4UqtvJFB4WsrEYuTVrtlLZIbcM8dFxBpIFKtN8Vq+1TMurKJN6iLiw8iRFlC5EMcYGKxKBl+ZGRtSGLUBIvawqkCoeNTCNTFbn/4+1B9tf3KYuTXvaaNPt5QMafb8itSaVAizpxaeNlF3eKb0XCHPFr+N2IgCL6O3es0LsKBSVD8eovSOOtLHdzTK0p1ydmoBVsnRZd7esS2Qjwggx/zandz1FHl/vtkPWU7XV65kSK6AoM+NxVyb9K8MT5GZ/oNrhAshzuDWMuryC5jhi0Ady9C2wrCg/0AuOkSQMmsX8QWOXEDAytyZXQy3P+yyhF2JFfAeZfCIqBpV0xTWv8Jly53AL3ePV6tA1eu7qfsGVmqvthBnNUGP++/8PJ37bnUqhpwdYHNgf1Bs1Xi7U0Hg35O9M6A==
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV2PR12MB5869.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?ttrIMDap4xt0f508rrpTwcwrQXkup8DB8YdLPI9UMbA6O/WTm7E3/ix32UuQ?=
- =?us-ascii?Q?bK/wpeWi5z3b1w7axhKXc6/BNcLTfKte305f7R4vot08lvtFdubOcfQdxIDk?=
- =?us-ascii?Q?pZr8fsXfmpS18xKmRyaOeOJsBUOgz5IJN+z08OCClYD3DZODDOSyMDJy+fkV?=
- =?us-ascii?Q?ZspJVhSU64f6LB7foveXfi7/J/oLaJbwe5fFIZ+Ta1xTvx96U/NCEhTeUKRp?=
- =?us-ascii?Q?sQJEYCnFYSbHXXDM7GbRd2zSdEglXu/Y/4T1bJsyo1ZLWxgqZto0wRgDEFLe?=
- =?us-ascii?Q?CtDKVsF/fVgdJNvTC9h9oFxhfgzUs6RL/qkvzW5xzhpKr+5J+5nKA+FS8pRL?=
- =?us-ascii?Q?9Z/FQiH752CaQXs2On710SbeJ2NhnwbUYUWQ2A2LmEbX6o4HgRAyBbU3C+s3?=
- =?us-ascii?Q?kHz1XtfW/ZlZmrN6QkCUhRh7+zyMw5WYlON2FhXkiDL0YvDaeL3oVYnn5xB9?=
- =?us-ascii?Q?yQ9689yvRP3OhjpYg6T8B3tsYYPHj0Z25RxtanL6v0U4OGNPq9KQjjtUOvkK?=
- =?us-ascii?Q?Br/NeWw27ODbHbnurT5DAfueYCGuM/3k1GARYmH6eNHvmI1mmUyEBNPcxFPf?=
- =?us-ascii?Q?lYKe4z/fc3KUsP0GSKSv31Y/5JsuVraIUdZJFB6Qf/OEuWMdoK3Vu+KK9wt0?=
- =?us-ascii?Q?C+fkGW35Wvgd7mQNgN/cVngbUy2vm+PXpAgn2p2f6IznhOQ6ycJULnvCqFUE?=
- =?us-ascii?Q?pJqsLgvXKgrIPQKgNji/WDPIHU3d8gQMP1mdgluTuoyv75NdN8kUV2Q1SUtP?=
- =?us-ascii?Q?Pei+b2KssVywmtKEI/O4TTY+ncNFrbXEM1r/Z1uFfVfnhhlkrxbbYtGBiEcr?=
- =?us-ascii?Q?bWZUtB7FG7MbviJJw8Lno5wdDAB5qYmXYzVu8YMvMKAmETv8T4/wqpYtFtIz?=
- =?us-ascii?Q?oY1FNKXd9O4JVVbGVYCgUR1QGxVfUlIaIIOefsgUcm/MaBQDuZttyDiSMuPI?=
- =?us-ascii?Q?pEqQ64TkiW8aW71efVj3Scrxq7YjfMzsC2Ey9sYjfFrVYFx01pztE3dA0And?=
- =?us-ascii?Q?fiR7o6dWIsGQZvPodi2XOSnvcPVgS/4b5NLEG0oLIcgI6JKt9aeAFhNyfe2g?=
- =?us-ascii?Q?eB2wCwg90BPQwXWnJzfttlswHQF6SGGdISgQW0LQo+ynBR2rUM/qiPR8AlJb?=
- =?us-ascii?Q?GIzQJEUFtGUpCo9w+JMJaEKOQpMkVsKGDey8XqG+flcywP7SXAsVuiFXOV8b?=
- =?us-ascii?Q?FNCx1HeXFx1gLiuy8APGyqg8kB2uJuiGNskiOw8OVC+xd7j/vtLG/qrVjp7+?=
- =?us-ascii?Q?kRO45OUaluwIW1JyLy7V0IwCujTxHPVCjWKIO3eGL2mZ6EBkGzA0nQxYWcWj?=
- =?us-ascii?Q?S5wb0k4I9XEUfU1V0lkfBAoEGNtVWqYKOwsdko8l2DpF8HgFjKiU15fRmdOg?=
- =?us-ascii?Q?btC5r6Cy/VKQZ1LEbivrDbrEi58QFx0BZwZMjLmKjLcDDVozSU1C+4tIotz3?=
- =?us-ascii?Q?1DqyT2JO0As11YHY4bGNeyGZZQC6mFepfwYM8Ecf5i2fSg8/bOWlNe88Rxde?=
- =?us-ascii?Q?ouHOGwutstrjeSAXBMebs1Kgzk3WwPGg0JsIUUyO3PO4V1/lU4EHBkc7ZsrY?=
- =?us-ascii?Q?nyDpjzAUl6Lx5lYhM4/Gn3HfHpVH6cryJrogn1co?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d7e6105e-57cd-4c98-527d-08dc33a96766
-X-MS-Exchange-CrossTenant-AuthSource: LV2PR12MB5869.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Feb 2024 13:23:05.8255
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: wnYBsMToufQNq2UDfJuoIhJmxjhWI10tSKnn/ZbdpMRRVANum3LdO+HzCVFxNmWx
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV2PR12MB5750
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
---ckfeWuDiNqjgRFbE
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Hi Jai Luthra,
 
-Hi Linus,
+On Tue, 20 Feb 2024 11:48:01 +0530, Jai Luthra wrote:
+> This series enables support for camera sensors using CSI-RX ports on
+> AM62P family of SoCs.
+> 
+> Particularly, it enables OV5640 and IMX219 sensors via the 22-pin FFC
+> CSI-RX connector on SK-AM62P [1] using the existing common overlays for
+> SK-AM62* family of boards.
+> 
+> [...]
 
-Some small fixes and updates for the selftest. I'm aware of some
-syzkaller issues that hopefully will get fixes into another PR before
-the merge window.
+I have applied the following to branch ti-k3-dts-next on [1].
+Thank you!
 
-The following changes since commit 54be6c6c5ae8e0d93a6c4641cb7528eb0b6ba478:
+[1/4] arm64: dts: ti: k3-am62p: Fix memory ranges for DMSS
+      commit: 90a67583171f213711de662fab9f8d24a2d291a9
+[2/4] arm64: dts: ti: k3-am62p: Add DMASS1 for CSI
+      commit: 091e2e05228fa3fd424b1d775b04fb4734d5275b
+[3/4] arm64: dts: ti: k3-am62p: Add nodes for CSI-RX
+      commit: a8787f4fd29a43c5351daf3059a6156ff089a441
+[4/4] arm64: dts: ti: Enable overlays for SK-AM62P
+      commit: 598139b8c7c56cc6fb30ef8b4cf34b53a7fa5d0f
 
-  Linux 6.8-rc3 (2024-02-04 12:20:36 +0000)
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent up the chain during
+the next merge window (or sooner if it is a relevant bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
 
-are available in the Git repository at:
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/jgg/iommufd.git tags/for-linus-iommufd
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
 
-for you to fetch changes up to 510325e5ac5f45c1180189d3bfc108c54bf64544:
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
 
-  selftests/iommu: fix the config fragment (2024-02-22 09:02:05 -0400)
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/ti/linux.git
+--
+Vignesh
 
-----------------------------------------------------------------
-iommufd for 6.8 rc
-
-- Fix dirty tracking bitmap collection when using reporting bitmaps that
-  are not neatly aligned to u64's or match the IO page table radix tree
-  layout.
-
-- Add self tests to cover the cases that were found to be broken.
-
-- Add missing enforcement of invalidation type in the uapi.
-
-- Fix selftest config generation
-
-----------------------------------------------------------------
-Jason Gunthorpe (1):
-      iommufd: Reject non-zero data_type if no data_len is provided
-
-Joao Martins (9):
-      iommufd/iova_bitmap: Bounds check mapped::pages access
-      iommufd/iova_bitmap: Switch iova_bitmap::bitmap to an u8 array
-      iommufd/selftest: Test u64 unaligned bitmaps
-      iommufd/iova_bitmap: Handle recording beyond the mapped pages
-      iommufd/selftest: Refactor dirty bitmap tests
-      iommufd/selftest: Refactor mock_domain_read_and_clear_dirty()
-      iommufd/selftest: Hugepage mock domain support
-      iommufd/selftest: Add mock IO hugepages tests
-      iommufd/iova_bitmap: Consider page offset for the pages to be pinned
-
-Muhammad Usama Anjum (1):
-      selftests/iommu: fix the config fragment
-
- drivers/iommu/iommufd/hw_pagetable.c          |  3 +-
- drivers/iommu/iommufd/iommufd_test.h          |  1 +
- drivers/iommu/iommufd/iova_bitmap.c           | 68 +++++++++++++++++++----
- drivers/iommu/iommufd/selftest.c              | 79 ++++++++++++++++++++-------
- tools/testing/selftests/iommu/config          |  5 +-
- tools/testing/selftests/iommu/iommufd.c       | 78 +++++++++++++++++++++-----
- tools/testing/selftests/iommu/iommufd_utils.h | 39 ++++++++-----
- 7 files changed, 210 insertions(+), 63 deletions(-)
-
---ckfeWuDiNqjgRFbE
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRRRCHOFoQz/8F5bUaFwuHvBreFYQUCZddKtQAKCRCFwuHvBreF
-YWU5AP4jZv47dnvw4rFM+MQDHiVN/3kT3eYmirUYRI7mGJo5dwD8CFW92m17CjoD
-h238bIQHw9PmSVy86yBmX2FP1yjVBQo=
-=Qq2e
------END PGP SIGNATURE-----
-
---ckfeWuDiNqjgRFbE--
