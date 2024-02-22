@@ -1,130 +1,266 @@
-Received: from mail-qt1-f171.google.com (mail-qt1-f171.google.com [209.85.160.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8464C6E617
-	for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 20:59:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70CD612D1F2;
+	Thu, 22 Feb 2024 20:59:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708635550; cv=none; b=saufHP+lXUywZo+dlxg4rET552PnpW4S/+cIHBzzdYjoljC9AjhnaCa0hOCEyYZ+4NWtyR97osSREC+ZLibZaLp2gTYCGt4FMr+ugXEjOEN+FtNbE1XjfU7ymEWkKEwBny1v20Nr08E73Cd38Zx05bDmlpaKgQl/pYv5m7zh62c=
+	t=1708635577; cv=none; b=rOP35tO2ReXFKMGN63JThNNxrg3bb7qr64O7SwFiVfn3D9fUM1ASLAyuMXryF1z+9smETulI+lEPrZ3HviY/x7/dPeiT0dZmEeXbDvq6i91borqUn8rsufvw5OYhe0W9itbODGeYZhU7QZvXH0qku3AVX/QIY6ZsaCNjfiqfswk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708635550; c=relaxed/simple;
-	bh=C4F7mlB1MqkcQcSyoJUPRfFHjf+dal0cew/+pSwHCXo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=WL0UOWIIyGhFliMwr1RdILFTMtJ91Ca+09a6AYZsKIdkcJu1ILmXIddxIQ1EKHr2KaygPJsEKFA17ch0ZKeMdaRU97z4opr8gljYpWejBGL41fIoOLJY6v/vd8WHSAH57L0+FkV35tProslF2NYPMj4wGgmbrz2mOD469tPtmqk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=MOHJAqqc; arc=none smtp.client-ip=209.85.160.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1708635577; c=relaxed/simple;
+	bh=ytKA8bnCAML3L4KEyiobLKKKomm+iv1MKMnix7R21fI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=d6A6TOfk2ig3AhjmtgBDmoAjs8da8ze36TRFwj9rQL0FWRDD5yXG5BoEBDmlYf7SB9/zvEKFNJkKV/2ApDP2v2DMOHIGIcwrsuD9wNy7oErSEJn0nExIDwcdk3SN3Y2fDnlk8cTC8kaWAsxdOqI+11MwpCTMO2ptXAGFp9Xg0Yk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bVo0v/0u; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="MOHJAqqc"
-Received: by mail-qt1-f171.google.com with SMTP id d75a77b69052e-42e2507c6e1so82171cf.1
-        for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 12:59:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1708635546; x=1709240346; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/zEWuRWWHcJcQcinmF9Ig0PacXm/lMdwIIHptRGDzpU=;
-        b=MOHJAqqcAnRE2NSLZhyESs/g5WAAwqx5bZyPaxifPADGalK3WQEz1I3/0pCW5PdqkI
-         ppGl1SyQhYFGzNy3SRnVVLTY8Q1L8ClG3FqEJkJFXqganGsY65/lTMo5K9QmgtbfBQBT
-         /MeX8JzP/yxOS/GN9tRwdo5b9tqFO67Q3SN5n3ZFQmGAOoKwdOojExjprnKpJnkBuAye
-         J/xcM0eZbNV01MeMB6Zn38/zOZ0fXEcY92HQMr85IBGcDe7q1sFoYO+RTn8ebga0c6zy
-         PEdTG+3lch6bIe0ZKqq+1kwFgOLk1lc9vRg49EcN0d0xSJgE9xzi9uGljq5REEQ/s7/E
-         Vqew==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708635546; x=1709240346;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=/zEWuRWWHcJcQcinmF9Ig0PacXm/lMdwIIHptRGDzpU=;
-        b=JFoMSaGOSo4UL7kfi2XRyiQfjdi6H8ee+/Ly/e9fevY9JuLFeseeZNDyZK2i40lcfg
-         Nt/k7PsHcEQXxX/svAIwWSdBK73YpTM7KhlO6ma0lkSZsrLEfINVoEhKZT7c9qOtYfJu
-         dnRv8dp0O2iBLHcWq7y1P/0T2+SkYPbDgxWTne6LwWtlE7Mkflu7hNgZw3AbzoWlO3za
-         iKuoATuWGRoyCB6FgMkBM2eWdg+ih/5rFIA4qBO8pFst34pQjgaeVJkHQb5Vx4sr45Bl
-         GCjfJEIhyTc+BFjw8fQnvBMP3TPvwJbxY6zoIhtOGDxqpj0Kq1OMG82EVLT87Ol8Ry1i
-         zvdw==
-X-Forwarded-Encrypted: i=1; AJvYcCUIr6+vFXqH0Qg/HQOWaJPnZS743qYswHBuSO8RdnlRsEgH4tL+BVOSIsL+rPcscrQhd+qFI0qxXD707QvhMPaqULakZPlEw/sJEv+8
-X-Gm-Message-State: AOJu0Yx/mKbyZ35/kUtYyAh9Qz356gzA8C+SzPCOFPIUyzkSRQstKUFa
-	wyUjG2WGM5s10yDFK2s+YYO49iLcw5n+Hn29rB+LepRYTloE8IqdT82pLmsDAeCetCSK/Tc9OqV
-	dbdmRYAOiFPHw51KPIZb9VzfcDAKi0GzElwFh
-X-Google-Smtp-Source: AGHT+IFSpfaLdIKihK3iEVOja+3Eqku3dKQtV6o3yrUl8zcXbBHUkfm22S3h1VkUJApYDgRUGbJE0TXcXoTj3FcGfX4=
-X-Received: by 2002:ac8:7643:0:b0:42e:1260:c4e6 with SMTP id
- i3-20020ac87643000000b0042e1260c4e6mr732606qtr.10.1708635546371; Thu, 22 Feb
- 2024 12:59:06 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bVo0v/0u"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C8004C433C7;
+	Thu, 22 Feb 2024 20:59:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1708635575;
+	bh=ytKA8bnCAML3L4KEyiobLKKKomm+iv1MKMnix7R21fI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=bVo0v/0ulRFyWKSSRrkJ8IyGHJsWcpYJZINTZxAXPS2WRT3wuaCHeXACQzYYNoz3V
+	 n9L8daC9BKpIUMQU9fpW2ig+QNCGBNdfC/GLxnY2Hw9R621kUpV9hR3aMNZkUYqViI
+	 pmrBOvC6N0mMCiyToOzsR0o+y7bnZNxz9+tWd/ooBYM/NapmLesart2v6zwSM6ShkM
+	 /ctG37WkF2yXfW504mlnFMH3pB28O6n+bh9Y3ZRxCGj7b2lRXnv0t8BqAKn2TFgvH8
+	 ODZwiYkgMWjrtysT5cD7aYo7zvuip+J3VOCgv3Eq8coe6oEsMq84fi2QHBJ0Io1ZFd
+	 eurmgMmAPFSJQ==
+Date: Thu, 22 Feb 2024 20:59:31 +0000
+From: Conor Dooley <conor@kernel.org>
+To: Yangyu Chen <cyy@cyyself.name>
+Cc: linux-riscv@lists.infradead.org,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, linux-kernel@vger.kernel.org,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Alexandre Ghiti <alex@ghiti.fr>, Rob Herring <robh+dt@kernel.org>,
+	devicetree@vger.kernel.org
+Subject: Re: [RFC PATCH 0/1] riscv: dts: Allow BUILTIN_DTB for all socs
+Message-ID: <20240222-crawlers-prankish-ecf425d1f0b5@spud>
+References: <tencent_AB625442CC1BCFF86E04D7B5891C43719109@qq.com>
+ <20240221-islamic-quartered-3863e44bc862@spud>
+ <tencent_DF3D7C2E8248DA188E3FB8DF31FE21478D08@qq.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240221092728.1281499-1-davidgow@google.com> <20240221092728.1281499-2-davidgow@google.com>
-In-Reply-To: <20240221092728.1281499-2-davidgow@google.com>
-From: Rae Moar <rmoar@google.com>
-Date: Thu, 22 Feb 2024 15:58:54 -0500
-Message-ID: <CA+GJov6GyU0t0D5quhroCgEQOJgk0PCjVn5LROifBcNMx-ovcQ@mail.gmail.com>
-Subject: Re: [PATCH 1/9] kunit: test: Log the correct filter string in executor_test
-To: David Gow <davidgow@google.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, Shuah Khan <skhan@linuxfoundation.org>, 
-	Guenter Roeck <linux@roeck-us.net>, Matthew Auld <matthew.auld@intel.com>, 
-	Arunpravin Paneer Selvam <arunpravin.paneerselvam@amd.com>, 
-	=?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
-	Kees Cook <keescook@chromium.org>, =?UTF-8?B?TWHDrXJhIENhbmFs?= <mcanal@igalia.com>, 
-	Rodrigo Vivi <rodrigo.vivi@intel.com>, Matthew Brost <matthew.brost@intel.com>, 
-	Willem de Bruijn <willemb@google.com>, Florian Westphal <fw@strlen.de>, Cassio Neri <cassio.neri@gmail.com>, 
-	Javier Martinez Canillas <javierm@redhat.com>, Arthur Grillo <arthur.grillo@usp.br>, 
-	Brendan Higgins <brendan.higgins@linux.dev>, Daniel Latypov <dlatypov@google.com>, 
-	Stephen Boyd <sboyd@kernel.org>, David Airlie <airlied@gmail.com>, Maxime Ripard <mripard@kernel.org>, 
-	"David S . Miller" <davem@davemloft.net>, dri-devel@lists.freedesktop.org, 
-	linux-kernel@vger.kernel.org, intel-xe@lists.freedesktop.org, 
-	linux-rtc@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	kunit-dev@googlegroups.com, linux-hardening@vger.kernel.org, 
-	netdev@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="IWs1APhR73R7CYvv"
+Content-Disposition: inline
+In-Reply-To: <tencent_DF3D7C2E8248DA188E3FB8DF31FE21478D08@qq.com>
+
+
+--IWs1APhR73R7CYvv
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Feb 21, 2024 at 4:28=E2=80=AFAM David Gow <davidgow@google.com> wro=
-te:
->
-> KUnit's executor_test logs the filter string in KUNIT_ASSERT_EQ_MSG(),
-> but passed a random character from the filter, rather than the whole
-> string.
->
-> This was found by annotating KUNIT_ASSERT_EQ_MSG() to let gcc validate
-> the format string.
->
-> Fixes: 76066f93f1df ("kunit: add tests for filtering attributes")
-> Signed-off-by: David Gow <davidgow@google.com>
+On Wed, Feb 21, 2024 at 10:28:08PM +0800, Yangyu Chen wrote:
+> On Wed, 2024-02-21 at 11:30 +0000, Conor Dooley wrote:
+> > Hey,
+> >=20
+> > On Wed, Feb 21, 2024 at 03:01:53AM +0800, Yangyu Chen wrote:
+> > > The BUILTIN_DTB kernel feature on RISC-V only works on K210 SoC
+> > > only. This
+> > > patch moved this configuration to entire riscv.
+> >=20
+> > To be honest, I would rather delete BUILTIN_DTB (and the
+> > configurations
+> > that depend on it) than expand its usefulness.
+> >=20
+>=20
+> I agree it=E2=80=99s useless for most platforms because we need to start =
+SBI
+> before kernel on RISC-V except NOMMU M-Mode Linux and SBI also need a
+> DT to work. However, it has been there for M-Mode K210 and it is set by
+> default for XIP kernel. So there might eventually be another patch to
+> support some new soc that will do this like this patch.
 
-Hello!
+To be clear, I was not suggesting that it was useless. I was saying that
+I would rather reduce the number of configurations that use builtin dtbs
+than increase the level of support for it.
 
-This change looks good to me. Thanks for fixing this mistake.
+>=20
+> > > Although BUILTIN_DTB is not a good choice for most platforms, it is
+> > > likely
+> > > to be a debug feature when some bootloader will always override
+> > > something
+> > > like the memory node in the device tree to adjust the memory size
+> > > from SPD
+> > > or configuration resistor, which makes it hard to do some
+> > > debugging.
+> >=20
+> > My inclination here is to say "fix your bootloader" and if that's not
+> > possible, chainload a bootloader that allows you control over
+> > modifications to your devicetree.
+> >=20
+>=20
+> Chainload a bootloader like S-Mode U-Boot on some platforms is hard due
+> to some drivers like pcie controller does not come to the mainline repo
+> of the bootloader, and some bootloader source repos provided by the
+> vendor may require specific versions of the compiler to work, which
+> makes users not easy to do some kernel debugging if change DT is
+> needed. The simplest way to do this I can imagine is to write a simple
+> bootloader by myself link the kernel binary and the dtb I want to it
+> and replace the a1 register point to the dtb address before jumping to
+> the kernel. However, kernel has this feature, why should I do it
+> manually rather than provide a more generic patch for everyone with
+> this need to use?
+>=20
+> > > As an
+> > > example, some platforms with numa like sg2042 only support sv39
+> > > will fail
+> > > to boot when there is no ZONE_HIGHMEM patch with 128G memory. If we
+> > > want
+> > > a kernel without this patch to boot, we need to write the memory
+> > > nodes=20
+> > > in the DT manually.
+> >=20
+> > If, as Alex suggests, there's a way to gain support some more memory
+> > in
+> > sv39, we should do so - but it is worth mentioning that highmem is on
+> > the
+> > removal list for the kernel, so mainline support for that is highly
+> > unlikely.
+> >=20
+>=20
+> Yes. But I=E2=80=99m debugging some mm performance issues on the sg2042 k=
+ernel.
+> Specifically, it=E2=80=99s about the IPI latency when doing rfence on
+> sfence.vma or fence.i. I would like to reduce the memory size and allow
+> the mainline kernel to boot and test without taking some out-of-tree
+> kernel patches. If I remove some DIMM modules from the board to reduce
+> the memory size, it will also lose some memory channels and even leave
+> some numa nodes with zero memory, and the compatible DIMM module is
+> hard to find.
 
-Thanks!
--Rae
+I'm not really sure how this relates to my comment about HIGHMEM. If
+Alex is able to give you the extra 4 GiB of memory that he says there is
+space for in the memory map, will the device boot properly?
 
-Reviewed-by: Rae Moar <rmoar@google.com>
+> > > Also, changing DT on some platforms is not easy. For Milk-V
+> > > Pioneer, the
+> > > boot procedure is ZSBL -> OpenSBI -> LinuxBoot -> Linux. If DT gets
+> > > changed, OpenSBI or LinuxBoot may refuse to boot. And there is some
+> > > bug on
+> > > LinuxBoot now which does not consume --dtb argument on kexec and
+> > > always
+> > > uses DT from memory.
+> >=20
+> > I don't use Linuxboot, but let me try to understand. Linuxboot uses
+> > kexec
+> > to boot the main Linux kernel, but the dtb you want to use is not
+> > used, and
+> > instead the one that Linuxboot itself was booted with is used?
+> >=20
+> > It sounds like Linuxboot has a --dtb argumet that is meant to be used
+> > to
+> > set the dtb for the next stage, but that argument is being ignored?
+> >=20
+>=20
+> Yes. That=E2=80=99s correct.
+>=20
+> > That sounds like a pretty serious issue with Linuxboot which should
+> > be
+> > fixed - what am I missing?
+> >=20
+>=20
+> Sure, that should be fixed in the LinuxBoot. However, I think not every
+> kernel developer should fix some complex bootloader like LinuxBoot
+> which is built upon the linux kernel with a huge initrd rootfs and runs
+> some userspace tools to support the boot process. If something is hard
+> to control, skip it, and doing some override for debugging will be a
+> better choice.
 
-> ---
->  lib/kunit/executor_test.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/lib/kunit/executor_test.c b/lib/kunit/executor_test.c
-> index 22d4ee86dbed..3f7f967e3688 100644
-> --- a/lib/kunit/executor_test.c
-> +++ b/lib/kunit/executor_test.c
-> @@ -129,7 +129,7 @@ static void parse_filter_attr_test(struct kunit *test=
-)
->                         GFP_KERNEL);
->         for (j =3D 0; j < filter_count; j++) {
->                 parsed_filters[j] =3D kunit_next_attr_filter(&filter, &er=
-r);
-> -               KUNIT_ASSERT_EQ_MSG(test, err, 0, "failed to parse filter=
- '%s'", filters[j]);
-> +               KUNIT_ASSERT_EQ_MSG(test, err, 0, "failed to parse filter=
- from '%s'", filters);
->         }
->
->         KUNIT_EXPECT_STREQ(test, kunit_attr_filter_name(parsed_filters[0]=
-), "speed");
-> --
-> 2.44.0.rc0.258.g7320e95886-goog
->
+Has anyone even /reported/ the issues with LinuxBoot to the LinuxBoot
+developers? Without that being fixed, there's unlikely to ever be
+mainstream distro support for it, since they're going to have to build
+kernels for it alone.
+
+> > > So I would like to do debugging on DT using
+> > > BUILTIN_DTB, which makes it very simple,
+> >=20
+> > > I can even install the kernel in
+> > > the distro's way and provide a kernel package for other users to
+> > > test.
+> >=20
+> > I'm not sure what you mean by this, other distros manage to create
+> > kernel packages without using builtin dtbs.
+> >=20
+>=20
+> I mean I can provide a distro package like Debian .deb and distribute
+> it to other users to test without changing their dtb from the entire
+> boot process.
+
+Other distros, like Ubuntu, manage to do this without relying on builtin
+dtbs. I suppose this comes down to having bootloaders that
+
+> Because changing the DT from the entire boot process
+> might prevent their vendor-provided OpenSBI or LinuxBoot from working.
+> Some vendor kernels may be developed out-of-tree and do not use the dt-
+> binding from mainline. Even for very basic CLINT and PLIC dt bindings.
+
+Which is verging on ridiculous at this point. Does the sg2042 also have
+a version of OpenSBI that is not capable of booting a mainline kernel?
+
+> It is only for testing, not for the production environment.
+
+If things are just for testing, I'm not particularly keen on merging on
+that basis alone. We all have various bits of testing code that doesn't
+end up being merged to mainline. That said, it is broken at present and
+its hard to argue against fixing it and any patch fixing it would
+ultimately look very similar to your patch here.
+
+> I want this feature to allow more people to participate in debugging
+> some kernel issues without taking a huge amount of time to deal with
+> bootloader issues about changing the DT. I think it will be good for
+> our under-development RISC-V community.
+
+And on the other hand, it provides no incentive for vendors to fix
+broken bootloaders or firmware, which is some we suffer from on RISC-V,
+in particular vendors that ship T-Head's vendor copy of OpenSBI.
+
+> Imagine we hardly change the
+> ACPI table for x86 machines but we sometimes change the DT for
+> ARM/RISC-V board, right?
+
+Usually we change them because nobody gets things "right" and we end up
+having different stuff in mainline to what the vendor did. Usually also
+a vendor has a relatively complete description in their vendor tree, but
+things only trickle into mainline, so mainline ends up requiring regular
+dtb updates until a platform stabilises. More infrequently, changes are
+needed for bugfixes.
+
+The other thing you do is compare to the ACPI table. I don't think it is
+quite apples to apples there - those machines mostly have devices on
+discoverable buses etc. If they had the same number of non discoverable
+devices, I think you'd end up having to do more BIOS updates etc.
+
+> Also, some SoCs that run M-Mode NOMMU Linux
+> may need it in the future like K210 for XIP without a prior bootloader.
+
+And the k210 is one of the things that is on the chopping block at the
+moment. It's removal was discussed at LPC this year, with Damien
+surprisingly agreeing to its removal. FWIW, builtin dtb is not required
+for XIP.
+
+BTW, I noticed that your patch only removes one of the $(addsuffix)
+calls in a platform makefile.
+Thanks,
+Conor.
+
+--IWs1APhR73R7CYvv
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZde1swAKCRB4tDGHoIJi
+0vGLAP9mlz8G/cmt1LN0xZm+9IXamM5sZ5RJ2rxzpk3oruvnWAD8CZW5LJcYm1Ei
+h7g1r2VazlNUr4sw53KSHjnfQo3mRAg=
+=BZzm
+-----END PGP SIGNATURE-----
+
+--IWs1APhR73R7CYvv--
