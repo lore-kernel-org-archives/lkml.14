@@ -1,225 +1,173 @@
-Received: from mail-oi1-f169.google.com (mail-oi1-f169.google.com [209.85.167.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E03614A0BE
-	for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 15:16:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4518E14A0BE;
+	Thu, 22 Feb 2024 15:16:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708614988; cv=none; b=tdQ6yKvf+Sx2xAsgUZ/rf+ZPo6cF6Wj7tusLalc4x51DOH8JE/lO7sN8WjB4ocbUu1JsMxBkqfukRWJ0AR6T75RWKNifSrxMGUivMs2IoJsrURaiHN0ASI1iDtcUWlNfc5/kTZndsW90hDXN74GPUtkuvXkpJ8ErFQQMs++GIFE=
+	t=1708614996; cv=none; b=tvEkeWD680nsClwH1fjjW0kpTazADwhr5eux14MYcAhT5uzeKEdYQ8Om2o93btvCKRCFZbuzVfiieAncTcnlbBvLRUDs8X3IOu+oquhI2XT7ZJqMjrb05rUsdr0TzeHe1lKox24i0JeDPv6wi59qSnL5cGrllxU7Yt10iHZy3sQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708614988; c=relaxed/simple;
-	bh=icxcY8uc+o2IJThcPoIsSP21PpsdAb6o+f7z+Pdo2xM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=nn6JqUaalvFzqaS6hz5Ymy5HTmVFv7mR3gVha+NQo4CURsSC1Mg902k7LI9XB3pIIW0k9NYy6tK2AB8Hwkv0HDL3qNvXxOa3yXwTPzYZkHJZo7MnB6pDbctpoEYDczypQmHZf7+8rkdZZpm1yZnLpnKAJwpqh0HnylsGEEhTYao=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=oWHiGsi3; arc=none smtp.client-ip=209.85.167.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1708614996; c=relaxed/simple;
+	bh=Erf5sZKGhXHdpt7NmAUu5f1k9gVUiUwxt7974PPbzx4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ZIt7dPORLoeFLpLz3Mjc/i845fb3IJAoJe8V/1DamEX4YCAmsvL2Pov4XZDS8iCqyPGZMJI4VHtjGFddNzPY1jvbqLMswi+nkKHnlX9194rxPrW6F3zeTbfPPxLRse3lg6WMwYJXmao2j9je4GBxMxOvG1EssNtOykNagVOuvys=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=c6hMYC33; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="oWHiGsi3"
-Received: by mail-oi1-f169.google.com with SMTP id 5614622812f47-3c15d67b83cso1814779b6e.0
-        for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 07:16:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1708614985; x=1709219785; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=uOdoTYWG4356EXT02DJVT6VCmhVf4Pj9aUeOKw00wQE=;
-        b=oWHiGsi36O7i/kEQxaD6GjAk+Ik6oek+Wzv980PYR/qNnVoVnH7R5R5PlKtWD1i2n3
-         ysljFBaOeydAUSos5Ml9NR4gR1o+ezFPQiCQdtxK7mv05JzPkppODX5JWgDGqeY0lVq8
-         SS+BTH/06HXTT7f6Wcnt/lp/b+3FCOiNPDC32QJmaU9SeLLg7mi/sMS/Ep5CaPPWbzXW
-         go7cuvNouDDdGiY6t4UmFCg119OBNf/rtaV+V/z0aKMjWKGVbgqL3oseD/Wqy3N0Li8A
-         ypOgya7cDuE4VBHc2+ESkhcu08MwTSat2kV8ure6h00e3VlUKzFWbU0WM+9X5mOeFsNc
-         nkEg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708614985; x=1709219785;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=uOdoTYWG4356EXT02DJVT6VCmhVf4Pj9aUeOKw00wQE=;
-        b=o3lTAe/ofb3HbecGWZOKlh0MBqvpf09SSMg1D6Z5ImAT3qBlMfTvM59OKFBxVn17Qj
-         IQ6AY9PWZQjJNiaFH4v5NV7HyorSayCXBup9F/8RrfDtE2aL5qzjjSfTQG70ZRY3JXnI
-         +aGWKN9D6UykFRIxodxsA9eHnKv2Z1vcSNe/yw8RV0OtRx/D2pkbFFbzCAMWbEtUfRoJ
-         bbSYehjADMuc1R84R6NtVimMCQmJkRlrN+fagzqHg8DwDDHwVzODAaS5nNlTfAhFFBaU
-         cbc7Ik/CUAV1hHUvEVVReZt04K5tn45hI4zJJWwMzUS55j8HncIUqgxMr1AImSshaQ0o
-         sfsg==
-X-Forwarded-Encrypted: i=1; AJvYcCW0F0ZUjHy+8Fxf/QWiU7duiL1YDGNR/v6bD0jAS6+KEGpWrxlp7dTgnA5J/E483/MvgjBBUlIKIzc2Uy9qtZISikyDbghIGrY+2jjI
-X-Gm-Message-State: AOJu0YxJojJ2I8uYqh554p2NXDWiztpqDvFV73N1Dey3w8ygmJ5I5Zd0
-	QAU6RrysBRLebTOi/gpDTpiIV/9JaW6Bs7WcZmNczOunFAFEQi7xHCsyZLqKmCfuJ0DAONdmK3M
-	AqjpQjgQZkYC6WIkpkjiey3LU4uvwyZkcCuGBuA==
-X-Google-Smtp-Source: AGHT+IGCT330ABEop5oo+JQQNQCzzjy/J0/pVrUJRTO4UAFq1whof9j5GRM6HGVl3q5ruQnmMDsqA0wmrtK8eiuZQa0=
-X-Received: by 2002:a05:6808:1719:b0:3c0:33a6:bbfa with SMTP id
- bc25-20020a056808171900b003c033a6bbfamr23615419oib.48.1708614984711; Thu, 22
- Feb 2024 07:16:24 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="c6hMYC33"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1708614994; x=1740150994;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=Erf5sZKGhXHdpt7NmAUu5f1k9gVUiUwxt7974PPbzx4=;
+  b=c6hMYC33L41Na2DYxs7AnoGmaNYtGRE/GjXKldgZmYZl3l2cAvN7cQuP
+   0qm4Ijeyp4c1cN3pmgxn43MpjdM3Mgn1iwzWhBWQ/Sg7JPlTDEid6LCpt
+   Ejl2vx9fGU9u503LBsF/DiQTCIVOY/Brr4TlDmGNJho/E96FfobsTzjNY
+   ++20VtBUSL654LxbNXAKj4RGs+MANaZK3FGYPLkufV4apxXPGqo8JV5Lg
+   LZ95bz+UtQq3hfeltpzu3B1I+Vuxa/jIeuA5LWili20Aj+EgICa+L3+eQ
+   rrEHBCyzJkB9l03gpG5jvffLR+rQCXAmc/Xisz3FBQzjHuGIJ6LzByOrb
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10992"; a="2759534"
+X-IronPort-AV: E=Sophos;i="6.06,179,1705392000"; 
+   d="scan'208";a="2759534"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Feb 2024 07:16:34 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.06,179,1705392000"; 
+   d="scan'208";a="5461770"
+Received: from marquiz-s-2.fi.intel.com (HELO [10.237.72.58]) ([10.237.72.58])
+  by orviesa009.jf.intel.com with ESMTP; 22 Feb 2024 07:16:32 -0800
+Message-ID: <03572069-c9ab-4912-a6b1-9f9c26ae5384@linux.intel.com>
+Date: Thu, 22 Feb 2024 17:16:31 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240221125931.742034354@linuxfoundation.org>
-In-Reply-To: <20240221125931.742034354@linuxfoundation.org>
-From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Thu, 22 Feb 2024 20:46:13 +0530
-Message-ID: <CA+G9fYsch0VPsmTTfR-VN+RDZCNC4F=3WXiN9KuK2yNWTK0sMQ@mail.gmail.com>
-Subject: Re: [PATCH 4.19 000/202] 4.19.307-rc1 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: stable@vger.kernel.org, patches@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org, 
-	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org, 
-	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de, 
-	jonathanh@nvidia.com, f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, 
-	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org, allen.lkml@gmail.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: irq/51-DLL075B:01 in D state without touchpad usage, interrupts
+ increase
+To: Paul Menzel <pmenzel@molgen.mpg.de>
+Cc: linux-i2c@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+References: <9181c391-bb08-4c1e-ad27-94b8493df86d@molgen.mpg.de>
+Content-Language: en-US
+From: Jarkko Nikula <jarkko.nikula@linux.intel.com>
+In-Reply-To: <9181c391-bb08-4c1e-ad27-94b8493df86d@molgen.mpg.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Wed, 21 Feb 2024 at 18:41, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> This is the start of the stable review cycle for the 4.19.307 release.
-> There are 202 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Fri, 23 Feb 2024 12:59:02 +0000.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-=
-4.19.307-rc1.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-4.19.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
+Hi
 
-Results from Linaro=E2=80=99s test farm.
-No regressions on arm64, arm, x86_64, and i386.
+On 2/20/24 18:15, Paul Menzel wrote:
+> Dear Linux folks,
+> 
+> 
+> On a Dell XPS 13 9360 with Debian sid/unstable and Linux 6.8-rc4+ (and 
+> probably before), I sometimes notice the fan spinning up, and trying to 
+> figure out why, I noticed that `top` showed `irq/51-DLL075B:01` in state 
+> D (uninterruptible sleep (usually IO)). That is without using the 
+> touchpad. I am using an external USB keyboard and an external USB mouse.
+> 
+> 
+>      $ sudo dmesg | grep -e "DMI:" -e "Linux version" -e microcode
+>          [    0.000000] Linux version 6.8.0-rc4+ 
+> (build@bohemianrhapsody.molgen.mpg.de) (gcc (Debian 13.2.0-13) 13.2.0, 
+> GNU ld (GNU Binutils for Debian) 2.42) #25 SMP PREEMPT_DYNAMIC Sat Feb 
+> 17 05:39:03 CET 2024
+>      [    0.000000] DMI: Dell Inc. XPS 13 9360/0596KF, BIOS 2.21.0 
+> 06/02/2022
+>      [    0.367292] microcode: Current revision: 0x000000f4
+>      [    0.367293] microcode: Updated early from: 0x000000f0
+> 
+>      $ sudo dmesg | grep DLL075B
+>      [    0.967975] input: DLL075B:01 06CB:76AF Mouse as 
+> /devices/pci0000:00/0000:00:15.1/i2c_designware.1/i2c-2/i2c-DLL075B:01/0018:06CB:76AF.0001/input/input2
+>      [    0.968302] input: DLL075B:01 06CB:76AF Touchpad as 
+> /devices/pci0000:00/0000:00:15.1/i2c_designware.1/i2c-2/i2c-DLL075B:01/0018:06CB:76AF.0001/input/input3
+>      [    0.968569] hid-generic 0018:06CB:76AF.0001: input,hidraw0: I2C 
+> HID v1.00 Mouse [DLL075B:01 06CB:76AF] on i2c-DLL075B:01
+>      [   19.753775] input: DLL075B:01 06CB:76AF Mouse as 
+> /devices/pci0000:00/0000:00:15.1/i2c_designware.1/i2c-2/i2c-DLL075B:01/0018:06CB:76AF.0001/input/input17
+>      [   19.753950] input: DLL075B:01 06CB:76AF Touchpad as 
+> /devices/pci0000:00/0000:00:15.1/i2c_designware.1/i2c-2/i2c-DLL075B:01/0018:06CB:76AF.0001/input/input18
+>      [   19.754654] hid-multitouch 0018:06CB:76AF.0001: input,hidraw0: 
+> I2C HID v1.00 Mouse [DLL075B:01 06CB:76AF] on i2c-DLL075B:01
+> 
+>  From `top`:
+> 
+>      206 root     -51   0       0      0      0 D   1,7   0,0   8:45.46 
+> irq/51-DLL075B:01
+> 
+>      $ ps aux | grep 'irq/51'
+>      root         206  0.2  0.0      0     0 ?        D    Feb17  12:11 
+> [irq/51-DLL075B:01]
+> 
+> The interrupts increase though by around 610 per second (without using 
+> the device):
+> 
+>      $ for i in $(seq 1 10); do LANG= date; sudo grep -e '17:' -e '51:' 
+> /proc/interrupts; sleep 1; done
+>      Tue Feb 20 17:04:23 CET 2024
+>        17: 1631256120          0          0    6452384  IR-IO-APIC 
+> 17-fasteoi   idma64.1, i2c_designware.1
+>        51:   25255617     109943          0          0  IR-IO-APIC 
+> 51-fasteoi   DLL075B:01
+>      Tue Feb 20 17:04:27 CET 2024
+>        17: 1631295844          0          0    6452384  IR-IO-APIC 
+> 17-fasteoi   idma64.1, i2c_designware.1
+>        51:   25256229     109943          0          0  IR-IO-APIC 
+> 51-fasteoi   DLL075B:01
+>      Tue Feb 20 17:04:28 CET 2024
+>        17: 1631335618          0          0    6452384  IR-IO-APIC 
+> 17-fasteoi   idma64.1, i2c_designware.1
+>        51:   25256843     109943          0          0  IR-IO-APIC 
+> 51-fasteoi   DLL075B:01
+>      Tue Feb 20 17:04:29 CET 2024
+>        17: 1631375224          0          0    6452384  IR-IO-APIC 
+> 17-fasteoi   idma64.1, i2c_designware.1
+>        51:   25257454     109943          0          0  IR-IO-APIC 
+> 51-fasteoi   DLL075B:01
+>      Tue Feb 20 17:04:30 CET 2024
+>        17: 1631415636          0          0    6452384  IR-IO-APIC 
+> 17-fasteoi   idma64.1, i2c_designware.1
+>        51:   25258076     109943          0          0  IR-IO-APIC 
+> 51-fasteoi   DLL075B:01
+>      Tue Feb 20 17:04:31 CET 2024
+>        17: 1631455174          0          0    6452384  IR-IO-APIC 
+> 17-fasteoi   idma64.1, i2c_designware.1
+>        51:   25258687     109943          0          0  IR-IO-APIC 
+> 51-fasteoi   DLL075B:01
+>      Tue Feb 20 17:04:32 CET 2024
+>        17: 1631494990          0          0    6452384  IR-IO-APIC 
+> 17-fasteoi   idma64.1, i2c_designware.1
+>        51:   25259300     109943          0          0  IR-IO-APIC 
+> 51-fasteoi   DLL075B:01
+>      Tue Feb 20 17:04:33 CET 2024
+>        17: 1631534944          0          0    6452384  IR-IO-APIC 
+> 17-fasteoi   idma64.1, i2c_designware.1
+>        51:   25259915     109943          0          0  IR-IO-APIC 
+> 51-fasteoi   DLL075B:01
+>      Tue Feb 20 17:04:34 CET 2024
+>        17: 1631574647          0          0    6452384  IR-IO-APIC 
+> 17-fasteoi   idma64.1, i2c_designware.1
+>        51:   25260527     109943          0          0  IR-IO-APIC 
+> 51-fasteoi   DLL075B:01
+>      Tue Feb 20 17:04:35 CET 2024
+>        17: 1631613552          0          0    6452384  IR-IO-APIC 
+> 17-fasteoi   idma64.1, i2c_designware.1
+>        51:   25261130     109943          0          0  IR-IO-APIC 
+> 51-fasteoi   DLL075B:01
+> 
+> The D state increases the load average.
+> 
+> Is that the expected behavior?
+> 
+No this is not. Touchpad appears to be firing interrupt line 51 
+continuously and then drivers/hid/i2c-hid/i2c-hid-core.c: i2c_hid_irq() 
+is trying to read input from touchpad over I2C bus.
 
-Tested-by: Linux Kernel Functional Testing <lkft@linaro.org>
-
-## Build
-* kernel: 4.19.307-rc1
-* git: https://gitlab.com/Linaro/lkft/mirrors/stable/linux-stable-rc
-* git branch: linux-4.19.y
-* git commit: 05a45288956cb4f8bd2d47d10050520cddfa9063
-* git describe: v4.19.306-203-g05a45288956c
-* test details:
-https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-4.19.y/build/v4.19=
-.306-203-g05a45288956c
-
-## Test Regressions (compared to v4.19.306-165-g6d7461510b51)
-
-## Metric Regressions (compared to v4.19.306-165-g6d7461510b51)
-
-## Test Fixes (compared to v4.19.306-165-g6d7461510b51)
-
-## Metric Fixes (compared to v4.19.306-165-g6d7461510b51)
-
-## Test result summary
-total: 58627, pass: 50543, fail: 940, skip: 7095, xfail: 49
-
-## Build Summary
-* arc: 10 total, 10 passed, 0 failed
-* arm: 111 total, 105 passed, 6 failed
-* arm64: 36 total, 31 passed, 5 failed
-* i386: 21 total, 18 passed, 3 failed
-* mips: 20 total, 20 passed, 0 failed
-* parisc: 3 total, 0 passed, 3 failed
-* powerpc: 24 total, 24 passed, 0 failed
-* s390: 6 total, 6 passed, 0 failed
-* sh: 10 total, 10 passed, 0 failed
-* sparc: 6 total, 6 passed, 0 failed
-* x86_64: 31 total, 26 passed, 5 failed
-
-## Test suites summary
-* boot
-* kselftest-android
-* kselftest-breakpoints
-* kselftest-capabilities
-* kselftest-cgroup
-* kselftest-clone3
-* kselftest-core
-* kselftest-cpu-hotplug
-* kselftest-cpufreq
-* kselftest-drivers-dma-buf
-* kselftest-efivarfs
-* kselftest-filesystems
-* kselftest-filesystems-binderfs
-* kselftest-filesystems-epoll
-* kselftest-firmware
-* kselftest-fpu
-* kselftest-ftrace
-* kselftest-futex
-* kselftest-gpio
-* kselftest-ipc
-* kselftest-ir
-* kselftest-kcmp
-* kselftest-kexec
-* kselftest-lib
-* kselftest-membarrier
-* kselftest-memfd
-* kselftest-memory-hotplug
-* kselftest-mincore
-* kselftest-mm
-* kselftest-mount
-* kselftest-mqueue
-* kselftest-net
-* kselftest-net-forwarding
-* kselftest-net-mptcp
-* kselftest-netfilter
-* kselftest-nsfs
-* kselftest-openat2
-* kselftest-pid_namespace
-* kselftest-pidfd
-* kselftest-proc
-* kselftest-pstore
-* kselftest-rseq
-* kselftest-rtc
-* kselftest-seccomp
-* kselftest-sigaltstack
-* kselftest-size
-* kselftest-splice
-* kselftest-static_keys
-* kselftest-sync
-* kselftest-sysctl
-* kselftest-tc-testing
-* kselftest-timens
-* kselftest-user
-* kselftest-zram
-* kunit
-* log-parser-boot
-* log-parser-test
-* ltp-cap_bounds
-* ltp-commands
-* ltp-containers
-* ltp-controllers
-* ltp-cpuhotplug
-* ltp-crypto
-* ltp-cve
-* ltp-dio
-* ltp-fcntl-locktests
-* ltp-filecaps
-* ltp-fs
-* ltp-fs_bind
-* ltp-fs_perms_simple
-* ltp-hugetlb
-* ltp-io
-* ltp-ipc
-* ltp-math
-* ltp-mm
-* ltp-nptl
-* ltp-pty
-* ltp-sched
-* ltp-securebits
-* ltp-smoke
-* ltp-smoketest
-* ltp-syscalls
-* ltp-tracing
-* rcutorture
-
---
-Linaro LKFT
-https://lkft.linaro.org
+Not sure is this HW failure or system FW error (there are bad ACPI 
+tables out there misconfiguring things etc).
