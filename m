@@ -1,147 +1,164 @@
-Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out30-98.freemail.mail.aliyun.com (out30-98.freemail.mail.aliyun.com [115.124.30.98])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10791134D1;
-	Fri, 23 Feb 2024 07:12:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B56AC12B98;
+	Fri, 23 Feb 2024 07:19:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.98
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708672343; cv=none; b=UUpsqC6XiiS1LYzg0zNC0JdLHuGo8T73eyxGAV7oZ+I9t0ZkpjMb9xt9zR2YooTSJ138mc69tijeUf7Wh/tBn6wAWLJy0xJt6hF1NMbxpWnnkCyXFD+s/YCMTQyA/NhkCFw4IH7ylYS5iypFKSY08XoUcdqd5nTugt3VabsCbdc=
+	t=1708672743; cv=none; b=awBkO0H+by/0vIFkMt7FOXBt3SRoE2xp+7z7hgTYvkaKqDOLl88Y8xKoeF0I7JWx6p7GuBAG44msxW+ukDRqVj8wAOlG/16EbLBNCvqtzC1ySu51sLGvj70kVyfq0jUrst8m+UdmR9/uu7A7RtUW+ac1I1C4RYEozQManEapXzE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708672343; c=relaxed/simple;
-	bh=euV3Flsf99oKeUKttYEXVxgR56sxpAk7m4tJQ5C4w54=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=UldeoLB78VLC3IepSozinlZZsMeaVihQontBiuVjOru/xYkZ+L1kal7TU8cmgWctU1xFZ96X9bbm4Y24LdUO0hSWKPQExJbMWjF0Msk9m793UKjvphx+oUhDgBlPIOKFVJ8e9KYxAqAmLTy3Z/Wdxr5D6nJZG9w8OIXrDhJP7j8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.210.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-6e45bd5014dso223569b3a.1;
-        Thu, 22 Feb 2024 23:12:21 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708672341; x=1709277141;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=R1/oy7XlfxqEsqkzmdhnzCfKVnHYh7+xgUlJxwYGD9g=;
-        b=O4KvCWIY+t5D6YW89hqeHetQWJ8/BmFJ2MYwxkQvvJNSCCq7R6fg5sVxxGdM7Aw2H5
-         oivQvtoBgRxd1KUQaIFF3arBLnZoyjdAkVu1D3N3PMzlYRCyxObCcjE6eHWoE+B6AH+l
-         FzZVaZUboWQlaBhLrQqY6uiRSdQvQ81xED/Styi4E3f2IEENtCydc0qpSDWtVUDdgw/t
-         HpL/ALgXVpPFnYliGNzmJC6Oy4BWRfCGNjUUB1n76A1tV9eU+4C2oYdvEBGQbUYMbcs2
-         gSDNJs34ukClOozZDoGxc4OmpV6CEhOB8X7pNE369+JNM2bKYR6DDF/Ij9VO6m7YdSlA
-         apPg==
-X-Forwarded-Encrypted: i=1; AJvYcCV2ag02dfJvx14UNrQa01D4BFRFEUGhh7kKUVcn44DPWSO53qIn5xVT7mVfOrbLGOvcmfBx63xcXR/1PgnKqXC0tWy0asbrsN2idLBan/7fvy2vd0byAuu0FeERcg6k2w7gSqtNbS4yIG+nLJ/Ulw==
-X-Gm-Message-State: AOJu0YzofEJxDet37cudrDv7lpCKSn9db8mTRl9S0k6U4FEkiQ+/VnEc
-	aotFopn+CZu5QHiCrWFLBTI8bCdPPsUUEVUpxbxHVjz3ShDkKKP/RXWFMumPrZLxui9joBjS8b6
-	u+s4Nqdpmwm9mCzaZmMB6wHuZBIygFbRc
-X-Google-Smtp-Source: AGHT+IEforQ2SGC2OG7bnanDl/MQmLhCpn3pZiGTnH73P8oXC/479csrdfRM55HOSMkzoFpAviFyvLaHBATwYkrf5C8=
-X-Received: by 2002:a17:90a:9dc2:b0:29a:827d:e805 with SMTP id
- x2-20020a17090a9dc200b0029a827de805mr224644pjv.34.1708672341348; Thu, 22 Feb
- 2024 23:12:21 -0800 (PST)
+	s=arc-20240116; t=1708672743; c=relaxed/simple;
+	bh=QW2Jy1OctnU/UI4pLF3wh2qArPJD2CkQk7fnI3qttQY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Wa/2j5Afz3fTp4ahOWth+WWz4OeNK+RwsIA87yj9SXIyLunyE2uwqMg+GBlmgXCiSnIzlgCfJTwEJP1b3MKXZHJ2d2r0bzkX8uIuQ1fTvwwyQsZDuroBSjFQBhpJH/ryJfmXXMFIiEsBuoQzoLrNOBigLcCSaZSHIMNIfNrkST8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=A+Pah8dO; arc=none smtp.client-ip=115.124.30.98
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="A+Pah8dO"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1708672733; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=4R2wwRGv9r0ABt36T9MYvpDosxNOFhHAa6Gib5GsXfA=;
+	b=A+Pah8dOONowtv+jy55rnPZghER9WvTEo74iQ229R4YEa7EAEXZrHwZfiNPHg0dQjKJP+UBnE8tSUi11zV+rvbMk7Z8FnrtHajbYV23fU1gX89eOsVKEnPaYo7vs2lCR/lJ3T/nY83SElIll9H5my+At98WX5HeWYQ7b61e2kO8=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R801e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045168;MF=yaoma@linux.alibaba.com;NM=1;PH=DS;RN=16;SR=0;TI=SMTPD_---0W13KKaF_1708672729;
+Received: from 30.178.67.167(mailfrom:yaoma@linux.alibaba.com fp:SMTPD_---0W13KKaF_1708672729)
+          by smtp.aliyun-inc.com;
+          Fri, 23 Feb 2024 15:18:51 +0800
+Message-ID: <3f4b7dbe-93c1-4cb0-8233-18e8432409f8@linux.alibaba.com>
+Date: Fri, 23 Feb 2024 15:18:48 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240117215101.77713-1-ilkka@os.amperecomputing.com> <d77856e0-50e8-b7b4-734-93be3447ed73@os.amperecomputing.com>
-In-Reply-To: <d77856e0-50e8-b7b4-734-93be3447ed73@os.amperecomputing.com>
-From: Namhyung Kim <namhyung@kernel.org>
-Date: Thu, 22 Feb 2024 23:12:09 -0800
-Message-ID: <CAM9d7cibn7ygfZoHCMNJF0DvRNw4dcyBHSbF0Jm20BaEoQbC=Q@mail.gmail.com>
-Subject: Re: [PATCH v3] perf data convert: Fix segfault when converting to
- json on arm64
-To: Ilkka Koskinen <ilkka@os.amperecomputing.com>
-Cc: James Clark <james.clark@arm.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Evgeny Pistun <kotborealis@awooo.ru>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCHv9 2/3] irq: use a struct for the kstat_irqs in the
+ interrupt descriptor
+Content-Language: en-US
+To: Thomas Gleixner <tglx@linutronix.de>, dianders@chromium.org,
+ akpm@linux-foundation.org, liusong@linux.alibaba.com, pmladek@suse.com,
+ kernelfans@gmail.com, deller@gmx.de, npiggin@gmail.com,
+ tsbogend@alpha.franken.de, James.Bottomley@HansenPartnership.com,
+ jan.kiszka@siemens.com
+Cc: linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
+ linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+ yaoma@linux.alibaba.com
+References: <20240222093420.13956-1-yaoma@linux.alibaba.com>
+ <20240222093420.13956-3-yaoma@linux.alibaba.com> <87jzmwfxak.ffs@tglx>
+From: Bitao Hu <yaoma@linux.alibaba.com>
+In-Reply-To: <87jzmwfxak.ffs@tglx>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hello,
+Hi,
 
-On Thu, Feb 22, 2024 at 1:42=E2=80=AFPM Ilkka Koskinen
-<ilkka@os.amperecomputing.com> wrote:
->
->
-> cc: Evgeny Pistun since he submitted a patch pretty similar to my first
-> version
-> (https://lore.kernel.org/all/20240125184411.30757-1-kotborealis@awooo.ru/=
-)
->
->
->
-> Namhyung and James,
->
-> What's your thought on this? Is one of the patches (Evgeny's or mine)
-> good enough or should we try some other approach?
+On 2024/2/22 21:22, Thomas Gleixner wrote:
+> On Thu, Feb 22 2024 at 17:34, Bitao Hu wrote:
+> 
+> First of all the subsystem prefix is 'genirq:'. 'git log kernel/irq/'
+> gives you a pretty good hint. It's documented....
+> 
+> Secondly the subject line does not match what this patch is about. It's
+> not about using a struct, it's about providing a snapshot mechanism, no?
+> 
+>> The current implementation uses an int for the kstat_irqs in the
+>> interrupt descriptor.
+>>
+>> However, we need to know the number of interrupts which happened
+>> since softlockup detection took a snapshot in order to analyze
+>> the problem caused by an interrupt storm.
+>>
+>> Replacing an int with a struct and providing sensible interfaces
+>> for the watchdog code can keep it self contained to the interrupt
+>> core code.
+> 
+> So something like this makes a useful change log for this:
+> 
+>   Subject: genirq: Provide a snapshot mechanism for interrupt statistics
+> 
+>   The soft lockup detector lacks a mechanism to identify interrupt storms
+>   as root cause of a lockup. To enable this the detector needs a
+>   mechanism to snapshot the interrupt count statistics on a CPU when the
+>   detector observes a potential lockup scenario and compare that against
+>   the interrupt count when it warns about the lockup later on. The number
+>   of interrupts in that period give a hint whether the lockup might be
+>   caused by an interrupt storm.
+> 
+>   Instead of having extra storage in the lockup detector and accessing
+>   the internals of the interrupt descriptor directly, convert the per CPU
+>   irq_desc::kstat_irq member to a data structure which contains the
+>   counter plus a snapshot member and provide interfaces to take a
+>   snapshot of all interrupts on the current CPU and to retrieve the delta
+>   of a specific interrupt later on.
+> 
+Thanks, the changelog you wrote very clearly articulates the purpose of
+this patch.
 
-Sorry for the long delay.  Please see my comments below.
+> Hmm?
+> 
+>> Signed-off-by: Bitao Hu <yaoma@linux.alibaba.com>
+> 
+> Interesting. You fully authored the patch?
+> 
+> That's not how it works. You cannot take work from others and claim that
+> it is yours. The minimal courtesy is to add a 'Originally-by:' tag.
+> 
+I'm very sorry, the majority of this patch is your work, I will add an
+'Originally-by:' tag.
 
->
->
-> On Wed, 17 Jan 2024, Ilkka Koskinen wrote:
-> > Arm64 doesn't have Model in /proc/cpuinfo and, thus, cpu_desc doesn't g=
-et
-> > assigned.
-> >
-> > Running
-> >       $ perf data convert --to-json perf.data.json
-> >
-> > ends up calling output_json_string() with NULL pointer, which causes a
-> > segmentation fault.
-> >
-> > Signed-off-by: Ilkka Koskinen <ilkka@os.amperecomputing.com>
-> > ---
-> > v1:
-> >    - https://lore.kernel.org/all/20240111232923.8138-1-ilkka@os.amperec=
-omputing.com/
-> > v2:
-> >    - Changed the patch based on James's comments.
-> > v3:
-> >    - The architecture is checked from the actual data file to allow one=
- to do
-> >      conversion on another system. (thanks to James for the feedback)
-> > ---
-> > tools/perf/util/data-convert-json.c | 8 +++++++-
-> > 1 file changed, 7 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/tools/perf/util/data-convert-json.c b/tools/perf/util/data=
--convert-json.c
-> > index 5bb3c2ba95ca..405c38371870 100644
-> > --- a/tools/perf/util/data-convert-json.c
-> > +++ b/tools/perf/util/data-convert-json.c
-> > @@ -284,7 +284,13 @@ static void output_headers(struct perf_session *se=
-ssion, struct convert_json *c)
-> >       output_json_key_string(out, true, 2, "os-release", header->env.os=
-_release);
-> >       output_json_key_string(out, true, 2, "arch", header->env.arch);
-> >
-> > -     output_json_key_string(out, true, 2, "cpu-desc", header->env.cpu_=
-desc);
-> > +     /*
-> > +      * Arm64 doesn't have Model section in /proc/cpuinfo and, thus, c=
-pu-desc
-> > +      * is not set.
-> > +      */
-> > +     if (strncmp(header->env.arch, "aarch64", 7))
-> > +             output_json_key_string(out, true, 2, "cpu-desc", header->=
-env.cpu_desc);
+>> diff --git a/kernel/irq/proc.c b/kernel/irq/proc.c
+>> index 623b8136e9af..3ad40cf30c66 100644
+>> --- a/kernel/irq/proc.c
+>> +++ b/kernel/irq/proc.c
+>> @@ -488,18 +488,15 @@ int show_interrupts(struct seq_file *p, void *v)
+>>   	if (!desc || irq_settings_is_hidden(desc))
+>>   		goto outsparse;
+>>   
+>> -	if (desc->kstat_irqs) {
+>> -		for_each_online_cpu(j)
+>> -			any_count |= data_race(*per_cpu_ptr(desc->kstat_irqs, j));
+>> -	}
+>> +	if (desc->kstat_irqs)
+>> +		any_count = data_race(desc->tot_count);
+> 
+> This is an unrelated change and needs to be split out into a separate
+> patch with a proper changelog which explains why this is equivalent.
+> 
 
-I prefer checking cpu_desc (if it's NULL) not the arch string.
-Maybe other arch has the same problem or can introduce one later..
+Alright, I will remove this change witch is not related to the purpose
+of this patch.
 
-Thanks,
-Namhyung
+I guess that the purpose of suggesting this change in your V1 response
+was to speedup the 'show_interrupts'. However, after reviewing the
+usage of 'desc->tot_count' in 'unsigned int kstat_irqs(unsigned int 
+irq)', I think the change might be as follows:
 
-> > +
-> >       output_json_key_string(out, true, 2, "cpuid", header->env.cpuid);
-> >       output_json_key_format(out, true, 2, "nrcpus-online", "%u", heade=
-r->env.nr_cpus_online);
-> >       output_json_key_format(out, true, 2, "nrcpus-avail", "%u", header=
-->env.nr_cpus_avail);
-> > --
-> > 2.43.0
-> >
-> >
+diff --git a/kernel/irq/proc.c b/kernel/irq/proc.c
+index 623b8136e9af..53b8d6edd7ac 100644
+--- a/kernel/irq/proc.c
++++ b/kernel/irq/proc.c
+@@ -489,8 +489,13 @@ int show_interrupts(struct seq_file *p, void *v)
+                 goto outsparse;
+
+         if (desc->kstat_irqs) {
+-               for_each_online_cpu(j)
+-                       any_count |= 
+data_race(per_cpu(desc->kstat_irqs->cnt, j));
++               if (!irq_settings_is_per_cpu_devid(desc) &&
++                   !irq_settings_is_per_cpu(desc) &&
++                   !irq_is_nmi(desc))
++                       any_count = data_race(desc->tot_count);
++               else
++                       for_each_online_cpu(j)
++                               any_count |= 
+data_race(per_cpu(desc->kstat_irqs->cnt, j));
+         }
+
+         if ((!desc->action || irq_desc_is_chained(desc)) && !any_count)
+
+Is my idea correct?
+
+Best Regards,
+	Bitao
