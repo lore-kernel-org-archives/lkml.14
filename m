@@ -1,174 +1,85 @@
-Received: from out162-62-58-216.mail.qq.com (out162-62-58-216.mail.qq.com [162.62.58.216])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4D2711714
-	for <linux-kernel@vger.kernel.org>; Fri, 23 Feb 2024 05:17:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.58.216
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C828101C1
+	for <linux-kernel@vger.kernel.org>; Fri, 23 Feb 2024 05:19:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708665481; cv=none; b=A7V/fQfY7WB2WvXDTvUbeds3f6rl9uVzLxTHS0XCqJWuAdtFnBdhwjbkk1uWVe2hX+IvyF7EAE3sIociFZQX78y7lM6lEG6XZeuZCyJRs2J5ikJFLtEgDOpDC7zQXb5RYakeYU6iUf/pAd7xKNcoqXwpYB3OGUSpuI/IY2WQLe4=
+	t=1708665543; cv=none; b=N4rXu38PNIzjaxC4Fa4eoW0H5BYZQeKGn9nWgCLFo312QX2BVKljM4JJ633dv+IjcuQN5K4I1SDZWqP8cQi1Bwv0W493gLYFw9AO9wOQ4QCz7BnsrSVJTKs7ghjStTsCh2uKtPQUfEYCA4MOhuCkbNAxlczXrHCjBKhkMyHuxIE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708665481; c=relaxed/simple;
-	bh=X/W5DwQO7kT7FYswAnD6pfP/r7ijSZmYe1K+mAC1F3g=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qLDrczYW7JrM2v8bZr2pyLV1iRkuCcD+Jp1hsng55bTbwLzVPx46d3vCji3XoTz9cECGZQDKUQN6pN1lJ0xy+sx0k5c1X0GlTxVLADUtvWI+NbFZgDECSgcm1M/QlezB7QL7v66v8zEw73F8bHqqsYhv/nRzndVgo/dT9z2VyOs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com; spf=pass smtp.mailfrom=foxmail.com; dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b=bNtK8dMH; arc=none smtp.client-ip=162.62.58.216
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foxmail.com
+	s=arc-20240116; t=1708665543; c=relaxed/simple;
+	bh=H2XeO8lmUCg3AbvczavG13/6CA2n5O1kZYTojrAKZco=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Q7jb8eYllITkpyB3+BqgxIa1IEsxV1ALfuE7iyrYCCTufNTrlxpDs40TVITH2TXsaV4gU/o49L6gerFuOAAB0HE8ipiZbAzFSuMnZXlsQECrwcHsmG5CIDw+HXFRJcu1jvrYnCjn2Kr7D52UGjF9OHgAFjYyju4Rj7Dg1WOeN9o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BU23r05Q; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b="bNtK8dMH"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foxmail.com;
-	s=s201512; t=1708665474;
-	bh=7BRUNUShwwd1gbD7m9jCq76qqkjH47dO+405L2MFVRA=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=bNtK8dMHNaXcKCTyoO7tQhbCTNJyzuSHUkjYup3CG4erhViR/Y6RJOUqMvxCtnPZR
-	 dxwBo1fn+8CcaX6kIp74+/rpT5Ekj5Ah/v0bLFFwxTFvzWVgQwpCmgWPfOiB2sM0S5
-	 3lOvwRiexXE+6ChQ2Hax0E+NYJVDfEtPW62dbHnE=
-Received: from [IPV6:2409:8961:2a00:95cb:ea24:ca0f:4466:39d5] ([2409:8961:2a00:95cb:ea24:ca0f:4466:39d5])
-	by newxmesmtplogicsvrsza10-0.qq.com (NewEsmtp) with SMTP
-	id 4731E03F; Fri, 23 Feb 2024 13:17:51 +0800
-X-QQ-mid: xmsmtpt1708665471ta754ocoi
-Message-ID: <tencent_92BA1C33B05FC533465532B55650E4645106@qq.com>
-X-QQ-XMAILINFO: NyTsQ4JOu2J2nQUV7WtK8TK7JidjFHCKiemiGG1RIe+Sce/bIdazkayQW/jwVt
-	 0esl/eyHmqiuP9zpuflDaPwEeEVtqHDvLHjyefZiNAeVy53ZhaYqA2P/FEWRjQSBa2/iPZrM1ffY
-	 pJq3uUMG82q899oZtEWtGbarmLgXcKT1vf0Fh+vNCPHegm17mRw4VGuffXNMuwanHDes70Fxu+ZF
-	 9P6h/3elX3h4CAdXHuZL0N6plFOsVn0BlXejPbkFq7PMegOMDjByRfXq08Lo/ymmO5/gsCxvNpEJ
-	 tuWvAFcArQg506f4qBb6s+DLglc2YDDve2j1BMl/RGIosqhGI90lt3WK47iwrtA6UITrvPe8+0NB
-	 F0L40+BbARcMRD7Zz+bUvUaZDtQyXQWg9X8XRYrJRtraIWZvGfPXsIx5dZxXnRJVP+UStXYM/8L0
-	 MQh7b8SCGju1iasYL87rAgGeCSAAq2yoMWRkn9I1yc1JRk9dkpcqi7KHkUrflLFSwfrPnzGfPz0T
-	 JAtg8LK2uu7SPZ62P7Pdj/hTnXCE82ldu3cE6Wpx3OuJRq/0AwIO/yW51tU3B+Pqg2ySoZWNRf7a
-	 +jHd5whRLc796u59oGF79Abr9lqzTOI7g+ZujBw9gznMBogP6u/sOwc0umXzs9luiXKRMElRsazJ
-	 7H3YTT6DdScJlWqKhfEecn2etI7JLjGk7ar0ib9GcUcbHsys8F4yEYahLfShk/pGByGkXy3ELy+g
-	 VuBrNBwwfzt+wjTVcG04fgSxeu9NqfWhi+HqPT307nI6P498GQsZ8yxF4aQOp6w9khfJ5IiPhcNq
-	 ovwE/dCjfW8NynyowNQR4Km4VQQJYqkDafUsEeAVEEXP4FXSO6tM7I4OeNqOV20//7N7qXSDvA4w
-	 r6nEkS7shmsA5/uJtvwcnfkInMkT/Z8y/sEf94Kv2TBWwvWdx8nMIUbOpBFuwldCgIaxRP9mfP5O
-	 FeFghsVoPZwF43YuzJHWGUIVHE5535HKCMkxYHuNU3jNZlYbethyjr08wzPStARaKD559KbtjF75
-	 ZjVTA8CENmv5cEWMJtmUnhVK5ovpttSaFhEfjzXu87hTB6eB+k
-X-QQ-XMRINFO: MSVp+SPm3vtS1Vd6Y4Mggwc=
-X-OQ-MSGID: <acaf7b2f-c510-49be-fdb8-ca540af445f8@foxmail.com>
-Date: Fri, 23 Feb 2024 13:17:50 +0800
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BU23r05Q"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1708665542; x=1740201542;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=H2XeO8lmUCg3AbvczavG13/6CA2n5O1kZYTojrAKZco=;
+  b=BU23r05QaL7dyECVIrKCXF2p3b3k3eY0vwr5C2jKshAWOgGvQVMsm3HS
+   B6lnTAR8oXCKrrka1SidiqJpsr2ATld+KTYZHDmPPGPnVcNEOV9/DAWID
+   W65x71gaHkYj09TRXQUv1BOmuiH5CHh8nqtJLO0CSCxXux+BhUTn1E3o2
+   UsmgH0hyE1C2k2U0F5cfxgblshifk/mIigALEd5IZrAKTW84q3zWiCndL
+   tEblw0Gzad0U4wV1SzK+Y3kjQq4B2gOYVCa7GITVl6f+721jMkT7lDoh8
+   eyuuKoSuMSoBWxFauQAIATpcj5R0Tn/ZZtDnuCjQ4sxoJkEcb8VAsreGu
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10992"; a="28395427"
+X-IronPort-AV: E=Sophos;i="6.06,179,1705392000"; 
+   d="scan'208";a="28395427"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Feb 2024 21:19:01 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.06,179,1705392000"; 
+   d="scan'208";a="5999886"
+Received: from allen-box.sh.intel.com ([10.239.159.127])
+  by fmviesa006.fm.intel.com with ESMTP; 22 Feb 2024 21:18:59 -0800
+From: Lu Baolu <baolu.lu@linux.intel.com>
+To: Joerg Roedel <joro@8bytes.org>,
+	Will Deacon <will@kernel.org>,
+	Robin Murphy <robin.murphy@arm.com>,
+	Jason Gunthorpe <jgg@ziepe.ca>,
+	Kevin Tian <kevin.tian@intel.com>,
+	Eric Badger <ebadger@purestorage.com>
+Cc: iommu@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	Lu Baolu <baolu.lu@linux.intel.com>
+Subject: [PATCH 0/2] iommu: Fix domain check on device release
+Date: Fri, 23 Feb 2024 13:13:00 +0800
+Message-Id: <20240223051302.177596-1-baolu.lu@linux.intel.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-Subject: Re: [PATCH 1/2] exit: add a tracepoint for profiling a task that is
- starting to exit
-Content-Language: en-US
-To: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Ingo Molnar <mingo@kernel.org>
-Cc: Oleg Nesterov <oleg@redhat.com>, Mel Gorman
- <mgorman@techsingularity.net>, Peter Zijlstra <peterz@infradead.org>,
- linux-kernel@vger.kernel.org
-References: <tencent_09CF49556CD442411A93D0E92ACC2B7E5D08@qq.com>
- <c411eda5-5378-4511-bea3-d1566174c8c7@efficios.com>
-From: Wen Yang <wenyang.linux@foxmail.com>
-In-Reply-To: <c411eda5-5378-4511-bea3-d1566174c8c7@efficios.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
+This is a follow-up to the discussion thread here:
 
+https://lore.kernel.org/linux-iommu/20240221154012.GC13491@ziepe.ca/
 
-On 2024/2/23 00:25, Mathieu Desnoyers wrote:
-> On 2024-02-22 11:04, wenyang.linux@foxmail.com wrote:
->> From: Wen Yang <wenyang.linux@foxmail.com>
->>
->> Currently coredump_task_exit() takes some time to wait for the generation
->> of the dump file. But if the user-space wants to receive a notification
->> as soon as possible it maybe inconvenient.
->>
->> Commit 2d4bcf886e42 ("exit: Remove profile_task_exit & profile_munmap")
->> simplified the code, but also removed profile_task_exit(), which may
->> prevent third-party kernel modules from detecting process exits timely.
->>
->> Add the new trace_sched_profile_task_exit() this way a user-space monitor
->> could detect the exits and potentially make some preparations in advance.
-> 
-> I don't see any explanation justifying adding an extra tracepoint
-> rather than just moving trace_sched_process_exit() earlier in do_exit().
-> 
-> Why is moving trace_sched_process_exit() earlier in do_exit() an issue,
-> considering that any tracer interested in knowing the point where a task
-> is really reclaimed (from zombie state) is trace_sched_process_free()
-> called from delayed_put_task_struct() ?
-> 
-> Thanks,
-> 
-> Mathieu
-> 
+It fixes a NULL pointer reference in the Intel iommu driver and
+strengthens the iommu core to possibly prevent similar failures in other
+iommu drivers.
 
-Thanks.
-We will make the modifications according to your suggestions.
+Best regards,
+baolu
 
---
-Best wishes,
-Wen
+Lu Baolu (2):
+  iommu: Add static iommu_ops->release_domain
+  iommu/vt-d: Fix NULL domain on device release
 
->>
->> Signed-off-by: Wen Yang <wenyang.linux@foxmail.com>
->> Cc: Oleg Nesterov <oleg@redhat.com>
->> Cc: Steven Rostedt <rostedt@goodmis.org>
->> Cc: Masami Hiramatsu <mhiramat@kernel.org>
->> Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
->> Cc: Ingo Molnar <mingo@kernel.org>
->> Cc: Mel Gorman <mgorman@techsingularity.net>
->> Cc: Peter Zijlstra <peterz@infradead.org>
->> Cc: linux-kernel@vger.kernel.org
->> ---
->>   include/trace/events/sched.h | 28 ++++++++++++++++++++++++++++
->>   kernel/exit.c                |  1 +
->>   2 files changed, 29 insertions(+)
->>
->> diff --git a/include/trace/events/sched.h b/include/trace/events/sched.h
->> index dbb01b4b7451..750b2f0bdf69 100644
->> --- a/include/trace/events/sched.h
->> +++ b/include/trace/events/sched.h
->> @@ -341,6 +341,34 @@ DEFINE_EVENT(sched_process_template, 
->> sched_wait_task,
->>       TP_PROTO(struct task_struct *p),
->>       TP_ARGS(p));
->> +/*
->> + * Tracepoint for profiling a task that is starting to exit:
->> + */
->> +TRACE_EVENT(sched_profile_task_exit,
->> +
->> +    TP_PROTO(struct task_struct *task, long code),
->> +
->> +    TP_ARGS(task, code),
->> +
->> +    TP_STRUCT__entry(
->> +        __array(    char,    comm,    TASK_COMM_LEN    )
->> +        __field(    pid_t,    pid            )
->> +        __field(    int,    prio            )
->> +        __field(    long,    code            )
->> +    ),
->> +
->> +    TP_fast_assign(
->> +        memcpy(__entry->comm, task->comm, TASK_COMM_LEN);
->> +        __entry->pid        = task->pid;
->> +        __entry->prio        = task->prio;
->> +        __entry->code        = code;
->> +    ),
->> +
->> +    TP_printk("comm=%s pid=%d prio=%d exit_code=0x%lx",
->> +          __entry->comm, __entry->pid, __entry->prio,
->> +          __entry->code)
->> +);
->> +
->>   /*
->>    * Tracepoint for a waiting task:
->>    */
->> diff --git a/kernel/exit.c b/kernel/exit.c
->> index 493647fd7c07..f675f879a1b2 100644
->> --- a/kernel/exit.c
->> +++ b/kernel/exit.c
->> @@ -826,6 +826,7 @@ void __noreturn do_exit(long code)
->>       WARN_ON(tsk->plug);
->> +    trace_sched_profile_task_exit(tsk, code);
->>       kcov_task_exit(tsk);
->>       kmsan_task_exit(tsk);
-> 
+ include/linux/iommu.h       |  1 +
+ drivers/iommu/intel/iommu.c | 26 +-------------------------
+ drivers/iommu/iommu.c       | 12 ++++++++++++
+ 3 files changed, 14 insertions(+), 25 deletions(-)
+
+-- 
+2.34.1
 
