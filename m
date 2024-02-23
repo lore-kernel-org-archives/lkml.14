@@ -1,77 +1,51 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from gentwo.org (gentwo.org [62.72.0.81])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78A17DDB1;
-	Fri, 23 Feb 2024 03:10:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 302B0C2C4
+	for <linux-kernel@vger.kernel.org>; Fri, 23 Feb 2024 03:11:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.72.0.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708657827; cv=none; b=mSkBr0cAwNoFS9T2nGrTcKGmuaVw0hwA2s/tO7ViUMitWw3nazKKDqA3PATXATZoiPAESIjj9JH9hnm8UYW1zzpVtM7rd9gi6o77e6kdmhS/rWWlfAN7ELZ6sjgB89qv026Nc9jR5MHA6eBExtaQqPc0SWAGesH9R9cwSJhDEcs=
+	t=1708657873; cv=none; b=GJTcgGOij1s9u76+K4gXNFpNuZNueWsUEnyiRzAImG9iQLOOxH1BD/hFtdiB8uce/RK6s3S/RMOpOlI0A3VP0OrpQgXhT/njaL1WUrlZiy0voKNwFN/A+PiaZy+s7FaEOxqGuH2JWkXZzpaVYxNlyY776QEZ32/Yq28OTykyThk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708657827; c=relaxed/simple;
-	bh=Ultwqvcq0n9E64Qm0Fs/sVhHWX2pgxkPlYGksBDhg5Y=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=hbsLGJFTNBmEwmoZqemkZeM77ERO4vMh3ITYTCnp9pOSihRgbDs9wMqariab6iGk4TPyvEs4NUSYzNf/iHOI2YORK2MsVRkfQganhWSDnavlB93GdlPW4gxANnPJHDxMYi7pvpfoRuSjgqKqhkkLugKNFmCuntPgIn3KaUXmpo8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W8Ht98pZ; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W8Ht98pZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 162E2C43142;
-	Fri, 23 Feb 2024 03:10:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708657827;
-	bh=Ultwqvcq0n9E64Qm0Fs/sVhHWX2pgxkPlYGksBDhg5Y=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=W8Ht98pZdGZBEStFd3TvJw8bIaLW7h87cqmaJAhKMtwzhen+a/8hTJ+YN2jTGGYpU
-	 tVaZ0x/oEb1amGLndOKXpe+YxdOHrVof0s1+lgcWhP7Rqra+6SsFOAMo+9IdPSSmcB
-	 qyspMcnogSosz9BzLula8aKB3Vlhs2kgJX4EQSiecmfyvg0yCQFH/FtOsZUEiskOoR
-	 fImZnEKwaj0j+oKYuP1PIeBOIhXojYKO0l8OtCmvwVdLv7y3fURktZ/peJSf4avfGs
-	 e0TIrEWq+GzgnKjt42zRNKHJ7KDzy+Im4Hn7oLn4egCWjZ52ZMm5A6JGuwhh1weWdO
-	 HuG2v07nV53EQ==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id EC457D84BC0;
-	Fri, 23 Feb 2024 03:10:26 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	s=arc-20240116; t=1708657873; c=relaxed/simple;
+	bh=B6x7M7JVh+smHCLEe58/rOR0eGKmDzIpuoOKG5lhbbE=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=m6SsJ35LjhArWRdDCbnaCrs4PsdYmYmpyEtphTVsss/uuOE8MJyzDv9aA1Wf6mPe/YQuqTn8jeFWkC518u4zfzPNyoe9KS8xX4GKQfRK1HbY5mMjDSLWnrfAs8r4twsdcwhCj+UkAWaYZvKAt/UQ8e2Q/9IOQGVjKAakySCfTOA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=fail smtp.mailfrom=linux.com; arc=none smtp.client-ip=62.72.0.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=linux.com
+Received: by gentwo.org (Postfix, from userid 1003)
+	id 13F5840AA8; Thu, 22 Feb 2024 19:02:58 -0800 (PST)
+Received: from localhost (localhost [127.0.0.1])
+	by gentwo.org (Postfix) with ESMTP id 1321A40788;
+	Thu, 22 Feb 2024 19:02:58 -0800 (PST)
+Date: Thu, 22 Feb 2024 19:02:58 -0800 (PST)
+From: "Christoph Lameter (Ampere)" <cl@linux.com>
+To: Chengming Zhou <chengming.zhou@linux.dev>
+cc: Vlastimil Babka <vbabka@suse.cz>, David Rientjes <rientjes@google.com>, 
+    Jianfeng Wang <jianfeng.w.wang@oracle.com>, penberg@kernel.org, 
+    iamjoonsoo.kim@lge.com, akpm@linux-foundation.org, 
+    roman.gushchin@linux.dev, 42.hyeyoo@gmail.com, linux-mm@kvack.org, 
+    linux-kernel@vger.kernel.org, Chengming Zhou <zhouchengming@bytedance.com>
+Subject: Re: [PATCH] slub: avoid scanning all partial slabs in
+ get_slabinfo()
+In-Reply-To: <55ccc92a-79fa-42d2-97d8-b514cf00823b@linux.dev>
+Message-ID: <6daf88a2-84c2-5ba4-853c-c38cca4a03cb@linux.com>
+References: <20240215211457.32172-1-jianfeng.w.wang@oracle.com> <6b58d81f-8e8f-3732-a5d4-40eece75013b@google.com> <fee76a21-fbc5-4ad8-b4bf-ba8a8e7cee8f@suse.cz> <55ccc92a-79fa-42d2-97d8-b514cf00823b@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH] [net-next] octeon_ep_vf: Improve help text grammar
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <170865782696.16544.7241037943109179618.git-patchwork-notify@kernel.org>
-Date: Fri, 23 Feb 2024 03:10:26 +0000
-References: <b3b97462c3d9eba2ec03dd6d597e63bf49a7365a.1708512706.git.geert+renesas@glider.be>
-In-Reply-To: <b3b97462c3d9eba2ec03dd6d597e63bf49a7365a.1708512706.git.geert+renesas@glider.be>
-To: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: vburru@marvell.com, sedara@marvell.com, srasheed@marvell.com,
- sburla@marvell.com, davem@davemloft.net, edumazet@google.com,
- kuba@kernel.org, pabeni@redhat.com, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=US-ASCII; format=flowed
 
-Hello:
+On Thu, 22 Feb 2024, Chengming Zhou wrote:
 
-This patch was applied to netdev/net-next.git (main)
-by Jakub Kicinski <kuba@kernel.org>:
+> Anyway, I put the code below for discussion...
 
-On Wed, 21 Feb 2024 11:52:41 +0100 you wrote:
-> Add missing articles.
-> Fix plural vs. singular.
-> Fix present vs. future.
-> 
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> ---
->  drivers/net/ethernet/marvell/octeon_ep_vf/Kconfig | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
+Can we guestimate the free objects based on the number of partial slabs. 
+That number is available.
 
-Here is the summary with links:
-  - [net-next] octeon_ep_vf: Improve help text grammar
-    https://git.kernel.org/netdev/net-next/c/bcc115760ff3
-
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
-
+How accurate need the accounting be? We also have fuzzy accounting in the 
+VM counters.
