@@ -1,124 +1,215 @@
-Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
+Received: from EUR02-AM0-obe.outbound.protection.outlook.com (mail-am0eur02on2052.outbound.protection.outlook.com [40.107.247.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C8BF12E5E;
-	Fri, 23 Feb 2024 07:04:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708671850; cv=none; b=Zz1/seuJp3Zube0zuUUGr0ADDXaskIGEOumF+AK/INgCbZIoiMxWXlJ0FPyi5Ur4ULOGAMQBbgq7CS+T7kMHAKnwt3Ij6ig8jMb9n7jZGPi/NzRPB05IV4Xj0I+qz6TmW28u35r+ksOgVWvioOskuUdJCke8uYhsZHcdOnIr+J8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708671850; c=relaxed/simple;
-	bh=T43BLEbFn/rY6Onlkz3M/nH7U1rGkzTWtfmwRvtPX34=;
-	h=Subject:To:CC:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=pivkHnrDYyC2gCSiN3gsSFuPNpehruMCwYwHPSRIocXN56F1SgSMrTeKwRk0dIjt4LCOzSzF2Nskvlhs5tl3WJ3u+GJEDADih38OGaKZ7yEyTRmQWxbNIQdvCccUhq0iiUdMT2rv+zKPm33MZoCLqjsHtmoxb9S+YAy7mQpn8AY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.191
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.234])
-	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4Th18D0w7Wz1FLFm;
-	Fri, 23 Feb 2024 14:59:08 +0800 (CST)
-Received: from canpemm500003.china.huawei.com (unknown [7.192.105.39])
-	by mail.maildlp.com (Postfix) with ESMTPS id D2CE31400CC;
-	Fri, 23 Feb 2024 15:04:01 +0800 (CST)
-Received: from canpemm500004.china.huawei.com (7.192.104.92) by
- canpemm500003.china.huawei.com (7.192.105.39) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Fri, 23 Feb 2024 15:04:01 +0800
-Received: from [10.174.179.14] (10.174.179.14) by
- canpemm500004.china.huawei.com (7.192.104.92) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Fri, 23 Feb 2024 15:04:00 +0800
-Subject: Re: [PATCH] scsi: libsas: Fix disk not being scanned in after being
- removed
-To: yangxingui <yangxingui@huawei.com>, John Garry <john.g.garry@oracle.com>,
-	<jejb@linux.ibm.com>, <martin.petersen@oracle.com>,
-	<damien.lemoal@opensource.wdc.com>
-CC: <linux-scsi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linuxarm@huawei.com>, <prime.zeng@hisilicon.com>,
-	<chenxiang66@hisilicon.com>, <kangfenglong@huawei.com>
-References: <20240221073159.29408-1-yangxingui@huawei.com>
- <d765d2c5-3451-4519-a5e1-9e8f28dcd6b3@oracle.com>
- <cdf241a7-8504-5b87-2d18-d2a971f6ebb9@huawei.com>
-From: Jason Yan <yanaijie@huawei.com>
-Message-ID: <8dc34f04-943b-26fd-01bc-34fb98803503@huawei.com>
-Date: Fri, 23 Feb 2024 15:04:00 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.12.0
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14407BA2B;
+	Fri, 23 Feb 2024 07:07:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.247.52
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1708672075; cv=fail; b=ff0QVhkmtDj/s0rdSsyXoTPW1/9zgIUhMenerbXqyY4Rr83youq5PuJmrfNY0Lvtt6JqKH1M4PBuQ3+uANsqZAGSSb0054jGx2fUzY9cnA45Cv1AFlZP7WTCKMq4bU0cSheFi0cR6tKuidmXZ1zxXKNFBPStWb4U3NZXxiuKR34=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1708672075; c=relaxed/simple;
+	bh=8Bv0oK8F6aroOKnuNLzRXudE9KfmulfcYJtoc+wxGSU=;
+	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=TL9Se3lfy0qGVJ/aPePHi8Q3fuE/bQi0pE5dTPu0n+i6I9PHVlWVi+hYN+PUe8uFBn0rsURPxRXtklVIzbihFhMbdR+ZKyyIp6JF0nFvk8axxnKboVpF0HGsgyPTqf14wyJR8g5uA1nAZ7XL3EN8kW+30hjh9HRpUW/KUSQ+0yM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com; spf=pass smtp.mailfrom=oss.nxp.com; dkim=pass (1024-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b=DXXe1wLX; arc=fail smtp.client-ip=40.107.247.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.nxp.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="DXXe1wLX"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=jaYUZPklmxM426S03e5rp+fdy5+U9nlCd3hmx5E8K1iaQyGvhRTUcGKNYTGDZh6Q+/e8wC8NsS3n/xdsGoKboGBoXXKQSC403RNvZGq4oKi8VxmCK/ghCxTX+KOWQpymX5TYFE6NWh4nsTYZu0BFE76yUpsX0reKDog8JxpxM0WWNW+i8KYU1gNI7ZuSByv5RaKLhGaLgje37vuqJ2wC1nNI/kJr13//ZMzRHO8ZT8/ja1173vax5Jow0x77t849S7xiaP4xJ+zXyUGdnC87OIDX5cTRVfA7OeEcDOgMXfxttIkNw/fWwNkH7Tqk1LQ38QcKQrohjtHbwey/jp9bLg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=2IULnDMdSt6WJwg+Taf/HHBWqcec6eoVyfZLSyNxiOU=;
+ b=W0l5ojqYZYfr+0ne9s22Ovl4X6u9b8G+JeLsgkuHyYA+NXIMcjC9AbgxuCTl0LiilUmLrR6Q23n/pBZaxosJmJhMKfPkYHntvEjLHwLRhwRXDWVlaUxk8X5m8j4IV1gG+CROFdUi0cxv11tfKN2acDlk7NNos/jQ+xgJ20uRXvZ7i+YbByU7kwNxn1XT4Ng+AgQccA6dqwlADGYLNT471Gh9T6TYkSAReRl8fnxBzGfJksUySIsy2QrgcH/+f3CUCERJu7hqw1Z0HmppmyaTvzNPZW+pn8aFcuAPugj5GMoTSzAC1TDKsONLKs31/wcl8JxW5W9kxnfWT3XPDa82Bw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
+ dkim=pass header.d=oss.nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
+ s=selector2-NXP1-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=2IULnDMdSt6WJwg+Taf/HHBWqcec6eoVyfZLSyNxiOU=;
+ b=DXXe1wLXTQWEAevCge0OFVCaBXxemN7ElIgSm14HRWTVERWMTiCabLZG8fy2xf5McRPjDwQOJsHGve63YfBbU/nIR6eH1JstVcCoBUoOk18OmFAV3R7tKm3nLPbXr+bL9cXOtUDwlO8BTbM8MQAH+f80/zmS6vHCJEER0wbofrE=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=oss.nxp.com;
+Received: from DU0PR04MB9417.eurprd04.prod.outlook.com (2603:10a6:10:358::11)
+ by AM8PR04MB8051.eurprd04.prod.outlook.com (2603:10a6:20b:241::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7292.37; Fri, 23 Feb
+ 2024 07:07:49 +0000
+Received: from DU0PR04MB9417.eurprd04.prod.outlook.com
+ ([fe80::4ac3:3559:4200:38e1]) by DU0PR04MB9417.eurprd04.prod.outlook.com
+ ([fe80::4ac3:3559:4200:38e1%4]) with mapi id 15.20.7292.036; Fri, 23 Feb 2024
+ 07:07:49 +0000
+From: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
+To: sudeep.holla@arm.com,
+	cristian.marussi@arm.com,
+	linus.walleij@linaro.org
+Cc: linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-gpio@vger.kernel.org,
+	aisheng.dong@nxp.com,
+	nitin.garg_3@nxp.com,
+	ranjani.vaidyanathan@nxp.com,
+	ye.li@nxp.com,
+	Peng Fan <peng.fan@nxp.com>
+Subject: [PATCH] pinctrl: scmi: support i.MX OEM pin configuration type
+Date: Fri, 23 Feb 2024 15:15:57 +0800
+Message-Id: <20240223071557.2681316-1-peng.fan@oss.nxp.com>
+X-Mailer: git-send-email 2.37.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SI2PR01CA0005.apcprd01.prod.exchangelabs.com
+ (2603:1096:4:191::23) To DU0PR04MB9417.eurprd04.prod.outlook.com
+ (2603:10a6:10:358::11)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <cdf241a7-8504-5b87-2d18-d2a971f6ebb9@huawei.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
- canpemm500004.china.huawei.com (7.192.104.92)
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DU0PR04MB9417:EE_|AM8PR04MB8051:EE_
+X-MS-Office365-Filtering-Correlation-Id: 36d3bb90-ad0e-4a7e-800c-08dc343e250a
+X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	UiXob72qTnPXIxNQiZbiMMxVSu9diUm3BDxeg20LOpQGs2aCDvNS7wnIoZoNADbL1HfkEcg8tLAdctK4f/N7DJO+um0rZQR9SPJv4dkREJTfFpFJydqAxMXDJpfkASxYb08wXwj4hynF7e+Qyq90J1a7O406VLR5aDm4dL1kHwlumNFunSHEJrS2ljO+TcGpUUjJj74zB01o44wq0G/cGX0PyGkcLfJfrkBxNBAmiUCM2xRIBOi0NInhPKB7OX56wmdCIQXie0NG1QxEfanQk7gP4h7N/FeMlIly/9YCm+erPkjSEbbSzoJC/RduMze4zq+mEUFi38CYIqmCaJA9TBdr9aLWFGn9ou/fVy89ICgpRwddQv65KlTG3DDOetOHlg493nLyVl/j7ptsjRKpbTjHDa1Bb10mfMKjZdlyvJ+PhfnxvvDv0nSU5PyLOAsPdHt2zCfPdmjczVSWBQtUw6K0ATzlhS9X+bO1JhJGD6vemXP5lfYuJTL8dXnfaxPc1Q6jW4aOl+0jNR3i4ZZOqiCbhl7J16zGCmTIJp47eXTlX0KIl7p87uE+6GyUUVzLYXeBSBQu98oLw+Hvf7TejM69MAsgat9Q3KY6VU+8Yi4=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DU0PR04MB9417.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(38350700005);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?+OM36pD3QbzyHYZ3IznLtTdoGKE/bmdSBqyMgwnhnWyjx3huragDPd8vRoo8?=
+ =?us-ascii?Q?fGKvfJxlKIudKtdRUtES6Lbvl6V78En4L1DVhhLBdn8qn9XmKoxRMt1llurJ?=
+ =?us-ascii?Q?LtoMlulsuAF5jaMndFjMEc7zxMJGvuUkFSQMTf0xewbrySgNeVAcakbEVqOr?=
+ =?us-ascii?Q?RxXsuDOckDnNgaVuhmCUkiNNroj39frVwGFFTizoqFeD0BGBz5sCS8ffxwzg?=
+ =?us-ascii?Q?FhQENgnTkqcsqAYf4sSViuR7Vm7VfovVHYO3x6tkySuKYKHfY+jEuL0tchcJ?=
+ =?us-ascii?Q?XeZbMQAWZJnKkk3f+v44AEqHISJxTmS4hhMTYT60ihQ87m5NJurYcTFX28mJ?=
+ =?us-ascii?Q?1rlvl6kcmRffQ1Qy7RbGBAa0Q4x+X4UKpTqHyMotHX8AR5lwOi8QFCm46zKc?=
+ =?us-ascii?Q?to9a/uqQtqWUOQlY5KHUgMaebXPfLy5IMiXiFQW7/j4osECFQ14sGSDhAP/I?=
+ =?us-ascii?Q?YFrYCbrmqw3dz9Q0I6IDn5vRz3ZrQfhurykzu7GtMfGmPNrarQgPoYdZmlmU?=
+ =?us-ascii?Q?Rb4CV/tokipVc7PHzGm6y39yUgju6u5bGLJkXXQEFK0Op5DJRwvU0hBR0V6g?=
+ =?us-ascii?Q?ljDKYkTB7+KwH3OSggeN6Lh4jCkuulThp9ad3BD2spLq1TqaCi5XLeHFE7uW?=
+ =?us-ascii?Q?E1+4bdr6gEg2PTwCxGnomak5dvsRCj+RP7h1xXs4lic+knXQO9omNw1utiaQ?=
+ =?us-ascii?Q?kfxi27oxnmFX01gh48JvT+yBQTe1xDu61klIZcQAAJvUmCEPeARV8sIj+SYR?=
+ =?us-ascii?Q?q3ewgCBCM+/H28XELk88YEvH2m1/to+QwSIfygnUzZlAUu80HNJwTKyXVlJ4?=
+ =?us-ascii?Q?G0L3SyiYRRfvXBcUD8r9IdbIfr0uDfZyxsmZtGh2f/8boTF5ycMhFcbs8Xfy?=
+ =?us-ascii?Q?gI/hfWoAn1pxUQ+5cj/RKC9aT+cOC6EQoEIutorkAlJR2hXnBhXWXMhuDg0V?=
+ =?us-ascii?Q?+hrRUGvmbJH35ePyy7AlnVt4zeYDiYDXFXDNRZ1NoS8fw+AX9zE3qT/uqeRo?=
+ =?us-ascii?Q?y1vSUycXtLJ3CAOqJiQOwr50N7WSHddTICteVjicizACKmJl/po7UQjQM3OL?=
+ =?us-ascii?Q?fVrMyiYUBhDfNLBxo7HPKEXPM32T+3ffzYXTtja5Spbwu0aswbIuHLEWgLD8?=
+ =?us-ascii?Q?iOYrf6McbfZ5p+rahINo+a/ntfJh5pzeu8vb4PWahkzKJZ+wV5erpn087QnB?=
+ =?us-ascii?Q?E1AqnrjwMlCb1uJ/Mgwrqh/0hSyrsVfODbQxRGJ8onY9geQVlyPIhMBkAxn2?=
+ =?us-ascii?Q?BIwmvxt6lwyS/3qkUnehcRB5rTKdAV4SYEMu67ERa25zbYbPuA7pYmpZ78oK?=
+ =?us-ascii?Q?uh6illPd8EKx3XpZZ9rxr+1xNZANB5PNdK3o+T4dQWdgIWkl8EjeL7P6ryeA?=
+ =?us-ascii?Q?Rq+IHVtmFCXwkiYacsdn3JU69pE4R9v+9S5agQs0ZW/29SJKnVd6h+yVNb2P?=
+ =?us-ascii?Q?xwQm++n18sqZVxa4khe4uQolg49eeK+OMIf40Rg4Rj1g6hxwu0KdKAtPxpET?=
+ =?us-ascii?Q?cOmVGB9OYxIWHlit1f9LaTgHwtnb9u/gxsuFXpiMfYVKksJ92BFiQ3WmC1n2?=
+ =?us-ascii?Q?1gTdHQlGFVQjgfg7MfRvwDG80DfPUV9Zw51Z7jGy?=
+X-OriginatorOrg: oss.nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 36d3bb90-ad0e-4a7e-800c-08dc343e250a
+X-MS-Exchange-CrossTenant-AuthSource: DU0PR04MB9417.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Feb 2024 07:07:49.7566
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: FqEXUMXVUeEeM+ioSX0fP+Gd8i1KEpO6ampx3TrLeBkVgnqc0XZSOusoA0TMEI4QZJFykdwI8YUwq1GAYufqqw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM8PR04MB8051
 
-On 2024/2/23 12:04, yangxingui wrote:
-> Hi, John
-> 
-> On 2024/2/22 20:41, John Garry wrote:
->> On 21/02/2024 07:31, Xingui Yang wrote:
->>> As of commit d8649fc1c5e4 ("scsi: libsas: Do discovery on empty PHY to
->>> update PHY info"), do discovery will send a new SMP_DISCOVER and update
->>> phy->phy_change_count. We found that if the disk is reconnected and phy
->>> change_count changes at this time, the disk scanning process will not be
->>> triggered.
->>>
->>> So update the PHY info with the last query results.
->>>
->>> Fixes: d8649fc1c5e4 ("scsi: libsas: Do discovery on empty PHY to 
->>> update PHY info")
->>> Signed-off-by: Xingui Yang <yangxingui@huawei.com>
->>> ---
->>>   drivers/scsi/libsas/sas_expander.c | 9 ++++-----
->>>   1 file changed, 4 insertions(+), 5 deletions(-)
->>>
->>> diff --git a/drivers/scsi/libsas/sas_expander.c 
->>> b/drivers/scsi/libsas/sas_expander.c
->>> index a2204674b680..9563f5589948 100644
->>> --- a/drivers/scsi/libsas/sas_expander.c
->>> +++ b/drivers/scsi/libsas/sas_expander.c
->>> @@ -1681,6 +1681,10 @@ int sas_get_phy_attached_dev(struct 
->>> domain_device *dev, int phy_id,
->>>           if (*type == 0)
->>>               memset(sas_addr, 0, SAS_ADDR_SIZE);
->>>       }
->>> +
->>> +    if ((SAS_ADDR(sas_addr) == 0) || (res == -ECOMM))
->>> +        sas_set_ex_phy(dev, phy_id, disc_resp);
->>> +
->>>       kfree(disc_resp);
->>>       return res;
->>>   }
->>> @@ -1972,11 +1976,6 @@ static int sas_rediscover_dev(struct 
->>> domain_device *dev, int phy_id,
->>>       if ((SAS_ADDR(sas_addr) == 0) || (res == -ECOMM)) {
->>>           phy->phy_state = PHY_EMPTY;
->>>           sas_unregister_devs_sas_addr(dev, phy_id, last);
->>> -        /*
->>> -         * Even though the PHY is empty, for convenience we discover
->>> -         * the PHY to update the PHY info, like negotiated linkrate.
->>> -         */
->>> -        sas_ex_phy_discover(dev, phy_id);
->>
->> It would be nice to be able to call sas_set_ex_phy() here (instead of 
->> sas_get_phy_attached_dev()), but I assume that you can't do that as 
->> the disc_resp memory is not available.
->>
->> If we were to manually set the PHY info here instead, how would that 
->> look?
-> Yes, I think it is indeed better to use sas_set_ex_phy, as you said, 
-> disc_resp memory is not available. Maybe we can use sas_get_phy_discover 
-> instead of sas_get_phy_attached_dev so we can use disc_resp?
+From: Peng Fan <peng.fan@nxp.com>
 
-Can we directly set phy->negotiated_linkrate = SAS_PHY_DISABLED here? 
-For an empty PHY the other variables means nothing, so why bother get 
-and update them?
+i.MX95 System Manager FW supports SCMI PINCTRL protocol, but uses
+OEM Pin Configuration type, so extend the driver to support custom
+params.
 
-Thanks,
-Jason
+Signed-off-by: Peng Fan <peng.fan@nxp.com>
+---
+
+V1:
+ Based on https://lore.kernel.org/all/20240223-pinctrl-scmi-v4-0-10eb5a379274@nxp.com/
+ This is an reimplementation for supporting i.MX95 OEM settings.
+ With this patch, the dts will be like:
+
++#define IMX95_PAD_SD1_CLK__USDHC1_CLK(val)	\
++	sd1clk {				\
++		pins = "sd1clk";		\
++		imx,func-id = <0>;		\
++		imx,pin-conf = <val>;		\
++	}
+  ....
++
++	pinctrl_usdhc1: usdhc1grp {
++		IMX95_PAD_SD1_CLK__USDHC1_CLK(0x158e);
++		IMX95_PAD_SD1_CMD__USDHC1_CMD(0x138e);
+ ....
++	};
+
+ drivers/pinctrl/pinctrl-scmi.c | 10 ++++++++++
+ drivers/pinctrl/pinctrl-scmi.h | 15 +++++++++++++++
+ 2 files changed, 25 insertions(+)
+ create mode 100644 drivers/pinctrl/pinctrl-scmi.h
+
+diff --git a/drivers/pinctrl/pinctrl-scmi.c b/drivers/pinctrl/pinctrl-scmi.c
+index f2fef3fb85ae..e58f1aaf9963 100644
+--- a/drivers/pinctrl/pinctrl-scmi.c
++++ b/drivers/pinctrl/pinctrl-scmi.c
+@@ -19,6 +19,7 @@
+ #include <linux/pinctrl/pinctrl.h>
+ #include <linux/pinctrl/pinmux.h>
+ 
++#include "pinctrl-scmi.h"
+ #include "pinctrl-utils.h"
+ #include "core.h"
+ #include "pinconf.h"
+@@ -472,6 +473,13 @@ static const struct pinconf_ops pinctrl_scmi_pinconf_ops = {
+ 	.pin_config_config_dbg_show = pinconf_generic_dump_config,
+ };
+ 
++static const struct pinconf_generic_params pinctrl_scmi_oem_dt_params[] = {
++	{"imx,func-id", IMX_SCMI_PIN_MUX, -1},
++	{"imx,daisy-id", IMX_SCMI_PIN_DAISY_ID, -1},
++	{"imx,daisy-conf", IMX_SCMI_PIN_DAISY_CFG, -1},
++	{"imx,pin-conf", IMX_SCMI_PIN_CONF, -1},
++};
++
+ static int pinctrl_scmi_get_pins(struct scmi_pinctrl *pmx,
+ 				 unsigned int *nr_pins,
+ 				 const struct pinctrl_pin_desc **pins)
+@@ -548,6 +556,8 @@ static int scmi_pinctrl_probe(struct scmi_device *sdev)
+ 	pmx->pctl_desc.pctlops = &pinctrl_scmi_pinctrl_ops;
+ 	pmx->pctl_desc.pmxops = &pinctrl_scmi_pinmux_ops;
+ 	pmx->pctl_desc.confops = &pinctrl_scmi_pinconf_ops;
++	pmx->pctl_desc.custom_params = pinctrl_scmi_oem_dt_params;
++	pmx->pctl_desc.num_custom_params = ARRAY_SIZE(pinctrl_scmi_oem_dt_params);
+ 
+ 	ret = pinctrl_scmi_get_pins(pmx, &pmx->pctl_desc.npins,
+ 				    &pmx->pctl_desc.pins);
+diff --git a/drivers/pinctrl/pinctrl-scmi.h b/drivers/pinctrl/pinctrl-scmi.h
+new file mode 100644
+index 000000000000..fcc61bc19c98
+--- /dev/null
++++ b/drivers/pinctrl/pinctrl-scmi.h
+@@ -0,0 +1,15 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * Copyright 2024 NXP
++ */
++
++#ifndef __DRIVERS_PINCTRL_SCMI_H
++#define __DRIVERS_PINCTRL_SCMI_H
++
++/* OEM VENDOR Pin Configuration Type */
++#define IMX_SCMI_PIN_MUX	192
++#define IMX_SCMI_PIN_CONF	193
++#define IMX_SCMI_PIN_DAISY_ID	194
++#define IMX_SCMI_PIN_DAISY_CFG	195
++
++#endif /* __DRIVERS_PINCTRL_SCMI_H */
+-- 
+2.37.1
 
