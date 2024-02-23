@@ -1,105 +1,122 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A22E3FF1;
-	Fri, 23 Feb 2024 18:30:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B4E14A00
+	for <linux-kernel@vger.kernel.org>; Fri, 23 Feb 2024 18:32:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708713007; cv=none; b=Frx2sd9TrEhcZIL/fREyQR2cJiYvyi5fpMGJzqKXqpcBVRrMntQgB6tD7OCn3lLrRd53pHgk0F3T0sNhuYk0SyOYlmEOrwXNITGyaW6Cz7N2FPN7k2MKqH9+I6uj4yCQ/vE6SOpXMCh31qLcmfYv9qGALlapNdNVqGeToe3/93E=
+	t=1708713154; cv=none; b=ZSOT3kUq9lk9AL1Tdwxm1w+T2r8uefUoPO9ikVO32fCIESe2iUuRAQ5DRKXC2ae6iiqOKKsjimsL9Fch2DlvXsHvzE6lleVF/e1iMlr4APP3WHvaNDqAqCFhptJAO6VZcpK+QJO3hBCmTV9qFWcY1qoln7rO9Fh3sqPO+GhdIoE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708713007; c=relaxed/simple;
-	bh=h4pO3Tgr1PTkYatoEkKrET/MjLlwGSker91U7kqaO1o=;
+	s=arc-20240116; t=1708713154; c=relaxed/simple;
+	bh=CrtaOL50aGokRIFP8Xi9mClwNApwI/04qRj31Y+3gjU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QBFUyTsE2Yhkqv02timKASG0rTN14cU/pqC/LjDnoMRgzWmlcMG94jSztEIL1sQZzKXsLHc6JeotO5utv6OR0oo0JCR3lnZv26sh4T7AylOO9aq3an2phwa9Zm9dM5X7yuNHvHIwruSwVPMV9T46q4iOqZdjAMyJvSjLum1ATTU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nbO0L3o5; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=gcjIrGx1p0BYQF//ps6aLBDJvGrbLLhVKQSsYfMjA547xBD89awmgV5VgdaQxf4JBszrtNHX0v7UTt0WsbWF0Q8G5oQ0IPIYSc/s6TwKOFCYsYgrIM80DZXLSJgWa1PNNC840birwBZ2J+Mce5hw/8sIcwT5ZRAB8GBDlMu+RV0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bb9woXN1; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nbO0L3o5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EBFCDC433F1;
-	Fri, 23 Feb 2024 18:30:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708713006;
-	bh=h4pO3Tgr1PTkYatoEkKrET/MjLlwGSker91U7kqaO1o=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=nbO0L3o5nidphoFvFp61Tw3dg+tZlos4tvnVsxt3LBum2bv9S4cTfrRbYtCdgcpk8
-	 2K3+Bqs4WAKaIaUXuBtYuzhcR3M9qhvTbIwBIFPCyZaItSaQjQrr8Jd56PmZEqrQZb
-	 acEwsL077wp13g1v9RpB2z0nSaHiOLwmaOr9HiFeBHfwJxnAsJU8yhUiKDdA+zvn9n
-	 RHBDNQixtUS8LsYmrCB85aI7TzZ//EdZ8jMmeSMNGs5bSkm8fzONPNSAGQWnNkLgVx
-	 h4oof10cHJMT7hRlxo70kTubFphVQMWuM+RE2weKDWruUnrzxYplMjxaZS63eqxuam
-	 ++gfEOXUOc9gQ==
-Date: Fri, 23 Feb 2024 10:30:04 -0800
-From: Eric Biggers <ebiggers@kernel.org>
-To: Andrew Cooper <andrew.cooper3@citrix.com>
-Cc: Ard Biesheuvel <ardb@kernel.org>,
-	Ross Philipson <ross.philipson@oracle.com>,
-	linux-kernel@vger.kernel.org, x86@kernel.org,
-	linux-integrity@vger.kernel.org, linux-doc@vger.kernel.org,
-	linux-crypto@vger.kernel.org, kexec@lists.infradead.org,
-	linux-efi@vger.kernel.org, dpsmith@apertussolutions.com,
-	tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
-	dave.hansen@linux.intel.com, mjg59@srcf.ucam.org,
-	James.Bottomley@hansenpartnership.com, peterhuewe@gmx.de,
-	jarkko@kernel.org, jgg@ziepe.ca, luto@amacapital.net,
-	nivedita@alum.mit.edu, herbert@gondor.apana.org.au,
-	davem@davemloft.net, kanth.ghatraju@oracle.com,
-	trenchboot-devel@googlegroups.com
-Subject: Re: [PATCH v8 06/15] x86: Add early SHA support for Secure Launch
- early measurements
-Message-ID: <20240223183004.GE1112@sol.localdomain>
-References: <20240214221847.2066632-1-ross.philipson@oracle.com>
- <20240214221847.2066632-7-ross.philipson@oracle.com>
- <CAMj1kXEmMBY_jc0uM5UgZbuZ3-C7NPKzg5AScaunyu9XzLgzZA@mail.gmail.com>
- <98ad92bb-ef17-4c15-88ba-252db2a2e738@citrix.com>
- <CAMj1kXFTu+bV2kQhAyu15hrYai20NcBLb4Zu8XG2Y-XjL0f+rw@mail.gmail.com>
- <1a8e69a7-89eb-4d36-94d6-0da662d8b72f@citrix.com>
- <CAMj1kXEvmGy9RJo4s8tECsFj2dufZ8jBPoJOEtkcGUoj+x2qsw@mail.gmail.com>
- <431a0b3a-47e5-4e61-a7fc-31cdf56f4e4c@citrix.com>
- <20240223175449.GA1112@sol.localdomain>
- <e641e2f1-16cf-4717-8a1f-8afac2644efe@citrix.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bb9woXN1"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1708713152; x=1740249152;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=CrtaOL50aGokRIFP8Xi9mClwNApwI/04qRj31Y+3gjU=;
+  b=bb9woXN1v4WVex5ZoaDmZeuUJFl77oOedAJClIwvQ065d9zpSO/ymoBv
+   MHHIzXXSjQ2f2lBY3cDdnvdbeBjDQYpfvEahNiNCmBaAtH4+B+I4HTD6r
+   2DclH1PyXmHznaY0ZAZUpzMWAwieBFmo5iMzWg2VBySRZEi4E5kRZzHJ+
+   AO4V7pieh2qwcZdSAj876zE0NgZox8y5E5hlNd1Mm9AxHppUi+GgzRGII
+   Xa8DE4l2bJ15ooMoGbpo7NTmbIFXrk9dfEVBFqIu6gvTSPy8OFxoPHOeA
+   fdwBTpKZjk1OMVx936R+qK5InqWVoRZAKpw6Su5wWaXRgmIVLCyrVGunB
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10993"; a="13605521"
+X-IronPort-AV: E=Sophos;i="6.06,180,1705392000"; 
+   d="scan'208";a="13605521"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Feb 2024 10:32:32 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10993"; a="913753358"
+X-IronPort-AV: E=Sophos;i="6.06,180,1705392000"; 
+   d="scan'208";a="913753358"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Feb 2024 10:32:30 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.97)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1rdaLT-00000006yNy-3e4s;
+	Fri, 23 Feb 2024 20:32:27 +0200
+Date: Fri, 23 Feb 2024 20:32:27 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: "Ruhl, Michael J" <michael.j.ruhl@intel.com>
+Cc: "linux@armlinux.org.uk" <linux@armlinux.org.uk>,
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] clkdev: Update clkdev id usage to allow for longer
+ names
+Message-ID: <Zdjku0kxCvMl2HcU@smile.fi.intel.com>
+References: <20240223163516.796606-1-michael.j.ruhl@intel.com>
+ <ZdjZCrpP52Hfbs6L@smile.fi.intel.com>
+ <DS0PR11MB64248E0C15C0B86A1CCF945BC1552@DS0PR11MB6424.namprd11.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <e641e2f1-16cf-4717-8a1f-8afac2644efe@citrix.com>
+In-Reply-To: <DS0PR11MB64248E0C15C0B86A1CCF945BC1552@DS0PR11MB6424.namprd11.prod.outlook.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Fri, Feb 23, 2024 at 06:20:27PM +0000, Andrew Cooper wrote:
-> On 23/02/2024 5:54 pm, Eric Biggers wrote:
-> > On Fri, Feb 23, 2024 at 04:42:11PM +0000, Andrew Cooper wrote:
-> >> Yes, and I agree.  We're not looking to try and force this in with
-> >> underhand tactics.
-> >>
-> >> But a blind "nack to any SHA-1" is similarly damaging in the opposite
-> >> direction.
-> >>
-> > Well, reviewers have said they'd prefer that SHA-1 not be included and given
-> > some thoughtful reasons for that.  But also they've given suggestions on how to
-> > make the SHA-1 support more palatable, such as splitting it into a separate
-> > patch and giving it a proper justification.
-> >
-> > All suggestions have been ignored.
-> 
-> The public record demonstrates otherwise.
-> 
-> But are you saying that you'd be happy if the commit message read
-> something more like:
-> 
-> ---8<---
-> For better or worse, Secure Launch needs SHA-1 and SHA-256.
-> 
-> The choice of hashes used lie with the platform firmware, not with
-> software, and is often outside of the users control.
-> 
-> Even if we'd prefer to use SHA-256-only, if firmware elected to start us
-> with the SHA-1 and SHA-256 backs active, we still need SHA-1 to parse
-> the TPM event log thus far, and deliberately cap the SHA-1 PCRs in order
-> to safely use SHA-256 for everything else.
-> ---
+On Fri, Feb 23, 2024 at 06:22:13PM +0000, Ruhl, Michael J wrote:
+> >From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> >Sent: Friday, February 23, 2024 12:43 PM
+> >On Fri, Feb 23, 2024 at 11:35:16AM -0500, Michael J. Ruhl wrote:
 
-Please take some time to read through the comments that reviewers have left on
-previous versions of the patchset.
+...
 
-- Eric
+> I will remove.
+
+Not remove, but move to the comments/changelog (after '---' line)
+
+> I see your script automatically does a cover page...will use that format int
+> the future.
+
+Only if there are more than a single patch.
+
+...
+
+> >[1]: https://github.com/andy-shev/home-bin-
+> >tools/blob/master/ge2maintainer.sh
+> 
+> Using your script I got:
+> 
+> To: "Michael J. Ruhl" <michael.j.ruhl@intel.com>,
+>         linux-arm-kernel@lists.infradead.org,
+>         linux-kernel@vger.kernel.org
+> Cc: Russell King <linux@armlinux.org.uk>
+> 
+> My list (using get_maintainers.pl) is:
+> 
+> linux@armlinux.org.uk
+> linux-arm-kernel@lists.infradead.org
+> linux-kernel@vger.kernel.org
+> 
+> They appear to be the same....
+
+Ah, the Russel's email looked like a mailing list, that what confused me.
+
+> I don't have the plain text part on Russel's email (linxu@armlinux.org.uk)... Is that what is missing?
+
+Yes :-)
+But my script also uses a heuristics (which is not visible here) to add active
+developers of the code in question based on the git history.
+
+> Not sure what CCF is?
+
+Common Clock Framework (This is how it's advertised in MAINTAINERS)
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
