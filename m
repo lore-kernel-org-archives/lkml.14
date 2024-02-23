@@ -1,181 +1,113 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27CF84687;
-	Fri, 23 Feb 2024 14:42:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1508E4C8C
+	for <linux-kernel@vger.kernel.org>; Fri, 23 Feb 2024 14:43:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708699346; cv=none; b=F3JpqgeQ8nydkBe5Hr6o+GGBEx5Jv87DhnvS3YKOEh42cnDQACXonMcTNDCIeKBcTebBxNZQHSMBeLaoNy41ajPXvHWSGDRlf4mGz9lALnK8k0b7K69amgjkLxCJNt+726bEd2dKw6K+RJh5IMk/8J3QOYx5aZuhJ6BGcaPGNjU=
+	t=1708699393; cv=none; b=WV0vEn3zWZxJ7xWH/AdXisHwtTXA8wn5X4nk+AAugo7fhLY/Q9vuxfajyxDcsSMmGXTWwATQJ31h4j/M6XYUWON8jNJ/ps39nKSu02IFIqe4vEcVyao9qab0gs3KXc9/qEsrwt90iJRJkb0e6glkeMsGWUTzhzJ6HsgMcxw0dBg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708699346; c=relaxed/simple;
-	bh=JG2wz/jwI/HJkXPNsVUM9vI9kFE7H3GmD3rx1EWtrvI=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=DsHzFb15FxXFyy7jZ1SamsEaOfhEXPikpLwUNMjv4AOAzHzA1ARV3J4dB0hHB5/UnvJ/PPf6verpK9IOPMOYeVFKHItsT15OpZxmtgjxb0LhK6ctQgU0XEXmJtKTeqvLkPfgCwNYsMGPPXxqzIZXKFkrcYxGsBhcSXMASvUSOck=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=dCvGqtVv; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1708699393; c=relaxed/simple;
+	bh=LCCnxhxOKUUGScjoj8X/h+vtjtJ8g9tt6GUc6Qartj0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=QofJ2ToiX0e7dRpMfFaSCiTQkxGz+0d/vt+d9F2/QvuJ7YKS41cCROudeKZaOSwHflHVvW+laTknycownX7TcGnRBq+2+ua9Jw0Z+Z+AvU4jdGha6Q0DOIrulBStRWtlMHRzevik+8yfq7T0KGBhbXXCyviZS74SsAmYMpm2ZKk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=coMqQ7hy; arc=none smtp.client-ip=209.85.214.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="dCvGqtVv"
-Received: from pps.filterd (m0353723.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 41NEDZLL000853;
-	Fri, 23 Feb 2024 14:42:20 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
- subject : to : cc : references : from : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=pp1;
- bh=WBmD23Rw85X27Usle1YuvJy0QIb1N98BwcB2TVrk6R4=;
- b=dCvGqtVv6UVIUdIXf293vM0n9qXb31CPgDB6Qyi5G/wn6byGhI1K6xCMAQAD7LJS1E71
- 7kKRjnQyRI/m6tEGMJo8OoWgebarE9INli6GVbrHXQScpIBD915QYiyxhM7IKITnDw7e
- Wo1xvykGz8JUJMinwfPLE/le/JvpkRSojew8n4evwRqaZggbB65kRZ5Trz9VKlmSFksk
- CN6tK66E2IQX3HELRcLqRYiIjfzVsM6n0BFBTf2YOSy/VJob7rQPf2jJsv43yN7+NYtl
- 3vVXq9dOo+pIgSYYn7buws3jrsgKAUiQVdcY94Nitf+bri52U8iTqeJ2q1BbZiu1KTEV 2A== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3wevxdrt9x-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 23 Feb 2024 14:42:19 +0000
-Received: from m0353723.ppops.net (m0353723.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 41NEZqEX020060;
-	Fri, 23 Feb 2024 14:42:19 GMT
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3wevxdrt95-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 23 Feb 2024 14:42:19 +0000
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 41NEBnae017261;
-	Fri, 23 Feb 2024 14:42:18 GMT
-Received: from smtprelay06.dal12v.mail.ibm.com ([172.16.1.8])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3wb8mmwtd6-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 23 Feb 2024 14:42:18 +0000
-Received: from smtpav01.wdc07v.mail.ibm.com (smtpav01.wdc07v.mail.ibm.com [10.39.53.228])
-	by smtprelay06.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 41NEgEau7275374
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 23 Feb 2024 14:42:17 GMT
-Received: from smtpav01.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id A608558059;
-	Fri, 23 Feb 2024 14:42:14 +0000 (GMT)
-Received: from smtpav01.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 537B558065;
-	Fri, 23 Feb 2024 14:42:11 +0000 (GMT)
-Received: from [9.171.73.236] (unknown [9.171.73.236])
-	by smtpav01.wdc07v.mail.ibm.com (Postfix) with ESMTP;
-	Fri, 23 Feb 2024 14:42:11 +0000 (GMT)
-Message-ID: <b8ad3e35-7dba-41f2-a301-65f8162a2dbd@linux.ibm.com>
-Date: Fri, 23 Feb 2024 15:42:10 +0100
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next 14/15] net/smc: introduce loopback-ism DMB data
- copy control
-Content-Language: en-GB
-To: Wen Gu <guwen@linux.alibaba.com>, wintera@linux.ibm.com, hca@linux.ibm.com,
-        gor@linux.ibm.com, agordeev@linux.ibm.com, davem@davemloft.net,
-        edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
-        jaka@linux.ibm.com, Gerd Bayer <gbayer@linux.ibm.com>
-Cc: borntraeger@linux.ibm.com, svens@linux.ibm.com, alibuda@linux.alibaba.com,
-        tonylu@linux.alibaba.com, linux-s390@vger.kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20240111120036.109903-1-guwen@linux.alibaba.com>
- <20240111120036.109903-15-guwen@linux.alibaba.com>
- <b3b71f26-239f-49c9-98e8-7eba2c4ecf69@linux.ibm.com>
- <58f36cb7-7427-4ed7-9a8e-baaacdd774cb@linux.alibaba.com>
-From: Wenjia Zhang <wenjia@linux.ibm.com>
-In-Reply-To: <58f36cb7-7427-4ed7-9a8e-baaacdd774cb@linux.alibaba.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: bjq3QYY01i7GuuboqWVYpK1sIYlEM-VP
-X-Proofpoint-GUID: BW3P7N4XcR4tpqGaukdPMVauBSZE4a1z
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="coMqQ7hy"
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-1d748f1320aso522985ad.0
+        for <linux-kernel@vger.kernel.org>; Fri, 23 Feb 2024 06:43:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1708699391; x=1709304191; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=GaiOkbA7+hcdvvfDFyD524BR9JUDgPVysbGQWfqsDPs=;
+        b=coMqQ7hyMeoPDlFryqCi3Yjbj8HfuO3QSwyNknqI0QT0YLje91naBj96S2Ih/IdesG
+         DzoNG+Ay2A9iUZMIi7XZSkmf4fAXgTO3Ar8FrMRnFNIp+oRI3m1yPUIIUUdDRAUjnma7
+         wcEWDGI0UTI69e9QwCXSm1PcnDK4cqXFvOsCjYswgZOeEJt2MrRfT/ikELxCr3Lmpwoq
+         CCPh8/eelf27Yp4nh6Ra04qJRySpfJIZ4qZHiPMp0wvNlX2LgOJH85h/GFLRb8SF/b9k
+         EBugKy1QHd30vIcempHm2my3vLgu9TuMge+3n+p/lp/y4yUfeyLP4YzcMm8pauvNuwVJ
+         BqRw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708699391; x=1709304191;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=GaiOkbA7+hcdvvfDFyD524BR9JUDgPVysbGQWfqsDPs=;
+        b=HySMsA+OS4qHB1V8SHUxRoxWXHXlz8MTn715jDSp6XpdYYXtTpOfdRyrWmXRRqNFqK
+         te24/u30xUhFxn4lFyXglyFDxESG49JVSmzHLnz5BvheQaAkQRMwFee1FLHpThVi6le1
+         T+GlPu7WxcI5T9Zz33El9kkqN9iOhurpF0T8YBHXgAU4P3YlH1wMGBOGBAK1Vaxq6Pjb
+         0Z/mWV5FwgaoCrp1Z8DiNABNOuP5BbHZ+T4OT2L5cuC+ZQIfFnhscRZ4WkhvbWuugzmh
+         BGJVuhkvV9y6kx6thLtoyU6GEoLcf6Yzzqpi9sNSxFd1S+S6pl5YQzbrkTOlkbtgLi3l
+         SVOQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWU0H4fdjv9kh2Z7oSah9YQs6hvpKlZ7StA5TfsBtUX/xD2cgNXMdsT1TMQsiBIX/f+jEe+kMCIB1Ziy9fuIc0+aG5p2DkBfCNQBVC3
+X-Gm-Message-State: AOJu0YxaIe2UIFuGSRdF6MhGMguE7TqVRRkvuC66bKBXyM8UEAIpsu0+
+	RpicgmBmZRyNtt5CXGm7dZq75QTXt1KQwrgJWWyKHPl7Nxf+mf60mxlUWEeuQaU=
+X-Google-Smtp-Source: AGHT+IFCe2OmI6udUtrLrpGM7CH6IcwXuOjaaWwTj2TJkeKJuL+YC18h5jSygUOYCFe/1oOsbioDdw==
+X-Received: by 2002:a17:90a:3f16:b0:299:3fb4:4f28 with SMTP id l22-20020a17090a3f1600b002993fb44f28mr1673303pjc.4.1708699391114;
+        Fri, 23 Feb 2024 06:43:11 -0800 (PST)
+Received: from [172.20.8.9] (071-095-160-189.biz.spectrum.com. [71.95.160.189])
+        by smtp.gmail.com with ESMTPSA id z15-20020a17090ab10f00b002995e9aca72sm1522284pjq.29.2024.02.23.06.43.09
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 23 Feb 2024 06:43:10 -0800 (PST)
+Message-ID: <3cbe7ad1-421a-493c-9cb2-9234e139923f@kernel.dk>
+Date: Fri, 23 Feb 2024 07:43:08 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-02-22_15,2024-02-23_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 clxscore=1011
- mlxlogscore=999 phishscore=0 lowpriorityscore=0 malwarescore=0
- suspectscore=0 spamscore=0 bulkscore=0 impostorscore=0 priorityscore=1501
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2311290000 definitions=main-2402230107
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] usb: gadget: f_fs: Fix NULL pointer dereference in
+ ffs_epfile_async_io_complete()
+Content-Language: en-US
+To: Selvarasu Ganesan <quic_selvaras@quicinc.com>,
+ Greg KH <gregkh@linuxfoundation.org>
+Cc: brauner@kernel.org, jack@suse.cz, jlayton@kernel.org,
+ keescook@chromium.org, peter@korsgaard.com, hayama@lineo.co.jp,
+ dmantipov@yandex.ru, quic_linyyuan@quicinc.com, linux-usb@vger.kernel.org,
+ linux-kernel@vger.kernel.org, quic_ppratap@quicinc.com,
+ quic_wcheng@quicinc.com, quic_jackp@quicinc.com
+References: <20240223054809.2379-1-quic_selvaras@quicinc.com>
+ <2024022302-routine-schematic-b4fd@gregkh>
+ <d2f40e2d-cbbd-41f9-9aa6-41d0f251ffda@quicinc.com>
+From: Jens Axboe <axboe@kernel.dk>
+In-Reply-To: <d2f40e2d-cbbd-41f9-9aa6-41d0f251ffda@quicinc.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
+On 2/23/24 4:35 AM, Selvarasu Ganesan wrote:
+> Here?s what the code might look like with a new lock:
+> 
+> static void ffs_epfile_async_io_complete(struct usb_ep *_ep,
+>                                          struct usb_request *req)
+> {
+> ....
+> spin_lock(&ffs->new_lock);
+> if (ffs && ffs->io_completion_wq)
+>     queue_work(ffs->io_completion_wq, &io_data->work);
+> spin_unlock(&ffs->new_lock);
+> ....
+> }
+> 
+> 
+> 
+> static void ffs_data_put(struct ffs_data *ffs) {
+> ...
+> destroy_workqueue(ffs->io_completion_wq);
+> kfree(ffs->dev_name);
+> spin_lock(&ffs->new_lock);
+> kfree(ffs);
+> spin_unlock(&ffs->new_lock);
+> ...
+> }
 
+This obviously won't work at all, and it's not the right way to fix it
+at all. It needs a ref count.
 
-On 20.02.24 04:36, Wen Gu wrote:
-> 
-> 
-> On 2024/2/16 22:25, Wenjia Zhang wrote:
->>
->>
->> On 11.01.24 13:00, Wen Gu wrote:
->>> This provides a way to {get|set} whether loopback-ism device supports
->>> merging sndbuf with peer DMB to eliminate data copies between them.
->>>
->>> echo 0 > /sys/devices/virtual/smc/loopback-ism/dmb_copy # support
->>> echo 1 > /sys/devices/virtual/smc/loopback-ism/dmb_copy # not support
->>>
->> Besides the same confusing as Niklas already mentioned, the name of 
->> the option looks not clear enough to what it means. What about:
->> echo 1 > /sys/devices/virtual/smc/loopback-ism/nocopy_support # merge 
->> mode
->> echo 0 > /sys/devices/virtual/smc/loopback-ism/nocopy_support # copy mode
->>
-> 
-> OK, if we decide to keep the knobs, I will improve the name. Thanks!
-> 
->>> The settings take effect after re-activating loopback-ism by:
->>>
->>> echo 0 > /sys/devices/virtual/smc/loopback-ism/active
->>> echo 1 > /sys/devices/virtual/smc/loopback-ism/active
->>>
->>> After this, the link group related to loopback-ism will be flushed and
->>> the sndbufs of subsequent connections will be merged or not merged with
->>> peer DMB.
->>>
->>> The motivation of this control is that the bandwidth will be highly
->>> improved when sndbuf and DMB are merged, but when virtually contiguous
->>> DMB is provided and merged with sndbuf, it will be concurrently accessed
->>> on Tx and Rx, then there will be a bottleneck caused by lock contention
->>> of find_vmap_area when there are many CPUs and CONFIG_HARDENED_USERCOPY
->>> is set (see link below). So an option is provided.
->>>
->>> Link: 
->>> https://lore.kernel.org/all/238e63cd-e0e8-4fbf-852f-bc4d5bc35d5a@linux.alibaba.com/
->>> Signed-off-by: Wen Gu <guwen@linux.alibaba.com>
->>> ---
->> We tried some simple workloads, and the performance of the no-copy 
->> case was remarkable. Thus, we're wondering if it is necessary to have 
->> the tunable setting in this loopback case? Or rather, why do we need 
->> the copy option? Is that because of the bottleneck caused by using the 
->> combination of the no-copy and virtually contiguours DMA? Or at least 
->> let no-copy as the default one.
-> 
-> Yes, it is because the bottleneck caused by using the combination of the 
-> no-copy
-> and virtual-DMB. If we have to use virtual-DMB and 
-> CONFIG_HARDENED_USERCOPY is
-> set, then we may be forced to use copy mode in many CPUs environment, to 
-> get the
-> good latency performance (the bandwidth performance still drop because 
-> of copy mode).
-> 
-> But if we agree that physical-DMB is acceptable (it costs 1 physical 
-> buffer per conn side
-> in loopback-ism no-copy mode, same as what sndbuf costs when using s390 
-> ISM), then
-> there is no such performance issue and the two knobs can be removed. 
-> (see also the reply
-> for 13/15 patch [1]).
-> 
-> [1] 
-> https://lore.kernel.org/netdev/442061eb-107a-421d-bc2e-13c8defb0f7b@linux.alibaba.com/
-> 
-> Thanks!
-Thank you, Wen, for the elaboration! As I said, though we did see some 
-better performance on using the virtually contiguous memory with a 
-simple test, the improvement was not really significant. Additionally, 
-our environment ist very different as your 48 CPUs qemu environment, and 
-it also depends on the workload. I think I can understand why you see 
-better performance by using physically contiguous memory. Anyway, I 
-don't have any objection on using physical-DMB only. But I still want to 
-see if there is any other opinion.
+-- 
+Jens Axboe
+
