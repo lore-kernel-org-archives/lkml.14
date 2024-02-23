@@ -1,460 +1,200 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 472C577F09
-	for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 09:01:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 438A418AF8
+	for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 09:02:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708938116; cv=none; b=SR23smKWQL7iOJcqxmIwNzI031Tw2T9rXjlG38PCnfHH01vxEzxOb5dDg9nHKB/NaMXaBKgzg/faP+hODDFU45zf2ezqKWCvilni0C578vMjV+5vsj3QU3bmQFtXq77F2I5jEQfodRK6MfdEM0eM0lrUhs17OFK6aE2ZpNJIsnw=
+	t=1708938168; cv=none; b=TLcWT6nGkmzrMXTJXY3OEC18mRQy1sbG00tYdsZ1QTMNNAdfDd1P9drZXXozNILian8SdGckZtQWdBbI/31WEkrDtIFyvIsVg1X/hibKQOITW8Jf9GKNTXV2JsqDOp8QqQ4ej+oYL22yVJ+O1zYephkoNi6u8ndY9dxuvMHBocY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708938116; c=relaxed/simple;
-	bh=KzAk9MosC0RT51GrLVoGCoVD1Ap0ZnxIMOrYGln5YLA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Zt0w6es5/OPreZY9D0ocnXR2vRhv/SCF9nLPCyOAhcATJuzC04Dm2HK9Nv/lHS/Fg973m/7TnA2i5c3tNwdpIOamVXc3bdg3hli+ZdSNLq0i3U9t0O2LJWgROLlI1sXeqv14negEjOhdjwtfS35/XYf0quEUObiTlDP0Vunn+8Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=T1eK8TFh; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1708938168; c=relaxed/simple;
+	bh=XbXVfHeOwDhV+PDLw6Hx0gES/Ce6Uc4JONajMf23QXo=;
+	h=References:From:To:Cc:Subject:Date:In-reply-to:Message-ID:
+	 MIME-Version:Content-Type; b=FDgTCXD4LcFht9+NPKWW53z5Gc3MNY8kcaK4xMyDwHOn6QFNvA/d/R+40/VeImWO1QC3rM+FfiV+UQo1xvtm6a0dzJT9EObn6OZZ8i7gG23/7XUbwH45jQFRTFTDdiVNQHu1+pqI/B1m4f2Rx2urp/VygpsXlvhHPAnamjB2j1Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=metaspace.dk; spf=none smtp.mailfrom=metaspace.dk; dkim=pass (2048-bit key) header.d=metaspace-dk.20230601.gappssmtp.com header.i=@metaspace-dk.20230601.gappssmtp.com header.b=ks0FbFhi; arc=none smtp.client-ip=209.85.218.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=metaspace.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=metaspace.dk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="T1eK8TFh"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1708938113;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=thM6w/Yn6Bo7SwMs4tgrLOx2+ltH4ZvcsiCqsPUNldE=;
-	b=T1eK8TFhNwlb9tlKKLIV6bFF+qVgA+HkpmEN9a9IeLHtcNarGblHTGxddq1ZvBWLYprt+U
-	wrEyDNcip2q/tLja3VatTi79M34cBeO41GViXeE6K1tCbcrtVRyhjsTRavQfsZ9kI8TyZy
-	NB/LBiktFBkaVUvG/liR8OrEzpceJ4k=
-Received: from mail-pf1-f199.google.com (mail-pf1-f199.google.com
- [209.85.210.199]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-263-mHSIC-n9NUSFtZPymGRT2A-1; Mon, 26 Feb 2024 04:01:51 -0500
-X-MC-Unique: mHSIC-n9NUSFtZPymGRT2A-1
-Received: by mail-pf1-f199.google.com with SMTP id d2e1a72fcca58-6e4e8fae664so1601129b3a.1
-        for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 01:01:51 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=metaspace-dk.20230601.gappssmtp.com header.i=@metaspace-dk.20230601.gappssmtp.com header.b="ks0FbFhi"
+Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-a3e891b5e4eso314138766b.0
+        for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 01:02:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=metaspace-dk.20230601.gappssmtp.com; s=20230601; t=1708938163; x=1709542963; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:in-reply-to:date
+         :subject:cc:to:from:user-agent:references:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=DXJKtDALC3AllytrckFvRAF/ZRCMob4eWSKm4Ha7cls=;
+        b=ks0FbFhiJIhNZP+mFC4+YnxvuB1LLZ5tmUnlPi2j6nJGNwYBfwgbP+JRA33kMINLYn
+         0OXEkPIEv6k19TVZbhMKxTq9ng5lCX9CD8mjDkEWykdPMwxi/X5yTLeGzR6/dRpFhCHs
+         GFD8+9q2uBb4f2nK9HtWajwonLfY6kwDhvJCeIpkmC0yDdD4gDFj3MfOtvZdy+FAl5Cc
+         s315j8pSdXCbfxLKWJCrgXjNL+DNsHsk3dTaYyO+NtKO/RIsfW56iOg6YgSYJNetjaGc
+         x7FuwQZPIjsz2FCPL/q+V2lp56sFOLUJdhYNtp3NRPtX23C5DB7KCkTmGRwUIwgZt6G7
+         bbyQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708938110; x=1709542910;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=thM6w/Yn6Bo7SwMs4tgrLOx2+ltH4ZvcsiCqsPUNldE=;
-        b=J5NfzSuSKEHSJPhDG5FOxFqTOurbI+HFzKbQeYhkp/OCJmFlokXz5fy8aE9qkVuvrw
-         kkaUQ1s3shy+5cdLgpzM6Rwcjt9K5S0wxq/iLzFE/8NNhlzl7kXELmFt3L5TjaeuHGqy
-         XqHhGeC8hXR5YlzJJ7BZub60t/dtJ1iHJT7ssFfLgAuR5MZPxgnbcB52FPimD09m8hcw
-         iYXfOdAC1lqCUEwyrL/o/Sf/YadDwPTEkq+qQyl7p4VZDP8TKSAc2/gw+iva0juhZawb
-         hoZsKt/bht6cTcUDKtqYzHS9jcLnHKwXhh5LHZ8az4Gzdy+wREERTiey0SVo5JBOSR73
-         C4Tg==
-X-Forwarded-Encrypted: i=1; AJvYcCVK+AeV5xvmMS6Gxy/wQWg6uqN8913oSNbJiMm3SqN5PXqgnYGxwV4W/zTqY/Z9gDzksRwKdnZclI7BSGNc+p67p8UlLAxbIMJDLmPS
-X-Gm-Message-State: AOJu0YwA1FuSDka6Sl1y0wtIaD4qGfn5nnJVnz8/TfZoRWYUsWm5op/v
-	RUXyQEodQcqMhIV8i4C3JJi741d7wN1QLZMH1rwSiHYzOhpP0A1py95BVSPdITAgN1Z6B+ra0uB
-	hfoxtCXP5HwgwEQn0hf1n0rZBGrBEKbkn/Vve29P5dmRHr/OekQokIiHTl3UWKLnVhhHSxytXMw
-	fKw6LnVHEJPY0Qa+5kU74sxjZCpYdpAGvoqcwj
-X-Received: by 2002:a05:6a00:1d9b:b0:6e4:f3d6:b10f with SMTP id z27-20020a056a001d9b00b006e4f3d6b10fmr5755780pfw.20.1708938110349;
-        Mon, 26 Feb 2024 01:01:50 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IHGNZnV4tx95F48WidNiqrtnrG2f301gLzgB/OzjUhB1svwj5Czm1B+C/vQgIoPrUYkDlkrihgGA6Qhs/3rDFk=
-X-Received: by 2002:a05:6a00:1d9b:b0:6e4:f3d6:b10f with SMTP id
- z27-20020a056a001d9b00b006e4f3d6b10fmr5755754pfw.20.1708938109982; Mon, 26
- Feb 2024 01:01:49 -0800 (PST)
+        d=1e100.net; s=20230601; t=1708938163; x=1709542963;
+        h=content-transfer-encoding:mime-version:message-id:in-reply-to:date
+         :subject:cc:to:from:user-agent:references:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=DXJKtDALC3AllytrckFvRAF/ZRCMob4eWSKm4Ha7cls=;
+        b=cvGVk1v8CRlw+UEN1g8kJIcxVB/VrP8mvpLIMwanGaWOjvVzI6laltMVtJWuAx5/c0
+         BO1/HtDVfgTZktMvmh9D27FATgIcTRW0cVIKjRA5kcsIY2ywnqQlOFq8kEYt4V6j5WdD
+         kiNudxB83wD/3nKnK3s1TF7u14F6WXkRGnanYj2sLFy+WzDx5S1i5202H+bOpU9ZKnHq
+         zanDUk1pjinp7OZNlqs+rn2ICLpsEwmHFB7aV7ljnMgo3GcCJQSZNrt16OF7SDZ3I6+i
+         m5c+0AiC5eNZnUBAbBQznlq62KdRRcGnORPT4VnHb1/BaPqY4163jEuaQgfYpTdRQ/wE
+         NxQQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW2GIiMSKoJFQFvV9teX7gFcc+8BKToj+U6RYiJuoUmuiIoobZ7i/KbVhiEjdXNCxh9TlFusYs1ehr1RGT4pY3dThYzvti4TMi2EvWL
+X-Gm-Message-State: AOJu0Yxqsz2K9qZrMtweGX5+pPFrhEnrUcxxywAJ6bEGKy2cGn3gDFO1
+	ugGbkPCdJq5ERuqfMhqCSxv5IF3o5KzVtZrweclxOUKoW3PupSblGOcMJJpnAIY=
+X-Google-Smtp-Source: AGHT+IEABUyZM4Qr+FrrCNgluJIL+UvNGxn0b+EdUy4hbr938x99f18HccbJrZ69FJrZcZZVDCIEmg==
+X-Received: by 2002:a17:906:b7ca:b0:a3e:6038:42b8 with SMTP id fy10-20020a170906b7ca00b00a3e603842b8mr3801391ejb.39.1708938163246;
+        Mon, 26 Feb 2024 01:02:43 -0800 (PST)
+Received: from localhost ([194.62.217.1])
+        by smtp.gmail.com with ESMTPSA id un6-20020a170907cb8600b00a4386852da5sm1198ejc.83.2024.02.26.01.02.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 26 Feb 2024 01:02:42 -0800 (PST)
+References: <20230503090708.2524310-7-nmi@metaspace.dk>
+ <20230503120354.534136-1-aliceryhl@google.com>
+User-agent: mu4e 1.10.8; emacs 29.2
+From: "Andreas Hindborg (Samsung)" <nmi@metaspace.dk>
+To: Alice Ryhl <aliceryhl@google.com>
+Cc: Damien.LeMoal@wdc.com, alex.gaynor@gmail.com, axboe@kernel.dk,
+ benno.lossin@proton.me, bjorn3_gh@protonmail.com, boqun.feng@gmail.com,
+ gary@garyguo.net, gost.dev@samsung.com, hare@suse.de, hch@lst.de,
+ kbusch@kernel.org, linux-block@vger.kernel.org,
+ linux-kernel@vger.kernel.org, lsf-pc@lists.linux-foundation.org,
+ ojeda@kernel.org, rust-for-linux@vger.kernel.org, wedsonaf@gmail.com,
+ willy@infradead.org
+Subject: Re: [RFC PATCH 06/11] rust: apply cache line padding for `SpinLock`
+Date: Fri, 23 Feb 2024 12:29:40 +0100
+In-reply-to: <20230503120354.534136-1-aliceryhl@google.com>
+Message-ID: <87y1b7a994.fsf@metaspace.dk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240222075806.1816400-1-yukuai1@huaweicloud.com> <20240222075806.1816400-2-yukuai1@huaweicloud.com>
-In-Reply-To: <20240222075806.1816400-2-yukuai1@huaweicloud.com>
-From: Xiao Ni <xni@redhat.com>
-Date: Mon, 26 Feb 2024 17:01:38 +0800
-Message-ID: <CALTww29hJHjRMk+dRfLLckvmwmH=CyuNebWjL7nhLzdJ=Rea_g@mail.gmail.com>
-Subject: Re: [PATCH md-6.9 01/10] md: add a new helper rdev_has_badblock()
-To: Yu Kuai <yukuai1@huaweicloud.com>
-Cc: paul.e.luse@linux.intel.com, song@kernel.org, neilb@suse.com, shli@fb.com, 
-	linux-raid@vger.kernel.org, linux-kernel@vger.kernel.org, yukuai3@huawei.com, 
-	yi.zhang@huawei.com, yangerkun@huawei.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Feb 22, 2024 at 4:05=E2=80=AFPM Yu Kuai <yukuai1@huaweicloud.com> w=
-rote:
->
-> From: Yu Kuai <yukuai3@huawei.com>
->
-> The current api is_badblock() must pass in 'first_bad' and
-> 'bad_sectors', however, many caller just want to know if there are
-> badblocks or not, and these caller must define two local variable that
-> will never be used.
->
-> Add a new helper rdev_has_badblock() that will only return if there are
-> badblocks or not, remove unnecessary local variables and replace
-> is_badblock() with the new helper in many places.
->
-> There are no functional changes, and the new helper will also be used
-> later to refactor read_balance().
->
-> Co-developed-by: Paul Luse <paul.e.luse@linux.intel.com>
-> Signed-off-by: Paul Luse <paul.e.luse@linux.intel.com>
-> Signed-off-by: Yu Kuai <yukuai3@huawei.com>
-> ---
->  drivers/md/md.h     | 10 ++++++++++
->  drivers/md/raid1.c  | 26 +++++++-------------------
->  drivers/md/raid10.c | 45 ++++++++++++++-------------------------------
->  drivers/md/raid5.c  | 35 +++++++++++++----------------------
->  4 files changed, 44 insertions(+), 72 deletions(-)
->
-> diff --git a/drivers/md/md.h b/drivers/md/md.h
-> index 8d881cc59799..a49ab04ab707 100644
-> --- a/drivers/md/md.h
-> +++ b/drivers/md/md.h
-> @@ -222,6 +222,16 @@ static inline int is_badblock(struct md_rdev *rdev, =
-sector_t s, int sectors,
->         }
->         return 0;
->  }
-> +
-> +static inline int rdev_has_badblock(struct md_rdev *rdev, sector_t s,
-> +                                   int sectors)
-> +{
-> +       sector_t first_bad;
-> +       int bad_sectors;
-> +
-> +       return is_badblock(rdev, s, sectors, &first_bad, &bad_sectors);
-> +}
-> +
->  extern int rdev_set_badblocks(struct md_rdev *rdev, sector_t s, int sect=
-ors,
->                               int is_new);
->  extern int rdev_clear_badblocks(struct md_rdev *rdev, sector_t s, int se=
-ctors,
-> diff --git a/drivers/md/raid1.c b/drivers/md/raid1.c
-> index 286f8b16c7bd..a145fe48b9ce 100644
-> --- a/drivers/md/raid1.c
-> +++ b/drivers/md/raid1.c
-> @@ -498,9 +498,6 @@ static void raid1_end_write_request(struct bio *bio)
->                  * to user-side. So if something waits for IO, then it
->                  * will wait for the 'master' bio.
->                  */
-> -               sector_t first_bad;
-> -               int bad_sectors;
-> -
->                 r1_bio->bios[mirror] =3D NULL;
->                 to_put =3D bio;
->                 /*
-> @@ -516,8 +513,8 @@ static void raid1_end_write_request(struct bio *bio)
->                         set_bit(R1BIO_Uptodate, &r1_bio->state);
->
->                 /* Maybe we can clear some bad blocks. */
-> -               if (is_badblock(rdev, r1_bio->sector, r1_bio->sectors,
-> -                               &first_bad, &bad_sectors) && !discard_err=
-or) {
-> +               if (rdev_has_badblock(rdev, r1_bio->sector, r1_bio->secto=
-rs) &&
-> +                   !discard_error) {
->                         r1_bio->bios[mirror] =3D IO_MADE_GOOD;
->                         set_bit(R1BIO_MadeGood, &r1_bio->state);
->                 }
-> @@ -1944,8 +1941,6 @@ static void end_sync_write(struct bio *bio)
->         struct r1bio *r1_bio =3D get_resync_r1bio(bio);
->         struct mddev *mddev =3D r1_bio->mddev;
->         struct r1conf *conf =3D mddev->private;
-> -       sector_t first_bad;
-> -       int bad_sectors;
->         struct md_rdev *rdev =3D conf->mirrors[find_bio_disk(r1_bio, bio)=
-].rdev;
->
->         if (!uptodate) {
-> @@ -1955,14 +1950,11 @@ static void end_sync_write(struct bio *bio)
->                         set_bit(MD_RECOVERY_NEEDED, &
->                                 mddev->recovery);
->                 set_bit(R1BIO_WriteError, &r1_bio->state);
-> -       } else if (is_badblock(rdev, r1_bio->sector, r1_bio->sectors,
-> -                              &first_bad, &bad_sectors) &&
-> -                  !is_badblock(conf->mirrors[r1_bio->read_disk].rdev,
-> -                               r1_bio->sector,
-> -                               r1_bio->sectors,
-> -                               &first_bad, &bad_sectors)
-> -               )
-> +       } else if (rdev_has_badblock(rdev, r1_bio->sector, r1_bio->sector=
-s) &&
-> +                  !rdev_has_badblock(conf->mirrors[r1_bio->read_disk].rd=
-ev,
-> +                                     r1_bio->sector, r1_bio->sectors)) {
->                 set_bit(R1BIO_MadeGood, &r1_bio->state);
-> +       }
->
->         put_sync_write_buf(r1_bio, uptodate);
->  }
-> @@ -2279,16 +2271,12 @@ static void fix_read_error(struct r1conf *conf, s=
-truct r1bio *r1_bio)
->                         s =3D PAGE_SIZE >> 9;
->
->                 do {
-> -                       sector_t first_bad;
-> -                       int bad_sectors;
-> -
->                         rdev =3D conf->mirrors[d].rdev;
->                         if (rdev &&
->                             (test_bit(In_sync, &rdev->flags) ||
->                              (!test_bit(Faulty, &rdev->flags) &&
->                               rdev->recovery_offset >=3D sect + s)) &&
-> -                           is_badblock(rdev, sect, s,
-> -                                       &first_bad, &bad_sectors) =3D=3D =
-0) {
-> +                           rdev_has_badblock(rdev, sect, s) =3D=3D 0) {
->                                 atomic_inc(&rdev->nr_pending);
->                                 if (sync_page_io(rdev, sect, s<<9,
->                                          conf->tmppage, REQ_OP_READ, fals=
-e))
-> diff --git a/drivers/md/raid10.c b/drivers/md/raid10.c
-> index 7412066ea22c..d5a7a621f0f0 100644
-> --- a/drivers/md/raid10.c
-> +++ b/drivers/md/raid10.c
-> @@ -518,11 +518,7 @@ static void raid10_end_write_request(struct bio *bio=
-)
->                  * The 'master' represents the composite IO operation to
->                  * user-side. So if something waits for IO, then it will
->                  * wait for the 'master' bio.
-> -                */
-> -               sector_t first_bad;
-> -               int bad_sectors;
-> -
-> -               /*
-> +                *
->                  * Do not set R10BIO_Uptodate if the current device is
->                  * rebuilding or Faulty. This is because we cannot use
->                  * such device for properly reading the data back (we cou=
-ld
-> @@ -535,10 +531,9 @@ static void raid10_end_write_request(struct bio *bio=
-)
->                         set_bit(R10BIO_Uptodate, &r10_bio->state);
->
->                 /* Maybe we can clear some bad blocks. */
-> -               if (is_badblock(rdev,
-> -                               r10_bio->devs[slot].addr,
-> -                               r10_bio->sectors,
-> -                               &first_bad, &bad_sectors) && !discard_err=
-or) {
-> +               if (rdev_has_badblock(rdev, r10_bio->devs[slot].addr,
-> +                                     r10_bio->sectors) &&
-> +                   !discard_error) {
->                         bio_put(bio);
->                         if (repl)
->                                 r10_bio->devs[slot].repl_bio =3D IO_MADE_=
-GOOD;
-> @@ -1330,10 +1325,7 @@ static void wait_blocked_dev(struct mddev *mddev, =
-struct r10bio *r10_bio)
->                 }
->
->                 if (rdev && test_bit(WriteErrorSeen, &rdev->flags)) {
-> -                       sector_t first_bad;
->                         sector_t dev_sector =3D r10_bio->devs[i].addr;
-> -                       int bad_sectors;
-> -                       int is_bad;
->
->                         /*
->                          * Discard request doesn't care the write result
-> @@ -1342,9 +1334,8 @@ static void wait_blocked_dev(struct mddev *mddev, s=
-truct r10bio *r10_bio)
->                         if (!r10_bio->sectors)
->                                 continue;
->
-> -                       is_bad =3D is_badblock(rdev, dev_sector, r10_bio-=
->sectors,
-> -                                            &first_bad, &bad_sectors);
-> -                       if (is_bad < 0) {
-> +                       if (rdev_has_badblock(rdev, dev_sector,
-> +                                             r10_bio->sectors) < 0) {
->                                 /*
->                                  * Mustn't write here until the bad block
->                                  * is acknowledged
-> @@ -2290,8 +2281,6 @@ static void end_sync_write(struct bio *bio)
->         struct mddev *mddev =3D r10_bio->mddev;
->         struct r10conf *conf =3D mddev->private;
->         int d;
-> -       sector_t first_bad;
-> -       int bad_sectors;
->         int slot;
->         int repl;
->         struct md_rdev *rdev =3D NULL;
-> @@ -2312,11 +2301,10 @@ static void end_sync_write(struct bio *bio)
->                                         &rdev->mddev->recovery);
->                         set_bit(R10BIO_WriteError, &r10_bio->state);
->                 }
-> -       } else if (is_badblock(rdev,
-> -                            r10_bio->devs[slot].addr,
-> -                            r10_bio->sectors,
-> -                            &first_bad, &bad_sectors))
-> +       } else if (rdev_has_badblock(rdev, r10_bio->devs[slot].addr,
-> +                                    r10_bio->sectors)) {
->                 set_bit(R10BIO_MadeGood, &r10_bio->state);
-> +       }
->
->         rdev_dec_pending(rdev, mddev);
->
-> @@ -2597,11 +2585,8 @@ static void recovery_request_write(struct mddev *m=
-ddev, struct r10bio *r10_bio)
->  static int r10_sync_page_io(struct md_rdev *rdev, sector_t sector,
->                             int sectors, struct page *page, enum req_op o=
-p)
->  {
-> -       sector_t first_bad;
-> -       int bad_sectors;
-> -
-> -       if (is_badblock(rdev, sector, sectors, &first_bad, &bad_sectors)
-> -           && (op =3D=3D REQ_OP_READ || test_bit(WriteErrorSeen, &rdev->=
-flags)))
-> +       if (rdev_has_badblock(rdev, sector, sectors) &&
-> +           (op =3D=3D REQ_OP_READ || test_bit(WriteErrorSeen, &rdev->fla=
-gs)))
->                 return -1;
->         if (sync_page_io(rdev, sector, sectors << 9, page, op, false))
->                 /* success */
-> @@ -2658,16 +2643,14 @@ static void fix_read_error(struct r10conf *conf, =
-struct mddev *mddev, struct r10
->                         s =3D PAGE_SIZE >> 9;
->
->                 do {
-> -                       sector_t first_bad;
-> -                       int bad_sectors;
-> -
->                         d =3D r10_bio->devs[sl].devnum;
->                         rdev =3D conf->mirrors[d].rdev;
->                         if (rdev &&
->                             test_bit(In_sync, &rdev->flags) &&
->                             !test_bit(Faulty, &rdev->flags) &&
-> -                           is_badblock(rdev, r10_bio->devs[sl].addr + se=
-ct, s,
-> -                                       &first_bad, &bad_sectors) =3D=3D =
-0) {
-> +                           rdev_has_badblock(rdev,
-> +                                             r10_bio->devs[sl].addr + se=
-ct,
-> +                                             s) =3D=3D 0) {
->                                 atomic_inc(&rdev->nr_pending);
->                                 success =3D sync_page_io(rdev,
->                                                        r10_bio->devs[sl].=
-addr +
-> diff --git a/drivers/md/raid5.c b/drivers/md/raid5.c
-> index 14f2cf75abbd..9241e95ef55c 100644
-> --- a/drivers/md/raid5.c
-> +++ b/drivers/md/raid5.c
-> @@ -1210,10 +1210,8 @@ static void ops_run_io(struct stripe_head *sh, str=
-uct stripe_head_state *s)
->                  */
->                 while (op_is_write(op) && rdev &&
->                        test_bit(WriteErrorSeen, &rdev->flags)) {
-> -                       sector_t first_bad;
-> -                       int bad_sectors;
-> -                       int bad =3D is_badblock(rdev, sh->sector, RAID5_S=
-TRIPE_SECTORS(conf),
-> -                                             &first_bad, &bad_sectors);
-> +                       int bad =3D rdev_has_badblock(rdev, sh->sector,
-> +                                                   RAID5_STRIPE_SECTORS(=
-conf));
->                         if (!bad)
->                                 break;
->
-> @@ -2855,8 +2853,6 @@ static void raid5_end_write_request(struct bio *bi)
->         struct r5conf *conf =3D sh->raid_conf;
->         int disks =3D sh->disks, i;
->         struct md_rdev *rdev;
-> -       sector_t first_bad;
-> -       int bad_sectors;
->         int replacement =3D 0;
->
->         for (i =3D 0 ; i < disks; i++) {
-> @@ -2888,9 +2884,8 @@ static void raid5_end_write_request(struct bio *bi)
->         if (replacement) {
->                 if (bi->bi_status)
->                         md_error(conf->mddev, rdev);
-> -               else if (is_badblock(rdev, sh->sector,
-> -                                    RAID5_STRIPE_SECTORS(conf),
-> -                                    &first_bad, &bad_sectors))
-> +               else if (rdev_has_badblock(rdev, sh->sector,
-> +                                          RAID5_STRIPE_SECTORS(conf)))
->                         set_bit(R5_MadeGoodRepl, &sh->dev[i].flags);
->         } else {
->                 if (bi->bi_status) {
-> @@ -2900,9 +2895,8 @@ static void raid5_end_write_request(struct bio *bi)
->                         if (!test_and_set_bit(WantReplacement, &rdev->fla=
-gs))
->                                 set_bit(MD_RECOVERY_NEEDED,
->                                         &rdev->mddev->recovery);
-> -               } else if (is_badblock(rdev, sh->sector,
-> -                                      RAID5_STRIPE_SECTORS(conf),
-> -                                      &first_bad, &bad_sectors)) {
-> +               } else if (rdev_has_badblock(rdev, sh->sector,
-> +                                            RAID5_STRIPE_SECTORS(conf)))=
- {
->                         set_bit(R5_MadeGood, &sh->dev[i].flags);
->                         if (test_bit(R5_ReadError, &sh->dev[i].flags))
->                                 /* That was a successful write so make
-> @@ -4674,8 +4668,6 @@ static void analyse_stripe(struct stripe_head *sh, =
-struct stripe_head_state *s)
->         /* Now to look around and see what can be done */
->         for (i=3Ddisks; i--; ) {
->                 struct md_rdev *rdev;
-> -               sector_t first_bad;
-> -               int bad_sectors;
->                 int is_bad =3D 0;
->
->                 dev =3D &sh->dev[i];
-> @@ -4719,8 +4711,8 @@ static void analyse_stripe(struct stripe_head *sh, =
-struct stripe_head_state *s)
->                 rdev =3D conf->disks[i].replacement;
->                 if (rdev && !test_bit(Faulty, &rdev->flags) &&
->                     rdev->recovery_offset >=3D sh->sector + RAID5_STRIPE_=
-SECTORS(conf) &&
-> -                   !is_badblock(rdev, sh->sector, RAID5_STRIPE_SECTORS(c=
-onf),
-> -                                &first_bad, &bad_sectors))
-> +                   !rdev_has_badblock(rdev, sh->sector,
-> +                                      RAID5_STRIPE_SECTORS(conf)))
->                         set_bit(R5_ReadRepl, &dev->flags);
->                 else {
->                         if (rdev && !test_bit(Faulty, &rdev->flags))
-> @@ -4733,8 +4725,8 @@ static void analyse_stripe(struct stripe_head *sh, =
-struct stripe_head_state *s)
->                 if (rdev && test_bit(Faulty, &rdev->flags))
->                         rdev =3D NULL;
->                 if (rdev) {
-> -                       is_bad =3D is_badblock(rdev, sh->sector, RAID5_ST=
-RIPE_SECTORS(conf),
-> -                                            &first_bad, &bad_sectors);
-> +                       is_bad =3D rdev_has_badblock(rdev, sh->sector,
-> +                                                  RAID5_STRIPE_SECTORS(c=
-onf));
->                         if (s->blocked_rdev =3D=3D NULL
->                             && (test_bit(Blocked, &rdev->flags)
->                                 || is_bad < 0)) {
-> @@ -5463,8 +5455,8 @@ static int raid5_read_one_chunk(struct mddev *mddev=
-, struct bio *raid_bio)
->         struct r5conf *conf =3D mddev->private;
->         struct bio *align_bio;
->         struct md_rdev *rdev;
-> -       sector_t sector, end_sector, first_bad;
-> -       int bad_sectors, dd_idx;
-> +       sector_t sector, end_sector;
-> +       int dd_idx;
->         bool did_inc;
->
->         if (!in_chunk_boundary(mddev, raid_bio)) {
-> @@ -5493,8 +5485,7 @@ static int raid5_read_one_chunk(struct mddev *mddev=
-, struct bio *raid_bio)
->
->         atomic_inc(&rdev->nr_pending);
->
-> -       if (is_badblock(rdev, sector, bio_sectors(raid_bio), &first_bad,
-> -                       &bad_sectors)) {
-> +       if (rdev_has_badblock(rdev, sector, bio_sectors(raid_bio))) {
->                 rdev_dec_pending(rdev, mddev);
->                 return 0;
->         }
-> --
-> 2.39.2
->
->
 
-This patch looks good to me.
-Reviewed-by: Xiao Ni <xni@redhat.com>
+Hi Alice,
 
+Alice Ryhl <aliceryhl@google.com> writes:
+
+> On Wed, 3 May 2023 11:07:03 +0200, Andreas Hindborg <a.hindborg@samsung.c=
+om> wrote:
+>> The kernel `struct spinlock` is 4 bytes on x86 when lockdep is not enabl=
+ed. The
+>> structure is not padded to fit a cache line. The effect of this for `Spi=
+nLock`
+>> is that the lock variable and the value protected by the lock will share=
+ a cache
+>> line, depending on the alignment requirements of the protected value. Al=
+igning
+>> the lock variable and the protected value to a cache line yields a 20%
+>> performance increase for the Rust null block driver for sequential reads=
+ to
+>> memory backed devices at 6 concurrent readers.
+>>=20
+>> Signed-off-by: Andreas Hindborg <a.hindborg@samsung.com>
+>
+> This applies the cacheline padding to all spinlocks unconditionally.
+> It's not clear to me that we want to do that. Instead, I suggest using
+> `SpinLock<CachePadded<T>>` in the null block driver to opt-in to the
+> cache padding there, and let other drivers choose whether or not they
+> want to cache pad their locks.
+
+I was going to write that this is not going to work because the compiler
+is going to reorder the fields of `Lock` and put the `data` field first,
+followed by the `state` field. But I checked the layout, and it seems
+that I actually get the `state` field first (with an alignment of 4), 60
+bytes of padding, and then the `data` field (with alignment 64).
+
+I am wondering why the compiler is not reordering these fields? Am I
+guaranteed that the fields will not be reordered? Looking at the
+definition of `Lock` there does not seem to be anything that prevents
+rustc from swapping `state` and `data`.
+
+>
+> On Wed, 3 May 2023 11:07:03 +0200, Andreas Hindborg <a.hindborg@samsung.c=
+om> wrote:
+>> diff --git a/rust/kernel/cache_padded.rs b/rust/kernel/cache_padded.rs
+>> new file mode 100644
+>> index 000000000000..758678e71f50
+>> --- /dev/null
+>> +++ b/rust/kernel/cache_padded.rs
+>>=20
+>> +impl<T> CachePadded<T> {
+>> +    /// Pads and aligns a value to 64 bytes.
+>> +    #[inline(always)]
+>> +    pub(crate) const fn new(t: T) -> CachePadded<T> {
+>> +        CachePadded::<T> { value: t }
+>> +    }
+>> +}
+>
+> Please make this `pub` instead of just `pub(crate)`. Other drivers might
+> want to use this directly.
+
+Alright.
+
+>
+> On Wed, 3 May 2023 11:07:03 +0200, Andreas Hindborg <a.hindborg@samsung.c=
+om> wrote:
+>> diff --git a/rust/kernel/sync/lock/spinlock.rs b/rust/kernel/sync/lock/s=
+pinlock.rs
+>> index 979b56464a4e..e39142a8148c 100644
+>> --- a/rust/kernel/sync/lock/spinlock.rs
+>> +++ b/rust/kernel/sync/lock/spinlock.rs
+>> @@ -100,18 +103,20 @@ unsafe impl super::Backend for SpinLockBackend {
+>>      ) {
+>>          // SAFETY: The safety requirements ensure that `ptr` is valid f=
+or writes, and `name` and
+>>          // `key` are valid for read indefinitely.
+>> -        unsafe { bindings::__spin_lock_init(ptr, name, key) }
+>> +        unsafe { bindings::__spin_lock_init((&mut *ptr).deref_mut(), na=
+me, key) }
+>>      }
+>>=20=20
+>> +    #[inline(always)]
+>>      unsafe fn lock(ptr: *mut Self::State) -> Self::GuardState {
+>>          // SAFETY: The safety requirements of this function ensure that=
+ `ptr` points to valid
+>>          // memory, and that it has been initialised before.
+>> -        unsafe { bindings::spin_lock(ptr) }
+>> +        unsafe { bindings::spin_lock((&mut *ptr).deref_mut()) }
+>>      }
+>>=20=20
+>> +    #[inline(always)]
+>>      unsafe fn unlock(ptr: *mut Self::State, _guard_state: &Self::GuardS=
+tate) {
+>>          // SAFETY: The safety requirements of this function ensure that=
+ `ptr` is valid and that the
+>>          // caller is the owner of the mutex.
+>> -        unsafe { bindings::spin_unlock(ptr) }
+>> +        unsafe { bindings::spin_unlock((&mut *ptr).deref_mut()) }
+>>      }
+>>  }
+>
+> I would prefer to remain in pointer-land for the above operations. I
+> think that this leads to core that is more obviously correct.
+>
+> For example:
+>
+> ```
+> impl<T> CachePadded<T> {
+>     pub const fn raw_get(ptr: *mut Self) -> *mut T {
+>         core::ptr::addr_of_mut!((*ptr).value)
+>     }
+> }
+>
+> #[inline(always)]
+> unsafe fn unlock(ptr: *mut Self::State, _guard_state: &Self::GuardState) {
+>     unsafe { bindings::spin_unlock(CachePadded::raw_get(ptr)) }
+> }
+> ```
+
+Got it =F0=9F=91=8D
+
+
+BR Andreas
