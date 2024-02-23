@@ -1,55 +1,57 @@
-Received: from mail-io1-f44.google.com (mail-io1-f44.google.com [209.85.166.44])
+Received: from mail-io1-f52.google.com (mail-io1-f52.google.com [209.85.166.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C8666280B
-	for <linux-kernel@vger.kernel.org>; Fri, 23 Feb 2024 13:39:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 245FA7EF1B
+	for <linux-kernel@vger.kernel.org>; Fri, 23 Feb 2024 13:39:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708695578; cv=none; b=eYIi47quYRXUWptev36wCLvlwgHEn5aIShi10fMDqCmTNgzu43Nu56K/sBBh8vWpOUBPb5PM4/UJ/mcsdOCi6mzKD7VLAwgi7eb9rtAbc+WLFWpQdFfdnBJi65I7i7fRjMEpm8o81WYclPFixd/8w6kamnx+psq/w1gdZLSbsAs=
+	t=1708695578; cv=none; b=P3P2nQ7w5aztL/JmQavOP7/6ru515kegYkpJVU/nEJkdOK+i645CKhK89oL7+ZlVWaXs7HgSz3Up5uFWq1gegmGYZuPVeX8Cvny1IWwQxWWplN4M62sQRwIHnmKXSGR/Wb4CohT86G0+1/HEJpTreaNyVUiNaU73L+akmbo77Lo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1708695578; c=relaxed/simple;
-	bh=Twp7tfSTw0JcrYxColLY4Ax9TG/pkPRhM7VLYkZRS4A=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=fcOvLTO+HAqbLOOmAxSM9jTgTuzW4wPJYTLPdzM/O/87iwkV7tYuudOYDU+L7fMkIYh0wwmhvZoPTx5N5PEIQuDTv8PQq4c9tXNRZu7l7IZ4bxDOvM4fANBh2g/C2YxcT33pYcOSRISwKWAHS2OrpfUCd1HBRwFiGX/dgJT/s50=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=O1pfL0Nj; arc=none smtp.client-ip=209.85.166.44
+	bh=Otvyd2MsHFXrOkwOQxydra3hVlb5u0R7qZzhz2ed4Fg=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=j6XBgIsKxXIqQO66FQrP6JFUCJsb+FICNV0N38X64PTu6DJViuxwmb14vJR+eivQJOx9q8g2JyA//OvSN5JeSIywPCQfi18dFaOC5RBU08ZSWZ76KIvkKfxpO9sItID7Wpmgag4ZasuDS9xJhEDMeZAgNnx17Dr6EvlCL9jAQyY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=VLKiRBzg; arc=none smtp.client-ip=209.85.166.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="O1pfL0Nj"
-Received: by mail-io1-f44.google.com with SMTP id ca18e2360f4ac-7c40863de70so44332239f.0
-        for <linux-kernel@vger.kernel.org>; Fri, 23 Feb 2024 05:39:35 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VLKiRBzg"
+Received: by mail-io1-f52.google.com with SMTP id ca18e2360f4ac-7c796072dafso30637539f.0
+        for <linux-kernel@vger.kernel.org>; Fri, 23 Feb 2024 05:39:36 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1708695575; x=1709300375; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=d4x2sMmK8Ljy9DYC/W73ZknuhG0GdB53Q7DPx/D50TQ=;
-        b=O1pfL0NjKwcPNi6v4TRbX29zYKLHT9rMUoyBA4x2AZuL0ZSjaepb9uKDoEpUo3cMzk
-         pJ9Imwnzko2bF3xyF4oqRTx3yD+bDoWAtWke12lKiK1u8FVmMYJGv8J2C24svYf45wow
-         xTp4qQ7ZXEjU1BbrXn5OZ5+fmmRd7M2ERjJrtmT00sj5N8j1m7DmsgMNOtWy11a1fKPo
-         hcJpWg8Baju6GSUd/gPvjBVW95iGZhqW/sUnGZfMc8y420mj4lABxgkkREtMgbtuiX7t
-         x5sulLg0C39I3Dyt0Tk4ZZ6wxXAdpSwCzpD1TyKtIhVYM2/ckv/0/PlqMbrtc+tbvB9/
-         pxLA==
+        d=linaro.org; s=google; t=1708695576; x=1709300376; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=4sNCG7M726gTL8Llpt0gPnGSGC/YST1sdl72eg4G5Bg=;
+        b=VLKiRBzgsXBoGMWuamMRqaGfTHGG8SO0OxUfmPDhgyQ3NsW6XCbzLLKKCzFyS5AzxE
+         S4WbOHdlUTpC5jzdAnevEepD34WLCQimM9oRAbHpJ6tXugWbaACmmpGJ+NpaUhHAF0lx
+         di4Erx47MtqTjLgAZt30Pi59a/9Q3jHlaR/V5i4FSAIt26locSm3lIUBtV7JjCglCpnb
+         2aun2UBD4bLk6mMLVjNJQXTKUVRVoZwzdmtFk3Nqepzl3eAvbF26LPj7H8RCg42NHy3e
+         aPXjLsyk/ENS9VPeOZOIDpYaqPhpg3hC22uPAJGWUZuoInG5PRyRgUBcbuV7H8vwBltK
+         zYAQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708695575; x=1709300375;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=d4x2sMmK8Ljy9DYC/W73ZknuhG0GdB53Q7DPx/D50TQ=;
-        b=sYdht2RZax2KzNPdm/a87vb/mEgnOYFffk4F03WiYg2x/PXpd56fxYfcq2BtEKm5nN
-         vUHnpZ49AVJOAFeqwcOJ89Oqljdb9+xZR0kFw4ZKVW8oZ3LMvl1NyKQzZjeAbP8IjuMF
-         6/1cwNIOKXIc+XoEZNEmunFrn8atWUMzkBpL167U/5vaAs4Fo0UeR4NE7iKCuF6G7f7T
-         jLe97S0L5KoqTBNiurNEKnDU2eKqDehUhjaoBPylibNX3MAWNFSJsk6MTM6ehXH/eU+7
-         G+RHaSVrzxJl4bz/EjclFWtOQVC7uEX37BMd76cE6JsgwTgn4Bhm5mfxS7tbqNuNG4Zo
-         V4pA==
-X-Forwarded-Encrypted: i=1; AJvYcCUH+5l8Mzoykf+ZT1qfFV7w/tpfVQBvol0TNO3cTHBoUGMN46I7tTq0lbCxvvzhM7hwoLpYxogQqy3tx1ljvC3xt2e+eLgiPdhNgVn+
-X-Gm-Message-State: AOJu0YxWA/tWeoCBJA4RugoXwQrZivym9hO0xOAy0GixKmb7xmmDldgF
-	6mjhGVEAtIiIWTR0j5QW8EMMGok7xwVmLiVoV5xOu7vpJDUqFBoAgezVF6n5e1E=
-X-Google-Smtp-Source: AGHT+IFrz5R0BlotlFi4jZ+FPrD+nKWN+cqkiTi9yfrUfHfyDhCGmqbGauLW7N/Kb+gQyn8NGnS1AQ==
-X-Received: by 2002:a6b:c90e:0:b0:7c7:9185:e58e with SMTP id z14-20020a6bc90e000000b007c79185e58emr1936714iof.12.1708695575154;
-        Fri, 23 Feb 2024 05:39:35 -0800 (PST)
+        d=1e100.net; s=20230601; t=1708695576; x=1709300376;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=4sNCG7M726gTL8Llpt0gPnGSGC/YST1sdl72eg4G5Bg=;
+        b=eDPHwHbwSJXV6JCV9wJs3gQj8/BZJAX6t8SrIPSjrxwR65U4sqfoEf+WC+JWUoxET8
+         Is+3y273aXPpnTkNbS6aqDEn5egGzSm50HVL+SaxcxEV3xrY+FqNsRAPr9TdTsue8N2A
+         QJkXKe/8Dt+RSkP5E6XoPX3tWSRnTiCQEgpTWN7Bo/4XHA9I6qcow7Xm1UivDReZmM5Z
+         iV23dL5xmymr7JU6RgJlnA24sioOSe7uYd+eILru9FB8tctTqr61rsGcwA0RbecfqA0T
+         eXwizLcGkmLO8UcfKVj4o03qhxdimPj7nXbJelb/jj3vF/+hcxNsE5AdhpyinDI+qqR3
+         ymaA==
+X-Forwarded-Encrypted: i=1; AJvYcCVDN1ZVycQf6Y17w6yA9iS06vhVdCuIxLAV4QTwMT/QhTPYd+TpJ3+UyfWl0xoeNolhLIaq/fdPcSXdBOH79IraTEkcq8OuMYj2vIly
+X-Gm-Message-State: AOJu0Yytjx1SwNYwslJi3EhGUsGl6SO1IM0Ve2NsHFh3JRDNUdvqCdFc
+	5E919xzXJYCAAn1cwKP98GLYI+lFHMtshXDyM2lGrCBcO8lloyPs0KD8BsE5+pc=
+X-Google-Smtp-Source: AGHT+IFxeXcd7g/tpcSglbnwOaRKYbO1Bk6zlg6uSwPZlSClK9s0o9j2TzDIYcP5g5NFpgyuBrvtBA==
+X-Received: by 2002:a05:6602:17de:b0:7c7:8d94:583c with SMTP id z30-20020a05660217de00b007c78d94583cmr1874917iox.16.1708695576302;
+        Fri, 23 Feb 2024 05:39:36 -0800 (PST)
 Received: from localhost.localdomain (c-73-228-159-35.hsd1.mn.comcast.net. [73.228.159.35])
-        by smtp.gmail.com with ESMTPSA id p11-20020a6b630b000000b007c76a2d6a98sm1836838iog.53.2024.02.23.05.39.34
+        by smtp.gmail.com with ESMTPSA id p11-20020a6b630b000000b007c76a2d6a98sm1836838iog.53.2024.02.23.05.39.35
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 23 Feb 2024 05:39:34 -0800 (PST)
+        Fri, 23 Feb 2024 05:39:35 -0800 (PST)
 From: Alex Elder <elder@linaro.org>
 To: davem@davemloft.net,
 	edumazet@google.com,
@@ -65,10 +67,12 @@ Cc: mka@chromium.org,
 	netdev@vger.kernel.org,
 	linux-arm-msm@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH net-next 0/6] net: ipa: don't abort system suspend
-Date: Fri, 23 Feb 2024 07:39:24 -0600
-Message-Id: <20240223133930.582041-1-elder@linaro.org>
+Subject: [PATCH net-next 1/6] net: ipa: don't bother aborting system resume
+Date: Fri, 23 Feb 2024 07:39:25 -0600
+Message-Id: <20240223133930.582041-2-elder@linaro.org>
 X-Mailer: git-send-email 2.40.1
+In-Reply-To: <20240223133930.582041-1-elder@linaro.org>
+References: <20240223133930.582041-1-elder@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -77,49 +81,57 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Currently the IPA code aborts an in-progress system suspend if an
-IPA interrupt arrives before the suspend completes.  There is no
-need to do that though, because the IPA driver handles a forced
-suspend correctly, quiescing any hardware activity before finally 
-turning off clocks and interconnects.
+The IPA interrupt can fire if there is data to be delivered to a GSI
+channel that is suspended.  This condition occurs in three scenarios.
 
-This series drops the call to pm_wakeup_dev_event() if an IPA
-SUSPEND interrupt arrives during system suspend.  Doing this
-makes the two remaining IPA power flags unnecessary, and allows
-some additional code to be cleaned up--and best of all, removed.
-The result is much simpler (and I'm really glad not to be using
-these flags any more).
+First, runtime power management automatically suspends the IPA
+hardware after half a second of inactivity.  This has nothing
+to do with system suspend, so a SYSTEM IPA power flag is used to
+avoid calling pm_wakeup_dev_event() when runtime suspended.
 
-The first patch implements the main change.  The second and
-third remove the flags that were used to determine whether to
-call pm_wakeup_dev_event().  The next two remove a function that
-becomes a trivial wrapper, and the last one just avoids writing
-a register unnecessarily.
+Second, if the system is suspended, the receipt of an IPA interrupt
+should trigger a system resume.  Configuring the IPA interrupt for
+wakeup accomplishes this.
 
-Note that the first two patches will have checkpatch warnings,
-because checkpatch disagrees with my compiler on what to do when
-a block contains only a semicolon.  I went with what the compiler
-recommends.
+Finally, if system suspend is underway and the IPA interrupt fires,
+we currently call pm_wakeup_dev_event() to abort the system suspend.
 
-clang says: warning: suggest braces around empty body
-checkpatch: WARNING: braces {} are not necessary for single statement blocks
+The IPA driver correctly handles quiescing the hardware before
+suspending it, so there's really no need to abort a suspend in
+progress in the third case.  We can simply quiesce and suspend
+things, and be done.
 
-					-Alex
+Incoming data can still wake the system after it's suspended.
+The IPA interrupt has wakeup mode enabled, so if it fires *after*
+we've suspended, it will trigger a wakeup (if not disabled via
+sysfs).
 
-Alex Elder (6):
-  net: ipa: don't bother aborting system resume
-  net: ipa: kill IPA_POWER_FLAG_SYSTEM
-  net: ipa: kill the IPA_POWER_FLAG_RESUMED flag
-  net: ipa: move ipa_interrupt_suspend_clear_all() up
-  net: ipa: kill ipa_power_suspend_handler()
-  net: ipa: don't bother zeroing an already zero register
+Stop calling pm_wakeup_dev_event() to abort a system suspend in
+progress in ipa_power_suspend_handler().
 
- drivers/net/ipa/ipa_interrupt.c | 50 ++++++++++++++++-----------------
- drivers/net/ipa/ipa_interrupt.h |  8 ------
- drivers/net/ipa/ipa_power.c     | 33 ----------------------
- drivers/net/ipa/ipa_power.h     | 11 --------
- 4 files changed, 25 insertions(+), 77 deletions(-)
+Signed-off-by: Alex Elder <elder@linaro.org>
+---
+Note: checkpatch warns: braces {} are not necessary...
 
+ drivers/net/ipa/ipa_power.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/net/ipa/ipa_power.c b/drivers/net/ipa/ipa_power.c
+index 128a816f65237..694bc71e0a170 100644
+--- a/drivers/net/ipa/ipa_power.c
++++ b/drivers/net/ipa/ipa_power.c
+@@ -220,8 +220,9 @@ void ipa_power_suspend_handler(struct ipa *ipa, enum ipa_irq_id irq_id)
+ 	 * system suspend, trigger a system resume.
+ 	 */
+ 	if (!__test_and_set_bit(IPA_POWER_FLAG_RESUMED, ipa->power->flags))
+-		if (test_bit(IPA_POWER_FLAG_SYSTEM, ipa->power->flags))
+-			pm_wakeup_dev_event(&ipa->pdev->dev, 0, true);
++		if (test_bit(IPA_POWER_FLAG_SYSTEM, ipa->power->flags)) {
++			;
++		}
+ 
+ 	/* Acknowledge/clear the suspend interrupt on all endpoints */
+ 	ipa_interrupt_suspend_clear_all(ipa->interrupt);
 -- 
 2.40.1
 
