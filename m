@@ -1,70 +1,115 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E7F87F46E
-	for <linux-kernel@vger.kernel.org>; Fri, 23 Feb 2024 14:17:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BE2180BE3
+	for <linux-kernel@vger.kernel.org>; Fri, 23 Feb 2024 14:17:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708697829; cv=none; b=d6gyH63yuCMqiQzq6cxuI6n0YYQQH1EvYGlN/dthqRXWKtcxisD87Q+/25qZ8P3xuMLMXRGstmsh2VdHuwii5K+wbsGsFKDlg2GJZwvS395hERuapzq9wMScbnBbexmC64QUgANcK3vNIAx2TSc2ZT1JPJNBFZs1hWf7cX47sa4=
+	t=1708697829; cv=none; b=OCrSnxER5Aai7PvPmlnHKPeOGoDPkRUs/2dTszJ+WSnz42hjj6FmPn7IY3bs0PI/t4lnwTb8a6NU0WEN4f3t54rbOdngnVWzWZv0F6qNKbwCXVQkf/98Js4x2Ycne3Ihjrc/j15pcbSMOpfRwCHlJFY3QMoATXDtpoAY8q6T8xI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1708697829; c=relaxed/simple;
-	bh=zYQCDr9hrLFweiad+Qinjuk9PQpfLW4WKjieIAuoI5c=;
-	h=Message-ID:Date:From:To:Cc:Subject; b=IcdPi165dzaMLeMh9oHVQTCm8qq/jk4wyxcEOoxEEzQTFUxkdEugZsVQWIxCOvuiVaUkhhO27xbid9Y26/ctLgBOpsliy1EVuf96mIizHGK2UCN42IKsEpIwK9FRR4kbLdluogTsYMJZPiEjhJ7rOlEdLN6eG+2fE3B4SX4LRJI=
+	bh=nKcWAWVRnB8xYWN/oRCb/6ODPrdVBFq4pB5n9Mp0FBY=;
+	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
+	 Content-Type; b=cZDCSNvcI0DrMUbxldcgcyKfzhULlPsmnTHOxmc0+ccTWnkoiHjw7D0env7jmKAeJjl7lMmr1Op6Z4W6OFoVFqsWFk7g33xJJPXc6VNba1crGedmYA/2FXXBPUEkCFg1PYlxQO20BXPfQQCZ5BzT16vTzT8+MCwRxgGFzf4hys0=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C5DDAC433F1;
-	Fri, 23 Feb 2024 14:17:08 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4B0AEC43390;
+	Fri, 23 Feb 2024 14:17:09 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.97)
 	(envelope-from <rostedt@goodmis.org>)
-	id 1rdWOD-000000077Kk-2NW1;
-	Fri, 23 Feb 2024 09:19:01 -0500
-Message-ID: <20240223141838.985298316@goodmis.org>
+	id 1rdWOE-000000077Mi-0sLR;
+	Fri, 23 Feb 2024 09:19:02 -0500
+Message-ID: <20240223141902.070244243@goodmis.org>
 User-Agent: quilt/0.67
-Date: Fri, 23 Feb 2024 09:18:38 -0500
+Date: Fri, 23 Feb 2024 09:18:42 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org
 Cc: Masami Hiramatsu <mhiramat@kernel.org>,
  Mark Rutland <mark.rutland@arm.com>,
  Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Andrew Morton <akpm@linux-foundation.org>
-Subject: [for-next][PATCH 00/13] tracing: Updates for 6.9
+ Andrew Morton <akpm@linux-foundation.org>,
+ Beau Belgrave <beaub@linux.microsoft.com>
+Subject: [for-next][PATCH 04/13] tracing/user_events: Document multi-format flag
+References: <20240223141838.985298316@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+
+From: Beau Belgrave <beaub@linux.microsoft.com>
+
+User programs can now ask user_events to handle the synchronization of
+multiple different formats for an event with the same name via the new
+USER_EVENT_REG_MULTI_FORMAT flag.
+
+Add a section for USER_EVENT_REG_MULTI_FORMAT that explains the intended
+purpose and caveats of using it. Explain how deletion works in these
+cases and how to use /sys/kernel/tracing/dynamic_events for per-version
+deletion.
+
+Link: https://lore.kernel.org/linux-trace-kernel/20240222001807.1463-5-beaub@linux.microsoft.com
+
+Signed-off-by: Beau Belgrave <beaub@linux.microsoft.com>
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+ Documentation/trace/user_events.rst | 27 ++++++++++++++++++++++++++-
+ 1 file changed, 26 insertions(+), 1 deletion(-)
+
+diff --git a/Documentation/trace/user_events.rst b/Documentation/trace/user_events.rst
+index d8f12442aaa6..1d5a7626e6a6 100644
+--- a/Documentation/trace/user_events.rst
++++ b/Documentation/trace/user_events.rst
+@@ -92,6 +92,24 @@ The following flags are currently supported.
+   process closes or unregisters the event. Requires CAP_PERFMON otherwise
+   -EPERM is returned.
+ 
+++ USER_EVENT_REG_MULTI_FORMAT: The event can contain multiple formats. This
++  allows programs to prevent themselves from being blocked when their event
++  format changes and they wish to use the same name. When this flag is used the
++  tracepoint name will be in the new format of "name.unique_id" vs the older
++  format of "name". A tracepoint will be created for each unique pair of name
++  and format. This means if several processes use the same name and format,
++  they will use the same tracepoint. If yet another process uses the same name,
++  but a different format than the other processes, it will use a different
++  tracepoint with a new unique id. Recording programs need to scan tracefs for
++  the various different formats of the event name they are interested in
++  recording. The system name of the tracepoint will also use "user_events_multi"
++  instead of "user_events". This prevents single-format event names conflicting
++  with any multi-format event names within tracefs. The unique_id is output as
++  a hex string. Recording programs should ensure the tracepoint name starts with
++  the event name they registered and has a suffix that starts with . and only
++  has hex characters. For example to find all versions of the event "test" you
++  can use the regex "^test\.[0-9a-fA-F]+$".
++
+ Upon successful registration the following is set.
+ 
+ + write_index: The index to use for this file descriptor that represents this
+@@ -106,6 +124,9 @@ or perf record -e user_events:[name] when attaching/recording.
+ **NOTE:** The event subsystem name by default is "user_events". Callers should
+ not assume it will always be "user_events". Operators reserve the right in the
+ future to change the subsystem name per-process to accommodate event isolation.
++In addition if the USER_EVENT_REG_MULTI_FORMAT flag is used the tracepoint name
++will have a unique id appended to it and the system name will be
++"user_events_multi" as described above.
+ 
+ Command Format
+ ^^^^^^^^^^^^^^
+@@ -156,7 +177,11 @@ to request deletes than the one used for registration due to this.
+ to the event. If programs do not want auto-delete, they must use the
+ USER_EVENT_REG_PERSIST flag when registering the event. Once that flag is used
+ the event exists until DIAG_IOCSDEL is invoked. Both register and delete of an
+-event that persists requires CAP_PERFMON, otherwise -EPERM is returned.
++event that persists requires CAP_PERFMON, otherwise -EPERM is returned. When
++there are multiple formats of the same event name, all events with the same
++name will be attempted to be deleted. If only a specific version is wanted to
++be deleted then the /sys/kernel/tracing/dynamic_events file should be used for
++that specific format of the event.
+ 
+ Unregistering
+ -------------
+-- 
+2.43.0
 
 
-Beau Belgrave (4):
-      tracing/user_events: Prepare find/delete for same name events
-      tracing/user_events: Introduce multi-format events
-      selftests/user_events: Test multi-format events
-      tracing/user_events: Document multi-format flag
-
-John Garry (1):
-      tracing: Use init_utsname()->release
-
-Steven Rostedt (Google) (8):
-      NFSD: Fix nfsd_clid_class use of __string_len() macro
-      drm/i915: Add missing ; to __assign_str() macros in tracepoint code
-      tracing: Rework __assign_str() and __string() to not duplicate getting the string
-      tracing: Do not calculate strlen() twice for __string() fields
-      tracing: Use ? : shortcut in trace macros
-      tracing: Use EVENT_NULL_STR macro instead of open coding "(null)"
-      tracing: Fix snapshot counter going between two tracers that use it
-      tracing: Decrement the snapshot if the snapshot trigger fails to register
-
-----
- Documentation/trace/user_events.rst                |  27 ++-
- drivers/gpu/drm/i915/display/intel_display_trace.h |   6 +-
- fs/nfsd/trace.h                                    |   2 +-
- include/linux/trace_events.h                       |   3 +
- include/trace/events/sunrpc.h                      |  12 +-
- include/trace/stages/stage2_data_offsets.h         |   4 +-
- include/trace/stages/stage5_get_offsets.h          |  15 +-
- include/trace/stages/stage6_event_callback.h       |  12 +-
- include/uapi/linux/user_events.h                   |   6 +-
- kernel/trace/trace.c                               |   6 +-
- kernel/trace/trace_events_trigger.c                |   5 +-
- kernel/trace/trace_events_user.c                   | 209 +++++++++++++++------
- tools/testing/selftests/user_events/abi_test.c     | 134 +++++++++++++
- 13 files changed, 354 insertions(+), 87 deletions(-)
