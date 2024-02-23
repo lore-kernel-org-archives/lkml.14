@@ -1,80 +1,92 @@
-Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EEE71B95F;
-	Fri, 23 Feb 2024 09:56:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC9A014F8C
+	for <linux-kernel@vger.kernel.org>; Fri, 23 Feb 2024 09:57:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708682195; cv=none; b=hU5sA6YepUZjav3j6UkB7ccYlOAjO+yilH0SVgQDuZsGz+bKkzzsAIIdldpLVdPQ9pbsjz+GXxD17bITWuKXCJiAzJJE7tyY10kwwsleYKtDtZf2yLKEnNTMRN4wtyDMV8AuJc/V+JgIYIJNOLv1yPa1ydWvzR7znIdI2Co1Z0s=
+	t=1708682262; cv=none; b=AhyBCZmG5FLoEX43CuCVsqKV/3Tco5U8veL8LdyTZuafDkvOag0JQIfxh91mmacXUzpECYfV+87MHd12gCdpnqg/87G3h1857eQ2bAIG9VtMujv5VrWANtYIzXhEu08m4hAvaroPhd9NCCdf1sLUeJfPZWSebh4D+uGP4jPVn20=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708682195; c=relaxed/simple;
-	bh=H+5Q8S0fCCHH/72zW00OZ26QcIirOOQqYtSEZXPW3hE=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=e9GkB62ISUtb23KvM5apZY5k6T2BQnDI5BhVNAcrTWAIBl3jOMsF3BnlsT/n1dOiWCHXIJ1LSoJzY2Us8RPP+W6pTmUZR+tp3znABCy5e4oLKC+TUrDFr/FbjQMPi26kq8YUvGpqjUSEieNbcY2OkMZg/GWPsUg73Msdd6w7nWw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=dZ9yY35a; arc=none smtp.client-ip=217.70.183.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1708682262; c=relaxed/simple;
+	bh=v0l7HTP7lsDPJCnwCBLsqGp+y2UNKtugLO9N2xkevdU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=M6aH4kIiOwT7azDep4BAnD6wjyfa7s1yvNhkFLz8MdYEeAMF2ZbvjU74JsAeFy1ghHe0WU7Wu9TgF5ozSjSekllPkcMSqi27WRbkGsljsKIOqCWZWJC70oRQSoBKjGxp3KXQABBiRe8YltgrapSccNbMmys1mvbJ+cuH56e0oXE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=dZjQNpvo; arc=none smtp.client-ip=209.85.221.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="dZ9yY35a"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id A86031BF20B;
-	Fri, 23 Feb 2024 09:56:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1708682191;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=F+3ui4MTey0h3yMuAIR85kZGD6qDVbJZoIy/CfcoFU4=;
-	b=dZ9yY35ac+PkpZTeHWyoX8fwl12pTM/KBK+uK5NZOMXMMwRu7nZt/nPeb4WrtkpE4kUVoG
-	JtoC2VWAhV1v9zPBannrTy349VpaZMT8tg4VSG6Q/EWcDRZXFd/h5h7tMPZ9NIMLBVJSiG
-	j9lgUJBiqrBPKpEofmPDCJjpVN7EZIlQ6DFjT09C/lWARcUcc2G6mRte7K9mGNRpbQt7gE
-	a/gwK+Zv3yQWzPPNar2HVpMepeiVcmBZ7FqVUyN8gO6DdzcFP/CYUpFXIkrLEnk+DvwAsZ
-	v47LMvVbmHF26lJbaDZqWd6im5aO9I2IbKkwcrwaomUqmRQiaKtzWnm9+wRr6w==
-Date: Fri, 23 Feb 2024 10:56:26 +0100
-From: Maxime Chevallier <maxime.chevallier@bootlin.com>
-To: Serge Semin <fancer.lancer@gmail.com>
-Cc: Jose Abreu <joabreu@synopsys.com>, Jose Abreu <Jose.Abreu@synopsys.com>,
- Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>,
- Russell King <linux@armlinux.org.uk>, Jakub Kicinski <kuba@kernel.org>,
- Vladimir Oltean <olteanv@gmail.com>, "David S. Miller"
- <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Paolo Abeni
- <pabeni@redhat.com>, Mengyuan Lou <mengyuanlou@net-swift.com>, Tomer Maimon
- <tmaimon77@gmail.com>, Jiawen Wu <jiawenwu@trustnetic.com>, Alexandre
- Torgue <alexandre.torgue@foss.st.com>, openbmc@lists.ozlabs.org,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next v2 4/4] net: pcs: xpcs: Explicitly return error
- on caps validation
-Message-ID: <20240223105626.71b2bcb2@device-28.home>
-In-Reply-To: <20240222175843.26919-5-fancer.lancer@gmail.com>
-References: <20240222175843.26919-1-fancer.lancer@gmail.com>
-	<20240222175843.26919-5-fancer.lancer@gmail.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.2.0 (GTK 3.24.41; x86_64-redhat-linux-gnu)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dZjQNpvo"
+Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-3394b892691so371429f8f.1
+        for <linux-kernel@vger.kernel.org>; Fri, 23 Feb 2024 01:57:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1708682259; x=1709287059; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=0/y/rI+M/5qiVISNkhUYwwY4gRxXJKTqbidyY3f2wE0=;
+        b=dZjQNpvo741c6WI3kkW9Pift5Phe9OtpEs0BgP1BJttEQ8vsMS4HELWROU9kj+sJVj
+         6rbizHUaiPQ4CGZxIeZyknUF6OUisNqJ9jnaNeraJpQ2roTdpxeNVrjcN7tcWoekUCn2
+         KUOYr+t3Lufi0bDLX8N5FzsDNV+znnXgmymeyKHE+77fKQGr4BtpnLZh1l19S7BoAryx
+         THPu2RreYc7Kf9gevUAVkzb0e9gapt5iCFOQ31Wo2q+1KQESBOmXoNRA/dLzjamA8NND
+         oaqsnc72jbmp82DT+IrFmcMBwP/mrCTmQGDSSZRSllGT9e4kyek3DQiq4JWr0d7keRs/
+         bQ1A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708682259; x=1709287059;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=0/y/rI+M/5qiVISNkhUYwwY4gRxXJKTqbidyY3f2wE0=;
+        b=FMRL8WTHH6RirEUfGp8P6wLMNmalgPymUXajEilcGAMHSHrt9XQryGwwcwWwsVUF6I
+         MFpQypNN10kbOmIRPLiS0ahwjlWHhh26wpbhqaJ16xaWVb9IKzDytEsies0YbMcNt6Ox
+         Sxt8mEGfrT/awLwO0WcGS8n29C67+T3++zwsmMq4ffGus4v11waELbgJ6gKLANhqcCZO
+         gc77Zy19h4TdztJ3RjQKW7X4ouK3nFxzYir0IUPkjdlRZVKwCaFEFYlvDvsDcKHb1vtJ
+         9fqoXNs1EjntuT0rLfcSvT3hnMLDDXYaCS2Hv4+scl5F6SljLRfsqEMHvJa/171hoIwa
+         yhPQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUmyRgbLC0EqS9ppmx1znt0h9S3IAW/YOhBUlPrWfypHn+4cBAoafO2IIeicSRGksGfirDplNX/b8S/8fYyOlkKzoj9E1Pz5EiGC2LW
+X-Gm-Message-State: AOJu0YzusLWUjP9EIfrx/KVALeTp4z68SIA22dkj+Q2WUT4DzWSPkDt7
+	xBIQjULl02ftMPzrLjA0V45xRRjKetMLh26WtQc05QZyza7SUWFKc76NmQiBUEI=
+X-Google-Smtp-Source: AGHT+IE6tVWqEE3mCN+25DqhP/CUP5T/jGAansZoun1aHwjyncsoYOjI/jf9FiAzxP2Z7I7QVismBw==
+X-Received: by 2002:a5d:6691:0:b0:33d:2567:995c with SMTP id l17-20020a5d6691000000b0033d2567995cmr1215561wru.1.1708682259350;
+        Fri, 23 Feb 2024 01:57:39 -0800 (PST)
+Received: from localhost ([102.222.70.76])
+        by smtp.gmail.com with ESMTPSA id bn22-20020a056000061600b0033d81d9c44esm2313054wrb.70.2024.02.23.01.57.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 23 Feb 2024 01:57:39 -0800 (PST)
+Date: Fri, 23 Feb 2024 12:57:35 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Su Hui <suhui@nfschina.com>
+Cc: Mike Marshall <hubcap@omnibond.com>,
+	Martin Brandenburg <martin@omnibond.com>, devel@lists.orangefs.org,
+	linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH next] orangefs: re-fix sb refcount leak when allocate sb
+ info failed.
+Message-ID: <32506721-f81b-46d8-b421-d5d2a4b3540a@moroto.mountain>
+References: <20240223093639.1794556-1-suhui@nfschina.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-GND-Sasl: maxime.chevallier@bootlin.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240223093639.1794556-1-suhui@nfschina.com>
 
-Hello Serge,
-
-On Thu, 22 Feb 2024 20:58:23 +0300
-Serge Semin <fancer.lancer@gmail.com> wrote:
-
-> If an unsupported interface is passed to the PCS validation callback there
-> is no need in further link-modes calculations since the resultant array
-> will be initialized with zeros which will be perceived by the phylink
-> subsystem as error anyway (see phylink_validate_mac_and_pcs()). Instead
-> let's explicitly return the -EINVAL error to inform the caller about the
-> unsupported interface as it's done in the rest of the pcs_validate
-> callbacks.
+On Fri, Feb 23, 2024 at 05:36:41PM +0800, Su Hui wrote:
+> This problem was previously fixed by commit ac2c63757f4f ("orangefs: Fix sb
+> refcount leak when allocate sb info failed.").
+> Add a judgement to fix NULL deference problem and also avoid refcount
+> leak problem.
 > 
-> Signed-off-by: Serge Semin <fancer.lancer@gmail.com>
+> Fixes: 9bf93dcfc453 ("Julia Lawall reported this null pointer dereference, this should fix it.")
+> Signed-off-by: Su Hui <suhui@nfschina.com>
+> ---
+> ps: Thanks for Dan's suggestion[1].
+> [1]: https://lore.kernel.org/all/c4bf77fb-c289-4f5d-9f20-e0861a543d91@moroto.mountain/
 
-This looks good to me,
+Thanks!
 
-Reviewed-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
+Reviewed-by: Dan Carpenter <dan.carpenter@linaro.org>
+
+regards,
+dan carpenter
+
