@@ -1,39 +1,38 @@
 Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99E9682C94;
-	Fri, 23 Feb 2024 16:05:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FFEC84A3B;
+	Fri, 23 Feb 2024 16:05:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708704336; cv=none; b=ONGMgD+XTp3ADHtO7yXT/88yI9nO9QxefiBxjs9N81DrL8Y0QfuXjIe9RM+v7S+UlCxRdbN57M2up3mlzO+xf/Vr9egRRoR0r+hP1pd7K/gXqhHOfVwNP5thW81477M4HOdY4nit3jezNQ9lIRze6ZWZssJ7WeVn3+q3dsyzuhY=
+	t=1708704338; cv=none; b=Mq8OGpmUE7sVIDMYJmjg1OjeWhu9xAoy+ldrrqxXklFmKj6Ug2SDsHfTh7boKXW7+qIY0ygHZ9xlYeEgW2rGed4yZfI6ysWwywEd1bgoxpaiUMDpoO6FEiTem0sYmuGmCXc/RHrRQbhUhx6Gl5kaR+0jwYsJtx7SjEtOHbve2U4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708704336; c=relaxed/simple;
-	bh=vE5VgPP6Zm7bCL/kEb3+VHnXXFs1xbBqGLEwnPNNXLg=;
+	s=arc-20240116; t=1708704338; c=relaxed/simple;
+	bh=97EOv05Zvt8CODTX+l/7VHsmXG1xRa8W1GdqMMOu4S4=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=twqZhVvHbjnJio6zCxIcRVL5ipbR7nUv4sNZrXllJsauPCTWrnHjKcsQgJFZeLVgO6UfcupcIUt9OynLSmAXUtbXHNvLI8/E/0RBC+JmHVz/A4OBmLc0Dr/GrdntS/4ZGIaa1O1h8uEafr5aoxaIepNBhk/sq2QWBvU8A1yH3w4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=kF1uRtGJ; arc=none smtp.client-ip=217.70.183.197
+	 In-Reply-To:To:Cc; b=R7c8hIRz6IV14Hn21Mu2Bg/vj/7swX/hBhFrslifUHtXM5MrdrbEZQTUuUo3B9SQBLCIhzkwiwRmDrqo0J9WGmJuRVtipkfvjXhexEARqXXaRnhJVW4+oRLOTQr9kkRJIvbmjxLZxUeq2XFcyWkt35U2inqHBEIajCITB0eUxmQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=cOD7OspL; arc=none smtp.client-ip=217.70.183.197
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="kF1uRtGJ"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 1EBC81C0004;
-	Fri, 23 Feb 2024 16:05:32 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="cOD7OspL"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id B24741C0008;
+	Fri, 23 Feb 2024 16:05:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1708704332;
+	t=1708704334;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=rbIZMwtxQIO+hXns/iDo1uxK2FfPOqD7m7muGpA+4qM=;
-	b=kF1uRtGJZjdQLHjQC+iq+zv9FIHFE8XcIXdKRpKFrlQAVWPUH6P4uS9KFI/gC9OtnqNoZO
-	JW58FYyVdiQ3FGxNCvMHqukattXpUCx16iLkt6Hdbo1dFFPhNrt5AR8FbFpXHVMj9QKIZc
-	V6FQCLsXDLjnhRX57QT5xGbP2hxZ6eyI5F/V4winePg/yPVYA/gBrc17r1VOUxgUZyljiz
-	bRVU0mdHdioz/UcIVyYY3NLgtTN+GvOOB/g05X7fH5i4qC3GvD82ECOWJw3jql0pBRGSBv
-	ryS6xX+gKGAMTz92bT3JjqOxUGsiBK60PIV5+F2wO1PrN1oAJF1qPmm9nb4zWA==
+	bh=9FINWLp/w0HN6A+6t4rg5b6XzSr+dwLhUgwTrZyKrbg=;
+	b=cOD7OspLvGU9jVADF5Hs8xu3HGeAENLLkI5Ccu/rnM7Nb6QAN993aq6F6blcocec/8zYOU
+	kt1fGZgX3RevRgRzg0stoXbRmz/b7rTLu+uNiqGkX5jIrPy9HYWZFdm7TmqdGiwLqv527R
+	C9SQ4kyCbS5k5Fk04BCbRQCa5S3lUF5sbzzT8sbVDP11szXnSuq6OKmHVybNDt3fa77CSj
+	zYPTB8ZXxt2friE/EDQ+gAx7+JAwDLtxOO8YHo8RtqqFGy665GLQgcWqxQhnO+h19JoxX3
+	Ep6/7ylAX6DHDXwMBPHUlFp1EB3h+ETaxlQQ0SLC0lqFyLtplZ6A1RwLXBFlVA==
 From: =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>
-Date: Fri, 23 Feb 2024 17:05:26 +0100
-Subject: [PATCH v3 2/8] dt-bindings: usb: ti,j721e-usb: add ti,j7200-usb
- compatible
+Date: Fri, 23 Feb 2024 17:05:28 +0100
+Subject: [PATCH v3 4/8] usb: cdns3-ti: support reset-on-resume behavior
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,7 +41,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20240223-j7200-usb-suspend-v3-2-b41c9893a130@bootlin.com>
+Message-Id: <20240223-j7200-usb-suspend-v3-4-b41c9893a130@bootlin.com>
 References: <20240223-j7200-usb-suspend-v3-0-b41c9893a130@bootlin.com>
 In-Reply-To: <20240223-j7200-usb-suspend-v3-0-b41c9893a130@bootlin.com>
 To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
@@ -61,26 +60,75 @@ Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
 X-Mailer: b4 0.13.0
 X-GND-Sasl: theo.lebrun@bootlin.com
 
-On J7200, the controller & its wrapper are reset on resume. This makes
-it have a different behavior from other platforms.
+Add match data support, with one boolean to indicate whether the
+hardware resets after a system-wide suspend. If hardware resets, we
+force execute ->runtime_resume() at system-wide resume to run the
+hardware init sequence.
+
+No compatible exploits this functionality, just yet.
 
 Signed-off-by: Théo Lebrun <theo.lebrun@bootlin.com>
 ---
- Documentation/devicetree/bindings/usb/ti,j721e-usb.yaml | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/usb/cdns3/cdns3-ti.c | 27 +++++++++++++++++++++++++++
+ 1 file changed, 27 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/usb/ti,j721e-usb.yaml b/Documentation/devicetree/bindings/usb/ti,j721e-usb.yaml
-index 949f45eb45c2..d52d5b2965aa 100644
---- a/Documentation/devicetree/bindings/usb/ti,j721e-usb.yaml
-+++ b/Documentation/devicetree/bindings/usb/ti,j721e-usb.yaml
-@@ -14,6 +14,7 @@ properties:
-     enum:
-       - ti,j721e-usb
-       - ti,am64-usb
-+      - ti,j7200-usb
+diff --git a/drivers/usb/cdns3/cdns3-ti.c b/drivers/usb/cdns3/cdns3-ti.c
+index 4c8a557e6a6f..f76327566798 100644
+--- a/drivers/usb/cdns3/cdns3-ti.c
++++ b/drivers/usb/cdns3/cdns3-ti.c
+@@ -57,9 +57,14 @@ struct cdns_ti {
+ 	unsigned vbus_divider:1;
+ 	struct clk *usb2_refclk;
+ 	struct clk *lpm_clk;
++	const struct cdns_ti_match_data *match_data;
+ 	int usb2_refclk_rate_code;
+ };
  
-   reg:
-     maxItems: 1
++struct cdns_ti_match_data {
++	bool reset_on_resume;
++};
++
+ static const int cdns_ti_rate_table[] = {	/* in KHZ */
+ 	9600,
+ 	10000,
+@@ -101,6 +106,7 @@ static int cdns_ti_probe(struct platform_device *pdev)
+ 	platform_set_drvdata(pdev, data);
+ 
+ 	data->dev = dev;
++	data->match_data = device_get_match_data(dev);
+ 
+ 	data->usbss = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(data->usbss)) {
+@@ -220,8 +226,29 @@ static int cdns_ti_runtime_resume(struct device *dev)
+ 	return 0;
+ }
+ 
++static int cdns_ti_suspend(struct device *dev)
++{
++	struct cdns_ti *data = dev_get_drvdata(dev);
++
++	if (data->match_data && data->match_data->reset_on_resume)
++		return pm_runtime_force_suspend(dev);
++	else
++		return 0;
++}
++
++static int cdns_ti_resume(struct device *dev)
++{
++	struct cdns_ti *data = dev_get_drvdata(dev);
++
++	if (data->match_data && data->match_data->reset_on_resume)
++		return pm_runtime_force_resume(dev);
++	else
++		return 0;
++}
++
+ static const struct dev_pm_ops cdns_ti_pm_ops = {
+ 	RUNTIME_PM_OPS(NULL, cdns_ti_runtime_resume, NULL)
++	SYSTEM_SLEEP_PM_OPS(cdns_ti_suspend, cdns_ti_resume)
+ };
+ 
+ static const struct of_device_id cdns_ti_of_match[] = {
 
 -- 
 2.43.2
