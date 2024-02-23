@@ -1,91 +1,139 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3647963111;
-	Fri, 23 Feb 2024 10:41:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C82F5FB82;
+	Fri, 23 Feb 2024 10:41:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708684887; cv=none; b=qwBOX3hs2IuuS9LplA5dy6gjnOyH17MTss3PRuGx9N85ZYA3/COQBrZCOQS5GMxA8PRlLJV99RDHnXYjd++iOwI8PP2xhABXeMu5t63W240aIluLsCiGy2LDivgh72D6kI0mrwQ5CrSUqoFse6Q8sp6emGuciurv85M9c5zCFkw=
+	t=1708684904; cv=none; b=OpxC+MP6aKlSfrkIxNisIXXE0lH0anGf5Pxt0qgVFMyBzUnTfbCug85og/fgDAZgspT8z4gtLX57tS0K3WBnGNqfA+c8PM7uD+RfOYhOyNaczPIw8VufLTS0gGHDZSml+lRu3WKfR+rZwSRxH8fexDNBGQ3kpZLVfw5O+Rc4M1M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708684887; c=relaxed/simple;
-	bh=yQ5gfwOefwOYR/TaCnNrogXr3ETb5Amk5wl97VmmEbA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qADtgk7NPSa7NwMVC84GhC/6iC4c0CNolQb+SHFhoNh15PiSnadNvuhxsj9WRtaggK6c5znrTPAGee9eLTVPOgcVBYIk2UaBGhlX9riI6Wld0YQzde5WfOJpevbS5n6Fr3ic9XPujAEPnQ+XV9l+8icKzUtGGQ+S07Tp0xBAvAQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=K6DU9Lko; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1708684904; c=relaxed/simple;
+	bh=pMA/M1Wst7tXkYIO5GIr1rjeX1F/9HHGrY1Lxy8EC3w=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=OYDaltaPLpq5zNpd3+JNM4LNnEH5/teblyXxTT/37c21tPX01PGJW5r6k0dbE8xSoX2e0hGxdHSNwqKFyI+Q9fdy6Gf3hW5ktUZa9Heq32SLLZX/4+h/4s1hy1VkcHo+aDvT80NauSrgI8Qpzb+tX2qQlrDXaSfgaQys0l0BwZw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nNXUAdlz; arc=none smtp.client-ip=209.85.218.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="K6DU9Lko"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BBEA6C433F1;
-	Fri, 23 Feb 2024 10:41:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708684886;
-	bh=yQ5gfwOefwOYR/TaCnNrogXr3ETb5Amk5wl97VmmEbA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=K6DU9LkoALnHKFvraTWmnJPi71aDWQwUWdz9BFoY5zQg1PPgl79U5SA0buvUmM72M
-	 wwNXXpmQpzhl5Je1d9egRhXJ+9BRw0PXDt+MUDyfU3EIBw4U5BGEE/0aVPQupIcxi6
-	 SeDch/AFzOd8U4QJyfzU+4pF744oUcOJPl9niqBTX7EOz6o3scAM/ktT5VkD2oBfq7
-	 3HaR8aHcfVWKiYjRpKQa7KhNQeVEgOZDKPc1EHyS631wKkQ9A0k6XHhEDXsGtD6U3U
-	 3MSZJVz3IsceBu3TiHlgyBJNWt1PwConf31kAUq0ysYpoz1XzQHZtQAI7i/aqksE0D
-	 Swe/EJ2/O1OfA==
-Date: Fri, 23 Feb 2024 10:41:21 +0000
-From: Lee Jones <lee@kernel.org>
-To: David Laight <David.Laight@aculab.com>
-Cc: 'Justin Stitt' <justinstitt@google.com>,
-	Andy Whitcroft <apw@canonical.com>, Joe Perches <joe@perches.com>,
-	Dwaipayan Ray <dwaipayanray1@gmail.com>,
-	Lukas Bulwahn <lukas.bulwahn@gmail.com>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>,
-	Kees Cook <keescook@chromium.org>,
-	Finn Thain <fthain@linux-m68k.org>
-Subject: Re: [PATCH v2] checkpatch: add check for snprintf to scnprintf
-Message-ID: <20240223104121.GQ10170@google.com>
-References: <20240221-snprintf-checkpatch-v2-1-9baeb59dae30@google.com>
- <dd2b4ac483b54a41aff11a04b6906fd6@AcuMS.aculab.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nNXUAdlz"
+Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-a3d5e77cfbeso128235366b.0;
+        Fri, 23 Feb 2024 02:41:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1708684901; x=1709289701; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=pMA/M1Wst7tXkYIO5GIr1rjeX1F/9HHGrY1Lxy8EC3w=;
+        b=nNXUAdlzppPpKfGM+9uUXwTErhlOIWOEuIIycM5iubmq6LkmexL98e41OsNy+L8qDe
+         yrV0hi618880HngsiGM+Zg8HCnkGimOHdp/QZen5W71FFV3LvKYc7YBMbjhar/+eyZGY
+         Ad3AECKIxoa9Hqrhh2knV8qRLDy9Q8OfkkhsxSdLkJDJhZsQ+vLljKhMzoNn6UKjYBsA
+         NSKHgNsSnqu1dMls+GHOKI4lW3eHVA9Xi6MvAPcK9/rCbWnxWQ3+rEx51rj2sOvXXp7Y
+         WGNBxtDVmhFmGOZKNgkDT1iuE5Mcleu6DqRhoZ7FYpgFdwGX5CKOx0gaSrYDkT1po3DB
+         bkpQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708684901; x=1709289701;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=pMA/M1Wst7tXkYIO5GIr1rjeX1F/9HHGrY1Lxy8EC3w=;
+        b=Vda7QvdLes8BW4WLCprRLOHrrirXF7Y64xBXOWHNbGJOzbIuXqCToVOpbT2K5t6ua8
+         xhhANJ4Qnwq8okg3rZMNSaJTmScoToN0SRfbu0hEjaoWinDZVzzAGTs/UAvb+vkmXTEO
+         3MWIMHNca4cu2Y8d7z9XMC6xhFLuNUkPDUQ2uK7MruQ/zCqBF8aCHNhBjgaZiRA8Wi0N
+         Wb5ckVjjTYNq4Ml7vUbtog6inCBl3OQF0iF6gloGgvSzPha6K6XHJyd+hJDX29iF9dAI
+         tzD5OmOqV5FISQpOtdMpaabmNO/oWo8RzSye4WvE08WsJzCXPX/OOfnJMM7JvmsyM2RT
+         GLaw==
+X-Forwarded-Encrypted: i=1; AJvYcCWTZyMP29Kzo4jXJqKUZDzq9EXd4yaWyb5yhhuiaJnTjp9boHC0beCS5iPZuLgqd74wM549jziqk/lWzHTJkGZJUgGCBfofNJKRqlEZOdXZmLOLo134gEN9k8bRh2zIC8AvBVHpbcJD/w==
+X-Gm-Message-State: AOJu0Yx8fwGP6tvSPi+tVDfcPfSZVFX5Qh3HeJQ4rwGLZXckCId8RRLR
+	ZQgJbYHglmSBOe3McYvEILV0bxXJVswz9Nz5/eo5UXLQwW3nC9Zb
+X-Google-Smtp-Source: AGHT+IGUCCSCQV9rw4wx/ZhCMSmgrPlnVN15HXlKN/MbnKUIkrgqLVKR3L5lMpuFeA3d/5nKzSSAzg==
+X-Received: by 2002:a17:906:5c9:b0:a3f:4800:1fa8 with SMTP id t9-20020a17090605c900b00a3f48001fa8mr4270726ejt.26.1708684901141;
+        Fri, 23 Feb 2024 02:41:41 -0800 (PST)
+Received: from ?IPv6:2003:f6:ef1b:2000:944c:cbc7:1e1c:2c47? (p200300f6ef1b2000944ccbc71e1c2c47.dip0.t-ipconnect.de. [2003:f6:ef1b:2000:944c:cbc7:1e1c:2c47])
+        by smtp.gmail.com with ESMTPSA id ty24-20020a170907c71800b00a3ee41cbe87sm3762669ejc.153.2024.02.23.02.41.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 23 Feb 2024 02:41:40 -0800 (PST)
+Message-ID: <cdf0a9facd95a2b7ee618e6130dedb9aabf4ed09.camel@gmail.com>
+Subject: Re: [PATCH 1/2] driver core: Introduce device_link_wait_removal()
+From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
+To: Herve Codina <herve.codina@bootlin.com>, Saravana Kannan
+	 <saravanak@google.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki"
+ <rafael@kernel.org>, Rob Herring <robh+dt@kernel.org>, Frank Rowand
+ <frowand.list@gmail.com>, Lizhi Hou <lizhi.hou@amd.com>, Max Zhen
+ <max.zhen@amd.com>, Sonal Santan <sonal.santan@amd.com>, Stefano Stabellini
+ <stefano.stabellini@xilinx.com>, Jonathan Cameron
+ <Jonathan.Cameron@huawei.com>,  linux-kernel@vger.kernel.org,
+ devicetree@vger.kernel.org, Allan Nielsen <allan.nielsen@microchip.com>,
+ Horatiu Vultur <horatiu.vultur@microchip.com>,  Steen Hegelund
+ <steen.hegelund@microchip.com>, Thomas Petazzoni
+ <thomas.petazzoni@bootlin.com>, Android Kernel Team
+ <kernel-team@android.com>
+Date: Fri, 23 Feb 2024 11:45:02 +0100
+In-Reply-To: <20240223101115.6bf7d570@bootlin.com>
+References: <20231130174126.688486-1-herve.codina@bootlin.com>
+	 <20231130174126.688486-2-herve.codina@bootlin.com>
+	 <CAGETcx9uP86EHyKJNifBMd23oCsA+KpMa+e36wJEEnHDve+Avg@mail.gmail.com>
+	 <20240223101115.6bf7d570@bootlin.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.50.4 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <dd2b4ac483b54a41aff11a04b6906fd6@AcuMS.aculab.com>
 
-On Thu, 22 Feb 2024, David Laight wrote:
+On Fri, 2024-02-23 at 10:11 +0100, Herve Codina wrote:
+> Hi Saravana,
+>=20
+> On Tue, 20 Feb 2024 16:31:13 -0800
+> Saravana Kannan <saravanak@google.com> wrote:
+>=20
+> ...
+>=20
+> > > +void device_link_wait_removal(void)
+> > > +{
+> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /*
+> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * devlink removal jobs ar=
+e queued in the dedicated work queue.
+> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * To be sure that all rem=
+oval jobs are terminated, ensure that
+> > > any
+> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * scheduled work has run =
+to completion.
+> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 */
+> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 drain_workqueue(fw_devlink_wq);=
+=C2=A0=20
+> >=20
+> > Is there a reason this needs to be drain_workqueu() instead of
+> > flush_workqueue(). Drain is a stronger guarantee than we need in this
+> > case. All we are trying to make sure is that all the device link
+> > remove work queued so far have completed.
+>=20
+> I used drain_workqueue() because drain_workqueue() allows for jobs alread=
+y
+> present in a workqueue to re-queue a job and drain_workqueue() will wait
+> also for this new job completion.
+>=20
+> I think flush_workqueue() doesn't wait for this chain queueing.
+>=20
+> In our case, my understanding was that device_link_release_fn() calls
+> put_device() for the consumer and the supplier.
+> If refcounts reaches zero, devlink_dev_release() can be called again
+> and re-queue a job.
+>=20
 
-> From: Justin Stitt
-> > Sent: 21 February 2024 22:12
-> > 
-> > I am going to quote Lee Jones who has been doing some snprintf ->
-> > scnprintf refactorings:
-> > 
-> > "There is a general misunderstanding amongst engineers that
-> > {v}snprintf() returns the length of the data *actually* encoded into the
-> > destination array.  However, as per the C99 standard {v}snprintf()
-> > really returns the length of the data that *would have been* written if
-> > there were enough space for it.  This misunderstanding has led to
-> > buffer-overruns in the past.  It's generally considered safer to use the
-> > {v}scnprintf() variants in their place (or even sprintf() in simple
-> > cases).  So let's do that."
-> 
-> While generally true, there are places that really do want to
-> detect (and error) overflow.
-> That isn't possible with scnprintf().
-> 
-> I'm not sure what the solution is though.
-> Having a function that returns a negative value on overflow is also
-> likely to get misused.
-> seq_printf() (or whatever it is called) may let you check,
-> but it is hardly a cheap wrapper and a bit of a PITA to use.
+Looks sensible. The only doubt (that Saravana mays know better) is that I'm=
+ not
+sure put_device() on a supplier or consumer can actually lead to
+devlink_dev_release(). AFAIU, a consumer or a supplier should not be a devi=
+ce
+from the devlink class. Hence, looking at device_release(), I'm not sure it=
+ can
+happen unless for some odd reason someone is messing with devlinks in .remo=
+ve()
+or .type->remove().
 
-I agree.
+- Nuno S=C3=A1
 
-spprinf() was my favorite solution, but it seems that the lib string
-people don't like to accept new functionality, even if it's a clear
-improvement over the currently available solutions.
-
-[0] https://lore.kernel.org/all/20240130160953.766676-1-lee@kernel.org/
-
--- 
-Lee Jones [李琼斯]
