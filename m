@@ -1,37 +1,37 @@
-Received: from relay.smtp-ext.broadcom.com (unknown [192.19.166.228])
+Received: from relay.smtp-ext.broadcom.com (unknown [192.19.166.231])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2100110A1E
-	for <linux-kernel@vger.kernel.org>; Fri, 23 Feb 2024 03:48:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.19.166.228
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38DAFDDBB;
+	Fri, 23 Feb 2024 03:48:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.19.166.231
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708660111; cv=none; b=J3+DKLaE1d3JC++VpbwStp76/fD9W5XNn1vKnoB4YKzeD5ifVr8rIdDrhgELCJChPlcuenPxJhg3XhkbEaNNzsyesjxN19gSuxZrdDh/cqUIhz0Uc1owGu6N2RFN26qS10kg45EWur3KpwNNW9qFsstUBiiC7w1PyFQGnq9CJig=
+	t=1708660111; cv=none; b=EFGMqPJ8Gw3qUinFt2BDoyRPQ9JZV9tl4gB8SC1YDns/O7FzPIx+9dtlqUIJePG0duBSpLWFBP2Y3nrM57j6d1TEZc7tHwbSJTvbmHFeYaxhkXT51PoPpqwQtaF8CspUIvZzeZt0X2njJauZVefjpaizK9rE8vAB8JjVaVq0u3c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1708660111; c=relaxed/simple;
-	bh=TeVtdX37iglXRJatw6wyyl1lRRIAsFqkPmZrbmC3too=;
+	bh=jLwEb4I1DX2qFCUdUG5NZdbf5UdXONu/inu49U3VjgQ=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=bLgBPB9cXtkrPlNHznYA0YgxWM6apsMLhXHTejqZZ6EqvIAsTVIM+Cjru8OyVa2g7cTka2T1IEQRQAqtdfF2xicUVqPx+W12GWK2xdpT2WkgZV8iD5Mqj3ykjMHglZR7UX+IvITy2xcNIC51oET6N2vz5/20qa+tvMquy54qqQ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=JwhKpcSi; arc=none smtp.client-ip=192.19.166.228
+	 MIME-Version; b=nwIOToFDJf82+FvujFvxg0mtNkK4c7h8SbGyHUmj2mDaD3ACQLuBlmbwegsJ2Asu+yGvSeDrBfevmRou217NRJYVZbtINxiVmAfgLv7WFxJ2xuXq199KsH/L0o5IN8I9BietbTBD0FZpxnnfaZmTyFY9mBCLP4EWeZczZDJ8jQE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=MevVbaeQ; arc=none smtp.client-ip=192.19.166.231
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="JwhKpcSi"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="MevVbaeQ"
 Received: from mail-lvn-it-01.lvn.broadcom.net (mail-lvn-it-01.lvn.broadcom.net [10.36.132.253])
-	by relay.smtp-ext.broadcom.com (Postfix) with ESMTP id 59FABC0047EF;
-	Thu, 22 Feb 2024 19:48:20 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 relay.smtp-ext.broadcom.com 59FABC0047EF
+	by relay.smtp-ext.broadcom.com (Postfix) with ESMTP id 65382C001BF5;
+	Thu, 22 Feb 2024 19:48:29 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 relay.smtp-ext.broadcom.com 65382C001BF5
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=broadcom.com;
-	s=dkimrelay; t=1708660100;
-	bh=TeVtdX37iglXRJatw6wyyl1lRRIAsFqkPmZrbmC3too=;
+	s=dkimrelay; t=1708660109;
+	bh=jLwEb4I1DX2qFCUdUG5NZdbf5UdXONu/inu49U3VjgQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=JwhKpcSil3kvONwj/g5TRzwPhwrMvWACFghJl2BckzNhcgRjAjdtJarBx2pQMOwe5
-	 h82PSr+5yESiHsa5oZ5WxRv4TvhJP9iY1RXJRCt4qNM4CDWPWZFasa9HGfDRFr6C+4
-	 adxPHUaANr1AwZ/I/zwIuyCGUQZkHiZI/++IltRs=
+	b=MevVbaeQgn8ezCqYhd8D4Yq2/ooO1PpfIkwMUi4lsOjKaUSW95jLsWZOzfV1mJYBr
+	 pXOC1VTHS+HPUwHSRkUAyZIOOsLHE4okImWIqQCV7GmrfhoTvrQeqcHUj804jzb27X
+	 U7HpLoOl8SHgpkHDtST3gYpfzuG8oHB7qtIRx3Oc=
 Received: from bcacpedev-irv-3.lvn.broadcom.net (bcacpedev-irv-3.lvn.broadcom.net [10.173.232.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by mail-lvn-it-01.lvn.broadcom.net (Postfix) with ESMTPSA id CBC1F18041CAC4;
-	Thu, 22 Feb 2024 19:48:18 -0800 (PST)
+	by mail-lvn-it-01.lvn.broadcom.net (Postfix) with ESMTPSA id ED05418041CAC4;
+	Thu, 22 Feb 2024 19:48:27 -0800 (PST)
 From: William Zhang <william.zhang@broadcom.com>
 To: Linux MTD List <linux-mtd@lists.infradead.org>,
 	Linux ARM List <linux-arm-kernel@lists.infradead.org>,
@@ -44,17 +44,20 @@ Cc: f.fainelli@gmail.com,
 	kamal.dasu@broadcom.com,
 	tomer.yacoby@broadcom.com,
 	dan.beygelman@broadcom.com,
-	David Regan <dregan@broadcom.com>,
-	Dan Carpenter <dan.carpenter@linaro.org>,
 	William Zhang <william.zhang@broadcom.com>,
-	Miquel Raynal <miquel.raynal@bootlin.com>,
-	linux-kernel@vger.kernel.org,
-	Vignesh Raghavendra <vigneshr@ti.com>,
+	devicetree@vger.kernel.org,
 	Brian Norris <computersforpeace@gmail.com>,
-	Richard Weinberger <richard@nod.at>
-Subject: [PATCH v6 01/13] mtd: rawnand: brcmnand: exec_op helper functions return type fixes
-Date: Thu, 22 Feb 2024 19:47:46 -0800
-Message-Id: <20240223034758.13753-2-william.zhang@broadcom.com>
+	linux-kernel@vger.kernel.org,
+	Conor Dooley <conor+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Vignesh Raghavendra <vigneshr@ti.com>,
+	Miquel Raynal <miquel.raynal@bootlin.com>,
+	Richard Weinberger <richard@nod.at>,
+	Kamal Dasu <kdasu.kdev@gmail.com>,
+	Rob Herring <robh+dt@kernel.org>
+Subject: [PATCH v6 06/13] dt-bindings: mtd: brcmnand: Add ecc strap property
+Date: Thu, 22 Feb 2024 19:47:51 -0800
+Message-Id: <20240223034758.13753-7-william.zhang@broadcom.com>
 X-Mailer: git-send-email 2.37.3
 In-Reply-To: <20240223034758.13753-1-william.zhang@broadcom.com>
 References: <20240223034758.13753-1-william.zhang@broadcom.com>
@@ -66,77 +69,76 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: David Regan <dregan@broadcom.com>
+Add brcm,nand-ecc-use-strap to get ecc and spare area size settings from
+board boot strap for broadband board designs because they do not specify
+ecc setting in dts but rather using the strap setting.
 
-Fix return types for exec_op reset and status helper functions.
-
-Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
-Closes: http://lists.infradead.org/pipermail/linux-mtd/2023-December/102423.html
-Fixes: 3c8260ce7663 ("mtd: rawnand: brcmnand: exec_op implementation")
-Signed-off-by: David Regan <dregan@broadcom.com>
 Signed-off-by: William Zhang <william.zhang@broadcom.com>
-Reviewed-by: William Zhang <william.zhang@broadcom.com>
 
 ---
 
 Changes in v6:
-- Moved style fixes to a separate patch
+- Add other nand ecc properties to the exclude check list
+- Update the brcm,nand-ecc-use-strap property description
 
-Changes in v5: None
+Changes in v5:
+- Update the description for this ecc strap property
+- Add check to make sure brcm,nand-ecc-use-strap and
+  nand-ecc-strength/brcm,nand-oob-sector-size can not be used at the
+  same time
+
 Changes in v4:
-- Fix the commit id in the fixes tag
+- Move ecc strap property to this separate patch and remove some
+non-binding related text from the description
 
 Changes in v3: None
-Changes in v2:
-- Added to patch series
+Changes in v2: None
 
- drivers/mtd/nand/raw/brcmnand/brcmnand.c | 12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
+ .../bindings/mtd/brcm,brcmnand.yaml           | 24 +++++++++++++++++++
+ 1 file changed, 24 insertions(+)
 
-diff --git a/drivers/mtd/nand/raw/brcmnand/brcmnand.c b/drivers/mtd/nand/raw/brcmnand/brcmnand.c
-index 8faca43ae1ff..b8e70fc64348 100644
---- a/drivers/mtd/nand/raw/brcmnand/brcmnand.c
-+++ b/drivers/mtd/nand/raw/brcmnand/brcmnand.c
-@@ -625,7 +625,7 @@ enum {
- /* Only for v7.2 */
- #define	ACC_CONTROL_ECC_EXT_SHIFT		13
+diff --git a/Documentation/devicetree/bindings/mtd/brcm,brcmnand.yaml b/Documentation/devicetree/bindings/mtd/brcm,brcmnand.yaml
+index 6a717bcedfd3..064e840aeaa1 100644
+--- a/Documentation/devicetree/bindings/mtd/brcm,brcmnand.yaml
++++ b/Documentation/devicetree/bindings/mtd/brcm,brcmnand.yaml
+@@ -146,6 +146,15 @@ patternProperties:
+           layout.
+         $ref: /schemas/types.yaml#/definitions/uint32
  
--static u8 brcmnand_status(struct brcmnand_host *host);
-+static int brcmnand_status(struct brcmnand_host *host);
- 
- static inline bool brcmnand_non_mmio_ops(struct brcmnand_controller *ctrl)
- {
-@@ -1690,7 +1690,7 @@ static int brcmnand_waitfunc(struct nand_chip *chip)
- 				 INTFC_FLASH_STATUS;
- }
- 
--static u8 brcmnand_status(struct brcmnand_host *host)
-+static int brcmnand_status(struct brcmnand_host *host)
- {
- 	struct nand_chip *chip = &host->chip;
- 	struct mtd_info *mtd = nand_to_mtd(chip);
-@@ -1701,7 +1701,7 @@ static u8 brcmnand_status(struct brcmnand_host *host)
- 	return brcmnand_waitfunc(chip);
- }
- 
--static u8 brcmnand_reset(struct brcmnand_host *host)
-+static int brcmnand_reset(struct brcmnand_host *host)
- {
- 	struct nand_chip *chip = &host->chip;
- 
-@@ -2433,7 +2433,11 @@ static int brcmnand_exec_op(struct nand_chip *chip,
- 
- 	if (brcmnand_op_is_status(op)) {
- 		status = op->instrs[1].ctx.data.buf.in;
--		*status = brcmnand_status(host);
-+		ret = brcmnand_status(host);
-+		if (ret < 0)
-+			return ret;
++      brcm,nand-ecc-use-strap:
++        description:
++          This property requires the host system to get the ECC related
++          settings from the SoC NAND boot strap configuration instead of
++          the generic NAND ECC settings. This is a common hardware design
++          on BCMBCA based boards. This strap ECC option and generic NAND
++          ECC option can not be specified at the same time.
++        $ref: /schemas/types.yaml#/definitions/flag
 +
-+		*status = ret & 0xFF;
+     unevaluatedProperties: false
  
- 		return 0;
- 	}
+ allOf:
+@@ -195,6 +204,21 @@ allOf:
+       required:
+         - interrupt-names
+ 
++  - if:
++      patternProperties:
++        "^nand@[a-f0-9]$":
++          required:
++            - brcm,nand-ecc-use-strap
++    then:
++      patternProperties:
++        "^nand@[a-f0-9]$":
++          properties:
++            nand-ecc-strength: false
++            nand-ecc-step-size: false
++            nand-ecc-maximize: false
++            nand-ecc-algo: false
++            brcm,nand-oob-sector-size: false
++
+ unevaluatedProperties: false
+ 
+ required:
 -- 
 2.37.3
 
