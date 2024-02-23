@@ -1,191 +1,153 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from mout-p-201.mailbox.org (mout-p-201.mailbox.org [80.241.56.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75AF67A725;
-	Fri, 23 Feb 2024 11:36:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05AFB5C617;
+	Fri, 23 Feb 2024 11:37:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708688200; cv=none; b=VAdAzv5NbQZpn8XNIuNmYjP1PC1r61rglnn8KqUnNOX6Z4qOChJ6SxSyBbAf8X53Xw2BwPb/xNtG0NCCIN120NGDQYCUdtdbYkgjkFphfFVKTpB44DFJhukx13YU/FrM3yXihT6qRuId4p/ODInU1LGcnVNIrNDGY3OO/cIxeSE=
+	t=1708688249; cv=none; b=GgQalgYN1Ibqrkav4GKcNJQR0km+/DW09YbS7y+M4gJUctCnhCbxGhI9kAbDs6MCuhZgJhjp8sN50IfeW+F2S6rIo5n+4h3GgilWJP/AY3Cy4CP5+4WJJaGoIDTibEIcW/HWWSUcamh960p6meiPi+UpPHbp/ydQbcXxWujRGvI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708688200; c=relaxed/simple;
-	bh=rD5j6z4UXyN4KDu0BktxVBBRuPzEK0pA5vDMoVfxJxE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=rL/Ub5DX/GpYP0MeyBkfHiC8ounYHrTmE4FlAnNq6b1FlcVhSzxjEmsnYqO+wlGKqDha9T8il99d+rBMMZoyHA2aAMoiS8bPZcryn05+S8KJqByof7m0vFb1Eo8OPHsWy7m0RMwgFbe+io1EcoCa0nn5Z2Zl5B5edFM8/u5J/XI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=VURsqpMD; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1708688249; c=relaxed/simple;
+	bh=ruxxOsZUCWD8LWHhoOKiqm+o9AotKoVhW0IiONdJ+zw=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ExFyzMLJkXZOVh0GsvAfWpOt7ZMYGVtLO7Qi7KFIEOxGAVVqIQyZZ1FZEd3RcvNqmwhSljxvwxMivjV5F6cAtBDFnLSc2NN4qA7YVphqps3v+dJv540c0nzo31lphzmK3W7kHoRBiazDJSNlBmBj+GehCREd5JmlFMEYNw4EoEQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org; spf=pass smtp.mailfrom=mailbox.org; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=eSAhnN4a; arc=none smtp.client-ip=80.241.56.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mailbox.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="VURsqpMD"
-Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 41NBFOfj031519;
-	Fri, 23 Feb 2024 11:36:16 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	qcppdkim1; bh=5ir3WNsd+5toDv8bs5/TXD7VZCLRGGsdWGLbCSN2DQQ=; b=VU
-	RsqpMDg2z7IahFTQ3pAbMaie1xgwwrMJE11nSYunFEZpkCfiMjOB5DWVfdW/Ai3Q
-	wkHRKl1n9aRBTJ2als03nLsHR+pZfXPlILQFNf+nsSnR+d6Pw+SgKJVArJto2efJ
-	vy1dvd8CYR57bACkpxk37U3mn4FeXbpv2o8LS9wwpHsg4Nh08LLE6DfTqm+60zny
-	jJH+ndEFLua8ofEKyIw9jcIpo81cL+OeXI0z2lmCYArxYewMrWrfEtDXRy2OUJEE
-	mtfaZMkqdW1VWKNPMWMXPg//QjIcHJBjYDtL9HK87nwc4V/ho+GJNK5YknD6YitC
-	QlwigPvVYMBoH7xEcZcA==
-Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3wekverxjj-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 23 Feb 2024 11:36:16 +0000 (GMT)
-Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
-	by NALASPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 41NBaFkL023154
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 23 Feb 2024 11:36:15 GMT
-Received: from [10.217.218.85] (10.80.80.8) by nalasex01b.na.qualcomm.com
- (10.47.209.197) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Fri, 23 Feb
- 2024 03:36:10 -0800
-Message-ID: <d2f40e2d-cbbd-41f9-9aa6-41d0f251ffda@quicinc.com>
-Date: Fri, 23 Feb 2024 17:05:59 +0530
+	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="eSAhnN4a"
+Received: from smtp202.mailbox.org (smtp202.mailbox.org [10.196.197.202])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-201.mailbox.org (Postfix) with ESMTPS id 4Th7K92jZGz9ssc;
+	Fri, 23 Feb 2024 12:37:17 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
+	t=1708688237;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=G/cnYUO4t1KnFyWBtPESWQ1mYGZ8vow6mQdKLDyR1pc=;
+	b=eSAhnN4ahg6PeXaRexhK/avhwA+IWYb3jKCemeJYcLlzdezH8LgnibRcp4AkSVTxE8v8ZA
+	gTyXWYgq8lX9Yj4FcUi4uMow0ZZwnqiqs+f3HJC2SAki1v/iE/dcTtPl/mf1J7Ek18mt1w
+	9s0H+i8+WEpqYepKcDTk4XsQ0cYF39gLnlUOKUrkyymJ99o8jWgmTfXhKgYz0rQlq/V6kj
+	dNzyLuSWsQj5sHhm6Q8P3OxxsEvuQXQZPy36uFkeZd1hTRNXLn14SH/gh2rcIt8KqaGopS
+	/uxiB5/Hoyv/IwhjYU9SRJSYEywY6k9uLXkir1Yv109X1K7tp0a9fm9V0hvGAA==
+Date: Fri, 23 Feb 2024 12:37:13 +0100
+From: Erhard Furtner <erhard_f@mailbox.org>
+To: Christophe Leroy <christophe.leroy@csgroup.eu>
+Cc: Charlie Jenkins <charlie@rivosinc.com>, "linuxppc-dev@lists.ozlabs.org"
+ <linuxppc-dev@lists.ozlabs.org>, Palmer Dabbelt <palmer@rivosinc.com>,
+ "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: "test_ip_fast_csum: ASSERTION FAILED at
+ lib/checksum_kunit.c:589" at boot with CONFIG_CHECKSUM_KUNIT=y enabled on a
+ Talos II, kernel 6.8-rc5
+Message-ID: <20240223123713.2e49b981@yea>
+In-Reply-To: <b2a7b678-fc59-4d12-acc3-696866cfd7c2@csgroup.eu>
+References: <20240223022654.625bef62@yea>
+	<528c6abf-e5ef-42cd-a5d7-6ede3254523d@csgroup.eu>
+	<Zdg3X4A1eJsJ+ACh@ghost>
+	<6c37ffa2-8642-46c0-89ba-1f1e29b094d9@csgroup.eu>
+	<ZdhCnoRu3i1Cnwks@ghost>
+	<b2a7b678-fc59-4d12-acc3-696866cfd7c2@csgroup.eu>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] usb: gadget: f_fs: Fix NULL pointer dereference in
- ffs_epfile_async_io_complete()
-To: Greg KH <gregkh@linuxfoundation.org>
-CC: <brauner@kernel.org>, <axboe@kernel.dk>, <jack@suse.cz>,
-        <jlayton@kernel.org>, <keescook@chromium.org>, <peter@korsgaard.com>,
-        <hayama@lineo.co.jp>, <dmantipov@yandex.ru>,
-        <quic_linyyuan@quicinc.com>, <linux-usb@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <quic_ppratap@quicinc.com>,
-        <quic_wcheng@quicinc.com>, <quic_jackp@quicinc.com>
-References: <20240223054809.2379-1-quic_selvaras@quicinc.com>
- <2024022302-routine-schematic-b4fd@gregkh>
-Content-Language: en-US
-From: Selvarasu Ganesan <quic_selvaras@quicinc.com>
-In-Reply-To: <2024022302-routine-schematic-b4fd@gregkh>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01b.na.qualcomm.com (10.47.209.197)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: vbfXIqZrfokxrUvaLB29KADRC0BcAcxR
-X-Proofpoint-ORIG-GUID: vbfXIqZrfokxrUvaLB29KADRC0BcAcxR
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-02-22_15,2024-02-23_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 bulkscore=0
- priorityscore=1501 lowpriorityscore=0 malwarescore=0 adultscore=0
- impostorscore=0 clxscore=1015 spamscore=0 phishscore=0 mlxlogscore=999
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2402120000 definitions=main-2402230083
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-MBO-RS-META: 8gai3cka79z68h461yeewwdpd8k1qg58
+X-MBO-RS-ID: 26b6a50f4d4151b2f26
 
+On Fri, 23 Feb 2024 09:06:56 +0000
+Christophe Leroy <christophe.leroy@csgroup.eu> wrote:
 
-On 2/23/2024 11:28 AM, Greg KH wrote:
-> On Thu, Feb 22, 2024 at 09:48:09PM -0800, Selvarasu Ganesan wrote:
->> In scenarios of continuous and parallel usage of multiple FFS interfaces
->> and concurrent adb operations (e.g., adb root, adb reboot), there's a
->> chance that ffs_epfile_async_io_complete() might be processed after
->> ffs_epfile_release(). This could lead to a NULL pointer dereference of
->> ffs when accessing the ffs pointer in ffs_epfile_async_io_complete(), as
->> ffs is freed as part of ffs_epfile_release(). This epfile release is
->> part of file operation and is triggered when user space daemons restart
->> themselves or a reboot is initiated.
->>
->> Fix this issue by adding a NULL pointer check for ffs in
->> ffs_epfile_async_io_complete().
->>
->> [  9981.393115] Unable to handle kernel NULL pointer dereference at virtual address 00000000000001e0
->> [  9981.402854] Mem abort info:
->> ...
->> [  9981.532540] Hardware name: Qualcomm Technologies,
->> [  9981.540579] pstate: 204000c5 (nzCv daIF +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
->> [  9981.548438] pc : ffs_epfile_async_io_complete+0x38/0x4c
->> [  9981.554529] lr : usb_gadget_giveback_request+0x30/0xd0
->> ...
->> [  9981.645057] Call trace:
->> [  9981.648282]  ffs_epfile_async_io_complete+0x38/0x4c
->> [  9981.654004]  usb_gadget_giveback_request+0x30/0xd0
->> [  9981.659637]  dwc3_gadget_endpoint_trbs_complete+0x1a8/0x48c
->> [  9981.666074]  dwc3_process_event_entry+0x378/0x648
->> [  9981.671622]  dwc3_process_event_buf+0x6c/0x288
->> [  9981.676903]  dwc3_thread_interrupt+0x3c/0x68
->> [  9981.682003]  irq_thread_fn+0x2c/0x8c
->> [  9981.686388]  irq_thread+0x198/0x2ac
->> [  9981.690685]  kthread+0x154/0x218
->> [  9981.694717]  ret_from_fork+0x10/0x20
->>
->> Signed-off-by: Selvarasu Ganesan <quic_selvaras@quicinc.com>
+> Yes, with second patch is magically works, meaning the patch description 
+> is not correct because the problem for powerpc it not at all related to 
+> memory alignment but to endianness. And endianness should have been 
+> fixed by patch 1, but instead of it, patch 1 just hides the problem by 
+> forcing casts.
 > 
-> What commit id does this fix?  Should it go to stable kernels?
-
-Fixes: 2e4c7553cd6f9 ("usb: gadget: f_fs: add aio support"). Yes it's
-required to propagate to stable kernel as well.
+> The real fix for endianness which should be your patch 1 is the 
+> following change. With that change it works perfectly well without any 
+> forced cast:
 > 
->> ---
->>   drivers/usb/gadget/function/f_fs.c | 4 +++-
->>   1 file changed, 3 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/usb/gadget/function/f_fs.c b/drivers/usb/gadget/function/f_fs.c
->> index be3851cffb73..d8c8e88628f9 100644
->> --- a/drivers/usb/gadget/function/f_fs.c
->> +++ b/drivers/usb/gadget/function/f_fs.c
->> @@ -849,7 +849,9 @@ static void ffs_epfile_async_io_complete(struct usb_ep *_ep,
->>   	usb_ep_free_request(_ep, req);
->>   
->>   	INIT_WORK(&io_data->work, ffs_user_copy_worker);
->> -	queue_work(ffs->io_completion_wq, &io_data->work);
->> +
->> +	if (ffs && ffs->io_completion_wq)
->> +		queue_work(ffs->io_completion_wq, &io_data->work);
+> diff --git a/lib/checksum_kunit.c b/lib/checksum_kunit.c
+> index 225bb7701460..bf70850035c7 100644
+> --- a/lib/checksum_kunit.c
+> +++ b/lib/checksum_kunit.c
+> @@ -215,7 +215,7 @@ static const u32 init_sums_no_overflow[] = {
+>   	0xffff0000, 0xfffffffb,
+>   };
 > 
-> What happens if ffs->io_compleation_wq goes away right after you test
-> it but before you call queue_work()?
+> -static const __sum16 expected_csum_ipv6_magic[] = {
+> +static const u16 expected_csum_ipv6_magic[] = {
+>   	0x18d4, 0x3085, 0x2e4b, 0xd9f4, 0xbdc8, 0x78f,	0x1034, 0x8422, 0x6fc0,
+>   	0xd2f6, 0xbeb5, 0x9d3,	0x7e2a, 0x312e, 0x778e, 0xc1bb, 0x7cf2, 0x9d1e,
+>   	0xca21, 0xf3ff, 0x7569, 0xb02e, 0xca86, 0x7e76, 0x4539, 0x45e3, 0xf28d,
+> @@ -241,7 +241,7 @@ static const __sum16 expected_csum_ipv6_magic[] = {
+>   	0x3845, 0x1014
+>   };
 > 
-> Where is the locking here to prevent that?
+> -static const __sum16 expected_fast_csum[] = {
+> +static const u16 expected_fast_csum[] = {
+>   	0xda83, 0x45da, 0x4f46, 0x4e4f, 0x34e,	0xe902, 0xa5e9, 0x87a5, 0x7187,
+>   	0x5671, 0xf556, 0x6df5, 0x816d, 0x8f81, 0xbb8f, 0xfbba, 0x5afb, 0xbe5a,
+>   	0xedbe, 0xabee, 0x6aac, 0xe6b,	0xea0d, 0x67ea, 0x7e68, 0x8a7e, 0x6f8a,
+> @@ -577,7 +577,8 @@ static void test_csum_no_carry_inputs(struct kunit 
+> *test)
 > 
-> thanks,
+>   static void test_ip_fast_csum(struct kunit *test)
+>   {
+> -	__sum16 csum_result, expected;
+> +	__sum16 csum_result;
+> +	u16 expected;
 > 
-> greg k-h
+>   	for (int len = IPv4_MIN_WORDS; len < IPv4_MAX_WORDS; len++) {
+>   		for (int index = 0; index < NUM_IP_FAST_CSUM_TESTS; index++) {
+> @@ -586,7 +587,7 @@ static void test_ip_fast_csum(struct kunit *test)
+>   				expected_fast_csum[(len - IPv4_MIN_WORDS) *
+>   						   NUM_IP_FAST_CSUM_TESTS +
+>   						   index];
+> -			CHECK_EQ(expected, csum_result);
+> +			CHECK_EQ(to_sum16(expected), csum_result);
+>   		}
+>   	}
+>   }
+> @@ -598,7 +599,7 @@ static void test_csum_ipv6_magic(struct kunit *test)
+>   	const struct in6_addr *daddr;
+>   	unsigned int len;
+>   	unsigned char proto;
+> -	unsigned int csum;
+> +	__wsum csum;
+> 
+>   	const int daddr_offset = sizeof(struct in6_addr);
+>   	const int len_offset = sizeof(struct in6_addr) + sizeof(struct in6_addr);
+> @@ -611,10 +612,10 @@ static void test_csum_ipv6_magic(struct kunit *test)
+>   		saddr = (const struct in6_addr *)(random_buf + i);
+>   		daddr = (const struct in6_addr *)(random_buf + i +
+>   						  daddr_offset);
+> -		len = *(unsigned int *)(random_buf + i + len_offset);
+> +		len = le32_to_cpu(*(__le32 *)(random_buf + i + len_offset));
+>   		proto = *(random_buf + i + proto_offset);
+> -		csum = *(unsigned int *)(random_buf + i + csum_offset);
+> -		CHECK_EQ(expected_csum_ipv6_magic[i],
+> +		csum = *(__wsum *)(random_buf + i + csum_offset);
+> +		CHECK_EQ(to_sum16(expected_csum_ipv6_magic[i]),
+>   			 csum_ipv6_magic(saddr, daddr, len, proto, csum));
+>   	}
+>   #endif /* !CONFIG_NET */
+> ---
+> 
+> Christophe
 
-Hi Greg,
+Your patch applied on top of 6.8-rc5 fixes the issue. Thanks!
 
-Thank you for your feedback. I understand your concern about the
-potential race condition with ffs->io_completion_wq. I’m considering
-introducing a lock to protect this section of the code, but I wanted to
-get your opinion on this.
-In the f_fs.c driver, there are pre-existing locks. Would it be suitable 
-to utilize these locks, or do you suggest the creation of a new lock 
-specifically for ffs->io_completion_wq? We anticipate a performance 
-impact if we use the existing lock, as it might be held by different
-threads. What are your thoughts on this?"
+And I take your remarks here as a hint for the other "drm_test_fb_xrgb8888_to_xrgb2101010 on Big Endian machines" issue I posted. ;) Let's see what I can do.
 
-Here’s what the code might look like with a new lock:
-
-static void ffs_epfile_async_io_complete(struct usb_ep *_ep,
-                                          struct usb_request *req)
-{
-....
-spin_lock(&ffs->new_lock);
-if (ffs && ffs->io_completion_wq)
-     queue_work(ffs->io_completion_wq, &io_data->work);
-spin_unlock(&ffs->new_lock);
-....
-}
-
-
-
-static void ffs_data_put(struct ffs_data *ffs) {
-...
-destroy_workqueue(ffs->io_completion_wq);
-kfree(ffs->dev_name);
-spin_lock(&ffs->new_lock);
-kfree(ffs);
-spin_unlock(&ffs->new_lock);
-...
-}
-
-Thanks,
-Selva
-
+Regards,
+Erhard
