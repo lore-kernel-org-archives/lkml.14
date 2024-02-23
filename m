@@ -1,121 +1,128 @@
-Received: from mailrelay5-1.pub.mailoutpod2-cph3.one.com (mailrelay5-1.pub.mailoutpod2-cph3.one.com [46.30.211.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f72.google.com (mail-io1-f72.google.com [209.85.166.72])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C54E5142623
-	for <linux-kernel@vger.kernel.org>; Fri, 23 Feb 2024 18:27:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.30.211.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBB6A12AAE0
+	for <linux-kernel@vger.kernel.org>; Fri, 23 Feb 2024 18:29:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708712881; cv=none; b=P897IuJs+HbpIEPrxGhwTWKJc4XkRHlhr4AhHyEM7DVidgBgqoJBJ8vXOZR4iF9tpXT+iaTEh/HrxzVIXO6exGDNDu1l8zACyYbEebvJDFs3Ke0UvxKoZtEjoCc0xSMSULPhywzKvltvei5BDNs1TZ/cA0XIcTBk5TOcRoiCeNI=
+	t=1708712966; cv=none; b=gUgJA35ZpM/63fYIuuuoop1vqHwjV+y7AYKdl9T1eEizGevkK2aeTro/rPuK2UOOdGJkrVgCxjDeQfbjDq3xgaHWp1xabNP4ILcMKCu6cABiOhDRCLeCZEc7ajKigOW2VRZ6tHPhVF13rXTJkMVlYf81997sNINXZvPQZY8oKQ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708712881; c=relaxed/simple;
-	bh=D1QGXZw6sUZ778PeZk9AsWl7LhHjAPoaCloTBO103w8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KD1MkIrOpU8u8dPZDbre3H2OwnCKj9Z81ElyyasL5y8RJREPlotQQWGwkLtJChDB3b1SmJ0kY6yYfNXwKjyn7ycUga7bQQVj+MVGVsY3HVxdY+lc8/06a21MLWOeesz9x0Tdbr5Md2c7Z0dcoQ0DGqbZSALzkjvyJMC+qOPkNIw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ravnborg.org; spf=none smtp.mailfrom=ravnborg.org; dkim=pass (2048-bit key) header.d=ravnborg.org header.i=@ravnborg.org header.b=uiEBRAvj; dkim=permerror (0-bit key) header.d=ravnborg.org header.i=@ravnborg.org header.b=oLwsR/0C; arc=none smtp.client-ip=46.30.211.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ravnborg.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ravnborg.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ravnborg.org header.i=@ravnborg.org header.b="uiEBRAvj";
-	dkim=permerror (0-bit key) header.d=ravnborg.org header.i=@ravnborg.org header.b="oLwsR/0C"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=ravnborg.org; s=rsa2;
-	h=in-reply-to:content-type:mime-version:references:message-id:subject:cc:to:
-	 from:date:from;
-	bh=B6EjNaWdiktqEuLncaKVE82jxx+NKh1TlSMryRmLWUA=;
-	b=uiEBRAvjxOsaJwk90DFlIOWSmTME7MH4GDlWu5J/vG1Okq9cmza6UGoBlXeNS3sLDcVsBLxHAADjD
-	 e2ZxhAQj4u0cQOdBAuCjB6Un0IEmUZDOm8lciiu7GhoQvittFnnYTZZN1nqSLQaJvZDcEo/XsU/EeY
-	 9jhdNMSD8/Nidu4uaxLuUdRBrtF1MI6JyOCLP+iLcglu6K+1WpQxA+E3YZZHzkGjCfZA9JD+RRUDeg
-	 riAheo4PZlQzGtOdPfZ+6di84OcIaib+qjrbHiHIUBXxppG+GEZlylwj1TymX1asVXMUKAVI6/fFoN
-	 eK84IcYM75uHLBRpWw/gbRdBjFQF/gg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed;
-	d=ravnborg.org; s=ed2;
-	h=in-reply-to:content-type:mime-version:references:message-id:subject:cc:to:
-	 from:date:from;
-	bh=B6EjNaWdiktqEuLncaKVE82jxx+NKh1TlSMryRmLWUA=;
-	b=oLwsR/0Cr6RWTYv5L83UN2z/haUi/To0reQmcJ4qbMung9oH9COqad2IyStuvbuQoBprzANSv0l3C
-	 CW/4520DQ==
-X-HalOne-ID: 19483c2d-d279-11ee-ad41-657a30c718c6
-Received: from ravnborg.org (2-105-2-98-cable.dk.customer.tdc.net [2.105.2.98])
-	by mailrelay5.pub.mailoutpod2-cph3.one.com (Halon) with ESMTPSA
-	id 19483c2d-d279-11ee-ad41-657a30c718c6;
-	Fri, 23 Feb 2024 18:26:47 +0000 (UTC)
-Date: Fri, 23 Feb 2024 19:26:46 +0100
-From: Sam Ravnborg <sam@ravnborg.org>
-To: Kees Cook <keescook@chromium.org>
-Cc: "David S. Miller" <davem@davemloft.net>,
-	Andreas Larsson <andreas@gaisler.com>,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	Helge Deller <deller@gmx.de>, Guo Ren <guoren@kernel.org>,
-	sparclinux@vger.kernel.org,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	"Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] sparc: vdso: Disable UBSAN instrumentation
-Message-ID: <20240223182646.GA2825372@ravnborg.org>
-References: <20240223165942.work.950-kees@kernel.org>
+	s=arc-20240116; t=1708712966; c=relaxed/simple;
+	bh=5wzVl9QGHYN/on13qUDPDDV9AgzVVcueuNiPyZ6NTTw=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=B2bgOGcnSESwBwH8Zesz7FtWldeU3y2scrjiouySAIPTQ6ojcB71wZE/C0/9SoEIIqQh1wh9oOcTE8Pal76fnQGblUK60r6Y1T02ll9tpY3nXcuzc0FDyQ1IJVrQ4v9BiwSD4b1BDxINGAW4z3Ln4Cif+ko16efIo5MZknywVMs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f72.google.com with SMTP id ca18e2360f4ac-7bfeb848712so60090739f.2
+        for <linux-kernel@vger.kernel.org>; Fri, 23 Feb 2024 10:29:24 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708712964; x=1709317764;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=ge1hRX1ECFlk43m9GAhc6uTPqn5oqnoXMgkOWLTUwl0=;
+        b=r+Kyt4dGCnaP+FlHgMAgYsiS1DNvR288g8vo9CVY1qNAXPCCG9P0fNMXvc8El8LNNV
+         6vcaZk5MXMuWoZtdzrajsxDpcqRDcNw1eV+sEviNHREtKod/QYWbo4qSYu29lDZeRN+1
+         +Y4dAvqfnFS+4+cOmU8tz9FjXDikNmLkL3of8xYp0Dvm8q0oYzF7kpgg//YjLqOQgpSU
+         IzWnvDF4Z9FCPU8y6etaMrOArLIazY+DL/DQjLHmdflJHBc/pVisHCdQQeKsPDvOd/Vv
+         7Hp2eTB2hE80lBK2Rhp3ikNAYxSU81tgs9syyZGiNz9xHCKskpeBBNjURKxtRT+L8+ab
+         95sg==
+X-Forwarded-Encrypted: i=1; AJvYcCUXGDYvb69nOgAdg5/g587EFsM1AdnVLRQiOMqajjhx2pvLnyDQRTduRcDuLdd0UAxO0NCCSO3AKtgPaelT+V9xClAYY0FQlmS3YBMT
+X-Gm-Message-State: AOJu0Yztg6n6QVka01UXvqo8mHOuOw9WmWi2LTezc1uWtP2VR+Z2XUaz
+	4i05YG6l2yAglwug7z2kiu6Gvis6du+41e8NDBJjadaA+aAwzYqOMatlvJm3DCoo9cGZwKjBlmq
+	Z8dc4t4djIVRfZDslm7mM1hr3OXRexCu0rT2IeMZqHpt00++maHRtK/I=
+X-Google-Smtp-Source: AGHT+IEI2T0MN0kQIAwFSw0qQiXNP5p7doqL2vMHiQLofiE/um/eUsWSJna0F+LP07r7n1tRH5sD9LoOB59+p/DQIC3zrd9UyrDV
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240223165942.work.950-kees@kernel.org>
+X-Received: by 2002:a05:6638:168a:b0:473:e341:43e2 with SMTP id
+ f10-20020a056638168a00b00473e34143e2mr38967jat.0.1708712963989; Fri, 23 Feb
+ 2024 10:29:23 -0800 (PST)
+Date: Fri, 23 Feb 2024 10:29:23 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000003de699061210bdc4@google.com>
+Subject: [syzbot] [gfs2?] kernel BUG in __gfs2_glock_put
+From: syzbot <syzbot+335b6972be76fa40c22f@syzkaller.appspotmail.com>
+To: agruenba@redhat.com, gfs2@lists.linux.dev, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-Hi Kees,
+Hello,
 
-On Fri, Feb 23, 2024 at 08:59:45AM -0800, Kees Cook wrote:
-> The UBSAN instrumentation cannot work in the vDSO since it is executing
-> in userspace, so disable it in the Makefile. Fixes the build failures
-> such as:
-> 
-> arch/sparc/vdso/vclock_gettime.c:217: undefined reference to `__ubsan_handle_shift_out_of_bounds'
-> 
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-> ---
-> Cc: "David S. Miller" <davem@davemloft.net>
-> Cc: Andreas Larsson <andreas@gaisler.com>
-> Cc: Masahiro Yamada <masahiroy@kernel.org>
-> Cc: Sam Ravnborg <sam@ravnborg.org>
-> Cc: Helge Deller <deller@gmx.de>
-> Cc: Guo Ren <guoren@kernel.org>
-> Cc: sparclinux@vger.kernel.org
-> ---
->  arch/sparc/vdso/Makefile | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/arch/sparc/vdso/Makefile b/arch/sparc/vdso/Makefile
-> index 7f5eedf1f5e0..e8aef2c8ae99 100644
-> --- a/arch/sparc/vdso/Makefile
-> +++ b/arch/sparc/vdso/Makefile
-> @@ -2,6 +2,7 @@
->  #
->  # Building vDSO images for sparc.
->  #
-> +UBSAN_SANITIZE := n
+syzbot found the following issue on:
 
-When I read:
+HEAD commit:    9abbc24128bc Merge branch 'for-next/core' into for-kernelci
+git tree:       git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git for-kernelci
+console output: https://syzkaller.appspot.com/x/log.txt?x=10af4008180000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=af5c6c699e57bbb3
+dashboard link: https://syzkaller.appspot.com/bug?extid=335b6972be76fa40c22f
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+userspace arch: arm64
 
-config UBSAN_SANITIZE_ALL
-        bool "Enable instrumentation for the entire kernel"
-        depends on ARCH_HAS_UBSAN_SANITIZE_ALL
-        default y
-        help
-          This option activates instrumentation for the entire kernel.
-          If you don't enable this option, you have to explicitly specify
-          UBSAN_SANITIZE := y for the files/directories you want to check for UB.
-          Enabling this option will get kernel image size increased
-          significantly.
+Unfortunately, I don't have any reproducer for this issue yet.
+
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/ce13ec3ed5ad/disk-9abbc241.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/256cbd314121/vmlinux-9abbc241.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/0af86fb52109/Image-9abbc241.gz.xz
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+335b6972be76fa40c22f@syzkaller.appspotmail.com
+
+gfs2: fsid=syz:syz.0: G:  s:UN n:2/819 f: t:UN d:EX/0 a:0 v:0 r:-128 m:20 p:1
+------------[ cut here ]------------
+kernel BUG at fs/gfs2/glock.c:282!
+Internal error: Oops - BUG: 00000000f2000800 [#1] PREEMPT SMP
+Modules linked in:
+CPU: 1 PID: 7508 Comm: kworker/1:0H Tainted: G    B              6.8.0-rc5-syzkaller-g9abbc24128bc #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/25/2024
+Workqueue: glock_workqueue glock_work_func
+pstate: 60400005 (nZCv daif +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+pc : __gfs2_glock_put+0x3f4/0x4ec fs/gfs2/glock.c:282
+lr : __gfs2_glock_put+0x3f4/0x4ec fs/gfs2/glock.c:282
+sp : ffff8000a4737ac0
+x29: ffff8000a4737ac0 x28: 1fffe0002666fd6e x27: dfff800000000000
+x26: ffff0000c4ff6408 x25: 0000000000000140 x24: 1fffe00025410015
+x23: ffff00012a080000 x22: dfff800000000000 x21: 0000000000000140
+x20: ffff00013337ed30 x19: ffff00013337ea40 x18: 1fffe00036804796
+x17: ffff80008ec8d000 x16: ffff80008ad5bbdc x15: 0000000000000001
+x14: 1ffff000148e6e18 x13: 0000000000000000 x12: 0000000000000000
+x11: 0000000000000001 x10: 0000000000ff0100 x9 : 82bd4918e7193700
+x8 : 82bd4918e7193700 x7 : 1fffe00036804797 x6 : ffff800080297af0
+x5 : 0000000000000000 x4 : 0000000000000001 x3 : ffff800082f22fb0
+x2 : 0000000000000001 x1 : 0000000000000000 x0 : 0000000000000000
+Call trace:
+ __gfs2_glock_put+0x3f4/0x4ec fs/gfs2/glock.c:282
+ glock_work_func+0x2ac/0x440 fs/gfs2/glock.c:1109
+ process_one_work+0x694/0x1204 kernel/workqueue.c:2633
+ process_scheduled_works kernel/workqueue.c:2706 [inline]
+ worker_thread+0x938/0xef4 kernel/workqueue.c:2787
+ kthread+0x288/0x310 kernel/kthread.c:388
+ ret_from_fork+0x10/0x20 arch/arm64/kernel/entry.S:860
+Code: aa1f03e0 aa1303e1 52800022 97fff7f7 (d4210000) 
+---[ end trace 0000000000000000 ]---
 
 
-I am left with the understanding that only arch's that
-selects ARCH_HAS_UBSAN_SANITIZE_ALL would need to turn off
-UBSAN_SANITIZE.
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-Are this fix papering over some other bug where we enable
-UBSAN_SANITIZE_ALL for arch's that should not have it,
-or something else that enable it?
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
 
-	Sam
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
 
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
