@@ -1,59 +1,60 @@
 Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DB651339B6;
-	Fri, 23 Feb 2024 17:26:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FDE712F5B5;
+	Fri, 23 Feb 2024 17:26:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.154.123
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708709172; cv=none; b=tpdiTPh7f1X5YqrWZDEkorhYQ0XqQ6OQvIpZFE5xGutFM6UG1toXPZeovjArAm/AdfcvGH4o19Nhk2B68i6pI5raP5VUHIkVgTEyUFnVck0Agis8/tBncG0bjYlcUJXZOqE5mMh6pin26VqPsvrNPa7cCcoSgwNtGey+JhnEWYY=
+	t=1708709174; cv=none; b=KE/kqRDwqZMTEv7I69wu2of8BGsSS60Pylc/qd9l1rHw58g2a6J8PobObiZfaeAKIfdKmT3FGVv4weiAnVKQDx1v40Fy1lX1+79SKK3f5906ncrYc69Zs2hSlEtVQLwjyA0wz8YZccKnxOz29e+2w9qrjyt9M5Y/7KXSphhU3i8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708709172; c=relaxed/simple;
-	bh=kk/UiHsga5gmFS3zENAHY1LBewwoUNLNuFmDepPq+yA=;
+	s=arc-20240116; t=1708709174; c=relaxed/simple;
+	bh=BZJTjqUHwuQlXlsd7x2WfXnXThGZTz45hMZUxsxzH20=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=mM0lXo6IDmrGZHkGpy5wOyzLzRqJQW4O51PKG0p/z7weJblVqZaEvcoejA48GUJEKXnOJKP8XP12WZBLrT+WdlO6KIbSV9aFxijhKmlGL/IotfOvvcRzs3hVRwUzIpxgxydVT+O4pD/Rg0zjQ3672BWQNkpdnakV1hqeNTDbZnE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=GU46yDfo; arc=none smtp.client-ip=68.232.154.123
+	 MIME-Version:Content-Type; b=hH5+ZjcTB5YAdxD+XhhsFKR/TD+2BARsuGJM7Bqr4HBjeGedg8qSvM+5GrsrxtUBYnbo4rAMzYb64Cqke7KFJUBa08P092I1iSm+UnMcqDJbU17x2rn5YxQziDnMAUaJVrkO+sZzY+UsDT6k0n9MYEowX5/aU09RsEZc7OPhwjw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=2C9F9l/s; arc=none smtp.client-ip=68.232.154.123
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=microchip.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="GU46yDfo"
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="2C9F9l/s"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1708709171; x=1740245171;
+  t=1708709172; x=1740245172;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=kk/UiHsga5gmFS3zENAHY1LBewwoUNLNuFmDepPq+yA=;
-  b=GU46yDfoPS3ajRwVdtMZwnOHdK3gYg+k3Nm8yehRpHOKqAXjtVKEbC8b
-   Sd+pTP565rAzmV0rB75xaE1GONdis/5xX/DpPOJgQM4KBK51xqwVoBBqF
-   f+IQpmhJ/vlmapk0G7h8j2vvcOg7XardxFJJS7W1cUbJWzg9/6JneQSH0
-   V+ehvT58eu7Kk3OCozX9HrBApDfgu1Etm6T73yKG4W9EMpPll725yHCW0
-   WIllOmdeZs2KoJwrgo4DA2Y1sNs+x+Mk/kGemQe4lIw5+Zk6kF5FHtSeo
-   YBZuHdfFAIFW+QLeH3K/1cQBQoQ8qo2uYh7iDQ8Pq6XLd3ix9cRYGoVzp
+  bh=BZJTjqUHwuQlXlsd7x2WfXnXThGZTz45hMZUxsxzH20=;
+  b=2C9F9l/sKx+IpXU2K7JoS5ggXsuZHhLsLYsugjmNCx85baycCgX8XKiQ
+   vUKhIQLVHzceQGG1fbCBa2BgOsSFcFfK0qUL6rfyIA2i+TPP3+OI0Lg9C
+   nemNzF312XF5Uo3Elh5z5cQG5Gd2/joER1Nx95Hjin+AJqsPAlJXzdwVi
+   21iuW4H9toZihm3QWOTD6Sx8YGzIsr39vdoDy6GDOHpD/fJMDmZPe3rd6
+   jgREmh05+NjVSdZ+D2kj35xSndZy/IlFWa0dwmtvaOQfMjcPtVNDSP5cY
+   hMX5KcZQGxAMnQcpzALSYmiYVgTTHKk2zKAAHJkWwD+OEPy3LD/1sqO9a
    w==;
 X-CSE-ConnectionGUID: Ely1r2TiR4Wv3Obixr7frw==
-X-CSE-MsgGUID: VI9R6XZzTteN3DbNWpHX6w==
+X-CSE-MsgGUID: M4vXw7loRkeKQ5VN/WOdcQ==
 X-IronPort-AV: E=Sophos;i="6.06,180,1705388400"; 
-   d="scan'208";a="16735838"
+   d="scan'208";a="16735843"
 X-Amp-Result: SKIPPED(no attachment in message)
 Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
   by esa4.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 23 Feb 2024 10:26:10 -0700
-Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
+Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
  chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Fri, 23 Feb 2024 10:25:19 -0700
+ 15.1.2507.35; Fri, 23 Feb 2024 10:26:08 -0700
 Received: from che-lt-i67070.microchip.com (10.10.85.11) by
- chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server id
- 15.1.2507.35 via Frontend Transport; Fri, 23 Feb 2024 10:25:15 -0700
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server id
+ 15.1.2507.35 via Frontend Transport; Fri, 23 Feb 2024 10:26:02 -0700
 From: Varshini Rajendran <varshini.rajendran@microchip.com>
-To: <claudiu.beznea@tuxon.dev>, <robh+dt@kernel.org>,
+To: <radu_nicolae.pirea@upb.ro>, <richard.genoud@gmail.com>,
+	<gregkh@linuxfoundation.org>, <jirislaby@kernel.org>, <robh+dt@kernel.org>,
 	<krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
 	<nicolas.ferre@microchip.com>, <alexandre.belloni@bootlin.com>,
-	<linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>
-CC: <varshini.rajendran@microchip.com>, Krzysztof Kozlowski
-	<krzysztof.kozlowski@linaro.org>
-Subject: [PATCH v4 07/39] dt-bindings: atmel-ssc: add microchip,sam9x7-ssc
-Date: Fri, 23 Feb 2024 22:55:09 +0530
-Message-ID: <20240223172509.671880-1-varshini.rajendran@microchip.com>
+	<claudiu.beznea@tuxon.dev>, <linux-kernel@vger.kernel.org>,
+	<linux-spi@vger.kernel.org>, <linux-serial@vger.kernel.org>,
+	<devicetree@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>
+CC: <varshini.rajendran@microchip.com>
+Subject: [PATCH v4 12/39] dt-bindings: serial: atmel,at91-usart: add compatible for sam9x7.
+Date: Fri, 23 Feb 2024 22:55:59 +0530
+Message-ID: <20240223172559.672142-1-varshini.rajendran@microchip.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20240223171342.669133-1-varshini.rajendran@microchip.com>
 References: <20240223171342.669133-1-varshini.rajendran@microchip.com>
@@ -66,29 +67,42 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
 
-Add microchip,sam9x7-ssc to DT bindings documentation.
+Add sam9x7 compatible to DT bindings documentation.
 
 Signed-off-by: Varshini Rajendran <varshini.rajendran@microchip.com>
-Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 ---
 Changes in v4:
-- Updated Acked-by tag
+- Fixed the wrong addition of compatible
+- Added further compatibles that are possible correct (as per DT)
 ---
- Documentation/devicetree/bindings/misc/atmel-ssc.txt | 1 +
- 1 file changed, 1 insertion(+)
+ .../devicetree/bindings/serial/atmel,at91-usart.yaml | 12 +++++++++---
+ 1 file changed, 9 insertions(+), 3 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/misc/atmel-ssc.txt b/Documentation/devicetree/bindings/misc/atmel-ssc.txt
-index f9fb412642fe..894875826de9 100644
---- a/Documentation/devicetree/bindings/misc/atmel-ssc.txt
-+++ b/Documentation/devicetree/bindings/misc/atmel-ssc.txt
-@@ -2,6 +2,7 @@
+diff --git a/Documentation/devicetree/bindings/serial/atmel,at91-usart.yaml b/Documentation/devicetree/bindings/serial/atmel,at91-usart.yaml
+index 65cb2e5c5eee..30af537e8e81 100644
+--- a/Documentation/devicetree/bindings/serial/atmel,at91-usart.yaml
++++ b/Documentation/devicetree/bindings/serial/atmel,at91-usart.yaml
+@@ -23,11 +23,17 @@ properties:
+           - const: atmel,at91sam9260-dbgu
+           - const: atmel,at91sam9260-usart
+       - items:
+-          - const: microchip,sam9x60-usart
++          - enum:
++              - microchip,sam9x60-usart
++              - microchip,sam9x7-usart
+           - const: atmel,at91sam9260-usart
+       - items:
+-          - const: microchip,sam9x60-dbgu
+-          - const: microchip,sam9x60-usart
++          - enum:
++              - microchip,sam9x60-dbgu
++              - microchip,sam9x7-dbgu
++          - enum:
++              - microchip,sam9x60-usart
++              - microchip,sam9x7-usart
+           - const: atmel,at91sam9260-dbgu
+           - const: atmel,at91sam9260-usart
  
- Required properties:
- - compatible: "atmel,at91rm9200-ssc" or "atmel,at91sam9g45-ssc"
-+	       or "microchip,sam9x7-ssc", "atmel,at91sam9g45-ssc"
- 	- atmel,at91rm9200-ssc: support pdc transfer
- 	- atmel,at91sam9g45-ssc: support dma transfer
- - reg: Should contain SSC registers location and length
 -- 
 2.25.1
 
