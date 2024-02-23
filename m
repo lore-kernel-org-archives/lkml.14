@@ -1,119 +1,76 @@
-Received: from mail-177132.yeah.net (mail-177132.yeah.net [123.58.177.132])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3A55414D44A;
-	Fri, 23 Feb 2024 23:33:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=123.58.177.132
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1419F14DFC6;
+	Fri, 23 Feb 2024 23:43:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708731215; cv=none; b=Rl4fMRcfgH8owEKqvFoVGrhEunAPakUtDXfGdmPvjXJ+oVmv1k5z2zEbW+Lxy5hvfvr89IXmQwbMvu5Ba+FT0Cdx9qpT+ocupqaBDWKKtTcmKAWWgC4UGimm1K6SH31aznsxl2Fa8bVjD5Odz5RyYg8N+v3mNacAPYF0WZKvozA=
+	t=1708731789; cv=none; b=oczrhpnAWTBDroHpPJcRPdz9idZG0DWw5+swvVIRkBTon5JeXDcqHqBeKTcS8pqOFlm0IT3k6F+hCGAWRahBuTemtRWwG7l7qnBuu5YJ2lml9qaGgOz3J1yDPwDk5werqLddBhf43SbuV/noAUPCefN+P+Ykdc4MNqrQ4gwnciw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708731215; c=relaxed/simple;
-	bh=QvReWiiur8SYGs5uaKN8mx3ALFlfw1WkRkgG0CneWAE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JpZ9TJzEsD/bOiL8JB0Vi1RZpzMR+mtP3xxqysse/p76iuRzsfTIsrsBLKfN8nSGVwLNBqp8nInxpoRnH0c+2tCDX2K2BCKnvHcu31PNjox454HEkl/Qiujg3C2eBL8Ytogq7yiS/ggnZn4m+NI2rAzG3tKJpUSv42g0unyohEw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net; spf=pass smtp.mailfrom=yeah.net; dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b=hYQNp5fd; arc=none smtp.client-ip=123.58.177.132
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yeah.net
+	s=arc-20240116; t=1708731789; c=relaxed/simple;
+	bh=yqdpYHfHFqw9BeQu7CM6p99+Ec8DqbbPN8QUcrJ5oVY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=GTj6OJwz3KLYXTA9/sIvwSxS7+QJGK3H1MOtsflK+fmf883MB9HgrI2noG3gZfb/NE8yF8cAwHgtanrKX1amkqneH+aofsGKcQr0BX6bK+fgPHYD2kcGHULRRml3ND+Q31h9XF6XTPG6LuScXZixbnMuaJBqvbD9KCVoSVstNkI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=ProDf81d; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b="hYQNp5fd"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yeah.net;
-	s=s110527; h=Date:From:Subject:Message-ID:MIME-Version:
-	Content-Type; bh=l4z91o6goByVRV29UVchlrb57CwSGXGW5ZjXIXoGNv4=;
-	b=hYQNp5fdBJql9uj6OdXcc7YuUxjqSiyIQI2kojMiAumVQzTRWbWJU0y+FXuQnC
-	67DIjttV4YOzQF96ZGJv3d04elGTCItlQ7DCQ0u9nfoI+yHY9ALgNbEZeDuQUUkn
-	44xwCYDUoX1FwbH49F6mMdIc5cjKSu8SajawwGpVnyfKQ=
-Received: from dragon (unknown [183.213.196.200])
-	by smtp2 (Coremail) with SMTP id C1UQrAC3nYc2K9ll3H48BA--.10236S3;
-	Sat, 24 Feb 2024 07:33:11 +0800 (CST)
-Date: Sat, 24 Feb 2024 07:33:09 +0800
-From: Shawn Guo <shawnguo2@yeah.net>
-To: Manuel Traut <manuel.traut@mt.com>
-Cc: linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	NXP Linux Team <linux-imx@nxp.com>, devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH] ARM: dts: imx6ul: Set macaddress location in ocotp
-Message-ID: <ZdkrNfkXGo2pprLW@dragon>
-References: <20240208122012.1959628-1-manuel.traut@mt.com>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ProDf81d"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:Sender:Reply-To:Content-ID:Content-Description;
+	bh=iN+Ry0ZlQG5XlAqHYqFp346OI4lr7dhIUmnflJV0Ov8=; b=ProDf81dNPvbZP7lSfBC/qAWSL
+	04Xow+RgDW/4F1Oawy66u249WYRFZLDCGe6Gu8aZ6SQiIS/6AC/OuzRLJ/gdNlnsWEpHWpSeLomey
+	hWhT8ii/HCkvEhJlU1eOCkKXlfngA87a4ZHxb6Y4/zUFJ1Qj4Vq5Vhmj+7Rp8+UfBS6qO4h5NT//F
+	FAYX6slgyJU+BKOA8fr0jdE3BYwVufLsUTqBlCgPZUp12oGZKAopS8UExhkQQw4fUqhkzTdxygNuw
+	FRl3q+x8koS1Ygbt1VRfna8rvFhcgDVV9BrXCvzErI+4ljO4fNZMh0ExS/v52qV6iP31fd3jkMAwm
+	e69PBMvA==;
+Received: from [50.53.50.0] (helo=[192.168.254.15])
+	by bombadil.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1rdfC6-0000000BatW-2q5h;
+	Fri, 23 Feb 2024 23:43:06 +0000
+Message-ID: <59c60c30-fc4c-45e4-8c29-8344014f19c6@infradead.org>
+Date: Fri, 23 Feb 2024 15:43:03 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240208122012.1959628-1-manuel.traut@mt.com>
-X-CM-TRANSID:C1UQrAC3nYc2K9ll3H48BA--.10236S3
-X-Coremail-Antispam: 1Uf129KBjvJXoW7Aw1UCw13Kw1kAFy3KF47XFb_yoW8Xw4fp3
-	srWrZ8Gr4IkF1Ikay3Jr1qgr95Aas8tr1FvF17WFyjkay7Za47Kr1kKr13u345ZF4Fyayr
-	trs7ur17ur4DtaUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07j4Q6JUUUUU=
-X-CM-SenderInfo: pvkd40hjxrjqh1hdxhhqhw/1tbiDxeNZVnxce-IJgAAso
+User-Agent: Mozilla Thunderbird
+Subject: Re: linux-next: Tree for Feb 23
+ (drivers/net/ethernet/ti/am65-cpsw-nuss.c)
+Content-Language: en-US
+To: Stephen Rothwell <sfr@canb.auug.org.au>,
+ Linux Next Mailing List <linux-next@vger.kernel.org>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Network Development <netdev@vger.kernel.org>,
+ Linux-OMAP <linux-omap@vger.kernel.org>,
+ Grygorii Strashko <grygorii.strashko@ti.com>,
+ Jakub Kicinski <kuba@kernel.org>
+References: <20240223154029.18368677@canb.auug.org.au>
+From: Randy Dunlap <rdunlap@infradead.org>
+In-Reply-To: <20240223154029.18368677@canb.auug.org.au>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, Feb 08, 2024 at 01:19:59PM +0100, Manuel Traut wrote:
-> If a bootloader does not configure the MAC address, devices come up with
-> a random MAC at the moment.
+
+
+On 2/22/24 20:40, Stephen Rothwell wrote:
+> Hi all,
 > 
-> ocotp provides registers for storing the mac-address.
-> Configure those for i.MX6UL and i.MX6ULL allows net/core to retrieve it from
-> there.
-> 
-> Signed-off-by: Manuel Traut <manuel.traut@mt.com>
-> ---
->  arch/arm/boot/dts/nxp/imx/imx6ul.dtsi | 12 ++++++++++++
->  1 file changed, 12 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/nxp/imx/imx6ul.dtsi b/arch/arm/boot/dts/nxp/imx/imx6ul.dtsi
-> index a27a7554c2e7..e5e8bf814f77 100644
-> --- a/arch/arm/boot/dts/nxp/imx/imx6ul.dtsi
-> +++ b/arch/arm/boot/dts/nxp/imx/imx6ul.dtsi
-> @@ -538,6 +538,8 @@ fec2: ethernet@20b4000 {
->  				fsl,num-rx-queues = <1>;
->  				fsl,stop-mode = <&gpr 0x10 4>;
->  				fsl,magic-packet;
-> +				nvmem-cells = <&fec2_mac_addr>;
-> +				nvmem-cell-names = "mac-address";
->  				status = "disabled";
->  			};
->  
-> @@ -897,6 +899,8 @@ fec1: ethernet@2188000 {
->  				fsl,num-rx-queues = <1>;
->  				fsl,stop-mode = <&gpr 0x10 3>;
->  				fsl,magic-packet;
-> +				nvmem-cells = <&fec1_mac_addr>;
-> +				nvmem-cell-names = "mac-address";
->  				status = "disabled";
->  			};
->  
-> @@ -1004,6 +1008,14 @@ tempmon_temp_grade: temp-grade@20 {
->  				cpu_speed_grade: speed-grade@10 {
->  					reg = <0x10 4>;
->  				};
-
-Have a newline between nodes.
-
-> +				fec1_mac_addr: mac-addr@88 {
-> +					reg = <0x88 6>;
-> +				};
-> +
-> +				fec2_mac_addr: mac-addr@8e {
-> +					reg = <0x8e 6>;
-> +				};
-> +
-
-Dropped this one.
-
-I fixed them up and applied the patch.
-
-Shawn
-
->  			};
->  
->  			csi: csi@21c4000 {
-> -- 
-> 2.43.0
+> Changes since 20240222:
 > 
 
+when CONFIG_BQL and CONFIG_DQL are not set:
+
+drivers/net/ethernet/ti/am65-cpsw-nuss.c: In function 'am65_cpsw_nuss_ndo_host_tx_timeout':
+drivers/net/ethernet/ti/am65-cpsw-nuss.c:297:40: error: 'struct netdev_queue' has no member named 'dql'
+  297 |                    dql_avail(&netif_txq->dql),
+      |                                        ^~
+
+
+
+-- 
+#Randy
