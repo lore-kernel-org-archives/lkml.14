@@ -1,248 +1,81 @@
-Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DDF542ABC
-	for <linux-kernel@vger.kernel.org>; Fri, 23 Feb 2024 09:19:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
+Received: from elvis.franken.de (elvis.franken.de [193.175.24.41])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5323E1A731;
+	Fri, 23 Feb 2024 09:19:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.175.24.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708679947; cv=none; b=LSZxMchOr0h9DIQabpsV7BkrPDddHB5bXWt/i2nKBWvbMhjB/pHkrqonGYqgINrsMF2y6vnfj5xmq5eoFhpghAG5lMWAmZWqor/BLlU+mvAgvYTsSbSsxVA8k8NAjjLqzOOBkW3hS2hiteHsT31d2DyDeDPkoJtfimK7D4e2TxM=
+	t=1708679968; cv=none; b=BwdRAooxNYuNn6CXbTo0nkoGnmI9w1SETPTwFevZPOAXyYWjqcaRrytrIjOkxU5wgXGdTP4bks1v5VJeXjnELQKLo6HyNr9dF5U1JmDOyA6R6Az/h2IhrKrFzM/Cn75mzAuV6bEHX/4QD5CtXHhZ00LZZB5wmaBXuMAywxyFMAo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708679947; c=relaxed/simple;
-	bh=tfVZnouqxcH4+vHT8E66+75iK2BwFsQTw791FF9I4Xk=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=eOCeI/fzfYp3hossDuTinE0yRATSGy5k0+bFl4hZ12QyTjHjJUw18HZ/ta9ZuA8a+hsLNXMoMXcRNoh37Kspz2zN9cAxoEBP0LMrRMei0ZGWqbUpTOAMw99Dbd5+2BnyvQLoQoVa4t8GEh/sL166Jtim1ISX/nIfaNR20eWSuW0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=dxvqT30F; arc=none smtp.client-ip=217.70.183.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="dxvqT30F"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id BF3CF40003;
-	Fri, 23 Feb 2024 09:18:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1708679936;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=4gG2DNJQ1sxB4LTvdXFLaVAG1FVlnYdKq/NERCDiFaw=;
-	b=dxvqT30FkF1AEQwwbZp9iFl6iVBI1iuZ5T3QAuYocxhIb6yAMgZGLQ6cyLgJZIBGs/UNW9
-	RhBIDu2U0OM1WILz2pqmn/HeZ7JWWEu0vQ3Dj69AEtVpH1ja7VYBV74JewhwR7c0StLlMS
-	sfZTk2S17OEolI40LMKkhX6yxcvMpGqvPOsJnaNadvEB8koCFRL6fWnLdSWe8hZPCWOye9
-	fFdagj/DuBIu1WNXochOxnBXl/8qYl350SsfiFBj/ZUx6hJIKWPNp47RGjGtg+VYPfiFDG
-	pt1FveOSYb8B/LxfaKd2W2IimazIKfGJwgx0cjjVQoHQV6T2PkPuLFsc5F0LWw==
-Date: Fri, 23 Feb 2024 10:18:52 +0100
-From: Miquel Raynal <miquel.raynal@bootlin.com>
-To: William Zhang <william.zhang@broadcom.com>
-Cc: Linux MTD List <linux-mtd@lists.infradead.org>, Linux ARM List
- <linux-arm-kernel@lists.infradead.org>, Broadcom Kernel List
- <bcm-kernel-feedback-list@broadcom.com>, f.fainelli@gmail.com,
- kursad.oney@broadcom.com, joel.peshkin@broadcom.com,
- anand.gore@broadcom.com, dregan@mail.com, kamal.dasu@broadcom.com,
- tomer.yacoby@broadcom.com, dan.beygelman@broadcom.com, David Regan
- <dregan@broadcom.com>, linux-kernel@vger.kernel.org, Vignesh Raghavendra
- <vigneshr@ti.com>, Brian Norris <computersforpeace@gmail.com>, Richard
- Weinberger <richard@nod.at>
-Subject: Re: [PATCH v6 12/13] mtd: rawnand: brcmnand: Add support for
- getting ecc setting from strap
-Message-ID: <20240223101852.005da3ad@xps-13>
-In-Reply-To: <20240223034758.13753-13-william.zhang@broadcom.com>
-References: <20240223034758.13753-1-william.zhang@broadcom.com>
-	<20240223034758.13753-13-william.zhang@broadcom.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1708679968; c=relaxed/simple;
+	bh=B2LN/yniV9iT2GJ1kbsrmW4avghqfoHXIm5XQIcvZAg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=X6isupdtZ5TbkEBf8dji4BwmY7H3ak/Sqva/tY1r1FHcjsAAZcA+Rn6ZTlYDBLERb/XMgh86OCQX30yDKb30PBzGCgtYP4VcwaLhUz2rJBYt4IYvIklOHfmSeLWgJZFmPIk6G5+7Arf60QZ6uNIAv1TPWn2L8zZJB7d3WuvccQ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpha.franken.de; spf=pass smtp.mailfrom=alpha.franken.de; arc=none smtp.client-ip=193.175.24.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpha.franken.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alpha.franken.de
+Received: from uucp by elvis.franken.de with local-rmail (Exim 3.36 #1)
+	id 1rdRi6-0003JB-00; Fri, 23 Feb 2024 10:19:14 +0100
+Received: by alpha.franken.de (Postfix, from userid 1000)
+	id C738DC0267; Fri, 23 Feb 2024 10:18:00 +0100 (CET)
+Date: Fri, 23 Feb 2024 10:18:00 +0100
+From: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+To: Jiaxun Yang <jiaxun.yang@flygoat.com>
+Cc: Nathan Chancellor <nathan@kernel.org>,
+	Nick Desaulniers <ndesaulniers@google.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>, linux-mips@vger.kernel.org,
+	linux-kernel@vger.kernel.org, llvm@lists.linux.dev,
+	Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH 0/8] MIPS: Aggregate build fixes
+Message-ID: <ZdhiyFzR3sC4nc+p@alpha.franken.de>
+References: <20240202-llvm-msym32-v1-0-52f0631057d6@flygoat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-GND-Sasl: miquel.raynal@bootlin.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240202-llvm-msym32-v1-0-52f0631057d6@flygoat.com>
 
-Hi William,
-
-william.zhang@broadcom.com wrote on Thu, 22 Feb 2024 19:47:57 -0800:
-
-> BCMBCA broadband SoC based board design does not specify ecc setting in
-> dts but rather use the SoC NAND strap info to obtain the ecc strength
-> and spare area size setting. Add brcm,nand-ecc-use-strap dts propety for
-> this purpose and update driver to support this option. However these two
-> options can not be used at the same time.
->=20
-> Signed-off-by: William Zhang <william.zhang@broadcom.com>
-> Reviewed-by: David Regan <dregan@broadcom.com>
->=20
-
-FYI I did not receive patches 7, 8, 9, which makes the series numbering
-very odd.
-
+On Fri, Feb 02, 2024 at 06:21:39PM +0000, Jiaxun Yang wrote:
+> Hi all,
+> 
+> This series is a collection of build fixes that have been lying
+> at my local trees for a while, some of them are for Clang built
+> linux and others are for some wiredo configurations.
+> 
+> Please review.
+> 
+> Thanks
+> 
+> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
 > ---
->=20
-> Changes in v6:
-> - Combine the ecc step size and ecc strength into one get function
-> - Treat it as error condition if both brcm,nand-ecc-use-strap and nand
-> ecc dts properties are set
-> - Add intermediate steps to get the sector size bitfield
->=20
-> Changes in v5: None
-> Changes in v4:
-> - Update the comments for ecc setting selection
->=20
-> Changes in v3: None
-> Changes in v2:
-> - Minor cosmetic fixes
->=20
->  drivers/mtd/nand/raw/brcmnand/brcmnand.c | 83 ++++++++++++++++++++++--
->  1 file changed, 77 insertions(+), 6 deletions(-)
->=20
-> diff --git a/drivers/mtd/nand/raw/brcmnand/brcmnand.c b/drivers/mtd/nand/=
-raw/brcmnand/brcmnand.c
-> index ef7d340475be..e8ffc283b365 100644
-> --- a/drivers/mtd/nand/raw/brcmnand/brcmnand.c
-> +++ b/drivers/mtd/nand/raw/brcmnand/brcmnand.c
-> @@ -1038,6 +1038,22 @@ static inline int brcmnand_sector_1k_shift(struct =
-brcmnand_controller *ctrl)
->  		return -1;
->  }
-> =20
-> +static int brcmnand_get_sector_size_1k(struct brcmnand_host *host)
-> +{
-> +	struct brcmnand_controller *ctrl =3D host->ctrl;
-> +	int sector_size_bit =3D brcmnand_sector_1k_shift(ctrl);
-> +	u16 acc_control_offs =3D brcmnand_cs_offset(ctrl, host->cs,
-> +						  BRCMNAND_CS_ACC_CONTROL);
-> +	u32 acc_control;
-> +
-> +	if (sector_size_bit < 0)
-> +		return 0;
-> +
-> +	acc_control =3D nand_readreg(ctrl, acc_control_offs);
-> +
-> +	return (acc_control & BIT(sector_size_bit)) >> sector_size_bit;
+> Jiaxun Yang (8):
+>       MIPS: Probe toolchain support of -msym32
+>       MIPS: Remove cc-option checks for -march=octeon
+>       MIPS: Fallback CPU -march flag to ISA level if unsupported
+>       MIPS: BMIPS: Drop unnecessary assembler flag
+>       MIPS: Loongson64: test for -march=loongson3a cflag
+>       MIPS: Limit MIPS_MT_SMP support by ISA reversion
+>       MIPS: Implement microMIPS MT ASE helpers
+>       MIPS: mipsregs: Set proper ISA level for virt extensions
+> 
+>  arch/mips/Kconfig                  |   3 +-
+>  arch/mips/Makefile                 |  46 ++++---
+>  arch/mips/include/asm/asmmacro.h   |  22 ++--
+>  arch/mips/include/asm/mipsmtregs.h | 256 ++++++++++++++++++++++---------------
+>  arch/mips/include/asm/mipsregs.h   |  22 +++-
+>  arch/mips/kernel/vpe-mt.c          |   4 +-
+>  6 files changed, 211 insertions(+), 142 deletions(-)
+> ---
+> base-commit: 076d56d74f17e625b3d63cf4743b3d7d02180379
+> change-id: 20240202-llvm-msym32-6392d410f650
 
-FIELD_PREP, FIELD_GET, *please*.
+applied to mips-next.
 
-> +}
-> +
->  static void brcmnand_set_sector_size_1k(struct brcmnand_host *host, int =
-val)
->  {
->  	struct brcmnand_controller *ctrl =3D host->ctrl;
-> @@ -1055,6 +1071,43 @@ static void brcmnand_set_sector_size_1k(struct brc=
-mnand_host *host, int val)
->  	nand_writereg(ctrl, acc_control_offs, tmp);
->  }
-> =20
-> +static int brcmnand_get_spare_size(struct brcmnand_host *host)
-> +{
-> +	struct brcmnand_controller *ctrl =3D host->ctrl;
-> +	u16 acc_control_offs =3D brcmnand_cs_offset(ctrl, host->cs,
-> +						  BRCMNAND_CS_ACC_CONTROL);
-> +	u32 acc =3D nand_readreg(ctrl, acc_control_offs);
-> +
-> +	return (acc & brcmnand_spare_area_mask(ctrl));
-> +}
-> +
-> +static void brcmnand_get_ecc_settings(struct brcmnand_host *host, struct=
- nand_chip *chip)
-> +{
-> +	struct brcmnand_controller *ctrl =3D host->ctrl;
-> +	u16 acc_control_offs =3D brcmnand_cs_offset(ctrl, host->cs,
-> +						  BRCMNAND_CS_ACC_CONTROL);
-> +	int sector_size_1k =3D brcmnand_get_sector_size_1k(host);
-> +	int spare_area_size, ecc_level;
-> +	u32 acc;
-> +
-> +	spare_area_size =3D brcmnand_get_spare_size(host);
-> +	acc =3D nand_readreg(ctrl, acc_control_offs);
-> +	ecc_level =3D (acc & brcmnand_ecc_level_mask(ctrl)) >> ctrl->ecc_level_=
-shift;
+Thomas.
 
-ditto
-
-> +	if (sector_size_1k)
-> +		chip->ecc.strength =3D ecc_level * 2;
-> +	else if (spare_area_size =3D=3D 16 && ecc_level =3D=3D 15)
-> +		chip->ecc.strength =3D 1; /* hamming */
-> +	else
-> +		chip->ecc.strength =3D ecc_level;
-> +
-> +	if (chip->ecc.size =3D=3D 0) {
-> +		if (sector_size_1k < 0)
-
-Should be <=3D 0 I guess
-
-> +			chip->ecc.size =3D 512;
-> +		else
-> +			chip->ecc.size =3D 512 << sector_size_1k;
-
-What is this? Are you expecting sector_size_1k to be 0 or 1
-and thus multiply 512 by two?
-
-Please just use:
-			chip->ecc.size =3D SZ_1K;
-		=09
-> +	}
-> +}
-> +
->  /***********************************************************************
->   * CS_NAND_SELECT
->   ***********************************************************************/
-> @@ -2625,19 +2678,37 @@ static int brcmnand_setup_dev(struct brcmnand_hos=
-t *host)
->  		nanddev_get_memorg(&chip->base);
->  	struct brcmnand_controller *ctrl =3D host->ctrl;
->  	struct brcmnand_cfg *cfg =3D &host->hwcfg;
-> -	char msg[128];
-> +	struct device_node *np =3D nand_get_flash_node(chip);
->  	u32 offs, tmp, oob_sector;
-> +	bool use_strap =3D false;
-> +	char msg[128];
->  	int ret;
-> =20
->  	memset(cfg, 0, sizeof(*cfg));
-> +	use_strap =3D of_property_read_bool(np, "brcm,nand-ecc-use-strap");
-> =20
-> -	ret =3D of_property_read_u32(nand_get_flash_node(chip),
-> -				   "brcm,nand-oob-sector-size",
-> +	/*
-> +	 * Either nand-ecc-xxx or brcm,nand-ecc-use-strap can be set. Error out
-> +	 * if both exist.
-> +	 */
-
-Thanks for the comment but I think the error string is clear enough.
-
-> +	if (chip->ecc.strength && use_strap) {
-> +		dev_err(ctrl->dev,
-> +			"nand ecc and strap ecc settings can't be set at the same time\n");
-
-Can we change to
-"ECC strap and DT ECC configuration properties are mutually exclusive"
-
-> +		return -EINVAL;
-> +	}
-> +
-> +	if (use_strap)
-> +		brcmnand_get_ecc_settings(host, chip);
-> +
-> +	ret =3D of_property_read_u32(np, "brcm,nand-oob-sector-size",
->  				   &oob_sector);
->  	if (ret) {
-> -		/* Use detected size */
-> -		cfg->spare_area_size =3D mtd->oobsize /
-> -					(mtd->writesize >> FC_SHIFT);
-> +		if (use_strap)
-> +			cfg->spare_area_size =3D brcmnand_get_spare_size(host);
-> +		else
-> +			/* Use detected size */
-> +			cfg->spare_area_size =3D mtd->oobsize /
-> +						(mtd->writesize >> FC_SHIFT);
->  	} else {
->  		cfg->spare_area_size =3D oob_sector;
->  	}
-
-The rest of the series looks good to me.
-
-Thanks,
-Miqu=C3=A8l
+-- 
+Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
+good idea.                                                [ RFC1925, 2.3 ]
