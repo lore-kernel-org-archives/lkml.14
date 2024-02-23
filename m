@@ -1,174 +1,93 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BD4F149388;
-	Fri, 23 Feb 2024 20:20:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DB23823CD
+	for <linux-kernel@vger.kernel.org>; Fri, 23 Feb 2024 20:21:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708719615; cv=none; b=tkZHEv/Ye0qeQhlSSltcQIn6dv+/z3BqdAVbhvSlgC5CtQYE06+3AMDtPef4lrQaASW3KNcc4nLnV/MSkRb7XGeTwf4TpGwg9QJZt4iY3FxF/CK+GQ2o45mk4BHkxoNR3fZZNvKmH9LfYw4HOfJ+PQOpqkTAIjMAOuN/IkolzZc=
+	t=1708719669; cv=none; b=ncm5GDN9RWQ1el32i6UjoXnHQKfaC4Gh8v8Ede7uMEIzQ6rNgzw6URchycVdRrYkcRLW34WbAGBdm7stp8IZLAdHYPU+UYCt77ViHgidrh/bQ4xl+qg6bZX2eBvbazi1b0rL+VzgzhdhFvbGXt6B0QL9XA7BRn/NH7vgIHgEUwg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708719615; c=relaxed/simple;
-	bh=CQv9OjZaC8cVr5dQoVkV3H1UwbxVlvPPTLLBhbu5mHI=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=MNXhqcU5JbAwDymAm9qUSOZ7/OC3PywhC56aG0dTmkPrQuyIPfHklHPP4Kc8smbszkCwEFkjkBzab3/33vYsjdVO6km7e4Akfb/sGWp8mEoRsGVFC3MZcc+IYtta1YW50Ci1kmHcbxnUa8Ax8P5d+/Pi0LXvugnjrGJxDj3QuXc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D1DCDC433F1;
-	Fri, 23 Feb 2024 20:20:13 +0000 (UTC)
-Date: Fri, 23 Feb 2024 15:22:06 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>
-Cc: linux-nfs@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>, Jeff
- Layton <jlayton@kernel.org>
-Subject: [PATCH v2] tracing: Remove __assign_str_len()
-Message-ID: <20240223152206.0b650659@gandalf.local.home>
-X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1708719669; c=relaxed/simple;
+	bh=1bmnyFrNrxcCLjE3S/+oXjFKsestIbMgUBvvfSSy+OA=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=AHdWh7fZ8lMLXaNgovUjIzM0vTS7vyOZEqEWhmxxm1b4+X/2X2kHTsx1Bhe0Pz1cxLN1qq40hUaHIIMQZi3dp3naaZZ7rJxyh9eSbREiviDk+Egiv0bfce4PZcK1zhX83ASR49ciCcn6YcqVPEaLRMcNWvJmykYCdbAAyIzRqpQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=USxebXXe; arc=none smtp.client-ip=209.85.214.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="USxebXXe"
+Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-1dc758f4264so4615295ad.3
+        for <linux-kernel@vger.kernel.org>; Fri, 23 Feb 2024 12:21:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1708719666; x=1709324466; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:reply-to:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=uMOKrbIKnJ6TKtSp5dRNn05/ENEXJGPDCIutix2Nmno=;
+        b=USxebXXerT99qzSHcujpnpMzyGBUM8k2BxQbJd2jwZFxX+o4lcuxA9mVSpnWg0rJVY
+         Kh7u8oj5ILoFJpTL+XbWBtSsYonNzWRV2qLiZPAQrxgoxLc+fcuunZqiOpzhw8Z8ZNgB
+         13qvrO1s2o1WFuV+7cobjzrIwSHjv+EUKrS1IpWJZ9D+yGvCfXy86HvnQpWhWEK6xKuE
+         RHftZI8TQWvxYxJkl6ZTPKLwNu0zwEJazYa03xKVda1Vh5vPqgaWzMyWlY7cY3kGrXlf
+         RsywgVZpe4xgc+JgMI0RUMOfGhAD1HMeMK6+gcIqxsnFBLHBx+flFHi7d6ArGxoWxd3h
+         XjNg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708719666; x=1709324466;
+        h=cc:to:from:subject:message-id:mime-version:date:reply-to
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=uMOKrbIKnJ6TKtSp5dRNn05/ENEXJGPDCIutix2Nmno=;
+        b=MqakbZo5vXoUTqLYu+Sq+080PB7WR41EZnO7p8j5V8HvKIcn6ruovc3S8ln62tYW/V
+         81a4kYX+n2eztUdbDQr820LAWTGjEMDmBNXi394cX30yhILq/XBRJIHSsrfrLGGDCQ/G
+         3BXrNNw/9Evfz0VRVCddThKJVJQyxBvbcbTO0Dt8/Lc/aU8rqTHW/xN1lJ01FXuyMOtA
+         YORVdUuTxE/Uot6jVH1tsmKrQeBL0Ga+ztDob/GPX872nkp6m6DWXJiE42CU5SiINGy/
+         swcnIUMrJOuh0iy+TGGYFTKuS8Q1vSP82T2z5jApiJGtnQLi69Z2RFGGRem2DmCSZQcK
+         eI9g==
+X-Forwarded-Encrypted: i=1; AJvYcCXcG6pD0tUmhvxbJJreKjZAYUsWCM9+EolRPBMl3tdvPzJcqq+zB8f9MaUEthR0efGCNVwrvbSIknzYKPPSMlDMntiqBaAFFSB7IZLS
+X-Gm-Message-State: AOJu0YwLbCVg1Zzd9dlIUvA0RqQjcsnTC5ss0+fT5cSNzqEaIOHYTMX2
+	cp6XzbBynjlTGrkJxV7ywU8oPmwys1X5MCYkBnPmszFQoGj90XEgPwC/h4qfu+4qXw3BKG0hqtS
+	6Ug==
+X-Google-Smtp-Source: AGHT+IGAiiFLABQHhdRPopaK/78IVe7JcLUV+v80lMlmvMheOafreGID10sjMpfQSo848B2ZgsL84/ldoM8=
+X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
+ (user=seanjc job=sendgmr) by 2002:a17:902:d50b:b0:1db:cf63:b87b with SMTP id
+ b11-20020a170902d50b00b001dbcf63b87bmr56644plg.7.1708719666432; Fri, 23 Feb
+ 2024 12:21:06 -0800 (PST)
+Reply-To: Sean Christopherson <seanjc@google.com>
+Date: Fri, 23 Feb 2024 12:21:01 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.44.0.rc0.258.g7320e95886-goog
+Message-ID: <20240223202104.3330974-1-seanjc@google.com>
+Subject: [PATCH v2 0/3] KVM: VMX: MSR intercept/passthrough cleanup and simplification
+From: Sean Christopherson <seanjc@google.com>
+To: Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>
+Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Dongli Zhang <dongli.zhang@oracle.com>
+Content-Type: text/plain; charset="UTF-8"
 
-From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+Clean up VMX's MSR passthrough code, in particular the portion that deals with
+userspace MSR filters (KVM needs to force interception if userspace wants to
+intercept even if KVM wants to passthrough).  As pointed out by Dongli, KVM
+does a linear walk twice in quick succession, which is wasteful, confuing, and
+unnecessarily brittle.
 
-Now that __assign_str() gets the length from the __string() (and
-__string_len()) macros, there's no reason to have a separate
-__assign_str_len() macro as __assign_str() can get the length of the
-string needed.
+Same exact idea as Dongli's v1[*], just a different approach to cleaning up the
+API for dealing with MSR filters.
 
-Also remove __assign_rel_str() although it had no users anyway.
-
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
-Changes since v2: https://lore.kernel.org/linux-trace-kernel/20240223144840.563660e1@gandalf.local.home/
-
-- I just realized that __assign_str_len() makes sure that the string ends
-  with a '\0'. To use __assign_str(), it too must write a '\0' at the end
-  of the string.
-
- fs/nfsd/trace.h                              |  8 +++---
- include/trace/stages/stage6_event_callback.h | 28 ++++++++------------
- samples/trace_events/trace-events-sample.h   |  9 ++++---
- 3 files changed, 20 insertions(+), 25 deletions(-)
-
-diff --git a/fs/nfsd/trace.h b/fs/nfsd/trace.h
-index 2cd57033791f..98b14f30d772 100644
---- a/fs/nfsd/trace.h
-+++ b/fs/nfsd/trace.h
-@@ -102,7 +102,7 @@ TRACE_EVENT(nfsd_compound,
- 	TP_fast_assign(
- 		__entry->xid = be32_to_cpu(rqst->rq_xid);
- 		__entry->opcnt = opcnt;
--		__assign_str_len(tag, tag, taglen);
-+		__assign_str(tag, tag);
- 	),
- 	TP_printk("xid=0x%08x opcnt=%u tag=%s",
- 		__entry->xid, __entry->opcnt, __get_str(tag)
-@@ -483,7 +483,7 @@ TRACE_EVENT(nfsd_dirent,
- 	TP_fast_assign(
- 		__entry->fh_hash = fhp ? knfsd_fh_hash(&fhp->fh_handle) : 0;
- 		__entry->ino = ino;
--		__assign_str_len(name, name, namlen)
-+		__assign_str(name, name);
- 	),
- 	TP_printk("fh_hash=0x%08x ino=%llu name=%s",
- 		__entry->fh_hash, __entry->ino, __get_str(name)
-@@ -853,7 +853,7 @@ DECLARE_EVENT_CLASS(nfsd_clid_class,
- 		__entry->flavor = clp->cl_cred.cr_flavor;
- 		memcpy(__entry->verifier, (void *)&clp->cl_verifier,
- 		       NFS4_VERIFIER_SIZE);
--		__assign_str_len(name, clp->cl_name.data, clp->cl_name.len);
-+		__assign_str(name, clp->cl_name.data);
- 	),
- 	TP_printk("addr=%pISpc name='%s' verifier=0x%s flavor=%s client=%08x:%08x",
- 		__entry->addr, __get_str(name),
-@@ -1800,7 +1800,7 @@ TRACE_EVENT(nfsd_ctl_time,
- 	TP_fast_assign(
- 		__entry->netns_ino = net->ns.inum;
- 		__entry->time = time;
--		__assign_str_len(name, name, namelen);
-+		__assign_str(name, name);
- 	),
- 	TP_printk("file=%s time=%d\n",
- 		__get_str(name), __entry->time
-diff --git a/include/trace/stages/stage6_event_callback.h b/include/trace/stages/stage6_event_callback.h
-index 2bfd49713b42..0c0f50bcdc56 100644
---- a/include/trace/stages/stage6_event_callback.h
-+++ b/include/trace/stages/stage6_event_callback.h
-@@ -32,16 +32,13 @@
+v2: Combine "check and get" into a single API instead of adding an out param.
  
- #undef __assign_str
- #define __assign_str(dst, src)						\
--	memcpy(__get_str(dst), __data_offsets.dst##_ptr_ ? : EVENT_NULL_STR, \
--	       __get_dynamic_array_len(dst))
--
--#undef __assign_str_len
--#define __assign_str_len(dst, src, len)					\
- 	do {								\
--		memcpy(__get_str(dst),					\
--		       __data_offsets.dst##_ptr_ ? : EVENT_NULL_STR, len); \
--		__get_str(dst)[len] = '\0';				\
--	} while(0)
-+		char *__str__ = __get_str(dst);				\
-+		int __len__ = __get_dynamic_array_len(dst) - 1;		\
-+		memcpy(__str__, __data_offsets.dst##_ptr_ ? :		\
-+		       EVENT_NULL_STR, __len__);			\
-+		__str__[__len__] = '\0';				\
-+	} while (0)
- 
- #undef __assign_vstr
- #define __assign_vstr(dst, fmt, va)					\
-@@ -94,15 +91,12 @@
- 
- #undef __assign_rel_str
- #define __assign_rel_str(dst, src)					\
--	memcpy(__get_rel_str(dst), __data_offsets.dst##_ptr_ ? : EVENT_NULL_STR, \
--	       __get_rel_dynamic_array_len(dst))
--
--#undef __assign_rel_str_len
--#define __assign_rel_str_len(dst, src, len)				\
- 	do {								\
--		memcpy(__get_rel_str(dst),				\
--		       __data_offsets.dst##_ptr_ ? : EVENT_NULL_STR, len); \
--		__get_rel_str(dst)[len] = '\0';				\
-+		char *__str__ = __get_rel_str(dst);			\
-+		int __len__ = __get_rel_dynamic_array_len(dst) - 1;	\
-+		memcpy(__str__, __data_offsets.dst##_ptr_ ? :		\
-+		       EVENT_NULL_STR, __len__);			\
-+		__str__[__len__] = '\0';				\
- 	} while (0)
- 
- #undef __rel_bitmask
-diff --git a/samples/trace_events/trace-events-sample.h b/samples/trace_events/trace-events-sample.h
-index 23f923ccd529..f2d2d56ce8e2 100644
---- a/samples/trace_events/trace-events-sample.h
-+++ b/samples/trace_events/trace-events-sample.h
-@@ -163,8 +163,7 @@
-  *         __string().
-  *
-  *   __string_len: This is a helper to a __dynamic_array, but it understands
-- *	   that the array has characters in it, and with the combined
-- *         use of __assign_str_len(), it will allocate 'len' + 1 bytes
-+ *	   that the array has characters in it, it will allocate 'len' + 1 bytes
-  *         in the ring buffer and add a '\0' to the string. This is
-  *         useful if the string being saved has no terminating '\0' byte.
-  *         It requires that the length of the string is known as it acts
-@@ -174,9 +173,11 @@
-  *
-  *         __string_len(foo, bar, len)
-  *
-- *         To assign this string, use the helper macro __assign_str_len().
-+ *         To assign this string, use the helper macro __assign_str().
-+ *         The length is saved via the __string_len() and is retrieved in
-+ *         __assign_str().
-  *
-- *         __assign_str_len(foo, bar, len);
-+ *         __assign_str(foo, bar);
-  *
-  *         Then len + 1 is allocated to the ring buffer, and a nul terminating
-  *         byte is added. This is similar to:
+Dongli Zhang (2):
+  KVM: VMX: fix comment to add LBR to passthrough MSRs
+  KVM: VMX: return early if msr_bitmap is not supported
+
+Sean Christopherson (1):
+  KVM: VMX: Combine "check" and "get" APIs for passthrough MSR lookups
+
+ arch/x86/kvm/vmx/vmx.c | 68 ++++++++++++++++++------------------------
+ 1 file changed, 29 insertions(+), 39 deletions(-)
+
+
+base-commit: ec1e3d33557babed2c2c2c7da6e84293c2f56f58
 -- 
-2.43.0
+2.44.0.rc0.258.g7320e95886-goog
 
