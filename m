@@ -1,77 +1,91 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from gandalf.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B8B511198
-	for <linux-kernel@vger.kernel.org>; Fri, 23 Feb 2024 04:30:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A89BEAD2;
+	Fri, 23 Feb 2024 04:36:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708662631; cv=none; b=g2dWqBhXq6H4qvmLaugbwk7oWLR9l7xIPZsVnUNgAP4hytImP8sWZ+rADnso2LPLn4Cp5Ugt+9Wtw0iFUtc1M5dOCrrbXH1F7bGlNgVl84vONUMbRJhD4J2G4qfXZZhguBCYH92ghlw0aQyoQVfNbYrIEqBN/rIaxFQWwdSpUt8=
+	t=1708663005; cv=none; b=PhiGy9lTzTKGtTKF0N+gX2JAD63QCylovTOwzogePv54jsvcq7S+QtcGIKeJ02WR69FStAcozDPjVocTi4CVsqCXL4XhaUenrWyzFSN8fChWu7AyrXT6WrX4KC3vVaXbTioNaUTZHND3f4u9wG5tcI5IALfXUObs9Rh5ZbpQ8Rs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708662631; c=relaxed/simple;
-	bh=a+Qn10BEQCsB42uL0fA+2chMWeK3dzruYaHmn+6Xb4Y=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=hbv4Sr2zPNz0028kTws7FXKU7I7tGQOFnTMUTJ6tcFcTOqgEqncRPLNhUQkgjt3ETHVALEeSW3U2GEIaAMVOhYS6dKMRgY3sV4c98ObrMC8hirue2GgBTCCWQakPCPk80SRpMN8sV+aWTH/9uTaOT0Ou6XynsloJT5ly5sx2X8s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O9jKyKrN; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1708663005; c=relaxed/simple;
+	bh=/FyjzMk6/1+QlLgjUrBq4h7dcYzZb2xLEL+3ICH2UhY=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=Mq//SFj70p7NA3goCaBBt6FsHcs5quhDFXOq2x8wbZA5RaJ962GFVMyLEKpm+kZf0YLSgJ7HzREB+mlKRZ57pMrs6miY/V3XBvKKIgqpFnjqlPvn0ROBqLy3sgTEMQqndMKJJ3Av32Sy6+suV1T/Z5ATVKXuNsTDIPloiTraBVM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=rKNURIUA; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O9jKyKrN"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 2DF53C43399;
-	Fri, 23 Feb 2024 04:30:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708662631;
-	bh=a+Qn10BEQCsB42uL0fA+2chMWeK3dzruYaHmn+6Xb4Y=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=O9jKyKrNBYPQMl/i3z6bIP1hYXB1f2lLEVjJoSgE6gMedZwMZagumZRL6KNUNDpHR
-	 RG2e5z95RquAT4GoN6qMZSFtCXDAgLPtLDg+Vq6QGov1H6dSuoXJ8NkP7mpV6ZTvX6
-	 RFpgnDSScGu3zGtFpMIAiEUuVdOUGxvLkSRogWolVEohQ+JLM1cUgTJ3htnk/BjVJ1
-	 m8bdX4lgR6OqweHy8/l6xuFqEh0HKYMWaKMRocgWHXgmOch1iKtFiq2rrIbS5e8394
-	 NwGQbo+hgdRo93sBZSXNvJLdPGHm5lBvfu27nAg5eH+LiPvzmXPVmo+For3I7jQNga
-	 Q5YsXuB5AxzBA==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 124C5D84BB9;
-	Fri, 23 Feb 2024 04:30:30 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="rKNURIUA"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=201702; t=1708663000;
+	bh=h2FyDHHxJrZbIdFI4oPYrRtlgmcQ6ZJ0mwEOJXqzeCA=;
+	h=Date:From:To:Cc:Subject:From;
+	b=rKNURIUArkXH2hb9+yJKBlzBCSy2bVj5UCWtgVohauxb/i+W18U0KCmVnu//Yuuy6
+	 tNEVFP7vp6Z03QAojPcq59gaIZkd8nrDAlqEoTMvtnvdFhG22pER1pOHsu8U5qc3ka
+	 TSY/AONZBsLwxECgArS9Hbsvf6sPJzC6ZenZgnTVfmc8yg+h8UtjrZcm6QbxHJbK2c
+	 Z1FaRhgAdBGrSLktD30FU9XZQ3XwrfdPmVJauGQ3X0qevK5aG6qgAp/XP6Gy+/P6kf
+	 pDFZZUocDHFAc1TFfd9muOSz9PoJUrkbJ1e9uOiAzchNUuO28q9uXlV+nvzcXxLHKE
+	 4eCmI4gVdtjTw==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4Tgxzq1f3xz4wcF;
+	Fri, 23 Feb 2024 15:36:39 +1100 (AEDT)
+Date: Fri, 23 Feb 2024 15:36:36 +1100
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: "Darrick J. Wong" <djwong@kernel.org>, David Chinner
+ <david@fromorbit.com>
+Cc: <linux-xfs@vger.kernel.org>, Chandan Babu R <chandanbabu@kernel.org>,
+ Christoph Hellwig <hch@lst.de>, Linux Kernel Mailing List
+ <linux-kernel@vger.kernel.org>, Linux Next Mailing List
+ <linux-next@vger.kernel.org>
+Subject: linux-next: build warning after merge of the xfs tree
+Message-ID: <20240223153636.41358be5@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH v2] riscv: add CALLER_ADDRx support
-From: patchwork-bot+linux-riscv@kernel.org
-Message-Id: 
- <170866263006.22939.204004953353760152.git-patchwork-notify@kernel.org>
-Date: Fri, 23 Feb 2024 04:30:30 +0000
-References: <20240202015102.26251-1-zong.li@sifive.com>
-In-Reply-To: <20240202015102.26251-1-zong.li@sifive.com>
-To: Zong Li <zong.li@sifive.com>
-Cc: linux-riscv@lists.infradead.org, palmer@dabbelt.com,
- paul.walmsley@sifive.com, alex@ghiti.fr, conor.dooley@microchip.com,
- aou@eecs.berkeley.edu, linux-kernel@vger.kernel.org
+Content-Type: multipart/signed; boundary="Sig_/SqI874M6Z23o3JjKW/QTqey";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-Hello:
+--Sig_/SqI874M6Z23o3JjKW/QTqey
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-This patch was applied to riscv/linux.git (fixes)
-by Palmer Dabbelt <palmer@rivosinc.com>:
+Hi all,
 
-On Fri,  2 Feb 2024 01:51:02 +0000 you wrote:
-> CALLER_ADDRx returns caller's address at specified level, they are used
-> for several tracers. These macros eventually use
-> __builtin_return_address(n) to get the caller's address if arch doesn't
-> define their own implementation.
-> 
-> In RISC-V, __builtin_return_address(n) only works when n == 0, we need
-> to walk the stack frame to get the caller's address at specified level.
-> 
-> [...]
+After merging the xfs tree, today's linux-next build (htmldocs) produced
+this warning:
 
-Here is the summary with links:
-  - [v2] riscv: add CALLER_ADDRx support
-    https://git.kernel.org/riscv/c/680341382da5
+Documentation/core-api/mm-api:130: mm/shmem.c:2155: WARNING: Inline emphasi=
+s start-string without end-string.
+Documentation/core-api/mm-api:130: mm/shmem.c:2156: WARNING: Inline emphasi=
+s start-string without end-string.
 
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
+Introduced by commit
 
+  d7468609ee0f ("shmem: export shmem_get_folio")
 
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/SqI874M6Z23o3JjKW/QTqey
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmXYINQACgkQAVBC80lX
+0Gy6Ywf+LUwcLue/f/XGLbpFZOziQf5znp5r/1uBbjhFeTX4LKYa2fYRf9ZNZXpM
+TXs1Mexiq7mQwizGj8Hs+yG6dAke5HhYnWsMGT6eM9w9Ik0vC0RNR6lP3y0/Yn5C
+DkPnJHDpVDgmK3gf6VNvHfu0T1ZNCsPQgh76iOoraq/PV8x82w8S4TY5Vdlq+bpx
+rda16KzaBejgJytI5nFiBlao87BqeTEchCAilNMwUPDbXXe7ylQ2juy2F0m+6BtA
+EEkBwGuVOYDWdeC+pI98mCJHuhO/X2KIaGwtMMLsPKupKo5zwZUSkSxpfMlKNJA2
+yrgF0+zv+Iy1W2GwH2kYQ5RsgqkDUw==
+=rzkb
+-----END PGP SIGNATURE-----
+
+--Sig_/SqI874M6Z23o3JjKW/QTqey--
