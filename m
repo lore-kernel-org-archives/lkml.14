@@ -1,33 +1,35 @@
 Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E5F222EF5;
-	Fri, 23 Feb 2024 13:45:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EE157F7CE;
+	Fri, 23 Feb 2024 13:45:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.193
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708695927; cv=none; b=BMqazJzPe41FGSw0TSvOh21iUYhVaozEUe6ZZP0bC6xXy9c2rPyTk4JPP1R8HK+xvF5KslmjDzUaO0ILZsHJEt53P3hFRJYwSEmrgNTZQA1KLV9AXGATQ1mZqejwQbzrnB3twcoZwQ5rH9i/hH2I5oJATflb3qrRPBdoRJuWBkU=
+	t=1708695929; cv=none; b=A6az1PLosr1pyg2SRieeGiVB7N0GdUrF080C1A2o5m4wXmJTKaWQ7LHc+62GoUf/laHa3D/YuszidxCad1GuRBMf5k09Ys4kJ+xEXU+B7fOtTo7f/+cowGe3dI+UghcHqQUKwwLeUj3nIvkKuE4nIbdbVtw1qDt+k6WyUN76AaY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708695927; c=relaxed/simple;
-	bh=BRMLvWZAkwfvmzNdxcA/tAyZT746eUsrCBZxYm35vGc=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=NIPinSNbiCumDu/NdBBwQVev00GUhpMESDlFgWrBTAuqP21FbQI7UzsyqkY8v/Swv/KEc8y2hI//CnJbbNjLxW3x7+Wls+y5VCQJ3XinCnaVa5G7EwH9l7gV1m3jwmxdlsUX4ZMcowGsteXskvvEPKc7inMaeO0R8E4UTV05vCU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=gTEy0rkq; arc=none smtp.client-ip=217.70.183.193
+	s=arc-20240116; t=1708695929; c=relaxed/simple;
+	bh=UqrS3L3ZfbwmChhjl8azT4mTToB0ZPmTuVA//e4Tm3c=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=N0qVDWwCwoRsYNf57mpcfj2bU5qYJb/Pv+C7hf/qvw8AKj1ixFtkFfG8ezCVTRV5ss1aE2JNPld0LMEYtfHze7FinFv80qDQxoyfwGRNJ/dPrUvgqoVF9TPBEdMy59iYKBVaNgalCBr6+KGlzBDLxRtHoW4SqOZVxXUOD5yQf7I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=H8HuPFVF; arc=none smtp.client-ip=217.70.183.193
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="gTEy0rkq"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 0367A240003;
-	Fri, 23 Feb 2024 13:45:20 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="H8HuPFVF"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id EE26724000E;
+	Fri, 23 Feb 2024 13:45:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1708695922;
+	t=1708695924;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=CUmJ2G7CxGQ9gN41KMMicO2/OzO2sVyAXn0vq+YQnEs=;
-	b=gTEy0rkq6UYMGwiZTZ19b5bAZM7P5MtNF/JcL+z+6Id31uzQKxvukzqG7INnoxfz/hE5sA
-	gaA0JXFzwJnX2ADB4KKpOMNs4M0hpULTxM41eZpR24F2rlTwo6CJgZB0TdIHf3L8tWamS+
-	QY90FjXIpmXfsmZ5N2xJyi3tXgmV1xH9x1eVF1ptspNhFQuZhd0LQ0RzOnEP5ffJJRNlZU
-	C+6pBhjcdfpt5G8PpRZUWjpQ+q+BWGXofYRijBLTb0hMpDr/Dz2w8Tbt8koOuPF9k2nDqe
-	EF/kFHns6hbI75gpEdMbseAuPP5dJ/xhA6SXEQQPB890H+HatiGoKkddh4gciA==
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=02ddm9Xy6N7z/+neL8gzCb13I4/NT+KuYhzJAZBmiP4=;
+	b=H8HuPFVFjlTSb6rpaiXXgs5bRaL0zt7HcTIQ9cusb5bvcuJk9zcO0BldPrYHbrN9D3KiFQ
+	u+2yGHH3pVxZA0GGmSGe0fjQ0aprlD5dfJYQG/sKXRtq+DAlXBNO5NZpwP01jNpJDe01tP
+	oBrgGicgs4gym0SCDZqY+FdmMZJt3FZxU1+sr6/DYWAWH/aRT0YYEMB/An4Y29qXyq+OEB
+	SdqbDBckYhAtpvgGvmm2mhEAD+7/xF7/JdMWBYJyZvIwxGbC19y4Fm1wBuI3mrk1wuTtGX
+	XBQe1s4wrfq9ax0PBfvKRW3ohgTYYXQcWNyOvo5dd+djCCLjxKgHBfaSO/Drgg==
 From: =?UTF-8?q?J=C3=A9r=C3=A9mie=20Dautheribes?= <jeremie.dautheribes@bootlin.com>
 To: Neil Armstrong <neil.armstrong@linaro.org>,
 	Jessica Zhang <quic_jesszhan@quicinc.com>,
@@ -47,10 +49,12 @@ Cc: dri-devel@lists.freedesktop.org,
 	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
 	Yen-Mei Goh <yen-mei.goh@keysight.com>,
 	=?UTF-8?q?J=C3=A9r=C3=A9mie=20Dautheribes?= <jeremie.dautheribes@bootlin.com>
-Subject: [PATCH 0/3] panel-simple: add support for Crystal Clear CMT430B19N00
-Date: Fri, 23 Feb 2024 14:45:14 +0100
-Message-Id: <20240223134517.728568-1-jeremie.dautheribes@bootlin.com>
+Subject: [PATCH 3/3] drm/panel: simple: add CMT430B19N00 LCD panel support
+Date: Fri, 23 Feb 2024 14:45:17 +0100
+Message-Id: <20240223134517.728568-4-jeremie.dautheribes@bootlin.com>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240223134517.728568-1-jeremie.dautheribes@bootlin.com>
+References: <20240223134517.728568-1-jeremie.dautheribes@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -61,24 +65,61 @@ Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 X-GND-Sasl: jeremie.dautheribes@bootlin.com
 
-This patch series add support for the Crystal Clear Technology
-CMT430B19N00 4.3" 480x272 TFT-LCD panel.
-It also adds Crystal Clear Technology to vendor-prefixes.yaml.
+Add support for Crystal Clear Technology CMT430B19N00 4.3" 480x272
+TFT-LCD panel.
 
-Please note that unfortunately there is no public datasheet available
-for this panel.
+Signed-off-by: Jérémie Dautheribes <jeremie.dautheribes@bootlin.com>
+---
+ drivers/gpu/drm/panel/panel-simple.c | 29 ++++++++++++++++++++++++++++
+ 1 file changed, 29 insertions(+)
 
-Jérémie Dautheribes (3):
-  dt-bindings: Add Crystal Clear Technology vendor prefix
-  dt-bindings: display: simple: add support for Crystal Clear
-    CMT430B19N00
-  drm/panel: simple: add CMT430B19N00 LCD panel support
-
- .../bindings/display/panel/panel-simple.yaml  |  2 ++
- .../devicetree/bindings/vendor-prefixes.yaml  |  2 ++
- drivers/gpu/drm/panel/panel-simple.c          | 29 +++++++++++++++++++
- 3 files changed, 33 insertions(+)
-
+diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
+index 20e3df1c59d4..b940220f56e2 100644
+--- a/drivers/gpu/drm/panel/panel-simple.c
++++ b/drivers/gpu/drm/panel/panel-simple.c
+@@ -1457,6 +1457,32 @@ static const struct panel_desc boe_hv070wsa = {
+ 	.connector_type = DRM_MODE_CONNECTOR_LVDS,
+ };
+ 
++static const struct drm_display_mode cct_cmt430b19n00_mode = {
++	.clock = 9000,
++	.hdisplay = 480,
++	.hsync_start = 480 + 43,
++	.hsync_end = 480 + 43 + 8,
++	.htotal = 480 + 43 + 8 + 4,
++	.vdisplay = 272,
++	.vsync_start = 272 + 12,
++	.vsync_end = 272 + 12 + 8,
++	.vtotal = 272 + 12 + 8 + 4,
++	.flags = DRM_MODE_FLAG_NHSYNC | DRM_MODE_FLAG_NVSYNC,
++};
++
++static const struct panel_desc cct_cmt430b19n00 = {
++	.modes = &cct_cmt430b19n00_mode,
++	.num_modes = 1,
++	.bpc = 8,
++	.size = {
++		.width = 95,
++		.height = 53,
++	},
++	.bus_format = MEDIA_BUS_FMT_RGB888_1X24,
++	.bus_flags = DRM_BUS_FLAG_DE_HIGH | DRM_BUS_FLAG_PIXDATA_DRIVE_NEGEDGE,
++	.connector_type = DRM_MODE_CONNECTOR_DPI,
++};
++
+ static const struct drm_display_mode cdtech_s043wq26h_ct7_mode = {
+ 	.clock = 9000,
+ 	.hdisplay = 480,
+@@ -4402,6 +4428,9 @@ static const struct of_device_id platform_of_match[] = {
+ 	}, {
+ 		.compatible = "boe,hv070wsa-100",
+ 		.data = &boe_hv070wsa
++	}, {
++		.compatible = "cct,cmt430b19n00",
++		.data = &cct_cmt430b19n00,
+ 	}, {
+ 		.compatible = "cdtech,s043wq26h-ct7",
+ 		.data = &cdtech_s043wq26h_ct7,
 -- 
 2.34.1
 
