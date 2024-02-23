@@ -1,39 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9A6781ACA
-	for <linux-kernel@vger.kernel.org>; Fri, 23 Feb 2024 14:17:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB59482868
+	for <linux-kernel@vger.kernel.org>; Fri, 23 Feb 2024 14:17:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708697829; cv=none; b=LTThyjxGmJlH3zv3ETEALeeVDGhd36XPtVk9PDHSSq79GckRQkN+mpZPsF3GCmvlmXqW2UogN16o7qyHHOqyEqsdFSv+54uyRyA4GJdGRueF+aqMJSF3G2lMOfiTP8woYW15TXEre8cPebOMTZrV6WRTg0HwZsT5Wza1Aw8qaig=
+	t=1708697830; cv=none; b=DJR9dZsa2lDZT1wLEcfyYY4yTjELp0mgF4FUxiZTfCPUWtFRV+ndr9/Uzw+opFa1US3OU5zwGtVsImOcw2imt4vwY+JfsQSa1+V7Ufeq31eNZ/W9g1ZPkiukEAIbHsVN85CJliDANw7I5sVwwIxVgiw2bVWb/P175gZilM80Btg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708697829; c=relaxed/simple;
-	bh=3xrOW9URhoOAn6cXs/5dE696kcxcVdjb+ohYIPRoMYs=;
+	s=arc-20240116; t=1708697830; c=relaxed/simple;
+	bh=ZgqLTdRoUVgbCvGQljZzqd+I5mUdqZPv5Wp0Z7wOMSk=;
 	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=VDNtnAgtwBEs3xlawjKTx7cQ3miDTG8I3cQ5eC8EHpKydnfyBsbLNb++QRz8TL6yaZXVTZxF9O8BHzqaksW4fkbQLW6P60yo0Yw2Mx9+y1A1k3yJ8MNo1S6jpj9Ni1Orron/4FOTRrZ6Tc+oc6ibbYE9kZZSUzLdoqsJhasxB7c=
+	 Content-Type; b=j8JK/MMNZsoItuD/rdXWUCWL5FSyKo0hqV9mEgaOXXpfDxRm1cEeDPfhUcesPjXPVeKwKdhyUHwGk/7rj0z5w06p6DWvGEg4ulgwtqldZUKad2MIjWddL07khjvVPPgXHyJi9bW7LcjRl9JQ6DehQ1htYtT+CAQc0cCX6RNAyrQ=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9D546C4166B;
-	Fri, 23 Feb 2024 14:17:09 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A65B5C43390;
+	Fri, 23 Feb 2024 14:17:10 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.97)
 	(envelope-from <rostedt@goodmis.org>)
-	id 1rdWOE-000000077Ng-2Ezo;
-	Fri, 23 Feb 2024 09:19:02 -0500
-Message-ID: <20240223141902.394601874@goodmis.org>
+	id 1rdWOF-000000077RA-2jRW;
+	Fri, 23 Feb 2024 09:19:03 -0500
+Message-ID: <20240223141903.512514224@goodmis.org>
 User-Agent: quilt/0.67
-Date: Fri, 23 Feb 2024 09:18:44 -0500
+Date: Fri, 23 Feb 2024 09:18:51 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org
 Cc: Masami Hiramatsu <mhiramat@kernel.org>,
  Mark Rutland <mark.rutland@arm.com>,
  Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
  Andrew Morton <akpm@linux-foundation.org>,
- Jeff Layton <jlayton@kernel.org>,
- Neil Brown <neilb@suse.de>,
- Olga Kornievskaia <kolga@netapp.com>,
- Dai Ngo <Dai.Ngo@oracle.com>,
- Tom Talpey <tom@talpey.com>,
- Chuck Lever <chuck.lever@oracle.com>
-Subject: [for-next][PATCH 06/13] NFSD: Fix nfsd_clid_class use of __string_len() macro
+ Vincent Donnefort <vdonnefort@google.com>
+Subject: [for-next][PATCH 13/13] tracing: Decrement the snapshot if the snapshot trigger fails to
+ register
 References: <20240223141838.985298316@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -45,49 +41,48 @@ Content-Type: text/plain; charset=UTF-8
 
 From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 
-I'm working on restructuring the __string* macros so that it doesn't need
-to recalculate the string twice. That is, it will save it off when
-processing __string() and the __assign_str() will not need to do the work
-again as it currently does.
+Running the ftrace selftests caused the ring buffer mapping test to fail.
+Investigating, I found that the snapshot counter would be incremented
+every time a snapshot trigger was added, even if that snapshot trigger
+failed.
 
-Currently __string_len(item, src, len) doesn't actually use "src", but my
-changes will require src to be correct as that is where the __assign_str()
-will get its value from.
+ # cd /sys/kernel/tracing
+ # echo "snapshot" > events/sched/sched_process_fork/trigger
+ # echo "snapshot" > events/sched/sched_process_fork/trigger
+ -bash: echo: write error: File exists
 
-The event class nfsd_clid_class has:
+That second one that fails increments the snapshot counter but doesn't
+decrement it. It needs to be decremented when the snapshot fails.
 
-  __string_len(name, name, clp->cl_name.len)
+Link: https://lore.kernel.org/linux-trace-kernel/20240223013344.729055907@goodmis.org
 
-But the second "name" does not exist and causes my changes to fail to
-build. That second parameter should be: clp->cl_name.data.
-
-Link: https://lore.kernel.org/linux-trace-kernel/20240222122828.3d8d213c@gandalf.local.home
-
-Cc: Jeff Layton <jlayton@kernel.org>
-Cc: Neil Brown <neilb@suse.de>
-Cc: Olga Kornievskaia <kolga@netapp.com>
-Cc: Dai Ngo <Dai.Ngo@oracle.com>
-Cc: Tom Talpey <tom@talpey.com>
-Fixes: d27b74a8675ca ("NFSD: Use new __string_len C macros for nfsd_clid_class")
-Acked-by: Chuck Lever <chuck.lever@oracle.com>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Vincent Donnefort <vdonnefort@google.com>
+Fixes: 16f7e48ffc53a ("tracing: Add snapshot refcount")
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- fs/nfsd/trace.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/trace/trace_events_trigger.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/fs/nfsd/trace.h b/fs/nfsd/trace.h
-index d1e8cf079b0f..2cd57033791f 100644
---- a/fs/nfsd/trace.h
-+++ b/fs/nfsd/trace.h
-@@ -843,7 +843,7 @@ DECLARE_EVENT_CLASS(nfsd_clid_class,
- 		__array(unsigned char, addr, sizeof(struct sockaddr_in6))
- 		__field(unsigned long, flavor)
- 		__array(unsigned char, verifier, NFS4_VERIFIER_SIZE)
--		__string_len(name, name, clp->cl_name.len)
-+		__string_len(name, clp->cl_name.data, clp->cl_name.len)
- 	),
- 	TP_fast_assign(
- 		__entry->cl_boot = clp->cl_clientid.cl_boot;
+diff --git a/kernel/trace/trace_events_trigger.c b/kernel/trace/trace_events_trigger.c
+index 62e4f58b8671..4bec043c8690 100644
+--- a/kernel/trace/trace_events_trigger.c
++++ b/kernel/trace/trace_events_trigger.c
+@@ -1491,7 +1491,10 @@ register_snapshot_trigger(char *glob,
+ 	if (ret < 0)
+ 		return ret;
+ 
+-	return register_trigger(glob, data, file);
++	ret = register_trigger(glob, data, file);
++	if (ret < 0)
++		tracing_disarm_snapshot(file->tr);
++	return ret;
+ }
+ 
+ static void unregister_snapshot_trigger(char *glob,
 -- 
 2.43.0
 
