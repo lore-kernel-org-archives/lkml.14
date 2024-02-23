@@ -1,100 +1,114 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
+Received: from a.peacevolution.org (a.peacevolution.org [206.189.193.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE88883CC4;
-	Fri, 23 Feb 2024 16:29:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BFCD8526C;
+	Fri, 23 Feb 2024 16:30:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=206.189.193.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708705762; cv=none; b=ID5L/xe6ZRFZ95op/CTbe11ZuORPiod5b86BNpsBIhkJLavmTmlGp6MDy295tTTSwoWyrDJedN8YF1JjwHmkF68hc7F6ConUtE9WatiQM6Y3tMSwS3nRB/jM5cUS75awKrpFbbAObT431qP1pnJnStxyhMaF1hHjQ+un54DB95Q=
+	t=1708705807; cv=none; b=EZ8YBBIQ/Ap55reIlnvWS0RhXm5PaQjWigXiuh0Dq4y86f7YyLOjgKiAscKKlFAYW3ehoGmi6uZvUDJmG/mkiP+ULY3Vq7PPdVw19m5KXKzt6ZhvP4Ip/OaaotMHKM8Z26V1a0qEosDYsJ+m/a3ruv96mp9BhiCwOE0uws+b9Bg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708705762; c=relaxed/simple;
-	bh=uQcQYf3+Y04XG3bF/6l4sxBLO3EUjwoVOCfO6HW/wv4=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=LI3P+UtYzq8oi6Hlu1a88W30fwm9GI5omm7xLrbCHWYQ7JIXYkxFofliqtWLu22roxbhSu5ELOWkojVHRwEoApp4yLHwuJnSvwPDV8mMbNptCgWXtXSxxtrzcCULCyfmpNgtE5QSgrkAmQpm1zNJuj3+DY2lQcrqJEUU8zNFf9Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=XJIKuRy6; arc=none smtp.client-ip=212.227.15.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	s=arc-20240116; t=1708705807; c=relaxed/simple;
+	bh=2gqITLPm+T8DVTKA8perP2UfzFrxKTvGsvyzXlsKDGQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lUXTspJy96az4Fuw5P88MPPYJQFewfmqqy4qT3C32HT2NnOtqwDz+Zpl0Az7RRyJd70glX19T7NO+460uNI/VNRLrMKhsoavGuyDsaCcP2dfFRPUis631IV2S2Kex3Ot1cYVvH71BTczvyWHwWYK0N7M48+vRLDWcEuHq+DE+6Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=peacevolution.org; spf=pass smtp.mailfrom=peacevolution.org; dkim=pass (1024-bit key) header.d=peacevolution.org header.i=@peacevolution.org header.b=frWGOL/5; arc=none smtp.client-ip=206.189.193.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=peacevolution.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=peacevolution.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="XJIKuRy6"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.de; s=s31663417;
-	t=1708705749; x=1709310549; i=w_armin@gmx.de;
-	bh=uQcQYf3+Y04XG3bF/6l4sxBLO3EUjwoVOCfO6HW/wv4=;
-	h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
-	b=XJIKuRy6nBe5Tfwo5DEPUnD5bAAo1w4Stmae3Bp9nJyNkhzLbc6Rsc1rqI5WTZ0o
-	 rwcMelUgDpYjcv74rLTKSVGyu4j6YFf3BajEFz/pv0bHVq4yT9ELVlRrNiRfn9HTr
-	 3Mel752n2ShUlrb3QKFm864D/V0+JAOWch8W5OfpMOL/igaYE+BYRAenG3r+/NFuR
-	 Pwp4PkfVvnX6lBKbT2288y2PSMmtO3XIC9FtuxPprLECbBEoRc6s3RT90No4GycZm
-	 rE1NVCwXqUBlQKHMsqj0jRNMlC3+TBZjcDldAS4181kw16Tetj8ffcxTcmP4FPCKb
-	 6fuC+3aezztTwWzpLw==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from mx-amd-b650.users.agdsn.de ([141.30.226.129]) by mail.gmx.net
- (mrgmx004 [212.227.17.190]) with ESMTPSA (Nemesis) id
- 1MeU0k-1r5JWz0LHI-00aYCd; Fri, 23 Feb 2024 17:29:09 +0100
-From: Armin Wolf <W_Armin@gmx.de>
-To: hdegoede@redhat.com,
-	ilpo.jarvinen@linux.intel.com
-Cc: Dell.Client.Kernel@dell.com,
-	platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] platform/x86: dell-privacy: Remove usage of wmi_has_guid()
-Date: Fri, 23 Feb 2024 17:29:05 +0100
-Message-Id: <20240223162905.12416-1-W_Armin@gmx.de>
-X-Mailer: git-send-email 2.39.2
+	dkim=pass (1024-bit key) header.d=peacevolution.org header.i=@peacevolution.org header.b="frWGOL/5"
+Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
+	by a.peacevolution.org (Postfix) with ESMTPA id 21840474E7;
+	Fri, 23 Feb 2024 16:30:03 +0000 (UTC)
+Date: Fri, 23 Feb 2024 11:30:00 -0500
+From: Aren <aren@peacevolution.org>
+To: Jernej =?utf-8?Q?=C5=A0krabec?= <jernej.skrabec@gmail.com>
+Cc: linux-kernel@vger.kernel.org, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, 
+	Jean-Jacques Hiblot <jjhiblot@traphandler.com>, Chen-Yu Tsai <wens@csie.org>, Ondrej Jirman <megi@xff.cz>, 
+	linux-sunxi@lists.linux.dev, Lee Jones <lee@kernel.org>, Pavel Machek <pavel@ucw.cz>, 
+	linux-arm-kernel@lists.infradead.org, linux-leds@vger.kernel.org, Conor Dooley <conor+dt@kernel.org>, 
+	Miles Alan <m@milesalan.com>, Samuel Holland <samuel@sholland.org>
+Subject: Re: [PATCH v2 4/4] arm64: dts: sun50i-a64-pinephone: change led type
+ to status
+Message-ID: <n5rmhx7ez7xoqainjqxpdk47e3bw2pvtsgswofnhjdxtrk72j2@debhbdxsxz4m>
+References: <20240206185400.596979-1-aren@peacevolution.org>
+ <20240206185400.596979-4-aren@peacevolution.org>
+ <2792937.BEx9A2HvPv@jernej-laptop>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:W31Q1xxw6jXnVTOqEdojWBofCqyiUiFBhm+rj0sZnzWrPUQrymx
- z6EGkveFeYfUdywBR1Jxxuxc0oDDEIUC1+5jSbVVDproEW4cWekMY6zlvPpy2aFu+V7QySW
- EE6v0voljDCnCIIGN17nJcaiRZemLjqLFXb2qUEAI/yQGswCWY9fzc35Dckmm2lOdC6GWag
- KdsDOfX8FHGO+y3LEftCg==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:pltGP1Gs7T8=;D5njLxhepIlSGQ8twTVRINaMKSy
- Y5N/DAIk7XQn/hTSlV7XF7ij7qw/CngoQWWYM8gyuS4choLdt9OS/QzxUft6ZDRjGo8MDdVHS
- hfUSC1LY2hrMhzsceoydZmZkjnV3+FGGftSuMkYOWxNUHm4qb/ZjlrPOM/J4RL1M+H7wY87ow
- 71cSlPIib3egh7J2FcygEOug5YP9DpG9Qqtv4nRogKc7j0SLeGQSMitD90mli/o3SRw+gJJhe
- UyTVya0uzatwqUx9JapWIjeTz9j/L7uE7h1e5k+Dc6DOIzjjmQBKPYc2h5Nz+q9J9u37J992n
- +1dFPDEl/pTWOTdZDprnN3RjCKzZpyHYcdcC7JPn2wZYBSt+KACCLOuvMq+5ByNVTXoHYl44k
- DzwI2wihGewRIo47HO60JTMm7I6FkpOQAzu3pq63BOukHj74smYgWXFOeNp+9vo86+GVW8OYx
- wh+0pMIqTEgQUPApugutzh0CJEYejfL8ykYSTitmEFQ3BVXYrvysVEK8TrOnwEgqvZI4QUdyC
- IV1QQ31FU0415iQhEfU13SuDuMAM4vcWk7tGS3zw//UtThtRqY8YqQTrsIDNx9OvWkByWiHnd
- kUTEI4v8lqpEle59bdkZGlV0j+U8XCrtAwfoYiSjvW3GbF1NuW/Mo1WvVBZB6lf3e8Yx3AKAv
- sXY8HB7ufu5YpRrAL0aZOo8KQ+aMJJ6QdcJXATKXh1EmLWeL+8Cv4N3hkopUk2hSyCHMXNFvS
- W7/alJtESS6nuwysqJusW7BrpOxkiBZk3uWEbZziDRt1AchuTm6Ra1TVALxLmbJ4A5saPkl5B
- s9ztEvzjFIQxz9jszQLV/tQzc0eMlfcTw9HXNJVTWouLU=
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <2792937.BEx9A2HvPv@jernej-laptop>
+X-Spamd-Bar: /
+Authentication-Results: auth=pass smtp.auth=aren@peacevolution.org smtp.mailfrom=aren@peacevolution.org
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=peacevolution.org;
+	s=dkim; t=1708705804;
+	h=from:subject:date:message-id:to:cc:mime-version:content-type:content-transfer-encoding:in-reply-to:references;
+	bh=QL3hXVllNtOOAwow+Eh+WDBYhGp8kPau81uRs9JQuQ0=;
+	b=frWGOL/5zk7t+eicPItDNp9ruemVvjx5/5RdP57IR6WLy1vXCdnC42bIuDIbFJ5iK2ZJvt
+	kSDgEvSNG1wEltNiI8sRmKyePbelj+Fmirhz+35GU34mTmvzNaJ9EfMTwdDcxiIo23I7xf
+	ccuTnTWWCs+/j+X85vPL7uEf8W/p7Wo=
 
-The WMI driver core already takes care that the WMI driver is
-only bound to WMI devices with a matching GUID.
+On Thu, Feb 22, 2024 at 09:57:00PM +0100, Jernej Škrabec wrote:
+> Dne torek, 06. februar 2024 ob 19:13:20 CET je Aren Moynihan napisal(a):
+> > The status function is described in the documentation as being a rgb led
+> > used for system notifications on phones[1][2]. This is exactly what this
+> > led is used for on the PinePhone, so using status is probably more
+> > accurate than indicator.
+> > 
+> > 1: Documentation/leds/well-known-leds.txt
+> > 2: include/dt-bindings/leds/common.h
+> > 
+> > Signed-off-by: Aren Moynihan <aren@peacevolution.org>
+> 
+> Sorry for late review.
+> 
+> Please update subject in patches 2-3. Instead of "sun50i-a64-pinephone:"
+> use "allwinner: pinephone:" (check commit history of sun50i-a64-pinephone.dtsi).
+> Also rgb -> RGB, led -> LED. Last, please reword commit message to exclude
+> links and just say DT bindings documentation.
+> 
+> Note that I'll merge patches 2-3 once patch 1 is merged.
 
-Remove the unnecessary call to wmi_has_guid(), which will always
-be true when the driver probes.
+Would you like me to reword and resend the patches, or is it quicker
+for you to just do it when you apply them?
 
-Tested on a Dell Inspiron 3505.
+Thanks for taking a look at this,
+ - Aren
 
-Signed-off-by: Armin Wolf <W_Armin@gmx.de>
-=2D--
- drivers/platform/x86/dell/dell-wmi-privacy.c | 4 ----
- 1 file changed, 4 deletions(-)
-
-diff --git a/drivers/platform/x86/dell/dell-wmi-privacy.c b/drivers/platfo=
-rm/x86/dell/dell-wmi-privacy.c
-index 4d94603f7785..4b65e1655d42 100644
-=2D-- a/drivers/platform/x86/dell/dell-wmi-privacy.c
-+++ b/drivers/platform/x86/dell/dell-wmi-privacy.c
-@@ -297,10 +297,6 @@ static int dell_privacy_wmi_probe(struct wmi_device *=
-wdev, const void *context)
- 	struct key_entry *keymap;
- 	int ret, i, j;
-
--	ret =3D wmi_has_guid(DELL_PRIVACY_GUID);
--	if (!ret)
--		pr_debug("Unable to detect available Dell privacy devices!\n");
--
- 	priv =3D devm_kzalloc(&wdev->dev, sizeof(*priv), GFP_KERNEL);
- 	if (!priv)
- 		return -ENOMEM;
-=2D-
-2.39.2
-
+> Best regards,
+> Jernej
+> 
+> > ---
+> > I can't find any documentation describing the indicator function, so
+> > it's definitely less specific than status, but besides that I'm not sure
+> > how it compares. Please ignore this patch if it's not useful.
+> > 
+> > (no changes since v1)
+> > 
+> >  arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone.dtsi | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone.dtsi
+> > index e53e0d4579a7..6d327266e6cc 100644
+> > --- a/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone.dtsi
+> > +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone.dtsi
+> > @@ -61,7 +61,7 @@ led2: led-2 {
+> >  	multi-led {
+> >  		compatible = "leds-group-multicolor";
+> >  		color = <LED_COLOR_ID_RGB>;
+> > -		function = LED_FUNCTION_INDICATOR;
+> > +		function = LED_FUNCTION_STATUS;
+> >  		leds = <&led0>, <&led1>, <&led2>;
+> >  	};
+> >  
+> > 
+> 
+> 
+> 
+> 
