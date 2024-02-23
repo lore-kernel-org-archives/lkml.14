@@ -1,60 +1,60 @@
-Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
+Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 677EE1493BF
-	for <linux-kernel@vger.kernel.org>; Fri, 23 Feb 2024 21:21:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C600514DFE0
+	for <linux-kernel@vger.kernel.org>; Fri, 23 Feb 2024 21:21:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708723317; cv=none; b=CEw1MH3+ehTEr/a77hK8ZmIwwvi8OJs4xuqslDBzz0Pg0xjPeOdL2m9On9nSWE13FolPhW9X0oCXQZwECq5nTjFStmrSCrJtwdlyvPsGeaaCs6LK2iHUCUxbBzplxzV02oUzqFQ5XKtMcuj89ilC1kOs4HmSrCcvIDMQRwpfb0g=
+	t=1708723321; cv=none; b=TkNV/yl82Ang+WOdEQPMntpq/qra6vLY8uY2bg7XZTlLpE+2dcMCDqZl/ybnk5d/3QtaK2vyoojPZ8Bwjm0jpnAwL0JIE/T45d0OrlcGZVDJABNucPHIbwUtYcL4wJ3sRcPpjDNOdURNoyyxssXBsz5jUQPqIs3Fhs5cS6r/qfs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708723317; c=relaxed/simple;
-	bh=N40Or+tDf6SauZ3IpQVbH4dSpocuMiX2cUGJS7MguqU=;
+	s=arc-20240116; t=1708723321; c=relaxed/simple;
+	bh=/obkr4MMIdqspTXLmZcuivEDxO3xqayOzHksqJVGMAk=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=i4EDj7VpCEHSUywdJr54xPKzI7p0WXnBMfL/cWLgNhS5PHplKGpKecyK+R6NKOLTezY4bNxwnjzdSVsjZEVQ63GIkibHs8N6H4hXL/dOXvGKUqgjn+KI71COXC5SNXlCSMwIVZjlWoWgvbECkEW5V0/zXg0euR6EIJ2wbps9eNs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=EyyEobHZ; arc=none smtp.client-ip=209.85.218.42
+	 In-Reply-To:To:Cc; b=JkHdOXwX+b8hm34sxXsLBZttd38RwCeNAeV4UStiULWz8V0bucqvPIt4q+spvRi/EnivXX9q+mmz4Hx3x1N9gXQC++Li9fipjTetBE62G8JDiXPgQfbi/K1h37xKJqWdJlKchLMsVgSbU3qdN5d7TL50UpV5SNce9opNq1VUzDY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=v+FTPPiR; arc=none smtp.client-ip=209.85.218.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="EyyEobHZ"
-Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-a34c5ca2537so184213866b.0
-        for <linux-kernel@vger.kernel.org>; Fri, 23 Feb 2024 13:21:55 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="v+FTPPiR"
+Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-a293f2280c7so141942866b.1
+        for <linux-kernel@vger.kernel.org>; Fri, 23 Feb 2024 13:21:59 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1708723314; x=1709328114; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1708723318; x=1709328118; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=EoVYRJ3JO5JPCatZldr5T9oAqTM5DVX2Z77uRLVSih8=;
-        b=EyyEobHZNypA0dYNTgrKwFcTK6KjK1Fjt5RTMnsdPUX98MwrrZ/V0PYyMA/klavZqp
-         CJbDhtCEehngjvgisU+1LNQCv38+0K448hAqiXTA3oPBoFhfaRAJG60wGX0a6NiyUMUQ
-         83hmarVRpw+plu34mznOaWu0saGWuAlz8/jPqyzXwS12+khA+d14PV4KNEUdj7tfc/Yl
-         Piniy4/Rg/wrvrc1odVRzrQ7AMGFUxjn8l+pOq5RFTkgLHiKW34XCEijJEWviZ0otD1a
-         dsyf1DVTORbaw+QeX17/vsKpCAaRn6SFZ/syWXFRY0bBV4+i7424YDYKSqhhmOZw7sSx
-         uWPA==
+        bh=+hQ3SpYizIIEdO8h/cb2gS2gZ6yJ1jbKnG/M424eunA=;
+        b=v+FTPPiRLqOROWjURKdaulEH11r+NrbujoVLaEMbjMGYy9XaCNV+juKbBqqVGO0yUk
+         oXD2XxZBqoWfB8HFGmX7+I7SeYjJAGI8NcklWcCejXQnJcy9Xj7DSnrZrYlduC4jT4fy
+         pRod0eE9OKTZKbU07L4jzhS2usr9jEDmhDYxz0kHkP+a8ckp6hK2kiiqCDVcx0aKWvKT
+         mEV5NEppYckJN/51UfiBPx/BIbZVjbIbs6oPne8ULkR2fQYHGCySk+CRvzEj38yRCAQz
+         RQKPFqIKNCQ0IqpFKuqZdFx+9BiqpxRQ3SuARkdZ35ULrHOk6mYYNQ+hDrG9WAh3Kxv8
+         cVJg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708723314; x=1709328114;
+        d=1e100.net; s=20230601; t=1708723318; x=1709328118;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=EoVYRJ3JO5JPCatZldr5T9oAqTM5DVX2Z77uRLVSih8=;
-        b=wzgk3irFZ1ahCobcdRJo++h+oWUA1H4XjJCIed80ynjHrNzyOtegfPbyx97WPzNrz4
-         vuwoGHlZRqofXebzlW3KuLPJpJiqv9HHSvt5Sq25uZ9SuUz4a5eP/wTEUf7RsAmBuUF/
-         WBgG01PpRKdMQYng0EVOJojxRPFjjBWu7g8lpd4V8Bbvf+g+pnvVR77d/zHzwhc8fXnv
-         i5lQ7iRE8hyu77tNp2S/xeNmI0GJP1XKp+YktT794GPrTJmQukXaa1ZHEeB1qLiPOcd4
-         ijRrBbs4S6yUWsC3BUKUJfdujMo3xncvZnTd8F86TstblBkbkb2J/IYg3uRnGx00ejMr
-         ulXw==
-X-Forwarded-Encrypted: i=1; AJvYcCUsJVZD5j6IIjq5VL3l1meED7zhhGu9iBAHppnBbE+Ud8vMBYXJewEfN6AeUtFrpVHCKKE27IqDS3UaQi2W84tGZzQvVBFxUeQGq0Dt
-X-Gm-Message-State: AOJu0YzbC/PdcEaUiZie7Qc2R7LFfOR5NwsHrlHhc+eeVJtHvo3FB1ju
-	OlfS54eOnC+vC1cQuzBbFTPlPS0sGBpDGi5ZqNd1zPVGGlrwnmDYavjbDfWl68g=
-X-Google-Smtp-Source: AGHT+IElCJL9Knpgm3mBvCvKLk9BKE+xbIYxQz/1ABooU6F2KcTzzBGD/RhyelpAMUnGIZxQEgVyTw==
-X-Received: by 2002:a17:906:d04e:b0:a3e:63bd:3ae1 with SMTP id bo14-20020a170906d04e00b00a3e63bd3ae1mr567772ejb.9.1708723313755;
-        Fri, 23 Feb 2024 13:21:53 -0800 (PST)
+        bh=+hQ3SpYizIIEdO8h/cb2gS2gZ6yJ1jbKnG/M424eunA=;
+        b=eyqP/YaIjLePEiFy6akmMUxqjYCFY9N+l5bqsYHXOf2gqblObyJsH6jbqW9StKmvwa
+         vSHQvNWIDWn15fVwYUHHdMnHX/EzcbC2vGmOB7JgEdRrUAUVvAwoNiHMo+Yhi8FH7Bar
+         WudjKJRvxCKC0H8yof89gXU4wAc3Qv4EJ+ksKGvNJuCIreFry8fAvcmQ0mVubcCnRbKw
+         gO0n6sYZD7Zk33eINkdpC2KVvXuNBaDBEiafkNzg/7C27v+/ZXpjpmxFyKV85nltcP3z
+         m3m+Ek4ELKEWcbZ55rqzXriLzvx5kGrUxqX/7H1p5p2ReGpa3YTBfEVuHY1RPFFdAKFW
+         JPog==
+X-Forwarded-Encrypted: i=1; AJvYcCVxlKUuzlxQBRMyc+JfnUPVuudn56qWTJNzueFyUj8eaTwjoBtfqwarHMwEVkCWh+GXvVdoQUVOqWn2c7yw6CUxsUfIys9IiliZ0WME
+X-Gm-Message-State: AOJu0YyEtwAwtcZAZRBndP6bNBZP/nY3x5fq+5ptutNBHKv9ZT5GU+UG
+	vwhsav9JFF0LYiwmC3+HxPXNlyP0XcZUFI1Lz3lIhFoia4931BJBK0702yu22/k=
+X-Google-Smtp-Source: AGHT+IGT2W+inJ5mu4XwVKxW6JI0EEqx3LbPDQ4lO11OsxNs4YZ2Cy/N+nePCCx8UipRF2D18K6sEQ==
+X-Received: by 2002:a17:906:b24c:b0:a3e:d20a:f1d9 with SMTP id ce12-20020a170906b24c00b00a3ed20af1d9mr640449ejb.11.1708723318103;
+        Fri, 23 Feb 2024 13:21:58 -0800 (PST)
 Received: from [10.167.154.1] (078088045141.garwolin.vectranet.pl. [78.88.45.141])
-        by smtp.gmail.com with ESMTPSA id mj8-20020a170906af8800b00a3ee9305b02sm4091226ejb.20.2024.02.23.13.21.51
+        by smtp.gmail.com with ESMTPSA id mj8-20020a170906af8800b00a3ee9305b02sm4091226ejb.20.2024.02.23.13.21.55
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 23 Feb 2024 13:21:53 -0800 (PST)
+        Fri, 23 Feb 2024 13:21:57 -0800 (PST)
 From: Konrad Dybcio <konrad.dybcio@linaro.org>
-Date: Fri, 23 Feb 2024 22:21:39 +0100
-Subject: [PATCH v2 3/7] clk: qcom: Add QCM2290 GPU clock controller driver
+Date: Fri, 23 Feb 2024 22:21:41 +0100
+Subject: [PATCH v2 5/7] drm/msm/adreno: Add A702 support
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -63,7 +63,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240219-topic-rb1_gpu-v2-3-2d3d6a0db040@linaro.org>
+Message-Id: <20240219-topic-rb1_gpu-v2-5-2d3d6a0db040@linaro.org>
 References: <20240219-topic-rb1_gpu-v2-0-2d3d6a0db040@linaro.org>
 In-Reply-To: <20240219-topic-rb1_gpu-v2-0-2d3d6a0db040@linaro.org>
 To: Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>, 
@@ -82,485 +82,284 @@ Cc: Marijn Suijten <marijn.suijten@somainline.org>,
  linux-clk@vger.kernel.org, dri-devel@lists.freedesktop.org, 
  freedreno@lists.freedesktop.org, Konrad Dybcio <konrad.dybcio@linaro.org>
 X-Mailer: b4 0.12.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1708723303; l=13178;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1708723303; l=11199;
  i=konrad.dybcio@linaro.org; s=20230215; h=from:subject:message-id;
- bh=N40Or+tDf6SauZ3IpQVbH4dSpocuMiX2cUGJS7MguqU=;
- b=ileEUokAWGDQZMMrM0V8MIU5fNLFtsBZet9EZbXeOiC8ZVs/lXncrVpQd+dc/Y29mbHBpGyuV
- I9prEqXrOxSD4Nl+pDWVif2yoBMryxdSAEK8AW5T9uFRjOKtikPLxGx
+ bh=/obkr4MMIdqspTXLmZcuivEDxO3xqayOzHksqJVGMAk=;
+ b=iGpmkAcmm3fUbJiZftbO7EpEpe4DIzzUNqVGtKPVhzZmXwEUWIJSo4843rvERaJTE7dZTmzfM
+ ZSadIeZnX4KBEFOGTgBXMmMGV/r2k1BMLZgPIPpwlsGsHhXVhyfXeRV
 X-Developer-Key: i=konrad.dybcio@linaro.org; a=ed25519;
  pk=iclgkYvtl2w05SSXO5EjjSYlhFKsJ+5OSZBjOkQuEms=
 
-Add a driver for the GPU clock controller block found on the QCM2290 SoC.
+The A702 is a weird mix of 600 and 700 series.. Perhaps even a
+testing ground for some A7xx features with good ol' A6xx silicon.
+It's basically A610 that's been beefed up with some new registers
+and hw features (like APRIV!), that was then cut back in size,
+memory bus and some other ways.
 
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Add support for it, tested with QCM2290 / RB1.
+
 Signed-off-by: Konrad Dybcio <konrad.dybcio@linaro.org>
 ---
- drivers/clk/qcom/Kconfig         |   9 +
- drivers/clk/qcom/Makefile        |   1 +
- drivers/clk/qcom/gpucc-qcm2290.c | 423 +++++++++++++++++++++++++++++++++++++++
- 3 files changed, 433 insertions(+)
+ drivers/gpu/drm/msm/adreno/a6xx_gpu.c      | 92 +++++++++++++++++++++++++++---
+ drivers/gpu/drm/msm/adreno/adreno_device.c | 18 ++++++
+ drivers/gpu/drm/msm/adreno/adreno_gpu.h    | 16 +++++-
+ 3 files changed, 117 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/clk/qcom/Kconfig b/drivers/clk/qcom/Kconfig
-index 4580edbd13ea..d70ea4548755 100644
---- a/drivers/clk/qcom/Kconfig
-+++ b/drivers/clk/qcom/Kconfig
-@@ -65,6 +65,15 @@ config CLK_X1E80100_TCSRCC
- 	  Support for the TCSR clock controller on X1E80100 devices.
- 	  Say Y if you want to use peripheral devices such as SD/UFS.
+diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
+index c9c55e2ea584..2a491a486ca1 100644
+--- a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
++++ b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
+@@ -837,6 +837,65 @@ const struct adreno_reglist a690_hwcg[] = {
+ 	{}
+ };
  
-+config CLK_QCM2290_GPUCC
-+	tristate "QCM2290 Graphics Clock Controller"
-+	depends on ARM64 || COMPILE_TEST
-+	select CLK_QCM2290_GCC
-+	help
-+	  Support for the graphics clock controller on QCM2290 devices.
-+	  Say Y if you want to support graphics controller devices and
-+	  functionality such as 3D graphics.
-+
- config QCOM_A53PLL
- 	tristate "MSM8916 A53 PLL"
- 	help
-diff --git a/drivers/clk/qcom/Makefile b/drivers/clk/qcom/Makefile
-index 1da65ca78e24..b8d49c054558 100644
---- a/drivers/clk/qcom/Makefile
-+++ b/drivers/clk/qcom/Makefile
-@@ -26,6 +26,7 @@ obj-$(CONFIG_CLK_X1E80100_DISPCC) += dispcc-x1e80100.o
- obj-$(CONFIG_CLK_X1E80100_GCC) += gcc-x1e80100.o
- obj-$(CONFIG_CLK_X1E80100_GPUCC) += gpucc-x1e80100.o
- obj-$(CONFIG_CLK_X1E80100_TCSRCC) += tcsrcc-x1e80100.o
-+obj-$(CONFIG_CLK_QCM2290_GPUCC) += gpucc-qcm2290.o
- obj-$(CONFIG_IPQ_APSS_PLL) += apss-ipq-pll.o
- obj-$(CONFIG_IPQ_APSS_6018) += apss-ipq6018.o
- obj-$(CONFIG_IPQ_GCC_4019) += gcc-ipq4019.o
-diff --git a/drivers/clk/qcom/gpucc-qcm2290.c b/drivers/clk/qcom/gpucc-qcm2290.c
-new file mode 100644
-index 000000000000..b6e20d63ac85
---- /dev/null
-+++ b/drivers/clk/qcom/gpucc-qcm2290.c
-@@ -0,0 +1,423 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Copyright (c) 2020, The Linux Foundation. All rights reserved.
-+ * Copyright (c) 2024, Linaro Limited
-+ */
-+
-+#include <linux/clk-provider.h>
-+#include <linux/mod_devicetable.h>
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+#include <linux/pm_clock.h>
-+#include <linux/pm_runtime.h>
-+#include <linux/regmap.h>
-+
-+#include <dt-bindings/clock/qcom,qcm2290-gpucc.h>
-+
-+#include "clk-alpha-pll.h"
-+#include "clk-branch.h"
-+#include "clk-rcg.h"
-+#include "clk-regmap.h"
-+#include "clk-regmap-divider.h"
-+#include "clk-regmap-mux.h"
-+#include "clk-regmap-phy-mux.h"
-+#include "gdsc.h"
-+#include "reset.h"
-+
-+enum {
-+	DT_GCC_AHB_CLK,
-+	DT_BI_TCXO,
-+	DT_GCC_GPU_GPLL0_CLK_SRC,
-+	DT_GCC_GPU_GPLL0_DIV_CLK_SRC,
++const struct adreno_reglist a702_hwcg[] = {
++	{ REG_A6XX_RBBM_CLOCK_CNTL_SP0, 0x22222222 },
++	{ REG_A6XX_RBBM_CLOCK_CNTL2_SP0, 0x02222220 },
++	{ REG_A6XX_RBBM_CLOCK_DELAY_SP0, 0x00000081 },
++	{ REG_A6XX_RBBM_CLOCK_HYST_SP0, 0x0000f3cf },
++	{ REG_A6XX_RBBM_CLOCK_CNTL_TP0, 0x22222222 },
++	{ REG_A6XX_RBBM_CLOCK_CNTL2_TP0, 0x22222222 },
++	{ REG_A6XX_RBBM_CLOCK_CNTL3_TP0, 0x22222222 },
++	{ REG_A6XX_RBBM_CLOCK_CNTL4_TP0, 0x00022222 },
++	{ REG_A6XX_RBBM_CLOCK_DELAY_TP0, 0x11111111 },
++	{ REG_A6XX_RBBM_CLOCK_DELAY2_TP0, 0x11111111 },
++	{ REG_A6XX_RBBM_CLOCK_DELAY3_TP0, 0x11111111 },
++	{ REG_A6XX_RBBM_CLOCK_DELAY4_TP0, 0x00011111 },
++	{ REG_A6XX_RBBM_CLOCK_HYST_TP0, 0x77777777 },
++	{ REG_A6XX_RBBM_CLOCK_HYST2_TP0, 0x77777777 },
++	{ REG_A6XX_RBBM_CLOCK_HYST3_TP0, 0x77777777 },
++	{ REG_A6XX_RBBM_CLOCK_HYST4_TP0, 0x00077777 },
++	{ REG_A6XX_RBBM_CLOCK_CNTL_RB0, 0x22222222 },
++	{ REG_A6XX_RBBM_CLOCK_CNTL2_RB0, 0x01202222 },
++	{ REG_A6XX_RBBM_CLOCK_CNTL_CCU0, 0x00002220 },
++	{ REG_A6XX_RBBM_CLOCK_HYST_RB_CCU0, 0x00040f00 },
++	{ REG_A6XX_RBBM_CLOCK_CNTL_RAC, 0x05522022 },
++	{ REG_A6XX_RBBM_CLOCK_CNTL2_RAC, 0x00005555 },
++	{ REG_A6XX_RBBM_CLOCK_DELAY_RAC, 0x00000011 },
++	{ REG_A6XX_RBBM_CLOCK_HYST_RAC, 0x00445044 },
++	{ REG_A6XX_RBBM_CLOCK_CNTL_TSE_RAS_RBBM, 0x04222222 },
++	{ REG_A6XX_RBBM_CLOCK_MODE_VFD, 0x00002222 },
++	{ REG_A6XX_RBBM_CLOCK_MODE_GPC, 0x02222222 },
++	{ REG_A6XX_RBBM_CLOCK_DELAY_HLSQ_2, 0x00000002 },
++	{ REG_A6XX_RBBM_CLOCK_MODE_HLSQ, 0x00002222 },
++	{ REG_A6XX_RBBM_CLOCK_DELAY_TSE_RAS_RBBM, 0x00004000 },
++	{ REG_A6XX_RBBM_CLOCK_DELAY_VFD, 0x00002222 },
++	{ REG_A6XX_RBBM_CLOCK_DELAY_GPC, 0x00000200 },
++	{ REG_A6XX_RBBM_CLOCK_DELAY_HLSQ, 0x00000000 },
++	{ REG_A6XX_RBBM_CLOCK_HYST_TSE_RAS_RBBM, 0x00000000 },
++	{ REG_A6XX_RBBM_CLOCK_HYST_VFD, 0x00000000 },
++	{ REG_A6XX_RBBM_CLOCK_HYST_GPC, 0x04104004 },
++	{ REG_A6XX_RBBM_CLOCK_HYST_HLSQ, 0x00000000 },
++	{ REG_A6XX_RBBM_CLOCK_CNTL_UCHE, 0x22222222 },
++	{ REG_A6XX_RBBM_CLOCK_HYST_UCHE, 0x00000004 },
++	{ REG_A6XX_RBBM_CLOCK_DELAY_UCHE, 0x00000002 },
++	{ REG_A6XX_RBBM_ISDB_CNT, 0x00000182 },
++	{ REG_A6XX_RBBM_RAC_THRESHOLD_CNT, 0x00000000 },
++	{ REG_A6XX_RBBM_SP_HYST_CNT, 0x00000000 },
++	{ REG_A6XX_RBBM_CLOCK_CNTL_GMU_GX, 0x00000222 },
++	{ REG_A6XX_RBBM_CLOCK_DELAY_GMU_GX, 0x00000111 },
++	{ REG_A6XX_RBBM_CLOCK_HYST_GMU_GX, 0x00000555 },
++	{ REG_A6XX_RBBM_CLOCK_CNTL_FCHE, 0x00000222 },
++	{ REG_A6XX_RBBM_CLOCK_DELAY_FCHE, 0x00000000 },
++	{ REG_A6XX_RBBM_CLOCK_HYST_FCHE, 0x00000000 },
++	{ REG_A6XX_RBBM_CLOCK_CNTL_GLC, 0x00222222 },
++	{ REG_A6XX_RBBM_CLOCK_DELAY_GLC, 0x00000000 },
++	{ REG_A6XX_RBBM_CLOCK_HYST_GLC, 0x00000000 },
++	{ REG_A6XX_RBBM_CLOCK_CNTL_MHUB, 0x00000002 },
++	{ REG_A6XX_RBBM_CLOCK_DELAY_MHUB, 0x00000000 },
++	{ REG_A6XX_RBBM_CLOCK_HYST_MHUB, 0x00000000 },
++	{}
 +};
 +
-+enum {
-+	P_BI_TCXO,
-+	P_GPLL0_OUT_MAIN,
-+	P_GPLL0_OUT_MAIN_DIV,
-+	P_GPU_CC_PLL0_2X_DIV_CLK_SRC,
-+	P_GPU_CC_PLL0_OUT_AUX,
-+	P_GPU_CC_PLL0_OUT_AUX2,
-+	P_GPU_CC_PLL0_OUT_MAIN,
-+};
+ const struct adreno_reglist a730_hwcg[] = {
+ 	{ REG_A6XX_RBBM_CLOCK_CNTL_SP0, 0x02222222 },
+ 	{ REG_A6XX_RBBM_CLOCK_CNTL2_SP0, 0x02022222 },
+@@ -968,6 +1027,8 @@ static void a6xx_set_hwcg(struct msm_gpu *gpu, bool state)
+ 		clock_cntl_on = 0x8aa8aa02;
+ 	else if (adreno_is_a610(adreno_gpu))
+ 		clock_cntl_on = 0xaaa8aa82;
++	else if (adreno_is_a702(adreno_gpu))
++		clock_cntl_on = 0xaaaaaa82;
+ 	else
+ 		clock_cntl_on = 0x8aa8aa82;
+ 
+@@ -989,14 +1050,14 @@ static void a6xx_set_hwcg(struct msm_gpu *gpu, bool state)
+ 		return;
+ 
+ 	/* Disable SP clock before programming HWCG registers */
+-	if (!adreno_is_a610(adreno_gpu) && !adreno_is_a7xx(adreno_gpu))
++	if (!adreno_is_a610_family(adreno_gpu) && !adreno_is_a7xx(adreno_gpu))
+ 		gmu_rmw(gmu, REG_A6XX_GPU_GMU_GX_SPTPRAC_CLOCK_CONTROL, 1, 0);
+ 
+ 	for (i = 0; (reg = &adreno_gpu->info->hwcg[i], reg->offset); i++)
+ 		gpu_write(gpu, reg->offset, state ? reg->value : 0);
+ 
+ 	/* Enable SP clock */
+-	if (!adreno_is_a610(adreno_gpu) && !adreno_is_a7xx(adreno_gpu))
++	if (!adreno_is_a610_family(adreno_gpu) && !adreno_is_a7xx(adreno_gpu))
+ 		gmu_rmw(gmu, REG_A6XX_GPU_GMU_GX_SPTPRAC_CLOCK_CONTROL, 0, 1);
+ 
+ 	gpu_write(gpu, REG_A6XX_RBBM_CLOCK_CNTL, state ? clock_cntl_on : 0);
+@@ -1224,7 +1285,7 @@ static void a6xx_set_cp_protect(struct msm_gpu *gpu)
+ 	const u32 *regs = a6xx_protect;
+ 	unsigned i, count, count_max;
+ 
+-	if (adreno_is_a650(adreno_gpu)) {
++	if (adreno_is_a650(adreno_gpu) || adreno_is_a702(adreno_gpu)) {
+ 		regs = a650_protect;
+ 		count = ARRAY_SIZE(a650_protect);
+ 		count_max = 48;
+@@ -1320,6 +1381,12 @@ static void a6xx_calc_ubwc_config(struct adreno_gpu *gpu)
+ 		gpu->ubwc_config.rgb565_predicator = 1;
+ 		gpu->ubwc_config.uavflagprd_inv = 2;
+ 	}
 +
-+static const struct pll_vco huayra_vco[] = {
-+	{ 600000000, 3300000000, 0 },
-+	{ 600000000, 2200000000, 1 },
-+};
-+
-+static const struct alpha_pll_config gpu_cc_pll0_config = {
-+	.l = 0x25,
-+	.config_ctl_val = 0x200d4828,
-+	.config_ctl_hi_val = 0x6,
-+	.test_ctl_val = GENMASK(28, 26),
-+	.test_ctl_hi_val = BIT(14),
-+	.user_ctl_val = 0xf,
-+};
-+
-+static struct clk_alpha_pll gpu_cc_pll0 = {
-+	.offset = 0x0,
-+	.vco_table = huayra_vco,
-+	.num_vco = ARRAY_SIZE(huayra_vco),
-+	.regs = clk_alpha_pll_regs[CLK_ALPHA_PLL_TYPE_HUAYRA_2290],
-+	.clkr = {
-+		.hw.init = &(struct clk_init_data){
-+			.name = "gpu_cc_pll0",
-+			.parent_data = &(const struct clk_parent_data) {
-+				.index = DT_BI_TCXO,
-+			},
-+			.num_parents = 1,
-+			.ops = &clk_alpha_pll_huayra_ops,
++	if (adreno_is_a702(gpu)) {
++		gpu->ubwc_config.highest_bank_bit = 14;
++		gpu->ubwc_config.min_acc_len = 1;
++		gpu->ubwc_config.ubwc_mode = 2;
++	}
+ }
+ 
+ static void a6xx_set_ubwc_config(struct msm_gpu *gpu)
+@@ -1453,7 +1520,7 @@ static bool a6xx_ucode_check_version(struct a6xx_gpu *a6xx_gpu,
+ 		return false;
+ 
+ 	/* A7xx is safe! */
+-	if (adreno_is_a7xx(adreno_gpu))
++	if (adreno_is_a7xx(adreno_gpu) || adreno_is_a702(adreno_gpu))
+ 		return true;
+ 
+ 	/*
+@@ -1671,7 +1738,7 @@ static int hw_init(struct msm_gpu *gpu)
+ 	a6xx_set_hwcg(gpu, true);
+ 
+ 	/* VBIF/GBIF start*/
+-	if (adreno_is_a610(adreno_gpu) ||
++	if (adreno_is_a610_family(adreno_gpu) ||
+ 	    adreno_is_a640_family(adreno_gpu) ||
+ 	    adreno_is_a650_family(adreno_gpu) ||
+ 	    adreno_is_a7xx(adreno_gpu)) {
+@@ -1705,6 +1772,7 @@ static int hw_init(struct msm_gpu *gpu)
+ 	}
+ 
+ 	if (!(adreno_is_a650_family(adreno_gpu) ||
++	      adreno_is_a702(adreno_gpu) ||
+ 	      adreno_is_a730(adreno_gpu))) {
+ 		gmem_range_min = adreno_is_a740_family(adreno_gpu) ? SZ_16M : SZ_1M;
+ 
+@@ -1725,7 +1793,7 @@ static int hw_init(struct msm_gpu *gpu)
+ 	if (adreno_is_a640_family(adreno_gpu) || adreno_is_a650_family(adreno_gpu)) {
+ 		gpu_write(gpu, REG_A6XX_CP_ROQ_THRESHOLDS_2, 0x02000140);
+ 		gpu_write(gpu, REG_A6XX_CP_ROQ_THRESHOLDS_1, 0x8040362c);
+-	} else if (adreno_is_a610(adreno_gpu)) {
++	} else if (adreno_is_a610_family(adreno_gpu)) {
+ 		gpu_write(gpu, REG_A6XX_CP_ROQ_THRESHOLDS_2, 0x00800060);
+ 		gpu_write(gpu, REG_A6XX_CP_ROQ_THRESHOLDS_1, 0x40201b16);
+ 	} else if (!adreno_is_a7xx(adreno_gpu)) {
+@@ -1740,13 +1808,18 @@ static int hw_init(struct msm_gpu *gpu)
+ 	if (adreno_is_a610(adreno_gpu)) {
+ 		gpu_write(gpu, REG_A6XX_CP_MEM_POOL_SIZE, 48);
+ 		gpu_write(gpu, REG_A6XX_CP_MEM_POOL_DBG_ADDR, 47);
++	} else if (adreno_is_a702(adreno_gpu)) {
++		gpu_write(gpu, REG_A6XX_CP_MEM_POOL_SIZE, 64);
++		gpu_write(gpu, REG_A6XX_CP_MEM_POOL_DBG_ADDR, 63);
+ 	} else if (!adreno_is_a7xx(adreno_gpu))
+ 		gpu_write(gpu, REG_A6XX_CP_MEM_POOL_SIZE, 128);
+ 
+ 	/* Setting the primFifo thresholds default values,
+ 	 * and vccCacheSkipDis=1 bit (0x200) for A640 and newer
+ 	*/
+-	if (adreno_is_a690(adreno_gpu))
++	if (adreno_is_a702(adreno_gpu))
++		gpu_write(gpu, REG_A6XX_PC_DBG_ECO_CNTL, 0x0000c000);
++	else if (adreno_is_a690(adreno_gpu))
+ 		gpu_write(gpu, REG_A6XX_PC_DBG_ECO_CNTL, 0x00800200);
+ 	else if (adreno_is_a650(adreno_gpu) || adreno_is_a660(adreno_gpu))
+ 		gpu_write(gpu, REG_A6XX_PC_DBG_ECO_CNTL, 0x00300200);
+@@ -1786,7 +1859,7 @@ static int hw_init(struct msm_gpu *gpu)
+ 		gpu_write(gpu, REG_A6XX_RBBM_INTERFACE_HANG_INT_CNTL, (1 << 30) | 0x4fffff);
+ 	else if (adreno_is_a619(adreno_gpu))
+ 		gpu_write(gpu, REG_A6XX_RBBM_INTERFACE_HANG_INT_CNTL, (1 << 30) | 0x3fffff);
+-	else if (adreno_is_a610(adreno_gpu))
++	else if (adreno_is_a610(adreno_gpu) || adreno_is_a702(adreno_gpu))
+ 		gpu_write(gpu, REG_A6XX_RBBM_INTERFACE_HANG_INT_CNTL, (1 << 30) | 0x3ffff);
+ 	else
+ 		gpu_write(gpu, REG_A6XX_RBBM_INTERFACE_HANG_INT_CNTL, (1 << 30) | 0x1fffff);
+@@ -1822,6 +1895,9 @@ static int hw_init(struct msm_gpu *gpu)
+ 		else
+ 			gpu_write(gpu, REG_A6XX_CP_CHICKEN_DBG, 0x1);
+ 		gpu_write(gpu, REG_A6XX_RBBM_GBIF_CLIENT_QOS_CNTL, 0x0);
++	} else if (adreno_is_a702(adreno_gpu)) {
++		/* Something to do with the HLSQ cluster */
++		gpu_write(gpu, REG_A6XX_CP_CHICKEN_DBG, BIT(24));
+ 	}
+ 
+ 	if (adreno_is_a690(adreno_gpu))
+diff --git a/drivers/gpu/drm/msm/adreno/adreno_device.c b/drivers/gpu/drm/msm/adreno/adreno_device.c
+index 2ce7d7b1690d..b121abc71338 100644
+--- a/drivers/gpu/drm/msm/adreno/adreno_device.c
++++ b/drivers/gpu/drm/msm/adreno/adreno_device.c
+@@ -492,6 +492,24 @@ static const struct adreno_info gpulist[] = {
+ 		.zapfw = "a690_zap.mdt",
+ 		.hwcg = a690_hwcg,
+ 		.address_space_size = SZ_16G,
++	}, {
++		.chip_ids = ADRENO_CHIP_IDS(0x07000200),
++		.family = ADRENO_6XX_GEN1, /* NOT a mistake! */
++		.fw = {
++			[ADRENO_FW_SQE] = "a702_sqe.fw",
 +		},
-+	},
-+};
-+
-+static const struct parent_map gpu_cc_parent_map_0[] = {
-+	{ P_BI_TCXO, 0 },
-+	{ P_GPU_CC_PLL0_OUT_MAIN, 1 },
-+	{ P_GPLL0_OUT_MAIN, 5 },
-+	{ P_GPLL0_OUT_MAIN_DIV, 6 },
-+};
-+
-+static const struct clk_parent_data gpu_cc_parent_data_0[] = {
-+	{ .index = DT_BI_TCXO, },
-+	{ .hw = &gpu_cc_pll0.clkr.hw, },
-+	{ .index = DT_GCC_GPU_GPLL0_CLK_SRC, },
-+	{ .index = DT_GCC_GPU_GPLL0_DIV_CLK_SRC, },
-+};
-+
-+static const struct parent_map gpu_cc_parent_map_1[] = {
-+	{ P_BI_TCXO, 0 },
-+	{ P_GPU_CC_PLL0_2X_DIV_CLK_SRC, 1 },
-+	{ P_GPU_CC_PLL0_OUT_AUX2, 2 },
-+	{ P_GPU_CC_PLL0_OUT_AUX, 3 },
-+	{ P_GPLL0_OUT_MAIN, 5 },
-+};
-+
-+static const struct clk_parent_data gpu_cc_parent_data_1[] = {
-+	{ .index = DT_BI_TCXO, },
-+	{ .hw = &gpu_cc_pll0.clkr.hw, },
-+	{ .hw = &gpu_cc_pll0.clkr.hw, },
-+	{ .hw = &gpu_cc_pll0.clkr.hw, },
-+	{ .index = DT_GCC_GPU_GPLL0_CLK_SRC, },
-+};
-+
-+static const struct freq_tbl ftbl_gpu_cc_gmu_clk_src[] = {
-+	F(200000000, P_GPLL0_OUT_MAIN, 3, 0, 0),
-+	{ }
-+};
-+
-+static struct clk_rcg2 gpu_cc_gmu_clk_src = {
-+	.cmd_rcgr = 0x1120,
-+	.mnd_width = 0,
-+	.hid_width = 5,
-+	.parent_map = gpu_cc_parent_map_0,
-+	.freq_tbl = ftbl_gpu_cc_gmu_clk_src,
-+	.clkr.hw.init = &(struct clk_init_data){
-+		.name = "gpu_cc_gmu_clk_src",
-+		.parent_data = gpu_cc_parent_data_0,
-+		.num_parents = ARRAY_SIZE(gpu_cc_parent_data_0),
-+		.flags = CLK_SET_RATE_PARENT,
-+		.ops = &clk_rcg2_shared_ops,
-+	},
-+};
-+
-+static const struct freq_tbl ftbl_gpu_cc_gx_gfx3d_clk_src[] = {
-+	F(355200000, P_GPU_CC_PLL0_OUT_AUX, 2, 0, 0),
-+	F(537600000, P_GPU_CC_PLL0_OUT_AUX2, 2, 0, 0),
-+	F(672000000, P_GPU_CC_PLL0_OUT_AUX2, 2, 0, 0),
-+	F(844800000, P_GPU_CC_PLL0_OUT_AUX2, 2, 0, 0),
-+	F(921600000, P_GPU_CC_PLL0_OUT_AUX2, 2, 0, 0),
-+	F(1017600000, P_GPU_CC_PLL0_OUT_AUX2, 2, 0, 0),
-+	F(1123200000, P_GPU_CC_PLL0_OUT_AUX2, 2, 0, 0),
-+	{ }
-+};
-+
-+static struct clk_rcg2 gpu_cc_gx_gfx3d_clk_src = {
-+	.cmd_rcgr = 0x101c,
-+	.mnd_width = 0,
-+	.hid_width = 5,
-+	.parent_map = gpu_cc_parent_map_1,
-+	.freq_tbl = ftbl_gpu_cc_gx_gfx3d_clk_src,
-+	.clkr.hw.init = &(struct clk_init_data){
-+		.name = "gpu_cc_gx_gfx3d_clk_src",
-+		.parent_data = gpu_cc_parent_data_1,
-+		.num_parents = ARRAY_SIZE(gpu_cc_parent_data_1),
-+		.flags = CLK_SET_RATE_PARENT,
-+		.ops = &clk_rcg2_ops,
-+	},
-+};
-+
-+static struct clk_branch gpu_cc_ahb_clk = {
-+	.halt_reg = 0x1078,
-+	.halt_check = BRANCH_HALT_DELAY,
-+	.clkr = {
-+		.enable_reg = 0x1078,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(struct clk_init_data){
-+			.name = "gpu_cc_ahb_clk",
-+			.flags = CLK_IS_CRITICAL,
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
-+
-+static struct clk_branch gpu_cc_crc_ahb_clk = {
-+	.halt_reg = 0x107c,
-+	.halt_check = BRANCH_HALT_DELAY,
-+	.clkr = {
-+		.enable_reg = 0x107c,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(struct clk_init_data){
-+			.name = "gpu_cc_crc_ahb_clk",
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
-+
-+static struct clk_branch gpu_cc_cx_gfx3d_clk = {
-+	.halt_reg = 0x10a4,
-+	.halt_check = BRANCH_HALT_DELAY,
-+	.clkr = {
-+		.enable_reg = 0x10a4,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(struct clk_init_data){
-+			.name = "gpu_cc_cx_gfx3d_clk",
-+			.parent_data = &(const struct clk_parent_data){
-+				.hw = &gpu_cc_gx_gfx3d_clk_src.clkr.hw,
-+			},
-+			.num_parents = 1,
-+			.flags = CLK_SET_RATE_PARENT,
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
-+
-+static struct clk_branch gpu_cc_cx_gmu_clk = {
-+	.halt_reg = 0x1098,
-+	.halt_check = BRANCH_HALT,
-+	.clkr = {
-+		.enable_reg = 0x1098,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(struct clk_init_data){
-+			.name = "gpu_cc_cx_gmu_clk",
-+			.parent_data = &(const struct clk_parent_data){
-+				.hw = &gpu_cc_gmu_clk_src.clkr.hw,
-+			},
-+			.num_parents = 1,
-+			.flags = CLK_SET_RATE_PARENT,
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
-+
-+static struct clk_branch gpu_cc_cx_snoc_dvm_clk = {
-+	.halt_reg = 0x108c,
-+	.halt_check = BRANCH_HALT_DELAY,
-+	.clkr = {
-+		.enable_reg = 0x108c,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(struct clk_init_data){
-+			.name = "gpu_cc_cx_snoc_dvm_clk",
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
-+
-+static struct clk_branch gpu_cc_cxo_aon_clk = {
-+	.halt_reg = 0x1004,
-+	.halt_check = BRANCH_HALT_DELAY,
-+	.clkr = {
-+		.enable_reg = 0x1004,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(struct clk_init_data){
-+			.name = "gpu_cc_cxo_aon_clk",
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
-+
-+static struct clk_branch gpu_cc_cxo_clk = {
-+	.halt_reg = 0x109c,
-+	.halt_check = BRANCH_HALT,
-+	.clkr = {
-+		.enable_reg = 0x109c,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(struct clk_init_data){
-+			.name = "gpu_cc_cxo_clk",
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
-+
-+static struct clk_branch gpu_cc_gx_gfx3d_clk = {
-+	.halt_reg = 0x1054,
-+	.halt_check = BRANCH_HALT_DELAY,
-+	.clkr = {
-+		.enable_reg = 0x1054,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(struct clk_init_data){
-+			.name = "gpu_cc_gx_gfx3d_clk",
-+			.parent_data = &(const struct clk_parent_data){
-+				.hw = &gpu_cc_gx_gfx3d_clk_src.clkr.hw,
-+			},
-+			.num_parents = 1,
-+			.flags = CLK_SET_RATE_PARENT,
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
-+
-+static struct clk_branch gpu_cc_sleep_clk = {
-+	.halt_reg = 0x1090,
-+	.halt_check = BRANCH_VOTED,
-+	.clkr = {
-+		.enable_reg = 0x1090,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(struct clk_init_data){
-+			.name = "gpu_cc_sleep_clk",
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
-+
-+static struct clk_branch gpu_cc_hlos1_vote_gpu_smmu_clk = {
-+	.halt_reg = 0x5000,
-+	.halt_check = BRANCH_VOTED,
-+	.clkr = {
-+		.enable_reg = 0x5000,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(struct clk_init_data){
-+			 .name = "gpu_cc_hlos1_vote_gpu_smmu_clk",
-+			 .ops = &clk_branch2_ops,
-+		},
-+	},
-+};
-+
-+static struct gdsc gpu_cx_gdsc = {
-+	.gdscr = 0x106c,
-+	.gds_hw_ctrl = 0x1540,
-+	.pd = {
-+		.name = "gpu_cx_gdsc",
-+	},
-+	.pwrsts = PWRSTS_OFF_ON,
-+	.flags = VOTABLE,
-+};
-+
-+static struct gdsc gpu_gx_gdsc = {
-+	.gdscr = 0x100c,
-+	.clamp_io_ctrl = 0x1508,
-+	.resets = (unsigned int []){ GPU_GX_BCR },
-+	.reset_count = 1,
-+	.pd = {
-+		.name = "gpu_gx_gdsc",
-+	},
-+	.parent = &gpu_cx_gdsc.pd,
-+	.pwrsts = PWRSTS_OFF_ON,
-+	.flags = CLAMP_IO | AON_RESET | SW_RESET,
-+};
-+
-+static struct clk_regmap *gpu_cc_qcm2290_clocks[] = {
-+	[GPU_CC_AHB_CLK] = &gpu_cc_ahb_clk.clkr,
-+	[GPU_CC_CRC_AHB_CLK] = &gpu_cc_crc_ahb_clk.clkr,
-+	[GPU_CC_CX_GFX3D_CLK] = &gpu_cc_cx_gfx3d_clk.clkr,
-+	[GPU_CC_CX_GMU_CLK] = &gpu_cc_cx_gmu_clk.clkr,
-+	[GPU_CC_CX_SNOC_DVM_CLK] = &gpu_cc_cx_snoc_dvm_clk.clkr,
-+	[GPU_CC_CXO_AON_CLK] = &gpu_cc_cxo_aon_clk.clkr,
-+	[GPU_CC_CXO_CLK] = &gpu_cc_cxo_clk.clkr,
-+	[GPU_CC_GMU_CLK_SRC] = &gpu_cc_gmu_clk_src.clkr,
-+	[GPU_CC_GX_GFX3D_CLK] = &gpu_cc_gx_gfx3d_clk.clkr,
-+	[GPU_CC_GX_GFX3D_CLK_SRC] = &gpu_cc_gx_gfx3d_clk_src.clkr,
-+	[GPU_CC_PLL0] = &gpu_cc_pll0.clkr,
-+	[GPU_CC_SLEEP_CLK] = &gpu_cc_sleep_clk.clkr,
-+	[GPU_CC_HLOS1_VOTE_GPU_SMMU_CLK] = &gpu_cc_hlos1_vote_gpu_smmu_clk.clkr,
-+};
-+
-+static const struct qcom_reset_map gpu_cc_qcm2290_resets[] = {
-+	[GPU_GX_BCR] = { 0x1008 },
-+};
-+
-+static struct gdsc *gpu_cc_qcm2290_gdscs[] = {
-+	[GPU_CX_GDSC] = &gpu_cx_gdsc,
-+	[GPU_GX_GDSC] = &gpu_gx_gdsc,
-+};
-+
-+static const struct regmap_config gpu_cc_qcm2290_regmap_config = {
-+	.reg_bits = 32,
-+	.reg_stride = 4,
-+	.val_bits = 32,
-+	.max_register = 0x9000,
-+	.fast_io = true,
-+};
-+
-+
-+static const struct qcom_cc_desc gpu_cc_qcm2290_desc = {
-+	.config = &gpu_cc_qcm2290_regmap_config,
-+	.clks = gpu_cc_qcm2290_clocks,
-+	.num_clks = ARRAY_SIZE(gpu_cc_qcm2290_clocks),
-+	.resets = gpu_cc_qcm2290_resets,
-+	.num_resets = ARRAY_SIZE(gpu_cc_qcm2290_resets),
-+	.gdscs = gpu_cc_qcm2290_gdscs,
-+	.num_gdscs = ARRAY_SIZE(gpu_cc_qcm2290_gdscs),
-+};
-+
-+static const struct of_device_id gpu_cc_qcm2290_match_table[] = {
-+	{ .compatible = "qcom,qcm2290-gpucc" },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, gpu_cc_qcm2290_match_table);
-+
-+static int gpu_cc_qcm2290_probe(struct platform_device *pdev)
++		.gmem = SZ_128K,
++		.inactive_period = DRM_MSM_INACTIVE_PERIOD,
++		.quirks = ADRENO_QUIRK_HAS_HW_APRIV,
++		.init = a6xx_gpu_init,
++		.zapfw = "a702_zap.mbn",
++		.hwcg = a702_hwcg,
++		.speedbins = ADRENO_SPEEDBINS(
++			{ 0,   0 },
++			{ 236, 1 },
++			{ 178, 2 },
++			{ 142, 3 },
++		),
+ 	}, {
+ 		.chip_ids = ADRENO_CHIP_IDS(0x07030001),
+ 		.family = ADRENO_7XX_GEN1,
+diff --git a/drivers/gpu/drm/msm/adreno/adreno_gpu.h b/drivers/gpu/drm/msm/adreno/adreno_gpu.h
+index bc14df96feb0..f451881a6ddf 100644
+--- a/drivers/gpu/drm/msm/adreno/adreno_gpu.h
++++ b/drivers/gpu/drm/msm/adreno/adreno_gpu.h
+@@ -77,7 +77,7 @@ struct adreno_reglist {
+ };
+ 
+ extern const struct adreno_reglist a612_hwcg[], a615_hwcg[], a630_hwcg[], a640_hwcg[], a650_hwcg[];
+-extern const struct adreno_reglist a660_hwcg[], a690_hwcg[], a730_hwcg[], a740_hwcg[];
++extern const struct adreno_reglist a660_hwcg[], a690_hwcg[], a702_hwcg[], a730_hwcg[], a740_hwcg[];
+ 
+ struct adreno_speedbin {
+ 	uint16_t fuse;
+@@ -382,6 +382,20 @@ static inline int adreno_is_a690(const struct adreno_gpu *gpu)
+ 	return gpu->info->chip_ids[0] == 0x06090000;
+ }
+ 
++static inline int adreno_is_a702(const struct adreno_gpu *gpu)
 +{
-+	struct regmap *regmap;
-+	int ret;
-+
-+	regmap = qcom_cc_map(pdev, &gpu_cc_qcm2290_desc);
-+	if (IS_ERR(regmap))
-+		return PTR_ERR(regmap);
-+
-+	ret = devm_pm_runtime_enable(&pdev->dev);
-+	if (ret)
-+		return ret;
-+
-+	ret = devm_pm_clk_create(&pdev->dev);
-+	if (ret)
-+		return ret;
-+
-+	ret = pm_clk_add(&pdev->dev, NULL);
-+	if (ret < 0) {
-+		dev_err(&pdev->dev, "failed to acquire ahb clock\n");
-+		return ret;
-+	}
-+
-+	ret = pm_runtime_resume_and_get(&pdev->dev);
-+	if (ret)
-+		return ret;
-+
-+	clk_huayra_2290_pll_configure(&gpu_cc_pll0, regmap, &gpu_cc_pll0_config);
-+
-+	regmap_update_bits(regmap, 0x1060, BIT(0), BIT(0)); /* GPU_CC_GX_CXO_CLK */
-+
-+	ret = qcom_cc_really_probe(pdev, &gpu_cc_qcm2290_desc, regmap);
-+	if (ret) {
-+		dev_err(&pdev->dev, "Failed to register display clock controller\n");
-+		goto out_pm_runtime_put;
-+	}
-+
-+out_pm_runtime_put:
-+	pm_runtime_put_sync(&pdev->dev);
-+
-+	return 0;
++	return gpu->info->chip_ids[0] == 0x07000200;
 +}
 +
-+static struct platform_driver gpu_cc_qcm2290_driver = {
-+	.probe = gpu_cc_qcm2290_probe,
-+	.driver = {
-+		.name = "gpucc-qcm2290",
-+		.of_match_table = gpu_cc_qcm2290_match_table,
-+	},
-+};
-+module_platform_driver(gpu_cc_qcm2290_driver);
++static inline int adreno_is_a610_family(const struct adreno_gpu *gpu)
++{
++	if (WARN_ON_ONCE(!gpu->info))
++		return false;
 +
-+MODULE_DESCRIPTION("QTI QCM2290 GPU clock controller driver");
-+MODULE_LICENSE("GPL");
++	/* TODO: A612 */
++	return adreno_is_a610(gpu) || adreno_is_a702(gpu);
++}
++
+ /* check for a615, a616, a618, a619 or any a630 derivatives */
+ static inline int adreno_is_a630_family(const struct adreno_gpu *gpu)
+ {
 
 -- 
 2.43.2
