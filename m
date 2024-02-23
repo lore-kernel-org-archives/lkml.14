@@ -1,113 +1,129 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E2015C60F;
-	Fri, 23 Feb 2024 12:08:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708690107; cv=none; b=T7p/L1ir96+eRlm07jLmXmwH0UcWiNM1p0qL6Q97jYBRti26a2RKHtL6pT7cQfBadfhZuHlF98g5ScW8WeMfSlEj9jemvOtWtSs+80j6tu1PNcsyUxm9twxYaTAM1MA7ZEU8kFY+eGdXAGpMTrtsaBU5j0HUsrOpn6i3/acobgg=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708690107; c=relaxed/simple;
-	bh=bVcheBD7yfXxTOc3yMDWi29q3BM0NmfM2+dmD5LnjY8=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=IYCeXmbeBsDD4AXLddMrW53Gz6HeszdAcuNKveQ4tZeicbEhFVJoFU0ELf+9nidnUdfcxd1+sFfrjKXI42jsJ7mVGSny6qCT8ggdAl+dbD1JAoBXyMbvIzmGsGYEflr2U1Wh+rT7F0GXCj7/hB0RXEg00h/aMrmtO5P8DKFlgzA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lyw8G/wH; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lyw8G/wH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2F8B5C433F1;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1C0D7C099;
 	Fri, 23 Feb 2024 12:08:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708690106;
-	bh=bVcheBD7yfXxTOc3yMDWi29q3BM0NmfM2+dmD5LnjY8=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=lyw8G/wHDhS+VVSwEM8WBdg5HCok3arZwrOHckAwm5axoPLoPTY2nBlzkCDu0IV1d
-	 uN15M1xs8ld2GymkKEakmh0AxYNmTuy1ydXfob+0MOoKjimG4H2HLb+T2zCcLUgzNS
-	 fLULd26a8V6AjqSkYujhMLDJeZL9GovODIHQFHyGaySoaBkypFovMAgd2Z/o50yIpM
-	 bstmyZdifWUMacRevmIJJMtq8WRZoF8UW4MkHU0Q2KriGRQbHLh+H5ic+QUq5mGDaC
-	 0JAcrW5lSd8cwwX28ExUjr1JJ2iu667ijf+63261hMyZ/wzKa3h1cco0rAwpYCXgPC
-	 93Yz97HhAEKhw==
-From: Vinod Koul <vkoul@kernel.org>
-To: Dave Jiang <dave.jiang@intel.com>, Fenghua Yu <fenghua.yu@intel.com>
-Cc: dmaengine@vger.kernel.org, linux-kernel <linux-kernel@vger.kernel.org>, 
- Tony Zhu <tony.zhu@intel.com>
-In-Reply-To: <20240209191412.1050270-1-fenghua.yu@intel.com>
-References: <20240209191412.1050270-1-fenghua.yu@intel.com>
-Subject: Re: [PATCH] dmaengine: idxd: Ensure safe user copy of completion
- record
-Message-Id: <170869010483.529426.16718868061769250519.b4-ty@kernel.org>
-Date: Fri, 23 Feb 2024 17:38:24 +0530
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1708690108; cv=none; b=EqOQlKx0eLtNyiFouykPfNY1o7/FV0SkimAoIelNj5+bSdjafc4qAimsXTF0J9StTgs5kZgDGqB9bmuCUmdGw+91nCBHT1bKgp4HTHqwE5QSmxpaEPKrN8nOylPiKt/6xBp48nYZcj+WE6AGrXLly/cRQLTLDfbjQxlnMgrn0dc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1708690108; c=relaxed/simple;
+	bh=kbwCh5ivkreyialYBJQE89WYwcGywhW6JhNL6UddKKo=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=JwFrFQbvJ+WkSWRlT5EkDsXKo8lRtMd0VCGlyy3pOsWIxLiTSpWu+vRjMn0U9kVNbyageK3wK0mpYz2WBI+2CJMiVwJQimMfUMJYp2ORUnYCfBvtMoRDdR/AlZ4tI0QXwec8t4U6ien7R/dX/QYeqD5qlHesVKlKOQkoQzZKeNs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Th7w71fm3z6K6B1;
+	Fri, 23 Feb 2024 20:04:07 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
+	by mail.maildlp.com (Postfix) with ESMTPS id 2F56D140B33;
+	Fri, 23 Feb 2024 20:08:16 +0800 (CST)
+Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Fri, 23 Feb
+ 2024 12:08:15 +0000
+Date: Fri, 23 Feb 2024 12:08:13 +0000
+From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To: Dan Williams <dan.j.williams@intel.com>
+CC: Shuai Xue <xueshuai@linux.alibaba.com>, Borislav Petkov <bp@alien8.de>,
+	Ira Weiny <ira.weiny@intel.com>, "Luck, Tony" <tony.luck@intel.com>,
+	"james.morse@arm.com" <james.morse@arm.com>, <rafael@kernel.org>,
+	<wangkefeng.wang@huawei.com>, <tanxiaofei@huawei.com>,
+	<mawupeng1@huawei.com>, <linmiaohe@huawei.com>, <naoya.horiguchi@nec.com>,
+	<gregkh@linuxfoundation.org>, <will@kernel.org>, <jarkko@kernel.org>,
+	<linux-acpi@vger.kernel.org>, <linux-mm@kvack.org>,
+	<linux-kernel@vger.kernel.org>, <akpm@linux-foundation.org>,
+	<linux-edac@vger.kernel.org>, <x86@kernel.org>, <justin.he@arm.com>,
+	<ardb@kernel.org>, <ying.huang@intel.com>, <ashish.kalra@amd.com>,
+	<baolin.wang@linux.alibaba.com>, <tglx@linutronix.de>, <mingo@redhat.com>,
+	<dave.hansen@linux.intel.com>, <lenb@kernel.org>, <hpa@zytor.com>,
+	<robert.moore@intel.com>, <lvying6@huawei.com>, <xiexiuqi@huawei.com>,
+	<zhuo.song@linux.alibaba.com>
+Subject: Re: [PATCH v11 1/3] ACPI: APEI: send SIGBUS to current task if
+ synchronous memory error not recovered
+Message-ID: <20240223120813.00005d1f@Huawei.com>
+In-Reply-To: <65d82c9352e78_24f3f294d5@dwillia2-mobl3.amr.corp.intel.com.notmuch>
+References: <20221027042445.60108-1-xueshuai@linux.alibaba.com>
+	<20240204080144.7977-2-xueshuai@linux.alibaba.com>
+	<20240219092528.GTZdMeiDWIDz613VeT@fat_crate.local>
+	<bdf15819-46e0-498f-97e1-a0183f257086@linux.alibaba.com>
+	<65d82c9352e78_24f3f294d5@dwillia2-mobl3.amr.corp.intel.com.notmuch>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.12.3
+X-ClientProxiedBy: lhrpeml100004.china.huawei.com (7.191.162.219) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
 
+On Thu, 22 Feb 2024 21:26:43 -0800
+Dan Williams <dan.j.williams@intel.com> wrote:
 
-On Fri, 09 Feb 2024 11:14:12 -0800, Fenghua Yu wrote:
-> If CONFIG_HARDENED_USERCOPY is enabled, copying completion record from
-> event log cache to user triggers a kernel bug.
+> Shuai Xue wrote:
+> > 
+> > 
+> > On 2024/2/19 17:25, Borislav Petkov wrote:  
+> > > On Sun, Feb 04, 2024 at 04:01:42PM +0800, Shuai Xue wrote:  
+> > >> Synchronous error was detected as a result of user-space process accessing
+> > >> a 2-bit uncorrected error. The CPU will take a synchronous error exception
+> > >> such as Synchronous External Abort (SEA) on Arm64. The kernel will queue a
+> > >> memory_failure() work which poisons the related page, unmaps the page, and
+> > >> then sends a SIGBUS to the process, so that a system wide panic can be
+> > >> avoided.
+> > >>
+> > >> However, no memory_failure() work will be queued when abnormal synchronous
+> > >> errors occur. These errors can include situations such as invalid PA,
+> > >> unexpected severity, no memory failure config support, invalid GUID
+> > >> section, etc. In such case, the user-space process will trigger SEA again.
+> > >> This loop can potentially exceed the platform firmware threshold or even
+> > >> trigger a kernel hard lockup, leading to a system reboot.
+> > >>
+> > >> Fix it by performing a force kill if no memory_failure() work is queued
+> > >> for synchronous errors.
+> > >>
+> > >> Signed-off-by: Shuai Xue <xueshuai@linux.alibaba.com>
+> > >> ---
+> > >>  drivers/acpi/apei/ghes.c | 9 +++++++++
+> > >>  1 file changed, 9 insertions(+)
+> > >>
+> > >> diff --git a/drivers/acpi/apei/ghes.c b/drivers/acpi/apei/ghes.c
+> > >> index 7b7c605166e0..0892550732d4 100644
+> > >> --- a/drivers/acpi/apei/ghes.c
+> > >> +++ b/drivers/acpi/apei/ghes.c
+> > >> @@ -806,6 +806,15 @@ static bool ghes_do_proc(struct ghes *ghes,
+> > >>  		}
+> > >>  	}
+> > >>  
+> > >> +	/*
+> > >> +	 * If no memory failure work is queued for abnormal synchronous
+> > >> +	 * errors, do a force kill.
+> > >> +	 */
+> > >> +	if (sync && !queued) {
+> > >> +		pr_err("Sending SIGBUS to current task due to memory error not recovered");
+> > >> +		force_sig(SIGBUS);
+> > >> +	}  
+> > > 
+> > > Except that there are a bunch of CXL GUIDs being handled there too and
+> > > this will sigbus those processes now automatically.  
+> > 
+> > Before the CXL GUIDs added, @Tony confirmed that the HEST notifications are always
+> > asynchronous on x86 platform, so only Synchronous External Abort (SEA) on ARM is
+> > delivered as a synchronous notification.
+> > 
+> > Will the CXL component trigger synchronous events for which we need to terminate the
+> > current process by sending sigbus to process?  
 > 
-> [ 1987.159822] usercopy: Kernel memory exposure attempt detected from SLUB object 'dsa0' (offset 74, size 31)!
-> [ 1987.170845] ------------[ cut here ]------------
-> [ 1987.176086] kernel BUG at mm/usercopy.c:102!
-> [ 1987.180946] invalid opcode: 0000 [#1] PREEMPT SMP NOPTI
-> [ 1987.186866] CPU: 17 PID: 528 Comm: kworker/17:1 Not tainted 6.8.0-rc2+ #5
-> [ 1987.194537] Hardware name: Intel Corporation AvenueCity/AvenueCity, BIOS BHSDCRB1.86B.2492.D03.2307181620 07/18/2023
-> [ 1987.206405] Workqueue: wq0.0 idxd_evl_fault_work [idxd]
-> [ 1987.212338] RIP: 0010:usercopy_abort+0x72/0x90
-> [ 1987.217381] Code: 58 65 9c 50 48 c7 c2 17 85 61 9c 57 48 c7 c7 98 fd 6b 9c 48 0f 44 d6 48 c7 c6 b3 08 62 9c 4c 89 d1 49 0f 44 f3 e8 1e 2e d5 ff <0f> 0b 49 c7 c1 9e 42 61 9c 4c 89 cf 4d 89 c8 eb a9 66 66 2e 0f 1f
-> [ 1987.238505] RSP: 0018:ff62f5cf20607d60 EFLAGS: 00010246
-> [ 1987.244423] RAX: 000000000000005f RBX: 000000000000001f RCX: 0000000000000000
-> [ 1987.252480] RDX: 0000000000000000 RSI: ffffffff9c61429e RDI: 00000000ffffffff
-> [ 1987.260538] RBP: ff62f5cf20607d78 R08: ff2a6a89ef3fffe8 R09: 00000000fffeffff
-> [ 1987.268595] R10: ff2a6a89eed00000 R11: 0000000000000003 R12: ff2a66934849c89a
-> [ 1987.276652] R13: 0000000000000001 R14: ff2a66934849c8b9 R15: ff2a66934849c899
-> [ 1987.284710] FS:  0000000000000000(0000) GS:ff2a66b22fe40000(0000) knlGS:0000000000000000
-> [ 1987.293850] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> [ 1987.300355] CR2: 00007fe291a37000 CR3: 000000010fbd4005 CR4: 0000000000f71ef0
-> [ 1987.308413] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> [ 1987.316470] DR3: 0000000000000000 DR6: 00000000fffe07f0 DR7: 0000000000000400
-> [ 1987.324527] PKRU: 55555554
-> [ 1987.327622] Call Trace:
-> [ 1987.330424]  <TASK>
-> [ 1987.332826]  ? show_regs+0x6e/0x80
-> [ 1987.336703]  ? die+0x3c/0xa0
-> [ 1987.339988]  ? do_trap+0xd4/0xf0
-> [ 1987.343662]  ? do_error_trap+0x75/0xa0
-> [ 1987.347922]  ? usercopy_abort+0x72/0x90
-> [ 1987.352277]  ? exc_invalid_op+0x57/0x80
-> [ 1987.356634]  ? usercopy_abort+0x72/0x90
-> [ 1987.360988]  ? asm_exc_invalid_op+0x1f/0x30
-> [ 1987.365734]  ? usercopy_abort+0x72/0x90
-> [ 1987.370088]  __check_heap_object+0xb7/0xd0
-> [ 1987.374739]  __check_object_size+0x175/0x2d0
-> [ 1987.379588]  idxd_copy_cr+0xa9/0x130 [idxd]
-> [ 1987.384341]  idxd_evl_fault_work+0x127/0x390 [idxd]
-> [ 1987.389878]  process_one_work+0x13e/0x300
-> [ 1987.394435]  ? __pfx_worker_thread+0x10/0x10
-> [ 1987.399284]  worker_thread+0x2f7/0x420
-> [ 1987.403544]  ? _raw_spin_unlock_irqrestore+0x2b/0x50
-> [ 1987.409171]  ? __pfx_worker_thread+0x10/0x10
-> [ 1987.414019]  kthread+0x107/0x140
-> [ 1987.417693]  ? __pfx_kthread+0x10/0x10
-> [ 1987.421954]  ret_from_fork+0x3d/0x60
-> [ 1987.426019]  ? __pfx_kthread+0x10/0x10
-> [ 1987.430281]  ret_from_fork_asm+0x1b/0x30
-> [ 1987.434744]  </TASK>
-> 
-> [...]
+> None of the CXL component errors should be handled as synchronous
+> events. They are either asynchronous protocol errors, or effectively
+> equivalent to CPER_SEC_PLATFORM_MEM notifications.
 
-Applied, thanks!
-
-[1/1] dmaengine: idxd: Ensure safe user copy of completion record
-      commit: d3ea125df37dc37972d581b74a5d3785c3f283ab
-
-Best regards,
--- 
-~Vinod
+Not a good example, CPER_SEC_PLATFORM_MEM is sometimes signaled via SEA.
 
 
