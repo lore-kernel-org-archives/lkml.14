@@ -1,26 +1,26 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C08780BE4
-	for <linux-kernel@vger.kernel.org>; Fri, 23 Feb 2024 14:17:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E82F7F7D0
+	for <linux-kernel@vger.kernel.org>; Fri, 23 Feb 2024 14:17:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708697829; cv=none; b=bgVXDzuq/bn5Vlqv4nhwfe8Z+DhczZDs6jye5TXTfn5spokfLJXAlkTnrvnri4LgLV+xRH0UwTs+ASotOXPec70KT6IR3bm4ZlucCyLOKoCEpxIr3B81CdKpfW8JNn62Qds4/QFBX7PQoWn+Iw9lU8yasKKRYNxuhmH0vf7PIe4=
+	t=1708697829; cv=none; b=m/MxUbH6kQk22Lfjad/FBjIn4iVX3PDuEJb9p/j4Imq7y8cKe6JRNcMD5PGjgreMjkiKhpoYrr0KuQ4VDiRuEZ4HUaRu4nV7qy/sjl+Tran3mU4idsQtDmxRHjeqDmKM+YVCEsdU98XlG1RrpF0dsTzw5GhAkpaveEUi+ajU4J0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1708697829; c=relaxed/simple;
-	bh=UDxACU48a6ODn38IN/prkOxVlk0VavU6n+0bJ/Ta2QQ=;
+	bh=7sp6LKfmVAODTBRGZ6mT00DB66BAm8reYLZmF3tLaL0=;
 	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=kI4BenmqArMo4B95MXCsVLymdFQM+J3kNvHwr/2ot8MOh1EG84VnGp/Odo5dzyWCpx1l4+P+6g6J8QnMW7ZTvArhu8JOZfri3n44zhHBqs0FWo5Gxua9mWpVFrtG/b4nEdPFv5Zf1tz78xsWqV56xq7GRnc7lnC1TaS2FMcgEGM=
+	 Content-Type; b=XkkANpFP2Rj/ER4qKke60Ek8eIDtWOYNgCcM//ibUG9T33O8FQZevZwoV9t4vf7Zc1IdhFy56VgmatrNyYGp6BdMLk6O19JcwuDxq1GR7BpcEkELw6m+Ki1s5TRvH38gbn1GCJsGgFzRIYQ8pENcpKR0yLniWaTOlwfeMsLuxm8=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2CFFDC433B1;
-	Fri, 23 Feb 2024 14:17:09 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D77C7C43390;
+	Fri, 23 Feb 2024 14:17:08 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.97)
 	(envelope-from <rostedt@goodmis.org>)
-	id 1rdWOE-000000077ME-0DHa;
-	Fri, 23 Feb 2024 09:19:02 -0500
-Message-ID: <20240223141901.913156672@goodmis.org>
+	id 1rdWOD-000000077LG-34wV;
+	Fri, 23 Feb 2024 09:19:01 -0500
+Message-ID: <20240223141901.595795628@goodmis.org>
 User-Agent: quilt/0.67
-Date: Fri, 23 Feb 2024 09:18:41 -0500
+Date: Fri, 23 Feb 2024 09:18:39 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org
 Cc: Masami Hiramatsu <mhiramat@kernel.org>,
@@ -28,7 +28,7 @@ Cc: Masami Hiramatsu <mhiramat@kernel.org>,
  Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
  Andrew Morton <akpm@linux-foundation.org>,
  Beau Belgrave <beaub@linux.microsoft.com>
-Subject: [for-next][PATCH 03/13] selftests/user_events: Test multi-format events
+Subject: [for-next][PATCH 01/13] tracing/user_events: Prepare find/delete for same name events
 References: <20240223141838.985298316@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -40,189 +40,226 @@ Content-Type: text/plain; charset=UTF-8
 
 From: Beau Belgrave <beaub@linux.microsoft.com>
 
-User_events now has multi-format events which allow for the same
-register name, but with different formats. When this occurs, different
-tracepoints are created with unique names.
+The current code for finding and deleting events assumes that there will
+never be cases when user_events are registered with the same name, but
+different formats. Scenarios exist where programs want to use the same
+name but have different formats. An example is multiple versions of a
+program running side-by-side using the same event name, but with updated
+formats in each version.
 
-Add a new test that ensures the same name can be used for two different
-formats. Ensure they are isolated from each other and that name and arg
-matching still works if yet another register comes in with the same
-format as one of the two.
+This change does not yet allow for multi-format events. If user_events
+are registered with the same name but different arguments the programs
+see the same return values as before. This change simply makes it
+possible to easily accommodate for this.
 
-Link: https://lore.kernel.org/linux-trace-kernel/20240222001807.1463-4-beaub@linux.microsoft.com
+Update find_user_event() to take in argument parameters and register
+flags to accommodate future multi-format event scenarios. Have find
+validate argument matching and return error pointers to cover when
+an existing event has the same name but different format. Update
+callers to handle error pointer logic.
+
+Move delete_user_event() to use hash walking directly now that
+find_user_event() has changed. Delete all events found that match the
+register name, stop if an error occurs and report back to the user.
+
+Update user_fields_match() to cover list_empty() scenarios now that
+find_user_event() uses it directly. This makes the logic consistent
+across several callsites.
+
+Link: https://lore.kernel.org/linux-trace-kernel/20240222001807.1463-2-beaub@linux.microsoft.com
 
 Signed-off-by: Beau Belgrave <beaub@linux.microsoft.com>
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- .../testing/selftests/user_events/abi_test.c  | 134 ++++++++++++++++++
- 1 file changed, 134 insertions(+)
+ kernel/trace/trace_events_user.c | 107 +++++++++++++++++--------------
+ 1 file changed, 59 insertions(+), 48 deletions(-)
 
-diff --git a/tools/testing/selftests/user_events/abi_test.c b/tools/testing/selftests/user_events/abi_test.c
-index cef1ff1af223..7288a05136ba 100644
---- a/tools/testing/selftests/user_events/abi_test.c
-+++ b/tools/testing/selftests/user_events/abi_test.c
-@@ -16,6 +16,8 @@
- #include <sys/ioctl.h>
- #include <sys/stat.h>
- #include <unistd.h>
-+#include <glob.h>
-+#include <string.h>
- #include <asm/unistd.h>
+diff --git a/kernel/trace/trace_events_user.c b/kernel/trace/trace_events_user.c
+index e76f5e1efdf2..fce5ed5fec50 100644
+--- a/kernel/trace/trace_events_user.c
++++ b/kernel/trace/trace_events_user.c
+@@ -202,6 +202,8 @@ static struct user_event_mm *user_event_mm_get(struct user_event_mm *mm);
+ static struct user_event_mm *user_event_mm_get_all(struct user_event *user);
+ static void user_event_mm_put(struct user_event_mm *mm);
+ static int destroy_user_event(struct user_event *user);
++static bool user_fields_match(struct user_event *user, int argc,
++			      const char **argv);
  
- #include "../kselftest_harness.h"
-@@ -23,6 +25,62 @@
+ static u32 user_event_key(char *name)
+ {
+@@ -1493,17 +1495,24 @@ static int destroy_user_event(struct user_event *user)
+ }
  
- const char *data_file = "/sys/kernel/tracing/user_events_data";
- const char *enable_file = "/sys/kernel/tracing/events/user_events/__abi_event/enable";
-+const char *multi_dir_glob = "/sys/kernel/tracing/events/user_events_multi/__abi_event.*";
-+
-+static int wait_for_delete(char *dir)
-+{
-+	struct stat buf;
-+	int i;
-+
-+	for (i = 0; i < 10000; ++i) {
-+		if (stat(dir, &buf) == -1 && errno == ENOENT)
-+			return 0;
-+
-+		usleep(1000);
-+	}
-+
-+	return -1;
-+}
-+
-+static int find_multi_event_dir(char *unique_field, char *out_dir, int dir_len)
-+{
-+	char path[256];
-+	glob_t buf;
-+	int i, ret;
-+
-+	ret = glob(multi_dir_glob, GLOB_ONLYDIR, NULL, &buf);
-+
-+	if (ret)
-+		return -1;
-+
-+	ret = -1;
-+
-+	for (i = 0; i < buf.gl_pathc; ++i) {
-+		FILE *fp;
-+
-+		snprintf(path, sizeof(path), "%s/format", buf.gl_pathv[i]);
-+		fp = fopen(path, "r");
-+
-+		if (!fp)
+ static struct user_event *find_user_event(struct user_event_group *group,
+-					  char *name, u32 *outkey)
++					  char *name, int argc, const char **argv,
++					  u32 flags, u32 *outkey)
+ {
+ 	struct user_event *user;
+ 	u32 key = user_event_key(name);
+ 
+ 	*outkey = key;
+ 
+-	hash_for_each_possible(group->register_table, user, node, key)
+-		if (!strcmp(EVENT_NAME(user), name))
++	hash_for_each_possible(group->register_table, user, node, key) {
++		if (strcmp(EVENT_NAME(user), name))
 +			continue;
 +
-+		while (fgets(path, sizeof(path), fp) != NULL) {
-+			if (strstr(path, unique_field)) {
-+				fclose(fp);
-+				/* strscpy is not available, use snprintf */
-+				snprintf(out_dir, dir_len, "%s", buf.gl_pathv[i]);
-+				ret = 0;
-+				goto out;
-+			}
-+		}
-+
-+		fclose(fp);
-+	}
-+out:
-+	globfree(&buf);
-+
-+	return ret;
-+}
++		if (user_fields_match(user, argc, argv))
+ 			return user_event_get(user);
  
- static bool event_exists(void)
- {
-@@ -74,6 +132,39 @@ static int event_delete(void)
- 	return ret;
++		return ERR_PTR(-EADDRINUSE);
++	}
++
+ 	return NULL;
  }
  
-+static int reg_enable_multi(void *enable, int size, int bit, int flags,
-+			    char *args)
-+{
-+	struct user_reg reg = {0};
-+	char full_args[512] = {0};
-+	int fd = open(data_file, O_RDWR);
-+	int len;
+@@ -1860,6 +1869,9 @@ static bool user_fields_match(struct user_event *user, int argc,
+ 	struct list_head *head = &user->fields;
+ 	int i = 0;
+ 
++	if (argc == 0)
++		return list_empty(head);
++
+ 	list_for_each_entry_reverse(field, head, link) {
+ 		if (!user_field_match(field, argc, argv, &i))
+ 			return false;
+@@ -1880,10 +1892,8 @@ static bool user_event_match(const char *system, const char *event,
+ 	match = strcmp(EVENT_NAME(user), event) == 0 &&
+ 		(!system || strcmp(system, USER_EVENTS_SYSTEM) == 0);
+ 
+-	if (match && argc > 0)
++	if (match)
+ 		match = user_fields_match(user, argc, argv);
+-	else if (match && argc == 0)
+-		match = list_empty(&user->fields);
+ 
+ 	return match;
+ }
+@@ -1922,11 +1932,11 @@ static int user_event_parse(struct user_event_group *group, char *name,
+ 			    char *args, char *flags,
+ 			    struct user_event **newuser, int reg_flags)
+ {
+-	int ret;
+-	u32 key;
+ 	struct user_event *user;
++	char **argv = NULL;
+ 	int argc = 0;
+-	char **argv;
 +	int ret;
++	u32 key;
+ 
+ 	/* Currently don't support any text based flags */
+ 	if (flags != NULL)
+@@ -1935,41 +1945,34 @@ static int user_event_parse(struct user_event_group *group, char *name,
+ 	if (!user_event_capable(reg_flags))
+ 		return -EPERM;
+ 
++	if (args) {
++		argv = argv_split(GFP_KERNEL, args, &argc);
 +
-+	if (fd < 0)
-+		return -1;
-+
-+	len = snprintf(full_args, sizeof(full_args), "__abi_event %s", args);
-+
-+	if (len > sizeof(full_args)) {
-+		ret = -E2BIG;
-+		goto out;
++		if (!argv)
++			return -ENOMEM;
 +	}
 +
-+	reg.size = sizeof(reg);
-+	reg.name_args = (__u64)full_args;
-+	reg.flags = USER_EVENT_REG_MULTI_FORMAT | flags;
-+	reg.enable_bit = bit;
-+	reg.enable_addr = (__u64)enable;
-+	reg.enable_size = size;
+ 	/* Prevent dyn_event from racing */
+ 	mutex_lock(&event_mutex);
+-	user = find_user_event(group, name, &key);
++	user = find_user_event(group, name, argc, (const char **)argv,
++			       reg_flags, &key);
+ 	mutex_unlock(&event_mutex);
+ 
+-	if (user) {
+-		if (args) {
+-			argv = argv_split(GFP_KERNEL, args, &argc);
+-			if (!argv) {
+-				ret = -ENOMEM;
+-				goto error;
+-			}
++	if (argv)
++		argv_free(argv);
+ 
+-			ret = user_fields_match(user, argc, (const char **)argv);
+-			argv_free(argv);
+-
+-		} else
+-			ret = list_empty(&user->fields);
+-
+-		if (ret) {
+-			*newuser = user;
+-			/*
+-			 * Name is allocated by caller, free it since it already exists.
+-			 * Caller only worries about failure cases for freeing.
+-			 */
+-			kfree(name);
+-		} else {
+-			ret = -EADDRINUSE;
+-			goto error;
+-		}
++	if (IS_ERR(user))
++		return PTR_ERR(user);
 +
-+	ret = ioctl(fd, DIAG_IOCSREG, &reg);
-+out:
-+	close(fd);
-+
-+	return ret;
-+}
-+
- static int reg_enable_flags(void *enable, int size, int bit, int flags)
- {
- 	struct user_reg reg = {0};
-@@ -207,6 +298,49 @@ TEST_F(user, bit_sizes) {
- 	ASSERT_NE(0, reg_enable(&self->check, 128, 0));
++	if (user) {
++		*newuser = user;
++		/*
++		 * Name is allocated by caller, free it since it already exists.
++		 * Caller only worries about failure cases for freeing.
++		 */
++		kfree(name);
+ 
+ 		return 0;
+-error:
+-		user_event_put(user, false);
+-		return ret;
+ 	}
+ 
+ 	user = kzalloc(sizeof(*user), GFP_KERNEL_ACCOUNT);
+@@ -2052,25 +2055,33 @@ static int user_event_parse(struct user_event_group *group, char *name,
  }
  
-+TEST_F(user, multi_format) {
-+	char first_dir[256];
-+	char second_dir[256];
-+	struct stat buf;
-+
-+	/* Multiple formats for the same name should work */
-+	ASSERT_EQ(0, reg_enable_multi(&self->check, sizeof(int), 0,
-+				      0, "u32 multi_first"));
-+
-+	ASSERT_EQ(0, reg_enable_multi(&self->check, sizeof(int), 1,
-+				      0, "u64 multi_second"));
-+
-+	/* Same name with same format should also work */
-+	ASSERT_EQ(0, reg_enable_multi(&self->check, sizeof(int), 2,
-+				      0, "u64 multi_second"));
-+
-+	ASSERT_EQ(0, find_multi_event_dir("multi_first",
-+					  first_dir, sizeof(first_dir)));
-+
-+	ASSERT_EQ(0, find_multi_event_dir("multi_second",
-+					  second_dir, sizeof(second_dir)));
-+
-+	/* Should not be found in the same dir */
-+	ASSERT_NE(0, strcmp(first_dir, second_dir));
-+
-+	/* First dir should still exist */
-+	ASSERT_EQ(0, stat(first_dir, &buf));
-+
-+	/* Disabling first register should remove first dir */
-+	ASSERT_EQ(0, reg_disable(&self->check, 0));
-+	ASSERT_EQ(0, wait_for_delete(first_dir));
-+
-+	/* Second dir should still exist */
-+	ASSERT_EQ(0, stat(second_dir, &buf));
-+
-+	/* Disabling second register should remove second dir */
-+	ASSERT_EQ(0, reg_disable(&self->check, 1));
-+	/* Ensure bit 1 and 2 are tied together, should not delete yet */
-+	ASSERT_EQ(0, stat(second_dir, &buf));
-+	ASSERT_EQ(0, reg_disable(&self->check, 2));
-+	ASSERT_EQ(0, wait_for_delete(second_dir));
-+}
-+
- TEST_F(user, forks) {
- 	int i;
+ /*
+- * Deletes a previously created event if it is no longer being used.
++ * Deletes previously created events if they are no longer being used.
+  */
+ static int delete_user_event(struct user_event_group *group, char *name)
+ {
+-	u32 key;
+-	struct user_event *user = find_user_event(group, name, &key);
++	struct user_event *user;
++	struct hlist_node *tmp;
++	u32 key = user_event_key(name);
++	int ret = -ENOENT;
  
+-	if (!user)
+-		return -ENOENT;
++	/* Attempt to delete all event(s) with the name passed in */
++	hash_for_each_possible_safe(group->register_table, user, tmp, node, key) {
++		if (strcmp(EVENT_NAME(user), name))
++			continue;
+ 
+-	user_event_put(user, true);
++		if (!user_event_last_ref(user))
++			return -EBUSY;
+ 
+-	if (!user_event_last_ref(user))
+-		return -EBUSY;
++		if (!user_event_capable(user->reg_flags))
++			return -EPERM;
+ 
+-	if (!user_event_capable(user->reg_flags))
+-		return -EPERM;
++		ret = destroy_user_event(user);
+ 
+-	return destroy_user_event(user);
++		if (ret)
++			goto out;
++	}
++out:
++	return ret;
+ }
+ 
+ /*
 -- 
 2.43.0
 
