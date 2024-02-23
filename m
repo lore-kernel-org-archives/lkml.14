@@ -1,57 +1,57 @@
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12BA413BAC2
-	for <linux-kernel@vger.kernel.org>; Fri, 23 Feb 2024 17:51:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96B6B133985
+	for <linux-kernel@vger.kernel.org>; Fri, 23 Feb 2024 17:51:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708710687; cv=none; b=IRFoEAorMFzdPoeC5tH1rRncWEkh3F/QBjhbGJQMzuvVAuevJzouZTzTCVgAXzG1eHEW5BYPDxFSq/+tKYTKPD6xkmnkODorl0y9GTt9iBnGj7/kV463eDrUgYUM9MKL0/vRSazUDA3eUcwy6wH31jbGpwz6IOgZaPUCaBk2ZpU=
+	t=1708710688; cv=none; b=u32U/WlEfpnQKdMG8nl6gWSyGrFUpgHQT/WAYoQO/GeZMD9b6AhmaXOOLK9wclcdbYY4LxyksLMnGjUPC8i+PhqijRqvglq0uLFDbP+sdkMLvXHCVprD8wNh/jwJvEKJRe08n0Kscr+sFyQqxGw4gkdKt8EUmFq8K7bBCHQ8xds=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708710687; c=relaxed/simple;
-	bh=j16zsMD+HTWYyVy/k1AZwAJ7XoBtLsYNzq4+rvXeU68=;
+	s=arc-20240116; t=1708710688; c=relaxed/simple;
+	bh=YbwFPjo6ccRVq4UzuSvS6LZFtetWcxbtqaMWTpTxTyE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=bdfQgSBTa2vi5QjentePENcip/hQaBINzg7VBw3LZmtOjnT6g4DyCmxwHqm8V2mIx0h9RjbCXC1ST+aZj8TiElgpBBo6vawEXeCsussu0jz1Hq/1NNLBb76ekWu+RWXrYeCvNXlTm3IbsT+aQBxxNjp21iouBDYjnWNP462oTWs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=HqKYrSH4; arc=none smtp.client-ip=209.85.128.41
+	 MIME-Version; b=D5i9+Kr09I0qir3DyfCWFwNYgxX9G41JLhLrbXHntI7fkja9T2wT4sxdOaYFYMApmuzVqrOmVSa2/pSXJY/QaDAUlCDw0C1IuMy6Wrb9Jfbi1/MJy2sdYNfQf/GCKsy9nut0/sC2bhw57EmYP433r+rkaFhoRJ55hOgIKZGVPFw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=d1Ob/D6L; arc=none smtp.client-ip=209.85.221.54
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="HqKYrSH4"
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-41274cada64so4611695e9.1
-        for <linux-kernel@vger.kernel.org>; Fri, 23 Feb 2024 09:51:24 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="d1Ob/D6L"
+Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-33d7b04f7e9so662202f8f.1
+        for <linux-kernel@vger.kernel.org>; Fri, 23 Feb 2024 09:51:26 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1708710683; x=1709315483; darn=vger.kernel.org;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1708710685; x=1709315485; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=n2ahiTP/lW6MiTpxUmavX+y9bbyFd7JEgWLGkKtHM5s=;
-        b=HqKYrSH4k5QihKMztmSVPgqZrFiLmMyvfiXjYQRUHWUwDWkFqQoeHsG65wTViCSA0b
-         /jOmLxFXvB06gOp7A8KXPBTSLojfTCBsW1NckldqfTAS3VLMzemESALKlwyYZf8mxdD9
-         F4EyyItJqorM0lERafQ4JmxG2ZmN62jsTKtqy/+iSMypx2r+4LNlXhthLmcvSn81E1H+
-         yVIcHmevmli2Q69/VFvlSI67VMscr1WfjLV0iEmqB31wQfotbKFbgKHjmPvA14gOkhU6
-         KK8Lwg6IT7bsvXHwhsmm04kzOgtnpuPvdTeYv4wuKHwQ6JM0Ngr7IbW+R6QHLuozN7LF
-         Mi3g==
+        bh=E5onlIQPMa8EU8sK1NqJS82W4yBogcW0MtBFux+iSL0=;
+        b=d1Ob/D6L0zsjyvH79I6uKqqoxs7Udses5ujcA88eE77p35fIILwi+EbFV31NqUnyGB
+         6snux43U6CMRS8t83JAtNMM9iXLAp3bKM9HMt30M1ZPQp2QEMg6Kgq2diLZkcd8ASMot
+         cHaEBNK4nAeT9C5802b0Lk22bcdZjy71j1YASLfujo9x3rvlqBJIRd+4D9vjO/iE9ekF
+         y3fZIFqvEOXydRHE0zRHEQ3sD9ccRgQgCXdhFUGrEcj/f/nBzDKeiaRk3ZBjZxzYMTv5
+         sZyX23TEfcRES5/BBn2OGsG90Gpf91w3rZLan0dYV1qlU/3CpjpzRLfIVvIdSmcBJpC9
+         s5Iw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708710683; x=1709315483;
+        d=1e100.net; s=20230601; t=1708710685; x=1709315485;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=n2ahiTP/lW6MiTpxUmavX+y9bbyFd7JEgWLGkKtHM5s=;
-        b=KJ1ISPRtaVE3giRoZHxF1F2oHlmQi1Br6ON3zRWdzmsGKMK/ygQYpK/Zuigm/Qh/Ek
-         WaN9TSzEvUaB/wzhPbje+ksctXOsUf2O2SDOXi65TU5lrkCSDuxA9dlbjU0O9Mmpi3JK
-         n0xCy7pmSktcV02CBQjZRJwMUp/+Oe8K2ODwUTmce6PH5BTDw1+NjobSOmMEZlp+jIQ0
-         cLXcdNyaVKvL6Neg+to7dUI71gDVB7yVpLvnkYaTZbAVYWwP1xLniLpwYQyBotDMFlwb
-         /SF/exgcpRsXgja4s7Fs07gFqnj/di/AhQ5MnDj6WUJqc4NyzZ2taHAdlHKSdztub8Yi
-         u1kA==
-X-Forwarded-Encrypted: i=1; AJvYcCW4V/ebRRnobfJz8z/DybgPh44yKSDW9IIV0tb7CLl4XH11Po3dJ4bIalYz8JS9n50T0Kk+bYTxpRZIyHCodGtUCMWufdcEsPD1LAPA
-X-Gm-Message-State: AOJu0YxvITbXHZ54GjYLcNGuB7QblOLMrFYkft4rbeYzQOLOhjFGbffO
-	2LnvIuSo9Asq+MygkZxjwjjxU5ktlzzbd6pmdKuWCiCHGkJrvyoQ4iXDBYHAjJk=
-X-Google-Smtp-Source: AGHT+IGqnoqMSxnWyvarUuiuXtt8jg0EPFcrolAZQBwRrHQk3pPFoxvi/xtJ821ZsNJVMnK4y5tzhw==
-X-Received: by 2002:a05:600c:5114:b0:412:9830:a259 with SMTP id o20-20020a05600c511400b004129830a259mr383837wms.25.1708710683406;
-        Fri, 23 Feb 2024 09:51:23 -0800 (PST)
+        bh=E5onlIQPMa8EU8sK1NqJS82W4yBogcW0MtBFux+iSL0=;
+        b=w5VVRCXHL2m1ncZij8+Hiaesx8hXAgTebeJZHW4HsVhtrnlPT8tGwQCjHITSiKY2W9
+         TsiOoXTOuGz6I7KzpSnoMOs4r5Tk8+IAfkDoJ1utYIYrk2NvKx7KgyJCdJsPpCB6q39B
+         f3XmoQLqC/gONok8NBMkQ1Zu9mYgl44uWwBfET753Nlhpish/PMv0MMcziwge3J7H2tf
+         96WMuL6XuzVyb0m1diS6w5veBc8XTd4+1MjIaeCYCQJ/CzTFH5pMa+stsC5gKYiyh19O
+         CstypNK43XeRL99wtv6sJrBt7LS/fv9h5eJDatk7lLn/vyxyU3IIOcRVWMvmvBn6l/jN
+         ecGw==
+X-Forwarded-Encrypted: i=1; AJvYcCWWN0Vs4zBnxytgZ6ql9sOTMi95WoWkPMMg/OCQ9EpaFQ3nFhykACwVAiaFMMDQpjTSY3/UuvXBV4BPPrR4HUotX77GEann6lLUod35
+X-Gm-Message-State: AOJu0YwdSbqtK/gQbKtWRzhiqcbyyN3kx/LTq9qgO4zlWly8bNkMwUao
+	VW4tsAzm+RxrxYghM9+xl+q1j+5tHoqxa6ThcxTBd0ADhri8B2HQzpOLQU0jrls=
+X-Google-Smtp-Source: AGHT+IGbVheYYWSnBsZMt7MWcRfxMQjAjkyXcfMrBJ55mpI+QDGAkuDrALH5oqVlvASElX3LNqQCRA==
+X-Received: by 2002:adf:fcc6:0:b0:33d:9283:93b with SMTP id f6-20020adffcc6000000b0033d9283093bmr329883wrs.47.1708710684884;
+        Fri, 23 Feb 2024 09:51:24 -0800 (PST)
 Received: from toaster.lan ([2a01:e0a:3c5:5fb1:e8a0:25a6:d4ec:a7ff])
-        by smtp.googlemail.com with ESMTPSA id bo10-20020a056000068a00b0033cddadde6esm3711524wrb.80.2024.02.23.09.51.22
+        by smtp.googlemail.com with ESMTPSA id bo10-20020a056000068a00b0033cddadde6esm3711524wrb.80.2024.02.23.09.51.24
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 23 Feb 2024 09:51:22 -0800 (PST)
+        Fri, 23 Feb 2024 09:51:24 -0800 (PST)
 From: Jerome Brunet <jbrunet@baylibre.com>
 To: Mark Brown <broonie@kernel.org>,
 	Liam Girdwood <lgirdwood@gmail.com>
@@ -59,9 +59,9 @@ Cc: Jerome Brunet <jbrunet@baylibre.com>,
 	alsa-devel@alsa-project.org,
 	linux-kernel@vger.kernel.org,
 	linux-amlogic@lists.infradead.org
-Subject: [PATCH 2/6] ASoC: meson: axg-tdm-interface: add frame rate constraint
-Date: Fri, 23 Feb 2024 18:51:08 +0100
-Message-ID: <20240223175116.2005407-3-jbrunet@baylibre.com>
+Subject: [PATCH 4/6] ASoC: meson: axg-spdifin: use max width for rate detection
+Date: Fri, 23 Feb 2024 18:51:10 +0100
+Message-ID: <20240223175116.2005407-5-jbrunet@baylibre.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240223175116.2005407-1-jbrunet@baylibre.com>
 References: <20240223175116.2005407-1-jbrunet@baylibre.com>
@@ -74,77 +74,44 @@ MIME-Version: 1.0
 X-Patchwork-Bot: notify
 Content-Transfer-Encoding: 8bit
 
-According to Amlogic datasheets for the SoCs supported by this driver, the
-maximum bit clock rate is 100MHz.
+Use maximum width between 2 edges to setup spdifin thresholds
+and detect the input sample rate. This comes from Amlogic SDK and
+seems to be marginally more reliable than minimum width.
 
-The tdm interface allows the rates listed by the DAI driver, regardless of
-the number slots or their width. However, these will impact the bit clock
-rate.
+This is done to align with a future eARC support.
+No issue was reported with minimum width so far, this is considered
+to be an update so no Fixes tag is set.
 
-Hitting the 100MHz limit is very unlikely for most use cases but it is
-possible.
-
-For example with 32 slots / 32 bits wide, the maximum rate is no longer
-384kHz but ~96kHz.
-
-Add the constraint accordingly if the component is not already active.
-If it is active, the rate is already constrained by the first stream rate.
-
-Fixes: d60e4f1e4be5 ("ASoC: meson: add tdm interface driver")
 Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
 ---
- sound/soc/meson/axg-tdm-interface.c | 25 ++++++++++++++++++-------
- 1 file changed, 18 insertions(+), 7 deletions(-)
+ sound/soc/meson/axg-spdifin.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/sound/soc/meson/axg-tdm-interface.c b/sound/soc/meson/axg-tdm-interface.c
-index cd5168e826df..2cedbce73837 100644
---- a/sound/soc/meson/axg-tdm-interface.c
-+++ b/sound/soc/meson/axg-tdm-interface.c
-@@ -12,6 +12,9 @@
+diff --git a/sound/soc/meson/axg-spdifin.c b/sound/soc/meson/axg-spdifin.c
+index bc2f2849ecfb..e721f579321e 100644
+--- a/sound/soc/meson/axg-spdifin.c
++++ b/sound/soc/meson/axg-spdifin.c
+@@ -179,9 +179,9 @@ static int axg_spdifin_sample_mode_config(struct snd_soc_dai *dai,
+ 			   SPDIFIN_CTRL1_BASE_TIMER,
+ 			   FIELD_PREP(SPDIFIN_CTRL1_BASE_TIMER, rate / 1000));
  
- #include "axg-tdm.h"
+-	/* Threshold based on the minimum width between two edges */
++	/* Threshold based on the maximum width between two edges */
+ 	regmap_update_bits(priv->map, SPDIFIN_CTRL0,
+-			   SPDIFIN_CTRL0_WIDTH_SEL, SPDIFIN_CTRL0_WIDTH_SEL);
++			   SPDIFIN_CTRL0_WIDTH_SEL, 0);
  
-+/* Maximum bit clock frequency according the datasheets */
-+#define MAX_SCLK 100000000 /* Hz */
-+
- enum {
- 	TDM_IFACE_PAD,
- 	TDM_IFACE_LOOPBACK,
-@@ -153,19 +156,27 @@ static int axg_tdm_iface_startup(struct snd_pcm_substream *substream,
- 		return -EINVAL;
- 	}
+ 	/* Calculate the last timer which has no threshold */
+ 	t_next = axg_spdifin_mode_timer(priv, i, rate);
+@@ -199,7 +199,7 @@ static int axg_spdifin_sample_mode_config(struct snd_soc_dai *dai,
+ 		axg_spdifin_write_timer(priv->map, i, t);
  
--	/* Apply component wide rate symmetry */
- 	if (snd_soc_component_active(dai->component)) {
-+		/* Apply component wide rate symmetry */
- 		ret = snd_pcm_hw_constraint_single(substream->runtime,
- 						   SNDRV_PCM_HW_PARAM_RATE,
- 						   iface->rate);
--		if (ret < 0) {
--			dev_err(dai->dev,
--				"can't set iface rate constraint\n");
--			return ret;
--		}
-+
-+	} else {
-+		/* Limit rate according to the slot number and width */
-+		unsigned int max_rate =
-+			MAX_SCLK / (iface->slots * iface->slot_width);
-+		ret = snd_pcm_hw_constraint_minmax(substream->runtime,
-+						   SNDRV_PCM_HW_PARAM_RATE,
-+						   0, max_rate);
- 	}
+ 		/* Set the threshold value */
+-		axg_spdifin_write_threshold(priv->map, i, t + t_next);
++		axg_spdifin_write_threshold(priv->map, i, 3 * (t + t_next));
  
--	return 0;
-+	if (ret < 0)
-+		dev_err(dai->dev, "can't set iface rate constraint\n");
-+	else
-+		ret = 0;
-+
-+	return ret;
- }
- 
- static int axg_tdm_iface_set_stream(struct snd_pcm_substream *substream,
+ 		/* Save the current timer for the next threshold calculation */
+ 		t_next = t;
 -- 
 2.43.0
 
