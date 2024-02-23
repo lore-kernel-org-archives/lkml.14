@@ -1,137 +1,166 @@
-Received: from mail-yb1-f179.google.com (mail-yb1-f179.google.com [209.85.219.179])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0F198061F
-	for <linux-kernel@vger.kernel.org>; Fri, 23 Feb 2024 14:18:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A208C81ACE
+	for <linux-kernel@vger.kernel.org>; Fri, 23 Feb 2024 14:18:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708697903; cv=none; b=GIkVvFQcmLxHvPkGZrgi3hpJJT0qs6YpUD1lwoCZe1XXK8nF89Hfx4VzW6Ne82nB+v+83JnDfAG+FXdF8IX3iNQu4LdzD5RgbB4d9KcglRbam4fjSB1H5DFj5++XsSeT/AjGm3VmukOd0xx7uVayh0tvQbUDoSnEIOXRx0leqJA=
+	t=1708697907; cv=none; b=ZRKfQ+tIYnoI0Fz6ujTo2BZekMfMXKy7lb39LqKT3tgBppaa5ReckJMi9ro6o5JzjGFX7AZluvnlojBJ5pHzrtgIIIIhfDBU5HL8gfozsVBRZBNUCuhArLLsdcg2/Z9KUCnKDPg8VAoQ0kSwbzycfsyKKg1GzYdYkE8IhT72cCU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708697903; c=relaxed/simple;
-	bh=HX4TUSWSsGsJPJcz5laMwy2GWSZ/MRJtO55N1YPwBtI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=YlLdjxfeL3jMz+kT1qdIXQCa0GvMDiZFXj00ioOLgHPs9FB6Rb9BJpVs/AQIeDcSjY4f6EiPwmTZF1pCJuKI+GimLt5TQgF/vs0l0m5Azao/7QrJZ/wf6yfoa2TQ11O8Y4HpTGFyJvlMPnyfQYsFZzfu1qFS0s0m1V5C0G8xvvA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Uuix5bik; arc=none smtp.client-ip=209.85.219.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1708697907; c=relaxed/simple;
+	bh=X3OwZlDhSXnIj5p2Ug690icelgyl5ae7KWaWNgRWoYQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=YJb8XjWcc8HZV0H2dzEiTkhT5f8YDGefsyHdSFzP846+s6qO3k98Y78X3ZhGy6yL6iykWepX9ZasV/u+FdepxMvxQYWMFpamTvpO74pKhQWtxOc/K+rZw1IfY9+S7fRfUX6B8tP3h7V5LP2zpHPjUG+rVcw/xHSiTPhhHCK7zrc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=pp0fSthx; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=Z4J5cJgn; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=pp0fSthx; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=Z4J5cJgn; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Uuix5bik"
-Received: by mail-yb1-f179.google.com with SMTP id 3f1490d57ef6-dcd9e34430cso907675276.1
-        for <linux-kernel@vger.kernel.org>; Fri, 23 Feb 2024 06:18:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1708697900; x=1709302700; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=R19d00zAe0ESb2W1wfQWoMVwkbh2mKJoTeu+62qXKLU=;
-        b=Uuix5bik05hshGSFS+elh24cUmuSawIIxz+Z0ZYmu0RAIJ6/qMBF92f+Kf25yC54jj
-         VDJnu211xVQPfp3BLphWiWw0wPSjlN1E0hZeBnPd/iDETrxfTDBb05oRFWiBaRHdq8UQ
-         Ai9JWsdO3zPhWL1jBk7z9yDiY2bSHw9Kz4ee3cYRBs0OViy8zsGxNduqb9A5EIHmYTvi
-         F+43srEtFbOf5VYQSjrkj6fObI9uc/jdZVxN9BCV5eyS1EApJWnlWG5/aeMi1MJC5L83
-         wutcUuYT4opGw0F5483FkaQVGb2aT6yMpTCx9x0+WBK19tuUVQqdjsa/HA3oLWRUmWQT
-         p72g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708697900; x=1709302700;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=R19d00zAe0ESb2W1wfQWoMVwkbh2mKJoTeu+62qXKLU=;
-        b=VSbGFF8ARASOHCcJSpd4r6nj5qCcXQG+T7RK4a/2+gz45ZtizOOjV8TAb2itM84Nmi
-         g7iFBlwSyamPYeZZB+3ziaCTWyPT/wnPoJNhLGeFh6NmZ0suQHS/WgXBDY2qSz8Cs6vk
-         KYP1zIF/BEOTuwfTjnkJJwrZNdgLstumRAlUR3nTeMzzNPZQ1slNPT3XsWeD4us3LXhJ
-         mjlvB5jeFTQwtWmlvT4opewb7Ph1thTWQVqni30OotUz76iKdRxK1s3U6k0srOqTC4hf
-         ZsYfWzlviuoqgcwcrAQqdG7d4Un6M48maO9vHM3c9OxED8KbrwwmLPkzXVVGHQsPu/Uc
-         fBoQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUlRTNuTpSLayfvnVpZ4Ggrxm60xAYc5QzTR35DhcnovulQ+c1a+fQsYQ1FctqEYpmODSYngV3lO+fwvpCO74f0FX6kUzv19WzlAe7z
-X-Gm-Message-State: AOJu0YwpDst8tccSrxz8XQuFj2WMtcnphYpaCHRn8n9Y0yl1lw1DMB6r
-	yxPv5V8/p/+U+Yb8yGnWWYFH8NrcWXx6ZVgBsrP9kll1M0VkWCyVW6vzkmiAtdmZ5ieKGer5p5O
-	xY4tAPZrB7PTKjMULAeidopMDeX9j+nABIRLO3A==
-X-Google-Smtp-Source: AGHT+IF70UF5LUoWVCUdf5eKhR2KmxVP4WJANJz9muRW2tleCLa7psg2DI+FTnDe298CK4P04Z21/Fhm5EKyGZLzPvY=
-X-Received: by 2002:a25:6b03:0:b0:dc7:32e5:a707 with SMTP id
- g3-20020a256b03000000b00dc732e5a707mr1990018ybc.61.1708697900641; Fri, 23 Feb
- 2024 06:18:20 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="pp0fSthx";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="Z4J5cJgn";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="pp0fSthx";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="Z4J5cJgn"
+Received: from imap2.dmz-prg2.suse.org (imap2.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:98])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 9D6501F79C;
+	Fri, 23 Feb 2024 14:18:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1708697901; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=8VyCyrehk3lZ9bYzoHMAHHn/3gFCXmGPk7/GfakXrfk=;
+	b=pp0fSthx28CEEOlMVmHMrQR13brqM8WV1Bm5aD7XEDMR9l7qMVw74RcgVJxosTUJLDKY6j
+	3dmjZzwqoqNvfwENlk0X9pfI9yp7itbZq37v3nHlCGScDyPBE3UXHbEyRzdlEJrcnZd96M
+	uGrTEbTpTk02S8q3fAoaXWQsZmEAI8k=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1708697901;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=8VyCyrehk3lZ9bYzoHMAHHn/3gFCXmGPk7/GfakXrfk=;
+	b=Z4J5cJgngz/PvFk5fbZFgoByw40vPGoW6iRmdkRtoJCpOQk0p/j157qqKMdB5XhuFvSPRC
+	ZyaXVXE15yXBfhAg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1708697901; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=8VyCyrehk3lZ9bYzoHMAHHn/3gFCXmGPk7/GfakXrfk=;
+	b=pp0fSthx28CEEOlMVmHMrQR13brqM8WV1Bm5aD7XEDMR9l7qMVw74RcgVJxosTUJLDKY6j
+	3dmjZzwqoqNvfwENlk0X9pfI9yp7itbZq37v3nHlCGScDyPBE3UXHbEyRzdlEJrcnZd96M
+	uGrTEbTpTk02S8q3fAoaXWQsZmEAI8k=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1708697901;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=8VyCyrehk3lZ9bYzoHMAHHn/3gFCXmGPk7/GfakXrfk=;
+	b=Z4J5cJgngz/PvFk5fbZFgoByw40vPGoW6iRmdkRtoJCpOQk0p/j157qqKMdB5XhuFvSPRC
+	ZyaXVXE15yXBfhAg==
+Received: from imap2.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap2.dmz-prg2.suse.org (Postfix) with ESMTPS id 11E8613419;
+	Fri, 23 Feb 2024 14:18:21 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([10.150.64.162])
+	by imap2.dmz-prg2.suse.org with ESMTPSA
+	id GifuAC2p2GXwAwAAn2gu4w
+	(envelope-from <osalvador@suse.de>); Fri, 23 Feb 2024 14:18:21 +0000
+Date: Fri, 23 Feb 2024 15:19:34 +0100
+From: Oscar Salvador <osalvador@suse.de>
+To: Baolin Wang <baolin.wang@linux.alibaba.com>
+Cc: akpm@linux-foundation.org, muchun.song@linux.dev, david@redhat.com,
+	linmiaohe@huawei.com, naoya.horiguchi@nec.com, mhocko@kernel.org,
+	linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH 2/3] mm: hugetlb: make the hugetlb migration strategy
+ consistent
+Message-ID: <ZdipdrJoN7LS3h9m@localhost.localdomain>
+References: <cover.1708507022.git.baolin.wang@linux.alibaba.com>
+ <0514e5139b17ecf3cd9e09d86c93e586c56688dc.1708507022.git.baolin.wang@linux.alibaba.com>
+ <ZdfHi142dvQuN7B-@localhost.localdomain>
+ <0a06dc7f-3a49-42ba-8221-0b4a3777ac0b@linux.alibaba.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240217150228.5788-1-johan+linaro@kernel.org>
- <170868613914.4029284.5549880672870201262.b4-ty@linaro.org>
- <3c4246b6-431a-442e-8ace-3b0d0e67743f@linaro.org> <ZdiU2z8rzo542_Ih@hovoldconsulting.com>
- <d4049823-ad24-4426-887b-9c66cdd96318@linaro.org>
-In-Reply-To: <d4049823-ad24-4426-887b-9c66cdd96318@linaro.org>
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Date: Fri, 23 Feb 2024 16:18:08 +0200
-Message-ID: <CAA8EJppYHdSmsWMk-u=QaAaHWqjFj8zs4CF947eeex6iV4dsYw@mail.gmail.com>
-Subject: Re: [PATCH 0/6] soc: qcom: pmic_glink_altmode: fix drm bridge use-after-free
-To: neil.armstrong@linaro.org
-Cc: Johan Hovold <johan@kernel.org>, Bjorn Andersson <andersson@kernel.org>, 
-	Andrzej Hajda <andrzej.hajda@intel.com>, Robert Foss <rfoss@kernel.org>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
-	Vinod Koul <vkoul@kernel.org>, Johan Hovold <johan+linaro@kernel.org>, 
-	Jonas Karlman <jonas@kwiboo.se>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, 
-	Jernej Skrabec <jernej.skrabec@gmail.com>, Konrad Dybcio <konrad.dybcio@linaro.org>, 
-	Kishon Vijay Abraham I <kishon@kernel.org>, Rob Clark <robdclark@gmail.com>, 
-	Abhinav Kumar <quic_abhinavk@quicinc.com>, Kuogee Hsieh <quic_khsieh@quicinc.com>, 
-	freedreno@lists.freedesktop.org, dri-devel@lists.freedesktop.org, 
-	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
-	linux-phy@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <0a06dc7f-3a49-42ba-8221-0b4a3777ac0b@linux.alibaba.com>
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=pp0fSthx;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=Z4J5cJgn
+X-Spamd-Result: default: False [-4.31 / 50.00];
+	 ARC_NA(0.00)[];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	 SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:98:from];
+	 FROM_HAS_DN(0.00)[];
+	 TO_DN_SOME(0.00)[];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 MIME_GOOD(-0.10)[text/plain];
+	 DWL_DNSWL_LOW(-1.00)[suse.de:dkim];
+	 RCVD_COUNT_THREE(0.00)[3];
+	 DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	 DKIM_TRACE(0.00)[suse.de:+];
+	 MX_GOOD(-0.01)[];
+	 RCPT_COUNT_SEVEN(0.00)[9];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 RCVD_TLS_ALL(0.00)[];
+	 BAYES_HAM(-3.00)[100.00%]
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Rspamd-Queue-Id: 9D6501F79C
+X-Spam-Level: 
+X-Spam-Score: -4.31
+X-Spam-Flag: NO
 
-On Fri, 23 Feb 2024 at 15:52, Neil Armstrong <neil.armstrong@linaro.org> wrote:
->
-> On 23/02/2024 13:51, Johan Hovold wrote:
-> > On Fri, Feb 23, 2024 at 12:03:10PM +0100, Neil Armstrong wrote:
-> >> On 23/02/2024 12:02, Neil Armstrong wrote:
-> >>> Hi,
-> >>>
-> >>> On Sat, 17 Feb 2024 16:02:22 +0100, Johan Hovold wrote:
-> >>>> Starting with 6.8-rc1 the internal display sometimes fails to come up on
-> >>>> machines like the Lenovo ThinkPad X13s and the logs indicate that this
-> >>>> is due to a regression in the DRM subsystem [1].
-> >>>>
-> >>>> This series fixes a race in the pmic_glink_altmode driver which was
-> >>>> exposed / triggered by the transparent DRM bridges rework that went into
-> >>>> 6.8-rc1 and that manifested itself as a bridge failing to attach and
-> >>>> sometimes triggering a NULL-pointer dereference.
-> >>>>
-> >>>> [...]
-> >>>
-> >>> Thanks, Applied to https://anongit.freedesktop.org/git/drm/drm-misc.git (drm-misc-fixes)
-> >>>
-> >>> [1/6] drm/bridge: aux-hpd: fix OF node leaks
-> >>>         https://cgit.freedesktop.org/drm/drm-misc/commit/?id=9ee485bdda68d6d3f5728cbe3150eb9013d7d22b
-> >>> [2/6] drm/bridge: aux-hpd: separate allocation and registration
-> >>>         (no commit info)
-> >>> [3/6] soc: qcom: pmic_glink_altmode: fix drm bridge use-after-free
-> >>>         (no commit info)
-> >>> [4/6] soc: qcom: pmic_glink: Fix boot when QRTR=m
-> >>>         (no commit info)
-> >>> [5/6] phy: qcom-qmp-combo: fix drm bridge registration
-> >>>         (no commit info)
-> >>> [6/6] phy: qcom-qmp-combo: fix type-c switch registration
-> >>>         (no commit info)
-> >>>
-> >>
-> >> To clarify, I only applied patch 1 to drm-misc-fixes
-> >
-> > Ok, but can you please not do that? :)
-> >
-> > These patches should go in through the same tree to avoid conflicts.
-> >
-> > I discussed this with Bjorn and Dmitry the other day and the conclusion
-> > was that it was easiest to take all of these through DRM.
->
-> I only applied patch 1, which is a standalone fix and goes into a separate tree,
-> for the next patches it would be indeed simpler for them to go via drm-misc when
-> they are properly acked.
+On Fri, Feb 23, 2024 at 10:56:48AM +0800, Baolin Wang wrote:
+ 
+> I previously considered passing the MR_reason argument to the
+> htlb_modify_alloc_mask(), which is only used by hugetlb migration.
+> But in alloc_hugetlb_folio_nodemask(), if there are available hugetlb on
+> other nodes, we should allow migrating, that will not break the per-node
+> hugetlb pool.
+> 
+> That's why I just change the gfp_mask for allocating a new hguetlb when
+> migration, that can break the pool.
 
-I think PHY patches can go through a usual route (phy/next or
-phy/fixes). For patches 3 and 4 I'd need an ack from Bjorn to merge
-them through drm-misc-next or drm-misc-fixes.
+Code-wise I think this is good, but I'm having some feelings
+about where filter out the mask.
+Ok, I'm trying to get my head around this.
+It's been a while since I looked into hugetlb code, so here we go.
 
+You mentioned that the only reason not to fiddle with gfp_mask before calling
+in alloc_hugetlb_folio_nodemask(), was that we might be able to find a hugetlb
+page in another node, and that that's ok because since all nodes remain with
+the same number of hugetlb pages, per-node pool doesn't get broken.
+
+Now, I see that dequeue_hugetlb_folio_nodemask() first tries to get the zonelist
+of the preferred node, and AFAICS, if it has !GFP_THISNODE, it should also
+get the zonelists of all other nodes, so we might fallback.
+
+In the hope of finding a way to be able to filter out in htlb_modify_alloc_mask(),
+I was trying to see whether we could skip GFP_THISNODE in
+dequeue_hugetlb_folio_nodemask() but no because we might end up dequeueing
+a hugetlb which sits in another node, while we really specified __GFP_THISNODE.
+
+The only way might be to somehow decouple dequeue_hugetlb_folio_nodemask()
+from alloc_hugetlb_folio_nodemask() and do some kind of gfp modification
+between the two calls.
+
+Another thing I dislike is the "-1" in alloc_hugetlb_folio_vma().
+I think at least it deserves a comment like "Passing -1 will make us stick
+to GFP_THISNODE".
+Although that is another thing, we will pass "-1" which forces GFP_THISNODE
+when allocating a newly fresh hugetlb page, but in dequeue_hugetlb_folio_nodemask()
+we might get a page from a different node.
+That doesn't break per-node pool, but it is somehow odd?
+ 
 
 -- 
-With best wishes
-Dmitry
+Oscar Salvador
+SUSE Labs
