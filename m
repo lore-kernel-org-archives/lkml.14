@@ -1,87 +1,96 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6B8B522D
-	for <linux-kernel@vger.kernel.org>; Fri, 23 Feb 2024 14:32:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0797B4687
+	for <linux-kernel@vger.kernel.org>; Fri, 23 Feb 2024 14:32:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708698755; cv=none; b=hvZ2j3OMri9kOTgbUPzpeUeDUBUDjvfvd1/lQUAYa8hcLhKmGZThrRYTFXIgXE/jQzWrcH9hVnAc6wUJOYiqkn3ic412q7tPFx6Usqyur7nGQqkz8pp2KZmbiMWfpfwUrtivutMGnhwDV0ZPqn/YjjYfx9ClS1Ee9R721QVG27c=
+	t=1708698778; cv=none; b=gt82BR8ZZf+39G55nd0Lg7HIW2kbKRkY3SZeIVT/uNJFFvKuyE05BU4+JSnHvGxTv2dSL8iReYyFfa7Fh7NmDXHuJNlh7TpEKhBtmajOsWBKKDbmrtp+hqdJAjcQ+qU+W5jQg6OXI/vOj1t03zpiDxYhZoDfKuT0zVGwAUGOLIY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708698755; c=relaxed/simple;
-	bh=28uU8XDmFkPxmKehFoVzJfAg7wTqvDYjNfQvEmRUDp4=;
+	s=arc-20240116; t=1708698778; c=relaxed/simple;
+	bh=NpL+P1L+oOnKE5XgqX6Sj01kbse60LlSbZVt3Vk3hnc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sRt9EevNuaTy3TzeRYYaFSHeOjZTzgu7nIqwnX8FTKYp8hDMvgk7oQtJub4vLkv/kIfzDqfBpJ1qVjzjiYSH7We9WevcnCYuAphXlpgLm6qmgOww7a4sGU8ikFtyJhrJpz+w2878GAGh/GQ62TrxyFTn8/qWdJ6cXzBkV3Lf7J4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=S5YoKLjY; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=oF6jqllLAkBIFNOep09WNOYdlebUj1iFy7FE+o+vEy6KSAJOnYMV4LKWTGuUziTrljCjdFSL/7ENPLIWBFaV7RTKImenqah+VO1ZC8qotiq4oHJofxB3RhzxUGhgpSn3Aq0lvBGngJey2xWYoNn53bm4NS8dCz9ldZSX9TgT+Cw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=RL5Zb1Gb; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="S5YoKLjY"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1708698754; x=1740234754;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=28uU8XDmFkPxmKehFoVzJfAg7wTqvDYjNfQvEmRUDp4=;
-  b=S5YoKLjYQmXozAUHq+fscx4jCDD0z7j/fXiP59EJIdxxrOm2O6rrdX2J
-   Sw4+UNLOiPeGnHpjxIByfFQhYpFIw68QZREbw4HlC1bjiKN/8NI88qG1r
-   5gXDFJPZ1hgF3PN5PTYxy33/8v1+sDs05tJrILn8nzS6Yk1mJseRYXvfe
-   81tb7x+RQxSQaet40zUJcGvsK8Kl+MpzH1OZWk+rOeHb1O8PDLWHJCfQx
-   qBupHECZarNf3LkC76uq8ub3jn+d5AE36X0/0nFMNHukBSA9/5b3HBgsz
-   u6bjb/tFO3jAQMQonEDD0JXU15A2k2G2pDu3xlCJNOFzLqNJHP9n1liTK
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10993"; a="3521883"
-X-IronPort-AV: E=Sophos;i="6.06,180,1705392000"; 
-   d="scan'208";a="3521883"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Feb 2024 06:32:33 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10993"; a="913747532"
-X-IronPort-AV: E=Sophos;i="6.06,180,1705392000"; 
-   d="scan'208";a="913747532"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Feb 2024 06:32:31 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.97)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1rdWbF-00000006vIk-36xo;
-	Fri, 23 Feb 2024 16:32:29 +0200
-Date: Fri, 23 Feb 2024 16:32:29 +0200
-From: 'Andy Shevchenko' <andriy.shevchenko@linux.intel.com>
-To: Chanwoo Choi <cw00.choi@samsung.com>
-Cc: linux-kernel@vger.kernel.org, 'MyungJoo Ham' <myungjoo.ham@samsung.com>
-Subject: Re: [PATCH v1 1/1] extcon: intel-mrfld: Don't shadow error from
- devm_extcon_dev_allocate()
-Message-ID: <ZdisfbUS7zVTtj1i@smile.fi.intel.com>
-References: <20231222161854.2955859-1-andriy.shevchenko@linux.intel.com>
- <ZcUqiaGI8N-FLijJ@smile.fi.intel.com>
- <CGME20240222131814epcas1p3b7a6a405f1170dcfac8e0f53b0f49d4c@epcas1p3.samsung.com>
- <ZddJeYhe8pCHup9a@smile.fi.intel.com>
- <061201da662b$f5b68f60$e123ae20$@samsung.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RL5Zb1Gb"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1708698775;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=jXimChZFYQZR/sMWqZ1etlf/rAL+dk4fPo4wWGRp+Sg=;
+	b=RL5Zb1GbpPqUPMxhUoq4fmWwts/EUmmpHDFdukQ2gS+xPEK5azHsSUVDfxwR7WlwMYeu56
+	gHbAaPrS7PHpAdIO4vZdPbKcMuUXSzPZPYKKYlt34kn5QNinTZmi4NmLl/Qr77ou5kZOT0
+	O0u56XOKFfDL1cJD+vJ0B03jRZMcZFI=
+Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
+ by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-167-Sf5Ek8fkOnSCI5XQlj9jiA-1; Fri,
+ 23 Feb 2024 09:32:52 -0500
+X-MC-Unique: Sf5Ek8fkOnSCI5XQlj9jiA-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 2AD66280FEC2;
+	Fri, 23 Feb 2024 14:32:52 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.151])
+	by smtp.corp.redhat.com (Postfix) with SMTP id C2414C185C0;
+	Fri, 23 Feb 2024 14:32:50 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Fri, 23 Feb 2024 15:31:33 +0100 (CET)
+Date: Fri, 23 Feb 2024 15:31:31 +0100
+From: Oleg Nesterov <oleg@redhat.com>
+To: Wen Yang <wenyang.linux@foxmail.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	"Eric W. Biederman" <ebiederm@xmission.com>,
+	Christian Brauner <brauner@kernel.org>,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] get_signal: simplify/cleanup the the usage of ksig->info
+Message-ID: <20240223143131.GC8267@redhat.com>
+References: <20240223105025.GA4542@redhat.com>
+ <tencent_7C50F304C14CB2A5133317F8A13D1F544D0A@qq.com>
+ <20240223141928.GB8267@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <061201da662b$f5b68f60$e123ae20$@samsung.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240223141928.GB8267@redhat.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.8
 
-On Fri, Feb 23, 2024 at 04:43:15PM +0900, Chanwoo Choi wrote:
-> > From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> > Sent: Thursday, February 22, 2024 10:18 PM
-> > On Thu, Feb 08, 2024 at 09:24:58PM +0200, Andy Shevchenko wrote:
+On 02/23, Oleg Nesterov wrote:
+>
+> On 02/23, Wen Yang wrote:
+> >
+> >
+> > On 2024/2/23 18:50, Oleg Nesterov wrote:
+> > >+			/*
+> > >+			 * implies do_group_exit(), no need to initialize
+> > >+			 * ksig->info
+> > >+			 */
+> > >  			goto fatal;
+> >
+> > There is little question:
+> > If the this conditions is met:
+> >    current->flags & PF_USER_WORKER
+> > It may execute “goto out“ instead of do_group_exit().
+>
+> Yes, but vhost/io workers do not use ksig at all.
 
-...
+Ah, wait...
 
-> > Here is another one, can it be applied as well?
-> 
-> Applied it. Thanks.
+I forgot about the ->sa_flags check before hide_si_addr_tag_bits().
 
-Thank you!
+OK, thanks... I'll send V2.
 
--- 
-With Best Regards,
-Andy Shevchenko
-
+Oleg.
 
