@@ -1,178 +1,159 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2073.outbound.protection.outlook.com [40.107.223.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 575DD59B50
-	for <linux-kernel@vger.kernel.org>; Fri, 23 Feb 2024 09:24:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708680256; cv=none; b=rQox238AhhjgYT5lBGBBSB0nr1eY0tcNPl6pZOvUxJ7Acfjy94IrdB+8K7ejiAAziCAXEqkXd2cyw3CJlsY3ZygXMqE5SQKm9HgKa3OXXxeivT5b+vy1E2xflqTbEI/MGjrmrNu/5mmLwJ/0zramMbOEaPROLHbs5jyIhsIYeqk=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708680256; c=relaxed/simple;
-	bh=/b/uAasNatYQkDRlPz3mGNYIuDQ6VGlg03I3StB6bnk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=hCq0Lo2+qjWPnpqnUx1U//AVoVMx+higdyptsgRQzVwMWMWz1Jp3GlV+PuHrOcI4aTJIVbp7RycrfNVgWpQVZEf+1WUCMoqmDagBx26vmfTTMjnxgQXbfANzNTKw+1+WlpwpUZx+Rewv34jQ98aqt90ECkdUV2jKh1OWYv+/bNg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=PhS/hbMB; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=HQ6TEx6P; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=PhS/hbMB; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=HQ6TEx6P; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA2CB5C8E8
+	for <linux-kernel@vger.kernel.org>; Fri, 23 Feb 2024 09:25:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.73
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1708680305; cv=fail; b=uY5KFckKCGT1Ejat+LhzwQ2kUaCd+6++OOW1jZwwdquZIpl6vwUIinji01RCnSuVkFVjnJBm2OdqSqvhyHMctSk5XTSQEj72A8Fss7QvrLCWbFwf1EAnyV/Kb/IJWDTw/e7q6XCy4naO0MeHyROz832D3ohxruQ4LoKFqc4U5ao=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1708680305; c=relaxed/simple;
+	bh=R4nZ2xfClmoJe+hj0NWcxIEbpsCJAI4fjkHEDhP2XJU=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=T0FgJaJiF8sdGOoczkUwl9grhOLuCe8QQCQprGMY1fvj2yr5zNBOGjgXWbStBxXLvYKcmvQwhy6ozz1vkweMjtbucO6cOrPsWV+E4Bdmiv5+w6SE/Xrijyu5graL8MjpNwg5GVU8XE/W5YGzH1NsJiTXPtUz3Wzv+dgz1klw2Mo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=pcLqUYVU; arc=fail smtp.client-ip=40.107.223.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="PhS/hbMB";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="HQ6TEx6P";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="PhS/hbMB";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="HQ6TEx6P"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 858CF22055;
-	Fri, 23 Feb 2024 09:24:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1708680252; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=BI3PUL04AyDJ8eLPoZj8TZ5v3v4zDascbS3qGTDm8D4=;
-	b=PhS/hbMBvnREKdhHIvVRK1rDlStl2LC2w7g5gFbs3R1CwU0qVyq0B9V6lT4zNYzOlmNpIP
-	ITRqzZ6UfvYaghpqpjHqBTPRFB1z4GBbIr2ggKpXa8OHwGBAAzuOktz5o2jAUbT8XG29Vp
-	/tbjJ+LNZqjjFPLxkra3qvef5i0AJ3M=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1708680252;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=BI3PUL04AyDJ8eLPoZj8TZ5v3v4zDascbS3qGTDm8D4=;
-	b=HQ6TEx6PM75XacgxB4dFIxFRF1g7/nuTmAk4ERZVWj/k+MOdY4NvPKJLQEUlTs5+BQ77CS
-	ioeKSi5/ZgymjaCA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1708680252; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=BI3PUL04AyDJ8eLPoZj8TZ5v3v4zDascbS3qGTDm8D4=;
-	b=PhS/hbMBvnREKdhHIvVRK1rDlStl2LC2w7g5gFbs3R1CwU0qVyq0B9V6lT4zNYzOlmNpIP
-	ITRqzZ6UfvYaghpqpjHqBTPRFB1z4GBbIr2ggKpXa8OHwGBAAzuOktz5o2jAUbT8XG29Vp
-	/tbjJ+LNZqjjFPLxkra3qvef5i0AJ3M=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1708680252;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=BI3PUL04AyDJ8eLPoZj8TZ5v3v4zDascbS3qGTDm8D4=;
-	b=HQ6TEx6PM75XacgxB4dFIxFRF1g7/nuTmAk4ERZVWj/k+MOdY4NvPKJLQEUlTs5+BQ77CS
-	ioeKSi5/ZgymjaCA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 634E8132C7;
-	Fri, 23 Feb 2024 09:24:12 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id r++SFzxk2GW9RQAAD6G6ig
-	(envelope-from <vbabka@suse.cz>); Fri, 23 Feb 2024 09:24:12 +0000
-Message-ID: <1a952209-fa22-4439-af27-bf102c7d742b@suse.cz>
-Date: Fri, 23 Feb 2024 10:24:12 +0100
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="pcLqUYVU"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=WthcKiR6nqIXyiabteBabyFqzO1nP9ej4pO2BYDn6WDjWzHrAVRXhowTFgsyXEiq0dJw2N82kiSXfdENg459AHrAbbxkbtjSqA1XDUu+o3L8dHl695Ff8PPb4V9BFA4IvWWQfAY2CaF+pmKLxGihpOHlC5nk5olHik6IvIOcmoJz7hFzCNj9CKpG08L/w+fntRtUVDFtBcISyWMFtSqfxmwtcwGovEyNQwQZYY6mCT+wnVJxOBMoylzIi+0HQSIrqOIg4Hn1QrFW5PZa00PfGIwyB9hsMep6Cf/k8jKBxLB9Ep8HvCpmZqK4RWOGDYZQTrlQTd5PSEEfp4X5TDe9Xg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=0tPEwzZRU6f2Y7A4ByoavtlkDz2r/2F88Gbwo4QlQeg=;
+ b=YgaBrWUP2czCXiFNdWpuugBWkA1QR+CqbT233eTgr812yoUY6ekW9BHoCnHSogNDEfxCY8bjwDW5yWMRJiwGxLAxQMPVqQ1j8wZFukw3pwzEBXDuXbQmb7oqKt00BLyn3VYn6tHnDZWx+z6bIPjZ6Nk2C8AaRh/uYVinYX2Mr6IQ948EwrY9/I/HQ2ZxVky4gRgMkRX6Bam8oADGM/6+2UnnImmLJ/n9nlNzM9CKFCr2EoJ5Mkn46db03+r5j4iqm1NfVTkNgge09bTxtZHy39XswdG0PnXkjAU9GsTz1ELjEVe6lHhBeHzLLyV7t5yfC8etL+tIzjLeOWsfrWEZZA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=linuxfoundation.org smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=0tPEwzZRU6f2Y7A4ByoavtlkDz2r/2F88Gbwo4QlQeg=;
+ b=pcLqUYVUuLTjTvhANOYscT89GrKPm5fHCsmMW+7kx/RUgz/eurNfKUHi5gDahLwadm8YHfmur4VZUmIheBbtpgdi7H2Dahkb/JnbDqKeoI3yufLu3wzNgFqhrnfMy2YlnDxZgTDU8wwQ6QnQYz64FQrmDwLEyPm2xtJuCBvzzDE=
+Received: from PR3P191CA0027.EURP191.PROD.OUTLOOK.COM (2603:10a6:102:54::32)
+ by CY8PR12MB7492.namprd12.prod.outlook.com (2603:10b6:930:93::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7316.24; Fri, 23 Feb
+ 2024 09:25:01 +0000
+Received: from SA2PEPF000015C9.namprd03.prod.outlook.com
+ (2603:10a6:102:54:cafe::e1) by PR3P191CA0027.outlook.office365.com
+ (2603:10a6:102:54::32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7292.43 via Frontend
+ Transport; Fri, 23 Feb 2024 09:25:01 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ SA2PEPF000015C9.mail.protection.outlook.com (10.167.241.199) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.7292.25 via Frontend Transport; Fri, 23 Feb 2024 09:25:00 +0000
+Received: from SATLEXMB03.amd.com (10.181.40.144) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Fri, 23 Feb
+ 2024 03:24:59 -0600
+Received: from xhdipdslab41.xilinx.com (10.180.168.240) by SATLEXMB03.amd.com
+ (10.181.40.144) with Microsoft SMTP Server id 15.1.2507.35 via Frontend
+ Transport; Fri, 23 Feb 2024 03:24:56 -0600
+From: Nipun Gupta <nipun.gupta@amd.com>
+To: <gregkh@linuxfoundation.org>, <maz@kernel.org>, <tglx@linutronix.de>,
+	<jgg@ziepe.ca>, <linux-kernel@vger.kernel.org>
+CC: <git@amd.com>, <harpreet.anand@amd.com>,
+	<pieter.jansen-van-vuuren@amd.com>, <nikhil.agarwal@amd.com>,
+	<michal.simek@amd.com>, <abhijit.gangurde@amd.com>, <srivatsa@csail.mit.edu>,
+	Nipun Gupta <nipun.gupta@amd.com>
+Subject: [PATCH v8 2/2] add wrapper msi allocation API and export msi functions
+Date: Fri, 23 Feb 2024 14:54:47 +0530
+Message-ID: <20240223092447.65564-2-nipun.gupta@amd.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240223092447.65564-1-nipun.gupta@amd.com>
+References: <20240223092447.65564-1-nipun.gupta@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] slub: avoid scanning all partial slabs in get_slabinfo()
-Content-Language: en-US
-To: Chengming Zhou <chengming.zhou@linux.dev>,
- "Christoph Lameter (Ampere)" <cl@linux.com>
-Cc: David Rientjes <rientjes@google.com>,
- Jianfeng Wang <jianfeng.w.wang@oracle.com>, penberg@kernel.org,
- iamjoonsoo.kim@lge.com, akpm@linux-foundation.org, roman.gushchin@linux.dev,
- 42.hyeyoo@gmail.com, linux-mm@kvack.org, linux-kernel@vger.kernel.org,
- Chengming Zhou <zhouchengming@bytedance.com>
-References: <20240215211457.32172-1-jianfeng.w.wang@oracle.com>
- <6b58d81f-8e8f-3732-a5d4-40eece75013b@google.com>
- <fee76a21-fbc5-4ad8-b4bf-ba8a8e7cee8f@suse.cz>
- <55ccc92a-79fa-42d2-97d8-b514cf00823b@linux.dev>
- <6daf88a2-84c2-5ba4-853c-c38cca4a03cb@linux.com>
- <e924c39b-7636-4c34-bfe9-603cf07c21d3@linux.dev>
- <b8f393fb-2b1d-213c-9301-35d4ffca1f50@linux.com>
- <347b870e-a7d5-45df-84ba-4eee37b74ff6@linux.dev>
-From: Vlastimil Babka <vbabka@suse.cz>
-In-Reply-To: <347b870e-a7d5-45df-84ba-4eee37b74ff6@linux.dev>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Authentication-Results: smtp-out1.suse.de;
-	none
-X-Spam-Level: 
-X-Spam-Score: -2.79
-X-Spamd-Result: default: False [-2.79 / 50.00];
-	 RCVD_VIA_SMTP_AUTH(0.00)[];
-	 XM_UA_NO_VERSION(0.01)[];
-	 TO_DN_SOME(0.00)[];
-	 RCVD_COUNT_THREE(0.00)[3];
-	 NEURAL_HAM_SHORT(-0.20)[-1.000];
-	 FROM_EQ_ENVFROM(0.00)[];
-	 MIME_TRACE(0.00)[0:+];
-	 MID_RHS_MATCH_FROM(0.00)[];
-	 BAYES_HAM(-3.00)[100.00%];
-	 ARC_NA(0.00)[];
-	 FROM_HAS_DN(0.00)[];
-	 FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	 TO_MATCH_ENVRCPT_ALL(0.00)[];
-	 TAGGED_RCPT(0.00)[];
-	 MIME_GOOD(-0.10)[text/plain];
-	 NEURAL_HAM_LONG(-1.00)[-1.000];
-	 DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	 RCPT_COUNT_TWELVE(0.00)[12];
-	 FUZZY_BLOCKED(0.00)[rspamd.com];
-	 FREEMAIL_CC(0.00)[google.com,oracle.com,kernel.org,lge.com,linux-foundation.org,linux.dev,gmail.com,kvack.org,vger.kernel.org,bytedance.com];
-	 RCVD_TLS_ALL(0.00)[];
-	 SUSPICIOUS_RECIPS(1.50)[]
-X-Spam-Flag: NO
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+Received-SPF: None (SATLEXMB04.amd.com: nipun.gupta@amd.com does not designate
+ permitted sender hosts)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SA2PEPF000015C9:EE_|CY8PR12MB7492:EE_
+X-MS-Office365-Filtering-Correlation-Id: 7fb68d55-2bf7-42a6-19fd-08dc34514f50
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	t2wQWaaZLgBivVkyQaKGprVPAz+q+SMgT5PUAS3rBd9ubAB83KWu7DleRJnr+BIqknaRSAZcAOZm7J88TYtkTRYjGmvoHEd6+Cqvppq3vIQyfay6H9HJrDiXmr8hDGLiaSwt2mYgvzSFR9XnWHr8u5ejPyOq1z3RMjklXTip8GGPczUvUEkQruk3BgNX9JqxLX5hl1IpP/i0gXXfWKSmJkleUFaYdMZs8yO9TNRrDQelZrDRs+hA4IPRd7Tgja04ybkm1mnXQLrTT+06AYLwMG6/GtvbYAn17oCgqZ5w2yT6t5Xq9ONdRsHGDa+iktkBASZGfKvCpyatvsgNHF01p7bqlj07pFvZ2aEZbKRCLa8gqzuQBLv8B+ybSmqiOTHw/wkCnqOYW6rsGRCGbHp0EzhyrgYiIMclrGm5LhaTOBdm3PM1sz8Wa17ZKtOpzRTbyRrgugINLbIuv2C3+d1UAbH/5RLOfLUQOjYP0Q5tU6WkO2CRuRHMK9v5COOMuqI+9SyrjtHIAZJF5Q0mZIskLKeuEN/dDEhh5hE+TOTf/nbzbaQTFu5I7E9XwR2a7Ps9wIB1BJK3VIFEb1g3teyZYtrccVn3+iR0wtVeu5F9xID5nHdWssQRpSwebHpwe2p8j3OFbdJMK3KWOsyHjptNPdNJpvSewWfrdJ9Ikpdn1Ak=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(36860700004)(40470700004)(46966006);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Feb 2024 09:25:00.6787
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7fb68d55-2bf7-42a6-19fd-08dc34514f50
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SA2PEPF000015C9.namprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR12MB7492
 
-On 2/23/24 06:00, Chengming Zhou wrote:
-> On 2024/2/23 11:50, Christoph Lameter (Ampere) wrote:
->> On Fri, 23 Feb 2024, Chengming Zhou wrote:
->> 
->>>> Can we guestimate the free objects based on the number of partial slabs. That number is available.
->>>
->>> Yeah, the number of partial slabs is easy to know, but I can't think of a way to
->>> estimate the free objects, since __slab_free() is just double cmpxchg in most cases.
->> 
->> Well a starting point may be half the objects possible in a slab page?
-> 
-> Yeah, also a choice.
-> 
->> 
->> 
->>>> How accurate need the accounting be? We also have fuzzy accounting in the VM counters.
->>>
->>> Maybe not need to be very accurate, some delay/fuzzy should be acceptable.
->>>
->>> Another direction I think is that we don't distinguish slabs on cpu partial list or
->>> slabs on node partial list anymore (different with current behavior).
->>>
->>> Now we have three scopes:
->>> 1. SL_ALL: include all slabs
->>> 2. SL_PARTIAL: only include partial slabs on node
->>> 3. SL_CPU: only include partail slabs on cpu and the using cpu slab
->>>
->>> If we change SL_PARTIAL to mean all partial slabs, it maybe simpler.
->> 
->> Thats not going to work since you would have to scan multiple lists instead of a single list.
-> 
-> We have to use percpu counters if we go this way.
-> 
->> 
->> Another approach may be to come up with some way to scan the partial lists without taking locks. That actually would improve the performance of the allocator. It may work with a single linked lists and RCU.
+MSI functions can be for allocation and free can be directly
+used by the device drivers without any wrapper provided by
+bus drivers. So export these MSI functions.
 
-We often remove a slab from the middle of a partial list due to object
-freeing, and this means it has to be double linked, no?
+Also, add a wrapper API to allocate MSIs providing only the
+number of IRQ's rather than range for simpler driver usage.
 
->> 
-> 
-> I think this is a better direction! We can use RCU list if slab can be freed by RCU.
+Signed-off-by: Nipun Gupta <nipun.gupta@amd.com>
+---
+ include/linux/msi.h | 6 ++++++
+ kernel/irq/msi.c    | 2 ++
+ 2 files changed, 8 insertions(+)
 
-Often we remove slab from the partial list for other purposes than freeing -
-i.e. to become a cpu (partial) slab, and that can't be handled by a rcu
-callback nor can we wait a grace period in such situations.
+diff --git a/include/linux/msi.h b/include/linux/msi.h
+index 26d07e23052e..765a65581a66 100644
+--- a/include/linux/msi.h
++++ b/include/linux/msi.h
+@@ -676,6 +676,12 @@ int platform_device_msi_init_and_alloc_irqs(struct device *dev, unsigned int nve
+ void platform_device_msi_free_irqs_all(struct device *dev);
+ 
+ bool msi_device_has_isolated_msi(struct device *dev);
++
++static inline int msi_domain_alloc_irqs(struct device *dev, unsigned int domid, int nirqs)
++{
++	return msi_domain_alloc_irqs_range(dev, domid, 0, nirqs - 1);
++}
++
+ #else /* CONFIG_GENERIC_MSI_IRQ */
+ static inline bool msi_device_has_isolated_msi(struct device *dev)
+ {
+diff --git a/kernel/irq/msi.c b/kernel/irq/msi.c
+index f90952ebc494..2024f89baea4 100644
+--- a/kernel/irq/msi.c
++++ b/kernel/irq/msi.c
+@@ -1434,6 +1434,7 @@ int msi_domain_alloc_irqs_range(struct device *dev, unsigned int domid,
+ 	msi_unlock_descs(dev);
+ 	return ret;
+ }
++EXPORT_SYMBOL_GPL(msi_domain_alloc_irqs_range);
+ 
+ /**
+  * msi_domain_alloc_irqs_all_locked - Allocate all interrupts from a MSI interrupt domain
+@@ -1680,6 +1681,7 @@ void msi_domain_free_irqs_range(struct device *dev, unsigned int domid,
+ 	msi_domain_free_irqs_range_locked(dev, domid, first, last);
+ 	msi_unlock_descs(dev);
+ }
++EXPORT_SYMBOL_GPL(msi_domain_free_irqs_all);
+ 
+ /**
+  * msi_domain_free_irqs_all_locked - Free all interrupts from a MSI interrupt domain
+-- 
+2.34.1
+
