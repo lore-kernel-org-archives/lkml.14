@@ -1,160 +1,241 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E773E12839B;
-	Fri, 23 Feb 2024 16:46:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAA9812839B
+	for <linux-kernel@vger.kernel.org>; Fri, 23 Feb 2024 16:46:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708706787; cv=none; b=b+UZN+FAuBhRlaUYElOo925Aiu3piU9cIX1U7rxWEPMFXHBEtnF2dc5wSDNJBDsewNvl3ZVVgDj3+P2MKE7foLJ5xeF7iE2dFbHGjZHpvx2UDeMYat+BeZ/V7klZfh+Dql6fRDI5ozjc2q7FBPJTVSBgoEIEQG1Y6tSZpn+2J+8=
+	t=1708706804; cv=none; b=Uv072R9chsI621ciWPrCR/rC3iQPkY3MB8wD1vu5qpWn+A5qyOh6d+mTITtgVZrQk4xnEHYBouLqQlv66HaoaIoZhcwkXBhd4+bRlaqHmn7EI+Prg//4jxI9bJKWVxC7xnlV5Ar7DVE35j9vgdNUTRNGH76hRcG1SfyNtWC9tkE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708706787; c=relaxed/simple;
-	bh=/BSuq4/86RjZ2LGVk3j8gdEPLDTykbNGwxB1TAs82K0=;
-	h=Date:From:To:Subject:Cc:MIME-Version:Message-ID:Content-Type; b=PJcr3GUwlnWcjDu6avt0XdYbIQiwvDC+lilvbX24cDyuiAFGl/xFm/j3s52lKE/HYKzzGRaMOgjFJ3WOrfdxn7kK2bLYifT/4L/HTplnFN7xe1RqAGg2ZdmjjHC9VgRC+UiYplG8nC3nWO7YZx6yNRhz2Ttc95AgiWLXUy3g/2Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=uKSYtuJ2; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=dbXUCI0R; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1708706804; c=relaxed/simple;
+	bh=UcvDafUh2QDdP5ODtPAmMXLmepE2Ecno7xfGvkqB9kI=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=kWsIdED82vUzm6OEzj4wBJozCRSe7eU46htWb+6n+dvdvffFJeQjNML0P3F8GaMcDqs9mYKR2L3sXnTBNzkOmOQigoW6m1PMageE302cYEfzIF9Wu5jEiecUy4yh3vDh9eKzh3JxJ89RbsBS7nFUlYQVMksomE14H+eSDHs3boI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=slKyzBlr; arc=none smtp.client-ip=209.85.128.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="uKSYtuJ2";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="dbXUCI0R"
-Date: Fri, 23 Feb 2024 16:46:23 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1708706784;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
-	bh=gYbe1yDtXUyQ0sodWy4NQ+yO4YkaKvVupNCaCp2iDBo=;
-	b=uKSYtuJ2wmHKc2fmU8RjR9p4AoeCxT7GkJk+VpoO7Uz9X6p0AAsfJbflyI4uFeHu8AIQPe
-	/ZBpfu/OWSK3yS4FJqXlSk5bsLvgcx/ce77ihm7YvmYatp//1+HBJH1n5FjaD3CzLiXTmg
-	I/Wdt4roq+BwW1XsEMIeJSdkUjd+lbIfirY97t6oe6bB2DAzWhtNaBFYoL3Pw/yIobfI8r
-	aeHRl1jPu9GK6ejbKU6ZUiN3tOReQDNSI1xzX1O7YqMK4sYVctLoixzKqXsTJNO/zj1Uz0
-	x/FTA2yAAozlXu4pDlZfDAC9V673OEKWbu/QAegQx4llFl2aPLsVYNv9EPtMNQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1708706784;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
-	bh=gYbe1yDtXUyQ0sodWy4NQ+yO4YkaKvVupNCaCp2iDBo=;
-	b=dbXUCI0RawIlloYCbB7cV3VeIG7d02VmlIf8F5NBGd8YwNMGExhJNmVwHq0pZl7N0USWJ2
-	e+Zqw7iVwpU1v8AA==
-From: "tip-bot2 for Kirill A. Shutemov" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/boot] x86/trampoline: Bypass compat mode in
- trampoline_start64() if not needed
-Cc: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
- Dave Hansen <dave.hansen@linux.intel.com>, Andi Kleen <ak@linux.intel.com>,
- Kai Huang <kai.huang@intel.com>, x86@kernel.org, linux-kernel@vger.kernel.org
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="slKyzBlr"
+Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-607c9677a91so18057767b3.2
+        for <linux-kernel@vger.kernel.org>; Fri, 23 Feb 2024 08:46:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1708706801; x=1709311601; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=NDZLY+1R91be6hXCSYVgTQ61KoEqdDMYEkzpyOE6s74=;
+        b=slKyzBlr4+v7Ypr9+laD4EzDJngZ9dZhQBwNFeky4GMR/DEtDlrU70l6PSa47/711P
+         wdlxvaym8/hDLM3IlgN10LT3KXRdujTsrgO0bSUuFXjn0KDS+xHGwtBRP3SyqF6sHj+h
+         AA8BhD+JbdHAOd475bskI9ym9/pih6We6Dj8liP/iI2IwT5B3xfkOpF2JZoev4D0Xy+R
+         njlqguZyb9ZH5lhP92DEHdS5vUsAPQbvd5wGpq+DLr1PKjsy3w4Ue8L1jF8srCUB9io3
+         3J4RqgiVMxYRIf1cvfSSuQDp3KsTu/MwxGEb+/Bw8jA3ttZ6BHzsqA+F0CLQZ71vyUr8
+         Lmug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708706801; x=1709311601;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=NDZLY+1R91be6hXCSYVgTQ61KoEqdDMYEkzpyOE6s74=;
+        b=EilPp/s9eUfnEP+ckG/46dpLLCmXE7EtUAFVJUAz1Kp96HlR7aRZ1hMerQsiRVEWOr
+         unS8kRnLWhwc4QGGv6f8n1MFCN2jgAa0zo8p39Zj9cP2KGJHwMdWRqQziA0vxlZ1lz1F
+         04BwwOhcoUUXmSbpqBnWSTqf5xbmOuchkAzjCCCqRGRy6oS2sdGPdGPavNcbF1kJbHDO
+         D93QgBoqy6k5JzpcydqwdJGgB7QLQczAmJc9rHEWl7mAb1Oq7FNHUxvyKAnKA49ZIPtl
+         bG1eaD5okZJP8qnOAG7ltqIBhwi7ZfyDVbq8uMI1X9jk1QlzSsafZsyMvft4DT6Rr74C
+         7QaA==
+X-Gm-Message-State: AOJu0YwJRNn2SkjZgoG0cZvqRvN1HtjbjIlKX75cCIRGgN/TSasBzPvY
+	9SQ/3ChJzAahsIuw6dpc+SyFYhfytMXOr9/5LzpoBgGEoE50cyklDHj1yCYYL4MhDGdAL5+1EqH
+	cdw==
+X-Google-Smtp-Source: AGHT+IHMhssa9VRUyAoJ+IUroeeIsCZaesVn8kPl1BvmvavzVCfKWZEmyKKDcXK+5cTrwrYcmNE2sWLeeFc=
+X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
+ (user=seanjc job=sendgmr) by 2002:a0d:d74d:0:b0:608:ba07:3093 with SMTP id
+ z74-20020a0dd74d000000b00608ba073093mr79184ywd.1.1708706800867; Fri, 23 Feb
+ 2024 08:46:40 -0800 (PST)
+Date: Fri, 23 Feb 2024 08:46:39 -0800
+In-Reply-To: <20240223104009.632194-8-pbonzini@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Message-ID: <170870678304.398.7107349021319622516.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0
+References: <20240223104009.632194-1-pbonzini@redhat.com> <20240223104009.632194-8-pbonzini@redhat.com>
+Message-ID: <ZdjL783FazB6V6Cy@google.com>
+Subject: Re: [PATCH v2 07/11] KVM: x86: define standard behavior for bits 0/1
+ of VM type
+From: Sean Christopherson <seanjc@google.com>
+To: Paolo Bonzini <pbonzini@redhat.com>
+Cc: linux-kernel@vger.kernel.org, kvm@vger.kernel.org, michael.roth@amd.com, 
+	aik@amd.com
+Content-Type: text/plain; charset="us-ascii"
 
-The following commit has been merged into the x86/boot branch of tip:
+On Fri, Feb 23, 2024, Paolo Bonzini wrote:
+> Some VM types have characteristics in common; in fact, the only use
+> of VM types right now is kvm_arch_has_private_mem and it assumes that
+> _all_ VM types have private memory.
+> 
+> So, let the low bits specify the characteristics of the VM type.  As
+> of we have two special things: whether memory is private, and whether
+> guest state is protected.  The latter is similar to
+> kvm->arch.guest_state_protected, but the latter is only set on a fully
+> initialized VM.  If both are set, ioctls to set registers will cause
+> an error---SEV-ES did not do so, which is a problematic API.
+> 
+> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+> Message-Id: <20240209183743.22030-7-pbonzini@redhat.com>
+> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+> ---
+>  arch/x86/include/asm/kvm_host.h |  9 +++-
+>  arch/x86/kvm/x86.c              | 93 +++++++++++++++++++++++++++------
+>  2 files changed, 85 insertions(+), 17 deletions(-)
+> 
+> diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+> index 0bcd9ae16097..15db2697863c 100644
+> --- a/arch/x86/include/asm/kvm_host.h
+> +++ b/arch/x86/include/asm/kvm_host.h
+> @@ -2135,8 +2135,15 @@ void kvm_mmu_new_pgd(struct kvm_vcpu *vcpu, gpa_t new_pgd);
+>  void kvm_configure_mmu(bool enable_tdp, int tdp_forced_root_level,
+>  		       int tdp_max_root_level, int tdp_huge_page_level);
+>  
+> +
+> +/* Low bits of VM types provide confidential computing capabilities.  */
+> +#define __KVM_X86_PRIVATE_MEM_TYPE	1
+> +#define __KVM_X86_PROTECTED_STATE_TYPE	2
+> +#define __KVM_X86_VM_TYPE_FEATURES	3
+> +static_assert((KVM_X86_SW_PROTECTED_VM & __KVM_X86_VM_TYPE_FEATURES) == __KVM_X86_PRIVATE_MEM_TYPE);
 
-Commit-ID:     c2cfc23f79676a9857a5a48911011bd56e23fd46
-Gitweb:        https://git.kernel.org/tip/c2cfc23f79676a9857a5a48911011bd56e23fd46
-Author:        Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-AuthorDate:    Fri, 26 Jan 2024 12:01:01 +02:00
-Committer:     Dave Hansen <dave.hansen@linux.intel.com>
-CommitterDate: Fri, 23 Feb 2024 08:40:29 -08:00
+Aliasing bit 0 to KVM_X86_SW_PROTECTED_VM is gross, e.g. this
 
-x86/trampoline: Bypass compat mode in trampoline_start64() if not needed
-
-The trampoline_start64() vector is used when a secondary CPU starts in
-64-bit mode. The current implementation directly enters compatibility
-mode. It is necessary to disable paging and re-enable it in the correct
-paging mode: either 4- or 5-level, depending on the configuration.
-
-The X86S[1] ISA does not support compatibility mode in ring 0, and
-paging cannot be disabled.
-
-Rework the trampoline_start64() function to only enter compatibility
-mode if it is necessary to change the paging mode. If the CPU is
-already in the desired paging mode, proceed in long mode.
-
-This allows a secondary CPU to boot on an X86S machine as long as the
-CPU is already in the correct paging mode.
-
-In the future, there will be a mechanism to switch between paging modes
-without disabling paging.
-
-[1] https://www.intel.com/content/www/us/en/developer/articles/technical/envisioning-future-simplified-architecture.html
-
-[ dhansen: changelog tweaks ]
-
-Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-Signed-off-by: Dave Hansen <dave.hansen@linux.intel.com>
-Reviewed-by: Andi Kleen <ak@linux.intel.com>
-Reviewed-by: Kai Huang <kai.huang@intel.com>
-Link: https://lore.kernel.org/all/20240126100101.689090-1-kirill.shutemov%40linux.intel.com
----
- arch/x86/realmode/rm/trampoline_64.S | 33 ++++++++++++++++++++++++++-
- 1 file changed, 32 insertions(+), 1 deletion(-)
-
-diff --git a/arch/x86/realmode/rm/trampoline_64.S b/arch/x86/realmode/rm/trampoline_64.S
-index c9f76fa..14d9c7d 100644
---- a/arch/x86/realmode/rm/trampoline_64.S
-+++ b/arch/x86/realmode/rm/trampoline_64.S
-@@ -37,13 +37,15 @@
- 	.text
- 	.code16
+ #define KVM_X86_DEFAULT_VM     0
+ #define KVM_X86_SW_PROTECTED_VM        1
++#define KVM_X86_SEV_VM         8
++#define KVM_X86_SEV_ES_VM      10
  
--.macro LOCK_AND_LOAD_REALMODE_ESP lock_pa=0
-+.macro LOCK_AND_LOAD_REALMODE_ESP lock_pa=0 lock_rip=0
- 	/*
- 	 * Make sure only one CPU fiddles with the realmode stack
- 	 */
- .Llock_rm\@:
- 	.if \lock_pa
-         lock btsl       $0, pa_tr_lock
-+	.elseif \lock_rip
-+        lock btsl       $0, tr_lock(%rip)
- 	.else
-         lock btsl       $0, tr_lock
- 	.endif
-@@ -220,6 +222,35 @@ SYM_CODE_START(trampoline_start64)
- 	lidt	tr_idt(%rip)
- 	lgdt	tr_gdt64(%rip)
+is _super_ confusing and bound to cause problems.
+
+Oh, good gravy, you're also aliasing __KVM_X86_PROTECTED_STATE_TYPE into SEV_ES_VM.
+Curse you and your Rami Code induced decimal-based bitwise shenanigans!!!
+
+I don't see any reason to bleed the flags into KVM's ABI.  Even shoving the flags
+into kvm->arch.vm_type is unncessary.  Aha!  As is storing vm_type as an "unsigned
+long", since (a) it can't ever be bigger than u32, and (b) in practice a u8 will
+suffice since as Mike pointed out we're effectively limited to 31 types before
+kvm_vm_ioctl_check_extension() starts returning error codes.
+
+So I vote to skip the aliasing and simply do:
+
+diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+index ff23712f1f3f..27265ff5fd29 100644
+--- a/arch/x86/include/asm/kvm_host.h
++++ b/arch/x86/include/asm/kvm_host.h
+@@ -1279,7 +1279,9 @@ enum kvm_apicv_inhibit {
+ };
  
-+	/* Check if paging mode has to be changed */
-+	movq	%cr4, %rax
-+	xorl	tr_cr4(%rip), %eax
-+	testl	$X86_CR4_LA57, %eax
-+	jnz	.L_switch_paging
-+
-+	/* Paging mode is correct proceed in 64-bit mode */
-+
-+	LOCK_AND_LOAD_REALMODE_ESP lock_rip=1
-+
-+	movw	$__KERNEL_DS, %dx
-+	movl	%edx, %ss
-+	addl	$pa_real_mode_base, %esp
-+	movl	%edx, %ds
-+	movl	%edx, %es
-+	movl	%edx, %fs
-+	movl	%edx, %gs
-+
-+	movl	$pa_trampoline_pgd, %eax
-+	movq	%rax, %cr3
-+
-+	pushq	$__KERNEL_CS
-+	pushq	tr_start(%rip)
-+	lretq
-+.L_switch_paging:
-+	/*
-+	 * To switch between 4- and 5-level paging modes, it is necessary
-+	 * to disable paging. This must be done in the compatibility mode.
-+	 */
- 	ljmpl	*tr_compat(%rip)
- SYM_CODE_END(trampoline_start64)
+ struct kvm_arch {
+-       unsigned long vm_type;
++       u8 vm_type;
++       bool has_private_memory;
++       bool has_protected_state;
+        unsigned long n_used_mmu_pages;
+        unsigned long n_requested_mmu_pages;
+        unsigned long n_max_mmu_pages;
+
+and then just use straight incrementing values for types, i.e.
+
+#define KVM_X86_DEFAULT_VM	0
+#define KVM_X86_SW_PROTECTED_VM	1
+#define KVM_X86_SEV_VM		2
+#define KVM_X86_SEV_ES_VM	3
+
+It'll require a bit of extra work in kvm_arch_init_vm(), but I think the end result
+will be signifincatly easier to follow.
+
+> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> index 8746530930d5..e634e5b67516 100644
+> --- a/arch/x86/kvm/x86.c
+> +++ b/arch/x86/kvm/x86.c
+> @@ -5526,21 +5526,30 @@ static int kvm_vcpu_ioctl_x86_set_vcpu_events(struct kvm_vcpu *vcpu,
+>  	return 0;
+>  }
+>  
+> -static void kvm_vcpu_ioctl_x86_get_debugregs(struct kvm_vcpu *vcpu,
+> -					     struct kvm_debugregs *dbgregs)
+> +static int kvm_vcpu_ioctl_x86_get_debugregs(struct kvm_vcpu *vcpu,
+> +					    struct kvm_debugregs *dbgregs)
+>  {
+>  	unsigned long val;
+>  
+> +	if ((vcpu->kvm->arch.vm_type & __KVM_X86_PROTECTED_STATE_TYPE) &&
+> +	    vcpu->arch.guest_state_protected)
+> +		return -EINVAL;
+> +
+>  	memset(dbgregs, 0, sizeof(*dbgregs));
+>  	memcpy(dbgregs->db, vcpu->arch.db, sizeof(vcpu->arch.db));
+>  	kvm_get_dr(vcpu, 6, &val);
+>  	dbgregs->dr6 = val;
+>  	dbgregs->dr7 = vcpu->arch.dr7;
+> +	return 0;
+>  }
+
+>  static int kvm_vcpu_ioctl_x86_set_xcrs(struct kvm_vcpu *vcpu,
+> @@ -5622,6 +5645,10 @@ static int kvm_vcpu_ioctl_x86_set_xcrs(struct kvm_vcpu *vcpu,
+>  {
+>  	int i, r = 0;
+>  
+> +	if ((vcpu->kvm->arch.vm_type & __KVM_X86_PROTECTED_STATE_TYPE) &&
+> +	    vcpu->arch.guest_state_protected)
+> +		return -EINVAL;
+> +
+>  	if (!boot_cpu_has(X86_FEATURE_XSAVE))
+>  		return -EINVAL;
+>  
+> @@ -6010,7 +6037,9 @@ long kvm_arch_vcpu_ioctl(struct file *filp,
+>  	case KVM_GET_DEBUGREGS: {
+>  		struct kvm_debugregs dbgregs;
+>  
+> -		kvm_vcpu_ioctl_x86_get_debugregs(vcpu, &dbgregs);
+> +		r = kvm_vcpu_ioctl_x86_get_debugregs(vcpu, &dbgregs);
+> +		if (r < 0)
+
+I would strongly prefer to just do
+
+		if (r)
+
+as "r < 0" implies that postive return values are possible/allowed.
+
+That said, rather than a mix of open coding checks in kvm_arch_vcpu_ioctl() versus
+burying checks in helpers, what about adding a dedicated helper to take care of
+everything in one shot?  E.g.
+
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index 3bc69b0c9822..f5ca78e75eec 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -5864,6 +5864,16 @@ static int kvm_vcpu_ioctl_enable_cap(struct kvm_vcpu *vcpu,
+        }
+ }
  
++static bool kvm_ioctl_accesses_guest_state(unsigned int ioctl)
++{
++       switch (ioctl) {
++       case <...>:
++               return true;
++       default:
++               return false:
++       }
++}
++
+ long kvm_arch_vcpu_ioctl(struct file *filp,
+                         unsigned int ioctl, unsigned long arg)
+ {
+@@ -5878,6 +5888,11 @@ long kvm_arch_vcpu_ioctl(struct file *filp,
+                void *buffer;
+        } u;
+ 
++       if (vcpu->kvm->arch.has_protected_state &&
++           vcpu->arch.guest_state_protected &&
++           kvm_ioctl_accesses_guest_state(ioctl))
++               return -EINVAL;
++
+        vcpu_load(vcpu);
+ 
+        u.buffer = NULL;
+
+It'll be a much smaller diff, and hopefully easier to audit, too.
