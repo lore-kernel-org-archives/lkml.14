@@ -1,54 +1,56 @@
-Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
+Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E74482D7D
-	for <linux-kernel@vger.kernel.org>; Fri, 23 Feb 2024 15:58:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CF9D84A37
+	for <linux-kernel@vger.kernel.org>; Fri, 23 Feb 2024 15:58:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708703900; cv=none; b=qjgkfmq4cTuXEkdPqyFdc6ck1fOXmL2UW87VbboveKP0q7jXuUTqeDT6pkc/CUW2IE/s36kjDma8+wlyi1mwoaNOQl3j5py1LoMR5DsGMjUpbitDk+PDqYjMX4ZgTVp6BjEi7AxEcAM/GjdLcPlpU5ds7FD3+fDf2dWAsRIuk3I=
+	t=1708703901; cv=none; b=jrTL9TrTlLafEQami8487i7VRFyhiwckYCUHBEEWW0dffgxoq6VKOi9lsTPLg0f+PyChBP8o9WGe7rMpKS1cpQapAUdpiHH7W5bBgJwWPzXcctTa9IRKOZ2GkcRUPn5wt1JH4ZwvIM4HxpNlet8xjqruQJ9mrAn6uo7DqeRhSB4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708703900; c=relaxed/simple;
-	bh=ZH381XWq1zBTkACBF2//KeafUWHfw67mulBGzDmiY08=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=bp1SzpVVjakw4n2Wp2HFf4p+UruLx3QJwBBIJ+u+7Y0+sWaAnxYQ9wk2Ey6U4P9D4Um+PIeNie1gVOWpA6wBeu6IP9olDh2NkhlVkbH994A3h/04acLC8BSnyUOpc1PtWwn/hPXJaXgT/aRqDVHhLCY9n5iuA9F++OG00i5vhD0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=layalina.io; spf=pass smtp.mailfrom=layalina.io; dkim=pass (2048-bit key) header.d=layalina-io.20230601.gappssmtp.com header.i=@layalina-io.20230601.gappssmtp.com header.b=KFKNFmPH; arc=none smtp.client-ip=209.85.218.42
+	s=arc-20240116; t=1708703901; c=relaxed/simple;
+	bh=yubuTyPGf4bTd9nBZMSBW040fOuvUEmyH1Rqt46p1Gg=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=D6Yo03b7RUx67M8puvaCoVAXrfJQ2n/E9BPVU4NZpEg3xGkTxGh68d2Tnk1JyCIuwxoPRYloxsb/q6YbTl0mow6DzU4wqNu9xBWXORUuuMyZpfuOtJVR/bpJ9wxIE8PLcZ6vHsPvtrrI3uD7a5sV0yL9HZ8edExOw6xE0zC9txQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=layalina.io; spf=pass smtp.mailfrom=layalina.io; dkim=pass (2048-bit key) header.d=layalina-io.20230601.gappssmtp.com header.i=@layalina-io.20230601.gappssmtp.com header.b=0Xtqqb8+; arc=none smtp.client-ip=209.85.208.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=layalina.io
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=layalina.io
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=layalina-io.20230601.gappssmtp.com header.i=@layalina-io.20230601.gappssmtp.com header.b="KFKNFmPH"
-Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-a2f22bfb4e6so83094866b.0
-        for <linux-kernel@vger.kernel.org>; Fri, 23 Feb 2024 07:58:16 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=layalina-io.20230601.gappssmtp.com header.i=@layalina-io.20230601.gappssmtp.com header.b="0Xtqqb8+"
+Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-564fd9eea75so716391a12.3
+        for <linux-kernel@vger.kernel.org>; Fri, 23 Feb 2024 07:58:19 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=layalina-io.20230601.gappssmtp.com; s=20230601; t=1708703895; x=1709308695; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=G6OU9fCSyWEEzN1u8BEFct7dyiCVhZczrHs1XtVuYnk=;
-        b=KFKNFmPHFQvnDtcs/LTdD3HuBYePSJheE7tvw/U+T3yLpjCPJNM1YC7hGoaOnohm/3
-         jVe/bz5W3TJj/JlbiKG3vuIVXEkzxilb8KUVOpSUfWlGYNlJZepoI8CIBRgA9K0wGqio
-         v0NznsX88neTPiQms+BZKv0WeISNc4E3xrl/UUWTRUbzp1UWAzwC+pKRljfgTJAXz7Se
-         jQQ5gVRZlwJgGLGDl+riICyZT9kZIu23m8ikbY8c/i3rAm/+MU0pKGbtbG8pWkGhhCQm
-         J34aQYBkGW5NUrPmM1XLf8OQTs3o3w11yFl46Z9sDjJQcpsxWzpWwk6VJbIEBR499BFG
-         pjCQ==
+        d=layalina-io.20230601.gappssmtp.com; s=20230601; t=1708703898; x=1709308698; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=qXt+HI9wwNeUARCoHPWGtfsHeSRaQT3zlVaUv+U3mfk=;
+        b=0Xtqqb8+1zh8fzxoAxgMsPFrlvjISu+kE0AAhHVeLbU66BwuGySpbxEr9+LaNaaMJw
+         TyShQQmia0rEE8Ig+wKKIuylGo0GJrxhrjuZXQ8vNfwgdR2OMYOUuLaymqHpxAXBk32i
+         WxWcxxEZ7fmemoy+/3ODYupkX/ya09/lJYl8onuJdyQS+Kz25EruH2zG9c+Y8F1zWCUJ
+         Qq6W/LTMC1ctjy6qDATiDVC7zTrv73PldMsuBg5s1w5+MSHZea1plIP6FwmVRtxupTPA
+         /QAEReDjHuc/GUa6jDuavtWEzzMqUcSn+b6iZY4/+B2p1/pRpYCxUY08U+4AroBBYsZI
+         v/ag==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708703895; x=1709308695;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=G6OU9fCSyWEEzN1u8BEFct7dyiCVhZczrHs1XtVuYnk=;
-        b=SiruqKScV2a0Y5hVxITyzR4xfjh8waMhRdP6SWAGTYliegO2NdoYTmeRd/SZitAxWT
-         djHaoKBMv7SdSqARBZwkdljM0fHWWsXhw8qSLJRknTempD8Z3cMvP6hvLxFilf9BT4OS
-         Qhph76upJnmeHO2wVsAaZcU30fo480NsWAzI3efMJFtgFX/+PCHrA2o1Eqw/W7QNfzaJ
-         Srw0TjJayBsFiOxYY9Cvy6STrGZ7CCT0cY22YMXVD31MMCEalJxH23TzTmpZIIeVOoSP
-         G1SWrVoxXoGKkmn9as0zDI9k7+0g26f9AIqFQKWqn/AHblYWZy+Iar3LTtMgA4b6AYMR
-         l14g==
-X-Gm-Message-State: AOJu0Yy2oh+Enzxi53Z/izjMOmm026FERZmD1FXGbUr4yL2+wpLpWrFX
-	1JLPZ3OaVjaIxm9P1zg/ld7IJLmOFs2voFHhrfB4Ezim34l5DcvN+rufVFT7ETI=
-X-Google-Smtp-Source: AGHT+IFOrob8ed9f5/s0soRamhpTRgugIXA1/sDn/fhSiVJwNaqHd65cLwVQZcDbvzNuhb8zX2rujA==
-X-Received: by 2002:a17:906:ae54:b0:a3e:f7c1:5f21 with SMTP id lf20-20020a170906ae5400b00a3ef7c15f21mr147674ejb.52.1708703895503;
-        Fri, 23 Feb 2024 07:58:15 -0800 (PST)
+        d=1e100.net; s=20230601; t=1708703898; x=1709308698;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=qXt+HI9wwNeUARCoHPWGtfsHeSRaQT3zlVaUv+U3mfk=;
+        b=fbtVhVvpoeK0yQcG/VRzDLoT+ierqGG5K2+wk+aZQNk6bezMZafFsNR2NLVV9sj3/v
+         dMJ2EZB+IU+smmYJr3W7incgZvSmj7kVU4Bo6Mqaj64e/Cdg0O6C1gOo3B03DJRBbd6G
+         G9K4Hxo/J8BGUBaELpqjCDyH5N65Nu6bBjIFGpPSJjEyVrYe9TFqAHcUN39agN8tdC1B
+         wcxbHCdKM9d5Tz1BymwEgaAhCDJwVtyKOvUD+6/XL1ZYrIUyjzE9HlYt8cwyYw3sylbt
+         xeRYwHyVLWDaedfEuFBpzlnq7FKEeKlAx5814IKPiZ/Kz04LbJ5Ej9wf9XSjRJfTgdri
+         wAvA==
+X-Gm-Message-State: AOJu0YzYMTrQPJ6ExnE1grXyLNBXb1KJpkRqgpph5IHDqFwytCNJWeqK
+	OMeJZpslJUFZPeynfjzRJKfuFlEfnaO5RdNRZj6eWzWa5oH32turpbx6SulNOw0=
+X-Google-Smtp-Source: AGHT+IGICtbJmOJxleBJrgHmax806zlycMWeIW3A9rVv8+9wIgvLrGYLOiADJ46veqiwirVtyjam+g==
+X-Received: by 2002:a17:906:3787:b0:a41:db75:7642 with SMTP id n7-20020a170906378700b00a41db757642mr70403ejc.37.1708703897542;
+        Fri, 23 Feb 2024 07:58:17 -0800 (PST)
 Received: from airbuntu.. (host109-154-46-208.range109-154.btcentralplus.com. [109.154.46.208])
-        by smtp.gmail.com with ESMTPSA id rg8-20020a1709076b8800b00a3e28471fa4sm6461293ejc.59.2024.02.23.07.58.14
+        by smtp.gmail.com with ESMTPSA id rg8-20020a1709076b8800b00a3e28471fa4sm6461293ejc.59.2024.02.23.07.58.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 23 Feb 2024 07:58:14 -0800 (PST)
+        Fri, 23 Feb 2024 07:58:17 -0800 (PST)
 From: Qais Yousef <qyousef@layalina.io>
 To: Jens Axboe <axboe@kernel.dk>,
 	Ingo Molnar <mingo@kernel.org>,
@@ -63,10 +65,12 @@ Cc: linux-kernel@vger.kernel.org,
 	Bart Van Assche <bvanassche@acm.org>,
 	Christoph Hellwig <hch@infradead.org>,
 	Qais Yousef <qyousef@layalina.io>
-Subject: [PATCH v2 0/2] sched: blk: Handle HMP systems when completing IO
-Date: Fri, 23 Feb 2024 15:57:47 +0000
-Message-Id: <20240223155749.2958009-1-qyousef@layalina.io>
+Subject: [PATCH v2 2/2] block/blk-mq: Don't complete locally if capacities are different
+Date: Fri, 23 Feb 2024 15:57:49 +0000
+Message-Id: <20240223155749.2958009-3-qyousef@layalina.io>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240223155749.2958009-1-qyousef@layalina.io>
+References: <20240223155749.2958009-1-qyousef@layalina.io>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -75,31 +79,68 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Due to recent changes in how topology is represented on asymmetric multi
-processing systems like big.LITTLE where all cpus share the last LLC, there is
-a performance regression as cpus with different compute capacities appear under
-the same LLC and we no longer send an IPI when the requester is running on
-a different cluster with different compute capacity.
+The logic in blk_mq_complete_need_ipi() assumes SMP systems where all
+CPUs have equal compute capacities and only LLC cache can make
+a different on perceived performance. But this assumption falls apart on
+HMP systems where LLC is shared, but the CPUs have different capacities.
+Staying local then can have a big performance impact if the IO request
+was done from a CPU with higher capacity but the interrupt is serviced
+on a lower capacity CPU.
 
-Restore the old behavior by adding a new cpus_equal_capacity() function to help
-check for the new condition for these systems.
+Use the new cpus_equal_capacity() function to check if we need to send
+an IPI.
 
-Changes since v1:
+Without the patch I see the BLOCK softirq always running on little cores
+(where the hardirq is serviced). With it I can see it running on all
+cores.
 
-	* Split the patch per subsystem.
-	* Convert cpus_gte_capacity() to cpus_equal_capacity()
-	* Make cpus_equal_capacity() return immediately for SMP systems.
+This was noticed after the topology change [1] where now on a big.LITTLE
+we truly get that the LLC is shared between all cores where as in the
+past it was being misrepresented for historical reasons. The logic
+exposed a missing dependency on capacities for such systems where there
+can be a big performance difference between the CPUs.
 
-Qais Yousef (2):
-  sched: Add a new function to compare if two cpus have the same
-    capacity
-  block/blk-mq: Don't complete locally if capacities are different
+This of course introduced a noticeable change in behavior depending on
+how the topology is presented. Leading to regressions in some workloads
+as the performance of the BLOCK softirq on littles can be noticeably
+worse on some platforms.
 
- block/blk-mq.c                 |  5 +++--
- include/linux/sched/topology.h |  6 ++++++
- kernel/sched/core.c            | 11 +++++++++++
- 3 files changed, 20 insertions(+), 2 deletions(-)
+Worth noting that we could have checked for capacities being greater
+than or equal instead for equality. This will lead to favouring higher
+performance always. But opted for equality instead to match the
+performance of the requester without making an assumption that can lead
+to power trade-offs which these systems tend to be sensitive about. If
+the requester would like to run faster, it's better to rely on the
+scheduler to give the IO requester via some facility to run on a faster
+core; and then if the interrupt triggered on a CPU with different
+capacity we'll make sure to match the performance the requester is
+supposed to run at.
 
+[1] https://lpc.events/event/16/contributions/1342/attachments/962/1883/LPC-2022-Android-MC-Phantom-Domains.pdf
+
+Signed-off-by: Qais Yousef <qyousef@layalina.io>
+---
+ block/blk-mq.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/block/blk-mq.c b/block/blk-mq.c
+index 2dc01551e27c..ea69047e12f7 100644
+--- a/block/blk-mq.c
++++ b/block/blk-mq.c
+@@ -1167,10 +1167,11 @@ static inline bool blk_mq_complete_need_ipi(struct request *rq)
+ 	if (force_irqthreads())
+ 		return false;
+ 
+-	/* same CPU or cache domain?  Complete locally */
++	/* same CPU or cache domain and capacity?  Complete locally */
+ 	if (cpu == rq->mq_ctx->cpu ||
+ 	    (!test_bit(QUEUE_FLAG_SAME_FORCE, &rq->q->queue_flags) &&
+-	     cpus_share_cache(cpu, rq->mq_ctx->cpu)))
++	     cpus_share_cache(cpu, rq->mq_ctx->cpu) &&
++	     cpus_equal_capacity(cpu, rq->mq_ctx->cpu)))
+ 		return false;
+ 
+ 	/* don't try to IPI to an offline CPU */
 -- 
 2.34.1
 
