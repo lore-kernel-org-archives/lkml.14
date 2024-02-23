@@ -1,204 +1,91 @@
-Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
+Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEA7013A25E
-	for <linux-kernel@vger.kernel.org>; Fri, 23 Feb 2024 17:35:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB05B13F018
+	for <linux-kernel@vger.kernel.org>; Fri, 23 Feb 2024 17:36:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708709744; cv=none; b=IiF3NZUgE/84Cu9oPvHvkLqiGog8Y91dozZR1quRncAakfb4bN4b3NjNDSDp290WJo7DQoKNY4oJiftMFoWYVakDVm+fbDb4rIEeS0MHMiMqdhkSnUbiLW2ggK1RvCrUaUiM57jVX0V5i+mAxjd74MwqKhq3dYLyj+fY9nt0cDo=
+	t=1708709820; cv=none; b=adtwFLQ80PXhHxmz2jE5F71+b7ps8YmjbzGHdkE+FV63cH+8JMw+qZpBB2Q9OHrCi3FNZiyzaRba+Cmy30UDRGRJ+JGJmw8bO0CKy/zXCaqCdI1fxu3u1K4ob5CB2PTvCPQ+tz2KFLt8ZJGnMTJhln/MdOBYPlE1w1IbdRxdpAc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708709744; c=relaxed/simple;
-	bh=IkzSUsW28OdScgPZ3xaWRx9AYrLQrDS+wnNZDYXn/yk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=iyvDmSHNC420bJfw2QONLdy9xFZj6Q7mdKzVdpNGa4ye5X3MFRuX8TYDwelGSjvz8ykXeznroTVbTsWOew7g8/86RXUxAE3EKMndtaWhC9pbLHyiE1OnHhuP7nRIt6pcOGrgoYvpeoq2uq/38IuFEmMekiF1/AGNNmNEMNG4U2s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylehuey.com; spf=pass smtp.mailfrom=kylehuey.com; dkim=pass (2048-bit key) header.d=kylehuey.com header.i=@kylehuey.com header.b=B0PlCaAi; arc=none smtp.client-ip=209.85.208.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylehuey.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylehuey.com
+	s=arc-20240116; t=1708709820; c=relaxed/simple;
+	bh=mPq99SHVDAlyu/Lw6k/HCBY8a5P8RgeYGBIuIYVU8jU=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=VzduhiXoJZ5eCAlJ/KuqFbYlDeZfLBrtBtfRq7VvYmTaoKBv8TKm9QzwE4noUaIHuHw20Q2CU1VlJlWei1ybYhy0EUSANnck18o+AqSFh6J61Df/bRX/rtIcRN9/2GSdtSBEyNCatlGmgx4FmNn2u6QLTJVSiQ+XOnYfjG7WJO4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=vZVfto5x; arc=none smtp.client-ip=209.85.219.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kylehuey.com header.i=@kylehuey.com header.b="B0PlCaAi"
-Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-55a179f5fa1so880774a12.0
-        for <linux-kernel@vger.kernel.org>; Fri, 23 Feb 2024 09:35:42 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vZVfto5x"
+Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-dcc4563611cso1824642276.3
+        for <linux-kernel@vger.kernel.org>; Fri, 23 Feb 2024 09:36:58 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kylehuey.com; s=google; t=1708709741; x=1709314541; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=2bG6kltsE57imWHJ/FJvS+n3D4X4xNnJDjhhmpS9a2A=;
-        b=B0PlCaAiMFeZDoUtT4Hu8ReNQVb0cLbUWLBBtItUExe3yZ6oOMQow/KS+DHP6t4Xgg
-         TUnw2Xh9QnvBLuHv/zL70szeA9E9vsc0f8rHqxpWYSqeWvzx6mOw39HWfd34GUCQsdqA
-         smG5yQ/4wgJxVpF3HoOKr/wnePb+JoaONNNllsUi9wm645/Yzhq5V8PY+l0o72Mj+7ga
-         iTtIsagk2LOqSzBPUMXHXxZv33cE8yev+zJE54NWDGuyEIcQpYaNtD4rzNojKrc2GxeQ
-         hYxG2M1pBy/0TBixAy/ZxE3y727L8w6SPIyFC9lSiKpcwtcPLsebYv19qgmwtuUXaL6n
-         rMHQ==
+        d=google.com; s=20230601; t=1708709818; x=1709314618; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=vQFkD/yeaXafYTambjNc8nGAaM5dCANMqU9RXbu0aLA=;
+        b=vZVfto5xhOFCLp49Hgi85KvUoY/pi52vzZf5i2PPR+Mx1mzavSmBIjMWZdobDQv7jc
+         uQR3zDF6XXOgf0E/Bza0yv57kNq+IlARkyHSl1ibhABzpULF74xsSs3/8jnxVI61YT7m
+         jyjPkAR31z9lNJGcDKClUEAzamfKXHOUSE3N8XJxcUonKxXkacg8Ucjrlk9U1qopaM8V
+         SGrFG4kDrYIgFD86g8bhTFHrJoS0UE5ZjrxXHHCyBC/JgBEnWA9EgvdtKaFpnqsSliP3
+         b5jpUbsMNDeIEvkxwRMQSBPkWC33urPVQBcV7gkzGaykj0+5tJISmH+Vwvj65BoepVr5
+         mx+g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708709741; x=1709314541;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=2bG6kltsE57imWHJ/FJvS+n3D4X4xNnJDjhhmpS9a2A=;
-        b=SSzzuKG060iGO8Br3vlBRAG9oAJRY1Dmu+x/WU7/oC17PyYKPysh27sdTze8r3fYbp
-         H7S8LNyjXaytFrxq0R9QZ9QFltA7TVFOYZQSFy+wpkJ2Xq+umO38uBthovi+THHI5FwE
-         wm6AlJWTtH/WFsUpc6lvVFybZvlhcRmuwlQeMH9WM8vNXb22BgIZFGor5aWOBd1On+x8
-         H21Q7lZEBlyHnLrk4JKSyRHvHtfWEjRJgk1fPl9EqBIQjHtgwhkkHmdQVNNz4RZi5RQT
-         Ii/BnUf5ZBHxdmosbim4tASubUT0x5N9TrDuFW9e8Z8+zp3ENgHfMqfp1yQchTvQyJwZ
-         ughw==
-X-Forwarded-Encrypted: i=1; AJvYcCW40giXyjf0+EPGv2sazNet0H2VqYUM9pqwWt+y4xcWNCOpFe83s0xDRnTsFPOs65s3O6Q5uy3H/xNQ/7yJmOsXo5GKjAaVpBHSejkC
-X-Gm-Message-State: AOJu0YzcdNPXze4MoHSAyDfZ1xFYJ9r1smv91fSkbcKuuNyW2fP7ZXBX
-	J3eMBXE2pBKyLFw9hlI2DlyUFwCyMr1G5Bs7vil/nz2TANPbtnj8SefdG/BEDlUAdmxM1zYIm9c
-	zam9hODVFLct3WYJZyM83nt7SW0lEUZ2neG8O
-X-Google-Smtp-Source: AGHT+IEom2vLpZpTDGtlXwNKqRKxmXkYeFwCXGhP9GJXkL7HeeJ5jS1c/OHixG0hSAsCBqKPRs7V/AGztdjxXjostL8=
-X-Received: by 2002:aa7:c318:0:b0:565:eb8:ed47 with SMTP id
- l24-20020aa7c318000000b005650eb8ed47mr293420edq.35.1708709741110; Fri, 23 Feb
- 2024 09:35:41 -0800 (PST)
+        d=1e100.net; s=20230601; t=1708709818; x=1709314618;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=vQFkD/yeaXafYTambjNc8nGAaM5dCANMqU9RXbu0aLA=;
+        b=rTHBgsnOlcRZpPtnph1UFwQEfb/mMqjIE+89r3VpbSmrHpK8evjsOd66900rAeVtqw
+         qcHk/fKhWy7k0bPMssqTuEfIzDxuPeJqtbZdFlPvbwqcSYO8983XUe+4FxPdP9QFot8W
+         XiDEZOr3lwnO7qIzu6wEazFFWZm+QECMf1AlGEHu57b9gj/Eu9IZslHrRrJmCinr4Z5y
+         J13tagTqETnsgenx7Y7UoY5HDcZ610HeZ7chh8XFf0gPjrQimg7fLpAnrzM6Iv85jzCN
+         MBD6/LJkoa0Fxk5cZMXSCADxicV0TGRCyvdiUvzyqCB10jCLgEMBeeGAXnQDBcnNdDYj
+         ITDQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUvbPeqT3AXCnv2irhesqSMesaV9Ui2ULKoBdVLGTnNNaRXDMa5hlVroIblY+D9F5CIGMj4lyC6IUQbYB+x3ECXo/xCT8fDMHjRrrP3
+X-Gm-Message-State: AOJu0Yz/NG/L75FGFN3LJgsLdZcBCk5oZGRckvE+smTA9HBVZ7L1Q2/A
+	W5WDh5d8oZPXWJDvSPdWOef4xtywYpr3Cp51qKUtamkw98TOUpy5yHLDsvsbXxZiD4BJPYlkQts
+	7lA==
+X-Google-Smtp-Source: AGHT+IF6qHLLb++rm38SnHHY1oMkxzeH9qs55zcOOM7YnS3PnobaoRSUe6xFvYZWf184A1ED5DElZhno5QQ=
+X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
+ (user=seanjc job=sendgmr) by 2002:a25:ad9a:0:b0:dc2:550b:a4f4 with SMTP id
+ z26-20020a25ad9a000000b00dc2550ba4f4mr124968ybi.1.1708709817812; Fri, 23 Feb
+ 2024 09:36:57 -0800 (PST)
+Date: Fri, 23 Feb 2024 09:36:56 -0800
+In-Reply-To: <20240221072528.2702048-10-stevensd@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20240221175210.19936-1-khuey@kylehuey.com> <20240221175210.19936-2-khuey@kylehuey.com>
- <CAP-5=fXsv7TJ_SVOZc38fN0gn+7cWBcMWt3FdVLcs5v0_vO=uw@mail.gmail.com>
- <CAP045AoSHWoOP3TN=6Hf2wZj7X9Y41sThBQWCDZ3BEP68qeTBw@mail.gmail.com> <ZdemibZepMqWvv6U@x1>
-In-Reply-To: <ZdemibZepMqWvv6U@x1>
-From: Kyle Huey <me@kylehuey.com>
-Date: Fri, 23 Feb 2024 09:35:29 -0800
-Message-ID: <CAP045Aqc6woHGYKJG4d=x4gPd0=PmrLeFv25Rkts1a8xFuocOQ@mail.gmail.com>
-Subject: Re: [PATCH 2/2] perf test: Test FASYNC with watermark wakeups.
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Ian Rogers <irogers@google.com>, Kyle Huey <khuey@kylehuey.com>, 
-	"Robert O'Callahan" <robert@ocallahan.org>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0
+References: <20240221072528.2702048-1-stevensd@google.com> <20240221072528.2702048-10-stevensd@google.com>
+Message-ID: <ZdjXuH4jBaAZCrgy@google.com>
+Subject: Re: [PATCH v10 7/8] KVM: x86/mmu: Track if sptes refer to refcounted pages
+From: Sean Christopherson <seanjc@google.com>
+To: David Stevens <stevensd@chromium.org>
+Cc: Yu Zhang <yu.c.zhang@linux.intel.com>, Isaku Yamahata <isaku.yamahata@gmail.com>, 
+	Zhi Wang <zhi.wang.linux@gmail.com>, Maxim Levitsky <mlevitsk@redhat.com>, kvmarm@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
 
-On Thu, Feb 22, 2024 at 11:54=E2=80=AFAM Arnaldo Carvalho de Melo
-<acme@kernel.org> wrote:
->
-> On Thu, Feb 22, 2024 at 09:55:36AM -0800, Kyle Huey wrote:
-> > On Wed, Feb 21, 2024 at 10:36=E2=80=AFAM Ian Rogers <irogers@google.com=
-> wrote:
-> > > On Wed, Feb 21, 2024 at 9:52=E2=80=AFAM Kyle Huey <me@kylehuey.com> w=
-rote:
-> > > > +       if (fcntl(fd, F_SETFL, FASYNC)) {
-> > > > +               pr_debug("failed F_SETFL FASYNC %d\n", errno);
-> > > > +               goto cleanup;
-> > > > +       }
->
-> > > Thanks for the work! The perf tool and perf test should run on older
-> > > kernels ideally without failure. I'm assuming this would fail on an
-> > > older kernel. Could we make the return value skip in that case?
->
-> > Ah, hmm, I wasn't aware of that. This would fail on an older kernel,
-> > yes. It's not possible to distinguish between an older kernel and a
-> > kernel where this fix broke (at least not without hardcoding in an
-> > expected good kernel version, which seems undesirable), so that would
->
-> Take a look at:
->
->  https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commi=
-t/tools/perf/tests/sigtrap.c?id=3D650e0bde43f35bb675e87e30f679a57cfa22e0e5
->
-> To see how introspecting using BTF can be used to figure out if internal
-> data structures have what is needed, or if functions with some specific
-> arguments are present, etc, for sigtrap we have, in the patch above:
->
-> -       TEST_ASSERT_EQUAL("unexpected sigtraps", ctx.signal_count, NUM_TH=
-READS * ctx.iterate_on);
-> +       expected_sigtraps =3D NUM_THREADS * ctx.iterate_on;
-> +
-> +       if (ctx.signal_count < expected_sigtraps && kernel_with_sleepable=
-_spinlocks()) {
-> +               pr_debug("Expected %d sigtraps, got %d, running on a kern=
-el with sleepable spinlocks.\n",
-> +                        expected_sigtraps, ctx.signal_count);
-> +               pr_debug("See https://lore.kernel.org/all/e368f2c848d77fb=
-c8d259f44e2055fe469c219cf.camel@gmx.de/\n");
-> +               return TEST_SKIP;
-> +       } else
-> +               TEST_ASSERT_EQUAL("unexpected sigtraps", ctx.signal_count=
-, expected_sigtraps);
->
-> And then:
->
-> +static bool kernel_with_sleepable_spinlocks(void)
+On Wed, Feb 21, 2024, David Stevens wrote:
+> + * Extra bits are only available for TDP SPTEs, since bits 62:52 are reserved
+> + * for PAE paging, including NPT PAE. When a tracking bit isn't available, we
+> + * will reject mapping non-refcounted struct pages.
+> + */
+> +static inline bool spte_has_refcount_bit(void)
 > +{
-> +       const struct btf_member *member;
-> +       const struct btf_type *type;
-> +       const char *type_name;
-> +       int id;
-> +
-> +       if (!btf__available())
-> +               return false;
-> +
-> +       id =3D btf__find_by_name_kind(btf, "spinlock", BTF_KIND_STRUCT);
-> +       if (id < 0)
-> +               return false;
-> +
-> +       // Only RT has a "lock" member for "struct spinlock"
-> +       member =3D __btf_type__find_member_by_name(id, "lock");
-> +       if (member =3D=3D NULL)
-> +               return false;
-> +
-> +       // But check its type as well
-> +       type =3D btf__type_by_id(btf, member->type);
-> +       if (!type || !btf_is_struct(type))
-> +               return false;
-> +
-> +       type_name =3D btf__name_by_offset(btf, type->name_off);
-> +       return type_name && !strcmp(type_name, "rt_mutex_base");
+> +	return tdp_enabled && IS_ENABLED(CONFIG_X86_64);
 > +}
->
-> > mean the test would always return ok or skip, not ok or fail. Is that
-> > ok?
->
-> It should return:
->
-> Ok if the kernel has what is needed and the test passes
-> Skip if the test fails and the kernel doesn't have what is needed
-> FAIL if the test fails and the kernel HAS what is needed.
->
-> 'perf test sigtrap' also checks for the presence of the feature it
-> requires:
->
-> static bool attr_has_sigtrap(void)
-> {
->         int id;
->
->         if (!btf__available()) {
->                 /* should be an old kernel */
->                 return false;
->         }
->
->         id =3D btf__find_by_name_kind(btf, "perf_event_attr", BTF_KIND_ST=
-RUCT);
->         if (id < 0)
->                 return false;
->
->         return __btf_type__find_member_by_name(id, "sigtrap") !=3D NULL;
-> }
->
->         fd =3D sys_perf_event_open(&attr, 0, -1, -1, perf_event_open_cloe=
-xec_flag());
->         if (fd < 0) {
->                 if (attr_has_sigtrap()) {
->                         pr_debug("FAILED sys_perf_event_open(): %s\n",
->                                  str_error_r(errno, sbuf, sizeof(sbuf)));
->                 } else {
->                         pr_debug("perf_event_attr doesn't have sigtrap\n"=
-);
->                         ret =3D TEST_SKIP;
->                 }
->                 goto out_restore_sigaction;
->         }
->
-> - Arnaldo
+> +
+> +static inline bool is_refcounted_page_spte(u64 spte)
+> +{
+> +	return !spte_has_refcount_bit() || (spte & SPTE_MMU_PAGE_REFCOUNTED);
 
-I think perhaps I'm barking up the wrong tree here. This seems like a
-ton of work just to write a regression test. Maybe I should be doing
-this in tools/testing/selftests instead?
+The preferred way to handle this in KVM's MMU is to use a global variable, e.g.
 
-- Kyle
+  extern u64 __read_mostly shadow_refcounted_mask;
+
+that avoids conditional branches when creating SPTEs, and arguably yields slightly
+more readable code, e.g.
+
+	return !shadow_refcounted_mask || (spte & shadow_refcounted_mask);
