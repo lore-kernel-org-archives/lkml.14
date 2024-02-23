@@ -1,151 +1,77 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8178370
-	for <linux-kernel@vger.kernel.org>; Fri, 23 Feb 2024 00:02:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32AC618E;
+	Fri, 23 Feb 2024 00:03:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708646545; cv=none; b=rEnUbvBXG6eXgmnsRPuB+h8+aKcnhrUFpHNP9F68yDq1hHnBSKvYWvAB2DRTOiQ7hhGOGrDH1Pe3H2Muay3o40q7A8dIuJOeC9g86iX3qmKM3lZ6oCh4EiYHrkCUFx+HM85fCrGPwC5TuGAzht8CI/RHZFdKyoxy/Ocog7RSgU8=
+	t=1708646603; cv=none; b=WRaFDp5Is14Rqxdy+I6j5pc3RSCtcU+DVP8M3jn6PwbvW+LMG8Ii0dA/S5MOSFghD217hLA0yOSujKmezBY4guL+m3nBWKlEFa3k6kxvIQOi3wgZgTwwz1/Vaqn9UqFEhz5M5/+FUuxpuw/lrdbMKAK97zd9s69hrgBFR5gq5Og=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708646545; c=relaxed/simple;
-	bh=e+0tBc5rl3AsuopjGEnlgHYKkTUemBC1S0uodgi3rj8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ff3XXxaRwVyCI57i45mbEp74mhoBqffOqlfies3CxROCB1UPfk+aJR4lHF+eRYvDySgH6r8pm7GJvkv/RpQBSoIQzq4aAPwXbq9Jo13pqngOXPHBhM6RCmB2fF0/3ekyKgKdeSR9vmqQAdhpVbVmeAu7KdjFJ5LIcbAAZP9+C9g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=obHVaBWm; arc=none smtp.client-ip=209.85.214.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1708646603; c=relaxed/simple;
+	bh=MoRpThz8BwfGmQI/tdKDwo2lq+nMd+Ual2CCuubziSk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=YOEo4pZEbjN4DtV57r3U8HioMfVEOZw+1yTBVG49q6KM+eF2fQv/YvsPYw1WgHWvBCiuHVm7FL2tTtPIgqcfGIOCfeMRqupstFmuTqYXhmH/X+MCDInkJDKojhhu8DEKW0E89V/uzTn2mL29/zcu3pVfgZc7bvNsKFiv6bE65Es=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cic+Typd; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="obHVaBWm"
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-1d5ce88b51cso36145ad.0
-        for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 16:02:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1708646543; x=1709251343; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=YKIqei624U8pNnH0un8neNQZM9OozSHq1mh1Op7pFks=;
-        b=obHVaBWmN2MUW8UVZkDATg3Eh6mC8E/svZFewFXut+0YRIgCGRAES2gnH8zfUHxUp1
-         cDpVN+MICjIpv1l2xiDoVBPOMlzTI8CBTV/kK/cWR4v85gjzncbe2W7UdcmmqDfgQFt2
-         nZC9YnB0aFeD47dbjoq4FMNf3VaymQHRhDoqmG//EkRP2EuHGKm3Yes8QWSar+lIQkuB
-         s4dp7/p9BbFk8qrg+bYyMrh4lLJw5uAePzRv5Y7+rE8rb/oO1gBrAtP4N6xWxItSOKD+
-         5eVZbcafepdjCo2lV/J5QV/E4Y4xkOyc5e9OdQQ5JsEicVC7rPeiIvvkDtLQKS2EiI8V
-         SiCg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708646543; x=1709251343;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=YKIqei624U8pNnH0un8neNQZM9OozSHq1mh1Op7pFks=;
-        b=YQvQlSVnrlSd9mZE+xCe1NbOycfDVGMTVLJknDfa0ENtMRJVL6f29NczeRJW77ZyQo
-         gqrhLyN3Z6MDH3Lpl+aNOxvZsIovBPdcBQkOo3IG+Spf/pHw60Tj+n9X+ONtzKdczkXK
-         6+NHHgl8lYtkEoLw+iaehZLPC9kqZMW706y1z9I6EjL/2FCRUcO7WTqxY29ezYa6O20d
-         ZBL7+sEFIlniae/1MdVG3KRh32vqxilpwS+YkAQ4FUudyN4PGlPR1StF2OXUP5yKdx2E
-         I3KEF5WW6yol34HzmurcqVvaV1T+PTKddKhUWTEjqHJDNuzZw1Js1gKTtRtnZw36jtNN
-         gW8Q==
-X-Forwarded-Encrypted: i=1; AJvYcCU+33UWb+LYeFRfhiBfSvZ7P2FLqqEN4zu1ecsymjXlVyeqkcfrCdHjln5/0aTP5fbd3iCD9P3qgM0gDXeRTtD1VYh27RTmoEzRYwS0
-X-Gm-Message-State: AOJu0YzJswd2jQJ5zpdOa7ohpoaklmdwUZt9WNnF60JDlUQwv5m9g2CK
-	JfQg3fxLkxV9JhcoOCRhP1pgf9VN/9WoCGSmqKgOdQVMOPXBzhct5Ty4ONzuMqvYotvIQfrPeFy
-	YWI176srWRwhNvfqXATFehfSu3xoXMNSkNBf/yEXOhn/AyznorcXc
-X-Google-Smtp-Source: AGHT+IER6ZkSQzG0kj2Bw1ykdDF9DFfTp86VxCrkri92YG1vjri132FLxMLOD4+5Zql5MBIoVXrxSQvCBDFa7V50Cs8=
-X-Received: by 2002:a17:903:4093:b0:1d9:6949:6c88 with SMTP id
- z19-20020a170903409300b001d969496c88mr606312plc.17.1708646542627; Thu, 22 Feb
- 2024 16:02:22 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cic+Typd"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 02B1BC433C7;
+	Fri, 23 Feb 2024 00:03:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1708646602;
+	bh=MoRpThz8BwfGmQI/tdKDwo2lq+nMd+Ual2CCuubziSk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=cic+Typd/Jo4A8aZdMWorj3V/IJph/j22l1PdN+nPGCHm4iZfwiLNl65BzABHjIxm
+	 Iqz2LIvb4Dg1cGZe3e9wB5lF3jTkEm14dH2k4Vm1W+JG0BS9XVXV7s2LD9qSqiy8l+
+	 4dX1FShLh+4XcOIf5X6i22kZ0XvVyRQZWMWB923qnu/lMp1brWdCmuGOWMf7J8B1Ic
+	 0g2q737UYikU/jvWOKf8T+ebhFnAtVRYcWrMSHFHx8ZVBTzz20ajVetX/MiCuST/B4
+	 CAJnvBDzwmRczVF9VicJZS48AQ6Q2ib4yJfGeZuq4Q8zEAYpg4QoxfJcdiDMAJmOl4
+	 owPDQU0LZN0Bw==
+Date: Thu, 22 Feb 2024 17:03:17 -0700
+From: Rob Herring <robh@kernel.org>
+To: Stephen Boyd <sboyd@kernel.org>
+Cc: linux-kernel@vger.kernel.org, patches@lists.linux.dev,
+	linux-um@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
+	kunit-dev@googlegroups.com, linux-kselftest@vger.kernel.org,
+	devicetree@vger.kernel.org, Frank Rowand <frowand.list@gmail.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH v4 5/7] arm64: Unconditionally call
+ unflatten_device_tree()
+Message-ID: <20240223000317.GA3835346-robh@kernel.org>
+References: <20240217010557.2381548-1-sboyd@kernel.org>
+ <20240217010557.2381548-6-sboyd@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <ZdepeMsjagbf1ufD@x1>
-In-Reply-To: <ZdepeMsjagbf1ufD@x1>
-From: Ian Rogers <irogers@google.com>
-Date: Thu, 22 Feb 2024 16:02:07 -0800
-Message-ID: <CAP-5=fVkA0-JMn-Xu-typJYFod-+LfyAwdUKCKEDQdQu4V_NNw@mail.gmail.com>
-Subject: Re: [PATCH 1/1] perf test: Use TEST_FAIL in the TEST_ASSERT macros
- instead of -1
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Jiri Olsa <jolsa@kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
-	linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240217010557.2381548-6-sboyd@kernel.org>
 
-On Thu, Feb 22, 2024 at 12:07=E2=80=AFPM Arnaldo Carvalho de Melo
-<acme@kernel.org> wrote:
->
-> Just to make things clearer, return TEST_FAIL (-1) instead of an open
-> coded -1.
->
-> Cc: Adrian Hunter <adrian.hunter@intel.com>
-> Cc: Ian Rogers <irogers@google.com>
-> Cc: Jiri Olsa <jolsa@kernel.org>
-> Cc: Namhyung Kim <namhyung@kernel.org>
-> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-
-Reviewed-by: Ian Rogers <irogers@google.com>
-
-Thanks,
-Ian
-
+On Fri, Feb 16, 2024 at 05:05:54PM -0800, Stephen Boyd wrote:
+> Call this function unconditionally so that we can populate an empty DTB
+> on platforms that don't boot with a firmware provided or builtin DTB.
+> When ACPI is in use, unflatten_device_tree() ignores the
+> 'initial_boot_params' pointer so the live DT on those systems won't be
+> whatever that's pointing to. Similarly, when kexec copies the DT data
+> the previous kernel to the new one on ACPI systems,
+> of_kexec_alloc_and_setup_fdt() will ignore the live DT (the empty root
+> one) and copy the 'initial_boot_params' data.
+> 
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Frank Rowand <frowand.list@gmail.com>
+> Cc: Catalin Marinas <catalin.marinas@arm.com>
+> Cc: Will Deacon <will@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: <linux-arm-kernel@lists.infradead.org>
+> Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 > ---
->  tools/perf/tests/tests.h | 16 ++++++++--------
->  1 file changed, 8 insertions(+), 8 deletions(-)
->
-> diff --git a/tools/perf/tests/tests.h b/tools/perf/tests/tests.h
-> index dad3d7414142d1be..3aa7701ee0e939f7 100644
-> --- a/tools/perf/tests/tests.h
-> +++ b/tools/perf/tests/tests.h
-> @@ -4,11 +4,17 @@
->
->  #include <stdbool.h>
->
-> +enum {
-> +       TEST_OK   =3D  0,
-> +       TEST_FAIL =3D -1,
-> +       TEST_SKIP =3D -2,
-> +};
-> +
->  #define TEST_ASSERT_VAL(text, cond)                                     =
-\
->  do {                                                                    =
-\
->         if (!(cond)) {                                                   =
-\
->                 pr_debug("FAILED %s:%d %s\n", __FILE__, __LINE__, text); =
-\
-> -               return -1;                                               =
-\
-> +               return TEST_FAIL;                                        =
-\
->         }                                                                =
-\
->  } while (0)
->
-> @@ -17,16 +23,10 @@ do {                                                 =
-                        \
->         if (val !=3D expected) {                                         =
-  \
->                 pr_debug("FAILED %s:%d %s (%d !=3D %d)\n",               =
-  \
->                          __FILE__, __LINE__, text, val, expected);       =
-\
-> -               return -1;                                               =
-\
-> +               return TEST_FAIL;                                        =
-        \
->         }                                                                =
-\
->  } while (0)
->
-> -enum {
-> -       TEST_OK   =3D  0,
-> -       TEST_FAIL =3D -1,
-> -       TEST_SKIP =3D -2,
-> -};
-> -
->  struct test_suite;
->
->  typedef int (*test_fnptr)(struct test_suite *, int);
-> --
-> 2.43.0
->
+>  arch/arm64/kernel/setup.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+
+Catalin, Will, Can I get an ack on this so I can take the series via the 
+DT tree.
+
+Rob
