@@ -1,96 +1,90 @@
-Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
+Received: from relay.hostedemail.com (smtprelay0010.hostedemail.com [216.40.44.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF0EEAD4C
-	for <linux-kernel@vger.kernel.org>; Fri, 23 Feb 2024 01:39:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 355B55CB5
+	for <linux-kernel@vger.kernel.org>; Fri, 23 Feb 2024 01:40:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708652380; cv=none; b=RqOJo+hcsC/HKXbStmIDRVpiWioi4i2DPCNyQL0cp5uyaai2uu9Yp53Z3TEYTqdqVVzyB/AG6U5puFIcE/H+GeyrYs8lawbNTSF4LQ68PMb8jdqSwZaWDJkVh/a48Zh70JwO18MndvvbITHKQTulh6jO3QHntUhRYd6HaDBCxgQ=
+	t=1708652443; cv=none; b=JAeLR6FwrXoQk8GlQbjEjrYooVpYhnxYe2m5nf3HDIFfyM+lHiYOCcmRnh9sVj8MFW3gwnO/2AjR3IJWyh6eS8Hkwn1fzZRyZ41iHdYDuijcEipzmza0hfSIOVYvAWfPHZs9g3noSkrptoPSYsm/9Q0vbdxYob+c7kC2oXbsvV8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708652380; c=relaxed/simple;
-	bh=w6a/lM4JOOIkaLGjwoIWUqUMup/m3aYFAur7x35KVXg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=ceiFJDn5bGNnDBBFnkG7HqQLeMmvSPN2Qd46Bdq+/XHLUBg6EKKg2RifaxEtYnID1AFrt6ZyA0tffZ7ASSLDy/rrLn88yqF7OZ77vIRqNupYrqLuBKT8DElyUsxD+dU9lLBSMtnEYseLXAwNIHKAbgeM1bKacYMSyp63cS2wGTM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.191
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.214])
-	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4Tgsxm2fPGz1FLGY;
-	Fri, 23 Feb 2024 09:34:36 +0800 (CST)
-Received: from dggpemd100004.china.huawei.com (unknown [7.185.36.20])
-	by mail.maildlp.com (Postfix) with ESMTPS id D2FDA1A016B;
-	Fri, 23 Feb 2024 09:39:29 +0800 (CST)
-Received: from [10.67.109.211] (10.67.109.211) by
- dggpemd100004.china.huawei.com (7.185.36.20) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.28; Fri, 23 Feb 2024 09:39:29 +0800
-Message-ID: <7396cdc0-e878-48fe-85b9-d88611d28444@huawei.com>
-Date: Fri, 23 Feb 2024 09:39:29 +0800
+	s=arc-20240116; t=1708652443; c=relaxed/simple;
+	bh=06nlyah+LimYhn6q4/L7UyYLSWP/+zvjFYNxxwsEfmI=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=V8tB4OFk/wR2x2F/hIItRt4OcArgBltDBaw6qRFywvHjFADptd4EoKWtPiyYT4u+n7dqUfHplfbfn92cNYStRx9B3KaCypVQhQf2Q1GdWYjqOGKLzR1+8+8Ex02F/qJn/H9CR21j8k5brwYtOXiYUjD+hr1H90rIK7537aYWWa4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=perches.com; spf=pass smtp.mailfrom=perches.com; arc=none smtp.client-ip=216.40.44.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=perches.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=perches.com
+Received: from omf16.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay09.hostedemail.com (Postfix) with ESMTP id 382F3810F7;
+	Fri, 23 Feb 2024 01:22:04 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: joe@perches.com) by omf16.hostedemail.com (Postfix) with ESMTPA id CCE982000D;
+	Fri, 23 Feb 2024 01:22:01 +0000 (UTC)
+Message-ID: <17265e7ace81d4e546a0b990d3e4723c6e6f4968.camel@perches.com>
+Subject: Re: [PATCH 2/2] checkpatch: Don't check for unified diff format in
+ git sendemail headers
+From: Joe Perches <joe@perches.com>
+To: Saravana Kannan <saravanak@google.com>
+Cc: Andy Whitcroft <apw@canonical.com>, Dwaipayan Ray
+ <dwaipayanray1@gmail.com>,  Lukas Bulwahn <lukas.bulwahn@gmail.com>,
+ kernel-team@android.com, linux-kernel@vger.kernel.org
+Date: Thu, 22 Feb 2024 17:22:00 -0800
+In-Reply-To: <CAGETcx8rANkOHhay6iFoXtXtJ8KvoNQBAMpruGENys+L2uHQTQ@mail.gmail.com>
+References: <20240222051539.3001988-3-saravanak@google.com>
+	 <20240222051539.3001988-4-saravanak@google.com>
+	 <ffec7c7b8eb86f573e420e0582075ba1e75d0e54.camel@perches.com>
+	 <CAGETcx-mNt+_ST0opQ=_M1ZJK1acf8Rr0VqaAUskyig5YwL_dw@mail.gmail.com>
+	 <e51c5e6fe02bcc5a487cae063fe8f440013d0ca9.camel@perches.com>
+	 <CAGETcx8rANkOHhay6iFoXtXtJ8KvoNQBAMpruGENys+L2uHQTQ@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.48.4 (3.48.4-1.fc38) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH -next] arm32: enable HAVE_LD_DEAD_CODE_DATA_ELIMINATION
-Content-Language: en-US
-To: Arnd Bergmann <arnd@arndb.de>, <linux-arm-kernel@lists.infradead.org>,
-	<linux-kernel@vger.kernel.org>
-CC: Russell King <linux@armlinux.org.uk>, Andrew Davis <afd@ti.com>, Andrew
- Morton <akpm@linux-foundation.org>, "Kirill A. Shutemov"
-	<kirill.shutemov@linux.intel.com>, Geert Uytterhoeven
-	<geert+renesas@glider.be>, Jonathan Corbet <corbet@lwn.net>, Mike Rapoport
-	<rppt@kernel.org>, Eric DeVolder <eric.devolder@oracle.com>, Rob Herring
-	<robh@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Linus Walleij
-	<linus.walleij@linaro.org>
-References: <20240220081527.23408-1-liuyuntao12@huawei.com>
- <1342759e-b967-4ec4-98d5-48146f81f695@app.fastmail.com>
- <38c09a4b-69cc-4dc5-8a68-e5f5597613ac@huawei.com>
- <30b01c65-12f2-4ee0-81d5-c7a2da2c36b4@app.fastmail.com>
- <4e9396ca-460b-49ca-818e-73f0a8997b15@huawei.com>
- <58297ee9-4f33-4b3b-bd00-b44e86965892@app.fastmail.com>
-From: "liuyuntao (F)" <liuyuntao12@huawei.com>
-In-Reply-To: <58297ee9-4f33-4b3b-bd00-b44e86965892@app.fastmail.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
- dggpemd100004.china.huawei.com (7.185.36.20)
+X-Rspamd-Server: rspamout06
+X-Rspamd-Queue-Id: CCE982000D
+X-Stat-Signature: 9x9389jnokt9gxoox5kye9oawx8f1tw5
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-Session-ID: U2FsdGVkX18+rkEm7949bNaeLsD5HarbInaSmXaVqA4=
+X-HE-Tag: 1708651321-214556
+X-HE-Meta: U2FsdGVkX18rgb+OfNzocMgCYQ2csH6MhWu06jBGyR2HUz0/0kU/7m/6/weIZvGizCKD6WXDbnmjlTyp0y2dgB89aDKDvrwuq0Q2V71bu5ftwi01DMzpCpAkkW1BAYF6FIwm1b2Vlvn2E6keJguhPfRkQpI85Xb0EFbIeI3CpV6LSnKNYvNMQQvEAyFEfrmA2Fwgwwf9j2vV+BqDd97nb3nJBmXqRQxjtz4Z3x8Br5nI7EcaItr7kbgCGUwLbihOsncG/BlsDxs3XWTIPEVwieGKp0jakAK8exbGxrZ+NFqFdhtg58yZjI4FJ3pzRcwmWvGELTRQxhldmzs8W18Oyi1BQ1DZ+rp0HXeH7QHsAJY6nA+CyP7DJ9Ark+MYdzM5
 
+On Thu, 2024-02-22 at 17:10 -0800, Saravana Kannan wrote:
+> On Thu, Feb 22, 2024 at 5:01=E2=80=AFPM Joe Perches <joe@perches.com> wro=
+te:
+> >=20
+> > On Thu, 2024-02-22 at 16:45 -0800, Saravana Kannan wrote:
+> > > On Thu, Feb 22, 2024 at 12:54=E2=80=AFAM Joe Perches <joe@perches.com=
+> wrote:
+> > > >=20
+> > > > On Wed, 2024-02-21 at 21:15 -0800, Saravana Kannan wrote:
+> > > > > When checkpatch is used as a git sendemail-validate hook, it's al=
+so passed
+> > > > > in the email header for sanity check.
+> > > >=20
+> > > > Why?
+> > > >=20
+> > > > If so, why not use a front-end script to stop/remove
+> > > > the file from being scanned by checkpatch?
+> > >=20
+> > > Sure, I could do that. But this also makes it easier for people to
+> > > start using checkpatch. Or I can put up a git hook wrapper script in
+> > > here for people to symlink into their .git/hooks that does this.
+> > >=20
+> > > I'd prefer the lazy route of not creating a 1 line wrapper script :)
+> >=20
+> > I'd not.  checkpatch is for _patches_.
+> > Don't feed stuff to it that isn't patches and expect good results.
+>=20
+> Would you be open to being a maintainer if I add a git hook
+> sendemail-validate wrapper? It feels silly to add myself as a
+> maintainer for a 1-line script. I'd rather give it to you :)
 
+<shrug>
 
-On 2024/2/23 0:04, Arnd Bergmann wrote:
-> On Thu, Feb 22, 2024, at 12:24, liuyuntao (F) wrote:
->>
->> The position of the caret has been moved below the right brace
->> of { KEEP(*(.vectors.bhb.loop8)) }, indicating that lld is treating
->> the entire `KEEP(*(.vectors))` as a file name. This could potentially be
->> a bug in lld. Perhaps we can temporarily
->> enable the DCE option only when option LD_IS_LLD is disabled,
->> like risc-v:
->>
->> `select HAVE_LD_DEAD_CODE_DATA_ELIMINATION if !LD_IS_LLD`.
-> 
-> I would really like to see this working with lld if at all
-> possible, as it allows the combination of gc-sections with
-> lto and CONFIG_TRIM_UNUSED_KSYMS.
-> 
-> I experimented with lld myself now and I did get a booting
-> kernel even without the the KEEP() on the vectors. I also
+I think you need a local script and not one in the tree.
+Or maybe some different git invocation command.  Dunno.
 
-When the kernel booted up successfully, was config DCE enabled?
-
-> see that this is the only use of OVERLAY in the kernel, so
-> I hope that we can find a way to make it work with existing
-> lld after all, either without the KEEP or without the OVERLAY.
-
-Yeah, i will try other way to make it work.
-
-> 
-> Did you see any problems without the KEEP() on the vectors?
-> 
->       Arnd
-
-Without the KEEP(),disable DCE, qemu boots well,
-enable DCE,qemu hangs on startup.
-I experimented with lld using vexpress_defconfig.
