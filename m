@@ -1,151 +1,152 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A98397E59A;
-	Fri, 23 Feb 2024 12:46:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A735A7BB01;
+	Fri, 23 Feb 2024 12:46:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708692372; cv=none; b=GduW+N5EXegSiHjvx7/5I7lxs776dUv1txDubB5VY2ddSKUwZN4CUPMRv8jcvhAIcWCd6NUjIX7ZCFyNGmBkLhzfBoXQLna5RkXjKhdWZlmTZYNkF3mFostaMOvR7LyaEfZgkf8Ofbw3gLSAijC1S9IIZV+ylqGMoU9JoarJUYw=
+	t=1708692396; cv=none; b=CtlMPqDxniu3hfA6K9AvS+EGFmuh2QhXtUXGf5uq0OFCZWAp8I6kvSFqOMrpGjq94sxC51N5q47h4BkRUcbN1S3pdL+BuxhXjb+dQLapaUvCaVQrpdrq1GMYdowWThDcr+eHVqdU/Mipx8BVbLSG46jdvgwcfq8OYOC6c1AvvoA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708692372; c=relaxed/simple;
-	bh=D8T1iuzJvdgAM8BRFbh+hcm3BNH2Qr3Lwn/NyFiXNCc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZEJ5tI5Lly38Ryp0yQDc9fbPq4jpkY72WXtocF17RDOTd2GqgM+rFTqBBiXaD8uBIEvDgNM/8XbAOMxRHMma/2Mjuh4PlDCyWles+5lYTir+/A1Y74nVnSNgbfENXwsREN+cWHHJNkYZeacTC9yDuIjJ9G8XuT0FklwPmgfh0mM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KGyzFhm7; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KGyzFhm7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2EAACC43330;
-	Fri, 23 Feb 2024 12:46:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708692372;
-	bh=D8T1iuzJvdgAM8BRFbh+hcm3BNH2Qr3Lwn/NyFiXNCc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=KGyzFhm7ILcP3GXTrYTNj37Jh2zhruTwranObf38pQndYH7SSUnzadWU1wxvtVqj0
-	 qTGEmV4Z32EIlEq08c7XGJWna2x3lkMwtjveIcgiZzFHU7xsYgbwwdTwGuHnX3OXST
-	 D1RXLNWq7+TUq2rxjavltUsvelEuCedCo/UgMgiOBANfVyo8HOL+zEYG5v9759klGd
-	 XzGpmYxdh5qbOaiVl0PTN47io8YGapFWIoQRRXww6R3c5dEImt6XFTlmI66N5sPwyv
-	 pNjksVmglMRXjR1DsnofXknnuHe1WXJvOO0RcaQUuLlURH0OKARgmF2OmmZCK5jnyA
-	 DXYjaTvKn/lDA==
-Received: from johan by xi.lan with local (Exim 4.97.1)
-	(envelope-from <johan@kernel.org>)
-	id 1rdUwR-000000002kC-3nOA;
-	Fri, 23 Feb 2024 13:46:15 +0100
-Date: Fri, 23 Feb 2024 13:46:15 +0100
-From: Johan Hovold <johan@kernel.org>
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc: Johan Hovold <johan+linaro@kernel.org>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Andrzej Hajda <andrzej.hajda@intel.com>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Robert Foss <rfoss@kernel.org>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
-	Vinod Koul <vkoul@kernel.org>, Jonas Karlman <jonas@kwiboo.se>,
-	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-	Jernej Skrabec <jernej.skrabec@gmail.com>,
-	Konrad Dybcio <konrad.dybcio@linaro.org>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Rob Clark <robdclark@gmail.com>,
-	Abhinav Kumar <quic_abhinavk@quicinc.com>,
-	Kuogee Hsieh <quic_khsieh@quicinc.com>,
-	freedreno@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-	linux-phy@lists.infradead.org
-Subject: Re: [PATCH 2/6] drm/bridge: aux-hpd: separate allocation and
- registration
-Message-ID: <ZdiTlwTOCROGD_AY@hovoldconsulting.com>
-References: <20240217150228.5788-1-johan+linaro@kernel.org>
- <20240217150228.5788-3-johan+linaro@kernel.org>
- <CAA8EJpoxe8BmyFqMC5yrqdx-Sx2VR_2gT3x6WT9MyhdLuw+xmA@mail.gmail.com>
+	s=arc-20240116; t=1708692396; c=relaxed/simple;
+	bh=uwvaZI11bdMokSgb+i0nBIM711O1DzkCOL2KDkr/QbY=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=h1xUJmqIkMb4XftmDMtN6IDL17LUuA2W+2PCvgAAdUMNJGfcA3umfmDxIro4ThII5BXN9YhP6Rk/NoZrAmP2auUTHVPTGomd6bvjaqnfQEZhqgApJ9K6SebDAbDu8NSdrOTPk9JGtt7/idp5cBRDiiGqNWKvNA2b48Qp758MEqI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Th8ms30Ljz6K8qJ;
+	Fri, 23 Feb 2024 20:42:53 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
+	by mail.maildlp.com (Postfix) with ESMTPS id 57DD3141144;
+	Fri, 23 Feb 2024 20:46:32 +0800 (CST)
+Received: from SecurePC-101-06.china.huawei.com (10.122.247.231) by
+ lhrpeml500005.china.huawei.com (7.191.163.240) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Fri, 23 Feb 2024 12:46:31 +0000
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: <linux-iio@vger.kernel.org>, Rob Herring <robh@kernel.org>, Frank Rowand
+	<frowand.list@gmail.com>, <linux-kernel@vger.kernel.org>, Julia Lawall
+	<Julia.Lawall@inria.fr>
+CC: Peter Zijlstra <peterz@infradead.org>, Andy Shevchenko
+	<andriy.shevchenko@linux.intel.com>, Greg Kroah-Hartman
+	<gregkh@linuxfoundation.org>, <marek.vasut@gmail.com>
+Subject: [PATCH v2 4/4] iio: adc: rcar-gyroadc: use for_each_available_child_node_scoped()
+Date: Fri, 23 Feb 2024 12:44:32 +0000
+Message-ID: <20240223124432.26443-5-Jonathan.Cameron@huawei.com>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240223124432.26443-1-Jonathan.Cameron@huawei.com>
+References: <20240223124432.26443-1-Jonathan.Cameron@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAA8EJpoxe8BmyFqMC5yrqdx-Sx2VR_2gT3x6WT9MyhdLuw+xmA@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: lhrpeml100004.china.huawei.com (7.191.162.219) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
 
-On Thu, Feb 22, 2024 at 10:57:07PM +0200, Dmitry Baryshkov wrote:
-> On Sat, 17 Feb 2024 at 17:03, Johan Hovold <johan+linaro@kernel.org> wrote:
-> >
-> > Combining allocation and registration is an anti-pattern that should be
-> > avoided. Add two new functions for allocating and registering an dp-hpd
-> > bridge with a proper 'devm' prefix so that it is clear that these are
-> > device managed interfaces.
-> >
-> >         devm_drm_dp_hpd_bridge_alloc()
-> >         devm_drm_dp_hpd_bridge_add()
-> >
-> > The new interface will be used to fix a use-after-free bug in the
-> > Qualcomm PMIC GLINK driver and may prevent similar issues from being
-> > introduced elsewhere.
-> >
-> > The existing drm_dp_hpd_bridge_register() is reimplemented using the
-> > above and left in place for now.
-> >
-> > Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
-> 
-> Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Using automated cleanup to replace of_node_put() handling allows for
+a simplfied flow by enabling direct returns on errors.
 
-Thanks for reviewing.
+Non available child nodes should never have been considered; that
+is ones where status != okay and was defined.
 
-> Minor nit below.
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+---
+ drivers/iio/adc/rcar-gyroadc.c | 21 ++++++---------------
+ 1 file changed, 6 insertions(+), 15 deletions(-)
 
-> > diff --git a/include/drm/bridge/aux-bridge.h b/include/drm/bridge/aux-bridge.h
-> > index c4c423e97f06..4453906105ca 100644
-> > --- a/include/drm/bridge/aux-bridge.h
-> > +++ b/include/drm/bridge/aux-bridge.h
-> > @@ -9,6 +9,8 @@
-> >
-> >  #include <drm/drm_connector.h>
-> >
-> > +struct auxiliary_device;
-> > +
-> >  #if IS_ENABLED(CONFIG_DRM_AUX_BRIDGE)
-> >  int drm_aux_bridge_register(struct device *parent);
-> >  #else
-> > @@ -19,10 +21,23 @@ static inline int drm_aux_bridge_register(struct device *parent)
-> >  #endif
-> >
-> >  #if IS_ENABLED(CONFIG_DRM_AUX_HPD_BRIDGE)
-> > +struct auxiliary_device *devm_drm_dp_hpd_bridge_alloc(struct device *parent, struct device_node *np);
-> > +int devm_drm_dp_hpd_bridge_add(struct device *dev, struct auxiliary_device *adev);
-> 
-> I had a pretty close idea during prototyping, but I ended up doing it
-> as a single function for the following reasons:
-> 
-> First, this exports the implementation detail that internally the code
-> uses an aux device.
+diff --git a/drivers/iio/adc/rcar-gyroadc.c b/drivers/iio/adc/rcar-gyroadc.c
+index d524f2e8e927..15a21d2860e7 100644
+--- a/drivers/iio/adc/rcar-gyroadc.c
++++ b/drivers/iio/adc/rcar-gyroadc.c
+@@ -318,7 +318,6 @@ static int rcar_gyroadc_parse_subdevs(struct iio_dev *indio_dev)
+ 	struct rcar_gyroadc *priv = iio_priv(indio_dev);
+ 	struct device *dev = priv->dev;
+ 	struct device_node *np = dev->of_node;
+-	struct device_node *child;
+ 	struct regulator *vref;
+ 	unsigned int reg;
+ 	unsigned int adcmode = -1, childmode;
+@@ -326,7 +325,7 @@ static int rcar_gyroadc_parse_subdevs(struct iio_dev *indio_dev)
+ 	unsigned int num_channels;
+ 	int ret, first = 1;
+ 
+-	for_each_child_of_node(np, child) {
++	for_each_available_child_of_node_scoped(np, child) {
+ 		of_id = of_match_node(rcar_gyroadc_child_match, child);
+ 		if (!of_id) {
+ 			dev_err(dev, "Ignoring unsupported ADC \"%pOFn\".",
+@@ -352,7 +351,7 @@ static int rcar_gyroadc_parse_subdevs(struct iio_dev *indio_dev)
+ 			num_channels = ARRAY_SIZE(rcar_gyroadc_iio_channels_3);
+ 			break;
+ 		default:
+-			goto err_e_inval;
++			return -EINVAL;
+ 		}
+ 
+ 		/*
+@@ -369,7 +368,7 @@ static int rcar_gyroadc_parse_subdevs(struct iio_dev *indio_dev)
+ 				dev_err(dev,
+ 					"Failed to get child reg property of ADC \"%pOFn\".\n",
+ 					child);
+-				goto err_of_node_put;
++				return ret;
+ 			}
+ 
+ 			/* Channel number is too high. */
+@@ -377,7 +376,7 @@ static int rcar_gyroadc_parse_subdevs(struct iio_dev *indio_dev)
+ 				dev_err(dev,
+ 					"Only %i channels supported with %pOFn, but reg = <%i>.\n",
+ 					num_channels, child, reg);
+-				goto err_e_inval;
++				return -EINVAL;
+ 			}
+ 		}
+ 
+@@ -386,7 +385,7 @@ static int rcar_gyroadc_parse_subdevs(struct iio_dev *indio_dev)
+ 			dev_err(dev,
+ 				"Channel %i uses different ADC mode than the rest.\n",
+ 				reg);
+-			goto err_e_inval;
++			return -EINVAL;
+ 		}
+ 
+ 		/* Channel is valid, grab the regulator. */
+@@ -396,8 +395,7 @@ static int rcar_gyroadc_parse_subdevs(struct iio_dev *indio_dev)
+ 		if (IS_ERR(vref)) {
+ 			dev_dbg(dev, "Channel %i 'vref' supply not connected.\n",
+ 				reg);
+-			ret = PTR_ERR(vref);
+-			goto err_of_node_put;
++			return PTR_ERR(vref);
+ 		}
+ 
+ 		priv->vref[reg] = vref;
+@@ -422,7 +420,6 @@ static int rcar_gyroadc_parse_subdevs(struct iio_dev *indio_dev)
+ 		 * we can stop parsing here.
+ 		 */
+ 		if (childmode == RCAR_GYROADC_MODE_SELECT_1_MB88101A) {
+-			of_node_put(child);
+ 			break;
+ 		}
+ 	}
+@@ -433,12 +430,6 @@ static int rcar_gyroadc_parse_subdevs(struct iio_dev *indio_dev)
+ 	}
+ 
+ 	return 0;
+-
+-err_e_inval:
+-	ret = -EINVAL;
+-err_of_node_put:
+-	of_node_put(child);
+-	return ret;
+ }
+ 
+ static void rcar_gyroadc_deinit_supplies(struct iio_dev *indio_dev)
+-- 
+2.39.2
 
-That's not an issue. The opposite, with interfaces trying to do too much
-and hide details from the developers so that they can no longer reason
-about what is going on, is a real problem though.
-
-> Also, by exporting the aux device the code becomes less type-safe. By
-> mistake one can call devm_drm_dp_hpd_bridge_add() on any aux device,
-> which is not necessarily the HPD bridge.
-
-No. First, that is currently not even an issue either as the
-registration interface is safe to use with any aux device.
-
-Second, if you cared about about type-safety you wouldn't have used a
-struct device pointer for drm_aux_hpd_bridge_notify() which you back
-cast to an aux device.
-
-> I'd prefer to see an opaque device-specific structure instead. WDYT?
-
-That should have been there from the start. But I'm not interested in
-cleaning up this mess beyond what is minimally required to fix the
-regressions it caused.
-
-This can be reworked for 6.9 or later.
-
-> >  struct device *drm_dp_hpd_bridge_register(struct device *parent,
-> >                                           struct device_node *np);
-> >  void drm_aux_hpd_bridge_notify(struct device *dev, enum drm_connector_status status);
-
-Johan
