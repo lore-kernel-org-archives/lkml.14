@@ -1,63 +1,41 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B1A64414;
-	Fri, 23 Feb 2024 07:09:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DD079455;
+	Fri, 23 Feb 2024 07:12:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708672185; cv=none; b=sBctHtSs6UFbM2dZtCa4NZcUfXrMoXlRpmO/Euwc1m/NyA+gXTBmEMjyRQ6j2YdNnHk+iqAtYir58fhj5aPFJvbiArwV9c0JZJB4DMwG8cKRLFHktMELTraqDAee6CGhPkoAS2aVs7OYwCOyb6Gy4SUOL3NSOYt7b6vcTeppWEk=
+	t=1708672341; cv=none; b=JHRzUG2DgKR8+jG+bmZRIx4Q0CElQdf5Md5FfLCfNo33kksiwMh8f0hSbQgG08BJWq+S25oEEsgorpE+G9+HmLIHnxeXZIBZUeHNXDtKsLW4KDYREcS1P1AtJg9o3FzMF5fE5gCDQyl+DDOiYdpxRqMo5gy19QQfXPAcMIWyo5E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708672185; c=relaxed/simple;
-	bh=Zz70VcC6ec8uW9MYAOTjf18dTlcTTAeDita2hNGYrmI=;
+	s=arc-20240116; t=1708672341; c=relaxed/simple;
+	bh=NDaLXNF7vdTsWUaH84OUNYIrKQDpJAly1GLNpuCRK3Q=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RZBDAt3NpKM9xe0xlGSL2XVIv24W/JwcUAZCVCog82JR1vSPCe6gmgrDaNe1xEZ6ZA4gppJihCkHISLixtTtK3BW87cF0MlMsncu8zeCbmZjLrxzuqM5sBZsPVRPi+eDqufCTRC8ge8fvnxvBX8SNxQRUpxESBK9hCC0M8r3WAc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=iwwqeyI9; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=g+XN1C/LWRHCT5AnZW9phHmbjVdH3QoUBWGfo3KaOY1uGzHdHuRamEzLfsajOP4HNMGRHyOb5/wGJlP0jcElYKKuDLnyKJg2MIybRKv3S9zYKJcvafKCLdtGMuWjaurh+sR9VbjXPbtbRt/pl+E/qsA9LkWg2jjsrdLdP1alT48=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RBn1nWWR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="iwwqeyI9"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
-	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=m+Owkp1rvs3wqHimfEH8BwiCegvG2RGz55AKhwheUbg=; b=iwwqeyI9c3+8e3/yCE9TC/w5CH
-	+apLO/tqnHj5OoEfskS2+ieWWgT6wYzNDVHvLRUwZCrkIRWwHo0xJ1V7anDQ2Z2tcXnO5OkeyDwlB
-	OYvrcCpFFGqai+oPl73PV76BDln7Vcb8zlKN3VhzOYCOZ1ju0MawnKpEf/NFKZxR0Van91cOu2bbx
-	7yMT2BVLFcJE5nNV9q6xK60ppA8eZzGA5zDW2AkwKAregxIwBLSQT6mfq6dkikHwvD0kk8yGu3M0b
-	evY+e5fafMmBj4yVCqPfcV9bHRRMBY26AF9b5bihcdFFw1bGbqxouM33wVdEeNI2goEITiCuBSog3
-	fApTjHIQ==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rdPgi-00000008G7y-2lsb;
-	Fri, 23 Feb 2024 07:09:40 +0000
-Date: Thu, 22 Feb 2024 23:09:40 -0800
-From: Christoph Hellwig <hch@infradead.org>
-To: Elliot Berman <quic_eberman@quicinc.com>
-Cc: Alex Elder <elder@linaro.org>,
-	Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-	Murali Nalajal <quic_mnalajal@quicinc.com>,
-	Trilok Soni <quic_tsoni@quicinc.com>,
-	Srivatsa Vaddagiri <quic_svaddagi@quicinc.com>,
-	Carl van Schaik <quic_cvanscha@quicinc.com>,
-	Philip Derrin <quic_pderrin@quicinc.com>,
-	Prakruthi Deepak Heragu <quic_pheragu@quicinc.com>,
-	Jonathan Corbet <corbet@lwn.net>, Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Konrad Dybcio <konrad.dybcio@linaro.org>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-	Fuad Tabba <tabba@google.com>,
-	Sean Christopherson <seanjc@google.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	linux-arm-msm@vger.kernel.org, linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org
-Subject: Re: [PATCH v17 19/35] arch/mm: Export direct {un,}map functions
-Message-ID: <ZdhEtH7xzbzdhS2j@infradead.org>
-References: <20240222-gunyah-v17-0-1e9da6763d38@quicinc.com>
- <20240222-gunyah-v17-19-1e9da6763d38@quicinc.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RBn1nWWR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1B397C433F1;
+	Fri, 23 Feb 2024 07:12:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1708672340;
+	bh=NDaLXNF7vdTsWUaH84OUNYIrKQDpJAly1GLNpuCRK3Q=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=RBn1nWWR8nmGFP3FqlK1Gws8CY8oYY8azzqL3ScMJ8QpmPCTi7giTtQGex0CQykij
+	 81csyiayRGNgmSxTfM1qCEwNQSRrkXXsbrt11YiWkkSskQTBxznleNOEwl4n2mW2cc
+	 s1G7kUxQsMcNwop4mz8Z2bkEckAk8o6Hynbp1CxSgjAJRWZqy1E19OTMBJWiJzMMul
+	 1lFdroAZ9m6zUu2i6p7yntn32U/YG4fEm81OA3Fr7cL/t8ei9cGFnQJQUnZVMjC2fT
+	 RP1RbSibMZjuCBYyUVuFbcs6LQzH6f07gDjSd+n7wIH8VA2JZirMD1fKi+1m/TFGb6
+	 sFMTIFV8nH9JQ==
+Date: Fri, 23 Feb 2024 12:42:16 +0530
+From: Vinod Koul <vkoul@kernel.org>
+To: Basavaraj Natikar <bnatikar@amd.com>
+Cc: Basavaraj Natikar <Basavaraj.Natikar@amd.com>,
+	dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] MAINTAINERS: change in AMD ptdma maintainer
+Message-ID: <ZdhFUDgGqHUA6VhE@matsya>
+References: <20240222083004.1907070-1-Basavaraj.Natikar@amd.com>
+ <ZddQHZIo8fLCoqec@matsya>
+ <cd2783cc-5616-41b7-a6e9-b20cd71706df@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -66,16 +44,49 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240222-gunyah-v17-19-1e9da6763d38@quicinc.com>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <cd2783cc-5616-41b7-a6e9-b20cd71706df@amd.com>
 
-On Thu, Feb 22, 2024 at 03:16:42PM -0800, Elliot Berman wrote:
-> Firmware and hypervisor drivers can donate system heap memory to their
-> respective firmware/hypervisor entities. Those drivers should unmap the
-> pages from the kernel's logical map before doing so.
+On 22-02-24, 19:19, Basavaraj Natikar wrote:
 > 
-> Export can_set_direct_map, set_direct_map_invalid_noflush, and
-> set_direct_map_default_noflush.
+> On 2/22/2024 7:16 PM, Vinod Koul wrote:
+> > On 22-02-24, 14:00, Basavaraj Natikar wrote:
+> >> As 'Sanjay R Mehta' stepped down from the role of ptdma maintainer, I
+> >> request to be added as the new maintainer of AMD PTDMA.
+> > Should you not CC Sanjay?
+> 
+> Sanjay left AMD below email id is invalid to CC.
 
-Err, not they should not.  And not using such super low-level interfaces
-from modular code.
+Ouch, looks like he doesnt want to help with this, ideally he should
+have changed the email id here...
+
+I will pick this, better to have someone responsible than none
+
+> 
+> Thanks,
+> --
+> Basavaraj
+> 
+> >
+> >> Signed-off-by: Basavaraj Natikar <Basavaraj.Natikar@amd.com>
+> >> ---
+> >>  MAINTAINERS | 2 +-
+> >>  1 file changed, 1 insertion(+), 1 deletion(-)
+> >>
+> >> diff --git a/MAINTAINERS b/MAINTAINERS
+> >> index e2c6187a3ac8..becd09410b8c 100644
+> >> --- a/MAINTAINERS
+> >> +++ b/MAINTAINERS
+> >> @@ -1034,7 +1034,7 @@ F:	include/linux/amd-pstate.h
+> >>  F:	tools/power/x86/amd_pstate_tracer/amd_pstate_trace.py
+> >>  
+> >>  AMD PTDMA DRIVER
+> >> -M:	Sanjay R Mehta <sanju.mehta@amd.com>
+> >> +M:	Basavaraj Natikar <Basavaraj.Natikar@amd.com>
+> >>  L:	dmaengine@vger.kernel.org
+> >>  S:	Maintained
+> >>  F:	drivers/dma/ptdma/
+> >> -- 
+> >> 2.25.1
+
+-- 
+~Vinod
