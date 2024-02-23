@@ -1,81 +1,58 @@
-Received: from mail.flyingcircus.io (mail.flyingcircus.io [212.122.41.197])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 876D57F7CE;
-	Fri, 23 Feb 2024 14:10:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.122.41.197
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C3367E798;
+	Fri, 23 Feb 2024 14:11:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708697424; cv=none; b=mElLGR2+ZWdIPbUSwY/BWMefasntOxNXhAK4lsojRvyAKdq/c3u+zRMYN/skPA7T4iS1O0xehbgMGGDwk/WCJ8xgEQ5UICVTgAIPRTO3YVOXarAKD7FQyFSjVUWxUZJmFNbAs5Q5HlDqWcJSFaQFi3Lb9E+eCNsxzJn1cK1ZR34=
+	t=1708697463; cv=none; b=OA0Az2wcrZW2+MPa/BJLpynMJKvp2eQHE+Vps2rWE6TPUKcof0//Vsqe3CKLUYbSKzKu37t0w8vbN7t//ArnywOdn7WcmDCVQ+eaVEUl7XfdxDqUnreCCDxqcknVHBKG0tXJO6iHnF3EHM2Si5aCEkltc/sYEF9tYkpTmRQIqQs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708697424; c=relaxed/simple;
-	bh=DdomKR0wDWtw1msIsHKsZbMqZerkBGz5yzEdAw5eRNc=;
-	h=From:Content-Type:Mime-Version:Subject:Message-Id:Date:Cc:To; b=Q9xzCE1xYvQTsKtT1ZxTFofr6ezbIw6YF4SkvAX3n8gV+ldsqdlQ6u/CiRPJQOtEljgGHO7Kj4OqBwa2j5JjqfG1y5r0i56Q1/X+PNVKM3VJCFkZ5v28/Elsh1xzmHKIVvKOzMsHIdca+Ug7ApROwgUsSgZSpV3tBPeq/7wVIik=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=flyingcircus.io; spf=pass smtp.mailfrom=flyingcircus.io; dkim=pass (1024-bit key) header.d=flyingcircus.io header.i=@flyingcircus.io header.b=ALvdoC1n; arc=none smtp.client-ip=212.122.41.197
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=flyingcircus.io
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flyingcircus.io
+	s=arc-20240116; t=1708697463; c=relaxed/simple;
+	bh=v75Fs9X9q1QSBWVEqaXKpl9UZgm3FC+OfE2dPCm6xDw=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ejrNQn9wD5ayLteZ50vvsVsecsG/rShEB/a1y3XFwYrNdrruR/fgl1xXAUC0rZVE7yXe1j6Ws0guyLRpuTH2Rn5Wgmx/+//Q9KhBsvUMP43kEjDzbbHvSf9sGlVdgICAdHOIQ+Up+tsv6ZMP/0Vh6lKKOA642Gi+frmTicSAyiw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CEM1sfmN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=flyingcircus.io header.i=@flyingcircus.io header.b="ALvdoC1n"
-From: Christian Theune <ct@flyingcircus.io>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flyingcircus.io;
-	s=mail; t=1708696810;
-	bh=DdomKR0wDWtw1msIsHKsZbMqZerkBGz5yzEdAw5eRNc=;
-	h=From:Subject:Date:Cc:To;
-	b=ALvdoC1nl9f5fZXz6p4s8YOYNDvrNmlsf9Ola4oIjj8QSIjlTw6nsmCsfAJE+CYV6
-	 xJd2kBCgZerrVJ35S0dZ43n81AmI0u3xBlOwXoEvWMpm2sAa0CpTEqIY/Gq5TL0FSJ
-	 xM1D5KqgyChsHdBxVfh3mXXZzKHdeBLuGN0MdeLY=
-Content-Type: text/plain;
-	charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CEM1sfmN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6EACDC433F1;
+	Fri, 23 Feb 2024 14:11:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1708697463;
+	bh=v75Fs9X9q1QSBWVEqaXKpl9UZgm3FC+OfE2dPCm6xDw=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=CEM1sfmNXqk9FxBTGehsu+qSAzaTB9qX+Dv/4obdOrcBlqjJYk5v74qh26umjfyfG
+	 BlntPfwZmQP6KusyG7Mdm2L6a8aeXe78f3ZU9pgsjlRh7nOqvPoYoZ4addKRD00Hhx
+	 nvfYCpzCNB6afQzRtC9sPkh8nEXZg6CYLWTEjQ8NehTwRxonJz6hDBq62tqoj6YpYO
+	 u0pyg9C/eo7W+iYX3pO4+X+1qy+C9GAquZaUi9ip29ujspIgpTaHiLlJkpcnk44XWn
+	 A5Uq5VhJFv6gWlmAHmzuteDYZba9q/7f96EyEh5j/pAs9/d7zKx//q2592XRJfOcIB
+	 vlefHloA61SCA==
+Date: Fri, 23 Feb 2024 06:11:01 -0800
+From: Jakub Kicinski <kuba@kernel.org>
+To: Richard Gobert <richardbgobert@gmail.com>
+Cc: davem@davemloft.net, edumazet@google.com, pabeni@redhat.com,
+ idosch@nvidia.com, razor@blackwall.org, amcohen@nvidia.com,
+ petrm@nvidia.com, jbenc@redhat.com, b.galvani@gmail.com,
+ bpoirier@nvidia.com, gavinl@nvidia.com, martin.lau@kernel.org,
+ daniel@iogearbox.net, herbert@gondor.apana.org.au, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next 0/2] net: add local address bind support to
+ vxlan and geneve
+Message-ID: <20240223061101.6ab0d1e6@kernel.org>
+In-Reply-To: <df300a49-7811-4126-a56a-a77100c8841b@gmail.com>
+References: <df300a49-7811-4126-a56a-a77100c8841b@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3774.400.31\))
-Subject: nfs4_schedule_state_manager stuck in tight loop
-Message-Id: <8B04DA70-ABEF-44A4-BBA7-60968E6CFA10@flyingcircus.io>
-Date: Fri, 23 Feb 2024 14:59:49 +0100
-Cc: linux-kernel@vger.kernel.org,
- Linux regressions mailing list <regressions@lists.linux.dev>
-To: linux-nfs@vger.kernel.org,
- chuck.lever@oracle.com,
- jlayton@kernel.org
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Hi,
+On Thu, 22 Feb 2024 21:48:39 +0100 Richard Gobert wrote:
+> This series adds local address bind support to both vxlan
+> and geneve sockets.
 
-unfortunately I=E2=80=99m a bit light on details, but willing to provide =
-better diagnostics as this moves along.
-
-We=E2=80=99ve had two instances of NFS clients getting stuck with a =
-kernel thread spinning around `nfs4_schedule_state_manager` AFAICT:
-
-The first instance of this was last September on a Qemu VM running a =
-6.1.45 guest:
-
-root 315344 44.5 0.0 0 0 ? D Sep05 781:38 \_ [172.22.56.83-manager]
-
-It happened a second time in last December on another VM that was likely =
-running 5.15.139. (We downgraded our fleet due to other stability issues =
-from 6.1 to 5.15 in between those two incidents.)
-
-My colleagues told me that no issues were visible in the logs at that =
-time, the systems were generally usable but interacting with anything on =
-NFS was (obviously) stuck. So apparently no (soft-) lock ups and no =
-stalls were recorded, but I=E2=80=99ll ask my colleagues to either alert =
-me or provide all of the logging they can get the next time this =
-happens.
-
-Cheers,
-Christian
-
-PS: I=E2=80=99ve also recorded this in =
-https://bugzilla.kernel.org/show_bug.cgi?id=3D217877 but switching to =
-mail-based workflow now.
-
---=20
-Christian Theune =C2=B7 ct@flyingcircus.io =C2=B7 +49 345 219401 0
-Flying Circus Internet Operations GmbH =C2=B7 https://flyingcircus.io
-Leipziger Str. 70/71 =C2=B7 06108 Halle (Saale) =C2=B7 Deutschland
-HR Stendal HRB 21169 =C2=B7 Gesch=C3=A4ftsf=C3=BChrer: Christian Theune, =
-Christian Zagrodnick
-
+Looks like this breaks a lot of vxlan selftests.
+-- 
+pw-bot: cr
