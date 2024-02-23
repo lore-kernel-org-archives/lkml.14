@@ -1,38 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61022129A76;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E20D823AA;
 	Fri, 23 Feb 2024 17:17:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708708674; cv=none; b=t2pEA3Llbhd1+E3pRacgwVXZfX8YQwpfwDD5LjgEmTUJZXJF1U2T0yZ4Fr9rHgNzbg96KtaW6vYajIE5W5WtZ/DI20NaSbrwXYogXyeLJmRxguDPaV/Gzy7BpBhCRZUTKgdyuDGG1UuUEV0VHYqyIwkropBEwcoAFW1h0QB5TNc=
+	t=1708708674; cv=none; b=rxgWLCiEp6B+UTIDXMT3FMpd8Oz/pNf+bF1Wwo7IPs+g3fnQN17M7JpEU2jKIY2n55ZWAI6/oYf3oGj1qKsrZ5EdBpmGDmRXs8/eYF59Slx6LN/74PBMYghwDC7EfmSYnmQ+ryh7iTfelDok95ux9aJbMoyy57cF5OQiaPfE1Tw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1708708674; c=relaxed/simple;
-	bh=A+X94K8nLPrBsMOn/w5jdCaGJfXT7yw62EcicOP2vgo=;
+	bh=XqhHlRFOh0p3EzbWAlXwzezqrqqunXvXPS2teqhfFtE=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=deCf+VdQMHTow24+/vNStUYdyOJPRgLimVB25iSjJuL1L5mhyTFuPXKB4FcEi2REoMQvHPsDofsp8vyqv6qDX6ae+MEWW2ok63XN7hxB+q+rHyQh3eJJWkTTjq1wXtBaonQuWBOZ1pUqF5Xx1sr0T9duNc9suY4bbwkMYOqjLlQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AYQ5S7ir; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=TiTFGibMKxE4UOi/tbkt7p9XM3tO/jeACT6bfXW3lJ8gpptGwgjCDdjHEd+GZccwxvi21OVDIQ5Ivv2axHbOuvRzmAlquqi8HhlZPuT6Sw4xSJtFLHCX7Nx00q95dt7gEX3XUBvhShJc2pFIZwWGGaKh1ZtEtfjnicySBt1NPhA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PHPPPYMH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AYQ5S7ir"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 052AEC433A6;
-	Fri, 23 Feb 2024 17:17:54 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PHPPPYMH"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id E20D4C433C7;
+	Fri, 23 Feb 2024 17:17:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708708674;
-	bh=A+X94K8nLPrBsMOn/w5jdCaGJfXT7yw62EcicOP2vgo=;
+	s=k20201202; t=1708708673;
+	bh=XqhHlRFOh0p3EzbWAlXwzezqrqqunXvXPS2teqhfFtE=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=AYQ5S7iriLvhFbkr/s9vYpH8cXsRC1cZ4/ae1w1dBxqHwQ6iD/VbchoYrbNhTJvZA
-	 Q8hqlaA5pv6yChIuz3I6wynk5u+t2qZQJt+BN/xNzqUDx2Mpu/IkvbLdsZV/o7U87E
-	 P6zL9hYXaBdI4uRzLaF4dn0F47p1ECEAovP12KPY8xBLguMYmQs924BU98GRksVbR4
-	 6bfpvvtPNiW4wcl11KA+p8yriwAdHuUahQEdky1ycD4XQbQ6XyQDpRlzDhPbTN84NH
-	 wU5Ke2akhOhPqKnhPYCYCKBwtzZ7W1OD0Z0lNY0Oh30xkGA58VYTC3ALgGE1/xVlUp
-	 Bwm+7X8pHdWMQ==
+	b=PHPPPYMHk3SD6zFHr5mT0/7v5w7sJGl0SVyCcPz6mNL3Yax5nBepIdzrgz9mt5Np8
+	 F7kqUVsmmFFxdfJ9Jqz712L16S/yUEWEALHndSpzZBYAo/FqFnXornew+DOliMOsjh
+	 VniKrAnduCNFKXdLm/T7oBUf4cBi6z8bPWnGgdTEGa2iYnJlUOZXiEX7gzweXnaLjC
+	 GfkARMVY6ptQagew9blIoly7xWybAT9VFcXYl0jzmIZU9a9dqxd7U9SeWgq1y+nSQZ
+	 qthuAaZIdfPDBYiuxt+Bxft5o4nu2TZe5j+he29NHzWeYJQZzlk0195Qw9xQjJETac
+	 JAadwxBAhtpGw==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD5ECC54E4C;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2A41C5478C;
 	Fri, 23 Feb 2024 17:17:53 +0000 (UTC)
 From: Yang Xiwen via B4 Relay <devnull+forbidden405.outlook.com@kernel.org>
-Date: Sat, 24 Feb 2024 01:17:50 +0800
-Subject: [PATCH 2/2] usb: dwc3: of-simple: Add compatible for hi3798mv200
- DWC3 controller
+Date: Sat, 24 Feb 2024 01:17:49 +0800
+Subject: [PATCH 1/2] dt-bindings: usb: add hisilicon,hi3798mv200-dwc3
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,7 +40,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240224-dwc3-v1-2-7ffb2e2baa73@outlook.com>
+Message-Id: <20240224-dwc3-v1-1-7ffb2e2baa73@outlook.com>
 References: <20240224-dwc3-v1-0-7ffb2e2baa73@outlook.com>
 In-Reply-To: <20240224-dwc3-v1-0-7ffb2e2baa73@outlook.com>
 To: Thinh Nguyen <Thinh.Nguyen@synopsys.com>, 
@@ -52,11 +51,11 @@ To: Thinh Nguyen <Thinh.Nguyen@synopsys.com>,
 Cc: linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, 
  devicetree@vger.kernel.org, Yang Xiwen <forbidden405@outlook.com>
 X-Mailer: b4 0.12.4
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1708708670; l=809;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1708708670; l=3418;
  i=forbidden405@outlook.com; s=20230724; h=from:subject:message-id;
- bh=CsDB1ujYdciRCCnGm2g0rfxKORwEFR6rPwogWA69oCs=;
- b=kcoh+3OR2yb6Nda5qLA0fxQS1yg/KkgJopIiTZA9dyseQ3jAdY9OS150JxrtO5PGYvCJVh8PM
- wHTXeFJgFoZBNcKqFyUxan0nOs1qU67GVQjo2ooc6Bn3y90cbwKsR2a
+ bh=9rvmNBv3Zah3IzddwZbZZSDtAcRKW+fEa/VQRxUOm4Q=;
+ b=8Dm4hLdraiulGflzrU3rl1gEYtOktMQJHdPIsBeyoR/te/pnHcrgJ/JaddJYf0N4qRKVuf7Jf
+ hDU+0XGE7lSAV4Wfo/W4X/gjOZ6Cwz5+DIYvvCaaYJrB33xvOHL5E22
 X-Developer-Key: i=forbidden405@outlook.com; a=ed25519;
  pk=qOD5jhp891/Xzc+H/PZ8LWVSWE3O/XCQnAg+5vdU2IU=
 X-Endpoint-Received:
@@ -66,26 +65,119 @@ Reply-To: <forbidden405@outlook.com>
 
 From: Yang Xiwen <forbidden405@outlook.com>
 
-Hi3798MV200 uses dwc3 controller with a few more clocks and a dedicated
-resets. Use of_simple driver for it.
+Document the DWC3 controller used by Hi3798MV200.
 
 Signed-off-by: Yang Xiwen <forbidden405@outlook.com>
 ---
- drivers/usb/dwc3/dwc3-of-simple.c | 1 +
- 1 file changed, 1 insertion(+)
+ .../bindings/usb/hisilicon,hi3798mv200-dwc3.yaml   | 100 +++++++++++++++++++++
+ 1 file changed, 100 insertions(+)
 
-diff --git a/drivers/usb/dwc3/dwc3-of-simple.c b/drivers/usb/dwc3/dwc3-of-simple.c
-index d1539fc9eabd..158acae08af5 100644
---- a/drivers/usb/dwc3/dwc3-of-simple.c
-+++ b/drivers/usb/dwc3/dwc3-of-simple.c
-@@ -173,6 +173,7 @@ static const struct of_device_id of_dwc3_simple_match[] = {
- 	{ .compatible = "sprd,sc9860-dwc3" },
- 	{ .compatible = "allwinner,sun50i-h6-dwc3" },
- 	{ .compatible = "hisilicon,hi3670-dwc3" },
-+	{ .compatible = "hisilicon,hi3798mv200-dwc3" },
- 	{ .compatible = "intel,keembay-dwc3" },
- 	{ /* Sentinel */ }
- };
+diff --git a/Documentation/devicetree/bindings/usb/hisilicon,hi3798mv200-dwc3.yaml b/Documentation/devicetree/bindings/usb/hisilicon,hi3798mv200-dwc3.yaml
+new file mode 100644
+index 000000000000..0884d1ba6723
+--- /dev/null
++++ b/Documentation/devicetree/bindings/usb/hisilicon,hi3798mv200-dwc3.yaml
+@@ -0,0 +1,100 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/usb/hisilicon,hi3798mv200-dwc3.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: HiSilicon Hi3798MV200 DWC3 USB SoC controller
++
++maintainers:
++  - Yang Xiwen <forbidden405@foxmail.com>
++
++properties:
++  compatible:
++    const: hisilicon,hi3798mv200-dwc3
++
++  '#address-cells':
++    const: 1
++
++  '#size-cells':
++    const: 1
++
++  ranges: true
++
++  clocks:
++    items:
++      - description: Controller bus clock
++      - description: Controller suspend clock
++      - description: Controller reference clock
++      - description: Controller gm clock
++      - description: Controller gs clock
++      - description: Controller utmi clock
++      - description: Controller pipe clock
++
++  clock-names:
++    items:
++      - const: bus
++      - const: suspend
++      - const: ref
++      - const: gm
++      - const: gs
++      - const: utmi
++      - const: pipe
++
++  resets:
++    maxItems: 1
++
++  reset-names:
++    const: soft
++
++patternProperties:
++  '^usb@[0-9a-z]+$':
++    $ref: snps,dwc3.yaml#
++
++additionalProperties: false
++
++required:
++  - compatible
++  - '#address-cells'
++  - '#size-cells'
++  - ranges
++  - clocks
++  - clock-names
++  - resets
++  - reset-names
++
++examples:
++  - |
++    #include <dt-bindings/clock/histb-clock.h>
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++
++    usb@98a0000 {
++            compatible = "hisilicon,hi3798mv200-dwc3";
++            #address-cells = <1>;
++            #size-cells = <1>;
++            ranges;
++            clocks = <&crg HISTB_USB3_BUS_CLK>,
++                     <&crg HISTB_USB3_SUSPEND_CLK>,
++                     <&crg HISTB_USB3_REF_CLK>,
++                     <&crg HISTB_USB3_GM_CLK>,
++                     <&crg HISTB_USB3_GS_CLK>,
++                     <&crg HISTB_USB3_UTMI_CLK>,
++                     <&crg HISTB_USB3_PIPE_CLK>;
++            clock-names = "bus", "suspend", "ref", "gm", "gs", "utmi", "pipe";
++            resets = <&crg 0xb0 12>;
++            reset-names = "soft";
++
++            usb@98a0000 {
++                    compatible = "snps,dwc3";
++                    reg = <0x98a0000 0x10000>;
++                    interrupts = <GIC_SPI 69 IRQ_TYPE_LEVEL_HIGH>;
++                    clocks = <&crg HISTB_USB3_BUS_CLK>,
++                             <&crg HISTB_USB3_SUSPEND_CLK>,
++                             <&crg HISTB_USB3_REF_CLK>;
++                    clock-names = "bus_early", "suspend", "ref";
++                    phys = <&usb2_phy1_port2>, <&combphy0 0>;
++                    phy-names = "usb2-phy", "usb3-phy";
++                    maximum-speed = "super-speed";
++                    dr_mode = "host";
++            };
++    };
 
 -- 
 2.43.0
