@@ -1,37 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A24562CA5;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B256111B5;
 	Fri, 23 Feb 2024 03:49:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708660190; cv=none; b=oxfJ+JWkwJ1+CBA3F2LwiFUY9lF4k06aD2v6k71WIpXX3eC2G6K+0xsazai5Zqx95i7v6rvLW3/Kp0sR8f25SlneU12yyFhc8FwyDOMutOYhjN9GNvL3MDX2PU/dzkiHwzTPML7zCyZ0yYGzgtm8+5y2hqy0XrZ2DGr4qRJBSKs=
+	t=1708660191; cv=none; b=m6Gv8wP1R1wnrf/Hairuiv60/0tUenJA1UDIXvOnqSEqDhTIvbqVebzRUg1kDrXnvZDdnNB/EZlUrwxaNl6FukPD3ScDesGDEdiEjyd7Us4X1B8YrsDGGlcFVKhakaJJlH8k18wiRuBzL//jPpqT+r6Wgi2hr/yxohmc6bnI7Y8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708660190; c=relaxed/simple;
-	bh=FABj5PqTYhnM786LMrFtQ0eBls3CUT1p0QbNHPCEQCs=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=IadMFZFvRZjABMqKA/ZjSU44eFoHSWxpASg8ivufdFjus0ZckTRTRCupAuobQrDO95tVWyukZfAjJWfdgXXPOY7DIqfXraeFh1/KfWmevsWL9P/QRgnFw50V31XVlk7t+Zlzz0VBb1ao3oxIjdjNVrb9KZynihbeALgL1fES9qc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pWTmeLFu; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1708660191; c=relaxed/simple;
+	bh=TWYzt4cWE702k5VOaGpWj9p2plXpYzNDkLilGGhbLfg=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=TTEH5YVBXzjxuVjcHy3WRjyT0Ug6AD5o325xNoz27jt2aRl/YMhK8Dwa9ibEdp2G3dpinLtV93km3ITK7vaPauxxGJKEnK6hdFmwdGEt+TwfMXQGfJyXu7rwXHDog7Iv0YZt9abVoKUdoihLmNaqMSB8w1oDlQ93YgcqPCbhZqM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jqc+9AuQ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pWTmeLFu"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 6E36EC433C7;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jqc+9AuQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 9B710C433A6;
 	Fri, 23 Feb 2024 03:49:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1708660190;
-	bh=FABj5PqTYhnM786LMrFtQ0eBls3CUT1p0QbNHPCEQCs=;
-	h=From:Subject:Date:To:Cc:Reply-To:From;
-	b=pWTmeLFuio0Ad5mcU+z4JGB4eT3C3VXIbezT4tSRCwKbeC7UUBV2XBJVMggGBirwU
-	 YOoYcgQsk3wluZGgxgkPApCfx3Gox4oilEmE2gKj0PBYYJV4ItAQy6ataCGXfOo8ck
-	 pFRp40DmNTTlQzkmOvyolJJBBS6B1xBYu/eiKrZxVASV83RKD/x8fYgixAmAY8k82G
-	 +rkNLGiNq/fvTW7km70I7puU3hu2Wu3uav0UVRtpENoA9ULvOOaImxjrPwmgWg8mJr
-	 BUtlfDAUggFxRV8wztTArEZXZaWsV5ibb/2WvHBCo+n5NecyjhssF9jqIo5pDmD4AK
-	 YYZpgBGPLWAag==
+	bh=TWYzt4cWE702k5VOaGpWj9p2plXpYzNDkLilGGhbLfg=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+	b=jqc+9AuQt9R+RFyxDbEXLasVKrOHbloI3R9NUuBgLCLw7/qNkRGQx0FDzweBtoO72
+	 h8brlCRB+MH8L+ZcTFyn5hme99s75Bi4yFwxKyGPpJ4Dj0L/tBbkaugzGVP/g4LT7D
+	 Bh5xkGwUVOqQrB4h7m3JUjxin/esA1qWVU0H3qXtdTAchnGWLRNcKiHzENybnHXQa0
+	 a3vZczf0lGAJUw+60ovLSDoKFZS0KmDHZikCSuPGWL2NTUE3fDZkmzHKr/+i9DMuNP
+	 UYKuuqo0AXBvrepPVMMFUkCKqGgtXhxXOx2NvUUexnBYpwTMlAtAwGKrbCzHQcBGdR
+	 URzHf17w2vt4w==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58CCAC48BC4;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E373C54798;
 	Fri, 23 Feb 2024 03:49:50 +0000 (UTC)
 From: Yang Xiwen via B4 Relay <devnull+forbidden405.outlook.com@kernel.org>
-Subject: [PATCH 0/2] simple-pm-bus: deassert resets if possible
-Date: Fri, 23 Feb 2024 11:49:45 +0800
-Message-Id: <20240223-b4-bus-v1-0-2803c3ac4673@outlook.com>
+Date: Fri, 23 Feb 2024 11:49:47 +0800
+Subject: [PATCH 2/2] drivers: bus: simple-pm-bus: Get and deassert resets
+ exclusively
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -40,9 +41,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIANkV2GUC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
- vPSU3UzU4B8JSMDIxMDIyNj3SQT3aTSYt0U02SzNHPTRCNTw0QloOKCotS0zAqwQdGxtbUAock
- 28lgAAAA=
+Message-Id: <20240223-b4-bus-v1-2-2803c3ac4673@outlook.com>
+References: <20240223-b4-bus-v1-0-2803c3ac4673@outlook.com>
+In-Reply-To: <20240223-b4-bus-v1-0-2803c3ac4673@outlook.com>
 To: Rob Herring <robh+dt@kernel.org>, 
  Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
  Conor Dooley <conor+dt@kernel.org>, 
@@ -51,11 +52,11 @@ To: Rob Herring <robh+dt@kernel.org>,
 Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
  Yang Xiwen <forbidden405@outlook.com>
 X-Mailer: b4 0.12.4
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1708660187; l=658;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1708660187; l=1979;
  i=forbidden405@outlook.com; s=20230724; h=from:subject:message-id;
- bh=FABj5PqTYhnM786LMrFtQ0eBls3CUT1p0QbNHPCEQCs=;
- b=lAjMgm0upwe5GNEV4wO9MDqjNe+0Gto1rn6DLXSaTmlZoFGjD2+RXTGbL9uwWw6+3sir5+WNP
- tQQ29dl5Rw1AQ8/E5UGsm02f5c26NWy06kxgA0nYOhW9ArEmiBAfR67
+ bh=JWFA4aEPe9UmKX/cnL2dAlkZhpNjtIvdqZ32qXjuGyM=;
+ b=qcHy1AJ2U0hzEwKWQHgC3iK0+xqjk8WbWl2uq7fhr6LqaRXcHt0ct/VyrmF1YNi9UhZRUXtJi
+ 6PhcXTFCv+eBZKsu7+gUxThU6jlKAvTTFu0oUsKCCNpUvnj66v+mIiW
 X-Developer-Key: i=forbidden405@outlook.com; a=ed25519;
  pk=qOD5jhp891/Xzc+H/PZ8LWVSWE3O/XCQnAg+5vdU2IU=
 X-Endpoint-Received:
@@ -63,23 +64,71 @@ X-Endpoint-Received:
 X-Original-From: Yang Xiwen <forbidden405@outlook.com>
 Reply-To: <forbidden405@outlook.com>
 
-simple power-managed buses can also have resets. Get and deassert them
-if possible.
+From: Yang Xiwen <forbidden405@outlook.com>
+
+Simple Power-Managed bus controller may need functional reset(s)
+to be deasserted before child devices connected to the bus can be
+accessed.  Get the reset(s) as an array and assert/deassert the
+reset(s) when the bus is being power managed.
+
+One example is that HiSilicon USB2 INNO PHY test bus needs to deassert
+the reset to the bus before accessing its registers.
 
 Signed-off-by: Yang Xiwen <forbidden405@outlook.com>
 ---
-Yang Xiwen (2):
-      dt-bindings: simple-pm-bus: Add optional resets
-      drivers: bus: simple-pm-bus: Get and deassert resets exclusively
+ drivers/bus/simple-pm-bus.c | 14 +++++++++++++-
+ 1 file changed, 13 insertions(+), 1 deletion(-)
 
- Documentation/devicetree/bindings/bus/simple-pm-bus.yaml |  7 +++++--
- drivers/bus/simple-pm-bus.c                              | 14 +++++++++++++-
- 2 files changed, 18 insertions(+), 3 deletions(-)
----
-base-commit: 8d3dea210042f54b952b481838c1e7dfc4ec751d
-change-id: 20240223-b4-bus-d5c6f75a251a
+diff --git a/drivers/bus/simple-pm-bus.c b/drivers/bus/simple-pm-bus.c
+index 50870c827889..d84dbd61c02b 100644
+--- a/drivers/bus/simple-pm-bus.c
++++ b/drivers/bus/simple-pm-bus.c
+@@ -16,9 +16,11 @@
+ #include <linux/of_platform.h>
+ #include <linux/platform_device.h>
+ #include <linux/pm_runtime.h>
++#include <linux/reset.h>
+ 
+ struct simple_pm_bus {
+ 	struct clk_bulk_data *clks;
++	struct reset_control *rsts;
+ 	int num_clks;
+ };
+ 
+@@ -62,6 +64,10 @@ static int simple_pm_bus_probe(struct platform_device *pdev)
+ 	if (bus->num_clks < 0)
+ 		return dev_err_probe(&pdev->dev, bus->num_clks, "failed to get clocks\n");
+ 
++	bus->rsts = devm_reset_control_array_get(dev, false, true);
++	if (IS_ERR(bus->rsts))
++		return dev_err_probe(&pdev->dev, PTR_ERR(bus->rsts), "failed to get resets\n");
++
+ 	dev_set_drvdata(&pdev->dev, bus);
+ 
+ 	dev_dbg(&pdev->dev, "%s\n", __func__);
+@@ -92,7 +98,7 @@ static int simple_pm_bus_runtime_suspend(struct device *dev)
+ 
+ 	clk_bulk_disable_unprepare(bus->num_clks, bus->clks);
+ 
+-	return 0;
++	return reset_control_assert(bus->rsts);
+ }
+ 
+ static int simple_pm_bus_runtime_resume(struct device *dev)
+@@ -106,6 +112,12 @@ static int simple_pm_bus_runtime_resume(struct device *dev)
+ 		return ret;
+ 	}
+ 
++	ret = reset_control_deassert(bus->rsts);
++	if (ret) {
++		dev_err(dev, "failed to deassert resets: %d\n", ret);
++		return ret;
++	}
++
+ 	return 0;
+ }
+ 
 
-Best regards,
 -- 
-Yang Xiwen <forbidden405@outlook.com>
+2.43.0
 
