@@ -1,113 +1,187 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DA02524F
-	for <linux-kernel@vger.kernel.org>; Fri, 23 Feb 2024 14:36:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC7CD4C9F;
+	Fri, 23 Feb 2024 14:37:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708698977; cv=none; b=etuXacX/Np5oYU9C7dPtr9K2/EpIn+GruSgkcue3JCdbQ0ARg/RMGiepV+Ec/6OPLIS3Hxeg4eMfcSCxE12LcZGB9f7ieZsIQ/8EFwBIXNuqih9zY/ngZwKdjs809EeHyd7XxUDmE4J9830vmuwKikG2YnswrKc/SLNQkA0lq0w=
+	t=1708699064; cv=none; b=bq3Y1Nx1dgIEguszRsfh4716v5BAqqTc6DVOMsSjlaR1/o+ttYzzcdbRTOe7UiQJgkuNTKsbi0/ypz7Y1ejXbTjmzorNQsFUpa2jk9MKuZIYHLGn+QY/31SXcWx/88YQjLOUQzOnOigpaWQP3RjNMUqucHHgM2mgIq6Wk7EqQa4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708698977; c=relaxed/simple;
-	bh=HmMMDpNkcyRtych0ZhQFvwfVcCaO6TfBMFxTojcX5pY=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=LYqBnopwG26KY62VmUR36Dz+/lAn3Si+AvhsYPVKolOX/YmTvk8RIYmyqPYxHL35mLt6I/rnXFhEBpNeArnj70FK6owA69XKsego50Ga9Y1qL0ZzOvGcXZRCA4ARaydnEIxsGZ8q3R8VIdC2RnM0RdrNVXKW8iTXRTJnKsqQpOk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XIZm/7xY; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XIZm/7xY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EF221C433C7;
-	Fri, 23 Feb 2024 14:36:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708698977;
-	bh=HmMMDpNkcyRtych0ZhQFvwfVcCaO6TfBMFxTojcX5pY=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=XIZm/7xYGPoKHRs51V+oY3uBkS3ll1xRo/8xu4nwYPkqaRVSF1dMKgy0Nx1rr/KdI
-	 6CVxXAYKOaY95cv3hFTD0iTf6tG5WiELVweYxxUYX3IHS4eCgt+XVHj/XmIK0GoQLj
-	 1DjhJQiE79+IYgWIxFBW9LlPQayPQpdJLqjcU7JoeQMJpZ+CMAKUYXfUJVBOKVpIJc
-	 p8a1zbUfBSgYn+Qy8Zqp2pfZpgio3FsftN9gpudqIsTp/rm/3lK2QKZApIqf/ZnXAv
-	 78IAyzG/B2ff7THWSpNYmRwvOylfy4Ek3P6TiXF+2tjf/HshG4nazyxS3pJeIHQbOk
-	 oo9nzhwzA2ULA==
-Message-ID: <191757a0ccb52fefa17b690a44299442fcb4e052.camel@kernel.org>
-Subject: Re: [for-next][PATCH 06/13] NFSD: Fix nfsd_clid_class use of
- __string_len() macro
-From: Jeff Layton <jlayton@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>, linux-kernel@vger.kernel.org
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland
- <mark.rutland@arm.com>,  Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Andrew Morton
- <akpm@linux-foundation.org>, Neil Brown <neilb@suse.de>, Olga Kornievskaia
- <kolga@netapp.com>, Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey
- <tom@talpey.com>, Chuck Lever <chuck.lever@oracle.com>
-Date: Fri, 23 Feb 2024 09:36:14 -0500
-In-Reply-To: <20240223141902.394601874@goodmis.org>
-References: <20240223141838.985298316@goodmis.org>
-	 <20240223141902.394601874@goodmis.org>
-Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
- keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxwn8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1WvegyjnSsFt7EGoDjdKqr1TS9syJYFjagYtvWk/UfHlW09X+jOh4vYtfX7iYSx/NfqV3W1D7EDi0PqVT2h6v8i8YqsATFPwO4nuiTmL6I40ZofxVd+9wdRI4Db8yUNA4ZSP2nqLcLtFjClYRBoJvRWvsv4lm0OX6MYPtv76hka8lW4mnRmZqqx3UtfHX/hF/zH24Gj7A6sYKYLCU3YrI2Ogiu7/ksKcl7goQjpvtVYrOOI5VGLHge0awt7bhMCTM9KAfPc+xL/ZxAMVWd3NCk5SamL2cE99UWgtvNOIYU8m6EjTLhsj8snVluJH0/RcxEeFbnSaswVChNSGa7mXJrTR22lRL6ZPjdMgS2Km90haWPRc8Wolcz07Y2se0xpGVLEQcDEsvv5IMmeMe1/qLZ6NaVkNuL3WOXvxaVT9USW1+/SGipO2IpKJjeDZfehlB/kpfF24+RrK+seQfCBYyUE8QJpvTZyfUHNYldXlrjO6n5MdOempLqWpfOmcGkwnyNRBR46g/jf8KnPRwXs509yAqDB6sELZH+yWr9LQZEwARAQABtCVKZWZmIExheXRvbiA8amxheXRvbkBwb29jaGllcmVkcy5uZXQ+iQI7BBMBAgAlAhsDBgsJCAcDAgYVCAIJCgsEFgIDAQIeAQIXgAUCTpXWPAIZAQAKCRAADmhBGVaCFc65D/4gBLNMHopQYgG/9RIM3kgFCCQV0pLv0hcg1cjr+bPI5f1PzJoOVi9s0wBDHwp8+vtHgYhM54yt43uI7Htij0RHFL5eFqoVT4TSfAg2qlvNemJEOY0e4daljjmZM7UtmpGs9NN0r9r50W82eb5Kw5bc/
-	r0kmR/arUS2st+ecRsCnwAOj6HiURwIgfDMHGPtSkoPpu3DDp/cjcYUg3HaOJuTjtGHFH963B+f+hyQ2BrQZBBE76ErgTDJ2Db9Ey0kw7VEZ4I2nnVUY9B5dE2pJFVO5HJBMp30fUGKvwaKqYCU2iAKxdmJXRIONb7dSde8LqZahuunPDMZyMA5+mkQl7kpIpR6kVDIiqmxzRuPeiMP7O2FCUlS2DnJnRVrHmCljLkZWf7ZUA22wJpepBligemtSRSbqCyZ3B48zJ8g5B8xLEntPo/NknSJaYRvfEQqGxgk5kkNWMIMDkfQOlDSXZvoxqU9wFH/9jTv1/6p8dHeGM0BsbBLMqQaqnWiVt5mG92E1zkOW69LnoozE6Le+12DsNW7RjiR5K+27MObjXEYIW7FIvNN/TQ6U1EOsdxwB8o//Yfc3p2QqPr5uS93SDDan5ehH59BnHpguTc27XiQQZ9EGiieCUx6Zh2ze3X2UW9YNzE15uKwkkuEIj60NvQRmEDfweYfOfPVOueC+iFifbQgSmVmZiBMYXl0b24gPGpsYXl0b25AcmVkaGF0LmNvbT6JAjgEEwECACIFAk6V0q0CGwMGCwkIBwMCBhUIAgkKCwQWAgMBAh4BAheAAAoJEAAOaEEZVoIViKUQALpvsacTMWWOd7SlPFzIYy2/fjvKlfB/Xs4YdNcf9qLqF+lk2RBUHdR/dGwZpvw/OLmnZ8TryDo2zXVJNWEEUFNc7wQpl3i78r6UU/GUY/RQmOgPhs3epQC3PMJj4xFx+VuVcf/MXgDDdBUHaCTT793hyBeDbQuciARDJAW24Q1RCmjcwWIV/pgrlFa4lAXsmhoac8UPc82Ijrs6ivlTweFf16VBc4nSLX5FB3ls7S5noRhm5/Zsd4PGPgIHgCZcPgkAnU1S/A/rSqf3FLpU+CbVBDvlVAnOq9gfNF+QiTlOHdZVIe4gEYAU3CUjbleywQqV02BKxPVM0C5/oVjMVx
-	3bri75n1TkBYGmqAXy9usCkHIsG5CBHmphv9MHmqMZQVsxvCzfnI5IO1+7MoloeeW/lxuyd0pU88dZsV/riHw87i2GJUJtVlMl5IGBNFpqoNUoqmvRfEMeXhy/kUX4Xc03I1coZIgmwLmCSXwx9MaCPFzV/dOOrju2xjO+2sYyB5BNtxRqUEyXglpujFZqJxxau7E0eXoYgoY9gtFGsspzFkVNntamVXEWVVgzJJr/EWW0y+jNd54MfPRqH+eCGuqlnNLktSAVz1MvVRY1dxUltSlDZT7P2bUoMorIPu8p7ZCg9dyX1+9T6Muc5dHxf/BBP/ir+3e8JTFQBFOiLNdFtB9KZWZmIExheXRvbiA8amxheXRvbkBzYW1iYS5vcmc+iQI4BBMBAgAiBQJOldK9AhsDBgsJCAcDAgYVCAIJCgsEFgIDAQIeAQIXgAAKCRAADmhBGVaCFWgWD/0ZRi4hN9FK2BdQs9RwNnFZUr7JidAWfCrs37XrA/56olQl3ojn0fQtrP4DbTmCuh0SfMijB24psy1GnkPepnaQ6VRf7Dxg/Y8muZELSOtsv2CKt3/02J1BBitrkkqmHyni5fLLYYg6fub0T/8Kwo1qGPdu1hx2BQRERYtQ/S5d/T0cACdlzi6w8rs5f09hU9Tu4qV1JLKmBTgUWKN969HPRkxiojLQziHVyM/weR5Reu6FZVNuVBGqBD+sfk/c98VJHjsQhYJijcsmgMb1NohAzwrBKcSGKOWJToGEO/1RkIN8tqGnYNp2G+aR685D0chgTl1WzPRM6mFG1+n2b2RR95DxumKVpwBwdLPoCkI24JkeDJ7lXSe3uFWISstFGt0HL8EewP8RuGC8s5h7Ct91HMNQTbjgA+Vi1foWUVXpEintAKgoywaIDlJfTZIl6Ew8ETN/7DLy8bXYgq0XzhaKg3CnOUuGQV5/nl4OAX/3jocT5Cz/OtAiNYj5mLPeL5z2ZszjoCAH6caqsF2oLyA
-	nLqRgDgR+wTQT6gMhr2IRsl+cp8gPHBwQ4uZMb+X00c/Amm9VfviT+BI7B66cnC7Zv6Gvmtu2rEjWDGWPqUgccB7hdMKnKDthkA227/82tYoFiFMb/NwtgGrn5n2vwJyKN6SEoygGrNt0SI84y6hEVbQlSmVmZiBMYXl0b24gPGpsYXl0b25AcHJpbWFyeWRhdGEuY29tPokCOQQTAQIAIwUCU4xmKQIbAwcLCQgHAwIBBhUIAgkKCwQWAgMBAh4BAheAAAoJEAAOaEEZVoIV1H0P/j4OUTwFd7BBbpoSp695qb6HqCzWMuExsp8nZjruymMaeZbGr3OWMNEXRI1FWNHMtcMHWLP/RaDqCJil28proO+PQ/yPhsr2QqJcW4nr91tBrv/MqItuAXLYlsgXqp4BxLP67bzRJ1Bd2x0bWXurpEXY//VBOLnODqThGEcL7jouwjmnRh9FTKZfBDpFRaEfDFOXIfAkMKBa/c9TQwRpx2DPsl3eFWVCNuNGKeGsirLqCxUg5kWTxEorROppz9oU4HPicL6rRH22Ce6nOAON2vHvhkUuO3GbffhrcsPD4DaYup4ic+DxWm+DaSSRJ+e1yJvwi6NmQ9P9UAuLG93S2MdNNbosZ9P8k2mTOVKMc+GooI9Ve/vH8unwitwo7ORMVXhJeU6Q0X7zf3SjwDq2lBhn1DSuTsn2DbsNTiDvqrAaCvbsTsw+SZRwF85eG67eAwouYk+dnKmp1q57LDKMyzysij2oDKbcBlwB/TeX16p8+LxECv51asjS9TInnipssssUDrHIvoTTXWcz7Y5wIngxDFwT8rPY3EggzLGfK5Zx2Q5S/N0FfmADmKknG/D8qGIcJE574D956tiUDKN4I+/g125ORR1v7bP+OIaayAvq17RP+qcAqkxc0x8iCYVCYDouDyNvWPGRhbLUO7mlBpjW9jK9e2fvZY9iw3QzIPGKtClKZWZmIExheXRvbiA8amVmZi5sYXl0
-	b25AcHJpbWFyeWRhdGEuY29tPokCOQQTAQIAIwUCU4xmUAIbAwcLCQgHAwIBBhUIAgkKCwQWAgMBAh4BAheAAAoJEAAOaEEZVoIVzJoQALFCS6n/FHQS+hIzHIb56JbokhK0AFqoLVzLKzrnaeXhE5isWcVg0eoV2oTScIwUSUapy94if69tnUo4Q7YNt8/6yFM6hwZAxFjOXR0ciGE3Q+Z1zi49Ox51yjGMQGxlakV9ep4sV/d5a50M+LFTmYSAFp6HY23JN9PkjVJC4PUv5DYRbOZ6Y1+TfXKBAewMVqtwT1Y+LPlfmI8dbbbuUX/kKZ5ddhV2736fgyfpslvJKYl0YifUOVy4D1G/oSycyHkJG78OvX4JKcf2kKzVvg7/Rnv+AueCfFQ6nGwPn0P91I7TEOC4XfZ6a1K3uTp4fPPs1Wn75X7K8lzJP/p8lme40uqwAyBjk+IA5VGd+CVRiyJTpGZwA0jwSYLyXboX+Dqm9pSYzmC9+/AE7lIgpWj+3iNisp1SWtHc4pdtQ5EU2SEz8yKvDbD0lNDbv4ljI7eflPsvN6vOrxz24mCliEco5DwhpaaSnzWnbAPXhQDWb/lUgs/JNk8dtwmvWnqCwRqElMLVisAbJmC0BhZ/Ab4sph3EaiZfdXKhiQqSGdK4La3OTJOJYZphPdGgnkvDV9Pl1QZ0ijXQrVIy3zd6VCNaKYq7BAKidn5g/2Q8oio9Tf4XfdZ9dtwcB+bwDJFgvvDYaZ5bI3ln4V3EyW5i2NfXazz/GA/I/ZtbsigCFc8ftCBKZWZmIExheXRvbiA8amxheXRvbkBrZXJuZWwub3JnPokCOAQTAQIAIgUCWe8u6AIbAwYLCQgHAwIGFQgCCQoLBBYCAwECHgECF4AACgkQAA5oQRlWghUuCg/+Lb/xGxZD2Q1oJVAE37uW308UpVSD2tAMJUvFTdDbfe3zKlPDTuVsyNsALBGclPLagJ5ZTP+Vp2irAN9uwBuac
-	BOTtmOdz4ZN2tdvNgozzuxp4CHBDVzAslUi2idy+xpsp47DWPxYFIRP3M8QG/aNW052LaPc0cedYxp8+9eiVUNpxF4SiU4i9JDfX/sn9XcfoVZIxMpCRE750zvJvcCUz9HojsrMQ1NFc7MFT1z3MOW2/RlzPcog7xvR5ENPH19ojRDCHqumUHRry+RF0lH00clzX/W8OrQJZtoBPXv9ahka/Vp7kEulcBJr1cH5Wz/WprhsIM7U9pse1f1gYy9YbXtWctUz8uvDR7shsQxAhX3qO7DilMtuGo1v97I/Kx4gXQ52syh/w6EBny71CZrOgD6kJwPVVAaM1LRC28muq91WCFhs/nzHozpbzcheyGtMUI2Ao4K6mnY+3zIuXPygZMFr9KXE6fF7HzKxKuZMJOaEZCiDOq0anx6FmOzs5E6Jqdpo/mtI8beK+BE7Va6ni7YrQlnT0i3vaTVMTiCThbqsB20VrbMjlhpf8lfK1XVNbRq/R7GZ9zHESlsa35ha60yd/j3pu5hT2xyy8krV8vGhHvnJ1XRMJBAB/UYb6FyC7S+mQZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65ke5Ag0ETpXRPAEQAJkVmzCmF+IEenf9a2nZRXMluJohnfl2wCMmw5qNzyk0f+mYuTwTCpw7BE2H0yXk4ZfAuA+xdj14K0A1Dj52j/fKRuDqoNAhQe0b6ipo85Sz98G+XnmQOMeFVp5G1Z7r/QP/nus3mXvtFsu9lLSjMA0cam2NLDt7vx3l9kUYlQBhyIE7/DkKg+3fdqRg7qJoMHNcODtQY+n3hMyaVpplJ/l0DdQDbRSZi5AzDM3DWZEShhuP6/E2LN4O3xWnZukEiz688d1ppl7vBZO9wBql6Ft9Og74diZrTN6lXGGjEWRvO55h6ijMsLCLNDRAVehPhZvSlPldtUuvhZLAjdWpwmzbRIwgoQcO51aWeKthpcpj8feDdKdlVjvJO9fgFD5kqZ
-	QiErRVPpB7VzA/pYV5Mdy7GMbPjmO0IpoL0tVZ8JvUzUZXB3ErS/dJflvboAAQeLpLCkQjqZiQ/DCmgJCrBJst9Xc7YsKKS379Tc3GU33HNSpaOxs2NwfzoesyjKU+P35czvXWTtj7KVVSj3SgzzFk+gLx8y2Nvt9iESdZ1Ustv8tipDsGcvIZ43MQwqU9YbLg8k4V9ch+Mo8SE+C0jyZYDCE2ZGf3OztvtSYMsTnF6/luzVyej1AFVYjKHORzNoTwdHUeC+9/07GO0bMYTPXYvJ/vxBFm3oniXyhgb5FtABEBAAGJAh8EGAECAAkFAk6V0TwCGwwACgkQAA5oQRlWghXhZRAAyycZ2DDyXh2bMYvI8uHgCbeXfL3QCvcw2XoZTH2l2umPiTzrCsDJhgwZfG9BDyOHaYhPasd5qgrUBtjjUiNKjVM+Cx1DnieR0dZWafnqGv682avPblfi70XXr2juRE/fSZoZkyZhm+nsLuIcXTnzY4D572JGrpRMTpNpGmitBdh1l/9O7Fb64uLOtA5Qj5jcHHOjL0DZpjmFWYKlSAHmURHrE8M0qRryQXvlhoQxlJR4nvQrjOPMsqWD5F9mcRyowOzr8amasLv43w92rD2nHoBK6rbFE/qC7AAjABEsZq8+TQmueN0maIXUQu7TBzejsEbV0i29z+kkrjU2NmK5pcxgAtehVxpZJ14LqmN6E0suTtzjNT1eMoqOPrMSx+6vOCIuvJ/MVYnQgHhjtPPnU86mebTY5Loy9YfJAC2EVpxtcCbx2KiwErTndEyWL+GL53LuScUD7tW8vYbGIp4RlnUgPLbqpgssq2gwYO9m75FGuKuB2+2bCGajqalid5nzeq9v7cYLLRgArJfOIBWZrHy2m0C+pFu9DSuV6SNr2dvMQUv1V58h0FaSOxHVQnJdnoHn13g/CKKvyg2EMrMt/EfcXgvDwQbnG9we4xJiWOIOcsvrWcB6C6lWBDA+In7w7SXnnok
-	kZWuOsJdJQdmwlWC5L5ln9xgfr/4mOY38B0U=
-Content-Type: text/plain; charset="ISO-8859-15"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.50.4 (3.50.4-1.fc39) 
+	s=arc-20240116; t=1708699064; c=relaxed/simple;
+	bh=lvbjD2z9NHzDWPv/TQz12bdxnv+pmG3sMvEDkHDpAKQ=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=r/jjZRjO3rDSky6fbTPJlZo2Vq+kn0tiXgLuvB+6JTiF7MK+4GfpBWf6rH1NlPg2PfW2DbRuf2D2deKJacX3I4eZLaQxJNZ/r+p1qB7kGvuh80UEpddA8cnbwuTH4VBJh1irlHbld+0cR3f7aswcme5ngSWu4mooMwzcrYC28pc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.216])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4ThCF44XpBz6K8d2;
+	Fri, 23 Feb 2024 22:34:00 +0800 (CST)
+Received: from lhrpeml500006.china.huawei.com (unknown [7.191.161.198])
+	by mail.maildlp.com (Postfix) with ESMTPS id B5B62140D26;
+	Fri, 23 Feb 2024 22:37:39 +0800 (CST)
+Received: from SecurePC30232.china.huawei.com (10.122.247.234) by
+ lhrpeml500006.china.huawei.com (7.191.161.198) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Fri, 23 Feb 2024 14:37:38 +0000
+From: <shiju.jose@huawei.com>
+To: <linux-cxl@vger.kernel.org>, <linux-acpi@vger.kernel.org>,
+	<linux-mm@kvack.org>, <dan.j.williams@intel.com>, <dave@stgolabs.net>,
+	<jonathan.cameron@huawei.com>, <dave.jiang@intel.com>,
+	<alison.schofield@intel.com>, <vishal.l.verma@intel.com>,
+	<ira.weiny@intel.com>
+CC: <linux-edac@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<david@redhat.com>, <Vilas.Sridharan@amd.com>, <leo.duran@amd.com>,
+	<Yazen.Ghannam@amd.com>, <rientjes@google.com>, <jiaqiyan@google.com>,
+	<tony.luck@intel.com>, <Jon.Grimm@amd.com>, <dave.hansen@linux.intel.com>,
+	<rafael@kernel.org>, <lenb@kernel.org>, <naoya.horiguchi@nec.com>,
+	<james.morse@arm.com>, <jthoughton@google.com>, <somasundaram.a@hpe.com>,
+	<erdemaktas@google.com>, <pgonda@google.com>, <duenwen@google.com>,
+	<mike.malvestuto@intel.com>, <gthelen@google.com>,
+	<wschwartz@amperecomputing.com>, <dferguson@amperecomputing.com>,
+	<tanxiaofei@huawei.com>, <prime.zeng@hisilicon.com>,
+	<kangkang.shen@futurewei.com>, <wanghuiqiang@huawei.com>,
+	<linuxarm@huawei.com>, <shiju.jose@huawei.com>
+Subject: [RFC PATCH v7 02/12] cxl/mbox: Add GET_FEATURE mailbox command
+Date: Fri, 23 Feb 2024 22:37:13 +0800
+Message-ID: <20240223143723.1574-3-shiju.jose@huawei.com>
+X-Mailer: git-send-email 2.35.1.windows.2
+In-Reply-To: <20240223143723.1574-1-shiju.jose@huawei.com>
+References: <20240223143723.1574-1-shiju.jose@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: lhrpeml500003.china.huawei.com (7.191.162.67) To
+ lhrpeml500006.china.huawei.com (7.191.161.198)
 
-On Fri, 2024-02-23 at 09:18 -0500, Steven Rostedt wrote:
-> From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
->=20
-> I'm working on restructuring the __string* macros so that it doesn't need
-> to recalculate the string twice. That is, it will save it off when
-> processing __string() and the __assign_str() will not need to do the work
-> again as it currently does.
->=20
-> Currently __string_len(item, src, len) doesn't actually use "src", but my
-> changes will require src to be correct as that is where the __assign_str(=
-)
-> will get its value from.
->=20
-> The event class nfsd_clid_class has:
->=20
->   __string_len(name, name, clp->cl_name.len)
->=20
-> But the second "name" does not exist and causes my changes to fail to
-> build. That second parameter should be: clp->cl_name.data.
->=20
-> Link: https://lore.kernel.org/linux-trace-kernel/20240222122828.3d8d213c@=
-gandalf.local.home
->=20
-> Cc: Jeff Layton <jlayton@kernel.org>
-> Cc: Neil Brown <neilb@suse.de>
-> Cc: Olga Kornievskaia <kolga@netapp.com>
-> Cc: Dai Ngo <Dai.Ngo@oracle.com>
-> Cc: Tom Talpey <tom@talpey.com>
-> Fixes: d27b74a8675ca ("NFSD: Use new __string_len C macros for nfsd_clid_=
-class")
-> Acked-by: Chuck Lever <chuck.lever@oracle.com>
-> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-> ---
->  fs/nfsd/trace.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/fs/nfsd/trace.h b/fs/nfsd/trace.h
-> index d1e8cf079b0f..2cd57033791f 100644
-> --- a/fs/nfsd/trace.h
-> +++ b/fs/nfsd/trace.h
-> @@ -843,7 +843,7 @@ DECLARE_EVENT_CLASS(nfsd_clid_class,
->  		__array(unsigned char, addr, sizeof(struct sockaddr_in6))
->  		__field(unsigned long, flavor)
->  		__array(unsigned char, verifier, NFS4_VERIFIER_SIZE)
-> -		__string_len(name, name, clp->cl_name.len)
-> +		__string_len(name, clp->cl_name.data, clp->cl_name.len)
->  	),
->  	TP_fast_assign(
->  		__entry->cl_boot =3D clp->cl_clientid.cl_boot;
+From: Shiju Jose <shiju.jose@huawei.com>
 
-Acked-by: Jeff Layton <jlayton@kernel.org>
+Add support for GET_FEATURE mailbox command.
+
+CXL spec 3.1 section 8.2.9.6 describes optional device specific features.
+The settings of a feature can be retrieved using Get Feature command.
+
+Signed-off-by: Shiju Jose <shiju.jose@huawei.com>
+---
+ drivers/cxl/core/mbox.c | 49 +++++++++++++++++++++++++++++++++++++++++
+ drivers/cxl/cxlmem.h    | 25 +++++++++++++++++++++
+ 2 files changed, 74 insertions(+)
+
+diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
+index 79cc7fd433aa..c078e62ea194 100644
+--- a/drivers/cxl/core/mbox.c
++++ b/drivers/cxl/core/mbox.c
+@@ -1317,6 +1317,55 @@ int cxl_get_supported_features(struct cxl_memdev_state *mds,
+ }
+ EXPORT_SYMBOL_NS_GPL(cxl_get_supported_features, CXL);
+ 
++size_t cxl_get_feature(struct cxl_memdev_state *mds,
++		       const uuid_t feat_uuid, void *feat_out,
++		       size_t feat_out_size,
++		       size_t feat_out_min_size,
++		       enum cxl_get_feat_selection selection)
++{
++	struct cxl_dev_state *cxlds = &mds->cxlds;
++	struct cxl_mbox_get_feat_in pi;
++	struct cxl_mbox_cmd mbox_cmd;
++	size_t data_rcvd_size = 0;
++	size_t data_to_rd_size;
++	int rc;
++
++	if (feat_out_size < feat_out_min_size) {
++		dev_err(cxlds->dev,
++			"%s: feature out buffer size(%lu) is not big enough\n",
++			__func__, feat_out_size);
++		return 0;
++	}
++
++	pi.uuid = feat_uuid;
++	pi.selection = selection;
++	do {
++		if ((feat_out_min_size - data_rcvd_size) <= mds->payload_size)
++			data_to_rd_size = feat_out_min_size - data_rcvd_size;
++		else
++			data_to_rd_size = mds->payload_size;
++
++		pi.offset = cpu_to_le16(data_rcvd_size);
++		pi.count = cpu_to_le16(data_to_rd_size);
++
++		mbox_cmd = (struct cxl_mbox_cmd) {
++			.opcode = CXL_MBOX_OP_GET_FEATURE,
++			.size_in = sizeof(pi),
++			.payload_in = &pi,
++			.size_out = data_to_rd_size,
++			.payload_out = feat_out + data_rcvd_size,
++			.min_out = data_to_rd_size,
++		};
++		rc = cxl_internal_send_cmd(mds, &mbox_cmd);
++		if (rc < 0 || mbox_cmd.size_out == 0)
++			return 0;
++		data_rcvd_size += mbox_cmd.size_out;
++	} while (data_rcvd_size < feat_out_min_size);
++
++	return data_rcvd_size;
++}
++EXPORT_SYMBOL_NS_GPL(cxl_get_feature, CXL);
++
+ int cxl_mem_get_poison(struct cxl_memdev *cxlmd, u64 offset, u64 len,
+ 		       struct cxl_region *cxlr)
+ {
+diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
+index dd66523cd96a..bcfefff062a6 100644
+--- a/drivers/cxl/cxlmem.h
++++ b/drivers/cxl/cxlmem.h
+@@ -530,6 +530,7 @@ enum cxl_opcode {
+ 	CXL_MBOX_OP_GET_SUPPORTED_LOGS	= 0x0400,
+ 	CXL_MBOX_OP_GET_LOG		= 0x0401,
+ 	CXL_MBOX_OP_GET_SUPPORTED_FEATURES	= 0x0500,
++	CXL_MBOX_OP_GET_FEATURE		= 0x0501,
+ 	CXL_MBOX_OP_IDENTIFY		= 0x4000,
+ 	CXL_MBOX_OP_GET_PARTITION_INFO	= 0x4100,
+ 	CXL_MBOX_OP_SET_PARTITION_INFO	= 0x4101,
+@@ -753,6 +754,25 @@ struct cxl_mbox_get_supp_feats_out {
+ 	struct cxl_mbox_supp_feat_entry feat_entries[];
+ } __packed;
+ 
++/* Get Feature CXL 3.1 Spec 8.2.9.6.2 */
++/*
++ * Get Feature input payload
++ * CXL rev 3.1 section 8.2.9.6.2 Table 8-99
++ */
++enum cxl_get_feat_selection {
++	CXL_GET_FEAT_SEL_CURRENT_VALUE,
++	CXL_GET_FEAT_SEL_DEFAULT_VALUE,
++	CXL_GET_FEAT_SEL_SAVED_VALUE,
++	CXL_GET_FEAT_SEL_MAX
++};
++
++struct cxl_mbox_get_feat_in {
++	uuid_t uuid;
++	__le16 offset;
++	__le16 count;
++	u8 selection;
++}  __packed;
++
+ /* Get Poison List  CXL 3.0 Spec 8.2.9.8.4.1 */
+ struct cxl_mbox_poison_in {
+ 	__le64 offset;
+@@ -887,6 +907,11 @@ int cxl_set_timestamp(struct cxl_memdev_state *mds);
+ int cxl_get_supported_features(struct cxl_memdev_state *mds,
+ 			       u32 count, u16 start_index,
+ 			       struct cxl_mbox_get_supp_feats_out *feats_out);
++size_t cxl_get_feature(struct cxl_memdev_state *mds,
++		       const uuid_t feat_uuid, void *feat_out,
++		       size_t feat_out_size,
++		       size_t feat_out_min_size,
++		       enum cxl_get_feat_selection selection);
+ int cxl_poison_state_init(struct cxl_memdev_state *mds);
+ int cxl_mem_get_poison(struct cxl_memdev *cxlmd, u64 offset, u64 len,
+ 		       struct cxl_region *cxlr);
+-- 
+2.34.1
+
