@@ -1,25 +1,25 @@
-Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
+Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EC406166C
-	for <linux-kernel@vger.kernel.org>; Fri, 23 Feb 2024 10:38:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B3F86306D
+	for <linux-kernel@vger.kernel.org>; Fri, 23 Feb 2024 10:38:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708684704; cv=none; b=CNdm3d9mSam4qbKm6shZaiu1yyyk3enOiqj4FOHmzVPMa4BjdfoGEy7tWTsvgYvau9YluHyrw1MO1TmQ4CHpoLBcj0/KzdkLDz9yU24sihoSnuuGDLCY8n5/xjm1e5x3Obg0UgRWs3+zYexIlf1KpeUFIoJ6qSuOUJO+EaU03eU=
+	t=1708684704; cv=none; b=PvicNor+8Q6BbPCFM/BuD5ODB42HWAXO3HyLaMjZDdyN8nHR4ONReR1MnemVCRYOyRwrgzAXQlFBwlGq+BW+ld0S7nG6t/c67nhS9/HkS62PQiHQ92mOHOOxj4ibI/E3NasoOzTLVhfaKO4cjmZSMZKi+OGFIwLn376sLa164zk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1708684704; c=relaxed/simple;
-	bh=pk+IyGIGi9yJjgkMjhMmpH6GqxmlnEiNPeUiPwjsYzE=;
+	bh=XfzDTM55JnKi9GmEEmEXI8Y/oikyBoFxPQs6RKvi91U=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=eHqCIOhnMJ/RxDI5Ednlc/I8IRYfeSddZ/CQ5zi70HPOxg54uoCbsMihYupoO/HJ5zXe8shkhPDqWGITdcmTlA+dlByBtXsKN4D2lT05MlubTep6ybL7fNzvbD5iIKDRwsvrtYarGO6sHbsJwTqRvl73XueMZHfXlCPVmERpzpE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
+	 MIME-Version:Content-Type; b=DzPyOfKfD5J/2zSG7mmacS4lN2hWwekyhjFDfMREYTZx+mhDVuxST/Tv1PZHFdvLANBuQ4c/QJTeNr5Dl8PO78AnfNlx/kF2J2sjZdKuaZ03DNGHm0DmaSPbfKKKum8c/C/0WiNpJlbQ4WNmdEZFXySm00lIpE3za+4okGHFG0s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.191
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.234])
-	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4Th5yc5vTjz2BdRP;
-	Fri, 23 Feb 2024 18:36:08 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.19.162.112])
+	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4Th5yd4SQ1z1h0KH;
+	Fri, 23 Feb 2024 18:36:09 +0800 (CST)
 Received: from canpemm500009.china.huawei.com (unknown [7.192.105.203])
-	by mail.maildlp.com (Postfix) with ESMTPS id 750D01400CC;
-	Fri, 23 Feb 2024 18:38:19 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 1155214011F;
+	Fri, 23 Feb 2024 18:38:20 +0800 (CST)
 Received: from localhost.localdomain (10.50.165.33) by
  canpemm500009.china.huawei.com (7.192.105.203) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
@@ -30,9 +30,9 @@ To: <jonathan.cameron@huawei.com>, <will@kernel.org>, <mark.rutland@arm.com>,
 	<linux-kernel@vger.kernel.org>
 CC: <yangyicong@hisilicon.com>, <linuxarm@huawei.com>,
 	<prime.zeng@hisilicon.com>, <fanghao11@huawei.com>
-Subject: [PATCH v2 4/8] drivers/perf: hisi_pcie: Add more events for counting TLP bandwidth
-Date: Fri, 23 Feb 2024 18:33:55 +0800
-Message-ID: <20240223103359.18669-5-yangyicong@huawei.com>
+Subject: [PATCH v2 7/8] drivers/perf: hisi_pcie: Merge find_related_event() and get_event_idx()
+Date: Fri, 23 Feb 2024 18:33:58 +0800
+Message-ID: <20240223103359.18669-8-yangyicong@huawei.com>
 X-Mailer: git-send-email 2.31.0
 In-Reply-To: <20240223103359.18669-1-yangyicong@huawei.com>
 References: <20240223103359.18669-1-yangyicong@huawei.com>
@@ -47,41 +47,106 @@ Content-Type: text/plain
 X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
  canpemm500009.china.huawei.com (7.192.105.203)
 
-From: Yicong Yang <yangyicong@hisilicon.com>
+From: Junhao He <hejunhao3@huawei.com>
 
-A typical PCIe transaction is consisted of various TLP packets in both
-direction. For counting bandwidth only memory read events are exported
-currently. Add memory write and completion counting events of both
-direction to complete the bandwidth counting.
+The function xxx_find_related_event() scan all working events to find
+related events. During this process, we also can find the idle counters.
+If not found related events, return the first idle counter to simplify
+the code.
 
+Signed-off-by: Junhao He <hejunhao3@huawei.com>
 Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 ---
- drivers/perf/hisilicon/hisi_pcie_pmu.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/perf/hisilicon/hisi_pcie_pmu.c | 51 ++++++++++----------------
+ 1 file changed, 19 insertions(+), 32 deletions(-)
 
 diff --git a/drivers/perf/hisilicon/hisi_pcie_pmu.c b/drivers/perf/hisilicon/hisi_pcie_pmu.c
-index 9176242eadb3..6f39cb82661e 100644
+index 5b15f3698188..5d1f0e9fdb08 100644
 --- a/drivers/perf/hisilicon/hisi_pcie_pmu.c
 +++ b/drivers/perf/hisilicon/hisi_pcie_pmu.c
-@@ -727,10 +727,18 @@ static struct attribute *hisi_pcie_pmu_events_attr[] = {
- 	HISI_PCIE_PMU_EVENT_ATTR(rx_mrd_cnt, 0x10210),
- 	HISI_PCIE_PMU_EVENT_ATTR(tx_mrd_latency, 0x0011),
- 	HISI_PCIE_PMU_EVENT_ATTR(tx_mrd_cnt, 0x10011),
-+	HISI_PCIE_PMU_EVENT_ATTR(rx_mwr_flux, 0x0104),
-+	HISI_PCIE_PMU_EVENT_ATTR(rx_mwr_time, 0x10104),
- 	HISI_PCIE_PMU_EVENT_ATTR(rx_mrd_flux, 0x0804),
- 	HISI_PCIE_PMU_EVENT_ATTR(rx_mrd_time, 0x10804),
-+	HISI_PCIE_PMU_EVENT_ATTR(rx_cpl_flux, 0x2004),
-+	HISI_PCIE_PMU_EVENT_ATTR(rx_cpl_time, 0x12004),
-+	HISI_PCIE_PMU_EVENT_ATTR(tx_mwr_flux, 0x0105),
-+	HISI_PCIE_PMU_EVENT_ATTR(tx_mwr_time, 0x10105),
- 	HISI_PCIE_PMU_EVENT_ATTR(tx_mrd_flux, 0x0405),
- 	HISI_PCIE_PMU_EVENT_ATTR(tx_mrd_time, 0x10405),
-+	HISI_PCIE_PMU_EVENT_ATTR(tx_cpl_flux, 0x1005),
-+	HISI_PCIE_PMU_EVENT_ATTR(tx_cpl_time, 0x11005),
- 	NULL
- };
+@@ -398,16 +398,24 @@ static u64 hisi_pcie_pmu_read_counter(struct perf_event *event)
+ 	return hisi_pcie_pmu_readq(pcie_pmu, event->hw.event_base, idx);
+ }
+ 
+-static int hisi_pcie_pmu_find_related_event(struct hisi_pcie_pmu *pcie_pmu,
+-					    struct perf_event *event)
++/*
++ * Check all work events, if a relevant event is found then we return it
++ * first, otherwise return the first idle counter (need to reset).
++ */
++static int hisi_pcie_pmu_get_event_idx(struct hisi_pcie_pmu *pcie_pmu,
++					struct perf_event *event)
+ {
++	int first_idle = -EAGAIN;
+ 	struct perf_event *sibling;
+ 	int idx;
+ 
+ 	for (idx = 0; idx < HISI_PCIE_MAX_COUNTERS; idx++) {
+ 		sibling = pcie_pmu->hw_events[idx];
+-		if (!sibling)
++		if (!sibling) {
++			if (first_idle == -EAGAIN)
++				first_idle = idx;
+ 			continue;
++		}
+ 
+ 		/* Related events must be used in group */
+ 		if (hisi_pcie_pmu_cmp_event(sibling, event) &&
+@@ -415,19 +423,7 @@ static int hisi_pcie_pmu_find_related_event(struct hisi_pcie_pmu *pcie_pmu,
+ 			return idx;
+ 	}
+ 
+-	return idx;
+-}
+-
+-static int hisi_pcie_pmu_get_event_idx(struct hisi_pcie_pmu *pcie_pmu)
+-{
+-	int idx;
+-
+-	for (idx = 0; idx < HISI_PCIE_MAX_COUNTERS; idx++) {
+-		if (!pcie_pmu->hw_events[idx])
+-			return idx;
+-	}
+-
+-	return -EINVAL;
++	return first_idle;
+ }
+ 
+ static void hisi_pcie_pmu_event_update(struct perf_event *event)
+@@ -553,27 +549,18 @@ static int hisi_pcie_pmu_add(struct perf_event *event, int flags)
+ 
+ 	hwc->state = PERF_HES_STOPPED | PERF_HES_UPTODATE;
+ 
+-	/* Check all working events to find a related event. */
+-	idx = hisi_pcie_pmu_find_related_event(pcie_pmu, event);
+-	if (idx < 0)
+-		return idx;
+-
+-	/* Current event shares an enabled counter with the related event */
+-	if (idx < HISI_PCIE_MAX_COUNTERS) {
+-		hwc->idx = idx;
+-		goto start_count;
+-	}
+-
+-	idx = hisi_pcie_pmu_get_event_idx(pcie_pmu);
++	idx = hisi_pcie_pmu_get_event_idx(pcie_pmu, event);
+ 	if (idx < 0)
+ 		return idx;
+ 
+ 	hwc->idx = idx;
+-	pcie_pmu->hw_events[idx] = event;
+-	/* Reset Counter to avoid previous statistic interference. */
+-	hisi_pcie_pmu_reset_counter(pcie_pmu, idx);
+ 
+-start_count:
++	/* No enabled counter found with related event, reset it */
++	if (!pcie_pmu->hw_events[idx]) {
++		hisi_pcie_pmu_reset_counter(pcie_pmu, idx);
++		pcie_pmu->hw_events[idx] = event;
++	}
++
+ 	if (flags & PERF_EF_START)
+ 		hisi_pcie_pmu_start(event, PERF_EF_RELOAD);
  
 -- 
 2.24.0
