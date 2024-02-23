@@ -1,183 +1,254 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3E9313A887;
-	Fri, 23 Feb 2024 16:15:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 143C913A899
+	for <linux-kernel@vger.kernel.org>; Fri, 23 Feb 2024 16:15:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708704913; cv=none; b=oawnn0iozqrwu02CujdlfrCgnirEdX9vglqm6WYi6eyYaSOZ8khV42OhcX1gVWxifE5ki/OiuaN88tXnC0Lyoh61gPfjiNHMydz1sfcRvEDW/uGc/aAqVxfd9J31mNN+edmyD542o4mvD9J8xl6T0lNmSHLcVASy1tFSL+hrzls=
+	t=1708704915; cv=none; b=jW2nI9W/amn9BTnGk1Z0I5vxv4ADz3rlI1Bpn/3D/6WJ/gJZFqtGI5T5bn4ZTQQK4NNhch+Xwq+08lz0fcG7rnlgO1nTjEGIVtw5Rk5wqT8jW0KXI9SevzwKKHAwNlSML+zkAbZd1LiaE3xHzzPXq5AkPsSG7uid+kDUa2tYrSI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708704913; c=relaxed/simple;
-	bh=7TtWjndsxVYffCALwoOeo7w2xmYQpzPb4cckMSedr8o=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=P9kJKYf9J58//ZstaPzrQ/f3CIDpNtGpQ0UtFvHQiC8QM0W8/KNRKBtQJTn/fFTASMO0SOVXfIe2Q07qYelaQkODyezqz76uFCGMGR3XT9EBvkGnL0kErzmSSKbARSxUoVkxRehrf7nPL2rnhZT1ZCb03S6XtHXDp8Kzw6MS+iE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uMP9Zs9F; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1708704915; c=relaxed/simple;
+	bh=mrGc8Gl82D/sdUB90gbyCPOUp2tdtmck2FNruNO29PA=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=Rs+bZbeAdPPuKQzgJE7bU+qPdLYcgawdhZrKmLMo5IqK8c19+PdqLEFxb9pDRe9xIo9+vWzPOCdKZlSCrCI5KgAxmNnLI0O0gJRoTBkfZJ3q6qxLZkPGCrWRClBqMpg8uN7slHQU3jCS2j0bUtLNdFYFcLaSujEgYh4LRIN+sDM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JKtCppnp; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uMP9Zs9F"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 43753C433C7;
-	Fri, 23 Feb 2024 16:15:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708704913;
-	bh=7TtWjndsxVYffCALwoOeo7w2xmYQpzPb4cckMSedr8o=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=uMP9Zs9FvAfs8yXXna/ZtizY9EHKjdcpQeCD7uKP4MR3vD01xGG8ZQosUT1+hw+xf
-	 oA1W70K/jcKg82oh9UekJDpVQAWhGHi+roXddDAeu38K+SimnnLwkWwSOoQmROPqiJ
-	 zzMEs/0R8snoUE0zySjABHzZobcTSdkYTkRETuiEVwQiiHFt42UQ2Ggfh13T/+XNZ0
-	 utgq/pGCiIWLJlqpNrWC7XvU2kLZS5Rp49EYex1a+w530Bx/2gS7Bki4TIc3lavPzp
-	 uhvoM5UrGe4LzGCOlyIih5+4AehIuzcjq25othCKufNLvfTx2LWPTFmdf7Y3QEyIvA
-	 pwH6tmithjCOw==
-From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Fri, 23 Feb 2024 17:14:19 +0100
-Subject: [PATCH net 09/10] mptcp: fix possible deadlock in subflow diag
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JKtCppnp"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1708704914; x=1740240914;
+  h=date:from:to:cc:subject:message-id;
+  bh=mrGc8Gl82D/sdUB90gbyCPOUp2tdtmck2FNruNO29PA=;
+  b=JKtCppnpdtSTbfQOqzVK+Rb30ScejI5whQUuPw3pFsHMYNVAkmX5Btba
+   eH/kgJZrbBBYeWrMQMW5LWcs95yYuReYeb/vlmbvT/9cRV9woZ9SMWmA7
+   fwh4bmL2RDV8vllKKlBKst4d8WARK1jVfB478i7kTS5NGhQPHqA4B1IlE
+   MQz2YTkvjdtLxGqdcsx2Ujb68JCwNAa2ySASc847AqHDirbW3GL/JuH9R
+   Lz+nOGNTtNE1yn84XlEy2ze07FCYkT9RPRdvHL5jeKPMbHNoNfLaK5L+4
+   NBhEgEeZFu7NR42s7cQoRDuStMo0LJzulqouztXGDkJlAF8LytZn2oXdD
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10993"; a="14455775"
+X-IronPort-AV: E=Sophos;i="6.06,180,1705392000"; 
+   d="scan'208";a="14455775"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Feb 2024 08:15:14 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.06,180,1705392000"; 
+   d="scan'208";a="6165332"
+Received: from lkp-server02.sh.intel.com (HELO 3c78fa4d504c) ([10.239.97.151])
+  by fmviesa006.fm.intel.com with ESMTP; 23 Feb 2024 08:15:12 -0800
+Received: from kbuild by 3c78fa4d504c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1rdYCb-0007ee-1X;
+	Fri, 23 Feb 2024 16:15:09 +0000
+Date: Sat, 24 Feb 2024 00:11:36 +0800
+From: kernel test robot <lkp@intel.com>
+To: "x86-ml" <x86@kernel.org>
+Cc: linux-kernel@vger.kernel.org
+Subject: [tip:x86/cache] BUILD SUCCESS
+ c0d848fcb09d80a5f48b99f85e448185125ef59f
+Message-ID: <202402240033.prx015i6-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240223-upstream-net-20240223-misc-fixes-v1-9-162e87e48497@kernel.org>
-References: <20240223-upstream-net-20240223-misc-fixes-v1-0-162e87e48497@kernel.org>
-In-Reply-To: <20240223-upstream-net-20240223-misc-fixes-v1-0-162e87e48497@kernel.org>
-To: mptcp@lists.linux.dev, Mat Martineau <martineau@kernel.org>, 
- Geliang Tang <geliang@kernel.org>, "David S. Miller" <davem@davemloft.net>, 
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
- Paolo Abeni <pabeni@redhat.com>, Florian Westphal <fw@strlen.de>, 
- Kishen Maloor <kishen.maloor@intel.com>, Shuah Khan <shuah@kernel.org>, 
- Peter Krystad <peter.krystad@linux.intel.com>, 
- Christoph Paasch <cpaasch@apple.com>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-kselftest@vger.kernel.org, 
- "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, stable@vger.kernel.org
-X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=5011; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=r5yS2aqxy/UFqDVBdC2SzLwUgEbcbOAGxz23X5YQglQ=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBl2MRqJQlYEbverqjk/Wt3czNkvGndu41GkjAVk
- Ipdmg1TyUyJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZdjEagAKCRD2t4JPQmmg
- c+qAD/9eH6iHyK1RwTYjxr/tAoH+SjQQWyyiQhjuZRa5eOHb/Wzp9QHInrYQhEAcrT2McZ/qBia
- ngOUSBp9kzlnuljowjUa2wDCVqhW+RE11BWvUqSHvvtONFt9HBxzyQ2RLSHLkFB/2ZMPqbUca8L
- 2Oot9QjYxQQrCUex4NzQkNiQNlleaTChQpPDUmU6AwaVeVvf1C9d7w9rQxA1rV2BSHNa4C2jsgu
- JXZY+424zLdFx3MnM0cW6IhfkrK8D+zquFuViCGyh3Tzkp7s3UlnumO48JCcucLouAyb3o2a2e4
- AWCzqLcxCoeten7eVvogMlPV+wFQwnEC2S2LbKgD91eXBQot4KqoBcvXm2W5bwO6ScSYfT2HJ5q
- bihP/eSvTpdtNN2XlqarlQqC1ccgxKOm7x4LiXwm4BPnNgOBOWtKVFKrXumFB7bcgt8DEfJ4GfZ
- osl8rwV73RgwfLCOJX+Iunv2dYGwXKnbNEB9paFifPw2SsqeXwdwDDl23h5HDb6PlDJ0vLvKSqW
- 6tQ+r3siPX5XS7MTyTS0mlYNd3pw6v/BoN5q76wIUJbJtdO7w7iUfGUD/LtCwERJIvZs0edULIu
- hM0WLZ4gVlGgw2YyESGr+HphdIbVLsk/TKEtc4oRBXRajGJf8rapMqw4BaVQRrnM+lFzJIdRSBB
- 4lKYfuJ0BLEbuMw==
-X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
- fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-From: Paolo Abeni <pabeni@redhat.com>
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86/cache
+branch HEAD: c0d848fcb09d80a5f48b99f85e448185125ef59f  x86/resctrl: Remove lockdep annotation that triggers false positive
 
-Syzbot and Eric reported a lockdep splat in the subflow diag:
+elapsed time: 1464m
 
-   WARNING: possible circular locking dependency detected
-   6.8.0-rc4-syzkaller-00212-g40b9385dd8e6 #0 Not tainted
+configs tested: 181
+configs skipped: 3
 
-   syz-executor.2/24141 is trying to acquire lock:
-   ffff888045870130 (k-sk_lock-AF_INET6){+.+.}-{0:0}, at:
-   tcp_diag_put_ulp net/ipv4/tcp_diag.c:100 [inline]
-   ffff888045870130 (k-sk_lock-AF_INET6){+.+.}-{0:0}, at:
-   tcp_diag_get_aux+0x738/0x830 net/ipv4/tcp_diag.c:137
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-   but task is already holding lock:
-   ffffc9000135e488 (&h->lhash2[i].lock){+.+.}-{2:2}, at: spin_lock
-   include/linux/spinlock.h:351 [inline]
-   ffffc9000135e488 (&h->lhash2[i].lock){+.+.}-{2:2}, at:
-   inet_diag_dump_icsk+0x39f/0x1f80 net/ipv4/inet_diag.c:1038
-
-   which lock already depends on the new lock.
-
-   the existing dependency chain (in reverse order) is:
-
-   -> #1 (&h->lhash2[i].lock){+.+.}-{2:2}:
-   lock_acquire+0x1e3/0x530 kernel/locking/lockdep.c:5754
-   __raw_spin_lock include/linux/spinlock_api_smp.h:133 [inline]
-   _raw_spin_lock+0x2e/0x40 kernel/locking/spinlock.c:154
-   spin_lock include/linux/spinlock.h:351 [inline]
-   __inet_hash+0x335/0xbe0 net/ipv4/inet_hashtables.c:743
-   inet_csk_listen_start+0x23a/0x320 net/ipv4/inet_connection_sock.c:1261
-   __inet_listen_sk+0x2a2/0x770 net/ipv4/af_inet.c:217
-   inet_listen+0xa3/0x110 net/ipv4/af_inet.c:239
-   rds_tcp_listen_init+0x3fd/0x5a0 net/rds/tcp_listen.c:316
-   rds_tcp_init_net+0x141/0x320 net/rds/tcp.c:577
-   ops_init+0x352/0x610 net/core/net_namespace.c:136
-   __register_pernet_operations net/core/net_namespace.c:1214 [inline]
-   register_pernet_operations+0x2cb/0x660 net/core/net_namespace.c:1283
-   register_pernet_device+0x33/0x80 net/core/net_namespace.c:1370
-   rds_tcp_init+0x62/0xd0 net/rds/tcp.c:735
-   do_one_initcall+0x238/0x830 init/main.c:1236
-   do_initcall_level+0x157/0x210 init/main.c:1298
-   do_initcalls+0x3f/0x80 init/main.c:1314
-   kernel_init_freeable+0x42f/0x5d0 init/main.c:1551
-   kernel_init+0x1d/0x2a0 init/main.c:1441
-   ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:147
-   ret_from_fork_asm+0x1b/0x30 arch/x86/entry/entry_64.S:242
-
-   -> #0 (k-sk_lock-AF_INET6){+.+.}-{0:0}:
-   check_prev_add kernel/locking/lockdep.c:3134 [inline]
-   check_prevs_add kernel/locking/lockdep.c:3253 [inline]
-   validate_chain+0x18ca/0x58e0 kernel/locking/lockdep.c:3869
-   __lock_acquire+0x1345/0x1fd0 kernel/locking/lockdep.c:5137
-   lock_acquire+0x1e3/0x530 kernel/locking/lockdep.c:5754
-   lock_sock_fast include/net/sock.h:1723 [inline]
-   subflow_get_info+0x166/0xd20 net/mptcp/diag.c:28
-   tcp_diag_put_ulp net/ipv4/tcp_diag.c:100 [inline]
-   tcp_diag_get_aux+0x738/0x830 net/ipv4/tcp_diag.c:137
-   inet_sk_diag_fill+0x10ed/0x1e00 net/ipv4/inet_diag.c:345
-   inet_diag_dump_icsk+0x55b/0x1f80 net/ipv4/inet_diag.c:1061
-   __inet_diag_dump+0x211/0x3a0 net/ipv4/inet_diag.c:1263
-   inet_diag_dump_compat+0x1c1/0x2d0 net/ipv4/inet_diag.c:1371
-   netlink_dump+0x59b/0xc80 net/netlink/af_netlink.c:2264
-   __netlink_dump_start+0x5df/0x790 net/netlink/af_netlink.c:2370
-   netlink_dump_start include/linux/netlink.h:338 [inline]
-   inet_diag_rcv_msg_compat+0x209/0x4c0 net/ipv4/inet_diag.c:1405
-   sock_diag_rcv_msg+0xe7/0x410
-   netlink_rcv_skb+0x1e3/0x430 net/netlink/af_netlink.c:2543
-   sock_diag_rcv+0x2a/0x40 net/core/sock_diag.c:280
-   netlink_unicast_kernel net/netlink/af_netlink.c:1341 [inline]
-   netlink_unicast+0x7ea/0x980 net/netlink/af_netlink.c:1367
-   netlink_sendmsg+0xa3b/0xd70 net/netlink/af_netlink.c:1908
-   sock_sendmsg_nosec net/socket.c:730 [inline]
-   __sock_sendmsg+0x221/0x270 net/socket.c:745
-   ____sys_sendmsg+0x525/0x7d0 net/socket.c:2584
-   ___sys_sendmsg net/socket.c:2638 [inline]
-   __sys_sendmsg+0x2b0/0x3a0 net/socket.c:2667
-   do_syscall_64+0xf9/0x240
-   entry_SYSCALL_64_after_hwframe+0x6f/0x77
-
-As noted by Eric we can break the lock dependency chain avoid
-dumping any extended info for the mptcp subflow listener:
-nothing actually useful is presented there.
-
-Fixes: b8adb69a7d29 ("mptcp: fix lockless access in subflow ULP diag")
-Cc: stable@vger.kernel.org
-Reported-by: Eric Dumazet <edumazet@google.com>
-Closes: https://lore.kernel.org/netdev/CANn89iJ=Oecw6OZDwmSYc9HJKQ_G32uN11L+oUcMu+TOD5Xiaw@mail.gmail.com/
-Suggested-by: Eric Dumazet <edumazet@google.com>
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
-Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
----
- net/mptcp/diag.c | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/net/mptcp/diag.c b/net/mptcp/diag.c
-index 6ff6f14674aa..7017dd60659d 100644
---- a/net/mptcp/diag.c
-+++ b/net/mptcp/diag.c
-@@ -21,6 +21,9 @@ static int subflow_get_info(struct sock *sk, struct sk_buff *skb)
- 	bool slow;
- 	int err;
- 
-+	if (inet_sk_state_load(sk) == TCP_LISTEN)
-+		return 0;
-+
- 	start = nla_nest_start_noflag(skb, INET_ULP_INFO_MPTCP);
- 	if (!start)
- 		return -EMSGSIZE;
+tested configs:
+alpha                             allnoconfig   gcc  
+alpha                            allyesconfig   gcc  
+alpha                               defconfig   gcc  
+arc                              allmodconfig   gcc  
+arc                               allnoconfig   gcc  
+arc                              allyesconfig   gcc  
+arc                          axs101_defconfig   gcc  
+arc                                 defconfig   gcc  
+arc                         haps_hs_defconfig   gcc  
+arc                     haps_hs_smp_defconfig   gcc  
+arc                   randconfig-001-20240223   gcc  
+arc                   randconfig-002-20240223   gcc  
+arm                              allmodconfig   gcc  
+arm                               allnoconfig   clang
+arm                              allyesconfig   gcc  
+arm                       aspeed_g5_defconfig   gcc  
+arm                                 defconfig   clang
+arm                          moxart_defconfig   gcc  
+arm                           omap1_defconfig   gcc  
+arm                             pxa_defconfig   gcc  
+arm                   randconfig-001-20240223   gcc  
+arm                   randconfig-004-20240223   gcc  
+arm                         s3c6400_defconfig   gcc  
+arm                           spitz_defconfig   gcc  
+arm                           stm32_defconfig   gcc  
+arm                         wpcm450_defconfig   gcc  
+arm64                             allnoconfig   gcc  
+arm64                               defconfig   gcc  
+arm64                 randconfig-002-20240223   gcc  
+arm64                 randconfig-004-20240223   gcc  
+csky                             allmodconfig   gcc  
+csky                              allnoconfig   gcc  
+csky                             allyesconfig   gcc  
+csky                                defconfig   gcc  
+csky                  randconfig-001-20240223   gcc  
+csky                  randconfig-002-20240223   gcc  
+hexagon                          allmodconfig   clang
+hexagon                           allnoconfig   clang
+hexagon                          allyesconfig   clang
+hexagon                             defconfig   clang
+i386                             allmodconfig   gcc  
+i386                              allnoconfig   gcc  
+i386                             allyesconfig   gcc  
+i386         buildonly-randconfig-006-20240223   clang
+i386                                defconfig   clang
+i386                  randconfig-001-20240223   clang
+i386                  randconfig-006-20240223   clang
+i386                  randconfig-013-20240223   clang
+i386                  randconfig-014-20240223   clang
+i386                  randconfig-015-20240223   clang
+i386                  randconfig-016-20240223   clang
+loongarch                        alldefconfig   gcc  
+loongarch                        allmodconfig   gcc  
+loongarch                         allnoconfig   gcc  
+loongarch                        allyesconfig   gcc  
+loongarch                           defconfig   gcc  
+loongarch             randconfig-001-20240223   gcc  
+loongarch             randconfig-002-20240223   gcc  
+m68k                             allmodconfig   gcc  
+m68k                              allnoconfig   gcc  
+m68k                             allyesconfig   gcc  
+m68k                          amiga_defconfig   gcc  
+m68k                                defconfig   gcc  
+m68k                        mvme147_defconfig   gcc  
+m68k                        mvme16x_defconfig   gcc  
+m68k                        stmark2_defconfig   gcc  
+m68k                           sun3_defconfig   gcc  
+microblaze                       allmodconfig   gcc  
+microblaze                        allnoconfig   gcc  
+microblaze                       allyesconfig   gcc  
+microblaze                          defconfig   gcc  
+mips                             allmodconfig   gcc  
+mips                              allnoconfig   gcc  
+mips                             allyesconfig   gcc  
+nios2                            allmodconfig   gcc  
+nios2                             allnoconfig   gcc  
+nios2                            allyesconfig   gcc  
+nios2                               defconfig   gcc  
+nios2                 randconfig-001-20240223   gcc  
+nios2                 randconfig-002-20240223   gcc  
+openrisc                         allmodconfig   gcc  
+openrisc                          allnoconfig   gcc  
+openrisc                         allyesconfig   gcc  
+openrisc                            defconfig   gcc  
+parisc                           alldefconfig   gcc  
+parisc                           allmodconfig   gcc  
+parisc                            allnoconfig   gcc  
+parisc                           allyesconfig   gcc  
+parisc                              defconfig   gcc  
+parisc                randconfig-001-20240223   gcc  
+parisc                randconfig-002-20240223   gcc  
+parisc64                            defconfig   gcc  
+powerpc                    adder875_defconfig   gcc  
+powerpc                          allmodconfig   gcc  
+powerpc                           allnoconfig   gcc  
+powerpc                          allyesconfig   clang
+powerpc                    amigaone_defconfig   gcc  
+powerpc                     ep8248e_defconfig   gcc  
+powerpc                 mpc8313_rdb_defconfig   gcc  
+powerpc                      ppc6xx_defconfig   gcc  
+powerpc                     tqm5200_defconfig   gcc  
+powerpc                 xes_mpc85xx_defconfig   gcc  
+powerpc64             randconfig-001-20240223   gcc  
+powerpc64             randconfig-002-20240223   gcc  
+powerpc64             randconfig-003-20240223   gcc  
+riscv                            allmodconfig   clang
+riscv                             allnoconfig   gcc  
+riscv                            allyesconfig   clang
+riscv                               defconfig   clang
+riscv                 randconfig-001-20240223   gcc  
+riscv                 randconfig-002-20240223   gcc  
+s390                             allmodconfig   clang
+s390                              allnoconfig   clang
+s390                             allyesconfig   gcc  
+s390                                defconfig   clang
+s390                  randconfig-001-20240223   gcc  
+sh                               allmodconfig   gcc  
+sh                                allnoconfig   gcc  
+sh                               allyesconfig   gcc  
+sh                                  defconfig   gcc  
+sh                        edosk7760_defconfig   gcc  
+sh                            hp6xx_defconfig   gcc  
+sh                            migor_defconfig   gcc  
+sh                          r7780mp_defconfig   gcc  
+sh                    randconfig-001-20240223   gcc  
+sh                    randconfig-002-20240223   gcc  
+sh                           se7619_defconfig   gcc  
+sh                           se7705_defconfig   gcc  
+sh                        sh7763rdp_defconfig   gcc  
+sh                            shmin_defconfig   gcc  
+sh                             shx3_defconfig   gcc  
+sparc                            allmodconfig   gcc  
+sparc                             allnoconfig   gcc  
+sparc                            allyesconfig   gcc  
+sparc                               defconfig   gcc  
+sparc64                          allmodconfig   gcc  
+sparc64                          allyesconfig   gcc  
+sparc64                             defconfig   gcc  
+sparc64               randconfig-001-20240223   gcc  
+sparc64               randconfig-002-20240223   gcc  
+um                               allmodconfig   clang
+um                                allnoconfig   clang
+um                               allyesconfig   gcc  
+um                                  defconfig   clang
+um                             i386_defconfig   gcc  
+um                    randconfig-002-20240223   gcc  
+um                           x86_64_defconfig   clang
+x86_64                           alldefconfig   gcc  
+x86_64                            allnoconfig   clang
+x86_64                           allyesconfig   clang
+x86_64       buildonly-randconfig-001-20240223   gcc  
+x86_64       buildonly-randconfig-002-20240223   gcc  
+x86_64       buildonly-randconfig-003-20240223   clang
+x86_64       buildonly-randconfig-004-20240223   clang
+x86_64       buildonly-randconfig-005-20240223   gcc  
+x86_64       buildonly-randconfig-006-20240223   clang
+x86_64                              defconfig   gcc  
+x86_64                randconfig-001-20240223   gcc  
+x86_64                randconfig-002-20240223   clang
+x86_64                randconfig-003-20240223   gcc  
+x86_64                randconfig-004-20240223   gcc  
+x86_64                randconfig-005-20240223   clang
+x86_64                randconfig-006-20240223   gcc  
+x86_64                randconfig-011-20240223   gcc  
+x86_64                randconfig-012-20240223   gcc  
+x86_64                randconfig-013-20240223   clang
+x86_64                randconfig-014-20240223   gcc  
+x86_64                randconfig-015-20240223   clang
+x86_64                randconfig-016-20240223   clang
+x86_64                randconfig-071-20240223   gcc  
+x86_64                randconfig-072-20240223   gcc  
+x86_64                randconfig-073-20240223   gcc  
+x86_64                randconfig-074-20240223   clang
+x86_64                randconfig-075-20240223   gcc  
+x86_64                randconfig-076-20240223   clang
+x86_64                          rhel-8.3-rust   clang
+x86_64                               rhel-8.3   gcc  
+xtensa                            allnoconfig   gcc  
+xtensa                           allyesconfig   gcc  
+xtensa                randconfig-001-20240223   gcc  
+xtensa                randconfig-002-20240223   gcc  
 
 -- 
-2.43.0
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
