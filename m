@@ -1,90 +1,106 @@
-Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFD1E1482E7
-	for <linux-kernel@vger.kernel.org>; Fri, 23 Feb 2024 20:23:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C6D6EAD2;
+	Fri, 23 Feb 2024 20:26:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708719827; cv=none; b=bcYbcy3vUEO/EMq4iwSaFJtIpeuKRe096oQNrWXsx9RyDaMlumT5LsJNTrr+sUX2aMYEdOLZg/vH6E0FXfxCHk2bPM87M5APxw+KqeI2A70wDMY8HhJjcZkuHm+ChrP4IKuTz+uemc1b8gGa0JgMS6ZojkG1KG4HzdrIzcYUDyQ=
+	t=1708719969; cv=none; b=Fa45nRif6qycAmaqHHJcIRGh11HzDHRlQnh0epDfvSuuqDY8lrbg5iMg9MwxvJ5ZMBXLOdk+yVHKjHlXyACP2IcEHPQi8AngbpLmwyDktuChKZ6xhoZj0JWwGWRPoG69xFHu8+A5kaNHMISDPsbBM/+IFVop+erfmr2oVTFPTBg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708719827; c=relaxed/simple;
-	bh=GAPRdDy0weW+cZabohnm2KVovLxRd2YD8tu+op2thxA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=boUQE//752j25YG+7kNaqMiNKaZX9w7IynjVC7bNEs+Dx3px8xWTbWl9mikhqoRM2ekOgWOpmg5csV7Cr+lkLN7TIqmbSMCsTt+iHgxLIYKNHm8vbAfeyj8qQRC2YGPojZp5vWDl2idjytWT/7brpdpZkKSQVjy3xd5vrxg7J/c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=K/9mnzg4; arc=none smtp.client-ip=209.85.218.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxon.dev
+	s=arc-20240116; t=1708719969; c=relaxed/simple;
+	bh=otrj2HG0uwGiWEAyJmF5JytS/AtQRVWKEWaHEN3Z8Sk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=l/M4bvvGIlCV+ZP2ozeypjNzmEL+RFhSHLJLyHjzSnhhwQzn/tBR5nGDfqSiRHU14TebuMv7/hcSJ2qepOHXjQNlYe5SJMUw/YQuOytr9yu00eRTsiKAw0TpEpmwxOvXYvJDuzDCXur6kw1DQGY3t8rpM1HxhFUWpyybFDqkVQc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=J/UpwaZc; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="K/9mnzg4"
-Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-a3f5808b0dfso171034066b.1
-        for <linux-kernel@vger.kernel.org>; Fri, 23 Feb 2024 12:23:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tuxon.dev; s=google; t=1708719823; x=1709324623; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=PufCuNIep49lutmoiIwdjVCU3ra1Yep6/fBx1imRwQ0=;
-        b=K/9mnzg4bwTjCd51PyvQUycZ4nPc27ZlX8S8Xz4ncQWkR5x9fH9W7xRlBrEHcMjaCv
-         6tDVcGzCh3U75JEROEjFy9IY4TwIyztQ7+7eGFc01jloYOtBrptj70JC1rfoIsEkdn/V
-         v5+8+2KPvmAzIhHTI2I0eC2ranOd0uUt8jGY4g9HAjnZCC76fTq96iUVUstgDb9O2R8c
-         viTzXwqfCldUncoE9jQEJKQjcumz/gXJmaLxqxtN1p7YO3iwBXOX75W3uJCY3iWgSQrg
-         hT6ZaCo867s3YXM2rxFL8R0TNHwUP89lbEjlDmfIksiQQT5omtje2qua/kOMcTOinH/g
-         HKkw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708719823; x=1709324623;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=PufCuNIep49lutmoiIwdjVCU3ra1Yep6/fBx1imRwQ0=;
-        b=Q4oXfHJHBLyleo1VdC8m/Dwx4aQCijnRpQm+zkxJybl0rHw58VmeidutKI6mbDadNl
-         QjRcAOjOIkaT1dMapk5Wyms33pe1hA319+huZ24lBlImn8twwntvwbuP/LT+TmpjpGL8
-         X8bWY+nd/fa9Gpe8m6odQic0YPHkluzqf9792H5nErD8jmd2NIFzPnZKqftpqidP4z6M
-         MtN14IekW1SpNiHdHL5dLt11Z+pWFSYgJLf95T5pfa7H1Q9SrKmeSJoMm/rb6ZdKQlyE
-         mtuN6SXYTxFGzY/8AM1DBnzPIiHuqQPVDJng3Rhnv2US89+Tc/3qfMa4PITOgkhBwxs+
-         tpFw==
-X-Forwarded-Encrypted: i=1; AJvYcCVapWXuZ6SiHXr/LFgxllnJaUr1VJxDuk91mtvW44Rft3om0LmjMLYpIXtbGe3Cr1qiUQeQIfceXyZ8PnNWx8gZ/EVCImY+kcKo9v7w
-X-Gm-Message-State: AOJu0YwSf6w3vuWK6WFjRCOoYR//00uUPIEKziDI+671ZrlX3jTQmldF
-	e6BnGxyKalo8zDrP1YCR/mMGCxZbEdEReEAXfNdMEOsuUV7ic7vIMdKl8SgSo2E=
-X-Google-Smtp-Source: AGHT+IECc8sKOWy0lbsXnY1v63WC5QWxaJU7ch/XxeG9NHaa36ucJ1wxAgJ4bphyr2IcF0fx99zhVg==
-X-Received: by 2002:a17:906:3709:b0:a3e:8223:289a with SMTP id d9-20020a170906370900b00a3e8223289amr595311ejc.31.1708719823195;
-        Fri, 23 Feb 2024 12:23:43 -0800 (PST)
-Received: from [192.168.50.4] ([82.78.167.99])
-        by smtp.gmail.com with ESMTPSA id h11-20020a17090634cb00b00a3d7bcfb9a1sm7195828ejb.128.2024.02.23.12.23.42
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 23 Feb 2024 12:23:42 -0800 (PST)
-Message-ID: <dcce833f-7bad-4db4-bbaa-60b5838aa910@tuxon.dev>
-Date: Fri, 23 Feb 2024 22:23:41 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="J/UpwaZc"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1708719965; x=1740255965;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=otrj2HG0uwGiWEAyJmF5JytS/AtQRVWKEWaHEN3Z8Sk=;
+  b=J/UpwaZc9BJUd+NettQn7aaxKj0MF2DHZ5OehaLTktr7YM/b6MM3ww9j
+   gML0SqcZ/zFz17FIbxeVStPqKHNIK9hpngrxGGmWCmZFlH1fw8rdE8Fij
+   WFTz6x0Bv1bpbDfv4Ep2HqNC7p6buHsvT4K4K/kll5VEBFqm1O7mYK0l0
+   +9SpcTnb3ta16EUSkljAV6ShOjg/jOUMVeQ7Aktw9nk83HMLX3TELv9OJ
+   zqOipgmg/auP/sz4Pwm+k4KOMjL1viBM5mHuFTW5h/n2yBktB6IjNHUCh
+   khDbHTroo3vcpMzA2WKWH2ZYkxmJlRQhk7mFAf7uxDFvXs+IKTxgRlJks
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10993"; a="14487209"
+X-IronPort-AV: E=Sophos;i="6.06,180,1705392000"; 
+   d="scan'208";a="14487209"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Feb 2024 12:26:04 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.06,180,1705392000"; 
+   d="scan'208";a="10713422"
+Received: from awvttdev-05.aw.intel.com ([10.228.212.156])
+  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Feb 2024 12:26:03 -0800
+From: "Michael J. Ruhl" <michael.j.ruhl@intel.com>
+To: linux-clk@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Cc: Russell King <linux@armlinux.org.uk>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	andriy.shevchenko@linux.intel.com,
+	"Michael J. Ruhl" <michael.j.ruhl@intel.com>,
+	Russell King <rmk+kernel@armlinux.org.uk>
+Subject: [PATCH v3] clkdev: Update clkdev id usage to allow for longer names
+Date: Fri, 23 Feb 2024 15:25:56 -0500
+Message-ID: <20240223202556.2194021-1-michael.j.ruhl@intel.com>
+X-Mailer: git-send-email 2.41.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/2] ARM: dts: microchip: sama7g5: add sama7g5
- compatible
-Content-Language: en-US
-To: Balakrishnan Sambath <balakrishnan.s@microchip.com>,
- Nicolas Ferre <nicolas.ferre@microchip.com>,
- Alexandre Belloni <alexandre.belloni@bootlin.com>,
- Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>, Lee Jones <lee@kernel.org>,
- Kavyasree Kotagiri <kavyasree.kotagiri@microchip.com>
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20240223-b4-sama5d2-flexcom-yaml-v2-0-7e96c60c7701@microchip.com>
- <20240223-b4-sama5d2-flexcom-yaml-v2-1-7e96c60c7701@microchip.com>
-From: claudiu beznea <claudiu.beznea@tuxon.dev>
-In-Reply-To: <20240223-b4-sama5d2-flexcom-yaml-v2-1-7e96c60c7701@microchip.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
+clkdev DEV ID information is limited to an array of 20 bytes
+(MAX_DEV_ID).  It is possible that the ID could be longer than
+that.  If so, the lookup will fail because the "real ID" will
+not match the copied value.
 
+For instance, generating a device name for the I2C Designware
+module using the PCI ID can result in a name of:
 
-On 23.02.2024 11:16, Balakrishnan Sambath wrote:
-> Add sama7g5 flexcom specific compatible in DT with fallbacks.
-> 
-> Signed-off-by: Balakrishnan Sambath <balakrishnan.s@microchip.com>
+i2c_designware.39424
 
-Applied to at91-dt, thanks!
+clkdev_create() will store:
+
+i2c_designware.3942
+
+The stored name is one off and will not match correctly during probe.
+
+Increase the size of the ID to allow for a longer name.
+
+Reviewed-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
+Signed-off-by: Michael J. Ruhl <michael.j.ruhl@intel.com>
+---
+
+v2: Removed CON_ID update and added example to commit
+V3: Add r-b and move version info
+
+ drivers/clk/clkdev.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/clk/clkdev.c b/drivers/clk/clkdev.c
+index ee37d0be6877..9cd80522ca2d 100644
+--- a/drivers/clk/clkdev.c
++++ b/drivers/clk/clkdev.c
+@@ -144,7 +144,7 @@ void clkdev_add_table(struct clk_lookup *cl, size_t num)
+ 	mutex_unlock(&clocks_mutex);
+ }
+ 
+-#define MAX_DEV_ID	20
++#define MAX_DEV_ID	24
+ #define MAX_CON_ID	16
+ 
+ struct clk_lookup_alloc {
+-- 
+2.41.0
+
