@@ -1,227 +1,163 @@
-Received: from mail-pg1-f171.google.com (mail-pg1-f171.google.com [209.85.215.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65B9F143C63
-	for <linux-kernel@vger.kernel.org>; Fri, 23 Feb 2024 22:40:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A10022071;
+	Fri, 23 Feb 2024 22:41:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708728007; cv=none; b=M6hWLNFmjp9uZGz8D+jF9gDpCFxy2YxOUG0H43rzKNs/MskD4sBmvlUUv7OrQAWVFgUx+ewyS5UcSuzo2zxPYBLUxAnVknsXz4wMr95vTxFtlwfkX0Eee1+jg0M0nj0/hS7AAxzWuI+LuzzAPbdbziu4r3bHEL39wSOreXs9q0M=
+	t=1708728073; cv=none; b=kD6wPBE+sHBOeDtYbrvVB/u6CcxxXWG1kgkbZ8l8a5mtEviFfMj70TvseKLKazukn9DxMMT0dZi8ZDE2PiECdTgWc3Y9+ItIW++fwJWmuseAsco0ZKkvPSwDYEdl8DRutN4cDvNeRxpK3gPPVKcAGlgpemX7DGRuLL1Is2FxVN8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708728007; c=relaxed/simple;
-	bh=ZGM0H9OX6IuYQLFMOB8tArMAbsmHZckmY8VWfmMOH+0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=G3ZpgZSiHmoa1WwUTb+Su2vw1+0glKsCblDJn91cPpMMrUU0DU9Bg9SPhyWdXarjXVwD2yxx4tXrJl56TU+S/bLz+MSbX2ENEybRzq4e5YdGj2RbnpoNqIcc7D+y0WqfFOphLgw8yAZkYPEuEEDENBS24ArUJyAztqABnsHb9Ac=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=cpu4ndIt; arc=none smtp.client-ip=209.85.215.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1708728073; c=relaxed/simple;
+	bh=M9KvWFP79FSlwdzb3EPPAWvxhpQ6pdeQUdYnpVN5Fok=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=G49gU8O6PnDuOgcTQd4G8jG79X8dJgCmE/BZUZLH0AQGE6cE0Db3PrQxMgy585Iiwk7uo8kBCPtVDMumecgmZao7rCzL9bBK6pSOzs43AdLXleL7+X9gPqrlnTkbfinAU2ROOLvmULG1Nvjh0yAtRWXCrMJ/uJBOZQ4Gm5esnu4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fgsrOtWM; arc=none smtp.client-ip=192.198.163.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="cpu4ndIt"
-Received: by mail-pg1-f171.google.com with SMTP id 41be03b00d2f7-5cedfc32250so1277353a12.0
-        for <linux-kernel@vger.kernel.org>; Fri, 23 Feb 2024 14:40:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1708728003; x=1709332803; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=j2NLOgJvFk9/xpCgoWWX0mwY7XC1SqoEPJetQl38NRg=;
-        b=cpu4ndIt16D5/QrGZ6s67ePQzuC2xQc8W2t8TcoIXfeQpxWN+nVbhXIB4re+qdjKte
-         thBi8YZdynxnmZ6eECAuP1F3WAjYlrFPCicTS9WFUyv7o3+IuEbqVqCYPquNp/bPwVO4
-         HqNRRLO9/iGBgOreXYOhJMYmqFKAF0S2vYAaw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708728003; x=1709332803;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=j2NLOgJvFk9/xpCgoWWX0mwY7XC1SqoEPJetQl38NRg=;
-        b=FEQahFM731n67qDc0tV99lvj6dP+KErCWjvPDEH97NXdrvQL6tjXIb23fu/0DB8aWZ
-         kKQX+1U3Uhjf9rGUKiQvtgTMZyM5aVkxItVXVoORRfCLp6YJTHbIGB4lJBx0QbK+ZfDF
-         /TiB+aG3+yU5DhSYA+rJ6ggZINCELrYPN4NNEwMkJcLh2na7uYEENwg4JKLWVQti6go+
-         l746vw3dD/r94IeaVb7ruOvUPgdxzgujltumwhdPmgHWJb9NQFVl+D518Bas357RJePK
-         v2BKBJEFFtQQg1S+F94gZHr6gVR/1/mRsvsoRsdLftrnGlZ/BbFL6mx+LdQBIrZVWlGI
-         UUxQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUA+kj9ysENdUqPkuZrEBkwvBoNW6KR7C2yQDevIeeQR77QdW4Va5z75mid52YTCSTRTB0QVtagf/a3gsa84QSr/QhEl2Z+beIEuMd8
-X-Gm-Message-State: AOJu0Yy6Ramdjp/laUDXD1pKPKisQPoBWhjjQGEeZiPFyPutLhieHTdf
-	AldKyrdEbRSN9/urcsulv/4+cUbQEGCe3MlESP0zlrYXWZkOj6pZkyzvIi2rUA==
-X-Google-Smtp-Source: AGHT+IEqAmzztLLv9pUMQIH60NYC+Jh68DPyMwr8SAMILCs8UUd15S395jHWIMuyyILxwr0lYYsk4g==
-X-Received: by 2002:a17:90b:380d:b0:299:2da5:a843 with SMTP id mq13-20020a17090b380d00b002992da5a843mr1194908pjb.14.1708728003603;
-        Fri, 23 Feb 2024 14:40:03 -0800 (PST)
-Received: from hsinyi.sjc.corp.google.com ([2620:15c:9d:2:8ff9:a089:c05c:9af])
-        by smtp.gmail.com with ESMTPSA id cz4-20020a17090ad44400b002966a13f2e9sm2032873pjb.37.2024.02.23.14.40.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 23 Feb 2024 14:40:03 -0800 (PST)
-From: Hsin-Yi Wang <hsinyi@chromium.org>
-To: Douglas Anderson <dianders@chromium.org>
-Cc: Neil Armstrong <neil.armstrong@linaro.org>,
-	Jessica Zhang <quic_jesszhan@quicinc.com>,
-	Sam Ravnborg <sam@ravnborg.org>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>,
-	Daniel Vetter <daniel@ffwll.ch>,
-	dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 1/2] drm_edid: Add a function to get EDID base block
-Date: Fri, 23 Feb 2024 14:29:17 -0800
-Message-ID: <20240223223958.3887423-2-hsinyi@chromium.org>
-X-Mailer: git-send-email 2.44.0.rc0.258.g7320e95886-goog
-In-Reply-To: <20240223223958.3887423-1-hsinyi@chromium.org>
-References: <20240223223958.3887423-1-hsinyi@chromium.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fgsrOtWM"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1708728071; x=1740264071;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=M9KvWFP79FSlwdzb3EPPAWvxhpQ6pdeQUdYnpVN5Fok=;
+  b=fgsrOtWM7rksJnt+ldJTUS7CFewZrXeKXK3CxYa7XhE74kY4EU+y6sj0
+   2kkxbYNvDx264npPwFuf00OYaNSGK2Ky+uysmiLTwrpyLvEdtpxSKJBpW
+   2J56ikIA8nlGD8XpzhG5fgs3CFzAf0/BzxA8/KboGZ9F54UTph9rOV7Je
+   IpDDGOglwiyZVuX9Zc1q50mAOO6IXKtS9UL+LPhpxWqknh5QVwhasnldC
+   INdKTW0YBknWspEd19QqPVDoJRtCPwsdqhoOb6MLSn+Bq36aYSYfvZUyj
+   UoquNfwkvCHHmzXphkaXcxyeejNU4OahxhsV8AJm6RHYnOVoYVrQonwSb
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10993"; a="13714259"
+X-IronPort-AV: E=Sophos;i="6.06,180,1705392000"; 
+   d="scan'208";a="13714259"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Feb 2024 14:41:10 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.06,180,1705392000"; 
+   d="scan'208";a="10601984"
+Received: from lkp-server02.sh.intel.com (HELO 3c78fa4d504c) ([10.239.97.151])
+  by fmviesa005.fm.intel.com with ESMTP; 23 Feb 2024 14:41:06 -0800
+Received: from kbuild by 3c78fa4d504c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1rdeE4-0007yi-2H;
+	Fri, 23 Feb 2024 22:41:04 +0000
+Date: Sat, 24 Feb 2024 06:40:06 +0800
+From: kernel test robot <lkp@intel.com>
+To: Yang Xiwen via B4 Relay <devnull+forbidden405.outlook.com@kernel.org>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Philipp Zabel <p.zabel@pengutronix.de>
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Yang Xiwen <forbidden405@outlook.com>
+Subject: Re: [PATCH 2/2] drivers: bus: simple-pm-bus: Get and deassert resets
+ exclusively
+Message-ID: <202402240646.IirqjDw8-lkp@intel.com>
+References: <20240223-b4-bus-v1-2-2803c3ac4673@outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240223-b4-bus-v1-2-2803c3ac4673@outlook.com>
 
-It's found that some panels have variants that they share the same panel id
-although their EDID and names are different. Besides panel id, now we need
-the hash of entire EDID base block to distinguish these panel variants.
+Hi Yang,
 
-Add drm_edid_get_base_block to returns the EDID base block, so caller can
-further use it to get panel id and/or the hash.
+kernel test robot noticed the following build errors:
 
-Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
----
- drivers/gpu/drm/drm_edid.c        | 55 +++++++++++++++++--------------
- drivers/gpu/drm/panel/panel-edp.c |  8 +++--
- include/drm/drm_edid.h            |  3 +-
- 3 files changed, 38 insertions(+), 28 deletions(-)
+[auto build test ERROR on 8d3dea210042f54b952b481838c1e7dfc4ec751d]
 
-diff --git a/drivers/gpu/drm/drm_edid.c b/drivers/gpu/drm/drm_edid.c
-index 923c4423151c..55598ca4a5d1 100644
---- a/drivers/gpu/drm/drm_edid.c
-+++ b/drivers/gpu/drm/drm_edid.c
-@@ -2770,58 +2770,63 @@ static u32 edid_extract_panel_id(const struct edid *edid)
- }
- 
- /**
-- * drm_edid_get_panel_id - Get a panel's ID through DDC
-- * @adapter: I2C adapter to use for DDC
-+ * drm_edid_get_panel_id - Get a panel's ID from EDID base block
-+ * @base_bock: EDID base block that contains panel ID.
-  *
-- * This function reads the first block of the EDID of a panel and (assuming
-+ * This function uses the first block of the EDID of a panel and (assuming
-  * that the EDID is valid) extracts the ID out of it. The ID is a 32-bit value
-  * (16 bits of manufacturer ID and 16 bits of per-manufacturer ID) that's
-  * supposed to be different for each different modem of panel.
-  *
-+ * Return: A 32-bit ID that should be different for each make/model of panel.
-+ *         See the functions drm_edid_encode_panel_id() and
-+ *         drm_edid_decode_panel_id() for some details on the structure of this
-+ *         ID.
-+ */
-+u32 drm_edid_get_panel_id(void *base_block)
-+{
-+	return edid_extract_panel_id(base_block);
-+}
-+EXPORT_SYMBOL(drm_edid_get_panel_id);
-+
-+/**
-+ * drm_edid_get_base_block - Get a panel's EDID base block
-+ * @adapter: I2C adapter to use for DDC
-+ *
-+ * This function returns the first block of the EDID of a panel.
-+ *
-  * This function is intended to be used during early probing on devices where
-  * more than one panel might be present. Because of its intended use it must
-- * assume that the EDID of the panel is correct, at least as far as the ID
-- * is concerned (in other words, we don't process any overrides here).
-+ * assume that the EDID of the panel is correct, at least as far as the base
-+ * block is concerned (in other words, we don't process any overrides here).
-  *
-  * NOTE: it's expected that this function and drm_do_get_edid() will both
-  * be read the EDID, but there is no caching between them. Since we're only
-  * reading the first block, hopefully this extra overhead won't be too big.
-  *
-- * Return: A 32-bit ID that should be different for each make/model of panel.
-- *         See the functions drm_edid_encode_panel_id() and
-- *         drm_edid_decode_panel_id() for some details on the structure of this
-- *         ID.
-+ * Caller should free the base block after use.
-  */
--
--u32 drm_edid_get_panel_id(struct i2c_adapter *adapter)
-+void *drm_edid_get_base_block(struct i2c_adapter *adapter)
- {
- 	enum edid_block_status status;
- 	void *base_block;
--	u32 panel_id = 0;
--
--	/*
--	 * There are no manufacturer IDs of 0, so if there is a problem reading
--	 * the EDID then we'll just return 0.
--	 */
- 
- 	base_block = kzalloc(EDID_LENGTH, GFP_KERNEL);
- 	if (!base_block)
--		return 0;
-+		return NULL;
- 
- 	status = edid_block_read(base_block, 0, drm_do_probe_ddc_edid, adapter);
- 
- 	edid_block_status_print(status, base_block, 0);
- 
--	if (edid_block_status_valid(status, edid_block_tag(base_block)))
--		panel_id = edid_extract_panel_id(base_block);
--	else
-+	if (!edid_block_status_valid(status, edid_block_tag(base_block))) {
- 		edid_block_dump(KERN_NOTICE, base_block, 0);
-+		return NULL;
-+	}
- 
--	kfree(base_block);
--
--	return panel_id;
-+	return base_block;
- }
--EXPORT_SYMBOL(drm_edid_get_panel_id);
-+EXPORT_SYMBOL(drm_edid_get_base_block);
- 
- /**
-  * drm_get_edid_switcheroo - get EDID data for a vga_switcheroo output
-diff --git a/drivers/gpu/drm/panel/panel-edp.c b/drivers/gpu/drm/panel/panel-edp.c
-index bd71d239272a..f6ddbaa103b5 100644
---- a/drivers/gpu/drm/panel/panel-edp.c
-+++ b/drivers/gpu/drm/panel/panel-edp.c
-@@ -763,6 +763,7 @@ static const struct edp_panel_entry *find_edp_panel(u32 panel_id);
- static int generic_edp_panel_probe(struct device *dev, struct panel_edp *panel)
- {
- 	struct panel_desc *desc;
-+	void *base_block;
- 	u32 panel_id;
- 	char vend[4];
- 	u16 product_id;
-@@ -792,8 +793,11 @@ static int generic_edp_panel_probe(struct device *dev, struct panel_edp *panel)
- 		goto exit;
- 	}
- 
--	panel_id = drm_edid_get_panel_id(panel->ddc);
--	if (!panel_id) {
-+	base_block = drm_edid_get_base_block(panel->ddc);
-+	if (base_block) {
-+		panel_id = drm_edid_get_panel_id(base_block);
-+		kfree(base_block);
-+	} else {
- 		dev_err(dev, "Couldn't identify panel via EDID\n");
- 		ret = -EIO;
- 		goto exit;
-diff --git a/include/drm/drm_edid.h b/include/drm/drm_edid.h
-index 7923bc00dc7a..56b60f9204d3 100644
---- a/include/drm/drm_edid.h
-+++ b/include/drm/drm_edid.h
-@@ -410,7 +410,8 @@ struct edid *drm_do_get_edid(struct drm_connector *connector,
- 	void *data);
- struct edid *drm_get_edid(struct drm_connector *connector,
- 			  struct i2c_adapter *adapter);
--u32 drm_edid_get_panel_id(struct i2c_adapter *adapter);
-+void *drm_edid_get_base_block(struct i2c_adapter *adapter);
-+u32 drm_edid_get_panel_id(void *base_block);
- struct edid *drm_get_edid_switcheroo(struct drm_connector *connector,
- 				     struct i2c_adapter *adapter);
- struct edid *drm_edid_duplicate(const struct edid *edid);
+url:    https://github.com/intel-lab-lkp/linux/commits/Yang-Xiwen-via-B4-Relay/dt-bindings-simple-pm-bus-Add-optional-resets/20240223-115400
+base:   8d3dea210042f54b952b481838c1e7dfc4ec751d
+patch link:    https://lore.kernel.org/r/20240223-b4-bus-v1-2-2803c3ac4673%40outlook.com
+patch subject: [PATCH 2/2] drivers: bus: simple-pm-bus: Get and deassert resets exclusively
+config: arm-allnoconfig (https://download.01.org/0day-ci/archive/20240224/202402240646.IirqjDw8-lkp@intel.com/config)
+compiler: clang version 19.0.0git (https://github.com/llvm/llvm-project edd4aee4dd9b5b98b2576a6f783e4086173d902a)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240224/202402240646.IirqjDw8-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202402240646.IirqjDw8-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+>> drivers/bus/simple-pm-bus.c:67:43: error: passing 'const struct device *' to parameter of type 'struct device *' discards qualifiers [-Werror,-Wincompatible-pointer-types-discards-qualifiers]
+      67 |         bus->rsts = devm_reset_control_array_get(dev, false, true);
+         |                                                  ^~~
+   include/linux/reset.h:192:45: note: passing argument to parameter 'dev' here
+     192 | devm_reset_control_array_get(struct device *dev, bool shared, bool optional)
+         |                                             ^
+   1 error generated.
+
+
+vim +67 drivers/bus/simple-pm-bus.c
+
+    26	
+    27	static int simple_pm_bus_probe(struct platform_device *pdev)
+    28	{
+    29		const struct device *dev = &pdev->dev;
+    30		const struct of_dev_auxdata *lookup = dev_get_platdata(dev);
+    31		struct device_node *np = dev->of_node;
+    32		const struct of_device_id *match;
+    33		struct simple_pm_bus *bus;
+    34	
+    35		/*
+    36		 * Allow user to use driver_override to bind this driver to a
+    37		 * transparent bus device which has a different compatible string
+    38		 * that's not listed in simple_pm_bus_of_match. We don't want to do any
+    39		 * of the simple-pm-bus tasks for these devices, so return early.
+    40		 */
+    41		if (pdev->driver_override)
+    42			return 0;
+    43	
+    44		match = of_match_device(dev->driver->of_match_table, dev);
+    45		/*
+    46		 * These are transparent bus devices (not simple-pm-bus matches) that
+    47		 * have their child nodes populated automatically.  So, don't need to
+    48		 * do anything more. We only match with the device if this driver is
+    49		 * the most specific match because we don't want to incorrectly bind to
+    50		 * a device that has a more specific driver.
+    51		 */
+    52		if (match && match->data) {
+    53			if (of_property_match_string(np, "compatible", match->compatible) == 0)
+    54				return 0;
+    55			else
+    56				return -ENODEV;
+    57		}
+    58	
+    59		bus = devm_kzalloc(&pdev->dev, sizeof(*bus), GFP_KERNEL);
+    60		if (!bus)
+    61			return -ENOMEM;
+    62	
+    63		bus->num_clks = devm_clk_bulk_get_all(&pdev->dev, &bus->clks);
+    64		if (bus->num_clks < 0)
+    65			return dev_err_probe(&pdev->dev, bus->num_clks, "failed to get clocks\n");
+    66	
+  > 67		bus->rsts = devm_reset_control_array_get(dev, false, true);
+    68		if (IS_ERR(bus->rsts))
+    69			return dev_err_probe(&pdev->dev, PTR_ERR(bus->rsts), "failed to get resets\n");
+    70	
+    71		dev_set_drvdata(&pdev->dev, bus);
+    72	
+    73		dev_dbg(&pdev->dev, "%s\n", __func__);
+    74	
+    75		pm_runtime_enable(&pdev->dev);
+    76	
+    77		if (np)
+    78			of_platform_populate(np, NULL, lookup, &pdev->dev);
+    79	
+    80		return 0;
+    81	}
+    82	
+
 -- 
-2.44.0.rc0.258.g7320e95886-goog
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
