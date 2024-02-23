@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F95DD510;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F984D51B;
 	Fri, 23 Feb 2024 03:10:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708657827; cv=none; b=WmKuWWDrwES7H4NZLlj1s8bYH+2N6Wq1UypGaMkAaliXb0O+6wN9XzMJGvmzr0Y/k9j1E9TkP+6bq91w5GI68miErHs4cwm0pkZ3FObl30bSxRpgz8Y1P5EqJrUKh1s9igKtVw6/7KtDwThpvIz80oEO3Rb2vW7Du8bR//zLmHk=
+	t=1708657827; cv=none; b=m5lSgkBP1SM/FP2VHlNrTQxOYQBg02h6px0TCJkK5plCe1z9NQSmicbzRn0Na69jdFVgi+BlEnzLJ/BdJ6ZTiwlHRzZCvzA0Md14o0MmUsQ09UReDkgIpUc8fMyziua2hDeRqT71fnzCvfC0AOHBVrNh82VDPl93O90ALKnDKaM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1708657827; c=relaxed/simple;
-	bh=faycilTshPbB6YjAlC7Ll0g1SDl1TVKUCVVTQuh3x0Q=;
+	bh=QjtME8ur+GdL+mJ9frZENuhVBCUAgZEPZM8y+OwSiuU=;
 	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=FqRDrjMxZYIRpVgQNPatmgbK2vBNuUEAa3qCgQQxsFZPEJXvSv9h08duUJ4SJnjZiHBGJMjv1Q6aiJ8AJnw2Gq/vlex5NaTnMj72pILLuxyM/ME48ItYNRLojrJPnP9p8pAHKfTBtxoyaet5wx2hWRoNvBaONSw94561c4SF6gs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PJD3OGCm; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=P8w2kLf4ENofmwr28605npDriabd1hmMcbZUha3pkHXwNrAyRjYdNwfAjlKMXP7+3sVaxaAkIftPCf18AG3SXTPN2xN12s/r0d7QeXJoiKeo+c/EvboO2w62rgJRz3hmQcrIaaBPhKIA1AAgTFa+npR5beHEm03ICg2ZCwskxww=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ct3hL/ZD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PJD3OGCm"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 02835C43394;
-	Fri, 23 Feb 2024 03:10:27 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ct3hL/ZD"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id F05EAC43399;
+	Fri, 23 Feb 2024 03:10:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1708657827;
-	bh=faycilTshPbB6YjAlC7Ll0g1SDl1TVKUCVVTQuh3x0Q=;
+	bh=QjtME8ur+GdL+mJ9frZENuhVBCUAgZEPZM8y+OwSiuU=;
 	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=PJD3OGCmS8EIuILXngOLqxPnHjmX5Rz25Ep2lhnpDV2QchEF8v167ABRC4aXh/6O1
-	 1e/1vLITk1YUTd4NKXBd9CwTNbmegFPlAydg8snzS9lEloyywsUUzXLwD/skDiyQZJ
-	 iraFt+/h1Nfaq9xXss/sBOBBR3ToQlReOiUQmNzqc11h3+RplJx9jWln4jcXpchNm3
-	 xZe2+mlNYjHSeLRDZh0TpJIk17tMnz7+620G2sy2lSkn0xILQ9691bVo9ijMByd5DD
-	 dZ4wsvE8MuW+6gUQVP1KnCL8syPTZafFy3XT0QPdMaZhAg0w5yvHPZLhyXNxn9WSXv
-	 HWpHYNE0bmJ5A==
+	b=ct3hL/ZD44jwmkGGw0wbhOy6A6u0KOOpBL0C9s74CHx5/HzGCUdqPvD+EucByHUMu
+	 SR/ri0zU48ht+isvH/3q5wC2Ih8j2Qvt15BEXeXdRAXX4MjndMVNWlmXASgxAwv4+a
+	 mtmAraH6tN2LuJE/wG8Eq0zRhv3aGEZqzfQpmRVA9hJYBBL8Tn1fSTaoSVE20IDcnu
+	 SLcslBWR98/GWyzYTRL2/QHxNJinAzw0jHwUt2VFZi7yfpfDtNeBqyzI0Gz1BAvwHD
+	 0npSxL6Xvr9881Gw4ODiZgSTwGxKcU6t/zrr8JxPv0pyULFpFg4NLhhTcCGkMZrIrb
+	 roIXgHWgkM1Uw==
 Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id E4CE5C04E32;
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id DD2D9D84BB8;
 	Fri, 23 Feb 2024 03:10:26 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
@@ -37,36 +37,37 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH][next] net: microchip: lan743x: Fix spelling mistake "erro" ->
- "error"
+Subject: Re: [PATCH net-next] ipv6/sit: Do not allocate stats in the driver
 From: patchwork-bot+netdevbpf@kernel.org
 Message-Id: 
- <170865782693.16544.30761697624612779.git-patchwork-notify@kernel.org>
+ <170865782690.16544.8099691796729643337.git-patchwork-notify@kernel.org>
 Date: Fri, 23 Feb 2024 03:10:26 +0000
-References: <20240220091737.2676984-1-colin.i.king@gmail.com>
-In-Reply-To: <20240220091737.2676984-1-colin.i.king@gmail.com>
-To: Colin Ian King <colin.i.king@gmail.com>
-Cc: bryan.whitehead@microchip.com, UNGLinuxDriver@microchip.com,
- davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
- netdev@vger.kernel.org, kernel-janitors@vger.kernel.org,
- linux-kernel@vger.kernel.org
+References: <20240221161732.3026127-1-leitao@debian.org>
+In-Reply-To: <20240221161732.3026127-1-leitao@debian.org>
+To: Breno Leitao <leitao@debian.org>
+Cc: kuba@kernel.org, davem@davemloft.net, pabeni@redhat.com,
+ edumazet@google.com, dsahern@kernel.org, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, horms@kernel.org
 
 Hello:
 
 This patch was applied to netdev/net-next.git (main)
 by Jakub Kicinski <kuba@kernel.org>:
 
-On Tue, 20 Feb 2024 09:17:37 +0000 you wrote:
-> There is a spelling mistake in a netif_err message. Fix it.
+On Wed, 21 Feb 2024 08:17:32 -0800 you wrote:
+> With commit 34d21de99cea9 ("net: Move {l,t,d}stats allocation to core and
+> convert veth & vrf"), stats allocation could be done on net core
+> instead of this driver.
 > 
-> Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
-> ---
->  drivers/net/ethernet/microchip/lan743x_main.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> With this new approach, the driver doesn't have to bother with error
+> handling (allocation failure checking, making sure free happens in the
+> right spot, etc). This is core responsibility now.
+> 
+> [...]
 
 Here is the summary with links:
-  - [next] net: microchip: lan743x: Fix spelling mistake "erro" -> "error"
-    https://git.kernel.org/netdev/net-next/c/cbe30f99431d
+  - [net-next] ipv6/sit: Do not allocate stats in the driver
+    https://git.kernel.org/netdev/net-next/c/3e7a0dccf070
 
 You are awesome, thank you!
 -- 
