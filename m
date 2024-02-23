@@ -1,151 +1,158 @@
-Received: from NAM04-MW2-obe.outbound.protection.outlook.com (mail-mw2nam04on2062.outbound.protection.outlook.com [40.107.101.62])
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBC1B76C83
-	for <linux-kernel@vger.kernel.org>; Fri, 23 Feb 2024 11:35:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.101.62
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708688120; cv=fail; b=MQhmpWaQU61OmquT77o7uBYy4hXF2rmKm+GqAKRJD+HMpHMTIS7Zyo2od8HuID3T/usS+ApCzhEt9+UmB4E7YlJUktSJfpNGxigUrQkp2cXqLKgJDqJq3khScDX0FslHSH+zWQp8nGlZw3hJp+Khz6rMVHN8+jWWgct5iI2LNQc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708688120; c=relaxed/simple;
-	bh=Wafc+tcwdz5erezhF2gq5I+swaLhLWWEXxUHFMQwFv0=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sh6Odp811kEDNcUO3DlE3pAePkxbK8VMwwLjZy4cNj1jGHunuzOP6a2m3NUscJt/TxATDjHvz8hMY96S3yNj62PXs6MceXDlCOV9UmYPf+PM+t1SyUnXErHdgxpY9bzoOqhQS29AkGks6E3Tw0k48YOITpgqZmBx9+li6gvBxaw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=JX3dDn02; arc=fail smtp.client-ip=40.107.101.62
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4C8A1758D;
+	Fri, 23 Feb 2024 11:36:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1708688197; cv=none; b=Tr+2BVzeWJYPWiWegL4+B76YGSZktRp150kpfJtGspg+Perqi156L419z2tKkkfznOrs/D6yvVKlozysd5rIya2iAsMrvfvALrYrYOQo82gPx4ARQ97UpiSMnSaxCSpmxK5T+3CpR8bmPv3ZjwhnL0t4QjrMtiouIZNqTG7VCso=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1708688197; c=relaxed/simple;
+	bh=cDc7U7GcuQWoMk6L+ou7gQSSvAw1xIOtj2z4l+2dVAI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=EN+A8e6fOscDeKwfZXHFpV1sIzc0lEzGskeWoLQKy1xgxWadzQfBq8DqWHFQrKdYD7RgEdnL4MdmTYksFJSMVYcB0KAre1Ttr+NI/lbkQEr/HYY0emtkmTk//kLYbfSbpixREa8OAVJD7FKaBkLM4av6K2sGm5kYVVQkOKJh0XY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=WznBUKJC; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="JX3dDn02"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=OXiCCWLuU5yGTixRQyG5KUGRP4f69klbBIUcXwEonae8SSZNHbLagjwayngCkX5y7OIFPVwQDYCg/86YuDGGTvRdj8G9RvjMyWz40AhQryC4jN7zbXOhJalnIEExOt8pvDaSubAku1ZsHtmokE23R2TknAXuQ10HZK/BTLmP+w8G+hd0lW1+03Dm1cPmqcj18/rIxKK5XIDZTMCi3kZ6bds6k9htltF07guJQmsW3Fxi8P3vaNlPnxL6tGPSID243QTV9m/lJcVg/oxl0MY2n19L9875Nq5NKLEOrOHtOrT0p/ScdgVvkG7zO/skp5dPZKkRw+k/QfNzmUtRy8MLwQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=gRmU7pD5AxbiVa47px6OHcPyL9go9Vf7q3vfSTdG7pU=;
- b=kFNnxqglCyfX42+dSaEnm7mfr5VE5SxNpU29sMQO2qJJUuay3mfyOKfYBkj/BXoEds0dEn6SObys6Y4TuAGeEDAk7hSF0NKDUlabPgZgQ/qAIify9lN+iEj4hnF4LBHrqDxGLbxCSOz8ZBKkDV9YVe5ltu+Ntrr9bejQL01RZazqO43Tf+of597Re3jx6lCiQHvzr4tAqcOslWXeZk61wa3iftCBviRWoSbOMsBr3U1l1ba1avmVEsBotRtStrtsbk5vCvTDy85mQgQx+YHiWaT0YuIGr94/vtWTxWdIT91SwhKV69lKkb2ADKCdaSpoqNzDUd3DQUHxys8ZGHb0Fg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.117.160) smtp.rcpttodomain=kernel.org smtp.mailfrom=nvidia.com;
- dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=gRmU7pD5AxbiVa47px6OHcPyL9go9Vf7q3vfSTdG7pU=;
- b=JX3dDn02HeB67dv9+75us7XYGBiwQz5puPCmzpQVm8T7wTv8yiXRSCfDRin3PdI4A0wPj0I6F0NrPeQ/GRBTd6//0lBTXW9FnDdifhgQdCnqy4a7wDJ+qV9B2/XMvPaAan8fEpAVWBPb0NmEIxNuRHgYosR74Vop3wnw+8v1myWv71NT0S3mW1exr1h16TPUaRTY3LjNd1zn63DsJ9RXRiI74LSY5INX9Lv49sVrLzctsOjci8AYJ+t04iIa+CdK5vbdi5ZgiSyRrEYKF7Hpbd2odXGfbuP1RnzITT6SgW6Pi/z3bwaVK8A/F95Tej2w1HAo3qmJU+SGuMO9JnCm8A==
-Received: from SN7PR04CA0071.namprd04.prod.outlook.com (2603:10b6:806:121::16)
- by SJ0PR12MB5634.namprd12.prod.outlook.com (2603:10b6:a03:429::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7316.22; Fri, 23 Feb
- 2024 11:35:16 +0000
-Received: from SN1PEPF0002636A.namprd02.prod.outlook.com
- (2603:10b6:806:121:cafe::71) by SN7PR04CA0071.outlook.office365.com
- (2603:10b6:806:121::16) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7292.43 via Frontend
- Transport; Fri, 23 Feb 2024 11:35:15 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.160)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.117.160 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.117.160; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.117.160) by
- SN1PEPF0002636A.mail.protection.outlook.com (10.167.241.135) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.7292.25 via Frontend Transport; Fri, 23 Feb 2024 11:35:15 +0000
-Received: from rnnvmail203.nvidia.com (10.129.68.9) by mail.nvidia.com
- (10.129.200.66) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.41; Fri, 23 Feb
- 2024 03:34:58 -0800
-Received: from rnnvmail204.nvidia.com (10.129.68.6) by rnnvmail203.nvidia.com
- (10.129.68.9) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1258.12; Fri, 23 Feb
- 2024 03:34:58 -0800
-Received: from Asurada-Nvidia (10.127.8.13) by mail.nvidia.com (10.129.68.6)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1258.12 via Frontend
- Transport; Fri, 23 Feb 2024 03:34:57 -0800
-Date: Fri, 23 Feb 2024 03:34:56 -0800
-From: Nicolin Chen <nicolinc@nvidia.com>
-To: Will Deacon <will@kernel.org>
-CC: <linux-kernel@vger.kernel.org>, <kernel-team@android.com>,
-	<iommu@lists.linux.dev>, Christoph Hellwig <hch@lst.de>, Marek Szyprowski
-	<m.szyprowski@samsung.com>, Robin Murphy <robin.murphy@arm.com>, Petr Tesarik
-	<petr.tesarik1@huawei-partners.com>, Dexuan Cui <decui@microsoft.com>,
-	Michael Kelley <mhklinux@outlook.com>
-Subject: Re: [PATCH v4 0/5] Fix double allocation in swiotlb_alloc()
-Message-ID: <ZdiC4OpEMQHQjEtv@Asurada-Nvidia>
-References: <20240221113504.7161-1-will@kernel.org>
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="WznBUKJC"
+Received: from pendragon.ideasonboard.com (89-27-53-110.bb.dnainternet.fi [89.27.53.110])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id C9B662E7;
+	Fri, 23 Feb 2024 12:36:24 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1708688185;
+	bh=cDc7U7GcuQWoMk6L+ou7gQSSvAw1xIOtj2z4l+2dVAI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=WznBUKJCCNNkzo+TNJTpcmhwi9mKmdT5Xi9UsPHhCaKcAboi3zgc0zLuO476a3c/N
+	 Ax5XW/b4bUHTCv56KEqee+UlLwDrPxoFJAQq21qcYzx/L5Rt4UdYqTiZ0NlG/xJZNy
+	 xYelyWxVKPeYjeUezIgGapKfLi8wJOzwEKJMzxys=
+Date: Fri, 23 Feb 2024 13:36:37 +0200
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To: Mikhail Rudenko <mike.rudenko@gmail.com>
+Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	Jacopo Mondi <jacopo@jmondi.org>,
+	Tommaso Merciai <tomm.merciai@gmail.com>,
+	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+	Dave Stevenson <dave.stevenson@raspberrypi.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>
+Subject: Re: [PATCH v2 15/20] media: i2c: ov4689: Move pixel array size out
+ of struct ov4689_mode
+Message-ID: <20240223113637.GA14575@pendragon.ideasonboard.com>
+References: <20231218174042.794012-1-mike.rudenko@gmail.com>
+ <20231218174042.794012-16-mike.rudenko@gmail.com>
+ <20240223113300.GS31348@pendragon.ideasonboard.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20240221113504.7161-1-will@kernel.org>
-X-NV-OnPremToCloud: ExternallySecured
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SN1PEPF0002636A:EE_|SJ0PR12MB5634:EE_
-X-MS-Office365-Filtering-Correlation-Id: be7135ec-a052-461e-6a72-08dc3463816a
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	2zzWfX+MOi/uReqVFGvh8b0zeNpgbS6uq04YdEr52D8upxgfoVLk2xXNHCT5FEKHdt0FCTHgR9nzDzhkwjoLA0iHFSuVELebd745ahSOJBR2TA+PWuPU6BbDSQ0d+aBnm1NRx99lVacUuauunulhGRBrbOT7ilckD550htfIgOWwaIyUo9C4wn4CyeCtBNxXM2UE5BgUtCjFQBavTdr6yNAGFEH6/lzxgNyXkFEIqTt9CvDkeb0TIIqdj2XSVZjTx8zoVHfksMTwWzsgY6GjL2uQrM9BuDf68XWaougZW/y3/shlvOXjPnKTB0xsNpf7QOg/PvCBkR9LD2f3MK+fpCLHqX1b16OFSM99DcgxsUZIKp/BBjtwXrhPnNWvXur8DH4cLsmfXxGqQKXEh6X5T+Lo23jAHt7NLyEe5L/Q5qyMFAts+CyGNbwssGKxq7scpOr4gbX+t+td0iVx3KF8E15U7DKUsIWTVgiRj8UzbbiVk6wUfHa6wXddwoKLkz+OnzjMjmyKWI+0mtMMwwDAHFl8Y0yl/+owoP2w6Q0G/R+vbHStjudyEIPG4zdvkBkXLcFKedb18wp1insz6r6xcWllZ6zUdlDY/iB+vFvx9Xr2Jgr0bwEKAFrc/kuOhgutas5DJkUaLtIGpfXIS7jeGXfuP8APjZ3bgDqHR4bTjXpUGUWSZIED0owxDEJP8J9Cybl+1xVtq67wVKmayQu4nD5JePsNmZGzehugYeEqSbs=
-X-Forefront-Antispam-Report:
-	CIP:216.228.117.160;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge1.nvidia.com;CAT:NONE;SFS:(13230031)(230273577357003)(32650700005)(36860700004)(40470700004);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Feb 2024 11:35:15.5065
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: be7135ec-a052-461e-6a72-08dc3463816a
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.160];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SN1PEPF0002636A.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR12MB5634
+In-Reply-To: <20240223113300.GS31348@pendragon.ideasonboard.com>
 
-On Wed, Feb 21, 2024 at 11:34:59AM +0000, Will Deacon wrote:
-> Hi again, folks,
+On Fri, Feb 23, 2024 at 01:33:01PM +0200, Laurent Pinchart wrote:
+> Hi Mikhail,
 > 
-> This is version four of the patches which I previously posted at:
+> Thank you for the patch.
 > 
-> v1: https://lore.kernel.org/r/20240126151956.10014-1-will@kernel.org
-> v2: https://lore.kernel.org/r/20240131122543.14791-1-will@kernel.org
-> v3: https://lore.kernel.org/r/20240205190127.20685-1-will@kernel.org
+> On Mon, Dec 18, 2023 at 08:40:36PM +0300, Mikhail Rudenko wrote:
+> > Pixel array dimensions and default crop size do not belong to the
+> > ov4689_mode structure, since they are mode independent. Make them
+> > defines instead.
+> > 
+> > Signed-off-by: Mikhail Rudenko <mike.rudenko@gmail.com>
+> > ---
+> >  drivers/media/i2c/ov4689.c | 29 +++++++++++++----------------
+> >  1 file changed, 13 insertions(+), 16 deletions(-)
+> > 
+> > diff --git a/drivers/media/i2c/ov4689.c b/drivers/media/i2c/ov4689.c
+> > index b43fb1d7b15f..475508559e3e 100644
+> > --- a/drivers/media/i2c/ov4689.c
+> > +++ b/drivers/media/i2c/ov4689.c
+> > @@ -70,6 +70,11 @@
+> >  #define OV4689_LANES			4
+> >  #define OV4689_XVCLK_FREQ		24000000
+> >  
+> > +#define OV4689_PIXEL_ARRAY_WIDTH	2720
+> > +#define OV4689_PIXEL_ARRAY_HEIGHT	1536
+> > +#define OV4689_DUMMY_ROWS		8
+> > +#define OV4689_DUMMY_COLUMNS		16
 > 
-> Thanks to Petr for his Reviewed-by tag on the first three.
+> Adding a comment here to indicate that there are dummy columns in each
+> side would be useful:
 > 
-> Changes since v3 include:
+> #define OV4689_DUMMY_ROWS		8	/* 8 dummy rows on each side */
+> #define OV4689_DUMMY_COLUMNS		16	/* 16 dummy columns on each side */
 > 
->   - Use umax() instead of max() to fix a build warning if the first
->     patch is applied to older kernels which warn on signedness
->     mismatches.
+> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 > 
->   - Add two new patches to the end of the series to resolve some
->     additional issues with NVME and 64KiB pages, reported by Nicolin.
->     I've added them to this series, as the first three patches make it
->     easier to fix this problem in the SWIOTLB code.
-> 
->   - Add Reviewed-by tags from Petr
-> 
-> Cheers,
-> 
-> Will
-> 
-> Cc: iommu@lists.linux.dev
-> Cc: Christoph Hellwig <hch@lst.de>
-> Cc: Marek Szyprowski <m.szyprowski@samsung.com>
-> Cc: Robin Murphy <robin.murphy@arm.com>
-> Cc: Petr Tesarik <petr.tesarik1@huawei-partners.com>
-> Cc: Dexuan Cui <decui@microsoft.com>
-> Cc: Nicolin Chen <nicolinc@nvidia.com>
+> > +
+> >  static const char *const ov4689_supply_names[] = {
+> >  	"avdd", /* Analog power */
+> >  	"dovdd", /* Digital I/O power */
+> > @@ -90,10 +95,6 @@ struct ov4689_mode {
+> >  	u32 vts_def;
+> >  	u32 exp_def;
+> >  	u32 pixel_rate;
+> > -	u32 sensor_width;
+> > -	u32 sensor_height;
+> > -	u32 crop_top;
+> > -	u32 crop_left;
+> >  	const struct cci_reg_sequence *reg_list;
+> >  	unsigned int num_regs;
+> >  };
+> > @@ -254,10 +255,6 @@ static const struct ov4689_mode supported_modes[] = {
+> >  		.id = OV4689_MODE_2688_1520,
+> >  		.width = 2688,
+> >  		.height = 1520,
+> > -		.sensor_width = 2720,
+> > -		.sensor_height = 1536,
+> > -		.crop_top = 8,
+> > -		.crop_left = 16,
+> >  		.exp_def = 1536,
+> >  		.hts_def = 10296,
+> >  		.hts_min = 3432,
+> > @@ -385,8 +382,6 @@ static int ov4689_get_selection(struct v4l2_subdev *sd,
+> >  				struct v4l2_subdev_state *state,
+> >  				struct v4l2_subdev_selection *sel)
+> >  {
+> > -	const struct ov4689_mode *mode = to_ov4689(sd)->cur_mode;
+> > -
+> >  	if (sel->which != V4L2_SUBDEV_FORMAT_ACTIVE)
+> >  		return -EINVAL;
+> >  
+> > @@ -394,15 +389,17 @@ static int ov4689_get_selection(struct v4l2_subdev *sd,
+> >  	case V4L2_SEL_TGT_CROP_BOUNDS:
+> >  		sel->r.top = 0;
+> >  		sel->r.left = 0;
+> > -		sel->r.width = mode->sensor_width;
+> > -		sel->r.height = mode->sensor_height;
+> > +		sel->r.width = OV4689_PIXEL_ARRAY_WIDTH;
+> > +		sel->r.height = OV4689_PIXEL_ARRAY_HEIGHT;
+> >  		return 0;
+> >  	case V4L2_SEL_TGT_CROP:
+> >  	case V4L2_SEL_TGT_CROP_DEFAULT:
+> > -		sel->r.top = mode->crop_top;
+> > -		sel->r.left = mode->crop_left;
+> > -		sel->r.width = mode->width;
+> > -		sel->r.height = mode->height;
+> > +		sel->r.top = OV4689_DUMMY_ROWS;
+> > +		sel->r.left = OV4689_DUMMY_COLUMNS;
+> > +		sel->r.width =
+> > +			OV4689_PIXEL_ARRAY_WIDTH - 2 * OV4689_DUMMY_COLUMNS;
+> > +		sel->r.height =
+> > +			OV4689_PIXEL_ARRAY_WIDTH - 2 * OV4689_DUMMY_ROWS;
 
-This fixes the bug with NVME on arm64/SMMU when PAGE_SIZE=64KiB.
+I spoke too fast: this should be OV4689_PIXEL_ARRAY_HEIGHT, not
+OV4689_PIXEL_ARRAY_WIDTH.
 
-Tested-by: Nicolin Chen <nicolinc@nvidia.com>
+> >  		return 0;
+> >  	}
+> >  
 
-Thanks!
+-- 
+Regards,
+
+Laurent Pinchart
