@@ -1,46 +1,47 @@
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2080.outbound.protection.outlook.com [40.107.92.80])
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2048.outbound.protection.outlook.com [40.107.92.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B5BE179A8;
-	Fri, 23 Feb 2024 19:27:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.80
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 175AC143C6A;
+	Fri, 23 Feb 2024 19:27:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.48
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708716445; cv=fail; b=YSVxlogg9PBBYfSLSpFKaK9jDILE4ij5HN0iFqmQLYQC0cj3Syfy6LI64tq6Gl4R03dwJl7GGJcZcjORzVP1pj2r3FGO+H0E96O/VqFffjku1B1llYlY3bmYXLUPQEOYvtRoypTDcfnXJPK1yDIdS2prnW08AwgrSi9oVyQFkw4=
+	t=1708716445; cv=fail; b=b1rpNl85Vvf0oXESHxz7Pz7Bzxtcn5TKBijyFkPtRA6VpAXEVzL4OQynYjwZtvW8n0frKyqtp1Owl4WU6K/kFhenXOrBgyH4ldGcoDtTpwRG6youaKtUt827xmZAC+6+s6Ab7GpzNkMxwp82AKSG75KCQm0YxyR58spvENwgisU=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1708716445; c=relaxed/simple;
-	bh=8W589ri+hg4bSEhsGN1GWaMawF0HzHN+vcIADygJG4Q=;
-	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=FurAfAleOvM9AWQEsq7Oq0cUZaWYSdU+k2OkFyVCoUT+LN21363RqDsGa5vB7mPNivKsyiXR3IDtLtPCx69rM/0qdprzSiOmXqD9Wm/79rN0/pFs4qjw9X7OP64ENrlMO6wrl/TZuQdAilXFo251qYS+zk6LulhP8mfsbI72Jr4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=TRQwUfLL; arc=fail smtp.client-ip=40.107.92.80
+	bh=fkIWIxg7q00NWXu2983DMgOaMBHbu2OR9505vsIKCbw=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=Eqt8eHPrqNexBoYv7giYHtQuk/NVunFXRCejHc0JT06qqun42gMVacn+EgrAYHXsmXvhtnW69k1w4Jhcv78VV9M3qPRjE6FdA/73TAwK+O8HMPN0KK0UVyTNDQ5zAIUt7D8jhRYoGhLSwpFEEqA99MCh10n28YcK5nlDqhfM4l4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=OGlgupts; arc=fail smtp.client-ip=40.107.92.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="TRQwUfLL"
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="OGlgupts"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=i+DfZq3AoLYhIpdgNMUABMOFpVZWemuUoizblm7iBWbX7pRhVW/Hslufo+uM9ju3nscEglDK/9yRUn5tLLTRnzjUwQnKga3RvVnFwbUkDOJRsg7PZ+iTt8etTSW1ibMW6SAUPEMVor7vTTQa+1bF+u1qAmP1D9u9dnV1YKynUV7S5cw/oVaF8QKYfOSJ49AAlJuU+YuBHOv1elo3G0B9sPg0nD2QatQBSUFQeGj63Nn2pLn4dYfZxFGdtmZDFLLsMAh76s1CS6iY/8COEbXTCgaQwNUj7bsGqpbSqhb9mpgym15YRCj4q4NYpC3imsrjFfyAOrJnCwkEPWQBI+ogAQ==
+ b=Ohzl99EeDvyxGQZIfAYqvoDEVdf57D7HDuE8yx/0gtX5ZHVkG2XhTmH37xCTWWLUtfczod75gFPxjnHBKNGvadD6tN2vcQMhTXOWcXErrBfxL98tsULrAzm1eNZGaRm+YF0pJPcH/d3h1hm5G6/sjOnLz9XKI+NjM7zDoANM2F+J+a7AQBMbS4qLKbxHGnAqc66bFoYTL6gJ8R9iLCkiqjwX2ALgu8cWF6u7AmIY1vzRVyFtgF7p97rnYBUcuTHNqF+w44DuoQtvx9Z9Xpm1efzzecbkHefXNwkiepd8Qp9QRVihxN+JARZEPh44N/NgOnv73ja2IeCBdwTB8jOIOQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=mouP0gvIb4s+6MbwsNs5eNh76gKqMtlZGkqIh5E0dW4=;
- b=ArB9FQRg2QDf9CLo5j1g5dKjxhEqaEOicfM+ajHiCe6qDaXaC/aUGJGlTDIHOsk9W67onpmZLUhiWB9EDbLfK28spxMtb7uXt7lulVgN0Z87XzEIOGYuPHbVqJHS3o2OL4/8KdDpZrCcCfBZQgw1AdCmUXIZQpWvr192goercu3h0XpybMKST81N/3x96hHt+8Veyfrf/duxpt6+GfkIzuy0E5pIsLT/9amcuy0dmg6Qc3aR5WlUO/ZxMbrXpS2BhsJT+yFMn/fYPKrxIrRxv5CX/+t6iXIGXiKMM8kZXJUMVgGgeBgkBbPsH4ss0duFdfc+PjfvPfKldIO9uiYQRg==
+ bh=RfVkymu7Gl6vN5rHt/lbJFfwQungApT9WPWAslGor8g=;
+ b=DEveQ4JGpK/uSl1rvR57/vbp6jLugIHlu8U6vp2OX9sLPN1AHOgSEaHxRLfJwrZmhSuT7sltKmC6zzCD/BQJZoxJlnf5cv348xRrd7QW/BQepT+p52Fu52kXR117DdAyTa4n+lGE3ROAQcUIVoEaBxAWpvlQHjIErxOf73yLFocKldd3LdPIFr1D3V6oKGfoikTz8lC1Hj782r4ZMtzmjrshCiKKTA4NXYIZOFnoXPKJd9m5FrvQHDnaFUyABMGMZM8gNB5TYoibvktALAVz2QKfSFDWoOji0PP605gAmfh7PlgKHYlmQrIGDGo/OgNK3sfdUk/NY0jBPHpMHvcUTw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
  dkim=pass header.d=nvidia.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=mouP0gvIb4s+6MbwsNs5eNh76gKqMtlZGkqIh5E0dW4=;
- b=TRQwUfLL1fxDWgI/P0y6M6XA/uCZwuhPnULkVD5DfxHYbIXOdMjc8sbWD5W0I7SAYeZrxXHMcMKD+GpKhGc8VZ3UoDrUk4orfikez5seRmBFgUNPjb0odkFeguIcHXua2HXSWE2RX9U999qmaxtkhGRsYhd19QcP1OuCrVwvv14NhW9dehDnEKRGuG8aBNnM47IQatrmBoAL8tpSJ6CQvH4FwHaHOEiQpewu+998UZa+6kx8P55HFwLg//6/aVx1XhlmebVIqZkQ0w0wg+W6gJDdOwudJ0G+lg4rgT7WJnF8AS153QIgFk0fKQq4C5A7IAjYRWybkyx1RyHwxVXCRg==
+ bh=RfVkymu7Gl6vN5rHt/lbJFfwQungApT9WPWAslGor8g=;
+ b=OGlgupts6FZ3CRZZNeUDUqFrK/c0PMC9ORYy2c65LnMg1AOdY/bmc/c4aZf1o3DZLJHK/kCe0vJKfYOPLkub1SFQeSriYtZZu1Drc7FJB125hdi8o7XSPZm4hPVKDSbqILTqBUt2POf4s7M8xbW8/sBv9McErMv4824zNuTsBzilnyx8feO19R9gXNjLcgEkCGBCqKMIXV1NclU63h/rekSWUcJtn/QR2RXF6WjmEWCpV7GCbLLtFwYzLgcTjbim0WO5WXKEtATclwiCb5+1kZoZy3Y5qZIJ3XJutQUiBPFnZq7luYkw8Jj96Nz9vX92snFwDXdQ8uHAAqHO3DCIgw==
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=nvidia.com;
 Received: from BYAPR12MB2743.namprd12.prod.outlook.com (2603:10b6:a03:61::28)
- by SJ0PR12MB6831.namprd12.prod.outlook.com (2603:10b6:a03:47d::9) with
+ by BN9PR12MB5226.namprd12.prod.outlook.com (2603:10b6:408:11f::11) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7316.20; Fri, 23 Feb
- 2024 19:27:16 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7316.27; Fri, 23 Feb
+ 2024 19:27:20 +0000
 Received: from BYAPR12MB2743.namprd12.prod.outlook.com
  ([fe80::459b:b6fe:a74c:5fbf]) by BYAPR12MB2743.namprd12.prod.outlook.com
  ([fe80::459b:b6fe:a74c:5fbf%6]) with mapi id 15.20.7316.023; Fri, 23 Feb 2024
- 19:27:16 +0000
+ 19:27:20 +0000
 From: Rahul Rameshbabu <rrameshbabu@nvidia.com>
 To: Saeed Mahameed <saeed@kernel.org>,
 	Leon Romanovsky <leon@kernel.org>,
@@ -75,14 +76,16 @@ Cc: netdev@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	linux-doc@vger.kernel.org,
 	Rahul Rameshbabu <rrameshbabu@nvidia.com>
-Subject: [PATCH RFC net-next v1 0/6] ethtool HW timestamping statistics
-Date: Fri, 23 Feb 2024 11:24:44 -0800
-Message-ID: <20240223192658.45893-1-rrameshbabu@nvidia.com>
+Subject: [PATCH RFC net-next v1 3/6] net/mlx5e: Introduce timestamps statistic counter for Tx DMA layer
+Date: Fri, 23 Feb 2024 11:24:47 -0800
+Message-ID: <20240223192658.45893-4-rrameshbabu@nvidia.com>
 X-Mailer: git-send-email 2.42.0
+In-Reply-To: <20240223192658.45893-1-rrameshbabu@nvidia.com>
+References: <20240223192658.45893-1-rrameshbabu@nvidia.com>
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-ClientProxiedBy: SJ0PR05CA0063.namprd05.prod.outlook.com
- (2603:10b6:a03:332::8) To BYAPR12MB2743.namprd12.prod.outlook.com
+X-ClientProxiedBy: SJ0PR13CA0060.namprd13.prod.outlook.com
+ (2603:10b6:a03:2c2::35) To BYAPR12MB2743.namprd12.prod.outlook.com
  (2603:10b6:a03:61::28)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -91,97 +94,137 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BYAPR12MB2743:EE_|SJ0PR12MB6831:EE_
-X-MS-Office365-Filtering-Correlation-Id: 254eabe1-6fd9-474c-065e-08dc34a571e8
+X-MS-TrafficTypeDiagnostic: BYAPR12MB2743:EE_|BN9PR12MB5226:EE_
+X-MS-Office365-Filtering-Correlation-Id: 690cbf36-19b2-4467-2dac-08dc34a5742e
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
 X-Microsoft-Antispam-Message-Info:
-	5ulbHuysk3E5TzVgqF9U8y0FxCzFQEawfWl3JiwEIGvhmr0FwrLbIlcka/I4Ae67wjoURnRBX5yRJih4KPRIDuuQFuH659oxFZg4H3ar7D3Sfj5ermBtyD5uBdrQyxwMoegw15PC32qLskvB7nA8hGz7l+nCMBMhyO2MEFtJ7OzVNXMIjrku0w9HU2eDzIBVbHJ5r7Tlqz1SLPY4107vx+XBQDeWuAsRb5C9J0m96XiIcTu+iuQ2gMRbdgx3JBfVpT4c/5GOTvmInQ6TDs4X3tbOxZbZ/CySmg7MfkeWIR4q6/LsWs/bWN9R7r7DBbMPJVW3RCUO3c7Ry/apThrHhIFFoBKLUd0wYDJ7qGXXRQby+4jr3JpdPseYbFBvv4jSP+2SnCuqXZcTsGrFgZ3Zapl29wHTYzibwv7hsHvZsRXBLqUbuyxyqVJr31xT28P1BxWJa0Itz/P8kFb3Pt1qvAlvs2eBBAd26/qBdfLBxT8QMJky5zPGiAf8VhY+huaq/H14a46/rBvPiX2ButahQ678NLF9L5DJqSjtdTrJhmM11A4Xxoccka0ZaeqjUBYJlQBZnQeIPbcMlleH2Ql4g52hJD1DSwLLaejtk/V3Fmw5gqCzYLG44jHmocvIkuVSC9D4pYbqhCeTuNEK3cofwg==
+	WSS/gpwl3aftD8UWckIAfDospyLt022LjL38AEoNkQcyIYZxaGfRgbmq39mKeCEGFTNV+OGDdHqVD3M5/6t2FYhnWas1ZvNxtneFAs9CvEtosCyThAuY2ThtRNzT/BqeqzdYl8U1ibVmphZhgxCq0yspQPei8wyREo6Up84SyoOhH3Wej0Aroiw63dN3VKNqxFETigXeqlifMRwTxR+6bN765qLRrQseyoX5Bc9xxgmfpgsLwKpSRsDMK595jy86XcYcIKoDDH4MrAWr+lB3LV2WGqSiwfKuEVVZNASLjJNCX/dX4eGNJcdPrw+2M5umNP9VXqnY+5gV5G+GHg0jEp6e/8FzRYqsALuGFn9sZA7UH6JnmIIbm3A42+YuhmlVHJlRPjkIessOGm3asZ5Gw4TIMVTetLvUMG8PRklBD/aACruUnzGiqQp77aZ/aQdqPdHhLYzDBvqjMgetDmKrPMjMa6dreK4/prQTdZGx57g7YRpL+i+uswfoy5YLHtBZkytSyr2jVVXJZEi5xwWve2MWiVYRLOxFfavt30+3kOt0M0UwJyujp8Oc5PBqEL4qmchzo7tlJFITm5pOsbERo1YWI9KTXV5exlXrO7+Gt+o=
 X-Forefront-Antispam-Report:
 	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR12MB2743.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(921011);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?iN5tfHKmMuwsY2ShOo/4oDSyqbQ7vOefQFoy+YEOGv+zd4F5jpREyr6Ql40i?=
- =?us-ascii?Q?k37q5aQUpCuBs5HAgaONPktJUVieBnizSbYVqAXz27UUMsZkd7rSroWbLPxq?=
- =?us-ascii?Q?vQ2gPeq3w3x9avFHInXrhhNQM7fZAZWVHfal7s861Zofc8BagM0k1kyipVf4?=
- =?us-ascii?Q?H3ukmsOH0A5Im1jCFCMsi3ASFNfKOqbnE/r+rGDxv337nrCqklIIFqNZGu0n?=
- =?us-ascii?Q?PJWOPI6WG1rI5qdXL9K3/71bCct5kIPy87KAp+iMLE5p8pxNFX9hgsf2XkUQ?=
- =?us-ascii?Q?8sSoSIiT055IYkeJuu+SoFhsPWNpkHGHaOfI1c6sYciFikYc5QZo9iMNc9bK?=
- =?us-ascii?Q?IItge+7s51S4UYMAsyLxf+XSVa79BRZCvx2uve90xwQU3EHjJhj+wJHSJt+C?=
- =?us-ascii?Q?J2uRkq85By72M8sRSEhUUjU/ELM0TnTOVvTSPUv19/4XUERl7rOIHnsbupm+?=
- =?us-ascii?Q?ZKSX+y0V1ZOCdF1XSGAZ7Au/IyzSDHZPP+QCz/9ZGeAMzS8fl66xK+VwhVv9?=
- =?us-ascii?Q?UrGISNi8kYO/VJEoCb+dvv2AmZlYYM6ZS5a459fVZx5X+q2zy4FK22s2XLG8?=
- =?us-ascii?Q?vMJKmglUvv9OFbakLays/tgVUBro4WUTmlrD9CKhIZS5WSXwsWUwhnPGfYG8?=
- =?us-ascii?Q?NGYxNOsttsdQheFliBSoIsVnpjfyEh8vg46rYkeXl3lDYdCujzOTAOslZfl0?=
- =?us-ascii?Q?PPmsrDQmC8v+suKlWKQGEo5f9UgyK7cgCx4Q4QL9qV9/PCsU7iyMFIGYCgWp?=
- =?us-ascii?Q?2SaYntlwzOZoXqhi/hKmIHolkkEv0S1++dkYeA6yHs5xfFj3DZJbS43IbOMQ?=
- =?us-ascii?Q?OYyjqlzVRiD4+71FZ6LusP2rJ0AY9OXsqQc9dXIi0gVdhbU2SUIzxDbu3iRC?=
- =?us-ascii?Q?N1IgeNSo0/4TetWD0ycjl3CWN4C1O8e8QNGyOL/Hb7n1ousKJcTmy7DGfrjO?=
- =?us-ascii?Q?2UZHR7RHsv1qb0OZI7w+jciMFDDl2q4zRed7FY6LoMqEjo3S4rd2FXI5n3a5?=
- =?us-ascii?Q?7ynEjl4ahfpQRsCh576ot3IgcJJNF53I/aJ3O/GftojjZYpFI/hTSRMch8Qx?=
- =?us-ascii?Q?C7yws5HWJatCwssJVLWCS6JJfaYzMZC+69Ilenw+iHe/Sru7v1+V1EwmSkc0?=
- =?us-ascii?Q?8M/T49orge8gIvifhfP1Xoo4n7/4Zh8B0MtCxiTRKQ9DNZcYERfWoGPs9/lS?=
- =?us-ascii?Q?IN0smfz5kTb7R95pRGbaj4R6zVQT/XFwhRRv5dFOJRBoqiZWUgz6wzotEGZ1?=
- =?us-ascii?Q?zhjzsBvaCimBuMGusqp9BGf9pqLXdh4qG9LJCuoUv2qPdRr9kpaeN2rnSUjO?=
- =?us-ascii?Q?IT6T2vxNJZT0QGJgBh3UQXAK2J2SPlTnqxwA2pE1G55Oe4NJ7BEvl1TkIreW?=
- =?us-ascii?Q?8OQhw6c6HkNpT1DgRLmYtdGdJtoEb9rKWzDryiyIQ7Am3vDety9KqG0qGfmS?=
- =?us-ascii?Q?sf0GbTgvkXDrFKExWYYwxP5aPYFCQ19PBI7kXPLNiEWWgYx7xY7x/jY44w9L?=
- =?us-ascii?Q?D2loXdGcJKO3TXtO9eyEj1CyfXCdfNRWmmN4WLwcePcIV8X5LD+bqyk4HVCK?=
- =?us-ascii?Q?ewKwOJtRjXe6NbPdhAHibRkwyz95E2lyLjDAqo5YB4aj5QqdtsyEu6Yqb7WI?=
+	=?us-ascii?Q?PXri+onAtEK51YujLJoaxPvBwQkl5gs0yBEfEm45VUW1nlE27hkPNgRVYoGG?=
+ =?us-ascii?Q?vfSeA7NzcCRwDkpcg+wJ4l7foFU/T8OlZnJIpNT9b9bEu/zXnkLeXU8BKZlm?=
+ =?us-ascii?Q?mQ3ddJMyP0W4blUjwEa4Feg67JKknP8HcVgt9m1k5b0w4ZEfACH7ljKgX1u2?=
+ =?us-ascii?Q?u4TI28vP7RI3jMvwBbIcb/rABolTFzukWUap1JebH17y0IjXOWCk/iC3FRIC?=
+ =?us-ascii?Q?ybY334fSERCjqz1oLVR8dlUOaJ34xRFQtI2rayGQ95DDbYQGYnsUF7XZdgsD?=
+ =?us-ascii?Q?3SepGPcOtd3wc5gnALWo1v5RZUqynr5zyZb18UOAtPwL/8OFrW8pXoyawkLw?=
+ =?us-ascii?Q?8GNX0kTUMNB71Vfiy8obpJMtRDug2AdsVdbTuGLFMJ4LgS5Uo/kxndZ89iBk?=
+ =?us-ascii?Q?0Qf7H3HdLYZFFmeyPkSO9iWgQdQVxQ/vmEjl26rETguMOGXr6Qe3ywvHMUKB?=
+ =?us-ascii?Q?2jJ230u4N+iU8f2UOh1X988FVsInK3oZZVaMgnlrWnzhvNzklB77If10fI6e?=
+ =?us-ascii?Q?Bng7uNU2mdVuLL/XBItOdmxjgoq1tH9VbzWjKroT647ioD9vufVbckfA8QgU?=
+ =?us-ascii?Q?ZiDmRGaU8VJ6r2RE1LcePYRDhdy+F1mmX2Uc62mOJZRtNMz9gwAuFaGQNzEe?=
+ =?us-ascii?Q?z9gRDZF0UK9B4I+OuMC/eIfesiRO0ZlyM52zYlDbkTMfjsNac3U/HuJE8IXj?=
+ =?us-ascii?Q?zkPurPsU95LW5zLk80NBPHsicpw5bHs/kqmVczp0tE4Ty2RgHqgZgnJ6zdGK?=
+ =?us-ascii?Q?+PVvc6YNKG+J4/+rdiiTeISh4fjVjnNtuMWefWtRNCdNkhHDoors737CBBoi?=
+ =?us-ascii?Q?n64KcbonJJJq485g0yR/Wvl2ZUvz+RLK1T7WWuB+jqAG2DmVWXZyvjQ/Xnkq?=
+ =?us-ascii?Q?7bxUthHBZzOUfL/J9xqTyRBI2OTlaqU+9MKAnWOBirmsdztjnIUi2Vicdt9O?=
+ =?us-ascii?Q?zNUqv0Jyx/qlTefzhimhwFCpgp7xLaMwTgQ+UTsLBZJWR0Q+BHKtpFRyoH/6?=
+ =?us-ascii?Q?UceqiURO4/Ih+/Jzr9vgphMWnmPF14J6GyZTQ2AnptN0Ill4DSmJVLoyUCws?=
+ =?us-ascii?Q?TgFuhW576ksbe5Iy+PbVR5WNT+klzAu9v3d2tfsBAIkeLmMFEXkchJehVmaf?=
+ =?us-ascii?Q?ri53PoWgzZN37VT6G/+hDOOG56ZHU3FVqwhfvj3fbO4fOkg4AGZN9Hg9sdOs?=
+ =?us-ascii?Q?2X0bs2vUpD4wQpyKKhIHi/pZfRILKJNPlvZaABFi/SRrVl45jrElaZsrZOQZ?=
+ =?us-ascii?Q?eBxQBjGURZlJrFYDMuvaAkhpf2jTIxWAVubrFb0fFf7mK6NLiPaX0Sd5IA/r?=
+ =?us-ascii?Q?qs+63KvUC/BfWXerYvh3AQcYdYnHzlB364F/bFyIr3eSsA8DdENBCvJwyifk?=
+ =?us-ascii?Q?V7k1aozjPTUb1Yke0vvnpUhXqgvrkly0WN+VEkhljhLPme8sRK4tvnb2KthY?=
+ =?us-ascii?Q?GJGyPRPpKjpMg4wiIIumUWHNIrmAfOJuSGMobwgxSgYJfOs2LuIPwWdSGqie?=
+ =?us-ascii?Q?vpC/TJff43C5g+TlOSSYdFcC2JczHfVGIgUzH330PAjHOgO5P7OfAshJZN2h?=
+ =?us-ascii?Q?4WIb5izENM2ygiprzbZ8GteWa7fsq6tPeokH+HJArfpCHMBer1ZlpI+przo6?=
  =?us-ascii?Q?lw=3D=3D?=
 X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 254eabe1-6fd9-474c-065e-08dc34a571e8
+X-MS-Exchange-CrossTenant-Network-Message-Id: 690cbf36-19b2-4467-2dac-08dc34a5742e
 X-MS-Exchange-CrossTenant-AuthSource: BYAPR12MB2743.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Feb 2024 19:27:16.6697
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Feb 2024 19:27:20.4540
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: F+oftdCWq11IlHkFIBPhNtiN+n/mfCcZPPZLS5aFBKMq6MEbk3Jjv4VqHgS5OYMu2E4smiKG6l23GODezTnJrA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR12MB6831
+X-MS-Exchange-CrossTenant-UserPrincipalName: RlePfRoye8BCm5ZNtmuZKalWR+S3c+jQ9zbhNhgi5FmY4ENf79uOGxs2e9iSCbrZMMOhCgm64Ti7gN3zbnzz+g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN9PR12MB5226
 
-The goal of this patch series is to introduce a common set of ethtool statistics
-for hardware timestamping that a driver implementer can hook into. The
-statistics counters added are based on what I believe are common
-patterns/behaviors found across various hardware timestamping implementations
-seen in the kernel tree today. The mlx5 family of devices is used as the PoC for
-this patch series. Other vendors are more than welcome to chim in on this
-series.
-
-Statistics can be queried from either the DMA or PHY layers. I think this
-concept of layer-based statistics selection and the general timestamping layer
-selection work Kory Maincent is working on can be converged together [1].
-
-[1] https://lore.kernel.org/netdev/20240216-feature_ptp_netnext-v8-0-510f42f444fb@bootlin.com/
+Count number of transmitted packets that were hardware timestamped at the
+device DMA layer.
 
 Signed-off-by: Rahul Rameshbabu <rrameshbabu@nvidia.com>
+Reviewed-by: Dragos Tatulea <dtatulea@nvidia.com>
 ---
-Rahul Rameshbabu (6):
-  ethtool: add interface to read Tx hardware timestamping statistics
-  net/mlx5e: Introduce lost_cqe statistic counter for PTP Tx port
-    timestamping CQ
-  net/mlx5e: Introduce timestamps statistic counter for Tx DMA layer
-  net/mlx5e: Implement ethtool hardware timestamping statistics
-  tools: ynl: ethtool.py: Make tool invokable from any CWD
-  tools: ynl: ethtool.py: Add ts ethtool statistics group
+ .../device_drivers/ethernet/mellanox/mlx5/counters.rst      | 5 +++++
+ drivers/net/ethernet/mellanox/mlx5/core/en_stats.c          | 2 ++
+ drivers/net/ethernet/mellanox/mlx5/core/en_stats.h          | 1 +
+ drivers/net/ethernet/mellanox/mlx5/core/en_tx.c             | 6 ++++--
+ 4 files changed, 12 insertions(+), 2 deletions(-)
 
- .../ethernet/mellanox/mlx5/counters.rst       | 11 +++
- .../net/ethernet/mellanox/mlx5/core/en/ptp.c  |  1 +
- .../ethernet/mellanox/mlx5/core/en_ethtool.c  |  9 +++
- .../ethernet/mellanox/mlx5/core/en_stats.c    | 71 +++++++++++++++++++
- .../ethernet/mellanox/mlx5/core/en_stats.h    |  4 ++
- .../net/ethernet/mellanox/mlx5/core/en_tx.c   |  6 +-
- include/linux/ethtool.h                       | 28 ++++++++
- include/uapi/linux/ethtool.h                  | 20 ++++++
- include/uapi/linux/ethtool_netlink.h          | 17 +++++
- net/ethtool/netlink.h                         |  3 +-
- net/ethtool/stats.c                           | 53 ++++++++++++--
- net/ethtool/strset.c                          |  5 ++
- tools/net/ynl/ethtool.py                      |  9 ++-
- 13 files changed, 227 insertions(+), 10 deletions(-)
-
+diff --git a/Documentation/networking/device_drivers/ethernet/mellanox/mlx5/counters.rst b/Documentation/networking/device_drivers/ethernet/mellanox/mlx5/counters.rst
+index 5464cd9e2694..fed821ef9b09 100644
+--- a/Documentation/networking/device_drivers/ethernet/mellanox/mlx5/counters.rst
++++ b/Documentation/networking/device_drivers/ethernet/mellanox/mlx5/counters.rst
+@@ -300,6 +300,11 @@ the software port.
+        in the beginning of the queue. This is a normal condition.
+      - Informative
+ 
++   * - `tx[i]_timestamps`
++     - Transmitted packets that were hardware timestamped at the device's DMA
++       layer.
++     - Informative
++
+    * - `tx[i]_added_vlan_packets`
+      - The number of packets sent where vlan tag insertion was offloaded to the
+        hardware.
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_stats.c b/drivers/net/ethernet/mellanox/mlx5/core/en_stats.c
+index 7e63d7c88894..bc31196d348a 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en_stats.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en_stats.c
+@@ -2046,6 +2046,7 @@ static const struct counter_desc sq_stats_desc[] = {
+ 	{ MLX5E_DECLARE_TX_STAT(struct mlx5e_sq_stats, csum_partial_inner) },
+ 	{ MLX5E_DECLARE_TX_STAT(struct mlx5e_sq_stats, added_vlan_packets) },
+ 	{ MLX5E_DECLARE_TX_STAT(struct mlx5e_sq_stats, nop) },
++	{ MLX5E_DECLARE_TX_STAT(struct mlx5e_sq_stats, timestamps) },
+ 	{ MLX5E_DECLARE_TX_STAT(struct mlx5e_sq_stats, mpwqe_blks) },
+ 	{ MLX5E_DECLARE_TX_STAT(struct mlx5e_sq_stats, mpwqe_pkts) },
+ #ifdef CONFIG_MLX5_EN_TLS
+@@ -2198,6 +2199,7 @@ static const struct counter_desc qos_sq_stats_desc[] = {
+ 	{ MLX5E_DECLARE_QOS_TX_STAT(struct mlx5e_sq_stats, csum_partial_inner) },
+ 	{ MLX5E_DECLARE_QOS_TX_STAT(struct mlx5e_sq_stats, added_vlan_packets) },
+ 	{ MLX5E_DECLARE_QOS_TX_STAT(struct mlx5e_sq_stats, nop) },
++	{ MLX5E_DECLARE_QOS_TX_STAT(struct mlx5e_sq_stats, timestamps) },
+ 	{ MLX5E_DECLARE_QOS_TX_STAT(struct mlx5e_sq_stats, mpwqe_blks) },
+ 	{ MLX5E_DECLARE_QOS_TX_STAT(struct mlx5e_sq_stats, mpwqe_pkts) },
+ #ifdef CONFIG_MLX5_EN_TLS
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_stats.h b/drivers/net/ethernet/mellanox/mlx5/core/en_stats.h
+index 03f6265d3ed5..3c634c5fd420 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en_stats.h
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en_stats.h
+@@ -429,6 +429,7 @@ struct mlx5e_sq_stats {
+ 	u64 stopped;
+ 	u64 dropped;
+ 	u64 recover;
++	u64 timestamps;
+ 	/* dirtied @completion */
+ 	u64 cqes ____cacheline_aligned_in_smp;
+ 	u64 wake;
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_tx.c b/drivers/net/ethernet/mellanox/mlx5/core/en_tx.c
+index 5c166d9d2dca..5acba323246e 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en_tx.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en_tx.c
+@@ -748,11 +748,13 @@ static void mlx5e_consume_skb(struct mlx5e_txqsq *sq, struct sk_buff *skb,
+ 		u64 ts = get_cqe_ts(cqe);
+ 
+ 		hwts.hwtstamp = mlx5e_cqe_ts_to_ns(sq->ptp_cyc2time, sq->clock, ts);
+-		if (sq->ptpsq)
++		if (sq->ptpsq) {
+ 			mlx5e_skb_cb_hwtstamp_handler(skb, MLX5E_SKB_CB_CQE_HWTSTAMP,
+ 						      hwts.hwtstamp, sq->ptpsq->cq_stats);
+-		else
++		} else {
+ 			skb_tstamp_tx(skb, &hwts);
++			sq->stats->timestamps++;
++		}
+ 	}
+ 
+ 	napi_consume_skb(skb, napi_budget);
 -- 
 2.42.0
 
