@@ -1,207 +1,195 @@
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f51.google.com (mail-oo1-f51.google.com [209.85.161.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 575B65C8EC;
-	Fri, 23 Feb 2024 09:23:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=68.232.154.123
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708680187; cv=fail; b=tnQSTT3h+xDQ+pb5XfTkQEN2S+g5ZVINm16juw4OpNRdWn7tfZi16D9axHL3Inne+Jc1+I9SbVfWfSVQ7airoS/RRSBoh5WxLyUC49tA8Er05UQ0qR+m1UqqeRNpzktgqh05Ew0zueqGkf8qEkl9+XTvOK7S/vncudC+7nGEDKw=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708680187; c=relaxed/simple;
-	bh=sxnBpTbgOeTl6GxAMzV0jKakxmLiP1WqPv2YsRq4U5M=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=ILL3I50CPRx6o1o0cZstCBS1eSizquzh4R9hrLxxEchfegLT/tTxlj3v+QWxPSJS3Xi/K433tHtSGtsxl1dINl6uUhqLhcynq9yj3ZF+0kiGkz5NOjR/qKWzb9sXu2aM2apTQhYk52yt/PI7D54WAzOooi3mEGDoP2y1pdyWaWk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=Qgau0OCI; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=Jv4c12EN; arc=fail smtp.client-ip=68.232.154.123
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=microchip.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F62C1AAA9
+	for <linux-kernel@vger.kernel.org>; Fri, 23 Feb 2024 09:23:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.51
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1708680234; cv=none; b=p7r1b+bTN05UihQnoz4QktWLYNFLinKWdz7OhPB4V0rpCekPREsolOkQh7on9gUQRsPOU//t+UTd4W4J06rCfFeQ7nQvzEyWJvwQ8GuNH2xVUdOx8nWOfxRovP1CISySLqcPeb1esBG1HW9DiSwdQDfuSN+Msp1LRfCbAsqfREE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1708680234; c=relaxed/simple;
+	bh=ckRSkSYNxlYZlzbSiUcnhkJwKP6BpBL3C/6X5jI2i14=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=E0UMOq4VQG3K/CSsqyikiY8GqHxpsU3WKD3hLpgEkI7T7dm15HC3QqyzL7plyZ2Ye5hyyYduuW1LQ+Myfm+26yZZfVx6NtZ1FcMmtzYaIrJFRscIaYqqBGL3UekuOus0bt/U1ciQELUwWuCcd3dlAGKsTtoYj3c9eELt9IefPYQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=kX4RZiim; arc=none smtp.client-ip=209.85.161.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="Qgau0OCI";
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="Jv4c12EN"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1708680185; x=1740216185;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-id:content-transfer-encoding:
-   mime-version;
-  bh=sxnBpTbgOeTl6GxAMzV0jKakxmLiP1WqPv2YsRq4U5M=;
-  b=Qgau0OCIjEqEIHBMkyr+gvsHnz744qI+L7qz5LSECAfZ1JGJa1C5Gt12
-   rTcoAKwNi+yK9eHYx5PdZ0sZTFUNDrKO4nnNKYt1oupdNp+MKxVeq4IBw
-   XPY1cIYHcjUSsV05dLG/O8oymu//O2tD2rzGaArzZ4JY8o+iqmmb5H97t
-   VYvAmYxlX9vew8cnbhoePHHlOTun3pGY9Jk5Bh5lyKD3oH6sz0Glhgrdp
-   X+ETVkQJLDKZ97V13ruqpTpHa/TCK+LvSqYi2HSnJz08GWkNxZKaL57w1
-   gFqzttlQ/7t+TKdU+wZjegFDsN2e4L9lyHDTwJvmZMSZKuwL0iQE1kZNS
-   A==;
-X-CSE-ConnectionGUID: vzWSt3+fRKux0ExA02lXlQ==
-X-CSE-MsgGUID: 8D16T9BKSOme11WcJU1Zgw==
-X-IronPort-AV: E=Sophos;i="6.06,179,1705388400"; 
-   d="scan'208";a="17247641"
-X-Amp-Result: SKIPPED(no attachment in message)
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa2.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 23 Feb 2024 02:23:04 -0700
-Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
- chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Fri, 23 Feb 2024 02:22:56 -0700
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (10.10.215.250)
- by email.microchip.com (10.10.87.72) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35 via Frontend Transport; Fri, 23 Feb 2024 02:22:56 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Ms6Mx5tmZGaARuGmMRp3QhesyCX70HlZ97sYpAo7vxnZdrPDDQq//N4Q4nRTc/GsVc2Qr/c0NeFHtqoCbqndEbs3skoD/gPq3vLRHjewypoXeR/3ntDbOSvoSPykhz0FVCdF9iJzGDKa6EWPhL6KMGhSCbj0/ni7vT11C67SHflXC0K+dknJ2dVfXVDtYt5E99jORgWsbToL8gnmb9/sdqFaAaF0+85AeId78DDa1oacDPNAAqP7Zk2GGTiEsDomuMNIOOe71uGK8JKd/SIng2ptb6+cPK1eNX0i96QdUc69KtCXkYSHa1iD7QL42phju/0rkfoQlrAZQiCcbQaHsw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=sxnBpTbgOeTl6GxAMzV0jKakxmLiP1WqPv2YsRq4U5M=;
- b=iStIu6fmMYkBvnaE9vIl81CaDym0t6P+8xoQQzc/FPQmaMY4Ei7/UIsNcQMzHKKeHyoqK3M3maRiXGbMpCdfOZuPXxcRRrb7Pwv+c9ts6gaahyeAttaAWzDO+tFKUgaGIE0+VkJtGpnzRrZJyUbwcb2RfLU/85JEpnKcaD3v+YbG/mjoyi1oikh8jx16tWFJBEq8CzMEFY2qJrklqeYvTrjh4STLYELiZkB9pZ5vnf0qIP59QcSRwHO0vubmCTwlQJpH5AsttVKL9gQAEhDKNnVFTEBPJETcN1yh9ci5YR4a31LvLJHiUkHGs5h50e/QVBw+waUtc5OcsFxttJMAfQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microchip.com; dmarc=pass action=none
- header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microchip.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=sxnBpTbgOeTl6GxAMzV0jKakxmLiP1WqPv2YsRq4U5M=;
- b=Jv4c12ENnY1jII3BZoOb3qtO7cCJKGN4zvQ29GuhObTfrdOnsUDOg6GkCIMovLkBOCkVsKw8FWgeML2wCT9qE4slEWSmr4ylufKGGiTp/zKfgE7PJV7/AZdTIpnjxsUx4YSvyHyVSdHEVkjJF1Ysllecd0gvXn7JWazQY29A6EfGn4jGnh7K1WvH1kf1vuAg7wYCTDCSXxPUeTxxkdxBKRT+qjEJV1OuSnEPpdGGDHpxUNxhzy0p2qD3wlbmj6bHMm1/EMl2vdWoRXlGGSsgeIWhVh2l1QxpSRrYmh3ZTMuD0z2I1qx+aE8lYjprKYyEFxZ2YTX9kGpnrTWiPpWkKg==
-Received: from DS0PR11MB7481.namprd11.prod.outlook.com (2603:10b6:8:14b::16)
- by CH3PR11MB7761.namprd11.prod.outlook.com (2603:10b6:610:148::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7316.21; Fri, 23 Feb
- 2024 09:22:55 +0000
-Received: from DS0PR11MB7481.namprd11.prod.outlook.com
- ([fe80::c243:33d7:2ff6:409b]) by DS0PR11MB7481.namprd11.prod.outlook.com
- ([fe80::c243:33d7:2ff6:409b%3]) with mapi id 15.20.7292.036; Fri, 23 Feb 2024
- 09:22:55 +0000
-From: <Rengarajan.S@microchip.com>
-To: <ilpo.jarvinen@linux.intel.com>
-CC: <jirislaby@kernel.org>, <linux-serial@vger.kernel.org>,
-	<gregkh@linuxfoundation.org>, <UNGLinuxDriver@microchip.com>,
-	<Kumaravel.Thiagarajan@microchip.com>, <linux-kernel@vger.kernel.org>,
-	<Tharunkumar.Pasumarthi@microchip.com>
-Subject: Re: [PATCH v1 tty] 8250: microchip: pci1xxxx: Refactor TX Burst code
- to use pre-existing APIs
-Thread-Topic: [PATCH v1 tty] 8250: microchip: pci1xxxx: Refactor TX Burst code
- to use pre-existing APIs
-Thread-Index: AQHaZZZL0nj0fFzSz0iXzZOI5AQ+c7EWhaQAgAEjtoA=
-Date: Fri, 23 Feb 2024 09:22:55 +0000
-Message-ID: <276f34802a7066ea5159e7214814fb8f78a0e4ab.camel@microchip.com>
-References: <20240222134944.1131952-1-rengarajan.s@microchip.com>
-	 <37490c91-a48f-e0a1-ec92-2307c08260e2@linux.intel.com>
-In-Reply-To: <37490c91-a48f-e0a1-ec92-2307c08260e2@linux.intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=microchip.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: DS0PR11MB7481:EE_|CH3PR11MB7761:EE_
-x-ms-office365-filtering-correlation-id: 536ee331-95aa-4efb-d5c2-08dc34510482
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: o39/KQaX4LGdNkl2mX4BNO90Dtp/sFqo6BwoHosnZIxk092SXnwB5RCWaSmljk/6yHV4QKKH/GlK3zneAIhNsTdi3BFT4lXfT0ynNJR/85VSXcMQFruf80/6wgQzbdVw1ejlPkWeBJq9Lt/GIq1A4jeE4myu7QkcICcljZfqdmvcdS3zzz6Hjq2UFc0KyRqEhKzSoftV0jILS3+Ift9bPwcSD9eSVqQy+F+NbYgW7absasX30MtiWvqmcG+Ye2VnuYkAvrMc0omNcpp2PDWRWgU6T768NW8NitGrojLC/1FhOPquPLmDAnplA1GDwtlHgQoywf0S96+w09E+4LXRc50TOQB8k6Nu6ySdC84+xGH+dsWGLzZK0lItS8+PdYCtjtXUzQYssIruMGonKxe9R5kOjKpIA6RL2iNhgVRitepUpKAjAGtf7uuCuKvBBFPHEHdbeYJSiFp6WdIU1iAY571qv5RIV9C5wPHNwKdwYOl7mHYpf6iyPogA7yJhJxYkyrgukW8u907fiHijsbKvD73VJrzyJ84/mxHdr0aE2zEgaLof/tbqpP6PYraMv1vm4MjfuWfFu32Fqp7vEN0NjaV3AiaT2hYdN+4y3cPECjBOJWQm7xGsYdwgY3P+wp3B
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR11MB7481.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(230273577357003)(38070700009);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?akZtWXNhV1djTFZDZFdyV1UxbmMrTEpKY1VLNW1JWkdyd3FkTDlBVU1GS0xi?=
- =?utf-8?B?VFNQa0Urc0dwTUkxRnNScWpLcExCN2FDa1BzVlZXbjUrMC93VEVZejhmU0xH?=
- =?utf-8?B?d2NEVGlWbTRab1JvUHRlUFJuQlRrQ1BFdDNiZVJFU1NkbmlNS2dMSzRtZjhn?=
- =?utf-8?B?RmxhK1N0cUt3UlBiZ2tWdVFRT05hYk1zR0pPMEQrUllOVFA1Yy95Y1ZnTzNl?=
- =?utf-8?B?WHNKVjl1QU5qOUljSmUwZU4vUHBTWXlGMzYxTjBjUGNSSUp1Ulg4WmZoQ1Ra?=
- =?utf-8?B?YVZyZGUxSU4xWjlpRmo2WDBXeEFscURoY0Q3cHVUSk1ZR3EwUFJyKzVHYUp4?=
- =?utf-8?B?UlQxUTQ1MStMV2YzTVp3d055TFhvUGF0T3p5VUdwaWVuOStxTnJYUXA1UHA4?=
- =?utf-8?B?TWRBc2JWbEs3MVRpK2d4T3dwcWNPckd1Yzd6ME5zS2NMbXJpUFVnS2Q2bHpw?=
- =?utf-8?B?RXZZVzJpZVZuVjZHdGpJV1Z3UUQ5QkIwbHczREpEcnEvdGVPWDBNMEVrcjVr?=
- =?utf-8?B?ZVEzVkg2M2VYK3dlekVhZ3hHTk5TdXZkVFA5b1JlYzBYVFVESGdJTHVQM0Vz?=
- =?utf-8?B?aUw5TFFmTGFkd1RxR2xzUmFpVGdLVS81bEU3VDd5MlRsNVZhY0RWWE1ta3ly?=
- =?utf-8?B?QkpSWkdoR0lDQzFUVk1UaXNSSlh3SHVLOXBEMHlPRU5yUW5FUytDQ1UrMXNM?=
- =?utf-8?B?MkNuOHpBRkUrQlFKbTJxd254TjJsUHh5VFV2QStoM2c4TkhtcjFwSWozOVZR?=
- =?utf-8?B?ZGJVbXNING9obzRIaDZRRGVMd1RPdEhhWFhxRVFaV0JkUVFWSllBNmgzMDBv?=
- =?utf-8?B?TG5Uc0RUY3ZhNkQwZkRrbE02cTJDQVI5cjU0ejZNYU9QZDJqb1V6aFRPZExE?=
- =?utf-8?B?bEpOVkNtZ2ZtMTNkanhPdHVySTlQTStmd1RQcHZicjZmV0gzV3drRE93ZXJo?=
- =?utf-8?B?WkpZeGlWVGJ0QzRwcDlKdDk4bWNkZ2JySkNHN2U5Q25hbXI1bTFjMTJabnBN?=
- =?utf-8?B?c3pkdVhIWnRTTG5scHRCcFdzYkNZUHltZFJ3TzNMdFU1blM2MXJmemg5Y0JG?=
- =?utf-8?B?UnVkaWJIcFJxaVB1bkZFNzZpb2d1N1RiYllZRVlxZzk4QitDRlU4SmpaN0o1?=
- =?utf-8?B?blFWcmVQTEpCdWVkaVh1QU1ISzUwRXdnOUZxV2ZDaUVNbVF5MHc4Wk1nOWxu?=
- =?utf-8?B?MzJhbXN6QVdhYU9rTXNQU3dMNlRnNUExKy80dXZzWEt2RG1FOXU3ZUpDSTF4?=
- =?utf-8?B?UHRnZW9xNkczeEhNM2c5Zm9BTlFZVHNRRy9QeExJd2NteW9LK0ZpbWt0Y0JP?=
- =?utf-8?B?b0RIYlBOaDZpNmhUL3RlRHpEQjdkQ20yYmhuNjRqRkVhM00zSnlnVVF4c2RH?=
- =?utf-8?B?YlNrUXVEbi9BcXR1Y3lOV3JMdVlVTEdyWW9OV0ZzeFVyM05hcW44Tnl6N3k1?=
- =?utf-8?B?T28zVm84bmZyYTFLTmlaUlU2UmJlSGVTOGQ2VkhXT0ZzY0VYN21pbmNrc0Fp?=
- =?utf-8?B?V3BMYTZNYXJscXlUT2k3a2E1cCtXNytmWGxWOWM0YkhXK0l0QktBRm5tZzlY?=
- =?utf-8?B?dUd0a2h1b1pTajU5cFl5aHFtNEV4bUdqVm5xdllSWTR4cDBwZTZQMlBpR2V4?=
- =?utf-8?B?djJoMSs3Z0NxNlY5dE5xbkNvRmFHRk03WU1JOVh6S3BXZUYzbkdYejRFdVhO?=
- =?utf-8?B?OEJhQlJQM0RKQ3lrYVd4U2xJOTE2NlN6L1UrZmZvb2FwSmttVjFhL3g2VUlO?=
- =?utf-8?B?b0plSithVEhBWjZNc2xWU2xrWFBzMzcrUjZHY0hPdDBFbEsrREkxOXA0TFl5?=
- =?utf-8?B?YjVxVXRlSjM5Z3ozTkwxNGNRVTk0S3JtL1JsMXNBb25HWUNzMkJzY2czZTRW?=
- =?utf-8?B?dWRPU0JUYjRobmNDUVdQVXFSalI1Q0ZzdlBMQmpuNG5KSER6eWFwUTVTVThk?=
- =?utf-8?B?c2gvNFZtZjhveEF3MWxjU2tRK01rbm1MV1JYSVlCZVBodVFuTkFqaU1ia2Ex?=
- =?utf-8?B?QlBnUkVZQVBpVERTbGtHc2Q3L254V2lhM1RIcU9qaE9rMHo1ak5rOFpHVUNt?=
- =?utf-8?B?QWtySklxcWtWSUQ4TlozM25DQVFFVUNWdHFNTmU4Qy9mREZjRUNDT2VPYWZK?=
- =?utf-8?B?MVpBOHpybDhzWTNvdWV6bVhNMzNwK1lGMm01MEtzUndGMEdIamNLdmdQQlVa?=
- =?utf-8?B?cXc9PQ==?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <26E68EFE2A76C444BD22232389DB0133@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: base64
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="kX4RZiim"
+Received: by mail-oo1-f51.google.com with SMTP id 006d021491bc7-59d489e8d68so292971eaf.2
+        for <linux-kernel@vger.kernel.org>; Fri, 23 Feb 2024 01:23:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1708680230; x=1709285030; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=HB/FNAFmQYYhsfmNSuI61Gc8yU/ABQLJ8+mq/+w5WNE=;
+        b=kX4RZiimfH11IPgvY0tTrD5Z9Qxxj8f9bXLVO5P7a3UTcyEmsvmnao6OOTirj4IRHk
+         Cv9cAaDdRS+458DCYmb6w8gPjSHJafDYGOOZ4NI4ZkKeQl9lZ2D5gd6ryvRMhiuG6YP4
+         Xq1HwWBRmOP10cvMtLcsFYvjZZDp8l2DA1TLM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708680230; x=1709285030;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=HB/FNAFmQYYhsfmNSuI61Gc8yU/ABQLJ8+mq/+w5WNE=;
+        b=EVgYXGwFL94qY1ZXyHhLwbc4lHC1TzoolvvIHegOHzl/RXlyvJrDCC0+EevqPv54Zl
+         ZA8rqzCjsBvg5t/C5nHIb8JQVn0SsdT2LQiuZaJGkr+tDjOsysGo+fgNZT3SIfPkwP8e
+         mI3HZa577t4cSfUPsy37WM3nN2AeNScQSeltbZaJBCNnj0vCY9faV4VvpYLEtrKA9nf2
+         5zZsZPcnVLWy+ahyQk+XMl1/xeKUrJQRqJJD7n2+spB1KbhsmLSDXfFyE+sv2dd/Nxd9
+         ZX7qgEJ45B9FF8485ArSPcYFvoHRzCgUdlWlDyiKnvHvQQFbYjCIUb9cJTWBixySPEjC
+         tpOg==
+X-Forwarded-Encrypted: i=1; AJvYcCV8varI8dXtquHshwhw1uk9fmCh8lZp0dnhiUUovhqUPn/KIjHnvRCQl3sxsqjTEp7H5YhZW2qV2cN6B7aE8DVvuX9gDw+QsrS6rEWw
+X-Gm-Message-State: AOJu0YzPFJZ9+iEwYE929KC2zJDk179o3lgUWtOEyBAKXl4wm/VzG1ih
+	xnlo13R7DzZWgQYsu1pMVbI0g0aa8IowLatlIJaMweaiohu6VlxWJppWZnT1Mw==
+X-Google-Smtp-Source: AGHT+IGxmT9JLyw7jzJXAiJjYX06IB01yPHil8fnUx8qSrKhBlGjZrRaHZVMNca8KrtmHHQgE+zc9g==
+X-Received: by 2002:a05:6358:d06:b0:17b:58a6:5172 with SMTP id v6-20020a0563580d0600b0017b58a65172mr1826086rwj.21.1708680230122;
+        Fri, 23 Feb 2024 01:23:50 -0800 (PST)
+Received: from wenstp920.tpe.corp.google.com ([2401:fa00:1:10:e0c9:81eb:a87f:e8e7])
+        by smtp.gmail.com with ESMTPSA id a21-20020a056a0011d500b006e0d1e6036bsm12367253pfu.129.2024.02.23.01.23.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 23 Feb 2024 01:23:49 -0800 (PST)
+From: Chen-Yu Tsai <wenst@chromium.org>
+To: Masahiro Yamada <masahiroy@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nicolas Schier <nicolas@fjasle.eu>
+Cc: Chen-Yu Tsai <wenst@chromium.org>,
+	linux-kbuild@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Simon Glass <sjg@chromium.org>
+Subject: [PATCH RFC] kbuild: create a list of all built DTB files
+Date: Fri, 23 Feb 2024 17:23:34 +0800
+Message-ID: <20240223092338.2433632-1-wenst@chromium.org>
+X-Mailer: git-send-email 2.44.0.rc0.258.g7320e95886-goog
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DS0PR11MB7481.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 536ee331-95aa-4efb-d5c2-08dc34510482
-X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Feb 2024 09:22:55.2071
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: gYagIiIGTe7BOk6OAJH7hxEsWhGhxCNSFaM0iTxz6/InGz+VmIQPhFVuF/1WeqAC6oVw5VPYnPhHW562CKqezB5l9jIEQUx+Io22AyPBXfE=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR11MB7761
+Content-Transfer-Encoding: 8bit
 
-T24gVGh1LCAyMDI0LTAyLTIyIGF0IDE4OjAxICswMjAwLCBJbHBvIErDpHJ2aW5lbiB3cm90ZToK
-PiBFWFRFUk5BTCBFTUFJTDogRG8gbm90IGNsaWNrIGxpbmtzIG9yIG9wZW4gYXR0YWNobWVudHMg
-dW5sZXNzIHlvdQo+IGtub3cgdGhlIGNvbnRlbnQgaXMgc2FmZQo+IAo+IE9uIFRodSwgMjIgRmVi
-IDIwMjQsIFJlbmdhcmFqYW4gUyB3cm90ZToKPiAKPiA+IFVwZGF0ZWQgdGhlIFRYIEJ1cnN0IGlt
-cGxlbWVudGF0aW9uIGJ5IGNoYW5naW5nIHRoZSBjaXJjdWxhciBidWZmZXIKPiA+IHByb2Nlc3Np
-bmcgd2l0aCB0aGUgcHJlLWV4aXN0aW5nIEFQSXMgaW4ga2VybmVsLiBBbHNvIHVwZGF0ZWQKPiA+
-IGNvbmRpdGlvbmFsCj4gPiBzdGF0ZW1lbnRzIGFuZCBhbGlnbm1lbnQgaXNzdWVzIGZvciBiZXR0
-ZXIgcmVhZGFiaWxpdHkuCj4gPiAKPiA+IFNpZ25lZC1vZmYtYnk6IFJlbmdhcmFqYW4gUyA8cmVu
-Z2FyYWphbi5zQG1pY3JvY2hpcC5jb20+Cj4gPiAtLS0KPiAKPiA+IEBAIC00MzQsMTYgKzQzNSw3
-IEBAIHN0YXRpYyB2b2lkIHBjaTF4eHh4X3R4X2J1cnN0KHN0cnVjdCB1YXJ0X3BvcnQKPiA+ICpw
-b3J0LCB1MzIgdWFydF9zdGF0dXMpCj4gPiAKPiA+IMKgwqDCoMKgwqAgeG1pdCA9ICZwb3J0LT5z
-dGF0ZS0+eG1pdDsKPiA+IAo+ID4gLcKgwqDCoMKgIGlmIChwb3J0LT54X2NoYXIpIHsKPiA+IC3C
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgd3JpdGViKHBvcnQtPnhfY2hhciwgcG9ydC0+bWVtYmFz
-ZSArIFVBUlRfVFgpOwo+ID4gLcKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBwb3J0LT5pY291bnQu
-dHgrKzsKPiA+IC3CoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgcG9ydC0+eF9jaGFyID0gMDsKPiA+
-IC3CoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgcmV0dXJuOwo+ID4gLcKgwqDCoMKgIH0KPiA+IC0K
-PiA+IC3CoMKgwqDCoCBpZiAoKHVhcnRfdHhfc3RvcHBlZChwb3J0KSkgfHwgKHVhcnRfY2lyY19l
-bXB0eSh4bWl0KSkpIHsKPiA+IC3CoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgcG9ydC0+b3BzLT5z
-dG9wX3R4KHBvcnQpOwo+ID4gLcKgwqDCoMKgIH0gZWxzZSB7Cj4gPiArwqDCoMKgwqAgaWYgKCEo
-cG9ydC0+eF9jaGFyKSkgewo+ID4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgZGF0YV9lbXB0
-eV9jb3VudCA9IChwY2kxeHh4eF9yZWFkX2J1cnN0X3N0YXR1cyhwb3J0KQo+ID4gJgo+ID4gwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgIFVBUlRfQlNUX1NUQVRfVFhfQ09VTlRfTUFTSykgPj4KPiA+IDg7Cj4gPiDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoCBkbyB7Cj4gPiBAQCAtNDUzLDE1ICs0NDUsMjIgQEAgc3RhdGlj
-IHZvaWQgcGNpMXh4eHhfdHhfYnVyc3Qoc3RydWN0Cj4gPiB1YXJ0X3BvcnQgKnBvcnQsIHUzMiB1
-YXJ0X3N0YXR1cykKPiA+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-Cj4gPiAmZGF0YV9lbXB0eV9jb3VudCwKPiA+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgCj4gPiAmdmFsaWRfYnl0ZV9jb3VudCk7Cj4gPiAKPiA+IC3CoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHBvcnQtPmljb3VudC50eCsrOwo+ID4gwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGlmICh1YXJ0X2NpcmNfZW1w
-dHkoeG1pdCkpCj4gPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgIGJyZWFrOwo+ID4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgfSB3
-aGlsZSAoZGF0YV9lbXB0eV9jb3VudCAmJiB2YWxpZF9ieXRlX2NvdW50KTsKPiA+ICvCoMKgwqDC
-oCB9IGVsc2Ugewo+ID4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCB3cml0ZWIocG9ydC0+eF9j
-aGFyLCBwb3J0LT5tZW1iYXNlICsgVUFSVF9UWCk7Cj4gPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgIHBvcnQtPmljb3VudC50eCsrOwo+ID4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBwb3J0
-LT54X2NoYXIgPSAwOwo+ID4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCByZXR1cm47Cj4gCj4g
-V2h5IHlvdSBtYWRlIHRoaXMgcmVvcmdhbml6YXRpb24gZm9yIHhfY2hhciBoYW5kbGluZz8/IEl0
-IHNlZW1zCj4gZW50aXJlbHkgd3JvbmcgdGhpbmcgdG8gZG8sIHhfY2hhciBzaG91bGQgaGF2ZSBw
-cmVjZW5kZW5jZSBvdmVyCj4gc2VuZGluZyBub3JtYWwgY2hhcnMuCj4gCj4gVGhpcyBwYXRjaCB3
-b3VsZCBoYXZlIGJlZW4gc29tZSBtdWNoIHNpbXBsZXIgdG8gcmV2aWV3IGlmIGl0IHdvdWxkCj4g
-aGF2ZQo+IG5vdCBhdHRlbXB0ZWQgdG8gbiB0aGluZ3MgaW4gb25lIGdvLCBwbGVhc2UgdHJ5IHRv
-IHNwbGl0IGludG8KPiBzZW5zaWJsZQo+IGNoYW5nZXMuCj4gCgpIaSwgVGhhbmtzIGZvciByZXZp
-ZXdpbmcgdGhlIHBhdGNoLiBXaWxsIGFkZHJlc3MgdGhlIGNvbW1lbnRzIGFuZCBzaGFyZQp0aGUg
-dXBkYXRlZCBwYXRjaCBzaG9ydGx5LgoKPiAKPiAtLQo+IMKgaS4KPiAKCg==
+It is useful to have a list of all composite *.dtb files, along with
+their individual components, generated from the current build.
+
+With this commit, 'make dtbs' creates arch/*/boot/dts/dtbs-components,
+which lists the composite dtb files created in the current build. It
+maintains the order of the dtb-y additions in Makefiles although the
+order is not important for DTBs.
+
+This compliments the list of all *.dtb and *.dtbo files in dtbs-list,
+which only includes the files directly added to dtb-y.
+
+For example, consider this case:
+
+    foo-dtbs := foo_base.dtb foo_overlay.dtbo
+    dtb-y := bar.dtb foo.dtb
+
+In this example, the new list will include foo.dtb with foo_base.dtb and
+foo_overlay.dtbo on the same line, but not bar.dtb.
+
+Signed-off-by: Chen-Yu Tsai <wenst@chromium.org>
+---
+Hi,
+
+I hacked up this new thing to list out the individual components of each
+composite dtb. I think this information would be useful for FIT image
+generation or other toolchains to consume. For example, instead of
+including each dtb, a toolchain could realize that some are put together
+using others, and if the bootloader supports it, put together commands
+to reassemble the end result from the original parts.
+
+This is based on and complements Masahiro-san's recent dtbs-list work.
+
+ .gitignore             |  1 +
+ scripts/Makefile.build | 16 ++++++++++++++++
+ scripts/Makefile.lib   |  8 ++++++--
+ 3 files changed, 23 insertions(+), 2 deletions(-)
+
+diff --git a/.gitignore b/.gitignore
+index c59dc60ba62e..bb5b3bbca4ef 100644
+--- a/.gitignore
++++ b/.gitignore
+@@ -52,6 +52,7 @@
+ *.xz
+ *.zst
+ Module.symvers
++dtbs-components
+ dtbs-list
+ modules.order
+ 
+diff --git a/scripts/Makefile.build b/scripts/Makefile.build
+index 4971f54c855e..ba85c2385c9e 100644
+--- a/scripts/Makefile.build
++++ b/scripts/Makefile.build
+@@ -72,6 +72,7 @@ endif
+ subdir-builtin := $(sort $(filter %/built-in.a, $(real-obj-y)))
+ subdir-modorder := $(sort $(filter %/modules.order, $(obj-m)))
+ subdir-dtbslist := $(sort $(filter %/dtbs-list, $(dtb-y)))
++subdir-dtbscomp := $(sort $(filter %/dtbs-components, $(multi-dtb-y)))
+ 
+ targets-for-builtin := $(extra-y)
+ 
+@@ -390,6 +391,7 @@ $(obj)/%.asn1.c $(obj)/%.asn1.h: $(src)/%.asn1 $(objtree)/scripts/asn1_compiler
+ $(subdir-builtin): $(obj)/%/built-in.a: $(obj)/% ;
+ $(subdir-modorder): $(obj)/%/modules.order: $(obj)/% ;
+ $(subdir-dtbslist): $(obj)/%/dtbs-list: $(obj)/% ;
++$(subdir-dtbscomp): $(obj)/%/dtbs-components: $(obj)/% ;
+ 
+ #
+ # Rule to compile a set of .o files into one .a file (without symbol table)
+@@ -422,6 +424,20 @@ $(obj)/modules.order: $(obj-m) FORCE
+ $(obj)/dtbs-list: $(dtb-y) FORCE
+ 	$(call if_changed,gen_order)
+ 
++#
++# Rule to create dtbs-components
++#
++# This is a list of composite dtb(s), along with each dtb's components,
++# from the current Makefile and its sub-directories.
++
++cmd_gen_dtb_components = { $(foreach m, $(real-prereqs), \
++		$(if $(filter %/$(notdir $@), $m), cat $m, \
++			echo $m: $(addprefix $(obj)/,$($(notdir $(m:%.dtb=%-dtbs))))); \
++	) :; } > $@
++
++$(obj)/dtbs-components: $(multi-dtb-y) FORCE
++	$(call if_changed,gen_dtb_components)
++
+ #
+ # Rule to compile a set of .o files into one .a file (with symbol table)
+ #
+diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
+index dbcac396329e..7c2127a84ac2 100644
+--- a/scripts/Makefile.lib
++++ b/scripts/Makefile.lib
+@@ -61,7 +61,6 @@ real-search = $(foreach m, $1, $(if $(call suffix-search, $m, $2, $3 -), $(call
+ multi-obj-y := $(call multi-search, $(obj-y), .o, -objs -y)
+ multi-obj-m := $(call multi-search, $(obj-m), .o, -objs -y -m)
+ multi-obj-ym := $(multi-obj-y) $(multi-obj-m)
+-
+ # Replace multi-part objects by their individual parts,
+ # including built-in.a from subdirectories
+ real-obj-y := $(call real-search, $(obj-y), .o, -objs -y)
+@@ -91,6 +90,11 @@ real-dtb-y := $(call real-search, $(dtb-y), .dtb, -dtbs)
+ # Base DTB that overlay is applied onto
+ base-dtb-y := $(filter %.dtb, $(call real-search, $(multi-dtb-y), .dtb, -dtbs))
+ 
++ifdef need-dtbslist
++multi-dtb-y	+= $(addsuffix /dtbs-components, $(subdir-ym))
++always-y	+= dtbs-components
++endif
++
+ always-y			+= $(dtb-y)
+ 
+ # Add subdir path
+@@ -406,7 +410,7 @@ cmd_dtc = $(HOSTCC) -E $(dtc_cpp_flags) -x assembler-with-cpp -o $(dtc-tmp) $< ;
+ quiet_cmd_fdtoverlay = DTOVL   $@
+       cmd_fdtoverlay = $(objtree)/scripts/dtc/fdtoverlay -o $@ -i $(real-prereqs)
+ 
+-$(multi-dtb-y): FORCE
++$(filter-out %/dtbs-components, multi-dtb-y): FORCE
+ 	$(call if_changed,fdtoverlay)
+ $(call multi_depend, $(multi-dtb-y), .dtb, -dtbs)
+ 
+-- 
+2.44.0.rc0.258.g7320e95886-goog
+
