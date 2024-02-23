@@ -1,68 +1,69 @@
-Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com [209.85.160.169])
+Received: from mail-qt1-f180.google.com (mail-qt1-f180.google.com [209.85.160.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 945E03236
-	for <linux-kernel@vger.kernel.org>; Fri, 23 Feb 2024 00:03:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6800D7F
+	for <linux-kernel@vger.kernel.org>; Fri, 23 Feb 2024 00:04:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708646608; cv=none; b=j97uqii0vJ6IvWOHO/JC2NdMDWr9K2MWt19+gIPK6BBha+CjFrq2WjApbYFG6i5dsBaYfxa5oSViYXZe5d6s9coSM0Z29VOAVrrxfKF5vJrdbcOkKo0S9DWwXD5wTj/63M5gDSI1H5brWgOS1rfs0eabpTkGuIgm+vsYv8hnoG4=
+	t=1708646675; cv=none; b=stfUHZsvYOumK2MTUY1pAJtKJVWr4YhQ1tiXvxaCH/e7XXaGY8mQ/yWUfvRyS51oUlL+KFhJDEkH4YzJPAJ95tzfsBwO3rYccXfcLHQCC7j8Oe+64FD6LCX03obE4VHwRsXW+KLfKTS2D17KjtBaUwqeDyJA+nJu63Mnm/Ol/YE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708646608; c=relaxed/simple;
-	bh=ji5lizpEt7VXBO3Sj9iMwTH5eCI1cYZ5fHrovqOl1nI=;
+	s=arc-20240116; t=1708646675; c=relaxed/simple;
+	bh=9pP5OlmtAIgm4P1Ua4x74MyvoK9EL4bdQqglBk/+A9U=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=DYn0r3XRNAXOUQdhnu9rpD6ZO9aRODhNl3EjSDFoUQVsdrIjGjX9SxY3w9+ihJJqzkJxGJXhEmHjlXHYBt7eXA7mIoWskz0Rakf7c+9/L0NmeQNjJZd7gt8g2MdCX8P8T1ssInvI87SqHc7KrUYclagg5j2fYrPzoQewdJSOnZM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=vpz9+XJd; arc=none smtp.client-ip=209.85.160.169
+	 To:Cc:Content-Type; b=Fbr8izS6Wec1ll/ubvTMvZSANuOvkpQwPORYfFUrfawjrtaBtdmj0qoGslMUGqNeVYDc/RTb/DBrgxbscqF3elKr0D823UehXL4ZiDXfJ/MK7YQWFjD9dUYS8b413EmrtaU/Vjrxv0PkI6z5cT05LD+tyr7SmyJxC3cW8uZOXOk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=D2vMev0v; arc=none smtp.client-ip=209.85.160.180
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vpz9+XJd"
-Received: by mail-qt1-f169.google.com with SMTP id d75a77b69052e-42e2507c6e1so57591cf.1
-        for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 16:03:26 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="D2vMev0v"
+Received: by mail-qt1-f180.google.com with SMTP id d75a77b69052e-42e2507c6e1so57981cf.1
+        for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 16:04:33 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1708646605; x=1709251405; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1708646672; x=1709251472; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=ji5lizpEt7VXBO3Sj9iMwTH5eCI1cYZ5fHrovqOl1nI=;
-        b=vpz9+XJdi8mc5NzhiyYJYVtGExN/UELfNIU7w7JILdC6cwWnucvGoIKlxGb/blW6MH
-         cVw3vVpNKXFvXfZMftmCm+7qZf412EyA0ApVe3yawQAoN7gGz/f1NsZy93XPYyOo9+H7
-         Azz8x4dtF6jdfySRCsx+SXIbh232kFHa/PcHkD22X+ZLBBNHJojpxCk/ArwPo29E3iCX
-         UMIKlhhtUcucPFDYQIO7/MY+w711Eql35Rglsd+hrqKA6I8FLB+vvBwDT2I+qC2CqN+0
-         SoAcnxsEq3YBmv10TgbksPKComqqHxFGEDxknlj1wjsNJ2KE3GQQlCRiPgZq8EILodtj
-         3ndQ==
+        bh=K4XV+6evrAtbe6Ax9g1oW9X84h/Wj2ygEaesXkyr4b8=;
+        b=D2vMev0vrQHJXk/hljFc4iMPZHQhj+ajZQFLkai3mm0BR+TqPYbCLlUZ6gESe81LMO
+         gNIkHVjjMvyUU87MFZj7zXJhM7px1FhulgKCjeMRhGnzsQ6/VRJahT1ZSfOX3Fvv4SpT
+         lRcX6l5M/pMexV2D5DTqh6vX5qcWsrLDFpBEmFTlSyTkloZ+oMjOWHENp0Z8Qcf0lb1r
+         FqT7OV3HpMwk6w3P3/+5vo7jgp52mL5N7IA1IYVADBTFQ40b+Hy42STmQpWaCMLYUqMc
+         QQVy3G4HYfK1NqD4S6GY02Z7Uez7aL2+7FQRVsjt3ErSL43PT8D2DQonAzt6/rvbJ2Zj
+         ajvw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708646605; x=1709251405;
+        d=1e100.net; s=20230601; t=1708646672; x=1709251472;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=ji5lizpEt7VXBO3Sj9iMwTH5eCI1cYZ5fHrovqOl1nI=;
-        b=hu4FZgAZ6V8Ml4Pkw9hpaoWzU8iRTmU3h1Cw50illHRPOEaNixM18NjkAI6KDV26PC
-         alr/QPKqYG+FcJ/cOMlYnqEZnAHfsiaIg/xRMWK5v8VIdL623A9y6dW8U9NpvYG2pWd8
-         s7wFJQCGEjzWvD7AV4QLUMP86bRVWp3mYNfOl2yV+QuqD7KSLXw9yr9H1GPWPtqO76q6
-         Mqp5AFLgJaa7hor6wumpTTHXSG3oDutInUOUHxZjNOf1jVX3ryfPoRLirWwi39TBcZEY
-         IUyNMZlwG+MaNfPkCsvJSkO7ebC3v1XlP5f9R6K63aFQnPSHYOf5w5rR+Asp+frLhcNC
-         K+jw==
-X-Forwarded-Encrypted: i=1; AJvYcCVXoyGer2krrRkg0uXX987TaS2wtc/ZfjGG4CgWv69C3MSHEksmJ8+3t3NsX7WDuF+QQwOW+0KZm/xGBnP8yIioGRhLPyVDBTTnPtGm
-X-Gm-Message-State: AOJu0YxkYoJOkAvWJDdwoMAthYET4D9IdAQBxIV5ZuTpZ5+DfDFbc7iu
-	jnFOUdn3HQ3teFBqAFp2gXMDEKunAF7uDN33ewKUavhCkopFP9iiT8lSNB4Qo0xIx9JeIyzoks2
-	6Xmc/woKhyNsd6CSDbnZNdb3yLTau5tHvrk1W
-X-Google-Smtp-Source: AGHT+IE/qVPaF9hdk7Fc9eyOZ27fSzcfdChCqEg6lSFD8trMhOj0+FjzVUDOystxqGjnNTEpmtr0QQ2Ib5we2bUgHYw=
-X-Received: by 2002:ac8:4907:0:b0:42e:660:eb8d with SMTP id
- e7-20020ac84907000000b0042e0660eb8dmr662808qtq.5.1708646605370; Thu, 22 Feb
- 2024 16:03:25 -0800 (PST)
+        bh=K4XV+6evrAtbe6Ax9g1oW9X84h/Wj2ygEaesXkyr4b8=;
+        b=EXxlMrbOgM7Bhf0qv8t2wk6DE9Jmd36szfrAxNeMrD8nMSdMx5cu6zcdHwl0Kylesz
+         ASHrnggqXAp08UD2WzMVx0TfoM6HYlK9IqFp0s2sHxM1VEGcw6yw6t6toghR5PhQksmi
+         9x2QYirvW7H8O765N/w30vA6obDcdsmgcpTvw5ETbumj5LWdaYrvjenD6htp8tQQxTvN
+         /17AFpZ3XNRW4FHFSUJtuFx/m540YAiEYjuAvWWTLckpBm2GY9wFTlO4KxNnJoSCAFjm
+         HKY5m4JIv4oX65B5tC7eZAuBxi72Y/R13HllL+8YujLodFEz18i3qtsGVZY322hrFxwp
+         R6yQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUNecV7mTCCw0gyUGQkzlNQCDv2Nmg4T1DyJmpUqrakEeGKnm2lKAA4yjvu10bQBijwDbvY/GADJNOXq4aTppAJ63PGiCc52rgUuRtC
+X-Gm-Message-State: AOJu0Yw2MiwfVkQ76kdGvOwQs1qktcbTKz831aMefop+Tswkoda7XaT+
+	5nACqCXLB3R+hgxZ//JcvmE4a9O+EPtDzLAAcuWvAsIAl58OLsGNTBUEFAWTvKNO6PThdFYDarG
+	ylJx56SCJZKfPSK1riwn4aUIxLOJaD1BgDHmc
+X-Google-Smtp-Source: AGHT+IGCEYReALWj0ivUpsTKXkYKdTcTd5VH39dy3gtqxDZ6oRtzNfNSG0nCQX3TRFOJh+JYmcLTyrQlRALpAFmJabU=
+X-Received: by 2002:ac8:6206:0:b0:42e:5b91:b081 with SMTP id
+ ks6-20020ac86206000000b0042e5b91b081mr205656qtb.6.1708646672198; Thu, 22 Feb
+ 2024 16:04:32 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240221233026.2915061-1-saravanak@google.com> <ZddNdqoqEz3BSXGI@smile.fi.intel.com>
-In-Reply-To: <ZddNdqoqEz3BSXGI@smile.fi.intel.com>
+References: <20240221233026.2915061-1-saravanak@google.com>
+ <20240221233026.2915061-5-saravanak@google.com> <ZddNAHqwCNR5MZc4@smile.fi.intel.com>
+In-Reply-To: <ZddNAHqwCNR5MZc4@smile.fi.intel.com>
 From: Saravana Kannan <saravanak@google.com>
-Date: Thu, 22 Feb 2024 16:02:47 -0800
-Message-ID: <CAGETcx_usPewYSPq=E_-_fuSge7H+YiQwS8Z4bbouX0SSH6sOg@mail.gmail.com>
-Subject: Re: [PATCH v3 0/4] Add post-init-providers binding to improve
- suspend/resume stability
+Date: Thu, 22 Feb 2024 16:03:53 -0800
+Message-ID: <CAGETcx8-fz7ijTJcBLMWetrZRfvS5GGGOBBoFM7an6qDtZ1NNg@mail.gmail.com>
+Subject: Re: [PATCH v3 4/4] of: property: fw_devlink: Add support for
+ "post-init-providers" property
 To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Cc: Rob Herring <robh+dt@kernel.org>, 
 	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
@@ -75,30 +76,35 @@ Cc: Rob Herring <robh+dt@kernel.org>,
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Feb 22, 2024 at 5:34=E2=80=AFAM Andy Shevchenko
+On Thu, Feb 22, 2024 at 5:32=E2=80=AFAM Andy Shevchenko
 <andriy.shevchenko@linux.intel.com> wrote:
 >
-> On Wed, Feb 21, 2024 at 03:30:20PM -0800, Saravana Kannan wrote:
-> > This patch series adds a "post-init-providers" device tree binding that
-> > can be used to break dependency cycles in device tree and enforce a mor=
-e
-> > determinstic probe/suspend/resume order. This will also improve the
-> > stability of global async probing and async suspend/resume and allow us
-> > to enable them more easily. Yet another step away from playing initcall
-> > chicken with probing and step towards fully async probing and
-> > suspend/resume.
+> On Wed, Feb 21, 2024 at 03:30:24PM -0800, Saravana Kannan wrote:
+> > Add support for this property so that dependency cycles can be broken a=
+nd
+> > fw_devlink can do better probe/suspend/resume ordering between devices =
+in a
+> > dependency cycle.
 >
-> Do you know what is the state of affairs in ACPI? Is there any (similar)
-> issue even possible?
+> ...
+>
+> > -     fwnode_link_add(of_fwnode_handle(con_np), of_fwnode_handle(sup_np=
+), 0);
+> > +     fwnode_link_add(of_fwnode_handle(con_np), of_fwnode_handle(sup_np=
+),
+> > +                     flags);
+>
+> I would leave it one line despite being 83 characters long.
+>
+> ...
+>
+> > -                     of_link_to_phandle(con_dev_np, phandle);
+> > +                     of_link_to_phandle(con_dev_np, phandle,
+> > +                                        s->fwlink_flags);
+>
+> I would leave this on one line, it's only 81 characters.
 
-I'm not very familiar with ACPI, but I wouldn't be surprised if ACPI
-devices have cyclic dependencies. But then ACPI on a PC doesn't
-typically have as many devices/drivers and ACPI might be hiding the
-dependencies from the kernel. So maybe the possibility of a cycle
-visible to the kernel might be low.
-
-I would really like to see fw_devlink extended to ACPI (it's written
-in a way to make that possible), but don't have enough knowledge to do
-it.
+I don't have a strong opinion either way. If I need to send another
+revision out, I'll address this (if checkpatch doesn't complain).
 
 -Saravana
