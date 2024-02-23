@@ -1,29 +1,29 @@
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2B432E412;
-	Fri, 23 Feb 2024 14:37:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E93F182C88;
+	Fri, 23 Feb 2024 14:37:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708699072; cv=none; b=SQWuZpBSHNOGMIiYqYM4ChO0yoBuXRF7ma3H9PKa43wBs+eLDVUIoyHKcz8KcMU44vzrxjgEw2U74m1KsRcUwhIk4htIJzuJfR6cxJNqQFGBjbDYBqeXZ7fbb96q30vFIQ3Pm/KLZeu5yeKKo91mU8SKlKK4dlm5oxyB//i5piQ=
+	t=1708699074; cv=none; b=QbyUcVQpiGEP4LCDVjWVOwce6VegbVnzWRx47wBHVsQzJhc5XyOlXF1owGcPnONsy2LaqSw9WZ44g1nEbbKycJimySvWU3sVRhfXJkRZqNhKRRzMrmPGeMlQTPz+xT1woBTFWbUCXf9eeK37JYYZFmc7lobmo1e5pQvinwnS+ms=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708699072; c=relaxed/simple;
-	bh=T0q+t3x/VkaVnw8IvMEZVDZKcyC74OoGTeGcfhG78jw=;
+	s=arc-20240116; t=1708699074; c=relaxed/simple;
+	bh=ng2+xCoimxTpUqvHJna0QOOSNJ2dtvt8TT9sWrKV3SM=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Xhtj0zU3ZqpFz1hk8tmmwDb0HP2HiHugi0J0inbtCL/V8c6QZMbOEBGY1RBUZGKRZSEJqGNnjwATXaKEyat5yY4qYkTG3ywiogxpBUUfMQpNZqpjKX1qg+lCUbR5HCfxEH57CmwX3ygLpa29PXj8QdwZ3y9f6mfwd3VRfsNT0D4=
+	 MIME-Version:Content-Type; b=RafnPp6svR7A22A4RSoE7GGFowB0a3rUiQ5Bb8TS5CqGQ+grX0LsgISnjPhQOSNf05vKV2xKheSGjXDCvOnN8KhaIckyhxYX+2OfQ4Q7vl9qAQWmaeHFMoWV2PCoH5vjXm7JWxzvdQr+wmKZKJCOWoNWyGoC4VYfTTjCSrbuBak=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4ThCDf2QDJz6K611;
-	Fri, 23 Feb 2024 22:33:38 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4ThCDh2YZGz6K5tV;
+	Fri, 23 Feb 2024 22:33:40 +0800 (CST)
 Received: from lhrpeml500006.china.huawei.com (unknown [7.191.161.198])
-	by mail.maildlp.com (Postfix) with ESMTPS id A378F14149E;
-	Fri, 23 Feb 2024 22:37:47 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id A53EA140B33;
+	Fri, 23 Feb 2024 22:37:49 +0800 (CST)
 Received: from SecurePC30232.china.huawei.com (10.122.247.234) by
  lhrpeml500006.china.huawei.com (7.191.161.198) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Fri, 23 Feb 2024 14:37:46 +0000
+ 15.1.2507.35; Fri, 23 Feb 2024 14:37:48 +0000
 From: <shiju.jose@huawei.com>
 To: <linux-cxl@vger.kernel.org>, <linux-acpi@vger.kernel.org>,
 	<linux-mm@kvack.org>, <dan.j.williams@intel.com>, <dave@stgolabs.net>,
@@ -42,9 +42,9 @@ CC: <linux-edac@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
 	<tanxiaofei@huawei.com>, <prime.zeng@hisilicon.com>,
 	<kangkang.shen@futurewei.com>, <wanghuiqiang@huawei.com>,
 	<linuxarm@huawei.com>, <shiju.jose@huawei.com>
-Subject: [RFC PATCH v7 10/12] ACPI:RAS2: Add common library for RAS2 PCC interfaces
-Date: Fri, 23 Feb 2024 22:37:21 +0800
-Message-ID: <20240223143723.1574-11-shiju.jose@huawei.com>
+Subject: [RFC PATCH v7 12/12] memory: RAS2: Add memory RAS2 driver
+Date: Fri, 23 Feb 2024 22:37:23 +0800
+Message-ID: <20240223143723.1574-13-shiju.jose@huawei.com>
 X-Mailer: git-send-email 2.35.1.windows.2
 In-Reply-To: <20240223143723.1574-1-shiju.jose@huawei.com>
 References: <20240223143723.1574-1-shiju.jose@huawei.com>
@@ -54,416 +54,838 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
 X-ClientProxiedBy: lhrpeml500003.china.huawei.com (7.191.162.67) To
  lhrpeml500006.china.huawei.com (7.191.161.198)
 
-From: A Somasundaram <somasundaram.a@hpe.com>
+From: Shiju Jose <shiju.jose@huawei.com>
 
-The code contains PCC interfaces for RAS2 table, functions to send
-RAS2 commands as per ACPI 6.5 & upwards revision.
+Memory RAS2 driver binds to the platform device add by the ACPI RAS2
+driver.
+Driver registers the PCC channel for communicating with the ACPI compliant
+platform that contains RAS2 command support in the hardware.
 
-References for this implementation,
-ACPI specification 6.5 section 5.2.21 for RAS2 table and chapter 14
-for PCC (Platform Communication Channel).
+Add interface functions to support configuring the parameters of HW patrol
+scrubs in the system, which exposed to the kernel via the RAS2 and PCC,
+using the RAS2 commands.
 
-Driver uses PCC interfaces to communicate to the ACPI HW. This code
-implements PCC interfaces and the functions to send the RAS2 commands
-to be used by OSPM.
+Add support for RAS2 platform devices to register with scrub subsystem
+driver. This enables user to configure the parameters of HW patrol scrubs,
+which exposed to the kernel via the RAS2 table, through the scrub sysfs
+attributes.
 
-Signed-off-by: A Somasundaram <somasundaram.a@hpe.com>
-Co-developed-by: Shiju Jose <shiju.jose@huawei.com>
+Open Question:
+Sysfs scrub control attribute "enable_background_scrub" is added for RAS2,
+based on the feedback from Bill Schwartz <wschwartz@amperecomputing.com
+on v4 to enable/disable the background_scrubbing in the platform as defined in the
+“Configure Scrub Parameters [INPUT]“ field  in RAS2 Table 5.87: Parameter Block
+Structure for PATROL_SCRUB.
+Is it a right approach to support "enable_background_scrub" in the sysfs
+scrub control?
+
 Signed-off-by: Shiju Jose <shiju.jose@huawei.com>
 ---
- drivers/acpi/Kconfig            |  14 ++
- drivers/acpi/Makefile           |   1 +
- drivers/acpi/ras2_acpi_common.c | 272 ++++++++++++++++++++++++++++++++
- include/acpi/ras2_acpi.h        |  59 +++++++
- 4 files changed, 346 insertions(+)
- create mode 100755 drivers/acpi/ras2_acpi_common.c
- create mode 100644 include/acpi/ras2_acpi.h
+ drivers/memory/Kconfig       |  14 ++
+ drivers/memory/Makefile      |   2 +
+ drivers/memory/ras2.c        | 364 +++++++++++++++++++++++++++++++++++
+ drivers/memory/ras2_common.c | 282 +++++++++++++++++++++++++++
+ include/memory/ras2.h        |  88 +++++++++
+ 5 files changed, 750 insertions(+)
+ create mode 100644 drivers/memory/ras2.c
+ create mode 100644 drivers/memory/ras2_common.c
+ create mode 100755 include/memory/ras2.h
 
-diff --git a/drivers/acpi/Kconfig b/drivers/acpi/Kconfig
-index 3c3f8037ebed..6f69c9976c4f 100644
---- a/drivers/acpi/Kconfig
-+++ b/drivers/acpi/Kconfig
-@@ -284,6 +284,20 @@ config ACPI_CPPC_LIB
- 	  If your platform does not support CPPC in firmware,
- 	  leave this option disabled.
+diff --git a/drivers/memory/Kconfig b/drivers/memory/Kconfig
+index d2e015c09d83..705f346f23de 100644
+--- a/drivers/memory/Kconfig
++++ b/drivers/memory/Kconfig
+@@ -225,6 +225,20 @@ config STM32_FMC2_EBI
+ 	  devices (like SRAM, ethernet adapters, FPGAs, LCD displays, ...) on
+ 	  SOCs containing the FMC2 External Bus Interface.
  
-+config ACPI_RAS2
-+	bool "ACPI RAS2 driver"
-+	depends on ACPI_PROCESSOR
-+	select MAILBOX
-+	select PCC
++config MEM_RAS2
++	bool "Memory RAS2 driver"
++	depends on ACPI_RAS2
++	depends on SCRUB
 +	help
-+	  The driver adds support for PCC (platform communication
-+	  channel) interfaces to communicate with the ACPI complaint
-+	  hardware platform supports RAS2(RAS2 Feature table).
-+	  The driver adds support for RAS2(extraction of RAS2
-+	  tables from OS system table), PCC interfaces and OSPM interfaces
-+	  to send RAS2 commands. Driver adds platform device which
-+	  binds to the RAS2 memory driver.
++	  The driver bound to the platform device added by the ACPI RAS2
++	  driver. Driver registers the PCC channel for communicating with
++	  the ACPI compliant platform that contains RAS2 command support
++	  in the hardware.
++	  Registers with the scrub configure driver to provide sysfs interfaces
++	  for configuring the hw patrol scrubber in the system, which exposed
++	  via the ACPI RAS2 table and PCC. Provides the interface functions
++	  support configuring the HW patrol scrubbers in the system.
 +
- config ACPI_PROCESSOR
- 	tristate "Processor"
- 	depends on X86 || ARM64 || LOONGARCH
-diff --git a/drivers/acpi/Makefile b/drivers/acpi/Makefile
-index 12ef8180d272..b12fba9cff06 100644
---- a/drivers/acpi/Makefile
-+++ b/drivers/acpi/Makefile
-@@ -105,6 +105,7 @@ obj-$(CONFIG_ACPI_CUSTOM_METHOD)+= custom_method.o
- obj-$(CONFIG_ACPI_BGRT)		+= bgrt.o
- obj-$(CONFIG_ACPI_CPPC_LIB)	+= cppc_acpi.o
- obj-$(CONFIG_ACPI_SPCR_TABLE)	+= spcr.o
-+obj-$(CONFIG_ACPI_RAS2)		+= ras2_acpi_common.o
- obj-$(CONFIG_ACPI_DEBUGGER_USER) += acpi_dbg.o
- obj-$(CONFIG_ACPI_PPTT) 	+= pptt.o
- obj-$(CONFIG_ACPI_PFRUT)	+= pfr_update.o pfr_telemetry.o
-diff --git a/drivers/acpi/ras2_acpi_common.c b/drivers/acpi/ras2_acpi_common.c
-new file mode 100755
-index 000000000000..c6e4ed96cd81
+ source "drivers/memory/samsung/Kconfig"
+ source "drivers/memory/tegra/Kconfig"
+ source "drivers/memory/scrub/Kconfig"
+diff --git a/drivers/memory/Makefile b/drivers/memory/Makefile
+index 4b37312cb342..52afd9d2259a 100644
+--- a/drivers/memory/Makefile
++++ b/drivers/memory/Makefile
+@@ -7,6 +7,8 @@ obj-$(CONFIG_DDR)		+= jedec_ddr_data.o
+ ifeq ($(CONFIG_DDR),y)
+ obj-$(CONFIG_OF)		+= of_memory.o
+ endif
++obj-$(CONFIG_MEM_RAS2)		+= ras2_common.o ras2.o
++
+ obj-$(CONFIG_ARM_PL172_MPMC)	+= pl172.o
+ obj-$(CONFIG_ATMEL_EBI)		+= atmel-ebi.o
+ obj-$(CONFIG_BRCMSTB_DPFE)	+= brcmstb_dpfe.o
+diff --git a/drivers/memory/ras2.c b/drivers/memory/ras2.c
+new file mode 100644
+index 000000000000..12fd1f4580d4
 --- /dev/null
-+++ b/drivers/acpi/ras2_acpi_common.c
-@@ -0,0 +1,272 @@
-+// SPDX-License-Identifier: GPL-2.0-only
++++ b/drivers/memory/ras2.c
+@@ -0,0 +1,364 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
 +/*
-+ * ACPI RAS2 table processing common functions
++ * ras2.c - ACPI RAS2 memory driver
 + *
-+ * (C) Copyright 2014, 2015 Hewlett-Packard Enterprises.
++ * Copyright (c) 2023 HiSilicon Limited.
 + *
-+ * Copyright (c) 2024 HiSilicon Limited.
-+ *
-+ * Support for
-+ * RAS2 - ACPI 6.5 Specification, section 5.2.21
-+ * PCC(Platform Communications Channel) - ACPI 6.5 Specification,
-+ * chapter 14.
-+ *
-+ * Code contains common functions for RAS2.
-+ * PCC(Platform communication channel) interfaces for the RAS2
-+ * and the functions for sending RAS2 commands to the ACPI HW.
++ *  - Registers the PCC channel for communicating with the
++ *    ACPI compliant platform that contains RAS2 command
++ *    support in the hardware.
++ *  - Provides functions to configure HW patrol scrubs
++ *    in the system.
++ *  - Registers with the scrub configure driver for the
++ *    hw patrol scrub in the system, which exposed via
++ *    the ACPI RAS2 table and PCC.
 + */
 +
-+#include <linux/export.h>
-+#include <linux/delay.h>
-+#include <linux/ktime.h>
++#define pr_fmt(fmt)	"MEMORY RAS2: " fmt
++
++#include <linux/module.h>
++#include <linux/of.h>
 +#include <linux/platform_device.h>
++#include <linux/cleanup.h>
++
 +#include <acpi/ras2_acpi.h>
-+#include <acpi/acpixf.h>
++#include <memory/ras2.h>
 +
-+static int ras2_check_pcc_chan(struct ras2_context *ras2_ctx)
++/* RAS2 specific definitions. */
++#define RAS2_SCRUB	"ras2_scrub"
++#define RAS2_ID_FORMAT RAS2_SCRUB "%d"
++#define RAS2_SUPPORT_HW_PARTOL_SCRUB	BIT(0)
++#define RAS2_TYPE_PATROL_SCRUB	0x0000
++
++#define RAS2_GET_PATROL_PARAMETERS	0x01
++#define	RAS2_START_PATROL_SCRUBBER	0x02
++#define	RAS2_STOP_PATROL_SCRUBBER	0x03
++
++#define RAS2_PATROL_SCRUB_RATE_VALID	BIT(0)
++#define RAS2_PATROL_SCRUB_RATE_IN_MASK	GENMASK(15, 8)
++#define RAS2_PATROL_SCRUB_EN_BACKGROUND	BIT(0)
++#define RAS2_PATROL_SCRUB_RATE_OUT_MASK	GENMASK(7, 0)
++#define RAS2_PATROL_SCRUB_MIN_RATE_OUT_MASK	GENMASK(15, 8)
++#define RAS2_PATROL_SCRUB_MAX_RATE_OUT_MASK	GENMASK(23, 16)
++
++static void ras2_tx_done(struct mbox_client *cl, void *msg, int ret)
 +{
-+	struct acpi_ras2_shared_memory  __iomem *generic_comm_base = ras2_ctx->pcc_comm_addr;
-+	ktime_t next_deadline = ktime_add(ktime_get(), ras2_ctx->deadline);
-+
-+	while (!ktime_after(ktime_get(), next_deadline)) {
-+		/*
-+		 * As per ACPI spec, the PCC space wil be initialized by
-+		 * platform and should have set the command completion bit when
-+		 * PCC can be used by OSPM
-+		 */
-+		if (readw_relaxed(&generic_comm_base->status) & RAS2_PCC_CMD_COMPLETE)
-+			return 0;
-+		/*
-+		 * Reducing the bus traffic in case this loop takes longer than
-+		 * a few retries.
-+		 */
-+		udelay(10);
++	if (ret) {
++		dev_dbg(cl->dev, "TX did not complete: CMD sent:%x, ret:%d\n",
++			*(u16 *)msg, ret);
++	} else {
++		dev_dbg(cl->dev, "TX completed. CMD sent:%x, ret:%d\n",
++			*(u16 *)msg, ret);
 +	}
-+
-+	return -EIO;
 +}
 +
-+/**
-+ * ras2_send_pcc_cmd() - Send RAS2 command via PCC channel
-+ * @ras2_ctx:	pointer to the ras2 context structure
-+ * @cmd:	command to send
-+ *
-+ * Returns: 0 on success, an error otherwise
++/*
++ * The below functions are exposed to OSPM, to query, configure and
++ * initiate memory patrol scrub.
 + */
-+int ras2_send_pcc_cmd(struct ras2_context *ras2_ctx, u16 cmd)
++static int ras2_is_patrol_scrub_support(struct ras2_context *ras2_ctx)
 +{
 +	int ret;
-+	struct acpi_ras2_shared_memory  *generic_comm_base =
-+		(struct acpi_ras2_shared_memory *)ras2_ctx->pcc_comm_addr;
-+	static ktime_t last_cmd_cmpl_time, last_mpar_reset;
-+	struct mbox_chan *pcc_channel;
-+	static int mpar_count;
-+	unsigned int time_delta;
++	struct acpi_ras2_shared_memory  __iomem *generic_comm_base;
 +
-+	if (cmd == RAS2_PCC_CMD_EXEC) {
-+		ret = ras2_check_pcc_chan(ras2_ctx);
-+		if (ret)
-+			return ret;
-+	}
-+	pcc_channel = ras2_ctx->pcc_chan->mchan;
++	if (!ras2_ctx || !ras2_ctx->pcc_comm_addr)
++		return -EFAULT;
 +
-+	/*
-+	 * Handle the Minimum Request Turnaround Time(MRTT)
-+	 * "The minimum amount of time that OSPM must wait after the completion
-+	 * of a command before issuing the next command, in microseconds"
-+	 */
-+	if (ras2_ctx->pcc_mrtt) {
-+		time_delta = ktime_us_delta(ktime_get(), last_cmd_cmpl_time);
-+		if (ras2_ctx->pcc_mrtt > time_delta)
-+			udelay(ras2_ctx->pcc_mrtt - time_delta);
-+	}
++	generic_comm_base = ras2_ctx->pcc_comm_addr;
++	guard(spinlock_irqsave)(&ras2_ctx->spinlock);
++	generic_comm_base->set_capabilities[0] = 0;
 +
-+	/*
-+	 * Handle the non-zero Maximum Periodic Access Rate(MPAR)
-+	 * "The maximum number of periodic requests that the subspace channel can
-+	 * support, reported in commands per minute. 0 indicates no limitation."
-+	 *
-+	 * This parameter should be ideally zero or large enough so that it can
-+	 * handle maximum number of requests that all the cores in the system can
-+	 * collectively generate. If it is not, we will follow the spec and just
-+	 * not send the request to the platform after hitting the MPAR limit in
-+	 * any 60s window
-+	 */
-+	if (ras2_ctx->pcc_mpar) {
-+		if (mpar_count == 0) {
-+			time_delta = ktime_ms_delta(ktime_get(), last_mpar_reset);
-+			if (time_delta < 60 * MSEC_PER_SEC) {
-+				dev_dbg(ras2_ctx->dev,
-+					"PCC cmd not sent due to MPAR limit");
-+				return -EIO;
-+			}
-+			last_mpar_reset = ktime_get();
-+			mpar_count = ras2_ctx->pcc_mpar;
-+		}
-+		mpar_count--;
-+	}
-+
-+	/* Write to the shared comm region. */
-+	writew_relaxed(cmd, &generic_comm_base->command);
-+
-+	/* Flip CMD COMPLETE bit */
-+	writew_relaxed(0, &generic_comm_base->status);
-+
-+	/* Ring doorbell */
-+	ret = mbox_send_message(pcc_channel, &cmd);
-+	if (ret < 0) {
++	/* send command for reading RAS2 capabilities */
++	ret = ras2_send_pcc_cmd(ras2_ctx, RAS2_PCC_CMD_EXEC);
++	if (ret) {
 +		dev_err(ras2_ctx->dev,
-+			"Err sending PCC mbox message. cmd:%d, ret:%d\n",
-+			cmd, ret);
++			"%s: ras2_send_pcc_cmd failed\n", __func__);
 +		return ret;
 +	}
 +
-+	/*
-+	 * For READs we need to ensure the cmd completed to ensure
-+	 * the ensuing read()s can proceed. For WRITEs we dont care
-+	 * because the actual write()s are done before coming here
-+	 * and the next READ or WRITE will check if the channel
-+	 * is busy/free at the entry of this call.
-+	 *
-+	 * If Minimum Request Turnaround Time is non-zero, we need
-+	 * to record the completion time of both READ and WRITE
-+	 * command for proper handling of MRTT, so we need to check
-+	 * for pcc_mrtt in addition to CMD_READ
-+	 */
-+	if (cmd == RAS2_PCC_CMD_EXEC || ras2_ctx->pcc_mrtt) {
-+		ret = ras2_check_pcc_chan(ras2_ctx);
-+		if (ras2_ctx->pcc_mrtt)
-+			last_cmd_cmpl_time = ktime_get();
-+	}
-+
-+	if (pcc_channel->mbox->txdone_irq)
-+		mbox_chan_txdone(pcc_channel, ret);
-+	else
-+		mbox_client_txdone(pcc_channel, ret);
-+
-+	return ret;
++	return generic_comm_base->features[0] & RAS2_SUPPORT_HW_PARTOL_SCRUB;
 +}
-+EXPORT_SYMBOL_GPL(ras2_send_pcc_cmd);
 +
-+/**
-+ * ras2_register_pcc_channel() - Register PCC channel
-+ * @ras2_ctx:	pointer to the ras2 context structure
-+ *
-+ * Returns: 0 on success, an error otherwise
-+ */
-+int ras2_register_pcc_channel(struct ras2_context *ras2_ctx)
++static int ras2_get_patrol_scrub_params(struct ras2_context *ras2_ctx,
++					struct ras2_scrub_params *params)
 +{
-+	u64 usecs_lat;
-+	unsigned int len;
-+	struct pcc_mbox_chan *pcc_chan;
-+	struct mbox_client *ras2_mbox_cl;
-+	struct acpi_pcct_hw_reduced *ras2_ss;
++	int ret = 0;
++	u8  min_supp_scrub_rate, max_supp_scrub_rate;
++	struct acpi_ras2_shared_memory  __iomem *generic_comm_base;
++	struct acpi_ras2_patrol_scrub_parameter __iomem *patrol_scrub_params;
 +
-+	ras2_mbox_cl = &ras2_ctx->mbox_client;
-+	if (!ras2_mbox_cl || ras2_ctx->pcc_subspace_idx < 0)
-+		return -EINVAL;
++	if (!ras2_ctx || !ras2_ctx->pcc_comm_addr)
++		return -EFAULT;
 +
-+	pcc_chan = pcc_mbox_request_channel(ras2_mbox_cl,
-+					    ras2_ctx->pcc_subspace_idx);
++	generic_comm_base = ras2_ctx->pcc_comm_addr;
++	patrol_scrub_params = ras2_ctx->pcc_comm_addr + sizeof(*generic_comm_base);
 +
-+	if (IS_ERR(pcc_chan)) {
++	guard(spinlock_irqsave)(&ras2_ctx->spinlock);
++	generic_comm_base->set_capabilities[0] = RAS2_SUPPORT_HW_PARTOL_SCRUB;
++	/* send command for reading RAS2 capabilities */
++	ret = ras2_send_pcc_cmd(ras2_ctx, RAS2_PCC_CMD_EXEC);
++	if (ret) {
 +		dev_err(ras2_ctx->dev,
-+			"Failed to find PCC channel for subspace %d\n",
-+			ras2_ctx->pcc_subspace_idx);
-+		return -ENODEV;
-+	}
-+	ras2_ctx->pcc_chan = pcc_chan;
-+	/*
-+	 * The PCC mailbox controller driver should
-+	 * have parsed the PCCT (global table of all
-+	 * PCC channels) and stored pointers to the
-+	 * subspace communication region in con_priv.
-+	 */
-+	ras2_ss = pcc_chan->mchan->con_priv;
-+
-+	if (!ras2_ss) {
-+		dev_err(ras2_ctx->dev, "No PCC subspace found for RAS2\n");
-+		pcc_mbox_free_channel(ras2_ctx->pcc_chan);
-+		return -ENODEV;
++			"%s: ras2_send_pcc_cmd failed\n", __func__);
++		return ret;
 +	}
 +
-+	/*
-+	 * This is the shared communication region
-+	 * for the OS and Platform to communicate over.
-+	 */
-+	ras2_ctx->comm_base_addr = ras2_ss->base_address;
-+	len = ras2_ss->length;
-+	dev_dbg(ras2_ctx->dev, "PCC subspace for RAS2=0x%llx len=%d\n",
-+		ras2_ctx->comm_base_addr, len);
++	if (!(generic_comm_base->features[0] & RAS2_SUPPORT_HW_PARTOL_SCRUB) ||
++	    !(generic_comm_base->num_parameter_blocks)) {
++		dev_err(ras2_ctx->dev,
++			"%s: Platform does not support HW Patrol Scrubber\n", __func__);
++		return -EOPNOTSUPP;
++	}
 +
-+	/*
-+	 * ras2_ss->latency is just a Nominal value. In reality
-+	 * the remote processor could be much slower to reply.
-+	 * So add an arbitrary amount of wait on top of Nominal.
-+	 */
-+	usecs_lat = RAS2_NUM_RETRIES * ras2_ss->latency;
-+	ras2_ctx->deadline = ns_to_ktime(usecs_lat * NSEC_PER_USEC);
-+	ras2_ctx->pcc_mrtt = ras2_ss->min_turnaround_time;
-+	ras2_ctx->pcc_mpar = ras2_ss->max_access_rate;
-+	ras2_ctx->pcc_comm_addr = acpi_os_ioremap(ras2_ctx->comm_base_addr,
-+						  len);
-+	dev_dbg(ras2_ctx->dev, "pcc_comm_addr=%p\n",
-+		ras2_ctx->pcc_comm_addr);
++	if (!patrol_scrub_params->requested_address_range[1]) {
++		dev_err(ras2_ctx->dev,
++			"%s: Invalid requested address range, \
++			requested_address_range[0]=0x%llx \
++			requested_address_range[1]=0x%llx\n",
++			__func__,
++			patrol_scrub_params->requested_address_range[0],
++			patrol_scrub_params->requested_address_range[1]);
++		return -EOPNOTSUPP;
++	}
 +
-+	/* Set flag so that we dont come here for each CPU. */
-+	ras2_ctx->pcc_channel_acquired = true;
++	generic_comm_base->set_capabilities[0] = RAS2_SUPPORT_HW_PARTOL_SCRUB;
++	patrol_scrub_params->header.type = RAS2_TYPE_PATROL_SCRUB;
++	patrol_scrub_params->patrol_scrub_command = RAS2_GET_PATROL_PARAMETERS;
++
++	/* send command for reading the HW patrol scrub parameters */
++	ret = ras2_send_pcc_cmd(ras2_ctx, RAS2_PCC_CMD_EXEC);
++	if (ret) {
++		dev_err(ras2_ctx->dev,
++			"%s: failed to read HW patrol scrub parameters\n",
++			__func__);
++		return ret;
++	}
++
++	/* copy output scrub parameters */
++	params->addr_base = patrol_scrub_params->actual_address_range[0];
++	params->addr_size = patrol_scrub_params->actual_address_range[1];
++	params->flags = patrol_scrub_params->flags;
++	params->rate = FIELD_GET(RAS2_PATROL_SCRUB_RATE_OUT_MASK,
++				 patrol_scrub_params->scrub_params_out);
++	min_supp_scrub_rate = FIELD_GET(RAS2_PATROL_SCRUB_MIN_RATE_OUT_MASK,
++					patrol_scrub_params->scrub_params_out);
++	max_supp_scrub_rate = FIELD_GET(RAS2_PATROL_SCRUB_MAX_RATE_OUT_MASK,
++					patrol_scrub_params->scrub_params_out);
++	snprintf(params->rate_avail, RAS2_MAX_RATE_RANGE_LENGTH,
++		 "%d-%d", min_supp_scrub_rate, max_supp_scrub_rate);
 +
 +	return 0;
 +}
-+EXPORT_SYMBOL_GPL(ras2_register_pcc_channel);
 +
-+/**
-+ * ras2_unregister_pcc_channel() - Unregister PCC channel
-+ * @ras2_ctx:	pointer to the ras2 context structure
-+ *
-+ * Returns: 0 on success, an error otherwise
-+ */
-+int ras2_unregister_pcc_channel(struct ras2_context *ras2_ctx)
++static int ras2_enable_patrol_scrub(struct ras2_context *ras2_ctx, bool enable)
 +{
-+	if (!ras2_ctx->pcc_chan)
-+		return -EINVAL;
++	int ret = 0;
++	struct ras2_scrub_params params;
++	struct acpi_ras2_shared_memory  __iomem *generic_comm_base;
++	u8 scrub_rate_to_set, min_supp_scrub_rate, max_supp_scrub_rate;
++	struct acpi_ras2_patrol_scrub_parameter __iomem *patrol_scrub_params;
 +
-+	pcc_mbox_free_channel(ras2_ctx->pcc_chan);
++	if (!ras2_ctx || !ras2_ctx->pcc_comm_addr)
++		return -EFAULT;
++
++	generic_comm_base = ras2_ctx->pcc_comm_addr;
++	patrol_scrub_params = ras2_ctx->pcc_comm_addr + sizeof(*generic_comm_base);
++
++	if (enable) {
++		ret = ras2_get_patrol_scrub_params(ras2_ctx, &params);
++		if (ret)
++			return ret;
++	}
++
++	guard(spinlock_irqsave)(&ras2_ctx->spinlock);
++	generic_comm_base->set_capabilities[0] = RAS2_SUPPORT_HW_PARTOL_SCRUB;
++	patrol_scrub_params->header.type = RAS2_TYPE_PATROL_SCRUB;
++
++	if (enable) {
++		patrol_scrub_params->patrol_scrub_command = RAS2_START_PATROL_SCRUBBER;
++		patrol_scrub_params->requested_address_range[0] = params.addr_base;
++		patrol_scrub_params->requested_address_range[1] = params.addr_size;
++
++		scrub_rate_to_set = FIELD_GET(RAS2_PATROL_SCRUB_RATE_IN_MASK,
++					      patrol_scrub_params->scrub_params_in);
++		min_supp_scrub_rate = FIELD_GET(RAS2_PATROL_SCRUB_MIN_RATE_OUT_MASK,
++						patrol_scrub_params->scrub_params_out);
++		max_supp_scrub_rate = FIELD_GET(RAS2_PATROL_SCRUB_MAX_RATE_OUT_MASK,
++						patrol_scrub_params->scrub_params_out);
++		if (scrub_rate_to_set < min_supp_scrub_rate ||
++		    scrub_rate_to_set > max_supp_scrub_rate) {
++			dev_warn(ras2_ctx->dev,
++				 "patrol scrub rate to set is out of the supported range\n");
++			dev_warn(ras2_ctx->dev,
++				 "min_supp_scrub_rate=%d max_supp_scrub_rate=%d\n",
++				 min_supp_scrub_rate, max_supp_scrub_rate);
++			return -EINVAL;
++		}
++	} else {
++		patrol_scrub_params->patrol_scrub_command = RAS2_STOP_PATROL_SCRUBBER;
++	}
++
++	/* send command for enable/disable HW patrol scrub */
++	ret = ras2_send_pcc_cmd(ras2_ctx, RAS2_PCC_CMD_EXEC);
++	if (ret) {
++		pr_err("%s: failed to enable/disable the HW patrol scrub\n", __func__);
++		return ret;
++	}
 +
 +	return 0;
 +}
-+EXPORT_SYMBOL_GPL(ras2_unregister_pcc_channel);
 +
-+/**
-+ * ras2_add_platform_device() - Add a platform device for RAS2
-+ * @name:	name of the device we're adding
-+ * @data:	platform specific data for this platform device
-+ * @size:	size of platform specific data
-+ *
-+ * Returns: pointer to platform device on success, an error otherwise
-+ */
-+struct platform_device *ras2_add_platform_device(char *name, const void *data,
-+						 size_t size)
++static int ras2_enable_background_scrub(struct ras2_context *ras2_ctx, bool enable)
 +{
 +	int ret;
-+	struct platform_device *pdev;
++	struct acpi_ras2_shared_memory  __iomem *generic_comm_base;
++	struct acpi_ras2_patrol_scrub_parameter __iomem *patrol_scrub_params;
 +
-+	pdev = platform_device_alloc(name, PLATFORM_DEVID_AUTO);
-+	if (!pdev)
-+		return NULL;
++	if (!ras2_ctx || !ras2_ctx->pcc_comm_addr)
++		return -EFAULT;
 +
-+	ret = platform_device_add_data(pdev, data, size);
-+	if (ret)
-+		goto dev_put;
++	generic_comm_base = ras2_ctx->pcc_comm_addr;
++	patrol_scrub_params = ras2_ctx->pcc_comm_addr + sizeof(*generic_comm_base);
 +
-+	ret = platform_device_add(pdev);
-+	if (ret)
-+		goto dev_put;
++	guard(spinlock_irqsave)(&ras2_ctx->spinlock);
++	generic_comm_base->set_capabilities[0] = RAS2_SUPPORT_HW_PARTOL_SCRUB;
++	patrol_scrub_params->header.type = RAS2_TYPE_PATROL_SCRUB;
++	patrol_scrub_params->patrol_scrub_command = RAS2_START_PATROL_SCRUBBER;
 +
-+	return pdev;
++	patrol_scrub_params->scrub_params_in &= ~RAS2_PATROL_SCRUB_EN_BACKGROUND;
++	patrol_scrub_params->scrub_params_in |= FIELD_PREP(RAS2_PATROL_SCRUB_EN_BACKGROUND,
++							   enable);
 +
-+dev_put:
-+	platform_device_put(pdev);
++	/* send command for enable/disable HW patrol scrub */
++	ret = ras2_send_pcc_cmd(ras2_ctx, RAS2_PCC_CMD_EXEC);
++	if (ret) {
++		dev_err(ras2_ctx->dev,
++			"%s: failed to enable/disable background patrol scrubbing\n",
++			__func__);
++		return ret;
++	}
 +
-+	return ERR_PTR(ret);
++	return 0;
 +}
-diff --git a/include/acpi/ras2_acpi.h b/include/acpi/ras2_acpi.h
++static int ras2_set_patrol_scrub_params(struct ras2_context *ras2_ctx,
++					struct ras2_scrub_params *params, u8 param_type)
++{
++	struct acpi_ras2_shared_memory  __iomem *generic_comm_base;
++	struct acpi_ras2_patrol_scrub_parameter __iomem *patrol_scrub_params;
++
++	if (!ras2_ctx || !ras2_ctx->pcc_comm_addr)
++		return -EFAULT;
++
++	generic_comm_base = ras2_ctx->pcc_comm_addr;
++	patrol_scrub_params = ras2_ctx->pcc_comm_addr + sizeof(*generic_comm_base);
++
++	guard(spinlock_irqsave)(&ras2_ctx->spinlock);
++	patrol_scrub_params->header.type = RAS2_TYPE_PATROL_SCRUB;
++	if (param_type == RAS2_MEM_SCRUB_PARAM_ADDR_BASE && params->addr_base) {
++		patrol_scrub_params->requested_address_range[0] = params->addr_base;
++	} else if (param_type == RAS2_MEM_SCRUB_PARAM_ADDR_SIZE && params->addr_size) {
++		patrol_scrub_params->requested_address_range[1] = params->addr_size;
++	} else if (param_type == RAS2_MEM_SCRUB_PARAM_RATE) {
++		patrol_scrub_params->scrub_params_in &= ~RAS2_PATROL_SCRUB_RATE_IN_MASK;
++		patrol_scrub_params->scrub_params_in |= FIELD_PREP(RAS2_PATROL_SCRUB_RATE_IN_MASK,
++								   params->rate);
++	} else {
++		dev_err(ras2_ctx->dev, "Invalid patrol scrub parameter to set\n");
++		return -EINVAL;
++	}
++
++	return 0;
++}
++
++static const struct ras2_hw_scrub_ops ras2_hw_ops = {
++	.enable_scrub = ras2_enable_patrol_scrub,
++	.enable_background_scrub = ras2_enable_background_scrub,
++	.get_scrub_params = ras2_get_patrol_scrub_params,
++	.set_scrub_params = ras2_set_patrol_scrub_params,
++};
++
++static const struct scrub_ops ras2_scrub_ops = {
++	.is_visible = ras2_hw_scrub_is_visible,
++	.read = ras2_hw_scrub_read,
++	.write = ras2_hw_scrub_write,
++	.read_string = ras2_hw_scrub_read_strings,
++};
++
++static DEFINE_IDA(ras2_ida);
++
++static void devm_ras2_release(void *ctx)
++{
++	struct ras2_context *ras2_ctx = ctx;
++
++	ida_free(&ras2_ida, ras2_ctx->id);
++	ras2_unregister_pcc_channel(ras2_ctx);
++}
++
++static int ras2_probe(struct platform_device *pdev)
++{
++	int ret, id;
++	struct mbox_client *cl;
++	struct device *hw_scrub_dev;
++	struct ras2_context *ras2_ctx;
++	char scrub_name[RAS2_MAX_NAME_LENGTH];
++
++	ras2_ctx = devm_kzalloc(&pdev->dev, sizeof(*ras2_ctx), GFP_KERNEL);
++	if (!ras2_ctx)
++		return -ENOMEM;
++
++	ras2_ctx->dev = &pdev->dev;
++	ras2_ctx->ops = &ras2_hw_ops;
++	spin_lock_init(&ras2_ctx->spinlock);
++	platform_set_drvdata(pdev, ras2_ctx);
++
++	cl = &ras2_ctx->mbox_client;
++	/* Request mailbox channel */
++	cl->dev = &pdev->dev;
++	cl->tx_done = ras2_tx_done;
++	cl->knows_txdone = true;
++	ras2_ctx->pcc_subspace_idx = *((int *)pdev->dev.platform_data);
++	dev_dbg(&pdev->dev, "pcc-subspace-id=%d\n", ras2_ctx->pcc_subspace_idx);
++	ret = ras2_register_pcc_channel(ras2_ctx);
++	if (ret < 0)
++		return ret;
++
++	ret = devm_add_action_or_reset(&pdev->dev, devm_ras2_release, ras2_ctx);
++	if (ret < 0)
++		return ret;
++
++	if (ras2_is_patrol_scrub_support(ras2_ctx)) {
++		id = ida_alloc(&ras2_ida, GFP_KERNEL);
++		if (id < 0)
++			return id;
++		ras2_ctx->id = id;
++		snprintf(scrub_name, sizeof(scrub_name), "%s%d", RAS2_SCRUB, id);
++		dev_set_name(&pdev->dev, RAS2_ID_FORMAT, id);
++		hw_scrub_dev = devm_scrub_device_register(&pdev->dev, scrub_name,
++							  ras2_ctx, &ras2_scrub_ops,
++							  0, NULL);
++		if (PTR_ERR_OR_ZERO(hw_scrub_dev))
++			return PTR_ERR_OR_ZERO(hw_scrub_dev);
++	}
++	ras2_ctx->scrub_dev = hw_scrub_dev;
++
++	return 0;
++}
++
++static const struct platform_device_id ras2_id_table[] = {
++	{ .name = "ras2", },
++	{ }
++};
++MODULE_DEVICE_TABLE(platform, ras2_id_table);
++
++static struct platform_driver ras2_driver = {
++	.probe = ras2_probe,
++	.driver = {
++		.name = "ras2",
++		.suppress_bind_attrs = true,
++	},
++	.id_table = ras2_id_table,
++};
++module_driver(ras2_driver, platform_driver_register, platform_driver_unregister);
++
++MODULE_DESCRIPTION("ras2 memory driver");
++MODULE_LICENSE("GPL");
+diff --git a/drivers/memory/ras2_common.c b/drivers/memory/ras2_common.c
 new file mode 100644
-index 000000000000..5e9ac788670a
+index 000000000000..97e1852e9fd7
 --- /dev/null
-+++ b/include/acpi/ras2_acpi.h
-@@ -0,0 +1,59 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
++++ b/drivers/memory/ras2_common.c
+@@ -0,0 +1,282 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
 +/*
-+ * RAS2 ACPI driver header file
++ * Common functions for memory RAS2 driver
 + *
-+ * (C) Copyright 2014, 2015 Hewlett-Packard Enterprises
++ * Copyright (c) 2024 HiSilicon Limited.
++ *
++ * This driver implements call back functions for the scrub
++ * configure driver to configure the parameters of the hw patrol
++ * scrubbers in the system, which exposed via the ACPI AS2
++ * table and PCC.
++ */
++
++#include <linux/acpi.h>
++#include <linux/io.h>
++#include <linux/interrupt.h>
++#include <linux/mailbox_controller.h>
++#include <linux/mailbox_client.h>
++#include <linux/module.h>
++#include <linux/platform_device.h>
++
++#include <acpi/ras2_acpi.h>
++#include <memory/ras2.h>
++
++static int enable_write(struct ras2_context *ras2_ctx, long val)
++{
++	int ret;
++	bool enable = val;
++
++	ret = ras2_ctx->ops->enable_scrub(ras2_ctx, enable);
++	if (ret) {
++		dev_err(ras2_ctx->dev,
++			"enable patrol scrub fail, enable=%d ret=%d\n",
++			enable, ret);
++		return ret;
++	}
++
++	return 0;
++}
++
++static int enable_background_scrub_write(struct ras2_context *ras2_ctx, long val)
++{
++	int ret;
++	bool enable = val;
++
++	ret = ras2_ctx->ops->enable_background_scrub(ras2_ctx, enable);
++	if (ret) {
++		dev_err(ras2_ctx->dev,
++			"enable background patrol scrub fail, enable=%d ret=%d\n",
++			enable, ret);
++		return ret;
++	}
++
++	return 0;
++}
++
++static int addr_base_read(struct ras2_context *ras2_ctx, u64 *val)
++{
++	int ret;
++	struct ras2_scrub_params params;
++
++	ret = ras2_ctx->ops->get_scrub_params(ras2_ctx, &params);
++	if (ret) {
++		dev_err(ras2_ctx->dev,
++			"get patrol scrub params fail ret=%d\n", ret);
++		return ret;
++	}
++	*val = params.addr_base;
++
++	return 0;
++}
++
++static int addr_base_write(struct ras2_context *ras2_ctx, u64 val)
++{
++	int ret;
++	struct ras2_scrub_params params;
++
++	params.addr_base = val;
++	ret = ras2_ctx->ops->set_scrub_params(ras2_ctx, &params,
++					      RAS2_MEM_SCRUB_PARAM_ADDR_BASE);
++	if (ret) {
++		dev_err(ras2_ctx->dev,
++			"set patrol scrub params for addr_base fail ret=%d\n",
++			ret);
++		return ret;
++	}
++
++	return 0;
++}
++
++static int addr_size_read(struct ras2_context *ras2_ctx, u64 *val)
++{
++	int ret;
++	struct ras2_scrub_params params;
++
++	ret = ras2_ctx->ops->get_scrub_params(ras2_ctx, &params);
++	if (ret) {
++		dev_err(ras2_ctx->dev,
++			"get patrol scrub params fail ret=%d\n", ret);
++		return ret;
++	}
++	*val = params.addr_size;
++
++	return 0;
++}
++
++static int addr_size_write(struct ras2_context *ras2_ctx, u64 val)
++{
++	int ret;
++	struct ras2_scrub_params params;
++
++	params.addr_size = val;
++	ret = ras2_ctx->ops->set_scrub_params(ras2_ctx, &params,
++					      RAS2_MEM_SCRUB_PARAM_ADDR_SIZE);
++	if (ret) {
++		dev_err(ras2_ctx->dev,
++			"set patrol scrub params for addr_size fail ret=%d\n",
++			ret);
++		return ret;
++	}
++
++	return 0;
++}
++
++static int rate_read(struct ras2_context *ras2_ctx, u64 *val)
++{
++	int ret;
++	struct ras2_scrub_params params;
++
++	ret = ras2_ctx->ops->get_scrub_params(ras2_ctx, &params);
++	if (ret) {
++		dev_err(ras2_ctx->dev, "get patrol scrub params fail ret=%d\n",
++			ret);
++		return ret;
++	}
++	*val = params.rate;
++
++	return 0;
++}
++
++static int rate_write(struct ras2_context *ras2_ctx, long val)
++{
++	int ret;
++	struct ras2_scrub_params params;
++
++	params.rate = val;
++	ret = ras2_ctx->ops->set_scrub_params(ras2_ctx, &params,
++					      RAS2_MEM_SCRUB_PARAM_RATE);
++	if (ret) {
++		dev_err(ras2_ctx->dev,
++			"set patrol scrub params for rate fail ret=%d\n", ret);
++		return ret;
++	}
++
++	return 0;
++}
++
++static int rate_available_read(struct ras2_context *ras2_ctx, char *buf)
++{
++	int ret;
++	struct ras2_scrub_params params;
++
++	ret = ras2_ctx->ops->get_scrub_params(ras2_ctx, &params);
++	if (ret) {
++		dev_err(ras2_ctx->dev,
++			"get patrol scrub params fail ret=%d\n", ret);
++		return ret;
++	}
++
++	sprintf(buf, "%s\n", params.rate_avail);
++
++	return 0;
++}
++
++/**
++ * ras2_hw_scrub_is_visible() - Callback to return attribute visibility
++ * @drv_data: Pointer to driver-private data structure passed
++ *	      as argument to devm_scrub_device_register().
++ * @attr_id: Scrub attribute
++ * @mode: attribute's mode
++ * @region_id: ID of the memory region
++ *
++ * Returns: 0 on success, an error otherwise
++ */
++umode_t ras2_hw_scrub_is_visible(struct device *dev, u32 attr_id,
++				 umode_t mode, int region_id)
++{
++	switch (attr_id) {
++	case scrub_rate_available:
++	case scrub_enable:
++	case scrub_enable_background_scrub:
++	case scrub_addr_base:
++	case scrub_addr_size:
++	case scrub_rate:
++		return mode;
++	default:
++		return 0;
++	}
++}
++
++/**
++ * ras2_hw_scrub_read() - Read callback for data attributes
++ * @device: Pointer to scrub device
++ * @attr_id: Scrub attribute
++ * @region_id: ID of the memory region
++ * @val: Pointer to the returned data
++ *
++ * Returns: 0 on success, an error otherwise
++ */
++int ras2_hw_scrub_read(struct device *device, u32 attr_id,
++		       int region_id, u64 *val)
++{
++	struct ras2_context *ras2_ctx;
++
++	ras2_ctx = dev_get_drvdata(device);
++
++	switch (attr_id) {
++	case scrub_addr_base:
++		return addr_base_read(ras2_ctx, val);
++	case scrub_addr_size:
++		return addr_size_read(ras2_ctx, val);
++	case scrub_rate:
++		return rate_read(ras2_ctx, val);
++	default:
++		return -EOPNOTSUPP;
++	}
++}
++
++/**
++ * ras2_hw_scrub_write() - Write callback for data attributes
++ * @device: Pointer to scrub device
++ * @attr_id: Scrub attribute
++ * @region_id: ID of the memory region
++ * @val: Value to write
++ *
++ * Returns: 0 on success, an error otherwise
++ */
++int ras2_hw_scrub_write(struct device *device, u32 attr_id,
++			int region_id, u64 val)
++{
++	struct ras2_context *ras2_ctx;
++
++	ras2_ctx = dev_get_drvdata(device);
++
++	switch (attr_id) {
++	case scrub_addr_base:
++		return addr_base_write(ras2_ctx, val);
++	case scrub_addr_size:
++		return addr_size_write(ras2_ctx, val);
++	case scrub_enable:
++		return enable_write(ras2_ctx, val);
++	case scrub_enable_background_scrub:
++		return enable_background_scrub_write(ras2_ctx, val);
++	case scrub_rate:
++		return rate_write(ras2_ctx, val);
++	default:
++		return -EOPNOTSUPP;
++	}
++}
++
++/**
++ * ras2_hw_scrub_read_strings() - Read callback for string attributes
++ * @device: Pointer to scrub device
++ * @attr_id: Scrub attribute
++ * @region_id: ID of the memory region
++ * @buf: Pointer to the buffer for copying returned string
++ *
++ * Returns: 0 on success, an error otherwise
++ */
++int ras2_hw_scrub_read_strings(struct device *dev, u32 attr_id,
++			       int region_id, char *buf)
++{
++	struct ras2_context *ras2_ctx;
++
++	ras2_ctx = dev_get_drvdata(dev);
++
++	switch (attr_id) {
++	case scrub_rate_available:
++		return rate_available_read(ras2_ctx, buf);
++	default:
++		return -EOPNOTSUPP;
++	}
++}
+diff --git a/include/memory/ras2.h b/include/memory/ras2.h
+new file mode 100755
+index 000000000000..3db1dce5dd34
+--- /dev/null
++++ b/include/memory/ras2.h
+@@ -0,0 +1,88 @@
++/* SPDX-License-Identifier: BSD-3-Clause OR GPL-2.0 */
++/*
++ * Memory RAS2 driver header file
 + *
 + * Copyright (c) 2024 HiSilicon Limited
 + */
 +
-+#ifndef _RAS2_ACPI_H
-+#define _RAS2_ACPI_H
++#ifndef _RAS2_H
++#define _RAS2_H
 +
-+#include <linux/acpi.h>
-+#include <linux/mailbox_client.h>
-+#include <linux/mailbox_controller.h>
-+#include <linux/types.h>
-+#include <acpi/pcc.h>
++#include <memory/memory-scrub.h>
 +
-+#define RAS2_PCC_CMD_COMPLETE 1
-+
-+/* RAS2 specific PCC commands */
-+#define RAS2_PCC_CMD_EXEC 0x01
-+
-+#define RAS2_FAILURE 0
-+#define RAS2_SUCCESS 1
++#define RAS2_MAX_NAME_LENGTH      64
++#define RAS2_MAX_RATE_RANGE_LENGTH      64
 +
 +/*
-+ * Arbitrary Retries for PCC commands because the
-+ * remote processor could be much slower to reply.
++ * Data structures RAS2
 + */
-+#define RAS2_NUM_RETRIES 600
 +
-+/*
-+ * Data structures for PCC communication and RAS2 table
++/**
++ * struct ras2_scrub_params- RAS2 scrub parameter data structure.
++ * @addr_base:	[IN] Base address of the address range to be patrol scrubbed.
++ *		[OUT] Base address of the actual address range.
++ * @addr_size:	[IN] Size of the address range to be patrol scrubbed.
++ *		[OUT] Size of the actual address range.
++ * @flags:	[OUT] The platform returns this value in response to
++ *		GET_PATROL_PARAMETERS.
++ *		For RAS2:
++ *		Bit [0]: Will be set if memory scrubber is already
++ *		running for address range specified in “Actual Address Range”.
++ * @rate:	[IN] Requested patrol scrub rate.
++ *		[OUT] Current patrol scrub rate.
++ * @rate_avail:[OUT] Supported patrol rates.
 + */
-+struct ras2_context {
-+	struct device *dev;
-+	int id;
-+	struct mbox_client mbox_client;
-+	struct pcc_mbox_chan *pcc_chan;
-+	void __iomem *pcc_comm_addr;
-+	u64 comm_base_addr;
-+	int pcc_subspace_idx;
-+	bool pcc_channel_acquired;
-+	ktime_t deadline;
-+	unsigned int pcc_mpar;
-+	unsigned int pcc_mrtt;
-+	/* Lock to provide mutually exclusive access to PCC channel */
-+	spinlock_t spinlock;
-+	struct device *scrub_dev;
-+	const struct ras2_hw_scrub_ops *ops;
++struct ras2_scrub_params {
++	u64 addr_base;
++	u64 addr_size;
++	u16 flags;
++	u32 rate;
++	char rate_avail[RAS2_MAX_RATE_RANGE_LENGTH];
 +};
 +
-+struct platform_device *ras2_add_platform_device(char *name, const void *data,
-+						 size_t size);
-+int ras2_send_pcc_cmd(struct ras2_context *ras2_ctx, u16 cmd);
-+int ras2_register_pcc_channel(struct ras2_context *ras2_ctx);
-+int ras2_unregister_pcc_channel(struct ras2_context *ras2_ctx);
-+#endif /* _RAS2_ACPI_H */
++enum {
++	RAS2_MEM_SCRUB_PARAM_ADDR_BASE = 0,
++	RAS2_MEM_SCRUB_PARAM_ADDR_SIZE,
++	RAS2_MEM_SCRUB_PARAM_RATE,
++};
++
++/**
++ * struct ras2_hw_scrub_ops - ras2 hw scrub device operations
++ * @enable_scrub: Function to enable/disable RAS2 scrubber.
++ *		Parameters are:
++ *		@ras2_ctx: Pointer to RAS2 context structure.
++ *		@enable: enable/disable RAS2 patrol scrubber.
++ *		The function returns 0 on success or a negative error number.
++ * @enable_background_scrub: Function to enable/disable background scrubbing.
++ *		Parameters are:
++ *		@ras2_ctx: Pointer to RAS2 context structure.
++ *		@enable: enable/disable background patrol scrubbing.
++ *		The function returns 0 on success or a negative error number.
++ * @get_scrub_params:	Read scrubber parameters. Mandatory
++ *		Parameters are:
++ *		@ras2_ctx: Pointer to RAS2 context structure.
++ *		@params: Pointer to scrub params data structure.
++ *		The function returns 0 on success or a negative error number.
++ * @set_scrub_params: Set scrubber parameters. Mandatory.
++ *		Parameters are:
++ *		@ras2_ctx: Pointer to RAS2 context structure.
++ *		@params: Pointer to scrub params data structure.
++ *		@param_type: Scrub parameter type to set.
++ *		The function returns 0 on success or a negative error number.
++ */
++struct ras2_hw_scrub_ops {
++	int (*enable_scrub)(struct ras2_context *ras2_ctx, bool enable);
++	int (*enable_background_scrub)(struct ras2_context *ras2_ctx, bool enable);
++	int (*get_scrub_params)(struct ras2_context *ras2_ctx,
++				struct ras2_scrub_params *params);
++	int (*set_scrub_params)(struct ras2_context *ras2_ctx,
++				struct ras2_scrub_params *params, u8 param_type);
++};
++
++umode_t ras2_hw_scrub_is_visible(struct device *dev, u32 attr_id,
++				 umode_t mode, int region_id);
++int ras2_hw_scrub_read(struct device *dev, u32 attr_id, int region_id, u64 *val);
++int ras2_hw_scrub_write(struct device *dev, u32 attr_id, int region_id, u64 val);
++int ras2_hw_scrub_read_strings(struct device *dev, u32 attr_id,
++			       int region_id, char *buf);
++#endif /* _RAS2_H */
 -- 
 2.34.1
 
