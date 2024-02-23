@@ -1,116 +1,67 @@
-Received: from inva020.nxp.com (inva020.nxp.com [92.121.34.13])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 549D6171C8;
-	Fri, 23 Feb 2024 08:25:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=92.121.34.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 210E11862A;
+	Fri, 23 Feb 2024 08:26:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708676735; cv=none; b=V1YM32w96uYXGd1JL4V0naBtBa2iUxXQka6jWNV+S9y+cCuKm2sJLQm4oQKVTiU/YPZbsgC1HH20002MxpSW/fNh+UYuD/bxshPWuJmP0LqsLVrW/sirBgWSl/ga46rL91/U+D6+8lyfyuBeszeyaRz2HXLju41Uo+c0cFF4/v8=
+	t=1708676766; cv=none; b=hOLLtORdyR+mxG4mwGqM1pMPYeHbvAqEDXguTiOsskCq29VW1r3w500vS/MkurB0wiUfRUo55IWTXUAP47dWDr+VtoAQV+gvbNLcSrP/EJiC/zclvVvWQNIhzAmaJeubXtJWxiYgGQuq2lYs/D/G2wb0frsLZGmJ0b9qUS5Wgc0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708676735; c=relaxed/simple;
-	bh=qB8IC0HQ792BgYcZ4+9CfgE1Ygvie81C6Gp2+oiS/0A=;
-	h=From:To:Subject:Date:Message-Id; b=p8TFmOFInQVIJuJgk+GlngM1zReVZrhBTLPO4Q1+/bIv7mjXtBo0cbDIawU84O7kgM6siD0kQVHOgbSUDASbvEtahJsYqoogWpWcdeIRtVBSBBCXML79PKw++RJfetR+IBO/OkGPsvDh3/5o64aSg6obxcIMBi3/c22gmoE7t6I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; arc=none smtp.client-ip=92.121.34.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-	by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 5D8AC1A09CB;
-	Fri, 23 Feb 2024 09:17:40 +0100 (CET)
-Received: from aprdc01srsp001v.ap-rdc01.nxp.com (aprdc01srsp001v.ap-rdc01.nxp.com [165.114.16.16])
-	by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 2208F1A0997;
-	Fri, 23 Feb 2024 09:17:40 +0100 (CET)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-	by aprdc01srsp001v.ap-rdc01.nxp.com (Postfix) with ESMTP id 75654183AC0A;
-	Fri, 23 Feb 2024 16:17:38 +0800 (+08)
-From: Shengjiu Wang <shengjiu.wang@nxp.com>
-To: robh+dt@kernel.org,
-	krzysztof.kozlowski+dt@linaro.org,
-	conor+dt@kernel.org,
-	shawnguo@kernel.org,
-	s.hauer@pengutronix.de,
-	kernel@pengutronix.de,
-	festevam@gmail.com,
-	linux-imx@nxp.com,
-	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	shengjiu.wang@gmail.com
-Subject: [PATCH 1/2] arm64: dts: imx8mp-evk: Add HDMI audio sound card support
-Date: Fri, 23 Feb 2024 16:02:18 +0800
-Message-Id: <1708675339-8180-1-git-send-email-shengjiu.wang@nxp.com>
-X-Mailer: git-send-email 2.7.4
-X-Virus-Scanned: ClamAV using ClamSMTP
+	s=arc-20240116; t=1708676766; c=relaxed/simple;
+	bh=d4+85PokRLij+Pmcnj8Pzm2cYiTlHEWq84xygWKmed4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JGRvh27WeoDs8iWwfXYlhmKdcHoTmxweCvRu/rnSVzZeUXJdWiH2QaF5jaN4DPMvnfhDbLF5+ZPolo87nFU+r6MGNz8QgbTzw4EoMCc3rSkHCqCf+ma0x/Rvl7fIvqs1TPJwdxVTRrMh9hsg22IgRR721bxCqLEK5u8LdTI04gI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=i5O9J95v; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i5O9J95v"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5F2DCC433C7;
+	Fri, 23 Feb 2024 08:26:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1708676765;
+	bh=d4+85PokRLij+Pmcnj8Pzm2cYiTlHEWq84xygWKmed4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=i5O9J95vaF2F1dkRoBkfaW7+FCxJ20NW/E9KygKO7GFkmI66PWmV1g1X8hqQ52Y/F
+	 L2zxy0cpQxjWkAMB455E0lrlAW8+YQok/uXW/w0aUIlDlydD5Dq3s/n0pZr6aVxGHj
+	 hQe12ogvC9AcqWjPbb/maDCxlmDN6jaAtPia8b5yZgLBMJevCH+I1xNq8N1Krbu+yo
+	 A8WBGiQBZAmZcS+r+tGLZv9bS/xIGw5rR8K9WbbLqIdvs9I0qJ2d5YH8xcX6iMa0RY
+	 tZd/K5dMIS+QZadpDrhbudfAz8gxUcodysUo8Jk4lm5q78tqx5UkJ8/FdeiR+4J9wW
+	 DCRCXRV8EXMRA==
+Date: Fri, 23 Feb 2024 09:25:58 +0100
+From: Christian Brauner <brauner@kernel.org>
+To: "Seth Forshee (DigitalOcean)" <sforshee@kernel.org>
+Cc: Serge Hallyn <serge@hallyn.com>, Paul Moore <paul@paul-moore.com>, 
+	Eric Paris <eparis@redhat.com>, James Morris <jmorris@namei.org>, 
+	Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>, 
+	Stephen Smalley <stephen.smalley.work@gmail.com>, Ondrej Mosnacek <omosnace@redhat.com>, 
+	Casey Schaufler <casey@schaufler-ca.com>, Mimi Zohar <zohar@linux.ibm.com>, 
+	Roberto Sassu <roberto.sassu@huawei.com>, Dmitry Kasatkin <dmitry.kasatkin@gmail.com>, 
+	Eric Snowberg <eric.snowberg@oracle.com>, "Matthew Wilcox (Oracle)" <willy@infradead.org>, 
+	Jonathan Corbet <corbet@lwn.net>, Miklos Szeredi <miklos@szeredi.hu>, 
+	Amir Goldstein <amir73il@gmail.com>, linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	linux-security-module@vger.kernel.org, audit@vger.kernel.org, selinux@vger.kernel.org, 
+	linux-integrity@vger.kernel.org, linux-doc@vger.kernel.org, linux-unionfs@vger.kernel.org
+Subject: Re: [PATCH v2 16/25] fs: add inode operations to get/set/remove
+ fscaps
+Message-ID: <20240223-landen-frisst-06ff8597cdf5@brauner>
+References: <20240221-idmap-fscap-refactor-v2-0-3039364623bd@kernel.org>
+ <20240221-idmap-fscap-refactor-v2-16-3039364623bd@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20240221-idmap-fscap-refactor-v2-16-3039364623bd@kernel.org>
 
-The AUD2HTX is a digital module that provides a bridge between
-the Audio Subsystem and the HDMI RTX Subsystem. This
-module includes intermediate storage to queue SDMA transactions
-prior to being synchronized and passed to the HDMI
-RTX Subsystem over the Audio Link.
+On Wed, Feb 21, 2024 at 03:24:47PM -0600, Seth Forshee (DigitalOcean) wrote:
+> Add inode operations for getting, setting and removing filesystem
+> capabilities rather than passing around raw xattr data. This provides
+> better type safety for ids contained within xattrs.
+> 
+> Signed-off-by: Seth Forshee (DigitalOcean) <sforshee@kernel.org>
+> ---
 
-AUD2HTX works as the cpu dai in HDMI audio sound card.
-
-Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
----
- arch/arm64/boot/dts/freescale/imx8mp-evk.dts | 12 ++++++++++++
- arch/arm64/boot/dts/freescale/imx8mp.dtsi    | 10 ++++++++++
- 2 files changed, 22 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/freescale/imx8mp-evk.dts b/arch/arm64/boot/dts/freescale/imx8mp-evk.dts
-index f87fa5a948cc..63f6e72fa18a 100644
---- a/arch/arm64/boot/dts/freescale/imx8mp-evk.dts
-+++ b/arch/arm64/boot/dts/freescale/imx8mp-evk.dts
-@@ -138,6 +138,14 @@ simple-audio-card,codec {
- 
- 	};
- 
-+	sound-hdmi {
-+		compatible = "fsl,imx-audio-hdmi";
-+		model = "audio-hdmi";
-+		audio-cpu = <&aud2htx>;
-+		hdmi-out;
-+		status = "okay";
-+	};
-+
- 	reserved-memory {
- 		#address-cells = <2>;
- 		#size-cells = <2>;
-@@ -191,6 +199,10 @@ &A53_3 {
- 	cpu-supply = <&reg_arm>;
- };
- 
-+&aud2htx {
-+	status = "okay";
-+};
-+
- &eqos {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_eqos>;
-diff --git a/arch/arm64/boot/dts/freescale/imx8mp.dtsi b/arch/arm64/boot/dts/freescale/imx8mp.dtsi
-index 9ab9c057f41e..721ab630d895 100644
---- a/arch/arm64/boot/dts/freescale/imx8mp.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8mp.dtsi
-@@ -1513,6 +1513,16 @@ micfil: audio-controller@30ca0000 {
- 					status = "disabled";
- 				};
- 
-+				aud2htx: aud2htx@30cb0000 {
-+					compatible = "fsl,imx8mp-aud2htx";
-+					reg = <0x30cb0000 0x10000>;
-+					interrupts = <GIC_SPI 130 IRQ_TYPE_LEVEL_HIGH>;
-+					clocks = <&audio_blk_ctrl IMX8MP_CLK_AUDIOMIX_AUD2HTX_IPG>;
-+					clock-names = "bus";
-+					dmas = <&sdma2 26 2 0>;
-+					dma-names = "tx";
-+					status = "disabled";
-+				};
- 			};
- 
- 			sdma3: dma-controller@30e00000 {
--- 
-2.34.1
-
+Looks good,
+Reviewed-by: Christian Brauner <brauner@kernel.org>
