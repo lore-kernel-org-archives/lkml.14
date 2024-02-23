@@ -1,228 +1,173 @@
-Received: from EUR05-DB8-obe.outbound.protection.outlook.com (mail-db8eur05on2057.outbound.protection.outlook.com [40.107.20.57])
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2049.outbound.protection.outlook.com [40.107.93.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80008C2DA;
-	Fri, 23 Feb 2024 02:49:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.20.57
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E901628EB;
+	Fri, 23 Feb 2024 02:51:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.49
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708656581; cv=fail; b=Cp/Ck2tc/h46XntlBDRnVV8qFsaDVHyrcVUvuD90NEVIyEue9GBvF7Uq18Gkozyfx6oOP7YTdeG+C70rGdZk/vmMCTB8qnr1T+opZrteJIZqY0eER7e39XXMDSADlPucbG4x8pedFwQ5ebkVTtJ+JcBbqVdMlGVoVOQSQVdwOaY=
+	t=1708656689; cv=fail; b=rHQPhZtIKVBuYkK/oQq/1eAk/caVvQ20EGDcbbbXxLKs+qMGrSXeu6tJgp/U6Md1+AXmIwk0A2o2RWQXFnW4exQ6U5sOb6QFiEYmPrs+5AUSV1gJSCqC4AKHg0hV/IEUt1xhsh1bxE89GoxkMImrez1lI6tZJza1C4avHnsfN48=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708656581; c=relaxed/simple;
-	bh=KW5SpCdEPL2LdGBPcT2TppJpU/y8LjS7cdd7DA9J2o8=;
-	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=bOiRPqchyfqFGyMEgSe3mXUN9uL0VO79pUGT+GRtsgP0ZLwu2TQOnENk2HvYyqfAOerzCSfA/B1P7sohLPDT7KgiSLf0njTf7UeMsINzEE5rbRNzRWaCU2GKArCcB2lfJHZXGFrTSpsKkPu+ZiozVXUllQw1F8qU+151VDvPi2w=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=Zq6gwVHO; arc=fail smtp.client-ip=40.107.20.57
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+	s=arc-20240116; t=1708656689; c=relaxed/simple;
+	bh=jnwJDNfwx7HLqjw7CTBC083ygY7K2m9YyPqw/Hywlc8=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=Iua9ljY15OXSloLvx8elQP1DjJsDTIp6MjN+ECe5wQsrSRelzMP1UE9HYyv6zZq8nhX1UQAHMRyAthJu4efoHKMJ0H7fDMFKRTo82GXzv/ZDaibcnNtvET3l/L5ukZgNOnwq6JZQjX+OLSzTi3+FFFpJ60Yg+9+yEaykExE2jSY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=Mhhbh9+7; arc=fail smtp.client-ip=40.107.93.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="Zq6gwVHO"
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="Mhhbh9+7"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=PBrI3ZXZp2y4X0+wCAGFkRdsYJJ2HBJ/AvFm1kTL2qSgxWbT0FwUC71oPO+woT1gSk3afVZoWDvk9NpN5pe/UujA3xy3nR/jKjqGRaxgIK4TL5BAQmC8LwghkOUTCWKAvOXpyGxt0n1IbuhW4FYock9/6VNTPA8cXrfW/xVx/oaUTYtn3Mp3WcZRm5WCd5vZI7clmOLzeP1kicwJk9XfWn+u0CPTTueRdVGZSVB+zWUMJv7FJ/jWl1xa8NsIIIuWChMS5yfokiqQw4f+Pes/sch0jZXICwGEksixLu2MkEpWU3FGWVvNoO+nvGZsLyBh8/kIqUkEvFf8H1Yyu2sGBA==
+ b=bY7OozWsggbOp1MfapCSYQrRdz/z++hTs32HsxGhUOPUCyAY53kxDbYyLYMHrdVu1kboLo1h/kwfzgw6WcXHwa5oX8jneB1P96hUA246xAu8N/YZ/W71YBYS6PbIs4i9G8H7M1OhZy2Us7wis9NR7453LM4Kwsd1dNve+jHdXOd3LK0qZ9/UlTjUObW+1ltGigb7WmdMY21BJbpVHgmhtdJOqtfrigTX9C4VrFvFIEaKJnmabKkl7MSlrMecsIZ7bTpNlrG/nqumW7x+OCMF2YCDAz53s6XmnSrKO66noZ8N+65s6mojyZ2/Pnrz9PX1k21VvpxKgTpz5NcVxH/cXA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=M5vhtTEqu/O6IOvfHYimy7LsQIkOKHvC8ntMI5hAvSU=;
- b=SG+Y8NDV7Ru19xfIMuIUUh6nxaWaRvzIDMffqXu5zoqNCJNZjnIca8Lt/DsRrADNLzoiOofBd89kksm7IwH915SuBgfcBDCDiCfWo9fZX1mIn4EUkb9bZzQ5g6mpXizK3Q352qWIsoYkUtwHlc/auiDyceOpoAVZV5CryGvq7chrsMARUXnUAwmuBi1Nuo+5RUQUdhLrzkmJbnRyjr7AoYX7wdopIzTKVW9EkNijkilk9BBUkAcqZINb7FLO/PjKbXYlWkZn96C7yJD0IiGbjhEWmwUZYsGYtEMauWBbI/YhDUxBOCE+Mwi82OVfhfInE75bQhZDet6hZp6XvMvm6w==
+ bh=jnwJDNfwx7HLqjw7CTBC083ygY7K2m9YyPqw/Hywlc8=;
+ b=ImGkQuYL/U9BbTJamK3zMqU0s3STpL7Q+VSbRYwM9zcDw8iwsLl0gXSacWAMj8NfvGTK6usH4a+Lgfmognunx/FfN6FpimJGBeDhuaq3VzBhqnlwXuwZNedKFZL9J3NlP7zduXeuThY+26d7vwrI73aAzE45UKIlaZK5BvoogmLQXNSeTCINRTrN6qiEp2fu3Q1bGnjJNkHKxWPI53q/J2QEecOQdc8Mh954wXDKtHEqSc6ZK4EI9P6eozCJW/5P6kBr3gTcZN7XFq58+BUEoLevtySjU2bhGikfYPWvw/haILG1qCvJUxyMIXsldtuuou5MOYbIiZ1liSIhF63e1w==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=M5vhtTEqu/O6IOvfHYimy7LsQIkOKHvC8ntMI5hAvSU=;
- b=Zq6gwVHO6mLMt4O8o2pZksVqr4BmIdV3lOt2E6dAfiGypSBCJ9HmuZ9g04lr9Or6QX32Yqgbo4bW101BRNi1/b3719dmlo4ZxrCKiBC7h6nE8aGR9miI0jYPn+zH0huketB/SfHCGDqa/qeOni3PuG5N03DljgFvBUmcKG0eiAo=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from AM7PR04MB7046.eurprd04.prod.outlook.com (2603:10a6:20b:113::22)
- by DBAPR04MB7237.eurprd04.prod.outlook.com (2603:10a6:10:1a4::19) with
+ bh=jnwJDNfwx7HLqjw7CTBC083ygY7K2m9YyPqw/Hywlc8=;
+ b=Mhhbh9+7p7nCG9mxlAPvV8ROyTjaCtwW6TTARJR9CNIvzx4q7l4AaWo/2D9CjiHFg1aDjklIHbXgRGuA8NJr2EeT29AMpIdVm7Hy2gU3FFIiOx+Xcry4qsTeu8ndDsoGri1FvpzqyTKVtLrb+XRSWTyjWF08e1z44wNNbrWz1YYXtuIz2ug5TVMp/jc0tgQqDDtbyxBlbR0DGoUI+RMJhPX3wtpuF5O/gq1x/LC7QV9urzJnOTmY6aUMe7mYHJxJfyj90SbCNdga1sOQ9hvhqGjC0ZvcB3VCT6ottcMBp5Gmc0rDaH3YkDyc2eo5DqTGXLpCNxftG2Sw+UO8Zs415w==
+Received: from SA1PR12MB7199.namprd12.prod.outlook.com (2603:10b6:806:2bc::21)
+ by CO6PR12MB5489.namprd12.prod.outlook.com (2603:10b6:303:139::18) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7292.38; Fri, 23 Feb
- 2024 02:49:36 +0000
-Received: from AM7PR04MB7046.eurprd04.prod.outlook.com
- ([fe80::6ab4:485b:3d5e:e0e6]) by AM7PR04MB7046.eurprd04.prod.outlook.com
- ([fe80::6ab4:485b:3d5e:e0e6%7]) with mapi id 15.20.7292.036; Fri, 23 Feb 2024
- 02:49:36 +0000
-From: Liu Ying <victor.liu@nxp.com>
-To: devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Cc: robh@kernel.org,
-	krzysztof.kozlowski+dt@linaro.org,
-	conor+dt@kernel.org,
-	shawnguo@kernel.org,
-	s.hauer@pengutronix.de,
-	kernel@pengutronix.de,
-	festevam@gmail.com,
-	linux-imx@nxp.com
-Subject: [PATCH] arm64: dts: imx8mp-evk: Fix hdmi@3d node
-Date: Fri, 23 Feb 2024 10:57:38 +0800
-Message-Id: <20240223025738.2486807-1-victor.liu@nxp.com>
-X-Mailer: git-send-email 2.37.1
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SG2PR01CA0141.apcprd01.prod.exchangelabs.com
- (2603:1096:4:8f::21) To AM7PR04MB7046.eurprd04.prod.outlook.com
- (2603:10a6:20b:113::22)
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7316.24; Fri, 23 Feb
+ 2024 02:51:25 +0000
+Received: from SA1PR12MB7199.namprd12.prod.outlook.com
+ ([fe80::284c:211f:16dc:f7b2]) by SA1PR12MB7199.namprd12.prod.outlook.com
+ ([fe80::284c:211f:16dc:f7b2%5]) with mapi id 15.20.7316.018; Fri, 23 Feb 2024
+ 02:51:24 +0000
+From: Ankit Agrawal <ankita@nvidia.com>
+To: Alex Williamson <alex.williamson@redhat.com>
+CC: Jason Gunthorpe <jgg@nvidia.com>, Yishai Hadas <yishaih@nvidia.com>,
+	"shameerali.kolothum.thodi@huawei.com"
+	<shameerali.kolothum.thodi@huawei.com>, "kevin.tian@intel.com"
+	<kevin.tian@intel.com>, "mst@redhat.com" <mst@redhat.com>,
+	"eric.auger@redhat.com" <eric.auger@redhat.com>, "jgg@ziepe.ca"
+	<jgg@ziepe.ca>, "oleksandr@natalenko.name" <oleksandr@natalenko.name>,
+	"clg@redhat.com" <clg@redhat.com>, "satyanarayana.k.v.p@intel.com"
+	<satyanarayana.k.v.p@intel.com>, "brett.creeley@amd.com"
+	<brett.creeley@amd.com>, "horms@kernel.org" <horms@kernel.org>,
+	"shannon.nelson@amd.com" <shannon.nelson@amd.com>, Rahul Rameshbabu
+	<rrameshbabu@nvidia.com>, Zhi Wang <zhiw@nvidia.com>, Aniket Agashe
+	<aniketa@nvidia.com>, Neo Jia <cjia@nvidia.com>, Kirti Wankhede
+	<kwankhede@nvidia.com>, "Tarun Gupta (SW-GPU)" <targupta@nvidia.com>, Vikram
+ Sethi <vsethi@nvidia.com>, Andy Currid <acurrid@nvidia.com>, Alistair Popple
+	<apopple@nvidia.com>, John Hubbard <jhubbard@nvidia.com>, Dan Williams
+	<danw@nvidia.com>, "Anuj Aggarwal (SW-GPU)" <anuaggarwal@nvidia.com>, Matt
+ Ochs <mochs@nvidia.com>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"virtualization@lists.linux-foundation.org"
+	<virtualization@lists.linux-foundation.org>
+Subject: Re: [PATCH v19 0/3] vfio/nvgrace-gpu: Add vfio pci variant module for
+ grace hopper
+Thread-Topic: [PATCH v19 0/3] vfio/nvgrace-gpu: Add vfio pci variant module
+ for grace hopper
+Thread-Index: AQHaY/Mekx2WvnlRDEKdWWLWleC5bbEW5psAgABXBe0=
+Date: Fri, 23 Feb 2024 02:51:24 +0000
+Message-ID:
+ <SA1PR12MB71992D7E87AD9DA2C89669BAB0552@SA1PR12MB7199.namprd12.prod.outlook.com>
+References: <20240220115055.23546-1-ankita@nvidia.com>
+ <20240222143654.0ed77f85.alex.williamson@redhat.com>
+In-Reply-To: <20240222143654.0ed77f85.alex.williamson@redhat.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+msip_labels:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SA1PR12MB7199:EE_|CO6PR12MB5489:EE_
+x-ms-office365-filtering-correlation-id: 028bb4f1-47f5-4488-37a2-08dc341a5330
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info:
+ ItwRBTbMHmtfT6jHr9pLqxCAlHm4TSp3HAfJLn+eFd8mTgnqe3MTi5GHvQ5/ptZ2idRws7CVMS3R7rhTAFCpRYiYvn39iMSY111t6WAwXH+reCRzUAXWqnBEc45Mdd7sYl1lt5Y/04gDtBkGbn+5Ruwid3cGLHHCOyHjk+ezqNvjDrP+ChRT1FVcw3qIjnsM2PFntyW3wNsw2jKQWyYiHTwKnsozmsQBTcxSkUduFOC6BkaZhBlPpirc+rY3FMkzuKCFd21BR4IFEuY/C0sfrOBJOWJr/4m3Xv+aPmgLjt+XIQ4coAaN41REXBH057LPzmsLwnvMKMlelSuiN34JSe85kIaQdxup7QwcvaAHw7LnR1sSsoOFdXOV/xsgwURPisDOwUAK6LTtUb15LzgYsBLqrzWKulLgLN7bcQg8Mz0mW+ZTiM7mdq8o9dF8T7Fr2hIYZFvoufTNIGml3mkpDL1Jn79QUYVXfmRkvM2BD2Xn7mYDVIdxySrCCZPbPpKX/o7DkXtONDcPlh9zRywnA6eTm1+YVr9SsH3dsEtVEwCsOxMDFoVFcsRvcg+65Fj5A7px4YQGm85m5qG6oj8fhRQwCmP3rA+RKWxlhJBT51xPnojI/f28rNH/Z886aPya
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR12MB7199.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(38070700009);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?iso-8859-1?Q?jWIg48zdyQCOsy3FFrRq+3Ic7zk1Nq4QXgsxf0j+OjbzT3x7c/fhd5SpuH?=
+ =?iso-8859-1?Q?odgtkbBo95vdpQcjvEd0kCYIIbsdH5D8z40LsQETky5jrOErLjMTrfVyqb?=
+ =?iso-8859-1?Q?mTvQCfwuahSEYd28XVbqV2MM8Kcj4SSSt25ARfdigcz2OP452o7Z0G4WBJ?=
+ =?iso-8859-1?Q?AzrsKqHtsaJ06Ltd0xsxNMr2bpfdRvyy/JMCIBsePghlPVOlLJJ43P/BLp?=
+ =?iso-8859-1?Q?ySLRDDLqMmvZpKYtYdHDPC96b+4NBjLW+nOupAYsfl5dmo5XV1YA4Z5hvE?=
+ =?iso-8859-1?Q?nCYNwKYNI4SheGyP/hrc2tETHEYHwW26h4vafF/pwhqSVzM8pqY0wr6UZo?=
+ =?iso-8859-1?Q?YzPHcdbnHhwBcNUd/PloTWrnO5pR0UoimfFoC91OwzGEkAWagOcPuKt+u+?=
+ =?iso-8859-1?Q?4hSf6qPf85JJLokL5uv0Yed1eF+6f2qHG+FamemNVUFbOO+tWJ8ljO4uqS?=
+ =?iso-8859-1?Q?Cy/i2pwkuk0DNKSA+lGVp7g+hI2Ijz7tn+aPRziATxTARzxIAcQAAgk64e?=
+ =?iso-8859-1?Q?iS8rNzjKzDR9XXcAUAygkRywDFc+QWTZ1u/oqnZJZE86q+Vtaew57tzaJB?=
+ =?iso-8859-1?Q?ADD7Uv/e2Vk+HKAJMDaulImGbn/+OZhPcYez0SeV+DPx43z/F6Y7/xkz1g?=
+ =?iso-8859-1?Q?9VG/T7n+F/mgZuZJknunqW89Ka2tbC8SQTvxL8ic9ZrCnDBcRDMoDt1Ojv?=
+ =?iso-8859-1?Q?bphCJk3uLJYf/FysJmRU8Klgn/qomUaeQ7eWKH5duX9Q/9pVCVkWLqdYUj?=
+ =?iso-8859-1?Q?M9P3hucwxusyAhmnmU4G5zRXbR+WD3rDhcsvM5rZFK7YeHZA+xDKozwYsz?=
+ =?iso-8859-1?Q?90X7a0bQYi/SzH8DqhweTFx2YXlOS569FC49Z0C28VUmxyez3ZmfQlcHhH?=
+ =?iso-8859-1?Q?IezUDVvTCpaR8qHQ/wTxp+T1ueDIfQdlgUoRsapar9Df4Klevs9LILPpCk?=
+ =?iso-8859-1?Q?wWy3efhg5n+r0JTKB0UCJ/F63tIkweptIcwjXiCnoVOsdxcEfRS/shZ6tm?=
+ =?iso-8859-1?Q?0lPGrsAkNIkW49cnI6ARUBtzS4rB5ylpDuKqeTpChGkMlCXXBLEyDbxzla?=
+ =?iso-8859-1?Q?lVz+CUHhQ8mDi98tKQjQKp98XhZCpxG7SW+GWpSISWUjWNaeWII3Cxs6I2?=
+ =?iso-8859-1?Q?Q5RPK0azZNeuLp4WBZ8ex9xKhT9TcengykLtSiE++aXZgQN5USDxeZytcL?=
+ =?iso-8859-1?Q?YiaO6SLsYh6mVB1TK/PhlknoRlAx9IE3dcVNDvi0VlsobMsS63bYhRkWR+?=
+ =?iso-8859-1?Q?8FN9GmU1ijekFLUY5tjPrAYWooJLbjQSz387ayFKnMnPu8eEp61N76WAhg?=
+ =?iso-8859-1?Q?hASRnyTgwzfZffR7hrSjtRBGtCm/eENcyGQVIzqF8ACrdzJEaOhq0PURsT?=
+ =?iso-8859-1?Q?XbIH9BhHbPe1quI18NLeN03FJozHPBRqGUjv+hIKqpWGalgarXRz52ycRy?=
+ =?iso-8859-1?Q?e6BaZ7C2al4LXjt7haWn2O3vZ+8IWx2+Qhw2r23x1sGzdYI+d8+7le44R/?=
+ =?iso-8859-1?Q?A/hLqLQR8r0ptBpTGpGG2EkY08OAbW0Umo0u/h/fkDdtwQ/jDVCVOkxSgi?=
+ =?iso-8859-1?Q?rIBEcSCjvLSGxRRH3oNpoJ6N+y8trOdaoL3A+TjM/tTvZzw0cLDVqzH5U7?=
+ =?iso-8859-1?Q?YnLbjhJgSFWIo=3D?=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: AM7PR04MB7046:EE_|DBAPR04MB7237:EE_
-X-MS-Office365-Filtering-Correlation-Id: 493b3014-3365-4a44-7e38-08dc341a126c
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	Vo5vveK935rhAZ7hIVKxNv9ka/pYQ1srtRXQFor+7Z3mfUw4JJu2Z4Nkgso8f3/oipDS/EXNE8OlQKNbk3F5KHx6m6G8hFyFageSg7ZAbG4drSQz+gJ88o+kL0xeJY7q7Drz/OFIx45ovfwd91tq/763+mG4rBVdhNNziGC2yU3TinQc051TZErNG31Yc169Ql5Ydw7MPSPlNrLPWIr/HxRYQHNBP2/1s7gr0Ji2yjrKq7LSISPYW78B7oCbEhIBM4NeW3eUK9++x6YrIvN1dmVbjQIc+aNdnegEnM6d758odgsz3mY9nhgfFLTQvkamRC/SNyhvSvgGvC036j7hLWj1kpUxAFIL8xeqLaqyoGjC6A62EhSYUJJ6zhjT3Wv8GZIMGKdPdI1mG83sfAQrHgncsoZxMoBr+ONJuOZyZj0okTTwSlLfitqgvrP+lu8e1b7RTMCaTYDt6IhcXYuJHDTwJmUF1JGBGrCe6meVGh8O9czRgUUFeZCrfVnRd3PVZxj3Y8DgoiFIYfFu45i0mVKyZSGYGZv7RKsk0VMlANaSyII7BQh2HMCtZoHvnUQbF2GxEFza5SP6WUdvlGG/m9DYmvT6SDYVDAfIb36PaQUnXorM4iutRIWyOnpM4u4S
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM7PR04MB7046.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(38350700005);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?7r+ADHGg5PkgF441YnvfkRhaY3GhU+QDkWQjTkqmy7DkdG6I0ftkbLlvNwfU?=
- =?us-ascii?Q?K0zROkNZoiiLZ88QcDU5wEDlY5twZnhfBUYHdC5VTAkJp1RFtmedW65ADflr?=
- =?us-ascii?Q?EZaFFAXvKkE/Nqg+JqRcXh9VxTjG+eNeoNAWRkiFCUtI7/SNtcn28wNP5Blf?=
- =?us-ascii?Q?HDK4yw7g49gwJlxhrHvg2/w1DBXAwVblvgLrjiviiwMfCRHxdFxQGoH/RGu1?=
- =?us-ascii?Q?dR+NWY++mOexC44jVfNgbqT1tC1QtCMrTnpgMFQHrPHQW2V7cjlq8gayysZ4?=
- =?us-ascii?Q?9rN6PkVqqRs8M0DHBpKiz3Ai+22PLqdK7x+qeSP8s6sVDMBsN/OSd4+d3Ks4?=
- =?us-ascii?Q?M9MX0Vr0mBpkJV9xRBe95APr4DitAgXTJLH4egtIWYGn523cDNTAQrMH3+D2?=
- =?us-ascii?Q?+NRODa/0rYkWgCtTJpDSj2fHttLGxFzXYWD0XJW8zou/6CLPxSIG0Onyo1bp?=
- =?us-ascii?Q?kjiI5a8L342THG9fPkkGheEhdyrplnB1cEBNDg2TqJ5DGtfEwhHXEyPy+Zfx?=
- =?us-ascii?Q?8D8RlUx61l8fz76jxKcaIVRClwP73KfiOIoKYtGJOC2PF0XH45H9kcEm16r8?=
- =?us-ascii?Q?UBahwP9DErM9H5+k2VFQzItCQQZqOhjYcgGBQW62Su+2+idy5G/OPnAeYowE?=
- =?us-ascii?Q?KwlM5xO//RGZyiBoNqDm9vAxs0hNBXDDJpF2GQttnIWW993nQ88pUDg4CwhF?=
- =?us-ascii?Q?+th40cTQ81zV614WIq9calNH3NBWTsmrscnSW1KgUXaPiKheRJeH3OaHMvVb?=
- =?us-ascii?Q?GYjGsB1bQ4XbUkzHStCdCF41lKyQh9jEKhSwG1Tu7BplGi2PjnQ2hvW6gKu5?=
- =?us-ascii?Q?awjgdt2ZInJOs0cC5Hg2aawelMT9NSgZERvecHXYK8hwy1zs6UDpdI1Rg2Lq?=
- =?us-ascii?Q?TFhNqPer4pS2emtkSx9d3Mp63AqVQ09sFF96f5r1Pq/s+p/FXyEm6iSMHhzx?=
- =?us-ascii?Q?aK8vcTy8X0WQN9Y9NdR7t/H0NFzsix8Sp9K77lvV1XZbkhw4sGsEilGO4HuY?=
- =?us-ascii?Q?t4mXvUw5fe7oXOy5kghyb5gKTagbEY+jhUOhMdREA9Ad9CRMzYySQ4yDdQNM?=
- =?us-ascii?Q?Wcwx/JIESiYDzJJdZ39MpuEG6EwLulGr6g1F+QekLVkE7Hwl20MXpmtjgDOJ?=
- =?us-ascii?Q?bIjWF8NDwpXNvWUlLTkMMLsGYOo7zZNt3fwcES30+UT7Vwax/cZRS7WU+ZOo?=
- =?us-ascii?Q?WafgA4IX5az2isU5zfu4w3KS8dHRXZ0jww3WyP4VMXWC06wSKUr4+ECgQcXJ?=
- =?us-ascii?Q?h/04M5e0cnEwaXzmoLmrh2bs1AArtKN3nPGA5ZWhEJe5JyGMuKSdynT77cxs?=
- =?us-ascii?Q?+YG3EQDd859ADuoKOES5j5t4oRM9VO6PxzJ8T8/PoLgTOWkj0A2d/1jZSnRj?=
- =?us-ascii?Q?SC9KKvy2mw60OS3enyRdcItBNWVXnImxwSaw0jW8bPAM3gYnpx0nU8D/q0yP?=
- =?us-ascii?Q?MuYZ73b52e2xs0cDKaz8XihtaLEuInIU1juwiJtXMOvEqrpkOqxMbZks/uly?=
- =?us-ascii?Q?yvVQemdECJRewW12KYfwugPVB3E67ozjerigQRyYvfc3NIPqEKc+DNBSIMZo?=
- =?us-ascii?Q?G0+GBQxB1OQFDiWgcZh7o7O36I3Y88Q8qY8CNvj0?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 493b3014-3365-4a44-7e38-08dc341a126c
-X-MS-Exchange-CrossTenant-AuthSource: AM7PR04MB7046.eurprd04.prod.outlook.com
+X-OriginatorOrg: Nvidia.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Feb 2024 02:49:36.5422
+X-MS-Exchange-CrossTenant-AuthSource: SA1PR12MB7199.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 028bb4f1-47f5-4488-37a2-08dc341a5330
+X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Feb 2024 02:51:24.8913
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: WhQLpIihPPC7rl4tXJA+cFBRyaMBtijl0C0iFUm79OTrL1T2SfhCALJAyA4ytiwGV1h6mnSBNsRYkx6sQTSoRQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DBAPR04MB7237
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 1QzOJ2FBkf7WuaJ0LLTHtDuHE+fOSD7uLZIbiygdCbBhstQcUiAcCfuyG/rjPNSrqZ7dpn0nR1LtwQqjPY5bRg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CO6PR12MB5489
 
-The hdmi@3d node's compatible string is "adi,adv7535" instead of
-"adi,adv7533" or "adi,adv751*".
-
-Fix the hdmi@3d node by means of:
-* Use default register addresses for "cec", "edid" and "packet", because
-  there is no need to use a non-default address map.
-* Add missing interrupt related properties.
-* Drop "adi,input-*" properties which are only valid for adv751*.
-* Add VEXT_3V3 fixed regulator.
-* Add "*-supply" properties, since most are required.
-* Fix label names - s/adv7533/adv7535/.
-
-Fixes: 65344b9bed3a ("arm64: dts: imx8mp-evk: Add HDMI support")
-Signed-off-by: Liu Ying <victor.liu@nxp.com>
----
- arch/arm64/boot/dts/freescale/imx8mp-evk.dts | 33 +++++++++++++-------
- 1 file changed, 21 insertions(+), 12 deletions(-)
-
-diff --git a/arch/arm64/boot/dts/freescale/imx8mp-evk.dts b/arch/arm64/boot/dts/freescale/imx8mp-evk.dts
-index f87fa5a948cc..9beba8d6a0df 100644
---- a/arch/arm64/boot/dts/freescale/imx8mp-evk.dts
-+++ b/arch/arm64/boot/dts/freescale/imx8mp-evk.dts
-@@ -23,7 +23,7 @@ hdmi-connector {
- 
- 		port {
- 			hdmi_connector_in: endpoint {
--				remote-endpoint = <&adv7533_out>;
-+				remote-endpoint = <&adv7535_out>;
- 			};
- 		};
- 	};
-@@ -107,6 +107,13 @@ reg_usdhc2_vmmc: regulator-usdhc2 {
- 		enable-active-high;
- 	};
- 
-+	reg_vext_3v3: regulator-vext-3v3 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "VEXT_3V3";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+	};
-+
- 	sound {
- 		compatible = "simple-audio-card";
- 		simple-audio-card,name = "wm8960-audio";
-@@ -364,7 +371,7 @@ BUCK4 {
- 				regulator-always-on;
- 			};
- 
--			BUCK5 {
-+			reg_buck5: BUCK5 {
- 				regulator-name = "BUCK5";
- 				regulator-min-microvolt = <1650000>;
- 				regulator-max-microvolt = <1950000>;
-@@ -415,14 +422,16 @@ &i2c2 {
- 
- 	hdmi@3d {
- 		compatible = "adi,adv7535";
--		reg = <0x3d>, <0x3c>, <0x3e>, <0x3f>;
--		reg-names = "main", "cec", "edid", "packet";
-+		reg = <0x3d>;
-+		interrupt-parent = <&gpio1>;
-+		interrupts = <9 IRQ_TYPE_EDGE_FALLING>;
- 		adi,dsi-lanes = <4>;
--		adi,input-depth = <8>;
--		adi,input-colorspace = "rgb";
--		adi,input-clock = "1x";
--		adi,input-style = <1>;
--		adi,input-justification = "evenly";
-+		avdd-supply = <&reg_buck5>;
-+		dvdd-supply = <&reg_buck5>;
-+		pvdd-supply = <&reg_buck5>;
-+		a2vdd-supply = <&reg_buck5>;
-+		v3p3-supply = <&reg_vext_3v3>;
-+		v1p2-supply = <&reg_buck5>;
- 
- 		ports {
- 			#address-cells = <1>;
-@@ -431,7 +440,7 @@ ports {
- 			port@0 {
- 				reg = <0>;
- 
--				adv7533_in: endpoint {
-+				adv7535_in: endpoint {
- 					remote-endpoint = <&dsi_out>;
- 				};
- 			};
-@@ -439,7 +448,7 @@ adv7533_in: endpoint {
- 			port@1 {
- 				reg = <1>;
- 
--				adv7533_out: endpoint {
-+				adv7535_out: endpoint {
- 					remote-endpoint = <&hdmi_connector_in>;
- 				};
- 			};
-@@ -524,7 +533,7 @@ port@1 {
- 			reg = <1>;
- 
- 			dsi_out: endpoint {
--				remote-endpoint = <&adv7533_in>;
-+				remote-endpoint = <&adv7535_in>;
- 				data-lanes = <1 2 3 4>;
- 			};
- 		};
--- 
-2.37.1
-
+>> Ankit Agrawal (3):=0A=
+>>=A0=A0 vfio/pci: rename and export do_io_rw()=0A=
+>>=A0=A0 vfio/pci: rename and export range_intersect_range=0A=
+>>=A0=A0 vfio/nvgrace-gpu: Add vfio pci variant module for grace hopper=0A=
+>>=0A=
+>>=A0 MAINTAINERS=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
+=A0=A0=A0=A0=A0=A0=A0 |=A0 16 +-=0A=
+>>=A0 drivers/vfio/pci/Kconfig=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 |=A0=
+=A0 2 +=0A=
+>>=A0 drivers/vfio/pci/Makefile=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 |=A0=A0=
+ 2 +=0A=
+>>=A0 drivers/vfio/pci/nvgrace-gpu/Kconfig=A0 |=A0 10 +=0A=
+>>=A0 drivers/vfio/pci/nvgrace-gpu/Makefile |=A0=A0 3 +=0A=
+>>=A0 drivers/vfio/pci/nvgrace-gpu/main.c=A0=A0 | 879 +++++++++++++++++++++=
++++++=0A=
+>>=A0 drivers/vfio/pci/vfio_pci_config.c=A0=A0=A0 |=A0 42 ++=0A=
+>>=A0 drivers/vfio/pci/vfio_pci_rdwr.c=A0=A0=A0=A0=A0 |=A0 16 +-=0A=
+>>=A0 drivers/vfio/pci/virtio/main.c=A0=A0=A0=A0=A0=A0=A0 |=A0 72 +--=0A=
+>>=A0 include/linux/vfio_pci_core.h=A0=A0=A0=A0=A0=A0=A0=A0 |=A0 10 +-=0A=
+>>=A0 10 files changed, 993 insertions(+), 59 deletions(-)=0A=
+>>=A0 create mode 100644 drivers/vfio/pci/nvgrace-gpu/Kconfig=0A=
+>>=A0 create mode 100644 drivers/vfio/pci/nvgrace-gpu/Makefile=0A=
+>>=A0 create mode 100644 drivers/vfio/pci/nvgrace-gpu/main.c=0A=
+>>=0A=
+>=0A=
+> Applied to vfio next branch for v6.9.=A0 Thanks,=0A=
+>=0A=
+> Alex=0A=
+=0A=
+Thanks Alex! Appreciate this along with your guidance and help in the revie=
+ws.=
