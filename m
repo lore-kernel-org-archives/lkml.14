@@ -1,295 +1,128 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 437F97F46F;
-	Fri, 23 Feb 2024 13:28:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10F737EF06;
+	Fri, 23 Feb 2024 13:28:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708694909; cv=none; b=c8WcNXvxshG+pazlwJjNDaKgHgbrwpHyfVIQKM83E2OwFdeUkxSJokt9gD2zVrnQciQbSk1ZnVEt8LyetqwQ8jUkSDENqbgEBEHAmSAdhtv0v8k5blqpXiZvFAhPaR4uK3n1K+dcMm8KoyFU/xGErsIM8poBNTH5Usq5Rsvb0kI=
+	t=1708694924; cv=none; b=fJGHgYsb7STaD3hY9f8SCM8ymHX6jmRFUx5FkFYHAld2++7EXt8usLM62HSQDwgrVIA8M49uJsuMUvpDVbtQ90pMvUe7Jt3y0H5mI5qh+9hlSZoGJZkJr32BKvNi8D+iEugkXI8UdVJcUTw8fH3Qti/npQO/fHpd1v9P8030CZg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708694909; c=relaxed/simple;
-	bh=GBaheOhdznjtGRKp6u9ZnNvUhBZp5GtwDt/jdqgbVr4=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=mJ8qSypWz2Ph2BMXXeCBElGTTtiE1MTj6zfbKYSRx/21lwV31GRjAeSs5oSl12bVjHAvTIhbegMJaNiR4h4T9rSm7+bMzTyTLzYIx06fwZ+wkopKnlCbi+5hhSHG8mG0DPhj7UpU/HOf40cBGoMUSDrbDj/UgILFOTshtTeZSp4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eAabbtwI; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eAabbtwI"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id CD469C4167D;
-	Fri, 23 Feb 2024 13:28:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708694908;
-	bh=GBaheOhdznjtGRKp6u9ZnNvUhBZp5GtwDt/jdqgbVr4=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=eAabbtwIPLNckHAfLZmp51vJNKtWnLUpgZZvlKeJ8JxDw8gfpA3HUMsJMIuh8/NLv
-	 I+E9ie97ecdlA/J3NeMP+0R9XKUZTpDPfGfKgyUzfo0mTfXM0pCX0vtIRjTF3FzLOM
-	 fRgHXo1KoucqiME89acZjDZlsuIj9nW1OVWXPV+0hIUx9m2fss4L0wlDHro/DXceVP
-	 RLxLzBL781a7APPOVqqDszW2/RHIk4MSBOKsieOf5gfQ4xQGteV9bRZ++VoOS1Dw7z
-	 6JeNtYsC9gUAEhRe0nNACHxBnsXIt3LS59w3+qOIsjSq7jHz/tQKKhjekcBcm2GyXq
-	 Z6oOv3CT6CAfQ==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB566C54E41;
-	Fri, 23 Feb 2024 13:28:28 +0000 (UTC)
-From: Yang Xiwen via B4 Relay <devnull+forbidden405.outlook.com@kernel.org>
-Date: Fri, 23 Feb 2024 21:28:21 +0800
-Subject: [PATCH net-next v5 6/7] net: hisilicon: add support for hisi_femac
- core on Hi3798MV200
+	s=arc-20240116; t=1708694924; c=relaxed/simple;
+	bh=HBeXTwP6V8GWzKbXvRGCp7ccI5d7wCs1JlCvNNA4GHA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=lLAmV37TeJrS0868ZmI5DACCuvGjw6pVlL4L4ZwoSzDSepJYc6+rZyKCLTsVOdbOnrsXdwyHbYtvpeA9maJiQirFLLkfhnzFBbKH5iCPtg1LdTg42EzTYD3t5dYBqXshJ8MPZtOuAznU4DAJmztqUrvoSUAlc1kPLJu+21aJsWY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=auristor.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.208.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=auristor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-5640fef9fa6so1031126a12.0;
+        Fri, 23 Feb 2024 05:28:41 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708694920; x=1709299720;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=1pxp9SZUqXTyshzqGMBNW9bsQ0Wd0IUJwu8yD4N1umA=;
+        b=HOG1nzCsRuEXxOwPSJE9AJdYkDcwzkcOhgSep+WfpVlaBhA8xHpewLkA3fv8FoNiKv
+         hfAcML83H0Yd9Y7+jfKip347YLQOHz6++lBcxZJNzYYAMm7jful2NhiY2pwX59PF46Nf
+         ea+F8DmT0eS2CPYVy0RO4E3wjAmsYRlzO93RAPgP6jBZBBLdkU5tp4Sq0rvWvb4OxO7w
+         iwBgIRQCOT5jkJLJokFFaXMxPMrpqLn6NAnQQDDqHp/r9VNqS4MwlGYmbYO8zaGaLa0C
+         xWghFDBCYpQvxZzWI8oFZvpzE7MkNjTyjpzKsedgZ2gs90bwtozDQvkJp2EfuUoBhv3U
+         VcYQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVfdRP0EKionPRCOXZxVEw6WHSanrK4mcaqBpcW5PGcFk4NS6MHYMMgh0dANOHDUS+r95hHH2kHDEaIs3IIDnBEweAxYHj7pGVmQzRNLyC3Efy82ln9ivh9qoTUFdrIIXouIJHr80Rd9tvspw==
+X-Gm-Message-State: AOJu0Yx/yqbJWPoiwvBM5d/f3fxUIQUzpOPenBtkztcXr/Czntcv6AGe
+	R9LkTqryfBVS0y9MA67U1/ZyWIZ9Jyzysp7/vXMI4SlNXf0DRpJ/SpE7nmaeNedRmA==
+X-Google-Smtp-Source: AGHT+IEt5ukyCi6juaBcTv7LG71P8GlHsU0WQp8yd08i4vXieMWXhl1JUOTBc4ePdp8lzP3CGTjemg==
+X-Received: by 2002:aa7:dd0f:0:b0:564:ded0:6072 with SMTP id i15-20020aa7dd0f000000b00564ded06072mr1391419edv.1.1708694919979;
+        Fri, 23 Feb 2024 05:28:39 -0800 (PST)
+Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com. [209.85.208.44])
+        by smtp.gmail.com with ESMTPSA id e18-20020a056402149200b00563c63e0a13sm6441222edv.49.2024.02.23.05.28.39
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 23 Feb 2024 05:28:39 -0800 (PST)
+Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-5654f700705so1020699a12.1;
+        Fri, 23 Feb 2024 05:28:39 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCV73BGPLkv0YBnNqC3XFBVNfCbK5ED+QYpxfdQ3SbDuGtx1sbt8YKzM8aZczd9S7S8VSBvBVNBDNA6MTUJNRBRUVxEPrfJyjMFAbrKLBECPNxVV3hahmLsschQ6w0UVy8iD5cXbQJTgCqvTug==
+X-Received: by 2002:a17:906:a112:b0:a3e:4404:dc7 with SMTP id
+ t18-20020a170906a11200b00a3e44040dc7mr1404625ejy.23.1708694919517; Fri, 23
+ Feb 2024 05:28:39 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240223-net-v5-6-43b22d39c013@outlook.com>
-References: <20240223-net-v5-0-43b22d39c013@outlook.com>
-In-Reply-To: <20240223-net-v5-0-43b22d39c013@outlook.com>
-To: Yisen Zhuang <yisen.zhuang@huawei.com>, 
- Salil Mehta <salil.mehta@huawei.com>, 
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
- Rob Herring <robh+dt@kernel.org>, 
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
- Conor Dooley <conor+dt@kernel.org>, Andrew Lunn <andrew@lunn.ch>, 
- Heiner Kallweit <hkallweit1@gmail.com>, 
- Russell King <linux@armlinux.org.uk>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
- devicetree@vger.kernel.org, Yang Xiwen <forbidden405@outlook.com>
-X-Mailer: b4 0.12.4
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1708694896; l=7210;
- i=forbidden405@outlook.com; s=20230724; h=from:subject:message-id;
- bh=/txku2bb14pGE8xgSS0aeGHZMyxLoNFPUgd/T9v5WGE=;
- b=0sL2q/RatS4l9C7mpNZE30BV/o0TnToQxmNmIqzT3Z2LmKcQ0shxbJqbUslOGUqTOgQh7R5rv
- 3SwLD9ZOYLnDmWeH1RUTJLy2JGTK46XR3TPj+zZH6o1Kg0Ost1gLagM
-X-Developer-Key: i=forbidden405@outlook.com; a=ed25519;
- pk=qOD5jhp891/Xzc+H/PZ8LWVSWE3O/XCQnAg+5vdU2IU=
-X-Endpoint-Received:
- by B4 Relay for forbidden405@outlook.com/20230724 with auth_id=67
-X-Original-From: Yang Xiwen <forbidden405@outlook.com>
-Reply-To: <forbidden405@outlook.com>
+References: <786185.1708694102@warthog.procyon.org.uk>
+In-Reply-To: <786185.1708694102@warthog.procyon.org.uk>
+From: Marc Dionne <marc.dionne@auristor.com>
+Date: Fri, 23 Feb 2024 09:28:28 -0400
+X-Gmail-Original-Message-ID: <CAB9dFdvDitrof7a4Df1ziJJHnfqNModR7ZxBD971VCZuxyiEZQ@mail.gmail.com>
+Message-ID: <CAB9dFdvDitrof7a4Df1ziJJHnfqNModR7ZxBD971VCZuxyiEZQ@mail.gmail.com>
+Subject: Re: [PATCH] afs: Fix endless loop in directory parsing
+To: David Howells <dhowells@redhat.com>
+Cc: Markus Suvanto <markus.suvanto@gmail.com>, Christian Brauner <brauner@kernel.org>, 
+	linux-afs@lists.infradead.org, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Yang Xiwen <forbidden405@outlook.com>
+On Fri, Feb 23, 2024 at 9:15=E2=80=AFAM David Howells <dhowells@redhat.com>=
+ wrote:
+>
+>
+> If a directory has a block with only ".__afsXXXX" files in it (from
+> uncompleted silly-rename), these .__afsXXXX files are skipped but without
+> advancing the file position in the dir_context.  This leads to
+> afs_dir_iterate() repeating the block again and again.
+>
+> Fix this by making the code that skips the .__afsXXXX file also manually
+> advance the file position.
+>
+> The symptoms are a soft lookup:
+>
+>         watchdog: BUG: soft lockup - CPU#3 stuck for 52s! [check:5737]
+>         ...
+>         RIP: 0010:afs_dir_iterate_block+0x39/0x1fd
+>         ...
+>          ? watchdog_timer_fn+0x1a6/0x213
+>         ...
+>          ? asm_sysvec_apic_timer_interrupt+0x16/0x20
+>          ? afs_dir_iterate_block+0x39/0x1fd
+>          afs_dir_iterate+0x10a/0x148
+>          afs_readdir+0x30/0x4a
+>          iterate_dir+0x93/0xd3
+>          __do_sys_getdents64+0x6b/0xd4
+>
+> This is almost certainly the actual fix for:
+>
+>         https://bugzilla.kernel.org/show_bug.cgi?id=3D218496
+>
+> Fixes: 57e9d49c5452 ("afs: Hide silly-rename files from userspace")
+> Signed-off-by: David Howells <dhowells@redhat.com>
+> cc: Marc Dionne <marc.dionne@auristor.com>
+> cc: Markus Suvanto <markus.suvanto@gmail.com>
+> cc: linux-afs@lists.infradead.org
+> ---
+>  fs/afs/dir.c |    4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+>
+> diff --git a/fs/afs/dir.c b/fs/afs/dir.c
+> index b5b8de521f99..8a67fc427e74 100644
+> --- a/fs/afs/dir.c
+> +++ b/fs/afs/dir.c
+> @@ -479,8 +479,10 @@ static int afs_dir_iterate_block(struct afs_vnode *d=
+vnode,
+>                     dire->u.name[0] =3D=3D '.' &&
+>                     ctx->actor !=3D afs_lookup_filldir &&
+>                     ctx->actor !=3D afs_lookup_one_filldir &&
+> -                   memcmp(dire->u.name, ".__afs", 6) =3D=3D 0)
+> +                   memcmp(dire->u.name, ".__afs", 6) =3D=3D 0) {
+> +                       ctx->pos =3D blkoff + next * sizeof(union afs_xdr=
+_dirent);
+>                         continue;
+> +               }
+>
+>                 /* found the next entry */
+>                 if (!dir_emit(ctx, dire->u.name, nlen,
 
-Register the sub MDIO bus if it is found. Also implement the internal
-PHY reset procedure as needed.
+Reviewed-by: Marc Dionne <marc.dionne@auristor.com>
 
-Note it's unable to put the MDIO bus node outside of MAC controller
-(i.e. at the same level in the parent bus node). Because we need to
-control all clocks and resets in FEMAC driver due to the phy reset
-procedure. So the clocks can't be assigned to MDIO bus device, which is
-an essential resource for the MDIO bus to work.
-
-No backward compatibility is maintained since the only existing
-user(Hi3516DV300) has not received any updates from HiSilicon for about
-8 years already. And till today, no mainline dts for this SoC is found.
-It seems unlikely that there are still existing mainline Hi3516DV300
-users. The effort to maintain the old binding seems gain a little.
-
-Signed-off-by: Yang Xiwen <forbidden405@outlook.com>
----
- drivers/net/ethernet/hisilicon/hisi_femac.c | 74 +++++++++++++++++++++++------
- 1 file changed, 60 insertions(+), 14 deletions(-)
-
-diff --git a/drivers/net/ethernet/hisilicon/hisi_femac.c b/drivers/net/ethernet/hisilicon/hisi_femac.c
-index 2406263c9dd3..eab91e011d11 100644
---- a/drivers/net/ethernet/hisilicon/hisi_femac.c
-+++ b/drivers/net/ethernet/hisilicon/hisi_femac.c
-@@ -10,8 +10,10 @@
- #include <linux/etherdevice.h>
- #include <linux/interrupt.h>
- #include <linux/module.h>
-+#include <linux/of.h>
- #include <linux/of_mdio.h>
- #include <linux/of_net.h>
-+#include <linux/of_platform.h>
- #include <linux/platform_device.h>
- #include <linux/reset.h>
- 
-@@ -97,6 +99,13 @@ enum phy_reset_delays {
- 	DELAYS_NUM,
- };
- 
-+enum clk_type {
-+	CLK_MAC,
-+	CLK_MACIF,
-+	CLK_PHY,
-+	CLK_NUM,
-+};
-+
- struct hisi_femac_queue {
- 	struct sk_buff **skb;
- 	dma_addr_t *dma_phys;
-@@ -108,7 +117,7 @@ struct hisi_femac_queue {
- struct hisi_femac_priv {
- 	void __iomem *port_base;
- 	void __iomem *glb_base;
--	struct clk *clk;
-+	struct clk_bulk_data *clks;
- 	struct reset_control *mac_rst;
- 	struct reset_control *phy_rst;
- 	u32 phy_reset_delays[DELAYS_NUM];
-@@ -116,6 +125,7 @@ struct hisi_femac_priv {
- 
- 	struct device *dev;
- 	struct net_device *ndev;
-+	struct platform_device *mdio_pdev;
- 
- 	struct hisi_femac_queue txq;
- 	struct hisi_femac_queue rxq;
-@@ -693,6 +703,7 @@ static const struct net_device_ops hisi_femac_netdev_ops = {
- static void hisi_femac_core_reset(struct hisi_femac_priv *priv)
- {
- 	reset_control_assert(priv->mac_rst);
-+	usleep_range(200, 300);
- 	reset_control_deassert(priv->mac_rst);
- }
- 
-@@ -712,6 +723,10 @@ static void hisi_femac_sleep_us(u32 time_us)
- 
- static void hisi_femac_phy_reset(struct hisi_femac_priv *priv)
- {
-+	/* MAC clock must be disabled before PHY reset
-+	 */
-+	clk_disable(priv->clks[CLK_MAC].clk);
-+	clk_disable(priv->clks[CLK_MACIF].clk);
- 	/* To make sure PHY hardware reset success,
- 	 * we must keep PHY in deassert state first and
- 	 * then complete the hardware reset operation
-@@ -727,6 +742,9 @@ static void hisi_femac_phy_reset(struct hisi_femac_priv *priv)
- 	reset_control_deassert(priv->phy_rst);
- 	/* delay some time to ensure later MDIO access */
- 	hisi_femac_sleep_us(priv->phy_reset_delays[POST_DELAY]);
-+
-+	clk_enable(priv->clks[CLK_MAC].clk);
-+	clk_enable(priv->clks[CLK_MACIF].clk);
- }
- 
- static void hisi_femac_port_init(struct hisi_femac_priv *priv)
-@@ -768,11 +786,12 @@ static void hisi_femac_port_init(struct hisi_femac_priv *priv)
- static int hisi_femac_drv_probe(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
--	struct device_node *node = dev->of_node;
-+	struct device_node *node = dev->of_node, *mdio_np;
- 	struct net_device *ndev;
- 	struct hisi_femac_priv *priv;
- 	struct phy_device *phy;
- 	int ret;
-+	bool mdio_registered = false;
- 
- 	ndev = alloc_etherdev(sizeof(*priv));
- 	if (!ndev)
-@@ -797,17 +816,16 @@ static int hisi_femac_drv_probe(struct platform_device *pdev)
- 		goto out_free_netdev;
- 	}
- 
--	priv->clk = devm_clk_get(&pdev->dev, NULL);
--	if (IS_ERR(priv->clk)) {
--		dev_err(dev, "failed to get clk\n");
--		ret = -ENODEV;
-+	ret = devm_clk_bulk_get_all(&pdev->dev, &priv->clks);
-+	if (ret < 0 || ret != CLK_NUM) {
-+		dev_err(dev, "failed to get clk bulk: %d\n", ret);
- 		goto out_free_netdev;
- 	}
- 
--	ret = clk_prepare_enable(priv->clk);
-+	ret = clk_bulk_prepare_enable(CLK_NUM, priv->clks);
- 	if (ret) {
--		dev_err(dev, "failed to enable clk %d\n", ret);
--		goto out_free_netdev;
-+		dev_err(dev, "failed to enable clk bulk: %d\n", ret);
-+		goto out_disable_clk;
- 	}
- 
- 	priv->mac_rst = devm_reset_control_get(dev, "mac");
-@@ -830,11 +848,29 @@ static int hisi_femac_drv_probe(struct platform_device *pdev)
- 		hisi_femac_phy_reset(priv);
- 	}
- 
-+	// Register the optional MDIO bus
-+	for_each_available_child_of_node(node, mdio_np) {
-+		if (of_node_name_prefix(mdio_np, "mdio")) {
-+			priv->mdio_pdev = of_platform_device_create(mdio_np, NULL, dev);
-+			of_node_put(mdio_np);
-+			if (!priv->mdio_pdev) {
-+				dev_err(dev, "failed to register MDIO bus device\n");
-+				ret = -ENODEV;
-+				goto out_disable_clk;
-+			}
-+			mdio_registered = true;
-+			break;
-+		}
-+	}
-+
-+	if (!mdio_registered)
-+		dev_warn(dev, "MDIO subnode not found. This is usually a bug.\n");
-+
- 	phy = of_phy_get_and_connect(ndev, node, hisi_femac_adjust_link);
- 	if (!phy) {
- 		dev_err(dev, "connect to PHY failed!\n");
- 		ret = -ENODEV;
--		goto out_disable_clk;
-+		goto out_unregister_mdio_bus;
- 	}
- 
- 	phy_attached_print(phy, "phy_id=0x%.8lx, phy_mode=%s\n",
-@@ -885,8 +921,10 @@ static int hisi_femac_drv_probe(struct platform_device *pdev)
- out_disconnect_phy:
- 	netif_napi_del(&priv->napi);
- 	phy_disconnect(phy);
-+out_unregister_mdio_bus:
-+	platform_device_unregister(priv->mdio_pdev);
- out_disable_clk:
--	clk_disable_unprepare(priv->clk);
-+	clk_bulk_disable_unprepare(CLK_NUM, priv->clks);
- out_free_netdev:
- 	free_netdev(ndev);
- 
-@@ -902,7 +940,8 @@ static void hisi_femac_drv_remove(struct platform_device *pdev)
- 	unregister_netdev(ndev);
- 
- 	phy_disconnect(ndev->phydev);
--	clk_disable_unprepare(priv->clk);
-+	platform_device_unregister(priv->mdio_pdev);
-+	clk_bulk_disable_unprepare(CLK_NUM, priv->clks);
- 	free_netdev(ndev);
- }
- 
-@@ -919,7 +958,7 @@ static int hisi_femac_drv_suspend(struct platform_device *pdev,
- 		netif_device_detach(ndev);
- 	}
- 
--	clk_disable_unprepare(priv->clk);
-+	clk_bulk_disable_unprepare(CLK_NUM, priv->clks);
- 
- 	return 0;
- }
-@@ -928,8 +967,14 @@ static int hisi_femac_drv_resume(struct platform_device *pdev)
- {
- 	struct net_device *ndev = platform_get_drvdata(pdev);
- 	struct hisi_femac_priv *priv = netdev_priv(ndev);
-+	int ret;
-+
-+	ret = clk_bulk_prepare_enable(CLK_NUM, priv->clks);
-+	if (ret) {
-+		dev_err(&pdev->dev, "failed to enable clk bulk: %d\n", ret);
-+		return ret;
-+	}
- 
--	clk_prepare_enable(priv->clk);
- 	if (priv->phy_rst)
- 		hisi_femac_phy_reset(priv);
- 
-@@ -948,6 +993,7 @@ static const struct of_device_id hisi_femac_match[] = {
- 	{.compatible = "hisilicon,hisi-femac-v1",},
- 	{.compatible = "hisilicon,hisi-femac-v2",},
- 	{.compatible = "hisilicon,hi3516cv300-femac",},
-+	{.compatible = "hisilicon,hi3798mv200-femac",},
- 	{},
- };
- 
-
--- 
-2.43.0
-
+Marc
