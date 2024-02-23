@@ -1,87 +1,62 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DC928003E;
-	Fri, 23 Feb 2024 14:23:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D5DF7FBC5
+	for <linux-kernel@vger.kernel.org>; Fri, 23 Feb 2024 14:24:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708698226; cv=none; b=nQY/5cgP1vnoKIFoiXVRFPMC9f8+FUP4VcebyaWI6lXTi148mIJDn4YpZaS1Me3k2UWJs9oVm9nPC2QiCpKDFQbrvr4Ct1lv9OJ44xPxJwgQ/f27ffItc4Vyh7UCla8+wd7pgFYANXDKLayP7JiHNPZ4BEJ7SxNobQQc61aICyQ=
+	t=1708698279; cv=none; b=SXHcn3ep+xx68Q9hmbZSJnwJ/cyUHmxWda4kDcrDdP8Kiwhcg9DBMVm2/Q49fr+KGcKXvCnxL+dcM7Mjefrum57HIgfO0IAQ6OY8VRzj0eEoUgaKcvX+hv7BlOeOF+jrETVXnmHEjjiIpDkkosUfg0Pjt3ODh7YDwvbqRyPhnJ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708698226; c=relaxed/simple;
-	bh=oG6lGxWEEemBwIFT+DyX89qfDgrB0Bkcpa14XrnC2Ks=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=N/nFFY1nqUamf3mNRbAr3ldvfc8YsOY39wfRNAaW+poqLYAULSMe6nqDPxifoT3Wi/HS6iXb2YF5v1yJTqeDH+3Q6DFIwNCcqmb0nyKA3sOJwT/f5w2CNLXm2F5XK9fcQWClfu93YNqzrexaynY1vR7Nk3oWGSdpuw18AS06pdA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Q3/aUvmv; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Q3/aUvmv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DE849C433F1;
-	Fri, 23 Feb 2024 14:23:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708698225;
-	bh=oG6lGxWEEemBwIFT+DyX89qfDgrB0Bkcpa14XrnC2Ks=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=Q3/aUvmvLzINogZY+JvkRDxgprMN4ZCuIBHfT85X/0fTg2sRO+Jvm6wLmvMo8z7Cc
-	 a3IIutESGxnmRYIr0S1djg5HZji8M/uNTk3Fxm6rorHLb19e7pVsZWrhgLmLM4pB4e
-	 Nyig2p/vY35Ln+VfjuSIGh2zgvbo/qI2J9S8XzN0J+ZI1pNH/SD+xKf2dATcNPLRBf
-	 xe3rlxJcRyM3v2dZ+4qm5eswOGOqCS+CZbtHLatve78QEsuWOHs5ucPi8J9y/Ize76
-	 StUau5ku3dzKZulk13jo5MaExtKXz/oU3Ln24Qrx9BQ0Gmcha2BqWxHuf3Vv62rTOv
-	 xtbOug6ltAtVQ==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <maz@kernel.org>)
-	id 1rdWSl-0066qh-Cf;
-	Fri, 23 Feb 2024 14:23:43 +0000
-Date: Fri, 23 Feb 2024 14:23:42 +0000
-Message-ID: <86le7b2r9t.wl-maz@kernel.org>
-From: Marc Zyngier <maz@kernel.org>
-To: Oliver Upton <oliver.upton@linux.dev>
-Cc: kvmarm@lists.linux.dev,
-	kvm@vger.kernel.org,
-	James Morse <james.morse@arm.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Zenghui Yu <yuzenghui@huawei.com>,
-	linux-kernel@vger.kernel.org,
-	Eric Auger <eric.auger@redhat.com>
-Subject: Re: [PATCH v4 00/10] KVM: arm64: Avoid serializing LPI get() / put()
-In-Reply-To: <20240221054253.3848076-1-oliver.upton@linux.dev>
-References: <20240221054253.3848076-1-oliver.upton@linux.dev>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/29.1
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+	s=arc-20240116; t=1708698279; c=relaxed/simple;
+	bh=vU/gHBg0qpmT0iQuaGkMnmP+a+3sqFwnNDs8zgNBfOA=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=XAqgzWLnVLESk+AztEtTxdSMhVJnO/m6eZzydgNiRZqrxN4/OxvH5uub+dfw2IwbtLBqy9pjGepVU4LJ+a5EFzK30X7hd8h1eAqHLi4YpkdqCJlYFarIDE1cXAoMTJgx82Tb7UfwOAwwQi1Df5qbjV/gC5ZDQiKl9YsaY9IGwU0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 19786C433F1;
+	Fri, 23 Feb 2024 14:24:38 +0000 (UTC)
+Date: Fri, 23 Feb 2024 09:26:30 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: Oleg Nesterov <oleg@redhat.com>, wenyang.linux@foxmail.com, Masami
+ Hiramatsu <mhiramat@kernel.org>, Ingo Molnar <mingo@kernel.org>, Mel Gorman
+ <mgorman@techsingularity.net>, Peter Zijlstra <peterz@infradead.org>,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] coredump debugging: add a tracepoint to report the
+ coredumping
+Message-ID: <20240223092630.49b9d367@gandalf.local.home>
+In-Reply-To: <776b842b-b19f-44bf-bc34-ac756fce7466@efficios.com>
+References: <tencent_5CD40341EC9384E9B7CC127EA5CF2655B408@qq.com>
+	<20240217104924.GB10393@redhat.com>
+	<20240219112926.77ac16f8@gandalf.local.home>
+	<20240219170038.GA710@redhat.com>
+	<20240219122825.31579a1e@gandalf.local.home>
+	<776b842b-b19f-44bf-bc34-ac756fce7466@efficios.com>
+X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: oliver.upton@linux.dev, kvmarm@lists.linux.dev, kvm@vger.kernel.org, james.morse@arm.com, suzuki.poulose@arm.com, yuzenghui@huawei.com, linux-kernel@vger.kernel.org, eric.auger@redhat.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+Content-Transfer-Encoding: 7bit
 
-On Wed, 21 Feb 2024 05:42:43 +0000,
-Oliver Upton <oliver.upton@linux.dev> wrote:
-> 
-> Addressing a few more goofs that Zenghui was kind enough to point out.
-> Clearly all of the bugs have been found and addressed at this point.
-> 
-> v2: https://lore.kernel.org/kvmarm/20240213093250.3960069-1-oliver.upton@linux.dev/
-> v3: https://lore.kernel.org/kvmarm/20240216184153.2714504-1-oliver.upton@linux.dev/
-> 
-> v3 -> v4:
->  - Actually walk the LPI INTID range in vgic_copy_lpi_list() (Zenghui)
->  - Ensure xa_lock is taken w/ IRQs disabled, even after purging usage of
->    the lpi_list_lock (Zenghui)
->  - Document the lock ordering (Marc)
+On Mon, 19 Feb 2024 13:01:16 -0500
+Mathieu Desnoyers <mathieu.desnoyers@efficios.com> wrote:
 
-This is looking good so far. I'll take it for a ride shortly, but in
-the meantime:
+> Between "sched_process_exit" and "sched_process_free", the task can still be
+> observed by a trace analysis looking at sched and signal events: it's a zombie at
+> that stage.
 
-Reviewed-by: Marc Zyngier <maz@kernel.org>
+Looking at the history of this tracepoint, it was added in 2008 by commit
+0a16b60758433 ("tracing, sched: LTTng instrumentation - scheduler").
+Hmm, LLTng? I wonder who the author was?
 
-	M.
+  Author: Mathieu Desnoyers <mathieu.desnoyers@polymtl.ca>
 
--- 
-Without deviation from the norm, progress is not possible.
+ :-D
+
+Mathieu, I would say it's your call on where the tracepoint can be located.
+You added it, you own it!
+
+-- Steve
