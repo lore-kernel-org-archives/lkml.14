@@ -1,73 +1,93 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84BE435EF1
-	for <linux-kernel@vger.kernel.org>; Fri, 23 Feb 2024 15:13:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB44A5FEE5;
+	Fri, 23 Feb 2024 15:13:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708701185; cv=none; b=PTdXddrrXfRJJcFOJZvyg9M4unTFqpfNC41nmtw6Nl+YTVMQ9bmF0Y+YJco146QINDPxHFfoc8bQM4rD2ABMCd9qY0PEzSQAeTN87CwRsSGIa9Of5M2Gk/rmsdLbtBCILfUv211t7NPzMSaYIU/5E4eIRib8RLs7qOOu8oeqHJE=
+	t=1708701200; cv=none; b=pIcjT5SrG4fjBpEDTDURMKzikJnciRc94jcN1wAwBrlie6x5P0ZMAymCxU2oNELjqrtIevoNG9dRYefuZe51gkgXWtroV/I6xmfqjsS1xWvpO/NwY/xCXevFWHPj8hCfSUmq3gCWVl2GKUJOrsYxkco+4iBw28iOL6yamK3hzvQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708701185; c=relaxed/simple;
-	bh=vHd3FYt9Efa+bMZ0+xD3vTKyeLH+4aXhKA+sU9dr4a8=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ncMOZQqNVJld6YM9Bwh8zRJhnli6YesTc9i1k5cg65b5O5Vtsley4/An+XAZ9rKWMc0r2HKdfPmCZRnq018hzEJEA9DmZwTvbZqwgcwKNMEFshg+1dBh/ZvYuG8yDO8xGVdsinaWWnSe/nBUfiWdYlgoKWk6L1+F4urm+hsskSc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 00A4BC433F1;
-	Fri, 23 Feb 2024 15:13:03 +0000 (UTC)
-Date: Fri, 23 Feb 2024 10:14:56 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Jeff Layton <jlayton@kernel.org>
-Cc: linux-kernel@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Andrew Morton
- <akpm@linux-foundation.org>, Neil Brown <neilb@suse.de>, Olga Kornievskaia
- <kolga@netapp.com>, Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey
- <tom@talpey.com>, Chuck Lever <chuck.lever@oracle.com>
-Subject: Re: [for-next][PATCH 06/13] NFSD: Fix nfsd_clid_class use of
- __string_len() macro
-Message-ID: <20240223101456.25ca7bab@gandalf.local.home>
-In-Reply-To: <191757a0ccb52fefa17b690a44299442fcb4e052.camel@kernel.org>
-References: <20240223141838.985298316@goodmis.org>
-	<20240223141902.394601874@goodmis.org>
-	<191757a0ccb52fefa17b690a44299442fcb4e052.camel@kernel.org>
-X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1708701200; c=relaxed/simple;
+	bh=WFnOyzagEoL2XMAHfjJHHnkD1L2Pm476EQxtsVG/O7o=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=uQvE+HuLT3h7A8j1Tmtm+GfIDH3IUFEPJW37sIlj/G6957bpYOVj3UxWjO2GjMgm3kq9Ho6QFCKngv2257c8hFFcBy81JedKSwxQQyfVrJzOyzqv5kyrYfyRYcDEYRPsdxLRVrypKS8z0GxKkPL+Y+lyAI4+qj2bUfdzLsUc+WE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=eJJMsG6n; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="eJJMsG6n"
+Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 41N9RQtH007795;
+	Fri, 23 Feb 2024 15:13:12 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	message-id:date:mime-version:subject:to:cc:references:from
+	:in-reply-to:content-type:content-transfer-encoding; s=
+	qcppdkim1; bh=NI4LeKwprpZtjLkpzn66X7efzVrPdTCPBGszzolQ1cE=; b=eJ
+	JMsG6nCvv2k+5QyECjO4ximmOoxEkGt5yk+2i6H4Mszx0xeuels1iuT2M2OZe+ib
+	7mvKGBDUNDy1XPyZ9Xsp0xwXecU6AwhYFK5+EfGI3tVK4x5Ww/6g3Wfa84XHALNN
+	qdYWY0ZFEYNLsFCBzK7IrYiWywnPMD8bp7wyc1P0uxo5747QCEJixMpHkEJPDvSY
+	GPX5kvEe6i9489gxseUczVYcviwYse8cveFVOkUvZkSUlb0+/qGy5Q5/BhTYqoD7
+	fgZC7KoSURVIflhtniSK76fdtYw10rV1VXRzlw4izoPLlwvuL1f8mOCq0XnTsgfC
+	HIAjW2jO6lnJtXwKfSkA==
+Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3wer8mruj0-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 23 Feb 2024 15:13:12 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 41NFDB9q020906
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 23 Feb 2024 15:13:11 GMT
+Received: from [10.226.59.182] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Fri, 23 Feb
+ 2024 07:13:07 -0800
+Message-ID: <add8e7de-a153-4d8e-7226-a5ec177a4223@quicinc.com>
+Date: Fri, 23 Feb 2024 08:13:07 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.6.0
+Subject: Re: [PATCH] accel/qaic: Constify aic100_channels
+Content-Language: en-US
+To: Jeff Johnson <quic_jjohnson@quicinc.com>,
+        Carl Vanderlip
+	<quic_carlv@quicinc.com>,
+        Pranjal Ramajor Asha Kanojiya
+	<quic_pkanojiy@quicinc.com>,
+        Oded Gabbay <ogabbay@kernel.org>
+CC: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        <linux-arm-msm@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
+        <linux-kernel@vger.kernel.org>, <kernel@quicinc.com>
+References: <20240222-mhi-const-accel-qaic-v1-1-028db0dd9098@quicinc.com>
+From: Jeffrey Hugo <quic_jhugo@quicinc.com>
+In-Reply-To: <20240222-mhi-const-accel-qaic-v1-1-028db0dd9098@quicinc.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: CsL34TIa0p9Sz7JxxjFGxwAcZmzsryZ6
+X-Proofpoint-ORIG-GUID: CsL34TIa0p9Sz7JxxjFGxwAcZmzsryZ6
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-02-23_01,2024-02-23_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 spamscore=0
+ adultscore=0 malwarescore=0 bulkscore=0 clxscore=1011 mlxscore=0
+ impostorscore=0 mlxlogscore=825 suspectscore=0 priorityscore=1501
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2402120000 definitions=main-2402230111
 
-On Fri, 23 Feb 2024 09:36:14 -0500
-Jeff Layton <jlayton@kernel.org> wrote:
-
-> On Fri, 2024-02-23 at 09:18 -0500, Steven Rostedt wrote:
-> > From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
-> > 
-> > I'm working on restructuring the __string* macros so that it doesn't need
-> > to recalculate the string twice. That is, it will save it off when
-> > processing __string() and the __assign_str() will not need to do the work
-> > again as it currently does.
-> > 
-> > Currently __string_len(item, src, len) doesn't actually use "src", but my
-> > changes will require src to be correct as that is where the __assign_str()
-> > will get its value from.
-> > 
-> > The event class nfsd_clid_class has:
-> > 
-> >   __string_len(name, name, clp->cl_name.len)
-> > 
-> > But the second "name" does not exist and causes my changes to fail to
-> > build. That second parameter should be: clp->cl_name.data.
-> > 
-> > Link: https://lore.kernel.org/linux-trace-kernel/20240222122828.3d8d213c@gandalf.local.home
-> > 
-
+On 2/22/2024 6:06 PM, Jeff Johnson wrote:
+> MHI allows the channel configs to be const, so constify
+> aic100_channels to prevent runtime modification.
 > 
-> Acked-by: Jeff Layton <jlayton@kernel.org>
+> Signed-off-by: Jeff Johnson <quic_jjohnson@quicinc.com>
 
-Thanks!
+Reviewed-by: Jeffrey Hugo <quic_jhugo@quicinc.com>
 
--- Steve
+I plan to apply to drm-misc-next before the rc6 freeze.
