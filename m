@@ -1,163 +1,173 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+Received: from mx0a-00268f01.pphosted.com (mx0a-00268f01.pphosted.com [148.163.148.236])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AA5A24B2B;
-	Fri, 23 Feb 2024 22:51:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708728699; cv=none; b=FYglo9kxQ4gR/pMTj5RCbTIcGjMVl+Yp1Svyly2Do3ZabF5G6wJI+fqZGLZPAtnrjToGARzRoIc6fzJadGyyXBh0KNkhtdy+PPCAJd2Lbgssc4pPU5iKwZs/oL5lnkW4cRId9gC3efGm9p20bQakdjmSi1/esF09+MyLHecv6xk=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708728699; c=relaxed/simple;
-	bh=Mc357CVHrALPxH36XBhZd6gv5wG0eLnjO1BTu774TgA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Dv4Qc6N1yaCyG5qbiqLdKcpBw06O+38BYF4kTuazlWpLmVAc8KyzFXpBBDOF6hZmqCLJX2BV5NbTrP7mRVBiTZXcUtCfZ/TzirW0VO+1TleFTXwtCxE3NiOJP0+96jvMvHYCC99QimLsAQOgAcZ+PqdPWbzPMOpEmjb8uU6fEPw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hEaItwDP; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E87C22071;
+	Fri, 23 Feb 2024 22:53:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=148.163.148.236
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1708728784; cv=fail; b=ew/YehmglqWNwHFiLtlGzluCd6QlxNenKSwFSYbYqRSWlUf6FdN8u9rHcIvWp5e6qYUCmFYQpmVD/tM2DnmAMLnUkUVhYrUgqg6qOvLo7miyybH0RacOIc0QQTcwBkBFoCSCj7peryvEAHm244P5Ki0P94/0qUo4sKkB8+1w43g=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1708728784; c=relaxed/simple;
+	bh=coG6UqcGRRVvlE/ZjP9ARgIv8No0OWy2yF16VRBWXpc=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=VP6PXXq61zOpLe03w0zoyR69cELNPVkd8oQ+OAs2PFHb/2/1yvtORhdVVIB66xlnVdEB9JCERW1usFQYO1ty5rEFOhRuR9AOtbM1vTZLnHZb2j9w2Yog/mreKrGxpv0Aqp3IpuI9nLHBhWDDIfjMYEPVW4GHzDc0NrNSYuw/I/Q=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=equinix.com; spf=pass smtp.mailfrom=equinix.com; dkim=pass (2048-bit key) header.d=equinix.com header.i=@equinix.com header.b=c6XeHFmP; arc=fail smtp.client-ip=148.163.148.236
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=equinix.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=equinix.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hEaItwDP"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1708728697; x=1740264697;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=Mc357CVHrALPxH36XBhZd6gv5wG0eLnjO1BTu774TgA=;
-  b=hEaItwDPF+oDN1AdK4O3zl0Uq83P+fMbkdtBhTbsWQkLHk1H8ex0WI7B
-   NZ5rrVq99t/N8Mg99ATHwt/kVor2RvQtRYF5VESmQne/dyNDcZEkTEfgv
-   Wtw7Jb/EunBMSpdXMSasNFHZOm1FFDKQpTPbzfhkjkfKyr1sJlKuqy9/W
-   4H6dTZ820dJm27vRegby+fdg8+avNIBOJyARMr7I2cJbLpqXlckMXT7OA
-   FrMYIeaAnJ/aWbL+bP4+AELS12M3WQyk8qI4f0kBUnsql4TGfMI9IQnRI
-   6gdso0Yg1XZN1eWF+ShXOGDJQ0SLm7nR/2IaNWAdFfIP53CoRNBef9ZI2
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10993"; a="6013691"
-X-IronPort-AV: E=Sophos;i="6.06,180,1705392000"; 
-   d="scan'208";a="6013691"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Feb 2024 14:51:37 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,180,1705392000"; 
-   d="scan'208";a="6194312"
-Received: from lkp-server02.sh.intel.com (HELO 3c78fa4d504c) ([10.239.97.151])
-  by fmviesa008.fm.intel.com with ESMTP; 23 Feb 2024 14:51:34 -0800
-Received: from kbuild by 3c78fa4d504c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rdeOA-0007z2-1p;
-	Fri, 23 Feb 2024 22:51:31 +0000
-Date: Sat, 24 Feb 2024 06:50:30 +0800
-From: kernel test robot <lkp@intel.com>
-To: Yang Xiwen via B4 Relay <devnull+forbidden405.outlook.com@kernel.org>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Philipp Zabel <p.zabel@pengutronix.de>
-Cc: oe-kbuild-all@lists.linux.dev, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Yang Xiwen <forbidden405@outlook.com>
-Subject: Re: [PATCH 2/2] drivers: bus: simple-pm-bus: Get and deassert resets
- exclusively
-Message-ID: <202402240650.1O7vtd48-lkp@intel.com>
-References: <20240223-b4-bus-v1-2-2803c3ac4673@outlook.com>
+	dkim=pass (2048-bit key) header.d=equinix.com header.i=@equinix.com header.b="c6XeHFmP"
+Received: from pps.filterd (m0165119.ppops.net [127.0.0.1])
+	by mx0a-00268f01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 41NKCYWv020570;
+	Fri, 23 Feb 2024 22:02:02 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=equinix.com; h=from : to : cc :
+ subject : date : message-id : references : in-reply-to : content-type :
+ content-id : content-transfer-encoding : mime-version; s=pps202002;
+ bh=IPajrUaWvY1CfpZRJehjRW4p/FSnbAfrASe83trFF+4=;
+ b=c6XeHFmPIfAaYY/nghdOAzQI47juvYy47VE8SPV240TrAV5vGPP6ABd2Hqc6tAZWAsw6
+ eo5KaigktW90/ihG3TLMjAFodxHeh8CJvRRNOyxuQD0bMOkO6Xf0uA+KkV+DEpAQHyo9
+ lw5qbUN06eAdsYezpzB3+uyWFfPViGZLAzUW0uw3JKuPnKgQ6hG4+SLcrhhIF8jkQ9Qx
+ DoJsFXhl/0h6Rd1vdTsslphXOeJH62fwj8U10KSIdcnYo4ep0S/9rQtRw316neLFSPV2
+ CXCmiUbf9Dj0RcPEqnGB0cOO3UXkjsat6XFww6i4+nsqt0nPeBcImRDQpalKuYfmYLWp CQ== 
+Received: from nam10-mw2-obe.outbound.protection.outlook.com (mail-mw2nam10lp2100.outbound.protection.outlook.com [104.47.55.100])
+	by mx0a-00268f01.pphosted.com (PPS) with ESMTPS id 3wf26u8apr-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 23 Feb 2024 22:02:01 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=P95IRGLqrrtPoblsvBF+TsXtdHkuzpMqflP1jp4B25sWYC/aHZvV3het+w15rUFG/JhHiGPvyoaZl2lytVAkKS/aNdcAnczSDZqUg4mVXpopmmRE5yz3ssjYvgjlPhqDb5c/CnievHsrQrUiMpMEgre463rsmRhUj815QIO/8ztinUFaPzLjYUsMPh2zc6MPvwfBwTfzoPHDjJJ/yEwRLfC1p0c4Uwt5o2hiUMsqJbYfwDxNfV2EAS/bz7NbZndEldWcwEGAEzCYln8pOmnXh6o7/TUupbx34zS6r6IahQITZhhIP25wmjdkHRdbZ3ZLncai5yYOmDbiedKvyL/Rtg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=IPajrUaWvY1CfpZRJehjRW4p/FSnbAfrASe83trFF+4=;
+ b=Ve+eMgKAHM6sm2oBPjdcMqC91lda63kOtHsKmQB6xMjsgMpQqvXjhmsKj/6PWnRrylq62icEAc/YjErpunHv3lVCgZQJv68fAQlwSvPhLGSgXN+EC2Ve7UjDEDh2+fa2Q3gDlAkVpZq5k2cHVr+S2ZUvxRwewa+OABdAnHEdGk51jcPzlRnLWYVg1IEwvhQ3U1QlPQiOePF3e2RHdVGaPAL1tLUsA3DUGSP+6Nh9fQZqvo2jbHdJBoul8qwmTcFRFpZru/6HU48J2dFAU5ZA0vczADu3M2FliIUPsbrdkPwh6+5Wn44Cos5ONX/KoyxeN8S/j5tyxxu/Y5FuxJ7tYg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=equinix.com; dmarc=pass action=none header.from=equinix.com;
+ dkim=pass header.d=equinix.com; arc=none
+Received: from CO6PR04MB7843.namprd04.prod.outlook.com (2603:10b6:5:35f::22)
+ by SJ0PR04MB7470.namprd04.prod.outlook.com (2603:10b6:a03:2a1::5) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7316.24; Fri, 23 Feb
+ 2024 22:01:15 +0000
+Received: from CO6PR04MB7843.namprd04.prod.outlook.com
+ ([fe80::f16c:1fa7:9c55:c1c]) by CO6PR04MB7843.namprd04.prod.outlook.com
+ ([fe80::f16c:1fa7:9c55:c1c%2]) with mapi id 15.20.7316.018; Fri, 23 Feb 2024
+ 22:01:15 +0000
+From: Zev Weiss <zweiss@equinix.com>
+To: Conor Dooley <conor@kernel.org>
+CC: Kelly Hung <ppighouse@gmail.com>,
+        "devicetree@vger.kernel.org"
+	<devicetree@vger.kernel.org>,
+        "conor+dt@kernel.org" <conor+dt@kernel.org>,
+        "linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>,
+        "openbmc@lists.ozlabs.org" <openbmc@lists.ozlabs.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kelly_hung@asus.com" <kelly_hung@asus.com>,
+        "robh+dt@kernel.org"
+	<robh+dt@kernel.org>,
+        "joel@jms.id.au" <joel@jms.id.au>,
+        "krzysztof.kozlowski+dt@linaro.org" <krzysztof.kozlowski+dt@linaro.org>,
+        "Allenyy_Hsu@asus.com" <Allenyy_Hsu@asus.com>,
+        "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH 1/2] dt-bindings: arm: aspeed: add ASUS X4TF board
+Thread-Topic: [PATCH 1/2] dt-bindings: arm: aspeed: add ASUS X4TF board
+Thread-Index: AQHaZqPSJY1nzbZtU0+m3VCAr00hKA==
+Date: Fri, 23 Feb 2024 22:01:15 +0000
+Message-ID: <20240223220115.GB9299@packtop>
+References: <20240222085914.1218037-1-Kelly_Hung@asus.com>
+ <20240222-getting-nebulizer-8f75ba8063b1@spud>
+In-Reply-To: <20240222-getting-nebulizer-8f75ba8063b1@spud>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: CO6PR04MB7843:EE_|SJ0PR04MB7470:EE_
+x-ms-office365-filtering-correlation-id: fd8c497e-0fd0-40f6-b5f3-08dc34baf4f4
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 
+ V0udlcPH36HKPH5vyhyka73zKGaw2qy2XksJlBTZgHMeg6UaiZMMY4s4b+ssPz2hVVdfx4WRRqiOk8rj1cRz9p1cfiyYonR9c5G9HVw+fbrPM0Mu1wxR6a/C6zwZUbOlEqnnWpMUc1X40oxaetcf6ahgacEZfgRiK08COKzabVf7FVUEHBQtce1cj+uLNt65PfKnpu/p8+seNw5r74T65oEQTTawmcXFJOXW+X/wdE8LRNPp3YFS251CDZSm5QMaY9SLl8gE8sa7eL18c/ddG//frDohUq9AFUIl31/BQIreOlWbGmtMzLhS05+oTsxX7CYlibK6F4tkOJGa3S+4eCukQs7T7pFwUcnK6ygWso/qMIknHhR+OisUxwiWdnAN9Ns3drsbx7OGxFHbq4VE2dohaVC2+AuxV2K1A4IuC4bspO1WrGj4qRCbfxZNLsiaeSOqerJxCkWhGilM8BtjOorEeimr2Z/2IejCbrLF/cyVYaEEqVsoPet/oYFpDOd4NWFeDTpSNriJ1uN/5h9j9kafqZLoR3jvghU4p1//wjLmYu8Ay1GTXoH8o0sbKil3KrfSUoc0T3B/fVx2B+lcKKBnj036U8W15sBha6zFjBWCEMUTvRD+JRCvkTCKy9Uj
+x-forefront-antispam-report: 
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CO6PR04MB7843.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(38070700009);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: 
+ =?us-ascii?Q?ChhJs9C9pOB1kHEs83iwJ6VOaMnNoEe/thyO0IFaxpp0rX3fbFEF9/RkhXTM?=
+ =?us-ascii?Q?0/yc8inPbXUMyRrci7slJr8dfl2/3+L0MN1MuiHnS5j+/ecCg5g7Yr5nVtkO?=
+ =?us-ascii?Q?sOYq+MISWFIrxvHNg5tQzfyErv668HNUJxZCNiqNhOF8VxcxJzpS3y+t2Pj6?=
+ =?us-ascii?Q?bETErhsS8Ds2Vv2JTE9p72rbzQ8oJ2/GPMkuPd9tbF/hbbgDK7v7avUQtc5t?=
+ =?us-ascii?Q?g0WG3PhJooXKQSOv4eVSA+SHJAzCdFmCw1UvVLZ1MNHntkhYnmm0XABU8T7U?=
+ =?us-ascii?Q?IyYYBj38ZzEVqbiv2svBaDC0/e5QJS52+ZxeHz8+4ngaWYXMj8xCzAkgRpsa?=
+ =?us-ascii?Q?nHJE5opq9ZL2sx4g2vzRNNW/Qv8fqwNP/Cll53YCRkFrAeEcp5lidH1DA6NT?=
+ =?us-ascii?Q?EklBchkyDiE9cclTEYYUMuuGlK14/43cyR1PcnkCeGcB1guoYkq9Uv5gbW/i?=
+ =?us-ascii?Q?67fKuRDtH44tIvp/d8F+nBHRgHkyG1jPIHF9m51+V1ix4ojq0kJx3xFM+tcN?=
+ =?us-ascii?Q?T7JrV4XjgfNEviBK/flfBWRKqM7ZNk0fBlWz+JOZt5CDeLuFSskcrTAK/Rmu?=
+ =?us-ascii?Q?5NVohh3z8ZC/F+HIQYNtRyEAefdpIsvC7bboEPWvAN6LsLCJMZn7Rq5kNRNZ?=
+ =?us-ascii?Q?nVGlrmcAM/DLoDd8iWRCxVKwO46+ui8Hnj+Tj2V0Eq8Gg+MZuPQRzPU02ZUH?=
+ =?us-ascii?Q?tlhJedl1epgdY7JQe1EjYLJl0YhnoyUS7pB8SO4INepbyMgfuVM+dXYxNqHJ?=
+ =?us-ascii?Q?yRFZVwK9ipObsaaUQBfNoYku+gIrjJQPwe7zpdgt0CH5/+Vk8TmgHA//Vknu?=
+ =?us-ascii?Q?dlZgmUeNUl2bVQ7OmL0x+RJ5oxNScUeeLk91s2VW96UGSbNSc0iuTjf1X/Ug?=
+ =?us-ascii?Q?FLiQ8y+/HzdJf8ygtFFWuBJ6yQlAZW3s7qoftZfeJN0BR7Rk6UEJ9q51jyQT?=
+ =?us-ascii?Q?EDnO9oQbmFHRwAE3zSVQ3whdcbLG7+YjBIXqqulvHPLMQ+tEVbfJhYfeWEno?=
+ =?us-ascii?Q?B+YTAi5/jaJEtb1JbnPxJR7McQCVzuA4Ibuz7u0idKgU640bfxHbGHHn08f6?=
+ =?us-ascii?Q?F2kuHwtFupEcjMxEvy9Jwi8nG5N48Fdon7bAQ4FA0oi7V6Abnc2O4eWayLrr?=
+ =?us-ascii?Q?E9XzTzGBJTcfisLXbHSvBZjeMqxgIvNFmm6P/ALSXjz/FFQ5ivkRsuEdXPJu?=
+ =?us-ascii?Q?FP5NjSu8cGAliOOwaw3tLtLP0w+enuHGyy4d15csQwNvxqcRgE0j4/aMWHLn?=
+ =?us-ascii?Q?ItzUFV6RJYNPIknidh1qdlae69q6FVxeOuW/nlmvKOa36J+28HVurdd6h95M?=
+ =?us-ascii?Q?yyK+Zm2PJLWwI2hqd8aoFmQsPnBpICvod79VP+9a5C4DlimDFEKvPoIZpHEK?=
+ =?us-ascii?Q?s77Mpgg/pbWw/p2bCe3oxMbtk5NaHL5V7UcSfBh+SBQqUU7Rohr03D4RLhet?=
+ =?us-ascii?Q?5kEC/17Mgme7uQnMSDyU7gSr/jRYE/83gXX2ZlYdwvOILbmybeXBEjSq/ZkZ?=
+ =?us-ascii?Q?MMkvVNvVFPC9UcYEQTAE31X4BKZLr8e+BlKpTLwId3ZZ+xENUSdD1zwhXk4m?=
+ =?us-ascii?Q?vmQ5OccoH+q3pCFmFbIVSp4mbIz7U6Qc5U9Ty4HH?=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <A03DAFD4614B4546908C779519E505B3@namprd04.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240223-b4-bus-v1-2-2803c3ac4673@outlook.com>
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 
+	8IxqJCjPr8T1EAclsUBn7q2aJkMxSsqRmadn6NkcDUuAKpjQYqyduGlL9JQmrbwF0/VDgTBmjuOdkDjFCqLuwInds7WR7q9onqO2cNb6vqnmEq/o1nlz7t2qXhXH0L+QI9hd5X6giCANRkujRIIQOXigHwSO4JDM1ac6zgyBCbrvsZI+Z+7cHFnRcLOC6Ukgd/+cNiWLMMayo+dnVLzNcMoF86yj15vv5v4ovFjiVwYXjr8hyzsQNRaQ8TeTQVbcpCUMcaZ/lAkP2af1omjOVtY+bYII/34ugkIFLnKoYHo4x9mkvxIYAP9lHNe5bCebxDqqng60YU40MzrcmNO/Y9S/jL7QVbugy81Z0yWLi78lrWVq5Xc1xatBTAGHpL/5pOsyyo90mKVdYFr2FH28UGPyuxA2CJWh5fbipqSv3wAHkcc80h3jj1TDhg0MSzGDkpVcgKC1I73uyGgk/pnDXJ9KYHTzFfpnDV6z150a2QF+AQ4yQE8W+utWuSsvMK+Z77pOZq3hYW4I93DNup0PCrLQPdHwM11XehnrveWmGaDacPxy0eCSO574+7tYpQQJ1WNRfaaOb++7OjnvQPJFPfIotpScX/P3pJAMZwwd5LyV8W8qMM6/0QvOCoENkCH8LGkp314CZnwIUceOxS0q2W8IEKv0XO/w3g66Pdt08Q4=
+X-OriginatorOrg: equinix.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: CO6PR04MB7843.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: fd8c497e-0fd0-40f6-b5f3-08dc34baf4f4
+X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Feb 2024 22:01:15.7578
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72adb271-2fc7-4afe-a5ee-9de6a59f6bfb
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: CT6ZYh8IvT0oTN90NRHjiUd5pLZZorPl9/hX6wxHeXxcC1jKEPPk+ptiZGmAQl+tojgmg12mB+k3BkX2y87Nfg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR04MB7470
+X-Proofpoint-ORIG-GUID: FGsH4ZxKLZTAhoAZF6q2gs81s5VR_ZC2
+X-Proofpoint-GUID: FGsH4ZxKLZTAhoAZF6q2gs81s5VR_ZC2
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-02-23_06,2024-02-23_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1011
+ lowpriorityscore=0 phishscore=0 impostorscore=0 spamscore=0 suspectscore=0
+ adultscore=0 mlxlogscore=999 priorityscore=1501 malwarescore=0 mlxscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2311290000 definitions=main-2402230158
 
-Hi Yang,
+On Thu, Feb 22, 2024 at 08:02:07AM PST, Conor Dooley wrote:
+>On Thu, Feb 22, 2024 at 04:59:13PM +0800, Kelly Hung wrote:
+>> Document the new compatibles used on ASUS X4TF.
+>
+>It would be good to mention here what the x4tf is - is it a bmc or
+>an sbc etc.
+>
 
-kernel test robot noticed the following build warnings:
+...and if, as a quick web search indicates is likely the case, it's a
+BMC for a server (or family of servers), following the existing naming
+convention with something more like "asus,x4tf-bmc" might be nice.
 
-[auto build test WARNING on 8d3dea210042f54b952b481838c1e7dfc4ec751d]
+Also, Kelly -- when sending revised versions of patches please use the
+'-v' flag to git format-patch to include a version number in the subject
+line so it's clearer what's going on.  (So when posting the next version
+incorporating the feedback on this one use '-v3', since this appears to
+be a v2.)
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Yang-Xiwen-via-B4-Relay/dt-bindings-simple-pm-bus-Add-optional-resets/20240223-115400
-base:   8d3dea210042f54b952b481838c1e7dfc4ec751d
-patch link:    https://lore.kernel.org/r/20240223-b4-bus-v1-2-2803c3ac4673%40outlook.com
-patch subject: [PATCH 2/2] drivers: bus: simple-pm-bus: Get and deassert resets exclusively
-config: openrisc-allnoconfig (https://download.01.org/0day-ci/archive/20240224/202402240650.1O7vtd48-lkp@intel.com/config)
-compiler: or1k-linux-gcc (GCC) 13.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240224/202402240650.1O7vtd48-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202402240650.1O7vtd48-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
-   drivers/bus/simple-pm-bus.c: In function 'simple_pm_bus_probe':
->> drivers/bus/simple-pm-bus.c:67:50: warning: passing argument 1 of 'devm_reset_control_array_get' discards 'const' qualifier from pointer target type [-Wdiscarded-qualifiers]
-      67 |         bus->rsts = devm_reset_control_array_get(dev, false, true);
-         |                                                  ^~~
-   In file included from drivers/bus/simple-pm-bus.c:19:
-   include/linux/reset.h:192:45: note: expected 'struct device *' but argument is of type 'const struct device *'
-     192 | devm_reset_control_array_get(struct device *dev, bool shared, bool optional)
-         |                              ~~~~~~~~~~~~~~~^~~
-
-
-vim +67 drivers/bus/simple-pm-bus.c
-
-    26	
-    27	static int simple_pm_bus_probe(struct platform_device *pdev)
-    28	{
-    29		const struct device *dev = &pdev->dev;
-    30		const struct of_dev_auxdata *lookup = dev_get_platdata(dev);
-    31		struct device_node *np = dev->of_node;
-    32		const struct of_device_id *match;
-    33		struct simple_pm_bus *bus;
-    34	
-    35		/*
-    36		 * Allow user to use driver_override to bind this driver to a
-    37		 * transparent bus device which has a different compatible string
-    38		 * that's not listed in simple_pm_bus_of_match. We don't want to do any
-    39		 * of the simple-pm-bus tasks for these devices, so return early.
-    40		 */
-    41		if (pdev->driver_override)
-    42			return 0;
-    43	
-    44		match = of_match_device(dev->driver->of_match_table, dev);
-    45		/*
-    46		 * These are transparent bus devices (not simple-pm-bus matches) that
-    47		 * have their child nodes populated automatically.  So, don't need to
-    48		 * do anything more. We only match with the device if this driver is
-    49		 * the most specific match because we don't want to incorrectly bind to
-    50		 * a device that has a more specific driver.
-    51		 */
-    52		if (match && match->data) {
-    53			if (of_property_match_string(np, "compatible", match->compatible) == 0)
-    54				return 0;
-    55			else
-    56				return -ENODEV;
-    57		}
-    58	
-    59		bus = devm_kzalloc(&pdev->dev, sizeof(*bus), GFP_KERNEL);
-    60		if (!bus)
-    61			return -ENOMEM;
-    62	
-    63		bus->num_clks = devm_clk_bulk_get_all(&pdev->dev, &bus->clks);
-    64		if (bus->num_clks < 0)
-    65			return dev_err_probe(&pdev->dev, bus->num_clks, "failed to get clocks\n");
-    66	
-  > 67		bus->rsts = devm_reset_control_array_get(dev, false, true);
-    68		if (IS_ERR(bus->rsts))
-    69			return dev_err_probe(&pdev->dev, PTR_ERR(bus->rsts), "failed to get resets\n");
-    70	
-    71		dev_set_drvdata(&pdev->dev, bus);
-    72	
-    73		dev_dbg(&pdev->dev, "%s\n", __func__);
-    74	
-    75		pm_runtime_enable(&pdev->dev);
-    76	
-    77		if (np)
-    78			of_platform_populate(np, NULL, lookup, &pdev->dev);
-    79	
-    80		return 0;
-    81	}
-    82	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Zev
