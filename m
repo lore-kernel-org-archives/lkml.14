@@ -1,26 +1,26 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C314823D0
-	for <linux-kernel@vger.kernel.org>; Fri, 23 Feb 2024 14:17:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F23B581AD2
+	for <linux-kernel@vger.kernel.org>; Fri, 23 Feb 2024 14:17:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708697830; cv=none; b=l7TbqePHpYTDb3sn6WbBQJzUjLUjErnsP7MOnjyax78CI+JB76k9ZaWcb36vs/S2udbpm0qS06+0uKXeIIV420nSEwy5xNkc9IxQgGt9TY6dYgmMFTkCtkSct/vSS7Jug9A452LC9uotdjvO9u7uXgRSpARxLzRypjsrTHkEZ1o=
+	t=1708697830; cv=none; b=gwV8djxby603qdyZzbgh09cEYnVLv2sMJNGNYq6axk/95CfTdsnQn1bVKGIlTEpW+/lLQeQWcuRNjMFJ9uTubVx55+Ucd3M2QcIvu38BeHQbpkyGk+7/SfSc2/lgchlHpgEq95lGwxCLqfVTM1SkvJ8ddKOM9CYJcjNA+nBMiWc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1708697830; c=relaxed/simple;
-	bh=CRDwQm02YMBZgJ/K9iwkHdDrBNbu7OUJpyW+gq/qcQg=;
+	bh=FCyX2FSgboFtCipl3b/75W1aXP+CFhFjDvr72f87SeE=;
 	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=mh+2TsIFWGaL11mMwnysddxQjIZUHEPTNTtm0NowmBRQDhODt6kLZ6tZZDJLtQ8OdA+HFhVNnIZDMYJ8Dr4dweF6mgWRXiZOJQxwy/tMvLHa5KQUY2obSmbAE0vFVyVRQlsFXXlP86mpXnFCkEEoAk95OAfBPZqGQVG6TJ+Y9j8=
+	 Content-Type; b=PuLnae3AWI8zEO1/t9N/IU2INnWz9V74Sm5CaAtfAg3xQHJakYNhf6TODN7eOmFlIE1KFBuo6BLCDa73JzWvP78/zMStBfnFew71cMMW36VoG4FJ21aQzcyWtR/SDoREeM1bsSAWqDFfrqduuCaFhmLLpEBe7DSRBsH2OnbSazc=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 387C6C4166B;
-	Fri, 23 Feb 2024 14:17:10 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D6E99C43330;
+	Fri, 23 Feb 2024 14:17:09 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.97)
 	(envelope-from <rostedt@goodmis.org>)
-	id 1rdWOF-000000077Pf-0hlO;
-	Fri, 23 Feb 2024 09:19:03 -0500
-Message-ID: <20240223141903.033285779@goodmis.org>
+	id 1rdWOE-000000077Oe-3Yxh;
+	Fri, 23 Feb 2024 09:19:02 -0500
+Message-ID: <20240223141902.711938025@goodmis.org>
 User-Agent: quilt/0.67
-Date: Fri, 23 Feb 2024 09:18:48 -0500
+Date: Fri, 23 Feb 2024 09:18:46 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org
 Cc: Masami Hiramatsu <mhiramat@kernel.org>,
@@ -30,7 +30,8 @@ Cc: Masami Hiramatsu <mhiramat@kernel.org>,
  =?utf-8?b?VmlsbGUgU3lyasOkbMOk?= <ville.syrjala@linux.intel.com>,
  Rodrigo Vivi <rodrigo.vivi@intel.com>,
  Chuck Lever <chuck.lever@oracle.com>
-Subject: [for-next][PATCH 10/13] tracing: Use ? : shortcut in trace macros
+Subject: [for-next][PATCH 08/13] tracing: Rework __assign_str() and __string() to not duplicate
+ getting the string
 References: <20240223141838.985298316@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -42,95 +43,141 @@ Content-Type: text/plain; charset=UTF-8
 
 From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 
-Instead of having:
+The TRACE_EVENT() macro handles dynamic strings by having:
 
-  #define __assign_str(dst, src)					\
-	memcpy(__get_str(dst), __data_offsets.dst##_ptr_ ?		\
-		__data_offsets.dst##_ptr_ : "(null)",			\
-		__get_dynamic_array_len(dst))
+  TP_PROTO(struct some_struct *s),
+  TP_ARGS(s),
+  TP_STRUCT__entry(
+	__string(my_string, s->string)
+ ),
+ TP_fast_assign(
+	__assign_str(my_string, s->string);
+ )
+ TP_printk("%s", __get_str(my_string))
 
-Use the ? : shortcut and compact it down to:
+There's even some code that may call a function helper to find the
+s->string value. The problem with the above is that the work to get the
+s->string is done twice. Once at the __string() and again in the
+__assign_str().
 
-  #define __assign_str(dst, src)					\
-	memcpy(__get_str(dst), __data_offsets.dst##_ptr_ ? : "(null)",	\
-	       __get_dynamic_array_len(dst))
+But the __string() uses dynamic_array() which has a helper structure that
+is created holding the offsets and length of the string fields. Instead of
+finding the string twice, just save it off in another field from that
+helper structure, and have __assign_str() use that instead.
 
-Link: https://lore.kernel.org/linux-trace-kernel/20240222211442.949327725@goodmis.org
+Note, this also means that the second parameter of __assign_str() isn't
+even used anymore, and may be removed in the future.
+
+Link: https://lore.kernel.org/linux-trace-kernel/20240222211442.634192653@goodmis.org
 
 Cc: Masami Hiramatsu <mhiramat@kernel.org>
 Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
 Cc: Andrew Morton <akpm@linux-foundation.org>
 Cc: =?utf-8?b?VmlsbGUgU3lyasOkbMOk?= <ville.syrjala@linux.intel.com>
 Cc: Rodrigo Vivi <rodrigo.vivi@intel.com>
 Cc: Chuck Lever <chuck.lever@oracle.com>
-Suggested-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- include/trace/stages/stage5_get_offsets.h    |  4 ++--
- include/trace/stages/stage6_event_callback.h | 14 ++++++--------
- 2 files changed, 8 insertions(+), 10 deletions(-)
+ include/trace/stages/stage2_data_offsets.h   |  4 ++--
+ include/trace/stages/stage5_get_offsets.h    | 15 ++++++++++-----
+ include/trace/stages/stage6_event_callback.h | 12 ++++++++----
+ 3 files changed, 20 insertions(+), 11 deletions(-)
 
+diff --git a/include/trace/stages/stage2_data_offsets.h b/include/trace/stages/stage2_data_offsets.h
+index 469b6a64293d..8b0cff06d346 100644
+--- a/include/trace/stages/stage2_data_offsets.h
++++ b/include/trace/stages/stage2_data_offsets.h
+@@ -24,7 +24,7 @@
+ #define __array(type, item, len)
+ 
+ #undef __dynamic_array
+-#define __dynamic_array(type, item, len)	u32 item;
++#define __dynamic_array(type, item, len)	u32 item; const void *item##_ptr_;
+ 
+ #undef __string
+ #define __string(item, src) __dynamic_array(char, item, -1)
+@@ -45,7 +45,7 @@
+ #define __sockaddr(field, len) __dynamic_array(u8, field, len)
+ 
+ #undef __rel_dynamic_array
+-#define __rel_dynamic_array(type, item, len)	u32 item;
++#define __rel_dynamic_array(type, item, len)	u32 item; const void *item##_ptr_;
+ 
+ #undef __rel_string
+ #define __rel_string(item, src) __rel_dynamic_array(char, item, -1)
 diff --git a/include/trace/stages/stage5_get_offsets.h b/include/trace/stages/stage5_get_offsets.h
-index 45f8151cf622..20b801ed3fd4 100644
+index e30a13be46ba..45f8151cf622 100644
 --- a/include/trace/stages/stage5_get_offsets.h
 +++ b/include/trace/stages/stage5_get_offsets.h
-@@ -47,7 +47,7 @@
+@@ -47,10 +47,12 @@
  
  #undef __string
  #define __string(item, src) __dynamic_array(char, item,			\
--		    strlen((src) ? (const char *)(src) : "(null)") + 1)	\
-+		    strlen((const char *)(src) ? : "(null)") + 1)	\
- 	__data_offsets->item##_ptr_ = src;
+-		    strlen((src) ? (const char *)(src) : "(null)") + 1)
++		    strlen((src) ? (const char *)(src) : "(null)") + 1)	\
++	__data_offsets->item##_ptr_ = src;
  
  #undef __string_len
-@@ -70,7 +70,7 @@
+-#define __string_len(item, src, len) __dynamic_array(char, item, (len) + 1)
++#define __string_len(item, src, len) __dynamic_array(char, item, (len) + 1)\
++	__data_offsets->item##_ptr_ = src;
+ 
+ #undef __vstring
+ #define __vstring(item, fmt, ap) __dynamic_array(char, item,		\
+@@ -67,11 +69,14 @@
+ 	__data_size += __item_length;
  
  #undef __rel_string
- #define __rel_string(item, src) __rel_dynamic_array(char, item,		\
--		    strlen((src) ? (const char *)(src) : "(null)") + 1)	\
-+		    strlen((const char *)(src) ? : "(null)") + 1)	\
- 	__data_offsets->item##_ptr_ = src;
+-#define __rel_string(item, src) __rel_dynamic_array(char, item,			\
+-		    strlen((src) ? (const char *)(src) : "(null)") + 1)
++#define __rel_string(item, src) __rel_dynamic_array(char, item,		\
++		    strlen((src) ? (const char *)(src) : "(null)") + 1)	\
++	__data_offsets->item##_ptr_ = src;
  
  #undef __rel_string_len
+-#define __rel_string_len(item, src, len) __rel_dynamic_array(char, item, (len) + 1)
++#define __rel_string_len(item, src, len) __rel_dynamic_array(char, item, (len) + 1)\
++	__data_offsets->item##_ptr_ = src;
++
+ /*
+  * __bitmask_size_in_bytes_raw is the number of bytes needed to hold
+  * num_possible_cpus().
 diff --git a/include/trace/stages/stage6_event_callback.h b/include/trace/stages/stage6_event_callback.h
-index c0e5d097324e..38732855eadb 100644
+index 919b1a4da980..b3e2f321e787 100644
 --- a/include/trace/stages/stage6_event_callback.h
 +++ b/include/trace/stages/stage6_event_callback.h
-@@ -32,15 +32,14 @@
+@@ -32,12 +32,14 @@
  
  #undef __assign_str
  #define __assign_str(dst, src)						\
--	memcpy(__get_str(dst), __data_offsets.dst##_ptr_ ?		\
--	       __data_offsets.dst##_ptr_ : "(null)",			\
-+	memcpy(__get_str(dst), __data_offsets.dst##_ptr_ ? : "(null)",	\
- 	       __get_dynamic_array_len(dst))
+-	strcpy(__get_str(dst), (src) ? (const char *)(src) : "(null)");
++	strcpy(__get_str(dst), __data_offsets.dst##_ptr_ ?		\
++	       __data_offsets.dst##_ptr_ : "(null)")
  
  #undef __assign_str_len
  #define __assign_str_len(dst, src, len)					\
  	do {								\
--		memcpy(__get_str(dst), __data_offsets.dst##_ptr_ ?	\
--		       __data_offsets.dst##_ptr_ : "(null)", len);	\
-+		memcpy(__get_str(dst),					\
-+		       __data_offsets.dst##_ptr_ ? : "(null)", len);	\
+-		memcpy(__get_str(dst), (src), (len));			\
++		memcpy(__get_str(dst), __data_offsets.dst##_ptr_ ?	\
++		       __data_offsets.dst##_ptr_ : "(null)", len);	\
  		__get_str(dst)[len] = '\0';				\
  	} while(0)
  
-@@ -95,15 +94,14 @@
+@@ -92,12 +94,14 @@
  
  #undef __assign_rel_str
  #define __assign_rel_str(dst, src)					\
--	memcpy(__get_rel_str(dst), __data_offsets.dst##_ptr_ ?		\
--	       __data_offsets.dst##_ptr_ : "(null)",			\
-+	memcpy(__get_rel_str(dst), __data_offsets.dst##_ptr_ ? : "(null)", \
- 	       __get_rel_dynamic_array_len(dst))
+-	strcpy(__get_rel_str(dst), (src) ? (const char *)(src) : "(null)");
++	strcpy(__get_rel_str(dst), __data_offsets.dst##_ptr_ ?		\
++	       __data_offsets.dst##_ptr_ : "(null)")
  
  #undef __assign_rel_str_len
  #define __assign_rel_str_len(dst, src, len)				\
  	do {								\
--		memcpy(__get_rel_str(dst), __data_offsets.dst##_ptr_ ?	\
--		       __data_offsets.dst##_ptr_ : "(null)", len);	\
-+		memcpy(__get_rel_str(dst),				\
-+		       __data_offsets.dst##_ptr_ ? : "(null)", len);	\
+-		memcpy(__get_rel_str(dst), (src), (len));		\
++		memcpy(__get_rel_str(dst), __data_offsets.dst##_ptr_ ?	\
++		       __data_offsets.dst##_ptr_ : "(null)", len);	\
  		__get_rel_str(dst)[len] = '\0';				\
  	} while (0)
  
