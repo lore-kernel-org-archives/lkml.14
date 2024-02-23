@@ -1,139 +1,144 @@
-Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from pegase1.c-s.fr (pegase1.c-s.fr [93.17.236.30])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C82F5FB82;
-	Fri, 23 Feb 2024 10:41:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54759651BA;
+	Fri, 23 Feb 2024 10:42:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.17.236.30
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708684904; cv=none; b=OpxC+MP6aKlSfrkIxNisIXXE0lH0anGf5Pxt0qgVFMyBzUnTfbCug85og/fgDAZgspT8z4gtLX57tS0K3WBnGNqfA+c8PM7uD+RfOYhOyNaczPIw8VufLTS0gGHDZSml+lRu3WKfR+rZwSRxH8fexDNBGQ3kpZLVfw5O+Rc4M1M=
+	t=1708684934; cv=none; b=Rvurd5wEhbO5Jc2bGvmpj4+RrGJxpXpDwcJS/vlUuqV7txfcdxwk5CTOIXXURMoF2Mk7u+R2UG4XRNMrJosEb/qQMmFL4KDBTtryQ5vODpIMO3altnlEPICHlNxXsX6pEKtH6qbS+GvC0uzerOAic/kP4krHd7GMfCwBE606uxg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708684904; c=relaxed/simple;
-	bh=pMA/M1Wst7tXkYIO5GIr1rjeX1F/9HHGrY1Lxy8EC3w=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=OYDaltaPLpq5zNpd3+JNM4LNnEH5/teblyXxTT/37c21tPX01PGJW5r6k0dbE8xSoX2e0hGxdHSNwqKFyI+Q9fdy6Gf3hW5ktUZa9Heq32SLLZX/4+h/4s1hy1VkcHo+aDvT80NauSrgI8Qpzb+tX2qQlrDXaSfgaQys0l0BwZw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nNXUAdlz; arc=none smtp.client-ip=209.85.218.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nNXUAdlz"
-Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-a3d5e77cfbeso128235366b.0;
-        Fri, 23 Feb 2024 02:41:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1708684901; x=1709289701; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=pMA/M1Wst7tXkYIO5GIr1rjeX1F/9HHGrY1Lxy8EC3w=;
-        b=nNXUAdlzppPpKfGM+9uUXwTErhlOIWOEuIIycM5iubmq6LkmexL98e41OsNy+L8qDe
-         yrV0hi618880HngsiGM+Zg8HCnkGimOHdp/QZen5W71FFV3LvKYc7YBMbjhar/+eyZGY
-         Ad3AECKIxoa9Hqrhh2knV8qRLDy9Q8OfkkhsxSdLkJDJhZsQ+vLljKhMzoNn6UKjYBsA
-         NSKHgNsSnqu1dMls+GHOKI4lW3eHVA9Xi6MvAPcK9/rCbWnxWQ3+rEx51rj2sOvXXp7Y
-         WGNBxtDVmhFmGOZKNgkDT1iuE5Mcleu6DqRhoZ7FYpgFdwGX5CKOx0gaSrYDkT1po3DB
-         bkpQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708684901; x=1709289701;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=pMA/M1Wst7tXkYIO5GIr1rjeX1F/9HHGrY1Lxy8EC3w=;
-        b=Vda7QvdLes8BW4WLCprRLOHrrirXF7Y64xBXOWHNbGJOzbIuXqCToVOpbT2K5t6ua8
-         xhhANJ4Qnwq8okg3rZMNSaJTmScoToN0SRfbu0hEjaoWinDZVzzAGTs/UAvb+vkmXTEO
-         3MWIMHNca4cu2Y8d7z9XMC6xhFLuNUkPDUQ2uK7MruQ/zCqBF8aCHNhBjgaZiRA8Wi0N
-         Wb5ckVjjTYNq4Ml7vUbtog6inCBl3OQF0iF6gloGgvSzPha6K6XHJyd+hJDX29iF9dAI
-         tzD5OmOqV5FISQpOtdMpaabmNO/oWo8RzSye4WvE08WsJzCXPX/OOfnJMM7JvmsyM2RT
-         GLaw==
-X-Forwarded-Encrypted: i=1; AJvYcCWTZyMP29Kzo4jXJqKUZDzq9EXd4yaWyb5yhhuiaJnTjp9boHC0beCS5iPZuLgqd74wM549jziqk/lWzHTJkGZJUgGCBfofNJKRqlEZOdXZmLOLo134gEN9k8bRh2zIC8AvBVHpbcJD/w==
-X-Gm-Message-State: AOJu0Yx8fwGP6tvSPi+tVDfcPfSZVFX5Qh3HeJQ4rwGLZXckCId8RRLR
-	ZQgJbYHglmSBOe3McYvEILV0bxXJVswz9Nz5/eo5UXLQwW3nC9Zb
-X-Google-Smtp-Source: AGHT+IGUCCSCQV9rw4wx/ZhCMSmgrPlnVN15HXlKN/MbnKUIkrgqLVKR3L5lMpuFeA3d/5nKzSSAzg==
-X-Received: by 2002:a17:906:5c9:b0:a3f:4800:1fa8 with SMTP id t9-20020a17090605c900b00a3f48001fa8mr4270726ejt.26.1708684901141;
-        Fri, 23 Feb 2024 02:41:41 -0800 (PST)
-Received: from ?IPv6:2003:f6:ef1b:2000:944c:cbc7:1e1c:2c47? (p200300f6ef1b2000944ccbc71e1c2c47.dip0.t-ipconnect.de. [2003:f6:ef1b:2000:944c:cbc7:1e1c:2c47])
-        by smtp.gmail.com with ESMTPSA id ty24-20020a170907c71800b00a3ee41cbe87sm3762669ejc.153.2024.02.23.02.41.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 23 Feb 2024 02:41:40 -0800 (PST)
-Message-ID: <cdf0a9facd95a2b7ee618e6130dedb9aabf4ed09.camel@gmail.com>
-Subject: Re: [PATCH 1/2] driver core: Introduce device_link_wait_removal()
-From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
-To: Herve Codina <herve.codina@bootlin.com>, Saravana Kannan
-	 <saravanak@google.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki"
- <rafael@kernel.org>, Rob Herring <robh+dt@kernel.org>, Frank Rowand
- <frowand.list@gmail.com>, Lizhi Hou <lizhi.hou@amd.com>, Max Zhen
- <max.zhen@amd.com>, Sonal Santan <sonal.santan@amd.com>, Stefano Stabellini
- <stefano.stabellini@xilinx.com>, Jonathan Cameron
- <Jonathan.Cameron@huawei.com>,  linux-kernel@vger.kernel.org,
- devicetree@vger.kernel.org, Allan Nielsen <allan.nielsen@microchip.com>,
- Horatiu Vultur <horatiu.vultur@microchip.com>,  Steen Hegelund
- <steen.hegelund@microchip.com>, Thomas Petazzoni
- <thomas.petazzoni@bootlin.com>, Android Kernel Team
- <kernel-team@android.com>
-Date: Fri, 23 Feb 2024 11:45:02 +0100
-In-Reply-To: <20240223101115.6bf7d570@bootlin.com>
-References: <20231130174126.688486-1-herve.codina@bootlin.com>
-	 <20231130174126.688486-2-herve.codina@bootlin.com>
-	 <CAGETcx9uP86EHyKJNifBMd23oCsA+KpMa+e36wJEEnHDve+Avg@mail.gmail.com>
-	 <20240223101115.6bf7d570@bootlin.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.50.4 
+	s=arc-20240116; t=1708684934; c=relaxed/simple;
+	bh=fB8+WnHBg1QU6ROizNqpYL5D/JABQshnFumNFCmdoLs=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=hV2ZUsiC4keVX1B/KerGIR/WlGBz7AzzE9rrNlB+8DcF+oM1IY5CQKFHEVjZ47W1a37qaeUMY2Cd7eJ7YPz4PJaX2r9wMwsAeBwg5Vb6BaHjiChY0OTrcDX69TyhqHWkBD4yi0KSGmGSVnWAJC4bj30GTlWoHjpAT5TtVdUUS5c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; arc=none smtp.client-ip=93.17.236.30
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
+Received: from localhost (mailhub3.si.c-s.fr [192.168.12.233])
+	by localhost (Postfix) with ESMTP id 4Th65S67W4z9v7S;
+	Fri, 23 Feb 2024 11:42:04 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+	by localhost (pegase1.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id Pg9xp3HD-DPv; Fri, 23 Feb 2024 11:42:04 +0100 (CET)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+	by pegase1.c-s.fr (Postfix) with ESMTP id 4Th65S5Tqlz9v7D;
+	Fri, 23 Feb 2024 11:42:04 +0100 (CET)
+Received: from localhost (localhost [127.0.0.1])
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id B80078B76D;
+	Fri, 23 Feb 2024 11:42:04 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+	with ESMTP id 550-njgW4UnI; Fri, 23 Feb 2024 11:42:04 +0100 (CET)
+Received: from PO20335.idsi0.si.c-s.fr (unknown [192.168.233.164])
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id 3B6738B764;
+	Fri, 23 Feb 2024 11:42:04 +0100 (CET)
+From: Christophe Leroy <christophe.leroy@csgroup.eu>
+To: "David S. Miller" <davem@davemloft.net>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>
+Cc: Christophe Leroy <christophe.leroy@csgroup.eu>,
+	linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org,
+	Charlie Jenkins <charlie@rivosinc.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Erhard Furtner <erhard_f@mailbox.org>
+Subject: [PATCH net] kunit: Fix again checksum tests on big endian CPUs
+Date: Fri, 23 Feb 2024 11:41:52 +0100
+Message-ID: <73df3a9e95c2179119398ad1b4c84cdacbd8dfb6.1708684443.git.christophe.leroy@csgroup.eu>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1708684913; l=3489; i=christophe.leroy@csgroup.eu; s=20211009; h=from:subject:message-id; bh=fB8+WnHBg1QU6ROizNqpYL5D/JABQshnFumNFCmdoLs=; b=ewHGEcAM+BfGESz93+V5yJAp5oGhVF467F6K+RwKVnjk7Xp9QSmGFg3z3chzIUStrejUTBxWW EExYoIQDauoB8p1An/w4l0svR+I18EkV9P9dSrR7995G9aqluKy7sso
+X-Developer-Key: i=christophe.leroy@csgroup.eu; a=ed25519; pk=HIzTzUj91asvincQGOFx6+ZF5AoUuP9GdOtQChs7Mm0=
+Content-Transfer-Encoding: 8bit
 
-On Fri, 2024-02-23 at 10:11 +0100, Herve Codina wrote:
-> Hi Saravana,
->=20
-> On Tue, 20 Feb 2024 16:31:13 -0800
-> Saravana Kannan <saravanak@google.com> wrote:
->=20
-> ...
->=20
-> > > +void device_link_wait_removal(void)
-> > > +{
-> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /*
-> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * devlink removal jobs ar=
-e queued in the dedicated work queue.
-> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * To be sure that all rem=
-oval jobs are terminated, ensure that
-> > > any
-> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * scheduled work has run =
-to completion.
-> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 */
-> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 drain_workqueue(fw_devlink_wq);=
-=C2=A0=20
-> >=20
-> > Is there a reason this needs to be drain_workqueu() instead of
-> > flush_workqueue(). Drain is a stronger guarantee than we need in this
-> > case. All we are trying to make sure is that all the device link
-> > remove work queued so far have completed.
->=20
-> I used drain_workqueue() because drain_workqueue() allows for jobs alread=
-y
-> present in a workqueue to re-queue a job and drain_workqueue() will wait
-> also for this new job completion.
->=20
-> I think flush_workqueue() doesn't wait for this chain queueing.
->=20
-> In our case, my understanding was that device_link_release_fn() calls
-> put_device() for the consumer and the supplier.
-> If refcounts reaches zero, devlink_dev_release() can be called again
-> and re-queue a job.
->=20
+Commit b38460bc463c ("kunit: Fix checksum tests on big endian CPUs")
+fixed endianness issues with kunit checksum tests, but then
+commit 6f4c45cbcb00 ("kunit: Add tests for csum_ipv6_magic and
+ip_fast_csum") introduced new issues on big endian CPUs. Those issues
+are once again reflected by the warnings reported by sparse.
 
-Looks sensible. The only doubt (that Saravana mays know better) is that I'm=
- not
-sure put_device() on a supplier or consumer can actually lead to
-devlink_dev_release(). AFAIU, a consumer or a supplier should not be a devi=
-ce
-from the devlink class. Hence, looking at device_release(), I'm not sure it=
- can
-happen unless for some odd reason someone is messing with devlinks in .remo=
-ve()
-or .type->remove().
+So, fix them with the same approach, perform proper conversion in
+order to support both little and big endian CPUs. Once the conversions
+are properly done and the right types used, the sparse warnings are
+cleared as well.
 
-- Nuno S=C3=A1
+Reported-by: Erhard Furtner <erhard_f@mailbox.org>
+Fixes: 6f4c45cbcb00 ("kunit: Add tests for csum_ipv6_magic and ip_fast_csum")
+Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
+---
+ lib/checksum_kunit.c | 17 +++++++++--------
+ 1 file changed, 9 insertions(+), 8 deletions(-)
+
+diff --git a/lib/checksum_kunit.c b/lib/checksum_kunit.c
+index 225bb7701460..bf70850035c7 100644
+--- a/lib/checksum_kunit.c
++++ b/lib/checksum_kunit.c
+@@ -215,7 +215,7 @@ static const u32 init_sums_no_overflow[] = {
+ 	0xffff0000, 0xfffffffb,
+ };
+ 
+-static const __sum16 expected_csum_ipv6_magic[] = {
++static const u16 expected_csum_ipv6_magic[] = {
+ 	0x18d4, 0x3085, 0x2e4b, 0xd9f4, 0xbdc8, 0x78f,	0x1034, 0x8422, 0x6fc0,
+ 	0xd2f6, 0xbeb5, 0x9d3,	0x7e2a, 0x312e, 0x778e, 0xc1bb, 0x7cf2, 0x9d1e,
+ 	0xca21, 0xf3ff, 0x7569, 0xb02e, 0xca86, 0x7e76, 0x4539, 0x45e3, 0xf28d,
+@@ -241,7 +241,7 @@ static const __sum16 expected_csum_ipv6_magic[] = {
+ 	0x3845, 0x1014
+ };
+ 
+-static const __sum16 expected_fast_csum[] = {
++static const u16 expected_fast_csum[] = {
+ 	0xda83, 0x45da, 0x4f46, 0x4e4f, 0x34e,	0xe902, 0xa5e9, 0x87a5, 0x7187,
+ 	0x5671, 0xf556, 0x6df5, 0x816d, 0x8f81, 0xbb8f, 0xfbba, 0x5afb, 0xbe5a,
+ 	0xedbe, 0xabee, 0x6aac, 0xe6b,	0xea0d, 0x67ea, 0x7e68, 0x8a7e, 0x6f8a,
+@@ -577,7 +577,8 @@ static void test_csum_no_carry_inputs(struct kunit *test)
+ 
+ static void test_ip_fast_csum(struct kunit *test)
+ {
+-	__sum16 csum_result, expected;
++	__sum16 csum_result;
++	u16 expected;
+ 
+ 	for (int len = IPv4_MIN_WORDS; len < IPv4_MAX_WORDS; len++) {
+ 		for (int index = 0; index < NUM_IP_FAST_CSUM_TESTS; index++) {
+@@ -586,7 +587,7 @@ static void test_ip_fast_csum(struct kunit *test)
+ 				expected_fast_csum[(len - IPv4_MIN_WORDS) *
+ 						   NUM_IP_FAST_CSUM_TESTS +
+ 						   index];
+-			CHECK_EQ(expected, csum_result);
++			CHECK_EQ(to_sum16(expected), csum_result);
+ 		}
+ 	}
+ }
+@@ -598,7 +599,7 @@ static void test_csum_ipv6_magic(struct kunit *test)
+ 	const struct in6_addr *daddr;
+ 	unsigned int len;
+ 	unsigned char proto;
+-	unsigned int csum;
++	__wsum csum;
+ 
+ 	const int daddr_offset = sizeof(struct in6_addr);
+ 	const int len_offset = sizeof(struct in6_addr) + sizeof(struct in6_addr);
+@@ -611,10 +612,10 @@ static void test_csum_ipv6_magic(struct kunit *test)
+ 		saddr = (const struct in6_addr *)(random_buf + i);
+ 		daddr = (const struct in6_addr *)(random_buf + i +
+ 						  daddr_offset);
+-		len = *(unsigned int *)(random_buf + i + len_offset);
++		len = le32_to_cpu(*(__le32 *)(random_buf + i + len_offset));
+ 		proto = *(random_buf + i + proto_offset);
+-		csum = *(unsigned int *)(random_buf + i + csum_offset);
+-		CHECK_EQ(expected_csum_ipv6_magic[i],
++		csum = *(__wsum *)(random_buf + i + csum_offset);
++		CHECK_EQ(to_sum16(expected_csum_ipv6_magic[i]),
+ 			 csum_ipv6_magic(saddr, daddr, len, proto, csum));
+ 	}
+ #endif /* !CONFIG_NET */
+-- 
+2.43.0
 
