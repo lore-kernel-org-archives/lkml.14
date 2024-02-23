@@ -1,100 +1,90 @@
-Received: from inva020.nxp.com (inva020.nxp.com [92.121.34.13])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE4C65DF1E;
-	Fri, 23 Feb 2024 10:31:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=92.121.34.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62C3660EF5
+	for <linux-kernel@vger.kernel.org>; Fri, 23 Feb 2024 10:31:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708684266; cv=none; b=VDlowCdedomEvgn0hs6JaOjDPDH9+UB81Pkm6X1Bq9PtzY3HfyCf8pRcOiEXEDJPudf3y8M9SgLIAMwkQWDKACFkbteCKeV63SrQJXndxzhBD6/iZHrxr2n/KfNHjVLwX3IhE/cJ44kmf0JDlf+4lthbdyh9TPmiWrZ2WtzLaXM=
+	t=1708684278; cv=none; b=GVBHp726z+N+4LWxyfGqzChwoblYTqAkBJsLGz4cwjQvtBzzRIEeSboSiRQfKa+ebs4i618ZDUg6TZ/HcUs683HwJKd4TmP9JcjUT48wvxjV+sNJw4z6GQekvC15JzeWjoBIrFSUY0aaIOL+SAZGWs+RnNTDy5vevzr59/5FQpw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708684266; c=relaxed/simple;
-	bh=D6bO7OzGqUljgDA4twduTq9DME6Aa10LBuM5fRsAoS8=;
-	h=From:To:Cc:Subject:Date:Message-Id; b=XicILzr3zEKI+Cp3fafJYyd0bcJ3EWf0+2qGB68OQoSiO9/HDC1M69mNRVRs7XONc1/7BoS/oS0Y+Fh1bbdQrR0jX22Zdgj/G6RcCDakuM3oeTuN1dGnfHOyKCgPg+zC/eBbW3tP5yVVUHzwXnTzaB+qW77qXsV6gHrhsYsYpqQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; arc=none smtp.client-ip=92.121.34.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-	by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 3555B1A1317;
-	Fri, 23 Feb 2024 11:31:03 +0100 (CET)
-Received: from aprdc01srsp001v.ap-rdc01.nxp.com (aprdc01srsp001v.ap-rdc01.nxp.com [165.114.16.16])
-	by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id F2BC21A132A;
-	Fri, 23 Feb 2024 11:31:02 +0100 (CET)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-	by aprdc01srsp001v.ap-rdc01.nxp.com (Postfix) with ESMTP id 30370183AC0A;
-	Fri, 23 Feb 2024 18:31:01 +0800 (+08)
-From: Shengjiu Wang <shengjiu.wang@nxp.com>
-To: abelvesa@kernel.org,
-	peng.fan@nxp.com,
-	mturquette@baylibre.com,
-	sboyd@kernel.org,
-	shawnguo@kernel.org,
-	s.hauer@pengutronix.de,
-	kernel@pengutronix.de,
-	festevam@gmail.com,
-	linux-imx@nxp.com,
-	shengjiu.wang@gmail.com,
-	marex@denx.de,
-	m.felsch@pengutronix.de
-Cc: linux-clk@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] clk: imx: imx8mp: Fix SAI_MCLK_SEL definition
-Date: Fri, 23 Feb 2024 18:15:51 +0800
-Message-Id: <1708683351-8504-1-git-send-email-shengjiu.wang@nxp.com>
-X-Mailer: git-send-email 2.7.4
-X-Virus-Scanned: ClamAV using ClamSMTP
+	s=arc-20240116; t=1708684278; c=relaxed/simple;
+	bh=jkLLuHQoX7Qx5Fy5qJpixZOVOxqV9iRWh6D0pLconUY=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=bxtn1PWTaKUVreKhD6Ei9hwiI99e93mdblOiqevJ3LnwT9tHzFWghRspzFeywCJMFn6NNK30IXk0/GvGtYO5+dNI04obysTpjUbF88hLGA/Gz+G54klnwpevMa/psOmi9NlFD9Os05wr0kNjT1eeOus1fAojE7HtxJglm2CwTbI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=YiVSVT26; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=09ZIG2ZH; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="YiVSVT26";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="09ZIG2ZH"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1708684273;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=jkLLuHQoX7Qx5Fy5qJpixZOVOxqV9iRWh6D0pLconUY=;
+	b=YiVSVT263F5FBqEISJkPVpVsZcbfVYxujjjgmA68+1aW2JPWI88DfN/lemthMtK9Xk+BYk
+	MgST4jZJNVsyNLdN4eVZOV+0A5SRkDYOTuZBmumyXO8//S4D7zAoBbMHxmutSMB6IyzpKP
+	6cVUOYz1ScR4VuG/JeY+rJdfXl2Qx31iV/xfxnEoxFVON5ouD7AcLPZQ8RKmL+tcbOMWwk
+	sLbKA9+9jJ5h22X1l0RdrMHbw8GbGhf3bivax/n/FQMPz/PCwW6apOB3mN6s/QXtukML1X
+	yEIrYNmzz4LTBTjEwg+YsGUCkssgiC9EjzW1yV3N8Q6Wd5gEgzTwXYlVsO1PxA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1708684273;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=jkLLuHQoX7Qx5Fy5qJpixZOVOxqV9iRWh6D0pLconUY=;
+	b=09ZIG2ZHx8YiIlTpa2V0EoiX45d9E+RxpvYkjsbD254Oww6TUCvu2V8tVDb1bx9jIP0dka
+	Sl0WEcqgpr8YkrCg==
+To: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>, Ingo Molnar
+ <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen
+ <dave.hansen@linux.intel.com>, x86@kernel.org
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Peter Zijlstra
+ <peterz@infradead.org>, Adrian Hunter <adrian.hunter@intel.com>,
+ Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
+ Elena Reshetova <elena.reshetova@intel.com>, Jun Nakajima
+ <jun.nakajima@intel.com>, Rick Edgecombe <rick.p.edgecombe@intel.com>, Tom
+ Lendacky <thomas.lendacky@amd.com>, "Kalra, Ashish"
+ <ashish.kalra@amd.com>, Sean Christopherson <seanjc@google.com>, "Huang,
+ Kai" <kai.huang@intel.com>, Baoquan He <bhe@redhat.com>,
+ kexec@lists.infradead.org, linux-coco@lists.linux.dev,
+ linux-kernel@vger.kernel.org, "Kirill A. Shutemov"
+ <kirill.shutemov@linux.intel.com>
+Subject: Re: [PATCHv7 16/16] x86/acpi: Add support for CPU offlining for
+ ACPI MADT wakeup method
+In-Reply-To: <20240212104448.2589568-17-kirill.shutemov@linux.intel.com>
+References: <20240212104448.2589568-1-kirill.shutemov@linux.intel.com>
+ <20240212104448.2589568-17-kirill.shutemov@linux.intel.com>
+Date: Fri, 23 Feb 2024 11:31:12 +0100
+Message-ID: <87jzmvcw0f.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain
 
-There is SAI1, SAI2, SAI3, SAI5, SAI6, SAI7 existing in this block
-control, the order is discontinuous. The definition of SAI_MCLK_SEL(n)
-is not match with the usage of CLK_SAIn(n).
+On Mon, Feb 12 2024 at 12:44, Kirill A. Shutemov wrote:
+> MADT Multiprocessor Wakeup structure version 1 brings support of CPU
+> offlining: BIOS provides a reset vector where the CPU has to jump to
+> for offlining itself. The new TEST mailbox command can be used to test
+> whether the CPU offlined itself which means the BIOS has control over
+> the CPU and can online it again via the ACPI MADT wakeup method.
+>
+> Add CPU offling support for the ACPI MADT wakeup method by implementing
+> custom cpu_die(), play_dead() and stop_this_cpu() SMP operations.
+>
+> CPU offlining makes is possible to hand over secondary CPUs over kexec,
+> not limiting the second kernel to a single CPU.
+>
+> The change conforms to the approved ACPI spec change proposal. See the
+> Link.
+>
+> Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+> Link: https://lore.kernel.org/all/13356251.uLZWGnKmhe@kreacher
+> Acked-by: Kai Huang <kai.huang@intel.com>
+> Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 
-So define SAI##n##_MCLK_SEL separately to fix the issue.
-
-Fixes: 6cd95f7b151c ("clk: imx: imx8mp: Add audiomix block control")
-Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
----
- drivers/clk/imx/clk-imx8mp-audiomix.c | 11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/clk/imx/clk-imx8mp-audiomix.c b/drivers/clk/imx/clk-imx8mp-audiomix.c
-index e4300df88f1a..55ed211a5e0b 100644
---- a/drivers/clk/imx/clk-imx8mp-audiomix.c
-+++ b/drivers/clk/imx/clk-imx8mp-audiomix.c
-@@ -18,7 +18,12 @@
- 
- #define CLKEN0			0x000
- #define CLKEN1			0x004
--#define SAI_MCLK_SEL(n)		(0x300 + 4 * (n))	/* n in 0..5 */
-+#define SAI1_MCLK_SEL		0x300
-+#define SAI2_MCLK_SEL		0x304
-+#define SAI3_MCLK_SEL		0x308
-+#define SAI5_MCLK_SEL		0x30C
-+#define SAI6_MCLK_SEL		0x310
-+#define SAI7_MCLK_SEL		0x314
- #define PDM_SEL			0x318
- #define SAI_PLL_GNRL_CTL	0x400
- 
-@@ -95,13 +100,13 @@ static const struct clk_parent_data clk_imx8mp_audiomix_pll_bypass_sels[] = {
- 		IMX8MP_CLK_AUDIOMIX_SAI##n##_MCLK1_SEL, {},		\
- 		clk_imx8mp_audiomix_sai##n##_mclk1_parents,		\
- 		ARRAY_SIZE(clk_imx8mp_audiomix_sai##n##_mclk1_parents), \
--		SAI_MCLK_SEL(n), 1, 0					\
-+		SAI##n##_MCLK_SEL, 1, 0					\
- 	}, {								\
- 		"sai"__stringify(n)"_mclk2_sel",			\
- 		IMX8MP_CLK_AUDIOMIX_SAI##n##_MCLK2_SEL, {},		\
- 		clk_imx8mp_audiomix_sai_mclk2_parents,			\
- 		ARRAY_SIZE(clk_imx8mp_audiomix_sai_mclk2_parents),	\
--		SAI_MCLK_SEL(n), 4, 1					\
-+		SAI##n##_MCLK_SEL, 4, 1					\
- 	}, {								\
- 		"sai"__stringify(n)"_ipg_cg",				\
- 		IMX8MP_CLK_AUDIOMIX_SAI##n##_IPG,			\
--- 
-2.34.1
-
+Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
