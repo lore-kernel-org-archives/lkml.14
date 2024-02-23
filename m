@@ -1,63 +1,65 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 279AF5CDC2;
-	Fri, 23 Feb 2024 09:44:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29B9E5D489;
+	Fri, 23 Feb 2024 09:44:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708681444; cv=none; b=m+O1YsHJXCBteOKOkZabGc/8XKdVFF9VV4A7yPEbXhWyBt3X/X1m8a4yaoGp0AhqUTcyV2d0NvXyVf55r1/KxMU4ZTTkKG/fJJVZU15Ym7kK9omarnjJzmFwKG/abAqQE0nNPbOUTivXRsEAlcPwT4vT+ue8TvpeowffX9dmNM0=
+	t=1708681447; cv=none; b=g11P5VfUNe2+bmMwLWXacXVcwiSfm08N4Cj+O6ID1M6HNaQclYYRiejcQAkBL6QyuK60svC1nV4T+tTem/voQlgI563+FQQhDRWXuCrZNhNxyfuhRvy4GVshZCK+oy42+imuFsk4cxgKyf4vFfEAFLCM8kcMylUkA1o/evo9C8o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708681444; c=relaxed/simple;
-	bh=hgNDypjtNG1qCAmnxmrFk1EU08TQF4LZ3NoiZx2wAzI=;
+	s=arc-20240116; t=1708681447; c=relaxed/simple;
+	bh=f5hvvf5fHYTj7NQED/7gg0VO6sDmyiq3Zrw3I+C2i00=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=gW7+Ih2FjXK7leeOI5m9eOIbjiV+cwchC6vi4aHpXgWBaTjpHhsybMxNPRbhQ2k+sqAAeJbksGzn0crQyb6HaoPonzS6BGdxZOY760vvir7bkqkc6sjMbmRRJO82B3Pr4JaxE6G95XREmCZzlZm01Z85ZDGbVRJxS7asGIBxVZA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=wMiD9Zs0; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=QQ5B/VHz; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=imylIfELlvRkCvbbbwl864ALh0SMJH2OVTDi2tHGgmBgf6ThaEUlPe3LtBAIL8U5Ll4IzH2kRcDGrzLlASX0eW4qHgzP2FkpqWbvIc08vgVZa5Md3LqaSVOIFdcvYdMO/4bGdMPa3bXQtWkhct/SJJg/e4JSKcO/w461RHdRu68=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=T+1L3A3K; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=u+z4cMLB; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="wMiD9Zs0";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="QQ5B/VHz"
-Date: Fri, 23 Feb 2024 09:43:56 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="T+1L3A3K";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="u+z4cMLB"
+Date: Fri, 23 Feb 2024 09:44:00 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1708681437;
+	s=2020; t=1708681441;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=RNdqJz+34lM7QFTAwzmXbPLV0lJZlhQnT3BpPvbMV3U=;
-	b=wMiD9Zs0E82qj9Qa8gu/TKdkXX/r1lqpeFv3sOrzL2vblIPBKEY8Sfk/Ce/Oqk0qKIjfhd
-	/Ohqx7eM9BDo3kK8hlPEIX6Zgd1uBowz7GxTf790cDf97hPuNaPkxRRsTqkh4AAiiPY/jN
-	KL7y1SCqr9kn7y+/8I1/NNkIgFH9ahKwI5HR6djS9jN7X90qEoZeisauDPdgHQk/qt1Ufd
-	k/GzFdVDB9AkSSHSzclYM9+0U8y0PYVVy1CdVHkCQJikhUUTCFy/BE5IApjqW1GXY/jqfD
-	v3yY2a3SKxH2HEfElar2ta7zf90uX5BrC1a3MZyFL2zDknRhhe/8vBU1xzg6/g==
+	bh=zZCKYvQvX/V27zysA35fscLc4hAb9T4pRSH1fsvjbGs=;
+	b=T+1L3A3KEED99NSEQ1IdjA8HROiQYopb7kXmMzPyf2fJZxdKEyIIw6OloJDbRxIJ9GiN8Q
+	CvrgPdlp5WcwgPwv0T2fPEN2ObF2ycQCnGgUqGoXxZKimlmG8G782nebYRt+wy/hb8M78e
+	kBltWO4EHEgDv6HCQAmw8caRSq5Zo0HoM2umWcdbcGEHPtmJsA7eT5ndI74eG81eMmBwmD
+	R02UoKZ5Z/dTcnWCAPZYuApslFUnEAOMHwqQKrSSeg1aOgBo1SESitvThnc+QxSHVQqSNl
+	tAImKDWUVjnT4Hx6njjdkogNfxaaRbtHBndA4jmRYJlJdhfcWmXmx6jBSuXDNg==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1708681437;
+	s=2020e; t=1708681441;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=RNdqJz+34lM7QFTAwzmXbPLV0lJZlhQnT3BpPvbMV3U=;
-	b=QQ5B/VHz/jmOB4mWnDiXmsuaPb0dJlPrFFj++2uyG9SO9GDLRWN0/jOhMwpqfolOMJWCdQ
-	MvchSXc5sx2VVlCA==
-From: "tip-bot2 for Anup Patel" <tip-bot2@linutronix.de>
+	bh=zZCKYvQvX/V27zysA35fscLc4hAb9T4pRSH1fsvjbGs=;
+	b=u+z4cMLBFKOsUPXq2O/dmRQvn9aCo9zwBLzR05ZvqvdghGRwl+Oe98bec/4Iet78w1aE9S
+	UuKyNIXKc4GZxSDA==
+From: "tip-bot2 for Yu Chien Peter Lin" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
 Subject:
- [tip: irq/msi] irqchip/sifive-plic: Use devm_xyz() for managed allocation
-Cc: Anup Patel <apatel@ventanamicro.com>, Thomas Gleixner <tglx@linutronix.de>,
+ [tip: irq/msi] irqchip/riscv-intc: Allow large non-standard interrupt number
+Cc: Yu Chien Peter Lin <peterlin@andestech.com>,
+ Thomas Gleixner <tglx@linutronix.de>, Randolph <randolph@andestech.com>,
+ Anup Patel <anup@brainfault.org>, Atish Patra <atishp@rivosinc.com>,
  x86@kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20240222094006.1030709-4-apatel@ventanamicro.com>
-References: <20240222094006.1030709-4-apatel@ventanamicro.com>
+In-Reply-To: <20240222083946.3977135-3-peterlin@andestech.com>
+References: <20240222083946.3977135-3-peterlin@andestech.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <170868143672.398.909119484089787009.tip-bot2@tip-bot2>
+Message-ID: <170868144033.398.6153636773103697821.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -67,121 +69,97 @@ Content-Transfer-Encoding: 7bit
 
 The following commit has been merged into the irq/msi branch of tip:
 
-Commit-ID:     b68d0ff529a939a118ec52f271be8cad5d99e79a
-Gitweb:        https://git.kernel.org/tip/b68d0ff529a939a118ec52f271be8cad5d99e79a
-Author:        Anup Patel <apatel@ventanamicro.com>
-AuthorDate:    Thu, 22 Feb 2024 15:09:51 +05:30
+Commit-ID:     96303bcb401c21dc1426d8d9bb1fc74aae5c02a9
+Gitweb:        https://git.kernel.org/tip/96303bcb401c21dc1426d8d9bb1fc74aae5c02a9
+Author:        Yu Chien Peter Lin <peterlin@andestech.com>
+AuthorDate:    Thu, 22 Feb 2024 16:39:38 +08:00
 Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Fri, 23 Feb 2024 10:18:43 +01:00
+CommitterDate: Fri, 23 Feb 2024 09:57:42 +01:00
 
-irqchip/sifive-plic: Use devm_xyz() for managed allocation
+irqchip/riscv-intc: Allow large non-standard interrupt number
 
-Use devm_xyz() for allocations and mappings managed by the
-Linux device driver framework.
+Currently, the implementation of the RISC-V INTC driver uses the
+interrupt cause as the hardware interrupt number, with a maximum of
+64 interrupts. However, the platform can expand the interrupt number
+further for custom local interrupts.
 
-Signed-off-by: Anup Patel <apatel@ventanamicro.com>
+To fully utilize the available local interrupt sources, switch
+to using irq_domain_create_tree() that creates the radix tree
+map, add global variables (riscv_intc_nr_irqs, riscv_intc_custom_base
+and riscv_intc_custom_nr_irqs) to determine the valid range of local
+interrupt number (hwirq).
+
+Signed-off-by: Yu Chien Peter Lin <peterlin@andestech.com>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lore.kernel.org/r/20240222094006.1030709-4-apatel@ventanamicro.com
+Reviewed-by: Randolph <randolph@andestech.com>
+Reviewed-by: Anup Patel <anup@brainfault.org>
+Reviewed-by: Atish Patra <atishp@rivosinc.com>
+Link: https://lore.kernel.org/r/20240222083946.3977135-3-peterlin@andestech.com
 
 ---
- drivers/irqchip/irq-sifive-plic.c | 49 +++++++++---------------------
- 1 file changed, 16 insertions(+), 33 deletions(-)
+ drivers/irqchip/irq-riscv-intc.c | 26 +++++++++++++++++++-------
+ 1 file changed, 19 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/irqchip/irq-sifive-plic.c b/drivers/irqchip/irq-sifive-plic.c
-index 892666f..299feef 100644
---- a/drivers/irqchip/irq-sifive-plic.c
-+++ b/drivers/irqchip/irq-sifive-plic.c
-@@ -436,39 +436,30 @@ static int plic_probe(struct platform_device *pdev)
- 			plic_quirks = (unsigned long)id->data;
- 	}
+diff --git a/drivers/irqchip/irq-riscv-intc.c b/drivers/irqchip/irq-riscv-intc.c
+index e8d01b1..684875c 100644
+--- a/drivers/irqchip/irq-riscv-intc.c
++++ b/drivers/irqchip/irq-riscv-intc.c
+@@ -19,15 +19,16 @@
+ #include <linux/smp.h>
  
--	priv = kzalloc(sizeof(*priv), GFP_KERNEL);
-+	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
- 	if (!priv)
- 		return -ENOMEM;
+ static struct irq_domain *intc_domain;
++static unsigned int riscv_intc_nr_irqs __ro_after_init = BITS_PER_LONG;
++static unsigned int riscv_intc_custom_base __ro_after_init = BITS_PER_LONG;
++static unsigned int riscv_intc_custom_nr_irqs __ro_after_init;
  
- 	priv->dev = dev;
- 	priv->plic_quirks = plic_quirks;
+ static asmlinkage void riscv_intc_irq(struct pt_regs *regs)
+ {
+ 	unsigned long cause = regs->cause & ~CAUSE_IRQ_FLAG;
  
--	priv->regs = of_iomap(to_of_node(dev->fwnode), 0);
--	if (WARN_ON(!priv->regs)) {
--		error = -EIO;
--		goto out_free_priv;
--	}
-+	priv->regs = devm_platform_ioremap_resource(pdev, 0);
-+	if (WARN_ON(!priv->regs))
-+		return -EIO;
- 
--	error = -EINVAL;
- 	of_property_read_u32(to_of_node(dev->fwnode), "riscv,ndev", &nr_irqs);
- 	if (WARN_ON(!nr_irqs))
--		goto out_iounmap;
-+		return -EINVAL;
- 
- 	priv->nr_irqs = nr_irqs;
- 
--	priv->prio_save = bitmap_alloc(nr_irqs, GFP_KERNEL);
-+	priv->prio_save = devm_bitmap_zalloc(dev, nr_irqs, GFP_KERNEL);
- 	if (!priv->prio_save)
--		goto out_free_priority_reg;
-+		return -ENOMEM;
- 
- 	nr_contexts = of_irq_count(to_of_node(dev->fwnode));
- 	if (WARN_ON(!nr_contexts))
--		goto out_free_priority_reg;
+-	if (unlikely(cause >= BITS_PER_LONG))
+-		panic("unexpected interrupt cause");
 -
--	error = -ENOMEM;
--	priv->irqdomain = irq_domain_add_linear(to_of_node(dev->fwnode), nr_irqs + 1,
--						&plic_irqdomain_ops, priv);
--	if (WARN_ON(!priv->irqdomain))
--		goto out_free_priority_reg;
-+		return -EINVAL;
- 
- 	for (i = 0; i < nr_contexts; i++) {
- 		struct of_phandle_args parent;
-@@ -539,10 +530,10 @@ static int plic_probe(struct platform_device *pdev)
- 			i * CONTEXT_ENABLE_SIZE;
- 		handler->priv = priv;
- 
--		handler->enable_save =  kcalloc(DIV_ROUND_UP(nr_irqs, 32),
--						sizeof(*handler->enable_save), GFP_KERNEL);
-+		handler->enable_save = devm_kcalloc(dev, DIV_ROUND_UP(nr_irqs, 32),
-+						    sizeof(*handler->enable_save), GFP_KERNEL);
- 		if (!handler->enable_save)
--			goto out_free_enable_reg;
-+			return -ENOMEM;
- done:
- 		for (hwirq = 1; hwirq <= nr_irqs; hwirq++) {
- 			plic_toggle(handler, hwirq, 0);
-@@ -552,6 +543,11 @@ done:
- 		nr_handlers++;
- 	}
- 
-+	priv->irqdomain = irq_domain_add_linear(to_of_node(dev->fwnode), nr_irqs + 1,
-+						&plic_irqdomain_ops, priv);
-+	if (WARN_ON(!priv->irqdomain))
-+		return -ENOMEM;
-+
- 	/*
- 	 * We can have multiple PLIC instances so setup cpuhp state
- 	 * and register syscore operations only once after context
-@@ -578,19 +574,6 @@ done:
- 	dev_info(dev, "mapped %d interrupts with %d handlers for %d contexts.\n",
- 		 nr_irqs, nr_handlers, nr_contexts);
- 	return 0;
--
--out_free_enable_reg:
--	for_each_cpu(cpu, cpu_present_mask) {
--		handler = per_cpu_ptr(&plic_handlers, cpu);
--		kfree(handler->enable_save);
--	}
--out_free_priority_reg:
--	kfree(priv->prio_save);
--out_iounmap:
--	iounmap(priv->regs);
--out_free_priv:
--	kfree(priv);
--	return error;
+-	generic_handle_domain_irq(intc_domain, cause);
++	if (generic_handle_domain_irq(intc_domain, cause))
++		pr_warn_ratelimited("Failed to handle interrupt (cause: %ld)\n", cause);
  }
  
- static struct platform_driver plic_driver = {
+ /*
+@@ -93,6 +94,14 @@ static int riscv_intc_domain_alloc(struct irq_domain *domain,
+ 	if (ret)
+ 		return ret;
+ 
++	/*
++	 * Only allow hwirq for which we have corresponding standard or
++	 * custom interrupt enable register.
++	 */
++	if ((hwirq >= riscv_intc_nr_irqs && hwirq < riscv_intc_custom_base) ||
++	    (hwirq >= riscv_intc_custom_base + riscv_intc_custom_nr_irqs))
++		return -EINVAL;
++
+ 	for (i = 0; i < nr_irqs; i++) {
+ 		ret = riscv_intc_domain_map(domain, virq + i, hwirq + i);
+ 		if (ret)
+@@ -117,8 +126,7 @@ static int __init riscv_intc_init_common(struct fwnode_handle *fn)
+ {
+ 	int rc;
+ 
+-	intc_domain = irq_domain_create_linear(fn, BITS_PER_LONG,
+-					       &riscv_intc_domain_ops, NULL);
++	intc_domain = irq_domain_create_tree(fn, &riscv_intc_domain_ops, NULL);
+ 	if (!intc_domain) {
+ 		pr_err("unable to add IRQ domain\n");
+ 		return -ENXIO;
+@@ -132,7 +140,11 @@ static int __init riscv_intc_init_common(struct fwnode_handle *fn)
+ 
+ 	riscv_set_intc_hwnode_fn(riscv_intc_hwnode);
+ 
+-	pr_info("%d local interrupts mapped\n", BITS_PER_LONG);
++	pr_info("%d local interrupts mapped\n", riscv_intc_nr_irqs);
++	if (riscv_intc_custom_nr_irqs) {
++		pr_info("%d custom local interrupts mapped\n",
++			riscv_intc_custom_nr_irqs);
++	}
+ 
+ 	return 0;
+ }
