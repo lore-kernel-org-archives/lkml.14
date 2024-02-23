@@ -1,111 +1,112 @@
-Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CD151E4B3;
-	Fri, 23 Feb 2024 13:02:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93A0722EF5
+	for <linux-kernel@vger.kernel.org>; Fri, 23 Feb 2024 13:06:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708693329; cv=none; b=F5JbtD6J2t4vegNhcFnEnKnCdht6Z2Y3zvDWfxUC36kIx96oqrF0lrBetxGExeD/f668Jy7HLB0O2WEVeU1z7v3lx3By8/bKWpXsOVHGeSg/i8mTqM/YROwU6Xm/5yCCuSVkx0gka/pvUCPCOaiP7+Q+M1OnIa/Zi0MkFiJaYV4=
+	t=1708693611; cv=none; b=JrkBqbdqrq3T9P336WXoxB7uYwN2jW4dqmtiQEJ4mkHVZseiRltLaGuHfjKezsb5urYxVSU+Kq49cRSMgbblJC2i78G6FfJY6Z3lS7xBHXD5QYWMrHt9lYNSj+yd8pfcRTV0CLOE7Egwe3S5qxp4Y8froXoDOZSoUVV6EXGhPZw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708693329; c=relaxed/simple;
-	bh=wjq07PpYymrZKKAoQVhq2BQc76gSpF0DqGU+6ncJhNo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=krXd1eP2xNmIqvIWcit9Lhrp71IyV/QUAQwA5+NaVE+8XQIIse4ATKo7gbgdVfq3q3MLjCQ/P8NHt559CXX1x4L5IwwpxFt9DVytBAw7yRtSA305JPb5OzoRCCZNiV6UI22HH/9SVH193iU9wjVaFpPa1QfTo/PP6RfQm99AdMo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=imYAMsJi; arc=none smtp.client-ip=209.85.218.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1708693611; c=relaxed/simple;
+	bh=vrHViwPtfViEodYrYu27uDWOfGFSmxsgqGqcy7hiZeE=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=bj9lLa6Nfh3SKbiDO+xenNamgmtVFNIhOgtsiTn6WZlqqrXDOUGDsQYMrt0hazQUplHScZAIsDFEYQFYrQh4ayTJMVAa6H53VcsR9yie/A6r9Ab8l4/jJmZHH5FmpXUXztKu/6N+QX5W7GW2TCRnWJju8NPx90lA3IR9p/MKZaY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bAEdihN8; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="imYAMsJi"
-Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-a3f829cde6dso93656366b.0;
-        Fri, 23 Feb 2024 05:02:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1708693326; x=1709298126; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=wjq07PpYymrZKKAoQVhq2BQc76gSpF0DqGU+6ncJhNo=;
-        b=imYAMsJixbEvRQxEfXAg3LQWGuA0c6z9+858Bp5S0DH8XZwQ15J7GhiYuk7KUGYQ6t
-         II8H3oBs7JNdq0k/ZhxNYt/IPMN57zPzLjuDtsfPbZGGC1D+czpxi56hxAnk7cNnXSZ2
-         rNPiBWixYI2zWyIYuMClHAOJoAhs1sdIYU4j3CQr1XevR8eK+vzcNoDS2jw6n2OyRho/
-         evhwscn8X+DUvdkvm+fOi0RbkI1x3mkX0pAJKq7YegpsmxT/+tXXYk1WXVuJvsIzCfWB
-         CPm0J1RcZfcMGLt1bPgYq+REcmDqgjXByRN6rs+VXw1DicDIxaYmMDtOm3F47PviMMQf
-         E6pQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708693326; x=1709298126;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=wjq07PpYymrZKKAoQVhq2BQc76gSpF0DqGU+6ncJhNo=;
-        b=a4Xr5ulzxfVck4VFhY/YPyU9TOIzEboqNja70Oc129iKTJtsPyMXidroeLnqkyY9Pz
-         vto2yTq7kio0yKMF612+I+TBehRIAl381FYeoqAUx5bbGCztmVWl/8lSxQfCFoUWXUu4
-         vHs1Vgxc44eliYMdU/zYJtrmkT9PnzEdDY/s/jTfjr6/sqgLgsJo/j3dzDx7RZF/KLKA
-         VzA946vd0bX3msOqCgwIoJ0p9pbVdTQxL0/OEdUaMbPtxaSjip7+PAq4F59I2Sy4y8Xz
-         MguooI612XaReyY29ZUkeuQt3aTzuRK2aznwxKJhRNRVDaS4y+ijvmuIjjQIYbfHcQA/
-         eyjg==
-X-Forwarded-Encrypted: i=1; AJvYcCVCIyubaAZJEZJP745+BNju0+20Kwkj5yqHuCqbJgg1Scq+9k4krz6wXkisMJSPlJkhntAqN4DPjYv6xNjY5zZOitMKPCTcwnmA+8eKpebyCbM1ylylRImFXW0VRlszGjqrkbaUs4g3
-X-Gm-Message-State: AOJu0YzniotdBf6wQV77RlDiCxp6wS0Jx5vjDySKxuePix9lYpjnzBvw
-	bnxT380q2LkpQ+6sEVoOvAp9XVy3OmA0wobC/dW2hkYHTj1VDRXdgPLQej8tYlYUqAum/9wkzyV
-	AJoeT6GwiK+br5kKBTrDRV+UtQNweuWJ86Rg=
-X-Google-Smtp-Source: AGHT+IFJicXo49jcPmF3ozTCIntOPHZaNICbV+q4qp+G0h6fLVfkxYx5SfT0LbSBWWGkkoGdw+ja5cEeSVfLsSgJPVQ=
-X-Received: by 2002:a17:906:688f:b0:a3e:9df6:7f0a with SMTP id
- n15-20020a170906688f00b00a3e9df67f0amr1215288ejr.68.1708693326401; Fri, 23
- Feb 2024 05:02:06 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bAEdihN8"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1708693609; x=1740229609;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=vrHViwPtfViEodYrYu27uDWOfGFSmxsgqGqcy7hiZeE=;
+  b=bAEdihN82roZzTL7Z0FLWsQAjO8hTpiu0bS+8vlNIj7gOXoVddeE4FAS
+   ljSdLUCqMbepLWzz1TZyMqgtxlXPfn2aGlNxp9IraLLbX2eGNQqwr72MP
+   tAg+vzpoUN1uIgR5zzTuWEk+bQF5P8iIxE1IjrCAAoSIPQ1Csyn9Tid9V
+   qRuRQChSxVsUyWw+SRzf0QedrzqLgSS+OcRETde2FCmg05Z8xyJYF9Q21
+   F00jnSI+OSaVenecD4fGW3bk8xCVdEJ+xxxqSZtsvjNnFboUPwWON2HBG
+   +pW7IqHadHuPZyxIODabtVd9tOW/bl84BnocSLYHS6F/5QhyUH/PUquWs
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10992"; a="3164262"
+X-IronPort-AV: E=Sophos;i="6.06,180,1705392000"; 
+   d="scan'208";a="3164262"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Feb 2024 05:06:48 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.06,180,1705392000"; 
+   d="scan'208";a="5859032"
+Received: from linux-pnp-server-09.sh.intel.com ([10.239.176.190])
+  by fmviesa009.fm.intel.com with ESMTP; 23 Feb 2024 05:06:45 -0800
+From: rulinhuang <rulin.huang@intel.com>
+To: urezki@gmail.com,
+	bhe@redhat.com
+Cc: colin.king@intel.com,
+	hch@infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org,
+	lstoakes@gmail.com,
+	rulin.huang@intel.com,
+	tianyou.li@intel.com,
+	tim.c.chen@intel.com,
+	wangyang.guo@intel.com,
+	zhiguo.zhou@intel.com
+Subject: Re: [PATCH v3] mm/vmalloc: lock contention optimization under multi-threading
+Date: Fri, 23 Feb 2024 08:09:25 -0500
+Message-ID: <20240223130946.112890-1-rulin.huang@intel.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <ZddDdxcdD5hNpyUX@pc636>
+References: <ZddDdxcdD5hNpyUX@pc636>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240223-saradcv2-chan-mask-v1-0-84b06a0f623a@theobroma-systems.com>
-In-Reply-To: <20240223-saradcv2-chan-mask-v1-0-84b06a0f623a@theobroma-systems.com>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Fri, 23 Feb 2024 15:01:30 +0200
-Message-ID: <CAHp75VfmsDeTP97srRJU09gA988xw68+ZHsXvXT3W_wv1HEauA@mail.gmail.com>
-Subject: Re: [PATCH 0/3] iio: adc: rockchip_saradc: fix bitmasking and remove
- custom logic for getting reset
-To: Quentin Schulz <foss+kernel@0leil.net>
-Cc: Jonathan Cameron <jic23@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>, Heiko Stuebner <heiko@sntech.de>, 
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
-	Shreeya Patel <shreeya.patel@collabora.com>, Simon Xue <xxm@rock-chips.com>, 
-	Philipp Zabel <p.zabel@pengutronix.de>, Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
-	linux-iio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	Quentin Schulz <quentin.schulz@theobroma-systems.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Fri, Feb 23, 2024 at 2:46=E2=80=AFPM Quentin Schulz <foss+kernel@0leil.n=
-et> wrote:
->
-> The mask for the channel selection is incorrect as it's specified to be
-> 16b wide by is actually only 4.
->
-> Also, the 16 lower bits in the SARADC_CONV_CON register are write
-> protected. Whatever their value is can only be written to the hardware
-> block if their associated bit in the higher 16 bits is set. Considering
-> that the channel bitmask is 4b wide but that we can write e.g. 0 in
-> there, we shouldn't use the value shifted by 16 as a mask but rather the
-> bitmask for that value shifted by 16. This is currently NOT an issue
-> because the only SoC with SARADCv2 IP is the RK3588 which has a reset
-> defined in the SoC DTSI. When that is the case, the reset is asserted
-> before every channel conversion is started. This means the registers are
-> reset so effectively, we do not need to write zeros so the wrong mask
-> still works because where we should be writing zeroes, there are already
-> zeroes. However, let's fix this in case there comes a day there's an SoC
-> which doesn't require to reset the controller before every channel
-> conversion is started.
->
-> Lastly, let's use the appropriate function from the reset subsystem
-> for getting an optional exclusive reset instead of rolling out our own
-> logic.
->
-> Those three patches should not be changing any behavior.
+> 
+> Hello, Rulinhuang!
+> 
+> > Hi Uladzislau and Andrew, we have rebased it(Patch v4) on branch
+> > mm-unstable and remeasured it. Could you kindly help confirm if this
+> > is the right base to work on?
+> > Compared to the previous result at kernel v6.7 with a 5% performance
+> > gain on intel icelake(160 vcpu), we only had a 0.6% with this commit
+> > base. But we think our modification still has some significance. On
+> > the one hand, this does reduce a critical section. On the other hand,
+> > we have a 4% performance gain on intel sapphire rapids(224 vcpu),
+> > which suggests more performance improvement would likely be achieved
+> > when the core count of processors increases to hundreds or even
+> > thousands.
+> > Thank you again for your comments.
+> >
+> According to the patch that was a correct rebase. Right a small delta on your
+> 160 CPUs is because of removing a contention. As for bigger systems it is
+> bigger impact, like you point here on your 224 vcpu results where you see %4
+> perf improvement.
+> 
+> So we should fix it. But the way how it is fixed is not optimal from my point of
+> view, because the patch that is in question spreads the internals from
+> alloc_vmap_area(), like inserting busy area, across many parts now.
+> 
+> --
+> Uladzislau Rezki
 
-Nice series, I have the comments in patch 3, but no need to resend
-until Jonathan asks for. He might address that whilst applying.
-
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-
---=20
-With Best Regards,
-Andy Shevchenko
+Our modifications in patch 5 not only achieve the original effect, 
+but also cancel the split of alloc_vmap_area()and setup_vmalloc_vm() 
+is placed without lock and lengthen the critical section.
+Without splitting alloc_vmap_area(), putting setup_vmalloc_vm() 
+directly into it is all we can think of.
+Regarding Baoquan’s changes, we think that:
+We prefer put setup_vmalloc_vm() function not placed inside the 
+critical section and it is no need to lengthen the critical section.
+We prefer use judging (vm_data) rather than 
+((!(va_flags & VMAP_RAM) && vm), and it is enough to deetermine the 
+conditions for assignment. The change seem to be wandering about the 
+judgment of va_flags.
+Hi Uladzislau, could you please let us know if you have any better 
+suggestions on the modification scheme?
+Thank you for your advice!
