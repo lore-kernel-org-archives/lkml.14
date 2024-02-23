@@ -1,125 +1,99 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD3A5224CF
-	for <linux-kernel@vger.kernel.org>; Fri, 23 Feb 2024 14:46:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61839225DE
+	for <linux-kernel@vger.kernel.org>; Fri, 23 Feb 2024 14:46:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708699587; cv=none; b=jACxfvtTx6QpfVOc2us45CPMn2YAnEvKtTTy7uDmB4xD+agMnFS6Fx2vMLtBSfe4/9DJWhca9x4FK6Nn1VIZScQfKWzDesJkcPvfHMG3nrwbPah2/hqtwRJFKy4i9e2iPgxExcZnU61ttxA+o/cr434EEQEy6TDdXLtMMMbvpro=
+	t=1708699611; cv=none; b=Tqfb7iLvBwrQNVAIpz/Po7eN8c+NL8qanA3c0sqQfiZiliMarLHcVvft76cLokfznPbukROqKpUfWBUqSdB6XiTJq5SpXcFCE8kdQyq0WpypbiguJ7Eyr6JviCsb7/aqxlZ2++L/O50NGyoZwFUTuyQXLlYVPfVZr0wI1CBj5fM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708699587; c=relaxed/simple;
-	bh=lPLN3MflurleOZnGSkG5LSHSQ+Bsp2As6DQup28ggnI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bAuo+MMhvlB8mUBppE4u7HO/bA5ZCrNKw3E0E85Osc7R7HTZ2y3eV+xnPS9bJoLMpImsSWfSdWP7hJFseBno6WHlnCFHs4WRhdTVIpmijb+jCTQJhvEbwHv/toU58e6E+FbnWAMyjKUXB/ymZ/JB0DYUaxRg4okRErpaa6ydKHg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=bO1UAniW; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1708699611; c=relaxed/simple;
+	bh=Mt1B9Ji47lzCrOOPWA7S+MJtKTeUuc/gx8Y/yssgYr8=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=Q1s2PiM6f++ajuLzpxMMY38BhRiELh3DASywX5V7tddFG02xGLq0418X8sIDkQ0SgxWLGkqNca4liZsNipRwEra7Gv7FVgcflT1KAzf5z4kMX2VjWi44bdQpaKEz/hEBETseF9DqzuMYMYtxHPTuxY34JfbtPOeBZcv/PFfNCUQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=G9eBRSqI; arc=none smtp.client-ip=209.85.210.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bO1UAniW"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1708699584;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=r1c6XaGPverFKE+fWn9zSNV/Y1JnQF5sISQgJ+fDFl4=;
-	b=bO1UAniWUDSSSVzPQ1U9sz4r3iDHNXL1GvxAyR6Fp1t3d9v2IxEmXddcVErP+fz950NbX/
-	ikHpd/fnxq0GLhZjXZ1i0YEY5rmIjxoWumqfJSRF9RxOWtAu5RDme17LwrPmg/AFgpB6fn
-	IN35A5jhjMORA6GWuNePWmqQUcuO20k=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-245-vPt1uc32Njy5NXUPQCFEGQ-1; Fri, 23 Feb 2024 09:46:21 -0500
-X-MC-Unique: vPt1uc32Njy5NXUPQCFEGQ-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id B18641020200;
-	Fri, 23 Feb 2024 14:46:20 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.151])
-	by smtp.corp.redhat.com (Postfix) with SMTP id 8153BC1D36C;
-	Fri, 23 Feb 2024 14:46:17 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Fri, 23 Feb 2024 15:45:02 +0100 (CET)
-Date: Fri, 23 Feb 2024 15:44:59 +0100
-From: Oleg Nesterov <oleg@redhat.com>
-To: Wen Yang <wenyang.linux@foxmail.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	"Eric W. Biederman" <ebiederm@xmission.com>,
-	Christian Brauner <brauner@kernel.org>,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] get_signal: simplify/cleanup the the usage of ksig->info
-Message-ID: <20240223144458.GD8267@redhat.com>
-References: <20240223105025.GA4542@redhat.com>
- <tencent_7C50F304C14CB2A5133317F8A13D1F544D0A@qq.com>
- <20240223141928.GB8267@redhat.com>
- <20240223143131.GC8267@redhat.com>
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="G9eBRSqI"
+Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-6e45c698090so175249b3a.0
+        for <linux-kernel@vger.kernel.org>; Fri, 23 Feb 2024 06:46:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1708699607; x=1709304407; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=v1MeBTQpUH7LY28h3Y8eqPCZpbMXd0Gt2ZHaY0D3V48=;
+        b=G9eBRSqI9Coalqi+vdZINYU6WUS27LFE4ub3BFGaCxVAqsO1aQyh1OTtXtL6jjcOUe
+         8pg75STt9vHs+9OLKvtY9J+vjQMKBq6HIgz4Kxfxu/lrjQ9SGQVZtArAMJavCNq+oIBo
+         mb//ZjbTOYv2G3vVjRKBTVe8PNKa7MLpafyMLzvJ+VZabAf8WHZUOIHKGtvW/YkzXK6H
+         +7PABVyqkWCXwokDQUS7uZmYorpy1P9jU4sg4KIoENbicAjDRlL3VhmOKYJdUnVJDYeK
+         Gs6qwzPhxyPvEY1YdTrjIzqxQx5QgJT47mzuj6bYw1yPRbroMH3v9vsyNzk7aLeF7YGF
+         e9Rg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708699607; x=1709304407;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=v1MeBTQpUH7LY28h3Y8eqPCZpbMXd0Gt2ZHaY0D3V48=;
+        b=MyKkdvWa1vbhk0W2XrWontY4Dw4k/qz+KDyBdR4crXnh46DHuDRRom1DnoGM1st0zQ
+         wzFo4zpM3/f8MQP7TeI4RlagYHwmWXeOux2S/41NLGSdkTntVAleR15eVcWKbjtyA22r
+         2eIv+AshFx0fdGNG3Mfaqdp2SrZz30+0at7tZ7l9oiV5rQV0R7Okcnc3xawuqNQ+s7YX
+         7I6qmjC1i0bnTn728d6UJDtEX3xlFaPejAlRfZ+xKHnq9fZhYG+PBk+UbJItqtRftriD
+         Ax74J9G+2eDBKVSweZMUoEM7xFsnGTFGzlWEEsKLfeTopJxFo0EJmgaWYzH6plecpo5S
+         QUGg==
+X-Forwarded-Encrypted: i=1; AJvYcCW5KYCQVQyMk6dFfNXG58ZIcQ4TmCP6mNf9ra0MrbChGyJj+SB5gavLFBBF3dsgl4YX9nTKt840IPC1fBpta44afw69skgWtfML7439
+X-Gm-Message-State: AOJu0Yy2LGeWub+PekkRb0KH1YRFG2x7YDR1rXFLs6KhO/vW3m9nCjvP
+	ybPjqEGPDNdMMYzBmAQxpfUIvTPrcmiDwumeRoXwM3598P7z/jp81Eqvu4oTyJY=
+X-Google-Smtp-Source: AGHT+IEtp3zS8kcrVaMAPfEaY3vM26FdkfQGqjIjERKuZq8/CcH61Rby2r+bAd13RdEhMxoqmwq8jA==
+X-Received: by 2002:a05:6a20:3d01:b0:1a0:debb:f150 with SMTP id y1-20020a056a203d0100b001a0debbf150mr85090pzi.2.1708699607496;
+        Fri, 23 Feb 2024 06:46:47 -0800 (PST)
+Received: from [127.0.0.1] ([2600:380:7649:34b6:d6ed:9c67:70ee:2f8f])
+        by smtp.gmail.com with ESMTPSA id v13-20020aa7808d000000b006e46df9f1b1sm9127924pff.9.2024.02.23.06.46.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 23 Feb 2024 06:46:47 -0800 (PST)
+From: Jens Axboe <axboe@kernel.dk>
+To: song@kernel.org, yukuai3@huawei.com, linan666@huaweicloud.com
+Cc: linux-raid@vger.kernel.org, linux-block@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, yi.zhang@huawei.com, houtao1@huawei.com, 
+ yangerkun@huawei.com
+In-Reply-To: <20240221090122.1281868-1-linan666@huaweicloud.com>
+References: <20240221090122.1281868-1-linan666@huaweicloud.com>
+Subject: Re: [PATCH v2] block: fix deadlock between bd_link_disk_holder and
+ partition scan
+Message-Id: <170869960618.48825.8696438313079266889.b4-ty@kernel.dk>
+Date: Fri, 23 Feb 2024 07:46:46 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240223143131.GC8267@redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.8
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.12.5-dev-2aabd
 
-On 02/23, Oleg Nesterov wrote:
->
-> On 02/23, Oleg Nesterov wrote:
-> >
-> > On 02/23, Wen Yang wrote:
-> > >
-> > >
-> > > On 2024/2/23 18:50, Oleg Nesterov wrote:
-> > > >+			/*
-> > > >+			 * implies do_group_exit(), no need to initialize
-> > > >+			 * ksig->info
-> > > >+			 */
-> > > >  			goto fatal;
-> > >
-> > > There is little question:
-> > > If the this conditions is met:
-> > >    current->flags & PF_USER_WORKER
-> > > It may execute “goto out“ instead of do_group_exit().
-> >
-> > Yes, but vhost/io workers do not use ksig at all.
->
-> Ah, wait...
->
-> I forgot about the ->sa_flags check before hide_si_addr_tag_bits().
->
-> OK, thanks... I'll send V2.
 
-Tomorrow.
+On Wed, 21 Feb 2024 17:01:22 +0800, linan666@huaweicloud.com wrote:
+> 'open_mutex' of gendisk is used to protect open/close block devices. But
+> in bd_link_disk_holder(), it is used to protect the creation of symlink
+> between holding disk and slave bdev, which introduces some issues.
+> 
+> When bd_link_disk_holder() is called, the driver is usually in the process
+> of initialization/modification and may suspend submitting io. At this
+> time, any io hold 'open_mutex', such as scanning partitions, can cause
+> deadlocks. For example, in raid:
+> 
+> [...]
 
-I'll recheck, but I think we need the patch below as 1/2 regadless of
-this change
+Applied, thanks!
 
-Oleg.
----
+[1/1] block: fix deadlock between bd_link_disk_holder and partition scan
+      commit: 03f12122b20b6e6028e9ed69030a49f9cffcbb75
 
---- a/kernel/signal.c
-+++ b/kernel/signal.c
-@@ -2897,13 +2897,13 @@ bool get_signal(struct ksignal *ksig)
- 		/* NOTREACHED */
- 	}
- 	spin_unlock_irq(&sighand->siglock);
--out:
-+
- 	ksig->sig = signr;
- 
- 	if (!(ksig->ka.sa.sa_flags & SA_EXPOSE_TAGBITS))
- 		hide_si_addr_tag_bits(ksig);
--
--	return ksig->sig > 0;
-+out:
-+	return signr > 0;
- }
- 
- /**
+Best regards,
+-- 
+Jens Axboe
+
+
 
