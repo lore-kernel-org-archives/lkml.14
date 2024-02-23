@@ -1,84 +1,213 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+Received: from mout.kundenserver.de (mout.kundenserver.de [212.227.17.24])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3695E7EF0E;
-	Fri, 23 Feb 2024 13:17:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 947997EF0A;
+	Fri, 23 Feb 2024 13:17:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.24
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708694281; cv=none; b=h9sG7U+5cVTAy1LBQhZVHnbfWi39Xm79HcL+nqCFk5juyyCGH3vRPncpPKV7mOwK1zOeabnQtGXEziGnlCe5sx15X9ZG1UmfPJEHe5h/4A45yn8iwr3nNpANpIv9rRZP9un1ZTGpuZlS9FqDqCfFMIcLjRkr6OgO/U4gmrDKcTQ=
+	t=1708694280; cv=none; b=pVc7VAQ00iKZ5ivS7BT4YvOCP3aKf1prDXKipntQD49Dwodvvc6yFarsNmJSJEWfpLMfExFxJVxIlSJmwASkaPf0cUKLQ0LMApttLYwjfuIkhUufj34A8W46lKC98l1nDXpIO94PzOd9bPGbrcQs3b0Dc+N0JTkrSEJlkayU/ck=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708694281; c=relaxed/simple;
-	bh=CJwV3AkbNYPmxUtNmWgmvsfyzdT6QZj/mLQfhzuCHbg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YwP5uOn9d/ytb/8GCmyHkY0zQZ72FXgG54Bnp0T9nKZsvTLOG+JC81ZknlHd4GPdaLLdGDBDCHn0T8lXjbomvDJFt3SMguRWkF5BWvoN/GPWu2vAad+pXVPR8ZaohHv9nEKCAb4gJIEcjzd9QP/fPnJRy/1j8FoM8TzlQDyTdqI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=u2D2k5NK; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	s=arc-20240116; t=1708694280; c=relaxed/simple;
+	bh=2JY+3DjG6lK45y3gH2HcJ0xwn7fJU24FgxnMJ0ij53U=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=kNyymquj5H739AkYBobzCOKaYNP/u6t9edZpcZtP/+wF9mCtmEcbX3/jWLcdaZuR7IgefUHxhgfPTUPqaI7XJqihY6PxJvBQ5JWIXyNsqQsPQXlANw3qV0GIQxjvjlIxFnKn5dvMx+qq/VGh7ijNbFwfnJKB9LIxNAaObCc/LvU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=valentinobst.de; spf=pass smtp.mailfrom=valentinobst.de; dkim=pass (2048-bit key) header.d=valentinobst.de header.i=kernel@valentinobst.de header.b=YP916j38; arc=none smtp.client-ip=212.227.17.24
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=valentinobst.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=valentinobst.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="u2D2k5NK"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=3tX/zOPdfg9oNGtHW1EObwb4Rk2/rjHkYa5cJrgte9Y=; b=u2D2k5NKU+S/KbwkFfxUYlFwN/
-	j3v1IlFcMP3UrgK0pvVk/iTGY6eSlEVv74H1iPHksgNX9i8NhkFK/DCbft9HnBoy4p5iP6/606lAa
-	cMJxgO1KQbuN5LQB8d9roKaKLJTXftU9Prtm4fwGFl8ZXUkL8CSYKX/Jh5nKU2rBHTns=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1rdVR9-008XUK-2k; Fri, 23 Feb 2024 14:17:59 +0100
-Date: Fri, 23 Feb 2024 14:17:59 +0100
-From: Andrew Lunn <andrew@lunn.ch>
-To: "Russell King (Oracle)" <linux@armlinux.org.uk>
-Cc: Oleksij Rempel <o.rempel@pengutronix.de>, Wei Fang <wei.fang@nxp.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	kernel@pengutronix.de, linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org, Shenwei Wang <shenwei.wang@nxp.com>,
-	Clark Wang <xiaoning.wang@nxp.com>,
-	NXP Linux Team <linux-imx@nxp.com>
-Subject: Re: [PATCH net-next v6 5/8] net: phy: Immediately call adjust_link
- if only tx_lpi_enabled changes
-Message-ID: <84e1368d-ec6a-48af-945b-509528c45dff@lunn.ch>
-References: <20240223094425.691209-1-o.rempel@pengutronix.de>
- <20240223094425.691209-6-o.rempel@pengutronix.de>
- <Zdh1nMWZDynP/AMc@shell.armlinux.org.uk>
+	dkim=pass (2048-bit key) header.d=valentinobst.de header.i=kernel@valentinobst.de header.b="YP916j38"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=valentinobst.de;
+	s=s1-ionos; t=1708694262; x=1709299062; i=kernel@valentinobst.de;
+	bh=2JY+3DjG6lK45y3gH2HcJ0xwn7fJU24FgxnMJ0ij53U=;
+	h=X-UI-Sender-Class:From:Date:Subject:To:Cc;
+	b=YP916j382Om/wJDpeMVdPKBp4Rq2vdl1ggRz6j7ycQC09X1AUejyZV16GPL2ZGuA
+	 AdZ32MlIlampf/ejsFeqx4SKY+ly0BQbHq2VFR3miRHX0pN5O30o+BriwCKrPMBpz
+	 RVnM8amUiQ0poElLXTvIiNhy6sqDqgOF9dnELQRUaV2weqylbF0ow9vigEiLwgmDW
+	 T49+6Fi4KGIykidzw1M876t1sN+a2EvRW6OIBdyiOobb3/DMKUmG0OrYvD2GtIqww
+	 1xTBLUBLVv+9eKchqulOq6Wuut4I8lJAauzq4K4zg89E0qU8rhTGGGe/wGtarNKxR
+	 yNy9aMVni1jchYY7Xw==
+X-UI-Sender-Class: 55c96926-9e95-11ee-ae09-1f7a4046a0f6
+Received: from [192.168.0.101] ([95.223.130.98]) by mrelayeu.kundenserver.de
+ (mreue106 [213.165.67.113]) with ESMTPSA (Nemesis) id
+ 1MPoTl-1rINoF3RnX-00MxPZ; Fri, 23 Feb 2024 14:11:16 +0100
+From: Valentin Obst <kernel@valentinobst.de>
+Date: Fri, 23 Feb 2024 14:10:51 +0100
+Subject: [PATCH v2] x86/tools: fix line number reported for malformed lines
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Zdh1nMWZDynP/AMc@shell.armlinux.org.uk>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <20240223-x86-insn-decoder-line-fix-v2-1-cde49c69f402@valentinobst.de>
+X-B4-Tracking: v=1; b=H4sIAFuZ2GUC/42NQQqDMBBFryKz7hQntUa68h7FhSaTOiBJSSRYx
+ Ls39QRdvgf//R0SR+EEj2qHyFmSBF9AXSow8+hfjGILg6pVUytFuHUtik8eLZtgOeIintHJhno
+ ip5j0TTkHZf+OXPTZfg6FZ0lriJ/zKtPP/lPNhISNNvY+kqbOtH0eF/ar+DCl9WoZhuM4vmBqy
+ QPIAAAA
+To: Borislav Petkov <bp@alien8.de>, 
+ Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, 
+ Ingo Molnar <mingo@kernel.org>, Ingo Molnar <mingo@redhat.com>, 
+ Thomas Gleixner <tglx@linutronix.de>
+Cc: Andreas Hindborg <a.hindborg@samsung.com>, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ John Baublitz <john.m.baublitz@gmail.com>, 
+ Masami Hiramatsu <mhiramat@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, 
+ Peter Zijlstra <peterz@infradead.org>, 
+ =?utf-8?q?Sergio_Gonz=C3=A1lez_Collado?= <sergio.collado@gmail.com>, 
+ linux-kernel@vger.kernel.org, stable@vger.kernel.org, x86@kernel.org, 
+ Valentin Obst <kernel@valentinobst.de>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1708693872; l=4956;
+ i=kernel@valentinobst.de; s=20240131; h=from:subject:message-id;
+ bh=lbnH0WF4tXXmXq+akd4bXjRC9W7lA7jDYNQ6lPoUNDw=;
+ b=NKIy1z/7P/uMN+m5mHRZ2o1/ocPXjhkEHpMT7bwPTFoeIFmDbMfeX56ekFvHSgFq8kUT2CqRe
+ C4uJFGW/uf8AeViKowR0NrHbnwEfvbPXJ1QiUVH7LHUt2sT/Jk2NJwQ
+X-Developer-Key: i=kernel@valentinobst.de; a=ed25519;
+ pk=3s7U8y0mqkaiurgHSQQTYWOo2tw5HgzCg5vnJVfw37Y=
+X-Provags-ID: V03:K1:6q3lfldMp4TifScdm6dJFNHXLxeAsJf8YBsSiHxjwVeiMrZEaRm
+ /xF6rtmRuxT1ihSpcMORxe697KN0vNHT+cXWyJ+Z8K8WPCKn2fj8eQV1w8T63WjotYBW7TK
+ V7LjICeh4A1yjQQE1EcXAEm0bgRRFmV2fiNTkVMBpZuMJQiZ8PDvstu/d4GzkYWJ/r970nf
+ xTDOCYu8hpW/3H4LmSHLQ==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:3xLKqbCpHv8=;NNUjALKrxqZfucfBVKNpSHyNDSP
+ dPTUbjGItOeu9HJx/qbn6lVnKyQ9zXp8EqApO3it98ZhiBd4GSsHr6RiznARqg2KedR6QXgEo
+ p7YBBnhbXHybXxv3s4TgZY1NGKoXZS0Nhw6tzHObiYE+h2PivPwHV7PZ1T3xMLUTntQTKlaWj
+ RVXoaRgMkIwbqwwDuGTT1z+J2bRsgMuizgduVooHsfILkPE0Gvk2PLQs2HBkFcOdbWifKda2S
+ ApH1Et2YPGBmB+QedmY6dJ5JRP13/md4BZZ5KxthPAG1MH6f0iNOFi/Dg+9blUr/edzhzAHwq
+ MbP/YuWXXhG9KWCgSwkMVZgkAsTBqDHfl8YU/eT2KgGWZT65W0lznpi4z8zPOGOxt7UNFLUvW
+ y9sXim8BrCNm3FDprjv7SYI5Ib4Ia9EpOq8LflYgzuChANDJav6TsCieitm+hMBsZNGC89cId
+ m48CyoaowJ5nMxoDHVrpRy0xjwUD+61ZTxSVg5iTUYEYKUwN3RvznDpPCrUf8S76hhqaNYlBt
+ P7BPMzy+nS+n0/OTcCc5tKW+cks14Qu52DFNCEn1Xs7yR2Akwyo0xfierH0NTPDHMC2M0U3qu
+ 6dej5GbJ58PAD8B/TWfrHUq6Mj1T5QK7C5RDIofuPn3nQemMYyFEI1T3coA9Ye1UXZevM05UA
+ WmmYC06RaO1OmKnJch1DnF4nk9qq+dysMqMhP1HnUc95fsu1cBtP9Frx+SJZxrYpwkrGyhm/P
+ BTB5CDhiE8leou4PM0NmjALHxKQZ+KRiEo6N/TWYRI/pAKh4mNGfM4=
 
-On Fri, Feb 23, 2024 at 10:38:20AM +0000, Russell King (Oracle) wrote:
-> On Fri, Feb 23, 2024 at 10:44:22AM +0100, Oleksij Rempel wrote:
-> > +static void phy_ethtool_set_eee_noneg(struct phy_device *phydev,
-> > +				      struct ethtool_keee *data)
-> > +{
-> > +	if (phydev->eee_cfg.tx_lpi_enabled !=
-> > +	    data->tx_lpi_enabled) {
-> > +		eee_to_eeecfg(data, &phydev->eee_cfg);
-> > +		phydev->enable_tx_lpi = eeecfg_mac_can_tx_lpi(&phydev->eee_cfg);
-> > +		if (phydev->link)
-> > +			phy_link_up(phydev);
-> 
-> I'm not convinced this is a good idea. Hasn't phylib previously had
-> the guarantee that the link will go down between two link-up events?
-> So calling phy_link_up() may result in either the MAC driver ignoring
-> it, or modifying registers that are only supposed to be modified while
-> the MAC side is down.
+While debugging the `X86_DECODER_SELFTEST` failure first reported in [1],
+we noticed that the line numbers reported by the `insn_decoder_test` tool
+do not correspond to the line in the output of `objdump_reformat.awk` that
+was causing the failure:
 
-When auto-neg is used, we expect the link to go down and come back up
-again.
+  # TEST    posttest
+    llvm-objdump -d -j .text ./vmlinux | \
+    awk -f ./arch/x86/tools/objdump_reformat.awk | \
+    arch/x86/tools/insn_decoder_test -y -v
+  arch/x86/tools/insn_decoder_test: error: malformed line 1657116:
+  68db0
 
-Here we are dealing with the case that autoneg is not used. The MAC
-needs informing somehow. If we want to preserve the down/up, we could
-call phy_link_down() and then phy_link_up() back to back.
+  $ llvm-objdump -d -j .text ./vmlinux | \
+  awk -f ./arch/x86/tools/objdump_reformat.awk > objdump_reformat.txt
+  $ head -n `echo 1657116+2 | bc` objdump_reformat.txt | tail -n 5
+  ffffffff815430b1        41 8b 47 1c             movl
+  ffffffff815430b5        89 c1                   movl
+  ffffffff815430b7        81 c9 00 40 00 00       orl
+  ffffffff815430bd        41 89 4e 18             movl
+  ffffffff815430c1        a8 40                   testb
 
-     Andrew
+These lines are perfectly fine. The reason is that the line count reported
+by the tool only includes instruction lines, i.e., it does not count symbo=
+l
+lines. This behavior was introduced in Commit 35039eb6b199 ("x86: Show
+symbol name if insn decoder test failed"), which included symbol lines
+in the output of the awk script. This broke the `instuction lines =3D=3D t=
+otal
+lines` property without accounting for it in `insn_decoder_test.c`.
+
+Add a new variable to count the combined (insn+symbol) line count and
+report this in the error message. With this patch, the line reported by th=
+e
+tool is the line causing the failure (long line wrapped at 75 chars):
+
+  # TEST    posttest
+    llvm-objdump -d -j .text ./vmlinux | \
+    awk -f ./arch/x86/tools/objdump_reformat.awk | \
+    arch/x86/tools/insn_decoder_test -y -v
+  arch/x86/tools/insn_decoder_test: error: malformed line 1699686:
+  68db0
+
+  $ head -n ` echo 1699686+2 | bc` objdump_reformat.txt | tail -n 5
+  ffffffff81568dac        c3                      retq
+  <_RNvXsP_NtCs7qddEHlz8fK_4core3fmtRINtNtNtNtB7_4iter8adapters5chain5Chai=
+n
+  INtNtBA_7flatten7FlattenINtNtB7_6option8IntoIterNtNtB7_4char11EscapeDebu=
+g
+  EEINtB1a_7FlatMapNtNtNtB7_3str4iter5CharsB1T_NtB2D_23CharEscapeDebugCont=
+i
+  nueEENtB5_5Debug3fmtB7_>:ffffffff81568db0
+  ffffffff81568dad        0f 1f 00                nopl
+  ffffffff81568db0        f3 0f 1e fa             endbr64
+  ffffffff81568db4        41 56                   pushq
+
+[In this case the line causing the failure is interpreted as two lines by
+the tool (due to its length, but this is fixed by [1, 2]), and the second
+line is reported. Still the spatial closeness between the reported line an=
+d
+the line causing the failure would have made debugging a lot easier.]
+
+Link: https://lore.kernel.org/lkml/Y9ES4UKl%2F+DtvAVS@gmail.com/T/ [1]
+Link: https://lore.kernel.org/rust-for-linux/20231119180145.157455-1-sergi=
+o.collado@gmail.com/ [2]
+Fixes: 35039eb6b199 ("x86: Show symbol name if insn decoder test failed")
+Reviewed-by: Miguel Ojeda <ojeda@kernel.org>
+Tested-by: Miguel Ojeda <ojeda@kernel.org>
+Reported-by: John Baublitz <john.m.baublitz@gmail.com>
+Debugged-by: John Baublitz <john.m.baublitz@gmail.com>
+Signed-off-by: Valentin Obst <kernel@valentinobst.de>
+=2D--
+Changes in v2:
+- Added tags 'Reviewed-by', 'Tested-by', 'Reported-by', 'Debugged-by',
+  'Link', and 'Fixes'.
+- Explain why this patch fixes the commit mentioned in the 'Fixes' tag.
+- CCed the stable list and sent to all x86 maintainers.
+- Link to v1: https://lore.kernel.org/r/20240221-x86-insn-decoder-line-fix=
+-v1-1-47cd5a1718c6@valentinobst.de
+=2D--
+ arch/x86/tools/insn_decoder_test.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
+
+diff --git a/arch/x86/tools/insn_decoder_test.c b/arch/x86/tools/insn_deco=
+der_test.c
+index 472540aeabc2..727017a3c3c7 100644
+=2D-- a/arch/x86/tools/insn_decoder_test.c
++++ b/arch/x86/tools/insn_decoder_test.c
+@@ -114,6 +114,7 @@ int main(int argc, char **argv)
+ 	unsigned char insn_buff[16];
+ 	struct insn insn;
+ 	int insns =3D 0;
++	int lines =3D 0;
+ 	int warnings =3D 0;
+
+ 	parse_args(argc, argv);
+@@ -123,6 +124,8 @@ int main(int argc, char **argv)
+ 		int nb =3D 0, ret;
+ 		unsigned int b;
+
++		lines++;
++
+ 		if (line[0] =3D=3D '<') {
+ 			/* Symbol line */
+ 			strcpy(sym, line);
+@@ -134,12 +137,12 @@ int main(int argc, char **argv)
+ 		strcpy(copy, line);
+ 		tab1 =3D strchr(copy, '\t');
+ 		if (!tab1)
+-			malformed_line(line, insns);
++			malformed_line(line, lines);
+ 		s =3D tab1 + 1;
+ 		s +=3D strspn(s, " ");
+ 		tab2 =3D strchr(s, '\t');
+ 		if (!tab2)
+-			malformed_line(line, insns);
++			malformed_line(line, lines);
+ 		*tab2 =3D '\0';	/* Characters beyond tab2 aren't examined */
+ 		while (s < tab2) {
+ 			if (sscanf(s, "%x", &b) =3D=3D 1) {
+
+=2D--
+base-commit: b401b621758e46812da61fa58a67c3fd8d91de0d
+change-id: 20240221-x86-insn-decoder-line-fix-7b1f2e1732ff
+
+Best regards,
+=2D-
+Valentin Obst <kernel@valentinobst.de>
+
