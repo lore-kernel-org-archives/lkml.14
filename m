@@ -1,113 +1,112 @@
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1508E4C8C
-	for <linux-kernel@vger.kernel.org>; Fri, 23 Feb 2024 14:43:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AECD06FBD;
+	Fri, 23 Feb 2024 14:43:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708699393; cv=none; b=WV0vEn3zWZxJ7xWH/AdXisHwtTXA8wn5X4nk+AAugo7fhLY/Q9vuxfajyxDcsSMmGXTWwATQJ31h4j/M6XYUWON8jNJ/ps39nKSu02IFIqe4vEcVyao9qab0gs3KXc9/qEsrwt90iJRJkb0e6glkeMsGWUTzhzJ6HsgMcxw0dBg=
+	t=1708699409; cv=none; b=akyLwywmAZNelv9kaYytZTTm4BClgIkDF1EE79HMedYBeo7HdR9zavCnlHszOGVyvzTBdzDREpXOw6ZQi3oBmdivEewUrtDHFnhrJWTXuQeEtYqqrwrrKo4XjCSg5CWg5C05C0MSTqhKKrNEVd+MBnraOZsQ4ZeSu1OE4mjbSwc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708699393; c=relaxed/simple;
-	bh=LCCnxhxOKUUGScjoj8X/h+vtjtJ8g9tt6GUc6Qartj0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=QofJ2ToiX0e7dRpMfFaSCiTQkxGz+0d/vt+d9F2/QvuJ7YKS41cCROudeKZaOSwHflHVvW+laTknycownX7TcGnRBq+2+ua9Jw0Z+Z+AvU4jdGha6Q0DOIrulBStRWtlMHRzevik+8yfq7T0KGBhbXXCyviZS74SsAmYMpm2ZKk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=coMqQ7hy; arc=none smtp.client-ip=209.85.214.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
+	s=arc-20240116; t=1708699409; c=relaxed/simple;
+	bh=DEMIQOvydhZ/VpnCranobldgWGcw+Pq5Nukc/1RDlVc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Y2C9tZwVy7f/yIGSMW4jYErnTacdmdsMlt93jhK29d8pNZQD9E8Eyz7K0l6ZP/cb1deQvXZAHM5upDzutRo6vaWH5MOmE9K4IunT5E6Xf6MuTGy/ESQPZ6j22xy9DyHNNrp3FvHmblRp9Dfe0Eh2qxEMsXP0rZ+qwS0LYW1uEtY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cJPJf7Ly; arc=none smtp.client-ip=209.85.208.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="coMqQ7hy"
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-1d748f1320aso522985ad.0
-        for <linux-kernel@vger.kernel.org>; Fri, 23 Feb 2024 06:43:11 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cJPJf7Ly"
+Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-5643eccad0bso1373194a12.1;
+        Fri, 23 Feb 2024 06:43:27 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1708699391; x=1709304191; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=GaiOkbA7+hcdvvfDFyD524BR9JUDgPVysbGQWfqsDPs=;
-        b=coMqQ7hyMeoPDlFryqCi3Yjbj8HfuO3QSwyNknqI0QT0YLje91naBj96S2Ih/IdesG
-         DzoNG+Ay2A9iUZMIi7XZSkmf4fAXgTO3Ar8FrMRnFNIp+oRI3m1yPUIIUUdDRAUjnma7
-         wcEWDGI0UTI69e9QwCXSm1PcnDK4cqXFvOsCjYswgZOeEJt2MrRfT/ikELxCr3Lmpwoq
-         CCPh8/eelf27Yp4nh6Ra04qJRySpfJIZ4qZHiPMp0wvNlX2LgOJH85h/GFLRb8SF/b9k
-         EBugKy1QHd30vIcempHm2my3vLgu9TuMge+3n+p/lp/y4yUfeyLP4YzcMm8pauvNuwVJ
-         BqRw==
+        d=gmail.com; s=20230601; t=1708699406; x=1709304206; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=IRQuvAZAPsUv3dwxMyD+E+7cfGvNoyt2/LH5pgsTUnE=;
+        b=cJPJf7LyBc8vjzfhUn8A/vr1Gv6jGe9Wct57Z5HhdTzzsODeAJOXCBPQsLFUMurlrB
+         OJnuNDaYJCI9yXc7J/g+bCw2WGtZp9jk6BQy9drQsAXo8hgAtLVotjbez2J3+nkAxBmo
+         rs8gfQWOe8ynrspIMA/P2KZQ7BAvFO35C4oBE78LtLbOxmt3kbuFK03Kq7cWpDcQLUIf
+         mldC5E4hG0oIkobAoL/7iHHpHM94yUMCEQGpRNvdAOX2EXN2A3MD3x4r3urPAqVCo/sf
+         w5ArcWzU8oKFaIUZRwu5Fuf8WzNi3ifATTmgYHaLmvagmWMtKCof0LezCniTVo3jZAiJ
+         6O/Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708699391; x=1709304191;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=GaiOkbA7+hcdvvfDFyD524BR9JUDgPVysbGQWfqsDPs=;
-        b=HySMsA+OS4qHB1V8SHUxRoxWXHXlz8MTn715jDSp6XpdYYXtTpOfdRyrWmXRRqNFqK
-         te24/u30xUhFxn4lFyXglyFDxESG49JVSmzHLnz5BvheQaAkQRMwFee1FLHpThVi6le1
-         T+GlPu7WxcI5T9Zz33El9kkqN9iOhurpF0T8YBHXgAU4P3YlH1wMGBOGBAK1Vaxq6Pjb
-         0Z/mWV5FwgaoCrp1Z8DiNABNOuP5BbHZ+T4OT2L5cuC+ZQIfFnhscRZ4WkhvbWuugzmh
-         BGJVuhkvV9y6kx6thLtoyU6GEoLcf6Yzzqpi9sNSxFd1S+S6pl5YQzbrkTOlkbtgLi3l
-         SVOQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWU0H4fdjv9kh2Z7oSah9YQs6hvpKlZ7StA5TfsBtUX/xD2cgNXMdsT1TMQsiBIX/f+jEe+kMCIB1Ziy9fuIc0+aG5p2DkBfCNQBVC3
-X-Gm-Message-State: AOJu0YxaIe2UIFuGSRdF6MhGMguE7TqVRRkvuC66bKBXyM8UEAIpsu0+
-	RpicgmBmZRyNtt5CXGm7dZq75QTXt1KQwrgJWWyKHPl7Nxf+mf60mxlUWEeuQaU=
-X-Google-Smtp-Source: AGHT+IFCe2OmI6udUtrLrpGM7CH6IcwXuOjaaWwTj2TJkeKJuL+YC18h5jSygUOYCFe/1oOsbioDdw==
-X-Received: by 2002:a17:90a:3f16:b0:299:3fb4:4f28 with SMTP id l22-20020a17090a3f1600b002993fb44f28mr1673303pjc.4.1708699391114;
-        Fri, 23 Feb 2024 06:43:11 -0800 (PST)
-Received: from [172.20.8.9] (071-095-160-189.biz.spectrum.com. [71.95.160.189])
-        by smtp.gmail.com with ESMTPSA id z15-20020a17090ab10f00b002995e9aca72sm1522284pjq.29.2024.02.23.06.43.09
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 23 Feb 2024 06:43:10 -0800 (PST)
-Message-ID: <3cbe7ad1-421a-493c-9cb2-9234e139923f@kernel.dk>
-Date: Fri, 23 Feb 2024 07:43:08 -0700
+        d=1e100.net; s=20230601; t=1708699406; x=1709304206;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=IRQuvAZAPsUv3dwxMyD+E+7cfGvNoyt2/LH5pgsTUnE=;
+        b=bqBgl16jc1bMjyWpGONnVSlZ0HUNIRXQdjKSqB+g8ruCeuXmpHytq/Y9nopRctJkvV
+         xKsqT4G3OOfH8ikb4FgOKskLfzUhUjawh3ywnd45TDv49fxVWdJH1+0MRQp/jLEFSsvn
+         LpsjD34dU6kInoBKHhz2ELireInWOFrfxpJAeUANvw5K4KiAjrr0Lq3KxNqN8Vid2qMt
+         VTtaNrCXjmhc41OS9hrpxr2pBO4qwC5SYLwgjK1joJiYkifei9Y8baqnnM5+iHoBERRT
+         K6NXjoGHqyI/1Uwk23lPzSdGvtu1YkJSQjPym9z8DU0gH/OdJyfSiZMYxvMTIkXMKgQE
+         JF3w==
+X-Forwarded-Encrypted: i=1; AJvYcCWe0UFflyxrGNqc3t5XUVCNhCEH50VUEoTZ77GdGkz9xFb8x1zr9qvoVJYtN19f5MZRqHyvfz75xxwk/kLIArwsAOErpdoNneU6H/Hvu4/rkGaPNrN/RAEY84CgxOuk8NtnVZdPHM/MnROWtla7C0SUSBOXmYmaeeSM4XF4z4FPm31T2swKLDgUmrIseArPGm5hqpzrLS4yRIbJdrXnFq0=
+X-Gm-Message-State: AOJu0YyCXw48KKsv9bAi0qEVhdMrUCU4HlNKPTCSHUP/ChWD7wX3Gxpk
+	Qjig6X3o7b5mKO/Ae5+fy5LZS4rWUD7tZ9wAUylTIoalOCEAw1yLbnF2KSnINwmNpGxJsj01kcM
+	cfF4fgXnT/jMqi7eldklHYpXCi0w=
+X-Google-Smtp-Source: AGHT+IGiHiAkfrKtroFs848fr9GZTa3NoU86QtnnJ6tiFG1Z8p16HIHWpUfwHXBT5/jFD1kjrOBJqL8PGK2y1xsRPQM=
+X-Received: by 2002:a17:906:1310:b0:a3d:a63f:2db0 with SMTP id
+ w16-20020a170906131000b00a3da63f2db0mr19511ejb.28.1708699405892; Fri, 23 Feb
+ 2024 06:43:25 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] usb: gadget: f_fs: Fix NULL pointer dereference in
- ffs_epfile_async_io_complete()
-Content-Language: en-US
-To: Selvarasu Ganesan <quic_selvaras@quicinc.com>,
- Greg KH <gregkh@linuxfoundation.org>
-Cc: brauner@kernel.org, jack@suse.cz, jlayton@kernel.org,
- keescook@chromium.org, peter@korsgaard.com, hayama@lineo.co.jp,
- dmantipov@yandex.ru, quic_linyyuan@quicinc.com, linux-usb@vger.kernel.org,
- linux-kernel@vger.kernel.org, quic_ppratap@quicinc.com,
- quic_wcheng@quicinc.com, quic_jackp@quicinc.com
-References: <20240223054809.2379-1-quic_selvaras@quicinc.com>
- <2024022302-routine-schematic-b4fd@gregkh>
- <d2f40e2d-cbbd-41f9-9aa6-41d0f251ffda@quicinc.com>
-From: Jens Axboe <axboe@kernel.dk>
-In-Reply-To: <d2f40e2d-cbbd-41f9-9aa6-41d0f251ffda@quicinc.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20240223133758.9787-1-mitrutzceclan@gmail.com> <20240223133758.9787-2-mitrutzceclan@gmail.com>
+In-Reply-To: <20240223133758.9787-2-mitrutzceclan@gmail.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Fri, 23 Feb 2024 16:42:50 +0200
+Message-ID: <CAHp75VekP4fJPxcZeQVXypDDrQT1i9CtesN2R4TtiYxxpQr44A@mail.gmail.com>
+Subject: Re: [PATCH v15 2/3] iio: adc: ad_sigma_delta: Add optional irq selection
+To: Dumitru Ceclan <mitrutzceclan@gmail.com>
+Cc: linus.walleij@linaro.org, brgl@bgdev.pl, andy@kernel.org, 
+	linux-gpio@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>, 
+	Jonathan Cameron <jic23@kernel.org>, Rob Herring <robh+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Michael Walle <michael@walle.cc>, Arnd Bergmann <arnd@arndb.de>, ChiaEn Wu <chiaen_wu@richtek.com>, 
+	Niklas Schnelle <schnelle@linux.ibm.com>, =?UTF-8?Q?Leonard_G=C3=B6hrs?= <l.goehrs@pengutronix.de>, 
+	Mike Looijmans <mike.looijmans@topic.nl>, Haibo Chen <haibo.chen@nxp.com>, 
+	Hugo Villeneuve <hvilleneuve@dimonoff.com>, David Lechner <dlechner@baylibre.com>, 
+	Ceclan Dumitru <dumitru.ceclan@analog.com>, linux-iio@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 2/23/24 4:35 AM, Selvarasu Ganesan wrote:
-> Here?s what the code might look like with a new lock:
-> 
-> static void ffs_epfile_async_io_complete(struct usb_ep *_ep,
->                                          struct usb_request *req)
-> {
-> ....
-> spin_lock(&ffs->new_lock);
-> if (ffs && ffs->io_completion_wq)
->     queue_work(ffs->io_completion_wq, &io_data->work);
-> spin_unlock(&ffs->new_lock);
-> ....
-> }
-> 
-> 
-> 
-> static void ffs_data_put(struct ffs_data *ffs) {
-> ...
-> destroy_workqueue(ffs->io_completion_wq);
-> kfree(ffs->dev_name);
-> spin_lock(&ffs->new_lock);
-> kfree(ffs);
-> spin_unlock(&ffs->new_lock);
-> ...
-> }
+On Fri, Feb 23, 2024 at 3:38=E2=80=AFPM Dumitru Ceclan <mitrutzceclan@gmail=
+.com> wrote:
+>
+> Add optional irq_num attribute to ad_sigma_delta_info structure for
+> selecting the used interrupt line for ADC's conversion completion.
 
-This obviously won't work at all, and it's not the right way to fix it
-at all. It needs a ref count.
+...
 
--- 
-Jens Axboe
+>   * @data_reg: Address of the data register, if 0 the default address of =
+0x3 will
+>   *   be used.
+>   * @irq_flags: flags for the interrupt used by the triggered buffer
+> + * @irq_line: IRQ for reading conversions. If 0, spi->irq will be used
+>   * @num_slots: Number of sequencer slots
 
+Now kernel doc order is unaligned with the real member order.
+Moreover, have you checked with `pahole`?
+
+>  struct ad_sigma_delta_info {
+> @@ -60,6 +61,7 @@ struct ad_sigma_delta_info {
+>         unsigned int data_reg;
+>         unsigned long irq_flags;
+>         unsigned int num_slots;
+> +       int irq_line;
+>  };
+
+But no need to resend, it's minor and Jonathan can probably amend this
+whilst applying.
+
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+
+--=20
+With Best Regards,
+Andy Shevchenko
