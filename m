@@ -1,110 +1,153 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4700618E0E;
-	Fri, 23 Feb 2024 08:43:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9B7118E10;
+	Fri, 23 Feb 2024 08:43:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708677799; cv=none; b=GRRI1LTyQpwHPcGy3sEWluA+qoSUrInHGLA/CkRoZfMz6fobzKX9GO0ktqvqDOgqjC8lbh4UzxkRFDItBd8G5EXVFuHjPqPV/yQq1AS4cUXcMfvkdPwLYYp0Jsl6pBfb6FGKl8ucXS9kCXxu0cCe/o4WkCfqfDRDjCemnacDUWQ=
+	t=1708677814; cv=none; b=DH3et1E3Gy9pi93EoPauZ/No1Ab0PK6Rc+YMfGpfZVPvxPTFZjUwESa8dlwQdjpY5cYY9qD/xgddat2NAl4meR+T8/kcBnk0bcpZGTipbL+FTS5+KL/oHu4p0YIBbCzC8vuCerkgWd0NPFfq5FmrJkm5LzUZ1jq9SF09uM82ie0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708677799; c=relaxed/simple;
-	bh=IEeTlpxURy3/yxx9Pu6JpPyffFdM2y6Tfz9e7EtiqbE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DFuY9gaQk0tSluj6T/aAWGeVkxogCVMV7jV04vBj1PVeXN5hHayfHXydxGfv2PVrmDBApbMjDf3KnwlAJ9EH6kWzODEIUI987ZWfkpZE5p5KoTm4fERXr1YPgXAGtvaBZLED9HzDOGk5N8MgMEOFq8fJXNpK/eUSMPsLhEpFYI0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=a/GE7Ycn; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="a/GE7Ycn"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1708677797; x=1740213797;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=IEeTlpxURy3/yxx9Pu6JpPyffFdM2y6Tfz9e7EtiqbE=;
-  b=a/GE7YcnnKw4ZAhiIvHWQXP9syXTouQtCTed7mT4SA8qkPG7yDOidaKz
-   XfxNI2xDto6SX1qNJIzpRgte7P5HrZ7odfLQYOKBWNLUT/IVG+1o7w18A
-   y10d+ZvQCK2H13kLU1shn5wzZbtIZzHU+xy5A0LyUuvBPpKqZMhoJbH6V
-   Gc25UodTO/vV4yMbkBBc0YCN0jr0MIhbJztapa1Im8CryF+jQRivAOfM/
-   QA1HARDnTWsHG5EPBfpTAJ7dKGqxU6YsR9Gdm/rFY3sKeDqFHZPRf8Usy
-   TaojJ4y38xggtLB0Fe47skFeRLVpv5VL5wTxfuvP5YLusx3Vz1Sqo+05C
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10992"; a="6767826"
-X-IronPort-AV: E=Sophos;i="6.06,179,1705392000"; 
-   d="scan'208";a="6767826"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Feb 2024 00:43:16 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,179,1705392000"; 
-   d="scan'208";a="43297602"
-Received: from turnipsi.fi.intel.com (HELO kekkonen.fi.intel.com) ([10.237.72.44])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Feb 2024 00:43:14 -0800
-Received: from kekkonen.localdomain (localhost [127.0.0.1])
-	by kekkonen.fi.intel.com (Postfix) with SMTP id 13BF511F81D;
-	Fri, 23 Feb 2024 10:43:11 +0200 (EET)
-Date: Fri, 23 Feb 2024 08:43:11 +0000
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
-To: Mikhail Rudenko <mike.rudenko@gmail.com>
-Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-	Jacopo Mondi <jacopo@jmondi.org>,
-	Tommaso Merciai <tomm.merciai@gmail.com>,
-	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-	Dave Stevenson <dave.stevenson@raspberrypi.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>
-Subject: Re: [PATCH v2 00/20] Omnivision OV4689 refactoring and improvements
-Message-ID: <Zdhan1Gzi6GD5QfP@kekkonen.localdomain>
-References: <20231218174042.794012-1-mike.rudenko@gmail.com>
- <87o7c9q27c.fsf@gmail.com>
- <ZdhULRi3w4E5tQgR@kekkonen.localdomain>
+	s=arc-20240116; t=1708677814; c=relaxed/simple;
+	bh=iLnJXvuR5lkNWwaRH7mn/a0WJs/BElzIKvl+E/YGsVo=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=LZhgZdh9t5hnrldkucy0/UZqzf56oIIF8iUeUtceUwZgvdfVBu4EpLauH0G74Pr8nYOpAmh7IpvYV9J9N7d5II9wtI3Ege/KuQWSqhRY92dn9K8wXQKRUM2zFRuSeocgmEG3qIlWnp23PafXljyNhTNndlfcLJtnAeYZh+Up5/c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.191
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.214])
+	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4Th3Q52vzdz1h08B;
+	Fri, 23 Feb 2024 16:41:17 +0800 (CST)
+Received: from canpemm500009.china.huawei.com (unknown [7.192.105.203])
+	by mail.maildlp.com (Postfix) with ESMTPS id C1E871A016B;
+	Fri, 23 Feb 2024 16:43:27 +0800 (CST)
+Received: from localhost.localdomain (10.50.165.33) by
+ canpemm500009.china.huawei.com (7.192.105.203) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Fri, 23 Feb 2024 16:43:27 +0800
+From: Yicong Yang <yangyicong@huawei.com>
+To: <gregkh@linuxfoundation.org>, <jirislaby@kernel.org>, <tony@atomide.com>,
+	<linux-kernel@vger.kernel.org>, <linux-serial@vger.kernel.org>
+CC: <john.ogness@linutronix.de>, <andriy.shevchenko@linux.intel.com>,
+	<tglx@linutronix.de>, <yangyicong@hisilicon.com>, <linuxarm@huawei.com>,
+	<prime.zeng@hisilicon.com>, <jonathan.cameron@huawei.com>,
+	<fanghao11@huawei.com>
+Subject: [PATCH v4] serial: port: Don't suspend if the port is still busy
+Date: Fri, 23 Feb 2024 16:39:03 +0800
+Message-ID: <20240223083903.42129-1-yangyicong@huawei.com>
+X-Mailer: git-send-email 2.31.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZdhULRi3w4E5tQgR@kekkonen.localdomain>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
+ canpemm500009.china.huawei.com (7.192.105.203)
 
-On Fri, Feb 23, 2024 at 08:15:41AM +0000, Sakari Ailus wrote:
-> Hi Mikhail,
-> 
-> On Wed, Feb 21, 2024 at 06:02:15PM +0300, Mikhail Rudenko wrote:
-> > 
-> > Hi,
-> > 
-> > On 2023-12-18 at 20:40 +03, Mikhail Rudenko <mike.rudenko@gmail.com> wrote:
-> > 
-> > > Hi,
-> > >
-> > > This series contains refactoring and new features implementation for
-> > > the Omnivision OV4689 sensor driver. Specifically, patches 1, 2, 3, 5,
-> > > 6, 10, 15, 16, 18, and 19 are refactorings, and are not supposed to
-> > > introduce any functional change. Patches 4 and 7 perform migration to
-> > > CCI helpers and subdevice active state respectively, and should not
-> > > introduce any hardware- and/or user-visible change either. Patch 8
-> > > fixes a possible race condition due to v4l2_async_register_subdev_sensor
-> > > being called too early in ov4689_probe, and patch 9 migrates power
-> > > management to PM autosuspend.
-> > >
-> > > Patches 11-14 expose more sensor controls to the userspace, such as
-> > > (read-write) HBLANK, VFLIP/HFLIP, digital gain, and color
-> > > balance. Patch 17 implements configurable analogue crop rectangle via
-> > > .set_selection callback. And finally, patch 20 enables 2x2 binning
-> > > option. It should be noted that publicly available sensor
-> > > documentation is lacking description of many registers and their value
-> > > ranges, so a lot of values had to be found by experimentation.
-> > 
-> > Gentle ping on this series. Anything I can do to help getting it
-> > reviewed and merged? Maybe split patches 15-20 which implement cropping
-> > and binning and change the driver away from register list based model
-> > into a separate series? Anyone?
-> 
-> Oops, my bad. I'll review these shortly. I can already tell there's not
-> much to do though.
+From: Yicong Yang <yangyicong@hisilicon.com>
 
-Done.
+We accidently met the issue that the bash prompt is not shown after the
+previous command done and until the next input if there's only one CPU
+(In our issue other CPUs are isolated by isolcpus=). Further analysis
+shows it's because the port entering runtime suspend even if there's
+still pending chars in the buffer and the pending chars will only be
+processed in next device resuming. We are using amba-pl011 and the
+problematic flow is like below:
 
+Bash                                         kworker
+tty_write()
+  file_tty_write()
+    n_tty_write()
+      uart_write()
+        __uart_start()
+          pm_runtime_get() // wakeup waker
+            queue_work()
+                                             pm_runtime_work()
+                                               rpm_resume()
+                                                status = RPM_RESUMING
+                                                serial_port_runtime_resume()
+                                                  port->ops->start_tx()
+                                                    pl011_tx_chars()
+                                                      uart_write_wakeup()
+        […]
+        __uart_start()
+          pm_runtime_get() < 0 // because runtime status = RPM_RESUMING
+                               // later data are not commit to the port driver
+                                                status = RPM_ACTIVE
+                                                rpm_idle() -> rpm_suspend()
+
+This patch tries to fix this by checking the port busy before entering
+runtime suspending. A runtime_suspend callback is added for the port
+driver. When entering runtime suspend the callback is invoked, if there's
+still pending chars in the buffer then flush the buffer.
+
+Cc: Tony Lindgren <tony@atomide.com>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Jiri Slaby <jirislaby@kernel.org>
+Fixes: 84a9582fd203 ("serial: core: Start managing serial controllers to enable runtime PM")
+Reviewed-by: Tony Lindgren <tony@atomide.com>
+Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
+---
+Change since v3:
+- Drop non-fix change in __serial_port_busy()
+- Use a boolen busy instead of ret per Jiri
+Link: https://lore.kernel.org/all/20240208075216.48915-1-yangyicong@huawei.com/
+
+Change since v2:
+- Narrow the spinlock region per Andy
+- Make __serial_port_busy() return -EBUSY if port has pending chars per Andy
+Thanks.
+Link: https://lore.kernel.org/all/20240206073322.5560-1-yangyicong@huawei.com/
+
+Change since v1:
+- Use port lock wrapper per John
+- Flush the pending chars and return -EBUSY per Tony.
+Thanks.
+Link: https://lore.kernel.org/all/20240204031957.58176-1-yangyicong@huawei.com/
+
+ drivers/tty/serial/serial_port.c | 27 ++++++++++++++++++++++++++-
+ 1 file changed, 26 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/tty/serial/serial_port.c b/drivers/tty/serial/serial_port.c
+index 88975a4df306..1843c9ef7c49 100644
+--- a/drivers/tty/serial/serial_port.c
++++ b/drivers/tty/serial/serial_port.c
+@@ -46,8 +46,33 @@ static int serial_port_runtime_resume(struct device *dev)
+ 	return 0;
+ }
+ 
++static int serial_port_runtime_suspend(struct device *dev)
++{
++	struct serial_port_device *port_dev = to_serial_base_port_device(dev);
++	struct uart_port *port;
++	unsigned long flags;
++	bool busy;
++
++	port = port_dev->port;
++
++	if (port->flags & UPF_DEAD)
++		return 0;
++
++	uart_port_lock_irqsave(port, &flags);
++	busy = __serial_port_busy(port);
++	if (busy)
++		port->ops->start_tx(port);
++	uart_port_unlock_irqrestore(port, flags);
++
++	if (busy)
++		pm_runtime_mark_last_busy(dev);
++
++	return busy ? -EBUSY : 0;
++}
++
+ static DEFINE_RUNTIME_DEV_PM_OPS(serial_port_pm,
+-				 NULL, serial_port_runtime_resume, NULL);
++				 serial_port_runtime_suspend,
++				 serial_port_runtime_resume, NULL);
+ 
+ static int serial_port_probe(struct device *dev)
+ {
 -- 
-Sakari Ailus
+2.24.0
+
