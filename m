@@ -1,93 +1,104 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F364A13B2B5;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C84D13A863;
 	Fri, 23 Feb 2024 17:12:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708708358; cv=none; b=E1q8WWYrV2OPizEZq2veUYjrDxk5wgfn68g2QW0p36EZWIyMCh0XKSb7YL9SvLrHfYFTfDwE3ra4++i9EZbaVActvKMUjPebXQj6nKONIefJcZ2d3F2dnBDIFsa2n5Sq+SAxncILKopvOm/XnClrpUL57cDuuvu7S/a3H9lUXsk=
+	t=1708708359; cv=none; b=SX600kba1/tUWHuWhsoCrw6a5180BoEG8yWbSqwday2f9stlFwu5cWAfsUSJP323Z3AuUn79NbhpxuES6REc6TNZEA/r7u4GbQYtO685Pd5zgl0TezeOtKyDCkcxZsD+u6hmvifFHnU5VvsC8uMQksO3bERlzxAlUYuUXYIc5vg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708708358; c=relaxed/simple;
-	bh=SJjK/OlnPiSEOlTM7MrjuCeEvk6XyHl4V+e8NRfLHqQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sAjwiog+a5vHc3wcCR3Du0cPEHjrTp0oQ3m74odeYGWy3gsAiQhJEtPpX7qBlKI8RdDpSPLPqumdstSWx9JII47EEOU/IMqnKh/X/vDwwHXDGX4oeGMCHYjL1T6G7n6ekYF8e2gS5JCPhioJt+d6ZV5+VcZsKYwygPWDsP7Pyzk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iYm1KEm2; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iYm1KEm2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7A374C433B1;
-	Fri, 23 Feb 2024 17:12:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708708357;
-	bh=SJjK/OlnPiSEOlTM7MrjuCeEvk6XyHl4V+e8NRfLHqQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=iYm1KEm2XgtFgQGp5qKeCuIkODtj4+WK/ieP3Rqkbgz0M3YCb0tomjB7u6JQ7aURH
-	 9IPoG5BxDf5IHeMPQmbXNZKuuT4LqD038LhJkroxo/MAk/NomQeaAS+eX6XrfIF9HO
-	 ArC0Km+RQXKxmWqXOUENhhB/cN/Q8XFjbQyJdyZQAJqARFceZRVRJ1Lne60NYMOTx3
-	 p0oDUKsznRxiZzDFu4A/Xpy97Eey5CtV6lFk/azTDZZ8NsNbECZIMau1/0gQC8boTm
-	 TW4f4N5MnNQx+2qQEFuFW2pc7flHpIivly4BrC8fnptrg+CdS8QE8Bl2+SGCMXJWcb
-	 ujd3ZSC+eBWgQ==
-Date: Fri, 23 Feb 2024 17:12:31 +0000
-From: Lee Jones <lee@kernel.org>
-To: Roger Quadros <rogerq@kernel.org>
-Cc: Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>, Nishanth Menon <nm@ti.com>,
-	Vignesh Raghavendra <vigneshr@ti.com>,
-	Tero Kristo <kristo@kernel.org>, Andrew Davis <afd@ti.com>,
-	b-liu@ti.com, srk@ti.com, r-gunasekaran@ti.com,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v5 1/4] dt-bindings: mfd: syscon: Add
- ti,am62-usb-phy-ctrl compatible
-Message-ID: <20240223171231.GN1666215@google.com>
-References: <20240223-b4-for-v6-5-am62-usb-typec-dt-v5-0-4b5854d17d18@kernel.org>
- <20240223-b4-for-v6-5-am62-usb-typec-dt-v5-1-4b5854d17d18@kernel.org>
+	s=arc-20240116; t=1708708359; c=relaxed/simple;
+	bh=omVfxmJ5d0K2yC1GRTrc2kykKRrP0QiZLn0MqUh5wF4=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=GdrpZsO/wj4Pb1gj46PeT+d9kGi8tWa6QRwb2wcDKc2IjOprKYEiYEGL16Tt+KCcDAvo4pNHm05lZCh81gf+mCqKqXPZ/lE1qD52go6XikKyGfNwZuynqtQ+bXTluz1c5/LvlpOPZHUk8bBBlINwKLdCoXVfZ6+Gjz7qIugB8dk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4ThGgF35Tnz6K5tk;
+	Sat, 24 Feb 2024 01:08:25 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
+	by mail.maildlp.com (Postfix) with ESMTPS id 211CD140F0B;
+	Sat, 24 Feb 2024 01:12:35 +0800 (CST)
+Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Fri, 23 Feb
+ 2024 17:12:34 +0000
+Date: Fri, 23 Feb 2024 17:12:33 +0000
+From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To: Julia Lawall <julia.lawall@inria.fr>
+CC: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	<linux-iio@vger.kernel.org>, Rob Herring <robh@kernel.org>, Frank Rowand
+	<frowand.list@gmail.com>, <linux-kernel@vger.kernel.org>, Peter Zijlstra
+	<peterz@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	<marek.vasut@gmail.com>
+Subject: Re: [PATCH v2 0/4] of: automate of_node_put() - new approach to
+ loops.
+Message-ID: <20240223171233.000069bd@Huawei.com>
+In-Reply-To: <3ced0f8-fe6c-a2f4-f7c4-79ecc7c308d@inria.fr>
+References: <20240223124432.26443-1-Jonathan.Cameron@huawei.com>
+	<Zdi_ToUofu62s5zT@smile.fi.intel.com>
+	<20240223163602.0000697a@Huawei.com>
+	<3ced0f8-fe6c-a2f4-f7c4-79ecc7c308d@inria.fr>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240223-b4-for-v6-5-am62-usb-typec-dt-v5-1-4b5854d17d18@kernel.org>
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml100006.china.huawei.com (7.191.160.224) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
 
-On Fri, 23 Feb 2024, Roger Quadros wrote:
+On Fri, 23 Feb 2024 17:38:31 +0100 (CET)
+Julia Lawall <julia.lawall@inria.fr> wrote:
 
-> Add the compatible for TI AM62 USB PHY Control register. This
-> register is found in the TI AM62 WKUP_CTRL_MMR0 space [1]. It
-> is used to indicate the USB PHY PLL reference clock rate and
-> core voltage level to the USB controller.
+> On Fri, 23 Feb 2024, Jonathan Cameron wrote:
 > 
-> [1] - https://www.ti.com/lit/pdf/spruiv7
+> > On Fri, 23 Feb 2024 17:52:46 +0200
+> > Andy Shevchenko <andriy.shevchenko@linux.intel.com> wrote:
+> >  
+> > > On Fri, Feb 23, 2024 at 12:44:28PM +0000, Jonathan Cameron wrote:  
+> > > > The equivalent device_for_each_child_node_scoped() series for
+> > > > fwnode will be queued up in IIO for the merge window shortly as
+> > > > it has gathered sufficient tags. Hopefully the precdent set there
+> > > > for the approach will reassure people that instantiating the
+> > > > child variable inside the macro definition is the best approach.
+> > > > https://lore.kernel.org/linux-iio/20240217164249.921878-1-jic23@kernel.org/
+> > > >
+> > > > v2: Andy suggested most of the original converted set should move to
+> > > >     generic fwnode / property.h handling.  Within IIO that was
+> > > >     a reasonable observation given we've been trying to move away from
+> > > >     firmware specific handling for some time. Patches making that change
+> > > >     to appropriate drivers posted.
+> > > >     As we discussed there are cases which are not suitable for such
+> > > >     conversion and this infrastructure still provides clear benefits
+> > > >     for them.  
+> > >  
+> > > >   iio: adc: rcar-gyroadc: use for_each_available_child_node_scoped()  
+> > >
+> > > Is this the only one so far? Or do we have more outside of IIO?
+> > >
+> > > I'm fine with the code if OF maintainers think it's useful.
+> > > My concern is to make as many as possible drivers to be converted to
+> > > use fwnode instead of OF one.
+> > >  
+> > Julia wrote a coccinelle script
+> > __free() cases
+> > https://lore.kernel.org/all/alpine.DEB.2.22.394.2401291455430.8649@hadrien/  
 > 
-> Signed-off-by: Roger Quadros <rogerq@kernel.org>
-> Acked-by: Rob Herring <robh@kernel.org>
-> ---
-> Changelog:
-> v5 - no change. Added Lee Jones in To list
-> v4 - no change. Added Rob's Acked-by
->      https://lore.kernel.org/all/20240205135908.54656-2-rogerq@kernel.org/
-> v3 - add compatibles in alphabetical order
->      https://lore.kernel.org/all/20240201120332.4811-2-rogerq@kernel.org/
-> v2 - New patch
-> ---
->  Documentation/devicetree/bindings/mfd/syscon.yaml | 1 +
->  1 file changed, 1 insertion(+)
+> The script doesn't use fwnode.  It gets rid of of_node_put, asssuming that
+> someone has already set that up for __free.
+
+Question I was addressing was a few lines up.
+"Or do we have more outside of IIO?"
+
+I should have addressed it immediately after the question
++ not sent half an answer :(
+
 > 
-> diff --git a/Documentation/devicetree/bindings/mfd/syscon.yaml b/Documentation/devicetree/bindings/mfd/syscon.yaml
-> index 084b5c2a2a3c..9437705af92f 100644
-> --- a/Documentation/devicetree/bindings/mfd/syscon.yaml
-> +++ b/Documentation/devicetree/bindings/mfd/syscon.yaml
-> @@ -72,6 +72,7 @@ properties:
->                - rockchip,rk3588-qos
->                - rockchip,rv1126-qos
->                - starfive,jh7100-sysmain
-> +              - ti,am62-usb-phy-ctrl
->                - ti,am654-dss-oldi-io-ctrl
+> julia
 
-Doesn't apply.  Please rebase on tomorrow's -next.
-
--- 
-Lee Jones [李琼斯]
