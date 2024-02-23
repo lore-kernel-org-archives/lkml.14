@@ -1,282 +1,132 @@
-Received: from mail-vs1-f51.google.com (mail-vs1-f51.google.com [209.85.217.51])
+Received: from mail-yb1-f178.google.com (mail-yb1-f178.google.com [209.85.219.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED5DC14CACC
-	for <linux-kernel@vger.kernel.org>; Fri, 23 Feb 2024 22:20:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8FA214DFD2
+	for <linux-kernel@vger.kernel.org>; Fri, 23 Feb 2024 22:21:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708726852; cv=none; b=KYHCwbUnRtRT0gV+3LmZ3My5x3cmpYObS/bNidiyfqgRpRJf8FugFFhLVKbelvrSOaMa1iHhaWrkD+PBAMswznNaJfSas+DbmgLu5KaTh2RD7Sz3GnDhy5gru/aMlADDrFonBxWEgcBkB6P7oDXC7XHA0+RoB9PLeQzsRQZXCqs=
+	t=1708726898; cv=none; b=Ys09cGu7D8/4El2FI/1TGx4qf/Y/xilH6uOzuvbrCLlYq01TNatJy1qYgaJywdOjZlVDC2aZmKHSLfdullxLv+xwvWaKqonzRfR+BKOCd5K4lZcFKaYKsEm8GDnrcmokXq7/Bm8lJN1blyI7PK0l7aQy1ELzfd6W966AOkcE9s8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708726852; c=relaxed/simple;
-	bh=2ewFfHqwslPMlbxM+1sLeqdGacpFDMTN+m47JT4rxhs=;
+	s=arc-20240116; t=1708726898; c=relaxed/simple;
+	bh=tCxLkZaiXV0zdt3VLXgnun/1lqJgVCO7ceU56CFwRpU=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ECB+oWvUi8jLhob6ImRC2cigZxBuTn1jKoS7XC1po5tjJnI7gQ8WXdlFRQSWz7QkDhUA3pk972+b2BIaYI3+/oC7TLkw8NrkH1nMHar72Ql4zC4gSltifOKpF+gSRGrjXLrjcjC7sdy22dHvOA9Gj07OQKhocegN4zDcfHuU6cg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Wt77wLzq; arc=none smtp.client-ip=209.85.217.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Cc:Content-Type; b=PqGMrPYQeuRjp7ZjjqHxsj5wcLJTOauzpeRg1fmAMYa/yeJHl9wSNGWnV8vMFEFSgbVybhEgfzJ4dtyXSXgLXtTMe5AcM21GeFYHvStlywNcxODvH2NtGZiKzH2ZIbObscbu8q+EAlGQanUYewKMAJyCoFe0PTdraonXx+8ibdc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com; spf=pass smtp.mailfrom=paul-moore.com; dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b=DGeG1NJ2; arc=none smtp.client-ip=209.85.219.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paul-moore.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Wt77wLzq"
-Received: by mail-vs1-f51.google.com with SMTP id ada2fe7eead31-47050fd33f5so248383137.1
-        for <linux-kernel@vger.kernel.org>; Fri, 23 Feb 2024 14:20:48 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b="DGeG1NJ2"
+Received: by mail-yb1-f178.google.com with SMTP id 3f1490d57ef6-dcc86086c9fso1375636276.3
+        for <linux-kernel@vger.kernel.org>; Fri, 23 Feb 2024 14:21:32 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1708726848; x=1709331648; darn=vger.kernel.org;
+        d=paul-moore.com; s=google; t=1708726892; x=1709331692; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=8tnf0UCnczzqZkJrcJnLBW756ktsgx2tF5puvvkvbzc=;
-        b=Wt77wLzq+gB6s72sGu/vMIlH3TL2Y8nz2fuGU2X292T32Sr75ZIdgeVAUnCxWd6oCs
-         uO3+ZSzB3YYDUR7K2+zG8516VqsY+grxlqfGJuZCG/t4sGSn/4QuFbgTDse65niC6mpP
-         7A4uZ0P4iak+A1yvoazwO1J8J9cV3Wpyt+2k9zE1vr9wjG+PInrzz4a6PFGhNtTW9Wwe
-         PYXBUdCkduEAzGdG5KEa8s1XxHvgu0T6TROePrPp/MzSvAamv60bj8zlpj4ofgG9vSKR
-         f9i8HDdtb2/AfNtjIj1oFfoD9h3T4CILmM+dxRCj5p/VKkiTYZUoLhZEtpAcssdeHYgl
-         eKOg==
+        bh=ZSHK5epAuKvdBFEuYnQb3nyTXVxrBoDNXBYJr9NtKwo=;
+        b=DGeG1NJ2i9WQOHMWBbz9z8nrmtXaogxgI5TGhyK4p/hjJMW8UG7NVPc/g7B467Iihv
+         yuIQvf/mi1PSkisYQja3NlvZP/ibnX59/wVuAXrotALE5Rml7Cr2RMT7TJYtszr0xzpc
+         Xz7bSENYj9Ebn6oiSA9GzRUx7TvCbCspCQG/KunAEF2QghjvI+o5GirNRqaL63z8x7J8
+         NCMCe4PhEVJj5lntgr6zco47iNn6EAEbFIAd8XBrHXJkZeZY+kwjmSGdgp+XTlhZu0sE
+         yMs+M7TvEMAQ3jYyBcnK1cTplkAmac6d6fjlYAXbK4rjAfpNVTOw7X2wQ5INnUqVFlzG
+         CK5A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708726848; x=1709331648;
+        d=1e100.net; s=20230601; t=1708726892; x=1709331692;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=8tnf0UCnczzqZkJrcJnLBW756ktsgx2tF5puvvkvbzc=;
-        b=XGy9PVTZiMdPbVikR2cJJ9seOVUDCEYT2MDap23mLkN/usz43ugPWXB+z1VgFi92yK
-         xekGt/LmnYueXFwVKRa/sUG40WuZkI4Iq2aQmx60KcCxaPt1QyM2HJzBkLvjHgg5Nx+V
-         tQYgl43/mIfad7ToEQ9h048iD/Ur08gW8UgeD4KmLLfU6PyVLfA8JrUQqJyRlTaVRYjt
-         nqAhGzcSDAFF/YdHqD8a9SmZLex6A1Sg+a4zGCQAG9tlXiJ+pH0U8U5+ZaMwsFRQmOXm
-         v6JgLiOrhxe/GpauOvcRNCuxgbFAGuW0+zyG85SdkZ7udgXnsbspG7p8qdflF+0kEgKc
-         jUIA==
-X-Forwarded-Encrypted: i=1; AJvYcCWkwBlpD2XIZKBH93dcul1tkqzwhaTOunNGNEIi0dTCcR8uNSIMZebGKDYoduEIMqxyFdKHdev/u//jFKz4rLVekYP4gr3vHcvD+Ezm
-X-Gm-Message-State: AOJu0YyQdARG/vcArXqU4aAW526syLfKpRp4SL0fT9YjGABR0Y0amRtX
-	rQO+wT6sgfPSnaYnVI8dBvVFndDJrumGTss278XpELXobtrdrzXecp2A9kZF3s+hXxfJUzp68fH
-	As/uUxBRZFuwrsg6vJG1G/nCqf0E=
-X-Google-Smtp-Source: AGHT+IEiiRffkuV3Tls4JY0NY5ew2NENgDZ86ddM/QxqIYcfgucw/QBar9EBLUhesx3Qketwm+17dagWsta+mWFLke4=
-X-Received: by 2002:a05:6102:3964:b0:471:54c:81dd with SMTP id
- ho4-20020a056102396400b00471054c81ddmr1151432vsb.17.1708726847671; Fri, 23
- Feb 2024 14:20:47 -0800 (PST)
+        bh=ZSHK5epAuKvdBFEuYnQb3nyTXVxrBoDNXBYJr9NtKwo=;
+        b=tn/M9JWGoTs0aK+eXXWukO3u++EcczB5WF1Zn9qjDKw9CHnCTpd+DogRtcUIqnjFy6
+         Z5Efay5AoVj7/QWdoqvgA8SyG1r90GQ0w4rrLrUkg0e5TGBrIPgG8PYF4QZ8ga9XJn91
+         bY1EYq8+XwV2zGBuArjN34JGKUEvAmknXsF4dvNHGPIPdLaUtZaru5x/q7zL3zvAge7o
+         t7AB0CGzZz+hMdVhK/I9DQgXHEgFXM/R8zKUmMKPjXZK+SYurkJOFXJUMsRAJrcD7zRD
+         AFiB6tZ3sIed3YRm8uDkeC6JB1TLRe55xtvuANh3/oHAlgmnqNQbqMQbci4kMnnvjm4X
+         Aeyw==
+X-Forwarded-Encrypted: i=1; AJvYcCWx3gjTnjSWTlIWmC+bMsGtaela/mCZ/SjxhAaAmUBIOg4TBglrMdnLRoW6jzsEh6kg8KzK+hovliG6tHRZkhrZTKkk6lTc5jJmO6zY
+X-Gm-Message-State: AOJu0YyCH46FG8o3lbFYrZsDJ1u03Ui9XEluWTuYOA1n5RbzBPKWgANs
+	vza3HRyUDnouVoyNmiIQ9prHCZ7jGvtKTiGyUDnorxroyu+MdIXwLOP9uXl+qXX3u9A6dHo0u5Q
+	xwARnMuR3CIznHd330vPUQZdWY3Tcvt7OvLrI
+X-Google-Smtp-Source: AGHT+IHoS06SEmuSwB42FEj2Tv0jydKO5BLvQbKa4zVmj3/4z7CKsbNK/04Q5C3FEGLnLUWZFAf1+v3Y+5eZxxScozA=
+X-Received: by 2002:a25:d0d4:0:b0:dcc:9dcc:a433 with SMTP id
+ h203-20020a25d0d4000000b00dcc9dcca433mr1335893ybg.54.1708726891747; Fri, 23
+ Feb 2024 14:21:31 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240223041550.77157-1-21cnbao@gmail.com> <ZdkXpcAB6xWj2geh@google.com>
-In-Reply-To: <ZdkXpcAB6xWj2geh@google.com>
-From: Barry Song <21cnbao@gmail.com>
-Date: Sat, 24 Feb 2024 11:20:36 +1300
-Message-ID: <CAGsJ_4zPVNcP-7YQ8wkxmZu0xLkaQ-hyh98Ot0+RpyXm9o1krQ@mail.gmail.com>
-Subject: Re: [PATCH RFC] mm: madvise: pageout: ignore references rather than
- clearing young
-To: Minchan Kim <minchan@kernel.org>
-Cc: sj@kernel.org, akpm@linux-foundation.org, damon@lists.linux.dev, 
-	linux-mm@kvack.org, linux-kernel@vger.kernel.org, mhocko@suse.com, 
-	hannes@cmpxchg.org, Barry Song <v-songbaohua@oppo.com>
+References: <20240223190546.3329966-1-mic@digikod.net> <20240223.ieSh2aegurig@digikod.net>
+ <20240223.eij0Oudai0Ia@digikod.net> <CAHC9VhRdRK3FztE-Th=3M+0ZjCZQJ+5sTiXPwfK6xXX_=SFHhA@mail.gmail.com>
+ <20240223.goo9Xei0xa9S@digikod.net>
+In-Reply-To: <20240223.goo9Xei0xa9S@digikod.net>
+From: Paul Moore <paul@paul-moore.com>
+Date: Fri, 23 Feb 2024 17:21:20 -0500
+Message-ID: <CAHC9VhQh4R6x7+giLBQV_YvRconZAqjW=vRBrzwVw2jzYqFu+A@mail.gmail.com>
+Subject: Re: [PATCH 1/2] SELinux: Fix lsm_get_self_attr()
+To: =?UTF-8?B?TWlja2HDq2wgU2FsYcO8bg==?= <mic@digikod.net>
+Cc: Casey Schaufler <casey@schaufler-ca.com>, John Johansen <john.johansen@canonical.com>, 
+	James Morris <jmorris@namei.org>, "Serge E . Hallyn" <serge@hallyn.com>, linux-kernel@vger.kernel.org, 
+	linux-security-module@vger.kernel.org, stable@vger.kernel.org, 
+	selinux@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Sat, Feb 24, 2024 at 11:09=E2=80=AFAM Minchan Kim <minchan@kernel.org> w=
-rote:
->
-> Hi Barry,
->
-> On Fri, Feb 23, 2024 at 05:15:50PM +1300, Barry Song wrote:
-> > From: Barry Song <v-songbaohua@oppo.com>
+On Fri, Feb 23, 2024 at 5:03=E2=80=AFPM Micka=C3=ABl Sala=C3=BCn <mic@digik=
+od.net> wrote:
+> On Fri, Feb 23, 2024 at 04:05:16PM -0500, Paul Moore wrote:
+> > On Fri, Feb 23, 2024 at 3:04=E2=80=AFPM Micka=C3=ABl Sala=C3=BCn <mic@d=
+igikod.net> wrote:
+> > >
+> > > On Fri, Feb 23, 2024 at 08:59:34PM +0100, Micka=C3=ABl Sala=C3=BCn wr=
+ote:
+> > > > On Fri, Feb 23, 2024 at 08:05:45PM +0100, Micka=C3=ABl Sala=C3=BCn =
+wrote:
+> > > > > selinux_lsm_getattr() may not initialize the value's pointer in s=
+ome
+> > > > > case.  As for proc_pid_attr_read(), initialize this pointer to NU=
+LL in
+> > > > > selinux_getselfattr() to avoid an UAF in the kfree() call.
+> > > >
+> > > > Not UAF but NULL pointer dereference (both patches)...
+> > >
+> > > Well, that may be the result (as observed with the kfree() call), but
+> > > the cause is obviously an uninitialized pointer.
 > >
-> > While doing MADV_PAGEOUT, the current code will clear PTE young
-> > so that vmscan won't read young flags to allow the reclamation
-> > of madvised folios to go ahead.
+> > Adding the SELinux list to the CC line; SELinux folks the original post=
+ is here:
+> >
+> > * https://lore.kernel.org/all/20240223190546.3329966-1-mic@digikod.net
+> >
+> > Thanks for finding this and testing the patch, based on our off-list
+> > discussion, do you mind if I add a Suggested-by?  Looking at this a
 >
-> Isn't it good to accelerate reclaiming? vmscan checks whether the
-> page was accessed recenlty by the young bit from pte and if it is,
-> it doesn't reclaim the page. Since we have cleared the young bit
-> in pte in madvise_pageout, vmscan is likely to reclaim the page
-> since it wouldn't see the ferencecd_ptes from folio_check_references.
+> Sure! I was in a hurry and didn't give it the attention it needed...
+>
+> > bit more I think we'll want to make a few changes to
+> > selinux_lsm_getattr() later, but this patch is a good one for stable
+> > as it not only fixes the bug, but it is a trivial one-liner with very
+> > low risk.
+> >
+> > I do think we need to tweak the commit description a bit, what do you
+> > think of the following?
+> >
+> >   "selinux_getselfattr() doesn't properly initialize the string
+> >    pointer it passes to selinux_lsm_getattr() which can cause a
+> >    problem when an attribute hasn't been explicitly set;
+> >    selinux_lsm_getattr() returns 0/success, but does not set or
+> >    initialize the string label/attribute.  Failure to properly
+> >    initialize the string causes problems later in
+> >    selinux_getselfattr() when the function attempts to kfree()
+> >    the string."
+>
+> Much better!
 
-right, but the proposal is asking vmscan to skip the folio_check_references
-if this is a PAGEOUT. so we remove both pte_clear_young and rmap
-of folio_check_references.
+Great :)  I just went ahead and merged this into the lsm/stable-6.8
+branch to get this some testing in linux-next, although I'm going to
+be *shocked* if this commit causes a regression.  I'll send this up to
+Linus early next week, and if John wants me to send the AppArmor patch
+I'll do that at the same time.
 
->
-> Could you clarify if I miss something here?
-
-guest you missed we are skipping folio_check_references now.
-we remove both, thus, make MADV_PAGEOUT 6% faster.
-
->
->
-> > It seems we can do it by directly ignoring references, thus we
-> > can remove tlb flush in madvise and rmap overhead in vmscan.
-> >
-> > Regarding the side effect, in the original code, if a parallel
-> > thread runs side by side to access the madvised memory with the
-> > thread doing madvise, folios will get a chance to be re-activated
-> > by vmscan. But with the patch, they will still be reclaimed. But
-> > this behaviour doing PAGEOUT and doing access at the same time is
-> > quite silly like DoS. So probably, we don't need to care.
-> >
-> > A microbench as below has shown 6% decrement on the latency of
-> > MADV_PAGEOUT,
-> >
-> >  #define PGSIZE 4096
-> >  main()
-> >  {
-> >       int i;
-> >  #define SIZE 512*1024*1024
-> >       volatile long *p =3D mmap(NULL, SIZE, PROT_READ | PROT_WRITE,
-> >                       MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
-> >
-> >       for (i =3D 0; i < SIZE/sizeof(long); i +=3D PGSIZE / sizeof(long)=
-)
-> >               p[i] =3D  0x11;
-> >
-> >       madvise(p, SIZE, MADV_PAGEOUT);
-> >  }
-> >
-> > w/o patch                    w/ patch
-> > root@10:~# time ./a.out      root@10:~# time ./a.out
-> > real  0m49.634s            real   0m46.334s
-> > user  0m0.637s             user   0m0.648s
-> > sys   0m47.434s            sys    0m44.265s
-> >
-> > Signed-off-by: Barry Song <v-songbaohua@oppo.com>
-> > ---
-> >  mm/damon/paddr.c |  2 +-
-> >  mm/internal.h    |  2 +-
-> >  mm/madvise.c     |  8 ++++----
-> >  mm/vmscan.c      | 12 +++++++-----
-> >  4 files changed, 13 insertions(+), 11 deletions(-)
-> >
-> > diff --git a/mm/damon/paddr.c b/mm/damon/paddr.c
-> > index 081e2a325778..5e6dc312072c 100644
-> > --- a/mm/damon/paddr.c
-> > +++ b/mm/damon/paddr.c
-> > @@ -249,7 +249,7 @@ static unsigned long damon_pa_pageout(struct damon_=
-region *r, struct damos *s)
-> >  put_folio:
-> >               folio_put(folio);
-> >       }
-> > -     applied =3D reclaim_pages(&folio_list);
-> > +     applied =3D reclaim_pages(&folio_list, false);
-> >       cond_resched();
-> >       return applied * PAGE_SIZE;
-> >  }
-> > diff --git a/mm/internal.h b/mm/internal.h
-> > index 93e229112045..36c11ea41f47 100644
-> > --- a/mm/internal.h
-> > +++ b/mm/internal.h
-> > @@ -868,7 +868,7 @@ extern unsigned long  __must_check vm_mmap_pgoff(st=
-ruct file *, unsigned long,
-> >          unsigned long, unsigned long);
-> >
-> >  extern void set_pageblock_order(void);
-> > -unsigned long reclaim_pages(struct list_head *folio_list);
-> > +unsigned long reclaim_pages(struct list_head *folio_list, bool ignore_=
-references);
-> >  unsigned int reclaim_clean_pages_from_list(struct zone *zone,
-> >                                           struct list_head *folio_list)=
-;
-> >  /* The ALLOC_WMARK bits are used as an index to zone->watermark */
-> > diff --git a/mm/madvise.c b/mm/madvise.c
-> > index abde3edb04f0..44a498c94158 100644
-> > --- a/mm/madvise.c
-> > +++ b/mm/madvise.c
-> > @@ -386,7 +386,7 @@ static int madvise_cold_or_pageout_pte_range(pmd_t =
-*pmd,
-> >                       return 0;
-> >               }
-> >
-> > -             if (pmd_young(orig_pmd)) {
-> > +             if (!pageout && pmd_young(orig_pmd)) {
-> >                       pmdp_invalidate(vma, addr, pmd);
-> >                       orig_pmd =3D pmd_mkold(orig_pmd);
-> >
-> > @@ -410,7 +410,7 @@ static int madvise_cold_or_pageout_pte_range(pmd_t =
-*pmd,
-> >  huge_unlock:
-> >               spin_unlock(ptl);
-> >               if (pageout)
-> > -                     reclaim_pages(&folio_list);
-> > +                     reclaim_pages(&folio_list, true);
-> >               return 0;
-> >       }
-> >
-> > @@ -490,7 +490,7 @@ static int madvise_cold_or_pageout_pte_range(pmd_t =
-*pmd,
-> >
-> >               VM_BUG_ON_FOLIO(folio_test_large(folio), folio);
-> >
-> > -             if (pte_young(ptent)) {
-> > +             if (!pageout && pte_young(ptent)) {
-> >                       ptent =3D ptep_get_and_clear_full(mm, addr, pte,
-> >                                                       tlb->fullmm);
-> >                       ptent =3D pte_mkold(ptent);
-> > @@ -524,7 +524,7 @@ static int madvise_cold_or_pageout_pte_range(pmd_t =
-*pmd,
-> >               pte_unmap_unlock(start_pte, ptl);
-> >       }
-> >       if (pageout)
-> > -             reclaim_pages(&folio_list);
-> > +             reclaim_pages(&folio_list, true);
-> >       cond_resched();
-> >
-> >       return 0;
-> > diff --git a/mm/vmscan.c b/mm/vmscan.c
-> > index 402c290fbf5a..ba2f37f46a73 100644
-> > --- a/mm/vmscan.c
-> > +++ b/mm/vmscan.c
-> > @@ -2102,7 +2102,8 @@ static void shrink_active_list(unsigned long nr_t=
-o_scan,
-> >  }
-> >
-> >  static unsigned int reclaim_folio_list(struct list_head *folio_list,
-> > -                                   struct pglist_data *pgdat)
-> > +                                   struct pglist_data *pgdat,
-> > +                                   bool ignore_references)
-> >  {
-> >       struct reclaim_stat dummy_stat;
-> >       unsigned int nr_reclaimed;
-> > @@ -2115,7 +2116,7 @@ static unsigned int reclaim_folio_list(struct lis=
-t_head *folio_list,
-> >               .no_demotion =3D 1,
-> >       };
-> >
-> > -     nr_reclaimed =3D shrink_folio_list(folio_list, pgdat, &sc, &dummy=
-_stat, false);
-> > +     nr_reclaimed =3D shrink_folio_list(folio_list, pgdat, &sc, &dummy=
-_stat, ignore_references);
-> >       while (!list_empty(folio_list)) {
-> >               folio =3D lru_to_folio(folio_list);
-> >               list_del(&folio->lru);
-> > @@ -2125,7 +2126,7 @@ static unsigned int reclaim_folio_list(struct lis=
-t_head *folio_list,
-> >       return nr_reclaimed;
-> >  }
-> >
-> > -unsigned long reclaim_pages(struct list_head *folio_list)
-> > +unsigned long reclaim_pages(struct list_head *folio_list, bool ignore_=
-references)
-> >  {
-> >       int nid;
-> >       unsigned int nr_reclaimed =3D 0;
-> > @@ -2147,11 +2148,12 @@ unsigned long reclaim_pages(struct list_head *f=
-olio_list)
-> >                       continue;
-> >               }
-> >
-> > -             nr_reclaimed +=3D reclaim_folio_list(&node_folio_list, NO=
-DE_DATA(nid));
-> > +             nr_reclaimed +=3D reclaim_folio_list(&node_folio_list, NO=
-DE_DATA(nid),
-> > +                                                ignore_references);
-> >               nid =3D folio_nid(lru_to_folio(folio_list));
-> >       } while (!list_empty(folio_list));
-> >
-> > -     nr_reclaimed +=3D reclaim_folio_list(&node_folio_list, NODE_DATA(=
-nid));
-> > +     nr_reclaimed +=3D reclaim_folio_list(&node_folio_list, NODE_DATA(=
-nid), ignore_references);
-> >
-> >       memalloc_noreclaim_restore(noreclaim_flag);
-> >
-> > --
-> > 2.34.1
-> >
-
-Thanks
-Barry
+--=20
+paul-moore.com
