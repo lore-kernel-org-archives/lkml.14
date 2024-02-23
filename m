@@ -1,109 +1,91 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A10F48663D;
-	Fri, 23 Feb 2024 16:15:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 798F584FB4
+	for <linux-kernel@vger.kernel.org>; Fri, 23 Feb 2024 16:16:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708704929; cv=none; b=HXkutJRmhJAxLvYTZ7TqaHDEo+WBm2N0wrt+Y1wkYigpEmmUSO+OUHEsHSDM+lRgygfmnAZ/YJiKYJ91/bsZp9osxCiUhhTwGRqfUcg8tKSqpCTE09ELALjFmH+Hj/CyCyoDxk84oEiWdZ+c4nLqbU2RzhGJsKdZm/hSyQLRdLQ=
+	t=1708704963; cv=none; b=Z+ZMVZqOaIo9CBoLFUvmTOpLExu0q3R7LL39khs3phS2Ayw3kYc/RH3I5fzggU86XsPrTL3xkxkJJBomuTdLb4OdJf5Bx7ZrVfxaVCBauVUMYHz41TT5hWV9MclLMmicSPtXla16OHY+5oHMMPSgsYBIXHsIvPsTsqHhR2ItQa8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708704929; c=relaxed/simple;
-	bh=VSra52zqMJWH7KipolICK24PTwHPt/FGUYZKU1aK0UA=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=kfVHxU9+XMbQX/fFmUYWnkDLOHywMa47VQ/gxoHZx3mbOUT0RDX4KwiHOBT4RDoNdquReB6HeR/4PuZacIuNohSHiXKg0O4a//TTj2LXumSZ1FMlG3+0SpNPE4fT1Qr8AOAgT3qtld8Cf/YNBKKdms5PB1aLI7apYgNWGpBO9mw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=aCvwFv21; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1708704963; c=relaxed/simple;
+	bh=dQlULNoHT7Qs4BBqk4xJH7Fe4UH0/aQgmFtZgnvh9r0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=phe56tkbO7tAN4el4MxUWIQtuZ+cZVDsj19FfsOOF47wvLPfMLTWmAqs+YxMA1VOfM0bP9f3zNi/I8uQ4XeE+ChHN/4rEnk5Oiha2omjfKgp2iWx+IxsT8Q4aNkbaeGAnOjxi0FBEb2hQT4aYqz0miVId5X62lXOo7efb5wOOkk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lR/gyaa0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="aCvwFv21"
-Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 41NBZXHU008808;
-	Fri, 23 Feb 2024 16:15:11 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	from:to:cc:subject:date:message-id:mime-version
-	:content-transfer-encoding:content-type; s=qcppdkim1; bh=DX1+LZJ
-	RS0HgO0vf8V4rF3WsGTPxp2gnvPc0W+M9/7Q=; b=aCvwFv21jYCnMLKfJkpZT8V
-	1T1AcJhnDzG6/Ph+Omk0+umEH6Pqsb07eyAtm6grFWgwfAXf0XxtozQ70n2b0ygg
-	mimuBeQkEFnisjDFx4vy7PxooHmwoMiilo5Pj/kmQZlP34Cp2enlkhLX1ifHlxHk
-	uZba0knevGup9dagsPNEsf1JvsOul9HXLN3AVXHQRKgoR/x8gU//J7eHX4XQeRC3
-	PXtWOVt93gWyO3f+q4aKnOxW+gX3WXAd6MnWPmmwA8PqQ7+BNDtrVvPaS0m0o+xN
-	kytN0ZEKaCfln9/n2NwQH2At5Ejm+JStCi92uZsJj99cfww/iDpGe4gi4nm7jIw=
-	=
-Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3weqxd10ty-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 23 Feb 2024 16:15:10 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 41NGFApB012261
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 23 Feb 2024 16:15:10 GMT
-Received: from jhugo-lnx.qualcomm.com (10.80.80.8) by
- nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Fri, 23 Feb 2024 08:15:09 -0800
-From: Jeffrey Hugo <quic_jhugo@quicinc.com>
-To: <andersson@kernel.org>, <konrad.dybcio@linaro.org>,
-        <wim@linux-watchdog.org>, <linux@roeck-us.net>, <robh@kernel.org>,
-        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
-        <quic_rjendra@quicinc.com>
-CC: <linux-arm-msm@vger.kernel.org>, <linux-watchdog@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Jeffrey Hugo
-	<quic_jhugo@quicinc.com>
-Subject: [PATCH RESEND] dt-bindings: watchdog: qcom-wdt: Update maintainer to Rajendra Nayak
-Date: Fri, 23 Feb 2024 09:14:55 -0700
-Message-ID: <20240223161455.4009469-1-quic_jhugo@quicinc.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lR/gyaa0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5E813C433C7;
+	Fri, 23 Feb 2024 16:16:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1708704963;
+	bh=dQlULNoHT7Qs4BBqk4xJH7Fe4UH0/aQgmFtZgnvh9r0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=lR/gyaa0rdaWGHGjd7PDMy2/n4BdmnVEexuQn+GqUC3gPRKsDVJ2X/Sl97P+ymoZx
+	 aca+vQR640Ppm+0a2zVeRQlqIeii0NcXMZFLk8Nqh1SmRe4Zpd9Rh613zK9eXEcBtH
+	 3S4CwC5pXKH4afDpXfjuDWi2xyWKdoQRotUFeR2joQI46fjL/LBz7Ysdaouzt8R6Nu
+	 jH1VhDMyM+UXc8IM81PlYRec908v0tjB7qs/NMgLRNRUJ87S+lo9kVxuL6+Nvegqyj
+	 LGNb1SRkMwAx8WcUhhsxPBz45IpYdwo3YIhc86tXIhnKC+OdCRzNTLcLDzCBHHBHiM
+	 RfTNNMG/BVJLQ==
+Date: Fri, 23 Feb 2024 16:15:59 +0000
+From: Lee Jones <lee@kernel.org>
+To: =?utf-8?Q?Ond=C5=99ej?= Jirman <megi@xff.cz>
+Cc: linux-kernel@vger.kernel.org
+Subject: Re: [RESEND PATCH] mfd: rk8xx-core: Fix interrupt processing order
+ for power key button
+Message-ID: <20240223161559.GI1666215@google.com>
+References: <20240217195615.1767907-1-megi@xff.cz>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: AgA-Zzuh_EuwhtnO0KaU0hfY7UhSt7HJ
-X-Proofpoint-ORIG-GUID: AgA-Zzuh_EuwhtnO0KaU0hfY7UhSt7HJ
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-02-23_02,2024-02-23_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 impostorscore=0
- lowpriorityscore=0 bulkscore=0 mlxlogscore=966 malwarescore=0
- suspectscore=0 phishscore=0 spamscore=0 priorityscore=1501 adultscore=0
- clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2402120000 definitions=main-2402230118
+In-Reply-To: <20240217195615.1767907-1-megi@xff.cz>
 
-The servers for the @codeaurora domain are long retired and any messages
-sent there will bounce. Sai has left the company and appears no longer
-active in the community which leaves this binding orphaned. Rajendra Nayak
-has volunteered to take over as maintainer.
+On Sat, 17 Feb 2024, Ondřej Jirman wrote:
 
-Signed-off-by: Jeffrey Hugo <quic_jhugo@quicinc.com>
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-Acked-by: Rajendra Nayak <quic_rjendra@quicinc.com>
----
+> From: Ondrej Jirman <megi@xff.cz>
+> 
+> Process rise event last, to avoid stuck keys when multiple interrupts
+> are coalesced. This can happen typically when resuming from suspend
+> via power key press and holding the power button for a bit too short,
+> so that RISE an FALL IRQ flags are set before any interrupt routine
+> has a chance to run.
+> 
+> Input subsystem will interpret it as holding down a power key for
+> a long time, which leads to unintended initiation of shutdown UI
+> on some OSes.
+> 
+> Signed-off-by: Ondrej Jirman <megi@xff.cz>
+> ---
+> Sorry, resent without the bogous patch series numbering.
+> 
+>  drivers/mfd/rk8xx-core.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/mfd/rk8xx-core.c b/drivers/mfd/rk8xx-core.c
+> index b1ffc3b9e2be..e2261b68b844 100644
+> --- a/drivers/mfd/rk8xx-core.c
+> +++ b/drivers/mfd/rk8xx-core.c
+> @@ -43,8 +43,8 @@ static struct resource rk806_pwrkey_resources[] = {
+>  };
+>  
+>  static const struct resource rk817_pwrkey_resources[] = {
+> -	DEFINE_RES_IRQ(RK817_IRQ_PWRON_RISE),
+>  	DEFINE_RES_IRQ(RK817_IRQ_PWRON_FALL),
+> +	DEFINE_RES_IRQ(RK817_IRQ_PWRON_RISE),
 
-Rob, will you take this into your tree for 6.9?
+FWIW, basing solutions on ordering like this is often fragile!
 
- Documentation/devicetree/bindings/watchdog/qcom-wdt.yaml | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+>  };
+>  
+>  static const struct resource rk817_charger_resources[] = {
+> -- 
+> 2.43.0
+> 
 
-diff --git a/Documentation/devicetree/bindings/watchdog/qcom-wdt.yaml b/Documentation/devicetree/bindings/watchdog/qcom-wdt.yaml
-index a4f35c598cdb..47587971fb0b 100644
---- a/Documentation/devicetree/bindings/watchdog/qcom-wdt.yaml
-+++ b/Documentation/devicetree/bindings/watchdog/qcom-wdt.yaml
-@@ -7,7 +7,7 @@ $schema: http://devicetree.org/meta-schemas/core.yaml#
- title: Qualcomm Krait Processor Sub-system (KPSS) Watchdog timer
- 
- maintainers:
--  - Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-+  - Rajendra Nayak <quic_rjendra@quicinc.com>
- 
- properties:
-   $nodename:
 -- 
-2.34.1
-
+Lee Jones [李琼斯]
