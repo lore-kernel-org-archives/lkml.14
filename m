@@ -1,138 +1,86 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from smtp-bc0e.mail.infomaniak.ch (smtp-bc0e.mail.infomaniak.ch [45.157.188.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B924B7CF07;
-	Fri, 23 Feb 2024 13:11:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C5B65DF00
+	for <linux-kernel@vger.kernel.org>; Fri, 23 Feb 2024 13:11:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.157.188.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708693884; cv=none; b=fLPNoUNBTSwRW38adsmNl3zg92UBohMqppR4zed7v5htowuWvMJUg75fWx8kd6I2j/QrfPUGuBLAnUsJU9td768ZL60PwHxmUEiwq8+WbJZ5WOS0pofai5Qto8spfgJD2ifsugF9FSLvmj/uH2iE/nPXyvdckMk0DJP+ht3BNxg=
+	t=1708693901; cv=none; b=L6wpV3D6mC/l7duemZ4lBIWYruV0IB4437wO2vMBGh2RT4d9I327f/NkQtPnPEj21HfBHnpnS3KLr0kvSftNa/ok9cu+oZ+IojPXQ+4TmUbY6zNsC2sd0oQTTlgW/X7JviYqLVAPm+59+/Ok0W0q9Qj104NhTkVQY8O2D5t/IcA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708693884; c=relaxed/simple;
-	bh=d1m6ANOqwKXrv9+LcTPfoOJ4sArWK9YSnVhDFXtLuLM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=lx3JZ3NrSGH5qSMgB0bp/trvwUk2afuc74ueeysJJlH/vE8GmpPOAZKX43KShrJsuDqxGzusgadzAdsylOL8WIuD2odA2aq9UZjIZYt77992T4pgvwSvS4SEmYdLwoi25lhI+UDgea7hHj14Nt0pdXqSq+NMjl6lzN2Jn4CIkAg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ebvv/7s7; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ebvv/7s7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 614C8C433C7;
-	Fri, 23 Feb 2024 13:11:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708693884;
-	bh=d1m6ANOqwKXrv9+LcTPfoOJ4sArWK9YSnVhDFXtLuLM=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=Ebvv/7s7jWF2knmh/ApfiKPoZn0oY+OtXfdntU0JDB3IRn1weaXAs2oj5e6FgE6if
-	 NoDIAxh0S3r3CUya7AwGYF9zOp2ptIjiZ0WVjv3lyE/GLlfTtrocbBYJCTPYPjDMo5
-	 yX9reo68M+CS5EW2gtEs/r6Ugly+IiRj6qzESy192jTFPuXzWKCplHVM4PqFnA+r6z
-	 qX15Gq/aeAGQCmxRN49SvTNgOgLwUZOxSxsik0hVu6/LszsF2D/r17uQyat1VpDDGm
-	 KdCEO9JbZ/sdem6Ci+kX7Y5sXggbUrtPFdFOvQ/mThTS8xliNN6jOZEi0tMoFI+PZo
-	 1gjKojxyEhgrQ==
-Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-2d204e102a9so8642121fa.0;
-        Fri, 23 Feb 2024 05:11:24 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCUd2ZUENFtg0IXpxW6BNuFwxULIdRrjxJ11bvZsYB++uZGwd9qulkPjuTKWBnEQAoAS9XPtZxdlZCRDlQe4HTgac1+MAasjISQ9zg==
-X-Gm-Message-State: AOJu0Yxsut8/N5nSqmdOxVEvlttqqsBH+SCIb3bYLJ6toRalUKPL4gYJ
-	LsC5v7ACSN0MNUFX2l1V1JRQ3jPZt0ux9p8Un30cU26PnXKzGdBR5qSOYkP4Abrr9A164qo8Bg8
-	G6wcYTMDVttjHl21TG3GcxX1nid4=
-X-Google-Smtp-Source: AGHT+IEsCg2Q0TwrKd0cog82aTVDxFfxFpKuZiqhdev7tD/NUay4QE8lNuoY0iLfx2wJjeRraE2dvnF5myz898EFVRQ=
-X-Received: by 2002:a05:651c:204f:b0:2d2:3f1d:92ec with SMTP id
- t15-20020a05651c204f00b002d23f1d92ecmr1220780ljo.40.1708693882639; Fri, 23
- Feb 2024 05:11:22 -0800 (PST)
+	s=arc-20240116; t=1708693901; c=relaxed/simple;
+	bh=0EmZbA6Z/VNF5c7++YIeS8HzXck5oR/WMMWqA0pYtD0=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=qOCWM4Za/TNl2nck9LW2ri7Qyr8HQNAvPseeVLzHrOmLqZSd4MjbNb1Jlmtlaunw0BkepO/6/TCP9lXJRB9PQ4HgktiKWlvyoYWVMhinO9oOdcENyxwqrR1svPJXlD9nZMGBd1n2O4G+Rof9O1DZkcvUWg4eb2FFB0sIjbDWrHE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=0leil.net; spf=pass smtp.mailfrom=0leil.net; arc=none smtp.client-ip=45.157.188.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=0leil.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=0leil.net
+Received: from smtp-4-0001.mail.infomaniak.ch (unknown [10.7.10.108])
+	by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4Th9Q03TwQzMs1Yf;
+	Fri, 23 Feb 2024 14:11:36 +0100 (CET)
+Received: from unknown by smtp-4-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4Th9Q005gGzbZW;
+	Fri, 23 Feb 2024 14:11:35 +0100 (CET)
+From: Quentin Schulz <foss+kernel@0leil.net>
+Date: Fri, 23 Feb 2024 14:11:23 +0100
+Subject: [PATCH 2/2] regulator: rk808: fix LDO range on RK806
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240221113506.2565718-18-ardb+git@google.com> <20240221113506.2565718-28-ardb+git@google.com>
-In-Reply-To: <20240221113506.2565718-28-ardb+git@google.com>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Fri, 23 Feb 2024 14:11:11 +0100
-X-Gmail-Original-Message-ID: <CAMj1kXGFP0oz=7_4sW=Cd-n2k5=M6Nzzrst-dAdkYtmdeTqYrg@mail.gmail.com>
-Message-ID: <CAMj1kXGFP0oz=7_4sW=Cd-n2k5=M6Nzzrst-dAdkYtmdeTqYrg@mail.gmail.com>
-Subject: Re: [PATCH v5 10/16] x86/startup_64: Simplify virtual switch on
- primary boot
-To: Ard Biesheuvel <ardb+git@google.com>
-Cc: linux-kernel@vger.kernel.org, Kevin Loughlin <kevinloughlin@google.com>, 
-	Tom Lendacky <thomas.lendacky@amd.com>, Dionna Glaze <dionnaglaze@google.com>, 
-	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, Andy Lutomirski <luto@kernel.org>, 
-	Arnd Bergmann <arnd@arndb.de>, Nathan Chancellor <nathan@kernel.org>, 
-	Nick Desaulniers <ndesaulniers@google.com>, Justin Stitt <justinstitt@google.com>, 
-	Kees Cook <keescook@chromium.org>, Brian Gerst <brgerst@gmail.com>, linux-arch@vger.kernel.org, 
-	llvm@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240223-rk806-regulator-ranges-v1-2-3904ab70d250@theobroma-systems.com>
+References: <20240223-rk806-regulator-ranges-v1-0-3904ab70d250@theobroma-systems.com>
+In-Reply-To: <20240223-rk806-regulator-ranges-v1-0-3904ab70d250@theobroma-systems.com>
+To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
+ Matti Vaittinen <mazziesaccount@gmail.com>, 
+ shengfei Xu <xsf@rock-chips.com>, 
+ Sebastian Reichel <sebastian.reichel@collabora.com>
+Cc: linux-kernel@vger.kernel.org, 
+ Quentin Schulz <quentin.schulz@theobroma-systems.com>, 
+ Quentin Schulz <foss+kernel@0leil.net>
+X-Mailer: b4 0.13.0
+X-Infomaniak-Routing: alpha
 
-On Wed, 21 Feb 2024 at 12:36, Ard Biesheuvel <ardb+git@google.com> wrote:
->
-> From: Ard Biesheuvel <ardb@kernel.org>
->
-> The secondary startup code is used on the primary boot path as well, but
-> in this case, the initial part runs from a 1:1 mapping, until an
-> explicit cross-jump is made to the kernel virtual mapping of the same
-> code.
->
-> On the secondary boot path, this jump is pointless as the code already
-> executes from the mapping targeted by the jump. So combine this
-> cross-jump with the jump from startup_64() into the common boot path.
-> This simplifies the execution flow, and clearly separates code that runs
-> from a 1:1 mapping from code that runs from the kernel virtual mapping.
->
-> Note that this requires a page table switch, so hoist the CR3 assignment
-> into startup_64() as well. And since absolute symbol references will no
-> longer be permitted in .head.text once we enable the associated build
-> time checks, a RIP-relative memory operand is used in the JMP
-> instruction, referring to an absolute constant in the .init.rodata
-> section.
->
-> Given that the secondary startup code does not require a special
-> placement inside the executable, move it to the .noinstr.text section.
+From: Quentin Schulz <quentin.schulz@theobroma-systems.com>
 
-This should be the .text section, or we get
+The linear ranges aren't really matching what they should be. Indeed,
+the range is inclusive of the min value, so it makes sense the previous
+range does NOT include the max step value representing the min value of
+the range in question.
 
-vmlinux.o: warning: objtool: early_setup_idt+0x4: call to
-startup_64_load_idt() leaves .noinstr.text section
+Since 3.4V is represented by the decimal value 232, the previous range
+max step value should be 231 and not 232.
 
-It would be better to have the secondary startup code in
-.noinstr.text, but it is only a very minor improvement. I'll be
-looking into teaching objtool to be strict about .head.text code and
-reject references that use absolute addressing, so I might be able to
-tweak it to permit this use case as well but at this point we should
-probably just move it into ordinary .text
+No expected change in behavior since 3.4V was mapped with step 232 from
+the first range but is now mapped with step 232 from the second range.
 
+While at it, remove the incorrect comment from the second range.
 
-> This requires the use of a subsection so that the payload is placed
-> after the page aligned Xen hypercall page, as otherwise, objtool will
-> complain about the resulting JMP instruction emitted by the assembler
-> being unreachable.
->
+Fixes: f991a220a447 ("regulator: rk808: add rk806 support")
+Cc: Quentin Schulz <foss+kernel@0leil.net>
+Signed-off-by: Quentin Schulz <quentin.schulz@theobroma-systems.com>
+---
+ drivers/regulator/rk808-regulator.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-^^^ this bit can be dropped, and the following hunk applied (apologies
-if my gmail mangles this - i can resend the patch or the series)
+diff --git a/drivers/regulator/rk808-regulator.c b/drivers/regulator/rk808-regulator.c
+index bfab5468cc54..d89ae7f16d7a 100644
+--- a/drivers/regulator/rk808-regulator.c
++++ b/drivers/regulator/rk808-regulator.c
+@@ -1023,8 +1023,8 @@ static const struct linear_range rk806_buck_voltage_ranges[] = {
+ };
+ 
+ static const struct linear_range rk806_ldo_voltage_ranges[] = {
+-	REGULATOR_LINEAR_RANGE(500000, 0, 232, 12500), /* 500mV ~ 3400mV */
+-	REGULATOR_LINEAR_RANGE(3400000, 233, 255, 0), /* 500mV ~ 3400mV */
++	REGULATOR_LINEAR_RANGE(500000, 0, 231, 12500), /* 500mV ~ 3400mV */
++	REGULATOR_LINEAR_RANGE(3400000, 232, 255, 0),
+ };
+ 
+ static const struct regulator_desc rk806_reg[] = {
 
+-- 
+2.43.2
 
-diff --git a/arch/x86/kernel/head64.c b/arch/x86/kernel/head64.c
-index 4bee33d8e1dc..e16df01791be 100644
---- a/arch/x86/kernel/head64.c
-+++ b/arch/x86/kernel/head64.c
-@@ -515,7 +515,7 @@
- }
-
- /* This is used when running on kernel addresses */
--void noinstr early_setup_idt(void)
-+void early_setup_idt(void)
- {
-        void *handler = NULL;
-
-diff --git a/arch/x86/kernel/head_64.S b/arch/x86/kernel/head_64.S
-index 32fefb23f4df..c9ee92550508 100644
---- a/arch/x86/kernel/head_64.S
-+++ b/arch/x86/kernel/head_64.S
-@@ -139,8 +139,7 @@
-        __INITRODATA
- 0:     .quad   common_startup_64
-
--       .section .noinstr.text, "ax"
--       .subsection 1
-+       .text
- SYM_CODE_START(secondary_startup_64)
-        UNWIND_HINT_END_OF_STACK
-        ANNOTATE_NOENDBR
