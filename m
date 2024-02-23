@@ -1,96 +1,150 @@
-Received: from mail-pg1-f202.google.com (mail-pg1-f202.google.com [209.85.215.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1728D12BE99
-	for <linux-kernel@vger.kernel.org>; Fri, 23 Feb 2024 17:01:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22DFD1292C6;
+	Fri, 23 Feb 2024 17:02:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708707708; cv=none; b=sar8NuEWQ3buKlSiQ5WnxJDZFCgH6HhYgCktuaGj2JI41Tsll0O0IA/jzUS+L0N1Dpyw8KgO/2y2L9xmKLMphpkbwzNuM40553C77VL3OAxwmIVttn4P7KKO2DDuerbXdpFiJKsg+uJKxeHXqjPRKq1/BR/YHWwAlM/1rWJMawA=
+	t=1708707732; cv=none; b=hJ7Xwan9vi8gOtjExLPs19fxSqVRJP1qALjFlKb/y8zh5LYGvFJRABBDwcQuRD+obTarUyCdtuwcx5LFpWtK15O//ZehRvjzvZ+nZAeg50EbizIj9sULr6Rw2g90TvWDYrCp9nsFdfmtr8eXHBtQwwIcuv49EkkPx/VP1MkcZ2A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708707708; c=relaxed/simple;
-	bh=x9++INN2m+gpmUh/KCO+PSvjrYfe9RJFSkVt3950PsA=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=Z8aDoQ9zOEg8jp4uf9DBGXMxj3/J+MCPyQwqjRUyBC7u7oDpX+Ywqtr16EveOZinFpS8UuCZh0/NUpmxjcyioQmDELRB3D50sNoq2wQTe2zABv3cFtVL9zbx7v+0zG3iiyf0ulYLygbMBhXtnl1DXziTSrHzzfToF/bNWcVhSh0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=XYzNY+5N; arc=none smtp.client-ip=209.85.215.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1708707732; c=relaxed/simple;
+	bh=bK6MUj0ihY6O0q0AWMV5Wk/jMqKJGmt8hsDBwlu4A6Y=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=rXqje48o10psr6h76ylqXEcU41z4HZ1coIR31xo0l8SFH2jrNEwDOg6KDGJdky41V+xKSHCVbbFy9MyX/iEVa8vIIhmLRtfVCxV5k4vFlEfenkP8naPbXPg2Go/qokxgH+/n8jehLtYduCfa/+YXDDfbwfTTgjYa7XonTdMwHMQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kE6gJjYI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XYzNY+5N"
-Received: by mail-pg1-f202.google.com with SMTP id 41be03b00d2f7-5cfc2041cdfso759535a12.2
-        for <linux-kernel@vger.kernel.org>; Fri, 23 Feb 2024 09:01:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1708707706; x=1709312506; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Pfc17/TKkSDYgpRi5ALTWEPHfW2uf7bskubXgF1ZJyM=;
-        b=XYzNY+5N9nDJwUBFHJ59wyzsY5acfJX/77wylFZqBcvmkBkeuLWfpsTkVO627VN/k7
-         8qhGqEK5DnMb21wTWOxk42QNwALjarm7cAIGJVz/NoAV2yrbybNK9M1PGKclu/RlkiBA
-         MiOD2u+LG1vIzDmYLEgfq3f+SlWY6lm5fsSxg4ZtG72oTUo9yMkoVnWsl9R2znh8+vlZ
-         kJf0ROc3egeebelhdlu/EgLbFNrN8E0vH8sn7q1Kbnhd1Ix9jhncccIcdtm5SL/4Iy+L
-         0Dt4wrIFe0Q0Ibs2EJ6FkZlsqnHO6oeSM2i0lHnj3k9GXIrZWXdt8TXGVxoClmuXqGUm
-         ix3g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708707706; x=1709312506;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Pfc17/TKkSDYgpRi5ALTWEPHfW2uf7bskubXgF1ZJyM=;
-        b=W9YCt7fnkE+uqAL0hwXdk/ZTTGf4+lfTpLl6lvj6vsY+GyOJxkmumrH9Gt8WFhNpse
-         ugXulpyfzNC6/G9u4OtBlpy6FpOY444Crd4vxq5nOi43KJzYMPs/G12mkA/76k5hSND/
-         UhUQOZqF2Np98jIVVcyaw4PrAVluJPxfsUTrubbvB7owJWwc2q9Ppi8zaVpGopAJGRcw
-         pXLGdzcLI7zI19vBjtjR9u8S1GyxWZvC1r+xnPHPXvyMwoAo9A3SNlGQnLFwCYiibdpb
-         zvKKF2mSX5025jhgZ1x4vbOdnsaGp43R/8fnapfADcmBZv0qrrd95iWUq5aSKXwu0+bC
-         v3Lw==
-X-Gm-Message-State: AOJu0YyTb/N4GuhPdyEulF6+bDBQZGKx4uA0QLVpFrnFq6rGSTVp9UUW
-	N3SD9hvXSJhPLkCLmtz2vJHhOxMkl9+iiZQ4CS/b+vUCAmib6tfBSXALX6FSGJJrlio/6t+xvDb
-	zjA==
-X-Google-Smtp-Source: AGHT+IHN4bcZqxgjuf+nU1Zula5l2c65fnndy7t0fwNKOatXmncYBrpJyaX50gAvLeG5jHGHzeWmn+kw+xU=
-X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a05:6a02:995:b0:5ca:43c7:a67 with SMTP id
- cl21-20020a056a02099500b005ca43c70a67mr997pgb.9.1708707706441; Fri, 23 Feb
- 2024 09:01:46 -0800 (PST)
-Date: Fri, 23 Feb 2024 09:01:44 -0800
-In-Reply-To: <43b9125f-35d4-4368-8783-a41799b11c21@redhat.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kE6gJjYI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ACDAAC433C7;
+	Fri, 23 Feb 2024 17:02:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1708707731;
+	bh=bK6MUj0ihY6O0q0AWMV5Wk/jMqKJGmt8hsDBwlu4A6Y=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=kE6gJjYIsGH8AsPpO83eJ+g/DPLuomiNo+JyVL51HgR+r0a2J8av5JA+Yg2fJkl8M
+	 QfVisl5FK+CadKD8UhtrEm/6qymZvkFLRE5zBr3RQ8BAVpeo7OJ+pkhIetLorVaorB
+	 VtV6WgIc+DVZd/Jv2jlUFRRyze2X+GMgeIVC4V0I91zcFHHWwVfXhnL+P1UgZqO6Zv
+	 4L192KNlIg0rc1cE9kxCkw1EG5RJupdIe98kG4YzOG/hQuz21XtAs0YVLKM2XdxIk2
+	 g+M0X15L6NZnVaRixdvEBj8GudTieYGEf46FdKdS1TD39uq/W36ZkWwir918d56WFo
+	 +E5swKTwgmj8g==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1rdYw5-006A9I-0t;
+	Fri, 23 Feb 2024 17:02:09 +0000
+Date: Fri, 23 Feb 2024 17:02:08 +0000
+Message-ID: <86jzmv2jxr.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: <ankita@nvidia.com>
+Cc: <jgg@nvidia.com>,
+	<oliver.upton@linux.dev>,
+	<james.morse@arm.com>,
+	<suzuki.poulose@arm.com>,
+	<yuzenghui@huawei.com>,
+	<reinette.chatre@intel.com>,
+	<surenb@google.com>,
+	<stefanha@redhat.com>,
+	<brauner@kernel.org>,
+	<catalin.marinas@arm.com>,
+	<will@kernel.org>,
+	<mark.rutland@arm.com>,
+	<alex.williamson@redhat.com>,
+	<kevin.tian@intel.com>,
+	<yi.l.liu@intel.com>,
+	<ardb@kernel.org>,
+	<akpm@linux-foundation.org>,
+	<andreyknvl@gmail.com>,
+	<wangjinchao@xfusion.com>,
+	<gshan@redhat.com>,
+	<shahuang@redhat.com>,
+	<ricarkol@google.com>,
+	<linux-mm@kvack.org>,
+	<lpieralisi@kernel.org>,
+	<rananta@google.com>,
+	<ryan.roberts@arm.com>,
+	<david@redhat.com>,
+	<linus.walleij@linaro.org>,
+	<bhe@redhat.com>,
+	<aniketa@nvidia.com>,
+	<cjia@nvidia.com>,
+	<kwankhede@nvidia.com>,
+	<targupta@nvidia.com>,
+	<vsethi@nvidia.com>,
+	<acurrid@nvidia.com>,
+	<apopple@nvidia.com>,
+	<jhubbard@nvidia.com>,
+	<danw@nvidia.com>,
+	<kvmarm@lists.linux.dev>,
+	<mochs@nvidia.com>,
+	<zhiw@nvidia.com>,
+	<kvm@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH v8 0/4] kvm: arm64: allow the VM to select DEVICE_* and NORMAL_NC for IO memory
+In-Reply-To: <20240220072926.6466-1-ankita@nvidia.com>
+References: <20240220072926.6466-1-ankita@nvidia.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/29.1
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20240223104009.632194-1-pbonzini@redhat.com> <20240223104009.632194-5-pbonzini@redhat.com>
- <ZdjCpX4LMCCyYev9@google.com> <43b9125f-35d4-4368-8783-a41799b11c21@redhat.com>
-Message-ID: <ZdjPeKDITWoVre6o@google.com>
-Subject: Re: [PATCH v2 04/11] KVM: SEV: publish supported VMSA features
-From: Sean Christopherson <seanjc@google.com>
-To: Paolo Bonzini <pbonzini@redhat.com>
-Cc: linux-kernel@vger.kernel.org, kvm@vger.kernel.org, michael.roth@amd.com, 
-	aik@amd.com
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: ankita@nvidia.com, jgg@nvidia.com, oliver.upton@linux.dev, james.morse@arm.com, suzuki.poulose@arm.com, yuzenghui@huawei.com, reinette.chatre@intel.com, surenb@google.com, stefanha@redhat.com, brauner@kernel.org, catalin.marinas@arm.com, will@kernel.org, mark.rutland@arm.com, alex.williamson@redhat.com, kevin.tian@intel.com, yi.l.liu@intel.com, ardb@kernel.org, akpm@linux-foundation.org, andreyknvl@gmail.com, wangjinchao@xfusion.com, gshan@redhat.com, shahuang@redhat.com, ricarkol@google.com, linux-mm@kvack.org, lpieralisi@kernel.org, rananta@google.com, ryan.roberts@arm.com, david@redhat.com, linus.walleij@linaro.org, bhe@redhat.com, aniketa@nvidia.com, cjia@nvidia.com, kwankhede@nvidia.com, targupta@nvidia.com, vsethi@nvidia.com, acurrid@nvidia.com, apopple@nvidia.com, jhubbard@nvidia.com, danw@nvidia.com, kvmarm@lists.linux.dev, mochs@nvidia.com, zhiw@nvidia.com, kvm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-On Fri, Feb 23, 2024, Paolo Bonzini wrote:
-> On 2/23/24 17:07, Sean Christopherson wrote:
-> > > diff --git a/arch/x86/kvm/svm/sev.c b/arch/x86/kvm/svm/sev.c
-> > > index f760106c31f8..53e958805ab9 100644
-> > > --- a/arch/x86/kvm/svm/sev.c
-> > > +++ b/arch/x86/kvm/svm/sev.c
-> > > @@ -59,10 +59,12 @@ module_param_named(sev_es, sev_es_enabled, bool, 0444);
-> > >   /* enable/disable SEV-ES DebugSwap support */
-> > >   static bool sev_es_debug_swap_enabled = true;
-> > >   module_param_named(debug_swap, sev_es_debug_swap_enabled, bool, 0444);
-> > > +static u64 sev_supported_vmsa_features;
-> > >   #else
-> > >   #define sev_enabled false
-> > >   #define sev_es_enabled false
-> > >   #define sev_es_debug_swap_enabled false
-> > > +#define sev_supported_vmsa_features 0
-> > 
-> > Ok, I've reached my breaking point.  Compiling sev.c for CONFIG_KVM_AMD_SEV=n is
-> > getting untenable.  Splattering #ifdefs _inside_ SEV specific functions is weird
-> > and confusing.
+On Tue, 20 Feb 2024 07:29:22 +0000,
+<ankita@nvidia.com> wrote:
 > 
-> Ok, I think in some cases I prefer stubs but I'll weave your 4 patches in
-> v3.
+> From: Ankit Agrawal <ankita@nvidia.com>
+> 
+> Currently, KVM for ARM64 maps at stage 2 memory that is considered device
+> with DEVICE_nGnRE memory attributes; this setting overrides (per
+> ARM architecture [1]) any device MMIO mapping present at stage 1,
+> resulting in a set-up whereby a guest operating system cannot
+> determine device MMIO mapping memory attributes on its own but
+> it is always overridden by the KVM stage 2 default.
+> 
+> This set-up does not allow guest operating systems to select device
+> memory attributes independently from KVM stage-2 mappings
+> (refer to [1], "Combining stage 1 and stage 2 memory type attributes"),
+> which turns out to be an issue in that guest operating systems
+> (e.g. Linux) may request to map devices MMIO regions with memory
+> attributes that guarantee better performance (e.g. gathering
+> attribute - that for some devices can generate larger PCIe memory
+> writes TLPs) and specific operations (e.g. unaligned transactions)
+> such as the NormalNC memory type.
+> 
+> The default device stage 2 mapping was chosen in KVM for ARM64 since
+> it was considered safer (i.e. it would not allow guests to trigger
+> uncontained failures ultimately crashing the machine) but this
+> turned out to be asynchronous (SError) defeating the purpose.
+> 
+> For these reasons, relax the KVM stage 2 device memory attributes
+> from DEVICE_nGnRE to Normal-NC.
+> 
+> Generalizing to other devices may be problematic, however. E.g.
+> GICv2 VCPU interface, which is effectively a shared peripheral, can
+> allow a guest to affect another guest's interrupt distribution. Hence
+> limit the change to VFIO PCI as caution. This is achieved by
+> making the VFIO PCI core module set a flag that is tested by KVM
+> to activate the code. This could be extended to other devices in
+> the future once that is deemed safe.
+> 
+> [1] section D8.5 - DDI0487J_a_a-profile_architecture_reference_manual.pdf
+> 
+> Applied over v6.8-rc5.
 
-No problem, I don't have a strong preference.  I initially added stubs instead of
-the IS_ENABLED().  The main reason I switched is when I realized that sev_set_cpu_caps()
-*cleared* capabilities, and so decided it would be safer to have a separate patch
-that effectively stubbed out the global SEV calls.
+For the series,
+
+Reviewed-by: Marc Zyngier <maz@kernel.org>
+
+	M.
+
+-- 
+Without deviation from the norm, progress is not possible.
