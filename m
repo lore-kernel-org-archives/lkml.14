@@ -1,66 +1,66 @@
-Received: from mail-pj1-f46.google.com (mail-pj1-f46.google.com [209.85.216.46])
+Received: from mail-pj1-f50.google.com (mail-pj1-f50.google.com [209.85.216.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F8D517BAC
-	for <linux-kernel@vger.kernel.org>; Fri, 23 Feb 2024 09:32:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C45D18E29
+	for <linux-kernel@vger.kernel.org>; Fri, 23 Feb 2024 09:32:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708680730; cv=none; b=Vj0/oivxkVXFNy5jExztqn8Y4/lSAd0gvWzp5DeUNOisit9aWB6EG+LBhBFnz1r2kU+lidEAF7rC9FUOON7xOnS3YMVLP3KtLcLVLoOQ2XNJ7gba2iNYmg/G8rVRaFtEndEe43q6sTIfmSNQqWRK4qHvTzDMbRQSltHSgEEjD6E=
+	t=1708680746; cv=none; b=QhE35caT3QMSKVLcUSozBD/jsDjNhYV5IoNdXd5v9qyPoL/LE3OAliDQN/ckucYbhKjbRSK2sEN+Zzoge7HIp9hksHEZFnMm0sPNKn/KhX2d2vHTH8bP4XA4YdgGyX/5NL4hY8onj0X7OgMxu+k3gN9igMR2IrQpx4M9s6x+Ibw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708680730; c=relaxed/simple;
-	bh=1VYx/axPQ/Y/kZ06Nqv3k98TVq+A97WOfptU9iKYjbI=;
+	s=arc-20240116; t=1708680746; c=relaxed/simple;
+	bh=qApWEFFYRZvt09gXx+YkszWxC753jaUWfWsFpXxbF1A=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Yu/POTblgTJl4XOwjg9FluyXMSYlcwKiAb036DRnc0/v5l669cHe6Y/1vWvArROIe2Gw8o/I2kP0yiLH+GIy8qkuTYs1IFXDDyadISXnQ9nVX6F5iwBzkHzdJ1SuXJGQH922rIp12EZ7rjFsjo9r2y2ezClde4sR8ULQRWYdRpg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=z6HxZk59; arc=none smtp.client-ip=209.85.216.46
+	 To:Cc:Content-Type; b=WN7ylF5IsOihCYxS9DTI8gy+x8h2B/6j2TbhaAPcucMFzjyfB5GdkXWN0IIEWZtswksOIcde+yi0Iq2EoTOfMJYZ55aC+X2hZ0BKNdcTF9kWLzNoMRJHZPG+n+3CIrrUloAZmyGr3Ih8c4hNvvx9FqhEU9nA+tqsiAj+2U1FroI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=uPipCWl2; arc=none smtp.client-ip=209.85.216.50
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="z6HxZk59"
-Received: by mail-pj1-f46.google.com with SMTP id 98e67ed59e1d1-299e4b352cdso513250a91.0
-        for <linux-kernel@vger.kernel.org>; Fri, 23 Feb 2024 01:32:08 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="uPipCWl2"
+Received: by mail-pj1-f50.google.com with SMTP id 98e67ed59e1d1-29a8911d11cso31000a91.1
+        for <linux-kernel@vger.kernel.org>; Fri, 23 Feb 2024 01:32:24 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1708680728; x=1709285528; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1708680744; x=1709285544; darn=vger.kernel.org;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=6MtRioIoGbmMgxjAxFCCvhtN1+GGLvZzkqp5B6pIt9g=;
-        b=z6HxZk59x0V/HjqUOzbuNvs9YPU9uaoJO5b94c7QTZRF3aRwqNgOwiy7l6nEqo49+0
-         A7HxRRNLW96J4gbBC9UAD0ruMvZQO5hlv50DWJ8zlGT0u/g8AM/DijNAVNbVPoufHmWc
-         N57sFZ83hXGVW5Jeyp21vMj/ifjQdVPSy0jpPVB2+YitF5Dv6fq5HYtzy29kWzRzb02S
-         AOZ7a+uXS3xaa9XH2DG+PnOagxTE6sXJpsh5eWnShc2N/S85bmnoj3r3s5MtReBVTf47
-         x6NIXZwfI322yimyZ3rcVY6DuX3rTjCQfOVpFYU/rsYrGC2gV0XimzG3/h1ubrB2Jvtl
-         mD2A==
+        bh=YH0on72w0dSvrTpAI4EZ8xCDoXPQcz05aupfXOJOA3A=;
+        b=uPipCWl2UaqDZF5eEHMTXKxYxGYpe0RQQIR+tzI7/bf/yJ4lZ+twtXh8abkf9R5oq5
+         gTJe5Dri3nflFOt3LfVMhyDe+Pu4xmz4WktnVSdEtZFthUQApY3WnhUenMBLTWXxvMsr
+         E95m3mWQrKeC6KxAPSOhBXYT7JrZUYTIJUu2uKAwl16FyX3iPEAQf3PRXdE5Hve1vzlJ
+         42vtTZRAUBOaO16SZynd+3wRNhfTPxjjbOaBfUt5HC2QLsPAGy40TltXlX6+GQ90ZBFQ
+         CQ5rFrN3J8fMDlMDBepsA8+L8V2LB22j5MotEUh9WHjryHgaSlvSIf10W59UCVwZZykI
+         XFZQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708680728; x=1709285528;
+        d=1e100.net; s=20230601; t=1708680744; x=1709285544;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=6MtRioIoGbmMgxjAxFCCvhtN1+GGLvZzkqp5B6pIt9g=;
-        b=F6xExmx+w1IPwMfErM4ip/f2UdyDOkpalj/P/28KpDPFTf6UgMiaRvzTKlZIy7Lv9h
-         4O8PKIIWXokqpV2weFX67YBt/qEtJQhcakEjQifRyOXz9Poc1Kp/WTsDQJC1VQJP1eDn
-         kE8NJJpAiXoYSvt0M9DwXhLHfRwr/Oi52X/eZOy0o954EB9PuTeUGVVWrblIuKA3s0pd
-         pGpyTt7CNU5wZwbqKOAdNwmj/uTwOTHfWbcwuGs7Kuso0gi2PwgKnhcVEJNOKigpQAJ3
-         OZfXWQ8KgyycHId0gNrXFaa9/GM0fSpSMM9MGeu6iGE2U7+fPdZhkkgtwbKb3I46IwJI
-         qVRQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUYtCkkPgYfBQybrTK2NWcZw225xXpmA2nHVHrHz1W39Xfafm3HIHDURAnbHKeeCdv9HI62siCUC8+YxCEuvvfAMI8DB080fe2WcK9J
-X-Gm-Message-State: AOJu0Yx6W4JDcRi+j5m8986764XQ9djbhnSlaTs+RqZgkhKtlpMTuJ6V
-	XJafx+SOL65hIr0NIXu4rd52UfRwN7b4bpn2UfbHIR0H4XzRT1SVClV7W2xBcNd748zHClc3Liw
-	cZzsXqnFuCMla9ojdxAVOiqTNHtYkkVQ0rEwDUQ==
-X-Google-Smtp-Source: AGHT+IHgcMD7lYWOBAfEs/KH+f5tKhGl2C+lRa25s1X4PdXzt4a9gGPZ5TNkiWHH3WHNz3KA1kxIE3aOz33ObHZjUKE=
-X-Received: by 2002:a17:90a:3d4c:b0:299:1bf1:9351 with SMTP id
- o12-20020a17090a3d4c00b002991bf19351mr1167066pjf.29.1708680727925; Fri, 23
- Feb 2024 01:32:07 -0800 (PST)
+        bh=YH0on72w0dSvrTpAI4EZ8xCDoXPQcz05aupfXOJOA3A=;
+        b=J/6s1oywTWTLxdjF6OxQKRG2rArwEtRsGbz8QfGaS3OmSVgF/nuMJ0rFhqyOFcUQdW
+         XrWoeyvo/knxRI2xZSYqWwf2gm64br6VMkqH+ZFAVWrIBrjS2cwYFpBgk7rJOYI1HOkJ
+         7MJnDOIKdshZ9OXXtunF4ZR9YFqdkEuA+t7SLSuxSNU1IuH/vDgAHhLdITFraMx3vWb6
+         ZRlfg9xT3zsAau+wXhN/cjCDJmWjgC8lftrS1TWfkFTWgXb+O5cKv727djSe/lmNoyIn
+         4nlPo05qgHzViTkU9BNUNrwCYBQDqBMyMrOkg0CaecnS7wDZD4glAXCdZUcBkeZf7Jyq
+         Y5/A==
+X-Forwarded-Encrypted: i=1; AJvYcCXz6duY/wYvxSYSQsVvvuPfiH26yfY4nfCemcRovtzfgPw0PdzpVylymvZI3Vn8RMY1O69BnlrSVTxspV8FESUZt90YIezofKLrudvS
+X-Gm-Message-State: AOJu0YzkbuHCd7/6ovVkZ3UtCGzBfLWqLNKoIkxxzXBSJCQ5fo5rZfWO
+	HSg6BdL14mX6AGAlitXwtB6puqoeq0G5O6UP5Zbkf2d3c0Hk3mJQrQ6SNSGsHOjlwUOsyG0jmBe
+	Y/3zryVRgHzTFLqEB1SaOTti9B2xP++lXctOx9qwOVROWDqenTqI=
+X-Google-Smtp-Source: AGHT+IHAa69QAOboZsPtT+Z7X6Qs1+x4qD7wmPRsZ+AnuCFbwvYVeNpi9JCF5twQwnVDK/A91WHSj4o4+D5XuiUt4/c=
+X-Received: by 2002:a17:90a:ab92:b0:299:32d6:aa76 with SMTP id
+ n18-20020a17090aab9200b0029932d6aa76mr1132370pjq.43.1708680744445; Fri, 23
+ Feb 2024 01:32:24 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240220225622.2626569-1-qyousef@layalina.io> <20240220225622.2626569-4-qyousef@layalina.io>
-In-Reply-To: <20240220225622.2626569-4-qyousef@layalina.io>
+References: <20240220225622.2626569-1-qyousef@layalina.io> <20240220225622.2626569-5-qyousef@layalina.io>
+In-Reply-To: <20240220225622.2626569-5-qyousef@layalina.io>
 From: Vincent Guittot <vincent.guittot@linaro.org>
-Date: Fri, 23 Feb 2024 10:31:56 +0100
-Message-ID: <CAKfTPtAvmMFL355zrqCebZJg6Su-V_um4X-c629cOJoS09-fdQ@mail.gmail.com>
-Subject: Re: [PATCH v6 3/4] sched/topology: Remove max_cpu_capacity from root_domain
+Date: Fri, 23 Feb 2024 10:32:13 +0100
+Message-ID: <CAKfTPtC3B5HPbMFnr-HyCd8_s1hHgihs2hjbUn11VKwH6f_Yhg@mail.gmail.com>
+Subject: Re: [PATCH v6 4/4] sched/fair: Don't double balance_interval for migrate_misfit
 To: Qais Yousef <qyousef@layalina.io>
 Cc: Ingo Molnar <mingo@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
 	Dietmar Eggemann <dietmar.eggemann@arm.com>, linux-kernel@vger.kernel.org, 
@@ -69,65 +69,56 @@ Content-Type: text/plain; charset="UTF-8"
 
 On Tue, 20 Feb 2024 at 23:56, Qais Yousef <qyousef@layalina.io> wrote:
 >
-> The value is no longer used as we now keep track of max_allowed_capacity
-> for each task instead.
+> It is not necessarily an indication of the system being busy and
+> requires a backoff of the load balancer activities. But pushing it high
+> could mean generally delaying other misfit activities or other type of
+> imbalances.
+>
+> Also don't pollute nr_balance_failed because of misfit failures. The
+> value is used for enabling cache hot migration and in migrate_util/load
+> types. None of which should be impacted (skewed) by misfit failures.
 >
 > Signed-off-by: Qais Yousef <qyousef@layalina.io>
 
 Reviewed-by: Vincent Guittot <vincent.guittot@linaro.org>
 
 > ---
->  kernel/sched/sched.h    |  2 --
->  kernel/sched/topology.c | 13 ++-----------
->  2 files changed, 2 insertions(+), 13 deletions(-)
+>  kernel/sched/fair.c | 13 +++++++++++--
+>  1 file changed, 11 insertions(+), 2 deletions(-)
 >
-> diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
-> index e85976bd2bab..bc9e598d6f62 100644
-> --- a/kernel/sched/sched.h
-> +++ b/kernel/sched/sched.h
-> @@ -917,8 +917,6 @@ struct root_domain {
->         cpumask_var_t           rto_mask;
->         struct cpupri           cpupri;
+> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> index 20006fcf7df2..4c1235a5dd60 100644
+> --- a/kernel/sched/fair.c
+> +++ b/kernel/sched/fair.c
+> @@ -11467,8 +11467,12 @@ static int load_balance(int this_cpu, struct rq *this_rq,
+>                  * We do not want newidle balance, which can be very
+>                  * frequent, pollute the failure counter causing
+>                  * excessive cache_hot migrations and active balances.
+> +                *
+> +                * Similarly for migration_misfit which is not related to
+> +                * load/util migration, don't pollute nr_balance_failed.
+>                  */
+> -               if (idle != CPU_NEWLY_IDLE)
+> +               if (idle != CPU_NEWLY_IDLE &&
+> +                   env.migration_type != migrate_misfit)
+>                         sd->nr_balance_failed++;
 >
-> -       unsigned long           max_cpu_capacity;
-> -
->         /*
->          * NULL-terminated list of performance domains intersecting with the
->          * CPUs of the rd. Protected by RCU.
-> diff --git a/kernel/sched/topology.c b/kernel/sched/topology.c
-> index 1505677e4247..a57c006d2923 100644
-> --- a/kernel/sched/topology.c
-> +++ b/kernel/sched/topology.c
-> @@ -2513,16 +2513,9 @@ build_sched_domains(const struct cpumask *cpu_map, struct sched_domain_attr *att
->         /* Attach the domains */
->         rcu_read_lock();
->         for_each_cpu(i, cpu_map) {
-> -               unsigned long capacity;
-> -
->                 rq = cpu_rq(i);
->                 sd = *per_cpu_ptr(d.sd, i);
+>                 if (need_active_balance(&env)) {
+> @@ -11551,8 +11555,13 @@ static int load_balance(int this_cpu, struct rq *this_rq,
+>          * repeatedly reach this code, which would lead to balance_interval
+>          * skyrocketing in a short amount of time. Skip the balance_interval
+>          * increase logic to avoid that.
+> +        *
+> +        * Similarly misfit migration which is not necessarily an indication of
+> +        * the system being busy and requires lb to backoff to let it settle
+> +        * down.
+>          */
+> -       if (env.idle == CPU_NEWLY_IDLE)
+> +       if (env.idle == CPU_NEWLY_IDLE ||
+> +           env.migration_type == migrate_misfit)
+>                 goto out;
 >
-> -               capacity = arch_scale_cpu_capacity(i);
-> -               /* Use READ_ONCE()/WRITE_ONCE() to avoid load/store tearing: */
-> -               if (capacity > READ_ONCE(d.rd->max_cpu_capacity))
-> -                       WRITE_ONCE(d.rd->max_cpu_capacity, capacity);
-> -
->                 cpu_attach_domain(sd, d.rd, i);
->
->                 if (lowest_flag_domain(i, SD_CLUSTER))
-> @@ -2536,10 +2529,8 @@ build_sched_domains(const struct cpumask *cpu_map, struct sched_domain_attr *att
->         if (has_cluster)
->                 static_branch_inc_cpuslocked(&sched_cluster_active);
->
-> -       if (rq && sched_debug_verbose) {
-> -               pr_info("root domain span: %*pbl (max cpu_capacity = %lu)\n",
-> -                       cpumask_pr_args(cpu_map), rq->rd->max_cpu_capacity);
-> -       }
-> +       if (rq && sched_debug_verbose)
-> +               pr_info("root domain span: %*pbl\n", cpumask_pr_args(cpu_map));
->
->         ret = 0;
->  error:
+>         /* tune up the balancing interval */
 > --
 > 2.34.1
 >
