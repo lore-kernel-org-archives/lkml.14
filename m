@@ -1,113 +1,101 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E07712AAE0
-	for <linux-kernel@vger.kernel.org>; Fri, 23 Feb 2024 17:20:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BC5512AAE0;
+	Fri, 23 Feb 2024 17:22:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708708812; cv=none; b=KyMkBykp/kZbBOmqv16/D8IzTtXOp2NbK6CsJ4AhP9Fn+Dcgi1YRoJsPhSqe8YDk+LO7w1M8yXtBMlAqTx7L97KcPc0aEaB2yiRV5ekdXO6cKc0f7QTxV5DsvuWWBldKbAWybdJYBYkj6OE3nBvLOfMLXNcZiUlO6srC76Z4PSE=
+	t=1708708957; cv=none; b=AI1UlayPsMQUgI4vFyNLgLT00yPUQPVkO5ZV5RDL/dFRIeLJunOvC5LF2ptN1O0VblNa2ZlZ2kGsXE1R2lyljvMdjHU1Due80GZu52XdM61qNDXglb0Mdj1WuQPV+TgG1u6ezNzVo+hJWWuw3l2jjrGkybyoWeKMMtsoWS2j0rY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708708812; c=relaxed/simple;
-	bh=T3y3bvy64o+ZYZ7fO4C4nj0LTrwniTjzjpka6LToHr8=;
+	s=arc-20240116; t=1708708957; c=relaxed/simple;
+	bh=SvkupoeribjXt1qO0/10r6stz8J1dmq6EiW8AL+wx9c=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kKNpgkAv3P49UxO9rI04kMauIVl9Sw1zHD/zTyvyp/WsN0frNU2/SerbJpssWNs38icnOQY4J6TxMpUenZy7n3zghBSBLX0+GyVQKEgJnVYUcOt6S2nmZfHvmK0NAVmMeLm0W33g/LjBL/fTrNDb+1zl8EUAq6I9GkyTOnHlCFs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=j2wHc/gq; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=iOmKGNFiIGIC/xN2lIMAlpWBnY5l6pgS72wsrbVL1PmpAK56kE0jCZBMRhBuhjEQtXwB0yAgIRGiQmqHq4Agnx8WnUYohnWW/t3svaerdd8p5DfTFKyCxNcvUxHZjngh8U1m9bzsMmQcycxO9trrrNZbLXV8hKMAgsbDfRZtIkQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=B5rr+wfR; arc=none smtp.client-ip=209.85.214.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="j2wHc/gq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 00988C433C7;
-	Fri, 23 Feb 2024 17:20:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708708812;
-	bh=T3y3bvy64o+ZYZ7fO4C4nj0LTrwniTjzjpka6LToHr8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=j2wHc/gqwUx4LU7n5jV4YJGxdYvcIIlVOlZgIu0Gv7+6tjiPvHaqsXIvFAFgkCVVb
-	 Yyb/b9rxiY/iKEy++S21TC79mUB1hinHwv7463qyAbYlphTWnY9FePw+xQS3z9HZgC
-	 erlaHvgN7pC3nKiH8w6yEFYasWS47UJ8hYOmqdr5BlLO0kTbLE/K5vUImKcC9QQAyF
-	 dSGCaDa/euhWKFmSmaTcRwFYjVAXcdVBwehQ2m/EWxnbtNfoOXlZoYWenZafd4aCpZ
-	 fWdtzy/CyFgRqvvRJrHmHa+TW4J3dJlbBQZaZyAsHk3JiwPTe5lD4lCKqk3+sgzLSo
-	 EoJk8CpQwCBKw==
-Date: Fri, 23 Feb 2024 17:20:09 +0000
-From: Mark Brown <broonie@kernel.org>
-To: "Ding, Shenghao" <shenghao-ding@ti.com>
-Cc: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-	"andriy.shevchenko@linux.intel.com" <andriy.shevchenko@linux.intel.com>,
-	"lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-	"perex@perex.cz" <perex@perex.cz>,
-	"13916275206@139.com" <13916275206@139.com>,
-	"alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"liam.r.girdwood@intel.com" <liam.r.girdwood@intel.com>,
-	"bard.liao@intel.com" <bard.liao@intel.com>,
-	"mengdong.lin@intel.com" <mengdong.lin@intel.com>,
-	"yung-chuan.liao@linux.intel.com" <yung-chuan.liao@linux.intel.com>,
-	"Xu, Baojun" <baojun.xu@ti.com>, "Lu, Kevin" <kevin-lu@ti.com>,
-	"tiwai@suse.de" <tiwai@suse.de>, "soyer@irl.hu" <soyer@irl.hu>
-Subject: Re: [EXTERNAL] Re: [PATCH v9] ASoc: tas2783: Add tas2783 codec driver
-Message-ID: <ZdjTyccCDoD9QYpi@finisterre.sirena.org.uk>
-References: <20240222074000.659-1-shenghao-ding@ti.com>
- <10f53a13-a0ff-40f9-b089-f5baacdb76b6@linux.intel.com>
- <5c7127256bf54fcd921fc1ec83f3e527@ti.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B5rr+wfR"
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-1d918008b99so4596025ad.3;
+        Fri, 23 Feb 2024 09:22:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1708708955; x=1709313755; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=O1qB8qiWWm1+KnuGpJ58yy4A/Vx3gsfPagJr/34wvao=;
+        b=B5rr+wfROEtXCdlfWTJeQGMi5+q8CVaOgwOxbIyG2NpZVB1lPyh5MpQJamCxMonjcS
+         sc3qcr/evyucx1roBLrMPvepOoRzp4aPJaxNxd+/7kyL/quDXWCrmF6znqjoro11urhd
+         EsRKiaRyeR9Oz/Tf2Ucwf7OpjcZSxg6RAl8fIPzIEvcbiwcZR+mexlhlKMyqNIKPVsST
+         RGmiFHSqyUai/RUPU5Ed0MwpsMqdgNIorAxy3Gbi/5Ob06vJ8kfF5Gwa5XOFlMyoNloJ
+         3IAWmeTp3hkzsY0vpuKhgAtGuGuJeq9yVtEw/JBgvu9E53In5ez2qoJnBCIs+0iURQ9q
+         rC8w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708708955; x=1709313755;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=O1qB8qiWWm1+KnuGpJ58yy4A/Vx3gsfPagJr/34wvao=;
+        b=KU8VlvL5vMCSIqUtKYc2v5r876LLeX9c+lE8FxmqQl3/U1JI8rMPGKgTh6vlG4gfG0
+         yjeI0d8b7aDBLyJT9psqV9WL5hXRnG9TyGXf61ea+TmU60V48zDakpnbB3IWzVsEd8tO
+         Y8C108mENw1WGMNzQcs7GneOQcx8WpMzkwSC40deMxTPjhlTHJIrSG6qt/cMjd+LFT/t
+         I8SzlOP+PhxsHEVwki3D4kY8lNqj6QufJcK9gMnSjwXwulkr9R1OJxuNB6JXc1n+X0KS
+         4q9Jz6AS5iu62bm9j/poEXvZu04aGxiLS2BdYBKQmOeCWS4ToV4XRFGeuZF/C2lu2P8H
+         A0Sw==
+X-Forwarded-Encrypted: i=1; AJvYcCVPesz+6sjUbaeVJwbhrcxkPqM7uwQ+cvnwL12792tr5gXTxI92pKTbIflegZ+4oeqEqGyvmmR+TWO+ilO/aCMW53txzOTqski1aJL64K6EJe2GMWhSLS4an2KbKHm8kG2tclUI
+X-Gm-Message-State: AOJu0YyB4VOYdnAx6wdQu0JOLfiH3airJuX5Hye6aVXLLTBBrPAjoGgV
+	9xH3kg0g21MQUrJjQUqUTXRYjgwSMegV62hQ5JRgKi/oDiq3K3AE
+X-Google-Smtp-Source: AGHT+IHsUCKVimVlZp1C0rBkdkNvHrz1AxRrnvYYXHkv5kCUK97hyDvETtILF5TK+bLfMS/m69cSpg==
+X-Received: by 2002:a17:902:ee84:b0:1db:e837:4091 with SMTP id a4-20020a170902ee8400b001dbe8374091mr420817pld.3.1708708955358;
+        Fri, 23 Feb 2024 09:22:35 -0800 (PST)
+Received: from localhost (dhcp-141-239-158-86.hawaiiantel.net. [141.239.158.86])
+        by smtp.gmail.com with ESMTPSA id f4-20020a170902ce8400b001d95d47cce4sm11875205plg.138.2024.02.23.09.22.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 23 Feb 2024 09:22:34 -0800 (PST)
+Sender: Tejun Heo <htejun@gmail.com>
+Date: Fri, 23 Feb 2024 07:22:33 -1000
+From: Tejun Heo <tj@kernel.org>
+To: Mike Snitzer <snitzer@kernel.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>,
+	Mikulas Patocka <mpatocka@redhat.com>, linux-kernel@vger.kernel.org,
+	dm-devel@lists.linux.dev, msnitzer@redhat.com, ignat@cloudflare.com,
+	damien.lemoal@wdc.com, bob.liu@oracle.com, houtao1@huawei.com,
+	peterz@infradead.org, mingo@kernel.org, netdev@vger.kernel.org,
+	allen.lkml@gmail.com, kernel-team@meta.com,
+	Alasdair Kergon <agk@redhat.com>
+Subject: Re: [PATCH 8/8] dm-verity: Convert from tasklet to BH workqueue
+Message-ID: <ZdjUWVkLbxSmJS48@slm.duckdns.org>
+References: <20240130091300.2968534-1-tj@kernel.org>
+ <20240130091300.2968534-9-tj@kernel.org>
+ <c2539f87-b4fe-ac7d-64d9-cbf8db929c7@redhat.com>
+ <Zbq8cE3Y2ZL6dl8r@slm.duckdns.org>
+ <CAHk-=wjMz_1mb+WJsPhfp5VBNrM=o8f-x2=6UW2eK5n4DHff9g@mail.gmail.com>
+ <ZbrgCPEolPJNfg1x@slm.duckdns.org>
+ <ZbrjhJFMttj8lh3X@redhat.com>
+ <ZdUBHQQEN5-9AHBe@redhat.com>
+ <ZdUGFqLCpWez42Js@slm.duckdns.org>
+ <Zde7nXVx8oFepINV@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="JSSHE0FUht8S9Os8"
-Content-Disposition: inline
-In-Reply-To: <5c7127256bf54fcd921fc1ec83f3e527@ti.com>
-X-Cookie: You might have mail.
-
-
---JSSHE0FUht8S9Os8
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <Zde7nXVx8oFepINV@redhat.com>
 
-On Fri, Feb 23, 2024 at 10:12:49AM +0000, Ding, Shenghao wrote:
-> Hi Pierre-Louis
->=20
-> > In the SoundWire spec, the unique_id is *LINK SPECIFIC*, and only used =
-at
-> > the bus level within the context of a link to help avoid enumeration
-> > conflicts
+On Thu, Feb 22, 2024 at 04:24:45PM -0500, Mike Snitzer wrote:
+> I've rebased and made the changes available in this dm-6.9-bh-wq branch:
+> https://git.kernel.org/pub/scm/linux/kernel/git/device-mapper/linux-dm.git/log/?h=dm-6.9-bh-wq
+> 
+> I left them both DM conversion commits attributed to use despite the
+> rebase (and churn of renames I did in the dm-verity commit); hopefully
+> you're fine with that but if not I can split the renames out.
 
-> > If you are using the unique_id as a SYSTEM-UNIQUE value to lookup EFI
-> > data, this is a TI-specific requirement that needs to be documented.
-> > That also means you need to double-check for errors so make sure there
-> > are no board configurations where the same unique_id is used in multiple
-> > links, or by devices other than tas2783.
+Looks good to me.
 
-> This code only covers the tas2783s sitting in the same bus link. As to ca=
-ses of the
-> different SWD links, customer will be required to have the secondary deve=
-lopment
-> on current code. I'm sure my customers have much knowledge to handle this.
+Thanks.
 
-As Pierre says I think we really should have some sort of defensive
-programming here, even if you're going to leave multi-link systems to
-future work people will still have older versions in distributions or
-whtaever.  While I'm not sure the consequences of getting things wrong
-are likely to be that bad (I'm expecting bad quality audio) it's also
-going to be kind of hard to figure out if we just silently pick the
-wrong calibration, especially if it's actually a valid calibration for
-another device in the system.  Other vendors (eg, Cirrus) seem to have
-figured out a scheme here?
-
---JSSHE0FUht8S9Os8
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmXY08gACgkQJNaLcl1U
-h9CDTAf/bo/BBm0FaalBPQlGYIf6F1SuRLsnvDOwApCG85Z6wSol1qV1EdXwsRHM
-4ijYqyHPymwdgpesQnl3LhgpuZ2m/eMk8xXOqOtjC/yCLN0f59uCAmw7XglxhQsP
-WmS/0JEZ3Xv2+JcddbErmCdrWi+uJQkiJuhUYkxpx9p0gao5pYarIOoNyHC9vCFF
-K+Cxv/YKjuQqakXNVGTfvC7ywD7iX3tT2UVtlAFm8VnFr9W44jkggE9MzyJPP9xb
-yvqkqyrcKIEUCGSdMJLxXFTiT1N3cfWPN2/kjJ933DZMEHp2L1ytio4p1lionLE7
-+KMiDfhfNZabb3w0gy+dU7MI71OnbA==
-=aP7c
------END PGP SIGNATURE-----
-
---JSSHE0FUht8S9Os8--
+-- 
+tejun
