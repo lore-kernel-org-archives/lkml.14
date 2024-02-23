@@ -1,84 +1,45 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CCFE80BE3;
-	Fri, 23 Feb 2024 13:59:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4B0E5DF00;
+	Fri, 23 Feb 2024 14:02:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708696797; cv=none; b=sYcvYWvyB3oicesM8BUUliRz2iNtm1wp2CmzDrJdYCXo4NDoV4QTR9XByzseYSQdmKZvBM+UjTb07eG7rg4qe8yfgF1Gey3srRGFb1siCNFxbCdE9Z7blUbPWlt1k7bN6UnT34NB5x+NGmRmQQfSCls7HxWMJ+CYWbwInH2ocVc=
+	t=1708696979; cv=none; b=uHV+lKd+SxPBps2Sb4+D9xZTkyX4h4lqW3lMXz/6DDXdsZIlbV3wTOfiKzbdawlqxfcaP6MBYkwsGtwqn3bK7cl0BveYRX+YRk69kdBYQpCgKdvd/bGUnhXLJa6tKMwmJKhZGn3AurtKMobMMWFeGnSHyXJ0toHerkOt4LEMc+o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708696797; c=relaxed/simple;
-	bh=WH00J42XRSLOx+AYd4eDGdtsAI7y6ZtzqylvJFYY4z0=;
+	s=arc-20240116; t=1708696979; c=relaxed/simple;
+	bh=KudqgcL6FXV7PnIRApxE0DX6lKwquS27CBUuH61ACuY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=o3xvasnjMY4u8LZtJcUg4u1CKC/j9laxEvlBKoZf/j4yqPxRTOm68H2r1wRx+x2Qtxd9D1MRs4R2yHjnHmDU9GV9fhapceTqJUj50Xce5gzLcsIGzAWeb6EDqXjUaIwHUR1dCULVQRx3nYLJPdjWA/GuB+Fj8O69N+7bgT0MoRE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=bZ3Mrm2k; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=fwLuUbpH; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=bZ3Mrm2k; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=fwLuUbpH; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	 Content-Type:Content-Disposition:In-Reply-To; b=dZCNZ6zzWK87jfPUTFKPFmAIMsyoAiyrNgGnCdJAh12molDEJvVvVi0IcTeuoUo9w9OkoigG/mu85/8pG8irRsdj7E7XIw657e406Yn37pkhfaJdo86EpCxRSyTV6Ui22XsU0uNuKtLpyVNVmH/X2TMjelQ6LT3z44jeUtbVWwI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fLi4DYFc; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="bZ3Mrm2k";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="fwLuUbpH";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="bZ3Mrm2k";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="fwLuUbpH"
-Received: from imap2.dmz-prg2.suse.org (imap2.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:98])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 6157021228;
-	Fri, 23 Feb 2024 13:59:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1708696779; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=U5I5JLIOt6cWg7cHecCMNbeuLIZxzsx9ULi7w8Ob25k=;
-	b=bZ3Mrm2k2f8asnJGUairFgzsX61UmeXmfZANe8xoomAgt+CyDDoRF8r3wDWypucksBH2iP
-	v5jACxDlaYMOKliZuHxkknuPvf+H6xsRJnVy5lBBjCsPxKOg4KxQ+K8KdVuxm7vv3ZnD7W
-	2ZWJgavfsDR/vkvR3N9JVRTnBgaJ94M=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1708696779;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=U5I5JLIOt6cWg7cHecCMNbeuLIZxzsx9ULi7w8Ob25k=;
-	b=fwLuUbpHNRaOeE4s8d7WpY7t5c5Znn4EjJtrCGtEQWt60gZb90naQDRFQeEtIFMuQCWzVH
-	/5GRfVHPBc6VoNBA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1708696779; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=U5I5JLIOt6cWg7cHecCMNbeuLIZxzsx9ULi7w8Ob25k=;
-	b=bZ3Mrm2k2f8asnJGUairFgzsX61UmeXmfZANe8xoomAgt+CyDDoRF8r3wDWypucksBH2iP
-	v5jACxDlaYMOKliZuHxkknuPvf+H6xsRJnVy5lBBjCsPxKOg4KxQ+K8KdVuxm7vv3ZnD7W
-	2ZWJgavfsDR/vkvR3N9JVRTnBgaJ94M=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1708696779;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=U5I5JLIOt6cWg7cHecCMNbeuLIZxzsx9ULi7w8Ob25k=;
-	b=fwLuUbpHNRaOeE4s8d7WpY7t5c5Znn4EjJtrCGtEQWt60gZb90naQDRFQeEtIFMuQCWzVH
-	/5GRfVHPBc6VoNBA==
-Received: from imap2.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap2.dmz-prg2.suse.org (Postfix) with ESMTPS id 5610413419;
-	Fri, 23 Feb 2024 13:59:39 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([10.150.64.162])
-	by imap2.dmz-prg2.suse.org with ESMTPSA
-	id EVr9FMuk2GWBfgAAn2gu4w
-	(envelope-from <jack@suse.cz>); Fri, 23 Feb 2024 13:59:39 +0000
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-	id 16937A07D1; Fri, 23 Feb 2024 14:59:39 +0100 (CET)
-Date: Fri, 23 Feb 2024 14:59:39 +0100
-From: Jan Kara <jack@suse.cz>
-To: Kemeng Shi <shikemeng@huaweicloud.com>
-Cc: viro@zeniv.linux.org.uk, brauner@kernel.org, jack@suse.cz,
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 7/7] fs/writeback: remove unnecessary return in
- writeback_inodes_sb
-Message-ID: <20240223135939.5wxt6vuifkauuksv@quack3>
-References: <20240208172024.23625-1-shikemeng@huaweicloud.com>
- <20240208172024.23625-8-shikemeng@huaweicloud.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fLi4DYFc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 98BDDC43390;
+	Fri, 23 Feb 2024 14:02:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1708696978;
+	bh=KudqgcL6FXV7PnIRApxE0DX6lKwquS27CBUuH61ACuY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=fLi4DYFcXeqOjYNV4Q5Y0zzkCxXVhiAEIcopANPUixE0A00H3p4zQaXilBTNRWWAz
+	 8WdpvA726hFRxVFaBV7VooO96ZCe8lQoO75INuRxATCb3qw09fQypMk1wtHPRPiUNH
+	 3D/UnzbO/QSRQ5VsUuoN81I5eI7gAvPnmR2ts3yqN7JMAi1wvt3FB4W8WXCXGWh+kv
+	 ILMB/mrEGzFtkwk/wyGov8x8/C4FR/kPzV5yksDYCaViYHPuVhwq/+J/WdfTQaTthb
+	 LXW8WMDUAavJojYX2dwmpZAfKHfiWfnvIuRgNwpZQSxxJpBgmWl6f7XiUsBrz2eHnW
+	 OPI70JWN1c/NA==
+Date: Fri, 23 Feb 2024 07:02:56 -0700
+From: Rob Herring <robh@kernel.org>
+To: Xu Yang <xu.yang_2@nxp.com>
+Cc: gregkh@linuxfoundation.org, krzysztof.kozlowski+dt@linaro.org,
+	shawnguo@kernel.org, conor+dt@kernel.org, s.hauer@pengutronix.de,
+	kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
+	peter.chen@kernel.org, jun.li@nxp.com, linux-usb@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v6 4/9] dt-bindings: usb: add NXP ChipIdea USB2
+ Controller schema
+Message-ID: <20240223140256.GA1768266-robh@kernel.org>
+References: <20240221145846.1611627-1-xu.yang_2@nxp.com>
+ <20240221145846.1611627-4-xu.yang_2@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -87,69 +48,88 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240208172024.23625-8-shikemeng@huaweicloud.com>
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=bZ3Mrm2k;
-	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=fwLuUbpH
-X-Spamd-Result: default: False [-1.71 / 50.00];
-	 ARC_NA(0.00)[];
-	 RCVD_VIA_SMTP_AUTH(0.00)[];
-	 R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	 SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:98:from];
-	 FROM_HAS_DN(0.00)[];
-	 TO_DN_SOME(0.00)[];
-	 TO_MATCH_ENVRCPT_ALL(0.00)[];
-	 MIME_GOOD(-0.10)[text/plain];
-	 RCPT_COUNT_FIVE(0.00)[6];
-	 RCVD_COUNT_THREE(0.00)[3];
-	 DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	 DKIM_TRACE(0.00)[suse.cz:+];
-	 MX_GOOD(-0.01)[];
-	 DBL_BLOCKED_OPENRESOLVER(0.00)[huaweicloud.com:email,suse.com:email];
-	 FUZZY_BLOCKED(0.00)[rspamd.com];
-	 FROM_EQ_ENVFROM(0.00)[];
-	 MIME_TRACE(0.00)[0:+];
-	 MID_RHS_NOT_FQDN(0.50)[];
-	 RCVD_TLS_ALL(0.00)[];
-	 BAYES_HAM(-1.90)[94.47%]
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Rspamd-Queue-Id: 6157021228
-X-Spam-Level: 
-X-Spam-Score: -1.71
-X-Spam-Flag: NO
+In-Reply-To: <20240221145846.1611627-4-xu.yang_2@nxp.com>
 
-On Fri 09-02-24 01:20:24, Kemeng Shi wrote:
-> writeback_inodes_sb doesn't have return value, just remove unnecessary
-> return in it.
+On Wed, Feb 21, 2024 at 10:58:41PM +0800, Xu Yang wrote:
+> As more and more NXP i.MX chips come out, it becomes harder to maintain
+> ci-hdrc-usb2.yaml if more stuffs like property restrictions are added to
+> this file. This will separate i.MX parts out of ci-hdrc-usb2.yaml and add
+> a new schema for NXP ChipIdea USB2 Controller.
 > 
-> Signed-off-by: Kemeng Shi <shikemeng@huaweicloud.com>
-
-Looks good. Feel free to add:
-
-Reviewed-by: Jan Kara <jack@suse.cz>
-
-								Honza
-
+> Signed-off-by: Xu Yang <xu.yang_2@nxp.com>
+> 
 > ---
->  fs/fs-writeback.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> Changes in v6:
+>  - new patch
+> ---
+>  .../bindings/usb/ci-hdrc-usb2-imx.yaml        | 75 +++++++++++++++++++
+>  1 file changed, 75 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/usb/ci-hdrc-usb2-imx.yaml
 > 
-> diff --git a/fs/fs-writeback.c b/fs/fs-writeback.c
-> index 816505d74b2f..eb62196777dd 100644
-> --- a/fs/fs-writeback.c
-> +++ b/fs/fs-writeback.c
-> @@ -2748,7 +2748,7 @@ EXPORT_SYMBOL(writeback_inodes_sb_nr);
->   */
->  void writeback_inodes_sb(struct super_block *sb, enum wb_reason reason)
->  {
-> -	return writeback_inodes_sb_nr(sb, get_nr_dirty_pages(), reason);
-> +	writeback_inodes_sb_nr(sb, get_nr_dirty_pages(), reason);
->  }
->  EXPORT_SYMBOL(writeback_inodes_sb);
->  
-> -- 
-> 2.30.0
-> 
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+> diff --git a/Documentation/devicetree/bindings/usb/ci-hdrc-usb2-imx.yaml b/Documentation/devicetree/bindings/usb/ci-hdrc-usb2-imx.yaml
+> new file mode 100644
+> index 000000000000..2ec62f564bf5
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/usb/ci-hdrc-usb2-imx.yaml
+> @@ -0,0 +1,75 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/usb/ci-hdrc-usb2-imx.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: NXP USB2 ChipIdea USB controller
+> +
+> +maintainers:
+> +  - Xu Yang <xu.yang_2@nxp.com>
+> +
+> +properties:
+> +  compatible:
+> +    oneOf:
+> +      - enum:
+> +          - fsl,imx27-usb
+> +      - items:
+> +          - enum:
+> +              - fsl,imx23-usb
+> +              - fsl,imx25-usb
+> +              - fsl,imx28-usb
+> +              - fsl,imx35-usb
+> +              - fsl,imx50-usb
+> +              - fsl,imx51-usb
+> +              - fsl,imx53-usb
+> +              - fsl,imx6q-usb
+> +              - fsl,imx6sl-usb
+> +              - fsl,imx6sx-usb
+> +              - fsl,imx6ul-usb
+> +              - fsl,imx7d-usb
+> +              - fsl,vf610-usb
+> +          - const: fsl,imx27-usb
+> +      - items:
+> +          - enum:
+> +              - fsl,imx8dxl-usb
+> +              - fsl,imx8ulp-usb
+> +          - const: fsl,imx7ulp-usb
+> +          - const: fsl,imx6ul-usb
+> +      - items:
+> +          - enum:
+> +              - fsl,imx8mm-usb
+> +              - fsl,imx8mn-usb
+> +          - const: fsl,imx7d-usb
+> +          - const: fsl,imx27-usb
+> +      - items:
+> +          - enum:
+> +              - fsl,imx6sll-usb
+> +              - fsl,imx7ulp-usb
+> +          - const: fsl,imx6ul-usb
+> +          - const: fsl,imx27-usb
+
+Now you just duplicated all the compatibles, and now any new compatibles 
+have to be added in 2 places. For this to work, you have to split 
+ci-hdrc-usb2.yaml into 2 files. One with all the common properties and 
+one with compatibles (minus imx). This is also needed if imx has any 
+extra properties the other don't.
+
+Didn't I say this already?
+
+Rob
+
