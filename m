@@ -1,143 +1,131 @@
-Received: from CHN02-BJS-obe.outbound.protection.partner.outlook.cn (mail-bjschn02on2103.outbound.protection.partner.outlook.cn [139.219.17.103])
+Received: from mx0a-0064b401.pphosted.com (mx0a-0064b401.pphosted.com [205.220.166.238])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3119CC2C6;
-	Fri, 23 Feb 2024 03:27:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=139.219.17.103
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708658846; cv=fail; b=oXfV9Qv7soRmEJI1PriiwFxfAdd3XoqEahcwRlwFIQ8jsCAGl/jRGCle6sTnbKQSSJn4xzHpUfJqFs9HnnrtEuD8neDLKJNRyFZ3TAtzaNSqM1NwCSligkz4DT33K2caL7OxM5rkoVrFqFNWsGGPdBWjeYfA/izR/8s5nCP6rlY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708658846; c=relaxed/simple;
-	bh=oJKxtjJvPnbkfw6j3TVtscM8YI1C3KKUDdKGDfAVBlo=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=q4AjpkJtSWE0uhj4Z64y6MXxohbFIXgKjGQE/zWlB0M9SJ0dj0Y57MA2C3uF08Qveoe5EdiuBhmJRpUr/BEYAJeIhqO6rz29i4G9DBJZ3BDV9koLQs9n0A4GcZ8ueGwtx36+kZQRwv+b1/mrRyyB3nkAni/Fp6PudkwMTZu7dwE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com; spf=pass smtp.mailfrom=starfivetech.com; arc=fail smtp.client-ip=139.219.17.103
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=starfivetech.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Y0qyR53FMaWbOak0iExzZcgWEXRT1CkCytVPQFPzrzCYh4KZFEbzQz7YJJgw9fNaGl8XMxk0tr1wQxbKW1QLNKot5hk1x5qglgccSB+JpWs2ntJKO/zjv/dohRcQ7cdKxyOU/KZcx907j6jAsYqESjdigJYkI8Z1xYnVd8A7ch7pMK9DCoVYaGgBK1LbrWvuTlo6N2QUxDGnp1490SEwkiLRQB+O0UEuOJfaGunT4R5+6IkexWjNJIGdtC3qtHkL7uTkNO3w0IkiM6DVpovMlYUqGyLcW8W+wZ0M29eYDqTjawWRpPbRdxIQV/DJ7PF9pM1KsZiHaTya6ZzNNBLxlQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=oJKxtjJvPnbkfw6j3TVtscM8YI1C3KKUDdKGDfAVBlo=;
- b=CQhv6uJgd2Eh1iGT5WMV/O8Q+0I7Xb2JUoq7cCdc84Ko7+qaYrq58ndvMXsEu3Yj3PxFEw/sWhhZf1DtZnbKTT41xsDYjWCQiGVUd7vXXBg8AlgFFkrLsiNNdNuqj2mTiisSVlTCU0m91BqrtUJNOuCGfHvc1ig14w2oYlfNIUYY5eKLRpxuDqV+VtXOboKs4eLUDYGa4AG+LnANtY+U21tSBMVd2/PIhnj/Sh1nNXXXBvrtzTSyYuutz4DE9lFIMoitjl0bE4jsDgjqT2IxpWFVYlfpx+SPg7THbRUIAwLmkYo5zhSgwGg72mNdf7pwO7HAHqTrgEIULzNLJTqMow==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=starfivetech.com; dmarc=pass action=none
- header.from=starfivetech.com; dkim=pass header.d=starfivetech.com; arc=none
-Received: from SHXPR01MB0671.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c311:25::10) by SHXPR01MB0845.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c311:26::14) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7270.47; Fri, 23 Feb
- 2024 02:53:36 +0000
-Received: from SHXPR01MB0671.CHNPR01.prod.partner.outlook.cn
- ([fe80::b0af:4c9d:2058:a344]) by
- SHXPR01MB0671.CHNPR01.prod.partner.outlook.cn ([fe80::b0af:4c9d:2058:a344%6])
- with mapi id 15.20.7249.041; Fri, 23 Feb 2024 02:53:36 +0000
-From: Changhuang Liang <changhuang.liang@starfivetech.com>
-To: Jai Luthra <j-luthra@ti.com>, Tomi Valkeinen
-	<tomi.valkeinen@ideasonboard.com>, Mauro Carvalho Chehab
-	<mchehab@kernel.org>, Sakari Ailus <sakari.ailus@linux.intel.com>, Hans
- Verkuil <hverkuil-cisco@xs4all.nl>, Vaishnav Achath <vaishnav.a@ti.com>,
-	Maxime Ripard <mripard@kernel.org>, Rob Herring <robh@kernel.org>, Krzysztof
- Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley
-	<conor+dt@kernel.org>
-CC: "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Vignesh
- Raghavendra <vigneshr@ti.com>, Aradhya Bhatia <a-bhatia1@ti.com>, Devarsh
- Thakkar <devarsht@ti.com>, Jack Zhu <jack.zhu@starfivetech.com>, Julien
- Massot <julien.massot@collabora.com>, Jayshri Pawar <jpawar@cadence.com>
-Subject:
- =?utf-8?B?5Zue5aSNOiBbUEFUQ0ggUkZDIDAwLzIxXSBtZWRpYTogY2FkZW5jZSx0aTog?=
- =?utf-8?Q?CSI2RX_Multistream_Support?=
-Thread-Topic: [PATCH RFC 00/21] media: cadence,ti: CSI2RX Multistream Support
-Thread-Index: AQHaZYLyz20pRFMaSU2WOsA6GWwHNbEXOg7g
-Date: Fri, 23 Feb 2024 02:53:36 +0000
-Message-ID:
- <SHXPR01MB06714030189A3CFD430A88EEF255A@SHXPR01MB0671.CHNPR01.prod.partner.outlook.cn>
-References: <20240222-multistream-v1-0-1837ed916eeb@ti.com>
-In-Reply-To: <20240222-multistream-v1-0-1837ed916eeb@ti.com>
-Accept-Language: zh-CN, en-US
-Content-Language: zh-CN
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=starfivetech.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SHXPR01MB0671:EE_|SHXPR01MB0845:EE_
-x-ms-office365-filtering-correlation-id: daa0fd9f-e4ad-4c2a-d288-08dc341aa166
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info:
- Eir8f7Oht5lIvZG5bPQhT1NYnEh89bqEpS+ZpCAAW8Jlu+Qpr/T/4hKb/CqdHyQhcx38JyZMi8kjUur2p6v2i5G9tRSlC9zx1SkTOJQDohC7L2YP7EAMZfDd0o9Mk7DqUNpO5gVURT/suDmJucwxBdxZWbDe3OpK4xO8LDwM88IfZP1PI9HRYss8SXOO+3vMcu9dM3iE4e0kG5SNn4R/Ls7axoofpus0QeXV6Uv+lTTEWPIQtTPlINB+4kVltIr4N53TtqgROeIaCsH1k/adOY4kwNWVgw665jW2n1lE1uhwgeQq89BEMSjfD+bSmUe/IPnjURwM2bbGsA4rJSPq1j1roAcfaWP5A5xAqgFAt5zW+6LkuLoirx/oVJMVVcPF74utaVylfdpkhPz8MvGm2CBHxBtfnKn8VBpgQHxTLF4sfX8u8/VH/Y5XEWEjaVtoqHCobOOL/NU5cRNFKpeoVIWOallQwA0Kx00/eJELgwhFjZFcWezn62l+7/jfJuKyq74VIVrUESLNLTd9YOx7M/mS6AeGWDJsnIqL+fC5pe0o6hSim+7axHX596jrHzUxXzKbrCPQ+PHsRLRqNSrCJg==
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SHXPR01MB0671.CHNPR01.prod.partner.outlook.cn;PTR:;CAT:NONE;SFS:(13230031)(38070700009)(921011);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?utf-8?B?NUtZUGRXUHVDbjN5OThHSjcwVksyK052U1U3YTNvcXpOeUhtcGx1TjRRMG1T?=
- =?utf-8?B?MzlnV3FVSzZIY240dnlLZlVvN05XVHkyazNLbkRLWCtEc01OTzh5T3hlenNl?=
- =?utf-8?B?dm9MdVNtdFNvelY5d3V3RnlIQzIvdzZ0alBZMlg3NTZkYWkvWVJsaldzalhL?=
- =?utf-8?B?UjRCdVhBeUpkNHBQTmJyQzA4SVpzVy9rT2JoZnpEY0N0bUQyaGM3dmdRVlFt?=
- =?utf-8?B?NjY2eUEwTUZLTHl1VkdZM245UWpyQjhBVTR4d3k3Wk9vNFhIZGhtMU9CNURU?=
- =?utf-8?B?d3RQZUxteVpNNjRUSVBkT1FmNUV2TndMK1RmM2tEaXVNbk9DSDRmMmRVdXJ5?=
- =?utf-8?B?emYwZEZQME5Yb2YwdHdKT3Y4VE1aMUxTVFdYd01BYzMvQkl2TGJIaW1ydWov?=
- =?utf-8?B?QVVzQnVRSTNrMHdqNWsrZ3hSMm9RZTFnS2F0a2Q0MEhLOFhZZHVkNU1lL0xE?=
- =?utf-8?B?b0RrVm9EYU10Ky9QR0l2U3VhSCsyRStnMkdyK3RVdVU1ZjNXd0Y4alFEWWV3?=
- =?utf-8?B?STRRY1lzMExWWk5CSEtCQXNrUFRLelQ0STU3R1RrWUJmUEVkakppYVZSUzJE?=
- =?utf-8?B?aFZiR05GUE85Q3hqeDRjMURUNnI5RVZlUFFKZXhKSk9XS08vaUhNTVdzZlJq?=
- =?utf-8?B?Rmluais1b2MyNU0xVVE5ZU45RS8yMU9HUjMyNFNJemFMYXg4dVBrSDdFQXAy?=
- =?utf-8?B?RVVBVWRNVGNVYU15S3BLeDdYSWliNUZWZWdYdFZkNUNpOW9HWHFxcHF6RnRJ?=
- =?utf-8?B?MHBQY01TWUtSdFl0Rm8wZWdoWVgrRlJicDdYSUgySm4rMHFTR29jbGtxN0ZT?=
- =?utf-8?B?WjUrcHV2ZlFGVWVlQVJIdE84MFNCbVpHUTZheFErZWFPZ2ZCWlJFYWxqdWo2?=
- =?utf-8?B?R1p0Ymc3dnpZMnpRRDU5Ny9LY1ovcks4TmFHdGNVZjVJemhlb2M4SURkNVN0?=
- =?utf-8?B?cFp1c1RaVEN0SzcrUVU0dnJMOGhGMS94OG1CZTBtTjVmUVEzTk1od3E3MVUv?=
- =?utf-8?B?UURFd1FiYUdSb2ZLZnZ6ckR4dFNTazQvdW1FQzhXRmVEdFhrRU5SUkV5V081?=
- =?utf-8?B?OXdkeXc5Ri9WUlpWUzFSREhBNklvaHBYZFJOSGNqVGhBMW1TS04wWWtSZ0lq?=
- =?utf-8?B?eHhUVTh2RldKYjJ2K2x0enREV3ZjN28vbi8wdnZXYm9wZFNMclM5MzVVUklQ?=
- =?utf-8?B?aS9lRE9IWi9HeUVxOHcvSjAyb2F6NjBwaWMzdHMxRmV2cHVUb2g0TEUzYVFS?=
- =?utf-8?B?eitEeWN4MC84TFVTYWhsYXFnV0o4aE5peVpybyt3c2prbUVsVkZRSElUdVNv?=
- =?utf-8?B?Q3I5YkxXdDFOaXBqWkhMNTl5REhzVFd3Y3hrWmNaY0dObHBFNnZ1VVFoYy9B?=
- =?utf-8?B?bGxISlR5TDV0eGxnbzF2c0cwRkNmdERhR2d1b0hRU05nY3BPb3BmL0ZUZkNS?=
- =?utf-8?B?LzZPWjNUOXErRFBHdzVsN3ZnMjRrLytNY1pNaU54VHJVZ0VOWUFQc0krdmFa?=
- =?utf-8?B?TTdiRDFMNFJ4WG96SkgzdWJaRTlVUnlJK3RkWVpWQ0FqaUFXMUU3MmpRTis2?=
- =?utf-8?B?bGVjY0dQSktXdjB3YlJMeHNFdmpwWlIzSEw1dTMyemdFcG5EdXVQMnZBQXp0?=
- =?utf-8?B?M0VSMmM2Sjc3QzRzQmFOYzJENm10ZnJhdTROUlg5MDZMK2E5dWFvdFArY2RY?=
- =?utf-8?B?Z09WbEhzS2t3dGtoNWozK2NtM0VmZjNpQ3dpMmgzN0tueWNBTmx1UHdSK1Nw?=
- =?utf-8?B?SHBHd1I4cVlubUhFUGhqVWF4VU1VSTdwS1BpaitNZmdDVWhuSEJWeWt1cyto?=
- =?utf-8?B?RzZobWc0QzFscytwQk1zUGtjMmxBdnQ5bkF3TGE4cllaTEFJL1lVR2ZLMWRP?=
- =?utf-8?B?OUYxbS9qSUY2NDNkK0ptSlZjVVVXT2ZrNHljT3Z2WEdVTHNWKy84WEZvZzhn?=
- =?utf-8?B?L05tMVVDeUlCR3dBZ3Z0Slg5TjFTMHM5T29iTE00aEw3d1lqOUQwYmVxa3cx?=
- =?utf-8?B?VGtGOERHUVRMU1dlRENNdDFLc01VUWI5R0QxcktQSU5uVkdaZ1hVczFlbkFR?=
- =?utf-8?B?ZUY4K1JMZ3hWT2UwRHNwc2R3Nmtlc1lFK2wweEtXbUEzOXNFOVUzQkhHeXlW?=
- =?utf-8?B?MXNhT25wS21YK1dHRGFRajBBNC80K3BPL0VmTGxQVmhWUlNVU3Uxem90NXFU?=
- =?utf-8?B?T2c9PQ==?=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B54BAD29B;
+	Fri, 23 Feb 2024 03:30:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.166.238
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1708659049; cv=none; b=ME3930GpvP/b1cnL66qQGDD9ILeftliVT65LKqZcSPKmgaszQPNMB7AdDIV3bn84dqHfDqrgsQaskO4NUkfZ/bumHJmzSEqRAH3krX5LxD8dGq8RaS0IhupFu6pgk7go+JvrvnMVpsIf9Xk1mDGeENfhPiutVT+jwPs7XRnWv8I=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1708659049; c=relaxed/simple;
+	bh=xtgmmrwGf4oCx/Nion/tAMuKrudQc0Vc/AnG9TkdKSk=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=uf4k2NpwA/0KLW84QSRW+x9jaAWUcDOnD1EDmPl9zlEDT8nETgfM+0JJGkBeDumLklN/hG5w62CzzTzwZ+T9kVviJ9TuyCK8XkBp00J7kj+bKnOp8SyFGGPG4S7rcn6bldqhx2KOgLqtSZQo+Rfum9boj22TDljffoRm+/M/ka8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com; spf=pass smtp.mailfrom=windriver.com; dkim=pass (2048-bit key) header.d=windriver.com header.i=@windriver.com header.b=V962kKE5; arc=none smtp.client-ip=205.220.166.238
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=windriver.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=windriver.com header.i=@windriver.com header.b="V962kKE5"
+Received: from pps.filterd (m0250809.ppops.net [127.0.0.1])
+	by mx0a-0064b401.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 41N3J0Gi028738;
+	Thu, 22 Feb 2024 19:30:19 -0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=windriver.com;
+	 h=from:to:cc:subject:date:message-id:in-reply-to:references
+	:mime-version:content-transfer-encoding:content-type; s=
+	PPS06212021; bh=ruGkPXveDhQO3x9RTueUQtvKLkpPdHwXZoTwyUXISRI=; b=
+	V962kKE50vz43a/OnTCpR1JXuu3wJMYQa7SZ1soJ4Rbf7HSQ1wJqYisygk4LYl49
+	XqhKGwn7wJxVuOojoRGxqwn6h3O9JZ1JLnXODh+shaGLk5JnvwDSUqCbSNj/kGB0
+	cgcLjIS/SrExi2uGFFFCD7nMSy7BtB+8tjjjspgm5m6IhlkComTPQsPeBjnWs2T1
+	X1BKatjzkSGpIW1lEOp97Z6bDojg/wCV4RwDnZlx1O39zT4o/7M698L3QUB5I2lx
+	49WTu9mA8/2FQiw5ZOrXeN3zg7bDqLEhWprLZK77p34fKltBW/YYabaTAStgdY61
+	iLksmheeBeo6QMKIc9j/xg==
+Received: from ala-exchng01.corp.ad.wrs.com (ala-exchng01.wrs.com [147.11.82.252])
+	by mx0a-0064b401.pphosted.com (PPS) with ESMTPS id 3wd20ctq8f-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+	Thu, 22 Feb 2024 19:30:18 -0800 (PST)
+Received: from ala-exchng01.corp.ad.wrs.com (147.11.82.252) by
+ ala-exchng01.corp.ad.wrs.com (147.11.82.252) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Thu, 22 Feb 2024 19:30:17 -0800
+Received: from pek-lpd-ccm6.wrs.com (147.11.136.210) by
+ ala-exchng01.corp.ad.wrs.com (147.11.82.252) with Microsoft SMTP Server id
+ 15.1.2507.35 via Frontend Transport; Thu, 22 Feb 2024 19:30:14 -0800
+From: Lizhi Xu <lizhi.xu@windriver.com>
+To: <edumazet@google.com>
+CC: <davem@davemloft.net>, <dsahern@kernel.org>, <fw@strlen.de>,
+        <horms@kernel.org>, <kuba@kernel.org>, <linux-kernel@vger.kernel.org>,
+        <lizhi.xu@windriver.com>, <netdev@vger.kernel.org>,
+        <pabeni@redhat.com>,
+        <syzbot+99d15fcdb0132a1e1a82@syzkaller.appspotmail.com>,
+        <syzkaller-bugs@googlegroups.com>
+Subject: Re: [PATCH net-next] net/mpls: fix WARNING in mpls_gso_segment
+Date: Fri, 23 Feb 2024 11:30:13 +0800
+Message-ID: <20240223033013.3547161-1-lizhi.xu@windriver.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <CANn89iKJ=-V7xS2PqpkwrqF=kg7FJdTqYgVEsnvR5hie24aqZg@mail.gmail.com>
+References: <CANn89iKJ=-V7xS2PqpkwrqF=kg7FJdTqYgVEsnvR5hie24aqZg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: starfivetech.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SHXPR01MB0671.CHNPR01.prod.partner.outlook.cn
-X-MS-Exchange-CrossTenant-Network-Message-Id: daa0fd9f-e4ad-4c2a-d288-08dc341aa166
-X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Feb 2024 02:53:36.0841
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 06fe3fa3-1221-43d3-861b-5a4ee687a85c
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: u1sJvPCCdg25NKqV7hNnMktLSMK+LMw9R3C1pO87MxFw8UcE0e2Qu2kojH1Zc/3Y0vFv9UjiPlof3/pE8AWjkaRrzt26ij9BILgTzpPPBVtvLAmoScaL25di8VBlbHkz
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SHXPR01MB0845
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Proofpoint-GUID: rYk5XstyqiKgieUCz1qTh2fr5n7DvZ7k
+X-Proofpoint-ORIG-GUID: rYk5XstyqiKgieUCz1qTh2fr5n7DvZ7k
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-02-22_15,2024-02-22_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ lowpriorityscore=0 phishscore=0 bulkscore=0 malwarescore=0 adultscore=0
+ impostorscore=0 mlxlogscore=999 suspectscore=0 clxscore=1015 spamscore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2402120000 definitions=main-2402230022
 
-SGkgSmFpLA0KDQo+IFtQQVRDSCBSRkMgMDAvMjFdIG1lZGlhOiBjYWRlbmNlLHRpOiBDU0kyUlgg
-TXVsdGlzdHJlYW0gU3VwcG9ydA0KWy4uLl0NCj4gIC4uLi9iaW5kaW5ncy9tZWRpYS90aSxqNzIx
-ZS1jc2kycngtc2hpbS55YW1sICAgICAgIHwgIDQwICstDQo+ICBkcml2ZXJzL21lZGlhL3BsYXRm
-b3JtL2NhZGVuY2UvY2Rucy1jc2kycnguYyAgICAgICB8IDQ2MCArKysrKysrKystLQ0KPiAgLi4u
-L21lZGlhL3BsYXRmb3JtL3RpL2o3MjFlLWNzaTJyeC9qNzIxZS1jc2kycnguYyAgfCA4NTMNCj4g
-KysrKysrKysrKysrKysrLS0tLS0tDQo+ICAzIGZpbGVzIGNoYW5nZWQsIDEwNTIgaW5zZXJ0aW9u
-cygrKSwgMzAxIGRlbGV0aW9ucygtKQ0KPiAtLS0NCj4gYmFzZS1jb21taXQ6IGQ4OTRhMmEyODZm
-Y2NkNmU0N2NkMWNhYzRjMmQ0ZmY1ZDMwMGQ3YzcNCg0KQ2FuIHlvdSBwcm92aWRlIG1lIHdpdGgg
-d2hlcmUgdGhpcyBjb21taXQgY29tZXMgZnJvbSwgSSBjYW4gb25seSANCmFwcGx5IHBhcnRpYWwg
-cGF0Y2hzIHRvIHRlc3QuDQoNClRoYW5rcywNCkNoYW5naHVhbmcNCg==
+On Thu, 22 Feb 2024 09:11:14 +0100, Eric Dumazet <edumazet@google.com> wrote:
+> > When the network header pointer is greater than the inner network header, the
+> > difference between the two can cause mpls_hlen overflow.
+> >
+> > Reported-and-tested-by: syzbot+99d15fcdb0132a1e1a82@syzkaller.appspotmail.com
+> > Signed-off-by: Lizhi Xu <lizhi.xu@windriver.com>
+> > ---
+> >  net/mpls/mpls_gso.c | 4 ++--
+> >  1 file changed, 2 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/net/mpls/mpls_gso.c b/net/mpls/mpls_gso.c
+> > index 533d082f0701..2ab24b2fd90f 100644
+> > --- a/net/mpls/mpls_gso.c
+> > +++ b/net/mpls/mpls_gso.c
+> > @@ -25,11 +25,11 @@ static struct sk_buff *mpls_gso_segment(struct sk_buff *skb,
+> >         netdev_features_t mpls_features;
+> >         u16 mac_len = skb->mac_len;
+> >         __be16 mpls_protocol;
+> > -       unsigned int mpls_hlen;
+> > +       int mpls_hlen;
+> >
+> >         skb_reset_network_header(skb);
+> >         mpls_hlen = skb_inner_network_header(skb) - skb_network_header(skb);
+> > -       if (unlikely(!mpls_hlen || mpls_hlen % MPLS_HLEN))
+> > +       if (unlikely(mpls_hlen <= 0 || mpls_hlen % MPLS_HLEN))
+> >                 goto out;
+> >         if (unlikely(!pskb_may_pull(skb, mpls_hlen)))
+> >                 goto out;
+> > --
+> > 2.43.0
+> >
+> 
+> I think Florian posted this patch, right ?
+After you mentioned it, I discovered it. 
+I forgot to check the email details before sending the patch.
+> 
+> We must add a Fixes: tag
+> 
+> Also we should ask ourselves :
+> Why are we even looking at skb_inner_network_header(skb) if this was not set ?
+
+__sys_sendto()->
+   __sock_sendmsg()->
+      netlink_sendmsg()->
+         netlink_broadcast_filtered()->
+            netlink_trim()->
+	       1323         pskb_expand_head(skb, 0, -delta, 
+                  1                          (allocation & ~__GFP_DIRECT_RECLAIM) |
+                  2                          __GFP_NOWARN | __GFP_NORETRY);
+               pskb_expand_head()->
+                 skb_headers_offset_update()->
+		 1977         skb->inner_network_header += off;
+
+The root cause is: 
+Initialize inner_network_header to 0 in network_trim(), and without any other
+assignment operations.
