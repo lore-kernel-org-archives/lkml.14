@@ -1,82 +1,69 @@
-Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F010C8062E;
-	Fri, 23 Feb 2024 13:43:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B94217C0B7;
+	Fri, 23 Feb 2024 13:44:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708695841; cv=none; b=UZR0TkRkKsZ9tzbssvlRxUU6F+gIQ0DG5Pi0jciElBUS/5mZF3P525YDEJatbFIRf0sBwwaAG9HZFNNg/d9yi3e4c+K5BC6UmFaYFNfD7sEXPtDqJ+iB8sruYqZ2dZN0bP65LiY5LVOSXG8BbUeJ4S3FWybKenr4DXOovtG7ED8=
+	t=1708695899; cv=none; b=tifYOgFC0eawqdFKXtCFa2ce7XdeZnVogmk5IlB4ZUeofbLZy+I4AzL5gd+66XV1TTaSXeY5tjSWxNeS94n4omfvJNv+wqyyiaIuWWYRuA72RFDjxc9g14ZQQmfNkB5JbPVal1vzi5HYT5luPhF+wNc5pbS7jjKQZlP2/cB1Ico=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708695841; c=relaxed/simple;
-	bh=XzO6MJifE+JArjb+66zzk/BVaQsPkGlLVFwOugc6dhw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=K1p0Lspuf5vYQFgUD43suCy6HrnnQON3t/ERfvlnWFODC2mxknmUWcCyAksVMWsGNloK7yOZCtiyHG3LGXdGZ8CZx8GknRIDIWXCiLsyX+ItYzFt49oC3i4HvPhLXE0kQLWBDSx+4up5dC7lrxn+FdOuxUEL5YCUN2ZdPmq9BFo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; arc=none smtp.client-ip=185.11.138.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
-Received: from i53875b6c.versanet.de ([83.135.91.108] helo=diego.localnet)
-	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <heiko@sntech.de>)
-	id 1rdVq2-0001HH-7o; Fri, 23 Feb 2024 14:43:42 +0100
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-To: Jonathan Cameron <jic23@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>,
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
- Andy Shevchenko <andy.shevchenko@gmail.com>,
- Shreeya Patel <shreeya.patel@collabora.com>, Simon Xue <xxm@rock-chips.com>,
- Philipp Zabel <p.zabel@pengutronix.de>,
- Quentin Schulz <foss+kernel@0leil.net>
-Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>, linux-iio@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org,
- linux-kernel@vger.kernel.org,
- Quentin Schulz <quentin.schulz@theobroma-systems.com>,
- Quentin Schulz <foss+kernel@0leil.net>
-Subject:
- Re: [PATCH 2/3] iio: adc: rockchip_saradc: use mask for write_enable bitfield
-Date: Fri, 23 Feb 2024 14:43:41 +0100
-Message-ID: <2385656.yKrmzQ4Hd0@diego>
-In-Reply-To:
- <20240223-saradcv2-chan-mask-v1-2-84b06a0f623a@theobroma-systems.com>
-References:
- <20240223-saradcv2-chan-mask-v1-0-84b06a0f623a@theobroma-systems.com>
- <20240223-saradcv2-chan-mask-v1-2-84b06a0f623a@theobroma-systems.com>
+	s=arc-20240116; t=1708695899; c=relaxed/simple;
+	bh=1F9fR2uIOGyzzAWTvTKIzydyCEWW/JWJN6l0R95QyM4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VHGLOM1vS1i32/5e9pXCdBDApQO4ZSu9/cq1ZFXT6wzbgDuaZ0FZ2UOoCrhkbhfT4uwFpJdsIO5HC9izxj6ZygJ3Zb3DFgetZHj4JJ98J9BJHkFHUXQelgPwFLet2Tll9ce7LNRVBYHi2yGpmxw5fZJkhtXofWxwkru3y/BZ+nU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=V+1dJ11X; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="V+1dJ11X"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 40F90C43390;
+	Fri, 23 Feb 2024 13:44:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1708695899;
+	bh=1F9fR2uIOGyzzAWTvTKIzydyCEWW/JWJN6l0R95QyM4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=V+1dJ11XiDSsukq7sXlDNOm+DC5lvXB5fTw/igG6Jv3XmxsANZRBuBg/S2mVOWboB
+	 z1N9FtV0lbWrP3FbgyKSjFAfWCBW5142AA0f9RrrRe5HeEXb6sxrYHNexxO9JG32ou
+	 4idZO7Lg9DBwq1HnKYrsyBd0weY2/EIetq7VGOxBNQX1WOUD57eeLX2y9AIKeEbdCN
+	 Mcw0YJSqtOUWX/o7CLEZCOXKBlN5SpqD8ihY0RQ7NkjBlxsxvlN0uF4WKsQA/ld8Vg
+	 WkVpjLtT2F/kY4pG2B7bXtSV8JNc7XN9hR6HppjKZISloGABusIqCqHXTChFey0lS9
+	 gCzwGx8UX6G0g==
+Date: Fri, 23 Feb 2024 06:44:57 -0700
+From: Rob Herring <robh@kernel.org>
+To: Danila Tikhonov <danila@jiaxyga.com>
+Cc: david@mainlining.org, linux-clk@vger.kernel.org,
+	konrad.dybcio@linaro.org, sboyd@kernel.org, conor+dt@kernel.org,
+	andersson@kernel.org, linux-arm-msm@vger.kernel.org,
+	adrian@travitia.xyz, krzysztof.kozlowski+dt@linaro.org,
+	mturquette@baylibre.com, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/8] dt-bindings: clock: qcom: Add SM7150 DISPCC clocks
+Message-ID: <170869589672.1759235.8199982773056881678.robh@kernel.org>
+References: <20240220165240.154716-1-danila@jiaxyga.com>
+ <20240220165240.154716-4-danila@jiaxyga.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240220165240.154716-4-danila@jiaxyga.com>
 
-Am Freitag, 23. Februar 2024, 13:45:22 CET schrieb Quentin Schulz:
-> From: Quentin Schulz <quentin.schulz@theobroma-systems.com>
-> 
-> Some of the registers on the SARADCv2 have bits write protected except
-> if another bit is set. This is usually done by having the lowest 16 bits
-> store the data to write and the highest 16 bits specify which of the 16
-> lowest bits should have their value written to the hardware block.
-> 
-> The write_enable mask for the channel selection was incorrect because it
-> was just the value shifted by 16 bits, which means it would only ever
-> write bits and never clear them. So e.g. if someone starts a conversion
-> on channel 5, the lowest 4 bits would be 0x5, then starts a conversion
-> on channel 0, it would still be 5.
-> 
-> Instead of shifting the value by 16 as the mask, let's use the OR'ing of
-> the appropriate masks shifted by 16.
-> 
-> Note that this is not an issue currently because the only SARADCv2
-> currently supported has a reset defined in its Device Tree, that reset
-> resets the SARADC controller before starting a conversion on a channel.
-> However, this reset is handled as optional by the probe function and
-> thus proper masking should be used in the event an SARADCv2 without a
-> reset ever makes it upstream.
-> 
-> Fixes: 757953f8ec69 ("iio: adc: rockchip_saradc: Add support for RK3588")
-> Cc: Quentin Schulz <foss+kernel@0leil.net>
-> Signed-off-by: Quentin Schulz <quentin.schulz@theobroma-systems.com>
 
-Reviewed-by: Heiko Stuebner <heiko@sntech.de>
+On Tue, 20 Feb 2024 19:52:35 +0300, Danila Tikhonov wrote:
+> Add device tree bindings for the display clock controller on Qualcomm
+> SM7150 platform.
+> 
+> Co-developed-by: David Wronek <david@mainlining.org>
+> Signed-off-by: David Wronek <david@mainlining.org>
+> Signed-off-by: Danila Tikhonov <danila@jiaxyga.com>
+> ---
+>  .../bindings/clock/qcom,sm7150-dispcc.yaml    | 75 +++++++++++++++++++
+>  .../dt-bindings/clock/qcom,sm7150-dispcc.h    | 59 +++++++++++++++
+>  2 files changed, 134 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/clock/qcom,sm7150-dispcc.yaml
+>  create mode 100644 include/dt-bindings/clock/qcom,sm7150-dispcc.h
+> 
 
+Reviewed-by: Rob Herring <robh@kernel.org>
 
