@@ -1,90 +1,77 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB1F384047;
-	Fri, 23 Feb 2024 16:07:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E3E584FA8
+	for <linux-kernel@vger.kernel.org>; Fri, 23 Feb 2024 16:08:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708704465; cv=none; b=JF+05oEHfnyL70d6loJrZ8r/6/JPbLq7VQN/NSn/qwUqc6c82esWP9yFvrta7IfqrIDPqr5etlnKdSWolZBujJOms2xgLOAjIXpiNTCN/AAU6s8/t35rj7uUewGYLTAmrTIYSLHC/wrlFP7S7Umhz4JGDjMV4tcZowPj+S8oeLc=
+	t=1708704506; cv=none; b=XWcAt0+uYMGYags0hOyAyC7j2OgL++dbsHkJJ4h5btLITezONIAX3RE/jXVWWxbaSg0sEwdySo6y6eZJDL6KMaRwvUal0YXOdq/wnl/ui7jvIZecuiP0ZgSkzYeSEmYS8hR9ngbqzY4sA5QsAQE+tW2MMcLfkbtyK0Lg/0GwMJM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708704465; c=relaxed/simple;
-	bh=x6MP3eJoAiWhUJ80Vtf6eZUTTsZqo5dnOoTbzEKncWA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IDoBCRGlC2UGkmUvUQAo9fN4GWHqFtzwwR/CxB99e33xyZrYiAiE/2VpOg+I2RfwoOCVrttQNG3uYG+vIBZZ/Vnp3Vq5ccEVUEC+Q04soOkKc1wswMpZ7jPK0/wALDDPBwZQnhEd2PAkX0RGqBAPvZRxqx7C5EMWCn9lYMgOZVE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=G+MssmDS; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1708704506; c=relaxed/simple;
+	bh=2PMjD9iHH3ocbBefw//1TN5JlDlwz5Msjr28jhhqymw=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=Ay3ZdVjdOOGZ28vbI4ArAud+a/HBkkofXbcMgn1LYKAHW6HtNduJf7l5Ewa6Kfzp7YB69/oYrpQlpirQzW7ZOz+ju8oOsmDw/HJ5VYSCh19kOuLYYJeYxOnrYm/AoB6kwB8NmDpaenlzROPQnkN9XnfJu1p2+zIHWxBjfeeQfYY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=dWk8Oeyp; arc=none smtp.client-ip=209.85.216.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="G+MssmDS"
-Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 41NG2KHa025576;
-	Fri, 23 Feb 2024 16:07:42 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
- subject : message-id : references : mime-version : content-type :
- in-reply-to; s=pp1; bh=EA8REWowfVeSXktaGtFknZiGaShYWXiwehS7sDUZxp0=;
- b=G+MssmDSZbvsZi+eh7kA06M0RCww/g4lqKzx2KFX8ITZBeitYloiainkMJjX8ZUnqEWZ
- hF9UQhz6JezL+BZBbv6pUpQL3XauxXoAHwsjzEdwQv12h8sR/9c4/6Ms89HNqOtSNdCd
- k06SbX8pcUKjuErXqhTrQns1BEXId1pG8uqAY3b0jICVm3aFXRKcXmFKw5HPJc5KYpv5
- Giil35yMwvC4Guv0xnBT8g9GdPOcV4FhItYxI86Wda0faJYx7FnYaqWGRLcS15Tf7iJX
- GTLUhC7i9+cBvGKmIX3FTZctcWPjA9LhtOQGCX0ME90a+0rOV9UEBcfbkgfIijI/GgFQ CA== 
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3wexhdg58s-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 23 Feb 2024 16:07:42 +0000
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 41NG2sGD014339;
-	Fri, 23 Feb 2024 16:07:41 GMT
-Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 3wb9u35uuf-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 23 Feb 2024 16:07:41 +0000
-Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
-	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 41NG7Ztk43712954
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 23 Feb 2024 16:07:37 GMT
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 817072004E;
-	Fri, 23 Feb 2024 16:07:35 +0000 (GMT)
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 1217C20040;
-	Fri, 23 Feb 2024 16:07:35 +0000 (GMT)
-Received: from osiris (unknown [9.171.74.183])
-	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Fri, 23 Feb 2024 16:07:34 +0000 (GMT)
-Date: Fri, 23 Feb 2024 17:07:33 +0100
-From: Heiko Carstens <hca@linux.ibm.com>
-To: Heiko Carstens <hca@linux.ibm.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [GIT PULL] s390 fixes for 6.8-rc6
-Message-ID: <20240223160733.36568-B-hca@linux.ibm.com>
-References: <20240223155220.36568-A-hca@linux.ibm.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dWk8Oeyp"
+Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-2992c1d4e7fso205114a91.3
+        for <linux-kernel@vger.kernel.org>; Fri, 23 Feb 2024 08:08:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1708704504; x=1709309304; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=/NLktSsNTI2TQw0/DJtmGZ9UBM2FfO1AcEKluSzavPE=;
+        b=dWk8Oeyp5tiCJYZFuBQNshLJNO3A32T9B1EamHkjVf8KFM9eXrZXirrUfc7Y2nf4cU
+         RwfifSzbd7P8NWTaWMqCEtXffUmEfqHpJD0ToQFgoNCcm8jj8ws8upDmNVemIQdbugb9
+         2mQ527Skp5TvZzK5m687LE0glJnpqGDgagCtqXbC0HB3uA8XlzpzJCHJiiUTU0toykG9
+         wni4aPX1JxZpiFz6dkI84FMFxa878d+bUAZHVqD6Lvx51U3mEAHTZ3GIQjbCoNRQvFJk
+         EKv1Pg43awpb52jDvqaU1uCovzhAUBCilVtUkaMILD23azBl5L/X/6StA0Zw5TdSWzmM
+         Ryiw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708704504; x=1709309304;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=/NLktSsNTI2TQw0/DJtmGZ9UBM2FfO1AcEKluSzavPE=;
+        b=jWMrXDPe1kOsxB1YTCJHpbepgoAaAe3AhXxo4qFZGD3uvU9F8erkm2RWzhiKJGjNpo
+         iKXUxQUjc8DqOj54d1LyI096+/S6f7HWI3x2j7ZwhlMkVuLHqLNxzQecF41iyCsMpT2j
+         JAjRcYNIRCw2aTYt/muRWklfE7Q1kseG3cXFqd91Vo4ofATg/cUd49lS5UHjxPb6qYz6
+         leSRXxx/OekyFL2k2uVyOwab+JWNsEReiiAvFkeniN6ebeKVgC0fNXMMusFp+CI1m2LW
+         FpSiot8H+mpqGUbzXI1R4uS6F050ZSzxRpSm+m8kT3rP+S3m/TtAYL0Yl4S/ONFEufcX
+         VIOQ==
+X-Gm-Message-State: AOJu0Yywsl4cFqEGgIBVVyiX0wAaJVdqxH/MXcXDme4p3z+1BMjgzmE+
+	VtnRWlHd/Ol1Nc7i6/kUvbaE59efYCQyOqwle5waxotns0ZrbPCTMY7kBEsAF3q9CcQJyzT4NEP
+	dqg==
+X-Google-Smtp-Source: AGHT+IHlCSKX3D/08U9DgXj+O49FoqJykL2DTVuXyOPcFje2VkAVkZpw4D1FRULWHx92im0ftmbOMNy9FT0=
+X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
+ (user=seanjc job=sendgmr) by 2002:a17:90b:1d48:b0:29a:8489:1f05 with SMTP id
+ ok8-20020a17090b1d4800b0029a84891f05mr3149pjb.2.1708704504478; Fri, 23 Feb
+ 2024 08:08:24 -0800 (PST)
+Date: Fri, 23 Feb 2024 08:08:23 -0800
+In-Reply-To: <20240223104009.632194-7-pbonzini@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240223155220.36568-A-hca@linux.ibm.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: Jw1XqAXHwLemUbiuZtXj4RhrK8-3kLBb
-X-Proofpoint-GUID: Jw1XqAXHwLemUbiuZtXj4RhrK8-3kLBb
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-02-23_02,2024-02-23_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 mlxlogscore=550
- suspectscore=0 priorityscore=1501 phishscore=0 adultscore=0 spamscore=0
- clxscore=1015 malwarescore=0 lowpriorityscore=0 impostorscore=0 mlxscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2311290000
- definitions=main-2402230117
+Mime-Version: 1.0
+References: <20240223104009.632194-1-pbonzini@redhat.com> <20240223104009.632194-7-pbonzini@redhat.com>
+Message-ID: <ZdjC94grcjWynW9n@google.com>
+Subject: Re: [PATCH v2 06/11] KVM: SEV: disable DEBUG_SWAP by default
+From: Sean Christopherson <seanjc@google.com>
+To: Paolo Bonzini <pbonzini@redhat.com>
+Cc: linux-kernel@vger.kernel.org, kvm@vger.kernel.org, michael.roth@amd.com, 
+	aik@amd.com
+Content-Type: text/plain; charset="us-ascii"
 
-On Fri, Feb 23, 2024 at 04:52:20PM +0100, Heiko Carstens wrote:
-> Hi Linus,
-> 
-> please pull s390 fixes for 6.8-rc3.
+On Fri, Feb 23, 2024, Paolo Bonzini wrote:
+> Disable all VMSA features in KVM_SEV_INIT and KVM_SEV_ES_INIT.  They are
+> not actually supported by SEV (a SEV guest does not have a VMSA to which
+> you can apply features) and they cause unexpected changes in measurement
+> for SEV-ES.
 
-... still no time machine, so this should be for 6.8-rc6.
+Sorry :-(
+
+I've done my best to avoid having to deal with attestation, so it's a bit of a
+blind spot for me.
