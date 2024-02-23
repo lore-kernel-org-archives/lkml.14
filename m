@@ -1,83 +1,152 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B456F140362;
-	Fri, 23 Feb 2024 19:46:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F7511F176;
+	Fri, 23 Feb 2024 19:46:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708717571; cv=none; b=pStvtSwAm80eKgo9MtFANMIJRCCGpveJJXBaigiIJ06kf9BrVW0kXx5GWAYtTHUUGOowGeQYT076f+IT6d9tMp1ozj1l4oOf6VpfSI8IVuToFu86gaPuyIUi1FgvwdzEK76DnuvVrDW5v4Sy6sNdiEPKKQ1pteVrLq0Boy3pZxk=
+	t=1708717608; cv=none; b=YcPvYr8eOZNkS6WnPK1YGJyTG0uqdOzZy3l1vAPOfhc/DbQdvEVz+UJ2KVjFly5KPN+WRaagfzK+W5/BC7D/Ah1NltqrNMc8qNMqs66b3s8rTw8tByzQ6GFYeIHgpQnaJlzjYjbOsCcyjRGqIV+K42mOxKr8LKSO9HacCDc0HeU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708717571; c=relaxed/simple;
-	bh=mqXIqQqf6lEU0XrKwLtMVJZ8Wp9+q4U3TbvXwfpGX1c=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GOcnjnfY8dQCj6RL/RCbyUn56r7W24lPqrEg/AL0xpj38QEvNxMRGNgl1hsUipU0UDfgXukQ72kVW7vq1J7Rho2W5erjsEMo473odCW7f1FCddRaP6UY9JAbae99rf56Kc4SZ0TmAiBUuRS0ARTpq23Z9Q+hShYp9Vt6yH2jOvA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rBY591L9; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rBY591L9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 30F75C433F1;
-	Fri, 23 Feb 2024 19:46:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708717571;
-	bh=mqXIqQqf6lEU0XrKwLtMVJZ8Wp9+q4U3TbvXwfpGX1c=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=rBY591L9wR07ev+vEtAYAv/reBCABFbtOgNeMpRxjnciE3UA7huMzcdReYLjVz3gi
-	 KYhDSQVNFPE3o+Q00EqAC8c+XVTcVzFOtcdhpcP+EMvW8+8KoW0mJBYo5vulfCTnAy
-	 CIsSN/G1XgaDiPxmL4rSUyqgfNbN9D1m66e3o8UDpBchfTj/dMHKeadLDNNcmfzMwc
-	 r0s73vKccWUyjWcuy76K4kLrqJi7xJjMeDG9foZKLKdwCG+gNHzghar5lCllhLlld6
-	 xC2S+NjQYOO38eNyEPgynt8iV5JzDyWkL3YiNF2HVApsc5ESZeFTfPdN8Fs4WoxxHa
-	 vH5uKuyqvtDiA==
-Date: Fri, 23 Feb 2024 20:46:04 +0100
-From: Benjamin Tissoires <bentiss@kernel.org>
-To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc: Alexei Starovoitov <ast@kernel.org>, 
-	Daniel Borkmann <daniel@iogearbox.net>, John Fastabend <john.fastabend@gmail.com>, 
-	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, 
-	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
-	Yonghong Song <yonghong.song@linux.dev>, KP Singh <kpsingh@kernel.org>, 
-	Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Jiri Kosina <jikos@kernel.org>, Benjamin Tissoires <benjamin.tissoires@redhat.com>, 
-	Jonathan Corbet <corbet@lwn.net>, Shuah Khan <shuah@kernel.org>, bpf <bpf@vger.kernel.org>, 
-	LKML <linux-kernel@vger.kernel.org>, "open list:HID CORE LAYER" <linux-input@vger.kernel.org>, 
-	"open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, 
-	"open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>
-Subject: Re: [PATCH RFC bpf-next v3 02/16] bpf/verifier: introduce
- in_sleepable() helper
-Message-ID: <qajvrsg3neipbcmktzuxm7dpee6qaobgvq35bccupayoa6avff@56no2hfgitkk>
-References: <20240221-hid-bpf-sleepable-v3-0-1fb378ca6301@kernel.org>
- <20240221-hid-bpf-sleepable-v3-2-1fb378ca6301@kernel.org>
- <CAADnVQKotZ0ki6p4DAydj=XE9hU6pPc+FdqU_WQ99NBK-qSe+A@mail.gmail.com>
+	s=arc-20240116; t=1708717608; c=relaxed/simple;
+	bh=s3CLtUg/fGhXAFEPlH1/T5Vz1PnUlMyIjP2Qb13jI5s=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=l2M5g4+Iswv43YaN9g3bkCTK0uUM1Kw4HZg6sLvbEAt7Q8N4nxtCrE4Vad/ci6klwia2QWPOzdebOzEosinFyo9PPILPZmTpH1+KKYwua0rP4/59MGKggefXDzYIz8Jz9xvlFxNVBqPpWIZvMpSxScLnftsBAWpeXe+dPr0tjo8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 66861C433C7;
+	Fri, 23 Feb 2024 19:46:47 +0000 (UTC)
+Date: Fri, 23 Feb 2024 14:48:40 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>
+Cc: linux-nfs@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>, Jeff
+ Layton <jlayton@kernel.org>
+Subject: [PATCH] tracing: Remove __assign_str_len()
+Message-ID: <20240223144840.563660e1@gandalf.local.home>
+X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAADnVQKotZ0ki6p4DAydj=XE9hU6pPc+FdqU_WQ99NBK-qSe+A@mail.gmail.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Feb 22 2024, Alexei Starovoitov wrote:
-> On Wed, Feb 21, 2024 at 8:25 AM Benjamin Tissoires <bentiss@kernel.org> wrote:
-> > @@ -18193,7 +18198,7 @@ static int resolve_pseudo_ldimm64(struct bpf_verifier_env *env)
-> >                                 return -E2BIG;
-> >                         }
-> >
-> > -                       if (env->prog->aux->sleepable)
-> > +                       if (in_sleepable(env))
-> >                                 atomic64_inc(&map->sleepable_refcnt);
-> 
-> this one doesn't look correct.
-> The verifier didn't start its main loop when resolve_pseudo_ldimm64()
-> is called.
-> It also loses symmetry with other sleepable_refcnt operations
-> in syscall.c and core.c
-> 
-> I reverted this hunk and applied patches 1,2,3
-> with minor edits, like removing unnecessary parens in patch 3,
-> and patch subject rewords.
+From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 
-Thanks a lot. I'll work on the rest of the series next week.
+Now that __assign_str() gets the length from the __string() (and
+__string_len()) macros, there's no reason to have a separate
+__assign_str_len() macro as __assign_str() can get the length of the
+string needed.
 
-Cheers,
-Benjamin
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+ fs/nfsd/trace.h                              |  8 ++++----
+ include/trace/stages/stage6_event_callback.h | 16 ----------------
+ samples/trace_events/trace-events-sample.h   |  9 +++++----
+ 3 files changed, 9 insertions(+), 24 deletions(-)
+
+diff --git a/fs/nfsd/trace.h b/fs/nfsd/trace.h
+index 2cd57033791f..98b14f30d772 100644
+--- a/fs/nfsd/trace.h
++++ b/fs/nfsd/trace.h
+@@ -102,7 +102,7 @@ TRACE_EVENT(nfsd_compound,
+ 	TP_fast_assign(
+ 		__entry->xid = be32_to_cpu(rqst->rq_xid);
+ 		__entry->opcnt = opcnt;
+-		__assign_str_len(tag, tag, taglen);
++		__assign_str(tag, tag);
+ 	),
+ 	TP_printk("xid=0x%08x opcnt=%u tag=%s",
+ 		__entry->xid, __entry->opcnt, __get_str(tag)
+@@ -483,7 +483,7 @@ TRACE_EVENT(nfsd_dirent,
+ 	TP_fast_assign(
+ 		__entry->fh_hash = fhp ? knfsd_fh_hash(&fhp->fh_handle) : 0;
+ 		__entry->ino = ino;
+-		__assign_str_len(name, name, namlen)
++		__assign_str(name, name);
+ 	),
+ 	TP_printk("fh_hash=0x%08x ino=%llu name=%s",
+ 		__entry->fh_hash, __entry->ino, __get_str(name)
+@@ -853,7 +853,7 @@ DECLARE_EVENT_CLASS(nfsd_clid_class,
+ 		__entry->flavor = clp->cl_cred.cr_flavor;
+ 		memcpy(__entry->verifier, (void *)&clp->cl_verifier,
+ 		       NFS4_VERIFIER_SIZE);
+-		__assign_str_len(name, clp->cl_name.data, clp->cl_name.len);
++		__assign_str(name, clp->cl_name.data);
+ 	),
+ 	TP_printk("addr=%pISpc name='%s' verifier=0x%s flavor=%s client=%08x:%08x",
+ 		__entry->addr, __get_str(name),
+@@ -1800,7 +1800,7 @@ TRACE_EVENT(nfsd_ctl_time,
+ 	TP_fast_assign(
+ 		__entry->netns_ino = net->ns.inum;
+ 		__entry->time = time;
+-		__assign_str_len(name, name, namelen);
++		__assign_str(name, name);
+ 	),
+ 	TP_printk("file=%s time=%d\n",
+ 		__get_str(name), __entry->time
+diff --git a/include/trace/stages/stage6_event_callback.h b/include/trace/stages/stage6_event_callback.h
+index 2bfd49713b42..61e718962036 100644
+--- a/include/trace/stages/stage6_event_callback.h
++++ b/include/trace/stages/stage6_event_callback.h
+@@ -35,14 +35,6 @@
+ 	memcpy(__get_str(dst), __data_offsets.dst##_ptr_ ? : EVENT_NULL_STR, \
+ 	       __get_dynamic_array_len(dst))
+ 
+-#undef __assign_str_len
+-#define __assign_str_len(dst, src, len)					\
+-	do {								\
+-		memcpy(__get_str(dst),					\
+-		       __data_offsets.dst##_ptr_ ? : EVENT_NULL_STR, len); \
+-		__get_str(dst)[len] = '\0';				\
+-	} while(0)
+-
+ #undef __assign_vstr
+ #define __assign_vstr(dst, fmt, va)					\
+ 	do {								\
+@@ -97,14 +89,6 @@
+ 	memcpy(__get_rel_str(dst), __data_offsets.dst##_ptr_ ? : EVENT_NULL_STR, \
+ 	       __get_rel_dynamic_array_len(dst))
+ 
+-#undef __assign_rel_str_len
+-#define __assign_rel_str_len(dst, src, len)				\
+-	do {								\
+-		memcpy(__get_rel_str(dst),				\
+-		       __data_offsets.dst##_ptr_ ? : EVENT_NULL_STR, len); \
+-		__get_rel_str(dst)[len] = '\0';				\
+-	} while (0)
+-
+ #undef __rel_bitmask
+ #define __rel_bitmask(item, nr_bits) __rel_dynamic_array(unsigned long, item, -1)
+ 
+diff --git a/samples/trace_events/trace-events-sample.h b/samples/trace_events/trace-events-sample.h
+index 23f923ccd529..f2d2d56ce8e2 100644
+--- a/samples/trace_events/trace-events-sample.h
++++ b/samples/trace_events/trace-events-sample.h
+@@ -163,8 +163,7 @@
+  *         __string().
+  *
+  *   __string_len: This is a helper to a __dynamic_array, but it understands
+- *	   that the array has characters in it, and with the combined
+- *         use of __assign_str_len(), it will allocate 'len' + 1 bytes
++ *	   that the array has characters in it, it will allocate 'len' + 1 bytes
+  *         in the ring buffer and add a '\0' to the string. This is
+  *         useful if the string being saved has no terminating '\0' byte.
+  *         It requires that the length of the string is known as it acts
+@@ -174,9 +173,11 @@
+  *
+  *         __string_len(foo, bar, len)
+  *
+- *         To assign this string, use the helper macro __assign_str_len().
++ *         To assign this string, use the helper macro __assign_str().
++ *         The length is saved via the __string_len() and is retrieved in
++ *         __assign_str().
+  *
+- *         __assign_str_len(foo, bar, len);
++ *         __assign_str(foo, bar);
+  *
+  *         Then len + 1 is allocated to the ring buffer, and a nul terminating
+  *         byte is added. This is similar to:
+-- 
+2.43.0
+
