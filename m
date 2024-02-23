@@ -1,38 +1,38 @@
 Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D28BB7B3FA
-	for <linux-kernel@vger.kernel.org>; Fri, 23 Feb 2024 11:37:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E4237BAE8
+	for <linux-kernel@vger.kernel.org>; Fri, 23 Feb 2024 11:37:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708688268; cv=none; b=gvioCDwPDKDGNhKcOqkfwFK1eVqQfvHIZdS0vRMSflFNFmB5aibj42S4m/hHzEh3Jwk2FSdWZAhDODJxGCJELNPS0tyU2/emSa1hLkIFxl3lwQR7ZbKEeoXnaaZfhObAfglKfzBRgy12Y0Hg1WsqB3RmFl8U9K2IPxH3fIYUmMg=
+	t=1708688269; cv=none; b=uxgjEczYKZeOoAVmek/EGAQIugDen3nDHrTvCRaTTzcqWHvX0f65WYz7uaePJEpVRQ3Sj9lR0tW9QfdHPVpq0TXTPJ3fHf9DyHRA7Dk7uZ8ZPQgK1WKMbr3KZyINnz1FGMSVsOajuF+FhfFJ3Y7rMnRoVMQ/j2YMeD2G8XEVFEQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708688268; c=relaxed/simple;
-	bh=mBNtO9MRdQyVSUnp0677/U3/dj0DCJQz7n5ZIh29cQE=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=rJuWL3ERHy5SSSHZz6s9RAR95AXheGx34DV3vGO50aiY3PRcWj512jDPEbSxAjTr2tXZds3RKqK150wo5N55j9fFBR4G5HaiDsyhCD/Tilb7384hAmh2ghIB0Duj0MaetbythDs2wzkp06b7lIOC3HMxni7QEUx16AQdZBfTWVI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=b0zmyfS+; arc=none smtp.client-ip=217.70.183.194
+	s=arc-20240116; t=1708688269; c=relaxed/simple;
+	bh=52wWLXv52UxCcak1ee9ZxfQFyR67YA1n+FDOTYunbls=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=okHb6gYKCdTlHxI7CdFDfDywQK1Ryf+UzUPdVeqiP/X1cfHu9rly/tmiEmhodQg9+capxyeewdSGCZnldkIorB6L5nPCtnSWntdEyJwpDo6EbsgjSke14hqwJPhf24G6GDaA2zC1P80Y26A9eOIcdVPAwQf7TJwL8BGQlmzP/28=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=PMwA+yvU; arc=none smtp.client-ip=217.70.183.194
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="b0zmyfS+"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 3795C40003;
-	Fri, 23 Feb 2024 11:37:42 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="PMwA+yvU"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id C23AA40007;
+	Fri, 23 Feb 2024 11:37:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1708688263;
+	t=1708688265;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=Ifnpa8zr1id8PgJXAuNZq9AhudHBZLq2Kwr93pnBEgE=;
-	b=b0zmyfS+9hX6zpg2BoKv+GQp29BajjAmhNNNuroNVnLpyMFMEYTCefpuKRxKkdNmuFSTPv
-	fUeS2BCL1dqlcFQB1IsHDBR/YzlefjC+0nBqKWcWfPVyh3t04MvktSiSBDpANOI52SzSlS
-	2Qc2alkYhbg0cICKX8HddioLKALFf+Vr1lSPVIPMhATWwjjVYfAYzcAi1ql9Nhl26izR6d
-	SFdd4EgVE80RNz6U0IoP4oCvWV+/qHwP8X5xfYjRAYg40asQIRZrvVTjDjVp9Ep51YOXkX
-	g5wOpIADJxJDyQ3KK9CNOuFQk976cCsHqRG9j7kN7QwXDv/OwXzXkPezoZAUPQ==
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=H9vIAXwIOUIWcL2JXzqSsbjPwFVUBmSDwO7BEh2dBj4=;
+	b=PMwA+yvU9d9uEtRZyvlyioBFfkPqKCldFazUbDBd1M82oD5ZAHvvo08kGLdVyfO9ELBvU/
+	T48C7h3vudvuyc544jO1UO8/dsh75ZHtGINVXteXWsFZ11USAX12r/GqcDX4gfSatdJHwE
+	K7gssWHz24vQrSHc0X6icU7stjrM8yACHOkY/P/E2tys6PmutsxCLzmrhNuou83sLRKiY4
+	E91ak5ztRkNx1cNUgGRFjytMGsxps4a23IGH27De8HU4io+c3vhRrNBzecCGLavIxnhzqO
+	et620t7k2o8HBdVf3mv4B5Gswr05ESJSmEk6PMJWIDFW9SIihTvfz3HQGximGg==
 From: Louis Chauvet <louis.chauvet@bootlin.com>
-Subject: [PATCH v2 0/9] drm/vkms: Reimplement line-per-line pixel
- conversion for plane reading
-Date: Fri, 23 Feb 2024 12:37:20 +0100
-Message-Id: <20240223-yuv-v2-0-aa6be2827bb7@bootlin.com>
+Date: Fri, 23 Feb 2024 12:37:22 +0100
+Subject: [PATCH v2 2/9] drm/vkms: Use drm_frame directly
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -40,11 +40,10 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-B4-Tracking: v=1; b=H4sIAHCD2GUC/1WNyw6CMBBFf4XM2po+lAZX/odhUUqxk9TWtNBIC
- P/uyM7lObk5d4PiMroCt2aD7CoWTJFAnhqw3sSnYzgSg+TywiUXbF0qE0rpseNjd9Ut0HIwxbE
- hm2g9beMSAsl3dhN+jvSjJ/ZY5pTX46mKn/2PVsE4U9Yo3U5St0reh5TmgPFs0wv6fd+/D8E/B
- K0AAAA=
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240223-yuv-v2-2-aa6be2827bb7@bootlin.com>
+References: <20240223-yuv-v2-0-aa6be2827bb7@bootlin.com>
+In-Reply-To: <20240223-yuv-v2-0-aa6be2827bb7@bootlin.com>
 To: Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>, 
  Melissa Wen <melissa.srw@gmail.com>, 
  =?utf-8?q?Ma=C3=ADra_Canal?= <mairacanal@riseup.net>, 
@@ -57,157 +56,124 @@ Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
  jeremie.dautheribes@bootlin.com, miquel.raynal@bootlin.com, 
  thomas.petazzoni@bootlin.com, Louis Chauvet <louis.chauvet@bootlin.com>
 X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=6323;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4080;
  i=louis.chauvet@bootlin.com; h=from:subject:message-id;
- bh=mBNtO9MRdQyVSUnp0677/U3/dj0DCJQz7n5ZIh29cQE=;
- b=owEBbQKS/ZANAwAIASCtLsZbECziAcsmYgBl2IN+GTYEFNEAcoL/p6sJ5vjm9X3v40h/neLWa2yK
- Wgf0TvOJAjMEAAEIAB0WIQRPj7g/vng8MQxQWQQgrS7GWxAs4gUCZdiDfgAKCRAgrS7GWxAs4rdMD/
- 9Ngf3zJRcQPu9bD2hXq1E9sgmcV85hIia99c6PSm9wHwO9HHgCf7hwN01UST03oJgT/MglWYrZndXX
- zl9c0SrSrlMFznOO9E+xjNI67Kqku94u7CPun6c0UmhBk7qQYOe6x+rnABs507vUpfmIae6YD1k4g+
- hkJHKKlDYMr/PmGPpbhtQziizHrjyfaXaCGgl8zu60iJ9pjMBKKd91VDs0gtTOcq5Jtg+h9oxtRC91
- 23K8sHXtVb5a03mD7h2oU7ZXVpCfUGpm+EV7ay/k0p1b28kFcWEi3YEEKz4NX132HvoD5XF7a/zAC/
- sUB1vxKM2P5Z2u0z8T4fx2MUDC7KeTvUL7if7Uvev4vqHudT1kiyRaV7bw0STMvsGzRX/fP+K0V0WG
- RsEKkLtk5BoGlv1GXj1YVMmATbQ2G7KkHZyw5Qi2O/4Lnz2G1/frgcW6h726YI4/FWwVCnrru7BXVQ
- +4XEFmdPQpdH19fMAyukAyvKPFL2AjGvZeaGBuZZyd8Mmy2WeTConPyX15+rP/MPT0Wxb+LK1Fwh1p
- EcbSNrEWSOpXB2XgNu3aml2/ZQ5PECimbtWrLys5q3vsqYF+x7YanUprayOryMjFr8arMLLZDypxlA
- EjGnU7ugmn4TPHOeOGlBaq17DWN2O3+eT6Abb2RXcf2uQ2qCKY+6bxB2G0zw==
+ bh=LCanIMOHanyMsqevo6fpwtNwvVAT/mqVTUFuxMtxwSE=;
+ b=owEBbQKS/ZANAwAIASCtLsZbECziAcsmYgBl2IOE/erZs6pa70tq2hW15rsFjTHrlsg4EMEoeM4K
+ C+7jyBSJAjMEAAEIAB0WIQRPj7g/vng8MQxQWQQgrS7GWxAs4gUCZdiDhAAKCRAgrS7GWxAs4nGjD/
+ 48CTxVsDCzJccpj1vjrZzjWNDDA2/ubtmtEU2sSnFCIMYcDCT7hnL4asC7Q/ymwZNbA4MaT4nPwGZZ
+ 1ywHGyCpSt7ir30hM9fr0F3dtDV9CDf4KJ0mbIFdSTU02r3EfX4D53CHYhO+l6KkN6J+o4rQJmTgOJ
+ NkW7wZpywicABoHm2qweWPI+b5InQOtegxQ0uTw9gIFj9v5awcR/YdhVtnUJkNhk2TFVupaQH/PwmT
+ 84BcbxEsySLddjOh9WwX3OcrnfhzVegR3cLd8XwZ9NW6v7ZOViD5+MgzcFizzhOtj/elxtKok/vCHl
+ owbdRIfzN/3frz0j435LVZpTPLF/fAqANmBpSJ7oPnnSp47KMoI7ueODZZnfx6mqqeQLgDStX8ISaM
+ s1Kll8FKIuTi+aK+oq+m0ffp1Pqrx53DK2axxw4aJixsilDLiWZ3UuSMVh76EICQxSGK+pBnsGseLG
+ K76OhAqf3s8ld7QRypuNejMojxi+LA8bn4bzxIPIXreEYNyN6t8p+eUeaSESOT696UVcEI6Zo91PjQ
+ sS0wzkWwic7UUkknuCGMvqnIqhjb4+kaXFc+zDnmAdolydCEwlZ853H8jRgNpx/y9p0228i/TJCSf3
+ 9gbULZ50gvKlSFrfGZqdeYSM2FNHFBwkqBSHZV7inOSVBRdHgqLrvKBes+dQ==
 X-Developer-Key: i=louis.chauvet@bootlin.com; a=openpgp;
  fpr=8B7104AE9A272D6693F527F2EC1883F55E0B40A5
 X-GND-Sasl: louis.chauvet@bootlin.com
 
-This patchset is the second version of [1]. It is almost a complete 
-rewrite to use a line-by-line algorithm for the composition.
-It can be divided in three parts:
-- PATCH 1 to 4: no functional change is intended, only some formatting and 
-documenting
-(PATCH 2 is taken from [2])
-- PATCH 5: main patch for this series, it reintroduce the 
-line-by-line algorithm
-- PATCH 6 to 9: taken from Arthur's series [2], with sometimes adaptation 
-to use the pixel-by-pixel algorithm.
+From: Arthur Grillo <arthurgrillo@riseup.net>
 
-The PATCH 5 aims to restore the line-by-line pixel reading algorithm. It 
-was introduced in 8ba1648567e2 ("drm: vkms: Refactor the plane composer to 
-accept new formats") but removed in 8ba1648567e2 ("drm: vkms: Refactor the 
-plane composer to accept new formats") in a over-simplification effort. 
-At this time, nobody noticed the performance impact of this commit. After 
-the first iteration of my series, poeple notice performance impact, and it 
-was the case. Pekka suggested to reimplement the line-by-line algorithm.
+Remove intermidiary variables and access the variables directly from
+drm_frame. These changes should be noop.
 
-Expiriments on my side shown great improvement for the line-by-line 
-algorithm, and the performances are the same as the original line-by-line 
-algorithm. I targeted my effort to make the code working for all the 
-rotations and translations. The usage of helpers from drm_rect_* avoid 
-reimplementing existing logic.
-
-The only "complex" part remaining is the clipping of the coordinate to 
-avoid reading/writing outside of src/dst. Thus I added a lot of comments 
-to help when someone will want to add some features (framebuffer resizing 
-for example).
-
-The YUV part is not mandatory for this series, but as my first effort was 
-to help the integration of YUV, I decided to rebase Arthur's series on 
-mine to help. I took [3], [4], [5] and [6] and adapted them to use the 
-line-by-line reading. If I did something wrong here, please let me 
-know.
-
-My series was mainly tested with:
-- kms_plane (for color conversions)
-- kms_rotation_crc (for rotations of planes)
-- kms_cursor_crc (for translations)
-The benchmark used to measure the improvment was done with:
-- kms_fb_stress
-
-[1]: https://lore.kernel.org/r/20240201-yuv-v1-0-3ca376f27632@bootlin.com
-[2]: https://lore.kernel.org/all/20240110-vkms-yuv-v2-0-952fcaa5a193@riseup.net/
-[3]: https://lore.kernel.org/all/20240110-vkms-yuv-v2-3-952fcaa5a193@riseup.net/
-[4]: https://lore.kernel.org/all/20240110-vkms-yuv-v2-5-952fcaa5a193@riseup.net/
-[5]: https://lore.kernel.org/all/20240110-vkms-yuv-v2-6-952fcaa5a193@riseup.net/
-[6]: https://lore.kernel.org/all/20240110-vkms-yuv-v2-7-952fcaa5a193@riseup.net/
-
-To: Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>
-To: Melissa Wen <melissa.srw@gmail.com>
-To: Maíra Canal <mairacanal@riseup.net>
-To: Haneen Mohammed <hamohammed.sa@gmail.com>
-To: Daniel Vetter <daniel@ffwll.ch>
-To: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
-To: Maxime Ripard <mripard@kernel.org>
-To: Thomas Zimmermann <tzimmermann@suse.de>
-To: David Airlie <airlied@gmail.com>
-To: arthurgrillo@riseup.net
-To: Jonathan Corbet <corbet@lwn.net>
-Cc: dri-devel@lists.freedesktop.org
-Cc: linux-kernel@vger.kernel.org
-Cc: jeremie.dautheribes@bootlin.com
-Cc: miquel.raynal@bootlin.com
-Cc: thomas.petazzoni@bootlin.com
+Signed-off-by: Arthur Grillo <arthurgrillo@riseup.net>
 Signed-off-by: Louis Chauvet <louis.chauvet@bootlin.com>
-
-Note: after my changes, those tests seems to pass, so [7] may need 
-updating (I did not check, it was maybe already the case):
-- kms_cursor_legacy@flip-vs-cursor-atomic
-- kms_pipe_crc_basic@nonblocking-crc
-- kms_pipe_crc_basic@nonblocking-crc-frame-sequence
-- kms_writeback@writeback-pixel-formats
-- kms_writeback@writeback-invalid-parameters
-- kms_flip@flip-vs-absolute-wf_vblank-interruptible
-And those tests pass, I did not investigate why the runners fails:
-- kms_flip@flip-vs-expired-vblank-interruptible
-- kms_flip@flip-vs-expired-vblank
-- kms_flip@plain-flip-fb-recreate
-- kms_flip@plain-flip-fb-recreate-interruptible
-- kms_flip@plain-flip-ts-check-interruptible
-- kms_cursor_legacy@cursorA-vs-flipA-toggle
-- kms_pipe_crc_basic@nonblocking-crc
-- kms_prop_blob@invalid-get-prop
-- kms_flip@flip-vs-absolute-wf_vblank-interruptible
-- kms_invalid_mode@zero-hdisplay
-- kms_invalid_mode@bad-vtotal
-- kms_cursor_crc.* (everything is SUCCEED or SKIP, but no fails)
-
-[7]: https://lore.kernel.org/all/20240201065346.801038-1-vignesh.raman@collabora.com/
-
-Changes in v2:
-- Rebased the series on top of drm-misc/drm-misc-net
-- Extract the typedef for pixel_read/pixel_write
-- Introduce the line-by-line algorithm per pixel format
-- Add some documentation for existing and new code
-- Port the series [1] to use line-by-line algorithm
-- Link to v1: https://lore.kernel.org/r/20240201-yuv-v1-0-3ca376f27632@bootlin.com
-
 ---
-Arthur Grillo (5):
-      drm/vkms: Use drm_frame directly
-      drm/vkms: Add YUV support
-      drm/vkms: Add range and encoding properties to pixel_read function
-      drm/vkms: Drop YUV formats TODO
-      drm/vkms: Create KUnit tests for YUV conversions
+ drivers/gpu/drm/vkms/vkms_drv.h       |  3 ---
+ drivers/gpu/drm/vkms/vkms_formats.c   | 12 +++++++-----
+ drivers/gpu/drm/vkms/vkms_plane.c     |  3 ---
+ drivers/gpu/drm/vkms/vkms_writeback.c |  5 -----
+ 4 files changed, 7 insertions(+), 16 deletions(-)
 
-Louis Chauvet (4):
-      drm/vkms: Code formatting
-      drm/vkms: write/update the documentation for pixel conversion and pixel write functions
-      drm/vkms: Add typedef and documentation for pixel_read and pixel_write functions
-      drm/vkms: Re-introduce line-per-line composition algorithm
+diff --git a/drivers/gpu/drm/vkms/vkms_drv.h b/drivers/gpu/drm/vkms/vkms_drv.h
+index 8f5710debb1e..b4b357447292 100644
+--- a/drivers/gpu/drm/vkms/vkms_drv.h
++++ b/drivers/gpu/drm/vkms/vkms_drv.h
+@@ -31,9 +31,6 @@ struct vkms_frame_info {
+ 	struct drm_rect rotated;
+ 	struct iosys_map map[DRM_FORMAT_MAX_PLANES];
+ 	unsigned int rotation;
+-	unsigned int offset;
+-	unsigned int pitch;
+-	unsigned int cpp;
+ };
+ 
+ struct pixel_argb_u16 {
+diff --git a/drivers/gpu/drm/vkms/vkms_formats.c b/drivers/gpu/drm/vkms/vkms_formats.c
+index 36046b12f296..172830a3936a 100644
+--- a/drivers/gpu/drm/vkms/vkms_formats.c
++++ b/drivers/gpu/drm/vkms/vkms_formats.c
+@@ -11,8 +11,10 @@
+ 
+ static size_t pixel_offset(const struct vkms_frame_info *frame_info, int x, int y)
+ {
+-	return frame_info->offset + (y * frame_info->pitch)
+-				  + (x * frame_info->cpp);
++	struct drm_framebuffer *fb = frame_info->fb;
++
++	return fb->offsets[0] + (y * fb->pitches[0])
++			      + (x * fb->format->cpp[0]);
+ }
+ 
+ /*
+@@ -131,12 +133,12 @@ void vkms_compose_row(struct line_buffer *stage_buffer, struct vkms_plane_state
+ 	u8 *src_pixels = get_packed_src_addr(frame_info, y);
+ 	int limit = min_t(size_t, drm_rect_width(&frame_info->dst), stage_buffer->n_pixels);
+ 
+-	for (size_t x = 0; x < limit; x++, src_pixels += frame_info->cpp) {
++	for (size_t x = 0; x < limit; x++, src_pixels += frame_info->fb->format->cpp[0]) {
+ 		int x_pos = get_x_position(frame_info, limit, x);
+ 
+ 		if (drm_rotation_90_or_270(frame_info->rotation))
+ 			src_pixels = get_packed_src_addr(frame_info, x + frame_info->rotated.y1)
+-				+ frame_info->cpp * y;
++				+ frame_info->fb->format->cpp[0] * y;
+ 
+ 		plane->pixel_read(src_pixels, &out_pixels[x_pos]);
+ 	}
+@@ -223,7 +225,7 @@ void vkms_writeback_row(struct vkms_writeback_job *wb,
+ 	struct pixel_argb_u16 *in_pixels = src_buffer->pixels;
+ 	int x_limit = min_t(size_t, drm_rect_width(&frame_info->dst), src_buffer->n_pixels);
+ 
+-	for (size_t x = 0; x < x_limit; x++, dst_pixels += frame_info->cpp)
++	for (size_t x = 0; x < x_limit; x++, dst_pixels += frame_info->fb->format->cpp[0])
+ 		wb->pixel_write(dst_pixels, &in_pixels[x]);
+ }
+ 
+diff --git a/drivers/gpu/drm/vkms/vkms_plane.c b/drivers/gpu/drm/vkms/vkms_plane.c
+index 90c09046e0af..d5203f531d96 100644
+--- a/drivers/gpu/drm/vkms/vkms_plane.c
++++ b/drivers/gpu/drm/vkms/vkms_plane.c
+@@ -124,9 +124,6 @@ static void vkms_plane_atomic_update(struct drm_plane *plane,
+ 	drm_rect_rotate(&frame_info->rotated, drm_rect_width(&frame_info->rotated),
+ 			drm_rect_height(&frame_info->rotated), frame_info->rotation);
+ 
+-	frame_info->offset = fb->offsets[0];
+-	frame_info->pitch = fb->pitches[0];
+-	frame_info->cpp = fb->format->cpp[0];
+ 	vkms_plane_state->pixel_read = get_pixel_conversion_function(fmt);
+ }
+ 
+diff --git a/drivers/gpu/drm/vkms/vkms_writeback.c b/drivers/gpu/drm/vkms/vkms_writeback.c
+index bc724cbd5e3a..c8582df1f739 100644
+--- a/drivers/gpu/drm/vkms/vkms_writeback.c
++++ b/drivers/gpu/drm/vkms/vkms_writeback.c
+@@ -149,11 +149,6 @@ static void vkms_wb_atomic_commit(struct drm_connector *conn,
+ 	crtc_state->active_writeback = active_wb;
+ 	crtc_state->wb_pending = true;
+ 	spin_unlock_irq(&output->composer_lock);
+-
+-	wb_frame_info->offset = fb->offsets[0];
+-	wb_frame_info->pitch = fb->pitches[0];
+-	wb_frame_info->cpp = fb->format->cpp[0];
+-
+ 	drm_writeback_queue_job(wb_conn, connector_state);
+ 	active_wb->pixel_write = get_pixel_write_function(wb_format);
+ 	drm_rect_init(&wb_frame_info->src, 0, 0, crtc_width, crtc_height);
 
- Documentation/gpu/vkms.rst                    |   3 +-
- drivers/gpu/drm/vkms/Makefile                 |   1 +
- drivers/gpu/drm/vkms/tests/.kunitconfig       |   4 +
- drivers/gpu/drm/vkms/tests/Makefile           |   3 +
- drivers/gpu/drm/vkms/tests/vkms_format_test.c | 155 +++++++
- drivers/gpu/drm/vkms/vkms_composer.c          | 233 ++++++++---
- drivers/gpu/drm/vkms/vkms_crtc.c              |   6 +-
- drivers/gpu/drm/vkms/vkms_drv.c               |   3 +-
- drivers/gpu/drm/vkms/vkms_drv.h               |  56 ++-
- drivers/gpu/drm/vkms/vkms_formats.c           | 565 +++++++++++++++++++++-----
- drivers/gpu/drm/vkms/vkms_formats.h           |  13 +-
- drivers/gpu/drm/vkms/vkms_plane.c             |  50 ++-
- drivers/gpu/drm/vkms/vkms_writeback.c         |  14 +-
- 13 files changed, 916 insertions(+), 190 deletions(-)
----
-base-commit: aa1267e673fe5307cf00d02add4017d2878598b6
-change-id: 20240201-yuv-1337d90d9576
-
-Best regards,
 -- 
-Louis Chauvet <louis.chauvet@bootlin.com>
+2.43.0
 
