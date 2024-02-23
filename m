@@ -1,211 +1,121 @@
-Received: from mx1.riseup.net (mx1.riseup.net [198.252.153.129])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0B3C7AE65
-	for <linux-kernel@vger.kernel.org>; Fri, 23 Feb 2024 11:58:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.252.153.129
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4EDD7A71B;
+	Fri, 23 Feb 2024 11:58:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708689483; cv=none; b=pYIg6kncaZ5/qMSrKV2B3+Apeh7bKzYoN8OXJMHH5DnIN5esBYSqvdHt3xWn09MqzZ5KJm7p+WIARq9IQ1VODf7GhlnDF1qtePDdATmgc4gJ5tL591Y9E62Utv0Z4qNOrsexxhnGDWao/FWOAnWYljcQWvG5KoClMaIo5EZSlJI=
+	t=1708689532; cv=none; b=hnutTX9iOA/Fr7uyxL805jjecvVvrPQvhnprFa1iirmxf4CJJV+2lIdhH5QNl/0+hH/ly7OnBFVPdiM0lD5cpmHsSeFO+3nqf9SUr6C21My08N6C8F/wBNvU+LNnQga5egBBS4oVHSpIqYNIjSMKD6rIHWBNv4aUy+7kioyhOD8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708689483; c=relaxed/simple;
-	bh=OUmiIYV1ZOxPQwwDzWBugUjrO/94kZzGcCCUhw19TKo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=UwjVC8f71FLQZpOlJIWK5dfACeKKfT/E1XqDH1PcIy0s6koi/nv1DoDgDyLfOXxvb/9iZ7HAfGA9oEhQZihK93N9jX0JUVlmYbpUWLbtVZ4prWRUyevC2NV3V8V5RmVKRDb9ScLguzQ4e65OWT0Xk8AVv130xb5e6HKQitCIR/g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riseup.net; spf=pass smtp.mailfrom=riseup.net; dkim=pass (1024-bit key) header.d=riseup.net header.i=@riseup.net header.b=VFx8LYLO; arc=none smtp.client-ip=198.252.153.129
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riseup.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=riseup.net
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=riseup.net header.i=@riseup.net header.b="VFx8LYLO"
-Received: from mx0.riseup.net (mx0-pn.riseup.net [10.0.1.42])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx1.riseup.net (Postfix) with ESMTPS id 4Th7g32jqZzDqP1
-	for <linux-kernel@vger.kernel.org>; Fri, 23 Feb 2024 11:52:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=riseup.net; s=squak;
-	t=1708689167; bh=OUmiIYV1ZOxPQwwDzWBugUjrO/94kZzGcCCUhw19TKo=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=VFx8LYLOZmIhQp8rg646zyQMKTWhjrjgJOKt4Q4GITfYo6/MMPpsCPkqpJQx1u1QK
-	 4SRtKwTasjQzUWK6A3hqzLP9tzNaMwQiRe2h5tGHu+NJ5apgU6a4U9C6CY9df6zfNq
-	 N/mvBySley4kW3od04tNf4CnDkBY7u8woeH4nzfc=
-Received: from fews02-sea.riseup.net (fews02-sea-pn.riseup.net [10.0.1.112])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx0.riseup.net (Postfix) with ESMTPS id 4Th7fx1tgFz9wx0;
-	Fri, 23 Feb 2024 11:52:41 +0000 (UTC)
-X-Riseup-User-ID: 0EF8E654CC1AEAB381F9584BCE1A40612DF66BFDD921DB16F4891EE24A96A184
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-	 by fews02-sea.riseup.net (Postfix) with ESMTPSA id 4Th7fr1hYYzFsSY;
-	Fri, 23 Feb 2024 11:52:35 +0000 (UTC)
-Message-ID: <282a368c-6713-4c36-8713-4e081025b0bb@riseup.net>
-Date: Fri, 23 Feb 2024 08:52:33 -0300
+	s=arc-20240116; t=1708689532; c=relaxed/simple;
+	bh=kgf5qzofg9XdjyRI2Okw+ogBrpfswPf+/CPSQfTyBj4=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=QiVfz9ife2ZbrUtyMCQq2r5KDWwp19p+wUeOz8nqADZmihzJtaKVqoeqHCuBXaNR8hI9lil64DkOANWOamSWTcBzb9EWmlNGrH/deA/yvzeRVHrifvMddqyUoLIWwBAdjl01/8jgN+Pqf2IWWToJ33iCbOOMz58CSYqpd5sPuDQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.208.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-5655c7dd3b1so542734a12.0;
+        Fri, 23 Feb 2024 03:58:50 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708689529; x=1709294329;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Wv2F+CMwFgzgnky2Oblv6t762R5K7w7duNIZkmo8KDY=;
+        b=oCX7jVTU+3VSihgcFDWBl3E8qSt7lI4RFGGEfBw3UKjBpcbWKL+sMP70zmbjG/IKJG
+         rM9yZaJQFt+dL+7ajAFmtDEJ0t5HF20frhJgN4w5sIwtDnYzrr9qXNcZujyn4Ws1OTo2
+         qBPHu/f0RRfkp/cfz3bWS1JB7RWjd1gTSsLiM3khwcSlMbJAAt5Va8vJGGl52tNgbYZ7
+         D1Pw2UPXEIt+sjGgJik94Ts5gVHnHF0ORepvXtgAE8w/4aQlS9R3NPnr4I202E1BqV2T
+         4kkNBe6WnjIvy+BPsCuKar+qTfxGNR9qAuDJV140VAoDvi/Hn2qWP4BBYQylYfx+L6jS
+         bvew==
+X-Forwarded-Encrypted: i=1; AJvYcCVqZZSxFdAt5ZWxpw1FOaCjWr41NUR6Kv5n1EyIEuhXW0Pb0z9RipgEG8W9CYSb/09I8BO2N1TmGg7NTAa/cXooOqknJgRB5qDWSMXS
+X-Gm-Message-State: AOJu0YxE0oFiAUen9soGxkvtqF8Uz1RtaWWct6CchCCAgkkIVk8KuZrB
+	R9TlsyQzOtrRVqjdBsLRWNjSy4XL3Dqae61kjyVQqZirQsS0J7Zd
+X-Google-Smtp-Source: AGHT+IEwZE90ddruXHba1WENbP9lNcLlOKscuPh/LATd8ln0hCxmETUo80I+NSEbZD9hNAu4n8T9iw==
+X-Received: by 2002:a17:906:6d49:b0:a3f:af43:5245 with SMTP id a9-20020a1709066d4900b00a3faf435245mr1702677ejt.0.1708689528908;
+        Fri, 23 Feb 2024 03:58:48 -0800 (PST)
+Received: from localhost (fwdproxy-lla-120.fbsv.net. [2a03:2880:30ff:78::face:b00c])
+        by smtp.gmail.com with ESMTPSA id fj14-20020a1709069c8e00b00a3f64663fe8sm1895858ejc.200.2024.02.23.03.58.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 23 Feb 2024 03:58:48 -0800 (PST)
+From: Breno Leitao <leitao@debian.org>
+To: kuba@kernel.org,
+	davem@davemloft.net,
+	pabeni@redhat.com,
+	edumazet@google.com,
+	Stefano Garzarella <sgarzare@redhat.com>
+Cc: netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	horms@kernel.org,
+	virtualization@lists.linux.dev (open list:VM SOCKETS (AF_VSOCK))
+Subject: [PATCH net-next 1/2] net/vsockmon: Leverage core stats allocator
+Date: Fri, 23 Feb 2024 03:58:37 -0800
+Message-Id: <20240223115839.3572852-1-leitao@debian.org>
+X-Mailer: git-send-email 2.39.3
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH v2 0/9] drm/vkms: Reimplement line-per-line pixel
- conversion for plane reading
-Content-Language: en-US
-To: Louis Chauvet <louis.chauvet@bootlin.com>,
- Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>,
- Melissa Wen <melissa.srw@gmail.com>,
- Haneen Mohammed <hamohammed.sa@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>, arthurgrillo@riseup.net,
- Jonathan Corbet <corbet@lwn.net>
-Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
- jeremie.dautheribes@bootlin.com, miquel.raynal@bootlin.com,
- thomas.petazzoni@bootlin.com
-References: <20240223-yuv-v2-0-aa6be2827bb7@bootlin.com>
-From: Maira Canal <mairacanal@riseup.net>
-In-Reply-To: <20240223-yuv-v2-0-aa6be2827bb7@bootlin.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-Hi Louis,
+With commit 34d21de99cea9 ("net: Move {l,t,d}stats allocation to core and
+convert veth & vrf"), stats allocation could be done on net core
+instead of this driver.
 
-On 2/23/24 08:37, Louis Chauvet wrote:
-> This patchset is the second version of [1]. It is almost a complete
-> rewrite to use a line-by-line algorithm for the composition.
-> It can be divided in three parts:
-> - PATCH 1 to 4: no functional change is intended, only some formatting and
-> documenting
-> (PATCH 2 is taken from [2])
-> - PATCH 5: main patch for this series, it reintroduce the
-> line-by-line algorithm
-> - PATCH 6 to 9: taken from Arthur's series [2], with sometimes adaptation
-> to use the pixel-by-pixel algorithm.
-> 
-> The PATCH 5 aims to restore the line-by-line pixel reading algorithm. It
-> was introduced in 8ba1648567e2 ("drm: vkms: Refactor the plane composer to
-> accept new formats") but removed in 8ba1648567e2 ("drm: vkms: Refactor the
-> plane composer to accept new formats") in a over-simplification effort.
-> At this time, nobody noticed the performance impact of this commit. After
-> the first iteration of my series, poeple notice performance impact, and it
-> was the case. Pekka suggested to reimplement the line-by-line algorithm.
-> 
-> Expiriments on my side shown great improvement for the line-by-line
-> algorithm, and the performances are the same as the original line-by-line
-> algorithm. I targeted my effort to make the code working for all the
-> rotations and translations. The usage of helpers from drm_rect_* avoid
-> reimplementing existing logic.
-> 
-> The only "complex" part remaining is the clipping of the coordinate to
-> avoid reading/writing outside of src/dst. Thus I added a lot of comments
-> to help when someone will want to add some features (framebuffer resizing
-> for example).
-> 
-> The YUV part is not mandatory for this series, but as my first effort was
-> to help the integration of YUV, I decided to rebase Arthur's series on
-> mine to help. I took [3], [4], [5] and [6] and adapted them to use the
-> line-by-line reading. If I did something wrong here, please let me
-> know.
-> 
-> My series was mainly tested with:
-> - kms_plane (for color conversions)
-> - kms_rotation_crc (for rotations of planes)
-> - kms_cursor_crc (for translations)
-> The benchmark used to measure the improvment was done with:
-> - kms_fb_stress
-> 
-> [1]: https://lore.kernel.org/r/20240201-yuv-v1-0-3ca376f27632@bootlin.com
-> [2]: https://lore.kernel.org/all/20240110-vkms-yuv-v2-0-952fcaa5a193@riseup.net/
-> [3]: https://lore.kernel.org/all/20240110-vkms-yuv-v2-3-952fcaa5a193@riseup.net/
-> [4]: https://lore.kernel.org/all/20240110-vkms-yuv-v2-5-952fcaa5a193@riseup.net/
-> [5]: https://lore.kernel.org/all/20240110-vkms-yuv-v2-6-952fcaa5a193@riseup.net/
-> [6]: https://lore.kernel.org/all/20240110-vkms-yuv-v2-7-952fcaa5a193@riseup.net/
-> 
-> To: Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>
-> To: Melissa Wen <melissa.srw@gmail.com>
-> To: Maíra Canal <mairacanal@riseup.net>
-> To: Haneen Mohammed <hamohammed.sa@gmail.com>
-> To: Daniel Vetter <daniel@ffwll.ch>
-> To: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
-> To: Maxime Ripard <mripard@kernel.org>
-> To: Thomas Zimmermann <tzimmermann@suse.de>
-> To: David Airlie <airlied@gmail.com>
-> To: arthurgrillo@riseup.net
-> To: Jonathan Corbet <corbet@lwn.net>
-> Cc: dri-devel@lists.freedesktop.org
-> Cc: linux-kernel@vger.kernel.org
-> Cc: jeremie.dautheribes@bootlin.com
-> Cc: miquel.raynal@bootlin.com
-> Cc: thomas.petazzoni@bootlin.com
-> Signed-off-by: Louis Chauvet <louis.chauvet@bootlin.com>
-> 
-> Note: after my changes, those tests seems to pass, so [7] may need
-> updating (I did not check, it was maybe already the case):
-> - kms_cursor_legacy@flip-vs-cursor-atomic
-> - kms_pipe_crc_basic@nonblocking-crc
-> - kms_pipe_crc_basic@nonblocking-crc-frame-sequence
-> - kms_writeback@writeback-pixel-formats
-> - kms_writeback@writeback-invalid-parameters
-> - kms_flip@flip-vs-absolute-wf_vblank-interruptible
-> And those tests pass, I did not investigate why the runners fails:
-> - kms_flip@flip-vs-expired-vblank-interruptible
-> - kms_flip@flip-vs-expired-vblank
-> - kms_flip@plain-flip-fb-recreate
-> - kms_flip@plain-flip-fb-recreate-interruptible
-> - kms_flip@plain-flip-ts-check-interruptible
-> - kms_cursor_legacy@cursorA-vs-flipA-toggle
-> - kms_pipe_crc_basic@nonblocking-crc
-> - kms_prop_blob@invalid-get-prop
-> - kms_flip@flip-vs-absolute-wf_vblank-interruptible
-> - kms_invalid_mode@zero-hdisplay
-> - kms_invalid_mode@bad-vtotal
-> - kms_cursor_crc.* (everything is SUCCEED or SKIP, but no fails)
+With this new approach, the driver doesn't have to bother with error
+handling (allocation failure checking, making sure free happens in the
+right spot, etc). This is core responsibility now.
 
-This is great news! Could you just adjust the series fixing the
-compiling errors?
+Remove the allocation in the vsockmon driver and leverage the network
+core allocation instead.
 
-Best Regards,
-- Maíra
+Signed-off-by: Breno Leitao <leitao@debian.org>
+---
+ drivers/net/vsockmon.c | 16 +---------------
+ 1 file changed, 1 insertion(+), 15 deletions(-)
 
-> 
-> [7]: https://lore.kernel.org/all/20240201065346.801038-1-vignesh.raman@collabora.com/
-> 
-> Changes in v2:
-> - Rebased the series on top of drm-misc/drm-misc-net
-> - Extract the typedef for pixel_read/pixel_write
-> - Introduce the line-by-line algorithm per pixel format
-> - Add some documentation for existing and new code
-> - Port the series [1] to use line-by-line algorithm
-> - Link to v1: https://lore.kernel.org/r/20240201-yuv-v1-0-3ca376f27632@bootlin.com
-> 
-> ---
-> Arthur Grillo (5):
->        drm/vkms: Use drm_frame directly
->        drm/vkms: Add YUV support
->        drm/vkms: Add range and encoding properties to pixel_read function
->        drm/vkms: Drop YUV formats TODO
->        drm/vkms: Create KUnit tests for YUV conversions
-> 
-> Louis Chauvet (4):
->        drm/vkms: Code formatting
->        drm/vkms: write/update the documentation for pixel conversion and pixel write functions
->        drm/vkms: Add typedef and documentation for pixel_read and pixel_write functions
->        drm/vkms: Re-introduce line-per-line composition algorithm
-> 
->   Documentation/gpu/vkms.rst                    |   3 +-
->   drivers/gpu/drm/vkms/Makefile                 |   1 +
->   drivers/gpu/drm/vkms/tests/.kunitconfig       |   4 +
->   drivers/gpu/drm/vkms/tests/Makefile           |   3 +
->   drivers/gpu/drm/vkms/tests/vkms_format_test.c | 155 +++++++
->   drivers/gpu/drm/vkms/vkms_composer.c          | 233 ++++++++---
->   drivers/gpu/drm/vkms/vkms_crtc.c              |   6 +-
->   drivers/gpu/drm/vkms/vkms_drv.c               |   3 +-
->   drivers/gpu/drm/vkms/vkms_drv.h               |  56 ++-
->   drivers/gpu/drm/vkms/vkms_formats.c           | 565 +++++++++++++++++++++-----
->   drivers/gpu/drm/vkms/vkms_formats.h           |  13 +-
->   drivers/gpu/drm/vkms/vkms_plane.c             |  50 ++-
->   drivers/gpu/drm/vkms/vkms_writeback.c         |  14 +-
->   13 files changed, 916 insertions(+), 190 deletions(-)
-> ---
-> base-commit: aa1267e673fe5307cf00d02add4017d2878598b6
-> change-id: 20240201-yuv-1337d90d9576
-> 
-> Best regards,
+diff --git a/drivers/net/vsockmon.c b/drivers/net/vsockmon.c
+index b1bb1b04b664..a0b4dca36baf 100644
+--- a/drivers/net/vsockmon.c
++++ b/drivers/net/vsockmon.c
+@@ -13,19 +13,6 @@
+ #define DEFAULT_MTU (VIRTIO_VSOCK_MAX_PKT_BUF_SIZE + \
+ 		     sizeof(struct af_vsockmon_hdr))
+ 
+-static int vsockmon_dev_init(struct net_device *dev)
+-{
+-	dev->lstats = netdev_alloc_pcpu_stats(struct pcpu_lstats);
+-	if (!dev->lstats)
+-		return -ENOMEM;
+-	return 0;
+-}
+-
+-static void vsockmon_dev_uninit(struct net_device *dev)
+-{
+-	free_percpu(dev->lstats);
+-}
+-
+ struct vsockmon {
+ 	struct vsock_tap vt;
+ };
+@@ -79,8 +66,6 @@ static int vsockmon_change_mtu(struct net_device *dev, int new_mtu)
+ }
+ 
+ static const struct net_device_ops vsockmon_ops = {
+-	.ndo_init = vsockmon_dev_init,
+-	.ndo_uninit = vsockmon_dev_uninit,
+ 	.ndo_open = vsockmon_open,
+ 	.ndo_stop = vsockmon_close,
+ 	.ndo_start_xmit = vsockmon_xmit,
+@@ -112,6 +97,7 @@ static void vsockmon_setup(struct net_device *dev)
+ 	dev->flags = IFF_NOARP;
+ 
+ 	dev->mtu = DEFAULT_MTU;
++	dev->pcpu_stat_type = NETDEV_PCPU_STAT_LSTATS;
+ }
+ 
+ static struct rtnl_link_ops vsockmon_link_ops __read_mostly = {
+-- 
+2.39.3
+
