@@ -1,88 +1,115 @@
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E862D7E772;
-	Fri, 23 Feb 2024 10:38:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E30B67C7D;
+	Fri, 23 Feb 2024 10:38:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708684722; cv=none; b=EzJ22EYaiWhTMPOCzsvWlu4EzJP/W9gFrXnh3b1uG5OOqCVntNFPtJGvH5Pv92yUzSJ9ZAXZkRbCuTBP54LG3lnhSOodYkl6NAh63tVwpCdgpiTxGW5dVJsSAWQE/DWAHTOM/4tFH76h+XIZKNUbsNk6Qv6EJS3Xij+9WWuNon8=
+	t=1708684730; cv=none; b=pCR/QhomsLymZ8iVrBa1DgzcZFFRS2gXHJb1hNtViRBpYuDpZJI6vLry5pXNSGXfF96quzsKHvi/2zjY2AtE/Fi5j9vGeR7ifU1gt7VXs+2VzPQBd5x9WE3AVMXXQ9NTL8SrrIWBWpimmyayYLMwg89f/o73U9fpwAngoO2Wiug=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708684722; c=relaxed/simple;
-	bh=O3IrUyblnuX/5xQB5jaQ38QXY1p+GizHIVBUKzOy3jo=;
+	s=arc-20240116; t=1708684730; c=relaxed/simple;
+	bh=NWT5bX994Gc9URSqTJ1uQ/MVapIMzP60ER2OflZLuLw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YcvG7LRJ8f11pm8aUWcuQUh5L+Y2MxatdINadMAXyQxPvROsQ4e3QVgOV/UGAPVhDMfMRnmaujlghxl6eW6RWkiNjihwngIxs3aT9y4xgZE+KvWCcHMbS4x6bemd7ycFrgJhNH+P8Lc9c3GVU5xEJ6lSkZrd2l1s/ykr7k1NbIQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=I+Y0fxKd; arc=none smtp.client-ip=78.32.30.218
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
+	 Content-Type:Content-Disposition:In-Reply-To; b=pkdVSY2y3vhycJzy+3QgAkiiCqy7at0z8HM2APMwuaWZfk3XakvUEs4+DapT+0ADZbIC1bt5OCktAwwtViqTfd/4CMJdDDp3G8zZ7a+FyOwHCbYYcvFQjwCpXTPQvQjLDqxbnwLQhcENUjfvO/7DLvb1CSeIPUJ2U22KlYblBos=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=r2HjcuNN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="I+Y0fxKd"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=STbccEumsUwS1x3Lag48jXHMfPCnA9k9jkVStMkjKiE=; b=I+Y0fxKdZ0Sd2vE+QThwFWzwIQ
-	GIC3VHV/kqid/e+7zPewniD1+fDQYmK7Kto6z2uVk+91xhO+qLhJ8hLLJGjbseZ4/hrzWeJne84Wn
-	RJR0NE2jiV1YANZNlnIF3uaNRWttSvCl6XFm77qKYuiuD519Y2CY7dqGANuet0/qD7Nk8wyNDlwJd
-	p0dPUqB5NtWAnOmjAB9rcDkxn64ALbRU5GnA5vgxVHGnLp2RVAVFTVuz9JpSDeTxGVMfF1Vj2MTQK
-	fJ4m2QbZ+0XnePYFaHkrrb4nErWbbfogTtSDUrugzQAG7tJG914q0SEJImRSbmk3YYJ2TwaAP6COC
-	LhkXiVYw==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:46402)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1rdSwi-0007Tj-0G;
-	Fri, 23 Feb 2024 10:38:24 +0000
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1rdSwe-0003Y7-Lq; Fri, 23 Feb 2024 10:38:20 +0000
-Date: Fri, 23 Feb 2024 10:38:20 +0000
-From: "Russell King (Oracle)" <linux@armlinux.org.uk>
-To: Oleksij Rempel <o.rempel@pengutronix.de>
-Cc: Wei Fang <wei.fang@nxp.com>, "David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Andrew Lunn <andrew@lunn.ch>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	kernel@pengutronix.de, linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org, Shenwei Wang <shenwei.wang@nxp.com>,
-	Clark Wang <xiaoning.wang@nxp.com>,
-	NXP Linux Team <linux-imx@nxp.com>
-Subject: Re: [PATCH net-next v6 5/8] net: phy: Immediately call adjust_link
- if only tx_lpi_enabled changes
-Message-ID: <Zdh1nMWZDynP/AMc@shell.armlinux.org.uk>
-References: <20240223094425.691209-1-o.rempel@pengutronix.de>
- <20240223094425.691209-6-o.rempel@pengutronix.de>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="r2HjcuNN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1BDDAC433C7;
+	Fri, 23 Feb 2024 10:38:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1708684730;
+	bh=NWT5bX994Gc9URSqTJ1uQ/MVapIMzP60ER2OflZLuLw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=r2HjcuNNUujkUWMNDNnrB78JazeIbOj63Yi6su96i4X1jHKfp+xNSEA+JErWEz3r+
+	 ZhCP+6MzK7joA79HaNeDScuq08FfZidzymx3wWrBVCF3kv4zJV+knzxB5QZF06Wh9D
+	 ayjLt+1eFkSpXsU0G3AYZuytji4M94H4Er3PpEHCAUyZTv7lmG/EHA/3tQJ8KZgja4
+	 1p/HW8uThdRxNOSLfBLdS/TbtwGO1Ze83JzlfXwYiwu8kpAutImi6gSzcB2RlpKpc4
+	 9tmIjQDK5WDf2koNRQoVNCvqc8gzyHbTmhwVPzBY7hExmClb1fjq3c1o2alhjh6u//
+	 CiVB5R+MMpy/w==
+Date: Fri, 23 Feb 2024 10:38:45 +0000
+From: Lee Jones <lee@kernel.org>
+To: Joe Perches <joe@perches.com>
+Cc: Justin Stitt <justinstitt@google.com>,
+	Andy Whitcroft <apw@canonical.com>,
+	Dwaipayan Ray <dwaipayanray1@gmail.com>,
+	Lukas Bulwahn <lukas.bulwahn@gmail.com>,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+	Kees Cook <keescook@chromium.org>,
+	Finn Thain <fthain@linux-m68k.org>
+Subject: Re: [PATCH v2] checkpatch: add check for snprintf to scnprintf
+Message-ID: <20240223103845.GP10170@google.com>
+References: <20240221-snprintf-checkpatch-v2-1-9baeb59dae30@google.com>
+ <bccc704fc78b362bbc57a79eb240219f5ec1548e.camel@perches.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20240223094425.691209-6-o.rempel@pengutronix.de>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <bccc704fc78b362bbc57a79eb240219f5ec1548e.camel@perches.com>
 
-On Fri, Feb 23, 2024 at 10:44:22AM +0100, Oleksij Rempel wrote:
-> +static void phy_ethtool_set_eee_noneg(struct phy_device *phydev,
-> +				      struct ethtool_keee *data)
-> +{
-> +	if (phydev->eee_cfg.tx_lpi_enabled !=
-> +	    data->tx_lpi_enabled) {
-> +		eee_to_eeecfg(data, &phydev->eee_cfg);
-> +		phydev->enable_tx_lpi = eeecfg_mac_can_tx_lpi(&phydev->eee_cfg);
-> +		if (phydev->link)
-> +			phy_link_up(phydev);
+On Wed, 21 Feb 2024, Joe Perches wrote:
 
-I'm not convinced this is a good idea. Hasn't phylib previously had
-the guarantee that the link will go down between two link-up events?
-So calling phy_link_up() may result in either the MAC driver ignoring
-it, or modifying registers that are only supposed to be modified while
-the MAC side is down.
+> On Wed, 2024-02-21 at 22:11 +0000, Justin Stitt wrote:
+> > I am going to quote Lee Jones who has been doing some snprintf ->
+> > scnprintf refactorings:
+> > 
+> > "There is a general misunderstanding amongst engineers that
+> > {v}snprintf() returns the length of the data *actually* encoded into the
+> > destination array.  However, as per the C99 standard {v}snprintf()
+> > really returns the length of the data that *would have been* written if
+> > there were enough space for it.  This misunderstanding has led to
+> > buffer-overruns in the past.  It's generally considered safer to use the
+> > {v}scnprintf() variants in their place (or even sprintf() in simple
+> > cases).  So let's do that."
+> > 
+> > To help prevent new instances of snprintf() from popping up, let's add a
+> > check to checkpatch.pl.
+> > 
+> > Suggested-by: Finn Thain <fthain@linux-m68k.org>
+> > Signed-off-by: Justin Stitt <justinstitt@google.com>
+> > ---
+> > Changes in v2:
+> > - Had a vim moment and deleted a character before sending the patch.
+> > - Replaced the character :)
+> > - Link to v1: https://lore.kernel.org/r/20240221-snprintf-checkpatch-v1-1-3ac5025b5961@google.com
+> > ---
+> > From a discussion here [1].
+> > 
+> > [1]: https://lore.kernel.org/all/0f9c95f9-2c14-eee6-7faf-635880edcea4@linux-m68k.org/
+> 
+> > diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+> []
+> > @@ -7012,6 +7012,12 @@ sub process {
+> >  			     "Prefer strscpy, strscpy_pad, or __nonstring over strncpy - see: https://github.com/KSPP/linux/issues/90\n" . $herecurr);
+> >  		}
+> >  
+> > +# snprintf uses that should likely be {v}scnprintf
+> > +		if ($line =~ /\bsnprintf\s*\(\s*/) {
+> > +				WARN("SNPRINTF",
+> > +				     "Prefer scnprintf over snprintf\n" . $herecurr);
+> 
+> There really should be some sort of reference link here
+> similar to the one above this.
+> 
+> Also, I rather doubt _all_ of these should be changed just
+> for churn's sake.
+
+This is for new implementations only.
+
+Kees is planning on changing all of the current instances kernel-wide.
+
+> Maybe add a test for some return value use like
+> 
+> 		if (defined($stat) &&
+> 		    $stat =~ /$Lval\s*=\s*snprintf\s*\(/) {
+> 			etc...
+> 
+> Maybe offer to --fix it too.
+> 
 
 -- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+Lee Jones [李琼斯]
