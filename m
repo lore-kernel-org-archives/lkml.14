@@ -1,39 +1,35 @@
-Received: from mail-m49198.qiye.163.com (mail-m49198.qiye.163.com [45.254.49.198])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 973F6BE7D;
-	Fri, 23 Feb 2024 03:17:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.254.49.198
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49C6FC2DA;
+	Fri, 23 Feb 2024 03:20:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708658231; cv=none; b=c4C+AJtmfY4AT3axEN0EvPYufIu6/1XuIn7kPvSmp53QnK7Q0vyq0r4tygkCwQPOeLXo5ovYJ/CRD/0N1c8yTDS0DjMid4A298R48wWqXfMXWOAcCPBtZU4Lyhy2IfOvntRhCVZfwfnzyhue/gft2DPn+st+Y1JtNehefNTF0eg=
+	t=1708658428; cv=none; b=K/G8DIBfWzSEaliL1w0NsHuP4uwqlBvfO5kRtbJLCFeInh4J31cIhb2AuG5HCn5hbzYHkyh/9mnylF/G7LGtmvUPXmY8+5FBlhlXz3+7U5zK6gw2pmcp2EB4VIKZrRIPc0mfqNkym5bdFl0A0z38SWQ2cgaE6HlxcIyWgp0DZqo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708658231; c=relaxed/simple;
-	bh=AOFDVig+qtC1FMg26lE/IlypjEeqd4lm+DmWUHDkZIg=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=a3UdtXsHC0qg20AstC83SkdkXsYZMb+mz2F8EcmpcHs/NfWKNEG2ug+SOaWEH/p0ny6oKm2A69MTxin0SO6wzOTuGdDOBhyOpnU3IUXPTMEBTOvfRm8aHE+O1K/1+0we0ls76yXEoSlEOaofj/b0LEeGt6ILVSX3G+gnqImbpgg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=jmu.edu.cn; spf=pass smtp.mailfrom=jmu.edu.cn; arc=none smtp.client-ip=45.254.49.198
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=jmu.edu.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jmu.edu.cn
-Received: from amadeus-Vostro-3710.lan (unknown [58.61.140.157])
-	by smtp.qiye.163.com (Hmail) with ESMTPA id 7FDA17E012E;
-	Fri, 23 Feb 2024 11:10:25 +0800 (CST)
-From: Chukun Pan <amadeus@jmu.edu.cn>
-To: andersson@kernel.org
-Cc: amadeus@jmu.edu.cn,
-	conor+dt@kernel.org,
-	devicetree@vger.kernel.org,
-	konrad.dybcio@linaro.org,
-	krzysztof.kozlowski+dt@linaro.org,
-	linux-arm-msm@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	robh+dt@kernel.org,
-	robimarko@gmail.com
-Subject: Re: [PATCH v4 1/2] arm64: dts: qcom: ipq6018: add LDOA2 regulator
-Date: Fri, 23 Feb 2024 11:10:20 +0800
-Message-Id: <20240223031020.78744-1-amadeus@jmu.edu.cn>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <cliph5zxla23bgguzk52ulxh6trl4qcggjg7hqvrg2d4qdh3a7@mq6fewwjfk2m>
-References: <cliph5zxla23bgguzk52ulxh6trl4qcggjg7hqvrg2d4qdh3a7@mq6fewwjfk2m>
+	s=arc-20240116; t=1708658428; c=relaxed/simple;
+	bh=V6JZhkP+8HnvC5KUFcuNeGRzMN+4OV+7JlW6tufRPAY=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=tH2ELEmaKfVpr1QXviJsJijsVN/p/gNM+McC3anpx/TnKZDvycGXwJxwSOL+88Mr589/eLdZ+LXejJQ2+OJRIsWMQkpZ0N3UQ2U1Zef2g4cXotR3R1dZIcPKmhxb0vYvP4j0+mZ1fJxPYpq5M2bItzx2MSfu9XyE1Rff41Ku3rs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YTSjaRSl; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YTSjaRSl"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id CC550C433F1;
+	Fri, 23 Feb 2024 03:20:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1708658427;
+	bh=V6JZhkP+8HnvC5KUFcuNeGRzMN+4OV+7JlW6tufRPAY=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=YTSjaRSlRiBgTO02P0GIbHviTnos/EqofPnJgeMSy3XfCmfP9p5l7+32rO150QVQK
+	 Ih9eOGV8gmUQMPj0YbnGuiSZHNBII6oI6THCBre2hI8LQM9y8jCSKT68iplZbOkQje
+	 lnt01vuQc6r6NyNeyREVYmiK6TlVzua9qqmocIRGOEAuTI/Ff1OEObTRpaLREi+Mfn
+	 SHgAXhvp2nIqHH6yoperab5tJ1pnMlu2sbMBVGb2MU2qxrZeAwfd87GckpOMJEX017
+	 gzTGwcpZ07cZC0e9WIaG5XV1GsJxK1R78T8F9vVxtW1NdQ8+cHTElv25+MiumcAmbr
+	 ASYxMTrAwif7w==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id AD9BBC04E32;
+	Fri, 23 Feb 2024 03:20:27 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,53 +37,44 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVkZQ0lCVh5NSEpMTElNH00eGFUTARMWGhIXJBQOD1
-	lXWRgSC1lBWU5DVU1KVUpPS1VKTkxZV1kWGg8SFR0UWUFZT0tIVUpKS0hKQ1VKS0tVS1kG
-X-HM-Tid: 0a8dd3f157da03a2kunm7fda17e012e
-X-HM-MType: 10
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6MEk6Txw4EjMPExwWGCFDTi8c
-	HQkwCjdVSlVKTEtDTU5MQ0lNSE5KVTMWGhIXVRoWGh8eDgg7ERYOVR4fDlUYFUVZV1kSC1lBWU5D
-	VU1KVUpPS1VKTkxZV1kIAVlBSU5ITjcG
+Subject: Re: [PATCH net-next v2] net: smsc95xx: add support for SYS TEC
+ USB-SPEmodule1
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <170865842770.21611.18090294447425361465.git-patchwork-notify@kernel.org>
+Date: Fri, 23 Feb 2024 03:20:27 +0000
+References: <20240219053413.4732-1-andre.werner@systec-electronic.com>
+In-Reply-To: <20240219053413.4732-1-andre.werner@systec-electronic.com>
+To: Andre Werner <andre.werner@systec-electronic.com>
+Cc: steve.glendinning@shawell.net, UNGLinuxDriver@microchip.com,
+ davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+ netdev@vger.kernel.org, linux-usb@vger.kernel.org,
+ linux-kernel@vger.kernel.org, daniel.krueger@systec-electronic.com
 
-Hi, Bjorn
-> I still don't see a patch that does "something-supply = <&ipq6018_l2>;",
-> which would imply that the main thing this patch achieves is that the
-> regulator framework might turn the regulator off after a while.
+Hello:
 
-> Shouldn't there be a user of ipq6018_l2?
+This patch was applied to netdev/net.git (main)
+by Jakub Kicinski <kuba@kernel.org>:
 
-Although there is the sdhc node in ipq6018-cp01-c1 in the qsdk kernel,
-I don't have the official rdp board of qca, so I can't test it.
+On Mon, 19 Feb 2024 06:33:32 +0100 you wrote:
+> This patch adds support for the SYS TEC USB-SPEmodule1 10Base-T1L
+> ethernet device to the existing smsc95xx driver by adding the new
+> USB VID/PID pair.
+> 
+> Signed-off-by: Andre Werner <andre.werner@systec-electronic.com>
+> ---
+> v2:
+> - Sort new USB_DEVICE entry by VID and swap with previous entry.
+> 
+> [...]
 
-Normally it looks like this:
+Here is the summary with links:
+  - [net-next,v2] net: smsc95xx: add support for SYS TEC USB-SPEmodule1
+    https://git.kernel.org/netdev/net/c/45532b21dc2a
 
-&sdhc {
-	bus-width = <4>;
-	cd-gpios = <&tlmm 62 GPIO_ACTIVE_LOW>;
-    ... /* specific properties */
-	pinctrl-0 = <&sdhci_pins>;
-	pinctrl-names = "default";
-	vqmmc-supply = <&ipq6018_l2>;
-	status = "okay";
-};
-
-As for actual routers, there are users.
-One of the examples is on openwrt, a development board like 8devices:
-https://github.com/openwrt/openwrt/blob/main/target/linux/qualcommax/files/arch/arm64/boot/dts/qcom/ipq6010-mango-dvk.dts#L272
-
-	vqmmc-supply = <&ipq6018_l2>;
-	cd-gpios = <&tlmm 62 GPIO_ACTIVE_LOW>;
-...
-
-The function of this node is to reference sd/emmc supply for devices
-with pmic. Please let me know if it doesn't fit in this patch series
-and I will deal with this in another pmic patch series.
-
-
-Thanks,
-Chukun
-
+You are awesome, thank you!
 -- 
-2.25.1
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
 
