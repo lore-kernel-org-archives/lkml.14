@@ -1,60 +1,36 @@
-Received: from relay3-d.mail.gandi.net (relay3-d.mail.gandi.net [217.70.183.195])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF19F7175E;
-	Fri, 23 Feb 2024 15:11:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84BE435EF1
+	for <linux-kernel@vger.kernel.org>; Fri, 23 Feb 2024 15:13:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708701070; cv=none; b=o4WmQx/McrKB0gUfwRVrSTuVTWHQippwqQHhkrf15cK3snkpp1zK6AeYCgp57m6h7yiszJtUvDyyGX5c9Q7DEZYylexklwiquUrYE83OcgVtZOXNyo0yF7OegOu+TJs2vHh6aR54YFwkhdzsMN0fBT1VfoIaVXaC//nKppN3ycI=
+	t=1708701185; cv=none; b=PTdXddrrXfRJJcFOJZvyg9M4unTFqpfNC41nmtw6Nl+YTVMQ9bmF0Y+YJco146QINDPxHFfoc8bQM4rD2ABMCd9qY0PEzSQAeTN87CwRsSGIa9Of5M2Gk/rmsdLbtBCILfUv211t7NPzMSaYIU/5E4eIRib8RLs7qOOu8oeqHJE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708701070; c=relaxed/simple;
-	bh=PxYjF1RutTsLPmE3OJ6tcrJ1xcdHiw4brWhvRfjFA9w=;
+	s=arc-20240116; t=1708701185; c=relaxed/simple;
+	bh=vHd3FYt9Efa+bMZ0+xD3vTKyeLH+4aXhKA+sU9dr4a8=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=RZl44I9q+ULpCJt+r3fM+RWowJGY0hWjCNiaLqPWccOeYA10zjC+2QTrj20LViW6Rh1V5woZTEeW5YP2Ar8tERsotNUHzyOXyEe5Rv9Qiceg9VlCZXqTsSaqP7FSp7+T+xYEizy4eXiY9qfLyTPnop4JDo2EBI7AAbPZdEzxd5Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=h0rWbaEf; arc=none smtp.client-ip=217.70.183.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="h0rWbaEf"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 521E66000F;
-	Fri, 23 Feb 2024 15:10:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1708701060;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ydUaesQ0OVtKhYP+EhluA0cNkJa752d4qIXveokF4Ws=;
-	b=h0rWbaEfcT+buqVA4TnEgUUD0EqapemsxttQSTkXQ6OUyOpLbKRlZXN4rlvZehSOdjNM2s
-	aZ66FTmRsPx2ZxzDsA/+oo/8P36SoTYhFZBPDBDcaju++FI7SXuuwNuwCo8joKOtDwy9kk
-	uLk9Zt54c9ZuqWydu6sYstr/ViV88dwYHSBzkU1ODNgZ/6OolZXLMYf60shZb7fzJCq1cH
-	m6u/Zl57MpZzMkxAKXfBjBuXjNXELDhUV7QUmfZvNss+KkcJUQ+EgcsnnpGmMABEHNcZ5h
-	G06t+0lWrWOmPrehhKUG+8m53b6YPxA3zGrnglio20vWJnnl5RYKrTPnStaouQ==
-Date: Fri, 23 Feb 2024 16:10:57 +0100
-From: Maxime Chevallier <maxime.chevallier@bootlin.com>
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: Conor Dooley <conor@kernel.org>, Rob Herring <robh@kernel.org>, Bastien
- Curutchet <bastien.curutchet@bootlin.com>, "David S. Miller"
- <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub Kicinski
- <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Krzysztof Kozlowski
- <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>,
- Richard Cochran <richardcochran@gmail.com>, Heiner Kallweit
- <hkallweit1@gmail.com>, Russell King <linux@armlinux.org.uk>,
- netdev@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, Thomas Petazzoni
- <thomas.petazzoni@bootlin.com>, Herve Codina <herve.codina@bootlin.com>
-Subject: Re: [PATCH 1/2] dt-bindings: net: Add TI DP83640
-Message-ID: <20240223161057.07b7aa5c@device-28.home>
-In-Reply-To: <20240223160704.4018cac2@device-28.home>
-References: <20240130085935.33722-1-bastien.curutchet@bootlin.com>
-	<20240130085935.33722-2-bastien.curutchet@bootlin.com>
-	<20240130-impulsive-widow-9142a069b7fd@spud>
-	<20240131210521.GA2289883-robh@kernel.org>
-	<20240131-tummy-imperfect-e6d6f0e245e9@spud>
-	<a1e54836-51d2-4990-9444-56d9414eb28c@lunn.ch>
-	<20240223160704.4018cac2@device-28.home>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.2.0 (GTK 3.24.41; x86_64-redhat-linux-gnu)
+	 MIME-Version:Content-Type; b=ncMOZQqNVJld6YM9Bwh8zRJhnli6YesTc9i1k5cg65b5O5Vtsley4/An+XAZ9rKWMc0r2HKdfPmCZRnq018hzEJEA9DmZwTvbZqwgcwKNMEFshg+1dBh/ZvYuG8yDO8xGVdsinaWWnSe/nBUfiWdYlgoKWk6L1+F4urm+hsskSc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 00A4BC433F1;
+	Fri, 23 Feb 2024 15:13:03 +0000 (UTC)
+Date: Fri, 23 Feb 2024 10:14:56 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Jeff Layton <jlayton@kernel.org>
+Cc: linux-kernel@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Andrew Morton
+ <akpm@linux-foundation.org>, Neil Brown <neilb@suse.de>, Olga Kornievskaia
+ <kolga@netapp.com>, Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey
+ <tom@talpey.com>, Chuck Lever <chuck.lever@oracle.com>
+Subject: Re: [for-next][PATCH 06/13] NFSD: Fix nfsd_clid_class use of
+ __string_len() macro
+Message-ID: <20240223101456.25ca7bab@gandalf.local.home>
+In-Reply-To: <191757a0ccb52fefa17b690a44299442fcb4e052.camel@kernel.org>
+References: <20240223141838.985298316@goodmis.org>
+	<20240223141902.394601874@goodmis.org>
+	<191757a0ccb52fefa17b690a44299442fcb4e052.camel@kernel.org>
+X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -63,27 +39,35 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-GND-Sasl: maxime.chevallier@bootlin.com
 
+On Fri, 23 Feb 2024 09:36:14 -0500
+Jeff Layton <jlayton@kernel.org> wrote:
+
+> On Fri, 2024-02-23 at 09:18 -0500, Steven Rostedt wrote:
+> > From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+> > 
+> > I'm working on restructuring the __string* macros so that it doesn't need
+> > to recalculate the string twice. That is, it will save it off when
+> > processing __string() and the __assign_str() will not need to do the work
+> > again as it currently does.
+> > 
+> > Currently __string_len(item, src, len) doesn't actually use "src", but my
+> > changes will require src to be correct as that is where the __assign_str()
+> > will get its value from.
+> > 
+> > The event class nfsd_clid_class has:
+> > 
+> >   __string_len(name, name, clp->cl_name.len)
+> > 
+> > But the second "name" does not exist and causes my changes to fail to
+> > build. That second parameter should be: clp->cl_name.data.
+> > 
+> > Link: https://lore.kernel.org/linux-trace-kernel/20240222122828.3d8d213c@gandalf.local.home
+> > 
 
 > 
-> I've missed that thread initially. I guess that if Fiber is to be used,
-> this would be done through sfp, then we have all the regular interfaces
-> to configure the phy_interface_mode, in that case that would be
-> 100BaseX.
-> 
-> So, a sane behaviour could simply be to configure the PHY in copper
-> mode by default, without relying on any DT property ? If anyone wants to
-> use fiber mode, then they would have to implement the
-> sfp_upstreamp_ops, which would take care of reconfiguring the MDI
-> interface of the PHY in the correct mode.
+> Acked-by: Jeff Layton <jlayton@kernel.org>
 
-I missed the fact that this isn't a new driver... So this would indeed
-break existing setups who would have fiber-mode strapped-in but don't
-use SFP for some reason :(
+Thanks!
 
-Maxime
-
-> Maxime
-> 
-
+-- Steve
