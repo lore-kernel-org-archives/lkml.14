@@ -1,87 +1,138 @@
-Received: from mail-pj1-f44.google.com (mail-pj1-f44.google.com [209.85.216.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28DD3823A9;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADE7F5C60F;
 	Fri, 23 Feb 2024 14:48:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.44
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708699736; cv=none; b=OPkjjiI+bGYL+sYNJEayx/Mp9JLZIoWYPmBLfKmy6DzbathRnIb+Qn92u8mtHAPGsqa8sB7Or40XnPxMGZ3FikfGbZm7ociXvOyRKSf99ADGWOHhrVo0K+MdOkPJbtfkDBxj5eCRIsGkIMbA0MnR+fNhGP0onJszwiDksiTLJcU=
+	t=1708699737; cv=none; b=JgaDKIjPJ+NiIlfY5mKkx3F0/0067WPWb4Zzpb/8bcV0cHzi0j3CRjKtCnkS4lgeA0BltpS44hZ1x5lPR7L3Opntq+JUN148NWMfmI4L3oOv16KXuiUw9rqvdjw9lkSW/Dn+9ra8/SNzOr5rDTJZ0pLf1O5wla7XlQM6XaIwx0I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708699736; c=relaxed/simple;
-	bh=8JApompvM0J/gpnwcLTup3cUj8M9W3A4GPR/LpT+CDE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=TfI0ufxryYtvxpDioDs4nmLmak3BQxYv71fz72T1IBDH6Lu8SDC0xg7K3wIYMvf75WzxUnnKOicPFH+jUjfTA1d1aXSJPO8vnWKZ8cwF95r2l3gxLE91qTMl2QMNJsOV5nXkRbfzSGFthIXupyG87ZUOFlz001PiY3BE4NrvV1s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZWgXK3H3; arc=none smtp.client-ip=209.85.216.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1708699737; c=relaxed/simple;
+	bh=sUI5hJ3jZ135N0buYIvZdIjDEI5T2GRIwmaUXAbq2Io=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
+	 In-Reply-To:To:CC; b=Y4Wog7F/5OuD6SwfA9WCJ3E24amcpRmHWPZ4D7uBHvrywkPh0XTpVpx3VeDhHe4oJOz6GbqS3USEnXTqQTMbmJMw8gMmTnLUOJPMe2uLaJR76Z1/m0tYdz8jnnjU//0j/8Yw5WpJDaH0AGiEo2qnWe7bYmgfwC5p9ayF+uWR58w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Rz4CNhMi; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZWgXK3H3"
-Received: by mail-pj1-f44.google.com with SMTP id 98e67ed59e1d1-299b92948a6so690731a91.3;
-        Fri, 23 Feb 2024 06:48:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1708699734; x=1709304534; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=8JApompvM0J/gpnwcLTup3cUj8M9W3A4GPR/LpT+CDE=;
-        b=ZWgXK3H37YHGevUEcPLFXnRx2IejpyYb/tMr4AU/ozLaCqVXFGEoRw7SWVQf97Pj8u
-         OieD0TeQQA3Dtf7yjacIEHiq/1rmXC2Qjscij6As9isjdPlWKxIbVjfu7kDsS9lteETk
-         QsX6vWLSBjkr6E7I6xhRukhQ0s/s11WmfdfaW2fXbfvvlrYrapwq25xYM18u3omv3e8V
-         LT3Pin/8ymRkGsz3XDGvhMaF21BuHYnKrasIfre37XDdTzhdZPzq1wslpREQuxRCQDxt
-         W1ktEGynTZM7UUYBi931Ys0WouAleX+8ymF0+x00z+T3sSUBzxZ/XXqRDBbPJjVEp8Hq
-         muLA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708699734; x=1709304534;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=8JApompvM0J/gpnwcLTup3cUj8M9W3A4GPR/LpT+CDE=;
-        b=ikjQUiVZl/nhVTBoDU1s/Q73LwZVgRNEMKAPwHhki6k0U0xtHd21CIMfE3pMrGGdxM
-         VKapEEOZQ0/fkVcuzmR9q9vtf7V+7BvtLKv0jmkjhOXaNYy1k//GePybviE3hkctRERh
-         YwUSCzBaRQZLD+dYjsaO8+ZYFr6SEhPpyJZvdy50Hw/GznWTHbotth4+ExJchIsRgMG2
-         StTkqlAwcjbrsrK8LylgRf8ntzqw0TxOg0ylCMNjg7kvRnuxY1LVI8RZmEOdJnh04rkN
-         MwpPE4XmLNc7LNZc8gwhcNbCNWvxACVsNGp4SuUEin81qd7uKXU98ENL8A0nrbw7MZxC
-         ZOhw==
-X-Forwarded-Encrypted: i=1; AJvYcCVDK7bCv+6oZBxzZpOEbB5FhLzAxKMCc0Pv4c3EycosJXuRvOpF8WLnfRuGhaemPGnIwz5dKlns6FJiJ8F2zK5qXAFHvMXqP3uMi2H7WSBPF6FJ59H6h+Ic0bux4AWqGboAKC5iFP3eq/uUEW47Qp1BMeSVcJ1ZM8DeKET0vRS7kpKdy0AVg8I=
-X-Gm-Message-State: AOJu0YwycSpXEYimlvwwqRtIzHPPkQno8PFdf0mg0/UYsu+whMridG4i
-	etwxuyvXCv8n0Kx1wbJnIVmbSfYbz21/fwB1ajt4tTLmhVTtsj65gDfUBqCu+LHjTfFe7dIBw9S
-	xwQA3CqrJsJe95Qh2256MIMhO4NM=
-X-Google-Smtp-Source: AGHT+IEx80L+NjAGNZBT0jrWK6YYZABf331Gny44+Vt2581VZkWmKe7cyuzJfytUyxpNvh1A/stzEYfy6+bcfMkUw/I=
-X-Received: by 2002:a17:90a:68ce:b0:29a:2788:c9d1 with SMTP id
- q14-20020a17090a68ce00b0029a2788c9d1mr7269pjj.39.1708699734458; Fri, 23 Feb
- 2024 06:48:54 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Rz4CNhMi"
+Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 41NDU2a9007337;
+	Fri, 23 Feb 2024 14:48:47 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	from:date:subject:mime-version:content-type
+	:content-transfer-encoding:message-id:references:in-reply-to:to
+	:cc; s=qcppdkim1; bh=2ilRA4F8XouQOkHZIvowRMIrWXeaZkTccgPDvx1p9nE
+	=; b=Rz4CNhMiSVHG4vrHRo+SkaSbstpSIjXAJ0OV6aXNcbl5CMt2/U4KwdaBCOb
+	p8SAMfLInNT9BnMQMhHm5zUlSLm8lEgLIb6iDm/R3cGyQru/RvrNZlsVk8P9I9dp
+	q00cwYnkEVBY/Z4koptzINgSZFPWd+/5mr1ONIYXQ3ELqrgOiySLzdXt+lVCYdY9
+	vWKW7uFh79ZB2WTe9Q8/j0upfwWWtXHprUJTFd33bPkC0SAgJIisk8EXreyVAMEw
+	ZB0BS7AtnaLLZLFfAV7/CBcLQ9lslQs7A1sfH9WLHS7Y60/3vEYzYDDKngKU4m1k
+	ldPin8R/GmtPMsjgYYyuWxglVuw==
+Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3weqcf8v9s-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 23 Feb 2024 14:48:47 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 41NEmkY9017016
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 23 Feb 2024 14:48:46 GMT
+Received: from hu-krichai-hyd.qualcomm.com (10.80.80.8) by
+ nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.40; Fri, 23 Feb 2024 06:48:39 -0800
+From: Krishna chaitanya chundru <quic_krichai@quicinc.com>
+Date: Fri, 23 Feb 2024 20:18:01 +0530
+Subject: [PATCH v7 4/7] dt-bindings: pci: qcom: Add opp table
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240223-leverage-walmart-5424542cd8bd@spud> <20240223-palatable-quintuple-ed221a517407@spud>
-In-Reply-To: <20240223-palatable-quintuple-ed221a517407@spud>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Fri, 23 Feb 2024 15:48:42 +0100
-Message-ID: <CANiq72=z+aO2cvmyHNYOVQyAXLiZeM5KV+YrMXAsCkotJFcHag@mail.gmail.com>
-Subject: Re: [PATCH v2 3/3] RISC-V: enable building 64-bit kernels with rust support
-To: Conor Dooley <conor@kernel.org>
-Cc: linux-riscv@lists.infradead.org, Conor Dooley <conor.dooley@microchip.com>, 
-	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Wedson Almeida Filho <wedsonaf@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Jonathan Corbet <corbet@lwn.net>, Paul Walmsley <paul.walmsley@sifive.com>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Nathan Chancellor <nathan@kernel.org>, 
-	Nick Desaulniers <ndesaulniers@google.com>, Tom Rix <trix@redhat.com>, 
-	rust-for-linux@vger.kernel.org, linux-doc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, llvm@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-ID: <20240223-opp_support-v7-4-10b4363d7e71@quicinc.com>
+References: <20240223-opp_support-v7-0-10b4363d7e71@quicinc.com>
+In-Reply-To: <20240223-opp_support-v7-0-10b4363d7e71@quicinc.com>
+To: Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio
+	<konrad.dybcio@linaro.org>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+        Rob Herring
+	<robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+        Krzysztof Kozlowski
+	<krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Rob Herring
+	<robh+dt@kernel.org>,
+        Johan Hovold <johan+linaro@kernel.org>,
+        Brian Masney
+	<bmasney@redhat.com>, Georgi Djakov <djakov@kernel.org>
+CC: <linux-arm-msm@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <vireshk@kernel.org>, <quic_vbadigan@quicinc.com>,
+        <quic_skananth@quicinc.com>, <quic_nitegupt@quicinc.com>,
+        <quic_parass@quicinc.com>,
+        Krishna chaitanya chundru
+	<quic_krichai@quicinc.com>,
+        Krzysztof Kozlowski
+	<krzysztof.kozlowski@linaro.org>
+X-Mailer: b4 0.13-dev-83828
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1708699692; l=1100;
+ i=quic_krichai@quicinc.com; s=20230907; h=from:subject:message-id;
+ bh=sUI5hJ3jZ135N0buYIvZdIjDEI5T2GRIwmaUXAbq2Io=;
+ b=rvAl5ycEVrHXHRamaQsUvfLfLWU7+GLK4wOrDyC8Id/jNHkQkEuQHsnWG1LCu2W2DjbW4lWlK
+ Nf9SL3HFN2ZCOETppS1sxPUyj34X/Lo/x9m+bf1Hf2kXygeZ2rHxL80
+X-Developer-Key: i=quic_krichai@quicinc.com; a=ed25519;
+ pk=10CL2pdAKFyzyOHbfSWHCD0X0my7CXxj8gJScmn1FAg=
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: earLYDZASq_1d-e4n4lx5YliBjlQ0bXG
+X-Proofpoint-GUID: earLYDZASq_1d-e4n4lx5YliBjlQ0bXG
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-02-22_15,2024-02-23_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 mlxlogscore=916
+ impostorscore=0 clxscore=1015 priorityscore=1501 suspectscore=0
+ spamscore=0 phishscore=0 lowpriorityscore=0 mlxscore=0 adultscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2402120000 definitions=main-2402230108
 
-On Fri, Feb 23, 2024 at 2:38=E2=80=AFPM Conor Dooley <conor@kernel.org> wro=
-te:
->
-> As 64-bit RISC-V is now supported, add it to the arch support table,
-> taking the opportunity to sort the table in alphabetical order.
+PCIe needs to choose the appropriate performance state of RPMH power
+domain based upon the PCIe gen speed.
 
-Nit: this can be removed now.
+Adding the Operating Performance Points table allows to adjust power
+domain performance state and icc peak bw, depending on the PCIe gen
+speed and width.
 
-Cheers,
-Miguel
+Acked-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
+---
+ Documentation/devicetree/bindings/pci/qcom,pcie.yaml | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
+index 5ad5c4cfd2a8..e1d75cabb1a9 100644
+--- a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
++++ b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
+@@ -127,6 +127,10 @@ properties:
+     description: GPIO controlled connection to WAKE# signal
+     maxItems: 1
+ 
++  operating-points-v2: true
++  opp-table:
++    type: object
++
+ required:
+   - compatible
+   - reg
+
+-- 
+2.42.0
+
