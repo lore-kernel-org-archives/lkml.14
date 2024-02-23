@@ -1,83 +1,77 @@
-Received: from mail-qk1-f181.google.com (mail-qk1-f181.google.com [209.85.222.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69352AD4B
-	for <linux-kernel@vger.kernel.org>; Fri, 23 Feb 2024 01:43:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C01ABAD53;
+	Fri, 23 Feb 2024 01:45:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708652624; cv=none; b=JV0O6I8Qt6bvWijxD1eOEasRb+RNL55YjXIXxcTPcJjqZ7JrLZQdFtT2uxNZWsEouSImBw1tEjIwOGseM9XNvMG79mL441TzZuZT9WZte1Wa4skxOQhVnhxSQtcKzKGZ3KsnZdTnqdugkrECg/x2SZDBsUhv3c5rNa0qKgppoCU=
+	t=1708652712; cv=none; b=cQgycTtw5w7fMyH80AD+0P8SguxmDZn6eirE0EaTVUZ26fRv9nLHKXJA04uUyO8KJVBSqK8kt0grthnvZ0bUp88L+PZ/fqAeHCiBfRRHZDykZicuIEGnZ9Q8GhGdzvQ3EsZ374k6k574lfN6TMwHEZrJU2a3yF33qCMoPwh6Vn8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708652624; c=relaxed/simple;
-	bh=Q68JTkmTvaca/7XKfrcLjsI6zB7P1f/ULoMPv/7Ii5w=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=B5fXSpG0gWLcRrA0/H55a0n8x5D/QmmdskWw4MUEJSncOZ5JxR3i0v6zJfoAcxxUX1mtrsYhfCGjzm44qQu29kMJJ9UchwQ4KBdm0IrBJjsOHb9UWKI17Fbs6Yp9oyOS1xdtgs/aLU7zjk8Z+aA/qx/O2XB/GGYEkaygWD35RhU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=U5ELMvfu; arc=none smtp.client-ip=209.85.222.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="U5ELMvfu"
-Received: by mail-qk1-f181.google.com with SMTP id af79cd13be357-787ad0290adso14527885a.2
-        for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 17:43:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1708652622; x=1709257422; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Q68JTkmTvaca/7XKfrcLjsI6zB7P1f/ULoMPv/7Ii5w=;
-        b=U5ELMvfumvWRZxc/bD8Twdo0zXNP3rsWj1d+412tg8j3RX+yq33iZuepVo3BoPUWgo
-         Ma7Y/s4eA7a6jmOUQ18rqRMAxyBL6ZTZ6M8xniCDXm4E/D2/dLrhfyBZIs9Yn+2/Vkz5
-         h34XJMer6kALIED5dF7tW7/b5BRm9qGSitzxk=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708652622; x=1709257422;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Q68JTkmTvaca/7XKfrcLjsI6zB7P1f/ULoMPv/7Ii5w=;
-        b=Uck2BT1sAkUPsOLcnT79dpkdFABsajWhscbKNQktdACH5tl0Tx67Oly4ndHAfQDoNr
-         R2Ro7yka/26BqUfizFcElIpmtC3I2r5nZTBcpmhPed5htqb6w9B1qf6XE7/xn+LtqJiN
-         Ksc3IwBG8MYSoxF6T/vgkyuF95wFefKzTGtbx7l+zahEcZElOjYynLBh7ksYk3ettPBV
-         zyKSRLsDOGFPI8gEGIkES8iu+mbIF317WGmEJoXkvuZeybPEwV0Oi+ObtxYFqP05jB/u
-         TYRxtNKqNod5dYugjkRjner7dJn9hk46oCXKQWzOwXEDHkiZrbq6UV29rVQL0k7deV3b
-         uftw==
-X-Forwarded-Encrypted: i=1; AJvYcCVbXnlqTq0rH8N4dpJhOv+5XhXIJ0poxU9aEWE5mMkcrB0Cv9lUEGrNptbKuqJtOqrzwLUYljUSgb7Uzoo8SsROJQb2kcKEShRHnZhf
-X-Gm-Message-State: AOJu0Yz7uvmtQUG077rbUZx2efNUgu40QOySn5+MXvy6DvlpxIjIpbQf
-	v34Ivvya19q8zAaWkADenEwNK2veNw3Ie4YoHFMMdY/mr3kPwG74QnCL5QstfvuFF4NfyqMcb96
-	YZBbbbKyY3Loyp4cpzgGfNMb5JYpMqjT+Wk/g
-X-Google-Smtp-Source: AGHT+IE+61R6YeJrVypveqB8cGLlYKqNb6UwFmpsKtWuEUYQ3EDm9X5NTDZSuB7qWlGuX0b0wwD3TT+QJpZoN+s/kZE=
-X-Received: by 2002:a0c:d988:0:b0:68f:6a2e:cfc5 with SMTP id
- y8-20020a0cd988000000b0068f6a2ecfc5mr872706qvj.5.1708652622374; Thu, 22 Feb
- 2024 17:43:42 -0800 (PST)
+	s=arc-20240116; t=1708652712; c=relaxed/simple;
+	bh=n6RPnC6yufWY3n3pn0vWSMZ9igCtwEYuAlgxz4yas28=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=pnqhgnz1FFbs/Gt/Px/+2ZrSoWvMQh7e2wdf3hsBOeoBZM+EbdFmxnaAPOnh6fjgJN6ievapZ1JC/aWhXzgvswbr9vCj9HUck8/v2ECVemLJhda2X/hvnIvhMqlrcSKG791Ep8fGs0+YprOtq4scPGZR8wuzOzARrHeTCth2tVQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6F8AFC433C7;
+	Fri, 23 Feb 2024 01:45:10 +0000 (UTC)
+Date: Thu, 22 Feb 2024 20:47:01 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Huang Yiwei <quic_hyiwei@quicinc.com>
+Cc: <mhiramat@kernel.org>, <mark.rutland@arm.com>, <mcgrof@kernel.org>,
+ <keescook@chromium.org>, <j.granados@samsung.com>,
+ <mathieu.desnoyers@efficios.com>, <corbet@lwn.net>,
+ <linux-kernel@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
+ <linux-fsdevel@vger.kernel.org>, <linux-doc@vger.kernel.org>,
+ <quic_bjorande@quicinc.com>, <quic_tsoni@quicinc.com>,
+ <quic_satyap@quicinc.com>, <quic_aiquny@quicinc.com>, <kernel@quicinc.com>,
+ Ross Zwisler <zwisler@google.com>, Joel Fernandes <joel@joelfernandes.org>
+Subject: Re: [PATCH v5] tracing: Support to dump instance traces by
+ ftrace_dump_on_oops
+Message-ID: <20240222204701.6b9de71e@gandalf.local.home>
+In-Reply-To: <20240208131814.614691-1-quic_hyiwei@quicinc.com>
+References: <20240208131814.614691-1-quic_hyiwei@quicinc.com>
+X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240223010328.2826774-1-jthies@google.com> <20240223010328.2826774-2-jthies@google.com>
-In-Reply-To: <20240223010328.2826774-2-jthies@google.com>
-From: Prashant Malani <pmalani@chromium.org>
-Date: Thu, 22 Feb 2024 17:43:30 -0800
-Message-ID: <CACeCKadU+A=ydQq_pQdfwQ3qLT=ydLt6PPdLNQaqbzH53W2D9A@mail.gmail.com>
-Subject: Re: [PATCH 1/4] usb: typec: ucsi: Clean up UCSI_CABLE_PROP macros
-To: Jameson Thies <jthies@google.com>
-Cc: heikki.krogerus@linux.intel.com, linux-usb@vger.kernel.org, 
-	bleung@google.com, abhishekpandit@chromium.org, andersson@kernel.org, 
-	dmitry.baryshkov@linaro.org, fabrice.gasnier@foss.st.com, 
-	gregkh@linuxfoundation.org, hdegoede@redhat.com, neil.armstrong@linaro.org, 
-	rajaram.regupathy@intel.com, saranya.gopal@intel.com, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Feb 22, 2024 at 5:04=E2=80=AFPM Jameson Thies <jthies@google.com> w=
-rote:
->
-> Clean up UCSI_CABLE_PROP macros by fixing a bitmask shifting error for
-> plug type and updating the modal support macro for consistent naming.
->
-> Fixes: 3cf657f07918 ("usb: typec: ucsi: Remove all bit-fields")
-> Signed-off-by: Jameson Thies <jthies@google.com>
- I think you should CC stable@ for this patch.
+On Thu, 8 Feb 2024 21:18:14 +0800
+Huang Yiwei <quic_hyiwei@quicinc.com> wrote:
 
-That apart:
-Reviewed-by: Prashant Malani <pmalani@chromium.org>
+> Currently ftrace only dumps the global trace buffer on an OOPs. For
+> debugging a production usecase, instance trace will be helpful to
+> check specific problems since global trace buffer may be used for
+> other purposes.
+>=20
+> This patch extend the ftrace_dump_on_oops parameter to dump a specific
+> or multiple trace instances:
+>=20
+>   - ftrace_dump_on_oops=3D0: as before -- don't dump
+>   - ftrace_dump_on_oops[=3D1]: as before -- dump the global trace buffer
+>   on all CPUs
+>   - ftrace_dump_on_oops=3D2 or =3Dorig_cpu: as before -- dump the global
+>   trace buffer on CPU that triggered the oops
+>   - ftrace_dump_on_oops=3D<instance_name>: new behavior -- dump the
+>   tracing instance matching <instance_name>
+>   - ftrace_dump_on_oops[=3D2/orig_cpu],<instance1_name>[=3D2/orig_cpu],
+>   <instrance2_name>[=3D2/orig_cpu]: new behavior -- dump the global trace
+>   buffer and multiple instance buffer on all CPUs, or only dump on CPU
+>   that triggered the oops if =3D2 or =3Dorig_cpu is given
+>=20
+> Also, the sysctl node can handle the input accordingly.
+>=20
+> Cc: Ross Zwisler <zwisler@google.com>
+> Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+> Signed-off-by: Huang Yiwei <quic_hyiwei@quicinc.com>
+
+This patch failed with the following warning:
+
+  kernel/trace/trace.c:10029:6: warning: no previous prototype for =E2=80=
+=98ftrace_dump_one=E2=80=99 [-Wmissing-prototypes]
+
+-- Steve
