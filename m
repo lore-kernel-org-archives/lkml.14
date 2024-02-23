@@ -1,33 +1,49 @@
-Received: from mail.nfschina.com (unknown [42.101.60.195])
-	by smtp.subspace.kernel.org (Postfix) with SMTP id 17BDC18B04;
-	Fri, 23 Feb 2024 09:37:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=42.101.60.195
+Received: from esa2.ltts.com (unknown [14.140.155.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEAB05BAC0;
+	Fri, 23 Feb 2024 09:37:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=14.140.155.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708681049; cv=none; b=Rnm7fFuWyqY2jZ9JflKzsJwAuPUOwYwBe3J4V7OPtitRzSrDyeVaqTEo+1/vo4tauQKDDJv2vIa8rLUe037795zf7ZHbX7blPmYL59maptHjqlILWYPcYV+8sXlPNBCHtdp17QMhxVE3scQCQLtbigLpDQ/lA04AgpBLxaaq3Sk=
+	t=1708681059; cv=none; b=HJi8MYVklBmE9fbyx/JYMYszgqjA4lhZewR6ddvJ250a1tdtrbYLYXP6ln4Wpv5jDX8ZPbDwZVV0o58mzI2NB9alb4OGrkJ1KZs6bFgAvlHPDiGmiM1r2lkslCFJLflhY3W0FjIPsoW0coSZwFkYhHk3XV3qTsiL8Ex09bsJjkI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708681049; c=relaxed/simple;
-	bh=jzGH6BnS+LEtgknawVwnW9qhr2Z/pUoY5FYpMz3a70E=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=tPv5BmAHy/nGQOggmd/ymo1A1VHPsGrnJAC33umROUe0UN6BsgR9JZfEPbDQvBwqk86yPhs4oZFQ+53njuLFwUKvE0xJk5FsNZY0DY3vM0MNYNCBirqZArbL0B/P9y1vL5E2GL1TUKbH2WIJn5XWf+pnz+4vXO8YQm+EwsN7UBc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nfschina.com; spf=pass smtp.mailfrom=nfschina.com; arc=none smtp.client-ip=42.101.60.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nfschina.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nfschina.com
-Received: from localhost.localdomain (unknown [180.167.10.98])
-	by mail.nfschina.com (Maildata Gateway V2.8.8) with ESMTPSA id A61F2604A6F93;
-	Fri, 23 Feb 2024 17:37:11 +0800 (CST)
-X-MD-Sfrom: suhui@nfschina.com
-X-MD-SrcIP: 180.167.10.98
-From: Su Hui <suhui@nfschina.com>
-To: Mike Marshall <hubcap@omnibond.com>,
-	Martin Brandenburg <martin@omnibond.com>
-Cc: Dan Carpenter <dan.carpenter@linaro.org>,
-	devel@lists.orangefs.org,
-	linux-kernel@vger.kernel.org,
-	kernel-janitors@vger.kernel.org,
-	Su Hui <suhui@nfschina.com>
-Subject: [PATCH next] orangefs: re-fix sb refcount leak when allocate sb info failed.
-Date: Fri, 23 Feb 2024 17:36:41 +0800
-Message-Id: <20240223093639.1794556-1-suhui@nfschina.com>
-X-Mailer: git-send-email 2.30.2
+	s=arc-20240116; t=1708681059; c=relaxed/simple;
+	bh=YhRydBMoSfK2yiDbquWm5uDTbUoeCWofGtGmhmE1C5M=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=kI9mVY9HBBdnhrtBFmdveERIqAmDPPP+QHKcxRSedbjCSqCpTFlp/vGnGWTjnmD5QDwQJ6kysrxOf3yfmFPBXKUKRCzFqGnn8Q77WhRSvRpc8esu7i0zAyutQ81bMc3/2bRSFstkxNBIUK1eYN8mJh+LmrMVoJqaCuniRFrn9SA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ltts.com; spf=pass smtp.mailfrom=ltts.com; arc=none smtp.client-ip=14.140.155.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ltts.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ltts.com
+IronPort-SDR: RDo4bVXk5djaunyNJnrk5wFpmCUBMBQPLXHa2b2NXT1cIqQSsX/LDayRDlO6J6cMBCpIVIHwOP
+ 0hxqbGe/UvpA==
+Received: from unknown (HELO localhost.localdomain) ([192.168.34.55])
+  by esa2.ltts.com with ESMTP; 23 Feb 2024 15:07:13 +0530
+From: Bhargav Raviprakash <bhargav.r@ltts.com>
+To: linux-kernel@vger.kernel.org
+Cc: m.nirmaladevi@ltts.com,
+	lee@kernel.org,
+	robh+dt@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org,
+	conor+dt@kernel.org,
+	jpanis@baylibre.com,
+	devicetree@vger.kernel.org,
+	arnd@arndb.de,
+	gregkh@linuxfoundation.org,
+	lgirdwood@gmail.com,
+	broonie@kernel.org,
+	linus.walleij@linaro.org,
+	linux-gpio@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	nm@ti.com,
+	vigneshr@ti.com,
+	kristo@kernel.org,
+	Bhargav Raviprakash <bhargav.r@ltts.com>
+Subject: [PATCH v2 04/14] dt-bindings: mfd: ti,tps6594: Add TI TPS65224 PMIC
+Date: Fri, 23 Feb 2024 15:06:51 +0530
+Message-Id: <20240223093701.66034-5-bhargav.r@ltts.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20240223093701.66034-1-bhargav.r@ltts.com>
+References: <20240223093701.66034-1-bhargav.r@ltts.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -36,42 +52,31 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This problem was previously fixed by commit ac2c63757f4f ("orangefs: Fix sb
-refcount leak when allocate sb info failed.").
-Add a judgement to fix NULL deference problem and also avoid refcount
-leak problem.
+TPS65224 is a Power Management IC with 4 Buck regulators and 3 LDO
+regulators, it includes additional features like GPIOs, watchdog, ESMs
+(Error Signal Monitor), and PFSM (Pre-configurable Finite State Machine)
+managing the state of the device.
 
-Fixes: 9bf93dcfc453 ("Julia Lawall reported this null pointer dereference, this should fix it.")
-Signed-off-by: Su Hui <suhui@nfschina.com>
+In addition TPS65224 has support for 12-bit ADC and does not have RTC
+unlike TPS6594.
+
+Signed-off-by: Bhargav Raviprakash <bhargav.r@ltts.com>
 ---
-ps: Thanks for Dan's suggestion[1].
-[1]: https://lore.kernel.org/all/c4bf77fb-c289-4f5d-9f20-e0861a543d91@moroto.mountain/
- fs/orangefs/super.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ Documentation/devicetree/bindings/mfd/ti,tps6594.yaml | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/fs/orangefs/super.c b/fs/orangefs/super.c
-index 34849b4a3243..e189e1aae00b 100644
---- a/fs/orangefs/super.c
-+++ b/fs/orangefs/super.c
-@@ -527,7 +527,7 @@ struct dentry *orangefs_mount(struct file_system_type *fst,
- 	sb->s_fs_info = kzalloc(sizeof(struct orangefs_sb_info_s), GFP_KERNEL);
- 	if (!ORANGEFS_SB(sb)) {
- 		d = ERR_PTR(-ENOMEM);
--		goto free_op;
-+		goto free_sb_and_op;
- 	}
+diff --git a/Documentation/devicetree/bindings/mfd/ti,tps6594.yaml b/Documentation/devicetree/bindings/mfd/ti,tps6594.yaml
+index 9d43376be..6341b6070 100644
+--- a/Documentation/devicetree/bindings/mfd/ti,tps6594.yaml
++++ b/Documentation/devicetree/bindings/mfd/ti,tps6594.yaml
+@@ -21,6 +21,7 @@ properties:
+       - ti,lp8764-q1
+       - ti,tps6593-q1
+       - ti,tps6594-q1
++      - ti,tps65224-q1
  
- 	ret = orangefs_fill_sb(sb,
-@@ -581,7 +581,8 @@ struct dentry *orangefs_mount(struct file_system_type *fst,
- 
- free_sb_and_op:
- 	/* Will call orangefs_kill_sb with sb not in list. */
--	ORANGEFS_SB(sb)->no_list = 1;
-+	if (ORANGEFS_SB(sb))
-+		ORANGEFS_SB(sb)->no_list = 1;
- 	/* ORANGEFS_VFS_OP_FS_UMOUNT is done by orangefs_kill_sb. */
- 	deactivate_locked_super(sb);
- free_op:
+   reg:
+     description: I2C slave address or SPI chip select number.
 -- 
-2.30.2
+2.25.1
 
