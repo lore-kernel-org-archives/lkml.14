@@ -1,201 +1,197 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa1-f47.google.com (mail-oa1-f47.google.com [209.85.160.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D8F381ACC;
-	Fri, 23 Feb 2024 14:04:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 674C87F7E8
+	for <linux-kernel@vger.kernel.org>; Fri, 23 Feb 2024 14:04:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708697050; cv=none; b=p1I707Vw6JbCKEEuGQVJP5eZmkm+h7U6pPk4FEx0H9EFYVpwSVgBIDuhrr8cIffyUymzHXGsD7ZGNDuqaujep5ZK0ntWZRpBCZvSuizymEQenxKtq7sui3jJILfQ1WI3TrK4o25nceOnEs/uP2EAxlMoicctVKs2vyaCTucf8EI=
+	t=1708697067; cv=none; b=C1cs8LOQNDBDvM/ePXT+bAJV5oa4usq+MyJ0XBSHl9ZChiLUFdQLf+Sx24bD1WblYrUOC1A0LhT9oJrUxM/9sAt4ptmVV+67P4anZflnGrMRurMALT4JG9qKEJmlPmGRIEeXwbDVLRozwkHjO8w3886TGew6c3eR2drwvTlYzEc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708697050; c=relaxed/simple;
-	bh=xPsYxYaXctL6OwVxC6q/yhBVDQBb7DxQdGMybM75kxk=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=ep/3vBGmFkhvotGcDElZvr1r4NxMBpni7V0higr0pxlMAHgmfMdx0z5Pg3QdjMtXM4xTE6+6HnXELin5Hn2/HzDxMVZQgGoP5ChpTWDEUEDdzuwP9O8FUFko1kSe3FAx6YOGjn3DsFjLNR52lKfpinVL9DKAL1T9+9Txok0YMnE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=qualcomm.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=NLRK/UpB; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qualcomm.com
+	s=arc-20240116; t=1708697067; c=relaxed/simple;
+	bh=dBiElgOr95kAXqHLkrS8jy2/CWPZ4qM99KR7X+Crw9I=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Gyt4Gd7vYaag8aGNSSz5o1gmzdB6tCxqjqtRfdm+GonDa4VYQjCCSsB8UaZsJ7qMfEmo7tXkGEeokRKxIvadd8WKjsKiHCJwmwe0xDN+vHwSCzAMUw/Sn2YAN3ceBjltfGJVOFEj3KEQyi46c1/F9c8mvE3oh6+qOPkfYEUL/zU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com; spf=pass smtp.mailfrom=sifive.com; dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b=aZKL1Y9U; arc=none smtp.client-ip=209.85.160.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sifive.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="NLRK/UpB"
-Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 41ND8GAk022566;
-	Fri, 23 Feb 2024 14:04:00 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	from:to:cc:subject:date:message-id:in-reply-to:references; s=
-	qcppdkim1; bh=ZYjOvKqIdGSZ4UkdmEQfuRqPiU0eAQeT2YEEkDuGum4=; b=NL
-	RK/UpBtz/5uVRvis7pdgwkutUKMLZHu89nuL5XPumvJisZIxcsoA/PHG9YHqY6Kn
-	W4qGx9nyndLFqR7PkJovGbDmONPsluzxL6daUFilfB8oEsI+6Poj1KAwkkzZdUqJ
-	pYmvp0dqIXYPvPEZ4+ocr+ExWCi3RMLXxGmX9mDiZUjvNMSU2Wzp3tM3/c/Q0zal
-	uAmYpCux7WEL9KrfUENS/AJuCY41ZxK89VaaxpcTa98wUPi7YT1qFCWPd1OrjGN7
-	SPm9e0/jB15vm+9mjBUYLV3tT7svdeWPO2vM32Rjzm64wh++QS0yMTyoJwoaSRMM
-	a6cpwT4hVVR/7oieXDHA==
-Received: from apblrppmta01.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3weqcf8sgn-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 23 Feb 2024 14:03:59 +0000 (GMT)
-Received: from pps.filterd (APBLRPPMTA01.qualcomm.com [127.0.0.1])
-	by APBLRPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTP id 41NE3rad027358;
-	Fri, 23 Feb 2024 14:03:55 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-	by APBLRPPMTA01.qualcomm.com (PPS) with ESMTP id 3wanvme288-1;
-	Fri, 23 Feb 2024 14:03:55 +0000
-Received: from APBLRPPMTA01.qualcomm.com (APBLRPPMTA01.qualcomm.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 41NE3teL027395;
-	Fri, 23 Feb 2024 14:03:55 GMT
-Received: from hu-sgudaval-hyd.qualcomm.com (hu-msarkar-hyd.qualcomm.com [10.213.111.194])
-	by APBLRPPMTA01.qualcomm.com (PPS) with ESMTP id 41NE3two027392;
-	Fri, 23 Feb 2024 14:03:55 +0000
-Received: by hu-sgudaval-hyd.qualcomm.com (Postfix, from userid 3891782)
-	id 6C35A14F8; Fri, 23 Feb 2024 19:33:54 +0530 (+0530)
-From: Mrinmay Sarkar <quic_msarkar@quicinc.com>
-To: andersson@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-        conor+dt@kernel.org, konrad.dybcio@linaro.org,
-        manivannan.sadhasivam@linaro.org, robh@kernel.org
-Cc: quic_shazhuss@quicinc.com, quic_nitegupt@quicinc.com,
-        quic_ramkri@quicinc.com, quic_nayiluri@quicinc.com,
-        dmitry.baryshkov@linaro.org, quic_krichai@quicinc.com,
-        quic_vbadigan@quicinc.com, quic_schintav@quicinc.com,
-        Mrinmay Sarkar <quic_msarkar@quicinc.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org
-Subject: [PATCH v5 2/3] PCI: qcom-ep: Enable cache coherency for SA8775P EP
-Date: Fri, 23 Feb 2024 19:33:39 +0530
-Message-Id: <1708697021-16877-3-git-send-email-quic_msarkar@quicinc.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1708697021-16877-1-git-send-email-quic_msarkar@quicinc.com>
-References: <1708697021-16877-1-git-send-email-quic_msarkar@quicinc.com>
-X-QCInternal: smtphost
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: 1UHkap_p5j5UxBqNwVhWGqZUp_FiDhN1
-X-Proofpoint-GUID: 1UHkap_p5j5UxBqNwVhWGqZUp_FiDhN1
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-02-22_15,2024-02-23_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 mlxlogscore=999
- impostorscore=0 clxscore=1015 priorityscore=1501 suspectscore=0
- spamscore=0 phishscore=0 lowpriorityscore=0 mlxscore=0 adultscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2402120000 definitions=main-2402230102
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="aZKL1Y9U"
+Received: by mail-oa1-f47.google.com with SMTP id 586e51a60fabf-2184133da88so425705fac.0
+        for <linux-kernel@vger.kernel.org>; Fri, 23 Feb 2024 06:04:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google; t=1708697064; x=1709301864; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=8g40GSj1SuM3MvNOVaVxi58BU8kqY9DyWAR2wyASV2c=;
+        b=aZKL1Y9Ua/fCV1Xw6iTBctlXF7adk8oYEWSCpRpc9Lv+eafB7ZPruRfOAx/WX3lF/Z
+         xkvARgV8i9Pfj8R+/4S2QAPcO+KUAPNWX1bo0MF7UtvPvDVAgeSXpIn22YgO6qWwIu0k
+         yC93eoWHX9upPuJDRBugT5fFNaDYwAtV3ycQV3TzwMdZ+hnQvssOWW/1+YlmYzeDK+En
+         BIrx7y39cnI28tRh8AVsiVpFmGwhOTDkeVEp8+HsD8RX4eEwNWbH9YQTmc5GBeTBs9yo
+         PwwXEdy9qxQd18nlwRmsCofeCvf1tdjmSwMscMUg1FwkifIiGX9Iqp7+wV37i17fFL2m
+         3mJQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708697064; x=1709301864;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=8g40GSj1SuM3MvNOVaVxi58BU8kqY9DyWAR2wyASV2c=;
+        b=S6D1+Wea3RHvQ0vXxKCiiWf7IzbuNffw9LIot66bEyTv0tIKiizrPBWxnVBfNundzb
+         EC3SChTqvW/TQa04bV/UrMeHOykK3xU8qdJEuRM47hdcZ2MLnyQRmR2DyRQInPxwrGba
+         Z88wkBSJ6j59NODAlwglT01JEyUp2nibUcqFX3a+sVQeHWkJ86CfthHF5Ju3qslWxW8p
+         DcUhqt6TyA/52uh5SBrMFl+Nnvw+5BHG7kJeYa/k/EXznJxQGc8zyOKk0s+f640VdbXO
+         2DdXAR1vOBGT+PWNmiZVJk4HLvSjBoEOqcRtgT94aigpzjFmqMpNz2Na4ki25k2ucW8d
+         WljQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV/pn8LJRPIUf7PspJIx5p7+7GgQxpUhJQ/dRLIimrv6XgNMrmNwaBSt303NDmlerR/aJhHBCK318lhZj2s+Djp/2zJWD6yQK4PchNN
+X-Gm-Message-State: AOJu0YzCS8INMYdTRhBvrNDiqt5ws4RMUBqQ8YrPuJROoV3Q/MR+a9Oc
+	TQQP281EiH0y21l0HK+xErlvHB9jO63wLarTBhq7tb/PYScUc0Utkji9nBVCFCzXlBL3JM1GiE4
+	D3uqtjVyjQB5V4qMCbP+yp1qRO5xtXx2W+c2ZaQ==
+X-Google-Smtp-Source: AGHT+IHYBIX6HbsjNo7yyi7/bw4LuehBOxec802PGYW7ieaze/5sJtuWKqHmCdvfviB98HjMRINz+MEtpbXXzNcM6EI=
+X-Received: by 2002:a05:6871:28a6:b0:21e:d92b:ef39 with SMTP id
+ bq38-20020a05687128a600b0021ed92bef39mr2121534oac.27.1708697064350; Fri, 23
+ Feb 2024 06:04:24 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+References: <cover.1689792825.git.tjeznach@rivosinc.com> <CAHCEehJKYu3-GSX2L6L4_VVvYt1MagRgPJvYTbqekrjPw3ZSkA@mail.gmail.com>
+In-Reply-To: <CAHCEehJKYu3-GSX2L6L4_VVvYt1MagRgPJvYTbqekrjPw3ZSkA@mail.gmail.com>
+From: Zong Li <zong.li@sifive.com>
+Date: Fri, 23 Feb 2024 22:04:13 +0800
+Message-ID: <CANXhq0qsZS7sB-npPKdnFaWi2+yUc_dROCsVXZDHo07-a34wcw@mail.gmail.com>
+Subject: Re: [PATCH 00/13] Linux RISC-V IOMMU Support
+To: Tomasz Jeznach <tjeznach@rivosinc.com>
+Cc: Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	Robin Murphy <robin.murphy@arm.com>, Will Deacon <will@kernel.org>, Joerg Roedel <joro@8bytes.org>, 
+	Anup Patel <apatel@ventanamicro.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+	Greentime Hu <greentime.hu@sifive.com>, linux@rivosinc.com, 
+	"linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>, Sebastien Boeuf <seb@rivosinc.com>, iommu@lists.linux.dev, 
+	Nick Kossifidis <mick@ics.forth.gr>, linux-riscv <linux-riscv@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Due to some hardware changes, SA8775P has set the NO_SNOOP attribute
-in its TLP for all the PCIe controllers. NO_SNOOP attribute when set,
-the requester is indicating that there no cache coherency issues exit
-for the addressed memory on the host i.e., memory is not cached. But
-in reality, requester cannot assume this unless there is a complete
-control/visibility over the addressed memory on the host.
+>
+> The RISC-V IOMMU specification is now ratified as-per the RISC-V internat=
+ional
+> process [1]. The latest frozen specifcation can be found at:
+> https://github.com/riscv-non-isa/riscv-iommu/releases/download/v1.0/riscv=
+-iommu.pdf
+>
+> At a high-level, the RISC-V IOMMU specification defines:
+> 1) Memory-mapped programming interface
+>    - Mandatory and optional registers layout and description.
+>    - Software guidelines for device initialization and capabilities disco=
+very.
+> 2) In-memory queue interface
+>    - A command-queue used by software to queue commands to the IOMMU.
+>    - A fault/event queue used to bring faults and events to software=E2=
+=80=99s attention.
+>    - A page-request queue used to report =E2=80=9CPage Request=E2=80=9D m=
+essages received from
+>      PCIe devices.
+>    - Message-signalled and wire-signaled interrupt mechanism.
+> 3) In-memory data structures
+>    - Device-context: used to associate a device with an address space and=
+ to hold
+>      other per-device parameters used by the IOMMU to perform address tra=
+nslations.
+>    - Process-contexts: used to associate a different virtual address spac=
+e based on
+>      device provided process identification number.
+>    - MSI page table configuration used to direct an MSI to a guest interr=
+upt file
+>      in an IMSIC. The MSI page table formats are defined by the Advanced =
+Interrupt
+>      Architecture specification [2].
+>
+> This series introduces complete single-level translation support, includi=
+ng shared
+> virtual address (SVA), ATS/PRI interfaces in the kernel driver. Patches a=
+dding MSI
+> identity remapping and G-Stage translation (GPA to SPA) are added only to=
+ excercise
+> hardware interfaces, to be complemented with AIA/KVM bindings in follow-u=
+p series.
+>
+> This series is a logical regrouping of series of incremental patches base=
+d on
+> RISC-V International IOMMU Task Group discussions and specification devel=
+opment
+> process. Original series can be found at the maintainer's repository bran=
+ch [3].
+>
+> These patches can also be found in the riscv_iommu_v1 branch at:
+> https://github.com/tjeznach/linux/tree/riscv_iommu_v1
+>
+> To test this series, use QEMU/OpenSBI with RISC-V IOMMU implementation av=
+ailable in
+> the riscv_iommu_v1 branch at:
+> https://github.com/tjeznach/qemu/tree/riscv_iommu_v1
+>
+> References:
+> [1] - https://wiki.riscv.org/display/HOME/Specification+Status
+> [2] - https://github.com/riscv/riscv-aia/releases/download/1.0/riscv-inte=
+rrupts-1.0.pdf
+> [3] - https://github.com/tjeznach/qemu/tree/tjeznach/riscv-iommu-20230719
+>
+>
+> Anup Patel (1):
+>   dt-bindings: Add RISC-V IOMMU bindings
+>
+> Tomasz Jeznach (10):
+>   RISC-V: drivers/iommu: Add RISC-V IOMMU - Ziommu support.
+>   RISC-V: arch/riscv/config: enable RISC-V IOMMU support
+>   MAINTAINERS: Add myself for RISC-V IOMMU driver
+>   RISC-V: drivers/iommu/riscv: Add sysfs interface
+>   RISC-V: drivers/iommu/riscv: Add command, fault, page-req queues
+>   RISC-V: drivers/iommu/riscv: Add device context support
+>   RISC-V: drivers/iommu/riscv: Add page table support
+>   RISC-V: drivers/iommu/riscv: Add SVA with PASID/ATS/PRI support.
+>   RISC-V: drivers/iommu/riscv: Add MSI identity remapping
+>   RISC-V: drivers/iommu/riscv: Add G-Stage translation support
+>
+>  .../bindings/iommu/riscv,iommu.yaml           |  146 ++
+>  MAINTAINERS                                   |    7 +
+>  arch/riscv/configs/defconfig                  |    1 +
+>  drivers/iommu/Kconfig                         |    1 +
+>  drivers/iommu/Makefile                        |    2 +-
+>  drivers/iommu/io-pgtable.c                    |    3 +
+>  drivers/iommu/riscv/Kconfig                   |   22 +
+>  drivers/iommu/riscv/Makefile                  |    1 +
+>  drivers/iommu/riscv/io_pgtable.c              |  266 ++
+>  drivers/iommu/riscv/iommu-bits.h              |  704 ++++++
+>  drivers/iommu/riscv/iommu-pci.c               |  206 ++
+>  drivers/iommu/riscv/iommu-platform.c          |  160 ++
+>  drivers/iommu/riscv/iommu-sysfs.c             |  183 ++
+>  drivers/iommu/riscv/iommu.c                   | 2130 +++++++++++++++++
+>  drivers/iommu/riscv/iommu.h                   |  165 ++
+>  include/linux/io-pgtable.h                    |    2 +
+>  16 files changed, 3998 insertions(+), 1 deletion(-)
+>  create mode 100644 Documentation/devicetree/bindings/iommu/riscv,iommu.y=
+aml
+>  create mode 100644 drivers/iommu/riscv/Kconfig
+>  create mode 100644 drivers/iommu/riscv/Makefile
+>  create mode 100644 drivers/iommu/riscv/io_pgtable.c
+>  create mode 100644 drivers/iommu/riscv/iommu-bits.h
+>  create mode 100644 drivers/iommu/riscv/iommu-pci.c
+>  create mode 100644 drivers/iommu/riscv/iommu-platform.c
+>  create mode 100644 drivers/iommu/riscv/iommu-sysfs.c
+>  create mode 100644 drivers/iommu/riscv/iommu.c
+>  create mode 100644 drivers/iommu/riscv/iommu.h
+>
+> --
+> 2.34.1
+>
+>
+> _______________________________________________
+> linux-riscv mailing list
+> linux-riscv@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-riscv
 
-And worst case, if the memory is cached on the host, it may lead to
-memory corruption issues. It should be noted that the caching of memory
-on the host is not solely dependent on the NO_SNOOP attribute in TLP.
-
-So to avoid the corruption, this patch overrides the NO_SNOOP attribute
-by setting the PCIE_PARF_NO_SNOOP_OVERIDE register. This patch is not
-needed for other upstream supported platforms since they do not set
-NO_SNOOP attribute by default.
-
-Signed-off-by: Mrinmay Sarkar <quic_msarkar@quicinc.com>
----
- drivers/pci/controller/dwc/pcie-qcom-ep.c | 20 +++++++++++++++++---
- 1 file changed, 17 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/pci/controller/dwc/pcie-qcom-ep.c b/drivers/pci/controller/dwc/pcie-qcom-ep.c
-index 89d06a3e6e06..369954649254 100644
---- a/drivers/pci/controller/dwc/pcie-qcom-ep.c
-+++ b/drivers/pci/controller/dwc/pcie-qcom-ep.c
-@@ -45,6 +45,7 @@
- #define PARF_SLV_ADDR_MSB_CTRL			0x2c0
- #define PARF_DBI_BASE_ADDR			0x350
- #define PARF_DBI_BASE_ADDR_HI			0x354
-+#define PARF_NO_SNOOP_OVERIDE			0x3d4
- #define PARF_SLV_ADDR_SPACE_SIZE		0x358
- #define PARF_SLV_ADDR_SPACE_SIZE_HI		0x35c
- #define PARF_ATU_BASE_ADDR			0x634
-@@ -86,6 +87,10 @@
- #define PARF_DEBUG_INT_CFG_BUS_MASTER_EN	BIT(2)
- #define PARF_DEBUG_INT_RADM_PM_TURNOFF		BIT(3)
- 
-+/* PARF_NO_SNOOP_OVERIDE register fields */
-+#define WR_NO_SNOOP_OVERIDE_EN                 BIT(1)
-+#define RD_NO_SNOOP_OVERIDE_EN                 BIT(3)
-+
- /* PARF_DEVICE_TYPE register fields */
- #define PARF_DEVICE_TYPE_EP			0x0
- 
-@@ -152,9 +157,11 @@ enum qcom_pcie_ep_link_status {
- /**
-  * struct qcom_pcie_ep_cfg - Per SoC config struct
-  * @hdma_support: HDMA support on this SoC
-+ * @enable_cache_snoop: enable cache snooping on this SoC
-  */
- struct qcom_pcie_ep_cfg {
- 	bool hdma_support;
-+	bool enable_cache_snoop;
- };
- 
- /**
-@@ -175,6 +182,7 @@ struct qcom_pcie_ep_cfg {
-  * @num_clks: PCIe clocks count
-  * @perst_en: Flag for PERST enable
-  * @perst_sep_en: Flag for PERST separation enable
-+ * @cfg: PCIe EP config struct
-  * @link_status: PCIe Link status
-  * @global_irq: Qualcomm PCIe specific Global IRQ
-  * @perst_irq: PERST# IRQ
-@@ -202,6 +210,7 @@ struct qcom_pcie_ep {
- 	u32 perst_en;
- 	u32 perst_sep_en;
- 
-+	const struct qcom_pcie_ep_cfg *cfg;
- 	enum qcom_pcie_ep_link_status link_status;
- 	int global_irq;
- 	int perst_irq;
-@@ -497,6 +506,11 @@ static int qcom_pcie_perst_deassert(struct dw_pcie *pci)
- 	val |= BIT(8);
- 	writel_relaxed(val, pcie_ep->parf + PARF_LTSSM);
- 
-+	/* Enable cache snooping for SA8775P */
-+	if (pcie_ep->cfg && pcie_ep->cfg->enable_cache_snoop)
-+		writel_relaxed(WR_NO_SNOOP_OVERIDE_EN | RD_NO_SNOOP_OVERIDE_EN,
-+				pcie_ep->parf + PARF_NO_SNOOP_OVERIDE);
-+
- 	return 0;
- 
- err_disable_resources:
-@@ -811,7 +825,6 @@ static const struct dw_pcie_ep_ops pci_ep_ops = {
- 
- static int qcom_pcie_ep_probe(struct platform_device *pdev)
- {
--	const struct qcom_pcie_ep_cfg *cfg;
- 	struct device *dev = &pdev->dev;
- 	struct qcom_pcie_ep *pcie_ep;
- 	char *name;
-@@ -826,8 +839,8 @@ static int qcom_pcie_ep_probe(struct platform_device *pdev)
- 	pcie_ep->pci.ep.ops = &pci_ep_ops;
- 	pcie_ep->pci.edma.nr_irqs = 1;
- 
--	cfg = of_device_get_match_data(dev);
--	if (cfg && cfg->hdma_support) {
-+	pcie_ep->cfg = of_device_get_match_data(dev);
-+	if (pcie_ep->cfg && pcie_ep->cfg->hdma_support) {
- 		pcie_ep->pci.edma.ll_wr_cnt = 8;
- 		pcie_ep->pci.edma.ll_rd_cnt = 8;
- 		pcie_ep->pci.edma.mf = EDMA_MF_HDMA_NATIVE;
-@@ -893,6 +906,7 @@ static void qcom_pcie_ep_remove(struct platform_device *pdev)
- 
- static const struct qcom_pcie_ep_cfg cfg_1_34_0 = {
- 	.hdma_support = true,
-+	.enable_cache_snoop = true,
- };
- 
- static const struct of_device_id qcom_pcie_ep_match[] = {
--- 
-2.40.1
-
+Hi Tomasz,
+Could I know if you have a plan for the next version and if you have
+any estimates for when the v2 patch will be ready? We have some
+patches based on top of your old implementation, and it would be great
+if we can rebase them onto your next version. Thanks.
