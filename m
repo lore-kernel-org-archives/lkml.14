@@ -1,42 +1,41 @@
-Received: from mail-177131.yeah.net (mail-177131.yeah.net [123.58.177.131])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2E7A3191;
-	Fri, 23 Feb 2024 06:51:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=123.58.177.131
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BD0F12B68;
+	Fri, 23 Feb 2024 06:52:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708671105; cv=none; b=RvgJq4HVoVfSdwKmNum363Y1zbRrNEhCuX7WyG+E7ydLFuWirYLQ8CtqFEN1d76DAPRMLVCow1/P+o3K5a3aWPjMcFGTfyS7scZGiyiHdawC91N3kKStnb3cCX3E0dmX8c41D4QoL3mKbkz2K1mRLt4QFmyGaGw+CLC1u0c09Ao=
+	t=1708671134; cv=none; b=QBHMdEmTpYv4wTuFIxP1QbQz9+4xXEJkPUwvz3Vp+CrPOqj1txPtJZPpT+oNDSXT086qT+GijETSRGd9T4mnydiKgoSB4w+ULKG07Cks2JuSZ1DAmX4yREndljKSfO+xRHdOVHoOhbyE13L3ZNvQzx8l/0fMT9lAGtKS+7OFHOQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708671105; c=relaxed/simple;
-	bh=vT9G9b43AMGM5pLTKA+EprBnUWtHeH0b5MybGw/4Lus=;
+	s=arc-20240116; t=1708671134; c=relaxed/simple;
+	bh=PD7fumnCozoMq2DQsY+y9uUvvocD8d5Y6Kd1TmUZGME=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=M6Pyn5oXvmrPVLpWaJYbLD04wT2pts5oB9eavRQQctVnkTwyfx3DfHtBeRikU3TpN8N2bOhIg+OXHw60Dy7ZdY5X7lK/SZh8apHjk8s189en0RAPleI6rqJooc03j1Nct63eW1Quv1gQ32sydGbsj5zNKzuKshMuygLW0sCw2fg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net; spf=pass smtp.mailfrom=yeah.net; dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b=ewCes4RB; arc=none smtp.client-ip=123.58.177.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yeah.net
+	 Content-Type:Content-Disposition:In-Reply-To; b=Dw6wYSOSZNv9NmwGcjm2zrx4RvTgGhvXPtoy3Co8AEzqSFXtZ3tXfyWen++oLFUeLiS1gvBiFLCpNMvj1ixPB105x0ogfEUXqPORuiFha+vYuBRir6EqrXLww+3M5GitOrHXoKRM4W2gBxDw54WlYYfm04WVsL3lEpX5T5lNARY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PgRqckuH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b="ewCes4RB"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yeah.net;
-	s=s110527; h=Date:From:Subject:Message-ID:MIME-Version:
-	Content-Type; bh=VKc5odsoWzSfFg9pZXMb4XA+y+Mb9lK0SWDgdu2fK3Y=;
-	b=ewCes4RBDuIVtSowGiiPfjBtU8mnGhuataNePolVwqCIY2I8NVnHlk/NdFb0JF
-	2JO7uP/jrV4JIOPSdP7p0lmDsqAR6k4XePjSZWHEbtWdBx/4HIE/QOE1N7i1vbw4
-	sbtoxKq4XIqGrKcuW0+FKjb5N1lX+BGwbz/MIpkCGR/1U=
-Received: from dragon (unknown [183.213.196.200])
-	by smtp1 (Coremail) with SMTP id ClUQrADnpBkyQNhlOqIwBA--.5122S3;
-	Fri, 23 Feb 2024 14:50:28 +0800 (CST)
-Date: Fri, 23 Feb 2024 14:50:26 +0800
-From: Shawn Guo <shawnguo2@yeah.net>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PgRqckuH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E6B55C433F1;
+	Fri, 23 Feb 2024 06:52:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1708671133;
+	bh=PD7fumnCozoMq2DQsY+y9uUvvocD8d5Y6Kd1TmUZGME=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=PgRqckuHHpeG6b/y+o1PlCuXDpjKutm2i7hjezlMXMLPBb4fBDGxRoOSNKJHhc8pE
+	 OxBj9vmBbGXqqVb5ZcyIHLvTL2ICq2QGj40anvgA8T11EbYQfYxjLDfIOhy50t3JMI
+	 Mm0y4D6JhnVTx3iq0aB6Z6Zf3n5RombqXY77ubmVYR7t2wTkZKJ/yBO+2naiOXMZYW
+	 jFIjOmwmh4ifN+ZhZqzBDtOG/ieym/d7W8QeHMBAFq/M7fgIGnyqDg+ezEk/4AMDZU
+	 jrzktN9+DJDPhD2hLFa3YhCZ+1wMDIAtsxd1laZGv148Gr+FTna61ctdu88J7TZ6tW
+	 sXM897v+vajJQ==
+Date: Fri, 23 Feb 2024 12:22:08 +0530
+From: Vinod Koul <vkoul@kernel.org>
 To: Frank Li <Frank.Li@nxp.com>
-Cc: Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	"moderated list:ARM/FREESCALE LAYERSCAPE ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>,
-	"open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>,
+Cc: "open list:DMA GENERIC OFFLOAD ENGINE SUBSYSTEM" <dmaengine@vger.kernel.org>,
 	open list <linux-kernel@vger.kernel.org>, imx@lists.linux.dev
-Subject: Re: [PATCH 1/1] arm64: dts: ls1088a: Add the PME interrupt for PCIe
- EP node
-Message-ID: <ZdhAMmOILyw3pUz3@dragon>
-References: <20240206230525.3578868-1-Frank.Li@nxp.com>
+Subject: Re: [PATCH v2 1/1] dmaengine: fsl-qdma: add __iomem and struct in
+ union to fix sparse warning
+Message-ID: <ZdhAmICEsIxtJYFI@matsya>
+References: <20240219155939.611237-1-Frank.Li@nxp.com>
+ <ZddTmwh82K6biJSx@matsya>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -45,19 +44,15 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240206230525.3578868-1-Frank.Li@nxp.com>
-X-CM-TRANSID:ClUQrADnpBkyQNhlOqIwBA--.5122S3
-X-Coremail-Antispam: 1Uf129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
-	VFW2AGmfu7bjvjm3AaLaJ3UbIYCTnIWIevJa73UjIFyTuYvjxUIco7DUUUU
-X-CM-SenderInfo: pvkd40hjxrjqh1hdxhhqhw/1tbiFRSNZV6Nm6C1PwAAsL
+In-Reply-To: <ZddTmwh82K6biJSx@matsya>
 
-On Tue, Feb 06, 2024 at 06:05:25PM -0500, Frank Li wrote:
-> From: Xiaowei Bao <xiaowei.bao@nxp.com>
+On 22-02-24, 19:30, Vinod Koul wrote:
+> On 19-02-24, 10:59, Frank Li wrote:
+> > Fix below sparse warnings.
 > 
-> Add the PME interrupt porperty in PCIe EP node.
-> 
-> Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
-> Signed-off-by: Frank Li <Frank.Li@nxp.com>
+> This does not apply for me, can you rebase
 
-Applied, thanks!
+Nevermind I had issues in my local branch, this works
 
+-- 
+~Vinod
