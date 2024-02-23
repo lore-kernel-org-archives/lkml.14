@@ -1,72 +1,86 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FCD24414;
-	Fri, 23 Feb 2024 08:03:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06FA4125AF;
+	Fri, 23 Feb 2024 08:07:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708675420; cv=none; b=PwpelitrvtNkBB5TeEHb8f3Ys/K3YUcCxL4INrDUrNHw+PcaJaBOcF4BEAQw0YRJYtNyWXdhUwJc7mKZKB8uOrposY/ffScfLkAW8IAwnx/771ZcE3Rlwo9d5Lv214bqGfYLWl7rYr8W4ZwkfZbRqBYudd+c8cXq+fNSfrBOL/o=
+	t=1708675666; cv=none; b=EIT3Qh3oSIc8clGSlDb0PgaApcRa1JJiTC/QC+2EKxXQaUK3MzjJiAIB0Aft/fWcZeqQnv9S4k2mcdxMJBHlr0wL6hiRf6THTHOn3+9mRtH8BEf5aIyKZtdcA0XWDNmlUSdtcfQjO/fRj2O7VSAMfELH5v63fGpEVocxWpyjQxA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708675420; c=relaxed/simple;
-	bh=KrdAbu7vFuDAxh60xIAq4DCNIP7bmUzOzIQZIfJxERs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=k07VmA+56pLW/dKKnPlvW6gyzUsytBpGpwcS+tqjJbNYkwmyP4CJnpapLfXO9bXOuYCGEsetyNIYyRWrp7mE+K+L7P0yawdQwCYHhKqcIHALds5nHIvfHeD8Ym7mGtx5woGNjD3SZtmJwr2xUCSSJuQvRwdVX14ien+rXAy8bq0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=EFbTSIFQ; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
+	s=arc-20240116; t=1708675666; c=relaxed/simple;
+	bh=ypenPyTF5ynt/pDgjgx+1rh7Y2dHoKZRn8wHfY2ebxo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=i7mhWCnXyJ5ntvFo6dN5KxHMutNEwWTakNA4IVwSrInTbfXUPoDbZukPZi3YNt3b091zFw/i7Lm/XkE3JmwCANxGXCAyJvrjSQM4cS92yGFlrKSPrCAq0FwWfh9t7IrJrHZ64M11rvo5lPegtnfPRItcxdtPoOM/jCp02yScBW0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=t5wfrjZC; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="EFbTSIFQ"
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="t5wfrjZC"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
-	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=fZw/7FWIZCP3rlrNit4Cu4sOKIBy8Icb2/Ch7C+m1dM=; b=EFbTSIFQQhE4pz/GyRHpok3GRo
-	n6sfnPliTKOzk23Rpg+/0osKCzLlzZu5Sgjzz9C5sj06/0QX83bIOZ7jM+iRvlCd6YaYVci2DBH/3
-	eSblmbW2ih9igDH4//EVBA8BAYoR9KvrswvA3gj+eDP5VldjQ9FRjpm6pFqYacKCfv6nhNabcr/rp
-	z6neL60IpJkoz8k0apRGsSUuaxWf+IhMqgHYfzpuGsitOnbBiegegIMeQhXBq98ECyRk9qW+u4gnb
-	aqDrGCpCmh1Vg0xaY1RVXxZEKpFUNLdBEFRqV91qVNtjjQoogNH2rtQ41EP31PMMTknBeJYd8Baut
-	NNTK0XbA==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rdQWL-00000008OyF-3mql;
-	Fri, 23 Feb 2024 08:03:01 +0000
-Date: Fri, 23 Feb 2024 00:03:01 -0800
-From: Christoph Hellwig <hch@infradead.org>
-To: "Michael S. Tsirkin" <mst@redhat.com>
-Cc: Christoph Hellwig <hch@infradead.org>,
-	Maxime Coquelin <maxime.coquelin@redhat.com>, jasowang@redhat.com,
-	xuanzhuo@linux.alibaba.com, xieyongji@bytedance.com,
-	axboe@kernel.dk, gregkh@linuxfoundation.org, brauner@kernel.org,
-	lstoakes@gmail.com, virtualization@lists.linux.dev,
-	linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-	david.marchand@redhat.com
-Subject: Re: [PATCH] vduse: implement DMA sync callbacks
-Message-ID: <ZdhRNeJRo1UaZt2F@infradead.org>
-References: <20240219170606.587290-1-maxime.coquelin@redhat.com>
- <ZdRqcIRmDD-70ap3@infradead.org>
- <20240222152541-mutt-send-email-mst@kernel.org>
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
+	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
+	In-Reply-To:References; bh=ypenPyTF5ynt/pDgjgx+1rh7Y2dHoKZRn8wHfY2ebxo=;
+	t=1708675664; x=1709107664; b=t5wfrjZCgikmySYj/9KBDxrZK6s2thCgvJl3Z74x/1veNCl
+	0iXa4pm9sVFJwdXbqq4uGXQZqVJm51cjPkJS/T8BzVzvdhj0GuUIlvhPaNcOHUDUD/safcGnnCMVZ
+	agGDm2tOkcG/AG6J5s7w7u6BhA+hv4r1zU3TYDWVEr7mtoBBjXdcG+OCnlCNzxJIm6zW3/2/xUcfm
+	xZTqZ+tHLGWJyvf8s9cwuGpKcIExEIr3PLKjMbbEaFANdokrB+uzTROWmu0MiaK8H0UcGn+8AKKhX
+	PA7ushcDk4JGo2OI8f2oep77VS6HZ6Bm0k9/FwSHTLrFfD2UdsNfPjCkSzBJm/Eg==;
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1rdQar-0007xw-Lf; Fri, 23 Feb 2024 09:07:41 +0100
+Message-ID: <7efac6e0-32df-457e-9d21-4945c69328f8@leemhuis.info>
+Date: Fri, 23 Feb 2024 09:07:41 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240222152541-mutt-send-email-mst@kernel.org>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+User-Agent: Mozilla Thunderbird
+Subject: Re: [REGRESSION] 6.7.1: md: raid5 hang and unresponsive system;
+ successfully bisected
+Content-Language: en-US, de-DE
+To: song@kernel.org
+Cc: gregkh@linuxfoundation.org, junxiao.bi@oracle.com,
+ linux-kernel@vger.kernel.org, linux-raid@vger.kernel.org,
+ regressions@lists.linux.dev, stable@vger.kernel.org,
+ Dan Moulding <dan@danm.net>
+References: <20240123005700.9302-1-dan@danm.net>
+ <20240220230658.11069-1-dan@danm.net>
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <20240220230658.11069-1-dan@danm.net>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1708675664;98875bf2;
+X-HE-SMSGID: 1rdQar-0007xw-Lf
 
-On Thu, Feb 22, 2024 at 03:29:10PM -0500, Michael S. Tsirkin wrote:
-> In a sense ... but on the other hand, the "fake DMA" metaphor seems to
-> work surprisingly well, like in this instance - internal bounce buffer
-> looks a bit like non-coherent DMA.  A way to make this all prettier
-> would I guess be to actually wrap all of DMA with virtio wrappers which
-> would all go if () dma_... else vduse_...; or something to this end.  A
-> lot of work for sure, and is it really worth it? if the only crazy
-> driver is vduse I'd maybe rather keep the crazy hacks local there ...
+On 21.02.24 00:06, Dan Moulding wrote:
+> Just a friendly reminder that this regression still exists on the
+> mainline. It has been reverted in 6.7 stable. But I upgraded a
+> development system to 6.8-rc5 today and immediately hit this issue
+> again. Then I saw that it hasn't yet been reverted in Linus' tree.
 
-Well, vduse is the only driver that does this hack - we had a few more
-and we got rid of it.  It basically is the only thing preventing us
-from doing direct calls into the iommu code and compile out dma_ops
-entirely for non-Xen builds on the common architectures.
+Song Liu, what's the status here? I aware that you fixed with quite a
+few regressions recently, but it seems like resolving this one is
+stalled. Or were you able to reproduce the issue or make some progress
+and I just missed it?
 
-So yes, I'd really like to see it gone rather sooner than later.
+And if not, what's the way forward here wrt to the release of 6.8?
+Revert the culprit and try again later? Or is that not an option for one
+reason or another?
+
+Or do we assume that this is not a real issue? That it's caused by some
+oddity (bit-flip in the metadata or something like that?) only to be
+found in Dan's setup?
+
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+If I did something stupid, please tell me, as explained on that page.
+
+#regzbot poke
