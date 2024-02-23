@@ -1,402 +1,252 @@
-Received: from relay.smtp-ext.broadcom.com (unknown [192.19.166.228])
+Received: from APC01-SG2-obe.outbound.protection.outlook.com (mail-sgaapc01on2122.outbound.protection.outlook.com [40.107.215.122])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C62C171AE;
-	Fri, 23 Feb 2024 03:48:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.19.166.228
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708660118; cv=none; b=G4zyoV57XcK/3rEXgd7pBgBeXbvtw3KapHXPaiK0EMcS4LsTy8wAWTi7+ANtAdD4G5wleO6x2PtLpvDc0varNcAZU4dqMKj8L6dcU+/s8c7GxjvlR7yGGmvDIQV4VtzWIrypjkNAa13OG8ufZBBYdC5SKzincc+8YIgSBiojxQY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708660118; c=relaxed/simple;
-	bh=qOex9Lc+JQ8NRm94VQlXUYDsA9lrs7AJX95xppQfXoE=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=PltYX1lC+37D7L5nU+ZwcYriXdjOlHZFTn2s/dMkQr+cR0CO+moE/OC4jXr4qL6e/homft4aXv/9RONI5XeRSxBG3VpfQ8DtKiVuwaj8qomJUP7vakG+6M+ZS6vRNgDVBjYVv0cQhHQi0dYAFfxhTn9V+oLjkCPKsi6msvNDMGg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=IojI8iM/; arc=none smtp.client-ip=192.19.166.228
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BC1DE573;
+	Fri, 23 Feb 2024 03:49:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.215.122
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1708660167; cv=fail; b=pEmcb3qPE7fJT1LbBMquRLq8Kdz+bTKH2I/0YZBQgyLejYO4Zc4R2YQCSbS6giZ8d84d13GE9guSb+PoC40hVLL8cbvsTC/Bm+1f0oMkSyID3jGeIg3w4w6Ef9SVfDdUDDwZ5Pbmyx0FWL2K7VidIGDSRPMDnnYh3mZZwF6b1w8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1708660167; c=relaxed/simple;
+	bh=u9sPNuKH4pfjHq4g6WG0olmGwVnNcDE46L2sUE9sL6w=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=qjRGrgEa1hmWCZ5I5oucFA7ceexg8bBdycMZOm8h9JuyvBvOUnx7RBBcVSLhSwSGSVmE9jRrjCRYnQiF5rxSqa7Ln/UuIw9JJAxp89tgsQ5umLReSlhj8485dA4bfUT18jKbppvP+BnSMDN9EDO7jV2VBXo296RFhOH/6oTKiqo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=aspeedtech.com; spf=pass smtp.mailfrom=aspeedtech.com; dkim=pass (2048-bit key) header.d=aspeedtech.com header.i=@aspeedtech.com header.b=q69aQJku; arc=fail smtp.client-ip=40.107.215.122
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=aspeedtech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aspeedtech.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="IojI8iM/"
-Received: from mail-lvn-it-01.lvn.broadcom.net (mail-lvn-it-01.lvn.broadcom.net [10.36.132.253])
-	by relay.smtp-ext.broadcom.com (Postfix) with ESMTP id B0EF5C005937;
-	Thu, 22 Feb 2024 19:48:30 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 relay.smtp-ext.broadcom.com B0EF5C005937
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=broadcom.com;
-	s=dkimrelay; t=1708660110;
-	bh=qOex9Lc+JQ8NRm94VQlXUYDsA9lrs7AJX95xppQfXoE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=IojI8iM/vWZfI+uGf3QujqTUoBgKAqpbc3iJTIwJKqRhxwq4G/JlqcrQXu+uvmNmH
-	 h1Lhz5xENPt5r3vqFqvf/7JhHRfRswGWkbUGpONiOuTvXxxqoM8VRe8b5rXj9/1iIP
-	 ayD4sqZbHDhcLFm2KjaOLH9LVgbPFqba/2G9oyDo=
-Received: from bcacpedev-irv-3.lvn.broadcom.net (bcacpedev-irv-3.lvn.broadcom.net [10.173.232.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mail-lvn-it-01.lvn.broadcom.net (Postfix) with ESMTPSA id 4BC5618041CAC4;
-	Thu, 22 Feb 2024 19:48:29 -0800 (PST)
-From: William Zhang <william.zhang@broadcom.com>
-To: Linux MTD List <linux-mtd@lists.infradead.org>,
-	Linux ARM List <linux-arm-kernel@lists.infradead.org>,
-	Broadcom Kernel List <bcm-kernel-feedback-list@broadcom.com>
-Cc: f.fainelli@gmail.com,
-	kursad.oney@broadcom.com,
-	joel.peshkin@broadcom.com,
-	anand.gore@broadcom.com,
-	dregan@mail.com,
-	kamal.dasu@broadcom.com,
-	tomer.yacoby@broadcom.com,
-	dan.beygelman@broadcom.com,
-	William Zhang <william.zhang@broadcom.com>,
-	David Regan <dregan@broadcom.com>,
-	devicetree@vger.kernel.org,
-	Conor Dooley <conor+dt@kernel.org>,
-	linux-kernel@vger.kernel.org,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Rob Herring <robh+dt@kernel.org>,
-	=?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal@milecki.pl>,
-	Florian Fainelli <florian.fainelli@broadcom.com>
-Subject: [PATCH v6 08/13] arm64: dts: broadcom: bcmbca: Add NAND controller node
-Date: Thu, 22 Feb 2024 19:47:53 -0800
-Message-Id: <20240223034758.13753-9-william.zhang@broadcom.com>
-X-Mailer: git-send-email 2.37.3
-In-Reply-To: <20240223034758.13753-1-william.zhang@broadcom.com>
-References: <20240223034758.13753-1-william.zhang@broadcom.com>
+	dkim=pass (2048-bit key) header.d=aspeedtech.com header.i=@aspeedtech.com header.b="q69aQJku"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Yg950ouvx1WjNpCP1clyKtNInAyLcDkgW+Nteoi9HHrbIhePcDI7Ioc5aJrL9s5zmhIB8bh8pmp3/nj3lTiEyQeteZzFWrXKK71zxS4sekdNVSurRKK8P9469OBkxGAFQVcfX/0GYlL+8TCSYjAO5XdNZSESscksbvYgu7k7d3ib9htimI7awGG7HQW5ZyNaCo+JYKwDtEZ2S7QuWQcnAtawxCidAjN2WOAnGTPP4j7P+57PqhewOypkq99kZXcdR7x7Miy+E+B/5yNkWMwTSTcHmhsclf8OqDbAb5Be3qYa9GhXSRu4c461Z6sQNsY2SuVFmaUdbiPDmyRbHgj6Vg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=UhT5Jglo9eajC1MtBF2LOaR4J/dQPutJITGmsH95r18=;
+ b=euONYUYATW14N5VC8ymbp10E5JR2cR7jXp56Qyd+502ps3s1rGjQumkmMZIoig8/lejipHgYVJMIElkteicCGB2FRIxE4MGMiiOrIQJOJwbSj6WqoTvDLAxUPAZFFHvNvG5NVhu+acgjBrjlP1L2ma5HAzvycUdVP0MSzvvwL0nGUOafL8Tr50miXk6mzSq46ZU8HFsBXSMMTNKZkxq1qJX9pg4LEmssfLP2GgFtsIMWTGPjtE1w5nuVXUxePQvEZA/dDPZYikex2zSAxe8apfjndGAbCV8FK3hPyeXhBw6RuJDAThyWWjSodm3FokTeiJtQEdq9aNX8W9MjQtDNAg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=aspeedtech.com; dmarc=pass action=none
+ header.from=aspeedtech.com; dkim=pass header.d=aspeedtech.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aspeedtech.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=UhT5Jglo9eajC1MtBF2LOaR4J/dQPutJITGmsH95r18=;
+ b=q69aQJkuvPhpllidfujK4e5Gm4OQym0rSZGFa/E7/R/np+CgIGxECqOyTVw9gc2E6kJBqsA+uKaagTnOf5ifbLvxU/LDOtY01JYtyzktZYWDgWX4VpkpB2Wyp039Oao3efV8fhOBNsAPIASj0VLKdvk4BMAGRzh/WGT3m+wxeDV3GjCocoSMwoxSYSRQUtcNcFOlBkNCQLGOm4YOuK5bXv6aXGFj4nyMsf53O3fF+FO8qt48u9+c+Aiepk3+2H8PdhGMM/gtL/qaj8RMZ2PCp/p0nnwoU/OchdTyET/aX3Vwuyh7D2ddfhd6MYwFFAHmHWOmWB4SvrE0TaHA0WYHJg==
+Received: from TYZPR06MB6191.apcprd06.prod.outlook.com (2603:1096:400:33d::12)
+ by PUZPR06MB5585.apcprd06.prod.outlook.com (2603:1096:301:e9::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7316.24; Fri, 23 Feb
+ 2024 03:49:17 +0000
+Received: from TYZPR06MB6191.apcprd06.prod.outlook.com
+ ([fe80::e10a:d9a2:5070:6903]) by TYZPR06MB6191.apcprd06.prod.outlook.com
+ ([fe80::e10a:d9a2:5070:6903%5]) with mapi id 15.20.7292.036; Fri, 23 Feb 2024
+ 03:49:17 +0000
+From: Tommy Huang <tommy_huang@aspeedtech.com>
+To: Andi Shyti <andi.shyti@kernel.org>
+CC: "brendan.higgins@linux.dev" <brendan.higgins@linux.dev>,
+	"p.zabel@pengutronix.de" <p.zabel@pengutronix.de>,
+	"linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
+	"openbmc@lists.ozlabs.org" <openbmc@lists.ozlabs.org>,
+	"benh@kernel.crashing.org" <benh@kernel.crashing.org>, "joel@jms.id.au"
+	<joel@jms.id.au>, "andrew@aj.id.au" <andrew@aj.id.au>,
+	"linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>, "linux-aspeed@lists.ozlabs.org"
+	<linux-aspeed@lists.ozlabs.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, BMC-SW <BMC-SW@aspeedtech.com>
+Subject: RE: [PATCH] i2c: aspeed: Fix the dummy irq expected print
+Thread-Topic: [PATCH] i2c: aspeed: Fix the dummy irq expected print
+Thread-Index: AQHaYNBg0EEa3X7oHECRXZPcHJI3VbEVVFwAgAA4R6CAAIwtAIABM1cg
+Date: Fri, 23 Feb 2024 03:49:17 +0000
+Message-ID:
+ <TYZPR06MB61912715EE2869DDB7C3763DE1552@TYZPR06MB6191.apcprd06.prod.outlook.com>
+References: <20240216120455.4138642-1-tommy_huang@aspeedtech.com>
+ <nbkkaktcozbhly44hii3zwie7ivsra3qxzdibyzhyhooxrudvb@zik6skmkki2c>
+ <TYZPR06MB61911F076C8719C6A7D57B97E1562@TYZPR06MB6191.apcprd06.prod.outlook.com>
+ <v4nawwb4rwjiy2g7xv2sfyhc545mhk4izb3g22f7jupcevjuzb@nxmqgf2zjyqs>
+In-Reply-To: <v4nawwb4rwjiy2g7xv2sfyhc545mhk4izb3g22f7jupcevjuzb@nxmqgf2zjyqs>
+Accept-Language: zh-TW, en-US
+Content-Language: zh-TW
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=aspeedtech.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: TYZPR06MB6191:EE_|PUZPR06MB5585:EE_
+x-ms-office365-filtering-correlation-id: 24e1dc8c-477e-4a4c-8f3f-08dc342268f9
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info:
+ 2cEFO/Ns/jyTKVK6b3AShK7EQ4FudoSO+1qoQfMr8atutRZqvSBohSHG2geisIdhGDgcF4eYdYBBuINDrlyYvBIE4eIoYro6Ii/FCN9cL+TMXvHOlcm41ULEVtGBCVU6upuxUqPgusO5uYSRWoPElClPSfh4TJJb8qZ+C0TgFVph4YGh87zjqVpNYke9iqw9v9NsOCUmbhcvKZPwyhp70x2/bGm6k/57dDLLIIzA/01A5Vq/swqK7sH2RNbbWSFQTAKLnIFglLzYlnYymqkXOxSYZy2VM43Wydo5yalnufup245SLzCKdwA8h2gQwTGVD0gBUEchHUTFSZO1x7neI2sGrKeBKtevJpuCLKzQXNXITcZf+lQeHSI44EBFDDJyjWgU1985xmtWFYonUKaszmPQuUIFie+bYFRhdN/0zn56GszY5cHx46HTqM39nN7zjvUfsh5Mp4ZV3Wotwl/Jukv4b306fJBTnIiYxr47iqcTLqhMJ435f7nEl13JK4sw5aDnRVcFoI48zlvQLumQ23wMOzf1FsTOYPLRRfAXELppxy33MK/Sm8O71Cd5TCbMrRHbcxtMFQDT/MUtWoV/WK9d1fcE6Sh/Oww/fzF8nl9Jkry1M4UTVr0KM97tdEHk
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYZPR06MB6191.apcprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(38070700009);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?RQ/iP1ovrQvLx9MtJZ+PU0pTCBfdhYSuh+l/cKaNGRZWpS+i25YaSPq61bwb?=
+ =?us-ascii?Q?/XDhmfkWMQx3OhBU2OnrXlgOQWWIW+ytcPGw9H6RLjzqVTrV2lJCj79MYJE1?=
+ =?us-ascii?Q?l+dnJh7evAO0D+2jPjmNeTWduVTLf2T8/NcgHuRUFtr42v6ghOMit45/ZvZ6?=
+ =?us-ascii?Q?LuGiGYBBjrdWl/iKG3SsyCdLLagS9NiYCtKe1t0Sesb/USNGrb/Uo2HpwpXE?=
+ =?us-ascii?Q?dg6+K9cXnh1irpt5gba97gHAAHiQKWaZYaYII3+pubBRgnzli4Z5grnh2USW?=
+ =?us-ascii?Q?hNe7cXDg8++z6FjJouO5HvUlsCUAZ1qMxFFNVvoWe7o1agnq2/jqLM3uEBK5?=
+ =?us-ascii?Q?qMi4YlNERCtzTunVoywBRE8ssPahrTs4ezo2WNOJ7vCPEhs5OYdTNEQsdtaW?=
+ =?us-ascii?Q?Xjr2JXYUXBc79nIJZOOgUx5UqMh1kMiuSs/rFXjje7T2hSzZpNMiv6b7SiIG?=
+ =?us-ascii?Q?4NSuXrLUnCuYsidmbsVfBZhOLqQEmfTzTf+HwOeve182ZE1w/1OLIVZDPvzm?=
+ =?us-ascii?Q?LMi1C4KsqwpoJi8QXj050eI2ywHH3UxjKK+gNQcO8ei5kJIgg0BY1ibU98LR?=
+ =?us-ascii?Q?X2rxVdZSG99k4mdfqWxY4wNvRTO2ZsarV/ktZMgLoG8zDwP0vI7jxeTD5pG5?=
+ =?us-ascii?Q?LvyprxIfi3dYelo0cqmP9F/nUJyx98pxL3WZYwqo3vv8RpKaXw34MnG/OI7h?=
+ =?us-ascii?Q?Zn6Yf/OJJOqhxsGrIXMw+AozL+51Bw3fNj8DUASbYfYyBsH9lFiUU8EOzVSU?=
+ =?us-ascii?Q?HWRZZh2nbJ+fduiFAtf9zS3B8MMNjzFBj45svnXoy31ykq4N3GNYgOYYPHc+?=
+ =?us-ascii?Q?kzGCtiI9U13LxK30VUXiuEe8ZevvvOl0C1w89mz9EZhxK0S8XcEl1e+ctl7K?=
+ =?us-ascii?Q?FEkI8JPa5Yf8Smsvf2ZpvOTRvcMNXekoV+w6KxV0WIOIRkUJdTXHX1kZ4OFw?=
+ =?us-ascii?Q?Ipdzb8y+dWoiUsJmuRHtt3eLL3fCM18Ct5Wl968Hi+R5p3HAGQEBH3UJe4WJ?=
+ =?us-ascii?Q?foR6UsZx9YRlFLiqWzVibPCBe9QQbL4oUkTdui4zfHbRLl1l2mqtOFdWNSvr?=
+ =?us-ascii?Q?JG8tGtXUTiWot29SQ93X7Xz6S0NNDICwf+2jB9BQgsM0qknp6oOjwDdmdUYr?=
+ =?us-ascii?Q?D6713RI9XF6CH/m5ke241LsYtX7fZ7U6nBpeHbWjdX1hsakd9G9CNHJ3Rnlw?=
+ =?us-ascii?Q?G58JB3lD77A1BY8Fjpy4omUn2q0SGHziF0XTWkauTCrDcvbhe+8PjGJc+U2I?=
+ =?us-ascii?Q?MzquyFrNcjgqQmy9MQuE1c6wrm714fl5RHysmfRpZcoNsX8jyZ8ZaAT23KC0?=
+ =?us-ascii?Q?mqaJhKVeo+XmNkS8eEjsNFJCcHcTr+lL3BsCC66kfjAz8gOTAb4uHD3nZWip?=
+ =?us-ascii?Q?4E/KQIIpUaVS5/kPu1mn4OMtNYN/Dv6B64ui0eQVYjl9sRgx3SpgJKP9wePV?=
+ =?us-ascii?Q?+9yA5s3qtUjG3LziCEHGjRkMDTwGiCUerz9aYCmj/aoylpsRWtenRY0Xcw60?=
+ =?us-ascii?Q?08eRkgOPD/plcjmx3W6xEfhQk7FJKlPWkAPKsFmB6O0tUJeD6cu4Sk3XxbFz?=
+ =?us-ascii?Q?mFFInGt3ikOcKY7zFCAoAvbE+fPRTaUTPGV8mf4pmicTCWgvYaeDV8hUWEtI?=
+ =?us-ascii?Q?Kg=3D=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: aspeedtech.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: TYZPR06MB6191.apcprd06.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 24e1dc8c-477e-4a4c-8f3f-08dc342268f9
+X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Feb 2024 03:49:17.3927
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 43d4aa98-e35b-4575-8939-080e90d5a249
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: GYHVUIN+3itbPP/SihXlxAi3PvAGjKEJWzxXGcGY/DMRBn9s4MYJM8KXgPY1gdajXvH6+BtjM7L6s9Gy0p4mi0Tnnt27Pn5zL6RK/+gWKWg=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PUZPR06MB5585
 
-Add support for Broadcom STB NAND controller in BCMBCA ARMv8 chip dts
-files.
+Hi Andi,
 
-Signed-off-by: William Zhang <william.zhang@broadcom.com>
-Reviewed-by: David Regan <dregan@broadcom.com>
+	Sure~
+	Below is my re-word commit and fixes tag.
 
----
+	When the i2c error condition occurred and master state was not
+	idle, the master irq function will goto complete state without any
+    other interrupt handling. It would cause dummy irq expected print.
+    Under this condition, assign the irq_status into irq_handle.
 
-Changes in v6: None
-Changes in v5: None
-Changes in v4:
-- Move the board related dts setting from SoC dtsi to board dts
+	For example, when the abnormal start / stop occurred (bit 5) with normal s=
+top
+	status (bit 4) at same time. Then the normal stop status would not be hand=
+led=20
+	and it would cause irq expected print in the aspeed_i2c_bus_irq.
 
-Changes in v3: None
-Changes in v2:
-- Add nand controller node label for 4908 so it is consistent with other
-SoCs and can be referenced by board dts file
+	...
+	aspeed-i2c-bus xxxxxxxx. i2c-bus: irq handled !=3D irq. Expected 0x0000003=
+0, but was 0x00000020
+	...
+=20
+	Fixes: 3e9efc3299dd ("i2c: aspeed: Handle master/slave combined irq events=
+ properly")
+	Cc: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
 
- arch/arm64/boot/dts/broadcom/bcmbca/bcm4908.dtsi  |  4 ++--
- arch/arm64/boot/dts/broadcom/bcmbca/bcm4912.dtsi  | 14 ++++++++++++++
- arch/arm64/boot/dts/broadcom/bcmbca/bcm63146.dtsi | 14 ++++++++++++++
- arch/arm64/boot/dts/broadcom/bcmbca/bcm63158.dtsi | 14 ++++++++++++++
- arch/arm64/boot/dts/broadcom/bcmbca/bcm6813.dtsi  | 14 ++++++++++++++
- arch/arm64/boot/dts/broadcom/bcmbca/bcm6856.dtsi  | 14 ++++++++++++++
- arch/arm64/boot/dts/broadcom/bcmbca/bcm6858.dtsi  | 14 ++++++++++++++
- arch/arm64/boot/dts/broadcom/bcmbca/bcm94908.dts  | 10 ++++++++++
- arch/arm64/boot/dts/broadcom/bcmbca/bcm94912.dts  | 10 ++++++++++
- arch/arm64/boot/dts/broadcom/bcmbca/bcm963146.dts | 10 ++++++++++
- arch/arm64/boot/dts/broadcom/bcmbca/bcm963158.dts | 10 ++++++++++
- arch/arm64/boot/dts/broadcom/bcmbca/bcm96813.dts  | 10 ++++++++++
- arch/arm64/boot/dts/broadcom/bcmbca/bcm96856.dts  | 10 ++++++++++
- arch/arm64/boot/dts/broadcom/bcmbca/bcm96858.dts  | 10 ++++++++++
- 14 files changed, 156 insertions(+), 2 deletions(-)
+	Tommy
 
-diff --git a/arch/arm64/boot/dts/broadcom/bcmbca/bcm4908.dtsi b/arch/arm64/boot/dts/broadcom/bcmbca/bcm4908.dtsi
-index 2f124b027bbf..336016e334d9 100644
---- a/arch/arm64/boot/dts/broadcom/bcmbca/bcm4908.dtsi
-+++ b/arch/arm64/boot/dts/broadcom/bcmbca/bcm4908.dtsi
-@@ -589,7 +589,7 @@ hsspi: spi@1000 {
- 			status = "disabled";
- 		};
- 
--		nand-controller@1800 {
-+		nand_controller: nand-controller@1800 {
- 			#address-cells = <1>;
- 			#size-cells = <0>;
- 			compatible = "brcm,nand-bcm63138", "brcm,brcmnand-v7.1", "brcm,brcmnand";
-@@ -597,7 +597,7 @@ nand-controller@1800 {
- 			reg-names = "nand", "nand-int-base";
- 			interrupts = <GIC_SPI 37 IRQ_TYPE_LEVEL_HIGH>;
- 			interrupt-names = "nand_ctlrdy";
--			status = "okay";
-+			status = "disabled";
- 
- 			nandcs: nand@0 {
- 				compatible = "brcm,nandcs";
-diff --git a/arch/arm64/boot/dts/broadcom/bcmbca/bcm4912.dtsi b/arch/arm64/boot/dts/broadcom/bcmbca/bcm4912.dtsi
-index d658c81f7285..14b2adfb817c 100644
---- a/arch/arm64/boot/dts/broadcom/bcmbca/bcm4912.dtsi
-+++ b/arch/arm64/boot/dts/broadcom/bcmbca/bcm4912.dtsi
-@@ -138,6 +138,20 @@ hsspi: spi@1000 {
- 			status = "disabled";
- 		};
- 
-+		nand_controller: nand-controller@1800 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			compatible = "brcm,nand-bcm63138", "brcm,brcmnand-v7.1", "brcm,brcmnand";
-+			reg = <0x1800 0x600>, <0x2000 0x10>;
-+			reg-names = "nand", "nand-int-base";
-+			status = "disabled";
-+
-+			nandcs: nand@0 {
-+				compatible = "brcm,nandcs";
-+				reg = <0>;
-+			};
-+		};
-+
- 		uart0: serial@12000 {
- 			compatible = "arm,pl011", "arm,primecell";
- 			reg = <0x12000 0x1000>;
-diff --git a/arch/arm64/boot/dts/broadcom/bcmbca/bcm63146.dtsi b/arch/arm64/boot/dts/broadcom/bcmbca/bcm63146.dtsi
-index 4f474d47022e..589b8a1efc72 100644
---- a/arch/arm64/boot/dts/broadcom/bcmbca/bcm63146.dtsi
-+++ b/arch/arm64/boot/dts/broadcom/bcmbca/bcm63146.dtsi
-@@ -119,6 +119,20 @@ hsspi: spi@1000 {
- 			status = "disabled";
- 		};
- 
-+		nand_controller: nand-controller@1800 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			compatible = "brcm,nand-bcm63138", "brcm,brcmnand-v7.1", "brcm,brcmnand";
-+			reg = <0x1800 0x600>, <0x2000 0x10>;
-+			reg-names = "nand", "nand-int-base";
-+			status = "disabled";
-+
-+			nandcs: nand@0 {
-+				compatible = "brcm,nandcs";
-+				reg = <0>;
-+			};
-+		};
-+
- 		uart0: serial@12000 {
- 			compatible = "arm,pl011", "arm,primecell";
- 			reg = <0x12000 0x1000>;
-diff --git a/arch/arm64/boot/dts/broadcom/bcmbca/bcm63158.dtsi b/arch/arm64/boot/dts/broadcom/bcmbca/bcm63158.dtsi
-index 909f254dc47d..48d618e75866 100644
---- a/arch/arm64/boot/dts/broadcom/bcmbca/bcm63158.dtsi
-+++ b/arch/arm64/boot/dts/broadcom/bcmbca/bcm63158.dtsi
-@@ -137,6 +137,20 @@ hsspi: spi@1000 {
- 			status = "disabled";
- 		};
- 
-+		nand_controller: nand-controller@1800 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			compatible = "brcm,nand-bcm63138", "brcm,brcmnand-v7.1", "brcm,brcmnand";
-+			reg = <0x1800 0x600>, <0x2000 0x10>;
-+			reg-names = "nand", "nand-int-base";
-+			status = "disabled";
-+
-+			nandcs: nand@0 {
-+				compatible = "brcm,nandcs";
-+				reg = <0>;
-+			};
-+		};
-+
- 		uart0: serial@12000 {
- 			compatible = "arm,pl011", "arm,primecell";
- 			reg = <0x12000 0x1000>;
-diff --git a/arch/arm64/boot/dts/broadcom/bcmbca/bcm6813.dtsi b/arch/arm64/boot/dts/broadcom/bcmbca/bcm6813.dtsi
-index 685ae32951c9..1d1303cf90f3 100644
---- a/arch/arm64/boot/dts/broadcom/bcmbca/bcm6813.dtsi
-+++ b/arch/arm64/boot/dts/broadcom/bcmbca/bcm6813.dtsi
-@@ -138,6 +138,20 @@ hsspi: spi@1000 {
- 			status = "disabled";
- 		};
- 
-+		nand_controller: nand-controller@1800 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			compatible = "brcm,nand-bcm63138", "brcm,brcmnand-v7.1", "brcm,brcmnand";
-+			reg = <0x1800 0x600>, <0x2000 0x10>;
-+			reg-names = "nand", "nand-int-base";
-+			status = "disabled";
-+
-+			nandcs: nand@0 {
-+				compatible = "brcm,nandcs";
-+				reg = <0>;
-+			};
-+		};
-+
- 		uart0: serial@12000 {
- 			compatible = "arm,pl011", "arm,primecell";
- 			reg = <0x12000 0x1000>;
-diff --git a/arch/arm64/boot/dts/broadcom/bcmbca/bcm6856.dtsi b/arch/arm64/boot/dts/broadcom/bcmbca/bcm6856.dtsi
-index 820553ce541b..00c62c1e5df0 100644
---- a/arch/arm64/boot/dts/broadcom/bcmbca/bcm6856.dtsi
-+++ b/arch/arm64/boot/dts/broadcom/bcmbca/bcm6856.dtsi
-@@ -119,5 +119,19 @@ hsspi: spi@1000 {
- 			num-cs = <8>;
- 			status = "disabled";
- 		};
-+
-+		nand_controller: nand-controller@1800 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			compatible = "brcm,nand-bcm63138", "brcm,brcmnand-v7.1", "brcm,brcmnand";
-+			reg = <0x1800 0x600>, <0x2000 0x10>;
-+			reg-names = "nand", "nand-int-base";
-+			status = "disabled";
-+
-+			nandcs: nand@0 {
-+				compatible = "brcm,nandcs";
-+				reg = <0>;
-+			};
-+		};
- 	};
- };
-diff --git a/arch/arm64/boot/dts/broadcom/bcmbca/bcm6858.dtsi b/arch/arm64/boot/dts/broadcom/bcmbca/bcm6858.dtsi
-index 0eb93c298297..caeaf428dc15 100644
---- a/arch/arm64/boot/dts/broadcom/bcmbca/bcm6858.dtsi
-+++ b/arch/arm64/boot/dts/broadcom/bcmbca/bcm6858.dtsi
-@@ -156,5 +156,19 @@ hsspi: spi@1000 {
- 			num-cs = <8>;
- 			status = "disabled";
- 		};
-+
-+		nand_controller: nand-controller@1800 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			compatible = "brcm,nand-bcm63138", "brcm,brcmnand-v7.1", "brcm,brcmnand";
-+			reg = <0x1800 0x600>, <0x2000 0x10>;
-+			reg-names = "nand", "nand-int-base";
-+			status = "disabled";
-+
-+			nandcs: nand@0 {
-+				compatible = "brcm,nandcs";
-+				reg = <0>;
-+			};
-+		};
- 	};
- };
-diff --git a/arch/arm64/boot/dts/broadcom/bcmbca/bcm94908.dts b/arch/arm64/boot/dts/broadcom/bcmbca/bcm94908.dts
-index c4e6e71f6310..030ffa5364fb 100644
---- a/arch/arm64/boot/dts/broadcom/bcmbca/bcm94908.dts
-+++ b/arch/arm64/boot/dts/broadcom/bcmbca/bcm94908.dts
-@@ -32,3 +32,13 @@ &uart0 {
- &hsspi {
- 	status = "okay";
- };
-+
-+&nand_controller {
-+	brcm,wp-not-connected;
-+	status = "okay";
-+};
-+
-+&nandcs {
-+	nand-on-flash-bbt;
-+	brcm,nand-ecc-use-strap;
-+};
-diff --git a/arch/arm64/boot/dts/broadcom/bcmbca/bcm94912.dts b/arch/arm64/boot/dts/broadcom/bcmbca/bcm94912.dts
-index e69cd683211a..4b779e6c22e1 100644
---- a/arch/arm64/boot/dts/broadcom/bcmbca/bcm94912.dts
-+++ b/arch/arm64/boot/dts/broadcom/bcmbca/bcm94912.dts
-@@ -32,3 +32,13 @@ &uart0 {
- &hsspi {
- 	status = "okay";
- };
-+
-+&nand_controller {
-+	brcm,wp-not-connected;
-+	status = "okay";
-+};
-+
-+&nandcs {
-+	nand-on-flash-bbt;
-+	brcm,nand-ecc-use-strap;
-+};
-diff --git a/arch/arm64/boot/dts/broadcom/bcmbca/bcm963146.dts b/arch/arm64/boot/dts/broadcom/bcmbca/bcm963146.dts
-index db2c82d6dfd8..2851e8e41bf4 100644
---- a/arch/arm64/boot/dts/broadcom/bcmbca/bcm963146.dts
-+++ b/arch/arm64/boot/dts/broadcom/bcmbca/bcm963146.dts
-@@ -32,3 +32,13 @@ &uart0 {
- &hsspi {
- 	status = "okay";
- };
-+
-+&nand_controller {
-+	brcm,wp-not-connected;
-+	status = "okay";
-+};
-+
-+&nandcs {
-+	nand-on-flash-bbt;
-+	brcm,nand-ecc-use-strap;
-+};
-diff --git a/arch/arm64/boot/dts/broadcom/bcmbca/bcm963158.dts b/arch/arm64/boot/dts/broadcom/bcmbca/bcm963158.dts
-index 25c12bc63545..17dc594fe83f 100644
---- a/arch/arm64/boot/dts/broadcom/bcmbca/bcm963158.dts
-+++ b/arch/arm64/boot/dts/broadcom/bcmbca/bcm963158.dts
-@@ -32,3 +32,13 @@ &uart0 {
- &hsspi {
- 	status = "okay";
- };
-+
-+&nand_controller {
-+	brcm,wp-not-connected;
-+	status = "okay";
-+};
-+
-+&nandcs {
-+	nand-on-flash-bbt;
-+	brcm,nand-ecc-use-strap;
-+};
-diff --git a/arch/arm64/boot/dts/broadcom/bcmbca/bcm96813.dts b/arch/arm64/boot/dts/broadcom/bcmbca/bcm96813.dts
-index faba21f03120..34832a734734 100644
---- a/arch/arm64/boot/dts/broadcom/bcmbca/bcm96813.dts
-+++ b/arch/arm64/boot/dts/broadcom/bcmbca/bcm96813.dts
-@@ -32,3 +32,13 @@ &uart0 {
- &hsspi {
- 	status = "okay";
- };
-+
-+&nand_controller {
-+	brcm,wp-not-connected;
-+	status = "okay";
-+};
-+
-+&nandcs {
-+	nand-on-flash-bbt;
-+	brcm,nand-ecc-use-strap;
-+};
-diff --git a/arch/arm64/boot/dts/broadcom/bcmbca/bcm96856.dts b/arch/arm64/boot/dts/broadcom/bcmbca/bcm96856.dts
-index 9808331eede2..e1396b5544b7 100644
---- a/arch/arm64/boot/dts/broadcom/bcmbca/bcm96856.dts
-+++ b/arch/arm64/boot/dts/broadcom/bcmbca/bcm96856.dts
-@@ -32,3 +32,13 @@ &uart0 {
- &hsspi {
- 	status = "okay";
- };
-+
-+&nand_controller {
-+	brcm,wp-not-connected;
-+	status = "okay";
-+};
-+
-+&nandcs {
-+	nand-on-flash-bbt;
-+	brcm,nand-ecc-use-strap;
-+};
-diff --git a/arch/arm64/boot/dts/broadcom/bcmbca/bcm96858.dts b/arch/arm64/boot/dts/broadcom/bcmbca/bcm96858.dts
-index 1f561c8e13b0..30bbf6f2917e 100644
---- a/arch/arm64/boot/dts/broadcom/bcmbca/bcm96858.dts
-+++ b/arch/arm64/boot/dts/broadcom/bcmbca/bcm96858.dts
-@@ -32,3 +32,13 @@ &uart0 {
- &hsspi {
- 	status = "okay";
- };
-+
-+&nand_controller {
-+	brcm,wp-not-connected;
-+	status = "okay";
-+};
-+
-+&nandcs {
-+	nand-on-flash-bbt;
-+	brcm,nand-ecc-use-strap;
-+};
--- 
-2.37.3
-
+> -----Original Message-----
+> From: Andi Shyti <andi.shyti@kernel.org>
+> Sent: Thursday, February 22, 2024 4:58 PM
+> To: Tommy Huang <tommy_huang@aspeedtech.com>
+> Cc: brendan.higgins@linux.dev; p.zabel@pengutronix.de;
+> linux-i2c@vger.kernel.org; openbmc@lists.ozlabs.org;
+> benh@kernel.crashing.org; joel@jms.id.au; andrew@aj.id.au;
+> linux-arm-kernel@lists.infradead.org; linux-aspeed@lists.ozlabs.org;
+> linux-kernel@vger.kernel.org; BMC-SW <BMC-SW@aspeedtech.com>
+> Subject: Re: [PATCH] i2c: aspeed: Fix the dummy irq expected print
+>=20
+> Hi Tommy,
+>=20
+> On Thu, Feb 22, 2024 at 01:10:39AM +0000, Tommy Huang wrote:
+> > > On Fri, Feb 16, 2024 at 08:04:55PM +0800, Tommy Huang wrote:
+> > > > When the i2c error condition occurred and master state was not
+> > > > idle, the master irq function will goto complete state without any
+> > > > other interrupt handling. It would cause dummy irq expected print.
+> > > > Under this condition, assign the irq_status into irq_handle.
+> > >
+> > > I'm sorry, but I don't understand much from your log here.
+> > >
+> > > Do you mean that irq_handled in aspeed_i2c_master_irq() is left with
+> > > some states that is not supposed to have and then you end up printing
+> here:
+> > >
+> > > 	dev_err(bus->dev,
+> > > 		"irq handled !=3D irq. expected 0x%08x, but was 0x%08x\n",
+> > > 		irq_received, irq_handled);
+> > >
+> > > Can you please explain better?
+> > >
+> >
+> > Yes. If the platform met any irq error condition and the i2c wasn't sta=
+ted
+> under ASPEED_I2C_MASTER_INACTIVE.
+> > Then the code flow would goto the end of aspeed_i2c_master_irq.
+> >
+> > 	ret =3D aspeed_i2c_is_irq_error(irq_status);
+> > 	if (ret) {
+> > 		...
+> > 		irq_handled |=3D (irq_status & ASPEED_I2CD_INTR_MASTER_ERRORS);
+> > 		if (bus->master_state !=3D ASPEED_I2C_MASTER_INACTIVE) {
+> > 			bus->cmd_err =3D ret;
+> > 			bus->master_state =3D ASPEED_I2C_MASTER_INACTIVE;
+> > 			goto out_complete;
+> > 		}
+> > 	}
+> >
+> > Some master interrupt states were not handled under this situation.
+> > The fake irq not equaled message would be filled into whole of demsg.
+> > It's most like below example.
+> >
+> > ...
+> > aspeed-i2c-bus 1e78a780. i2c-bus: irq handled !=3D irq. expected
+> > 0x00000030, but was 0x00000020 aspeed-i2c-bus 1e78a780. i2c-bus: irq
+> > handled !=3D irq. expected 0x00000030, but was 0x00000020 aspeed-i2c-bu=
+s
+> > 1e78a780. i2c-bus: irq handled !=3D irq. expected 0x00000030, but was
+> 0x00000020 ...
+> >
+> > I thought the bus->cmd_err has been filled error reason and it would be
+> returned to upper layer.
+> > So, I didn't think the print should be existed.
+>=20
+> thanks! Can you please write a commit that explains better the fix you ar=
+e
+> doing?
+>=20
+> > > If that's the case, wouldn't it make more sense to check for
+> > > bus->master_state !=3D ASPEED_I2C_MASTER_INACTIVE) earlier?
+> >
+> > Did you suggest to add "bus->master_state !=3D
+> ASPEED_I2C_MASTER_INACTIVE" judgement before print the irq not equal
+> print?
+>=20
+> no, not really, but nevermind, on a second look, what I'm suggesting does=
+n't
+> make much sense.
+>=20
+> If you want, please reword the commit message as reply to this e-mail and=
+ I
+> will take care of it.
+>=20
+> > > And, still, If that's the case, I believe you might need the Fixes
+> > > tag. It's true that you are not really failing, but you are not repor=
+ting a
+> failure by mistake.
+>=20
+> Please, also consider adding the Fixes tag if you see it necessary; I thi=
+nk you
+> should, but it's borderline.
+>=20
+> Andi
