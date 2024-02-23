@@ -1,116 +1,124 @@
-Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f178.google.com (mail-yb1-f178.google.com [209.85.219.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0913629AF;
-	Fri, 23 Feb 2024 15:07:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.197
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 542D77175E
+	for <linux-kernel@vger.kernel.org>; Fri, 23 Feb 2024 15:07:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708700837; cv=none; b=CsTCrdKUAHV+S330NpAbHRJRZaxO9+FAlTAu8NWa3nvqx/7lCBFpyAjEJFIb6KLpi6CsnIQbVXDEnVJPitYbvoON6JOlELRxHv4Iy2KQkDvom8fzegTu7WIwc8kpiTtC+LihkpnyDXTpeNyKKHBxi9BPnPT9BFtzOvETsWjcQSk=
+	t=1708700850; cv=none; b=Qwz8BjMWg2BGAtFi4/ZqbUbq5cfWtfqH6SUcRsGQyIMa+AOf0QHziXEFwECN7+EWrGryMUoBbTC/M8P/A2fssJtzVqIzye4ApoiE9064w574yeuCgLB/hGyBlZFkV/2eJXN6gsIQOXXS/YcMpEYRo3SITg4aOCE6VFRemy0hnG0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708700837; c=relaxed/simple;
-	bh=qwYvqnbUBgRmfcU5PY/qmaPSAuFYYxZn2Jkfy1nGQPY=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=if0JdlbHamRgyI8oPID4AZGMbmX8dDsrdNvNyY1dzaWOUwkyhZdpNPZm8WUDFwKXex9YSJ2LIhXup8cxmxk5gnFYz/KLvm0c7sS2Q2J2iw5XN6JYVQZ4j7EJVMYLF7pHMEmtM3YPxSDifOuxZUvDWfafr0qRe7DLWLKM4vn2nGs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=ksxjEXF8; arc=none smtp.client-ip=217.70.183.197
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1708700850; c=relaxed/simple;
+	bh=NId8MgG3/SUMuIAbVWmEJCUH5j84rbDkiitN42p58MU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=BVm0hmIc6Pz8ergOjnnuGytPT19vPZNR+E255dFEWRGs1+8TW6IZ49sCLEO4LANYFwx/woZnTefZVYdL6V9dwPe2tyg4D4uqvDSd0uvE79m4FY0pQv9FsvF6O7zJGc5P1HJQPZSwsKJuxoeb/k0KzKDvlCPAC2sR+CtEiGWKbDo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=tL5Winiv; arc=none smtp.client-ip=209.85.219.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="ksxjEXF8"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 4107C1C0015;
-	Fri, 23 Feb 2024 15:07:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1708700826;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=7FVN6qzrARPqd8slGB+ZGG+q4yGV1yFcxd8XyD/FaGY=;
-	b=ksxjEXF8MtHctHNicBMz13UjkukmPWXphf8gXxKB6y5Uem1PJZrkDjzSlCUQQB5ENfq2bR
-	s4QDePcCTPRohSRp2I7FIgq6sVvQl8Rqm5mcl3an9DBYOPzLrJ829BWPzlPr47WLu5F2SK
-	kRkMa6hgUeMukEbhoUZzKvBiMhoagAAhl3Yumh5Nfx2gss/hD25R5pvP0GV9ibL5UiI2mD
-	ENkfmO6ab3BWQPIoaJul7mbZg6tBM7D9UzVe50WZtWjI1jhIQSa4NFblhXR8YsLmG6+zZW
-	thfqY4GS1gCWtZLP7CLf7AQl3g+aOQx30JSVfo2N5cQjDhUytE3YY5jEYO9fNA==
-Date: Fri, 23 Feb 2024 16:07:04 +0100
-From: Maxime Chevallier <maxime.chevallier@bootlin.com>
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: Conor Dooley <conor@kernel.org>, Rob Herring <robh@kernel.org>, Bastien
- Curutchet <bastien.curutchet@bootlin.com>, "David S. Miller"
- <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub Kicinski
- <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Krzysztof Kozlowski
- <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>,
- Richard Cochran <richardcochran@gmail.com>, Heiner Kallweit
- <hkallweit1@gmail.com>, Russell King <linux@armlinux.org.uk>,
- netdev@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, Thomas Petazzoni
- <thomas.petazzoni@bootlin.com>, Herve Codina <herve.codina@bootlin.com>
-Subject: Re: [PATCH 1/2] dt-bindings: net: Add TI DP83640
-Message-ID: <20240223160704.4018cac2@device-28.home>
-In-Reply-To: <a1e54836-51d2-4990-9444-56d9414eb28c@lunn.ch>
-References: <20240130085935.33722-1-bastien.curutchet@bootlin.com>
-	<20240130085935.33722-2-bastien.curutchet@bootlin.com>
-	<20240130-impulsive-widow-9142a069b7fd@spud>
-	<20240131210521.GA2289883-robh@kernel.org>
-	<20240131-tummy-imperfect-e6d6f0e245e9@spud>
-	<a1e54836-51d2-4990-9444-56d9414eb28c@lunn.ch>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.2.0 (GTK 3.24.41; x86_64-redhat-linux-gnu)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tL5Winiv"
+Received: by mail-yb1-f178.google.com with SMTP id 3f1490d57ef6-dc742543119so956160276.0
+        for <linux-kernel@vger.kernel.org>; Fri, 23 Feb 2024 07:07:27 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1708700846; x=1709305646; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=A7N/x1XZZ13w/J9RvBvRRguBA+rtWAzOoF+dbMHjtzE=;
+        b=tL5WinivURQifsKX2Qrj54bUzsMPHFHSfCwnuhC06fF78go07/iN237ceHrEHQWqFC
+         nWAJKgOs/qCGTuHPLDuaW4wk3MgO+miF5MdD9Ok7zFAGcyxlpOsV6Nq9p1fg1ZQkUjjh
+         EGAVN1WEZbLIT5fRXo2766xLNEVDMx30eIlV00yVJnlvNiktA9NXGC4JPZKEz7nRFCcr
+         B7/4LEZ4IkjOQ06RaCtvDM8Dm6KUcjHWWl2fa6fcaXW9nHPOQh/v3V+7p2zi8hxc6wkG
+         VM11Asq9asMEKFQ4/Qjr8glRboQGa1GqXH+yL1NgSWNFr/LNrGWHWcU9V3Ila0SDVXPt
+         QVXA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708700846; x=1709305646;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=A7N/x1XZZ13w/J9RvBvRRguBA+rtWAzOoF+dbMHjtzE=;
+        b=qlQXnxOoc7r5rjQLgGos/1ZR5Bb3xK/S5TxwBq0Ma+MqX/uDAyJQxAk5WQe/8hjA3q
+         E42U3rgUqycXAwWY+GlqJJtpdicmZh+qPE35Z2rQsNWM5cPJ2y9aXKNh3Z73y9l9OQiG
+         o0RUVMWWPtrDZ0ktiYpde5wZVZKi6eTPXT2SxjcyavAqWt2KRlJcHMKuHAVJMk3B9QBt
+         UrNHgLKbop7B3ZGd2mrwklfIMsdXRtBZFqn3uld7K9c1pFjW9LOglUiJiP5rzuvwa2ql
+         WQ7YDMP7bT9gF+TD587phTAp9E0ydho5thqntp33ik0NtlP0uKVLS7hNlOaE4+pUGVy7
+         WlUQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX9NFS6SN/CcN5NP3LVqiouRhLJxDTViR5/g/fdb9miDX+zwbnrBZHMzBcVzfAGpOmYtxtwpnG6Ql2oWMCN/jjMMmk/kXsAq+c/mk5P
+X-Gm-Message-State: AOJu0YxQjuSeP0nEkSyZis6YDNTFSSC0nH1kNLsj5r0Hzs6rvuE2Ovk0
+	E12lgPKuyFabgjmAFk9qtEuSJyJY2oVGaG6uhbzWoMSvfjN0SSb8Br0ud8wjNWIFg7lBU0h8f+7
+	xLuydj7F7qxJIZF5tGSDZ2kDa/bUKABD4+dJxPg==
+X-Google-Smtp-Source: AGHT+IHVp3IoavGMPyTgcYZAB/4X0W31P+xAKxbr9Gb+QsxAn1gv0v6QzKKvAYqZ5A5+yYWrSQ0bJyPW0Vw0YbTeOKw=
+X-Received: by 2002:a25:86d1:0:b0:dc6:e75d:d828 with SMTP id
+ y17-20020a2586d1000000b00dc6e75dd828mr84838ybm.18.1708700846276; Fri, 23 Feb
+ 2024 07:07:26 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-GND-Sasl: maxime.chevallier@bootlin.com
+References: <20240217150228.5788-1-johan+linaro@kernel.org>
+ <170868613914.4029284.5549880672870201262.b4-ty@linaro.org>
+ <3c4246b6-431a-442e-8ace-3b0d0e67743f@linaro.org> <ZdiU2z8rzo542_Ih@hovoldconsulting.com>
+ <d4049823-ad24-4426-887b-9c66cdd96318@linaro.org> <ZdiqAPPTn9SvsjL8@hovoldconsulting.com>
+ <77715ecd-ddb9-450c-98bf-4fcade0e81c0@linaro.org> <ZdixFo2EjUQDgeFh@hovoldconsulting.com>
+ <b5401b19-09d9-4907-86d6-9aab9dc2970e@linaro.org>
+In-Reply-To: <b5401b19-09d9-4907-86d6-9aab9dc2970e@linaro.org>
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Date: Fri, 23 Feb 2024 17:07:14 +0200
+Message-ID: <CAA8EJppJL7ha8AQ7g+_b=0omcWRnTpjRc655V58FKoowUDRPeA@mail.gmail.com>
+Subject: Re: [PATCH 0/6] soc: qcom: pmic_glink_altmode: fix drm bridge use-after-free
+To: neil.armstrong@linaro.org
+Cc: Johan Hovold <johan@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+	Maxime Ripard <mripard@kernel.org>, David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
+	Bjorn Andersson <andersson@kernel.org>, Andrzej Hajda <andrzej.hajda@intel.com>, 
+	Robert Foss <rfoss@kernel.org>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+	Vinod Koul <vkoul@kernel.org>, Johan Hovold <johan+linaro@kernel.org>, 
+	Jonas Karlman <jonas@kwiboo.se>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, 
+	Jernej Skrabec <jernej.skrabec@gmail.com>, Konrad Dybcio <konrad.dybcio@linaro.org>, 
+	Kishon Vijay Abraham I <kishon@kernel.org>, Rob Clark <robdclark@gmail.com>, 
+	Abhinav Kumar <quic_abhinavk@quicinc.com>, Kuogee Hsieh <quic_khsieh@quicinc.com>, 
+	freedreno@lists.freedesktop.org, dri-devel@lists.freedesktop.org, 
+	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
+	linux-phy@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
 
-Hi Andrew, Bastien,
+On Fri, 23 Feb 2024 at 16:55, Neil Armstrong <neil.armstrong@linaro.org> wrote:
+>
+> On 23/02/2024 15:52, Johan Hovold wrote:
+> > On Fri, Feb 23, 2024 at 03:38:13PM +0100, Neil Armstrong wrote:
+> >> On 23/02/2024 15:21, Johan Hovold wrote:
+> >
+> >>> But it is *not* standalone as I tried to explain above.
+> >>>
+> >>> So you have to drop it again as the later patches depend on it and
+> >>> cannot be merged (through a different tree) without it.
+> >>
+> >> drm-misc branches cannot be rebased, it must be reverted, but it can still be applied
+> >> on drm-misc-next and I'll send a revert patch for drm-misc-fixes if needed, not a big deal.
+> >>
+> >>> I thought you had all the acks you needed to take this through drm-misc,
+> >>> but we can wait a bit more if necessary (and there's no rush to get the
+> >>> first one in).
+> >>
+> >> If you want it to be in v6.9, it's too late since the last drm-misc-next PR has been sent
+> >> yesterday (https://cgit.freedesktop.org/drm/drm-misc/tag/?h=drm-misc-next-2024-02-22)
+> >>
+> >> Please ping Thomas or Maxime, perhaps it's not too late since the drm-misc-next tree
+> >> really closes on sunday.
+> >
+> > I don't want this in 6.9, this is needed for *6.8* as this fixes a DRM
+> > regression in 6.8-rc1 that breaks the display on machines like the X13s.
+> >
+> > If you guys can't sort this out in time, then perhaps Bjorn can take
+> > this through the Qualcomm tree instead (with DRM acks).
+> >
+> > But again, this is fixing a severe *regression* in 6.8-rc1. It can not
+> > wait for 6.9.
+>
+> Right, I can't apply them right now, I send a patchset ack so it can be applied ASAP,
 
-On Wed, 31 Jan 2024 23:40:45 +0100
-Andrew Lunn <andrew@lunn.ch> wrote:
+Applied and pushed patches 2-4. Patches 5 and 6 can go through the
+phy/fixes. There is no need for them to go through drm-misc tree.
 
-> On Wed, Jan 31, 2024 at 09:18:39PM +0000, Conor Dooley wrote:
-> > On Wed, Jan 31, 2024 at 03:05:21PM -0600, Rob Herring wrote:  
-> > > On Tue, Jan 30, 2024 at 05:56:37PM +0000, Conor Dooley wrote:  
-> > > > On Tue, Jan 30, 2024 at 09:59:34AM +0100, Bastien Curutchet wrote:  
-> >   
-> > > > > +  ti,fiber-mode:
-> > > > > +    $ref: /schemas/types.yaml#/definitions/uint32
-> > > > > +    enum: [0, 1]
-> > > > > +    description: |
-> > > > > +      If present, enables or disables the FX Fiber Mode.
-> > > > > +      Fiber mode support can also be strapped. If the strap pin is not set
-> > > > > +      correctly or not set at all then this can be used to configure it.
-> > > > > +       - 0     = FX Fiber Mode disabled
-> > > > > +       - 1     = FX Fiber Mode enabled
-> > > > > +       - unset = Configured by straps  
-> > > > 
-> > > > I don't like these properties that map meanings onto numbers. We can
-> > > > have enums of strings in bindings that allow you to use something more
-> > > > meaningful than "0" or "1".  
-> > > 
-> > > Tristate properties are fairly common pattern where we need 
-> > > on/off/default. I've thought about making it a type. I don't think we 
-> > > need defines for it.  
-> > 
-> > I think a type would be a good idea. I am not at all a fan of any of the
-> > properties people introduce along these lines.  
-> 
-> Before going too far with that, i'm not actually sure it is required
-> here. I've not looked at the PHY driver itself, but i expect there is
-> some indication somewhere that the network stack expects a fibre link
-> is to be used. We probably can determine at runtime if fibre should be
-> used.
-
-I've missed that thread initially. I guess that if Fiber is to be used,
-this would be done through sfp, then we have all the regular interfaces
-to configure the phy_interface_mode, in that case that would be
-100BaseX.
-
-So, a sane behaviour could simply be to configure the PHY in copper
-mode by default, without relying on any DT property ? If anyone wants to
-use fiber mode, then they would have to implement the
-sfp_upstreamp_ops, which would take care of reconfiguring the MDI
-interface of the PHY in the correct mode.
-
-Maxime
+-- 
+With best wishes
+Dmitry
