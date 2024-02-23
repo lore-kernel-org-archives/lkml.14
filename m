@@ -1,108 +1,96 @@
-Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84E2E168AF
-	for <linux-kernel@vger.kernel.org>; Fri, 23 Feb 2024 01:37:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF0EEAD4C
+	for <linux-kernel@vger.kernel.org>; Fri, 23 Feb 2024 01:39:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708652222; cv=none; b=NgsTTyVQho57CBNtU1nruQRwnBdcymMVbBpi/a4x2uipsN73nbPxRGFbvoJY6IUJCpDhgzjHFRVc+NtEHA2Y8ZLIAzGZrVDqosPXFtt0O6mUcv0mU6ptM/2rYAWLS3afDViNgRSRx76GB7TdBdjlc3LkkyK7Rypn6JuE02lZmzo=
+	t=1708652380; cv=none; b=RqOJo+hcsC/HKXbStmIDRVpiWioi4i2DPCNyQL0cp5uyaai2uu9Yp53Z3TEYTqdqVVzyB/AG6U5puFIcE/H+GeyrYs8lawbNTSF4LQ68PMb8jdqSwZaWDJkVh/a48Zh70JwO18MndvvbITHKQTulh6jO3QHntUhRYd6HaDBCxgQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708652222; c=relaxed/simple;
-	bh=VXpwlfK71J4KbEEFIeZ7tUQyBMbEOHN9OdsL7t/D7hk=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=uWDYUfjF/OOpmtjlxSwS+fhVSzjTCTCEB4trzuhR1ew7FCPPpXCOKUTvGlUD7qNg3XXVJAPMK/5u9xa3DaJTQF4/5ILAEsDkfpdlptTRdvwLWiTRyB7+ZxXHCWTSEfjkuyRhpJnAYZS0plD2RrIR+Hal9aw4TB2IqWgbHYJhP2s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=GaX+A1cq; arc=none smtp.client-ip=209.85.219.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="GaX+A1cq"
-Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-dbf216080f5so585830276.1
-        for <linux-kernel@vger.kernel.org>; Thu, 22 Feb 2024 17:37:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1708652220; x=1709257020; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=g+GUOl5V+17CoJouuTsco7mvhC5Ywx7x7NMBcMgxpQI=;
-        b=GaX+A1cqEB/8VOjHGr4AHtPllv2dxCv5jCm957uGDtKL1T3Ka0Ypfcr4uk2L+GIjwT
-         5JHEVmTzjA7WuwphheJVCv+5MtljthjXv5dCkE2d6C78d5Whln54ELHes2zO6+kKRf+9
-         k3WyUYWrEtt/+khNw/Gg8zAMGBDQmL3G1X809d88NxD/rVwgyH4vD58Vgz/J5bkw77fs
-         h+Z9amKp2mqP9UnjTZ7BYXWuTOMOBMyLL8Hjs49ipV3iFlzMM1ojTZP7y4B8R8X08usm
-         xHX/aZvz+MUaRfdwDpGZNVhpTg8/M2WQlK69JIMDvaJI8eGjwpeZ7sf4TW5AT3REODIU
-         GAPQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708652220; x=1709257020;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=g+GUOl5V+17CoJouuTsco7mvhC5Ywx7x7NMBcMgxpQI=;
-        b=J5vgseLFWvcRuDXsj3TJ0nCkpXVNKJ7hyT4BIU/JsgRdQ9MxkY1LGrdkPSryNQKYUi
-         kXo8e9vOn2W/f65reUea5gky0b8dc5v0mAgplYaHuZ6QcwJn1VP+e1PS2/Vpxt8OzkmI
-         L/IAsL/9aPo/7ezxnfWEpbF4ATHZffyK2TRFwaTw9FeJ82vdMEHJh9MFMrkPIaJd+g0M
-         mLGR/Zi3g9bqzILDZeYRP1J/3vut6oblIe8HQT5yKpGSDXCs0ebuIcp3Xi26O60a4ffB
-         dgp8bSGkDidXSjYHM249lHBbFSgpdoyrD6JnKb1qtKdTR+H7PFee1467dZ5/9SZNTzqC
-         B7kQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVKm1JDaGyZYln287aXPY43vCibbbRbbbhvtvvZ/dUcAFH/Knw+DLPfYUMoDJRbk8mYYHKan7AChbmz4YWRh4WkPjO0Uo83SGnQWXMT
-X-Gm-Message-State: AOJu0YyGIZZ9pYc8nNtPrQ7IfmyvQ2O/MmcFC2DlhWKmBHH+2a0TCoaf
-	ysMGBA9Z2B3fTRJA9KfttC1qeYIaBentWm4qnoK6sopKPoVRNnIyGOjZFOYPadS2FuEtF0OAMA5
-	T4w==
-X-Google-Smtp-Source: AGHT+IE6j9Q8ldQJogtuiWU9nF0CUi0jjFOCBiv1P76aQruSkWj7RbwizXHz4RiGug8hb8qauQu2sf4lRzc=
-X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a25:b120:0:b0:dc2:466a:23c4 with SMTP id
- g32-20020a25b120000000b00dc2466a23c4mr219620ybj.4.1708652219843; Thu, 22 Feb
- 2024 17:36:59 -0800 (PST)
-Date: Thu, 22 Feb 2024 17:35:52 -0800
-In-Reply-To: <20240110002340.485595-1-seanjc@google.com>
+	s=arc-20240116; t=1708652380; c=relaxed/simple;
+	bh=w6a/lM4JOOIkaLGjwoIWUqUMup/m3aYFAur7x35KVXg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=ceiFJDn5bGNnDBBFnkG7HqQLeMmvSPN2Qd46Bdq+/XHLUBg6EKKg2RifaxEtYnID1AFrt6ZyA0tffZ7ASSLDy/rrLn88yqF7OZ77vIRqNupYrqLuBKT8DElyUsxD+dU9lLBSMtnEYseLXAwNIHKAbgeM1bKacYMSyp63cS2wGTM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.191
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.214])
+	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4Tgsxm2fPGz1FLGY;
+	Fri, 23 Feb 2024 09:34:36 +0800 (CST)
+Received: from dggpemd100004.china.huawei.com (unknown [7.185.36.20])
+	by mail.maildlp.com (Postfix) with ESMTPS id D2FDA1A016B;
+	Fri, 23 Feb 2024 09:39:29 +0800 (CST)
+Received: from [10.67.109.211] (10.67.109.211) by
+ dggpemd100004.china.huawei.com (7.185.36.20) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.28; Fri, 23 Feb 2024 09:39:29 +0800
+Message-ID: <7396cdc0-e878-48fe-85b9-d88611d28444@huawei.com>
+Date: Fri, 23 Feb 2024 09:39:29 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20240110002340.485595-1-seanjc@google.com>
-X-Mailer: git-send-email 2.44.0.rc0.258.g7320e95886-goog
-Message-ID: <170864656017.3080257.14048100709856204250.b4-ty@google.com>
-Subject: Re: [PATCH] x86/cpu: Add a VMX flag to enumerate 5-level EPT support
- to userspace
-From: Sean Christopherson <seanjc@google.com>
-To: Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>, 
-	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org
-Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Yi Lai <yi1.lai@intel.com>, Tao Su <tao1.su@linux.intel.com>, 
-	Xudong Hao <xudong.hao@intel.com>
-Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH -next] arm32: enable HAVE_LD_DEAD_CODE_DATA_ELIMINATION
+Content-Language: en-US
+To: Arnd Bergmann <arnd@arndb.de>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-kernel@vger.kernel.org>
+CC: Russell King <linux@armlinux.org.uk>, Andrew Davis <afd@ti.com>, Andrew
+ Morton <akpm@linux-foundation.org>, "Kirill A. Shutemov"
+	<kirill.shutemov@linux.intel.com>, Geert Uytterhoeven
+	<geert+renesas@glider.be>, Jonathan Corbet <corbet@lwn.net>, Mike Rapoport
+	<rppt@kernel.org>, Eric DeVolder <eric.devolder@oracle.com>, Rob Herring
+	<robh@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Linus Walleij
+	<linus.walleij@linaro.org>
+References: <20240220081527.23408-1-liuyuntao12@huawei.com>
+ <1342759e-b967-4ec4-98d5-48146f81f695@app.fastmail.com>
+ <38c09a4b-69cc-4dc5-8a68-e5f5597613ac@huawei.com>
+ <30b01c65-12f2-4ee0-81d5-c7a2da2c36b4@app.fastmail.com>
+ <4e9396ca-460b-49ca-818e-73f0a8997b15@huawei.com>
+ <58297ee9-4f33-4b3b-bd00-b44e86965892@app.fastmail.com>
+From: "liuyuntao (F)" <liuyuntao12@huawei.com>
+In-Reply-To: <58297ee9-4f33-4b3b-bd00-b44e86965892@app.fastmail.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
+ dggpemd100004.china.huawei.com (7.185.36.20)
 
-On Tue, 09 Jan 2024 16:23:40 -0800, Sean Christopherson wrote:
-> Add a VMX flag in /proc/cpuinfo, ept_5level, so that userspace can query
-> whether or not the CPU supports 5-level EPT paging.  EPT capabilities are
-> enumerated via MSR, i.e. aren't accessible to userspace without help from
-> the kernel, and knowing whether or not 5-level EPT is supported is sadly
-> necessary for userspace to correctly configure KVM VMs.
+
+
+On 2024/2/23 0:04, Arnd Bergmann wrote:
+> On Thu, Feb 22, 2024, at 12:24, liuyuntao (F) wrote:
+>>
+>> The position of the caret has been moved below the right brace
+>> of { KEEP(*(.vectors.bhb.loop8)) }, indicating that lld is treating
+>> the entire `KEEP(*(.vectors))` as a file name. This could potentially be
+>> a bug in lld. Perhaps we can temporarily
+>> enable the DCE option only when option LD_IS_LLD is disabled,
+>> like risc-v:
+>>
+>> `select HAVE_LD_DEAD_CODE_DATA_ELIMINATION if !LD_IS_LLD`.
 > 
-> When EPT is enabled, bits 51:49 of guest physical addresses are consumed
-> if and only if 5-level EPT is enabled.  For CPUs with MAXPHYADDR > 48, KVM
-> *can't* map all legal guest memory if 5-level EPT is unsupported, e.g.
-> creating a VM with RAM (or anything that gets stuffed into KVM's memslots)
-> above bit 48 will be completely broken.
+> I would really like to see this working with lld if at all
+> possible, as it allows the combination of gc-sections with
+> lto and CONFIG_TRIM_UNUSED_KSYMS.
 > 
-> [...]
+> I experimented with lld myself now and I did get a booting
+> kernel even without the the KEEP() on the vectors. I also
 
-Applied to kvm-x86 vmx, with a massaged changelog to avoid presenting this as a
-bug fix (and finally fixed the 51:49=>51:48 goof):
+When the kernel booted up successfully, was config DCE enabled?
 
-    Add a VMX flag in /proc/cpuinfo, ept_5level, so that userspace can query
-    whether or not the CPU supports 5-level EPT paging.  EPT capabilities are
-    enumerated via MSR, i.e. aren't accessible to userspace without help from
-    the kernel, and knowing whether or not 5-level EPT is supported is useful
-    for debug, triage, testing, etc.
-    
-    For example, when EPT is enabled, bits 51:48 of guest physical addresses
-    are consumed by the CPU if and only if 5-level EPT is enabled.  For CPUs
-    with MAXPHYADDR > 48, KVM *can't* map all legal guest memory if 5-level
-    EPT is unsupported, making it more or less necessary to know whether or
-    not 5-level EPT is supported.
+> see that this is the only use of OVERLAY in the kernel, so
+> I hope that we can find a way to make it work with existing
+> lld after all, either without the KEEP or without the OVERLAY.
 
-[1/1] x86/cpu: Add a VMX flag to enumerate 5-level EPT support to userspace
-      https://github.com/kvm-x86/linux/commit/b1a3c366cbc7
+Yeah, i will try other way to make it work.
 
---
-https://github.com/kvm-x86/linux/tree/next
+> 
+> Did you see any problems without the KEEP() on the vectors?
+> 
+>       Arnd
+
+Without the KEEP(),disable DCE, qemu boots well,
+enable DCE,qemu hangs on startup.
+I experimented with lld using vexpress_defconfig.
