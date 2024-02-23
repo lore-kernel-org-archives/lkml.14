@@ -1,128 +1,80 @@
-Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com [209.85.167.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F8BA128834;
-	Fri, 23 Feb 2024 17:02:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64DD7128815;
+	Fri, 23 Feb 2024 17:02:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708707733; cv=none; b=A/5SbOnPxzJtYim0BAhgThvWxNA9lZEIxL1NbJSRejM3pXkcH0QU1aWsqtOi4DIRRz1SnayWiQ7RoySU1X/SgNMcSDj0iQHqKZ4J74LMI5m8L9zmtO1PlUyUkUJuO9wr94mOh1tU3/w303vV4hZgVjDW90nGvHCsWodVEkYaWu4=
+	t=1708707745; cv=none; b=NljWXrqEg53VKSaaGHf9e/mbxzd95o/tJOn1SgXOynHSnuYRRZ0TEt20TPM/fC0FZqB6fJx+PKJa3ysjRStUquMUpQxr14HguutUfY+g6D9oHBKV8tgX7Y1LJEPXdcB1vCPvyGC+eo0UiL1MRNpmsmVdtfqjW6l0WAaKqkCJOuE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708707733; c=relaxed/simple;
-	bh=Qp1U8rgBnaMb4ZdsZ4KKsgLguvGHdJsb0qwKj9KW2bQ=;
-	h=References:From:To:Cc:Subject:Date:In-reply-to:Message-ID:
-	 MIME-Version:Content-Type; b=JaZnwYbFjRaLwQyo0LxLcEGNmEOauN22gxHFNdsJUIcQBWsr+vAI5nDbAQezqGeDYFyaS9hdAQ58KK1ent2D9KcbpzZzH9kTwJ9Y0+cwo2cNwFLj3f0wM0Kgmzk2TgbMH7Yn03iqMOamtF2bbgct0UvQSMA7MOZemPpDvFCkVak=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dATURRsv; arc=none smtp.client-ip=209.85.167.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1708707745; c=relaxed/simple;
+	bh=2o5JTRd3DSLZEMCMjL2aEPBU20fNxBNrc7mjVBw+7kc=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=tg+QMNmlMSb8G2DhJiHuWUU68XP6j9rUGlcGSyIdc+HaznXyFPIK9h4LGgbQpwVSo9TrWgeiHbv2EnHc1alkExjPdf19uhgFZJwbNwtcLxqOmKwuRckXUctwSl88PGqPsm9+CggLaW0yB6+yRw9HJMq4GwG30UrhHRAtQKvheNQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=o+1xBZ+4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dATURRsv"
-Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-512cc3ea7a5so662832e87.3;
-        Fri, 23 Feb 2024 09:02:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1708707730; x=1709312530; darn=vger.kernel.org;
-        h=mime-version:message-id:in-reply-to:date:subject:cc:to:from
-         :user-agent:references:from:to:cc:subject:date:message-id:reply-to;
-        bh=Qp1U8rgBnaMb4ZdsZ4KKsgLguvGHdJsb0qwKj9KW2bQ=;
-        b=dATURRsvy3KCJbbF8Qidp2a+DFQgQSLrDaDjILvSfzoEc5XiZpAC3Py8ha2qlc9NY3
-         ZDWTmWUQImurx6zpqNbm/Habvqvxw20+VONKOdge8hbXI3s1p22meNa6aMcCQQyPRsWj
-         F1Ln5uZ3L9yhr1T3N49BtJEI3EFgqw/0lad8+Ur4iD/ALb9Z31WXpg+G7rDNYOYhIg/O
-         gLNuBFEwcBQyQEbGiXuR0X6QfQRti9UX0sBtswKTXTHWCsqWSf1qzmb8A7qJ/rAC7ddM
-         c08SS0eXrOJJXNjOwyZDZfbUPf8nvwYAdfj1rk2TDLy4ud00MkFG3bSuDHE30U8zOHEB
-         MbzA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708707730; x=1709312530;
-        h=mime-version:message-id:in-reply-to:date:subject:cc:to:from
-         :user-agent:references:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Qp1U8rgBnaMb4ZdsZ4KKsgLguvGHdJsb0qwKj9KW2bQ=;
-        b=SdEA64PCcMVOMRJxkMRJcAQw9jh0+x2PeZBRu6HSOYdAY6hpb7Of6t7TacOLeJ8eBh
-         n6dx47+1fJQTq4Qdt/9F8xBj0VUZiKoCOJI8gFLYtWaoeRn24pUfNTU5XAEOuoj/VrEj
-         WMIJfdqpTA7MOsLviR92GpvCri2qj4zSfDvzZvDgcRO9eRNhK3yxG9zuLohe2bQtWwKf
-         bza7PgAnJ0MfgPO7oZQcXe1V+pMCJ2RmUTr64TeRMdEgRTf84DyX6caBb3OxWaJe7sDW
-         1XsYxD5W0OsC+gr5QHBrekeJBhHvM1wsMmXm67fHZvOSWz0aYXHavOlRowfkZ1GqZBVx
-         kTiA==
-X-Forwarded-Encrypted: i=1; AJvYcCWOckPTriksxpK0HLxKYJ8NdRFnvbh1esK/kUqCminLGRwY/GoXXzEJJLnatP38Ed3E7ASU9Vmd1j4gKEC9SpLMRLKTxdWGPtx0L74C
-X-Gm-Message-State: AOJu0Yzm3nH3G3akPf9DyvI6w01yg/wUqr70eWWbxR6en0s+pZcudJvH
-	x/m8Ax4ycb2wC+fW4vVLrMZOoEmsUf5x26lANg3lYEOcPQd0buLP
-X-Google-Smtp-Source: AGHT+IFUpsG8qrL1QQgYd8GXsf8ZBOT8KoNOgh+eR11WdPx6tvzUHtL1wtbeWMgLnZnWccEJJSlmNg==
-X-Received: by 2002:a05:6512:1094:b0:512:bc0f:2400 with SMTP id j20-20020a056512109400b00512bc0f2400mr335414lfg.50.1708707729961;
-        Fri, 23 Feb 2024 09:02:09 -0800 (PST)
-Received: from razdolb ([37.1.50.248])
-        by smtp.gmail.com with ESMTPSA id z6-20020ac25de6000000b005119498ba1dsm2517298lfq.198.2024.02.23.09.02.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 23 Feb 2024 09:02:09 -0800 (PST)
-References: <20231218174042.794012-1-mike.rudenko@gmail.com>
- <87o7c9q27c.fsf@gmail.com> <ZdhULRi3w4E5tQgR@kekkonen.localdomain>
- <Zdhan1Gzi6GD5QfP@kekkonen.localdomain>
-User-agent: mu4e 1.10.8; emacs 29.2.50
-From: Mikhail Rudenko <mike.rudenko@gmail.com>
-To: Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, Laurent
- Pinchart <laurent.pinchart@ideasonboard.com>, Jacopo Mondi
- <jacopo@jmondi.org>, Tommaso Merciai <tomm.merciai@gmail.com>, Christophe
- JAILLET <christophe.jaillet@wanadoo.fr>, Dave Stevenson
- <dave.stevenson@raspberrypi.com>, Mauro Carvalho Chehab
- <mchehab@kernel.org>
-Subject: Re: [PATCH v2 00/20] Omnivision OV4689 refactoring and improvements
-Date: Fri, 23 Feb 2024 18:47:49 +0300
-In-reply-to: <Zdhan1Gzi6GD5QfP@kekkonen.localdomain>
-Message-ID: <87cysndsha.fsf@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="o+1xBZ+4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6338FC433F1;
+	Fri, 23 Feb 2024 17:02:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1708707745;
+	bh=2o5JTRd3DSLZEMCMjL2aEPBU20fNxBNrc7mjVBw+7kc=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=o+1xBZ+4fsS6hVxXlzE4Esjcw5DWE+4AqLCXAV/E6hescN5VFBzaVp5Ml59UVr1Vj
+	 NzMDNV2UJfA3il+FBx6bweSe4q5iNn+Y/+Okyy8D9oxMiQJFZ7ov+9NLXfrATx7QB+
+	 XvZXB3wXhotzo91inun1fUnroamTPKzvz5IwEWq5UPGOpRldJMjPJc9i8upC/fq++8
+	 FQlwge+dM5xQ14mVJVPiJ0s3ILgC5sJg1czRw6U13HxhT74bm8j+UbSL+41i/95ral
+	 vu/+41W8+SF6cvkjkAKA2HG8euWXKsu98br8kgE2I8D8kcRd5Xk5bIIG9HoQYnHKY6
+	 SlXDMhmaJSzog==
+From: Lee Jones <lee@kernel.org>
+To: ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org, 
+ Lee Jones <lee@kernel.org>, Daniel Thompson <daniel.thompson@linaro.org>, 
+ Jingoo Han <jingoohan1@gmail.com>, Helge Deller <deller@gmx.de>, 
+ Andrew Morton <akpm@linux-foundation.org>, 
+ "G.Shark Jeong" <gshark.jeong@gmail.com>, 
+ Bjorn Andersson <andersson@kernel.org>, 
+ Konrad Dybcio <konrad.dybcio@linaro.org>, Rob Herring <robh+dt@kernel.org>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Maximilian Weigand <mweigand@mweigand.net>, Luca Weiss <luca@z3ntu.xyz>
+Cc: dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
+ devicetree@vger.kernel.org
+In-Reply-To: <20240220-lm3630a-fixups-v1-0-9ca62f7e4a33@z3ntu.xyz>
+References: <20240220-lm3630a-fixups-v1-0-9ca62f7e4a33@z3ntu.xyz>
+Subject: Re: (subset) [PATCH 0/4] Various fixes for the lm3630a backlight
+ driver
+Message-Id: <170870774114.1756675.11800657479764151316.b4-ty@kernel.org>
+Date: Fri, 23 Feb 2024 17:02:21 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-Mailer: b4 0.12.4
 
+On Tue, 20 Feb 2024 00:11:18 +0100, Luca Weiss wrote:
+> On the MSM8974 Nexus 5 and OnePlus One phones (latter doesn't have
+> display upstream) the display backlight was turning off whenever you
+> would write a brightness to sysfs since a recent commit to the driver
+> (kernel v6.5).
+> 
+>   backlight: lm3630a: Turn off both led strings when display is blank
+> 
+> [...]
 
-Hi Sakari,
+Applied, thanks!
 
-On 2024-02-23 at 08:43 GMT, Sakari Ailus <sakari.ailus@linux.intel.com> wrote:
-
-> On Fri, Feb 23, 2024 at 08:15:41AM +0000, Sakari Ailus wrote:
->> Hi Mikhail,
->>
->> On Wed, Feb 21, 2024 at 06:02:15PM +0300, Mikhail Rudenko wrote:
->> >
->> > Hi,
->> >
->> > On 2023-12-18 at 20:40 +03, Mikhail Rudenko <mike.rudenko@gmail.com> wrote:
->> >
->> > > Hi,
->> > >
->> > > This series contains refactoring and new features implementation for
->> > > the Omnivision OV4689 sensor driver. Specifically, patches 1, 2, 3, 5,
->> > > 6, 10, 15, 16, 18, and 19 are refactorings, and are not supposed to
->> > > introduce any functional change. Patches 4 and 7 perform migration to
->> > > CCI helpers and subdevice active state respectively, and should not
->> > > introduce any hardware- and/or user-visible change either. Patch 8
->> > > fixes a possible race condition due to v4l2_async_register_subdev_sensor
->> > > being called too early in ov4689_probe, and patch 9 migrates power
->> > > management to PM autosuspend.
->> > >
->> > > Patches 11-14 expose more sensor controls to the userspace, such as
->> > > (read-write) HBLANK, VFLIP/HFLIP, digital gain, and color
->> > > balance. Patch 17 implements configurable analogue crop rectangle via
->> > > .set_selection callback. And finally, patch 20 enables 2x2 binning
->> > > option. It should be noted that publicly available sensor
->> > > documentation is lacking description of many registers and their value
->> > > ranges, so a lot of values had to be found by experimentation.
->> >
->> > Gentle ping on this series. Anything I can do to help getting it
->> > reviewed and merged? Maybe split patches 15-20 which implement cropping
->> > and binning and change the driver away from register list based model
->> > into a separate series? Anyone?
->>
->> Oops, my bad. I'll review these shortly. I can already tell there's not
->> much to do though.
->
-> Done.
-
-Thanks for the prompt review! I'll wait a few days to collect more
-comments (especially on patches 17, 18, 20) and then post v3.
-
+[1/4] backlight: lm3630a: Initialize backlight_properties on init
+      commit: 4602c7615989e6e7052e317995a66014eb318082
+[2/4] backlight: lm3630a: Don't set bl->props.brightness in get_brightness
+      commit: ebb3b9a65b56e9b21841ab9a15b946407cd6b104
+[3/4] backlight: lm3630a: Use backlight_get_brightness helper in update_status
+      commit: 3c40590fafd4cc2447fb482a640c450e1a58ffa1
 
 --
-Best regards,
-Mikhail Rudenko
+Lee Jones [李琼斯]
+
