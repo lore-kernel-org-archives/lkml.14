@@ -1,40 +1,40 @@
 Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 819555D906;
-	Fri, 23 Feb 2024 10:30:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 807C724205;
+	Fri, 23 Feb 2024 10:30:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708684214; cv=none; b=PKukYik8NR7S4lpuXlZglu5plwRyCSWJL0lvjHgSkFO3o31xjuZ9/wfSOfQ1HMR5zKaF5LWS/ovW6ef0AVCVs9HwF8iELRP2nb6eX892d3KH8gkjiKoMKMf/1umcX/ke7RcrI9vI1naM4yDz0kHRgqxBxxmbvvGLJFCNMmXQN3c=
+	t=1708684215; cv=none; b=cR7/q5QOaltNv02lGdVUBMnJQBxIW+7SmHT4B3Bqbokml0hBFQKNNXzBFS03TL0MwRZcx4EONTHBG0B44qssH4oFiFULkJc/Vt3Wc0S5CugvjPq4keEIGvAYDtEEBcfKNACyuJv709/SAfqHOtjoKnPuXZ6xS5mdYqG4mA8yemQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708684214; c=relaxed/simple;
-	bh=a5wsB2yzzq4HgC/3HlvIPTX8LqprZF/u+NXqYmbqYW8=;
+	s=arc-20240116; t=1708684215; c=relaxed/simple;
+	bh=oksfU+fjc/xYMcDn3tKuSUAuIA25aWOSa7trmb9oheE=;
 	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=oveXDV0eWlzoOvh52kNogaWPsBrcyBjEi2lhM0hP1oL4lvGXo6NXWdfEYqwJFq3uO4HrCqa+wykEMA+5qUWbusKdhK5iQxV/+Jow1hpO/33bDi81qSPSGOkceKewsVluQMImjc2k4mgbeRlqQJreVaJuy9NZl3M17hDRGH9i5GI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=AITRzPou; arc=none smtp.client-ip=46.235.227.194
+	 In-Reply-To:Content-Type; b=kSpbsc9S2N81I0doZTlx9oJ2KjAOVM8ZZpJTvDylS06/YoOU0DHnu3YlpajP8QpbbsxVkTX4/8hx3Tr6BN7MSIOjg7PGT7vYxOygQF+7BUVXV0Y93Q8vfb7juZbeOVFcxpv/HUGb93y1kenJLhxfrkT5cJfQaTJxCCUf4zR9cTA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=tU/pwnqt; arc=none smtp.client-ip=46.235.227.194
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="AITRzPou"
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="tU/pwnqt"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1708684210;
-	bh=a5wsB2yzzq4HgC/3HlvIPTX8LqprZF/u+NXqYmbqYW8=;
+	s=mail; t=1708684211;
+	bh=oksfU+fjc/xYMcDn3tKuSUAuIA25aWOSa7trmb9oheE=;
 	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=AITRzPoueMRYeP57son9yL6hAeAgXHSh8sWxepR3jEGc2Mp36bHj3vHMYYi+J7aEx
-	 tFcIxI397gK1+nh3flb50/8ug7TbRyAyDAKtTc4o3yOzg3wdF1pRBPZ2/OfekKUju1
-	 ib3ph1KHl+R3jvap1mX0iSkEOpiech1UU5Us0C8emgMpSqp23Pk19Mwm1epvnxJLST
-	 GmWULOC0PkTfYbbYBfgWC6aKawmvgh0wS9L4yjWUNTrzcbFvi90WHpE8nnT5bXg0uS
-	 1EumBITbZZDinPGrDEzkCaNX87LUD4sUdF/qvawmv+5EhkewYtAlW8QFmdr3MEu3aD
-	 1rsOgo4/wQfkg==
+	b=tU/pwnqtf19cXHHYt1duEeCMAfVyO//g1/TgqsTYB9Ebx++6plCrQCDjvstojhAf5
+	 v0ukIqQhDkyu7HyZQflSangDQJCtC/Ey+OqWJiwsAc6s8uowzyP1mv9npoCgUC7Vd1
+	 2VbYQVbaQvZL1Y0mxRy9+VSh4SoEFHDnOySXbHTbcKcjvg0fBw7uWUG9xFjy0ddhbW
+	 YJJLWBlqzX2QFtOrFB0Y/+sIv83593pRK/y/aeFVWIrsqFvCtByXlaSGP4C9WbCX7A
+	 +sU/xobO40rWRVkhw2q+wWX04YQr6hnsF4KXBp5TbfYr6eZ3lgRSnEtQshhnBWpyA+
+	 w4PfC7SSPL6sA==
 Received: from [100.113.186.2] (cola.collaboradmins.com [195.201.22.229])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
 	(Authenticated sender: kholk11)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id E127E37820CF;
-	Fri, 23 Feb 2024 10:30:09 +0000 (UTC)
-Message-ID: <c365c2c8-8211-4e36-8ba1-8b4638e81039@collabora.com>
-Date: Fri, 23 Feb 2024 11:30:09 +0100
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 25C5637820DC;
+	Fri, 23 Feb 2024 10:30:11 +0000 (UTC)
+Message-ID: <0a09cbe4-3a36-4d44-a826-5b1dbab6dd49@collabora.com>
+Date: Fri, 23 Feb 2024 11:30:11 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,8 +42,8 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 03/12] soc: mediatek: cmdq: Rename cmdq_pkt_jump() to
- cmdq_pkt_jump_abs()
+Subject: Re: [PATCH v2 04/12] soc: mediatek: cmdq: Add cmdq_pkt_jump_rel()
+ helper function
 Content-Language: en-US
 To: Chun-Kuang Hu <chunkuang.hu@kernel.org>,
  Matthias Brugger <matthias.bgg@gmail.com>,
@@ -53,20 +53,18 @@ To: Chun-Kuang Hu <chunkuang.hu@kernel.org>,
  dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
  linux-media@vger.kernel.org
 References: <20240222154120.16959-1-chunkuang.hu@kernel.org>
- <20240222154120.16959-4-chunkuang.hu@kernel.org>
+ <20240222154120.16959-5-chunkuang.hu@kernel.org>
 From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-In-Reply-To: <20240222154120.16959-4-chunkuang.hu@kernel.org>
+In-Reply-To: <20240222154120.16959-5-chunkuang.hu@kernel.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
 Il 22/02/24 16:41, Chun-Kuang Hu ha scritto:
-> In order to distinguish absolute jump and relative jump,
-> cmdq_pkt_jump() append absolute jump command, so rename it to
-> cmdq_pkt_jump_abs().
+> cmdq_pkt_jump_rel() append relative jump command to the packet.
+> Relative jump change PC to the target address with offset from
+> current PC.
 > 
 > Signed-off-by: Chun-Kuang Hu <chunkuang.hu@kernel.org>
 
-
 Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-
 
