@@ -1,151 +1,164 @@
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2077.outbound.protection.outlook.com [40.107.220.77])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A1D014E2E4;
-	Fri, 23 Feb 2024 23:44:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.77
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708731864; cv=fail; b=KBaeUUdPeVH6qKXgA+rGolr9lHT2Ym4ZGGCPwn9iPUjBdmOdeEFn4h569n9Fc4ctMAiCSsvMe9Yleb8uvKnZDplCZEGBnMaM7FYF+lR8NP4R+Rb01eBS+3536jAj/x8V+LW6beS3NBNYrHCncJ+LuV0o6C7/wEakU6iY8ck8UM0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708731864; c=relaxed/simple;
-	bh=JzmVzH9/eHZZcpxHE4lvM8Ja0oCO0dVjoFdugW+Vh8g=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 MIME-Version:Content-Type; b=qO0+X40m5EojXYNgWphn9PeJoZSo3UkxErRD/XlMEraonXjDZC3SsuiBzSbazVnyjhOJ3MAcPZaA6LOFAT036KlRugz4ik2XmRTqTxUS2XTCWgkpUiAZSwhCaDiuXCQtS8gv2c8CKt/uj7zjxiwcoYcwofUUc+kHyvtPM+EoSb4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=Ho0Jk7Bq; arc=fail smtp.client-ip=40.107.220.77
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B21D250E5
+	for <linux-kernel@vger.kernel.org>; Fri, 23 Feb 2024 23:46:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1708731998; cv=none; b=NlX/jKTYxnuh3DAPuw6FAl2fk7OeVrjiQslgMUTTaMs8vULR6j6eBxSsGnFT9yCCTRY9GG43u2b4Qn2z1fUOf5wLR/zN4gLsVlgNr+FKXdRA07shSLiRmV0el861TwUNG6gOQVyiKnuT49nct/YmthUfD+AtpJP7zWNe3pLljHA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1708731998; c=relaxed/simple;
+	bh=mgHqWgnzX8YgCtUVgGyFblbfkBZfwH2hQtNerw34L/0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=Wveay5sgCAjllINgdQnR4y5PgmJO1xy1Pd5DdZADjCBZiTmxcu5tMhM8cx9yKqlz8fDxVhnMySFCWARbt2Vo53S7K9MwPzko6jcM1ivs44qalu0wSaCCq7v6Dlss3kGfU8QH23HnKguub8BEbabAvP118V03o3qW+nBI7CYnr08=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=WPYq7mXA; arc=none smtp.client-ip=209.85.218.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="Ho0Jk7Bq"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=OxYwPzY+3Xek47RxaDMEIZLAaOrOlA4tFcNRxw0wxfwFk+rILcPGgAuz9/9ii3BsUNgPHWu+01tDCRUoRu9PoWeV8QIa9ekoXqVBzNdAfQOUd8kV6ExoS0A2Xvm7OXuE1jndro3pSMzj85B0fToO6AoD8nv4z+q6qjJ95QBS5Swqq7hAEg16/rodbQy26y0Tr7uYiEdrM7UX32wUV2z7eDi0UMN996XyxtPBtQ0gJ/p/fJHFBatO06WuWIqiy/BH7NMMjeE+xuvhmiLeCIkydvXA1wq8YAQifQo5C+5nC78gbNot+1+J1gR82Yz1+mm4SPDn7VNZPWHX9cqDTk4RBw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=nIXtxpfnsq/h02wkERp7yYj3whkmvcqio/Q7xnKXanQ=;
- b=HLI0FpToXNgYJfm+C8fiUeFsvV3BoPgczAP8V7nfE/UqVkNxv1YMTEC+Rc4Fxz1SOO2joludp/KWmzlVPagEPdWRVmJ/wgfSbRxT9q1pg5h3c+OrstkrWKedg1Tx2yji5xrhmGDH+WfTZbQf4YmXKFVYuCvUGwaxghnYyzwA3k9dSDAMKs7nkpzfnQh3NjvmNeIM/9QL6msUoGCtfujqm5nZr6gyuHC1byV6fZAWMFaKMhgMKt/KOR4JZUBKcto9Xs0lJmi7Qo7Pg7ECrI9WGleqBTt9azHfEDhnJcBHhRNrmDixjYn4xJAxpoe/g1dTWmgRzixTG5cXlBQBFXKyQA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.117.160) smtp.rcpttodomain=gmail.com smtp.mailfrom=nvidia.com;
- dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=nIXtxpfnsq/h02wkERp7yYj3whkmvcqio/Q7xnKXanQ=;
- b=Ho0Jk7BqiQbodPc8aIly4YkL474mDSIdxIT4cfeYhjieFlsUuUiDaECF2DI6hfEnhrmWd1nBfWDI9Zn7bus60Z0Dqw8ird4PGoDZyZozfRfjrBnK1mytBR9oAh2DMb5VGixl9nTmpEtoh7ljDXoclnin/YSyWoxMLRA4tGKKXJMMeOd3zTgWioLJKYyEZoTvG20ak56JKZjZ95M2lxdV7SqoV8qWP+hMLd6xaL5YZmtbHwjR1axb6SqqHpW8uQ6p77zV6hS8AGa2tV1FJQYBdNlCCXIJtcyO0gmvidsRdmoeln/UZrwJmSa62ZZfrQCrEqXkskkf298UuDuQdK05rw==
-Received: from CH2PR18CA0026.namprd18.prod.outlook.com (2603:10b6:610:4f::36)
- by MW3PR12MB4363.namprd12.prod.outlook.com (2603:10b6:303:56::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7316.27; Fri, 23 Feb
- 2024 23:44:18 +0000
-Received: from CH2PEPF0000009C.namprd02.prod.outlook.com
- (2603:10b6:610:4f:cafe::29) by CH2PR18CA0026.outlook.office365.com
- (2603:10b6:610:4f::36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7292.45 via Frontend
- Transport; Fri, 23 Feb 2024 23:44:17 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.160)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.117.160 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.117.160; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.117.160) by
- CH2PEPF0000009C.mail.protection.outlook.com (10.167.244.24) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.7292.25 via Frontend Transport; Fri, 23 Feb 2024 23:44:17 +0000
-Received: from rnnvmail201.nvidia.com (10.129.68.8) by mail.nvidia.com
- (10.129.200.66) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.41; Fri, 23 Feb
- 2024 15:44:01 -0800
-Received: from pohsuns-pegasus.nvidia.com (10.126.230.35) by
- rnnvmail201.nvidia.com (10.129.68.8) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.12; Fri, 23 Feb 2024 15:43:59 -0800
-From: Pohsun Su <pohsuns@nvidia.com>
-To: <thierry.reding@gmail.com>, <daniel.lezcano@linaro.org>,
-	<tglx@linutronix.de>, <jonathanh@nvidia.com>
-CC: <linux-kernel@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-	<sumitg@nvidia.com>, Pohsun Su <pohsuns@nvidia.com>
-Subject: Re: [PATCH v2 2/2] clocksource/drivers/timer-tegra186: fix watchdog self-pinging.
-Date: Sat, 24 Feb 2024 07:42:55 +0800
-Message-ID: <20240223234255.30235-1-pohsuns@nvidia.com>
-X-Mailer: git-send-email 2.17.1
-References: <CZ96VR54894Z.TIAQI1OXCH2Z@gmail.com>
-In-Reply-To: <CZ96VR54894Z.TIAQI1OXCH2Z@gmail.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WPYq7mXA"
+Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-a293f2280c7so154740466b.1
+        for <linux-kernel@vger.kernel.org>; Fri, 23 Feb 2024 15:46:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1708731995; x=1709336795; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:to:subject:user-agent:mime-version:date
+         :message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=NIAGIlOyfdPQGzUhuhBTCj1fg0Ra/brIZfOUyFxv3go=;
+        b=WPYq7mXA4GS5XMA1VDMZ5ZAmWyn84fNBhQFINGtYcK4i6ywGXwFC1qzi0mpc+vO8wT
+         kNfaqDU04031cp+L85JZNK3iajGT92DI5MS+vOicJm/FpdXbpxcd0z3KNiIeKRLFUyQt
+         tqLFcrAr5Vnnm7yCjDPQ8L+vaOlPa8r8o840iqMi7BA6VZUNbTct1oHrNNheMDG2jXri
+         M4/ySjPMFCcfnd9BChafx5RtXhUmedzJkNozQJmDgl0eolgniE4oFaavi+jr/OqD5IJm
+         OcXwdBUCLITcdT9t5MMRpdarSMXIqhcwEkZx1/lPGn9Q1CK9qxDo2RS7gJe19HPFqLcH
+         ACpQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708731995; x=1709336795;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:to:subject:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=NIAGIlOyfdPQGzUhuhBTCj1fg0Ra/brIZfOUyFxv3go=;
+        b=GFFiSa1iQOHT1wZtRuFOpM4VtOI6GlNFnoRY3Rf4cKHyNh8HEK8f3QPMGDVFoEXd38
+         c0eS90b/JAA2l6JY8iYdlv1r1IATKCKQolfJ+HjkBm1jnb73UJUXtEJjoC0Bqe5zaQ3p
+         8mAxX6jn93Vm73o8+CHO+GcJjos/hrncMj/fGL3kpsrANl49bTaWp9TmAjCluRRiNnN1
+         OmJnQoJzuifghHJqWHWMk6POEAR7H0HXsCQKVb/V631tHXb3icUWkP56J/iLI0z+9f/z
+         cszBelARDyP8LsLIMTlGIwA7I1b4l0vIuNPooPSNAP7wn6vMLajzVZULQOtI28xXLgmT
+         bMlQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWNhrqLj3AZlVL3sg6OIc1et/yuIxJhSJoDyHtxYiwPEytzvMlc+ZY/3yvTZIXgXV1kTPrI7MXdMJq9eT9Scr4eCjwlHE43/V5G08Qi
+X-Gm-Message-State: AOJu0YxALJ95VlFBPPmqlnpHFI5rZFriCZGHqp9ecgqYswFSi/tV1GXS
+	iTNiIDIzN2w0ci2Iywww2R6tsyodIN+1CSg273r/yAeJSg8Sg1nxSZD1CgyV74I=
+X-Google-Smtp-Source: AGHT+IE0+tL8hH0wqn2x+/epyE+ZkG3YGes2J0uLaDyxWp2Ro/Yw07l0+8CizphqXDIS10sDl1t62Q==
+X-Received: by 2002:a17:906:d923:b0:a41:30be:4a82 with SMTP id rn3-20020a170906d92300b00a4130be4a82mr677228ejb.61.1708731994017;
+        Fri, 23 Feb 2024 15:46:34 -0800 (PST)
+Received: from [192.168.179.2] (078088045141.garwolin.vectranet.pl. [78.88.45.141])
+        by smtp.gmail.com with ESMTPSA id u22-20020a1709060b1600b00a3fbe13e2absm52810ejg.211.2024.02.23.15.46.32
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 23 Feb 2024 15:46:33 -0800 (PST)
+Message-ID: <b50aae99-151b-47ed-b610-99f4748790bf@linaro.org>
+Date: Sat, 24 Feb 2024 00:46:31 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-ClientProxiedBy: rnnvmail201.nvidia.com (10.129.68.8) To
- rnnvmail201.nvidia.com (10.129.68.8)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH2PEPF0000009C:EE_|MW3PR12MB4363:EE_
-X-MS-Office365-Filtering-Correlation-Id: 10dd65a0-491f-48b4-ebb5-08dc34c959a5
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	3SXBkh/ivxuIfL1qhn+gaMuZBEBZAgDAIuW7q9KdWdq32TDUpivksKrc59Pp0ofpKr+xCzCUT0GT6GgYvkps+BEAEoyxR1dLQl9Q30BYKioDCFfv+GJoyMBw9tHoxuOfjmwlWSJftfHmEuYBLsQNq7B4e4YPWi/6Ou/M8MWOgKTH1IDlV7XPqM8YIrLpZe2vqlrvPJBOxgZ5oSPHcJ1UmEY7m76qdYUbw2GY+X6SHWv6l1/7IS7ux1fMo4zcjkSPjChLtYpuSaUJ5a4Ct06eeMj86nxYCFgAUOtB4p288YxbyMKptXi2HMIL21wHSUiYotiPWtLraFh4GbJ6VSPPnERxFLxuczC+YnYTYM9eWCe/v1Swkvh/+3zc+4mIFNqPb31BF0WUbC1J4sdsMXYb4nS/6LocVaBf21iOQDnWSWXa30fuqIhwbS7mq15UuwlxYH0ALoHuK4LxuLPHikywhoGg9a3uSpzXpk/MLQEQO/q/C8WEofc9gVdNZHPy3vyXO5zrmnzQecKfq2mdf4azDeGJ2oeXR1DBI9X/EeRlT5WXJk2Zxmw8h4Ry39ycgEsQvUcXI0PwudbMlyO0utq+27S5/kfW/7bE5j9DcbMgt302IK+6Nt3qBSrXiW7L6rqTn+vBGf5GtqILX7QZNJrtG9dgEa731phwhN3O0vC0Rbs=
-X-Forefront-Antispam-Report:
-	CIP:216.228.117.160;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge1.nvidia.com;CAT:NONE;SFS:(13230031)(36860700004)(40470700004)(46966006);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Feb 2024 23:44:17.5009
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 10dd65a0-491f-48b4-ebb5-08dc34c959a5
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.160];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	CH2PEPF0000009C.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW3PR12MB4363
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v17 05/35] virt: gunyah: Add hypervisor driver
+To: Alex Elder <elder@linaro.org>,
+ Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+ Murali Nalajal <quic_mnalajal@quicinc.com>,
+ Trilok Soni <quic_tsoni@quicinc.com>,
+ Srivatsa Vaddagiri <quic_svaddagi@quicinc.com>,
+ Carl van Schaik <quic_cvanscha@quicinc.com>,
+ Philip Derrin <quic_pderrin@quicinc.com>,
+ Prakruthi Deepak Heragu <quic_pheragu@quicinc.com>,
+ Jonathan Corbet <corbet@lwn.net>, Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>, Catalin Marinas
+ <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Bjorn Andersson <andersson@kernel.org>,
+ Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, Fuad Tabba
+ <tabba@google.com>, Sean Christopherson <seanjc@google.com>,
+ Andrew Morton <akpm@linux-foundation.org>, linux-arm-msm@vger.kernel.org,
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-mm@kvack.org
+References: <20240222-gunyah-v17-0-1e9da6763d38@quicinc.com>
+ <20240222-gunyah-v17-5-1e9da6763d38@quicinc.com>
+ <a3356079-bd55-4852-9bb3-b5362a1c953e@linaro.org>
+ <20240223144844667-0800.eberman@hu-eberman-lv.qualcomm.com>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@linaro.org>
+Autocrypt: addr=konrad.dybcio@linaro.org; keydata=
+ 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
+ izWDgYvmBE8=
+In-Reply-To: <20240223144844667-0800.eberman@hu-eberman-lv.qualcomm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-> On Fri Feb 16, 2024 at 10:02 PM CET, Pohsun Su wrote:
->> This change removes watchdog self-pinging behavior.
+On 23.02.2024 23:58, Elliot Berman wrote:
+> On Fri, Feb 23, 2024 at 10:10:47PM +0100, Konrad Dybcio wrote:
+>> On 23.02.2024 00:16, Elliot Berman wrote:
+>>> Add driver to detect when running under Gunyah. It performs basic
+>>> identification hypercall and populates the platform bus for resource
+>>> manager to probe.
+>>>
+>>> Signed-off-by: Elliot Berman <quic_eberman@quicinc.com>
+>>> ---
 >>
->> The timer irq handler is triggered due to the 1st expiration,
->> the handler disables and enables watchdog but also implicitly
->> clears the expiration count so the count can only be 0 or 1.
+>> [...]
 >>
->> Since this watchdog supports opened, configured, or pinged by
->> systemd, We remove this behavior or the watchdog may not bark
->> when systemd crashes since the 5th expiration never comes.
+>>> +
+>>> +	/* Might move this out to individual drivers if there's ever an API version bump */
+>>> +	if (gunyah_api_version(&gunyah_api) != GUNYAH_API_V1) {
+>>> +		pr_info("Unsupported Gunyah version: %u\n",
+>>> +			gunyah_api_version(&gunyah_api));
 >>
->> Signed-off-by: Pohsun Su <pohsuns@nvidia.com>
->> ---
->>  drivers/clocksource/timer-tegra186.c | 27 ++-------------------------
->>  1 file changed, 2 insertions(+), 25 deletions(-)
->>
->> diff --git a/drivers/clocksource/timer-tegra186.c b/drivers/clocksource/timer-tegra186.c
->> index 8f516366da86..acff97da138a 100644
->> --- a/drivers/clocksource/timer-tegra186.c
->> +++ b/drivers/clocksource/timer-tegra186.c
->> @@ -175,7 +175,8 @@ static void tegra186_wdt_enable(struct tegra186_wdt *wdt)
->>                value |= WDTCR_PERIOD(1);
->> 
->>                /* enable local interrupt for WDT petting */
->> -             value |= WDTCR_LOCAL_INT_ENABLE;
->> +             if (0)
->> +                     value |= WDTCR_LOCAL_INT_ENABLE;
->
-> We probably shouldn't proliferate this scheme. In retrospect I should've
-> removed the two other similar blocks back when I submitted the driver at
-> the time since they don't really serve a purpose. The intention at the
-> time was to keep them there and eventually replace the condition with
-> something that could actually be toggled, but it's been almost four
-> years and this hasn't happened, so I suspect that we just don't need it
-> at all. So perhaps you could remove this line along with the comment in
-> this patch and then add another patch that removes the other unused bits
-> so that we don't carry around stuff that we just never use.
+>> Weird for this not to be an error, but it's probably not worth resending
+>> over if it's the only thing
 > 
-> Thierry
+> It is an error, but maybe I misunderstood:
 
-Sure, removing both lines and the comment above.
-will add another patch to clean unused bits.
+Sorry, I meant "pr_info might have been pr_err"
 
-Thanks!
---
-Pohsun
+Konrad
+
+> 
+>>> +	/* Might move this out to individual drivers if there's ever an API version bump */
+>>> +	if (gunyah_api_version(&gunyah_api) != GUNYAH_API_V1) {
+>>> +		pr_info("Unsupported Gunyah version: %u\n",
+>>> +			gunyah_api_version(&gunyah_api));
+>>> +		return -ENODEV;
+>>> +	}
+> 
