@@ -1,121 +1,152 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F35682863
-	for <linux-kernel@vger.kernel.org>; Fri, 23 Feb 2024 15:41:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A30282863;
+	Fri, 23 Feb 2024 15:43:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708702898; cv=none; b=s6F3useJEOKH1FavtJxqox++x7z1T0ASTVGU5tAQrRxp8tMGE63aoTJYvFejgWlVw0ze8fzLKaVsOCrkYy/6oAscSAjYpSOqiRVl0Y5nvOEMcBqChCjCtAQ5RXHq+LK7VVabJcS0SKpPAwIq4Zs7InaYZ+tALZjxaR7Q4P9SWDY=
+	t=1708702990; cv=none; b=m1SpQYXmfsxfGjMgtmMYLiPlBCRjiwfp/IbYr9J/2zSNS8b3X+gOGdSmcsnBLNs3vDnT0k6Oo0O5lTDWKcw7mCzBgSHwIEiwswTPBy1xuAI1qzid4MGlCflgqw9qzN5A6HJqBoEBil5Zc8iMseJo/qoZZuyzl7pR67opZJM4ApU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708702898; c=relaxed/simple;
-	bh=ISOpelRzcKba5NgCuFuc5tbG/MHEVgcIyOM8/9vVlnQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=PNue3PkZ656iYfLz4VJkCEbiV9ZM4/HbMkpKFvPkoHepTarcsTWhsbpUG1tf00jN5QRgltTjHmksFplf7jZq2ol9uF7VR5OOofqHZsPZdLUudU5ybGAP+HCveBiwyqG+UioyQZHnpj3aA6tDSjE6cz1t77Htvylgd7GZWs9uIj4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from dude02.red.stw.pengutronix.de ([2a0a:edc0:0:1101:1d::28])
-	by metis.whiteo.stw.pengutronix.de with esmtp (Exim 4.92)
-	(envelope-from <m.felsch@pengutronix.de>)
-	id 1rdXg3-0001um-4d; Fri, 23 Feb 2024 16:41:31 +0100
-From: Marco Felsch <m.felsch@pengutronix.de>
-To: srinivas.kandagatla@linaro.org,
-	miquel.raynal@bootlin.com,
-	michael@walle.cc
-Cc: linux-kernel@vger.kernel.org,
-	kernel@pengutronix.de
-Subject: [PATCH] nvmem: core: add sysfs cell write support
-Date: Fri, 23 Feb 2024 16:41:29 +0100
-Message-Id: <20240223154129.1902905-1-m.felsch@pengutronix.de>
-X-Mailer: git-send-email 2.39.2
+	s=arc-20240116; t=1708702990; c=relaxed/simple;
+	bh=VulX/bEzC0bjQkYNIhonnatB3A8d1Ksmk/boghxkEaw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FSgNEn7kBgDQMyPrdTaxucjLWoY0BLMjfF9Dfn2ksYldzk2PcpUvMifThWnhDHOKAmc06aBR/scqwvtCp63EWvPCWM9c0AJmDI2f3JuqGfJzB+OlTwuzPLVT3mUELMQyxRDVxxbvzHtWHapvu6TF1KA+Ddqt9/fH5DqxC25Ex4M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fQjwj/f4; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fQjwj/f4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8A83AC433F1;
+	Fri, 23 Feb 2024 15:43:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1708702989;
+	bh=VulX/bEzC0bjQkYNIhonnatB3A8d1Ksmk/boghxkEaw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=fQjwj/f4dQ98xd0fo1xB7lPKHDUxOPTz4UCfTpUlcO3fbM2pMRC5mbsn5wYzc6rDD
+	 51uWyKM+IuiVDK2E6sGleOjE4ZsaOJOa3vbCbt6v/wVzWTs31RQzHI/sTkgUqgFYb+
+	 ZshFgXTcKhqqO79Bhqa8Ew3u7kv6xoTNcOI5ZyZlow+rl9FMGi/jQ2s9WopDWz6zLu
+	 Minrw3mN+v7mOtl6EYUxzqQdocc5rHQ/+oxAX7R1qJQ6SMpOfdevtUD6Mtk6NrBwz4
+	 JWRddU8W+MjeIH/6+bO+lCksqNglGMD34q1Vywql1Zj4a+UcKPQbhG1ycypNEQhhwf
+	 mKz5ecVg3Su8Q==
+Date: Fri, 23 Feb 2024 15:43:04 +0000
+From: Lee Jones <lee@kernel.org>
+To: Conor Dooley <conor@kernel.org>
+Cc: Conor Dooley <conor.dooley@microchip.com>, Pavel Machek <pavel@ucw.cz>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Sven Schwermer <sven.schwermer@disruptive-technologies.com>,
+	Christian Marangi <ansuelsmth@gmail.com>,
+	linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: leds: pwm-multicolour: re-allow active-low
+Message-ID: <20240223154304.GE1666215@google.com>
+References: <20240213-verse-clinic-e6de06e1f18d@spud>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:1101:1d::28
-X-SA-Exim-Mail-From: m.felsch@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+In-Reply-To: <20240213-verse-clinic-e6de06e1f18d@spud>
 
-Add the sysfs cell write support to make it possible to write to exposed
-cells from sysfs as well e.g. for device provisioning. The write support
-is limited to EEPROM based nvmem devices and to nvmem-cells which don't
-require post-processing.
+On Tue, 13 Feb 2024, Conor Dooley wrote:
 
-Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
----
- drivers/nvmem/core.c | 43 ++++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 42 insertions(+), 1 deletion(-)
+> From: Conor Dooley <conor.dooley@microchip.com>
+> 
+> active-low was lifted to the common schema for leds, but it went
+> unnoticed that the leds-multicolour binding had "additionalProperties:
+> false" where the other users had "unevaluatedProperties: false", thereby
+> disallowing active-low for multicolour leds. Explicitly permit it again.
+> 
+> Fixes: c94d1783136e ("dt-bindings: net: phy: Make LED active-low property common")
+> Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
+> ---
+> 
+> I'm just assuming this is intentionally restrictive, if its not, we
+> could easily just change this to uneval: false.
+> 
+> CC: Pavel Machek <pavel@ucw.cz>
+> CC: Lee Jones <lee@kernel.org>
+> CC: Rob Herring <robh@kernel.org>
+> CC: Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
+> CC: Conor Dooley <conor+dt@kernel.org>
+> CC: Sven Schwermer <sven.schwermer@disruptive-technologies.com>
+> CC: Christian Marangi <ansuelsmth@gmail.com>
+> CC: linux-leds@vger.kernel.org
+> CC: devicetree@vger.kernel.org
+> CC: linux-kernel@vger.kernel.org
+> ---
+>  Documentation/devicetree/bindings/leds/leds-pwm-multicolor.yaml | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/leds/leds-pwm-multicolor.yaml b/Documentation/devicetree/bindings/leds/leds-pwm-multicolor.yaml
+> index 5edfbe347341..a31a202afe5c 100644
+> --- a/Documentation/devicetree/bindings/leds/leds-pwm-multicolor.yaml
+> +++ b/Documentation/devicetree/bindings/leds/leds-pwm-multicolor.yaml
+> @@ -41,6 +41,8 @@ properties:
+>  
+>            pwm-names: true
+>  
+> +          active-low: true
+> +
+>            color: true
+>  
+>          required:
+> -- 
+> 2.43.0
 
-diff --git a/drivers/nvmem/core.c b/drivers/nvmem/core.c
-index 980123fb4dde..b1f86cb431ef 100644
---- a/drivers/nvmem/core.c
-+++ b/drivers/nvmem/core.c
-@@ -336,6 +336,40 @@ static ssize_t nvmem_cell_attr_read(struct file *filp, struct kobject *kobj,
- 	return read_len;
- }
- 
-+static ssize_t nvmem_cell_attr_write(struct file *filp, struct kobject *kobj,
-+				     struct bin_attribute *attr, char *buf,
-+				     loff_t pos, size_t count)
-+{
-+	struct nvmem_cell_entry *entry;
-+	struct nvmem_cell *cell;
-+	int ret;
-+
-+	entry = attr->private;
-+
-+	if (!entry->nvmem->reg_write)
-+		return -EPERM;
-+
-+	if (pos >= entry->bytes)
-+		return -EFBIG;
-+
-+	if (pos + count > entry->bytes)
-+		count = entry->bytes - pos;
-+
-+	cell = nvmem_create_cell(entry, entry->name, 0);
-+	if (IS_ERR(cell))
-+		return PTR_ERR(cell);
-+
-+	if (!cell)
-+		return -EINVAL;
-+
-+	ret = nvmem_cell_write(cell, buf, count);
-+
-+	kfree_const(cell->id);
-+	kfree(cell);
-+
-+	return ret;
-+}
-+
- /* default read/write permissions */
- static struct bin_attribute bin_attr_rw_nvmem = {
- 	.attr	= {
-@@ -458,13 +492,20 @@ static int nvmem_populate_sysfs_cells(struct nvmem_device *nvmem)
- 
- 	/* Initialize each attribute to take the name and size of the cell */
- 	list_for_each_entry(entry, &nvmem->cells, node) {
-+		umode_t mode = nvmem_bin_attr_get_umode(nvmem);
-+
-+		/* Limit cell-write support to EEPROMs at the moment */
-+		if (entry->read_post_process || nvmem->type != NVMEM_TYPE_EEPROM)
-+			mode &= ~0222;
-+
- 		sysfs_bin_attr_init(&attrs[i]);
- 		attrs[i].attr.name = devm_kasprintf(&nvmem->dev, GFP_KERNEL,
- 						    "%s@%x", entry->name,
- 						    entry->offset);
--		attrs[i].attr.mode = 0444;
-+		attrs[i].attr.mode = mode;
- 		attrs[i].size = entry->bytes;
- 		attrs[i].read = &nvmem_cell_attr_read;
-+		attrs[i].write = &nvmem_cell_attr_write;
- 		attrs[i].private = entry;
- 		if (!attrs[i].attr.name) {
- 			ret = -ENOMEM;
+Neither checkpatch.pl or Git appear to be happy with this:
+
+ERROR: Does not appear to be a unified-diff format patch
+
+total: 1 errors, 0 warnings, 0 lines checked
+
+NOTE: For some of the reported defects, checkpatch may be able to
+      mechanically convert to the typical style using --fix or --fix-inplace.
+
+"[PATCH] dt-bindings: leds: pwm-multicolour: re-allow active-low" has style problems, please review.
+
+NOTE: If any of the errors are false positives, please report
+      them to the maintainer, see CHECKPATCH in MAINTAINERS.
+WARNING: Missing commit description - Add an appropriate one
+
+ERROR: Missing Signed-off-by: line(s)
+
+total: 1 errors, 1 warnings, 8 lines checked
+
+NOTE: For some of the reported defects, checkpatch may be able to
+      mechanically convert to the typical style using --fix or --fix-inplace.
+
+Your patch has style problems, please review.
+
+NOTE: If any of the errors are false positives, please report
+      them to the maintainer, see CHECKPATCH in MAINTAINERS.
+
+Check the results (hit return to continue or Ctrl+c to exit)
+
+
+Applying patch(es)
+Applying: dt-bindings: leds: pwm-multicolour: re-allow active-low
+Using index info to reconstruct a base tree...
+M	Documentation/devicetree/bindings/leds/leds-pwm-multicolor.yaml
+/home/joneslee/projects/linux/kernel/.git/worktrees/for-led-next/rebase-apply/patch:28: indent with spaces.
+          active-low: true
+Checking patch Documentation/devicetree/bindings/leds/leds-pwm-multicolor.yaml...
+Applied patch Documentation/devicetree/bindings/leds/leds-pwm-multicolor.yaml cleanly.
+warning: 1 line adds whitespace errors.
+Falling back to patching base and 3-way merge...
+error: Your local changes to the following files would be overwritten by merge:
+	Documentation/devicetree/bindings/leds/leds-pwm-multicolor.yaml
+Please commit your changes or stash them before you merge.
+Aborting
+error: Failed to merge in the changes.
+Patch failed at 0001 dt-bindings: leds: pwm-multicolour: re-allow active-low
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+When you have resolved this problem, run "git am --continue".
+If you prefer to skip this patch, run "git am --skip" instead.
+To restore the original branch and stop patching, run "git am --abort".
+
 -- 
-2.39.2
-
+Lee Jones [李琼斯]
