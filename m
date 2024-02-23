@@ -1,96 +1,70 @@
-Received: from out-182.mta0.migadu.com (out-182.mta0.migadu.com [91.218.175.182])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C4BD11706
-	for <linux-kernel@vger.kernel.org>; Fri, 23 Feb 2024 05:00:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D78D7B66B;
+	Fri, 23 Feb 2024 05:15:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708664451; cv=none; b=s2q3sQwDJqwvgLf6ESI74w4VzuCayhzr5c0kMW/ura/oRZZo6A/pFwdFyF4WDNmB6H9aksYalhQrg+aqUVOaMa8eehQ3kdki7fNPZzLd+7+NE1X3NAtaL1bN3KPkTehsLrKPWB27Dr870G2ItVkUl8uO83IT0H2ANPFmWSUSp0E=
+	t=1708665360; cv=none; b=YQwhWw33bE95FubajrooL/ouQrdHhLhF0RVVNXDukzhpHhvep3dzAMdogNDoorsNfP2twy4Wt/h/ZMeLFPspYRKxU2+ek8pAiocjeFJPFL+7tHYKm4/QjLQ2wd+SPLpNOscsOWYEC7C9wedo4Fd6mNfUCcRTU3HEzSun5CCTzVk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708664451; c=relaxed/simple;
-	bh=Que1evLbnFfHRKzVpQkiqW6XLuqZSBE2U004J7wfB1g=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=WlIgm2VOqzD8OInluDdP0GraWbot6Mu8I82o8OHg4/QkkuvS2/EAIZ9ECFnY68JI7kNwhICbZYUXnBkRy7X+U874PNMq42Nm+Xbyw499sWXclmx3ryPKzBUx3Ekf66fWxZYDSQTw/BLu4e5Ac5h6Bpc3IdwhvDpdeWrUBmUX0n4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=mHqP772C; arc=none smtp.client-ip=91.218.175.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="mHqP772C"
-Message-ID: <347b870e-a7d5-45df-84ba-4eee37b74ff6@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1708664446;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=44xWYjkvEitvr2LpqKYpVHLl/pWnfYZs1Xfy0OuFJbw=;
-	b=mHqP772ChKDinSnQ925Tx/lQvvV6L4V4Qy8/FIogSIb1hkSpr01P6b5cfW5cz+tA26Hr/q
-	sy5sDLAP7wNNgiZi/Fe386kHg36Tw22uAd006IjT6voIAtvlecUhl7xYLDtviEgqlJmA+7
-	QhEucaJDD+nkDy3EExHa4388hqCHfNs=
-Date: Fri, 23 Feb 2024 13:00:13 +0800
+	s=arc-20240116; t=1708665360; c=relaxed/simple;
+	bh=WuL1uQewecYalXVHDaYYtlroaae/JXx3HQFuHa4Fq5E=;
+	h=Message-ID:Date:MIME-Version:To:Cc:From:Subject:Content-Type; b=qvp23YS7kP8yHwqHLyn7TXBAmL1hV9lr2ReFTd8or5RG+ZPio9PORYiAvciOBVxT7MzOUFTGuX0srNbgbHz7jadxPkPg++QJjRvcFv+Aidv7v+T3VbLOu2rWzsX9vgeDmUEbkbZzciOgjnnfR5INyrDhWKN/MV6MH0SBzFOU5kU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+	Content-Type:Subject:From:Cc:To:MIME-Version:Date:Message-ID:Sender:Reply-To:
+	Content-ID:Content-Description:In-Reply-To:References;
+	bh=K4pZXLcE/2qx7/60xUGjLqbdHGX9Oq/cAHz4EffVmhs=; b=TJTibySTb/nEdkBxr6pXorTJu+
+	fNpbiFnNAYVjJGi7zJhNEEXqDIz+80ctyjvWohVwAPJjzL0cDEYIWsC/4APSDdDdIBQiRkejhu6f0
+	UlVuvJKEgD+nhCN1KsBi0PFKKwnQcgVTeek5enfinKeijrYa1W6hfcQFduMbJ2WudW/npir7QWfkg
+	Zk4U5xnp7Mf5bluvnPZ/sRoC5fYs55QWsU6BOceIrwg+OwOod9YTPFrpnRIWxqvidI7IUWBOjgPby
+	oRJFnec6i8kDAA/ADjNwycJngFEpqdmJ4TlRslJDqiZ2LAzEtcS0Lmk8OP228K9bwmUUwH58aC8H/
+	5alvaMtA==;
+Received: from [50.53.50.0] (helo=[192.168.254.15])
+	by bombadil.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1rdNuF-00000007xVV-3zqp;
+	Fri, 23 Feb 2024 05:15:37 +0000
+Message-ID: <4c4e2845-c7a8-4d0b-aa4a-7c5e3399b3dc@infradead.org>
+Date: Thu, 22 Feb 2024 21:15:28 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH] slub: avoid scanning all partial slabs in get_slabinfo()
+User-Agent: Mozilla Thunderbird
 Content-Language: en-US
-To: "Christoph Lameter (Ampere)" <cl@linux.com>
-Cc: Vlastimil Babka <vbabka@suse.cz>, David Rientjes <rientjes@google.com>,
- Jianfeng Wang <jianfeng.w.wang@oracle.com>, penberg@kernel.org,
- iamjoonsoo.kim@lge.com, akpm@linux-foundation.org, roman.gushchin@linux.dev,
- 42.hyeyoo@gmail.com, linux-mm@kvack.org, linux-kernel@vger.kernel.org,
- Chengming Zhou <zhouchengming@bytedance.com>
-References: <20240215211457.32172-1-jianfeng.w.wang@oracle.com>
- <6b58d81f-8e8f-3732-a5d4-40eece75013b@google.com>
- <fee76a21-fbc5-4ad8-b4bf-ba8a8e7cee8f@suse.cz>
- <55ccc92a-79fa-42d2-97d8-b514cf00823b@linux.dev>
- <6daf88a2-84c2-5ba4-853c-c38cca4a03cb@linux.com>
- <e924c39b-7636-4c34-bfe9-603cf07c21d3@linux.dev>
- <b8f393fb-2b1d-213c-9301-35d4ffca1f50@linux.com>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Chengming Zhou <chengming.zhou@linux.dev>
-In-Reply-To: <b8f393fb-2b1d-213c-9301-35d4ffca1f50@linux.com>
+To: sparclinux <sparclinux@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ Andreas Larsson <andreas@gaisler.com>
+Cc: "Maciej W. Rozycki" <macro@orcam.me.uk>
+From: Randy Dunlap <rdunlap@infradead.org>
+Subject: sparc: patch to fix parport_pc build on 32-bit
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
 
-On 2024/2/23 11:50, Christoph Lameter (Ampere) wrote:
-> On Fri, 23 Feb 2024, Chengming Zhou wrote:
-> 
->>> Can we guestimate the free objects based on the number of partial slabs. That number is available.
->>
->> Yeah, the number of partial slabs is easy to know, but I can't think of a way to
->> estimate the free objects, since __slab_free() is just double cmpxchg in most cases.
-> 
-> Well a starting point may be half the objects possible in a slab page?
+Hi Andreas,
 
-Yeah, also a choice.
+Please pick up this patch from June/2023. I have already replied to
+the patch with:
 
-> 
-> 
->>> How accurate need the accounting be? We also have fuzzy accounting in the VM counters.
->>
->> Maybe not need to be very accurate, some delay/fuzzy should be acceptable.
->>
->> Another direction I think is that we don't distinguish slabs on cpu partial list or
->> slabs on node partial list anymore (different with current behavior).
->>
->> Now we have three scopes:
->> 1. SL_ALL: include all slabs
->> 2. SL_PARTIAL: only include partial slabs on node
->> 3. SL_CPU: only include partail slabs on cpu and the using cpu slab
->>
->> If we change SL_PARTIAL to mean all partial slabs, it maybe simpler.
-> 
-> Thats not going to work since you would have to scan multiple lists instead of a single list.
+Acked-by: Randy Dunlap <rdunlap@infradead.org>
+Tested-by: Randy Dunlap <rdunlap@infradead.org> # build-tested
 
-We have to use percpu counters if we go this way.
+and I just rechecked it on linux-next-20240223 to make sure that it
+builds cleanly. It does; however, there is one trivial merge warning:
 
-> 
-> Another approach may be to come up with some way to scan the partial lists without taking locks. That actually would improve the performance of the allocator. It may work with a single linked lists and RCU.
-> 
+patching file arch/sparc/include/asm/parport.h
+Hunk #1 succeeded at 20 (offset 1 line).
+Hunk #2 succeeded at 252 (offset 1 line).
 
-I think this is a better direction! We can use RCU list if slab can be freed by RCU.
+The patch:
+https://lore.kernel.org/lkml/alpine.DEB.2.21.2306190121540.14084@angie.orcam.me.uk/
 
+
+Thank you.
+-- 
+#Randy
