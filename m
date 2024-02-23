@@ -1,41 +1,38 @@
-Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
+Received: from szxga07-in.huawei.com (szxga07-in.huawei.com [45.249.212.35])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EC756280B
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 446BC1642C
 	for <linux-kernel@vger.kernel.org>; Fri, 23 Feb 2024 10:38:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.35
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708684703; cv=none; b=YOAIGsnyIFSXTW2ahQytwuvoAKZRMzFTnPuDrYzF3R/qPn5X3QGbBkIx7eLp0v0dF1yADaN6qLVPOGh1JBGjeb7SgVxdOUEsTs7TyVbFxIVsZFBlv63aAa/fRLHuAg8UBQJfJlI6fJ9lspiPvDaUvc2TJ+YUIBPEh7B5qLomDVk=
+	t=1708684704; cv=none; b=P1BHiCbzXrzV46zUd7rbtTpeMoIfUhoKU5TgSJZHoFyg+k8PncGzOcuODaQVUFYEMwB+e03ru6QxLW1ICeSrJaPb3VdMhbIUp4xHGVElc0bMMRZp5d4a63/voCl6SuFmZ80ZjK0DD4IVnZmqs3UAtmmDWxNvwBVAaHdrk1gfJJw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708684703; c=relaxed/simple;
-	bh=qHWLYtRlKhwqIEOeaqNuTNGZAOEJatl8IxH61J5yzBQ=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=N3jvk212G7QkvvBTBM/kh5tynszebPthaQ+/jfdNYOLnlDs1L1YCvMO0gh6pcEoX67ndWrbsTwNpB5CcP505Qakfs2p7HBNvZaGXrL30pD3EECWJZJEAjwki8YFZA48NiL4LgIOU9XmDAm8DDutf8cjcqABul3uIRjCh7FGwqGk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
+	s=arc-20240116; t=1708684704; c=relaxed/simple;
+	bh=RUPsiCDd2MQJ2G7s6am/N3RkD+u1oGVMu5JjFEVw4Kg=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=aN9QlSKSFIxMC2L6EfA+9qKeFB6x+Zv2u2wlyBZuM54ociUx4FefG6Mb+tFWUnQO3nDI+Ly7tYXHyR7/LMbFfXufORlB8WuqeQtF4KmH2Bkcsr2tKGhcDs0WTWlNFyC7lPUDjlCnfCelsCPdj7vQcMh0c0n571iAjJ6AL5uSMgs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.35
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.163])
-	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4Th5yd0F71z2BdSB;
-	Fri, 23 Feb 2024 18:36:09 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.19.88.214])
+	by szxga07-in.huawei.com (SkyGuard) with ESMTP id 4Th5yb4wYTz1X2qw;
+	Fri, 23 Feb 2024 18:36:07 +0800 (CST)
 Received: from canpemm500009.china.huawei.com (unknown [7.192.105.203])
-	by mail.maildlp.com (Postfix) with ESMTPS id A6D9C18002F;
-	Fri, 23 Feb 2024 18:38:19 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id A549E1A016B;
+	Fri, 23 Feb 2024 18:38:18 +0800 (CST)
 Received: from localhost.localdomain (10.50.165.33) by
  canpemm500009.china.huawei.com (7.192.105.203) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Fri, 23 Feb 2024 18:38:19 +0800
+ 15.1.2507.35; Fri, 23 Feb 2024 18:38:18 +0800
 From: Yicong Yang <yangyicong@huawei.com>
 To: <jonathan.cameron@huawei.com>, <will@kernel.org>, <mark.rutland@arm.com>,
 	<hejunhao3@huawei.com>, <linux-arm-kernel@lists.infradead.org>,
 	<linux-kernel@vger.kernel.org>
 CC: <yangyicong@hisilicon.com>, <linuxarm@huawei.com>,
 	<prime.zeng@hisilicon.com>, <fanghao11@huawei.com>
-Subject: [PATCH v2 5/8] drivers/perf: hisi_pcie: Check the target filter properly
-Date: Fri, 23 Feb 2024 18:33:56 +0800
-Message-ID: <20240223103359.18669-6-yangyicong@huawei.com>
+Subject: [PATCH v2 0/8] drivers/perf: hisi_pcie: Several updates for HiSilicon PCIe PMU driver
+Date: Fri, 23 Feb 2024 18:33:51 +0800
+Message-ID: <20240223103359.18669-1-yangyicong@huawei.com>
 X-Mailer: git-send-email 2.31.0
-In-Reply-To: <20240223103359.18669-1-yangyicong@huawei.com>
-References: <20240223103359.18669-1-yangyicong@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -47,80 +44,38 @@ Content-Type: text/plain
 X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
  canpemm500009.china.huawei.com (7.192.105.203)
 
-From: Junhao He <hejunhao3@huawei.com>
+From: Yicong Yang <yangyicong@hisilicon.com>
 
-The PMU can monitor traffic of certain target Root Port or downstream
-target Endpoint. User can specify the target filter by the "port" or
-"bdf" option respectively. The PMU can only monitor the Root Port or
-Endpoint on the same PCIe core so the value of "port" or "bdf" should
-be valid and will be checked by the driver.
+This series mainly fix and optimize the several usage of the driver:
+- Add more events to complement the TLP bandwidth counting
+- Fix the wrong counting on using the event group
+- Properly check the target filter to avoid invalid filter value
+- Optimize the handling of related events which are not in an event group
+- Update the docs
 
-Currently at least and only one of "port" and "bdf" option must be set.
-If "port" filter is not set or is set explicitly to zero (default),
-driver will regard the user specifies a "bdf" option since "port" option
-is a bitmask of the target Root Ports and zero is not a valid
-value.
+Change since v1:
+- Rename hisi_pcie_pmu_{config,clear}_filter() to properly reflect its function.
+- Add some test case logs to the Patch 5/8 comments.
+- Avoid use HISI_PCIE_MAX_COUNTER outside of functions in Patch 7/8.
+Link: https://lore.kernel.org/all/20240204074527.47110-1-yangyicong@huawei.com/
 
-If user not explicitly set "port" or "bdf" filter, the driver uses "bdf"
-default value (zero) to set target filter, but driver will skip the
-check of bdf=0, although it's a valid value (meaning 0000:000:00.0).
-Then the user just gets zero.
+Junhao He (4):
+  drivers/perf: hisi_pcie: Check the target filter properly
+  drivers/perf: hisi_pcie: Relax the check on related events
+  drivers/perf: hisi_pcie: Merge find_related_event() and
+    get_event_idx()
+  docs: perf: Update usage for target filter of hisi-pcie-pmu
 
-Therefore, we need to check if both "port" and "bdf" are invalid, then
-return failure and report warning.
+Yicong Yang (4):
+  drivers/perf: hisi_pcie: Rename hisi_pcie_pmu_{config,clear}_filter()
+  drivers/perf: hisi_pcie: Introduce hisi_pcie_pmu_get_event_ctrl_val()
+  drivers/perf: hisi_pcie: Fix incorrect counting under metric mode
+  drivers/perf: hisi_pcie: Add more events for counting TLP bandwidth
 
-Testing:
-before the patch:
-                   0      hisi_pcie0_core1/rx_mrd_flux/
-                   0      hisi_pcie0_core1/rx_mrd_flux,port=0/
-              24,124      hisi_pcie0_core1/rx_mrd_flux,port=1/
-                   0      hisi_pcie0_core1/rx_mrd_flux,bdf=0/
-                   0      hisi_pcie0_core1/rx_mrd_flux,port=0x800/
-     <not supported>      hisi_pcie0_core1/rx_mrd_flux,bdf=1/
-              24,132      hisi_pcie0_core1/rx_mrd_flux,bdf=0x1700/
-     <not supported>      hisi_pcie0_core1/rx_mrd_flux,port=0x0,bdf=0x0/
-     <not supported>      hisi_pcie0_core1/rx_mrd_flux,port=0x0,bdf=0x1/
-              24,138      hisi_pcie0_core1/rx_mrd_flux,port=0x0,bdf=0x1700/
-              24,126      hisi_pcie0_core1/rx_mrd_flux,port=0x1,bdf=0x0/
+ .../admin-guide/perf/hisi-pcie-pmu.rst        |  31 ++++--
+ drivers/perf/hisilicon/hisi_pcie_pmu.c        | 102 +++++++++---------
+ 2 files changed, 76 insertions(+), 57 deletions(-)
 
-after the patch:
-     <not supported>      hisi_pcie0_core1/rx_mrd_flux/
-     <not supported>      hisi_pcie0_core1/rx_mrd_flux,port=0/
-              24,153      hisi_pcie0_core1/rx_mrd_flux,port=1/
-                   0      hisi_pcie0_core1/rx_mrd_flux,port=0x800/
-     <not supported>      hisi_pcie0_core1/rx_mrd_flux,bdf=0/
-     <not supported>      hisi_pcie0_core1/rx_mrd_flux,bdf=1/
-              24,117      hisi_pcie0_core1/rx_mrd_flux,bdf=0x1700/
-     <not supported>      hisi_pcie0_core1/rx_mrd_flux,port=0x0,bdf=0x0/
-     <not supported>      hisi_pcie0_core1/rx_mrd_flux,port=0x0,bdf=0x1/
-              24,120      hisi_pcie0_core1/rx_mrd_flux,port=0x0,bdf=0x1700/
-              24,123      hisi_pcie0_core1/rx_mrd_flux,port=0x1,bdf=0x0/
-
-Signed-off-by: Junhao He <hejunhao3@huawei.com>
-Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
----
- drivers/perf/hisilicon/hisi_pcie_pmu.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/perf/hisilicon/hisi_pcie_pmu.c b/drivers/perf/hisilicon/hisi_pcie_pmu.c
-index 6f39cb82661e..b2dde7559639 100644
---- a/drivers/perf/hisilicon/hisi_pcie_pmu.c
-+++ b/drivers/perf/hisilicon/hisi_pcie_pmu.c
-@@ -306,10 +306,10 @@ static bool hisi_pcie_pmu_valid_filter(struct perf_event *event,
- 	if (hisi_pcie_get_trig_len(event) > HISI_PCIE_TRIG_MAX_VAL)
- 		return false;
- 
--	if (requester_id) {
--		if (!hisi_pcie_pmu_valid_requester_id(pcie_pmu, requester_id))
--			return false;
--	}
-+	/* Need to explicitly set filter of "port" or "bdf" */
-+	if (!hisi_pcie_get_port(event) &&
-+	    !hisi_pcie_pmu_valid_requester_id(pcie_pmu, requester_id))
-+		return false;
- 
- 	return true;
- }
 -- 
 2.24.0
 
