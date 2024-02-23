@@ -1,167 +1,266 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D7D182C60
-	for <linux-kernel@vger.kernel.org>; Fri, 23 Feb 2024 15:57:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D94882C94;
+	Fri, 23 Feb 2024 15:57:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708703860; cv=none; b=nCacgRmXS8EOd3TKR/cP8Npae+jn/AV6kgx2b74MiVLMq54eEcSXuLXLfs9Tj/VOw6tfVdEIwE7nor7yZwNBdNAiIK0zzuKbxjJPKYPuoRyDC6VTdbufu1tKjLFy+J5HbgQujwP0osm04ASMuNy6gqhx9paP+/FHOMQjTniVXLQ=
+	t=1708703868; cv=none; b=aF3EI00sD3Deq0hEigsrYuSdykV3BlcBcANZ4AvyIVXqUM2gzlfkaBVKnG/7FBVEsDJZhoY+3YAc+YhCZHDr//FcEuAMCkrGgz5VoJr3BPTThzqNci0imla61FXoqif+xBicwaUBfvhmOvThztWfwswQDFkmxJbg1XZQ87oalwo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708703860; c=relaxed/simple;
-	bh=zi7xhCN9r1n3iv+sh5wHZdIfmjyejjuSjiISgXho2UM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=doDmcgTnPd+96Yp20keBjASBCU/wEDCe8HSReYrETP8GDJPlBUjnnj2Q8CKfcWdkmlieV9135s8rCkusXsmQ3OxKYcNZUJY2mq3YADIegskaBXO+ZJ8BkgbpLAewsqC2It2VknNwKWS9cHlGCERZAOg7oXLCnxHagx/3XFQCDrI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=g5hIBsHk; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1708703868; c=relaxed/simple;
+	bh=gqrb+PGYOs5LLfSJLIoNp2Y40YeJ+CmorKnMSDQ5124=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=Hj4dFTk1hxFdE5xMpKqqqnJRg/qSNNM/O9FOTWmag+lW72NlQxnEjGWQzTgqzP8mhz0WAzwZ+V0GmUvSLAC8oQMDihD5AsG5qdiDowiOxQ222KKMG/XJswRFhm+ph7hmvsyFxEIk/OXRFZItgDujV8cCeazFf1cEETfKn8AIS9E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=e1BXG7/B; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="g5hIBsHk"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1708703856;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=P+cR72EL54R2xpPEHe1/1VXURnv19BSEwvnemyDV8zU=;
-	b=g5hIBsHkEL823PoYoE96NvQRIbPuglpuH9XAXJOFJGcqFSq6HTQcHRDtu3wH7SFRJbhBy8
-	jGCh2eYn9tz9CGi8TMfevWsLFjcRhZog5BcAbjjRIq29ebIDjfGby4WUAvOc431+giRKZ6
-	gQCIXNkB3ocYtYdkYQgZZZEdf0AP5hQ=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-635-ahSBYWehOVOzYxLguwbzWw-1; Fri, 23 Feb 2024 10:57:31 -0500
-X-MC-Unique: ahSBYWehOVOzYxLguwbzWw-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.rdu2.redhat.com [10.11.54.3])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 6AABB185A780;
-	Fri, 23 Feb 2024 15:57:30 +0000 (UTC)
-Received: from localhost (unknown [10.72.116.2])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 43026112132A;
-	Fri, 23 Feb 2024 15:57:28 +0000 (UTC)
-Date: Fri, 23 Feb 2024 23:57:25 +0800
-From: Baoquan He <bhe@redhat.com>
-To: Uladzislau Rezki <urezki@gmail.com>
-Cc: Pedro Falcato <pedro.falcato@gmail.com>,
-	Matthew Wilcox <willy@infradead.org>, Mel Gorman <mgorman@suse.de>,
-	kirill.shutemov@linux.intel.com,
-	Vishal Moola <vishal.moola@gmail.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	Lorenzo Stoakes <lstoakes@gmail.com>,
-	Christoph Hellwig <hch@infradead.org>,
-	"Liam R . Howlett" <Liam.Howlett@oracle.com>,
-	Dave Chinner <david@fromorbit.com>,
-	"Paul E . McKenney" <paulmck@kernel.org>,
-	Joel Fernandes <joel@joelfernandes.org>,
-	Oleksiy Avramchenko <oleksiy.avramchenko@sony.com>,
-	linux-mm@kvack.org
-Subject: Re: [PATCH v3 00/11] Mitigate a vmap lock contention v3
-Message-ID: <ZdjAZQRVmP9gnfsJ@MiWiFi-R3L-srv>
-References: <20240102184633.748113-1-urezki@gmail.com>
- <ZdcHXFMq0cwmVKfM@pc636>
- <CAKbZUD3+PJUoXee3MNvToy1zRnDoPoPqMjNAf5_87Uh-u2377w@mail.gmail.com>
- <ZdhmrEmA8wOuVcQT@pc636>
- <Zdhy3S1PzwfEJuS3@MiWiFi-R3L-srv>
- <Zdh8KmZtoQym7Syz@pc636>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="e1BXG7/B"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1708703867; x=1740239867;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=gqrb+PGYOs5LLfSJLIoNp2Y40YeJ+CmorKnMSDQ5124=;
+  b=e1BXG7/BR0FwHA5zlSBrY6vGKPhCYvjUd3rT544mRebBn2ZjwXccK952
+   B1g+eyCIvpfU6kuWgGshKs2AG7NXBL3jenQS6/yv3uW+tqyVOT3xKivFn
+   5n++o03lWq7T6rwarwV41Pk0KjETrNtw0G+2l106qV3AYSY1Abed2K9zp
+   RPTo3Jh2a7xs85ok4VAMiMxaW/K64x9oQGcjz9CDVolo8oosIvCPalfoe
+   wNi+v9Nd1lQsN8uR+WA23i8OW1t1wqYNKoQ42i3hYXyGdDYiob0whsZQd
+   RXirpt/DS6l2NIEclZ7byGlFaBF8JnMn/AWVorXD8z+hnKzLE6Pww1K+O
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10993"; a="3187534"
+X-IronPort-AV: E=Sophos;i="6.06,180,1705392000"; 
+   d="scan'208";a="3187534"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Feb 2024 07:57:44 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10993"; a="937025346"
+X-IronPort-AV: E=Sophos;i="6.06,180,1705392000"; 
+   d="scan'208";a="937025346"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmsmga001.fm.intel.com with ESMTP; 23 Feb 2024 07:57:41 -0800
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+	id 1F1E34F1; Fri, 23 Feb 2024 17:57:40 +0200 (EET)
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	linux-kernel@vger.kernel.org,
+	linux-acpi@vger.kernel.org
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
+	Daniel Scally <djrscally@gmail.com>,
+	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+	Len Brown <lenb@kernel.org>
+Subject: [PATCH v2 2/4] driver core: Move fw_devlink stuff to where it belongs
+Date: Fri, 23 Feb 2024 17:54:37 +0200
+Message-ID: <20240223155731.858412-3-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.43.0.rc1.1.gbec44491f096
+In-Reply-To: <20240223155731.858412-1-andriy.shevchenko@linux.intel.com>
+References: <20240223155731.858412-1-andriy.shevchenko@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <Zdh8KmZtoQym7Syz@pc636>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.3
 
-On 02/23/24 at 12:06pm, Uladzislau Rezki wrote:
-> > On 02/23/24 at 10:34am, Uladzislau Rezki wrote:
-> > > On Thu, Feb 22, 2024 at 11:15:59PM +0000, Pedro Falcato wrote:
-> > > > Hi,
-> > > > 
-> > > > On Thu, Feb 22, 2024 at 8:35 AM Uladzislau Rezki <urezki@gmail.com> wrote:
-> > > > >
-> > > > > Hello, Folk!
-> > > > >
-> > > > >[...]
-> > > > > pagetable_alloc - gets increased as soon as a higher pressure is applied by
-> > > > > increasing number of workers. Running same number of jobs on a next run
-> > > > > does not increase it and stays on same level as on previous.
-> > > > >
-> > > > > /**
-> > > > >  * pagetable_alloc - Allocate pagetables
-> > > > >  * @gfp:    GFP flags
-> > > > >  * @order:  desired pagetable order
-> > > > >  *
-> > > > >  * pagetable_alloc allocates memory for page tables as well as a page table
-> > > > >  * descriptor to describe that memory.
-> > > > >  *
-> > > > >  * Return: The ptdesc describing the allocated page tables.
-> > > > >  */
-> > > > > static inline struct ptdesc *pagetable_alloc(gfp_t gfp, unsigned int order)
-> > > > > {
-> > > > >         struct page *page = alloc_pages(gfp | __GFP_COMP, order);
-> > > > >
-> > > > >         return page_ptdesc(page);
-> > > > > }
-> > > > >
-> > > > > Could you please comment on it? Or do you have any thought? Is it expected?
-> > > > > Is a page-table ever shrink?
-> > > > 
-> > > > It's my understanding that the vunmap_range helpers don't actively
-> > > > free page tables, they just clear PTEs. munmap does free them in
-> > > > mmap.c:free_pgtables, maybe something could be worked up for vmalloc
-> > > > too.
-> > > >
-> > > Right. I see that for a user space, pgtables are removed. There was a
-> > > work on it.
-> > > 
-> > > >
-> > > > I would not be surprised if the memory increase you're seeing is more
-> > > > or less correlated to the maximum vmalloc footprint throughout the
-> > > > whole test.
-> > > > 
-> > > Yes, the vmalloc footprint follows the memory usage. Some uses cases
-> > > map lot of memory.
-> > 
-> > The 'nr_threads=256' testing may be too radical. I took the test on
-> > a bare metal machine as below, it's still running and hang there after
-> > 30 minutes. I did this after system boot. I am looking for other
-> > machines with more processors.
-> > 
-> > [root@dell-r640-068 ~]# nproc 
-> > 64
-> > [root@dell-r640-068 ~]# free -h
-> >                total        used        free      shared  buff/cache   available
-> > Mem:           187Gi        18Gi       169Gi        12Mi       262Mi       168Gi
-> > Swap:          4.0Gi          0B       4.0Gi
-> > [root@dell-r640-068 ~]# 
-> > 
-> > [root@dell-r640-068 linux]# tools/testing/selftests/mm/test_vmalloc.sh run_test_mask=127 nr_threads=256
-> > Run the test with following parameters: run_test_mask=127 nr_threads=256
-> > 
-> Agree, nr_threads=256 is a way radical :) Mine took 50 minutes to
-> complete. So wait more :)
+A few APIs that belong specifically to the fw_devlink APIs
+- are exposed to others without need
+- prevents device property code to be cleaned up in the future
 
-Right, mine could take the similar time to finish that. I got a machine
-with 288 cpus, see if I can get some clues. When I go through the code
-flow, suddenly realized it could be drain_vmap_area_work which is the 
-bottle neck and cause the tremendous page table pages costing.
+Resolve this mess by moving fw_devlink code to where it belongs
+and hide from others.
 
-On your system, there's 64 cpus. then 
+Reviewed-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ drivers/base/core.c      | 58 ++++++++++++++++++++++++++++++++++++++++
+ drivers/base/property.c  | 56 --------------------------------------
+ include/linux/fwnode.h   |  1 -
+ include/linux/property.h |  2 --
+ 4 files changed, 58 insertions(+), 59 deletions(-)
 
-nr_lazy_max = lazy_max_pages() = 7*32M = 224M;
-
-So with nr_threads=128 or 256, it's so easily getting to the nr_lazy_max
-and triggering drain_vmap_work(). When cpu resouce is very limited, the
-lazy vmap purging will be very slow. While the alloc/free in lib/tet_vmalloc.c 
-are going far faster and more easily then vmap reclaiming. If old va is not
-reused, new va is allocated and keep extending, the new page table surely
-need be created to cover them.
-
-I will take testing on the system with 288 cpus, will update if testing
-is done.
+diff --git a/drivers/base/core.c b/drivers/base/core.c
+index 9828da9b933c..35ccd8bb2c9b 100644
+--- a/drivers/base/core.c
++++ b/drivers/base/core.c
+@@ -1871,6 +1871,7 @@ static void fw_devlink_unblock_consumers(struct device *dev)
+ 	device_links_write_unlock();
+ }
+ 
++#define get_dev_from_fwnode(fwnode)	get_device((fwnode)->dev)
+ 
+ static bool fwnode_init_without_drv(struct fwnode_handle *fwnode)
+ {
+@@ -1901,6 +1902,63 @@ static bool fwnode_ancestor_init_without_drv(struct fwnode_handle *fwnode)
+ 	return false;
+ }
+ 
++/**
++ * fwnode_is_ancestor_of - Test if @ancestor is ancestor of @child
++ * @ancestor: Firmware which is tested for being an ancestor
++ * @child: Firmware which is tested for being the child
++ *
++ * A node is considered an ancestor of itself too.
++ *
++ * Return: true if @ancestor is an ancestor of @child. Otherwise, returns false.
++ */
++static bool fwnode_is_ancestor_of(const struct fwnode_handle *ancestor,
++				  const struct fwnode_handle *child)
++{
++	struct fwnode_handle *parent;
++
++	if (IS_ERR_OR_NULL(ancestor))
++		return false;
++
++	if (child == ancestor)
++		return true;
++
++	fwnode_for_each_parent_node(child, parent) {
++		if (parent == ancestor) {
++			fwnode_handle_put(parent);
++			return true;
++		}
++	}
++	return false;
++}
++
++/**
++ * fwnode_get_next_parent_dev - Find device of closest ancestor fwnode
++ * @fwnode: firmware node
++ *
++ * Given a firmware node (@fwnode), this function finds its closest ancestor
++ * firmware node that has a corresponding struct device and returns that struct
++ * device.
++ *
++ * The caller is responsible for calling put_device() on the returned device
++ * pointer.
++ *
++ * Return: a pointer to the device of the @fwnode's closest ancestor.
++ */
++static struct device *fwnode_get_next_parent_dev(const struct fwnode_handle *fwnode)
++{
++	struct fwnode_handle *parent;
++	struct device *dev;
++
++	fwnode_for_each_parent_node(fwnode, parent) {
++		dev = get_dev_from_fwnode(parent);
++		if (dev) {
++			fwnode_handle_put(parent);
++			return dev;
++		}
++	}
++	return NULL;
++}
++
+ /**
+  * __fw_devlink_relax_cycles - Relax and mark dependency cycles.
+  * @con: Potential consumer device.
+diff --git a/drivers/base/property.c b/drivers/base/property.c
+index a1b01ab42052..afa1bf2b3c5a 100644
+--- a/drivers/base/property.c
++++ b/drivers/base/property.c
+@@ -699,34 +699,6 @@ struct fwnode_handle *fwnode_get_next_parent(struct fwnode_handle *fwnode)
+ }
+ EXPORT_SYMBOL_GPL(fwnode_get_next_parent);
+ 
+-/**
+- * fwnode_get_next_parent_dev - Find device of closest ancestor fwnode
+- * @fwnode: firmware node
+- *
+- * Given a firmware node (@fwnode), this function finds its closest ancestor
+- * firmware node that has a corresponding struct device and returns that struct
+- * device.
+- *
+- * The caller is responsible for calling put_device() on the returned device
+- * pointer.
+- *
+- * Return: a pointer to the device of the @fwnode's closest ancestor.
+- */
+-struct device *fwnode_get_next_parent_dev(const struct fwnode_handle *fwnode)
+-{
+-	struct fwnode_handle *parent;
+-	struct device *dev;
+-
+-	fwnode_for_each_parent_node(fwnode, parent) {
+-		dev = get_dev_from_fwnode(parent);
+-		if (dev) {
+-			fwnode_handle_put(parent);
+-			return dev;
+-		}
+-	}
+-	return NULL;
+-}
+-
+ /**
+  * fwnode_count_parents - Return the number of parents a node has
+  * @fwnode: The node the parents of which are to be counted
+@@ -773,34 +745,6 @@ struct fwnode_handle *fwnode_get_nth_parent(struct fwnode_handle *fwnode,
+ }
+ EXPORT_SYMBOL_GPL(fwnode_get_nth_parent);
+ 
+-/**
+- * fwnode_is_ancestor_of - Test if @ancestor is ancestor of @child
+- * @ancestor: Firmware which is tested for being an ancestor
+- * @child: Firmware which is tested for being the child
+- *
+- * A node is considered an ancestor of itself too.
+- *
+- * Return: true if @ancestor is an ancestor of @child. Otherwise, returns false.
+- */
+-bool fwnode_is_ancestor_of(const struct fwnode_handle *ancestor, const struct fwnode_handle *child)
+-{
+-	struct fwnode_handle *parent;
+-
+-	if (IS_ERR_OR_NULL(ancestor))
+-		return false;
+-
+-	if (child == ancestor)
+-		return true;
+-
+-	fwnode_for_each_parent_node(child, parent) {
+-		if (parent == ancestor) {
+-			fwnode_handle_put(parent);
+-			return true;
+-		}
+-	}
+-	return false;
+-}
+-
+ /**
+  * fwnode_get_next_child_node - Return the next child node handle for a node
+  * @fwnode: Firmware node to find the next child node for.
+diff --git a/include/linux/fwnode.h b/include/linux/fwnode.h
+index 2d23a14857c7..416cbe72f0c7 100644
+--- a/include/linux/fwnode.h
++++ b/include/linux/fwnode.h
+@@ -187,7 +187,6 @@ struct fwnode_operations {
+ 		if (fwnode_has_op(fwnode, op))				\
+ 			(fwnode)->ops->op(fwnode, ## __VA_ARGS__);	\
+ 	} while (false)
+-#define get_dev_from_fwnode(fwnode)	get_device((fwnode)->dev)
+ 
+ static inline void fwnode_init(struct fwnode_handle *fwnode,
+ 			       const struct fwnode_operations *ops)
+diff --git a/include/linux/property.h b/include/linux/property.h
+index e6516d0b7d52..284ff79ebf03 100644
+--- a/include/linux/property.h
++++ b/include/linux/property.h
+@@ -156,11 +156,9 @@ struct fwnode_handle *fwnode_get_next_parent(struct fwnode_handle *fwnode);
+ 	for (parent = fwnode_get_parent(fwnode); parent;	\
+ 	     parent = fwnode_get_next_parent(parent))
+ 
+-struct device *fwnode_get_next_parent_dev(const struct fwnode_handle *fwnode);
+ unsigned int fwnode_count_parents(const struct fwnode_handle *fwn);
+ struct fwnode_handle *fwnode_get_nth_parent(struct fwnode_handle *fwn,
+ 					    unsigned int depth);
+-bool fwnode_is_ancestor_of(const struct fwnode_handle *ancestor, const struct fwnode_handle *child);
+ struct fwnode_handle *fwnode_get_next_child_node(
+ 	const struct fwnode_handle *fwnode, struct fwnode_handle *child);
+ struct fwnode_handle *fwnode_get_next_available_child_node(
+-- 
+2.43.0.rc1.1.gbec44491f096
 
