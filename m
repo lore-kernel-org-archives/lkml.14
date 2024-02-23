@@ -1,108 +1,187 @@
-Received: from mx0b-001ae601.pphosted.com (mx0a-001ae601.pphosted.com [67.231.149.25])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1A2D12FB23;
-	Fri, 23 Feb 2024 17:02:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.149.25
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 961CF12AAFA;
+	Fri, 23 Feb 2024 17:02:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708707760; cv=none; b=Q1SWYrJQ6qjoD01gUxEwUs1ToAxOY2ipmZxZuY5KMxWhJeTUzq6OcbLdim72gJTY7z1e3D7UeZ4vgKq2+cv/m+YKOJDMj+PzeKfAMNO6mxKGcqYp0zUAzElZfyFvd7T+bIvIP8uPDKUWJKqkntkut9QDcEaGM2zW1y6CDKDo7/8=
+	t=1708707777; cv=none; b=AnnpKa3iY7aR/qw3wZxSimnGYxCaVALwwg4g7xt0nuZwlJ9QKJHFeOFvQfKH9MBphD0QFXB+51aOZzHcXCDEAYvpHEy/8zwlMKPnudwpxvpXeA45RplfrjFe9zSXbd/CFSPbyasPdEgh/cXg6YZFezvGqYZ9VMNfqv6ClGtf7bo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708707760; c=relaxed/simple;
-	bh=MLId+vpL1GJSYnk9r4V10bG6KRC9aNji3+0kQGieFqg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=OmrHgiVFVdw7YInHRtDv6Pn9HWl3msVzWPp+yk65OiS2bKi/9oBsTA1Xg4PnZ20ZCt3Q5DVig9dQHfnm1zvpQ29wHL2uuRcoDIOe36xhiigMsycKE4PdzS4+PQ0M4yAxri6njCTRyLqPH5KDLBXpgT34mhU8ArH0EmS0GRyqga4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com; spf=pass smtp.mailfrom=opensource.cirrus.com; dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b=bWlCKrvA; arc=none smtp.client-ip=67.231.149.25
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=opensource.cirrus.com
+	s=arc-20240116; t=1708707777; c=relaxed/simple;
+	bh=w3vKnidsx0wUtK3fpR4TZWN2po2bShZX3cmliDEejj4=;
+	h=References:From:To:Cc:Subject:Date:In-reply-to:Message-ID:
+	 MIME-Version:Content-Type; b=EqEn56u4ER/UtCpOLArEcUUagRi9cwQu3SX4YpVw2sBIEljcOP/w7ufbHDpx3EJzAhiCEDs+8i8tpiZcZFQotCMZSSJPqXri9zdEDypQVx5tS/cVV1g1eufJvb3rW9w4b/YrzsHQbCS80/yvFFOlpPq4dBEGIJchid7ocebYh0Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PoGOy6Vs; arc=none smtp.client-ip=209.85.167.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="bWlCKrvA"
-Received: from pps.filterd (m0077473.ppops.net [127.0.0.1])
-	by mx0a-001ae601.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 41N6HREp027836;
-	Fri, 23 Feb 2024 11:02:06 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	PODMain02222019; bh=x/AtCItlvRqeTztsKy5EsHh5og0itw6wNDcPMUzLjho=; b=
-	bWlCKrvAeBVO4Ssmi/QxqKGTXiqcqBTnYxBFp3Gb7KV51QPwLvmCu1Choq/DX837
-	1gsatA9mcK2riPDaBdjbNdNoJwv4tD7mTeQZh0FeZ3vhWZQDpCbi7ciylpaNW2Le
-	Tm0/hRthSKWXkTy//LaLAt6Qgpmb+FCNptV/+gFbwQELQXmviypneXUPWV5RW0DP
-	dASxgw5iFWmHA+6CBEBbb6ejlpC0gFW0NpFy0+woJCD/qmigeNd8sffXxbEa8HRq
-	AnboIH7irKiwAKU6aUPMlASwci6ttZ4TPG5J0W6ZOJ1gFFyC8OJC7xgAesjHyPar
-	F2DHavGgqai6nSHlrYomKA==
-Received: from ediex02.ad.cirrus.com ([84.19.233.68])
-	by mx0a-001ae601.pphosted.com (PPS) with ESMTPS id 3wd207mbqm-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 23 Feb 2024 11:02:05 -0600 (CST)
-Received: from ediex01.ad.cirrus.com (198.61.84.80) by ediex02.ad.cirrus.com
- (198.61.84.81) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Fri, 23 Feb
- 2024 17:02:03 +0000
-Received: from ediswmail9.ad.cirrus.com (198.61.86.93) by
- ediex01.ad.cirrus.com (198.61.84.80) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40 via Frontend Transport; Fri, 23 Feb 2024 17:02:03 +0000
-Received: from [198.90.208.18] (ediswws06.ad.cirrus.com [198.90.208.18])
-	by ediswmail9.ad.cirrus.com (Postfix) with ESMTP id 6F06F820243;
-	Fri, 23 Feb 2024 17:02:03 +0000 (UTC)
-Message-ID: <956f2b88-8b52-45b3-a27d-fa8e75a02642@opensource.cirrus.com>
-Date: Fri, 23 Feb 2024 17:02:03 +0000
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PoGOy6Vs"
+Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-512d5744290so1427477e87.2;
+        Fri, 23 Feb 2024 09:02:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1708707773; x=1709312573; darn=vger.kernel.org;
+        h=mime-version:message-id:in-reply-to:date:subject:cc:to:from
+         :user-agent:references:from:to:cc:subject:date:message-id:reply-to;
+        bh=SDARa/oqbm/d9tdhXbytuGygf2kw/guW3ER9GGbmrkA=;
+        b=PoGOy6VsUZVpdbHGSOvTwqr5zNlukF2OB5FalDDhEaNQ3AAmoncgHw67M2amuQSzQd
+         ULKORic7Dv73K3dwU4RE7dG0RdlvvcNwe+Ocz5b0tVtqkII5w3dyPKuC+GC7rmHb27nf
+         8CxOrgtt8oypUzq9Q3jS189n9TGQMXw3IAVH+nmP06SD8DUFqcHGG1544ssllBt++ETF
+         BWRuIObh+rW29H5oGsZn/ueLpupfCioU3UW1Dq+2yLGm+QKjSISYmN4cip7sWNiW3Mxt
+         XH5tuhaJxH0DDWasDb9TH6TQ+z4SNmnvO5yXdHbUr+EjuFDSb/5MoIN4hHxnwfezq+AY
+         Gv1g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708707773; x=1709312573;
+        h=mime-version:message-id:in-reply-to:date:subject:cc:to:from
+         :user-agent:references:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=SDARa/oqbm/d9tdhXbytuGygf2kw/guW3ER9GGbmrkA=;
+        b=Mn7NyaEtJzVwNN1gRnCx7MwXrhzEa6ufDsz0aKUP7sgetOK2MMGSA/UbVkdeY+sVfx
+         dJVD1BUxReBOWATpeXJNyFv6J88PqC3C6C6+iJ3jySHLa4keFtxSYPiu7tzKCrhV8ola
+         c/w0QYhk0S69d78Q/QD+MZqH35dYposQ1qQIeHWMnQ/QKF4bQXDS80dqxGFvRHZrLJYH
+         kItIviPZ0E/Pe6zfzJVvp5PNa6z7YnWksVVLJovuP6r0oDJz/QfTsU13+ShNUoxL7zC6
+         nef0b94Topuj7TDCrEhoEYNUkMuA2RzorJ3r9b6LBgmhXk9e1ECnijSn9RO99gYgwMyA
+         uoIA==
+X-Forwarded-Encrypted: i=1; AJvYcCXoPxBftbPCyeiPyuDl6tth2BpP+mz2gS93b++53KQvfgOSC+QKTzJOZe92YvDItUMny4Nf7rLH6A/gul6VeL04JmNuTYVgr61icGBo
+X-Gm-Message-State: AOJu0Yw5SZkm6NHNQ3SL35CdTWxufiGIa+ueFK1bwn/zYbwzKcvp5VRr
+	tF1lzq1FkNu9nzI4M09tHc7RzR+CHqL6abTbYW2O8Jzn2Xxwo/rtmtRQf84a86SQVw==
+X-Google-Smtp-Source: AGHT+IHa0Wv6AanMCgAGh0zxvBqJA4ChoAzx7oJxdKKctA8sXuKVuddjKVQs1OBIpwnhVCHG65/MIQ==
+X-Received: by 2002:ac2:4f0b:0:b0:512:b318:c1fd with SMTP id k11-20020ac24f0b000000b00512b318c1fdmr293439lfr.54.1708707773451;
+        Fri, 23 Feb 2024 09:02:53 -0800 (PST)
+Received: from razdolb ([37.1.50.248])
+        by smtp.gmail.com with ESMTPSA id p5-20020a056512234500b00512dd531149sm652334lfu.74.2024.02.23.09.02.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 23 Feb 2024 09:02:53 -0800 (PST)
+References: <20231218174042.794012-1-mike.rudenko@gmail.com>
+ <20231218174042.794012-16-mike.rudenko@gmail.com>
+ <20240223113300.GS31348@pendragon.ideasonboard.com>
+User-agent: mu4e 1.10.8; emacs 29.2.50
+From: Mikhail Rudenko <mike.rudenko@gmail.com>
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, Sakari Ailus
+ <sakari.ailus@linux.intel.com>, Jacopo Mondi <jacopo@jmondi.org>, Tommaso
+ Merciai <tomm.merciai@gmail.com>, Christophe JAILLET
+ <christophe.jaillet@wanadoo.fr>, Dave Stevenson
+ <dave.stevenson@raspberrypi.com>, Mauro Carvalho Chehab
+ <mchehab@kernel.org>
+Subject: Re: [PATCH v2 15/20] media: i2c: ov4689: Move pixel array size out
+ of struct ov4689_mode
+Date: Fri, 23 Feb 2024 19:29:06 +0300
+In-reply-to: <20240223113300.GS31348@pendragon.ideasonboard.com>
+Message-ID: <874jdzdsg3.fsf@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 6/6] ASoC: cs-amp-lib: Add KUnit test for calibration
- helpers
-Content-Language: en-GB
-To: Mark Brown <broonie@kernel.org>
-CC: <tiwai@suse.com>, <linux-sound@vger.kernel.org>,
-        <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>,
-        <patches@opensource.cirrus.com>
-References: <20240223153910.2063698-1-rf@opensource.cirrus.com>
- <20240223153910.2063698-7-rf@opensource.cirrus.com>
- <ZdjMIVYp7Qb/Tt9d@finisterre.sirena.org.uk>
-From: Richard Fitzgerald <rf@opensource.cirrus.com>
-In-Reply-To: <ZdjMIVYp7Qb/Tt9d@finisterre.sirena.org.uk>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-GUID: CnArif1KVPkqp-jNYyI0ptCu1_Z1L7YN
-X-Proofpoint-ORIG-GUID: CnArif1KVPkqp-jNYyI0ptCu1_Z1L7YN
-X-Proofpoint-Spam-Reason: safe
+Content-Type: text/plain
 
-On 23/02/2024 16:47, Mark Brown wrote:
-> On Fri, Feb 23, 2024 at 03:39:10PM +0000, Richard Fitzgerald wrote:
-> 
->> +config SND_SOC_CS_AMP_LIB_TEST
->> +	tristate "KUnit test for Cirrus Logic cs-amp-lib"
->> +	depends on ACPI || COMPILE_TEST || KUNIT
-> 
-> Should this not depend unconditionally on KUNIT rather than KUNIT or
-> some other stuff?  ie
-> 
-> 	depends on ACPI || COMPILE_TEST
-> 	depends on KUNIT
-> 
-> or equivalent.
-> 
 
-Now I look at it again, it's not correct. It's the ACPI || COMPILE_TEST
-that is bogus.
+Hi Laurent,
 
->> +#define TYPESAFE_ACTIVATE_STATIC_STUB_PTR(test, fn_ptr, replacement_fn)		\
->> +	do {									\
->> +		typecheck_fn(typeof(fn_ptr), replacement_fn);			\
->> +		__kunit_activate_static_stub(test, fn_ptr, replacement_fn);	\
->> +	} while (0)
-> 
-> Should this be somewhere more generic in the kunit headers?
+and thanks for the review!
 
-Damn, I meant to change this. I did a patch a while ago to fix
-kunit_activate_static_stub() so that it worked but it takes a really
-long time for kunit patches to end up in the mainline kernel. Hence this
-was a temporary workaround. I noticed my fix has gone in at last but I
-forgot to remove this workaround.
+On 2024-02-23 at 13:33 +02, Laurent Pinchart <laurent.pinchart@ideasonboard.com> wrote:
 
-Can you skip this patch and take the others (assuming you are happy with
-them) and I'll fixup and resubmit this test later.
+> Hi Mikhail,
+>
+> Thank you for the patch.
+>
+> On Mon, Dec 18, 2023 at 08:40:36PM +0300, Mikhail Rudenko wrote:
+>> Pixel array dimensions and default crop size do not belong to the
+>> ov4689_mode structure, since they are mode independent. Make them
+>> defines instead.
+>>
+>> Signed-off-by: Mikhail Rudenko <mike.rudenko@gmail.com>
+>> ---
+>>  drivers/media/i2c/ov4689.c | 29 +++++++++++++----------------
+>>  1 file changed, 13 insertions(+), 16 deletions(-)
+>>
+>> diff --git a/drivers/media/i2c/ov4689.c b/drivers/media/i2c/ov4689.c
+>> index b43fb1d7b15f..475508559e3e 100644
+>> --- a/drivers/media/i2c/ov4689.c
+>> +++ b/drivers/media/i2c/ov4689.c
+>> @@ -70,6 +70,11 @@
+>>  #define OV4689_LANES			4
+>>  #define OV4689_XVCLK_FREQ		24000000
+>>
+>> +#define OV4689_PIXEL_ARRAY_WIDTH	2720
+>> +#define OV4689_PIXEL_ARRAY_HEIGHT	1536
+>> +#define OV4689_DUMMY_ROWS		8
+>> +#define OV4689_DUMMY_COLUMNS		16
+>
+> Adding a comment here to indicate that there are dummy columns in each
+> side would be useful:
+>
+> #define OV4689_DUMMY_ROWS		8	/* 8 dummy rows on each side */
+> #define OV4689_DUMMY_COLUMNS		16	/* 16 dummy columns on each side */
+
+Will add the comments in v3.
+
+>
+> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+>
+>> +
+>>  static const char *const ov4689_supply_names[] = {
+>>  	"avdd", /* Analog power */
+>>  	"dovdd", /* Digital I/O power */
+>> @@ -90,10 +95,6 @@ struct ov4689_mode {
+>>  	u32 vts_def;
+>>  	u32 exp_def;
+>>  	u32 pixel_rate;
+>> -	u32 sensor_width;
+>> -	u32 sensor_height;
+>> -	u32 crop_top;
+>> -	u32 crop_left;
+>>  	const struct cci_reg_sequence *reg_list;
+>>  	unsigned int num_regs;
+>>  };
+>> @@ -254,10 +255,6 @@ static const struct ov4689_mode supported_modes[] = {
+>>  		.id = OV4689_MODE_2688_1520,
+>>  		.width = 2688,
+>>  		.height = 1520,
+>> -		.sensor_width = 2720,
+>> -		.sensor_height = 1536,
+>> -		.crop_top = 8,
+>> -		.crop_left = 16,
+>>  		.exp_def = 1536,
+>>  		.hts_def = 10296,
+>>  		.hts_min = 3432,
+>> @@ -385,8 +382,6 @@ static int ov4689_get_selection(struct v4l2_subdev *sd,
+>>  				struct v4l2_subdev_state *state,
+>>  				struct v4l2_subdev_selection *sel)
+>>  {
+>> -	const struct ov4689_mode *mode = to_ov4689(sd)->cur_mode;
+>> -
+>>  	if (sel->which != V4L2_SUBDEV_FORMAT_ACTIVE)
+>>  		return -EINVAL;
+>>
+>> @@ -394,15 +389,17 @@ static int ov4689_get_selection(struct v4l2_subdev *sd,
+>>  	case V4L2_SEL_TGT_CROP_BOUNDS:
+>>  		sel->r.top = 0;
+>>  		sel->r.left = 0;
+>> -		sel->r.width = mode->sensor_width;
+>> -		sel->r.height = mode->sensor_height;
+>> +		sel->r.width = OV4689_PIXEL_ARRAY_WIDTH;
+>> +		sel->r.height = OV4689_PIXEL_ARRAY_HEIGHT;
+>>  		return 0;
+>>  	case V4L2_SEL_TGT_CROP:
+>>  	case V4L2_SEL_TGT_CROP_DEFAULT:
+>> -		sel->r.top = mode->crop_top;
+>> -		sel->r.left = mode->crop_left;
+>> -		sel->r.width = mode->width;
+>> -		sel->r.height = mode->height;
+>> +		sel->r.top = OV4689_DUMMY_ROWS;
+>> +		sel->r.left = OV4689_DUMMY_COLUMNS;
+>> +		sel->r.width =
+>> +			OV4689_PIXEL_ARRAY_WIDTH - 2 * OV4689_DUMMY_COLUMNS;
+>> +		sel->r.height =
+>> +			OV4689_PIXEL_ARRAY_WIDTH - 2 * OV4689_DUMMY_ROWS;
+>>  		return 0;
+>>  	}
+>>
+
+
+--
+Best regards,
+Mikhail Rudenko
