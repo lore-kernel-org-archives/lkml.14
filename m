@@ -1,187 +1,106 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f181.google.com (mail-qt1-f181.google.com [209.85.160.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E24EC1493B1;
-	Fri, 23 Feb 2024 21:43:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F54F14AD04;
+	Fri, 23 Feb 2024 21:44:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708724595; cv=none; b=VYgBQKFjsJ9w4C7dLv8qpBP5sd6OeH8KeUfE8xFhDzPgUUpvcBJEQ5E3BRU2ugi8/toCQeV6RuuRnJP62exTgoOkTTCULMO+l28fEPVu3lfTIMcNyNNRLheyeCxczSoxvJ4LVjuN/g0pqoyTuU+p1J1lrgkswgqe1TRP97w3Lwk=
+	t=1708724663; cv=none; b=ZDOsSd3iUkiA5t/xrSbTv4jh3YAju6gtOgsNcSuQWFl5EiUkmIkT08nRUxoGIpp1Z2Z8aX84t5cIarAJl7dCTKxepsv5x/3Z3lcSwdTyGgIgbV1fBWszU842LlMWCh9XvsgflB28u1qpZ3VurZZzFyDzJNmHvfsP9qlOK8QjTR0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708724595; c=relaxed/simple;
-	bh=JlDIzPVB8g61Il6cA8cxo+FBqhvdebJU8biCKYxI6Dc=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=L2Dz3DGydgpuobYjCLfJN4yL/MfMfvRRyhVm/XQ/GZxsHPsHHEdWaHDawr3vY86R0oqV1jgZq9NOGlbWsD+RyXeu3OS8eKfxiNuqraQseMdPnZGPv9PRN1Ys8HfQJOXQcx3ZPtfrwtzKUA8jiOQcr1zQJ9fjdZT0Lg2jycBLvgo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QfHyfDqm; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1708724663; c=relaxed/simple;
+	bh=Pe5erZHyCvS6VkWlhzfR04p/Sev+tZt7VSqDg3j4P8Q=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=SLqWKOwGeqShL6Gl+QfKdFkgdP3XpdKm6DXfTGDJvBDts0VdRztg2yq+DjQSj9UDbvCjglWLOxppja/8KP4GxIUlefhoOVkxZ3s+JgPuU1TcQxRYaDDJSrMU52y4AqMWG7Lefd+LNqdxf2whRAEUOB66zaOToYhKs2yVNRar0W4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ocallahan.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail-com.20230601.gappssmtp.com header.i=@gmail-com.20230601.gappssmtp.com header.b=yPUj50H3; arc=none smtp.client-ip=209.85.160.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ocallahan.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QfHyfDqm"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id B9A20C43399;
-	Fri, 23 Feb 2024 21:43:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708724594;
-	bh=JlDIzPVB8g61Il6cA8cxo+FBqhvdebJU8biCKYxI6Dc=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=QfHyfDqmGzHQNKQviFH+J8TSfb20QU++tD5qTpSwYS5lz8Lhidn1UBrO7Mi6oq2k+
-	 V9Jp2mwtO95t3RbrkhNUex3XYv0xjDtvaBLhpxaeERQjMH2l3Q8MOAyfnFK5V/3G6b
-	 D/LI5oyCXq4SYcrTkcUf4Bkavl/r5mFGlj5ByWmzqswO2Pc7q27D7xJLU3oP79bMio
-	 XswpYRzalUekwDsWqJh1ylMSJzN9yKQwtaNV2KBbB5vhu/VCmhIfM109ao3JU4bA+8
-	 jt9S8th4K131WYNoH+k8U618Jh+EL9yWt1hfeBtF7nFAt88RjEQ79iWbrCm/aInrn3
-	 n0rsasHdqOPqA==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A262DC54E49;
-	Fri, 23 Feb 2024 21:43:14 +0000 (UTC)
-From: Yang Xiwen via B4 Relay <devnull+forbidden405.outlook.com@kernel.org>
-Date: Sat, 24 Feb 2024 05:43:12 +0800
-Subject: [PATCH v2 1/2] dt-bindings: usb: add hisilicon,hi3798mv200-dwc3
+	dkim=pass (2048-bit key) header.d=gmail-com.20230601.gappssmtp.com header.i=@gmail-com.20230601.gappssmtp.com header.b="yPUj50H3"
+Received: by mail-qt1-f181.google.com with SMTP id d75a77b69052e-42a9f4935a6so6190461cf.1;
+        Fri, 23 Feb 2024 13:44:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail-com.20230601.gappssmtp.com; s=20230601; t=1708724660; x=1709329460; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:reply-to:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=dflXWGJiHy7MbSy8pXkZb9NeeYUWtRBjyhK7A4GkIig=;
+        b=yPUj50H34+iXkWP9ZoINgCfeRvzn6tJnjokRnGWvxpxq64M8AbuGVzv6z1C8niRJkc
+         x8Wag+5AsU6w0Rhza3+xw0leWKf5t5FcfMPe1drtcgssIr6Jn+sVSAm8B5iWiMbZNmFw
+         Ad9pFgJOzPRgXam5QpgajJz9PoKeDRSraS4lPweW3+70wUaYQaifg4xcmHV4qgyJ5uzf
+         wDNIaUS57t4Le+KrJ+vaXlWNQokkXzZsn58aGSm8HyiBEIjYs+KD/qQGJ70cFvStel1Y
+         t6JF9XB0CWbI0CvmQ6nBO9AV93rqcd8Xz/bJSwgNLZ0YWucR8bHz96ZXvkAkJ9O1RJ8t
+         icww==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708724660; x=1709329460;
+        h=cc:to:subject:message-id:date:from:reply-to:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=dflXWGJiHy7MbSy8pXkZb9NeeYUWtRBjyhK7A4GkIig=;
+        b=TeqAYOZHOStIQzU1EE7I2PxG95XCvb/jVwDV4RgxktTfTirlR0WxSacdSwNuQ+u/t6
+         KS6tuhLJxBNO4fgmNKVS/BrH6WCmG+/fYMQ2QdSxDoijAvi/8ncxIYE4ISonlGVm21/m
+         Igj++AQONZ3OzWAa2njnNY0+uXKjGJaznBaTp4EdLCTlQYdacZqICefIKzcvJWWzn718
+         dEQZ/yWJlU7lxN7Xg+EmHgu8g2Is7wmepS3GIrWjVEY7HLlImNx7KRf0aeQ7/clduyUl
+         F2ef7hfkEtxTQS8YKE2L/Sf62QnRAVAqXCqoRq13lYX5NeO3SfnGC6j+v5o1XNeTioiW
+         +UTA==
+X-Forwarded-Encrypted: i=1; AJvYcCVUPULJpGqeK0ofqwPdo6FvBte1Z2HFgAxoUvU98NiuW8ubsn8p+ER2b886djN7dbxH6Oy+lmTmSIavLCtdsHLifNtsos0cEc/58FA/wXwj/ZqKubFHh5ETNmg0zdks5r5Z/eKNAQR88Neisg4YAQ==
+X-Gm-Message-State: AOJu0YyScr9VITtFLPGSOKOZO6fymQUHNPo/9yliQ0+ba5+RfPXU/4Uj
+	52d3x+0jzhc3OJZ3gWL94jpWmsC3yBkI4wueNpw7OjfZKZy8vU38CDAOmu9HM0A1Mnfkgyo8Bf4
+	5ji2CGuFTxBPvmMHKTXrQTWA7eDY=
+X-Google-Smtp-Source: AGHT+IEdqbE3nTHzTHVnvtCEoIC2+Cn09Y4dZAXa8zWYlw3yYVCckBoDOV8siFuX1rqxLf21t2FTt18kB0pJV1s+ch4=
+X-Received: by 2002:ac8:7dca:0:b0:42d:de30:83e1 with SMTP id
+ c10-20020ac87dca000000b0042dde3083e1mr694373qte.29.1708724659935; Fri, 23 Feb
+ 2024 13:44:19 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240224-dwc3-v2-1-8e4fcd757175@outlook.com>
-References: <20240224-dwc3-v2-0-8e4fcd757175@outlook.com>
-In-Reply-To: <20240224-dwc3-v2-0-8e4fcd757175@outlook.com>
-To: Thinh Nguyen <Thinh.Nguyen@synopsys.com>, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- Rob Herring <robh+dt@kernel.org>, 
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
- Conor Dooley <conor+dt@kernel.org>, Yang Xiwen <forbidden405@foxmail.com>
-Cc: linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, 
- devicetree@vger.kernel.org, Yang Xiwen <forbidden405@outlook.com>
-X-Mailer: b4 0.12.4
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1708724592; l=3287;
- i=forbidden405@outlook.com; s=20230724; h=from:subject:message-id;
- bh=rL7ggdfkzgLl7HD8zLKVvIZ6BF4Gsjs6h7u7dfg1NOA=;
- b=fIUhTl/a+yP8sRgMXvR8ghG2OF5PEG5WLuu3h1YrqoaaddGF1ygaFfVBffAGOmHMZR5MtWP0e
- mlF7MO9hxuVDvBvq0kdEKhYisN90w44La89aCns1R1qxhCCCi6hhsYo
-X-Developer-Key: i=forbidden405@outlook.com; a=ed25519;
- pk=qOD5jhp891/Xzc+H/PZ8LWVSWE3O/XCQnAg+5vdU2IU=
-X-Endpoint-Received:
- by B4 Relay for forbidden405@outlook.com/20230724 with auth_id=67
-X-Original-From: Yang Xiwen <forbidden405@outlook.com>
-Reply-To: <forbidden405@outlook.com>
+References: <20240221175210.19936-1-khuey@kylehuey.com> <20240221175210.19936-2-khuey@kylehuey.com>
+ <CAP-5=fXsv7TJ_SVOZc38fN0gn+7cWBcMWt3FdVLcs5v0_vO=uw@mail.gmail.com>
+ <CAP045AoSHWoOP3TN=6Hf2wZj7X9Y41sThBQWCDZ3BEP68qeTBw@mail.gmail.com>
+ <ZdemibZepMqWvv6U@x1> <CAP045Aqc6woHGYKJG4d=x4gPd0=PmrLeFv25Rkts1a8xFuocOQ@mail.gmail.com>
+ <ZdjdAKIV39A-jpR5@x1>
+In-Reply-To: <ZdjdAKIV39A-jpR5@x1>
+Reply-To: robert@ocallahan.org
+From: "Robert O'Callahan" <robert@ocallahan.org>
+Date: Sat, 24 Feb 2024 10:43:38 +1300
+Message-ID: <CAOp6jLZKZKyYrJrzjZ90ZdxzzuDV0wp+XS3Rzssd-kvZV45JSQ@mail.gmail.com>
+Subject: Re: [PATCH 2/2] perf test: Test FASYNC with watermark wakeups.
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Kyle Huey <me@kylehuey.com>, Ian Rogers <irogers@google.com>, Kyle Huey <khuey@kylehuey.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-From: Yang Xiwen <forbidden405@outlook.com>
+(I work with Kyle.)
 
-Document the DWC3 controller used by Hi3798MV200.
+IMHO this is more of a bug fix than a feature. `man perf_event_open`
+expects this to work already: "watermark: If set, have an overflow
+notification happen when we cross the wakeup_watermark boundary" and
+later "Alternatively, the overflow events can be captured via a signal
+handler, by enabling I/O signaling".
 
-Signed-off-by: Yang Xiwen <forbidden405@outlook.com>
----
- .../bindings/usb/hisilicon,hi3798mv200-dwc3.yaml   | 103 +++++++++++++++++++++
- 1 file changed, 103 insertions(+)
+Bug fixes need regression tests. Such tests should fail on any kernel
+where the bug is present. It seems strange to expect each such test to
+detect whether the bug "should be fixed" in the kernel it's running on
+and skip when that's not the case. I haven't seen any other project
+try to do this. Instead (as in kernel selftests) the tests, the code
+under test, and any metadata about which tests are expected to pass
+are all in the repository together and updated together.
 
-diff --git a/Documentation/devicetree/bindings/usb/hisilicon,hi3798mv200-dwc3.yaml b/Documentation/devicetree/bindings/usb/hisilicon,hi3798mv200-dwc3.yaml
-new file mode 100644
-index 000000000000..2a93d659414d
---- /dev/null
-+++ b/Documentation/devicetree/bindings/usb/hisilicon,hi3798mv200-dwc3.yaml
-@@ -0,0 +1,103 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/usb/hisilicon,hi3798mv200-dwc3.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: HiSilicon Hi3798MV200 DWC3 USB SoC controller
-+
-+maintainers:
-+  - Yang Xiwen <forbidden405@foxmail.com>
-+
-+properties:
-+  compatible:
-+    const: hisilicon,hi3798mv200-dwc3
-+
-+  '#address-cells':
-+    const: 1
-+
-+  '#size-cells':
-+    const: 1
-+
-+  reg: true
-+
-+  ranges: true
-+
-+  clocks:
-+    items:
-+      - description: Controller bus clock
-+      - description: Controller suspend clock
-+      - description: Controller reference clock
-+      - description: Controller gm clock
-+      - description: Controller gs clock
-+      - description: Controller utmi clock
-+      - description: Controller pipe clock
-+
-+  clock-names:
-+    items:
-+      - const: bus
-+      - const: suspend
-+      - const: ref
-+      - const: gm
-+      - const: gs
-+      - const: utmi
-+      - const: pipe
-+
-+  resets:
-+    maxItems: 1
-+
-+  reset-names:
-+    const: soft
-+
-+patternProperties:
-+  '^usb@[0-9a-z]+$':
-+    $ref: snps,dwc3.yaml#
-+
-+additionalProperties: false
-+
-+required:
-+  - compatible
-+  - '#address-cells'
-+  - '#size-cells'
-+  - ranges
-+  - reg
-+  - clocks
-+  - clock-names
-+  - resets
-+  - reset-names
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+
-+    usb@98a0000 {
-+            compatible = "hisilicon,hi3798mv200-dwc3";
-+            #address-cells = <1>;
-+            #size-cells = <1>;
-+            reg = <0x98a0000 0x10000>;
-+            ranges;
-+            clocks = <&clk_bus>,
-+                     <&clk_suspend>,
-+                     <&clk_ref>,
-+                     <&clk_gm>,
-+                     <&clk_gs>,
-+                     <&clk_utmi>,
-+                     <&clk_pipe>;
-+            clock-names = "bus", "suspend", "ref", "gm", "gs", "utmi", "pipe";
-+            resets = <&crg 0xb0 12>;
-+            reset-names = "soft";
-+
-+            usb@98a0000 {
-+                    compatible = "snps,dwc3";
-+                    reg = <0x98a0000 0x10000>;
-+                    interrupts = <GIC_SPI 69 IRQ_TYPE_LEVEL_HIGH>;
-+                    clocks = <&clk_bus>,
-+                             <&clk_suspend>,
-+                             <&clk_ref>;
-+                    clock-names = "bus_early", "suspend", "ref";
-+                    phys = <&usb2_phy1_port2>, <&combphy0 0>;
-+                    phy-names = "usb2-phy", "usb3-phy";
-+                    maximum-speed = "super-speed";
-+                    dr_mode = "host";
-+            };
-+    };
+It makes sense that tests for the code in tools/perf should not fail
+on older kernels, given that the code in tools/perf is expected to
+work on older kernels. But tests for bug fixes in the kernel itself
+should be expected to fail on older kernels and therefore should live
+somewhere else, IMHO.
 
+Rob
 -- 
-2.43.0
-
+Su ot deraeppa sah dna Rehtaf eht htiw saw hcihw, efil lanrete eht uoy
+ot mialcorp ew dna, ti ot yfitset dna ti nees evah ew; deraeppa efil
+eht. Efil fo Drow eht gninrecnoc mialcorp ew siht - dehcuot evah sdnah
+ruo dna ta dekool evah ew hcihw, seye ruo htiw nees evah ew hcihw,
+draeh evah ew hcihw, gninnigeb eht morf saw hcihw taht.
