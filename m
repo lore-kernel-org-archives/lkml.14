@@ -1,95 +1,127 @@
-Received: from out-182.mta1.migadu.com (out-182.mta1.migadu.com [95.215.58.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f44.google.com (mail-io1-f44.google.com [209.85.166.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2CB01482F2
-	for <linux-kernel@vger.kernel.org>; Fri, 23 Feb 2024 21:52:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A02C914C5B5
+	for <linux-kernel@vger.kernel.org>; Fri, 23 Feb 2024 22:02:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708725145; cv=none; b=l4UuhRBRG9zUUCammicUT87O3s49RibSYUEt5Wcc6aj0gpqT+2fFQyWMPThoZjPZDt5q1UERp1gpVvlvMkXBZZtzdtp3yNUoQeWI7gQj0YQNfIxVjMhNRbrvPAYhQ+bgyECx2PGiSwyWEHJCA908pnLsvZtJxWw2SIXnShXWQIA=
+	t=1708725751; cv=none; b=LPobtdqK0Wihdt53mude6Taub2tXUrIoGD5DwPn3AyLHRd3+9muxDYqqCLj1zhMqGFqVsqll8YQ7+WrcHWS1oOE6AX8Ud0gQ7/rP24iWfCWDpjvgfqeat+cEhibYLZ8Te0rpvFGylDaQPAZMRap+idjWk95fXW4u18M0rr0OoLk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708725145; c=relaxed/simple;
-	bh=WghNiSEcslFUkasOpQxww+LCo1yWX13E/n+PrcQm1Go=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=NruTnlob7f7nTO1tZr1n4iMoAmoXJQ0ch06jAwsE1HwoU/1rcjryyqXkDjsWZCDtfSFnawZepWt+2CdGKpoTu9jp/Z+Ak4f7gFXDS0EpUQdVf7/7FOdvioPqgSROt61llqAbnkjHBlC6hmUaDefGvzDbV9gukwc6Nr8v65sA/9g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=gTIP7f6q; arc=none smtp.client-ip=95.215.58.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1708725751; c=relaxed/simple;
+	bh=OxuxrEWZFLmd9bVvllL0cDqo3Qro+iCmjrAkC+i8LtY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=htsyB5DhDz4XxPwPQQflplsNqLQx1Y5/UD7Dn423yiVmSA+G5fDWz//uP58JZV6avqPmsGOuhPpTo/swgKQb024K5+3bEVIy7WZIYQ8gPQRYIc1NuBJq83hVs3wasxxfmmkvb8IP1dvZOlgsm3FyCaq2dD/kQ4LJbQmqoalRECc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=ca1Up2on; arc=none smtp.client-ip=209.85.166.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="gTIP7f6q"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1708725141;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=4hHqqqhFF3Gydbv6RBgXfAetBdxsg+N/xk7e231yih0=;
-	b=gTIP7f6qjnayXOiMlXoD5jndqDv+4vM5rGrfvTzaU+1V9n9NzxjM+y5y1jn14ayzr0Alup
-	gihCIRbnJOZmif+3rwG+dZ7aLlx/+jEluaXwtVcIJ26VjUfv/8+DzrCiF8dAC/Ei9CfmRb
-	z+ouNR/5CcNUqGmcFIFNhsQB6qkfET8=
-From: Oliver Upton <oliver.upton@linux.dev>
-To: kvmarm@lists.linux.dev,
-	Oliver Upton <oliver.upton@linux.dev>
-Cc: James Morse <james.morse@arm.com>,
-	Eric Auger <eric.auger@redhat.com>,
-	kvm@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Marc Zyngier <maz@kernel.org>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Zenghui Yu <yuzenghui@huawei.com>
-Subject: Re: [PATCH v4 00/10] KVM: arm64: Avoid serializing LPI get() / put()
-Date: Fri, 23 Feb 2024 21:52:09 +0000
-Message-ID: <170872506306.206263.12047189993769691373.b4-ty@linux.dev>
-In-Reply-To: <20240221054253.3848076-1-oliver.upton@linux.dev>
-References: <20240221054253.3848076-1-oliver.upton@linux.dev>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="ca1Up2on"
+Received: by mail-io1-f44.google.com with SMTP id ca18e2360f4ac-7c495be1924so20297639f.1
+        for <linux-kernel@vger.kernel.org>; Fri, 23 Feb 2024 14:02:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google; t=1708725749; x=1709330549; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=5dO5uxANb6KhoFhAZhuWxdF4f1WkNSLPqmHQVMIujpc=;
+        b=ca1Up2on7z7dE4dtnBiWQCFtuo5LnkzSa7BdIj2/JFouHPDNantTY6AG3ajjNeszEH
+         lPmhVSNNAuP0a6ZVjx/6RYIrckcdhSk30qfrJztMT/IjiTeSa6zPdST4pWyQoZ/PlBVs
+         Q5BGIbSyr/6ovyNnI86NRXba7Gs3Fhl+819xs=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708725749; x=1709330549;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=5dO5uxANb6KhoFhAZhuWxdF4f1WkNSLPqmHQVMIujpc=;
+        b=XgayCKHuj6Y4Dy19V/twXudVx0nHd044ep1b5U/8Tnw+IDZ/dsZN/ca81Z6Vhorc65
+         Fnxg7nL2ballwIuh6+/Zs+lITDWXwn2jjcJJdBxhYp3i51U/x55Wc4moFCbMhgk9xuoN
+         s91B/fXZffxzgK0nsqOigbjK9V+jpvn5X0x2zPPKkI3RemD3LI8adVvdbSPeAV6PxSgV
+         jTyZcwqN0BIUpj0VIY3ArNyaPnw+UZvdNY6co6y+aYbLPok42ZLn1mhLu93AKLYsX70G
+         +U94tvbSjo5gb2crlNqbDf0EFCkuJJbvXBPI0AkysB0RJvkkwd9yHbBc21hZBO7u8ETh
+         DEHg==
+X-Forwarded-Encrypted: i=1; AJvYcCVN5cKC9c8OndufGNKFBGxbjWpCYXXmsf2HI8m3tsNwfTlZYaCQZzFxp8w9S0kCfKjujquYSJoYpu4D+mVhR2MPNVkHUULyPa57qF9x
+X-Gm-Message-State: AOJu0YzrzqV1wK2cIlplP1EBPKkGY68IycteaRXIkrp2telOqRWqFoLe
+	H9DYNAIODbXXZVCiRRDUXi16lCzXRQ+Auo31Giyjt2rbHwC3aF6jxXzYdf7po2s=
+X-Google-Smtp-Source: AGHT+IERZo8E9m1EGVtoEcqCl+qpo29VVrQyzIz0yZSgzKLzC3fQ3HVY78TWD4zIJBlLjlYuudMkEg==
+X-Received: by 2002:a5e:de08:0:b0:7c7:951a:a4cb with SMTP id e8-20020a5ede08000000b007c7951aa4cbmr1177605iok.1.1708725748777;
+        Fri, 23 Feb 2024 14:02:28 -0800 (PST)
+Received: from [192.168.1.128] ([38.175.170.29])
+        by smtp.gmail.com with ESMTPSA id q26-20020a02cf1a000000b00471346c4225sm4015616jar.7.2024.02.23.14.02.27
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 23 Feb 2024 14:02:28 -0800 (PST)
+Message-ID: <8fe544e1-ac1c-4edf-81e9-fc0992b6bbc4@linuxfoundation.org>
+Date: Fri, 23 Feb 2024 15:02:27 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3] kselftest: Add basic test for probing the rust sample
+ modules
+Content-Language: en-US
+To: Laura Nao <laura.nao@collabora.com>, ojeda@kernel.org,
+ alex.gaynor@gmail.com, wedsonaf@gmail.com, shuah@kernel.org
+Cc: usama.anjum@collabora.com, a.hindborg@samsung.com, aliceryhl@google.com,
+ benno.lossin@proton.me, bjorn3_gh@protonmail.com, boqun.feng@gmail.com,
+ gary@garyguo.net, kernel@collabora.com, linux-kernel@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, rust-for-linux@vger.kernel.org,
+ kernel@valentinobst.de, Sergio Gonzalez Collado <sergio.collado@gmail.com>,
+ Shuah Khan <skhan@linuxfoundation.org>
+References: <20240222162913.498197-1-laura.nao@collabora.com>
+ <bb4c94f5-082d-48d8-9d4c-099375603f9f@linuxfoundation.org>
+From: Shuah Khan <skhan@linuxfoundation.org>
+In-Reply-To: <bb4c94f5-082d-48d8-9d4c-099375603f9f@linuxfoundation.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
 
-On Wed, 21 Feb 2024 05:42:43 +0000, Oliver Upton wrote:
-> Addressing a few more goofs that Zenghui was kind enough to point out.
-> Clearly all of the bugs have been found and addressed at this point.
+On 2/23/24 14:48, Shuah Khan wrote:
+> On 2/22/24 09:29, Laura Nao wrote:
+>> Add new basic kselftest that checks if the available rust sample modules
+>> can be added and removed correctly.
+>>
+>> Signed-off-by: Laura Nao <laura.nao@collabora.com>
+>> Reviewed-by: Sergio Gonzalez Collado <sergio.collado@gmail.com>
+>> Reviewed-by: Muhammad Usama Anjum <usama.anjum@collabora.com>
+>> ---
+>> Changes in v3:
+>> - Removed useless KSFT_PASS, KSFT_FAIL, KSFT_SKIP constants
+>> - Used ktap_finished to print the results summary and handle the return code
+>> Changes in v2:
+>> - Added missing SPDX line
+>> - Edited test_probe_samples.sh script to use the common KTAP helpers file
+>> ---
+>>   MAINTAINERS                                   |  1 +
+>>   tools/testing/selftests/Makefile              |  1 +
+>>   tools/testing/selftests/rust/Makefile         |  4 +++
+>>   .../selftests/rust/test_probe_samples.sh      | 34 +++++++++++++++++++
+>>   4 files changed, 40 insertions(+)
+>>   create mode 100644 tools/testing/selftests/rust/Makefile
+>>   create mode 100755 tools/testing/selftests/rust/test_probe_samples.sh
+>>
 > 
-> v2: https://lore.kernel.org/kvmarm/20240213093250.3960069-1-oliver.upton@linux.dev/
-> v3: https://lore.kernel.org/kvmarm/20240216184153.2714504-1-oliver.upton@linux.dev/
+> Looks good to me. Don't you need a config file for this test?
+> Refer to config files for existing tests as a reference.
 > 
-> v3 -> v4:
->  - Actually walk the LPI INTID range in vgic_copy_lpi_list() (Zenghui)
->  - Ensure xa_lock is taken w/ IRQs disabled, even after purging usage of
->    the lpi_list_lock (Zenghui)
->  - Document the lock ordering (Marc)
-> 
-> [...]
+make kselftest TARGETS=rust
+or
+make run_tests
 
-Applied to kvmarm/next, thanks!
+On Linux 6.8-rc5 give the following? Doesn't look right.
+  
+TAP version 13
+1..1
+# timeout set to 45
+# selftests: rust: test_probe_samples.sh
+# ./test_probe_samples.sh: line 12: /linux/linux_6.8/tools/testing/selftests/rust/../kselftest/ktap_helpers.sh: No such file or directory
+# ./test_probe_samples.sh: line 16: ktap_print_header: command not found
+# ./test_probe_samples.sh: line 18: ktap_set_plan: command not found
+# ./test_probe_samples.sh: line 22: ktap_test_skip: command not found
+# ./test_probe_samples.sh: line 22: ktap_test_skip: command not found
+# ./test_probe_samples.sh: line 34: ktap_finished: command not found
+not ok 1 selftests: rust: test_probe_samples.sh # exit=127
 
-[01/10] KVM: arm64: vgic: Store LPIs in an xarray
-        https://git.kernel.org/kvmarm/kvmarm/c/1d6f83f60f79
-[02/10] KVM: arm64: vgic: Use xarray to find LPI in vgic_get_lpi()
-        https://git.kernel.org/kvmarm/kvmarm/c/5a021df71916
-[03/10] KVM: arm64: vgic-v3: Iterate the xarray to find pending LPIs
-        https://git.kernel.org/kvmarm/kvmarm/c/49f0a468a158
-[04/10] KVM: arm64: vgic-its: Walk the LPI xarray in vgic_copy_lpi_list()
-        https://git.kernel.org/kvmarm/kvmarm/c/2798683b8c80
-[05/10] KVM: arm64: vgic: Get rid of the LPI linked-list
-        https://git.kernel.org/kvmarm/kvmarm/c/9880835af78e
-[06/10] KVM: arm64: vgic: Use atomics to count LPIs
-        https://git.kernel.org/kvmarm/kvmarm/c/05f4d4f5d462
-[07/10] KVM: arm64: vgic: Free LPI vgic_irq structs in an RCU-safe manner
-        https://git.kernel.org/kvmarm/kvmarm/c/a5c7f011cb58
-[08/10] KVM: arm64: vgic: Rely on RCU protection in vgic_get_lpi()
-        https://git.kernel.org/kvmarm/kvmarm/c/864d4304ec1e
-[09/10] KVM: arm64: vgic: Ensure the irq refcount is nonzero when taking a ref
-        https://git.kernel.org/kvmarm/kvmarm/c/50ac89bb7092
-[10/10] KVM: arm64: vgic: Don't acquire the lpi_list_lock in vgic_put_irq()
-        https://git.kernel.org/kvmarm/kvmarm/c/e27f2d561fee
+thanks,
+-- Shuah
 
---
-Best,
-Oliver
