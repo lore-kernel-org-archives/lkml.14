@@ -1,150 +1,113 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E65EF1272D9;
-	Fri, 23 Feb 2024 16:37:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E641112838F;
+	Fri, 23 Feb 2024 16:39:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708706281; cv=none; b=mxaaMVJr2c1gj/ci4fRCFiPbMGW8O0Kghe/g+mvI4eLp+/qolly6uScmjnuEEgzVDh4T/G25EDDPSs27nHbqHtE68zl+iDKZXVAWVgBkAZAiehLr975h4d1VEhrJLLbMmmkSpkwASYy8WPUBJsCyvOABSBxTHDtQ2BcGxV7Lw3k=
+	t=1708706357; cv=none; b=qxfzJ5HBnjcSYAHu91y8hv7aZCiuQNJUWb9L+ppMloEG935GATCuuL6Porc2Y+HXQO1+W5klrIPKI4VhhiT4pxkyL8eP3cNoNy8dG5qYRtninc9ydW2RV1sp4seKq278MEe2UAzngcpQKUObO1u3udosR0VewHzHKX8F1lXsPEg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708706281; c=relaxed/simple;
-	bh=8F2rfIl1oXQXijAvfjLCxS4uHIpMSGYRug5N/NQxstU=;
-	h=Date:From:To:Subject:Cc:MIME-Version:Message-ID:Content-Type; b=eyv9+lUtJ1YjPc2hCaeP84yvdDAsRhdSN4yE3zD0KJxAQP1MdYUvh0XBUJ+DBhhMW9kxoes0MCYjrTCYzI4bnQ/mL5JGf7dlq4DMCZY0HLl4LxKbWNJf0AOPaY7V5loCyFh9ydhVeIhDP9uqrL6ExGbwmqYqZbHgZ/Flmc8WJ20=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=3220xFlS; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=N0kygYMq; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1708706357; c=relaxed/simple;
+	bh=wMCc8J1PCY8KB0C8TU2S2VGitU5uhYxb7pS5TWKpv/4=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=m0ywGQ+wYF/c5YBT3yGn4pJa0knmqxISxLYl3038cqoH/QZV/gKp2Au4RhGMLPzIfzwFA7p8C1GskKMYyFxSNG5ojYB9NeTztX51zhiG1Z7DDMlaHtGGeTslbBYCz4SPbF68TtxAoZZSTx/5tYB0Ny0cCrvGE7hDIiFO1cUQnm0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=LeW1JYd4; arc=none smtp.client-ip=212.227.17.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="3220xFlS";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="N0kygYMq"
-Date: Fri, 23 Feb 2024 16:37:56 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1708706277;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
-	bh=l+yIHpDqOw5/hXaF7TeNmF5npvyBmzvP2PhHvrHPalc=;
-	b=3220xFlS5p8NWng7bY8OGd7qpqMAbCY/VwVv94QSDAEnNmVWLMVj8ecVPlxGeMne7x3rik
-	TNNh9eaIG4zloekH+XE2KNDLNJZi+yQILTEi3Tz4AOVjKzhnYnfI9YtFqS5PeN0bQrHsa7
-	tpculCxI6g2bCbnPhLpvqFv6DzLnrhQ+LAspgLvg9OcAAs/bNf1SU0nI11D8791zNa8WD4
-	ehLQoZABEXHMP9mY/laLgAen5yl/wFUvgKCd2qc9lkJYtcPK49/eYSmxfmpm85SgK3mVCW
-	ymL4ur+r524noft2ZWIRFMJ++TCniXPbJT7Xzkbcg3PdWakGxc+gioOhq7axHw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1708706277;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
-	bh=l+yIHpDqOw5/hXaF7TeNmF5npvyBmzvP2PhHvrHPalc=;
-	b=N0kygYMq2c6uF0s4aexPvMFng5DL1RhvQJ0ysZwBQjsBffCPvLM/udZAuD3IIcvycv/gWa
-	mDUdxY9/q8nguxAg==
-From: "tip-bot2 for Chris Koch" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/boot] kexec: Allocate kernel above bzImage's pref_address
-Cc: Cloud Hsu <cloudhsu@google.com>, Chris Koch <chrisko@google.com>,
- Dave Hansen <dave.hansen@linux.intel.com>,
- "H. Peter Anvin (Intel)" <hpa@zytor.com>, x86@kernel.org,
- linux-kernel@vger.kernel.org
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="LeW1JYd4"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.de; s=s31663417;
+	t=1708706344; x=1709311144; i=w_armin@gmx.de;
+	bh=wMCc8J1PCY8KB0C8TU2S2VGitU5uhYxb7pS5TWKpv/4=;
+	h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
+	b=LeW1JYd4sZeYAiv5q6V+9W1F7OPREwHsyP+1oXuEd2SaiJRuO7myQioMtDGAYi2B
+	 4qdLV9XR3wspI8rAu9tQEzAfnpMFLv/stztJP/npHkrwOt4UXeJJgNDlt8Kw0oe8y
+	 dA3PXqYPjb6VFZHCfYCxQ/R/z3YyY+y66Fgv3URpuJ5ChAor8mpbo1xrtx2yjF1go
+	 6jzQCoCq/6HcW5US70Y6GVevMAytStgPoT82jL2fYVHPK/36FTkskUywHslNpUoBF
+	 ZoJXfOM8yWSQZklUm2S1rNLRuXR4gJl6516Tw3hrHkqLMVcz3NdgXIz9jzoCOxKRP
+	 xxje+Kz/hzUJ9F6v3w==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from mx-amd-b650.users.agdsn.de ([141.30.226.129]) by mail.gmx.net
+ (mrgmx105 [212.227.17.168]) with ESMTPSA (Nemesis) id
+ 1Mv31c-1qmYRs2gwS-00r2Ea; Fri, 23 Feb 2024 17:39:04 +0100
+From: Armin Wolf <W_Armin@gmx.de>
+To: Shyam-sundar.S-k@amd.com,
+	mika.westerberg@linux.intel.com
+Cc: sathyanarayanan.kuppuswamy@linux.intel.com,
+	hdegoede@redhat.com,
+	ilpo.jarvinen@linux.intel.com,
+	platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2 1/3] platform/x86/amd/pmf: Add missing __iomem attribute to policy_base
+Date: Fri, 23 Feb 2024 17:38:59 +0100
+Message-Id: <20240223163901.13504-1-W_Armin@gmx.de>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <170870627680.398.14239353324950664750.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:g6CwP8ZbyVS4WMdNo0t7gz5el5M8L0xLzd/hWpAiC8OJ9LRzQM8
+ Vz3TSxFE5BKM92JTfjUnWEh0RI+1DGljTOVADnhg64X9i44y7l/fGMX5WoO7JXZd+A4Kwqd
+ vTiXn0aXuPscJIHIBEiPY3RtidWsnSZVGe86XvOkEFIR9CWUJRRePTjOCozOO2Zr2KCJovY
+ kLPMmlbkOHQsI6S0WkUKw==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:2aICjQ/9zTo=;MM8khOtZJ//pj63x0PsCKT0JlmC
+ QWPXzZ/4ipsD84Q/qJLJ/3v0vvMNQgHjpx4UOWi3IZctxVHTJmhpkUNMvB5gYBYtehgBstN0c
+ rDKa7dOhR1Fh/+c68RoiriFHleKmwx26cp9DAG7xlnyNRlbHz/bkqJ1k1Rvpxs4lq5Z2zpayg
+ tfnfVNw6uOVmfPzb/xn4uVQxoJVJMmRHJrmRO6oIqMhWSKVDm/Zp5JMDqOB+WcccFvrUdtEzj
+ TfMjAUSqO7kCrtL5Ngnv8fINP4UHo2/Viu4bg8XyzGM73wtV5Jv2cJgMJWs6e0uPnH+PcRRqs
+ B0pIndmbs6dUGif2ECLVZ8bgEmpb5HeDoaC+eRdj8lF/+oJwdbrbzRlsbj/LVMZC0/ldeBjex
+ 2fSU4Ywri9rD+cINz68PcRW+6wWqC9kLCD4pDPtGfzu0r6mCQF+KkTbO4t87ZzfHKmvzcRK8R
+ QoGkkZR+2W3wH0UTfKbfNlNOZ2QN71SgZpKzcfL5yC0LLD8yKAS8zPEVwrpfFDAgfIDKyz2Ru
+ P6g/X9QhWSHTUbsHqHpS3rqEMHMLdqTpL6hfiWnUkHFKf4veGRjoBFH3klNwZwGOSo+TQERk5
+ epCx+5TJIalBA+wBTaW0NgMNFgxp1JdXfwfjz/eWY4htc8INkc214WOUbhEnpL1rVea+GpCOf
+ 2FHL0zKjP/ogVAW2FcKzkaqe+CPmWf65FYIojkwXEAWflprkETDUPIfIUb7a2KObnyGPHPwmn
+ Ga2fd0zYfnolaV7N38gGg5pvxvunFbMKTSs/JMyuF9cTVE0/eEX5P4ZH4OH81RWyuZWwXyaDf
+ z3l4Fmb+PtNS+BiDCPWKE1a+Kos7m1byliKnesrJjn+ww=
 
-The following commit has been merged into the x86/boot branch of tip:
+The value of policy_base is the return value of a devm_ioremap call,
+which returns a __iomem pointer instead of an regular pointer.
+Add the missing __iomem attribute.
 
-Commit-ID:     43b1d3e68ee7f41c494ee5558d8def3d3d0b7f1b
-Gitweb:        https://git.kernel.org/tip/43b1d3e68ee7f41c494ee5558d8def3d3d0b7f1b
-Author:        Chris Koch <chrisko@google.com>
-AuthorDate:    Fri, 15 Dec 2023 11:05:21 -08:00
-Committer:     Dave Hansen <dave.hansen@linux.intel.com>
-CommitterDate: Thu, 22 Feb 2024 15:13:57 -08:00
+Compile-tested only.
 
-kexec: Allocate kernel above bzImage's pref_address
+Signed-off-by: Armin Wolf <W_Armin@gmx.de>
+=2D--
+ drivers/platform/x86/amd/pmf/pmf.h    | 2 +-
+ drivers/platform/x86/amd/pmf/tee-if.c | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-A relocatable kernel will relocate itself to pref_address if it is
-loaded below pref_address. This means a booted kernel may be relocating
-itself to an area with reserved memory on modern systems, potentially
-clobbering arbitrary data that may be important to the system.
+diff --git a/drivers/platform/x86/amd/pmf/pmf.h b/drivers/platform/x86/amd=
+/pmf/pmf.h
+index 16999c5b334f..bcf777a5659a 100644
+=2D-- a/drivers/platform/x86/amd/pmf/pmf.h
++++ b/drivers/platform/x86/amd/pmf/pmf.h
+@@ -229,7 +229,7 @@ struct amd_pmf_dev {
+ 	struct delayed_work pb_work;
+ 	struct pmf_action_table *prev_data;
+ 	u64 policy_addr;
+-	void *policy_base;
++	void __iomem *policy_base;
+ 	bool smart_pc_enabled;
+ };
 
-This is often the case, as the default value of PHYSICAL_START is
-0x1000000 and kernels are typically loaded at 0x100000 or above by
-bootloaders like iPXE or kexec. GRUB behaves like the approach
-implemented here.
+diff --git a/drivers/platform/x86/amd/pmf/tee-if.c b/drivers/platform/x86/=
+amd/pmf/tee-if.c
+index f8c0177afb0d..16973bebf55f 100644
+=2D-- a/drivers/platform/x86/amd/pmf/tee-if.c
++++ b/drivers/platform/x86/amd/pmf/tee-if.c
+@@ -346,7 +346,7 @@ static int amd_pmf_get_bios_buffer(struct amd_pmf_dev =
+*dev)
+ 	if (!dev->policy_base)
+ 		return -ENOMEM;
 
-Also fixes the documentation around pref_address and PHYSICAL_START to
-be accurate.
+-	memcpy(dev->policy_buf, dev->policy_base, dev->policy_sz);
++	memcpy_fromio(dev->policy_buf, dev->policy_base, dev->policy_sz);
 
-[ dhansen: changelog tweak ]
+ 	amd_pmf_hex_dump_pb(dev);
+ 	if (pb_side_load)
+=2D-
+2.39.2
 
-Co-developed-by: Cloud Hsu <cloudhsu@google.com>
-Signed-off-by: Cloud Hsu <cloudhsu@google.com>
-Signed-off-by: Chris Koch <chrisko@google.com>
-Signed-off-by: Dave Hansen <dave.hansen@linux.intel.com>
-Reviewed-by: H. Peter Anvin (Intel) <hpa@zytor.com>
-Link: https://lore.kernel.org/all/20231215190521.3796022-1-chrisko%40google.com
----
- Documentation/arch/x86/boot.rst   |  3 ++-
- arch/x86/Kconfig                  | 10 +++++-----
- arch/x86/kernel/kexec-bzimage64.c |  5 ++++-
- 3 files changed, 11 insertions(+), 7 deletions(-)
-
-diff --git a/Documentation/arch/x86/boot.rst b/Documentation/arch/x86/boot.rst
-index c513855..4fd492c 100644
---- a/Documentation/arch/x86/boot.rst
-+++ b/Documentation/arch/x86/boot.rst
-@@ -878,7 +878,8 @@ Protocol:	2.10+
-   address if possible.
- 
-   A non-relocatable kernel will unconditionally move itself and to run
--  at this address.
-+  at this address. A relocatable kernel will move itself to this address if it
-+  loaded below this address.
- 
- ============	=======
- Field name:	init_size
-diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index 5edec17..1a33575 100644
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -2114,11 +2114,11 @@ config PHYSICAL_START
- 	help
- 	  This gives the physical address where the kernel is loaded.
- 
--	  If kernel is a not relocatable (CONFIG_RELOCATABLE=n) then
--	  bzImage will decompress itself to above physical address and
--	  run from there. Otherwise, bzImage will run from the address where
--	  it has been loaded by the boot loader and will ignore above physical
--	  address.
-+	  If the kernel is not relocatable (CONFIG_RELOCATABLE=n) then bzImage
-+	  will decompress itself to above physical address and run from there.
-+	  Otherwise, bzImage will run from the address where it has been loaded
-+	  by the boot loader. The only exception is if it is loaded below the
-+	  above physical address, in which case it will relocate itself there.
- 
- 	  In normal kdump cases one does not have to set/change this option
- 	  as now bzImage can be compiled as a completely relocatable image
-diff --git a/arch/x86/kernel/kexec-bzimage64.c b/arch/x86/kernel/kexec-bzimage64.c
-index 2a422e0..cde167b 100644
---- a/arch/x86/kernel/kexec-bzimage64.c
-+++ b/arch/x86/kernel/kexec-bzimage64.c
-@@ -503,7 +503,10 @@ static void *bzImage64_load(struct kimage *image, char *kernel,
- 	kbuf.bufsz =  kernel_len - kern16_size;
- 	kbuf.memsz = PAGE_ALIGN(header->init_size);
- 	kbuf.buf_align = header->kernel_alignment;
--	kbuf.buf_min = MIN_KERNEL_LOAD_ADDR;
-+	if (header->pref_address < MIN_KERNEL_LOAD_ADDR)
-+		kbuf.buf_min = MIN_KERNEL_LOAD_ADDR;
-+	else
-+		kbuf.buf_min = header->pref_address;
- 	kbuf.mem = KEXEC_BUF_MEM_UNKNOWN;
- 	ret = kexec_add_buffer(&kbuf);
- 	if (ret)
