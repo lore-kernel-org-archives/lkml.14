@@ -1,80 +1,94 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32E3A5C91B;
-	Fri, 23 Feb 2024 10:35:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B13F05DF25
+	for <linux-kernel@vger.kernel.org>; Fri, 23 Feb 2024 10:36:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708684544; cv=none; b=EfcXe/XUijZ9TqWCtfXE8OYyIQ/wPGtpX+X6cxqbCXobG2bklsPM5w48pAZbSuW/pf3knIhX8E7xNSXdJQqjplQjefiu3od30V11CAYoWes1ArQpRsW4yqhBB30ZzF0yanWQ/hq3kO/1Y3OW6d7g+BThSjIaCdQ5vJzHB5oHEYU=
+	t=1708684605; cv=none; b=GZNNd8jclOcW4jfYF3aUwXol8nTM1EZ9KQaqSegly9yIuYzGnlKVOEaEIfR6p+EUe5B6buaZnV660N7V70FvyQw221Wr10r3SBcRkuhEX/lUmEXGVwQIqMK/IwBrJOhkRTkU7oOBFH+EbKoAPUx0CyCbJEv+NllBmxTBld11SCA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708684544; c=relaxed/simple;
-	bh=ruwnsn/gjGehFv1nBJWx1lSoMV/uko91BIOgAziMm3M=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Rlce9eXP0g2dSXDvuwxckbzomZTKc4stdqjVLcvPgRdvQX9yz6Ia7DynPhorn4iKPm3dU385kAILYYhEmhym//8lQREplJ6EfQ3Sy4oUmAFct+NUxq8WYQpM0OZRDFseb/ZpbGKTONxaIQWKc/i+vmmliw5y2fIFw1WZCZw7DQs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RWgHoCDs; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1708684605; c=relaxed/simple;
+	bh=oGa9d8hXuiijz2WQcWWqfhlvaB3jirIqqRv0WuyyLd8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Cg2Y11WXy3zVfbEikqiXab/9cO1Rv6K4XbRCh0mt4tWLdYd9ZLBgf4KJG3Xt1d9R1GZM+tYqSzNrafMTvLFtkHGbfOVN1yBlzRu/V7ishVLCj4LRqREdNR2cu+IVSfjAC/Vi7GC1WlYDrLumZaZEQCtwJudI9S9jBlWAhAOyMwU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=fQNsh2OK; arc=none smtp.client-ip=209.85.208.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RWgHoCDs"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A1C69C433F1;
-	Fri, 23 Feb 2024 10:35:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708684543;
-	bh=ruwnsn/gjGehFv1nBJWx1lSoMV/uko91BIOgAziMm3M=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=RWgHoCDsVInAwCNNN7dPCmlvFap+RO20ZKOlw5tytgf/6HhxKiXjXRWImhWH4zwH4
-	 vzTPARKaSLya1nJMxTc3NfXVRQSgkd+uWgdiSeKp+i3IEsyAWavegkD2Nn0WFtefg0
-	 KDoZGR/8YogeLYhEEJ98ZrF//2MX+GGKZ0y6LoazZzdZX2DXWHCoIXQD92qnARlSou
-	 Hom7au3sqBTdrrTwXo30O7GOKJkb5SuteMP8x+N1GTlKwaoKpDfxcRESRuBSUtF3Ph
-	 AuVlC3rc2dVnBYZp4TFtwnXgsSd1gY/lDdCp/yAg+zEVC/T1a+HfeRW8msjSLElkrz
-	 TrAjAOo9vBIYg==
-Date: Fri, 23 Feb 2024 10:35:37 +0000
-From: Lee Jones <lee@kernel.org>
-To: linux-kernel@vger.kernel.org, Aren Moynihan <aren@peacevolution.org>
-Cc: Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-	Jean-Jacques Hiblot <jjhiblot@traphandler.com>,
-	Chen-Yu Tsai <wens@csie.org>, Ondrej Jirman <megi@xff.cz>,
-	linux-sunxi@lists.linux.dev, Pavel Machek <pavel@ucw.cz>,
-	linux-arm-kernel@lists.infradead.org,
-	Jernej Skrabec <jernej.skrabec@gmail.com>,
-	linux-leds@vger.kernel.org, Conor Dooley <conor+dt@kernel.org>,
-	Miles Alan <m@milesalan.com>, Samuel Holland <samuel@sholland.org>
-Subject: Re: (subset) [PATCH v2 1/4] leds: rgb: leds-group-multicolor: allow
- leds to stay on in suspend
-Message-ID: <20240223103537.GA1585387@google.com>
-References: <20240206185400.596979-1-aren@peacevolution.org>
- <170868429025.1582603.10651778411484887304.b4-ty@kernel.org>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="fQNsh2OK"
+Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-564fc495d83so701095a12.0
+        for <linux-kernel@vger.kernel.org>; Fri, 23 Feb 2024 02:36:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1708684602; x=1709289402; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=oGa9d8hXuiijz2WQcWWqfhlvaB3jirIqqRv0WuyyLd8=;
+        b=fQNsh2OKUBgnb5FP0MIFgb3d/zuraki6pSWU1EC+QQzscEskxBX3+AG1e1a1QPvd0B
+         hr/r6dLshp+BvzTAYA2Zau6LG+yrD8YznsM50ToHcnWOfQcNaY9/0pQ+1sOsQ9hIPIb3
+         cI5ElA0W+w2DcgFUWmUZCfLsut0jK5w/aP4hZReuZfHZxjdoA6SheufDCCIZed/IBOW7
+         hNoFAXmZeNUx3BBXomv2gsuXv/zaL0sbxRvAKc31q97AlDRCy7ZA0tMDcHoAxCB6t3HZ
+         4cJKO8Huez7q3DtnQADWBGxNp4krR7xcO7/qs4/Vl2/mvjr9hUj4qmz6g3yZ4dGESN0b
+         1trw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708684602; x=1709289402;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=oGa9d8hXuiijz2WQcWWqfhlvaB3jirIqqRv0WuyyLd8=;
+        b=j/HafsW90PNQ+ac+CZmnINY7j/DLAwwRZZhca8llseMQE895dXOtA9fhcvO/O4LAjd
+         +Xuslq1dVC7LQ+6TxwY7+CtYtXqlOH7aUYhaBpoEw+zndAysQ5zre6nhjMv5ZMMr6C87
+         RXG+gvLwJEXlcEZYDiY6r0E7t4JltdmeoW72GsVUAQAgrZ/AyxJERvdAKZgTUL8ubT58
+         tNVChT6C4/xaDA2Ul6ziizIhqfwy5TYX84Pej4auXofzzBgzNmWkoy+EHRpxO/yNLkeb
+         /ovOV3acxttYrriN8rahOsLmFQojybGRY2YfBIiPczClG1JBeyRGEtMqSIC5YqO5KHvz
+         1Nhw==
+X-Forwarded-Encrypted: i=1; AJvYcCWR2EIq2Rmwqz43/4ZB0lGFBrpSLI70O8Aw5+9A1WFWz2L0gbdomnoEwztfssvfPgOVlDrdsAWVBvzTtuUJpEwz098qy7zucvSVCvdN
+X-Gm-Message-State: AOJu0YwoHQCOoKGE7XzKcqm32pwXaQLFVJLWAo26rb3TJRFkAvQK0dty
+	0jnSWIyyf8OaMmhvU2dOmdhlcVAD28rME7+UgixAgGKNn5Cy9mt8V6hnllPVw22tp/09QRJrDt6
+	U6hFS1HNM4pwvX8elByXXnuR+G3oqiCIPd9ul
+X-Google-Smtp-Source: AGHT+IHUav3spNKZz8TuROOuLqr44AG4XeF8yBOYDiOk8XKBPI8yc/QGOy9I7fCdiFaLDT3fTvD/WiTk7Gr2b1xnDxE=
+X-Received: by 2002:aa7:d50a:0:b0:565:6424:6ad1 with SMTP id
+ y10-20020aa7d50a000000b0056564246ad1mr843919edq.14.1708684601764; Fri, 23 Feb
+ 2024 02:36:41 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <170868429025.1582603.10651778411484887304.b4-ty@kernel.org>
+References: <20240220081205.135063-1-raychi@google.com> <2024022024-trout-kennel-6d14@gregkh>
+ <4d62d4d0-3f28-486b-8132-4cc571b6f721@quicinc.com> <CAPBYUsD=3ux8RXgRcroVsmpqNs0D+2NeLhqPHh3TBB_oq=ziXA@mail.gmail.com>
+ <2024022033-broom-anime-6dd5@gregkh>
+In-Reply-To: <2024022033-broom-anime-6dd5@gregkh>
+From: Ray Chi <raychi@google.com>
+Date: Fri, 23 Feb 2024 18:36:04 +0800
+Message-ID: <CAPBYUsAapQin9ioDggDk_ZE2dGxBRFwSUcf8JGt4eRqrYd9m6w@mail.gmail.com>
+Subject: Re: [PATCH] usb: dwc3: gadget: remove warning during kernel boot
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: Krishna Kurapati PSSNV <quic_kriskura@quicinc.com>, Thinh.Nguyen@synopsys.com, 
+	quic_uaggarwa@quicinc.com, albertccwang@google.com, linux-usb@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, 23 Feb 2024, Lee Jones wrote:
+On Tue, Feb 20, 2024 at 9:56=E2=80=AFPM Greg KH <gregkh@linuxfoundation.org=
+> wrote:
+>
+> On Tue, Feb 20, 2024 at 05:42:56PM +0800, Ray Chi wrote:
+> > Hi Krishna,
+> >
+> > I verified the Thinh's patch and the warning could be
+> > fixed. Thanks for the information.
+>
+> Can you provide a tested-by for that one?
 
-> On Tue, 06 Feb 2024 13:13:17 -0500, Aren Moynihan wrote:
-> > If none of the managed leds enable LED_CORE_SUSPENDRESUME, then we
-> > shouldn't need to set it here. This makes it possible to use multicolor
-> > groups with gpio leds that enable retain-state-suspended in the device
-> > tree.
-> > 
-> > 
-> 
-> Applied, thanks!
-> 
-> [1/4] leds: rgb: leds-group-multicolor: allow leds to stay on in suspend
->       commit: 68552911e71d59e62dd5e50e9ac56ebfc32f0c71
+Since the solution has been merged, do I still need to provide tested-by?
+If tested-by is required, should I reply to the email thread for the
+merged patch or the reported patch?
 
-Note that I changed a bunch of grammatical issues.
+> And please do not top post :(
 
-led  => LED
-gpio => GPIO
+Thanks for the tips and your patience.
 
-Capitalised the first word of the comment, etc.
-
--- 
-Lee Jones [李琼斯]
+Regards,
+Ray
