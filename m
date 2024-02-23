@@ -1,93 +1,115 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB44A5FEE5;
-	Fri, 23 Feb 2024 15:13:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5C7035EF1;
+	Fri, 23 Feb 2024 15:14:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708701200; cv=none; b=pIcjT5SrG4fjBpEDTDURMKzikJnciRc94jcN1wAwBrlie6x5P0ZMAymCxU2oNELjqrtIevoNG9dRYefuZe51gkgXWtroV/I6xmfqjsS1xWvpO/NwY/xCXevFWHPj8hCfSUmq3gCWVl2GKUJOrsYxkco+4iBw28iOL6yamK3hzvQ=
+	t=1708701292; cv=none; b=REPWMvWb3EfBGybtOfax8LDTHsBCyVfwl5k0p/7hai8MmOif3mLdRPGq8f7qLNOygm7n/Ud/88h8pZZ+9j7FzYe/ejZrU7aX8XVH1FGaes+zMeqIcIiqrM0Wq1NU2gckw53Sqy8weE5L5b0BpYw3nWnc8M6RtAFgCP0/XAfkIz8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708701200; c=relaxed/simple;
-	bh=WFnOyzagEoL2XMAHfjJHHnkD1L2Pm476EQxtsVG/O7o=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=uQvE+HuLT3h7A8j1Tmtm+GfIDH3IUFEPJW37sIlj/G6957bpYOVj3UxWjO2GjMgm3kq9Ho6QFCKngv2257c8hFFcBy81JedKSwxQQyfVrJzOyzqv5kyrYfyRYcDEYRPsdxLRVrypKS8z0GxKkPL+Y+lyAI4+qj2bUfdzLsUc+WE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=eJJMsG6n; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1708701292; c=relaxed/simple;
+	bh=7W8+QYtt2grKoqRx/oAyb0v655L0Xcbk0QRleTescoc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=evzq2ZI9pF3xAyjXRuboVI8/9C2JnDQQEaPiRTL/MKDzOzaW1zII0DTLcB6FdO7IQTy2AC20hovctZYCl5GQNQSs/zdiIiyBwoAquG+dka5sYIjQ8MGotggLx1mBz15wOEG9X0un7n4HFiB96nptctDxf3zsJtkEgXoq7sr3los=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IvLF4unx; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="eJJMsG6n"
-Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 41N9RQtH007795;
-	Fri, 23 Feb 2024 15:13:12 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	qcppdkim1; bh=NI4LeKwprpZtjLkpzn66X7efzVrPdTCPBGszzolQ1cE=; b=eJ
-	JMsG6nCvv2k+5QyECjO4ximmOoxEkGt5yk+2i6H4Mszx0xeuels1iuT2M2OZe+ib
-	7mvKGBDUNDy1XPyZ9Xsp0xwXecU6AwhYFK5+EfGI3tVK4x5Ww/6g3Wfa84XHALNN
-	qdYWY0ZFEYNLsFCBzK7IrYiWywnPMD8bp7wyc1P0uxo5747QCEJixMpHkEJPDvSY
-	GPX5kvEe6i9489gxseUczVYcviwYse8cveFVOkUvZkSUlb0+/qGy5Q5/BhTYqoD7
-	fgZC7KoSURVIflhtniSK76fdtYw10rV1VXRzlw4izoPLlwvuL1f8mOCq0XnTsgfC
-	HIAjW2jO6lnJtXwKfSkA==
-Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3wer8mruj0-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 23 Feb 2024 15:13:12 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 41NFDB9q020906
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 23 Feb 2024 15:13:11 GMT
-Received: from [10.226.59.182] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Fri, 23 Feb
- 2024 07:13:07 -0800
-Message-ID: <add8e7de-a153-4d8e-7226-a5ec177a4223@quicinc.com>
-Date: Fri, 23 Feb 2024 08:13:07 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IvLF4unx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E2C7FC433C7;
+	Fri, 23 Feb 2024 15:14:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1708701292;
+	bh=7W8+QYtt2grKoqRx/oAyb0v655L0Xcbk0QRleTescoc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=IvLF4unxDB0rNIL0JXp0Hn4oDAPmbkGVzyPv3iUfoOeZJtZzBl7GOF6ksN0FJuxHr
+	 NrcysBwlpekCR5yYcYL61aQP2GiHY9A8lx4oA1O60976Ro7Wuhgo5otJqsQqykF1De
+	 b+bl6zWjMAxlhhUg8KdkjPEzFDop5x9AQ7x+jDq5fIilm6AaSXLMPOFocrxz3LZIz3
+	 Y+/WU7aweJAUHkMzgMWQaeDFEZxGipIxG8mTPsT7DiqSrS97lYDAvrEZu9WrZOLQwm
+	 ue6ioQIgjLQ5oJTvKGV2a7RE1apuaaNMkbCetf4FLMrc0zEOFDfFu2DtCr6JpKmsJI
+	 eNQ9x1LvGbKKQ==
+Date: Fri, 23 Feb 2024 16:14:49 +0100
+From: Frederic Weisbecker <frederic@kernel.org>
+To: "Paul E. McKenney" <paulmck@kernel.org>
+Cc: Boqun Feng <boqun.feng@gmail.com>, linux-kernel@vger.kernel.org,
+	rcu@vger.kernel.org, Neeraj Upadhyay <Neeraj.Upadhyay@amd.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Sebastian Siewior <bigeasy@linutronix.de>,
+	Anna-Maria Behnsen <anna-maria@linutronix.de>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Neeraj Upadhyay <quic_neeraju@quicinc.com>,
+	Joel Fernandes <joel@joelfernandes.org>,
+	Josh Triplett <josh@joshtriplett.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Lai Jiangshan <jiangshanlai@gmail.com>,
+	Zqiang <qiang.zhang1211@gmail.com>
+Subject: Re: [PATCH v2 6/6] rcu-tasks: Maintain real-time response in
+ rcu_tasks_postscan()
+Message-ID: <Zdi2aXbgKdsmP/1O@lothringen>
+References: <20240217012745.3446231-1-boqun.feng@gmail.com>
+ <20240217012745.3446231-7-boqun.feng@gmail.com>
+ <ZdeI_-RfdLR8jlsm@localhost.localdomain>
+ <e0472956-1b18-4a22-be6e-5dbbc11141eb@paulmck-laptop>
+ <9a27f638-4eb0-42b3-b8a3-201d6ed9406b@paulmck-laptop>
+ <ZdiMympnNOo6e+5T@lothringen>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.6.0
-Subject: Re: [PATCH] accel/qaic: Constify aic100_channels
-Content-Language: en-US
-To: Jeff Johnson <quic_jjohnson@quicinc.com>,
-        Carl Vanderlip
-	<quic_carlv@quicinc.com>,
-        Pranjal Ramajor Asha Kanojiya
-	<quic_pkanojiy@quicinc.com>,
-        Oded Gabbay <ogabbay@kernel.org>
-CC: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        <linux-arm-msm@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
-        <linux-kernel@vger.kernel.org>, <kernel@quicinc.com>
-References: <20240222-mhi-const-accel-qaic-v1-1-028db0dd9098@quicinc.com>
-From: Jeffrey Hugo <quic_jhugo@quicinc.com>
-In-Reply-To: <20240222-mhi-const-accel-qaic-v1-1-028db0dd9098@quicinc.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: CsL34TIa0p9Sz7JxxjFGxwAcZmzsryZ6
-X-Proofpoint-ORIG-GUID: CsL34TIa0p9Sz7JxxjFGxwAcZmzsryZ6
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-02-23_01,2024-02-23_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 spamscore=0
- adultscore=0 malwarescore=0 bulkscore=0 clxscore=1011 mlxscore=0
- impostorscore=0 mlxlogscore=825 suspectscore=0 priorityscore=1501
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2402120000 definitions=main-2402230111
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZdiMympnNOo6e+5T@lothringen>
 
-On 2/22/2024 6:06 PM, Jeff Johnson wrote:
-> MHI allows the channel configs to be const, so constify
-> aic100_channels to prevent runtime modification.
+On Fri, Feb 23, 2024 at 01:17:14PM +0100, Frederic Weisbecker wrote:
+> diff --git a/kernel/rcu/tasks.h b/kernel/rcu/tasks.h
+> index 866743e0796f..0ff2b554f5b5 100644
+> --- a/kernel/rcu/tasks.h
+> +++ b/kernel/rcu/tasks.h
+> @@ -973,12 +973,13 @@ static void rcu_tasks_postscan(struct list_head *hop)
+>  	for_each_possible_cpu(cpu) {
+>  		unsigned long j = jiffies + 1;
+>  		struct rcu_tasks_percpu *rtpcp = per_cpu_ptr(rcu_tasks.rtpcpu, cpu);
+> -		struct task_struct *t;
+> -		struct task_struct *t1;
+> -		struct list_head tmp;
+>  
+>  		raw_spin_lock_irq_rcu_node(rtpcp);
+> -		list_for_each_entry_safe(t, t1, &rtpcp->rtp_exit_list, rcu_tasks_exit_list) {
+> +		while (!list_empty(&rtpcp->rtp_exit_list)) {
+> +			struct task_struct *t;
+> +			t = list_first_entry(&rtpcp->rtp_exit_list, typeof(*t), rcu_tasks_exit_list);
+> +			list_del_init(&t->rcu_tasks_exit_list);
+
+Oh no! The task has to stay in the list for subsequent grace periods! Please
+forget that suggestion... Yours looks good!
+
+Thanks.
+
+> +
+>  			if (list_empty(&t->rcu_tasks_holdout_list))
+>  				rcu_tasks_pertask(t, hop);
+>  
+> @@ -987,14 +988,9 @@ static void rcu_tasks_postscan(struct list_head *hop)
+>  			if (!IS_ENABLED(CONFIG_PREEMPT_RT) && time_before(jiffies, j))
+>  				continue;
+>  
+> -			// Keep our place in the list while pausing.
+> -			// Nothing else traverses this list, so adding a
+> -			// bare list_head is OK.
+> -			list_add(&tmp, &t->rcu_tasks_exit_list);
+>  			raw_spin_unlock_irq_rcu_node(rtpcp);
+>  			cond_resched(); // For CONFIG_PREEMPT=n kernels
+>  			raw_spin_lock_irq_rcu_node(rtpcp);
+> -			list_del(&tmp);
+>  			j = jiffies + 1;
+>  		}
+>  		raw_spin_unlock_irq_rcu_node(rtpcp);
+> @@ -1219,7 +1215,6 @@ void exit_tasks_rcu_stop(void)
+>  	struct rcu_tasks_percpu *rtpcp;
+>  	struct task_struct *t = current;
+>  
+> -	WARN_ON_ONCE(list_empty(&t->rcu_tasks_exit_list));
+>  	rtpcp = per_cpu_ptr(rcu_tasks.rtpcpu, t->rcu_tasks_exit_cpu);
+>  	raw_spin_lock_irqsave_rcu_node(rtpcp, flags);
+>  	list_del_init(&t->rcu_tasks_exit_list);
 > 
-> Signed-off-by: Jeff Johnson <quic_jjohnson@quicinc.com>
-
-Reviewed-by: Jeffrey Hugo <quic_jhugo@quicinc.com>
-
-I plan to apply to drm-misc-next before the rc6 freeze.
