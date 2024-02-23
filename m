@@ -1,109 +1,99 @@
-Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from serv108.segi.ulg.ac.be (serv108.segi.ulg.ac.be [139.165.32.111])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE5E45DF00;
-	Fri, 23 Feb 2024 14:40:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52B017493;
+	Fri, 23 Feb 2024 14:41:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=139.165.32.111
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708699202; cv=none; b=V1wUf5MBVGbo+G1l6bN4ov6V9xDgMiS6wdS/HJbrc5IF5xnwYNs8jGLipv2uudybUOrU2sBqm4d4kn93fSR4qC/ZZSE/m7KZ11opO66BhInFfkape4AcmODrH/mqzhHekJWTFiWny7JPsQK2vhhvVSNGkrzhOQY+Byso+Ozjjfo=
+	t=1708699312; cv=none; b=c4w1mI2NDpE25dI89mXlQeJchifTPZowi59Q3fqmuSk4Egi+4BkTnncPd31vMYAFx+PTCjWP4IyUfLIsnK1C1BlhbpcocEtHpT5DsofZVy/abP3TUoYoMfmUW6q3VbJywvgMFnogGXrVC9gh/KTObMvWjo5Y4ZeyssRtiYM0lEA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708699202; c=relaxed/simple;
-	bh=F8ArNbtydFiL0D6k2+Q831xONNh/JINNubofnCWr6EU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=j59otzoiD3MoXlyaAT9Z4BqJHQoSuhlh4i+wO5VrClLIfDy8gDHexr+CSEta71KEQVpAY4Vhyd+HNfePaZC27SJwJYJ6tikK+GMlJVGfkHwlF6EXFiy8GpGazoSndBh6wd4CO7qRpWrnjA0Z8qg5WR7p/dRV+6eoUkGtIifizWA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CqhINM5k; arc=none smtp.client-ip=209.85.210.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1708699312; c=relaxed/simple;
+	bh=lYSbqhb9aelgiyV2bHdQgyY0ObK/yrK8TqQKdtUu/qM=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=ekGqSvyO2dIChQMBavP2lYBXUtaRJjW5hnD3x0hlKOrxgP13ILBufosLlWQDCxLzN7d0HlDg/XGcZ7HxFMCrL8XFb4wyXFXekHjPWDIYXX8upPh/jXQCm7Ve9MlCoqTpljbCanYEfy8cLicGLFhFYdgGFTELJrqVfLlOCy6Fj90=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uliege.be; spf=pass smtp.mailfrom=uliege.be; dkim=pass (2048-bit key) header.d=uliege.be header.i=@uliege.be header.b=lpuxA5Fp; arc=none smtp.client-ip=139.165.32.111
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uliege.be
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uliege.be
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CqhINM5k"
-Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-6e4ca46ab04so251045b3a.3;
-        Fri, 23 Feb 2024 06:40:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1708699200; x=1709304000; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=KymCeXAdOwhnbLLu7sHJyesb6UapRJI/5wmiDLXWjq8=;
-        b=CqhINM5kO2385xqPlWcnx5GAVjd9DTVvfeFA+oy1PHmG8Gan5yQJnNLdpK1CONCgtO
-         P2ln1LjAFGEOmm6TFAH1aWzo+ssjRcQwfCiZRN8u+8fKFYGjJwkKSctlulptxqdalwG5
-         1xQ54aLX4s187D7DlkHjBvdeBwTwP/z/EWOoLtc3pzrznK5RTEERz/FsrrQ+qKjQpsTS
-         DYesOz9Xx/fH2zR+493mQOHigNQHUSCqwsFWrwFInE1/wG1k4sQJPQ3JTfPZ1akMAEi4
-         osQ/PCFDcmNYwIgW0Wv0HPYZaGzcU2et62TpBum7DT5ff/j2N97fLWfKQYms1lzX3lHH
-         d2bg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708699200; x=1709304000;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=KymCeXAdOwhnbLLu7sHJyesb6UapRJI/5wmiDLXWjq8=;
-        b=CqKUt7jTVW8rbhuf+rOO/UatjWjDfYFNDYI0iEm9vWOXbE2kdQHIJpe9XPMfOobl/a
-         nhhRI4rihIkvH4XZ2OBEEHM/fREptlTbiafzFJnT6S5fZrZy8K0D/OFJ/bOuzo/5GZfB
-         1UOCggXTccsq15f9jjXYI9VkB29nQR4w4XXBbQe1qNMjrsqgGpOZz3vlbhoBjCliL3EN
-         NlMtlSBM+AG2Xv+ot2g51dVhy46gnlDS3GotUZ80P89BinmZk9s+71ghch98hqFMbPif
-         gFQiKGM9xQoOT6z8nk6s4EQ6QK5WzARPRx6xN7QBk6P2ZnIPvX2YeELDhBHoRzNwmM7h
-         KRtA==
-X-Forwarded-Encrypted: i=1; AJvYcCVPlC2mzZLyMPB2FNaDnKAgjKpETp52FU35JlwqjR4VXb5vAbDHzulUvsiYUfMUx6HgGqKxhPcZTrIP/q+fAjBNb+o8Ic3jQapYtnP2xV0z05o2YKStq36McjGaN51BRCl6ZD2XKBQocagoDCuqihHmfpMk42BwXtVo50jw7kgT0T9hLb53CTw=
-X-Gm-Message-State: AOJu0Yy38Va8C+steOMDc0zR34jK/5h1Elh3kt2H31BbJGed9P40XBRB
-	mT42pOZrqyOCI0PlIrXCp7hyamwIFbAMZ4tHQoFTVgAgz7Of+orSA9DiOElg8tub0aQ+QfY2A/l
-	8Iy0gjDC68AvlLV4sj8rsKfbXWpM=
-X-Google-Smtp-Source: AGHT+IHwDwRlHf/VCvl3JY5KZpo2YjDUVeb5So1ID2OBba3Z4WVPb5UzKpoEEDoA/9Zp+8R5HJYMwh7wafY2OKOm9SM=
-X-Received: by 2002:a05:6a21:3943:b0:1a0:5841:6756 with SMTP id
- ac3-20020a056a21394300b001a058416756mr81570pzc.4.1708699200297; Fri, 23 Feb
- 2024 06:40:00 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=uliege.be header.i=@uliege.be header.b="lpuxA5Fp"
+Received: from ubuntu.home (125.179-65-87.adsl-dyn.isp.belgacom.be [87.65.179.125])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by serv108.segi.ulg.ac.be (Postfix) with ESMTPSA id 64142200C982;
+	Fri, 23 Feb 2024 15:41:43 +0100 (CET)
+DKIM-Filter: OpenDKIM Filter v2.11.0 serv108.segi.ulg.ac.be 64142200C982
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uliege.be;
+	s=ulg20190529; t=1708699303;
+	bh=LcVhwtN+UqJjMSh3FfAL9zHi7+WPp9yvrVRqAgObzSs=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=lpuxA5FplMiOqb/KbsHnDkgK9+wxn6OZTR4X17vi1Za2CxMkPSP95T5NOS8oJOTtX
+	 Qdh3fos5tVvMNnksWZeyYT1JPnFslBUX17zHkwWvgzW4A2ktCyU2SQtufOO6LHZAmF
+	 afDM4Fx7S+ISfovXy2zQy7IB2xG/GD0T4U66tzkC0nQCSW7xam2JXX9YR3fmIbLw+4
+	 b0fPKj0yWmaP7jAPuFEImXh4FLpdBHFqgigPbTgzIG1btadvch0Xu9nnsxbEocNMP7
+	 4cy/aHy0uluXUYwV3UP7VhPWY55fg/zAJjFe5hI33iIkbyz90QmTIdh4gGGeA9Vxvn
+	 zv62Zmu82IhjQ==
+From: Justin Iurman <justin.iurman@uliege.be>
+To: netdev@vger.kernel.org
+Cc: davem@davemloft.net,
+	dsahern@kernel.org,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	linux-kernel@vger.kernel.org,
+	justin.iurman@uliege.be
+Subject: [PATCH net-next v4 1/3] uapi: ioam6: API for netlink multicast events
+Date: Fri, 23 Feb 2024 15:41:33 +0100
+Message-Id: <20240223144135.12826-2-justin.iurman@uliege.be>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240223144135.12826-1-justin.iurman@uliege.be>
+References: <20240223144135.12826-1-justin.iurman@uliege.be>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240223-leverage-walmart-5424542cd8bd@spud> <20240223-employee-pessimism-03ba0b58db6b@spud>
-In-Reply-To: <20240223-employee-pessimism-03ba0b58db6b@spud>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Fri, 23 Feb 2024 15:39:47 +0100
-Message-ID: <CANiq72ngEZskjH0f=8+cJuQsFTK227bGCxe5G0STMHuPbZYnXg@mail.gmail.com>
-Subject: Re: [PATCH v2 2/3] scripts: generate_rust_target: enable building on RISC-V
-To: Conor Dooley <conor@kernel.org>
-Cc: linux-riscv@lists.infradead.org, Conor Dooley <conor.dooley@microchip.com>, 
-	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Wedson Almeida Filho <wedsonaf@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Jonathan Corbet <corbet@lwn.net>, Paul Walmsley <paul.walmsley@sifive.com>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Nathan Chancellor <nathan@kernel.org>, 
-	Nick Desaulniers <ndesaulniers@google.com>, Tom Rix <trix@redhat.com>, 
-	rust-for-linux@vger.kernel.org, linux-doc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, llvm@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Fri, Feb 23, 2024 at 2:38=E2=80=AFPM Conor Dooley <conor@kernel.org> wro=
-te:
->
-> Add the required bits from rust-for-linux to enable generating a RISC-V
-> target for rust. The script, written by Miguel, was originally a
-> config file contributed by Gary.
+Add new api to support ioam6 events for generic netlink multicast. A
+first "trace" event is added to the list of ioam6 events, which will
+represent an IOAM Pre-allocated (or Incremental) Trace Option-Type. It
+provides another solution to share IOAM data with user space.
 
-Thanks for this Connor!
+Signed-off-by: Justin Iurman <justin.iurman@uliege.be>
+---
+ include/uapi/linux/ioam6_genl.h | 20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
 
-arm64 is sending these for 6.9:
+diff --git a/include/uapi/linux/ioam6_genl.h b/include/uapi/linux/ioam6_genl.h
+index ca4b22833754..1733fbc51fb5 100644
+--- a/include/uapi/linux/ioam6_genl.h
++++ b/include/uapi/linux/ioam6_genl.h
+@@ -49,4 +49,24 @@ enum {
+ 
+ #define IOAM6_CMD_MAX (__IOAM6_CMD_MAX - 1)
+ 
++#define IOAM6_GENL_EV_GRP_NAME "ioam6_events"
++
++enum ioam6_event_type {
++	IOAM6_EVENT_UNSPEC,
++	IOAM6_EVENT_TRACE,
++};
++
++enum ioam6_event_attr {
++	IOAM6_EVENT_ATTR_UNSPEC,
++
++	IOAM6_EVENT_ATTR_TRACE_NAMESPACE,	/* u16 */
++	IOAM6_EVENT_ATTR_TRACE_NODELEN,		/* u8 */
++	IOAM6_EVENT_ATTR_TRACE_TYPE,		/* u32 */
++	IOAM6_EVENT_ATTR_TRACE_DATA,		/* Binary */
++
++	__IOAM6_EVENT_ATTR_MAX
++};
++
++#define IOAM6_EVENT_ATTR_MAX (__IOAM6_EVENT_ATTR_MAX - 1)
++
+ #endif /* _UAPI_LINUX_IOAM6_GENL_H */
+-- 
+2.34.1
 
-    https://git.kernel.org/arm64/c/f82811e22b48
-    https://git.kernel.org/arm64/c/724a75ac9542
-
-So it would be nice to see if it may be already possible to enable it
-via a builtin target + flags instead of the custom target, e.g. arm64
-does:
-
-    KBUILD_RUSTFLAGS +=3D --target=3Daarch64-unknown-none -Ctarget-feature=
-=3D"-neon"
-
-and so on.
-
-If it does not work, it would be good to know what would be needed for
-RISC-V and put it into the unstable features / wanted features list
-for Rust.
-
-Either way, it is not a blocker (although you will need a rebase after
-arm64 lands to use the `target.json` in the right places).
-
-Cheers,
-Miguel
