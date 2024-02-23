@@ -1,39 +1,59 @@
-Received: from serv108.segi.ulg.ac.be (serv108.segi.ulg.ac.be [139.165.32.111])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D2E012D1F9;
-	Fri, 23 Feb 2024 18:20:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=139.165.32.111
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708712410; cv=none; b=qvhKL1lCvUlTULkTZhGoknuRzDAnQw1YtiWQil3KabYJztirSix4hSJhKgwwBAWeHpAtM/5+yHdOx/1SYO0mttuswpjTt/vPp//nb6UsVcapoXXvy+iC7BrL8+QVxhxzvH3jIO2tRhWRU8qfx7wR+T4lgASS5QjtK9+GU90Q00o=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708712410; c=relaxed/simple;
-	bh=L17zNUCxvNnm7yyqQ7WS5W8AZHiSgpBGe/zD9/AGBOs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Y0ZOBfUI5EnREzcYLk0OQ0IThrN2nncDvlDcnhl3e88aHHSMymL3Q8oukEs2ptCEesTB+5MKiyOVu2J3l77+o3eSjsWXBujsnOVQg5W5bvEQ1pPrE5Ely5MbNzH2IRhoixfCb1rS1zBv/tdl2UWQx8SedzZrqniVAcppl/NWKcM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uliege.be; spf=pass smtp.mailfrom=uliege.be; dkim=pass (2048-bit key) header.d=uliege.be header.i=@uliege.be header.b=mjZbgi9O; arc=none smtp.client-ip=139.165.32.111
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uliege.be
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uliege.be
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=uliege.be header.i=@uliege.be header.b="mjZbgi9O"
-Received: from [192.168.1.55] (125.179-65-87.adsl-dyn.isp.belgacom.be [87.65.179.125])
+Received: from mail-pg1-f170.google.com (mail-pg1-f170.google.com [209.85.215.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by serv108.segi.ulg.ac.be (Postfix) with ESMTPSA id CE777200C247;
-	Fri, 23 Feb 2024 19:20:04 +0100 (CET)
-DKIM-Filter: OpenDKIM Filter v2.11.0 serv108.segi.ulg.ac.be CE777200C247
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uliege.be;
-	s=ulg20190529; t=1708712405;
-	bh=QvbrHms9ETKk/v/CsD8CfF4FaoDekyg4wG/YRj8GOqI=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=mjZbgi9O1KiS3zphKQB3YRcvJaUIZGjlHWJbEWKciGZrv9WW10zNrgHKW/5d3UY/9
-	 Q/+npasTrG7gWq0+wNIoVxufjRcpPgyvg+4DGR6qZaX6+j1LANaU+p1oze7zVtdpLe
-	 KAgWj+CTITrjLGKVbMbSKsItLiwk5gwGIzxmlTOTA3eX3qO5VSOlTRgurILwzGswLM
-	 Rpn5VjpTQRu0ft89eDT3Viy4gwi2Fuu8TJnn1uOIqvix24WEEBsufY69LmzJcn1z3W
-	 Ajp0GFK5pWsq1uzU1n+qpfiXWZt2DUeMjOTCZrshgQ+LRgBII3M99txJB28MqE+cNV
-	 IcQbMvSws1W0A==
-Message-ID: <da6a308f-8053-4744-8b81-67b63232a526@uliege.be>
-Date: Fri, 23 Feb 2024 19:20:04 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E44414263E;
+	Fri, 23 Feb 2024 18:20:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.170
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1708712443; cv=none; b=X8de8bc8EZW/CJ+LAjVbPtyRjI+v5/ULVoPU1oSAoO7jkofKjgbOYfjMsTfEhv0osFLSyJXq7QqOzzjoYhzDVlcQBizqKfsVombK9S4nxWHrm/rirR9zOxlY6F2hHY7pRgZxAIs6dDhLaVveYyTCNnGrNN9onUi1GXAractLA6g=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1708712443; c=relaxed/simple;
+	bh=4Qrvq1AhP6eyIkuoH88pa0hlk5TiVVHr6E9tQvZNksE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=BPTv6Mavb8Y6eUlGkIEzWUuPnE90mIVLQqLEXJG5re2ASKKMEhQ51TKTf6HV0+1cds6lIoarLkdyS+5dhOh0wrZtDEeSUdhQR5eP+wQWjdkr/g+bKYVqBVxFUM2Nunzw/gsKxS6lah3EE4svFtulB7n4WR4t9Spx00wm06A3ce8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jrLpW/XA; arc=none smtp.client-ip=209.85.215.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jrLpW/XA"
+Received: by mail-pg1-f170.google.com with SMTP id 41be03b00d2f7-53fbf2c42bfso999005a12.3;
+        Fri, 23 Feb 2024 10:20:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1708712438; x=1709317238; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=uvmCBum3obDIzEvJJBYCmhBj4c5cWpFkxhaUjZo6Kko=;
+        b=jrLpW/XA9Gpvqhw2vvohkxecNbvp2boguflh8dUqSnJ7otPwc2uXpYjE5dO20hdeuP
+         EluHRC6NhES11Iq+xbCEOcl9lsXXt14u7UZZJETWX9zuafRWtX2bc/t66p1nnkVLNLF9
+         VfADDENc5cg4P6UQuWDGGbyDty5hT+bLzWVULGjgZf1HLYfLQZOVmjHRalfifH/or/Av
+         JdWUjM9SaUbjFQotcp0anP4rmO10F4vLp32KbThK8xH9IgRzQOPNl6GjPbtBOCbuv/uY
+         zeGoIJruytT3Q1qdZntKAvJPVWgNaHs+N0gYe1A28bl10ve5Hsdc4dEwZAS6BS4pHzXE
+         55hQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708712438; x=1709317238;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=uvmCBum3obDIzEvJJBYCmhBj4c5cWpFkxhaUjZo6Kko=;
+        b=lhUIVWehDyaUXA6h4XSupE8bOdd3wu0j9YRPH9FH77soo9tvbcpZbsZtnrNIAKvQHg
+         9uND2FWe7Z7fQIHmfYes9fnTW4cjaOfdhxiTCoEsEp+4a0yKWRTRMcgh3mHoQKK0/imc
+         QVZ19GhqkOFT9w85ntRj7VynWTpmktiWTD/DBsPQ6dZ64dwIvX/IHSyUkarvPow04EgV
+         8L4fQuC0QgdH8eP56UTcDlmhTn0W9qf0ZohHaZ1y1Bj6cTjfXnFsimBMSPybTmhCiVo/
+         Z8LtwRQhnbiTs09VVDDn6xuA/NbtJpRyKRKp1XzakLJOUGFljWvku2BiWqmdsfrG+VZk
+         tNMw==
+X-Forwarded-Encrypted: i=1; AJvYcCVBqQsdf9keqRJ0PTNa4BpEpE5Ms/tWxl+xpPQcOTvgbF5RwiljKO4opp//uccC48QvRXel+uPhJ9nipsL462hxtMYUOqOHExc=
+X-Gm-Message-State: AOJu0YwVjDAbJLWQ6CjFlVlFGx+1tagegCczdMKV95HZqbhQQ2lZYagu
+	y7q+fgjsXespj9iV4DyeKC8z2VadTHtXwmhPEoMzciVsiPQsmaUg
+X-Google-Smtp-Source: AGHT+IGg7ReM16zETYG2CYBHHz4NjUZ7dBtJCjwrpYyfNBFSVowWkw/L6NHszSznrq68kkWUt/LnqQ==
+X-Received: by 2002:a05:6a20:4c9b:b0:1a0:ce31:128b with SMTP id fq27-20020a056a204c9b00b001a0ce31128bmr519668pzb.34.1708712437592;
+        Fri, 23 Feb 2024 10:20:37 -0800 (PST)
+Received: from [10.67.48.245] ([192.19.223.252])
+        by smtp.googlemail.com with ESMTPSA id t42-20020a056a0013aa00b006e06b8548c3sm3986146pfg.139.2024.02.23.10.20.34
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 23 Feb 2024 10:20:37 -0800 (PST)
+Message-ID: <a299118d-eeec-40b4-9a3d-48dc40f34e12@gmail.com>
+Date: Fri, 23 Feb 2024 10:20:32 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,67 +61,41 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next v4 3/3] net: exthdrs: ioam6: send trace event
+Subject: Re: [PATCH v3] PM / core: conditionally skip system pm in
+ device/driver model
 Content-Language: en-US
-To: netdev@vger.kernel.org
-Cc: davem@davemloft.net, dsahern@kernel.org, edumazet@google.com,
- kuba@kernel.org, pabeni@redhat.com, linux-kernel@vger.kernel.org,
- justin.iurman@uliege.be
-References: <20240223144135.12826-1-justin.iurman@uliege.be>
- <20240223144135.12826-4-justin.iurman@uliege.be>
-From: Justin Iurman <justin.iurman@uliege.be>
-In-Reply-To: <20240223144135.12826-4-justin.iurman@uliege.be>
+To: Guan-Yu Lin <guanyulin@google.com>, rafael@kernel.org, pavel@ucw.cz,
+ len.brown@intel.com, gregkh@linuxfoundation.org,
+ andriy.shevchenko@linux.intel.com, petr.tesarik.ext@huawei.com,
+ rdunlap@infradead.org, james@equiv.tech, broonie@kernel.org,
+ james.clark@arm.com, masahiroy@kernel.org
+Cc: linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
+References: <20240223143833.1509961-1-guanyulin@google.com>
+From: Florian Fainelli <f.fainelli@gmail.com>
+In-Reply-To: <20240223143833.1509961-1-guanyulin@google.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On 2/23/24 15:41, Justin Iurman wrote:
-> If we're processing an IOAM Pre-allocated Trace Option-Type (the only
-> one supported currently), and if we're the destination, then send the
-> trace as an ioam6 event to the multicast group. This way, user space
-> apps will be able to collect IOAM data (for a trace, it only makes sense
-> to send events if we're the destination).
-> 
-> Signed-off-by: Justin Iurman <justin.iurman@uliege.be>
-> ---
->   net/ipv6/exthdrs.c | 6 ++++++
->   1 file changed, 6 insertions(+)
-> 
-> diff --git a/net/ipv6/exthdrs.c b/net/ipv6/exthdrs.c
-> index 02e9ffb63af1..003f35d9b42b 100644
-> --- a/net/ipv6/exthdrs.c
-> +++ b/net/ipv6/exthdrs.c
-> @@ -50,6 +50,7 @@
->   #endif
->   #include <net/rpl.h>
->   #include <linux/ioam6.h>
-> +#include <linux/ioam6_genl.h>
->   #include <net/ioam6.h>
->   #include <net/dst_metadata.h>
->   
-> @@ -954,6 +955,11 @@ static bool ipv6_hop_ioam(struct sk_buff *skb, int optoff)
->   						   + optoff + sizeof(*hdr));
->   
->   		ioam6_fill_trace_data(skb, ns, trace, true);
-> +
-> +		if (skb_dst(skb)->dev->flags & IFF_LOOPBACK)
+On 2/23/24 06:38, Guan-Yu Lin wrote:
+> In systems with a main processor and a co-processor, asynchronous
+> controller management can lead to conflicts.  One example is the main
+> processor attempting to suspend a device while the co-processor is
+> actively using it. To address this, we introduce a new sysfs entry
+> called "conditional_skip". This entry allows the system to selectively
+> skip certain device power management state transitions. To use this
+> feature, set the value in "conditional_skip" to indicate the type of
+> state transition you want to avoid.  Please review /Documentation/ABI/
+> testing/sysfs-devices-power for more detailed information.
 
-Hmm, now that I think about this a bit more, I'm not sure we should 
-force a node to be the destination in order to send the event. Instead, 
-we could just remove the "am I the destination" check and directly call 
-ioam6_event(), which does check if there is at least one listener before 
-sending the event. I see two reasons for the change: (a) one may want 
-(for whatever reason) to capture IOAM traces on transit nodes, or (b) 
-one may use inline (instead of encap) IOAM injection where the 
-destination may be outside the IOAM domain (i.e., destination != 
-decap/egress IOAM node), which is not RFC8200-compliant and requires 
-removing the IOAM Option-Type in-flight from the HbH, but that's another 
-story.
+This looks like a poor way of dealing with a lack of adequate resource 
+tracking from Linux on behalf of the co-processor(s) and I really do not 
+understand how someone is supposed to use that in a way that works.
 
-Any opinion?
+Cannot you use a HW maintained spinlock between your host processor and 
+the co-processor such that they can each claim exclusive access to the 
+hardware and you can busy-wait until one or the other is done using the 
+device? How is your partitioning between host processor owned blocks and 
+co-processor(s) owned blocks? Is it static or is it dynamic?
+-- 
+Florian
 
-> +			ioam6_event(IOAM6_EVENT_TRACE, dev_net(skb->dev),
-> +				    GFP_ATOMIC, (void *)trace,
-> +				    hdr->opt_len - 2);
->   		break;
->   	default:
->   		break;
