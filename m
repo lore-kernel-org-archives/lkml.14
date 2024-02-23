@@ -1,83 +1,92 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com [209.85.167.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2E5B146E96;
-	Fri, 23 Feb 2024 20:26:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FF5F143C63
+	for <linux-kernel@vger.kernel.org>; Fri, 23 Feb 2024 20:27:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708719995; cv=none; b=j0aX18qISt5sZdjy0G/QPxkmycampUByT3Rn81k807jAQYeVARywstS4aRpzKujX0Qr8D53j9EdVRtiUJ6jp03lGhl2Smrl3jGfRpgJdgFqjr65JxKPKbgYH0HH5kxUgrkpLjHS0lQvptlSMwoU2OWG2zM+0hVlVOM96TRBtU30=
+	t=1708720045; cv=none; b=narzbbCAATVdmREWzlFolX4XkxIE8jp3EFgpR0Rl+cwNXpLHtBibnwBde1FTGfAlvlSZDYCtItZ1b45TQkJkZbNjjgN98hrIhFsHj7KfQM8oqXmzjtH1S4lv5nEP4xx44iYIElFK4BpBds8Vec0nIb/72RLra6sBONeEQ3n9i2k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708719995; c=relaxed/simple;
-	bh=BKjk2drUibhKGcus9h79n6m+U1rXszg3UpQTrvBjVCA=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=J3bE/IUfKkFC9fyGzFlAYRFs3lE/0Z1LPdI35lhZMt558vRFqnnENp0rEOnFEqmiCICkQRMK9hF8H6BTJnDdygrSsRIyCeQzkPfOOKUSkko/BLDc38IxwnIeKw4pQP2+ThvtTgmhEc7p5iE2CtSIj43jN+tnDlSqbRlRhma6URw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ADCBFC43399;
-	Fri, 23 Feb 2024 20:26:34 +0000 (UTC)
-Date: Fri, 23 Feb 2024 15:28:27 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>
-Subject: [PATCH] tracing: Add __string_len() example
-Message-ID: <20240223152827.5f9f78e2@gandalf.local.home>
-X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1708720045; c=relaxed/simple;
+	bh=3YpEGeuhL8ubJmEesiwCMngORbDqOsSbQu4Bi2PiD98=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=PYzUYPv5SNBrXq0AmZWc09T1dAMU9eE711dohyszAY1VRdwjxORLW5gRXjuse0If3E73I4Vw4B+YjyBKaytrJ3r+KZCVf40pu1lhxdMEQ3y8DzBHDIy0cfkBkvIALWx2qKfkYOQBvuLIxZLsCedxdDzL0APE0qTi4r2mFY8B0GY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=rW94okdR; arc=none smtp.client-ip=209.85.167.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxon.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="rW94okdR"
+Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-512ea6ce06aso1031998e87.2
+        for <linux-kernel@vger.kernel.org>; Fri, 23 Feb 2024 12:27:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tuxon.dev; s=google; t=1708720042; x=1709324842; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=K2Et8H1DtwHnrSyv4ArO1u3yJYDVaQ44clIgnisl2H4=;
+        b=rW94okdRQGsBErEYNste9kOAmY7aCUxzrW8Z2UK181ndRUllIa5wku4yth5BPjWJ2J
+         1pVLn/04ygPt1Oghi6OusywmhBjnY9bFjr7lDgRxBbBVzP2WGAEwM2Py0EyUv01hI0Fo
+         07mWNT2TMewdTS5XExOmMFGS5aWAGSw+D6BOsJmJ8nJDzlNZeclLJEbU+h5SOc+josD7
+         v0T/TigHXJzAWFva35MCFb5Fq7IofxwOCAGc5U5FoIfCTbi5OwT/px9Ywhd9kCFnH4JT
+         TDomTd1OCKtjoHG1ML/BNkHImfLYtNPcN26X1E2eFO61BZDNqagHjznoOSu1qOw/MOKX
+         0JoA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708720042; x=1709324842;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=K2Et8H1DtwHnrSyv4ArO1u3yJYDVaQ44clIgnisl2H4=;
+        b=SrtpzFMJKv3MiB6eLxNTLBVhWL4YeDswkrFsC+KzKw35rfIK0uVZpEOr6KxFCZ1dvu
+         1Mvk0QyopZSbR3c2ljm1aHkmoFYxnFokq+fm7tgGK+OOqS4FVAhfV5Shw0HBv7IyTcoF
+         Yiy/K6rmSwPVvOdXpdK+cKKp2gjWoLX0DTfzOj+c2Ut/wWl66KeM36KPmh8UEVRu8/Co
+         ol4MuE4TTj9fH5J9w3re9w7h5S64r6lPi7mSEfdQuKz59qJjMC1wtxqd4V7taGL/MMhR
+         Jqy21oykwksqG/GS/Sb4nPC6dcDnLI9DGBRR2oOfh4WR+y0q0PQZJKvzsdKycvG+Pjc4
+         junQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWS+Eg3Q2y5M7QJnPTXX2S2h8KGkXzmoDCqfSXzglC2df2woGOZXIhySNGkW42dIxesI8NRzu40GCSN5aznZQh6aE6jDyGjfJuoqB9I
+X-Gm-Message-State: AOJu0Yyo0gegh++g/Qrb2ruVxpWrGKq3+4XZxOTueNA2HuK2Zr8JeXKd
+	GgMD+HTGZQTAMF4XM+ZP415xsoTyDAQhg0WqqmUsfMMHKVGtmI2dFPamx+7wusI36FvtilD7vOl
+	I
+X-Google-Smtp-Source: AGHT+IEkDhFlL5nB07GkTiQuGx05uTfF0HxzH9d74rlmOmpM0jUr/IFa5TPMHf48Y4Z6h4KtKW8I1g==
+X-Received: by 2002:a05:6512:3244:b0:512:df93:479c with SMTP id c4-20020a056512324400b00512df93479cmr492390lfr.36.1708720041614;
+        Fri, 23 Feb 2024 12:27:21 -0800 (PST)
+Received: from [192.168.50.4] ([82.78.167.99])
+        by smtp.gmail.com with ESMTPSA id fw14-20020a170906c94e00b00a3f04112c0csm3705544ejb.221.2024.02.23.12.27.20
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 23 Feb 2024 12:27:21 -0800 (PST)
+Message-ID: <0dac99e5-4ee0-4d55-a344-ae7bd627149e@tuxon.dev>
+Date: Fri, 23 Feb 2024 22:27:20 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/2] ARM: dts: microchip: few DT cleanups
+Content-Language: en-US
+To: robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+ conor+dt@kernel.org, nicolas.ferre@microchip.com,
+ alexandre.belloni@bootlin.com
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org
+References: <20240218151353.3612621-1-claudiu.beznea@tuxon.dev>
+From: claudiu beznea <claudiu.beznea@tuxon.dev>
+In-Reply-To: <20240218151353.3612621-1-claudiu.beznea@tuxon.dev>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 
-There's no example code that uses __string_len(), and since the sample
-code is used for testing the event logic, add a use case.
+On 18.02.2024 17:13, Claudiu Beznea wrote:
+> Hi,
+> 
+> Series adds minor cleanups for sam9x60 and sama7g5.
+> 
+> Thank you,
+> Claudiu Beznea
+> 
+> Claudiu Beznea (2):
+>   ARM: dts: microchip: sama7g5: align dmas to opening '<'
+>   ARM: dts: microchip: sam9x60: align dmas to opening '<'
 
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
- samples/trace_events/trace-events-sample.h | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
-
-diff --git a/samples/trace_events/trace-events-sample.h b/samples/trace_events/trace-events-sample.h
-index f2d2d56ce8e2..2dfaf7fc7bfa 100644
---- a/samples/trace_events/trace-events-sample.h
-+++ b/samples/trace_events/trace-events-sample.h
-@@ -303,6 +303,7 @@ TRACE_EVENT(foo_bar,
- 		__bitmask(	cpus,	num_possible_cpus()	)
- 		__cpumask(	cpum				)
- 		__vstring(	vstr,	fmt,	va		)
-+		__string_len(	lstr,	foo,	bar / 2 < strlen(foo) ? bar / 2 : strlen(foo) )
- 	),
- 
- 	TP_fast_assign(
-@@ -311,12 +312,13 @@ TRACE_EVENT(foo_bar,
- 		memcpy(__get_dynamic_array(list), lst,
- 		       __length_of(lst) * sizeof(int));
- 		__assign_str(str, string);
-+		__assign_str(lstr, foo);
- 		__assign_vstr(vstr, fmt, va);
- 		__assign_bitmask(cpus, cpumask_bits(mask), num_possible_cpus());
- 		__assign_cpumask(cpum, cpumask_bits(mask));
- 	),
- 
--	TP_printk("foo %s %d %s %s %s %s (%s) (%s) %s", __entry->foo, __entry->bar,
-+	TP_printk("foo %s %d %s %s %s %s %s (%s) (%s) %s", __entry->foo, __entry->bar,
- 
- /*
-  * Notice here the use of some helper functions. This includes:
-@@ -360,7 +362,8 @@ TRACE_EVENT(foo_bar,
- 		  __print_array(__get_dynamic_array(list),
- 				__get_dynamic_array_len(list) / sizeof(int),
- 				sizeof(int)),
--		  __get_str(str), __get_bitmask(cpus), __get_cpumask(cpum),
-+		  __get_str(str), __get_str(lstr),
-+		  __get_bitmask(cpus), __get_cpumask(cpum),
- 		  __get_str(vstr))
- );
- 
--- 
-2.43.0
+Applied to at91-dt, thanks!
 
