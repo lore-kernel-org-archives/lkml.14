@@ -1,67 +1,122 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from inva020.nxp.com (inva020.nxp.com [92.121.34.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 405811799D;
-	Fri, 23 Feb 2024 08:23:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F5491643E;
+	Fri, 23 Feb 2024 08:25:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=92.121.34.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708676630; cv=none; b=X1Qz4RtlWvIUUbbO3q0MTHkF1EY4mxC3z75Ei2ZWVzrtqIeQTRsuSXKTK3keIPvu/Bp7Me90STChbNIAeU12N+9zJjoBPWKUgpnjWJ/hop55S5NkECh2JjUY+rpRRH+2Hiqk2jRhkWZffgYsjXhaqUbbiIkKAaLhp6QcL19esnA=
+	t=1708676735; cv=none; b=qvQpbxy0qgGyW9zHV9pxmauuB+4M1al+4C2v3Duwbn1kYUk3V5Xv5BnafJLz35ySLHwKDWxYn16/SiuoOfJNPGOBVycKWGAUKeTtQsX4Kn2akMfqN99WlsM7yFMT3Y9ahKLmsOfMGVWmzlglxXt4DIJxQPXh6woudwH+1PWpgf4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708676630; c=relaxed/simple;
-	bh=2pRL/DHKpNavrBYCEdxRER3bzRbwjnSyn6+Le6BPexg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ac87q6aZBK/3JNK21bN1j9x/Rf/4nF4bp9bXtZUcO6iFOy2r3z4pn3a8AKwGkaF0uVhfRa11R0uFwtKAT/VxwuBtrDnpq08xb7GSbPDx4egY6VJe2vixl8Y7hKGbvuWbIIWfi7Q+iVGEdhW7v1h3F6hVFso+Y53lLIeSobCxY3s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m8qlj/Q/; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m8qlj/Q/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6724CC433C7;
-	Fri, 23 Feb 2024 08:23:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708676629;
-	bh=2pRL/DHKpNavrBYCEdxRER3bzRbwjnSyn6+Le6BPexg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=m8qlj/Q/6twHNGmgMEhqf+gHAUuT1pceqZRy6RPWg+g5+1yAQGO2v7RW9qTnvz3gH
-	 GnL3Hppha6HjbhiG49JDkujP9bNdPRFlNagkOllw1++EXolSNuM8IKPZ6/2Nuhxpwk
-	 EOaQwj8bQZrl5NagUA2ropmzLvgV0rj6LGLvPNRRPCZokhBDJS8OnSu9qZZhdc/sFt
-	 bH1FhG4aD11dzFXA4WiIYCL/ac1hi6Ae/wl5z7mmW59Ub1+EoWslwPn3W1tAjqIhsj
-	 YlJim2O3buoF+rsuZy/6sZ8VIgAgKHSMU+GTEcIEm58qK6YW/YHZiTVrXKAN7bDWNp
-	 au/oLYyVUv1mg==
-Date: Fri, 23 Feb 2024 09:23:42 +0100
-From: Christian Brauner <brauner@kernel.org>
-To: "Seth Forshee (DigitalOcean)" <sforshee@kernel.org>
-Cc: Serge Hallyn <serge@hallyn.com>, Paul Moore <paul@paul-moore.com>, 
-	Eric Paris <eparis@redhat.com>, James Morris <jmorris@namei.org>, 
-	Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>, 
-	Stephen Smalley <stephen.smalley.work@gmail.com>, Ondrej Mosnacek <omosnace@redhat.com>, 
-	Casey Schaufler <casey@schaufler-ca.com>, Mimi Zohar <zohar@linux.ibm.com>, 
-	Roberto Sassu <roberto.sassu@huawei.com>, Dmitry Kasatkin <dmitry.kasatkin@gmail.com>, 
-	Eric Snowberg <eric.snowberg@oracle.com>, "Matthew Wilcox (Oracle)" <willy@infradead.org>, 
-	Jonathan Corbet <corbet@lwn.net>, Miklos Szeredi <miklos@szeredi.hu>, 
-	Amir Goldstein <amir73il@gmail.com>, linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-security-module@vger.kernel.org, audit@vger.kernel.org, selinux@vger.kernel.org, 
-	linux-integrity@vger.kernel.org, linux-doc@vger.kernel.org, linux-unionfs@vger.kernel.org
-Subject: Re: [PATCH v2 11/25] security: add hooks for set/get/remove of fscaps
-Message-ID: <20240223-anfallen-kegeln-4550c939a31a@brauner>
-References: <20240221-idmap-fscap-refactor-v2-0-3039364623bd@kernel.org>
- <20240221-idmap-fscap-refactor-v2-11-3039364623bd@kernel.org>
+	s=arc-20240116; t=1708676735; c=relaxed/simple;
+	bh=qAl1KeYptMFYfDgXCbpPXJEIKYmK6FKlgiquwJOgj3M=;
+	h=From:To:Subject:Date:Message-Id:In-Reply-To:References; b=UQoj/DVv5D224DMjvUzTtaK1naTDmedlPcDYfHxJMCN7HgYh1+q/B415f/wcYB6fZegGQs9ElGmeDhZw3JR7fhLi/xGSWYjYZaP7qmTWyT78g/wxv4h4roswrBuB7rp2U8D62HOIun7wXZpqtWebf/xv+J4yOddLd/KRFYegF00=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; arc=none smtp.client-ip=92.121.34.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+	by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 8735A1A09B4;
+	Fri, 23 Feb 2024 09:17:41 +0100 (CET)
+Received: from aprdc01srsp001v.ap-rdc01.nxp.com (aprdc01srsp001v.ap-rdc01.nxp.com [165.114.16.16])
+	by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 5082A1A098E;
+	Fri, 23 Feb 2024 09:17:41 +0100 (CET)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+	by aprdc01srsp001v.ap-rdc01.nxp.com (Postfix) with ESMTP id A5B651802201;
+	Fri, 23 Feb 2024 16:17:39 +0800 (+08)
+From: Shengjiu Wang <shengjiu.wang@nxp.com>
+To: robh+dt@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org,
+	conor+dt@kernel.org,
+	shawnguo@kernel.org,
+	s.hauer@pengutronix.de,
+	kernel@pengutronix.de,
+	festevam@gmail.com,
+	linux-imx@nxp.com,
+	devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	shengjiu.wang@gmail.com
+Subject: [PATCH 2/2] arm64: dts: imx8mp-evk:Add PDM micphone sound card support
+Date: Fri, 23 Feb 2024 16:02:19 +0800
+Message-Id: <1708675339-8180-2-git-send-email-shengjiu.wang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1708675339-8180-1-git-send-email-shengjiu.wang@nxp.com>
+References: <1708675339-8180-1-git-send-email-shengjiu.wang@nxp.com>
+X-Virus-Scanned: ClamAV using ClamSMTP
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20240221-idmap-fscap-refactor-v2-11-3039364623bd@kernel.org>
 
-On Wed, Feb 21, 2024 at 03:24:42PM -0600, Seth Forshee (DigitalOcean) wrote:
-> In preparation for moving fscaps out of the xattr code paths, add new
-> security hooks. These hooks are largely needed because common kernel
-> code will pass around struct vfs_caps pointers, which EVM will need to
-> convert to raw xattr data for verification and updates of its hashes.
-> 
-> Signed-off-by: Seth Forshee (DigitalOcean) <sforshee@kernel.org>
-> ---
+Add PDM micphone sound card support, configure the pinmux.
 
-Looks good,
-Reviewed-by: Christian Brauner <brauner@kernel.org>
+This sound card supports recording sound from PDM micphone
+and convert the PDM format data to PCM data.
+
+Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+---
+ arch/arm64/boot/dts/freescale/imx8mp-evk.dts | 34 ++++++++++++++++++++
+ 1 file changed, 34 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/freescale/imx8mp-evk.dts b/arch/arm64/boot/dts/freescale/imx8mp-evk.dts
+index 63f6e72fa18a..fdcd1158a34a 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mp-evk.dts
++++ b/arch/arm64/boot/dts/freescale/imx8mp-evk.dts
+@@ -146,6 +146,20 @@ sound-hdmi {
+ 		status = "okay";
+ 	};
+ 
++	sound-micfil {
++		compatible = "fsl,imx-audio-card";
++		model = "micfil-audio";
++
++		pri-dai-link {
++			link-name = "micfil hifi";
++			format = "i2s";
++
++			cpu {
++				sound-dai = <&micfil>;
++			};
++		};
++	};
++
+ 	reserved-memory {
+ 		#address-cells = <2>;
+ 		#size-cells = <2>;
+@@ -527,6 +541,16 @@ &lcdif1 {
+ 	status = "okay";
+ };
+ 
++&micfil {
++	#sound-dai-cells = <0>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_pdm>;
++	assigned-clocks = <&clk IMX8MP_CLK_PDM>;
++	assigned-clock-parents = <&clk IMX8MP_AUDIO_PLL1_OUT>;
++	assigned-clock-rates = <196608000>;
++	status = "okay";
++};
++
+ &mipi_dsi {
+ 	samsung,esc-clock-frequency = <10000000>;
+ 	status = "okay";
+@@ -793,6 +817,16 @@ MX8MP_IOMUXC_SD1_DATA4__GPIO2_IO06	0x40
+ 		>;
+ 	};
+ 
++	pinctrl_pdm: pdmgrp {
++		fsl,pins = <
++			MX8MP_IOMUXC_SAI5_RXC__AUDIOMIX_PDM_CLK		0xd6
++			MX8MP_IOMUXC_SAI5_RXD0__AUDIOMIX_PDM_BIT_STREAM00	0xd6
++			MX8MP_IOMUXC_SAI5_RXD1__AUDIOMIX_PDM_BIT_STREAM01	0xd6
++			MX8MP_IOMUXC_SAI5_RXD2__AUDIOMIX_PDM_BIT_STREAM02	0xd6
++			MX8MP_IOMUXC_SAI5_RXD3__AUDIOMIX_PDM_BIT_STREAM03	0xd6
++		>;
++	};
++
+ 	pinctrl_pmic: pmicgrp {
+ 		fsl,pins = <
+ 			MX8MP_IOMUXC_GPIO1_IO03__GPIO1_IO03	0x000001c0
+-- 
+2.34.1
+
