@@ -1,153 +1,141 @@
-Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from vps.xff.cz (vps.xff.cz [195.181.215.36])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9B7118E10;
-	Fri, 23 Feb 2024 08:43:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22BF618E1E;
+	Fri, 23 Feb 2024 08:46:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.181.215.36
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708677814; cv=none; b=DH3et1E3Gy9pi93EoPauZ/No1Ab0PK6Rc+YMfGpfZVPvxPTFZjUwESa8dlwQdjpY5cYY9qD/xgddat2NAl4meR+T8/kcBnk0bcpZGTipbL+FTS5+KL/oHu4p0YIBbCzC8vuCerkgWd0NPFfq5FmrJkm5LzUZ1jq9SF09uM82ie0=
+	t=1708677990; cv=none; b=FaISb6QcpKcFTTwF6ZX5w6M6DOkWKKdeUo6zC0XpxEBqq6arBhD3OZW0sWOuZh1RO15G1cHCmg8YZMkcnMFdSmJLZEc8lAUVdbswY4tHA3oOWq24ckXBrJ0mHujWgmwfkLwbTEYq2nSxxWYdp9/9pxKceU3qt/K8EL7/SezcHGw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708677814; c=relaxed/simple;
-	bh=iLnJXvuR5lkNWwaRH7mn/a0WJs/BElzIKvl+E/YGsVo=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=LZhgZdh9t5hnrldkucy0/UZqzf56oIIF8iUeUtceUwZgvdfVBu4EpLauH0G74Pr8nYOpAmh7IpvYV9J9N7d5II9wtI3Ege/KuQWSqhRY92dn9K8wXQKRUM2zFRuSeocgmEG3qIlWnp23PafXljyNhTNndlfcLJtnAeYZh+Up5/c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.191
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.214])
-	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4Th3Q52vzdz1h08B;
-	Fri, 23 Feb 2024 16:41:17 +0800 (CST)
-Received: from canpemm500009.china.huawei.com (unknown [7.192.105.203])
-	by mail.maildlp.com (Postfix) with ESMTPS id C1E871A016B;
-	Fri, 23 Feb 2024 16:43:27 +0800 (CST)
-Received: from localhost.localdomain (10.50.165.33) by
- canpemm500009.china.huawei.com (7.192.105.203) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Fri, 23 Feb 2024 16:43:27 +0800
-From: Yicong Yang <yangyicong@huawei.com>
-To: <gregkh@linuxfoundation.org>, <jirislaby@kernel.org>, <tony@atomide.com>,
-	<linux-kernel@vger.kernel.org>, <linux-serial@vger.kernel.org>
-CC: <john.ogness@linutronix.de>, <andriy.shevchenko@linux.intel.com>,
-	<tglx@linutronix.de>, <yangyicong@hisilicon.com>, <linuxarm@huawei.com>,
-	<prime.zeng@hisilicon.com>, <jonathan.cameron@huawei.com>,
-	<fanghao11@huawei.com>
-Subject: [PATCH v4] serial: port: Don't suspend if the port is still busy
-Date: Fri, 23 Feb 2024 16:39:03 +0800
-Message-ID: <20240223083903.42129-1-yangyicong@huawei.com>
-X-Mailer: git-send-email 2.31.0
+	s=arc-20240116; t=1708677990; c=relaxed/simple;
+	bh=EZZPQchlQbMRgMLdaZSVRfWs5DMx2XOakjV6Hz3uCjc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=u6OUgxfN3J5gF/LyvAacZ4JoQLif2LdTxzPzKVVvgDXFbDG9mYHyT2LHItRGOtHtcVV5FC0IpsdazK9ilHuR5BmDai+pPGfIiOhINZ2ADJzZkHZpAnWhGN3mqdisTSkw6anfSbEO5pDELO8HBV5qHP8sUJ+RAEBlHrtbN4jleqE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=xff.cz; spf=pass smtp.mailfrom=xff.cz; dkim=pass (1024-bit key) header.d=xff.cz header.i=@xff.cz header.b=tYDKGXyT; arc=none smtp.client-ip=195.181.215.36
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=xff.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xff.cz
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=xff.cz header.i=@xff.cz header.b="tYDKGXyT"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xff.cz; s=mail;
+	t=1708677986; bh=EZZPQchlQbMRgMLdaZSVRfWs5DMx2XOakjV6Hz3uCjc=;
+	h=Date:From:To:Cc:Subject:X-My-GPG-KeyId:References:From;
+	b=tYDKGXyTUFx45Cfn4MxTIQ4wjmFHD/P+5LQ8Tv8lWgD9lkdtT3FOkBhEEyWWts15p
+	 NdK0gVmh6eiX1XcL39WrYugf7CrmeaVPEU3mcpfmHMTbimF+jrF2xM5GtbVsDSDBHq
+	 a3IKS0Xu+eifTUatSjo6DXYkh12/fb+JEgtO842c=
+Date: Fri, 23 Feb 2024 09:46:25 +0100
+From: =?utf-8?Q?Ond=C5=99ej?= Jirman <megi@xff.cz>
+To: Aren Moynihan <aren@peacevolution.org>
+Cc: linux-kernel@vger.kernel.org, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, 
+	Jean-Jacques Hiblot <jjhiblot@traphandler.com>, Chen-Yu Tsai <wens@csie.org>, linux-sunxi@lists.linux.dev, 
+	Lee Jones <lee@kernel.org>, Pavel Machek <pavel@ucw.cz>, 
+	linux-arm-kernel@lists.infradead.org, Jernej Skrabec <jernej.skrabec@gmail.com>, 
+	linux-leds@vger.kernel.org, Conor Dooley <conor+dt@kernel.org>, Miles Alan <m@milesalan.com>, 
+	Samuel Holland <samuel@sholland.org>
+Subject: Re: [PATCH v2 3/4] arm64: dts: sun50i-a64-pinephone: add multicolor
+ led node
+Message-ID: <sixgkkllo7medcjwjnmbkpqkgfvnmrtlhlwarwuxid5oqwrht5@gl65b6fetq2b>
+Mail-Followup-To: =?utf-8?Q?Ond=C5=99ej?= Jirman <megi@xff.cz>, 
+	Aren Moynihan <aren@peacevolution.org>, linux-kernel@vger.kernel.org, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, 
+	Jean-Jacques Hiblot <jjhiblot@traphandler.com>, Chen-Yu Tsai <wens@csie.org>, linux-sunxi@lists.linux.dev, 
+	Lee Jones <lee@kernel.org>, Pavel Machek <pavel@ucw.cz>, 
+	linux-arm-kernel@lists.infradead.org, Jernej Skrabec <jernej.skrabec@gmail.com>, 
+	linux-leds@vger.kernel.org, Conor Dooley <conor+dt@kernel.org>, Miles Alan <m@milesalan.com>, 
+	Samuel Holland <samuel@sholland.org>
+X-My-GPG-KeyId: EBFBDDE11FB918D44D1F56C1F9F0A873BE9777ED
+ <https://xff.cz/key.txt>
+References: <20240206185400.596979-1-aren@peacevolution.org>
+ <20240206185400.596979-3-aren@peacevolution.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
- canpemm500009.china.huawei.com (7.192.105.203)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240206185400.596979-3-aren@peacevolution.org>
 
-From: Yicong Yang <yangyicong@hisilicon.com>
+Hello Aren,
 
-We accidently met the issue that the bash prompt is not shown after the
-previous command done and until the next input if there's only one CPU
-(In our issue other CPUs are isolated by isolcpus=). Further analysis
-shows it's because the port entering runtime suspend even if there's
-still pending chars in the buffer and the pending chars will only be
-processed in next device resuming. We are using amba-pl011 and the
-problematic flow is like below:
+On Tue, Feb 06, 2024 at 01:13:19PM -0500, Aren Moynihan wrote:
+> The red, green, and blue leds currently in the device tree represent a
+> single rgb led on the front of the PinePhone.
+> 
+> Signed-off-by: Aren Moynihan <aren@peacevolution.org>
+> ---
+> 
+> Changes in v2:
+>  - remove function property from individual led nodes
+> 
+>  .../boot/dts/allwinner/sun50i-a64-pinephone.dtsi | 16 ++++++++++------
+>  1 file changed, 10 insertions(+), 6 deletions(-)
+> 
+> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone.dtsi
+> index ad2476ee01e4..e53e0d4579a7 100644
+> --- a/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone.dtsi
+> +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone.dtsi
+> @@ -39,28 +39,32 @@ chosen {
+>  	leds {
+>  		compatible = "gpio-leds";
+>  
+> -		led-0 {
+> -			function = LED_FUNCTION_INDICATOR;
 
-Bash                                         kworker
-tty_write()
-  file_tty_write()
-    n_tty_write()
-      uart_write()
-        __uart_start()
-          pm_runtime_get() // wakeup waker
-            queue_work()
-                                             pm_runtime_work()
-                                               rpm_resume()
-                                                status = RPM_RESUMING
-                                                serial_port_runtime_resume()
-                                                  port->ops->start_tx()
-                                                    pl011_tx_chars()
-                                                      uart_write_wakeup()
-        […]
-        __uart_start()
-          pm_runtime_get() < 0 // because runtime status = RPM_RESUMING
-                               // later data are not commit to the port driver
-                                                status = RPM_ACTIVE
-                                                rpm_idle() -> rpm_suspend()
+This looks like a needless change that will just break people's current scripts
+and setup. It does mine, and there sure are others that will be surprised, too.
 
-This patch tries to fix this by checking the port busy before entering
-runtime suspending. A runtime_suspend callback is added for the port
-driver. When entering runtime suspend the callback is invoked, if there's
-still pending chars in the buffer then flush the buffer.
+This leads to a change in sysfs path from:
 
-Cc: Tony Lindgren <tony@atomide.com>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Jiri Slaby <jirislaby@kernel.org>
-Fixes: 84a9582fd203 ("serial: core: Start managing serial controllers to enable runtime PM")
-Reviewed-by: Tony Lindgren <tony@atomide.com>
-Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
----
-Change since v3:
-- Drop non-fix change in __serial_port_busy()
-- Use a boolen busy instead of ret per Jiri
-Link: https://lore.kernel.org/all/20240208075216.48915-1-yangyicong@huawei.com/
+  /sys/class/leds/blue:indicator
 
-Change since v2:
-- Narrow the spinlock region per Andy
-- Make __serial_port_busy() return -EBUSY if port has pending chars per Andy
-Thanks.
-Link: https://lore.kernel.org/all/20240206073322.5560-1-yangyicong@huawei.com/
+to
 
-Change since v1:
-- Use port lock wrapper per John
-- Flush the pending chars and return -EBUSY per Tony.
-Thanks.
-Link: https://lore.kernel.org/all/20240204031957.58176-1-yangyicong@huawei.com/
+  /sys/class/leds/blue:
 
- drivers/tty/serial/serial_port.c | 27 ++++++++++++++++++++++++++-
- 1 file changed, 26 insertions(+), 1 deletion(-)
+which is 1) a weird name and 2) a backwards compatibility break for seemingly
+no apparent reason. Any reaons for the change?
 
-diff --git a/drivers/tty/serial/serial_port.c b/drivers/tty/serial/serial_port.c
-index 88975a4df306..1843c9ef7c49 100644
---- a/drivers/tty/serial/serial_port.c
-+++ b/drivers/tty/serial/serial_port.c
-@@ -46,8 +46,33 @@ static int serial_port_runtime_resume(struct device *dev)
- 	return 0;
- }
- 
-+static int serial_port_runtime_suspend(struct device *dev)
-+{
-+	struct serial_port_device *port_dev = to_serial_base_port_device(dev);
-+	struct uart_port *port;
-+	unsigned long flags;
-+	bool busy;
-+
-+	port = port_dev->port;
-+
-+	if (port->flags & UPF_DEAD)
-+		return 0;
-+
-+	uart_port_lock_irqsave(port, &flags);
-+	busy = __serial_port_busy(port);
-+	if (busy)
-+		port->ops->start_tx(port);
-+	uart_port_unlock_irqrestore(port, flags);
-+
-+	if (busy)
-+		pm_runtime_mark_last_busy(dev);
-+
-+	return busy ? -EBUSY : 0;
-+}
-+
- static DEFINE_RUNTIME_DEV_PM_OPS(serial_port_pm,
--				 NULL, serial_port_runtime_resume, NULL);
-+				 serial_port_runtime_suspend,
-+				 serial_port_runtime_resume, NULL);
- 
- static int serial_port_probe(struct device *dev)
- {
--- 
-2.24.0
+People normally hardcode these paths in eg. /etc/tmpfiles.d to apply LED triggers
+to particular LEDs.
 
+Kind regards,
+	o.
+
+> +		led0: led-0 {
+>  			color = <LED_COLOR_ID_BLUE>;
+>  			gpios = <&pio 3 20 GPIO_ACTIVE_HIGH>; /* PD20 */
+>  			retain-state-suspended;
+>  		};
+>  
+> -		led-1 {
+> -			function = LED_FUNCTION_INDICATOR;
+> +		led1: led-1 {
+>  			color = <LED_COLOR_ID_GREEN>;
+>  			gpios = <&pio 3 18 GPIO_ACTIVE_HIGH>; /* PD18 */
+>  			retain-state-suspended;
+>  		};
+>  
+> -		led-2 {
+> -			function = LED_FUNCTION_INDICATOR;
+> +		led2: led-2 {
+>  			color = <LED_COLOR_ID_RED>;
+>  			gpios = <&pio 3 19 GPIO_ACTIVE_HIGH>; /* PD19 */
+>  			retain-state-suspended;
+>  		};
+>  	};
+>  
+> +	multi-led {
+> +		compatible = "leds-group-multicolor";
+> +		color = <LED_COLOR_ID_RGB>;
+> +		function = LED_FUNCTION_INDICATOR;
+> +		leds = <&led0>, <&led1>, <&led2>;
+> +	};
+> +
+>  	reg_ps: ps-regulator {
+>  		compatible = "regulator-fixed";
+>  		regulator-name = "ps";
+> -- 
+> 2.43.0
+> 
