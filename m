@@ -1,125 +1,67 @@
-Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EE157F7CE;
-	Fri, 23 Feb 2024 13:45:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.193
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88E237E779;
+	Fri, 23 Feb 2024 13:46:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708695929; cv=none; b=A6az1PLosr1pyg2SRieeGiVB7N0GdUrF080C1A2o5m4wXmJTKaWQ7LHc+62GoUf/laHa3D/YuszidxCad1GuRBMf5k09Ys4kJ+xEXU+B7fOtTo7f/+cowGe3dI+UghcHqQUKwwLeUj3nIvkKuE4nIbdbVtw1qDt+k6WyUN76AaY=
+	t=1708695963; cv=none; b=uzXerCPPKZP1ZqEDpT7gxpD93EFVHemKFgndF4V3zNH2L8gdiS43iJcciqabfhyfsgwoZr1afK113y0rAXwc9ecyKUEVF3UYymzz4FV8fbNXl689kC+9vX1NcDnyv19zOCEkjaH/h2/jIDlr/yvXukDyHIwrdEtW4a+NzGOUGig=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708695929; c=relaxed/simple;
-	bh=UqrS3L3ZfbwmChhjl8azT4mTToB0ZPmTuVA//e4Tm3c=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=N0qVDWwCwoRsYNf57mpcfj2bU5qYJb/Pv+C7hf/qvw8AKj1ixFtkFfG8ezCVTRV5ss1aE2JNPld0LMEYtfHze7FinFv80qDQxoyfwGRNJ/dPrUvgqoVF9TPBEdMy59iYKBVaNgalCBr6+KGlzBDLxRtHoW4SqOZVxXUOD5yQf7I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=H8HuPFVF; arc=none smtp.client-ip=217.70.183.193
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1708695963; c=relaxed/simple;
+	bh=yHKE8iCyFnaVY1u7Z7xo7dhXjG5IiAU0ATJQ41IPm7s=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WqhGTZ2MIdvjis18qkske2h6LlqpJZl6DDkDAuVoO1pN/KpXWpQ6fasVnv5Sn9zRHhFTzghVL/EHtoliU1/aTBltNDbLWuWqyYm/TR9q8xMamB5z3+aQATrJrEeEN/v072CEdgvt0iEdwRre/WIoFjtgYuaG8YZMvngNyL3Dx3g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LyUPSWf4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="H8HuPFVF"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id EE26724000E;
-	Fri, 23 Feb 2024 13:45:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1708695924;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=02ddm9Xy6N7z/+neL8gzCb13I4/NT+KuYhzJAZBmiP4=;
-	b=H8HuPFVFjlTSb6rpaiXXgs5bRaL0zt7HcTIQ9cusb5bvcuJk9zcO0BldPrYHbrN9D3KiFQ
-	u+2yGHH3pVxZA0GGmSGe0fjQ0aprlD5dfJYQG/sKXRtq+DAlXBNO5NZpwP01jNpJDe01tP
-	oBrgGicgs4gym0SCDZqY+FdmMZJt3FZxU1+sr6/DYWAWH/aRT0YYEMB/An4Y29qXyq+OEB
-	SdqbDBckYhAtpvgGvmm2mhEAD+7/xF7/JdMWBYJyZvIwxGbC19y4Fm1wBuI3mrk1wuTtGX
-	XBQe1s4wrfq9ax0PBfvKRW3ohgTYYXQcWNyOvo5dd+djCCLjxKgHBfaSO/Drgg==
-From: =?UTF-8?q?J=C3=A9r=C3=A9mie=20Dautheribes?= <jeremie.dautheribes@bootlin.com>
-To: Neil Armstrong <neil.armstrong@linaro.org>,
-	Jessica Zhang <quic_jesszhan@quicinc.com>,
-	Sam Ravnborg <sam@ravnborg.org>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>,
-	Daniel Vetter <daniel@ffwll.ch>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Thierry Reding <thierry.reding@gmail.com>
-Cc: dri-devel@lists.freedesktop.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	Yen-Mei Goh <yen-mei.goh@keysight.com>,
-	=?UTF-8?q?J=C3=A9r=C3=A9mie=20Dautheribes?= <jeremie.dautheribes@bootlin.com>
-Subject: [PATCH 3/3] drm/panel: simple: add CMT430B19N00 LCD panel support
-Date: Fri, 23 Feb 2024 14:45:17 +0100
-Message-Id: <20240223134517.728568-4-jeremie.dautheribes@bootlin.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240223134517.728568-1-jeremie.dautheribes@bootlin.com>
-References: <20240223134517.728568-1-jeremie.dautheribes@bootlin.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LyUPSWf4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EB0B8C433F1;
+	Fri, 23 Feb 2024 13:46:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1708695963;
+	bh=yHKE8iCyFnaVY1u7Z7xo7dhXjG5IiAU0ATJQ41IPm7s=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=LyUPSWf4EEOn7Z5deDEaGz/CUWw14RNRPjyg+paa0U7TwIrk6Cd37O9nhkyw8YlCZ
+	 HaqYjSXGd74dtooNa+5v4cq0f39oOglGhJF+kkIsk5OJzmW1Lv4PZe30JP7YnUsUgj
+	 NQ1upwbXYmKojvYjF0qQMECp/cyo4ZruHIgCHNq6ExVEE6++tK02lcmmPSaAhKzbks
+	 GG5JtVfnnMP/ywBY+yBVauUoJWEzW/jDSpgMay9HQ/TH06KfCo/bK3Xhe/HFxNG1mn
+	 +GFgthicFJABSFlAbbFgr8jUNxqQ94YvQaOn6xl5eH9nOIgxWypVKFSFi5hyVtv1xB
+	 sVdeuQgQDWSEg==
+Date: Fri, 23 Feb 2024 06:46:01 -0700
+From: Rob Herring <robh@kernel.org>
+To: Danila Tikhonov <danila@jiaxyga.com>
+Cc: andersson@kernel.org, linux-kernel@vger.kernel.org,
+	linux-clk@vger.kernel.org, konrad.dybcio@linaro.org,
+	krzysztof.kozlowski+dt@linaro.org, sboyd@kernel.org,
+	adrian@travitia.xyz, david@mainlining.org, conor+dt@kernel.org,
+	devicetree@vger.kernel.org, mturquette@baylibre.com,
+	linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH 5/8] dt-bindings: clock: qcom: Add SM7150 CAMCC clocks
+Message-ID: <170869596032.1760474.1949121239875836418.robh@kernel.org>
+References: <20240220165240.154716-1-danila@jiaxyga.com>
+ <20240220165240.154716-6-danila@jiaxyga.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-GND-Sasl: jeremie.dautheribes@bootlin.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240220165240.154716-6-danila@jiaxyga.com>
 
-Add support for Crystal Clear Technology CMT430B19N00 4.3" 480x272
-TFT-LCD panel.
 
-Signed-off-by: Jérémie Dautheribes <jeremie.dautheribes@bootlin.com>
----
- drivers/gpu/drm/panel/panel-simple.c | 29 ++++++++++++++++++++++++++++
- 1 file changed, 29 insertions(+)
+On Tue, 20 Feb 2024 19:52:37 +0300, Danila Tikhonov wrote:
+> Add device tree bindings for the camera clock controller on Qualcomm
+> SM7150 platform.
+> 
+> Signed-off-by: Danila Tikhonov <danila@jiaxyga.com>
+> ---
+>  .../bindings/clock/qcom,sm7150-camcc.yaml     |  60 ++++++++++
+>  include/dt-bindings/clock/qcom,sm7150-camcc.h | 113 ++++++++++++++++++
+>  2 files changed, 173 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/clock/qcom,sm7150-camcc.yaml
+>  create mode 100644 include/dt-bindings/clock/qcom,sm7150-camcc.h
+> 
 
-diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
-index 20e3df1c59d4..b940220f56e2 100644
---- a/drivers/gpu/drm/panel/panel-simple.c
-+++ b/drivers/gpu/drm/panel/panel-simple.c
-@@ -1457,6 +1457,32 @@ static const struct panel_desc boe_hv070wsa = {
- 	.connector_type = DRM_MODE_CONNECTOR_LVDS,
- };
- 
-+static const struct drm_display_mode cct_cmt430b19n00_mode = {
-+	.clock = 9000,
-+	.hdisplay = 480,
-+	.hsync_start = 480 + 43,
-+	.hsync_end = 480 + 43 + 8,
-+	.htotal = 480 + 43 + 8 + 4,
-+	.vdisplay = 272,
-+	.vsync_start = 272 + 12,
-+	.vsync_end = 272 + 12 + 8,
-+	.vtotal = 272 + 12 + 8 + 4,
-+	.flags = DRM_MODE_FLAG_NHSYNC | DRM_MODE_FLAG_NVSYNC,
-+};
-+
-+static const struct panel_desc cct_cmt430b19n00 = {
-+	.modes = &cct_cmt430b19n00_mode,
-+	.num_modes = 1,
-+	.bpc = 8,
-+	.size = {
-+		.width = 95,
-+		.height = 53,
-+	},
-+	.bus_format = MEDIA_BUS_FMT_RGB888_1X24,
-+	.bus_flags = DRM_BUS_FLAG_DE_HIGH | DRM_BUS_FLAG_PIXDATA_DRIVE_NEGEDGE,
-+	.connector_type = DRM_MODE_CONNECTOR_DPI,
-+};
-+
- static const struct drm_display_mode cdtech_s043wq26h_ct7_mode = {
- 	.clock = 9000,
- 	.hdisplay = 480,
-@@ -4402,6 +4428,9 @@ static const struct of_device_id platform_of_match[] = {
- 	}, {
- 		.compatible = "boe,hv070wsa-100",
- 		.data = &boe_hv070wsa
-+	}, {
-+		.compatible = "cct,cmt430b19n00",
-+		.data = &cct_cmt430b19n00,
- 	}, {
- 		.compatible = "cdtech,s043wq26h-ct7",
- 		.data = &cdtech_s043wq26h_ct7,
--- 
-2.34.1
+Reviewed-by: Rob Herring <robh@kernel.org>
 
