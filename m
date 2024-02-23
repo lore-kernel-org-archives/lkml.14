@@ -1,54 +1,54 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B01ED1493B3
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B02391493B4
 	for <linux-kernel@vger.kernel.org>; Fri, 23 Feb 2024 19:51:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708717883; cv=none; b=ljz8wt/K+erjjyZxxGupzOHPWT9WOQFp62jNezLbn8sD6umaHOFVp1p6vPWro68+yPvMRtcOipV8mAJaxO6mCIc/pAwkrUNxzKJ1eJHRx0y2ZoUPyO7qhTP1v51fJ34aWGNKNALSZ6nmmurLrO9W1R1HD8rzkqUwjLpQGxZjX7c=
+	t=1708717883; cv=none; b=AVs3wfUisDXS2lVc7IhvIYd2HV0CHh7I/5qu/9pewDreE11wLKyRkJW9DwhhefSnQhN9j2oJI7UQdpDmiGS53SWf9XRjf0/Ll0TAQ6e0RwyGFVoEgtXCWnuArbJxXyLZxatwN1XNdln8ZMMX9/eymr5bHmw0YMLFvVsXrnZLaAk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1708717883; c=relaxed/simple;
-	bh=JOR5ZbgquS01wBvWAK1H9MXS0YUwJRqWZazvt54flDI=;
+	bh=0PKdh4pEIrqDSQO7ZRWs0TVdP0lCYrCSx8iDEn/lkVs=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=aP2KyOY+YljhT9FnzR6heLqieJfNb6RJ7yR8sguebs0RAz2i/R7mAhBLKGaTocx/A2SJl1Y2/o5G59QYeIBD8kW+kDA8FRu5aftmdLmyc0uRoA1HirUaGyCfn2cFnZ7bqempPod/fWe9R5x52XVk7Ox7tiDQABknWVzu1gho1go=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Jsv4uSfg; arc=none smtp.client-ip=192.198.163.12
+	 MIME-Version; b=maaweI5YbJDzr8Tiipzdrz0X98zWYyAEe6oQeYXbmA7rVnxYuo1dHc5CCXQTSCDt1kUEXZ10Ax8EF14+mES3rc2W4vofZ/g7a9HXg10GA0Utb69BltyXHao+WzCLAv6NAMW1XQ0KibhKVrONhL7mY+3CRM47Ul9MEgFsg3ZfUB0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hAb3t4HU; arc=none smtp.client-ip=192.198.163.12
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Jsv4uSfg"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hAb3t4HU"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
   t=1708717882; x=1740253882;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=JOR5ZbgquS01wBvWAK1H9MXS0YUwJRqWZazvt54flDI=;
-  b=Jsv4uSfgUXwdTHJXrzzPaojcnTBHgIohnNZi91BBIuylQQxlp+ujUCtd
-   h1SKm60m/uANQAu1s20lTNbX8nW917s/ZGqskA0tRK/z/6Snn0X8ztGKL
-   wEnJphsdFLoSXNCbHazRLJsstMY+ko46KuQckBpJCTZIJSUZDpq++xyTc
-   ZcImKuig2mkEGAiyVOPD6U87VvwWGCNCKciicQev7H2RMHC9csXKzQ3HT
-   lI8ikJb7FIYD9AQHkhhCJnEhohqVl+CpG0v/rZcz4vsHFdK3Vrrq5Tx1l
-   fpPy8SXrH48zcEgXY4TImvNB8jDJR7pcbyJ+5RUG4D0ApBwuQgBGuhWJz
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10993"; a="6837330"
+  bh=0PKdh4pEIrqDSQO7ZRWs0TVdP0lCYrCSx8iDEn/lkVs=;
+  b=hAb3t4HUBUl3zBlB/a7OjwUDRIEVS57tTUQSTyoyUYkHicJiD5sW+QMJ
+   vlqoYr6aMmoAkClKqd0jVSUxwTgoCgJTEApLJuA0ApZyyvHj4IgjagnLI
+   ou3ZpndePmqRA0/boK4gJcFPK/JYhVFPtHnvYHhwve3QmVg8tl2rZzNf7
+   ruIXNF5Ty5XD2cpK7KfrKA0ctK0kXf52U3q5Q0qg45k60NsZuwWk1W4z3
+   tJ1TjA0jsLk6otoCsmtNcH+Sed28VTdera68ZIVquohZ8K190hkv24fkZ
+   yu8++u9VXTVX6ygYir6dbO+Fz0Rq+di5tOepU3LtXaDyJtbwVoKborM3G
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10993"; a="6837328"
 X-IronPort-AV: E=Sophos;i="6.06,180,1705392000"; 
-   d="scan'208";a="6837330"
+   d="scan'208";a="6837328"
 Received: from fmsmga001.fm.intel.com ([10.253.24.23])
   by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Feb 2024 11:51:17 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10993"; a="937025654"
+X-IronPort-AV: E=McAfee;i="6600,9927,10993"; a="937025653"
 X-IronPort-AV: E=Sophos;i="6.06,180,1705392000"; 
-   d="scan'208";a="937025654"
+   d="scan'208";a="937025653"
 Received: from black.fi.intel.com ([10.237.72.28])
   by fmsmga001.fm.intel.com with ESMTP; 23 Feb 2024 11:51:15 -0800
 Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id BF63B80C; Fri, 23 Feb 2024 21:51:14 +0200 (EET)
+	id AF78479A; Fri, 23 Feb 2024 21:51:14 +0200 (EET)
 From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
 	linux-kernel@vger.kernel.org
 Cc: Lee Jones <lee@kernel.org>
-Subject: [PATCH v1 4/6] mfd: kempld: Use PLATFORM_DEVID_NONE instead of -1
-Date: Fri, 23 Feb 2024 21:49:53 +0200
-Message-ID: <20240223195113.880121-5-andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v1 3/6] mfd: kempld: Simplify device registration
+Date: Fri, 23 Feb 2024 21:49:52 +0200
+Message-ID: <20240223195113.880121-4-andriy.shevchenko@linux.intel.com>
 X-Mailer: git-send-email 2.43.0.rc1.1.gbec44491f096
 In-Reply-To: <20240223195113.880121-1-andriy.shevchenko@linux.intel.com>
 References: <20240223195113.880121-1-andriy.shevchenko@linux.intel.com>
@@ -60,29 +60,75 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Use the `PLATFORM_DEVID_NONE` constant instead of hard-coding -1
-when creating a platform device.
-
-No functional changes are intended.
+Use platform_device_register_full() instead of open coding this
+function.
 
 Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- drivers/mfd/kempld-core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/mfd/kempld-core.c | 33 +++++++++++++--------------------
+ 1 file changed, 13 insertions(+), 20 deletions(-)
 
 diff --git a/drivers/mfd/kempld-core.c b/drivers/mfd/kempld-core.c
-index e207a62d6577..c3bc61dcd098 100644
+index e8ac30528085..e207a62d6577 100644
 --- a/drivers/mfd/kempld-core.c
 +++ b/drivers/mfd/kempld-core.c
-@@ -109,7 +109,7 @@ static int kempld_register_cells_generic(struct kempld_device_data *pld)
- 	if (pld->feature_mask & KEMPLD_FEATURE_MASK_UART)
- 		devs[i++].name = kempld_dev_names[KEMPLD_UART];
+@@ -6,6 +6,7 @@
+  * Author: Michael Brunner <michael.brunner@kontron.com>
+  */
  
--	return mfd_add_devices(pld->dev, -1, devs, i, NULL, 0, NULL);
-+	return mfd_add_devices(pld->dev, PLATFORM_DEVID_NONE, devs, i, NULL, 0, NULL);
++#include <linux/err.h>
+ #include <linux/platform_device.h>
+ #include <linux/mfd/core.h>
+ #include <linux/mfd/kempld.h>
+@@ -131,28 +132,20 @@ static struct platform_device *kempld_pdev;
+ static int kempld_create_platform_device(const struct dmi_system_id *id)
+ {
+ 	const struct kempld_platform_data *pdata = id->driver_data;
+-	int ret;
++	const struct platform_device_info pdevinfo = {
++		.name = "kempld",
++		.id = PLATFORM_DEVID_NONE,
++		.res = pdata->ioresource,
++		.num_res = 1,
++		.data = pdata,
++		.size_data = sizeof(*pdata),
++	};
+ 
+-	kempld_pdev = platform_device_alloc("kempld", -1);
+-	if (!kempld_pdev)
+-		return -ENOMEM;
+-
+-	ret = platform_device_add_data(kempld_pdev, pdata, sizeof(*pdata));
+-	if (ret)
+-		goto err;
+-
+-	ret = platform_device_add_resources(kempld_pdev, pdata->ioresource, 1);
+-	if (ret)
+-		goto err;
+-
+-	ret = platform_device_add(kempld_pdev);
+-	if (ret)
+-		goto err;
++	kempld_pdev = platform_device_register_full(&pdevinfo);
++	if (IS_ERR(kempld_pdev))
++		return PTR_ERR(kempld_pdev);
+ 
+ 	return 0;
+-err:
+-	platform_device_put(kempld_pdev);
+-	return ret;
  }
  
- static struct resource kempld_ioresource = {
+ /**
+@@ -424,7 +417,7 @@ static int kempld_probe(struct platform_device *pdev)
+ 	struct resource *ioport;
+ 	int ret;
+ 
+-	if (kempld_pdev == NULL) {
++	if (IS_ERR_OR_NULL(kempld_pdev)) {
+ 		/*
+ 		 * No kempld_pdev device has been registered in kempld_init,
+ 		 * so we seem to be probing an ACPI platform device.
 -- 
 2.43.0.rc1.1.gbec44491f096
 
