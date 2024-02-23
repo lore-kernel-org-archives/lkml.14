@@ -1,59 +1,59 @@
 Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 023A312DD85;
-	Fri, 23 Feb 2024 17:28:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0702812DD85;
+	Fri, 23 Feb 2024 17:29:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.153.233
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708709317; cv=none; b=Qu3gTEp+/2XGvGuiwkcY1BeBsOhEZe808fxAhD/03IKNfr8aVlooXhhxDB15B9Yc4gybv8q2A+h2rZ8fZGVhfs/BLProRPl9O6w3xpNfzie1v4nmKhXdy+qCw9AxDgVo7iYtfqTUcObf1t2Xl8dhGVfh5zij05pBykQ3ndciGYw=
+	t=1708709355; cv=none; b=Ljwm4DS05TtuC4CmNXIA0vIANeFPZXDRtDYCtleARhagIuo7Ut3FBTu0NH3r//NPyafPjMfHIxrEmq5ApvQWkSfnXSVmNBdMRxWmOg7YQLhjx3n+gFr2l9Dm/+sIRFGAM42zXh4VrSjycE2GZD76Ra5f2+rtFT+4tYXfPcKvapU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708709317; c=relaxed/simple;
-	bh=mzGYFdm3v1XDGFucUtcC36Y7oX4EkJ+bnjLPq/ua1Ck=;
+	s=arc-20240116; t=1708709355; c=relaxed/simple;
+	bh=u6JeeHT9oRTlHnIjB/tPWNs3cODCuJ8lE0PAWT8DiHA=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=SXCI6Rk5LfKhj+M8jad3n64tGUrotYWd5q9sXvuj9MRpGjn4OCkdjQ1U1bI64Ce9JTLsvGf/qElJdTXa1v0516Li0DnAuXerjrCu+/YexiC0i22xH+3Gtc9SvEuFIUhWK47lJ6FkM/YBjNhhDsaCJoY+Cse1byQ9OIMTo3si6GQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=SQqwHMrw; arc=none smtp.client-ip=68.232.153.233
+	 MIME-Version:Content-Type; b=etAfjsCU5DFl242lCovFBjRYD5jqEygRuun1X8PAFPRJ7z/bhThgbJDr9jtdo6mgcpwiIIZFKICyCGpk0vV36v7bNPcBnFhyxrtUzu6RTCBNRPviqCzbR7wHTwTqB6UuelwJ1Le6qz9MWHqQYKnDdeAp3sAZBuB2fEuS9DhtnUE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=jQxjzLSp; arc=none smtp.client-ip=68.232.153.233
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=microchip.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="SQqwHMrw"
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="jQxjzLSp"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1708709315; x=1740245315;
+  t=1708709353; x=1740245353;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=mzGYFdm3v1XDGFucUtcC36Y7oX4EkJ+bnjLPq/ua1Ck=;
-  b=SQqwHMrw4YBObwIoQuKqC53wr+/aytNtHhXAuXE7Vrqfx4HQ3E0YL1Mh
-   /DRcaYChiWv68KKQ+NNwBPy3vFNx4VEZkSe4Fu4x4IlZqpPTkR6m3B/YM
-   l8sd3pKOur598mCJOeGAs5dRRw6kbboAZxWzuecEOJtb+1m795rWAYdPm
-   lUMLHAN6c0Z2LFHNLFpw8oFsYuL8qCn+K+Suw4f591Hd5zuois0xnsa+s
-   ImKuGj9SPxqzmF9TDxamywVS8mZEMbSuMe+1XmlPsMnEW4LUSOiqqgIfl
-   NTg+KmYGFxD1U9MCACwezqCx5L7UFQr4jwxpsPMUp4HZVwHO8oerU9rYW
-   A==;
-X-CSE-ConnectionGUID: J2gaCqTjSWW69xa5fHD66A==
-X-CSE-MsgGUID: 0uaOQgYvT4ulCAfYELEKEQ==
+  bh=u6JeeHT9oRTlHnIjB/tPWNs3cODCuJ8lE0PAWT8DiHA=;
+  b=jQxjzLSpg3FeTEzHdxy8K/gWQmZSwZl3kcyZN/yA2wOU8YuYilwgB8FE
+   My1GQNSgiPkqxNkonS26r9S/wJfFF92O+SgdkssZLREsyeS+Gq9Vzps0J
+   TsQ+HIrI7nzEc2OOxDcUmE6rpuV762upKuIeftf95JaaiaBRdSU727v0L
+   tGdfGnyvk+k+VV0R2SEBKbscEIz9awB3pyBD7FybdoAuClLVwJX867eqo
+   u/dJTgM1qMwnUjVHlqAf7fM6ahivPgswhQMntPXUrKPF9/RKKosnxli7T
+   aUc5n3A8EUItBFB+/DxDBcKYVGNCx1VdkqdkVLRpOy+bE4zn1rGscba0L
+   g==;
+X-CSE-ConnectionGUID: nX+aFf6zR2a6Qs8N2xdKug==
+X-CSE-MsgGUID: qzh6xr4eSEq0O3yKtlB6dQ==
 X-IronPort-AV: E=Sophos;i="6.06,180,1705388400"; 
-   d="scan'208";a="18276287"
+   d="scan'208";a="18276347"
 X-Amp-Result: SKIPPED(no attachment in message)
 Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa1.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 23 Feb 2024 10:28:35 -0700
+  by esa1.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 23 Feb 2024 10:29:13 -0700
 Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
+ chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Fri, 23 Feb 2024 10:28:30 -0700
+ 15.1.2507.35; Fri, 23 Feb 2024 10:29:04 -0700
 Received: from che-lt-i67070.microchip.com (10.10.85.11) by
  chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server id
- 15.1.2507.35 via Frontend Transport; Fri, 23 Feb 2024 10:28:25 -0700
+ 15.1.2507.35 via Frontend Transport; Fri, 23 Feb 2024 10:29:00 -0700
 From: Varshini Rajendran <varshini.rajendran@microchip.com>
-To: <mturquette@baylibre.com>, <sboyd@kernel.org>, <robh+dt@kernel.org>,
+To: <tglx@linutronix.de>, <robh+dt@kernel.org>,
 	<krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
 	<nicolas.ferre@microchip.com>, <alexandre.belloni@bootlin.com>,
-	<claudiu.beznea@tuxon.dev>, <linux-clk@vger.kernel.org>,
-	<devicetree@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-	<linux-kernel@vger.kernel.org>
-CC: <varshini.rajendran@microchip.com>
-Subject: [PATCH v4 26/39] dt-bindings: clock: at91: Allow PLLs to be exported and referenced in DT
-Date: Fri, 23 Feb 2024 22:58:22 +0530
-Message-ID: <20240223172822.672902-1-varshini.rajendran@microchip.com>
+	<claudiu.beznea@tuxon.dev>, <linux-kernel@vger.kernel.org>,
+	<devicetree@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>
+CC: <varshini.rajendran@microchip.com>, Krzysztof Kozlowski
+	<krzysztof.kozlowski@linaro.org>
+Subject: [PATCH v4 28/39] dt-bindings: irqchip/atmel-aic5: Add support for sam9x7 aic
+Date: Fri, 23 Feb 2024 22:58:55 +0530
+Message-ID: <20240223172855.673003-1-varshini.rajendran@microchip.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20240223171342.669133-1-varshini.rajendran@microchip.com>
 References: <20240223171342.669133-1-varshini.rajendran@microchip.com>
@@ -66,29 +66,31 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
 
-Allow PLLADIV2 and LVDSPLL to be referenced as a PMC_TYPE_CORE
-clock from phandle in DT for sam9x7 SoC family.
+Document the support added for the Advanced interrupt controller(AIC)
+chip in the sam9x7 SoC family.
 
 Signed-off-by: Varshini Rajendran <varshini.rajendran@microchip.com>
+Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 ---
- include/dt-bindings/clock/at91.h | 4 ++++
- 1 file changed, 4 insertions(+)
+Changes in v4:
+- Updated Acked-by tag.
+---
+ .../devicetree/bindings/interrupt-controller/atmel,aic.txt      | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/include/dt-bindings/clock/at91.h b/include/dt-bindings/clock/at91.h
-index 3e3972a814c1..6ede88c3992d 100644
---- a/include/dt-bindings/clock/at91.h
-+++ b/include/dt-bindings/clock/at91.h
-@@ -38,6 +38,10 @@
- #define PMC_CPU			(PMC_MAIN + 9)
- #define PMC_MCK1		(PMC_MAIN + 10)
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/atmel,aic.txt b/Documentation/devicetree/bindings/interrupt-controller/atmel,aic.txt
+index 7079d44bf3ba..5fb9366c94a1 100644
+--- a/Documentation/devicetree/bindings/interrupt-controller/atmel,aic.txt
++++ b/Documentation/devicetree/bindings/interrupt-controller/atmel,aic.txt
+@@ -4,7 +4,7 @@ Required properties:
+ - compatible: Should be:
+     - "atmel,<chip>-aic" where  <chip> can be "at91rm9200", "sama5d2",
+       "sama5d3" or "sama5d4"
+-    - "microchip,<chip>-aic" where <chip> can be "sam9x60"
++    - "microchip,<chip>-aic" where <chip> can be "sam9x60" or "sam9x7"
  
-+/* SAM9X7 */
-+#define PMC_PLLADIV2		(PMC_MAIN + 11)
-+#define PMC_LVDSPLL		(PMC_MAIN + 12)
-+
- #ifndef AT91_PMC_MOSCS
- #define AT91_PMC_MOSCS		0		/* MOSCS Flag */
- #define AT91_PMC_LOCKA		1		/* PLLA Lock */
+ - interrupt-controller: Identifies the node as an interrupt controller.
+ - #interrupt-cells: The number of cells to define the interrupts. It should be 3.
 -- 
 2.25.1
 
