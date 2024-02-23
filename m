@@ -1,37 +1,37 @@
-Received: from relay.smtp-ext.broadcom.com (unknown [192.19.166.228])
+Received: from relay.smtp-ext.broadcom.com (unknown [192.19.166.231])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93876DDB1;
-	Fri, 23 Feb 2024 03:48:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.19.166.228
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 990A81173E
+	for <linux-kernel@vger.kernel.org>; Fri, 23 Feb 2024 03:48:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.19.166.231
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708660112; cv=none; b=GoYGqYSJE9qzjVBd4xOWj+5yhCRXIuUzRIOi36v1cHUH/FfbxW5cI0nM98LGaL9uAcUUIGbeJYAw4LmZywLLPahmBM3rZAZHatqDuVVhX8xlAU46GdgwfrcXjvvpCdpD+Y5Lfq8IOzU9XulAWG8FOZaCa8BJjVKKDeZpRbgI/k8=
+	t=1708660114; cv=none; b=gzG4GWEP1q4Q/abG+GTfhKf1WziFGcjhMoyqU/wvBIZ9BLsq5aEqneu9b7eKaAGic22LfCvhjLD7iE4Fs2vxovHlOWfuRl1EJzoQhXL0mL8SmZpVtmeNoBS422Jg3a6Kgf+TCY2qqPCEc3rEcqtUh5dG2M/ugDdOhzG7xq6gRO0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708660112; c=relaxed/simple;
-	bh=VL3W4Hrd8AMxNoY1VfirYQHtQnsee+7UFtazgfSJcYc=;
+	s=arc-20240116; t=1708660114; c=relaxed/simple;
+	bh=1E8LlEJSmZyzjiVTNvXJAATm4YWjLO1n2vn04c4dfGA=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=l1tt0rDSrzhPM5woWgCFB/AiqUgZsenYo8F/UVvG8NQs1tIcNxN5Y4XZNTHgDq/pBF0N0KgqpaC0cImBf4idRhcx/7LD20Rx1CGExLPCrzGYpRKdPS7e+BYYVIK//+E/1vr6nxNmZ5+6I0zbnmwjkJiKOIQiAdTFVUe6v7vpDQk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=gRg1zp2L; arc=none smtp.client-ip=192.19.166.228
+	 MIME-Version; b=b5qcXh4A7ZSi0XLjT9gEY31Bp2qnpIZD/TKZ/69CGv5s09hheJ0PqQanRvWlhypgzj7Ob8dRUL0u6X7uIh1HqQ72qN3vLODUUq1QVPPnGT0hInASKHSGurksalGCtSlhLyxX3hrvalOQebosWc4RfQIGv03hjFyJxUqCDGwlDBM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=OSOvTxOv; arc=none smtp.client-ip=192.19.166.231
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="gRg1zp2L"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="OSOvTxOv"
 Received: from mail-lvn-it-01.lvn.broadcom.net (mail-lvn-it-01.lvn.broadcom.net [10.36.132.253])
-	by relay.smtp-ext.broadcom.com (Postfix) with ESMTP id A4D28C0047FE;
-	Thu, 22 Feb 2024 19:48:28 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 relay.smtp-ext.broadcom.com A4D28C0047FE
+	by relay.smtp-ext.broadcom.com (Postfix) with ESMTP id 23F68C0019AB;
+	Thu, 22 Feb 2024 19:48:26 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 relay.smtp-ext.broadcom.com 23F68C0019AB
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=broadcom.com;
-	s=dkimrelay; t=1708660108;
-	bh=VL3W4Hrd8AMxNoY1VfirYQHtQnsee+7UFtazgfSJcYc=;
+	s=dkimrelay; t=1708660106;
+	bh=1E8LlEJSmZyzjiVTNvXJAATm4YWjLO1n2vn04c4dfGA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=gRg1zp2LO7EHCQAQD6CuliV5gJm6QoHnJMZdC+vvfiWtGdDkRK7ezoZGnv+rjzquX
-	 AT5omQCtRdR8imYenbIrwU4D7vnIE74sooNYAQo/floXoWrDs9NHPh+pFWiFN3FiG7
-	 RYECOPUu6/8J13dsvMGO06RVgD1BHpZCzl0Sddqw=
+	b=OSOvTxOvY72/fbB86m2S4hUe7kNtTp9vE0ml9JS6GpTKG2Y8D9LKYOOEv2+QMAgBZ
+	 3BzW/N7Hc0BVNB6fd8BioT20YuRAu7sg4SQqMf3qzHl4MgBnlUhR1nYOLr0wPkdYiz
+	 eC3VgORvH/h+8EiZjNsTVHvr6IWQado7So8eIDqE=
 Received: from bcacpedev-irv-3.lvn.broadcom.net (bcacpedev-irv-3.lvn.broadcom.net [10.173.232.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by mail-lvn-it-01.lvn.broadcom.net (Postfix) with ESMTPSA id 390B718041CAC4;
-	Thu, 22 Feb 2024 19:48:27 -0800 (PST)
+	by mail-lvn-it-01.lvn.broadcom.net (Postfix) with ESMTPSA id AC70F18041CAC4;
+	Thu, 22 Feb 2024 19:48:24 -0800 (PST)
 From: William Zhang <william.zhang@broadcom.com>
 To: Linux MTD List <linux-mtd@lists.infradead.org>,
 	Linux ARM List <linux-arm-kernel@lists.infradead.org>,
@@ -44,22 +44,16 @@ Cc: f.fainelli@gmail.com,
 	kamal.dasu@broadcom.com,
 	tomer.yacoby@broadcom.com,
 	dan.beygelman@broadcom.com,
+	David Regan <dregan@broadcom.com>,
 	William Zhang <william.zhang@broadcom.com>,
-	Conor Dooley <conor.dooley@microchip.com>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	devicetree@vger.kernel.org,
-	Brian Norris <computersforpeace@gmail.com>,
-	linux-kernel@vger.kernel.org,
-	Conor Dooley <conor+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Vignesh Raghavendra <vigneshr@ti.com>,
 	Miquel Raynal <miquel.raynal@bootlin.com>,
-	Richard Weinberger <richard@nod.at>,
-	Kamal Dasu <kdasu.kdev@gmail.com>,
-	Rob Herring <robh+dt@kernel.org>
-Subject: [PATCH v6 05/13] dt-bindings: mtd: brcmnand: Add WP pin connection property
-Date: Thu, 22 Feb 2024 19:47:50 -0800
-Message-Id: <20240223034758.13753-6-william.zhang@broadcom.com>
+	linux-kernel@vger.kernel.org,
+	Vignesh Raghavendra <vigneshr@ti.com>,
+	Brian Norris <computersforpeace@gmail.com>,
+	Richard Weinberger <richard@nod.at>
+Subject: [PATCH v6 03/13] mtd: rawnand: brcmnand: update log level messages
+Date: Thu, 22 Feb 2024 19:47:48 -0800
+Message-Id: <20240223034758.13753-4-william.zhang@broadcom.com>
 X-Mailer: git-send-email 2.37.3
 In-Reply-To: <20240223034758.13753-1-william.zhang@broadcom.com>
 References: <20240223034758.13753-1-william.zhang@broadcom.com>
@@ -71,49 +65,57 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add brcm,wp-not-connected property to have an option for disabling this
-feature on broadband board design that does not connect WP pin.
+From: David Regan <dregan@broadcom.com>
 
+Update log level messages so that more critical messages can be logged
+to console and help the troubleshooting with field devices.
+
+Signed-off-by: David Regan <dregan@broadcom.com>
 Signed-off-by: William Zhang <william.zhang@broadcom.com>
-Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
-Reviewed-by: Florian Fainelli <florian.fainelli@broadcom.com>
+Reviewed-by: William Zhang <william.zhang@broadcom.com>
 
 ---
 
 Changes in v6:
-- Add reviewed-by tags
+- Fix style issue
 
 Changes in v5:
-- Update the description of this new property
+- Update the commit message
 
 Changes in v4:
-- Move the WP pin property to this separate patch and change it to
-boolean type.
+- Revert the log level change for correctable ecc error
 
 Changes in v3: None
-Changes in v2: None
+Changes in v2:
+- Added to patch series
 
- Documentation/devicetree/bindings/mtd/brcm,brcmnand.yaml | 7 +++++++
- 1 file changed, 7 insertions(+)
+ drivers/mtd/nand/raw/brcmnand/brcmnand.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/mtd/brcm,brcmnand.yaml b/Documentation/devicetree/bindings/mtd/brcm,brcmnand.yaml
-index e54ca08a798a..6a717bcedfd3 100644
---- a/Documentation/devicetree/bindings/mtd/brcm,brcmnand.yaml
-+++ b/Documentation/devicetree/bindings/mtd/brcm,brcmnand.yaml
-@@ -113,6 +113,13 @@ properties:
-       earlier versions of this core that include WP
-     type: boolean
+diff --git a/drivers/mtd/nand/raw/brcmnand/brcmnand.c b/drivers/mtd/nand/raw/brcmnand/brcmnand.c
+index 5f34e5a51d25..f1f0de50b5f7 100644
+--- a/drivers/mtd/nand/raw/brcmnand/brcmnand.c
++++ b/drivers/mtd/nand/raw/brcmnand/brcmnand.c
+@@ -1084,8 +1084,8 @@ static int bcmnand_ctrl_poll_status(struct brcmnand_host *host,
+ 	if ((val & mask) == expected_val)
+ 		return 0;
  
-+  brcm,wp-not-connected:
-+    description:
-+      Use this property when WP pin is not physically wired to the NAND chip.
-+      Write protection feature cannot be used. By default, controller assumes
-+      the pin is connected and feature is used.
-+    $ref: /schemas/types.yaml#/definitions/flag
-+
- patternProperties:
-   "^nand@[a-f0-9]$":
-     type: object
+-	dev_warn(ctrl->dev, "timeout on status poll (expected %x got %x)\n",
+-		 expected_val, val & mask);
++	dev_err(ctrl->dev, "timeout on status poll (expected %x got %x)\n",
++		expected_val, val & mask);
+ 
+ 	return -ETIMEDOUT;
+ }
+@@ -2137,7 +2137,7 @@ static int brcmnand_read(struct mtd_info *mtd, struct nand_chip *chip,
+ 				return err;
+ 		}
+ 
+-		dev_dbg(ctrl->dev, "uncorrectable error at 0x%llx\n",
++		dev_err(ctrl->dev, "uncorrectable error at 0x%llx\n",
+ 			(unsigned long long)err_addr);
+ 		mtd->ecc_stats.failed++;
+ 		/* NAND layer expects zero on ECC errors */
 -- 
 2.37.3
 
